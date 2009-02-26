@@ -1,0 +1,154 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!-- C++Builder XML Project -->
+<PROJECT>
+  <MACROS>
+    <VERSION value="BCB.06.00"/>
+    <PROJECT value=".\lib\release\LibRelease.lib"/>
+    <OBJFILES value="common.obj spec.obj dfa.obj lex.obj node.obj lex_test.obj Arsenal.obj"/>
+    <RESFILES value=""/>
+    <IDLFILES value=""/>
+    <IDLGENFILES value=""/>
+    <DEFFILE value=""/>
+    <RESDEPEN value="$(RESFILES)"/>
+    <LIBFILES value=""/>
+    <LIBRARIES value=""/>
+    <PACKAGES value=""/>
+    <PATHCPP value=".;..\..\Arsenal\Common;..\..\Arsenal\Lex;..\..\Arsenal\Test;..\..\Arsenal"/>
+    <PATHPAS value=".;"/>
+    <PATHRC value=".;"/>
+    <PATHASM value=".;"/>
+    <LINKER value="TLib"/>
+    <USERDEFINES value="WIN32,NDEBUG,_LIB"/>
+    <SYSDEFINES value="_RTLDLL;NO_STRICT"/>
+    <MAINSOURCE value="LibRelease.bpf"/>
+    <INCLUDEPATH value="..\..\Arsenal;..\..\Arsenal\Test;..\..\Arsenal\Lex;..\..\Arsenal\Common;$(BCB)\include;$(BCB)\include\vcl"/>
+    <LIBPATH value="..\..\Arsenal;..\..\Arsenal\Test;..\..\Arsenal\Lex;..\..\Arsenal\Common;$(BCB)\lib\obj;$(BCB)\lib"/>
+    <WARNINGS value="-w-par"/>
+    <LISTFILE value=""/>
+    <OTHERFILES value=""/>
+  </MACROS>
+  <OPTIONS>
+    <IDLCFLAGS value="-I..\..\Arsenal -I..\..\Arsenal\Test -I..\..\Arsenal\Lex 
+      -I..\..\Arsenal\Common -I$(BCB)\include -I$(BCB)\include\vcl -src_suffix 
+      cpp -DWIN32,NDEBUG,_LIB -boa"/>
+    <CFLAG1 value="-O2 -H=$(BCB)\lib\vcl60.csm -Hc -Vx -Ve -x- -RT- -X- -a8 -6 -b- -k- -vi -c 
+      -tW -tWM"/>
+    <PFLAGS value="-N2. -N0. -$Y- -$L- -$D- -$A8 -v -JPHNE -M"/>
+    <AFLAGS value="/mx /w2 /zn"/>
+    <LFLAGS value="-l.\lib\release"/>
+    <OTHERFILES value=""/>
+  </OPTIONS>
+  <LINKER>
+    <ALLOBJ value="$(OBJFILES)"/>
+    <ALLLIB value=""/>
+    <OTHERFILES value=""/>
+  </LINKER>
+  <FILELIST>
+      <FILE FILENAME="LibRelease.bpf" FORMNAME="" UNITNAME="LibRelease" CONTAINERID="BPF" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Common\common.c" FORMNAME="" UNITNAME="common.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Common\common.h" FORMNAME="" UNITNAME="common.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Common\config.h" FORMNAME="" UNITNAME="config.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Common\platform.h" FORMNAME="" UNITNAME="platform.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Common\spec.c" FORMNAME="" UNITNAME="spec.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Common\spec.h" FORMNAME="" UNITNAME="spec.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Lex\__inline.h" FORMNAME="" UNITNAME="__inline.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Lex\dfa.c" FORMNAME="" UNITNAME="dfa.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Lex\dfa.h" FORMNAME="" UNITNAME="dfa.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Lex\lex.c" FORMNAME="" UNITNAME="lex.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Lex\lex.h" FORMNAME="" UNITNAME="lex.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Lex\node.c" FORMNAME="" UNITNAME="node.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Lex\node.h" FORMNAME="" UNITNAME="node.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Test\lex_test.c" FORMNAME="" UNITNAME="lex_test" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Arsenal.c" FORMNAME="" UNITNAME="Arsenal.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Arsenal.h" FORMNAME="" UNITNAME="Arsenal.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+  </FILELIST>
+  <BUILDTOOLS>
+  </BUILDTOOLS>
+
+  <IDEOPTIONS>
+[Version Info]
+IncludeVerInfo=0
+AutoIncBuild=0
+MajorVer=1
+MinorVer=0
+Release=0
+Build=0
+Debug=0
+PreRelease=0
+Special=0
+Private=0
+DLL=0
+Locale=2052
+CodePage=936
+
+[Version Info Keys]
+CompanyName=
+FileDescription=
+FileVersion=1.0.0.0
+InternalName=
+LegalCopyright=
+LegalTrademarks=
+OriginalFilename=
+ProductName=
+ProductVersion=1.0.0.0
+Comments=
+
+[HistoryLists\hlIncludePath]
+Count=1
+Item0=$(BCB)\include;$(BCB)\include\vcl
+
+[HistoryLists\hlLibraryPath]
+Count=1
+Item0=$(BCB)\lib\obj;$(BCB)\lib
+
+[HistoryLists\hlDebugSourcePath]
+Count=1
+Item0=$(BCB)\source\vcl
+
+[HistoryLists\hlConditionals]
+Count=2
+Item0=WIN32,NDEBUG,_LIB
+Item1=_DEBUG
+
+[HistoryLists\hlIntOutputDir]
+Count=1
+Item0=.
+
+[HistoryLists\hlFinalOutputDir]
+Count=1
+Item0=.\lib\release\
+
+[HistoryLists\hIBPIOutputDir]
+Count=1
+Item0=.\lib\release\
+
+[HistoryLists\hlTlibPageSize]
+Count=1
+Item0=0x0010
+
+[Debugging]
+DebugSourceDirs=$(BCB)\source\vcl
+
+[Parameters]
+RunParams=
+Launcher=
+UseLauncher=0
+DebugCWD=
+HostApplication=
+RemoteHost=
+RemotePath=
+RemoteLauncher=
+RemoteCWD=
+RemoteDebug=0
+
+[Compiler]
+ShowInfoMsgs=0
+LinkDebugVcl=0
+LinkCGLIB=0
+
+[CORBA]
+AddServerUnit=1
+AddClientUnit=1
+PrecompiledHeaders=1
+  </IDEOPTIONS>
+</PROJECT>
