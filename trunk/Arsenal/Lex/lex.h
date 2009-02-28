@@ -16,6 +16,7 @@
 
 #include "..\Common\Common.h"
 
+AR_NAMESPACE_BEGIN
 
 typedef enum
 {
@@ -71,12 +72,13 @@ typedef struct __lex_tag		lex_t;
 
 
 
-lex_t*			LEX_CreateLex();
-void			LEX_Destroy(lex_t *lex);
-void			LEX_Reset(lex_t *lex);
+lex_t*			LEX_CreateLex(const wchar_t *pattern);
+void			LEX_DestroyLex(lex_t *lex);
+
+
 
 #define			LEX_DEF(_pat_) L##_pat_##L"\r\n"
-lexError_t		LEX_Build(lex_t *lex, const wchar_t *pattern);
+
 
 
 
@@ -88,24 +90,22 @@ typedef struct __lex_match_result_tag
 		size_t					x;
 		size_t					y;
 		lexToken_t				token;
+
+		wchar_t					*input;
 }lexMatch_t;
 
 
-AR_INLINE void LEX_InitMatch(lexMatch_t *pmatch, const wchar_t *input)
-{
-		AR_ASSERT(pmatch != NULL && input != NULL);
-		AR_MSET0(pmatch, sizeof(*pmatch));
-		pmatch->err = LEX_NO_ERROR;
-		pmatch->next = input;
-		pmatch->x = pmatch->y = 0;
-}
+void LEX_InitMatch(lexMatch_t *pmatch, const wchar_t *input);
 
-#define LEX_UnInitMatch(_match) AR_NOOP
+
+void LEX_UnInitMatch(lexMatch_t *pmatch);
+
 
 bool_t	LEX_Match(lex_t *lex, lexMatch_t *match);
 
 
 
+AR_NAMESPACE_END
 
 
 #endif

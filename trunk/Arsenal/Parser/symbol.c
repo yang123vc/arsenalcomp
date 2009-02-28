@@ -16,8 +16,9 @@
 
 /*以下为终结符*/
 static const psrSymb_t __epsilon_symb	= {L"%EPSILON",	False, 0, PSR_ASSO_NOASSO, NULL, 0};
-static const psrSymb_t __eoi_symb		= {L"%EOI",		False, 0, PSR_ASSO_NOASSO, NULL, 1};
 static const psrSymb_t __lalr_symb		= {L"%LALR",	False, 0, PSR_ASSO_NOASSO, NULL, 2};
+
+static const psrSymb_t __eoi_symb		= {L"%EOI",		False, 0, PSR_ASSO_NOASSO, NULL, PSR_EOI_TOKVAL};
 
 const psrSymb_t	*PSR_EpsilonSymb		= &__epsilon_symb;
 const psrSymb_t	*PSR_EOISymb			= &__eoi_symb;

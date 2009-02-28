@@ -27,10 +27,17 @@
 
 #define AR_C_LINKAGE extern "C"
 
+#define AR_NAMESPACE_BEGIN extern "C" {
+
+#define AR_NAMESPACE_END		}
+
 #else
 
 #define AR_C_LINKAGE extern
 
+#define AR_NAMESPACE_BEGIN
+
+#define AR_NAMESPACE_END		
 
 #endif
 
@@ -70,7 +77,7 @@
 		#else
 				#define AR_DEBUG
 		#endif
-		
+/*		
 		#if defined(AR_SHARED_LIB)
 				#if defined(AR_EXPORTS)
 						#define AR_API AR_C_LINKAGE AR_NO_THROW __declspec(dllexport)
@@ -81,6 +88,7 @@
 
 				#define AR_API AR_C_LINKAGE AR_NO_THROW
 		#endif
+*/
 		
 		#define AR_STDCALL __stdcall
 

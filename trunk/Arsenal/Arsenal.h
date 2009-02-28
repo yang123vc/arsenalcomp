@@ -16,5 +16,7 @@
 
 #include ".\Lex\lex.h"
 #include ".\Parser\parser.h"
+#include ".\Test\test.h"
+
 #endif
 

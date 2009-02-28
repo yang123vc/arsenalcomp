@@ -185,12 +185,11 @@ typedef struct __action_record_tag
 		size_t					priority;
 		psrAction_t				*next;
 		
-
 		union{
 				size_t			shift_to;
 				size_t			reduce_id;
 		};
-		
+
 		psrLRItem_t				item;/*从哪项得到的*/
 		size_t					reduce_count;/*规约时用到，产生式如果为%Epsilon，则count为0*/
 }psrAction_t;
@@ -236,11 +235,6 @@ typedef struct __parser_tag
 {
 		psrActionTable_t		*tbl;
 		psrGrammar_t			*grammar;
-		lex_t					*lex;
-
-		psrLeaf_func			leaf_func;
-		psrNode_func			node_func;
-		psrDestroy_func			destroy_func;
 }parser_t;
 
 

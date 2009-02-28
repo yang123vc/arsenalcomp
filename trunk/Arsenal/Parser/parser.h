@@ -17,6 +17,8 @@
 #include "..\Common\Common.h"
 #include "..\Lex\lex.h"
 
+AR_NAMESPACE_BEGIN
+
 typedef enum
 {
 		PSR_NO_ERROR = 0,
@@ -46,56 +48,21 @@ typedef enum
 /******************************************************Parser********************************************************/
 
 #define PSR_MAX_TOKENLEN		4096
-#define PSR_IGNORE_TOKEN_TYPE	0
+#define PSR_EOI_TOKVAL			1
 
-typedef void	  psrNode_t;
+typedef void			psrNode_t;
 
-typedef struct __psr_token_tag
+typedef lexToken_t		psrToken_t;
+
+
+typedef struct __parser_context_tag
 {
-		size_t			lex_type;
-		wchar_t			value[PSR_MAX_TOKENLEN];
-		size_t			line;
-		size_t			col;
-}psrToken_t;
-
-typedef struct __parser_node_set_tag
-{
-		psrNode_t		**nodes;
-		size_t			count;
-		size_t			cap;
-}psrNodeSet_t;
-
-AR_INLINE void PSR_InitNodeSet(psrNodeSet_t *nodes)
-{
-		AR_MSET0(nodes, sizeof(*nodes));
-}
-
-AR_INLINE void PSR_UnInitNodeSet(psrNodeSet_t *nodes)
-{
-		AR_DEL(nodes->nodes);
-		AR_MSET0(nodes, sizeof(*nodes));
-}
-
-AR_INLINE void PSR_InsertToNodeSet(psrNodeSet_t *nodes, psrNode_t *node)
-{
-		if(nodes->count == nodes->cap)
-		{
-				nodes->cap = (nodes->cap + 1)*2;
-				nodes->nodes = AR_REALLOC(psrNode_t*, nodes->nodes, nodes->cap);
-		}
-
-		nodes->nodes[nodes->count++] = node;
-}
-
-AR_INLINE void PSR_ClearNodeSet(psrNodeSet_t *set)
-{
-		set->count = 0;
-}
-
-
-typedef psrNode_t* (*psrLeaf_func)(const psrToken_t *leaf);
-typedef psrNode_t* (*psrNode_func)(size_t rule_id,  const psrNodeSet_t *set);
-typedef void	   (*psrDestroy_func)(psrNode_t *node);
+		bool_t	   (*token_f)(psrToken_t *tok, void *ctx);		/*parser调用此函数得到下一个词法值*/
+		psrNode_t* (*leaf_f)(const psrToken_t *tok,void *ctx);/*通过词法值创建叶节点*/
+		psrNode_t* (*node_f)(size_t rule_id, const wchar_t *rule_name, psrNode_t **nodes, size_t count, void *ctx); /*通过子节点和产生式ID创建父节点*/
+		void	   (*destroy_f)(psrNode_t *node, void *ctx);/*如果产生语法或者词法错误，则通过此函数析构所有已建立的节点*/
+		void		*ctx;
+}psrCtx_t;
 
 
 typedef struct __parser_tag parser_t;
@@ -107,15 +74,15 @@ typedef enum
 		PSR_LALR
 }psrEngineType_t;
 
-parser_t* PSR_CreateParser(const wchar_t *lex, const wchar_t *grammar, psrLeaf_func leaf_func, psrNode_func node_func, psrDestroy_func destroy_func, psrEngineType_t type);
+parser_t* PSR_CreateParser(const wchar_t *grammar, psrEngineType_t type);
 
 void	  PSR_DestroyParser(parser_t *parser);
 
-psrNode_t* PSR_Parse(parser_t *parser, const wchar_t *sources);
+psrNode_t* PSR_Parse(parser_t *parser, psrCtx_t *ctx);
 
 
 
-
+AR_NAMESPACE_END
 
 
 #endif

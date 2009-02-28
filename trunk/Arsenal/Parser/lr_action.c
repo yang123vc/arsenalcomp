@@ -134,11 +134,24 @@ int	 PSR_GetState(const psrActionTable_t *tbl, size_t state, const psrSymb_t *sy
 lookahead为右结合时候与之相反，如果lookahead无结合性，则同样算是冲突，将其加入。
 */
 
+static void __copy_action(psrAction_t *l, const psrAction_t *r)
+{
+		l->item = r->item;
+		l->priority = r->priority;
+		l->reduce_id = r->reduce_id;
+		l->type = r->type;
+		l->reduce_count = r->reduce_count;
+		
+		
+}
+
 void __insert_action_to_action_list(psrAction_t **dest, const psrAction_t *sour, const psrSymb_t *lookahead)
 {
 		psrAction_t *curr, *prev, *tmp;
 		AR_ASSERT(dest != NULL && sour != NULL);
 
+		
+		
 		curr = *dest;
 		prev = NULL;
 		if(curr == NULL)
@@ -149,13 +162,11 @@ void __insert_action_to_action_list(psrAction_t **dest, const psrAction_t *sour,
 				return;
 		}
 
+		if(curr->type == PSR_SHIFT && sour->type == PSR_SHIFT)return;
 
 		if(sour->priority > curr->priority)
 		{
-				curr->item = sour->item;
-				curr->priority = sour->priority;
-				curr->reduce_id = sour->reduce_id;
-				curr->type = sour->type;
+				__copy_action(curr, sour);
 				return;
 				
 		}else if(sour->priority < curr->priority)
@@ -163,47 +174,53 @@ void __insert_action_to_action_list(psrAction_t **dest, const psrAction_t *sour,
 				return;
 		}else
 		{
-				if(curr->type == PSR_SHIFT && sour->type == PSR_SHIFT)return;
-
 				if(lookahead->asso == PSR_ASSO_NOASSO)
 				{
 						tmp = AR_NEW0(psrAction_t);
-						*tmp = *sour;
+						__copy_action(tmp, sour);
+
 						tmp->next = curr->next;
 						curr->next = tmp;
 				}else if(lookahead->asso == PSR_ASSO_LEFT)
 				{
+						/*左结合，优先级相同，优先选规约*/
 						if(curr->type == PSR_SHIFT && sour->type == PSR_REDUCE)/*shift-reduce冲突，且左结合*/
 						{
+								__copy_action(curr, sour);
+								/*
 								curr->item = sour->item;
 								curr->priority = sour->priority;
 								curr->reduce_id = sour->reduce_id;
 								curr->type = sour->type;
+								*/
+
+						/*
+						左结合，只要curr为规约，sour不是规约则不变动
+						*/
 						}else if(curr->type == PSR_REDUCE && sour->type != PSR_REDUCE)
 						{
 								return;
-						}else
+						}else/*冲突*/
 						{
+
 								tmp = AR_NEW0(psrAction_t);
-								*tmp = *sour;
+								__copy_action(tmp, sour);
 								tmp->next = curr->next;
 								curr->next = tmp;
 						}
 				}else if(lookahead->asso == PSR_ASSO_RIGHT)
 				{
+						/*右结合，优先级相同，优先选移入*/
 						if(curr->type == PSR_REDUCE && sour->type == PSR_SHIFT)
 						{
-								curr->item = sour->item;
-								curr->priority = sour->priority;
-								curr->reduce_id = sour->reduce_id;
-								curr->type = sour->type;
+								__copy_action(curr, sour);
 						}else if(curr->type == PSR_SHIFT && sour->type != PSR_SHIFT)
 						{
 								return;
 						}else
 						{
 								tmp = AR_NEW0(psrAction_t);
-								*tmp = *sour;
+								__copy_action(tmp, sour);
 								tmp->next = curr->next;
 								curr->next = tmp;
 						}
@@ -333,7 +350,7 @@ psrActionTable_t* PSR_BuildActionTable_SLR(const psrGrammar_t *grammar)
 		act.next = NULL;
 		act.type = PSR_ERROR;
 		act.reduce_id = 0;
-
+		act.reduce_count = 0;
 		
 
 		for(i = 0; i < clt->count; ++i)

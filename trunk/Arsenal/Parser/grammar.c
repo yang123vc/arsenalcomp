@@ -443,6 +443,7 @@ static void __calc_grammar(psrGrammar_t *grammar)
 
 
 static const wchar_t *__gmr_pattern =
+LEX_DEF("any = [^\\0]")
 LEX_DEF("delim = [\\r\\n\\t ]*")
 LEX_DEF("letter = [A-Z_a-z]")
 LEX_DEF("digit = [0-9]")
@@ -775,7 +776,7 @@ static bool_t __handle_rules(lex_t *lex, lexMatch_t *match, psrGrammar_t *gramma
 		}
 
 
-		while(tok.type == LEXEME && iswalpha(tok.name[0]))
+		while(tok.type == LEXEME && AR_ISWALPHA(tok.name[0]))
 		{
 				bool_t handle_rule;
 				
@@ -813,7 +814,7 @@ static bool_t __handle_rules(lex_t *lex, lexMatch_t *match, psrGrammar_t *gramma
 										
 										if(idx == -1)
 										{
-												if(!iswalpha(tok.name[0]))goto CHECK_POINT;
+												if(!AR_ISWALPHA(tok.name[0]))goto CHECK_POINT;
 												PSR_SetSymb(&tmp, tok.name, True, PSR_MIN_PRIOVAL, PSR_ASSO_NOASSO, PSR_MIN_NONTERM_ID);
 												tmp.id = PSR_NONTERM_ID_INRULE;
 												PSR_InsertSymb(&body, &tmp);
@@ -973,8 +974,8 @@ static bool_t __parse_grammar_pattern(const wchar_t *input, psrGrammar_t *gmr)
 		psrGrammarToken_t tok;
 		if(input == NULL)return False;
 
-		lex = LEX_CreateLex();
-		LEX_Build(lex, __gmr_pattern);
+		lex = LEX_CreateLex(__gmr_pattern);
+		AR_ASSERT(lex != NULL);
 		LEX_InitMatch(&match, input);
 		
 		
@@ -1016,11 +1017,12 @@ static bool_t __parse_grammar_pattern(const wchar_t *input, psrGrammar_t *gmr)
 		{
 				goto INVALID_POINT;
 		}
-		LEX_Destroy(lex);
+		LEX_UnInitMatch(&match);
+		LEX_DestroyLex(lex);
 		return __check_grammar_is_valid(gmr);
 
 INVALID_POINT:
-		LEX_Destroy(lex);
+		LEX_DestroyLex(lex);
 		return False;
 }
 

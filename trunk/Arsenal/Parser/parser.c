@@ -14,10 +14,39 @@
 #include "..\Lex\lex.h"
 
 
+typedef struct __parser_node_set_tag
+{
+		psrNode_t		**nodes;
+		size_t			count;
+		size_t			cap;
+}psrNodeSet_t;
 
+void PSR_InitNodeSet(psrNodeSet_t *nodes)
+{
+		AR_MSET0(nodes, sizeof(*nodes));
+}
 
+void PSR_UnInitNodeSet(psrNodeSet_t *nodes)
+{
+		AR_DEL(nodes->nodes);
+		AR_MSET0(nodes, sizeof(*nodes));
+}
 
+void PSR_InsertToNodeSet(psrNodeSet_t *nodes, psrNode_t *node)
+{
+		if(nodes->count == nodes->cap)
+		{
+				nodes->cap = (nodes->cap + 1)*2;
+				nodes->nodes = AR_REALLOC(psrNode_t*, nodes->nodes, nodes->cap);
+		}
 
+		nodes->nodes[nodes->count++] = node;
+}
+
+void PSR_ClearNodeSet(psrNodeSet_t *set)
+{
+		set->count = 0;
+}
 
 
 
@@ -72,35 +101,31 @@ psrStackFrame_t* PSR_TopStack(psrStack_t *stack)
 }
 
 
+/****************************************************Parser*****************************************************/
+
+
+void	  PSR_DestroyParser(parser_t *parser)
+{
+		if(parser != NULL)
+		{
+				PSR_DestroyActionTable(parser->tbl);
+				PSR_DestroyGrammar(parser->grammar);
+				AR_DEL(parser);
+		}
+}
 
 
 
-
-
-
-parser_t* PSR_CreateParser(const wchar_t *lex, const wchar_t *grammar, psrLeaf_func leaf_func, psrNode_func node_func, psrDestroy_func destroy_func, psrEngineType_t type)
+parser_t* PSR_CreateParser(const wchar_t *grammar, psrEngineType_t type)
 {
 		parser_t *parser;
-		AR_ASSERT(lex != NULL && grammar != NULL && leaf_func != NULL && node_func != NULL && destroy_func != NULL);
+		AR_ASSERT(grammar != NULL);
 
 		parser = AR_NEW0(parser_t);
-		parser->leaf_func = leaf_func;
-		parser->node_func = node_func;
-		parser->destroy_func = destroy_func;
-		parser->lex = LEX_CreateLex();
 		
-		if(LEX_Build(parser->lex, lex)  != LEX_NO_ERROR)
-		{
-				LEX_Destroy(parser->lex);
-				AR_DEL(parser);
-				return NULL;
-		}
-
 		parser->grammar = PSR_BuildGrammar(grammar);
 		if(parser->grammar == NULL)
 		{
-				
-				LEX_Destroy(parser->lex);
 				AR_DEL(parser);
 				return NULL;
 		}
@@ -128,7 +153,7 @@ parser_t* PSR_CreateParser(const wchar_t *lex, const wchar_t *grammar, psrLeaf_f
 
 
 
-
+#if(0)
 static bool_t __get_token(lex_t *lex, lexMatch_t *match, psrToken_t *tok)
 {
 		while(True)
@@ -137,10 +162,17 @@ static bool_t __get_token(lex_t *lex, lexMatch_t *match, psrToken_t *tok)
 				{
 						if(match->err == LEX_RUN_EOI)
 						{
+								/*
 								tok->lex_type = PSR_EOISymb->val;
 								tok->line = match->x;
 								tok->col = match->y;
 								AR_WSTRCPY(tok->value, PSR_EOISymb->name);
+								*/
+								tok->type = PSR_EOISymb->val;
+								tok->tok = PSR_EOISymb->name;
+								tok->count = AR_WSTRLEN(PSR_EOISymb->name);
+								tok->x = match->x;
+								tok->y = match->y;
 								return True;
 						}else
 						{
@@ -160,56 +192,64 @@ static bool_t __get_token(lex_t *lex, lexMatch_t *match, psrToken_t *tok)
 										return False;
 								}else
 								{
+										*tok = match->token;
+										/*
 										AR_WSTRNCPY(tok->value, match->token.tok, match->token.count);
 										tok->value[match->token.count] = L'\0';
 										tok->lex_type = match->token.type;
 										tok->line = match->token.x;
 										tok->col = match->token.y;
+										*/
 										return True;
 								}
 						}
 				}
 		}
 }
+#endif
 
 
-const psrSymb_t* __calc_lookahead(parser_t *parser, lexMatch_t *match, psrToken_t *tok)
+const psrSymb_t* __calc_lookahead(parser_t *parser, psrToken_t *tok, psrCtx_t *ctx)
 {
 		const psrSymb_t *res;
-		if(!__get_token(parser->lex, match, tok))return NULL;
+		
+		if(!ctx->token_f(ctx->ctx,tok))return NULL;
 
-		res = PSR_GetTermSymbByValue(parser->grammar, tok->lex_type);
+		res = PSR_GetTermSymbByValue(parser->grammar, tok->type);
 
 		if(res == NULL)
 		{
-				AR_Error(AR_CRITICAL, L"Lex Error: %s : (%d,%d), %d\r\n", tok->value, tok->line, tok->col, tok->lex_type);
+				wchar_t buf[PSR_MAX_TOKENLEN];
+				AR_WSTRNCPY(buf, tok->tok, tok->count);
+				buf[tok->count] = L'\0';
+				AR_Error(AR_CRITICAL, L"Syntax Error: %s : (%d,%d), %d\r\n", buf, tok->x, tok->y, tok->type);
 				return NULL;
 		}
 		return res;
 
 }
 
-psrNode_t* PSR_Parse(parser_t *parser, const wchar_t *sources)
+
+psrNode_t* PSR_Parse(parser_t *parser, psrCtx_t *ctx)
 {
-		lexMatch_t		match;
-		psrStack_t		stack;
-		psrToken_t		token;
-		psrNode_t		*root;
-		psrStackFrame_t frame;
-		psrNodeSet_t	node_set;
+		psrStack_t				stack;
+		psrToken_t				token;
+		psrNode_t				*root;
+		psrStackFrame_t			frame;
+		psrNodeSet_t			node_set;
 		const psrSymb_t			*lookahead;
 		const psrAction_t		*action;
 		psrStackFrame_t			*top;
 		
+		AR_ASSERT(parser != NULL && ctx != NULL);
 
-		LEX_InitMatch(&match, sources);
 		PSR_InitNodeSet(&node_set);
 		PSR_InitStack(&stack);
 		frame.node = NULL;
 		frame.state = 0;
 		PSR_PushStack(&stack, &frame);
 		
-		lookahead = __calc_lookahead(parser, &match, &token);
+		lookahead = __calc_lookahead(parser, &token, ctx);
 		if(lookahead == NULL)goto INVALID_POINT;
 		root = NULL;
 		while(root == NULL)
@@ -224,10 +264,11 @@ psrNode_t* PSR_Parse(parser_t *parser, const wchar_t *sources)
 				{
 				case PSR_SHIFT:
 				{
-						frame.node = parser->leaf_func(&token);
+						frame.node = ctx->leaf_f(&token,ctx->ctx);
 						frame.state = action->shift_to;
+						AR_ASSERT(action->shift_to < parser->tbl->row);
 						PSR_PushStack(&stack, &frame);
-						lookahead = __calc_lookahead(parser, &match, &token);
+						lookahead = __calc_lookahead(parser, &token, ctx);
 						if(lookahead == NULL)
 						{
 								goto INVALID_POINT;
@@ -238,7 +279,10 @@ psrNode_t* PSR_Parse(parser_t *parser, const wchar_t *sources)
 				{
 						size_t i;
 						const psrSymb_t *head;
+						
 						PSR_ClearNodeSet(&node_set);
+						head = PSR_GetRuleHeadByRuleID(parser->grammar, action->reduce_id);
+						AR_ASSERT(head != NULL);
 
 						if(action->reduce_count == 0)/*如果为0则表明此次规约为产生式空*/
 						{
@@ -254,18 +298,37 @@ psrNode_t* PSR_Parse(parser_t *parser, const wchar_t *sources)
 								}
 								if(node_set.count > 0)
 								{
-										frame.node = parser->node_func(action->reduce_id, &node_set);
-										PSR_PopStack(&stack, action->reduce_count);
+										frame.node = ctx->node_f(action->reduce_id, head->name, node_set.nodes, node_set.count, ctx->ctx);
 								}else
 								{
 										frame.node = NULL;
 								}
 						}
 						
-						head = PSR_GetRuleHeadByRuleID(parser->grammar, action->reduce_id);
-						AR_ASSERT(head != NULL);
-						frame.state = PSR_GetState(parser->tbl, PSR_TopStack(&stack)->state, head);
-						PSR_PushStack(&stack, &frame);
+						PSR_PopStack(&stack, action->reduce_count);
+						AR_ASSERT(PSR_TopStack(&stack)->state < parser->tbl->row);
+						
+						{
+								int next;
+								size_t state;
+								state = PSR_TopStack(&stack)->state;
+								next = PSR_GetState(parser->tbl, state, head);
+								if(next == -1)
+								{
+										wchar_t buf[PSR_MAX_TOKENLEN];
+										AR_WSTRNCPY(buf, token.tok, token.count);
+										buf[token.count] = L'\0';
+										AR_Error(AR_CRITICAL, L"Syntax Error : %s : (%d, %d)\r\n", buf, token.x, token.y);
+										
+										AR_ASSERT(0);
+
+										goto INVALID_POINT;
+								}else
+								{
+										frame.state = (size_t)next;
+										PSR_PushStack(&stack, &frame);
+								}
+						}
 				}
 						break;
 				case PSR_ACCEPT:
@@ -276,7 +339,10 @@ psrNode_t* PSR_Parse(parser_t *parser, const wchar_t *sources)
 						break;	
 				default:/*PSR_ERROR*/
 				{
-						AR_Error(AR_CRITICAL, L"Syntax Error : %s : (%d, %d)\r\n", token.value, token.line, token.col);
+						wchar_t buf[PSR_MAX_TOKENLEN];
+						AR_WSTRNCPY(buf, token.tok, token.count);
+						buf[token.count] = L'\0';
+						AR_Error(AR_CRITICAL, L"Syntax Error : %s : (%d, %d)\r\n", buf, token.x, token.y);
 						goto INVALID_POINT;
 				}
 				}
@@ -285,7 +351,6 @@ psrNode_t* PSR_Parse(parser_t *parser, const wchar_t *sources)
 		AR_ASSERT(root != NULL);
 		PSR_UnInitNodeSet(&node_set);
 		PSR_UnInitStack(&stack);
-		LEX_UnInitMatch(&match);
 		return root;
 INVALID_POINT:
 		{
@@ -294,18 +359,17 @@ INVALID_POINT:
 				{
 						if(stack.frame[i].node != NULL)
 						{
-								parser->destroy_func(stack.frame[i].node);
+								ctx->destroy_f(stack.frame[i].node,ctx->ctx);
 						}
 				}
 		}
 		PSR_UnInitStack(&stack);
-		LEX_UnInitMatch(&match);
 		PSR_UnInitNodeSet(&node_set);
 		return NULL;
 }
 
-
-
+#if(0)
+#endif
 
 
 

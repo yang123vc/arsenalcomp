@@ -29,30 +29,6 @@ typedef struct __lex_tag
 
 
 
-lex_t*			LEX_CreateLex()
-{
-		lex_t *res = AR_NEW0(lex_t);
-		LEX_InitCClass(&res->cclass);
-		LEX_InitStateTable(&res->tbl);
-		return res;
-
-}
-
-void			LEX_Destroy(lex_t *lex)
-{
-		LEX_UnInitCClass(&lex->cclass);
-		LEX_UnInitStateTable(&lex->tbl);
-		/*
-		if(lex->dfa != NULL)
-		{
-				LEX_DestroyDFA(lex->dfa);
-		}
-		*/
-}
-
-
-
-
 
 
 
@@ -84,7 +60,7 @@ const wchar_t* __parse_pattern(lexNode_t *uniroot, lexNameTable_t *tbl, const wc
 						
 						p++;
 						TRIM_STR(p);
-						if(!iswdigit(*p))
+						if(!AR_ISWDIGIT(*p))
 						{
 								err = LEX_BUILD_INVALID_PATTERN;
 								goto INVALID_POINT;
@@ -187,7 +163,7 @@ const wchar_t* __parse_pattern(lexNode_t *uniroot, lexNameTable_t *tbl, const wc
 								return p+1;
 						}
 
-				}else if(iswalpha(*p) || *p == L'_')
+				}else if(AR_ISWALPHA(*p) || *p == L'_')
 				{
 						wchar_t *name, *def;
 						const  wchar_t *pname, *pdef;
@@ -195,7 +171,7 @@ const wchar_t* __parse_pattern(lexNode_t *uniroot, lexNameTable_t *tbl, const wc
 
 						pname = p;
 						name_count = 0;
-						while(iswalnum(*p) || *p == L'_')
+						while(AR_ISWALNUM(*p) || *p == L'_')
 						{
 								p++;name_count++;
 						}
@@ -277,7 +253,7 @@ INVALID_POINT:
 
 
 
-lexError_t		LEX_Build(lex_t *lex, const wchar_t *pattern)
+static lexError_t		__build_lex(lex_t *lex, const wchar_t *pattern)
 {
 		lexNameTable_t tbl;
 		lexCClass_t		cclass;
@@ -341,6 +317,35 @@ INVALID_POINT:
 		LEX_UnInitLeafSet(&leafset);
 		LEX_UnInitCClass(&cclass);
 		return err;
+}
+
+void			LEX_DestroyLex(lex_t *lex)
+{
+		LEX_UnInitCClass(&lex->cclass);
+		LEX_UnInitStateTable(&lex->tbl);
+		/*
+		if(lex->dfa != NULL)
+		{
+				LEX_DestroyDFA(lex->dfa);
+		}
+		*/
+}
+
+lex_t*			LEX_CreateLex(const wchar_t *pattern)
+{
+		lex_t *res = AR_NEW0(lex_t);
+		LEX_InitCClass(&res->cclass);
+		LEX_InitStateTable(&res->tbl);
+
+		if(__build_lex(res, pattern) != LEX_NO_ERROR)
+		{
+				LEX_DestroyLex(res);
+				return NULL;
+		}else
+		{
+				return res;
+		}
+
 }
 
 
@@ -512,5 +517,30 @@ bool_t	LEX_Match(lex_t *lex, lexMatch_t *match)
 				return False;
 		}
 
+
+}
+
+
+void LEX_InitMatch(lexMatch_t *pmatch, const wchar_t *input)
+{
+		AR_ASSERT(pmatch != NULL && input != NULL);
+		AR_MSET0(pmatch, sizeof(*pmatch));
+		pmatch->err = LEX_NO_ERROR;
+		
+		pmatch->x = pmatch->y = 0;
+
+		pmatch->input = AR_NEWARR0(wchar_t, AR_WSTRLEN(input) + 1);
+		AR_WSTRCPY(pmatch->input, input);
+		pmatch->next = pmatch->input;
+}
+
+
+void LEX_UnInitMatch(lexMatch_t *pmatch)
+{
+		if(pmatch != NULL)
+		{
+				AR_DEL(pmatch->input);
+				AR_MSET0(pmatch, sizeof(*pmatch));
+		}
 
 }

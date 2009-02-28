@@ -27,7 +27,7 @@
 
 #include<stdio.h>
 
-
+AR_NAMESPACE_BEGIN
 
 
 typedef AR_INT8_T				int8_t;
@@ -81,23 +81,24 @@ typedef enum
 		AR_FATAL
 };
 
-typedef void (AR_STDCALL *ar_errhandler_t)(int, const wchar_t*);
+typedef void (AR_STDCALL *ArErrorHandler_t)(int, const wchar_t*);
 
-AR_API ar_errhandler_t ar_set_errhdl(ar_errhandler_t hdl);
+ArErrorHandler_t AR_SetErrorHandler(ArErrorHandler_t hdl);
 
-AR_API void ar_error(int level,  const wchar_t *msg, ...);
+void AR_Error(int level,  const wchar_t *msg, ...);
 
 
-typedef void (AR_STDCALL *ar_disphandler_t)(const wchar_t*);
+typedef void (AR_STDCALL *ArPrintHandler_t)(const wchar_t*);
 
-AR_API ar_disphandler_t ar_set_disphdl(ar_disphandler_t hdl);
+ArPrintHandler_t AR_SetPrintHandler(ArPrintHandler_t hdl);
 
-AR_API void ar_printf(const wchar_t *msg,...);
+void AR_Print(const wchar_t *msg,...);
+
+
+
 
 /**************************************************IO**********************************************************************/
 
-#define AR_Printf		ar_printf
-#define AR_Error		ar_error
 
 
 
@@ -112,7 +113,7 @@ AR_API void ar_printf(const wchar_t *msg,...);
 
 
 #if defined(AR_DEBUG)
-		#define AR_DBGPRINT		AR_Printf
+		#define AR_DBGPRINT		Ar_Print
 #else
 		#define AR_DBGPRINT		AR_NOOP
 #endif
@@ -156,11 +157,14 @@ AR_API void ar_printf(const wchar_t *msg,...);
 #define AR_WSTRNCPY(_d, _s, _n)	wcsncpy((_d), (_s), (_n))
 #define AR_WSTRCHR(_s, _c)		wcschr((_s),(_c))
 
-
-
+#define AR_ISWALPHA(_c)			iswalpha((_c))
+#define AR_ISWALNUM(_c)			iswalnum((_c))
+#define AR_ISWDIGIT(_c)			iswdigit((_c))
 /***********************************************************macro_oper*********************************************************/
 
 #define AR_CMP(_a,_b) ((_a) < (_b) ? -1 : ((_a) == (_b) ? 0 : 1))
 
+
+AR_NAMESPACE_END
 
 #endif

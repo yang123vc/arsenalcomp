@@ -616,11 +616,7 @@ lrItemsCollection_t* LALR_CreateItemsCollection(const psrGrammar_t *grammar)
 						}
 				}
 		}
-
-
 		
-		
-
 		return result;
 }
 
