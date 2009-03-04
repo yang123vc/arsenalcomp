@@ -15,7 +15,7 @@
 
 #include "lex.h"
 
-
+AR_NAMESPACE_BEGIN
 
 typedef enum
 {
@@ -237,7 +237,7 @@ void LEX_BuildLeafSet(lexNode_t *root, lexCClass_t *cclass, lexLeafSet_t *leafse
 void LEX_FindPositionByCClassID(lexLeafSet_t *leaf, size_t ccid, lexPositionSet_t *out);
 
 
-
+AR_NAMESPACE_END
 
 #endif
 

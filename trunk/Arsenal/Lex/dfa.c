@@ -12,7 +12,7 @@
  */
 #include "dfa.h"
 
-
+AR_NAMESPACE_BEGIN
 /************************************************DFA Vertex**********************************************************************/
 
 
@@ -493,4 +493,8 @@ void LEX_BuildStateTable(lexStateTable_t *tbl, lexDFAVertex_t *dfa, const lexCCl
 }
 
 #undef __POS
+
+
+AR_NAMESPACE_END
+
 

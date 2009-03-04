@@ -15,7 +15,7 @@
 #include "lex.h"
 
 
-
+AR_NAMESPACE_BEGIN
 
 typedef struct __lex_tag
 {
@@ -544,3 +544,7 @@ void LEX_UnInitMatch(lexMatch_t *pmatch)
 		}
 
 }
+
+
+
+AR_NAMESPACE_END

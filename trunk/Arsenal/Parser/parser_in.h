@@ -16,7 +16,7 @@
 
 #include "parser.h"
 
-
+AR_NAMESPACE_BEGIN
 
 
 
@@ -55,6 +55,10 @@ typedef struct __parser_symbol_tag
 extern const psrSymb_t	*PSR_EpsilonSymb;/*表示空*/
 extern const psrSymb_t	*PSR_EOISymb;   /*表示输入结尾符号*/
 extern const psrSymb_t	*PSR_LALRSymb; /*表示为不在所有字符值集合中的字符，计算LALR语法分析表时使用*/
+extern const psrSymb_t	*PSR_ErrorSymb;/*特殊的错误处理产生式标记终结符，*/
+/*extern const psrSymb_t	*PSR_ErrorOKSymb;*/
+
+
 
 /*以下都为非终结符*/
 extern const psrSymb_t	*PSR_StartSymb;/*第一个符号，被转换为 %Start -> gmr->head[0]*/
@@ -246,6 +250,7 @@ typedef struct __parser_tag
 
 
 
+AR_NAMESPACE_END
 
 
 

@@ -18,6 +18,7 @@
 
 
 
+AR_NAMESPACE_BEGIN
 
 typedef struct	__lex_dfa_vtx_tag lexDFAVertex_t;
 
@@ -109,5 +110,6 @@ AR_INLINE int LEX_GetNextState(const lexStateTable_t *tbl, int curr, size_t id)
 		return tbl->tbl[((size_t)curr) * tbl->col + id];
 }
 
+AR_NAMESPACE_END
 
 #endif

@@ -12,6 +12,7 @@
  */
 #include "lr.h"
 
+AR_NAMESPACE_BEGIN
 
 /********************************************************LR0×Ô¶¯»ú*******************************************************/
 
@@ -619,4 +620,7 @@ lrItemsCollection_t* LALR_CreateItemsCollection(const psrGrammar_t *grammar)
 		
 		return result;
 }
+
+
+AR_NAMESPACE_END
 

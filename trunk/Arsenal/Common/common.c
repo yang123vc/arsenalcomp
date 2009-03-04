@@ -15,6 +15,7 @@
 
 /******************************************************Print**************************************************************/
 
+AR_NAMESPACE_BEGIN
 
 static void AR_STDCALL __def_disp_handler(const wchar_t *msg)
 {
@@ -75,3 +76,5 @@ void AR_Error(int level,  const wchar_t *msg, ...)
 		err_handler(level, buf);
 
 }
+
+AR_NAMESPACE_END

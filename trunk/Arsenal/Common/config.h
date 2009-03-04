@@ -27,17 +27,17 @@
 
 #define AR_C_LINKAGE extern "C"
 
-#define AR_NAMESPACE_BEGIN extern "C" {
+#define AR_NAMESPACE_BEGIN extern "C" { namespace Arsenal {
 
-#define AR_NAMESPACE_END		}
+#define AR_NAMESPACE_END		} }
 
 #else
 
 #define AR_C_LINKAGE extern
 
-#define AR_NAMESPACE_BEGIN
+#define AR_NAMESPACE_BEGIN 
 
-#define AR_NAMESPACE_END		
+#define AR_NAMESPACE_END 
 
 #endif
 

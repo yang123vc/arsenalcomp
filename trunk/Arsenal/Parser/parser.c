@@ -14,6 +14,9 @@
 #include "..\Lex\lex.h"
 
 
+AR_NAMESPACE_BEGIN
+
+
 typedef struct __parser_node_set_tag
 {
 		psrNode_t		**nodes;
@@ -213,7 +216,7 @@ const psrSymb_t* __calc_lookahead(parser_t *parser, psrToken_t *tok, psrCtx_t *c
 {
 		const psrSymb_t *res;
 		
-		if(!ctx->token_f(ctx->ctx,tok))return NULL;
+		if(!ctx->token_f(tok, ctx->ctx))return NULL;
 
 		res = PSR_GetTermSymbByValue(parser->grammar, tok->type);
 
@@ -230,6 +233,91 @@ const psrSymb_t* __calc_lookahead(parser_t *parser, psrToken_t *tok, psrCtx_t *c
 }
 
 
+#if(0)
+返回True表示可以继续，否则表示已经结束分析
+
+
+
+
+static bool_t __handle_error(parser_t *parser, psrStack_t *stack, const psrSymb_t *lookahead, psrCtx_t *ctx)
+{
+		psrToken_t				token;
+		psrNode_t				*root;
+		psrStackFrame_t			frame;
+		psrStack_t				err_stack;
+		psrNodeSet_t			node_set;
+		const psrAction_t		*action;
+		psrStackFrame_t			*top;
+		bool_t					is_ok;
+		action == NULL;
+
+		is_ok = False;
+		while(stack->count != 0 && !is_ok)
+		{
+				top = &stack->frame[stack->count-1];
+				action = PSR_GetAction(parser->tbl, top->state, PSR_ErrorSymb);
+				AR_ASSERT(action != NULL);
+				if(action->type != PSR_ERROR)
+				{
+						AR_ASSERT(action->type == PSR_SHIFT);
+						frame.node = NULL;
+						frame.state = action->shift_to;
+						PSR_InitStack(&err_stack);
+						PSR_PushStack(&err_stack, &frame);
+						is_ok = True;
+				}else
+				{
+						if(top->node != NULL)ctx->destroy_f(top->node);
+						PSR_PopStack(stack, 1);
+				}
+		}
+
+		if(!is_ok)return False;
+
+		top = &err_stack.frame[err_stack.count-1];
+
+		while(err_stack.count > 0)
+		{
+				action = PSR_GetAction(parser->tbl, top->state, lookahead);
+				AR_ASSERT(action != NULL);
+				
+				switch(action->type)
+				{
+				case PSR_SHIFT:
+				{
+						frame.node = NULL;
+						frame.state = action->shift_to;
+						AR_ASSERT(action->shift_to < parser->tbl->row);
+						PSR_PushStack(&err_stack, &frame);
+						
+						lookahead = __calc_lookahead(parser, &token, ctx);
+						if(lookahead == NULL) return False;
+						
+						break;
+				}
+				case PSR_REDUCE:
+				{
+
+						break;
+				}
+				case PSR_ERROR:
+				{
+						lookahead = __calc_lookahead(parser, &token, ctx);
+						if(PSR_CompSymb(lookahead, PSR_EOISymb) == 0)return False;
+						break;
+				}
+				default:/*PSR_ACCEPT*/
+						AR_ASSERT(0);
+						return False;
+				}
+		}
+}
+#endif
+
+
+
+
+
 psrNode_t* PSR_Parse(parser_t *parser, psrCtx_t *ctx)
 {
 		psrStack_t				stack;
@@ -240,18 +328,21 @@ psrNode_t* PSR_Parse(parser_t *parser, psrCtx_t *ctx)
 		const psrSymb_t			*lookahead;
 		const psrAction_t		*action;
 		psrStackFrame_t			*top;
-		
+		bool_t					err_mode;
 		AR_ASSERT(parser != NULL && ctx != NULL);
+
+		;
 
 		PSR_InitNodeSet(&node_set);
 		PSR_InitStack(&stack);
 		frame.node = NULL;
 		frame.state = 0;
 		PSR_PushStack(&stack, &frame);
-		
+		err_mode = False;
 		lookahead = __calc_lookahead(parser, &token, ctx);
 		if(lookahead == NULL)goto INVALID_POINT;
 		root = NULL;
+		
 		while(root == NULL)
 		{
 				top = PSR_TopStack(&stack);
@@ -309,10 +400,12 @@ psrNode_t* PSR_Parse(parser_t *parser, psrCtx_t *ctx)
 						AR_ASSERT(PSR_TopStack(&stack)->state < parser->tbl->row);
 						
 						{
-								int next;
 								size_t state;
+								int next;
 								state = PSR_TopStack(&stack)->state;
 								next = PSR_GetState(parser->tbl, state, head);
+								AR_ASSERT(next != -1);
+								/*
 								if(next == -1)
 								{
 										wchar_t buf[PSR_MAX_TOKENLEN];
@@ -323,12 +416,13 @@ psrNode_t* PSR_Parse(parser_t *parser, psrCtx_t *ctx)
 										AR_ASSERT(0);
 
 										goto INVALID_POINT;
-								}else
-								{
-										frame.state = (size_t)next;
-										PSR_PushStack(&stack, &frame);
-								}
+								}else*/
+								frame.state = (size_t)next;
+								PSR_PushStack(&stack, &frame);
+								
 						}
+
+						err_mode = False;
 				}
 						break;
 				case PSR_ACCEPT:
@@ -339,11 +433,58 @@ psrNode_t* PSR_Parse(parser_t *parser, psrCtx_t *ctx)
 						break;	
 				default:/*PSR_ERROR*/
 				{
+						/*
 						wchar_t buf[PSR_MAX_TOKENLEN];
 						AR_WSTRNCPY(buf, token.tok, token.count);
 						buf[token.count] = L'\0';
 						AR_Error(AR_CRITICAL, L"Syntax Error : %s : (%d, %d)\r\n", buf, token.x, token.y);
 						goto INVALID_POINT;
+						*/
+
+						if(!err_mode)
+						{
+								bool_t is_ok;
+								is_ok = False;
+
+								while(stack.count != 0 && !is_ok)
+								{
+										top = &stack.frame[stack.count-1];
+										action = PSR_GetAction(parser->tbl, top->state, PSR_ErrorSymb);
+										AR_ASSERT(action != NULL);
+										if(action->type != PSR_ERROR)
+										{
+												AR_ASSERT(action->type == PSR_SHIFT);
+												frame.node = NULL;
+												frame.state = action->shift_to;
+												PSR_PushStack(&stack, &frame);
+												is_ok = True;
+										}else
+										{
+												if(top->node != NULL)ctx->destroy_f(top->node,ctx->ctx);
+												PSR_PopStack(&stack, 1);
+										}
+								}
+
+								//if(!is_ok)
+								{
+								wchar_t buf[PSR_MAX_TOKENLEN];
+								AR_WSTRNCPY(buf, token.tok, token.count);
+								buf[token.count] = L'\0';
+								AR_Error(AR_CRITICAL, L"Syntax Error : %s : (%d, %d)\r\n", buf, token.x, token.y);
+								}
+								if(!is_ok)goto INVALID_POINT;
+								err_mode = True;
+						
+						}else
+						{
+								if(PSR_CompSymb(lookahead, PSR_EOISymb) == 0)
+								{
+										goto INVALID_POINT;
+								}else
+								{
+										lookahead = __calc_lookahead(parser, &token, ctx);
+								}
+						}
 				}
 				}
 		}
@@ -367,6 +508,10 @@ INVALID_POINT:
 		PSR_UnInitNodeSet(&node_set);
 		return NULL;
 }
+
+
+AR_NAMESPACE_END
+
 
 #if(0)
 #endif

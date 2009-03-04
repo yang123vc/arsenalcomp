@@ -12,21 +12,28 @@
  */
 #include "parser_in.h"
 
+AR_NAMESPACE_BEGIN
+
 /**********************************************************************************************/
 
 /*以下为终结符*/
 static const psrSymb_t __epsilon_symb	= {L"%EPSILON",	False, 0, PSR_ASSO_NOASSO, NULL, 0};
+static const psrSymb_t __eoi_symb		= {L"%EOI",		False, 0, PSR_ASSO_NOASSO, NULL, PSR_EOI_TOKVAL};
 static const psrSymb_t __lalr_symb		= {L"%LALR",	False, 0, PSR_ASSO_NOASSO, NULL, 2};
 
-static const psrSymb_t __eoi_symb		= {L"%EOI",		False, 0, PSR_ASSO_NOASSO, NULL, PSR_EOI_TOKVAL};
+
+static const psrSymb_t __error_symb		= {L"error",	False, 0, PSR_ASSO_NOASSO, NULL, 3};
+/*static const psrSymb_t __error_ok_symb	= {L"error_ok",	False, 0, PSR_ASSO_NOASSO, NULL, 4};*/
 
 const psrSymb_t	*PSR_EpsilonSymb		= &__epsilon_symb;
 const psrSymb_t	*PSR_EOISymb			= &__eoi_symb;
 const psrSymb_t *PSR_LALRSymb			= &__lalr_symb;
+const psrSymb_t	*PSR_ErrorSymb			= &__error_symb;
+/*const psrSymb_t	*PSR_ErrorOKSymb		= &__error_ok_symb;*/
+
 
 /*以下为非终结符*/
 static const psrSymb_t __start_symb		= {L"%Start",	True,  0, PSR_ASSO_NOASSO, NULL, 0};
-
 const psrSymb_t	*PSR_StartSymb			= &__start_symb;
 
 
@@ -305,4 +312,6 @@ const psrSymb_t* PSR_IndexOfSymbList(const psrSymb_t *lst, size_t index)
 		return curr;
 }
 
+
+AR_NAMESPACE_END
 

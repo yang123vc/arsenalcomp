@@ -18,6 +18,7 @@
 
 
 
+AR_NAMESPACE_BEGIN
 
 
 typedef struct __lr_goto_map_tag
@@ -173,10 +174,7 @@ lrItemsCollection_t* LALR_CreateItemsCollection(const psrGrammar_t *grammar);
 
 
 
-
-
-
-
+AR_NAMESPACE_END
 
 
 

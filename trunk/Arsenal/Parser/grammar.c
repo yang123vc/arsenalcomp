@@ -13,6 +13,8 @@
 #include "parser_in.h"
 #include "..\Lex\lex.h"
 
+AR_NAMESPACE_BEGIN
+
 /********************************************************************************************/
 void			PSR_DestroyGrammar(psrGrammar_t* grammar)
 {
@@ -118,9 +120,11 @@ static void __init_default_tokset(psrGrammar_t *grammar)
 		/*
 				extern const psrSymb_t	*PSR_EpsilonSymb;
 				extern const psrSymb_t	*PSR_EOISymb;
+				PSR_ErrorSymb
 		*/
 		__insert_token_to_grammar(grammar, PSR_EpsilonSymb);
 		__insert_token_to_grammar(grammar, PSR_EOISymb);
+		__insert_token_to_grammar(grammar, PSR_ErrorSymb);
 
 }
 
@@ -282,6 +286,7 @@ static void __calc_follow(psrGrammar_t* grammar)
 		
 		AR_ASSERT(grammar != NULL && grammar->count > 1 && grammar->non_count > 1);
 		changed = True;
+
 		while(changed)
 		{
 				changed = False;
@@ -332,6 +337,8 @@ static void __calc_follow(psrGrammar_t* grammar)
 												}
 												first = first->next;
 										}
+
+										body = body->next;
 								}
 								
 								if(need_continue)
@@ -427,7 +434,7 @@ static void __calc_grammar(psrGrammar_t *grammar)
 		__calc_first(grammar);
 		
 		__calc_follow(grammar);
-
+		
 		AR_ASSERT(grammar->symb_list == NULL);
 
 		for(i = 0; i < grammar->non_count; ++i)
@@ -913,6 +920,7 @@ INVALID_POINT:
 }
 
 
+
 static bool_t __check_grammar_is_valid(const psrGrammar_t *gmr)
 {
 		size_t i,j;
@@ -962,6 +970,32 @@ static bool_t __check_grammar_is_valid(const psrGrammar_t *gmr)
 						}
 				}
 		}
+
+		
+		for(i = 0; i < gmr->count; ++i)
+		{
+				bool_t err_symb;
+				const psrSymb_t *symb;
+				err_symb = False;
+				for(symb = gmr->body[i]; symb != NULL; symb = symb->next)
+				{
+						if(err_symb)
+						{
+								if(PSR_CompSymb(symb, PSR_ErrorSymb) == 0 || symb->non_term)
+								{
+										AR_Error(AR_WARNING, L"Grammar Error: Invalid error definition<%s:%d>!\n", gmr->head[i]->name,gmr->head[i]->id);
+										is_ok = False;
+								}
+						}else
+						{
+								if(PSR_CompSymb(symb, PSR_ErrorSymb) == 0)
+								{
+										err_symb = True;
+								}
+						}
+				}
+		}
+		
 		return is_ok;
 }
 
@@ -994,8 +1028,9 @@ static bool_t __parse_grammar_pattern(const wchar_t *input, psrGrammar_t *gmr)
 		
 		if(!__handle_token_def(lex, &match, gmr))goto INVALID_POINT;
 
-
+		
 		__get_token(lex, &match, &tok, PREC_DEF_BEGIN);
+
 		if(tok.type == PREC_DEF_BEGIN)
 		{
 				if(!__handle_token_prio(lex, &match, gmr))
@@ -1006,7 +1041,6 @@ static bool_t __parse_grammar_pattern(const wchar_t *input, psrGrammar_t *gmr)
 		}
 		
 		
-
 		if(tok.type != RULES_DEF_BEGIN)
 		{
 				__GMR_ERROR(match.next, match.x, match.y, PSR_INVALID_GRAMMAR_PATTERN);
@@ -1019,7 +1053,9 @@ static bool_t __parse_grammar_pattern(const wchar_t *input, psrGrammar_t *gmr)
 		}
 		LEX_UnInitMatch(&match);
 		LEX_DestroyLex(lex);
+
 		return __check_grammar_is_valid(gmr);
+
 
 INVALID_POINT:
 		LEX_DestroyLex(lex);
@@ -1040,7 +1076,7 @@ psrGrammar_t*	PSR_BuildGrammar(const wchar_t *input)
 		__insert_rule_to_grammar(res, PSR_StartSymb,NULL);
 		
 		if(!__parse_grammar_pattern(input, res))
-		{
+		{		
 				PSR_DestroyGrammar(res);
 				return NULL;
 		}else
@@ -1052,3 +1088,4 @@ psrGrammar_t*	PSR_BuildGrammar(const wchar_t *input)
 
 
 
+AR_NAMESPACE_END

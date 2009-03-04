@@ -12,6 +12,9 @@
  */
 #include "lr.h"
 
+AR_NAMESPACE_BEGIN
+
+
 int PSR_CompLRItem(const psrLRItem_t *left, const psrLRItem_t *right)
 {
 		size_t l_id,r_id;
@@ -213,3 +216,7 @@ bool_t	 PSR_IsIncludesLRItemList(const psrLRItem_t *left, const psrLRItem_t *rig
 
 		return l == NULL ? True : False;
 }
+
+
+AR_NAMESPACE_END
+

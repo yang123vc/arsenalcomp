@@ -13,7 +13,7 @@
 #include "lr.h"
 /*****************************************************”Ô∑®∑÷Œˆ±Ì*******************************************************/
 
-
+AR_NAMESPACE_BEGIN
 
 #define __TBL_POS(_tbl, _x,_y, _col) ((_tbl)[(_x)*(_col) + _y])
 
@@ -730,3 +730,6 @@ psrActionTable_t* PSR_BuildActionTable_LALR(const psrGrammar_t *grammar)
 
 
 }
+
+
+AR_NAMESPACE_END

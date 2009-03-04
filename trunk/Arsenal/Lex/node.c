@@ -12,6 +12,7 @@
  */
 #include "node.h"
 
+AR_NAMESPACE_BEGIN
 
 void LEX_InitCharSet(lexCharSet_t *cset)
 {
@@ -2068,3 +2069,4 @@ void LEX_FindPositionByCClassID(lexLeafSet_t *leaf, size_t ccid, lexPositionSet_
 }
 
 
+AR_NAMESPACE_END
