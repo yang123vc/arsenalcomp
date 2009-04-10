@@ -1,0 +1,50 @@
+LIBRARY   Arsenal
+EXPORTS
+
+
+;Arsenal
+
+Arsenal_Init	@1
+Arsenal_UnInit	@2
+
+;Lex
+AR_LEX_CreateMatch	@100
+AR_LEX_DestroyMatch	@101
+
+AR_LEX_Create		@102
+AR_LEX_Destroy		@103
+AR_LEX_Clear		@104
+;AR_LEX_InsertName	@105
+;AR_LEX_InsertRule	@106
+
+AR_LEX_Insert		@107
+
+AR_LEX_GenerateTransTable	@108
+AR_LEX_Match		@109
+AR_LEX_GetNextInput	@110
+
+AR_LEX_ResetMatch	@111
+
+AR_PSR_CreateGrammar	@200
+AR_PSR_DestroyGrammar	@201
+AR_PSR_ClearGrammar		@202
+AR_PSR_ConfigGrammar	@203
+AR_PSR_PrintGrammar		@205
+AR_PSR_CheckIsValidGrammar	@206
+
+;Parser
+
+
+AR_PSR_Create		@300
+AR_PSR_Destroy		@301
+AR_PSR_Clear		@302
+AR_PSR_GetRoot		@303
+AR_PSR_PrintConflict	@304
+AR_PSR_PrintActionTable	@305
+AR_PSR_AddToken			@306
+
+AR_PSR_Create2			@307
+
+;Test
+AR_Test				@1024
+

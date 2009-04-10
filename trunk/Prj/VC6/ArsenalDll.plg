@@ -1,0 +1,124 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: ArsenalDll - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\Temp\RSP49.tmp" with contents
+[
+/nologo /MDd /W4 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "ARSENAL_EXPORTS" /D "AR_EXPORTS" /D "AR_SHARED_LIB" /FR"..\..\Temp\x86\DLLDebug\\" /Fp"..\..\Temp\x86\DLLDebug\ArsenalDll.pch" /YX /Fo"..\..\Temp\x86\DLLDebug\\" /Fd"..\..\Temp\x86\DLLDebug\\" /FD /GZ /c 
+"D:\User\Desktop\Arsenal\Arsenal\Common\common.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\spec.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\string.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\dfa.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\expr.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\lex.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\node.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\grammar.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\grammar_config.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\lr_action.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\lr_core.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\lr_dfa.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\lr_item.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\parser.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\symbol.c"
+"D:\User\Desktop\Arsenal\Arsenal\Test\com_test.c"
+"D:\User\Desktop\Arsenal\Arsenal\Test\lex_test.c"
+"D:\User\Desktop\Arsenal\Arsenal\Test\lr_test.c"
+"D:\User\Desktop\Arsenal\Arsenal\Test\parser_test.c"
+"D:\User\Desktop\Arsenal\Arsenal\Test\test.c"
+"D:\User\Desktop\Arsenal\Arsenal\Arsenal.c"
+]
+Creating command line "cl.exe @C:\Temp\RSP49.tmp" 
+Creating temporary file "C:\Temp\RSP4A.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /incremental:yes /pdb:"..\..\Binary\x86\DLL\Debug\ArsenalDll.pdb" /debug /machine:I386 /def:".\export.def" /out:"..\..\Binary\x86\DLL\Debug\ArsenalDll.dll" /implib:"..\..\Binary\x86\DLL\Debug\ArsenalDll.lib" /pdbtype:sept 
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\common.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\spec.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\string.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\dfa.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\expr.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\lex.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\node.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\grammar.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\grammar_config.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\lr_action.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\lr_core.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\lr_dfa.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\lr_item.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\parser.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\symbol.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\com_test.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\lex_test.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\lr_test.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\parser_test.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\test.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\Arsenal.obj
+]
+Creating command line "link.exe @C:\Temp\RSP4A.tmp"
+<h3>Output Window</h3>
+Compiling...
+common.c
+spec.c
+string.c
+dfa.c
+expr.c
+lex.c
+node.c
+grammar.c
+grammar_config.c
+lr_action.c
+lr_core.c
+lr_dfa.c
+lr_item.c
+parser.c
+symbol.c
+com_test.c
+c:\program files\microsoft visual studio\vc98\include\rpcasync.h(45) : warning C4115: '_RPC_ASYNC_STATE' : named type definition in parentheses
+lex_test.c
+lr_test.c
+D:\User\Desktop\Arsenal\Arsenal\Test\lr_test.c(349) : warning C4206: nonstandard extension used : translation unit is empty
+parser_test.c
+test.c
+Arsenal.c
+c:\program files\microsoft visual studio\vc98\include\rpcasync.h(45) : warning C4115: '_RPC_ASYNC_STATE' : named type definition in parentheses
+Linking...
+   Creating library ..\..\Binary\x86\DLL\Debug\ArsenalDll.lib and object ..\..\Binary\x86\DLL\Debug\ArsenalDll.exp
+ArsenalDll.exp : warning LNK4070: /OUT:Arsenal.dll directive in .EXP differs from output filename "..\..\Binary\x86\DLL\Debug\ArsenalDll.dll"; ignoring directive
+Creating temporary file "C:\Temp\RSP4E.tmp" with contents
+[
+/nologo /o"..\..\Binary\x86\DLL\Debug\ArsenalDll.bsc" 
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\common.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\spec.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\string.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\dfa.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\expr.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\lex.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\node.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\grammar.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\grammar_config.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\lr_action.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\lr_core.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\lr_dfa.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\lr_item.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\parser.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\symbol.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\com_test.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\lex_test.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\lr_test.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\parser_test.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\test.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\Arsenal.sbr]
+Creating command line "bscmake.exe @C:\Temp\RSP4E.tmp"
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+ArsenalDll.dll - 0 error(s), 4 warning(s)
+</pre>
+</body>
+</html>
