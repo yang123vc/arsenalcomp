@@ -27,9 +27,6 @@ typedef struct __lex_tag
 		lexStateTable_t	tbl;
 		lexCClass_t		cclass;
 
-		size_t			*skip_list;
-		size_t			skip_count;
-		size_t			skip_cap;
 }lex_t;
 
 
@@ -41,10 +38,6 @@ lex_t*	LEX_Create()
 		LEX_InitCClass(&res->cclass);
 		
 		res->uni_root = LEX_CreateNode(LEX_BRANCH);
-
-		res->skip_list = NULL;
-		res->skip_count = 0;
-		res->skip_cap = 0;
 
 		return res;
 }
@@ -60,10 +53,7 @@ void	LEX_Destroy(lex_t *lex)
 		LEX_UnInitStateTable(&lex->tbl);
 		LEX_UnInitCClass(&lex->cclass);
 		LEX_DestroyNode(lex->uni_root);
-		if(lex->skip_list)
-		{
-				AR_DEL(lex->skip_list);
-		}
+
 		AR_DEL(lex);
 }
 
@@ -123,9 +113,21 @@ bool	LEX_Insert(lex_t *lex, const wchar_t *input)
 		AR_ASSERT(lex != NULL && input != NULL);
 		p = AR_wcstrim(input, L" \t");
 		
-		if(AR_iswdigit(*p))/*action*/
+		if(AR_iswdigit(*p) || *p == L'%')/*action*/
 		{
 				lexAction_t		act;
+				bool			is_skip;
+				
+				is_skip = false;
+				if(*p == L'%')
+				{
+						if(AR_wcsstr(p, L"%skip") == NULL)return false;
+
+						p = AR_wcstrim(p + AR_wcslen(L"%skip"), L" \t");
+						is_skip = true;
+				}
+
+				
 				act.priority = act.type = 0;
 				p = AR_wtou(p, &act.type, 10);
 				if(p == NULL)return false;
@@ -139,7 +141,8 @@ bool	LEX_Insert(lex_t *lex, const wchar_t *input)
 				}
 
 				p = AR_wcstrim(p, L" \t");
-				
+
+				act.is_skip = is_skip;
 				return LEX_InsertRule(lex, p, &act);
 		}else if(AR_iswalpha(*p) || *p == L'_')
 		{
@@ -170,7 +173,6 @@ void	LEX_Clear(lex_t *lex)
 {
 		LEX_DestroyNode(lex->uni_root);
 		LEX_DestroyNameList(lex->name_tbl);
-		lex->skip_count = 0;
 		lex->uni_root = LEX_CreateNode(LEX_BRANCH);
 		lex->name_tbl = NULL;
 }
@@ -199,7 +201,7 @@ bool	LEX_GenerateTransTable(lex_t *lex)
 }
 
 
-
+/*
 void	LEX_InsertSkipAction(lex_t *lex, size_t action_type)
 {
 		size_t i;
@@ -219,7 +221,7 @@ void	LEX_InsertSkipAction(lex_t *lex, size_t action_type)
 
 		lex->skip_list[lex->skip_count++] = action_type;
 }
-
+*/
 
 /*********************************lexMatch_t***************************/
 void LEX_ResetMatch(lexMatch_t *pmatch, const wchar_t *input)
@@ -252,17 +254,7 @@ void LEX_UnInitMatch(lexMatch_t *pmatch)
 		}
 }
 
-static bool __is_skiped(const lex_t *lex, size_t type)
-{
-		size_t i;
-		AR_ASSERT(lex != NULL);
 
-		for(i = 0; i < lex->skip_count; ++i)
-		{
-				if(lex->skip_list[i] == type)return true;
-		}
-		return false;
-}
 
 bool LEX_Match(lex_t *lex, lexMatch_t *match, lexToken_t *tok)
 {
@@ -329,12 +321,13 @@ RE_MATCH_POINT:
 
 		if(accepted != -1)
 		{
+				
 				tok->type = lex->tbl.actions[accepted].type;
 				tok->count = count;
 				match->next = match->next + count;
 				match->is_ok = true;
 				
-				if(__is_skiped(lex, tok->type))goto RE_MATCH_POINT;
+				if(lex->tbl.actions[accepted].is_skip)goto RE_MATCH_POINT;
 
 		}else
 		{

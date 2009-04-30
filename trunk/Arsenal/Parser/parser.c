@@ -16,7 +16,7 @@
 #include "parser.h"
 #include "grammar.h"
 #include "lr_action.h"
-
+#include "parser_aux.h"
 
 
 AR_NAMESPACE_BEGIN
@@ -26,167 +26,33 @@ AR_NAMESPACE_BEGIN
 
 
 
-/***************************************************辅助数据结构**********************************************/
-
-
-typedef struct __parser_node_set_tag
-{
-		psrNode_t		**nodes;
-		size_t			count;
-		size_t			cap;
-}psrNodeSet_t;
-
-void PSR_InitNodeSet(psrNodeSet_t *nodes)
-{
-		AR_memset(nodes, 0, sizeof(*nodes));
-}
-
-void PSR_UnInitNodeSet(psrNodeSet_t *nodes)
-{
-		AR_DEL(nodes->nodes);
-		AR_memset(nodes, 0, sizeof(*nodes));
-}
-
-void PSR_InsertToNodeSet(psrNodeSet_t *nodes, psrNode_t *node)
-{
-		if(nodes->count == nodes->cap)
-		{
-				nodes->cap = (nodes->cap + 1)*2;
-				nodes->nodes = AR_REALLOC(psrNode_t*, nodes->nodes, nodes->cap);
-		}
-
-		nodes->nodes[nodes->count++] = node;
-}
-
-void PSR_ClearNodeSet(psrNodeSet_t *set)
-{
-		set->count = 0;
-}
-
-
-
-
-
-typedef struct __stack_frame_tag
-{
-		size_t			state;
-		psrNode_t		*node;
-}psrStackFrame_t;
-
-typedef struct __parser_stack_tag
-{
-		psrStackFrame_t	 *frame;
-		size_t			 count;
-		size_t			 cap;
-}psrStack_t;
-
-
-void PSR_PushStack(psrStack_t *stack, psrStackFrame_t *frame)
-{
-		if(stack->count == stack->cap)
-		{
-				stack->cap = (stack->cap + 1)*2;
-				stack->frame = AR_REALLOC(psrStackFrame_t, stack->frame, stack->cap);
-		}
-
-		stack->frame[stack->count++] = *frame;
-}
-
-void PSR_PopStack(psrStack_t *stack, size_t n)
-{
-		AR_ASSERT(n <= stack->count);
-		stack->count -= n;
-}
-
-psrStackFrame_t* PSR_TopStack(psrStack_t *stack)
-{
-		if(stack->count == 0)return NULL;
-		return &(stack->frame[stack->count-1]);
-}
-
-
-void PSR_InitStack(psrStack_t *stack)
-{
-		AR_memset(stack, 0,sizeof(*stack));
-
-}
-void PSR_UnInitStack(psrStack_t *stack)
-{
-		AR_DEL(stack->frame);
-		AR_memset(stack, 0,sizeof(*stack));
-}
 
 
 /****************************************************Parser*****************************************************/
-
-
-void	  PSR_Clear(parser_t *parser)
-{
-		size_t i;
-		AR_ASSERT(parser != NULL && parser->stack != NULL);
-		parser->is_inerr = false;
-		parser->is_accepted = false;
-		for(i = 0; i < parser->stack->count; ++i)
-		{
-				if(parser->stack->frame[i].node != NULL)
-				{
-						parser->ctx.free_f(parser->stack->frame[i].node, parser->ctx.ctx);
-				}
-		}
-
-		PSR_ClearNodeSet(parser->node_set);
-		PSR_UnInitStack(parser->stack);
-		PSR_InitStack(parser->stack);
-		
-}
-
-
-void	  PSR_DestroyParser(parser_t *parser)
-{
-		if(parser != NULL)
-		{
-				size_t i;
-				
-				for(i = 0; i < parser->term_count; ++i)
-				{
-						PSR_DestroySymb(parser->term_set[i]);
-				}
-				AR_DEL((psrSymb_t**)parser->term_set);
-
-				PSR_UnInitStack(parser->stack);
-				AR_DEL(parser->stack);
-
-				PSR_UnInitNodeSet(parser->node_set);
-				AR_DEL(parser->node_set);
-
-				PSR_DestroyActionTable(parser->tbl);
-				PSR_UnInitGrammar(parser->grammar);
-				AR_DEL(parser->grammar);
-				AR_DEL(parser);
-		}
-}
 
 
 
 parser_t* PSR_CreateParser(const psrGrammar_t *grammar, psrModeType_t type, const psrCtx_t *ctx)
 {
 		parser_t *parser;
+		size_t i;
 		AR_ASSERT(grammar != NULL && ctx != NULL);
+		
+		AR_ASSERT(ctx->error_f != NULL && ctx->free_f != NULL);
 
 		parser = AR_NEW0(parser_t);
-		parser->grammar = AR_NEW0(psrGrammar_t);
-		PSR_InitGrammar(parser->grammar);
-		PSR_CopyGrammar(parser->grammar, grammar);
-		parser->stack = AR_NEW0(psrStack_t);
-		PSR_InitStack(parser->stack);
-
-		parser->node_set = AR_NEW0(psrNodeSet_t);
-		PSR_InitNodeSet(parser->node_set);
-
-		parser->ctx = *ctx;
-		AR_ASSERT( parser->ctx.free_f != NULL && parser->ctx.node_f != NULL && parser->ctx.leaf_f != NULL);
+		parser->grammar = (psrGrammar_t*)grammar;
 		
-		parser->is_inerr = false;
+		parser->state_stack = AR_NEW0(psrStack_t);
+		PSR_InitStack(parser->state_stack);
+		
+		parser->node_stack = AR_NEW0(psrNodeStack_t);
+		PSR_InitNodeStack(parser->node_stack);
+		
+		parser->user = *ctx;
+		parser->is_repair = false;
+		parser->is_accepted = false;
+
 		switch(type)
 		{
 		case PSR_SLR:
@@ -200,132 +66,128 @@ parser_t* PSR_CreateParser(const psrGrammar_t *grammar, psrModeType_t type, cons
 				break;
 		}
 
+		parser->msg_count = parser->tbl->row;
+		parser->msg_set = AR_NEWARR0(psrExpectedMsg_t, parser->msg_count);
+
+		for(i = 0; i < parser->msg_count; ++i)
 		{
-				int_t i,j;
-				const psrSymbList_t *lst;
-				lst = PSR_GetSymbList(grammar);
-				parser->term_count = 0;
-				parser->term_set = AR_NEWARR0(const psrSymb_t*, lst->count);
+				PSR_InitExpectedMsg(&parser->msg_set[i], PSR_GetExpectedSymb(parser->tbl, i));
+		}
 
-				for(i = 0; i < (int_t)lst->count; ++i)
+		parser->term_tbl = PSR_CreateTermInfoTable();
+		
+		
+		{
+				const psrTermInfoList_t *tlst = &parser->grammar->term_list;
+				
+				for(i = 0; i < tlst->count; ++i)
 				{
-						if(lst->lst[i]->type == PSR_TERM)
-						{
-								parser->term_set[parser->term_count++] = PSR_CopyNewSymb(lst->lst[i]);
-						}
-				}
-
-				for(i = 0; i < (int_t)parser->term_count; ++i)
-				{
-						for(j = i;j > 0; --j)
-						{
-								if(parser->term_set[j]->val < parser->term_set[j-1]->val)
-								{
-										const psrSymb_t *tmp = parser->term_set[j-1];
-										parser->term_set[j-1] = parser->term_set[j];
-										parser->term_set[j] = tmp;
-								}
-						}
+						PSR_InsertToTermInfoTable(parser->term_tbl, &tlst->lst[i]);
 				}
 		}
-		parser->is_accepted = false;
+		
 		return parser;
 }
 
-const psrSymb_t* __find_term_symb(const parser_t *parser, size_t val)
+
+
+void	  PSR_Clear(parser_t *parser)
 {
-		int_t l,r,m,cmp;
-		l = 0; r = parser->term_count-1;
-		
-		while(l <= r)
-		{
-				m = (l + r)/2;
-				cmp = AR_CMP(parser->term_set[m]->val, val);
+		size_t i;
+		AR_ASSERT(parser != NULL);
 
-				if(cmp < 0)
-				{
-						l = m + 1;
-				}else if(cmp == 0)
-				{
-						return parser->term_set[m];
-				}else
-				{
-						r = m -1;
-				}
-		}
-
-		return NULL;
-}
-
-
-psrNode_t* PSR_GetResult(parser_t *parser)/*在状态为accepted之后才可以调用*/
-{
-		psrNode_t *res;
-		psrStackFrame_t *frame;
-		AR_ASSERT(parser != NULL && parser->is_accepted);
-		if(!parser->is_accepted)return NULL;
-		AR_ASSERT(parser->stack->count == 2);
-		frame = PSR_TopStack(parser->stack);
-		res = frame->node;
-		PSR_PopStack(parser->stack, 1);
+		parser->is_repair = false;
 		parser->is_accepted = false;
-		AR_ASSERT(parser->stack->count == 1);
-		return res;
+		
+		for(i = 0; i < parser->node_stack->count; ++i)
+		{
+				if(parser->node_stack->nodes[i])parser->user.free_f(parser->node_stack->nodes[i], parser->user.ctx);
+		}
+
+		PSR_ClearNodeStack(parser->node_stack);
+		PSR_ClearStack(parser->state_stack);
 }
 
 
-psrError_t PSR_AddToken(parser_t *parser, const psrToken_t *tok)
-{
-		const psrSymb_t *lookahead;
-		const psrStackFrame_t *top;
-		const psrAction_t	  *action;
-		
-		psrError_t		err;
-		bool			is_done;
-		
 
-		AR_ASSERT(parser != NULL && !parser->is_accepted && tok != NULL);
-		
-		
-		err = PSR_ERR_OK;
-		
-		if(parser->stack->count == 0)
+void	  PSR_DestroyParser(parser_t *parser)
+{
+		if(parser != NULL)
 		{
-				psrStackFrame_t frame = {0, NULL};
-				PSR_PushStack(parser->stack, &frame);
+				size_t i;
+				PSR_Clear(parser);
+
+				for(i = 0; i < parser->msg_count; ++i)
+				{
+						PSR_UnInitExpectedMsg(&parser->msg_set[i]);
+				}
+				AR_DEL(parser->msg_set);
+
+				PSR_DestroyTermInfoTable(parser->term_tbl);
+				PSR_DestroyActionTable(parser->tbl);
+				PSR_DestroyGrammar(parser->grammar);
+				
+				PSR_UnInitNodeStack(parser->node_stack);
+				AR_DEL(parser->node_stack);
+				
+				PSR_UnInitStack(parser->state_stack);
+				AR_DEL(parser->state_stack);
+				AR_DEL(parser);
+		}
+}
+
+
+static void __handle_reduce(parser_t *parser, const psrAction_t *action)
+{
+		psrNode_t **nodes;
+		psrNode_t *new_node;
+		size_t	  next_state;
+		AR_ASSERT(parser != NULL && action != NULL && action->type == PSR_REDUCE);
+		
+		/*
+		if(action->reduce_count > 0)
+		{
+				nodes = &parser->node_stack->nodes[parser->node_stack->count - action->reduce_count];
+				new_node = action->rule->rule_f(nodes, action->reduce_count, parser->user.ctx);
+
+		}else
+		{
+				new_node = NULL;	
+		}
+		*/
+
+		nodes = &parser->node_stack->nodes[parser->node_stack->count - action->reduce_count];
+
+		if(action->rule->rule_f != NULL)
+		{
+				new_node = action->rule->rule_f(nodes, action->reduce_count, action->rule->head->name, parser->user.ctx);
+		}else
+		{
+				new_node = NULL;
+		}
+
+		if(action->reduce_count > 0)
+		{
+				PSR_PopStack(parser->state_stack, action->reduce_count);
+				PSR_PopNodeStack(parser->node_stack, action->reduce_count);
 		}
 		
-		is_done = false;
+		next_state = PSR_GetState(parser->tbl, PSR_TopStack(parser->state_stack), action->rule->head);
+		PSR_PushStack(parser->state_stack, next_state);
+		PSR_PushNodeStack(parser->node_stack, new_node);
+}
+
+
+
+static void __handle_shift(parser_t *parser, size_t shift_to, const psrToken_t *tok, const psrTermInfo_t *term)
+{
+		psrNode_t		*new_node;
 		
-		while(!is_done)
-		{
-				psrStackFrame_t frame;
+		AR_ASSERT(parser != NULL && tok != NULL && term != NULL && term->leaf_f != NULL);
 
-				//lookahead = PSR_FindTermByValue(parser->grammar, tok->tokval);
-//				lookahead = __find_term_symb(parser, tok->tokval);
-				lookahead = __find_term_symb(parser, tok->type);
-				if(lookahead == NULL)
-				{
-						top = PSR_TopStack(parser->stack);
-						action = (const psrAction_t*)PSR_ErrorAction;
-				}else
-				{
-						top = PSR_TopStack(parser->stack);
-						action = PSR_GetAction(parser->tbl, top->state, lookahead);
-				}
-				
-				
-				switch(action->type)
-				{
-				case PSR_SHIFT:
-				{
-
-						AR_ASSERT(action->shift_to < parser->tbl->row);
-						frame.node = parser->ctx.leaf_f(tok,parser->ctx.ctx);
-						frame.state = action->shift_to;
-						PSR_PushStack(parser->stack, &frame);
-						is_done = true;
-
+		PSR_PushStack(parser->state_stack, shift_to);
+		new_node = term->leaf_f(tok, parser->user.ctx);
+		PSR_PushNodeStack(parser->node_stack, new_node);
 
 /*
 		将parser状态从error转回正常状态只有在当前状态上存在移入，例如：
@@ -338,123 +200,183 @@ psrError_t PSR_AddToken(parser_t *parser, const psrToken_t *tok)
 		B -> A ";";
 		这里假如A有任何错误，将在移入':'后清除规约状态；
 */
-						if(parser->is_inerr)parser->is_inerr = false;
+		if(parser->is_repair)parser->is_repair = false;
+}
+
+static bool __error_recovery(parser_t *parser, const psrToken_t *tok)
+{		
+		
+		AR_ASSERT(parser != NULL);
+		
+		if(!parser->is_repair)
+		{
+				bool found;
+				
+				
+				{
+				size_t top_state;
+				top_state = PSR_TopStack(parser->state_stack);
+				AR_ASSERT(top_state < parser->msg_count);
+				parser->user.error_f(tok, parser->msg_set[top_state].msg, parser->msg_set[top_state].count, parser->user.ctx);
 				}
+
+				found = false;
+
+				while(parser->state_stack->count > 0 && !found)
+				{
+						size_t top;
+						const psrAction_t *action;
+
+						top = PSR_TopStack(parser->state_stack);
+						action = PSR_GetAction(parser->tbl, top, PSR_ErrorSymb);
+						
+						AR_ASSERT(action != NULL);
+						
+/*
+		应该找到一个在error上有shift动作的状态，之后移入NULL替代终结符error，如果存在规约，则需要先行规约(当然，规约后就是移入error了),如果error不是合法的输入，
+		则向上pop stack和相关节点
+*/
+						if(action->type == PSR_REDUCE)
+						{
+								__handle_reduce(parser, action);
+						}else if(action->type == PSR_ERROR)
+						{
+								psrNode_t *top_node;
+								
+								top_node = PSR_TopNodeStack(parser->node_stack);
+								if(top_node)parser->user.free_f(top_node, parser->user.ctx);
+								PSR_PopStack(parser->state_stack, 1);
+								PSR_PopNodeStack(parser->node_stack, 1);
+						
+						}else if(action->type == PSR_SHIFT)
+						{
+								PSR_PushStack(parser->state_stack, action->shift_to);
+								PSR_PushNodeStack(parser->node_stack, NULL);
+								found = true;
+						}else
+						{
+								/*只有EOI符号才可能导致一个accept动作*/
+								AR_ASSERT(false);
+						}
+				}
+				parser->is_repair = true;
+				return found;
+		}else
+		{
+
+/*
+		在repair模式，任何不合法的输入都会丢弃，并且不显示任何错误信息，当输入为EOI时，则调用error_f报告已达EOI;
+*/
+				const psrSymb_t *symb;
+				symb = PSR_FindTermFromInfoTable(parser->term_tbl, tok->type)->term;
+
+				if(PSR_CompSymb(PSR_EOISymb, symb) == 0)
+				{
+						size_t top_state;
+						top_state = PSR_TopStack(parser->state_stack);
+						AR_ASSERT(top_state < parser->msg_count);
+						parser->user.error_f(tok, parser->msg_set[top_state].msg, parser->msg_set[top_state].count, parser->user.ctx);
+						return false;
+				}else
+				{
+						return true;
+				}
+		}
+}
+
+bool PSR_AddToken(parser_t *parser, const psrToken_t *tok)
+{
+
+		bool					is_done;
+		
+		const psrTermInfo_t		*term;
+
+		AR_ASSERT(parser != NULL && !parser->is_accepted && tok != NULL);
+		
+		/*先压入扩展的产生式Start，只有其可以接受EOI*/
+		
+		if(parser->state_stack->count == 0)
+		{
+				PSR_PushStack(parser->state_stack, 0);
+				PSR_PushNodeStack(parser->node_stack, NULL);
+		}
+		
+		term = PSR_FindTermFromInfoTable(parser->term_tbl, tok->type);
+		
+		/*
+				移入进来的token必须在term_set中找到对应的symbol，
+				否则这里应该在调用PSR_AddToken之前由词法分析器检测出错误来
+		*/
+		
+		if(term == NULL)
+		{
+				AR_ASSERT(false);
+				AR_error(AR_PARSER, L"invalid input token\r\n");
+				return false;
+		}
+		
+		is_done = false;
+		
+		while(!is_done)
+		{
+				const psrAction_t		*action;
+				size_t					top;
+				top = PSR_TopStack(parser->state_stack);
+				action = PSR_GetAction(parser->tbl, top, term->term);
+				AR_ASSERT(action != NULL);
+				
+				switch(action->type)
+				{
+				case PSR_SHIFT:
+						__handle_shift(parser, action->shift_to, tok, term);
+						is_done = true;
 						break;
 				case PSR_REDUCE:
-				{
-						size_t i;
-						psrNode_t **nodes;
-						PSR_ClearNodeSet(parser->node_set);
-
-						for(i = 0; i < action->reduce_count; ++i)
-						{
-								psrNode_t *node;
-								node = parser->stack->frame[parser->stack->count - action->reduce_count + i].node;
-								PSR_InsertToNodeSet(parser->node_set, node);
-						}
-						
-						if(parser->node_set->count > 0)
-						{
-								nodes = parser->node_set->count > 0 ? parser->node_set->nodes : NULL;
-								frame.node = parser->ctx.node_f(action->rule_id, action->rule_name, nodes, parser->node_set->count, parser->ctx.ctx);
-						}else
-						{
-								/*
-										如果所在产生式所有符号都为空，则直接压入空
-								*/
-								frame.node = NULL;
-						}
-						
-						PSR_PopStack(parser->stack, action->reduce_count);
-						
-						{
-								size_t state;
-								int_t next;
-								state = PSR_TopStack(parser->stack)->state;
-								next = PSR_GetState(parser->tbl, state, PSR_GetRuleByRuleID(parser->grammar, action->rule_id)->head);
-								AR_ASSERT(next != -1);
-								frame.state = (size_t)next;
-								PSR_PushStack(parser->stack, &frame);
-						}
-						/*AR_ASSERT(!parser->is_inerr);*/
-						/*if(parser->is_inerr)parser->is_inerr = false;*/
-				}
+						__handle_reduce(parser, action);
 						break;
 				case PSR_ACCEPT:
-				{
+						AR_ASSERT(PSR_CompSymb(term->term, PSR_EOISymb) == 0);
 						AR_ASSERT(action->reduce_count == 1);
-						err = PSR_ERR_ACCEPT;
+						AR_ASSERT(parser->state_stack->count == 2);
+						/*这里相当于shift了EOI*/
+						if(parser->is_repair)parser->is_repair = false;
+						
 						is_done = true;
 						parser->is_accepted = true;
-						/*这里相当于shift了EOI*/
-						parser->is_inerr = false;
-				}
+						
+						
 						break;
-				default:/*PSR_ERROR*/
-				{
-						if(!parser->is_inerr)
-						{
-								bool is_ok;
-								is_ok = false;
-								
-								parser->ctx.error_f(tok, parser->ctx.ctx);
-								
-								while(parser->stack->count > 0 && !is_ok)
-								{
-										top = PSR_TopStack(parser->stack);
-										action = PSR_GetAction(parser->tbl, top->state, PSR_ErrorSymb);
-										AR_ASSERT(action != NULL);
-										/*
-										应该找到一个在error上有shift动作的状态
-										*/
-										if(action->type == PSR_SHIFT)
-										{
-												frame.node = NULL;
-												frame.state = action->shift_to;
-												PSR_PushStack(parser->stack, &frame);
-												is_ok = true;
-										}else
-										{
-												if(top->node != NULL)parser->ctx.free_f(top->node, parser->ctx.ctx);
-												PSR_PopStack(parser->stack, 1);
-										}
-								}
-
-								if(!is_ok)
-								{
-										err = PSR_ERR_INVALID_SYNTAX;
-										is_done = true;
-								}
-								
-								parser->is_inerr = true;
-						}else
-						{
-/*
-		在error状态中，任何不合法的输入都会丢弃，并且不显示任何错误信息;
-
-*/
-								if(lookahead != NULL)
-								{
-										err = (PSR_CompSymb(PSR_EOISymb, lookahead) == 0 ? PSR_ERR_INVALID_SYNTAX : PSR_ERR_OK);
-								}else
-								{
-										err = PSR_ERR_OK;
-								}
-								is_done = true;
-						}
-				}
+				case PSR_ERROR:
+						if(!__error_recovery(parser, tok))return false;
 						break;
+				default:
+						AR_ASSERT(false);
 				}
 		}
 
-		PSR_ClearNodeSet(parser->node_set);
-		return err;
+		return true;
 }
 
 
+psrNode_t* PSR_GetResult(parser_t *parser)/*在状态为accepted之后才可以调用*/
+{
+		psrNode_t *res;
+		AR_ASSERT(parser != NULL && parser->is_accepted);
+		if(!parser->is_accepted)return NULL;
+		AR_ASSERT(parser->state_stack->count == 2);
+		res = PSR_TopNodeStack(parser->node_stack);
+		
+		PSR_PopStack(parser->state_stack, 1);
+		PSR_PopNodeStack(parser->node_stack, 1);
+		parser->is_accepted = false;
+		return res;
+}
 
-
+bool	   PSR_IsAccepted(const parser_t *parser)
+{
+		AR_ASSERT(parser != NULL);
+		return parser->is_accepted;
+}
 
 AR_NAMESPACE_END
 

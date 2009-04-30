@@ -194,13 +194,15 @@ void	  PSR_CollectDFA(psrDFASet_t *empty_set, psrDFA_t *start)
 		%Epsilon  %Epsilon. term
 		delim = 2;
 		现在body是term了，所以失败，但是还有一项没插入，此时delim == 2，所以将delim插入
+
+		当然，一个正常的文法条目如果存在epsilon那么应该只有这一个终结符，再无其他任何符号。
 */
 
 inline bool __handle_epsilon(psrLRItemTbl_t *closure, const psrGrammar_t *grammar, const psrSymb_t *body, const psrLRItem_t *item, const psrRule_t *rule)
 {
 		psrLRItem_t tmp;
 		bool changed;
-		PSR_InitLRItem(&tmp, item->rule_id, item->delim, item->symb);
+		PSR_InitLRItem(&tmp, item->rule, item->delim, item->symb);
 
 		changed = false;
 
@@ -212,7 +214,7 @@ inline bool __handle_epsilon(psrLRItemTbl_t *closure, const psrGrammar_t *gramma
 				}
 
 				PSR_UnInitLRItem(&tmp);
-				PSR_InitLRItem(&tmp, tmp.rule_id, tmp.delim + 1, tmp.symb);
+				PSR_InitLRItem(&tmp, tmp.rule, tmp.delim + 1, tmp.symb);
 				body = PSR_IndexOfSymbList(&rule->body, tmp.delim);
 		}
 
@@ -223,6 +225,7 @@ inline bool __handle_epsilon(psrLRItemTbl_t *closure, const psrGrammar_t *gramma
 		PSR_UnInitLRItem(&tmp);
 		return changed;
 }
+
 
 
 void PSR_Calc_LR0_Closure(psrLRItemTbl_t *closure, const psrGrammar_t *grammar)
@@ -250,7 +253,7 @@ void PSR_Calc_LR0_Closure(psrLRItemTbl_t *closure, const psrGrammar_t *grammar)
 						const psrSymb_t *body;
 
 						AR_ASSERT(iter.curr->item.symb == NULL);
-						rule = PSR_GetRuleByRuleID(grammar, iter.curr->item.rule_id);
+						rule = iter.curr->item.rule;
 						
 						/*
 						 delim为下一个元素，A-> .abc
@@ -277,12 +280,12 @@ void PSR_Calc_LR0_Closure(psrLRItemTbl_t *closure, const psrGrammar_t *grammar)
 										const psrRule_t *rule_dest;
 										
 										if(added[i])continue;/*此产生式闭包已经被加入了*/
-										rule_dest = PSR_GetRuleByRuleID(grammar, i);
+										rule_dest = grammar->rules[i];
 										
 										if(PSR_CompSymb(body, rule_dest->head) == 0)
 										{
 												psrLRItem_t item;
-												PSR_InitLRItem(&item, rule_dest->rule_id, 0, NULL);
+												PSR_InitLRItem(&item, rule_dest, 0, NULL);
 
 												if(PSR_InsertToLRItemTbl(closure, &item))
 												{
@@ -315,7 +318,7 @@ void PSR_Calc_LR0_Goto(const psrLRItemTbl_t *start, psrLRItemTbl_t *to, const ps
 		{
 				const psrRule_t *rule;
 				const psrSymb_t *next_symb;
-				rule = PSR_GetRuleByRuleID(grammar, iter.curr->item.rule_id);
+				rule = iter.curr->item.rule;
 				next_symb = PSR_IndexOfSymbList(&rule->body, iter.curr->item.delim);
 						
 				if(next_symb == NULL || PSR_CompSymb(next_symb, symb) != 0)
@@ -324,7 +327,7 @@ void PSR_Calc_LR0_Goto(const psrLRItemTbl_t *start, psrLRItemTbl_t *to, const ps
 				}else
 				{
 						psrLRItem_t item;
-						PSR_InitLRItem(&item, iter.curr->item.rule_id, iter.curr->item.delim + 1, NULL);
+						PSR_InitLRItem(&item, iter.curr->item.rule, iter.curr->item.delim + 1, NULL);
 						PSR_InsertToLRItemTbl(to, &item);
 						PSR_UnInitLRItem(&item);
 				}
@@ -348,7 +351,7 @@ psrDFA_t*		PSR_Build_LR0_DFA(const psrGrammar_t *grammar)
 		AR_ASSERT(grammar != NULL && grammar->count > 1);
 
 		
-		PSR_InitLRItem(&item, 0, 0, NULL);
+		PSR_InitLRItem(&item, PSR_GetStartRule(grammar), 0, NULL);
 		start = PSR_CreateDFA();
 		PSR_InsertToLRItemTbl(&start->tbl, &item);
 		PSR_Calc_LR0_Closure(&start->tbl, grammar);
@@ -362,7 +365,7 @@ psrDFA_t*		PSR_Build_LR0_DFA(const psrGrammar_t *grammar)
 		
 		PSR_InitLRItemTbl(&goto_tmp);
 
-		
+
 		for(i = 0; i < set.count; ++i)
 		{
 				size_t k;
@@ -400,6 +403,7 @@ psrDFA_t*		PSR_Build_LR0_DFA(const psrGrammar_t *grammar)
 
 
 
+
 /****************************************************************************************************************************************************/
 
 void PSR_Calc_LR1_Closure(psrLRItemTbl_t *closure, const psrGrammar_t *grammar, const psrFollow_t *tbl)
@@ -423,7 +427,8 @@ void PSR_Calc_LR1_Closure(psrLRItemTbl_t *closure, const psrGrammar_t *grammar, 
 						const psrRule_t *rule;
 						const psrSymb_t *body;
 						AR_ASSERT(iter.curr->item.symb != NULL);
-						rule = PSR_GetRuleByRuleID(grammar, iter.curr->item.rule_id);
+						//rule = PSR_GetRuleByRuleID(grammar, iter.curr->item.rule_id);
+						rule = iter.curr->item.rule;
 						
 						/*
 						 delim为下一个元素，A-> .abc
@@ -446,13 +451,13 @@ void PSR_Calc_LR1_Closure(psrLRItemTbl_t *closure, const psrGrammar_t *grammar, 
 								size_t i;
 								const psrFollowRec_t* rec;
 								//__lr1_calc_first(&rule->body, iter.curr->item.delim + 1, iter.curr->item.symb, first_set, cache);
-								rec = PSR_GetFollowRecord(tbl, iter.curr->item.rule_id, iter.curr->item.delim);
+								rec = PSR_GetFollowRecord(tbl, (size_t)PSR_IndexOfGrammar(grammar, iter.curr->item.rule), iter.curr->item.delim);
 
 								for(i = 0; i < grammar->count; ++i)
 								{
 										const psrRule_t *rule_dest;
 
-										rule_dest = PSR_GetRuleByRuleID(grammar, i);
+										rule_dest = grammar->rules[i];
 										
 										if(PSR_CompSymb(body, rule_dest->head) == 0)
 										{
@@ -463,7 +468,7 @@ void PSR_Calc_LR1_Closure(psrLRItemTbl_t *closure, const psrGrammar_t *grammar, 
 														const psrSymb_t *tmp_symb;
 														psrLRItem_t item;
 														tmp_symb = rec->lst.lst[k];
-														PSR_InitLRItem(&item, rule_dest->rule_id, 0, tmp_symb);
+														PSR_InitLRItem(&item, rule_dest, 0, tmp_symb);
 														if(PSR_InsertToLRItemTbl(closure, &item))
 														{
 																changed = true;
@@ -474,7 +479,7 @@ void PSR_Calc_LR1_Closure(psrLRItemTbl_t *closure, const psrGrammar_t *grammar, 
 												if(rec->has_epsilon)
 												{
 														psrLRItem_t item;
-														PSR_InitLRItem(&item, rule_dest->rule_id, 0, iter.curr->item.symb);
+														PSR_InitLRItem(&item, rule_dest, 0, iter.curr->item.symb);
 														if(PSR_InsertToLRItemTbl(closure, &item))
 														{
 																changed = true;
@@ -505,7 +510,7 @@ void PSR_Calc_LR1_Goto(const psrLRItemTbl_t *start, psrLRItemTbl_t *to, const ps
 		{
 				const psrRule_t *rule;
 				const psrSymb_t *next_symb;
-				rule = PSR_GetRuleByRuleID(grammar, iter.curr->item.rule_id);
+				rule = iter.curr->item.rule;
 				next_symb = PSR_IndexOfSymbList(&rule->body, iter.curr->item.delim);
 				
 				if(next_symb == NULL || PSR_CompSymb(next_symb, symb) != 0)
@@ -514,7 +519,7 @@ void PSR_Calc_LR1_Goto(const psrLRItemTbl_t *start, psrLRItemTbl_t *to, const ps
 				}else
 				{
 						psrLRItem_t item;
-						PSR_InitLRItem(&item, iter.curr->item.rule_id, iter.curr->item.delim + 1, iter.curr->item.symb);
+						PSR_InitLRItem(&item, iter.curr->item.rule, iter.curr->item.delim + 1, iter.curr->item.symb);
 						PSR_InsertToLRItemTbl(to, &item);
 						PSR_UnInitLRItem(&item);
 				}
@@ -542,7 +547,7 @@ psrDFA_t*		PSR_Build_LR1_DFA(const psrGrammar_t *grammar)
 		PSR_InitFollowTbl(&follow_tbl, grammar);
 		
 
-		PSR_InitLRItem(&item, 0, 0, PSR_EOISymb);
+		PSR_InitLRItem(&item, PSR_GetStartRule(grammar), 0, PSR_EOISymb);
 		start = PSR_CreateDFA();
 		PSR_InsertToLRItemTbl(&start->tbl, &item);
 		PSR_Calc_LR1_Closure(&start->tbl, grammar, &follow_tbl); 
@@ -603,24 +608,6 @@ psrDFA_t*		PSR_Build_LR1_DFA(const psrGrammar_t *grammar)
 /*****************************************************LALR************************************************************************/
 
 
-static void __clear_lr0_nonkernel(psrLRItemTbl_t *tbl, psrLRItemTbl_t *backup)
-{
-		psrLRItemTblIter_t iter;
-		
-		AR_ASSERT(tbl != NULL && backup != NULL);
-		PSR_ClearLRItemTbl(backup);
-
-		for(iter = PSR_GetLRItemTblFirst(tbl); iter.curr; PSR_GetLRItemTblNext(tbl, &iter))
-		{
-				if(iter.curr->item.delim > 0 || iter.curr->item.rule_id == 0)
-				{
-						AR_ASSERT(iter.curr->item.symb == NULL);/*确定其为LR0项集*/
-						PSR_InsertToLRItemTbl(backup, &iter.curr->item);
-				}
-		}
-		PSR_SwapLRItemTbl(backup, tbl);
-}
-
 
 
 static bool __calc_symbol_transfer(psrDFA_t *start, psrDFA_t *to, const psrGrammar_t *grammar, const psrFollow_t *tbl, psrLR1ClosureTbl_t *closure_tbl)
@@ -637,7 +624,7 @@ static bool __calc_symbol_transfer(psrDFA_t *start, psrDFA_t *to, const psrGramm
 				psrLRItem_t item;
 				psrLRItemTblIter_t lr1_iter;
 
-				PSR_InitLRItem(&item, iter.curr->item.rule_id, iter.curr->item.delim, PSR_LALRSymb);
+				PSR_InitLRItem(&item, iter.curr->item.rule, iter.curr->item.delim, PSR_LALRSymb);
 				lr1_closure = PSR_GetLR1Closure(closure_tbl, &item, grammar, tbl);
 				PSR_UnInitLRItem(&item);
 				
@@ -649,7 +636,7 @@ static bool __calc_symbol_transfer(psrDFA_t *start, psrDFA_t *to, const psrGramm
 						psrLRItem_t key;
 						plr1_item = &lr1_iter.curr->item;
 						
-						PSR_InitLRItem(&key, plr1_item->rule_id, plr1_item->delim + 1, NULL);
+						PSR_InitLRItem(&key, plr1_item->rule, plr1_item->delim + 1, NULL);
 						/*
 								因为计算的是从item start->tbl[x]到 to->tbl[y]的转移中，传递过去了多少个符号
 								所以plr1_item的LR0部分，一定在to->tbl中有对应的部分，所以这里直接加1表示经过符号的转移
@@ -662,17 +649,19 @@ static bool __calc_symbol_transfer(psrDFA_t *start, psrDFA_t *to, const psrGramm
 						
 						if(PSR_CompSymb(plr1_item->symb, PSR_LALRSymb) != 0)
 						{
-								AR_ASSERT(plr0_item->tbl != NULL);
-								if(PSR_InsertToSymbTbl(plr0_item->tbl, plr1_item->symb))
+								AR_ASSERT(plr0_item->lst != NULL);
+
+								if(PSR_InsertToSymbList_Unique(plr0_item->lst, plr1_item->symb))
 								{
 										changed = true;
 								}
 						}else
 						{
-								psrSymbTblIter_t symb_iter;
-								for(symb_iter = PSR_FirstFromSymbTbl(iter.curr->item.tbl); symb_iter.curr; PSR_NextFromSymbTbl(iter.curr->item.tbl, &symb_iter))
+								size_t x;
+								
+								for(x = 0; x < iter.curr->item.lst->count; ++x)
 								{
-										if(PSR_InsertToSymbTbl(plr0_item->tbl, symb_iter.curr->symb))
+										if(PSR_InsertToSymbList_Unique(plr0_item->lst, iter.curr->item.lst->lst[x]))
 										{
 												changed = true;
 										}
@@ -686,6 +675,26 @@ static bool __calc_symbol_transfer(psrDFA_t *start, psrDFA_t *to, const psrGramm
 		return changed;
 
 
+}
+
+
+
+static void __clear_lr0_nonkernel(psrLRItemTbl_t *tbl, psrLRItemTbl_t *backup, const psrGrammar_t *grammar)
+{
+		psrLRItemTblIter_t iter;
+		
+		AR_ASSERT(tbl != NULL && backup != NULL);
+		PSR_ClearLRItemTbl(backup);
+
+		for(iter = PSR_GetLRItemTblFirst(tbl); iter.curr; PSR_GetLRItemTblNext(tbl, &iter))
+		{
+				if(iter.curr->item.delim > 0 || iter.curr->item.rule == PSR_GetStartRule(grammar))
+				{
+						AR_ASSERT(iter.curr->item.symb == NULL);/*确定其为LR0项集*/
+						PSR_InsertToLRItemTbl(backup, &iter.curr->item);
+				}
+		}
+		PSR_SwapLRItemTbl(backup, tbl);
 }
 
 
@@ -710,26 +719,26 @@ psrDFA_t*		PSR_Build_LALR_DFA(const psrGrammar_t *grammar)
 		PSR_CollectDFA(&set, lr0_start);
 		
 		backup_set = AR_NEWARR(psrLRItemTbl_t, set.count);
-
+		
 
 		for(i = 0; i < set.count; ++i)
 		{
 				psrLRItemTblIter_t iter;
 				PSR_InitLRItemTbl(&backup_set[i]);
-				__clear_lr0_nonkernel(&(set.set[i]->tbl),&backup_set[i]);
+				__clear_lr0_nonkernel(&(set.set[i]->tbl),&backup_set[i], grammar);
 
 				for(iter = PSR_GetLRItemTblFirst(&(set.set[i]->tbl)); iter.curr; PSR_GetLRItemTblNext(&(set.set[i]->tbl), &iter))
 				{
 						psrLRItem_t *pitem;
 						
 						pitem = (psrLRItem_t*)&(iter.curr->item);
-						pitem->tbl = AR_NEW0(psrSymbTbl_t);
-						PSR_InitSymbTbl(pitem->tbl, 10);
+						pitem->lst = AR_NEW0(psrSymbList_t);
+						PSR_InitSymbList(pitem->lst);
 
-						if(pitem->rule_id == 0 && pitem->delim == 0)
+						if(pitem->rule == PSR_GetStartRule(grammar) && pitem->delim == 0)
 						{
 								/*augmentation grammar*/
-								PSR_InsertToSymbTbl(pitem->tbl, PSR_CopyNewSymb(PSR_EOISymb));
+								PSR_InsertToSymbList(pitem->lst, PSR_CopyNewSymb(PSR_EOISymb));
 						}
 				}
 		}
@@ -784,9 +793,6 @@ psrDFA_t*		PSR_Build_LALR_DFA(const psrGrammar_t *grammar)
 		PSR_UnInitLR1ClosureTbl(&lr1_closure);
 		return lr0_start;
 }
-
-
-
 
 AR_NAMESPACE_END
 

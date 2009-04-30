@@ -22,14 +22,18 @@ AR_NAMESPACE_BEGIN
 
 
 
-#define PSR_EOI_TOKVAL			0/*end of input符号的词法值*/
-#define PSR_EPSILON_TOKVAL		1
-#define PSR_LALR_TOKVAL			2
-#define PSR_ERROR_TOKVAL		3
 
-#define PSR_MIN_PRIOTERMVAL		0xFFFF
-#define PSR_MIN_TOKENVAL		257
 
+
+typedef void			psrNode_t;
+typedef lexToken_t		psrToken_t;
+
+typedef psrNode_t*		(AR_STDCALL *psrTermFunc_t)(const psrToken_t *tok,void *ctx);
+typedef psrNode_t*		(AR_STDCALL *psrRuleFunc_t)(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+typedef void			(AR_STDCALL *psrFreeFunc_t)(psrNode_t *node, void *ctx);
+
+typedef void			(AR_STDCALL *psrErrorFunc_t)(const psrToken_t *tok, const wchar_t *expected[], size_t count, void *ctx);
 
 
 
@@ -38,6 +42,32 @@ AR_NAMESPACE_BEGIN
 
 void	PSR_Init();
 void	PSR_UnInit();
+
+
+
+#define PSR_EOI_TOKVAL			0/*end of input符号的词法值*/
+#define PSR_EPSILON_TOKVAL		1
+#define PSR_LALR_TOKVAL			2
+#define PSR_ERROR_TOKVAL		3
+#define PSR_DEFPREC_TOKVAL		4
+
+#define PSR_MIN_TOKENVAL		256		/*最小终结符value*/
+
+
+/*
+所有符号如无特殊定义，则结合性都为NO_ASSOC，左结合表示在发生冲突时，优先选择同优先级的规约，而右结合与其相反，例如
+expr -> id | expr '-' expr;
+
+在 输入为 expr - expr - expr时，如果无结合性，则为冲突，如声明'-'为左结合，则优先归于前面的expr-expr，右结合反之
+
+*/
+
+typedef enum 
+{
+		PSR_ASSOC_NOASSOC,
+		PSR_ASSOC_LEFT,
+		PSR_ASSOC_RIGHT
+}psrAssocType_t;/*终结符结合性*/
 
 
 typedef enum
@@ -50,22 +80,13 @@ typedef enum
 
 typedef psrLRItemType_t psrModeType_t;
 
-typedef void		psrNode_t;
-
-typedef lexToken_t		psrToken_t;
 
 
 
-typedef psrNode_t* (AR_STDCALL *psrLeafFunc_t)(const psrToken_t *tok,void *ctx);
-typedef psrNode_t* (AR_STDCALL *psrNodeFunc_t)(size_t rule_id, const wchar_t *rule_name, psrNode_t **nodes, size_t count, void *ctx);
-typedef void	   (AR_STDCALL *psrFreeFunc_t)(psrNode_t *node, void *ctx);
 
-typedef void		(AR_STDCALL *psrErrorFunc_t)(const psrToken_t *tok, void *ctx);
 
 typedef struct __parser_context_tag
 {
-		psrLeafFunc_t	leaf_f;
-		psrNodeFunc_t	node_f;
 		psrFreeFunc_t	free_f;
 		psrErrorFunc_t	error_f;
 		void			*ctx;
@@ -75,23 +96,26 @@ typedef struct __parser_context_tag
 typedef struct __parser_grammar_tag		psrGrammar_t;
 typedef struct __parser_action_tag		psrActionTable_t;
 typedef struct __parser_symbol_tag		psrSymb_t;
-
 typedef struct __parser_stack_tag		psrStack_t;
-typedef struct __parser_node_set_tag	psrNodeSet_t;
+typedef struct __parser_node_stack		psrNodeStack_t;
+typedef struct __term_table_tag			psrTermInfoTbl_t;
+typedef struct __expected_message_tag	psrExpectedMsg_t;
 
-typedef struct __parser_tag 
+typedef struct __parser_tag
 {
 		psrGrammar_t			*grammar;
 		psrActionTable_t		*tbl;
-		psrStack_t				*stack;
-		psrNodeSet_t			*node_set;
-		bool					is_inerr;
-		psrCtx_t				ctx;
+		psrStack_t				*state_stack;
+		psrNodeStack_t			*node_stack;
+		psrTermInfoTbl_t		*term_tbl;
 		
-		const psrSymb_t			**term_set;
-		size_t					term_count;
-
+		bool					is_repair;
 		bool					is_accepted;
+		
+		psrExpectedMsg_t		*msg_set;
+		size_t					msg_count;
+		
+		psrCtx_t				user;
 }parser_t;
 
 
@@ -102,29 +126,16 @@ void	  PSR_DestroyParser(parser_t *parser);
 
 void	  PSR_Clear(parser_t *parser);
 
+/*
+		由于采用了一个增广的文法，所以当EOI被增加到stack中时，只可能出现错误或者成为接受状态，EOI永远不会被SHIFT到parser中
+*/
+
+bool PSR_AddToken(parser_t *parser, const psrToken_t *tok);
+
+
 psrNode_t* PSR_GetResult(parser_t *parser);/*在状态为accepted之后才可以调用*/
 
-
-
-
-
-
-typedef enum
-{
-		PSR_ERR_INVALID_TOKEN,
-		PSR_ERR_INVALID_SYNTAX,
-		PSR_ERR_ACCEPT,
-		PSR_ERR_OK,
-}psrError_t;
-
-/*由于采用了一个增广的文法，所以当EOI被增加到stack中时，只可能出现错误或者成为接受状态，EOI永远不会被SHIFT到parser中*/
-psrError_t PSR_AddToken(parser_t *parser, const psrToken_t *tok);
-
-
-
-
-
-
+bool	   PSR_IsAccepted(const parser_t *parser);
 
 
 AR_NAMESPACE_END

@@ -66,26 +66,25 @@ inline bool  __calc_first(const psrSymbList_t *body, size_t start_idx, const psr
 		for(i = start_idx; i < body->count; ++i)
 		{
 				const psrSymb_t *curr;
-				const psrSymbTbl_t *tbl;
-				psrSymbTblIter_t iter;
+				const psrSymbList_t *lst;
+				size_t x;
 				curr = body->lst[i];
 				
-				tbl = &(PSR_GetSymbolFromSymbMap(first_set, curr)->tbl);
+				lst = &(PSR_GetSymbolFromSymbMap(first_set, curr)->lst);
 				
-				if(tbl->item_count == 0)continue;
+				if(lst->count == 0)continue;
 				
 				has_epsilon = false;
-				for(iter = PSR_FirstFromSymbTbl(tbl); iter.curr; PSR_NextFromSymbTbl(tbl, &iter))
+				
+				for(x = 0; x < lst->count; ++x)
 				{
-						if(PSR_CompSymb(iter.curr->symb, PSR_EpsilonSymb) == 0)
+						const psrSymb_t *tmp_symb = lst->lst[x];
+						if(PSR_CompSymb(tmp_symb, PSR_EpsilonSymb) == 0)
 						{
 								has_epsilon = true;
 						}else
 						{
-								if(PSR_FindFromSymbList(out, iter.curr->symb) == -1)
-								{
-										PSR_InsertToSymbList(out, iter.curr->symb);
-								}
+								PSR_InsertToSymbList_Unique(out, tmp_symb);
 						}
 				}
 				
@@ -114,11 +113,12 @@ inline void PSR_InitFollowTbl(psrFollow_t *tbl, const psrGrammar_t *grammar)
 		tbl->row = grammar->count;
 		tbl->col = 0;
 
+		/*计算最长的产生式的体长度，建立表的列数*/
 		for(i = 0; i < grammar->count; ++i)
 		{
-				if(AR_CMP(tbl->col, grammar->rules[i].body.count) < 0)
+				if(AR_CMP(tbl->col, grammar->rules[i]->body.count) < 0)
 				{
-						tbl->col = grammar->rules[i].body.count;
+						tbl->col = grammar->rules[i]->body.count;
 				}
 		}
 		tbl->col++;
@@ -126,7 +126,7 @@ inline void PSR_InitFollowTbl(psrFollow_t *tbl, const psrGrammar_t *grammar)
 		
 		for(i = 0; i < tbl->row; ++i)
 		{
-				const psrRule_t *rule = &grammar->rules[i];
+				const psrRule_t *rule = grammar->rules[i];
 				
 				for(j = 0; j <= rule->body.count; ++j)
 				{
@@ -156,10 +156,10 @@ inline void PSR_UnInitFollowTbl(psrFollow_t *tbl)
 }
 
 
-inline  const psrFollowRec_t* PSR_GetFollowRecord(const psrFollow_t *tbl, size_t rule_id, size_t symb_idx)
+inline  const psrFollowRec_t* PSR_GetFollowRecord(const psrFollow_t *tbl, size_t rule_idx, size_t symb_idx)
 {
 		const psrFollowRec_t *rec;
-		rec = &tbl->tbl[AR_TBL_IDX_R(rule_id, symb_idx, tbl->col)];
+		rec = &tbl->tbl[AR_TBL_IDX_R(rule_idx, symb_idx, tbl->col)];
 		AR_ASSERT(rec->is_init);
 		return rec;
 }
@@ -232,11 +232,12 @@ inline const psrLRItemTbl_t* PSR_GetLR1Closure(psrLR1ClosureTbl_t	*tbl, const ps
 						{
 								return &tmp->value;
 						}
+						tmp = tmp->next;
 				}
 		}
 
 		rec = AR_NEW0(psrLR1ClosureRec_t);
-		PSR_InitLRItem(&rec->key, item->rule_id, item->delim, item->symb);
+		PSR_InitLRItem(&rec->key, item->rule, item->delim, item->symb);
 		PSR_InitLRItemTbl(&rec->value);
 		PSR_InsertToLRItemTbl(&rec->value, &rec->key);
 		PSR_Calc_LR1_Closure(&rec->value, grammar, follow_tbl);

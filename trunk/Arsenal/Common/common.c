@@ -112,6 +112,107 @@ void AR_printf(const wchar_t *msg,...)
 
 /**********************************************************string*************************************************************/
 
+const wchar_t* AR_wtou64_s(const wchar_t *in, const wchar_t *end, uint64_t  *num, size_t base)
+{
+		uint64_t val;
+		const wchar_t *p;
+		bool is_ok;
+		
+		AR_ASSERT(in != NULL && end != NULL && num != NULL && base > 0 && base <= 16);
+		
+		is_ok = false; 
+		
+		p = AR_wcstrim_s(in, end, L" \t");
+
+		val = 0;
+
+		while(p < end)
+		{
+				uint64_t tmp;
+				if(*p >= L'0' && *p <= L'9')
+				{
+						tmp = (*p - L'0');
+				}else if(*p >= L'A' && *p <= L'F')
+				{
+						tmp = ((*p - L'A') + 10);
+				}else if(*p >= L'a' && *p <= L'f')
+				{
+						tmp = ((*p - L'a') + 10);
+				}else
+				{
+						break;
+				}
+				if(tmp >= base)
+				{
+						is_ok = false;
+						break;
+				}
+				val *= base;
+				val += tmp;
+				p++;
+				is_ok = true;
+		}
+		
+		if(!is_ok)return NULL;
+		*num = val;
+		return p;
+}
+
+
+const wchar_t* AR_wtoi64_s(const wchar_t *in, const wchar_t *end, int64_t  *num, size_t base)
+{
+		uint64_t val;
+		const wchar_t *p;
+		bool is_neg;
+
+		p = AR_wcstrim_s(in, end, L" \t");
+		
+		is_neg = false;
+
+		if(*p == L'-')
+		{
+				is_neg = true;
+				++p;
+		}
+
+		p = AR_wtou64_s(p, end, &val, base);
+		*num = (int64_t)val;
+		if(is_neg)*num = -(*num);
+		return p;
+}
+
+
+const wchar_t* AR_wcstrim_s(const wchar_t *in, const wchar_t *end, const wchar_t *trim)
+{
+		AR_ASSERT(in != NULL && end != NULL && trim != NULL);
+
+		while(in < end && AR_wcschr(trim, *in) != NULL)in++;
+		return in;
+}
+
+
+const wchar_t* AR_wtoi32_s(const wchar_t *in, const wchar_t *end, int32_t  *num, size_t base)
+{
+		int64_t val;
+		const wchar_t *p;
+		AR_ASSERT(in != NULL && end != NULL && num != NULL);
+		p = AR_wtoi64_s(in, end, &val, base);
+		*num = (int32_t)val;
+		return p;
+}
+
+const wchar_t* AR_wtou32_s(const wchar_t *in, const wchar_t *end, uint32_t *num, size_t base)
+{
+		uint64_t val;
+		const wchar_t *p;
+		AR_ASSERT(in != NULL && end != NULL && num != NULL);
+		p = AR_wtou64_s(in, end, &val, base);
+		*num = (uint32_t)val;
+		return p;
+}
+
+
+/************************************************************************************************************************************/
 
 const wchar_t* AR_wcstrim(const wchar_t *in, const wchar_t *trim)
 {
@@ -128,7 +229,7 @@ const wchar_t* AR_wtoi64(const wchar_t *in,	 int64_t  *num, size_t base)
 		const wchar_t *p;
 		bool is_neg;
 
-		p = AR_wcstrim(in, L" ");
+		p = AR_wcstrim(in, L" \t");
 		is_neg = false;
 		if(*p == L'-')
 		{
@@ -143,14 +244,14 @@ const wchar_t* AR_wtoi64(const wchar_t *in,	 int64_t  *num, size_t base)
 
 const wchar_t* AR_wtou64(const wchar_t *in,	 uint64_t  *num, size_t base)
 {
-		int64_t val;
+		uint64_t val;
 		const wchar_t *p;
 		bool is_ok;
 		uint64_t tmp;
 		AR_ASSERT(in != NULL && num != NULL && base > 0 && base <= 16);
 		
 		is_ok = false; 
-		p = AR_wcstrim(in,L" ");
+		p = AR_wcstrim(in,L" \t");
 		
 		val = 0;
 
@@ -169,7 +270,12 @@ const wchar_t* AR_wtou64(const wchar_t *in,	 uint64_t  *num, size_t base)
 				{
 						break;
 				}
-				if(tmp >= base)break;
+				
+				if(tmp >= base)
+				{
+						is_ok = false;
+						break;
+				}
 
 				val *= base;
 				val += tmp;
@@ -181,6 +287,50 @@ const wchar_t* AR_wtou64(const wchar_t *in,	 uint64_t  *num, size_t base)
 		*num = val;
 		return p;
 }
+
+
+const wchar_t*	AR_wtod(const wchar_t *in, double *num)
+{
+		wchar_t *stop;
+		AR_ASSERT(in != NULL && num != NULL);
+
+		*num = AR_wcstod(in, &stop);
+
+		if(stop == in)
+		{
+				return NULL;
+		}else
+		{
+				return stop;
+		}
+}
+
+
+const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *num)
+{
+		const wchar_t *stop;
+		wchar_t *buf;
+		AR_ASSERT(in != NULL && end != NULL && num != NULL);
+		
+		if(in >= end)return NULL;
+		buf  = AR_wcsndup(in, end - in);
+		
+		stop = AR_wtod(buf, num);
+		
+		if(stop == NULL)
+		{
+				AR_DEL(buf);
+				return NULL;
+		}else
+		{
+				const wchar_t *res;
+				res = &in[stop - buf];
+				AR_DEL(buf);
+				return res;
+		}
+}
+
+
 
 const wchar_t* AR_wtoi32(const wchar_t *in,  int32_t *num, size_t base)
 {
@@ -243,12 +393,12 @@ wchar_t* AR_wcsdup(const wchar_t *sour)
 wchar_t* AR_wcsndup(const wchar_t *sour, size_t len)
 {
 		wchar_t *result;
+		if(len == 0)return NULL;
 		AR_ASSERT(sour != NULL && len > 0);
 		result = AR_NEWARR(wchar_t, len + 1);
 		AR_wcsncpy(result, sour, len);
 		result[len] = L'\0';
 		return result;
 }
-
 
 AR_NAMESPACE_END

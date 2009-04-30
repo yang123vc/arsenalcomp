@@ -140,6 +140,8 @@ void AR_printf(const wchar_t *msg,...);
 #define AR_iswalnum(_c)			iswalnum((_c))
 #define AR_iswdigit(_c)			iswdigit((_c))
 
+#define AR_wcstod(_s, _end)			wcstod((_s), (_end))
+
 wchar_t* AR_wcsdup(const wchar_t *sour);
 wchar_t* AR_wcsndup(const wchar_t *sour, size_t len);
 
@@ -148,11 +150,23 @@ wchar_t* AR_wcsndup(const wchar_t *sour, size_t len);
 
 const wchar_t* AR_wcstrim(const wchar_t *in, const wchar_t *trim);
 
+
 const wchar_t* AR_wtoi32(const wchar_t *in,	 int32_t  *num, size_t base);
 const wchar_t* AR_wtou32(const wchar_t *in,  uint32_t *num, size_t base);
 const wchar_t* AR_wtoi64(const wchar_t *in,	 int64_t  *num, size_t base);
 const wchar_t* AR_wtou64(const wchar_t *in,	 uint64_t  *num, size_t base);
 
+const wchar_t*	AR_wtod(const wchar_t *in, double *num);
+
+/********************************************************************************************************************************************/
+const wchar_t* AR_wcstrim_s(const wchar_t *in, const wchar_t *end, const wchar_t *trim);
+
+const wchar_t* AR_wtoi32_s(const wchar_t *in, const wchar_t *end, int32_t  *num, size_t base);
+const wchar_t* AR_wtou32_s(const wchar_t *in, const wchar_t *end, uint32_t *num, size_t base);
+
+const wchar_t* AR_wtoi64_s(const wchar_t *in, const wchar_t *end, int64_t  *num, size_t base);
+const wchar_t* AR_wtou64_s(const wchar_t *in, const wchar_t *end, uint64_t  *num, size_t base);
+const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *num);
 
 
 #if(ARCH == ARCH_IA32)
@@ -160,10 +174,16 @@ const wchar_t* AR_wtou64(const wchar_t *in,	 uint64_t  *num, size_t base);
 #define AR_wtoi AR_wtoi32
 #define AR_wtou AR_wtou32
 
+#define AR_wtou_s	AR_wtou32_s
+#define AR_wtoi_s	AR_wtoi32_s
+
 #elif(ARCH == ARCH_IA64 || ARCH == ARCH_X64)
 
 #define AR_wtoi AR_wtoi64
 #define AR_wtou AR_wtou64
+
+#define AR_wtou_s	AR_wtou64_s
+#define AR_wtoi_s	AR_wtoi64_s
 
 #else
 
@@ -218,6 +238,38 @@ void			AR_UnLockSpinLock(volatile arSpinLock_t *lock);
 
 
 /********************************************************StringTable*****************************************************************/
+
+
+typedef struct __arsenal_str_rec
+{
+		wchar_t					 *str;
+		size_t					 len;
+		struct __arsenal_str_rec *next;
+}arStringRec_t;
+
+
+
+typedef struct __string_table_
+{
+		arStringRec_t	**bucket;
+		size_t			count;
+}arStringTable_t;
+
+
+#define		MIN_BUCKET_SIZE		1024
+
+
+arStringTable_t*		AR_CreateStrTable(size_t count);
+void					AR_DestroyStrTable(arStringTable_t* tbl);
+
+
+const wchar_t*			AR_GetString(arStringTable_t *tbl, const wchar_t *str);
+const wchar_t*			AR_GetStringN(arStringTable_t *tbl, const wchar_t *str, size_t n);
+
+const wchar_t*			AR_GetStringUInt(arStringTable_t *tbl, uint64_t num, size_t radix);
+const wchar_t*			AR_GetStringInt(arStringTable_t *tbl, int64_t num, size_t radix);
+
+
 
 
 

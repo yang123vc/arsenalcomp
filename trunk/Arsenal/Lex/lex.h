@@ -36,6 +36,7 @@ typedef struct __lex_action_tag
 {
 		size_t			type;
 		size_t			priority;
+		bool			is_skip;
 }lexAction_t;
 
 
@@ -49,8 +50,6 @@ bool	LEX_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action);
 bool	LEX_Insert(lex_t *lex, const wchar_t *input);
 bool	LEX_GenerateTransTable(lex_t *lex);
 void	LEX_Clear(lex_t *lex);
-
-void	LEX_InsertSkipAction(lex_t *lex, size_t action_type);
 
 
 typedef struct __lex_token_tag
@@ -85,6 +84,41 @@ const wchar_t* LEX_GetNextInput(const lexMatch_t *match);
 bool LEX_Match(lex_t *lex, lexMatch_t *match, lexToken_t *tok);
 
 
+/****************************************config**********************************************/
+
+
+typedef enum {LEX_NAME, LEX_PATTERN} arPatternT_t;
+
+typedef struct __lex_cfg_name_tag
+{
+		wchar_t	*name;
+		wchar_t	*expr;
+}lexCfgName_t;
+
+
+typedef struct __lex_cfg_pattern_tag
+{
+		wchar_t			*pattern;
+		lexAction_t		action;	/*action∫Õpattern”√”⁄LEX_PATTERN*/
+}lexCfgPattern_t;
+
+
+typedef struct __lex_config_tag
+{
+		arPatternT_t	type;
+		union{
+				lexCfgName_t		name;
+				lexCfgPattern_t		pattern;
+		};
+		struct __lex_config_tag	*next;
+}lexConfig_t;
+
+
+const lexConfig_t*	LEX_CreateConfig(const wchar_t *pattern, const wchar_t **next_input);
+void				LEX_DestroyConfig(const lexConfig_t *pattern);
+
+
+const wchar_t*		  LEX_Config(lex_t *lex, const wchar_t *pattern);
 
 
 AR_NAMESPACE_END

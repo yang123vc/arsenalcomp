@@ -4,11 +4,15 @@
   <MACROS>
     <VERSION value="BCB.06.00"/>
     <PROJECT value=".\dll\release\DLLRelease.dll"/>
-    <OBJFILES value="common.obj spec.obj dfa.obj lex.obj node.obj lex_test.obj Arsenal.obj"/>
+    <OBJFILES value="common.obj spec.obj dfa.obj lex.obj node.obj lex_test.obj Arsenal.obj 
+      string.obj strtable.obj thread.obj expr.obj lex_config.obj grammar.obj 
+      grammar_config.obj lr_action.obj lr_dfa.obj lr_item.obj parser.obj 
+      parser_in.obj symbol.obj calc_test.obj com_test.obj dragonbook.obj 
+      gmr_test.obj parser_test.obj psr_misc.obj test.obj"/>
     <RESFILES value=""/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
-    <DEFFILE value=""/>
+    <DEFFILE value="export.def"/>
     <RESDEPEN value="$(RESFILES)"/>
     <LIBFILES value=""/>
     <LIBRARIES value=""/>
@@ -20,7 +24,7 @@
       inetdbbde.bpi inetdbxpress.bpi inetdb.bpi nmfast.bpi webdsnap.bpi 
       bcbie.bpi websnap.bpi soaprtl.bpi dclocx.bpi dbexpress.bpi dbxcds.bpi 
       indy.bpi bcb2kaxserver.bpi"/>
-    <PATHCPP value=".;..\..\Arsenal\Common;..\..\Arsenal\Lex;..\..\Arsenal\Test;..\..\Arsenal"/>
+    <PATHCPP value=".;..\..\Arsenal\Common;..\..\Arsenal\Lex;..\..\Arsenal\Test;..\..\Arsenal;..\..\Arsenal\Parser"/>
     <PATHPAS value=".;"/>
     <PATHRC value=".;"/>
     <PATHASM value=".;"/>
@@ -30,14 +34,14 @@
     <USERDEFINES value="WIN32,NDEBUG,_MBCS,_USRDLL,ARSENAL_EXPORTS,AR_EXPORTS,AR_SHARED_LIB"/>
     <SYSDEFINES value="NO_STRICT;_NO_VCL;_RTLDLL;USEPACKAGES"/>
     <MAINSOURCE value="DLLRelease.bpf"/>
-    <INCLUDEPATH value="..\..\Arsenal;..\..\Arsenal\Test;..\..\Arsenal\Lex;..\..\Arsenal\Common;..\..\..\..\Arsenal\Test;..\..\..\..\Arsenal\Lex;..\..\..\..\Arsenal\Common;Test;$(BCB)\include;$(BCB)\include\vcl"/>
-    <LIBPATH value="..\..\Arsenal;..\..\Arsenal\Test;..\..\Arsenal\Lex;..\..\Arsenal\Common;..\..\..\..\Arsenal\Test;..\..\..\..\Arsenal\Lex;..\..\..\..\Arsenal\Common;Test;$(BCB)\lib\obj;$(BCB)\lib"/>
+    <INCLUDEPATH value="..\..\Arsenal\Parser;..\..\Arsenal;..\..\Arsenal\Test;..\..\Arsenal\Lex;..\..\Arsenal\Common;..\..\..\..\Arsenal\Test;..\..\..\..\Arsenal\Lex;..\..\..\..\Arsenal\Common;Test;$(BCB)\include;$(BCB)\include\vcl"/>
+    <LIBPATH value="..\..\Arsenal\Parser;..\..\Arsenal;..\..\Arsenal\Test;..\..\Arsenal\Lex;..\..\Arsenal\Common;..\..\..\..\Arsenal\Test;..\..\..\..\Arsenal\Lex;..\..\..\..\Arsenal\Common;Test;$(BCB)\lib\obj;$(BCB)\lib"/>
     <WARNINGS value="-w-par"/>
     <OTHERFILES value=""/>
   </MACROS>
   <OPTIONS>
-    <IDLCFLAGS value="-I..\..\Arsenal -I..\..\Arsenal\Test -I..\..\Arsenal\Lex 
-      -I..\..\Arsenal\Common -I..\..\..\..\Arsenal\Test 
+    <IDLCFLAGS value="-I..\..\Arsenal\Parser -I..\..\Arsenal -I..\..\Arsenal\Test 
+      -I..\..\Arsenal\Lex -I..\..\Arsenal\Common -I..\..\..\..\Arsenal\Test 
       -I..\..\..\..\Arsenal\Lex -I..\..\..\..\Arsenal\Common -ITest 
       -I$(BCB)\include -I$(BCB)\include\vcl -src_suffix cpp 
       -DWIN32,NDEBUG,_MBCS,_USRDLL,ARSENAL_EXPORTS,AR_EXPORTS,AR_SHARED_LIB -boa"/>
@@ -73,6 +77,38 @@
       <FILE FILENAME="..\..\Arsenal\Test\lex_test.c" FORMNAME="" UNITNAME="lex_test" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\Arsenal\Arsenal.c" FORMNAME="" UNITNAME="Arsenal.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\Arsenal\Arsenal.h" FORMNAME="" UNITNAME="Arsenal.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Common\string.c" FORMNAME="" UNITNAME="string.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Common\strtable.c" FORMNAME="" UNITNAME="strtable.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Common\thread.c" FORMNAME="" UNITNAME="thread.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Lex\expr.c" FORMNAME="" UNITNAME="expr.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Lex\expr.h" FORMNAME="" UNITNAME="expr.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Lex\lex_config.c" FORMNAME="" UNITNAME="lex_config.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Parser\grammar.c" FORMNAME="" UNITNAME="grammar.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Parser\grammar.h" FORMNAME="" UNITNAME="grammar.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Parser\grammar_config.c" FORMNAME="" UNITNAME="grammar_config.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Parser\lr_action.c" FORMNAME="" UNITNAME="lr_action.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Parser\lr_action.h" FORMNAME="" UNITNAME="lr_action.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Parser\lr_dfa.c" FORMNAME="" UNITNAME="lr_dfa.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Parser\lr_dfa.h" FORMNAME="" UNITNAME="lr_dfa.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Parser\lr_dfa_aux.h" FORMNAME="" UNITNAME="lr_dfa_aux.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Parser\lr_item.c" FORMNAME="" UNITNAME="lr_item.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Parser\lr_item.h" FORMNAME="" UNITNAME="lr_item.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Parser\parser.c" FORMNAME="" UNITNAME="parser.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Parser\parser.h" FORMNAME="" UNITNAME="parser.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Parser\parser_aux.h" FORMNAME="" UNITNAME="parser_aux.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Parser\parser_in.c" FORMNAME="" UNITNAME="parser_in.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Parser\parser_in.h" FORMNAME="" UNITNAME="parser_in.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Parser\symbol.c" FORMNAME="" UNITNAME="symbol.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Parser\symbol.h" FORMNAME="" UNITNAME="symbol.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Test\calc_test.c" FORMNAME="" UNITNAME="calc_test.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Test\com_test.c" FORMNAME="" UNITNAME="com_test.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Test\dragonbook.c" FORMNAME="" UNITNAME="dragonbook.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Test\gmr_test.c" FORMNAME="" UNITNAME="gmr_test.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Test\parser_test.c" FORMNAME="" UNITNAME="parser_test.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Test\psr_misc.c" FORMNAME="" UNITNAME="psr_misc.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Test\test.c" FORMNAME="" UNITNAME="test.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Test\test.h" FORMNAME="" UNITNAME="test.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="export.def" FORMNAME="" UNITNAME="export.def" CONTAINERID="DefTool" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>

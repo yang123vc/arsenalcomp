@@ -17,19 +17,7 @@
 
 AR_NAMESPACE_BEGIN
 
-/*
-size_t M_MASK = 0x8765fed1;
-		size_t a = 8, b = 4;
-		size_t hash = 0;
-		
-		hash += a;
-		hash += hash << 10;
-		hash ^= (hash >> 6);
 
-		hash += b;
-		hash += hash << 10;
-		hash ^= (hash >> 6);
-*/
 
 static uint_t __hash_uint(uint_t hash, uint_t n)
 {
@@ -39,21 +27,22 @@ static uint_t __hash_uint(uint_t hash, uint_t n)
 		return hash;
 }
 
-void			PSR_InitLRItem(psrLRItem_t *item, size_t rule_id, size_t delim, const psrSymb_t *symb)
+void			PSR_InitLRItem(psrLRItem_t *item, const psrRule_t	*rule, size_t delim, const psrSymb_t *symb)
 {
 		AR_ASSERT(item != NULL);
-		item->rule_id = rule_id;
+		item->rule = rule;
 		item->delim = delim;
 		item->hash_code = 0;
 		item->symb = NULL;
-		item->tbl = NULL;
+		item->lst = NULL;
 
-		item->hash_code = __hash_uint(item->hash_code, item->rule_id);
+		item->hash_code = __hash_uint(item->hash_code, (uint_t)item->rule);
 		item->hash_code ^= __hash_uint(item->hash_code, item->delim);
 
 		if(symb)
 		{
 				item->symb = PSR_CopyNewSymb(symb);
+				
 				item->hash_code ^= symb->hash_code;
 		}
 }
@@ -66,10 +55,10 @@ void			PSR_UnInitLRItem(psrLRItem_t *item)
 				PSR_DestroySymb(item->symb);
 		}
 
-		if(item->tbl)
+		if(item->lst)
 		{
-				PSR_UnInitSymbTbl(item->tbl);
-				AR_DEL(item->tbl);
+				PSR_UnInitSymbList(item->lst);
+				AR_DEL(item->lst);
 		}
 }
 
@@ -82,7 +71,7 @@ int_t			PSR_CompLRItem(const psrLRItem_t *l, const psrLRItem_t *r)
 		cmp = AR_CMP(l->hash_code, r->hash_code);
 		if(cmp != 0)return cmp;
 
-		cmp = AR_CMP(l->rule_id, r->rule_id);
+		cmp = AR_CMP(l->rule, r->rule);
 		if(cmp != 0)return cmp;
 		
 		cmp = AR_CMP(l->delim, r->delim);
@@ -101,7 +90,16 @@ int_t			PSR_CompLRItem(const psrLRItem_t *l, const psrLRItem_t *r)
 void			PSR_CopyLRItem(psrLRItem_t *dest, const psrLRItem_t *sour)
 {
 		PSR_UnInitLRItem(dest);
-		PSR_InitLRItem(dest, sour->rule_id, sour->delim, sour->symb);
+		PSR_InitLRItem(dest, sour->rule, sour->delim, sour->symb);
+		
+		if(sour->lst)
+		{
+				/*现在对LR_Item的应用决定了这里永远不会被执行到*/
+				AR_ASSERT(false);
+				dest->lst = AR_NEW0(psrSymbList_t);
+				PSR_InitSymbList(dest->lst);
+				PSR_CopySymbList(dest->lst, sour->lst);
+		}
 }
 
 /*******************************************************************************************************************************/
@@ -426,7 +424,7 @@ void			PSR_PrintLRItem(const psrLRItem_t *item, const psrGrammar_t *gmr, arStrin
 		
 		size_t i;
 		AR_ASSERT(item != NULL && gmr != NULL && str != NULL);
-		rule = PSR_GetRuleByRuleID(gmr, item->rule_id);
+		rule = item->rule;
 
 		AR_AppendString(str, L"[ ");
 		
@@ -438,7 +436,7 @@ void			PSR_PrintLRItem(const psrLRItem_t *item, const psrGrammar_t *gmr, arStrin
 		{
 				const psrSymb_t	*curr;
 				curr = PSR_IndexOfSymbList(&rule->body, i);
-				PSR_PrintSymbol(curr, false,str);
+				PSR_PrintSymbol(curr, str);
 		}
 		
 		AR_AppendString(str, L". ");
@@ -447,22 +445,23 @@ void			PSR_PrintLRItem(const psrLRItem_t *item, const psrGrammar_t *gmr, arStrin
 		{
 				const psrSymb_t	*curr;
 				curr = PSR_IndexOfSymbList(&rule->body, i);
-				PSR_PrintSymbol(curr, false,str);
+				PSR_PrintSymbol(curr, str);
 		}
 
 		if(item->symb)
 		{
 				AR_AppendString(str, L" : ");
-				PSR_PrintSymbol(item->symb, false,str);
+				PSR_PrintSymbol(item->symb, str);
 		}
 
-		if(item->tbl)
+		if(item->lst)
 		{
 				AR_AppendString(str, L" : ");
-				PSR_PrintSymbolTable(item->tbl, false,str);
+				PSR_PrintSymbolList(item->lst, str);
 		}
 		AR_AppendString(str, L" ]");
 }
+
 
 
 void PSR_PrintLRItemTable(const psrLRItemTbl_t *tbl, const psrGrammar_t *gmr, arString_t *str)

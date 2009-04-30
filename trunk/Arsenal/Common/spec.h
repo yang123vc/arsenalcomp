@@ -47,7 +47,7 @@ inline int AR_vscwprintf(const wchar_t *fmt, va_list argptr) { int n; size_t buf
 
 #elif(AR_COMPILER == AR_BCB6)
 
-#define AR_swprintf						swprintf
+/*#define AR_swprintf						swprintf*/
 #define AR_sprintf		sprintf
 #define AR_vsprintf(buf, count, fmt, args)	        vsprintf(buf, fmt, args)
 #define AR_vswprintf(buf, count, fmt, args)	        vswprintf(buf, fmt, args)

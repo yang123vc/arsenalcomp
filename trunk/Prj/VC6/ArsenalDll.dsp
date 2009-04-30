@@ -118,6 +118,14 @@ SOURCE=..\..\Arsenal\Common\spec.h
 
 SOURCE=..\..\Arsenal\Common\string.c
 # End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Common\strtable.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Common\thread.c
+# End Source File
 # End Group
 # Begin Group "Lex"
 
@@ -148,6 +156,10 @@ SOURCE=..\..\Arsenal\Lex\lex.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\Arsenal\Lex\lex_config.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\Arsenal\Lex\node.c
 # End Source File
 # Begin Source File
@@ -172,15 +184,11 @@ SOURCE=..\..\Arsenal\Parser\grammar_config.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\Arsenal\Parser\lr.h
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\Arsenal\Parser\lr_action.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\Arsenal\Parser\lr_core.c
+SOURCE=..\..\Arsenal\Parser\lr_action.h
 # End Source File
 # Begin Source File
 
@@ -188,7 +196,19 @@ SOURCE=..\..\Arsenal\Parser\lr_dfa.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\Arsenal\Parser\lr_dfa.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Parser\lr_dfa_aux.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\Arsenal\Parser\lr_item.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Parser\lr_item.h
 # End Source File
 # Begin Source File
 
@@ -197,6 +217,18 @@ SOURCE=..\..\Arsenal\Parser\parser.c
 # Begin Source File
 
 SOURCE=..\..\Arsenal\Parser\parser.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Parser\parser_aux.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Parser\parser_in.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Parser\parser_in.h
 # End Source File
 # Begin Source File
 
@@ -212,7 +244,19 @@ SOURCE=..\..\Arsenal\Parser\symbol.h
 # PROP Default_Filter ""
 # Begin Source File
 
+SOURCE=..\..\Arsenal\Test\calc_test.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\Arsenal\Test\com_test.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Test\dragonbook.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Test\gmr_test.c
 # End Source File
 # Begin Source File
 
@@ -220,11 +264,11 @@ SOURCE=..\..\Arsenal\Test\lex_test.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\Arsenal\Test\lr_test.c
+SOURCE=..\..\Arsenal\Test\parser_test.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\Arsenal\Test\parser_test.c
+SOURCE=..\..\Arsenal\Test\psr_misc.c
 # End Source File
 # Begin Source File
 

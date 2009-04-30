@@ -36,23 +36,21 @@ typedef struct __action_record_tag psrAction_t;
 typedef struct __action_record_tag
 {
 		psrActionType_t			type;
-		const wchar_t			*rule_name;
-		size_t					rule_id;
+		
+		size_t					shift_to;
+		const psrRule_t			*rule;
 		size_t					delim;
+		
 
+		
 		size_t					prec;
 		size_t					reduce_count;/*规约时用到，产生式如果为%Epsilon，则count为0*/
 		psrAction_t				*next;
 		
-		
-		
-		union{
-				size_t			shift_to;
-				size_t			reduce_id;
-		};
 }psrAction_t;
 
 extern const psrAction_t	*PSR_ErrorAction;
+
 
 typedef struct __parser_action_tag
 {
@@ -66,6 +64,7 @@ typedef struct __parser_action_tag
 		size_t			row;
 		size_t			col;
 		psrAction_t		**actions;
+		psrSymbList_t	*expected_set;
 }psrActionTable_t;
 
 
@@ -74,6 +73,7 @@ typedef struct __parser_action_tag
 const psrAction_t*		PSR_GetAction(const psrActionTable_t *tbl, size_t state, const psrSymb_t *symb);
 int_t					PSR_GetState(const psrActionTable_t *tbl, size_t state, const psrSymb_t *symb);
 
+const psrSymbList_t*	PSR_GetExpectedSymb(const psrActionTable_t *tbl, size_t state);
 
 
 psrActionTable_t*		PSR_CreateActionTable_SLR(const psrGrammar_t *grammar);
@@ -87,7 +87,7 @@ void					PSR_DestroyActionTable(psrActionTable_t *tbl);
 void PSR_PrintActionTable(const psrActionTable_t *tbl, const psrGrammar_t *grammar, size_t width, arString_t *str);
 void PSR_ReportConflict(const psrActionTable_t *tbl, const psrGrammar_t *grammar, arString_t *str);
 
-
+size_t PSR_CountConflict(const psrActionTable_t *tbl);
 
 
 

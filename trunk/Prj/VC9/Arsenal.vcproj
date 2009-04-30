@@ -636,10 +636,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\Arsenal\Lex\lex_config.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\Arsenal\Lex\node.c"
 				>
 			</File>
@@ -680,6 +676,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\Arsenal\Common\strtable.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\Arsenal\Common\thread.c"
 				>
 			</File>
@@ -688,11 +688,19 @@
 			Name="Test"
 			>
 			<File
+				RelativePath="..\..\Arsenal\Test\calc_test.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\Arsenal\Test\com_test.c"
 				>
 			</File>
 			<File
 				RelativePath="..\..\Arsenal\Test\dragonbook.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Arsenal\Test\gmr_test.c"
 				>
 			</File>
 			<File
@@ -715,6 +723,22 @@
 				RelativePath="..\..\Arsenal\Test\test.h"
 				>
 			</File>
+			<Filter
+				Name="dragonbook"
+				>
+				<File
+					RelativePath="..\..\Arsenal\Test\DragonBook\comn.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Arsenal\Test\DragonBook\syntree.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Arsenal\Test\DragonBook\syntree.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Parser"
@@ -768,19 +792,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\Arsenal\Parser\parser_aux.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\Arsenal\Parser\parser_in.c"
 				>
 			</File>
 			<File
 				RelativePath="..\..\Arsenal\Parser\parser_in.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Arsenal\Parser\strtbl.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Arsenal\Parser\strtbl.h"
 				>
 			</File>
 			<File

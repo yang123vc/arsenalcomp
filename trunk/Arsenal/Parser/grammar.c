@@ -16,385 +16,488 @@
 
 AR_NAMESPACE_BEGIN
 
+/*
+void			PSR_InitTermInfoList(psrTermInfoList_t	*lst);
+void			PSR_UnInitTermInfoList(psrTermInfoList_t	*lst);
+void			PSR_ClearTermInfoList(psrTermInfoList_t	*lst);
+psrTermInfo_t*	PSR_FindTermByName(psrTermInfoList_t	*lst, const wchar_t *name);
+psrTermInfo_t*	PSR_FindTermByValue(psrTermInfoList_t	*lst, size_t val);
+bool			PSR_InsertToTermInfoList(psrTermInfoList_t	*lst, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f);
+*/
 
 
-
-void					PSR_InitGrammar(psrGrammar_t *grammar)
+void			PSR_InitTermInfoList(psrTermInfoList_t	*lst)
 {
-		AR_memset(grammar, 0, sizeof(*grammar));
-		PSR_InitSymbTbl(&grammar->term_tbl, 10);
-		PSR_InitSymbList(&grammar->symb_list);
+		AR_ASSERT(lst != NULL);
+		AR_memset(lst, 0, sizeof(*lst));
+		
 
 }
 
-void					PSR_UnInitGrammar(psrGrammar_t *grammar)
-{
-		if(grammar != NULL)
-		{
-				PSR_ClearGrammar(grammar);
-				PSR_UnInitSymbTbl(&grammar->term_tbl);
-				PSR_UnInitSymbList(&grammar->symb_list);
-				AR_memset(grammar, 0, sizeof(*grammar));
-		}
-}
 
-
-static void		__destroy_rule(psrRule_t *rule)
-{
-		if(rule)
-		{
-				size_t i;
-				PSR_DestroySymb(rule->head);
-				for(i = 0; i < rule->body.count; ++i)
-				{
-						PSR_DestroySymb(rule->body.lst[i]);
-				}
-				PSR_UnInitSymbList(&rule->body);
-		}
-}
-
-void					PSR_ClearGrammar(psrGrammar_t *grammar)
+void			PSR_ClearTermInfoList(psrTermInfoList_t	*lst)
 {
 		size_t i;
-		psrSymbTblIter_t iter;
-		
-		for(iter = PSR_FirstFromSymbTbl(&grammar->term_tbl); iter.curr; PSR_NextFromSymbTbl(&grammar->term_tbl, &iter))
-		{
-				PSR_DestroySymb(iter.curr->symb);
-		}
+		AR_ASSERT(lst != NULL);
 
-		PSR_ClearSymbTbl(&grammar->term_tbl);
-		PSR_ClearSymbList(&grammar->symb_list);
-
-		for(i = 0; i < grammar->count; ++i)
+		for(i = 0; i < lst->count; ++i)
 		{
-				__destroy_rule(&grammar->rules[i]);
+				psrTermInfo_t	*info = &lst->lst[i];
+
+				PSR_DestroySymb(info->term);
 		}
-		grammar->count = 0;
+		lst->count = 0;
 }
 
-/***************************************************************************************/
+void			PSR_UnInitTermInfoList(psrTermInfoList_t	*lst)
+{
+		AR_ASSERT(lst != NULL);
+		PSR_ClearTermInfoList(lst);
+		if(lst->lst)AR_DEL(lst->lst);
+		AR_memset(lst, 0, sizeof(*lst));
+}
 
-static void	__copy_rule(psrRule_t *dest, const psrRule_t *sour)
+
+psrTermInfo_t*	PSR_FindTermByName(psrTermInfoList_t	*lst, const wchar_t *name)
 {
 		size_t i;
-		
-		dest->head = PSR_CopyNewSymb(sour->head);
-		if(sour->prec_tok)
+		AR_ASSERT(lst != NULL && name != NULL);
+		for(i = 0; i < lst->count; ++i)
 		{
-				dest->prec_tok = PSR_AllocString(sour->prec_tok);
-		}else
-		{
-				dest->prec_tok = NULL;
-		}
-		dest->rule_id = sour->rule_id;
-		PSR_InitSymbList(&dest->body);
-		
-		for(i = 0; i < sour->body.count; ++i)
-		{
-				PSR_InsertToSymbList(&dest->body, PSR_CopyNewSymb(sour->body.lst[i]));
-		}
-		
-}
+				psrTermInfo_t	*info = &lst->lst[i];
 
-void PSR_CopyGrammar(psrGrammar_t *dest, const psrGrammar_t *grammar)
-{
-		psrSymbTblIter_t iter;
-		size_t	i;
-		AR_ASSERT(grammar != NULL && dest != NULL);
-		
-		PSR_ClearSymbTbl(&dest->term_tbl);
-
-		for(iter = PSR_FirstFromSymbTbl(&grammar->term_tbl); iter.curr; PSR_NextFromSymbTbl(&grammar->term_tbl, &iter))
-		{
-				PSR_InsertToSymbTbl(&dest->term_tbl, PSR_CopyNewSymb(iter.curr->symb));
-		}
-		
-		if(grammar->count > 0)
-		{
-				dest->count = dest->cap = grammar->count;
-				dest->rules = AR_NEWARR0(psrRule_t, dest->count);
-
-				for(i = 0; i < dest->count; ++i)
-				{
-						__copy_rule(&dest->rules[i], &grammar->rules[i]);
-				}
-		}
-}
-
-/***************************************************************************************/
-
-
-
-
-
-bool					PSR_InsertTerm(psrGrammar_t *grammar, const psrSymb_t *token)
-{
-		AR_ASSERT(grammar != NULL && token != NULL && token->type == PSR_TERM);
-		
-		if(token->val < PSR_MIN_TOKENVAL)
-		{
-				AR_error(AR_GRAMMAR, L"Grammar Error : invalid token value %s : %d\r\n", token->name, token->val);
-				return false;
-		}
-
-		if(grammar->term_tbl.item_count == 0)
-		{
-				PSR_InsertToSymbTbl(&grammar->term_tbl, PSR_CopyNewSymb(PSR_EpsilonSymb));
-				PSR_InsertToSymbTbl(&grammar->term_tbl, PSR_CopyNewSymb(PSR_EOISymb));
-				PSR_InsertToSymbTbl(&grammar->term_tbl, PSR_CopyNewSymb(PSR_ErrorSymb));
-		}
-
-		if(PSR_FindTermByName(grammar, token->name) != NULL || PSR_FindTermByValue(grammar, token->val) != NULL)return false;
-		return PSR_InsertToSymbTbl(&grammar->term_tbl, PSR_CreateSymb(token->name, token->type, token->prec, token->assoc, token->val));
-}
-
-
-const psrSymb_t*		PSR_FindTermByName(psrGrammar_t	*grammar, const wchar_t *name)
-{
-		psrSymbTblIter_t iter;
-		AR_ASSERT(grammar != NULL && name != NULL);
-
-		for(iter = PSR_FirstFromSymbTbl(&grammar->term_tbl); iter.curr; PSR_NextFromSymbTbl(&grammar->term_tbl, &iter))
-		{
-				if(AR_wcscmp(iter.curr->symb->name, name) == 0)return iter.curr->symb;
-		}
-		return NULL;	
-}
-
-
-const psrSymb_t*		PSR_FindTermByValue(psrGrammar_t	*grammar, uint_t val)
-{
-		psrSymbTblIter_t iter;
-		AR_ASSERT(grammar != NULL);
-
-		for(iter = PSR_FirstFromSymbTbl(&grammar->term_tbl); iter.curr; PSR_NextFromSymbTbl(&grammar->term_tbl, &iter))
-		{
-				if(iter.curr->symb->val == val)return iter.curr->symb;
+				if(AR_wcscmp(info->term->name, name) == 0)return info;
 		}
 		return NULL;
 }
 
 
-bool					PSR_SetTerm(psrGrammar_t *grammar, const wchar_t *name, psrAssocType_t assoc, size_t prec)
+psrTermInfo_t*	PSR_FindTermByValue(psrTermInfoList_t	*lst, size_t val)
 {
-		const psrSymb_t *term;
-		AR_ASSERT(grammar != NULL && name != NULL);
-		term = PSR_FindTermByName(grammar, name);
-		if(term == NULL)return false;
+		size_t i;
+		AR_ASSERT(lst != NULL);
+		for(i = 0; i < lst->count; ++i)
+		{
+				psrTermInfo_t	*info = &lst->lst[i];
+				if(info->val == val)return info;
+		}
+		return NULL;
+}
 
-		((psrSymb_t*)term)->prec = prec;
-		((psrSymb_t*)term)->assoc = assoc;
+
+bool			PSR_InsertToTermInfoList(psrTermInfoList_t	*lst, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f)
+{
+		psrTermInfo_t *info;
+		AR_ASSERT(lst != NULL && name != NULL);
+
+		if(lst->count == lst->cap)
+		{
+				lst->cap = (lst->cap + 4)*2;
+				lst->lst = AR_REALLOC(psrTermInfo_t, lst->lst, lst->cap);
+		}
+		info = &lst->lst[lst->count++];
+		
+		info->term = PSR_CreateSymb(name, PSR_TERM);
+		info->assoc = assoc;
+		info->prec = prec;
+		info->val = val;
+		info->leaf_f = leaf_f;
+		return true;
+}
+
+/*******************************************Rule******************************************************************/
+
+/*
+psrRule_t*		PSR_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, const psrTermInfoList_t *term_list);
+psrRule_t*		PSR_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, const psrTermInfoList_t *term_list);
+psrRule_t*		PSR_CopyNewRule(const psrRule_t *rule);
+
+void			PSR_DestroyRule(psrRule_t *rule);
+
+*/
+
+
+psrRule_t* PSR_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, const psrTermInfoList_t *term_list)
+{
+		psrRule_t		*rule;
+		size_t i;
+		bool			inerr;
+		const wchar_t*  right_term;
+		AR_ASSERT(head != NULL && body != NULL && term_list != NULL);
+		
+		
+
+		if(PSR_FindTermByName((psrTermInfoList_t*)term_list, head->name) != NULL) return NULL;
+
+		if(prec_tok != NULL && PSR_FindTermByName((psrTermInfoList_t*)term_list, prec_tok) == NULL)
+		{
+				AR_error(AR_GRAMMAR, L"Grammar Error: Invalid prec token <%s>!\r\n", head->name);
+				return NULL;
+		}
+		
+		right_term = NULL; 
+		inerr = false;
+
+		for(i = 0; i < body->count; ++i)
+		{
+				const psrSymb_t	*symb;
+
+				symb = body->lst[i];
+
+				if(body->lst[i]->type == PSR_TERM)
+				{
+						if(PSR_FindTermByName((psrTermInfoList_t*)term_list, symb->name) == NULL)return NULL;
+						
+						if(PSR_CompSymb(symb, PSR_EpsilonSymb) == 0)
+						{
+								if(body->count != 1)
+								{
+										AR_error(AR_GRAMMAR, L"Grammar Error: invalid epsilon definition in <%s>!\r\n", head->name);
+										return NULL;
+								}
+						}
+
+						if(PSR_CompSymb(symb, PSR_ErrorSymb) == 0)
+						{
+								if(inerr)
+								{
+										AR_error(AR_GRAMMAR, L"Grammar Error: Duplicate error definition in <%s>!\r\n", head->name);
+										return NULL;
+								}else
+								{
+										inerr = true;
+								}
+						}
+						right_term = symb->name;
+				}else
+				{
+						if(PSR_FindTermByName((psrTermInfoList_t*)term_list, symb->name) != NULL)return NULL;
+				}
+		}
+		
+		if(right_term == NULL)right_term = PSR_DefPrecSymb->name;
+		
+		rule = AR_NEW0(psrRule_t);
+		PSR_InitSymbList(&rule->body);
+		
+		rule->head = PSR_CopyNewSymb(head);
+		
+		for(i = 0; i < body->count; ++i)
+		{
+				PSR_InsertToSymbList(&rule->body, PSR_CopyNewSymb(body->lst[i]));
+				
+		}
+
+		if(rule->body.count == 0)
+		{
+				PSR_InsertToSymbList(&rule->body, PSR_CopyNewSymb(PSR_EpsilonSymb));
+		}
+
+
+		rule->prec_tok = prec_tok != NULL ? AR_wcsdup(prec_tok) : AR_wcsdup(right_term);
+		rule->rule_f = rule_f;
+		return rule;
+}
+
+
+
+/*****************************************************************************************************************************************/
+
+psrRule_t* PSR_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, const psrTermInfoList_t *term_list)
+{
+		const psrSymb_t *head;
+		psrSymbList_t	body;
+		psrRule_t		*res;
+		const wchar_t	*p, *beg;
+		size_t			count;
+		AR_ASSERT(str != NULL && term_list != NULL);
+		
+		res = NULL;
+		head = NULL; 
+		PSR_InitSymbList(&body);
+		p = AR_wcstrim(str, L" \t\n");
+
+		beg = p;
+
+		while(*p != L'\0' && (AR_iswalpha(*p) || *p == L'_'))p++;
+
+		if(*p == L'\0' || p - beg == 0)return NULL;
+		
+		{
+				
+				wchar_t *name;
+				count = p - beg;
+				name = AR_wcsndup(beg, count);
+				head = PSR_CreateSymb(name, PSR_NONTERM);
+				AR_DEL(name);
+		}
+		
+		p = AR_wcstrim(p, L" \t\n");
+
+		if(*p != L':')goto END_POINT;
+		++p;
+
+		while(*p != L'\0')
+		{
+				if(*p == L' ' || *p == L'\t' || *p == L'\n')
+				{
+						++p;
+				}else
+				{
+						beg = p;
+						while(*p != L'\0' && *p != L' ' && *p != L'\t' && *p != L'\n')++p;
+						
+						{
+								wchar_t *name;
+								const psrSymb_t *tmp;
+								count = p - beg;
+								name = AR_wcsndup(beg, count);
+
+								if(PSR_FindTermByName((psrTermInfoList_t*)term_list, name) == NULL)
+								{
+										tmp = PSR_CreateSymb(name, PSR_NONTERM);
+								}else
+								{
+										tmp = PSR_CreateSymb(name, PSR_TERM);
+								}
+								PSR_InsertToSymbList(&body, tmp);
+						}
+				}
+		}
+		
+
+		res =  PSR_CreateRule(head, &body, prec, rule_f, term_list);
+
+END_POINT:
+		if(head)PSR_DestroySymb(head);
+		
+		{
+				size_t i;
+				
+				for(i = 0; i < body.count; ++i)
+				{
+						PSR_DestroySymb(body.lst[i]);
+				}
+		}
+		PSR_UnInitSymbList(&body);
+		return res;
+}
+
+
+void			PSR_DestroyRule(psrRule_t *rule)
+{
+		size_t i;
+		AR_ASSERT(rule != NULL);
+
+		PSR_DestroySymb(rule->head);
+		for(i = 0; i < rule->body.count; ++i)
+		{
+				PSR_DestroySymb(rule->body.lst[i]);
+		}
+
+		PSR_UnInitSymbList(&rule->body);
+		AR_DEL(rule);
+}
+
+
+
+psrRule_t*		PSR_CopyNewRule(const psrRule_t *rule)
+{
+		psrRule_t *dest;
+		size_t i;
+		AR_ASSERT(rule != NULL);
+		dest = AR_NEW0(psrRule_t);
+
+		dest->head = PSR_CopyNewSymb(rule->head);
+		PSR_InitSymbList(&dest->body);
+
+		for(i = 0; i < rule->body.count; ++i)
+		{
+				PSR_InsertToSymbList(&dest->body, PSR_CopyNewSymb(rule->body.lst[i]));
+		}
+
+		dest->prec_tok = rule->prec_tok;
+		dest->rule_f = rule->rule_f;
+		return dest;
+
+}
+
+
+
+
+/******************************************Grammar************************************************************/
+
+/******************************************************************************************************************/
+
+void __insert_rule(psrGrammar_t *grammar, psrRule_t *rule)
+{
+		if(grammar->count == grammar->cap)
+		{
+				grammar->cap = (grammar->cap + 4)*2;
+				grammar->rules = AR_REALLOC(psrRule_t*, grammar->rules, grammar->cap);
+		}
+		grammar->rules[grammar->count++] = rule;
+}
+
+void __init_grammar_component_unit(psrGrammar_t *grammar)
+{
+		AR_ASSERT(grammar != NULL);
+
+		PSR_InsertToTermInfoList(&grammar->term_list, PSR_EpsilonSymb->name, PSR_EPSILON_TOKVAL, PSR_ASSOC_NOASSOC, 0, NULL);
+		PSR_InsertToTermInfoList(&grammar->term_list, PSR_EOISymb->name,PSR_EOI_TOKVAL, PSR_ASSOC_NOASSOC, 0, NULL);
+		PSR_InsertToTermInfoList(&grammar->term_list, PSR_ErrorSymb->name, PSR_ERROR_TOKVAL, PSR_ASSOC_NOASSOC, 0, NULL);
+		PSR_InsertToTermInfoList(&grammar->term_list, PSR_DefPrecSymb->name, PSR_DEFPREC_TOKVAL, PSR_ASSOC_NOASSOC, 0, NULL);
+
+		{
+				psrRule_t *start;
+				psrSymbList_t	body;
+				PSR_InitSymbList(&body);
+				start = PSR_CreateRule(PSR_StartSymb, &body, NULL, NULL, &grammar->term_list);
+				AR_ASSERT(start != NULL);
+				PSR_UnInitSymbList(&body);
+				__insert_rule(grammar, start);
+		}
+}		
+
+/******************************************************************************************************************/
+
+
+psrGrammar_t*			PSR_CreateGrammar()
+{
+		psrGrammar_t* gmr;
+		gmr = AR_NEW0(psrGrammar_t);
+		PSR_InitTermInfoList(&gmr->term_list);
+		PSR_InitSymbList(&gmr->symb_list);
+		__init_grammar_component_unit(gmr);
+		return gmr;
+}
+
+void					PSR_ClearGrammar(psrGrammar_t *grammar)
+{
+		size_t i;
+		for(i = 0; i < grammar->count; ++i)
+		{
+				PSR_DestroyRule(grammar->rules[i]);
+				grammar->rules[i] = NULL;
+		}
+		
+		grammar->count = 0;
+		PSR_ClearTermInfoList(&grammar->term_list);
+		PSR_ClearSymbList(&grammar->symb_list);
+		__init_grammar_component_unit(grammar);
+}
+
+
+void					PSR_DestroyGrammar(psrGrammar_t *grammar)
+{
+
+		AR_ASSERT(grammar != NULL);
+		PSR_ClearGrammar(grammar);
+		
+		PSR_UnInitTermInfoList(&grammar->term_list);
+		PSR_UnInitSymbList(&grammar->symb_list);
+		AR_DEL(grammar->rules);
+		AR_DEL(grammar);
+
+}
+
+
+
+
+bool					PSR_InsertTerm(psrGrammar_t *grammar, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f)
+{
+		AR_ASSERT(grammar != NULL && name != NULL);
+		
+		if(val < PSR_MIN_TOKENVAL)
+		{
+				AR_error(AR_GRAMMAR, L"Grammar Error : invalid token value %d\r\n", val);
+				return false;
+		}
+		
+
+		if(PSR_FindTermByName(&grammar->term_list, name) != NULL)
+		{
+				AR_error(AR_GRAMMAR, L"Grammar Error : duplicate name : %s definition\r\n", name);
+				return false;
+		}
+
+		if(PSR_FindTermByValue(&grammar->term_list, val) != NULL)
+		{
+				AR_error(AR_GRAMMAR, L"Grammar Error : duplicate token value : %d definition\r\n", val);
+				return false;
+		}
+		
+		return PSR_InsertToTermInfoList(&grammar->term_list, name, val, assoc, prec, leaf_f);
+}
+
+bool					PSR_InsertRule(psrGrammar_t *grammar, psrRule_t *rule)
+{
+		size_t i;
+		AR_ASSERT(grammar != NULL && rule != NULL);
+		
+		for(i = 0; i < grammar->count; ++i)
+		{
+				if(grammar->rules[i] == rule)return false;
+		}
+
+		if(PSR_CompSymb(rule->head, PSR_StartSymb) == 0)/*rule-head不可为%Start保留符号*/
+		{
+				AR_error(AR_GRAMMAR, L"Grammar Error : Non-term token %s was reserved\r\n", rule->head->name);
+				return false;
+		}
+		
+		if(grammar->count == 1)
+		{
+				PSR_DestroySymb(grammar->rules[0]->body.lst[0]);
+				grammar->rules[0]->body.lst[0] = PSR_CopyNewSymb(rule->head);
+		}
+		__insert_rule(grammar, rule);
+		
 		return true;
 }
 
 
-const psrRule_t*		PSR_GetRuleByRuleID(const psrGrammar_t *grammar, size_t rule_id)
+
+bool					PSR_InsertRule2(psrGrammar_t *grammar, const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f)
 {
-		AR_ASSERT(grammar != NULL && rule_id < grammar->count);
-		return &grammar->rules[rule_id];
+		psrRule_t		*rule;
+		AR_ASSERT(grammar != NULL && head != NULL && body != NULL);
+
+		rule = PSR_CreateRule(head, body, prec_tok, rule_f, &grammar->term_list);
+		
+		if(rule == NULL)return false;
+
+		return PSR_InsertRule(grammar, rule);
+}
+
+
+
+bool					PSR_InsertRule3(psrGrammar_t *grammar, const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f)
+{
+
+		psrRule_t		*rule;
+		AR_ASSERT(grammar != NULL && str != NULL);
+		rule = PSR_CreateRuleByStr(str, prec, rule_f, &grammar->term_list);
+		if(rule == NULL)return false;
+		return PSR_InsertRule(grammar, rule);
 }
 
 
 
 
 
-static void __insert_rule(psrGrammar_t *grammar, const psrSymb_t *head, const psrSymbList_t *body, const psrSymb_t *term)
+
+
+int_t					PSR_IndexOfGrammar(const psrGrammar_t *grammar, const psrRule_t *rule)
 {
 		size_t i;
-		if(grammar->count == grammar->cap)
-		{
-				
-				grammar->cap = (grammar->cap + 4) * 2;
-				grammar->rules = AR_REALLOC(psrRule_t, grammar->rules, grammar->cap);
-				for(i = grammar->count; i < grammar->cap; ++i)
-				{
-						AR_memset(&grammar->rules[i], 0, sizeof(grammar->rules[i]));
-				}
-		}
-		
-		grammar->rules[grammar->count].head = head;
-		grammar->rules[grammar->count].rule_id = grammar->count;
-		PSR_InitSymbList(&grammar->rules[grammar->count].body);
-		
-		for(i = 0; i < body->count; ++i)
-		{
-				const psrSymb_t *new_symb = PSR_CreateSymb(body->lst[i]->name, body->lst[i]->type, body->lst[i]->prec, body->lst[i]->assoc, body->lst[i]->val);
-				PSR_InsertToSymbList(&grammar->rules[grammar->count].body, new_symb);
-		}
-
-		if(term != NULL)
-		{
-				grammar->rules[grammar->count].prec_tok = PSR_AllocString(term->name);
-		}else
-		{
-				grammar->rules[grammar->count].prec_tok = NULL;
-		}
-		grammar->count++;
-}
-
-
-bool					PSR_InsertRule(psrGrammar_t *grammar, const psrSymb_t *head, const psrSymbList_t *body, const psrSymb_t *term)
-{
-		bool is_ok;
-		bool is_error;
-		size_t right_prec;
-		psrAssocType_t right_assoc;
-		size_t i;
-		const psrSymb_t *right_term;
-		
-		
-		AR_ASSERT(grammar != NULL && head != NULL && body != NULL && body->count > 0 && head->type == PSR_NONTERM);
-
-		if(PSR_FindTermByName(grammar, head->name) != NULL)
-		{
-				AR_error(AR_GRAMMAR, L"Grammar Error : invalid rule head \"%s\" is a term symbol\r\n", head->name);
-				return false;
-		}
-		
-		if(term != NULL && (PSR_FindTermByValue(grammar, term->val) == NULL || PSR_FindTermByName(grammar, term->name) == NULL))
-		{
-				AR_error(AR_GRAMMAR, L"Grammar Error : prec term %s not found\r\n", term->name);
-				return false;
-		}
-		
-		if(grammar->count == 0)
-		{
-				psrSymbList_t	lst;
-				PSR_InitSymbList(&lst);
-				PSR_InsertToSymbList(&lst, head);
-				__insert_rule(grammar, PSR_CopyNewSymb(PSR_StartSymb), &lst, NULL);
-				PSR_UnInitSymbList(&lst);
-		}
-		
-		is_ok = true;
-		
-		right_prec = 0;
-		right_assoc = PSR_ASSOC_NOASSOC;
-		right_term = NULL;
-		
-		is_error = false;
-
-		for(i = 0; i < body->count; ++i)
-		{
-				const psrSymb_t *curr;
-				curr = body->lst[i];
-				if(curr->type == PSR_TERM)
-				{
-						const psrSymb_t *tok, *tok2;
-						tok = PSR_FindTermByName(grammar, curr->name);
-						tok2 = PSR_FindTermByValue(grammar, curr->val);
-						if(tok == NULL || tok2 == NULL || tok != tok2)
-						{
-								is_ok = false;
-								break;
-						}
-
-						if(PSR_CompSymb(tok, PSR_EpsilonSymb) == 0)
-						{
-								if(i > 0 || body->count > 1)
-								{
-										is_ok = false;
-										AR_error(AR_GRAMMAR, L"Grammar Error: Invalid epsilon token definition<%s>!\r\n", head->name);
-										break;
-								}
-						}
-						
-						((psrSymb_t*)curr)->prec = tok->prec;
-						((psrSymb_t*)curr)->val = tok->val;
-						((psrSymb_t*)curr)->assoc = tok->assoc;
-
-						right_prec = curr->prec;
-						right_assoc = curr->assoc;
-						right_term = curr;
-
-						if(PSR_CompSymb(curr, PSR_ErrorSymb) == 0)
-						{
-							/*	if(i == body->count - 1)
-								{
-										AR_error(AR_GRAMMAR, L"Grammar Error: error  must be followed by term or non-term token : <%s>!\r\n", head->name);
-										is_ok = false;
-										break;
-								}
-							*/
-								if(!is_error)
-								{
-										is_error = true;
-								}else
-								{
-										AR_error(AR_GRAMMAR, L"Grammar Error: Duplicate error definition<%s>!\r\n", head->name);
-										is_ok = false;
-										break;
-								}
-						}
-
-				}else if(curr->type == PSR_NONTERM)
-				{
-						/*if(is_error)
-						{
-								AR_error(AR_GRAMMAR, L"Grammar Error: Invalid error definition<%s>!\r\n", head->name);
-								is_ok = false;
-								break;
-						}
-						*/
-						((psrSymb_t*)curr)->prec = 0;
-						((psrSymb_t*)curr)->val = 0;
-						((psrSymb_t*)curr)->assoc = PSR_ASSOC_NOASSOC;
-				}else
-				{
-						AR_ASSERT(false);
-				}
-		}
-		
-		if(is_ok)
-		{
-				if(term == NULL)
-				{
-						((psrSymb_t*)head)->prec = right_prec;
-						((psrSymb_t*)head)->assoc = right_assoc;
-				}else
-				{
-						((psrSymb_t*)head)->assoc = term->assoc;
-						((psrSymb_t*)head)->prec = term->prec;
-				}
-
-				if(term == NULL)term = right_term;
-				__insert_rule(grammar, PSR_CreateSymb(head->name, head->type, head->prec, head->assoc, head->val), body, term);
-		}else
-		{
-				if(grammar->count == 1)
-				{
-						PSR_ClearGrammar(grammar);
-				}
-		}
-		return is_ok;
-}
-
-
-
-void					PSR_UpdateGrammar(psrGrammar_t *grammar)
-{
-		size_t i;
-		AR_ASSERT(grammar != NULL);
-
 		for(i = 0; i < grammar->count; ++i)
 		{
-				psrRule_t		*rule;
-
-				rule = &grammar->rules[i];
-				if(rule->prec_tok != NULL)
-				{
-						const psrSymb_t *prec = PSR_FindTermByName(grammar, rule->prec_tok);
-						AR_ASSERT(prec != NULL);
-
-						((psrSymb_t*)rule->head)->prec = prec->prec;
-						((psrSymb_t*)rule->head)->assoc = prec->assoc;
-				}
+				if(grammar->rules[i] == rule)return (int_t)i;
 		}
 
-		PSR_ClearSymbList(&grammar->symb_list);
+		return -1;
 }
-
 
 const psrSymbList_t* PSR_GetSymbList(const psrGrammar_t *grammar)
 {
@@ -402,18 +505,18 @@ const psrSymbList_t* PSR_GetSymbList(const psrGrammar_t *grammar)
 		AR_ASSERT(grammar != NULL);
 		
 		lst = (psrSymbList_t*)(&grammar->symb_list);
+
 		if(grammar->symb_list.count == 0)
 		{
-				psrSymbTblIter_t iter;
 				size_t i;
-				for(iter = PSR_FirstFromSymbTbl(&grammar->term_tbl); iter.curr; PSR_NextFromSymbTbl(&grammar->term_tbl, &iter))
-				{
-						PSR_InsertToSymbList(lst, iter.curr->symb);
-				}
+
+				for(i = 0; i < grammar->term_list.count; ++i)PSR_InsertToSymbList(lst, grammar->term_list.lst[i].term);
+				
+				
 				
 				for(i = 0; i < grammar->count; ++i)
 				{
-						const psrSymb_t *head = grammar->rules[i].head;
+						const psrSymb_t *head = grammar->rules[i]->head;
 
 						if(PSR_FindFromSymbList(lst, head) == -1)
 						{
@@ -440,7 +543,7 @@ bool			PSR_CheckIsValidGrammar(const psrGrammar_t *grammar)
 		for(i = 0; i < grammar->count; ++i)
 		{
 				const psrRule_t *rule;
-				rule = &grammar->rules[i];
+				rule = grammar->rules[i];
 
 				for(j = 0; j < rule->body.count; ++j)
 				{
@@ -453,7 +556,7 @@ bool			PSR_CheckIsValidGrammar(const psrGrammar_t *grammar)
 								is_ok = false;
 								for(k = 0; !is_ok && k < grammar->count; ++k)
 								{
-										if(PSR_CompSymb(symb, grammar->rules[k].head) == 0)
+										if(PSR_CompSymb(symb, grammar->rules[k]->head) == 0)
 										{
 												is_ok = true;
 										}
@@ -461,7 +564,7 @@ bool			PSR_CheckIsValidGrammar(const psrGrammar_t *grammar)
 
 								if(!is_ok)
 								{
-										AR_error(AR_GRAMMAR, L"Grammar Error : The rule %s not exist in this grammar\r\n", symb->name);
+										AR_error(AR_GRAMMAR, L"Grammar Error : The rule <%s> not exist in this grammar\r\n", symb->name);
 										result = false;
 								}
 						}
@@ -486,7 +589,7 @@ bool			PSR_CheckIsValidGrammar(const psrGrammar_t *grammar)
 						{
 								const psrRule_t *rule;
 								
-								rule = &grammar->rules[k];
+								rule = grammar->rules[k];
 
 								if(PSR_CompSymb(rule->head, symb) == 0)continue;/*自己引用自己不算*/
 								
@@ -510,28 +613,67 @@ bool			PSR_CheckIsValidGrammar(const psrGrammar_t *grammar)
 		return result;
 }
 
+const psrRule_t*		PSR_GetStartRule(const psrGrammar_t *grammar)
+{
+		return grammar->rules[0];
+
+}
+
+const psrTermInfo_t* PSR_GetRulePrecAssocInfo(const psrGrammar_t *grammar, const psrRule_t *rule)
+{
+		AR_ASSERT(grammar != NULL && rule != NULL && rule->prec_tok != NULL);
+		return PSR_FindTermByName((psrTermInfoList_t*)&grammar->term_list, rule->prec_tok);
+
+}
+
+psrTermInfo_t*	PSR_GetTermSymbInfo(const psrGrammar_t	*grammar, const psrSymb_t *term)
+{
+		AR_ASSERT(grammar != NULL && term != NULL && term->type == PSR_TERM);
+		return  PSR_FindTermByName((psrTermInfoList_t*)&grammar->term_list, term->name);
+		
+}
+
+psrTermInfo_t*			PSR_GetTermSymbInfoByName(const psrGrammar_t	*grammar, const wchar_t *name)
+{
+		AR_ASSERT(grammar != NULL && name != NULL);
+
+		return  PSR_FindTermByName((psrTermInfoList_t*)&grammar->term_list, name);
+
+}
+
+psrTermInfo_t*			PSR_GetTermSymbInfoByValue(const psrGrammar_t	*grammar, size_t val)
+{
+		AR_ASSERT(grammar != NULL);
+		return PSR_FindTermByValue((psrTermInfoList_t*)&grammar->term_list, val);
+}
 
 
 
 void			PSR_PrintGrammar(const psrGrammar_t *grammar, arString_t *str)
 {
 		size_t i;
-		psrSymbList_t lst;
 		
 
-
 		AR_AppendFormatString(str,L"Rule:\r\n");
+
 		for(i = 0; i < grammar->count; ++i)
 		{
 				const psrRule_t *rule;
-				rule = &grammar->rules[i];
+				rule = grammar->rules[i];
 				
-				AR_AppendFormatString(str, L"id == %d  ", rule->rule_id);
-				PSR_PrintSymbol(rule->head, false,str);
+				PSR_PrintSymbol(rule->head, str);
 				AR_AppendString(str, L" -> ");
-				PSR_PrintSymbolList(&rule->body, false,str);
+				PSR_PrintSymbolList(&rule->body, str);
 				AR_AppendString(str, L"    ");
-				PSR_PrintSymbol(rule->head, true,str);
+				PSR_PrintSymbol(rule->head, str);
+				
+				{
+						const psrTermInfo_t *info;
+						AR_ASSERT(rule->prec_tok != NULL);
+						info = PSR_FindTermByName((psrTermInfoList_t*)&grammar->term_list, rule->prec_tok);
+						AR_ASSERT(info != NULL);
+						AR_AppendFormatString(str, L" prec = %d assoc = %d prec_tok = %s", info->prec, info->assoc, info->term->name);
+				}
 				
 				AR_AppendString(str, L"\r\n");
 		}
@@ -540,45 +682,27 @@ void			PSR_PrintGrammar(const psrGrammar_t *grammar, arString_t *str)
 		AR_AppendString(str, L"------------------------------------------\r\n");
 		AR_AppendString(str, L"Term Set:\r\n");
 		
-		PSR_InitSymbList(&lst);
 		
-		PSR_SymbTblToSymbList(&grammar->term_tbl, &lst);
 
-		for(i = 0; i < lst.count; ++i)
+		for(i = 0; i < grammar->term_list.count; ++i)
 		{
-				PSR_PrintSymbol(lst.lst[i], true,str);
+				PSR_PrintSymbol(grammar->term_list.lst[i].term, str);
+				AR_AppendFormatString(str, L": %d\r\n", PSR_GetTermSymbInfoByName(grammar,grammar->term_list.lst[i].term->name)->val);
+				/*
 				AR_AppendString(str, L"\r\n");
+				*/
 		}
-		PSR_UnInitSymbList(&lst);
+		
 
 		AR_AppendString(str, L"------------------------------------------\r\n");
 		AR_AppendString(str, L"Symbol List:\r\n");
 		
 		
-		PSR_PrintSymbolList(PSR_GetSymbList(grammar), false,str);
+		PSR_PrintSymbolList(PSR_GetSymbList(grammar), str);
 		AR_AppendString(str, L"\r\n\r\n");
 }
 
-
-
-/****************************************SymbMap*********************************************************/
-
-/*
-typedef struct __parser_symbmap_record_tag
-{
-		const psrSymb_t			*key;
-		psrSymbTbl_t			tbl;
-		struct __parser_symbmap_record_tag		*next;
-}psrMapRec_t;
-
-
-typedef struct __parser_symbmap_tag
-{
-		psrMapRec_t		*bucket[1024];
-		size_t			item_count;
-}psrSymbMap_t;
-*/
-
+/************************************************************************************************************************************/
 
 
 void					PSR_InitSymbMap(psrSymbMap_t *map)
@@ -600,7 +724,7 @@ void					PSR_UnInitSymbMap(psrSymbMap_t *map)
 				while(rec)
 				{
 						tmp = rec->next;
-						PSR_UnInitSymbTbl(&rec->tbl);
+						PSR_UnInitSymbList(&rec->lst);
 						AR_DEL(rec);
 						rec = tmp;
 				}
@@ -630,7 +754,7 @@ bool					PSR_InsertToSymbMap(psrSymbMap_t *map, const psrSymb_t *key, const psrS
 				{
 						tmp = AR_NEW0(psrMapRec_t);
 						tmp->key = key;
-						PSR_InitSymbTbl(&tmp->tbl, 10);
+						PSR_InitSymbList(&tmp->lst);
 						tmp->next = map->bucket[key->hash_code % MAP_BUCKET_SIZE];
 						map->bucket[key->hash_code % MAP_BUCKET_SIZE] = tmp;
 						map->item_count++;
@@ -640,7 +764,7 @@ bool					PSR_InsertToSymbMap(psrSymbMap_t *map, const psrSymb_t *key, const psrS
 		{
 				rec = AR_NEW0(psrMapRec_t);
 				rec->key = key;
-				PSR_InitSymbTbl(&rec->tbl, 10);
+				PSR_InitSymbList(&rec->lst);
 				rec->next = map->bucket[key->hash_code % MAP_BUCKET_SIZE];
 				map->bucket[key->hash_code % MAP_BUCKET_SIZE] = rec;
 				map->item_count++;
@@ -648,13 +772,7 @@ bool					PSR_InsertToSymbMap(psrSymbMap_t *map, const psrSymb_t *key, const psrS
 		
 		if(val)
 		{
-				if(PSR_InsertToSymbTbl(&rec->tbl, val))
-				{
-						return true;
-				}else
-				{
-						return false;
-				}
+				return PSR_InsertToSymbList_Unique(&rec->lst, val);
 		}else
 		{
 				return false;
@@ -674,6 +792,26 @@ const psrMapRec_t*		PSR_GetSymbolFromSymbMap(const psrSymbMap_t *map, const psrS
 				rec = rec->next;
 		}
 		return rec;
+}
+
+
+void			PSR_PrintSymbolMap(const psrSymbMap_t *map, arString_t *str)
+{
+		size_t i;
+
+		for(i = 0; i < MAP_BUCKET_SIZE; ++i)
+		{
+				const psrMapRec_t *rec;
+				rec = map->bucket[i];
+				while(rec)
+				{
+						PSR_PrintSymbol(rec->key, str);
+						AR_AppendFormatString(str, L" : ");
+						PSR_PrintSymbolList(&rec->lst, str);
+						AR_AppendFormatString(str, L"\r\n");
+						rec = rec->next;
+				}
+		}
 }
 
 
@@ -721,7 +859,7 @@ void					PSR_CalcFirstSet(const psrGrammar_t *grammar, psrSymbMap_t *first_set)
 						bool need_continue;	/*是否需要继续*/
 
 						/*产生式head[i]的体为body[i]*/
-						rule = &grammar->rules[i];
+						rule = grammar->rules[i];
 						n_body = 0;
 						body = PSR_IndexOfSymbList(&rule->body, n_body);
 						AR_ASSERT(body != NULL);/*不可能为空，至少会有一个Epsilon或者EOI*/
@@ -730,16 +868,17 @@ void					PSR_CalcFirstSet(const psrGrammar_t *grammar, psrSymbMap_t *first_set)
 						while(need_continue && body != NULL)
 						{
 								const psrMapRec_t *first;
-								psrSymbTblIter_t   f_iter;
+								size_t x;
 								first = PSR_GetSymbolFromSymbMap(first_set, body);/*得到*/
 								AR_ASSERT(first != NULL);
 								need_continue = false;
 								
-								for(f_iter = PSR_FirstFromSymbTbl(&first->tbl); f_iter.curr; PSR_NextFromSymbTbl(&first->tbl, &f_iter))
+								for(x = 0; x < first->lst.count; ++x)
 								{
 										const psrSymb_t *f_symb;
-										f_symb = f_iter.curr->symb;
+										f_symb = first->lst.lst[x];
 										AR_ASSERT(f_symb->type == PSR_TERM);/*first不可能为非终结符*/
+										
 										if(PSR_CompSymb(f_symb, PSR_EpsilonSymb) == 0)
 										{
 												need_continue = true;
@@ -761,9 +900,6 @@ void					PSR_CalcFirstSet(const psrGrammar_t *grammar, psrSymbMap_t *first_set)
 						}
 				}
 		}
-
-
-
 }
 
 
@@ -810,10 +946,10 @@ void					PSR_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *follow_set
 						const psrRule_t *rule;
 						const psrMapRec_t *head_follow;
 						size_t nbody;
-						rule = &grammar->rules[i];
+						rule = grammar->rules[i];
 						
 						head_follow = PSR_GetSymbolFromSymbMap(follow_set,rule->head);/*grammar->head[i]所对应的follow集合*/
-						
+
 						for(nbody = 0; nbody < rule->body.count; ++nbody)
 						{
 								bool need_continue;
@@ -830,14 +966,14 @@ void					PSR_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *follow_set
 								while(need_continue && next)
 								{
 										const psrMapRec_t *first_rec;
-										psrSymbTblIter_t iter;
+										size_t x;
 										first_rec = PSR_GetSymbolFromSymbMap(first_set, next);
 
 										need_continue = false;
-										for(iter = PSR_FirstFromSymbTbl(&first_rec->tbl); iter.curr; PSR_NextFromSymbTbl(&first_rec->tbl, &iter))
+										for(x = 0; x < first_rec->lst.count; ++x)
 										{
 												const psrSymb_t *f_symb;
-												f_symb = iter.curr->symb;
+												f_symb = first_rec->lst.lst[x];
 
 												AR_ASSERT(f_symb->type == PSR_TERM);				/*first不可能为非终结符*/
 												if(PSR_CompSymb(f_symb, PSR_EpsilonSymb) == 0)
@@ -859,54 +995,31 @@ void					PSR_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *follow_set
 
 								if(need_continue)
 								{
-										psrSymbTblIter_t iter;
-										for(iter = PSR_FirstFromSymbTbl(&head_follow->tbl); iter.curr; PSR_NextFromSymbTbl(&head_follow->tbl, &iter))
+										size_t x;
+										for(x = 0; x < head_follow->lst.count; ++x)
 										{
-												if(PSR_InsertToSymbMap(follow_set, key, iter.curr->symb))/*如果不存在符号follow，则加入到follow_set中，*/
+												if(PSR_InsertToSymbMap(follow_set, key, head_follow->lst.lst[x]))/*如果不存在符号follow，则加入到follow_set中，*/
 												{
 														changed = true;							/*任何一步的改动都需要重新计算follow集合*/
 												}
 										}
 								}
+
 						}
 				}
 
 		}
 }
 
-
-
-
-void			PSR_PrintSymbolMap(const psrSymbMap_t *map, arString_t *str)
-{
-		size_t i;
-
-		for(i = 0; i < MAP_BUCKET_SIZE; ++i)
-		{
-				const psrMapRec_t *rec;
-				rec = map->bucket[i];
-				while(rec)
-				{
-						psrSymbList_t lst;
-						PSR_InitSymbList(&lst);
-
-						PSR_SymbTblToSymbList(&rec->tbl, &lst);
-						PSR_PrintSymbol(rec->key, false,str);
-						AR_AppendFormatString(str, L" : ");
-						PSR_PrintSymbolList(&lst, false,str);
-						AR_AppendFormatString(str, L"\r\n");
-						PSR_UnInitSymbList(&lst);
-						rec = rec->next;
-				}
-		}
-}
-
-
-
-
-
-
 AR_NAMESPACE_END
+
+
+
+
+
+
+
+
 
 
 

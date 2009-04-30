@@ -133,12 +133,10 @@
 #elif defined(__hppa) || defined(__hppa__)
 	#define ARCH										ARCH_HPPA
 	#define ARCH_BIG_ENDIAN								1
-#elif defined(__PPC) || defined(__POWERPC__) || defined(__powerpc) || defined(__PPC__) || \
-      defined(__powerpc__) || defined(__ppc__) || defined(_ARCH_PPC) || defined(_M_PPC)
+#elif defined(__PPC) || defined(__POWERPC__) || defined(__powerpc) || defined(__PPC__) || defined(__powerpc__) || defined(__ppc__) || defined(_ARCH_PPC) || defined(_M_PPC)
 	#define ARCH										ARCH_PPC
 	#define ARCH_BIG_ENDIAN								1
-#elif defined(_POWER) || defined(_ARCH_PWR) || defined(_ARCH_PWR2) || defined(_ARCH_PWR3) || \
-      defined(_ARCH_PWR4) || defined(__THW_RS6000)
+#elif defined(_POWER) || defined(_ARCH_PWR) || defined(_ARCH_PWR2) || defined(_ARCH_PWR3) || defined(_ARCH_PWR4) || defined(__THW_RS6000)
 	#define ARCH										ARCH_POWER
 	#define ARCH_BIG_ENDIAN								1
 #elif defined(__sparc__) || defined(__sparc) || defined(sparc)

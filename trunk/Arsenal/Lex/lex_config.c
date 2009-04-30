@@ -1,4 +1,18 @@
-#include "lex_config.h"
+/*
+ * The Arsenal Library
+ * Copyright (c) 2009 by Solidus
+ * 
+ * Permission to use, copy, modify, distribute and sell this software
+ * and its documentation for any purpose is hereby granted without fee,
+ * provided that the above copyright notice appear in all copies and
+ * that both that copyright notice and this permission notice appear
+ * in supporting documentation.It is provided "as is" without express 
+ * or implied warranty.
+ *
+ */
+
+
+#include "lex.h"
 
 
 
@@ -10,19 +24,20 @@ bool __insert_lexcfg(lexConfig_t **pcfg, const wchar_t *line)
 		lexConfig_t tmp;
 		uint32_t val, prio;
 		const wchar_t *p;
-
+		bool	is_skip;
 		AR_ASSERT(pcfg != NULL && line != NULL);
 
 		p = AR_wcstrim(line, L" \t");
 		if(*p == L'\0')return false;
 		val = 0; prio = 0;
-		tmp.pattern.skip = false;
+		is_skip = false;
+		tmp.pattern.action.is_skip = false;
 		
 		if(*p == L'%')
 		{
 				p = AR_wcsstr(p, L"%skip");
 				if(p == NULL)return false;
-				tmp.pattern.skip = true;
+				is_skip = true;
 				p = AR_wcstrim(p + 5, L"\t ");
 		}
 		
@@ -42,6 +57,8 @@ bool __insert_lexcfg(lexConfig_t **pcfg, const wchar_t *line)
 				
 				tmp.pattern.action.type = val;
 				tmp.pattern.action.priority = prio;
+				if(is_skip)tmp.pattern.action.is_skip = is_skip;
+
 				{
 						size_t len;
 						len = AR_wcslen(p);
@@ -53,7 +70,7 @@ bool __insert_lexcfg(lexConfig_t **pcfg, const wchar_t *line)
 		{
 				const wchar_t *beg, *end;
 				tmp.type = LEX_NAME;
-				if(tmp.pattern.skip)return false;
+				if(is_skip)return false;
 				if(!AR_iswalpha(*p) && *p != L'_')return false;
 				beg = p;
 				while(*p != L'\0' && (AR_iswalpha(*p) || *p == L'_'))++p;
@@ -237,8 +254,6 @@ const wchar_t*		  LEX_Config(lex_t *lex, const wchar_t *pattern)
 				}else
 				{
 						is_ok = LEX_InsertRule(lex, curr->pattern.pattern, &curr->pattern.action);
-
-						if(curr->pattern.skip)LEX_InsertSkipAction(lex, curr->pattern.action.type);
 				}
 
 				if(!is_ok)break;

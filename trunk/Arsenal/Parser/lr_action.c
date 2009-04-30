@@ -30,7 +30,7 @@ void PSR_PrintActionTable(const psrActionTable_t *tbl, const psrGrammar_t *gramm
 		AR_AppendString(str,L"TermSet:\r\n");
 		for(i = 0; i < tbl->term_set.count; ++i)
 		{
-				PSR_PrintSymbol(tbl->term_set.lst[i],false,str);
+				PSR_PrintSymbol(tbl->term_set.lst[i],str);
 				AR_AppendString(str,L"  ");
 		}
 		AR_AppendString(str,L"\r\n");
@@ -38,7 +38,7 @@ void PSR_PrintActionTable(const psrActionTable_t *tbl, const psrGrammar_t *gramm
 		AR_AppendString(str,L"NonTermSet:\r\n");
 		for(i = 0; i < tbl->nonterm_set.count; ++i)
 		{
-				PSR_PrintSymbol(tbl->nonterm_set.lst[i],false,str);
+				PSR_PrintSymbol(tbl->nonterm_set.lst[i],str);
 				AR_AppendString(str,L"  ");
 		}
 
@@ -104,8 +104,8 @@ void PSR_PrintActionTable(const psrActionTable_t *tbl, const psrGrammar_t *gramm
 						case PSR_REDUCE:
 						{
 								const psrRule_t *rule;
-								rule = PSR_GetRuleByRuleID(grammar, pact->reduce_id);
-								AR_swprintf(buf, 1024, L"[<%s:%d>:%d]",rule->head->name, pact->reduce_id,pact->reduce_count);
+								rule = pact->rule;
+								AR_swprintf(buf, 1024, L"[<%s>:%d]",rule->head->name, pact->reduce_count);
 								AR_AppendFormatString(str,L"%*s", __WIDTH__,buf);
 								
 						}
@@ -119,7 +119,6 @@ void PSR_PrintActionTable(const psrActionTable_t *tbl, const psrGrammar_t *gramm
 		}
 		AR_AppendFormatString(str,L"-----------------------------------------\r\n");
 }
-
 
 
 void PSR_ReportConflict(const psrActionTable_t *tbl, const psrGrammar_t *grammar, arString_t *str)
@@ -141,7 +140,7 @@ void PSR_ReportConflict(const psrActionTable_t *tbl, const psrGrammar_t *grammar
 						{
 								psrLRItem_t tmp;
 								
-								PSR_InitLRItem(&tmp, action->rule_id, action->delim, NULL);
+								PSR_InitLRItem(&tmp, action->rule, action->delim, NULL);
 								
 								switch(action->type)
 								{
@@ -174,6 +173,26 @@ void PSR_ReportConflict(const psrActionTable_t *tbl, const psrGrammar_t *grammar
 
 }
 
+size_t PSR_CountConflict(const psrActionTable_t *tbl)
+{
+		
+		size_t i, j, count;
+		const psrAction_t *action;
+
+		AR_ASSERT(tbl != NULL);
+		count = 0;
+		for(i = 0; i < tbl->row; ++i)
+		{
+				for(j = 0; j < tbl->col; ++j)
+				{
+						action = tbl->actions[AR_TBL_IDX_R(i,j,tbl->col)];
+						AR_ASSERT(action != NULL);
+						if(action->next != NULL)count++;
+				}
+		}
+		return  count;
+}
+
 
 /******************************************************************************aux*****************************/
 
@@ -198,6 +217,11 @@ int_t					PSR_GetState(const psrActionTable_t *tbl, size_t state, const psrSymb_
 		return tbl->goto_tbl[AR_TBL_IDX_R(state,idx, tbl->goto_col)];
 }
 
+const psrSymbList_t*	PSR_GetExpectedSymb(const psrActionTable_t *tbl, size_t state)
+{
+		AR_ASSERT(state < tbl->row);
+		return &tbl->expected_set[state];
+}
 
 
 static psrActionTable_t* __create_table(const psrGrammar_t *gmr)
@@ -268,10 +292,54 @@ static void __build_goto_table(psrActionTable_t *tbl, const psrDFASet_t *set)
 
 }
 
+/*此函数将在建立完毕后调用*/
+static void __build_expected_list(psrActionTable_t *tbl)
+{
+		size_t i,j;
+		AR_ASSERT(tbl != NULL && tbl->expected_set == NULL && tbl->row > 0);
+		
+		tbl->expected_set = AR_NEWARR0(psrSymbList_t, tbl->row);
+
+		for(i = 0; i < tbl->row; ++i)PSR_InitSymbList(&tbl->expected_set[i]);
+		
+		for(i = 0; i < tbl->row; ++i)
+		{
+				for(j = 0; j < tbl->term_set.count; ++j)
+				{
+						const psrAction_t	*act;
+						const psrSymb_t *symb = tbl->term_set.lst[j];
+						
+						if(PSR_CompSymb(symb, PSR_ErrorSymb) == 0 || PSR_CompSymb(symb, PSR_EpsilonSymb) == 0)continue;
+
+						act = PSR_GetAction(tbl, i, symb);
+						AR_ASSERT(act != NULL);
+						
+						if(act->type != PSR_ERROR)
+						{
+								PSR_InsertToSymbList(&tbl->expected_set[i], symb);
+						}
+				}
+		}
+}
+
+static void __destroy_expected_list(psrActionTable_t *tbl)
+{
+		size_t i;
+		AR_ASSERT(tbl != NULL && tbl->row > 0);
+		
+		for(i = 0; i < tbl->row; ++i)PSR_UnInitSymbList(&tbl->expected_set[i]);
+		AR_DEL(tbl->expected_set);
+		tbl->expected_set = NULL;
+}
+
+
+
 void					PSR_DestroyActionTable(psrActionTable_t *tbl)
 {
 		size_t i;
 		
+		__destroy_expected_list(tbl);
+
 		for(i = 0; i < tbl->term_set.count; ++i)
 		{
 				PSR_DestroySymb(tbl->term_set.lst[i]);
@@ -312,7 +380,7 @@ void					PSR_DestroyActionTable(psrActionTable_t *tbl)
 
 
 
-const static psrAction_t error_action = {PSR_ERROR, L"error", 0, 0,0, 0, NULL, 0};
+const static psrAction_t error_action = {PSR_ERROR, 0, NULL, 0, 0,0, NULL};
 
 const psrAction_t	*PSR_ErrorAction = &error_action;
 
@@ -328,21 +396,20 @@ lookahead为右结合时候与之相反，如果lookahead无结合性，则同样算是冲突，将其加入。
 
 static void __copy_action(psrAction_t *l, const psrAction_t *r)
 {
-		l->rule_name = PSR_AllocString(r->rule_name);
-		l->rule_id = r->rule_id;
+		l->rule = r->rule;
 		l->prec = r->prec;
-		l->reduce_id = r->reduce_id;
 		l->type = r->type;
 		l->delim = r->delim;
 		l->reduce_count = r->reduce_count;
+		l->shift_to = r->shift_to;
 }
 
 
 
-void __insert_action_to_action_list(psrAction_t **dest, const psrAction_t *sour, const psrSymb_t *lookahead)
+void __insert_action_to_action_list(psrAction_t **dest, const psrAction_t *sour, const psrTermInfo_t *lookahead)
 {
 		psrAction_t *curr, *prev, *tmp;
-		AR_ASSERT(dest != NULL && sour != NULL);
+		AR_ASSERT(dest != NULL && sour != NULL && lookahead != NULL);
 		
 		curr = *dest;
 		prev = NULL;
@@ -376,10 +443,22 @@ void __insert_action_to_action_list(psrAction_t **dest, const psrAction_t *sour,
 		{
 				if(lookahead->assoc == PSR_ASSOC_NOASSOC)
 				{
+
 						tmp = AR_NEW0(psrAction_t);
 						__copy_action(tmp, sour);
-						tmp->next = curr->next;
-						curr->next = tmp;
+						
+						if(curr->type != PSR_SHIFT)
+						{
+								/*如果不是shift，则将新的action放在前面*/
+								tmp->next = *dest;
+								*dest = tmp;
+						}else
+						{
+								/*如果是shift，则选择curr在前*/
+								tmp->next = curr->next;
+								curr->next = tmp;
+						}
+
 				}else if(lookahead->assoc == PSR_ASSOC_LEFT)
 				{
 						/*左结合，优先级相同，优先选规约*/
@@ -465,25 +544,21 @@ psrActionTable_t* PSR_CreateActionTable_SLR(const psrGrammar_t *grammar)
 						psrAction_t		  action;
 						
 						item = &iter.curr->item;
-						rule = PSR_GetRuleByRuleID(grammar, item->rule_id);
+						rule = item->rule;
 						body = PSR_IndexOfSymbList(&rule->body, item->delim);
 						AR_memset(&action, 0, sizeof(action));
 						
-						action.rule_id = rule->rule_id;
+						action.rule = rule;
 						action.delim = item->delim;
-						action.rule_name = PSR_AllocString(rule->head->name);
-						action.prec = rule->head->prec;
+						action.prec = PSR_GetRulePrecAssocInfo(grammar, rule)->prec;
 						action.reduce_count = 0;
 						action.shift_to = 0;
-
 						action.next = NULL;
 						
 
 						if(body == NULL)
 						{
 								size_t x;
-								
-								action.reduce_id = rule->rule_id;
 								action.reduce_count = rule->body.count;
 								
 								/*
@@ -510,18 +585,19 @@ psrActionTable_t* PSR_CreateActionTable_SLR(const psrGrammar_t *grammar)
 								}
 
 								{
-										psrSymbTblIter_t		symb_iter;
+										
 										const psrMapRec_t		*rec;
 										rec = PSR_GetSymbolFromSymbMap(&follow, rule->head);
 										AR_ASSERT(rec != NULL);
 										
-										for(symb_iter = PSR_FirstFromSymbTbl(&rec->tbl); symb_iter.curr; PSR_NextFromSymbTbl(&rec->tbl, &symb_iter))
+										for(x = 0; x < rec->lst.count; ++x)
 										{
 												int_t idx;
-												idx = PSR_FindFromSymbList(&tbl->term_set, symb_iter.curr->symb);
+												const psrSymb_t *symb_tmp1 = rec->lst.lst[x];
+												idx = PSR_FindFromSymbList(&tbl->term_set, symb_tmp1);
 												AR_ASSERT(idx != -1);
 												
-												__insert_action_to_action_list(&tbl->actions[AR_TBL_IDX_R(i,idx, tbl->col)], &action,symb_iter.curr->symb);
+												__insert_action_to_action_list(&tbl->actions[AR_TBL_IDX_R(i,idx, tbl->col)], &action,PSR_GetTermSymbInfo(grammar, symb_tmp1));
 										}
 								}
 						}else
@@ -539,7 +615,7 @@ psrActionTable_t* PSR_CreateActionTable_SLR(const psrGrammar_t *grammar)
 										action.shift_to = (size_t)trans_to_idx;
 										
 										idx = PSR_FindFromSymbList(&tbl->term_set, body);
-										__insert_action_to_action_list(&tbl->actions[AR_TBL_IDX_R(i,idx, tbl->col)], &action, body);
+										__insert_action_to_action_list(&tbl->actions[AR_TBL_IDX_R(i,idx, tbl->col)], &action, PSR_GetTermSymbInfo(grammar, body));
 								}
 								
 						}
@@ -561,8 +637,11 @@ psrActionTable_t* PSR_CreateActionTable_SLR(const psrGrammar_t *grammar)
 				}
 		}
 
+		__build_expected_list(tbl);
 		return tbl;
 }
+
+
 
 
 psrActionTable_t* PSR_CreateActionTable_LR1(const psrGrammar_t *grammar)
@@ -597,24 +676,21 @@ psrActionTable_t* PSR_CreateActionTable_LR1(const psrGrammar_t *grammar)
 						psrAction_t		  action;
 					
 						item = &iter.curr->item;
-						rule = PSR_GetRuleByRuleID(grammar, item->rule_id);
+						rule = item->rule;
 						body = PSR_IndexOfSymbList(&rule->body, item->delim);
 						AR_memset(&action, 0, sizeof(action));
 
-						action.rule_id = rule->rule_id;
+						action.rule = rule;
 						action.delim = item->delim;
-						action.rule_name = PSR_AllocString(rule->head->name);
-						action.prec = rule->head->prec;
+						action.prec = PSR_GetRulePrecAssocInfo(grammar, rule)->prec;
 						action.reduce_count = 0;
 						action.shift_to = 0;
-
 						action.next = NULL;
 						
 						if(body == NULL)
 						{
 								size_t x;
 								
-								action.reduce_id = rule->rule_id;
 								action.reduce_count = rule->body.count;
 								
 								for(x = 0; x < rule->body.count; ++x)
@@ -636,7 +712,7 @@ psrActionTable_t* PSR_CreateActionTable_LR1(const psrGrammar_t *grammar)
 										int_t idx;
 										AR_ASSERT(iter.curr->item.symb != NULL);
 										idx = PSR_FindFromSymbList(&tbl->term_set, iter.curr->item.symb);
-										__insert_action_to_action_list(&tbl->actions[AR_TBL_IDX_R(i,idx, tbl->col)], &action, iter.curr->item.symb);
+										__insert_action_to_action_list(&tbl->actions[AR_TBL_IDX_R(i,idx, tbl->col)], &action, PSR_GetTermSymbInfo(grammar, item->symb));
 										
 								}
 						}else
@@ -654,7 +730,7 @@ psrActionTable_t* PSR_CreateActionTable_LR1(const psrGrammar_t *grammar)
 										action.shift_to = (size_t)trans_to_idx;
 										
 										idx = PSR_FindFromSymbList(&tbl->term_set, body);
-										__insert_action_to_action_list(&tbl->actions[AR_TBL_IDX_R(i,idx, tbl->col)], &action, body);
+										__insert_action_to_action_list(&tbl->actions[AR_TBL_IDX_R(i,idx, tbl->col)], &action, PSR_GetTermSymbInfo(grammar, body));
 								}
 								
 						}
@@ -675,9 +751,9 @@ psrActionTable_t* PSR_CreateActionTable_LR1(const psrGrammar_t *grammar)
 				}
 		}
 
+		__build_expected_list(tbl);
 		return tbl;
 }
-
 
 
 
@@ -715,24 +791,21 @@ psrActionTable_t* PSR_CreateActionTable_LALR(const psrGrammar_t *grammar)
 						psrAction_t		  action;
 					
 						item = &iter.curr->item;
-						rule = PSR_GetRuleByRuleID(grammar, item->rule_id);
+						rule = item->rule;
 						body = PSR_IndexOfSymbList(&rule->body, item->delim);
 						AR_memset(&action, 0, sizeof(action));
 
-						action.rule_id = rule->rule_id;
+						action.rule = rule;
 						action.delim = item->delim;
-						action.rule_name = PSR_AllocString(rule->head->name);
-						action.prec = rule->head->prec;
+						action.prec = PSR_GetRulePrecAssocInfo(grammar, rule)->prec;
 						action.reduce_count = 0;
 						action.shift_to = 0;
-
 						action.next = NULL;
 						
 						if(body == NULL)
 						{
 								size_t x;
 								
-								action.reduce_id = rule->rule_id;
 								action.reduce_count = rule->body.count;
 								
 								for(x = 0; x < rule->body.count; ++x)
@@ -751,15 +824,19 @@ psrActionTable_t* PSR_CreateActionTable_LALR(const psrGrammar_t *grammar)
 										action.type = PSR_REDUCE;
 								}
 								{
-										psrSymbTblIter_t symb_iter;
-										AR_ASSERT(iter.curr->item.tbl != NULL);
+										
+										AR_ASSERT(iter.curr->item.lst != NULL);
 										AR_ASSERT(iter.curr->item.symb == NULL);
-										for(symb_iter = PSR_FirstFromSymbTbl(iter.curr->item.tbl); symb_iter.curr; PSR_NextFromSymbTbl(iter.curr->item.tbl, &symb_iter))
+										
+										//for(symb_iter = PSR_FirstFromSymbTbl(iter.curr->item.tbl); symb_iter.curr; PSR_NextFromSymbTbl(iter.curr->item.tbl, &symb_iter))
+										for(x = 0; x < iter.curr->item.lst->count; ++x)
 										{
 												int_t idx;
-												idx = PSR_FindFromSymbList(&tbl->term_set, symb_iter.curr->symb);
+												const psrSymb_t *lookahead_symb = iter.curr->item.lst->lst[x];
+												idx = PSR_FindFromSymbList(&tbl->term_set, lookahead_symb);
+
 												AR_ASSERT(idx != -1);
-												__insert_action_to_action_list(&tbl->actions[AR_TBL_IDX_R(i,idx, tbl->col)], &action, symb_iter.curr->symb);
+												__insert_action_to_action_list(&tbl->actions[AR_TBL_IDX_R(i,idx, tbl->col)], &action, PSR_GetTermSymbInfo(grammar,lookahead_symb));
 										}
 										
 								}
@@ -778,15 +855,12 @@ psrActionTable_t* PSR_CreateActionTable_LALR(const psrGrammar_t *grammar)
 										action.shift_to = (size_t)trans_to_idx;
 										
 										idx = PSR_FindFromSymbList(&tbl->term_set, body);
-										__insert_action_to_action_list(&tbl->actions[AR_TBL_IDX_R(i,idx, tbl->col)], &action, body);
+										__insert_action_to_action_list(&tbl->actions[AR_TBL_IDX_R(i,idx, tbl->col)], &action, PSR_GetTermSymbInfo(grammar,body));
 								}
 								
 						}
-
 				}
-
 		}
-
 
 		PSR_DestroyDFA_ALL(start);
 		PSR_UnInitDFASet(&set);
@@ -798,7 +872,7 @@ psrActionTable_t* PSR_CreateActionTable_LALR(const psrGrammar_t *grammar)
 						tbl->actions[i] = (psrAction_t*)PSR_ErrorAction;
 				}
 		}
-
+		__build_expected_list(tbl);
 		return tbl;
 }
 

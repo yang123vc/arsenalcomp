@@ -25,16 +25,18 @@ typedef struct __parser_lr_item_tag psrLRItem_t;
 
 typedef struct __parser_lr_item_tag
 {
-		size_t					rule_id;
+		const psrRule_t			*rule;
 		size_t					delim;
 		const psrSymb_t			*symb;/*只有在LR1，LALR时会用到*/
-		psrSymbTbl_t			*tbl;/*只有在LALR时会用到*/
+		
+		psrSymbList_t			*lst;/*只有在LALR时会用到*/
 		uint_t					hash_code;
 }psrLRItem_t;
 
 
-void			PSR_InitLRItem(psrLRItem_t *item, size_t rule_id, size_t delim, const psrSymb_t *symb);
+void			PSR_InitLRItem(psrLRItem_t *item, const psrRule_t	*rule, size_t delim, const psrSymb_t *symb);
 void			PSR_UnInitLRItem(psrLRItem_t *item);
+
 void			PSR_CopyLRItem(psrLRItem_t *dest, const psrLRItem_t *sour);
 
 int_t			PSR_CompLRItem(const psrLRItem_t *l, const psrLRItem_t *r);

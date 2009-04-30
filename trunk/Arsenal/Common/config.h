@@ -79,7 +79,7 @@
 				#define AR_NOOP					__noop
 				#define AR_FUNC_NAME			__FUNCSIG__
 		#elif (AR_COMPILER == AR_BCB6)
-				#define AR_NOOP					__noop
+				#define AR_NOOP					NULL
 				#define AR_FUNC_NAME			__FUNC__
 		#endif
 
