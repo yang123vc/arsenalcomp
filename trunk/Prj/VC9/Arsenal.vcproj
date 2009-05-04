@@ -672,6 +672,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\Arsenal\Common\strconv.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\Arsenal\Common\string.c"
 				>
 			</File>
@@ -728,6 +732,14 @@
 				>
 				<File
 					RelativePath="..\..\Arsenal\Test\DragonBook\comn.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Arsenal\Test\DragonBook\symtbl.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Arsenal\Test\DragonBook\symtbl.h"
 					>
 				</File>
 				<File

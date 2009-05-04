@@ -13,13 +13,122 @@
 
 
 #include "grammar.h"
+
 #include "parser.h"
 #include "..\Lex\lex.h"
 
 AR_NAMESPACE_BEGIN
 
 
+/*****************************************************PrintNode*****************************************************************/
 
+printNode_t*	 PSR_CreatePrintNode(const wchar_t *name)
+{
+		printNode_t		*res;
+		res = AR_NEW0(printNode_t);
+		res->name = AR_wcsdup(name);
+		return res;
+}
+
+void				PSR_DestroyPrintNode(printNode_t *node)
+{
+		if(node)
+		{
+				size_t i;
+				for(i = 0; i < node->count; ++i)
+				{
+						PSR_DestroyPrintNode(node->nodes[i]);
+				}
+				AR_DEL(node->name);
+				AR_DEL(node->nodes);
+				AR_DEL(node);
+		}
+}
+
+
+void PSR_InsertPrintNode(printNode_t *dest, printNode_t *sour)
+{
+		AR_ASSERT(dest != NULL && sour != NULL);
+		if(dest->count == dest->cap)
+		{
+				dest->cap = (dest->cap + 4)*2;
+				dest->nodes = AR_REALLOC(printNode_t*, dest->nodes, dest->cap);
+		}
+		dest->nodes[dest->count++] = sour;
+}
+
+
+
+static psrNode_t* AR_STDCALL __def_leaf_builder(const psrToken_t *tok,void *ctx)
+{
+		printNode_t		*n;
+		wchar_t			*buf;
+		AR_ASSERT(tok != NULL);
+		if(tok->count == 0)
+		{
+				buf = AR_wcsdup(L"%EOI");
+		}else
+		{
+				buf = AR_wcsndup(tok->str, tok->count);
+		}
+
+		n = PSR_CreatePrintNode(buf);
+
+		AR_DEL(buf);
+		return (psrNode_t*)n;
+}
+
+
+static psrNode_t*		AR_STDCALL __def_reduce_handler(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+		printNode_t		*n;
+		printNode_t		**ns = (printNode_t**)nodes;
+		size_t i;
+		n = PSR_CreatePrintNode(name);
+		for(i = 0; i < count; ++i)
+		{
+				PSR_InsertPrintNode(n, ns[i]);
+		}
+
+		return (psrNode_t*)n;
+}
+
+
+
+
+static void	AR_STDCALL def_free_handler(psrNode_t *node, void *ctx)
+{
+		PSR_DestroyPrintNode((printNode_t*)node);
+
+}
+
+static void	AR_STDCALL def_error_handler(const psrToken_t *tok, const wchar_t *expected[], size_t count, void *ctx)
+{
+		wchar_t *buf;
+		size_t i;
+		if(tok->count == 0)
+		{
+				buf = AR_wcsdup(L"%EOI");
+		}else
+		{
+				buf = AR_wcsndup(tok->str, tok->count);
+		}
+
+		AR_printf(L"Invalid Token \"%s\" in (%d : %d)\r\n", buf, tok->line, tok->col);
+		AR_DEL(buf);
+		for(i = 0; i < count; ++i)AR_printf(L"Expected token \"%s\"", expected[i]);
+		AR_printf(L"\r\n");
+
+}
+
+static psrCtx_t		__print_node_ctx = {def_free_handler, def_error_handler, NULL};
+
+const psrCtx_t			*PSR_PrintNodeCtx = &__print_node_ctx;
+
+
+
+
+/*****************************************************Config*****************************************************************/
 typedef enum 
 {
 		CFG_TOKEN_T,
@@ -322,7 +431,7 @@ psrNode_t*		AR_STDCALL __build_token_decl(psrNode_t **nodes, size_t count, const
 
 /*token_decl	:	LEXEME ":" NUMBER;*/
 
-psrNode_t*		AR_STDCALL __build_term(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+static psrNode_t*		AR_STDCALL __build_term(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res;
@@ -340,7 +449,7 @@ psrNode_t*		AR_STDCALL __build_term(psrNode_t **nodes, size_t count, const wchar
 /*******************************Prec Rule***********************************************/
 
 /*prec_rule	 :	PREC_DEF { prec_decl_list }*/
-psrNode_t*		AR_STDCALL __build_prec_rule(psrNode_t **nodes, size_t count,const wchar_t *name,  void *ctx)
+static psrNode_t*		AR_STDCALL __build_prec_rule(psrNode_t **nodes, size_t count,const wchar_t *name,  void *ctx)
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res;
@@ -390,7 +499,7 @@ psrNode_t*		AR_STDCALL __build_prec_rule(psrNode_t **nodes, size_t count,const w
 /*prec_decl_list :	prec_decl_list  prec_decl */
 
 
-psrNode_t*		AR_STDCALL __build_prec_decl_list1(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+static psrNode_t*		AR_STDCALL __build_prec_decl_list1(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res;
@@ -404,7 +513,7 @@ psrNode_t*		AR_STDCALL __build_prec_decl_list1(psrNode_t **nodes, size_t count, 
 
 
 /* prec_decl_list :  prec_decl */
-psrNode_t*		AR_STDCALL __build_prec_decl_list2(psrNode_t **nodes, size_t count,const wchar_t *name,  void *ctx)
+static psrNode_t*		AR_STDCALL __build_prec_decl_list2(psrNode_t **nodes, size_t count,const wchar_t *name,  void *ctx)
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res;
@@ -418,7 +527,7 @@ psrNode_t*		AR_STDCALL __build_prec_decl_list2(psrNode_t **nodes, size_t count,c
 
 /*prec_decl	:	ASSOC_DECL prec_token_list ; */
 
-psrNode_t*		AR_STDCALL __build_prec_decl(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+static psrNode_t*		AR_STDCALL __build_prec_decl(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		cfgNode_t		*res;
 		size_t i;
@@ -453,7 +562,7 @@ psrNode_t*		AR_STDCALL __build_prec_decl(psrNode_t **nodes, size_t count, const 
 
 /*prec_token_list :	prec_token_list  ","  LEXEME*/
 
-psrNode_t*		AR_STDCALL __build_prec_token1(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+static psrNode_t*		AR_STDCALL __build_prec_token1(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res, *n;
@@ -472,7 +581,7 @@ psrNode_t*		AR_STDCALL __build_prec_token1(psrNode_t **nodes, size_t count, cons
 }
 
 /*prec_token_list :	 LEXEME;*/
-psrNode_t*		AR_STDCALL __build_prec_token2(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+static psrNode_t*		AR_STDCALL __build_prec_token2(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res, *n;
@@ -493,7 +602,7 @@ psrNode_t*		AR_STDCALL __build_prec_token2(psrNode_t **nodes, size_t count, cons
 
 
 /*rules_rule :	RULE_DEF  { rule_decl_list  }*/
-psrNode_t*		AR_STDCALL __handle_rules(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+static psrNode_t*		AR_STDCALL __handle_rules(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res;
@@ -528,7 +637,7 @@ psrNode_t*		AR_STDCALL __handle_rules(psrNode_t **nodes, size_t count, const wch
 								AR_AppendString(str, L" ");
 						}else
 						{
-								AR_AppendString(str, L" ");
+								AR_AppendString(str, L" ");/*epsilon*/
 						}
 				}
 
@@ -544,7 +653,7 @@ psrNode_t*		AR_STDCALL __handle_rules(psrNode_t **nodes, size_t count, const wch
 
 /*rule_decl_list	:	rule_decl_list   rule_decl */
 
-psrNode_t*		AR_STDCALL __handle_rule_decl_list1(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+static psrNode_t*		AR_STDCALL __handle_rule_decl_list1(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res;
@@ -564,7 +673,7 @@ psrNode_t*		AR_STDCALL __handle_rule_decl_list1(psrNode_t **nodes, size_t count,
 
 
 /*rule_decl_list	: rule_decl */
-psrNode_t*		AR_STDCALL __handle_rule_decl_list2(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+static psrNode_t*		AR_STDCALL __handle_rule_decl_list2(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		AR_ASSERT(count == 1 && nodes != NULL);
@@ -573,7 +682,7 @@ psrNode_t*		AR_STDCALL __handle_rule_decl_list2(psrNode_t **nodes, size_t count,
 
 
 /*rule_decl		:	LEXEME -> rule_list ;*/
-psrNode_t*		AR_STDCALL __handle_rule_decl(psrNode_t **nodes, size_t count,const wchar_t *name,  void *ctx)
+static psrNode_t*		AR_STDCALL __handle_rule_decl(psrNode_t **nodes, size_t count,const wchar_t *name,  void *ctx)
 {
 
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
@@ -597,7 +706,7 @@ psrNode_t*		AR_STDCALL __handle_rule_decl(psrNode_t **nodes, size_t count,const 
 
 /*rule_list		:	rule_list  | rule rule_prec */
 
-psrNode_t*		AR_STDCALL __handle_rule_list1(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+static psrNode_t*		AR_STDCALL __handle_rule_list1(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res, *n, *prec;
@@ -620,7 +729,7 @@ psrNode_t*		AR_STDCALL __handle_rule_list1(psrNode_t **nodes, size_t count, cons
 
 
 /*rule_list		:	rule rule_prec */
-psrNode_t*		AR_STDCALL __handle_rule_list2(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+static psrNode_t*		AR_STDCALL __handle_rule_list2(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res, *lst;
@@ -641,7 +750,7 @@ psrNode_t*		AR_STDCALL __handle_rule_list2(psrNode_t **nodes, size_t count, cons
 
 
 /*rule		:	rule LEXEME */
-psrNode_t*		AR_STDCALL __handle_rule_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+static psrNode_t*		AR_STDCALL __handle_rule_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res;
@@ -653,7 +762,7 @@ psrNode_t*		AR_STDCALL __handle_rule_list(psrNode_t **nodes, size_t count, const
 
 /*rule		:   LEXEME*/
 /*rule		:	.*/
-psrNode_t*		AR_STDCALL __handle_rule_lexeme(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+static psrNode_t*		AR_STDCALL __handle_rule_lexeme(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res;
@@ -666,7 +775,7 @@ psrNode_t*		AR_STDCALL __handle_rule_lexeme(psrNode_t **nodes, size_t count, con
 
 	
 /*rule_prec	:	PREC_DEF LEXEME*/
-psrNode_t*		AR_STDCALL __handle_rule_prec(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+static psrNode_t*		AR_STDCALL __handle_rule_prec(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		AR_ASSERT(count == 2 && nodes != NULL);
@@ -684,7 +793,7 @@ psrNode_t*		AR_STDCALL __handle_rule_prec(psrNode_t **nodes, size_t count, const
 /*************************************************************************root***************************************************************/
 /*root_rule	: 	token_rule  prec_rule rules_rule*/
 
-psrNode_t*		AR_STDCALL __build_root(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+static psrNode_t*		AR_STDCALL __build_root(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res;
@@ -696,7 +805,7 @@ psrNode_t*		AR_STDCALL __build_root(psrNode_t **nodes, size_t count, const wchar
 		return res;
 }
 
-psrGrammar_t* __build_grammar()
+static psrGrammar_t* __build_grammar()
 {
 		psrGrammar_t *gmr;
 		
@@ -785,13 +894,13 @@ psrGrammar_t* __build_grammar()
 
 
 
-void	AR_STDCALL cfg_free(psrNode_t *node, void *ctx)
+static void	AR_STDCALL cfg_free(psrNode_t *node, void *ctx)
 {
 		CFG_DestroyNode((cfgNode_t*)node);
 
 }
 
-void	AR_STDCALL cfg_on_error(const psrToken_t *tok, const wchar_t *expected[], size_t count, void *ctx)
+static void	AR_STDCALL cfg_on_error(const psrToken_t *tok, const wchar_t *expected[], size_t count, void *ctx)
 {
 		wchar_t *buf;
 		size_t i;
@@ -870,110 +979,8 @@ static cfgNode_t* __build_root_node(const wchar_t *pattern)
 
 
 
-printNode_t*	 PSR_CreatePrintNode(const wchar_t *name)
-{
-		printNode_t		*res;
-		res = AR_NEW0(printNode_t);
-		res->name = AR_wcsdup(name);
-		return res;
-}
-
-void				PSR_DestroyPrintNode(printNode_t *node)
-{
-		if(node)
-		{
-				size_t i;
-				for(i = 0; i < node->count; ++i)
-				{
-						PSR_DestroyPrintNode(node->nodes[i]);
-				}
-				AR_DEL(node->name);
-				AR_DEL(node->nodes);
-				AR_DEL(node);
-		}
-}
 
 
-void PSR_InsertPrintNode(printNode_t *dest, printNode_t *sour)
-{
-		AR_ASSERT(dest != NULL && sour != NULL);
-		if(dest->count == dest->cap)
-		{
-				dest->cap = (dest->cap + 4)*2;
-				dest->nodes = AR_REALLOC(printNode_t*, dest->nodes, dest->cap);
-		}
-		dest->nodes[dest->count++] = sour;
-}
-
-
-
-
-
-static psrNode_t* AR_STDCALL __def_leaf_builder(const psrToken_t *tok,void *ctx)
-{
-		printNode_t		*n;
-		wchar_t			*buf;
-		AR_ASSERT(tok != NULL);
-		if(tok->count == 0)
-		{
-				buf = AR_wcsdup(L"%EOI");
-		}else
-		{
-				buf = AR_wcsndup(tok->str, tok->count);
-		}
-
-		n = PSR_CreatePrintNode(buf);
-
-		AR_DEL(buf);
-		return (psrNode_t*)n;
-}
-
-
-static psrNode_t*		AR_STDCALL __def_reduce_handler(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-		printNode_t		*n;
-		printNode_t		**ns = (printNode_t**)nodes;
-		size_t i;
-		n = PSR_CreatePrintNode(name);
-		for(i = 0; i < count; ++i)
-		{
-				PSR_InsertPrintNode(n, ns[i]);
-		}
-
-		return (psrNode_t*)n;
-}
-
-
-
-
-void	AR_STDCALL def_free_handler(psrNode_t *node, void *ctx)
-{
-		PSR_DestroyPrintNode((printNode_t*)node);
-
-}
-
-void	AR_STDCALL def_error_handler(const psrToken_t *tok, const wchar_t *expected[], size_t count, void *ctx)
-{
-		wchar_t *buf;
-		size_t i;
-		if(tok->count == 0)
-		{
-				buf = AR_wcsdup(L"%EOI");
-		}else
-		{
-				buf = AR_wcsndup(tok->str, tok->count);
-		}
-
-		AR_printf(L"Invalid Token \"%s\" in (%d : %d)\r\n", buf, tok->line, tok->col);
-		AR_DEL(buf);
-		for(i = 0; i < count; ++i)AR_printf(L"Expected token \"%s\"", expected[i]);
-		AR_printf(L"\r\n");
-
-}
-
-static psrCtx_t		__print_node_ctx = {def_free_handler, def_error_handler, NULL};
-
-const psrCtx_t			*PSR_PrintNodeCtx = &__print_node_ctx;
 
 
 static bool __config_grammar(psrGrammar_t *gmr, cfgNode_t *root)

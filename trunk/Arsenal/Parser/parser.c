@@ -196,9 +196,9 @@ static void __handle_shift(parser_t *parser, size_t shift_to, const psrToken_t *
 		等
 
 		第一条将在移入";"时候清除error状态，
-		第二条将在error规约为A后的下一次正确输入时清楚，例如
+		第二条将在error规约为A后的下一次正确输入时清除，例如
 		B -> A ";";
-		这里假如A有任何错误，将在移入':'后清除规约状态；
+		这里假如A有任何错误，将在移入':'后清除错误状态；
 */
 		if(parser->is_repair)parser->is_repair = false;
 }
@@ -343,8 +343,6 @@ bool PSR_AddToken(parser_t *parser, const psrToken_t *tok)
 						
 						is_done = true;
 						parser->is_accepted = true;
-						
-						
 						break;
 				case PSR_ERROR:
 						if(!__error_recovery(parser, tok))return false;
@@ -376,6 +374,20 @@ bool	   PSR_IsAccepted(const parser_t *parser)
 {
 		AR_ASSERT(parser != NULL);
 		return parser->is_accepted;
+}
+
+
+bool	PSR_IsInError(const parser_t *parser)
+{
+		AR_ASSERT(parser != NULL);
+		return parser->is_repair;
+
+}
+
+void	PSR_ClearError(parser_t *parser)
+{
+		AR_ASSERT(parser != NULL);
+		parser->is_repair = false;
 }
 
 AR_NAMESPACE_END

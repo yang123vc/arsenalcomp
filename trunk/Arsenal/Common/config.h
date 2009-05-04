@@ -88,7 +88,10 @@
 /*
     配置编译器相关的选项
 */
-		//#define _CRT_SECURE_NO_WARNINGS	
+#if(AR_COMPILER != AR_BCB6)
+		#if !defined(_CRT_SECURE_NO_WARNINGS)
+				#define _CRT_SECURE_NO_WARNINGS
+		#endif
 
 		#pragma warning(disable : 4204)
 		#pragma warning(disable : 4244)
@@ -99,6 +102,10 @@
 		#pragma warning(disable : 4514)
 		#pragma warning(disable : 4710)
 		#pragma warning(disable : 4761)
+#else
+
+
+#endif
 
 #else
 

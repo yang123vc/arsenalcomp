@@ -67,8 +67,22 @@ inline int AR_swprintf(wchar_t *buffer,  size_t count, const wchar_t *fmt, ...)
 		return res;
 }
 
+/*这里只能先凑合凑合，因为各个编译器的printf一族的函数标准实在是太不一样了，这东西我应该自己实现一套才对，所以只能先凑合凑合了*/
 
-inline int AR_vscwprintf(const wchar_t *fmt, va_list argptr) { int n; size_t buf_size; n = -1; buf_size = 1048576; while(n == -1){ wchar_t *buf; buf_size *= 2; buf = (wchar_t*)malloc(sizeof(wchar_t) * buf_size); n = AR_vswprintf(buf, buf_size, fmt, argptr); free(buf); } return n; }
+inline int AR_vscwprintf(const wchar_t *fmt, va_list argptr) 
+{ 
+		int n; size_t buf_size; n = -1; buf_size = 1048576; 
+		while(n == -1)
+		{ 
+				wchar_t *buf; 
+				buf_size *= 2; 
+				buf = (wchar_t*)malloc(sizeof(wchar_t) * buf_size); 
+				n = AR_vswprintf(buf, buf_size, fmt, argptr); 
+				free(buf); 
+		}
+		return n; 
+}
+
 
 #else
 

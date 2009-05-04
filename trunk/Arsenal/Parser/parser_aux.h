@@ -171,7 +171,7 @@ inline bool			PSR_InsertToTermInfoRec(psrTermInfoRec_t *rec, const psrTermInfo_t
 		if(rec->count == rec->cap)
 		{
 				rec->cap = (rec->cap + 4)*2;
-				rec->terms = AR_REALLOC(const psrTermInfo_t*, rec->terms, rec->cap);
+				rec->terms = AR_REALLOC(const psrTermInfo_t*, (void*)rec->terms, rec->cap);
 		}
 		rec->terms[rec->count++] = term;
 		return true;
@@ -275,7 +275,7 @@ inline void PSR_InitExpectedMsg(psrExpectedMsg_t *msg, const psrSymbList_t *lst)
 inline void PSR_UnInitExpectedMsg(psrExpectedMsg_t *msg)
 {
 		AR_ASSERT(msg != NULL);
-		if(msg->msg)AR_DEL(msg->msg);
+		if(msg->msg)AR_DEL((void*)msg->msg);
 }
 
 

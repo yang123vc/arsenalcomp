@@ -35,7 +35,7 @@ common.h -- misc founctions used in Arsenal
 
 
 /*******************************************************************************init********************************/
-
+ 
 typedef void (AR_STDCALL *AR_error_func)(int, const wchar_t*);
 typedef void (AR_STDCALL *AR_print_func)(const wchar_t *);
 
@@ -128,6 +128,8 @@ void AR_printf(const wchar_t *msg,...);
 #define AR_qsort		qsort
 
 /**********************************************************string*************************************************************/
+
+#define AR_strlen(_s)			strlen((_s))
 
 #define AR_wcscmp(_l, _r)		wcscmp((_l), (_r))
 #define AR_wcsncmp(_l, _r,_n)	wcsncmp((_l), (_r), (_n))
@@ -270,6 +272,16 @@ const wchar_t*			AR_GetStringUInt(arStringTable_t *tbl, uint64_t num, size_t rad
 const wchar_t*			AR_GetStringInt(arStringTable_t *tbl, int64_t num, size_t radix);
 
 
+
+/*********************************************************String Convert****************************************************/
+
+size_t AR_wcs_to_utf8(const wchar_t *unicode, size_t n, char *out, size_t out_len);
+
+size_t AR_utf8_to_wcs(const char *utf8, size_t n, wchar_t *out, size_t out_len);
+
+char*  AR_wcs_convto_utf8(const wchar_t *wcs);
+
+wchar_t* AR_utf8_convto_wcs(const char *utf8);
 
 
 

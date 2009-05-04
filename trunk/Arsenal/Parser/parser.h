@@ -135,7 +135,11 @@ bool PSR_AddToken(parser_t *parser, const psrToken_t *tok);
 
 psrNode_t* PSR_GetResult(parser_t *parser);/*在状态为accepted之后才可以调用*/
 
-bool	   PSR_IsAccepted(const parser_t *parser);
+bool	PSR_IsAccepted(const parser_t *parser);
+
+bool	PSR_IsInError(const parser_t *parser);
+
+void	PSR_ClearError(parser_t *parser);
 
 
 AR_NAMESPACE_END

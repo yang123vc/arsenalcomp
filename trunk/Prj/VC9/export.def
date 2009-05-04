@@ -45,38 +45,39 @@ LEX_Config				@95
 
 
 
-;PSR_InitGrammar			@100
-;PSR_UnInitGrammar		@101
-;PSR_ClearGrammar		@102
-;PSR_CopyGrammar			@103
-;PSR_InsertTerm			@104
-;PSR_FindTermByName		@105
-;PSR_FindTermByValue		@106
-;PSR_SetTerm				@107
-;PSR_InsertRule			@108
-;PSR_GetRuleByRuleID		@109
-;PSR_UpdateGrammar		@110
-;PSR_ConfigGrammar		@111
-;PSR_GetSymbList			@112
-;PSR_CheckIsValidGrammar	@113
-;PSR_PrintGrammar		@114
+PSR_CreateGrammar			@100
+PSR_DestroyGrammar		@101
+PSR_ClearGrammar		@102
+PSR_InsertTerm			@104
+PSR_FindTermByName		@105
+PSR_FindTermByValue		@106
+PSR_InsertRule			@108
+PSR_InsertRule2			@109
+PSR_InsertRule3			@110
 
-;PSR_InitSymbMap			@115
-;PSR_UnInitSymbMap		@116
-;PSR_InsertToSymbMap		@117
-;PSR_CalcFollowSet		@118
-;PSR_CalcFirstSet		@119
-;PSR_GetSymbolFromSymbMap @120
-;PSR_PrintSymbolMap		@121
+PSR_GetSymbList			@112
+PSR_CheckIsValidGrammar	@113
+PSR_PrintGrammar		@114
 
+PSR_InitSymbMap			@115
+PSR_UnInitSymbMap		@116
+PSR_InsertToSymbMap		@117
+PSR_CalcFollowSet		@118
+PSR_CalcFirstSet		@119
+PSR_GetSymbolFromSymbMap @120
+PSR_PrintSymbolMap		@121
+PSR_ConfigGrammar		@122
 
 ;Parser
 
-;PSR_CreateParser		@200
-;PSR_DestroyParser		@201
-;PSR_Clear				@202
-;PSR_GetResult			@203
-;PSR_AddToken			@204
+PSR_CreateParser		@200
+PSR_DestroyParser		@201
+PSR_Clear				@202
+PSR_GetResult			@203
+PSR_AddToken			@204
+PSR_IsAccepted			@205
+PSR_IsInError			@206
+PSR_ClearError			@207
 
 
 ;Test
