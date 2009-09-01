@@ -1,0 +1,296 @@
+# Microsoft Developer Studio Project File - Name="ArsenalLib" - Package Owner=<4>
+# Microsoft Developer Studio Generated Build File, Format Version 6.00
+# ** DO NOT EDIT **
+
+# TARGTYPE "Win32 (x86) Static Library" 0x0104
+
+CFG=ArsenalLib - Win32 Debug
+!MESSAGE This is not a valid makefile. To build this project using NMAKE,
+!MESSAGE use the Export Makefile command and run
+!MESSAGE 
+!MESSAGE NMAKE /f "ArsenalLib.mak".
+!MESSAGE 
+!MESSAGE You can specify a configuration when running NMAKE
+!MESSAGE by defining the macro CFG on the command line. For example:
+!MESSAGE 
+!MESSAGE NMAKE /f "ArsenalLib.mak" CFG="ArsenalLib - Win32 Debug"
+!MESSAGE 
+!MESSAGE Possible choices for configuration are:
+!MESSAGE 
+!MESSAGE "ArsenalLib - Win32 Release" (based on "Win32 (x86) Static Library")
+!MESSAGE "ArsenalLib - Win32 Debug" (based on "Win32 (x86) Static Library")
+!MESSAGE 
+
+# Begin Project
+# PROP AllowPerConfigDependencies 0
+# PROP Scc_ProjName ""
+# PROP Scc_LocalPath ""
+CPP=cl.exe
+RSC=rc.exe
+
+!IF  "$(CFG)" == "ArsenalLib - Win32 Release"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "Release"
+# PROP BASE Intermediate_Dir "Release"
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "..\..\Binary\x86\Lib\Release\"
+# PROP Intermediate_Dir "..\..\Temp\x86\LIBRelease\"
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
+# ADD CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_UNICODE" /D "_LIB" /YX /FD /c
+# ADD BASE RSC /l 0x804 /d "NDEBUG"
+# ADD RSC /l 0x804 /d "NDEBUG"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LIB32=link.exe -lib
+# ADD BASE LIB32 /nologo
+# ADD LIB32 /nologo
+
+!ELSEIF  "$(CFG)" == "ArsenalLib - Win32 Debug"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 1
+# PROP BASE Output_Dir "Debug"
+# PROP BASE Intermediate_Dir "Debug"
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 1
+# PROP Output_Dir "..\..\Binary\x86\Lib\Debug\"
+# PROP Intermediate_Dir "..\..\Temp\x86\LIBDebug\"
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
+# ADD CPP /nologo /W4 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_UNICODE" /D "_LIB" /YX /FD /GZ /c
+# ADD BASE RSC /l 0x804 /d "_DEBUG"
+# ADD RSC /l 0x409 /d "_DEBUG"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LIB32=link.exe -lib
+# ADD BASE LIB32 /nologo
+# ADD LIB32 /nologo
+
+!ENDIF 
+
+# Begin Target
+
+# Name "ArsenalLib - Win32 Release"
+# Name "ArsenalLib - Win32 Debug"
+# Begin Group "Common"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Common\common.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Common\common.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Common\config.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Common\platform.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Common\strconv.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Common\string.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Common\strtable.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Common\thread.c
+# End Source File
+# End Group
+# Begin Group "Lex"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Lex\dfa.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Lex\dfa.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Lex\expr.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Lex\expr.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Lex\lex.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Lex\lex.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Lex\lex_config.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Lex\node.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Lex\node.h
+# End Source File
+# End Group
+# Begin Group "Parser"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Parser\grammar.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Parser\grammar.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Parser\grammar_config.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Parser\lr_action.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Parser\lr_action.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Parser\lr_dfa.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Parser\lr_dfa.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Parser\lr_dfa_aux.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Parser\lr_item.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Parser\lr_item.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Parser\parser.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Parser\parser.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Parser\parser_aux.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Parser\parser_in.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Parser\parser_in.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Parser\symbol.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Parser\symbol.h
+# End Source File
+# End Group
+# Begin Group "Test"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Test\calc_test.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Test\com_test.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Test\DragonBook\comn.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Test\gmr_test.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Test\lex_test.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Test\parser_test.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Test\psr_misc.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Test\DragonBook\symtbl.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Test\DragonBook\symtbl.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Test\DragonBook\syntree.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Test\DragonBook\syntree.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Test\test.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Test\test.h
+# End Source File
+# End Group
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Arsenal.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Arsenal.h
+# End Source File
+# End Target
+# End Project
