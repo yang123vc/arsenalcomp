@@ -1,0 +1,128 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: ArsenalLib - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\Temp\RSP5C.tmp" with contents
+[
+/nologo /MLd /W4 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_UNICODE" /D "_LIB" /Fp"..\..\Temp\x86\LIBDebug\ArsenalLib.pch" /YX /Fo"..\..\Temp\x86\LIBDebug\\" /Fd"..\..\Temp\x86\LIBDebug\\" /FD /GZ /c 
+"D:\User\Desktop\Arsenal\Arsenal\Common\common.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\crtstr.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\memory.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\random.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\string.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\strtable.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\thread.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\dfa.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\expr.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\lex.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\lex_config.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\node.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\grammar.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\grammar_config.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\lr_action.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\lr_dfa.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\lr_item.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\parser.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\parser_in.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\symbol.c"
+"D:\User\Desktop\Arsenal\Arsenal\Test\calc_test.c"
+"D:\User\Desktop\Arsenal\Arsenal\Test\com_test.c"
+"D:\User\Desktop\Arsenal\Arsenal\Test\gmr_test.c"
+"D:\User\Desktop\Arsenal\Arsenal\Test\lex_test.c"
+"D:\User\Desktop\Arsenal\Arsenal\Test\parser_test.c"
+"D:\User\Desktop\Arsenal\Arsenal\Test\psr_misc.c"
+"D:\User\Desktop\Arsenal\Arsenal\Test\DragonBook\symtbl.c"
+"D:\User\Desktop\Arsenal\Arsenal\Test\DragonBook\syntree.c"
+"D:\User\Desktop\Arsenal\Arsenal\Test\test.c"
+"D:\User\Desktop\Arsenal\Arsenal\Arsenal.c"
+]
+Creating command line "cl.exe @C:\Temp\RSP5C.tmp" 
+Creating temporary file "C:\Temp\RSP5D.tmp" with contents
+[
+/nologo /out:"..\..\Binary\x86\Lib\Debug\ArsenalLib.lib" 
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\common.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\crtstr.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\memory.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\random.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\strconv.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\string.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\strtable.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\thread.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\dfa.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\expr.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\lex.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\lex_config.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\node.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\grammar.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\grammar_config.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\lr_action.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\lr_dfa.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\lr_item.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\parser.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\parser_in.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\symbol.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\calc_test.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\com_test.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\gmr_test.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\lex_test.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\parser_test.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\psr_misc.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\symtbl.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\syntree.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\test.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\Arsenal.obj
+]
+Creating command line "link.exe -lib @C:\Temp\RSP5D.tmp"
+<h3>Output Window</h3>
+Compiling...
+common.c
+crtstr.c
+memory.c
+random.c
+strconv.c
+string.c
+strtable.c
+thread.c
+dfa.c
+expr.c
+lex.c
+lex_config.c
+node.c
+grammar.c
+grammar_config.c
+lr_action.c
+lr_dfa.c
+lr_item.c
+parser.c
+parser_in.c
+symbol.c
+calc_test.c
+d:\user\desktop\arsenal\arsenal\lex\lex.h(112) : warning C4201: nonstandard extension used : nameless struct/union
+com_test.c
+gmr_test.c
+d:\user\desktop\arsenal\arsenal\test\com_test.c(347) : warning C4700: local variable 'next' used without having been initialized
+lex_test.c
+d:\user\desktop\arsenal\arsenal\lex\lex.h(112) : warning C4201: nonstandard extension used : nameless struct/union
+d:\user\desktop\arsenal\arsenal\lex\node.h(131) : warning C4201: nonstandard extension used : nameless struct/union
+parser_test.c
+d:\user\desktop\arsenal\arsenal\lex\lex.h(112) : warning C4201: nonstandard extension used : nameless struct/union
+psr_misc.c
+d:\user\desktop\arsenal\arsenal\lex\lex.h(112) : warning C4201: nonstandard extension used : nameless struct/union
+symtbl.c
+syntree.c
+test.c
+Arsenal.c
+Creating library...
+
+
+
+<h3>Results</h3>
+ArsenalLib.lib - 0 error(s), 6 warning(s)
+</pre>
+</body>
+</html>
