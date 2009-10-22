@@ -1,0 +1,196 @@
+# depslib dependency file v1.0
+1256152885 source:/root/Desktop/Programming/Arsenal/Arsenal/Lex/dfa.c
+	"dfa.h"
+
+1256152885 /root/Desktop/Programming/Arsenal/Arsenal/Lex/dfa.h
+	"node.h"
+
+1256152885 /root/Desktop/Programming/Arsenal/Arsenal/Lex/node.h
+	"lex.h"
+
+1256152885 /root/Desktop/Programming/Arsenal/Arsenal/Lex/lex.h
+	"../Common/common.h"
+
+1256152885 /root/Desktop/Programming/Arsenal/Arsenal/Common/common.h
+	"config.h"
+
+1256153853 /root/Desktop/Programming/Arsenal/Arsenal/Common/config.h
+	"platform.h"
+	<stdio.h>
+	<wchar.h>
+	<stddef.h>
+	<stdarg.h>
+	<limits.h>
+	<stdlib.h>
+	<assert.h>
+	<memory.h>
+	<string.h>
+	<math.h>
+	<wctype.h>
+
+1256152885 /root/Desktop/Programming/Arsenal/Arsenal/Common/platform.h
+
+1256152885 source:/root/Desktop/Programming/Arsenal/Arsenal/Lex/lex_config.c
+	"lex.h"
+
+1256152885 /root/Desktop/Programming/Arsenal/Arsenal/Lex/expr.h
+	"node.h"
+
+1256152885 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/common.c
+	"common.h"
+
+1256152885 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/thread.c
+	"common.h"
+	"thread_win.h"
+	"thread_posix.h"
+
+1256152885 source:/root/Desktop/Programming/Arsenal/Arsenal/Lex/expr.c
+	"expr.h"
+
+1256152885 source:/root/Desktop/Programming/Arsenal/Arsenal/Lex/node.c
+	"node.h"
+
+1256150689 source:/root/Desktop/Programming/Arsenal/main.c
+	<pthread.h>
+	"./Arsenal/Arsenal.h"
+
+1256152885 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/crtstr.c
+	"common.h"
+
+1255988476 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/main.cpp
+	"common.h"
+	<stdlib.h>
+	<stdio.h>
+	<wchar.h>
+
+1256152885 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/memory.c
+	"common.h"
+
+1256152885 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/random.c
+	"common.h"
+
+1256152885 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/strconv.c
+	"common.h"
+
+1256152885 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/string.c
+	"common.h"
+
+1256152885 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/strtable.c
+	"common.h"
+
+1256127901 /root/Desktop/Programming/Arsenal/Arsenal/Lex/lex_in.h
+	"../Common/common.h"
+
+1256152885 source:/root/Desktop/Programming/Arsenal/Arsenal/Lex/lex.c
+	"dfa.h"
+	"expr.h"
+	"lex.h"
+
+1256152885 source:/root/Desktop/Programming/Arsenal/Arsenal/Arsenal.c
+	"Arsenal.h"
+
+1256152885 /root/Desktop/Programming/Arsenal/Arsenal/Arsenal.h
+	"./Common/common.h"
+	"./Lex/lex.h"
+	"./Parser/grammar.h"
+	"./Parser/parser.h"
+
+1256152885 /root/Desktop/Programming/Arsenal/Arsenal/Parser/grammar.h
+	"symbol.h"
+
+1256152885 /root/Desktop/Programming/Arsenal/Arsenal/Parser/symbol.h
+	"parser.h"
+
+1256152885 /root/Desktop/Programming/Arsenal/Arsenal/Parser/parser.h
+	"../Common/common.h"
+	"../Lex/lex.h"
+
+1256152885 source:/root/Desktop/Programming/Arsenal/Arsenal/Parser/grammar.c
+	"grammar.h"
+	"parser_in.h"
+
+1256152885 /root/Desktop/Programming/Arsenal/Arsenal/Parser/parser_in.h
+	"parser.h"
+
+1256152885 source:/root/Desktop/Programming/Arsenal/Arsenal/Parser/grammar_config.c
+	"grammar.h"
+	"parser.h"
+	"../Lex/lex.h"
+
+1256153979 source:/root/Desktop/Programming/Arsenal/Arsenal/Parser/lr_action.c
+	"lr_action.h"
+	"lr_dfa.h"
+
+1256152885 /root/Desktop/Programming/Arsenal/Arsenal/Parser/lr_action.h
+	"parser.h"
+	"parser_in.h"
+	"lr_item.h"
+
+1256152885 /root/Desktop/Programming/Arsenal/Arsenal/Parser/lr_item.h
+	"grammar.h"
+
+1256152885 /root/Desktop/Programming/Arsenal/Arsenal/Parser/lr_dfa.h
+	"parser.h"
+	"lr_item.h"
+
+1256152885 source:/root/Desktop/Programming/Arsenal/Arsenal/Parser/lr_dfa.c
+	"lr_dfa.h"
+	"parser_in.h"
+	"symbol.h"
+	"lr_dfa_aux.h"
+
+1256152885 /root/Desktop/Programming/Arsenal/Arsenal/Parser/lr_dfa_aux.h
+	"symbol.h"
+	"grammar.h"
+
+1256152885 source:/root/Desktop/Programming/Arsenal/Arsenal/Parser/lr_item.c
+	"lr_item.h"
+
+1256152885 source:/root/Desktop/Programming/Arsenal/Arsenal/Parser/parser.c
+	"parser.h"
+	"grammar.h"
+	"lr_action.h"
+	"parser_aux.h"
+
+1256152885 /root/Desktop/Programming/Arsenal/Arsenal/Parser/parser_aux.h
+	"parser.h"
+
+1256153952 source:/root/Desktop/Programming/Arsenal/Arsenal/Parser/parser_in.c
+	"parser_in.h"
+	"symbol.h"
+
+1256152885 source:/root/Desktop/Programming/Arsenal/Arsenal/Parser/symbol.c
+	"parser_in.h"
+	"symbol.h"
+
+1256151108 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/thread_posix.c
+	"common.h"
+	<unistd.h>
+	<pthread.h>
+
+1256149975 source:/root/Desktop/Programming/Arsenal/calc_test.c
+	"./Arsenal/Parser/grammar.h"
+	"./Arsenal/Parser/parser.h"
+	"./Arsenal/Parser/lr_action.h"
+
+1256150493 source:/root/Desktop/Programming/Arsenal/gmr_test.c
+	"./Arsenal/Parser/grammar.h"
+
+1256151750 source:/root/Desktop/Programming/Arsenal/parser_test.c
+	"./Arsenal/Parser/grammar.h"
+	"./Arsenal/Parser/lr_item.h"
+	"./Arsenal/Parser/lr_dfa.h"
+	"./Arsenal/Parser/parser.h"
+	"./Arsenal/Parser/parser_in.h"
+	"./Arsenal/Parser/lr_action.h"
+	<locale.h>
+
+1256152885 /root/Desktop/Programming/Arsenal/Arsenal/Common/thread_win.h
+	"common.h"
+	<windows.h>
+
+1256152885 /root/Desktop/Programming/Arsenal/Arsenal/Common/thread_posix.h
+	"common.h"
+	<unistd.h>
+	<pthread.h>
+
