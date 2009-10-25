@@ -4,10 +4,10 @@
   <MACROS>
     <VERSION value="BCB.06.00"/>
     <PROJECT value=".\dll\debug\DLLDebug.dll"/>
-    <OBJFILES value="common.obj strconv.obj string.obj strtable.obj thread.obj dfa.obj expr.obj 
-      lex.obj lex_config.obj node.obj grammar.obj grammar_config.obj 
-      lr_action.obj lr_dfa.obj lr_item.obj parser.obj parser_in.obj ray.obj 
-      crtstr.obj memory.obj random.obj"/>
+    <OBJFILES value="strconv.obj string.obj strtable.obj thread.obj dfa.obj expr.obj lex.obj 
+      lex_config.obj node.obj grammar.obj grammar_config.obj lr_action.obj 
+      lr_dfa.obj lr_item.obj parser.obj parser_in.obj ray.obj crtstr.obj 
+      memory.obj random.obj Arsenal.obj common.obj"/>
     <RESFILES value=""/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
@@ -23,7 +23,7 @@
       inetdbbde.bpi inetdbxpress.bpi inetdb.bpi nmfast.bpi webdsnap.bpi 
       bcbie.bpi websnap.bpi soaprtl.bpi dclocx.bpi dbexpress.bpi dbxcds.bpi 
       indy.bpi bcb2kaxserver.bpi"/>
-    <PATHCPP value=".;..\..\Arsenal\Common;..\..\Arsenal\Lex;..\..\Arsenal\Parser;..\..\Arsenal\Ray"/>
+    <PATHCPP value=".;..\..\Arsenal\Common;..\..\Arsenal\Lex;..\..\Arsenal\Parser;..\..\Arsenal\Ray;..\..\Arsenal"/>
     <PATHPAS value=".;"/>
     <PATHRC value=".;"/>
     <PATHASM value=".;"/>
@@ -31,7 +31,7 @@
     <RELEASELIBPATH value="$(BCB)\lib\release"/>
     <LINKER value="ilink32"/>
     <USERDEFINES value="WIN32,_DEBUG, _USRDLL"/>
-    <SYSDEFINES value="NO_STRICT;_NO_VCL;_RTLDLL;USEPACKAGES"/>
+    <SYSDEFINES value="NO_STRICT;_NO_VCL;USEPACKAGES"/>
     <MAINSOURCE value="DLLDebug.bpf"/>
     <INCLUDEPATH value="..\..\Arsenal\Ray;..\..\Arsenal;..\..\Arsenal\Parser;..\..\Arsenal\Test;..\..\Arsenal\Lex;..\..\Arsenal\Common;..\..\..\..\Arsenal\Test;..\..\..\..\Arsenal\Lex;..\..\..\..\Arsenal\Common;Test;$(BCB)\include;$(BCB)\include\vcl"/>
     <LIBPATH value="..\..\Arsenal\Ray;..\..\Arsenal;..\..\Arsenal\Parser;..\..\Arsenal\Test;..\..\Arsenal\Lex;..\..\Arsenal\Common;..\..\..\..\Arsenal\Test;..\..\..\..\Arsenal\Lex;..\..\..\..\Arsenal\Common;Test;$(BCB)\lib\obj;$(BCB)\lib"/>
@@ -43,14 +43,9 @@
       -I..\..\Arsenal\Test -I..\..\Arsenal\Lex -I..\..\Arsenal\Common 
       -I..\..\..\..\Arsenal\Test -I..\..\..\..\Arsenal\Lex 
       -I..\..\..\..\Arsenal\Common -ITest -I$(BCB)\include -I$(BCB)\include\vcl 
-      -src_suffix cpp -DWIN32,_DEBUG, _USRDLL _USRDLL 
-      _USRDLL,ARSENAL_EXPORTS,AR_EXPORTS,AR_SHARED_LIB 
-      _USRDLL,ARSENAL_EXPORTS,AR_EXPORTS,AR_SHARED_LIB 
-      _USRDLL,ARSENAL_EXPORTS,AR_EXPORTS,AR_SHARED_LIB 
-      _USRDLL,ARSENAL_EXPORTS,AR_EXPORTS,AR_SHARED_LIB 
-      _USRDLL,ARSENAL_EXPORTS,AR_EXPORTS,AR_SHARED_LIB -boa"/>
-    <CFLAG1 value="-WD -Od -H=$(BCB)\lib\vcl60.csm -Hc -Vx -Ve -x- -RT- -X- -r- -a8 -b- -k -y 
-      -v -vi- -tWD -tWM -c"/>
+      -src_suffix cpp -DWIN32,_DEBUG, _USRDLL -boa"/>
+    <CFLAG1 value="-WD -Od -H=$(BCB)\lib\vcl60.csm -Vx -Ve -x- -RT- -X- -a8 -6 -b- -k -y -v 
+      -vi- -tWD -tWM -c"/>
     <PFLAGS value="-N2. -N0. -$YD -$W -$O- -$A8 -v -JPHNE -M"/>
     <RFLAGS value=""/>
     <AFLAGS value="/mx /w2 /zi"/>
@@ -60,12 +55,11 @@
   <LINKER>
     <ALLOBJ value="c0d32.obj $(PACKAGES) $(OBJFILES)"/>
     <ALLRES value="$(RESFILES)"/>
-    <ALLLIB value="$(LIBFILES) $(LIBRARIES) import32.lib cw32mti.lib"/>
+    <ALLLIB value="$(LIBFILES) $(LIBRARIES) import32.lib cw32mt.lib"/>
     <OTHERFILES value=""/>
   </LINKER>
   <FILELIST>
       <FILE FILENAME="DLLDebug.bpf" FORMNAME="" UNITNAME="DLLDebug" CONTAINERID="BPF" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\Arsenal\Common\common.c" FORMNAME="" UNITNAME="common.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\Arsenal\Common\common.h" FORMNAME="" UNITNAME="common.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\Arsenal\Common\config.h" FORMNAME="" UNITNAME="config.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\Arsenal\Common\platform.h" FORMNAME="" UNITNAME="platform.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
@@ -103,6 +97,11 @@
       <FILE FILENAME="..\..\Arsenal\Common\crtstr.c" FORMNAME="" UNITNAME="crtstr.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\Arsenal\Common\memory.c" FORMNAME="" UNITNAME="memory.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\Arsenal\Common\random.c" FORMNAME="" UNITNAME="random.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Arsenal.c" FORMNAME="" UNITNAME="Arsenal.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Arsenal.h" FORMNAME="" UNITNAME="Arsenal.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Common\common.c" FORMNAME="" UNITNAME="common.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Common\thread_posix.h" FORMNAME="" UNITNAME="thread_posix.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Common\thread_win.h" FORMNAME="" UNITNAME="thread_win.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>
