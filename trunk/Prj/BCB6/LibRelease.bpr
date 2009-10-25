@@ -39,7 +39,7 @@
       -tW -tWM"/>
     <PFLAGS value="-N2. -N0. -$Y- -$L- -$D- -$A8 -v -JPHNE -M"/>
     <AFLAGS value="/mx /w2 /zn"/>
-    <LFLAGS value="-l.\lib\release "/>
+    <LFLAGS value="-l.\lib\release"/>
     <OTHERFILES value=""/>
   </OPTIONS>
   <LINKER>
@@ -49,7 +49,6 @@
   </LINKER>
   <FILELIST>
       <FILE FILENAME="LibRelease.bpf" FORMNAME="" UNITNAME="LibRelease" CONTAINERID="BPF" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\Arsenal\Test\DragonBook\comn.h" FORMNAME="" UNITNAME="comn.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\Arsenal\Arsenal.c" FORMNAME="" UNITNAME="Arsenal.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\Arsenal\Arsenal.h" FORMNAME="" UNITNAME="Arsenal.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\Arsenal\Ray\ray.c" FORMNAME="" UNITNAME="ray.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
@@ -91,6 +90,8 @@
       <FILE FILENAME="..\..\Arsenal\Common\crtstr.c" FORMNAME="" UNITNAME="crtstr.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\Arsenal\Common\memory.c" FORMNAME="" UNITNAME="memory.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\Arsenal\Common\random.c" FORMNAME="" UNITNAME="random.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Common\thread_posix.h" FORMNAME="" UNITNAME="thread_posix.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\Arsenal\Common\thread_win.h" FORMNAME="" UNITNAME="thread_win.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>
