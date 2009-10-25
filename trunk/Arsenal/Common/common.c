@@ -137,8 +137,9 @@ void	AR_fatal(const wchar_t *msg,...)
 				__ctx.fatal_f(buf, __ctx.ctx);
 				AR_DEL(buf);
 		}
-		/*exit(-1);*/
-		abort();
+		
+		AR_abort();
+		
 		
 }
 

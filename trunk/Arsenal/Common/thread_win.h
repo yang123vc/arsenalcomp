@@ -15,7 +15,7 @@
 
 
 
-#if(AR_COMPILER == AR_VC6)
+#if(AR_COMPILER == AR_VC6 || OS_TYPE == OS_WINDOWS_CE)
 		struct _RPC_ASYNC_STATE;
 #endif
 

@@ -101,6 +101,12 @@
 
 		#pragma warning(disable : 4100)
 		#pragma warning(disable : 4127)
+#if(OS_TYPE == OS_WINDOWS_CE)
+		#pragma warning(disable : 4214)
+		#pragma warning(disable : 4201)
+		#pragma warning(disable : 4090)
+#endif
+
 /*
 
 
@@ -413,22 +419,30 @@ typedef void*					ptr_t;
 #define AR_swprintf						_snwprintf
 #define AR_vsprintf(buf, nelems, fmt, arg_ptr)		do{vsprintf(buf, fmt, arg_ptr);}while(0)
 #define AR_vswprintf								_vsnwprintf
+#define AR_abort									abort
 
-/*
-已经不用了
-inline int AR_vscwprintf(const wchar_t *fmt, va_list argptr) { int n; size_t buf_size; n = -1; buf_size = 1048576; while(n == -1){ wchar_t *buf; buf_size *= 2; buf = (wchar_t*)malloc(sizeof(wchar_t) * buf_size); n = AR_vswprintf(buf, buf_size, fmt, argptr); free(buf); } return n; }
-*/
+
 #elif (AR_COMPILER == AR_VC9)
 
-#define AR_swprintf						_snwprintf
-/*#define AR_swprintf					swprintf*/
-#define AR_vsprintf						vsprintf_s
-#define AR_vswprintf					vswprintf_s
+#if(OS_TYPE == OS_WINDOWS_CE)
+		/*
+		#define AR_swprintf								_snwprintf
+		#define AR_vsprintf(buf, count, fmt, args)		vsprintf(buf, fmt, args)
+		#define AR_vswprintf(buf, count, fmt, args)	    vswprintf(buf, fmt, args)
+		*/
 
-/*
-已经不用了
-#define AR_vscwprintf					_vscwprintf
-*/
+		#define AR_swprintf						_snwprintf
+		#define AR_vsprintf						_vsnprintf
+		#define AR_vswprintf					_vsnwprintf
+		#define AR_abort()						exit(-1)
+
+#else
+		#define AR_swprintf						_snwprintf
+		#define AR_vsprintf						vsprintf_s
+		#define AR_vswprintf					vswprintf_s
+		#define AR_abort						abort
+
+#endif
 
 
 
@@ -437,47 +451,16 @@ inline int AR_vscwprintf(const wchar_t *fmt, va_list argptr) { int n; size_t buf
 #define AR_sprintf		sprintf
 #define AR_vsprintf(buf, count, fmt, args)	        vsprintf(buf, fmt, args)
 #define AR_vswprintf(buf, count, fmt, args)	        vswprintf(buf, fmt, args)
+#define AR_abort									abort
+#define AR_swprintf						_snwprintf
 
-/*
-#define AR_sscanf		sscanf
-#define AR_swscanf		swscanf
-*/
-
-
-inline int AR_swprintf(wchar_t *buffer,  size_t count, const wchar_t *fmt, ...)
-{
-		int res;
-		va_list  arg_ptr;
-		va_start(arg_ptr, fmt);
-		res = vwprintf(fmt, arg_ptr);
-		va_end(arg_ptr);
-		return res;
-}
-
-
-/*
-测试时有可能会用到，遗留代码
-inline int AR_vscwprintf(const wchar_t *fmt, va_list argptr)
-{
-		int n; size_t buf_size; n = -1; buf_size = 1048576;
-		while(n == -1)
-		{
-				wchar_t *buf;
-				buf_size *= 2;
-				buf = (wchar_t*)malloc(sizeof(wchar_t) * buf_size);
-				n = AR_vswprintf(buf, buf_size, fmt, argptr);
-				free(buf);
-		}
-		return n;
-}
-*/
 
 #elif(AR_COMPILER == AR_GCC3 || AR_COMPILER == AR_GCC4)
 
-    #define AR_swprintf						swprintf
-    #define AR_vsprintf						vsprintf
-    #define AR_vswprintf					vswprintf
-
+		#define AR_swprintf						swprintf
+		#define AR_vsprintf						vsprintf
+		#define AR_vswprintf					vswprintf
+		#define AR_abort						abort
 
 #else
 
