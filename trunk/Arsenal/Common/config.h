@@ -448,12 +448,11 @@ typedef void*					ptr_t;
 
 
 #elif(AR_COMPILER == AR_BCB6)
+                #define AR_swprintf				_snwprintf
+		#define AR_vsprintf				_vsnprintf
+		#define AR_vswprintf				_vsnwprintf
+                #define AR_abort	                        abort
 
-#define AR_sprintf		sprintf
-#define AR_vsprintf(buf, count, fmt, args)	        vsprintf(buf, fmt, args)
-#define AR_vswprintf(buf, count, fmt, args)	        vswprintf(buf, fmt, args)
-#define AR_abort									abort
-#define AR_swprintf									_snwprintf
 
 
 #elif(AR_COMPILER == AR_GCC3 || AR_COMPILER == AR_GCC4)
