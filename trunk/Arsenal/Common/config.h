@@ -88,8 +88,6 @@
 
 
 
-
-
 /**********************************************************±‡“Î∆˜œ‡πÿµƒ≈‰÷√***********************************************************************/
 
 /*
@@ -137,6 +135,8 @@
 
 
 #endif
+
+
 
 
 
@@ -205,6 +205,14 @@
 				#define AR_NOOP					NULL
 				#define AR_FUNC_NAME			__FUNC__
 		#endif
+
+
+		#if(OS_TYPE == OS_WINDOWS_CE)
+				#define			AR_MEM_POLICY		(7)
+		#else
+				#define			AR_MEM_POLICY		(1)
+		#endif
+
 
 #elif(AR_COMPILER == AR_GCC3 || AR_COMPILER == AR_GCC4)
 
@@ -294,8 +302,11 @@
 
 #else
 
+		#error "Not Support Platform!"
 
 #endif
+
+
 
 
 
@@ -425,12 +436,7 @@ typedef void*					ptr_t;
 #elif (AR_COMPILER == AR_VC9)
 
 #if(OS_TYPE == OS_WINDOWS_CE)
-		/*
-		#define AR_swprintf								_snwprintf
-		#define AR_vsprintf(buf, count, fmt, args)		vsprintf(buf, fmt, args)
-		#define AR_vswprintf(buf, count, fmt, args)	    vswprintf(buf, fmt, args)
-		*/
-
+		
 		#define AR_swprintf						_snwprintf
 		#define AR_vsprintf						_vsnprintf
 		#define AR_vswprintf					_vsnwprintf

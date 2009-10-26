@@ -956,7 +956,6 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				AdditionalOptions=" /SUBSYSTEM:WINDOWSCE,$(CEVER) /MACHINE:$(ARCHFAM)"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -1224,7 +1223,6 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				AdditionalOptions=" /SUBSYSTEM:WINDOWSCE,$(CEVER) /MACHINE:$(ARCHFAM)"
 			/>
 			<Tool
 				Name="VCALinkTool"

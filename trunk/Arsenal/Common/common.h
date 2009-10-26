@@ -289,9 +289,7 @@ typedef struct __string_table_			arStringTable_t;
 
 
 
-
-
-#define		MIN_BUCKET_SIZE		6151
+#define		MIN_BUCKET_SIZE		(6151 / AR_MEM_POLICY)
 
 
 arStringTable_t*		AR_CreateStrTable(size_t count);

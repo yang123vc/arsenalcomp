@@ -58,7 +58,9 @@ typedef struct __lr_item_rec_tag
 */
 
 /*#define LR_ITEM_BUCKET_SIZE		1543*/
-#define LR_ITEM_BUCKET_SIZE		193
+
+#define LR_ITEM_BUCKET_SIZE		(193 / AR_MEM_POLICY)
+
 
 typedef struct __lr_item_hash_table_tag
 {
