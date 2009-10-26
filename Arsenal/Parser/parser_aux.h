@@ -179,7 +179,7 @@ inline bool_t			PSR_InsertToTermInfoRec(psrTermInfoRec_t *rec, const psrTermInfo
 
 
 
-#define TERM_BUCKET_SIZE		20481
+#define TERM_BUCKET_SIZE		(20481 / AR_MEM_POLICY)
 
 
 typedef struct __term_table_tag

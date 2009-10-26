@@ -34,7 +34,8 @@ extern const struct __parser_symbol_tag	*PSR_StartSymb;/*第一个符号，被转换为 %S
 
 /*所有parser配置相关的符号都由以下函数分配，此功能为符号对比提供了O(1)的性能(只需对比指针)*/
 
-#define PSR_STRTBL_BUCKET		(2048*100 + 1)
+#define PSR_STRTBL_BUCKET		((2048*100 + 1) / AR_MEM_POLICY)
+
 
 const wchar_t*	PSR_AllocString(const wchar_t *str);
 const wchar_t*	PSR_AllocStringN(const wchar_t *str, size_t n);
