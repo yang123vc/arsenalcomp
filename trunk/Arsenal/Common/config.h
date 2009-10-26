@@ -427,10 +427,15 @@ typedef void*					ptr_t;
 
 #if (AR_COMPILER == AR_VC6)
 
+/*
 #define AR_swprintf						_snwprintf
 #define AR_vsprintf(buf, nelems, fmt, arg_ptr)		do{vsprintf(buf, fmt, arg_ptr);}while(0)
 #define AR_vswprintf								_vsnwprintf
-#define AR_abort									abort
+*/
+		#define AR_swprintf						_snwprintf
+		#define AR_vsprintf						_vsnprintf
+		#define AR_vswprintf					_vsnwprintf
+		#define AR_abort									abort
 
 
 #elif (AR_COMPILER == AR_VC9)
