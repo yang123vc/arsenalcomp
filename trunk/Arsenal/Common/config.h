@@ -435,20 +435,15 @@ typedef void*					ptr_t;
 
 #elif (AR_COMPILER == AR_VC9)
 
-#if(OS_TYPE == OS_WINDOWS_CE)
-		
 		#define AR_swprintf						_snwprintf
 		#define AR_vsprintf						_vsnprintf
 		#define AR_vswprintf					_vsnwprintf
-		#define AR_abort()						exit(-1)
 
-#else
-		#define AR_swprintf						_snwprintf
-		#define AR_vsprintf						vsprintf_s
-		#define AR_vswprintf					vswprintf_s
-		#define AR_abort						abort
-
-#endif
+		#if(OS_TYPE == OS_WINDOWS_CE)
+				#define AR_abort()						exit(3)
+		#else
+				#define AR_abort						abort
+		#endif
 
 
 
@@ -458,7 +453,7 @@ typedef void*					ptr_t;
 #define AR_vsprintf(buf, count, fmt, args)	        vsprintf(buf, fmt, args)
 #define AR_vswprintf(buf, count, fmt, args)	        vswprintf(buf, fmt, args)
 #define AR_abort									abort
-#define AR_swprintf						_snwprintf
+#define AR_swprintf									_snwprintf
 
 
 #elif(AR_COMPILER == AR_GCC3 || AR_COMPILER == AR_GCC4)
