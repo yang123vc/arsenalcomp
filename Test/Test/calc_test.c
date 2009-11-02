@@ -9,7 +9,6 @@ AR_NAMESPACE_BEGIN
 
 
 
-
 typedef enum
 {
 		EOI = 0,
