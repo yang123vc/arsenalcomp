@@ -1277,7 +1277,7 @@
 				AssemblerOutput="0"
 				WarningLevel="4"
 				DebugInformationFormat="3"
-				CompileAs="2"
+				CompileAs="1"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -1591,6 +1591,10 @@
 		<Filter
 			Name="Common"
 			>
+			<File
+				RelativePath="..\..\Arsenal\Common\algo.c"
+				>
+			</File>
 			<File
 				RelativePath="..\..\Arsenal\Common\common.c"
 				>

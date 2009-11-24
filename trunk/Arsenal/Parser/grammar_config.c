@@ -201,6 +201,7 @@ typedef enum {
 	
 }cfgTokenType_t;
 
+
 typedef struct __parser_config_token_tag
 {
 		wchar_t			*str;
@@ -226,10 +227,10 @@ typedef struct __parser_config_prec_tag
 
 typedef struct __parser_config_rule_tag
 {
-		wchar_t									*head;
-		wchar_t									*prec_token;
-		cfgNode_t			*nodes;
-		wchar_t									*rule_str;
+		wchar_t			*head;
+		wchar_t			*prec_token;
+		cfgNode_t		*nodes;
+		wchar_t			*rule_str;
 		
 }cfgRule_t;
 

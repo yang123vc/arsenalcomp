@@ -102,17 +102,29 @@ void	AR_fatal(const wchar_t *msg,...);
 #define AR_NELEMS(_arr)	(sizeof((_arr))/sizeof((_arr)[0]))
 
 
+inline const void* AR_GET_ELEM(const void *base, size_t width, size_t idx)
+{
+		AR_ASSERT(base != NULL && width > 0);
+		return (const void*)((byte_t*)base + (width * idx));
+}
+
+
+
+
 /**********************************************************memory***************************************************************/
 
 void*	AR_malloc(size_t nbytes);
 void*	AR_calloc(size_t num, size_t size);
 void*	AR_realloc(void *block, size_t nbytes);
 void	AR_free(void *ptr);
-
+void	AR_memswap(void *a, void *b, size_t n);
 
 #define AR_memset				memset
 #define AR_memcpy				memcpy
 #define AR_memcmp				memcmp
+
+
+
 
 
 
@@ -136,7 +148,14 @@ void	AR_free(void *ptr);
 
 /**********************************************************algo*************************************************************/
 
-#define AR_qsort		qsort
+/*#define AR_qsort		qsort*/
+
+
+
+void AR_qsort(void *base, size_t num, size_t width, int_t (*cmp_f)(const void*, const void*));
+
+/*void	AR_qsort(void *base, size_t num, size_t width, int_t (__cdecl *cmp_f)(void*,void*));*/
+
 
 
 /**********************************************************rand*************************************************************/
@@ -351,7 +370,10 @@ inline uint64_t AR_BIT_MARK(uint64_t pos) { return AR_BIGNUM_U64(0x01) << pos; }
 
 
 
+
 AR_NAMESPACE_END
+
+
 
 
 #endif

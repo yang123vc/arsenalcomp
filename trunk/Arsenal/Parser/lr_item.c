@@ -47,6 +47,8 @@ void			PSR_InitLRItem(psrLRItem_t *item, const psrRule_t	*rule, size_t delim, co
 		}
 }
 
+
+
 void			PSR_UnInitLRItem(psrLRItem_t *item)
 {
 		AR_ASSERT(item != NULL);
@@ -84,8 +86,8 @@ int_t			PSR_CompLRItem(const psrLRItem_t *l, const psrLRItem_t *r)
 		{
 				return 0;
 		}
-		
 }
+
 
 void			PSR_CopyLRItem(psrLRItem_t *dest, const psrLRItem_t *sour)
 {
@@ -297,16 +299,27 @@ bool_t	PSR_EqualLRItemTbl(const psrLRItemTbl_t *l, const psrLRItemTbl_t *r)
 		size_t i;
 		const psrLRItemRec_t *pl, *pr;
 		AR_ASSERT(l != NULL && r != NULL);
-		if(l == r)return 0;
+		
+		if(l == r)return true;
+
+		if(l->item_count != r->item_count)return false;
+
+		
 		
 		for(i = 0; i < LR_ITEM_BUCKET_SIZE; ++i)
 		{
 				pl = l->bucket[i];
 				pr = r->bucket[i];
-				for(; pl && pr && PSR_CompLRItem(&pl->item, &pr->item) == 0; pl = pl->next, pr = pr->next)
+				while(pl && pr && PSR_CompLRItem(&pl->item, &pr->item) == 0)
+				{
+						pl = pl->next;
+						pr = pr->next;
+				}
+				
+				/*for(; pl && pr && PSR_CompLRItem(&pl->item, &pr->item) == 0; pl = pl->next, pr = pr->next)
 				{
 				}
-
+				*/
 				if(pl || pr)return false;
 		}
 		return true;

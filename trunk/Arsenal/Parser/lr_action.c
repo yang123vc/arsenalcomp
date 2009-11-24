@@ -671,10 +671,18 @@ psrActionTable_t* PSR_CreateActionTable_LR1(const psrGrammar_t *grammar)
 		psrDFA_t	*start;
 		psrDFASet_t set;
 		size_t i;
+
+		
 		tbl = __create_table(grammar);
 		
 		PSR_InitDFASet(&set);
+		
+		
+
 		start = PSR_Build_LR1_DFA(grammar);
+
+		
+
 		PSR_CollectDFA(&set, start);
 		__build_goto_table(tbl, &set);
 

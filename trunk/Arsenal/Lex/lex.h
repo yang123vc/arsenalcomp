@@ -40,7 +40,6 @@ typedef struct __lex_token_tag
 		size_t			type;
 		size_t			line;
 		size_t			col;
-
 }lexToken_t;
 
 

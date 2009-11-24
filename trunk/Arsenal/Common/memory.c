@@ -68,10 +68,62 @@ void	AR_free(void *ptr)
 
 
 
+void	AR_memswap(void *a, void *b, size_t n)
+{
+		int_t cnt;
+		
+		AR_ASSERT(a != NULL && b != NULL);
+
+		if(a == b)return;
+		
+		cnt = (int_t)(n / sizeof(int_t));
+		
+		while(cnt-- > 0)
+		{
+				int_t t = *(int_t*)a;
+				*(int_t*)a = *(int_t*)b;
+				*(int_t*)b = t;
+				a = (int_t*)a + 1;
+				b = (int_t*)b + 1;
+		}
+
+		cnt = (int_t)(n %  sizeof(int_t));
+
+		while(cnt-- > 0)
+		{
+				byte_t t = *(byte_t*)a;
+				*(byte_t*)a = *(byte_t*)b;
+				*(byte_t*)b = t;
+				a = (byte_t*)a + 1;
+				b = (byte_t*)b + 1;
+		}
+
+}
 
 
+#if(0)
+void AR_memswap(void *a, void *b, size_t n)
+{
+		byte_t tmp, *l,*r;
+		int_t cnt;
 
+		AR_ASSERT(a != NULL && b != NULL);
 
+		if(a == b)return;
+
+		cnt = (int_t)n;
+		l = (byte_t*)a; 
+		r = (byte_t*)b;
+
+		
+		while(cnt-- > 0)
+		{
+				tmp = *l;
+				*l++ = *r;
+				*r++ = tmp;
+		}
+}
+#endif
 
 
 

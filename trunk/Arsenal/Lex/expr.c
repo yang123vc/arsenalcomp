@@ -937,7 +937,7 @@ INVALID_POINT:
 		if(cat != NULL)LEX_DestroyNode(cat);
 		if(branch != NULL) LEX_DestroyNode(branch);
 		if(g_res.node != NULL) LEX_DestroyNode(g_res.node);
-
+		
 		g_res.node = NULL; g_res.next = NULL;
 		return g_res;
 }

@@ -22,10 +22,6 @@
 AR_NAMESPACE_BEGIN
 
 
-void			AR_YiledThread()
-{
-		pthread_yield();
-}
 
 
 int_t			AR_AtomicInc(volatile int_t *dest)
@@ -45,6 +41,10 @@ int_t			AR_AtomicDec(volatile int_t *dest)
 /****************************************************************************SpinLock***********************************************/
 
 
+void			AR_YiledThread()
+{
+		pthread_yield();
+}
 
 
 void			AR_InitSpinLock(arSpinLock_t *lock)

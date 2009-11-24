@@ -574,7 +574,7 @@ psrDFA_t*		PSR_Build_LR1_DFA(const psrGrammar_t *grammar)
 
 		symb_lst = PSR_GetSymbList(grammar);
 
-
+		
 		for(i = 0; i < set.count; ++i)
 		{
 				psrDFA_t *dfa;
