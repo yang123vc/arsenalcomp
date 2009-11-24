@@ -60,7 +60,7 @@ void AR_Test()
 {
 #if defined(__LIB)
 		
-		//com_test();
+		com_test();
 
 		//trie_tree_test();
 		//expr_test();
@@ -83,7 +83,7 @@ void AR_Test()
 		//lr_item_tbl_test();
 		//cache_test();
 		//calc_test1();
-		calc_test();
+		//calc_test();
 
 		//db_test();
 
@@ -93,7 +93,7 @@ void AR_Test()
 
 		//trans_char_test();
 
-		parser_test();
+		//parser_test();
 
 #else
 		AR_printf(L"dll version\r\n");

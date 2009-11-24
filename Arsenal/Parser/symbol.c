@@ -274,6 +274,7 @@ int_t				PSR_BSearchFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t*
 		return -1;
 }
 
+/*
 static int __comp_symb(const void *left, const void *right)
 {
 		const psrSymb_t *l,*r;
@@ -282,6 +283,17 @@ static int __comp_symb(const void *left, const void *right)
 
 		AR_ASSERT(l != NULL && r != NULL);
 		return (int)PSR_CompSymb(l,r);
+}
+*/
+
+static int_t __comp_symb(const void *left, const void *right)
+{
+		const psrSymb_t *l,*r;
+		l = *(const psrSymb_t**)left;
+		r = *(const psrSymb_t**)right;
+
+		AR_ASSERT(l != NULL && r != NULL);
+		return PSR_CompSymb(l,r);
 }
 
 void			PSR_SortSymbList(psrSymbList_t *symb_lst)

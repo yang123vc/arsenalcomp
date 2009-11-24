@@ -21,6 +21,7 @@
 
 
 
+
 /**********************************************************确定编译器和平台***********************************************************************/
 
 
@@ -99,29 +100,25 @@
 
 		#pragma warning(disable : 4100)
 		#pragma warning(disable : 4127)
+		#pragma warning(disable : 4201)
+
 #if(OS_TYPE == OS_WINDOWS_CE)
 		#pragma warning(disable : 4214)
 		#pragma warning(disable : 4201)
 		#pragma warning(disable : 4090)
+		
 #endif
 
 /*
 
-
-		#pragma warning(disable : 4201)
-
-
-
 		#pragma warning(disable : 4204)
 		#pragma warning(disable : 4244)
-
-
-
 		#pragma warning(disable : 4505)
 		#pragma warning(disable : 4514)
 		#pragma warning(disable : 4710)
 		#pragma warning(disable : 4761)
 */
+
 		#if !defined(_CRT_SECURE_NO_WARNINGS)
 				#define _CRT_SECURE_NO_WARNINGS
 		#endif

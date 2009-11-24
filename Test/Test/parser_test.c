@@ -252,7 +252,6 @@ void parser_test()
 		if(syntree)PSR_DestroyPrintNode(syntree);
 
 
-		
 		if(parser)PSR_DestroyParser(parser);
 		PSR_DestroyGrammar(gmr);
 		LEX_Destroy(lex);

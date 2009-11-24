@@ -1,5 +1,8 @@
 #include "test.h"
+#include <algorithm>
+
 #include <math.h>
+#include <time.h>
 
 #if defined(__LIB)
 
@@ -507,6 +510,75 @@ void bug_test()
         AR_scwprintf(L"%hc\r\n", c);
 }
 
+
+int_t __cmp_size_t(const void *l, const void *r)
+{
+		return AR_CMP(*(size_t*)l, *(size_t*)r);
+
+}
+
+int __cmp_size_t_2(const void *l, const void *r)
+{
+		return (int)AR_CMP(*(size_t*)l, *(size_t*)r);
+
+}
+
+
+#define  SORT_TEST_CNT (30*1024 * 1024)
+
+//#define  SORT_TEST_CNT (30)
+
+void sort_test()
+{
+		size_t *vi = AR_NEWARR(size_t, SORT_TEST_CNT);
+		int i;
+		DWORD beg,end;
+		int_t cnt = 3;
+		AR_srand(time(NULL));
+
+		__int64 n = (__int64)SORT_TEST_CNT;
+		while(cnt-- > 0)
+		{
+				for(i = 0; i < SORT_TEST_CNT; ++i)
+				{
+						vi[i] = AR_rand32() ;//% 40960;
+						
+						//vi[i] = (size_t)--n;
+
+				}
+
+				printf("-----------beg------------\r\n");
+				beg = GetTickCount();
+				
+				AR_qsort(vi,SORT_TEST_CNT , sizeof(size_t),__cmp_size_t);
+				//qsort(vi, SORT_TEST_CNT, sizeof(size_t), __cmp_size_t_2);
+
+				
+
+				//std::sort(vi, vi + SORT_TEST_CNT);
+
+				end = GetTickCount();
+
+				printf("elapsed == %u\r\n", end - beg);
+				printf("-----------end------------\r\n");
+
+				
+
+				for(i = 1; i < SORT_TEST_CNT; ++i)
+				{
+						if(vi[i-1] <= vi[i])
+						{
+
+						}else
+						{
+								system("pause");
+								abort();
+						}
+				}
+		}
+
+}
+
 void com_test()
 {
 		
@@ -527,7 +599,9 @@ void com_test()
 		//itow_test();
 
 		//test_bittest();
-		bug_test();
+		//bug_test();
+
+		sort_test();
 
 }
 
