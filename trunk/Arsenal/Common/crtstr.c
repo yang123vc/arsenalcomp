@@ -327,6 +327,27 @@ int_t			AR_scwprintf(const wchar_t *fmt, ...)
 }
 
 
+
+wchar_t*		AR_vtow(const wchar_t *fmt, ...)
+{
+		va_list			args;
+		
+		wchar_t			*buf;
+		int_t			len;
+
+		AR_ASSERT(fmt != NULL);
+
+		va_start (args, fmt);
+		len = AR_vscwprintf(fmt, args);
+		buf = AR_NEWARR(wchar_t, len + 1);
+		AR_vswprintf(buf, len + 1, fmt, args);
+		va_end (args);
+		return buf;
+}
+
+
+
+
 int AR_wchartodigit(wchar_t ch)
 {
 #define DIGIT_RANGE_TEST(zero)  \

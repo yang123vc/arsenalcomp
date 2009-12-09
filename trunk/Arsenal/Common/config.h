@@ -204,13 +204,6 @@
 		#endif
 
 
-		#if(OS_TYPE == OS_WINDOWS_CE)
-				#define			AR_MEM_POLICY		(7)
-		#else
-				#define			AR_MEM_POLICY		(1)
-		#endif
-
-
 #elif(AR_COMPILER == AR_GCC3 || AR_COMPILER == AR_GCC4)
 
 		#if defined(NDEBUG)
@@ -251,7 +244,7 @@
 #endif
 
 
-
+#define			AR_MEM_POLICY		(1)
 
 
 
@@ -260,7 +253,8 @@
 		#define AR_NAMESPACE_END		} }
 
 		typedef bool					bool_t;
-
+		
+		#define AR_INLINE				inline
 #else
 		#define AR_NAMESPACE_BEGIN
 		#define AR_NAMESPACE_END
@@ -269,12 +263,13 @@
 
 		#define	true					1
 		#define false					0
-
+		
 		#if(__STDC_VERSION__ < 199901L) /*C99标准之前的编译器定义为static*/
-				#define inline					static
+				#define AR_INLINE				static
         #else
-                #define inline					static inline
+                #define AR_INLINE				inline
 		#endif
+
 #endif
 
 

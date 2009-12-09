@@ -23,10 +23,10 @@ AR_NAMESPACE_BEGIN
 /**********************************************************************************************************/
 
 
-
-lex_t*	LEX_Create()
+lex_t*	LEX_Create(void *io)
 {
 		lex_t *res;
+		
 		res = AR_NEW0(lex_t);
 		res->tbl = AR_NEW0(lexStateTable_t);
 		res->cclass = AR_NEW0(lexCClass_t);
@@ -35,6 +35,8 @@ lex_t*	LEX_Create()
 		LEX_InitCClass(res->cclass);
 		
 		res->uni_root = LEX_CreateNode(LEX_BRANCH);
+		
+		res->io = io == NULL ? AR_global_ioctx() : io;
 
 		return res;
 }
@@ -67,7 +69,8 @@ bool_t	LEX_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr)
 		
 		if(LEX_FindFromNameList(lex->name_tbl, name) != NULL)
 		{
-				AR_error(AR_LEX, L"Lex Rule Error : Duplicate name defination %ls: %ls\r\n", name, expr);
+				/*AR_error( L"Lex Rule Error : Duplicate name defination %ls: %ls\r\n", name, expr);*/
+				AR_printf_ctx(lex->io, L"Lex Rule Error : Duplicate name defination %ls: %ls\r\n", name, expr);
 				return false;
 		}
 
@@ -75,7 +78,8 @@ bool_t	LEX_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr)
 		
 		if(res.node == NULL)
 		{
-				AR_error(AR_LEX, L"Lex Rule Error : %ls: %ls\r\n", name, res.err.pos);
+				/*AR_error(L"Lex Rule Error : %ls: %ls\r\n", name, res.err.pos);*/
+				AR_printf_ctx(lex->io, L"Lex Rule Error : %ls: %ls\r\n", name, res.err.pos);
 				return false;
 		}
 		return LEX_InsertToNameList(&lex->name_tbl, name, res.node);
@@ -95,8 +99,9 @@ bool_t	LEX_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action
 		{
 				
 				/*AR_error(AR_LEX, L"Lex Rule Error : %d : %ls\n", action->type, res.err.pos);*/
-				AR_error(AR_LEX, L"Lex Rule Error : %" AR_PLAT_INT_FMT L"d : %ls\n", (size_t)action->type, (size_t)res.err.pos);
+				/*AR_error(L"Lex Rule Error : %" AR_PLAT_INT_FMT L"d : %ls\n", (size_t)action->type, (size_t)res.err.pos);*/
 				
+				AR_printf_ctx(lex->io, L"Lex Rule Error : %" AR_PLAT_INT_FMT L"d : %ls\n", (size_t)action->type, (size_t)res.err.pos);
 				return false;
 		}
 
@@ -164,10 +169,12 @@ bool_t	LEX_Insert(lex_t *lex, const wchar_t *input)
 				if(*p != L'=')return false;
 				p = AR_wcstrim_space(++p);
 				return LEX_InsertName(lex, name, p);
-				
+		
 		}else
 		{
-				AR_error(AR_LEX, L"Lex Rule Error : Invalid Input %ls\r\n", p);
+				/*AR_error(L"Lex Rule Error : Invalid Input %ls\r\n", p);*/
+
+				AR_printf_ctx(lex->io, L"Lex Rule Error : Invalid Input %ls\r\n", p);
 				return false;
 		}
 		

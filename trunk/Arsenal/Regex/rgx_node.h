@@ -11,34 +11,16 @@
  *
  */
 
-#ifndef AR_HEADER_H
-#define AR_HEADER_H
 
+#include "../Common/common.h"
 
-#include "./Common/common.h"
-#include "./Lex/lex.h"
-
-#include "./Parser/grammar.h"
-#include "./Parser/parser.h"
-#include "./Tools/tools.h"
 
 
 AR_NAMESPACE_BEGIN
 
-typedef struct __arsenal_context_tag
-{
-		arInit_t		init;
-}arCtx_t;
 
-//void	Arsenal_Init(arInit_t *start_info);
-void	Arsenal_Init(const arCtx_t *ctx);
-void	Arsenal_UnInit();
 
 
 
 
 AR_NAMESPACE_END
-
-
-#endif
-

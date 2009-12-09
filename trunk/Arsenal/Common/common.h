@@ -35,42 +35,47 @@ common.h -- misc founctions used in Arsenal
 
 /*******************************************************************************init********************************/
  
-typedef void	(AR_STDCALL *AR_error_func)(int, const wchar_t *msg, void *ctx);
+typedef void	(AR_STDCALL *AR_error_func)(int_t level, const wchar_t *msg, void *ctx);
 typedef void	(AR_STDCALL *AR_print_func)(const wchar_t *msg, void *ctx);
-typedef void	(AR_STDCALL *AR_fatal_func)(const wchar_t *msg, void *ctx);
+/*typedef void	(AR_STDCALL *AR_fatal_func)(const wchar_t *msg, void *ctx);*/
+
+
 
 typedef struct __ar_init_tag
 {
-		AR_error_func	error_f;
-		AR_print_func	print_f;
-		AR_fatal_func	fatal_f;
-		void			*ctx;
+		AR_error_func	on_error;
+		AR_print_func	on_print;
+		/*AR_fatal_func	on_fatal;*/
+		void			*global_ctx;
 }arInit_t;
 
 
 void AR_Init(const arInit_t *info);
 void AR_UnInit();
 
-
-enum
-{
-		AR_LEX,
-		AR_GRAMMAR,
-		AR_PARSER,
-		AR_RAYVM
-};
+void*	AR_global_ioctx();
 
 void	AR_printf(const wchar_t *msg,...);
-void	AR_error(int level,  const wchar_t *msg, ...);
-void	AR_fatal(const wchar_t *msg,...);
 
-#define AR_report()		AR_printf(L"file (%ls) : line (%" AR_PLAT_INT_FMT L"d) : function (%ls)\r\n", AR_WSTR(__FILE__), (size_t)__LINE__, AR_WSTR(AR_FUNC_NAME))
+/*库内部错误为负数*/
+#define AR_ERR_FATAL	-1
+
+void	AR_error(int_t level, const wchar_t *msg, ...);
+
+
+
+void	AR_printf_ctx(void *ctx, const wchar_t *msg,...);
+void	AR_error_ctx(void *ctx, int_t level, const wchar_t *msg, ...);
+
+
 
 
 
 /***********************************************************************debug************************************************/
 
-#define AR_CHECK(_cond,_msg) do {if(!(_cond))AR_fatal(L"%ls\r\n", (_msg)); }while(0)
+#define AR_report()		AR_printf(L"File (%ls) : Line (%" AR_PLAT_INT_FMT L"d) : Function (%ls)\r\n", AR_WSTR(__FILE__), (size_t)__LINE__, AR_WSTR(AR_FUNC_NAME))
+
+#define AR_CHECK(_cond,_msg,_level) do {if(!(_cond))AR_error((_level), L"%ls\r\n", (_msg)); }while(0)
 
 
 #if defined(AR_DEBUG)
@@ -89,6 +94,8 @@ void	AR_fatal(const wchar_t *msg,...);
 
 
 
+
+
 /***********************************************************macro_oper*********************************************************/
 #define AR_MAX(_a,_b) ((_a) > (_b) ? (_a) : (_b))
 #define AR_MIN(_a,_b) ((_a) < (_b) ? (_a) : (_b))
@@ -102,7 +109,7 @@ void	AR_fatal(const wchar_t *msg,...);
 #define AR_NELEMS(_arr)	(sizeof((_arr))/sizeof((_arr)[0]))
 
 
-inline const void* AR_GET_ELEM(const void *base, size_t width, size_t idx)
+AR_INLINE const void* AR_GET_ELEM(const void *base, size_t width, size_t idx)
 {
 		AR_ASSERT(base != NULL && width > 0);
 		return (const void*)((byte_t*)base + (width * idx));
@@ -139,7 +146,7 @@ void	AR_memswap(void *a, void *b, size_t n);
 
 #define AR_REALLOC(_type, _ptr, _new_count) ((_type*)AR_realloc((_ptr), sizeof(_type) * (_new_count)))
 
-#define AR_DEL(_ptr) AR_free((_ptr))
+#define AR_DEL(_ptr) AR_free((void*)(_ptr))
 
 
 
@@ -152,7 +159,8 @@ void	AR_memswap(void *a, void *b, size_t n);
 
 
 
-void AR_qsort(void *base, size_t num, size_t width, int_t (*cmp_f)(const void*, const void*));
+void	AR_qsort(void *base, size_t num, size_t width, int_t (*cmp_f)(const void*, const void*));
+int_t	AR_bsearch(const void *key, const void *base, size_t num, size_t width, int_t (*cmp_f)(const void*, const void*));
 
 /*void	AR_qsort(void *base, size_t num, size_t width, int_t (__cdecl *cmp_f)(void*,void*));*/
 
@@ -256,9 +264,11 @@ int_t			AR_u64tow_buf(wchar_t *out, size_t nbuf, uint64_t num, size_t radix);
 
 
 
-
+/*返回一个长度，足够容乃fmt + args*/
 int_t			AR_vscwprintf(const wchar_t *fmt, va_list args);
 int_t			AR_scwprintf(const wchar_t *fmt, ...);
+wchar_t*		AR_vtow(const wchar_t *fmt, ...);
+
 
 int				AR_wchartodigit(wchar_t ch);
 
@@ -360,7 +370,7 @@ void			AR_YiledThread();
 
 /*#define AR_BIT_MARK(_pos)	(((uint64_t)0x01) << ((uint64_t)(_pos)))*/
 
-inline uint64_t AR_BIT_MARK(uint64_t pos) { return AR_BIGNUM_U64(0x01) << pos; }
+AR_INLINE uint64_t AR_BIT_MARK(uint64_t pos) { return AR_BIGNUM_U64(0x01) << pos; }
 
 #define AR_BIT_TEST(_val, _pos)  ((((_val) & (AR_BIT_MARK((_pos))))))
 
