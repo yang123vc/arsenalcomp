@@ -89,7 +89,7 @@ void LEX_InitStateTable(lexStateTable_t *tbl);
 void LEX_UnInitStateTable(lexStateTable_t *tbl);
 void LEX_BuildStateTable(lexStateTable_t *tbl, lexDFA_t *dfa, const lexCClass_t *cclass);
 
-inline int_t LEX_GetNextState(const lexStateTable_t *tbl, int_t curr, size_t id)
+AR_INLINE int_t LEX_GetNextState(const lexStateTable_t *tbl, int_t curr, size_t id)
 {
 		AR_ASSERT(id < tbl->col && (size_t)curr < tbl->row && curr >= 0);
 		return tbl->tbl[AR_TBL_IDX_R((size_t)curr, id, tbl->col)];

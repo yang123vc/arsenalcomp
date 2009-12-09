@@ -56,13 +56,7 @@ typedef struct __parser_rule_tag
 		psrRuleFunc_t			rule_f;/**/
 }psrRule_t;
 
-psrRule_t*		PSR_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, const psrTermInfoList_t *term_list);
-psrRule_t*		PSR_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, const psrTermInfoList_t *term_list);
-psrRule_t*		PSR_CopyNewRule(const psrRule_t *rule);
-void			PSR_DestroyRule(psrRule_t *rule);
-
 /****************************************************************************************************************************************/
-
 
 
 typedef struct __parser_grammar_tag
@@ -73,9 +67,10 @@ typedef struct __parser_grammar_tag
 		
 		psrTermInfoList_t		term_list;
 		psrSymbList_t			symb_list;
+		void					*io;
 }psrGrammar_t;
 
-psrGrammar_t*			PSR_CreateGrammar();
+psrGrammar_t*			PSR_CreateGrammar(void *io);
 void					PSR_DestroyGrammar(psrGrammar_t *grammar);
 void					PSR_ClearGrammar(psrGrammar_t *grammar);
 
@@ -87,11 +82,9 @@ const psrSymbList_t*	PSR_GetSymbList(const psrGrammar_t *grammar);
 
 
 bool_t					PSR_CheckIsValidGrammar(const psrGrammar_t *grammar);
-
 bool_t					PSR_ReportLeftRecursion(const psrGrammar_t *grammar, arString_t *output);
-
-
 void					PSR_PrintGrammar(const psrGrammar_t *grammar, arString_t *str);
+
 
 const psrRule_t*		PSR_GetStartRule(const psrGrammar_t *grammar);
 
@@ -143,33 +136,21 @@ void					PSR_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *follow_set
 
 
 
-/*****************************************************PrintNode****************************************************************/
-
-
-/*typedef struct __print_node_tag printNode_t;*/
-
-typedef struct __print_node_tag
-{
-		wchar_t							*name;
-		size_t							lineno;
-
-		struct __print_node_tag			**nodes;
-		size_t							count;
-		size_t							cap;
-}printNode_t;
-
-/*extern const psrCtx_t	*PSR_PrintNodeCtx;*/
-
-const psrCtx_t*	PSR_GetPrintNodeContext();
-
-printNode_t*	PSR_CreatePrintNode(const wchar_t *name, size_t lineno);
-void			PSR_DestroyPrintNode(printNode_t *node);
-void			PSR_InsertPrintNode(printNode_t *dest, printNode_t *sour);
 
 
 
-/*****************************************************ConfigGrammar****************************************************************/
-bool_t			PSR_ConfigGrammar(psrGrammar_t *gmr, const wchar_t *pattern);
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

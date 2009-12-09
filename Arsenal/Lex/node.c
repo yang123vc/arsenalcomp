@@ -144,7 +144,7 @@ static lexCharRange_t* __new_cset_range(wchar_t beg, wchar_t end, lexCharRange_t
 		
 		/*AR_CHECK(res != NULL,AR_LEX, L"alloc memory failed");*/
 
-		AR_CHECK(res != NULL, L"alloc memory failed");
+		/*AR_CHECK(res != NULL, L"alloc memory failed");*/
 
 		res->beg = beg; res->end = end; res->next = next;
 		return res;
@@ -646,6 +646,7 @@ void			LEX_DestroyNode(lexNode_t *node)
 				break;
 		default:
 				AR_ASSERT(0);
+				AR_abort();
 				break;
 		}
 		LEX_UnInitNodeAttr(&node->attr);

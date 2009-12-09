@@ -65,7 +65,9 @@ psrTermInfo_t*	PSR_FindTermByName(psrTermInfoList_t	*lst, const wchar_t *name)
 		for(i = 0; i < lst->count; ++i)
 		{
 				psrTermInfo_t	*info = &lst->lst[i];
-
+				/*注意，这里的参数name可能是任何非PSR_StringTable分配的内存，
+				 *因此，这里必须用AR_wcscmp比较字符串而非类似PSR_CompSymb内部的比较str指针
+				*/
 				if(AR_wcscmp(info->term->name, name) == 0)return info;
 		}
 		return NULL;
@@ -113,7 +115,8 @@ bool_t			PSR_InsertToTermInfoList(psrTermInfoList_t	*lst, const wchar_t *name, s
 */
 
 
-psrRule_t* PSR_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, const psrTermInfoList_t *term_list)
+
+psrRule_t* PSR_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, const psrTermInfoList_t *term_list, void *ctx)
 {
 		psrRule_t		*rule;
 		size_t i;
@@ -121,13 +124,14 @@ psrRule_t* PSR_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, cons
 		const wchar_t*  right_term;
 		AR_ASSERT(head != NULL && body != NULL && term_list != NULL);
 		
-		
+		AR_ASSERT(ctx != NULL);
 
 		if(PSR_FindTermByName((psrTermInfoList_t*)term_list, head->name) != NULL) return NULL;
 
 		if(prec_tok != NULL && PSR_FindTermByName((psrTermInfoList_t*)term_list, prec_tok) == NULL)
 		{
-				AR_error(AR_GRAMMAR, L"Grammar Error: Invalid prec token <%ls>!\r\n", head->name);
+				/*AR_error(L"Grammar Error: Invalid prec token <%ls>!\r\n", head->name);*/
+				AR_printf_ctx(ctx, L"Grammar Error: Invalid prec token <%ls>!\r\n", head->name);
 				return NULL;
 		}
 		
@@ -148,7 +152,8 @@ psrRule_t* PSR_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, cons
 						{
 								if(body->count != 1)
 								{
-										AR_error(AR_GRAMMAR, L"Grammar Error: invalid epsilon definition in <%ls>!\r\n", head->name);
+										/*AR_error(L"Grammar Error: invalid epsilon definition in <%ls>!\r\n", head->name);*/
+										AR_printf_ctx(ctx, L"Grammar Error: invalid epsilon definition in <%ls>!\r\n", head->name);
 										return NULL;
 								}
 						}
@@ -157,7 +162,8 @@ psrRule_t* PSR_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, cons
 						{
 								if(inerr)
 								{
-										AR_error(AR_GRAMMAR, L"Grammar Error: Duplicate error definition in <%ls>!\r\n", head->name);
+										/*AR_error(L"Grammar Error: Duplicate error definition in <%ls>!\r\n", head->name);*/
+										AR_printf_ctx(ctx, L"Grammar Error: Duplicate error definition in <%ls>!\r\n", head->name);
 										return NULL;
 								}else
 								{
@@ -199,7 +205,7 @@ psrRule_t* PSR_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, cons
 
 /*****************************************************************************************************************************************/
 
-psrRule_t* PSR_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, const psrTermInfoList_t *term_list)
+psrRule_t* PSR_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, const psrTermInfoList_t *term_list, void *ctx)
 {
 		const psrSymb_t *head;
 		psrSymbList_t	body;
@@ -207,11 +213,12 @@ psrRule_t* PSR_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRuleF
 		const wchar_t	*p, *beg;
 		size_t			count;
 		AR_ASSERT(str != NULL && term_list != NULL);
+
+		AR_ASSERT(ctx != NULL);
 		
 		res = NULL;
 		head = NULL; 
 		PSR_InitSymbList(&body);
-		/*p = AR_wcstrim(str, L" \t\r\n");*/
 		p = AR_wcstrim_space(str);
 
 		beg = p;
@@ -229,7 +236,6 @@ psrRule_t* PSR_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRuleF
 				AR_DEL(name);
 		}
 		
-		/*p = AR_wcstrim(p, L" \t\r\n");*/
 		p = AR_wcstrim_space(p);
 
 		if(*p != L':')goto END_POINT;
@@ -237,14 +243,12 @@ psrRule_t* PSR_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRuleF
 
 		while(*p != L'\0')
 		{
-			/*	if(*p == L' ' || *p == L'\t' || *p == L'\n' || *p == L'\r')*/
 				if(AR_iswspace(*p))
 				{
 						++p;
 				}else
 				{
 						beg = p;
-						/*while(*p != L'\0' && *p != L' ' && *p != L'\t' && *p != L'\n' && *p != L'\r')*/
 						while(*p != L'\0' && !AR_iswspace(*p))
 						{
 								++p; 
@@ -271,7 +275,7 @@ psrRule_t* PSR_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRuleF
 		}
 		
 
-		res =  PSR_CreateRule(head, &body, prec, rule_f, term_list);
+		res =  PSR_CreateRule(head, &body, prec, rule_f, term_list, ctx);
 
 END_POINT:
 		if(head)PSR_DestroySymb(head);
@@ -357,7 +361,7 @@ static void __init_grammar_component_unit(psrGrammar_t *grammar)
 				psrRule_t *start;
 				psrSymbList_t	body;
 				PSR_InitSymbList(&body);
-				start = PSR_CreateRule(PSR_StartSymb, &body, NULL, NULL, &grammar->term_list);
+				start = PSR_CreateRule(PSR_StartSymb, &body, NULL, NULL, &grammar->term_list, &grammar->io);
 				AR_ASSERT(start != NULL);
 				PSR_UnInitSymbList(&body);
 				__insert_rule(grammar, start);
@@ -367,13 +371,17 @@ static void __init_grammar_component_unit(psrGrammar_t *grammar)
 /******************************************************************************************************************/
 
 
-psrGrammar_t*			PSR_CreateGrammar()
+psrGrammar_t*			PSR_CreateGrammar(void *io)
 {
 		psrGrammar_t* gmr;
+
+
 		gmr = AR_NEW0(psrGrammar_t);
 		PSR_InitTermInfoList(&gmr->term_list);
 		PSR_InitSymbList(&gmr->symb_list);
 		__init_grammar_component_unit(gmr);
+
+		gmr->io = io == NULL ? AR_global_ioctx() : io;
 		return gmr;
 }
 
@@ -445,7 +453,8 @@ bool_t					PSR_InsertTerm(psrGrammar_t *grammar, const wchar_t *name, size_t val
 		if(val < PSR_MIN_TOKENVAL)
 		{
 				/*AR_error(AR_GRAMMAR, L"Grammar Error : invalid token value %d\r\n", val);*/
-				AR_error(AR_GRAMMAR, L"Grammar Error : invalid token value %" AR_PLAT_INT_FMT L"d\r\n", (size_t)val);
+				/*AR_error(L"Grammar Error : invalid token value %" AR_PLAT_INT_FMT L"d\r\n", (size_t)val);*/
+				AR_printf_ctx(grammar->io, L"Grammar Error : invalid token value %" AR_PLAT_INT_FMT L"d\r\n", (size_t)val);
 				
 
 				return false;
@@ -454,14 +463,16 @@ bool_t					PSR_InsertTerm(psrGrammar_t *grammar, const wchar_t *name, size_t val
 
 		if(PSR_FindTermByName(&grammar->term_list, name) != NULL)
 		{
-				AR_error(AR_GRAMMAR, L"Grammar Error : duplicate name : %ls definition\r\n", name);
+				/*AR_error( L"Grammar Error : duplicate name : %ls definition\r\n", name);*/
+				AR_printf_ctx(grammar->io, L"Grammar Error : duplicate name : \"%ls\" definition\r\n", name);
 				return false;
 		}
 
 		if(PSR_FindTermByValue(&grammar->term_list, val) != NULL)
 		{
 				/*AR_error(AR_GRAMMAR, L"Grammar Error : duplicate token value : %d definition\r\n", val);*/
-				AR_error(AR_GRAMMAR, L"Grammar Error : duplicate token value : %" AR_PLAT_INT_FMT L"d definition\r\n", (size_t)val);
+				/*AR_error(L"Grammar Error : duplicate token value : %" AR_PLAT_INT_FMT L"d definition\r\n", (size_t)val);*/
+				AR_printf_ctx(grammar->io, L"Grammar Error : duplicate token value : %" AR_PLAT_INT_FMT L"d definition\r\n", (size_t)val);
 				return false;
 		}
 		
@@ -480,7 +491,8 @@ bool_t					PSR_InsertRule(psrGrammar_t *grammar, psrRule_t *rule)
 
 		if(PSR_CompSymb(rule->head, PSR_StartSymb) == 0)/*rule-head不可为%Start保留符号*/
 		{
-				AR_error(AR_GRAMMAR, L"Grammar Error : Non-term token %ls was reserved\r\n", rule->head->name);
+				/*AR_error(L"Grammar Error : Non-term token %ls was reserved\r\n", rule->head->name);*/
+				AR_printf_ctx(grammar->io, L"Grammar Error : Non-term token %ls was reserved\r\n", rule->head->name);
 				return false;
 		}
 		
@@ -501,7 +513,7 @@ bool_t					PSR_InsertRuleByPartStr(psrGrammar_t *grammar, const psrSymb_t *head,
 		psrRule_t		*rule;
 		AR_ASSERT(grammar != NULL && head != NULL && body != NULL);
 
-		rule = PSR_CreateRule(head, body, prec_tok, rule_f, &grammar->term_list);
+		rule = PSR_CreateRule(head, body, prec_tok, rule_f, &grammar->term_list, grammar->io);
 		
 		if(rule == NULL)return false;
 
@@ -515,7 +527,7 @@ bool_t					PSR_InsertRuleByStr(psrGrammar_t *grammar, const wchar_t *str, const 
 
 		psrRule_t		*rule;
 		AR_ASSERT(grammar != NULL && str != NULL);
-		rule = PSR_CreateRuleByStr(str, prec, rule_f, &grammar->term_list);
+		rule = PSR_CreateRuleByStr(str, prec, rule_f, &grammar->term_list, &grammar->io);
 		if(rule == NULL)return false;
 		return PSR_InsertRule(grammar, rule);
 }
@@ -634,6 +646,7 @@ static bool_t __detect_left_recursion(const psrGrammar_t *grammar, const psrSymb
 		
 }
 
+
 bool_t					PSR_ReportLeftRecursion(const psrGrammar_t *grammar, arString_t *output)
 {
 		size_t i;
@@ -701,7 +714,8 @@ bool_t			PSR_CheckIsValidGrammar(const psrGrammar_t *grammar)
 
 								if(!is_ok)
 								{
-										AR_error(AR_GRAMMAR, L"Grammar Error : The rule <%ls> not exist in this grammar\r\n", symb->name);
+										/*AR_error(L"Grammar Error : The rule <%ls> not exist in this grammar\r\n", symb->name);*/
+										AR_printf_ctx(&((psrGrammar_t*)grammar)->io, L"Grammar Error : The rule <%ls> not exist in this grammar\r\n", symb->name);
 										result = false;
 								}
 						}
@@ -742,7 +756,9 @@ bool_t			PSR_CheckIsValidGrammar(const psrGrammar_t *grammar)
 
 						if(!is_ok)
 						{
-								AR_error(AR_GRAMMAR, L"Grammar Warning : The rule %ls is declared but never used\r\n", symb->name);
+								/*AR_error(L"Grammar Warning : The rule %ls is declared but never used\r\n", symb->name);*/
+
+								AR_printf_ctx(&((psrGrammar_t*)grammar)->io,L"Grammar Warning : The rule %ls is declared but never used\r\n", symb->name);
 						}
 				}
 		}
@@ -1112,7 +1128,9 @@ void					PSR_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *follow_set
 										first_rec = PSR_GetSymbolFromSymbMap(first_set, next);
 
 										need_continue = false;
-										for(x = 0; x < first_rec->lst.count; ++x)
+
+
+										for(x = 0; first_rec && x < first_rec->lst.count; ++x)
 										{
 												const psrSymb_t *f_symb;
 												f_symb = first_rec->lst.lst[x];

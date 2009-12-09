@@ -60,7 +60,7 @@ parser_t* PSR_CreateParser(const struct __parser_grammar_tag *grammar, psrModeTy
 		size_t i;
 		AR_ASSERT(grammar != NULL && ctx != NULL);
 		
-		AR_ASSERT(ctx->error_f != NULL && ctx->free_f != NULL);
+		AR_ASSERT(ctx->free_f != NULL);
 
 		parser = AR_NEW0(parser_t);
 		parser->grammar = (psrGrammar_t*)grammar;
@@ -180,6 +180,9 @@ static void __handle_reduce(parser_t *parser, const psrAction_t *action)
 
 		nodes = &parser->node_stack->nodes[parser->node_stack->count - action->reduce_count];
 
+/*
+		有时候例如A->.这类空产生式也会存在handler，例如语义钩子等，因此这里只根据是否有注册进来的函数来决定规约是否为NULL
+*/
 		if(action->rule->rule_f != NULL)
 		{
 				new_node = action->rule->rule_f(nodes, action->reduce_count, action->rule->head->name, parser->user.ctx);
@@ -226,6 +229,53 @@ static void __handle_shift(parser_t *parser, size_t shift_to, const psrToken_t *
 		
 }
 
+
+static void __on_error(parser_t *parser, const psrToken_t		*tok)
+{
+		arString_t		*str;
+		wchar_t			*buf;
+		size_t			i;
+		size_t			top_state;
+
+		
+		AR_ASSERT(parser != NULL && tok != NULL);
+
+		top_state = PSR_TopStack(parser->state_stack);
+		AR_ASSERT(top_state < parser->msg_count);
+
+		buf = tok->count == 0 ? AR_wcsdup(L"%EOI") : AR_wcsndup(tok->str, tok->count);
+		
+		str = AR_CreateString();
+
+		AR_AppendFormatString(str
+							 , L"Invalid Token \"%ls\" in (%" AR_PLAT_INT_FMT L"d : %" AR_PLAT_INT_FMT L"d)\r\n\r\n"
+							 , buf
+							 , tok->line
+							 , tok->col
+							 );
+
+		
+		AR_DEL(buf);
+
+		AR_AppendFormatString(str, L"Expected Term Type:\r\n");
+		
+		for(i = 0; i < parser->msg_set[top_state].count; ++i)
+		{
+				AR_AppendFormatString(str, L"\"%ls\" ", parser->msg_set[top_state].msg[i]);
+		}
+
+		AR_AppendFormatString(str, L"\r\n\r\n");
+
+		AR_printf_ctx(parser->grammar->io, L"%ls\r\n", AR_GetStrString(str));
+
+		AR_DestroyString(str);
+}
+
+
+
+
+
+
 static bool_t __error_recovery(parser_t *parser, const psrToken_t *tok)
 {		
 		
@@ -235,12 +285,16 @@ static bool_t __error_recovery(parser_t *parser, const psrToken_t *tok)
 		{
 				bool_t found = false;
 				
+				/*
 				{
 				size_t top_state;
 				top_state = PSR_TopStack(parser->state_stack);
 				AR_ASSERT(top_state < parser->msg_count);
 				parser->user.error_f(tok, parser->msg_set[top_state].msg, parser->msg_set[top_state].count, parser->user.ctx);
 				}
+				*/
+				__on_error(parser, tok);
+				
 
 				
 				while(parser->state_stack->count > 0 && !found)
@@ -294,10 +348,13 @@ static bool_t __error_recovery(parser_t *parser, const psrToken_t *tok)
 				AR_ASSERT(symb != NULL);
 				if(PSR_CompSymb(PSR_EOISymb, symb) == 0)
 				{
+						__on_error(parser, tok);
+/*
 						size_t top_state;
 						top_state = PSR_TopStack(parser->state_stack);
 						AR_ASSERT(top_state < parser->msg_count);
 						parser->user.error_f(tok, parser->msg_set[top_state].msg, parser->msg_set[top_state].count, parser->user.ctx);
+*/
 						return false;
 				}else
 				{
@@ -332,7 +389,7 @@ bool_t PSR_AddToken(parser_t *parser, const psrToken_t *tok)
 		
 		if(term == NULL)
 		{
-				AR_error(AR_PARSER, L"invalid input token\r\n");
+				/*AR_error(L"Invalid input token\r\n");*/
 				AR_ASSERT(false);
 				return false;
 		}

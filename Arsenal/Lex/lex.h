@@ -51,7 +51,6 @@ typedef struct __lex_token_tag
 
 /*typedef struct __lex_tag lex_t;*/
 
-
 typedef struct __lex_tag 
 {
 		struct __lex_name_tag *name_tbl;
@@ -59,17 +58,19 @@ typedef struct __lex_tag
 		
 		struct __lex_state_table_tag *tbl;
 		struct __lex_charclass_tag   *cclass;
-		
+
+		void	*io;
 }lex_t;
 
 
-lex_t*	LEX_Create();
+lex_t*	LEX_Create(void *io);
 void	LEX_Destroy(lex_t *lex);
 bool_t	LEX_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr);
 bool_t	LEX_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action);
 bool_t	LEX_Insert(lex_t *lex, const wchar_t *input);
 bool_t	LEX_GenerateTransTable(lex_t *lex);
 void	LEX_Clear(lex_t *lex);
+
 
 
 
@@ -101,42 +102,6 @@ bool_t LEX_Match(lex_t *lex, lexMatch_t *match, lexToken_t *tok);
 
 
 
-/****************************************config**********************************************/
-
-
-typedef enum {LEX_NAME, LEX_PATTERN} lexPatternT_t;
-
-typedef struct __lex_cfg_name_tag
-{
-		wchar_t	*name;
-		wchar_t	*expr;
-}lexCfgName_t;
-
-
-typedef struct __lex_cfg_pattern_tag
-{
-		wchar_t			*pattern;
-		lexAction_t		action;	/*action∫Õpattern”√”⁄LEX_PATTERN*/
-}lexCfgPattern_t;
-
-
-typedef struct __lex_config_tag
-{
-		lexPatternT_t	type;
-
-		/*union{*/
-				lexCfgName_t		name;
-				lexCfgPattern_t		pattern;
-		/*};*/
-		struct __lex_config_tag	*next;
-}lexConfig_t;
-
-
-const lexConfig_t*	LEX_CreateConfig(const wchar_t *pattern, const wchar_t **next_input);
-void				LEX_DestroyConfig(const lexConfig_t *pattern);
-
-
-const wchar_t*		LEX_Config(lex_t *lex, const wchar_t *pattern);
 
 
 AR_NAMESPACE_END

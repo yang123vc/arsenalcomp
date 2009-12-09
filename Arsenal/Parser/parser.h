@@ -87,8 +87,8 @@ typedef psrLRItemType_t psrModeType_t;
 
 typedef struct __parser_context_tag
 {
+		/*psrErrorFunc_t	error_f;*/
 		psrFreeFunc_t	free_f;
-		psrErrorFunc_t	error_f;
 		void			*ctx;
 }psrCtx_t;
 
@@ -156,11 +156,14 @@ bool_t	PSR_IsInError(const parser_t *parser);
 void	PSR_ClearError(parser_t *parser);
 
 
+
+
 /***************************************Print************************************/
 
 void	PSR_PrintParserConflict(const parser_t *parser, arString_t *out);
 size_t	PSR_CountParserConflict(const parser_t *parser);
 void	PSR_PrintParserActionTable(const parser_t *parser, arString_t *out, size_t width);
+
 
 
 
