@@ -7,9 +7,14 @@ EXPORTS
 Arsenal_Init			
 Arsenal_UnInit			
 
+AR_global_ioctx
+
 AR_error				
-AR_printf				
-AR_fatal				
+AR_printf
+
+AR_error_ctx
+AR_printf_ctx
+
 
 AR_CreateString			
 AR_DestroyString		
@@ -42,9 +47,7 @@ LEX_ResetMatch
 LEX_GetNextInput		
 LEX_Match				
 
-LEX_CreateConfig		
-LEX_DestroyConfig		
-LEX_Config				
+
 
 LEX_ResetInput			
 
@@ -76,11 +79,10 @@ PSR_CalcFirstSet
 PSR_GetSymbolFromSymbMap 
 PSR_PrintSymbolMap
 
-PSR_ConfigGrammar
-PSR_CreatePrintNode
-PSR_DestroyPrintNode
-PSR_InsertPrintNode
-PSR_GetPrintNodeContext
+
+CFG_CollectGrammarConfig
+CFG_DestroyGrammarConfig
+;CFG_ConfigToCode
 
 ;Parser
 
@@ -98,6 +100,5 @@ PSR_PrintParserConflict
 PSR_CountParserConflict
 
 
-;Test
-;AR_Test				
+
 

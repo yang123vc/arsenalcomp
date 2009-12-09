@@ -1277,7 +1277,7 @@
 				AssemblerOutput="0"
 				WarningLevel="4"
 				DebugInformationFormat="3"
-				CompileAs="1"
+				CompileAs="2"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -1660,10 +1660,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\Arsenal\Parser\grammar_config.c"
-				>
-			</File>
-			<File
 				RelativePath="..\..\Arsenal\Parser\lr_action.c"
 				>
 			</File>
@@ -1762,15 +1758,39 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\Arsenal\Lex\lex_config.c"
-				>
-			</File>
-			<File
 				RelativePath="..\..\Arsenal\Lex\node.c"
 				>
 			</File>
 			<File
 				RelativePath="..\..\Arsenal\Lex\node.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Tools"
+			>
+			<File
+				RelativePath="..\..\Arsenal\Tools\grammar_config.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Arsenal\Tools\grammar_config.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Arsenal\Tools\tools.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Regex"
+			>
+			<File
+				RelativePath="..\..\Arsenal\Regex\rgx_node.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Arsenal\Regex\rgx_node.h"
 				>
 			</File>
 		</Filter>
