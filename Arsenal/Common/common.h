@@ -151,8 +151,6 @@ void	AR_memswap(void *a, void *b, size_t n);
 
 
 
-
-
 /**********************************************************algo*************************************************************/
 
 /*#define AR_qsort		qsort*/
@@ -189,7 +187,7 @@ uint32_t		AR_rand32();
 #define AR_iswdigit(_c)			iswdigit((_c))
 #define AR_towlower(_c)			towlower((_c))
 #define AR_iswspace(_c)			iswspace((_c))
-
+#define AR_iswgraph(_c)			iswgraph((_c))
 
 
 
@@ -301,7 +299,8 @@ const wchar_t*	AR_GetStrString(const arString_t *str);
 size_t			AR_GetLengthString(const arString_t *str);
 
 
-
+#define			AR_StrPrint(_s) do{ AR_printf(L"%ls\r\n", AR_GetStrString((_s))); }while(0)
+		
 
 
 

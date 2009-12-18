@@ -15,7 +15,7 @@
 #define __PARSER_H__
 
 #include "../Common/common.h"
-#include "../Lex/lex.h"
+
 
 AR_NAMESPACE_BEGIN
 
@@ -26,7 +26,29 @@ AR_NAMESPACE_BEGIN
 
 
 typedef void			psrNode_t;
-typedef lexToken_t		psrToken_t;
+/*typedef lexToken_t		psrToken_t;*/
+
+
+typedef struct __parser_token_tag
+{
+		size_t			term_val;
+		const wchar_t	*str;
+		size_t			str_cnt;
+		size_t			line;
+		size_t			col;
+}psrToken_t;
+
+#define PSR_TOTERMTOK(_ltok, _psr_tok)							\
+		do{														\
+				(_psr_tok)->str = (_ltok)->str;					\
+				(_psr_tok)->str_cnt = (_ltok)->count;			\
+				(_psr_tok)->term_val = (_ltok)->type;			\
+				(_psr_tok)->line = (_ltok)->line;				\
+				(_psr_tok)->col = (_ltok)->col;					\
+		}while(0)						
+
+
+
 
 typedef psrNode_t*		(AR_STDCALL *psrTermFunc_t)(const psrToken_t *tok,void *ctx);
 typedef psrNode_t*		(AR_STDCALL *psrRuleFunc_t)(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
@@ -135,7 +157,7 @@ typedef struct __parser_tag
 
 
 parser_t* PSR_CreateParser(const struct __parser_grammar_tag *grammar, psrModeType_t type, const psrCtx_t *ctx);
- 
+
 void	  PSR_DestroyParser(parser_t *parser);
 
 void	  PSR_Clear(parser_t *parser);
