@@ -422,19 +422,19 @@ static void	AR_STDCALL cfg_free(psrNode_t *node, void *ctx)
 static psrNode_t* AR_STDCALL __build_leaf(const psrToken_t *tok,  void *ctx)
 {
 		cfgNode_t *node;
-		AR_ASSERT(tok->count > 0);
+		AR_ASSERT(tok->str_cnt > 0);
 		node = CFG_CreateNode(CFG_LEXEME_T);
 		
-		node->lexeme.lex_val = (cfgLexValue_t)tok->type;
+		node->lexeme.lex_val = (cfgLexValue_t)tok->term_val;
 
 		
-		if(tok->type == LEXEME && (tok->str[0] == L'"' || tok->str[0] == L'\''))
+		if(tok->term_val == LEXEME && (tok->str[0] == L'"' || tok->str[0] == L'\''))
 		{
-				node->lexeme.lexeme = AR_wcsndup(tok->str + 1, tok->count-2);
+				node->lexeme.lexeme = AR_wcsndup(tok->str + 1, tok->str_cnt-2);
 				AR_ASSERT(node->lexeme.lexeme != NULL);
-		}else if(tok->count > 0)
+		}else if(tok->str_cnt > 0)
 		{
-				node->lexeme.lexeme = AR_wcsndup(tok->str, tok->count);
+				node->lexeme.lexeme = AR_wcsndup(tok->str, tok->str_cnt);
 		}
 		
 		node->lexeme.line = tok->line;
@@ -650,6 +650,8 @@ static psrNode_t*		AR_STDCALL __handle_rule_def(psrNode_t **nodes, size_t count,
 
 		res = ns[2];
 
+		ns[0] = ns[1] = ns[2] = ns[3] = NULL;
+
 		return res;
 }
 
@@ -714,6 +716,8 @@ static psrNode_t*		AR_STDCALL __handle_rule_block(psrNode_t **nodes, size_t coun
 		res = ns[2];
 		ns[2] = NULL;
 		CFG_DestroyNode(ns[3]);
+
+		ns[0] = ns[1] = ns[2] = ns[3] = NULL;
 		return res;
 }
 
@@ -793,6 +797,7 @@ static psrNode_t*		AR_STDCALL __handle_prec_def_list(psrNode_t **nodes, size_t c
 		}
 
 		CFG_InsertToNodeList(&res->lst, ns[1]);
+		ns[1] = NULL;
 		
 		return res;
 }
@@ -820,6 +825,9 @@ static psrNode_t*		AR_STDCALL __handle_prec_block(psrNode_t **nodes, size_t coun
 		ns[2] = NULL;
 		
 		CFG_DestroyNode(ns[2]);
+
+		ns[0] = ns[1] = ns[2] = ns[3] = NULL;
+
 		return res;
 }
 
@@ -977,6 +985,8 @@ static psrNode_t*		AR_STDCALL __handle_token_block(psrNode_t **nodes, size_t cou
 		res = ns[2];
 		ns[2] = NULL;
 		CFG_DestroyNode(ns[3]);
+
+		ns[0] = ns[1] = ns[2] = ns[3] = NULL;
 		return res;
 }
 
@@ -1009,7 +1019,7 @@ static psrNode_t*		AR_STDCALL __handle_name_def(psrNode_t **nodes, size_t count,
 		CFG_DestroyNode(ns[1]);
 		CFG_DestroyNode(ns[2]);
 		CFG_DestroyNode(ns[3]);
-		
+		ns[0] = ns[1] = ns[2] = ns[3] = NULL;
 		return res;
 }
 
@@ -1039,6 +1049,7 @@ static psrNode_t*		AR_STDCALL __handle_name_def_list(psrNode_t **nodes, size_t c
 		}
 		
 		CFG_InsertToNodeList(&res->lst, ns[1]);
+		ns[1] = NULL;
 		
 		return res;
 }
@@ -1069,7 +1080,7 @@ static psrNode_t*		AR_STDCALL __handle_name_block(psrNode_t **nodes, size_t coun
 		res = ns[2];
 		CFG_DestroyNode(ns[3]);
 
-		ns[0] = ns[1] = ns[2] = ns[3];
+		ns[0] = ns[1] = ns[2] = ns[3] = NULL;
 
 		
 		return res;
@@ -1270,7 +1281,8 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, void *io)
 		bool_t is_ok;
 		lex_t *lex;
 		lexMatch_t match;
-		lexToken_t tok;
+		lexToken_t		tok;
+		psrToken_t		term;
 		parser_t		*parser;
 		cfgNode_t		*result = NULL;
 		AR_ASSERT(gmr_txt != NULL);
@@ -1292,8 +1304,11 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, void *io)
 				{
 						continue;
 				}
+				
+				PSR_TOTERMTOK(&tok, &term);
+				
 
-				is_ok = PSR_AddToken(parser, &tok);
+				is_ok = PSR_AddToken(parser, &term);
 				
 				if(tok.type == EOI)break;
 

@@ -188,12 +188,33 @@ static void __handle_reduce(parser_t *parser, const psrAction_t *action)
 				new_node = action->rule->rule_f(nodes, action->reduce_count, action->rule->head->name, parser->user.ctx);
 		}else
 		{
-				new_node = NULL;
+				if(action->reduce_count > 0)
+				{
+						new_node = nodes[0];
+						nodes[0] = NULL;
+
+				}else
+				{
+						new_node = NULL;
+				}
 		}
 
 		if(action->reduce_count > 0)
 		{
 				PSR_PopStack(parser->state_stack, action->reduce_count);
+
+				{
+						size_t i;
+						for(i = 0; i < action->reduce_count; ++i)
+						{
+								if(nodes[i])
+								{
+										parser->user.free_f(nodes[i], parser->user.ctx);
+										nodes[i] = NULL;
+								}
+						}
+				}
+
 				PSR_PopNodeStack(parser->node_stack, action->reduce_count);
 		}
 		
@@ -243,7 +264,7 @@ static void __on_error(parser_t *parser, const psrToken_t		*tok)
 		top_state = PSR_TopStack(parser->state_stack);
 		AR_ASSERT(top_state < parser->msg_count);
 
-		buf = tok->count == 0 ? AR_wcsdup(L"%EOI") : AR_wcsndup(tok->str, tok->count);
+		buf = tok->str_cnt == 0 ? AR_wcsdup(L"%EOI") : AR_wcsndup(tok->str, tok->str_cnt);
 		
 		str = AR_CreateString();
 
@@ -320,8 +341,10 @@ static bool_t __error_recovery(parser_t *parser, const psrToken_t *tok)
 								
 								top_node = PSR_TopNodeStack(parser->node_stack);
 								if(top_node)parser->user.free_f(top_node, parser->user.ctx);
-								PSR_PopStack(parser->state_stack, 1);
 								PSR_PopNodeStack(parser->node_stack, 1);
+
+								PSR_PopStack(parser->state_stack, 1);
+								
 						
 						}else if(action->type == PSR_SHIFT)
 						{
@@ -344,7 +367,7 @@ static bool_t __error_recovery(parser_t *parser, const psrToken_t *tok)
 		在repair模式，任何不合法的输入都会丢弃，并且不显示任何错误信息，当输入为EOI时，则调用error_f报告已达EOI;
 */
 				const psrSymb_t *symb;
-				symb = PSR_FindTermFromInfoTable(parser->term_tbl, tok->type)->term;
+				symb = PSR_FindTermFromInfoTable(parser->term_tbl, tok->term_val)->term;
 				AR_ASSERT(symb != NULL);
 				if(PSR_CompSymb(PSR_EOISymb, symb) == 0)
 				{
@@ -380,7 +403,8 @@ bool_t PSR_AddToken(parser_t *parser, const psrToken_t *tok)
 				PSR_PushNodeStack(parser->node_stack, NULL);
 		}
 		
-		term = PSR_FindTermFromInfoTable(parser->term_tbl, tok->type);
+		term = PSR_FindTermFromInfoTable(parser->term_tbl, tok->term_val);
+
 		
 		/*
 				移入进来的token必须在term_set中找到对应的symbol，

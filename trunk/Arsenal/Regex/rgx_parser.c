@@ -11,95 +11,17 @@
  *
  */
 
-#include "expr.h"
+
+#ifndef __REGEX_PARSER_H__
+#define __REGEX_PARSER_H__
+
+#include "rgx_parser.h"
+
 
 AR_NAMESPACE_BEGIN
 
 
-
-
-bool_t			LEX_InsertToNameList(lexName_t **dest, const wchar_t *name, lexNode_t *node)
-{
-		
-		lexName_t *prev, *curr, *tmp;
-		AR_ASSERT(dest != NULL && name != NULL && node != NULL);
-		AR_ASSERT(AR_wcslen(name) < AR_MAX_LEXNAME);
-
-		prev = NULL; curr = *dest;
-		
-		while(curr != NULL)
-		{
-				int cmp = AR_wcscmp(curr->name, name);
-				if(cmp == 0)
-				{
-						return false;
-				}else if(cmp < 0)
-				{
-						prev = curr;
-						curr = curr->next;
-				}else
-				{
-						break;
-				}
-		}
-
-		tmp = AR_NEW0(lexName_t);
-		AR_wcscpy(tmp->name, name);
-		tmp->node = node;
-
-		if(prev == NULL)
-		{
-				AR_ASSERT(curr == *dest);
-				tmp->next = *dest;
-				*dest = tmp;
-		}else
-		{
-				prev->next = tmp;
-				tmp->next = curr;
-		}
-		return true;
-}
-
-
-void			LEX_DestroyNameList(lexName_t *lst)
-{		
-
-		lexName_t *curr,*tmp;
-
-		curr = lst;
-		while(curr != NULL)
-		{
-				tmp = curr->next;
-				LEX_DestroyNode(curr->node);
-				AR_DEL(curr);
-				curr = tmp;
-		}
-}
-
-
-lexNode_t*		LEX_FindFromNameList(lexName_t *lst, const wchar_t *name)
-{
-		lexName_t *curr;
-		
-		curr = lst;
-		while(curr != NULL)
-		{
-				int cmp = AR_wcscmp(curr->name, name);
-				if(cmp == 0)
-				{
-						return curr->node;
-				}else 
-				{
-						curr = curr->next;
-				}
-		}
-		return NULL;
-}
-
-/*****************************************************************************************************************/
-
-
-const wchar_t*	__transform_char(const wchar_t *input, wchar_t *c, lexError_t *err)
+static const wchar_t*	__transform_char(const wchar_t *input, wchar_t *c, rgxError_t *err)
 {
 		const wchar_t	*p; 
 		AR_ASSERT(input != NULL && c != NULL && err != NULL);
@@ -122,11 +44,11 @@ const wchar_t*	__transform_char(const wchar_t *input, wchar_t *c, lexError_t *er
 		case L'+':
 		case L'-':
 		case L'*':
-		case L'/':
 		case L'|':
 		case L'^':
 		case L'$':
 		case L'"':
+		case L'.':
 				*c = *p;
 				return ++p;
 		case L'a': 
@@ -154,7 +76,7 @@ const wchar_t*	__transform_char(const wchar_t *input, wchar_t *c, lexError_t *er
 		{
 				const wchar_t *ret; uint32_t val;
 				p += 1;
-				ret = AR_wtou32_s(p,p+4, &val, 16);
+				ret = AR_wtou32_s(p,p+4, &val, 10);
 				if(ret == NULL)
 				{
 						err->pos = p;
@@ -224,18 +146,21 @@ const wchar_t*	__transform_char(const wchar_t *input, wchar_t *c, lexError_t *er
 }
 
 
-lexResult_t	__handle_quote(const wchar_t *input)
+
+static rgxResult_t	__handle_quote(const wchar_t *input)
 {
-		const wchar_t *p; lexResult_t		g_res; 
+		const wchar_t *p; 
+		rgxResult_t		g_res; 
 		AR_ASSERT(input != NULL);
 		p = input;
-		g_res.next = NULL; g_res.node = LEX_CreateNode(LEX_CAT);
+		g_res.next = NULL; 
+		g_res.node = RGX_CreateNode(RGX_CAT_T);
 
 		while(*p != L'"')
 		{
 				wchar_t c;
-				lexCharRange_t range;
-				lexNode_t		*tmp = NULL;
+				rgxCharRange_t range;
+				rgxNode_t		*tmp = NULL;
 
 				if(*p == L'\0')
 				{
@@ -263,14 +188,14 @@ lexResult_t	__handle_quote(const wchar_t *input)
 				}
 
 				range.beg = range.end = c;
-				tmp = LEX_CreateNode(LEX_CHARSET);
-				LEX_InsertRangeToCharSet(&tmp->charset, &range);
-				LEX_InsertNodeToCat(&g_res.node->cat, tmp);
+				tmp = RGX_CreateNode(RGX_CSET_T);
+				RGX_InsertRangeToCharSet(&tmp->cset, &range);
+				RGX_InsertToNode(g_res.node, tmp);
 				++p;
 		}
 		AR_ASSERT(*p == L'"');
 		
-		if(g_res.node->cat.left == NULL)
+		if(g_res.node->left == NULL && g_res.node->right == NULL)
 		{
 				g_res.err.pos = p;
 				goto INVALID_POINT;
@@ -282,16 +207,14 @@ INVALID_POINT:
 		g_res.next = NULL;
 		if(g_res.node != NULL)
 		{
-				LEX_DestroyNode(g_res.node);
+				RGX_DestroyNode(g_res.node);
 				g_res.node = NULL;
 		}
 		return g_res;
 }
 
 
-
-
-const wchar_t* __get_charset(const wchar_t *input, wchar_t *c, lexError_t *err)
+static const wchar_t* __get_charset(const wchar_t *input, wchar_t *c, rgxError_t *err)
 {
 		switch(*input)
 		{
@@ -317,11 +240,11 @@ const wchar_t* __get_charset(const wchar_t *input, wchar_t *c, lexError_t *err)
 		case L'+':
 		case L'-':
 		case L'*':
-		case L'/':
 		case L'|':
+		case L'"':
 		case L'^':
 		case L'$':
-		case L'"':
+		case L'.':
 				err->pos = input;
 				return NULL;
 		case L'\\':
@@ -335,24 +258,26 @@ const wchar_t* __get_charset(const wchar_t *input, wchar_t *c, lexError_t *err)
 
 
 
-
-lexResult_t	__handle_cset_range(const wchar_t *input)
+static rgxResult_t	__handle_cset_range(const wchar_t *input)
 {
 		const wchar_t *p; 
-		lexResult_t		g_res; 
-		lexCharSet_t	cset;
+		rgxResult_t		g_res; 
+		rgxCharSet_t	cset;
 
 		AR_ASSERT(input != NULL);
 		p = input;
-		g_res.next = NULL; g_res.node = NULL;
+
+		g_res.next = NULL; 
+		g_res.node = NULL;
+		AR_memset(&g_res, 0, sizeof(g_res));
 		
-		LEX_InitCharSet(&cset);
+		RGX_InitCharSet(&cset);
 		
 		if(*p == L'^') {cset.is_neg = true; p++;}
 		
 		while(*p != L']')
 		{
-				lexCharRange_t	range;	lexError_t err;
+				rgxCharRange_t	range;	rgxError_t err;
 				p = __get_charset(p, &range.beg, &err);
 				if(p == NULL)
 				{
@@ -379,57 +304,66 @@ lexResult_t	__handle_cset_range(const wchar_t *input)
 								range.end = range.beg;
 						}
 				}
-				LEX_InsertRangeToCharSet(&cset, &range);
+				RGX_InsertRangeToCharSet(&cset, &range);
 		}
 
 		AR_ASSERT(*p == L']');
 		g_res.next = ++p;
-		g_res.node = LEX_CreateNode(LEX_CHARSET);
-		g_res.node->charset = cset;
+		g_res.node = RGX_CreateNode(RGX_CSET_T);
+		g_res.node->cset = cset;
 		cset.range = NULL;
-		LEX_UnInitCharSet(&cset);
+		RGX_UnInitCharSet(&cset);
 
-		if(g_res.node->charset.is_neg)
+		if(g_res.node->cset.is_neg)
 		{
-				LEX_ReverseNegativeCharSet(&g_res.node->charset);
+				RGX_ReverseNegativeCharSet(&g_res.node->cset);
 		}
 
 		return g_res;
 INVALID_POINT:
-		LEX_UnInitCharSet(&cset);
+		RGX_UnInitCharSet(&cset);
 		g_res.next = NULL;
 		if(g_res.node != NULL) 
 		{
-				LEX_DestroyNode(g_res.node);
+				RGX_DestroyNode(g_res.node);
 				g_res.node = NULL;
 		}
 		return g_res;
 }
 
 
-lexResult_t	__handle_charset(const wchar_t *input)
+static rgxResult_t	__handle_charset(const wchar_t *input)
 {
 		const wchar_t *p; 
-		lexResult_t		g_res; 
+		rgxResult_t		g_res; 
 		AR_ASSERT(input != NULL);
 		p = input;
-		g_res.next = NULL; g_res.node = NULL;
+
+		AR_memset(&g_res, 0, sizeof(g_res));
 
 		if(*p == L'[')
 		{
 				return __handle_cset_range(p+1);
+		}else if(*p == L'.')
+		{
+				g_res = __handle_charset(L"[^\\n]");
+				AR_ASSERT(g_res.node != NULL && g_res.err.pos == NULL);
+				g_res.next = ++p;
+				return g_res;
 		}else
 		{
-				lexCharRange_t range;
+				rgxCharRange_t range;
+				
 				p = __get_charset(p, &range.beg, &g_res.err);
+				
 				if(p == NULL)
 				{
 						return g_res;
 				}else
 				{
 						range.end = range.beg;
-						g_res.node = LEX_CreateNode(LEX_CHARSET);
-						LEX_InsertRangeToCharSet(&(g_res.node->charset), &range);
+						g_res.node = RGX_CreateNode(RGX_CSET_T);
+						RGX_InsertRangeToCharSet(&(g_res.node->cset), &range);
 						g_res.next = p;
 						return g_res;
 				}
@@ -438,11 +372,10 @@ lexResult_t	__handle_charset(const wchar_t *input)
 
 
 
-
-lexNode_t*	__handle_loopcount(lexNode_t *expr, size_t min, size_t max)
+static rgxNode_t*	__handle_loopcount(rgxNode_t *expr, size_t min, size_t max)
 {
 		bool_t is_infinite;
-		lexNode_t *cat, *branch, *loop;
+		rgxNode_t *cat, *loop;
 		size_t i;
 		AR_ASSERT(expr != NULL && min <= max && max > 0);
 
@@ -458,84 +391,116 @@ RECHECK:
 								goto RECHECK;
 						}else
 						{
-								branch = LEX_CreateNode(LEX_BRANCH);
+								rgxNode_t *quest = RGX_CreateNode(RGX_QUEST_T);
+								quest->left = RGX_CopyNode(expr);
+								//branch = RGX_CreateNode(RGX_BRANCH_T);
+								//RGX_InsertToNode(branch, RGX_CopyNode(expr));
+								cat = RGX_CreateNode(RGX_CAT_T);
+								for(i = 0; i < max; ++i)RGX_InsertToNode(cat, RGX_CopyNode(quest));
 								
-								LEX_InsertNodeToBranch(&branch->branch, LEX_CopyNode(expr));
-								LEX_InsertNodeToBranch(&branch->branch, EPSILON_NODE());
-								cat = LEX_CreateNode(LEX_CAT);
-								for(i = 0; i < max; ++i)LEX_InsertNodeToCat(&cat->cat, LEX_CopyNode(branch));
-								LEX_DestroyNode(branch);
-								return cat;
+								RGX_DestroyNode(quest);
+								RGX_DestroyNode(expr);
+
 						}
 				}else
 				{
-						cat = LEX_CreateNode(LEX_CAT);
-						for(i = 0; i < min; ++i)LEX_InsertNodeToCat(&cat->cat, LEX_CopyNode(expr));
+						cat = RGX_CreateNode(RGX_CAT_T);
+						for(i = 0; i < min; ++i)RGX_InsertToNode(cat, RGX_CopyNode(expr));
 
 						if(is_infinite)
 						{
-								loop = LEX_CreateNode(LEX_LOOP);
-								loop->loop = LEX_CopyNode(expr);
-								LEX_InsertNodeToCat(&cat->cat, loop);
+								loop = RGX_CreateNode(RGX_STAR_T);
+								loop->left = RGX_CopyNode(expr);
+								RGX_InsertToNode(cat, loop);
 						}else
 						{
-								branch = LEX_CreateNode(LEX_BRANCH);
-								LEX_InsertNodeToBranch(&branch->branch, LEX_CopyNode(expr));
-								LEX_InsertNodeToBranch(&branch->branch, EPSILON_NODE());
-								for(; i < max; i++)LEX_InsertNodeToCat(&cat->cat, LEX_CopyNode(branch));
-
-								LEX_DestroyNode(branch);
+								rgxNode_t *quest = RGX_CreateNode(RGX_QUEST_T);
+								quest->left = RGX_CopyNode(expr);
+								for(; i < max; i++)RGX_InsertToNode(cat, RGX_CopyNode(quest));
+								RGX_DestroyNode(quest);
+								RGX_DestroyNode(expr);
 						}
-						LEX_DestroyNode(expr);
-						return cat;
+						
+						
 				}
 
+				return cat;
 
 		}else/* if(min == max)*/
 		{
+
 				if(is_infinite)
 				{
-						loop = LEX_CreateNode(LEX_LOOP);
-						loop->loop = expr;
+						loop = RGX_CreateNode(RGX_STAR_T);
+						loop->left = expr;
 						return loop;
 				}else /*if(max > 0)*/
 				{
-						cat = LEX_CreateNode(LEX_CAT);
-						for(i = 0; i < min; ++i) LEX_InsertNodeToCat(&cat->cat, LEX_CopyNode(expr));
-						LEX_DestroyNode(expr);
+						cat = RGX_CreateNode(RGX_CAT_T);
+						for(i = 0; i < min; ++i) RGX_InsertToNode(cat, RGX_CopyNode(expr));
+						RGX_DestroyNode(expr);
 						return cat;
 				}
+
 		}
 }
 
 
+/*static rgxResult_t	__handle_factor(const wchar_t *input, const rgxNameSet_t *name_set);*/
+static rgxResult_t	__handle_expr(const wchar_t *input, wchar_t tc, const rgxNameSet_t *name_set);
 
-lexResult_t	__handle_postfix(lexNode_t *expr, const wchar_t *input)
+static rgxResult_t	__handle_postfix(rgxNode_t *expr, const wchar_t *input, const rgxNameSet_t *name_set)
 {
 		const wchar_t *p; 
-		lexResult_t		g_res; 
-		AR_ASSERT(input != NULL);
+		rgxResult_t		g_res; 
+		AR_ASSERT(input != NULL && expr != NULL);
 		p = input;
-		g_res.next = NULL; g_res.node = NULL;
+
+		AR_memset(&g_res, 0, sizeof(g_res));
 		
 		switch(*p)
 		{
 		case '*':
 		{
-				g_res.node = __handle_loopcount(expr, 0, AR_SIZE_MAX);
-				g_res.next = ++p;
+				//g_res.node = __handle_loopcount(expr, 0, AR_SIZE_MAX);
+				g_res.node = RGX_CreateNode(RGX_STAR_T);
+				g_res.node->left = expr;
+				++p;
+				if(*p == L'?')
+				{
+						g_res.node->non_greedy = true;
+						++p;
+				}
+				g_res.next = p;
 		}
 				break;
 		case '+':
 		{
-				g_res.node = __handle_loopcount(expr, 1, AR_SIZE_MAX);
-				g_res.next = ++p;
+				g_res.node = RGX_CreateNode(RGX_PLUS_T);
+				g_res.node->left = expr;
+				
+				++p;
+				if(*p == L'?')
+				{
+						g_res.node->non_greedy = true;
+						++p;
+				}
+				g_res.next = p;
 		}
 				break;
 		case '?':
 		{
-				g_res.node = __handle_loopcount(expr, 0,1);
-				g_res.next = ++p;
+				//g_res.node = __handle_loopcount(expr, 0,1);
+				g_res.node = RGX_CreateNode(RGX_QUEST_T);
+				g_res.node->left = expr;
+				
+				++p;
+				if(*p == L'?')
+				{
+						g_res.node->non_greedy = true;
+						++p;
+				}
+				g_res.next = p;
 		}
 				break;
 		case '{':
@@ -598,82 +563,115 @@ lexResult_t	__handle_postfix(lexNode_t *expr, const wchar_t *input)
 				return g_res;
 		}
 
-		return __handle_postfix(g_res.node, g_res.next);
+		//return __handle_postfix(g_res.node, g_res.next, name_set);
+		return g_res;
 INVALID_POINT:
-		LEX_DestroyNode(expr);
+		RGX_DestroyNode(expr);
 		g_res.next = NULL;
 		g_res.node = NULL;
 		return g_res;
-
 }
 
 
 
-lexResult_t __handle_expr(const wchar_t *input, wchar_t tc, lexName_t *lst);
-
-lexResult_t __handle_factor(const wchar_t *input,lexName_t *lst)
+static rgxResult_t __handle_factor(const wchar_t *input, const rgxNameSet_t *name_set)
 {
 		const wchar_t *p; 
-		lexResult_t		g_res; 
+		rgxResult_t		g_res; 
+		
 		AR_ASSERT(input != NULL);
 		p = input;
 		g_res.err.pos = NULL; g_res.next = NULL; g_res.node = NULL;
 		
 		switch(*p)
 		{
+		case L'^':
+		case L'$':
+		{
+				g_res.node =  RGX_CreateNode(*p == L'^' ? RGX_BEGIN_T : RGX_END_T);
+				g_res.next = ++p;
+				return g_res;
+				break;
+		}
 		case L'"':
 				g_res = __handle_quote(p + 1);
 				break;
 		case L'(':
-				g_res = __handle_expr(p + 1, L')', lst);
+		{
+				++p;
+				
+				if(*p == L'?')
+				{
+						++p;
+						
+						if(*p == L'='/* || *p == L'!'*/)
+						{
+								rgxResult_t		result;
+								result = __handle_expr(p + 1, L')', name_set);
+
+								if(result.node == NULL)return result;
+								g_res.next = result.next;
+								g_res.err = result.err;
+								g_res.node = RGX_CreateNode(RGX_LOOKAHEAD_T);
+								g_res.node->left = result.node;
+
+						}else
+						{
+								g_res.err.pos = p;
+								g_res.next = NULL;
+								g_res.node = NULL;
+								return g_res;
+
+						}
+				}else
+				{
+						g_res = __handle_expr(p, L')', name_set);
+				}
+
+		}
 				break;
 		case L'{':
 		{
 				const wchar_t *beg;
 				size_t i, count;
 				p += 1;
-				/*p = AR_wcstrim(p, L" \t");*/
 				p = AR_wcstrim_space(p);
-				/*if((*p >= L'A' && *p <= L'Z') || (*p >= L'a' && *p <= L'z') || *p == L'_')*/
 				if(AR_iswalnum(*p) || *p == L'_')
 				{
 						beg = p; count = 0;
 						
-						/*while((*p >= L'A' && *p <= L'Z') || (*p >= L'a' && *p <= L'z') || *p == L'_' || (*p >= L'0' && *p <= L'9'))*/
 						while(AR_iswalnum(*p) || *p == L'_')
 						{
 								p++;
 								count++;
 						}
-
-						/*p = AR_wcstrim(p, L" \t");*/
+						
 						p = AR_wcstrim_space(p);
 
-						if(*p != L'}' || count >= AR_MAX_LEXNAME)
+						if(*p != L'}' || count >= AR_RGX_MAXNAME)
 						{
-								AR_ASSERT(0);
+							//	AR_ASSERT(0);
 								g_res.err.pos = p;
 								g_res.next = NULL;
 								g_res.node = NULL;
 								return g_res;
 						}else
 						{
-								lexNode_t *new_node; wchar_t name[AR_MAX_LEXNAME];
+								const rgxNode_t *new_node; wchar_t name[AR_RGX_MAXNAME];
 								
 								for(i = 0; i < count; ++i) name[i] = beg[i];
 								name[count] = L'\0';
-								new_node = LEX_FindFromNameList(lst, name);
+								new_node = RGX_FindFromNameSet(name_set, name);
 								
 								if(new_node == NULL)
 								{
-										/*AR_ASSERT(0);*/
 										g_res.err.pos = p - count - 1;
 										g_res.next = NULL;
 										g_res.node = NULL;
 										return g_res;
 								}else
 								{
-										g_res.node = LEX_CopyNode(new_node);
+										g_res.node = RGX_CopyNode(new_node);
 										g_res.next = ++p;
 										g_res.err.pos = NULL;
 								}
@@ -695,22 +693,20 @@ lexResult_t __handle_factor(const wchar_t *input,lexName_t *lst)
 
 		if(g_res.next != NULL)
 		{
-				return __handle_postfix(g_res.node, g_res.next);
+				return __handle_postfix(g_res.node, g_res.next,name_set);
 		}else
 		{
 				return g_res;
 		}
-
-
 }
 
 
 
-lexResult_t __handle_expr(const wchar_t *input, wchar_t tc, lexName_t *lst)
+static rgxResult_t __handle_expr(const wchar_t *input, wchar_t tc, const rgxNameSet_t *name_set)
 {
 
-		lexNode_t		*branch, *cat;
-		const wchar_t *p; lexResult_t g_res; 
+		rgxNode_t		*branch, *cat;
+		const wchar_t *p; rgxResult_t g_res; 
 		
 		AR_ASSERT(input != NULL);
 
@@ -720,7 +716,7 @@ lexResult_t __handle_expr(const wchar_t *input, wchar_t tc, lexName_t *lst)
 
 		while(*p != L'\0' && *p != tc)
 		{
-				lexResult_t tmp = __handle_factor(p, lst);
+				rgxResult_t tmp = __handle_factor(p, name_set);
 				if(tmp.next == NULL)
 				{
 						g_res.err = tmp.err;
@@ -731,22 +727,22 @@ lexResult_t __handle_expr(const wchar_t *input, wchar_t tc, lexName_t *lst)
 				
 				if(*p == L'|')
 				{
-						if(branch == NULL) branch = LEX_CreateNode(LEX_BRANCH);
+						if(branch == NULL) branch = RGX_CreateNode(RGX_BRANCH_T);
 						
 						if(cat == NULL)
 						{
-								LEX_InsertNodeToBranch(&branch->branch, tmp.node);
+								RGX_InsertToNode(branch, tmp.node);
 						}else
 						{
-								LEX_InsertNodeToCat(&cat->cat, tmp.node);
-								LEX_InsertNodeToBranch(&branch->branch, cat);
+								RGX_InsertToNode(cat, tmp.node);
+								RGX_InsertToNode(branch, cat);
 								cat = NULL;
 						}
 						p++;
 				}else
 				{
-						if(cat == NULL)cat =  LEX_CreateNode(LEX_CAT);
-						LEX_InsertNodeToCat(&cat->cat, tmp.node);
+						if(cat == NULL)cat =  RGX_CreateNode(RGX_CAT_T);
+						RGX_InsertToNode(cat, tmp.node);
 				}
 		}
 		
@@ -756,7 +752,7 @@ lexResult_t __handle_expr(const wchar_t *input, wchar_t tc, lexName_t *lst)
 		
 		if(cat != NULL && branch != NULL)
 		{
-				LEX_InsertNodeToBranch(&branch->branch, cat);
+				RGX_InsertToNode(branch, cat);
 				cat = NULL;
 		}
 		
@@ -766,9 +762,9 @@ lexResult_t __handle_expr(const wchar_t *input, wchar_t tc, lexName_t *lst)
 		return g_res;
 
 INVALID_POINT:
-		if(cat != NULL)LEX_DestroyNode(cat);
-		if(branch != NULL) LEX_DestroyNode(branch);
-		if(g_res.node != NULL) LEX_DestroyNode(g_res.node);
+		if(cat != NULL)RGX_DestroyNode(cat);
+		if(branch != NULL) RGX_DestroyNode(branch);
+		if(g_res.node != NULL) RGX_DestroyNode(g_res.node);
 		
 		g_res.node = NULL; g_res.next = NULL;
 		return g_res;
@@ -776,11 +772,19 @@ INVALID_POINT:
 
 
 
-lexResult_t		LEX_CompileExpr(const wchar_t *expr, lexName_t *name_set)
+rgxResult_t	RGX_ParseExpr(const wchar_t *expr, const rgxNameSet_t *name_set)
 {
+		AR_ASSERT(expr != NULL && name_set != NULL);
 		return __handle_expr(expr, L'\0', name_set);
-
 }
+#if(0)
+#endif
+
+
 
 
 AR_NAMESPACE_END
+
+
+
+#endif

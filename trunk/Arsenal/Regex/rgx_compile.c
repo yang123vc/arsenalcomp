@@ -1,0 +1,317 @@
+/*
+ * The Arsenal Library
+ * Copyright (c) 2009 by Solidus
+ * 
+ * Permission to use, copy, modify, distribute and sell this software
+ * and its documentation for any purpose is hereby granted without fee,
+ * provided that the above copyright notice appear in all copies and
+ * that both that copyright notice and this permission notice appear
+ * in supporting documentation.It is provided "as is" without express 
+ * or implied warranty.
+ *
+ */
+
+#include "rgx_node.h"
+#include "rgx_compile.h"
+
+
+AR_NAMESPACE_BEGIN
+
+
+static size_t __count(const rgxNode_t *node)
+{
+		AR_ASSERT(node != NULL);
+		
+		switch(node->type)
+		{
+		case RGX_CCLASS_ID_T:
+		case RGX_FINAL_T:
+		case RGX_BEGIN_T:
+		case RGX_END_T:
+		{
+				return 1;
+				break;
+		}
+		case RGX_CAT_T:
+		{
+				return __count(node->left) + __count(node->right);
+				break;
+		}
+		case RGX_BRANCH_T:
+		{
+				return 2 + __count(node->left) + __count(node->right);
+				break;
+		}
+		case RGX_STAR_T:
+		{
+				return 2 + __count(node->left);
+				break;
+		}
+		case RGX_QUEST_T:
+		{
+				return 1 + __count(node->left);
+				break;
+		}
+		case RGX_PLUS_T:
+		{
+				return 1 + __count(node->left);
+				break;
+		}
+		case RGX_LOOKAHEAD_T:
+		{
+				return 2 + __count(node->left);
+				break;
+		}
+		case RGX_CSET_T:
+		default:
+		{
+				AR_ASSERT(false);
+				AR_abort();
+				break;
+		}
+		}
+		
+		return 0;
+}
+
+static void __emit(rgxProg_t *prog, const rgxNode_t *node)
+{
+
+		AR_ASSERT(prog != NULL && node != NULL);
+		
+		AR_ASSERT(prog->pc != NULL && prog->start != NULL && prog->count > 0);
+		switch(node->type)
+		{
+		case RGX_CCLASS_ID_T:
+		{
+				prog->pc->opcode = RGX_CHAR_I;
+				prog->pc->data = (int_t)node->cclass_id;
+				prog->pc++; /*count = 1*/
+				break;
+		}
+		case RGX_FINAL_T:
+		{
+				prog->pc->opcode = RGX_MATCH_I;
+				prog->pc->data = (int_t)node->final_val;
+				prog->pc++;/*count = 1*/
+				break;
+		}
+		case RGX_BEGIN_T:
+		{
+				prog->pc->opcode = RGX_BEGIN_I;
+				prog->pc++;/*count = 1*/
+				break;
+		}
+		case RGX_END_T:
+		{
+				prog->pc->opcode = RGX_END_I;
+				prog->pc++;/*count = 1*/
+				break;
+		}
+		case RGX_CAT_T:
+		{
+				AR_ASSERT(node->left != NULL && node->right != NULL);
+				__emit(prog, node->left);
+				__emit(prog, node->right);
+				break;
+		}
+		case RGX_BRANCH_T:
+		{
+				rgxIns_t *p1, *p2;
+				p1 = prog->pc++;
+				p1->opcode = RGX_BRANCH_I;/*count + 1*/
+				p1->left = prog->pc;/*第一个分支，当前指令的下一条*/
+				
+				__emit(prog, node->left);
+				/*当前prog->pc为node->left生成指令组的下一条指令*/
+
+				p2 = prog->pc++; /*p2是node->left指令组执行完之后的下一条指令*/
+				p2->opcode = RGX_JMP_I;/*count + 1*/
+				p1->right = prog->pc;/*第二个分支，node->left生成指令组的下一条*/
+				__emit(prog, node->right);
+				p2->left = prog->pc;/*p2要跳到node->right生成的指令组之后的下一条指令*/
+
+				/*count == 2*/
+				break;
+		}
+		case RGX_STAR_T:
+		{
+				rgxIns_t *p1;
+				prog->pc->opcode = RGX_BRANCH_I;/*这条指令导致一个分支, count + 1*/
+				p1 = prog->pc++; /*p1为当前指令*/
+				p1->left = prog->pc;/*一是从下一条开始继续匹配node->left*/
+				__emit(prog, node->left);
+				
+				/*跟着star的是一个跳转指令，会直接跳回到当前指令*/
+				/*这里prog->pc为node->left生成的指令组的下一条指令*/
+				prog->pc->opcode = RGX_JMP_I;/*count + 1*/
+				prog->pc->left = p1;/*star,所以回退到开始*/
+				
+				p1->right = ++prog->pc;/*执行到下一条指令*/
+
+				if(node->non_greedy)
+				{
+						rgxIns_t *tmp = p1->left;
+						p1->left = p1->right;
+						p1->right = tmp;
+				}
+
+				/*count == 2*/
+				break;
+		}
+		case RGX_QUEST_T:
+		{
+				rgxIns_t *p1;
+				prog->pc->opcode = RGX_BRANCH_I;/*quest导致一个分支, count + 1*/
+				p1 = prog->pc++;				/*p1当前branch指令*/
+				p1->left = prog->pc;			/*p1分支1为下一条指令*/
+				__emit(prog,node->left);		
+				/*当前pc为node->left生成的指令组的下一条指令*/
+				p1->right = prog->pc; /*quest == (0|1)，所以分支2为node->left的下一条指令*/
+
+				if(node->non_greedy)
+				{
+						rgxIns_t *tmp = p1->left;
+						p1->left = p1->right;
+						p1->right = tmp;
+				}
+				/*count == 1*/
+				break;
+		}
+		case RGX_PLUS_T:
+		{
+				rgxIns_t *p1, *p2;
+				p1 = prog->pc;/*p1为当前指令*/
+				__emit(prog, node->left);
+
+				/*此时pc为node->left指令组的下一条指令*/
+				p2 = prog->pc++;/*p2为当前指令*/
+				p2->opcode = RGX_BRANCH_I;/*count + 1*/
+				p2->left = p1;/*plus，分支1为node->left指令组的第一条指令,循环*/
+				
+				p2->right = prog->pc;/*分支2，经过node->left后，执行到下一条指令*/
+
+				if(node->non_greedy)
+				{
+						rgxIns_t *tmp = p2->left;
+						p2->left = p2->right;
+						p2->left = tmp;
+				}
+				/*count + 1*/
+				break;
+		}
+		case RGX_LOOKAHEAD_T:
+		{
+				prog->pc->opcode = RGX_LOOKAHEAD_BEG_I;/*count + 1*/
+				prog->pc++;
+				__emit(prog,node->left);/*node->left*/
+				/*此时当前指令pc为node->left指令组的下一条*/
+				prog->pc->opcode = RGX_LOOKAHEAD_END_I;/*count + 1*/
+				prog->pc++;
+
+				/*count == 2*/
+				break;
+		}
+		case RGX_CSET_T:
+		default:
+		{
+				AR_ASSERT(false);
+				AR_abort();
+				break;
+		}
+		}
+}
+
+
+
+
+void			RGX_InitProg(rgxProg_t *prog)
+{
+		AR_ASSERT(prog != NULL);
+		AR_memset(prog, 0, sizeof(*prog));
+
+}
+
+void			RGX_UnInitProg(rgxProg_t *prog)
+{
+		AR_ASSERT(prog != NULL);
+		if(prog->start != NULL)AR_DEL(prog->start);
+		AR_memset(prog, 0, sizeof(*prog));
+}
+
+
+void			RGX_Compile(rgxProg_t *prog, const rgxNode_t *tree)
+{
+		AR_ASSERT(prog != NULL && prog->count == 0 && prog->start == NULL && tree != NULL);
+
+		prog->count = __count(tree);
+		
+		AR_ASSERT(prog->count > 0);
+
+		/*
+		AR_printf(L"__count(tree) == %d\r\n", prog->count);
+		*/
+		prog->start = AR_NEWARR0(rgxIns_t, prog->count);
+		prog->pc = prog->start;
+
+		__emit(prog, tree);
+
+		AR_ASSERT(prog->pc == prog->start + prog->count);
+
+		/*
+		AR_printf(L"sizeof(rgxIns_t) == %d\r\n", sizeof(rgxIns_t));
+		AR_printf(L"pc->start == %d : pc->end == %d\r\n", prog->start, prog->pc);
+		*/
+
+		
+}
+
+
+void			RGX_PringProg(const rgxProg_t *prog, arString_t *str)
+{
+		size_t i;
+
+		AR_ASSERT(prog != NULL && str);
+
+		for(i = 0; i < prog->count; ++i)
+		{
+				const rgxIns_t *pc = &prog->start[i];
+				switch(pc->opcode)
+				{
+				case RGX_CHAR_I:
+				{
+						AR_AppendFormatString(str, L"%2d. %ls <id%" AR_PLAT_INT_FMT L"d>\r\n", i, RGX_INS_NAME[pc->opcode], pc->data);
+						break;
+				}
+				case RGX_BEGIN_I:
+				case RGX_END_I:
+				case RGX_LOOKAHEAD_BEG_I:
+				case RGX_LOOKAHEAD_END_I:
+				case RGX_MATCH_I:
+				{
+						AR_AppendFormatString(str, L"%2d. %ls\r\n", i, RGX_INS_NAME[pc->opcode]);
+						break;
+				}
+				case RGX_JMP_I:
+				{
+						AR_AppendFormatString(str, L"%2d. %ls %" AR_PLAT_INT_FMT L"d\r\n", i, RGX_INS_NAME[pc->opcode], (size_t)(pc->left - prog->start));
+						break;
+				}
+				case RGX_BRANCH_I:
+				{
+						AR_AppendFormatString(str, L"%2d. %ls %" AR_PLAT_INT_FMT L"d %" AR_PLAT_INT_FMT L"d\r\n", i, RGX_INS_NAME[pc->opcode], (size_t)(pc->left - prog->start), (size_t)(pc->right - prog->start));
+
+						break;
+				}
+				default:
+				{
+						AR_ASSERT(false);
+						AR_abort();
+						break;
+				}
+				}
+		}
+}
+
+
+AR_NAMESPACE_END
