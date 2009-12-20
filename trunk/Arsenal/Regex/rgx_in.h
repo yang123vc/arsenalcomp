@@ -115,38 +115,151 @@ void RGX_CopyCharSet(rgxCharSet_t *dest, const rgxCharSet_t *sour);
 /*CharSetEnd*/
 
 
+/*rgx node*/
 
-
-
-
-/*rgx_action*/
-typedef struct __regex_action_tag
+typedef enum
 {
-		size_t			type;
-		size_t			priority;
-		bool_t			is_skip;
-}rgxAction_t;
+		RGX_BEGIN_T,
+		RGX_END_T,
+		RGX_CSET_T,
 
-/*rgx_action end*/
+		RGX_CAT_T,
+		RGX_BRANCH_T,
 
+		RGX_STAR_T,
+		RGX_QUEST_T,
+		RGX_PLUS_T,
+		
+		RGX_LOOKAHEAD_T,
 
-
-
-
-
-
-
-
-
-
-
+		RGX_CCLASS_ID_T,
+		RGX_FINAL_T
+}rgxNodeType_t;
 
 
+struct __rgx_node_tag
+{
+		rgxNodeType_t		type;
+		rgxNode_t			*left;
+		rgxNode_t			*right;
+		
+		union{
+				rgxCharSet_t			cset;
+				bool_t					non_greedy;
+				size_t					cclass_id;
+				size_t					final_val;
+		};
+};
+
+
+
+rgxNode_t*		RGX_CreateNode(rgxNodeType_t type);
+
+rgxNode_t*		RGX_CopyNode(const rgxNode_t *node);
+
+void			RGX_DestroyNode(rgxNode_t *node);
+
+void			RGX_InsertToNode(rgxNode_t *root, rgxNode_t *node);
+
+
+void			RGX_CalcCharClass(const rgxNode_t *node, rgxCClass_t *cclass);
+void			RGX_SplitCharSetToCClassID(rgxNode_t *node, const rgxCClass_t *cclass);
+
+void			RGX_ToString(const rgxNode_t *node, arString_t *str);
+
+void			RGX_CorrectTree(rgxNode_t *root);
+
+
+
+/*rgx node end*/
+
+
+
+/*parser*/
+typedef struct __rgx_result_tag	rgxResult_t;
+typedef struct __rgx_error_tag	rgxError_t;
+
+struct __rgx_error_tag
+{
+		const wchar_t	*pos;
+};
+
+
+struct __rgx_result_tag
+{
+		rgxNode_t*		node;
+		const wchar_t	*next;
+		rgxError_t		err;
+};
+
+
+rgxResult_t	RGX_ParseExpr(const wchar_t *expr, const rgxNameSet_t *name_set);
+
+/*parser end*/
 
 
 
 
+/*rgx instruction*/
 
+
+typedef enum
+{
+		RGX_CHAR_I,
+		RGX_BEGIN_I,
+		RGX_END_I,
+		RGX_LOOKAHEAD_BEG_I,
+		RGX_LOOKAHEAD_END_I,
+		RGX_JMP_I,
+		RGX_BRANCH_I,
+		RGX_MATCH_I
+}rgxInsType_t;
+
+static const wchar_t *RGX_INS_NAME[] = 
+{
+		L"char",
+		L"match_begin",
+		L"match_end",
+		L"lookahead_begin",
+		L"lookahead_end",
+		L"jmp",
+		L"branch",
+		L"match"
+};
+
+typedef struct __regex_instruction_tag	rgxIns_t;
+
+struct __regex_instruction_tag
+{
+		rgxInsType_t	opcode;
+		int_t			data;
+		
+		rgxIns_t		*left;
+		rgxIns_t		*right;
+		int_t			mark;
+};
+
+
+
+typedef struct __regex_program_tag		rgxProg_t;
+
+
+struct __regex_program_tag
+{
+		rgxIns_t		*start;
+		size_t			count;
+		
+		rgxIns_t		*pc;
+};
+
+
+void			RGX_InitProg(rgxProg_t *prog);
+void			RGX_UnInitProg(rgxProg_t *prog);
+void			RGX_Compile(rgxProg_t *prog, const rgxNode_t *tree);
+void			RGX_PringProg(const rgxProg_t *prog, arString_t *str);
+
+
+/*rgx instruction end*/
 
 
 
