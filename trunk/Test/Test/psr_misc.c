@@ -13,7 +13,7 @@
 AR_NAMESPACE_BEGIN
 
 
-
+#if(0)
 
 void str_tbl_test()
 {
@@ -202,7 +202,7 @@ void grammar_test2()
 {
 		psrGrammar_t *gmr;
 		size_t i;
-		gmr = PSR_CreateGrammar();
+		gmr = PSR_CreateGrammar(NULL);
 		
 		PSR_ClearGrammar(gmr);
 
@@ -312,7 +312,7 @@ void grammar_test2()
 
 		{
 				parser_t		*psr;
-				psrCtx_t		user = {on_free_test, on_error_test, NULL};
+				psrCtx_t		user = {on_free_test,  NULL};
 
 				psr = PSR_CreateParser(gmr, PSR_LALR, &user);
 
@@ -385,7 +385,7 @@ void calc_test1()
 		parser_t	 *psr;
 		str = AR_CreateString();
 		
-		gmr = PSR_CreateGrammar();
+		gmr = PSR_CreateGrammar(NULL);
 		
 		PSR_InsertTerm(gmr, L"(", 300, PSR_ASSOC_NOASSOC, 0, create_leaf);
 		PSR_InsertTerm(gmr, L")", 301, PSR_ASSOC_NOASSOC, 0, create_leaf);
@@ -400,7 +400,7 @@ void calc_test1()
 		
 		
 		{
-				psrCtx_t ctx = { free_node, on_error, NULL};
+				psrCtx_t ctx = { free_node, NULL};
 				psr = PSR_CreateParser(gmr, PSR_LALR, &ctx);
 				AR_ASSERT(psr);
 
@@ -470,7 +470,7 @@ void calc_test1()
 
 
 
-
+#endif
 
 
 

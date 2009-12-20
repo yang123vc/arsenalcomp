@@ -1,5 +1,5 @@
 #include "test.h"
-#include <algorithm>
+
 
 #include <math.h>
 #include <time.h>
@@ -527,7 +527,7 @@ int __cmp_size_t_2(const void *l, const void *r)
 #define  SORT_TEST_CNT (30*1024 * 1024)
 
 //#define  SORT_TEST_CNT (30)
-
+#if(0)
 void sort_test()
 {
 		size_t *vi = AR_NEWARR(size_t, SORT_TEST_CNT);
@@ -578,6 +578,30 @@ void sort_test()
 		}
 
 }
+#endif
+
+void search_test()
+{
+		int i;
+		int arr[] = {0,1,2,3,4,5,6,7,8,9};
+		
+		for(i = 0; i < sizeof(arr)/sizeof(arr[0]); ++i)
+		{
+				int_t m = AR_bsearch(&i, arr,sizeof(arr)/sizeof(arr[0]), sizeof(int), __cmp_size_t);
+		
+				printf("arr[%d] == %d\r\n", m,arr[m]);
+		}
+
+
+
+}
+
+
+void str_test6()
+{
+		wprintf(L"%ls\r\n", AR_vtow(L"%ls : %ls\r\n", L"abc", L"def"));
+
+}
 
 void com_test()
 {
@@ -588,6 +612,7 @@ void com_test()
 		//str_test4();
 		//str_test5();
 
+		str_test6();
 		
 		//com_test3();
 		//com_conv();
@@ -601,7 +626,8 @@ void com_test()
 		//test_bittest();
 		//bug_test();
 
-		sort_test();
+		//sort_test();
+		//search_test();
 
 }
 

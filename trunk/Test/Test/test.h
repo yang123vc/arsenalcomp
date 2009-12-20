@@ -5,6 +5,8 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #include "../../Arsenal/Common/common.h"
 
+
+
 #if defined(__LIB)
 
 #if(AR_COMPILER == AR_VC6)
@@ -12,7 +14,7 @@ struct _RPC_ASYNC_STATE;
 #endif
 
 #include <windows.h>
-
+/*
 inline unsigned __int64 GetTime()
 {
 		FILETIME ft;
@@ -28,7 +30,7 @@ inline unsigned __int64 GetTime()
 		ts.QuadPart -= epoch.QuadPart;
 		return ts.QuadPart/10 ;
 }
-
+*/
 
 #endif
 
