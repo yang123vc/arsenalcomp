@@ -11,8 +11,7 @@
  *
  */
 
-#include "rgx_node.h"
-#include "rgx_compile.h"
+#include "rgx_in.h"
 
 
 AR_NAMESPACE_BEGIN
@@ -73,6 +72,7 @@ static size_t __count(const rgxNode_t *node)
 		
 		return 0;
 }
+
 
 static void __emit(rgxProg_t *prog, const rgxNode_t *node)
 {
@@ -195,7 +195,7 @@ static void __emit(rgxProg_t *prog, const rgxNode_t *node)
 				{
 						rgxIns_t *tmp = p2->left;
 						p2->left = p2->right;
-						p2->left = tmp;
+						p2->right = tmp;
 				}
 				/*count + 1*/
 				break;
@@ -248,9 +248,6 @@ void			RGX_Compile(rgxProg_t *prog, const rgxNode_t *tree)
 		
 		AR_ASSERT(prog->count > 0);
 
-		/*
-		AR_printf(L"__count(tree) == %d\r\n", prog->count);
-		*/
 		prog->start = AR_NEWARR0(rgxIns_t, prog->count);
 		prog->pc = prog->start;
 
@@ -258,13 +255,9 @@ void			RGX_Compile(rgxProg_t *prog, const rgxNode_t *tree)
 
 		AR_ASSERT(prog->pc == prog->start + prog->count);
 
-		/*
-		AR_printf(L"sizeof(rgxIns_t) == %d\r\n", sizeof(rgxIns_t));
-		AR_printf(L"pc->start == %d : pc->end == %d\r\n", prog->start, prog->pc);
-		*/
-
-		
 }
+
+
 
 
 void			RGX_PringProg(const rgxProg_t *prog, arString_t *str)

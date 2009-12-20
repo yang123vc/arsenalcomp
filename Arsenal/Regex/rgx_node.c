@@ -12,7 +12,7 @@
  */
 
 
-#include "rgx_node.h"
+#include "rgx_in.h"
 
 
 AR_NAMESPACE_BEGIN
@@ -225,6 +225,235 @@ void			RGX_InsertToNode(rgxNode_t *root, rgxNode_t *node)
 
 
 
+static void __calc_cclass(const rgxNode_t *node, rgxCharSet_t *cset)
+{
+		AR_ASSERT(node != NULL && cset != NULL);
+		
+		switch(node->type)
+		{
+		case RGX_CCLASS_ID_T:
+		case RGX_FINAL_T:
+		case RGX_BEGIN_T:
+		case RGX_END_T:
+		{
+				break;
+		}
+		case RGX_CSET_T:
+		{
+				rgxCharRange_t *range;
+				AR_ASSERT(!node->cset.is_neg);
+				range = node->cset.range;
+				while(range)
+				{
+						RGX_InsertRangeToCharSet(cset, range);
+						range = range->next;
+				}
+
+				break;
+		}
+		case RGX_CAT_T:
+		case RGX_BRANCH_T:
+		{
+				if(node->left)__calc_cclass(node->left, cset);
+				if(node->right)__calc_cclass(node->right, cset);
+				break;
+		}
+		case RGX_STAR_T:
+		case RGX_QUEST_T:
+		case RGX_PLUS_T:
+		case RGX_LOOKAHEAD_T:
+		{
+				AR_ASSERT(node->left != NULL && node->right == NULL);
+				__calc_cclass(node->left, cset);
+				break;
+		}
+		default:
+		{
+				AR_ASSERT(false);
+				AR_abort();
+				break;
+		}
+		}
+}
+
+
+void			RGX_CalcCharClass(const rgxNode_t *node, rgxCClass_t *cclass)
+{
+		rgxCharSet_t cset;
+		rgxCharRange_t	*prange, range;
+		AR_ASSERT(node != NULL && cclass != NULL);
+		AR_ASSERT(cclass->count == 0);
+
+		RGX_InitCharSet(&cset);
+		range.beg = L'\0'; range.end = AR_WCHARMAX;
+		RGX_InsertRangeToCharSet(&cset, &range);
+
+		__calc_cclass(node, &cset);
+
+		for(prange = cset.range; prange != NULL; prange = prange->next)
+		{
+				rgxCClassRange_t tmp;
+				tmp.beg = prange->beg;
+				tmp.end = prange->end;
+				RGX_InsertToCClass(cclass, &tmp);
+		}
+		
+		RGX_UnInitCharSet(&cset);
+}
+
+
+static void __split_charset(rgxNode_t *node, const rgxCClass_t *cclass)
+{
+		AR_ASSERT(node != NULL && cclass != NULL);
+		
+		switch(node->type)
+		{
+		case RGX_CCLASS_ID_T:
+		case RGX_FINAL_T:
+		case RGX_BEGIN_T:
+		case RGX_END_T:
+		{
+				break;
+		}
+		case RGX_CSET_T:
+		{
+				size_t id;
+				rgxCharRange_t *range;
+				rgxNode_t		*branch;
+				branch = RGX_CreateNode(RGX_BRANCH_T);
+				
+				
+				/*
+						因为cclass id是根据所有charset节点分割得到的，因此cclass的颗粒度一定小于任何一个charset节点的颗粒度
+						因此，cclass->ranges[i]可以被看做为单一的字符，所以每个[curr->beg, curr->end]区间会包含几个class_id
+				*/
+
+				for(id = 0; id < cclass->count; ++id)
+				{
+						range = node->cset.range;
+						while(range)
+						{
+								if(range->beg <= cclass->cclass[id].beg && range->end >= cclass->cclass[id].end)
+								{
+										rgxNode_t *tmp = RGX_CreateNode(RGX_CCLASS_ID_T);
+										tmp->cclass_id = id;
+										RGX_InsertToNode(branch, tmp);
+										break;
+								}else
+								{
+										range = range->next;
+								}
+						}
+				}
+
+
+				RGX_UnInitCharSet(&node->cset);
+				node->type = RGX_CAT_T;
+				node->left = branch;
+				node->right = NULL;
+				break;
+		}
+		case RGX_CAT_T:
+		case RGX_BRANCH_T:
+		{
+				if(node->left)__split_charset(node->left,cclass);
+				if(node->right)__split_charset(node->right,cclass);
+				break;
+		}
+		case RGX_STAR_T:
+		case RGX_QUEST_T:
+		case RGX_PLUS_T:
+		case RGX_LOOKAHEAD_T:
+		{
+				AR_ASSERT(node->left != NULL && node->right == NULL);
+				__split_charset(node->left,cclass);
+				break;
+		}
+		default:
+		{
+				AR_ASSERT(false);
+				AR_abort();
+				break;
+		}
+		}
+}
+
+
+
+void			RGX_SplitCharSetToCClassID(rgxNode_t *node, const rgxCClass_t *cclass)
+{
+		AR_ASSERT(node != NULL && cclass != NULL);
+		__split_charset(node, cclass);
+}
+
+
+
+static void __correct_tree(rgxNode_t *node)
+{
+		AR_ASSERT(node != NULL);
+
+		switch(node->type)
+		{
+		case RGX_CCLASS_ID_T:
+		case RGX_FINAL_T:
+		case RGX_BEGIN_T:
+		case RGX_END_T:
+		{
+				break;
+		}
+		
+		case RGX_CAT_T:
+		case RGX_BRANCH_T:
+		{
+				if(node->left)__correct_tree(node->left);
+				if(node->right)__correct_tree(node->right);
+				
+				if(node->right == NULL)
+				{
+						rgxNode_t *tmp = node->left;
+						*node = *(node->left);
+						AR_DEL(tmp);
+				}
+
+#if defined(AR_DEBUG)
+				if((node->type == RGX_CAT_T || node->type == RGX_BRANCH_T) && (node->left == NULL || node->right == NULL))
+				{
+						AR_ASSERT(false);
+						AR_abort();
+				}
+#endif
+
+
+				break;
+		}
+		case RGX_STAR_T:
+		case RGX_QUEST_T:
+		case RGX_PLUS_T:
+		case RGX_LOOKAHEAD_T:
+		{
+				AR_ASSERT(node->left != NULL && node->right == NULL);
+				__correct_tree(node->left);
+				break;
+		}
+		case RGX_CSET_T:
+		default:
+		{
+				AR_ASSERT(false);
+				AR_abort();
+				break;
+		}
+		}
+}
+
+
+void RGX_CorrectTree(rgxNode_t *root)
+{
+		__correct_tree(root);
+}
+
+
+
+
 
 
 
@@ -392,238 +621,6 @@ void			RGX_ToString(const rgxNode_t *node, arString_t *str)
 		}
 }
 
-
-
-
-
-
-
-
-
-static void __calc_cclass(const rgxNode_t *node, rgxCharSet_t *cset)
-{
-		AR_ASSERT(node != NULL && cset != NULL);
-		
-		switch(node->type)
-		{
-		case RGX_CCLASS_ID_T:
-		case RGX_FINAL_T:
-		case RGX_BEGIN_T:
-		case RGX_END_T:
-		{
-				break;
-		}
-		case RGX_CSET_T:
-		{
-				rgxCharRange_t *range;
-				AR_ASSERT(!node->cset.is_neg);
-				range = node->cset.range;
-				while(range)
-				{
-						RGX_InsertRangeToCharSet(cset, range);
-						range = range->next;
-				}
-
-				break;
-		}
-		case RGX_CAT_T:
-		case RGX_BRANCH_T:
-		{
-				if(node->left)__calc_cclass(node->left, cset);
-				if(node->right)__calc_cclass(node->right, cset);
-				break;
-		}
-		case RGX_STAR_T:
-		case RGX_QUEST_T:
-		case RGX_PLUS_T:
-		case RGX_LOOKAHEAD_T:
-		{
-				AR_ASSERT(node->left != NULL && node->right == NULL);
-				__calc_cclass(node->left, cset);
-				break;
-		}
-		default:
-		{
-				AR_ASSERT(false);
-				AR_abort();
-				break;
-		}
-		}
-}
-
-
-void			RGX_CalcCharClass(const rgxNode_t *node, rgxCClass_t *cclass)
-{
-		rgxCharSet_t cset;
-		rgxCharRange_t	*prange, range;
-		AR_ASSERT(node != NULL && cclass != NULL);
-		AR_ASSERT(cclass->count == 0);
-
-		RGX_InitCharSet(&cset);
-		range.beg = L'\0'; range.end = AR_WCHARMAX;
-		RGX_InsertRangeToCharSet(&cset, &range);
-
-		__calc_cclass(node, &cset);
-
-		for(prange = cset.range; prange != NULL; prange = prange->next)
-		{
-				rgxCClassRange_t tmp;
-				tmp.beg = prange->beg;
-				tmp.end = prange->end;
-				RGX_InsertToCClass(cclass, &tmp);
-		}
-		
-		RGX_UnInitCharSet(&cset);
-}
-
-static void __split_charset(rgxNode_t *node, const rgxCClass_t *cclass)
-{
-		AR_ASSERT(node != NULL && cclass != NULL);
-		
-		switch(node->type)
-		{
-		case RGX_CCLASS_ID_T:
-		case RGX_FINAL_T:
-		case RGX_BEGIN_T:
-		case RGX_END_T:
-		{
-				break;
-		}
-		case RGX_CSET_T:
-		{
-				size_t id;
-				rgxCharRange_t *range;
-				rgxNode_t		*branch;
-				branch = RGX_CreateNode(RGX_BRANCH_T);
-				
-				
-				/*
-						因为cclass id是根据所有charset节点分割得到的，因此cclass的颗粒度一定小于任何一个charset节点的颗粒度
-						因此，cclass->ranges[i]可以被看做为单一的字符，所以每个[curr->beg, curr->end]区间会包含几个class_id
-				*/
-
-				for(id = 0; id < cclass->count; ++id)
-				{
-						range = node->cset.range;
-						while(range)
-						{
-								if(range->beg <= cclass->cclass[id].beg && range->end >= cclass->cclass[id].end)
-								{
-										rgxNode_t *tmp = RGX_CreateNode(RGX_CCLASS_ID_T);
-										tmp->cclass_id = id;
-										RGX_InsertToNode(branch, tmp);
-										break;
-								}else
-								{
-										range = range->next;
-								}
-						}
-				}
-
-
-				RGX_UnInitCharSet(&node->cset);
-				node->type = RGX_CAT_T;
-				node->left = branch;
-				node->right = NULL;
-				break;
-		}
-		case RGX_CAT_T:
-		case RGX_BRANCH_T:
-		{
-				if(node->left)__split_charset(node->left,cclass);
-				if(node->right)__split_charset(node->right,cclass);
-				break;
-		}
-		case RGX_STAR_T:
-		case RGX_QUEST_T:
-		case RGX_PLUS_T:
-		case RGX_LOOKAHEAD_T:
-		{
-				AR_ASSERT(node->left != NULL && node->right == NULL);
-				__split_charset(node->left,cclass);
-				break;
-		}
-		default:
-		{
-				AR_ASSERT(false);
-				AR_abort();
-				break;
-		}
-		}
-}
-
-
-
-void			RGX_SplitCharSetToCClassID(rgxNode_t *node, const rgxCClass_t *cclass)
-{
-		AR_ASSERT(node != NULL && cclass != NULL);
-		__split_charset(node, cclass);
-}
-
-
-
-static void __correct_tree(rgxNode_t *node)
-{
-		AR_ASSERT(node != NULL);
-
-		switch(node->type)
-		{
-		case RGX_CCLASS_ID_T:
-		case RGX_FINAL_T:
-		case RGX_BEGIN_T:
-		case RGX_END_T:
-		{
-				break;
-		}
-		
-		case RGX_CAT_T:
-		case RGX_BRANCH_T:
-		{
-				if(node->left)__correct_tree(node->left);
-				if(node->right)__correct_tree(node->right);
-				
-				if(node->right == NULL)
-				{
-						rgxNode_t *tmp = node->left;
-						*node = *(node->left);
-						AR_DEL(tmp);
-				}
-		
-#if defined(AR_DEBUG)
-				if((node->type == RGX_CAT_T || node->type == RGX_BRANCH_T) && (node->left == NULL || node->right == NULL))
-				{
-						AR_ASSERT(false);
-						AR_abort();
-				}
-#endif
-
-
-				break;
-		}
-		case RGX_STAR_T:
-		case RGX_QUEST_T:
-		case RGX_PLUS_T:
-		case RGX_LOOKAHEAD_T:
-		{
-				AR_ASSERT(node->left != NULL && node->right == NULL);
-				__correct_tree(node->left);
-				break;
-		}
-		case RGX_CSET_T:
-		default:
-		{
-				AR_ASSERT(false);
-				AR_abort();
-				break;
-		}
-		}
-}
-
-
-void RGX_CorrectTree(rgxNode_t *root)
-{
-		__correct_tree(root);
-}
 
 
 AR_NAMESPACE_END

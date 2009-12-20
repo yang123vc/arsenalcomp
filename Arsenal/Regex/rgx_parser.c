@@ -15,7 +15,7 @@
 #ifndef __REGEX_PARSER_H__
 #define __REGEX_PARSER_H__
 
-#include "rgx_parser.h"
+#include "rgx_in.h"
 
 
 AR_NAMESPACE_BEGIN
@@ -777,8 +777,8 @@ rgxResult_t	RGX_ParseExpr(const wchar_t *expr, const rgxNameSet_t *name_set)
 		AR_ASSERT(expr != NULL && name_set != NULL);
 		return __handle_expr(expr, L'\0', name_set);
 }
-#if(0)
-#endif
+
+
 
 
 
