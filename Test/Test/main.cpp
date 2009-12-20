@@ -27,20 +27,14 @@ L"}"
 ;
 
 
-void AR_STDCALL tiny_error(int level, const wchar_t* msg, void *ctx)
+void AR_STDCALL tiny_error(int_t level, const wchar_t* msg, void *ctx)
 {
-		wprintf(L"%d : %ls\r\n", level, msg);
+		wprintf(L"%ls\r\n", msg);
 }
 
 void AR_STDCALL tiny_printf(const wchar_t *msg, void *ctx)
 {
 		wprintf(L"%ls", msg);
-}
-
-
-void AR_STDCALL	tiny_fatal(const wchar_t *msg, void *ctx)
-{
-		tiny_printf(msg, ctx);
 }
 
 
@@ -50,14 +44,13 @@ void AR_STDCALL	tiny_fatal(const wchar_t *msg, void *ctx)
 
 int main()
 {
-		arInit_t ai = {tiny_error, tiny_printf, tiny_fatal,NULL};
+		arInit_t ai = {tiny_error, tiny_printf, NULL};
 		arCtx_t ctx;
 
 		ctx.init = ai;
 		Arsenal_Init(&ctx);
 		
 		AR_Test();
-
 		
 
 		Arsenal_UnInit();

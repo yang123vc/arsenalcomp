@@ -257,7 +257,7 @@ void lex_test()
 		lexToken_t tok;
 		lexMatch_t match;
 
-		lex = LEX_Create();
+		lex = LEX_Create(NULL);
 		LEX_InitMatch(&match, L"   345 abc ef\r\n 674  adfsd");
 
 		for(i = 0; i < sizeof(name_expr) / sizeof(name_expr[0]); ++i)
@@ -310,7 +310,7 @@ const wchar_t *pat[] =
 const wchar_t *pat2[] = 
 {
 		L"delim = [ \\t\\n\\r]",
-		L"strchr   = [^\\0\\\"]|(\\\\\\\")",
+		L"strchr   = [^\\\"]|(\\\\\\\")",
 		L"str   = \\\"{strchr}*\\\"",
 		L"EOI = \\0",
 		
@@ -329,14 +329,14 @@ void lex_test2()
 		lexMatch_t match;
 		size_t i;
 
-		lex = LEX_Create();
+		lex = LEX_Create(NULL);
 		LEX_InitMatch(&match, L"  \"abc\\\"\"\"def\"  ");
 
 		for(i = 0; i < sizeof(pat2)/sizeof(pat2[0]);  ++i)
 		{
 				if(!LEX_Insert(lex, pat2[i]))
 				{
-						abort();
+						AR_abort();
 				}
 		}
 
@@ -365,7 +365,7 @@ void lex_test3()
 //		lexMatch_t match;
 //		size_t i;
 
-		lex = LEX_Create();
+		lex = LEX_Create(NULL);
 		
 		LEX_GenerateTransTable(lex);
 
@@ -464,6 +464,41 @@ void trans_char_test()
 
 }
 
+
+
+void lex_test20()
+{
+		lex_t *lex;
+		lexToken_t tok;
+		lexMatch_t match;
+		size_t i;
+
+		lex = LEX_Create(NULL);
+		LEX_InitMatch(&match,L"aaa" );
+
+
+		if(!LEX_Insert(lex, L"2,0 a+[\\0]+"))
+		{
+				AR_abort();
+		}
+		
+		LEX_GenerateTransTable(lex);
+
+		while(LEX_Match(lex, &match, &tok))
+		{
+				wchar_t buf[1024];
+				AR_wcsncpy(buf, tok.str, tok.count);
+				buf[tok.count] = L'\0';
+
+				AR_printf(L"%ls : type == %d : count == %d\r\n", buf, tok.type, tok.count);
+				
+				if(tok.type == 0)break;
+		}
+
+		getchar();
+
+		LEX_UnInitMatch(&match);
+}
 
 
 AR_NAMESPACE_END

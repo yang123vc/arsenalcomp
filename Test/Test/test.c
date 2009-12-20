@@ -11,7 +11,7 @@ extern void com_test();
 extern void str_test();
 extern void expr_test();
 extern void lex_test();
-
+extern void lex_test20();
 extern void lr_dfa_test();
 extern void action_tbl_test();
 extern void parser_test();
@@ -48,7 +48,9 @@ extern void create_file_test();
 extern void trie_tree_test();
 
 extern void parser_test();
+extern void parser_test_lex();
 
+extern void rgx_test();
 #endif
 
 
@@ -60,7 +62,7 @@ void AR_Test()
 {
 #if defined(__LIB)
 		
-		com_test();
+		//com_test();
 
 		//trie_tree_test();
 		//expr_test();
@@ -68,7 +70,7 @@ void AR_Test()
 		//lex_test2();
 		//lex_test3();
 		//lex_test4();
-		
+		//lex_test20();
 		//lr_dfa_test();
 		//action_tbl_test();
 		//parser_test();
@@ -94,6 +96,9 @@ void AR_Test()
 		//trans_char_test();
 
 		//parser_test();
+
+		rgx_test();
+
 
 #else
 		AR_printf(L"dll version\r\n");

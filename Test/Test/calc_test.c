@@ -1,4 +1,5 @@
 #include "test.h"
+#include "../../Arsenal/Lex/lex.h"
 #include "../../Arsenal/Parser/grammar.h"
 #include "../../Arsenal/Parser/parser.h"
 #include "../../Arsenal/Parser/lr_action.h"
@@ -51,8 +52,8 @@ static Node_t* CreateNode(const Token_t *op, Node_t *l, Node_t *r)
 static  psrNode_t*		AR_STDCALL create_leaf(const psrToken_t *tok,void *ctx)
 {
 		Token_t	op;
-		op.type = (TokenType_t)tok->type;
-		op.str = AR_wcsndup(tok->str, tok->count);
+		op.type = (TokenType_t)tok->term_val;
+		op.str = AR_wcsndup(tok->str, tok->str_cnt);
 		return (psrNode_t*)CreateNode(&op, NULL, NULL);
 }
 
@@ -121,12 +122,14 @@ static  void			AR_STDCALL free_node(psrNode_t *node, void *ctx)
 
 }
 
+/*
 static  void			AR_STDCALL on_error(const psrToken_t *tok, const wchar_t *expected[], size_t count, void *ctx)
 
 {
 		printf("on_error\r\n");
 
 }
+*/
 
 /*
 {L"(", 354, 0, PSR_ASSOC_NOASSOC},
@@ -144,7 +147,7 @@ static lex_t* __build_lex()
 {
 		lex_t *lex;
 
-		lex = LEX_Create();
+		lex = LEX_Create(NULL);
 
 		LEX_Insert(lex, L"delim 			= 	[ \\r\\n\\t]");
 		LEX_Insert(lex, L"digit 			= 	[0-9]");
@@ -179,7 +182,7 @@ static  parser_t* __build_parser()
 {
 		psrGrammar_t	*gmr;
 
-		gmr = PSR_CreateGrammar();
+		gmr = PSR_CreateGrammar(NULL);
 
 		PSR_InsertTerm(gmr, L"(", CLP, PSR_ASSOC_NOASSOC, 0, create_leaf);
 		PSR_InsertTerm(gmr, L")", RP, PSR_ASSOC_NOASSOC, 0, create_leaf);
@@ -215,7 +218,7 @@ static  parser_t* __build_parser()
 
 
 		{
-				psrCtx_t ctx = {free_node, on_error, NULL};
+				psrCtx_t ctx = {free_node,  NULL};
 				return PSR_CreateParser(gmr, PSR_LALR, &ctx);
 		}
 }
@@ -268,8 +271,11 @@ void calc_test()
 
 		while(LEX_Match(lex, &match, &tok))
 		{
+				psrToken_t term;
 				AR_printf(L"token == %ls : val = %d\r\n", AR_wcsndup(tok.str, tok.count), tok.type);
-				AR_ASSERT(PSR_AddToken(psr, &tok));
+
+				PSR_TOTERMTOK(&tok, &term);
+				AR_ASSERT(PSR_AddToken(psr, &term));
 				if(tok.type == 0)break;
 		}
 		
@@ -291,8 +297,8 @@ void calc_test()
 
 
 
-
-
+#if(0)
+#endif
 
 
 
