@@ -57,7 +57,7 @@ public:
 
 
 /**************************************************************************************************/
-
+#if(0)
 class Lexer : private NonCopyable
 {
 public:
@@ -118,6 +118,7 @@ public:
 		~Parser();
 };
 
+#endif
 
 
 AR_NAMESPACE_END

@@ -189,7 +189,7 @@ static rgxResult_t	__handle_quote(const wchar_t *input)
 
 				range.beg = range.end = c;
 				tmp = RGX_CreateNode(RGX_CSET_T);
-				RGX_InsertRangeToCharSet(&tmp->cset, &range);
+				tmp->range.beg = tmp->range.end = c;
 				RGX_InsertToNode(g_res.node, tmp);
 				++p;
 		}
@@ -263,7 +263,7 @@ static rgxResult_t	__handle_cset_range(const wchar_t *input)
 		const wchar_t *p; 
 		rgxResult_t		g_res; 
 		rgxCharSet_t	cset;
-
+		rgxCharRange_t	*range = NULL;
 		AR_ASSERT(input != NULL);
 		p = input;
 
@@ -308,17 +308,27 @@ static rgxResult_t	__handle_cset_range(const wchar_t *input)
 		}
 
 		AR_ASSERT(*p == L']');
-		g_res.next = ++p;
-		g_res.node = RGX_CreateNode(RGX_CSET_T);
-		g_res.node->cset = cset;
-		cset.range = NULL;
-		RGX_UnInitCharSet(&cset);
 
-		if(g_res.node->cset.is_neg)
+		if(cset.is_neg)
 		{
-				RGX_ReverseNegativeCharSet(&g_res.node->cset);
+				RGX_ReverseNegativeCharSet(&cset);
 		}
 
+		g_res.next = ++p;
+		AR_ASSERT(cset.range != NULL);
+
+		g_res.node = RGX_CreateNode(RGX_BRANCH_T);
+
+		for(range = cset.range; range; range = range->next)
+		{
+				rgxNode_t *tmp = RGX_CreateNode(RGX_CSET_T);
+				tmp->range.beg = range->beg;
+				tmp->range.end = range->end;
+				RGX_InsertToNode(g_res.node, tmp);
+		}
+		RGX_UnInitCharSet(&cset);
+
+		
 		return g_res;
 INVALID_POINT:
 		RGX_UnInitCharSet(&cset);
@@ -363,7 +373,8 @@ static rgxResult_t	__handle_charset(const wchar_t *input)
 				{
 						range.end = range.beg;
 						g_res.node = RGX_CreateNode(RGX_CSET_T);
-						RGX_InsertRangeToCharSet(&(g_res.node->cset), &range);
+						g_res.node->range.beg = range.beg;
+						g_res.node->range.end = range.end;
 						g_res.next = p;
 						return g_res;
 				}
@@ -604,7 +615,7 @@ static rgxResult_t __handle_factor(const wchar_t *input, const rgxNameSet_t *nam
 				{
 						++p;
 						
-						if(*p == L'='/* || *p == L'!'*/)
+						if(*p == L'=' || *p == L'!')
 						{
 								rgxResult_t		result;
 								result = __handle_expr(p + 1, L')', name_set);
@@ -614,6 +625,14 @@ static rgxResult_t __handle_factor(const wchar_t *input, const rgxNameSet_t *nam
 								g_res.err = result.err;
 								g_res.node = RGX_CreateNode(RGX_LOOKAHEAD_T);
 								g_res.node->left = result.node;
+
+								if(*p == L'=')
+								{
+										g_res.node->negative_lookahead = false;
+								}else
+								{
+										g_res.node->negative_lookahead = true;
+								}
 
 						}else
 						{
@@ -777,7 +796,8 @@ rgxResult_t	RGX_ParseExpr(const wchar_t *expr, const rgxNameSet_t *name_set)
 		AR_ASSERT(expr != NULL && name_set != NULL);
 		return __handle_expr(expr, L'\0', name_set);
 }
-
+#if(0)
+#endif
 
 
 

@@ -61,7 +61,7 @@ BOOL CUIApp::InitInstance()
 	// such as the name of your company or organization
 	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
 
-	//CUIDlg dlg;
+//	CUIDlg dlg;
 	LexerDialog dlg;
 
 	m_pMainWnd = (CWnd*)&dlg;

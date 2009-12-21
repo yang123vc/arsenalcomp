@@ -4,6 +4,8 @@
 
 AR_NAMESPACE_BEGIN
 
+#if(0)
+
 Lexer::Lexer()
 {
 		m_lex =  LEX_Create();
@@ -100,6 +102,8 @@ const Lexer::lastError_t& Lexer::GetLastError()const
 		return m_error;
 
 }
+
+#endif
 
 
 AR_NAMESPACE_END
