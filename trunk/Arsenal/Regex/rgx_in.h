@@ -54,39 +54,6 @@ const rgxNode_t*		RGX_FindFromNameSet(const rgxNameSet_t	*set, const wchar_t *na
 /*NameSet end*/
 
 
-
-/*char class id*/
-
-/*******************char class id **********************/
-
-typedef struct __rgx_cclass_range_tag	rgxCClassRange_t;
-typedef struct __rgx_charclass_tag		rgxCClass_t;
-
-struct __rgx_cclass_range_tag
-{
-		wchar_t			beg;
-		wchar_t			end;
-};
-
-struct __rgx_charclass_tag
-{
-		rgxCClassRange_t		*cclass;
-		size_t					count;
-		size_t					cap;
-};
-
-void	RGX_InitCClass(rgxCClass_t *cclass);
-void	RGX_UnInitCClass(rgxCClass_t *cclass);
-int_t	RGX_FindIndexFromCClass(const rgxCClass_t *cclass, wchar_t c);
-void	RGX_CopyCClass(rgxCClass_t *dest, const rgxCClass_t *other);
-void	RGX_InsertToCClass(rgxCClass_t *dest, const rgxCClassRange_t *range);
-
-/*char class id end*/
-
-
-
-
-
 /*CharSet*/
 typedef struct __rgx_char_range_tag		rgxCharRange_t;
 typedef struct __rgx_charset_tag		rgxCharSet_t;
@@ -97,8 +64,6 @@ struct __rgx_char_range_tag
 		wchar_t									end;
 		rgxCharRange_t							*next;
 };
-
-
 
 struct __rgx_charset_tag
 {
@@ -113,6 +78,7 @@ void RGX_InsertRangeToCharSet(rgxCharSet_t *cset, const rgxCharRange_t *new_rang
 void RGX_ReverseNegativeCharSet(rgxCharSet_t *cset);
 void RGX_CopyCharSet(rgxCharSet_t *dest, const rgxCharSet_t *sour);
 /*CharSetEnd*/
+
 
 
 /*rgx node*/
@@ -131,8 +97,7 @@ typedef enum
 		RGX_PLUS_T,
 		
 		RGX_LOOKAHEAD_T,
-
-		RGX_CCLASS_ID_T,
+		
 		RGX_FINAL_T
 }rgxNodeType_t;
 
@@ -144,9 +109,12 @@ struct __rgx_node_tag
 		rgxNode_t			*right;
 		
 		union{
-				rgxCharSet_t			cset;
+				struct {
+						wchar_t	beg;
+						wchar_t end;
+				}range;
+				bool_t					negative_lookahead;
 				bool_t					non_greedy;
-				size_t					cclass_id;
 				size_t					final_val;
 		};
 };
@@ -161,9 +129,6 @@ void			RGX_DestroyNode(rgxNode_t *node);
 
 void			RGX_InsertToNode(rgxNode_t *root, rgxNode_t *node);
 
-
-void			RGX_CalcCharClass(const rgxNode_t *node, rgxCClass_t *cclass);
-void			RGX_SplitCharSetToCClassID(rgxNode_t *node, const rgxCClass_t *cclass);
 
 void			RGX_ToString(const rgxNode_t *node, arString_t *str);
 
@@ -205,6 +170,7 @@ rgxResult_t	RGX_ParseExpr(const wchar_t *expr, const rgxNameSet_t *name_set);
 
 typedef enum
 {
+		RGX_NOP_I,
 		RGX_CHAR_I,
 		RGX_BEGIN_I,
 		RGX_END_I,
@@ -217,6 +183,7 @@ typedef enum
 
 static const wchar_t *RGX_INS_NAME[] = 
 {
+		L"nop",
 		L"char",
 		L"match_begin",
 		L"match_end",
@@ -232,11 +199,23 @@ typedef struct __regex_instruction_tag	rgxIns_t;
 struct __regex_instruction_tag
 {
 		rgxInsType_t	opcode;
-		int_t			data;
 		
 		rgxIns_t		*left;
 		rgxIns_t		*right;
+
 		int_t			mark;
+
+		union{
+				int_t			final;
+				struct {
+						wchar_t	beg;
+						wchar_t end;
+				}range;
+				
+				struct {
+						bool_t			negative;
+				}lookahead;
+		};
 };
 
 
@@ -250,13 +229,16 @@ struct __regex_program_tag
 		size_t			count;
 		
 		rgxIns_t		*pc;
+		int_t			mark;
 };
 
 
 void			RGX_InitProg(rgxProg_t *prog);
 void			RGX_UnInitProg(rgxProg_t *prog);
 void			RGX_Compile(rgxProg_t *prog, const rgxNode_t *tree);
+
 void			RGX_PringProg(const rgxProg_t *prog, arString_t *str);
+
 
 
 /*rgx instruction end*/

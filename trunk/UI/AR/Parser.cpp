@@ -8,33 +8,6 @@ AR_NAMESPACE_BEGIN
 
 
 #if(0)
-class Parser : private NonCopyable
-{
-public:
-		typedef enum 
-		{
-				PARSER_SLR = PSR_SLR,
-				PARSER_LR1 = PSR_LR1,
-				PARSER_LALR = PSR_LALR
-		}ParserType_t;
-private:
-		psrGrammar_t	*m_grammar;
-		parser_t		*m_parser;
-		printNode_t		*m_result;
-		arString_t		*m_strbuf;
-public:
-		bool SetGrammar(const wchar_t *gmr, Parser::ParserType_t type = PARSER_LALR);
-		bool Parse(const wchar_t *source);
-public:
-		void PrintGrammar();
-		void PrintFirstFollow();
-		void ReportConflict();
-		void PrintActionTable();
-public:
-		Parser();
-		~Parser();
-};
-#endif
 
 
 Parser::Parser() 
@@ -169,6 +142,8 @@ const printNode_t* Parser::GetResult()const
 		return (printNode_t*)PSR_GetResult(m_parser);
 
 }
+
+#endif
 
 
 AR_NAMESPACE_END

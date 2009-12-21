@@ -23,7 +23,7 @@ static size_t __count(const rgxNode_t *node)
 		
 		switch(node->type)
 		{
-		case RGX_CCLASS_ID_T:
+		case RGX_CSET_T:
 		case RGX_FINAL_T:
 		case RGX_BEGIN_T:
 		case RGX_END_T:
@@ -43,7 +43,7 @@ static size_t __count(const rgxNode_t *node)
 		}
 		case RGX_STAR_T:
 		{
-				return 2 + __count(node->left);
+				return 2 + __count(node->left) ;
 				break;
 		}
 		case RGX_QUEST_T:
@@ -61,7 +61,6 @@ static size_t __count(const rgxNode_t *node)
 				return 2 + __count(node->left);
 				break;
 		}
-		case RGX_CSET_T:
 		default:
 		{
 				AR_ASSERT(false);
@@ -82,17 +81,18 @@ static void __emit(rgxProg_t *prog, const rgxNode_t *node)
 		AR_ASSERT(prog->pc != NULL && prog->start != NULL && prog->count > 0);
 		switch(node->type)
 		{
-		case RGX_CCLASS_ID_T:
+		case RGX_CSET_T:
 		{
 				prog->pc->opcode = RGX_CHAR_I;
-				prog->pc->data = (int_t)node->cclass_id;
+				prog->pc->range.beg = node->range.beg;
+				prog->pc->range.end = node->range.end;
 				prog->pc++; /*count = 1*/
 				break;
 		}
 		case RGX_FINAL_T:
 		{
 				prog->pc->opcode = RGX_MATCH_I;
-				prog->pc->data = (int_t)node->final_val;
+				prog->pc->final = (int_t)node->final_val;
 				prog->pc++;/*count = 1*/
 				break;
 		}
@@ -142,6 +142,7 @@ static void __emit(rgxProg_t *prog, const rgxNode_t *node)
 				p1->left = prog->pc;/*一是从下一条开始继续匹配node->left*/
 				__emit(prog, node->left);
 				
+
 				/*跟着star的是一个跳转指令，会直接跳回到当前指令*/
 				/*这里prog->pc为node->left生成的指令组的下一条指令*/
 				prog->pc->opcode = RGX_JMP_I;/*count + 1*/
@@ -202,17 +203,29 @@ static void __emit(rgxProg_t *prog, const rgxNode_t *node)
 		}
 		case RGX_LOOKAHEAD_T:
 		{
+				rgxIns_t *p1;
 				prog->pc->opcode = RGX_LOOKAHEAD_BEG_I;/*count + 1*/
+
+				if(node->negative_lookahead)
+				{
+						prog->pc->lookahead.negative= true;
+				}
+
+				/*prog->pc->lookahead.has_run = false;*/
+
+				p1 = prog->pc;
+				
 				prog->pc++;
 				__emit(prog,node->left);/*node->left*/
 				/*此时当前指令pc为node->left指令组的下一条*/
 				prog->pc->opcode = RGX_LOOKAHEAD_END_I;/*count + 1*/
 				prog->pc++;
+				
+				p1->left = prog->pc;
 
 				/*count == 2*/
 				break;
 		}
-		case RGX_CSET_T:
 		default:
 		{
 				AR_ASSERT(false);
@@ -244,6 +257,8 @@ void			RGX_Compile(rgxProg_t *prog, const rgxNode_t *tree)
 {
 		AR_ASSERT(prog != NULL && prog->count == 0 && prog->start == NULL && tree != NULL);
 
+		AR_ASSERT(tree->type == RGX_CAT_T && tree->right->type == RGX_FINAL_T);
+
 		prog->count = __count(tree);
 		
 		AR_ASSERT(prog->count > 0);
@@ -256,6 +271,9 @@ void			RGX_Compile(rgxProg_t *prog, const rgxNode_t *tree)
 		AR_ASSERT(prog->pc == prog->start + prog->count);
 
 }
+
+
+
 
 
 
@@ -273,13 +291,48 @@ void			RGX_PringProg(const rgxProg_t *prog, arString_t *str)
 				{
 				case RGX_CHAR_I:
 				{
-						AR_AppendFormatString(str, L"%2d. %ls <id%" AR_PLAT_INT_FMT L"d>\r\n", i, RGX_INS_NAME[pc->opcode], pc->data);
+						AR_AppendFormatString(str, L"%2d. %ls <", i, RGX_INS_NAME[pc->opcode]);
+						if(pc->range.beg == pc->range.end)
+						{
+								if(AR_iswgraph(pc->range.beg) && pc->range.beg < (wchar_t)128)
+								{
+										AR_AppendFormatString(str, L"%c", pc->range.beg);
+								}else
+								{
+										AR_AppendFormatString(str, L"\\u%" AR_PLAT_INT_FMT L"d", pc->range.beg);
+								}
+						}else
+						{
+								if(AR_iswgraph(pc->range.beg) && pc->range.beg < (wchar_t)128)
+								{
+										AR_AppendFormatString(str, L"%c", pc->range.beg);
+								}else
+								{
+										AR_AppendFormatString(str, L"\\u%" AR_PLAT_INT_FMT L"d", pc->range.beg);
+								}
+
+								AR_AppendString(str, L"-");
+
+								if(AR_iswgraph(pc->range.end) && pc->range.end < (wchar_t)128)
+								{
+										AR_AppendFormatString(str, L"%c", pc->range.end);
+								}else
+								{
+										AR_AppendFormatString(str, L"\\u%" AR_PLAT_INT_FMT L"d", pc->range.end);
+								}
+						}
+						AR_AppendFormatString(str, L">\r\n");
 						break;
 				}
+				
+				case RGX_LOOKAHEAD_BEG_I:
+				{
+						AR_AppendFormatString(str, L"%2d. %ls %" AR_PLAT_INT_FMT L"d\r\n", i, RGX_INS_NAME[pc->opcode], (size_t)(pc->left - prog->start));
+						break;
+				}
+				case RGX_LOOKAHEAD_END_I:
 				case RGX_BEGIN_I:
 				case RGX_END_I:
-				case RGX_LOOKAHEAD_BEG_I:
-				case RGX_LOOKAHEAD_END_I:
 				case RGX_MATCH_I:
 				{
 						AR_AppendFormatString(str, L"%2d. %ls\r\n", i, RGX_INS_NAME[pc->opcode]);
@@ -296,6 +349,9 @@ void			RGX_PringProg(const rgxProg_t *prog, arString_t *str)
 
 						break;
 				}
+				case RGX_NOP_I:
+						AR_AppendFormatString(str, L"%2d. %ls\r\n", i,RGX_INS_NAME[RGX_NOP_I]);
+						break;
 				default:
 				{
 						AR_ASSERT(false);

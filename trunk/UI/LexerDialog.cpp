@@ -40,6 +40,7 @@ END_MESSAGE_MAP()
 
 void LexerDialog::OnBnClickedButtonMatch()
 {
+#if(0)
 		// TODO: Add your control notification handler code here
 		m_output->Clear();
 		wchar_t  *buf = new wchar_t[65536];
@@ -79,6 +80,8 @@ void LexerDialog::OnBnClickedButtonMatch()
 				const Lexer::lastError_t  &err = m_lexer.GetLastError();
 				AR_printf(L"Match error : (%d,%d)\r\n", err.line,err.col);
 		}
+#endif
+
 }
 
 BOOL LexerDialog::PreTranslateMessage(MSG* pMsg)

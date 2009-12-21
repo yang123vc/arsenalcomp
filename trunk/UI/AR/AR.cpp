@@ -4,6 +4,7 @@
 AR_NAMESPACE_BEGIN
 
 
+
 static void AR_STDCALL __error_func(int level, const wchar_t *msg, void *ctx)
 {
 		ARContext		*context = (ARContext*)ctx;
@@ -76,6 +77,7 @@ void	Arsenal::UnInstance()
 				__g_arsenal = NULL;
 		}
 }
+
 
 
 

@@ -67,7 +67,7 @@ public:
 		enum { IDD = IDD_LEXERDIALOG };
 		
 public:
-		ARSpace::Lexer			m_lexer;
+//		ARSpace::Lexer			m_lexer;
 		LexerOutput				*m_output;
 protected:
 		virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
@@ -80,3 +80,5 @@ protected:
 public:
 		afx_msg void OnBnClickedButtonMatch();
 };
+
+

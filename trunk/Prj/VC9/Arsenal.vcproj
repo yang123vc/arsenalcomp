@@ -1786,11 +1786,31 @@
 			Name="Regex"
 			>
 			<File
-				RelativePath="..\..\Arsenal\Regex\rgx_node.c"
+				RelativePath="..\..\Arsenal\Regex\rgx_compile.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Arsenal\Regex\rgx_node.h"
+				RelativePath="..\..\Arsenal\Regex\rgx_in.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Arsenal\Regex\rgx_in.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Arsenal\Regex\rgx_node.c"
+				>
+				<FileConfiguration
+					Name="LibDebug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						CompileAs="1"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\Arsenal\Regex\rgx_parser.c"
 				>
 			</File>
 		</Filter>

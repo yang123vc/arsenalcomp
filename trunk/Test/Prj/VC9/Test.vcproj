@@ -1677,6 +1677,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\Test\deelx.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\Test\gmr_test.c"
 				>
 			</File>
@@ -1703,6 +1707,14 @@
 						CompileAs="2"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\Test\rgx_thompson.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Test\rgx_thompson.h"
+				>
 			</File>
 			<File
 				RelativePath="..\..\Test\test.c"
