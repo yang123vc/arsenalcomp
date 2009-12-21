@@ -1677,10 +1677,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\Test\deelx.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\Test\gmr_test.c"
 				>
 			</File>
@@ -1694,26 +1690,6 @@
 			</File>
 			<File
 				RelativePath="..\..\Test\psr_misc.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Test\rgx_test.c"
-				>
-				<FileConfiguration
-					Name="LibDebug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						CompileAs="2"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\Test\rgx_thompson.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Test\rgx_thompson.h"
 				>
 			</File>
 			<File

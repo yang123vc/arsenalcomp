@@ -16,6 +16,7 @@
 #define __LEX_H__
 
 #include "../Common/common.h"
+#include "match.h"
 
 AR_NAMESPACE_BEGIN
 
@@ -33,14 +34,6 @@ typedef struct __lex_action_tag
 }lexAction_t;
 
 
-typedef struct __lex_token_tag
-{
-		const wchar_t	*str;
-		size_t			count;
-		size_t			type;
-		size_t			line;
-		size_t			col;
-}lexToken_t;
 
 
 
@@ -49,16 +42,16 @@ typedef struct __lex_token_tag
 
 
 
+
 /*typedef struct __lex_tag lex_t;*/
 
 typedef struct __lex_tag 
 {
-		struct __lex_name_tag *name_tbl;
-		struct __lex_node_tag *uni_root;
+		struct __rgx_name_set_tag		*name_tbl;
 		
-		struct __lex_state_table_tag *tbl;
-		struct __lex_charclass_tag   *cclass;
-
+		struct __prog_set_tag			*prog_set;
+		
+		
 		void	*io;
 }lex_t;
 
@@ -72,29 +65,6 @@ bool_t	LEX_GenerateTransTable(lex_t *lex);
 void	LEX_Clear(lex_t *lex);
 
 
-
-
-typedef struct __lex_match_result_tag
-{
-		bool_t					is_ok;
-		
-		wchar_t					*input;
-		const wchar_t			*next;
-		size_t					line;
-		size_t					col;
-}lexMatch_t;
-
-
-
-void LEX_InitMatch(lexMatch_t *pmatch, const wchar_t *input);
-
-void LEX_UnInitMatch(lexMatch_t *pmatch);
-
-void LEX_ResetInput(lexMatch_t *pmatch, const wchar_t *input);
-
-void LEX_ResetMatch(lexMatch_t *pmatch);
-
-const wchar_t* LEX_GetNextInput(const lexMatch_t *match);
 
 bool_t LEX_Match(lex_t *lex, lexMatch_t *match, lexToken_t *tok);
 

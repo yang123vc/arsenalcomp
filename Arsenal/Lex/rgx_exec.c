@@ -1,0 +1,365 @@
+#include "rgx.h"
+
+
+
+AR_NAMESPACE_BEGIN
+
+
+static void __add_thread(rgxThreadList_t *lst,  rgxThread_t thd, rgxProg_t *prog)
+{
+		AR_ASSERT(lst != NULL);
+		
+		if(prog->mark == thd.pc->mark)return;
+		thd.pc->mark = prog->mark;
+
+		switch(thd.pc->opcode)
+		{
+		case RGX_JMP_I:
+		{
+				AR_ASSERT(thd.pc->right == NULL);
+				__add_thread(lst, RGX_BuildThread(thd.pc->left, thd.sp, thd.line, thd.col), prog);
+				break;
+		}
+		case RGX_BRANCH_I:
+		{
+				__add_thread(lst, RGX_BuildThread(thd.pc->left, thd.sp, thd.line, thd.col), prog);
+				__add_thread(lst, RGX_BuildThread(thd.pc->right, thd.sp, thd.line, thd.col), prog);
+				break;
+		}
+		case RGX_LOOKAHEAD_BEG_I:
+		case RGX_LOOKAHEAD_END_I:
+		case RGX_NOP_I:
+		case RGX_CHAR_I:
+		case RGX_BEGIN_I:
+		case RGX_END_I:
+		case RGX_MATCH_I:
+		{
+				RGX_InsertToThreadList(lst, thd);
+				break;
+		}
+		default:
+		{
+				//AR_ASSERT(false);
+				//AR_abort();
+				break;
+		}
+		}
+}
+
+static void __clear_ins_set(rgxIns_t *start)
+{		
+		size_t k,l;
+		AR_ASSERT(start != NULL);
+
+		for(k = 0, l = 1; l > 0; ++k)
+		{
+				if(start[k].opcode == RGX_LOOKAHEAD_BEG_I)
+				{
+						l++;
+				}else if(start[k].opcode == RGX_LOOKAHEAD_END_I)
+				{
+						l--;
+				}
+				start[k].mark = 0;
+		}
+
+}
+
+static void __clear_prog(rgxProg_t *prog)
+{
+		size_t i;
+		AR_ASSERT(prog != NULL);
+
+		for(i = 0; i < prog->count; ++i)
+		{
+				prog->start[i].mark = 0;
+		}
+		
+}
+
+
+static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, const wchar_t *input_beg)
+{
+		rgxThreadList_t curr, next;
+		rgxIns_t *pc;
+		size_t i;
+		AR_ASSERT(prog != NULL && sp != NULL && input_beg != NULL);
+
+		RGX_InitThreadList(&curr);
+		RGX_InitThreadList(&next);
+
+		prog->mark = 0;
+
+		prog->mark++;
+		__add_thread(&curr, RGX_BuildThread(prog->start, sp,0,0), prog);
+
+		for(;;)
+		{
+				if(curr.count == 0)break;
+				
+				prog->mark++;
+				for(i = 0; i < curr.count; ++i)
+				{
+						pc = curr.lst[i].pc;
+						sp = curr.lst[i].sp;
+						
+						switch(pc->opcode)
+						{
+						case RGX_CHAR_I:
+						{
+								if(*sp >= pc->range.beg && *sp <= pc->range.end)
+								{
+										__add_thread(&next, RGX_BuildThread(pc + 1, *sp == L'\0' ? sp : sp + 1, 0, 0), prog);
+								}
+								break;
+						}
+						case RGX_BEGIN_I:
+						{
+								if(sp == input_beg)
+								{
+										__add_thread(&next, RGX_BuildThread(pc + 1, sp, 0, 0), prog);
+								}
+								--sp;
+								break;
+						}
+						case RGX_END_I:
+						{
+								if(*sp == L'\0')
+								{
+										__add_thread(&next, RGX_BuildThread(pc + 1, sp, 0, 0), prog);
+								}
+								break;
+						}
+						case RGX_LOOKAHEAD_BEG_I:
+						{
+								
+								rgxProg_t lhd;
+								
+								lhd.start = pc + 1;
+								lhd.pc = lhd.start;
+								lhd.mark = 0;
+
+								__clear_ins_set(lhd.start);
+
+
+								if(__lookahead(&lhd, sp, input_beg))
+								{
+										if(pc->lookahead.negative)
+										{
+
+										}else
+										{
+												__add_thread(&next, RGX_BuildThread(pc->left, sp, 0,0), prog);
+										}
+
+								}else
+								{
+										if(pc->lookahead.negative)
+										{
+												__add_thread(&next, RGX_BuildThread(pc->left, sp, 0,0), prog);
+										}else
+										{
+
+										}
+								}
+								
+								break;
+						}
+						case RGX_LOOKAHEAD_END_I:
+						{
+								RGX_UnInitThreadList(&curr);
+								RGX_UnInitThreadList(&next);
+								return true;
+								break;
+						}
+						case RGX_MATCH_I:
+						{
+								AR_ASSERT(false);
+								AR_abort();
+								break;
+						}
+						}
+				}
+				RGX_SwapThreadList(&curr, &next);
+				RGX_ClearThreadList(&next);
+		}
+
+		RGX_UnInitThreadList(&curr);
+		RGX_UnInitThreadList(&next);
+		return false;
+
+
+}
+
+
+
+static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok, rgxThreadList_t *curr, rgxThreadList_t *next)
+{
+		bool_t			matched;
+		rgxIns_t		*pc;
+		const wchar_t	*sp;
+		size_t i,x,y;
+		
+		AR_ASSERT(prog != NULL && match->next != NULL && match->input != NULL);
+		AR_ASSERT(curr != NULL && next != NULL);
+
+		__clear_prog(prog);
+		RGX_ClearThreadList(curr);
+		RGX_ClearThreadList(next);
+
+		prog->mark = 0;
+		matched = false;
+		sp = match->next;
+		x = match->line;
+		y = match->col;
+		prog->mark++;
+		
+		__add_thread(curr, RGX_BuildThread(prog->start, sp, x,y), prog);
+
+		for(;;)
+		{
+				if(curr->count == 0)break;
+				prog->mark++;
+				
+				for(i = 0; i < curr->count; ++i)
+				{
+						pc = curr->lst[i].pc;
+						sp = curr->lst[i].sp;
+						x = curr->lst[i].line;
+						y = curr->lst[i].col;
+
+						switch(pc->opcode)
+						{
+						case RGX_CHAR_I:
+						{
+								if(*sp >= pc->range.beg && *sp <= pc->range.end)
+								{
+										if(*sp == L'\n')
+										{
+
+												y = 0;
+												x++;
+										}else
+										{
+												y++;
+										}
+
+										if(*sp != L'\0')sp++;
+
+										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y), prog);
+								}
+								break;
+						}
+						case RGX_BEGIN_I:
+						{
+								if(sp == match->input)
+								{
+										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y), prog);
+								}
+								break;
+						}
+						case RGX_END_I:
+						{
+								if(*sp == L'\0')
+								{
+										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y), prog);
+								}
+								break;
+						}
+						case RGX_LOOKAHEAD_BEG_I:
+						{
+								
+								rgxProg_t lhd;
+								
+								lhd.start = pc + 1;
+								lhd.pc = lhd.start;
+								lhd.mark = 0;
+
+								__clear_ins_set(lhd.start);
+
+
+								if(__lookahead(&lhd, sp, match->input))
+								{
+										if(pc->lookahead.negative)
+										{
+
+										}else
+										{
+												__add_thread(next, RGX_BuildThread(pc->left, sp, x,y), prog);
+										}
+
+								}else
+								{
+										if(pc->lookahead.negative)
+										{
+												__add_thread(next, RGX_BuildThread(pc->left, sp, x,y), prog);
+										}else
+										{
+
+										}
+								}
+								break;
+						}
+						case RGX_LOOKAHEAD_END_I:
+						{
+								AR_ASSERT(false);
+								AR_abort();
+								break;
+						}
+						case RGX_MATCH_I:
+						{
+								tok->str = match->next;
+								tok->count = sp - match->next;
+								tok->line = match->line;
+								tok->col = match->col;
+								tok->type = (size_t)pc->final;
+								matched = true;
+								
+								goto BREAK_POINT;
+								break;
+						}
+						}
+				}
+BREAK_POINT:
+				RGX_SwapThreadList(curr, next);
+				RGX_ClearThreadList(next);
+		}
+
+		if(matched)
+		{
+				match->col = y;
+				match->line = x;
+				match->next = sp;
+		}
+		return matched;
+}
+
+
+
+
+
+
+bool_t RGX_Match(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok, rgxThreadList_t *curr, rgxThreadList_t *next)
+{
+		AR_ASSERT(prog != NULL && match != NULL && tok != NULL);
+
+		AR_ASSERT(match->input != NULL && match->next != NULL);
+
+		if(!match->is_ok)return match->is_ok;
+
+		return __thompson(prog, match, tok, curr, next);
+
+}
+
+
+
+
+
+
+
+
+AR_NAMESPACE_END
+
+
+
+
