@@ -46,15 +46,17 @@ struct __cfg_node_tag
 
 static const wchar_t *__cfg_lex_name[] = 
 {
-		L"	delim		= 	[\\t\\r\\n ]*",
+		L"	delim		= 	[\\t\\r\\n ]+",
 		L"	letter		= 	[A-Z_a-z]",
 		L"	digit		=	[0-9]",
 		L"	number		=	0|[1-9]{digit}*",
 		L"	name		=	{letter}({letter}|{digit})*",
 		L"	lexeme		=	{name}|(\\\"([^\\\"])+\\\")|('([^'])+')",
 
-		L"	comment		= 	\\/\\*([^\\*]|\\*+[^\\*\\/])*\\*+\\/",
-		L"	comment_line	= 	\\/\\/[^\\n]*\\n",
+		L"	comment		= 	/\\*([^\\*]|\\*+[^\\*/])*\\*+/",
+		L"	comment_line	= 	//[^\\n]*\\n",
+		L"  skip_lexem		= {delim}|{comment}|{comment_line}",
+		L"  key_lookahead   = {skip_lexem}+|\"{\""
 };
 
 
@@ -93,14 +95,16 @@ typedef struct  __cfg_lex_pattern_tag
 static const cfgLexPattern_t	__cfg_pattern[] = 
 {
 		{EOI,	L"[\\0]", false,0},
-		{DELIM, L"{delim}|{comment_line}|{comment}", true},
-		{SKIP,	L"\"%skip\"", false,0},
-		{NAME,	L"\"%name\"", false,0},
-		{TOKEN,	L"\"%token\"", false,0},
-		{PREC,	L"\"%prec\"", false,0},
-		{RULES,	L"\"%rule\"",false,0},
-		{HANDLER, L"\"%handler\"", false, 0},
+		{DELIM, L"{skip_lexem}+", true},
 		{ASSOC,	L"\"%\"(\"left\"|\"right\"|\"noassoc\")", false,1},
+		
+		{SKIP,	L"\"%skip\"", false,0},
+		{NAME,	L"\"%name\"(?={key_lookahead})", false,0},
+		{TOKEN,	L"\"%token\"(?={key_lookahead})", false,0},
+		{PREC,	L"\"%prec\"(?={key_lookahead})", false,0},
+		{RULES,	L"\"%rule\"(?={key_lookahead})",false,0},
+		{HANDLER, L"\"%handler\"(?={skip_lexem}+)", false, 0},
+
 		
 		{LEXEME,	L"{lexeme}", false,0},
 		{NUMBER,	L"{number}", false,0},
@@ -1304,9 +1308,12 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, void *io)
 				{
 						continue;
 				}
+				/*
+				AR_printf(L"tok->name %ls : (%d : %d)\r\n", AR_wcsndup(tok.str, tok.count), tok.line, tok.col);
+				getchar();
+				*/
 				
 				PSR_TOTERMTOK(&tok, &term);
-				
 
 				is_ok = PSR_AddToken(parser, &term);
 				

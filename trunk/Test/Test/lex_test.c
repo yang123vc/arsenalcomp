@@ -1,8 +1,5 @@
 #include "test.h"
 #include "../../Arsenal/Lex/lex.h"
-#include "../../Arsenal/Lex/expr.h"
-#include "../../Arsenal/Lex/dfa.h"
-
 
 #if defined(__LIB)
 
@@ -10,7 +7,7 @@ AR_NAMESPACE_BEGIN
 
 
 
-
+#if(0)
 void charsetShowChar(wchar_t c, bool_t is_digit)
 {
 		const wchar_t *fmt;
@@ -464,6 +461,7 @@ void trans_char_test()
 
 }
 
+#endif
 
 
 void lex_test20()
@@ -477,7 +475,7 @@ void lex_test20()
 		LEX_InitMatch(&match,L"aaa" );
 
 
-		if(!LEX_Insert(lex, L"2,0 a+[\\0]+"))
+		if(!LEX_Insert(lex, L"2,0 a+[\\0]"))
 		{
 				AR_abort();
 		}

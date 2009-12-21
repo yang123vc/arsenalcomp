@@ -1734,22 +1734,6 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\Arsenal\Lex\dfa.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Arsenal\Lex\dfa.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Arsenal\Lex\expr.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Arsenal\Lex\expr.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\Arsenal\Lex\lex.c"
 				>
 			</File>
@@ -1758,11 +1742,35 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\Arsenal\Lex\node.c"
+				RelativePath="..\..\Arsenal\Lex\match.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Arsenal\Lex\node.h"
+				RelativePath="..\..\Arsenal\Lex\match.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Arsenal\Lex\misc.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Arsenal\Lex\rgx.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Arsenal\Lex\rgx_compile.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Arsenal\Lex\rgx_exec.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Arsenal\Lex\rgx_node.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Arsenal\Lex\rgx_parser.c"
 				>
 			</File>
 		</Filter>
@@ -1779,38 +1787,6 @@
 			</File>
 			<File
 				RelativePath="..\..\Arsenal\Tools\tools.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Regex"
-			>
-			<File
-				RelativePath="..\..\Arsenal\Regex\rgx_compile.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Arsenal\Regex\rgx_in.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Arsenal\Regex\rgx_in.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Arsenal\Regex\rgx_node.c"
-				>
-				<FileConfiguration
-					Name="LibDebug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						CompileAs="1"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\Arsenal\Regex\rgx_parser.c"
 				>
 			</File>
 		</Filter>

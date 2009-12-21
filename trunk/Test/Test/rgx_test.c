@@ -1,6 +1,6 @@
 #include "deelx.h"
 #include "test.h"
-#include "rgx_thompson.h"
+
 #include "../../Arsenal/Regex/rgx_in.h"
 #include "../../Arsenal/Lex/lex.h"
 
@@ -11,7 +11,7 @@
 
 AR_NAMESPACE_BEGIN
 
-
+/*
 bool_t			RGX_Run(rgxProg_t *prog,  lexMatch_t *match)
 {
 		
@@ -27,7 +27,7 @@ bool_t			RGX_Run(rgxProg_t *prog,  lexMatch_t *match)
 				return false;
 		}
 }
-
+*/
 
 
 
@@ -106,11 +106,26 @@ void rgx_test_1(const wchar_t *e1, const wchar_t *input)
 		{
 				getchar();
 				lexMatch_t match;
-				
+				lexToken_t tok;
+				rgxThreadList_t curr, next;
+				RGX_InitThreadList(&curr);
+				RGX_InitThreadList(&next);
 				LEX_InitMatch(&match, input);
-
 				
-				AR_printf(L"RGX_Run result == %d\r\n", RGX_Run(&prog, &match));
+				//AR_printf(L"RGX_Run result == %d\r\n", RGX_Run(&prog, &match));
+
+				while(RGX_Match(&prog, &match, &tok, &curr, &next))
+				{
+						if(tok.count == 0)break;
+
+						AR_printf(L"tok.str ==%ls\r\n", AR_wcsndup(tok.str, tok.count));
+						AR_printf(L"tok.line == %d tok.col == %d\r\n", tok.line, tok.col);
+						AR_printf(L"tok.type == %d\r\n", tok.type);
+
+						AR_printf(L"next == %ls\r\n", match.next);
+				}
+				
+				AR_printf(L"isok == %d\r\n", match.is_ok);
 
 				LEX_UnInitMatch(&match);
 

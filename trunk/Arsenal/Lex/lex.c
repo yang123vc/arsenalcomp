@@ -11,70 +11,145 @@
  *
  */
 
-#include "dfa.h"
-#include "expr.h"
-
+#include "rgx.h"
 #include "lex.h"
 
 AR_NAMESPACE_BEGIN
 
 
 
-/**********************************************************************************************************/
 
-
-lex_t*	LEX_Create(void *io)
+typedef struct __prog_set_tag
 {
-		lex_t *res;
-		
-		res = AR_NEW0(lex_t);
-		res->tbl = AR_NEW0(lexStateTable_t);
-		res->cclass = AR_NEW0(lexCClass_t);
-		
-		LEX_InitStateTable(res->tbl);
-		LEX_InitCClass(res->cclass);
-		
-		res->uni_root = LEX_CreateNode(LEX_BRANCH);
-		
-		res->io = io == NULL ? AR_global_ioctx() : io;
+		rgxProg_t						**prog;
+		lexAction_t						*action;
+		size_t							count;
+		size_t							cap;
+		rgxThreadList_t					curr;
+		rgxThreadList_t					next;
+}lexProgSet_t;
 
+lexProgSet_t* LEX_CreateProgSet()
+{
+		lexProgSet_t *res;
+		res = AR_NEW0(lexProgSet_t);
+		RGX_InitThreadList(&res->curr);
+		RGX_InitThreadList(&res->next);
 		return res;
 }
 
 
-
-
-
-
-void	LEX_Destroy(lex_t *lex)
+void LEX_ClearProgSet(lexProgSet_t *set)
 {
-		AR_ASSERT(lex != NULL);
+		size_t i;
+		AR_ASSERT(set != NULL);
 
-		LEX_DestroyNameList(lex->name_tbl);
-		LEX_UnInitStateTable(lex->tbl);
-		LEX_UnInitCClass(lex->cclass);
-		LEX_DestroyNode(lex->uni_root);
-		
-		AR_DEL(lex->tbl);
-		AR_DEL(lex->cclass);
-		AR_DEL(lex);
+		for(i = 0; i < set->count; ++i)
+		{
+				RGX_UnInitProg(set->prog[i]);
+		}
+
+		set->count = 0;
+		RGX_ClearThreadList(&set->curr);
+		RGX_ClearThreadList(&set->next);
 }
 
 
+void		LEX_DestroyProgSet(lexProgSet_t *set)
+{
+		
+		if(set)
+		{
+				LEX_ClearProgSet(set);
+				RGX_UnInitThreadList(&set->curr);
+				RGX_UnInitThreadList(&set->next);
+
+				if(set->prog)AR_DEL(set->prog);
+				if(set->action)AR_DEL(set->action);
+				AR_DEL(set);
+		}
+}
+
+void LEX_InserToProgSet(lexProgSet_t *set, rgxProg_t *prog, const lexAction_t *act)
+{
+		AR_ASSERT(set != NULL && prog != NULL && act != NULL);
+
+		if(set->count == set->cap)
+		{
+				set->cap = (set->cap + 1)*2;
+				set->prog = AR_REALLOC(rgxProg_t*, set->prog, set->cap);
+				set->action = AR_REALLOC(lexAction_t, set->action, set->cap);
+		}
+		set->prog[set->count] = prog;
+		set->action[set->count] = *act;
+		set->count++;
+}
+
+static void __exch_set(lexProgSet_t *set, int_t i,int_t j)
+{
+		rgxProg_t		*prog;
+		lexAction_t		act;
+		AR_ASSERT(set != NULL);
+
+		prog = set->prog[i];
+		set->prog[i] = set->prog[j];
+		set->prog[j] = prog;
+
+
+		act = set->action[i];
+		set->action[i] = set->action[j];
+		set->action[j] = act;
+}
+
+void LEX_SortProgSet(lexProgSet_t *set)
+{
+		int_t i,j;
+
+		
+
+		for(i = (int_t)set->count - 1; i > 0; --i)
+		{
+				if(set->action[i].priority > set->action[i-1].priority)
+				{
+						__exch_set(set, i, i - 1);
+				}
+		}
+
+		
+
+		for(i = 1; i < (int_t)set->count; ++i)
+		{
+				for(j = i; j > 0; --j)
+				{
+						if(set->action[j].priority > set->action[j-1].priority)
+						{
+								__exch_set(set, j, j - 1);
+						}else
+						{
+								break;
+						}
+				}
+		}
+
+
+}
+
+
+/**********************************lex**************************************************/
 
 bool_t	LEX_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr)
 {
-		lexResult_t res;
+		rgxResult_t res;
 		AR_ASSERT(name != NULL && AR_wcslen(name) > 0 && expr != NULL);
 		
-		if(LEX_FindFromNameList(lex->name_tbl, name) != NULL)
+		if(RGX_FindFromNameSet(lex->name_tbl, name) != NULL)
 		{
 				/*AR_error( L"Lex Rule Error : Duplicate name defination %ls: %ls\r\n", name, expr);*/
 				AR_printf_ctx(lex->io, L"Lex Rule Error : Duplicate name defination %ls: %ls\r\n", name, expr);
 				return false;
 		}
 
-		res = LEX_CompileExpr(expr, lex->name_tbl);
+		res = RGX_ParseExpr(expr, lex->name_tbl);
 		
 		if(res.node == NULL)
 		{
@@ -82,22 +157,22 @@ bool_t	LEX_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr)
 				AR_printf_ctx(lex->io, L"Lex Rule Error : %ls: %ls\r\n", name, res.err.pos);
 				return false;
 		}
-		return LEX_InsertToNameList(&lex->name_tbl, name, res.node);
+		return RGX_InsertToNameSet(lex->name_tbl, name, res.node);
 }
 
 
 bool_t	LEX_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action)
 {
-		lexResult_t res;
-		lexNode_t	*cat, *final;
+		rgxResult_t res;
+		rgxNode_t	*cat, *final;
+		rgxProg_t	*prog;
 		AR_ASSERT(lex != NULL && rule != NULL && action != NULL);
 		AR_ASSERT(AR_wcslen(rule) > 0);
 
-		res = LEX_CompileExpr(rule, lex->name_tbl);
+		res = RGX_ParseExpr(rule, lex->name_tbl);
 
 		if(res.node == NULL)
 		{
-				
 				/*AR_error(AR_LEX, L"Lex Rule Error : %d : %ls\n", action->type, res.err.pos);*/
 				/*AR_error(L"Lex Rule Error : %" AR_PLAT_INT_FMT L"d : %ls\n", (size_t)action->type, (size_t)res.err.pos);*/
 				
@@ -105,15 +180,27 @@ bool_t	LEX_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action
 				return false;
 		}
 
-		cat = LEX_CreateNode(LEX_CAT);
-		final = LEX_CreateNode(LEX_FINAL);
-		final->action = *action;
+		cat = RGX_CreateNode(RGX_CAT_T);
+		final = RGX_CreateNode(RGX_FINAL_T);
+		final->final_val = (int_t)action->type;
 		
-		LEX_InsertNodeToCat(&cat->cat, res.node);
-		LEX_InsertNodeToCat(&cat->cat, final);
-		LEX_InsertNodeToBranch(&lex->uni_root->branch, cat);
+		cat->left = res.node;
+		cat->right = final;
+		
+		RGX_CorrectTree(cat);
+
+		prog = AR_NEW(rgxProg_t);
+		
+		RGX_InitProg(prog);
+		
+		RGX_Compile(prog, cat);
+		
+		LEX_InserToProgSet(lex->prog_set, prog, action);
+		RGX_DestroyNode(cat);
+
 		return true;
 }
+
 
 
 bool_t	LEX_Insert(lex_t *lex, const wchar_t *input)
@@ -182,83 +269,97 @@ bool_t	LEX_Insert(lex_t *lex, const wchar_t *input)
 }
 
 
-void	LEX_Clear(lex_t *lex)
-{
-		LEX_DestroyNode(lex->uni_root);
-		LEX_DestroyNameList(lex->name_tbl);
-		LEX_UnInitCClass(lex->cclass);
-		LEX_UnInitStateTable(lex->tbl);
-
-
-		LEX_InitStateTable(lex->tbl);
-		LEX_InitCClass(lex->cclass);
-		lex->uni_root = LEX_CreateNode(LEX_BRANCH);
-		lex->name_tbl = NULL;
-		
-}
-
-
 bool_t	LEX_GenerateTransTable(lex_t *lex)
 {
-		lexDFA_t *dfa;
-		lexLeafSet_t *set;
-		AR_ASSERT(lex != NULL);
-		LEX_UnInitStateTable(lex->tbl);
-		LEX_UnInitCClass(lex->cclass);
+		AR_ASSERT(lex != NULL && lex->prog_set != NULL);
 
-		if(lex->uni_root->branch.count == 0)return false;
-
-		LEX_CalcCClass(lex->cclass, lex->uni_root);
-
-		set = LEX_BuildLeafSet(lex->uni_root, lex->cclass);
-		dfa = LEX_BuildDFA(lex->cclass, set);
-		LEX_BuildStateTable(lex->tbl, dfa, lex->cclass);
-		
-		LEX_DestroyLeafSet(set);
-		LEX_DestroyDFA_ALL(dfa);
-		
-		return true;
-}
-
-/*********************************lexMatch_t***************************/
-void LEX_ResetInput(lexMatch_t *pmatch, const wchar_t *input)
-{
-		AR_ASSERT(pmatch != NULL && input != NULL);
-		LEX_UnInitMatch(pmatch);
-		LEX_InitMatch(pmatch, input);
-}
-
-void LEX_ResetMatch(lexMatch_t *pmatch)
-{
-		AR_ASSERT(pmatch != NULL && pmatch->input != NULL);
-		
-		pmatch->is_ok = true;
-		pmatch->col = pmatch->line = 0;
-		pmatch->next = pmatch->input;
+		LEX_SortProgSet(lex->prog_set);
+		return lex->prog_set->count > 0;
 }
 
 
-void LEX_InitMatch(lexMatch_t *pmatch, const wchar_t *input)
+bool_t LEX_Match(lex_t *lex, lexMatch_t *match, lexToken_t *tok)
 {
-		AR_ASSERT(pmatch != NULL && input != NULL);
-
-		AR_memset(pmatch, 0, sizeof(*pmatch));
-		pmatch->input = AR_NEWARR0(wchar_t, AR_wcslen(input) + 1);
-		AR_wcscpy(pmatch->input, input);
-		pmatch->next = pmatch->input;
-		pmatch->is_ok = true;
-
-}
-
-
-void LEX_UnInitMatch(lexMatch_t *pmatch)
-{
-		if(pmatch != NULL)
+		size_t i;
+		AR_ASSERT(lex != NULL && match != NULL && tok != NULL);
+REMATCH:
+		for(i = 0; i < lex->prog_set->count; ++i)
 		{
-				if(pmatch->input)AR_DEL(pmatch->input);
-				AR_memset(pmatch, 0, sizeof(*pmatch));
+				/*
+				arString_t *str = AR_CreateString();
+				RGX_PringProg(lex->prog_set->prog[i],str);
+				AR_printf(L"%ls\r\n", AR_GetStrString(str));
+				AR_DestroyString(str);
+				*/
+
+				if(RGX_Match(lex->prog_set->prog[i], match, tok, &lex->prog_set->curr, &lex->prog_set->next))
+				{
+						if(lex->prog_set->action[i].is_skip)
+						{
+								goto REMATCH;
+						}else
+						{
+								return true;
+						}
+				}
 		}
+
+		match->is_ok = false;
+		return false;
 }
+
+lex_t*	LEX_Create(void *io)
+{
+		lex_t *res;
+		
+		res = AR_NEW0(lex_t);
+		
+		
+		res->prog_set = LEX_CreateProgSet();
+		res->name_tbl = AR_NEW(rgxNameSet_t);
+		RGX_InitNameSet(res->name_tbl);
+		
+		res->io = io == NULL ? AR_global_ioctx() : io;
+
+		return res;
+}
+
+
+
+void	LEX_Clear(lex_t *lex)
+{
+		
+		RGX_ClearNameSet(lex->name_tbl);
+		LEX_ClearProgSet(lex->prog_set);
+}
+
+
+
+
+
+void	LEX_Destroy(lex_t *lex)
+{
+		AR_ASSERT(lex != NULL);
+
+		LEX_DestroyProgSet(lex->prog_set);
+		RGX_UnInitNameSet(lex->name_tbl);
+
+		AR_DEL(lex->name_tbl);
+		AR_DEL(lex);
+}
+
+
+
+/**********************************************************************************************************/
+
+#if(0)
+
+
+
+
+
+
+
 
 
 
@@ -342,10 +443,9 @@ RE_MATCH_POINT:
 }
 
 
-const wchar_t* LEX_GetNextInput(const lexMatch_t *match)
-{
-		return match->next;
-}
+#endif
+
+
 
 
 

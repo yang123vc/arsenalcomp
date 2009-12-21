@@ -95,9 +95,9 @@ void AR_Test()
 
 		//trans_char_test();
 
-		//parser_test();
+		parser_test();
 
-		rgx_test();
+		//rgx_test();
 
 
 #else
