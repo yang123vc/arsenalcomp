@@ -8,13 +8,8 @@
 <h3>Command Lines</h3>
 Creating temporary file "Z:\Temp\RSP36.tmp" with contents
 [
-/nologo /MD /W4 /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_UNICODE" /D "_USRDLL" /D "ARSENAL_EXPORTS" /D "AR_EXPORTS" /D "AR_SHARED_LIB" /Fp"..\..\Temp\x86\DLLRelease\ArsenalDll.pch" /YX /Fo"..\..\Temp\x86\DLLRelease\\" /Fd"..\..\Temp\x86\DLLRelease\\" /FD /c 
-"D:\User\Desktop\Arsenal\Arsenal\Lex\dfa.c"
-"D:\User\Desktop\Arsenal\Arsenal\Lex\expr.c"
-"D:\User\Desktop\Arsenal\Arsenal\Lex\lex.c"
-"D:\User\Desktop\Arsenal\Arsenal\Lex\lex_config.c"
-"D:\User\Desktop\Arsenal\Arsenal\Lex\node.c"
-"D:\User\Desktop\Arsenal\Arsenal\Arsenal.c"
+/nologo /MD /W4 /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_UNICODE" /D "_USRDLL" /D "ARSENAL_EXPORTS" /D "AR_EXPORTS" /D "AR_SHARED_LIB" /FR"..\..\Temp\x86\DLLRelease\\" /Fp"..\..\Temp\x86\DLLRelease\ArsenalDll.pch" /YX /Fo"..\..\Temp\x86\DLLRelease\\" /Fd"..\..\Temp\x86\DLLRelease\\" /FD /c 
+"D:\User\Desktop\Arsenal\Arsenal\Common\algo.c"
 "D:\User\Desktop\Arsenal\Arsenal\Common\common.c"
 "D:\User\Desktop\Arsenal\Arsenal\Common\crtstr.c"
 "D:\User\Desktop\Arsenal\Arsenal\Common\memory.c"
@@ -23,25 +18,29 @@ Creating temporary file "Z:\Temp\RSP36.tmp" with contents
 "D:\User\Desktop\Arsenal\Arsenal\Common\string.c"
 "D:\User\Desktop\Arsenal\Arsenal\Common\strtable.c"
 "D:\User\Desktop\Arsenal\Arsenal\Common\thread.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\lex.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\match.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_compile.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_exec.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_node.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_parser.c"
 "D:\User\Desktop\Arsenal\Arsenal\Parser\grammar.c"
-"D:\User\Desktop\Arsenal\Arsenal\Parser\grammar_config.c"
 "D:\User\Desktop\Arsenal\Arsenal\Parser\lr_action.c"
 "D:\User\Desktop\Arsenal\Arsenal\Parser\lr_dfa.c"
 "D:\User\Desktop\Arsenal\Arsenal\Parser\lr_item.c"
 "D:\User\Desktop\Arsenal\Arsenal\Parser\parser.c"
 "D:\User\Desktop\Arsenal\Arsenal\Parser\parser_in.c"
 "D:\User\Desktop\Arsenal\Arsenal\Parser\symbol.c"
+"D:\User\Desktop\Arsenal\Arsenal\Tools\grammar_config.c"
+"D:\User\Desktop\Arsenal\Arsenal\Ray\ray.c"
+"D:\User\Desktop\Arsenal\Arsenal\Arsenal.c"
 ]
 Creating command line "cl.exe @Z:\Temp\RSP36.tmp" 
 Creating temporary file "Z:\Temp\RSP37.tmp" with contents
 [
-kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /incremental:no /pdb:"..\..\Binary\x86\DLL\Release/ArsenalDll.pdb" /machine:I386 /def:".\export.def" /out:"..\..\Binary\x86\DLL\Release/ArsenalDll.dll" /implib:"..\..\Binary\x86\DLL\Release/ArsenalDll.lib" 
-\User\Desktop\Arsenal\Temp\x86\DLLRelease\dfa.obj
-\User\Desktop\Arsenal\Temp\x86\DLLRelease\expr.obj
-\User\Desktop\Arsenal\Temp\x86\DLLRelease\lex.obj
-\User\Desktop\Arsenal\Temp\x86\DLLRelease\lex_config.obj
-\User\Desktop\Arsenal\Temp\x86\DLLRelease\node.obj
-\User\Desktop\Arsenal\Temp\x86\DLLRelease\Arsenal.obj
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /incremental:no /pdb:"..\..\Binary\x86\DLL\Release/ArsenalDll.pdb" /machine:I386 /out:"..\..\Binary\x86\DLL\Release/ArsenalDll.dll" /implib:"..\..\Binary\x86\DLL\Release/ArsenalDll.lib" 
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\algo.obj
 \User\Desktop\Arsenal\Temp\x86\DLLRelease\common.obj
 \User\Desktop\Arsenal\Temp\x86\DLLRelease\crtstr.obj
 \User\Desktop\Arsenal\Temp\x86\DLLRelease\memory.obj
@@ -50,105 +49,67 @@ kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32
 \User\Desktop\Arsenal\Temp\x86\DLLRelease\string.obj
 \User\Desktop\Arsenal\Temp\x86\DLLRelease\strtable.obj
 \User\Desktop\Arsenal\Temp\x86\DLLRelease\thread.obj
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\lex.obj
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\match.obj
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\rgx_compile.obj
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\rgx_exec.obj
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\rgx_misc.obj
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\rgx_node.obj
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\rgx_parser.obj
 \User\Desktop\Arsenal\Temp\x86\DLLRelease\grammar.obj
-\User\Desktop\Arsenal\Temp\x86\DLLRelease\grammar_config.obj
 \User\Desktop\Arsenal\Temp\x86\DLLRelease\lr_action.obj
 \User\Desktop\Arsenal\Temp\x86\DLLRelease\lr_dfa.obj
 \User\Desktop\Arsenal\Temp\x86\DLLRelease\lr_item.obj
 \User\Desktop\Arsenal\Temp\x86\DLLRelease\parser.obj
 \User\Desktop\Arsenal\Temp\x86\DLLRelease\parser_in.obj
 \User\Desktop\Arsenal\Temp\x86\DLLRelease\symbol.obj
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\grammar_config.obj
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\ray.obj
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\Arsenal.obj
 ]
 Creating command line "link.exe @Z:\Temp\RSP37.tmp"
 <h3>Output Window</h3>
 Compiling...
-dfa.c
-D:\User\Desktop\Arsenal\Arsenal\Lex\node.h(133) : warning C4201: nonstandard extension used : nameless struct/union
-D:\User\Desktop\Arsenal\Arsenal\Lex\dfa.c(371) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
-        D:\User\Desktop\Arsenal\Arsenal\Lex\../Common/common.h(346) : see declaration of 'AR_BIT_MARK'
-D:\User\Desktop\Arsenal\Arsenal\Lex\dfa.c(371) : warning C4505: 'LEX_GetNextState' : unreferenced local function has been removed
-        D:\User\Desktop\Arsenal\Arsenal\Lex\dfa.h(92) : see declaration of 'LEX_GetNextState'
-expr.c
-D:\User\Desktop\Arsenal\Arsenal\Lex\node.h(133) : warning C4201: nonstandard extension used : nameless struct/union
-D:\User\Desktop\Arsenal\Arsenal\Lex\expr.c(617) : warning C4244: '=' : conversion from 'const int ' to '__int8 ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Lex\expr.c(955) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
-        D:\User\Desktop\Arsenal\Arsenal\Lex\../Common/common.h(346) : see declaration of 'AR_BIT_MARK'
-lex.c
-D:\User\Desktop\Arsenal\Arsenal\Lex\node.h(133) : warning C4201: nonstandard extension used : nameless struct/union
-D:\User\Desktop\Arsenal\Arsenal\Lex\lex.c(346) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
-        D:\User\Desktop\Arsenal\Arsenal\Lex\../Common/common.h(346) : see declaration of 'AR_BIT_MARK'
-lex_config.c
-D:\User\Desktop\Arsenal\Arsenal\Lex\lex_config.c(302) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
-        D:\User\Desktop\Arsenal\Arsenal\Lex\../Common/common.h(346) : see declaration of 'AR_BIT_MARK'
-node.c
-D:\User\Desktop\Arsenal\Arsenal\Lex\node.h(133) : warning C4201: nonstandard extension used : nameless struct/union
-D:\User\Desktop\Arsenal\Arsenal\Lex\node.c(197) : warning C4244: 'function' : conversion from 'int ' to 'unsigned short ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Lex\node.c(208) : warning C4244: '=' : conversion from 'int ' to 'unsigned short ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Lex\node.c(218) : warning C4244: 'function' : conversion from 'int ' to 'unsigned short ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Lex\node.c(238) : warning C4244: 'function' : conversion from 'int ' to 'unsigned short ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Lex\node.c(250) : warning C4244: '=' : conversion from 'int ' to 'unsigned short ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Lex\node.c(262) : warning C4244: '=' : conversion from 'int ' to 'unsigned short ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Lex\node.c(290) : warning C4244: '=' : conversion from 'int ' to 'unsigned short ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Lex\node.c(304) : warning C4244: 'function' : conversion from 'int ' to 'unsigned short ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Lex\node.c(314) : warning C4244: '=' : conversion from 'int ' to 'unsigned short ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Lex\node.c(324) : warning C4244: 'function' : conversion from 'int ' to 'unsigned short ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Lex\node.c(346) : warning C4244: 'function' : conversion from 'int ' to 'unsigned short ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Lex\node.c(358) : warning C4244: '=' : conversion from 'int ' to 'unsigned short ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Lex\node.c(419) : warning C4244: '=' : conversion from 'int ' to 'unsigned short ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Lex\node.c(423) : warning C4244: '=' : conversion from 'int ' to 'unsigned short ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Lex\node.c(1007) : warning C4244: '=' : conversion from 'const int ' to '__int8 ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Lex\node.c(1096) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
-        D:\User\Desktop\Arsenal\Arsenal\Lex\../Common/common.h(346) : see declaration of 'AR_BIT_MARK'
-Arsenal.c
-D:\User\Desktop\Arsenal\Arsenal\Lex\node.c(197) : warning C4761: integral size mismatch in argument; conversion supplied
-D:\User\Desktop\Arsenal\Arsenal\Lex\node.c(218) : warning C4761: integral size mismatch in argument; conversion supplied
-D:\User\Desktop\Arsenal\Arsenal\Lex\node.c(238) : warning C4761: integral size mismatch in argument; conversion supplied
-D:\User\Desktop\Arsenal\Arsenal\Lex\node.c(304) : warning C4761: integral size mismatch in argument; conversion supplied
-D:\User\Desktop\Arsenal\Arsenal\Lex\node.c(324) : warning C4761: integral size mismatch in argument; conversion supplied
-D:\User\Desktop\Arsenal\Arsenal\Lex\node.c(346) : warning C4761: integral size mismatch in argument; conversion supplied
-D:\User\Desktop\Arsenal\Arsenal\Arsenal.c(52) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
-        D:\User\Desktop\Arsenal\Arsenal\./Common/common.h(346) : see declaration of 'AR_BIT_MARK'
+algo.c
+D:\User\Desktop\Arsenal\Arsenal\Common\algo.c(260) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Common\common.h(372) : see declaration of 'AR_BIT_MARK'
 common.c
-D:\User\Desktop\Arsenal\Arsenal\Common\common.c(159) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
-        D:\User\Desktop\Arsenal\Arsenal\Common\common.h(346) : see declaration of 'AR_BIT_MARK'
+D:\User\Desktop\Arsenal\Arsenal\Common\common.c(242) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Common\common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Common\common.c(242) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Common\common.h(372) : see declaration of 'AR_BIT_MARK'
 crtstr.c
-D:\User\Desktop\Arsenal\Arsenal\Common\crtstr.c(1065) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
-        D:\User\Desktop\Arsenal\Arsenal\Common\common.h(346) : see declaration of 'AR_BIT_MARK'
+D:\User\Desktop\Arsenal\Arsenal\Common\crtstr.c(1086) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Common\common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Common\crtstr.c(1086) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Common\common.h(372) : see declaration of 'AR_BIT_MARK'
 memory.c
-D:\User\Desktop\Arsenal\Arsenal\Common\memory.c(82) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
-        D:\User\Desktop\Arsenal\Arsenal\Common\common.h(346) : see declaration of 'AR_BIT_MARK'
+D:\User\Desktop\Arsenal\Arsenal\Common\memory.c(134) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Common\common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Common\memory.c(134) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Common\common.h(372) : see declaration of 'AR_BIT_MARK'
 random.c
+D:\User\Desktop\Arsenal\Arsenal\Common\random.c(61) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Common\common.h(112) : see declaration of 'AR_GET_ELEM'
 D:\User\Desktop\Arsenal\Arsenal\Common\random.c(61) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
-        D:\User\Desktop\Arsenal\Arsenal\Common\common.h(346) : see declaration of 'AR_BIT_MARK'
+        D:\User\Desktop\Arsenal\Arsenal\Common\common.h(372) : see declaration of 'AR_BIT_MARK'
 strconv.c
-D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c(98) : warning C4244: '=' : conversion from 'unsigned int ' to 'unsigned __int8 ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c(99) : warning C4244: '=' : conversion from 'unsigned int ' to 'unsigned __int8 ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c(104) : warning C4244: '=' : conversion from 'unsigned int ' to 'unsigned __int8 ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c(105) : warning C4244: '=' : conversion from 'unsigned int ' to 'unsigned __int8 ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c(106) : warning C4244: '=' : conversion from 'unsigned int ' to 'unsigned __int8 ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c(111) : warning C4244: '=' : conversion from 'unsigned int ' to 'unsigned __int8 ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c(112) : warning C4244: '=' : conversion from 'unsigned int ' to 'unsigned __int8 ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c(113) : warning C4244: '=' : conversion from 'unsigned int ' to 'unsigned __int8 ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c(114) : warning C4244: '=' : conversion from 'unsigned int ' to 'unsigned __int8 ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c(119) : warning C4244: '=' : conversion from 'unsigned int ' to 'unsigned __int8 ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c(120) : warning C4244: '=' : conversion from 'unsigned int ' to 'unsigned __int8 ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c(121) : warning C4244: '=' : conversion from 'unsigned int ' to 'unsigned __int8 ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c(122) : warning C4244: '=' : conversion from 'unsigned int ' to 'unsigned __int8 ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c(123) : warning C4244: '=' : conversion from 'unsigned int ' to 'unsigned __int8 ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c(128) : warning C4244: '=' : conversion from 'unsigned int ' to 'unsigned __int8 ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c(129) : warning C4244: '=' : conversion from 'unsigned int ' to 'unsigned __int8 ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c(130) : warning C4244: '=' : conversion from 'unsigned int ' to 'unsigned __int8 ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c(131) : warning C4244: '=' : conversion from 'unsigned int ' to 'unsigned __int8 ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c(132) : warning C4244: '=' : conversion from 'unsigned int ' to 'unsigned __int8 ', possible loss of data
-D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c(133) : warning C4244: '=' : conversion from 'unsigned int ' to 'unsigned __int8 ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c(98) : warning C4244: '=' : conversion from 'int ' to 'unsigned __int8 ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c(99) : warning C4244: '=' : conversion from 'int ' to 'unsigned __int8 ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c(232) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Common\common.h(112) : see declaration of 'AR_GET_ELEM'
 D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c(232) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
-        D:\User\Desktop\Arsenal\Arsenal\Common\common.h(346) : see declaration of 'AR_BIT_MARK'
+        D:\User\Desktop\Arsenal\Arsenal\Common\common.h(372) : see declaration of 'AR_BIT_MARK'
 string.c
+D:\User\Desktop\Arsenal\Arsenal\Common\string.c(166) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Common\common.h(112) : see declaration of 'AR_GET_ELEM'
 D:\User\Desktop\Arsenal\Arsenal\Common\string.c(166) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
-        D:\User\Desktop\Arsenal\Arsenal\Common\common.h(346) : see declaration of 'AR_BIT_MARK'
+        D:\User\Desktop\Arsenal\Arsenal\Common\common.h(372) : see declaration of 'AR_BIT_MARK'
 strtable.c
+D:\User\Desktop\Arsenal\Arsenal\Common\strtable.c(182) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Common\common.h(112) : see declaration of 'AR_GET_ELEM'
 D:\User\Desktop\Arsenal\Arsenal\Common\strtable.c(182) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
-        D:\User\Desktop\Arsenal\Arsenal\Common\common.h(346) : see declaration of 'AR_BIT_MARK'
+        D:\User\Desktop\Arsenal\Arsenal\Common\common.h(372) : see declaration of 'AR_BIT_MARK'
 thread.c
 D:\User\Desktop\Arsenal\Arsenal\Common\thread_win.h(68) : warning C4090: 'function' : different 'volatile' qualifiers
 D:\User\Desktop\Arsenal\Arsenal\Common\thread_win.h(68) : warning C4024: 'InterlockedIncrement' : different types for formal and actual parameter 1
@@ -160,41 +121,795 @@ D:\User\Desktop\Arsenal\Arsenal\Common\thread_win.h(102) : warning C4022: 'Inter
 D:\User\Desktop\Arsenal\Arsenal\Common\thread_win.h(118) : warning C4090: 'function' : different 'volatile' qualifiers
 D:\User\Desktop\Arsenal\Arsenal\Common\thread_win.h(118) : warning C4022: 'InterlockedCompareExchange' : pointer mismatch for actual parameter 1
 D:\User\Desktop\Arsenal\Arsenal\Common\thread_win.h(118) : warning C4022: 'InterlockedCompareExchange' : pointer mismatch for actual parameter 3
+D:\User\Desktop\Arsenal\Arsenal\Common\thread.c(29) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Common\common.h(112) : see declaration of 'AR_GET_ELEM'
 D:\User\Desktop\Arsenal\Arsenal\Common\thread.c(29) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
-        D:\User\Desktop\Arsenal\Arsenal\Common\common.h(346) : see declaration of 'AR_BIT_MARK'
+        D:\User\Desktop\Arsenal\Arsenal\Common\common.h(372) : see declaration of 'AR_BIT_MARK'
+lex.c
+D:\User\Desktop\Arsenal\Arsenal\Lex\lex.c(356) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Lex\../Common/common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Lex\lex.c(356) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Lex\../Common/common.h(372) : see declaration of 'AR_BIT_MARK'
+match.c
+D:\User\Desktop\Arsenal\Arsenal\Lex\match.c(75) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Lex\../Common/common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Lex\match.c(75) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Lex\../Common/common.h(372) : see declaration of 'AR_BIT_MARK'
+rgx_compile.c
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_compile.c(606) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Lex\../Common/common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_compile.c(606) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Lex\../Common/common.h(372) : see declaration of 'AR_BIT_MARK'
+rgx_exec.c
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_compile.c(79) : warning C4702: unreachable code
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_exec.c(388) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Lex\../Common/common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_exec.c(388) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Lex\../Common/common.h(372) : see declaration of 'AR_BIT_MARK'
+rgx_misc.c
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(203) : warning C4244: 'function' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(214) : warning C4244: '=' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(224) : warning C4244: 'function' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(244) : warning C4244: 'function' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(256) : warning C4244: '=' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(268) : warning C4244: '=' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(296) : warning C4244: '=' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(310) : warning C4244: 'function' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(320) : warning C4244: '=' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(330) : warning C4244: 'function' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(352) : warning C4244: 'function' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(364) : warning C4244: '=' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(423) : warning C4244: '=' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(427) : warning C4244: '=' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(508) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Lex\../Common/common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(508) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Lex\../Common/common.h(372) : see declaration of 'AR_BIT_MARK'
+rgx_node.c
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(203) : warning C4761: integral size mismatch in argument; conversion supplied
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(224) : warning C4761: integral size mismatch in argument; conversion supplied
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(244) : warning C4761: integral size mismatch in argument; conversion supplied
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(310) : warning C4761: integral size mismatch in argument; conversion supplied
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(330) : warning C4761: integral size mismatch in argument; conversion supplied
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(352) : warning C4761: integral size mismatch in argument; conversion supplied
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_node.c(472) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Lex\../Common/common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_node.c(472) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Lex\../Common/common.h(372) : see declaration of 'AR_BIT_MARK'
+rgx_parser.c
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_node.c(78) : warning C4702: unreachable code
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_parser.c(393) : warning C4244: '=' : conversion from 'const int ' to '__int8 ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_parser.c(811) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Lex\../Common/common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_parser.c(811) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Lex\../Common/common.h(372) : see declaration of 'AR_BIT_MARK'
 grammar.c
-D:\User\Desktop\Arsenal\Arsenal\Parser\grammar.c(1169) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
-        D:\User\Desktop\Arsenal\Arsenal\Parser\../Common/common.h(346) : see declaration of 'AR_BIT_MARK'
-grammar_config.c
-D:\User\Desktop\Arsenal\Arsenal\Parser\grammar_config.c(255) : warning C4201: nonstandard extension used : nameless struct/union
-D:\User\Desktop\Arsenal\Arsenal\Parser\grammar_config.c(1134) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
-        D:\User\Desktop\Arsenal\Arsenal\Parser\../Common/common.h(346) : see declaration of 'AR_BIT_MARK'
+D:\User\Desktop\Arsenal\Arsenal\Parser\grammar.c(1187) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Parser\../Common/common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Parser\grammar.c(1187) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Parser\../Common/common.h(372) : see declaration of 'AR_BIT_MARK'
 lr_action.c
-D:\User\Desktop\Arsenal\Arsenal\Parser\lr_action.c(907) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
-        D:\User\Desktop\Arsenal\Arsenal\Parser\../Common/common.h(346) : see declaration of 'AR_BIT_MARK'
+D:\User\Desktop\Arsenal\Arsenal\Parser\lr_action.c(915) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Parser\../Common/common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Parser\lr_action.c(915) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Parser\../Common/common.h(372) : see declaration of 'AR_BIT_MARK'
 lr_dfa.c
+D:\User\Desktop\Arsenal\Arsenal\Parser\lr_dfa.c(823) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Parser\../Common/common.h(112) : see declaration of 'AR_GET_ELEM'
 D:\User\Desktop\Arsenal\Arsenal\Parser\lr_dfa.c(823) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
-        D:\User\Desktop\Arsenal\Arsenal\Parser\../Common/common.h(346) : see declaration of 'AR_BIT_MARK'
+        D:\User\Desktop\Arsenal\Arsenal\Parser\../Common/common.h(372) : see declaration of 'AR_BIT_MARK'
 lr_item.c
-D:\User\Desktop\Arsenal\Arsenal\Parser\lr_item.c(485) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
-        D:\User\Desktop\Arsenal\Arsenal\Parser\../Common/common.h(346) : see declaration of 'AR_BIT_MARK'
+D:\User\Desktop\Arsenal\Arsenal\Parser\lr_item.c(498) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Parser\../Common/common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Parser\lr_item.c(498) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Parser\../Common/common.h(372) : see declaration of 'AR_BIT_MARK'
 parser.c
-D:\User\Desktop\Arsenal\Arsenal\Parser\parser.c(418) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
-        D:\User\Desktop\Arsenal\Arsenal\Parser\../Common/common.h(346) : see declaration of 'AR_BIT_MARK'
+D:\User\Desktop\Arsenal\Arsenal\Parser\parser.c(499) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Parser\../Common/common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Parser\parser.c(499) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Parser\../Common/common.h(372) : see declaration of 'AR_BIT_MARK'
 parser_in.c
+D:\User\Desktop\Arsenal\Arsenal\Parser\parser_in.c(119) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Parser\../Common/common.h(112) : see declaration of 'AR_GET_ELEM'
 D:\User\Desktop\Arsenal\Arsenal\Parser\parser_in.c(119) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
-        D:\User\Desktop\Arsenal\Arsenal\Parser\../Common/common.h(346) : see declaration of 'AR_BIT_MARK'
+        D:\User\Desktop\Arsenal\Arsenal\Parser\../Common/common.h(372) : see declaration of 'AR_BIT_MARK'
 symbol.c
-D:\User\Desktop\Arsenal\Arsenal\Parser\symbol.c(343) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
-        D:\User\Desktop\Arsenal\Arsenal\Parser\../Common/common.h(346) : see declaration of 'AR_BIT_MARK'
+D:\User\Desktop\Arsenal\Arsenal\Parser\symbol.c(355) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Parser\../Common/common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Parser\symbol.c(355) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Parser\../Common/common.h(372) : see declaration of 'AR_BIT_MARK'
+grammar_config.c
+D:\User\Desktop\Arsenal\Arsenal\Tools\grammar_config.c(1364) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Tools\../Parser/../Common/common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Tools\grammar_config.c(1364) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Tools\../Parser/../Common/common.h(372) : see declaration of 'AR_BIT_MARK'
+ray.c
+D:\User\Desktop\Arsenal\Arsenal\Ray\ray.c(29) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Ray\../Common/common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Ray\ray.c(29) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\Ray\../Common/common.h(372) : see declaration of 'AR_BIT_MARK'
+Arsenal.c
+D:\User\Desktop\Arsenal\Arsenal\Arsenal.c(54) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\./Common/common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Arsenal.c(54) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        D:\User\Desktop\Arsenal\Arsenal\./Common/common.h(372) : see declaration of 'AR_BIT_MARK'
 Linking...
-   Creating library ..\..\Binary\x86\DLL\Release/ArsenalDll.lib and object ..\..\Binary\x86\DLL\Release/ArsenalDll.exp
-ArsenalDll.exp : warning LNK4070: /OUT:Arsenal.dll directive in .EXP differs from output filename "..\..\Binary\x86\DLL\Release/ArsenalDll.dll"; ignoring directive
+Creating temporary file "Z:\Temp\RSP39.tmp" with contents
+[
+/nologo /o"..\..\Binary\x86\DLL\Release/ArsenalDll.bsc" 
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\algo.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\common.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\crtstr.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\memory.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\random.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\strconv.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\string.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\strtable.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\thread.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\lex.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\match.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\rgx_compile.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\rgx_exec.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\rgx_misc.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\rgx_node.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\rgx_parser.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\grammar.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\lr_action.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\lr_dfa.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\lr_item.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\parser.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\parser_in.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\symbol.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\grammar_config.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\ray.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLRelease\Arsenal.sbr]
+Creating command line "bscmake.exe @Z:\Temp\RSP39.tmp"
+Creating browse info file...
+<h3>Output Window</h3>
 
 
 
 <h3>Results</h3>
-ArsenalDll.dll - 0 error(s), 81 warning(s)
+ArsenalDll.dll - 0 error(s), 86 warning(s)
+<h3>
+--------------------Configuration: ArsenalDll - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "Z:\Temp\RSP3A.tmp" with contents
+[
+/nologo /MDd /W4 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_UNICODE" /D "_USRDLL" /D "ARSENAL_EXPORTS" /D "AR_EXPORTS" /D "AR_SHARED_LIB" /FR"..\..\Temp\x86\DLLDebug\\" /Fp"..\..\Temp\x86\DLLDebug\ArsenalDll.pch" /YX /Fo"..\..\Temp\x86\DLLDebug\\" /Fd"..\..\Temp\x86\DLLDebug\\" /FD /GZ /c 
+"D:\User\Desktop\Arsenal\Arsenal\Common\algo.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\common.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\crtstr.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\memory.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\random.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\string.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\strtable.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\thread.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\lex.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\match.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_compile.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_exec.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_node.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_parser.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\grammar.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\lr_action.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\lr_dfa.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\lr_item.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\parser.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\parser_in.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\symbol.c"
+"D:\User\Desktop\Arsenal\Arsenal\Tools\grammar_config.c"
+"D:\User\Desktop\Arsenal\Arsenal\Ray\ray.c"
+"D:\User\Desktop\Arsenal\Arsenal\Arsenal.c"
+]
+Creating command line "cl.exe @Z:\Temp\RSP3A.tmp" 
+Creating temporary file "Z:\Temp\RSP3B.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /incremental:yes /pdb:"..\..\Binary\x86\DLL\Debug\ArsenalDll.pdb" /debug /machine:I386 /out:"..\..\Binary\x86\DLL\Debug\ArsenalDll.dll" /implib:"..\..\Binary\x86\DLL\Debug\ArsenalDll.lib" /pdbtype:sept 
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\algo.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\common.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\crtstr.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\memory.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\random.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\strconv.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\string.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\strtable.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\thread.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\lex.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\match.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\rgx_compile.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\rgx_exec.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\rgx_misc.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\rgx_node.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\rgx_parser.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\grammar.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\lr_action.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\lr_dfa.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\lr_item.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\parser.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\parser_in.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\symbol.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\grammar_config.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\ray.obj
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\Arsenal.obj
+]
+Creating command line "link.exe @Z:\Temp\RSP3B.tmp"
+<h3>Output Window</h3>
+Compiling...
+algo.c
+d:\user\desktop\arsenal\arsenal\common\algo.c(260) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+common.c
+D:\User\Desktop\Arsenal\Arsenal\Common\common.c(242) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Common\common.c(242) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+crtstr.c
+D:\User\Desktop\Arsenal\Arsenal\Common\crtstr.c(1086) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Common\crtstr.c(1086) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+memory.c
+D:\User\Desktop\Arsenal\Arsenal\Common\memory.c(134) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Common\memory.c(134) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+random.c
+D:\User\Desktop\Arsenal\Arsenal\Common\random.c(61) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Common\random.c(61) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+strconv.c
+D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c(98) : warning C4244: '=' : conversion from 'int ' to 'unsigned __int8 ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c(99) : warning C4244: '=' : conversion from 'int ' to 'unsigned __int8 ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c(232) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c(232) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+string.c
+D:\User\Desktop\Arsenal\Arsenal\Common\string.c(166) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Common\string.c(166) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+strtable.c
+D:\User\Desktop\Arsenal\Arsenal\Common\strtable.c(182) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Common\strtable.c(182) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+thread.c
+d:\user\desktop\arsenal\arsenal\common\thread_win.h(68) : warning C4090: 'function' : different 'volatile' qualifiers
+d:\user\desktop\arsenal\arsenal\common\thread_win.h(68) : warning C4024: 'InterlockedIncrement' : different types for formal and actual parameter 1
+d:\user\desktop\arsenal\arsenal\common\thread_win.h(73) : warning C4090: 'function' : different 'volatile' qualifiers
+d:\user\desktop\arsenal\arsenal\common\thread_win.h(73) : warning C4024: 'InterlockedDecrement' : different types for formal and actual parameter 1
+d:\user\desktop\arsenal\arsenal\common\thread_win.h(102) : warning C4090: 'function' : different 'volatile' qualifiers
+d:\user\desktop\arsenal\arsenal\common\thread_win.h(102) : warning C4022: 'InterlockedCompareExchange' : pointer mismatch for actual parameter 1
+d:\user\desktop\arsenal\arsenal\common\thread_win.h(102) : warning C4022: 'InterlockedCompareExchange' : pointer mismatch for actual parameter 2
+d:\user\desktop\arsenal\arsenal\common\thread_win.h(118) : warning C4090: 'function' : different 'volatile' qualifiers
+d:\user\desktop\arsenal\arsenal\common\thread_win.h(118) : warning C4022: 'InterlockedCompareExchange' : pointer mismatch for actual parameter 1
+d:\user\desktop\arsenal\arsenal\common\thread_win.h(118) : warning C4022: 'InterlockedCompareExchange' : pointer mismatch for actual parameter 3
+D:\User\Desktop\Arsenal\Arsenal\Common\thread.c(29) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Common\thread.c(29) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+lex.c
+d:\user\desktop\arsenal\arsenal\lex\lex.c(356) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+d:\user\desktop\arsenal\arsenal\lex\lex.c(356) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+match.c
+d:\user\desktop\arsenal\arsenal\lex\match.c(75) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+d:\user\desktop\arsenal\arsenal\lex\match.c(75) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+rgx_compile.c
+d:\user\desktop\arsenal\arsenal\lex\rgx_compile.c(606) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+d:\user\desktop\arsenal\arsenal\lex\rgx_compile.c(606) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+rgx_exec.c
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_exec.c(388) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_exec.c(388) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+rgx_misc.c
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(203) : warning C4244: 'function' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(214) : warning C4244: '=' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(224) : warning C4244: 'function' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(244) : warning C4244: 'function' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(256) : warning C4244: '=' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(268) : warning C4244: '=' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(296) : warning C4244: '=' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(310) : warning C4244: 'function' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(320) : warning C4244: '=' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(330) : warning C4244: 'function' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(352) : warning C4244: 'function' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(364) : warning C4244: '=' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(423) : warning C4244: '=' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(427) : warning C4244: '=' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(508) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(508) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+rgx_node.c
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(203) : warning C4761: integral size mismatch in argument; conversion supplied
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(224) : warning C4761: integral size mismatch in argument; conversion supplied
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(244) : warning C4761: integral size mismatch in argument; conversion supplied
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(310) : warning C4761: integral size mismatch in argument; conversion supplied
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(330) : warning C4761: integral size mismatch in argument; conversion supplied
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(352) : warning C4761: integral size mismatch in argument; conversion supplied
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_node.c(472) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_node.c(472) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+rgx_parser.c
+d:\user\desktop\arsenal\arsenal\lex\rgx_parser.c(393) : warning C4244: '=' : conversion from 'const int ' to '__int8 ', possible loss of data
+d:\user\desktop\arsenal\arsenal\lex\rgx_parser.c(811) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+d:\user\desktop\arsenal\arsenal\lex\rgx_parser.c(811) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+grammar.c
+d:\user\desktop\arsenal\arsenal\parser\grammar.c(1187) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+d:\user\desktop\arsenal\arsenal\parser\grammar.c(1187) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+lr_action.c
+d:\user\desktop\arsenal\arsenal\parser\lr_action.c(915) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+d:\user\desktop\arsenal\arsenal\parser\lr_action.c(915) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+lr_dfa.c
+d:\user\desktop\arsenal\arsenal\parser\lr_dfa.c(823) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+d:\user\desktop\arsenal\arsenal\parser\lr_dfa.c(823) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+lr_item.c
+d:\user\desktop\arsenal\arsenal\parser\lr_item.c(498) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+d:\user\desktop\arsenal\arsenal\parser\lr_item.c(498) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+parser.c
+d:\user\desktop\arsenal\arsenal\parser\parser.c(499) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+d:\user\desktop\arsenal\arsenal\parser\parser.c(499) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+parser_in.c
+d:\user\desktop\arsenal\arsenal\parser\parser_in.c(119) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+d:\user\desktop\arsenal\arsenal\parser\parser_in.c(119) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+symbol.c
+D:\User\Desktop\Arsenal\Arsenal\Parser\symbol.c(355) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Parser\symbol.c(355) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+grammar_config.c
+d:\user\desktop\arsenal\arsenal\tools\grammar_config.c(1364) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+d:\user\desktop\arsenal\arsenal\tools\grammar_config.c(1364) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+ray.c
+d:\user\desktop\arsenal\arsenal\ray\ray.c(29) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+d:\user\desktop\arsenal\arsenal\ray\ray.c(29) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+Arsenal.c
+d:\user\desktop\arsenal\arsenal\arsenal.c(54) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+d:\user\desktop\arsenal\arsenal\arsenal.c(54) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+Linking...
+Creating temporary file "Z:\Temp\RSP3D.tmp" with contents
+[
+/nologo /o"..\..\Binary\x86\DLL\Debug\ArsenalDll.bsc" 
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\algo.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\common.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\crtstr.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\memory.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\random.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\strconv.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\string.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\strtable.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\thread.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\lex.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\match.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\rgx_compile.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\rgx_exec.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\rgx_misc.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\rgx_node.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\rgx_parser.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\grammar.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\lr_action.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\lr_dfa.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\lr_item.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\parser.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\parser_in.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\symbol.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\grammar_config.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\ray.sbr
+\User\Desktop\Arsenal\Temp\x86\DLLDebug\Arsenal.sbr]
+Creating command line "bscmake.exe @Z:\Temp\RSP3D.tmp"
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+ArsenalDll.dll - 0 error(s), 84 warning(s)
+<h3>
+--------------------Configuration: ArsenalLib - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "Z:\Temp\RSP3E.tmp" with contents
+[
+/nologo /ML /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_UNICODE" /D "_LIB" /FR"..\..\Temp\x86\LIBRelease\\" /Fp"..\..\Temp\x86\LIBRelease\ArsenalLib.pch" /YX /Fo"..\..\Temp\x86\LIBRelease\\" /Fd"..\..\Temp\x86\LIBRelease\\" /FD /c 
+"D:\User\Desktop\Arsenal\Arsenal\Arsenal.c"
+"D:\User\Desktop\Arsenal\Arsenal\Tools\grammar_config.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\grammar.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\lr_action.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\lr_dfa.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\lr_item.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\parser.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\parser_in.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\symbol.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\lex.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\match.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_compile.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_exec.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_node.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_parser.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\algo.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\common.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\crtstr.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\memory.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\random.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\string.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\strtable.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\thread.c"
+]
+Creating command line "cl.exe @Z:\Temp\RSP3E.tmp" 
+Creating temporary file "Z:\Temp\RSP3F.tmp" with contents
+[
+/nologo /out:"..\..\Binary\x86\Lib\Release\ArsenalLib.lib" 
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\Arsenal.obj
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\grammar_config.obj
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\grammar.obj
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\lr_action.obj
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\lr_dfa.obj
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\lr_item.obj
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\parser.obj
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\parser_in.obj
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\symbol.obj
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\lex.obj
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\match.obj
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\rgx_compile.obj
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\rgx_exec.obj
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\rgx_misc.obj
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\rgx_node.obj
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\rgx_parser.obj
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\algo.obj
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\common.obj
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\crtstr.obj
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\memory.obj
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\random.obj
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\strconv.obj
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\string.obj
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\strtable.obj
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\thread.obj
+]
+Creating command line "link.exe -lib @Z:\Temp\RSP3F.tmp"
+<h3>Output Window</h3>
+Compiling...
+Arsenal.c
+grammar_config.c
+grammar.c
+lr_action.c
+lr_dfa.c
+lr_item.c
+parser.c
+parser_in.c
+symbol.c
+lex.c
+match.c
+rgx_compile.c
+rgx_exec.c
+rgx_misc.c
+rgx_node.c
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(203) : warning C4761: integral size mismatch in argument; conversion supplied
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(224) : warning C4761: integral size mismatch in argument; conversion supplied
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(244) : warning C4761: integral size mismatch in argument; conversion supplied
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(310) : warning C4761: integral size mismatch in argument; conversion supplied
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(330) : warning C4761: integral size mismatch in argument; conversion supplied
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(352) : warning C4761: integral size mismatch in argument; conversion supplied
+rgx_parser.c
+algo.c
+common.c
+crtstr.c
+memory.c
+random.c
+strconv.c
+string.c
+strtable.c
+thread.c
+D:\User\Desktop\Arsenal\Arsenal\Common\thread_win.h(68) : warning C4090: 'function' : different 'volatile' qualifiers
+D:\User\Desktop\Arsenal\Arsenal\Common\thread_win.h(68) : warning C4024: 'InterlockedIncrement' : different types for formal and actual parameter 1
+D:\User\Desktop\Arsenal\Arsenal\Common\thread_win.h(73) : warning C4090: 'function' : different 'volatile' qualifiers
+D:\User\Desktop\Arsenal\Arsenal\Common\thread_win.h(73) : warning C4024: 'InterlockedDecrement' : different types for formal and actual parameter 1
+D:\User\Desktop\Arsenal\Arsenal\Common\thread_win.h(102) : warning C4090: 'function' : different 'volatile' qualifiers
+D:\User\Desktop\Arsenal\Arsenal\Common\thread_win.h(102) : warning C4022: 'InterlockedCompareExchange' : pointer mismatch for actual parameter 1
+D:\User\Desktop\Arsenal\Arsenal\Common\thread_win.h(102) : warning C4022: 'InterlockedCompareExchange' : pointer mismatch for actual parameter 2
+D:\User\Desktop\Arsenal\Arsenal\Common\thread_win.h(118) : warning C4090: 'function' : different 'volatile' qualifiers
+D:\User\Desktop\Arsenal\Arsenal\Common\thread_win.h(118) : warning C4022: 'InterlockedCompareExchange' : pointer mismatch for actual parameter 1
+D:\User\Desktop\Arsenal\Arsenal\Common\thread_win.h(118) : warning C4022: 'InterlockedCompareExchange' : pointer mismatch for actual parameter 3
+Creating library...
+Creating temporary file "Z:\Temp\RSP40.tmp" with contents
+[
+/nologo /o"..\..\Binary\x86\Lib\Release\ArsenalLib.bsc" 
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\Arsenal.sbr
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\grammar_config.sbr
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\grammar.sbr
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\lr_action.sbr
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\lr_dfa.sbr
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\lr_item.sbr
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\parser.sbr
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\parser_in.sbr
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\symbol.sbr
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\lex.sbr
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\match.sbr
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\rgx_compile.sbr
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\rgx_exec.sbr
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\rgx_misc.sbr
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\rgx_node.sbr
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\rgx_parser.sbr
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\algo.sbr
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\common.sbr
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\crtstr.sbr
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\memory.sbr
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\random.sbr
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\strconv.sbr
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\string.sbr
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\strtable.sbr
+\User\Desktop\Arsenal\Temp\x86\LIBRelease\thread.sbr]
+Creating command line "bscmake.exe @Z:\Temp\RSP40.tmp"
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+ArsenalLib.lib - 0 error(s), 16 warning(s)
+<h3>
+--------------------Configuration: ArsenalLib - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "Z:\Temp\RSP41.tmp" with contents
+[
+/nologo /MLd /W4 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_UNICODE" /D "_LIB" /Fp"..\..\Temp\x86\LIBDebug\ArsenalLib.pch" /YX /Fo"..\..\Temp\x86\LIBDebug\\" /Fd"..\..\Temp\x86\LIBDebug\\" /FD /GZ /c 
+"D:\User\Desktop\Arsenal\Arsenal\Arsenal.c"
+"D:\User\Desktop\Arsenal\Arsenal\Tools\grammar_config.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\grammar.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\lr_action.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\lr_dfa.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\lr_item.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\parser.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\parser_in.c"
+"D:\User\Desktop\Arsenal\Arsenal\Parser\symbol.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\lex.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\match.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_compile.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_exec.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_node.c"
+"D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_parser.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\algo.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\common.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\crtstr.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\memory.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\random.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\string.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\strtable.c"
+"D:\User\Desktop\Arsenal\Arsenal\Common\thread.c"
+]
+Creating command line "cl.exe @Z:\Temp\RSP41.tmp" 
+Creating temporary file "Z:\Temp\RSP42.tmp" with contents
+[
+/nologo /out:"..\..\Binary\x86\Lib\Debug\ArsenalLib.lib" 
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\Arsenal.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\grammar_config.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\grammar.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\lr_action.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\lr_dfa.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\lr_item.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\parser.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\parser_in.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\symbol.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\lex.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\match.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\rgx_compile.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\rgx_exec.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\rgx_misc.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\rgx_node.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\rgx_parser.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\algo.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\common.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\crtstr.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\memory.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\random.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\strconv.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\string.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\strtable.obj
+\User\Desktop\Arsenal\Temp\x86\LIBDebug\thread.obj
+]
+Creating command line "link.exe -lib @Z:\Temp\RSP42.tmp"
+<h3>Output Window</h3>
+Compiling...
+Arsenal.c
+d:\user\desktop\arsenal\arsenal\arsenal.c(54) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+d:\user\desktop\arsenal\arsenal\arsenal.c(54) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+grammar_config.c
+d:\user\desktop\arsenal\arsenal\tools\grammar_config.c(1364) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+d:\user\desktop\arsenal\arsenal\tools\grammar_config.c(1364) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+grammar.c
+d:\user\desktop\arsenal\arsenal\parser\grammar.c(1187) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+d:\user\desktop\arsenal\arsenal\parser\grammar.c(1187) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+lr_action.c
+d:\user\desktop\arsenal\arsenal\parser\lr_action.c(915) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+d:\user\desktop\arsenal\arsenal\parser\lr_action.c(915) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+lr_dfa.c
+d:\user\desktop\arsenal\arsenal\parser\lr_dfa.c(823) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+d:\user\desktop\arsenal\arsenal\parser\lr_dfa.c(823) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+lr_item.c
+d:\user\desktop\arsenal\arsenal\parser\lr_item.c(498) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+d:\user\desktop\arsenal\arsenal\parser\lr_item.c(498) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+parser.c
+d:\user\desktop\arsenal\arsenal\parser\parser.c(499) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+d:\user\desktop\arsenal\arsenal\parser\parser.c(499) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+parser_in.c
+d:\user\desktop\arsenal\arsenal\parser\parser_in.c(119) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+d:\user\desktop\arsenal\arsenal\parser\parser_in.c(119) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+symbol.c
+D:\User\Desktop\Arsenal\Arsenal\Parser\symbol.c(355) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Parser\symbol.c(355) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+lex.c
+d:\user\desktop\arsenal\arsenal\lex\lex.c(356) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+d:\user\desktop\arsenal\arsenal\lex\lex.c(356) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+match.c
+d:\user\desktop\arsenal\arsenal\lex\match.c(75) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+d:\user\desktop\arsenal\arsenal\lex\match.c(75) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+rgx_compile.c
+d:\user\desktop\arsenal\arsenal\lex\rgx_compile.c(606) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+d:\user\desktop\arsenal\arsenal\lex\rgx_compile.c(606) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+rgx_exec.c
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_exec.c(388) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_exec.c(388) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+rgx_misc.c
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(203) : warning C4244: 'function' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(214) : warning C4244: '=' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(224) : warning C4244: 'function' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(244) : warning C4244: 'function' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(256) : warning C4244: '=' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(268) : warning C4244: '=' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(296) : warning C4244: '=' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(310) : warning C4244: 'function' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(320) : warning C4244: '=' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(330) : warning C4244: 'function' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(352) : warning C4244: 'function' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(364) : warning C4244: '=' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(423) : warning C4244: '=' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(427) : warning C4244: '=' : conversion from 'int ' to 'unsigned short ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(508) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(508) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+rgx_node.c
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(203) : warning C4761: integral size mismatch in argument; conversion supplied
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(224) : warning C4761: integral size mismatch in argument; conversion supplied
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(244) : warning C4761: integral size mismatch in argument; conversion supplied
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(310) : warning C4761: integral size mismatch in argument; conversion supplied
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(330) : warning C4761: integral size mismatch in argument; conversion supplied
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_misc.c(352) : warning C4761: integral size mismatch in argument; conversion supplied
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_node.c(472) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Lex\rgx_node.c(472) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+rgx_parser.c
+d:\user\desktop\arsenal\arsenal\lex\rgx_parser.c(393) : warning C4244: '=' : conversion from 'const int ' to '__int8 ', possible loss of data
+d:\user\desktop\arsenal\arsenal\lex\rgx_parser.c(811) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+d:\user\desktop\arsenal\arsenal\lex\rgx_parser.c(811) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+algo.c
+d:\user\desktop\arsenal\arsenal\common\algo.c(260) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+common.c
+D:\User\Desktop\Arsenal\Arsenal\Common\common.c(242) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Common\common.c(242) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+crtstr.c
+D:\User\Desktop\Arsenal\Arsenal\Common\crtstr.c(1086) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Common\crtstr.c(1086) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+memory.c
+D:\User\Desktop\Arsenal\Arsenal\Common\memory.c(134) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Common\memory.c(134) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+random.c
+D:\User\Desktop\Arsenal\Arsenal\Common\random.c(61) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Common\random.c(61) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+strconv.c
+D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c(98) : warning C4244: '=' : conversion from 'int ' to 'unsigned __int8 ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c(99) : warning C4244: '=' : conversion from 'int ' to 'unsigned __int8 ', possible loss of data
+D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c(232) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Common\strconv.c(232) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+string.c
+D:\User\Desktop\Arsenal\Arsenal\Common\string.c(166) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Common\string.c(166) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+strtable.c
+D:\User\Desktop\Arsenal\Arsenal\Common\strtable.c(182) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Common\strtable.c(182) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+thread.c
+d:\user\desktop\arsenal\arsenal\common\thread_win.h(68) : warning C4090: 'function' : different 'volatile' qualifiers
+d:\user\desktop\arsenal\arsenal\common\thread_win.h(68) : warning C4024: 'InterlockedIncrement' : different types for formal and actual parameter 1
+d:\user\desktop\arsenal\arsenal\common\thread_win.h(73) : warning C4090: 'function' : different 'volatile' qualifiers
+d:\user\desktop\arsenal\arsenal\common\thread_win.h(73) : warning C4024: 'InterlockedDecrement' : different types for formal and actual parameter 1
+d:\user\desktop\arsenal\arsenal\common\thread_win.h(102) : warning C4090: 'function' : different 'volatile' qualifiers
+d:\user\desktop\arsenal\arsenal\common\thread_win.h(102) : warning C4022: 'InterlockedCompareExchange' : pointer mismatch for actual parameter 1
+d:\user\desktop\arsenal\arsenal\common\thread_win.h(102) : warning C4022: 'InterlockedCompareExchange' : pointer mismatch for actual parameter 2
+d:\user\desktop\arsenal\arsenal\common\thread_win.h(118) : warning C4090: 'function' : different 'volatile' qualifiers
+d:\user\desktop\arsenal\arsenal\common\thread_win.h(118) : warning C4022: 'InterlockedCompareExchange' : pointer mismatch for actual parameter 1
+d:\user\desktop\arsenal\arsenal\common\thread_win.h(118) : warning C4022: 'InterlockedCompareExchange' : pointer mismatch for actual parameter 3
+D:\User\Desktop\Arsenal\Arsenal\Common\thread.c(29) : warning C4505: 'AR_GET_ELEM' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(112) : see declaration of 'AR_GET_ELEM'
+D:\User\Desktop\Arsenal\Arsenal\Common\thread.c(29) : warning C4505: 'AR_BIT_MARK' : unreferenced local function has been removed
+        d:\user\desktop\arsenal\arsenal\common\common.h(372) : see declaration of 'AR_BIT_MARK'
+Creating library...
+
+
+
+<h3>Results</h3>
+ArsenalLib.lib - 0 error(s), 82 warning(s)
 </pre>
 </body>
 </html>

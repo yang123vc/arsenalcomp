@@ -1257,7 +1257,7 @@ static parser_t*	__build_parser(void *io)
 
 		if(gmr == NULL || !PSR_CheckIsValidGrammar(gmr))
 		{
-				AR_printf(L"Internal Error : %ls\r\n", AR_WSTR(__FUNCSIG__));
+				AR_printf(L"Internal Error : %ls\r\n", AR_WSTR(AR_FUNC_NAME));
 				AR_abort();
 		}
 
