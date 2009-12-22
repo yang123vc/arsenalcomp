@@ -1750,10 +1750,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\Arsenal\Lex\misc.c"
-				>
-			</File>
-			<File
 				RelativePath="..\..\Arsenal\Lex\rgx.h"
 				>
 			</File>
@@ -1763,6 +1759,10 @@
 			</File>
 			<File
 				RelativePath="..\..\Arsenal\Lex\rgx_exec.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Arsenal\Lex\rgx_misc.c"
 				>
 			</File>
 			<File
