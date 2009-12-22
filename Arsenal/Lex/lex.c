@@ -119,15 +119,9 @@ void LEX_SortProgSet(lexProgSet_t *set)
 
 		for(i = 1; i < (int_t)set->count; ++i)
 		{
-				for(j = i; j > 0; --j)
+				for(j = i; j > 0 && set->action[j].priority > set->action[j-1].priority; --j)
 				{
-						if(set->action[j].priority > set->action[j-1].priority)
-						{
-								__exch_set(set, j, j - 1);
-						}else
-						{
-								break;
-						}
+						__exch_set(set, j, j - 1);
 				}
 		}
 
@@ -157,6 +151,10 @@ bool_t	LEX_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr)
 				AR_printf_ctx(lex->io, L"Lex Rule Error : %ls: %ls\r\n", name, res.err.pos);
 				return false;
 		}
+
+
+		/*RGX_CorrectTree(res.node);*/
+		
 		return RGX_InsertToNameSet(lex->name_tbl, name, res.node);
 }
 
@@ -187,7 +185,7 @@ bool_t	LEX_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action
 		cat->left = res.node;
 		cat->right = final;
 		
-		RGX_CorrectTree(cat);
+		/*RGX_CorrectTree(cat);*/
 
 		prog = AR_NEW(rgxProg_t);
 		
@@ -243,7 +241,7 @@ bool_t	LEX_Insert(lex_t *lex, const wchar_t *input)
 				return LEX_InsertRule(lex, p, &act);
 		}else if(AR_iswalpha(*p) || *p == L'_')
 		{
-				wchar_t name[AR_MAX_LEXNAME + 1];
+				wchar_t name[AR_RGX_MAXNAME + 1];
 				size_t i;
 				i = 0;
 				while(AR_iswalnum(*p) || *p == L'_')
@@ -274,7 +272,7 @@ bool_t	LEX_GenerateTransTable(lex_t *lex)
 		AR_ASSERT(lex != NULL && lex->prog_set != NULL);
 
 		LEX_SortProgSet(lex->prog_set);
-		return lex->prog_set->count > 0;
+		return (bool_t)(lex->prog_set->count > 0);
 }
 
 
@@ -349,101 +347,6 @@ void	LEX_Destroy(lex_t *lex)
 }
 
 
-
-/**********************************************************************************************************/
-
-#if(0)
-
-
-
-
-
-
-
-
-
-
-bool_t LEX_Match(lex_t *lex, lexMatch_t *match, lexToken_t *tok)
-{
-		const wchar_t *forward;
-		int_t id;
-		size_t count;
-		int_t	curr, accepted;
-		size_t	x,y;
-
-RE_MATCH_POINT:
-		if(!match->is_ok)return match->is_ok;
-		AR_ASSERT(lex != NULL && match != NULL && match->next != NULL && tok != NULL);
-
-		x = match->line;
-		y = match->col;
-		curr = 0;
-		accepted = -1;
-		count = 0;
-		
-		tok->line = match->line;
-		tok->col = match->col;
-		
-		forward = match->next;
-		tok->count = 0;
-		tok->str = forward;
-
-		while(curr != -1)
-		{
-				wchar_t c = *forward;
-
-				if(c == L'\n')
-				{
-						x++; y = 0;
-				}else
-				{
-						if(c != L'\0')y++;
-				}
-
-				id = LEX_FindIndexFromCClass(lex->cclass, c);
-				AR_ASSERT((size_t)id < lex->tbl->col);
-				curr = LEX_GetNextState(lex->tbl, curr, id);
-				
-				if(curr != -1)
-				{
-						if(c != L'\0')
-						{
-								count++;
-								forward++;
-						}
-						
-						if(lex->tbl->is_final[curr])
-						{
-								accepted = curr;
-								match->line = x;
-								match->col = y;
-						}
-				}
-
-				if(c == L'\0')break;
-		}
-		
-		
-		if(accepted != -1)
-		{
-				
-				tok->type = lex->tbl->actions[accepted].type;
-				tok->count = count;
-				match->next = match->next + count;
-				match->is_ok = true;
-				
-				if(lex->tbl->actions[accepted].is_skip)goto RE_MATCH_POINT;
-
-		}else
-		{
-				match->is_ok = false;
-		}
-
-		return match->is_ok;
-}
-
-
-#endif
 
 
 
