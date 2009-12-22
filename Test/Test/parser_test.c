@@ -164,9 +164,13 @@ void parser_test()
 
 		getchar();
 
+		
 		cfg = CFG_CollectGrammarConfig(gmr_txt, NULL);
+		
 
-
+		
+		
+		
 		
 
 		if(cfg)
