@@ -85,6 +85,10 @@ LIB32=link.exe -lib
 # PROP Default_Filter ""
 # Begin Source File
 
+SOURCE=..\..\Arsenal\Common\algo.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\Arsenal\Common\common.c
 # End Source File
 # Begin Source File
@@ -141,22 +145,6 @@ SOURCE=..\..\Arsenal\Common\thread_win.h
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\..\Arsenal\Lex\dfa.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Arsenal\Lex\dfa.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Arsenal\Lex\expr.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Arsenal\Lex\expr.h
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\Arsenal\Lex\lex.c
 # End Source File
 # Begin Source File
@@ -165,15 +153,35 @@ SOURCE=..\..\Arsenal\Lex\lex.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\Arsenal\Lex\lex_config.c
+SOURCE=..\..\Arsenal\Lex\match.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\Arsenal\Lex\node.c
+SOURCE=..\..\Arsenal\Lex\match.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\Arsenal\Lex\node.h
+SOURCE=..\..\Arsenal\Lex\rgx.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Lex\rgx_compile.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Lex\rgx_exec.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Lex\rgx_misc.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Lex\rgx_node.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Lex\rgx_parser.c
 # End Source File
 # End Group
 # Begin Group "Parser"
@@ -186,10 +194,6 @@ SOURCE=..\..\Arsenal\Parser\grammar.c
 # Begin Source File
 
 SOURCE=..\..\Arsenal\Parser\grammar.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Arsenal\Parser\grammar_config.c
 # End Source File
 # Begin Source File
 
@@ -246,6 +250,22 @@ SOURCE=..\..\Arsenal\Parser\symbol.c
 # Begin Source File
 
 SOURCE=..\..\Arsenal\Parser\symbol.h
+# End Source File
+# End Group
+# Begin Group "Tools"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Tools\grammar_config.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Tools\grammar_config.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Tools\tools.h
 # End Source File
 # End Group
 # Begin Source File

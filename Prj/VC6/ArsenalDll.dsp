@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "ARSENAL_EXPORTS" /YX /FD /c
-# ADD CPP /nologo /MD /W4 /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_UNICODE" /D "_USRDLL" /D "ARSENAL_EXPORTS" /D "AR_EXPORTS" /D "AR_SHARED_LIB" /YX /FD /c
+# ADD CPP /nologo /MD /W4 /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_UNICODE" /D "_USRDLL" /D "ARSENAL_EXPORTS" /D "AR_EXPORTS" /D "AR_SHARED_LIB" /FR /YX /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x804 /d "NDEBUG"
@@ -90,6 +90,10 @@ LINK32=link.exe
 # Begin Group "Common"
 
 # PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Common\algo.c
+# End Source File
 # Begin Source File
 
 SOURCE=..\..\Arsenal\Common\common.c
@@ -148,22 +152,6 @@ SOURCE=..\..\Arsenal\Common\thread_win.h
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\..\Arsenal\Lex\dfa.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Arsenal\Lex\dfa.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Arsenal\Lex\expr.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Arsenal\Lex\expr.h
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\Arsenal\Lex\lex.c
 # End Source File
 # Begin Source File
@@ -172,15 +160,35 @@ SOURCE=..\..\Arsenal\Lex\lex.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\Arsenal\Lex\lex_config.c
+SOURCE=..\..\Arsenal\Lex\match.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\Arsenal\Lex\node.c
+SOURCE=..\..\Arsenal\Lex\match.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\Arsenal\Lex\node.h
+SOURCE=..\..\Arsenal\Lex\rgx.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Lex\rgx_compile.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Lex\rgx_exec.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Lex\rgx_misc.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Lex\rgx_node.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Lex\rgx_parser.c
 # End Source File
 # End Group
 # Begin Group "Parser"
@@ -193,10 +201,6 @@ SOURCE=..\..\Arsenal\Parser\grammar.c
 # Begin Source File
 
 SOURCE=..\..\Arsenal\Parser\grammar.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Arsenal\Parser\grammar_config.c
 # End Source File
 # Begin Source File
 
@@ -255,6 +259,34 @@ SOURCE=..\..\Arsenal\Parser\symbol.c
 SOURCE=..\..\Arsenal\Parser\symbol.h
 # End Source File
 # End Group
+# Begin Group "Tools"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Tools\grammar_config.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Tools\grammar_config.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Tools\tools.h
+# End Source File
+# End Group
+# Begin Group "Ray"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Ray\ray.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Arsenal\Ray\ray.h
+# End Source File
+# End Group
 # Begin Source File
 
 SOURCE=..\..\Arsenal\Arsenal.c
@@ -262,10 +294,6 @@ SOURCE=..\..\Arsenal\Arsenal.c
 # Begin Source File
 
 SOURCE=..\..\Arsenal\Arsenal.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\export.def
 # End Source File
 # End Target
 # End Project
