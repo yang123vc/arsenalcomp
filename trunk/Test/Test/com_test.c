@@ -203,7 +203,7 @@ void com_conv()
 
 
 
-inline uint_t str_hash_test(const wchar_t *str, size_t n)
+AR_INLINE uint_t str_hash_test(const wchar_t *str, size_t n)
 {
 		uint_t	ret;
 		size_t	i;
@@ -218,14 +218,14 @@ inline uint_t str_hash_test(const wchar_t *str, size_t n)
 		return ret;
 }
 
-inline uint_t str_hash_test2(const wchar_t *s)
+AR_INLINE uint_t str_hash_test2(const wchar_t *s)
 {
 		return str_hash_test(s, AR_wcslen(s));
 
 }
 
 
-inline uint_t str_hash_test3(const wchar_t *str, size_t n)
+AR_INLINE uint_t str_hash_test3(const wchar_t *str, size_t n)
 {
 		uint_t	ret;
 		size_t	i;
@@ -243,7 +243,7 @@ inline uint_t str_hash_test3(const wchar_t *str, size_t n)
 		return ret;
 }
 
-inline uint_t str_hash_test4(const wchar_t *s)
+AR_INLINE uint_t str_hash_test4(const wchar_t *s)
 {
 		return str_hash_test3(s, AR_wcslen(s));
 
