@@ -284,6 +284,20 @@ void			RGX_Compile(rgxProg_t *prog, const rgxNode_t *tree)
 
 		AR_ASSERT(prog->pc == prog->start + prog->count);
 
+/*
+		{
+				arString_t *str;
+				
+				str = AR_CreateString();
+
+				RGX_PringProg(prog, str);
+
+				AR_printf(L"%ls\r\n", AR_GetStrString(str));
+
+				AR_DestroyString(str);
+		}
+*/
+
 }
 
 
