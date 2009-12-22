@@ -109,6 +109,8 @@ struct __rgx_node_tag
 		rgxNode_t			*left;
 		rgxNode_t			*right;
 		
+		size_t				ref_count;
+
 		union{
 				struct {
 						wchar_t	beg;
@@ -133,7 +135,8 @@ void			RGX_InsertToNode(rgxNode_t *root, rgxNode_t *node);
 
 void			RGX_ToString(const rgxNode_t *node, arString_t *str);
 
-void			RGX_CorrectTree(rgxNode_t *root);
+
+/*void			RGX_CorrectTree(rgxNode_t *root);*/
 
 
 
@@ -272,8 +275,7 @@ void			RGX_SwapThreadList(rgxThreadList_t *l, rgxThreadList_t *r);
 void			RGX_ClearThreadList(rgxThreadList_t *l);
 
 
-
-bool_t RGX_Match(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok, rgxThreadList_t *curr, rgxThreadList_t *next);
+bool_t			RGX_Match(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok, rgxThreadList_t *curr, rgxThreadList_t *next);
 
 
 

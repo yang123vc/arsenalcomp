@@ -1,3 +1,16 @@
+/*
+ * The Arsenal Library
+ * Copyright (c) 2009 by Solidus
+ * 
+ * Permission to use, copy, modify, distribute and sell this software
+ * and its documentation for any purpose is hereby granted without fee,
+ * provided that the above copyright notice appear in all copies and
+ * that both that copyright notice and this permission notice appear
+ * in supporting documentation.It is provided "as is" without express 
+ * or implied warranty.
+ *
+ */
+
 #include "rgx.h"
 
 
@@ -172,7 +185,9 @@ static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, const wchar_t *in
 								return true;
 								break;
 						}
+						case RGX_NOP_I:
 						case RGX_MATCH_I:
+						default:
 						{
 								AR_ASSERT(false);
 								AR_abort();
@@ -316,6 +331,13 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok, rg
 								matched = true;
 								
 								goto BREAK_POINT;
+								break;
+						}
+						case RGX_NOP_I:
+						default:
+						{
+								AR_ASSERT(false);
+								AR_abort();
 								break;
 						}
 						}

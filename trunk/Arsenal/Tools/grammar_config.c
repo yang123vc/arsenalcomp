@@ -1306,6 +1306,11 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, void *io)
 
 				if(!is_ok)
 				{
+						const wchar_t *tok = NULL;
+						size_t n = AR_wcslen(match.next);
+						tok = AR_wcsndup(match.next, n > 10 ? 10 : n);
+						AR_printf(L"Invalid input %ls...(%"AR_PLAT_INT_FMT L"d : %"AR_PLAT_INT_FMT L"d)\r\n", tok, match.line, match.col);
+
 						continue;
 				}
 				/*
@@ -1348,78 +1353,6 @@ void			CFG_DestroyGrammarConfig(cfgConfig_t *cfg)
 
 
 
-#if(0)
-
-#define INSERT_NAME_PATTERN		L"LEX_InsertName(lex, %ls, %ls)"
-
-
-#define LEX_RULE_ACTION			L"lexAction_t		act = {%d, %d, %ls}"
-
-#define INSERT_LEX_RULE			L"LEX_InsertRule(lex, %ls, %ls)"
-
-
-
-
-wchar_t* __str_to_code(wchar_t *buf, const wchar_t *str)
-{
-		size_t i = 0;
-		
-		buf[i++] = L'L';
-		buf[i++] = L'"';
-
-		while(*str)
-		{
-				switch(*str)
-				{
-				case L'\\':
-				case L'\'':
-				case L'"':
-						buf[i++] = L'\\';
-						break;
-				}
-
-				buf[i++] = *str++;
-		}
-		
-		buf[i++] = L'"';
-		buf[i] = 0;
-
-		
-
-		return buf;
-}
-
-
-
-void			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
-{
-		size_t i;
-		wchar_t buf[1024], tmp1[1024], tmp2[1024],tmp3[1024];
-		AR_ASSERT(cfg != NULL);
-		
-		for(i = 0; i < cfg->name_cnt; ++i)
-		{
-				__str_to_code(tmp1, cfg->name[i].name);
-				__str_to_code(tmp2, cfg->name[i].regex);
-				AR_swprintf(buf, 1024, INSERT_NAME_PATTERN, tmp1, tmp2);
-				AR_printf(L"%ls\r\n", buf);
-		}
-
-
-		for(i = 0; i < cfg->tok_cnt; ++i)
-		{
-				
-				AR_swprintf(tmp1, 1024, LEX_RULE_ACTION, cfg->tok[i].tokval, cfg->tok[i].lex_prec, cfg->tok[i].is_skip ? L"true" : L"false");
-				__str_to_code(tmp2,cfg->tok[i].regex);
-				AR_swprintf(tmp3, 1024, INSERT_LEX_RULE, tmp2,L"&act");
-
-				AR_swprintf(buf, 1024, L"{ \r\n %ls ; \r\n %ls ;\r\n}\r\n", tmp1,tmp3);
-
-				AR_printf(L"%ls\r\n", buf);
-		}
-}
-
-#endif
 
 
 

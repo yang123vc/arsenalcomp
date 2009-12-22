@@ -24,6 +24,9 @@ rgxNode_t*		RGX_CreateNode(rgxNodeType_t type)
 
 		node = AR_NEW0(rgxNode_t);
 		node->type = type;
+
+		node->ref_count = 1;
+
 		switch(type)
 		{
 		case RGX_BEGIN_T:
@@ -76,6 +79,7 @@ rgxNode_t*		RGX_CreateNode(rgxNodeType_t type)
 				break;
 		}
 		}
+		
 
 		return node;
 
@@ -86,6 +90,14 @@ rgxNode_t*		RGX_CopyNode(const rgxNode_t *node)
 		rgxNode_t *res;
 
 		AR_ASSERT(node != NULL);
+
+		AR_ASSERT(node->ref_count >= 1);
+
+		res = (rgxNode_t*)node;
+		res->ref_count++;
+		return res;
+
+		/*
 		res = NULL;
 		switch(node->type)
 		{
@@ -139,13 +151,19 @@ rgxNode_t*		RGX_CopyNode(const rgxNode_t *node)
 		}
 
 		return res;
-
+		*/
 }
 
 void			RGX_DestroyNode(rgxNode_t *node)
 {
 		AR_ASSERT(node != NULL);
+		
+		AR_ASSERT(node->ref_count >= 1);
 
+		if(--node->ref_count > 0)return;
+
+		
+		
 		switch(node->type)
 		{
 		case RGX_FINAL_T:
@@ -213,72 +231,6 @@ void			RGX_InsertToNode(rgxNode_t *root, rgxNode_t *node)
 
 }
 
-
-
-
-
-
-static void __correct_tree(rgxNode_t *node)
-{
-		AR_ASSERT(node != NULL);
-
-		switch(node->type)
-		{
-		case RGX_CSET_T:
-		case RGX_FINAL_T:
-		case RGX_BEGIN_T:
-		case RGX_END_T:
-		{
-				break;
-		}
-		
-		case RGX_CAT_T:
-		case RGX_BRANCH_T:
-		{
-				if(node->left)__correct_tree(node->left);
-				if(node->right)__correct_tree(node->right);
-				
-				if(node->right == NULL)
-				{
-						rgxNode_t *tmp = node->left;
-						*node = *(node->left);
-						AR_DEL(tmp);
-				}
-
-#if defined(AR_DEBUG)
-				if((node->type == RGX_CAT_T || node->type == RGX_BRANCH_T) && (node->left == NULL || node->right == NULL))
-				{
-						AR_ASSERT(false);
-						AR_abort();
-				}
-#endif
-
-
-				break;
-		}
-		case RGX_STAR_T:
-		case RGX_QUEST_T:
-		case RGX_PLUS_T:
-		case RGX_LOOKAHEAD_T:
-		{
-				AR_ASSERT(node->left != NULL && node->right == NULL);
-				__correct_tree(node->left);
-				break;
-		}
-		default:
-		{
-				AR_ASSERT(false);
-				AR_abort();
-				break;
-		}
-		}
-}
-
-
-void RGX_CorrectTree(rgxNode_t *root)
-{
-		__correct_tree(root);
-}
 
 
 
@@ -448,4 +400,72 @@ AR_NAMESPACE_END
 
 
 
+
+
+
+
+
+#if(0)
+static void __correct_tree(rgxNode_t *node)
+{
+		AR_ASSERT(node != NULL);
+
+		switch(node->type)
+		{
+		case RGX_CSET_T:
+		case RGX_FINAL_T:
+		case RGX_BEGIN_T:
+		case RGX_END_T:
+		{
+				break;
+		}
+		
+		case RGX_CAT_T:
+		case RGX_BRANCH_T:
+		{
+				if(node->left)__correct_tree(node->left);
+				if(node->right)__correct_tree(node->right);
+				
+				if(node->right == NULL)
+				{
+						rgxNode_t *tmp = node->left;
+						*node = *(node->left);
+						AR_DEL(tmp);
+				}
+
+#if defined(AR_DEBUG)
+				if((node->type == RGX_CAT_T || node->type == RGX_BRANCH_T) && (node->left == NULL || node->right == NULL))
+				{
+						AR_ASSERT(false);
+						AR_abort();
+				}
+#endif
+
+
+				break;
+		}
+		case RGX_STAR_T:
+		case RGX_QUEST_T:
+		case RGX_PLUS_T:
+		case RGX_LOOKAHEAD_T:
+		{
+				AR_ASSERT(node->left != NULL && node->right == NULL);
+				__correct_tree(node->left);
+				break;
+		}
+		default:
+		{
+				AR_ASSERT(false);
+				AR_abort();
+				break;
+		}
+		}
+}
+
+
+void RGX_CorrectTree(rgxNode_t *root)
+{
+		__correct_tree(root);
+}
+#endif
 

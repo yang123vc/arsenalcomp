@@ -23,8 +23,6 @@ AR_NAMESPACE_BEGIN
 
 
 
-#define AR_MAX_LEXNAME					128
-#define AR_MAX_LENEXPR					1024
 
 typedef struct __lex_action_tag
 {
