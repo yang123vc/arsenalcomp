@@ -94,7 +94,7 @@ typedef struct  __cfg_lex_pattern_tag
 
 static const cfgLexPattern_t	__cfg_pattern[] = 
 {
-		{EOI,	L"[\\0]", false,0},
+		{EOI,	L"[\\0]", false,2},
 		{DELIM, L"{skip_lexem}+", true},
 		{ASSOC,	L"\"%\"(\"left\"|\"right\"|\"noassoc\")", false,1},
 		
