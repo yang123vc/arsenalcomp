@@ -356,7 +356,7 @@ static rgxResult_t	__handle_charset(const wchar_t *input)
 				return __handle_cset_range(p+1);
 		}else if(*p == L'.')
 		{
-				g_res = __handle_charset(L"[^\\n]");
+				g_res = __handle_charset(L"[^\\0]");
 				AR_ASSERT(g_res.node != NULL && g_res.err.pos == NULL);
 				g_res.next = ++p;
 				return g_res;
@@ -382,8 +382,7 @@ static rgxResult_t	__handle_charset(const wchar_t *input)
 }
 
 
-
-static rgxNode_t*	__handle_loopcount(rgxNode_t *expr, size_t min, size_t max)
+static rgxNode_t*	__handle_loopcount(rgxNode_t *expr, size_t min, size_t max, bool_t non_greedy)
 {
 		bool_t is_infinite;
 		rgxNode_t *cat, *loop;
@@ -404,6 +403,7 @@ RECHECK:
 						{
 								rgxNode_t *quest = RGX_CreateNode(RGX_QUEST_T);
 								quest->left = RGX_CopyNode(expr);
+								quest->non_greedy = non_greedy;
 								//branch = RGX_CreateNode(RGX_BRANCH_T);
 								//RGX_InsertToNode(branch, RGX_CopyNode(expr));
 								cat = RGX_CreateNode(RGX_CAT_T);
@@ -422,11 +422,13 @@ RECHECK:
 						{
 								loop = RGX_CreateNode(RGX_STAR_T);
 								loop->left = RGX_CopyNode(expr);
+								loop->non_greedy = non_greedy;
 								RGX_InsertToNode(cat, loop);
 						}else
 						{
 								rgxNode_t *quest = RGX_CreateNode(RGX_QUEST_T);
 								quest->left = RGX_CopyNode(expr);
+								quest->non_greedy = non_greedy;
 								for(; i < max; i++)RGX_InsertToNode(cat, RGX_CopyNode(quest));
 								RGX_DestroyNode(quest);
 								RGX_DestroyNode(expr);
@@ -516,6 +518,7 @@ static rgxResult_t	__handle_postfix(rgxNode_t *expr, const wchar_t *input, const
 				break;
 		case '{':
 		{
+				bool_t non_greedy = false;
 				const wchar_t *beg = p + 1;
 				uint_t min,max;
 				
@@ -562,9 +565,17 @@ static rgxResult_t	__handle_postfix(rgxNode_t *expr, const wchar_t *input, const
 				}
 				
 				if(min > max || max == 0){ g_res.err.pos = p; goto INVALID_POINT;}
+				
+				++beg;
 
-				g_res.next = ++beg;
-				g_res.node = __handle_loopcount(expr, min,max);
+				if(*beg == L'?')
+				{
+						non_greedy = true;
+						++beg;
+				}
+				
+				g_res.next = beg;
+				g_res.node = __handle_loopcount(expr, min,max, non_greedy);
 		}
 				break;
 		default:
