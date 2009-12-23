@@ -70,7 +70,7 @@ void AR_Test()
 		//lex_test2();
 		//lex_test3();
 		//lex_test4();
-		//lex_test20();
+		
 		//lr_dfa_test();
 		//action_tbl_test();
 		//parser_test();
@@ -94,8 +94,9 @@ void AR_Test()
 		//pcg_test2();
 
 		//trans_char_test();
-
-		parser_test();
+		
+		lex_test();
+		//parser_test();
 
 		//rgx_test();
 

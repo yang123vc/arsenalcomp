@@ -242,7 +242,7 @@ void			RGX_InitProg(rgxProg_t *prog);
 void			RGX_UnInitProg(rgxProg_t *prog);
 void			RGX_Compile(rgxProg_t *prog, const rgxNode_t *tree);
 
-void			RGX_PringProg(const rgxProg_t *prog, arString_t *str);
+void			RGX_ProgToString(const rgxProg_t *prog, arString_t *str);
 
 
 
@@ -273,6 +273,11 @@ void			RGX_UnInitThreadList(rgxThreadList_t *lst);
 void			RGX_InsertToThreadList(rgxThreadList_t *lst, rgxThread_t thd);
 void			RGX_SwapThreadList(rgxThreadList_t *l, rgxThreadList_t *r);
 void			RGX_ClearThreadList(rgxThreadList_t *l);
+
+
+
+
+
 
 
 bool_t			RGX_Match(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok, rgxThreadList_t *curr, rgxThreadList_t *next);

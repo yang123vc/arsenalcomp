@@ -284,19 +284,19 @@ void			RGX_Compile(rgxProg_t *prog, const rgxNode_t *tree)
 
 		AR_ASSERT(prog->pc == prog->start + prog->count);
 
-/*
+
 		{
 				arString_t *str;
 				
 				str = AR_CreateString();
 
-				RGX_PringProg(prog, str);
+				RGX_ProgToString(prog, str);
 
 				AR_printf(L"%ls\r\n", AR_GetStrString(str));
 
 				AR_DestroyString(str);
 		}
-*/
+
 
 }
 
@@ -306,7 +306,7 @@ void			RGX_Compile(rgxProg_t *prog, const rgxNode_t *tree)
 
 
 
-void			RGX_PringProg(const rgxProg_t *prog, arString_t *str)
+void			RGX_ProgToString(const rgxProg_t *prog, arString_t *str)
 {
 		size_t i;
 
@@ -319,7 +319,7 @@ void			RGX_PringProg(const rgxProg_t *prog, arString_t *str)
 				{
 				case RGX_CHAR_I:
 				{
-						AR_AppendFormatString(str, L"%2d. %ls <", i, RGX_INS_NAME[pc->opcode]);
+						AR_AppendFormatString(str, L"%2d. %ls [", i, RGX_INS_NAME[pc->opcode]);
 						if(pc->range.beg == pc->range.end)
 						{
 								if(AR_iswgraph(pc->range.beg) && pc->range.beg < (wchar_t)128)
@@ -349,7 +349,7 @@ void			RGX_PringProg(const rgxProg_t *prog, arString_t *str)
 										AR_AppendFormatString(str, L"\\u%" AR_PLAT_INT_FMT L"d", pc->range.end);
 								}
 						}
-						AR_AppendFormatString(str, L">\r\n");
+						AR_AppendFormatString(str, L"]\r\n");
 						break;
 				}
 				

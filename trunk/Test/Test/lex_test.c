@@ -474,12 +474,17 @@ void lex_test20()
 		lex = LEX_Create(NULL);
 		LEX_InitMatch(&match,L"aaa" );
 
-
-		if(!LEX_Insert(lex, L"2,0 a+[\\0]"))
+		if(!LEX_Insert(lex, L"2,0 a{1,2}?"))
 		{
 				AR_abort();
 		}
-		
+
+
+		if(!LEX_Insert(lex, L"0,1 [\\0]"))
+		{
+				AR_abort();
+		}
+
 		LEX_GenerateTransTable(lex);
 
 		while(LEX_Match(lex, &match, &tok))
@@ -498,6 +503,12 @@ void lex_test20()
 		LEX_UnInitMatch(&match);
 }
 
+
+void lex_test()
+{
+
+		lex_test20();
+}
 
 AR_NAMESPACE_END
 
