@@ -275,12 +275,22 @@ bool_t	LEX_GenerateTransTable(lex_t *lex)
 		return (bool_t)(lex->prog_set->count > 0);
 }
 
+#define LEX_MAX_EMPTY_MATCH_CNT 200
 
 bool_t LEX_Match(lex_t *lex, lexMatch_t *match, lexToken_t *tok)
 {
 		size_t i;
+		
+		size_t empty_match_cnt = 0;
+
 		AR_ASSERT(lex != NULL && match != NULL && tok != NULL);
 REMATCH:
+		if(empty_match_cnt > LEX_MAX_EMPTY_MATCH_CNT)
+		{
+				AR_printf_ctx(lex->io, L"%ls\r\n", L"Invalid empty pattern\r\n");
+				return false;
+		}
+
 		for(i = 0; i < lex->prog_set->count; ++i)
 		{
 				/*
@@ -294,6 +304,10 @@ REMATCH:
 				{
 						if(lex->prog_set->action[i].is_skip)
 						{
+								if(tok->count == 0)
+								{
+										empty_match_cnt++;
+								}
 								goto REMATCH;
 						}else
 						{

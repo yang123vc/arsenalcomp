@@ -41,6 +41,15 @@ typedef struct __term_info_list_tag
 }psrTermInfoList_t;
 
 
+void			PSR_InitTermInfoList(psrTermInfoList_t	*lst);
+void			PSR_UnInitTermInfoList(psrTermInfoList_t	*lst);
+void			PSR_ClearTermInfoList(psrTermInfoList_t	*lst);
+
+bool_t			PSR_InsertToTermInfoList(psrTermInfoList_t	*lst, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f);
+psrTermInfo_t*	PSR_FindTermByValue(psrTermInfoList_t	*lst, size_t val);
+psrTermInfo_t*	PSR_FindTermByName(psrTermInfoList_t	*lst, const wchar_t *name);
+
+
 
 
 /***********************************************************Rule*********************************************************************/
@@ -56,6 +65,10 @@ typedef struct __parser_rule_tag
 		psrRuleFunc_t			rule_f;/**/
 }psrRule_t;
 
+psrRule_t*		PSR_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, const psrTermInfoList_t *term_list, void *ctx);
+psrRule_t*		PSR_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, const psrTermInfoList_t *term_list, void *ctx);
+void			PSR_DestroyRule(psrRule_t *rule);
+psrRule_t*		PSR_CopyNewRule(const psrRule_t *rule);
 /****************************************************************************************************************************************/
 
 
@@ -73,6 +86,8 @@ typedef struct __parser_grammar_tag
 psrGrammar_t*			PSR_CreateGrammar(void *io);
 void					PSR_DestroyGrammar(psrGrammar_t *grammar);
 void					PSR_ClearGrammar(psrGrammar_t *grammar);
+
+psrGrammar_t*			PSR_CopyNewGrammar(const psrGrammar_t* grammar);
 
 
 

@@ -147,24 +147,106 @@ void print_conflict(const parser_t *psr)
 
 #define DEF_PAT_PATH  L"..\\..\\..\\misc\\test.gmr"
 
+#define DEF_SOUR_PATH  L"..\\..\\..\\misc\\book1.txt"
 
+
+
+
+void parse_code(const cfgConfig_t *cfg, const wchar_t *sources)
+{
+		lex_t *lex;
+		lexMatch_t match;
+		lexToken_t tok;
+		size_t	i;
+
+		
+		AR_ASSERT(cfg != NULL && sources != NULL);
+		
+
+		
+		lex = LEX_Create(NULL);
+
+		for(i = 0; i < cfg->name_cnt; ++i)
+		{
+				if(!LEX_InsertName(lex, cfg->name[i].name, cfg->name[i].regex))
+				{
+						AR_ASSERT(false);
+						AR_abort();
+				}
+		}
+
+		for(i = 0; i < cfg->tok_cnt; ++i)
+		{
+				lexAction_t act;
+				act.is_skip = cfg->tok[i].is_skip;
+				act.priority = cfg->tok[i].lex_prec;
+				act.type = cfg->tok[i].tokval;
+				if(!LEX_InsertRule(lex, cfg->tok[i].regex, &act))
+				{
+						AR_ASSERT(false);
+						AR_abort();
+				}
+		}
+
+		LEX_GenerateTransTable(lex);
+
+		LEX_InitMatch(&match, sources);
+
+		{
+				DWORD beg, end;
+				beg = GetTickCount();
+
+				while(LEX_Match(lex, &match, &tok))
+				{
+						wchar_t buf[1024];
+						AR_wcsncpy(buf, tok.str, tok.count);
+						buf[tok.count] = L'\0';
+
+						AR_printf(L"%ls : type == %d : count == %d : line = %d\r\n", buf, tok.type, tok.count, tok.line);
+
+						if(tok.type == 0)break;
+				}
+
+				if(match.is_ok)
+				{
+						AR_printf(L"lex parse done\r\n");
+				}else
+				{
+						AR_printf(L"lex parse failed : %ls\r\n", match.next);
+				}
+
+				end = GetTickCount();
+
+				AR_printf(L"elapsed == %d\r\n", end - beg);
+		}
+
+		LEX_UnInitMatch(&match);
+
+
+		LEX_Destroy(lex);
+
+
+}
 
 
 void parser_test()
 {
+		
 		const wchar_t	*gmr_txt;
 		cfgConfig_t		*cfg;
-		
-
-		
 		gmr_txt = __load_txt(DEF_PAT_PATH);
-
+		
+		if(gmr_txt == NULL)
+		{
+				AR_abort();
+		}
 
 		AR_printf(L"%ls\r\n", gmr_txt);
 
 		getchar();
 
-		
+
+
 		cfg = CFG_CollectGrammarConfig(gmr_txt, NULL);
 		
 
@@ -175,7 +257,9 @@ void parser_test()
 
 		if(cfg)
 		{
-#if(1)
+				parse_code(cfg, __load_txt(DEF_SOUR_PATH));
+
+#if(0)
 				size_t i;
 				lex_t *tmp_lex;
 				tmp_lex = LEX_Create(NULL);
@@ -228,6 +312,8 @@ void parser_test()
 		{
 				AR_abort();
 		}
+
+
 
 
 		

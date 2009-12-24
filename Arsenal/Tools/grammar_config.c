@@ -193,8 +193,6 @@ static void CFG_InsertToNodeList(cfgNodeList_t *lst, cfgNode_t *node)
 }
 
 
-
-
 static void CFG_InitConfig(cfgConfig_t *cfg, cfgNodeList_t *name, cfgNodeList_t *token, cfgNodeList_t *prec, cfgNodeList_t *rule)
 {
 		size_t i;
@@ -220,7 +218,7 @@ static void CFG_InitConfig(cfgConfig_t *cfg, cfgNodeList_t *name, cfgNodeList_t 
 		{
 				cfg->tok_cnt = token->count;
 
-				cfg->tok = cfg->tok_cnt > 0 ? AR_NEWARR0(cfgToken_t, cfg->tok_cnt) : NULL;
+				cfg->tok = cfg->tok_cnt > 0 ? AR_NEWARR0(cfgToken_t, cfg->tok_cnt + 1) : NULL;
 
 				for(i = 0; i < cfg->tok_cnt; ++i)
 				{
@@ -228,6 +226,16 @@ static void CFG_InitConfig(cfgConfig_t *cfg, cfgNodeList_t *name, cfgNodeList_t 
 						cfg->tok[i].name = token->lst[i]->token.name != NULL ? AR_wcsdup(token->lst[i]->token.name) : NULL;
 						cfg->tok[i].regex = AR_wcsdup(token->lst[i]->token.regex);
 				}
+
+				/*EOI*/
+				cfg->tok[cfg->tok_cnt - 1].is_skip = false;
+				cfg->tok[cfg->tok_cnt - 1].lex_prec = 2;
+				cfg->tok[cfg->tok_cnt - 1].line = 0;
+				cfg->tok[cfg->tok_cnt - 1].tokval = 0;
+				cfg->tok[cfg->tok_cnt - 1].name = AR_wcsdup(L"EOI");
+				cfg->tok[cfg->tok_cnt - 1].regex = AR_wcsdup(L"[\\0]");
+
+
 		}
 
 
@@ -1266,17 +1274,12 @@ static parser_t*	__build_parser(void *io)
 				psrCtx_t		psr_ctx = {cfg_free,  NULL};
 				parser = PSR_CreateParser(gmr, PSR_LALR, &psr_ctx);
 		}
-
+		
+		PSR_DestroyGrammar(gmr);
 		return parser;
 }
 
-static void		__destroy_parser(parser_t *parser)
-{
-		AR_ASSERT(parser != NULL);
 
-		PSR_DestroyGrammar((psrGrammar_t*)parser->grammar);
-		PSR_DestroyParser(parser);
-}
 
 
 cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, void *io)
@@ -1335,12 +1338,14 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, void *io)
 		}
 
 
-		__destroy_parser(parser);
+		PSR_DestroyParser(parser);
 		LEX_UnInitMatch(&match);
 
 		
 		LEX_Destroy(lex);
 		
+		
+
 		return (cfgConfig_t*)result;
 
 }

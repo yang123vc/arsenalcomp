@@ -218,8 +218,13 @@ static  parser_t* __build_parser()
 
 
 		{
+				parser_t *psr;
 				psrCtx_t ctx = {free_node,  NULL};
-				return PSR_CreateParser(gmr, PSR_LALR, &ctx);
+				
+				psr =  PSR_CreateParser(gmr, PSR_LALR, &ctx);
+
+				PSR_DestroyGrammar(gmr);
+				return psr;
 		}
 }
 
@@ -253,6 +258,7 @@ int post_order(Node_t *node)
 				return 0;
 		}
 }
+
 
 
 
@@ -292,13 +298,54 @@ void calc_test()
 		}
 		
 		PSR_DestroyParser(psr);
-		PSR_DestroyGrammar(__g_gmr);
+		
 }
 
 
 
-#if(0)
-#endif
+
+void calc_test3()
+{
+		psrGrammar_t	*gmr, *gmr2;
+
+		gmr = PSR_CreateGrammar(NULL);
+
+		PSR_InsertTerm(gmr, L"(", CLP, PSR_ASSOC_NOASSOC, 0, create_leaf);
+		PSR_InsertTerm(gmr, L")", RP, PSR_ASSOC_NOASSOC, 0, create_leaf);
+		PSR_InsertTerm(gmr, L"+", ADD, PSR_ASSOC_LEFT, 1, create_leaf);
+		PSR_InsertTerm(gmr, L"-", MINUS, PSR_ASSOC_LEFT, 1, create_leaf);
+		PSR_InsertTerm(gmr, L"*", MUL, PSR_ASSOC_LEFT, 2, create_leaf);
+		PSR_InsertTerm(gmr, L"/", DIV, PSR_ASSOC_LEFT, 2, create_leaf);
+		PSR_InsertTerm(gmr, L"%", MOD, PSR_ASSOC_LEFT, 2, create_leaf);
+		PSR_InsertTerm(gmr, L"number", NUMBER, PSR_ASSOC_NOASSOC, 0, create_leaf);
+		PSR_InsertTerm(gmr, L"UMINUS", 0xFFFF, PSR_ASSOC_RIGHT, 3, create_leaf);
+		
+		PSR_InsertRuleByStr(gmr, L"E : E + E", NULL, create_node);
+		PSR_InsertRuleByStr(gmr, L"E : E - E", NULL, create_node);
+		PSR_InsertRuleByStr(gmr, L"E : E * E", NULL, create_node);
+		PSR_InsertRuleByStr(gmr, L"E : E / E", NULL, create_node);
+		PSR_InsertRuleByStr(gmr, L"E : E % E", NULL, create_node);
+
+		PSR_InsertRuleByStr(gmr, L"E : number", NULL, create_node1);
+		PSR_InsertRuleByStr(gmr, L"E : ( E )", NULL, create_node1);
+		PSR_InsertRuleByStr(gmr, L"E : - E", L"UMINUS", create_node2);
+		
+		{
+				arString_t		*str;
+
+				str = AR_CreateString();
+				PSR_PrintGrammar(gmr, str);
+				AR_printf(L"%ls\r\n", AR_GetStrString(str));
+		}
+		
+		gmr2 = PSR_CopyNewGrammar(gmr);
+
+		PSR_DestroyGrammar(gmr);
+		PSR_DestroyGrammar(gmr2);
+
+}
+
+
 
 
 
