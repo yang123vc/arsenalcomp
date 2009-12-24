@@ -35,6 +35,15 @@ void			PSR_InitTermInfoList(psrTermInfoList_t	*lst)
 }
 
 
+void			PSR_UnInitTermInfoList(psrTermInfoList_t	*lst)
+{
+		AR_ASSERT(lst != NULL);
+		PSR_ClearTermInfoList(lst);
+		if(lst->lst)AR_DEL(lst->lst);
+		AR_memset(lst, 0, sizeof(*lst));
+}
+
+
 void			PSR_ClearTermInfoList(psrTermInfoList_t	*lst)
 {
 		size_t i;
@@ -49,13 +58,8 @@ void			PSR_ClearTermInfoList(psrTermInfoList_t	*lst)
 		lst->count = 0;
 }
 
-void			PSR_UnInitTermInfoList(psrTermInfoList_t	*lst)
-{
-		AR_ASSERT(lst != NULL);
-		PSR_ClearTermInfoList(lst);
-		if(lst->lst)AR_DEL(lst->lst);
-		AR_memset(lst, 0, sizeof(*lst));
-}
+
+
 
 
 psrTermInfo_t*	PSR_FindTermByName(psrTermInfoList_t	*lst, const wchar_t *name)
@@ -72,6 +76,7 @@ psrTermInfo_t*	PSR_FindTermByName(psrTermInfoList_t	*lst, const wchar_t *name)
 		}
 		return NULL;
 }
+
 
 
 psrTermInfo_t*	PSR_FindTermByValue(psrTermInfoList_t	*lst, size_t val)
@@ -443,6 +448,42 @@ void					PSR_DestroyGrammar(psrGrammar_t *grammar)
 
 }
 
+
+psrGrammar_t*			PSR_CopyNewGrammar(const psrGrammar_t* grammar)
+{
+		psrGrammar_t	*gmr;
+		size_t i;
+		AR_ASSERT(grammar != NULL);
+
+		gmr = AR_NEW0(psrGrammar_t);
+
+		gmr->count = gmr->cap = grammar->count;
+
+		gmr->rules = AR_NEWARR0(psrRule_t*, gmr->cap);
+
+		for(i = 0; i < gmr->cap; ++i)
+		{
+				gmr->rules[i] = PSR_CopyNewRule(grammar->rules[i]);
+		}
+
+		PSR_InitSymbList(&gmr->symb_list);
+		PSR_InitTermInfoList(&gmr->term_list);
+
+		for(i = 0; i < grammar->symb_list.count; ++i)
+		{
+				PSR_InsertToSymbList(&gmr->symb_list, grammar->symb_list.lst[i]);
+		}
+	
+		for(i = 0; i < grammar->term_list.count; ++i)
+		{
+				const psrTermInfo_t *term = &grammar->term_list.lst[i];
+				PSR_InsertToTermInfoList(&gmr->term_list, term->term->name, term->val, term->assoc, term->prec, term->leaf_f);
+		}
+
+		return gmr;
+		
+
+}
 
 
 

@@ -63,7 +63,7 @@ parser_t* PSR_CreateParser(const struct __parser_grammar_tag *grammar, psrModeTy
 		AR_ASSERT(ctx->free_f != NULL);
 
 		parser = AR_NEW0(parser_t);
-		parser->grammar = (psrGrammar_t*)grammar;
+		parser->grammar = PSR_CopyNewGrammar(grammar);
 		
 		parser->state_stack = AR_NEW0(psrStack_t);
 		PSR_InitStack(parser->state_stack);
@@ -147,7 +147,7 @@ void	  PSR_DestroyParser(parser_t *parser)
 
 				PSR_DestroyTermInfoTable(parser->term_tbl);
 				PSR_DestroyActionTable(parser->tbl);
-//				PSR_DestroyGrammar(parser->grammar);
+				PSR_DestroyGrammar(parser->grammar);
 				
 				PSR_UnInitNodeStack(parser->node_stack);
 				AR_DEL(parser->node_stack);

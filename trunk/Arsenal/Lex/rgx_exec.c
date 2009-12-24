@@ -180,6 +180,9 @@ static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, const wchar_t *in
 						}
 						case RGX_LOOKAHEAD_END_I:
 						{
+								/*
+										这里的意义是，不论你前向预搜索什么，只要有一个走通了就OK
+								*/
 								RGX_UnInitThreadList(&curr);
 								RGX_UnInitThreadList(&next);
 								return true;
@@ -202,8 +205,6 @@ static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, const wchar_t *in
 		RGX_UnInitThreadList(&curr);
 		RGX_UnInitThreadList(&next);
 		return false;
-
-
 }
 
 
@@ -217,6 +218,8 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok, rg
 		
 		AR_ASSERT(prog != NULL && match->next != NULL && match->input != NULL);
 		AR_ASSERT(curr != NULL && next != NULL);
+
+		AR_memset(tok, 0, sizeof(*tok));
 
 		__clear_prog(prog);
 		RGX_ClearThreadList(curr);
@@ -329,7 +332,6 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok, rg
 								tok->col = match->col;
 								tok->type = (size_t)pc->final;
 								matched = true;
-								
 								goto BREAK_POINT;
 								break;
 						}
@@ -342,13 +344,28 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok, rg
 						}
 						}
 				}
-BREAK_POINT:
+
+		BREAK_POINT:
+
 				RGX_SwapThreadList(curr, next);
 				RGX_ClearThreadList(next);
 		}
 
 		if(matched)
 		{
+		/*
+				{
+						arString_t *str;
+				
+						str = AR_CreateString();
+
+						RGX_ProgToString(prog, str);
+
+						AR_printf(L"%ls\r\n", AR_GetStrString(str));
+
+						AR_DestroyString(str);
+				}
+*/
 				match->col = y;
 				match->line = x;
 				match->next = sp;
@@ -370,7 +387,6 @@ bool_t RGX_Match(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok, rgxThreadL
 		if(!match->is_ok)return match->is_ok;
 
 		return __thompson(prog, match, tok, curr, next);
-
 }
 
 

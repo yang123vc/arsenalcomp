@@ -143,7 +143,7 @@ typedef struct __parser_tag
 
 typedef struct __parser_tag
 {
-		const struct __parser_grammar_tag		*grammar;
+		struct __parser_grammar_tag				*grammar;
 		struct __parser_action_tag				*tbl;
 		struct __parser_stack_tag				*state_stack;
 		struct __parser_node_stack				*node_stack;

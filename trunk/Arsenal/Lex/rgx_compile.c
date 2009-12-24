@@ -284,7 +284,7 @@ void			RGX_Compile(rgxProg_t *prog, const rgxNode_t *tree)
 
 		AR_ASSERT(prog->pc == prog->start + prog->count);
 
-
+/*
 		{
 				arString_t *str;
 				
@@ -296,7 +296,7 @@ void			RGX_Compile(rgxProg_t *prog, const rgxNode_t *tree)
 
 				AR_DestroyString(str);
 		}
-
+*/
 
 }
 

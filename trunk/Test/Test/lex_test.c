@@ -472,9 +472,9 @@ void lex_test20()
 		size_t i;
 
 		lex = LEX_Create(NULL);
-		LEX_InitMatch(&match,L"aaa" );
+		LEX_InitMatch(&match,L"<html></html>" );
 
-		if(!LEX_Insert(lex, L"2,0 a{1,2}?"))
+		if(!LEX_Insert(lex, L"2,0 <(.*?)>"))
 		{
 				AR_abort();
 		}

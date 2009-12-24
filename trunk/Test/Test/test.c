@@ -51,6 +51,8 @@ extern void parser_test();
 extern void parser_test_lex();
 
 extern void rgx_test();
+
+void calc_test3();
 #endif
 
 
@@ -86,6 +88,7 @@ void AR_Test()
 		//cache_test();
 		//calc_test1();
 		//calc_test();
+		//calc_test3();
 
 		//db_test();
 
@@ -95,8 +98,8 @@ void AR_Test()
 
 		//trans_char_test();
 		
-		lex_test();
-		//parser_test();
+		//lex_test();
+		parser_test();
 
 		//rgx_test();
 
