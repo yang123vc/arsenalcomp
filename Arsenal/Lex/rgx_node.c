@@ -17,12 +17,68 @@
 AR_NAMESPACE_BEGIN
 
 
+static rgxNode_t*		__g_node_list = NULL;
+static arSpinLock_t		__g_lock;
+
+void RGX_InitNode()
+{
+		AR_InitSpinLock(&__g_lock);
+		__g_node_list = NULL;
+
+}
+
+
+void RGX_UnInitNode()
+{
+		while(__g_node_list)
+		{
+				rgxNode_t *node = __g_node_list;
+				__g_node_list = __g_node_list->left;
+				AR_DEL(node);
+		}
+		AR_UnInitSpinLock(&__g_lock);
+}
+
+
+static rgxNode_t* __alloc_node()
+{
+		rgxNode_t *node;
+		AR_LockSpinLock(&__g_lock);
+
+		if(__g_node_list == NULL)
+		{
+				__g_node_list = AR_NEW0(rgxNode_t);
+		}
+
+		node = __g_node_list;
+		__g_node_list = __g_node_list->left;
+		AR_UnLockSpinLock(&__g_lock);
+		
+		AR_memset(node, 0, sizeof(*node));
+		return node;
+}
+
+static void		__free_node(rgxNode_t *node)
+{
+		AR_ASSERT(node != NULL);
+		
+		AR_LockSpinLock(&__g_lock);
+
+		node->left = __g_node_list;
+		__g_node_list = node;
+		AR_UnLockSpinLock(&__g_lock);
+}
+
+
 
 rgxNode_t*		RGX_CreateNode(rgxNodeType_t type)
 {
 		rgxNode_t		*node;
 
-		node = AR_NEW0(rgxNode_t);
+		/*node = AR_NEW0(rgxNode_t);*/
+		
+		node = __alloc_node();
+
 		node->type = type;
 
 		node->ref_count = 1;
@@ -154,6 +210,9 @@ rgxNode_t*		RGX_CopyNode(const rgxNode_t *node)
 		*/
 }
 
+
+
+
 void			RGX_DestroyNode(rgxNode_t *node)
 {
 		AR_ASSERT(node != NULL);
@@ -170,13 +229,11 @@ void			RGX_DestroyNode(rgxNode_t *node)
 		case RGX_BEGIN_T:
 		case RGX_END_T:
 		{
-				AR_DEL(node);
 				break;
 		}
 		
 		case RGX_CSET_T:
 		{
-				AR_DEL(node);
 				break;
 		}
 		case RGX_CAT_T:
@@ -184,7 +241,7 @@ void			RGX_DestroyNode(rgxNode_t *node)
 		{
 				if(node->left)RGX_DestroyNode(node->left);
 				if(node->right)RGX_DestroyNode(node->right);
-				AR_DEL(node);
+				
 				break;
 		}
 		case RGX_STAR_T:
@@ -194,7 +251,6 @@ void			RGX_DestroyNode(rgxNode_t *node)
 		{
 				AR_ASSERT(node->left != NULL && node->right == NULL);
 				RGX_DestroyNode(node->left);
-				AR_DEL(node);
 				break;
 		}
 		default:
@@ -204,7 +260,12 @@ void			RGX_DestroyNode(rgxNode_t *node)
 				break;
 		}
 		}
+
+		/*AR_DEL(node);*/
+
+		__free_node(node);
 }
+
 
 
 void			RGX_InsertToNode(rgxNode_t *root, rgxNode_t *node)
@@ -354,7 +415,6 @@ void			RGX_ToString(const rgxNode_t *node, arString_t *str)
 				
 				break;
 		}
-				break;
 		case RGX_LOOKAHEAD_T:
 		{
 				AR_ASSERT(node->left != NULL && node->right == NULL);
@@ -403,69 +463,4 @@ AR_NAMESPACE_END
 
 
 
-
-
-#if(0)
-static void __correct_tree(rgxNode_t *node)
-{
-		AR_ASSERT(node != NULL);
-
-		switch(node->type)
-		{
-		case RGX_CSET_T:
-		case RGX_FINAL_T:
-		case RGX_BEGIN_T:
-		case RGX_END_T:
-		{
-				break;
-		}
-		
-		case RGX_CAT_T:
-		case RGX_BRANCH_T:
-		{
-				if(node->left)__correct_tree(node->left);
-				if(node->right)__correct_tree(node->right);
-				
-				if(node->right == NULL)
-				{
-						rgxNode_t *tmp = node->left;
-						*node = *(node->left);
-						AR_DEL(tmp);
-				}
-
-#if defined(AR_DEBUG)
-				if((node->type == RGX_CAT_T || node->type == RGX_BRANCH_T) && (node->left == NULL || node->right == NULL))
-				{
-						AR_ASSERT(false);
-						AR_abort();
-				}
-#endif
-
-
-				break;
-		}
-		case RGX_STAR_T:
-		case RGX_QUEST_T:
-		case RGX_PLUS_T:
-		case RGX_LOOKAHEAD_T:
-		{
-				AR_ASSERT(node->left != NULL && node->right == NULL);
-				__correct_tree(node->left);
-				break;
-		}
-		default:
-		{
-				AR_ASSERT(false);
-				AR_abort();
-				break;
-		}
-		}
-}
-
-
-void RGX_CorrectTree(rgxNode_t *root)
-{
-		__correct_tree(root);
-}
-#endif
 

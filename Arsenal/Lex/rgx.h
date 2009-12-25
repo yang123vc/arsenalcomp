@@ -136,6 +136,7 @@ void			RGX_InsertToNode(rgxNode_t *root, rgxNode_t *node);
 void			RGX_ToString(const rgxNode_t *node, arString_t *str);
 
 
+
 /*void			RGX_CorrectTree(rgxNode_t *root);*/
 
 
@@ -224,17 +225,50 @@ struct __regex_instruction_tag
 
 
 
+
+typedef struct __thread_tag
+{
+		rgxIns_t		*pc;
+		const wchar_t	*sp;
+		size_t			line;
+		size_t			col;
+}rgxThread_t;
+
+
+rgxThread_t		RGX_BuildThread(rgxIns_t *pc, const wchar_t *sp, size_t x, size_t y);
+
+typedef struct __thd_list_tag
+{
+		rgxThread_t		*lst;
+		size_t			count;
+		size_t			cap;
+
+		struct __thd_list_tag	*next;
+}rgxThreadList_t;
+
+
+rgxThreadList_t*	RGX_CreateThreadList();
+void				RGX_DestroyThreadList(rgxThreadList_t *lst);
+void				RGX_InsertToThreadList(rgxThreadList_t *lst, rgxThread_t thd);
+void				RGX_SwapThreadList(rgxThreadList_t *l, rgxThreadList_t *r);
+void				RGX_ClearThreadList(rgxThreadList_t *l);
+
+
+
 typedef struct __regex_program_tag		rgxProg_t;
 
 
 
 struct __regex_program_tag
 {
-		rgxIns_t		*start;
-		size_t			count;
+		rgxIns_t				*start;
+		size_t					count;
 		
-		rgxIns_t		*pc;
-		int_t			mark;
+		rgxIns_t				*pc;
+		int_t					mark;
+		
+		rgxThreadList_t			*curr;
+		rgxThreadList_t			*next;
 };
 
 
@@ -250,40 +284,15 @@ void			RGX_ProgToString(const rgxProg_t *prog, arString_t *str);
 
 
 
-typedef struct __thread_tag
-{
-		rgxIns_t		*pc;
-		const wchar_t	*sp;
-		size_t			line;
-		size_t			col;
-}rgxThread_t;
+
+bool_t			RGX_Match(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok);
 
 
 
-typedef struct __thd_list_tag
-{
-		rgxThread_t		*lst;
-		size_t			count;
-		size_t			cap;
-}rgxThreadList_t;
-
-rgxThread_t		RGX_BuildThread(rgxIns_t *pc, const wchar_t *sp, size_t x, size_t y);
-void			RGX_InitThreadList(rgxThreadList_t *lst);
-void			RGX_UnInitThreadList(rgxThreadList_t *lst);
-void			RGX_InsertToThreadList(rgxThreadList_t *lst, rgxThread_t thd);
-void			RGX_SwapThreadList(rgxThreadList_t *l, rgxThreadList_t *r);
-void			RGX_ClearThreadList(rgxThreadList_t *l);
-
-
-
-
-
-
-
-bool_t			RGX_Match(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok, rgxThreadList_t *curr, rgxThreadList_t *next);
-
-
-
+void	RGX_InitNode();
+void	RGX_UnInitNode();
+void	RGX_InitMisc();
+void	RGX_UnInitMisc();
 
 
 AR_NAMESPACE_END

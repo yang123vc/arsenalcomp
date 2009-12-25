@@ -216,16 +216,40 @@ static void CFG_InitConfig(cfgConfig_t *cfg, cfgNodeList_t *name, cfgNodeList_t 
 
 		if(token)
 		{
-				cfg->tok_cnt = token->count;
+				size_t k;
+				size_t tmp_tok_val = 1;
+				
+				cfg->tok_cnt = token->count + 1;
 
-				cfg->tok = cfg->tok_cnt > 0 ? AR_NEWARR0(cfgToken_t, cfg->tok_cnt + 1) : NULL;
+				/*cfg->tok = cfg->tok_cnt > 0 ? AR_NEWARR0(cfgToken_t, cfg->tok_cnt + 1) : NULL;*/
 
-				for(i = 0; i < cfg->tok_cnt; ++i)
+				cfg->tok = AR_NEWARR0(cfgToken_t, cfg->tok_cnt);
+
+				for(i = 0; i < cfg->tok_cnt - 1; ++i)
 				{
 						cfg->tok[i] = token->lst[i]->token;
 						cfg->tok[i].name = token->lst[i]->token.name != NULL ? AR_wcsdup(token->lst[i]->token.name) : NULL;
 						cfg->tok[i].regex = AR_wcsdup(token->lst[i]->token.regex);
 				}
+
+				for(i = 0; i < cfg->tok_cnt - 1; ++i)
+				{
+						if(cfg->tok[i].tokval == 0)
+						{
+RE_CHECK_POINT:
+								for(k = 0; k < cfg->tok_cnt - 1; ++k)
+								{
+										if(cfg->tok[k].tokval == tmp_tok_val)
+										{
+												tmp_tok_val++;
+												k = 0;
+												goto RE_CHECK_POINT;
+										}
+								}
+								cfg->tok[i].tokval = tmp_tok_val++;
+						}
+				}
+
 
 				/*EOI*/
 				cfg->tok[cfg->tok_cnt - 1].is_skip = false;
@@ -234,7 +258,6 @@ static void CFG_InitConfig(cfgConfig_t *cfg, cfgNodeList_t *name, cfgNodeList_t 
 				cfg->tok[cfg->tok_cnt - 1].tokval = 0;
 				cfg->tok[cfg->tok_cnt - 1].name = AR_wcsdup(L"EOI");
 				cfg->tok[cfg->tok_cnt - 1].regex = AR_wcsdup(L"[\\0]");
-
 
 		}
 

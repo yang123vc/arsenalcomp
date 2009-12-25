@@ -257,12 +257,17 @@ void			RGX_InitProg(rgxProg_t *prog)
 		AR_ASSERT(prog != NULL);
 		AR_memset(prog, 0, sizeof(*prog));
 
-}
+}		
+
 
 void			RGX_UnInitProg(rgxProg_t *prog)
 {
 		AR_ASSERT(prog != NULL);
 		if(prog->start != NULL)AR_DEL(prog->start);
+		
+		if(prog->curr)RGX_DestroyThreadList(prog->curr);
+		if(prog->next)RGX_DestroyThreadList(prog->next);
+
 		AR_memset(prog, 0, sizeof(*prog));
 }
 

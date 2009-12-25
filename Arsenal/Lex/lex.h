@@ -24,19 +24,17 @@ AR_NAMESPACE_BEGIN
 
 
 
+void	LEX_Init();
+void	LEX_UnInit();
+
+
+
 typedef struct __lex_action_tag
 {
 		size_t			type;
 		size_t			priority;
 		bool_t			is_skip;
 }lexAction_t;
-
-
-
-
-
-#define LEX_Init()		AR_NOOP
-#define LEX_UnInit()	AR_NOOP
 
 
 
