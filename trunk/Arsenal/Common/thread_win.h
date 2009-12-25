@@ -65,6 +65,7 @@ uint_t			AR_CompExchange(volatile uint_t *dest, uint_t exch, uint_t compval)
 int_t			AR_AtomicInc(volatile int_t *dest)
 {
 		//return (uint_t)ATOMIC_INC(dest);
+		
 		return (int_t)ATOMIC_INC(dest);
 }
 
@@ -94,11 +95,11 @@ void			AR_UnInitSpinLock(arSpinLock_t *lock)
 
 void			AR_LockSpinLock(arSpinLock_t *lock)
 {
+
 		size_t count;
 		AR_ASSERT(lock != NULL);
 		count = 0;
 
-		/*while((uint_t)COMP_EXCH(lock, LOCK_STATE, UNLOCK_STATE) != UNLOCK_STATE)*/
 		while(COMP_EXCH(lock, LOCK_STATE, UNLOCK_STATE) != UNLOCK_STATE)
 		{
 				if(++count > AR_MAXSPIN_COUNT)
@@ -108,14 +109,19 @@ void			AR_LockSpinLock(arSpinLock_t *lock)
 				}
 		}
 
+
 }
+
 
 
 void			AR_UnLockSpinLock(arSpinLock_t *lock)
 {
 		AR_ASSERT(lock != NULL && *lock == LOCK_STATE);
-		/*COMP_EXCH(lock, (LONG)UNLOCK_STATE, (LONG)LOCK_STATE);*/
+
 		COMP_EXCH(lock, UNLOCK_STATE, LOCK_STATE);
+
+
+
 }
 
 

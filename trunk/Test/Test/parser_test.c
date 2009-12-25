@@ -158,7 +158,7 @@ void parse_code(const cfgConfig_t *cfg, const wchar_t *sources)
 		lexMatch_t match;
 		lexToken_t tok;
 		size_t	i;
-
+		wchar_t buf[1024];
 		
 		AR_ASSERT(cfg != NULL && sources != NULL);
 		
@@ -193,23 +193,26 @@ void parse_code(const cfgConfig_t *cfg, const wchar_t *sources)
 		LEX_InitMatch(&match, sources);
 
 		{
+				
+				size_t tok_cnt = 0;
 				DWORD beg, end;
 				beg = GetTickCount();
-
+				
 				while(LEX_Match(lex, &match, &tok))
 				{
-						wchar_t buf[1024];
+						/*
 						AR_wcsncpy(buf, tok.str, tok.count);
 						buf[tok.count] = L'\0';
 
 						AR_printf(L"%ls : type == %d : count == %d : line = %d\r\n", buf, tok.type, tok.count, tok.line);
-
+						*/
+						tok_cnt++;
 						if(tok.type == 0)break;
 				}
 
 				if(match.is_ok)
 				{
-						AR_printf(L"lex parse done\r\n");
+						AR_printf(L"lex parse done for %d token\r\n", tok_cnt);
 				}else
 				{
 						AR_printf(L"lex parse failed : %ls\r\n", match.next);
@@ -257,9 +260,9 @@ void parser_test()
 
 		if(cfg)
 		{
-				parse_code(cfg, __load_txt(DEF_SOUR_PATH));
+				
 
-#if(0)
+#if(1)
 				size_t i;
 				lex_t *tmp_lex;
 				tmp_lex = LEX_Create(NULL);
@@ -307,6 +310,9 @@ void parser_test()
 		//		arString_t *str = NULL;
 		//		CFG_ConfigToCode(cfg, str);
 #endif
+				
+				parse_code(cfg, __load_txt(DEF_SOUR_PATH));
+
 
 		}else
 		{

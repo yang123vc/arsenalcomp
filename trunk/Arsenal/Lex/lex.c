@@ -16,7 +16,17 @@
 
 AR_NAMESPACE_BEGIN
 
+void	LEX_Init()
+{
+		RGX_InitNode();
+		RGX_InitMisc();
+}
 
+void	LEX_UnInit()
+{
+		RGX_UnInitNode();
+		RGX_UnInitMisc();
+}
 
 
 typedef struct __prog_set_tag
@@ -25,16 +35,12 @@ typedef struct __prog_set_tag
 		lexAction_t						*action;
 		size_t							count;
 		size_t							cap;
-		rgxThreadList_t					curr;
-		rgxThreadList_t					next;
 }lexProgSet_t;
 
 lexProgSet_t* LEX_CreateProgSet()
 {
 		lexProgSet_t *res;
 		res = AR_NEW0(lexProgSet_t);
-		RGX_InitThreadList(&res->curr);
-		RGX_InitThreadList(&res->next);
 		return res;
 }
 
@@ -50,8 +56,6 @@ void LEX_ClearProgSet(lexProgSet_t *set)
 		}
 
 		set->count = 0;
-		RGX_ClearThreadList(&set->curr);
-		RGX_ClearThreadList(&set->next);
 }
 
 
@@ -61,8 +65,6 @@ void		LEX_DestroyProgSet(lexProgSet_t *set)
 		if(set)
 		{
 				LEX_ClearProgSet(set);
-				RGX_UnInitThreadList(&set->curr);
-				RGX_UnInitThreadList(&set->next);
 
 				if(set->prog)AR_DEL(set->prog);
 				if(set->action)AR_DEL(set->action);
@@ -300,7 +302,7 @@ REMATCH:
 				AR_DestroyString(str);
 				*/
 
-				if(RGX_Match(lex->prog_set->prog[i], match, tok, &lex->prog_set->curr, &lex->prog_set->next))
+				if(RGX_Match(lex->prog_set->prog[i], match, tok))
 				{
 						if(lex->prog_set->action[i].is_skip)
 						{

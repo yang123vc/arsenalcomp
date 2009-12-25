@@ -453,7 +453,7 @@ rgxThread_t RGX_BuildThread(rgxIns_t *pc, const wchar_t *sp, size_t x, size_t y)
 		return tmp;
 }
 
-
+/*
 void RGX_InitThreadList(rgxThreadList_t *lst)
 {
 		AR_ASSERT(lst != NULL);
@@ -469,6 +469,74 @@ void RGX_UnInitThreadList(rgxThreadList_t *lst)
 		}
 		AR_memset(lst, 0, sizeof(*lst));
 }
+*/
+
+
+
+static rgxThreadList_t	*__g_free_list = NULL;
+static arSpinLock_t		__g_spin_lock;
+
+
+void	RGX_InitMisc()
+{
+		AR_InitSpinLock(&__g_spin_lock);
+		__g_free_list = NULL;
+}
+
+
+void	RGX_UnInitMisc()
+{
+		
+		while(__g_free_list != NULL)
+		{
+				rgxThreadList_t *lst = __g_free_list;
+				__g_free_list = __g_free_list->next;
+
+				if(lst->lst)AR_DEL(lst->lst);
+				AR_DEL(lst);
+		}
+
+		AR_UnInitSpinLock(&__g_spin_lock);
+}
+
+
+rgxThreadList_t*	RGX_CreateThreadList()
+{
+
+		rgxThreadList_t	*res = NULL;
+
+
+		AR_LockSpinLock(&__g_spin_lock);
+
+		if(__g_free_list == NULL)
+		{
+				__g_free_list = AR_NEW0(rgxThreadList_t);
+		}
+
+		
+		res = __g_free_list;
+		__g_free_list = __g_free_list->next;
+		AR_UnLockSpinLock(&__g_spin_lock);
+		res->next = NULL;
+		
+		RGX_ClearThreadList(res);
+		return res;
+}
+
+void				RGX_DestroyThreadList(rgxThreadList_t *lst)
+{
+		AR_ASSERT(lst != NULL);
+		AR_ASSERT(lst->next == NULL);
+		AR_LockSpinLock(&__g_spin_lock);
+		lst->next = __g_free_list;
+		__g_free_list = lst;
+		AR_UnLockSpinLock(&__g_spin_lock);
+}
+
+
+
+
+
 
 
 void RGX_InsertToThreadList(rgxThreadList_t *lst, rgxThread_t thd)
