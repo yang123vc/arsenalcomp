@@ -109,7 +109,7 @@ void	AR_error_ctx(void *ctx, int_t level, const wchar_t *msg, ...);
 #define AR_NELEMS(_arr)	(sizeof((_arr))/sizeof((_arr)[0]))
 
 
-AR_INLINE const void* AR_GET_ELEM(const void *base, size_t width, size_t idx)
+static AR_INLINE const void* AR_GET_ELEM(const void *base, size_t width, size_t idx)
 {
 		AR_ASSERT(base != NULL && width > 0);
 		return (const void*)((byte_t*)base + (width * idx));
@@ -369,7 +369,7 @@ void			AR_YiledThread();
 
 /*#define AR_BIT_MARK(_pos)	(((uint64_t)0x01) << ((uint64_t)(_pos)))*/
 
-AR_INLINE uint64_t AR_BIT_MARK(uint64_t pos) { return AR_BIGNUM_U64(0x01) << pos; }
+static AR_INLINE uint64_t AR_BIT_MARK(uint64_t pos) { return AR_BIGNUM_U64(0x01) << pos; }
 
 #define AR_BIT_TEST(_val, _pos)  ((((_val) & (AR_BIT_MARK((_pos))))))
 

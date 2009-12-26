@@ -17,6 +17,8 @@
 AR_NAMESPACE_BEGIN
 
 
+/***************************************************global*****************************/
+
 static rgxNode_t*		__g_node_list = NULL;
 static arSpinLock_t		__g_lock;
 
@@ -43,8 +45,8 @@ void RGX_UnInitNode()
 static rgxNode_t* __alloc_node()
 {
 		rgxNode_t *node;
+		
 		AR_LockSpinLock(&__g_lock);
-
 		if(__g_node_list == NULL)
 		{
 				__g_node_list = AR_NEW0(rgxNode_t);
@@ -58,6 +60,7 @@ static rgxNode_t* __alloc_node()
 		return node;
 }
 
+
 static void		__free_node(rgxNode_t *node)
 {
 		AR_ASSERT(node != NULL);
@@ -70,6 +73,7 @@ static void		__free_node(rgxNode_t *node)
 }
 
 
+/**************************************************************************************/
 
 rgxNode_t*		RGX_CreateNode(rgxNodeType_t type)
 {
@@ -150,7 +154,10 @@ rgxNode_t*		RGX_CopyNode(const rgxNode_t *node)
 		AR_ASSERT(node->ref_count >= 1);
 
 		res = (rgxNode_t*)node;
-		res->ref_count++;
+
+		AR_AtomicInc((volatile int_t*)&node->ref_count);
+
+		/*res->ref_count++;*/
 		return res;
 
 		/*
@@ -219,7 +226,12 @@ void			RGX_DestroyNode(rgxNode_t *node)
 		
 		AR_ASSERT(node->ref_count >= 1);
 
-		if(--node->ref_count > 0)return;
+		if(AR_AtomicDec((volatile int_t*)&node->ref_count) > 0)
+		{
+				return;
+		}
+		
+		/*if(--node->ref_count > 0)return;*/
 
 		
 		

@@ -248,7 +248,6 @@ void PSR_Calc_LR0_Closure(psrLRItemTbl_t *closure, const psrGrammar_t *grammar)
 				
 				for(iter = PSR_GetLRItemTblFirst(closure); iter.curr; PSR_GetLRItemTblNext(closure, &iter))
 				{
-						
 						const psrRule_t *rule;
 						const psrSymb_t *body;
 
@@ -321,7 +320,7 @@ void PSR_Calc_LR0_Goto(const psrLRItemTbl_t *start, psrLRItemTbl_t *to, const ps
 				const psrSymb_t *next_symb;
 				rule = iter.curr->item.rule;
 				next_symb = PSR_IndexOfSymbList(&rule->body, iter.curr->item.delim);
-						
+
 				if(next_symb == NULL || PSR_CompSymb(next_symb, symb) != 0)
 				{
 						/*当下某一项的产生式已经到达规约状态或在symb上无转移时继续检测下一个*/

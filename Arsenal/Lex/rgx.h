@@ -234,8 +234,8 @@ typedef struct __thread_tag
 		size_t			col;
 }rgxThread_t;
 
-
 rgxThread_t		RGX_BuildThread(rgxIns_t *pc, const wchar_t *sp, size_t x, size_t y);
+
 
 typedef struct __thd_list_tag
 {
