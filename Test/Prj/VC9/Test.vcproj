@@ -359,8 +359,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLLDebug|Pocket PC 2003 (ARMV4)"
-			OutputDirectory="Pocket PC 2003 (ARMV4)\$(ConfigurationName)"
-			IntermediateDirectory="Pocket PC 2003 (ARMV4)\$(ConfigurationName)"
+			OutputDirectory="..\..\..\binary\ppc2003\DLL\Debug"
+			IntermediateDirectory="..\..\..\Temp\Arsenal\ppc2003\DLLDebug"
 			ConfigurationType="1"
 			CharacterSet="1"
 			>
@@ -779,8 +779,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLLRelease|Pocket PC 2003 (ARMV4)"
-			OutputDirectory="$(SolutionDir)Pocket PC 2003 (ARMV4)\$(ConfigurationName)"
-			IntermediateDirectory="Pocket PC 2003 (ARMV4)\$(ConfigurationName)"
+			OutputDirectory="..\..\..\binary\ppc2003\DLL\Release"
+			IntermediateDirectory="..\..\..\Temp\Arsenal\ppc2003\DLLDebug"
 			ConfigurationType="1"
 			CharacterSet="1"
 			>
@@ -1174,8 +1174,8 @@
 		</Configuration>
 		<Configuration
 			Name="LibDebug|Pocket PC 2003 (ARMV4)"
-			OutputDirectory="Pocket PC 2003 (ARMV4)\$(ConfigurationName)"
-			IntermediateDirectory="Pocket PC 2003 (ARMV4)\$(ConfigurationName)"
+			OutputDirectory="..\..\..\binary\ppc2003\Lib\Debug"
+			IntermediateDirectory="..\..\..\Temp\Arsenal\ppc2003\LibDebug"
 			ConfigurationType="1"
 			CharacterSet="1"
 			>
@@ -1569,8 +1569,8 @@
 		</Configuration>
 		<Configuration
 			Name="LibRelease|Pocket PC 2003 (ARMV4)"
-			OutputDirectory="$(SolutionDir)Pocket PC 2003 (ARMV4)\$(ConfigurationName)"
-			IntermediateDirectory="Pocket PC 2003 (ARMV4)\$(ConfigurationName)"
+			OutputDirectory="..\..\..\binary\ppc2003\Lib\Release"
+			IntermediateDirectory="..\..\..\Temp\Arsenal\ppc2003\LibRelease"
 			ConfigurationType="1"
 			CharacterSet="1"
 			>
