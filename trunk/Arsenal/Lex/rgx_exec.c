@@ -174,6 +174,7 @@ static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, const wchar_t *in
 						{
 								/*
 										这里的意义是，不论你前向预搜索什么，只要有一个走通了就OK
+										例如a(?=(a|b|c|d))走通了哪个都算OK
 								*/
 								RGX_DestroyThreadList(curr);
 								RGX_DestroyThreadList(next);

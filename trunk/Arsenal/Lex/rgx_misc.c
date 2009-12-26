@@ -472,6 +472,7 @@ void RGX_UnInitThreadList(rgxThreadList_t *lst)
 */
 
 
+/**********************************************************Global************************************************************/
 
 static rgxThreadList_t	*__g_free_list = NULL;
 static arSpinLock_t		__g_spin_lock;
@@ -499,6 +500,7 @@ void	RGX_UnInitMisc()
 		AR_UnInitSpinLock(&__g_spin_lock);
 }
 
+/*****************************************************************************************************************************/
 
 rgxThreadList_t*	RGX_CreateThreadList()
 {

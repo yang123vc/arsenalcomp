@@ -106,7 +106,7 @@
 		#pragma warning(disable : 4214)
 		#pragma warning(disable : 4201)
 		#pragma warning(disable : 4090)
-		
+
 #endif
 
 /*
@@ -233,6 +233,7 @@
 		#define AR_INT_FMT64		L"ll"
 
 		#define AR_NOOP
+
 		#define AR_FUNC_NAME			__PRETTY_FUNCTION__
 
 
@@ -253,7 +254,7 @@
 		#define AR_NAMESPACE_END		} }
 
 		typedef bool					bool_t;
-		
+
 		#define AR_INLINE				inline
 #else
 		#define AR_NAMESPACE_BEGIN
@@ -263,9 +264,9 @@
 
 		#define	true					1
 		#define false					0
-		
-		#if(__STDC_VERSION__ < 199901L) /*C99标准之前的编译器定义为static*/
-				#define AR_INLINE				static
+
+		#if(__STDC_VERSION__ < 199901L) /*C99标准之前的编译器定义为无*/
+				#define AR_INLINE				/*static*/
         #else
                 #define AR_INLINE				inline
 		#endif

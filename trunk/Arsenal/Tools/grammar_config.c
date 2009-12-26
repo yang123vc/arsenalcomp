@@ -1,12 +1,12 @@
 /*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
- * 
+ *
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.It is provided "as is" without express 
+ * in supporting documentation.It is provided "as is" without express
  * or implied warranty.
  *
  */
@@ -17,7 +17,7 @@
 
 AR_NAMESPACE_BEGIN
 
-typedef enum 
+typedef enum
 {
 		CFG_LEXEME_T,
 		CFG_NAME_T,
@@ -44,7 +44,7 @@ struct __cfg_node_tag
 };
 
 
-static const wchar_t *__cfg_lex_name[] = 
+static const wchar_t *__cfg_lex_name[] =
 {
 		L"	delim		= 	[\\t\\r\\n ]+",
 		L"	letter		= 	[A-Z_a-z]",
@@ -92,12 +92,12 @@ typedef struct  __cfg_lex_pattern_tag
 		size_t			prec;
 }cfgLexPattern_t;
 
-static const cfgLexPattern_t	__cfg_pattern[] = 
+static const cfgLexPattern_t	__cfg_pattern[] =
 {
 		{EOI,	L"[\\0]", false,2},
-		{DELIM, L"{skip_lexem}+", true},
+		{DELIM, L"{skip_lexem}+", true, 1},
 		{ASSOC,	L"\"%\"(\"left\"|\"right\"|\"noassoc\")", false,1},
-		
+
 		{SKIP,	L"\"%skip\"", false,0},
 		{NAME,	L"\"%name\"(?={key_lookahead})", false,0},
 		{TOKEN,	L"\"%token\"(?={key_lookahead})", false,0},
@@ -105,7 +105,7 @@ static const cfgLexPattern_t	__cfg_pattern[] =
 		{RULES,	L"\"%rule\"(?={key_lookahead})",false,0},
 		{HANDLER, L"\"%handler\"(?={skip_lexem}+)", false, 0},
 
-		
+
 		{LEXEME,	L"{lexeme}", false,0},
 		{NUMBER,	L"{number}", false,0},
 
@@ -140,7 +140,7 @@ typedef struct	__cfg_term_info_tag
 }cfgTermInfo_t;
 
 
-static const cfgTermInfo_t	__cfg_term[] = 
+static const cfgTermInfo_t	__cfg_term[] =
 {
 		{SKIP, L"%skip"},
 		{NAME, L"%name"},
@@ -183,7 +183,7 @@ static void CFG_InsertToNodeList(cfgNodeList_t *lst, cfgNode_t *node)
 {
 		AR_ASSERT(lst != NULL && node != NULL);
 
-		
+
 		if(lst->count == lst->cap)
 		{
 				lst->cap = (lst->cap + 4)*2;
@@ -204,7 +204,7 @@ static void CFG_InitConfig(cfgConfig_t *cfg, cfgNodeList_t *name, cfgNodeList_t 
 		{
 				cfg->name_cnt = name->count;
 				cfg->name = cfg->name_cnt > 0 ? AR_NEWARR0(cfgName_t, name->count) : NULL;
-				
+
 				for(i = 0; i < name->count; ++i)
 				{
 						cfg->name[i].line = name->lst[i]->name.line;
@@ -218,7 +218,7 @@ static void CFG_InitConfig(cfgConfig_t *cfg, cfgNodeList_t *name, cfgNodeList_t 
 		{
 				size_t k;
 				size_t tmp_tok_val = 1;
-				
+
 				cfg->tok_cnt = token->count + 1;
 
 				/*cfg->tok = cfg->tok_cnt > 0 ? AR_NEWARR0(cfgToken_t, cfg->tok_cnt + 1) : NULL;*/
@@ -318,7 +318,7 @@ static void CFG_UnInitConfig(cfgConfig_t *cfg)
 		{
 				AR_DEL(cfg->name[i].name);
 				AR_DEL(cfg->name[i].regex);
-				
+
 		}
 
 		if(cfg->name)AR_DEL(cfg->name);
@@ -340,12 +340,12 @@ static void CFG_UnInitConfig(cfgConfig_t *cfg)
 
 		if(cfg->prec)AR_DEL(cfg->prec);
 
-		
+
 		for(i = 0; i < cfg->rule_cnt; ++i)
 		{
 				AR_DEL(cfg->rule[i].lhs);
 				AR_DEL(cfg->rule[i].rhs);
-				
+
 				if(cfg->rule[i].prec_tok)AR_DEL(cfg->rule[i].prec_tok);
 				if(cfg->rule[i].handler_name)AR_DEL(cfg->rule[i].handler_name);
 		}
@@ -459,10 +459,10 @@ static psrNode_t* AR_STDCALL __build_leaf(const psrToken_t *tok,  void *ctx)
 		cfgNode_t *node;
 		AR_ASSERT(tok->str_cnt > 0);
 		node = CFG_CreateNode(CFG_LEXEME_T);
-		
+
 		node->lexeme.lex_val = (cfgLexValue_t)tok->term_val;
 
-		
+
 		if(tok->term_val == LEXEME && (tok->str[0] == L'"' || tok->str[0] == L'\''))
 		{
 				node->lexeme.lexeme = AR_wcsndup(tok->str + 1, tok->str_cnt-2);
@@ -471,7 +471,7 @@ static psrNode_t* AR_STDCALL __build_leaf(const psrToken_t *tok,  void *ctx)
 		{
 				node->lexeme.lexeme = AR_wcsndup(tok->str, tok->str_cnt);
 		}
-		
+
 		node->lexeme.line = tok->line;
 		return (psrNode_t*)node;
 }
@@ -485,7 +485,7 @@ static psrNode_t*		AR_STDCALL __build_prec_decl(psrNode_t **nodes, size_t count,
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res;
-		
+
 		AR_ASSERT(count == 2 && nodes != NULL);
 		AR_ASSERT(ns[0]->type == CFG_LEXEME_T && ns[1]->type == CFG_LEXEME_T);
 
@@ -516,7 +516,7 @@ static psrNode_t*		AR_STDCALL __handle_term_list(psrNode_t **nodes, size_t count
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res;
-		
+
 		AR_ASSERT((count == 1 || count == 2) && nodes != NULL);
 
 		if(count == 1)
@@ -524,7 +524,7 @@ static psrNode_t*		AR_STDCALL __handle_term_list(psrNode_t **nodes, size_t count
 				res = CFG_CreateNode(CFG_NODE_LIST_T);
 
 				AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T);
-				
+
 				CFG_InsertToNodeList(&res->lst, ns[0]);
 				ns[0] = NULL;
 		}else
@@ -532,12 +532,12 @@ static psrNode_t*		AR_STDCALL __handle_term_list(psrNode_t **nodes, size_t count
 				AR_ASSERT(ns[0] && ns[0]->type == CFG_NODE_LIST_T && ns[1] && ns[1]->type == CFG_LEXEME_T);
 
 				res = ns[0];
-				
+
 				CFG_InsertToNodeList(&res->lst, ns[1]);
 
 				ns[0] = ns[1] = NULL;
 		}
-		
+
 		return res;
 }
 
@@ -553,15 +553,15 @@ static psrNode_t*		AR_STDCALL __handle_rhs(psrNode_t **nodes, size_t count, cons
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res;
-		
+
 		AR_ASSERT((count == 1 || count == 3) && nodes != NULL);
-		
+
 		res = CFG_CreateNode(CFG_RULE_T);
 		res->rule.lhs = NULL;
 		res->rule.line = 0;
 		res->rule.prec_tok = NULL;
 		res->rule.rhs = AR_NEWARR0(wchar_t, 2048);
-		
+
 		if(count == 3)
 		{
 				size_t i;
@@ -570,9 +570,9 @@ static psrNode_t*		AR_STDCALL __handle_rhs(psrNode_t **nodes, size_t count, cons
 				AR_ASSERT(ns[1] ? ns[1]->type == CFG_LEXEME_T : true);
 
 				AR_ASSERT(ns[2] ? ns[2]->type == CFG_LEXEME_T : true);
-				
 
-				
+
+
 				for(i = 0; i < ns[0]->lst.count; ++i)
 				{
 						cfgNode_t *tmp = ns[0]->lst.lst[i];
@@ -625,7 +625,7 @@ static psrNode_t*		AR_STDCALL __handle_rhs_list(psrNode_t **nodes, size_t count,
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res;
-		
+
 		AR_ASSERT((count == 1 || count == 3) && nodes != NULL);
 
 		if(count == 3)
@@ -666,10 +666,10 @@ static psrNode_t*		AR_STDCALL __handle_rule_def(psrNode_t **nodes, size_t count,
 
 		AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T && ns[1] && ns[1]->type == CFG_LEXEME_T && ns[2] && ns[2]->type == CFG_NODE_LIST_T && ns[3] && ns[3]->type == CFG_LEXEME_T);
 
-		
+
 		CFG_DestroyNode(ns[1]);
 		CFG_DestroyNode(ns[3]);
-		
+
 		AR_ASSERT(ns[0]->lexeme.lexeme != NULL);
 
 		for(i = 0; i < ns[2]->lst.count; ++i)
@@ -680,7 +680,7 @@ static psrNode_t*		AR_STDCALL __handle_rule_def(psrNode_t **nodes, size_t count,
 				tmp->rule.lhs = AR_wcsdup(ns[0]->lexeme.lexeme);
 				tmp->rule.line = ns[0]->lexeme.line;
 		}
-		
+
 		CFG_DestroyNode(ns[0]);
 
 		res = ns[2];
@@ -704,18 +704,18 @@ static psrNode_t*		AR_STDCALL __handle_rule_def_list(psrNode_t **nodes, size_t c
 		AR_ASSERT(count == 2 || count == 1);
 
 		res = ns[0];
-		
+
 		if(count == 1)
 		{
 				AR_ASSERT(ns[0] && ns[0]->type == CFG_NODE_LIST_T);
 
 				ns[0] = NULL;
-				
+
 		}else
 		{
 				size_t i;
 				AR_ASSERT(ns[0] && ns[0]->type == CFG_NODE_LIST_T && ns[1] && ns[1]->type == CFG_NODE_LIST_T);
-				
+
 				for(i = 0; i < ns[1]->lst.count; ++i)
 				{
 						cfgNode_t *tmp = ns[1]->lst.lst[i];
@@ -744,8 +744,8 @@ static psrNode_t*		AR_STDCALL __handle_rule_block(psrNode_t **nodes, size_t coun
 
 		AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T && ns[1] && ns[1]->type == CFG_LEXEME_T && ns[2] && ns[2]->type == CFG_NODE_LIST_T && ns[3] && ns[3]->type == CFG_LEXEME_T);
 
-		
-		
+
+
 		CFG_DestroyNode(ns[0]);
 		CFG_DestroyNode(ns[1]);
 		res = ns[2];
@@ -767,16 +767,16 @@ static psrNode_t*		AR_STDCALL __handle_prec_def(psrNode_t **nodes, size_t count,
 		cfgNode_t		*res;
 		wchar_t			c;
 		AR_ASSERT(count == 3);
-		
+
 		AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T &&  ns[0]->lexeme.lex_val == ASSOC && ns[1] && ns[1]->type == CFG_LEXEME_T);
 
 
-		
+
 		res = CFG_CreateNode(CFG_PREC_T);
 		res->prec.line = ns[0]->lexeme.line;
 
 		c = ns[0]->lexeme.lexeme[1];
-		
+
 		if(c == L'n')
 		{
 				res->prec.assoc	= PSR_ASSOC_NOASSOC;
@@ -792,8 +792,8 @@ static psrNode_t*		AR_STDCALL __handle_prec_def(psrNode_t **nodes, size_t count,
 		{
 				AR_abort();
 		}
-				
-		
+
+
 		res->prec.prec_tok = ns[1]->lexeme.lexeme;
 		ns[1]->lexeme.lexeme = NULL;
 
@@ -833,7 +833,7 @@ static psrNode_t*		AR_STDCALL __handle_prec_def_list(psrNode_t **nodes, size_t c
 
 		CFG_InsertToNodeList(&res->lst, ns[1]);
 		ns[1] = NULL;
-		
+
 		return res;
 }
 
@@ -850,7 +850,7 @@ static psrNode_t*		AR_STDCALL __handle_prec_block(psrNode_t **nodes, size_t coun
 		cfgNode_t		*res;
 
 		AR_ASSERT(count == 4 && nodes != NULL);
-		
+
 		AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T && ns[1] && ns[1]->type == CFG_LEXEME_T && ns[3] && ns[3]->type == CFG_LEXEME_T);
 		AR_ASSERT((ns[2] == NULL) || (ns[2]->type == CFG_NODE_LIST_T));
 
@@ -858,7 +858,7 @@ static psrNode_t*		AR_STDCALL __handle_prec_block(psrNode_t **nodes, size_t coun
 		CFG_DestroyNode(ns[1]);
 		res = ns[2];
 		ns[2] = NULL;
-		
+
 		CFG_DestroyNode(ns[2]);
 
 		ns[0] = ns[1] = ns[2] = ns[3] = NULL;
@@ -879,10 +879,10 @@ static psrNode_t*		AR_STDCALL __handle_token_val_prec(psrNode_t **nodes, size_t 
 		cfgNode_t		*res;
 
 		AR_ASSERT(count == 2 && nodes != NULL);
-		
+
 		AR_ASSERT(ns[0]->type == CFG_LEXEME_T && ns[0]->lexeme.lex_val == (size_t)COMMA);
 		AR_ASSERT(ns[1]->type == CFG_LEXEME_T && ns[1]->lexeme.lex_val == (size_t)NUMBER);
-		
+
 		CFG_DestroyNode(ns[0]);
 		res = ns[1];
 
@@ -909,14 +909,14 @@ static psrNode_t*		AR_STDCALL __handle_token_def(psrNode_t **nodes, size_t count
 		cfgNode_t		*res;
 
 		AR_ASSERT(count == 6);
-		
+
 		/*AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T && ns[1] && ns[1]->type == CFG_LEXEME_T && ns[2] && ns[2]->type == CFG_LEXEME_T && ns[4] && ns[4]->type == CFG_LEXEME_T);*/
 
 		AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T && ns[2] && ns[2]->type == CFG_LEXEME_T && ns[3] && ns[3]->type == CFG_LEXEME_T);
-		
+
 		AR_ASSERT((ns[1] == NULL) || (ns[1]->type == CFG_LEXEME_T));
 		AR_ASSERT((ns[4] == NULL) || (ns[4]->type == CFG_LEXEME_T));
-		
+
 
 
 		res = CFG_CreateNode(CFG_TOKEN_T);
@@ -930,16 +930,16 @@ static psrNode_t*		AR_STDCALL __handle_token_def(psrNode_t **nodes, size_t count
 		}else
 		{
 				res->token.is_skip = false;
-				
+
 				res->token.name = ns[0]->lexeme.lexeme;
 				ns[0]->lexeme.lexeme = NULL;
 		}
 
 		res->token.regex = ns[3]->lexeme.lexeme;
 		ns[3]->lexeme.lexeme = NULL;
-		
+
 		res->token.lex_prec = 0;
-		
+
 		if(ns[1])
 		{
 				AR_wtou(ns[1]->lexeme.lexeme, &res->token.tokval, 10);
@@ -953,7 +953,7 @@ static psrNode_t*		AR_STDCALL __handle_token_def(psrNode_t **nodes, size_t count
 				AR_wtou(ns[4]->lexeme.lexeme, &res->token.lex_prec, 10);
 		}
 
-		
+
 
 		CFG_DestroyNode(ns[0]);
 		CFG_DestroyNode(ns[1]);
@@ -995,7 +995,7 @@ static psrNode_t*		AR_STDCALL __handle_token_def_list(psrNode_t **nodes, size_t 
 				CFG_InsertToNodeList(&res->lst, ns[0]);
 				ns[0] = NULL;
 		}
-		
+
 		return res;
 
 }
@@ -1012,8 +1012,8 @@ static psrNode_t*		AR_STDCALL __handle_token_block(psrNode_t **nodes, size_t cou
 
 		AR_ASSERT(count == 4);
 		AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T && ns[1] && ns[1]->type == CFG_LEXEME_T && ns[2] && ns[2]->type == CFG_NODE_LIST_T && ns[3] && ns[3]->type == CFG_LEXEME_T);
-		
-		
+
+
 
 		CFG_DestroyNode(ns[0]);
 		CFG_DestroyNode(ns[1]);
@@ -1039,14 +1039,14 @@ static psrNode_t*		AR_STDCALL __handle_name_def(psrNode_t **nodes, size_t count,
 
 		AR_ASSERT(count == 4);
 		AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T && ns[1] && ns[1]->type == CFG_LEXEME_T && ns[2] && ns[2]->type == CFG_LEXEME_T && ns[3] && ns[3]->type == CFG_LEXEME_T);
-		
+
 		res = CFG_CreateNode(CFG_NAME_T);
 
 		res->name.line = ns[0]->lexeme.line;
 		res->name.name = ns[0]->lexeme.lexeme;
 
 		ns[0]->lexeme.lexeme = NULL;
-		
+
 		res->name.regex = ns[2]->lexeme.lexeme;
 		ns[2]->lexeme.lexeme = NULL;
 
@@ -1073,7 +1073,7 @@ static psrNode_t*		AR_STDCALL __handle_name_def_list(psrNode_t **nodes, size_t c
 
 		AR_ASSERT(count == 2);
 		AR_ASSERT((ns[0] == NULL || (ns[0] && ns[0]->type == CFG_NODE_LIST_T)) && ns[1] && ns[1]->type == CFG_NAME_T);
-		
+
 		if(ns[0] == NULL)
 		{
 				res = CFG_CreateNode(CFG_NODE_LIST_T);
@@ -1082,10 +1082,10 @@ static psrNode_t*		AR_STDCALL __handle_name_def_list(psrNode_t **nodes, size_t c
 				res =ns[0];
 				ns[0] = NULL;
 		}
-		
+
 		CFG_InsertToNodeList(&res->lst, ns[1]);
 		ns[1] = NULL;
-		
+
 		return res;
 }
 
@@ -1107,9 +1107,9 @@ static psrNode_t*		AR_STDCALL __handle_name_block(psrNode_t **nodes, size_t coun
 		AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T &&  ns[1] && ns[1]->type == CFG_LEXEME_T && ns[3] && ns[3]->type == CFG_LEXEME_T);
 
 		AR_ASSERT((ns[2] == NULL) || (ns[2]->type == CFG_NODE_LIST_T));
-		
+
 		res = ns[2];
-		
+
 		CFG_DestroyNode(ns[0]);
 		CFG_DestroyNode(ns[1]);
 		res = ns[2];
@@ -1117,7 +1117,7 @@ static psrNode_t*		AR_STDCALL __handle_name_block(psrNode_t **nodes, size_t coun
 
 		ns[0] = ns[1] = ns[2] = ns[3] = NULL;
 
-		
+
 		return res;
 }
 
@@ -1135,7 +1135,7 @@ static psrNode_t*		AR_STDCALL __handle_program(psrNode_t **nodes, size_t count, 
 		AR_ASSERT((ns[2] == NULL) || (ns[2] && ns[2]->type == CFG_NODE_LIST_T));
 		AR_ASSERT((ns[3] == NULL) || (ns[3] && ns[3]->type == CFG_NODE_LIST_T));
 
-		
+
 		res = CFG_CreateNode(CFG_CONFIG_T);
 
 		CFG_InitConfig(	&res->config
@@ -1163,11 +1163,11 @@ typedef struct __cfg_rule_tag
 		psrRuleFunc_t handler;
 }cfgRuleDef_t;
 
-static const cfgRuleDef_t	__cfg_rule[] = 
+static const cfgRuleDef_t	__cfg_rule[] =
 {
 
 		{ L"program				:		name_block token_block prec_block rule_block",	__handle_program},
-		
+
 		{ L"name_block			:		%name { name_def_list }",						__handle_name_block},
 		{ L"name_block			:			",											NULL},
 		{ L"name_def_list 		:		name_def_list  name_def",						__handle_name_def_list},
@@ -1177,13 +1177,13 @@ static const cfgRuleDef_t	__cfg_rule[] =
 		{ L"token_block 		:		%token { token_def_list }",						__handle_token_block},
 		{ L"token_def_list 		:		token_def_list  token_def",						__handle_token_def_list},
 		{ L"token_def_list 		:		token_def ",									__handle_token_def_list},
-		
+
 		{ L"token_def			:  		%skip token_val_prec : lexeme token_val_prec ;",				__handle_token_def},
 		{ L"token_def			:  		lexeme token_val_prec : lexeme token_val_prec ;",				__handle_token_def},
 
 		{ L"token_val_prec 		:		, number",										__handle_token_val_prec},
 		{ L"token_val_prec 		:		",												NULL},
-		
+
 
 		{ L"prec_block 			:		%prec { prec_def_list  }",						__handle_prec_block},
 		{ L"prec_block 			:		",												NULL},
@@ -1195,8 +1195,8 @@ static const cfgRuleDef_t	__cfg_rule[] =
 		{ L"rule_block			:		",												NULL},
 		{ L"rule_def_list		:		rule_def_list rule_def ",						__handle_rule_def_list},
 		{ L"rule_def_list		:		rule_def",										__handle_rule_def_list},
-		
-		
+
+
 		{ L"rule_def			: 		lexeme : rhs_list ;",							__handle_rule_def},
 		{ L"rhs_list			: 		rhs_list  | rhs ",								__handle_rhs_list},
 		{ L"rhs_list			: 		rhs ",											__handle_rhs_list},
@@ -1216,12 +1216,12 @@ static const cfgRuleDef_t	__cfg_rule[] =
 static lex_t* __build_lex(void *io)
 {
 		lex_t *lex;
-		int_t	i;
+		size_t	i;
 
 		lex = LEX_Create(io);
 
 		AR_ASSERT(lex != NULL);
-		
+
 		for(i = 0; i < AR_NELEMS(__cfg_lex_name); ++i)
 		{
 				if(!LEX_Insert(lex, __cfg_lex_name[i]))
@@ -1247,13 +1247,13 @@ static lex_t* __build_lex(void *io)
 				}
 		}
 
-		
+
 		if(!LEX_GenerateTransTable(lex))
 		{
 				AR_ASSERT(false);
 				AR_abort();
 		}
-		
+
 		return lex;
 }
 
@@ -1265,7 +1265,7 @@ static parser_t*	__build_parser(void *io)
 		psrGrammar_t	*gmr;
 		parser_t		*parser;
 		size_t i;
-		
+
 		gmr = PSR_CreateGrammar(io);
 
 		for(i = 0; i < AR_NELEMS(__cfg_term); ++i)
@@ -1288,7 +1288,8 @@ static parser_t*	__build_parser(void *io)
 
 		if(gmr == NULL || !PSR_CheckIsValidGrammar(gmr))
 		{
-				AR_printf(L"Internal Error : %ls\r\n", AR_WSTR(AR_FUNC_NAME));
+		    AR_printf(L"Internal Error : %ls\r\n", AR_FUNC_NAME);
+
 				AR_abort();
 		}
 
@@ -1297,7 +1298,7 @@ static parser_t*	__build_parser(void *io)
 				psrCtx_t		psr_ctx = {cfg_free,  NULL};
 				parser = PSR_CreateParser(gmr, PSR_LALR, &psr_ctx);
 		}
-		
+
 		PSR_DestroyGrammar(gmr);
 		return parser;
 }
@@ -1307,7 +1308,7 @@ static parser_t*	__build_parser(void *io)
 
 cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, void *io)
 {
-		
+
 		bool_t is_ok;
 		lex_t *lex;
 		lexMatch_t match;
@@ -1319,13 +1320,13 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, void *io)
 		LEX_InitMatch(&match, gmr_txt);
 
 		lex = __build_lex(io);
-		
+
 
 
 		parser = __build_parser(io);
-		
+
 		is_ok = true;
-		
+
 		while(is_ok)
 		{
 				is_ok = LEX_Match(lex, &match, &tok);
@@ -1343,20 +1344,20 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, void *io)
 				AR_printf(L"tok->name %ls : (%d : %d)\r\n", AR_wcsndup(tok.str, tok.count), tok.line, tok.col);
 				getchar();
 				*/
-				
+
 				PSR_TOTERMTOK(&tok, &term);
 
 				is_ok = PSR_AddToken(parser, &term);
-				
+
 				if(tok.type == EOI)break;
 
 				//AR_printf(L"%ls : %d\r\n", AR_wcsndup(tok.str, tok.count), tok.type);
 		}
-		
+
 		if(is_ok)
 		{
 				result = (cfgNode_t*)PSR_GetResult(parser);
-				
+
 				AR_ASSERT(result->type == CFG_CONFIG_T);
 		}
 
@@ -1364,10 +1365,10 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, void *io)
 		PSR_DestroyParser(parser);
 		LEX_UnInitMatch(&match);
 
-		
+
 		LEX_Destroy(lex);
-		
-		
+
+
 
 		return (cfgConfig_t*)result;
 

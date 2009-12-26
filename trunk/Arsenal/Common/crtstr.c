@@ -1,12 +1,12 @@
 /*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
- * 
+ *
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.It is provided "as is" without express 
+ * in supporting documentation.It is provided "as is" without express
  * or implied warranty.
  *
  */
@@ -42,10 +42,10 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 						res++;
 						continue;
 				}
-				
+
 				/*处理%后面的*/
 
-				
+
 				while(*fmt)
 				{
 						if(*fmt == L'#')
@@ -96,11 +96,11 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 								AR_ASSERT(fmt != NULL && prec >= 0);
 								if(fmt == NULL || prec < 0)return -1;
 						}
-						
+
 				}
 
 				modifier = 0;
-				
+
 				if(*fmt == L'I' && *(fmt + 1) == L'6' && *(fmt + 2) == L'4')/*VC,BCB等*/
 				{
 						/*例如%I64d*/
@@ -114,7 +114,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 				{
 						/*例如%Id*/
 						fmt += 1;
-				
+
 						#if(AR_ARCH_VER == AR_ARCH_64)
 								modifier |= __MODIFIER_INT64
 						#elif(AR_ARCH_VER == AR_ARCH_32)
@@ -157,7 +157,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 						break;
 				case L'c' | __MODIFIER_ANSI:
 				case L'C' | __MODIFIER_ANSI:
-				
+
 						len = 2;
 
 #if(AR_COMPILER == AR_GCC3 || AR_COMPILER == AR_GCC4)
@@ -277,7 +277,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 								*/
 
 								cclen = AR_MAX(width, 312 + prec + 6);/*取最大值*/
-								
+
 								buf = AR_NEWARR0(wchar_t, cclen);
 								AR_swprintf(buf, cclen, L"%*.*f", width, prec + 6, f);
 								len = AR_wcslen(buf);
@@ -309,8 +309,8 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 		va_end(save);
 		return res;
 }
-#undef	__MODIFIER_ANSI		
-#undef	__MODIFIER_UNICODE	
+#undef	__MODIFIER_ANSI
+#undef	__MODIFIER_UNICODE
 #undef	__MODIFIER_INT64
 
 
@@ -331,7 +331,7 @@ int_t			AR_scwprintf(const wchar_t *fmt, ...)
 wchar_t*		AR_vtow(const wchar_t *fmt, ...)
 {
 		va_list			args;
-		
+
 		wchar_t			*buf;
 		int_t			len;
 
@@ -425,7 +425,7 @@ wchar_t*		AR_wcscat(wchar_t *dest, const wchar_t *sour)
 		AR_ASSERT(dest != NULL && sour != NULL);
 		d = dest;
 		while(*d)d++;
-		
+
 		while(*sour)*d++ = *sour++;
 		*d = 0;
 		return dest;
@@ -439,11 +439,11 @@ wchar_t*		AR_wcsncat(wchar_t *dest, const wchar_t *sour, size_t n)
 		AR_ASSERT(dest != NULL && sour != NULL);
 		d = dest;
 		while(*d)d++;
-		
+
 		for(i = 0; i < n && sour[i]; ++i,++d) *d = sour[i];
 
 		*d = 0;
-		
+
 		return dest;
 
 
@@ -466,7 +466,7 @@ wchar_t*		AR_wcstrim_right(wchar_t *in, const wchar_t *trim)
 				}
 				++p;
 		}
-		
+
 		if(plast)*plast = L'\0';
 		return in;
 }
@@ -476,7 +476,7 @@ wchar_t*		AR_wcstrim_right(wchar_t *in, const wchar_t *trim)
 const wchar_t* AR_wcstrim(const wchar_t *in, const wchar_t *trim)
 {
 		AR_ASSERT(in != NULL && trim != NULL);
-		
+
 		while(*in != L'\0' && AR_wcschr(trim, *in) != NULL)in++;
 		return in;
 }
@@ -521,7 +521,7 @@ uint_t	AR_wcshash(const wchar_t *str)
 		uint_t	ret;
 		size_t	i;
 		AR_ASSERT(str != NULL);
-		
+
 		ret = 0;
 		for(i = 0; str[i]; ++i)
 		{
@@ -537,7 +537,7 @@ uint_t		AR_wcshash_n(const wchar_t *str, size_t n)
 		size_t	i;
 		if(n == 0)return 0;
 		AR_ASSERT(str != NULL);
-		
+
 		ret = 0;
 		for(i = 0; i < n && str[i]; ++i)
 		{
@@ -582,9 +582,9 @@ int_t			AR_u64tow_buf(wchar_t *out, size_t nbuf, uint64_t num, size_t radix)
 		p = buf + __BUFFER_LEN;
 		*--p = 0;
 		do{ *--p = __tbl[num % radix];}while((num /= radix) > 0);
-		
+
 		len = (int_t)(buf + __BUFFER_LEN - p);/*返回的是需要元素数组的长度包含0*/
-		
+
 		if(out != NULL)
 		{
 				if(nbuf < (size_t)len)return -1;
@@ -610,16 +610,16 @@ int_t			AR_i64tow_buf(wchar_t *out, size_t nbuf, int64_t num, size_t radix)
 		static const wchar_t* __tbl = L"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		AR_ASSERT(radix >= 2 && radix <= 36);
 		is_neg = false;
-		
+
 		if(num < 0){ is_neg = true; num = -num;}
-		
+
 		p = buf + __BUFFER_LEN;
 		*--p = 0;
 		do{ *--p = __tbl[num % radix];}while((num /= radix) > 0);
 		if(is_neg)*--p = L'-';
-		
+
 		len = (int_t)(buf + __BUFFER_LEN - p);/*返回的是需要元素数组的长度包含0*/
-		
+
 		if(out != NULL)
 		{
 				if(nbuf < (size_t)len)return -1;
@@ -644,7 +644,7 @@ const wchar_t*	AR_wtod(const wchar_t *in, double *num)
 		AR_ASSERT(in != NULL && num != NULL);
 
 		*num = AR_wcstod(in, &stop);
-		
+
 		if(stop == in)
 		{
 				return NULL;
@@ -665,12 +665,12 @@ const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *num)
 		const wchar_t *stop;
 		wchar_t *buf;
 		AR_ASSERT(in != NULL && end != NULL && num != NULL);
-		
+
 		if(in >= end)return NULL;
 		buf  = AR_wcsndup(in, end - in);
-		
+
 		stop = AR_wtod(buf, num);
-		
+
 		if(stop == NULL)
 		{
 				AR_DEL(buf);
@@ -684,7 +684,7 @@ const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *num)
 		}
 }
 */
- 
+
 
 /*此函数貌似不太完整，对溢出检测也没做到位*/
 const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *out)
@@ -693,22 +693,22 @@ const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *out)
 		double num = 0.0f,frac = 0.0f, exp = 1.0f;
 		double result = 0.0f;
 		bool_t is_neg = false, is_ok = false;
-		
+
 		AR_ASSERT(in != NULL && end != NULL && in <= end && out != NULL);
 
 		/*p = AR_wcstrim(in, L" \t");*/
 		p = AR_wcstrim_space_s(in, end);
-		
+
 		if(*p == L'-')
-		{ 
-				++p; 
+		{
+				++p;
 				is_neg = true;
 		}else if(*p == L'+')
 		{
 				++p;
 		}
-		
-		
+
+
 		while(p < end && *p >= L'0' && *p <= L'9')
 		{
 				num *= 10.0f;
@@ -716,7 +716,7 @@ const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *out)
 				++p;
 				is_ok = true;
 		}
-		
+
 		if(p < end && *p == L'.')
 		{
 				++p;
@@ -748,7 +748,7 @@ const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *out)
 				{
 						return NULL;
 				}
-				++p; 
+				++p;
 				e = 0;
 				is_ok = false;
 				while(p < end && *p >= L'0' && *p <= L'9')
@@ -758,7 +758,7 @@ const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *out)
 						++p;
 						is_ok = true;
 				}
-						
+
 				for(i = 0; i < e; ++i)
 				{
 						if(factor)
@@ -777,17 +777,17 @@ const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *out)
 
 
 
-#define __UNSIGNED   0x01      
-#define __NEG        0x02      
-#define __OVERFLOW   0x04      
-#define __READDIGIT  0x08      
+#define __UNSIGNED   0x01
+#define __NEG        0x02
+#define __OVERFLOW   0x04
+#define __READDIGIT  0x08
 
 
 static const wchar_t* __wtou64_s(const wchar_t *in, const wchar_t *end, uint64_t  *num, size_t base, uint32_t flag)
 {
 		uint64_t val,digit, maxval;
 		const wchar_t *p;
-		
+
 		AR_ASSERT(in != NULL && end != NULL && num != NULL && (base == 0 || (base > 1 && base <= 36)));
 
 		/*p = AR_wcstrim_s(in, end, L" \t");*/
@@ -797,13 +797,13 @@ static const wchar_t* __wtou64_s(const wchar_t *in, const wchar_t *end, uint64_t
 
 		if(*p == L'-')
 		{
-				flag |= __NEG; 
+				flag |= __NEG;
 				++p;
 		}else if(*p == L'+')
 		{
 				++p;
 		}
-		
+
 		if(flag & __NEG && flag & __UNSIGNED)return NULL;
 		if(p >= end)return NULL;
 		if(base == 0)
@@ -819,7 +819,7 @@ static const wchar_t* __wtou64_s(const wchar_t *in, const wchar_t *end, uint64_t
 						base = 8;
 				}
 		}
-		
+
 		if(base == 16)
 		{
 				if(AR_wchartodigit(*p) == 0 && (*(p + 1) == L'x' || *(p + 1) == L'X'))
@@ -827,7 +827,7 @@ static const wchar_t* __wtou64_s(const wchar_t *in, const wchar_t *end, uint64_t
 						p += 2;
 				}
 		}
-		
+
 		if(p >= end)return NULL;
 
 		maxval = AR_UINT64_MAX / base;
@@ -850,14 +850,14 @@ static const wchar_t* __wtou64_s(const wchar_t *in, const wchar_t *end, uint64_t
 				{
 						break;
 				}
-				
+
 				digit = (uint64_t)tmp;
 				if(digit >= base)break;
 				flag |= __READDIGIT;
 
-				
-				
-				if (val < maxval || (val == maxval && digit <= AR_UINT64_MAX % base)) 
+
+
+				if (val < maxval || (val == maxval && digit <= AR_UINT64_MAX % base))
 				{
 						val = val * base + digit;
 				}else
@@ -866,12 +866,12 @@ static const wchar_t* __wtou64_s(const wchar_t *in, const wchar_t *end, uint64_t
 				}
 				++p;
 		}
-		
+
 		if(!(flag & __READDIGIT))
 		{
 				val = 0;
 				p = NULL;
-		}else if((flag & __OVERFLOW) || ((!(flag & __UNSIGNED)) && ((flag & __NEG) && (val > -AR_INT64_MIN) || (!(flag & __NEG) && (val > AR_INT64_MAX)))))
+		}else if((flag & __OVERFLOW) || ((!(flag & __UNSIGNED)) && (((flag & __NEG) && (val > -AR_INT64_MIN)) || (!(flag & __NEG) && (val > AR_INT64_MAX)))))
 		{
 				p = NULL;
 				/*errno = ERANGE;*/
@@ -901,7 +901,7 @@ static const wchar_t* __wtou32_s(const wchar_t *in, const wchar_t *end, uint32_t
 {
 		uint32_t val,digit, maxval;
 		const wchar_t *p;
-		
+
 		AR_ASSERT(in != NULL && end != NULL && num != NULL && (base == 0 || (base > 1 && base <= 36)));
 
 		/*p = AR_wcstrim_s(in, end, L" \t");*/
@@ -911,13 +911,13 @@ static const wchar_t* __wtou32_s(const wchar_t *in, const wchar_t *end, uint32_t
 
 		if(*p == L'-')
 		{
-				flag |= __NEG; 
+				flag |= __NEG;
 				++p;
 		}else if(*p == L'+')
 		{
 				++p;
 		}
-		
+
 		if(flag & __NEG && flag & __UNSIGNED)return NULL;
 		if(p >= end)return NULL;
 		if(base == 0)
@@ -933,7 +933,7 @@ static const wchar_t* __wtou32_s(const wchar_t *in, const wchar_t *end, uint32_t
 						base = 8;
 				}
 		}
-		
+
 		if(base == 16)
 		{
 				if(AR_wchartodigit(*p) == 0 && (*(p + 1) == L'x' || *(p + 1) == L'X'))
@@ -941,7 +941,7 @@ static const wchar_t* __wtou32_s(const wchar_t *in, const wchar_t *end, uint32_t
 						p += 2;
 				}
 		}
-		
+
 		if(p >= end)return NULL;
 
 		maxval = AR_UINT32_MAX / (uint32_t)base;
@@ -964,14 +964,14 @@ static const wchar_t* __wtou32_s(const wchar_t *in, const wchar_t *end, uint32_t
 				{
 						break;
 				}
-				
+
 				digit = (uint32_t)tmp;
 				if(digit >= base)break;
 				flag |= __READDIGIT;
 
-				
-				
-				if (val < maxval || (val == maxval && digit <= AR_UINT32_MAX % base)) 
+
+
+				if (val < maxval || (val == maxval && digit <= AR_UINT32_MAX % base))
 				{
 						val = val * (uint32_t)base + digit;
 				}else
@@ -980,12 +980,12 @@ static const wchar_t* __wtou32_s(const wchar_t *in, const wchar_t *end, uint32_t
 				}
 				++p;
 		}
-		
+
 		if(!(flag & __READDIGIT))
 		{
 				val = 0;
 				p = NULL;
-		}else if((flag & __OVERFLOW) || ((!(flag & __UNSIGNED)) && ((flag & __NEG) && (val > -AR_INT32_MIN) || (!(flag & __NEG) && (val > AR_INT32_MAX)))))
+		}else if((flag & __OVERFLOW) || ((!(flag & __UNSIGNED)) && (((flag & __NEG) && (val > -AR_INT32_MIN)) || (!(flag & __NEG) && (val > AR_INT32_MAX)))))
 		{
 				p = NULL;
 				/*errno = ERANGE;*/
@@ -1020,9 +1020,9 @@ const wchar_t* AR_wtoi64_s(const wchar_t *in, const wchar_t *end, int64_t  *num,
 		uint64_t val;
 		const wchar_t *p;
 		AR_ASSERT(in != NULL && end != NULL && num != NULL && (base == 0 || (base > 1 && base <= 36)));
-		
+
 		p = __wtou64_s(in, end, &val, base, flag);
-		
+
 		*num = (int64_t)val;
 
 		return p;
@@ -1034,9 +1034,9 @@ const wchar_t* AR_wtou64_s(const wchar_t *in, const wchar_t *end, uint64_t  *num
 		uint32_t flag = __UNSIGNED;
 		const wchar_t *p;
 		AR_ASSERT(in != NULL && end != NULL && num != NULL && (base == 0 || (base > 1 && base <= 36)));
-		
+
 		p = __wtou64_s(in, end, num, base, flag);
-		
+
 		return p;
 
 }
@@ -1051,9 +1051,9 @@ const wchar_t* AR_wtoi32_s(const wchar_t *in, const wchar_t *end, int32_t  *num,
 		uint32_t val;
 		const wchar_t *p;
 		AR_ASSERT(in != NULL && end != NULL && num != NULL && (base == 0 || (base > 1 && base <= 36)));
-		
+
 		p = __wtou32_s(in, end, &val, base, flag);
-		
+
 		*num = (int32_t)val;
 
 		return p;
@@ -1065,9 +1065,9 @@ const wchar_t* AR_wtou32_s(const wchar_t *in, const wchar_t *end, uint32_t  *num
 		uint32_t flag = __UNSIGNED;
 		const wchar_t *p;
 		AR_ASSERT(in != NULL && end != NULL && num != NULL && (base == 0 || (base > 1 && base <= 36)));
-		
+
 		p = __wtou32_s(in, end, num, base, flag);
-		
+
 		return p;
 
 }
