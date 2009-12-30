@@ -76,6 +76,36 @@ void			PSR_PrintSymbolList(const psrSymbList_t *lst, arString_t *str);
 
 
 
+/**************************************Symbol Map**********************************************************/
+
+
+
+typedef struct __parser_symbmap_record_tag
+{
+		const psrSymb_t			*key;
+		psrSymbList_t			lst;
+		struct __parser_symbmap_record_tag		*next;
+}psrMapRec_t;
+
+
+#define MAP_BUCKET_SIZE (1543 / AR_MEM_POLICY)
+
+typedef struct __parser_symbmap_tag
+{
+		psrMapRec_t		*bucket[MAP_BUCKET_SIZE];
+		size_t			item_count;
+}psrSymbMap_t;
+
+
+
+
+void					PSR_InitSymbMap(psrSymbMap_t *map);
+void					PSR_UnInitSymbMap(psrSymbMap_t *map);
+
+bool_t					PSR_InsertToSymbMap(psrSymbMap_t *map, const psrSymb_t *key, const psrSymb_t *val);
+const psrMapRec_t*		PSR_GetSymbolFromSymbMap(const psrSymbMap_t *map, const psrSymb_t *key);
+void					PSR_PrintSymbolMap(const psrSymbMap_t *map, arString_t *str);
+
 
 
 

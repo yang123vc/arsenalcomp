@@ -25,7 +25,7 @@ typedef struct __lex_token_tag
 {
 		const wchar_t	*str;
 		size_t			count;
-		size_t			type;
+		size_t			value;
 		size_t			line;
 		size_t			col;
 }lexToken_t;
@@ -52,6 +52,7 @@ void LEX_ResetMatch(lexMatch_t *pmatch);
 
 const wchar_t* LEX_GetNextInput(const lexMatch_t *match);
 
+bool_t	LEX_IsError(const lexMatch_t *match);
 
 AR_NAMESPACE_END
 

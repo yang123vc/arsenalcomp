@@ -30,7 +30,6 @@ typedef struct __arsenal_context_tag
 		arInit_t		init;
 }arCtx_t;
 
-//void	Arsenal_Init(arInit_t *start_info);
 void	Arsenal_Init(const arCtx_t *ctx);
 void	Arsenal_UnInit();
 

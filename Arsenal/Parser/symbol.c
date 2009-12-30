@@ -345,6 +345,117 @@ void			PSR_PrintSymbolList(const psrSymbList_t *lst, arString_t *str)
 
 
 
+/**************************************Symbol Map**********************************************************/
+
+void					PSR_InitSymbMap(psrSymbMap_t *map)
+{
+		AR_ASSERT(map != NULL);
+		AR_memset(map, 0, sizeof(*map));
+}
+
+void					PSR_UnInitSymbMap(psrSymbMap_t *map)
+{
+		size_t i;
+		psrMapRec_t *rec, *tmp;
+		
+		AR_ASSERT(map != NULL);
+
+		for(i = 0; i < MAP_BUCKET_SIZE; ++i)
+		{
+				rec = map->bucket[i];
+				while(rec)
+				{
+						tmp = rec->next;
+						PSR_UnInitSymbList(&rec->lst);
+						AR_DEL(rec);
+						rec = tmp;
+				}
+		}
+}
+
+
+bool_t					PSR_InsertToSymbMap(psrSymbMap_t *map, const psrSymb_t *key, const psrSymb_t *val)
+{
+		psrMapRec_t *rec, *tmp;
+		AR_ASSERT(map != NULL && key != NULL);
+		
+		rec = map->bucket[key->hash_code % MAP_BUCKET_SIZE];
+		
+
+		if(rec)
+		{
+				for(tmp = rec; tmp; tmp = tmp->next)
+				{
+						if(PSR_CompSymb(tmp->key, key) == 0)
+						{
+								break;
+						}
+				}
+
+				if(tmp == NULL)
+				{
+						tmp = AR_NEW0(psrMapRec_t);
+						tmp->key = key;
+						PSR_InitSymbList(&tmp->lst);
+						tmp->next = map->bucket[key->hash_code % MAP_BUCKET_SIZE];
+						map->bucket[key->hash_code % MAP_BUCKET_SIZE] = tmp;
+						map->item_count++;
+				}
+				rec = tmp;
+		}else
+		{
+				rec = AR_NEW0(psrMapRec_t);
+				rec->key = key;
+				PSR_InitSymbList(&rec->lst);
+				rec->next = map->bucket[key->hash_code % MAP_BUCKET_SIZE];
+				map->bucket[key->hash_code % MAP_BUCKET_SIZE] = rec;
+				map->item_count++;
+		}
+		
+		if(val)
+		{
+				return PSR_InsertToSymbList_Unique(&rec->lst, val);
+		}else
+		{
+				return false;
+		}
+}
+
+
+const psrMapRec_t*		PSR_GetSymbolFromSymbMap(const psrSymbMap_t *map, const psrSymb_t *key)
+{
+		const psrMapRec_t *rec;
+
+		rec = map->bucket[key->hash_code % MAP_BUCKET_SIZE];
+
+		while(rec)
+		{
+				if(PSR_CompSymb(key, rec->key) == 0)break;
+				rec = rec->next;
+		}
+		return rec;
+}
+
+
+void			PSR_PrintSymbolMap(const psrSymbMap_t *map, arString_t *str)
+{
+		size_t i;
+
+		for(i = 0; i < MAP_BUCKET_SIZE; ++i)
+		{
+				const psrMapRec_t *rec;
+				rec = map->bucket[i];
+				while(rec)
+				{
+						PSR_PrintSymbol(rec->key, str);
+						AR_AppendFormatString(str, L" : ");
+						PSR_PrintSymbolList(&rec->lst, str);
+						AR_AppendFormatString(str, L"\r\n");
+						rec = rec->next;
+				}
+		}
+}
+
 
 
 

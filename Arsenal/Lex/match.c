@@ -62,8 +62,19 @@ void LEX_UnInitMatch(lexMatch_t *pmatch)
 
 const wchar_t* LEX_GetNextInput(const lexMatch_t *match)
 {
+		AR_ASSERT(match != NULL);
 		return match->next;
 }
+
+bool_t	LEX_IsError(const lexMatch_t *match)
+{
+		AR_ASSERT(match != NULL);
+		return !match->is_ok;
+}
+
+
+
+
 
 
 AR_NAMESPACE_END

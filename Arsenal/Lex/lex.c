@@ -87,6 +87,7 @@ void LEX_InserToProgSet(lexProgSet_t *set, rgxProg_t *prog, const lexAction_t *a
 		set->count++;
 }
 
+
 static void __exch_set(lexProgSet_t *set, int_t i,int_t j)
 {
 		rgxProg_t		*prog;
@@ -102,6 +103,43 @@ static void __exch_set(lexProgSet_t *set, int_t i,int_t j)
 		set->action[i] = set->action[j];
 		set->action[j] = act;
 }
+
+bool_t	LEX_RemoveFromProgSet(lexProgSet_t *set, size_t value)
+{
+		int_t l,r,cnt;
+		bool_t res = false;
+		AR_ASSERT(set != NULL);
+		
+		l = 0; r = (int_t)set->count - (int_t)1, cnt = (int_t)set->count;
+
+		while(l <= r)
+		{
+				if(set->action[l].value == value)
+				{
+						__exch_set(set, l,r);
+						r--;
+						res = true;
+				}
+				l++;
+		}
+		
+		
+		for(l = r + 1; l < (int_t)set->count; ++l)
+		{
+				rgxProg_t *prog = set->prog[l];
+				set->prog[l] = NULL;
+				RGX_UnInitProg(prog);
+				AR_DEL(prog);
+				cnt--;
+		}
+		AR_ASSERT(cnt >= 0);
+
+		set->count = (size_t)cnt;
+
+		return res;
+}
+
+
 
 void LEX_SortProgSet(lexProgSet_t *set)
 {
@@ -161,6 +199,26 @@ bool_t	LEX_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr)
 }
 
 
+bool_t	LEX_RemoveByName(lex_t *lex, const wchar_t *name)
+{
+		AR_ASSERT(lex != NULL && name != NULL);
+
+		return RGX_RemoveFromNameSet(lex->name_tbl, name);
+}
+
+
+
+bool_t	LEX_RemoveByValue(lex_t *lex, size_t value)
+{
+		AR_ASSERT(lex != NULL && lex->prog_set != NULL);
+
+		return LEX_RemoveFromProgSet(lex->prog_set, value);
+}
+
+
+
+
+
 bool_t	LEX_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action)
 {
 		rgxResult_t res;
@@ -176,13 +234,13 @@ bool_t	LEX_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action
 				/*AR_error(AR_LEX, L"Lex Rule Error : %d : %ls\n", action->type, res.err.pos);*/
 				/*AR_error(L"Lex Rule Error : %" AR_PLAT_INT_FMT L"d : %ls\n", (size_t)action->type, (size_t)res.err.pos);*/
 				
-				AR_printf_ctx(lex->io, L"Lex Rule Error : %" AR_PLAT_INT_FMT L"d : %ls\n", (size_t)action->type, (size_t)res.err.pos);
+				AR_printf_ctx(lex->io, L"Lex Rule Error : %" AR_PLAT_INT_FMT L"d : %ls\n", (size_t)action->value, (size_t)res.err.pos);
 				return false;
 		}
 
 		cat = RGX_CreateNode(RGX_CAT_T);
 		final = RGX_CreateNode(RGX_FINAL_T);
-		final->final_val = (int_t)action->type;
+		final->final_val = (int_t)action->value;
 		
 		cat->left = res.node;
 		cat->right = final;
@@ -225,8 +283,8 @@ bool_t	LEX_Insert(lex_t *lex, const wchar_t *input)
 						is_skip = true;
 				}
 				
-				act.priority = act.type = 0;
-				p = AR_wtou(p, &act.type, 10);
+				act.priority = act.value = 0;
+				p = AR_wtou(p, &act.value, 10);
 				if(p == NULL)return false;
 
 				p = AR_wcstrim_space(p);
