@@ -87,7 +87,7 @@ void AR_Test()
 		//lr_item_tbl_test();
 		//cache_test();
 		//calc_test1();
-		//calc_test();
+		calc_test();
 		//calc_test3();
 
 		//db_test();
@@ -100,7 +100,7 @@ void AR_Test()
 		
 		//lex_test();
 		parser_test();
-
+		
 		//rgx_test();
 
 

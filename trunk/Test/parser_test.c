@@ -1,15 +1,15 @@
 
 #include "test.h"
 
-#include "../../Arsenal/Parser/grammar.h"
-#include "../../Arsenal/Parser/lr_item.h"
-#include "../../Arsenal/Parser/lr_dfa.h"
-#include "../../Arsenal/Parser/parser.h"
-#include "../../Arsenal/Parser/parser_in.h"
-#include "../../Arsenal/Parser/lr_action.h"
+#include "../Arsenal/Parser/grammar.h"
+#include "../Arsenal/Parser/lr_item.h"
+#include "../Arsenal/Parser/lr_dfa.h"
+#include "../Arsenal/Parser/parser.h"
+#include "../Arsenal/Parser/parser_in.h"
+#include "../Arsenal/Parser/lr_action.h"
 
 
-#include "../../Arsenal/Tools/tools.h"
+#include "../Arsenal/Tools/tools.h"
 
 //#include "gmr_config.h"
 
@@ -180,7 +180,7 @@ void parse_code(const cfgConfig_t *cfg, const wchar_t *sources)
 				lexAction_t act;
 				act.is_skip = cfg->tok[i].is_skip;
 				act.priority = cfg->tok[i].lex_prec;
-				act.type = cfg->tok[i].tokval;
+				act.value = cfg->tok[i].tokval;
 				if(!LEX_InsertRule(lex, cfg->tok[i].regex, &act))
 				{
 						AR_ASSERT(false);
@@ -207,7 +207,7 @@ void parse_code(const cfgConfig_t *cfg, const wchar_t *sources)
 						AR_printf(L"%ls : type == %d : count == %d : line = %d\r\n", buf, tok.type, tok.count, tok.line);
 						*/
 						tok_cnt++;
-						if(tok.type == 0)break;
+						if(tok.value == 0)break;
 				}
 
 				if(match.is_ok)
@@ -283,7 +283,7 @@ void parser_test()
 						lexAction_t act;
 						act.is_skip = cfg->tok[i].is_skip;
 						act.priority = cfg->tok[i].lex_prec;
-						act.type = i + 256;
+						act.value = i + 256;
 
 						AR_printf(L"%ls : %ls : %d : %d\r\n", cfg->tok[i].name, cfg->tok[i].regex, cfg->tok[i].lex_prec, cfg->tok[i].tokval);
 

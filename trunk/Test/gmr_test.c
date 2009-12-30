@@ -1,4 +1,4 @@
-#include "../../Arsenal/Parser/grammar.h"
+#include "../Arsenal/Parser/grammar.h"
 
 
 #if defined(__LIB)
