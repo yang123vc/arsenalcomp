@@ -29,12 +29,12 @@ L"}"
 
 void AR_STDCALL tiny_error(int_t level, const wchar_t* msg, void *ctx)
 {
-		wprintf(L"%ls\r\n", msg);
+		printf("%ls\r\n", msg);
 }
 
 void AR_STDCALL tiny_printf(const wchar_t *msg, void *ctx)
 {
-		wprintf(L"%ls", msg);
+		printf("%ls", msg);
 }
 
 

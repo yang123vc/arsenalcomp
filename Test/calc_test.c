@@ -1,8 +1,8 @@
 #include "test.h"
-#include "../../Arsenal/Lex/lex.h"
-#include "../../Arsenal/Parser/grammar.h"
-#include "../../Arsenal/Parser/parser.h"
-#include "../../Arsenal/Parser/lr_action.h"
+#include "../Arsenal/Lex/lex.h"
+#include "../Arsenal/Parser/grammar.h"
+#include "../Arsenal/Parser/parser.h"
+#include "../Arsenal/Parser/lr_action.h"
 
 #if defined(__LIB)
 
@@ -181,8 +181,8 @@ static psrGrammar_t *__g_gmr = NULL;
 static  parser_t* __build_parser()
 {
 		psrGrammar_t	*gmr;
-
-		gmr = PSR_CreateGrammar(NULL);
+		psrCtx_t ctx = {NULL, free_node,  NULL, NULL};
+		gmr = PSR_CreateGrammar(&ctx);
 
 		PSR_InsertTerm(gmr, L"(", CLP, PSR_ASSOC_NOASSOC, 0, create_leaf);
 		PSR_InsertTerm(gmr, L")", RP, PSR_ASSOC_NOASSOC, 0, create_leaf);
@@ -219,11 +219,11 @@ static  parser_t* __build_parser()
 
 		{
 				parser_t *psr;
-				psrCtx_t ctx = {free_node,  NULL};
 				
-				psr =  PSR_CreateParser(gmr, PSR_LALR, &ctx);
+				
+				psr =  PSR_CreateParser(gmr, PSR_LALR);
 
-				PSR_DestroyGrammar(gmr);
+				/*PSR_DestroyGrammar(gmr);*/
 				return psr;
 		}
 }
@@ -278,11 +278,11 @@ void calc_test()
 		while(LEX_Match(lex, &match, &tok))
 		{
 				psrToken_t term;
-				AR_printf(L"token == %ls : val = %d\r\n", AR_wcsndup(tok.str, tok.count), tok.type);
+				AR_printf(L"token == %ls : val = %d\r\n", AR_wcsndup(tok.str, tok.count), tok.value);
 
 				PSR_TOTERMTOK(&tok, &term);
 				AR_ASSERT(PSR_AddToken(psr, &term));
-				if(tok.type == 0)break;
+				if(tok.value == 0)break;
 		}
 		
 		getchar();
@@ -298,7 +298,7 @@ void calc_test()
 		}
 		
 		PSR_DestroyParser(psr);
-		
+		PSR_DestroyGrammar(__g_gmr);
 }
 
 
@@ -337,11 +337,15 @@ void calc_test3()
 				PSR_PrintGrammar(gmr, str);
 				AR_printf(L"%ls\r\n", AR_GetStrString(str));
 		}
-		
+
+		PSR_DestroyGrammar(gmr);
+
+		/*
 		gmr2 = PSR_CopyNewGrammar(gmr);
 
 		PSR_DestroyGrammar(gmr);
 		PSR_DestroyGrammar(gmr2);
+		*/
 
 }
 

@@ -1,8 +1,8 @@
 #include "deelx.h"
 #include "test.h"
 
-#include "../../Arsenal/Regex/rgx_in.h"
-#include "../../Arsenal/Lex/lex.h"
+#include "../Arsenal/Regex/rgx_in.h"
+#include "../Arsenal/Lex/lex.h"
 
 
 

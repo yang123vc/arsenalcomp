@@ -1,5 +1,6 @@
 #include "test.h"
-#include "../../Arsenal/Lex/lex.h"
+#include "../Arsenal/Lex/lex.h"
+#include "../Arsenal/Lex/rgx.h"
 
 #if defined(__LIB)
 
@@ -474,15 +475,35 @@ void lex_test20()
 		lex = LEX_Create(NULL);
 		LEX_InitMatch(&match,L"abc" );
 
+		
 		if(!LEX_Insert(lex, L"2,0 (a(?=b(?=c)){2})|b(?=c)|c(?=[\\0])"))
 		{
 				AR_abort();
 		}
 		
+		/*
+		
+		if(!LEX_Insert(lex, L"3,0 [\\0]"))
+		{
+				AR_abort();
+		}
+		
+		if(!LEX_Insert(lex, L"3,0 [\\0]"))
+		{
+				AR_abort();
+		}
+		
+		
+		*/
+
 		if(!LEX_Insert(lex, L"0,1 [\\0]"))
 		{
 				AR_abort();
 		}
+
+		AR_printf(L"remove result == %d\r\n", LEX_RemoveByValue(lex, 0));
+
+		AR_printf(L"remove result == %d\r\n", LEX_RemoveByValue(lex, 0));
 
 		LEX_GenerateTransTable(lex);
 
@@ -492,9 +513,9 @@ void lex_test20()
 				AR_wcsncpy(buf, tok.str, tok.count);
 				buf[tok.count] = L'\0';
 
-				AR_printf(L"%ls : type == %d : count == %d\r\n", buf, tok.type, tok.count);
+				AR_printf(L"%ls : type == %d : count == %d\r\n", buf, tok.value, tok.count);
 				
-				if(tok.type == 0)break;
+				if(tok.value == 0)break;
 		}
 
 		getchar();

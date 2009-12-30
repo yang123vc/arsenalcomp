@@ -1,10 +1,10 @@
 #include "test.h"
-#include "../../Arsenal/Parser/parser_in.h"
-#include "../../Arsenal/Parser/symbol.h"
-#include "../../Arsenal/Parser/grammar.h"
-#include "../../Arsenal/Parser/lr_item.h"
-#include "../../Arsenal/Parser/lr_dfa.h"
-#include "../../Arsenal/Parser/lr_action.h"
+#include "../Arsenal/Parser/parser_in.h"
+#include "../Arsenal/Parser/symbol.h"
+#include "../Arsenal/Parser/grammar.h"
+#include "../Arsenal/Parser/lr_item.h"
+#include "../Arsenal/Parser/lr_dfa.h"
+#include "../Arsenal/Parser/lr_action.h"
 
 
 #if defined(__LIB)
