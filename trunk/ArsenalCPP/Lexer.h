@@ -8,7 +8,7 @@ namespace ArsenalCPP{
 
 /**************************************************************************************************/
 
-class Lexer : private NonCopyable
+class ARAPI Lexer : private NonCopyable
 {
 public:
 		typedef struct __last_error_tag
