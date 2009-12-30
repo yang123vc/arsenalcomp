@@ -5,16 +5,19 @@
 namespace ArsenalCPP{
 
 
-class Node
+class ARAPI Node
 {
 public:
 		Node(){ }
-		virtual ~Node() = 0;
+		virtual ~Node() = 0
+		{
+
+		}
 };
 
 
 
-class NodeContext : NonCopyable
+class ARAPI NodeContext : NonCopyable
 {
 private:
 		ARContext		*m_io_context;
@@ -30,7 +33,10 @@ public:
 				}
 		}
 
-		virtual ~NodeContext() = 0;
+		virtual ~NodeContext() = 0
+		{
+
+		}
 public:
 		ARContext* Context()
 		{
@@ -39,9 +45,9 @@ public:
 };
 
 
-class Parser;
+class ARAPI Parser;
 
-class Grammar : NonCopyable
+class ARAPI Grammar : NonCopyable
 {
 private:
 		psrGrammar_t	*m_grammar;
@@ -68,7 +74,7 @@ public:
 
 
 
-class Parser : NonCopyable
+class ARAPI Parser : NonCopyable
 {
 private:
 		Grammar			*m_grammar;

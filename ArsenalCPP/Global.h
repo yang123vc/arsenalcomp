@@ -1,15 +1,28 @@
 #pragma once
 
 #include "Arsenal.h"
-
 #pragma comment(lib, "Arsenal.lib")
+
+
+
+#if defined(AR_SHARED_LIB)
+		#if defined(AR_EXPORTS)
+				#define ARAPI __declspec(dllexport)
+		#else
+				#define ARAPI __declspec(dllimport)	
+		#endif
+#else
+		#define ARAPI
+#endif
+
+
 
 
 namespace ArsenalCPP{
 
 using namespace ARSpace;
 
-class NonCopyable
+class ARAPI NonCopyable
 {
 private:
 		NonCopyable(const NonCopyable&);
@@ -21,7 +34,7 @@ protected:
 
 
 
-class ARContext : private NonCopyable
+class ARAPI ARContext : private NonCopyable
 {
 public:
 		virtual void OnError(int_t level, const wchar_t *msg) = 0;	
@@ -32,7 +45,7 @@ public:
 
 
 
-class Arsenal : private NonCopyable
+class ARAPI Arsenal : private NonCopyable
 {
 private:
 		ARContext		*m_ctx;
