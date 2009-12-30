@@ -54,24 +54,23 @@ void	PSR_PrintParserActionTable(const parser_t *parser, arString_t *out, size_t 
 
 
 
-parser_t* PSR_CreateParser(const struct __parser_grammar_tag *grammar, psrModeType_t type, const psrCtx_t *ctx)
+parser_t* PSR_CreateParser(const struct __parser_grammar_tag *grammar, psrModeType_t type)
 {
 		parser_t *parser;
 		size_t i;
-		AR_ASSERT(grammar != NULL && ctx != NULL);
-		
-		AR_ASSERT(ctx->free_f != NULL);
+		AR_ASSERT(grammar != NULL);
 
 		parser = AR_NEW0(parser_t);
-		parser->grammar = PSR_CopyNewGrammar(grammar);
+		
+		/*parser->grammar = PSR_CopyNewGrammar(grammar);*/
+		parser->grammar = grammar;
 		
 		parser->state_stack = AR_NEW0(psrStack_t);
 		PSR_InitStack(parser->state_stack);
 		
 		parser->node_stack = AR_NEW0(psrNodeStack_t);
 		PSR_InitNodeStack(parser->node_stack);
-		
-		parser->user = *ctx;
+
 		parser->is_repair = false;
 		parser->is_accepted = false;
 
@@ -116,14 +115,17 @@ parser_t* PSR_CreateParser(const struct __parser_grammar_tag *grammar, psrModeTy
 void	  PSR_Clear(parser_t *parser)
 {
 		size_t i;
+		const psrCtx_t *ctx;
 		AR_ASSERT(parser != NULL);
 
+		ctx = PSR_GetGrammarContext(parser->grammar);
+		AR_ASSERT(ctx != NULL);
 		parser->is_repair = false;
 		parser->is_accepted = false;
 		
 		for(i = 0; i < parser->node_stack->count; ++i)
 		{
-				if(parser->node_stack->nodes[i])parser->user.free_f(parser->node_stack->nodes[i], parser->user.ctx);
+				if(parser->node_stack->nodes[i])ctx->free_f(parser->node_stack->nodes[i], ctx->ctx);
 		}
 
 		PSR_ClearNodeStack(parser->node_stack);
@@ -147,7 +149,8 @@ void	  PSR_DestroyParser(parser_t *parser)
 
 				PSR_DestroyTermInfoTable(parser->term_tbl);
 				PSR_DestroyActionTable(parser->tbl);
-				PSR_DestroyGrammar(parser->grammar);
+				
+				/*PSR_DestroyGrammar(parser->grammar);*/
 				
 				PSR_UnInitNodeStack(parser->node_stack);
 				AR_DEL(parser->node_stack);
@@ -164,8 +167,10 @@ static void __handle_reduce(parser_t *parser, const psrAction_t *action)
 		psrNode_t **nodes;
 		psrNode_t *new_node;
 		size_t	  next_state;
+		const	psrCtx_t *user;
 		AR_ASSERT(parser != NULL && action != NULL && action->type == PSR_REDUCE);
 		
+		user = PSR_GetGrammarContext(parser->grammar);
 		/*
 		if(action->reduce_count > 0)
 		{
@@ -185,18 +190,23 @@ static void __handle_reduce(parser_t *parser, const psrAction_t *action)
 */
 		if(action->rule->rule_f != NULL)
 		{
-				new_node = action->rule->rule_f(nodes, action->reduce_count, action->rule->head->name, parser->user.ctx);
+				new_node = action->rule->rule_f(nodes, action->reduce_count, action->rule->head->name, user->ctx);
 		}else
 		{
+
+/****************************************Experiment****************************************************/
 				if(action->reduce_count > 0)
 				{
 						new_node = nodes[0];
 						nodes[0] = NULL;
 
 				}else
+/****************************************************************************************************/
 				{
 						new_node = NULL;
 				}
+				
+
 		}
 
 		if(action->reduce_count > 0)
@@ -209,7 +219,8 @@ static void __handle_reduce(parser_t *parser, const psrAction_t *action)
 						{
 								if(nodes[i])
 								{
-										parser->user.free_f(nodes[i], parser->user.ctx);
+										/*parser->user.free_f(nodes[i], parser->user.ctx);*/
+										user->free_f(nodes[i], user->ctx);
 										nodes[i] = NULL;
 								}
 						}
@@ -228,11 +239,14 @@ static void __handle_reduce(parser_t *parser, const psrAction_t *action)
 static void __handle_shift(parser_t *parser, size_t shift_to, const psrToken_t *tok, const psrTermInfo_t *term)
 {
 		psrNode_t		*new_node;
-		
+		const psrCtx_t	*user;
 		AR_ASSERT(parser != NULL && tok != NULL && term != NULL && term->leaf_f != NULL);
+		
+		user = PSR_GetGrammarContext(parser->grammar);
+		AR_ASSERT(user != NULL);
 
 		PSR_PushStack(parser->state_stack, shift_to);
-		new_node = term->leaf_f(tok, parser->user.ctx);
+		new_node = term->leaf_f(tok, user->ctx);
 		PSR_PushNodeStack(parser->node_stack, new_node);
 
 /*
@@ -253,43 +267,52 @@ static void __handle_shift(parser_t *parser, size_t shift_to, const psrToken_t *
 
 static void __on_error(parser_t *parser, const psrToken_t		*tok)
 {
-		arString_t		*str;
-		wchar_t			*buf;
-		size_t			i;
 		size_t			top_state;
-
-		
+		const psrCtx_t	*user;
 		AR_ASSERT(parser != NULL && tok != NULL);
-
+		
+		user = PSR_GetGrammarContext(parser->grammar);
+		AR_ASSERT(user != NULL);
+		
 		top_state = PSR_TopStack(parser->state_stack);
-		AR_ASSERT(top_state < parser->msg_count);
 
-		buf = tok->str_cnt == 0 ? AR_wcsdup(L"%EOI") : AR_wcsndup(tok->str, tok->str_cnt);
-		
-		str = AR_CreateString();
-
-		AR_AppendFormatString(str
-							 , L"Invalid Token \"%ls\" in (%" AR_PLAT_INT_FMT L"d : %" AR_PLAT_INT_FMT L"d)\r\n\r\n"
-							 , buf
-							 , tok->line
-							 , tok->col
-							 );
-
-		
-		AR_DEL(buf);
-
-		AR_AppendFormatString(str, L"Expected Term Type:\r\n");
-		
-		for(i = 0; i < parser->msg_set[top_state].count; ++i)
+		if(user->error_f == NULL)
 		{
-				AR_AppendFormatString(str, L"\"%ls\" ", parser->msg_set[top_state].msg[i]);
+				arString_t		*str;
+				wchar_t			*buf;
+				size_t			i;
+				AR_ASSERT(top_state < parser->msg_count);
+
+				buf = tok->str_cnt == 0 ? AR_wcsdup(L"%EOI") : AR_wcsndup(tok->str, tok->str_cnt);
+
+				str = AR_CreateString();
+
+				AR_AppendFormatString(str
+						, L"Invalid Token \"%ls\" in (%" AR_PLAT_INT_FMT L"d : %" AR_PLAT_INT_FMT L"d)\r\n\r\n"
+						, buf
+						, tok->line
+						, tok->col
+						);
+
+
+				AR_DEL(buf);
+
+				AR_AppendFormatString(str, L"Expected Term Type:\r\n");
+
+				for(i = 0; i < parser->msg_set[top_state].count; ++i)
+				{
+						AR_AppendFormatString(str, L"\"%ls\" ", parser->msg_set[top_state].msg[i]);
+				}
+
+				AR_AppendFormatString(str, L"\r\n\r\n");
+
+				AR_printf_ctx(user->io, L"%ls\r\n", AR_GetStrString(str));
+
+				AR_DestroyString(str);
+		}else
+		{
+				user->error_f(tok, parser->msg_set[top_state].msg, parser->msg_set[top_state].count, user->ctx);
 		}
-
-		AR_AppendFormatString(str, L"\r\n\r\n");
-
-		AR_printf_ctx(parser->grammar->io, L"%ls\r\n", AR_GetStrString(str));
-
-		AR_DestroyString(str);
 }
 
 
@@ -299,9 +322,13 @@ static void __on_error(parser_t *parser, const psrToken_t		*tok)
 
 static bool_t __error_recovery(parser_t *parser, const psrToken_t *tok)
 {		
+		const psrCtx_t	*user;
 		
 		AR_ASSERT(parser != NULL);
 		
+		user = PSR_GetGrammarContext(parser->grammar);
+		AR_ASSERT(user != NULL);
+
 		if(!parser->is_repair)
 		{
 				bool_t found = false;
@@ -340,7 +367,7 @@ static bool_t __error_recovery(parser_t *parser, const psrToken_t *tok)
 								psrNode_t *top_node;
 								
 								top_node = PSR_TopNodeStack(parser->node_stack);
-								if(top_node)parser->user.free_f(top_node, parser->user.ctx);
+								if(top_node)user->free_f(top_node, user->ctx);
 								PSR_PopNodeStack(parser->node_stack, 1);
 
 								PSR_PopStack(parser->state_stack, 1);

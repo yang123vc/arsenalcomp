@@ -90,10 +90,19 @@ void AR_error(int_t level, const wchar_t *msg, ...)
 				va_end(arg_ptr);
 		
 				__g_ctx.on_error(level, buf, __g_ctx.global_ctx);
-		
+				
 				AR_DEL(buf);
 		}
+
+
+		if(level == AR_ERR_FATAL)
+		{
+				AR_abort();
+		}
+
 }
+
+
 
 
 void AR_printf(const wchar_t *msg,...)
@@ -173,11 +182,9 @@ void	AR_printf_ctx(void *ctx, const wchar_t *msg,...)
 				va_end(arg_ptr);
 				__g_ctx.on_print(buf, ctx);
 				AR_DEL(buf);
-
 		}
-
-
 }
+
 
 void	AR_error_ctx(void *ctx, int_t level, const wchar_t *msg, ...)
 {		
@@ -202,6 +209,7 @@ void	AR_error_ctx(void *ctx, int_t level, const wchar_t *msg, ...)
 		}
 
 }
+
 
 /*
 void	AR_fatal_ctx(void *ctx, const wchar_t *msg,...)

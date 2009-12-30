@@ -42,7 +42,7 @@ typedef struct __parser_token_tag
 		do{														\
 				(_psr_tok)->str = (_ltok)->str;					\
 				(_psr_tok)->str_cnt = (_ltok)->count;			\
-				(_psr_tok)->term_val = (_ltok)->type;			\
+				(_psr_tok)->term_val = (_ltok)->value;			\
 				(_psr_tok)->line = (_ltok)->line;				\
 				(_psr_tok)->col = (_ltok)->col;					\
 		}while(0)						
@@ -109,41 +109,17 @@ typedef psrLRItemType_t psrModeType_t;
 
 typedef struct __parser_context_tag
 {
-		/*psrErrorFunc_t	error_f;*/
+		psrErrorFunc_t	error_f;
 		psrFreeFunc_t	free_f;
 		void			*ctx;
+		void			*io;
 }psrCtx_t;
 
-/*
-typedef struct __parser_grammar_tag		psrGrammar_t;
-typedef struct __parser_action_tag		psrActionTable_t;
-typedef struct __parser_symbol_tag		psrSymb_t;
-typedef struct __parser_stack_tag		psrStack_t;
-typedef struct __parser_node_stack		psrNodeStack_t;
-typedef struct __term_table_tag			psrTermInfoTbl_t;
-typedef struct __expected_message_tag	psrExpectedMsg_t;
+
 
 typedef struct __parser_tag
 {
-		const psrGrammar_t			*grammar;
-		psrActionTable_t		*tbl;
-		psrStack_t				*state_stack;
-		psrNodeStack_t			*node_stack;
-		psrTermInfoTbl_t		*term_tbl;
-		
-		bool_t					is_repair;
-		bool_t					is_accepted;
-		
-		psrExpectedMsg_t		*msg_set;
-		size_t					msg_count;
-		
-		psrCtx_t				user;
-}parser_t;
-*/
-
-typedef struct __parser_tag
-{
-		struct __parser_grammar_tag				*grammar;
+		const struct __parser_grammar_tag		*grammar;
 		struct __parser_action_tag				*tbl;
 		struct __parser_stack_tag				*state_stack;
 		struct __parser_node_stack				*node_stack;
@@ -152,15 +128,16 @@ typedef struct __parser_tag
 		bool_t									is_repair;
 		bool_t									is_accepted;
 		size_t									msg_count;
-		psrCtx_t								user;
 }parser_t;
 
 
-parser_t* PSR_CreateParser(const struct __parser_grammar_tag *grammar, psrModeType_t type, const psrCtx_t *ctx);
+parser_t* PSR_CreateParser(const struct __parser_grammar_tag *grammar, psrModeType_t type);
 
 void	  PSR_DestroyParser(parser_t *parser);
 
 void	  PSR_Clear(parser_t *parser);
+
+
 
 /*
 		由于采用了一个增广的文法，所以当EOI被增加到stack中时，只可能出现错误或者成为接受状态，EOI永远不会被SHIFT到parser中

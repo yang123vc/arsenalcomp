@@ -37,8 +37,6 @@ common.h -- misc founctions used in Arsenal
  
 typedef void	(AR_STDCALL *AR_error_func)(int_t level, const wchar_t *msg, void *ctx);
 typedef void	(AR_STDCALL *AR_print_func)(const wchar_t *msg, void *ctx);
-/*typedef void	(AR_STDCALL *AR_fatal_func)(const wchar_t *msg, void *ctx);*/
-
 
 
 typedef struct __ar_init_tag
@@ -58,7 +56,8 @@ void*	AR_global_ioctx();
 void	AR_printf(const wchar_t *msg,...);
 
 /*库内部错误为负数*/
-#define AR_ERR_FATAL	-1
+#define AR_ERR_FATAL		((int_t)-0x0001)
+#define AR_ERR_WARNING		((int_t)-0x0002)
 
 void	AR_error(int_t level, const wchar_t *msg, ...);
 

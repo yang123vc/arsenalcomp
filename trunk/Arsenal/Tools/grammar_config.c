@@ -431,7 +431,7 @@ static void CFG_DestroyNode(cfgNode_t *node)
 				default:
 				{
 						AR_ASSERT(false);
-						AR_abort();
+						AR_error(AR_ERR_FATAL, L"%hs\r\n", AR_FUNC_NAME);
 				}
 				}
 
@@ -448,7 +448,6 @@ static void	AR_STDCALL cfg_free(psrNode_t *node, void *ctx)
 		CFG_DestroyNode((cfgNode_t*)node);
 
 }
-
 
 
 
@@ -790,7 +789,8 @@ static psrNode_t*		AR_STDCALL __handle_prec_def(psrNode_t **nodes, size_t count,
 				res->prec.assoc	= PSR_ASSOC_RIGHT;
 		}else
 		{
-				AR_abort();
+				AR_ASSERT(false);
+				AR_error(AR_ERR_FATAL, L"%hs\r\n", AR_FUNC_NAME);
 		}
 
 
@@ -1227,7 +1227,7 @@ static lex_t* __build_lex(void *io)
 				if(!LEX_Insert(lex, __cfg_lex_name[i]))
 				{
 						AR_ASSERT(false);
-						AR_abort();
+						AR_error(AR_ERR_FATAL, L"%hs\r\n", AR_FUNC_NAME);
 
 				}
 		}
@@ -1237,12 +1237,12 @@ static lex_t* __build_lex(void *io)
 				lexAction_t action;
 				action.is_skip = __cfg_pattern[i].is_skip;
 				action.priority = __cfg_pattern[i].prec;
-				action.type = (size_t)__cfg_pattern[i].val;
+				action.value = (size_t)__cfg_pattern[i].val;
 
 				if(!LEX_InsertRule(lex, __cfg_pattern[i].regex, &action))
 				{
 						AR_ASSERT(false);
-						AR_abort();
+						AR_error(AR_ERR_FATAL, L"%hs\r\n", AR_FUNC_NAME);
 
 				}
 		}
@@ -1251,28 +1251,32 @@ static lex_t* __build_lex(void *io)
 		if(!LEX_GenerateTransTable(lex))
 		{
 				AR_ASSERT(false);
-				AR_abort();
+				AR_error(AR_ERR_FATAL, L"%hs\r\n", AR_FUNC_NAME);
 		}
 
 		return lex;
 }
 
-
-
-
-static parser_t*	__build_parser(void *io)
+static psrGrammar_t*	__build_grammar(void *io)
 {
 		psrGrammar_t	*gmr;
-		parser_t		*parser;
 		size_t i;
+		psrCtx_t		psr_ctx;
 
-		gmr = PSR_CreateGrammar(io);
+		psr_ctx.ctx = NULL;
+		psr_ctx.free_f =  cfg_free;
+		psr_ctx.io = io;
+		psr_ctx.error_f = NULL;
+		gmr = PSR_CreateGrammar(&psr_ctx);
+		
+		if(gmr == NULL)return NULL;
 
 		for(i = 0; i < AR_NELEMS(__cfg_term); ++i)
 		{
 				if(!PSR_InsertTerm(gmr, __cfg_term[i].name, (size_t)__cfg_term[i].val, PSR_ASSOC_NOASSOC, 0, __build_leaf))
 				{
-						AR_abort();
+						AR_ASSERT(false);
+						AR_error(AR_ERR_FATAL, L"%hs\r\n", AR_FUNC_NAME);
 				}
 		}
 
@@ -1280,30 +1284,76 @@ static parser_t*	__build_parser(void *io)
 		{
 				if(!PSR_InsertRuleByStr(gmr, __cfg_rule[i].rule, NULL, __cfg_rule[i].handler))
 				{
-						AR_abort();
+						AR_ASSERT(false);
+						AR_error(AR_ERR_FATAL, L"%hs\r\n", AR_FUNC_NAME);
 				}
 
 		}
-
-
-		if(gmr == NULL || !PSR_CheckIsValidGrammar(gmr))
+		
+		if(!PSR_CheckIsValidGrammar(gmr))
 		{
-		    AR_printf(L"Internal Error : %ls\r\n", AR_FUNC_NAME);
+				AR_ASSERT(false);
+				AR_error(AR_ERR_FATAL, L"Arsenal Internal Error : %hs\r\n", AR_FUNC_NAME);
+		}
+		
+		return gmr;
+}
 
-				AR_abort();
+static parser_t*		__build_parser(const psrGrammar_t *gmr)
+{
+		AR_ASSERT(gmr && PSR_CheckIsValidGrammar(gmr));
+				
+		return PSR_CreateParser(gmr, PSR_LALR);
+}
+
+#if(0)
+static parser_t*		__build_parser(void *io)
+{
+		psrGrammar_t	*gmr;
+		parser_t		*parser;
+		size_t i;
+		psrCtx_t		psr_ctx;
+
+		psr_ctx.ctx = NULL;
+		psr_ctx.free_f =  cfg_free;
+		psr_ctx.io = io;
+		psr_ctx.error_f = NULL;
+		gmr = PSR_CreateGrammar(&psr_ctx);
+		
+		if(gmr == NULL)return NULL;
+
+		for(i = 0; i < AR_NELEMS(__cfg_term); ++i)
+		{
+				if(!PSR_InsertTerm(gmr, __cfg_term[i].name, (size_t)__cfg_term[i].val, PSR_ASSOC_NOASSOC, 0, __build_leaf))
+				{
+						AR_ASSERT(false);
+						AR_error(AR_ERR_FATAL, L"%hs\r\n", AR_FUNC_NAME);
+				}
 		}
 
+		for(i = 0; i < AR_NELEMS(__cfg_rule); ++i)
 		{
+				if(!PSR_InsertRuleByStr(gmr, __cfg_rule[i].rule, NULL, __cfg_rule[i].handler))
+				{
+						AR_ASSERT(false);
+						AR_error(AR_ERR_FATAL, L"%hs\r\n", AR_FUNC_NAME);
+				}
 
-				psrCtx_t		psr_ctx = {cfg_free,  NULL};
-				parser = PSR_CreateParser(gmr, PSR_LALR, &psr_ctx);
 		}
-
-		PSR_DestroyGrammar(gmr);
+		
+		if(!PSR_CheckIsValidGrammar(gmr))
+		{
+				AR_ASSERT(false);
+				AR_error(AR_ERR_FATAL, L"Arsenal Internal Error : %hs\r\n", AR_FUNC_NAME);
+		}
+		
+		parser = PSR_CreateParser(gmr, PSR_LALR);
+		
+		/*PSR_DestroyGrammar(gmr);*/
 		return parser;
 }
 
-
+#endif
 
 
 cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, void *io)
@@ -1314,6 +1364,7 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, void *io)
 		lexMatch_t match;
 		lexToken_t		tok;
 		psrToken_t		term;
+		psrGrammar_t	*gmr;
 		parser_t		*parser;
 		cfgNode_t		*result = NULL;
 		AR_ASSERT(gmr_txt != NULL);
@@ -1321,9 +1372,9 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, void *io)
 
 		lex = __build_lex(io);
 
-
-
-		parser = __build_parser(io);
+		gmr = __build_grammar(io);
+		
+		parser = __build_parser(gmr);
 
 		is_ok = true;
 
@@ -1349,7 +1400,7 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, void *io)
 
 				is_ok = PSR_AddToken(parser, &term);
 
-				if(tok.type == EOI)break;
+				if(tok.value == EOI)break;
 
 				//AR_printf(L"%ls : %d\r\n", AR_wcsndup(tok.str, tok.count), tok.type);
 		}
@@ -1363,9 +1414,10 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, void *io)
 
 
 		PSR_DestroyParser(parser);
+		PSR_DestroyGrammar(gmr);
 		LEX_UnInitMatch(&match);
 
-
+		
 		LEX_Destroy(lex);
 
 

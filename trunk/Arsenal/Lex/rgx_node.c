@@ -134,7 +134,7 @@ rgxNode_t*		RGX_CreateNode(rgxNodeType_t type)
 		default:
 		{
 				AR_ASSERT(false);
-				AR_abort();
+				AR_error(AR_ERR_FATAL, L"Arsenal : regex parser error %hs\r\n", AR_FUNC_NAME);
 				return NULL;
 				break;
 		}
@@ -268,7 +268,7 @@ void			RGX_DestroyNode(rgxNode_t *node)
 		default:
 		{
 				AR_ASSERT(false);
-				AR_abort();
+				AR_error(AR_ERR_FATAL, L"Arsenal : regex parser error %hs\r\n", AR_FUNC_NAME);
 				break;
 		}
 		}
@@ -459,7 +459,7 @@ void			RGX_ToString(const rgxNode_t *node, arString_t *str)
 				break;
 		default:
 				AR_ASSERT(false);
-				AR_abort();
+				AR_error(AR_ERR_FATAL, L"Arsenal : regex parser error %hs\r\n", AR_FUNC_NAME);
 		}
 }
 

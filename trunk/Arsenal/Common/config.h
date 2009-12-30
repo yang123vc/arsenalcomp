@@ -254,7 +254,7 @@
 		#define AR_NAMESPACE_END		} }
 
 		typedef bool					bool_t;
-
+		
 		#define AR_INLINE				inline
 #else
 		#define AR_NAMESPACE_BEGIN
