@@ -112,10 +112,11 @@ static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, const wchar_t *in
 						{
 						case RGX_CHAR_I:
 						{
-								if(*sp >= pc->range.beg && *sp <= pc->range.end)
+								if(*sp != L'\0' && *sp >= pc->range.beg && *sp <= pc->range.end)
 								{
-										__add_thread(next, RGX_BuildThread(pc + 1, *sp == L'\0' ? sp : sp + 1, 0, 0), prog);
+										__add_thread(next, RGX_BuildThread(pc + 1, sp + 1, 0, 0), prog);
 								}
+
 								break;
 						}
 						case RGX_BEGIN_I:
@@ -256,11 +257,11 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 						{
 						case RGX_CHAR_I:
 						{
-								if(*sp >= pc->range.beg && *sp <= pc->range.end)
+								
+								if(*sp != L'\0' && *sp >= pc->range.beg && *sp <= pc->range.end)
 								{
-										if(*sp == L'\n')
+										if(*sp == L'\n') 
 										{
-
 												y = 0;
 												x++;
 										}else
@@ -268,8 +269,7 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 												y++;
 										}
 
-										if(*sp != L'\0')sp++;
-
+										sp++;
 										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y), prog);
 								}
 								break;
@@ -350,9 +350,7 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 						}
 						}
 				}
-
 		BREAK_POINT:
-
 				RGX_SwapThreadList(curr, next);
 				RGX_ClearThreadList(next);
 		}

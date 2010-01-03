@@ -50,6 +50,17 @@
 
 AR_NAMESPACE_BEGIN
 
+void			AR_InitThread()
+{
+
+
+}
+
+void			AR_UnInitThread()
+{
+
+
+}
 
 void			AR_YiledThread()
 {

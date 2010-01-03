@@ -204,7 +204,7 @@ void parse_code(const cfgConfig_t *cfg, const wchar_t *sources)
 						AR_wcsncpy(buf, tok.str, tok.count);
 						buf[tok.count] = L'\0';
 
-						AR_printf(L"%ls : type == %d : count == %d : line = %d\r\n", buf, tok.type, tok.count, tok.line);
+						AR_printf(L"%ls : type == %d : count == %d : line = %d\r\n", buf, tok.value, tok.count, tok.line);
 						*/
 						tok_cnt++;
 						if(tok.value == 0)break;
@@ -249,7 +249,6 @@ void parser_test()
 		getchar();
 
 
-
 		cfg = CFG_CollectGrammarConfig(gmr_txt, NULL);
 		
 
@@ -270,11 +269,12 @@ void parser_test()
 				for(i = 0; i < cfg->name_cnt; ++i)
 				{
 						AR_printf(L"%ls : %ls : %d\r\n", cfg->name[i].name, cfg->name[i].regex, cfg->name[i].line);
-
+/*
 						if(!LEX_InsertName(tmp_lex, cfg->name[i].name, cfg->name[i].regex))
 						{
 								AR_abort();
 						}
+*/
 						
 				}
 				AR_printf(L"----------------------\r\n");
@@ -286,11 +286,12 @@ void parser_test()
 						act.value = i + 256;
 
 						AR_printf(L"%ls : %ls : %d : %d\r\n", cfg->tok[i].name, cfg->tok[i].regex, cfg->tok[i].lex_prec, cfg->tok[i].tokval);
-
+/*
 						if(!LEX_InsertRule(tmp_lex, cfg->tok[i].regex, &act))
 						{
 								AR_abort();
 						}
+		*/
 				}
 				AR_printf(L"----------------------\r\n");
 
@@ -309,14 +310,12 @@ void parser_test()
 		
 		//		arString_t *str = NULL;
 		//		CFG_ConfigToCode(cfg, str);
-#endif
-				
-				parse_code(cfg, __load_txt(DEF_SOUR_PATH));
 
-
+#endif		
+			//	parse_code(cfg, __load_txt(DEF_SOUR_PATH));
 		}else
 		{
-				AR_abort();
+				__asm { int 3};
 		}
 
 
@@ -328,7 +327,42 @@ void parser_test()
 
 
 
+void parser_perf_test()
+{
+		size_t i;
+		const wchar_t	*gmr_txt, *src_txt;
+		cfgConfig_t		*cfg;
+		gmr_txt = __load_txt(DEF_PAT_PATH);
+		
+		if(gmr_txt == NULL)
+		{
+				AR_abort();
+		}
 
+		AR_printf(L"%ls\r\n", gmr_txt);
+		src_txt = __load_txt(DEF_SOUR_PATH);
+		getchar();
+		
+		while(true)
+		{
+				DWORD beg, end;
+
+				beg = GetTickCount();
+				cfg = CFG_CollectGrammarConfig(gmr_txt, NULL);
+
+				parse_code(cfg, src_txt);
+
+				if(cfg)CFG_DestroyGrammarConfig(cfg);
+				
+				end = GetTickCount();
+
+				AR_printf(L"parser elapsed == %d\r\n", end - beg);
+
+				Sleep(500);
+
+				system("cls");
+		}
+}
 
 
 AR_NAMESPACE_END

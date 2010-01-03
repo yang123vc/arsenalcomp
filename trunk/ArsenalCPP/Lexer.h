@@ -39,6 +39,8 @@ public:
 		void	Reset();
 		void	Clear();
 public:
+		void	ClearError();
+		void	Skip();
 		bool	IsError()const;
 		bool	GetToken(lexToken_t &token);
 public:

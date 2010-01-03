@@ -348,7 +348,7 @@ wchar_t*		AR_vtow(const wchar_t *fmt, ...)
 
 
 
-int AR_wchartodigit(wchar_t ch)
+int_t AR_wchartodigit(wchar_t ch)
 {
 #define DIGIT_RANGE_TEST(zero)  \
     if (ch < zero)              \
@@ -836,7 +836,7 @@ static const wchar_t* __wtou64_s(const wchar_t *in, const wchar_t *end, uint64_t
 
 		while(p < end)
 		{
-				int tmp;
+				int_t tmp;
 				if((tmp = AR_wchartodigit(*p)) != -1)
 				{
 						//tmp = (*p - L'0');
@@ -950,7 +950,7 @@ static const wchar_t* __wtou32_s(const wchar_t *in, const wchar_t *end, uint32_t
 
 		while(p < end)
 		{
-				int tmp;
+				int_t tmp;
 				if((tmp = AR_wchartodigit(*p)) != -1)
 				{
 						//tmp = (*p - L'0');

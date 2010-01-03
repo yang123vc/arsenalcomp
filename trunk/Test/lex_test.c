@@ -473,10 +473,10 @@ void lex_test20()
 		size_t i;
 
 		lex = LEX_Create(NULL);
-		LEX_InitMatch(&match,L"abc" );
+		LEX_InitMatch(&match,L"\"abc\r\ndef\r\n\"" );
 
 		
-		if(!LEX_Insert(lex, L"2,0 (a(?=b(?=c)){2})|b(?=c)|c(?=[\\0])"))
+		if(!LEX_Insert(lex, L"2,0 (\\\"([^\\\"\\n])+\\\")"))
 		{
 				AR_abort();
 		}
@@ -492,30 +492,40 @@ void lex_test20()
 		{
 				AR_abort();
 		}
-		
-		
 		*/
 
-		if(!LEX_Insert(lex, L"0,1 [\\0]"))
+		if(!LEX_Insert(lex, L"0,1 $"))
 		{
 				AR_abort();
 		}
 
-		AR_printf(L"remove result == %d\r\n", LEX_RemoveByValue(lex, 0));
+		//AR_printf(L"remove result == %d\r\n", LEX_RemoveByValue(lex, 0));
 
-		AR_printf(L"remove result == %d\r\n", LEX_RemoveByValue(lex, 0));
+		//AR_printf(L"remove result == %d\r\n", LEX_RemoveByValue(lex, 0));
 
 		LEX_GenerateTransTable(lex);
 
-		while(LEX_Match(lex, &match, &tok))
-		{
-				wchar_t buf[1024];
-				AR_wcsncpy(buf, tok.str, tok.count);
-				buf[tok.count] = L'\0';
+		bool_t  is_ok = true;
 
-				AR_printf(L"%ls : type == %d : count == %d\r\n", buf, tok.value, tok.count);
-				
-				if(tok.value == 0)break;
+		while(true)
+		{
+				if(!LEX_Match(lex, &match, &tok))
+				{
+						LEX_Skip(&match);
+						LEX_ClearError(&match);
+						continue;
+				}else
+				{
+		
+						wchar_t buf[1024];
+
+						AR_wcsncpy(buf, tok.str, tok.count);
+						buf[tok.count] = L'\0';
+
+						AR_printf(L"%ls : type == %d : count == %d\r\n", buf, tok.value, tok.count);
+
+						if(tok.value == 0)break;
+				}
 		}
 
 		getchar();

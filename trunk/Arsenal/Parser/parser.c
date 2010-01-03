@@ -317,10 +317,15 @@ static void __on_error(parser_t *parser, const psrToken_t		*tok)
 
 
 
+typedef enum 
+{
+		ERR_RECOVERY_CONTINUE,
+		ERR_RECOVERY_DISCARD,
+		ERR_RECOVERY_FAILED
+}errRecovery_t;
 
 
-
-static bool_t __error_recovery(parser_t *parser, const psrToken_t *tok)
+static errRecovery_t __error_recovery(parser_t *parser, const psrToken_t *tok)
 {		
 		const psrCtx_t	*user;
 		
@@ -369,7 +374,6 @@ static bool_t __error_recovery(parser_t *parser, const psrToken_t *tok)
 								top_node = PSR_TopNodeStack(parser->node_stack);
 								if(top_node)user->free_f(top_node, user->ctx);
 								PSR_PopNodeStack(parser->node_stack, 1);
-
 								PSR_PopStack(parser->state_stack, 1);
 								
 						
@@ -386,7 +390,7 @@ static bool_t __error_recovery(parser_t *parser, const psrToken_t *tok)
 						}
 				}
 				parser->is_repair = true;
-				return found;
+				return found ? ERR_RECOVERY_CONTINUE : ERR_RECOVERY_FAILED;
 		}else
 		{
 
@@ -405,10 +409,10 @@ static bool_t __error_recovery(parser_t *parser, const psrToken_t *tok)
 						AR_ASSERT(top_state < parser->msg_count);
 						parser->user.error_f(tok, parser->msg_set[top_state].msg, parser->msg_set[top_state].count, parser->user.ctx);
 */
-						return false;
+						return ERR_RECOVERY_FAILED;
 				}else
 				{
-						return true;
+						return ERR_RECOVERY_DISCARD;
 				}
 		}
 }
@@ -475,7 +479,20 @@ bool_t PSR_AddToken(parser_t *parser, const psrToken_t *tok)
 						parser->is_accepted = true;
 						break;
 				case PSR_ERROR:
-						if(!__error_recovery(parser, tok))return false;
+				{
+						errRecovery_t stat = __error_recovery(parser, tok);
+						if(stat == ERR_RECOVERY_FAILED)
+						{
+								return false;
+						}else if(stat == ERR_RECOVERY_DISCARD)
+						{
+								is_done = true;
+						}else /*ERR_RECOVERY_CONTINUE*/
+						{
+								
+						}
+						
+				}
 						break;
 				default:
 						AR_ASSERT(false);

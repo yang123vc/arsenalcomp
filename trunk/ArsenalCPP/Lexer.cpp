@@ -102,7 +102,17 @@ void	Lexer::Reset()
 		LEX_ResetMatch(m_match);
 }
 
+void	Lexer::ClearError()
+{
+		AR_ASSERT(m_lex != NULL && m_ctx != NULL && m_match != NULL);
+		LEX_ClearError(m_match);
+}
 
+void	Lexer::Skip()
+{
+		AR_ASSERT(m_lex != NULL && m_ctx != NULL && m_match != NULL);
+		LEX_Skip(m_match);
+}
 
 bool	Lexer::IsError()const
 {
