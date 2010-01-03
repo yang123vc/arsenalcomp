@@ -560,6 +560,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalOptions="/LTCG"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(OutDir)\"
 				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
@@ -786,6 +787,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalOptions="/LTCG"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(OutDir)\"
 				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
@@ -1018,10 +1020,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\Test\test.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Test\trie_test.c"
 				>
 			</File>
 		</Filter>

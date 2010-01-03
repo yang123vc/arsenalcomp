@@ -355,11 +355,11 @@ REMATCH:
 		{
 				/*
 				arString_t *str = AR_CreateString();
-				RGX_PringProg(lex->prog_set->prog[i],str);
+				RGX_ProgToString(lex->prog_set->prog[i],str);
 				AR_printf(L"%ls\r\n", AR_GetStrString(str));
 				AR_DestroyString(str);
 				*/
-
+				
 				if(RGX_Match(lex->prog_set->prog[i], match, tok))
 				{
 						if(lex->prog_set->action[i].is_skip)

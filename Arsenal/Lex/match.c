@@ -72,7 +72,40 @@ bool_t	LEX_IsError(const lexMatch_t *match)
 		return !match->is_ok;
 }
 
+void	LEX_ClearError(lexMatch_t *match)
+{
+		AR_ASSERT(match != NULL);
+		match->is_ok = true;
+}
 
+
+void	LEX_Skip(lexMatch_t *pmatch)
+{
+		AR_ASSERT(pmatch != NULL && pmatch->next != NULL);
+
+		
+		while(*pmatch->next && !AR_iswspace(*pmatch->next))
+		{
+				pmatch->next++;
+				pmatch->col++;
+		}
+
+
+		while(*pmatch->next && AR_iswspace(*pmatch->next))
+		{
+				if(*pmatch->next == L'\n')
+				{
+						pmatch->line++;
+						pmatch->col = 0;
+				}else
+				{
+						pmatch->col++;
+				}
+				pmatch->next++;
+		}
+
+		
+}
 
 
 

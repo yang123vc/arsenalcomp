@@ -69,9 +69,6 @@ static const wchar_t*	__transform_char(const wchar_t *input, wchar_t *c, rgxErro
 		case L'v': 
 				*c = L'\v';
 				return ++p;
-		case L'0':
-				*c = L'\0';
-				return ++p;
 		case L'u':
 		{
 				const wchar_t *ret; uint32_t val;
@@ -356,7 +353,7 @@ static rgxResult_t	__handle_charset(const wchar_t *input)
 				return __handle_cset_range(p+1);
 		}else if(*p == L'.')
 		{
-				g_res = __handle_charset(L"[^\\0]");
+				g_res = __handle_charset(L"[^\\u0000]");
 				AR_ASSERT(g_res.node != NULL && g_res.err.pos == NULL);
 				g_res.next = ++p;
 				return g_res;

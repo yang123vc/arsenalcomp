@@ -93,12 +93,13 @@ typedef struct __cfg_config_tag
 
 		cfgRule_t		*rule;
 		size_t			rule_cnt;
+
+		bool_t			has_error;
 }cfgConfig_t;
 
 
-
-
 cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, void *io);
+
 void			CFG_DestroyGrammarConfig(cfgConfig_t *cfg);
 
 

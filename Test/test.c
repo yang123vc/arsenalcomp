@@ -52,7 +52,10 @@ extern void parser_test_lex();
 
 extern void rgx_test();
 
-void calc_test3();
+extern void calc_test3();
+
+extern void parser_perf_test();
+
 #endif
 
 
@@ -87,7 +90,7 @@ void AR_Test()
 		//lr_item_tbl_test();
 		//cache_test();
 		//calc_test1();
-		calc_test();
+		//calc_test();
 		//calc_test3();
 
 		//db_test();
@@ -100,6 +103,8 @@ void AR_Test()
 		
 		//lex_test();
 		parser_test();
+
+		//parser_perf_test();
 		
 		//rgx_test();
 

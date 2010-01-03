@@ -53,6 +53,8 @@ void LEX_ResetMatch(lexMatch_t *pmatch);
 const wchar_t* LEX_GetNextInput(const lexMatch_t *match);
 
 bool_t	LEX_IsError(const lexMatch_t *match);
+void	LEX_ClearError(lexMatch_t *match);
+void	LEX_Skip(lexMatch_t *pmatch);
 
 AR_NAMESPACE_END
 

@@ -19,7 +19,6 @@
 
 
 
-
 AR_NAMESPACE_BEGIN
 
 
@@ -81,13 +80,13 @@ void	AR_error_ctx(void *ctx, int_t level, const wchar_t *msg, ...);
 
 #define AR_DPRINT		AR_printf
 
-#define AR_ASSERT		assert
+#define AR_ASSERT(_cond)		assert((_cond))
 
 #else
 
-#define AR_DPRINT		
+#define AR_DPRINT
 
-#define AR_ASSERT		
+#define AR_ASSERT(_cond)		(_cond)
 
 #endif
 
@@ -267,7 +266,7 @@ int_t			AR_scwprintf(const wchar_t *fmt, ...);
 wchar_t*		AR_vtow(const wchar_t *fmt, ...);
 
 
-int				AR_wchartodigit(wchar_t ch);
+int_t				AR_wchartodigit(wchar_t ch);
 
 
 
@@ -345,7 +344,9 @@ wchar_t* AR_utf8_convto_wcs(const char *utf8);
 
 /**********************************************************Threading*************************************************************/
 
-
+/*thread模块初始化函数，只能由AR_Init调用*/
+void			AR_InitThread();
+void			AR_UnInitThread();
 
 /*uint_t			AR_CompExchange(volatile uint_t *dest, uint_t exch, uint_t compval);*/
 
