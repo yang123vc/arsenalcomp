@@ -135,17 +135,27 @@
 
 
 
-
-
 #if(AR_COMPILER == AR_VC6 || AR_COMPILER == AR_VC9 || AR_COMPILER == AR_BCB6 || AR_COMPILER == AR_GCC3 || AR_COMPILER == AR_GCC4)
+		
+		
+	/*	
+		#define _CRTDBG_MAP_ALLOC 
+		
+		#include<crtdbg.h>
+		
+		MSVC mem check tools "_CrtDumpMemoryLeaks();"
+		_CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+		#define AR_USE_CRT_ALLOCFUNC	1
+		
+	*/
+		
+		#include<stdlib.h> 
 
 		#include <stdio.h>
 		#include <wchar.h>
-
 		#include <stddef.h>
 		#include <stdarg.h>
 		#include <limits.h>
-		#include <stdlib.h>
 		#include <assert.h>
 		#include <memory.h>
 		#include <string.h>
@@ -253,10 +263,13 @@
 		#define AR_NAMESPACE_BEGIN		extern "C" { namespace ARSpace {
 		#define AR_NAMESPACE_END		} }
 
+
 		typedef bool					bool_t;
 		
 		#define AR_INLINE				inline
 #else
+		
+
 		#define AR_NAMESPACE_BEGIN
 		#define AR_NAMESPACE_END
 

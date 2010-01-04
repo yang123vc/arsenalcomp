@@ -9,6 +9,7 @@ class ARAPI Node
 {
 public:
 		Node(){ }
+
 		virtual ~Node() = 0
 		{
 
@@ -43,6 +44,8 @@ public:
 				return m_io_context;
 		}
 };
+
+
 
 
 class ARAPI Parser;

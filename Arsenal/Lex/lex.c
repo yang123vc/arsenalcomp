@@ -53,6 +53,7 @@ void LEX_ClearProgSet(lexProgSet_t *set)
 		for(i = 0; i < set->count; ++i)
 		{
 				RGX_UnInitProg(set->prog[i]);
+				AR_DEL(set->prog[i]);
 		}
 
 		set->count = 0;

@@ -63,6 +63,9 @@ void					AR_DestroyStrTable(arStringTable_t* tbl)
 						curr = tmp;
 				}
 		}
+
+		if(tbl->bucket)AR_DEL(tbl->bucket);
+		AR_DEL(tbl);
 }
 
 
