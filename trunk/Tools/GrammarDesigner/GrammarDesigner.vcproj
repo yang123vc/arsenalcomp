@@ -24,8 +24,8 @@
 	<Configurations>
 		<Configuration
 			Name="DLLDebug|Win32"
-			OutputDirectory="..\binary\x86\DLL\Debug"
-			IntermediateDirectory="..\Temp\GrammarDesigner\x86\DLLDebug"
+			OutputDirectory="..\..\binary\x86\DLL\Debug"
+			IntermediateDirectory="..\..\Temp\GrammarDesigner\x86\DLLDebug"
 			ConfigurationType="1"
 			UseOfMFC="2"
 			CharacterSet="1"
@@ -51,7 +51,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\Arsenal;..\ArsenalCPP;"
+				AdditionalIncludeDirectories="..\..\Arsenal;..\..\ArsenalCPP;"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -107,8 +107,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLLDebug|x64"
-			OutputDirectory="..\binary\x64\DLL\Debug"
-			IntermediateDirectory="..\Temp\GrammarDesigner\x64\DLLDebug"
+			OutputDirectory="..\..\binary\x64\DLL\Debug"
+			IntermediateDirectory="..\..\Temp\GrammarDesigner\x64\DLLDebug"
 			ConfigurationType="1"
 			UseOfMFC="2"
 			CharacterSet="1"
@@ -131,7 +131,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\Arsenal;..\ArsenalCPP;"
+				AdditionalIncludeDirectories="..\..\Arsenal;..\..\ArsenalCPP;"
 				PreprocessorDefinitions="WIN64;_WINDOWS;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -184,8 +184,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLLDebug|Itanium"
-			OutputDirectory="..\binary\ia64\DLL\Debug"
-			IntermediateDirectory="..\Temp\GrammarDesigner\ia64\DLLDebug"
+			OutputDirectory="..\..\binary\ia64\DLL\Debug"
+			IntermediateDirectory="..\..\Temp\GrammarDesigner\ia64\DLLDebug"
 			ConfigurationType="1"
 			UseOfMFC="2"
 			CharacterSet="1"
@@ -209,7 +209,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\Arsenal;..\ArsenalCPP;"
+				AdditionalIncludeDirectories="..\..\Arsenal;..\..\ArsenalCPP;"
 				PreprocessorDefinitions="WIN64;_WINDOWS;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -261,8 +261,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLLRelease|Win32"
-			OutputDirectory="..\binary\x86\DLL\Release"
-			IntermediateDirectory="..\Temp\GrammarDesigner\x86\DLLRelease"
+			OutputDirectory="..\..\binary\x86\DLL\Release"
+			IntermediateDirectory="..\..\Temp\GrammarDesigner\x86\DLLRelease"
 			ConfigurationType="1"
 			UseOfMFC="2"
 			CharacterSet="1"
@@ -292,7 +292,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="..\Arsenal;..\ArsenalCPP;"
+				AdditionalIncludeDirectories="..\..\Arsenal;..\..\ArsenalCPP;"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
@@ -350,8 +350,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLLRelease|x64"
-			OutputDirectory="..\binary\x64\DLL\Release"
-			IntermediateDirectory="..\Temp\GrammarDesigner\x64\DLLRelease"
+			OutputDirectory="..\..\binary\x64\DLL\Release"
+			IntermediateDirectory="..\..\Temp\GrammarDesigner\x64\DLLRelease"
 			ConfigurationType="1"
 			UseOfMFC="2"
 			CharacterSet="1"
@@ -377,10 +377,10 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="..\Arsenal;..\ArsenalCPP;"
+				AdditionalIncludeDirectories="..\..\Arsenal;..\..\ArsenalCPP;"
 				PreprocessorDefinitions="WIN64;_WINDOWS;NDEBUG"
 				RuntimeLibrary="2"
-				UsePrecompiledHeader="1"
+				UsePrecompiledHeader="0"
 				WarningLevel="4"
 				DebugInformationFormat="3"
 			/>
@@ -428,8 +428,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLLRelease|Itanium"
-			OutputDirectory="..\binary\ia64\DLL\Release"
-			IntermediateDirectory="..\Temp\GrammarDesigner\ia64\DLRelease"
+			OutputDirectory="..\..\binary\ia64\DLL\Release"
+			IntermediateDirectory="..\..\Temp\GrammarDesigner\ia64\DLRelease"
 			ConfigurationType="1"
 			UseOfMFC="2"
 			CharacterSet="1"
@@ -456,7 +456,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="..\Arsenal;..\ArsenalCPP;"
+				AdditionalIncludeDirectories="..\..\Arsenal;..\..\ArsenalCPP;"
 				PreprocessorDefinitions="WIN64;_WINDOWS;NDEBUG"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="1"
@@ -506,8 +506,8 @@
 		</Configuration>
 		<Configuration
 			Name="LibDebug|Win32"
-			OutputDirectory="..\binary\x86\Lib\Debug"
-			IntermediateDirectory="..\Temp\GrammarDesigner\x86\LibDebug"
+			OutputDirectory="..\..\binary\x86\Lib\Debug"
+			IntermediateDirectory="..\..\Temp\GrammarDesigner\x86\LibDebug"
 			ConfigurationType="1"
 			UseOfMFC="1"
 			CharacterSet="1"
@@ -530,7 +530,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\Arsenal;..\ArsenalCPP;"
+				AdditionalIncludeDirectories="..\..\Arsenal;..\..\ArsenalCPP;"
 				PreprocessorDefinitions="WIN32;_DEBUG;__LIB"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -582,8 +582,8 @@
 		</Configuration>
 		<Configuration
 			Name="LibDebug|x64"
-			OutputDirectory="..\binary\x64\Lib\Debug"
-			IntermediateDirectory="..\Temp\GrammarDesigner\x64\LibDebug"
+			OutputDirectory="..\..\binary\x64\Lib\Debug"
+			IntermediateDirectory="..\..\Temp\GrammarDesigner\x64\LibDebug"
 			ConfigurationType="1"
 			UseOfMFC="1"
 			CharacterSet="1"
@@ -606,7 +606,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\Arsenal;..\ArsenalCPP;"
+				AdditionalIncludeDirectories="..\..\Arsenal;..\..\ArsenalCPP;"
 				PreprocessorDefinitions="WIN64;_WINDOWS;_DEBUG; __LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -659,8 +659,8 @@
 		</Configuration>
 		<Configuration
 			Name="LibDebug|Itanium"
-			OutputDirectory="..\binary\ia64\Lib\Debug"
-			IntermediateDirectory="..\Temp\GrammarDesigner\ia64\LibDebug"
+			OutputDirectory="..\..\binary\ia64\Lib\Debug"
+			IntermediateDirectory="..\..\Temp\GrammarDesigner\ia64\LibDebug"
 			ConfigurationType="1"
 			UseOfMFC="1"
 			CharacterSet="1"
@@ -684,7 +684,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\Arsenal;..\ArsenalCPP;"
+				AdditionalIncludeDirectories="..\..\Arsenal;..\..\ArsenalCPP;"
 				PreprocessorDefinitions="WIN64;_WINDOWS;_DEBUG; __LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -736,8 +736,8 @@
 		</Configuration>
 		<Configuration
 			Name="LibRelease|Win32"
-			OutputDirectory="..\binary\x86\Lib\Release"
-			IntermediateDirectory="..\Temp\GrammarDesigner\x86\LibRelease"
+			OutputDirectory="..\..\binary\x86\Lib\Release"
+			IntermediateDirectory="..\..\Temp\GrammarDesigner\x86\LibRelease"
 			ConfigurationType="1"
 			UseOfMFC="1"
 			CharacterSet="1"
@@ -763,7 +763,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="..\Arsenal;..\ArsenalCPP;"
+				AdditionalIncludeDirectories="..\..\Arsenal;..\..\ArsenalCPP;"
 				PreprocessorDefinitions="WIN32;NDEBUG;__LIB"
 				UsePrecompiledHeader="1"
 				WarningLevel="4"
@@ -814,8 +814,8 @@
 		</Configuration>
 		<Configuration
 			Name="LibRelease|x64"
-			OutputDirectory="..\binary\x64\Lib\Release"
-			IntermediateDirectory="..\Temp\GrammarDesigner\x64\LibRelease"
+			OutputDirectory="..\..\binary\x64\Lib\Release"
+			IntermediateDirectory="..\..\Temp\GrammarDesigner\x64\LibRelease"
 			ConfigurationType="1"
 			UseOfMFC="1"
 			CharacterSet="1"
@@ -841,9 +841,9 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="..\Arsenal;..\ArsenalCPP;"
+				AdditionalIncludeDirectories="..\..\Arsenal;..\..\ArsenalCPP;"
 				PreprocessorDefinitions="WIN64;_WINDOWS;NDEBUG; __LIB"
-				UsePrecompiledHeader="1"
+				UsePrecompiledHeader="0"
 				WarningLevel="4"
 				DebugInformationFormat="3"
 			/>
@@ -891,8 +891,8 @@
 		</Configuration>
 		<Configuration
 			Name="LibRelease|Itanium"
-			OutputDirectory="..\binary\ia64\Lib\Release"
-			IntermediateDirectory="..\Temp\GrammarDesigner\ia64\LibRelease"
+			OutputDirectory="..\..\binary\ia64\Lib\Release"
+			IntermediateDirectory="..\..\Temp\GrammarDesigner\ia64\LibRelease"
 			ConfigurationType="1"
 			UseOfMFC="1"
 			CharacterSet="1"
@@ -919,7 +919,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="..\Arsenal;..\ArsenalCPP;"
+				AdditionalIncludeDirectories="..\..\Arsenal;..\..\ArsenalCPP;"
 				PreprocessorDefinitions="WIN64;_WINDOWS;NDEBUG; __LIB"
 				UsePrecompiledHeader="1"
 				WarningLevel="4"

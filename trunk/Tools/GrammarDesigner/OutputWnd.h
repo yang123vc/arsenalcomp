@@ -26,6 +26,7 @@ public:
 		afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 };
 
+
 class COutputWnd : public CDockablePane
 {
 // Construction

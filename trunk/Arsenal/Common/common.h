@@ -75,6 +75,9 @@ void	AR_error_ctx(void *ctx, int_t level, const wchar_t *msg, ...);
 
 #define AR_CHECK(_cond,_msg,_level) do {if(!(_cond))AR_error((_level), L"%ls\r\n", (_msg)); }while(0)
 
+#define AR_STATIC_CHECK(_expr)	typedef char __static_assert_t[ (_expr) ]
+
+
 
 #if defined(AR_DEBUG)
 
@@ -118,11 +121,26 @@ static AR_INLINE const void* AR_GET_ELEM(const void *base, size_t width, size_t 
 
 /**********************************************************memory***************************************************************/
 
-void*	AR_malloc(size_t nbytes);
-void*	AR_calloc(size_t num, size_t size);
-void*	AR_realloc(void *block, size_t nbytes);
-void	AR_free(void *ptr);
+#if defined(AR_USE_CRT_ALLOCFUNC)
+
+		#define AR_malloc(_bytes)		malloc((_bytes))
+		#define	AR_calloc(_n, _size)	calloc((_n), (_size))
+		#define AR_realloc(_b, _n)		realloc((_b), (_n))
+		#define AR_free(_p)				free(_p)
+#else
+
+		void*	AR_malloc(size_t nbytes);
+		void*	AR_calloc(size_t num, size_t size);
+		void*	AR_realloc(void *block, size_t nbytes);
+		void	AR_free(void *ptr);
+
+#endif
+
+
 void	AR_memswap(void *a, void *b, size_t n);
+
+
+
 
 #define AR_memset				memset
 #define AR_memcpy				memcpy
@@ -189,9 +207,9 @@ uint32_t		AR_rand32();
 
 
 
+
 wchar_t* AR_wcsdup(const wchar_t *sour);
 wchar_t* AR_wcsndup(const wchar_t *sour, size_t len);
-
 
 
 const wchar_t*	AR_wcstrim(const wchar_t *in, const wchar_t *trim);

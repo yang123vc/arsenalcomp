@@ -554,6 +554,7 @@ wchar_t* AR_wcsdup(const wchar_t *sour)
 }
 
 
+
 wchar_t* AR_wcsndup(const wchar_t *sour, size_t len)
 {
 		wchar_t *result;

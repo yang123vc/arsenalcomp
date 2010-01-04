@@ -22,6 +22,11 @@ AR_NAMESPACE_BEGIN
 
 
 /*****************************************************Memory*******************************/
+#if defined(AR_USE_CRT_ALLOCFUNC)
+
+
+#else
+
 void*	AR_malloc(size_t nbytes)
 {
 		void *ptr;
@@ -64,8 +69,7 @@ void	AR_free(void *ptr)
 		if(ptr)free(ptr);
 }
 
-
-
+#endif
 
 
 void	AR_memswap(void *a, void *b, size_t n)
@@ -99,31 +103,6 @@ void	AR_memswap(void *a, void *b, size_t n)
 		}
 
 }
-
-
-#if(0)
-void AR_memswap(void *a, void *b, size_t n)
-{
-		byte_t tmp, *l,*r;
-		int_t cnt;
-
-		AR_ASSERT(a != NULL && b != NULL);
-
-		if(a == b)return;
-
-		cnt = (int_t)n;
-		l = (byte_t*)a; 
-		r = (byte_t*)b;
-
-		
-		while(cnt-- > 0)
-		{
-				tmp = *l;
-				*l++ = *r;
-				*r++ = tmp;
-		}
-}
-#endif
 
 
 

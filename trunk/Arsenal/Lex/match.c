@@ -103,8 +103,6 @@ void	LEX_Skip(lexMatch_t *pmatch)
 				}
 				pmatch->next++;
 		}
-
-		
 }
 
 

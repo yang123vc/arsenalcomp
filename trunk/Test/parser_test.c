@@ -259,8 +259,7 @@ void parser_test()
 
 #if(1)
 				size_t i;
-				lex_t *tmp_lex;
-				tmp_lex = LEX_Create(NULL);
+				
 				AR_printf(L"----------------------\r\n");
 				for(i = 0; i < cfg->name_cnt; ++i)
 				{
@@ -308,17 +307,21 @@ void parser_test()
 		//		CFG_ConfigToCode(cfg, str);
 
 #endif		
-				parse_code(cfg, __load_txt(DEF_SOUR_PATH));
+				{
+						const wchar_t *input = __load_txt(DEF_SOUR_PATH);
+						parse_code(cfg, input);
+
+						AR_DEL(input);
+				}
 		}else
 		{
-				__asm { int 3};
+				AR_abort();
 		}
 
 
-
-
-		
 		if(cfg)CFG_DestroyGrammarConfig(cfg);
+
+		AR_DEL(gmr_txt);
 }
 
 
@@ -339,14 +342,14 @@ void parser_perf_test()
 		src_txt = __load_txt(DEF_SOUR_PATH);
 		getchar();
 		
-		while(true)
+		for(i = 0; i < 5; ++i)
 		{
 				DWORD beg, end;
 
 				beg = GetTickCount();
 				cfg = CFG_CollectGrammarConfig(gmr_txt, NULL);
 
-				parse_code(cfg, src_txt);
+				//parse_code(cfg, src_txt);
 
 				if(cfg)CFG_DestroyGrammarConfig(cfg);
 				
@@ -358,6 +361,9 @@ void parser_perf_test()
 
 				system("cls");
 		}
+		
+		AR_DEL(src_txt);
+		AR_DEL(gmr_txt);
 }
 
 

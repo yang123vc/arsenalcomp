@@ -498,7 +498,6 @@ static psrNode_t* AR_STDCALL __build_leaf(const psrToken_t *tok,  void *ctx)
 
 		node->lexeme.lex_val = (cfgLexValue_t)tok->term_val;
 
-
 		if(tok->term_val == LEXEME && (tok->str[0] == L'"' || tok->str[0] == L'\''))
 		{
 				node->lexeme.lexeme = AR_wcsndup(tok->str + 1, tok->str_cnt-2);

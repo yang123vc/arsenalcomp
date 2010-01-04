@@ -66,7 +66,6 @@ extern void parser_perf_test();
 void AR_Test()
 {
 #if defined(__LIB)
-		
 		//com_test();
 
 		//trie_tree_test();
@@ -102,9 +101,9 @@ void AR_Test()
 		//trans_char_test();
 		
 		//lex_test();
-		parser_test();
+		//parser_test();
 
-		//parser_perf_test();
+		parser_perf_test();
 		
 		//rgx_test();
 

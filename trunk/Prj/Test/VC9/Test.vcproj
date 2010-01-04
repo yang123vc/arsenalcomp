@@ -97,6 +97,7 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
+				PageHeapConserveMemory="false"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -585,6 +586,7 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
+				PageHeapConserveMemory="false"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1005,6 +1007,14 @@
 			<File
 				RelativePath="..\..\..\Test\lex_test.c"
 				>
+				<FileConfiguration
+					Name="LibRelease|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						CompileAs="2"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\Test\parser_test.c"

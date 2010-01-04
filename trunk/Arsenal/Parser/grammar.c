@@ -310,6 +310,7 @@ void			PSR_DestroyRule(psrRule_t *rule)
 		}
 
 		PSR_UnInitSymbList(&rule->body);
+		if(rule->prec_tok) AR_DEL(rule->prec_tok);
 		AR_DEL(rule);
 }
 
