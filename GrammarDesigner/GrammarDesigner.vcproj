@@ -56,7 +56,7 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="1"
 				WarningLevel="4"
 				DebugInformationFormat="4"
 			/>
@@ -136,7 +136,7 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="1"
 				WarningLevel="4"
 				DebugInformationFormat="4"
 			/>
@@ -214,7 +214,7 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="1"
 				WarningLevel="4"
 				DebugInformationFormat="4"
 			/>
@@ -297,7 +297,7 @@
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="false"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="1"
 				WarningLevel="4"
 				DebugInformationFormat="3"
 			/>
@@ -380,7 +380,7 @@
 				AdditionalIncludeDirectories="..\Arsenal;..\ArsenalCPP;"
 				PreprocessorDefinitions="WIN64;_WINDOWS;NDEBUG"
 				RuntimeLibrary="2"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="1"
 				WarningLevel="4"
 				DebugInformationFormat="3"
 			/>
@@ -459,7 +459,7 @@
 				AdditionalIncludeDirectories="..\Arsenal;..\ArsenalCPP;"
 				PreprocessorDefinitions="WIN64;_WINDOWS;NDEBUG"
 				RuntimeLibrary="2"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="1"
 				WarningLevel="4"
 				DebugInformationFormat="3"
 			/>
@@ -534,7 +534,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;__LIB"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="1"
 				AssemblerOutput="0"
 				WarningLevel="4"
 				DebugInformationFormat="4"
@@ -611,7 +611,7 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="1"
 				WarningLevel="4"
 				DebugInformationFormat="4"
 			/>
@@ -689,7 +689,7 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="1"
 				WarningLevel="4"
 				DebugInformationFormat="4"
 			/>
@@ -765,7 +765,7 @@
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="..\Arsenal;..\ArsenalCPP;"
 				PreprocessorDefinitions="WIN32;NDEBUG;__LIB"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="1"
 				WarningLevel="4"
 				DebugInformationFormat="3"
 			/>
@@ -843,7 +843,7 @@
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="..\Arsenal;..\ArsenalCPP;"
 				PreprocessorDefinitions="WIN64;_WINDOWS;NDEBUG; __LIB"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="1"
 				WarningLevel="4"
 				DebugInformationFormat="3"
 			/>
@@ -921,7 +921,7 @@
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="..\Arsenal;..\ArsenalCPP;"
 				PreprocessorDefinitions="WIN64;_WINDOWS;NDEBUG; __LIB"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="1"
 				WarningLevel="4"
 				DebugInformationFormat="3"
 			/>
@@ -976,17 +976,121 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\AboutDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GrammarDesigner.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GrammarDesignerDoc.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GrammarDesignerView.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MainFrm.h"
+				>
+			</File>
+			<File
+				RelativePath=".\OutputWnd.h"
+				>
+			</File>
+			<File
+				RelativePath=".\resource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\stdafx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\targetver.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+			<File
+				RelativePath=".\res\GrammarDesigner.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\GrammarDesigner.rc"
+				>
+			</File>
+			<File
+				RelativePath=".\res\GrammarDesigner.rc2"
+				>
+			</File>
+			<File
+				RelativePath=".\res\GrammarDesignerDoc.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\res\output_wnd.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\res\output_wnd_hc.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\res\Toolbar.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\res\Toolbar256.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\UserImages.bmp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Sources Files"
 			>
+			<File
+				RelativePath=".\AboutDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GrammarDesigner.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GrammarDesignerDoc.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GrammarDesignerView.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MainFrm.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\OutputWnd.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\stdafx.cpp"
+				>
+			</File>
 		</Filter>
+		<File
+			RelativePath=".\GrammarDesigner.reg"
+			>
+		</File>
 		<File
 			RelativePath=".\ReadMe.txt"
 			>
@@ -995,7 +1099,7 @@
 	<Globals>
 		<Global
 			Name="RESOURCE_FILE"
-			Value="UI.rc"
+			Value="GrammarDesigner.rc"
 		/>
 	</Globals>
 </VisualStudioProject>

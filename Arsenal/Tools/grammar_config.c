@@ -1222,6 +1222,9 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, void *io)
 		cfgNode_t		*result = NULL;
 		
 		AR_ASSERT(gmr_txt != NULL);
+
+		if(io == NULL)io = AR_global_ioctx();
+
 		LEX_InitMatch(&match, gmr_txt);
 
 		lex = __build_lex(io);
@@ -1243,7 +1246,7 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, void *io)
 						const wchar_t *tok = NULL;
 						size_t n = AR_wcslen(match.next);
 						tok = AR_wcsndup(match.next, n > 5 ? 5 : n);
-						AR_printf_ctx(gmr->user.io, L"Invalid Token %ls...(%"AR_PLAT_INT_FMT L"d : %"AR_PLAT_INT_FMT L"d)\r\n", tok, match.line, match.col);
+						AR_printf_ctx(io, L"Invalid Token %ls...(%"AR_PLAT_INT_FMT L"d : %"AR_PLAT_INT_FMT L"d)\r\n", tok, match.line, match.col);
 						if(tok)AR_DEL(tok);
 						LEX_Skip(&match);
 						LEX_ClearError(&match);
@@ -1268,7 +1271,7 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, void *io)
 
 						if(!PSR_AddToken(parser, &end))
 						{
-								AR_error_ctx(gmr->user.io, AR_ERR_FATAL, L"%hs\r\n", AR_FUNC_NAME);
+								AR_error_ctx(io , AR_ERR_FATAL, L"%hs\r\n", AR_FUNC_NAME);
 						}
 				}
 

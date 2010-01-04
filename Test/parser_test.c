@@ -232,6 +232,7 @@ void parse_code(const cfgConfig_t *cfg, const wchar_t *sources)
 }
 
 
+
 void parser_test()
 {
 		
@@ -251,12 +252,7 @@ void parser_test()
 
 		cfg = CFG_CollectGrammarConfig(gmr_txt, NULL);
 		
-
 		
-		
-		
-		
-
 		if(cfg)
 		{
 				
@@ -312,7 +308,7 @@ void parser_test()
 		//		CFG_ConfigToCode(cfg, str);
 
 #endif		
-			//	parse_code(cfg, __load_txt(DEF_SOUR_PATH));
+				parse_code(cfg, __load_txt(DEF_SOUR_PATH));
 		}else
 		{
 				__asm { int 3};
