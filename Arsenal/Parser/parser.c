@@ -338,14 +338,6 @@ static errRecovery_t __error_recovery(parser_t *parser, const psrToken_t *tok)
 		{
 				bool_t found = false;
 				
-				/*
-				{
-				size_t top_state;
-				top_state = PSR_TopStack(parser->state_stack);
-				AR_ASSERT(top_state < parser->msg_count);
-				parser->user.error_f(tok, parser->msg_set[top_state].msg, parser->msg_set[top_state].count, parser->user.ctx);
-				}
-				*/
 				__on_error(parser, tok);
 				
 
@@ -389,8 +381,16 @@ static errRecovery_t __error_recovery(parser_t *parser, const psrToken_t *tok)
 
 						}
 				}
-				parser->is_repair = true;
-				return found ? ERR_RECOVERY_CONTINUE : ERR_RECOVERY_FAILED;
+				
+				if(found)
+				{
+						parser->is_repair = true;
+						return ERR_RECOVERY_CONTINUE;
+				}else
+				{
+						return ERR_RECOVERY_FAILED;
+				}
+
 		}else
 		{
 
@@ -403,12 +403,7 @@ static errRecovery_t __error_recovery(parser_t *parser, const psrToken_t *tok)
 				if(PSR_CompSymb(PSR_EOISymb, symb) == 0)
 				{
 						__on_error(parser, tok);
-/*
-						size_t top_state;
-						top_state = PSR_TopStack(parser->state_stack);
-						AR_ASSERT(top_state < parser->msg_count);
-						parser->user.error_f(tok, parser->msg_set[top_state].msg, parser->msg_set[top_state].count, parser->user.ctx);
-*/
+
 						return ERR_RECOVERY_FAILED;
 				}else
 				{
