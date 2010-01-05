@@ -19,6 +19,119 @@ AR_NAMESPACE_BEGIN
 
 
 
+const psrActionView_t*	PSR_CreateActionView(const psrActionTable_t *tbl, const psrGrammar_t *grammar)
+{
+		psrActionView_t		*view;
+		size_t r, c, k;
+		wchar_t *msg;
+		AR_ASSERT(tbl != NULL && grammar != NULL);
+
+		view = AR_NEW0(psrActionView_t);
+		
+		view->item_cnt = tbl->term_set.count + tbl->nonterm_set.count;
+
+		view->item = AR_NEWARR0(wchar_t*, view->item_cnt);
+
+		
+		c = 0;
+		for(k = 0; k < tbl->term_set.count; ++k)
+		{
+				view->item[c] = AR_vtow(L"%ls", tbl->term_set.lst[k]->name);
+				c++;
+		}
+
+		for(k = 0; k < tbl->nonterm_set.count; ++k)
+		{
+				view->item[c] = AR_vtow(L"<%ls>", tbl->nonterm_set.lst[k]->name);
+				c++;
+		}
+
+		AR_ASSERT(c == view->item_cnt);
+		
+
+		view->row = tbl->row;
+		view->col = tbl->col + tbl->goto_col;
+
+		AR_ASSERT(view->col == view->item_cnt);
+
+		view->action_tbl = AR_NEWARR0(wchar_t*, view->row * view->col);
+		
+		/*construct action view*/
+
+		for(r = 0; r < tbl->row; ++r)
+		{
+				c = 0;
+				msg = NULL;
+				for(k = 0; k < tbl->col; ++k)
+				{
+						
+						const psrAction_t *action = tbl->actions[AR_TBL_IDX_R(r, k, tbl->col)];
+
+						switch(action->type)
+						{
+						case PSR_ACCEPT:
+								msg = AR_wcsdup(L"accept");
+								break;
+						case PSR_SHIFT:
+								{
+										msg = AR_vtow(L"%" AR_PLAT_INT_FMT L"d", (size_t)action->shift_to);
+								}
+								break;
+						case PSR_REDUCE:
+								{
+										msg = AR_vtow(L"[<%ls>:%" AR_PLAT_INT_FMT L"d]", action->rule->head->name, (size_t)action->reduce_count);
+								}
+								break;
+						default:
+								msg = AR_vtow(L"error");
+								break;
+						}
+						
+						view->action_tbl[AR_TBL_IDX_R(r, c, view->col)] = msg;
+						c++;
+						msg = NULL;
+				}
+
+				for(k = 0; k < tbl->goto_col; ++k)
+				{
+						int_t state =  tbl->goto_tbl[AR_TBL_IDX_R(r, k, tbl->goto_col)];
+						msg = AR_vtow(L"%" AR_PLAT_INT_FMT L"d", state);
+
+						view->action_tbl[AR_TBL_IDX_R(r, c, view->col)] = msg;
+						c++;
+						msg = NULL;
+				}
+				AR_ASSERT(c == view->col);
+		}
+
+		AR_ASSERT(r == view->row);
+		return view;
+}
+
+
+void PSR_DestroyActionView(const psrActionView_t *action_view)
+{
+		size_t i;
+		psrActionView_t *view;
+		AR_ASSERT(action_view != NULL);
+
+		view = (psrActionView_t*)action_view;
+
+		for(i = 0; i < view->item_cnt; ++i)
+		{
+				AR_DEL(view->item[i]);
+		}
+
+		for(i = 0; i < view->row * view->col; ++i)
+		{
+				AR_DEL(view->action_tbl[i]);
+		}
+
+		AR_DEL(view);
+}
+
+
+
 void PSR_PrintActionTable(const psrActionTable_t *tbl, const psrGrammar_t *grammar, size_t width, arString_t *str)
 {
 		/*这里必须用int，因为printf一族函数的对于%*d这类width的定义就是int*/
@@ -106,7 +219,7 @@ void PSR_PrintActionTable(const psrActionTable_t *tbl, const psrGrammar_t *gramm
 								break;
 						case PSR_SHIFT:
 						{
-								AR_AppendFormatString(str,L"%*" AR_PLAT_INT_FMT L"d", (size_t)__WIDTH__,pact->shift_to);
+								AR_AppendFormatString(str,L"%*" AR_PLAT_INT_FMT L"d", __WIDTH__, (size_t)pact->shift_to);
 						}
 								break;
 						case PSR_REDUCE:
@@ -177,9 +290,8 @@ void PSR_ReportConflict(const psrActionTable_t *tbl, const psrGrammar_t *grammar
 						AR_AppendFormatString(str,L"-----------------------------------------------\r\n");
 				}
 		}
-
-
 }
+
 
 size_t PSR_CountConflict(const psrActionTable_t *tbl)
 {

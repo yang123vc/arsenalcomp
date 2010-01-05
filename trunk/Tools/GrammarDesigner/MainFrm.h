@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include "OutputItem.h"
 #include "OutputWnd.h"
 
 class CMainFrame : public CFrameWndEx
@@ -49,6 +50,8 @@ protected:
 
 	BOOL CreateDockingWindows();
 	void SetDockingWindowIcons(BOOL bHiColorIcons);
+public:
+		afx_msg void OnTestTestmainform();
 };
 
 

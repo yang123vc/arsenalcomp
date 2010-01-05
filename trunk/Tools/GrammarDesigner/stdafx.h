@@ -15,6 +15,11 @@
 
 #include "targetver.h"
 
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS			1
+#endif
+
+
 #define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS      // some CString constructors will be explicit
 
 // turns off MFC's hiding of some common and often safely ignored warning messages
@@ -38,7 +43,7 @@
 #include <afxcontrolbars.h>     // MFC support for ribbons and control bars
 
 
-
+#include "resource.h"
 
 
 
@@ -55,6 +60,7 @@
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #endif
 #endif
+
 
 
 

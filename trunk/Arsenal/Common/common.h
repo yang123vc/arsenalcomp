@@ -34,23 +34,28 @@ common.h -- misc founctions used in Arsenal
 
 /*******************************************************************************init********************************/
  
-typedef void	(AR_STDCALL *AR_error_func)(int_t level, const wchar_t *msg, void *ctx);
-typedef void	(AR_STDCALL *AR_print_func)(const wchar_t *msg, void *ctx);
+typedef void	(AR_STDCALL *AR_error_func_t)(int_t level, const wchar_t *msg, void *ctx);
+typedef void	(AR_STDCALL *AR_print_func_t)(const wchar_t *msg, void *ctx);
+
+
+typedef struct __arsenal_io_context_tag
+{
+		AR_error_func_t	on_error;
+		AR_print_func_t	on_print;
+		void			*ctx;
+}arIOCtx_t;
 
 
 typedef struct __ar_init_tag
 {
-		AR_error_func	on_error;
-		AR_print_func	on_print;
-		/*AR_fatal_func	on_fatal;*/
-		void			*global_ctx;
+		arIOCtx_t		global_io_ctx;
 }arInit_t;
 
 
 void AR_Init(const arInit_t *info);
 void AR_UnInit();
 
-void*	AR_global_ioctx();
+arIOCtx_t*	AR_global_ioctx();
 
 void	AR_printf(const wchar_t *msg,...);
 
@@ -62,8 +67,8 @@ void	AR_error(int_t level, const wchar_t *msg, ...);
 
 
 
-void	AR_printf_ctx(void *ctx, const wchar_t *msg,...);
-void	AR_error_ctx(void *ctx, int_t level, const wchar_t *msg, ...);
+void	AR_printf_ctx(arIOCtx_t *ctx, const wchar_t *msg,...);
+void	AR_error_ctx(arIOCtx_t *ctx, int_t level, const wchar_t *msg, ...);
 
 
 

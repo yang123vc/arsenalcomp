@@ -98,7 +98,36 @@ typedef struct __cfg_config_tag
 }cfgConfig_t;
 
 
-cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, void *io);
+
+
+typedef enum
+{
+		CFG_REPORT_MESSAGE_T,
+		CFG_REPORT_ERROR_T,
+		CFG_REPORT_ERR_LEX_T,
+		CFG_REPORT_ERR_SYNTAX_T
+}cfgReportType_t;
+
+typedef struct __cfg_report_info_tag
+{
+		cfgReportType_t			type;
+		const	psrToken_t		*tok;
+		const	wchar_t			*message;
+		int_t					err_level;
+}cfgReportInfo_t;
+
+
+typedef void (AR_STDCALL *cfgReportFunc_t)(const cfgReportInfo_t *report, void *context);
+
+typedef struct __cfg_report_tag
+{
+		cfgReportFunc_t	report_func;
+		void			*report_ctx;
+}cfgReport_t;
+
+
+
+cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t	*report);
 
 void			CFG_DestroyGrammarConfig(cfgConfig_t *cfg);
 

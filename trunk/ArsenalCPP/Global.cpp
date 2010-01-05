@@ -28,9 +28,9 @@ Arsenal::Arsenal(ARContext		*ctx)
 		
 		arCtx_t		ar_ctx;
 		m_ctx = ctx;
-		ar_ctx.init.global_ctx = (void*)ctx;
-		ar_ctx.init.on_error = __error_func;
-		ar_ctx.init.on_print = __print_func;
+		ar_ctx.init.global_io_ctx.ctx = (void*)ctx;
+		ar_ctx.init.global_io_ctx.on_error = __error_func;
+		ar_ctx.init.global_io_ctx.on_print = __print_func;
 		Arsenal_Init(&ar_ctx);
 }
 

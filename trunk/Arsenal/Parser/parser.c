@@ -37,7 +37,6 @@ void	PSR_PrintParserConflict(const parser_t *parser, arString_t *out)
 		AR_ASSERT(parser->tbl != NULL && parser->grammar != NULL);
 		
 		PSR_ReportConflict(parser->tbl, parser->grammar, out);
-
 }
 
 void	PSR_PrintParserActionTable(const parser_t *parser, arString_t *out, size_t width)
@@ -48,6 +47,21 @@ void	PSR_PrintParserActionTable(const parser_t *parser, arString_t *out, size_t 
 		PSR_PrintActionTable(parser->tbl, parser->grammar, width, out);
 }
 
+
+
+const psrActionView_t* PSR_CreateParserActionView(const parser_t *parser)
+{
+		AR_ASSERT(parser != NULL);
+		return PSR_CreateActionView(parser->tbl, parser->grammar);
+
+}
+
+void					PSR_DestroyParserActionView(const psrActionView_t *view)
+{
+		AR_ASSERT(view != NULL);
+		PSR_DestroyActionView(view);
+
+}
 
 
 /****************************************************Parser*****************************************************/
@@ -269,9 +283,12 @@ static void __on_error(parser_t *parser, const psrToken_t		*tok)
 {
 		size_t			top_state;
 		const psrCtx_t	*user;
+		const arIOCtx_t	*io;
 		AR_ASSERT(parser != NULL && tok != NULL);
 		
 		user = PSR_GetGrammarContext(parser->grammar);
+		io	 = PSR_GetGrammarIOContext(parser->grammar);
+
 		AR_ASSERT(user != NULL);
 		
 		top_state = PSR_TopStack(parser->state_stack);
@@ -306,7 +323,7 @@ static void __on_error(parser_t *parser, const psrToken_t		*tok)
 
 				AR_AppendFormatString(str, L"\r\n\r\n");
 
-				AR_printf_ctx(user->io, L"%ls\r\n", AR_GetStrString(str));
+				AR_printf_ctx((arIOCtx_t*)io, L"%ls\r\n", AR_GetStrString(str));
 
 				AR_DestroyString(str);
 		}else

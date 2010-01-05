@@ -28,17 +28,39 @@ static void		AR_STDCALL __error_func(const psrToken_t *tok, const wchar_t *expec
 
 
 
-Grammar::Grammar(NodeContext *context) : m_context(context)
+static void AR_STDCALL __io_error_func(int_t level, const wchar_t *msg, void *ctx)
 {
-		AR_ASSERT(m_context != NULL);
+		ARContext		*context = (ARContext*)ctx;
+		
+		AR_ASSERT(context != NULL);
+		context->OnError(level, msg);
+}
 
-		psrCtx_t ctx;
 
-		ctx.ctx = (void*)m_context;
-		ctx.io = (void*)context->Context();
-		ctx.error_f = __error_func;
-		ctx.free_f = __free_func;
-		m_grammar = PSR_CreateGrammar(&ctx);
+static void	AR_STDCALL __io_print_func(const wchar_t *msg, void *ctx)
+{
+		ARContext		*context = (ARContext*)ctx;
+		AR_ASSERT(context != NULL);
+		context->OnPrint(msg);
+}
+
+Grammar::Grammar(NodeContext *psr_ctx, ARContext	*io_ctx): m_psr_ctx(psr_ctx), m_io_ctx(io_ctx)
+{
+		AR_ASSERT(m_psr_ctx != NULL && m_io_ctx != NULL);
+
+		psrCtx_t		ar_psr;
+		arIOCtx_t		ar_io;
+
+		ar_io.on_print	= __io_print_func;
+		ar_io.on_error	= __io_error_func;
+		ar_io.ctx = (void*)m_io_ctx;
+		
+		ar_psr.ctx = (void*)m_psr_ctx;
+		ar_psr.error_f = __error_func;
+		ar_psr.free_f = __free_func;
+
+		
+		m_grammar = PSR_CreateGrammar(&ar_psr, &ar_io);
 
 		AR_ASSERT(m_grammar != NULL);
 		
@@ -47,16 +69,11 @@ Grammar::Grammar(NodeContext *context) : m_context(context)
 
 Grammar::~Grammar()
 {
-		AR_ASSERT(m_grammar != NULL);
-		AR_ASSERT(m_context != NULL);
+		
 		
 		PSR_DestroyGrammar(m_grammar);
-		delete m_context;
-}
-
-ARContext* Grammar::IOContext()
-{
-		return m_context->Context();
+		delete m_psr_ctx;
+		delete m_io_ctx;
 }
 
 bool	Grammar::Insert(const wchar_t *name, size_t term_val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f)
@@ -98,7 +115,7 @@ void	Grammar::PrintFirstSet()const
 		AR_ASSERT(str != NULL);
 		PSR_PrintSymbolMap(&first, str);
 
-		m_context->Context()->OnPrint(AR_GetStrString(str));
+		m_io_ctx->OnPrint(AR_GetStrString(str));
 		
 		AR_DestroyString(str);
 		PSR_UnInitSymbMap(&first);
@@ -120,7 +137,7 @@ void	Grammar::PrintFollowSet()const
 		AR_ASSERT(str != NULL);
 		PSR_PrintSymbolMap(&follow, str);
 		
-		m_context->Context()->OnPrint(AR_GetStrString(str));
+		m_io_ctx->OnPrint(AR_GetStrString(str));
 		
 		AR_DestroyString(str);
 		PSR_UnInitSymbMap(&first);
@@ -138,7 +155,7 @@ bool	Grammar::PrintLeftRecursion()const
 
 		if(res)
 		{
-				m_context->Context()->OnPrint(AR_GetStrString(str));
+				m_io_ctx->OnPrint(AR_GetStrString(str));
 		}
 		AR_DestroyString(str);
 
@@ -151,6 +168,11 @@ bool	Grammar::IsLeftRecursion()const
 
 }
 
+ARContext*		Grammar::IOContext()
+{
+		return m_io_ctx;
+		
+}
 /***************************************************************Parser****************************************************/
 
 
@@ -244,7 +266,17 @@ size_t	Parser::CountConflict()const
 }
 
 
+const psrActionView_t*	Parser::CreateActionView()const
+{
 
+		return PSR_CreateParserActionView(m_parser);
+}
+
+void	Parser::DestroyActionView(const psrActionView_t *view)
+{
+		PSR_DestroyParserActionView(view);
+
+}
 
 
 

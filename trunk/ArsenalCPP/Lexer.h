@@ -20,7 +20,6 @@ public:
 private:
 		ARContext		*m_ctx;
 private:
-
 		lex_t			*m_lex;
 		lexMatch_t		*m_match;
 		lastError_t		m_error;

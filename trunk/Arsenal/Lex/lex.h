@@ -47,12 +47,11 @@ typedef struct __lex_tag
 		
 		struct __prog_set_tag			*prog_set;
 		
-		
-		void	*io;
+		arIOCtx_t						io_ctx;
 }lex_t;
 
 
-lex_t*	LEX_Create(void *io);
+lex_t*	LEX_Create(const arIOCtx_t *io);
 void	LEX_Destroy(lex_t *lex);
 bool_t	LEX_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr);
 bool_t	LEX_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action);

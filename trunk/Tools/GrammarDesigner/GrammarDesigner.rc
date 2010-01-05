@@ -197,6 +197,7 @@ BEGIN
     POPUP "&Test"
     BEGIN
         MENUITEM "&Test\tCtrl+T",               ID_TEST_TEST
+        MENUITEM "TestMainform",                ID_TEST_TESTMAINFORM
     END
 END
 
@@ -220,6 +221,8 @@ BEGIN
         MENUITEM "&Clear",                      ID_EDIT_CLEAR
         MENUITEM SEPARATOR
         MENUITEM "&Hide",                       ID_VIEW_OUTPUTWND
+        MENUITEM SEPARATOR
+        MENUITEM "&Font",                       ID_OUTPUTWND_FONT
     END
 END
 
