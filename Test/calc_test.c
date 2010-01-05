@@ -152,7 +152,7 @@ static lex_t* __build_lex()
 		LEX_Insert(lex, L"delim 			= 	[ \\r\\n\\t]");
 		LEX_Insert(lex, L"digit 			= 	[0-9]");
 		LEX_Insert(lex, L"number 			= 	{digit}+");
-		LEX_Insert(lex, L"EOI 			= 	\\0");
+		LEX_Insert(lex, L"EOI 			= 	$");
 
 		LEX_Insert(lex, L"0				{EOI}");
 		LEX_Insert(lex, L"%skip 1		{delim}");
@@ -181,8 +181,9 @@ static psrGrammar_t *__g_gmr = NULL;
 static  parser_t* __build_parser()
 {
 		psrGrammar_t	*gmr;
-		psrCtx_t ctx = {NULL, free_node,  NULL, NULL};
-		gmr = PSR_CreateGrammar(&ctx);
+		psrCtx_t ctx = {NULL, free_node,  NULL};
+
+		gmr = PSR_CreateGrammar(&ctx, NULL);
 
 		PSR_InsertTerm(gmr, L"(", CLP, PSR_ASSOC_NOASSOC, 0, create_leaf);
 		PSR_InsertTerm(gmr, L")", RP, PSR_ASSOC_NOASSOC, 0, create_leaf);
@@ -269,22 +270,62 @@ void calc_test()
 		lex_t	*lex;
 		lexMatch_t		match;
 		lexToken_t		tok;
+		size_t i,k;
+		const psrActionView_t *view;
 		lex = __build_lex();
 		AR_ASSERT(lex);
 		psr = __build_parser();
 
-		LEX_InitMatch(&match, L"10 + (5 + 4) / 3");
+		view = PSR_CreateParserActionView(psr);
+		
+		AR_printf(L"-----------------------------------------\r\n");
 
-		while(LEX_Match(lex, &match, &tok))
+		for(i = 0; i < view->item_cnt; ++i)
 		{
+				AR_printf(L"%*ls", 20, view->item[i]);
+		}
+
+		AR_printf(L"-----------------------------------------\r\n");
+
+		for(i = 0; i < view->row; ++i)
+		{
+				for(k = 0; k < view->col; ++k)
+				{
+						AR_printf(L"%*ls", 20, view->action_tbl[AR_TBL_IDX_R(i,k,view->col)]);
+				}
+
+				AR_printf(L"\r\n");
+		}
+
+		AR_printf(L"-----------------------------------------\r\n");
+
+		getchar();
+
+		LEX_InitMatch(&match, L"10 + (5 + 4) / 3");
+		
+		bool is_ok = true;
+		while(is_ok)
+		{
+				is_ok = LEX_Match(lex, &match, &tok);
+				if(!is_ok)
+				{
+						continue;
+				}
+
 				psrToken_t term;
 				AR_printf(L"token == %ls : val = %d\r\n", AR_wcsndup(tok.str, tok.count), tok.value);
-
 				PSR_TOTERMTOK(&tok, &term);
-				AR_ASSERT(PSR_AddToken(psr, &term));
-				if(tok.value == 0)break;
+				is_ok = PSR_AddToken(psr, &term);
+
+				if(!is_ok)continue;
+				
+				if(tok.value == 0)
+				{
+						break;
+				}
 		}
 		
+		AR_ASSERT(is_ok);
 		getchar();
 
 		{
@@ -307,8 +348,10 @@ void calc_test()
 void calc_test3()
 {
 		psrGrammar_t	*gmr, *gmr2;
+		psrCtx_t ctx = {NULL, free_node,  NULL};
 
-		gmr = PSR_CreateGrammar(NULL);
+		gmr = PSR_CreateGrammar(&ctx, NULL);
+		
 
 		PSR_InsertTerm(gmr, L"(", CLP, PSR_ASSOC_NOASSOC, 0, create_leaf);
 		PSR_InsertTerm(gmr, L")", RP, PSR_ASSOC_NOASSOC, 0, create_leaf);

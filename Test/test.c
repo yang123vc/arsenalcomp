@@ -103,10 +103,11 @@ void AR_Test()
 		//lex_test();
 		//parser_test();
 
-		parser_perf_test();
+		//parser_perf_test();
 		
 		//rgx_test();
-
+		
+		calc_test();
 
 #else
 		AR_printf(L"dll version\r\n");

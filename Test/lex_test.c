@@ -476,7 +476,7 @@ void lex_test20()
 		LEX_InitMatch(&match,L"\"abc\r\ndef\r\n\"" );
 
 		
-		if(!LEX_Insert(lex, L"2,0 (\\\"([^\\\"\\n])+\\\")"))
+		if(!LEX_Insert(lex, L"2,0 (\\\"([^\\\"])+\\\")"))
 		{
 				AR_abort();
 		}

@@ -103,5 +103,8 @@ PSR_PrintParserConflict
 PSR_CountParserConflict
 
 
+PSR_CreateParserActionView
+PSR_DestroyParserActionView
+
 
 

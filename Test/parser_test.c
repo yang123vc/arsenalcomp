@@ -215,7 +215,8 @@ void parse_code(const cfgConfig_t *cfg, const wchar_t *sources)
 						AR_printf(L"lex parse done for %d token\r\n", tok_cnt);
 				}else
 				{
-						AR_printf(L"lex parse failed : %ls\r\n", match.next);
+						size_t n = AR_wcslen(match.next);
+						AR_printf(L"lex parse failed : %ls\r\n", AR_wcsndup(match.next, n > 10 ? 10 : n));
 				}
 
 				end = GetTickCount();
@@ -231,7 +232,47 @@ void parse_code(const cfgConfig_t *cfg, const wchar_t *sources)
 
 }
 
+/*
 
+typedef enum
+{
+		CFG_REPORT_MESSAGE_T,
+		CFG_REPORT_ERROR_T,
+		CFG_REPORT_ERR_LEX_T,
+		CFG_REPORT_ERR_SYNTAX_T
+}cfgReportType_t;
+*/
+
+static void AR_STDCALL report_func(const cfgReportInfo_t *report, void *context)
+{
+		switch(report->type)
+		{
+		case CFG_REPORT_MESSAGE_T:
+				AR_printf(L"%ls\r\n", report->message);
+				break;
+		case CFG_REPORT_ERROR_T:
+				AR_printf(L"%ls : %d\r\n", report->message, report->err_level);
+				break;
+		case CFG_REPORT_ERR_LEX_T:
+				AR_printf(L"lex error %ls\r\n", report->message);
+				break;
+		case CFG_REPORT_ERR_SYNTAX_T:
+				AR_printf(L"syntax error %ls\r\n", report->message);
+				break;
+		default:
+				AR_ASSERT(false);
+		}
+}
+
+/*
+typedef struct __cfg_report_tag
+{
+		cfgReportFunc_t	report_func;
+		void			*report_ctx;
+}cfgReport_t;
+*/
+
+static cfgReport_t __g_report = { report_func, NULL};
 
 void parser_test()
 {
@@ -250,7 +291,7 @@ void parser_test()
 		getchar();
 
 
-		cfg = CFG_CollectGrammarConfig(gmr_txt, NULL);
+		cfg = CFG_CollectGrammarConfig(gmr_txt, &__g_report);
 		
 		
 		if(cfg)

@@ -163,7 +163,7 @@ void CGrammarDesignerApp::SaveCustomState()
 int CGrammarDesignerApp::ExitInstance()
 {
 		// TODO: Add your specialized code here and/or call the base class
-		ArsenalCPP::Arsenal::UnInstance();
+		//ArsenalCPP::Arsenal::UnInstance();
 
 		return CWinAppEx::ExitInstance();
 }

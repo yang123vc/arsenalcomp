@@ -65,8 +65,8 @@ typedef struct __parser_rule_tag
 		psrRuleFunc_t			rule_f;/**/
 }psrRule_t;
 
-psrRule_t*		PSR_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, const psrTermInfoList_t *term_list, void *ctx);
-psrRule_t*		PSR_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, const psrTermInfoList_t *term_list, void *ctx);
+psrRule_t*		PSR_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, const psrTermInfoList_t *term_list, arIOCtx_t *ctx);
+psrRule_t*		PSR_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, const psrTermInfoList_t *term_list, arIOCtx_t *ctx);
 void			PSR_DestroyRule(psrRule_t *rule);
 psrRule_t*		PSR_CopyNewRule(const psrRule_t *rule);
 /****************************************************************************************************************************************/
@@ -81,19 +81,17 @@ typedef struct __parser_grammar_tag
 		psrTermInfoList_t		term_list;
 		psrSymbList_t			symb_list;
 
-		psrCtx_t				user;
+		psrCtx_t				psr_ctx;
+		arIOCtx_t				io_ctx;
 }psrGrammar_t;
 
-psrGrammar_t*			PSR_CreateGrammar(const psrCtx_t *ctx);
+psrGrammar_t*			PSR_CreateGrammar(const psrCtx_t *ctx, const arIOCtx_t *io_ctx);
 void					PSR_DestroyGrammar(psrGrammar_t *grammar);
 void					PSR_ClearGrammar(psrGrammar_t *grammar);
 
-/*
-psrGrammar_t*			PSR_CopyNewGrammar(const psrGrammar_t* grammar);
-*/
 
 const psrCtx_t*			PSR_GetGrammarContext(const psrGrammar_t *grammar);
-
+const arIOCtx_t*		PSR_GetGrammarIOContext(const psrGrammar_t *grammar);
 
 int_t					PSR_IndexOfGrammar(const psrGrammar_t *grammar, const psrRule_t *rule);
 

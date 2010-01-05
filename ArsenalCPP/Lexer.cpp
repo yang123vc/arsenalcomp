@@ -5,13 +5,39 @@
 
 namespace ArsenalCPP{
 
+
+static void AR_STDCALL __error_func(int_t level, const wchar_t *msg, void *ctx)
+{
+		ARContext		*context = (ARContext*)ctx;
+		
+		AR_ASSERT(context != NULL);
+		context->OnError(level, msg);
+}
+
+
+static void	AR_STDCALL __print_func(const wchar_t *msg, void *ctx)
+{
+		ARContext		*context = (ARContext*)ctx;
+		AR_ASSERT(context != NULL);
+		context->OnPrint(msg);
+}
+
+
+
 Lexer::Lexer(ARContext *ctx) : m_ctx(ctx)
 {
 		if(m_ctx == NULL)
 		{
 				m_ctx = Arsenal::Get()->Context();
 		}
-		m_lex = LEX_Create((void*)m_ctx);
+
+		arIOCtx_t		io;
+
+		io.ctx = (void*)m_ctx;
+		io.on_error = __error_func;
+		io.on_print = __print_func;
+
+		m_lex = LEX_Create(&io);
 
 		m_match = new lexMatch_t;
 

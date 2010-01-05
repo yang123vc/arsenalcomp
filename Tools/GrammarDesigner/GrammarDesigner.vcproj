@@ -56,7 +56,7 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				UsePrecompiledHeader="1"
+				UsePrecompiledHeader="2"
 				WarningLevel="4"
 				DebugInformationFormat="4"
 			/>
@@ -136,7 +136,7 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				UsePrecompiledHeader="1"
+				UsePrecompiledHeader="2"
 				WarningLevel="4"
 				DebugInformationFormat="4"
 			/>
@@ -214,7 +214,7 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				UsePrecompiledHeader="1"
+				UsePrecompiledHeader="2"
 				WarningLevel="4"
 				DebugInformationFormat="4"
 			/>
@@ -297,7 +297,7 @@
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="false"
-				UsePrecompiledHeader="1"
+				UsePrecompiledHeader="2"
 				WarningLevel="4"
 				DebugInformationFormat="3"
 			/>
@@ -380,7 +380,7 @@
 				AdditionalIncludeDirectories="..\..\Arsenal;..\..\ArsenalCPP;"
 				PreprocessorDefinitions="WIN64;_WINDOWS;NDEBUG"
 				RuntimeLibrary="2"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
 				WarningLevel="4"
 				DebugInformationFormat="3"
 			/>
@@ -459,7 +459,7 @@
 				AdditionalIncludeDirectories="..\..\Arsenal;..\..\ArsenalCPP;"
 				PreprocessorDefinitions="WIN64;_WINDOWS;NDEBUG"
 				RuntimeLibrary="2"
-				UsePrecompiledHeader="1"
+				UsePrecompiledHeader="2"
 				WarningLevel="4"
 				DebugInformationFormat="3"
 			/>
@@ -534,7 +534,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;__LIB"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				UsePrecompiledHeader="1"
+				UsePrecompiledHeader="2"
 				AssemblerOutput="0"
 				WarningLevel="4"
 				DebugInformationFormat="4"
@@ -611,7 +611,7 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				UsePrecompiledHeader="1"
+				UsePrecompiledHeader="2"
 				WarningLevel="4"
 				DebugInformationFormat="4"
 			/>
@@ -689,7 +689,7 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				UsePrecompiledHeader="1"
+				UsePrecompiledHeader="2"
 				WarningLevel="4"
 				DebugInformationFormat="4"
 			/>
@@ -765,7 +765,7 @@
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="..\..\Arsenal;..\..\ArsenalCPP;"
 				PreprocessorDefinitions="WIN32;NDEBUG;__LIB"
-				UsePrecompiledHeader="1"
+				UsePrecompiledHeader="2"
 				WarningLevel="4"
 				DebugInformationFormat="3"
 			/>
@@ -843,7 +843,7 @@
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="..\..\Arsenal;..\..\ArsenalCPP;"
 				PreprocessorDefinitions="WIN64;_WINDOWS;NDEBUG; __LIB"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
 				WarningLevel="4"
 				DebugInformationFormat="3"
 			/>
@@ -921,7 +921,7 @@
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="..\..\Arsenal;..\..\ArsenalCPP;"
 				PreprocessorDefinitions="WIN64;_WINDOWS;NDEBUG; __LIB"
-				UsePrecompiledHeader="1"
+				UsePrecompiledHeader="2"
 				WarningLevel="4"
 				DebugInformationFormat="3"
 			/>
@@ -994,6 +994,10 @@
 			</File>
 			<File
 				RelativePath=".\MainFrm.h"
+				>
+			</File>
+			<File
+				RelativePath=".\OutputItem.h"
 				>
 			</File>
 			<File
@@ -1079,12 +1083,112 @@
 				>
 			</File>
 			<File
+				RelativePath=".\OutputItem.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\OutputWnd.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\stdafx.cpp"
 				>
+				<FileConfiguration
+					Name="DLLDebug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DLLDebug|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DLLDebug|Itanium"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DLLRelease|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DLLRelease|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DLLRelease|Itanium"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="LibDebug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="LibDebug|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="LibDebug|Itanium"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="LibRelease|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="LibRelease|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="LibRelease|Itanium"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<File

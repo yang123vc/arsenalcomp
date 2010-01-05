@@ -112,7 +112,6 @@ typedef struct __parser_context_tag
 		psrErrorFunc_t	error_f;
 		psrFreeFunc_t	free_f;
 		void			*ctx;
-		void			*io;
 }psrCtx_t;
 
 
@@ -163,6 +162,19 @@ void	PSR_PrintParserConflict(const parser_t *parser, arString_t *out);
 size_t	PSR_CountParserConflict(const parser_t *parser);
 void	PSR_PrintParserActionTable(const parser_t *parser, arString_t *out, size_t width);
 
+
+typedef struct __parser_action_item_view_tag
+{
+		wchar_t	**item;
+		size_t			item_cnt;
+
+		wchar_t	**action_tbl;
+		size_t			row;
+		size_t			col;
+}psrActionView_t;
+
+const psrActionView_t*	PSR_CreateParserActionView(const parser_t *parser);
+void					PSR_DestroyParserActionView(const psrActionView_t *view);
 
 
 

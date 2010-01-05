@@ -88,7 +88,8 @@ size_t PSR_CountConflict(const psrActionTable_t *tbl);
 
 
 
-
+const psrActionView_t*	PSR_CreateActionView(const psrActionTable_t *tbl, const psrGrammar_t *grammar);
+void PSR_DestroyActionView(const psrActionView_t *action_view);
 
 
 

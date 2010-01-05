@@ -26,6 +26,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 	ON_COMMAND_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_OFF_2007_AQUA, &CMainFrame::OnApplicationLook)
 	ON_UPDATE_COMMAND_UI_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_OFF_2007_AQUA, &CMainFrame::OnUpdateApplicationLook)
 
+	ON_COMMAND(ID_TEST_TESTMAINFORM, &CMainFrame::OnTestTestmainform)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -331,4 +332,39 @@ BOOL CMainFrame::LoadFrame(UINT nIDResource, DWORD dwDefaultStyle, CWnd* pParent
 	}
 
 	return TRUE;
+}
+
+static COutputList  test_output;
+bool inserted = false;
+bool is_init = false;
+void CMainFrame::OnTestTestmainform()
+{
+		// TODO: Add your command handler code here
+
+		if(!inserted)
+		{
+				CRect rect;
+				rect.SetRectEmpty();
+
+				test_output.Create(0, rect, this, 0);
+				m_wndOutput.Insert(&test_output, TEXT("AAAAAA"));
+		}else
+		{
+				m_wndOutput.Remove(&test_output);
+		}
+		
+		inserted = !inserted;
+		
+	//	m_wndOutput.ShowPane(TRUE, FALSE, TRUE);
+		//m_wndOutput.SetAutoHideMode(FALSE, CBRS_ALIGN_ANY);
+
+		//m_wndOutput.SetAutoHideMode(stat, CBRS_ALIGN_ANY, NULL, FALSE);
+
+		//m_wndOutput.EnableDocking(CBRS_ALIGN_ANY);
+
+		
+		
+		//this->MessageBox(TEXT(__FUNCSIG__));
+
+
 }

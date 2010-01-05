@@ -481,13 +481,6 @@ static void CFG_DestroyNode(cfgNode_t *node)
 
 
 
-static void	AR_STDCALL cfg_free(psrNode_t *node, void *ctx)
-{
-		CFG_DestroyNode((cfgNode_t*)node);
-}
-
-
-
 
 
 static psrNode_t* AR_STDCALL __build_leaf(const psrToken_t *tok,  void *ctx)
@@ -1109,7 +1102,7 @@ static const cfgRuleDef_t	__cfg_rule[] =
 };
 
 
-static lex_t* __build_lex(void *io)
+static lex_t* __build_lex(arIOCtx_t		*io)
 {
 		lex_t *lex;
 		size_t	i;
@@ -1154,17 +1147,13 @@ static lex_t* __build_lex(void *io)
 }
 
 
-static psrGrammar_t*	__build_grammar(void *io)
+static psrGrammar_t*	__build_grammar(psrCtx_t *psr_ctx, arIOCtx_t *io)
 {
 		psrGrammar_t	*gmr;
 		size_t i;
-		psrCtx_t		psr_ctx;
-
-		psr_ctx.ctx = NULL;
-		psr_ctx.free_f =  cfg_free;
-		psr_ctx.io = io;
-		psr_ctx.error_f = NULL;
-		gmr = PSR_CreateGrammar(&psr_ctx);
+		AR_ASSERT(psr_ctx != NULL);
+		
+		gmr = PSR_CreateGrammar(psr_ctx, io);
 		
 		if(gmr == NULL)return NULL;
 
@@ -1207,8 +1196,100 @@ static parser_t*		__build_parser(const psrGrammar_t *gmr)
 }
 
 
+/*
+typedef void	(AR_STDCALL *AR_error_func)(int_t level, const wchar_t *msg, void *ctx);
+typedef void	(AR_STDCALL *AR_print_func)(const wchar_t *msg, void *ctx);
+*/
 
-cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, void *io)
+
+
+static void	AR_STDCALL cfg_on_error(int_t level, const wchar_t *msg, void *ctx)
+{
+		cfgReport_t				*report = NULL;
+		cfgReportInfo_t			info;
+		AR_ASSERT(msg != NULL && ctx != NULL);
+
+		report = (cfgReport_t*)ctx;
+
+		AR_memset(&info, 0, sizeof(info));
+
+		info.type = CFG_REPORT_ERROR_T;
+		info.tok = NULL;
+		info.message = msg;
+		info.err_level = level;
+		report->report_func(&info, report->report_ctx);
+}
+
+
+void	AR_STDCALL cfg_on_print(const wchar_t *msg, void *ctx)
+{
+		cfgReport_t				*report = NULL;
+		cfgReportInfo_t			info;
+		AR_ASSERT(msg != NULL && ctx != NULL);
+
+		report = (cfgReport_t*)ctx;
+
+		AR_memset(&info, 0, sizeof(info));
+
+		info.type = CFG_REPORT_MESSAGE_T;
+		info.tok = NULL;
+		info.message = msg;
+		info.err_level = 0;
+		report->report_func(&info, report->report_ctx);
+}
+
+
+
+static void	AR_STDCALL cfg_free(psrNode_t *node, void *ctx)
+{
+		CFG_DestroyNode((cfgNode_t*)node);
+}
+
+static void		AR_STDCALL cfg_error(const psrToken_t *tok, const wchar_t *expected[], size_t count, void *ctx)
+{
+		cfgReport_t				*report = NULL;
+		cfgReportInfo_t			info;
+
+		arString_t		*str;
+		wchar_t			*buf;
+		size_t			i;
+
+		AR_ASSERT(tok != NULL && ctx != NULL && expected != NULL && count > 0);
+		
+		report = (cfgReport_t*)ctx;
+		AR_memset(&info, 0, sizeof(info));
+
+		/******************************************************************************************/
+		buf = tok->str_cnt == 0 ? AR_wcsdup(L"%EOI") : AR_wcsndup(tok->str, tok->str_cnt);
+		str = AR_CreateString();
+		
+		AR_AppendFormatString(str
+						, L"Invalid Token \"%ls\" in (%" AR_PLAT_INT_FMT L"d : %" AR_PLAT_INT_FMT L"d)\r\n\r\n"
+						, buf
+						, tok->line
+						, tok->col
+						);
+		AR_DEL(buf);
+		AR_AppendFormatString(str, L"Expected Term Type:\r\n");
+
+		for(i = 0; i < count; ++i)
+		{
+				AR_AppendFormatString(str, L"\"%ls\" ", expected[i]);
+		}
+		AR_AppendFormatString(str, L"\r\n\r\n");
+		/******************************************************************************************/
+		info.message = AR_GetStrString(str);
+		info.tok = tok;
+		info.type = CFG_REPORT_ERR_SYNTAX_T;
+		report->report_func(&info, report->report_ctx);
+		AR_DestroyString(str);
+}
+
+
+
+
+
+cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *report)
 {
 
 		bool_t is_ok, has_error;
@@ -1219,18 +1300,31 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, void *io)
 		psrGrammar_t	*gmr;
 		parser_t		*parser;
 		cfgNode_t		*result = NULL;
+
+		arIOCtx_t	io_ctx ;
+		psrCtx_t	psr_ctx;
 		
-		AR_ASSERT(gmr_txt != NULL);
+		AR_ASSERT(gmr_txt != NULL && report != NULL);
 
-		if(io == NULL)io = AR_global_ioctx();
+		io_ctx.on_error = cfg_on_error;
+		io_ctx.on_print = cfg_on_print;
+		io_ctx.ctx = (void*)report;
 
-		LEX_InitMatch(&match, gmr_txt);
+		psr_ctx.error_f = cfg_error;
+		psr_ctx.free_f = cfg_free;
+		psr_ctx.ctx = (void*)report;
+		
 
-		lex = __build_lex(io);
+		
+		
 
-		gmr = __build_grammar(io);
+		lex = __build_lex(&io_ctx);
+
+		gmr = __build_grammar(&psr_ctx, &io_ctx);
 		
 		parser = __build_parser(gmr);
+
+		LEX_InitMatch(&match, gmr_txt);
 
 		is_ok = true;
 		has_error = false;
@@ -1242,11 +1336,37 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, void *io)
 
 				if(!is_ok)
 				{
+						cfgReportInfo_t	info;
+						psrToken_t		tmp_tok;
+						arString_t		*str;
+						size_t n;
 						const wchar_t *tok = NULL;
-						size_t n = AR_wcslen(match.next);
+
+						AR_memset(&info, 0, sizeof(info));
+						n = AR_wcslen(match.next);
 						tok = AR_wcsndup(match.next, n > 5 ? 5 : n);
-						AR_printf_ctx(io, L"Invalid Token %ls...(%"AR_PLAT_INT_FMT L"d : %"AR_PLAT_INT_FMT L"d)\r\n", tok, match.line, match.col);
+						
+						str = AR_CreateString();
+
+						AR_AppendFormatString(str, L"Invalid Token %ls...(%"AR_PLAT_INT_FMT L"d : %"AR_PLAT_INT_FMT L"d)\r\n", tok, match.line, match.col);
 						if(tok)AR_DEL(tok);
+
+						info.type = CFG_REPORT_ERR_LEX_T;
+						info.message = AR_GetStrString(str);
+
+
+						tmp_tok.term_val = 0;
+						tmp_tok.str_cnt = 0;
+						tmp_tok.str =  match.input;
+						tmp_tok.line = match.line;
+						tmp_tok.col = match.col;
+						info.tok = &tmp_tok;
+						info.err_level = 0;
+						
+						report->report_func(&info, report->report_ctx);
+
+						AR_DestroyString(str);
+
 						LEX_Skip(&match);
 						LEX_ClearError(&match);
 						is_ok = true;
@@ -1270,7 +1390,7 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, void *io)
 
 						if(!PSR_AddToken(parser, &end))
 						{
-								AR_error_ctx(io , AR_ERR_FATAL, L"%hs\r\n", AR_FUNC_NAME);
+								AR_error(AR_ERR_FATAL, L"%hs\r\n", AR_FUNC_NAME);
 						}
 				}
 
