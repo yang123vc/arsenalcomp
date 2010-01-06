@@ -42,6 +42,7 @@
 
 #include <afxcontrolbars.h>     // MFC support for ribbons and control bars
 
+#include <afxrich.h>
 
 #include "resource.h"
 

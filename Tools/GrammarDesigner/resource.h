@@ -58,9 +58,10 @@
 #define ID_EDIT_ENDCODING               32804
 #define ID_ENDCODING_ASCII              32805
 #define ID_ENDCODING_UNICODEBE          32806
-#define ID_ENDCODING_UNICODELE          32807
+#define ID_ENDCODING_UNICODELE           32807
 #define ID_ENDCODING_UTF8               32808
-
+#define ID_INDICATOR_LINE               59142
+#define ID_INDICATOR_COL                59143
 
 // Next default values for new objects
 // 

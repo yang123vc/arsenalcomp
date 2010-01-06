@@ -16,15 +16,18 @@
 
 // CGrammarDesignerView
    
-IMPLEMENT_DYNCREATE(CGrammarDesignerView, CEditView)
+IMPLEMENT_DYNCREATE(CGrammarDesignerView, CRichEditView)
 
-BEGIN_MESSAGE_MAP(CGrammarDesignerView, CEditView)
+BEGIN_MESSAGE_MAP(CGrammarDesignerView, CRichEditView)
 		ON_WM_KEYDOWN()
 		ON_COMMAND(ID_EDIT_FONTDLG, &CGrammarDesignerView::OnEditFontdlg)
-		ON_COMMAND(ID_TEST_TEST, &CGrammarDesignerView::OnTestTest)
+		
 		ON_COMMAND(ID_EDIT_WORDWARP, &CGrammarDesignerView::OnEditWordwarp)
 		ON_UPDATE_COMMAND_UI(ID_EDIT_WORDWARP, &CGrammarDesignerView::OnUpdateEditWordwarp)
 		ON_COMMAND(ID_EDIT_PASTE, &CGrammarDesignerView::OnEditPaste)
+
+
+		ON_COMMAND(ID_TEST_TEST, &CGrammarDesignerView::OnTestTest)
 END_MESSAGE_MAP()
 
 // CGrammarDesignerView construction/destruction
@@ -40,7 +43,7 @@ CGrammarDesignerView::CGrammarDesignerView()
 
 		VERIFY(m_acctbl);
 
-		m_iswarp = false;
+		m_iswarp = true;
 }
 
 CGrammarDesignerView::~CGrammarDesignerView()
@@ -53,11 +56,11 @@ BOOL CGrammarDesignerView::PreCreateWindow(CREATESTRUCT& cs)
 	// TODO: Modify the Window class or styles here by modifying
 	//  the CREATESTRUCT cs
 
-	BOOL bPreCreated = CEditView::PreCreateWindow(cs);
+	BOOL bPreCreated = CRichEditView::PreCreateWindow(cs);
 
 	if(m_iswarp)
 	{
-		cs.style &= ~(ES_AUTOHSCROLL|WS_HSCROLL);	// Enable word-wrapping
+		cs.style |= (ES_AUTOHSCROLL|WS_HSCROLL);	// Enable word-wrapping
 	}
 	
 	return bPreCreated;
@@ -83,12 +86,12 @@ void CGrammarDesignerView::OnContextMenu(CWnd* pWnd, CPoint point)
 #ifdef _DEBUG
 void CGrammarDesignerView::AssertValid() const
 {
-	CEditView::AssertValid();
+	CRichEditView::AssertValid();
 }
 
 void CGrammarDesignerView::Dump(CDumpContext& dc) const
 {
-	CEditView::Dump(dc);
+	CRichEditView::Dump(dc);
 }
 
 CGrammarDesignerDoc* CGrammarDesignerView::GetDocument() const // non-debug version is inline
@@ -130,7 +133,7 @@ BOOL CGrammarDesignerView::PreTranslateMessage(MSG* pMsg)
 				case VK_APPS:
 				{
 						GetFocus();
-						CPoint pt = this->GetEditCtrl().GetCaretPos();
+						CPoint pt = this->GetRichEditCtrl().GetCaretPos();
 						this->ClientToScreen(&pt);
 						this->OnContextMenu(this, pt);
 						return TRUE;
@@ -139,7 +142,7 @@ BOOL CGrammarDesignerView::PreTranslateMessage(MSG* pMsg)
 		}
 		}
 
-		return CEditView::PreTranslateMessage(pMsg);
+		return CRichEditView::PreTranslateMessage(pMsg);
 		
 }
 
@@ -147,12 +150,12 @@ BOOL CGrammarDesignerView::PreTranslateMessage(MSG* pMsg)
 
 void CGrammarDesignerView::OnInitialUpdate()
 {
-		CEditView::OnInitialUpdate();
+		CRichEditView::OnInitialUpdate();
 
 		
 		// TODO: Add your specialized code here and/or call the base class
 
-		this->GetEditCtrl().SetLimitText(1024*1024*10);
+//		this->GetRichEditCtrl().SetLimitText(1024*1024*10);
 		
 		this->SetFont(&m_font);
 }
@@ -188,6 +191,18 @@ BOOL   CGrammarDesignerView::SetWordWrap(BOOL   bWordWrap)
 {   
 
 
+		if(bWordWrap)
+		{
+				this->m_nWordWrap = WrapNone;
+		}else
+		{
+				this->m_nWordWrap = WrapToWindow;
+		}
+		
+		WrapChanged();
+		Invalidate();
+		return TRUE;
+#if(0)
 		
 #if defined(i386) || defined(__i386) || defined(__i386__) || defined(_M_IX86)
 
@@ -201,6 +216,7 @@ BOOL   CGrammarDesignerView::SetWordWrap(BOOL   bWordWrap)
 		#error "Not support platform\r\n"
 #endif
 
+		
 
 		bWordWrap   =   !bWordWrap;         //   make   sure   ==TRUE   ||   ==FALSE   
 		
@@ -209,8 +225,11 @@ BOOL   CGrammarDesignerView::SetWordWrap(BOOL   bWordWrap)
 
 		m_iswarp = !m_iswarp;
 
+		
+
 		//   preserve   original   control's   state.   
 		CFont*   pFont   =   GetFont();   
+		
 		int   nLen   =   GetBufferLength();   
 		TCHAR*   pSaveText   =   new   TCHAR[GetBufferLength()+1];   
 		GetWindowText(pSaveText,   nLen+1);   
@@ -263,7 +282,7 @@ BOOL   CGrammarDesignerView::SetWordWrap(BOOL   bWordWrap)
 		GetParentFrame()->SendMessage(WM_RECALCPARENT);   
 
 		UINT   nTabStops   =   m_nTabStops;   
-		GetEditCtrl().SetTabStops(nTabStops);   
+		GetRichEditCtrl().SetTabStops(nTabStops);   
 
 		GetClientRect(&rect);   
 		SetWindowPos(NULL,   0,   0,   0,   0,   
@@ -280,25 +299,28 @@ BOOL   CGrammarDesignerView::SetWordWrap(BOOL   bWordWrap)
 		::DestroyWindow(hWndOld);   
 
 		//   restore   rest   of   state...   
-		GetEditCtrl().LimitText(nMaxSize);   
+		GetRichEditCtrl().LimitText(nMaxSize);   
 		if   (pFocus   ==   this)   
 				SetFocus();   
 
 
 		ASSERT_VALID(this);   
 		return   TRUE;  
-
 #undef WNDPROC_PLAT
+#endif
+
+		
 
 }
 
 
 
-   
+
 void CGrammarDesignerView::OnEditWordwarp()
 {
 		// TODO: Add your command handler code here
 		VERIFY(SetWordWrap(m_iswarp));
+		m_iswarp = !m_iswarp;
 }
 
 
@@ -310,21 +332,46 @@ void CGrammarDesignerView::OnUpdateEditWordwarp(CCmdUI *pCmdUI)
 }
 
 
-
-void CGrammarDesignerView::OnTestTest()
-{
-		// TODO: Add your command handler code here
-		
-		this->MessageBox(TEXT(__FUNCSIG__));
-}
-
-
 void CGrammarDesignerView::OnEditPaste()
 {
 		// TODO: Add your command handler code here
 
-		CEditView::OnEditPaste();
-
-		
-
+		CRichEditView::OnEditPaste();
 }
+
+void CGrammarDesignerView::Highlight(long start, long end, COLORREF color)
+{
+		CHARFORMAT cf;
+        ZeroMemory(&cf, sizeof(CHARFORMAT));
+		this->GetRichEditCtrl().GetDefaultCharFormat(cf);
+
+		cf.dwMask  |= CFM_COLOR;
+		cf.dwEffects = 0;
+		cf.crTextColor = color;
+		long x,y;
+
+		this->GetRichEditCtrl().GetSel(x,y);
+
+		this->GetRichEditCtrl().SetSel(start, end);
+        this->GetRichEditCtrl().SetSelectionCharFormat(cf);
+		this->GetRichEditCtrl().SetSel(x,y);
+		
+}
+void CGrammarDesignerView::OnTestTest()
+{
+		// TODO: Add your command handler code here
+		
+		static bool is_highlight = false;
+
+		if(!is_highlight)
+		{
+				this->Highlight(1,5,RGB(255, 0, 0));
+		}else
+		{
+				this->Highlight(1,5,RGB(0, 0, 0));
+		}
+
+
+		is_highlight = !is_highlight;
+}
+
