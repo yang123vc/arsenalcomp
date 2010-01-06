@@ -209,9 +209,10 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 		rgxThreadList_t	*curr, *next;
 		bool_t			matched;
 		rgxIns_t		*pc;
-		const wchar_t	*sp;
-		size_t i,x,y;
+		const wchar_t	*sp, *fianl_next;
+		size_t i,x,y, final_row, final_col;
 		
+
 		AR_ASSERT(prog != NULL && match->next != NULL && match->input != NULL);
 		
 
@@ -237,6 +238,8 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 		sp = match->next;
 		x = match->line;
 		y = match->col;
+
+		final_row = 0; final_col = 0; fianl_next = NULL;
 
 		prog->mark++;
 		__add_thread(curr, RGX_BuildThread(prog->start, sp, x,y), prog);
@@ -337,6 +340,11 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 								tok->line = match->line;
 								tok->col = match->col;
 								tok->value = (size_t)pc->final;
+
+								final_row = x;
+								final_col = y;
+								fianl_next = sp;
+
 								matched = true;
 								goto BREAK_POINT;
 								break;
@@ -359,9 +367,9 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 		/*RGX_DestroyThreadList(next);*/
 		if(matched)
 		{
-				match->col = y;
-				match->line = x;
-				match->next = sp;
+				match->col = final_col;
+				match->line = final_row;
+				match->next = fianl_next;
 		}
 		return matched;
 }
