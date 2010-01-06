@@ -82,10 +82,10 @@ bool	Grammar::Insert(const wchar_t *name, size_t term_val, psrAssocType_t assoc,
 		return PSR_InsertTerm(m_grammar, name, term_val, assoc, prec, leaf_f);
 }
 
-bool	Grammar::Insert(const wchar_t *rule, const wchar_t *prec_tok, psrRuleFunc_t rule_f)
+bool	Grammar::Insert(const wchar_t *rule, const wchar_t *prec_tok, psrRuleFunc_t rule_f, size_t auto_ret)
 {
 		AR_ASSERT(rule != NULL);
-		return PSR_InsertRuleByStr(m_grammar, rule, prec_tok, rule_f);
+		return PSR_InsertRuleByStr(m_grammar, rule, prec_tok, rule_f, auto_ret);
 }
 
 
