@@ -40,12 +40,12 @@ BOOL CGrammarDesignerDoc::OnNewDocument()
 	if (!CDocument::OnNewDocument())
 		return FALSE;
 
-	reinterpret_cast<CEditView*>(m_viewList.GetHead())->SetWindowText(NULL);
+	reinterpret_cast<CRichEditView*>(m_viewList.GetHead())->SetWindowText(NULL);
 	
 	// TODO: add reinitialization code here
 	// (SDI documents will reuse this document)
 
-	this->SetTitle(TEXT("New Grammar"));
+	this->SetTitle(TEXT("Untitled-Grammar"));
 
 	return TRUE;
 }
@@ -92,11 +92,11 @@ BOOL CGrammarDesignerDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		{
 				m_encoding = fr.GetEncoding();
 
-				CEditView *view = (CEditView*)m_viewList.GetHead();
+				CRichEditView *view = (CRichEditView*)m_viewList.GetHead();
 
 				ASSERT(view != NULL);
 				//this->UpdateAllViews(view, NULL, this);
-				view->GetEditCtrl().SetWindowText(txt);
+				view->GetRichEditCtrl().SetWindowText(txt);
 		}
 	
 		
@@ -109,7 +109,7 @@ BOOL CGrammarDesignerDoc::OnSaveDocument(LPCTSTR lpszPathName)
 
 		//return CDocument::OnSaveDocument(lpszPathName);
 
-		CEditView *view = (CEditView*)m_viewList.GetHead();
+		CRichEditView *view = (CRichEditView*)m_viewList.GetHead();
 
 		CTextFileWrite fw(lpszPathName, m_encoding);
 		

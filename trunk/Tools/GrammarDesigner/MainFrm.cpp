@@ -3,6 +3,8 @@
 //
 
 #include "stdafx.h"
+
+
 #include "GrammarDesigner.h"
 
 #include "MainFrm.h"
@@ -13,11 +15,12 @@
 
 // CMainFrame
 
-IMPLEMENT_DYNCREATE(CMainFrame, CFrameWndEx)
 
 const int  iMaxUserToolbars = 10;
 const UINT uiFirstUserToolBarId = AFX_IDW_CONTROLBAR_FIRST + 40;
 const UINT uiLastUserToolBarId = uiFirstUserToolBarId + iMaxUserToolbars - 1;
+
+IMPLEMENT_DYNCREATE(CMainFrame, CFrameWndEx);
 
 BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 	ON_WM_CREATE()
@@ -26,15 +29,22 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 	ON_COMMAND_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_OFF_2007_AQUA, &CMainFrame::OnApplicationLook)
 	ON_UPDATE_COMMAND_UI_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_OFF_2007_AQUA, &CMainFrame::OnUpdateApplicationLook)
 
+	ON_UPDATE_COMMAND_UI_RANGE(ID_INDICATOR_LINE, ID_INDICATOR_COL, &CMainFrame::OnUpdateStatusBarPanes)
+
 //	ON_COMMAND(ID_TEST_TESTMAINFORM, &CMainFrame::OnTestTestmainform)
+ON_COMMAND(ID_TEST_TEST, &CMainFrame::OnTestTest)
+
+ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
 {
-	ID_SEPARATOR,           // status line indicator
-	ID_INDICATOR_CAPS,
-	ID_INDICATOR_NUM,
-	ID_INDICATOR_SCRL,
+		ID_SEPARATOR,           // status line indicator
+		ID_INDICATOR_LINE,
+		ID_INDICATOR_COL,
+		ID_INDICATOR_CAPS,
+		ID_INDICATOR_NUM,
+		ID_INDICATOR_SCRL
 };
 
 // CMainFrame construction/destruction
@@ -89,13 +99,18 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// Allow user-defined toolbars operations:
 	InitUserToolbars(NULL, uiFirstUserToolBarId, uiLastUserToolBarId);
 
+	
 	if (!m_wndStatusBar.Create(this))
 	{
 		TRACE0("Failed to create status bar\n");
 		return -1;      // fail to create
 	}
-	m_wndStatusBar.SetIndicators(indicators, sizeof(indicators)/sizeof(UINT));
 
+	m_status_font.CreatePointFont(110, TEXT("Consolas"));
+	m_wndStatusBar.SetFont(&m_status_font);
+
+
+	
 	// TODO: Delete these five lines if you don't want the toolbar and menubar to be dockable
 	m_wndMenuBar.EnableDocking(CBRS_ALIGN_ANY);
 	m_wndToolBar.EnableDocking(CBRS_ALIGN_ANY);
@@ -332,4 +347,119 @@ BOOL CMainFrame::LoadFrame(UINT nIDResource, DWORD dwDefaultStyle, CWnd* pParent
 	}
 
 	return TRUE;
+}
+
+CMFCStatusBar& CMainFrame::GetStatusBar(void)
+{
+		return this->m_wndStatusBar;
+}
+
+CMFCMenuBar& CMainFrame::GetMenuBar(void)
+{
+		//TODO: insert return statement here
+		return this->m_wndMenuBar;
+}
+
+CMFCToolBar& CMainFrame::GetToolBar(void)
+{
+		//TODO: insert return statement here
+		return this->m_wndToolBar;
+}
+
+
+void CMainFrame::OnUpdateStatusBarPanes(CCmdUI* pCmdUI)
+{
+		pCmdUI->Enable(TRUE);
+
+		CRichEditView *view = (CRichEditView*)this->GetActiveView();
+		
+		if(view)
+		{
+#if(0)
+				CPoint pt = view->GetCaretPos();
+
+				/*
+				long line = view->GetRichEditCtrl().LineFromChar(-1);
+				long col = view->GetRichEditCtrl().LineIndex(line);
+				*/
+				long line = view->GetRichEditCtrl().LineIndex(-1);
+
+				view->GetRichEditCtrl().li
+				long col = 0;
+/*
+				int lc = view->GetRichEditCtrl().CharFromPos(pt);				
+				int line = lc >> 16;
+				int col  = lc & 0x0000FFFF;
+				*/
+#endif
+
+				CPoint   VarCharPoint;                   //指定字符的位置   
+				CPoint   CurrPoint;                         //当前光标位置   
+				int   LineFirstIndex;                     //当前行首字符位置   
+				int   Length;                                     //当前行长度   
+
+				int   CurrentCharIndex = 0;                 //当前编辑光标所在字符序号。   
+				int   CurrentLine= 0;                           //当前编辑光标所在的行号   
+				int   CurrentRow= 0;                             //当前编辑光标所在的列号   
+				int   i;
+				CurrPoint   =   view->GetRichEditCtrl().GetCaretPos();                 //获取光标位置   
+				LineFirstIndex   =   view->GetRichEditCtrl().LineIndex(-1);       //获取当前行首字符位置   
+				Length   =   view->GetRichEditCtrl().LineLength(-1);                     //获取当前行长度.   
+
+				for   (i  =   0;   i   <   Length;   i++)   
+				{   
+						VarCharPoint   =  view->GetRichEditCtrl(). GetCharPos(   LineFirstIndex   );   
+						if   (VarCharPoint.x   >=   CurrPoint.x)   
+						{   
+								CurrentCharIndex   =   LineFirstIndex;   
+								break;   
+						}   
+						LineFirstIndex++;   
+				}   
+				
+				CurrentRow   =   i;   //列号   
+                CurrentLine   =   view->GetRichEditCtrl().LineFromChar(   -1   );   //行号   
+
+
+				int line = CurrentLine;
+				int col = CurrentRow;
+
+
+
+				CString str;
+				str.Format(TEXT("Ln %d"), line);
+
+				this->GetStatusBar().SetPaneText(this->GetStatusBar().CommandToIndex(ID_INDICATOR_LINE), str);
+
+				str.Format(TEXT("Col %d"), col);
+				this->GetStatusBar().SetPaneText(this->GetStatusBar().CommandToIndex(ID_INDICATOR_COL), str);
+		}
+}
+
+
+
+void CMainFrame::OnSize(UINT nType, int cx, int cy)
+{
+		CFrameWndEx::OnSize(nType, cx, cy);
+
+		// TODO: Add your message handler code here
+
+		if(this->GetStatusBar().GetSafeHwnd() != NULL)
+		{
+				m_wndStatusBar.SetIndicators(indicators, sizeof(indicators)/sizeof(UINT));
+				float w = (float)cx;
+				this->GetStatusBar().SetPaneInfo(1, ID_INDICATOR_LINE, SBPS_NORMAL, (int)(w * 0.08));
+				this->GetStatusBar().SetPaneInfo(2, ID_INDICATOR_COL, SBPS_NORMAL, (int)(w * 0.08));
+				this->GetStatusBar().SetPaneInfo(3, ID_INDICATOR_CAPS, SBPS_NORMAL, (int)(w * 0.03));
+				this->GetStatusBar().SetPaneInfo(4, ID_INDICATOR_NUM, SBPS_NORMAL, (int)(w * 0.03));
+				this->GetStatusBar().SetPaneInfo(5, ID_INDICATOR_SCRL, SBPS_NORMAL, (int)(w * 0.03));
+		}
+}
+
+
+
+void CMainFrame::OnTestTest()
+{
+		// TODO: Add your command handler code here
+
 }

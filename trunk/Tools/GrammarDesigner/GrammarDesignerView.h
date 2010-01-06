@@ -6,7 +6,7 @@
 #pragma once
 
 
-class CGrammarDesignerView : public CEditView
+class CGrammarDesignerView : public CRichEditView 
 {
 protected: // create from serialization only
 	CGrammarDesignerView();
@@ -49,6 +49,8 @@ private:
 		CFont	m_font;
 		HACCEL	m_acctbl;
 		BOOL	m_iswarp;
+private:
+		void Highlight(long start, long end, COLORREF color);
 public:
 		BOOL   SetWordWrap(BOOL   bWordWrap);
 		afx_msg void OnTestTest();

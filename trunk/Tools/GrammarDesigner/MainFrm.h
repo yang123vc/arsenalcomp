@@ -35,6 +35,8 @@ public:
 protected:  // control bar embedded members
 	CMFCMenuBar       m_wndMenuBar;
 	CMFCToolBar       m_wndToolBar;
+	
+	CFont			  m_status_font;
 	CMFCStatusBar     m_wndStatusBar;
 	CMFCToolBarImages m_UserImages;
 	COutputWnd        m_wndOutput;
@@ -46,12 +48,21 @@ protected:
 	afx_msg LRESULT OnToolbarCreateNew(WPARAM wp, LPARAM lp);
 	afx_msg void OnApplicationLook(UINT id);
 	afx_msg void OnUpdateApplicationLook(CCmdUI* pCmdUI);
+	afx_msg void CMainFrame::OnUpdateStatusBarPanes(CCmdUI* pCmdUI);
 	DECLARE_MESSAGE_MAP()
 
 	BOOL CreateDockingWindows();
 	void SetDockingWindowIcons(BOOL bHiColorIcons);
+		
 public:
 
+		CMFCStatusBar& GetStatusBar(void);
+		CMFCMenuBar& GetMenuBar(void);
+		CMFCToolBar& GetToolBar(void);
+		afx_msg void OnSize(UINT nType, int cx, int cy);
+
+public:
+		afx_msg void OnTestTest();
 };
 
 
