@@ -764,32 +764,6 @@ static psrNode_t*		AR_STDCALL __handle_prec_def(psrNode_t **nodes, size_t count,
 
 
 
-/*
-{ L"token_val_prec 		:		,	number",									NULL},
-{ L"token_val_prec 		:		",												NULL},
-*/
-
-
-static psrNode_t*		AR_STDCALL __handle_token_val_prec(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-		cfgNode_t		**ns = (cfgNode_t**)nodes;
-		cfgNode_t		*res;
-
-		AR_ASSERT(count == 2 && nodes != NULL);
-
-		AR_ASSERT(ns[0]->type == CFG_LEXEME_T && ns[0]->lexeme.lex_val == (size_t)COMMA);
-		AR_ASSERT(ns[1]->type == CFG_LEXEME_T && ns[1]->lexeme.lex_val == (size_t)NUMBER);
-
-		CFG_DestroyNode(ns[0]);
-		res = ns[1];
-
-		ns[0] = ns[1] = NULL;
-
-		return res;
-
-}
-
-
 
 
 /*
@@ -1056,48 +1030,56 @@ typedef struct __cfg_rule_tag
 {
 		const wchar_t *rule;
 		psrRuleFunc_t handler;
+		size_t			auto_ret;
 }cfgRuleDef_t;
+
 
 
 static const cfgRuleDef_t	__cfg_rule[] =
 {
 
-		{ L"program				:		item_list",			__handle_program},
+		{ L"program				:		item_list",			__handle_program, 0},
 
-		{ L"item_list			:		item_list item",	__handle_item_list},
-		{ L"item_list			:		",	NULL},
+		{ L"item_list			:		item_list item",	__handle_item_list, 0},
+		{ L"item_list			:		",	NULL, 0},
 		
-		{ L"item				:		name_def ;",	__handle_item},
-		{ L"item				:		token_def ;",	__handle_item},
-		{ L"item				:		prec_def ;",	__handle_item},
-		{ L"item				:		rule_def ;",	__handle_item},
-		{ L"item				:		error ; ",	__handle_item},
-		{ L"item				:		; ",	__handle_item},
+		{ L"item				:		name_def ;",	__handle_item, 0},
+		{ L"item				:		token_def ;",	__handle_item,0},
+		{ L"item				:		prec_def ;",	__handle_item,0},
+		{ L"item				:		rule_def ;",	__handle_item,0},
+		{ L"item				:		error ; ",	__handle_item,0},
+		{ L"item				:		; ",	__handle_item,0},
 
-		{ L"name_def 			:		%name lexeme : lexeme ",								__handle_name_def},
+		{ L"name_def 			:		%name lexeme : lexeme ",								__handle_name_def,0},
 		
-		{ L"token_def			:  		%token %skip token_val_prec : lexeme token_val_prec ",	__handle_token_def},
-		{ L"token_def			:  		%token lexeme token_val_prec : lexeme token_val_prec ",	__handle_token_def},
+		{ L"token_def			:  		%token %skip token_val_prec : lexeme token_val_prec ",	__handle_token_def,0},
+		{ L"token_def			:  		%token lexeme token_val_prec : lexeme token_val_prec ",	__handle_token_def,0},
 
-		{ L"token_val_prec 		:		, number",												__handle_token_val_prec},
-		{ L"token_val_prec 		:		",														NULL},
+		{ L"token_val_prec 		:		, number",												NULL,1},
+		{ L"token_val_prec 		:		",														NULL,0},
 		
-		{ L"prec_def			:  		assoc lexeme ",										__handle_prec_def},
+		{ L"prec_def			:  		assoc lexeme ",										__handle_prec_def,0},
 
 		
-		{ L"rule_def			: 		lexeme : rhs_list ",							__handle_rule_def},
+		{ L"rule_def			: 		lexeme : rhs_list ",							__handle_rule_def,0},
 		
 
-		{ L"rhs_list			: 		rhs_list  | rhs ",								__handle_rhs_list},
-		{ L"rhs_list			: 		rhs ",											__handle_rhs_list},
-		{ L"rhs					:		term_list prec_decl handler_decl",				__handle_rhs},
-		{ L"rhs					:		.",												__handle_rhs},
-		{ L"term_list			:		term_list lexeme",								__handle_term_list},
-		{ L"term_list			:		lexeme",										__handle_term_list},
-		{ L"prec_decl			:		%prec lexeme",									__build_prec_decl},
-		{ L"prec_decl			:		",												NULL},
-		{ L"handler_decl		:		%handler lexeme",								__handle_handler_decl},
-		{ L"handler_decl		:				",										NULL},
+		{ L"rhs_list			: 		rhs_list  | rhs ",								__handle_rhs_list,0},
+		{ L"rhs_list			: 		rhs ",											__handle_rhs_list,0},
+		{ L"rhs					:		term_list prec_decl handler_decl",				__handle_rhs,0},
+		{ L"rhs					:		.",												__handle_rhs,0},
+
+		{ L"term_list			:		term_list lexeme",								__handle_term_list,0},
+		{ L"term_list			:		lexeme",										__handle_term_list,0},
+
+
+
+
+		{ L"prec_decl			:		%prec lexeme",									NULL,1},
+
+		{ L"prec_decl			:		",												NULL,0},
+		{ L"handler_decl		:		%handler lexeme",								__handle_handler_decl,0},
+		{ L"handler_decl		:				",										NULL,0},
 
 };
 
@@ -1168,7 +1150,7 @@ static psrGrammar_t*	__build_grammar(psrCtx_t *psr_ctx, arIOCtx_t *io)
 
 		for(i = 0; i < AR_NELEMS(__cfg_rule); ++i)
 		{
-				if(!PSR_InsertRuleByStr(gmr, __cfg_rule[i].rule, NULL, __cfg_rule[i].handler))
+				if(!PSR_InsertRuleByStr(gmr, __cfg_rule[i].rule, NULL, __cfg_rule[i].handler, __cfg_rule[i].auto_ret))
 				{
 						AR_ASSERT(false);
 						AR_error(AR_ERR_FATAL, L"%hs\r\n", AR_FUNC_NAME);
@@ -1366,7 +1348,8 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 						report->report_func(&info, report->report_ctx);
 
 						AR_DestroyString(str);
-
+						
+						AR_ASSERT(*match.next != L'\0');
 						LEX_Skip(&match);
 						LEX_ClearError(&match);
 						is_ok = true;
