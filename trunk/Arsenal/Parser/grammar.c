@@ -121,7 +121,7 @@ bool_t			PSR_InsertToTermInfoList(psrTermInfoList_t	*lst, const wchar_t *name, s
 
 
 
-psrRule_t* PSR_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, const psrTermInfoList_t *term_list, arIOCtx_t *ctx)
+psrRule_t* PSR_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, size_t auto_ret, const psrTermInfoList_t *term_list, arIOCtx_t *ctx)
 {
 		psrRule_t		*rule;
 		size_t i;
@@ -130,6 +130,8 @@ psrRule_t* PSR_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, cons
 		AR_ASSERT(head != NULL && body != NULL && term_list != NULL);
 		
 		AR_ASSERT(ctx != NULL);
+
+		AR_ASSERT(auto_ret <= body->count);
 
 		if(PSR_FindTermByName((psrTermInfoList_t*)term_list, head->name) != NULL) return NULL;
 
@@ -203,6 +205,7 @@ psrRule_t* PSR_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, cons
 
 		rule->prec_tok = prec_tok != NULL ? AR_wcsdup(prec_tok) : AR_wcsdup(right_term);
 		rule->rule_f = rule_f;
+		rule->auto_ret = auto_ret;
 		return rule;
 }
 
@@ -210,7 +213,7 @@ psrRule_t* PSR_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, cons
 
 /*****************************************************************************************************************************************/
 
-psrRule_t* PSR_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, const psrTermInfoList_t *term_list, arIOCtx_t *ctx)
+psrRule_t* PSR_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, size_t auto_ret, const psrTermInfoList_t *term_list, arIOCtx_t *ctx)
 {
 		const psrSymb_t *head;
 		psrSymbList_t	body;
@@ -280,7 +283,7 @@ psrRule_t* PSR_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRuleF
 		}
 		
 
-		res =  PSR_CreateRule(head, &body, prec, rule_f, term_list, ctx);
+		res =  PSR_CreateRule(head, &body, prec, rule_f, auto_ret, term_list, ctx);
 
 END_POINT:
 		if(head)PSR_DestroySymb(head);
@@ -367,7 +370,7 @@ static void __init_grammar_component_unit(psrGrammar_t *grammar)
 				psrRule_t *start;
 				psrSymbList_t	body;
 				PSR_InitSymbList(&body);
-				start = PSR_CreateRule(PSR_StartSymb, &body, NULL, NULL, &grammar->term_list, &grammar->io_ctx);
+				start = PSR_CreateRule(PSR_StartSymb, &body, NULL, NULL, 0, &grammar->term_list, &grammar->io_ctx);
 				AR_ASSERT(start != NULL);
 				PSR_UnInitSymbList(&body);
 				__insert_rule(grammar, start);
@@ -561,14 +564,12 @@ bool_t					PSR_InsertRule(psrGrammar_t *grammar, psrRule_t *rule)
 		return true;
 }
 
-
-
-bool_t					PSR_InsertRuleByPartStr(psrGrammar_t *grammar, const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f)
+bool_t					PSR_InsertRuleByPartStr(psrGrammar_t *grammar, const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, size_t auto_ret)
 {
 		psrRule_t		*rule;
 		AR_ASSERT(grammar != NULL && head != NULL && body != NULL);
 
-		rule = PSR_CreateRule(head, body, prec_tok, rule_f, &grammar->term_list, &grammar->io_ctx);
+		rule = PSR_CreateRule(head, body, prec_tok, rule_f, auto_ret, &grammar->term_list, &grammar->io_ctx);
 		
 		if(rule == NULL)return false;
 
@@ -576,13 +577,12 @@ bool_t					PSR_InsertRuleByPartStr(psrGrammar_t *grammar, const psrSymb_t *head,
 }
 
 
-
-bool_t					PSR_InsertRuleByStr(psrGrammar_t *grammar, const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f)
+bool_t					PSR_InsertRuleByStr(psrGrammar_t *grammar, const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, size_t auto_ret)
 {
 
 		psrRule_t		*rule;
 		AR_ASSERT(grammar != NULL && str != NULL);
-		rule = PSR_CreateRuleByStr(str, prec, rule_f, &grammar->term_list, &grammar->io_ctx);
+		rule = PSR_CreateRuleByStr(str, prec, rule_f, auto_ret, &grammar->term_list, &grammar->io_ctx);
 		if(rule == NULL)return false;
 		return PSR_InsertRule(grammar, rule);
 }
