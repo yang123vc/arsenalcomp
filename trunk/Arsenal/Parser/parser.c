@@ -209,10 +209,10 @@ static void __handle_reduce(parser_t *parser, const psrAction_t *action)
 		{
 
 /****************************************Experiment****************************************************/
-				if(action->reduce_count > 0)
+				if(action->rule->auto_ret < action->reduce_count)
 				{
-						new_node = nodes[0];
-						nodes[0] = NULL;
+						new_node = nodes[action->rule->auto_ret];
+						nodes[action->rule->auto_ret] = NULL;
 
 				}else
 /****************************************************************************************************/
