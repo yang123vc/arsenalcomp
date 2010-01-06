@@ -14,14 +14,16 @@ protected: // create from serialization only
 
 // Attributes
 public:
-
+		/*enum TEXTENCODING { ASCII, UNI16_BE, UNI16_LE, UTF_8 };*/
+		typedef CTextFileBase::TEXTENCODING		EncodingType;
+		
+		EncodingType	m_encoding;
 // Operations
 public:
 
 // Overrides
 public:
 	virtual BOOL OnNewDocument();
-	virtual void Serialize(CArchive& ar);
 
 // Implementation
 public:
@@ -37,6 +39,14 @@ protected:
 // Generated message map functions
 protected:
 	DECLARE_MESSAGE_MAP()
+public:
+		virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
+		virtual BOOL OnSaveDocument(LPCTSTR lpszPathName);
+protected:
+		virtual BOOL SaveModified();
+public:
+		void OnEndcodingChange(UINT nID);
+		afx_msg void OnEndcodingChangeUI(CCmdUI *pCmdUI);
 };
 
 

@@ -66,3 +66,6 @@
 
 #include "ArsenalCPP.h"
 #pragma comment(lib, "ArsenalCPP.lib")
+
+
+#include "textfile.h"

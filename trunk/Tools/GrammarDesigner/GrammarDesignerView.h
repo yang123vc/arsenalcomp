@@ -54,6 +54,7 @@ public:
 		afx_msg void OnTestTest();
 		afx_msg void OnEditWordwarp();
 		afx_msg void OnUpdateEditWordwarp(CCmdUI *pCmdUI);
+		afx_msg void OnEditPaste();
 };
 
 #ifndef _DEBUG  // debug version in GrammarDesignerView.cpp

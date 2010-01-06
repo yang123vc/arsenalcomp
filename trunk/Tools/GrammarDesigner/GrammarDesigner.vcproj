@@ -760,7 +760,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				EnableIntrinsicFunctions="true"
+				InlineFunctionExpansion="0"
+				EnableIntrinsicFunctions="false"
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="..\..\Arsenal;..\..\ArsenalCPP;"
@@ -981,6 +982,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DocManagerEx.h"
+				>
+			</File>
+			<File
 				RelativePath=".\GrammarDesigner.h"
 				>
 			</File>
@@ -1014,6 +1019,10 @@
 			</File>
 			<File
 				RelativePath=".\targetver.h"
+				>
+			</File>
+			<File
+				RelativePath=".\textfile.h"
 				>
 			</File>
 		</Filter>
@@ -1064,6 +1073,10 @@
 			>
 			<File
 				RelativePath=".\AboutDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DocManagerEx.cpp"
 				>
 			</File>
 			<File
@@ -1189,6 +1202,10 @@
 						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\textfile.cpp"
+				>
 			</File>
 		</Filter>
 		<File

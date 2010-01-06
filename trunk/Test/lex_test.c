@@ -471,17 +471,23 @@ void lex_test20()
 		lexToken_t tok;
 		lexMatch_t match;
 		size_t i;
-
+		bool_t  is_ok;
 		lex = LEX_Create(NULL);
-		LEX_InitMatch(&match,L"\"abc\r\ndef\r\n\"" );
-
+		LEX_InitMatch(&match,L"/*abcdef/" );
 		
-		if(!LEX_Insert(lex, L"2,0 (\\\"([^\\\"])+\\\")"))
+
+		if(!LEX_Insert(lex, L"1,0 (/\\*([^\\*]|\\*+[^\\*/])*\\*+/)|(/\\*)"))
 		{
 				AR_abort();
 		}
 		
 		/*
+		if(!LEX_Insert(lex, L"2,0 (\\\"([^\\\"])+\\\")"))
+		{
+				AR_abort();
+		}
+		
+		
 		
 		if(!LEX_Insert(lex, L"3,0 [\\0]"))
 		{
@@ -505,14 +511,15 @@ void lex_test20()
 
 		LEX_GenerateTransTable(lex);
 
-		bool_t  is_ok = true;
+		is_ok = true;
 
 		while(true)
 		{
 				if(!LEX_Match(lex, &match, &tok))
 				{
-						LEX_Skip(&match);
-						LEX_ClearError(&match);
+						//LEX_Skip(&match);
+						//LEX_ClearError(&match);
+						break;
 						continue;
 				}else
 				{

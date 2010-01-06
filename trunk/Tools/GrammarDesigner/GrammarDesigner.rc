@@ -166,6 +166,13 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "&Font\tAlt+F",                ID_EDIT_FONTDLG
         MENUITEM "WordWarp",                    ID_EDIT_WORDWARP, CHECKED
+        POPUP "Endcoding"
+        BEGIN
+            MENUITEM "ASCII",                       ID_ENDCODING_ASCII, CHECKED
+            MENUITEM "UNICODE Big Endian",          ID_ENDCODING_UNICODEBE, CHECKED
+            MENUITEM "UNICODE",                     ID_ENDCODING_UNICODELE, CHECKED
+            MENUITEM "UTF8",                        ID_ENDCODING_UTF8, CHECKED
+        END
     END
     POPUP "&View"
     BEGIN

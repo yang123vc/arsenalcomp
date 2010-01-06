@@ -7,6 +7,10 @@
 
 
 #include "afxwinappex.h"
+
+#include "DocManagerEx.h"
+
+
 #include "GrammarDesigner.h"
 #include "MainFrm.h"
 
@@ -97,7 +101,11 @@ BOOL CGrammarDesignerApp::InitInstance()
 		RUNTIME_CLASS(CGrammarDesignerView));
 	if (!pDocTemplate)
 		return FALSE;
-	AddDocTemplate(pDocTemplate);
+
+	ASSERT(m_pDocManager == NULL);
+	m_pDocManager = new CDocManagerEx();
+		
+		AddDocTemplate(pDocTemplate);
 
 
 	// Enable DDE Execute open
