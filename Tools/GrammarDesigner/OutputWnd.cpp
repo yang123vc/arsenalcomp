@@ -47,9 +47,9 @@ int COutputWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		TRACE0("Failed to create output tab window\n");
 		return -1;      // fail to create
 	}
-
 	return 0;
 }
+
 
 void COutputWnd::OnSize(UINT nType, int cx, int cy)
 {

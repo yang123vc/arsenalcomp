@@ -24,6 +24,7 @@ BEGIN_MESSAGE_MAP(CGrammarDesignerView, CEditView)
 		ON_COMMAND(ID_TEST_TEST, &CGrammarDesignerView::OnTestTest)
 		ON_COMMAND(ID_EDIT_WORDWARP, &CGrammarDesignerView::OnEditWordwarp)
 		ON_UPDATE_COMMAND_UI(ID_EDIT_WORDWARP, &CGrammarDesignerView::OnUpdateEditWordwarp)
+		ON_COMMAND(ID_EDIT_PASTE, &CGrammarDesignerView::OnEditPaste)
 END_MESSAGE_MAP()
 
 // CGrammarDesignerView construction/destruction
@@ -317,3 +318,13 @@ void CGrammarDesignerView::OnTestTest()
 		this->MessageBox(TEXT(__FUNCSIG__));
 }
 
+
+void CGrammarDesignerView::OnEditPaste()
+{
+		// TODO: Add your command handler code here
+
+		CEditView::OnEditPaste();
+
+		
+
+}

@@ -195,15 +195,15 @@ static  parser_t* __build_parser()
 		PSR_InsertTerm(gmr, L"number", NUMBER, PSR_ASSOC_NOASSOC, 0, create_leaf);
 		PSR_InsertTerm(gmr, L"UMINUS", 0xFFFF, PSR_ASSOC_RIGHT, 3, create_leaf);
 		
-		PSR_InsertRuleByStr(gmr, L"E : E + E", NULL, create_node);
-		PSR_InsertRuleByStr(gmr, L"E : E - E", NULL, create_node);
-		PSR_InsertRuleByStr(gmr, L"E : E * E", NULL, create_node);
-		PSR_InsertRuleByStr(gmr, L"E : E / E", NULL, create_node);
-		PSR_InsertRuleByStr(gmr, L"E : E % E", NULL, create_node);
+		PSR_InsertRuleByStr(gmr, L"E : E + E", NULL, create_node, 0);
+		PSR_InsertRuleByStr(gmr, L"E : E - E", NULL, create_node, 0);
+		PSR_InsertRuleByStr(gmr, L"E : E * E", NULL, create_node, 0);
+		PSR_InsertRuleByStr(gmr, L"E : E / E", NULL, create_node, 0);
+		PSR_InsertRuleByStr(gmr, L"E : E % E", NULL, create_node, 0);
 
-		PSR_InsertRuleByStr(gmr, L"E : number", NULL, create_node1);
-		PSR_InsertRuleByStr(gmr, L"E : ( E )", NULL, create_node1);
-		PSR_InsertRuleByStr(gmr, L"E : - E", L"UMINUS", create_node2);
+		PSR_InsertRuleByStr(gmr, L"E : number", NULL, create_node1, 0);
+		PSR_InsertRuleByStr(gmr, L"E : ( E )", NULL, create_node1, 0);
+		PSR_InsertRuleByStr(gmr, L"E : - E", L"UMINUS", create_node2, 0);
 		
 		{
 				arString_t		*str;
@@ -271,6 +271,7 @@ void calc_test()
 		lexMatch_t		match;
 		lexToken_t		tok;
 		size_t i,k;
+		bool_t is_ok;
 		const psrActionView_t *view;
 		lex = __build_lex();
 		AR_ASSERT(lex);
@@ -303,16 +304,17 @@ void calc_test()
 
 		LEX_InitMatch(&match, L"10 + (5 + 4) / 3");
 		
-		bool is_ok = true;
+		is_ok = true;
 		while(is_ok)
 		{
+				psrToken_t term;
 				is_ok = LEX_Match(lex, &match, &tok);
 				if(!is_ok)
 				{
 						continue;
 				}
 
-				psrToken_t term;
+				
 				AR_printf(L"token == %ls : val = %d\r\n", AR_wcsndup(tok.str, tok.count), tok.value);
 				PSR_TOTERMTOK(&tok, &term);
 				is_ok = PSR_AddToken(psr, &term);
@@ -363,15 +365,15 @@ void calc_test3()
 		PSR_InsertTerm(gmr, L"number", NUMBER, PSR_ASSOC_NOASSOC, 0, create_leaf);
 		PSR_InsertTerm(gmr, L"UMINUS", 0xFFFF, PSR_ASSOC_RIGHT, 3, create_leaf);
 		
-		PSR_InsertRuleByStr(gmr, L"E : E + E", NULL, create_node);
-		PSR_InsertRuleByStr(gmr, L"E : E - E", NULL, create_node);
-		PSR_InsertRuleByStr(gmr, L"E : E * E", NULL, create_node);
-		PSR_InsertRuleByStr(gmr, L"E : E / E", NULL, create_node);
-		PSR_InsertRuleByStr(gmr, L"E : E % E", NULL, create_node);
+		PSR_InsertRuleByStr(gmr, L"E : E + E", NULL, create_node, 0);
+		PSR_InsertRuleByStr(gmr, L"E : E - E", NULL, create_node, 0);
+		PSR_InsertRuleByStr(gmr, L"E : E * E", NULL, create_node, 0);
+		PSR_InsertRuleByStr(gmr, L"E : E / E", NULL, create_node, 0);
+		PSR_InsertRuleByStr(gmr, L"E : E % E", NULL, create_node, 0);
 
-		PSR_InsertRuleByStr(gmr, L"E : number", NULL, create_node1);
-		PSR_InsertRuleByStr(gmr, L"E : ( E )", NULL, create_node1);
-		PSR_InsertRuleByStr(gmr, L"E : - E", L"UMINUS", create_node2);
+		PSR_InsertRuleByStr(gmr, L"E : number", NULL, create_node1, 0);
+		PSR_InsertRuleByStr(gmr, L"E : ( E )", NULL, create_node1, 0);
+		PSR_InsertRuleByStr(gmr, L"E : - E", L"UMINUS", create_node2, 0);
 		
 		{
 				arString_t		*str;

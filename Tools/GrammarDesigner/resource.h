@@ -55,13 +55,19 @@
 #define ID_OUTPUTWND_HIDE               32801
 #define ID_POPUP_FONT                   32802
 #define ID_OUTPUTWND_FONT               32803
+#define ID_EDIT_ENDCODING               32804
+#define ID_ENDCODING_ASCII              32805
+#define ID_ENDCODING_UNICODEBE          32806
+#define ID_ENDCODING_UNICODELE          32807
+#define ID_ENDCODING_UTF8               32808
+
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        311
-#define _APS_NEXT_COMMAND_VALUE         32804
+#define _APS_NEXT_COMMAND_VALUE         32810
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           310
 #endif

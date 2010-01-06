@@ -333,7 +333,7 @@ void parser_test()
 
 				for(i = 0; i < cfg->rule_cnt; ++i)
 				{
-						AR_printf(L"%ls : %ls : %ls : %ls : %d\r\n"
+						AR_printf(L"%ls : %ls : %ls : %ls : line %d\r\n"
 								, cfg->rule[i].lhs
 								, cfg->rule[i].rhs
 								, cfg->rule[i].prec_tok ? cfg->rule[i].prec_tok : L" "
@@ -349,10 +349,10 @@ void parser_test()
 
 #endif		
 				{
-						const wchar_t *input = __load_txt(DEF_SOUR_PATH);
-						parse_code(cfg, input);
+						//const wchar_t *input = __load_txt(DEF_SOUR_PATH);
+						//parse_code(cfg, input);
 
-						AR_DEL(input);
+						//AR_DEL(input);
 				}
 		}else
 		{

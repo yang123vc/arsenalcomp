@@ -2,8 +2,8 @@
 	then you should remove the include file below.
   */
 	//#include <afx.h>
-#include "stdafx.h"
 
+#include "stdafx.h"
 #include "textfile.h"
 
 #if PEK_TX_TECHLEVEL == 0
