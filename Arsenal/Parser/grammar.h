@@ -62,13 +62,15 @@ typedef struct __parser_rule_tag
 		const psrSymb_t			*head;
 		psrSymbList_t			body;
 		const	wchar_t			*prec_tok;
-		psrRuleFunc_t			rule_f;/**/
+		psrRuleFunc_t			rule_f;
+		size_t					auto_ret;
 }psrRule_t;
 
-psrRule_t*		PSR_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, const psrTermInfoList_t *term_list, arIOCtx_t *ctx);
-psrRule_t*		PSR_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, const psrTermInfoList_t *term_list, arIOCtx_t *ctx);
+psrRule_t*		PSR_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, size_t auto_ret, const psrTermInfoList_t *term_list, arIOCtx_t *ctx);
+psrRule_t*		PSR_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, size_t auto_ret, const psrTermInfoList_t *term_list, arIOCtx_t *ctx);
 void			PSR_DestroyRule(psrRule_t *rule);
 psrRule_t*		PSR_CopyNewRule(const psrRule_t *rule);
+
 /****************************************************************************************************************************************/
 
 
@@ -114,8 +116,8 @@ psrTermInfo_t*			PSR_GetTermSymbInfoByValue(const psrGrammar_t	*grammar, size_t 
 
 bool_t					PSR_InsertTerm(psrGrammar_t *grammar, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f);
 bool_t					PSR_InsertRule(psrGrammar_t *grammar, psrRule_t *rule);
-bool_t					PSR_InsertRuleByPartStr(psrGrammar_t *grammar, const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f);
-bool_t					PSR_InsertRuleByStr(psrGrammar_t *grammar, const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f);
+bool_t					PSR_InsertRuleByPartStr(psrGrammar_t *grammar, const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, size_t auto_ret);
+bool_t					PSR_InsertRuleByStr(psrGrammar_t *grammar, const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, size_t auto_ret);
 
 
 
