@@ -54,7 +54,6 @@ static const wchar_t *__cfg_lex_name[] =
 		L"	number		=	0|[1-9]{digit}*",
 		L"	name		=	{letter}({letter}|{digit})*",
 		L"	lexeme		=	{name}|(\\\"([^\\\"\\n])+\\\")|('([^'\\n])+')",
-
 		L"	comment		= 	/\\*([^\\*]|\\*+[^\\*/])*\\*+/",
 		L"	comment_line	= 	//[^\\n]*\\n",
 		L"  skip_lexem		= {delim}|{comment}|{comment_line}",
@@ -70,7 +69,6 @@ typedef enum
 		NAME,
 		TOKEN,
 		PREC,
-		/*RULES,*/
 		HANDLER,
 		ASSOC,
 		LEXEME,
@@ -79,7 +77,8 @@ typedef enum
 		COMMA,
 		COLON,
 		SEMI,
-		OR
+		OR,
+		FAKE_EOI
 }cfgLexValue_t;
 
 
@@ -116,10 +115,6 @@ static const cfgLexPattern_t	__cfg_pattern[] =
 		{SEMI,		L"\";\"",	false,1},
 
 		{OR,		L"\"|\"",	false,1}
-/*
-		{BLOCK_OPEN,	L"\"{\"",	false,1},
-		{BLOCK_CLOSE,	L"\"}\"",	false,1}
-*/
 };
 
 
@@ -156,7 +151,8 @@ static const cfgTermInfo_t	__cfg_term[] =
 		{COMMA, L","},
 		{COLON, L":"},
 		{SEMI, L";"},
-		{OR,   L"|"}
+		{OR,   L"|"},
+		{FAKE_EOI, L"#"}
 };
 
 
@@ -939,18 +935,28 @@ static psrNode_t*		AR_STDCALL __handle_item_list(psrNode_t **nodes, size_t count
 
 
 /*
-{ L"program				:		item_list",			__handle_program},
+{ L"program				:		item_list #",			__handle_program, 0},
+{ L"program				:		item_list error #",		__handle_program, 0},
 */
-
 static psrNode_t*		AR_STDCALL __handle_program(psrNode_t **nodes, size_t count, const wchar_t * name_tmp, void *ctx)
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res = NULL;
 		size_t	i;
+		bool_t			has_err = false;
 		cfgNodeList_t name, token, prec, rule, error, empty;
 
-		AR_ASSERT(count == 1);
+		AR_ASSERT(count == 2 || count == 3);
 		AR_ASSERT((ns[0] == NULL) || (ns[0] && ns[0]->type == CFG_NODE_LIST_T));
+		
+		if(count == 2)
+		{
+				AR_ASSERT(ns[1]->type == CFG_LEXEME_T && ns[1]->lexeme.lex_val == FAKE_EOI);
+		}else
+		{
+				AR_ASSERT(ns[1] == NULL && ns[2]->type == CFG_LEXEME_T && ns[2]->lexeme.lex_val == FAKE_EOI);
+				has_err = true;
+		}
 
 		CFG_InitNodeList(&name);
 		CFG_InitNodeList(&token);
@@ -1011,7 +1017,7 @@ static psrNode_t*		AR_STDCALL __handle_program(psrNode_t **nodes, size_t count, 
 		res = CFG_CreateNode(CFG_CONFIG_T);
 		CFG_InitConfig(&res->config, &name, &token, &prec, &rule);
 
-		if(error.count > 0)
+		if(error.count > 0 || has_err)
 		{
 				res->config.has_error = true;
 		}
@@ -1026,6 +1032,7 @@ static psrNode_t*		AR_STDCALL __handle_program(psrNode_t **nodes, size_t count, 
 }
 
 
+
 typedef struct __cfg_rule_tag
 {
 		const wchar_t *rule;
@@ -1038,7 +1045,9 @@ typedef struct __cfg_rule_tag
 static const cfgRuleDef_t	__cfg_rule[] =
 {
 
-		{ L"program				:		item_list",			__handle_program, 0},
+		
+		{ L"program				:		item_list #",			__handle_program, 0},
+		{ L"program				:		item_list error #",		__handle_program, 0},
 
 		{ L"item_list			:		item_list item",	__handle_item_list, 0},
 		{ L"item_list			:		",	NULL, 0},
@@ -1236,6 +1245,11 @@ static void		AR_STDCALL cfg_error(const psrToken_t *tok, const wchar_t *expected
 		wchar_t			*buf;
 		size_t			i;
 
+		if(tok->term_val == FAKE_EOI)
+		{
+				return;
+		}
+
 		AR_ASSERT(tok != NULL && ctx != NULL && expected != NULL && count > 0);
 		
 		report = (cfgReport_t*)ctx;
@@ -1367,9 +1381,9 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 						psrToken_t end;
 						end.col = term.col;
 						end.line = term.line;
-						end.str = L";";
+						end.str = L"#";
 						end.str_cnt = 1;
-						end.term_val = SEMI;
+						end.term_val = FAKE_EOI;
 
 						if(!PSR_AddToken(parser, &end))
 						{

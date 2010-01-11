@@ -4,7 +4,6 @@
 
 #include "stdafx.h"
 
-
 #include "GrammarDesigner.h"
 
 #include "MainFrm.h"
@@ -131,9 +130,6 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 	}
 
-	m_wndOutput.EnableDocking(CBRS_ALIGN_ANY);
-	DockPane(&m_wndOutput);
-
 
 	// Enable toolbar and docking window menu replacement
 	EnablePaneMenu(TRUE, ID_VIEW_CUSTOMIZE, strCustomize, ID_VIEW_TOOLBAR);
@@ -201,7 +197,43 @@ BOOL CMainFrame::CreateDockingWindows()
 		return FALSE; // failed to create
 	}
 
+	CString strActView;
+
+	bNameValid = strActView.LoadString(IDS_ACTVIEW_WND);
+
+	ASSERT(bNameValid);
+
+	if (!m_wndActView.Create(strActView, this, CRect(0, 0, 100, 100), TRUE, ID_VIEW_ACTIONWND, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_BOTTOM | CBRS_FLOAT_MULTI))
+	{
+		TRACE0("Failed to create Action window\n");
+		return FALSE; // failed to create
+	}
+
+	CString strTagView;
+
+
+	bNameValid = strTagView.LoadString(IDS_TAGVIEW_WND);
+		
+	if(!m_wndTag.Create(strTagView, this, CRect(0,0,100,100), TRUE, ID_VIEW_TAGWND, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
+	{
+				TRACE0("Failed to create TagView window\n");
+				return FALSE; // failed to create
+	}
+
 	SetDockingWindowIcons(theApp.m_bHiColorIcons);
+
+
+	
+	m_wndOutput.EnableDocking(CBRS_ALIGN_ANY);
+	DockPane(&m_wndOutput);
+
+	m_wndActView.EnableDocking(CBRS_ALIGN_ANY);
+	DockPane(&m_wndActView);
+
+
+	m_wndTag.EnableDocking(CBRS_ALIGN_LEFT);
+	DockPane(&m_wndTag);
+
 	return TRUE;
 }
 
@@ -209,6 +241,16 @@ void CMainFrame::SetDockingWindowIcons(BOOL bHiColorIcons)
 {
 	HICON hOutputBarIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_OUTPUT_WND_HC : IDI_OUTPUT_WND), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
 	m_wndOutput.SetIcon(hOutputBarIcon, FALSE);
+
+
+	HICON hActViewBarIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_OUTPUT_WND_HC : IDI_OUTPUT_WND), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
+	m_wndActView.SetIcon(hActViewBarIcon, FALSE);
+
+	HICON hTagViewBarIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_OUTPUT_WND_HC : IDI_OUTPUT_WND), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
+	m_wndTag.SetIcon(hTagViewBarIcon, FALSE);
+
+	
+
 
 }
 
@@ -367,6 +409,13 @@ CMFCToolBar& CMainFrame::GetToolBar(void)
 }
 
 
+CTagView&	CMainFrame::GetTagView()
+{
+		return this->m_wndTag;
+
+}
+
+
 void CMainFrame::OnUpdateStatusBarPanes(CCmdUI* pCmdUI)
 {
 		pCmdUI->Enable(TRUE);
@@ -458,8 +507,27 @@ void CMainFrame::OnSize(UINT nType, int cx, int cy)
 
 
 
+
+
 void CMainFrame::OnTestTest()
 {
 		// TODO: Add your command handler code here
+		
+		//m_wndActView.DrawActionView(NULL);
 
+		ARSpace::psrConflictItem_t		item;
+		item.name = TEXT("test");
+		item.items = new wchar_t*[10];
+		item.count = 2;
+		item.items[0] = TEXT("aaaaaaaaaaaa");
+		item.items[1] = TEXT("bbbbbbbbbbbb");
+
+		ARSpace::psrConflictView_t		conflict;
+		conflict.count = 1;
+		conflict.conflict = new ARSpace::psrConflictItem_t*[1024];
+		conflict.conflict[0] = &item;
+
+		m_wndActView.DrawConflictView(&conflict);
+
+		
 }

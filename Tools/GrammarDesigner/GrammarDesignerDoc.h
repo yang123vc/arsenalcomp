@@ -6,6 +6,8 @@
 #pragma once
 
 
+
+
 class CGrammarDesignerDoc : public CDocument
 {
 protected: // create from serialization only
@@ -18,6 +20,7 @@ public:
 		typedef CTextFileBase::TEXTENCODING		EncodingType;
 		
 		EncodingType	m_encoding;
+		CString				m_src_cache;
 // Operations
 public:
 
@@ -47,6 +50,7 @@ protected:
 public:
 		void OnEndcodingChange(UINT nID);
 		afx_msg void OnEndcodingChangeUI(CCmdUI *pCmdUI);
+		afx_msg void OnToolsRebuildtags();
 };
 
 

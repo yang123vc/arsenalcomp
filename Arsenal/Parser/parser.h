@@ -45,7 +45,7 @@ typedef struct __parser_token_tag
 				(_psr_tok)->term_val = (_ltok)->value;			\
 				(_psr_tok)->line = (_ltok)->line;				\
 				(_psr_tok)->col = (_ltok)->col;					\
-		}while(0)						
+		}while(0)
 
 
 
@@ -165,7 +165,7 @@ void	PSR_PrintParserActionTable(const parser_t *parser, arString_t *out, size_t 
 
 typedef struct __parser_action_item_view_tag
 {
-		wchar_t	**item;
+		wchar_t			**item;
 		size_t			item_cnt;
 
 		wchar_t	**action_tbl;
@@ -176,7 +176,27 @@ typedef struct __parser_action_item_view_tag
 const psrActionView_t*	PSR_CreateParserActionView(const parser_t *parser);
 void					PSR_DestroyParserActionView(const psrActionView_t *view);
 
+#define	PSR_IndexActionViewItem(_v, _n)			((_v)->item[(_n)])
+#define PSR_IndexActionViewAction(_v, _x,_y)	((_v)->action_tbl[AR_TBL_IDX_R((_x), (_y), (_v)->col)])
 
+
+typedef struct __parser_conflict_item_tag
+{
+		wchar_t			*name;
+		wchar_t			**items;
+		size_t			count;
+}psrConflictItem_t;
+
+typedef struct __parser_conflict_view_tag
+{
+		psrConflictItem_t		**conflict;
+		size_t					count;
+		size_t					cap;
+}psrConflictView_t;
+
+
+const	psrConflictView_t*		PSR_CreateParserConflictView(const parser_t *parser);
+void							PSR_DestroyParserConflictView(const psrConflictView_t *view);
 
 AR_NAMESPACE_END
 

@@ -45,6 +45,7 @@ public:
 
 
 
+
 class ARAPI Arsenal : private NonCopyable
 {
 private:
@@ -60,7 +61,31 @@ public:
 		static Arsenal*	Get();
 };
 
+/*******************************PreDefined**********************************/
 
+class ARAPI DummyContext : public ARContext
+{
+public:
+		virtual void OnError(int_t level, const wchar_t *msg)
+		{
+
+		}
+
+		virtual void OnPrint(const wchar_t *msg)
+		{
+
+		}
+public:
+		DummyContext()
+		{
+
+		}
+
+		virtual ~DummyContext()
+		{
+
+		}
+};
 
 
 

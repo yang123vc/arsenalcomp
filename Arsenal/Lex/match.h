@@ -34,7 +34,7 @@ typedef struct __lex_match_result_tag
 {
 		bool_t					is_ok;
 		
-		wchar_t					*input;
+		const wchar_t			*input;
 		const wchar_t			*next;
 		size_t					line;
 		size_t					col;

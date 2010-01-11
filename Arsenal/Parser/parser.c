@@ -64,6 +64,23 @@ void					PSR_DestroyParserActionView(const psrActionView_t *view)
 }
 
 
+
+const	psrConflictView_t*		PSR_CreateParserConflictView(const parser_t *parser)
+{
+		AR_ASSERT(parser != NULL);
+
+		return PSR_CreateConflictView(parser->tbl, parser->grammar);
+}
+
+
+void							PSR_DestroyParserConflictView(const psrConflictView_t *view)
+{
+		AR_ASSERT(view != NULL);
+
+		PSR_DestroyConflictView(view);
+}
+
+
 /****************************************************Parser*****************************************************/
 
 

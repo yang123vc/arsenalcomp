@@ -20,7 +20,6 @@
 AR_NAMESPACE_BEGIN
 
 
-
 #define LOAD_TXT_MAX_BUF  (1024*1024 * 5)
 static const wchar_t* __load_txt(const wchar_t *path)
 {
@@ -347,12 +346,13 @@ void parser_test()
 		//		arString_t *str = NULL;
 		//		CFG_ConfigToCode(cfg, str);
 
-#endif		
+#endif			
+				if(!cfg->has_error)
 				{
-						//const wchar_t *input = __load_txt(DEF_SOUR_PATH);
-						//parse_code(cfg, input);
+						const wchar_t *input = __load_txt(DEF_SOUR_PATH);
+						parse_code(cfg, input);
 
-						//AR_DEL(input);
+						AR_DEL(input);
 				}
 		}else
 		{

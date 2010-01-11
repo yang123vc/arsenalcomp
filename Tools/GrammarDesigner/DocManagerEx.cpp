@@ -12,7 +12,7 @@ CDocManagerEx::~CDocManagerEx(void)
 }
 
 
-AFX_STATIC void AFXAPI _AfxAppendFilterSuffix(CString& filter, OPENFILENAME& ofn,CDocTemplate* pTemplate, CString* pstrDefaultExt)
+static void AFXAPI _AfxAppendFilterSuffix(CString& filter, OPENFILENAME& ofn,CDocTemplate* pTemplate, CString* pstrDefaultExt)
 {
 		ENSURE_VALID(pTemplate);
 		ASSERT_KINDOF(CDocTemplate, pTemplate);

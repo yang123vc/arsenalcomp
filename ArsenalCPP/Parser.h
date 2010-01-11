@@ -85,8 +85,13 @@ public:
 		void	PrintConflict()const;
 		size_t	CountConflict()const;
 
-		const psrActionView_t*	CreateActionView()const;
-		void					DestroyActionView(const psrActionView_t *view);
+public:
+		const psrActionView_t*			CreateActionView()const;
+		void							DestroyActionView(const psrActionView_t *view);
+		
+		const psrConflictView_t*		CreateConflictView()const;
+		void							DestroyConflictView(const psrConflictView_t *view);
+
 
 };
 
