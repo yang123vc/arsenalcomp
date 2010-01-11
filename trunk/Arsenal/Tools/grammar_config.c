@@ -1250,6 +1250,8 @@ static void		AR_STDCALL cfg_error(const psrToken_t *tok, const wchar_t *expected
 				return;
 		}
 
+		if(ctx == NULL)return;
+
 		AR_ASSERT(tok != NULL && ctx != NULL && expected != NULL && count > 0);
 		
 		report = (cfgReport_t*)ctx;
@@ -1429,10 +1431,39 @@ void			CFG_DestroyGrammarConfig(cfgConfig_t *cfg)
 }
 
 
+parser_t*		CFG_GetCollectParser()
+{
+		psrGrammar_t	*gmr;
+		
+		arIOCtx_t	io_ctx ;
+		psrCtx_t	psr_ctx;
+
+		io_ctx.on_error = cfg_on_error;
+		io_ctx.on_print = cfg_on_print;
+		io_ctx.ctx = NULL;
+
+		psr_ctx.error_f = cfg_error;
+		psr_ctx.free_f = cfg_free;
+		psr_ctx.ctx = NULL;
+		
+		gmr =  __build_grammar(&psr_ctx, &io_ctx);
+		return __build_parser(gmr);
+}
 
 
 
+void			CFG_DestroyCollectParser(parser_t *parser)
+{
+		const psrGrammar_t *gmr;
+		AR_ASSERT(parser != NULL && parser->grammar != NULL);
 
+		gmr = parser->grammar;
+
+		PSR_DestroyParser(parser);
+
+		PSR_DestroyGrammar((psrGrammar_t*)gmr);
+		
+}
 
 
 AR_NAMESPACE_END

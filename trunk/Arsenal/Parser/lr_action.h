@@ -80,21 +80,6 @@ void					PSR_DestroyActionTable(psrActionTable_t *tbl);
 
 
 
-void PSR_PrintActionTable(const psrActionTable_t *tbl, const psrGrammar_t *grammar, size_t width, arString_t *str);
-void PSR_ReportConflict(const psrActionTable_t *tbl, const psrGrammar_t *grammar, arString_t *str);
-
-size_t PSR_CountConflict(const psrActionTable_t *tbl);
-
-
-
-
-const psrActionView_t*	PSR_CreateActionView(const psrActionTable_t *tbl, const psrGrammar_t *grammar);
-void PSR_DestroyActionView(const psrActionView_t *action_view);
-
-
-const	psrConflictView_t*		PSR_CreateConflictView(const psrActionTable_t *tbl, const psrGrammar_t *grammar);
-void							PSR_DestroyConflictView(const	psrConflictView_t *view);
-
 
 
 

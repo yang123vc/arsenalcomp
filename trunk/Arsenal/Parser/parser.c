@@ -22,65 +22,6 @@
 AR_NAMESPACE_BEGIN
 
 
-
-size_t	PSR_CountParserConflict(const parser_t *parser)
-{
-		AR_ASSERT(parser != NULL);
-		AR_ASSERT(parser->tbl != NULL && parser->grammar != NULL);
-
-		return PSR_CountConflict(parser->tbl);
-}
-
-void	PSR_PrintParserConflict(const parser_t *parser, arString_t *out)
-{
-		AR_ASSERT(parser != NULL && out != NULL);
-		AR_ASSERT(parser->tbl != NULL && parser->grammar != NULL);
-		
-		PSR_ReportConflict(parser->tbl, parser->grammar, out);
-}
-
-void	PSR_PrintParserActionTable(const parser_t *parser, arString_t *out, size_t width)
-{
-		AR_ASSERT(parser != NULL && out != NULL);
-		AR_ASSERT(parser->tbl != NULL && parser->grammar != NULL);
-
-		PSR_PrintActionTable(parser->tbl, parser->grammar, width, out);
-}
-
-
-
-const psrActionView_t* PSR_CreateParserActionView(const parser_t *parser)
-{
-		AR_ASSERT(parser != NULL);
-		return PSR_CreateActionView(parser->tbl, parser->grammar);
-
-}
-
-void					PSR_DestroyParserActionView(const psrActionView_t *view)
-{
-		AR_ASSERT(view != NULL);
-		PSR_DestroyActionView(view);
-
-}
-
-
-
-const	psrConflictView_t*		PSR_CreateParserConflictView(const parser_t *parser)
-{
-		AR_ASSERT(parser != NULL);
-
-		return PSR_CreateConflictView(parser->tbl, parser->grammar);
-}
-
-
-void							PSR_DestroyParserConflictView(const psrConflictView_t *view)
-{
-		AR_ASSERT(view != NULL);
-
-		PSR_DestroyConflictView(view);
-}
-
-
 /****************************************************Parser*****************************************************/
 
 
