@@ -281,10 +281,28 @@ void calc_test()
 		bool_t is_ok;
 		const psrActionView_t *view;
 		const psrConflictView_t	*conflict;
+		const psrFirstFollowView_t *first_follow;
 		lex = __build_lex();
 		AR_ASSERT(lex);
 		psr = __build_parser();
 
+
+		first_follow = PSR_CreateParserFirstFollowView(psr);
+
+		AR_printf(L"------------------first------------------\r\n");
+		for(i = 0; i < first_follow->first_set.count; ++i)
+		{
+				AR_printf(L"%ls : %ls\r\n", first_follow->first_set.name[i],first_follow->first_set.name_set[i]);
+		}
+
+		AR_printf(L"------------------follow------------------\r\n");
+		
+		for(i = 0; i < first_follow->follow_set.count; ++i)
+		{
+				AR_printf(L"%ls : %ls\r\n", first_follow->follow_set.name[i],first_follow->follow_set.name_set[i]);
+		}
+
+#if(0)
 		view = PSR_CreateParserActionView(psr);
 
 		conflict = PSR_CreateParserConflictView(psr);
@@ -323,6 +341,8 @@ void calc_test()
 
 				AR_printf(L"\r\n");
 		}
+
+#endif
 
 		AR_printf(L"-----------------------------------------\r\n");
 

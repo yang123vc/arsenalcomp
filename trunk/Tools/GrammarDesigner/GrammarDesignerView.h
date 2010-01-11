@@ -64,7 +64,13 @@ public:
 		afx_msg void OnClose();
 
 public:
-		CString	GetText()const;
+		
+		afx_msg void OnResetTimer(UINT nID);
+		afx_msg void OnUpdateSetrebuildtime100ms(CCmdUI *pCmdUI);
+		afx_msg void OnUpdateSetrebuildtime500ms(CCmdUI *pCmdUI);
+		afx_msg void OnUpdateSetrebuildtime1000ms(CCmdUI *pCmdUI);
+		afx_msg void OnUpdateSetrebuildtime3000ms(CCmdUI *pCmdUI);
+		afx_msg void OnUpdateSetrebuildtime5000ms(CCmdUI *pCmdUI);
 };
 
 #ifndef _DEBUG  // debug version in GrammarDesignerView.cpp

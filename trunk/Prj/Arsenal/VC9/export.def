@@ -109,3 +109,10 @@ PSR_DestroyParserActionView
 
 PSR_CreateParserConflictView
 PSR_DestroyParserConflictView
+
+
+PSR_CreateParserFirstFollowView
+PSR_DestroyParserFirstFollowView
+
+CFG_GetCollectParser
+CFG_DestroyCollectParser

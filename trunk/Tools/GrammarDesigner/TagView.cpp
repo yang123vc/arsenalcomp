@@ -286,8 +286,30 @@ void CTagTree::OnLButtonDown(UINT nFlags, CPoint point)
 		HTREEITEM curr = this->HitTest(point);
 		
 		this->SelectItem(curr);
+}
 
-		
+
+const CSrcInfo*	CTagTree::LookupByName(const CString &name)
+{
+		CSrcInfo *val = NULL;
+
+		if(m_term_tbl.Lookup(name, val))
+		{
+				return val;
+		}
+
+		if(m_rule_tbl.Lookup(name, val))
+		{
+				return val;
+		}
+
+		if(m_prec_tbl.Lookup(name, val))
+		{
+				return val;
+		}
+
+		return NULL;
+
 }
 
 //////////////////////////////// CTagView//////////////////////////////////////////////////////////////
@@ -354,4 +376,13 @@ void	CTagView::UpdateTag(const ARSpace::cfgConfig_t *cfg)
 		ASSERT(cfg != NULL);
 
 		m_tree.UpdateTag(cfg);
+
+		m_tree.Invalidate();
+}
+
+
+
+const CSrcInfo*	CTagView::LookupByName(const CString &name)
+{
+		return m_tree.LookupByName(name);
 }

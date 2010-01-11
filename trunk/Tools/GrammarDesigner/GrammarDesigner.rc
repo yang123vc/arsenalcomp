@@ -65,6 +65,20 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MENU_TAGVIEW MENU 
+BEGIN
+    POPUP "Popup"
+    BEGIN
+        MENUITEM "&Font",                       ID_TAGVIEW_FONT
+    END
+END
+
 #endif    // Chinese (P.R.C.) resources
 /////////////////////////////////////////////////////////////////////////////
 
@@ -196,13 +210,34 @@ BEGIN
             END
         END
     END
-    POPUP "&Help"
+    POPUP "&Parser"
     BEGIN
-        MENUITEM "&About GrammarDesigner...",   ID_APP_ABOUT
+        POPUP "Mode"
+        BEGIN
+            MENUITEM "&SLR(1)",                     ID_PARSER_MODE_SLR, CHECKED
+            MENUITEM "&LR(1)",                      ID_PARSER_MODE_LR, CHECKED
+            MENUITEM "L&ALR(1)",                    ID_PARSER_MODE_LALR, CHECKED
+        END
+        MENUITEM "&Build",                      ID_BUILD_BUILD
+        MENUITEM "Show &ActionTable",           ID_PARSER_SHOWACTIONTABLE
+        MENUITEM "Show &Conflict",              ID_PARSER_SHOWCONFLICT
+        MENUITEM "Show &FirstFollow",           ID_PARSER_SHOWFIRSTFOLLOW
     END
     POPUP "&Tools"
     BEGIN
         MENUITEM "ReBuild &Tags",               ID_TOOLS_REBUILDTAGS
+        POPUP "Set ReBuild Time"
+        BEGIN
+            MENUITEM "100ms",                       ID_SETREBUILDTIME_100MS, CHECKED
+            MENUITEM "500ms",                       ID_SETREBUILDTIME_500MS, CHECKED
+            MENUITEM "1000ms",                      ID_SETREBUILDTIME_1000MS, CHECKED
+            MENUITEM "3000ms",                      ID_SETREBUILDTIME_3000MS, CHECKED
+            MENUITEM "5000ms",                      ID_SETREBUILDTIME_5000MS, CHECKED
+        END
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About GrammarDesigner...",   ID_APP_ABOUT
     END
     POPUP "&Test"
     BEGIN
@@ -215,6 +250,8 @@ IDR_POPUP_EDIT MENU
 BEGIN
     POPUP "Edit"
     BEGIN
+        MENUITEM "&Goto Decl",                  ID_EDIT_GOTO_DECL
+        MENUITEM SEPARATOR
         MENUITEM "Cu&t\tCtrl+X",                ID_EDIT_CUT
         MENUITEM "&Copy\tCtrl+C",               ID_EDIT_COPY
         MENUITEM "&Paste\tCtrl+V",              ID_EDIT_PASTE

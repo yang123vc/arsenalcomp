@@ -27,11 +27,20 @@ BEGIN_MESSAGE_MAP(CGrammarDesignerView, CRichEditView)
 		ON_COMMAND(ID_EDIT_PASTE, &CGrammarDesignerView::OnEditPaste)
 		
 		ON_MESSAGE(ID_EDIT_LOCATE_POS, &CGrammarDesignerView::OnLocatePos)
-
-		ON_COMMAND(ID_TEST_TEST, &CGrammarDesignerView::OnTestTest)
+		
 		ON_WM_CREATE()
 		ON_WM_TIMER()
 		ON_WM_CLOSE()
+		
+		ON_COMMAND_RANGE(ID_SETREBUILDTIME_500MS, ID_SETREBUILDTIME_100MS, &CGrammarDesignerView::OnResetTimer)
+
+		//ON_COMMAND(ID_TEST_TEST, &CGrammarDesignerView::OnTestTest)
+		
+		ON_UPDATE_COMMAND_UI(ID_SETREBUILDTIME_100MS, &CGrammarDesignerView::OnUpdateSetrebuildtime100ms)
+		ON_UPDATE_COMMAND_UI(ID_SETREBUILDTIME_500MS, &CGrammarDesignerView::OnUpdateSetrebuildtime500ms)
+		ON_UPDATE_COMMAND_UI(ID_SETREBUILDTIME_1000MS, &CGrammarDesignerView::OnUpdateSetrebuildtime1000ms)
+		ON_UPDATE_COMMAND_UI(ID_SETREBUILDTIME_3000MS, &CGrammarDesignerView::OnUpdateSetrebuildtime3000ms)
+		ON_UPDATE_COMMAND_UI(ID_SETREBUILDTIME_5000MS, &CGrammarDesignerView::OnUpdateSetrebuildtime5000ms)
 END_MESSAGE_MAP()
 
 // CGrammarDesignerView construction/destruction
@@ -348,6 +357,8 @@ void CGrammarDesignerView::OnEditPaste()
 {
 		// TODO: Add your command handler code here
 		CRichEditView::OnEditPaste();
+		this->SetFont(&m_font);
+		
 }
 
 void CGrammarDesignerView::Highlight(long start, long end, COLORREF color)
@@ -424,22 +435,33 @@ void CGrammarDesignerView::OnClose()
 }
 
 
-CString	CGrammarDesignerView::GetText()const
+
+void CGrammarDesignerView::OnResetTimer(UINT nID)
 {
-		
-		CString result;
-		
-		const CRichEditCtrl &ctrl = this->GetRichEditCtrl();
-		for(int i = 0; i < ctrl.GetLineCount(); ++i)
+		this->KillTimer(ID_DOC_PARSETAG_TIMER);
+		switch(nID)
 		{
-				int start = ctrl.LineIndex(i);
-				int len = ctrl.LineLength(i);
-				CString tmp;
-				ctrl.GetTextRange(start, start + len, tmp);
-				result.AppendFormat(TEXT("%ls\r\n"), (LPCTSTR)tmp);
+		case ID_SETREBUILDTIME_100MS:
+				m_timer_interval = 100;
+				break;
+		case ID_SETREBUILDTIME_500MS:
+				m_timer_interval = 500;
+				break;
+		case ID_SETREBUILDTIME_1000MS:
+				m_timer_interval = 1000;
+				break;
+		case ID_SETREBUILDTIME_3000MS:
+				m_timer_interval = 3000;
+				break;
+		case ID_SETREBUILDTIME_5000MS:
+				m_timer_interval = 5000;
+				break;
+		default:
+				VERIFY(false);
 		}
-		
-		return result;
+
+
+		this->SetTimer(ID_DOC_PARSETAG_TIMER, m_timer_interval, NULL);
 }
 
 
@@ -460,4 +482,34 @@ void CGrammarDesignerView::OnTestTest()
 
 
 		is_highlight = !is_highlight;
+}
+
+void CGrammarDesignerView::OnUpdateSetrebuildtime100ms(CCmdUI *pCmdUI)
+{
+		// TODO: Add your command update UI handler code here
+		pCmdUI->SetCheck(m_timer_interval == 100);
+}
+
+void CGrammarDesignerView::OnUpdateSetrebuildtime500ms(CCmdUI *pCmdUI)
+{
+		// TODO: Add your command update UI handler code here
+		pCmdUI->SetCheck(m_timer_interval == 500);
+}
+
+void CGrammarDesignerView::OnUpdateSetrebuildtime1000ms(CCmdUI *pCmdUI)
+{
+		// TODO: Add your command update UI handler code here
+		pCmdUI->SetCheck(m_timer_interval == 1000);
+}
+
+void CGrammarDesignerView::OnUpdateSetrebuildtime3000ms(CCmdUI *pCmdUI)
+{
+		// TODO: Add your command update UI handler code here
+		pCmdUI->SetCheck(m_timer_interval == 3000);
+}
+
+void CGrammarDesignerView::OnUpdateSetrebuildtime5000ms(CCmdUI *pCmdUI)
+{
+		// TODO: Add your command update UI handler code here
+		pCmdUI->SetCheck(m_timer_interval == 5000);
 }

@@ -514,7 +514,7 @@ void CMainFrame::OnTestTest()
 		// TODO: Add your command handler code here
 		
 		//m_wndActView.DrawActionView(NULL);
-
+/*
 		ARSpace::psrConflictItem_t		item;
 		item.name = TEXT("test");
 		item.items = new wchar_t*[10];
@@ -528,6 +528,10 @@ void CMainFrame::OnTestTest()
 		conflict.conflict[0] = &item;
 
 		m_wndActView.DrawConflictView(&conflict);
-
+*/		
+		ARSpace::parser_t *psr = ARSpace::CFG_GetCollectParser();
 		
+		m_wndActView.DrawFirstFollowView(ARSpace::PSR_CreateParserFirstFollowView(psr));
+
+		ARSpace::CFG_DestroyCollectParser(psr);
 }
