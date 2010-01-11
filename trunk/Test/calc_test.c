@@ -202,8 +202,14 @@ static  parser_t* __build_parser()
 		PSR_InsertRuleByStr(gmr, L"E : E % E", NULL, create_node, 0);
 
 		PSR_InsertRuleByStr(gmr, L"E : number", NULL, create_node1, 0);
+
+		//PSR_InsertRuleByStr(gmr, L"E : X number", NULL, create_node1, 0);
+		//PSR_InsertRuleByStr(gmr, L"E : Y number", NULL, create_node1, 0);
 		PSR_InsertRuleByStr(gmr, L"E : ( E )", NULL, create_node1, 0);
 		PSR_InsertRuleByStr(gmr, L"E : - E", L"UMINUS", create_node2, 0);
+
+		PSR_InsertRuleByStr(gmr, L"X : ", NULL, NULL, 0);
+		PSR_InsertRuleByStr(gmr, L"Y : ", NULL, NULL, 0);
 		
 		{
 				arString_t		*str;
@@ -223,7 +229,8 @@ static  parser_t* __build_parser()
 				
 				
 				psr =  PSR_CreateParser(gmr, PSR_LALR);
-
+				
+				AR_printf(L"Conflict == %d\r\n", PSR_CountParserConflict(psr));
 				/*PSR_DestroyGrammar(gmr);*/
 				return psr;
 		}
@@ -273,11 +280,14 @@ void calc_test()
 		size_t i,k;
 		bool_t is_ok;
 		const psrActionView_t *view;
+		const psrConflictView_t	*conflict;
 		lex = __build_lex();
 		AR_ASSERT(lex);
 		psr = __build_parser();
 
 		view = PSR_CreateParserActionView(psr);
+
+		conflict = PSR_CreateParserConflictView(psr);
 		
 		AR_printf(L"-----------------------------------------\r\n");
 
@@ -293,6 +303,22 @@ void calc_test()
 				for(k = 0; k < view->col; ++k)
 				{
 						AR_printf(L"%*ls", 20, view->action_tbl[AR_TBL_IDX_R(i,k,view->col)]);
+				}
+
+				AR_printf(L"\r\n");
+		}
+
+		AR_printf(L"-----------------------------------------\r\n");
+
+
+		for(i = 0; i < conflict->count; ++i)
+		{
+				const psrConflictItem_t *item = conflict->conflict[i];
+				
+				AR_printf(L"%ls:\r\n", item->name);
+				for(k = 0; k < item->count; ++k)
+				{
+						AR_printf(L"%ls \r\n", item->items[k]);
 				}
 
 				AR_printf(L"\r\n");

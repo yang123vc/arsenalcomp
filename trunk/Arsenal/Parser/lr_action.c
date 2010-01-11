@@ -18,6 +18,141 @@
 AR_NAMESPACE_BEGIN
 
 
+/*
+typedef struct __parser_conflict_item_tag
+{
+		wchar_t			*name;
+		wchar_t			**items;
+}psrConflictItem_t;
+
+typedef struct __parser_conflict_view_tag
+{
+		psrConflictItem_t		*conflict;
+		size_t					count;
+		size_t					cap;
+}psrConflictView_t;
+
+
+const	psrConflictView_t*		PSR_CreateParserConflictView(const parser_t *parser);
+void							PSR_DestroyConflictView(const psrConflictView_t *view);
+*/
+
+static void __insert_to_conflict_set(psrConflictView_t *view, psrConflictItem_t *item)
+{
+		AR_ASSERT(view != NULL && item != NULL);
+
+		if(view->count == view->cap)
+		{
+				view->cap = (view->cap + 4)*2;
+				view->conflict = AR_REALLOC(psrConflictItem_t*, view->conflict, view->cap);
+		}
+		view->conflict[view->count++] = item;
+}
+
+
+const	psrConflictView_t*		PSR_CreateConflictView(const psrActionTable_t *tbl, const psrGrammar_t *grammar)
+{
+		psrConflictView_t		*view;
+		size_t i,k;
+		AR_ASSERT(tbl != NULL && grammar != NULL);
+	
+		view = AR_NEW0(psrConflictView_t);
+		
+		
+		for(i = 0; i < tbl->row; ++i)
+		{
+				size_t					l = 0;
+				psrConflictItem_t		*item = NULL;
+
+				for(k = 0; k < tbl->col; ++k)
+				{
+						arString_t				*str = NULL;
+						const psrAction_t		*act = tbl->actions[AR_TBL_IDX_R(i,k,tbl->col)];
+						
+						if(act->next == NULL)continue;
+						
+						str = AR_CreateString();
+						item = AR_NEW0(psrConflictItem_t);
+						AR_AppendFormatString(str,L"state[%" AR_PLAT_INT_FMT L"d] : %ls",(size_t)i, tbl->term_set.lst[k]->name);
+						item->name = AR_wcsdup(AR_GetStrString(str));
+						AR_ClearString(str);
+
+						while(act != NULL)
+						{
+								item->count++;
+								act = act->next;
+						}
+
+						item->items = AR_NEWARR0(wchar_t*, item->count);
+
+						
+						
+						for(l = 0, act = tbl->actions[AR_TBL_IDX_R(i,k,tbl->col)]; l < item->count; ++l, act = act->next)
+						{
+								psrLRItem_t tmp;
+								AR_ASSERT(act != NULL);
+
+								
+								PSR_InitLRItem(&tmp, act->rule, act->delim, NULL);
+								AR_ClearString(str);
+								switch(act->type)
+								{
+								case PSR_REDUCE:
+										AR_AppendFormatString(str,L"Reduce: ");
+										PSR_PrintLRItem(&tmp,grammar,str);
+										break;
+								case PSR_SHIFT:
+										AR_AppendFormatString(str,L"Shift: ");
+										PSR_PrintLRItem(&tmp, grammar,str);
+										break;
+								case PSR_ACCEPT:
+										AR_AppendFormatString(str,L"Accept ");
+										break;
+								default:
+										AR_ASSERT(false);
+								}
+								/*AR_AppendFormatString(str,L"\r\n");*/
+
+								PSR_UnInitLRItem(&tmp);
+								item->items[l] = AR_wcsdup(AR_GetStrString(str));
+
+						}
+						
+						__insert_to_conflict_set(view, item);
+				}
+		}
+		
+		return view;
+}
+
+void							PSR_DestroyConflictView(const psrConflictView_t *view)
+{
+		
+		psrConflictView_t		*v = (psrConflictView_t*)view;
+
+		if(v != NULL)
+		{
+				size_t i,k;
+				for(i = 0; i < view->count; ++i)
+				{
+						psrConflictItem_t		*item = view->conflict[i];
+						
+						AR_DEL(item->name);
+						for(k = 0; k < item->count; ++k)
+						{
+								AR_DEL(item->items[k]);
+						}
+						AR_DEL(item->items);
+						AR_DEL(item);
+				}
+
+				AR_DEL(v->conflict);
+				AR_DEL(v);
+		}
+
+}
+
+
 
 const psrActionView_t*	PSR_CreateActionView(const psrActionTable_t *tbl, const psrGrammar_t *grammar)
 {

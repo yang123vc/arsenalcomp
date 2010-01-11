@@ -58,17 +58,22 @@
 #define ID_EDIT_ENDCODING               32804
 #define ID_ENDCODING_ASCII              32805
 #define ID_ENDCODING_UNICODEBE          32806
-#define ID_ENDCODING_UNICODELE           32807
+#define ID_ENDCODING_UNICODELE          32807
 #define ID_ENDCODING_UTF8               32808
+#define ID_TOOLS_REBUILDTAGS            32810
 #define ID_INDICATOR_LINE               59142
 #define ID_INDICATOR_COL                59143
+#define IDS_ACTVIEW_WND                 61204
+#define ID_VIEW_ACTIONWND               61205
+#define IDS_TAGVIEW_WND                 61206
+#define ID_VIEW_TAGWND                  61207
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        311
-#define _APS_NEXT_COMMAND_VALUE         32810
+#define _APS_NEXT_RESOURCE_VALUE        312
+#define _APS_NEXT_COMMAND_VALUE         32811
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           310
 #endif

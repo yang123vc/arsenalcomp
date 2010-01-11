@@ -25,9 +25,13 @@ BEGIN_MESSAGE_MAP(CGrammarDesignerView, CRichEditView)
 		ON_COMMAND(ID_EDIT_WORDWARP, &CGrammarDesignerView::OnEditWordwarp)
 		ON_UPDATE_COMMAND_UI(ID_EDIT_WORDWARP, &CGrammarDesignerView::OnUpdateEditWordwarp)
 		ON_COMMAND(ID_EDIT_PASTE, &CGrammarDesignerView::OnEditPaste)
-
+		
+		ON_MESSAGE(ID_EDIT_LOCATE_POS, &CGrammarDesignerView::OnLocatePos)
 
 		ON_COMMAND(ID_TEST_TEST, &CGrammarDesignerView::OnTestTest)
+		ON_WM_CREATE()
+		ON_WM_TIMER()
+		ON_WM_CLOSE()
 END_MESSAGE_MAP()
 
 // CGrammarDesignerView construction/destruction
@@ -43,7 +47,9 @@ CGrammarDesignerView::CGrammarDesignerView()
 
 		VERIFY(m_acctbl);
 
-		m_iswarp = true;
+		m_iswarp = false;
+
+		m_timer_interval = 1000;
 }
 
 CGrammarDesignerView::~CGrammarDesignerView()
@@ -58,9 +64,9 @@ BOOL CGrammarDesignerView::PreCreateWindow(CREATESTRUCT& cs)
 
 	BOOL bPreCreated = CRichEditView::PreCreateWindow(cs);
 
-	if(m_iswarp)
+	if(!m_iswarp)
 	{
-		cs.style |= (ES_AUTOHSCROLL|WS_HSCROLL);	// Enable word-wrapping
+		cs.style |= (ES_AUTOHSCROLL|WS_HSCROLL);	
 	}
 	
 	return bPreCreated;
@@ -153,11 +159,16 @@ void CGrammarDesignerView::OnInitialUpdate()
 		CRichEditView::OnInitialUpdate();
 
 		
+		
 		// TODO: Add your specialized code here and/or call the base class
 
 //		this->GetRichEditCtrl().SetLimitText(1024*1024*10);
 		
 		this->SetFont(&m_font);
+
+		this->SetTimer(ID_DOC_PARSETAG_TIMER, m_timer_interval, NULL);
+
+		this->SetWordWrap(FALSE);
 }
 
 
@@ -191,7 +202,7 @@ BOOL   CGrammarDesignerView::SetWordWrap(BOOL   bWordWrap)
 {   
 
 
-		if(bWordWrap)
+		if(!bWordWrap)
 		{
 				this->m_nWordWrap = WrapNone;
 		}else
@@ -319,6 +330,7 @@ BOOL   CGrammarDesignerView::SetWordWrap(BOOL   bWordWrap)
 void CGrammarDesignerView::OnEditWordwarp()
 {
 		// TODO: Add your command handler code here
+
 		VERIFY(SetWordWrap(m_iswarp));
 		m_iswarp = !m_iswarp;
 }
@@ -327,7 +339,7 @@ void CGrammarDesignerView::OnEditWordwarp()
 void CGrammarDesignerView::OnUpdateEditWordwarp(CCmdUI *pCmdUI)
 {
 		// TODO: Add your command update UI handler code here
-
+		
 		pCmdUI->SetCheck(m_iswarp);
 }
 
@@ -335,7 +347,6 @@ void CGrammarDesignerView::OnUpdateEditWordwarp(CCmdUI *pCmdUI)
 void CGrammarDesignerView::OnEditPaste()
 {
 		// TODO: Add your command handler code here
-
 		CRichEditView::OnEditPaste();
 }
 
@@ -357,6 +368,82 @@ void CGrammarDesignerView::Highlight(long start, long end, COLORREF color)
 		this->GetRichEditCtrl().SetSel(x,y);
 		
 }
+
+
+LRESULT CGrammarDesignerView::OnLocatePos(WPARAM wp, LPARAM lp)
+{
+		this->GetRichEditCtrl().GetFocus();
+
+		
+		int index = this->GetRichEditCtrl().LineIndex((size_t)wp);
+
+		if(index != -1)
+		{
+				CPoint pt = this->GetRichEditCtrl().PosFromChar(index);
+				this->SetCaretPos(pt);
+				int cnt = this->GetRichEditCtrl().LineLength(index);
+				if(cnt >= 0)this->GetRichEditCtrl().SetSel(index, index + cnt);
+				
+		}
+		
+		this->GetRichEditCtrl().Invalidate();
+
+		
+		return 0L;
+}
+int CGrammarDesignerView::OnCreate(LPCREATESTRUCT lpCreateStruct)
+{
+		if (CRichEditView::OnCreate(lpCreateStruct) == -1)
+				return -1;
+
+		// TODO:  Add your specialized creation code here
+		
+		return 0;
+}
+
+void CGrammarDesignerView::OnTimer(UINT_PTR nIDEvent)
+{
+		// TODO: Add your message handler code here and/or call default
+
+		if(nIDEvent == ID_DOC_PARSETAG_TIMER)
+		{
+				this->SendMessage(WM_COMMAND, (WPARAM)ID_TOOLS_REBUILDTAGS); 
+		}else
+		{
+
+				CRichEditView::OnTimer(nIDEvent);
+		}
+}
+
+void CGrammarDesignerView::OnClose()
+{
+		// TODO: Add your message handler code here and/or call default
+
+		this->KillTimer(ID_DOC_PARSETAG_TIMER);
+		CRichEditView::OnClose();
+}
+
+
+CString	CGrammarDesignerView::GetText()const
+{
+		
+		CString result;
+		
+		const CRichEditCtrl &ctrl = this->GetRichEditCtrl();
+		for(int i = 0; i < ctrl.GetLineCount(); ++i)
+		{
+				int start = ctrl.LineIndex(i);
+				int len = ctrl.LineLength(i);
+				CString tmp;
+				ctrl.GetTextRange(start, start + len, tmp);
+				result.AppendFormat(TEXT("%ls\r\n"), (LPCTSTR)tmp);
+		}
+		
+		return result;
+}
+
+
+
 void CGrammarDesignerView::OnTestTest()
 {
 		// TODO: Add your command handler code here
@@ -374,4 +461,3 @@ void CGrammarDesignerView::OnTestTest()
 
 		is_highlight = !is_highlight;
 }
-

@@ -92,7 +92,8 @@ const psrActionView_t*	PSR_CreateActionView(const psrActionTable_t *tbl, const p
 void PSR_DestroyActionView(const psrActionView_t *action_view);
 
 
-
+const	psrConflictView_t*		PSR_CreateConflictView(const psrActionTable_t *tbl, const psrGrammar_t *grammar);
+void							PSR_DestroyConflictView(const	psrConflictView_t *view);
 
 
 

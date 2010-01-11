@@ -40,8 +40,12 @@ void LEX_InitMatch(lexMatch_t *pmatch, const wchar_t *input)
 		AR_ASSERT(pmatch != NULL && input != NULL);
 
 		AR_memset(pmatch, 0, sizeof(*pmatch));
+		/*
 		pmatch->input = AR_NEWARR0(wchar_t, AR_wcslen(input) + 1);
 		AR_wcscpy(pmatch->input, input);
+		*/
+
+		pmatch->input = input;
 		pmatch->next = pmatch->input;
 		pmatch->is_ok = true;
 
@@ -52,7 +56,7 @@ void LEX_UnInitMatch(lexMatch_t *pmatch)
 {
 		if(pmatch != NULL)
 		{
-				if(pmatch->input)AR_DEL(pmatch->input);
+				/*if(pmatch->input)AR_DEL(pmatch->input);*/
 				AR_memset(pmatch, 0, sizeof(*pmatch));
 		}
 }

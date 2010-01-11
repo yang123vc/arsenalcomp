@@ -3,8 +3,11 @@
 //
 
 #pragma once
-#include "OutputItem.h"
+
 #include "OutputWnd.h"
+#include "ActionView.h"
+#include "TagView.h"
+
 
 class CMainFrame : public CFrameWndEx
 {
@@ -39,7 +42,12 @@ protected:  // control bar embedded members
 	CFont			  m_status_font;
 	CMFCStatusBar     m_wndStatusBar;
 	CMFCToolBarImages m_UserImages;
-	COutputWnd        m_wndOutput;
+	
+/**/	
+	COutputWnd			m_wndOutput;
+	CActionView			m_wndActView;
+	CTagView			m_wndTag;
+	
 
 // Generated message map functions
 protected:
@@ -59,6 +67,7 @@ public:
 		CMFCStatusBar& GetStatusBar(void);
 		CMFCMenuBar& GetMenuBar(void);
 		CMFCToolBar& GetToolBar(void);
+		CTagView&	GetTagView();
 		afx_msg void OnSize(UINT nType, int cx, int cy);
 
 public:

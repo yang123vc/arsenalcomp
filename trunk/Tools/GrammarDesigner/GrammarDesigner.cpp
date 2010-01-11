@@ -130,7 +130,7 @@ BOOL CGrammarDesignerApp::InitInstance()
 	// Enable drag/drop open
 	m_pMainWnd->DragAcceptFiles();
 
-	//ArsenalCPP::Arsenal::Instance(NULL);
+	ArsenalCPP::Arsenal::Instance(new ArsenalCPP::DummyContext());
 
 	return TRUE;
 }
@@ -171,7 +171,7 @@ void CGrammarDesignerApp::SaveCustomState()
 int CGrammarDesignerApp::ExitInstance()
 {
 		// TODO: Add your specialized code here and/or call the base class
-		//ArsenalCPP::Arsenal::UnInstance();
-
+		ArsenalCPP::Arsenal::UnInstance();
+		
 		return CWinAppEx::ExitInstance();
 }

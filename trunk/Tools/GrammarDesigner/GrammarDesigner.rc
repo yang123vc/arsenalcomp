@@ -165,7 +165,6 @@ BEGIN
         MENUITEM "&Replace",                    ID_EDIT_REPLACE
         MENUITEM SEPARATOR
         MENUITEM "&Font\tAlt+F",                ID_EDIT_FONTDLG
-        MENUITEM "WordWarp",                    ID_EDIT_WORDWARP, CHECKED
         POPUP "Endcoding"
         BEGIN
             MENUITEM "ASCII",                       ID_ENDCODING_ASCII, CHECKED
@@ -200,6 +199,10 @@ BEGIN
     POPUP "&Help"
     BEGIN
         MENUITEM "&About GrammarDesigner...",   ID_APP_ABOUT
+    END
+    POPUP "&Tools"
+    BEGIN
+        MENUITEM "ReBuild &Tags",               ID_TOOLS_REBUILDTAGS
     END
     POPUP "&Test"
     BEGIN
@@ -458,6 +461,8 @@ STRINGTABLE
 BEGIN
     AFX_IDS_SCRESTORE       "Restore the window to normal size"
     AFX_IDS_SCTASKLIST      "Activate Task List"
+    IDS_ACTVIEW_WND         "Action"
+    IDS_TAGVIEW_WND         "Tag"
 END
 
 STRINGTABLE 

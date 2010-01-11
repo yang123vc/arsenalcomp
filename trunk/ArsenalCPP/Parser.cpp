@@ -278,7 +278,15 @@ void	Parser::DestroyActionView(const psrActionView_t *view)
 
 }
 
+const psrConflictView_t*		Parser::CreateConflictView()const
+{
+		return PSR_CreateParserConflictView(m_parser);
+}
 
+void	Parser::DestroyConflictView(const psrConflictView_t *view)
+{
+		PSR_DestroyParserConflictView(view);
+}
 
 }
 

@@ -982,6 +982,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionView.h"
+				>
+			</File>
+			<File
 				RelativePath=".\DocManagerEx.h"
 				>
 			</File>
@@ -1002,10 +1006,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\OutputItem.h"
-				>
-			</File>
-			<File
 				RelativePath=".\OutputWnd.h"
 				>
 			</File>
@@ -1015,6 +1015,10 @@
 			</File>
 			<File
 				RelativePath=".\stdafx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TagView.h"
 				>
 			</File>
 			<File
@@ -1076,6 +1080,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ActionView.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\DocManagerEx.cpp"
 				>
 			</File>
@@ -1093,10 +1101,6 @@
 			</File>
 			<File
 				RelativePath=".\MainFrm.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\OutputItem.cpp"
 				>
 			</File>
 			<File
@@ -1202,6 +1206,10 @@
 						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\TagView.cpp"
+				>
 			</File>
 			<File
 				RelativePath=".\textfile.cpp"

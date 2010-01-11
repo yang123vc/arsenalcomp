@@ -49,6 +49,7 @@ private:
 		CFont	m_font;
 		HACCEL	m_acctbl;
 		BOOL	m_iswarp;
+		UINT	m_timer_interval;
 private:
 		void Highlight(long start, long end, COLORREF color);
 public:
@@ -57,6 +58,13 @@ public:
 		afx_msg void OnEditWordwarp();
 		afx_msg void OnUpdateEditWordwarp(CCmdUI *pCmdUI);
 		afx_msg void OnEditPaste();
+		afx_msg LRESULT OnLocatePos(WPARAM wp, LPARAM lp);
+		afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+		afx_msg void OnTimer(UINT_PTR nIDEvent);
+		afx_msg void OnClose();
+
+public:
+		CString	GetText()const;
 };
 
 #ifndef _DEBUG  // debug version in GrammarDesignerView.cpp
