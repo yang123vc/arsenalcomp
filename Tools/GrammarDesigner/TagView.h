@@ -81,7 +81,8 @@ public:
 		HTREEITEM InsertText(LPCTSTR lpszItem, LPARAM lParam, HTREEITEM hParent = TVI_ROOT, HTREEITEM hInsertAfter = TVI_LAST);
 		HTREEITEM InsertText_Unique(LPCTSTR lpszItem, LPARAM lParam, HTREEITEM hParent = TVI_ROOT, HTREEITEM hInsertAfter = TVI_LAST);
 		void	Clear();
-
+		
+		const CSrcInfo*	LookupByName(const CString &name);
 protected:
 	DECLARE_MESSAGE_MAP()
 public:
@@ -117,5 +118,7 @@ public:
 
 public:
 		void	UpdateTag(const ARSpace::cfgConfig_t *cfg);
+		
+		const CSrcInfo*	LookupByName(const CString &name);
 };
 

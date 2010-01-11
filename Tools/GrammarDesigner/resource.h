@@ -35,6 +35,7 @@
 #define IDS_DEBUG_TAB                   301
 #define IDS_FIND_TAB                    302
 #define IDS_EDIT_MENU                   306
+#define IDR_MENU_TAGVIEW                312
 #define ID_EDIT_UNDO32771               32771
 #define ID_EDIT_SELECTALL               32772
 #define ID_EDIT_SELECTALL32773          32773
@@ -61,6 +62,26 @@
 #define ID_ENDCODING_UNICODELE          32807
 #define ID_ENDCODING_UTF8               32808
 #define ID_TOOLS_REBUILDTAGS            32810
+#define ID_BUILD_MODE                   32811
+#define ID_BUILD_BUILD                  32815
+#define ID_PARSER_ACTIONTABLE           32816
+#define ID_PARSER_CONFLICT              32817
+#define ID_PARSER_SHOWFIRSTFOLLOW       32818
+#define ID_PARSER_SHOWCONFLICT          32819
+#define ID_PARSER_SHOWACTIONTABLE       32820
+#define ID_PARSER_MODE_SLR              32821
+#define ID_PARSER_MODE_LR               32822
+#define ID_PARSER_MODE_LALR             32823
+#define ID_EDIT_GOTO32824               32824
+#define ID_EDIT_GOTO_DECL               32825
+#define ID_POPUP_FONT32826              32826
+#define ID_TAGVIEW_FONT                 32827
+#define ID_TOOLS_SETREBUILDTIME         32828
+#define ID_SETREBUILDTIME_500MS         32829
+#define ID_SETREBUILDTIME_1000MS        32830
+#define ID_SETREBUILDTIME_3000MS        32831
+#define ID_SETREBUILDTIME_5000MS        32832
+#define ID_SETREBUILDTIME_100MS         32833
 #define ID_INDICATOR_LINE               59142
 #define ID_INDICATOR_COL                59143
 #define IDS_ACTVIEW_WND                 61204
@@ -72,9 +93,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        312
-#define _APS_NEXT_COMMAND_VALUE         32811
-#define _APS_NEXT_CONTROL_VALUE         1000
+#define _APS_NEXT_RESOURCE_VALUE        314
+#define _APS_NEXT_COMMAND_VALUE         32834
+#define _APS_NEXT_CONTROL_VALUE         1001
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

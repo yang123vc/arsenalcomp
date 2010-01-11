@@ -101,13 +101,13 @@ void AR_Test()
 		//trans_char_test();
 		
 		//lex_test();
-		parser_test();
+		//parser_test();
 
 		//parser_perf_test();
 		
 		//rgx_test();
 		
-		//calc_test();
+		calc_test();
 
 #else
 		AR_printf(L"dll version\r\n");

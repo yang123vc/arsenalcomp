@@ -19,12 +19,20 @@
 
 IMPLEMENT_DYNCREATE(CGrammarDesignerDoc, CDocument);
 
+
 BEGIN_MESSAGE_MAP(CGrammarDesignerDoc, CDocument)
 
 		ON_COMMAND_RANGE(ID_ENDCODING_ASCII, ID_ENDCODING_UTF8, &CGrammarDesignerDoc::OnEndcodingChange)
 		ON_UPDATE_COMMAND_UI_RANGE(ID_ENDCODING_ASCII, ID_ENDCODING_UTF8, &CGrammarDesignerDoc::OnEndcodingChangeUI)
 
 		ON_COMMAND(ID_TOOLS_REBUILDTAGS, &CGrammarDesignerDoc::OnToolsRebuildtags)
+
+		ON_COMMAND_RANGE(ID_PARSER_MODE_SLR, ID_PARSER_MODE_LALR, &CGrammarDesignerDoc::OnChangeParserMode)
+		ON_UPDATE_COMMAND_UI(ID_PARSER_MODE_LALR, &CGrammarDesignerDoc::OnUpdateParserModeLalr)
+		ON_UPDATE_COMMAND_UI(ID_PARSER_MODE_LR, &CGrammarDesignerDoc::OnUpdateParserModeLr)
+		ON_UPDATE_COMMAND_UI(ID_PARSER_MODE_SLR, &CGrammarDesignerDoc::OnUpdateParserModeSlr)
+		ON_COMMAND(ID_EDIT_GOTO_DECL, &CGrammarDesignerDoc::OnEditGotoDecl)
+		ON_UPDATE_COMMAND_UI(ID_EDIT_GOTO_DECL, &CGrammarDesignerDoc::OnUpdateEditGotoDecl)
 END_MESSAGE_MAP()
 
 
@@ -34,6 +42,7 @@ CGrammarDesignerDoc::CGrammarDesignerDoc()
 {
 	// TODO: add one-time construction code here
 		m_encoding = CTextFileBase::ASCII;
+		m_parser_mode = ARSpace::PSR_LALR;
 }
 
 CGrammarDesignerDoc::~CGrammarDesignerDoc()
@@ -182,6 +191,25 @@ void CGrammarDesignerDoc::OnEndcodingChangeUI(CCmdUI *pCmdUI)
 }
 
 
+
+void CGrammarDesignerDoc::OnChangeParserMode(UINT nID)
+{
+		switch(nID)
+		{
+		case ID_PARSER_MODE_SLR:
+				m_parser_mode = ARSpace::PSR_SLR;
+				break;
+		case ID_PARSER_MODE_LR:
+				m_parser_mode = ARSpace::PSR_LR1;
+				break;
+		case ID_PARSER_MODE_LALR:
+				m_parser_mode = ARSpace::PSR_LALR;
+				break;
+		default:
+				VERIFY(false);
+		}
+}
+
 static void AR_STDCALL report_func(const ARSpace::cfgReportInfo_t *report, void *context)
 {
 		switch(report->type)
@@ -240,4 +268,70 @@ void CGrammarDesignerDoc::OnToolsRebuildtags()
 
 				ARSpace::CFG_DestroyGrammarConfig(cfg);
 		}
+}
+
+
+void CGrammarDesignerDoc::OnUpdateParserModeLalr(CCmdUI *pCmdUI)
+{
+		// TODO: Add your command update UI handler code here
+		pCmdUI->SetCheck(m_parser_mode == ARSpace::PSR_LALR);
+}
+
+void CGrammarDesignerDoc::OnUpdateParserModeLr(CCmdUI *pCmdUI)
+{
+		// TODO: Add your command update UI handler code here
+		pCmdUI->SetCheck(m_parser_mode == ARSpace::PSR_LR1);
+}
+
+void CGrammarDesignerDoc::OnUpdateParserModeSlr(CCmdUI *pCmdUI)
+{
+		// TODO: Add your command update UI handler code here
+		pCmdUI->SetCheck(m_parser_mode == ARSpace::PSR_SLR);
+}
+
+
+void CGrammarDesignerDoc::OnEditGotoDecl()
+{
+		// TODO: Add your command handler code here
+		
+		CGrammarDesignerView *view = (CGrammarDesignerView*)reinterpret_cast<CGrammarDesignerView*>(m_viewList.GetHead());
+
+
+		CString sel = view->GetRichEditCtrl().GetSelText();
+
+		sel.TrimLeft();
+		sel.TrimRight();
+
+		if(!sel.IsEmpty())
+		{
+		
+				CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
+
+				CTagView &tag = main_frm->GetTagView();
+
+				const CSrcInfo *info = tag.LookupByName(sel);
+
+				if(info)
+				{
+						view->OnLocatePos(info->m_line, NULL);
+				}else
+				{
+						CString str;
+						str.Format(TEXT("The symbol \"%ls\" not declared"), sel.GetString());
+						view->MessageBox(str);
+				}
+		}
+	
+}
+
+void CGrammarDesignerDoc::OnUpdateEditGotoDecl(CCmdUI *pCmdUI)
+{
+		// TODO: Add your command update UI handler code here
+
+		CGrammarDesignerView *view = (CGrammarDesignerView*)reinterpret_cast<CGrammarDesignerView*>(m_viewList.GetHead());
+
+
+		CString sel = view->GetRichEditCtrl().GetSelText();
+		
+		pCmdUI->Enable(!sel.IsEmpty());
 }

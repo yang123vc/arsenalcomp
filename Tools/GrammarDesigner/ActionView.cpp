@@ -332,6 +332,67 @@ void	CActionView::DrawConflictView(const ARSpace::psrConflictView_t *view)
 }
 
 
+void	CActionView::DrawFirstFollowView(const ARSpace::psrFirstFollowView_t *view)
+{
+		size_t	i;
+		ASSERT(view != NULL);
+		
+		this->Clear();
+
+		
+
+		CRect rect;
+		this->GetWindowRect(&rect);
+
+		this->m_list.InsertColumn(0, TEXT("Name"), 0, rect.Width()/ 3 * 1);
+		this->m_list.InsertColumn(1, TEXT("Set"), 0, rect.Width() / 3 * 2);
+
+		this->m_list.InsertItem(0, TEXT("First Set:"));
+
+		for(i = 0; i < view->first_set.count; ++i)
+		{
+				LVITEM	lv;
+				memset(&lv, 0, sizeof(lv));
+				lv.mask   =   LVIF_TEXT;   
+				lv.pszText   =   (LPWSTR)view->first_set.name[i];
+				lv.cchTextMax   =  (int)(wcslen(lv.pszText) + 1);
+				lv.iItem   =  this->m_list.GetItemCount();
+				lv.iSubItem = 0;
+
+				this->m_list.InsertItem(&lv);
+
+				lv.pszText   =   (LPWSTR)view->first_set.name_set[i];
+				lv.cchTextMax   =  (int)(wcslen(lv.pszText) + 1);
+				lv.iSubItem = 1;
+				this->m_list.SetItem(&lv);
+		}
+		
+		this->m_list.InsertItem(this->m_list.GetItemCount(), TEXT(""));
+		this->m_list.InsertItem(this->m_list.GetItemCount(), TEXT(""));
+		this->m_list.InsertItem(this->m_list.GetItemCount(), TEXT(""));
+		this->m_list.InsertItem(this->m_list.GetItemCount(), TEXT("Follow Set:"));
+
+		for(i = 0; i < view->follow_set.count; ++i)
+		{
+				LVITEM	lv;
+				memset(&lv, 0, sizeof(lv));
+				lv.mask   =   LVIF_TEXT;   
+				lv.pszText   =   (LPWSTR)view->follow_set.name[i];
+				lv.cchTextMax   =  (int)(wcslen(lv.pszText) + 1);
+				lv.iItem   =  this->m_list.GetItemCount();
+				lv.iSubItem = 0;
+
+				this->m_list.InsertItem(&lv);
+
+				lv.pszText   =   (LPWSTR)view->follow_set.name_set[i];
+				lv.cchTextMax   =  (int)(wcslen(lv.pszText) + 1);
+				lv.iSubItem = 1;
+				this->m_list.SetItem(&lv);
+		}
+
+
+}
+
 void CActionView::Clear()
 {
 		this->m_list.OnEditClear();
