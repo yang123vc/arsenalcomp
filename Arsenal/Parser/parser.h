@@ -162,6 +162,7 @@ void	PSR_PrintParserConflict(const parser_t *parser, arString_t *out);
 size_t	PSR_CountParserConflict(const parser_t *parser);
 void	PSR_PrintParserActionTable(const parser_t *parser, arString_t *out, size_t width);
 
+/*action table view*/
 
 typedef struct __parser_action_item_view_tag
 {
@@ -179,7 +180,7 @@ void					PSR_DestroyParserActionView(const psrActionView_t *view);
 #define	PSR_IndexActionViewItem(_v, _n)			((_v)->item[(_n)])
 #define PSR_IndexActionViewAction(_v, _x,_y)	((_v)->action_tbl[AR_TBL_IDX_R((_x), (_y), (_v)->col)])
 
-
+/*conflict*/
 typedef struct __parser_conflict_item_tag
 {
 		wchar_t			*name;
@@ -197,6 +198,25 @@ typedef struct __parser_conflict_view_tag
 
 const	psrConflictView_t*		PSR_CreateParserConflictView(const parser_t *parser);
 void							PSR_DestroyParserConflictView(const psrConflictView_t *view);
+
+
+/*first follow view*/
+typedef struct __sym_tbl_view_tag
+{
+		wchar_t	**name;
+		wchar_t	**name_set;
+		size_t	count;
+		size_t	cap;
+}psrSymbolMapView_t;
+
+typedef struct __first_follow_view_tag
+{
+		psrSymbolMapView_t		first_set;
+		psrSymbolMapView_t		follow_set;
+}psrFirstFollowView_t;
+
+const psrFirstFollowView_t*		PSR_CreateParserFirstFollowView(const parser_t *parser);
+void							PSR_DestroyParserFirstFollowView(const psrFirstFollowView_t *view);
 
 AR_NAMESPACE_END
 

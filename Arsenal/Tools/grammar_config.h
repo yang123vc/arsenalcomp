@@ -131,6 +131,8 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t	*repor
 
 void			CFG_DestroyGrammarConfig(cfgConfig_t *cfg);
 
+parser_t*		CFG_GetCollectParser();
+void			CFG_DestroyCollectParser(parser_t *parser);
 
 /*void			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code);*/
 
