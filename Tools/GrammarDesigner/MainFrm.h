@@ -68,6 +68,8 @@ public:
 		CMFCMenuBar& GetMenuBar(void);
 		CMFCToolBar& GetToolBar(void);
 		CTagView&	GetTagView();
+		COutputWnd&		GetOutputView();
+public:
 		afx_msg void OnSize(UINT nType, int cx, int cy);
 
 public:

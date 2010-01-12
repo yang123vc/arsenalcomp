@@ -20,12 +20,15 @@ private:
 		typedef CTextFileBase::TEXTENCODING		EncodingType;
 		
 		EncodingType	m_encoding;
-		
 
 		ARSpace::psrModeType_t	m_parser_mode;
 		
 private:
 		CString			m_src_cache;
+
+private:
+		ArsenalCPP::Parser		*m_parser;
+		CString					m_build_src_bak;
 // Operations
 public:
 
@@ -48,12 +51,14 @@ protected:
 protected:
 	DECLARE_MESSAGE_MAP()
 public:
+		void OnEndcodingChange(UINT nID);
+public:
 		virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
 		virtual BOOL OnSaveDocument(LPCTSTR lpszPathName);
 protected:
 		virtual BOOL SaveModified();
 public:
-		void OnEndcodingChange(UINT nID);
+		
 		afx_msg void OnEndcodingChangeUI(CCmdUI *pCmdUI);
 		afx_msg void OnToolsRebuildtags();
 
@@ -63,6 +68,7 @@ public:
 		afx_msg void OnUpdateParserModeSlr(CCmdUI *pCmdUI);
 		afx_msg void OnEditGotoDecl();
 		afx_msg void OnUpdateEditGotoDecl(CCmdUI *pCmdUI);
+		afx_msg void OnParserBuild();
 };
 
 

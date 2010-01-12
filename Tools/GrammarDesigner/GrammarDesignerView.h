@@ -71,6 +71,7 @@ public:
 		afx_msg void OnUpdateSetrebuildtime1000ms(CCmdUI *pCmdUI);
 		afx_msg void OnUpdateSetrebuildtime3000ms(CCmdUI *pCmdUI);
 		afx_msg void OnUpdateSetrebuildtime5000ms(CCmdUI *pCmdUI);
+		afx_msg void OnUpdateSetrebuildtimeDisable(CCmdUI *pCmdUI);
 };
 
 #ifndef _DEBUG  // debug version in GrammarDesignerView.cpp

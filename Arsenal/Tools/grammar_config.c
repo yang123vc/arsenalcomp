@@ -1245,10 +1245,12 @@ static void		AR_STDCALL cfg_error(const psrToken_t *tok, const wchar_t *expected
 		wchar_t			*buf;
 		size_t			i;
 
+/*
 		if(tok->term_val == FAKE_EOI)
 		{
 				return;
 		}
+*/
 
 		if(ctx == NULL)return;
 

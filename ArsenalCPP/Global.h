@@ -61,6 +61,9 @@ public:
 		static Arsenal*	Get();
 };
 
+
+
+
 /*******************************PreDefined**********************************/
 
 class ARAPI DummyContext : public ARContext

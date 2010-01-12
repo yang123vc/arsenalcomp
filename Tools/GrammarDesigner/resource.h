@@ -82,6 +82,12 @@
 #define ID_SETREBUILDTIME_3000MS        32831
 #define ID_SETREBUILDTIME_5000MS        32832
 #define ID_SETREBUILDTIME_100MS         32833
+#define ID_POPUP_REBUILD                32834
+#define ID_TAGVIEW_REBUILD              32835
+#define ID_SETREBUILDTIME_DISABLE       32836
+#define ID_DOC_BUILD_PARSER             32837
+#define ID_PARSER_RUN                   32838
+#define ID_PARSER_BUILD                 32839
 #define ID_INDICATOR_LINE               59142
 #define ID_INDICATOR_COL                59143
 #define IDS_ACTVIEW_WND                 61204
@@ -94,7 +100,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        314
-#define _APS_NEXT_COMMAND_VALUE         32834
+#define _APS_NEXT_COMMAND_VALUE         32840
 #define _APS_NEXT_CONTROL_VALUE         1001
 #define _APS_NEXT_SYMED_VALUE           310
 #endif

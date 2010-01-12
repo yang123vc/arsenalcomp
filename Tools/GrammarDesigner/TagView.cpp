@@ -225,6 +225,10 @@ BEGIN_MESSAGE_MAP(CTagTree, CTreeCtrl)
 		ON_WM_CREATE()
 		ON_WM_LBUTTONDBLCLK()
 		ON_WM_LBUTTONDOWN()
+		ON_COMMAND(ID_TAGVIEW_FONT, &CTagTree::OnTagviewFont)
+		ON_WM_CONTEXTMENU()
+		ON_NOTIFY_REFLECT(NM_RCLICK, &CTagTree::OnNMRClick)
+		ON_COMMAND(ID_TAGVIEW_REBUILD, &CTagTree::OnTagviewRebuild)
 END_MESSAGE_MAP()
 
 
@@ -312,6 +316,73 @@ const CSrcInfo*	CTagTree::LookupByName(const CString &name)
 
 }
 
+
+
+void CTagTree::OnTagviewFont()
+{
+		// TODO: Add your command handler code here
+
+		LOGFONT lft;
+		m_font.GetLogFont(&lft);
+		CFontDialog		dlg(&lft);
+		
+		if(dlg.DoModal() == IDOK)
+		{
+				LOGFONT lf; 
+				dlg.GetCurrentFont(&lf);
+				m_font.Detach();
+				VERIFY(m_font.CreateFontIndirect(&lf));
+				this->SetFont(&m_font);
+		}
+}
+
+
+
+
+void CTagTree::OnContextMenu(CWnd* pWnd, CPoint point)
+{
+		// TODO: Add your message handler code here
+
+		CMenu menu;
+		menu.LoadMenu(IDR_MENU_TAGVIEW);
+
+		CMenu* pSumMenu = menu.GetSubMenu(0);
+	
+		((CWinAppEx*)AfxGetApp())->GetContextMenuManager()->ShowPopupMenu(pSumMenu->GetSafeHmenu(),point.x, point.y, this, TRUE);
+
+		SetFocus();
+}
+
+
+
+void CTagTree::OnNMRClick(NMHDR *pNMHDR, LRESULT *pResult)
+{
+		// TODO: Add your control notification handler code here
+		*pResult = 0;
+
+		CPoint pt;
+		GetCursorPos(&pt);
+		OnContextMenu(this, pt);
+}
+
+
+
+
+void CTagTree::OnTagviewRebuild()
+{
+		// TODO: Add your command handler code here
+		
+		
+		CView *pview = ((CFrameWnd*)::AfxGetMainWnd())->GetActiveView();
+
+		if(pview)
+		{
+				pview->SendMessage(WM_COMMAND, (WPARAM)ID_TOOLS_REBUILDTAGS); 
+		}
+}
+
+
+
 //////////////////////////////// CTagView//////////////////////////////////////////////////////////////
 
 IMPLEMENT_DYNAMIC(CTagView, CDockablePane)
@@ -329,6 +400,7 @@ CTagView::~CTagView()
 BEGIN_MESSAGE_MAP(CTagView, CDockablePane)
 		ON_WM_CREATE()
 		ON_WM_SIZE()
+		
 END_MESSAGE_MAP()
 
 

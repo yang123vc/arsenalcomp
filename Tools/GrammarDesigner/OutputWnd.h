@@ -33,6 +33,20 @@ public:
 		afx_msg void OnOutputwndFont();
 protected:
 		virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
+
+public:
+		enum MsgType{MSG_MESSAGE, MSG_ERROR};
+
+		struct Param
+		{
+				MsgType	type;
+				size_t	line;
+
+				Param(MsgType t = MSG_MESSAGE, size_t l = 0) : type(t), line(l) { }
+		};
+public:
+		void	Append(const CString &msg, const Param &param);
+		void	Clear();
 };
 
 
@@ -60,7 +74,8 @@ protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 public:
-		
+		void	Append(const CString &msg, const COutputList::Param &param = COutputList::Param());
+		void	Clear();	
 
 	DECLARE_MESSAGE_MAP()
 };

@@ -89,6 +89,10 @@ public:
 		afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 		afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 		afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+		afx_msg void OnTagviewFont();
+		afx_msg void OnContextMenu(CWnd* /*pWnd*/, CPoint /*point*/);
+		afx_msg void OnNMRClick(NMHDR *pNMHDR, LRESULT *pResult);
+		afx_msg void OnTagviewRebuild();
 };
 
 
@@ -120,5 +124,6 @@ public:
 		void	UpdateTag(const ARSpace::cfgConfig_t *cfg);
 		
 		const CSrcInfo*	LookupByName(const CString &name);
+
 };
 

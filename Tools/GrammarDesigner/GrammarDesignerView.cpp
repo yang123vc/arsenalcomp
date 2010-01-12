@@ -32,7 +32,7 @@ BEGIN_MESSAGE_MAP(CGrammarDesignerView, CRichEditView)
 		ON_WM_TIMER()
 		ON_WM_CLOSE()
 		
-		ON_COMMAND_RANGE(ID_SETREBUILDTIME_500MS, ID_SETREBUILDTIME_100MS, &CGrammarDesignerView::OnResetTimer)
+		ON_COMMAND_RANGE(ID_SETREBUILDTIME_500MS, ID_SETREBUILDTIME_DISABLE, &CGrammarDesignerView::OnResetTimer)
 
 		//ON_COMMAND(ID_TEST_TEST, &CGrammarDesignerView::OnTestTest)
 		
@@ -41,6 +41,7 @@ BEGIN_MESSAGE_MAP(CGrammarDesignerView, CRichEditView)
 		ON_UPDATE_COMMAND_UI(ID_SETREBUILDTIME_1000MS, &CGrammarDesignerView::OnUpdateSetrebuildtime1000ms)
 		ON_UPDATE_COMMAND_UI(ID_SETREBUILDTIME_3000MS, &CGrammarDesignerView::OnUpdateSetrebuildtime3000ms)
 		ON_UPDATE_COMMAND_UI(ID_SETREBUILDTIME_5000MS, &CGrammarDesignerView::OnUpdateSetrebuildtime5000ms)
+		ON_UPDATE_COMMAND_UI(ID_SETREBUILDTIME_DISABLE, &CGrammarDesignerView::OnUpdateSetrebuildtimeDisable)
 END_MESSAGE_MAP()
 
 // CGrammarDesignerView construction/destruction
@@ -456,6 +457,9 @@ void CGrammarDesignerView::OnResetTimer(UINT nID)
 		case ID_SETREBUILDTIME_5000MS:
 				m_timer_interval = 5000;
 				break;
+		case ID_SETREBUILDTIME_DISABLE:
+				m_timer_interval = INFINITE;
+				break;
 		default:
 				VERIFY(false);
 		}
@@ -512,4 +516,10 @@ void CGrammarDesignerView::OnUpdateSetrebuildtime5000ms(CCmdUI *pCmdUI)
 {
 		// TODO: Add your command update UI handler code here
 		pCmdUI->SetCheck(m_timer_interval == 5000);
+}
+
+void CGrammarDesignerView::OnUpdateSetrebuildtimeDisable(CCmdUI *pCmdUI)
+{
+		// TODO: Add your command update UI handler code here
+		pCmdUI->SetCheck(m_timer_interval == INFINITE);
 }
