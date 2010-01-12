@@ -76,6 +76,7 @@ BEGIN
     POPUP "Popup"
     BEGIN
         MENUITEM "&Font",                       ID_TAGVIEW_FONT
+        MENUITEM "&ReBuild",                    ID_TAGVIEW_REBUILD
     END
 END
 
@@ -91,62 +92,6 @@ END
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
 #endif //_WIN32
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Icon
-//
-
-// Icon with lowest ID value placed first to ensure application icon
-// remains consistent on all systems.
-IDR_MAINFRAME           ICON                    "res\\GrammarDesigner.ico"
-IDR_GrammarDesignerTYPE ICON                    "res\\GrammarDesignerDoc.ico"
-IDI_OUTPUT_WND          ICON                    "res\\output_wnd.ico"
-IDI_OUTPUT_WND_HC       ICON                    "res\\output_wnd_hc.ico"
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Bitmap
-//
-
-IDR_MAINFRAME           BITMAP                  "res\\Toolbar.bmp"
-IDR_MAINFRAME_256       BITMAP                  "res\\Toolbar256.bmp"
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Toolbar
-//
-
-IDR_MAINFRAME TOOLBAR  16, 16
-BEGIN
-    BUTTON      ID_FILE_NEW
-    BUTTON      ID_FILE_OPEN
-    BUTTON      ID_FILE_SAVE
-    SEPARATOR
-    BUTTON      ID_EDIT_CUT
-    BUTTON      ID_EDIT_COPY
-    BUTTON      ID_EDIT_PASTE
-    SEPARATOR
-    BUTTON      ID_FILE_PRINT
-    BUTTON      ID_APP_ABOUT
-    BUTTON      ID_EDIT_SELECT_ALL
-    BUTTON      ID_BUTTON32785
-END
-
-IDR_MAINFRAME_256 TOOLBAR  16, 16
-BEGIN
-    BUTTON      ID_FILE_NEW
-    BUTTON      ID_FILE_OPEN
-    BUTTON      ID_FILE_SAVE
-    SEPARATOR
-    BUTTON      ID_EDIT_CUT
-    BUTTON      ID_EDIT_COPY
-    BUTTON      ID_EDIT_PASTE
-    SEPARATOR
-    BUTTON      ID_FILE_PRINT
-    BUTTON      ID_APP_ABOUT
-END
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -218,7 +163,8 @@ BEGIN
             MENUITEM "&LR(1)",                      ID_PARSER_MODE_LR, CHECKED
             MENUITEM "L&ALR(1)",                    ID_PARSER_MODE_LALR, CHECKED
         END
-        MENUITEM "&Build",                      ID_BUILD_BUILD
+        MENUITEM "&Build",                      ID_PARSER_BUILD
+        MENUITEM "&Run",                        ID_PARSER_RUN
         MENUITEM "Show &ActionTable",           ID_PARSER_SHOWACTIONTABLE
         MENUITEM "Show &Conflict",              ID_PARSER_SHOWCONFLICT
         MENUITEM "Show &FirstFollow",           ID_PARSER_SHOWFIRSTFOLLOW
@@ -233,6 +179,7 @@ BEGIN
             MENUITEM "1000ms",                      ID_SETREBUILDTIME_1000MS, CHECKED
             MENUITEM "3000ms",                      ID_SETREBUILDTIME_3000MS, CHECKED
             MENUITEM "5000ms",                      ID_SETREBUILDTIME_5000MS, CHECKED
+            MENUITEM "Disable",                     ID_SETREBUILDTIME_DISABLE, CHECKED
         END
     END
     POPUP "&Help"
@@ -279,6 +226,62 @@ BEGIN
     MENUITEM "Office 2007 (B&lack Style)",  ID_VIEW_APPLOOK_OFF_2007_BLACK
     MENUITEM "Office 2007 (&Silver Style)", ID_VIEW_APPLOOK_OFF_2007_SILVER
     MENUITEM "Office 2007 (&Aqua Style)",   ID_VIEW_APPLOOK_OFF_2007_AQUA
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\GrammarDesigner.ico"
+IDR_GrammarDesignerTYPE ICON                    "res\\GrammarDesignerDoc.ico"
+IDI_OUTPUT_WND          ICON                    "res\\output_wnd.ico"
+IDI_OUTPUT_WND_HC       ICON                    "res\\output_wnd_hc.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDR_MAINFRAME           BITMAP                  "res\\Toolbar.bmp"
+IDR_MAINFRAME_256       BITMAP                  "res\\Toolbar256.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Toolbar
+//
+
+IDR_MAINFRAME TOOLBAR  16, 16
+BEGIN
+    BUTTON      ID_FILE_NEW
+    BUTTON      ID_FILE_OPEN
+    BUTTON      ID_FILE_SAVE
+    SEPARATOR
+    BUTTON      ID_EDIT_CUT
+    BUTTON      ID_EDIT_COPY
+    BUTTON      ID_EDIT_PASTE
+    SEPARATOR
+    BUTTON      ID_FILE_PRINT
+    BUTTON      ID_APP_ABOUT
+    BUTTON      ID_EDIT_SELECT_ALL
+    BUTTON      ID_BUTTON32785
+END
+
+IDR_MAINFRAME_256 TOOLBAR  16, 16
+BEGIN
+    BUTTON      ID_FILE_NEW
+    BUTTON      ID_FILE_OPEN
+    BUTTON      ID_FILE_SAVE
+    SEPARATOR
+    BUTTON      ID_EDIT_CUT
+    BUTTON      ID_EDIT_COPY
+    BUTTON      ID_EDIT_PASTE
+    SEPARATOR
+    BUTTON      ID_FILE_PRINT
+    BUTTON      ID_APP_ABOUT
 END
 
 

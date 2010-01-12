@@ -29,6 +29,32 @@ COutputList::~COutputList()
 }
 
 
+
+void	COutputList::Append(const CString &msg, const Param &param)
+{
+		int idx = this->AddString(msg);
+		Param *ptr = new Param;
+		*ptr = param;
+		this->SetItemDataPtr(idx, (void*)ptr);
+}
+
+
+void	COutputList::Clear()
+{
+		for(int i = 0; i < this->GetCount(); ++i)
+		{
+				Param *ptr = (Param*)this->GetItemData(i);
+				
+				if(ptr != NULL)
+				{
+						delete ptr;
+				}
+		}
+
+		this->ResetContent();
+
+}
+
 BEGIN_MESSAGE_MAP(COutputList, CListBox)
 	ON_WM_CONTEXTMENU()
 	ON_COMMAND(ID_EDIT_COPY, OnEditCopy)
@@ -84,7 +110,7 @@ void COutputList::OnEditCopy()
 
 void COutputList::OnEditClear()
 {
-		this->ResetContent();
+		Clear();
 }
 
 
@@ -107,6 +133,25 @@ void COutputList::OnLButtonDblClk(UINT nFlags, CPoint point)
 		// TODO: Add your message handler code here and/or call default
 		
 		CListBox::OnLButtonDblClk(nFlags, point);
+
+		int idx = this->GetCurSel();
+
+		if(idx != -1)
+		{
+				Param *ptr = (Param*)this->GetItemData(idx);
+
+				if(ptr->type != MSG_MESSAGE)
+				{
+						CView *pview = ((CFrameWnd*)::AfxGetMainWnd())->GetActiveView();
+
+						if(pview)
+						{
+								pview->SendMessage(ID_EDIT_LOCATE_POS, ptr->line);
+						}
+				}
+		}
+
+		
 }
 
 
@@ -120,8 +165,10 @@ int COutputList::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		// TODO:  Add your specialized creation code here
 		this->SetFont(&m_font);
 
-		this->AddString(TEXT(__FUNCSIG__));
-
+		/*this->AddString(TEXT(__FUNCSIG__));
+		Param param;
+		this->Append(TEXT(__FUNCSIG__), param);
+		*/
 		return 0;
 }
 
@@ -259,3 +306,12 @@ void COutputWnd::OnSize(UINT nType, int cx, int cy)
 }
 
 
+void	COutputWnd::Append(const CString &msg, const COutputList::Param &param)
+{
+		m_output.Append(msg, param);
+}
+
+void COutputWnd::Clear()
+{
+		m_output.Clear();
+}

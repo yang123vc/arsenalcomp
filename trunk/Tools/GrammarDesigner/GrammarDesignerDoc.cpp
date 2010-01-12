@@ -33,6 +33,7 @@ BEGIN_MESSAGE_MAP(CGrammarDesignerDoc, CDocument)
 		ON_UPDATE_COMMAND_UI(ID_PARSER_MODE_SLR, &CGrammarDesignerDoc::OnUpdateParserModeSlr)
 		ON_COMMAND(ID_EDIT_GOTO_DECL, &CGrammarDesignerDoc::OnEditGotoDecl)
 		ON_UPDATE_COMMAND_UI(ID_EDIT_GOTO_DECL, &CGrammarDesignerDoc::OnUpdateEditGotoDecl)
+		ON_COMMAND(ID_PARSER_BUILD, &CGrammarDesignerDoc::OnParserBuild)
 END_MESSAGE_MAP()
 
 
@@ -210,7 +211,8 @@ void CGrammarDesignerDoc::OnChangeParserMode(UINT nID)
 		}
 }
 
-static void AR_STDCALL report_func(const ARSpace::cfgReportInfo_t *report, void *context)
+
+static void AR_STDCALL report_tag_func(const ARSpace::cfgReportInfo_t *report, void *context)
 {
 		switch(report->type)
 		{
@@ -255,7 +257,7 @@ void CGrammarDesignerDoc::OnToolsRebuildtags()
 				return;
 		}
 
-		ARSpace::cfgReport_t	report = {report_func, NULL};
+		ARSpace::cfgReport_t	report = {report_tag_func, NULL};
 		ARSpace::cfgConfig_t *cfg = ARSpace::CFG_CollectGrammarConfig(str.GetString(), &report);
 
 		if(cfg != NULL)
@@ -330,8 +332,89 @@ void CGrammarDesignerDoc::OnUpdateEditGotoDecl(CCmdUI *pCmdUI)
 
 		CGrammarDesignerView *view = (CGrammarDesignerView*)reinterpret_cast<CGrammarDesignerView*>(m_viewList.GetHead());
 
-
 		CString sel = view->GetRichEditCtrl().GetSelText();
-		
+		sel.TrimLeft();
+		sel.TrimRight();
 		pCmdUI->Enable(!sel.IsEmpty());
+}
+
+
+
+
+static void AR_STDCALL report_build_func(const ARSpace::cfgReportInfo_t *report, void *context)
+{
+		COutputWnd *output;
+		COutputList::Param		param;
+		CString str;
+		ASSERT(context != NULL);
+
+		output = (COutputWnd*)context;
+
+		switch(report->type)
+		{
+		case ARSpace::CFG_REPORT_MESSAGE_T:
+				param.type = COutputList::MSG_MESSAGE;
+				param.line = 0;
+				output->Append(report->message, param);
+				//AR_printf(L"%ls\r\n", report->message);
+				break;
+		case ARSpace::CFG_REPORT_ERROR_T:
+				str.Format(TEXT("%ls : %d"), report->message, report->err_level);
+				param.type = COutputList::MSG_ERROR;
+				param.line = report->tok->line;
+				output->Append(str, param);
+				break;
+		case ARSpace::CFG_REPORT_ERR_LEX_T:
+				str.Format(TEXT("Lex error %ls"), report->message);
+				param.type = COutputList::MSG_ERROR;
+				param.line = report->tok->line;
+				output->Append(str, param);
+
+				//::AfxMessageBox(report->message);
+				//AR_printf(L"lex error %ls\r\n", report->message);
+				break;
+		case ARSpace::CFG_REPORT_ERR_SYNTAX_T:
+				str.Format(TEXT("Syntax error %ls"), report->message);
+				param.type = COutputList::MSG_ERROR;
+				param.line = report->tok->line;
+				output->Append(str, param);
+				break;
+		default:
+				AR_ASSERT(false);
+		}
+}
+
+
+void CGrammarDesignerDoc::OnParserBuild()
+{
+		// TODO: Add your command handler code here
+
+
+		CGrammarDesignerView *view = (CGrammarDesignerView*)reinterpret_cast<CGrammarDesignerView*>(m_viewList.GetHead());
+
+		CString str;
+		view->GetRichEditCtrl().GetWindowText(str);
+
+		
+		CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
+		
+		COutputWnd		&output = main_frm->GetOutputView();
+		
+		output.Clear();
+
+		ARSpace::cfgReport_t	report = {report_build_func, (void*)&output};
+		ARSpace::cfgConfig_t *cfg = ARSpace::CFG_CollectGrammarConfig(str.GetString(), &report);
+		
+		if(cfg == NULL || cfg->has_error)
+		{
+				if(cfg)ARSpace::CFG_DestroyGrammarConfig(cfg);
+				
+				output.Append(TEXT("Build Parser failed!"));
+		}else
+		{
+
+
+				output.Append(TEXT("Build Parser successful!"));
+		}
+		main_frm->ShowPane(&output, TRUE, TRUE, TRUE);
 }

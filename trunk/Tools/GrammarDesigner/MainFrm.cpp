@@ -415,6 +415,10 @@ CTagView&	CMainFrame::GetTagView()
 
 }
 
+COutputWnd&		CMainFrame::GetOutputView()
+{
+		return this->m_wndOutput;
+}
 
 void CMainFrame::OnUpdateStatusBarPanes(CCmdUI* pCmdUI)
 {

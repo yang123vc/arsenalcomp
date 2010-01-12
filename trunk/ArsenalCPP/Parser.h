@@ -92,7 +92,8 @@ public:
 		const psrConflictView_t*		CreateConflictView()const;
 		void							DestroyConflictView(const psrConflictView_t *view);
 
-
+		const psrFirstFollowView_t*		CreateFirstFollowView()const;
+		void							DestroyFirstFollowView(const psrFirstFollowView_t *view);
 };
 
 
