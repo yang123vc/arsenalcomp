@@ -42,6 +42,7 @@ BEGIN_MESSAGE_MAP(CGrammarDesignerView, CRichEditView)
 		ON_UPDATE_COMMAND_UI(ID_SETREBUILDTIME_3000MS, &CGrammarDesignerView::OnUpdateSetrebuildtime3000ms)
 		ON_UPDATE_COMMAND_UI(ID_SETREBUILDTIME_5000MS, &CGrammarDesignerView::OnUpdateSetrebuildtime5000ms)
 		ON_UPDATE_COMMAND_UI(ID_SETREBUILDTIME_DISABLE, &CGrammarDesignerView::OnUpdateSetrebuildtimeDisable)
+		ON_WM_CHAR()
 END_MESSAGE_MAP()
 
 // CGrammarDesignerView construction/destruction
@@ -387,7 +388,7 @@ LRESULT CGrammarDesignerView::OnLocatePos(WPARAM wp, LPARAM lp)
 		this->GetRichEditCtrl().GetFocus();
 
 		
-		int index = this->GetRichEditCtrl().LineIndex((size_t)wp);
+		int index = this->GetRichEditCtrl().LineIndex((int)wp);
 
 		if(index != -1)
 		{
@@ -403,6 +404,7 @@ LRESULT CGrammarDesignerView::OnLocatePos(WPARAM wp, LPARAM lp)
 		
 		return 0L;
 }
+
 int CGrammarDesignerView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 		if (CRichEditView::OnCreate(lpCreateStruct) == -1)
@@ -522,4 +524,11 @@ void CGrammarDesignerView::OnUpdateSetrebuildtimeDisable(CCmdUI *pCmdUI)
 {
 		// TODO: Add your command update UI handler code here
 		pCmdUI->SetCheck(m_timer_interval == INFINITE);
+}
+
+void CGrammarDesignerView::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
+{
+		// TODO: Add your message handler code here and/or call default
+
+		CRichEditView::OnChar(nChar, nRepCnt, nFlags);
 }

@@ -190,8 +190,10 @@ static void CFG_InsertToNodeList(cfgNodeList_t *lst, cfgNode_t *node)
 static void CFG_InitConfig(cfgConfig_t *cfg, cfgNodeList_t *name, cfgNodeList_t *token, cfgNodeList_t *prec, cfgNodeList_t *rule)
 {
 		size_t i;
-		AR_ASSERT(cfg != NULL);
+		size_t tmp_tok_val = PSR_MIN_TOKENVAL;
 
+		AR_ASSERT(cfg != NULL);
+		
 		AR_memset(cfg, 0, sizeof(*cfg));
 
 		if(name)
@@ -218,7 +220,7 @@ static void CFG_InitConfig(cfgConfig_t *cfg, cfgNodeList_t *name, cfgNodeList_t 
 		if(token)
 		{
 				size_t k;
-				size_t tmp_tok_val = 1;
+				
 
 				/*cfg->tok_cnt = token->count + 1;*/
 
@@ -290,6 +292,8 @@ RE_CHECK_POINT:
 								if(prec->lst[i]->prec.prec_tok)
 								{
 										cfg->prec[cfg->prec_cnt].prec_tok = AR_wcsdup(prec->lst[i]->prec.prec_tok);
+										cfg->prec[cfg->prec_cnt].prec_tok_val = tmp_tok_val++;
+										cfg->prec[cfg->prec_cnt].prec_level = i + 1;
 										cfg->prec_cnt++;
 								}
 						}
@@ -1431,42 +1435,6 @@ void			CFG_DestroyGrammarConfig(cfgConfig_t *cfg)
 		CFG_DestroyNode((cfgNode_t*)cfg);
 
 }
-
-
-parser_t*		CFG_GetCollectParser()
-{
-		psrGrammar_t	*gmr;
-		
-		arIOCtx_t	io_ctx ;
-		psrCtx_t	psr_ctx;
-
-		io_ctx.on_error = cfg_on_error;
-		io_ctx.on_print = cfg_on_print;
-		io_ctx.ctx = NULL;
-
-		psr_ctx.error_f = cfg_error;
-		psr_ctx.free_f = cfg_free;
-		psr_ctx.ctx = NULL;
-		
-		gmr =  __build_grammar(&psr_ctx, &io_ctx);
-		return __build_parser(gmr);
-}
-
-
-
-void			CFG_DestroyCollectParser(parser_t *parser)
-{
-		const psrGrammar_t *gmr;
-		AR_ASSERT(parser != NULL && parser->grammar != NULL);
-
-		gmr = parser->grammar;
-
-		PSR_DestroyParser(parser);
-
-		PSR_DestroyGrammar((psrGrammar_t*)gmr);
-		
-}
-
 
 AR_NAMESPACE_END
 

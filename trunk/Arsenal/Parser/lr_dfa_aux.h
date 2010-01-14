@@ -31,14 +31,14 @@ typedef struct __follow_record_tag
 		psrSymbList_t							lst;
 }psrFollowRec_t;
 
-AR_INLINE void PSR_InitFollowRec(psrFollowRec_t *rec)
+static AR_INLINE void PSR_InitFollowRec(psrFollowRec_t *rec)
 {
 		AR_memset(rec, 0, sizeof(*rec));
 		PSR_InitSymbList(&rec->lst);
 		rec->is_init = true;
 }
 
-AR_INLINE void PSR_UnInitFollowRec(psrFollowRec_t *rec)
+static AR_INLINE void PSR_UnInitFollowRec(psrFollowRec_t *rec)
 {
 		PSR_UnInitSymbList(&rec->lst);
 		rec->is_init = false;
@@ -53,7 +53,7 @@ typedef struct __follow_table_tag
 }psrFollow_t;
 
 
-AR_INLINE bool_t  __calc_follow(const psrSymbList_t *body, size_t start_idx, const psrSymbMap_t *first_set, psrSymbList_t *out)
+static AR_INLINE bool_t  __calc_follow(const psrSymbList_t *body, size_t start_idx, const psrSymbMap_t *first_set, psrSymbList_t *out)
 {
 		size_t i;
 		bool_t has_epsilon;
@@ -97,7 +97,7 @@ AR_INLINE bool_t  __calc_follow(const psrSymbList_t *body, size_t start_idx, con
 }
 
 
-AR_INLINE void PSR_InitFollowTbl(psrFollow_t *tbl, const psrGrammar_t *grammar)
+static AR_INLINE void PSR_InitFollowTbl(psrFollow_t *tbl, const psrGrammar_t *grammar)
 {
 		psrSymbMap_t	first_set;
 		size_t i,j;
@@ -140,14 +140,14 @@ AR_INLINE void PSR_InitFollowTbl(psrFollow_t *tbl, const psrGrammar_t *grammar)
 		PSR_UnInitSymbMap(&first_set);
 }
 
-AR_INLINE void PSR_UnInitFollowTbl(psrFollow_t *tbl)
+static AR_INLINE void PSR_UnInitFollowTbl(psrFollow_t *tbl)
 {
 		size_t i,j;
 		for(i = 0; i < tbl->row; ++i)
 		{
 				for(j = 0; j < tbl->col; ++j)
 				{
-						psrFollowRec_t *first_rec = &tbl->tbl[AR_TBL_IDX_R(0, i, tbl->col)];
+						psrFollowRec_t *first_rec = &tbl->tbl[AR_TBL_IDX_R(i, j, tbl->col)];
 						if(first_rec->is_init)PSR_UnInitFollowRec(first_rec);
 				}
 		}
@@ -156,7 +156,7 @@ AR_INLINE void PSR_UnInitFollowTbl(psrFollow_t *tbl)
 }
 
 
-AR_INLINE  const psrFollowRec_t* PSR_GetFollowRecord(const psrFollow_t *tbl, size_t rule_idx, size_t symb_idx)
+static AR_INLINE  const psrFollowRec_t* PSR_GetFollowRecord(const psrFollow_t *tbl, size_t rule_idx, size_t symb_idx)
 {
 		const psrFollowRec_t *rec;
 		rec = &tbl->tbl[AR_TBL_IDX_R(rule_idx, symb_idx, tbl->col)];
@@ -184,12 +184,12 @@ typedef struct lr1_closure_table_tag
 		
 }psrLR1ClosureTbl_t;
 
-AR_INLINE void PSR_InitLR1ClosureTbl(psrLR1ClosureTbl_t *tbl)
+static AR_INLINE void PSR_InitLR1ClosureTbl(psrLR1ClosureTbl_t *tbl)
 {
 		AR_memset(tbl, 0, sizeof(*tbl));
 }
 
-AR_INLINE void PSR_UnInitLR1ClosureTbl(psrLR1ClosureTbl_t	*tbl)
+static AR_INLINE void PSR_UnInitLR1ClosureTbl(psrLR1ClosureTbl_t	*tbl)
 {
 		size_t i;
 		AR_ASSERT(tbl != NULL);
@@ -213,7 +213,7 @@ AR_INLINE void PSR_UnInitLR1ClosureTbl(psrLR1ClosureTbl_t	*tbl)
 
 extern void PSR_Calc_LR1_Closure(psrLRItemTbl_t *closure, const psrGrammar_t *grammar, const psrFollow_t *tbl);
 
-AR_INLINE const psrLRItemTbl_t* PSR_GetLR1Closure(psrLR1ClosureTbl_t	*tbl, const psrLRItem_t *item, const psrGrammar_t *grammar, const psrFollow_t *follow_tbl)
+static AR_INLINE const psrLRItemTbl_t* PSR_GetLR1Closure(psrLR1ClosureTbl_t	*tbl, const psrLRItem_t *item, const psrGrammar_t *grammar, const psrFollow_t *follow_tbl)
 {
 		psrLR1ClosureRec_t		*rec;
 		size_t	idx;

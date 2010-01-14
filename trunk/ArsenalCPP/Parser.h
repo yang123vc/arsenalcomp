@@ -31,13 +31,39 @@ public:
 };
 
 
+class ARAPI DummyNodeContext : public NodeContext
+{
+public:
+		virtual void	Free(Node *node)
+		{
+				delete node;
+		}
+		
+		virtual void	Error(const psrToken_t *tok, const wchar_t *expected[], size_t count)
+		{
+
+		}
+public:
+		DummyNodeContext()
+		{
+
+		}
+
+		virtual ~DummyNodeContext()
+		{
+
+		}
+};
+
+
+
 
 
 class ARAPI Parser;
 
 class ARAPI Grammar : NonCopyable
 {
-private:
+public:
 		psrGrammar_t	*m_grammar;
 		NodeContext		*m_psr_ctx;
 		ARContext		*m_io_ctx;
@@ -46,6 +72,9 @@ private:
 public:
 		Grammar(NodeContext *psr_ctx, ARContext		*io_ctx);
 		~Grammar();
+
+		void	ResetIOContext(ARContext		*io_ctx);
+		void	ResetParseContext(NodeContext *psr_ctx);
 public:
 		bool	Insert(const wchar_t *name, size_t term_val, psrAssocType_t assoc = PSR_ASSOC_NOASSOC, size_t prec = 0, psrTermFunc_t	leaf_f = NULL);
 		bool	Insert(const wchar_t *rule, const wchar_t *prec_tok = NULL, psrRuleFunc_t rule_f = NULL, size_t auto_ret = 0);
@@ -58,6 +87,7 @@ public:
 		bool	IsLeftRecursion()const;
 public:
 		ARContext*		IOContext();
+
 };
 
 

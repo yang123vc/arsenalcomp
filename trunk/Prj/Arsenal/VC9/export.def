@@ -54,6 +54,7 @@ LEX_ClearError
 LEX_Skip
 LEX_ResetInput			
 
+LEX_ResetIOContext
 
 ;Grammar
 
@@ -82,10 +83,12 @@ PSR_CalcFirstSet
 PSR_GetSymbolFromSymbMap 
 PSR_PrintSymbolMap
 
+PSR_ResetGrammarIOContext
+PSR_ResetGrammarParseContext
 
-CFG_CollectGrammarConfig
-CFG_DestroyGrammarConfig
-;CFG_ConfigToCode
+
+
+
 
 ;Parser
 
@@ -114,5 +117,8 @@ PSR_DestroyParserConflictView
 PSR_CreateParserFirstFollowView
 PSR_DestroyParserFirstFollowView
 
-CFG_GetCollectParser
-CFG_DestroyCollectParser
+;Tools
+
+
+CFG_CollectGrammarConfig
+CFG_DestroyGrammarConfig

@@ -34,6 +34,12 @@ BEGIN_MESSAGE_MAP(CGrammarDesignerDoc, CDocument)
 		ON_COMMAND(ID_EDIT_GOTO_DECL, &CGrammarDesignerDoc::OnEditGotoDecl)
 		ON_UPDATE_COMMAND_UI(ID_EDIT_GOTO_DECL, &CGrammarDesignerDoc::OnUpdateEditGotoDecl)
 		ON_COMMAND(ID_PARSER_BUILD, &CGrammarDesignerDoc::OnParserBuild)
+		ON_COMMAND(ID_PARSER_SHOWACTIONTABLE, &CGrammarDesignerDoc::OnParserShowactiontable)
+		ON_UPDATE_COMMAND_UI(ID_PARSER_SHOWACTIONTABLE, &CGrammarDesignerDoc::OnUpdateParserShowactiontable)
+		ON_COMMAND(ID_PARSER_SHOWCONFLICT, &CGrammarDesignerDoc::OnParserShowconflict)
+		ON_UPDATE_COMMAND_UI(ID_PARSER_SHOWCONFLICT, &CGrammarDesignerDoc::OnUpdateParserShowconflict)
+		ON_COMMAND(ID_PARSER_SHOWFIRSTFOLLOW, &CGrammarDesignerDoc::OnParserShowfirstfollow)
+		ON_UPDATE_COMMAND_UI(ID_PARSER_SHOWFIRSTFOLLOW, &CGrammarDesignerDoc::OnUpdateParserShowfirstfollow)
 END_MESSAGE_MAP()
 
 
@@ -42,13 +48,18 @@ END_MESSAGE_MAP()
 CGrammarDesignerDoc::CGrammarDesignerDoc()
 {
 	// TODO: add one-time construction code here
-		m_encoding = CTextFileBase::ASCII;
-		m_parser_mode = ARSpace::PSR_LALR;
+		m_encoding		= CTextFileBase::ASCII;
+		m_parser_mode	= ARSpace::PSR_LALR;
+		m_lexer			= NULL;
+		m_parser		=	NULL;
+		
 }
 
 CGrammarDesignerDoc::~CGrammarDesignerDoc()
 {
+		ClearParser();
 }
+
 
 BOOL CGrammarDesignerDoc::OnNewDocument()
 {
@@ -385,16 +396,191 @@ static void AR_STDCALL report_build_func(const ARSpace::cfgReportInfo_t *report,
 }
 
 
+
+
+void	CGrammarDesignerDoc::ClearParser()
+{
+		
+		ASSERT((m_lexer == NULL && m_parser == NULL) || (m_lexer != NULL && m_parser != NULL));
+		
+		if(m_lexer != NULL && m_parser != NULL)
+		{
+				delete m_lexer;
+				delete m_parser;
+		}
+		/*
+
+		if(m_lexer != NULL)
+		{
+				delete m_lexer;
+		}
+
+		if(m_parser != NULL)
+		{
+				delete m_parser;
+		}
+
+		*/
+}
+
+
+
+class ReportIOContext : public ArsenalCPP::ARContext
+{
+public:
+		COutputWnd		&m_output;
+public:
+		virtual void OnError(int_t level, const wchar_t *msg)
+		{
+				m_output.Append(msg);
+		}
+
+		virtual void OnPrint(const wchar_t *msg)
+		{
+				m_output.Append(msg);
+		}
+public:
+		ReportIOContext(COutputWnd &output) : m_output(output)
+		{
+
+		}
+
+		virtual ~ReportIOContext()
+		{
+		}
+};
+
+
+
+
+
+
+bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
+{
+		
+		CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
+		COutputWnd		&output = main_frm->GetOutputView();
+
+		bool has_error = false;
+		
+		ClearParser();
+
+		ArsenalCPP::Lexer		*lexer = new ArsenalCPP::Lexer(new ReportIOContext(output));
+		ArsenalCPP::Grammar		*grammar = new ArsenalCPP::Grammar(new ArsenalCPP::DummyNodeContext(), new ReportIOContext(output));
+
+
+
+		for(size_t i = 0; i < cfg->name_cnt; ++i)
+		{
+				const ARSpace::cfgName_t		*name = &cfg->name[i];
+				if(!lexer->Insert(name->name, name->regex))
+				{
+						CString msg;
+						msg.Format(TEXT("Name Error : \"%ls : %ls\""), name->name, name->regex);
+						output.Append(msg, COutputList::MSG_ERROR, name->line);
+						has_error = true;
+				}
+		}
+
+		for(size_t i = 0; i < cfg->tok_cnt; ++i)
+		{
+				const ARSpace::cfgToken_t		*tok = &cfg->tok[i];
+
+				if(!lexer->Insert(tok->regex, tok->tokval, tok->lex_prec, tok->is_skip))
+				{
+						CString msg;
+						msg.Format(TEXT("Token Error :  \"%ls : %ls\""), tok->name, tok->regex);
+						output.Append(msg, COutputList::MSG_ERROR, tok->line);
+						has_error = true;
+						continue;
+				}
+
+				if(tok->is_skip || tok->tokval == 0)continue;
+				if(!grammar->Insert(tok->name, tok->tokval))
+				{
+						CString msg;
+
+						msg.Format(TEXT("Token Error : \"%ls : %ls\""), tok->name, tok->regex);
+						output.Append(msg, COutputList::MSG_ERROR, tok->line);
+						has_error = true;
+				}
+		}
+
+		
+		for(size_t i = 0; i < cfg->prec_cnt; ++i)
+		{
+				const ARSpace::cfgPrec_t		*prec = &cfg->prec[i];
+				ASSERT(prec->prec_tok != NULL);
+				if(!grammar->Insert(prec->prec_tok, prec->prec_tok_val, prec->assoc, prec->prec_level))
+				{
+						CString msg;
+						msg.Format(TEXT("Prec Error : \"%ls\"!"), prec->prec_tok);
+						output.Append(msg, COutputList::MSG_ERROR, prec->line);
+						has_error = true;
+				}
+		}
+
+
+		for(size_t i = 0; i < cfg->rule_cnt; ++i)
+		{
+				const ARSpace::cfgRule_t		*rule = &cfg->rule[i];
+				CString str;
+				str.Format(TEXT("%ls : %ls"), rule->lhs, rule->rhs);
+				if(!grammar->Insert(str.GetString(), rule->prec_tok))
+				{
+						CString msg;
+						msg.Format(TEXT("Rule Error : \"%ls\"!"), str.GetString());
+						output.Append(msg, COutputList::MSG_ERROR, rule->line);
+						has_error = true;
+				}
+		}
+
+		if(!grammar->IsValid())
+		{
+				has_error = true;
+		}
+
+
+		if(has_error)
+		{
+				delete lexer;
+				delete grammar;
+				return false;
+		}else
+		{
+				DWORD beg, end;
+
+				m_lexer = lexer;
+				m_lexer->Generate();
+
+
+				beg = GetTickCount();
+				
+				m_parser = new ArsenalCPP::Parser(grammar, m_parser_mode);
+				
+				end = GetTickCount();
+
+				CString str;
+
+				str.Format(TEXT("Build Parser Tick count %d"), end - beg);
+
+				output.Append(str);
+				
+				return true;
+		}
+}
+
+
+
 void CGrammarDesignerDoc::OnParserBuild()
 {
 		// TODO: Add your command handler code here
-
 
 		CGrammarDesignerView *view = (CGrammarDesignerView*)reinterpret_cast<CGrammarDesignerView*>(m_viewList.GetHead());
 
 		CString str;
 		view->GetRichEditCtrl().GetWindowText(str);
-
+		
 		
 		CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
 		
@@ -405,16 +591,103 @@ void CGrammarDesignerDoc::OnParserBuild()
 		ARSpace::cfgReport_t	report = {report_build_func, (void*)&output};
 		ARSpace::cfgConfig_t *cfg = ARSpace::CFG_CollectGrammarConfig(str.GetString(), &report);
 		
-		if(cfg == NULL || cfg->has_error)
+		if(cfg == NULL || cfg->has_error || !BuildParser(cfg))
 		{
-				if(cfg)ARSpace::CFG_DestroyGrammarConfig(cfg);
-				
-				output.Append(TEXT("Build Parser failed!"));
-		}else
-		{
-
-
-				output.Append(TEXT("Build Parser successful!"));
+				goto FAILED_POINT;		
 		}
+
+
+		if(cfg)ARSpace::CFG_DestroyGrammarConfig(cfg);
+		output.Append(TEXT("Build Parser successful!"));
 		main_frm->ShowPane(&output, TRUE, TRUE, TRUE);
+		return;
+
+FAILED_POINT:
+		if(cfg)ARSpace::CFG_DestroyGrammarConfig(cfg);
+		output.Append(TEXT("Build Parser failed!"));
+		main_frm->ShowPane(&output, TRUE, TRUE, TRUE);
+		return;
+}
+
+
+void CGrammarDesignerDoc::OnParserShowactiontable()
+{
+		// TODO: Add your command handler code here
+
+		ASSERT(m_parser != NULL);
+
+		const ARSpace::psrActionView_t		*view = m_parser->CreateActionView();
+
+		ASSERT(view != NULL);
+
+		CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
+		CActionView	&action = main_frm->GetActionView();
+
+		action.DrawActionView(view);
+		
+		m_parser->DestroyActionView(view);
+
+		main_frm->ShowPane(&action, TRUE, TRUE, TRUE);
+
+}
+
+void CGrammarDesignerDoc::OnUpdateParserShowactiontable(CCmdUI *pCmdUI)
+{
+		// TODO: Add your command update UI handler code here
+
+		pCmdUI->Enable(m_parser != NULL);
+}
+
+void CGrammarDesignerDoc::OnParserShowconflict()
+{
+		// TODO: Add your command handler code here
+		ASSERT(m_parser != NULL);
+
+		const ARSpace::psrConflictView_t		*view = m_parser->CreateConflictView();
+		
+
+		ASSERT(view != NULL);
+
+		CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
+		CActionView	&action = main_frm->GetActionView();
+
+		action.DrawConflictView(view);
+		
+		m_parser->DestroyConflictView(view);
+
+		main_frm->ShowPane(&action, TRUE, TRUE, TRUE);
+}
+
+
+void CGrammarDesignerDoc::OnUpdateParserShowconflict(CCmdUI *pCmdUI)
+{
+		// TODO: Add your command update UI handler code here
+		pCmdUI->Enable(m_parser != NULL);
+}
+
+void CGrammarDesignerDoc::OnParserShowfirstfollow()
+{
+		// TODO: Add your command handler code here
+
+		ASSERT(m_parser != NULL);
+
+		const ARSpace::psrFirstFollowView_t		*view = m_parser->CreateFirstFollowView();
+		
+
+		ASSERT(view != NULL);
+
+		CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
+		CActionView	&action = main_frm->GetActionView();
+		
+		action.DrawFirstFollowView(view);
+
+		m_parser->DestroyFirstFollowView(view);
+		main_frm->ShowPane(&action, TRUE, TRUE, TRUE);
+
+}
+
+void CGrammarDesignerDoc::OnUpdateParserShowfirstfollow(CCmdUI *pCmdUI)
+{
+		// TODO: Add your command update UI handler code here
+		pCmdUI->Enable(m_parser != NULL);
 }

@@ -93,6 +93,7 @@ public:
 		afx_msg void OnContextMenu(CWnd* /*pWnd*/, CPoint /*point*/);
 		afx_msg void OnNMRClick(NMHDR *pNMHDR, LRESULT *pResult);
 		afx_msg void OnTagviewRebuild();
+		afx_msg void OnDestroy();
 };
 
 

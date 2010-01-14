@@ -76,9 +76,47 @@ Grammar::~Grammar()
 		delete m_io_ctx;
 }
 
+
+void Grammar::ResetIOContext(ARContext		*io_ctx)
+{		
+		AR_ASSERT(io_ctx != NULL);
+
+		if(io_ctx != m_io_ctx)
+		{
+				delete m_io_ctx;
+				m_io_ctx = io_ctx;
+
+				arIOCtx_t		ar_io;
+				ar_io.on_print	= __io_print_func;
+				ar_io.on_error	= __io_error_func;
+				ar_io.ctx = (void*)m_io_ctx;
+				PSR_ResetGrammarIOContext(m_grammar, &ar_io);
+		}
+}
+
+void	Grammar::ResetParseContext(NodeContext *psr_ctx)
+{
+		AR_ASSERT(psr_ctx != NULL);
+
+		if(psr_ctx != m_psr_ctx)
+		{
+				delete m_psr_ctx;
+				m_psr_ctx = psr_ctx;
+				
+				psrCtx_t		ar_psr;
+				ar_psr.ctx = (void*)m_psr_ctx;
+				ar_psr.error_f = __error_func;
+				ar_psr.free_f = __free_func;
+
+				PSR_ResetGrammarParseContext(m_grammar, &ar_psr);
+
+		}
+}
+
+
 bool	Grammar::Insert(const wchar_t *name, size_t term_val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f)
 {
-		AR_ASSERT(name != NULL && leaf_f != NULL);
+		AR_ASSERT(name != NULL);
 		return PSR_InsertTerm(m_grammar, name, term_val, assoc, prec, leaf_f);
 }
 
@@ -294,7 +332,7 @@ const psrFirstFollowView_t*		Parser::CreateFirstFollowView()const
 		return PSR_CreateParserFirstFollowView(m_parser);
 }
 
-void							DestroyFirstFollowView(const psrFirstFollowView_t *view)
+void							Parser::DestroyFirstFollowView(const psrFirstFollowView_t *view)
 {
 		PSR_DestroyParserFirstFollowView(view);
 

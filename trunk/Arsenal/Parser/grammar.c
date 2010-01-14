@@ -133,7 +133,11 @@ psrRule_t* PSR_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, cons
 
 		AR_ASSERT(auto_ret <= body->count);
 
-		if(PSR_FindTermByName((psrTermInfoList_t*)term_list, head->name) != NULL) return NULL;
+		if(PSR_FindTermByName((psrTermInfoList_t*)term_list, head->name) != NULL)
+		{
+				AR_printf_ctx(ctx, L"Grammar Error: Duplicate Rule name <%ls>!\r\n", head->name);
+				return NULL;
+		}
 
 		if(prec_tok != NULL && PSR_FindTermByName((psrTermInfoList_t*)term_list, prec_tok) == NULL)
 		{
@@ -378,6 +382,20 @@ static void __init_grammar_component_unit(psrGrammar_t *grammar)
 }
 
 /******************************************************************************************************************/
+
+void					PSR_ResetGrammarIOContext(psrGrammar_t *gmr, const arIOCtx_t *io_ctx)
+{
+		AR_ASSERT(gmr != NULL && io_ctx != NULL);
+
+		gmr->io_ctx = io_ctx != NULL ? *io_ctx : *AR_global_ioctx();
+}
+
+void					PSR_ResetGrammarParseContext(psrGrammar_t *gmr, const psrCtx_t *psr_ctx)
+{
+		AR_ASSERT(gmr != NULL && psr_ctx != NULL);
+		gmr->psr_ctx = *psr_ctx;
+}
+
 psrGrammar_t*			PSR_CreateGrammar(const psrCtx_t *ctx, const arIOCtx_t *io_ctx)
 {
 		psrGrammar_t* gmr;
@@ -770,7 +788,7 @@ bool_t			PSR_CheckIsValidGrammar(const psrGrammar_t *grammar)
 								if(!is_ok)
 								{
 										/*AR_error(L"Grammar Error : The rule <%ls> not exist in this grammar\r\n", symb->name);*/
-										AR_printf_ctx((arIOCtx_t*)&grammar->io_ctx, L"Grammar Error : The rule <%ls> not exist in this grammar\r\n", symb->name);
+										AR_printf_ctx((arIOCtx_t*)&grammar->io_ctx, L"Grammar Error : The rule <%ls> not exist in this grammar <%ls>\r\n", symb->name, rule->head->name);
 										result = false;
 								}
 						}

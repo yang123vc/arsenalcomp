@@ -180,7 +180,7 @@ bool_t	LEX_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr)
 		if(RGX_FindFromNameSet(lex->name_tbl, name) != NULL)
 		{
 				/*AR_error( L"Lex Rule Error : Duplicate name defination %ls: %ls\r\n", name, expr);*/
-				AR_printf_ctx(&lex->io_ctx, L"Lex Rule Error : Duplicate name defination %ls: %ls\r\n", name, expr);
+				AR_printf_ctx(&lex->io_ctx, L"Lex Name Error : Duplicate name defination %ls: %ls\r\n", name, expr);
 				return false;
 		}
 
@@ -189,7 +189,7 @@ bool_t	LEX_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr)
 		if(res.node == NULL)
 		{
 				/*AR_error(L"Lex Rule Error : %ls: %ls\r\n", name, res.err.pos);*/
-				AR_printf_ctx(&lex->io_ctx, L"Lex Rule Error : %ls: %ls\r\n", name, res.err.pos);
+				AR_printf_ctx(&lex->io_ctx, L"Lex Name Error : %ls: %ls\r\n", name, res.err.pos);
 				return false;
 		}
 
@@ -235,7 +235,7 @@ bool_t	LEX_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action
 				/*AR_error(AR_LEX, L"Lex Rule Error : %d : %ls\n", action->type, res.err.pos);*/
 				/*AR_error(L"Lex Rule Error : %" AR_PLAT_INT_FMT L"d : %ls\n", (size_t)action->type, (size_t)res.err.pos);*/
 				
-				AR_printf_ctx(&lex->io_ctx, L"Lex Rule Error : %" AR_PLAT_INT_FMT L"d : %ls\n", (size_t)action->value, (size_t)res.err.pos);
+				AR_printf_ctx(&lex->io_ctx, L"Lex Rule Error : %" AR_PLAT_INT_FMT L"d : %ls\n", (size_t)action->value, res.err.pos);
 				return false;
 		}
 
@@ -421,7 +421,14 @@ void	LEX_Destroy(lex_t *lex)
 		AR_DEL(lex);
 }
 
-
+void	LEX_ResetIOContext(lex_t *lex, const arIOCtx_t *io)
+{
+		AR_ASSERT(lex != NULL && io != NULL);
+		
+		lex->io_ctx = io == NULL ? *AR_global_ioctx() : *io;
+				
+		
+}
 
 
 

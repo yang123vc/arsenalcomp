@@ -228,7 +228,7 @@ static  parser_t* __build_parser()
 				parser_t *psr;
 				
 				
-				psr =  PSR_CreateParser(gmr, PSR_LALR);
+				psr =  PSR_CreateParser(gmr, PSR_LR1);
 				
 				AR_printf(L"Conflict == %d\r\n", PSR_CountParserConflict(psr));
 				/*PSR_DestroyGrammar(gmr);*/
@@ -279,15 +279,19 @@ void calc_test()
 		lexToken_t		tok;
 		size_t i,k;
 		bool_t is_ok;
+		/*
 		const psrActionView_t *view;
 		const psrConflictView_t	*conflict;
 		const psrFirstFollowView_t *first_follow;
+		*/
+
 		lex = __build_lex();
 		AR_ASSERT(lex);
 		psr = __build_parser();
 
-
+		/*
 		first_follow = PSR_CreateParserFirstFollowView(psr);
+		
 
 		AR_printf(L"------------------first------------------\r\n");
 		for(i = 0; i < first_follow->first_set.count; ++i)
@@ -301,7 +305,7 @@ void calc_test()
 		{
 				AR_printf(L"%ls : %ls\r\n", first_follow->follow_set.name[i],first_follow->follow_set.name_set[i]);
 		}
-
+		*/
 #if(0)
 		view = PSR_CreateParserActionView(psr);
 
@@ -388,6 +392,8 @@ void calc_test()
 		
 		PSR_DestroyParser(psr);
 		PSR_DestroyGrammar(__g_gmr);
+		LEX_Destroy(lex);
+		LEX_UnInitMatch(&match);
 }
 
 

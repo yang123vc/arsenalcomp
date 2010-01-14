@@ -46,9 +46,6 @@ void AR_STDCALL tiny_printf(const wchar_t *msg, void *ctx)
 
 int main()
 {
-		
-		
-
 		arInit_t ai = {{tiny_error, tiny_printf, NULL}};
 		arCtx_t ctx;
 		ctx.init = ai;

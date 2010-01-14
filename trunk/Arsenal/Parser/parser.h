@@ -144,7 +144,6 @@ void	  PSR_Clear(parser_t *parser);
 
 bool_t	PSR_AddToken(parser_t *parser, const psrToken_t *tok);
 
-
 psrNode_t* PSR_GetResult(parser_t *parser);/*在状态为accepted之后才可以调用*/
 
 bool_t	PSR_IsAccepted(const parser_t *parser);

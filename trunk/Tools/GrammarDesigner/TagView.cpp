@@ -229,6 +229,7 @@ BEGIN_MESSAGE_MAP(CTagTree, CTreeCtrl)
 		ON_WM_CONTEXTMENU()
 		ON_NOTIFY_REFLECT(NM_RCLICK, &CTagTree::OnNMRClick)
 		ON_COMMAND(ID_TAGVIEW_REBUILD, &CTagTree::OnTagviewRebuild)
+		ON_WM_DESTROY()
 END_MESSAGE_MAP()
 
 
@@ -379,6 +380,14 @@ void CTagTree::OnTagviewRebuild()
 		{
 				pview->SendMessage(WM_COMMAND, (WPARAM)ID_TOOLS_REBUILDTAGS); 
 		}
+}
+
+
+void CTagTree::OnDestroy()
+{
+		this->Clear();
+		CTreeCtrl::OnDestroy();
+		// TODO: Add your message handler code here
 }
 
 
