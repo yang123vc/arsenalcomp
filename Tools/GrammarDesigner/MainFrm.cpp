@@ -420,6 +420,11 @@ COutputWnd&		CMainFrame::GetOutputView()
 		return this->m_wndOutput;
 }
 
+CActionView&	CMainFrame::GetActionView()
+{
+		return this->m_wndActView;
+}
+
 void CMainFrame::OnUpdateStatusBarPanes(CCmdUI* pCmdUI)
 {
 		pCmdUI->Enable(TRUE);
@@ -515,27 +520,5 @@ void CMainFrame::OnSize(UINT nType, int cx, int cy)
 
 void CMainFrame::OnTestTest()
 {
-		// TODO: Add your command handler code here
 		
-		//m_wndActView.DrawActionView(NULL);
-/*
-		ARSpace::psrConflictItem_t		item;
-		item.name = TEXT("test");
-		item.items = new wchar_t*[10];
-		item.count = 2;
-		item.items[0] = TEXT("aaaaaaaaaaaa");
-		item.items[1] = TEXT("bbbbbbbbbbbb");
-
-		ARSpace::psrConflictView_t		conflict;
-		conflict.count = 1;
-		conflict.conflict = new ARSpace::psrConflictItem_t*[1024];
-		conflict.conflict[0] = &item;
-
-		m_wndActView.DrawConflictView(&conflict);
-*/		
-		ARSpace::parser_t *psr = ARSpace::CFG_GetCollectParser();
-		
-		m_wndActView.DrawFirstFollowView(ARSpace::PSR_CreateParserFirstFollowView(psr));
-
-		ARSpace::CFG_DestroyCollectParser(psr);
 }

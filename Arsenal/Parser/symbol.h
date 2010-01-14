@@ -58,6 +58,19 @@ void				PSR_ClearSymbList(psrSymbList_t *symb_lst);
 void				PSR_CopySymbList(psrSymbList_t *dest, const psrSymbList_t *sour);
 
 void				PSR_InsertToSymbList(psrSymbList_t *symb_lst, const psrSymb_t *symb);
+
+/*
+#define			PSR_InsertToSymbList(_l, _b)											\
+		do{																				\
+				if((_l)->count == (_l)->cap)											\
+				{																		\
+						(_l)->cap = ((_l)->cap + 4)*2;								\
+						(_l)->lst = AR_REALLOC(const psrSymb_t*, (psrSymb_t**)(_l)->lst, (_l)->cap);		\
+				}																						\
+				(_l)->lst[(_l)->count++] = (_b);														\
+		}while(0)
+*/
+
 const psrSymb_t*	PSR_IndexOfSymbList(const psrSymbList_t *symb_lst, size_t idx);
 int_t				PSR_FindFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t* symb);
 
@@ -67,7 +80,9 @@ int_t				PSR_BSearchFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t*
 void				PSR_SortSymbList(psrSymbList_t *symb_lst);
 
 
+
 bool_t				PSR_InsertToSymbList_Unique(psrSymbList_t *symb_lst, const psrSymb_t *symb);
+
 
 
 /********************************************************************************************************/

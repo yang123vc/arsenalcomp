@@ -28,6 +28,9 @@ public:
 		Lexer(ARContext *ctx);
 		~Lexer();
 public:
+		ARContext*		IOContext();
+		void ResetContext(ARContext *ctx);
+public:
 		bool	Insert(const wchar_t *name, const wchar_t *expr);
 		bool	Insert(const wchar_t *expr, size_t lex_val, size_t prec = 0, bool is_skip = false);
 		bool	Remove(const wchar_t *name);

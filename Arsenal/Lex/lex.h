@@ -53,6 +53,8 @@ typedef struct __lex_tag
 
 lex_t*	LEX_Create(const arIOCtx_t *io);
 void	LEX_Destroy(lex_t *lex);
+void	LEX_ResetIOContext(lex_t *lex, const arIOCtx_t *io);
+
 bool_t	LEX_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr);
 bool_t	LEX_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action);
 
@@ -62,6 +64,7 @@ bool_t	LEX_RemoveByValue(lex_t *lex, size_t value);
 bool_t	LEX_Insert(lex_t *lex, const wchar_t *input);
 bool_t	LEX_GenerateTransTable(lex_t *lex);
 void	LEX_Clear(lex_t *lex);
+
 
 
 

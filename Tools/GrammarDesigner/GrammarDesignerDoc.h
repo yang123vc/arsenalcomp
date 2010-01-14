@@ -27,8 +27,8 @@ private:
 		CString			m_src_cache;
 
 private:
+		ArsenalCPP::Lexer		*m_lexer;
 		ArsenalCPP::Parser		*m_parser;
-		CString					m_build_src_bak;
 // Operations
 public:
 
@@ -52,6 +52,10 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 		void OnEndcodingChange(UINT nID);
+
+		bool	BuildParser(const ARSpace::cfgConfig_t *cfg);
+		
+		void	ClearParser();
 public:
 		virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
 		virtual BOOL OnSaveDocument(LPCTSTR lpszPathName);
@@ -69,6 +73,12 @@ public:
 		afx_msg void OnEditGotoDecl();
 		afx_msg void OnUpdateEditGotoDecl(CCmdUI *pCmdUI);
 		afx_msg void OnParserBuild();
+		afx_msg void OnParserShowactiontable();
+		afx_msg void OnUpdateParserShowactiontable(CCmdUI *pCmdUI);
+		afx_msg void OnParserShowconflict();
+		afx_msg void OnUpdateParserShowconflict(CCmdUI *pCmdUI);
+		afx_msg void OnParserShowfirstfollow();
+		afx_msg void OnUpdateParserShowfirstfollow(CCmdUI *pCmdUI);
 };
 
 

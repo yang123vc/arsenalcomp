@@ -165,9 +165,12 @@ BEGIN
         END
         MENUITEM "&Build",                      ID_PARSER_BUILD
         MENUITEM "&Run",                        ID_PARSER_RUN
-        MENUITEM "Show &ActionTable",           ID_PARSER_SHOWACTIONTABLE
-        MENUITEM "Show &Conflict",              ID_PARSER_SHOWCONFLICT
-        MENUITEM "Show &FirstFollow",           ID_PARSER_SHOWFIRSTFOLLOW
+        POPUP "Show"
+        BEGIN
+            MENUITEM "&ActionTable",                ID_PARSER_SHOWACTIONTABLE
+            MENUITEM "&Conflict",                   ID_PARSER_SHOWCONFLICT
+            MENUITEM "&FirstFollow",                ID_PARSER_SHOWFIRSTFOLLOW
+        END
     END
     POPUP "&Tools"
     BEGIN

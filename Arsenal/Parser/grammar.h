@@ -91,6 +91,9 @@ psrGrammar_t*			PSR_CreateGrammar(const psrCtx_t *ctx, const arIOCtx_t *io_ctx);
 void					PSR_DestroyGrammar(psrGrammar_t *grammar);
 void					PSR_ClearGrammar(psrGrammar_t *grammar);
 
+void					PSR_ResetGrammarIOContext(psrGrammar_t *grammar, const arIOCtx_t *io_ctx);
+void					PSR_ResetGrammarParseContext(psrGrammar_t *grammar, const psrCtx_t *io_ctx);
+
 
 const psrCtx_t*			PSR_GetGrammarContext(const psrGrammar_t *grammar);
 const arIOCtx_t*		PSR_GetGrammarIOContext(const psrGrammar_t *grammar);

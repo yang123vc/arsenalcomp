@@ -46,7 +46,9 @@ public:
 		};
 public:
 		void	Append(const CString &msg, const Param &param);
+		
 		void	Clear();
+		afx_msg void OnDestroy();
 };
 
 
@@ -75,9 +77,11 @@ protected:
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 public:
 		void	Append(const CString &msg, const COutputList::Param &param = COutputList::Param());
+		void	Append(const CString &msg, COutputList::MsgType type, size_t line);
 		void	Clear();	
 
 	DECLARE_MESSAGE_MAP()
+	afx_msg void OnDestroy();
 };
 
 

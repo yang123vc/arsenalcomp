@@ -30,18 +30,18 @@ typedef struct __parser_node_stack
 		size_t			cap;
 }psrNodeStack_t;
 
-AR_INLINE void PSR_InitNodeStack(psrNodeStack_t *stack)
+static AR_INLINE void PSR_InitNodeStack(psrNodeStack_t *stack)
 {
 		AR_memset(stack, 0, sizeof(*stack));
 }
 
-AR_INLINE void PSR_UnInitNodeStack(psrNodeStack_t *stack)
+static AR_INLINE void PSR_UnInitNodeStack(psrNodeStack_t *stack)
 {
 		AR_DEL(stack->nodes);
 		AR_memset(stack, 0, sizeof(*stack));
 }
 
-AR_INLINE void PSR_PushNodeStack(psrNodeStack_t *stack, psrNode_t *node)
+static AR_INLINE void PSR_PushNodeStack(psrNodeStack_t *stack, psrNode_t *node)
 {
 		AR_ASSERT(stack != NULL);
 		if(stack->count == stack->cap)
@@ -52,19 +52,19 @@ AR_INLINE void PSR_PushNodeStack(psrNodeStack_t *stack, psrNode_t *node)
 		stack->nodes[stack->count++] = node;
 }
 
-AR_INLINE void PSR_PopNodeStack(psrNodeStack_t *stack, size_t n)
+static AR_INLINE void PSR_PopNodeStack(psrNodeStack_t *stack, size_t n)
 {
 		AR_ASSERT(stack != NULL && n <= stack->count);
 		stack->count -= n;
 }
 
-AR_INLINE void PSR_ClearNodeStack(psrNodeStack_t *stack)
+static AR_INLINE void PSR_ClearNodeStack(psrNodeStack_t *stack)
 {
 		AR_ASSERT(stack != NULL);
 		stack->count = 0;
 }
 
-AR_INLINE psrNode_t* PSR_TopNodeStack(psrNodeStack_t *stack)
+static AR_INLINE psrNode_t* PSR_TopNodeStack(psrNodeStack_t *stack)
 {
 		AR_ASSERT(stack != NULL && stack->count > 0);
 		return stack->nodes[stack->count-1];
@@ -83,7 +83,7 @@ typedef struct __parser_stack_tag
 }psrStack_t;
 
 
-AR_INLINE void PSR_PushStack(psrStack_t *stack, size_t state)
+static AR_INLINE void PSR_PushStack(psrStack_t *stack, size_t state)
 {
 		if(stack->count == stack->cap)
 		{
@@ -94,32 +94,32 @@ AR_INLINE void PSR_PushStack(psrStack_t *stack, size_t state)
 }
 
 
-AR_INLINE void PSR_PopStack(psrStack_t *stack, size_t n)
+static AR_INLINE void PSR_PopStack(psrStack_t *stack, size_t n)
 {
 		AR_ASSERT(n <= stack->count);
 		stack->count -= n;
 }
 
-AR_INLINE size_t PSR_TopStack(const psrStack_t *stack)
+static AR_INLINE size_t PSR_TopStack(const psrStack_t *stack)
 {
 		AR_ASSERT(stack->count > 0);
 		return stack->states[stack->count-1];
 }
 
 
-AR_INLINE void PSR_InitStack(psrStack_t *stack)
+static AR_INLINE void PSR_InitStack(psrStack_t *stack)
 {
 		AR_memset(stack, 0,sizeof(*stack));
 }
 
-AR_INLINE void PSR_UnInitStack(psrStack_t *stack)
+static AR_INLINE void PSR_UnInitStack(psrStack_t *stack)
 {
 		AR_DEL(stack->states);
 		AR_memset(stack, 0,sizeof(*stack));
 }
 
 
-AR_INLINE void PSR_ClearStack(psrStack_t *stack)
+static AR_INLINE void PSR_ClearStack(psrStack_t *stack)
 {
 		AR_ASSERT(stack != NULL);
 		stack->count = 0;
@@ -136,12 +136,12 @@ typedef struct __term_info_rec_tag
 		size_t	cap;
 }psrTermInfoRec_t;
 
-AR_INLINE psrTermInfoRec_t* PSR_CreateTermInfoRec()
+static AR_INLINE psrTermInfoRec_t* PSR_CreateTermInfoRec()
 {
 		return AR_NEW0(psrTermInfoRec_t);
 }
 
-AR_INLINE void			PSR_DestroyTermInfoRec(psrTermInfoRec_t *rec)
+static AR_INLINE void			PSR_DestroyTermInfoRec(psrTermInfoRec_t *rec)
 {
 		if(rec)
 		{
@@ -150,7 +150,7 @@ AR_INLINE void			PSR_DestroyTermInfoRec(psrTermInfoRec_t *rec)
 		}
 }
 
-AR_INLINE const psrTermInfo_t* PSR_FindTermFromRec(const psrTermInfoRec_t *rec, size_t val)
+static AR_INLINE const psrTermInfo_t* PSR_FindTermFromRec(const psrTermInfoRec_t *rec, size_t val)
 {
 		size_t i;
 		AR_ASSERT(rec != NULL);
@@ -163,7 +163,7 @@ AR_INLINE const psrTermInfo_t* PSR_FindTermFromRec(const psrTermInfoRec_t *rec, 
 		return NULL;
 }
 
-AR_INLINE bool_t			PSR_InsertToTermInfoRec(psrTermInfoRec_t *rec, const psrTermInfo_t *term)
+static AR_INLINE bool_t			PSR_InsertToTermInfoRec(psrTermInfoRec_t *rec, const psrTermInfo_t *term)
 {
 		AR_ASSERT(rec != NULL && term != NULL);
 		if(PSR_FindTermFromRec(rec, term->val) != NULL)return false;
@@ -188,12 +188,12 @@ typedef struct __term_table_tag
 		size_t					item_count;
 }psrTermInfoTbl_t;
 
-AR_INLINE psrTermInfoTbl_t* PSR_CreateTermInfoTable()
+static AR_INLINE psrTermInfoTbl_t* PSR_CreateTermInfoTable()
 {
 		return AR_NEW0(psrTermInfoTbl_t);
 }
 
-AR_INLINE void PSR_DestroyTermInfoTable(psrTermInfoTbl_t *tbl)
+static AR_INLINE void PSR_DestroyTermInfoTable(psrTermInfoTbl_t *tbl)
 {
 		size_t i;
 		
@@ -204,7 +204,7 @@ AR_INLINE void PSR_DestroyTermInfoTable(psrTermInfoTbl_t *tbl)
 		AR_DEL(tbl);
 }
 
-AR_INLINE bool_t PSR_InsertToTermInfoTable(psrTermInfoTbl_t *tbl, const psrTermInfo_t *term)
+static AR_INLINE bool_t PSR_InsertToTermInfoTable(psrTermInfoTbl_t *tbl, const psrTermInfo_t *term)
 {
 		size_t idx;
 		psrTermInfoRec_t		*rec;
@@ -229,7 +229,7 @@ AR_INLINE bool_t PSR_InsertToTermInfoTable(psrTermInfoTbl_t *tbl, const psrTermI
 		}
 }
 
-AR_INLINE const psrTermInfo_t* PSR_FindTermFromInfoTable(const psrTermInfoTbl_t *tbl, size_t tokval)
+static AR_INLINE const psrTermInfo_t* PSR_FindTermFromInfoTable(const psrTermInfoTbl_t *tbl, size_t tokval)
 {
 		size_t idx;
 		psrTermInfoRec_t		*rec;
@@ -253,7 +253,7 @@ typedef struct __expected_message_tag
 
 
 
-AR_INLINE void PSR_InitExpectedMsg(psrExpectedMsg_t *msg, const psrSymbList_t *lst)
+static AR_INLINE void PSR_InitExpectedMsg(psrExpectedMsg_t *msg, const psrSymbList_t *lst)
 {
 		size_t i;
 		AR_ASSERT(msg != NULL && lst != NULL);
@@ -272,7 +272,7 @@ AR_INLINE void PSR_InitExpectedMsg(psrExpectedMsg_t *msg, const psrSymbList_t *l
 		}
 }
 
-AR_INLINE void PSR_UnInitExpectedMsg(psrExpectedMsg_t *msg)
+static AR_INLINE void PSR_UnInitExpectedMsg(psrExpectedMsg_t *msg)
 {
 		AR_ASSERT(msg != NULL);
 		if(msg->msg)AR_DEL((void*)msg->msg);

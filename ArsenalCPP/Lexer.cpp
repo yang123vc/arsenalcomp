@@ -58,6 +58,27 @@ Lexer::~Lexer()
 		delete m_ctx;
 }
 
+void Lexer::ResetContext(ARContext *ctx)
+{
+		AR_ASSERT(ctx != NULL);
+		if(m_ctx == ctx)return;
+
+		delete m_ctx;
+		m_ctx = ctx;
+		
+		arIOCtx_t		io;
+
+		io.ctx = (void*)m_ctx;
+		io.on_error = __error_func;
+		io.on_print = __print_func;
+		ARSpace::LEX_ResetIOContext(m_lex, &io);
+}
+
+ARContext*	Lexer::IOContext()
+{
+		return m_ctx;
+}
+
 bool	Lexer::Generate()
 {
 		AR_ASSERT(m_lex != NULL && m_ctx != NULL && m_match != NULL);

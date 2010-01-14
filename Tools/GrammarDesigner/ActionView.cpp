@@ -246,37 +246,38 @@ void CActionView::DrawActionView(const ARSpace::psrActionView_t *view)
 		ASSERT(view != NULL);
 		this->Clear();
 		
+
+		this->m_list.InsertColumn(0, TEXT("state"), 0, 100, -1);
+		
 		for(int i = 0; view && i < (int)view->item_cnt; ++i)
 		{
-				this->m_list.InsertColumn(i, PSR_IndexActionViewItem(view, i), 0, 100, -1);
+				this->m_list.InsertColumn(i + 1, PSR_IndexActionViewItem(view, i), 0, 100, -1);
 		}
 
 		for(size_t i = 0; view && i < view->row; ++i)
 		{
+				
+				CString str;
+				str.Format(TEXT("%d"), i);
+				this->m_list.InsertItem((int)i, str);
+
 				for(size_t k = 0; k < view->col; ++k)
 				{
 						const wchar_t *s = PSR_IndexActionViewAction(view, i,k);
+						
+						LVITEM	item;
+						memset(&item, 0, sizeof(item));
 
-						if(k == 0)
-						{
-								this->m_list.InsertItem((int)i, s);
-						}else
-						{
-								LVITEM	item;
-								memset(&item, 0, sizeof(item));
-
-								item.mask   =   LVIF_TEXT;   
-								item.pszText   =   (LPWSTR)s;
-								item.cchTextMax   =  (int)( wcslen(s) + 1);
-								item.iItem   =  (int)i;
-								item.iSubItem = (int)k;
-								this->m_list.SetItem(&item);
-						}
-
+						item.mask   =   LVIF_TEXT;   
+						item.pszText   =   (LPWSTR)s;
+						item.cchTextMax   =  (int)( wcslen(s) + 1);
+						item.iItem   =  (int)i;
+						item.iSubItem = (int)k + 1;
+						this->m_list.SetItem(&item);
 				}
 		}
 
-		this->ShowPane(TRUE, TRUE, TRUE);
+	//	this->ShowPane(TRUE, TRUE, TRUE);
 }
 
 
@@ -328,7 +329,7 @@ void	CActionView::DrawConflictView(const ARSpace::psrConflictView_t *view)
 				}
 		}
 
-		this->ShowPane(TRUE, TRUE, TRUE);
+	//	this->ShowPane(TRUE, TRUE, TRUE);
 }
 
 

@@ -69,6 +69,7 @@ public:
 		CMFCToolBar& GetToolBar(void);
 		CTagView&	GetTagView();
 		COutputWnd&		GetOutputView();
+		CActionView&	GetActionView();
 public:
 		afx_msg void OnSize(UINT nType, int cx, int cy);
 

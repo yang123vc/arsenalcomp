@@ -36,7 +36,7 @@ protected:
 
 // Generated message map functions
 protected:
-	afx_msg void OnFilePrintPreview();
+
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
 	DECLARE_MESSAGE_MAP()
@@ -72,6 +72,7 @@ public:
 		afx_msg void OnUpdateSetrebuildtime3000ms(CCmdUI *pCmdUI);
 		afx_msg void OnUpdateSetrebuildtime5000ms(CCmdUI *pCmdUI);
 		afx_msg void OnUpdateSetrebuildtimeDisable(CCmdUI *pCmdUI);
+		afx_msg void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags);
 };
 
 #ifndef _DEBUG  // debug version in GrammarDesignerView.cpp

@@ -26,6 +26,7 @@ COutputList::COutputList()
 
 COutputList::~COutputList()
 {
+		
 }
 
 
@@ -67,6 +68,7 @@ BEGIN_MESSAGE_MAP(COutputList, CListBox)
 	ON_WM_LBUTTONDOWN()
 	ON_UPDATE_COMMAND_UI(ID_EDIT_COPY, &COutputList::OnUpdateEditCopy)
 	ON_COMMAND(ID_OUTPUTWND_FONT, &COutputList::OnOutputwndFont)
+	ON_WM_DESTROY()
 END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // COutputList message handlers
@@ -255,6 +257,14 @@ BOOL COutputList::PreCreateWindow(CREATESTRUCT& cs)
 }
 
 
+void COutputList::OnDestroy()
+{
+		Clear();
+		CListBox::OnDestroy();
+
+		// TODO: Add your message handler code here
+}
+
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -274,6 +284,7 @@ BEGIN_MESSAGE_MAP(COutputWnd, CDockablePane)
 	ON_WM_CREATE()
 	ON_WM_SIZE()
 	
+	ON_WM_DESTROY()
 END_MESSAGE_MAP()
 
 int COutputWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
@@ -311,7 +322,19 @@ void	COutputWnd::Append(const CString &msg, const COutputList::Param &param)
 		m_output.Append(msg, param);
 }
 
+
+void	COutputWnd::Append(const CString &msg, COutputList::MsgType type, size_t line)
+{
+		this->Append(msg, COutputList::Param(type, line));
+}
+
 void COutputWnd::Clear()
 {
 		m_output.Clear();
+}
+void COutputWnd::OnDestroy()
+{
+		CDockablePane::OnDestroy();
+
+		// TODO: Add your message handler code here
 }

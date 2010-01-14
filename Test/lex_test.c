@@ -473,21 +473,24 @@ void lex_test20()
 		size_t i;
 		bool_t  is_ok;
 		lex = LEX_Create(NULL);
-		LEX_InitMatch(&match,L"/*abcdef/" );
+		LEX_InitMatch(&match,L"\"\\\"abcdef\\\"\"" );
 		
-
+#if(0)
 		if(!LEX_Insert(lex, L"1,0 (/\\*([^\\*]|\\*+[^\\*/])*\\*+/)|(/\\*)"))
+		{
+				AR_abort();
+		}
+#endif	
+
+
+
+		
+		if(!LEX_Insert(lex, L"2,0 (\\\"(\\\\\\\"|[^\\\"])+\\\")"))
 		{
 				AR_abort();
 		}
 		
 		/*
-		if(!LEX_Insert(lex, L"2,0 (\\\"([^\\\"])+\\\")"))
-		{
-				AR_abort();
-		}
-		
-		
 		
 		if(!LEX_Insert(lex, L"3,0 [\\0]"))
 		{
