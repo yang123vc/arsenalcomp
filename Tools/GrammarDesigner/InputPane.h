@@ -2,7 +2,7 @@
 #include "afxdockablepane.h"
 
 
-class CInputEdit : public CEdit
+class CInputEdit : public CRichEditCtrl
 {
 protected:
 		CFont	m_font;
@@ -10,6 +10,8 @@ protected:
 public:
 		CInputEdit();
 		virtual ~CInputEdit();
+public:
+		void	ResetFont();
 public:
 
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
@@ -30,6 +32,7 @@ public:
 		afx_msg void OnPopupOpen();
 		afx_msg void OnPopupSave();
 		
+		afx_msg void OnEnChange();
 };
 
 
@@ -40,7 +43,12 @@ protected:
 public:
 		CInputPane(void);
 		~CInputPane(void);
+protected:
+		void Highlight(long start, long end, COLORREF color);
+
+public:
 		DECLARE_MESSAGE_MAP()
+public:
 		afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 		afx_msg void OnSize(UINT nType, int cx, int cy);
 public:

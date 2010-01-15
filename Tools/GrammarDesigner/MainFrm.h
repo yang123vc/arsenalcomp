@@ -8,6 +8,7 @@
 #include "ActionView.h"
 #include "TagView.h"
 #include "InputPane.h"
+#include "SyntaxPane.h"
 
 class CMainFrame : public CFrameWndEx
 {
@@ -49,7 +50,7 @@ protected:  // control bar embedded members
 	CTagView			m_wndTag;
 
 	CInputPane			m_inputPane;
-	
+	CSyntaxPane			m_syntaxPane;	
 
 // Generated message map functions
 protected:
@@ -59,6 +60,9 @@ protected:
 	afx_msg void OnApplicationLook(UINT id);
 	afx_msg void OnUpdateApplicationLook(CCmdUI* pCmdUI);
 	afx_msg void CMainFrame::OnUpdateStatusBarPanes(CCmdUI* pCmdUI);
+
+	
+
 	DECLARE_MESSAGE_MAP()
 
 	BOOL CreateDockingWindows();
@@ -73,12 +77,18 @@ public:
 		COutputWnd&		GetOutputView();
 		CActionView&	GetActionView();
 		CInputPane&		GetInputPane();
+		CSyntaxPane&	GetSyntaxPnae();
 		void			ClearShow();
 public:
 		afx_msg void OnSize(UINT nType, int cx, int cy);
 
 public:
 		afx_msg void OnTestTest();
+		afx_msg void OnShowOutput();
+		afx_msg void OnShowSyntaxtree();
+		afx_msg void OnShowActionview();
+		afx_msg void OnShowTagview();
+		afx_msg void OnShowInput();
 };
 
 

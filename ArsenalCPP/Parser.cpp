@@ -256,6 +256,18 @@ bool	Parser::AddToken(const psrToken_t &tok)
 		return PSR_AddToken(m_parser, &tok);
 }
 
+
+bool	Parser::AddToken(const lexToken_t &tok)
+{
+		AR_ASSERT(m_grammar != NULL && m_parser != NULL);
+		
+		psrToken_t		psr_tok;
+
+		PSR_TOTERMTOK(&tok, &psr_tok);
+
+		return AddToken(psr_tok);
+}
+
 bool	Parser::Accepted()const
 {
 		AR_ASSERT(m_grammar != NULL && m_parser != NULL);

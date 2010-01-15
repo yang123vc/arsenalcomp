@@ -45,6 +45,9 @@ BEGIN_MESSAGE_MAP(CGrammarDesignerView, CRichEditView)
 		ON_WM_CHAR()
 		ON_WM_KEYDOWN()
 		ON_CONTROL_REFLECT(EN_CHANGE, &CGrammarDesignerView::OnEnChange)
+		
+		ON_COMMAND(ID_EDIT_OPEN, &CGrammarDesignerView::OnEditOpen)
+		ON_COMMAND(ID_EDIT_SAVE32863, &CGrammarDesignerView::OnEditSaveFile)
 END_MESSAGE_MAP()
 
 // CGrammarDesignerView construction/destruction
@@ -182,6 +185,8 @@ void CGrammarDesignerView::OnInitialUpdate()
 		this->SetTimer(ID_DOC_PARSETAG_TIMER, m_timer_interval, NULL);
 
 		this->SetWordWrap(FALSE);
+
+		this->GetDocument()->SetModifiedFlag(FALSE);
 }
 
 
@@ -552,6 +557,29 @@ void CGrammarDesignerView::OnEnChange()
 		// TODO:  Add your control notification handler code here
 
 		this->GetDocument()->SetModifiedFlag(TRUE);
+
+}
+
+
+void CGrammarDesignerView::OnEditOpen()
+{
+		// TODO: Add your command handler code here
 		
+		::AfxGetMainWnd()->SendMessage(WM_COMMAND, ID_FILE_OPEN);
 		
 }
+
+void CGrammarDesignerView::OnEditSaveFile()
+{
+		// TODO: Add your command handler code here
+
+		::AfxGetMainWnd()->SendMessage(WM_COMMAND, ID_FILE_SAVE);
+}
+
+//BOOL CGrammarDesignerView::OnDrop(COleDataObject* pDataObject, DROPEFFECT dropEffect, CPoint point)
+//{
+//		// TODO: Add your specialized code here and/or call the base class
+//
+//		this->MessageBox(TEXT("XXXXXXXXX"));
+//		return CRichEditView::OnDrop(pDataObject, dropEffect, point);
+//}

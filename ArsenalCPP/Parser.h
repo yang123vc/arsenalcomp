@@ -110,6 +110,7 @@ public:
 		void	ClearError();
 
 		bool	AddToken(const psrToken_t &tok);
+		bool	AddToken(const lexToken_t &tok);
 		bool	Accepted()const;
 		bool	InError()const;
 		Node*	GetResult();

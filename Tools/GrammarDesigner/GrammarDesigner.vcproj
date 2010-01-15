@@ -1030,6 +1030,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SyntaxPane.h"
+				>
+			</File>
+			<File
 				RelativePath=".\TagView.h"
 				>
 			</File>
@@ -1226,6 +1230,10 @@
 						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\SyntaxPane.cpp"
+				>
 			</File>
 			<File
 				RelativePath=".\TagView.cpp"

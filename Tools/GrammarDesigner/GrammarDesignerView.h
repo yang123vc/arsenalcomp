@@ -75,6 +75,10 @@ public:
 		afx_msg void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags);
 		afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
 		afx_msg void OnEnChange();
+		
+		afx_msg void OnEditOpen();
+		afx_msg void OnEditSaveFile();
+//		virtual BOOL OnDrop(COleDataObject* pDataObject, DROPEFFECT dropEffect, CPoint point);
 };
 
 #ifndef _DEBUG  // debug version in GrammarDesignerView.cpp

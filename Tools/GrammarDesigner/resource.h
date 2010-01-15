@@ -4,6 +4,7 @@
 //
 #define IDD_ABOUTBOX                    100
 #define IDP_OLE_INIT_FAILED             100
+#define IDS_SYNTAXPANE_WND              101
 #define IDR_POPUP_EDIT                  119
 #define ID_STATUSBAR_PANE1              120
 #define ID_STATUSBAR_PANE2              121
@@ -37,6 +38,8 @@
 #define IDS_EDIT_MENU                   306
 #define IDR_MENU_TAGVIEW                312
 #define IDR_INPUT_POPUP                 315
+#define IDR_MENU1                       316
+#define IDR_SYNTAXTREE_MENU             316
 #define ID_EDIT_UNDO32771               32771
 #define ID_EDIT_SELECTALL               32772
 #define ID_EDIT_SELECTALL32773          32773
@@ -105,6 +108,16 @@
 #define ID_INPUT_EDIT_OPEN              32853
 #define ID_PARSER_PARSE                 32854
 #define ID_SHOW_LEFTRECURSION           32855
+#define ID_VIEW_SHOW                    32856
+#define ID_SHOW_OUTPUT                  32857
+#define ID_SHOW_SYNTAXTREE              32858
+#define ID_SHOW_ACTIONVIEW              32859
+#define ID_SHOW_TAGVIEW                 32860
+#define ID_SHOW_INPUT                   32861
+#define ID_EDIT_OPEN                    32862
+#define ID_EDIT_SAVE32863               32863
+#define ID_POPUP_FONT32864              32864
+#define ID_POPUP_CLEAR32865             32865
 #define ID_INDICATOR_LINE               59142
 #define ID_INDICATOR_COL                59143
 #define IDS_ACTVIEW_WND                 61204
@@ -117,8 +130,8 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        316
-#define _APS_NEXT_COMMAND_VALUE         32856
+#define _APS_NEXT_RESOURCE_VALUE        317
+#define _APS_NEXT_COMMAND_VALUE         32866
 #define _APS_NEXT_CONTROL_VALUE         1001
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
