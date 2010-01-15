@@ -100,6 +100,15 @@ BEGIN
     END
 END
 
+IDR_SYNTAXTREE_MENU MENU 
+BEGIN
+    POPUP "Popup"
+    BEGIN
+        MENUITEM "&Font",                       ID_POPUP_FONT32864
+        MENUITEM "&Clear",                      ID_POPUP_CLEAR32865
+    END
+END
+
 #endif    // Chinese (P.R.C.) resources
 /////////////////////////////////////////////////////////////////////////////
 
@@ -174,6 +183,14 @@ BEGIN
                 MENUITEM "&Aqua Style",                 ID_VIEW_APPLOOK_OFF_2007_AQUA
             END
         END
+        POPUP "&Show"
+        BEGIN
+            MENUITEM "&Output",                     ID_SHOW_OUTPUT
+            MENUITEM "&SyntaxTree",                 ID_SHOW_SYNTAXTREE
+            MENUITEM "&ActionView",                 ID_SHOW_ACTIONVIEW
+            MENUITEM "&TagView",                    ID_SHOW_TAGVIEW
+            MENUITEM "&Input",                      ID_SHOW_INPUT
+        END
     END
     POPUP "&Parser"
     BEGIN
@@ -184,7 +201,6 @@ BEGIN
             MENUITEM "L&ALR(1)",                    ID_PARSER_MODE_LALR, CHECKED
         END
         MENUITEM "&Build",                      ID_PARSER_BUILD
-        MENUITEM "&Parse",                      ID_PARSER_PARSE
         POPUP "Show"
         BEGIN
             MENUITEM "&ActionTable",                ID_PARSER_SHOWACTIONTABLE
@@ -195,6 +211,7 @@ BEGIN
     END
     POPUP "&Tools"
     BEGIN
+        MENUITEM "&Parse Input",                ID_PARSER_PARSE
         MENUITEM "ReBuild &Tags",               ID_TOOLS_REBUILDTAGS
         POPUP "Set ReBuild Time"
         BEGIN
@@ -228,6 +245,9 @@ BEGIN
         MENUITEM "&Paste\tCtrl+V",              ID_EDIT_PASTE
         MENUITEM SEPARATOR
         MENUITEM "Select ALL\tCtrl+A",          ID_EDIT_SELECT_ALL
+        MENUITEM SEPARATOR
+        MENUITEM "&Open",                       ID_EDIT_OPEN
+        MENUITEM "&Save",                       ID_EDIT_SAVE32863
     END
 END
 
@@ -419,6 +439,7 @@ END
 STRINGTABLE 
 BEGIN
     IDP_OLE_INIT_FAILED     "OLE initialization failed.  Make sure that the OLE libraries are the correct version."
+    IDS_SYNTAXPANE_WND      "SyntaxTree"
 END
 
 STRINGTABLE 

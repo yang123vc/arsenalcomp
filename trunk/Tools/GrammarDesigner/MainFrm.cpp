@@ -34,6 +34,14 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 ON_COMMAND(ID_TEST_TEST, &CMainFrame::OnTestTest)
 
 ON_WM_SIZE()
+ON_COMMAND(ID_SHOW_OUTPUT, &CMainFrame::OnShowOutput)
+ON_COMMAND(ID_SHOW_SYNTAXTREE, &CMainFrame::OnShowSyntaxtree)
+ON_COMMAND(ID_SHOW_ACTIONVIEW, &CMainFrame::OnShowActionview)
+ON_COMMAND(ID_SHOW_TAGVIEW, &CMainFrame::OnShowTagview)
+ON_COMMAND(ID_SHOW_INPUT, &CMainFrame::OnShowInput)
+
+
+
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -77,6 +85,13 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	// prevent the menu bar from taking the focus on activation
 	CMFCPopupMenu::SetForceMenuFocus(FALSE);
+
+	
+/*
+	m_wndMenuBar.SetRecentlyUsedMenus(FALSE);
+	
+	m_wndMenuBar.SetShowAllCommands(TRUE);
+	*/
 
 	if (!m_wndToolBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP | CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC) ||
 		!m_wndToolBar.LoadToolBar(theApp.m_bHiColorIcons ? IDR_MAINFRAME_256 : IDR_MAINFRAME))
@@ -229,9 +244,23 @@ BOOL CMainFrame::CreateDockingWindows()
 				return FALSE; // failed to create
 		}
 		
+		
+
+		CString strSyntaxPane;
+
+		bNameValid = strSyntaxPane.LoadString(IDS_SYNTAXPANE_WND);
+
+		if(!m_syntaxPane.Create(strSyntaxPane, this, CRect(0,0,100,100), TRUE, ID_SYNTAXPANE_WND ,WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_BOTTOM | CBRS_FLOAT_MULTI))
+		{
+				TRACE0("Failed to create syntax tree  window\n");
+				return FALSE; // failed to create
+		}
+		
+		
+		
 	SetDockingWindowIcons(theApp.m_bHiColorIcons);
 
-
+		
 	
 	m_wndOutput.EnableDocking(CBRS_ALIGN_ANY);
 	DockPane(&m_wndOutput);
@@ -246,6 +275,11 @@ BOOL CMainFrame::CreateDockingWindows()
 
 	m_inputPane.EnableDocking(CBRS_ALIGN_TOP);
 	DockPane(&m_inputPane);
+
+
+	m_syntaxPane.EnableDocking(CBRS_ALIGN_ANY);
+	DockPane(&m_syntaxPane);
+		
 
 	return TRUE;
 }
@@ -264,6 +298,10 @@ void CMainFrame::SetDockingWindowIcons(BOOL bHiColorIcons)
 
 	HICON hInputViewBarIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_OUTPUT_WND_HC : IDI_OUTPUT_WND), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
 	m_inputPane.SetIcon(hInputViewBarIcon, FALSE);
+
+
+	HICON hSyntaxPaneBarIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_OUTPUT_WND_HC : IDI_OUTPUT_WND), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
+	m_syntaxPane.SetIcon(hSyntaxPaneBarIcon, FALSE);
 
 }
 
@@ -444,11 +482,16 @@ CInputPane&		CMainFrame::GetInputPane()
 		return this->m_inputPane;
 }
 
+CSyntaxPane&	CMainFrame::GetSyntaxPnae()
+{
+		return m_syntaxPane;
+}
 
 void	CMainFrame::ClearShow()
 {
 		m_wndActView.Clear();
 		m_wndOutput.Clear();
+		m_syntaxPane.Clear();
 }
 
 void CMainFrame::OnUpdateStatusBarPanes(CCmdUI* pCmdUI)
@@ -544,7 +587,42 @@ void CMainFrame::OnSize(UINT nType, int cx, int cy)
 
 
 
+
+void CMainFrame::OnShowOutput()
+{
+		// TODO: Add your command handler code here
+
+		this->ShowPane(&m_wndOutput, TRUE, TRUE, TRUE);
+}
+
+void CMainFrame::OnShowSyntaxtree()
+{
+		// TODO: Add your command handler code here
+		this->ShowPane(&m_syntaxPane, TRUE, TRUE, TRUE);
+}
+
+void CMainFrame::OnShowActionview()
+{
+		// TODO: Add your command handler code here
+		this->ShowPane(&m_wndActView, TRUE, TRUE, TRUE);
+}
+
+void CMainFrame::OnShowTagview()
+{
+		// TODO: Add your command handler code here
+		this->ShowPane(&m_wndTag, TRUE, TRUE, TRUE);
+}
+
+void CMainFrame::OnShowInput()
+{
+		// TODO: Add your command handler code here
+		this->ShowPane(&m_inputPane, TRUE, TRUE, TRUE);
+}
+
+
+
 void CMainFrame::OnTestTest()
 {
-		this->GetInputPane().OnLocatePos(0, NULL);
+		OnShowInput();
+		
 }

@@ -1,6 +1,7 @@
 #include "StdAfx.h"
-#include "InputPane.h"
 
+#include "InputPane.h"
+#include "MainFrm.h"
 
 
 /***********************CInputPane*******************************/
@@ -30,8 +31,29 @@ CString	CInputPane::GetInput()const
 		m_input.GetWindowText(txt);
 
 		return txt;
-
 }
+
+void CInputPane::Highlight(long start, long end, COLORREF color)
+{
+		CHARFORMAT cf;
+        ZeroMemory(&cf, sizeof(CHARFORMAT));
+		this->m_input.GetDefaultCharFormat(cf);
+
+		cf.dwMask  |= CFM_COLOR;
+		cf.dwEffects = 0;
+		cf.crTextColor = color;
+		long x,y;
+
+		this->m_input.GetSel(x,y);
+
+		this->m_input.SetSel(start, end);
+        this->m_input.SetSelectionCharFormat(cf);
+		this->m_input.SetSel(x,y);
+		
+}
+
+
+
 
 BEGIN_MESSAGE_MAP(CInputPane, CDockablePane)
 		ON_WM_CREATE()
@@ -52,7 +74,7 @@ int CInputPane::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		rectDummy.SetRectEmpty();
 
 		const DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_VSCROLL
-								| ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE ;
+								| ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE |ES_WANTRETURN  ;
 
 		if (!m_input.Create(dwStyle, rectDummy, this, 1))
 		{
@@ -68,15 +90,17 @@ void CInputPane::OnSize(UINT nType, int cx, int cy)
 		CDockablePane::OnSize(nType, cx, cy);
 
 		// TODO: Add your message handler code here
-
-		CDockablePane::OnSize(nType, cx, cy);
 		m_input.SetWindowPos (NULL, -1, -1, cx, cy, SWP_NOMOVE | SWP_NOACTIVATE | SWP_NOZORDER);
 }
 
 
 LRESULT CInputPane::OnLocatePos(WPARAM wp, LPARAM lp)
 {
-		m_input.SetFocus();
+		CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
+		
+		main_frm->ShowPane(this, TRUE, TRUE, TRUE);
+
+		
 
 		int index = m_input.LineIndex((int)wp);
 		
@@ -89,13 +113,16 @@ LRESULT CInputPane::OnLocatePos(WPARAM wp, LPARAM lp)
 				{
 						m_input.SetSel(index, index + cnt);
 				}
-
 		}
-
+		
+		m_input.SetFocus();
 		//m_input.Invalidate();
 
+		
 		return 0;
 }
+
+
 
 
 /*****************************************CInputEdit***********************************************************/
@@ -112,7 +139,10 @@ CInputEdit::~CInputEdit()
 
 }
 
-
+void	CInputEdit::ResetFont()
+{
+		this->SetFont(&m_font);
+}
 
 BOOL CInputEdit::PreTranslateMessage(MSG* pMsg)
 {
@@ -122,7 +152,7 @@ BOOL CInputEdit::PreTranslateMessage(MSG* pMsg)
 		{ 
 				if(::TranslateAccelerator(this->GetSafeHwnd(), m_acctbl, pMsg))
 				{
-						return true;
+					return true;
 				}
 		}
 
@@ -151,11 +181,11 @@ BOOL CInputEdit::PreTranslateMessage(MSG* pMsg)
 				}
 		}
 		}
-		return CEdit::PreTranslateMessage(pMsg);
+		return CRichEditCtrl::PreTranslateMessage(pMsg);
 }
 
 
-BEGIN_MESSAGE_MAP(CInputEdit, CEdit)
+BEGIN_MESSAGE_MAP(CInputEdit, CRichEditCtrl)
 		ON_WM_CONTEXTMENU()
 		ON_COMMAND(ID_EDIT_CUT, &CInputEdit::OnEditCut)
 		ON_UPDATE_COMMAND_UI(ID_EDIT_CUT, &CInputEdit::OnUpdateEditCut)
@@ -172,6 +202,7 @@ BEGIN_MESSAGE_MAP(CInputEdit, CEdit)
 		ON_COMMAND(ID_INPUT_EDIT_OPEN, &CInputEdit::OnPopupOpen)
 		ON_COMMAND(ID_INPUT_EDIT_SAVE, &CInputEdit::OnPopupSave)
 		
+		ON_CONTROL_REFLECT(EN_CHANGE, &CInputEdit::OnEnChange)
 END_MESSAGE_MAP()
 
 void CInputEdit::OnContextMenu(CWnd* pWnd, CPoint point)
@@ -193,13 +224,13 @@ void CInputEdit::OnContextMenu(CWnd* pWnd, CPoint point)
 void CInputEdit::OnEditCut()
 {
 		// TODO: Add your command handler code here
-		CEdit::Cut();
+		CRichEditCtrl::Cut();
 }
 
 void CInputEdit::OnUpdateEditCut(CCmdUI *pCmdUI)
 {
 		// TODO: Add your command update UI handler code here
-		int start = -1, end = -1;
+		long start = -1, end = -1;
 		this->GetSel(start, end);
 		
 		pCmdUI->Enable(start != end);
@@ -209,7 +240,7 @@ void CInputEdit::OnUpdateEditCut(CCmdUI *pCmdUI)
 void CInputEdit::OnEditCopy()
 {
 		// TODO: Add your command handler code here
-		CEdit::Copy();
+		CRichEditCtrl::Copy();
 }
 
 
@@ -217,7 +248,7 @@ void CInputEdit::OnUpdateEditCopy(CCmdUI *pCmdUI)
 {
 		// TODO: Add your command update UI handler code here
 		
-		int start = -1, end = -1;
+		long start = -1, end = -1;
 		this->GetSel(start, end);
 
 		pCmdUI->Enable(start != end);
@@ -226,7 +257,7 @@ void CInputEdit::OnUpdateEditCopy(CCmdUI *pCmdUI)
 void CInputEdit::OnEditPaste()
 {
 		// TODO: Add your command handler code here
-		CEdit::Paste();
+		CRichEditCtrl::Paste();
 }
 
 void CInputEdit::OnUpdateEditPaste(CCmdUI *pCmdUI)
@@ -251,7 +282,7 @@ void CInputEdit::OnUpdateEditSelectAll(CCmdUI *pCmdUI)
 void CInputEdit::OnEditClear()
 {
 		// TODO: Add your command handler code here
-		CEdit::Clear();
+		CRichEditCtrl::Clear();
 		
 		this->SetWindowText(TEXT(""));
 }
@@ -265,7 +296,7 @@ void CInputEdit::OnUpdateEditClear(CCmdUI *pCmdUI)
 
 int CInputEdit::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
-		if (CEdit::OnCreate(lpCreateStruct) == -1)
+		if (CRichEditCtrl::OnCreate(lpCreateStruct) == -1)
 				return -1;
 
 		// TODO:  Add your specialized creation code here
@@ -341,4 +372,16 @@ static TCHAR BASED_CODE szFilter[] = TEXT("Input Files (*.txt)|*.txt|All Files (
 		this->GetWindowText(txt);
 		
 		fw.Write(txt);
+}
+
+void CInputEdit::OnEnChange()
+{
+		// TODO:  If this is a RICHEDIT control, the control will not
+		// send this notification unless you override the CRichEditCtrl::OnInitDialog()
+		// function and call CRichEditCtrl().SetEventMask()
+		// with the ENM_CHANGE flag ORed into the mask.
+
+		// TODO:  Add your control notification handler code here
+
+		
 }

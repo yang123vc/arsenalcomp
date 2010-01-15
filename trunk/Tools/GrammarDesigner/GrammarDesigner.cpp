@@ -148,6 +148,7 @@ void CGrammarDesignerApp::OnAppAbout()
 
 void CGrammarDesignerApp::PreLoadState()
 {
+
 	BOOL bNameValid;
 	CString strName;
 	bNameValid = strName.LoadString(IDS_EDIT_MENU);

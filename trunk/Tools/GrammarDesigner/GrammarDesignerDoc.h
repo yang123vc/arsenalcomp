@@ -6,8 +6,6 @@
 #pragma once
 
 
-
-
 class CGrammarDesignerDoc : public CDocument
 {
 protected: // create from serialization only
@@ -84,6 +82,7 @@ public:
 		afx_msg void OnShowLeftrecursion();
 		afx_msg void OnUpdateShowLeftrecursion(CCmdUI *pCmdUI);
 		virtual void Serialize(CArchive& ar);
+//		virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
 };
 
 

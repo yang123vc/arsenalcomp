@@ -68,44 +68,6 @@ CGrammarDesignerDoc::~CGrammarDesignerDoc()
 
 
 
-
-
-// CGrammarDesignerDoc diagnostics
-
-#ifdef _DEBUG
-void CGrammarDesignerDoc::AssertValid() const
-{
-	CDocument::AssertValid();
-}
-
-void CGrammarDesignerDoc::Dump(CDumpContext& dc) const
-{
-	CDocument::Dump(dc);
-}
-#endif //_DEBUG
-
-
-// CGrammarDesignerDoc commands
-
-//BOOL CGrammarDesignerDoc::OnOpenDocument(LPCTSTR lpszPathName)
-//{
-//		
-//		if (!CDocument::OnOpenDocument(lpszPathName))
-//				return FALSE;
-//
-//		
-//		return TRUE;
-//}
-
-//BOOL CGrammarDesignerDoc::OnSaveDocument(LPCTSTR lpszPathName)
-//{
-//		// TODO: Add your specialized code here and/or call the base class
-//
-//		return CDocument::OnSaveDocument(lpszPathName);
-//
-//}
-
-
 BOOL CGrammarDesignerDoc::OnNewDocument()
 {
 	if (!CDocument::OnNewDocument())
@@ -120,6 +82,8 @@ BOOL CGrammarDesignerDoc::OnNewDocument()
 
 	return TRUE;
 }
+
+
 
 
 void CGrammarDesignerDoc::Serialize(CArchive& ar)
@@ -161,6 +125,7 @@ void CGrammarDesignerDoc::Serialize(CArchive& ar)
 						ASSERT(view != NULL);
 						//this->UpdateAllViews(view, NULL, this);
 						view->GetRichEditCtrl().SetWindowText(txt);
+
 				}
 
 		}
@@ -168,12 +133,26 @@ void CGrammarDesignerDoc::Serialize(CArchive& ar)
 
 
 
-//BOOL CGrammarDesignerDoc::SaveModified()
-//{
-//		// TODO: Add your specialized code here and/or call the base class
-//
-//		return CDocument::SaveModified();
-//}
+
+
+// CGrammarDesignerDoc diagnostics
+
+#ifdef _DEBUG
+void CGrammarDesignerDoc::AssertValid() const
+{
+	CDocument::AssertValid();
+}
+
+void CGrammarDesignerDoc::Dump(CDumpContext& dc) const
+{
+	CDocument::Dump(dc);
+}
+#endif //_DEBUG
+
+
+// CGrammarDesignerDoc commands
+
+
 
 void CGrammarDesignerDoc::OnEndcodingChange(UINT nID)
 {
@@ -610,7 +589,7 @@ void CGrammarDesignerDoc::OnParserBuild()
 		COutputWnd		&output = main_frm->GetOutputView();
 
 		main_frm->ClearShow();
-		
+		ClearParser();
 		this->SaveModified();
 		
 		if(this->IsModified())
@@ -854,11 +833,11 @@ public:
 						token.Append(TEXT("%EOI"));
 				}
 
-				msg.Format(TEXT("Invalid Token \"%ls\", expected : "), token.GetString());
+				msg.Format(TEXT("Invalid Token \"%ls\", expected\t:\t"), token.GetString());
 
 				for(size_t i = 0; i < count; ++i)
 				{
-						msg.AppendFormat(TEXT("%ls\t"), expected[i]);
+						msg.AppendFormat(TEXT("%ls \t"), expected[i]);
 				}
 
 				m_output.Append(msg, COutputList::MSG_ERROR, tok->line, &m_target);
@@ -879,6 +858,11 @@ void CGrammarDesignerDoc::OnParserParse()
 				OnParserBuild();
 		}
 
+
+		if(this->IsModified())return;
+
+		main_frm->ClearShow();
+
 		if(m_parser == NULL)return;
 		if(input.GetInputLength() <= 0)return;
 
@@ -890,6 +874,8 @@ void CGrammarDesignerDoc::OnParserParse()
 
 		m_parser->ResetParseContext(new ParserContext(input, output));
 
+		m_parser->Clear();
+
 		CString str = input.GetInput();
 
 
@@ -900,25 +886,59 @@ void CGrammarDesignerDoc::OnParserParse()
 		ARSpace::lexToken_t		token;
 
 		memset(&token, 0, sizeof(token));
+		
 		while(is_ok)
 		{
 				
 				if(!m_lexer->GetToken(token))
 				{
-						is_ok = false;
+						const ArsenalCPP::Lexer::lastError_t &last_err = m_lexer->GetLastError();
+
+						size_t len = wcslen(last_err.str);
+						if(len > 10) len = 10;
+
+						CString lex_err;
+						CString msg;
+						msg.Append(last_err.str,  len);
+					
+						lex_err.Format(TEXT("Lexer Error : %ls"), msg.GetString());
+						
+
+						output.Append(lex_err, COutputList::MSG_ERROR, last_err.line, &input);
+						
+						m_lexer->Skip();
+						m_lexer->ClearError();
 				}else
 				{
-						if(token.value != 0)
-						{
-								output.Append(CString(token.str, token.count), COutputList::MSG_ERROR, token.line, &input);
-						}else
+						is_ok = m_parser->AddToken(token);
+
+						if(token.value == 0)
 						{
 								break;
 						}
 				}
-
 		}
 		
+		
+		if(is_ok)
+		{
+				CPrintNode *node = (CPrintNode*)m_parser->GetResult();
+				
+				ASSERT(node != NULL);
+
+				CSyntaxPane &tree = main_frm->GetSyntaxPnae();
+
+				tree.DrawTree(node);
+				output.Append(TEXT("Parse code successful!"));
+				
+				main_frm->ShowPane(&tree, TRUE, TRUE, TRUE);
+		}else
+		{
+				output.Append(TEXT("Parse code failed!"));
+		}
+
+		main_frm->ShowPane(&output, TRUE, TRUE, TRUE);
+
 }
 
 
