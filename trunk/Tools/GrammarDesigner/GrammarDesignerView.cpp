@@ -48,6 +48,7 @@ BEGIN_MESSAGE_MAP(CGrammarDesignerView, CRichEditView)
 		
 		ON_COMMAND(ID_EDIT_OPEN, &CGrammarDesignerView::OnEditOpen)
 		ON_COMMAND(ID_EDIT_SAVE32863, &CGrammarDesignerView::OnEditSaveFile)
+		ON_WM_DROPFILES()
 END_MESSAGE_MAP()
 
 // CGrammarDesignerView construction/destruction
@@ -414,6 +415,7 @@ LRESULT CGrammarDesignerView::OnLocatePos(WPARAM wp, LPARAM lp)
 
 int CGrammarDesignerView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
+		this->DragAcceptFiles(FALSE);
 		if (CRichEditView::OnCreate(lpCreateStruct) == -1)
 				return -1;
 
@@ -583,3 +585,53 @@ void CGrammarDesignerView::OnEditSaveFile()
 //		this->MessageBox(TEXT("XXXXXXXXX"));
 //		return CRichEditView::OnDrop(pDataObject, dropEffect, point);
 //}
+
+void CGrammarDesignerView::OnDropFiles(HDROP hDropInfo)
+{
+		CString fname;
+		// TODO: Add your message handler code here and/or call default
+		UINT DropCount=DragQueryFile(hDropInfo,-1,NULL,0);//取得被拖动文件的数目
+		for(UINT i=0;i< DropCount;i++)
+		{ 
+				//取得第i个拖动文件名所占字节数      
+				UINT len=DragQueryFile(hDropInfo,i,NULL,0);
+				wchar_t *name = new wchar_t[len + 1];
+				len = DragQueryFile(hDropInfo,i,name, len + 1);
+				name[len] = 0;
+				fname = name;
+				delete []name;
+				break;
+		} 
+		DragFinish(hDropInfo);  //拖放结束后,释放内存
+		
+		if(!fname.IsEmpty())
+		{
+				if(this->GetDocument()->IsModified())
+				{
+						((CGrammarDesignerDoc*)this->GetDocument())->SaveModified();
+						
+				}
+
+				this->GetDocument()->OnOpenDocument(fname);
+				this->GetDocument()->SetPathName(fname, TRUE);
+
+				
+				
+		}
+		//CRichEditView::OnDropFiles(hDropInfo);
+}
+
+HRESULT CGrammarDesignerView::QueryAcceptData(LPDATAOBJECT lpdataobj, CLIPFORMAT* lpcfFormat, DWORD dwReco, BOOL bReally, HGLOBAL hMetaFile)
+{
+		// TODO: Add your specialized code here and/or call the base class
+		COleDataObject   dataobj;       
+
+        dataobj.Attach(lpdataobj,   FALSE); 
+
+        if(!dataobj.IsDataAvailable(CF_TEXT))
+
+            return S_FALSE; 
+
+		
+		return CRichEditView::QueryAcceptData(lpdataobj, lpcfFormat, dwReco, bReally, hMetaFile);
+}

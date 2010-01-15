@@ -203,6 +203,7 @@ BEGIN_MESSAGE_MAP(CInputEdit, CRichEditCtrl)
 		ON_COMMAND(ID_INPUT_EDIT_SAVE, &CInputEdit::OnPopupSave)
 		
 		ON_CONTROL_REFLECT(EN_CHANGE, &CInputEdit::OnEnChange)
+		ON_WM_DROPFILES()
 END_MESSAGE_MAP()
 
 void CInputEdit::OnContextMenu(CWnd* pWnd, CPoint point)
@@ -296,6 +297,7 @@ void CInputEdit::OnUpdateEditClear(CCmdUI *pCmdUI)
 
 int CInputEdit::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
+		this->DragAcceptFiles(TRUE);
 		if (CRichEditCtrl::OnCreate(lpCreateStruct) == -1)
 				return -1;
 
@@ -382,6 +384,43 @@ void CInputEdit::OnEnChange()
 		// with the ENM_CHANGE flag ORed into the mask.
 
 		// TODO:  Add your control notification handler code here
+}
 
+
+void CInputEdit::OnDropFiles(HDROP hDropInfo)
+{
+		// TODO: Add your message handler code here and/or call default
+		CString fname;
+		// TODO: Add your message handler code here and/or call default
+		UINT DropCount=DragQueryFile(hDropInfo,-1,NULL,0);//取得被拖动文件的数目
+		for(UINT i=0;i< DropCount;i++)
+		{ 
+				//取得第i个拖动文件名所占字节数      
+				UINT len=DragQueryFile(hDropInfo,i,NULL,0);
+				wchar_t *name = new wchar_t[len + 1];
+				len = DragQueryFile(hDropInfo,i,name, len + 1);
+				name[len] = 0;
+				fname = name;
+				delete []name;
+				break;
+		} 
+		DragFinish(hDropInfo);  //拖放结束后,释放内存
 		
+		if(!fname.IsEmpty())
+		{
+				CTextFileRead	fr(fname);
+
+				CString txt;
+				
+				if(fr.Read(txt))
+				{
+						this->SetWindowText(txt);
+				}else
+				{
+						CString msg;
+						msg.Format(TEXT("Failed to open %ls"), fname.GetString());
+						this->MessageBox(msg);
+				}
+		}
+		//CRichEditCtrl::OnDropFiles(hDropInfo);
 }

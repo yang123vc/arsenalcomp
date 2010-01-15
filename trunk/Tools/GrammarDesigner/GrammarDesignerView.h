@@ -79,6 +79,9 @@ public:
 		afx_msg void OnEditOpen();
 		afx_msg void OnEditSaveFile();
 //		virtual BOOL OnDrop(COleDataObject* pDataObject, DROPEFFECT dropEffect, CPoint point);
+		afx_msg void OnDropFiles(HDROP hDropInfo);
+protected:
+		virtual HRESULT QueryAcceptData(LPDATAOBJECT lpdataobj, CLIPFORMAT* lpcfFormat, DWORD dwReco, BOOL bReally, HGLOBAL hMetaFile);
 };
 
 #ifndef _DEBUG  // debug version in GrammarDesignerView.cpp

@@ -33,6 +33,7 @@ public:
 		afx_msg void OnPopupSave();
 		
 		afx_msg void OnEnChange();
+		afx_msg void OnDropFiles(HDROP hDropInfo);
 };
 
 
