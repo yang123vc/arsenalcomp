@@ -36,6 +36,7 @@
 #define IDS_FIND_TAB                    302
 #define IDS_EDIT_MENU                   306
 #define IDR_MENU_TAGVIEW                312
+#define IDR_INPUT_POPUP                 315
 #define ID_EDIT_UNDO32771               32771
 #define ID_EDIT_SELECTALL               32772
 #define ID_EDIT_SELECTALL32773          32773
@@ -89,19 +90,35 @@
 #define ID_PARSER_RUN                   32838
 #define ID_PARSER_BUILD                 32839
 #define ID_Menu                         32840
+#define ID_POPUP_CUT                    32841
+#define ID_POPUP_COPY                   32842
+#define ID_POPUP_PASTE                  32843
+#define ID_POPUP_SELECTALL              32844
+#define ID_POPUP_FONT32845              32845
+#define ID_POPUP_PARSE                  32846
+#define ID_INPUT_FONT                   32847
+#define ID_POPUP_OPEN                   32848
+#define ID_POPUP_CLEAR                  32849
+#define ID_POPUP_SAVE                   32850
+#define ID_EDIT_SAVE                    32851
+#define ID_INPUT_EDIT_SAVE              32852
+#define ID_INPUT_EDIT_OPEN              32853
+#define ID_PARSER_PARSE                 32854
+#define ID_SHOW_LEFTRECURSION           32855
 #define ID_INDICATOR_LINE               59142
 #define ID_INDICATOR_COL                59143
 #define IDS_ACTVIEW_WND                 61204
 #define ID_VIEW_ACTIONWND               61205
 #define IDS_TAGVIEW_WND                 61206
 #define ID_VIEW_TAGWND                  61207
+#define IDS_INPUTVIEW_WND               61211
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        314
-#define _APS_NEXT_COMMAND_VALUE         32841
+#define _APS_NEXT_RESOURCE_VALUE        316
+#define _APS_NEXT_COMMAND_VALUE         32856
 #define _APS_NEXT_CONTROL_VALUE         1001
 #define _APS_NEXT_SYMED_VALUE           310
 #endif

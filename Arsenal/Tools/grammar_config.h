@@ -53,12 +53,15 @@ typedef struct __cfg_token_tag
 typedef struct __cfg_prec_tag
 {
 		size_t	line;
-		const wchar_t	*prec_tok;
-		size_t			prec_tok_val;
+		
 		psrAssocType_t	assoc;
 		size_t			prec_level;
-}cfgPrec_t;
 
+		size_t			*prec_tok_val;
+		wchar_t			**prec_tok_set;
+		size_t			count;
+		size_t			cap;
+}cfgPrec_t;
 
 typedef struct __rule_tag
 {

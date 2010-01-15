@@ -141,8 +141,8 @@ psrRule_t* PSR_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, cons
 
 		if(prec_tok != NULL && PSR_FindTermByName((psrTermInfoList_t*)term_list, prec_tok) == NULL)
 		{
-				/*AR_error(L"Grammar Error: Invalid prec token <%ls>!\r\n", head->name);*/
-				AR_printf_ctx(ctx, L"Grammar Error: Invalid prec token <%ls>!\r\n", head->name);
+				/*AR_error(L"Grammar Error: Invalid prec token in <%ls>!\r\n", head->name);*/
+				AR_printf_ctx(ctx, L"Grammar Error: Invalid prec \"%ls\" token <%ls>\r\n", prec_tok, head->name);
 				return NULL;
 		}
 		

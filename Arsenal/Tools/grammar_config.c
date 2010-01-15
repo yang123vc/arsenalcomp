@@ -155,8 +155,76 @@ static const cfgTermInfo_t	__cfg_term[] =
 		{FAKE_EOI, L"#"}
 };
 
+/*
+typedef struct __cfg_prec_tag
+{
+		size_t	line;
+		
+		psrAssocType_t	assoc;
+		size_t			prec_level;
+
+		size_t			*prec_tok_val;
+		wchar_t			**prec_tok_set;
+		size_t			count;
+		size_t			cap;
+}cfgPrec_t;
+*/
+
+static void CFG_InitPrec(cfgPrec_t *prec)
+{
+		AR_ASSERT(prec != NULL);
+		AR_memset(prec, 0, sizeof(*prec));
+}
 
 
+static void CFG_UnInitPrec(cfgPrec_t *prec)
+{
+		size_t i;
+		AR_ASSERT(prec != NULL);
+		
+		for(i = 0; i < prec->count; ++i)
+		{
+				AR_ASSERT(prec->prec_tok_set[i] != NULL);
+				AR_DEL(prec->prec_tok_set[i]);
+		}
+
+		if(prec->prec_tok_set) AR_DEL(prec->prec_tok_set);
+		if(prec->prec_tok_val) AR_DEL(prec->prec_tok_val);
+		AR_memset(prec, 0, sizeof(*prec));
+}
+
+static void CFG_InsertTokenToPrec(cfgPrec_t *prec, const wchar_t *prec_tok, size_t prec_tok_val)
+{
+		AR_ASSERT(prec != NULL && prec_tok != NULL);
+
+		if(prec->count == prec->cap)
+		{
+				prec->cap = (prec->cap + 4)*2;
+				prec->prec_tok_set = AR_REALLOC(wchar_t*, prec->prec_tok_set, prec->cap);
+				prec->prec_tok_val = AR_REALLOC(size_t, prec->prec_tok_val, prec->cap);
+		}
+
+		prec->prec_tok_set[prec->count] = AR_wcsdup(prec_tok);
+		prec->prec_tok_val[prec->count] = prec_tok_val;
+		prec->count++;
+}
+
+
+static void CFG_CopyPrec(cfgPrec_t *dest, const cfgPrec_t *sour)
+{
+		size_t i;
+		CFG_UnInitPrec(dest);
+
+		dest->assoc = sour->assoc;
+		dest->prec_level = sour->prec_level;
+		dest->line = sour->line;
+		for(i = 0; i < sour->count; ++i)
+		{
+				CFG_InsertTokenToPrec(dest, sour->prec_tok_set[i], sour->prec_tok_val[i]);
+		}
+}
+
+/*******************************************************************/
 static void CFG_InitNodeList(cfgNodeList_t *lst)
 {
 		AR_ASSERT(lst != NULL);
@@ -185,6 +253,8 @@ static void CFG_InsertToNodeList(cfgNodeList_t *lst, cfgNode_t *node)
 		}
 		lst->lst[lst->count++] = node;
 }
+
+
 
 
 static void CFG_InitConfig(cfgConfig_t *cfg, cfgNodeList_t *name, cfgNodeList_t *token, cfgNodeList_t *prec, cfgNodeList_t *rule)
@@ -281,7 +351,6 @@ RE_CHECK_POINT:
 
 				for(i = 0; i < prec->count; ++i)
 				{
-						cfg->prec[i] = prec->lst[i]->prec;
 
 						if(prec->lst[i]->type == CFG_ERROR_T)
 						{
@@ -289,13 +358,36 @@ RE_CHECK_POINT:
 
 						}else
 						{
-								if(prec->lst[i]->prec.prec_tok)
+								size_t k;
+								cfgPrec_t *dest = &cfg->prec[cfg->prec_cnt];
+								CFG_InitPrec(dest);
+								
+								CFG_CopyPrec(dest, &prec->lst[i]->prec);
+
+								for(k = 0; k < dest->count; ++k)
 								{
-										cfg->prec[cfg->prec_cnt].prec_tok = AR_wcsdup(prec->lst[i]->prec.prec_tok);
-										cfg->prec[cfg->prec_cnt].prec_tok_val = tmp_tok_val++;
-										cfg->prec[cfg->prec_cnt].prec_level = i + 1;
-										cfg->prec_cnt++;
+										size_t x;
+										for(x = 0; x < cfg->tok_cnt; ++x)
+										{
+												if(cfg->tok[x].is_skip)continue;
+
+												AR_ASSERT(cfg->tok[x].name != NULL);
+												if(AR_wcscmp(dest->prec_tok_set[k], cfg->tok[x].name) == 0)
+												{
+														dest->prec_tok_val[k] = cfg->tok[x].tokval;
+														break;
+												}
+										}
+
+										if(dest->prec_tok_val[k] == 0)
+										{
+												dest->prec_tok_val[k] = tmp_tok_val++;
+										}
+
 								}
+
+								dest->prec_level = i + 1;
+								cfg->prec_cnt++;
 						}
 				}
 		}
@@ -305,6 +397,7 @@ RE_CHECK_POINT:
 				/*cfg->rule_cnt = rule->count;*/
 
 				cfg->rule = rule->count > 0 ? AR_NEWARR0(cfgRule_t, rule->count) : NULL;
+				
 
 				for(i = 0; i < rule->count; ++i)
 				{
@@ -365,7 +458,8 @@ static void CFG_UnInitConfig(cfgConfig_t *cfg)
 
 		for(i = 0; i < cfg->prec_cnt; ++i)
 		{
-				if(cfg->prec[i].prec_tok)AR_DEL(cfg->prec[i].prec_tok);
+				CFG_UnInitPrec(&cfg->prec[i]);
+				/*if(cfg->prec[i].prec_tok)AR_DEL(cfg->prec[i].prec_tok);*/
 		}
 
 		if(cfg->prec)AR_DEL(cfg->prec);
@@ -387,6 +481,8 @@ static void CFG_UnInitConfig(cfgConfig_t *cfg)
 
 
 
+
+
 static cfgNode_t* CFG_CreateNode(cfgNodeType_t type)
 {
 		cfgNode_t		*node;
@@ -398,6 +494,9 @@ static cfgNode_t* CFG_CreateNode(cfgNodeType_t type)
 		if(node->type == CFG_NODE_LIST_T)
 		{
 				CFG_InitNodeList(&node->lst);
+		}else if(node->type == CFG_PREC_T)
+		{
+				CFG_InitPrec(&node->prec);
 		}
 		return node;
 }
@@ -436,7 +535,7 @@ static void CFG_DestroyNode(cfgNode_t *node)
 				}
 				case CFG_PREC_T:
 				{
-						if(node->prec.prec_tok)AR_DEL(node->prec.prec_tok);
+						CFG_UnInitPrec(&node->prec);
 						break;
 				}
 				case CFG_RULE_T:
@@ -724,10 +823,10 @@ static psrNode_t*		AR_STDCALL __handle_prec_def(psrNode_t **nodes, size_t count,
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res;
 		wchar_t			c;
+		size_t			i;
 		AR_ASSERT(count == 2);
 
-		AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T &&  ns[0]->lexeme.lex_val == ASSOC && ns[1] && ns[1]->type == CFG_LEXEME_T);
-
+		AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T &&  ns[0]->lexeme.lex_val == ASSOC && ns[1] && ns[1]->type == CFG_NODE_LIST_T);
 
 
 		res = CFG_CreateNode(CFG_PREC_T);
@@ -752,11 +851,12 @@ static psrNode_t*		AR_STDCALL __handle_prec_def(psrNode_t **nodes, size_t count,
 				AR_error(AR_ERR_FATAL, L"Arsenal Tools Internal Error In : %hs\r\n", AR_FUNC_NAME);
 		}
 
-
-		res->prec.prec_tok = ns[1]->lexeme.lexeme;
-		ns[1]->lexeme.lexeme = NULL;
-
-
+		for(i = 0; i < ns[1]->lst.count; ++i)
+		{
+				const cfgNode_t *node = ns[1]->lst.lst[i];
+				AR_ASSERT(node->type == CFG_LEXEME_T);
+				CFG_InsertTokenToPrec(&res->prec, node->lexeme.lexeme, 0);
+		}
 		return res;
 
 }
@@ -1071,7 +1171,9 @@ static const cfgRuleDef_t	__cfg_rule[] =
 		{ L"token_val_prec 		:		, number",												NULL,1},
 		{ L"token_val_prec 		:		",														NULL,0},
 		
-		{ L"prec_def			:  		assoc lexeme ",										__handle_prec_def,0},
+
+		{ L"prec_def			:  		assoc term_list ",								__handle_prec_def,0},
+
 
 		
 		{ L"rule_def			: 		lexeme : rhs_list ",							__handle_rule_def,0},

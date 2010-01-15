@@ -105,7 +105,7 @@ BOOL CGrammarDesignerApp::InitInstance()
 	ASSERT(m_pDocManager == NULL);
 	m_pDocManager = new CDocManagerEx();
 		
-		AddDocTemplate(pDocTemplate);
+	AddDocTemplate(pDocTemplate);
 
 
 	// Enable DDE Execute open

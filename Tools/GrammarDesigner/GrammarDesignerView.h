@@ -73,6 +73,8 @@ public:
 		afx_msg void OnUpdateSetrebuildtime5000ms(CCmdUI *pCmdUI);
 		afx_msg void OnUpdateSetrebuildtimeDisable(CCmdUI *pCmdUI);
 		afx_msg void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags);
+		afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
+		afx_msg void OnEnChange();
 };
 
 #ifndef _DEBUG  // debug version in GrammarDesignerView.cpp

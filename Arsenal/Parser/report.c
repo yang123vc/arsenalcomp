@@ -533,11 +533,117 @@ static void __insert_to_symtbl_view(psrSymbolMapView_t *map_view, const wchar_t 
 }
 
 
+
+
+static bool_t __detect_left_recursion(const psrGrammar_t *grammar, const psrSymb_t *head, psrSymbList_t *lst, psrSymbolMapView_t *output)
+{
+		size_t i;
+		bool_t is_recu = false;
+		AR_ASSERT(grammar != NULL && head != NULL && lst != NULL);
+
+		/*AR_ASSERT(lst->count > 0);*/
+
+		AR_ASSERT(PSR_FindFromSymbList(lst, head) == -1);
+		
+		PSR_InsertToSymbList(lst, head);
+		
+		
+		
+		for(i = 0; i < grammar->count; ++i)
+		{
+				const psrRule_t *rule;
+				rule = grammar->rules[i];
+				
+				if(PSR_CompSymb(rule->head, head) == 0)
+				{
+						const psrSymb_t *symb;
+
+						size_t x = 0;
+						
+						while(x < rule->body.count && PSR_CompSymb(rule->body.lst[x], PSR_EpsilonSymb) == 0)x++;
+						
+						if(x < rule->body.count && rule->body.lst[x]->type == PSR_NONTERM)
+						{
+								symb = rule->body.lst[x];
+
+								if(PSR_CompSymb(lst->lst[0], symb) == 0)
+								{
+										is_recu = true;
+										if(output)
+										{
+												size_t cnt;
+												
+												arString_t *str = AR_CreateString();
+
+												for(cnt = 0; cnt < lst->count; ++cnt)
+												{
+														AR_AppendFormatString(str, L"<%ls> -> ", lst->lst[cnt]->name);
+												}
+												AR_AppendFormatString(str, L"<%ls> ", lst->lst[0]->name);
+												
+												__insert_to_symtbl_view(output, L"Path:", AR_GetStrString(str));
+
+												AR_DestroyString(str);
+
+										}
+
+								}else if(PSR_FindFromSymbList(lst, symb) != -1)
+								{
+										continue;
+								}else
+								{
+										__detect_left_recursion(grammar, symb, lst,output);
+								}
+						}
+				}
+		}
+		
+		PSR_RemoveFromSymbListByIndex(lst, lst->count-1);
+		return is_recu;
+		
+}
+
+
+bool_t					__report_left_recursion(const psrGrammar_t *grammar, psrSymbolMapView_t *output)
+{
+		size_t i;
+		psrSymbList_t	lst;
+		bool_t			ret = false;
+		AR_ASSERT(grammar != NULL);
+		
+		PSR_InitSymbList(&lst);
+		
+		for(i = 0; i < grammar->symb_list.count; ++i)
+		{
+				const psrSymb_t *symb;
+				
+				symb = grammar->symb_list.lst[i];
+
+				PSR_ClearSymbList(&lst);
+				
+				if(symb->type == PSR_NONTERM)
+				{
+						if(__detect_left_recursion(grammar, symb, &lst,output))
+						{
+								ret = true;
+						}
+				}
+		}
+
+		PSR_UnInitSymbList(&lst);
+		return ret;
+}
+
+
+
+
+
+
 const psrFirstFollowView_t*		PSR_CreateParserFirstFollowView(const parser_t *parser)
 {
 		psrSymbMap_t	first, follow;
 		arString_t		*str;
-		psrSymbolMapView_t		first_view, follow_view;
+		psrSymbolMapView_t		first_view, follow_view, left_recu;
 		psrFirstFollowView_t	*ret;
 		size_t i;
 		
@@ -545,7 +651,8 @@ const psrFirstFollowView_t*		PSR_CreateParserFirstFollowView(const parser_t *par
 
 		AR_memset(&first_view, 0, sizeof(first_view));
 		AR_memset(&follow_view, 0, sizeof(follow_view));
-
+		
+		AR_memset(&left_recu, 0, sizeof(left_recu));
 
 		ret = NULL;
 
@@ -595,10 +702,12 @@ const psrFirstFollowView_t*		PSR_CreateParserFirstFollowView(const parser_t *par
 				}
 		}
 
+		__report_left_recursion(parser->grammar, &left_recu);
+
 		ret = AR_NEW0(psrFirstFollowView_t);
 		ret->first_set = first_view;
 		ret->follow_set = follow_view;
-
+		ret->left_recursion = left_recu;
 
 		return ret;
 }
@@ -630,6 +739,16 @@ void							PSR_DestroyParserFirstFollowView(const psrFirstFollowView_t *follow_v
 
 				AR_DEL(view->follow_set.name);
 				AR_DEL(view->follow_set.name_set);
+
+
+				for(i = 0; i < view->left_recursion.count; ++i)
+				{
+						AR_DEL(view->left_recursion.name[i]);
+						AR_DEL(view->left_recursion.name_set[i]);
+				}
+
+				AR_DEL(view->left_recursion.name);
+				AR_DEL(view->left_recursion.name_set);
 
 				AR_DEL(view);
 		}

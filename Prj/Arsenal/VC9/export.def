@@ -86,8 +86,8 @@ PSR_PrintSymbolMap
 PSR_ResetGrammarIOContext
 PSR_ResetGrammarParseContext
 
-
-
+PSR_GetTermSymbInfoByValue
+PSR_GetTermSymbInfoByName
 
 
 ;Parser

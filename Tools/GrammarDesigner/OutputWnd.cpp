@@ -142,19 +142,21 @@ void COutputList::OnLButtonDblClk(UINT nFlags, CPoint point)
 		{
 				Param *ptr = (Param*)this->GetItemData(idx);
 
-				if(ptr->type != MSG_MESSAGE)
+				if(ptr->type != MSG_MESSAGE && ptr->target != NULL)
 				{
-						CView *pview = ((CFrameWnd*)::AfxGetMainWnd())->GetActiveView();
+						/*CView *pview = ((CFrameWnd*)::AfxGetMainWnd())->GetActiveView();
 
 						if(pview)
 						{
 								pview->SendMessage(ID_EDIT_LOCATE_POS, ptr->line);
 						}
+						*/
+
+						ptr->target->SendMessage(ID_EDIT_LOCATE_POS, ptr->line);
 				}
 		}
-
-		
 }
+
 
 
 
@@ -317,15 +319,11 @@ void COutputWnd::OnSize(UINT nType, int cx, int cy)
 }
 
 
-void	COutputWnd::Append(const CString &msg, const COutputList::Param &param)
-{
-		m_output.Append(msg, param);
-}
 
-
-void	COutputWnd::Append(const CString &msg, COutputList::MsgType type, size_t line)
+void	COutputWnd::Append(const CString &msg, COutputList::MsgType type, size_t line, CWnd *target)
 {
-		this->Append(msg, COutputList::Param(type, line));
+		//this->Append(msg, COutputList::Param(type, line, target));
+		m_output.Append(msg, COutputList::Param(type, line, target));
 }
 
 void COutputWnd::Clear()

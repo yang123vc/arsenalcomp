@@ -1002,6 +1002,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\InputPane.h"
+				>
+			</File>
+			<File
 				RelativePath=".\MainFrm.h"
 				>
 			</File>
@@ -1010,7 +1014,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PrintNode.h"
+				>
+			</File>
+			<File
 				RelativePath=".\resource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\resource_id.h"
 				>
 			</File>
 			<File
@@ -1100,11 +1112,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\InputPane.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\MainFrm.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\OutputWnd.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\PrintNode.cpp"
 				>
 			</File>
 			<File

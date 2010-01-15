@@ -394,6 +394,28 @@ void	CActionView::DrawFirstFollowView(const ARSpace::psrFirstFollowView_t *view)
 
 }
 
+
+void	CActionView::DrawLeftRecursionView(const ARSpace::psrFirstFollowView_t *view)
+{
+		size_t	i;
+		ASSERT(view != NULL);
+		
+		this->Clear();
+
+		
+
+		CRect rect;
+		this->GetWindowRect(&rect);
+
+		this->m_list.InsertColumn(0, TEXT("Path"), 0, rect.Width());
+
+		for(i = 0; i < view->left_recursion.count; ++i)
+		{
+				this->m_list.InsertItem(i, view->left_recursion.name_set[i]);
+		}
+
+}
+
 void CActionView::Clear()
 {
 		this->m_list.OnEditClear();

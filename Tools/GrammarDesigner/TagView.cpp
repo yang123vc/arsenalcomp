@@ -189,9 +189,19 @@ void	CTagTree::UpdateTag(const ARSpace::cfgConfig_t *cfg)
 
 		for(size_t i = 0; i < cfg->prec_cnt; ++i)
 		{
+				size_t k;
 				const ARSpace::cfgPrec_t *prec = &cfg->prec[i];
 				
+				CString str;
+				for(k = 0; k < prec->count; ++k)
+				{
+						ASSERT(prec->prec_tok_set[k] != NULL);
+						str = prec->prec_tok_set[k];
+						update_table(m_prec_tbl, str, prec->line);
+				}
 				
+				
+				/*
 				if(prec->prec_tok == NULL)
 				{
 						str.Format(TEXT("Null Token %d"), i);
@@ -200,6 +210,7 @@ void	CTagTree::UpdateTag(const ARSpace::cfgConfig_t *cfg)
 						str = prec->prec_tok;
 				}
 				update_table(m_prec_tbl, str, prec->line);
+				*/
 		}
 
 

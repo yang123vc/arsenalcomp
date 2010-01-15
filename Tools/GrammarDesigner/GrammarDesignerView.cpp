@@ -19,7 +19,7 @@
 IMPLEMENT_DYNCREATE(CGrammarDesignerView, CRichEditView)
 
 BEGIN_MESSAGE_MAP(CGrammarDesignerView, CRichEditView)
-		ON_WM_KEYDOWN()
+		
 		ON_COMMAND(ID_EDIT_FONTDLG, &CGrammarDesignerView::OnEditFontdlg)
 		
 		ON_COMMAND(ID_EDIT_WORDWARP, &CGrammarDesignerView::OnEditWordwarp)
@@ -43,6 +43,8 @@ BEGIN_MESSAGE_MAP(CGrammarDesignerView, CRichEditView)
 		ON_UPDATE_COMMAND_UI(ID_SETREBUILDTIME_5000MS, &CGrammarDesignerView::OnUpdateSetrebuildtime5000ms)
 		ON_UPDATE_COMMAND_UI(ID_SETREBUILDTIME_DISABLE, &CGrammarDesignerView::OnUpdateSetrebuildtimeDisable)
 		ON_WM_CHAR()
+		ON_WM_KEYDOWN()
+		ON_CONTROL_REFLECT(EN_CHANGE, &CGrammarDesignerView::OnEnChange)
 END_MESSAGE_MAP()
 
 // CGrammarDesignerView construction/destruction
@@ -137,7 +139,7 @@ BOOL CGrammarDesignerView::PreTranslateMessage(MSG* pMsg)
 		{
 		case WM_RBUTTONDOWN:
 		{
-				GetFocus();
+				this->SetFocus();
 				CPoint point;
 				GetCursorPos(&point);
 				this->OnContextMenu(this, point);
@@ -149,7 +151,7 @@ BOOL CGrammarDesignerView::PreTranslateMessage(MSG* pMsg)
 				{
 				case VK_APPS:
 				{
-						GetFocus();
+						this->SetFocus();
 						CPoint pt = this->GetRichEditCtrl().GetCaretPos();
 						this->ClientToScreen(&pt);
 						this->OnContextMenu(this, pt);
@@ -385,7 +387,7 @@ void CGrammarDesignerView::Highlight(long start, long end, COLORREF color)
 
 LRESULT CGrammarDesignerView::OnLocatePos(WPARAM wp, LPARAM lp)
 {
-		this->GetRichEditCtrl().GetFocus();
+		this->GetRichEditCtrl().SetFocus();
 
 		
 		int index = this->GetRichEditCtrl().LineIndex((int)wp);
@@ -531,4 +533,25 @@ void CGrammarDesignerView::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
 		// TODO: Add your message handler code here and/or call default
 
 		CRichEditView::OnChar(nChar, nRepCnt, nFlags);
+}
+
+void CGrammarDesignerView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
+{
+		// TODO: Add your message handler code here and/or call default
+
+		CRichEditView::OnKeyDown(nChar, nRepCnt, nFlags);
+}
+
+void CGrammarDesignerView::OnEnChange()
+{
+		// TODO:  If this is a RICHEDIT control, the control will not
+		// send this notification unless you override the CRichEditView::OnInitDialog()
+		// function and call CRichEditCtrl().SetEventMask()
+		// with the ENM_CHANGE flag ORed into the mask.
+
+		// TODO:  Add your control notification handler code here
+
+		this->GetDocument()->SetModifiedFlag(TRUE);
+		
+		
 }
