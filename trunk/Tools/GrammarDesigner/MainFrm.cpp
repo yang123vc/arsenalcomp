@@ -30,7 +30,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 
 	ON_UPDATE_COMMAND_UI_RANGE(ID_INDICATOR_LINE, ID_INDICATOR_COL, &CMainFrame::OnUpdateStatusBarPanes)
 
-//	ON_COMMAND(ID_TEST_TESTMAINFORM, &CMainFrame::OnTestTestmainform)
+	
 ON_COMMAND(ID_TEST_TEST, &CMainFrame::OnTestTest)
 
 ON_WM_SIZE()
@@ -220,6 +220,15 @@ BOOL CMainFrame::CreateDockingWindows()
 				return FALSE; // failed to create
 	}
 
+		CString strInputView;
+		bNameValid = strInputView.LoadString(IDS_INPUTVIEW_WND);
+
+		if(!m_inputPane.Create(strInputView, this, CRect(0,0,100,100), TRUE, ID_INPUTVIEW_WND ,WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_TOP | CBRS_FLOAT_MULTI))
+		{
+				TRACE0("Failed to create input  window\n");
+				return FALSE; // failed to create
+		}
+		
 	SetDockingWindowIcons(theApp.m_bHiColorIcons);
 
 
@@ -233,6 +242,10 @@ BOOL CMainFrame::CreateDockingWindows()
 
 	m_wndTag.EnableDocking(CBRS_ALIGN_LEFT);
 	DockPane(&m_wndTag);
+
+
+	m_inputPane.EnableDocking(CBRS_ALIGN_TOP);
+	DockPane(&m_inputPane);
 
 	return TRUE;
 }
@@ -249,8 +262,8 @@ void CMainFrame::SetDockingWindowIcons(BOOL bHiColorIcons)
 	HICON hTagViewBarIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_OUTPUT_WND_HC : IDI_OUTPUT_WND), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
 	m_wndTag.SetIcon(hTagViewBarIcon, FALSE);
 
-	
-
+	HICON hInputViewBarIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_OUTPUT_WND_HC : IDI_OUTPUT_WND), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
+	m_inputPane.SetIcon(hInputViewBarIcon, FALSE);
 
 }
 
@@ -425,6 +438,19 @@ CActionView&	CMainFrame::GetActionView()
 		return this->m_wndActView;
 }
 
+
+CInputPane&		CMainFrame::GetInputPane()
+{
+		return this->m_inputPane;
+}
+
+
+void	CMainFrame::ClearShow()
+{
+		m_wndActView.Clear();
+		m_wndOutput.Clear();
+}
+
 void CMainFrame::OnUpdateStatusBarPanes(CCmdUI* pCmdUI)
 {
 		pCmdUI->Enable(TRUE);
@@ -520,5 +546,5 @@ void CMainFrame::OnSize(UINT nType, int cx, int cy)
 
 void CMainFrame::OnTestTest()
 {
-		
+		this->GetInputPane().OnLocatePos(0, NULL);
 }

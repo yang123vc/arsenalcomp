@@ -41,8 +41,12 @@ public:
 		{
 				MsgType	type;
 				size_t	line;
+				CWnd	*target;
 
-				Param(MsgType t = MSG_MESSAGE, size_t l = 0) : type(t), line(l) { }
+				Param(MsgType t = MSG_MESSAGE, size_t l = 0, CWnd	*tar = NULL) : type(t), line(l), target(tar)
+				{
+
+				}
 		};
 public:
 		void	Append(const CString &msg, const Param &param);
@@ -76,8 +80,9 @@ protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 public:
-		void	Append(const CString &msg, const COutputList::Param &param = COutputList::Param());
-		void	Append(const CString &msg, COutputList::MsgType type, size_t line);
+
+		
+		void	Append(const CString &msg, COutputList::MsgType type = COutputList::MSG_MESSAGE, size_t line = 0, CWnd *target = NULL);
 		void	Clear();	
 
 	DECLARE_MESSAGE_MAP()

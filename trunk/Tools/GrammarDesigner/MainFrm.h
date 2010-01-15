@@ -7,7 +7,7 @@
 #include "OutputWnd.h"
 #include "ActionView.h"
 #include "TagView.h"
-
+#include "InputPane.h"
 
 class CMainFrame : public CFrameWndEx
 {
@@ -47,6 +47,8 @@ protected:  // control bar embedded members
 	COutputWnd			m_wndOutput;
 	CActionView			m_wndActView;
 	CTagView			m_wndTag;
+
+	CInputPane			m_inputPane;
 	
 
 // Generated message map functions
@@ -70,6 +72,8 @@ public:
 		CTagView&	GetTagView();
 		COutputWnd&		GetOutputView();
 		CActionView&	GetActionView();
+		CInputPane&		GetInputPane();
+		void			ClearShow();
 public:
 		afx_msg void OnSize(UINT nType, int cx, int cy);
 

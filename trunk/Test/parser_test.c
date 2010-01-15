@@ -329,6 +329,19 @@ void parser_test()
 		*/
 				}
 				AR_printf(L"----------------------\r\n");
+				
+				for(i = 0; i < cfg->prec_cnt; ++i)
+				{
+						size_t k;
+						const cfgPrec_t	*prec = &cfg->prec[i];
+
+						for(k = 0; k < prec->count; ++k)
+						{
+								AR_printf(L"name == %ls : tok_val == %d : prec_level == %d : assoc == %d \r\n", prec->prec_tok_set[k], prec->prec_tok_val[k],prec->prec_level, prec->assoc);
+						}
+				}
+
+				AR_printf(L"----------------------\r\n");
 
 				for(i = 0; i < cfg->rule_cnt; ++i)
 				{

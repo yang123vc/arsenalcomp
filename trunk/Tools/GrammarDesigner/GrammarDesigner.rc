@@ -80,6 +80,26 @@ BEGIN
     END
 END
 
+IDR_INPUT_POPUP MENU 
+BEGIN
+    POPUP "Popup"
+    BEGIN
+        MENUITEM "Cut",                         ID_EDIT_CUT
+        MENUITEM "Copy",                        ID_EDIT_COPY
+        MENUITEM "Clear",                       ID_EDIT_CLEAR
+        MENUITEM "Paste",                       ID_EDIT_PASTE
+        MENUITEM SEPARATOR
+        MENUITEM "Select All",                  ID_EDIT_SELECT_ALL
+        MENUITEM SEPARATOR
+        MENUITEM "Font",                        ID_INPUT_FONT
+        MENUITEM SEPARATOR
+        MENUITEM "Open",                        ID_INPUT_EDIT_OPEN
+        MENUITEM "Save",                        ID_INPUT_EDIT_SAVE
+        MENUITEM SEPARATOR
+        MENUITEM "Parse",                       ID_POPUP_PARSE
+    END
+END
+
 #endif    // Chinese (P.R.C.) resources
 /////////////////////////////////////////////////////////////////////////////
 
@@ -164,12 +184,13 @@ BEGIN
             MENUITEM "L&ALR(1)",                    ID_PARSER_MODE_LALR, CHECKED
         END
         MENUITEM "&Build",                      ID_PARSER_BUILD
-        MENUITEM "&Run",                        ID_PARSER_RUN
+        MENUITEM "&Parse",                      ID_PARSER_PARSE
         POPUP "Show"
         BEGIN
             MENUITEM "&ActionTable",                ID_PARSER_SHOWACTIONTABLE
             MENUITEM "&Conflict",                   ID_PARSER_SHOWCONFLICT
             MENUITEM "&FirstFollow",                ID_PARSER_SHOWFIRSTFOLLOW
+            MENUITEM "Left Recursion",              ID_SHOW_LEFTRECURSION
         END
     END
     POPUP "&Tools"
@@ -506,6 +527,7 @@ BEGIN
     AFX_IDS_SCTASKLIST      "Activate Task List"
     IDS_ACTVIEW_WND         "Action"
     IDS_TAGVIEW_WND         "Tag"
+    IDS_INPUTVIEW_WND       "Input"
 END
 
 STRINGTABLE 

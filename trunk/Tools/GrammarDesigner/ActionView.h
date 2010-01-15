@@ -47,8 +47,10 @@ public:
 		void	DrawActionView(const ARSpace::psrActionView_t *view);
 		void	DrawConflictView(const ARSpace::psrConflictView_t *view);
 		
-
+		
 		void	DrawFirstFollowView(const ARSpace::psrFirstFollowView_t *view);
+
+		void	DrawLeftRecursionView(const ARSpace::psrFirstFollowView_t *view);
 
 		void	Clear();
 };

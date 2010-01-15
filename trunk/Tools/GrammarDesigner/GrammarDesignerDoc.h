@@ -57,10 +57,10 @@ public:
 		
 		void	ClearParser();
 public:
-		virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
-		virtual BOOL OnSaveDocument(LPCTSTR lpszPathName);
+//		virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
+//		virtual BOOL OnSaveDocument(LPCTSTR lpszPathName);
 protected:
-		virtual BOOL SaveModified();
+//		virtual BOOL SaveModified();
 public:
 		
 		afx_msg void OnEndcodingChangeUI(CCmdUI *pCmdUI);
@@ -79,6 +79,11 @@ public:
 		afx_msg void OnUpdateParserShowconflict(CCmdUI *pCmdUI);
 		afx_msg void OnParserShowfirstfollow();
 		afx_msg void OnUpdateParserShowfirstfollow(CCmdUI *pCmdUI);
+		afx_msg void OnParserParse();
+		afx_msg void OnUpdateParserParse(CCmdUI *pCmdUI);
+		afx_msg void OnShowLeftrecursion();
+		afx_msg void OnUpdateShowLeftrecursion(CCmdUI *pCmdUI);
+		virtual void Serialize(CArchive& ar);
 };
 
 

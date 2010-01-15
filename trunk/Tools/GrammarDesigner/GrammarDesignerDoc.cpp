@@ -4,6 +4,7 @@
 
 #include "stdafx.h"
 
+#include "PrintNode.h"
 #include "MainFrm.h"
 
 #include "GrammarDesigner.h"
@@ -40,6 +41,10 @@ BEGIN_MESSAGE_MAP(CGrammarDesignerDoc, CDocument)
 		ON_UPDATE_COMMAND_UI(ID_PARSER_SHOWCONFLICT, &CGrammarDesignerDoc::OnUpdateParserShowconflict)
 		ON_COMMAND(ID_PARSER_SHOWFIRSTFOLLOW, &CGrammarDesignerDoc::OnParserShowfirstfollow)
 		ON_UPDATE_COMMAND_UI(ID_PARSER_SHOWFIRSTFOLLOW, &CGrammarDesignerDoc::OnUpdateParserShowfirstfollow)
+		ON_COMMAND(ID_PARSER_PARSE, &CGrammarDesignerDoc::OnParserParse)
+		ON_UPDATE_COMMAND_UI(ID_PARSER_PARSE, &CGrammarDesignerDoc::OnUpdateParserParse)
+		ON_COMMAND(ID_SHOW_LEFTRECURSION, &CGrammarDesignerDoc::OnShowLeftrecursion)
+		ON_UPDATE_COMMAND_UI(ID_SHOW_LEFTRECURSION, &CGrammarDesignerDoc::OnUpdateShowLeftrecursion)
 END_MESSAGE_MAP()
 
 
@@ -60,21 +65,6 @@ CGrammarDesignerDoc::~CGrammarDesignerDoc()
 		ClearParser();
 }
 
-
-BOOL CGrammarDesignerDoc::OnNewDocument()
-{
-	if (!CDocument::OnNewDocument())
-		return FALSE;
-
-	reinterpret_cast<CRichEditView*>(m_viewList.GetHead())->SetWindowText(NULL);
-	
-	// TODO: add reinitialization code here
-	// (SDI documents will reuse this document)
-
-	this->SetTitle(TEXT("Untitled-Grammar"));
-
-	return TRUE;
-}
 
 
 
@@ -97,62 +87,93 @@ void CGrammarDesignerDoc::Dump(CDumpContext& dc) const
 
 // CGrammarDesignerDoc commands
 
-BOOL CGrammarDesignerDoc::OnOpenDocument(LPCTSTR lpszPathName)
+//BOOL CGrammarDesignerDoc::OnOpenDocument(LPCTSTR lpszPathName)
+//{
+//		
+//		if (!CDocument::OnOpenDocument(lpszPathName))
+//				return FALSE;
+//
+//		
+//		return TRUE;
+//}
+
+//BOOL CGrammarDesignerDoc::OnSaveDocument(LPCTSTR lpszPathName)
+//{
+//		// TODO: Add your specialized code here and/or call the base class
+//
+//		return CDocument::OnSaveDocument(lpszPathName);
+//
+//}
+
+
+BOOL CGrammarDesignerDoc::OnNewDocument()
 {
-		/*
-		if (!CDocument::OnOpenDocument(lpszPathName))
-				return FALSE;
-		*/
-		
-		
-		// TODO:  Add your specialized creation code here
+	if (!CDocument::OnNewDocument())
+		return FALSE;
 
-		CTextFileRead fr(lpszPathName);
+	reinterpret_cast<CRichEditView*>(m_viewList.GetHead())->SetWindowText(NULL);
+	
+	// TODO: add reinitialization code here
+	// (SDI documents will reuse this document)
 
-		CString txt;
+	this->SetTitle(TEXT("Untitled-Grammar"));
+
+	return TRUE;
+}
+
+
+void CGrammarDesignerDoc::Serialize(CArchive& ar)
+{
 		
-		if(!fr.Read(txt))
-		{
-				return FALSE;
-		}else
-		{
-				m_encoding = fr.GetEncoding();
+			
+
+		if (ar.IsStoring())
+		{	// storing code
+				
 
 				CRichEditView *view = (CRichEditView*)m_viewList.GetHead();
 
-				ASSERT(view != NULL);
-				//this->UpdateAllViews(view, NULL, this);
-				view->GetRichEditCtrl().SetWindowText(txt);
+				CTextFileWrite fw(ar.GetFile(), m_encoding);
+
+				CString buf;
+				view->GetWindowText(buf);
+
+				fw.Write(buf);
+
+				
 		}
-	
-		
-		return TRUE;
+		else
+		{	// loading code
+
+				CTextFileRead fr(ar.GetFile());
+
+				CString txt;
+				
+				if(!fr.Read(txt))
+				{
+						throw new CFileException(CFileException::genericException);
+				}else
+				{
+						m_encoding = fr.GetEncoding();
+
+						CRichEditView *view = (CRichEditView*)m_viewList.GetHead();
+
+						ASSERT(view != NULL);
+						//this->UpdateAllViews(view, NULL, this);
+						view->GetRichEditCtrl().SetWindowText(txt);
+				}
+
+		}
 }
 
-BOOL CGrammarDesignerDoc::OnSaveDocument(LPCTSTR lpszPathName)
-{
-		// TODO: Add your specialized code here and/or call the base class
 
-		//return CDocument::OnSaveDocument(lpszPathName);
 
-		CRichEditView *view = (CRichEditView*)m_viewList.GetHead();
-
-		CTextFileWrite fw(lpszPathName, m_encoding);
-		
-		CString buf;
-		view->GetWindowText(buf);
-
-		fw.Write(buf);
-
-		return TRUE;
-}
-
-BOOL CGrammarDesignerDoc::SaveModified()
-{
-		// TODO: Add your specialized code here and/or call the base class
-
-		return CDocument::SaveModified();
-}
+//BOOL CGrammarDesignerDoc::SaveModified()
+//{
+//		// TODO: Add your specialized code here and/or call the base class
+//
+//		return CDocument::SaveModified();
+//}
 
 void CGrammarDesignerDoc::OnEndcodingChange(UINT nID)
 {
@@ -357,29 +378,31 @@ static void AR_STDCALL report_build_func(const ARSpace::cfgReportInfo_t *report,
 		COutputWnd *output;
 		COutputList::Param		param;
 		CString str;
-		ASSERT(context != NULL);
 
+		CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
+		ASSERT(context != NULL);
+		
+		CWnd *tar = main_frm->GetActiveView();
 		output = (COutputWnd*)context;
 
 		switch(report->type)
 		{
 		case ARSpace::CFG_REPORT_MESSAGE_T:
-				param.type = COutputList::MSG_MESSAGE;
-				param.line = 0;
-				output->Append(report->message, param);
+				output->Append(report->message, COutputList::MSG_MESSAGE, 0, tar);
 				//AR_printf(L"%ls\r\n", report->message);
 				break;
 		case ARSpace::CFG_REPORT_ERROR_T:
 				str.Format(TEXT("%ls : %d"), report->message, report->err_level);
-				param.type = COutputList::MSG_ERROR;
+				/*param.type = COutputList::MSG_ERROR;
 				param.line = report->tok->line;
-				output->Append(str, param);
+				*/
+				output->Append(str, COutputList::MSG_ERROR, report->tok->line, tar); 
 				break;
 		case ARSpace::CFG_REPORT_ERR_LEX_T:
 				str.Format(TEXT("Lex error %ls"), report->message);
 				param.type = COutputList::MSG_ERROR;
 				param.line = report->tok->line;
-				output->Append(str, param);
+				output->Append(str, COutputList::MSG_ERROR, report->tok->line, tar);
 
 				//::AfxMessageBox(report->message);
 				//AR_printf(L"lex error %ls\r\n", report->message);
@@ -388,7 +411,8 @@ static void AR_STDCALL report_build_func(const ARSpace::cfgReportInfo_t *report,
 				str.Format(TEXT("Syntax error %ls"), report->message);
 				param.type = COutputList::MSG_ERROR;
 				param.line = report->tok->line;
-				output->Append(str, param);
+				//output->Append(str, param);
+				output->Append(str, COutputList::MSG_ERROR, report->tok->line, tar);
 				break;
 		default:
 				AR_ASSERT(false);
@@ -407,20 +431,10 @@ void	CGrammarDesignerDoc::ClearParser()
 		{
 				delete m_lexer;
 				delete m_parser;
-		}
-		/*
 
-		if(m_lexer != NULL)
-		{
-				delete m_lexer;
+				m_lexer = NULL;
+				m_parser = NULL;
 		}
-
-		if(m_parser != NULL)
-		{
-				delete m_parser;
-		}
-
-		*/
 }
 
 
@@ -432,12 +446,12 @@ public:
 public:
 		virtual void OnError(int_t level, const wchar_t *msg)
 		{
-				m_output.Append(msg);
+				m_output.Append(msg, COutputList::MSG_ERROR, 0, NULL);
 		}
 
 		virtual void OnPrint(const wchar_t *msg)
 		{
-				m_output.Append(msg);
+				m_output.Append(msg, COutputList::MSG_MESSAGE, 0, NULL);
 		}
 public:
 		ReportIOContext(COutputWnd &output) : m_output(output)
@@ -467,7 +481,8 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 
 		ArsenalCPP::Lexer		*lexer = new ArsenalCPP::Lexer(new ReportIOContext(output));
 		ArsenalCPP::Grammar		*grammar = new ArsenalCPP::Grammar(new ArsenalCPP::DummyNodeContext(), new ReportIOContext(output));
-
+		
+		CWnd	*tar	= main_frm->GetActiveView();
 
 
 		for(size_t i = 0; i < cfg->name_cnt; ++i)
@@ -477,7 +492,7 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 				{
 						CString msg;
 						msg.Format(TEXT("Name Error : \"%ls : %ls\""), name->name, name->regex);
-						output.Append(msg, COutputList::MSG_ERROR, name->line);
+						output.Append(msg, COutputList::MSG_ERROR, name->line, tar);
 						has_error = true;
 				}
 		}
@@ -490,18 +505,18 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 				{
 						CString msg;
 						msg.Format(TEXT("Token Error :  \"%ls : %ls\""), tok->name, tok->regex);
-						output.Append(msg, COutputList::MSG_ERROR, tok->line);
+						output.Append(msg, COutputList::MSG_ERROR, tok->line, tar);
 						has_error = true;
 						continue;
 				}
 
 				if(tok->is_skip || tok->tokval == 0)continue;
-				if(!grammar->Insert(tok->name, tok->tokval))
+				if(!grammar->Insert(tok->name, tok->tokval, ARSpace::PSR_ASSOC_NOASSOC, 0, build_leaf))
 				{
 						CString msg;
 
 						msg.Format(TEXT("Token Error : \"%ls : %ls\""), tok->name, tok->regex);
-						output.Append(msg, COutputList::MSG_ERROR, tok->line);
+						output.Append(msg, COutputList::MSG_ERROR, tok->line, tar);
 						has_error = true;
 				}
 		}
@@ -510,14 +525,27 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 		for(size_t i = 0; i < cfg->prec_cnt; ++i)
 		{
 				const ARSpace::cfgPrec_t		*prec = &cfg->prec[i];
-				ASSERT(prec->prec_tok != NULL);
-				if(!grammar->Insert(prec->prec_tok, prec->prec_tok_val, prec->assoc, prec->prec_level))
+				
+				for(size_t k = 0; k < prec->count; ++k)
 				{
-						CString msg;
-						msg.Format(TEXT("Prec Error : \"%ls\"!"), prec->prec_tok);
-						output.Append(msg, COutputList::MSG_ERROR, prec->line);
-						has_error = true;
+						ARSpace::psrTermInfo_t *info = grammar->GetTermInfo(prec->prec_tok_set[k]);
+
+						if(info == NULL)
+						{
+								if(!grammar->Insert(prec->prec_tok_set[k], prec->prec_tok_val[k], prec->assoc, prec->prec_level, NULL))
+								{
+										CString msg;
+										msg.Format(TEXT("Prec Error : \"%ls\"!"), prec->prec_tok_set[k]);
+										output.Append(msg, COutputList::MSG_ERROR, prec->line, tar);
+										has_error = true;
+								}
+						}else
+						{
+								info->assoc = prec->assoc;
+								info->prec = prec->prec_level;
+						}
 				}
+
 		}
 
 
@@ -526,11 +554,11 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 				const ARSpace::cfgRule_t		*rule = &cfg->rule[i];
 				CString str;
 				str.Format(TEXT("%ls : %ls"), rule->lhs, rule->rhs);
-				if(!grammar->Insert(str.GetString(), rule->prec_tok))
+				if(!grammar->Insert(str.GetString(), rule->prec_tok, build_rule))
 				{
 						CString msg;
 						msg.Format(TEXT("Rule Error : \"%ls\"!"), str.GetString());
-						output.Append(msg, COutputList::MSG_ERROR, rule->line);
+						output.Append(msg, COutputList::MSG_ERROR, rule->line, tar);
 						has_error = true;
 				}
 		}
@@ -564,7 +592,7 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 
 				str.Format(TEXT("Build Parser Tick count %d"), end - beg);
 
-				output.Append(str);
+				output.Append(str, COutputList::MSG_MESSAGE, 0, tar);
 				
 				return true;
 		}
@@ -577,16 +605,29 @@ void CGrammarDesignerDoc::OnParserBuild()
 		// TODO: Add your command handler code here
 
 		CGrammarDesignerView *view = (CGrammarDesignerView*)reinterpret_cast<CGrammarDesignerView*>(m_viewList.GetHead());
+		
+		CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
+		COutputWnd		&output = main_frm->GetOutputView();
+
+		main_frm->ClearShow();
+		
+		this->SaveModified();
+		
+		if(this->IsModified())
+		{
+				return;
+		}
+
 
 		CString str;
 		view->GetRichEditCtrl().GetWindowText(str);
 		
 		
-		CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
 		
-		COutputWnd		&output = main_frm->GetOutputView();
 		
-		output.Clear();
+		
+		
+		main_frm->ClearShow();
 
 		ARSpace::cfgReport_t	report = {report_build_func, (void*)&output};
 		ARSpace::cfgConfig_t *cfg = ARSpace::CFG_CollectGrammarConfig(str.GetString(), &report);
@@ -598,13 +639,16 @@ void CGrammarDesignerDoc::OnParserBuild()
 
 
 		if(cfg)ARSpace::CFG_DestroyGrammarConfig(cfg);
-		output.Append(TEXT("Build Parser successful!"));
+
+
+		output.Append(TEXT("Build Parser successful!"),COutputList::MSG_MESSAGE, 0, NULL);
 		main_frm->ShowPane(&output, TRUE, TRUE, TRUE);
 		return;
 
 FAILED_POINT:
+		this->ClearParser();
 		if(cfg)ARSpace::CFG_DestroyGrammarConfig(cfg);
-		output.Append(TEXT("Build Parser failed!"));
+		output.Append(TEXT("Build Parser failed!"), COutputList::MSG_MESSAGE, 0, NULL);
 		main_frm->ShowPane(&output, TRUE, TRUE, TRUE);
 		return;
 }
@@ -691,3 +735,191 @@ void CGrammarDesignerDoc::OnUpdateParserShowfirstfollow(CCmdUI *pCmdUI)
 		// TODO: Add your command update UI handler code here
 		pCmdUI->Enable(m_parser != NULL);
 }
+
+
+void CGrammarDesignerDoc::OnShowLeftrecursion()
+{
+		// TODO: Add your command handler code here
+
+		ASSERT(m_parser != NULL);
+
+		const ARSpace::psrFirstFollowView_t		*view = m_parser->CreateFirstFollowView();
+		
+
+		ASSERT(view != NULL);
+
+		CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
+		CActionView	&action = main_frm->GetActionView();
+		
+		action.DrawLeftRecursionView(view);
+
+		m_parser->DestroyFirstFollowView(view);
+		main_frm->ShowPane(&action, TRUE, TRUE, TRUE);
+
+
+}
+
+
+void CGrammarDesignerDoc::OnUpdateShowLeftrecursion(CCmdUI *pCmdUI)
+{
+		// TODO: Add your command update UI handler code here
+		pCmdUI->Enable(m_parser != NULL);
+}
+
+
+
+
+void CGrammarDesignerDoc::OnUpdateParserParse(CCmdUI *pCmdUI)
+{
+		// TODO: Add your command update UI handler code here
+
+		CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
+		CInputPane &input = main_frm->GetInputPane();
+
+		int len = input.GetInputLength();
+
+		pCmdUI->Enable(len > 0 && m_parser != NULL);
+
+}
+
+
+
+
+class ParserReport : public ArsenalCPP::ARContext
+{
+
+private:
+		CInputPane		&m_target;
+		COutputWnd		&m_output;
+public:
+		ParserReport(CInputPane		&tar, COutputWnd	&output) : m_target(tar), m_output(output)
+		{
+
+		}
+
+		virtual ~ParserReport()
+		{
+
+
+		}
+
+public:
+		virtual void OnError(int_t level, const wchar_t *msg)
+		{
+				m_output.Append(msg);
+
+		}
+
+		virtual void OnPrint(const wchar_t *msg)
+		{
+				m_output.Append(msg);
+		}
+};
+
+
+class ParserContext : public ArsenalCPP::NodeContext
+{
+private:
+		CInputPane		&m_target;
+		COutputWnd		&m_output;
+public:
+		ParserContext(CInputPane		&tar, COutputWnd	&output) : m_target(tar), m_output(output)
+		{
+
+
+		}
+		
+		virtual ~ParserContext()
+		{
+
+		}
+public:
+		virtual void	Free(ArsenalCPP::Node *node)
+		{
+				delete node;
+		}
+
+		virtual void	Error(const ArsenalCPP::psrToken_t *tok, const wchar_t *expected[], size_t count)
+		{
+				ASSERT(tok != NULL && expected != NULL && count > 0);
+		
+				
+				CString msg;
+				CString token;
+				if(tok->str_cnt > 0)
+				{
+						token.Append(tok->str, tok->str_cnt);
+				}else
+				{
+						token.Append(TEXT("%EOI"));
+				}
+
+				msg.Format(TEXT("Invalid Token \"%ls\", expected : "), token.GetString());
+
+				for(size_t i = 0; i < count; ++i)
+				{
+						msg.AppendFormat(TEXT("%ls\t"), expected[i]);
+				}
+
+				m_output.Append(msg, COutputList::MSG_ERROR, tok->line, &m_target);
+		}
+};
+
+
+void CGrammarDesignerDoc::OnParserParse()
+{
+		// TODO: Add your command handler code here
+
+		CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
+		CInputPane		&input = main_frm->GetInputPane();
+		COutputWnd		&output = main_frm->GetOutputView();
+		
+		if(this->IsModified())
+		{
+				OnParserBuild();
+		}
+
+		if(m_parser == NULL)return;
+		if(input.GetInputLength() <= 0)return;
+
+		ASSERT(m_lexer != NULL && m_parser != NULL);
+
+		m_lexer->ResetContext(new ParserReport(input, output));
+
+		m_parser->ResetIOContext(new ParserReport(input, output));
+
+		m_parser->ResetParseContext(new ParserContext(input, output));
+
+		CString str = input.GetInput();
+
+
+		bool is_ok = true;
+		
+
+		m_lexer->SetInput(str.GetString());
+		ARSpace::lexToken_t		token;
+
+		memset(&token, 0, sizeof(token));
+		while(is_ok)
+		{
+				
+				if(!m_lexer->GetToken(token))
+				{
+						is_ok = false;
+				}else
+				{
+						if(token.value != 0)
+						{
+								output.Append(CString(token.str, token.count), COutputList::MSG_ERROR, token.line, &input);
+						}else
+						{
+								break;
+						}
+				}
+
+		}
+		
+}
+
+
+

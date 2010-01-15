@@ -78,6 +78,10 @@ public:
 public:
 		bool	Insert(const wchar_t *name, size_t term_val, psrAssocType_t assoc = PSR_ASSOC_NOASSOC, size_t prec = 0, psrTermFunc_t	leaf_f = NULL);
 		bool	Insert(const wchar_t *rule, const wchar_t *prec_tok = NULL, psrRuleFunc_t rule_f = NULL, size_t auto_ret = 0);
+
+public:
+		psrTermInfo_t*	GetTermInfo(const wchar_t *name);
+		psrTermInfo_t*	GetTermInfo(size_t term_val);
 public:
 		bool	IsValid()const;
 		void	Clear();
@@ -114,6 +118,10 @@ public:
 		void	PrintParseTable(size_t width = 20)const;
 		void	PrintConflict()const;
 		size_t	CountConflict()const;
+
+public:
+		void	ResetIOContext(ARContext		*io_ctx);
+		void	ResetParseContext(NodeContext *psr_ctx);
 
 public:
 		const psrActionView_t*			CreateActionView()const;

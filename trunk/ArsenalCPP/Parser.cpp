@@ -127,6 +127,18 @@ bool	Grammar::Insert(const wchar_t *rule, const wchar_t *prec_tok, psrRuleFunc_t
 }
 
 
+psrTermInfo_t*	Grammar::GetTermInfo(const wchar_t *name)
+{
+		AR_ASSERT(name != NULL);
+		return PSR_GetTermSymbInfoByName(m_grammar, name);
+}
+
+psrTermInfo_t*	Grammar::GetTermInfo(size_t term_val)
+{
+		return PSR_GetTermSymbInfoByValue(m_grammar, term_val);
+
+}
+
 
 bool	Grammar::IsValid()const
 {
@@ -337,6 +349,21 @@ void							Parser::DestroyFirstFollowView(const psrFirstFollowView_t *view)
 		PSR_DestroyParserFirstFollowView(view);
 
 }
+
+
+
+void	Parser::ResetIOContext(ARContext		*io_ctx)
+{
+		AR_ASSERT(io_ctx != NULL);
+		m_grammar->ResetIOContext(io_ctx);
+}
+
+void	Parser::ResetParseContext(NodeContext *psr_ctx)
+{
+		AR_ASSERT(psr_ctx != NULL);
+		m_grammar->ResetParseContext(psr_ctx);
+}
+
 
 }
 
