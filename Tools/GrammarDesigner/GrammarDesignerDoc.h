@@ -6,8 +6,10 @@
 #pragma once
 
 
-class CGrammarDesignerDoc : public CDocument
+class CGrammarDesignerDoc : public CRichEditDoc 
 {
+private:
+
 protected: // create from serialization only
 	CGrammarDesignerDoc();
 	DECLARE_DYNCREATE(CGrammarDesignerDoc)
@@ -43,6 +45,7 @@ public:
 	virtual void Dump(CDumpContext& dc) const;
 #endif
 
+	virtual CRichEditCntrItem* CreateClientItem(REOBJECT* preo = NULL) const;
 protected:
 
 // Generated message map functions
@@ -57,8 +60,7 @@ public:
 public:
 //		virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
 //		virtual BOOL OnSaveDocument(LPCTSTR lpszPathName);
-protected:
-//		virtual BOOL SaveModified();
+
 public:
 		
 		afx_msg void OnEndcodingChangeUI(CCmdUI *pCmdUI);
@@ -83,6 +85,8 @@ public:
 		afx_msg void OnUpdateShowLeftrecursion(CCmdUI *pCmdUI);
 		virtual void Serialize(CArchive& ar);
 //		virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
+public:
+		virtual BOOL SaveModified();
 };
 
 

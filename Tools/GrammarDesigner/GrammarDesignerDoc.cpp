@@ -18,10 +18,10 @@
 
 // CGrammarDesignerDoc
 
-IMPLEMENT_DYNCREATE(CGrammarDesignerDoc, CDocument);
+IMPLEMENT_DYNCREATE(CGrammarDesignerDoc, CRichEditDoc);
 
 
-BEGIN_MESSAGE_MAP(CGrammarDesignerDoc, CDocument)
+BEGIN_MESSAGE_MAP(CGrammarDesignerDoc, CRichEditDoc)
 
 		ON_COMMAND_RANGE(ID_ENDCODING_ASCII, ID_ENDCODING_UTF8, &CGrammarDesignerDoc::OnEndcodingChange)
 		ON_UPDATE_COMMAND_UI_RANGE(ID_ENDCODING_ASCII, ID_ENDCODING_UTF8, &CGrammarDesignerDoc::OnEndcodingChangeUI)
@@ -49,7 +49,11 @@ END_MESSAGE_MAP()
 
 
 // CGrammarDesignerDoc construction/destruction
+CRichEditCntrItem* CGrammarDesignerDoc::CreateClientItem(REOBJECT* preo ) const
+{
+		return CRichEditDoc::CreateClientItem(preo);
 
+}
 CGrammarDesignerDoc::CGrammarDesignerDoc()
 {
 	// TODO: add one-time construction code here
@@ -70,7 +74,7 @@ CGrammarDesignerDoc::~CGrammarDesignerDoc()
 
 BOOL CGrammarDesignerDoc::OnNewDocument()
 {
-	if (!CDocument::OnNewDocument())
+	if (!CRichEditDoc::OnNewDocument())
 		return FALSE;
 
 	reinterpret_cast<CRichEditView*>(m_viewList.GetHead())->SetWindowText(NULL);
@@ -140,12 +144,12 @@ void CGrammarDesignerDoc::Serialize(CArchive& ar)
 #ifdef _DEBUG
 void CGrammarDesignerDoc::AssertValid() const
 {
-	CDocument::AssertValid();
+	CRichEditDoc::AssertValid();
 }
 
 void CGrammarDesignerDoc::Dump(CDumpContext& dc) const
 {
-	CDocument::Dump(dc);
+	CRichEditDoc::Dump(dc);
 }
 #endif //_DEBUG
 
@@ -943,3 +947,10 @@ void CGrammarDesignerDoc::OnParserParse()
 
 
 
+
+BOOL CGrammarDesignerDoc::SaveModified()
+{
+		// TODO: Add your specialized code here and/or call the base class
+
+		return CRichEditDoc::SaveModified();
+}
