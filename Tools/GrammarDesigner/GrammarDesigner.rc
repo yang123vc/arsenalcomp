@@ -201,17 +201,10 @@ BEGIN
             MENUITEM "L&ALR(1)",                    ID_PARSER_MODE_LALR, CHECKED
         END
         MENUITEM "&Build",                      ID_PARSER_BUILD
-        POPUP "Show"
-        BEGIN
-            MENUITEM "&ActionTable",                ID_PARSER_SHOWACTIONTABLE
-            MENUITEM "&Conflict",                   ID_PARSER_SHOWCONFLICT
-            MENUITEM "&FirstFollow",                ID_PARSER_SHOWFIRSTFOLLOW
-            MENUITEM "Left Recursion",              ID_SHOW_LEFTRECURSION
-        END
+        MENUITEM "&Parse Input",                ID_PARSER_PARSE
     END
     POPUP "&Tools"
     BEGIN
-        MENUITEM "&Parse Input",                ID_PARSER_PARSE
         MENUITEM "ReBuild &Tags",               ID_TOOLS_REBUILDTAGS
         POPUP "Set ReBuild Time"
         BEGIN
@@ -222,15 +215,22 @@ BEGIN
             MENUITEM "5000ms",                      ID_SETREBUILDTIME_5000MS, CHECKED
             MENUITEM "Disable",                     ID_SETREBUILDTIME_DISABLE, CHECKED
         END
+        POPUP "Show"
+        BEGIN
+            MENUITEM "&ActionTable",                ID_PARSER_SHOWACTIONTABLE
+            MENUITEM "&Conflict",                   ID_PARSER_SHOWCONFLICT
+            MENUITEM "&FirstFollow",                ID_PARSER_SHOWFIRSTFOLLOW
+            MENUITEM "Left Recursion",              ID_SHOW_LEFTRECURSION
+        END
     END
     POPUP "&Help"
     BEGIN
         MENUITEM "&About GrammarDesigner...",   ID_APP_ABOUT
-    END
-    POPUP "&Test"
-    BEGIN
-        MENUITEM "&Test\tCtrl+T",               ID_TEST_TEST
-        MENUITEM "TestMainform",                ID_TEST_TESTMAINFORM
+        POPUP "&Test"
+        BEGIN
+            MENUITEM "&Test\tCtrl+T",               ID_TEST_TEST
+            MENUITEM "TestMainform",                ID_TEST_TESTMAINFORM
+        END
     END
 END
 

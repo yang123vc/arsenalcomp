@@ -218,7 +218,7 @@ BOOL CMainFrame::CreateDockingWindows()
 
 	ASSERT(bNameValid);
 
-	if (!m_wndActView.Create(strActView, this, CRect(0, 0, 100, 100), TRUE, ID_VIEW_ACTIONWND, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_BOTTOM | CBRS_FLOAT_MULTI))
+	if (!m_wndActView.Create(strActView, this, CRect(0, 0, 100, 100), TRUE, ID_VIEW_ACTIONWND, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_TOP | CBRS_FLOAT_MULTI))
 	{
 		TRACE0("Failed to create Action window\n");
 		return FALSE; // failed to create
@@ -238,7 +238,7 @@ BOOL CMainFrame::CreateDockingWindows()
 		CString strInputView;
 		bNameValid = strInputView.LoadString(IDS_INPUTVIEW_WND);
 
-		if(!m_inputPane.Create(strInputView, this, CRect(0,0,100,100), TRUE, ID_INPUTVIEW_WND ,WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_TOP | CBRS_FLOAT_MULTI))
+		if(!m_inputPane.Create(strInputView, this, CRect(0,0,100,100), TRUE, ID_INPUTVIEW_WND ,WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_NOALIGN | CBRS_FLOAT_MULTI))
 		{
 				TRACE0("Failed to create input  window\n");
 				return FALSE; // failed to create
@@ -250,7 +250,7 @@ BOOL CMainFrame::CreateDockingWindows()
 
 		bNameValid = strSyntaxPane.LoadString(IDS_SYNTAXPANE_WND);
 
-		if(!m_syntaxPane.Create(strSyntaxPane, this, CRect(0,0,100,100), TRUE, ID_SYNTAXPANE_WND ,WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_BOTTOM | CBRS_FLOAT_MULTI))
+		if(!m_syntaxPane.Create(strSyntaxPane, this, CRect(0,0,100,100), TRUE, ID_SYNTAXPANE_WND ,WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
 		{
 				TRACE0("Failed to create syntax tree  window\n");
 				return FALSE; // failed to create
@@ -269,11 +269,11 @@ BOOL CMainFrame::CreateDockingWindows()
 	DockPane(&m_wndActView);
 
 
-	m_wndTag.EnableDocking(CBRS_ALIGN_LEFT);
+	m_wndTag.EnableDocking(CBRS_ALIGN_ANY);
 	DockPane(&m_wndTag);
 
 
-	m_inputPane.EnableDocking(CBRS_ALIGN_TOP);
+	m_inputPane.EnableDocking(CBRS_ALIGN_ANY);
 	DockPane(&m_inputPane);
 
 
