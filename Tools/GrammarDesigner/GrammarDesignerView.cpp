@@ -590,7 +590,7 @@ void CGrammarDesignerView::OnDropFiles(HDROP hDropInfo)
 {
 		CString fname;
 		// TODO: Add your message handler code here and/or call default
-		UINT DropCount=DragQueryFile(hDropInfo,-1,NULL,0);//取得被拖动文件的数目
+		UINT DropCount=DragQueryFile(hDropInfo,0xFFFFFFFF,NULL,0);//取得被拖动文件的数目
 		for(UINT i=0;i< DropCount;i++)
 		{ 
 				//取得第i个拖动文件名所占字节数      
