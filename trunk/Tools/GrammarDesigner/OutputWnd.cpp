@@ -282,6 +282,7 @@ COutputWnd::~COutputWnd()
 
 
 
+
 BEGIN_MESSAGE_MAP(COutputWnd, CDockablePane)
 	ON_WM_CREATE()
 	ON_WM_SIZE()

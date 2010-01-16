@@ -238,7 +238,7 @@ BOOL CMainFrame::CreateDockingWindows()
 		CString strInputView;
 		bNameValid = strInputView.LoadString(IDS_INPUTVIEW_WND);
 
-		if(!m_inputPane.Create(strInputView, this, CRect(0,0,100,100), TRUE, ID_INPUTVIEW_WND ,WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_NOALIGN | CBRS_FLOAT_MULTI))
+		if(!m_inputPane.Create(strInputView, this, CRect(0,0,100,100), TRUE, ID_INPUTVIEW_WND ,WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_TOP | CBRS_FLOATING))
 		{
 				TRACE0("Failed to create input  window\n");
 				return FALSE; // failed to create

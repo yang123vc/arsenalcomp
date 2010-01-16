@@ -38,7 +38,6 @@
 #define IDS_EDIT_MENU                   306
 #define IDR_MENU_TAGVIEW                312
 #define IDR_INPUT_POPUP                 315
-#define IDR_MENU1                       316
 #define IDR_SYNTAXTREE_MENU             316
 #define ID_EDIT_UNDO32771               32771
 #define ID_EDIT_SELECTALL               32772
@@ -118,6 +117,8 @@
 #define ID_EDIT_SAVE32863               32863
 #define ID_POPUP_FONT32864              32864
 #define ID_POPUP_CLEAR32865             32865
+#define ID_EDIT_BUILD                   32866
+#define ID_EDIT_FONT32867               32867
 #define ID_INDICATOR_LINE               59142
 #define ID_INDICATOR_COL                59143
 #define IDS_ACTVIEW_WND                 61204
@@ -131,7 +132,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        317
-#define _APS_NEXT_COMMAND_VALUE         32866
+#define _APS_NEXT_COMMAND_VALUE         32868
 #define _APS_NEXT_CONTROL_VALUE         1001
 #define _APS_NEXT_SYMED_VALUE           310
 #endif

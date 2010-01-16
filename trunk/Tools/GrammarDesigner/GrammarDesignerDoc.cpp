@@ -755,17 +755,21 @@ void CGrammarDesignerDoc::OnUpdateShowLeftrecursion(CCmdUI *pCmdUI)
 void CGrammarDesignerDoc::OnUpdateParserParse(CCmdUI *pCmdUI)
 {
 		// TODO: Add your command update UI handler code here
+		pCmdUI->Enable(IsParseable());
 
+}
+
+
+
+bool	CGrammarDesignerDoc::IsParseable()const
+{
 		CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
 		CInputPane &input = main_frm->GetInputPane();
 
 		int len = input.GetInputLength();
 
-		pCmdUI->Enable(len > 0 && m_parser != NULL);
-
+		return (len > 0 && m_parser != NULL);
 }
-
-
 
 
 class ParserReport : public ArsenalCPP::ARContext

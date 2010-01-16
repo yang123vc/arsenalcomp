@@ -56,7 +56,10 @@ public:
 
 		bool	BuildParser(const ARSpace::cfgConfig_t *cfg);
 		
+		bool			IsParseable()const;
+
 		void	ClearParser();
+
 public:
 //		virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
 //		virtual BOOL OnSaveDocument(LPCTSTR lpszPathName);

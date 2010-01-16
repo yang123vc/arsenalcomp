@@ -34,6 +34,8 @@ public:
 		
 		afx_msg void OnEnChange();
 		afx_msg void OnDropFiles(HDROP hDropInfo);
+		afx_msg void OnPopupParse();
+		afx_msg void OnUpdatePopupParse(CCmdUI *pCmdUI);
 };
 
 

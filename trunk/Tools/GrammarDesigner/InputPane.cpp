@@ -2,7 +2,7 @@
 
 #include "InputPane.h"
 #include "MainFrm.h"
-
+#include "GrammarDesignerDoc.h"
 
 /***********************CInputPane*******************************/
 
@@ -204,6 +204,8 @@ BEGIN_MESSAGE_MAP(CInputEdit, CRichEditCtrl)
 		
 		ON_CONTROL_REFLECT(EN_CHANGE, &CInputEdit::OnEnChange)
 		ON_WM_DROPFILES()
+		ON_COMMAND(ID_POPUP_PARSE, &CInputEdit::OnPopupParse)
+		ON_UPDATE_COMMAND_UI(ID_POPUP_PARSE, &CInputEdit::OnUpdatePopupParse)
 END_MESSAGE_MAP()
 
 void CInputEdit::OnContextMenu(CWnd* pWnd, CPoint point)
@@ -423,4 +425,21 @@ void CInputEdit::OnDropFiles(HDROP hDropInfo)
 				}
 		}
 		//CRichEditCtrl::OnDropFiles(hDropInfo);
+}
+
+void CInputEdit::OnPopupParse()
+{
+		// TODO: Add your command handler code here
+		
+		::AfxGetMainWnd()->SendMessage(WM_COMMAND, (WPARAM)ID_PARSER_PARSE);
+}
+
+void CInputEdit::OnUpdatePopupParse(CCmdUI *pCmdUI)
+{
+		// TODO: Add your command update UI handler code here
+
+		 CMainFrame *main_frm = ( CMainFrame*)::AfxGetMainWnd();
+		
+		 pCmdUI->Enable(((CGrammarDesignerDoc*)main_frm->GetActiveDocument())->IsParseable());
+		 
 }
