@@ -9,9 +9,12 @@
 #include "GrammarDesignerDoc.h"
 #include "GrammarDesignerView.h"
 
+
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+
 
 
 // CGrammarDesignerView
@@ -35,7 +38,10 @@ BEGIN_MESSAGE_MAP(CGrammarDesignerView, CRichEditView)
 		ON_COMMAND_RANGE(ID_SETREBUILDTIME_500MS, ID_SETREBUILDTIME_DISABLE, &CGrammarDesignerView::OnResetTimer)
 
 		//ON_COMMAND(ID_TEST_TEST, &CGrammarDesignerView::OnTestTest)
-		
+		//ON_MESSAGE(ID_MSG_TEST, &CGrammarDesignerView::OnTestMessage)
+
+		ON_MESSAGE(ID_BUILD_CFG_COMPLETED, &CGrammarDesignerView::OnBuildTagCompleted)
+
 		ON_UPDATE_COMMAND_UI(ID_SETREBUILDTIME_100MS, &CGrammarDesignerView::OnUpdateSetrebuildtime100ms)
 		ON_UPDATE_COMMAND_UI(ID_SETREBUILDTIME_500MS, &CGrammarDesignerView::OnUpdateSetrebuildtime500ms)
 		ON_UPDATE_COMMAND_UI(ID_SETREBUILDTIME_1000MS, &CGrammarDesignerView::OnUpdateSetrebuildtime1000ms)
@@ -49,6 +55,9 @@ BEGIN_MESSAGE_MAP(CGrammarDesignerView, CRichEditView)
 		ON_COMMAND(ID_EDIT_OPEN, &CGrammarDesignerView::OnEditOpen)
 		ON_COMMAND(ID_EDIT_SAVE32863, &CGrammarDesignerView::OnEditSaveFile)
 		ON_WM_DROPFILES()
+
+
+
 END_MESSAGE_MAP()
 
 // CGrammarDesignerView construction/destruction
@@ -413,6 +422,8 @@ LRESULT CGrammarDesignerView::OnLocatePos(WPARAM wp, LPARAM lp)
 		return 0L;
 }
 
+
+
 int CGrammarDesignerView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 		this->DragAcceptFiles(FALSE);
@@ -497,6 +508,8 @@ void CGrammarDesignerView::OnTestTest()
 
 
 		is_highlight = !is_highlight;
+
+		
 }
 
 void CGrammarDesignerView::OnUpdateSetrebuildtime100ms(CCmdUI *pCmdUI)
@@ -634,4 +647,16 @@ HRESULT CGrammarDesignerView::QueryAcceptData(LPDATAOBJECT lpdataobj, CLIPFORMAT
 
 		
 		return CRichEditView::QueryAcceptData(lpdataobj, lpcfFormat, dwReco, bReally, hMetaFile);
+}
+
+
+LRESULT CGrammarDesignerView::OnBuildTagCompleted(WPARAM wp, LPARAM lp)
+{
+		ASSERT(wp != NULL);
+
+		ARSpace::cfgConfig_t *cfg = (ARSpace::cfgConfig_t*)wp;
+
+		this->GetDocument()->OnTagBuildCompleted(cfg);
+
+		return 0L;
 }

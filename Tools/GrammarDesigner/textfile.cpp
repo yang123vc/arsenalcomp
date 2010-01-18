@@ -6,6 +6,12 @@
 #include "stdafx.h"
 #include "textfile.h"
 
+
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#endif
+
+
 #if PEK_TX_TECHLEVEL == 0
  //Include iostream if running in ANSI mode.
  #include <iostream>

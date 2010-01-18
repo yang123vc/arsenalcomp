@@ -35,6 +35,11 @@ public:
 	afx_msg void OnAppAbout();
 	DECLARE_MESSAGE_MAP()
 	virtual int ExitInstance();
+
+public:
+		
+		//BOOL OnThreadMessage(MSG* pMsg);
+		virtual BOOL PreTranslateMessage(MSG* pMsg);
 };
 
 extern CGrammarDesignerApp theApp;

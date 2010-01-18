@@ -3,6 +3,10 @@
 #include "AboutDialog.h"
 
 
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#endif
+
 CAboutDlg::CAboutDlg() : CDialog(CAboutDlg::IDD)
 {
 }

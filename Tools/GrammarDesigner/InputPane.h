@@ -4,6 +4,9 @@
 
 class CInputEdit : public CRichEditCtrl
 {
+private:
+		DECLARE_DYNAMIC(CInputEdit)
+
 protected:
 		CFont	m_font;
 		HACCEL	m_acctbl;

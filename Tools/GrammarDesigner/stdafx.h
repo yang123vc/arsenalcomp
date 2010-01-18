@@ -64,8 +64,12 @@
 
 
 
+
+#include "textfile.h"
+
+
 #include "ArsenalCPP.h"
 #pragma comment(lib, "ArsenalCPP.lib")
 
 
-#include "textfile.h"
+void test_func();

@@ -4,6 +4,11 @@
 #include "MainFrm.h"
 #include "GrammarDesignerDoc.h"
 
+
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#endif
+
 /***********************CInputPane*******************************/
 
 
@@ -126,6 +131,9 @@ LRESULT CInputPane::OnLocatePos(WPARAM wp, LPARAM lp)
 
 
 /*****************************************CInputEdit***********************************************************/
+
+IMPLEMENT_DYNAMIC(CInputEdit, CRichEditCtrl)
+
 CInputEdit::CInputEdit()
 {
 		VERIFY(m_font.CreatePointFont(120, TEXT("Consolas")));
@@ -394,7 +402,7 @@ void CInputEdit::OnDropFiles(HDROP hDropInfo)
 		// TODO: Add your message handler code here and/or call default
 		CString fname;
 		// TODO: Add your message handler code here and/or call default
-		UINT DropCount=DragQueryFile(hDropInfo,-1,NULL,0);//取得被拖动文件的数目
+		UINT DropCount=DragQueryFile(hDropInfo, (UINT)-1,NULL,0);//取得被拖动文件的数目
 		for(UINT i=0;i< DropCount;i++)
 		{ 
 				//取得第i个拖动文件名所占字节数      

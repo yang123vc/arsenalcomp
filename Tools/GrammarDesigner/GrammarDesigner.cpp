@@ -17,9 +17,12 @@
 #include "GrammarDesignerDoc.h"
 #include "GrammarDesignerView.h"
 #include "AboutDialog.h"
+
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+
 
 
 // CGrammarDesignerApp
@@ -29,6 +32,8 @@ BEGIN_MESSAGE_MAP(CGrammarDesignerApp, CWinAppEx)
 	// Standard file based document commands
 	ON_COMMAND(ID_FILE_NEW, &CWinAppEx::OnFileNew)
 	ON_COMMAND(ID_FILE_OPEN, &CWinAppEx::OnFileOpen)
+
+
 END_MESSAGE_MAP()
 
 
@@ -132,6 +137,8 @@ BOOL CGrammarDesignerApp::InitInstance()
 
 	ArsenalCPP::Arsenal::Instance(new ArsenalCPP::DummyContext());
 
+	test_func();
+
 	return TRUE;
 }
 
@@ -175,4 +182,35 @@ int CGrammarDesignerApp::ExitInstance()
 		ArsenalCPP::Arsenal::UnInstance();
 		
 		return CWinAppEx::ExitInstance();
+}
+/*
+BOOL CGrammarDesignerApp::OnThreadMessage(MSG* pMsg)
+{
+		switch(pMsg->wParam)
+		{
+		case ID_BUILD_CFG_COMPLETED:
+		{
+				CGrammarDesignerDoc *pdoc = (CGrammarDesignerDoc*)((CMainFrame*)::AfxGetMainWnd())->GetActiveDocument();
+				pdoc->OnTagBuildCompleted((ARSpace::cfgConfig_t*) pMsg->lParam);
+				return TRUE;
+				break;
+		}
+		default:
+				VERIFY(FALSE);
+				return FALSE;
+		}
+
+}
+*/
+BOOL CGrammarDesignerApp::PreTranslateMessage(MSG* pMsg)
+{
+		// TODO: Add your specialized code here and/or call the base class
+/*
+		if(pMsg->message == ID_THREAD_MESSAGE)
+		{
+				return OnThreadMessage(pMsg);
+		}
+*/		
+
+		return CWinAppEx::PreTranslateMessage(pMsg);
 }

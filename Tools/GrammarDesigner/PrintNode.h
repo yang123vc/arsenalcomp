@@ -3,6 +3,8 @@
 
 class CPrintNode :	public ArsenalCPP::Node
 {
+private:
+		
 public:
 		CString					m_name;
 		size_t					m_line;

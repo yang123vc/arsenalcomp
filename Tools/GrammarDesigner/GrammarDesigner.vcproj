@@ -986,6 +986,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\BackEndThread.h"
+				>
+			</File>
+			<File
 				RelativePath=".\DocManagerEx.h"
 				>
 			</File>
@@ -1097,6 +1101,10 @@
 			</File>
 			<File
 				RelativePath=".\ActionView.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\BackEndThread.cpp"
 				>
 			</File>
 			<File

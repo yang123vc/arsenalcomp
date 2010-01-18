@@ -4,7 +4,7 @@
 
 
 #pragma once
-
+#include "BackEndThread.h"
 
 class CGrammarDesignerDoc : public CRichEditDoc 
 {
@@ -29,6 +29,10 @@ private:
 private:
 		ArsenalCPP::Lexer		*m_lexer;
 		ArsenalCPP::Parser		*m_parser;
+
+private:
+		CBackEndThread			m_thread;
+
 // Operations
 public:
 
@@ -55,10 +59,12 @@ public:
 		void OnEndcodingChange(UINT nID);
 
 		bool	BuildParser(const ARSpace::cfgConfig_t *cfg);
-		
-		bool			IsParseable()const;
+
+		bool	IsParseable()const;
 
 		void	ClearParser();
+
+		void	OnTagBuildCompleted(ARSpace::cfgConfig_t *cfg);
 
 public:
 //		virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
@@ -86,10 +92,17 @@ public:
 		afx_msg void OnUpdateParserParse(CCmdUI *pCmdUI);
 		afx_msg void OnShowLeftrecursion();
 		afx_msg void OnUpdateShowLeftrecursion(CCmdUI *pCmdUI);
-		virtual void Serialize(CArchive& ar);
-//		virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
+
 public:
+		virtual void Serialize(CArchive& ar);
 		virtual BOOL SaveModified();
+
+public:
+		
+		afx_msg void OnTestTest();
+		
+		
+		afx_msg void OnTestTest2();
 };
 
 
