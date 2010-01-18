@@ -2,6 +2,10 @@
 #include "PrintNode.h"
 
 
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#endif
+
 
 CPrintNode::CPrintNode(const CString &name, size_t line, size_t col, size_t cnt) : m_name(name), m_line(line), m_col(col), m_cnt(cnt)
 {

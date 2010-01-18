@@ -7,6 +7,8 @@
 
 class CActionCtrl : public CListCtrl
 {
+private:
+		DECLARE_DYNAMIC(CActionCtrl)
 public:
 		CActionCtrl();
 		virtual ~CActionCtrl();

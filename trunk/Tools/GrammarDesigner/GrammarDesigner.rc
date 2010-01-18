@@ -229,7 +229,7 @@ BEGIN
         POPUP "&Test"
         BEGIN
             MENUITEM "&Test\tCtrl+T",               ID_TEST_TEST
-            MENUITEM "TestMainform",                ID_TEST_TESTMAINFORM
+            MENUITEM "Test2",                       ID_TEST_TEST2
         END
     END
 END
@@ -368,9 +368,9 @@ STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSM
 CAPTION "About GrammarDesigner"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    ICON            IDR_MAINFRAME,IDC_STATIC,14,14,21,20
-    LTEXT           "GrammarDesigner, Version 1.0",IDC_STATIC,42,14,114,8,SS_NOPREFIX
-    LTEXT           "Copyright (C) 2010",IDC_STATIC,42,26,114,8
+    ICON            IDR_MAINFRAME,IDC_STATIC,14,14,20,20
+    LTEXT           "GrammarDesigner, Version 0.1.2.4",IDC_STATIC,42,7,114,8,SS_NOPREFIX
+    LTEXT           "Copyright (C) 2009",IDC_STATIC,42,26,114,8
     DEFPUSHBUTTON   "OK",IDOK,113,41,50,14,WS_GROUP
 END
 
@@ -381,8 +381,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,0,1
- PRODUCTVERSION 1,0,0,1
+ FILEVERSION 0,1,2,4
+ PRODUCTVERSION 0,1,2,4
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -397,14 +397,14 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "TODO: <Company name>"
-            VALUE "FileDescription", "TODO: <File description>"
-            VALUE "FileVersion", "1.0.0.1"
+            VALUE "CompanyName", "None"
+            VALUE "FileDescription", "Grammar Designer"
+            VALUE "FileVersion", "0, 1, 2, 4"
             VALUE "InternalName", "GrammarDesigner.exe"
-            VALUE "LegalCopyright", "TODO: (c) <Company name>.  All rights reserved."
+            VALUE "LegalCopyright", "Solidus.  All rights reserved."
             VALUE "OriginalFilename", "GrammarDesigner.exe"
-            VALUE "ProductName", "TODO: <Product name>"
-            VALUE "ProductVersion", "1.0.0.1"
+            VALUE "ProductName", "Grammar Designer"
+            VALUE "ProductVersion", "0, 1, 2, 4"
         END
     END
     BLOCK "VarFileInfo"

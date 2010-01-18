@@ -8,9 +8,12 @@
 
 #include "MainFrm.h"
 
+
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+
 
 // CMainFrame
 
@@ -31,16 +34,16 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 	ON_UPDATE_COMMAND_UI_RANGE(ID_INDICATOR_LINE, ID_INDICATOR_COL, &CMainFrame::OnUpdateStatusBarPanes)
 
 	
-ON_COMMAND(ID_TEST_TEST, &CMainFrame::OnTestTest)
+		
 
-ON_WM_SIZE()
-ON_COMMAND(ID_SHOW_OUTPUT, &CMainFrame::OnShowOutput)
-ON_COMMAND(ID_SHOW_SYNTAXTREE, &CMainFrame::OnShowSyntaxtree)
-ON_COMMAND(ID_SHOW_ACTIONVIEW, &CMainFrame::OnShowActionview)
-ON_COMMAND(ID_SHOW_TAGVIEW, &CMainFrame::OnShowTagview)
-ON_COMMAND(ID_SHOW_INPUT, &CMainFrame::OnShowInput)
+	ON_WM_SIZE()
+	ON_COMMAND(ID_SHOW_OUTPUT, &CMainFrame::OnShowOutput)
+	ON_COMMAND(ID_SHOW_SYNTAXTREE, &CMainFrame::OnShowSyntaxtree)
+	ON_COMMAND(ID_SHOW_ACTIONVIEW, &CMainFrame::OnShowActionview)
+	ON_COMMAND(ID_SHOW_TAGVIEW, &CMainFrame::OnShowTagview)
+	ON_COMMAND(ID_SHOW_INPUT, &CMainFrame::OnShowInput)
 
-
+	//ON_COMMAND(ID_TEST_TEST, &CMainFrame::OnTestTest)
 
 END_MESSAGE_MAP()
 

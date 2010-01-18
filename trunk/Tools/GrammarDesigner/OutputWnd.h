@@ -5,6 +5,8 @@
 
 class COutputList : public CListBox
 {
+private:
+		DECLARE_DYNAMIC(COutputList)
 // Construction
 public:
 	COutputList();

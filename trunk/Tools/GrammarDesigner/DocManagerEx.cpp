@@ -1,6 +1,11 @@
 #include "StdAfx.h"
 #include "DocManagerEx.h"
 
+
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#endif
+
 IMPLEMENT_DYNAMIC(CDocManagerEx, CDocManager)
 
 CDocManagerEx::CDocManagerEx(void)

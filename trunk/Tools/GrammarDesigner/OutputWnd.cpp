@@ -16,6 +16,7 @@ static char THIS_FILE[] = __FILE__;
 
 
 
+IMPLEMENT_DYNAMIC(COutputList, CListBox)
 // COutputList1
 
 COutputList::COutputList()

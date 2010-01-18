@@ -55,10 +55,14 @@ private:
 public:
 		BOOL   SetWordWrap(BOOL   bWordWrap);
 		afx_msg void OnTestTest();
+
+		afx_msg LRESULT OnBuildTagCompleted(WPARAM wp, LPARAM lp);
+
 		afx_msg void OnEditWordwarp();
 		afx_msg void OnUpdateEditWordwarp(CCmdUI *pCmdUI);
 		afx_msg void OnEditPaste();
 		afx_msg LRESULT OnLocatePos(WPARAM wp, LPARAM lp);
+
 		afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 		afx_msg void OnTimer(UINT_PTR nIDEvent);
 		afx_msg void OnClose();
@@ -76,6 +80,8 @@ public:
 		afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
 		afx_msg void OnEnChange();
 		
+		
+
 		afx_msg void OnEditOpen();
 		afx_msg void OnEditSaveFile();
 //		virtual BOOL OnDrop(COleDataObject* pDataObject, DROPEFFECT dropEffect, CPoint point);

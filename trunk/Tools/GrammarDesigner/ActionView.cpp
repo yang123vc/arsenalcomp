@@ -8,6 +8,13 @@
 #include "GrammarDesigner.h"
 
 
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#endif
+
+
+IMPLEMENT_DYNAMIC(CActionCtrl, CListCtrl)
+
 BEGIN_MESSAGE_MAP(CActionCtrl, CListCtrl)
 
 		ON_WM_CREATE()

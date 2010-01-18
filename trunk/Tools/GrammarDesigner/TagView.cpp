@@ -7,6 +7,9 @@
 
 
 
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#endif
 
 
 
@@ -465,9 +468,14 @@ void CTagView::OnSize(UINT nType, int cx, int cy)
 
 void	CTagView::UpdateTag(const ARSpace::cfgConfig_t *cfg)
 {
-		ASSERT(cfg != NULL);
-
-		m_tree.UpdateTag(cfg);
+		//ASSERT(cfg != NULL);
+		if(cfg != NULL)
+		{
+				m_tree.UpdateTag(cfg);
+		}else
+		{
+				m_tree.Clear();
+		}
 
 		m_tree.Invalidate();
 }

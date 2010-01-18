@@ -11,9 +11,12 @@
 #include "GrammarDesignerDoc.h"
 #include "GrammarDesignerView.h"
 
+
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+
 
 
 // CGrammarDesignerDoc
@@ -45,6 +48,12 @@ BEGIN_MESSAGE_MAP(CGrammarDesignerDoc, CRichEditDoc)
 		ON_UPDATE_COMMAND_UI(ID_PARSER_PARSE, &CGrammarDesignerDoc::OnUpdateParserParse)
 		ON_COMMAND(ID_SHOW_LEFTRECURSION, &CGrammarDesignerDoc::OnShowLeftrecursion)
 		ON_UPDATE_COMMAND_UI(ID_SHOW_LEFTRECURSION, &CGrammarDesignerDoc::OnUpdateShowLeftrecursion)
+
+
+		
+
+		ON_COMMAND(ID_TEST_TEST, &CGrammarDesignerDoc::OnTestTest)
+		ON_COMMAND(ID_TEST_TEST2, &CGrammarDesignerDoc::OnTestTest2)
 END_MESSAGE_MAP()
 
 
@@ -62,10 +71,15 @@ CGrammarDesignerDoc::CGrammarDesignerDoc()
 		m_lexer			= NULL;
 		m_parser		=	NULL;
 		
+		VERIFY(m_thread.CreateThread());
+
+		
+
 }
 
 CGrammarDesignerDoc::~CGrammarDesignerDoc()
 {
+		m_thread.EndThread();
 		ClearParser();
 }
 
@@ -226,66 +240,6 @@ void CGrammarDesignerDoc::OnChangeParserMode(UINT nID)
 		}
 }
 
-
-static void AR_STDCALL report_tag_func(const ARSpace::cfgReportInfo_t *report, void *context)
-{
-		switch(report->type)
-		{
-		case ARSpace::CFG_REPORT_MESSAGE_T:
-				//AR_printf(L"%ls\r\n", report->message);
-				break;
-		case ARSpace::CFG_REPORT_ERROR_T:
-				//::AfxMessageBox(report->message);
-				//AR_printf(L"%ls : %d\r\n", report->message, report->err_level);
-				break;
-		case ARSpace::CFG_REPORT_ERR_LEX_T:
-				//::AfxMessageBox(report->message);
-				//AR_printf(L"lex error %ls\r\n", report->message);
-				break;
-		case ARSpace::CFG_REPORT_ERR_SYNTAX_T:
-				//::AfxMessageBox(report->message);
-				//AR_printf(L"syntax error %ls\r\n", report->message);
-				break;
-		default:
-				AR_ASSERT(false);
-		}
-}
-
-
-void CGrammarDesignerDoc::OnToolsRebuildtags()
-{
-		// TODO: Add your command handler code here
-		
-		CGrammarDesignerView *view = (CGrammarDesignerView*)reinterpret_cast<CGrammarDesignerView*>(m_viewList.GetHead());
-		
-
-		ASSERT(view != NULL);
-		CString str;
-
-		view->GetWindowText(str);
-
-		if(str != m_src_cache)
-		{
-				m_src_cache = str;
-		}else
-		{
-				return;
-		}
-
-		ARSpace::cfgReport_t	report = {report_tag_func, NULL};
-		ARSpace::cfgConfig_t *cfg = ARSpace::CFG_CollectGrammarConfig(str.GetString(), &report);
-
-		if(cfg != NULL)
-		{
-				CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
-
-				CTagView &tag = main_frm->GetTagView();
-
-				tag.UpdateTag(cfg);
-
-				ARSpace::CFG_DestroyGrammarConfig(cfg);
-		}
-}
 
 
 void CGrammarDesignerDoc::OnUpdateParserModeLalr(CCmdUI *pCmdUI)
@@ -804,6 +758,7 @@ public:
 };
 
 
+
 class ParserContext : public ArsenalCPP::NodeContext
 {
 private:
@@ -957,4 +912,132 @@ BOOL CGrammarDesignerDoc::SaveModified()
 		// TODO: Add your specialized code here and/or call the base class
 
 		return CRichEditDoc::SaveModified();
+}
+
+
+
+static void AR_STDCALL report_tag_func(const ARSpace::cfgReportInfo_t *report, void *context)
+{
+		switch(report->type)
+		{
+		case ARSpace::CFG_REPORT_MESSAGE_T:
+				//AR_printf(L"%ls\r\n", report->message);
+				break;
+		case ARSpace::CFG_REPORT_ERROR_T:
+				//::AfxMessageBox(report->message);
+				//AR_printf(L"%ls : %d\r\n", report->message, report->err_level);
+				break;
+		case ARSpace::CFG_REPORT_ERR_LEX_T:
+				//::AfxMessageBox(report->message);
+				//AR_printf(L"lex error %ls\r\n", report->message);
+				break;
+		case ARSpace::CFG_REPORT_ERR_SYNTAX_T:
+				//::AfxMessageBox(report->message);
+				//AR_printf(L"syntax error %ls\r\n", report->message);
+				break;
+		default:
+				AR_ASSERT(false);
+		}
+}
+
+
+class ReBuildTagWorker : public CBackEndThread::CWorkerUnit
+{
+private:
+		CString					m_src;
+		CWnd					&m_target;
+public:
+		ReBuildTagWorker(const CString &source, CWnd &target) : m_src(source), m_target(target)
+		{
+
+		}
+
+		virtual ~ReBuildTagWorker()
+		{
+
+
+		}
+public:
+		virtual void Run()
+		{
+				ARSpace::cfgReport_t	report = {report_tag_func, NULL};
+				ARSpace::cfgConfig_t *cfg = ARSpace::CFG_CollectGrammarConfig(m_src.GetString(), &report);
+				//::AfxGetApp()->PostThreadMessage(ID_THREAD_MESSAGE, ID_BUILD_CFG_COMPLETED, (WPARAM)cfg);
+				m_target.PostMessage(ID_BUILD_CFG_COMPLETED, (WPARAM)cfg, NULL);
+		}
+};
+
+
+void CGrammarDesignerDoc::OnToolsRebuildtags()
+{
+		// TODO: Add your command handler code here
+		
+		CGrammarDesignerView *view = (CGrammarDesignerView*)reinterpret_cast<CGrammarDesignerView*>(m_viewList.GetHead());
+		
+
+		ASSERT(view != NULL);
+		CString str;
+
+		view->GetWindowText(str);
+
+		if(str != m_src_cache)
+		{
+				m_src_cache = str;
+		}else
+		{
+				return;
+		}
+
+		m_thread.PostWorker(new ReBuildTagWorker(m_src_cache, *this->GetView()));
+
+}
+
+void	CGrammarDesignerDoc::OnTagBuildCompleted(ARSpace::cfgConfig_t *cfg)
+{
+		CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
+		
+		CTagView &tag = main_frm->GetTagView();
+
+		tag.UpdateTag(cfg);
+
+		if(cfg)ARSpace::CFG_DestroyGrammarConfig(cfg);
+		
+		
+}
+
+
+
+
+
+void CGrammarDesignerDoc::OnTestTest()
+{
+		/*
+		class TestWorker : public CBackEndThread::CWorkerUnit
+		{
+		public:
+				virtual void Run()
+				{
+						::AfxMessageBox(TEXT("On TestWorker::Run"));
+				}
+				
+				virtual ~TestWorker()
+				{
+
+				}
+		};
+		// TODO: Add your command handler code here
+		m_thread.PostWorker(new TestWorker());
+		*/
+		//	::AfxMessageBox(TEXT("OnTestTest"));
+
+		//this->GetView()->SendMessage(ID_MSG_TEST, NULL, (LPARAM)(TEXT("abcedefg")));
+
+}
+
+
+void CGrammarDesignerDoc::OnTestTest2()
+{
+		// TODO: Add your command handler code here
+
+		
 }

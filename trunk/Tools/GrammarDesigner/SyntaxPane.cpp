@@ -10,6 +10,11 @@
 
 #include "MainFrm.h"
 
+
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#endif
+
 // CSyntaxPane
 
 IMPLEMENT_DYNAMIC(CSyntaxPane, CDockablePane)
