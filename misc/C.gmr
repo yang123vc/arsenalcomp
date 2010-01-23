@@ -184,13 +184,6 @@
 %token	TYPE_ID	:	'^'			,0		;	//占位符
 %token	FAKE_EOI	:	'^'			,0		;	//占位符
 
-/*
-
-10 ^ 
-11 | 
-12 && 
-13 || 
-*/
 
 %left		"||"				;
 %left		"&&"				;
@@ -221,190 +214,106 @@ constant	:	OCT_CONSTANT
 		|	STRING_LITERAL
 		;
 
-primary_expression
-	: IDENTIFIER
-	| constant
-	| "(" expression ")"
-	;
+primary_expression	:	IDENTIFIER
+				|	constant
+				|	"(" expression ")"
+				;
 
-postfix_expression
-	: primary_expression
-	| postfix_expression "[" expression "]"
-	| postfix_expression "(" ")"
-	| postfix_expression "(" argument_expression_list ")"
-	| postfix_expression "." IDENTIFIER
-	| postfix_expression "->" IDENTIFIER
-	| postfix_expression "++"
-	| postfix_expression "--"
-	;
+postfix_expression	:	primary_expression
+				|	postfix_expression "[" expression "]"
+				|	postfix_expression "(" ")"
+				|	postfix_expression "(" argument_expression_list ")"
+				|	postfix_expression "." IDENTIFIER
+				|	postfix_expression "->" IDENTIFIER
+				|	postfix_expression "++"
+				|	postfix_expression "--"
+				;
 
-argument_expression_list
-	: assignment_expression
-	| argument_expression_list "," assignment_expression
-	;
-
-unary_expression
-	: postfix_expression
-	| "++" unary_expression
-	| "--" unary_expression
-	| unary_operator cast_expression
-	| "sizeof" unary_expression
-	| "sizeof" "(" type_name ")"
-	;
-
-unary_operator
-	: "&"
-	| "*"
-	| "+"
-	| "-"
-	| "~"
-	| "!"
-	;
-
-cast_expression
-	: unary_expression
-	| "(" type_name ")" cast_expression
-	;
-	
-/*
-multiplicative_expression
-	: cast_expression
-	| multiplicative_expression "*" cast_expression
-	| multiplicative_expression "/" cast_expression
-	| multiplicative_expression "%" cast_expression
-	;
-
-additive_expression
-	: multiplicative_expression
-	| additive_expression "+" multiplicative_expression
-	| additive_expression "-" multiplicative_expression
-	;
-
-shift_expression
-	: additive_expression
-	| shift_expression "<<" additive_expression
-	| shift_expression ">>" additive_expression
-	;
-
-relational_expression
-	: shift_expression
-	| relational_expression "<" shift_expression
-	| relational_expression ">" shift_expression
-	| relational_expression "<=" shift_expression
-	| relational_expression ">=" shift_expression
-	;
-
-equality_expression
-	: relational_expression
-	| equality_expression "==" relational_expression
-	| equality_expression "!=" relational_expression
-	;
-
-and_expression
-	: equality_expression
-	| and_expression "&" equality_expression
-	;
-
-exclusive_or_expression
-	: and_expression
-	| exclusive_or_expression "^" and_expression
-	;
-
-inclusive_or_expression
-	: exclusive_or_expression
-	| inclusive_or_expression "|" exclusive_or_expression
-	;
-
-logical_and_expression
-	: inclusive_or_expression
-	| logical_and_expression "&&" inclusive_or_expression
-	;
-
-logical_or_expression
-	: logical_and_expression
-	| logical_or_expression "||" logical_and_expression
-	;
-
-
-conditional_expression
-	: logical_or_expression
-	| logical_or_expression "?" expression ":" conditional_expression
-	;
-
-
-*/
-
-binary_expression		:	binary_expression	"+"	binary_expression
-					|	binary_expression	"-"	binary_expression
-					|	binary_expression	"*"	binary_expression
-					|	binary_expression	"/"	binary_expression
-					|	binary_expression	"%"	binary_expression
-					|	binary_expression	"<<"	binary_expression
-					|	binary_expression	">>"	binary_expression
-					|	binary_expression	"<"	binary_expression
-					|	binary_expression	"<="	binary_expression
-					|	binary_expression	">"	binary_expression
-					|	binary_expression	">="	binary_expression
-
-					|	binary_expression	"=="	binary_expression
-					|	binary_expression	"!="	binary_expression
-					|	binary_expression	"&"	binary_expression
-					|	binary_expression	"^"	binary_expression
-					|	binary_expression	"|"	binary_expression
-					|	binary_expression	"&&"	binary_expression
-					|	binary_expression	"||"	binary_expression
-					|	cast_expression
+argument_expression_list	:	assignment_expression
+					|	argument_expression_list "," assignment_expression
 					;
 
+unary_expression	:	postfix_expression
+				|	"++" unary_expression
+				|	"--" unary_expression
+				|	unary_operator cast_expression
+				|	"sizeof" unary_expression
+				|	"sizeof" "(" type_name ")"
+				;
 
-conditional_expression	:	binary_expression
-					|	binary_expression	"?" expression ":" conditional_expression
+unary_operator	:	"&"
+			|	"*"
+			|	"+"
+			|	"-"
+			|	"~"
+			|	"!"
+			;
+
+cast_expression	:	unary_expression
+			|	"(" type_name ")" cast_expression
+			;
+
+
+binary_expression	:	binary_expression	"+"	binary_expression
+				|	binary_expression	"-"	binary_expression
+				|	binary_expression	"*"	binary_expression
+				|	binary_expression	"/"	binary_expression
+				|	binary_expression	"%"	binary_expression
+				|	binary_expression	"<<"	binary_expression
+				|	binary_expression	">>"	binary_expression
+				|	binary_expression	"<"	binary_expression
+				|	binary_expression	"<="	binary_expression
+				|	binary_expression	">"	binary_expression
+				|	binary_expression	">="	binary_expression
+				|	binary_expression	"=="	binary_expression
+				|	binary_expression	"!="	binary_expression
+				|	binary_expression	"&"	binary_expression
+				|	binary_expression	"^"	binary_expression
+				|	binary_expression	"|"	binary_expression
+				|	binary_expression	"&&"	binary_expression
+				|	binary_expression	"||"	binary_expression
+				|	cast_expression
+				;
+
+
+
+constant_expression		:	binary_expression
+					|	binary_expression	"?"	expression	":"	constant_expression
 					;
 
+assignment_expression		:	constant_expression
+					|	unary_expression assignment_operator assignment_expression
+					;
 
+assignment_operator	:	"="
+				|	"*="
+				|	"/="
+				|	"%="
+				|	"+="
+				|	"-="
+				|	"<<="
+				|	">>="
+				|	"&="
+				|	"^="
+				|	"|="
+				;
 
-assignment_expression
-	: conditional_expression
-	| unary_expression assignment_operator assignment_expression
-	;
+expression		:	assignment_expression
+			|	expression "," assignment_expression
+			;
 
-assignment_operator
-	: "="
-	| "*="
-	| "/="
-	| "%="
-	| "+="
-	| "-="
-	| "<<="
-	| ">>="
-	| "&="
-	| "^="
-	| "|="
-	;
+declaration	:	declaration_specifiers ";"
+			|	declaration_specifiers init_declarator_list ";"
+			|	declaration_specifiers  error ";"
+			|	error ";"
+			;
 
-expression
-	: assignment_expression
-	| expression "," assignment_expression
-	;
-
-constant_expression
-	: conditional_expression
-	;
-
-declaration
-	: declaration_specifiers ";"
-	| declaration_specifiers init_declarator_list ";"
-	| declaration_specifiers  error ";"
-	| error ";"
-	;
-
-declaration_specifiers
-	: "typedef" declaration_specifiers
-	| type_specifier
-	| type_qualifier
-	| type_specifier declaration_specifiers
-	| type_qualifier declaration_specifiers
-	;
+declaration_specifiers	:	"typedef" declaration_specifiers
+					|	type_specifier
+					|	type_qualifier
+					|	type_specifier declaration_specifiers
+					|	type_qualifier declaration_specifiers
+					;
 
 init_declarator_list
 	: init_declarator
