@@ -418,7 +418,7 @@ void	CActionView::DrawLeftRecursionView(const ARSpace::psrFirstFollowView_t *vie
 
 		for(i = 0; i < view->left_recursion.count; ++i)
 		{
-				this->m_list.InsertItem(i, view->left_recursion.name_set[i]);
+				this->m_list.InsertItem((int)i, view->left_recursion.name_set[i]);
 		}
 
 }

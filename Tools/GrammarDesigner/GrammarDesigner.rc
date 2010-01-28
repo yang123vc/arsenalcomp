@@ -84,6 +84,8 @@ IDR_INPUT_POPUP MENU
 BEGIN
     POPUP "Popup"
     BEGIN
+        MENUITEM "Parse",                       ID_POPUP_PARSE
+        MENUITEM SEPARATOR
         MENUITEM "Cut",                         ID_EDIT_CUT
         MENUITEM "Copy",                        ID_EDIT_COPY
         MENUITEM "Clear",                       ID_EDIT_CLEAR
@@ -95,8 +97,6 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Open",                        ID_INPUT_EDIT_OPEN
         MENUITEM "Save",                        ID_INPUT_EDIT_SAVE
-        MENUITEM SEPARATOR
-        MENUITEM "Parse",                       ID_POPUP_PARSE
     END
 END
 
@@ -197,7 +197,6 @@ BEGIN
         POPUP "Mode"
         BEGIN
             MENUITEM "&SLR(1)",                     ID_PARSER_MODE_SLR, CHECKED
-            MENUITEM "&LR(1)",                      ID_PARSER_MODE_LR, CHECKED
             MENUITEM "L&ALR(1)",                    ID_PARSER_MODE_LALR, CHECKED
         END
         MENUITEM "&Build",                      ID_PARSER_BUILD
@@ -226,11 +225,6 @@ BEGIN
     POPUP "&Help"
     BEGIN
         MENUITEM "&About GrammarDesigner...",   ID_APP_ABOUT
-        POPUP "&Test"
-        BEGIN
-            MENUITEM "&Test\tCtrl+T",               ID_TEST_TEST
-            MENUITEM "Test2",                       ID_TEST_TEST2
-        END
     END
 END
 
@@ -240,6 +234,13 @@ BEGIN
     BEGIN
         MENUITEM "&Goto Decl",                  ID_EDIT_GOTO_DECL
         MENUITEM "&Build",                      ID_PARSER_BUILD
+        POPUP "Show"
+        BEGIN
+            MENUITEM "&ActionTable",                ID_PARSER_SHOWACTIONTABLE
+            MENUITEM "&Conflict",                   ID_PARSER_SHOWCONFLICT
+            MENUITEM "&FirstFollow",                ID_PARSER_SHOWFIRSTFOLLOW
+            MENUITEM "Left Recursion",              ID_SHOW_LEFTRECURSION
+        END
         MENUITEM SEPARATOR
         MENUITEM "Cu&t\tCtrl+X",                ID_EDIT_CUT
         MENUITEM "&Copy\tCtrl+C",               ID_EDIT_COPY
@@ -346,6 +347,7 @@ BEGIN
     "F",            ID_EDIT_FONTDLG,        VIRTKEY, ALT, NOINVERT
     "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL, NOINVERT
     VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT, NOINVERT
+    "H",            ID_EDIT_REPLACE,        VIRTKEY, CONTROL, NOINVERT
     "A",            ID_EDIT_SELECT_ALL,     VIRTKEY, CONTROL, NOINVERT
     VK_BACK,        ID_EDIT_UNDO,           VIRTKEY, ALT, NOINVERT
     "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL, NOINVERT
@@ -354,7 +356,6 @@ BEGIN
     "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL, NOINVERT
     VK_F6,          ID_NEXT_PANE,           VIRTKEY, NOINVERT
     VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT, NOINVERT
-    "H",            ID_EDIT_REPLACE,        VIRTKEY, CONTROL, NOINVERT
 END
 
 

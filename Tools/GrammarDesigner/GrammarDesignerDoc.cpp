@@ -33,7 +33,6 @@ BEGIN_MESSAGE_MAP(CGrammarDesignerDoc, CRichEditDoc)
 
 		ON_COMMAND_RANGE(ID_PARSER_MODE_SLR, ID_PARSER_MODE_LALR, &CGrammarDesignerDoc::OnChangeParserMode)
 		ON_UPDATE_COMMAND_UI(ID_PARSER_MODE_LALR, &CGrammarDesignerDoc::OnUpdateParserModeLalr)
-		ON_UPDATE_COMMAND_UI(ID_PARSER_MODE_LR, &CGrammarDesignerDoc::OnUpdateParserModeLr)
 		ON_UPDATE_COMMAND_UI(ID_PARSER_MODE_SLR, &CGrammarDesignerDoc::OnUpdateParserModeSlr)
 		ON_COMMAND(ID_EDIT_GOTO_DECL, &CGrammarDesignerDoc::OnEditGotoDecl)
 		ON_UPDATE_COMMAND_UI(ID_EDIT_GOTO_DECL, &CGrammarDesignerDoc::OnUpdateEditGotoDecl)
@@ -144,6 +143,7 @@ void CGrammarDesignerDoc::Serialize(CArchive& ar)
 						//this->UpdateAllViews(view, NULL, this);
 						view->GetRichEditCtrl().SetWindowText(txt);
 
+						this->OnToolsRebuildtags();
 				}
 
 		}
@@ -229,9 +229,6 @@ void CGrammarDesignerDoc::OnChangeParserMode(UINT nID)
 		case ID_PARSER_MODE_SLR:
 				m_parser_mode = ARSpace::PSR_SLR;
 				break;
-		case ID_PARSER_MODE_LR:
-				m_parser_mode = ARSpace::PSR_LR1;
-				break;
 		case ID_PARSER_MODE_LALR:
 				m_parser_mode = ARSpace::PSR_LALR;
 				break;
@@ -248,11 +245,6 @@ void CGrammarDesignerDoc::OnUpdateParserModeLalr(CCmdUI *pCmdUI)
 		pCmdUI->SetCheck(m_parser_mode == ARSpace::PSR_LALR);
 }
 
-void CGrammarDesignerDoc::OnUpdateParserModeLr(CCmdUI *pCmdUI)
-{
-		// TODO: Add your command update UI handler code here
-		pCmdUI->SetCheck(m_parser_mode == ARSpace::PSR_LR1);
-}
 
 void CGrammarDesignerDoc::OnUpdateParserModeSlr(CCmdUI *pCmdUI)
 {
@@ -549,12 +541,12 @@ void CGrammarDesignerDoc::OnParserBuild()
 		main_frm->ClearShow();
 		ClearParser();
 		this->SaveModified();
-		
+		/*
 		if(this->IsModified())
 		{
 				return;
 		}
-
+		*/
 
 		CString str;
 		view->GetRichEditCtrl().GetWindowText(str);
@@ -706,24 +698,7 @@ void CGrammarDesignerDoc::OnUpdateShowLeftrecursion(CCmdUI *pCmdUI)
 
 
 
-void CGrammarDesignerDoc::OnUpdateParserParse(CCmdUI *pCmdUI)
-{
-		// TODO: Add your command update UI handler code here
-		pCmdUI->Enable(IsParseable());
 
-}
-
-
-
-bool	CGrammarDesignerDoc::IsParseable()const
-{
-		CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
-		CInputPane &input = main_frm->GetInputPane();
-
-		int len = input.GetInputLength();
-
-		return (len > 0 && m_parser != NULL);
-}
 
 
 class ParserReport : public ArsenalCPP::ARContext
@@ -790,7 +765,7 @@ public:
 				CString token;
 				if(tok->str_cnt > 0)
 				{
-						token.Append(tok->str, tok->str_cnt);
+						token.Append(tok->str, (int)tok->str_cnt);
 				}else
 				{
 						token.Append(TEXT("%EOI"));
@@ -821,13 +796,28 @@ void CGrammarDesignerDoc::OnParserParse()
 				OnParserBuild();
 		}
 
-
-		if(this->IsModified())return;
+		//if(this->IsModified())return;
 
 		main_frm->ClearShow();
 
-		if(m_parser == NULL)return;
-		if(input.GetInputLength() <= 0)return;
+		//if(m_parser == NULL)return;
+		//if(input.GetInputLength() <= 0)return;
+
+		ASSERT((m_lexer == NULL && m_parser == NULL) || (m_lexer != NULL && m_parser != NULL));
+		
+		if(m_parser == NULL)
+		{
+				BOOL is_modify = this->IsModified();
+				this->SetModifiedFlag(FALSE);
+				this->OnParserBuild();
+
+				this->SetModifiedFlag(is_modify);
+		}
+
+		if(m_parser == NULL )
+		{
+				return;
+		}
 
 		ASSERT(m_lexer != NULL && m_parser != NULL);
 
@@ -862,7 +852,7 @@ void CGrammarDesignerDoc::OnParserParse()
 
 						CString lex_err;
 						CString msg;
-						msg.Append(last_err.str,  len);
+						msg.Append(last_err.str,  (int)len);
 					
 						lex_err.Format(TEXT("Lexer Error : %ls"), msg.GetString());
 						
@@ -881,8 +871,7 @@ void CGrammarDesignerDoc::OnParserParse()
 						}
 				}
 		}
-		
-		
+
 		if(is_ok)
 		{
 				CPrintNode *node = (CPrintNode*)m_parser->GetResult();
@@ -904,6 +893,26 @@ void CGrammarDesignerDoc::OnParserParse()
 
 }
 
+
+
+bool	CGrammarDesignerDoc::IsParseable()const
+{
+		CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
+		CInputPane &input = main_frm->GetInputPane();
+
+		int len = input.GetInputLength();
+
+		//return (len > 0 && m_parser != NULL);
+
+		return (len > 0 && main_frm->GetActiveView()->GetWindowTextLength() > 0);
+}
+
+void CGrammarDesignerDoc::OnUpdateParserParse(CCmdUI *pCmdUI)
+{
+		// TODO: Add your command update UI handler code here
+		pCmdUI->Enable(IsParseable());
+
+}
 
 
 

@@ -17,7 +17,7 @@
 
 #include "parser.h"
 #include "parser_in.h"
-#include "lr_item.h"
+#include "grammar.h"
 
 AR_NAMESPACE_BEGIN
 
@@ -38,7 +38,7 @@ typedef struct __action_record_tag
 		psrActionType_t					type;
 		
 		size_t							shift_to;
-		const psrRule_t					*rule;
+		size_t							rule_num;
 		size_t							delim;
 		
 		size_t							prec;
@@ -73,13 +73,9 @@ const psrSymbList_t*	PSR_GetExpectedSymb(const psrActionTable_t *tbl, size_t sta
 
 
 psrActionTable_t*		PSR_CreateActionTable_SLR(const psrGrammar_t *grammar);
-psrActionTable_t*		PSR_CreateActionTable_LR1(const psrGrammar_t *grammar);
 psrActionTable_t*		PSR_CreateActionTable_LALR(const psrGrammar_t *grammar);
 
 void					PSR_DestroyActionTable(psrActionTable_t *tbl);
-
-
-
 
 
 

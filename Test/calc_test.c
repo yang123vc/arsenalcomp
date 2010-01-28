@@ -1,5 +1,7 @@
 #include "test.h"
 #include "../Arsenal/Lex/lex.h"
+
+
 #include "../Arsenal/Parser/grammar.h"
 #include "../Arsenal/Parser/parser.h"
 #include "../Arsenal/Parser/lr_action.h"
@@ -200,17 +202,18 @@ static  parser_t* __build_parser()
 		PSR_InsertRuleByStr(gmr, L"E : E * E", NULL, create_node, 0);
 		PSR_InsertRuleByStr(gmr, L"E : E / E", NULL, create_node, 0);
 		PSR_InsertRuleByStr(gmr, L"E : E % E", NULL, create_node, 0);
+		PSR_InsertRuleByStr(gmr, L"E : ( E )", NULL, create_node1, 0);
+		PSR_InsertRuleByStr(gmr, L"E : - E", L"UMINUS", create_node2, 0);
 
 		PSR_InsertRuleByStr(gmr, L"E : number", NULL, create_node1, 0);
 
 		//PSR_InsertRuleByStr(gmr, L"E : X number", NULL, create_node1, 0);
 		//PSR_InsertRuleByStr(gmr, L"E : Y number", NULL, create_node1, 0);
-		PSR_InsertRuleByStr(gmr, L"E : ( E )", NULL, create_node1, 0);
-		PSR_InsertRuleByStr(gmr, L"E : - E", L"UMINUS", create_node2, 0);
-
+		
+/*
 		PSR_InsertRuleByStr(gmr, L"X : ", NULL, NULL, 0);
 		PSR_InsertRuleByStr(gmr, L"Y : ", NULL, NULL, 0);
-		
+*/
 		{
 				arString_t		*str;
 
@@ -228,7 +231,7 @@ static  parser_t* __build_parser()
 				parser_t *psr;
 				
 				
-				psr =  PSR_CreateParser(gmr, PSR_LR1);
+				psr =  PSR_CreateParser(gmr, PSR_SLR);
 				
 				AR_printf(L"Conflict == %d\r\n", PSR_CountParserConflict(psr));
 				/*PSR_DestroyGrammar(gmr);*/
@@ -279,6 +282,7 @@ void calc_test()
 		lexToken_t		tok;
 		size_t i,k;
 		bool_t is_ok;
+		arString_t		*str;
 		/*
 		const psrActionView_t *view;
 		const psrConflictView_t	*conflict;
@@ -288,6 +292,15 @@ void calc_test()
 		lex = __build_lex();
 		AR_ASSERT(lex);
 		psr = __build_parser();
+
+		/*
+		str = AR_CreateString();
+
+		PSR_ActionTableToString(psr->tbl, str);
+
+
+		AR_printf(L"%ls\r\n", AR_GetStrString(str));
+		*/
 
 		/*
 		first_follow = PSR_CreateParserFirstFollowView(psr);
@@ -456,3 +469,4 @@ void calc_test3()
 AR_NAMESPACE_END
 
 #endif
+

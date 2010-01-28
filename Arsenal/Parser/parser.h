@@ -96,7 +96,6 @@ typedef enum
 {
 		PSR_LR0,
 		PSR_SLR = PSR_LR0,
-		PSR_LR1,
 		PSR_LALR
 }psrLRItemType_t;
 

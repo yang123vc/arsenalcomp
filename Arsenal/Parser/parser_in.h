@@ -22,9 +22,7 @@ AR_NAMESPACE_BEGIN
 /*typedef struct __parser_symbol_tag psrSymb_t;*/
 
 /*以下为终结符*/
-extern const struct __parser_symbol_tag	*PSR_EpsilonSymb;/*表示空*/
 extern const struct __parser_symbol_tag	*PSR_EOISymb;   /*表示输入结尾符号*/
-extern const struct __parser_symbol_tag	*PSR_LALRSymb; /*表示为不在所有字符值集合中的字符，计算LALR语法分析表时使用*/
 extern const struct __parser_symbol_tag	*PSR_ErrorSymb;/*特殊的错误处理产生式标记终结符，*/
 extern const struct __parser_symbol_tag	*PSR_DefPrecSymb;/*所有无终结符的产生式且未指定prec_tok的产生式所相关的终结符*/
 

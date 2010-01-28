@@ -230,6 +230,24 @@ void	CTagTree::UpdateTag(const ARSpace::cfgConfig_t *cfg)
 		update_tree_node(m_term_tbl, m_term);
 		update_tree_node(m_prec_tbl, m_prec);
 		update_tree_node(m_rule_tbl, m_rule);
+
+
+
+		str.Format(TEXT("Name (%d)"), cfg->name_cnt);
+		this->SetItemText(m_name, str);
+
+
+		str.Format(TEXT("Term (%d)"), cfg->tok_cnt);
+		this->SetItemText(m_term, str);
+
+
+		str.Format(TEXT("Prec (%d)"), cfg->prec_cnt);
+		this->SetItemText(m_prec, str);
+
+
+		str.Format(TEXT("Rule (%d)"), cfg->rule_cnt);
+		this->SetItemText(m_rule, str);
+
 }
 
 

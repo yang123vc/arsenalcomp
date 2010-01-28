@@ -80,7 +80,7 @@ void	CSyntaxPane::DrawTree(CPrintNode *node)
 {
 		m_tree.DrawTree(node);
 
-		
+		m_tree.ExpandAll();
 
 }
 
@@ -253,3 +253,37 @@ void CSyntaxTree::OnUpdatePopupClear32865(CCmdUI *pCmdUI)
 		// TODO: Add your command update UI handler code here
 		pCmdUI->Enable(m_root != NULL);
 }
+
+
+
+void	CSyntaxTree::ExpandAll()
+{
+		if(m_root == NULL)return ;
+		
+		//VERIFY(this->Expand(m_root, TVE_EXPAND));
+
+		HTREEITEM	item = this->GetRootItem();
+		CList<HTREEITEM> que;
+		
+		if(item != NULL)que.AddTail(item);
+		
+		while(!que.IsEmpty())
+		{
+				item = que.RemoveHead();
+
+				if(this->ItemHasChildren(item))
+				{
+						VERIFY(this->Expand(item, TVE_EXPAND));
+
+						HTREEITEM chd = this->GetChildItem(item);
+
+						while(chd != NULL)
+						{
+								que.AddTail(chd);
+								chd = this->GetNextSiblingItem(chd);
+						}
+				}
+		}
+} 
+
+

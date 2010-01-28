@@ -30,7 +30,7 @@ public:
 		afx_msg void OnUpdateEditSelectAll(CCmdUI *pCmdUI);
 		afx_msg void OnEditClear();
 		afx_msg void OnUpdateEditClear(CCmdUI *pCmdUI);
-		afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+		afx_msg int	 OnCreate(LPCREATESTRUCT lpCreateStruct);
 		afx_msg void OnInputFont();
 		afx_msg void OnPopupOpen();
 		afx_msg void OnPopupSave();

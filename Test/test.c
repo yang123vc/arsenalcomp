@@ -56,18 +56,18 @@ extern void calc_test3();
 
 extern void parser_perf_test();
 
+extern void lalr_test();
+
+extern void grammar_test();
+
 #endif
-
-
-
-
 
 
 void AR_Test()
 {
 #if defined(__LIB)
+		
 		//com_test();
-
 		//trie_tree_test();
 		//expr_test();
 		//lex_test();
@@ -101,14 +101,19 @@ void AR_Test()
 		//trans_char_test();
 		
 		//lex_test();
-		parser_test();
+		
 
 		//parser_perf_test();
 		
 		//rgx_test();
-		
-		//calc_test();
+		calc_test();
 
+		//parser_test();
+		//grammar_test();
+
+		//lalr_test();
+		
+		
 #else
 		AR_printf(L"dll version\r\n");
 #endif
