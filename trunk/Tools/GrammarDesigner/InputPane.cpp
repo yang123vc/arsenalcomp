@@ -186,6 +186,17 @@ BOOL CInputEdit::PreTranslateMessage(MSG* pMsg)
 						this->OnContextMenu(this, pt);
 						return TRUE;
 				}
+				case VK_TAB:
+				{
+
+						long nPos, nEnd;
+						
+						this->GetSel(nPos, nEnd);
+						SetSel(nPos, nEnd);
+						ReplaceSel(TEXT("\t"), TRUE);
+						return TRUE;
+
+				}
 				}
 		}
 		}
@@ -214,6 +225,7 @@ BEGIN_MESSAGE_MAP(CInputEdit, CRichEditCtrl)
 		ON_WM_DROPFILES()
 		ON_COMMAND(ID_POPUP_PARSE, &CInputEdit::OnPopupParse)
 		ON_UPDATE_COMMAND_UI(ID_POPUP_PARSE, &CInputEdit::OnUpdatePopupParse)
+
 END_MESSAGE_MAP()
 
 void CInputEdit::OnContextMenu(CWnd* pWnd, CPoint point)

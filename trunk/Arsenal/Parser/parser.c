@@ -51,9 +51,6 @@ parser_t* PSR_CreateParser(const struct __parser_grammar_tag *grammar, psrModeTy
 		case PSR_SLR:
 				parser->tbl = PSR_CreateActionTable_SLR(parser->grammar);
 				break;
-		case PSR_LR1:
-				parser->tbl = PSR_CreateActionTable_LR1(parser->grammar);
-				break;
 		default:
 				parser->tbl = PSR_CreateActionTable_LALR(parser->grammar);
 				break;
@@ -136,13 +133,16 @@ void	  PSR_DestroyParser(parser_t *parser)
 
 static void __handle_reduce(parser_t *parser, const psrAction_t *action)
 {
-		psrNode_t **nodes;
-		psrNode_t *new_node;
-		size_t	  next_state;
+		psrNode_t		**nodes;
+		psrNode_t		*new_node;
+		size_t			next_state;
+		const psrRule_t *rule;
 		const	psrCtx_t *user;
 		AR_ASSERT(parser != NULL && action != NULL && action->type == PSR_REDUCE);
 		
 		user = PSR_GetGrammarContext(parser->grammar);
+
+		rule = PSR_GetRuleOfGrammar(parser->grammar, action->rule_num);
 		/*
 		if(action->reduce_count > 0)
 		{
@@ -160,17 +160,17 @@ static void __handle_reduce(parser_t *parser, const psrAction_t *action)
 /*
 		有时候例如A->.这类空产生式也会存在handler，例如语义钩子等，因此这里只根据是否有注册进来的函数来决定规约是否为NULL
 */
-		if(action->rule->rule_f != NULL)
+		if(rule->rule_f != NULL)
 		{
-				new_node = action->rule->rule_f(nodes, action->reduce_count, action->rule->head->name, user->ctx);
+				new_node = rule->rule_f(nodes, action->reduce_count, rule->head->name, user->ctx);
 		}else
 		{
 
 /****************************************Experiment****************************************************/
-				if(action->rule->auto_ret < action->reduce_count)
+				if(rule->auto_ret < action->reduce_count)
 				{
-						new_node = nodes[action->rule->auto_ret];
-						nodes[action->rule->auto_ret] = NULL;
+						new_node = nodes[rule->auto_ret];
+						nodes[rule->auto_ret] = NULL;
 
 				}else
 /****************************************************************************************************/
@@ -201,7 +201,7 @@ static void __handle_reduce(parser_t *parser, const psrAction_t *action)
 				PSR_PopNodeStack(parser->node_stack, action->reduce_count);
 		}
 		
-		next_state = PSR_GetState(parser->tbl, PSR_TopStack(parser->state_stack), action->rule->head);
+		next_state = PSR_GetState(parser->tbl, PSR_TopStack(parser->state_stack), rule->head);
 		PSR_PushStack(parser->state_stack, next_state);
 		PSR_PushNodeStack(parser->node_stack, new_node);
 }

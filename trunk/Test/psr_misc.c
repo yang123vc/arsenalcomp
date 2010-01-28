@@ -1,4 +1,6 @@
 #include "test.h"
+
+#if(0)
 #include "../Arsenal/Parser/parser_in.h"
 #include "../Arsenal/Parser/symbol.h"
 #include "../Arsenal/Parser/grammar.h"
@@ -482,6 +484,9 @@ void calc_test1()
 
 
 AR_NAMESPACE_END
+
+
+#endif
 
 
 #endif

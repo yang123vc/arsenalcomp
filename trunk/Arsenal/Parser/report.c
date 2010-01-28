@@ -13,6 +13,7 @@
 
 
 #include "grammar.h"
+#include "lalr.h"
 #include "lr_action.h"
 #include "parser_aux.h"
 #include "parser.h"
@@ -21,7 +22,6 @@
 
 
 AR_NAMESPACE_BEGIN
-
 
 
 
@@ -41,9 +41,11 @@ static void __insert_to_conflict_set(psrConflictView_t *view, psrConflictItem_t 
 const	psrConflictView_t*		PSR_CreateConflictView(const psrActionTable_t *tbl, const psrGrammar_t *grammar)
 {
 		psrConflictView_t		*view;
+		
 		size_t i,k;
 		AR_ASSERT(tbl != NULL && grammar != NULL);
 	
+		
 		view = AR_NEW0(psrConflictView_t);
 		
 		
@@ -56,6 +58,7 @@ const	psrConflictView_t*		PSR_CreateConflictView(const psrActionTable_t *tbl, co
 				{
 						arString_t				*str = NULL;
 						const psrAction_t		*act = tbl->actions[AR_TBL_IDX_R(i,k,tbl->col)];
+						const psrRule_t			*rule = PSR_GetRuleOfGrammar(grammar, act->rule_num);
 						
 						if(act->next == NULL)continue;
 						
@@ -77,21 +80,27 @@ const	psrConflictView_t*		PSR_CreateConflictView(const psrActionTable_t *tbl, co
 						
 						for(l = 0, act = tbl->actions[AR_TBL_IDX_R(i,k,tbl->col)]; l < item->count; ++l, act = act->next)
 						{
+								/*
 								psrLRItem_t tmp;
+								*/
+								lalrConfig_t	tmp;
 								AR_ASSERT(act != NULL);
 
-								
-								PSR_InitLRItem(&tmp, act->rule, act->delim, NULL);
+								PSR_InitConfig(&tmp, rule, act->delim);
+								/*
+								PSR_InitLRItem(&tmp, rule, act->delim);
+								*/
+
 								AR_ClearString(str);
 								switch(act->type)
 								{
 								case PSR_REDUCE:
 										AR_AppendFormatString(str,L"Reduce: ");
-										PSR_PrintLRItem(&tmp,grammar,str);
+										PSR_PrintConfig(&tmp,grammar,str);
 										break;
 								case PSR_SHIFT:
 										AR_AppendFormatString(str,L"Shift: ");
-										PSR_PrintLRItem(&tmp, grammar,str);
+										PSR_PrintConfig(&tmp, grammar,str);
 										break;
 								case PSR_ACCEPT:
 										AR_AppendFormatString(str,L"Accept ");
@@ -101,7 +110,8 @@ const	psrConflictView_t*		PSR_CreateConflictView(const psrActionTable_t *tbl, co
 								}
 								/*AR_AppendFormatString(str,L"\r\n");*/
 
-								PSR_UnInitLRItem(&tmp);
+								/*PSR_UnInitLRItem(&tmp);*/
+								PSR_UnInitConfig(&tmp);
 								item->items[l] = AR_wcsdup(AR_GetStrString(str));
 
 						}
@@ -189,6 +199,8 @@ const psrActionView_t*	PSR_CreateActionView(const psrActionTable_t *tbl, const p
 				{
 						
 						const psrAction_t *action = tbl->actions[AR_TBL_IDX_R(r, k, tbl->col)];
+						const psrRule_t	 *rule = PSR_GetRuleOfGrammar(grammar, action->rule_num);
+						
 
 						switch(action->type)
 						{
@@ -202,7 +214,7 @@ const psrActionView_t*	PSR_CreateActionView(const psrActionTable_t *tbl, const p
 								break;
 						case PSR_REDUCE:
 								{
-										msg = AR_vtow(L"[<%ls>:%" AR_PLAT_INT_FMT L"d]", action->rule->head->name, (size_t)action->reduce_count);
+										msg = AR_vtow(L"[<%ls>:%" AR_PLAT_INT_FMT L"d]", rule->head->name, (size_t)action->reduce_count);
 								}
 								break;
 						default:
@@ -333,8 +345,10 @@ void PSR_PrintActionTable(const psrActionTable_t *tbl, const psrGrammar_t *gramm
 				for(j = 0; j < tbl->col; ++j)
 				{
 						const psrAction_t *pact;
-
+						const psrRule_t	 *rule;
 						pact = tbl->actions[AR_TBL_IDX_R(i,j, tbl->col)];
+						rule = PSR_GetRuleOfGrammar(grammar, pact->rule_num);
+
 						switch(pact->type)
 						{
 						case PSR_ACCEPT:
@@ -347,8 +361,6 @@ void PSR_PrintActionTable(const psrActionTable_t *tbl, const psrGrammar_t *gramm
 								break;
 						case PSR_REDUCE:
 						{
-								const psrRule_t *rule;
-								rule = pact->rule;
 								AR_swprintf(buf, 1024, L"[<%ls>:%" AR_PLAT_INT_FMT L"d]",rule->head->name, (size_t)pact->reduce_count);
 								AR_AppendFormatString(str,L"%*ls", __WIDTH__,buf);
 								
@@ -369,32 +381,44 @@ void PSR_ReportConflict(const psrActionTable_t *tbl, const psrGrammar_t *grammar
 {
 		size_t i,j;
 		const psrAction_t *action;
-		
+		const psrRule_t	 *rule;
 		AR_AppendFormatString(str,L"%ls\r\n", L"Conflict:");
 		for(i = 0; i < tbl->row; ++i)
 		{
 				for(j = 0; j < tbl->col; ++j)
 				{
 						action = tbl->actions[AR_TBL_IDX_R(i,j,tbl->col)];
+						rule = PSR_GetRuleOfGrammar(grammar, action->rule_num);
 						AR_ASSERT(action != NULL);
 						if(action->next == NULL)continue;
+
+
 						AR_AppendFormatString(str,L"state[%" AR_PLAT_INT_FMT L"d] : %ls\r\n",(size_t)i, tbl->term_set.lst[j]->name);
 						
 						while(action != NULL)
 						{
+								
+								lalrConfig_t	tmp;
+
+								/*
 								psrLRItem_t tmp;
 								
-								PSR_InitLRItem(&tmp, action->rule, action->delim, NULL);
+								PSR_InitLRItem(&tmp, rule, action->delim);
+								*/
+								PSR_InitConfig(&tmp, rule, action->delim);
 								
 								switch(action->type)
 								{
 								case PSR_REDUCE:
 										AR_AppendFormatString(str,L"Reduce: ");
-										PSR_PrintLRItem(&tmp,grammar,str);
+										PSR_PrintConfig(&tmp, grammar, str);
+										
+										/*PSR_PrintLRItem(&tmp,grammar,str);*/
+
 										break;
 								case PSR_SHIFT:
 										AR_AppendFormatString(str,L"Shift: ");
-										PSR_PrintLRItem(&tmp, grammar,str);
+										PSR_PrintConfig(&tmp, grammar,str);
 										break;
 								case PSR_ACCEPT:
 										AR_AppendFormatString(str,L"Accept ");
@@ -406,7 +430,10 @@ void PSR_ReportConflict(const psrActionTable_t *tbl, const psrGrammar_t *grammar
 								AR_AppendFormatString(str,L"\r\n");
 								action = action->next;
 								
+								PSR_UnInitConfig(&tmp);
+								/*
 								PSR_UnInitLRItem(&tmp);
+								*/
 						}
 
 						AR_AppendFormatString(str,L"\r\n");
@@ -559,8 +586,7 @@ static bool_t __detect_left_recursion(const psrGrammar_t *grammar, const psrSymb
 						const psrSymb_t *symb;
 
 						size_t x = 0;
-						
-						while(x < rule->body.count && PSR_CompSymb(rule->body.lst[x], PSR_EpsilonSymb) == 0)x++;
+
 						
 						if(x < rule->body.count && rule->body.lst[x]->type == PSR_NONTERM)
 						{
@@ -754,5 +780,9 @@ void							PSR_DestroyParserFirstFollowView(const psrFirstFollowView_t *follow_v
 		}
 
 }
+
+
+
+
 
 AR_NAMESPACE_END

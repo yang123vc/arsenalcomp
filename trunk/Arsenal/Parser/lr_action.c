@@ -11,8 +11,8 @@
  *
  */
 
+#include "lalr.h"
 #include "lr_action.h"
-#include "lr_dfa.h"
 
 
 AR_NAMESPACE_BEGIN
@@ -86,8 +86,7 @@ static psrActionTable_t* __create_table(const psrGrammar_t *gmr)
 
 
 
-
-static void __build_goto_table(psrActionTable_t *tbl, const psrDFASet_t *set)
+static void __build_goto_table(psrActionTable_t *tbl, const lalrStateSet_t *set)
 {
 		size_t i,j;
 		AR_ASSERT(tbl != NULL && tbl->goto_tbl == NULL && set != NULL && set->count > 0);
@@ -100,22 +99,23 @@ static void __build_goto_table(psrActionTable_t *tbl, const psrDFASet_t *set)
 
 		for(i = 0; i < tbl->goto_row; ++i)
 		{
-				const psrDFA_t *dfa;
-				dfa = set->set[i];
+				const lalrState_t *state;
+				state = set->set[i];
 				
-				for(j = 0; j < dfa->out_count; ++j)
+				for(j = 0; j < state->count; ++j)
 				{
-						if(dfa->out[j].symb->type == PSR_NONTERM)
+						if(state->actions[j].symb->type == PSR_NONTERM && state->actions[j].act_type == PSR_SHIFT)
 						{
 								int_t idx;
-								idx = PSR_BSearchFromSymbList(&tbl->nonterm_set, dfa->out[j].symb);
+								idx = PSR_BSearchFromSymbList(&tbl->nonterm_set, state->actions[j].symb);
 								AR_ASSERT(idx != -1);
-								tbl->goto_tbl[AR_TBL_IDX_R(i, idx, tbl->goto_col)] = PSR_IndexOfDFASet(set, dfa->out[j].to);
+								tbl->goto_tbl[AR_TBL_IDX_R(i, idx, tbl->goto_col)] = PSR_IndexOfStateSet(set, state->actions[j].to);
 						}
 				}
 		}
 
 }
+
 
 /*此函数将在建立完毕后调用*/
 static void __build_expected_list(psrActionTable_t *tbl)
@@ -134,7 +134,7 @@ static void __build_expected_list(psrActionTable_t *tbl)
 						const psrAction_t	*act;
 						const psrSymb_t *symb = tbl->term_set.lst[j];
 						
-						if(PSR_CompSymb(symb, PSR_ErrorSymb) == 0 || PSR_CompSymb(symb, PSR_EpsilonSymb) == 0)continue;
+						if(PSR_CompSymb(symb, PSR_ErrorSymb) == 0 )continue;
 
 						act = PSR_GetAction(tbl, i, symb);
 						AR_ASSERT(act != NULL);
@@ -205,7 +205,7 @@ void					PSR_DestroyActionTable(psrActionTable_t *tbl)
 
 
 
-static const psrAction_t error_action = {PSR_ERROR, 0, NULL, 0, 0,0, NULL};
+static const psrAction_t error_action = {PSR_ERROR, 0, 0, 0, 0,0, NULL};
 
 const psrAction_t	*PSR_ErrorAction = &error_action;
 
@@ -221,7 +221,7 @@ lookahead为右结合时候与之相反，如果lookahead无结合性，则同样算是冲突，将其加入。
 
 static void __copy_action(psrAction_t *l, const psrAction_t *r)
 {
-		l->rule = r->rule;
+		l->rule_num = r->rule_num;
 		l->prec = r->prec;
 		l->type = r->type;
 		l->delim = r->delim;
@@ -342,19 +342,21 @@ static void __insert_action_to_action_list(psrAction_t **dest, const psrAction_t
 
 /*********************************************************************************************************************************/
 
+
+
 psrActionTable_t* PSR_CreateActionTable_SLR(const psrGrammar_t *grammar)
 {
 		psrActionTable_t *tbl;
-		psrDFA_t	*start;
-		psrDFASet_t set;
+		lalrState_t	*start;
+		lalrStateSet_t set;
 		psrSymbMap_t first, follow;
 
 		size_t i;
 		tbl = __create_table(grammar);
 		
-		PSR_InitDFASet(&set);
-		start = PSR_Build_LR0_DFA(grammar);
-		PSR_CollectDFA(&set, start);
+		PSR_InitStateSet(&set);
+		start = PSR_Create_LALR_State(grammar);
+		PSR_CollectState(&set, start);
 		__build_goto_table(tbl, &set);
 
 
@@ -368,26 +370,33 @@ psrActionTable_t* PSR_CreateActionTable_SLR(const psrGrammar_t *grammar)
 
 		tbl->actions = AR_NEWARR0(psrAction_t*, tbl->row * tbl->col);
 
+
+
 		for(i = 0; i < tbl->row; ++i)
 		{
-				const psrDFA_t *dfa;
-				psrLRItemTblIter_t iter;
-				dfa = set.set[i];
+				lalrState_t *state;
+				lalrConfigNode_t *node;
+				state = set.set[i];
 				
-				for(iter = PSR_GetLRItemTblFirst(&dfa->tbl); iter.curr; PSR_GetLRItemTblNext(&dfa->tbl, &iter))
+				for(node = state->all_config->head; node != NULL; node = node->next)
 				{
-						const psrLRItem_t *item;
+						const lalrConfig_t *config;
 						const psrSymb_t	  *body;
-						const psrRule_t	   *rule;
+						const psrRule_t	  *rule;
+						size_t			rule_num;
 						psrAction_t		  action;
 						
-						item = &iter.curr->item;
-						rule = item->rule;
-						body = PSR_IndexOfSymbList(&rule->body, item->delim);
+						config = node->config;
+
+						rule = config->rule;
+						rule_num = (size_t)PSR_IndexOfGrammar(grammar, rule);
+						AR_ASSERT(rule_num < grammar->count);
+
+						body = PSR_IndexOfSymbList(&rule->body, config->delim);
 						AR_memset(&action, 0, sizeof(action));
 						
-						action.rule = rule;
-						action.delim = item->delim;
+						action.rule_num = rule_num;
+						action.delim = config->delim;
 						action.prec = PSR_GetRulePrecAssocInfo(grammar, rule)->prec;
 						action.reduce_count = 0;
 						action.shift_to = 0;
@@ -399,19 +408,7 @@ psrActionTable_t* PSR_CreateActionTable_SLR(const psrGrammar_t *grammar)
 								size_t x;
 								action.reduce_count = rule->body.count;
 								
-								/*
-										这里有点麻烦，我的原出目的是RULE中允许存在空终结符，所以，这样reduce_count就要减去所有的
-								这些空终结符，但是在实际的文法中，每条规则有且只有一个空终结符，否则为错误.所以，例如文法
-								A -> .;的reduce_count就为0，这样任何输入进来之后，直接会先规约出A，且parser stack不弹出任何符号，直接压入A。
-								*/
-								AR_ASSERT(action.reduce_count > 0);
-								for(x = 0; x < rule->body.count; ++x)
-								{
-										if(PSR_CompSymb(rule->body.lst[x], PSR_EpsilonSymb) == 0)
-										{
-												--action.reduce_count;
-										}
-								}
+								
 
 
 								if(PSR_CompSymb(rule->head, PSR_StartSymb) == 0)/*接受状态*/
@@ -440,15 +437,15 @@ psrActionTable_t* PSR_CreateActionTable_SLR(const psrGrammar_t *grammar)
 								}
 						}else
 						{
-								if(body->type == PSR_TERM && PSR_CompSymb(body, PSR_EpsilonSymb) != 0)
+								if(body->type == PSR_TERM)
 								{
-										const psrDFA_t *trans_to;
+										const lalrState_t *trans_to;
 										int_t trans_to_idx,idx;
 
 										action.type = PSR_SHIFT;
-										trans_to = PSR_GetTransTo((psrDFA_t*)dfa, body);
+										trans_to = PSR_GetTransTo(state, body);
 										AR_ASSERT(trans_to != NULL);
-										trans_to_idx = PSR_IndexOfDFASet(&set, trans_to);
+										trans_to_idx = PSR_IndexOfStateSet(&set, trans_to);
 										AR_ASSERT(trans_to_idx != -1);
 										action.shift_to = (size_t)trans_to_idx;
 										
@@ -460,12 +457,15 @@ psrActionTable_t* PSR_CreateActionTable_SLR(const psrGrammar_t *grammar)
 
 				}
 		}
+
+
+
 
 		PSR_UnInitSymbMap(&first);
 		PSR_UnInitSymbMap(&follow);
 
-		PSR_DestroyDFA_ALL(start);
-		PSR_UnInitDFASet(&set);
+		PSR_DestroyState_ALL(start);
+		PSR_UnInitStateSet(&set);
 
 		for(i = 0; i < tbl->row * tbl->col; ++i)
 		{
@@ -478,144 +478,19 @@ psrActionTable_t* PSR_CreateActionTable_SLR(const psrGrammar_t *grammar)
 		__build_expected_list(tbl);
 		return tbl;
 }
-
-
-
-
-psrActionTable_t* PSR_CreateActionTable_LR1(const psrGrammar_t *grammar)
-{
-		psrActionTable_t *tbl;
-		psrDFA_t	*start;
-		psrDFASet_t set;
-		size_t i;
-
-		
-		tbl = __create_table(grammar);
-		
-		PSR_InitDFASet(&set);
-		
-		
-
-		start = PSR_Build_LR1_DFA(grammar);
-
-		
-
-		PSR_CollectDFA(&set, start);
-		__build_goto_table(tbl, &set);
-
-		tbl->row = set.count;
-		tbl->col = tbl->term_set.count;
-
-		tbl->actions = AR_NEWARR0(psrAction_t*, tbl->row * tbl->col);
-
-		for(i = 0; i < tbl->row; ++i)
-		{
-				const psrDFA_t *dfa;
-				psrLRItemTblIter_t iter;
-				dfa = set.set[i];
-
-				for(iter = PSR_GetLRItemTblFirst(&dfa->tbl); iter.curr; PSR_GetLRItemTblNext(&dfa->tbl, &iter))
-				{
-						const psrLRItem_t *item;
-						const psrSymb_t	  *body;
-						const psrRule_t	   *rule;
-						psrAction_t		  action;
-					
-						item = &iter.curr->item;
-						rule = item->rule;
-						body = PSR_IndexOfSymbList(&rule->body, item->delim);
-						AR_memset(&action, 0, sizeof(action));
-
-						action.rule = rule;
-						action.delim = item->delim;
-						action.prec = PSR_GetRulePrecAssocInfo(grammar, rule)->prec;
-						action.reduce_count = 0;
-						action.shift_to = 0;
-						action.next = NULL;
-						
-						if(body == NULL)
-						{
-								size_t x;
-								
-								action.reduce_count = rule->body.count;
-								
-								for(x = 0; x < rule->body.count; ++x)
-								{
-										if(PSR_CompSymb(rule->body.lst[x], PSR_EpsilonSymb) == 0)
-										{
-												--action.reduce_count;
-										}
-								}
-
-								if(PSR_CompSymb(rule->head, PSR_StartSymb) == 0)/*接受状态*/
-								{
-										action.type = PSR_ACCEPT;
-								}else
-								{
-										action.type = PSR_REDUCE;
-								}
-								{
-										int_t idx;
-										AR_ASSERT(iter.curr->item.symb != NULL);
-										idx = PSR_FindFromSymbList(&tbl->term_set, iter.curr->item.symb);
-										__insert_action_to_action_list(&tbl->actions[AR_TBL_IDX_R(i,idx, tbl->col)], &action, PSR_GetTermSymbInfo(grammar, item->symb));
-										
-								}
-						}else
-						{
-								if(body->type == PSR_TERM && PSR_CompSymb(body, PSR_EpsilonSymb) != 0)
-								{
-										const psrDFA_t *trans_to;
-										int_t trans_to_idx,idx;
-
-										action.type = PSR_SHIFT;
-										trans_to = PSR_GetTransTo((psrDFA_t*)dfa, body);
-										AR_ASSERT(trans_to != NULL);
-										trans_to_idx = PSR_IndexOfDFASet(&set, trans_to);
-										AR_ASSERT(trans_to_idx != -1);
-										action.shift_to = (size_t)trans_to_idx;
-										
-										idx = PSR_FindFromSymbList(&tbl->term_set, body);
-										__insert_action_to_action_list(&tbl->actions[AR_TBL_IDX_R(i,idx, tbl->col)], &action, PSR_GetTermSymbInfo(grammar, body));
-								}
-								
-						}
-
-				}
-
-		}
-
-
-		PSR_DestroyDFA_ALL(start);
-		PSR_UnInitDFASet(&set);
-
-		for(i = 0; i < tbl->row * tbl->col; ++i)
-		{
-				if(tbl->actions[i] == NULL)
-				{
-						tbl->actions[i] = (psrAction_t*)PSR_ErrorAction;
-				}
-		}
-
-		__build_expected_list(tbl);
-		return tbl;
-}
-
-
-
 
 
 psrActionTable_t* PSR_CreateActionTable_LALR(const psrGrammar_t *grammar)
 {
-		psrActionTable_t *tbl;
-		psrDFA_t	*start;
-		psrDFASet_t set;
+		psrActionTable_t		*tbl;
+		lalrState_t				*start;
+		lalrStateSet_t			set;
 		size_t i;
 		tbl = __create_table(grammar);
 		
-		PSR_InitDFASet(&set);
-		start = PSR_Build_LALR_DFA(grammar);
-		PSR_CollectDFA(&set, start);
+		PSR_InitStateSet(&set);
+		start = PSR_Create_LALR_State(grammar);
+		PSR_CollectState(&set, start);
 		__build_goto_table(tbl, &set);
 
 		tbl->row = set.count;
@@ -623,26 +498,30 @@ psrActionTable_t* PSR_CreateActionTable_LALR(const psrGrammar_t *grammar)
 
 		tbl->actions = AR_NEWARR0(psrAction_t*, tbl->row * tbl->col);
 
+
 		for(i = 0; i < tbl->row; ++i)
 		{
-				const psrDFA_t *dfa;
-				psrLRItemTblIter_t iter;
-				dfa = set.set[i];
+				lalrState_t *state;
+				lalrConfigNode_t *node;
+				state = set.set[i];
 
-				for(iter = PSR_GetLRItemTblFirst(&dfa->tbl); iter.curr; PSR_GetLRItemTblNext(&dfa->tbl, &iter))
+				for(node = state->all_config->head; node != NULL; node = node->next)
 				{
-						const psrLRItem_t *item;
+						const lalrConfig_t *config;
 						const psrSymb_t	  *body;
-						const psrRule_t	   *rule;
+						const psrRule_t	  *rule;
+						size_t			  rule_num;
 						psrAction_t		  action;
 					
-						item = &iter.curr->item;
-						rule = item->rule;
-						body = PSR_IndexOfSymbList(&rule->body, item->delim);
+						config = node->config;
+						rule = config->rule;
+
+						rule_num = PSR_IndexOfGrammar(grammar, rule);
+						body = PSR_IndexOfSymbList(&rule->body, config->delim);
 						AR_memset(&action, 0, sizeof(action));
 
-						action.rule = rule;
-						action.delim = item->delim;
+						action.rule_num = rule_num;
+						action.delim = config->delim;
 						action.prec = PSR_GetRulePrecAssocInfo(grammar, rule)->prec;
 						action.reduce_count = 0;
 						action.shift_to = 0;
@@ -653,14 +532,6 @@ psrActionTable_t* PSR_CreateActionTable_LALR(const psrGrammar_t *grammar)
 								size_t x;
 								
 								action.reduce_count = rule->body.count;
-								
-								for(x = 0; x < rule->body.count; ++x)
-								{
-										if(PSR_CompSymb(rule->body.lst[x], PSR_EpsilonSymb) == 0)
-										{
-												--action.reduce_count;
-										}
-								}
 
 								if(PSR_CompSymb(rule->head, PSR_StartSymb) == 0)/*接受状态*/
 								{
@@ -671,14 +542,10 @@ psrActionTable_t* PSR_CreateActionTable_LALR(const psrGrammar_t *grammar)
 								}
 								{
 										
-										AR_ASSERT(iter.curr->item.lst != NULL);
-										AR_ASSERT(iter.curr->item.symb == NULL);
-										
-										//for(symb_iter = PSR_FirstFromSymbTbl(iter.curr->item.tbl); symb_iter.curr; PSR_NextFromSymbTbl(iter.curr->item.tbl, &symb_iter))
-										for(x = 0; x < iter.curr->item.lst->count; ++x)
+										for(x = 0; x < config->follow_set.count; ++x)
 										{
 												int_t idx;
-												const psrSymb_t *lookahead_symb = iter.curr->item.lst->lst[x];
+												const psrSymb_t *lookahead_symb = config->follow_set.lst[x];
 												idx = PSR_FindFromSymbList(&tbl->term_set, lookahead_symb);
 
 												AR_ASSERT(idx != -1);
@@ -688,15 +555,15 @@ psrActionTable_t* PSR_CreateActionTable_LALR(const psrGrammar_t *grammar)
 								}
 						}else
 						{
-								if(body->type == PSR_TERM && PSR_CompSymb(body, PSR_EpsilonSymb) != 0)
+								if(body->type == PSR_TERM)
 								{
-										const psrDFA_t *trans_to;
+										const lalrState_t *trans_to;
 										int_t trans_to_idx,idx;
 
 										action.type = PSR_SHIFT;
-										trans_to = PSR_GetTransTo((psrDFA_t*)dfa, body);
+										trans_to = PSR_GetTransTo(state, body);
 										AR_ASSERT(trans_to != NULL);
-										trans_to_idx = PSR_IndexOfDFASet(&set, trans_to);
+										trans_to_idx = PSR_IndexOfStateSet(&set, trans_to);
 										AR_ASSERT(trans_to_idx != -1);
 										action.shift_to = (size_t)trans_to_idx;
 										
@@ -708,8 +575,9 @@ psrActionTable_t* PSR_CreateActionTable_LALR(const psrGrammar_t *grammar)
 				}
 		}
 
-		PSR_DestroyDFA_ALL(start);
-		PSR_UnInitDFASet(&set);
+		
+		PSR_DestroyState_ALL(start);
+		PSR_UnInitStateSet(&set);
 
 		for(i = 0; i < tbl->row * tbl->col; ++i)
 		{
@@ -723,8 +591,137 @@ psrActionTable_t* PSR_CreateActionTable_LALR(const psrGrammar_t *grammar)
 }
 
 
+/********************************************************************************************************************************************/
 
 
+#if(0)
+
+static AR_INLINE void __dump_actions(const psrAction_t *act, arString_t *str)
+{
+		AR_ASSERT(act != NULL && str != NULL);
+		
+		AR_AppendString(str, L"{");
+
+		while(act)
+		{
+				AR_AppendString(str, L"{");
+				AR_AppendFormatString(str, L"%" AR_INT_FMT64 L"d", (uint64_t)act->type);
+				AR_AppendString(str, L",");
+				AR_AppendFormatString(str, L"%" AR_INT_FMT64 L"d", (uint64_t)act->shift_to);
+				AR_AppendString(str, L",");
+				AR_AppendFormatString(str, L"%" AR_INT_FMT64 L"d", (uint64_t)act->rule_num);
+				AR_AppendString(str, L",");
+				AR_AppendFormatString(str, L"%" AR_INT_FMT64 L"d", (uint64_t)act->delim);
+				AR_AppendString(str, L",");
+				AR_AppendFormatString(str, L"%" AR_INT_FMT64 L"d", (uint64_t)act->prec);
+				AR_AppendString(str, L",");
+				AR_AppendFormatString(str, L"%" AR_INT_FMT64 L"d", (uint64_t)act->reduce_count);
+				AR_AppendString(str, L"}");
+
+				if(act->next)
+				{
+						AR_AppendString(str, L",");
+				}
+
+				act = act->next;
+		}
+
+		AR_AppendString(str, L"}");
+}
+
+
+static AR_INLINE void __dump_action_tbl(const psrAction_t **act, size_t row, size_t col, arString_t *str)
+{
+		size_t i;
+		AR_ASSERT(act != NULL && str  != NULL && row > 0 && col > 0);
+
+		AR_AppendFormatString(str, L"action : %" AR_INT_FMT64 L"d" L" ," L"%" AR_INT_FMT64 L"d" L" ,", (uint64_t)row, (uint64_t)col);
+		
+		for(i = 0; i < row * col; ++i)
+		{
+				__dump_actions(act[i], str);
+
+				if(i < row * col -1)
+				{
+						AR_AppendString(str, L",");
+				}
+		}
+
+		AR_AppendString(str, L";\r\n");
+}
+
+
+static AR_INLINE void __dump_goto_tbl(const int_t *goto_tbl, size_t row, size_t col, arString_t *str)
+{
+		size_t i;
+		AR_ASSERT(goto_tbl != NULL && str  != NULL && row > 0 && col > 0);
+
+
+		AR_AppendFormatString(str, L"goto : %" AR_INT_FMT64 L"d" L" ," L"%" AR_INT_FMT64 L"d" L" , {", (uint64_t)row, (uint64_t)col);
+		
+		for(i = 0; i < row * col; ++i)
+		{
+				AR_AppendFormatString(str, L"%" AR_INT_FMT64 L"d ", (int64_t)goto_tbl[i]);
+
+				if(i < row * col -1)
+				{
+						AR_AppendString(str, L",");
+				}
+		}
+
+		AR_AppendString(str, L"} ;\r\n");
+}
+
+
+static AR_INLINE void __dump_term_list(const psrSymbList_t *lst, bool_t is_term, arString_t *str)
+{
+		size_t i;
+		
+		AR_ASSERT(lst != NULL);
+
+		if(is_term)
+		{
+				AR_AppendFormatString(str, L"term : ");
+		}else
+		{
+				AR_AppendFormatString(str, L"nonterm : ");
+		}
+
+		for(i = 0; i < lst->count; ++i)
+		{
+				AR_AppendFormatString(str, L"\"%ls\"", lst->lst[i]->name);
+
+				if(i <lst->count - 1)
+				{
+						AR_AppendString(str, L",");
+				}
+		}
+		AR_AppendFormatString(str, L";\r\n");
+}
+
+
+
+void					PSR_ActionTableToString(psrActionTable_t *tbl, arString_t *str)
+{
+		AR_ASSERT(tbl != NULL && str != NULL);
+		AR_ClearString(str);
+
+		__dump_term_list(&tbl->term_set, true, str);
+		__dump_term_list(&tbl->nonterm_set, false, str);
+		__dump_action_tbl(tbl->actions, tbl->row, tbl->col, str);
+		__dump_goto_tbl(tbl->goto_tbl, tbl->goto_row, tbl->goto_col, str);
+}
+
+
+
+
+psrActionTable_t*		PSR_RestoreActionTable(const wchar_t *txt)
+{
+		AR_ASSERT(txt);
+		
+}
+
+#endif
 
 
 AR_NAMESPACE_END

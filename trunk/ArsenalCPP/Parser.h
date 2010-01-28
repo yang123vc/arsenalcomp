@@ -103,7 +103,7 @@ private:
 		Grammar			*m_grammar;
 		parser_t		*m_parser;
 public:
-		Parser(Grammar *grammar, psrModeType_t mode = PSR_LALR);
+		Parser(Grammar *grammar, psrModeType_t mode = PSR_SLR);
 		~Parser();
 public:
 		void	Clear();

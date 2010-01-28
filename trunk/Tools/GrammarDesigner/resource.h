@@ -120,6 +120,8 @@
 #define ID_EDIT_BUILD                   32866
 #define ID_EDIT_FONT32867               32867
 #define ID_TEST_TEST2                   32868
+#define ID_EDIT_SHOW                    32869
+#define ID_KEY_TAB                      32870
 #define ID_INDICATOR_LINE               59142
 #define ID_INDICATOR_COL                59143
 #define IDS_ACTVIEW_WND                 61204
@@ -133,7 +135,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        317
-#define _APS_NEXT_COMMAND_VALUE         32869
+#define _APS_NEXT_COMMAND_VALUE         32872
 #define _APS_NEXT_CONTROL_VALUE         1001
 #define _APS_NEXT_SYMED_VALUE           310
 #endif

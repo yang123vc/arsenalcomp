@@ -409,6 +409,7 @@ bool_t					PSR_InsertToSymbMap(psrSymbMap_t *map, const psrSymb_t *key, const ps
 		{
 				rec = AR_NEW0(psrMapRec_t);
 				rec->key = key;
+				rec->can_empty = false;
 				PSR_InitSymbList(&rec->lst);
 				rec->next = map->bucket[key->hash_code % MAP_BUCKET_SIZE];
 				map->bucket[key->hash_code % MAP_BUCKET_SIZE] = rec;
@@ -425,7 +426,7 @@ bool_t					PSR_InsertToSymbMap(psrSymbMap_t *map, const psrSymb_t *key, const ps
 }
 
 
-const psrMapRec_t*		PSR_GetSymbolFromSymbMap(const psrSymbMap_t *map, const psrSymb_t *key)
+psrMapRec_t*		PSR_GetSymbolFromSymbMap(const psrSymbMap_t *map, const psrSymb_t *key)
 {
 		const psrMapRec_t *rec;
 
@@ -436,8 +437,26 @@ const psrMapRec_t*		PSR_GetSymbolFromSymbMap(const psrSymbMap_t *map, const psrS
 				if(PSR_CompSymb(key, rec->key) == 0)break;
 				rec = rec->next;
 		}
-		return rec;
+		return (psrMapRec_t*)rec;
 }
+
+
+bool_t					PSR_SetSymbEpsilon(psrSymbMap_t *map, const psrSymb_t *key, bool_t is_epsilon)
+{
+		psrMapRec_t *rec;
+		AR_ASSERT(map != NULL && key != NULL);
+		rec = PSR_GetSymbolFromSymbMap(map, key);
+
+		if(rec)
+		{
+				rec->can_empty = is_epsilon;
+				return true;
+		}else
+		{
+				return false;
+		}
+}
+
 
 
 void			PSR_PrintSymbolMap(const psrSymbMap_t *map, arString_t *str)
@@ -451,7 +470,7 @@ void			PSR_PrintSymbolMap(const psrSymbMap_t *map, arString_t *str)
 				while(rec)
 				{
 						PSR_PrintSymbol(rec->key, str);
-						AR_AppendFormatString(str, L" : ");
+						AR_AppendString(str, L" : ");
 						PSR_PrintSymbolList(&rec->lst, str);
 						AR_AppendFormatString(str, L"\r\n");
 						rec = rec->next;

@@ -73,6 +73,7 @@ public:
 public:
 		
 		afx_msg void OnEndcodingChangeUI(CCmdUI *pCmdUI);
+		
 		afx_msg void OnToolsRebuildtags();
 
 		afx_msg void OnChangeParserMode(UINT nID);

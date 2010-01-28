@@ -21,9 +21,7 @@ AR_NAMESPACE_BEGIN
 static arSpinLock_t		__tbl_lock;
 static arStringTable_t *__tbl = NULL;
 
-const struct __parser_symbol_tag	*PSR_EpsilonSymb = NULL;/*表示空*/
 const struct __parser_symbol_tag	*PSR_EOISymb = NULL;   /*表示输入结尾符号*/
-const struct __parser_symbol_tag	*PSR_LALRSymb= NULL; /*表示为不在所有字符值集合中的字符，计算LALR语法分析表时使用*/
 const struct __parser_symbol_tag	*PSR_ErrorSymb= NULL;/*特殊的错误处理产生式标记终结符，*/
 const struct __parser_symbol_tag	*PSR_DefPrecSymb = NULL;/*提供默认prec和assoc属性的终结符*/
 
@@ -36,11 +34,9 @@ const struct __parser_symbol_tag	*PSR_StartSymb = NULL;
 void	PSR_Init()
 {
 		AR_InitSpinLock(&__tbl_lock);
-		__tbl		= AR_CreateStrTable(PSR_STRTBL_BUCKET);
+		__tbl			=		AR_CreateStrTable(PSR_STRTBL_BUCKET);
 
-		PSR_EpsilonSymb =		PSR_CreateSymb(L"%EPSILON", PSR_TERM);
 		PSR_EOISymb		=		PSR_CreateSymb(L"%EOI", PSR_TERM);
-		PSR_LALRSymb	=		PSR_CreateSymb(L"%LALR", PSR_TERM);
 		PSR_ErrorSymb	=		PSR_CreateSymb(L"error", PSR_TERM);
 		
 		PSR_DefPrecSymb	=		PSR_CreateSymb(L"%PREC_ASSOC", PSR_TERM);
@@ -52,17 +48,12 @@ void	PSR_Init()
 
 void	PSR_UnInit()
 {
-		AR_ASSERT(PSR_EpsilonSymb->ref_count == 1);
 		AR_ASSERT(PSR_EOISymb->ref_count == 1);
-
-		AR_ASSERT(PSR_LALRSymb->ref_count == 1);
 		AR_ASSERT(PSR_ErrorSymb->ref_count == 1);
 		AR_ASSERT(PSR_DefPrecSymb->ref_count == 1);
 		AR_ASSERT(PSR_StartSymb->ref_count == 1);
 
-		PSR_DestroySymb((psrSymb_t*)PSR_EpsilonSymb);
 		PSR_DestroySymb((psrSymb_t*)PSR_EOISymb);
-		PSR_DestroySymb((psrSymb_t*)PSR_LALRSymb);
 		PSR_DestroySymb((psrSymb_t*)PSR_ErrorSymb);
 		PSR_DestroySymb((psrSymb_t*)PSR_DefPrecSymb);
 		PSR_DestroySymb((psrSymb_t*)PSR_StartSymb);

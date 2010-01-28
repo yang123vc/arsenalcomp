@@ -603,16 +603,18 @@ void str_test6()
 
 }
 
+
+
 void com_test()
 {
-		
+
 		//str_test1();
 		//str_test2();
 		//str_test3();
 		//str_test4();
 		//str_test5();
 
-		str_test6();
+		//str_test6();
 		
 		//com_test3();
 		//com_conv();

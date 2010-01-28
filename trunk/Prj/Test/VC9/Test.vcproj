@@ -1005,6 +1005,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\Test\grammar_test.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Test\lalr_dfa_test.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\Test\lex_test.c"
 				>
 				<FileConfiguration

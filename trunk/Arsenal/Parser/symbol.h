@@ -99,11 +99,12 @@ typedef struct __parser_symbmap_record_tag
 {
 		const psrSymb_t			*key;
 		psrSymbList_t			lst;
+		bool_t					can_empty;
 		struct __parser_symbmap_record_tag		*next;
 }psrMapRec_t;
 
 
-#define MAP_BUCKET_SIZE (1543 / AR_MEM_POLICY)
+#define MAP_BUCKET_SIZE (153 / AR_MEM_POLICY)
 
 typedef struct __parser_symbmap_tag
 {
@@ -112,13 +113,14 @@ typedef struct __parser_symbmap_tag
 }psrSymbMap_t;
 
 
-
-
 void					PSR_InitSymbMap(psrSymbMap_t *map);
 void					PSR_UnInitSymbMap(psrSymbMap_t *map);
 
 bool_t					PSR_InsertToSymbMap(psrSymbMap_t *map, const psrSymb_t *key, const psrSymb_t *val);
-const psrMapRec_t*		PSR_GetSymbolFromSymbMap(const psrSymbMap_t *map, const psrSymb_t *key);
+bool_t					PSR_SetSymbEpsilon(psrSymbMap_t *map, const psrSymb_t *key, bool_t is_epsilon);
+
+psrMapRec_t*			PSR_GetSymbolFromSymbMap(const psrSymbMap_t *map, const psrSymb_t *key);
+
 void					PSR_PrintSymbolMap(const psrSymbMap_t *map, arString_t *str);
 
 

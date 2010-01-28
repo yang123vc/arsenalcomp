@@ -148,14 +148,14 @@
 		#define AR_USE_CRT_ALLOCFUNC	1
 	*/
 
-/*/////////////////////////////////////
+//////////////////////////////////////
 		#define AR_USE_CRT_ALLOCFUNC	1
 		#define _CRTDBG_MAP_ALLOC 
 		#include<stdlib.h> 
 		#include<crtdbg.h> 
-/////////////////////////////////////*/
+//////////////////////////////////////
 		
-		#include<stdlib.h>
+		//#include<stdlib.h>
 
 		#include <stdio.h>
 		#include <wchar.h>

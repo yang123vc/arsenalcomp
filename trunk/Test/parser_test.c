@@ -1,6 +1,8 @@
 
 #include "test.h"
 
+#if(0)
+
 #include "../Arsenal/Parser/grammar.h"
 #include "../Arsenal/Parser/lr_item.h"
 #include "../Arsenal/Parser/lr_dfa.h"
@@ -349,11 +351,11 @@ void parser_test()
 								, cfg->rule[i].lhs
 								, cfg->rule[i].rhs
 								, cfg->rule[i].prec_tok ? cfg->rule[i].prec_tok : L" "
-								, cfg->rule[i].handler_name ? cfg->rule[i].handler_name : L" "
+								, cfg->rule[i].action_ins ? cfg->rule[i].action_ins : L" "
 								,cfg->rule[i].line
 								);
 				}
-
+				
 				AR_printf(L"----------------------\r\n");
 		
 		//		arString_t *str = NULL;
@@ -424,4 +426,8 @@ void parser_perf_test()
 AR_NAMESPACE_END
 
 #endif
+
+#endif
+
+
 

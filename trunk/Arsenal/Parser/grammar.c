@@ -159,16 +159,6 @@ psrRule_t* PSR_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, cons
 				{
 						if(PSR_FindTermByName((psrTermInfoList_t*)term_list, symb->name) == NULL)return NULL;
 						
-						if(PSR_CompSymb(symb, PSR_EpsilonSymb) == 0)
-						{
-								if(body->count != 1)
-								{
-										/*AR_error(L"Grammar Error: invalid epsilon definition in <%ls>!\r\n", head->name);*/
-										AR_printf_ctx(ctx, L"Grammar Error: invalid epsilon definition in <%ls>!\r\n", head->name);
-										return NULL;
-								}
-						}
-
 						if(PSR_CompSymb(symb, PSR_ErrorSymb) == 0)
 						{
 								if(inerr)
@@ -199,11 +189,6 @@ psrRule_t* PSR_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, cons
 		{
 				PSR_InsertToSymbList(&rule->body, PSR_CopyNewSymb(body->lst[i]));
 				
-		}
-
-		if(rule->body.count == 0)
-		{
-				PSR_InsertToSymbList(&rule->body, PSR_CopyNewSymb(PSR_EpsilonSymb));
 		}
 
 
@@ -344,7 +329,12 @@ psrRule_t*		PSR_CopyNewRule(const psrRule_t *rule)
 
 }
 
+bool_t			PSR_IsEmptyRule(const psrRule_t *rule)
+{
+		AR_ASSERT(rule != NULL);
 
+		return rule->body.count == 0;
+}
 
 
 /******************************************Grammar************************************************************/
@@ -365,7 +355,6 @@ static void __init_grammar_component_unit(psrGrammar_t *grammar)
 {
 		AR_ASSERT(grammar != NULL);
 
-		PSR_InsertToTermInfoList(&grammar->term_list, PSR_EpsilonSymb->name, PSR_EPSILON_TOKVAL, PSR_ASSOC_NOASSOC, 0, NULL);
 		PSR_InsertToTermInfoList(&grammar->term_list, PSR_EOISymb->name,PSR_EOI_TOKVAL, PSR_ASSOC_NOASSOC, 0, NULL);
 		PSR_InsertToTermInfoList(&grammar->term_list, PSR_ErrorSymb->name, PSR_ERROR_TOKVAL, PSR_ASSOC_NOASSOC, 0, NULL);
 		PSR_InsertToTermInfoList(&grammar->term_list, PSR_DefPrecSymb->name, PSR_DEFPREC_TOKVAL, PSR_ASSOC_NOASSOC, 0, NULL);
@@ -574,8 +563,12 @@ bool_t					PSR_InsertRule(psrGrammar_t *grammar, psrRule_t *rule)
 		
 		if(grammar->count == 1)
 		{
+				AR_ASSERT(grammar->rules[0]->body.count == 0);
+				/*
 				PSR_DestroySymb(grammar->rules[0]->body.lst[0]);
 				grammar->rules[0]->body.lst[0] = PSR_CopyNewSymb(rule->head);
+				*/
+				PSR_InsertToSymbList(&grammar->rules[0]->body, PSR_CopyNewSymb(rule->head));
 		}
 		__insert_rule(grammar, rule);
 		
@@ -681,7 +674,7 @@ static bool_t __detect_left_recursion(const psrGrammar_t *grammar, const psrSymb
 
 						size_t x = 0;
 						
-						while(x < rule->body.count && PSR_CompSymb(rule->body.lst[x], PSR_EpsilonSymb) == 0)x++;
+						/*while(x < rule->body.count && PSR_CompSymb(rule->body.lst[x], PSR_EpsilonSymb) == 0)x++;*/
 						
 						if(x < rule->body.count && rule->body.lst[x]->type == PSR_NONTERM)
 						{
@@ -933,6 +926,9 @@ void			PSR_PrintGrammar(const psrGrammar_t *grammar, arString_t *str)
 		AR_AppendString(str, L"\r\n\r\n");
 }
 
+
+
+
 /************************************************************************************************************************************/
 
 
@@ -967,61 +963,93 @@ void					PSR_CalcFirstSet(const psrGrammar_t *grammar, psrSymbMap_t *first_set)
 				}
 		}
 
-		changed = true;
-		while(changed)
-		{
+		changed = false;
+		do{
 				changed = false;
-				
-				for(i = 0; i < grammar->count; ++i)/*对每一条产生式*/
-				{
-						const psrSymb_t *body;/*产生式体*/
-						const psrRule_t *rule;
-						size_t	n_body;
-						bool_t need_continue;	/*是否需要继续*/
 
-						/*产生式head[i]的体为body[i]*/
-						rule = grammar->rules[i];
-						n_body = 0;
-						body = PSR_IndexOfSymbList(&rule->body, n_body);
-						AR_ASSERT(body != NULL);/*不可能为空，至少会有一个Epsilon或者EOI*/
-						need_continue = true;
+				for(i = 0; i < grammar->count; ++i)
+				{
+						psrMapRec_t *rec = NULL;
+						size_t k = 0;
+						psrRule_t *rule = grammar->rules[i];
+						rec= PSR_GetSymbolFromSymbMap(first_set, rule->head);
+
+						if(rec->can_empty)continue;
 						
-						while(need_continue && body != NULL)
+						
+						for(k = 0; k < rule->body.count; ++k)
 						{
-								const psrMapRec_t *first;
-								size_t x;
-								first = PSR_GetSymbolFromSymbMap(first_set, body);/*得到*/
-								AR_ASSERT(first != NULL);
-								need_continue = false;
-								
-								for(x = 0; x < first->lst.count; ++x)
-								{
-										const psrSymb_t *f_symb;
-										f_symb = first->lst.lst[x];
-										AR_ASSERT(f_symb->type == PSR_TERM);/*first不可能为非终结符*/
-										
-										if(PSR_CompSymb(f_symb, PSR_EpsilonSymb) == 0)
-										{
-												need_continue = true;
-										}else
-										{
-												if(PSR_InsertToSymbMap(first_set, rule->head, f_symb))/*如果不存在符号first，则加入到first中*/
-												{
-														changed = true;/*任何一步的改动都需要重新计算first集合*/
-												}
-										}
-								}
-								
-								body = PSR_IndexOfSymbList(&rule->body, ++n_body);
+								const psrSymb_t *symb = NULL;
+								const psrMapRec_t *tmp_rec = NULL;
+								symb = rule->body.lst[k];
+								if(symb->type == PSR_TERM)break;
+								tmp_rec= PSR_GetSymbolFromSymbMap(first_set, symb);
+								if(!tmp_rec->can_empty)break;
 						}
-						
-						if(need_continue && PSR_InsertToSymbMap(first_set, rule->head, PSR_EpsilonSymb))/*如果最后一步的计算仍包含空，则将空加入到集合First(A(i))中*/
+
+						if(k == rule->body.count)
 						{
+								rec->can_empty = true;
 								changed = true;
 						}
 				}
-		}
+
+		}while(changed);
+
+
+		do{
+				const psrSymb_t *s1, *s2;
+				changed = false;
+
+				for(i = 0; i < grammar->count; ++i)
+				{
+						const psrRule_t *rule;
+						psrMapRec_t *rec = NULL;
+						size_t k;
+						rule = grammar->rules[i];
+
+						s1 = rule->head;
+						rec= PSR_GetSymbolFromSymbMap(first_set, s1);
+
+
+						for(k = 0; k < rule->body.count; ++k)
+						{
+								s2 = rule->body.lst[k];
+								
+								if(s2->type == PSR_TERM)
+								{
+										if(PSR_InsertToSymbList_Unique(&rec->lst, s2))
+										{
+												changed = true;
+										}
+										break;
+								}else if(PSR_CompSymb(s1, s2) == 0)
+								{
+										if(!rec->can_empty)break;
+								}
+								else
+								{
+										const psrMapRec_t *rec2 = NULL;
+										size_t x;
+										rec2 = PSR_GetSymbolFromSymbMap(first_set, s2);
+
+										for(x = 0; x < rec2->lst.count; ++x)
+										{
+												if(PSR_InsertToSymbList_Unique(&rec->lst, rec2->lst.lst[x]))
+												{
+														changed = true;
+												}
+										}
+
+										if(!rec2->can_empty)break;
+								}
+
+						}
+				}
+		}while(changed);
+
 }
+
 
 
 /*
@@ -1040,7 +1068,8 @@ void					PSR_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *follow_set
 		size_t i;
 		bool_t changed;
 		const psrSymbList_t *lst;
-		//const psrSymb_t *key, *body, *head, *head_follow, *first;
+		psrMapRec_t *rec1 = NULL, *rec2 = NULL;
+
 		AR_ASSERT(grammar != NULL && grammar->count > 1 && follow_set != NULL && first_set != NULL);
 
 		changed = true;
@@ -1051,88 +1080,80 @@ void					PSR_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *follow_set
 				if(key->type == PSR_NONTERM)
 				{
 						PSR_InsertToSymbMap(follow_set, key, NULL);
+
+						rec1 = PSR_GetSymbolFromSymbMap(first_set, key);
+						rec2 = PSR_GetSymbolFromSymbMap(follow_set, key);
+						rec2->can_empty = rec1->can_empty;
 				}
 		}
 
 		PSR_InsertToSymbMap(follow_set, PSR_StartSymb, PSR_EOISymb);
-
 		
-
-		while(changed)
-		{
+		do{
 				changed = false;
 				
 				for(i = 0; i < grammar->count; ++i)/*对每一条产生式*/
 				{
 						const psrRule_t *rule;
 						const psrMapRec_t *head_follow;
-						size_t nbody;
+						size_t k;
 						rule = grammar->rules[i];
-						
-						head_follow = PSR_GetSymbolFromSymbMap(follow_set,rule->head);/*grammar->head[i]所对应的follow集合*/
 
-						for(nbody = 0; nbody < rule->body.count; ++nbody)
+						head_follow = PSR_GetSymbolFromSymbMap(follow_set,rule->head);/*grammar->head[i]所对应的follow集合*/
+						
+						for(k = 0; k < rule->body.count; ++k)
 						{
-								bool_t need_continue;
-								const psrSymb_t *key, *next;
+								const psrSymb_t *key;
 								size_t next_idx;
-								key = rule->body.lst[nbody];
-								
+								key = rule->body.lst[k];
+
 								if(key->type == PSR_TERM)continue;
 
-								next_idx = nbody + 1;
-								next = PSR_IndexOfSymbList(&rule->body, next_idx);
-								need_continue = true;
-
-								while(need_continue && next)
+								next_idx = k + 1;
+								
+								for(next_idx = k + 1; next_idx < rule->body.count; ++next_idx)
 								{
+										const psrSymb_t *next = NULL;
 										const psrMapRec_t *first_rec;
+										psrMapRec_t *rec_tmp = NULL;
 										size_t x;
+										
+										next = PSR_IndexOfSymbList(&rule->body, next_idx);
 										first_rec = PSR_GetSymbolFromSymbMap(first_set, next);
-
-										need_continue = false;
-
-
+										rec_tmp  = PSR_GetSymbolFromSymbMap(follow_set, key);
 										for(x = 0; first_rec && x < first_rec->lst.count; ++x)
 										{
 												const psrSymb_t *f_symb;
 												f_symb = first_rec->lst.lst[x];
-
 												AR_ASSERT(f_symb->type == PSR_TERM);				/*first不可能为非终结符*/
-												if(PSR_CompSymb(f_symb, PSR_EpsilonSymb) == 0)
+
+												if(PSR_InsertToSymbList_Unique(&rec_tmp->lst, f_symb))
 												{
-														need_continue = true;
-												}else
-												{
-														if(PSR_InsertToSymbMap(follow_set, key, f_symb))/*如果不存在符号follow，则加入到follow_set中，*/
-														{
-																changed = true;							/*任何一步的改动都需要重新计算follow集合*/
-														}
+														changed = true;	/*任何一步的改动都需要重新计算follow集合*/
 												}
 										}
-
-										next = PSR_IndexOfSymbList(&rule->body, ++next_idx);
-										
+										if(!first_rec->can_empty)break;
 								}
-								
 
-								if(need_continue)
+								if(next_idx == rule->body.count)
 								{
+										
 										size_t x;
+										psrMapRec_t *rec_tmp = PSR_GetSymbolFromSymbMap(follow_set, key);
+
 										for(x = 0; x < head_follow->lst.count; ++x)
 										{
-												if(PSR_InsertToSymbMap(follow_set, key, head_follow->lst.lst[x]))/*如果不存在符号follow，则加入到follow_set中，*/
+												if(PSR_InsertToSymbList_Unique(&rec_tmp->lst,head_follow->lst.lst[x]))
 												{
-														changed = true;							/*任何一步的改动都需要重新计算follow集合*/
+														changed = true;	/*任何一步的改动都需要重新计算follow集合*/
 												}
 										}
 								}
-
 						}
 				}
-
-		}
+		}while(changed);
 }
+
 
 AR_NAMESPACE_END
 
