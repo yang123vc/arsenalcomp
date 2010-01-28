@@ -58,7 +58,7 @@
 				AssemblerOutput="2"
 				WarningLevel="4"
 				DebugInformationFormat="4"
-				CompileAs="2"
+				CompileAs="1"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -574,7 +574,7 @@
 				WarningLevel="4"
 				WarnAsError="false"
 				DebugInformationFormat="4"
-				CompileAs="2"
+				CompileAs="1"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -1007,31 +1007,27 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\Arsenal\Parser\lalr.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Parser\lalr_build.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Parser\lalr_config.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Parser\lalr_state.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\Arsenal\Parser\lr_action.c"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\Arsenal\Parser\lr_action.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Parser\lr_dfa.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Parser\lr_dfa.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Parser\lr_dfa_aux.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Parser\lr_item.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Parser\lr_item.h"
 				>
 			</File>
 			<File
@@ -1076,6 +1072,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\Arsenal\Ray\ray.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Ray\symtbl.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Ray\symtbl.h"
 				>
 			</File>
 		</Filter>
