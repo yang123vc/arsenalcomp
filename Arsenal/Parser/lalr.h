@@ -85,7 +85,7 @@ struct __lalr_action_tag
 {
 		lalrActionType_t				act_type;
 		const psrSymb_t					*symb;
-		
+
 		union{
 				lalrState_t				*to;
 				const	psrRule_t*		*reduce_rule;

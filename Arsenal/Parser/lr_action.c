@@ -479,7 +479,6 @@ psrActionTable_t* PSR_CreateActionTable_SLR(const psrGrammar_t *grammar)
 		return tbl;
 }
 
-
 psrActionTable_t* PSR_CreateActionTable_LALR(const psrGrammar_t *grammar)
 {
 		psrActionTable_t		*tbl;
