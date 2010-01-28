@@ -197,6 +197,7 @@ static void __build_propagation_links(lalrStateSet_t *set)
 {
 		size_t i;
 		bool_t changed;
+		
 		AR_ASSERT(set != NULL);
 		
 		for(i = 0; i < set->count; ++i)
@@ -218,6 +219,17 @@ static void __build_propagation_links(lalrStateSet_t *set)
 		}
 
 
+		for(i = 0; i < set->count; ++i)
+		{
+				lalrConfigNode_t *node;
+				lalrState_t *state = set->set[i];
+
+				for(node = state->all_config->head; node != NULL; node = node->next)
+				{
+						node->config->is_completed = false;
+				}
+		}
+		
 
 		do{
 				changed = false;
@@ -231,6 +243,8 @@ static void __build_propagation_links(lalrStateSet_t *set)
 						{
 								lalrConfigNode_t *fp;
 								
+								if(node->config->is_completed)continue;
+
 								for(fp = node->config->forward->head; fp != NULL; fp = fp->next)
 								{
 										size_t x;
@@ -241,13 +255,18 @@ static void __build_propagation_links(lalrStateSet_t *set)
 												if(PSR_InsertToSymbList_Unique(&next_config->follow_set, node->config->follow_set.lst[x]))
 												{
 														changed = true;
+														next_config->is_completed = false;
 												}
 										}
 								}
+
+								node->config->is_completed = true;
 						}
 				}
 
 		}while(changed);
+
+
 }
 
 
