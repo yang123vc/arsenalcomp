@@ -26,10 +26,6 @@ void	RAY_Init();
 void	RAY_UnInit();
 
 
-
-
-
-
 AR_NAMESPACE_END
 
 #endif
