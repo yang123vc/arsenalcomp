@@ -263,7 +263,7 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 								
 								if(*sp != L'\0' && *sp >= pc->range.beg && *sp <= pc->range.end)
 								{
-										if(*sp == L'\n') 
+										if(*sp == L'\n')
 										{
 												y = 0;
 												x++;
