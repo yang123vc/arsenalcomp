@@ -91,29 +91,25 @@ static size_t __unicode_to_utf8_char(wchar_t uch, byte_t *utf8)
 		if(uc < 0x80)
 		{
 				*e++ = (byte_t)uc;
-		}
-		else if(uc < 0x800)
+		}else if(uc < 0x800)
 		{
 				/*<11011111> < 000 0000 0000>*/
 				*e++ = (byte_t)((uc >> 6) & 0x1f)|0xc0;
 				*e++ = (byte_t)(uc & 0x3f)|0x80; 
-		}
-		else if(uc < 0x10000)
+		}else if(uc < 0x10000)
 		{
 				/*<11101111> <0000 0000 0000 0000>*/
 				*e++ = (byte_t)(((uc >> 12) & 0x0f)|0xe0);
 				*e++ = (byte_t)(((uc >> 6) & 0x3f)|0x80);
 				*e++ = (byte_t)((uc & 0x3f)|0x80);
-		}
-		else if(uc < 0x200000)
+		}else if(uc < 0x200000)
 		{
 				/*<11110111> <0 0000 0000 0000 0000 0000>*/
 				*e++ = (byte_t)(((uc >> 18) & 0x07)|0xf0);
 				*e++ = (byte_t)(((uc >> 12) & 0x3f)|0x80);
 				*e++ = (byte_t)(((uc >> 6) & 0x3f)|0x80);
 				*e++ = (byte_t)((uc & 0x3f)|0x80);
-		}
-		else if(uc < 0x4000000)
+		}else if(uc < 0x4000000)
 		{
 				/*<11111011> <00 0000 0000 0000 0000 0000 0000>*/
 				*e++ = (byte_t)(((uc >> 24) & 0x03)|0xf8);
@@ -121,8 +117,7 @@ static size_t __unicode_to_utf8_char(wchar_t uch, byte_t *utf8)
 				*e++ = (byte_t)(((uc >> 12) & 0x3f)|0x80);
 				*e++ = (byte_t)(((uc >> 6) & 0x3f)|0x80);
 				*e++ = (byte_t)((uc & 0x3f)|0x80);
-		}
-		else
+		}else
 		{
 				/*<11111101> <0000 0000 0000 0000 0000 0000 0000 0000>*/
 				*e++ = (byte_t)(((uc >> 30) & 0x01)|0xfc);
