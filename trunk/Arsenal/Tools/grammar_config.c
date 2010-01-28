@@ -69,7 +69,6 @@ typedef enum
 		NAME,
 		TOKEN,
 		PREC,
-		HANDLER,
 		ASSOC,
 		LEXEME,
 		NUMBER,
@@ -78,7 +77,8 @@ typedef enum
 		COLON,
 		SEMI,
 		OR,
-		FAKE_EOI
+		FAKE_EOI,
+		ACTION,
 }cfgLexValue_t;
 
 
@@ -101,9 +101,9 @@ static const cfgLexPattern_t	__cfg_pattern[] =
 		{NAME,	L"\"%name\"(?={key_lookahead})", false,0},
 		{TOKEN,	L"\"%token\"(?={key_lookahead})", false,0},
 		{PREC,	L"\"%prec\"(?={key_lookahead})", false,0},
-		/*{RULES,	L"\"%rule\"(?={key_lookahead})",false,0},*/
-		{HANDLER, L"\"%handler\"(?={skip_lexem}+)", false, 0},
+		/*{HANDLER, L"\"%handler\"(?={skip_lexem}+)", false, 0},*/
 
+		{ACTION, L"\"%action\"(?={skip_lexem}+)", false, 0},
 
 		{LEXEME,	L"{lexeme}", false,0},
 		{NUMBER,	L"{number}", false,0},
@@ -142,7 +142,7 @@ static const cfgTermInfo_t	__cfg_term[] =
 		{NAME, L"%name"},
 		{TOKEN, L"%token"},
 		{PREC, L"%prec"},
-		{HANDLER, L"%handler"},
+		{ACTION, L"%action"},
 		{ASSOC, L"assoc"},
 		{LEXEME, L"lexeme"},
 		{NUMBER, L"number"},
@@ -416,9 +416,9 @@ RE_CHECK_POINT:
 										cfg->rule[cfg->rule_cnt].prec_tok = AR_wcsdup(rule->lst[i]->rule.prec_tok);
 								}
 
-								if(rule->lst[i]->rule.handler_name)
+								if(rule->lst[i]->rule.action_ins)
 								{
-										cfg->rule[cfg->rule_cnt].handler_name = AR_wcsdup(rule->lst[i]->rule.handler_name);
+										cfg->rule[cfg->rule_cnt].action_ins = AR_wcsdup(rule->lst[i]->rule.action_ins);
 								}
 
 								cfg->rule_cnt++;
@@ -471,7 +471,7 @@ static void CFG_UnInitConfig(cfgConfig_t *cfg)
 				AR_DEL(cfg->rule[i].rhs);
 
 				if(cfg->rule[i].prec_tok)AR_DEL(cfg->rule[i].prec_tok);
-				if(cfg->rule[i].handler_name)AR_DEL(cfg->rule[i].handler_name);
+				if(cfg->rule[i].action_ins)AR_DEL(cfg->rule[i].action_ins);
 		}
 
 		AR_DEL(cfg->rule);
@@ -543,7 +543,7 @@ static void CFG_DestroyNode(cfgNode_t *node)
 						if(node->rule.lhs)AR_DEL(node->rule.lhs);
 						if(node->rule.rhs)AR_DEL(node->rule.rhs);
 						if(node->rule.prec_tok)AR_DEL(node->rule.prec_tok);
-						if(node->rule.handler_name)AR_DEL(node->rule.handler_name);
+						if(node->rule.action_ins)AR_DEL(node->rule.action_ins);
 						break;
 				}
 				case CFG_NODE_LIST_T:
@@ -625,10 +625,10 @@ static psrNode_t*		AR_STDCALL __build_prec_decl(psrNode_t **nodes, size_t count,
 }
 
 /*
-{ L"handler_decl		:		%handler lexeme",								NULL},
+{ L"handler_decl		:		%action lexeme",								NULL},
 { L"handler_decl		:				",										NULL},
 */
-static psrNode_t*		AR_STDCALL __handle_handler_decl(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+static psrNode_t*		AR_STDCALL __handle_action_decl(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		return __build_prec_decl(nodes, count, name, ctx);
 }
@@ -719,7 +719,7 @@ static psrNode_t*		AR_STDCALL __handle_rhs(psrNode_t **nodes, size_t count, cons
 
 				if(ns[2])
 				{
-						res->rule.handler_name = ns[2]->lexeme.lexeme;
+						res->rule.action_ins = ns[2]->lexeme.lexeme;
 						ns[2]->lexeme.lexeme = NULL;
 				}
 
@@ -1181,7 +1181,7 @@ static const cfgRuleDef_t	__cfg_rule[] =
 
 		{ L"rhs_list			: 		rhs_list  | rhs ",								__handle_rhs_list,0},
 		{ L"rhs_list			: 		rhs ",											__handle_rhs_list,0},
-		{ L"rhs					:		term_list prec_decl handler_decl",				__handle_rhs,0},
+		{ L"rhs					:		term_list prec_decl action_decl",				__handle_rhs,0},
 		{ L"rhs					:		.",												__handle_rhs,0},
 
 		{ L"term_list			:		term_list lexeme",								__handle_term_list,0},
@@ -1193,8 +1193,8 @@ static const cfgRuleDef_t	__cfg_rule[] =
 		{ L"prec_decl			:		%prec lexeme",									NULL,1},
 
 		{ L"prec_decl			:		",												NULL,0},
-		{ L"handler_decl		:		%handler lexeme",								__handle_handler_decl,0},
-		{ L"handler_decl		:				",										NULL,0},
+		{ L"action_decl			:		%action lexeme",								__handle_action_decl,0},
+		{ L"action_decl			:		",										NULL,0},
 
 };
 

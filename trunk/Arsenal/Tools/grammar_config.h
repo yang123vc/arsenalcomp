@@ -69,7 +69,7 @@ typedef struct __rule_tag
 		const wchar_t			*lhs;
 		const wchar_t			*rhs;
 		const wchar_t			*prec_tok;
-		const wchar_t			*handler_name;
+		const wchar_t			*action_ins;
 }cfgRule_t;
 
 
