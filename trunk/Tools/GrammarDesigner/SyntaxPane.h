@@ -16,6 +16,7 @@ public:
 		void	DrawTree(CPrintNode *node);
 
 		void	ExpandAll();
+		void	ExpandLevel(size_t level);
 protected:
 		HTREEITEM InsertText(LPCTSTR lpszItem, LPARAM lParam, HTREEITEM hParent = TVI_ROOT, HTREEITEM hInsertAfter = TVI_LAST);
 

@@ -1,2 +1,2 @@
-xcopy ..\..\binary\x86\DLL  ..\..\..\ArsenalCS\Test\bin /S/Y
-xcopy ..\..\binary\x86\DLL  ..\..\..\ArsenalCS\Lib\bin /S/Y
+xcopy ..\..\..\binary\x86\Lib\Release\GrammarDesigner.exe  ..\..\..\misc\GrammarDesigner_x86.exe /S/Y
+xcopy ..\..\..\binary\X64\Lib\Release\GrammarDesigner.exe  ..\..\..\misc\GrammarDesigner_X64.exe /S/Y

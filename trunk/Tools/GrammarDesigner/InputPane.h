@@ -59,6 +59,7 @@ public:
 		afx_msg void OnSize(UINT nType, int cx, int cy);
 public:
 		afx_msg LRESULT OnLocatePos(WPARAM wp, LPARAM lp);
+		afx_msg	LRESULT OnLocateToken(WPARAM wp, LPARAM lp);
 public:
 
 		int   GetInputLength();

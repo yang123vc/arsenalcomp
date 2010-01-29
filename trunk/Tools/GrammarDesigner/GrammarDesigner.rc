@@ -109,6 +109,42 @@ BEGIN
     END
 END
 
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DIALOG_GOTO DIALOGEX 0, 0, 205, 76
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Goto"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    EDITTEXT        IDC_EDIT_LINE,11,28,183,14,ES_AUTOHSCROLL | ES_NUMBER
+    DEFPUSHBUTTON   "OK",IDOK,44,55,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,112,55,50,14
+    LTEXT           "Static",IDC_STATIC_LINE,11,7,183,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_DIALOG_GOTO, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 198
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 69
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
 #endif    // Chinese (P.R.C.) resources
 /////////////////////////////////////////////////////////////////////////////
 
@@ -356,6 +392,7 @@ BEGIN
     "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL, NOINVERT
     VK_F6,          ID_NEXT_PANE,           VIRTKEY, NOINVERT
     VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT, NOINVERT
+    "G",            ID_GOTO,                VIRTKEY, CONTROL, NOINVERT
 END
 
 
@@ -382,8 +419,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,1,2,4
- PRODUCTVERSION 0,1,2,4
+ FILEVERSION 0,1,38,0
+ PRODUCTVERSION 0,1,38,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -400,12 +437,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "None"
             VALUE "FileDescription", "Grammar Designer"
-            VALUE "FileVersion", "0, 1, 2, 4"
+            VALUE "FileVersion", "0, 1, 38, 0"
             VALUE "InternalName", "GrammarDesigner.exe"
             VALUE "LegalCopyright", "Solidus.  All rights reserved."
             VALUE "OriginalFilename", "GrammarDesigner.exe"
             VALUE "ProductName", "Grammar Designer"
-            VALUE "ProductVersion", "0, 1, 2, 4"
+            VALUE "ProductVersion", "0, 1, 38, 0"
         END
     END
     BLOCK "VarFileInfo"

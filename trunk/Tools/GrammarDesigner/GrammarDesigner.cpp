@@ -57,6 +57,9 @@ CGrammarDesignerApp theApp;
 
 BOOL CGrammarDesignerApp::InitInstance()
 {
+
+	ArsenalCPP::Arsenal::Instance(new ArsenalCPP::DummyContext());
+
 	// InitCommonControlsEx() is required on Windows XP if an application
 	// manifest specifies use of ComCtl32.dll version 6 or later to enable
 	// visual styles.  Otherwise, any window creation will fail.
@@ -135,13 +138,24 @@ BOOL CGrammarDesignerApp::InitInstance()
 	// Enable drag/drop open
 	m_pMainWnd->DragAcceptFiles();
 
-	ArsenalCPP::Arsenal::Instance(new ArsenalCPP::DummyContext());
+	
 
 	test_func();
 
 	return TRUE;
 }
 
+
+
+int CGrammarDesignerApp::ExitInstance()
+{
+		// TODO: Add your specialized code here and/or call the base class
+		
+		
+		int stat = CWinAppEx::ExitInstance();
+		ArsenalCPP::Arsenal::UnInstance();
+		return stat;
+}
 
 
 // App command to run the dialog
@@ -176,13 +190,6 @@ void CGrammarDesignerApp::SaveCustomState()
 
 
 
-int CGrammarDesignerApp::ExitInstance()
-{
-		// TODO: Add your specialized code here and/or call the base class
-		ArsenalCPP::Arsenal::UnInstance();
-		
-		return CWinAppEx::ExitInstance();
-}
 /*
 BOOL CGrammarDesignerApp::OnThreadMessage(MSG* pMsg)
 {

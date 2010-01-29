@@ -88,6 +88,8 @@ public:
 		afx_msg void OnDropFiles(HDROP hDropInfo);
 protected:
 		virtual HRESULT QueryAcceptData(LPDATAOBJECT lpdataobj, CLIPFORMAT* lpcfFormat, DWORD dwReco, BOOL bReally, HGLOBAL hMetaFile);
+public:
+		afx_msg void OnGoto();
 };
 
 #ifndef _DEBUG  // debug version in GrammarDesignerView.cpp

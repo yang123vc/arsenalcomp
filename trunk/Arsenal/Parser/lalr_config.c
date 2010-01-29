@@ -18,8 +18,61 @@
 AR_NAMESPACE_BEGIN
 
 
+
+
 /**************************************lalr config list*********************************************/
 
+static lalrConfig_t		*__g_free_list = NULL;
+static arSpinLock_t		__g_config_lock;
+
+void PSR_Init_LALR_Config()
+{
+		AR_InitSpinLock(&__g_config_lock);
+		__g_free_list = NULL;
+}
+
+void PSR_UnInit_LALR_Config()
+{
+		while(__g_free_list)
+		{
+				lalrConfig_t	*tmp = (lalrConfig_t*)__g_free_list->forward;
+				AR_DEL(__g_free_list);
+				__g_free_list = tmp;
+		}
+
+		AR_UnInitSpinLock(&__g_config_lock);
+
+		
+}
+
+
+static AR_INLINE lalrConfig_t*	__create_config()
+{
+		if(__g_free_list == NULL)
+		{
+				return AR_NEW(lalrConfig_t);
+		}else
+		{
+				lalrConfig_t	*res;
+				AR_LockSpinLock(&__g_config_lock);
+
+				res  = __g_free_list;
+				__g_free_list = (lalrConfig_t*)__g_free_list->forward;
+
+				AR_UnLockSpinLock(&__g_config_lock);
+				return res;
+		}
+}
+
+static AR_INLINE void	__destroy_config(lalrConfig_t *config)
+{
+		AR_ASSERT(config);
+		AR_LockSpinLock(&__g_config_lock);
+		config->forward = (lalrConfigList_t*)__g_free_list;
+		__g_free_list = config;
+		AR_UnLockSpinLock(&__g_config_lock);
+
+}
 
 
 lalrConfigList_t*		PSR_CreateConfigList()
@@ -41,11 +94,30 @@ void					PSR_DestroyConfigList(lalrConfigList_t *lst, bool_t destroy_config)
 				if(destroy_config)
 				{
 						PSR_UnInitConfig(node->config);
+						__destroy_config(node->config);
+						/*
 						AR_DEL(node->config);
+						*/
 				}
 				AR_DEL(node);
 		}
 		AR_DEL(lst);
+}
+
+lalrConfig_t*			PSR_InsertToConfigListByValue(lalrConfigList_t *lst, const psrRule_t *rule, size_t delim)
+{
+		lalrConfig_t *cfg;
+		AR_ASSERT(lst != NULL && rule != NULL);
+
+		/*cfg = AR_NEW(lalrConfig_t);*/
+
+		cfg = __create_config();
+
+		PSR_InitConfig(cfg, rule, delim);
+
+		PSR_InsertToConfigList(lst, cfg);
+		
+		return cfg;
 }
 
 
@@ -114,6 +186,7 @@ void					PSR_CopyConfigList(lalrConfigList_t *l, const lalrConfigList_t *r)
 }
 
 
+#if(0)
 int_t					PSR_CompConfigList(const lalrConfigList_t *l, const lalrConfigList_t *r)
 {
 		int_t cmp = 0;
@@ -140,6 +213,26 @@ int_t					PSR_CompConfigList(const lalrConfigList_t *l, const lalrConfigList_t *
 				return -1;
 		}
 }
+#endif
+
+int_t					PSR_CompConfigList(const lalrConfigList_t *l, const lalrConfigList_t *r)
+{
+		int_t cmp = 0;
+		const lalrConfigNode_t		*a, *b;
+		AR_ASSERT(l != NULL && r != NULL);
+		if(l == r)return 0;
+		
+		cmp = (int_t)l->count - (int_t)r->count;
+		if(cmp != 0)return cmp;
+		for(a = l->head, b = r->head; a != NULL && b != NULL; a = a->next, b = b->next)
+		{
+				cmp = PSR_CompConfig(a->config, b->config);
+				if(cmp != 0)return cmp;
+		}
+		
+		return (int_t)a - (int_t)b;
+
+}
 
 
 lalrConfig_t*			PSR_FindFromConfigList(lalrConfigList_t *lst, const psrRule_t *rule, size_t delim)
@@ -165,19 +258,6 @@ lalrConfig_t*			PSR_FindFromConfigList(lalrConfigList_t *lst, const psrRule_t *r
 }
 
 
-lalrConfig_t*			PSR_InsertToConfigListByValue(lalrConfigList_t *lst, const psrRule_t *rule, size_t delim)
-{
-		lalrConfig_t *cfg;
-		AR_ASSERT(lst != NULL && rule != NULL);
-
-		cfg = AR_NEW(lalrConfig_t);
-
-		PSR_InitConfig(cfg, rule, delim);
-
-		PSR_InsertToConfigList(lst, cfg);
-		
-		return cfg;
-}
 
 /************************************************************Sort*****************************************************/
 
@@ -368,9 +448,13 @@ void	PSR_UnInitConfig(lalrConfig_t *config)
 		PSR_DestroyConfigList(config->forward, false);
 		PSR_DestroyConfigList(config->backward, false);
 		PSR_UnInitSymbList(&config->follow_set);
+		
+		
+
 		AR_memset(config, 0, sizeof(*config));
 }
 
+#if(0)
 
 int_t	PSR_CompConfig(const lalrConfig_t *l, const lalrConfig_t *r)
 {
@@ -385,6 +469,23 @@ int_t	PSR_CompConfig(const lalrConfig_t *l, const lalrConfig_t *r)
 
 		cmp = AR_CMP(l->delim, r->delim);
 		
+		return cmp;
+}
+#endif
+
+
+int_t	PSR_CompConfig(const lalrConfig_t *l, const lalrConfig_t *r)
+{
+		int_t cmp;
+		AR_ASSERT(l != NULL && r != NULL);
+
+		if(l == r)return 0;
+		
+		cmp = (int_t)l->rule - (int_t)r->rule;
+		if(cmp != 0)return cmp;
+		
+		
+		cmp = (int_t)l->delim - (int_t)r->delim;
 		return cmp;
 }
 

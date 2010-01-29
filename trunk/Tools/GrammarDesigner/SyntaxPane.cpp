@@ -80,9 +80,11 @@ void	CSyntaxPane::DrawTree(CPrintNode *node)
 {
 		m_tree.DrawTree(node);
 
-		m_tree.ExpandAll();
+		//m_tree.ExpandAll();
 
+		m_tree.ExpandLevel(5);
 }
+
 
 /**********************************SyntaxTree*************************************************/
 IMPLEMENT_DYNAMIC(CSyntaxTree, CTreeCtrl)
@@ -172,6 +174,8 @@ void CSyntaxTree::OnDestroy()
 
 void CSyntaxTree::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
+		CTreeCtrl::OnLButtonDblClk(nFlags, point);
+
 		// TODO: Add your message handler code here and/or call default
 		HTREEITEM curr = this->GetSelectedItem();
 
@@ -184,7 +188,7 @@ void CSyntaxTree::OnLButtonDblClk(UINT nFlags, CPoint point)
 				
 				CInputPane &input = main_frm->GetInputPane();
 
-				input.SendMessage(ID_EDIT_LOCATE_POS, (WPARAM)node->m_line);
+				input.SendMessage(ID_INPUT_LOCATE_TOKEN, (WPARAM)node);
 
 				
 
@@ -193,10 +197,6 @@ void CSyntaxTree::OnLButtonDblClk(UINT nFlags, CPoint point)
 		{
 
 		}
-		
-
-		CTreeCtrl::OnLButtonDblClk(nFlags, point);
-		CTreeCtrl::OnLButtonDblClk(nFlags, point);
 }
 
 void CSyntaxTree::OnContextMenu(CWnd* pWnd, CPoint point)
@@ -254,6 +254,30 @@ void CSyntaxTree::OnUpdatePopupClear32865(CCmdUI *pCmdUI)
 		pCmdUI->Enable(m_root != NULL);
 }
 
+
+static void __expand_tree(int_t level, CTreeCtrl &tree, HTREEITEM	item)
+{
+		if(level <= 0 || item == NULL)return;
+		
+		if(tree.ItemHasChildren(item))
+		{
+				VERIFY(tree.Expand(item, TVE_EXPAND));
+				HTREEITEM chd = tree.GetChildItem(item);
+
+				while(chd != NULL)
+				{
+						__expand_tree(level - 1, tree, chd);
+						chd = tree.GetNextSiblingItem(chd);
+				}
+		}
+}
+
+void CSyntaxTree::ExpandLevel(size_t level)
+{
+		if(this->GetRootItem() == NULL)return;
+
+		__expand_tree(level, *this, this->GetRootItem());
+}
 
 
 void	CSyntaxTree::ExpandAll()

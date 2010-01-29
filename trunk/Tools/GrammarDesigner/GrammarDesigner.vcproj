@@ -578,6 +578,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine=""
 			/>
 		</Configuration>
 		<Configuration
@@ -744,6 +745,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine=""
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -811,6 +813,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="$(ProjectDir)\event.bat"
 			/>
 		</Configuration>
 		<Configuration
@@ -888,6 +891,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="$(ProjectDir)\event.bat"
 			/>
 		</Configuration>
 		<Configuration
@@ -1055,6 +1059,10 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+			<File
+				RelativePath=".\event.bat"
+				>
+			</File>
 			<File
 				RelativePath=".\res\GrammarDesigner.ico"
 				>
