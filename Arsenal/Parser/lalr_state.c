@@ -1,44 +1,22 @@
 
+/*
+ * The Arsenal Library
+ * Copyright (c) 2009 by Solidus
+ * 
+ * Permission to use, copy, modify, distribute and sell this software
+ * and its documentation for any purpose is hereby granted without fee,
+ * provided that the above copyright notice appear in all copies and
+ * that both that copyright notice and this permission notice appear
+ * in supporting documentation.It is provided "as is" without express 
+ * or implied warranty.
+ *
+ */
+
+
 #include "lalr.h"
 
 AR_NAMESPACE_BEGIN
 
-
-/*
-typedef struct	__lalr_action_tag			lalrAction_t;
-typedef struct	__lalr_state_tag			lalrState_t;
-
-typedef enum 
-{
-		LALR_ACT_SHIFT,
-		LALR_ACT_REDUCE,
-		LALR_ACT_ACCEPT
-}lalrActionType_t;
-
-
-struct __lalr_action_tag
-{
-		lalrActionType_t				act_type;
-		const psrSymb_t					*symb;
-		
-		union{
-				lalrState_t				*to;
-				const	psrRule_t*		*reduce_rule;
-		};
-};
-
-
-struct __lalr_state_tag
-{
-		lalrConfigList_t		*basis;
-		lalrConfigList_t		*all_config;
-
-		lalrAction_t			*actions;
-		size_t					count;
-		size_t					cap;
-};
-
-*/
 
 lalrState_t*	PSR_CreateState()
 {
@@ -118,15 +96,6 @@ void			PSR_DestroyState_ALL(lalrState_t *state)
 }
 
 
-
-/*
-typedef struct __lalr_state_set_tag
-{
-		lalrState_t		**set;
-		size_t			count;
-		size_t			cap;
-}lalrStateSet_t;
-*/
 
 void			PSR_InitStateSet(lalrStateSet_t *set)
 {
