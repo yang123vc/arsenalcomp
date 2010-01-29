@@ -200,19 +200,18 @@
 %noassoc	IF_STMT_ELSE_STMT_PREC				;
 
 
-translation_unit
-	: external_declaration
-	| translation_unit external_declaration
-	;
+translation_unit	:	external_declaration
+				|	translation_unit external_declaration
+				;
 
 
-constant	:	OCT_CONSTANT
-		|	HEX_CONSTANT
-		|	DEC_CONSTANT
-		|	FLOAT_CONSTANT
-		|	CHAR_CONSTANT
-		|	STRING_LITERAL
-		;
+constant			:	OCT_CONSTANT
+				|	HEX_CONSTANT
+				|	DEC_CONSTANT
+				|	FLOAT_CONSTANT
+				|	CHAR_CONSTANT
+				|	STRING_LITERAL
+				;
 
 primary_expression	:	IDENTIFIER
 				|	constant
@@ -315,236 +314,201 @@ declaration_specifiers	:	"typedef" declaration_specifiers
 					|	type_qualifier declaration_specifiers
 					;
 
-init_declarator_list
-	: init_declarator
-	| init_declarator_list "," init_declarator
-	;
+init_declarator_list		:	init_declarator
+					|	init_declarator_list "," init_declarator
+					;
 
-init_declarator
-	: declarator
-	| declarator "=" initializer
-	;
+init_declarator			:	declarator
+					|	declarator "=" initializer
+					;
 
 	
-type_specifier
-	: "void"
-	| "char"
-	| "short"
-	| "int"
-	| "long"
-	| "float"
-	| "double"
-	| "signed"
-	| "unsigned"
-	| struct_or_union_specifier
-	| enum_specifier
-	| TYPE_ID
-	;
-
-struct_or_union_specifier
-	: struct_or_union IDENTIFIER "{" struct_declaration_list "}"
-	| struct_or_union "{" struct_declaration_list "}"
-	| struct_or_union "{" error "}"
-	| struct_or_union IDENTIFIER
-	| struct_or_union error "}"
-	;
-
-struct_or_union
-	: "struct"
-	| "union"
-	;
-
-struct_declaration_list
-	: struct_declaration
-	| struct_declaration_list struct_declaration
-	;
-
-struct_declaration
-	: specifier_qualifier_list struct_declarator_list ";"
-	;
-
-specifier_qualifier_list
-	: type_specifier specifier_qualifier_list
-	| type_specifier
-	| type_qualifier specifier_qualifier_list
-	| type_qualifier
-	;
-
-struct_declarator_list
-	: struct_declarator
-	| struct_declarator_list "," struct_declarator
-	;
-
-struct_declarator
-	: declarator
-	| ":" constant_expression
-	| declarator ":" constant_expression
-	;
-
-enum_specifier
-	: "enum" "{" enumerator_list "}"
-	| "enum" IDENTIFIER "{" enumerator_list "}"
-	| "enum" IDENTIFIER
-	;
-
-enumerator_list
-	: enumerator
-	| enumerator_list "," enumerator
-	;
-
-enumerator
-	: IDENTIFIER
-	| IDENTIFIER "=" constant_expression
-	;
-
-type_qualifier
-	: "const"
-/*	| "volatile"	*/
-	;
-
-declarator
-	: pointer direct_declarator
-	| direct_declarator
-	;
-
-direct_declarator
-	: IDENTIFIER
-	| "(" declarator ")"
-	| direct_declarator "[" constant_expression "]"
-	| direct_declarator "[" "]"
-	| direct_declarator "(" parameter_type_list ")"
-	| direct_declarator "(" ")"
-	;
-pointer
-	: "*"
-	| "*" type_qualifier_list
-	| "*" type_qualifier_list pointer
-	| "*" pointer
-	;
-
-type_qualifier_list
-	: type_qualifier
-	| type_qualifier_list type_qualifier
-	;
-
-parameter_type_list
-	: parameter_list
-	| parameter_list "," "..."
-	;
-
-parameter_list
-	: parameter_declaration
-	| parameter_list "," parameter_declaration
-	;
-
-parameter_declaration
-	: declaration_specifiers declarator
-	| declaration_specifiers abstract_declarator
-	| declaration_specifiers
-	;
+type_specifier			:	"void"
+					|	"char"
+					|	"short"
+					|	"int"
+					|	"long"
+					|	"float"
+					|	"double"
+					|	"signed"
+					|	"unsigned"
+					|	struct_or_union_specifier
+					|	enum_specifier
+					|	TYPE_ID
+					;
 
 
-type_name
-	: specifier_qualifier_list
-	| specifier_qualifier_list abstract_declarator
-	;
 
-abstract_declarator
-	: pointer
-	| direct_abstract_declarator
-	| pointer direct_abstract_declarator
-	;
+struct_or_union_specifier	:	struct_or_union IDENTIFIER "{" struct_declaration_list "}"
+					|	struct_or_union "{" struct_declaration_list "}"
+					|	struct_or_union "{" error "}"
+					|	struct_or_union IDENTIFIER
+					|	struct_or_union error ";"
+					;
 
-direct_abstract_declarator
-	: "(" abstract_declarator ")"
-	| "[" "]"
-	| "[" constant_expression "]"
-	| direct_abstract_declarator "[" "]"
-	| direct_abstract_declarator "[" constant_expression "]"
-	| "(" ")"
-	| "(" parameter_type_list ")"
-	| direct_abstract_declarator "(" ")"
-	| direct_abstract_declarator "(" parameter_type_list ")"
-	;
+struct_or_union			:	"struct"
+					|	"union"
+					;
 
-initializer
-	: assignment_expression
-	| "{" initializer_list "}"
-	| "{" initializer_list "," "}"
-	| "{" error "}"
-	;
+struct_declaration_list	:	struct_declaration
+					|	struct_declaration_list struct_declaration
+					;
 
-initializer_list
-	: initializer
-	| initializer_list "," initializer
-	;
+struct_declaration		:	specifier_qualifier_list struct_declarator_list ";"
+					;
 
-statement
-	: labeled_statement
-	| compound_statement
-	| expression_statement
-	| selection_statement
-	| iteration_statement
-	| jump_statement
-	;
+specifier_qualifier_list	:	type_specifier specifier_qualifier_list
+					|	type_specifier
+					|	type_qualifier specifier_qualifier_list
+					|	type_qualifier
+					;
 
-labeled_statement
-	:	"case" constant_expression ":" statement
-	|	"default" ":" statement
-	|	 IDENTIFIER ":" statement
-	;
+struct_declarator_list	:	struct_declarator
+					|	struct_declarator_list "," struct_declarator
+					;
 
-compound_statement
-	: "{" "}"
-	| "{" statement_list "}"
-	| "{" declaration_list "}"
-	| "{" declaration_list statement_list "}"
-	| "{" error "}"
-	;
+struct_declarator		:	declarator
+					|	":" constant_expression
+					|	declarator ":" constant_expression
+					;
 
-declaration_list
-	: declaration
-	| declaration_list declaration
-	;
+enum_specifier			:	"enum" "{" enumerator_list "}"
+					|	"enum" IDENTIFIER "{" enumerator_list "}"
+					|	"enum" IDENTIFIER
+					;
 
-statement_list
-	: statement
-	| statement_list statement
-	;
+enumerator_list			:	enumerator
+					|	enumerator_list "," enumerator
+					;
 
-expression_statement
-	: ";"
-	| expression ";"
-	;
+enumerator				:	IDENTIFIER
+					|	IDENTIFIER "=" constant_expression
+					;
 
-selection_statement
-	: "if" "(" expression ")" statement	%prec IF_STMT_PREC
-	| "if" "(" expression ")" statement "else" statement	%prec IF_STMT_ELSE_STMT_PREC
-	| "switch" "(" expression ")" statement
-	;
+type_qualifier			:	"const"
+				/*	| "volatile"	*/
+					;
 
-iteration_statement
-	: "while" "(" expression ")" statement
-	| "do" statement "while" "(" expression ")" ";"
-	| "for" "(" expression_statement expression_statement ")" statement
-	| "for" "(" expression_statement expression_statement expression ")" statement
-	;
+declarator				:	pointer direct_declarator
+					|	direct_declarator
+					;
 
-jump_statement
-	: "goto" IDENTIFIER ";"
-	| "continue" ";"
-	| "break" ";"
-	| "return" ";"
-	| "return" expression ";"
-	;
+direct_declarator		:	IDENTIFIER
+					|	"(" declarator ")"
+					|	direct_declarator "[" constant_expression "]"
+					|	direct_declarator "[" "]"
+					|	direct_declarator "(" parameter_type_list ")"
+					|	direct_declarator "(" ")"
+					;
+pointer				:	"*"
+					|	"*" type_qualifier_list
+					|	"*" type_qualifier_list pointer
+					|	"*" pointer
+					;
 
-external_declaration
-	: function_definition
-	| declaration
-	;
+type_qualifier_list		:	type_qualifier
+					|	type_qualifier_list type_qualifier
+					;
 
-function_definition
-	: declaration_specifiers declarator compound_statement
-	| declaration_specifiers declarator error "}"
-	;
+parameter_type_list		:	parameter_list
+					|	parameter_list "," "..."
+					;
+
+parameter_list			:	parameter_declaration
+					|	parameter_list "," parameter_declaration
+					;
+
+parameter_declaration		:	declaration_specifiers declarator
+					|	declaration_specifiers abstract_declarator
+					|	declaration_specifiers
+					;
+		
+
+type_name				:	specifier_qualifier_list
+					|	specifier_qualifier_list abstract_declarator
+					;
+
+abstract_declarator		:	pointer
+					|	direct_abstract_declarator
+					|	pointer direct_abstract_declarator
+					;
+
+direct_abstract_declarator	:	"(" abstract_declarator ")"
+					|	"[" "]"
+					|	"[" constant_expression "]"
+					|	direct_abstract_declarator "[" "]"
+					|	direct_abstract_declarator "[" constant_expression "]"
+					|	"(" ")"
+					|	"(" parameter_type_list ")"
+					|	direct_abstract_declarator "(" ")"
+					|	direct_abstract_declarator "(" parameter_type_list ")"
+					;
+
+initializer			:	assignment_expression
+					|	"{" initializer_list "}"
+					|	"{" initializer_list "," "}"
+					|	"{" error "}"
+					;
+
+initializer_list		:	initializer
+					|	initializer_list "," initializer
+					;
+
+statement				:	labeled_statement
+					|	compound_statement
+					|	expression_statement
+					|	selection_statement
+					|	iteration_statement
+					|	jump_statement
+					;
+
+labeled_statement		:	"case" constant_expression ":" statement
+					|	"default" ":" statement
+					|	IDENTIFIER ":" statement
+					;
+
+compound_statement		:	"{" "}"
+					|	"{" statement_list "}"
+					|	"{" declaration_list "}"
+					|	"{" declaration_list error "}"
+					|	"{" declaration_list statement_list "}"
+					|	"{" declaration_list statement_list error "}"
+					;
+
+declaration_list		:	declaration
+					|	declaration_list declaration
+					;
+
+statement_list			:	statement
+					|	statement_list statement
+					;
+
+expression_statement		:	";"
+					|	expression ";"
+					;
+
+selection_statement		:	"if" "(" expression ")" statement	%prec IF_STMT_PREC
+					|	"if" "(" expression ")" statement "else" statement	%prec IF_STMT_ELSE_STMT_PREC
+					|	"switch" "(" expression ")" statement
+					;
+
+iteration_statement		:	"while" "(" expression ")" statement
+					|	"do" statement "while" "(" expression ")" ";"
+					|	"for" "(" expression_statement expression_statement ")" statement
+					|	"for" "(" expression_statement expression_statement expression ")" statement
+					;
+
+jump_statement			:	"goto" IDENTIFIER ";"
+					|	"continue" ";"
+					|	"break" ";"
+					|	"return" ";"
+					|	"return" expression ";"
+					;
+
+external_declaration		:	function_definition
+					|	declaration
+					;
+
+function_definition		:	declaration_specifiers declarator compound_statement
+					;
 
