@@ -14,70 +14,41 @@
 
 
 #include "lalr.h"
+#include "lalr_config_aux.h"
 
 AR_NAMESPACE_BEGIN
 
 
 
 
-/**************************************lalr config list*********************************************/
-
-static lalrConfig_t		*__g_free_list = NULL;
-static arSpinLock_t		__g_config_lock;
-
 void PSR_Init_LALR_Config()
 {
-		AR_InitSpinLock(&__g_config_lock);
-		__g_free_list = NULL;
+		
+		__init_config_freelist();
+		__init_config_list_freelist();
+		__init_node_freelist();
 }
 
 void PSR_UnInit_LALR_Config()
 {
-		while(__g_free_list)
-		{
-				lalrConfig_t	*tmp = (lalrConfig_t*)__g_free_list->forward;
-				AR_DEL(__g_free_list);
-				__g_free_list = tmp;
-		}
-
-		AR_UnInitSpinLock(&__g_config_lock);
+		__uninit_node_freelist();
+		__uninit_config_list_freelist();
+		__uninit_config_freelist();
+		
 
 		
 }
 
 
-static AR_INLINE lalrConfig_t*	__create_config()
-{
-		if(__g_free_list == NULL)
-		{
-				return AR_NEW(lalrConfig_t);
-		}else
-		{
-				lalrConfig_t	*res;
-				AR_LockSpinLock(&__g_config_lock);
 
-				res  = __g_free_list;
-				__g_free_list = (lalrConfig_t*)__g_free_list->forward;
-
-				AR_UnLockSpinLock(&__g_config_lock);
-				return res;
-		}
-}
-
-static AR_INLINE void	__destroy_config(lalrConfig_t *config)
-{
-		AR_ASSERT(config);
-		AR_LockSpinLock(&__g_config_lock);
-		config->forward = (lalrConfigList_t*)__g_free_list;
-		__g_free_list = config;
-		AR_UnLockSpinLock(&__g_config_lock);
-
-}
+/**************************************lalr config list*********************************************/
 
 
 lalrConfigList_t*		PSR_CreateConfigList()
 {
-		return AR_NEW0(lalrConfigList_t);
+		lalrConfigList_t *res = __create_config_list();
+		AR_memset(res, 0, sizeof(lalrConfigList_t));
+		return res;
 }
 
 void					PSR_DestroyConfigList(lalrConfigList_t *lst, bool_t destroy_config)
@@ -95,13 +66,11 @@ void					PSR_DestroyConfigList(lalrConfigList_t *lst, bool_t destroy_config)
 				{
 						PSR_UnInitConfig(node->config);
 						__destroy_config(node->config);
-						/*
-						AR_DEL(node->config);
-						*/
 				}
-				AR_DEL(node);
+				__destroy_node(node);
 		}
-		AR_DEL(lst);
+
+		__destroy_config_list(lst);
 }
 
 lalrConfig_t*			PSR_InsertToConfigListByValue(lalrConfigList_t *lst, const psrRule_t *rule, size_t delim)
@@ -109,7 +78,6 @@ lalrConfig_t*			PSR_InsertToConfigListByValue(lalrConfigList_t *lst, const psrRu
 		lalrConfig_t *cfg;
 		AR_ASSERT(lst != NULL && rule != NULL);
 
-		/*cfg = AR_NEW(lalrConfig_t);*/
 
 		cfg = __create_config();
 
@@ -125,7 +93,9 @@ void					PSR_InsertToConfigList(lalrConfigList_t *lst, lalrConfig_t *cfg)
 {
 		lalrConfigNode_t		*node;
 		AR_ASSERT(lst != NULL && cfg != NULL);
-		node = AR_NEW0(lalrConfigNode_t);
+		
+		/*node = AR_NEW0(lalrConfigNode_t);*/
+		node = __create_node();
 		
 		node->config = cfg;
 		node->next = NULL;
