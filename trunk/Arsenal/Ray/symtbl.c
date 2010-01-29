@@ -1,4 +1,3 @@
-#include "symtbl.h"
 
 /*
  * The Arsenal Library
@@ -12,6 +11,9 @@
  * or implied warranty.
  *
  */
+
+
+#include "symtbl.h"
 
 AR_NAMESPACE_BEGIN
 
