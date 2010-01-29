@@ -34,7 +34,6 @@ typedef struct __lalr_config_node_tag
 		struct __lalr_config_node_tag	*next;
 }lalrConfigNode_t;
 
-
 typedef struct __lalr_config_list_tag
 {
 		lalrConfigNode_t		*head;

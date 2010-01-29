@@ -313,7 +313,6 @@ size_t			AR_AppendString(arString_t *str, const wchar_t *sour);
 void			AR_FormatString(arString_t *str, const wchar_t *fmt, ...);
 void			AR_AppendFormatString(arString_t *str, const wchar_t *fmt, ...);
 
-
 void			AR_AppendCharToString(arString_t *str, wchar_t chr);
 
 const wchar_t*	AR_GetStrString(const arString_t *str);
@@ -321,7 +320,7 @@ size_t			AR_GetLengthString(const arString_t *str);
 
 
 #define			AR_StrPrint(_s) do{ AR_printf(L"%ls\r\n", AR_GetStrString((_s))); }while(0)
-		
+#define			AR_StrPrintCtx(_ctx, _s)do{ AR_printf_ctx((_ctx), L"%ls\r\n", AR_GetStrString((_s))); }while(0)
 
 
 
