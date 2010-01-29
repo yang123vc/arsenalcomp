@@ -1,0 +1,36 @@
+%name	delim 		:	"[ \r\n\t]"			;
+%name	comment		:	"/\*([^\*]|\*+[^\*/])*\*+/"	;
+%name	comment_line	:	"//[^\n]*\n"			;
+%name	digit			:	"[0-9]"				;
+%name	number		:	"{digit}+"			;
+
+
+
+
+
+%token	%skip 	:	"{delim}+|{comment}+|{comment_line}+",1;
+
+%token	NUM		: 	"{number}"	;
+%token     "+"		:	'"+"';
+%token	"-"		:	'"-"';
+%token 	"*"		:	'"*"';
+%token 	"/"		:	'"/"';
+%token	"("		:	'"("';
+%token	")"		:	'")"';
+%token	"%"		:	'"%"';
+
+
+%left		"+" "-";
+%left		"*" "/";
+%right 	UMINUS;
+
+E	:	E	"+" 	E	
+	|	E	"-"	E
+	|	E	"*"	E
+	|	E	"/"	E
+	|	E	"%"	E
+	|	"("	E	")"
+	|	"-"	E 	%prec UMINUS
+	|	NUM
+	;
+
