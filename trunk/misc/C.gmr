@@ -284,22 +284,22 @@ assignment_expression		:	constant_expression
 					|	unary_expression assignment_operator assignment_expression
 					;
 
-assignment_operator	:	"="
-				|	"*="
-				|	"/="
-				|	"%="
-				|	"+="
-				|	"-="
-				|	"<<="
-				|	">>="
-				|	"&="
-				|	"^="
-				|	"|="
-				;
+assignment_operator		:	"="
+					|	"*="
+					|	"/="
+					|	"%="
+					|	"+="
+					|	"-="
+					|	"<<="
+					|	">>="
+					|	"&="
+					|	"^="
+					|	"|="
+					;
 
-expression		:	assignment_expression
-			|	expression "," assignment_expression
-			;
+expression				:	assignment_expression
+					|	expression "," assignment_expression
+					;
 
 declaration	:	declaration_specifiers ";"
 			|	declaration_specifiers init_declarator_list ";"
@@ -341,8 +341,8 @@ type_specifier			:	"void"
 
 struct_or_union_specifier	:	struct_or_union IDENTIFIER "{" struct_declaration_list "}"
 					|	struct_or_union "{" struct_declaration_list "}"
-					|	struct_or_union "{" error "}"
 					|	struct_or_union IDENTIFIER
+					|	struct_or_union "{" error "}"
 					|	struct_or_union error ";"
 					;
 
@@ -399,7 +399,11 @@ direct_declarator		:	IDENTIFIER
 					|	direct_declarator "[" "]"
 					|	direct_declarator "(" parameter_type_list ")"
 					|	direct_declarator "(" ")"
+
+					|	direct_declarator "(" error ")"
+					|	direct_declarator "[" error "]"
 					;
+
 pointer				:	"*"
 					|	"*" type_qualifier_list
 					|	"*" type_qualifier_list pointer
@@ -433,6 +437,7 @@ abstract_declarator		:	pointer
 					|	pointer direct_abstract_declarator
 					;
 
+
 direct_abstract_declarator	:	"(" abstract_declarator ")"
 					|	"[" "]"
 					|	"[" constant_expression "]"
@@ -442,6 +447,9 @@ direct_abstract_declarator	:	"(" abstract_declarator ")"
 					|	"(" parameter_type_list ")"
 					|	direct_abstract_declarator "(" ")"
 					|	direct_abstract_declarator "(" parameter_type_list ")"
+
+					|	"(" error ")"
+					|	"["	error "]"
 					;
 
 initializer			:	assignment_expression
@@ -470,8 +478,9 @@ labeled_statement		:	"case" constant_expression ":" statement
 compound_statement		:	"{" "}"
 					|	"{" statement_list "}"
 					|	"{" declaration_list "}"
-					|	"{" declaration_list error "}"
 					|	"{" declaration_list statement_list "}"
+					|	"{" error  "}"
+					|	"{" declaration_list error "}"
 					|	"{" declaration_list statement_list error "}"
 					;
 
