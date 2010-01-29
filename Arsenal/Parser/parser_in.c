@@ -30,6 +30,8 @@ const struct __parser_symbol_tag	*PSR_StartSymb = NULL;
 
 
 /******************************************************************************************************************************************/
+extern void PSR_Init_LALR_Config();
+extern void PSR_UnInit_LALR_Config();
 
 void	PSR_Init()
 {
@@ -43,11 +45,14 @@ void	PSR_Init()
 
 		PSR_StartSymb	=		PSR_CreateSymb(L"%Start", PSR_NONTERM);
 
+		PSR_Init_LALR_Config();
 		
 }
 
 void	PSR_UnInit()
 {
+		PSR_UnInit_LALR_Config();
+
 		AR_ASSERT(PSR_EOISymb->ref_count == 1);
 		AR_ASSERT(PSR_ErrorSymb->ref_count == 1);
 		AR_ASSERT(PSR_DefPrecSymb->ref_count == 1);

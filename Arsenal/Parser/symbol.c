@@ -138,7 +138,7 @@ void			PSR_DestroySymb(const psrSymb_t *symb)
 
 
 
-
+#if(0)
 int_t					PSR_CompSymb(const psrSymb_t *l, const psrSymb_t *r)
 {
 		int_t cmp;
@@ -152,9 +152,25 @@ int_t					PSR_CompSymb(const psrSymb_t *l, const psrSymb_t *r)
 
 
 		return AR_CMP(l->name, r->name);		
-
 }
+#endif
 
+int_t					PSR_CompSymb(const psrSymb_t *l, const psrSymb_t *r)
+{
+		int_t cmp;
+		AR_ASSERT(l != NULL && r != NULL);
+		if(l == r)return 0;
+
+		cmp = (int_t)l->type - (int_t)r->type;
+		if(cmp != 0) return cmp;
+
+		cmp = l->hash_code - r->hash_code;
+		if(cmp != 0)return cmp;
+
+		cmp = (int_t)l->name - (int_t)r->name;
+		return cmp;
+		
+}
 
 
 void	PSR_InitSymbList(psrSymbList_t *symb_lst)
@@ -260,16 +276,17 @@ int_t				PSR_BSearchFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t*
 				
 				cmp = PSR_CompSymb(symb_lst->lst[m], symb);
 
-				switch(cmp)
+				if(cmp < 0)
 				{
-				case -1:
 						l = m + 1;
-						break;
-				case 0:
+				}else if(cmp == 0)
+				{
 						return m;
-				default:/*cmp == 1*/
+				}else	/*cmp > 0*/
+				{
 						r = m - 1;
 				}
+
 		}
 		return -1;
 }

@@ -65,6 +65,7 @@ BEGIN_MESSAGE_MAP(CInputPane, CDockablePane)
 		ON_WM_SIZE()
 
 		ON_MESSAGE(ID_EDIT_LOCATE_POS, &CInputPane::OnLocatePos)
+		ON_MESSAGE(ID_INPUT_LOCATE_TOKEN, &CInputPane::OnLocateToken)
 END_MESSAGE_MAP()
 
 int CInputPane::OnCreate(LPCREATESTRUCT lpCreateStruct)
@@ -122,9 +123,43 @@ LRESULT CInputPane::OnLocatePos(WPARAM wp, LPARAM lp)
 		
 		m_input.SetFocus();
 		//m_input.Invalidate();
-
-		
+	
 		return 0;
+}
+
+
+LRESULT CInputPane::OnLocateToken(WPARAM wp, LPARAM lp)
+{
+
+		CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
+
+		main_frm->ShowPane(this, TRUE, TRUE, TRUE);
+
+		const CPrintNode *node = (const CPrintNode*)wp;		
+		
+		ASSERT(node != NULL);
+
+		int index = m_input.LineIndex((int)node->m_line);
+		
+		if(index != -1)
+		{
+				CPoint pt = m_input.PosFromChar(index + (int)node->m_col);
+				m_input.SetCaretPos(pt);
+				//int cnt = m_input.LineLength(index);
+
+				if(node->m_cnt)
+				{
+						m_input.SetSel(index + (int)node->m_col, index + (int)node->m_col + (int)node->m_cnt);
+				}
+		}
+		
+		m_input.SetFocus();
+		//m_input.Invalidate();
+	
+		return 0;
+
+		return 0;
+
 }
 
 

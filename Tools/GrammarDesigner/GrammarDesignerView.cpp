@@ -58,6 +58,7 @@ BEGIN_MESSAGE_MAP(CGrammarDesignerView, CRichEditView)
 
 
 
+		ON_COMMAND(ID_GOTO, &CGrammarDesignerView::OnGoto)
 END_MESSAGE_MAP()
 
 // CGrammarDesignerView construction/destruction
@@ -660,3 +661,95 @@ LRESULT CGrammarDesignerView::OnBuildTagCompleted(WPARAM wp, LPARAM lp)
 
 		return 0L;
 }
+
+
+
+
+class CGotoDialog : public CDialog
+{
+private:
+		enum {IDD = IDD_DIALOG_GOTO };
+public:
+		size_t			m_line_cnt;
+
+		size_t			m_goto_line;
+public:
+		CGotoDialog(size_t line_cnt, size_t goto_line) : CDialog(CGotoDialog::IDD), m_line_cnt(line_cnt) , m_goto_line(goto_line)
+		{
+
+		}
+		virtual ~CGotoDialog()
+		{
+
+		}
+
+public:
+		virtual BOOL OnInitDialog()
+		{
+				CDialog::OnInitDialog();
+				// TODO:  Add extra initialization here
+				CString str;
+
+				str.Format(TEXT("Line number (%d - %d)"), 0, m_line_cnt > 0 ? m_line_cnt - 1 : 0);
+
+				this->SetDlgItemText(IDC_STATIC_LINE, str);
+
+				str.Format(TEXT("%d"), m_goto_line);
+
+				this->SetDlgItemText(IDC_EDIT_LINE, str);
+
+				
+
+				return TRUE;  // return TRUE unless you set the focus to a control
+				// EXCEPTION: OCX Property Pages should return FALSE
+		}
+
+		void OnOK()
+		{
+				// TODO: Add your specialized code here and/or call the base class
+				CString str;
+
+				this->GetDlgItemText(IDC_EDIT_LINE, str);
+
+				if(str.IsEmpty())
+				{
+						this->MessageBox(TEXT("You must enter a numeric value"));
+						return;
+						
+				}
+				size_t line = (size_t)_wtoi((const wchar_t*)str);
+				
+				if(line >= m_line_cnt)
+				{
+						line = m_line_cnt;
+				}
+
+				m_goto_line = line;
+				CDialog::OnOK();
+		}
+
+};
+
+
+
+
+
+
+
+void CGrammarDesignerView::OnGoto()
+{
+		// TODO: Add your command handler code here
+
+		CRichEditCtrl &ctrl = this->GetRichEditCtrl();
+		
+		
+
+		CGotoDialog dlg((size_t)ctrl.GetLineCount(), (size_t)ctrl.LineFromChar(ctrl.LineIndex(-1)));
+		
+		if(dlg.DoModal() == IDOK)
+		{
+				OnLocatePos((WPARAM)dlg.m_goto_line, NULL);
+		}
+}
+
+
