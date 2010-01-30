@@ -18,11 +18,18 @@
 %token	"("		:	'"("';
 %token	")"		:	'")"';
 %token	"%"		:	'"%"';
+%token	";"		:	'";"';
 
 
 %left		"+" "-";
-%left		"*" "/";
+%left		"*" "/" "%";
 %right 	UMINUS;
+
+
+Unit	:	Unit	E ";"
+	|	E ";"
+	|	error ";"
+	;
 
 E	:	E	"+" 	E	
 	|	E	"-"	E
