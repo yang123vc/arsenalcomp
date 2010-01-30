@@ -193,7 +193,7 @@ void com_conv()
 		wtmp = AR_utf8_convto_wcs(tmp);
 		
 
-		MessageBoxW(0, wtmp, 0, 0);
+//		MessageBoxW(0, wtmp, 0, 0);
 
 		AR_DEL(tmp); AR_DEL(wtmp);
 

@@ -10,8 +10,9 @@
  * or implied warranty.
  *
  */
-#include "parser_in.h"
 #include "symbol.h"
+#include "lalr.h"
+#include "parser_in.h"
 
 
 
@@ -30,8 +31,6 @@ const struct __parser_symbol_tag	*PSR_StartSymb = NULL;
 
 
 /******************************************************************************************************************************************/
-extern void PSR_Init_LALR_Config();
-extern void PSR_UnInit_LALR_Config();
 
 void	PSR_Init()
 {

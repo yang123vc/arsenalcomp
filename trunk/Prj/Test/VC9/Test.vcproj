@@ -1033,6 +1033,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\Test\ray_test.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\Test\test.c"
 				>
 			</File>

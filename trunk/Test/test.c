@@ -59,6 +59,7 @@ extern void parser_perf_test();
 extern void lalr_test();
 
 extern void grammar_test();
+extern void ray_test();
 
 #endif
 
@@ -106,13 +107,13 @@ void AR_Test()
 		//parser_perf_test();
 		
 		//rgx_test();
-		calc_test();
+		//calc_test();
 
-		//parser_test();
+		parser_test();
 		//grammar_test();
 
 		//lalr_test();
-		
+		ray_test();
 		
 #else
 		AR_printf(L"dll version\r\n");

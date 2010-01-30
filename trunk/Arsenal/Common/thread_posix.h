@@ -15,8 +15,7 @@
 
 #include <unistd.h>
 #include <pthread.h>
-
-
+#include <sys/select.h>
 
 
 AR_NAMESPACE_BEGIN
@@ -56,11 +55,18 @@ int_t			AR_AtomicDec(volatile int_t *dest)
 
 
 
-void			AR_YiledThread()
+void			AR_YieldThread()
 {
 		pthread_yield();
 }
 
+void			AR_Sleep(size_t millisecond)
+{
+		struct  timeval tv;
+		tv.tv_sec = 0LL;
+		tv.tv_usec = (int64_t)millisecond * 1000LL;
+		select(0,NULL,NULL,NULL,&tv);
+}
 
 void			AR_InitSpinLock(arSpinLock_t *lock)
 {
@@ -90,8 +96,14 @@ void			AR_UnLockSpinLock(arSpinLock_t *lock)
 }
 
 
-/****************************************************************************SpinLock***********************************************end*/
+/**********************************************************************************************************************************end*/
 
+uint64_t		AR_GetClock_US()
+{
+		struct timeval tv;
+		gettimeofday(&tv, NULL);
+		return tv.tv_sec * 1000000LL + tv.tv_usec;
+}
 
 
 AR_NAMESPACE_END

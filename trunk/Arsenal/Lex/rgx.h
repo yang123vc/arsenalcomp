@@ -88,6 +88,7 @@ typedef enum
 {
 		RGX_BEGIN_T,
 		RGX_END_T,
+
 		RGX_CSET_T,
 
 		RGX_CAT_T,
@@ -100,6 +101,7 @@ typedef enum
 		RGX_LOOKAHEAD_T,
 		
 		RGX_FINAL_T
+
 }rgxNodeType_t;
 
 

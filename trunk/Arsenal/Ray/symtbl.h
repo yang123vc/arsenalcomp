@@ -15,10 +15,45 @@
 #define __RAY_SYMBOL_TABLE_H__
 
 #include "ray.h"
+#include "raytype.h"
+
 
 AR_NAMESPACE_BEGIN
 
 
+struct __ray_symbol_tag;
+typedef struct __ray_symbol_tag	raySymbol_t;
+
+struct __ray_symbol_block_tag;
+typedef struct __ray_symbol_block_tag	raySymbBlock_t;
+
+struct __ray_symbol_table_tag;
+typedef struct __ray_symbol_table_tag	raySymbTable_t;
+
+
+#define RAY_SYMBOL_BUCKET_SIZE			1536
+
+struct __ray_symbol_tag
+{
+		const wchar_t	*name;
+
+};
+
+struct __ray_symbol_block_tag
+{
+		raySymbol_t		*bucket[RAY_SYMBOL_BUCKET_SIZE];
+		size_t			count;
+
+		raySymbBlock_t	*prev;
+		raySymbBlock_t	*next;
+};
+
+
+struct __ray_symbol_table_tag
+{
+		raySymbBlock_t	*global;
+		raySymbBlock_t	*current;
+};
 
 
 
@@ -28,3 +63,4 @@ AR_NAMESPACE_END
 
 
 #endif
+
