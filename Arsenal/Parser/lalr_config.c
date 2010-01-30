@@ -418,8 +418,6 @@ void	PSR_UnInitConfig(lalrConfig_t *config)
 		PSR_DestroyConfigList(config->forward, false);
 		PSR_DestroyConfigList(config->backward, false);
 		PSR_UnInitSymbList(&config->follow_set);
-		
-		
 
 		AR_memset(config, 0, sizeof(*config));
 }

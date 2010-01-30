@@ -14,7 +14,6 @@
 #include "ray.h"
 
 
-
 AR_NAMESPACE_BEGIN
 
 

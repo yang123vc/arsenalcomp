@@ -12,14 +12,14 @@
  *
  */
 
-
+#include <windows.h>
 #include "lalr.h"
 
 AR_NAMESPACE_BEGIN
 
-#define LALR_DEFAULT_CONFIG_NUM			1000
-#define LALR_DEFAULT_CONFIG_NODE_NUM	1000
-#define LALR_DEFAULT_CONFIG_LIST_NUM	1000
+#define LALR_DEFAULT_CONFIG_NUM			20000
+#define LALR_DEFAULT_CONFIG_NODE_NUM	20000
+#define LALR_DEFAULT_CONFIG_LIST_NUM	20000
 /****************************************lalrConfig aux*****************************************/
 
 
@@ -73,11 +73,20 @@ static AR_INLINE void __init_config_freelist()
 
 static AR_INLINE void __uninit_config_freelist()
 {
+		uint32_t count = 0;
+
 		while(__g_free_list)
 		{
 				lalrConfig_t	*tmp = (lalrConfig_t*)__g_free_list->forward;
 				AR_DEL(__g_free_list);
 				__g_free_list = tmp;
+				count++;
+		}
+
+		{
+				wchar_t buf[1024];
+				AR_swprintf(buf, 1024, L"Total consume lalrConfig_t == %u", count);
+				AR_printf(L"%ls\r\n", buf);
 		}
 
 		AR_UnInitSpinLock(&__g_config_lock);
@@ -136,11 +145,19 @@ static AR_INLINE void __init_node_freelist()
 
 static AR_INLINE void __uninit_node_freelist()
 {
+		uint32_t count = 0;
 		while(__free_node_list)
 		{
 				lalrConfigNode_t *tmp = __free_node_list->next;
 				AR_DEL(__free_node_list);
 				__free_node_list = tmp;
+				count++;
+		}
+
+		{
+				wchar_t buf[1024];
+				AR_swprintf(buf, 1024, L"Total consume lalrConfigNode_t == %u", count);
+				AR_printf(L"%ls\r\n", buf);
 		}
 
 		AR_UnInitSpinLock(&__g_node_lock);
@@ -203,11 +220,19 @@ static AR_INLINE void __init_config_list_freelist()
 
 static AR_INLINE void __uninit_config_list_freelist()
 {
+		uint32_t count = 0;
 		while(__free_config_list)
 		{
 				lalrConfigList_t	*tmp = (lalrConfigList_t*)__free_config_list->head;
 				AR_DEL(__free_config_list);
 				__free_config_list = tmp;
+				count++;
+		}
+		
+		{
+				wchar_t buf[1024];
+				AR_swprintf(buf, 1024, L"Total consume lalrConfigList_t == %u", count);
+				AR_printf(L"%ls\r\n", buf);
 		}
 
 		AR_UnInitSpinLock(&__g_config_list_lock);

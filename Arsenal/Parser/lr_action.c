@@ -479,6 +479,7 @@ psrActionTable_t* PSR_CreateActionTable_SLR(const psrGrammar_t *grammar)
 		return tbl;
 }
 
+#if(0)
 psrActionTable_t* PSR_CreateActionTable_LALR(const psrGrammar_t *grammar)
 {
 		psrActionTable_t		*tbl;
@@ -571,6 +572,114 @@ psrActionTable_t* PSR_CreateActionTable_LALR(const psrGrammar_t *grammar)
 								}
 								
 						}
+				}
+		}
+
+		
+		PSR_DestroyState_ALL(start);
+		PSR_UnInitStateSet(&set);
+
+		for(i = 0; i < tbl->row * tbl->col; ++i)
+		{
+				if(tbl->actions[i] == NULL)
+				{
+						tbl->actions[i] = (psrAction_t*)PSR_ErrorAction;
+				}
+		}
+		__build_expected_list(tbl);
+		return tbl;
+}
+#endif
+
+
+
+psrActionTable_t* PSR_CreateActionTable_LALR(const psrGrammar_t *grammar)
+{
+		psrActionTable_t		*tbl;
+		lalrState_t				*start;
+		lalrStateSet_t			set;
+		size_t i;
+		tbl = __create_table(grammar);
+		
+		PSR_InitStateSet(&set);
+		start = PSR_Create_LALR_State(grammar);
+		PSR_CollectState(&set, start);
+		__build_goto_table(tbl, &set);
+
+		tbl->row = set.count;
+		tbl->col = tbl->term_set.count;
+
+		tbl->actions = AR_NEWARR0(psrAction_t*, tbl->row * tbl->col);
+
+
+		for(i = 0; i < tbl->row; ++i)
+		{
+				size_t k;
+				lalrState_t *state;
+				state = set.set[i];
+				
+				for(k = 0; k <	state->count; ++k)
+				{
+						const lalrConfig_t *config;
+						const psrSymb_t	  *body;
+						const psrRule_t	  *rule;
+						size_t			  rule_num;
+						psrAction_t		  record;
+						const lalrAction_t	  *action;
+						
+						action = &state->actions[k];
+
+						config = action->config;
+						rule = action->config->rule;
+						rule_num = PSR_IndexOfGrammar(grammar, rule);
+						body = PSR_IndexOfSymbList(&rule->body, config->delim);
+
+						
+						
+						AR_memset(&record, 0, sizeof(record));
+
+						record.rule_num = rule_num;
+						record.delim = config->delim;
+						record.prec = PSR_GetRulePrecAssocInfo(grammar, rule)->prec;
+						record.reduce_count = 0;
+						record.shift_to = 0;
+						record.next = NULL;
+
+
+						if(action->act_type == LALR_ACT_REDUCE || action->act_type == LALR_ACT_ACCEPT)
+						{
+								int_t idx;
+								AR_ASSERT(body == NULL && action->to == NULL);
+								
+
+								record.reduce_count = rule->body.count;
+								record.type = action->act_type == LALR_ACT_REDUCE ? PSR_REDUCE : PSR_ACCEPT;
+								
+								idx = PSR_FindFromSymbList(&tbl->term_set, action->symb);
+								AR_ASSERT(idx != -1);
+
+								__insert_action_to_action_list(&tbl->actions[AR_TBL_IDX_R(i,idx, tbl->col)], &record, PSR_GetTermSymbInfo(grammar,action->symb));
+
+
+						}else if(action->act_type == LALR_ACT_SHIFT && action->symb->type == PSR_TERM)
+						{
+								int_t trans_to_idx,idx;
+								
+								AR_ASSERT(action->config != NULL && action->to != NULL && action->symb != NULL);
+								
+								AR_ASSERT(PSR_CompSymb(body, action->symb) == 0);
+
+								record.type = PSR_SHIFT;
+
+
+								trans_to_idx = PSR_IndexOfStateSet(&set, action->to);
+								AR_ASSERT(trans_to_idx != -1);
+								record.shift_to = (size_t)trans_to_idx;
+								idx = PSR_FindFromSymbList(&tbl->term_set, action->symb);
+								__insert_action_to_action_list(&tbl->actions[AR_TBL_IDX_R(i,idx, tbl->col)], &record, PSR_GetTermSymbInfo(grammar,action->symb));
+								
+						}
+
 				}
 		}
 
