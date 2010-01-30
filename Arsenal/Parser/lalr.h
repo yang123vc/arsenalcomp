@@ -83,6 +83,9 @@ void PSR_PrintConfig(const lalrConfig_t *config, const psrGrammar_t *gmr, arStri
 void PSR_PrintConfigList(const lalrConfigList_t *lst, const psrGrammar_t *gmr, arString_t *str);
 
 
+void PSR_Init_LALR_Config();
+void PSR_UnInit_LALR_Config();
+
 /**************************************************LALR State***************************************/
 typedef struct	__lalr_action_tag			lalrAction_t;
 typedef struct	__lalr_state_tag			lalrState_t;

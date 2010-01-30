@@ -35,7 +35,7 @@ void*	AR_malloc(size_t nbytes)
 				ptr = malloc(nbytes);
 		}while(ptr == NULL);
 		*/
-		while((ptr = malloc(nbytes)) == NULL)AR_YiledThread();
+		while((ptr = malloc(nbytes)) == NULL)AR_YieldThread();
 
 		return ptr;
 }
@@ -48,7 +48,7 @@ void*	AR_calloc(size_t num, size_t size)
 			ptr = calloc(num , size);
 		}while(ptr == NULL);
 		*/
-		while((ptr = calloc(num,size)) == NULL)AR_YiledThread();
+		while((ptr = calloc(num,size)) == NULL)AR_YieldThread();
 		return ptr;
 }		
 
@@ -60,7 +60,7 @@ void*	AR_realloc(void *block, size_t nbytes)
 				ptr = realloc(block, nbytes);		
 		}while(ptr == NULL);
 		*/
-		while((ptr = realloc(block, nbytes)) == NULL)AR_YiledThread();
+		while((ptr = realloc(block, nbytes)) == NULL)AR_YieldThread();
 		return ptr;
 }
 

@@ -384,7 +384,11 @@ void			AR_UnInitSpinLock(arSpinLock_t *lock);
 void			AR_LockSpinLock(arSpinLock_t *lock);
 void			AR_UnLockSpinLock(arSpinLock_t *lock);
 
-void			AR_YiledThread();
+void			AR_YieldThread();
+void			AR_Sleep(size_t millisecond);
+
+uint64_t		AR_GetClock_US();
+#define			AR_GetClock_MS()		(AR_GetClock_US() / 1000LL)
 
 /*******************************************************BitMark****************************************************************/
 

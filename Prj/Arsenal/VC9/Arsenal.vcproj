@@ -1079,19 +1079,27 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\Arsenal\Ray\rayparser.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Ray\rayparser.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Ray\raytype.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Ray\raytype.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\Arsenal\Ray\symtbl.c"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\Arsenal\Ray\symtbl.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Ray\type.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Ray\type.h"
 				>
 			</File>
 		</Filter>

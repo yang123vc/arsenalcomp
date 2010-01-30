@@ -20,6 +20,8 @@
 #endif
 
 #include <windows.h>
+#include <sys/timeb.h>
+
 
 #define COMP_EXCH(_dest, _exch, _comp_val)	InterlockedCompareExchange((volatile LONG*)(_dest), (LONG )(_exch), (LONG)(_comp_val))
 
@@ -43,12 +45,9 @@
 
 
 
-
-
-
-
-
 AR_NAMESPACE_BEGIN
+
+
 
 void			AR_InitThread()
 {
@@ -62,10 +61,16 @@ void			AR_UnInitThread()
 
 }
 
-void			AR_YiledThread()
+void			AR_YieldThread()
 {
 		__Yield();
 }
+
+void			AR_Sleep(size_t millisecond)
+{
+		Sleep((DWORD)millisecond);
+}
+
 /*
 uint_t			AR_CompExchange(volatile uint_t *dest, uint_t exch, uint_t compval)
 {
@@ -115,7 +120,7 @@ void			AR_LockSpinLock(arSpinLock_t *lock)
 		{
 				if(++count > AR_MAXSPIN_COUNT)
 				{
-						AR_YiledThread();
+						AR_YieldThread();
 						count = 0;
 				}
 		}
@@ -130,10 +135,19 @@ void			AR_UnLockSpinLock(arSpinLock_t *lock)
 		AR_ASSERT(lock != NULL && *lock == LOCK_STATE);
 
 		COMP_EXCH(lock, UNLOCK_STATE, LOCK_STATE);
-
-
-
 }
+
+
+
+uint64_t		AR_GetClock_US()
+{
+		struct __timeb64  tb;
+		_ftime64(&tb);
+		return (tb.time * 1000LL + tb.millitm) * 1000LL;
+}
+
+
+
 
 
 /****************************************************************************SpinLock***********************************************end*/

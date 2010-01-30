@@ -7,9 +7,9 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="LibDebug">
-				<Option output="../../binary/lib/Debug/libArsenal" prefix_auto="1" extension_auto="1" />
+				<Option output="../../../binary/lib/Debug/libArsenal" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="../../Temp/lib/Debug" />
+				<Option object_output="../../../Temp/lib/Debug" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -20,9 +20,9 @@
 				</Compiler>
 			</Target>
 			<Target title="LibRelease">
-				<Option output="../../binary/lib/Release/libArsenal" prefix_auto="1" extension_auto="1" />
+				<Option output="../../../binary/lib/Release/libArsenal" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="../../Temp/lib/Release" />
+				<Option object_output="../../../Temp/lib/Release" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -40,8 +40,8 @@
 				</Linker>
 			</Target>
 			<Target title="DLLDebug">
-				<Option output="../../binary/dll/Debug/Arsenal" prefix_auto="1" extension_auto="1" />
-				<Option object_output="../../Temp/dll/Debug" />
+				<Option output="../../../binary/dll/Debug/Arsenal" prefix_auto="1" extension_auto="1" />
+				<Option object_output="../../../Temp/dll/Debug" />
 				<Option type="3" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -53,8 +53,8 @@
 				</Compiler>
 			</Target>
 			<Target title="DLLRelease">
-				<Option output="../../binary/dll/Release/Arsenal" prefix_auto="1" extension_auto="1" />
-				<Option object_output="../../Temp/dll/Release" />
+				<Option output="../../../binary/dll/Release/Arsenal" prefix_auto="1" extension_auto="1" />
+				<Option object_output="../../../Temp/dll/Release" />
 				<Option type="3" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -72,6 +72,26 @@
 					<Add option="-s" />
 				</Linker>
 			</Target>
+			<Target title="ExecDebug">
+				<Option output="../../../binary/exec/Debug/Arsenal" prefix_auto="1" extension_auto="1" />
+				<Option object_output="../../../Temp/exec/Debug" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-Wextra" />
+					<Add option="-DDEBUG" />
+				</Compiler>
+			</Target>
+			<Target title="ExecRelease">
+				<Option output="../../../binary/exec/Release/Arsenal" prefix_auto="1" extension_auto="1" />
+				<Option object_output="../../../Temp/exec/Release" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
+				<Compiler>
+					<Add option="-DNDEBUG" />
+				</Compiler>
+			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
@@ -83,146 +103,155 @@
 		<Linker>
 			<Add library="pthread" />
 		</Linker>
-		<Unit filename="../../Arsenal/Arsenal.c">
+		<Unit filename="../../../Arsenal/Arsenal.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../Arsenal/Arsenal.h">
+		<Unit filename="../../../Arsenal/Arsenal.h" />
+		<Unit filename="../../../Arsenal/Common/algo.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../Arsenal/Common/algo.c">
+		<Unit filename="../../../Arsenal/Common/common.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../Arsenal/Common/common.c">
+		<Unit filename="../../../Arsenal/Common/common.h" />
+		<Unit filename="../../../Arsenal/Common/config.h" />
+		<Unit filename="../../../Arsenal/Common/crtstr.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../Arsenal/Common/common.h">
+		<Unit filename="../../../Arsenal/Common/memory.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../Arsenal/Common/config.h">
+		<Unit filename="../../../Arsenal/Common/platform.h" />
+		<Unit filename="../../../Arsenal/Common/random.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../Arsenal/Common/crtstr.c">
+		<Unit filename="../../../Arsenal/Common/strconv.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../Arsenal/Common/memory.c">
+		<Unit filename="../../../Arsenal/Common/string.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../Arsenal/Common/platform.h">
+		<Unit filename="../../../Arsenal/Common/strtable.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../Arsenal/Common/random.c">
+		<Unit filename="../../../Arsenal/Common/thread.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../Arsenal/Common/strconv.c">
+		<Unit filename="../../../Arsenal/Common/thread_posix.h" />
+		<Unit filename="../../../Arsenal/Common/thread_win.h" />
+		<Unit filename="../../../Arsenal/Lex/lex.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../Arsenal/Common/string.c">
+		<Unit filename="../../../Arsenal/Lex/lex.h" />
+		<Unit filename="../../../Arsenal/Lex/match.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../Arsenal/Common/strtable.c">
+		<Unit filename="../../../Arsenal/Lex/match.h" />
+		<Unit filename="../../../Arsenal/Lex/rgx.h" />
+		<Unit filename="../../../Arsenal/Lex/rgx_compile.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../Arsenal/Common/thread.c">
+		<Unit filename="../../../Arsenal/Lex/rgx_exec.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../Arsenal/Common/thread_posix.h">
+		<Unit filename="../../../Arsenal/Lex/rgx_misc.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../Arsenal/Common/thread_win.h">
+		<Unit filename="../../../Arsenal/Lex/rgx_node.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../Arsenal/Lex/lex.c">
+		<Unit filename="../../../Arsenal/Lex/rgx_parser.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../Arsenal/Lex/lex.h">
+		<Unit filename="../../../Arsenal/Parser/grammar.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../Arsenal/Lex/match.c">
+		<Unit filename="../../../Arsenal/Parser/grammar.h" />
+		<Unit filename="../../../Arsenal/Parser/lalr.h" />
+		<Unit filename="../../../Arsenal/Parser/lalr_build.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../Arsenal/Lex/match.h">
+		<Unit filename="../../../Arsenal/Parser/lalr_config.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../Arsenal/Lex/rgx.h">
+		<Unit filename="../../../Arsenal/Parser/lalr_config_aux.h" />
+		<Unit filename="../../../Arsenal/Parser/lalr_state.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../Arsenal/Lex/rgx_compile.c">
+		<Unit filename="../../../Arsenal/Parser/lr_action.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../Arsenal/Lex/rgx_exec.c">
+		<Unit filename="../../../Arsenal/Parser/lr_action.h" />
+		<Unit filename="../../../Arsenal/Parser/parser.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../Arsenal/Lex/rgx_misc.c">
+		<Unit filename="../../../Arsenal/Parser/parser.h" />
+		<Unit filename="../../../Arsenal/Parser/parser_aux.h" />
+		<Unit filename="../../../Arsenal/Parser/parser_in.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../Arsenal/Lex/rgx_node.c">
+		<Unit filename="../../../Arsenal/Parser/parser_in.h" />
+		<Unit filename="../../../Arsenal/Parser/report.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../Arsenal/Lex/rgx_parser.c">
+		<Unit filename="../../../Arsenal/Parser/symbol.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../Arsenal/Parser/grammar.c">
+		<Unit filename="../../../Arsenal/Parser/symbol.h" />
+		<Unit filename="../../../Arsenal/Ray/ray.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../Arsenal/Parser/grammar.h">
+		<Unit filename="../../../Arsenal/Ray/ray.h" />
+		<Unit filename="../../../Arsenal/Ray/rayparser.c">
+			<Option compilerVar="CC" />
+			<Option target="LibDebug" />
+			<Option target="LibRelease" />
+			<Option target="DLLDebug" />
+			<Option target="DLLRelease" />
+			<Option target="ExecRelease" />
+		</Unit>
+		<Unit filename="../../../Arsenal/Ray/rayparser.h">
+			<Option target="LibDebug" />
+			<Option target="LibRelease" />
+			<Option target="DLLDebug" />
+			<Option target="DLLRelease" />
+			<Option target="ExecRelease" />
+		</Unit>
+		<Unit filename="../../../Arsenal/Ray/raytype.c">
+			<Option compilerVar="CC" />
+			<Option target="LibDebug" />
+			<Option target="LibRelease" />
+			<Option target="DLLDebug" />
+			<Option target="DLLRelease" />
+			<Option target="ExecRelease" />
+		</Unit>
+		<Unit filename="../../../Arsenal/Ray/raytype.h" />
+		<Unit filename="../../../Arsenal/Ray/symtbl.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../Arsenal/Parser/lr_action.c">
+		<Unit filename="../../../Arsenal/Ray/symtbl.h" />
+		<Unit filename="../../../Arsenal/Tools/grammar_config.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../Arsenal/Parser/lr_action.h">
-			<Option compilerVar="CC" />
+		<Unit filename="../../../Arsenal/Tools/grammar_config.h" />
+		<Unit filename="../../../Arsenal/Tools/tools.h" />
+		<Unit filename="main.cpp">
+			<Option target="ExecDebug" />
+			<Option target="ExecRelease" />
 		</Unit>
-		<Unit filename="../../Arsenal/Parser/lr_dfa.c">
+		<Unit filename="parser_test.c">
 			<Option compilerVar="CC" />
+			<Option target="ExecDebug" />
+			<Option target="ExecRelease" />
 		</Unit>
-		<Unit filename="../../Arsenal/Parser/lr_dfa.h">
+		<Unit filename="test.c">
 			<Option compilerVar="CC" />
+			<Option target="ExecDebug" />
+			<Option target="ExecRelease" />
 		</Unit>
-		<Unit filename="../../Arsenal/Parser/lr_dfa_aux.h">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../../Arsenal/Parser/lr_item.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../../Arsenal/Parser/lr_item.h">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../../Arsenal/Parser/parser.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../../Arsenal/Parser/parser.h">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../../Arsenal/Parser/parser_aux.h">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../../Arsenal/Parser/parser_in.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../../Arsenal/Parser/parser_in.h">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../../Arsenal/Parser/symbol.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../../Arsenal/Parser/symbol.h">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../../Arsenal/Ray/ray.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../../Arsenal/Ray/ray.h">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../../Arsenal/Tools/grammar_config.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../../Arsenal/Tools/grammar_config.h">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../../Arsenal/Tools/tools.h">
-			<Option compilerVar="CC" />
+		<Unit filename="test.h">
+			<Option target="ExecDebug" />
+			<Option target="ExecRelease" />
 		</Unit>
 		<Extensions>
 			<envvars />

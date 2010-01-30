@@ -1,34 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
-	<ActiveTarget name="DLLDebug" />
-	<File name="../../Arsenal/Arsenal.c" open="0" top="0" tabpos="3">
-		<Cursor position="821" topLine="11" />
+	<ActiveTarget name="ExecDebug" />
+	<File name="../../../Arsenal/Arsenal.c" open="0" top="0" tabpos="0">
+		<Cursor position="485" topLine="0" />
 	</File>
-	<File name="../../Arsenal/Arsenal.h" open="0" top="0" tabpos="6">
-		<Cursor position="535" topLine="5" />
+	<File name="../../../Arsenal/Common/crtstr.c" open="1" top="0" tabpos="5">
+		<Cursor position="19855" topLine="982" />
 	</File>
-	<File name="../../Arsenal/Common/common.c" open="0" top="0" tabpos="5">
-		<Cursor position="1298" topLine="32" />
-	</File>
-	<File name="../../Arsenal/Common/common.h" open="0" top="0" tabpos="4">
-		<Cursor position="10484" topLine="356" />
-	</File>
-	<File name="../../Arsenal/Common/config.h" open="1" top="1" tabpos="3">
-		<Cursor position="5172" topLine="251" />
-	</File>
-	<File name="../../Arsenal/Common/crtstr.c" open="0" top="0" tabpos="2">
-		<Cursor position="20068" topLine="983" />
-	</File>
-	<File name="../../Arsenal/Common/platform.h" open="0" top="0" tabpos="8">
-		<Cursor position="1546" topLine="33" />
-	</File>
-	<File name="../../Arsenal/Common/thread_posix.h" open="1" top="0" tabpos="2">
-		<Cursor position="516" topLine="0" />
-	</File>
-	<File name="../../Arsenal/Common/thread_win.h" open="1" top="0" tabpos="1">
+	<File name="../../../Arsenal/Common/string.c" open="1" top="0" tabpos="7">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="../../Arsenal/Tools/grammar_config.c" open="0" top="0" tabpos="1">
-		<Cursor position="27885" topLine="1203" />
+	<File name="../../../Arsenal/Common/thread.c" open="1" top="0" tabpos="6">
+		<Cursor position="591" topLine="7" />
+	</File>
+	<File name="../../../Arsenal/Common/thread_posix.h" open="1" top="0" tabpos="4">
+		<Cursor position="497" topLine="0" />
+	</File>
+	<File name="main.cpp" open="1" top="0" tabpos="1">
+		<Cursor position="46" topLine="39" />
+	</File>
+	<File name="parser_test.c" open="1" top="0" tabpos="8">
+		<Cursor position="4090" topLine="190" />
+	</File>
+	<File name="test.c" open="1" top="1" tabpos="2">
+		<Cursor position="99" topLine="0" />
+	</File>
+	<File name="test.h" open="1" top="0" tabpos="3">
+		<Cursor position="99" topLine="0" />
 	</File>
 </CodeBlocks_layout_file>

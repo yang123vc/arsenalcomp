@@ -12,14 +12,14 @@
  *
  */
 
-#include <windows.h>
+
 #include "lalr.h"
 
 AR_NAMESPACE_BEGIN
 
-#define LALR_DEFAULT_CONFIG_NUM			20000
-#define LALR_DEFAULT_CONFIG_NODE_NUM	20000
-#define LALR_DEFAULT_CONFIG_LIST_NUM	20000
+#define LALR_DEFAULT_CONFIG_NUM			2000
+#define LALR_DEFAULT_CONFIG_NODE_NUM	2000
+#define LALR_DEFAULT_CONFIG_LIST_NUM	2000
 /****************************************lalrConfig aux*****************************************/
 
 

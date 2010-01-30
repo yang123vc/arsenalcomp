@@ -1,26 +1,15 @@
 
+#include <locale.h>
 #include "test.h"
 
 
-#include "../Arsenal/Parser/grammar.h"
-#include "../Arsenal/Parser/parser.h"
 
-
-
-
-#include "../Arsenal/Tools/tools.h"
-
-//#include "gmr_config.h"
-
-#include <locale.h>
-
-#if defined(__LIB)
 
 AR_NAMESPACE_BEGIN
 
 
 #define LOAD_TXT_MAX_BUF  (1024*1024 * 5)
-static const wchar_t* __load_txt(const wchar_t *path)
+static const wchar_t* __load_txt(const char *path)
 {
 		FILE *pf;
 		byte_t	*buf;
@@ -30,10 +19,10 @@ static const wchar_t* __load_txt(const wchar_t *path)
 
 		AR_ASSERT(path != NULL);
 
-		
+
 		//pf = fopen("..\\..\\..\\misc\\book1.gmr", "r");
 
-		pf = _wfopen(path, L"r");
+		pf = fopen(path, "r");
 
 		AR_ASSERT(pf != NULL);
 		rn = fread((void*)buf, 1, LOAD_TXT_MAX_BUF, pf);
@@ -45,7 +34,7 @@ static const wchar_t* __load_txt(const wchar_t *path)
 		AR_ASSERT(buf[0] == 0xEF && buf[1] == 0xBB && buf[2] == 0xBF);
 
 		//printf("%s\r\n", buf + 3);
-		
+
 
 		ret = AR_utf8_convto_wcs((const char*)(buf + 3));
 
@@ -68,7 +57,7 @@ void print_grammar(const psrGrammar_t *gmr)
 		PSR_ReportLeftRecursion(gmr, str);
 
 		AR_printf(L"%ls\r\n", AR_GetStrString(str));
-		
+
 
 		AR_DestroyString(str);
 }
@@ -83,11 +72,11 @@ void print_first_follow(const psrGrammar_t *gmr)
 		PSR_InitSymbMap(&follow);
 
 		str = AR_CreateString();
-				
-		
+
+
 		PSR_CalcFirstSet(gmr, &first);
 		PSR_CalcFollowSet(gmr, &follow, &first);
-		
+
 		AR_AppendString(str, L"First Set:\r\n");
 		PSR_PrintSymbolMap(&first, str);
 		AR_AppendString(str, L"----------------------------------------\r\n");
@@ -102,7 +91,7 @@ void print_first_follow(const psrGrammar_t *gmr)
 
 		AR_printf(L"%ls\r\n", AR_GetStrString(str));
 		AR_DestroyString(str);
-		
+
 }
 
 
@@ -118,7 +107,7 @@ void print_action_table(const parser_t *psr)
 
 		AR_printf(L"%ls\r\n", AR_GetStrString(str));
 
-		
+
 		AR_DestroyString(str);
 }
 
@@ -133,7 +122,7 @@ void print_conflict(const parser_t *psr)
 
 		AR_printf(L"%ls\r\n", AR_GetStrString(str));
 
-		
+
 		AR_DestroyString(str);
 }
 
@@ -143,9 +132,9 @@ void print_conflict(const parser_t *psr)
 
 
 
-#define DEF_PAT_PATH  L"..\\..\\..\\misc\\test.gmr"
+#define DEF_PAT_PATH  "../../../misc/test.gmr"
 
-#define DEF_SOUR_PATH  L"..\\..\\..\\misc\\book1.txt"
+#define DEF_SOUR_PATH  "../../../misc/book1.txt"
 
 
 
@@ -157,11 +146,11 @@ void parse_code(const cfgConfig_t *cfg, const wchar_t *sources)
 		lexToken_t tok;
 		size_t	i;
 		wchar_t buf[1024];
-		
-		AR_ASSERT(cfg != NULL && sources != NULL);
-		
 
-		
+		AR_ASSERT(cfg != NULL && sources != NULL);
+
+
+
 		lex = LEX_Create(NULL);
 
 		for(i = 0; i < cfg->name_cnt; ++i)
@@ -191,7 +180,7 @@ void parse_code(const cfgConfig_t *cfg, const wchar_t *sources)
 		LEX_InitMatch(&match, sources);
 
 		{
-				
+
 				size_t tok_cnt = 0;
 				uint64_t beg, end;
 
@@ -200,7 +189,7 @@ void parse_code(const cfgConfig_t *cfg, const wchar_t *sources)
 				//beg = GetTickCount();
 
 
-				
+
 				while(LEX_Match(lex, &match, &tok))
 				{
 						/*
@@ -226,7 +215,7 @@ void parse_code(const cfgConfig_t *cfg, const wchar_t *sources)
 
 				end = AR_GetClock_MS();
 
-				AR_printf(L"elapsed == %I64d\r\n", end - beg);
+				AR_printf(L"elapsed == %lld\r\n", end - beg);
 		}
 
 		LEX_UnInitMatch(&match);
@@ -234,6 +223,7 @@ void parse_code(const cfgConfig_t *cfg, const wchar_t *sources)
 
 		LEX_Destroy(lex);
 
+        AR_printf(L"\r\n\r\n");
 
 }
 
@@ -281,11 +271,11 @@ static cfgReport_t __g_report = { report_func, NULL};
 
 void parser_test()
 {
-		
+
 		const wchar_t	*gmr_txt;
 		cfgConfig_t		*cfg;
 		gmr_txt = __load_txt(DEF_PAT_PATH);
-		
+
 		if(gmr_txt == NULL)
 		{
 				AR_abort();
@@ -297,15 +287,15 @@ void parser_test()
 
 
 		cfg = CFG_CollectGrammarConfig(gmr_txt, &__g_report);
-		
-		
+
+
 		if(cfg)
 		{
-				
+
 
 #if(1)
 				size_t i;
-				
+
 				AR_printf(L"----------------------\r\n");
 				for(i = 0; i < cfg->name_cnt; ++i)
 				{
@@ -316,7 +306,7 @@ void parser_test()
 								AR_abort();
 						}
 */
-						
+
 				}
 				AR_printf(L"----------------------\r\n");
 				for(i = 0; i < cfg->tok_cnt; ++i)
@@ -335,7 +325,7 @@ void parser_test()
 		*/
 				}
 				AR_printf(L"----------------------\r\n");
-				
+
 				for(i = 0; i < cfg->prec_cnt; ++i)
 				{
 						size_t k;
@@ -359,13 +349,13 @@ void parser_test()
 								,cfg->rule[i].line
 								);
 				}
-				
+
 				AR_printf(L"----------------------\r\n");
-		
+
 		//		arString_t *str = NULL;
 		//		CFG_ConfigToCode(cfg, str);
 
-#endif			
+#endif
 				if(!cfg->has_error)
 				{
 						const wchar_t *input = __load_txt(DEF_SOUR_PATH);
@@ -392,7 +382,7 @@ void parser_perf_test()
 		const wchar_t	*gmr_txt, *src_txt;
 		cfgConfig_t		*cfg;
 		gmr_txt = __load_txt(DEF_PAT_PATH);
-		
+
 		if(gmr_txt == NULL)
 		{
 				AR_abort();
@@ -401,7 +391,7 @@ void parser_perf_test()
 		AR_printf(L"%ls\r\n", gmr_txt);
 		src_txt = __load_txt(DEF_SOUR_PATH);
 		getchar();
-		
+
 		for(i = 0; i < 5; ++i)
 		{
 				//DWORD beg, end;
@@ -415,18 +405,18 @@ void parser_perf_test()
 				//parse_code(cfg, src_txt);
 
 				if(cfg)CFG_DestroyGrammarConfig(cfg);
-				
+
 				//end = GetTickCount();
 				end = AR_GetClock_MS();
 
 				AR_printf(L"parser elapsed == %d\r\n", end - beg);
-				
+
 
 				//Sleep(500);
 
 				system("cls");
 		}
-		
+
 		AR_DEL(src_txt);
 		AR_DEL(gmr_txt);
 }
@@ -434,7 +424,7 @@ void parser_perf_test()
 
 AR_NAMESPACE_END
 
-#endif
+
 
 
 
