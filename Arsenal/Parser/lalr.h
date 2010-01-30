@@ -148,6 +148,7 @@ lalrState_t*   PSR_GetTransTo(lalrState_t *state, const psrSymb_t *symb);
 
 /*******************************************************************************************************/
 
+lalrState_t*	PSR_Create_LR0_State(const psrGrammar_t *grammar);
 lalrState_t*	PSR_Create_LALR_State(const psrGrammar_t *grammar);
 
 

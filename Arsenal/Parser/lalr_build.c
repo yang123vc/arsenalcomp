@@ -19,11 +19,11 @@
 AR_NAMESPACE_BEGIN
 
 
-static	void	__build_goto(lalrState_t *start, const psrGrammar_t *grammar, lalrStateSet_t *set, const psrSymbMap_t *first_set);
-static	void	__calc_lr0_closure(lalrConfigList_t *all_config, const psrGrammar_t *grammar, const psrSymbMap_t *first_set);
-static	lalrState_t* __build_state(lalrConfigList_t *basis, const psrGrammar_t *grammar, lalrStateSet_t *set, const psrSymbMap_t *first_set);
+static	void	__build_goto(lalrState_t *start, const psrGrammar_t *grammar, lalrStateSet_t *set, const psrSymbMap_t *first_set, bool_t lr0);
+static	void	__calc_lr0_closure(lalrConfigList_t *all_config, const psrGrammar_t *grammar, const psrSymbMap_t *first_set, bool_t lr0);
+static	lalrState_t* __build_state(lalrConfigList_t *basis, const psrGrammar_t *grammar, lalrStateSet_t *set, const psrSymbMap_t *first_set, bool_t lr0);
 
-static	void	__build_goto(lalrState_t *start, const psrGrammar_t *grammar, lalrStateSet_t *set, const psrSymbMap_t *first_set)
+static	void	__build_goto(lalrState_t *start, const psrGrammar_t *grammar, lalrStateSet_t *set, const psrSymbMap_t *first_set, bool_t lr0)
 {
 		lalrConfigNode_t		*node;
 		AR_ASSERT(start != NULL && grammar != NULL && set != NULL && first_set != NULL);
@@ -72,20 +72,23 @@ static	void	__build_goto(lalrState_t *start, const psrGrammar_t *grammar, lalrSt
 						{
 								new_config = PSR_InsertToConfigListByValue(goto_list, inner_node->config->rule, inner_node->config->delim + 1);
 						}
-
-						PSR_InsertToConfigList(new_config->backward, inner_node->config);
+						
+						if(!lr0)
+						{
+								PSR_InsertToConfigList(new_config->backward, inner_node->config);
+						}
 				}
 
-				new_state = __build_state(goto_list, grammar, set, first_set);
+				new_state = __build_state(goto_list, grammar, set, first_set, lr0);
 				
 				AR_ASSERT(new_state != NULL);
 				
 				PSR_InsertAction(start, new_state, symb, node->config);
 		}
-
 }
 
-static	void	__calc_lr0_closure(lalrConfigList_t *all_config, const psrGrammar_t *grammar, const psrSymbMap_t *first_set)
+
+static	void	__calc_lr0_closure(lalrConfigList_t *all_config, const psrGrammar_t *grammar, const psrSymbMap_t *first_set, bool_t lr0)
 {
 
 		lalrConfigNode_t		*node;
@@ -126,7 +129,8 @@ static	void	__calc_lr0_closure(lalrConfigList_t *all_config, const psrGrammar_t 
 										}
 										AR_ASSERT(new_config != NULL);
 
-
+										/*lr0模式，不计算传播链以及follow set*/
+										if(lr0)continue;
 
 										for(k = delim + 1; k < rule->body.count; ++k)
 										{
@@ -167,7 +171,7 @@ static	void	__calc_lr0_closure(lalrConfigList_t *all_config, const psrGrammar_t 
 
 }
 
-static	lalrState_t* __build_state(lalrConfigList_t *basis, const psrGrammar_t *grammar, lalrStateSet_t *set, const psrSymbMap_t *first_set)
+static	lalrState_t* __build_state(lalrConfigList_t *basis, const psrGrammar_t *grammar, lalrStateSet_t *set, const psrSymbMap_t *first_set, bool_t lr0)
 {
 		lalrState_t		*new_state;
 		AR_ASSERT(basis != NULL && basis->count > 0 && grammar != NULL && set != NULL && first_set != NULL);
@@ -177,11 +181,14 @@ static	lalrState_t* __build_state(lalrConfigList_t *basis, const psrGrammar_t *g
 
 		if(new_state)
 		{
-				lalrConfigNode_t *l, *r;
-
-				for(l = basis->head, r = new_state->basis->head; l != NULL && r != NULL; l = l->next, r = r->next)
+				if(!lr0)
 				{
-						PSR_UnionConfigList(r->config->backward, l->config->backward);
+						lalrConfigNode_t *l, *r;
+
+						for(l = basis->head, r = new_state->basis->head; l != NULL && r != NULL; l = l->next, r = r->next)
+						{
+								PSR_UnionConfigList(r->config->backward, l->config->backward);
+						}
 				}
 				
 				PSR_DestroyConfigList(basis, true);
@@ -192,7 +199,7 @@ static	lalrState_t* __build_state(lalrConfigList_t *basis, const psrGrammar_t *g
 				all_config = PSR_CreateConfigList();
 				PSR_CopyConfigList(all_config, basis);
 
-				__calc_lr0_closure(all_config, grammar, first_set);
+				__calc_lr0_closure(all_config, grammar, first_set, lr0);
 				PSR_SortConfigList(all_config);
 				
 				new_state = PSR_CreateState();
@@ -200,11 +207,90 @@ static	lalrState_t* __build_state(lalrConfigList_t *basis, const psrGrammar_t *g
 				new_state->all_config = all_config;
 				PSR_InsertToStateSet(set, new_state);
 				
-				__build_goto(new_state, grammar, set, first_set);
+				__build_goto(new_state, grammar, set, first_set, lr0);
 		}
 
 		return new_state;
 }
+
+
+static void __build_slr_actions(lalrStateSet_t *set, const psrSymbMap_t *follow_set)
+{
+		size_t i;
+		
+		
+		AR_ASSERT(set != NULL && set->count > 0 && follow_set != NULL);
+
+		
+		for(i = 0; i < set->count; ++i)
+		{
+				lalrConfigNode_t *node;
+				lalrState_t *state = set->set[i];
+
+				for(node = state->all_config->head; node != NULL; node = node->next)
+				{
+						if(node->config->delim == node->config->rule->body.count)
+						{
+								size_t x;
+								const psrSymbList_t *lst = &(PSR_GetSymbolFromSymbMap(follow_set, node->config->rule->head)->lst);
+
+								for(x = 0; x < lst->count; ++x)
+								{
+										
+										lalrAction_t *action = PSR_InsertAction(state, NULL, lst->lst[x], node->config);
+
+										if(PSR_CompSymb(node->config->rule->head, PSR_StartSymb) == 0)
+										{
+												action->act_type = LALR_ACT_ACCEPT;
+										}
+								}
+						}
+				}
+		}
+
+		
+}
+
+
+
+lalrState_t*	PSR_Create_LR0_State(const psrGrammar_t *grammar)
+{
+		psrSymbMap_t			first_set, follow_set;
+		lalrState_t				*start;
+		lalrConfigList_t		*basis;
+		lalrConfig_t			*first_cfg;
+		lalrStateSet_t			set;
+		AR_ASSERT(grammar != NULL);
+		
+		
+		PSR_InitSymbMap(&first_set);
+		PSR_InitSymbMap(&follow_set);
+		PSR_CalcFirstSet(grammar, &first_set);
+		PSR_CalcFollowSet(grammar, &follow_set, &first_set);
+
+		PSR_InitStateSet(&set);
+
+		basis = PSR_CreateConfigList();
+
+		first_cfg = PSR_InsertToConfigListByValue(basis, PSR_GetStartRule(grammar), 0);
+		
+		PSR_InsertToSymbList(&first_cfg->follow_set, PSR_EOISymb);
+
+		start = __build_state(basis, grammar, &set, &first_set, true);
+
+		__build_slr_actions(&set, &follow_set);
+
+		PSR_UnInitSymbMap(&follow_set);
+		PSR_UnInitSymbMap(&first_set);
+		PSR_UnInitStateSet(&set);
+
+		return start;
+}
+
+
+
+
+
 
 
 static void __build_propagation_links(lalrStateSet_t *set)
@@ -311,10 +397,7 @@ static void __build_actions(lalrStateSet_t *set)
 						}
 				}
 		}
-
-
 }
-
 
 
 lalrState_t*	PSR_Create_LALR_State(const psrGrammar_t *grammar)
@@ -338,7 +421,7 @@ lalrState_t*	PSR_Create_LALR_State(const psrGrammar_t *grammar)
 		
 		PSR_InsertToSymbList(&first_cfg->follow_set, PSR_EOISymb);
 
-		start = __build_state(basis, grammar, &set, &first_set);
+		start = __build_state(basis, grammar, &set, &first_set, false);
 
 		__build_propagation_links(&set);
 		__build_actions(&set);
