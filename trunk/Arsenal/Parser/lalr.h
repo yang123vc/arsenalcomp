@@ -99,11 +99,8 @@ struct __lalr_action_tag
 {
 		lalrActionType_t				act_type;
 		const psrSymb_t					*symb;
-
-		union{
-				lalrState_t				*to;
-				const	psrRule_t*		*reduce_rule;
-		};
+		lalrState_t						*to;
+		const lalrConfig_t				*config;
 };
 
 
@@ -121,8 +118,8 @@ struct __lalr_state_tag
 lalrState_t*	PSR_CreateState();
 void			PSR_DestroyState(lalrState_t *state);
 
-lalrAction_t*	PSR_InsertShiftAction(lalrState_t *state, lalrState_t *to, const psrSymb_t *symb);
-lalrAction_t*	PSR_InsertReduceAction(lalrState_t *state, const psrRule_t *rule, const psrSymb_t *symb);
+lalrAction_t*	PSR_InsertAction(lalrState_t *state, lalrState_t *to, const psrSymb_t *symb, const lalrConfig_t *config);
+
 
 void			PSR_DestroyState_ALL(lalrState_t *state);
 

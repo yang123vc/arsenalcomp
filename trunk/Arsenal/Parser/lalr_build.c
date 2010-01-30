@@ -80,8 +80,7 @@ static	void	__build_goto(lalrState_t *start, const psrGrammar_t *grammar, lalrSt
 				
 				AR_ASSERT(new_state != NULL);
 				
-				PSR_InsertShiftAction(start, new_state, symb);
-
+				PSR_InsertAction(start, new_state, symb, node->config);
 		}
 
 }
@@ -302,7 +301,7 @@ static void __build_actions(lalrStateSet_t *set)
 								size_t x;
 								for(x = 0; x < node->config->follow_set.count; ++x)
 								{
-										lalrAction_t *action = PSR_InsertReduceAction(state, node->config->rule, node->config->follow_set.lst[x]);
+										lalrAction_t *action = PSR_InsertAction(state, NULL, node->config->follow_set.lst[x], node->config);
 
 										if(PSR_CompSymb(node->config->rule->head, PSR_StartSymb) == 0)
 										{

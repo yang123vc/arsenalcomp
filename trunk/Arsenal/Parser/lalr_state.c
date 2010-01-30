@@ -48,35 +48,27 @@ void			PSR_DestroyState(lalrState_t *state)
 		AR_DEL(state);
 }
 
-
-static lalrAction_t* __insert_action(lalrState_t *state, void *data, const psrSymb_t *symb, lalrActionType_t act)
+lalrAction_t*	PSR_InsertAction(lalrState_t *state, lalrState_t *to, const psrSymb_t *symb, const lalrConfig_t *config)
 {
-		AR_ASSERT(state != NULL && data != NULL && symb != NULL);
+		lalrAction_t	*action;
+		AR_ASSERT(state != NULL  && symb != NULL && config != NULL);
 
 		if(state->count == state->cap)
 		{
 				state->cap = (state->cap + 4)*2;
 				state->actions = AR_REALLOC(lalrAction_t, state->actions, state->cap);
 		}
-		state->actions[state->count].act_type = act;
-		state->actions[state->count].symb = symb;
-		state->actions[state->count].to = (lalrState_t*)data;
-		state->count++;
-		return &state->actions[state->count-1];
-}
-
-lalrAction_t*	PSR_InsertShiftAction(lalrState_t *state, lalrState_t *to, const psrSymb_t *symb)
-{
-		AR_ASSERT(state != NULL && to != NULL && symb != NULL);
-		return __insert_action(state, (void*)to, symb, LALR_ACT_SHIFT);
 		
+		action = &state->actions[state->count];
+		state->count++;
+		action->act_type = to == NULL ? LALR_ACT_REDUCE : LALR_ACT_SHIFT;
+		action->symb = symb;
+		action->to = to;
+		action->config = config;
+		return action;
+
 }
 
-lalrAction_t*	PSR_InsertReduceAction(lalrState_t *state, const psrRule_t *rule, const psrSymb_t *symb)
-{
-		AR_ASSERT(state != NULL && rule != NULL && symb != NULL);
-		return __insert_action(state, (void*)rule, symb, LALR_ACT_REDUCE);
-}
 
 void			PSR_DestroyState_ALL(lalrState_t *state)
 {

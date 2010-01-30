@@ -1019,6 +1019,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\Arsenal\Parser\lalr_config_aux.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\Arsenal\Parser\lalr_state.c"
 				>
 			</File>
@@ -1080,6 +1084,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\Arsenal\Ray\symtbl.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Ray\type.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Ray\type.h"
 				>
 			</File>
 		</Filter>

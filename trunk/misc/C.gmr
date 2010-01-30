@@ -1,6 +1,5 @@
 
 
-
 %name	delim 		:	"[ \r\n\t]"			
 				;
 %name	comment		:	"/\*([^\*]|\*+[^\*/])*\*+/"	
@@ -87,45 +86,52 @@
 %name		keyword_lhd	:	"[A-Z_a-z0-9]"
 					;
 
-%token	"auto"	:	'"auto"(?!{keyword_lhd})'	,1		;	//AUTO
-%token	"case"	:	'"case"(?!{keyword_lhd})'	,1		;	//CASE
-%token	"break"	:	'"break"(?!{keyword_lhd})'	,1		;	//BREAK
-%token	"char"	:	'"char"(?!{keyword_lhd})'	,1		;	//CHAR
-%token	"const"	:	'"const"(?!{keyword_lhd})'	,1		;	//CONST
-%token	"continue"	:	'"continue"(?!{keyword_lhd})'	,1		;	//CONTINUE
-%token	"default"	:	'"default"(?!{keyword_lhd})'	,1		;	//DEFAULT
 
+%token	"auto"	:	'"auto"(?!{keyword_lhd})'	,1		;		//AUTO
+%token	"extern"	:	'"extern"(?!{keyword_lhd})'	,1		;	//EXTERN
+%token	"register"	:	'"register"(?!{keyword_lhd})'	,1		;	//REGISTER
+%token	"volatile"	:	'"volatile"(?!{keyword_lhd})'	,1		;	//VOLATILE
+%token	"static"	:	'"static"(?!{keyword_lhd})'		,1		;	//STATIC
+
+
+%token	"switch"	:	'"switch"(?!{keyword_lhd})'		,1		;	//SWITCH
+%token	"for"		:	'"for"(?!{keyword_lhd})'	,1		;	//FOR
+%token	"goto"	:	'"goto"(?!{keyword_lhd})'	,1		;	//GOTO
+%token	"return"	:	'"return"(?!{keyword_lhd})'		,1		;	//RETURN
 %token	"do"		:	'"do"(?!{keyword_lhd})'		,1		;	//DO
 %token	"while"	:	'"while"(?!{keyword_lhd})'	,1		;	//WHILE
 %token	"if"		:	'"if"(?!{keyword_lhd})'		,1		;	//IF
 %token	"else"	:	'"else"(?!{keyword_lhd})'	,1		;	//ELSE
-%token	"enum"	:	'"enum"(?!{keyword_lhd})'	,1		;	//ENUM
+%token	"enum"	:	'"enum"(?!{keyword_lhd})'	,1		;	//ENUM					;
+%token	"continue"	:	'"continue"(?!{keyword_lhd})'	,1		;	//CONTINUE
+%token	"default"	:	'"default"(?!{keyword_lhd})'	,1		;	//DEFAULT
+%token	"case"	:	'"case"(?!{keyword_lhd})'	,1		;	//CASE
+%token	"break"	:	'"break"(?!{keyword_lhd})'	,1		;	//BREAK
 
-%token	"double"	:	'"double"(?!{keyword_lhd})'	,1		;	//DOUBLE
 
-%token	"extern"	:	'"extern"(?!{keyword_lhd})'	,1		;	//EXTERN
-%token	"float"	:	'"float"(?!{keyword_lhd})'	,1		;	//FLOAT
-%token	"for"		:	'"for"(?!{keyword_lhd})'	,1		;	//FOR
-%token	"goto"	:	'"goto"(?!{keyword_lhd})'	,1		;	//GOTO
-%token	"int"		:	'"int"(?!{keyword_lhd})'	,1		;	//INT
-
-%token	"long"	:	'"long"(?!{keyword_lhd})'		,1		;	//LONG
-%token	"register"	:	'"register"(?!{keyword_lhd})'	,1		;	//REGISTER
-%token	"return"	:	'"return"(?!{keyword_lhd})'		,1		;	//RETURN
-
-%token	"short"	:	'"short"(?!{keyword_lhd})'		,1		;	//SHORT
-%token	"signed"	:	'"signed"(?!{keyword_lhd})'		,1		;	//SIGNED
+%token	"const"	:	'"const"(?!{keyword_lhd})'	,1		;	//CONST
 %token	"sizeof"	:	'"sizeof"(?!{keyword_lhd})'		,1		;	//SIZEOF
 
-%token	"static"	:	'"static"(?!{keyword_lhd})'		,1		;	//STATIC
-%token	"struct"	:	'"struct"(?!{keyword_lhd})'		,1		;	//STRUCT
-%token	"switch"	:	'"switch"(?!{keyword_lhd})'		,1		;	//SWITCH
-%token	"typedef"	:	'"typedef"(?!{keyword_lhd})'	,1		;	//TYPEDEF
-%token	"union"	:	'"union"(?!{keyword_lhd})'		,1		;	//UNION
-%token	"unsigned"	:	'"unsigned"(?!{keyword_lhd})'	,1		;	//UNSIGNED
-%token	"void"	:	'"void"(?!{keyword_lhd})'		,1		;	//VOID
 
-//%token	"volatile"	:	'"volatile"(?!{keyword_lhd})'	,1		;	//VOLATILE
+
+%token	"struct"	:	'"struct"(?!{keyword_lhd})'		,1		;	//STRUCT
+%token	"union"	:	'"union"(?!{keyword_lhd})'		,1		;	//UNION
+%token	"typedef"	:	'"typedef"(?!{keyword_lhd})'	,1		;	//TYPEDEF
+
+
+%token	"void"	:	'"void"(?!{keyword_lhd})'		,1		;	//VOID
+%token	"signed"	:	'"signed"(?!{keyword_lhd})'		,1	;	//SIGNED
+%token	"unsigned"	:	'"unsigned"(?!{keyword_lhd})'	,1		;	//UNSIGNED
+
+%token	"byte"	:	'"byte"(?!{keyword_lhd})'	,1		;	//BYTE
+%token	"int"		:	'"int"(?!{keyword_lhd})'	,1		;	//INT
+%token	"long"	:	'"long"(?!{keyword_lhd})'		,1		;	//LONG
+%token	"char"	:	'"char"(?!{keyword_lhd})'	,1		;	//CHAR
+%token	"short"	:	'"short"(?!{keyword_lhd})'		,1		;	//SHORT
+%token	"double"	:	'"double"(?!{keyword_lhd})'	,1		;	//DOUBLE
+%token	"float"	:	'"float"(?!{keyword_lhd})'	,1		;	//FLOAT
+
+
 
 %token	"..."		:	'"..."'		,1		;	//ELLIPSIS
 %token	">>="		:	'">>="'		,2		;	//RIGHT_ASSIGN
@@ -303,13 +309,22 @@ expression				:	assignment_expression
 					|	expression "," assignment_expression
 					;
 
-declaration	:	declaration_specifiers ";"
-			|	declaration_specifiers init_declarator_list ";"
-			|	declaration_specifiers  error ";"
-			|	error ";"
-			;
+declaration			:	declaration_specifiers ";"
+					|	declaration_specifiers init_declarator_list ";"
+					|	declaration_specifiers  error ";"
+					|	error ";"
+					;
 
-declaration_specifiers	:	"typedef" declaration_specifiers
+
+storage_class_specifier	:	"typedef"
+					|	"extern"
+					|	"static"
+					|	"auto"
+					|	"register"
+					;
+
+declaration_specifiers	:	storage_class_specifier
+					|	storage_class_specifier declaration_specifiers
 					|	type_specifier
 					|	type_qualifier
 					|	type_specifier declaration_specifiers
@@ -324,8 +339,10 @@ init_declarator			:	declarator
 					|	declarator "=" initializer
 					;
 
-	
+
+
 type_specifier			:	"void"
+					|	"byte"
 					|	"char"
 					|	"short"
 					|	"int"
@@ -388,7 +405,7 @@ enumerator				:	IDENTIFIER
 					;
 
 type_qualifier			:	"const"
-				/*	| "volatile"	*/
+					| 	"volatile"		
 					;
 
 declarator				:	pointer direct_declarator

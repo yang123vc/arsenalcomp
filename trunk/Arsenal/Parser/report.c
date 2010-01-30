@@ -41,11 +41,11 @@ static void __insert_to_conflict_set(psrConflictView_t *view, psrConflictItem_t 
 const	psrConflictView_t*		PSR_CreateConflictView(const psrActionTable_t *tbl, const psrGrammar_t *grammar)
 {
 		psrConflictView_t		*view;
-		
+		arString_t				*str = NULL;
 		size_t i,k;
 		AR_ASSERT(tbl != NULL && grammar != NULL);
 	
-		
+		str = AR_CreateString();
 		view = AR_NEW0(psrConflictView_t);
 		
 		
@@ -56,13 +56,13 @@ const	psrConflictView_t*		PSR_CreateConflictView(const psrActionTable_t *tbl, co
 
 				for(k = 0; k < tbl->col; ++k)
 				{
-						arString_t				*str = NULL;
+						
 						const psrAction_t		*act = tbl->actions[AR_TBL_IDX_R(i,k,tbl->col)];
 						const psrRule_t			*rule = PSR_GetRuleOfGrammar(grammar, act->rule_num);
 						
 						if(act->next == NULL)continue;
 						
-						str = AR_CreateString();
+						AR_ClearString(str);
 						item = AR_NEW0(psrConflictItem_t);
 						AR_AppendFormatString(str,L"state[%" AR_PLAT_INT_FMT L"d] : %ls",(size_t)i, tbl->term_set.lst[k]->name);
 						item->name = AR_wcsdup(AR_GetStrString(str));
@@ -119,6 +119,8 @@ const	psrConflictView_t*		PSR_CreateConflictView(const psrActionTable_t *tbl, co
 						__insert_to_conflict_set(view, item);
 				}
 		}
+
+		AR_DestroyString(str);
 		
 		return view;
 }
@@ -261,7 +263,16 @@ void PSR_DestroyActionView(const psrActionView_t *action_view)
 		{
 				AR_DEL(view->action_tbl[i]);
 		}
+		
+		if(view->action_tbl)
+		{
+				AR_DEL(view->action_tbl);
+		}
 
+		if(view->item)
+		{
+				AR_DEL(view->item);
+		}
 		AR_DEL(view);
 }
 
@@ -734,7 +745,10 @@ const psrFirstFollowView_t*		PSR_CreateParserFirstFollowView(const parser_t *par
 		ret->first_set = first_view;
 		ret->follow_set = follow_view;
 		ret->left_recursion = left_recu;
-
+		
+		PSR_UnInitSymbMap(&first);
+		PSR_UnInitSymbMap(&follow);
+		if(str)AR_DestroyString(str);
 		return ret;
 }
 
