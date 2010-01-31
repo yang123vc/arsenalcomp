@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
-	<ActiveTarget name="LibRelease" />
+	<ActiveTarget name="DLLRelease" />
 	<File name="main.c" open="1" top="0" tabpos="1">
 		<Cursor position="341" topLine="39" />
 	</File>
 	<File name="parser_test.c" open="1" top="1" tabpos="3">
-		<Cursor position="0" topLine="0" />
+		<Cursor position="5255" topLine="275" />
 	</File>
 	<File name="test.c" open="1" top="0" tabpos="2">
 		<Cursor position="110" topLine="0" />

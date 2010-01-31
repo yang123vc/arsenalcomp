@@ -283,10 +283,6 @@ void parser_test()
 				AR_abort();
 		}
 
-		AR_printf(L"%ls\r\n", gmr_txt);
-
-		getchar();
-
 
 		cfg = CFG_CollectGrammarConfig(gmr_txt, &__g_report);
 
