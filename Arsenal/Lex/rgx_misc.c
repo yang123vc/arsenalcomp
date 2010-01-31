@@ -478,24 +478,63 @@ static rgxThreadList_t	*__g_free_list = NULL;
 static arSpinLock_t		__g_spin_lock;
 
 
+#if defined(AR_DEBUG)
+		#define RGX_THREAD_LIST_INIT_COUNT		0
+		#define RGX_THREAD_LIST_POOL_NUM		0
+#else
+		#define RGX_THREAD_LIST_INIT_COUNT		32
+		#define RGX_THREAD_LIST_POOL_NUM		128
+#endif
+
 void	RGX_InitMisc()
 {
+		size_t i;
+		rgxThreadList_t	**tmp;
 		AR_InitSpinLock(&__g_spin_lock);
 		__g_free_list = NULL;
+		
+		if(RGX_THREAD_LIST_POOL_NUM == 0)return;
+
+		tmp = AR_NEWARR0(rgxThreadList_t*, RGX_THREAD_LIST_POOL_NUM);
+		
+		for(i = 0; i < RGX_THREAD_LIST_POOL_NUM; ++i)
+		{
+				tmp[i] = RGX_CreateThreadList();
+		}
+		
+		for(i = 0; i < RGX_THREAD_LIST_POOL_NUM; ++i)
+		{
+				RGX_DestroyThreadList(tmp[i]);
+		}
+
+		AR_DEL(tmp);
 }
 
 
 void	RGX_UnInitMisc()
 {
-		
+		size_t count = 0;
+		size_t max_lst_cap = 0;
 		while(__g_free_list != NULL)
 		{
 				rgxThreadList_t *lst = __g_free_list;
 				__g_free_list = __g_free_list->next;
 
 				if(lst->lst)AR_DEL(lst->lst);
+				
+				max_lst_cap = AR_MAX(max_lst_cap, lst->cap);
+
 				AR_DEL(lst);
+
+				count++;
 		}
+
+		{
+				wchar_t buf[1024];
+				AR_swprintf(buf, 1024, L"Total consume rgxThreadList_t == %u : max cap == %u", count, max_lst_cap);
+				AR_printf(L"%ls\r\n", buf);
+		}
+
 
 		AR_UnInitSpinLock(&__g_spin_lock);
 }
@@ -508,13 +547,20 @@ rgxThreadList_t*	RGX_CreateThreadList()
 		rgxThreadList_t	*res = NULL;
 
 
-		AR_LockSpinLock(&__g_spin_lock);
-
 		if(__g_free_list == NULL)
 		{
-				__g_free_list = AR_NEW0(rgxThreadList_t);
+				res = AR_NEW0(rgxThreadList_t);
+				res->cap = RGX_THREAD_LIST_INIT_COUNT;
+				
+				if(res->cap > 0)
+				{
+						res->lst = AR_NEWARR(rgxThread_t, res->cap);
+				}
+				
+				return res;
 		}
 
+		AR_LockSpinLock(&__g_spin_lock);
 		
 		res = __g_free_list;
 		__g_free_list = __g_free_list->next;

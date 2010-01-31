@@ -9,7 +9,8 @@ extern     parser_test();
 
 void AR_Test()
 {
-    parser_test();
+    //parser_test();
+    AR_printf(L"%ls\r\n", L"Hello World");
 }
 
 
