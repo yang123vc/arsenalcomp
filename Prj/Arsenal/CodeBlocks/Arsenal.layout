@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
-	<ActiveTarget name="LibDebug" />
+	<ActiveTarget name="DLLRelease" />
 	<File name="../../../Arsenal/Arsenal.c" open="0" top="0" tabpos="0">
 		<Cursor position="485" topLine="0" />
 	</File>
-	<File name="../../../Arsenal/Common/common.h" open="0" top="0" tabpos="2">
-		<Cursor position="2698" topLine="105" />
+	<File name="../../../Arsenal/Common/common.c" open="1" top="1" tabpos="6">
+		<Cursor position="605" topLine="0" />
 	</File>
-	<File name="../../../Arsenal/Common/crtstr.c" open="1" top="1" tabpos="4">
+	<File name="../../../Arsenal/Common/common.h" open="1" top="0" tabpos="5">
+		<Cursor position="2899" topLine="105" />
+	</File>
+	<File name="../../../Arsenal/Common/crtstr.c" open="1" top="0" tabpos="1">
 		<Cursor position="17661" topLine="867" />
 	</File>
 	<File name="../../../Arsenal/Common/string.c" open="0" top="0" tabpos="7">
