@@ -31,12 +31,14 @@ static const wchar_t* __load_txt(const char *path)
 		//printf("read size == %d\r\n", rn);
 		buf[rn] = 0;
 
-		AR_ASSERT(buf[0] == 0xEF && buf[1] == 0xBB && buf[2] == 0xBF);
 
-		//printf("%s\r\n", buf + 3);
-
-
-		ret = AR_utf8_convto_wcs((const char*)(buf + 3));
+		if(buf[0] == 0xEF && buf[1] == 0xBB && buf[2] == 0xBF)
+		{
+		    ret = AR_utf8_convto_wcs((const char*)(buf + 3));
+		}else
+		{
+		    ret = AR_utf8_convto_wcs((const char*)(buf));
+		}
 
 		AR_DEL(buf);
 		return ret;
@@ -132,9 +134,9 @@ void print_conflict(const parser_t *psr)
 
 
 
-#define DEF_PAT_PATH  "../../../misc/test.gmr"
+#define DEF_PAT_PATH  "../../../misc/C.gmr"
 
-#define DEF_SOUR_PATH  "../../../misc/book1.txt"
+#define DEF_SOUR_PATH  "../../../misc/input.txt"
 
 
 
