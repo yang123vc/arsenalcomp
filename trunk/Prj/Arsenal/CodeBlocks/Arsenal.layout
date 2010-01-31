@@ -1,31 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
-	<ActiveTarget name="ExecDebug" />
+	<ActiveTarget name="LibDebug" />
 	<File name="../../../Arsenal/Arsenal.c" open="0" top="0" tabpos="0">
 		<Cursor position="485" topLine="0" />
 	</File>
-	<File name="../../../Arsenal/Common/crtstr.c" open="1" top="0" tabpos="5">
-		<Cursor position="19855" topLine="982" />
+	<File name="../../../Arsenal/Common/common.h" open="0" top="0" tabpos="2">
+		<Cursor position="2698" topLine="105" />
 	</File>
-	<File name="../../../Arsenal/Common/string.c" open="1" top="0" tabpos="7">
+	<File name="../../../Arsenal/Common/crtstr.c" open="1" top="1" tabpos="4">
+		<Cursor position="17661" topLine="867" />
+	</File>
+	<File name="../../../Arsenal/Common/string.c" open="0" top="0" tabpos="7">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="../../../Arsenal/Common/thread.c" open="1" top="0" tabpos="6">
+	<File name="../../../Arsenal/Common/thread.c" open="0" top="0" tabpos="6">
 		<Cursor position="591" topLine="7" />
 	</File>
-	<File name="../../../Arsenal/Common/thread_posix.h" open="1" top="0" tabpos="4">
-		<Cursor position="497" topLine="0" />
-	</File>
-	<File name="main.cpp" open="1" top="0" tabpos="1">
-		<Cursor position="46" topLine="39" />
-	</File>
-	<File name="parser_test.c" open="1" top="0" tabpos="8">
-		<Cursor position="4090" topLine="190" />
-	</File>
-	<File name="test.c" open="1" top="1" tabpos="2">
-		<Cursor position="99" topLine="0" />
-	</File>
-	<File name="test.h" open="1" top="0" tabpos="3">
-		<Cursor position="99" topLine="0" />
+	<File name="../../../Arsenal/Common/thread_posix.h" open="0" top="0" tabpos="1">
+		<Cursor position="1430" topLine="86" />
 	</File>
 </CodeBlocks_layout_file>

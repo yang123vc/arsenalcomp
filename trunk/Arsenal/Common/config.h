@@ -181,7 +181,8 @@
 		#include <string.h>
 		#include <math.h>
 		#include <wctype.h>
-
+		
+		#include <windows.h>
 #else
     #error "Unknow Compiler!"
 
