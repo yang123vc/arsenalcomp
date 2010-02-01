@@ -374,6 +374,7 @@ struct_declaration_list	:	struct_declaration
 					;
 
 struct_declaration		:	specifier_qualifier_list struct_declarator_list ";"
+					|	specifier_qualifier_list  ";"
 					;
 
 specifier_qualifier_list	:	type_specifier specifier_qualifier_list
@@ -382,13 +383,16 @@ specifier_qualifier_list	:	type_specifier specifier_qualifier_list
 					|	type_qualifier
 					;
 
-struct_declarator_list	:	struct_declarator
+struct_declarator_list	:	struct_declarator 
 					|	struct_declarator_list "," struct_declarator
 					;
 
 struct_declarator		:	declarator
-					|	":" constant_expression
+
+/*					|	":" constant_expression
 					|	declarator ":" constant_expression
+*/
+
 					;
 
 enum_specifier			:	"enum" "{" enumerator_list "}"
