@@ -493,7 +493,7 @@ labeled_statement		:	"case" constant_expression ":" statement
 					|	IDENTIFIER ":" statement	
 					;
 
-push_symtbl			:	.	%prec SPEC_ACTION
+push_symtbl				:	.	%prec SPEC_ACTION
 					;
 
 pop_symtbl				:	.	%prec SPEC_ACTION	
