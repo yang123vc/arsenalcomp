@@ -345,6 +345,11 @@ const CSrcInfo*	CTagTree::LookupByName(const CString &name)
 				return val;
 		}
 
+		if(m_name_tbl.Lookup(name, val))
+		{
+				return val;
+		}
+
 		return NULL;
 
 }

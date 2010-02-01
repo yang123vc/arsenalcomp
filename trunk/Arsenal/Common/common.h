@@ -375,7 +375,7 @@ void			AR_UnInitThread();
 int_t			AR_AtomicInc(volatile int_t *dest);
 int_t			AR_AtomicDec(volatile int_t *dest);
 
-#define			AR_MAXSPIN_COUNT		10240
+#define			AR_MAXSPIN_COUNT		8192
 
 typedef			volatile int		arSpinLock_t;
 

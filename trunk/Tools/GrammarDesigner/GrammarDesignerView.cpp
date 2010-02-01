@@ -59,6 +59,7 @@ BEGIN_MESSAGE_MAP(CGrammarDesignerView, CRichEditView)
 
 
 		ON_COMMAND(ID_GOTO, &CGrammarDesignerView::OnGoto)
+		ON_WM_LBUTTONDBLCLK()
 END_MESSAGE_MAP()
 
 // CGrammarDesignerView construction/destruction
@@ -664,6 +665,17 @@ LRESULT CGrammarDesignerView::OnBuildTagCompleted(WPARAM wp, LPARAM lp)
 
 
 
+void CGrammarDesignerView::OnLButtonDblClk(UINT nFlags, CPoint point)
+{
+		// TODO: Add your message handler code here and/or call default
+	
+		CRichEditView::OnLButtonDblClk(nFlags, point);
+
+}
+
+
+
+
 
 class CGotoDialog : public CDialog
 {
@@ -751,5 +763,4 @@ void CGrammarDesignerView::OnGoto()
 				OnLocatePos((WPARAM)dlg.m_goto_line, NULL);
 		}
 }
-
 

@@ -113,7 +113,7 @@ void AR_Test()
 		//grammar_test();
 
 		//lalr_test();
-		ray_test();
+		//ray_test();
 		
 #else
 		AR_printf(L"dll version\r\n");

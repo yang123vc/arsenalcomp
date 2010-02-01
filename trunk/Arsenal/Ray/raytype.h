@@ -19,7 +19,9 @@
 AR_NAMESPACE_BEGIN
 
 
+struct __ray_type_tag;
 
+typedef struct __ray_type_tag	rayType_t;
 
 
 

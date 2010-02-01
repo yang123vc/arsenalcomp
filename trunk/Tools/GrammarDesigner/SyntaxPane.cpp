@@ -120,6 +120,10 @@ ON_NOTIFY_REFLECT(NM_RCLICK, &CSyntaxTree::OnNMRClick)
 ON_COMMAND(ID_POPUP_FONT32864, &CSyntaxTree::OnPopupFont32864)
 ON_COMMAND(ID_POPUP_CLEAR32865, &CSyntaxTree::OnPopupClear32865)
 ON_UPDATE_COMMAND_UI(ID_POPUP_CLEAR32865, &CSyntaxTree::OnUpdatePopupClear32865)
+ON_COMMAND(ID_SYNTAX_MENU_EXPANDALL, &CSyntaxTree::OnSyntaxMenuExpandall)
+ON_UPDATE_COMMAND_UI(ID_SYNTAX_MENU_EXPANDALL, &CSyntaxTree::OnUpdateSyntaxMenuExpandall)
+ON_COMMAND(ID_POPUP_COLLAPSEALL, &CSyntaxTree::OnPopupCollapseall)
+ON_UPDATE_COMMAND_UI(ID_POPUP_COLLAPSEALL, &CSyntaxTree::OnUpdatePopupCollapseall)
 END_MESSAGE_MAP()
 
 
@@ -174,25 +178,39 @@ void CSyntaxTree::OnDestroy()
 
 void CSyntaxTree::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
-		CTreeCtrl::OnLButtonDblClk(nFlags, point);
+		//CTreeCtrl::OnLButtonDblClk(nFlags, point);
 
 		// TODO: Add your message handler code here and/or call default
 		HTREEITEM curr = this->GetSelectedItem();
 
 		if(curr != NULL)
 		{
+				CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
 				const CPrintNode *node = (const CPrintNode*)this->GetItemData(curr);
 				ASSERT(node != NULL);
+				if(node->m_is_term)
+				{
+						ASSERT(node != NULL);
 
-				CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
-				
-				CInputPane &input = main_frm->GetInputPane();
+						CInputPane &input = main_frm->GetInputPane();
 
-				input.SendMessage(ID_INPUT_LOCATE_TOKEN, (WPARAM)node);
+						input.SendMessage(ID_INPUT_LOCATE_TOKEN, (WPARAM)node);
+				}else
+				{
+						CTagView		&tag = main_frm->GetTagView();
 
-				
+						const CSrcInfo *info = tag.LookupByName(node->m_name);
 
-				
+
+						CView *pview = ((CFrameWnd*)::AfxGetMainWnd())->GetActiveView();
+
+						if(info && pview)
+						{
+								pview->SendMessage(ID_EDIT_LOCATE_POS, (WPARAM)info->m_line);
+						}
+
+				}
+
 		}else
 		{
 
@@ -280,7 +298,7 @@ void CSyntaxTree::ExpandLevel(size_t level)
 }
 
 
-void	CSyntaxTree::ExpandAll()
+void	CSyntaxTree::ExpandAll(DWORD action )
 {
 		if(m_root == NULL)return ;
 		
@@ -297,7 +315,9 @@ void	CSyntaxTree::ExpandAll()
 
 				if(this->ItemHasChildren(item))
 				{
-						VERIFY(this->Expand(item, TVE_EXPAND));
+						//VERIFY(this->Expand(item, TVE_EXPAND));
+						this->Expand(item, action);
+						
 
 						HTREEITEM chd = this->GetChildItem(item);
 
@@ -311,3 +331,29 @@ void	CSyntaxTree::ExpandAll()
 } 
 
 
+
+
+void CSyntaxTree::OnSyntaxMenuExpandall()
+{
+		// TODO: Add your command handler code here
+		ExpandAll();		
+}
+
+void CSyntaxTree::OnUpdateSyntaxMenuExpandall(CCmdUI *pCmdUI)
+{
+		// TODO: Add your command update UI handler code here
+		pCmdUI->Enable(m_root != NULL);
+}
+
+void CSyntaxTree::OnPopupCollapseall()
+{
+		// TODO: Add your command handler code here
+		ExpandAll(TVE_COLLAPSE);
+		
+}
+
+void CSyntaxTree::OnUpdatePopupCollapseall(CCmdUI *pCmdUI)
+{
+		// TODO: Add your command update UI handler code here
+		pCmdUI->Enable(m_root != NULL);
+}

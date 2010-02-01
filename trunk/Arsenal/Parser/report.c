@@ -58,7 +58,7 @@ const	psrConflictView_t*		PSR_CreateConflictView(const psrActionTable_t *tbl, co
 				{
 						
 						const psrAction_t		*act = tbl->actions[AR_TBL_IDX_R(i,k,tbl->col)];
-						const psrRule_t			*rule = PSR_GetRuleOfGrammar(grammar, act->rule_num);
+						//const psrRule_t			*rule = PSR_GetRuleOfGrammar(grammar, act->rule_num);
 						
 						if(act->next == NULL)continue;
 						
@@ -84,8 +84,9 @@ const	psrConflictView_t*		PSR_CreateConflictView(const psrActionTable_t *tbl, co
 								psrLRItem_t tmp;
 								*/
 								lalrConfig_t	tmp;
+								const psrRule_t			*rule = PSR_GetRuleOfGrammar(grammar, act->rule_num);
 								AR_ASSERT(act != NULL);
-
+								
 								PSR_InitConfig(&tmp, rule, act->delim);
 								/*
 								PSR_InitLRItem(&tmp, rule, act->delim);
