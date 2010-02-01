@@ -12,4 +12,18 @@
  */
 
 
+#include "raygmr.h"
 #include "rayparser.h"
+
+
+AR_NAMESPACE_BEGIN
+/*
+static void _test()
+{
+		
+}
+*/
+
+
+
+AR_NAMESPACE_END

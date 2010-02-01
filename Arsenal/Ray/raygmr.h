@@ -1,4 +1,5 @@
 
+#if(0)
 
 %name	delim 		:	"[ \r\n\t]"			
 				;
@@ -206,7 +207,7 @@
 
 %noassoc	IF_STMT_PREC						;
 %noassoc	IF_STMT_ELSE_STMT_PREC				;
-%noassoc	SPEC_ACTION						;
+
 
 translation_unit	:	external_declaration
 				|	translation_unit external_declaration
@@ -305,7 +306,7 @@ assignment_operator		:	"="
 					|	"|="
 					;
 
-expression				:	assignment_expression
+expression			:	assignment_expression
 					|	expression "," assignment_expression
 					;
 
@@ -456,6 +457,7 @@ abstract_declarator		:	pointer
 					|	pointer direct_abstract_declarator
 					;
 
+
 direct_abstract_declarator	:	"(" abstract_declarator ")"
 					|	"[" "]"
 					|	"[" constant_expression "]"
@@ -476,11 +478,11 @@ initializer			:	assignment_expression
 					|	"{" error "}"
 					;
 
-initializer_list		:	initializer
+initializer_list	:	initializer
 					|	initializer_list "," initializer
 					;
 
-statement				:	labeled_statement
+statement			:	labeled_statement
 					|	compound_statement
 					|	expression_statement
 					|	selection_statement
@@ -488,28 +490,21 @@ statement				:	labeled_statement
 					|	jump_statement
 					;
 
-labeled_statement		:	"case" constant_expression ":" statement
+labeled_statement	:	"case" constant_expression ":" statement
 					|	"default" ":" statement
-					|	IDENTIFIER ":" statement	
+					|	IDENTIFIER ":" statement
 					;
-
-push_symtbl			:	.	%prec SPEC_ACTION
-					;
-
-pop_symtbl				:	.	%prec SPEC_ACTION	
-					;
-
-
 
 compound_statement		:	"{" "}"
 					|	"{" statement_list "}"
-					|	"{" push_symtbl	declaration_list pop_symtbl	"}"
-					|	"{" push_symtbl	declaration_list statement_list pop_symtbl	"}"					|	"{" error  "}"
-					|	"{" push_symtbl declaration_list error pop_symtbl "}"
-					|	"{" push_symtbl declaration_list statement_list error pop_symtbl "}"
+					|	"{" declaration_list "}"
+					|	"{" declaration_list statement_list "}"
+					|	"{" error  "}"
+					|	"{" declaration_list error "}"
+					|	"{" declaration_list statement_list error "}"
 					;
 
-declaration_list		:	declaration
+declaration_list	:	declaration
 					|	declaration_list declaration
 					;
 
@@ -532,7 +527,8 @@ iteration_statement		:	"while" "(" expression ")" statement
 					|	"for" "(" expression_statement expression_statement expression ")" statement
 					;
 
-jump_statement			:	"goto" IDENTIFIER ";"
+
+jump_statement		:	"goto" IDENTIFIER ";"
 					|	"continue" ";"
 					|	"break" ";"
 					|	"return" ";"
@@ -547,4 +543,4 @@ function_definition		:	declaration_specifiers declarator compound_statement
 					;
 
 
-
+#endif

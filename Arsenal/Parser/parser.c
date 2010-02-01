@@ -155,7 +155,13 @@ static void __handle_reduce(parser_t *parser, const psrAction_t *action)
 		}
 		*/
 
-		nodes = &parser->node_stack->nodes[parser->node_stack->count - action->reduce_count];
+		if(action->reduce_count > 0)
+		{
+				nodes = &parser->node_stack->nodes[parser->node_stack->count - action->reduce_count];
+		}else
+		{
+				nodes = NULL;
+		}
 
 /*
 		有时候例如A->.这类空产生式也会存在handler，例如语义钩子等，因此这里只根据是否有注册进来的函数来决定规约是否为NULL

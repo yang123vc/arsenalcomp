@@ -37,7 +37,10 @@ arString_t*	AR_CreateString()
 void	AR_DestroyString(arString_t *str)
 {
 		AR_ASSERT(str != NULL);
-		AR_DEL(str->str);
+		if(str->str)
+		{
+				AR_DEL(str->str);
+		}
 		AR_DEL(str);
 }
 

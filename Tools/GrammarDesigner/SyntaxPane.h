@@ -15,7 +15,7 @@ public:
 		void	Clear();
 		void	DrawTree(CPrintNode *node);
 
-		void	ExpandAll();
+		void	ExpandAll(DWORD action = TVE_EXPAND);
 		void	ExpandLevel(size_t level);
 protected:
 		HTREEITEM InsertText(LPCTSTR lpszItem, LPARAM lParam, HTREEITEM hParent = TVI_ROOT, HTREEITEM hInsertAfter = TVI_LAST);
@@ -31,6 +31,10 @@ public:
 		afx_msg void OnPopupFont32864();
 		afx_msg void OnPopupClear32865();
 		afx_msg void OnUpdatePopupClear32865(CCmdUI *pCmdUI);
+		afx_msg void OnSyntaxMenuExpandall();
+		afx_msg void OnUpdateSyntaxMenuExpandall(CCmdUI *pCmdUI);
+		afx_msg void OnPopupCollapseall();
+		afx_msg void OnUpdatePopupCollapseall(CCmdUI *pCmdUI);
 };
 
 // CSyntaxPane

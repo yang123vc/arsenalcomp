@@ -675,15 +675,15 @@ static psrNode_t*		AR_STDCALL __handle_term_list(psrNode_t **nodes, size_t count
 
 /*
 { L"rhs					:		term_list prec_decl handler_decl",				NULL},
-{ L"rhs					:		.",												NULL},
+{ L"rhs					:		. prec_decl handler_decl",				NULL},
 */
 
 static psrNode_t*		AR_STDCALL __handle_rhs(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res;
-
-		AR_ASSERT((count == 1 || count == 3) && nodes != NULL);
+		size_t i;
+		AR_ASSERT(count == 3 && nodes != NULL);
 
 		res = CFG_CreateNode(CFG_RULE_T);
 		res->rule.lhs = NULL;
@@ -691,17 +691,18 @@ static psrNode_t*		AR_STDCALL __handle_rhs(psrNode_t **nodes, size_t count, cons
 		res->rule.prec_tok = NULL;
 		res->rule.rhs = AR_NEWARR0(wchar_t, 2048);
 
-		if(count == 3)
+		//AR_ASSERT(ns[0] && ns[0]->type == CFG_NODE_LIST_T && ns[0]->lst.count > 0);
+		AR_ASSERT(ns[0]);
+		AR_ASSERT(ns[1] ? ns[1]->type == CFG_LEXEME_T : true);
+		AR_ASSERT(ns[2] ? ns[2]->type == CFG_LEXEME_T : true);
+
+
+		if(ns[0]->type == CFG_LEXEME_T && ns[0]->lexeme.lex_val == DOT)
 		{
-				size_t i;
+				AR_wcscat((wchar_t*)res->rule.rhs, L" ");
 
-				AR_ASSERT(ns[0] && ns[0]->type == CFG_NODE_LIST_T && ns[0]->lst.count > 0);
-				AR_ASSERT(ns[1] ? ns[1]->type == CFG_LEXEME_T : true);
-
-				AR_ASSERT(ns[2] ? ns[2]->type == CFG_LEXEME_T : true);
-
-
-
+		}else if(ns[0]->type == CFG_NODE_LIST_T)
+		{
 				for(i = 0; i < ns[0]->lst.count; ++i)
 				{
 						cfgNode_t *tmp = ns[0]->lst.lst[i];
@@ -711,32 +712,28 @@ static psrNode_t*		AR_STDCALL __handle_rhs(psrNode_t **nodes, size_t count, cons
 						AR_wcscat((wchar_t*)res->rule.rhs, tmp->lexeme.lexeme);
 						AR_wcscat((wchar_t*)res->rule.rhs, L" ");
 				}
-
-				if(ns[1])
-				{
-						res->rule.prec_tok = ns[1]->lexeme.lexeme;
-						ns[1]->lexeme.lexeme = NULL;
-				}
-
-				if(ns[2])
-				{
-						res->rule.action_ins = ns[2]->lexeme.lexeme;
-						ns[2]->lexeme.lexeme = NULL;
-				}
-
-				CFG_DestroyNode(ns[0]);
-				CFG_DestroyNode(ns[1]);
-				CFG_DestroyNode(ns[2]);
-				ns[0] = ns[1] = ns[2] = NULL;
 		}else
 		{
-				AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T && ns[0]->lexeme.lex_val == DOT);
-				AR_wcscat((wchar_t*)res->rule.rhs, L" ");
-
-				CFG_DestroyNode(ns[0]);
-				ns[0] = NULL;
-
+				AR_ASSERT(false);
 		}
+
+
+		if(ns[1])
+		{
+				res->rule.prec_tok = ns[1]->lexeme.lexeme;
+				ns[1]->lexeme.lexeme = NULL;
+		}
+
+		if(ns[2])
+		{
+				res->rule.action_ins = ns[2]->lexeme.lexeme;
+				ns[2]->lexeme.lexeme = NULL;
+		}
+
+		CFG_DestroyNode(ns[0]);
+		CFG_DestroyNode(ns[1]);
+		CFG_DestroyNode(ns[2]);
+		ns[0] = ns[1] = ns[2] = NULL;
 
 		return res;
 
@@ -1183,7 +1180,7 @@ static const cfgRuleDef_t	__cfg_rule[] =
 		{ L"rhs_list			: 		rhs_list  | rhs ",								__handle_rhs_list,0},
 		{ L"rhs_list			: 		rhs ",											__handle_rhs_list,0},
 		{ L"rhs					:		term_list prec_decl action_decl",				__handle_rhs,0},
-		{ L"rhs					:		.",												__handle_rhs,0},
+		{ L"rhs					:		. prec_decl action_decl",						__handle_rhs,0},
 
 		{ L"term_list			:		term_list lexeme",								__handle_term_list,0},
 		{ L"term_list			:		lexeme",										__handle_term_list,0},

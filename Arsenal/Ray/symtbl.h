@@ -31,21 +31,19 @@ struct __ray_symbol_table_tag;
 typedef struct __ray_symbol_table_tag	raySymbTable_t;
 
 
-#define RAY_SYMBOL_BUCKET_SIZE			1536
+#define RAY_SYMBOL_BUCKET_SIZE			139
 
 struct __ray_symbol_tag
 {
-		const wchar_t	*name;
-
+		const wchar_t		*name;
+		const rayType_t		*type;
 };
 
 struct __ray_symbol_block_tag
 {
 		raySymbol_t		*bucket[RAY_SYMBOL_BUCKET_SIZE];
 		size_t			count;
-
-		raySymbBlock_t	*prev;
-		raySymbBlock_t	*next;
+		raySymbBlock_t	*up_level;
 };
 
 

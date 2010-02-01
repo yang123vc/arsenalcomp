@@ -522,6 +522,14 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 				str.Format(TEXT("Build Parser Tick count %d"), end - beg);
 
 				output.Append(str, COutputList::MSG_MESSAGE, 0, tar);
+
+				size_t conflict = m_parser->CountConflict();
+
+				if(conflict > 0)
+				{
+						str.Format(TEXT("The grammar has %d conflicts !"), (uint32_t)conflict);
+						output.Append(str, COutputList::MSG_MESSAGE, 0, tar);
+				}
 				
 				return true;
 		}
@@ -568,8 +576,10 @@ void CGrammarDesignerDoc::OnParserBuild()
 
 
 		if(cfg)ARSpace::CFG_DestroyGrammarConfig(cfg);
+		
 
 
+		
 		output.Append(TEXT("Build Parser successful!"),COutputList::MSG_MESSAGE, 0, NULL);
 		main_frm->ShowPane(&output, TRUE, TRUE, TRUE);
 		return;

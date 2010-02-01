@@ -90,6 +90,7 @@ protected:
 		virtual HRESULT QueryAcceptData(LPDATAOBJECT lpdataobj, CLIPFORMAT* lpcfFormat, DWORD dwReco, BOOL bReally, HGLOBAL hMetaFile);
 public:
 		afx_msg void OnGoto();
+		afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 };
 
 #ifndef _DEBUG  // debug version in GrammarDesignerView.cpp

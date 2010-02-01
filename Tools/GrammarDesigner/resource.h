@@ -126,6 +126,9 @@
 #define ID_TEST_TEST2                   32868
 #define ID_EDIT_SHOW                    32869
 #define ID_GOTO                         32872
+#define ID_Menu32874                    32874
+#define ID_SYNTAX_MENU_EXPANDALL        32875
+#define ID_POPUP_COLLAPSEALL            32876
 #define ID_INDICATOR_LINE               59142
 #define ID_INDICATOR_COL                59143
 #define IDS_ACTVIEW_WND                 61204
@@ -139,7 +142,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        318
-#define _APS_NEXT_COMMAND_VALUE         32874
+#define _APS_NEXT_COMMAND_VALUE         32877
 #define _APS_NEXT_CONTROL_VALUE         1003
 #define _APS_NEXT_SYMED_VALUE           310
 #endif

@@ -351,6 +351,8 @@ void	Parser::DestroyConflictView(const psrConflictView_t *view)
 }
 
 
+
+
 const psrFirstFollowView_t*		Parser::CreateFirstFollowView()const
 {
 		return PSR_CreateParserFirstFollowView(m_parser);
