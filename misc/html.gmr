@@ -1,0 +1,335 @@
+/*
+'Name'         = "HTML";
+'Version'      = "1.0";
+'Author'       = "W3C Recommendation";
+'About'        = "HyperText Markup Language";
+
+'Entry' = "HTML";
+{IDTail}       = {Alphanumeric} + ["-/"];
+{SymbolChars}  = {Printable} - {Letter} - ["<>'\"="] - {Whitespace};
+{StringChars}  = {Printable} - ["\""];
+{HexDigit}     = {Digit} + ["abcdef"];
+
+
+*/
+
+
+%name	letter			:	"[A-Z_a-z]"
+					;
+
+%name symbol_chars		:	"[ a-zA-Z_]"
+					;
+
+%token	StringLiteral 	:	 "(\x22([^\x22\\])*\x22)"
+					;
+
+%token	Id			:	"{letter}[0-9a-zA-z_]*"
+					;
+
+
+
+/*
+Id          = {Letter}{IDTail}*;
+Symbol      = {SymbolChars};
+CharName    = "&" {Letter}+ ";";
+CharNumber  = "&#" {Digit}+ ";";
+Color       = "#" {HexDigit}+;
+*/
+//Comment Start = "<!--"
+//Comment End   = "-->"
+
+
+
+
+%token	"<html"		:		"<html"		;
+%token	">"			:		">"			;
+%token	"</html>"		:		"</html>"		;
+%token	"<!doctype" 	:		"<!doctype" 	;
+%token	"<head" 		:		"<head"		;
+%token	"</head>"		:		"</head>"		;
+%token	"<title"		:		"<title"		;
+%token	"<meta"      	:		"<meta"		;
+%token	"<link"      	:		"<link"		;
+%token	"<base"		:		"<base"		;
+%token	"<basefont" 	:		"<basefont"	;
+%token	"<script"    	:		"<script"		;
+%token	"</script>"	:		"</script>"	;
+%token	"</title>"		:		"</title>"		;
+%token	"<body" 		:		"<body"		;
+%token	"</body>"		:		"</body>"		;
+%token	"<p" 			:		"<p" 			;
+%token	"</p>"  	: 	"</p>"		;
+%token	"="			:		"="			;
+%token	"<applet"		:		"<applet"		;
+%token	"</applet>"	:		"</applet>"	;
+%token 	"<img" 		:	"<img"		;
+%token	"<br"    	: 	"<br"		;
+%token	"<hr" 	:	"<hr" 		;
+%token	"<h1"		:	"<h1"		;
+%token	"</h1>"	:	"</h1>"		;
+%token	"<h2"		:	"<h2"		;
+%token	"</h2>"		:	"</h2>"		;
+%token	"<h3"          	:	"<h3"		;
+%token	"</h3>"		:	"</h3>"		;
+%token	"<h4"		:	"<h4"		;
+%token	"</h4>"		:	"</h4>"		;
+%token	"<h5"		:	"<h5"		;
+%token	"</h5>"		:	"</h5>"		;
+%token	"<h6"		:	"<h6"		;
+%token	"</h6>"		:	"</h6>"		;
+%token	"<a"		:	"<a"		;
+%token	"</a>"		:	"</a>"		;
+%token	"<map"		:	"<map"		;
+%token	"</map>"	:	"</map>"		;
+%token	"<b"		:	"<b"		;
+%token	"</b>"          :	"</b>"		;
+%token	"<u"			:	"<u"		;
+%token	"</u>"		:	"</u>"		;
+%token	"<em"			:	"<em"		;
+%token	"</em>"		:	"</em>"		;
+%token	"<i"			:	"<i"		;
+%token	"</i>"		:	"</i>"		;
+%token	"<strike"		:	"<strike"		;
+%token	"</strike>"	:	"</strike>"		;
+%token	"<strong"		:	"<strong"		;
+%token	"</strong>"	:	"</strong>"		;
+%token	"<font"		:	"<font"		;
+%token	"</font>"		:	"</font>"			;
+%token	"<big"		:	"<big"		;
+%token	"</big>"        :  	"</big>"		;
+%token	"<small"		:	"<small"		;
+%token	"</small>"		:	"</small>"		;
+%token	"<sup"		:	"<sup"		;
+%token	"</sup>"		:	"</sup>"		;
+%token	"<sub"		:	"<sub"		;
+%token	"</sub>"		:	"</sub>"		;
+%token	"<blockquote"	:	"<blockquote"		;
+%token	"</blockquote>"	:	"</blockquote>"		;
+%token	"<address"		:	"<address"		;
+%token	"</address>"	:	"</address>"		;
+%token	"<code"		:	"<code"		;
+%token	"</code>"		:	"</code>"		;
+%token	"<cite"		:	"<cite"		;
+%token	"</cite>"		:	"</cite>"		;
+%token	"<caption"		:	"<caption"		;
+%token	"</caption>"	:	"</caption>"		;
+%token	"<samp" 		:	"<samp"		;
+%token	"</samp>"		:	"</samp>"		;
+%token	"<kbd"		:	"<kbd"		;
+%token	"</kbd>" 		:	"</kbd>"		;
+%token	"<tt"			:	"<tt"		;
+%token	"</tt>"		:	"</tt>"		;
+%token	"<center"		:	"<center"		;
+%token	"</center>"     :	"</center>"		;
+%token	"<span"		:	"<span"			;
+%token	"</span>"		:	"</span>"		;
+%token	"<div"		:	"<div"		;
+%token	"</div>"		:	"</div>"		;
+%token	"<object"		:	"<object"		;
+%token	"</object>"	:	"</object>"		;
+%token	"<table"		:	"<table"		;
+%token	"</table>"      :	"</table>"          		;
+%token	"<ul"			:	"<ul"		;
+%token	"</ul>" 		:	"</ul>" 		;
+%token	"<ol"			:	"<ol"		;
+%token	"</ol>"    	:	"</ol>"          		; 
+%token	"<dir"		:	"<dir"	;
+%token	"</dir>"	:	"</dir>"	;
+%token	"<menu"		:	"<menu"	;
+%token	"</menu>"	:	"</menu>"	;
+%token	"<dl"		:	"<dl"	;
+%token	"</dl>" 	:	"</dl>" 			;
+%token	"<form"		:	"<form"	;
+%token	"</form>" 		:	"</form>" 		;
+%token	"<select"	:	"<select"			;
+%token	"</select>" 	:	"</select>" 		; 
+%token	"<textarea"		:	"<textarea"		;
+%token	"</textarea>"	:	"</textarea>"	;
+%token	"<input"		:	"<input"	;
+%token	"<tr" 		:	"<tr"		;
+%token	"</tr>"		:	"</tr>"	;
+%token	"<td" 		:	"<td"		;
+%token	"</td>"		:	"</td>"	;
+%token	"<th" 		:	"<th"		;
+%token	"</th>"		:	"</th>"	;
+%token	"<dt"			:	"<dt"		;
+%token	"</dt>"		:	"</dt>"		;
+%token	"<dd"			:	"<dd"		;
+%token	"</dd>"		:	"</dd>"		;
+%token	"<li"			:	"<li"		;
+%token	"</li>"		:	"</li>"		;
+%token	"<option"		:	"<option"	;
+%token	"<area"		:	"<area"	;
+%token	"<param"		:	"<param"	;
+
+
+
+
+
+
+
+HTML 			:	DocTypeOpt "<html" Parameters ">" WebpageBody "</html>"
+			;
+
+
+DocTypeOpt 	:	"<!doctype" Parameters ">"
+                |	.
+			;
+
+WebpageBody 	:	Head Body
+			;
+
+Head  		:	"<head" Parameters ">" HeadItems "</head>"
+          		|	.
+			;
+
+HeadItems 		:	HeadItem HeadItems
+               	|	.
+			;
+
+HeadItem  		:	"<title"     Parameters ">" Content "</title>"
+               	|	"<meta"      Parameters ">"
+               	|	"<link"      Parameters ">"
+               	|	"<base"      Parameters ">"        
+               	|	"<basefont"  Parameters ">" 
+               	|	"<script"    Parameters ">" Content "</script>"
+			;
+
+Body  		:	"<body" Parameters ">" Content "</body>"
+			;
+
+
+Content 		:	"<p" Parameters ">" PContent               
+            	|	Tag        Content
+            	|	Word       Content
+            	|	.
+			;
+            
+PContent 		:	Tag        PContent
+              	|	Word       PContent
+              	|	.
+			;
+             
+
+
+Parameters 	:	Parameter Parameters
+               	|	.
+			;
+
+Parameter  	:	Id "=" StringLiteral
+               	|	Id "=" Color
+               	|	Id "=" Id
+               	|	Id
+               	|	StringLiteral
+			;
+
+Tag   		:	"<img"     Parameters ">" 
+          		|	"<br"      Parameters ">" 
+          		|	"<hr"      Parameters ">"                      
+          		|	"<p"           Parameters ">" PContent "</p>"   
+          		|	"<h1"          Parameters ">" Content   "</h1>"
+          		|	"<h2"          Parameters ">" Content   "</h2>"
+          		|	"<h3"          Parameters ">" Content   "</h3>"
+          		|	"<h4"          Parameters ">" Content   "</h4>"
+          		|	"<h5"          Parameters ">" Content   "</h5>"
+          		|	"<h6"          Parameters ">" Content   "</h6>"
+          		|	"<a"           Parameters ">" Content   "</a>"
+          		|	"<map"         Parameters ">" MapItems "</map>"
+          		|	"<b"           Parameters ">" Content   "</b>"          
+          		|	"<u"           Parameters ">" Content   "</u>"
+          		|	"<em"          Parameters ">" Content   "</em>"
+          		|	"<i"           Parameters ">" Content   "</i>"
+          		|	"<strike"      Parameters ">" Content   "</strike>"
+          		|	"<strong"      Parameters ">" Content   "</strong>"
+          		|	"<font"        Parameters ">" Content   "</font>"
+          		|	"<big"         Parameters ">" Content   "</big>"          
+          		|	"<small"       Parameters ">" Content   "</small>"
+          		|	"<sup"         Parameters ">" Content   "</sup>"
+          		|	"<sub"         Parameters ">" Content   "</sub>"
+          		|	"<blockquote"  Parameters ">" Content   "</blockquote>"
+          		|	"<address"     Parameters ">" Content   "</address>"
+          		|	"<code"        Parameters ">" Content   "</code>"
+          		|	"<cite"        Parameters ">" Content   "</cite>"
+          		|	"<caption"     Parameters ">" Content   "</caption>"
+          		|	"<samp"        Parameters ">" Content   "</samp>"
+          		|	"<kbd"         Parameters ">" Content   "</kbd>" 
+          		|	"<tt"          Parameters ">" Content   "</tt>"
+          		|	"<center"      Parameters ">" Content   "</center>"          
+          		|	"<span"        Parameters ">" Content   "</span>"
+          		|	"<div"         Parameters ">" Content  "</div>"
+          		|	"<applet"      Parameters ">" Params    "</applet>"
+          		|	"<object"      Parameters ">" Params    "</object>"
+          
+          		|	"<table"       Parameters ">" TableRows "</table>"          
+          		|	"<ul"          Parameters ">" ListItems "</ul>" 
+          		|	"<ol"          Parameters ">" ListItems "</ol>"           
+          		|	"<dir"         Parameters ">" ListItems "</dir>"
+          		|	"<menu"        Parameters ">" ListItems "</menu>"
+          		|	"<dl"          Parameters ">" DefItems  "</dl>" 
+          		|	"<form"        Parameters ">" Content    "</form>" 
+          		|	"<input"       Parameters ">" 
+          		|	"<select"      Parameters ">" Options    "</select>" 
+          		|	"<textarea"    Parameters ">" Content    "</textarea>"
+			;
+
+
+
+TableRows 		:	"<tr" Parameters ">" TableCells "</tr>" TableRows
+               	|	.
+			;
+               
+TableCells 	:	TableCell TableCells
+                | 	.
+			;
+               
+TableCell  	:	"<td" Parameters ">" Content "</td>"
+                |	"<th" Parameters ">" Content "</th>"
+			;
+             
+
+
+DefItems 		:	DefItem DefItems
+              	|	.
+			;
+               
+DefItem 		:	"<dt" Parameters ">" Content "</dt>"
+            	|	"<dd" Parameters ">" Content "</dd>"
+			;
+
+ListItems 		:	ListItem ListItems
+               	|	.
+			;
+               
+ListItem 		:	"<li" Parameters ">" Content "</li>"
+			;
+
+
+Options 		:	Option Options
+            	|	.
+			;
+
+Option 		:	"<option" Parameters ">"
+			;
+
+
+MapItems 		:	Area MapItems
+              	|	.
+			;
+
+Area 			:	"<area" Parameters ">"
+			;
+
+
+
+Params 		:	"<param" Parameters ">" Params
+           	|	.
+			;
+
+
+Word 			:	Id
+         		|	Symbol
+         		|	"="
+         		| 	CharName
+         		| 	CharNumber
+         		|	Color
+			;
