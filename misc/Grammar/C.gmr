@@ -124,12 +124,15 @@
 %token	"unsigned"	:	'"unsigned"(?!{keyword_lhd})'	,1		;	//UNSIGNED
 
 %token	"byte"	:	'"byte"(?!{keyword_lhd})'	,1		;	//BYTE
-%token	"int"		:	'"int"(?!{keyword_lhd})'	,1		;	//INT
-%token	"long"	:	'"long"(?!{keyword_lhd})'		,1		;	//LONG
 %token	"char"	:	'"char"(?!{keyword_lhd})'	,1		;	//CHAR
-%token	"short"	:	'"short"(?!{keyword_lhd})'		,1		;	//SHORT
-%token	"double"	:	'"double"(?!{keyword_lhd})'	,1		;	//DOUBLE
+%token	"short"	:	'"short"(?!{keyword_lhd})'		,1	;	//SHORT
+%token	"int"		:	'"int"(?!{keyword_lhd})'	,1		;	//INT
+%token	"long"	:	'"long"(?!{keyword_lhd})'		,1	;	//LONG
 %token	"float"	:	'"float"(?!{keyword_lhd})'	,1		;	//FLOAT
+%token	"double"	:	'"double"(?!{keyword_lhd})'	,1	;	//DOUBLE
+
+%token	"__stdcall"	:	'"__stdcall"'				,1	;
+%token	"__cdecl" 		:	'"__cdecl"'				,1	;
 
 
 
@@ -208,112 +211,37 @@
 %noassoc	IF_STMT_ELSE_STMT_PREC				;
 %noassoc	SPEC_ACTION						;
 
+
+
+/*编译单元*/
 translation_unit	:	external_declaration
 				|	translation_unit external_declaration
 				;
 
-
-constant			:	OCT_CONSTANT
-				|	HEX_CONSTANT
-				|	DEC_CONSTANT
-				|	FLOAT_CONSTANT
-				|	CHAR_CONSTANT
-				|	STRING_LITERAL
-				;
-
-primary_expression	:	IDENTIFIER
-				|	constant
-				|	"(" expression ")"
-				;
-
-postfix_expression	:	primary_expression
-				|	postfix_expression "[" expression "]"
-				|	postfix_expression "(" ")"
-				|	postfix_expression "(" argument_expression_list ")"
-				|	postfix_expression "." IDENTIFIER
-				|	postfix_expression "->" IDENTIFIER
-				|	postfix_expression "++"
-				|	postfix_expression "--"
-				;
-
-argument_expression_list	:	assignment_expression
-					|	argument_expression_list "," assignment_expression
+/*函数定义或声明*/
+external_declaration		:	function_definition
+					|	declaration
 					;
 
-unary_expression	:	postfix_expression
-				|	"++" unary_expression
-				|	"--" unary_expression
-				|	unary_operator cast_expression
-				|	"sizeof" unary_expression
-				|	"sizeof" "(" type_name ")"
-				;
-
-unary_operator	:	"&"
-			|	"*"
-			|	"+"
-			|	"-"
-			|	"~"
-			|	"!"
-			;
-
-cast_expression	:	unary_expression
-			|	"(" type_name ")" cast_expression
-			;
-
-
-binary_expression	:	binary_expression	"+"	binary_expression
-				|	binary_expression	"-"	binary_expression
-				|	binary_expression	"*"	binary_expression
-				|	binary_expression	"/"	binary_expression
-				|	binary_expression	"%"	binary_expression
-				|	binary_expression	"<<"	binary_expression
-				|	binary_expression	">>"	binary_expression
-				|	binary_expression	"<"	binary_expression
-				|	binary_expression	"<="	binary_expression
-				|	binary_expression	">"	binary_expression
-				|	binary_expression	">="	binary_expression
-				|	binary_expression	"=="	binary_expression
-				|	binary_expression	"!="	binary_expression
-				|	binary_expression	"&"	binary_expression
-				|	binary_expression	"^"	binary_expression
-				|	binary_expression	"|"	binary_expression
-				|	binary_expression	"&&"	binary_expression
-				|	binary_expression	"||"	binary_expression
-				|	cast_expression
-				;
-
-
-
-constant_expression		:	binary_expression
-					|	binary_expression	"?"	expression	":"	constant_expression
+function_definition		:	declaration_specifiers declarator compound_statement
 					;
 
-assignment_expression		:	constant_expression
-					|	unary_expression assignment_operator assignment_expression
-					;
 
-assignment_operator		:	"="
-					|	"*="
-					|	"/="
-					|	"%="
-					|	"+="
-					|	"-="
-					|	"<<="
-					|	">>="
-					|	"&="
-					|	"^="
-					|	"|="
-					;
 
-expression				:	assignment_expression
-					|	expression "," assignment_expression
-					;
 
+
+/*声明*/
 declaration			:	declaration_specifiers ";"
 					|	declaration_specifiers init_declarator_list ";"
 					|	declaration_specifiers  error ";"
 					|	error ";"
 					;
+
+
+declaration_list		:	declaration
+					|	declaration_list declaration
+					;
+
 
 
 storage_class_specifier	:	"typedef"
@@ -327,8 +255,8 @@ declaration_specifiers	:	storage_class_specifier
 					|	storage_class_specifier declaration_specifiers
 					|	type_specifier
 					|	type_qualifier
-					|	type_specifier declaration_specifiers
 					|	type_qualifier declaration_specifiers
+					|	type_specifier declaration_specifiers
 					;
 
 init_declarator_list		:	init_declarator
@@ -356,7 +284,7 @@ type_specifier			:	"void"
 					|	TYPE_ID
 					;
 
-
+/*结构声明*/
 
 struct_or_union_specifier	:	struct_or_union IDENTIFIER "{" struct_declaration_list "}"
 					|	struct_or_union "{" struct_declaration_list "}"
@@ -369,13 +297,15 @@ struct_or_union			:	"struct"
 					|	"union"
 					;
 
+struct_declaration		:	specifier_qualifier_list struct_declarator_list ";"
+					|	specifier_qualifier_list  ";"
+					;
+
+
 struct_declaration_list	:	struct_declaration
 					|	struct_declaration_list struct_declaration
 					;
 
-struct_declaration		:	specifier_qualifier_list struct_declarator_list ";"
-					|	specifier_qualifier_list  ";"
-					;
 
 specifier_qualifier_list	:	type_specifier specifier_qualifier_list
 					|	type_specifier
@@ -387,6 +317,9 @@ struct_declarator_list	:	struct_declarator
 					|	struct_declarator_list "," struct_declarator
 					;
 
+/*
+去掉了位域
+*/
 struct_declarator		:	declarator
 
 /*					|	":" constant_expression
@@ -395,6 +328,10 @@ struct_declarator		:	declarator
 
 					;
 
+
+/*
+	枚举声明
+*/
 enum_specifier			:	"enum" "{" enumerator_list "}"
 					|	"enum" IDENTIFIER "{" enumerator_list "}"
 					|	"enum" IDENTIFIER
@@ -412,9 +349,21 @@ type_qualifier			:	"const"
 					| 	"volatile"		
 					;
 
-declarator				:	pointer direct_declarator
-					|	direct_declarator
+
+/*调用约定*/
+call_convention			:	"__stdcall"
+					|	"__cdecl"
+					|	.	%prec SPEC_ACTION
 					;
+
+/*所有声明的变量，函数指针，类型，等等都会被规约为declarator或declarator_list*/
+
+declarator				:	call_convention pointer direct_declarator
+					|	call_convention direct_declarator
+
+					;
+
+
 
 direct_declarator		:	IDENTIFIER
 					|	"(" declarator ")"
@@ -484,6 +433,9 @@ initializer_list		:	initializer
 					|	initializer_list "," initializer
 					;
 
+
+
+/*语句*/
 statement				:	labeled_statement
 					|	compound_statement
 					|	expression_statement
@@ -513,9 +465,6 @@ compound_statement		:	"{" "}"
 					|	"{" push_symtbl declaration_list statement_list error pop_symtbl "}"
 					;
 
-declaration_list		:	declaration
-					|	declaration_list declaration
-					;
 
 statement_list			:	statement
 					|	statement_list statement
@@ -543,12 +492,114 @@ jump_statement			:	"goto" IDENTIFIER ";"
 					|	"return" expression ";"
 					;
 
-external_declaration		:	function_definition
-					|	declaration
+
+
+
+
+
+
+
+/*表达式*/
+expression				:	assignment_expression
+					|	expression "," assignment_expression
 					;
 
-function_definition		:	declaration_specifiers declarator compound_statement
+
+primary_expression	:	IDENTIFIER
+				|	constant
+				|	"(" expression ")"
+				;
+
+postfix_expression	:	primary_expression
+				|	postfix_expression "[" expression "]"
+				|	postfix_expression "(" ")"
+				|	postfix_expression "(" argument_expression_list ")"
+				|	postfix_expression "." IDENTIFIER
+				|	postfix_expression "->" IDENTIFIER
+				|	postfix_expression "++"
+				|	postfix_expression "--"
+				;
+
+argument_expression_list	:	assignment_expression
+					|	argument_expression_list "," assignment_expression
 					;
+
+unary_expression	:	postfix_expression
+				|	"++" unary_expression
+				|	"--" unary_expression
+				|	unary_operator cast_expression
+				|	"sizeof" unary_expression
+				|	"sizeof" "(" type_name ")"
+				;
+
+unary_operator		:	"&"
+				|	"*"
+				|	"+"
+				|	"-"
+				|	"~"
+				|	"!"
+				;
+
+cast_expression		:	unary_expression
+				|	"(" type_name ")" cast_expression
+				;
+
+
+binary_expression	:	binary_expression	"+"	binary_expression
+				|	binary_expression	"-"	binary_expression
+				|	binary_expression	"*"	binary_expression
+				|	binary_expression	"/"	binary_expression
+				|	binary_expression	"%"	binary_expression
+				|	binary_expression	"<<"	binary_expression
+				|	binary_expression	">>"	binary_expression
+				|	binary_expression	"<"	binary_expression
+				|	binary_expression	"<="	binary_expression
+				|	binary_expression	">"	binary_expression
+				|	binary_expression	">="	binary_expression
+				|	binary_expression	"=="	binary_expression
+				|	binary_expression	"!="	binary_expression
+				|	binary_expression	"&"	binary_expression
+				|	binary_expression	"^"	binary_expression
+				|	binary_expression	"|"	binary_expression
+				|	binary_expression	"&&"	binary_expression
+				|	binary_expression	"||"	binary_expression
+				|	cast_expression
+				;
+
+
+
+constant_expression		:	binary_expression
+					|	binary_expression	"?"	expression	":"	constant_expression
+					;
+
+assignment_expression		:	constant_expression
+					|	unary_expression assignment_operator assignment_expression
+					;
+
+assignment_operator		:	"="
+					|	"*="
+					|	"/="
+					|	"%="
+					|	"+="
+					|	"-="
+					|	"<<="
+					|	">>="
+					|	"&="
+					|	"^="
+					|	"|="
+					;
+
+
+
+
+/*常量*/
+constant			:	OCT_CONSTANT
+				|	HEX_CONSTANT
+				|	DEC_CONSTANT
+				|	FLOAT_CONSTANT
+				|	CHAR_CONSTANT
+				|	STRING_LITERAL
+				;
 
 
 
