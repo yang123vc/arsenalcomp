@@ -96,9 +96,7 @@
     配置编译器相关的选项
 */
 #if(AR_COMPILER == AR_VC6 || AR_COMPILER == AR_VC9)
-
-
-
+		
 		#pragma warning(disable : 4100)
 		#pragma warning(disable : 4127)
 		#pragma warning(disable : 4201)
@@ -182,7 +180,7 @@
 		#include <math.h>
 		#include <wctype.h>
 		
-		#include <windows.h>
+		
 #else
     #error "Unknow Compiler!"
 
@@ -191,6 +189,8 @@
 
 
 #if(AR_COMPILER == AR_VC6 || AR_COMPILER == AR_VC9 || AR_COMPILER == AR_BCB6)
+
+		#include <windows.h>
 
 		#if defined(NDEBUG)
 				#define AR_NDEBUG
@@ -233,6 +233,7 @@
 				#define AR_FUNC_NAME			__FUNC__
 		#endif
 
+		
 
 #elif(AR_COMPILER == AR_GCC3 || AR_COMPILER == AR_GCC4)
 
@@ -281,6 +282,8 @@
 
 #define			AR_MEM_POLICY		(1)
 
+
+/*sizeof(bool_t) 必须等于1*/
 
 
 #if defined(__cplusplus)

@@ -486,13 +486,34 @@ void			PSR_PrintSymbolMap(const psrSymbMap_t *map, arString_t *str)
 				rec = map->bucket[i];
 				while(rec)
 				{
-						PSR_PrintSymbol(rec->key, str);
-						AR_AppendString(str, L" : ");
-						PSR_PrintSymbolList(&rec->lst, str);
-						AR_AppendFormatString(str, L"\r\n");
+						if(rec->key->type == PSR_NONTERM)
+						{
+								PSR_PrintSymbol(rec->key, str);
+								AR_AppendString(str, L" : ");
+								PSR_PrintSymbolList(&rec->lst, str);
+								AR_AppendFormatString(str, L"\r\n");
+						}
 						rec = rec->next;
 				}
 		}
+
+		for(i = 0; i < MAP_BUCKET_SIZE; ++i)
+		{
+				const psrMapRec_t *rec;
+				rec = map->bucket[i];
+				while(rec)
+				{
+						if(rec->key->type == PSR_TERM)
+						{
+								PSR_PrintSymbol(rec->key, str);
+								AR_AppendString(str, L" : ");
+								PSR_PrintSymbolList(&rec->lst, str);
+								AR_AppendFormatString(str, L"\r\n");
+						}
+						rec = rec->next;
+				}
+		}
+
 }
 
 

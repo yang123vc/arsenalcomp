@@ -183,8 +183,6 @@ static void __handle_reduce(parser_t *parser, const psrAction_t *action)
 				{
 						new_node = NULL;
 				}
-				
-
 		}
 
 		if(action->reduce_count > 0)
@@ -438,13 +436,18 @@ bool_t PSR_AddToken(parser_t *parser, const psrToken_t *tok)
 				switch(action->type)
 				{
 				case PSR_SHIFT:
+				{
 						__handle_shift(parser, action->shift_to, tok, term);
 						is_done = true;
+				}
 						break;
 				case PSR_REDUCE:
+				{
 						__handle_reduce(parser, action);
+				}
 						break;
 				case PSR_ACCEPT:
+				{
 						AR_ASSERT(PSR_CompSymb(term->term, PSR_EOISymb) == 0);
 						AR_ASSERT(action->reduce_count == 1);
 						AR_ASSERT(parser->state_stack->count == 2);
@@ -453,6 +456,7 @@ bool_t PSR_AddToken(parser_t *parser, const psrToken_t *tok)
 						
 						is_done = true;
 						parser->is_accepted = true;
+				}
 						break;
 				case PSR_ERROR:
 				{
@@ -471,7 +475,9 @@ bool_t PSR_AddToken(parser_t *parser, const psrToken_t *tok)
 				}
 						break;
 				default:
+				{
 						AR_ASSERT(false);
+				}
 				}
 		}
 

@@ -113,6 +113,7 @@ void					PSR_PrintGrammar(const psrGrammar_t *grammar, arString_t *str);
 
 
 const psrRule_t*		PSR_GetStartRule(const psrGrammar_t *grammar);
+bool_t					PSR_SetFirstRule(psrGrammar_t *grammar, const wchar_t *rule_name);
 
 const psrTermInfo_t*	PSR_GetRulePrecAssocInfo(const psrGrammar_t *grammar, const psrRule_t *rule);
 

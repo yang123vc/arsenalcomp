@@ -15,15 +15,18 @@
 #ifndef __RAY_PARSER_H__
 #define __RAY_PARSER_H__
 
+
 #include "ray.h"
 #include "raytype.h"
+
 
 
 AR_NAMESPACE_BEGIN
 
 
-
-
+lex_t*			Ray_BuildLexer(const arIOCtx_t *io);
+psrGrammar_t*	Ray_BuildGrammar(const arIOCtx_t *io);
+parser_t*		Ray_BuildParser(psrGrammar_t *grammar);
 
 
 AR_NAMESPACE_END
