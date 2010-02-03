@@ -15,7 +15,6 @@
 
 #include "rayparser.h"
 
-//#include "raygmr.h"
 #include "rayparser_impl.h"
 
 AR_NAMESPACE_BEGIN

@@ -1079,10 +1079,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\Arsenal\Ray\raygmr.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\Arsenal\Ray\rayparser.c"
 				>
 			</File>
