@@ -131,9 +131,12 @@
 %token	"float"	:	'"float"(?!{keyword_lhd})'	,1		;	//FLOAT
 %token	"double"	:	'"double"(?!{keyword_lhd})'	,1	;	//DOUBLE
 
+/*
 %token	"__stdcall"	:	'"__stdcall"'				,1	;
 %token	"__cdecl" 		:	'"__cdecl"'				,1	;
+*/
 
+%token	"attribute" 		:	'"attribute"'				,1	;
 
 
 %token	"..."		:	'"..."'		,1		;	//ELLIPSIS
@@ -351,15 +354,14 @@ type_qualifier			:	"const"
 
 
 /*调用约定*/
-call_convention			:	"__stdcall"
-					|	"__cdecl"
+attribute_modifier			:	"attribute" "(" STRING_LITERAL ")"
 					|	.	%prec SPEC_ACTION
 					;
 
 /*所有声明的变量，函数指针，类型，等等都会被规约为declarator或declarator_list*/
 
-declarator				:	call_convention pointer direct_declarator
-					|	call_convention direct_declarator
+declarator				:	attribute_modifier pointer direct_declarator
+					|	attribute_modifier direct_declarator
 
 					;
 
