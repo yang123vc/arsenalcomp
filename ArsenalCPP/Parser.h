@@ -89,6 +89,7 @@ public:
 		void	PrintFollowSet()const;
 		bool	PrintLeftRecursion()const;
 		bool	IsLeftRecursion()const;
+		bool	SetFirstRule(const wchar_t *name);
 public:
 		ARContext*		IOContext();
 
