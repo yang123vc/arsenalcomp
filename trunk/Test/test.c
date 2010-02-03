@@ -109,11 +109,11 @@ void AR_Test()
 		//rgx_test();
 		//calc_test();
 
-		parser_test();
+		//parser_test();
 		//grammar_test();
 
 		//lalr_test();
-		//ray_test();
+		ray_test();
 		
 #else
 		AR_printf(L"dll version\r\n");
