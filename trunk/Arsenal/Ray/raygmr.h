@@ -367,33 +367,33 @@ static const rayTermInfo_t	__ray_term[] =
 
 */
 
-		{OR_OP,			L"||",			PSR_ASSOC_NOASSOC, 1, ray_handle_token},
+		{OR_OP,			L"||",			PSR_ASSOC_LEFT, 1, ray_handle_token},
 
-		{AND_OP,		L"&&",			PSR_ASSOC_NOASSOC, 2, ray_handle_token},
+		{AND_OP,		L"&&",			PSR_ASSOC_LEFT, 2, ray_handle_token},
 
-		{OR,			L"|",			PSR_ASSOC_NOASSOC, 3, ray_handle_token},
+		{OR,			L"|",			PSR_ASSOC_LEFT, 3, ray_handle_token},
 
-		{XOR,			L"^",			PSR_ASSOC_NOASSOC, 4, ray_handle_token},
+		{XOR,			L"^",			PSR_ASSOC_LEFT, 4, ray_handle_token},
 
-		{AND,			L"&",			PSR_ASSOC_NOASSOC, 5, ray_handle_token},
+		{AND,			L"&",			PSR_ASSOC_LEFT, 5, ray_handle_token},
 
-		{EQ_OP,			L"==",			PSR_ASSOC_NOASSOC, 6, ray_handle_token},
-		{NE_OP,			L"!=",			PSR_ASSOC_NOASSOC, 6, ray_handle_token},
+		{EQ_OP,			L"==",			PSR_ASSOC_LEFT, 6, ray_handle_token},
+		{NE_OP,			L"!=",			PSR_ASSOC_LEFT, 6, ray_handle_token},
 
-		{LE,			L"<",			PSR_ASSOC_NOASSOC, 7, ray_handle_token},
-		{GE,			L">",			PSR_ASSOC_NOASSOC, 7, ray_handle_token},
-		{LE_OP,			L"<=",			PSR_ASSOC_NOASSOC, 7, ray_handle_token},
-		{GE_OP,			L">=",			PSR_ASSOC_NOASSOC, 7, ray_handle_token},
+		{LE,			L"<",			PSR_ASSOC_LEFT, 7, ray_handle_token},
+		{GE,			L">",			PSR_ASSOC_LEFT, 7, ray_handle_token},
+		{LE_OP,			L"<=",			PSR_ASSOC_LEFT, 7, ray_handle_token},
+		{GE_OP,			L">=",			PSR_ASSOC_LEFT, 7, ray_handle_token},
 
-		{RIGHT_OP,		L">>",			PSR_ASSOC_NOASSOC, 8, ray_handle_token},
-		{LEFT_OP,		L"<<",			PSR_ASSOC_NOASSOC, 8, ray_handle_token},
+		{RIGHT_OP,		L">>",			PSR_ASSOC_LEFT, 8, ray_handle_token},
+		{LEFT_OP,		L"<<",			PSR_ASSOC_LEFT, 8, ray_handle_token},
 
-		{ADD,			L"+",			PSR_ASSOC_NOASSOC, 9, ray_handle_token},
-		{SUB,			L"-",			PSR_ASSOC_NOASSOC, 9, ray_handle_token},
+		{ADD,			L"+",			PSR_ASSOC_LEFT, 9, ray_handle_token},
+		{SUB,			L"-",			PSR_ASSOC_LEFT, 9, ray_handle_token},
 
-		{MUL,			L"*",			PSR_ASSOC_NOASSOC, 10, ray_handle_token},
-		{DIV,			L"/",			PSR_ASSOC_NOASSOC, 10, ray_handle_token},
-		{MOD,			L"%",			PSR_ASSOC_NOASSOC, 10, ray_handle_token},
+		{MUL,			L"*",			PSR_ASSOC_LEFT, 10, ray_handle_token},
+		{DIV,			L"/",			PSR_ASSOC_LEFT, 10, ray_handle_token},
+		{MOD,			L"%",			PSR_ASSOC_LEFT, 10, ray_handle_token},
 
 		{IF_STMT_PREC,				L"IF_STMT_PREC",			PSR_ASSOC_NOASSOC, 101, NULL},
 		{IF_STMT_ELSE_STMT_PREC,	L"IF_STMT_ELSE_STMT_PREC",	PSR_ASSOC_NOASSOC, 102, NULL},
@@ -453,6 +453,23 @@ static const rayRule_t	__ray_rule[] =
 
 		{ L"init_declarator : declarator", NULL, NULL, 0},
 		{ L"init_declarator : declarator = initializer", NULL, NULL, 0},
+
+		
+/*基本类型*/
+		{ L"type_specifier : void", NULL, NULL, 0},
+		{ L"type_specifier : byte", NULL, NULL, 0},
+		{ L"type_specifier : char", NULL, NULL, 0},
+		{ L"type_specifier : short", NULL, NULL, 0},
+		{ L"type_specifier : int", NULL, NULL, 0},
+		{ L"type_specifier : long", NULL, NULL, 0},
+		{ L"type_specifier : float", NULL, NULL, 0},
+		{ L"type_specifier : double", NULL, NULL, 0},
+		{ L"type_specifier : signed", NULL, NULL, 0},
+		{ L"type_specifier : unsigned", NULL, NULL, 0},
+		{ L"type_specifier : struct_or_union_specifier", NULL, NULL, 0},
+		{ L"type_specifier : enum_specifier", NULL, NULL, 0},
+		{ L"type_specifier : TYPE_ID", NULL, NULL, 0},
+
 
 		
 
@@ -625,6 +642,9 @@ static const rayRule_t	__ray_rule[] =
 		{L"jump_statement		:	return expression ;", NULL, NULL,0},
 
 
+
+
+
 		
 
 		/*表达式*/
@@ -717,20 +737,6 @@ static const rayRule_t	__ray_rule[] =
 
 
 
-/*基本类型*/
-		{ L"type_specifier : void", NULL, NULL, 0},
-		{ L"type_specifier : byte", NULL, NULL, 0},
-		{ L"type_specifier : char", NULL, NULL, 0},
-		{ L"type_specifier : short", NULL, NULL, 0},
-		{ L"type_specifier : int", NULL, NULL, 0},
-		{ L"type_specifier : long", NULL, NULL, 0},
-		{ L"type_specifier : float", NULL, NULL, 0},
-		{ L"type_specifier : double", NULL, NULL, 0},
-		{ L"type_specifier : signed", NULL, NULL, 0},
-		{ L"type_specifier : unsigned", NULL, NULL, 0},
-		{ L"type_specifier : struct_or_union_specifier", NULL, NULL, 0},
-		{ L"type_specifier : enum_specifier", NULL, NULL, 0},
-		{ L"type_specifier : TYPE_ID", NULL, NULL, 0},
 
 
 
@@ -741,9 +747,6 @@ static const rayRule_t	__ray_rule[] =
 		{ L"constant : FLOAT_CONSTANT", NULL, NULL, 0},
 		{ L"constant : CHAR_CONSTANT", NULL, NULL, 0},
 		{ L"constant : STRING_LITERAL", NULL, NULL, 0}
-
-		
-
 };
 
 
