@@ -114,6 +114,8 @@ static void parse_code(lex_t *lex, const wchar_t *sources)
 
 
 }
+
+
 
 
 
@@ -131,6 +133,14 @@ void ray_test()
 
 		lex = Ray_BuildLexer(NULL);
 		AR_ASSERT(lex != NULL);
+		
+		sources = __load_txt(DEF_SOUR_PATH);
+
+		parse_code(lex, sources);
+
+		AR_DEL(sources);
+		sources = NULL;
+
 
 		gmr = Ray_BuildGrammar(NULL);
 		AR_ASSERT(gmr != NULL);
@@ -160,15 +170,20 @@ void ray_test()
 		
 
 		getchar();
+		
 		PSR_UnInitSymbMap(&first);
 		PSR_UnInitSymbMap(&follow);
 		if(sources)AR_DEL(sources);
 		PSR_DestroyParser(parser);
 		PSR_DestroyGrammar(gmr);
+		
 		LEX_Destroy(lex);
 		AR_DestroyString(str);
 
 }
+
+
+
 
 
 AR_NAMESPACE_END

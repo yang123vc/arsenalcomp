@@ -122,3 +122,4 @@ PSR_DestroyParserFirstFollowView
 
 CFG_CollectGrammarConfig
 CFG_DestroyGrammarConfig
+CFG_ConfigToCode

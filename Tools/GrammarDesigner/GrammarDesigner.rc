@@ -240,6 +240,10 @@ BEGIN
         END
         MENUITEM "&Build",                      ID_PARSER_BUILD
         MENUITEM "&Parse Input",                ID_PARSER_PARSE
+        POPUP "Generate"
+        BEGIN
+            MENUITEM "Template",                    ID_GENERATE_TEMPLATE
+        END
     END
     POPUP "&Tools"
     BEGIN

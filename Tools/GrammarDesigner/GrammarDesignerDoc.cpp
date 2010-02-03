@@ -53,6 +53,7 @@ BEGIN_MESSAGE_MAP(CGrammarDesignerDoc, CRichEditDoc)
 
 		ON_COMMAND(ID_TEST_TEST, &CGrammarDesignerDoc::OnTestTest)
 		ON_COMMAND(ID_TEST_TEST2, &CGrammarDesignerDoc::OnTestTest2)
+		ON_COMMAND(ID_GENERATE_TEMPLATE, &CGrammarDesignerDoc::OnGenerateTemplate)
 END_MESSAGE_MAP()
 
 
@@ -613,6 +614,7 @@ FAILED_POINT:
 }
 
 
+
 void CGrammarDesignerDoc::OnParserShowactiontable()
 {
 		// TODO: Add your command handler code here
@@ -1079,4 +1081,82 @@ void CGrammarDesignerDoc::OnTestTest2()
 		// TODO: Add your command handler code here
 
 		
+}
+
+void CGrammarDesignerDoc::OnGenerateTemplate()
+{
+		// TODO: Add your command handler code here
+		static TCHAR BASED_CODE szFilter[] = TEXT("Output Files (*.c)|*.c|All Files (*.*)|*.*||");
+		CFileDialog		file(FALSE, TEXT("c"), NULL, 4|2, szFilter);
+		
+		
+		CGrammarDesignerView *view = (CGrammarDesignerView*)reinterpret_cast<CGrammarDesignerView*>(m_viewList.GetHead());
+		
+		CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
+		COutputWnd		&output = main_frm->GetOutputView();
+
+		main_frm->ClearShow();
+		ClearParser();
+		this->SaveModified();
+		/*
+		if(this->IsModified())
+		{
+				return;
+		}
+		*/
+
+		CString str;
+		view->GetRichEditCtrl().GetWindowText(str);
+		
+
+		main_frm->ClearShow();
+
+		ARSpace::cfgReport_t	report = {report_build_func, (void*)&output};
+		ARSpace::cfgConfig_t *cfg = ARSpace::CFG_CollectGrammarConfig(str.GetString(), &report);
+		ARSpace::arString_t *code		= NULL;
+		if(cfg == NULL || cfg->has_error)
+		{
+				main_frm->MessageBox(TEXT("Invalid Grammar"));
+				goto END_POINT;
+
+		}
+		
+		code = ARSpace::AR_CreateString();
+		
+		if(!ARSpace::CFG_ConfigToCode(cfg, code))
+		{
+				main_frm->MessageBox(TEXT("Failed to generate parser template"));
+				goto END_POINT;
+		}
+
+		
+		
+		if(file.DoModal() != IDOK)
+		{
+				
+		}else
+		{
+				CTextFileWrite fw(file.GetPathName(), CTextFileBase::UTF_8);
+				fw.Write(AR_GetStrString(code));
+				main_frm->MessageBox(TEXT("Generate Template successful"));
+		}
+		
+		
+		
+		
+
+		
+
+END_POINT:
+		
+		if(cfg)
+		{
+				CFG_DestroyGrammarConfig(cfg);
+				cfg = NULL;
+		}
+
+		if(code)
+		{
+				AR_DestroyString(code);
+		}
 }

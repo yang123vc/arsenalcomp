@@ -104,6 +104,7 @@ public:
 		
 		
 		afx_msg void OnTestTest2();
+		afx_msg void OnGenerateTemplate();
 };
 
 
