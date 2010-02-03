@@ -16,8 +16,9 @@
 #define __ARSENAL_RAY_H__
 
 #include "../Common/common.h"
-
-
+#include "../Lex/lex.h"
+#include "../Parser/Grammar.h"
+#include "../Parser/parser.h"
 AR_NAMESPACE_BEGIN
 
 

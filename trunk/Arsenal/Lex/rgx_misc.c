@@ -482,8 +482,8 @@ static arSpinLock_t		__g_spin_lock;
 		#define RGX_THREAD_LIST_INIT_COUNT		0
 		#define RGX_THREAD_LIST_POOL_NUM		0
 #else
-		#define RGX_THREAD_LIST_INIT_COUNT		32
-		#define RGX_THREAD_LIST_POOL_NUM		128
+		#define RGX_THREAD_LIST_INIT_COUNT		64
+		#define RGX_THREAD_LIST_POOL_NUM		256
 #endif
 
 void	RGX_InitMisc()

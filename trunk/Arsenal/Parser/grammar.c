@@ -824,7 +824,7 @@ bool_t			PSR_CheckIsValidGrammar(const psrGrammar_t *grammar)
 						{
 								/*AR_error(L"Grammar Warning : The rule %ls is declared but never used\r\n", symb->name);*/
 
-								AR_printf_ctx((arIOCtx_t*)&grammar->io_ctx,L"Grammar Warning : The rule %ls is declared but never used\r\n", symb->name);
+								AR_printf_ctx((arIOCtx_t*)&grammar->io_ctx,L"Grammar Warning : The rule <%ls> is declared but never used\r\n", symb->name);
 						}
 				}
 		}
@@ -835,7 +835,42 @@ bool_t			PSR_CheckIsValidGrammar(const psrGrammar_t *grammar)
 const psrRule_t*		PSR_GetStartRule(const psrGrammar_t *grammar)
 {
 		return grammar->rules[0];
+}
 
+
+bool_t					PSR_SetFirstRule(psrGrammar_t *grammar, const wchar_t *rule_name)
+{
+		psrRule_t *start = grammar->rules[0];
+		const psrSymb_t *lhs = NULL;
+		size_t i;
+		AR_ASSERT(grammar != NULL && grammar->count > 0 && rule_name != NULL);
+
+		if(PSR_GetTermSymbInfoByName(grammar, rule_name) != NULL)
+		{
+				return false;
+		}
+
+		if(AR_wcscmp(PSR_StartSymb->name, rule_name) == 0)return false;
+
+
+		for(i = 0; i < grammar->count; ++i)
+		{
+				if(AR_wcscmp(rule_name, grammar->rules[i]->head->name) == 0)
+				{
+						lhs = PSR_CopyNewSymb(grammar->rules[i]->head);
+						break;
+				}
+		}
+
+		if(lhs == NULL)return false;
+
+		AR_ASSERT(grammar->count > 1);
+		AR_ASSERT(start != NULL && start->body.count > 0);
+
+		PSR_DestroySymb(start->body.lst[0]);
+		start->body.lst[0] = lhs;
+		
+		return true;
 }
 
 const psrTermInfo_t* PSR_GetRulePrecAssocInfo(const psrGrammar_t *grammar, const psrRule_t *rule)

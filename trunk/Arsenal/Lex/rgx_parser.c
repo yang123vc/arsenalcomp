@@ -54,6 +54,9 @@ static const wchar_t*	__transform_char(const wchar_t *input, wchar_t *c, rgxErro
 		case L'a': 
 				*c = L'\a';
 				return ++p;
+		case L'b':
+				*c = L'\b';
+				return ++p;
 		case L'f': 
 				*c = L'\f';
 				return ++p;
@@ -224,7 +227,8 @@ static const wchar_t* __get_charset(const wchar_t *input, wchar_t *c, rgxError_t
 		case L'\r': 
 		case L'\t': 
 		case L'\v': 
-//				AR_ASSERT(0);
+		case L'\b':
+/*				AR_ASSERT(0);*/
 				err->pos = input;
 				return NULL;
 		case L'{':

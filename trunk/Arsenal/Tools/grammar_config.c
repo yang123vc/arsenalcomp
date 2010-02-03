@@ -1148,9 +1148,6 @@ static const cfgRuleDef_t	__cfg_rule[] =
 {
 
 		
-		{ L"program				:		item_list #",			__handle_program, 0},
-		{ L"program				:		item_list error #",		__handle_program, 0},
-
 		{ L"item_list			:		item_list item",	__handle_item_list, 0},
 		{ L"item_list			:		",	NULL, 0},
 		
@@ -1193,6 +1190,9 @@ static const cfgRuleDef_t	__cfg_rule[] =
 		{ L"prec_decl			:		",												NULL,0},
 		{ L"action_decl			:		%action lexeme",								__handle_action_decl,0},
 		{ L"action_decl			:		",										NULL,0},
+
+		{ L"program				:		item_list #",			__handle_program, 0},
+		{ L"program				:		item_list error #",		__handle_program, 0}
 
 };
 
@@ -1269,6 +1269,13 @@ static psrGrammar_t*	__build_grammar(psrCtx_t *psr_ctx, arIOCtx_t *io)
 						AR_error(AR_ERR_FATAL, L"%hs\r\n", AR_FUNC_NAME);
 				}
 
+		}
+
+		if(!PSR_SetFirstRule(gmr, L"program"))
+		{
+				AR_ASSERT(false);
+				AR_error(AR_ERR_FATAL, L"%hs\r\n", AR_FUNC_NAME);
+				return NULL;
 		}
 		
 		if(!PSR_CheckIsValidGrammar(gmr))

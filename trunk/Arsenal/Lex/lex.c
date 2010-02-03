@@ -349,6 +349,7 @@ REMATCH:
 		if(empty_match_cnt > LEX_MAX_EMPTY_MATCH_CNT)
 		{
 				AR_printf_ctx(&lex->io_ctx, L"%ls\r\n", L"Invalid empty pattern\r\n");
+				AR_ASSERT(false);
 				return false;
 		}
 
