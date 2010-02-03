@@ -326,7 +326,7 @@ CAPTION "About GrammarDesigner"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,14,14,20,20
-    LTEXT           "GrammarDesigner, Version 0.1.2.4",IDC_STATIC,42,7,114,8,SS_NOPREFIX
+    LTEXT           "Version 0.1.152.0",IDC_STATIC,42,7,114,8,SS_NOPREFIX
     LTEXT           "Copyright (C) 2009",IDC_STATIC,42,26,114,8
     DEFPUSHBUTTON   "OK",IDOK,113,41,50,14,WS_GROUP
 END
@@ -441,8 +441,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,1,38,0
- PRODUCTVERSION 0,1,38,0
+ FILEVERSION 0,1,152,0
+ PRODUCTVERSION 0,1,152,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -459,12 +459,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "None"
             VALUE "FileDescription", "Grammar Designer"
-            VALUE "FileVersion", "0, 1, 38, 0"
+            VALUE "FileVersion", "0, 1, 152, 0"
             VALUE "InternalName", "GrammarDesigner.exe"
             VALUE "LegalCopyright", "Solidus.  All rights reserved."
             VALUE "OriginalFilename", "GrammarDesigner.exe"
             VALUE "ProductName", "Grammar Designer"
-            VALUE "ProductVersion", "0, 1, 38, 0"
+            VALUE "ProductVersion", "0, 1, 152, 0"
         END
     END
     BLOCK "VarFileInfo"
