@@ -31,6 +31,7 @@ lex_t*	Ray_BuildLexer(const arIOCtx_t *io)
 		{
 				if(!LEX_Insert(lex, __g_lex_name[i]))
 				{
+						LEX_Destroy(lex);
 						AR_error(AR_ERR_FATAL, L"Ray_BuildLexer failed : %ls\r\n",   __g_lex_name[i]);
 						AR_ASSERT(false);
 						return NULL;
@@ -45,6 +46,7 @@ lex_t*	Ray_BuildLexer(const arIOCtx_t *io)
 				act.value = __g_lex_pattern[i].val;
 				if(!LEX_InsertRule(lex, __g_lex_pattern[i].regex, &act))
 				{
+						LEX_Destroy(lex);
 						AR_error(AR_ERR_FATAL, L"Ray_BuildLexer failed : %ls\r\n",   __g_lex_pattern[i].regex);
 						AR_ASSERT(false);
 						return NULL;
@@ -98,6 +100,8 @@ psrGrammar_t*	Ray_BuildGrammar(const arIOCtx_t *io)
 		{
 				if(!PSR_InsertTerm(grammar, __ray_term[i].name, __ray_term[i].val, __ray_term[i].assoc, __ray_term[i].prec, __ray_term[i].leaf_f))
 				{
+						PSR_DestroyGrammar(grammar);
+						grammar = NULL;
 						AR_error(AR_ERR_FATAL, L"Failed to build ray grammar  : Term : %ls\r\n",   __ray_term[i].name);
 						AR_ASSERT(false);
 						return NULL;
@@ -108,6 +112,8 @@ psrGrammar_t*	Ray_BuildGrammar(const arIOCtx_t *io)
 		{
 				if(!PSR_InsertRuleByStr(grammar, __ray_rule[i].rule, __ray_rule[i].prec_token, __ray_rule[i].handler, __ray_rule[i].auto_ret))
 				{
+						PSR_DestroyGrammar(grammar);
+						grammar = NULL;
 						AR_error(AR_ERR_FATAL, L"Failed to build ray grammar  : Rule : %ls\r\n",   __ray_rule[i].rule);
 						AR_ASSERT(false);
 						return NULL;
@@ -118,12 +124,39 @@ psrGrammar_t*	Ray_BuildGrammar(const arIOCtx_t *io)
 
 		if(!PSR_CheckIsValidGrammar(grammar))
 		{
+				PSR_DestroyGrammar(grammar);
+				grammar = NULL;
 				AR_error(AR_ERR_FATAL, L"%ls\r\n", L"Ray_BuildGrammar failed");
 				AR_ASSERT(false);
 				return NULL;
 		}
 
 		return grammar;
+}
+
+parser_t*		Ray_BuildParser(psrGrammar_t *grammar)
+{
+		parser_t *parser;
+		AR_ASSERT(grammar != NULL);
+		
+		parser = PSR_CreateParser(grammar, PSR_LALR);
+
+		if(PSR_CountParserConflict(parser))
+		{
+				{
+						arString_t		*str = AR_CreateString();
+						PSR_PrintParserConflict(parser, str);
+						AR_StrPrint(str);
+						AR_DestroyString(str);
+				}
+				
+				AR_error(AR_ERR_FATAL, L"%ls\r\n", L"Ray_BuildParser failed");
+				AR_ASSERT(false);
+				PSR_DestroyParser(parser);
+				return NULL;
+		}
+
+		return parser;
 }
 
 
