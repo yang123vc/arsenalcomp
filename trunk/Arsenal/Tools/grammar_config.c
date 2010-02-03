@@ -1800,13 +1800,21 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 
 						if(AR_wcsstr(AR_GetStrString(code), handler) == NULL)
 						{
-								AR_AppendString(code, L"/*");
-								AR_AppendString(code, cfg->rule[i].lhs);
-								AR_AppendString(code, L"\t:\t");
-								AR_AppendString(code, cfg->rule[i].rhs);
-								AR_AppendString(code, L"*/");
-								AR_AppendString(code, L"\n");
+								size_t k;
+								for(k = 0; k < cfg->rule_cnt; ++k)
+								{
+										if(AR_wcscmp(cfg->rule[k].lhs, cfg->rule[i].lhs) == 0)
+										{
+												AR_AppendString(code, L"/*");
+												AR_AppendString(code, cfg->rule[k].lhs);
+												AR_AppendString(code, L"\t:\t");
+												AR_AppendString(code, cfg->rule[k].rhs);
+												AR_AppendString(code, L"*/");
+												AR_AppendString(code, L"\n");
+										}
+								}
 								AR_AppendString(code, handler);
+								AR_AppendString(code, L"\n");
 								AR_AppendString(code, L"\n");
 						}
 
