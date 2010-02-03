@@ -221,7 +221,13 @@ bool	Grammar::IsLeftRecursion()const
 ARContext*		Grammar::IOContext()
 {
 		return m_io_ctx;
-		
+}
+
+
+bool	Grammar::SetFirstRule(const wchar_t *name)
+{
+		AR_ASSERT(name != NULL);
+		return (bool)PSR_SetFirstRule(m_grammar, name);
 }
 /***************************************************************Parser****************************************************/
 
