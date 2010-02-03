@@ -1,3 +1,5 @@
+#ifndef __RAY_GRAMMAR_H__
+#define __RAY_GRAMMAR_H__
 
 /*  '"'  == \x22,  '\'' == \x27 */
 
@@ -614,7 +616,7 @@ static const rayRule_t	__ray_rule[] =
 		{L"compound_statement	:	{ }", NULL, NULL, 0},
 		{L"compound_statement	:	{ statement_list }", NULL, NULL, 0},
 		{L"compound_statement	:	{ push_symtbl	declaration_list pop_symtbl	}", NULL, NULL, 0},
-		{L"compound_statement	:	{ push_symtbl	declaration_list statement_list pop_symtbl	}					", NULL, NULL, 0},
+		{L"compound_statement	:	{ push_symtbl	declaration_list statement_list pop_symtbl	}", NULL, NULL, 0},
 		{L"compound_statement	:	{ error  }", NULL, NULL, 0},
 		{L"compound_statement	:	{ push_symtbl declaration_list error pop_symtbl }", NULL, NULL, 0},
 		{L"compound_statement	:	{ push_symtbl declaration_list statement_list error pop_symtbl }", NULL, NULL, 0},
@@ -749,13 +751,7 @@ static const rayRule_t	__ray_rule[] =
 		{ L"constant : STRING_LITERAL", NULL, NULL, 0}
 };
 
-
-
-#if(0)
-
-
-
-
+#define RAY_START_RULE_NAME		L"translation_unit"
 
 
 

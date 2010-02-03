@@ -63,6 +63,12 @@ typedef struct __cfg_prec_tag
 		size_t			cap;
 }cfgPrec_t;
 
+typedef struct __cfg_start_tag
+{
+		size_t	line;
+		wchar_t	*start_rule;
+}cfgStart_t;
+
 typedef struct __rule_tag
 {
 		size_t					line;
@@ -87,6 +93,7 @@ typedef struct __cfg_node_list_tag
 
 typedef struct __cfg_config_tag
 {
+		
 		cfgName_t		*name;
 		size_t			name_cnt;
 
@@ -98,6 +105,8 @@ typedef struct __cfg_config_tag
 
 		cfgRule_t		*rule;
 		size_t			rule_cnt;
+		
+		cfgStart_t		start;
 
 		bool_t			has_error;
 }cfgConfig_t;
