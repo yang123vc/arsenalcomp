@@ -361,6 +361,8 @@ void parser_test()
 				}
 				
 				AR_printf(L"----------------------\r\n");
+
+				AR_printf(L"start rule == %ls : %d\r\n", cfg->start.start_rule, cfg->start.line);
 		
 		//		arString_t *str = NULL;
 		//		CFG_ConfigToCode(cfg, str);
@@ -369,9 +371,13 @@ void parser_test()
 				if(!cfg->has_error)
 				{
 						const wchar_t *input = __load_txt(DEF_SOUR_PATH);
-						parse_code(cfg, input);
+					//	parse_code(cfg, input);
 
 						AR_DEL(input);
+				}else
+				{
+						AR_printf(L"has error == %ls\r\n", L"");
+						getchar();
 				}
 		}else
 		{

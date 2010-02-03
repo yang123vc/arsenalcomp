@@ -492,6 +492,26 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 				}
 		}
 
+		if(cfg->start.start_rule != NULL)
+		{
+				has_error = true;
+				for(size_t i = 0; i < cfg->rule_cnt; ++i)
+				{
+						if(AR_wcscmp(cfg->start.start_rule, cfg->rule[i].lhs) == 0)
+						{
+								has_error = false;
+								break;
+						}
+				}
+
+				if(has_error || !grammar->SetFirstRule(cfg->start.start_rule))
+				{
+						CString msg;
+						msg.Format(TEXT("Start Rule Error : \"%ls\"!"), cfg->start.start_rule);
+						output.Append(msg, COutputList::MSG_ERROR, cfg->start.line, tar);
+				}
+		}
+
 		if(!grammar->IsValid())
 		{
 				has_error = true;

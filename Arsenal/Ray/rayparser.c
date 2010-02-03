@@ -19,6 +19,7 @@
 AR_NAMESPACE_BEGIN
 
 
+
 lex_t*	Ray_BuildLexer(const arIOCtx_t *io)
 {
 		lex_t	*lex;
@@ -57,6 +58,8 @@ lex_t*	Ray_BuildLexer(const arIOCtx_t *io)
 		return lex;
 
 }
+
+
 
 
 
@@ -122,7 +125,7 @@ psrGrammar_t*	Ray_BuildGrammar(const arIOCtx_t *io)
 		}
 		
 
-		if(!PSR_CheckIsValidGrammar(grammar))
+		if(!PSR_SetFirstRule(grammar,RAY_START_RULE_NAME) || !PSR_CheckIsValidGrammar(grammar))
 		{
 				PSR_DestroyGrammar(grammar);
 				grammar = NULL;
@@ -133,6 +136,7 @@ psrGrammar_t*	Ray_BuildGrammar(const arIOCtx_t *io)
 
 		return grammar;
 }
+
 
 parser_t*		Ray_BuildParser(psrGrammar_t *grammar)
 {

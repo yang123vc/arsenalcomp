@@ -122,6 +122,7 @@ void ray_test()
 		
 		lex_t *lex;
 		psrGrammar_t	*gmr;
+		parser_t		*parser;
 		psrSymbMap_t	first, follow;
 		const wchar_t *sources = NULL;
 		arString_t *str;
@@ -154,11 +155,15 @@ void ray_test()
 
 		AR_StrPrint(str);
 		
+		parser = Ray_BuildParser(gmr);
+
+		
 
 		getchar();
 		PSR_UnInitSymbMap(&first);
 		PSR_UnInitSymbMap(&follow);
 		if(sources)AR_DEL(sources);
+		PSR_DestroyParser(parser);
 		PSR_DestroyGrammar(gmr);
 		LEX_Destroy(lex);
 		AR_DestroyString(str);

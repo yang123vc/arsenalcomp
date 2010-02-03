@@ -25,6 +25,7 @@ typedef enum
 		CFG_NAME_T,
 		CFG_TOKEN_T,
 		CFG_PREC_T,
+		CFG_START_T,
 		CFG_RULE_T,
 		CFG_NODE_LIST_T,
 		CFG_CONFIG_T,
@@ -41,6 +42,7 @@ struct __cfg_node_tag
 				cfgToken_t		token;
 				cfgRule_t		rule;
 				cfgConfig_t		config;
+				cfgStart_t		start;
 		};
 
 		cfgNodeType_t	type;
@@ -67,6 +69,7 @@ typedef enum
 		EOI	= 0,
 		DELIM ,
 		SKIP = 600,
+		START,
 		NAME,
 		TOKEN,
 		PREC,
@@ -99,6 +102,7 @@ static const cfgLexPattern_t	__cfg_pattern[] =
 		{ASSOC,	L"\"%\"(\"left\"|\"right\"|\"noassoc\")", false,1},
 
 		{SKIP,	L"\"%skip\"", false,0},
+		{START,	L"\"%start\"", false,0},
 		{NAME,	L"\"%name\"(?={key_lookahead})", false,0},
 		{TOKEN,	L"\"%token\"(?={key_lookahead})", false,0},
 		{PREC,	L"\"%prec\"(?={key_lookahead})", false,0},
@@ -140,6 +144,7 @@ typedef struct	__cfg_term_info_tag
 static const cfgTermInfo_t	__cfg_term[] =
 {
 		{SKIP, L"%skip"},
+		{START, L"%start"},
 		{NAME, L"%name"},
 		{TOKEN, L"%token"},
 		{PREC, L"%prec"},
@@ -258,7 +263,7 @@ static void CFG_InsertToNodeList(cfgNodeList_t *lst, cfgNode_t *node)
 
 
 
-static void CFG_InitConfig(cfgConfig_t *cfg, cfgNodeList_t *name, cfgNodeList_t *token, cfgNodeList_t *prec, cfgNodeList_t *rule)
+static void CFG_InitConfig(cfgConfig_t *cfg, cfgNodeList_t *name, cfgNodeList_t *token, cfgNodeList_t *prec, cfgNodeList_t *rule, cfgStart_t *start_rule)
 {
 		size_t i;
 		size_t tmp_tok_val = PSR_MIN_TOKENVAL;
@@ -393,6 +398,7 @@ RE_CHECK_POINT:
 				}
 		}
 
+
 		if(rule)
 		{
 				/*cfg->rule_cnt = rule->count;*/
@@ -428,7 +434,17 @@ RE_CHECK_POINT:
 
 		}
 
+		
+		if(start_rule != NULL)
+		{
+				cfg->start.line = start_rule->line;
+				cfg->start.start_rule = AR_wcsdup(start_rule->start_rule);
 
+		}else
+		{
+				cfg->start.start_rule = NULL;
+				cfg->start.line = 0;
+		}
 
 }
 
@@ -465,6 +481,10 @@ static void CFG_UnInitConfig(cfgConfig_t *cfg)
 
 		if(cfg->prec)AR_DEL(cfg->prec);
 
+		if(cfg->start.start_rule)
+		{
+				AR_DEL(cfg->start.start_rule);
+		}
 
 		for(i = 0; i < cfg->rule_cnt; ++i)
 		{
@@ -537,6 +557,14 @@ static void CFG_DestroyNode(cfgNode_t *node)
 				case CFG_PREC_T:
 				{
 						CFG_UnInitPrec(&node->prec);
+						break;
+				}
+				case CFG_START_T:
+				{
+						if(node->start.start_rule)
+						{
+								AR_DEL(node->start.start_rule);
+						}
 						break;
 				}
 				case CFG_RULE_T:
@@ -1034,7 +1062,27 @@ static psrNode_t*		AR_STDCALL __handle_item_list(psrNode_t **nodes, size_t count
 		return (psrNode_t*)res;
 }
 
+/*
+{ L"start_def			:  		%start lexeme",							__handle_start_def,0},
+*/
 
+static psrNode_t*		AR_STDCALL __handle_start_def(psrNode_t **nodes, size_t count, const wchar_t * name_tmp, void *ctx)
+{
+		cfgNode_t		**ns = (cfgNode_t**)nodes;
+		cfgNode_t		*res;
+
+		AR_ASSERT(count == 2);
+		
+		AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T && ns[0]->lexeme.lex_val == START);
+		AR_ASSERT(ns[1] && ns[1]->type == CFG_LEXEME_T);
+
+
+		res = CFG_CreateNode(CFG_START_T);
+		res->start.line = ns[1]->lexeme.line;
+		res->start.start_rule = AR_wcsdup(ns[1]->lexeme.lexeme);
+		return res;
+		
+}
 
 /*
 { L"program				:		item_list #",			__handle_program, 0},
@@ -1047,6 +1095,7 @@ static psrNode_t*		AR_STDCALL __handle_program(psrNode_t **nodes, size_t count, 
 		size_t	i;
 		bool_t			has_err = false;
 		cfgNodeList_t name, token, prec, rule, error, empty;
+		cfgStart_t		*start_rule = NULL;
 
 		AR_ASSERT(count == 2 || count == 3);
 		AR_ASSERT((ns[0] == NULL) || (ns[0] && ns[0]->type == CFG_NODE_LIST_T));
@@ -1095,6 +1144,11 @@ static psrNode_t*		AR_STDCALL __handle_program(psrNode_t **nodes, size_t count, 
 						CFG_InsertToNodeList(&prec, node);
 						break;
 				}
+				case CFG_START_T:
+				{
+						start_rule = &node->start;
+						break;
+				}
 				case CFG_RULE_T:
 				{
 						CFG_InsertToNodeList(&rule, node);
@@ -1117,7 +1171,7 @@ static psrNode_t*		AR_STDCALL __handle_program(psrNode_t **nodes, size_t count, 
 		}
 
 		res = CFG_CreateNode(CFG_CONFIG_T);
-		CFG_InitConfig(&res->config, &name, &token, &prec, &rule);
+		CFG_InitConfig(&res->config, &name, &token, &prec, &rule, start_rule);
 
 		if(error.count > 0 || has_err)
 		{
@@ -1151,6 +1205,7 @@ static const cfgRuleDef_t	__cfg_rule[] =
 		{ L"item_list			:		item_list item",	__handle_item_list, 0},
 		{ L"item_list			:		",	NULL, 0},
 		
+		{ L"item				:		start_def ;",	__handle_item, 0},
 		{ L"item				:		name_def ;",	__handle_item, 0},
 		{ L"item				:		token_def ;",	__handle_item,0},
 		{ L"item				:		prec_def ;",	__handle_item,0},
@@ -1168,7 +1223,6 @@ static const cfgRuleDef_t	__cfg_rule[] =
 		
 
 		{ L"prec_def			:  		assoc term_list ",								__handle_prec_def,0},
-
 
 		
 		{ L"rule_def			: 		lexeme : rhs_list ",							__handle_rule_def,0},
@@ -1190,6 +1244,9 @@ static const cfgRuleDef_t	__cfg_rule[] =
 		{ L"prec_decl			:		",												NULL,0},
 		{ L"action_decl			:		%action lexeme",								__handle_action_decl,0},
 		{ L"action_decl			:		",										NULL,0},
+
+		{ L"start_def			:  		%start lexeme",							__handle_start_def,0},
+		
 
 		{ L"program				:		item_list #",			__handle_program, 0},
 		{ L"program				:		item_list error #",		__handle_program, 0}

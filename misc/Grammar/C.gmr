@@ -216,6 +216,9 @@
 
 
 
+
+%start	translation_unit;
+
 /*编译单元*/
 translation_unit	:	external_declaration
 				|	translation_unit external_declaration
@@ -353,7 +356,7 @@ type_qualifier			:	"const"
 					;
 
 
-/*调用约定*/
+/*声明修饰符*/
 attribute_modifier			:	"attribute" "(" STRING_LITERAL ")"
 					|	.	%prec SPEC_ACTION
 					;
