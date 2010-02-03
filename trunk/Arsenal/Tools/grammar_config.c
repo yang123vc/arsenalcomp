@@ -1600,6 +1600,319 @@ void			CFG_DestroyGrammarConfig(cfgConfig_t *cfg)
 
 }
 
+
+wchar_t*		__str_to_cstr(const wchar_t *str)
+{
+		wchar_t	*ret;
+		wchar_t *l;
+		if(str == NULL)
+		{
+				return NULL;
+		}
+		
+		ret = AR_NEWARR0(wchar_t, AR_wcslen(str) * 2 + 1);
+		l = ret;
+		
+		while(*str)
+		{
+				if(*str == L'\\')
+				{
+						*l++ = L'\\';
+				}else if(*str == L'"')
+				{
+						*l++ = L'\\';
+				}
+
+				*l++ = *str++;
+		}
+		*l = L'\0';
+		return ret;
+}
+
+
+bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
+{
+		size_t i;
+		AR_ASSERT(cfg != NULL && code != NULL);
+
+		if(cfg->has_error)return false;
+
+		if(cfg->name_cnt > 0)
+		{
+				AR_AppendString(code, L"\n");
+				AR_AppendString(code, CFG_NAME_DEF_BEGIN);
+				AR_AppendString(code, L"\n");
+				
+				for(i = 0; i < cfg->name_cnt; ++i)
+				{
+						/*#define CFG_NAME_DEF_ITEM		L"L\"%ls = %ls\""*/
+						wchar_t *name , *regex;
+						name =  __str_to_cstr(cfg->name[i].name);
+						regex = __str_to_cstr(cfg->name[i].regex);
+
+						
+						
+						AR_AppendFormatString(code, CFG_NAME_DEF_ITEM, name, regex);
+						if(i < cfg->name_cnt - 1)AR_AppendString(code, L",");
+						AR_AppendString(code, L"\n");
+
+						if(name)AR_DEL(name);
+						if(regex) AR_DEL(regex);
+				}
+				
+				AR_AppendString(code, CFG_NAME_DEF_END);
+				AR_AppendString(code, L"\n");
+				AR_AppendString(code, L"\n");
+		}
+
+		if(cfg->tok_cnt > 0)
+		{
+				AR_AppendString(code, L"\n");
+				AR_AppendString(code, CFG_TERM_DEF_BEGIN);
+				AR_AppendString(code, L"\n");
+				
+				//#define CFG_TERM_DEF_ITEM	L"{/*name*/L\"%ls\", /*token value*/%d, /*lex_prec*/%d, /*regex*/L\"%ls\", /*is_skip*/L\"%ls\"}"
+
+				for(i = 0; i < cfg->tok_cnt; ++i)
+				{
+						wchar_t *name , *regex;
+						
+						name =  __str_to_cstr(cfg->tok[i].name);
+						regex = __str_to_cstr(cfg->tok[i].regex);
+
+						/*
+						AR_printf(L"regex == %ls\r\n", regex);
+
+						getchar();
+						*/
+
+						if(name != NULL)
+						{
+								AR_AppendFormatString(code, CFG_TERM_DEF_ITEM_1, name, cfg->tok[i].tokval, cfg->tok[i].lex_prec, regex, cfg->tok[i].is_skip ? L"true" : L"false");
+						}else
+						{
+								AR_AppendFormatString(code, CFG_TERM_DEF_ITEM_2, L"NULL", cfg->tok[i].tokval, cfg->tok[i].lex_prec, regex, cfg->tok[i].is_skip ? L"true" : L"false");
+						}
+						if(i < cfg->tok_cnt - 1)AR_AppendString(code, L",");
+						AR_AppendString(code, L"\n");
+
+						if(name)AR_DEL(name);
+						if(regex) AR_DEL(regex);
+				}
+
+
+				AR_AppendString(code, CFG_TERM_DEF_END);
+				AR_AppendString(code, L"\n");
+				AR_AppendString(code, L"\n");
+		}
+
+		if(cfg->prec_cnt > 0)
+		{
+				AR_AppendString(code, L"\n");
+				AR_AppendString(code, CFG_PREC_DEF_BEGIN);
+				AR_AppendString(code, L"\n");
+				
+				//#define CFG_TERM_DEF_ITEM	L"{/*name*/L\"%ls\", /*token value*/%d, /*lex_prec*/%d, /*regex*/L\"%ls\", /*is_skip*/L\"%ls\"}"
+
+				for(i = 0; i < cfg->prec_cnt; ++i)
+				{
+						size_t k;
+						size_t prec = cfg->prec[i].prec_level;
+						const wchar_t *assoc;
+
+						switch(cfg->prec[i].assoc)
+						{
+						case PSR_ASSOC_NOASSOC:
+								assoc = L"PSR_ASSOC_NOASSOC";
+								break;
+						case PSR_ASSOC_LEFT:
+								assoc = L"PSR_ASSOC_LEFT";
+								break;
+						default:/*case PSR_ASSOC_RIGHT:*/
+								assoc = L"PSR_ASSOC_RIGHT";
+								break;
+						}
+
+						for(k = 0; k < cfg->prec[i].count; ++k)
+						{
+								wchar_t *name;
+								size_t tok_val;
+								name  =  __str_to_cstr(cfg->prec[i].prec_tok_set[k]);
+								tok_val = cfg->prec[i].prec_tok_val[k];
+								/*#define CFG_PREC_DEF_BEGIN	L"struct {const wchar_t *name; size_t tokval; size_t prec_level; psrAssocType_t	assoc;}__g_prec_pattern[] =  {"*/
+								/*#define CFG_PREC_DEF_ITEM 	L"{L\"%ls\", %d, %d, %ls}"*/
+								AR_AppendFormatString(code, CFG_PREC_DEF_ITEM, name, tok_val, prec, assoc);
+								if(name)AR_DEL(name);
+
+								if(i == cfg->prec_cnt - 1 && k == cfg->prec[i].count - 1)
+								{
+								}else
+								{
+										AR_AppendString(code, L",");
+								}
+
+								AR_AppendString(code, L"\n");
+						}
+
+				}
+				
+				AR_AppendString(code, CFG_PREC_DEF_END);
+				AR_AppendString(code, L"\n");
+				AR_AppendString(code, L"\n");
+		}
+
+		
+		if(cfg->rule_cnt > 0)
+		{
+				
+				AR_AppendString(code, L"\n");
+
+				for(i = 0; i < cfg->rule_cnt; ++i)
+				{
+						wchar_t *handler, *tmp;
+
+
+						if(cfg->rule[i].action_ins)
+						{
+								if(AR_wcscmp(cfg->rule[i].action_ins, L"NULL") == 0)
+								{
+										continue;
+								}
+								tmp = AR_NEWARR0(wchar_t, 2048 + 1);
+								AR_swprintf(tmp, 2048, CFG_RULE_HANDLER_ITEM_2, cfg->rule[i].action_ins);
+								handler = __str_to_cstr(tmp);
+								if(tmp)
+								{
+										AR_DEL(tmp);
+										tmp = NULL;
+								}
+						}else
+						{
+								tmp = AR_NEWARR0(wchar_t, 2048 + 1);
+								AR_swprintf(tmp, 2048, CFG_RULE_HANDLER_ITEM, cfg->rule[i].lhs);
+								handler = __str_to_cstr(tmp);
+								if(tmp)
+								{
+										AR_DEL(tmp);
+										tmp = NULL;
+								}
+						}
+
+						if(AR_wcsstr(AR_GetStrString(code), handler) == NULL)
+						{
+								AR_AppendString(code, L"/*");
+								AR_AppendString(code, cfg->rule[i].lhs);
+								AR_AppendString(code, L"\t:\t");
+								AR_AppendString(code, cfg->rule[i].rhs);
+								AR_AppendString(code, L"*/");
+								AR_AppendString(code, L"\n");
+								AR_AppendString(code, handler);
+								AR_AppendString(code, L"\n");
+						}
+
+						//AR_AppendString(code, L"\r\n");
+
+						if(handler)AR_DEL(handler);
+				}
+
+				AR_AppendString(code, L"\n");
+				AR_AppendString(code, L"\n");
+
+
+		}
+
+
+
+		if(cfg->rule_cnt > 0)
+		{
+				
+				AR_AppendString(code, L"\n");
+				AR_AppendString(code, CFG_RULE_DEF_BEGIN);
+				AR_AppendString(code, L"\n");
+				
+				
+
+				for(i = 0; i < cfg->rule_cnt; ++i)
+				{
+						wchar_t *rule , *prec, *handler;
+						wchar_t *tmp;
+						tmp = AR_NEWARR0(wchar_t, 2048 + 1);
+						AR_wcscat(tmp, cfg->rule[i].lhs);
+						AR_wcscat(tmp, L"  :  ");
+						AR_wcscat(tmp, cfg->rule[i].rhs);
+
+						rule =  __str_to_cstr(tmp);
+						if(tmp)
+						{
+								AR_DEL(tmp);
+								tmp = NULL;
+						}
+
+						prec = __str_to_cstr(cfg->rule[i].prec_tok);
+						
+						if(cfg->rule[i].action_ins)
+						{
+								handler = __str_to_cstr(cfg->rule[i].action_ins);
+						}else
+						{
+								tmp = AR_NEWARR0(wchar_t, 2048 + 1);
+								AR_swprintf(tmp, 2048, L"handle_%ls", cfg->rule[i].lhs);
+								handler = __str_to_cstr(tmp);
+								if(tmp)
+								{
+										AR_DEL(tmp);
+										tmp = NULL;
+								}
+						}
+
+/*
+#define CFG_RULE_DEF_ITEM 	L"{L\"%ls\", \"%ls\", \"%ls\", %d}"
+#define CFG_RULE_DEF_BEGIN	L"struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	handler; size_t	auto_ret; } __g_rule_pattern[] = {"
+*/						
+						if(prec == NULL)
+						{
+								AR_AppendFormatString(code, CFG_RULE_DEF_ITEM_2, rule, L"NULL", handler, 0);
+						}else
+						{
+								AR_AppendFormatString(code, CFG_RULE_DEF_ITEM_1, rule, prec, handler, 0);
+						}
+						if(i < cfg->rule_cnt - 1)AR_AppendString(code, L",");
+						AR_AppendString(code, L"\n");
+
+						if(rule)AR_DEL(rule);
+						if(prec)AR_DEL(prec);
+						if(handler)AR_DEL(handler);
+				}
+
+
+				AR_AppendString(code, CFG_RULE_DEF_END);
+				AR_AppendString(code, L"\n");
+				AR_AppendString(code, L"\n");
+
+				/*
+				#define CFG_RULE_DEF_ITEM 	L"{L\"%ls\", \"%ls\", \"%ls\", %d}"
+				#define CFG_RULE_DEF_BEGIN	L"struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	handler; size_t	auto_ret; } __g_rule_pattern[] = {"
+				*/
+		}
+
+		if(cfg->start.start_rule != NULL)
+		{
+				AR_AppendFormatString(code, CFG_START_ITEM, cfg->start.start_rule);
+				AR_AppendString(code, L"\n");
+		}
+
+		AR_AppendString(code, L"\n");
+		AR_AppendString(code, CFG_DEF_BUILD_LEX);
+		AR_AppendString(code, L"\n");
+
+
+		AR_AppendString(code, L"\n");
+		AR_AppendString(code, CFG_DEF_BUILD_GRAMMAR);
+		AR_AppendString(code, L"\n");
+		
+		return true;
+}
+
 AR_NAMESPACE_END
 
 

@@ -599,7 +599,7 @@ void search_test()
 
 void str_test6()
 {
-		wprintf(L"%ls\r\n", AR_vtow(L"%ls : %ls\r\n", L"abc", L"def"));
+		wprintf(L"%ls\r\n", L"\\\"=\\\"");
 
 }
 
@@ -614,7 +614,7 @@ void com_test()
 		//str_test4();
 		//str_test5();
 
-		//str_test6();
+		str_test6();
 		
 		//com_test3();
 		//com_conv();

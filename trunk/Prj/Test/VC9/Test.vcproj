@@ -1001,6 +1001,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\Test\gen_code_test.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\Test\gmr_test.c"
 				>
 			</File>

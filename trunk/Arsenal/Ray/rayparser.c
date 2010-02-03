@@ -15,11 +15,49 @@
 
 #include "rayparser.h"
 
-#include "raygmr.h"
+//#include "raygmr.h"
+#include "rayparser_impl.h"
+
 AR_NAMESPACE_BEGIN
 
+lex_t*	Ray_BuildLexer(const arIOCtx_t *io)
+{
+		return __build_lex(io);
+}
 
 
+static void	AR_STDCALL ray_parser_free(psrNode_t *node, void *ctx)
+{
+		AR_printf(L"%ls\r\n", L"ray_parser_free");
+}
+
+static void		AR_STDCALL ray_parser_error(const psrToken_t *tok, const wchar_t *expected[], size_t count, void *ctx)
+{
+		AR_printf(L"%ls\r\n", L"ray_parser_error");
+
+}
+
+
+psrNode_t*		AR_STDCALL ray_handle_token(const psrToken_t *tok,void *ctx)
+{
+		return NULL;
+}
+
+
+static const psrCtx_t		__g_default_psrctx = 
+{
+		ray_parser_error,
+		ray_parser_free,
+		NULL
+};
+
+
+psrGrammar_t*	Ray_BuildGrammar(const arIOCtx_t *io)
+{
+		return __build_grammar(&__g_default_psrctx, io);
+}
+
+#if(0)
 lex_t*	Ray_BuildLexer(const arIOCtx_t *io)
 {
 		lex_t	*lex;
@@ -91,6 +129,8 @@ static const psrCtx_t		__g_default_psrctx =
 };
 
 
+
+
 psrGrammar_t*	Ray_BuildGrammar(const arIOCtx_t *io)
 {
 		psrGrammar_t	*grammar;
@@ -137,6 +177,9 @@ psrGrammar_t*	Ray_BuildGrammar(const arIOCtx_t *io)
 		return grammar;
 }
 
+#endif
+
+
 
 parser_t*		Ray_BuildParser(psrGrammar_t *grammar)
 {
@@ -162,6 +205,7 @@ parser_t*		Ray_BuildParser(psrGrammar_t *grammar)
 
 		return parser;
 }
+
 
 
 AR_NAMESPACE_END

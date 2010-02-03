@@ -54,6 +54,32 @@ static const wchar_t* __load_txt(const wchar_t *path)
 }
 
 
+static void __save_txt(const wchar_t *path, const wchar_t *input)
+{
+		FILE *pf;
+		
+		size_t wn;
+		char *str = NULL;
+		AR_ASSERT(input != NULL && path != NULL);
+
+		pf = _wfopen(path, L"w+");
+
+		AR_ASSERT(pf != NULL);
+		static char head[] = {(char)0xEF, (char)0xBB, (char)0xBF};
+		wn = fwrite(head, 1, 3, pf);
+		AR_ASSERT(wn == 3);
+
+		str = AR_wcs_convto_utf8(input);
+		wn = fwrite(str, 1, AR_strlen(str), pf);
+		AR_ASSERT(wn == AR_strlen(str));
+		fclose(pf);
+		AR_DEL(str);
+}
+
+
+
+
+
 void print_grammar(const psrGrammar_t *gmr)
 {
 		arString_t  *str;
@@ -156,7 +182,7 @@ void parse_code(const cfgConfig_t *cfg, const wchar_t *sources)
 		lexMatch_t match;
 		lexToken_t tok;
 		size_t	i;
-		wchar_t buf[1024];
+
 		
 		AR_ASSERT(cfg != NULL && sources != NULL);
 		
@@ -279,6 +305,10 @@ typedef struct __cfg_report_tag
 
 static cfgReport_t __g_report = { report_func, NULL};
 
+
+#define DEF_SAVE_PATH  L"..\\..\\..\\misc\\gen_code.c"
+
+
 void parser_test()
 {
 		
@@ -303,7 +333,7 @@ void parser_test()
 		{
 				
 
-#if(1)
+#if(0)
 				size_t i;
 				
 				AR_printf(L"----------------------\r\n");
@@ -370,15 +400,25 @@ void parser_test()
 #endif			
 				if(!cfg->has_error)
 				{
-						const wchar_t *input = __load_txt(DEF_SOUR_PATH);
+						//const wchar_t *input = __load_txt(DEF_SOUR_PATH);
 					//	parse_code(cfg, input);
 
-						AR_DEL(input);
+						//AR_DEL(input);
 				}else
 				{
 						AR_printf(L"has error == %ls\r\n", L"");
 						getchar();
 				}
+
+				arString_t *code = AR_CreateString();
+
+				CFG_ConfigToCode(cfg, code);
+
+				AR_StrPrint(code);
+
+				__save_txt(DEF_SAVE_PATH, AR_GetStrString(code));
+
+				AR_DestroyString(code);
 		}else
 		{
 				AR_abort();
@@ -436,6 +476,7 @@ void parser_perf_test()
 		AR_DEL(src_txt);
 		AR_DEL(gmr_txt);
 }
+
 
 
 AR_NAMESPACE_END
