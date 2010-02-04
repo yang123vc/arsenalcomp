@@ -240,10 +240,6 @@ BEGIN
         END
         MENUITEM "&Build",                      ID_PARSER_BUILD
         MENUITEM "&Parse Input",                ID_PARSER_PARSE
-        POPUP "Generate"
-        BEGIN
-            MENUITEM "Template",                    ID_GENERATE_TEMPLATE
-        END
     END
     POPUP "&Tools"
     BEGIN
@@ -263,6 +259,10 @@ BEGIN
             MENUITEM "&Conflict",                   ID_PARSER_SHOWCONFLICT
             MENUITEM "&FirstFollow",                ID_PARSER_SHOWFIRSTFOLLOW
             MENUITEM "Left Recursion",              ID_SHOW_LEFTRECURSION
+        END
+        POPUP "Generate"
+        BEGIN
+            MENUITEM "Template",                    ID_GENERATE_TEMPLATE
         END
     END
     POPUP "&Help"

@@ -217,7 +217,11 @@
 
 
 
-%start	translation_unit;
+%start	program;
+
+program			:	translation_unit	FAKE_EOI
+				|	error FAKE_EOI
+				;
 
 /*±àÒëµ¥Ôª*/
 translation_unit	:	external_declaration
