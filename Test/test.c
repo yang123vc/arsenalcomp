@@ -64,6 +64,7 @@ void code_gen_lex_test();
 #endif
 
 
+
 void AR_Test()
 {
 #if defined(__LIB)
@@ -109,13 +110,13 @@ void AR_Test()
 		//rgx_test();
 		//calc_test();
 
-		parser_test();
+		//parser_test();
 		
 		//grammar_test();
 		
 		//code_gen_lex_test();
 		//lalr_test();
-		//ray_test();
+		ray_test();
 		
 #else
 		AR_printf(L"dll version\r\n");

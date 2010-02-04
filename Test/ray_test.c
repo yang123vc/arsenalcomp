@@ -167,8 +167,6 @@ void ray_test()
 		
 		parser = Ray_BuildParser(gmr);
 
-		
-
 		getchar();
 		
 		PSR_UnInitSymbMap(&first);
