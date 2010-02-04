@@ -100,8 +100,12 @@ typedef struct __rule_tag
 }cfgRule_t;
 
 
-#define	CFG_RULE_HANDLER_ITEM	L"static psrNode_t* AR_STDCALL handle_%ls(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx){return NULL;}"
-#define	CFG_RULE_HANDLER_ITEM_2	L"static psrNode_t* AR_STDCALL %ls(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx){return NULL;}"
+#define	CFG_RULE_HANDLER_DECL	L"static psrNode_t* AR_STDCALL handle_%ls(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);"
+#define	CFG_RULE_HANDLER_DECL_2	L"static psrNode_t* AR_STDCALL %ls(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);"
+
+#define	CFG_RULE_HANDLER_DEFINE	L"static psrNode_t* AR_STDCALL handle_%ls(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)\n{\n\t return NULL;\n}\n"
+#define	CFG_RULE_HANDLER_DEFINE_2	L"static psrNode_t* AR_STDCALL %ls(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)\n{\n\t return NULL;\n}\n"
+
 
 
 #define CFG_RULE_DEF_ITEM_1 	L"{L\"%ls\", L\"%ls\", %ls, %" AR_PLAT_INT_FMT L"d}"

@@ -1633,8 +1633,9 @@ wchar_t*		__str_to_cstr(const wchar_t *str)
 bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 {
 		size_t i;
+		arString_t		*handler_define = NULL;
 		AR_ASSERT(cfg != NULL && code != NULL);
-
+		
 		if(cfg->has_error)return false;
 
 		if(cfg->name_cnt > 0)
@@ -1764,13 +1765,13 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 		
 		if(cfg->rule_cnt > 0)
 		{
-				
+				handler_define	= AR_CreateString();
+
 				AR_AppendString(code, L"\n");
 
 				for(i = 0; i < cfg->rule_cnt; ++i)
 				{
-						wchar_t *handler, *tmp;
-
+						wchar_t *handler, *handler_def, *tmp;
 
 						if(cfg->rule[i].action_ins)
 						{
@@ -1779,8 +1780,12 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 										continue;
 								}
 								tmp = AR_NEWARR0(wchar_t, 2048 + 1);
-								AR_swprintf(tmp, 2048, CFG_RULE_HANDLER_ITEM_2, cfg->rule[i].action_ins);
+								AR_swprintf(tmp, 2048, CFG_RULE_HANDLER_DECL_2, cfg->rule[i].action_ins);
 								handler = __str_to_cstr(tmp);
+
+								AR_swprintf(tmp, 2048, CFG_RULE_HANDLER_DEFINE_2, cfg->rule[i].action_ins);
+								handler_def = __str_to_cstr(tmp);
+
 								if(tmp)
 								{
 										AR_DEL(tmp);
@@ -1789,8 +1794,12 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 						}else
 						{
 								tmp = AR_NEWARR0(wchar_t, 2048 + 1);
-								AR_swprintf(tmp, 2048, CFG_RULE_HANDLER_ITEM, cfg->rule[i].lhs);
+								AR_swprintf(tmp, 2048, CFG_RULE_HANDLER_DECL, cfg->rule[i].lhs);
 								handler = __str_to_cstr(tmp);
+
+								AR_swprintf(tmp, 2048, CFG_RULE_HANDLER_DEFINE, cfg->rule[i].lhs);
+								handler_def = __str_to_cstr(tmp);
+
 								if(tmp)
 								{
 										AR_DEL(tmp);
@@ -1801,26 +1810,38 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 						if(AR_wcsstr(AR_GetStrString(code), handler) == NULL)
 						{
 								size_t k;
+								arString_t *comment = AR_CreateString();
+
 								for(k = 0; k < cfg->rule_cnt; ++k)
 								{
 										if(AR_wcscmp(cfg->rule[k].lhs, cfg->rule[i].lhs) == 0)
 										{
-												AR_AppendString(code, L"/*");
-												AR_AppendString(code, cfg->rule[k].lhs);
-												AR_AppendString(code, L"\t:\t");
-												AR_AppendString(code, cfg->rule[k].rhs);
-												AR_AppendString(code, L"*/");
-												AR_AppendString(code, L"\n");
+												AR_AppendString(comment, L"/*");
+												AR_AppendString(comment, cfg->rule[k].lhs);
+												AR_AppendString(comment, L"\t:\t");
+												AR_AppendString(comment, cfg->rule[k].rhs);
+												AR_AppendString(comment, L"*/");
+												AR_AppendString(comment, L"\n");
 										}
 								}
+
+								AR_AppendString(handler_define, AR_GetStrString(comment));
+								AR_AppendString(handler_define, handler_def);
+								AR_AppendString(handler_define, L"\n");
+								AR_AppendString(handler_define, L"\n");
+								
 								AR_AppendString(code, handler);
 								AR_AppendString(code, L"\n");
 								AR_AppendString(code, L"\n");
+
+								AR_AppendString(code, AR_GetStrString(comment));
+								AR_DestroyString(comment);
 						}
 
 						//AR_AppendString(code, L"\r\n");
 
 						if(handler)AR_DEL(handler);
+						if(handler_def)AR_DEL(handler_def);
 				}
 
 				AR_AppendString(code, L"\n");
@@ -1906,8 +1927,15 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 		if(cfg->start.start_rule != NULL)
 		{
 				AR_AppendFormatString(code, CFG_START_ITEM, cfg->start.start_rule);
-				AR_AppendString(code, L"\n");
+		}else if(cfg->rule_cnt > 0)
+		{
+				AR_AppendFormatString(code, CFG_START_ITEM, cfg->rule[0].lhs);
+		}else
+		{
+				AR_AppendFormatString(code, CFG_START_ITEM, L"");
 		}
+
+		AR_AppendString(code, L"\n");
 
 		AR_AppendString(code, L"\n");
 		AR_AppendString(code, CFG_DEF_BUILD_LEX);
@@ -1917,6 +1945,13 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 		AR_AppendString(code, L"\n");
 		AR_AppendString(code, CFG_DEF_BUILD_GRAMMAR);
 		AR_AppendString(code, L"\n");
+
+		if(handler_define)
+		{
+				AR_AppendString(code, L"\n\n\n\n");
+				AR_AppendString(code, AR_GetStrString(handler_define));
+				AR_DestroyString(handler_define);
+		}
 		
 		return true;
 }
