@@ -110,7 +110,7 @@ typedef enum
 		R_PAREN,		/*)*/
 		COMMA,			/*,*/
 		COLON,			/*:*/
-		ASSING,			/*=*/
+		ASSIGN,			/*=*/
 		DOT,			/*.*/
 		QUEST,			/*?*/
 
@@ -236,7 +236,7 @@ static struct {
 		{L"}", R_BRACES, 0, L"\"}\"", false},
 		{L",", COMMA, 0, L"\",\"", false},
 		{L":", COLON, 0, L"\":\"", false},
-		{L"=", ASSING, 0, L"\"=\"", false},
+		{L"=", ASSIGN, 0, L"\"=\"", false},
 		{L"(", L_PAREN, 0, L"\"(\"", false},
 		{L")", R_PAREN, 0, L"\")\"", false},
 		{L"[", L_SQUARE, 0, L"\"[\"", false},
@@ -853,6 +853,10 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 #define START_RULE L"program"
 
 
+static psrNode_t*		AR_STDCALL ray_handle_token(const psrToken_t *tok,void *ctx);
+
+
+
 lex_t*	__ray_build_lex_impl(const arIOCtx_t *io)								
 {																				
 		lex_t	*lex;															
@@ -885,6 +889,10 @@ lex_t*	__ray_build_lex_impl(const arIOCtx_t *io)
 		return lex;																
 }
 
+
+
+
+
 psrGrammar_t*	__ray_build_grammar_impl(const psrCtx_t	*psr_ctx, const arIOCtx_t *io)											
 {
 		psrGrammar_t	*grammar;																								
@@ -896,7 +904,7 @@ psrGrammar_t*	__ray_build_grammar_impl(const psrCtx_t	*psr_ctx, const arIOCtx_t 
 				if(__g_term_pattern[i].skip || __g_term_pattern[i].tokval == 0)continue;
 
 
-				if(!PSR_InsertTerm(grammar, __g_term_pattern[i].name, __g_term_pattern[i].tokval, PSR_ASSOC_NOASSOC,0, NULL))	
+				if(!PSR_InsertTerm(grammar, __g_term_pattern[i].name, __g_term_pattern[i].tokval, PSR_ASSOC_NOASSOC,0, ray_handle_token))	
 				{																												
 						PSR_DestroyGrammar(grammar);
 
@@ -956,6 +964,14 @@ psrGrammar_t*	__ray_build_grammar_impl(const psrCtx_t	*psr_ctx, const arIOCtx_t 
 
 
 /*********************************************************************************************************************************/
+
+/*token*/
+static psrNode_t*		AR_STDCALL ray_handle_token(const psrToken_t *tok,void *ctx)
+{
+		return NULL;
+}
+
+
 
 
 /*program	:	translation_unit FAKE_EOI */

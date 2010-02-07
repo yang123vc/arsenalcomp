@@ -17,9 +17,16 @@
 
 AR_NAMESPACE_BEGIN
 
-#define LALR_DEFAULT_CONFIG_NUM			2000
-#define LALR_DEFAULT_CONFIG_NODE_NUM	2000
-#define LALR_DEFAULT_CONFIG_LIST_NUM	2000
+#if defined(AR_DEBUG)
+		#define LALR_DEFAULT_CONFIG_NUM			0
+		#define LALR_DEFAULT_CONFIG_NODE_NUM	0
+		#define LALR_DEFAULT_CONFIG_LIST_NUM	0
+#else
+
+		#define LALR_DEFAULT_CONFIG_NUM			2000
+		#define LALR_DEFAULT_CONFIG_NODE_NUM	2000
+		#define LALR_DEFAULT_CONFIG_LIST_NUM	2000
+#endif
 /****************************************lalrConfig aux*****************************************/
 
 
@@ -39,8 +46,14 @@ static AR_INLINE lalrConfig_t*	__create_config()
 				lalrConfig_t	*res;
 				AR_LockSpinLock(&__g_config_lock);
 
-				res  = __g_free_list;
-				__g_free_list = (lalrConfig_t*)__g_free_list->forward;
+				if(__g_free_list == NULL)
+				{
+						res = AR_NEW(lalrConfig_t);
+				}else
+				{
+						res  = __g_free_list;
+						__g_free_list = (lalrConfig_t*)__g_free_list->forward;
+				}
 
 				AR_UnLockSpinLock(&__g_config_lock);
 				return res;
@@ -112,8 +125,14 @@ static AR_INLINE lalrConfigNode_t*		__create_node()
 				lalrConfigNode_t *res;
 				AR_LockSpinLock(&__g_node_lock);
 
-				res = __free_node_list;
-				__free_node_list = __free_node_list->next;
+				if(__free_node_list == NULL)
+				{
+						res = AR_NEW(lalrConfigNode_t);
+				}else
+				{
+						res = __free_node_list;
+						__free_node_list = __free_node_list->next;
+				}
 				AR_UnLockSpinLock(&__g_node_lock);
 				return res;
 		}
@@ -185,8 +204,15 @@ static AR_INLINE lalrConfigList_t*		__create_config_list()
 				lalrConfigList_t *res;
 				AR_LockSpinLock(&__g_config_list_lock);
 
-				res = __free_config_list;
-				__free_config_list = (lalrConfigList_t*)__free_config_list->head;
+				if(__free_config_list == NULL)
+				{
+						res = AR_NEW(lalrConfigList_t);
+				}else
+				{
+						res = __free_config_list;
+						__free_config_list = (lalrConfigList_t*)__free_config_list->head;
+				}
+
 				AR_UnLockSpinLock(&__g_config_list_lock);
 				return res;
 		}

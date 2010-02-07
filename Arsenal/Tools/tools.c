@@ -1,4 +1,3 @@
-
 /*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
@@ -13,13 +12,24 @@
  */
 
 
-#include "symtbl.h"
+
+#include "tools.h"
+
 
 AR_NAMESPACE_BEGIN
 
+void	Tools_Init()
+{
+		CFG_Init();
+}
 
+void	Tools_UnInit()
+{
+		CFG_UnInit();
 
+}
 
 
 
 AR_NAMESPACE_END
+

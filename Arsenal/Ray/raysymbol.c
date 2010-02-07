@@ -1,3 +1,4 @@
+
 /*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
@@ -12,37 +13,11 @@
  */
 
 
-
-#include "Arsenal.h"
+#include "raysymbol.h"
 
 AR_NAMESPACE_BEGIN
 
 
-
-void	Arsenal_Init(const arCtx_t *ctx)
-{
-		AR_ASSERT(ctx != NULL);
-		AR_Init(&ctx->init);
-		LEX_Init();
-		PSR_Init();
-		
-		Tools_Init();
-}
-
-
-
-
-void	Arsenal_UnInit()
-{
-		Tools_UnInit();
-
-		PSR_UnInit();
-		LEX_UnInit();
-		AR_UnInit();
-}
-
-
-/*************************************************************************************************/
 
 
 

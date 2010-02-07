@@ -280,6 +280,10 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code);
 
 
 
+
+void			CFG_Init();
+void			CFG_UnInit();
+
 AR_NAMESPACE_END
 
 

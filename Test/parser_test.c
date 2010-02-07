@@ -54,18 +54,23 @@ static const wchar_t* __load_txt(const wchar_t *path)
 }
 
 
+
+
 static void __save_txt(const wchar_t *path, const wchar_t *input)
 {
 		FILE *pf;
 		
 		size_t wn;
 		char *str = NULL;
+
+		static const char head[] = {(char)0xEF, (char)0xBB, (char)0xBF};
+
 		AR_ASSERT(input != NULL && path != NULL);
 
 		pf = _wfopen(path, L"w+");
 
 		AR_ASSERT(pf != NULL);
-		static char head[] = {(char)0xEF, (char)0xBB, (char)0xBF};
+		
 		wn = fwrite(head, 1, 3, pf);
 		AR_ASSERT(wn == 3);
 

@@ -14,6 +14,7 @@
 				;
 
 
+
 %name	int_type_suffix	:	"((u|U)?(l|L))|((u|U)(l|L)?)"
 				;
 
