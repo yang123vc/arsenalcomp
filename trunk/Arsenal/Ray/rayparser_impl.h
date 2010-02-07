@@ -18,11 +18,24 @@
 
 #include "ray.h"
 #include "raytype.h"
+#include "raysymbol.h"
 
 AR_NAMESPACE_BEGIN
 
-lex_t*	__ray_build_lex_impl(const arIOCtx_t *io);
+
+
+
+
+lex_t*			__ray_build_lex_impl(const arIOCtx_t *io);
 psrGrammar_t*	__ray_build_grammar_impl(const psrCtx_t	*psr_ctx, const arIOCtx_t *io);
+
+
+
+
+
+
+
+
 
 AR_NAMESPACE_END
 

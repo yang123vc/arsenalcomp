@@ -1015,6 +1015,14 @@
 			<File
 				RelativePath="..\..\..\Test\lalr_dfa_test.c"
 				>
+				<FileConfiguration
+					Name="LibRelease|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						CompileAs="2"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\Test\lex_test.c"
@@ -1031,6 +1039,14 @@
 			<File
 				RelativePath="..\..\..\Test\parser_test.c"
 				>
+				<FileConfiguration
+					Name="LibRelease|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						CompileAs="2"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\Test\psr_misc.c"

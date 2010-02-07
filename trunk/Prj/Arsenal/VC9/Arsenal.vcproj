@@ -1095,19 +1095,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\Arsenal\Ray\raysymbol.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Ray\raysymbol.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\Arsenal\Ray\raytype.c"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\Arsenal\Ray\raytype.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Ray\symtbl.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Ray\symtbl.h"
 				>
 			</File>
 		</Filter>
@@ -1166,6 +1166,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\Arsenal\Tools\grammar_config.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Tools\tools.c"
 				>
 			</File>
 			<File

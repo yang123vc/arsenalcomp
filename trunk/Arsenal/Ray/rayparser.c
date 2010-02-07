@@ -14,15 +14,19 @@
 
 
 #include "rayparser.h"
-
 #include "rayparser_impl.h"
 
 AR_NAMESPACE_BEGIN
+
+
 
 lex_t*	Ray_BuildLexer(const arIOCtx_t *io)
 {
 		return __ray_build_lex_impl(io);
 }
+
+
+
 
 
 static void	AR_STDCALL ray_parser_free(psrNode_t *node, void *ctx)
@@ -37,18 +41,13 @@ static void		AR_STDCALL ray_parser_error(const psrToken_t *tok, const wchar_t *e
 }
 
 
-psrNode_t*		AR_STDCALL ray_handle_token(const psrToken_t *tok,void *ctx)
-{
-		return NULL;
-}
-
-
 static const psrCtx_t		__g_default_psrctx = 
 {
 		ray_parser_error,
 		ray_parser_free,
 		NULL
 };
+
 
 
 

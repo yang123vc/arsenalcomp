@@ -18,7 +18,8 @@
 
 AR_NAMESPACE_BEGIN
 
-
+void	Tools_Init();
+void	Tools_UnInit();
 
 
 

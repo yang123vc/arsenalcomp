@@ -17,7 +17,7 @@
 
 
 #include "ray.h"
-#include "raytype.h"
+#include "raysymbol.h"
 
 
 

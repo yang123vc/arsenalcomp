@@ -46,6 +46,7 @@ struct __cfg_node_tag
 		};
 
 		cfgNodeType_t	type;
+		cfgNode_t		*next;
 };
 
 
@@ -499,18 +500,110 @@ static void CFG_UnInitConfig(cfgConfig_t *cfg)
 
 }
 
+#if defined(AR_DEBUG)
+
+		#define CFG_INIT_CFG_NODE_COUNT			0
+#else
+		#define CFG_INIT_CFG_NODE_COUNT			1000
+#endif
+
+static cfgNode_t		*__g_node_list = NULL;
+static arSpinLock_t		__g_list_lock;
+
+static cfgNode_t*		__get_cfg_node()
+{
+		cfgNode_t *res = NULL;
+
+		if(__g_node_list == NULL)
+		{
+				res = AR_NEW(cfgNode_t);
+		}else
+		{
+				AR_LockSpinLock(&__g_list_lock);
+		
+				if(__g_node_list == NULL)
+				{
+						res = AR_NEW(cfgNode_t);
+				}else
+				{
+						res = __g_node_list;
+						__g_node_list = __g_node_list->next;
+				}
+				
+				AR_UnLockSpinLock(&__g_list_lock);
+		}
+
+		AR_memset(res, 0, sizeof(*res));
+		return res;
+}
+
+static void		__put_cfg_node(cfgNode_t *node)
+{
+		AR_ASSERT(node != NULL);
+		
+		AR_LockSpinLock(&__g_list_lock);
+		node->next = __g_node_list;
+		__g_node_list = node;
+
+		AR_UnLockSpinLock(&__g_list_lock);
+		
+}
 
 
+static void __init_cfg_node_list()
+{
+		size_t i;
+		AR_InitSpinLock(&__g_list_lock);
+		__g_node_list	= NULL;
 
+		for(i = 0; i < CFG_INIT_CFG_NODE_COUNT; ++i)
+		{
+				__put_cfg_node(AR_NEW0(cfgNode_t));
+		}
+}
+
+static void __uninit_cfg_node_list()
+{
+		size_t count = 0;
+		AR_UnInitSpinLock(&__g_list_lock);
+
+		while(__g_node_list)
+		{
+				cfgNode_t		*tmp = __g_node_list->next;
+				AR_DEL(__g_node_list);
+				__g_node_list = tmp;
+				count++;
+		}
+
+		
+		{
+				wchar_t buf[1024];
+				AR_swprintf(buf, 1024, L"Total consume cfgNode_t == %u", count);
+				AR_printf(L"%ls\r\n", buf);
+		}
+		
+}
+
+
+void			CFG_Init()
+{
+		__init_cfg_node_list();
+}
+
+void			CFG_UnInit()
+{
+		__uninit_cfg_node_list();		
+}
 
 
 static cfgNode_t* CFG_CreateNode(cfgNodeType_t type)
 {
 		cfgNode_t		*node;
-
-		node = AR_NEW0(cfgNode_t);
+		
+		node = __get_cfg_node();
 
 		node->type = type;
+		node->next = NULL;
 
 		if(node->type == CFG_NODE_LIST_T)
 		{
@@ -569,10 +662,15 @@ static void CFG_DestroyNode(cfgNode_t *node)
 				}
 				case CFG_RULE_T:
 				{
+						if(node->rule.action_ins)
+						{
+								AR_DEL(node->rule.action_ins);
+						}
+
 						if(node->rule.lhs)AR_DEL(node->rule.lhs);
 						if(node->rule.rhs)AR_DEL(node->rule.rhs);
 						if(node->rule.prec_tok)AR_DEL(node->rule.prec_tok);
-						if(node->rule.action_ins)AR_DEL(node->rule.action_ins);
+						
 						break;
 				}
 				case CFG_NODE_LIST_T:
@@ -601,7 +699,11 @@ static void CFG_DestroyNode(cfgNode_t *node)
 				}
 				}
 
+				/*
 				AR_DEL(node);
+				*/
+				__put_cfg_node(node);
+				
 		}
 }
 
@@ -757,12 +859,12 @@ static psrNode_t*		AR_STDCALL __handle_rhs(psrNode_t **nodes, size_t count, cons
 				res->rule.action_ins = ns[2]->lexeme.lexeme;
 				ns[2]->lexeme.lexeme = NULL;
 		}
-
+/*
 		CFG_DestroyNode(ns[0]);
 		CFG_DestroyNode(ns[1]);
 		CFG_DestroyNode(ns[2]);
 		ns[0] = ns[1] = ns[2] = NULL;
-
+*/
 		return res;
 
 }
