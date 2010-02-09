@@ -143,6 +143,8 @@ void CGrammarDesignerDoc::Serialize(CArchive& ar)
 						ASSERT(view != NULL);
 						//this->UpdateAllViews(view, NULL, this);
 						view->GetRichEditCtrl().SetWindowText(txt);
+						
+						((CGrammarDesignerView*)view)->ClearLineRecord();
 
 						this->OnToolsRebuildtags();
 				}

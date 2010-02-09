@@ -505,23 +505,7 @@ void CMainFrame::OnUpdateStatusBarPanes(CCmdUI* pCmdUI)
 		
 		if(view)
 		{
-#if(0)
-				CPoint pt = view->GetCaretPos();
 
-				/*
-				long line = view->GetRichEditCtrl().LineFromChar(-1);
-				long col = view->GetRichEditCtrl().LineIndex(line);
-				*/
-				long line = view->GetRichEditCtrl().LineIndex(-1);
-
-				view->GetRichEditCtrl().li
-				long col = 0;
-/*
-				int lc = view->GetRichEditCtrl().CharFromPos(pt);				
-				int line = lc >> 16;
-				int col  = lc & 0x0000FFFF;
-				*/
-#endif
 
 				CPoint   VarCharPoint;                   //指定字符的位置   
 				CPoint   CurrPoint;                         //当前光标位置   
