@@ -189,6 +189,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	CMFCToolBar::SetBasicCommands(lstBasicCommands);
 
+	HICON ico = AfxGetApp()->LoadIconW(IDI_OCTOPUS);
+	SetIcon(ico,true);
 	return 0;
 }
 

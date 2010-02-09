@@ -40,6 +40,8 @@
 #define IDR_INPUT_POPUP                 315
 #define IDR_SYNTAXTREE_MENU             316
 #define IDD_DIALOG_GOTO                 317
+#define IDI_OCT                         322
+#define IDI_OCTOPUS                     322
 #define IDC_EDIT1                       1001
 #define IDC_EDIT_LINE                   1001
 #define IDC_STATIC_LINE                 1002
@@ -143,7 +145,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        318
+#define _APS_NEXT_RESOURCE_VALUE        323
 #define _APS_NEXT_COMMAND_VALUE         32879
 #define _APS_NEXT_CONTROL_VALUE         1003
 #define _APS_NEXT_SYMED_VALUE           310
