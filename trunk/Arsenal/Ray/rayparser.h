@@ -24,9 +24,9 @@
 AR_NAMESPACE_BEGIN
 
 
-lex_t*			Ray_BuildLexer(const arIOCtx_t *io);
-psrGrammar_t*	Ray_BuildGrammar(const arIOCtx_t *io);
-parser_t*		Ray_BuildParser(psrGrammar_t *grammar);
+lex_t*			RAY_BuildLexer(const arIOCtx_t *io);
+psrGrammar_t*	RAY_BuildGrammar(const arIOCtx_t *io);
+parser_t*		RAY_BuildParser(psrGrammar_t *grammar);
 
 
 AR_NAMESPACE_END

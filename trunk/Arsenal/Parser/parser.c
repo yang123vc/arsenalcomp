@@ -236,7 +236,10 @@ static void __handle_shift(parser_t *parser, size_t shift_to, const psrToken_t *
 		B -> A ";";
 		这里假如A有任何错误，将在移入':'后清除错误状态；
 */
-		if(parser->is_repair)parser->is_repair = false;
+		if(parser->is_repair)
+		{
+				parser->is_repair = false;
+		}
 		
 }
 
