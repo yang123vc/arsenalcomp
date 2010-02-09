@@ -70,6 +70,20 @@
 
 
 
+/*
+丢弃的终结符
+%token	"union"	:	'"union"(?!{keyword_lhd})'		,1		;	//UNION
+%token	"enum"	:	'"enum"(?!{keyword_lhd})'	,1		;	//ENUM					;
+%token	"..."		:	'"..."'		,1		;	//ELLIPSIS
+%token	"__attribute__" :	'"__attribute__"'				,1	;
+%token	"register"	:	'"register"(?!{keyword_lhd})'	,1		;	//REGISTER
+%token	"static"	:	'"static"(?!{keyword_lhd})'		,1		;	//STATIC
+%token	"auto"	:	'"auto"(?!{keyword_lhd})'	,1		;		//AUTO
+%token	"extern"	:	'"extern"(?!{keyword_lhd})'	,1		;	//EXTERN
+
+*/
+
+
 
 %token	STRING_LITERAL	:	"{string_literal}";
 
@@ -87,11 +101,8 @@
 					;
 
 
-%token	"auto"	:	'"auto"(?!{keyword_lhd})'	,1		;		//AUTO
-%token	"extern"	:	'"extern"(?!{keyword_lhd})'	,1		;	//EXTERN
-%token	"register"	:	'"register"(?!{keyword_lhd})'	,1		;	//REGISTER
 %token	"volatile"	:	'"volatile"(?!{keyword_lhd})'	,1		;	//VOLATILE
-%token	"static"	:	'"static"(?!{keyword_lhd})'		,1		;	//STATIC
+
 
 
 %token	"switch"	:	'"switch"(?!{keyword_lhd})'		,1		;	//SWITCH
@@ -102,7 +113,8 @@
 %token	"while"	:	'"while"(?!{keyword_lhd})'	,1		;	//WHILE
 %token	"if"		:	'"if"(?!{keyword_lhd})'		,1		;	//IF
 %token	"else"	:	'"else"(?!{keyword_lhd})'	,1		;	//ELSE
-%token	"enum"	:	'"enum"(?!{keyword_lhd})'	,1		;	//ENUM					;
+
+
 %token	"continue"	:	'"continue"(?!{keyword_lhd})'	,1		;	//CONTINUE
 %token	"default"	:	'"default"(?!{keyword_lhd})'	,1		;	//DEFAULT
 %token	"case"	:	'"case"(?!{keyword_lhd})'	,1		;	//CASE
@@ -115,7 +127,6 @@
 
 
 %token	"struct"	:	'"struct"(?!{keyword_lhd})'		,1		;	//STRUCT
-%token	"union"	:	'"union"(?!{keyword_lhd})'		,1		;	//UNION
 %token	"typedef"	:	'"typedef"(?!{keyword_lhd})'	,1		;	//TYPEDEF
 
 
@@ -123,23 +134,18 @@
 %token	"signed"	:	'"signed"(?!{keyword_lhd})'		,1	;	//SIGNED
 %token	"unsigned"	:	'"unsigned"(?!{keyword_lhd})'	,1		;	//UNSIGNED
 
-%token	"byte"	:	'"byte"(?!{keyword_lhd})'	,1		;	//BYTE
-%token	"char"	:	'"char"(?!{keyword_lhd})'	,1		;	//CHAR
-%token	"short"	:	'"short"(?!{keyword_lhd})'		,1	;	//SHORT
-%token	"int"		:	'"int"(?!{keyword_lhd})'	,1		;	//INT
-%token	"long"	:	'"long"(?!{keyword_lhd})'		,1	;	//LONG
-%token	"float"	:	'"float"(?!{keyword_lhd})'	,1		;	//FLOAT
-%token	"double"	:	'"double"(?!{keyword_lhd})'	,1	;	//DOUBLE
-
-/*
-%token	"__stdcall"	:	'"__stdcall"'				,1	;
-%token	"__cdecl" 		:	'"__cdecl"'				,1	;
-*/
-
-%token	"attribute" 		:	'"attribute"'				,1	;
+%token	"byte"	:	'"byte"(?!{keyword_lhd})'	,1		;	//BYTE	sizeof(byte) == 1
+%token	"char"	:	'"char"(?!{keyword_lhd})'	,1		;	//CHAR	sizeof(char) == 2
+%token	"short"	:	'"short"(?!{keyword_lhd})'		,1	;	//SHORT	sizeof(short) == 3
+%token	"int"		:	'"int"(?!{keyword_lhd})'	,1		;	//INT		sizeof(int)	== 4
+%token	"long"	:	'"long"(?!{keyword_lhd})'		,1	;	//LONG	sizeof(long)	== 8
+%token	"float"	:	'"float"(?!{keyword_lhd})'	,1		;	//FLOAT	sizeof(float)	== 4
+%token	"double"	:	'"double"(?!{keyword_lhd})'	,1	;	//DOUBLE	sizeof(double) == 8
 
 
-%token	"..."		:	'"..."'		,1		;	//ELLIPSIS
+
+
+
 %token	">>="		:	'">>="'		,2		;	//RIGHT_ASSIGN
 %token	"<<="		:	'"<<="'		,2		;	//LEFT_ASSIGN
 
@@ -199,6 +205,9 @@
 %token	FAKE_EOI	:	'^'			,0		;	//占位符
 
 
+
+
+
 %left		"||"				;
 %left		"&&"				;
 %left		"|"				;
@@ -213,14 +222,221 @@
 %noassoc	IF_STMT_PREC						;
 %noassoc	IF_STMT_ELSE_STMT_PREC				;
 %noassoc	SPEC_ACTION						;
-
+%right	ERROR_SHIFT						;
 
 
 
 %start	program;
 
-program			:	translation_unit	FAKE_EOI
-				|	error FAKE_EOI
+
+
+/****************************************类型********************************************/
+
+
+type_specifier			:	"void"
+					|	"byte"
+					|	"char"
+					|	"short"
+					|	"int"
+					|	"long"
+					|	"float"
+					|	"double"
+					|	"signed"
+					|	"unsigned"
+					|	struct_specifier
+					|	TYPE_ID
+					;
+
+
+
+type_qualifier			:	"const"
+					| 	"volatile"		
+					;
+
+
+
+
+/*结构声明*/
+
+struct_specifier		:	"struct" IDENTIFIER "{" struct_declaration_list  "}"
+					|	"struct" IDENTIFIER "{" error  "}"
+					;
+
+
+struct_declaration		:	type_specifier  struct_declarator_list ";"
+					;
+
+
+
+struct_declaration_list	:	struct_declaration
+					|	struct_declaration_list struct_declaration
+					;
+
+struct_declarator_list	:	declarator 
+					|	struct_declarator_list "," declarator 
+					;
+
+
+
+
+/******************************************************************************************/
+
+/*声明*/
+declaration			:	declaration_specifiers init_declarator_list ";"
+					
+					|	declaration_specifiers error ";"	%prec ERROR_SHIFT
+					|	declaration_specifiers error 	
+					;
+
+
+declaration_specifiers	:	"typedef"	type_qualifier	type_specifier
+					|	"typedef"	type_specifier
+					|	type_qualifier	type_specifier
+					|	type_specifier
+					;
+
+
+
+declaration_list		:	declaration
+					|	declaration_list declaration
+					;
+
+
+
+
+init_declarator_list		:	init_declarator
+					|	init_declarator_list "," init_declarator
+					;
+
+init_declarator			:	declarator
+					|	declarator "=" initializer
+					;
+
+
+
+
+initializer			:	assignment_expression
+					|	"{" initializer_list "}"
+					;
+
+
+initializer_list		:	initializer
+					|	initializer_list "," initializer
+					;
+
+
+
+
+
+
+
+declarator				:	pointer direct_declarator
+					|	direct_declarator
+
+					;
+
+
+var_decl				:	IDENTIFIER
+//					|	"(" declarator ")"
+					;
+
+array_decl				:	direct_declarator "[" constant_expression "]"
+					|	direct_declarator "[" "]"
+					;
+
+func_decl				:	IDENTIFIER	"(" parameter_list	")"
+					|	IDENTIFIER	"(" ")"
+					|	"(" pointer IDENTIFIER ")" "(" parameter_list	")"
+					|	"(" pointer IDENTIFIER ")" "(" ")"
+
+					;
+
+
+direct_declarator		:	var_decl
+					|	array_decl
+					|	func_decl
+					;
+
+/*
+
+direct_declarator		:	IDENTIFIER
+					|	"(" declarator ")"
+					|	direct_declarator "[" constant_expression "]"
+					|	direct_declarator "[" "]"
+					|	direct_declarator "(" parameter_list	")"
+					|	direct_declarator "(" ")"
+					;
+*/
+
+pointer				:	"*"
+					|	"*" type_qualifier_list
+					|	"*" type_qualifier_list pointer
+					|	"*" pointer
+					;
+
+type_qualifier_list		:	type_qualifier
+					|	type_qualifier_list type_qualifier
+					;
+
+
+
+parameter_list			:	parameter_declaration
+					|	parameter_list "," parameter_declaration
+					;
+
+
+parameter_declaration		:	declaration_specifiers declarator
+					|	declaration_specifiers abstract_declarator
+					|	declaration_specifiers
+					;
+
+
+
+abstract_declarator		:	pointer
+					|	direct_abstract_declarator
+					|	pointer direct_abstract_declarator
+					;
+
+direct_abstract_declarator	:	"(" abstract_declarator ")"
+					|	"[" "]"
+					|	"[" constant_expression "]"
+					|	direct_abstract_declarator "[" "]"
+					|	direct_abstract_declarator "[" constant_expression "]"
+					|	"(" ")"
+					|	"(" parameter_list	")"
+					|	direct_abstract_declarator "(" ")"
+					|	direct_abstract_declarator "(" parameter_list ")"
+					;
+
+
+
+
+/*
+类型名,由一组type_specifier或者type_qualifier组成的链表
+*/
+
+type_name				:	specifier_qualifier_list
+					|	specifier_qualifier_list abstract_declarator
+					;
+
+
+specifier_qualifier_list	:	type_specifier specifier_qualifier_list
+					|	type_specifier
+					|	type_qualifier specifier_qualifier_list
+					|	type_qualifier
+					;
+
+
+
+
+
+
+
+
+/**************************************************************************************/
+
+program			:	translation_unit	/*FAKE_EOI
+				|	error FAKE_EOI*/
 				;
 
 /*编译单元*/
@@ -240,209 +456,12 @@ function_definition		:	declaration_specifiers declarator compound_statement
 
 
 
-/*声明*/
-declaration			:	declaration_specifiers ";"
-					|	declaration_specifiers init_declarator_list ";"
-					|	declaration_specifiers  error ";"
-					|	error ";"
-					;
-
-
-declaration_list		:	declaration
-					|	declaration_list declaration
-					;
 
 
 
-storage_class_specifier	:	"typedef"
-					|	"extern"
-					|	"static"
-					|	"auto"
-					|	"register"
-					;
-
-declaration_specifiers	:	storage_class_specifier
-					|	storage_class_specifier declaration_specifiers
-					|	type_specifier
-					|	type_qualifier
-					|	type_qualifier declaration_specifiers
-					|	type_specifier declaration_specifiers
-					;
-
-init_declarator_list		:	init_declarator
-					|	init_declarator_list "," init_declarator
-					;
-
-init_declarator			:	declarator
-					|	declarator "=" initializer
-					;
 
 
-
-type_specifier			:	"void"
-					|	"byte"
-					|	"char"
-					|	"short"
-					|	"int"
-					|	"long"
-					|	"float"
-					|	"double"
-					|	"signed"
-					|	"unsigned"
-					|	struct_or_union_specifier
-					|	enum_specifier
-					|	TYPE_ID
-					;
-
-/*结构声明*/
-
-struct_or_union_specifier	:	struct_or_union IDENTIFIER "{" struct_declaration_list "}"
-					|	struct_or_union "{" struct_declaration_list "}"
-					|	struct_or_union IDENTIFIER
-					|	struct_or_union "{" error "}"
-					|	struct_or_union error ";"
-					;
-
-struct_or_union			:	"struct"
-					|	"union"
-					;
-
-struct_declaration		:	specifier_qualifier_list struct_declarator_list ";"
-					|	specifier_qualifier_list  ";"
-					;
-
-
-struct_declaration_list	:	struct_declaration
-					|	struct_declaration_list struct_declaration
-					;
-
-
-specifier_qualifier_list	:	type_specifier specifier_qualifier_list
-					|	type_specifier
-					|	type_qualifier specifier_qualifier_list
-					|	type_qualifier
-					;
-
-struct_declarator_list	:	struct_declarator 
-					|	struct_declarator_list "," struct_declarator
-					;
-
-/*
-去掉了位域
-*/
-struct_declarator		:	declarator
-
-/*					|	":" constant_expression
-					|	declarator ":" constant_expression
-*/
-
-					;
-
-
-/*
-	枚举声明
-*/
-enum_specifier			:	"enum" "{" enumerator_list "}"
-					|	"enum" IDENTIFIER "{" enumerator_list "}"
-					|	"enum" IDENTIFIER
-					;
-
-enumerator_list			:	enumerator
-					|	enumerator_list "," enumerator
-					;
-
-enumerator				:	IDENTIFIER
-					|	IDENTIFIER "=" constant_expression
-					;
-
-type_qualifier			:	"const"
-					| 	"volatile"		
-					;
-
-
-/*声明修饰符*/
-attribute_modifier			:	"attribute" "(" STRING_LITERAL ")"
-					|	.	%prec SPEC_ACTION
-					;
-
-/*所有声明的变量，函数指针，类型，等等都会被规约为declarator或declarator_list*/
-
-declarator				:	attribute_modifier pointer direct_declarator
-					|	attribute_modifier direct_declarator
-
-					;
-
-
-
-direct_declarator		:	IDENTIFIER
-					|	"(" declarator ")"
-					|	direct_declarator "[" constant_expression "]"
-					|	direct_declarator "[" "]"
-					|	direct_declarator "(" parameter_type_list ")"
-					|	direct_declarator "(" ")"
-
-					|	direct_declarator "(" error ")"
-					|	direct_declarator "[" error "]"
-					;
-
-pointer				:	"*"
-					|	"*" type_qualifier_list
-					|	"*" type_qualifier_list pointer
-					|	"*" pointer
-					;
-
-type_qualifier_list		:	type_qualifier
-					|	type_qualifier_list type_qualifier
-					;
-
-parameter_type_list		:	parameter_list
-					|	parameter_list "," "..."
-					;
-
-parameter_list			:	parameter_declaration
-					|	parameter_list "," parameter_declaration
-					;
-
-parameter_declaration		:	declaration_specifiers declarator
-					|	declaration_specifiers abstract_declarator
-					|	declaration_specifiers
-					;
-		
-
-type_name				:	specifier_qualifier_list
-					|	specifier_qualifier_list abstract_declarator
-					;
-
-abstract_declarator		:	pointer
-					|	direct_abstract_declarator
-					|	pointer direct_abstract_declarator
-					;
-
-direct_abstract_declarator	:	"(" abstract_declarator ")"
-					|	"[" "]"
-					|	"[" constant_expression "]"
-					|	direct_abstract_declarator "[" "]"
-					|	direct_abstract_declarator "[" constant_expression "]"
-					|	"(" ")"
-					|	"(" parameter_type_list ")"
-					|	direct_abstract_declarator "(" ")"
-					|	direct_abstract_declarator "(" parameter_type_list ")"
-
-					|	"(" error ")"
-					|	"["	error "]"
-					;
-
-initializer			:	assignment_expression
-					|	"{" initializer_list "}"
-					|	"{" initializer_list "," "}"
-					|	"{" error "}"
-					;
-
-initializer_list		:	initializer
-					|	initializer_list "," initializer
-					;
-
-
+/**************************************************************************************/
 
 /*语句*/
 statement				:	labeled_statement
@@ -451,6 +470,7 @@ statement				:	labeled_statement
 					|	selection_statement
 					|	iteration_statement
 					|	jump_statement
+					|	error
 					;
 
 labeled_statement		:	"case" constant_expression ":" statement
@@ -458,7 +478,8 @@ labeled_statement		:	"case" constant_expression ":" statement
 					|	IDENTIFIER ":" statement	
 					;
 
-push_symtbl				:	.	%prec SPEC_ACTION
+
+push_symtbl			:	.	%prec SPEC_ACTION
 					;
 
 pop_symtbl				:	.	%prec SPEC_ACTION	
@@ -469,9 +490,11 @@ pop_symtbl				:	.	%prec SPEC_ACTION
 compound_statement		:	"{" "}"
 					|	"{" statement_list "}"
 					|	"{" push_symtbl	declaration_list pop_symtbl	"}"
-					|	"{" push_symtbl	declaration_list statement_list pop_symtbl	"}"					|	"{" error  "}"
-					|	"{" push_symtbl declaration_list error pop_symtbl "}"
-					|	"{" push_symtbl declaration_list statement_list error pop_symtbl "}"
+					|	"{" push_symtbl	declaration_list statement_list pop_symtbl	"}"
+
+					|	"{" push_symtbl	declaration_list error pop_symtbl	"}"	
+					|	"{" error "}"	%prec ERROR_SHIFT
+
 					;
 
 
@@ -505,6 +528,7 @@ jump_statement			:	"goto" IDENTIFIER ";"
 
 
 
+/**************************************************************************************/
 
 
 
@@ -599,7 +623,7 @@ assignment_operator		:	"="
 					;
 
 
-
+/**************************************************************************************/
 
 /*常量*/
 constant			:	OCT_CONSTANT
@@ -609,6 +633,11 @@ constant			:	OCT_CONSTANT
 				|	CHAR_CONSTANT
 				|	STRING_LITERAL
 				;
+
+
+/**************************************************************************************/
+
+
 
 
 
