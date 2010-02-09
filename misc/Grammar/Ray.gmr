@@ -70,23 +70,6 @@
 
 
 
-/*
-¶ªÆúµÄÖÕ½á·û
-%token	"union"	:	'"union"(?!{keyword_lhd})'		,1		;	//UNION
-%token	"enum"	:	'"enum"(?!{keyword_lhd})'	,1		;	//ENUM					;
-%token	"..."		:	'"..."'		,1		;	//ELLIPSIS
-%token	"__attribute__" :	'"__attribute__"'				,1	;
-%token	"register"	:	'"register"(?!{keyword_lhd})'	,1		;	//REGISTER
-%token	"static"	:	'"static"(?!{keyword_lhd})'		,1		;	//STATIC
-%token	"auto"	:	'"auto"(?!{keyword_lhd})'	,1		;		//AUTO
-%token	"extern"	:	'"extern"(?!{keyword_lhd})'	,1		;	//EXTERN
-
-%token	"volatile"	:	'"volatile"(?!{keyword_lhd})'	,1		;	//VOLATILE
-
-
-*/
-
-
 
 %token	STRING_LITERAL	:	"{string_literal}";
 
@@ -132,14 +115,17 @@
 
 
 %token	"void"	:	'"void"(?!{keyword_lhd})'		,1		;	//VOID
-%token	"signed"	:	'"signed"(?!{keyword_lhd})'		,1	;	//SIGNED
-%token	"unsigned"	:	'"unsigned"(?!{keyword_lhd})'	,1		;	//UNSIGNED
+
 
 %token	"byte"	:	'"byte"(?!{keyword_lhd})'	,1		;	//BYTE	sizeof(byte) == 1
 %token	"char"	:	'"char"(?!{keyword_lhd})'	,1		;	//CHAR	sizeof(char) == 2
-%token	"short"	:	'"short"(?!{keyword_lhd})'		,1	;	//SHORT	sizeof(short) == 3
+%token	"short"	:	'"short"(?!{keyword_lhd})'	,1	;	//SHORT	sizeof(short) == 3
 %token	"int"		:	'"int"(?!{keyword_lhd})'	,1		;	//INT		sizeof(int)	== 4
-%token	"long"	:	'"long"(?!{keyword_lhd})'		,1	;	//LONG	sizeof(long)	== 8
+%token	"long"	:	'"long"(?!{keyword_lhd})'	,1	;	//LONG	sizeof(long)	== 8
+%token	"signed"	:	'"signed"(?!{keyword_lhd})'	,1	;	//SIGNED	sizeof(signed)	== sizeof(int)
+%token	"unsigned"	:	'"unsigned"(?!{keyword_lhd})'	,1	;	//UNSIGNED	sizeof(signed)	== sizeof(int)
+
+
 %token	"float"	:	'"float"(?!{keyword_lhd})'	,1		;	//FLOAT	sizeof(float)	== 4
 %token	"double"	:	'"double"(?!{keyword_lhd})'	,1	;	//DOUBLE	sizeof(double) == 8
 
@@ -276,6 +262,12 @@ type_specifier			:	"void"
 					|	"double"
 					|	"signed"
 					|	"unsigned"
+					|	"signed"		"short"
+					|	"unsigned"		"short"
+					|	"signed"		"int"
+					|	"unsigned"		"int"
+					|	"signed"		"long"
+					|	"unsigned"		"long"
 					|	struct_specifier
 					|	TYPE_ID
 					;
@@ -308,7 +300,8 @@ struct_declarator_list	:	declarator
 
 
 declaration			:	declaration_specifiers init_declarator_list ";"
-					
+					|	declaration_specifiers ";"
+
 					|	declaration_specifiers error ";"	%prec ERROR_SHIFT
 					|	declaration_specifiers error 	
 					;
@@ -316,7 +309,7 @@ declaration			:	declaration_specifiers init_declarator_list ";"
 
 declaration_specifiers	:	"typedef"	type_qualifier	type_specifier
 					|	"typedef"	type_specifier
-					|	type_qualifier	type_specifier
+					|	type_qualifier	type_specifier	
 					|	type_specifier
 					;
 
@@ -588,5 +581,56 @@ constant			:	OCT_CONSTANT
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+¶ªÆúµÄÖÕ½á·û
+%token	"union"	:	'"union"(?!{keyword_lhd})'		,1		;	//UNION
+%token	"enum"	:	'"enum"(?!{keyword_lhd})'	,1		;	//ENUM					;
+%token	"..."		:	'"..."'		,1		;	//ELLIPSIS
+%token	"__attribute__" :	'"__attribute__"'				,1	;
+%token	"register"	:	'"register"(?!{keyword_lhd})'	,1		;	//REGISTER
+%token	"static"	:	'"static"(?!{keyword_lhd})'		,1		;	//STATIC
+%token	"auto"	:	'"auto"(?!{keyword_lhd})'	,1		;		//AUTO
+%token	"extern"	:	'"extern"(?!{keyword_lhd})'	,1		;	//EXTERN
+
+%token	"volatile"	:	'"volatile"(?!{keyword_lhd})'	,1		;	//VOLATILE
+
+
+*/
 
 

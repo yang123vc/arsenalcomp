@@ -1080,6 +1080,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\res\icon_octopus.ico"
+				>
+			</File>
+			<File
 				RelativePath=".\res\output_wnd.ico"
 				>
 			</File>

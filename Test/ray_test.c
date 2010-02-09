@@ -133,26 +133,40 @@ void ray_test()
 		lex = RAY_BuildLexer(NULL);
 		AR_ASSERT(lex != NULL);
 		
+		/*
 		sources = __load_txt(DEF_SOUR_PATH);
-
 		parse_code(lex, sources);
 
 		AR_DEL(sources);
 		sources = NULL;
-
+		*/
+		uint64_t beg, end;
+		
+		beg = AR_GetClock_US();
 
 		gmr = RAY_BuildGrammar(NULL);
 		AR_ASSERT(gmr != NULL);
+		
+
+		
+		
+
+		
+		
+		
+		parser = RAY_BuildParser(gmr);
+
+		end = AR_GetClock_US();
+
+		AR_printf(L"elapsed == %I64d us\r\n", end - beg);
+
+		getchar();
+		
 		PSR_InitSymbMap(&first);
 		PSR_InitSymbMap(&follow);
 
-		
-		
-
 		PSR_CalcFirstSet(gmr, &first);
 		PSR_CalcFollowSet(gmr, &follow, &first);
-		
-		
 		
 		AR_ClearString(str);
 		PSR_PrintSymbolMap(&first, str);
@@ -163,11 +177,7 @@ void ray_test()
 		PSR_PrintSymbolMap(&follow, str);
 
 		AR_StrPrint(str);
-		
-		parser = RAY_BuildParser(gmr);
 
-		getchar();
-		
 		PSR_UnInitSymbMap(&first);
 		PSR_UnInitSymbMap(&follow);
 		if(sources)AR_DEL(sources);
