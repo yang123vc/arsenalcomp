@@ -25,8 +25,7 @@ BEGIN_MESSAGE_MAP(CGrammarDesignerView, CRichEditView)
 		
 		ON_COMMAND(ID_EDIT_FONTDLG, &CGrammarDesignerView::OnEditFontdlg)
 		
-		ON_COMMAND(ID_EDIT_WORDWARP, &CGrammarDesignerView::OnEditWordwarp)
-		ON_UPDATE_COMMAND_UI(ID_EDIT_WORDWARP, &CGrammarDesignerView::OnUpdateEditWordwarp)
+		
 		ON_COMMAND(ID_EDIT_PASTE, &CGrammarDesignerView::OnEditPaste)
 		
 		ON_MESSAGE(ID_EDIT_LOCATE_POS, &CGrammarDesignerView::OnLocatePos)
@@ -60,6 +59,7 @@ BEGIN_MESSAGE_MAP(CGrammarDesignerView, CRichEditView)
 
 		ON_COMMAND(ID_GOTO, &CGrammarDesignerView::OnGoto)
 		ON_WM_LBUTTONDBLCLK()
+		ON_WM_LBUTTONDOWN()
 END_MESSAGE_MAP()
 
 // CGrammarDesignerView construction/destruction
@@ -75,7 +75,7 @@ CGrammarDesignerView::CGrammarDesignerView()
 
 		VERIFY(m_acctbl);
 
-		m_iswarp = false;
+
 
 		m_timer_interval = 1000;
 }
@@ -92,11 +92,15 @@ BOOL CGrammarDesignerView::PreCreateWindow(CREATESTRUCT& cs)
 
 	BOOL bPreCreated = CRichEditView::PreCreateWindow(cs);
 
+	cs.style |= (ES_AUTOHSCROLL|WS_HSCROLL);
+
+	/*
 	if(!m_iswarp)
 	{
 		cs.style |= (ES_AUTOHSCROLL|WS_HSCROLL);	
 	}
-	
+	*/
+
 	return bPreCreated;
 }
 
@@ -172,6 +176,48 @@ BOOL CGrammarDesignerView::PreTranslateMessage(MSG* pMsg)
 						this->OnContextMenu(this, pt);
 						return TRUE;
 				}
+				case VK_OEM_MINUS:
+				{
+						if(::GetKeyState(VK_LCONTROL) &  0x8000   )
+						{
+
+								if(!m_line_record.IsEmpty())
+								{
+										int index = m_line_record.GetAt(m_line_record.GetCount()-1);
+										m_line_record.RemoveAt(m_line_record.GetCount()-1);
+
+										if(index >= 0)
+										{
+												this->GetRichEditCtrl().SetSel(index, index);
+										}
+
+								}
+								return TRUE;
+						}
+						break;
+				}
+				case VK_UP:
+				case VK_DOWN:
+				case VK_LEFT:
+				case VK_RIGHT:
+				case VK_NEXT:
+				case VK_END:
+				case VK_PRIOR:
+				{
+						long start = -1, end = -1;
+
+						this->GetRichEditCtrl().GetSel(start, end);
+
+						if(start != -1 && end != -1)
+						{
+
+								if(m_line_record.IsEmpty() || m_line_record.GetAt(m_line_record.GetCount()-1) != start)
+								{
+										m_line_record.Add(start);
+								}
+						}
+						break;
+				}
 				}
 		}
 		}
@@ -219,7 +265,6 @@ void CGrammarDesignerView::OnEditFontdlg()
 				this->SetFont(&m_font);
 		}
 }
-
 
 
 
@@ -357,21 +402,7 @@ BOOL   CGrammarDesignerView::SetWordWrap(BOOL   bWordWrap)
 
 
 
-void CGrammarDesignerView::OnEditWordwarp()
-{
-		// TODO: Add your command handler code here
 
-		VERIFY(SetWordWrap(m_iswarp));
-		m_iswarp = !m_iswarp;
-}
-
-
-void CGrammarDesignerView::OnUpdateEditWordwarp(CCmdUI *pCmdUI)
-{
-		// TODO: Add your command update UI handler code here
-		
-		pCmdUI->SetCheck(m_iswarp);
-}
 
 
 void CGrammarDesignerView::OnEditPaste()
@@ -401,6 +432,30 @@ void CGrammarDesignerView::Highlight(long start, long end, COLORREF color)
 		
 }
 
+void CGrammarDesignerView::OnLButtonDown(UINT nFlags, CPoint point)
+{
+		// TODO: Add your message handler code here and/or call default
+		
+		/*
+		int curr = this->GetRichEditCtrl().LineIndex();
+		*/
+
+		long start = -1, end = -1;
+		
+		this->GetRichEditCtrl().GetSel(start, end);
+
+		if(start != -1 && end != -1)
+		{
+
+				if(m_line_record.IsEmpty() || m_line_record.GetAt(m_line_record.GetCount()-1) != start)
+				{
+						m_line_record.Add(start);
+				}
+		}
+
+		CRichEditView::OnLButtonDown(nFlags, point);
+}
+
 
 LRESULT CGrammarDesignerView::OnLocatePos(WPARAM wp, LPARAM lp)
 {
@@ -411,6 +466,22 @@ LRESULT CGrammarDesignerView::OnLocatePos(WPARAM wp, LPARAM lp)
 
 		if(index != -1)
 		{
+				long start = -1, end = -1;
+
+				this->GetRichEditCtrl().GetSel(start, end);
+
+				if(start != -1 && end != -1)
+				{
+
+						if(m_line_record.IsEmpty() || m_line_record.GetAt(m_line_record.GetCount()-1) != start)
+						{
+								m_line_record.Add(start);
+						}
+				}
+/*
+				m_line_record.Add(this->GetRichEditCtrl().LineIndex());
+*/
+
 				CPoint pt = this->GetRichEditCtrl().PosFromChar(index);
 				this->SetCaretPos(pt);
 				int cnt = this->GetRichEditCtrl().LineLength(index);
@@ -764,3 +835,8 @@ void CGrammarDesignerView::OnGoto()
 		}
 }
 
+
+void	CGrammarDesignerView::ClearLineRecord()
+{
+		this->m_line_record.RemoveAll();
+}

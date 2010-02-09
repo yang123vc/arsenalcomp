@@ -48,18 +48,18 @@ public:
 private:
 		CFont	m_font;
 		HACCEL	m_acctbl;
-		BOOL	m_iswarp;
 		UINT	m_timer_interval;
+
+		CArray<int, int>		m_line_record;
 private:
 		void Highlight(long start, long end, COLORREF color);
 public:
-		BOOL   SetWordWrap(BOOL   bWordWrap);
+		
 		afx_msg void OnTestTest();
 
 		afx_msg LRESULT OnBuildTagCompleted(WPARAM wp, LPARAM lp);
 
-		afx_msg void OnEditWordwarp();
-		afx_msg void OnUpdateEditWordwarp(CCmdUI *pCmdUI);
+		
 		afx_msg void OnEditPaste();
 		afx_msg LRESULT OnLocatePos(WPARAM wp, LPARAM lp);
 
@@ -80,7 +80,7 @@ public:
 		afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
 		afx_msg void OnEnChange();
 		
-		
+		BOOL   SetWordWrap(BOOL   bWordWrap);
 
 		afx_msg void OnEditOpen();
 		afx_msg void OnEditSaveFile();
@@ -91,6 +91,10 @@ protected:
 public:
 		afx_msg void OnGoto();
 		afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
+
+public:
+		void	ClearLineRecord();
+		afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 };
 
 #ifndef _DEBUG  // debug version in GrammarDesignerView.cpp
