@@ -20,12 +20,10 @@ AR_NAMESPACE_BEGIN
 
 
 
-lex_t*	Ray_BuildLexer(const arIOCtx_t *io)
+lex_t*	RAY_BuildLexer(const arIOCtx_t *io)
 {
 		return __ray_build_lex_impl(io);
 }
-
-
 
 
 
@@ -51,7 +49,7 @@ static const psrCtx_t		__g_default_psrctx =
 
 
 
-psrGrammar_t*	Ray_BuildGrammar(const arIOCtx_t *io)
+psrGrammar_t*	RAY_BuildGrammar(const arIOCtx_t *io)
 {
 		return __ray_build_grammar_impl(&__g_default_psrctx, io);
 		
@@ -61,7 +59,7 @@ psrGrammar_t*	Ray_BuildGrammar(const arIOCtx_t *io)
 
 
 
-parser_t*		Ray_BuildParser(psrGrammar_t *grammar)
+parser_t*		RAY_BuildParser(psrGrammar_t *grammar)
 {
 		parser_t *parser;
 		AR_ASSERT(grammar != NULL);

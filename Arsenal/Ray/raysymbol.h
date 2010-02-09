@@ -20,6 +20,8 @@
 
 AR_NAMESPACE_BEGIN
 
+
+
 struct __ray_attribute_tag;
 typedef struct __ray_attribute_tag		rayAttr_t;
 
@@ -61,18 +63,17 @@ struct __ray_symbol_table_tag
 };
 
 
-void			Ray_InitSymbTable(raySymbTable_t *tbl);
-void			Ray_UnInitSymbTable(raySymbTable_t *tbl);
+void			RAY_InitSymbTable(raySymbTable_t *tbl);
+void			RAY_UnInitSymbTable(raySymbTable_t *tbl);
 
-void			Ray_EnterBlock(raySymbTable_t *tbl);
-void			Ray_LeaveBlock(raySymbTable_t *tbl);
-raySymbBlock_t*	Ray_CurrentBlock(raySymbTable_t *tbl);
+void			RAY_EnterBlock(raySymbTable_t *tbl);
+void			RAY_LeaveBlock(raySymbTable_t *tbl);
+raySymbBlock_t*	RAY_CurrentBlock(raySymbTable_t *tbl);
 
 
-bool_t			Ray_InsertName(raySymbBlock_t *block,	const wchar_t *name, const rayAttr_t *attr);
-bool_t			Ray_RemoveName(raySymbBlock_t *block,	const wchar_t *name);
-rayAttr_t*		Ray_GetNameAttr(raySymbBlock_t *block,	const wchar_t *name);
-
+bool_t			RAY_InsertName(raySymbBlock_t *block,	const wchar_t *name, const rayAttr_t *attr);
+bool_t			RAY_RemoveName(raySymbBlock_t *block,	const wchar_t *name);
+rayAttr_t*		RAY_GetNameAttr(raySymbBlock_t *block,	const wchar_t *name);
 
 
 
