@@ -75,8 +75,8 @@
 
 
 %token	OCT_CONSTANT	:	"{oct_literal}";
-%token	HEX_CONSTANT	:	"{hex_literal}";
 %token	DEC_CONSTANT	:	"{dec_literal}";
+%token	HEX_CONSTANT	:	"{hex_literal}";
 %token	FLOAT_CONSTANT	:	"{float_literal}";
 %token	CHAR_CONSTANT	:	"{char_literal}";
 
@@ -130,8 +130,8 @@
 %token	"double"	:	'"double"(?!{keyword_lhd})'	,1	;	//DOUBLE	sizeof(double) == 8
 
 
-
-
+%token	"__attribute__" :	'"__attribute__"'				,1	;
+%token	"__pack__" :	'"__pack__"'				,1	;
 
 %token	">>="		:	'">>="'		,2		;	//RIGHT_ASSIGN
 %token	"<<="		:	'"<<="'		,2		;	//LEFT_ASSIGN
@@ -189,7 +189,7 @@
 %token	"?"		:	'"?"'			,0		;	//?
 
 %token	TYPE_ID	:	'^'			,0		;	//占位符
-%token	FAKE_EOI	:	'^'			,0		;	//占位符
+%token	FAKE_EOI	:	'"$"'			,0		;	//占位符
 
 
 
@@ -213,14 +213,25 @@
 
 
 
-%start	program;
+%start	translation_unit;
+
+
+/****************************************特殊动作钩子**********************************************/
+
+enter_scope			:	.	%prec SPEC_ACTION
+					;
+
+exit_scope				:	.	%prec SPEC_ACTION	
+					;
+
+create_labels			:	.	%prec SPEC_ACTION	
+					;
+
+destroy_labels			:	.	%prec SPEC_ACTION	
+					;
 
 
 /**************************************************************************************/
-
-program			:	translation_unit	/*FAKE_EOI
-				|	error FAKE_EOI		*/
-				;
 
 /*编译单元*/
 translation_unit	:	external_declaration
@@ -232,12 +243,8 @@ external_declaration		:	function_definition
 					|	declaration
 					;
 
-function_definition		:	declaration_specifiers declarator compound_statement
+function_definition		:	declaration_specifiers declarator create_labels compound_statement destroy_labels
 					;
-
-
-
-
 
 
 
@@ -275,8 +282,11 @@ type_specifier			:	"void"
 
 /*结构声明*/
 
-struct_specifier		:	"struct" IDENTIFIER "{" struct_declaration_list  "}"
-					|	"struct" IDENTIFIER "{" error  "}"
+struct_specifier		:	"struct" IDENTIFIER "{" enter_scope struct_declaration_list  exit_scope "}"
+					|	"struct" IDENTIFIER
+					
+					|	"struct" IDENTIFIER "{" enter_scope error  exit_scope "}"
+					|	"struct" error 
 					;
 
 
@@ -298,12 +308,15 @@ struct_declarator_list	:	declarator
 
 /*************************************声明***************************************************/
 
+set_pack				:	"__pack__"		"(" ")"
+					|	"__pack__"		"(" DEC_CONSTANT ")"
+					|	"__pack__" 	error 
+					;	
 
 declaration			:	declaration_specifiers init_declarator_list ";"
 					|	declaration_specifiers ";"
-
-					|	declaration_specifiers error ";"	%prec ERROR_SHIFT
-					|	declaration_specifiers error 	
+					|	declaration_specifiers error
+					|	set_pack
 					;
 
 
@@ -325,6 +338,7 @@ declaration_list		:	declaration
 init_declarator_list		:	init_declarator
 					|	init_declarator_list "," init_declarator
 					;
+
 
 init_declarator			:	declarator
 					|	declarator "=" initializer
@@ -413,7 +427,6 @@ statement				:	labeled_statement
 					|	selection_statement
 					|	iteration_statement
 					|	jump_statement
-					|	error
 					;
 
 labeled_statement		:	"case" constant_expression ":" statement
@@ -422,20 +435,14 @@ labeled_statement		:	"case" constant_expression ":" statement
 					;
 
 
-push_symtbl			:	.	%prec SPEC_ACTION
-					;
-
-pop_symtbl				:	.	%prec SPEC_ACTION	
-					;
-
 
 
 compound_statement		:	"{" "}"
 					|	"{" statement_list "}"
-					|	"{" push_symtbl	declaration_list pop_symtbl	"}"
-					|	"{" push_symtbl	declaration_list statement_list pop_symtbl	"}"
+					|	"{" enter_scope	declaration_list exit_scope	"}"
+					|	"{" enter_scope	declaration_list statement_list exit_scope	"}"
 
-					|	"{" push_symtbl	declaration_list error pop_symtbl	"}"	
+					|	"{" enter_scope	declaration_list error exit_scope	"}"	
 					|	"{" error "}"	%prec ERROR_SHIFT
 
 					;
