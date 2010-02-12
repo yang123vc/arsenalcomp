@@ -44,7 +44,7 @@
 %name float_type_suffix	:	"(f|F|d|D)"
 					;
 
-%name float_literal	:	"([0-9]+\.[0-9]*{exponet}?{float_type_suffix}?)"
+%name float_literal	:	"([0-9]*\.[0-9]*{exponet}?{float_type_suffix}?)"
 				;
 
 
@@ -69,16 +69,17 @@
 
 
 
-
+%token	CHAR_CONSTANT	:	"{char_literal}";
 
 %token	STRING_LITERAL	:	"{string_literal}";
 
+%token	FLOAT_CONSTANT	:	"{float_literal}(?!{keyword_lhd})"			,2	;
+%token	HEX_CONSTANT	:	"{hex_literal}(?!{keyword_lhd})"			,2	;
+%token	OCT_CONSTANT	:	"{oct_literal}(?!{keyword_lhd})"			,1	;
+%token	DEC_CONSTANT	:	"{dec_literal}(?!{keyword_lhd})"			,1	;
 
-%token	OCT_CONSTANT	:	"{oct_literal}";
-%token	DEC_CONSTANT	:	"{dec_literal}";
-%token	HEX_CONSTANT	:	"{hex_literal}";
-%token	FLOAT_CONSTANT	:	"{float_literal}";
-%token	CHAR_CONSTANT	:	"{char_literal}";
+
+
 
 %token	IDENTIFIER		:	"{letter}({letter}|{digit})*";
 
