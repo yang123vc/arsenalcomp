@@ -1,6 +1,7 @@
 ﻿
 
 
+
 struct test{
 	unsigned int *a,b,c;
 
@@ -123,6 +124,57 @@ int strcmp(const char *l, const char *r)
 
 
 
+
+
+
+int		dec	=	0;
+int		dec2	=	10;
+int		dec3	=	10L;
+
+int		oct	=	060L;
+int		oct2	=	060;
+
+int		hex	=	0x80;
+int		hex1	=	0xAB;
+
+int		hex2	=	0x80L;
+int		hex3	=	0xABu;
+
+
+double	d	=	3.14d;
+float 	f	=	0.0F;
+float 	f	=	.0f;
+float 	f	=	.12;
+
+
+
+double	d	=	3.14e+10d;
+float 	f	=	0.0e-10F;
+float 	f	=	.0e10f;
+float 	f	=	.12e10;
+
+
+/*错误的constant*/
+
+
+int		dec	=	0La;
+int		dec2	=	10La;
+int		dec3	=	10Lf;
+
+int		oct	=	060aL;
+int		oct2	=	060a;
+
+int		hex	=	0x80LW;
+int		hex1	=	0xABLW;
+
+int		hex2	=	0x80LW;
+int		hex3	=	0xABLW;
+
+
+double	d	=	3.14dW;
+float 	f	=	0.0FW;
+float 	f	=	.0fW;
+float 	f	=	W.12W;
 
 
 
