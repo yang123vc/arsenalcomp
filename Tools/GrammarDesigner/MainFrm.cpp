@@ -62,7 +62,7 @@ static UINT indicators[] =
 CMainFrame::CMainFrame()
 {
 	// TODO: add member initialization code here
-	theApp.m_nAppLook = theApp.GetInt(_T("ApplicationLook"), ID_VIEW_APPLOOK_VS_2005);
+	theApp.m_nAppLook = theApp.GetInt(_T("ApplicationLook"), ID_VIEW_APPLOOK_OFF_2007_AQUA);
 }
 
 CMainFrame::~CMainFrame()
@@ -189,8 +189,9 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	CMFCToolBar::SetBasicCommands(lstBasicCommands);
 
-	HICON ico = AfxGetApp()->LoadIconW(IDI_OCTOPUS);
+	HICON ico = AfxGetApp()->LoadIconW(IDR_MAINFRAME);
 	SetIcon(ico,true);
+
 	return 0;
 }
 

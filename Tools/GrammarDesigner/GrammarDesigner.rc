@@ -148,15 +148,6 @@ BEGIN
 END
 #endif    // APSTUDIO_INVOKED
 
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Icon
-//
-
-// Icon with lowest ID value placed first to ensure application icon
-// remains consistent on all systems.
-IDR_MAINFRAME           ICON                    "res\\icon_octopus.ico"
 #endif    // Chinese (P.R.C.) resources
 /////////////////////////////////////////////////////////////////////////////
 
@@ -333,15 +324,16 @@ END
 // Dialog
 //
 
-IDD_ABOUTBOX DIALOGEX 0, 0, 170, 62
+IDD_ABOUTBOX DIALOGEX 0, 0, 170, 80
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "About GrammarDesigner"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,14,14,20,20
-    LTEXT           "Version 0. 1. 174. 0",IDC_STATIC,42,7,114,8,SS_NOPREFIX
-    LTEXT           "Copyright (C) 2009",IDC_STATIC,42,26,114,8
-    DEFPUSHBUTTON   "OK",IDOK,113,41,50,14,WS_GROUP
+    LTEXT           "Version 0. 1. 183. 1",IDC_STATIC,45,24,114,8,SS_NOPREFIX
+    CONTROL         "Copyright (C) 2009-2010 Solidus",IDC_STATIC,"Static",SS_LEFTNOWORDWRAP | WS_GROUP,45,39,114,8
+    DEFPUSHBUTTON   "OK",IDOK,113,59,50,14,WS_GROUP
+    LTEXT           "Grammar Designer",IDC_STATIC,45,10,114,8,SS_NOPREFIX
 END
 
 
@@ -358,7 +350,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 163
         TOPMARGIN, 7
-        BOTTOMMARGIN, 55
+        BOTTOMMARGIN, 73
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -371,6 +363,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\icon_octopus.ico"
 IDR_GrammarDesignerTYPE ICON                    "res\\GrammarDesignerDoc.ico"
 IDI_OUTPUT_WND          ICON                    "res\\output_wnd.ico"
 IDI_OUTPUT_WND_HC       ICON                    "res\\output_wnd_hc.ico"
@@ -453,8 +446,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,1,174,0
- PRODUCTVERSION 0,1,174,0
+ FILEVERSION 0,1,183,1
+ PRODUCTVERSION 0,1,183,1
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -471,12 +464,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "None"
             VALUE "FileDescription", "Grammar Designer"
-            VALUE "FileVersion", "0, 1, 174, 0"
+            VALUE "FileVersion", "0, 1, 183, 1"
             VALUE "InternalName", "GrammarDesigner.exe"
             VALUE "LegalCopyright", "Solidus.  All rights reserved."
             VALUE "OriginalFilename", "GrammarDesigner.exe"
             VALUE "ProductName", "Grammar Designer"
-            VALUE "ProductVersion", "0, 1, 174, 0"
+            VALUE "ProductVersion", "0, 1, 183, 1"
         END
     END
     BLOCK "VarFileInfo"
