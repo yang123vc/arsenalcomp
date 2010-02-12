@@ -70,8 +70,13 @@
 
 
 %token	CHAR_CONSTANT	:	"{char_literal}";
-
 %token	STRING_LITERAL	:	"{string_literal}";
+
+/*
+由于引擎本身的算法原因，必须把相同前缀最长的匹配的优先级提到最高，例如匹配
+"=" 和"=="，需要把==的优先级设置到大于"="才可以正常匹配
+*/
+
 
 %token	FLOAT_CONSTANT	:	"{float_literal}(?!{keyword_lhd})"			,2	;
 %token	HEX_CONSTANT	:	"{hex_literal}(?!{keyword_lhd})"			,2	;
