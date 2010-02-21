@@ -143,7 +143,7 @@
 %token 	EXPLICIT 		:	'"explicit"'	,1		;	//explicit
 %token 	EXPORT 		:	'"export"'		,1		;	//export
 %token 	EXTERN		:	'"extern"'		,1		;	//extern
-%token 	FLOAT		:	'"float"'		,1		;	//float
+%token 	FLOAT			:	'"float"'		,1		;	//float
 %token 	FALSE 		:	'"false"'		,1		;	//false
 %token 	FOR 			:	'"for"'		,1		;	//for
 %token 	FRIEND 		:	'"friend"'		,1		;	//friend

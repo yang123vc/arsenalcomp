@@ -133,6 +133,7 @@
 #define ID_POPUP_COLLAPSEALL            32876
 #define ID_PARSER_GENERATE              32877
 #define ID_GENERATE_TEMPLATE            32878
+#define ID_POPUP_UNDO                   32879
 #define ID_INDICATOR_LINE               59142
 #define ID_INDICATOR_COL                59143
 #define IDS_ACTVIEW_WND                 61204
@@ -146,7 +147,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        323
-#define _APS_NEXT_COMMAND_VALUE         32879
+#define _APS_NEXT_COMMAND_VALUE         32880
 #define _APS_NEXT_CONTROL_VALUE         1003
 #define _APS_NEXT_SYMED_VALUE           310
 #endif

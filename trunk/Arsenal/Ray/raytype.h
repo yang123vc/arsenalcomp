@@ -19,18 +19,30 @@
 AR_NAMESPACE_BEGIN
 
 
-/*type_specifier	:	void */
-/*type_specifier	:	byte */
-/*type_specifier	:	char */
-/*type_specifier	:	short */
-/*type_specifier	:	int */
-/*type_specifier	:	long */
-/*type_specifier	:	float */
-/*type_specifier	:	double */
-/*type_specifier	:	signed */
-/*type_specifier	:	unsigned */
-/*type_specifier	:	struct_specifier */
-/*type_specifier	:	TYPE_ID */
+
+/*
+type_specifier			:	"void"
+					|	"byte"
+					|	"char"
+					|	"short"
+					|	"int"
+					|	"long"
+					|	"float"
+					|	"double"
+					|	"signed"
+					|	"unsigned"
+					|	"signed"		"short"
+					|	"unsigned"		"short"
+					|	"signed"		"int"
+					|	"unsigned"		"int"
+					|	"signed"		"long"
+					|	"unsigned"		"long"
+					|	struct_specifier
+					|	TYPE_ID
+					;
+*/
+
+
 typedef enum
 {
 		RAY_VOID,
@@ -51,17 +63,79 @@ typedef enum
 
 typedef enum
 {
-		RAY_BAISC_T,
-		RAY_POINTER_T,
-		RAY_ARRAY_T,
-		RAY_FUNCTION_T,
-		RAY_STRUCT_T
-}rayCompoundType_t;
+		RAY_BAISC_OP,
+		RAY_POINTER_OP,
+		RAY_ARRAY_OP,
+		RAY_FUNCTION_OP,
+		RAY_STRUCT_OP,
+		RAY_QUAL_OP
+}rayTypeOper_t;
 
+
+typedef enum
+{
+		RAY_CONST_QUALIFIER
+}rayTypeQualifier_t;
 
 struct __ray_type_tag;
 
 typedef struct __ray_type_tag	rayType_t;
+
+typedef struct __ray_basic_tag
+{
+		rayBasicType_t	basic;
+}rayBasic_t;
+
+typedef struct __ray_array_tag
+{
+		size_t			count;
+		rayType_t		*type;
+}rayArray_t;
+
+typedef struct __ray_struct_tag
+{
+		void	*lst;
+		size_t	count;
+}rayStruct_t;
+
+
+typedef struct __ray_function_tag
+{
+		rayType_t		*ret;
+		rayType_t		**params;
+		size_t			count;
+}rayFunc_t;
+
+
+typedef struct __ray_pointer_tag
+{
+		rayType_t		*type;
+}rayPointer_t;
+
+
+typedef struct __ray_qual_tag
+{
+		rayTypeQualifier_t		qual;
+		rayType_t				*type;
+}rayQual_t;
+
+struct __ray_type_tag
+{
+		rayTypeOper_t	kind;
+		
+		size_t			align;
+		size_t			size;
+
+		union{
+				rayBasic_t		basic;
+				rayArray_t		arr;
+				rayStruct_t		record;
+				rayFunc_t		func;
+				rayPointer_t	pointer;
+				rayQual_t		qual;
+		};
+};
+
 
 
 

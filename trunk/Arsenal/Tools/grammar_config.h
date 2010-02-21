@@ -191,7 +191,7 @@ L"static psrGrammar_t*	__build_grammar(const psrCtx_t	*psr_ctx, const arIOCtx_t 
 		for(i = 0; i < AR_NELEMS(__g_term_pattern); ++i)																		\n	\
 		{																														\n	\
 				if(__g_term_pattern[i].skip || __g_term_pattern[i].tokval == 0)continue;										\n	\
-				if(!PSR_InsertTerm(grammar, __g_term_pattern[i].name, __g_term_pattern[i].tokval, PSR_ASSOC_NOASSOC,0, NULL))	\n	\
+				if(!PSR_InsertTerm(grammar, __g_term_pattern[i].name, __g_term_pattern[i].tokval, PSR_ASSOC_NONASSOC,0, NULL))	\n	\
 				{																												\n	\
 						PSR_DestroyGrammar(grammar);																			\n	\
 						grammar = NULL;																							\n	\

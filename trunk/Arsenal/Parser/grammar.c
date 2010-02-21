@@ -355,9 +355,9 @@ static void __init_grammar_component_unit(psrGrammar_t *grammar)
 {
 		AR_ASSERT(grammar != NULL);
 
-		PSR_InsertToTermInfoList(&grammar->term_list, PSR_EOISymb->name,PSR_EOI_TOKVAL, PSR_ASSOC_NOASSOC, 0, NULL);
-		PSR_InsertToTermInfoList(&grammar->term_list, PSR_ErrorSymb->name, PSR_ERROR_TOKVAL, PSR_ASSOC_NOASSOC, 0, NULL);
-		PSR_InsertToTermInfoList(&grammar->term_list, PSR_DefPrecSymb->name, PSR_DEFPREC_TOKVAL, PSR_ASSOC_NOASSOC, 0, NULL);
+		PSR_InsertToTermInfoList(&grammar->term_list, PSR_EOISymb->name,PSR_EOI_TOKVAL, PSR_ASSOC_NONASSOC, 0, NULL);
+		PSR_InsertToTermInfoList(&grammar->term_list, PSR_ErrorSymb->name, PSR_ERROR_TOKVAL, PSR_ASSOC_NONASSOC, 0, NULL);
+		PSR_InsertToTermInfoList(&grammar->term_list, PSR_DefPrecSymb->name, PSR_DEFPREC_TOKVAL, PSR_ASSOC_NONASSOC, 0, NULL);
 
 		{
 				psrRule_t *start;

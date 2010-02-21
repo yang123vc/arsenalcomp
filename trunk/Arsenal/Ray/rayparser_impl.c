@@ -302,9 +302,9 @@ static struct {
 		{L"/", DIV,				10, PSR_ASSOC_LEFT},
 		{L"%", MOD,				10, PSR_ASSOC_LEFT},
 		
-		{L"IF_STMT_PREC", IF_STMT_PREC,						11, PSR_ASSOC_NOASSOC},
-		{L"IF_STMT_ELSE_STMT_PREC", IF_STMT_ELSE_STMT_PREC, 12, PSR_ASSOC_NOASSOC},
-		{L"SPEC_ACTION", SPEC_ACTION,						13, PSR_ASSOC_NOASSOC},
+		{L"IF_STMT_PREC", IF_STMT_PREC,						11, PSR_ASSOC_NONASSOC},
+		{L"IF_STMT_ELSE_STMT_PREC", IF_STMT_ELSE_STMT_PREC, 12, PSR_ASSOC_NONASSOC},
+		{L"SPEC_ACTION", SPEC_ACTION,						13, PSR_ASSOC_NONASSOC},
 		{L"ERROR_SHIFT", ERROR_SHIFT, 14, PSR_ASSOC_RIGHT}
 };
 
@@ -791,7 +791,7 @@ psrGrammar_t*	__ray_build_grammar_impl(const psrCtx_t	*psr_ctx, const arIOCtx_t 
 			for(i = 0; i < AR_NELEMS(__g_term_pattern); ++i)																		
 			{																														
 					if(__g_term_pattern[i].skip || __g_term_pattern[i].tokval == 0)continue;										
-					if(!PSR_InsertTerm(grammar, __g_term_pattern[i].name, __g_term_pattern[i].tokval, PSR_ASSOC_NOASSOC,0, ray_handle_token))	
+					if(!PSR_InsertTerm(grammar, __g_term_pattern[i].name, __g_term_pattern[i].tokval, PSR_ASSOC_NONASSOC,0, ray_handle_token))	
 					{																												
 							PSR_DestroyGrammar(grammar);																			
 							grammar = NULL;																							

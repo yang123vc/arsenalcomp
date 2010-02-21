@@ -279,7 +279,7 @@ static void __insert_action_to_action_list(psrAction_t **dest, const psrAction_t
 				/*
 						相同优先级的情况下：
 				*/
-				if(lookahead->assoc == PSR_ASSOC_NOASSOC)
+				if(lookahead->assoc == PSR_ASSOC_NONASSOC)
 				{
 
 						tmp = AR_NEW0(psrAction_t);

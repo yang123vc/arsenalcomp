@@ -231,7 +231,7 @@ lalrConfig_t*			PSR_FindFromConfigList(lalrConfigList_t *lst, const psrRule_t *r
 
 /************************************************************Sort*****************************************************/
 
-static void __merge_list(lalrConfigList_t *dest, lalrConfigList_t *a, lalrConfigList_t *b)
+static AR_INLINE void __merge_list(lalrConfigList_t *dest, lalrConfigList_t *a, lalrConfigList_t *b)
 {
 		lalrConfigNode_t *l, *r;
 		lalrConfigNode_t *prev , *tmp, *head;
@@ -302,7 +302,7 @@ static void __merge_list(lalrConfigList_t *dest, lalrConfigList_t *a, lalrConfig
 		}
 }
 
-static lalrConfigNode_t* __pop_head(lalrConfigList_t *lst)
+static AR_INLINE lalrConfigNode_t* __pop_head(lalrConfigList_t *lst)
 {
 		lalrConfigNode_t *res;
 		AR_ASSERT(lst != NULL);
@@ -322,7 +322,7 @@ static lalrConfigNode_t* __pop_head(lalrConfigList_t *lst)
 		return res;
 }
 
-static void		__insert_back(lalrConfigList_t *lst, lalrConfigNode_t *node)
+static AR_INLINE void		__insert_back(lalrConfigList_t *lst, lalrConfigNode_t *node)
 {
 		
 		AR_ASSERT(lst != NULL && node != NULL);
@@ -344,7 +344,7 @@ static void		__insert_back(lalrConfigList_t *lst, lalrConfigNode_t *node)
 }
 
 
-static void __sort_list(lalrConfigList_t *sour_list)
+static AR_INLINE void __sort_list(lalrConfigList_t *sour_list)
 {
 		int_t i,fill;
 		lalrConfigList_t lst, carry, tmp_list[64];
@@ -377,7 +377,15 @@ static void __sort_list(lalrConfigList_t *sour_list)
 				AR_memset(&carry, 0, sizeof(carry));
 		}
 
-		for(i = 1; i < fill; ++i)__merge_list(&tmp_list[i], &tmp_list[i], &tmp_list[i-1]);
+		for(i = 1; i < fill; ++i)
+		{
+				lalrConfigList_t		*dest, *l, *r;
+
+				dest	=		&tmp_list[i];
+				l		=		&tmp_list[i];
+				r		=		&tmp_list[i-1];
+				__merge_list(dest, l, r);
+		}
 
 		*sour_list = tmp_list[fill-1];
 }
