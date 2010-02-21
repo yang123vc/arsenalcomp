@@ -29,7 +29,8 @@ AR_GetLengthString
 
 ;common
 ;AR_qsort
-
+AR_escstr_to_str_buf
+AR_str_to_escstr_buf
 
 
 ;Lex

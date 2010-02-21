@@ -45,7 +45,7 @@ public:
 		virtual void OnInitialUpdate();
 		afx_msg void OnEditFontdlg();
 
-private:
+public:
 		CFont	m_font;
 		HACCEL	m_acctbl;
 		UINT	m_timer_interval;

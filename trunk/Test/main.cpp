@@ -51,7 +51,7 @@ int main()
 		arCtx_t ctx;
 		ctx.init = ai;
 
-		
+		printf("current locale == %ls\r\n", setlocale(LC_ALL,NULL));
 
 		Arsenal_Init(&ctx);
 		

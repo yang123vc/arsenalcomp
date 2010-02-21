@@ -1038,6 +1038,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\StringConvDlg.h"
+				>
+			</File>
+			<File
 				RelativePath=".\SyntaxPane.h"
 				>
 			</File>
@@ -1250,6 +1254,10 @@
 						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\StringConvDlg.cpp"
+				>
 			</File>
 			<File
 				RelativePath=".\SyntaxPane.cpp"

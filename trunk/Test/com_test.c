@@ -623,6 +623,104 @@ void escstr_test0()
 }
 
 
+void escstr_test1()
+{
+		wchar_t tmp[1024];
+
+		while(true)
+		{
+				_getws(tmp);
+				if(AR_wcscmp(tmp, L"quit") == 0)break;
+
+				arEscStrErr_t	err;
+				wchar_t *d = AR_escstr_to_str(tmp, &err);
+				
+				wchar_t buf[1024];
+				if(err.type == AR_ESCSTR_ERR_VALUE)
+				{
+						swprintf(buf, 1024, L"invalid value %I64d\r\n", err.value);
+				}else if(err.type == AR_ESCSTR_ERR_CHAR)
+				{
+						swprintf(buf, 1024, L"invalid input %ls\r\n", err.pos);
+				}else
+				{
+						swprintf(buf, 1024, L"%ls\r\n", d);
+				}
+
+				//wprintf(L"string == %ls\r\n", d);
+				::MessageBoxW(NULL, buf, 0,0);
+				
+				AR_DEL(d);
+
+		}
+
+}
+
+
+
+
+void escstr_test_buf0()
+{
+
+		//const wchar_t *s = L"\\a\\b\\c\\d\\s";
+		wchar_t buf[1024], tmp[1024];
+
+		while(true)
+		{
+				_getws(buf);
+				if(AR_wcscmp(buf, L"quit") == 0)break;
+
+				int_t l = AR_str_to_escstr_buf(tmp, 1024, buf);
+
+				AR_ASSERT(l >= 0);
+				
+				wprintf(L"escape == %ls\r\n", tmp);
+				
+
+		}
+}
+
+
+
+void escstr_test_buf1()
+{
+		wchar_t tmp[1024], out[1024];
+
+		while(true)
+		{
+				_getws(tmp);
+				if(AR_wcscmp(tmp, L"quit") == 0)break;
+
+				arEscStrErr_t	err;
+				int_t l = AR_escstr_to_str_buf(out, 1024, tmp, &err);
+				
+				wchar_t buf[1024];
+				if(err.type == AR_ESCSTR_ERR_BUFFER)
+				{
+						AR_ASSERT(false);
+						
+				}else if(err.type == AR_ESCSTR_ERR_VALUE)
+				{
+						swprintf(buf, 1024, L"invalid value %I64d\r\n", err.value);
+				}else if(err.type == AR_ESCSTR_ERR_CHAR)
+				{
+						swprintf(buf, 1024, L"invalid input %ls\r\n", err.pos);
+				}else
+				{
+						swprintf(buf, 1024, L"%ls\r\n", out);
+				}
+
+				//wprintf(L"string == %ls\r\n", d);
+				::MessageBoxW(NULL, buf, 0,0);
+				
+				
+
+		}
+
+}
+
+
+
 void com_test()
 {
 
@@ -649,7 +747,12 @@ void com_test()
 		//sort_test();
 		//search_test();
 
-		escstr_test0();
+		//escstr_test0();
+		//escstr_test1();
+
+		//escstr_test_buf0();
+
+		escstr_test_buf1();
 
 }
 

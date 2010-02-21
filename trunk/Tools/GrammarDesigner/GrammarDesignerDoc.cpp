@@ -4,6 +4,7 @@
 
 #include "stdafx.h"
 
+
 #include "PrintNode.h"
 #include "MainFrm.h"
 
@@ -11,7 +12,7 @@
 #include "GrammarDesignerDoc.h"
 #include "GrammarDesignerView.h"
 
-
+#include "StringConvDlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -54,6 +55,7 @@ BEGIN_MESSAGE_MAP(CGrammarDesignerDoc, CRichEditDoc)
 		ON_COMMAND(ID_TEST_TEST, &CGrammarDesignerDoc::OnTestTest)
 		ON_COMMAND(ID_TEST_TEST2, &CGrammarDesignerDoc::OnTestTest2)
 		ON_COMMAND(ID_GENERATE_TEMPLATE, &CGrammarDesignerDoc::OnGenerateTemplate)
+		ON_COMMAND(ID_STRINGS_STRINGCONVERTER, &CGrammarDesignerDoc::OnStringsStringconverter)
 END_MESSAGE_MAP()
 
 
@@ -1183,4 +1185,14 @@ END_POINT:
 		{
 				AR_DestroyString(code);
 		}
+}
+
+void CGrammarDesignerDoc::OnStringsStringconverter()
+{
+		// TODO: Add your command handler code here
+		CStringConvDlg dlg;
+		
+		dlg.DoModal();
+
+		
 }
