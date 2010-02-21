@@ -42,9 +42,15 @@
 #define IDD_DIALOG_GOTO                 317
 #define IDI_OCT                         322
 #define IDI_OCTOPUS                     322
+#define IDD_DIALOG1                     323
+#define IDD_DIALOG_STR_CODE_CONV        323
 #define IDC_EDIT1                       1001
 #define IDC_EDIT_LINE                   1001
+#define IDC_EDIT_STRING                 1001
 #define IDC_STATIC_LINE                 1002
+#define IDC_EDIT_CODE                   1003
+#define IDC_BUTTON_TO_CODE              1005
+#define IDC_BUTTON_TO_STRING            1006
 #define ID_EDIT_UNDO32771               32771
 #define ID_EDIT_SELECTALL               32772
 #define ID_EDIT_SELECTALL32773          32773
@@ -134,6 +140,8 @@
 #define ID_PARSER_GENERATE              32877
 #define ID_GENERATE_TEMPLATE            32878
 #define ID_POPUP_UNDO                   32879
+#define ID_TOOLS_STRINGS                32880
+#define ID_STRINGS_STRINGCONVERTER      32881
 #define ID_INDICATOR_LINE               59142
 #define ID_INDICATOR_COL                59143
 #define IDS_ACTVIEW_WND                 61204
@@ -146,9 +154,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        323
-#define _APS_NEXT_COMMAND_VALUE         32880
-#define _APS_NEXT_CONTROL_VALUE         1003
+#define _APS_NEXT_RESOURCE_VALUE        324
+#define _APS_NEXT_COMMAND_VALUE         32882
+#define _APS_NEXT_CONTROL_VALUE         1007
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

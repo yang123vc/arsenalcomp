@@ -297,8 +297,26 @@ uint_t			AR_wcshash(const wchar_t *str);
 uint_t			AR_wcshash_n(const wchar_t *str, size_t n);
 
 
+
+#define	AR_ESCSTR_ERR_OK				0x00
+#define	AR_ESCSTR_ERR_VALUE				0x01
+#define	AR_ESCSTR_ERR_CHAR				0x02
+#define AR_ESCSTR_ERR_BUFFER			0x03
+
+typedef struct __escape_string_error_tag
+{
+		int_t			type;			
+		const wchar_t	*pos;
+		uint64_t		value;
+}arEscStrErr_t;
+
+
+wchar_t*		AR_escstr_to_str(const wchar_t *src, arEscStrErr_t *error);
 wchar_t*		AR_str_to_escstr(const wchar_t *src);
 
+
+int_t 		AR_escstr_to_str_buf(wchar_t *dest, size_t len, const wchar_t *src, arEscStrErr_t *error);
+int_t 		AR_str_to_escstr_buf(wchar_t *dest, size_t len, const wchar_t *src);
 
 /********************************************************String*****************************************************************/
 
@@ -325,8 +343,6 @@ size_t			AR_GetLengthString(const arString_t *str);
 
 #define			AR_StrPrint(_s) do{ AR_printf(L"%ls\r\n", AR_GetStrString((_s))); }while(0)
 #define			AR_StrPrintCtx(_ctx, _s)do{ AR_printf_ctx((_ctx), L"%ls\r\n", AR_GetStrString((_s))); }while(0)
-
-
 
 
 
