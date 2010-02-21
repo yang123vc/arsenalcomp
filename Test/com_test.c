@@ -603,6 +603,24 @@ void str_test6()
 
 }
 
+void escstr_test0()
+{
+
+		//const wchar_t *s = L"\\a\\b\\c\\d\\s";
+		wchar_t buf[1024];
+
+		while(true)
+		{
+				_getws(buf);
+				if(AR_wcscmp(buf, L"quit") == 0)break;
+
+				wchar_t *d = AR_str_to_escstr(buf);
+
+				wprintf(L"escape == %ls\r\n", d);
+				AR_DEL(d);
+
+		}
+}
 
 
 void com_test()
@@ -614,7 +632,7 @@ void com_test()
 		//str_test4();
 		//str_test5();
 
-		str_test6();
+		//str_test6();
 		
 		//com_test3();
 		//com_conv();
@@ -630,6 +648,8 @@ void com_test()
 
 		//sort_test();
 		//search_test();
+
+		escstr_test0();
 
 }
 

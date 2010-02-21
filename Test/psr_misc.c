@@ -96,16 +96,16 @@ typedef struct __rule_tag
 
 token_test_t tokens[] = 
 {
-		{L"(", 354, 0, PSR_ASSOC_NOASSOC},
-		{L")", 355, 0, PSR_ASSOC_NOASSOC},
-		{L"+", 356, 0, PSR_ASSOC_NOASSOC},
-		{L"-", 357, 0, PSR_ASSOC_NOASSOC},
-		{L"*", 358, 0, PSR_ASSOC_NOASSOC},
-		{L"/", 359, 0, PSR_ASSOC_NOASSOC},
-		{L"%", 360, 0, PSR_ASSOC_NOASSOC},
-		{L"number", 361, 0, PSR_ASSOC_NOASSOC},
-		{L";",		362, 0, PSR_ASSOC_NOASSOC},
-		{L"UMINUS", 0xFFFF, 0, PSR_ASSOC_NOASSOC}
+		{L"(", 354, 0, PSR_ASSOC_NONASSOC},
+		{L")", 355, 0, PSR_ASSOC_NONASSOC},
+		{L"+", 356, 0, PSR_ASSOC_NONASSOC},
+		{L"-", 357, 0, PSR_ASSOC_NONASSOC},
+		{L"*", 358, 0, PSR_ASSOC_NONASSOC},
+		{L"/", 359, 0, PSR_ASSOC_NONASSOC},
+		{L"%", 360, 0, PSR_ASSOC_NONASSOC},
+		{L"number", 361, 0, PSR_ASSOC_NONASSOC},
+		{L";",		362, 0, PSR_ASSOC_NONASSOC},
+		{L"UMINUS", 0xFFFF, 0, PSR_ASSOC_NONASSOC}
 };
 
 
@@ -123,9 +123,9 @@ rule_test_t rules[] =
 
 token_test_t tokens1[] = 
 {
-		{L"id", 300, 0, PSR_ASSOC_NOASSOC},
-		{L"n",	400, 0, PSR_ASSOC_NOASSOC},
-		{L":=", 500, 0, PSR_ASSOC_NOASSOC}
+		{L"id", 300, 0, PSR_ASSOC_NONASSOC},
+		{L"n",	400, 0, PSR_ASSOC_NONASSOC},
+		{L":=", 500, 0, PSR_ASSOC_NONASSOC}
 };
 
 
@@ -141,9 +141,9 @@ rule_test_t rules1[] =
 
 token_test_t tokens2[] = 
 {
-		{L"(", 300, 0, PSR_ASSOC_NOASSOC},
-		{L")",	301, 0, PSR_ASSOC_NOASSOC},
-		{L"++", 303, 0, PSR_ASSOC_NOASSOC}
+		{L"(", 300, 0, PSR_ASSOC_NONASSOC},
+		{L")",	301, 0, PSR_ASSOC_NONASSOC},
+		{L"++", 303, 0, PSR_ASSOC_NONASSOC}
 };
 
 
@@ -158,10 +158,10 @@ rule_test_t rules2[] =
 
 token_test_t tokens3[] = 
 {
-		{L"n", 300, 0, PSR_ASSOC_NOASSOC},
-		{L"id",	301, 0, PSR_ASSOC_NOASSOC},
-		{L"=", 400, 0, PSR_ASSOC_NOASSOC},
-		{L"*", 401, 0, PSR_ASSOC_NOASSOC}
+		{L"n", 300, 0, PSR_ASSOC_NONASSOC},
+		{L"id",	301, 0, PSR_ASSOC_NONASSOC},
+		{L"=", 400, 0, PSR_ASSOC_NONASSOC},
+		{L"*", 401, 0, PSR_ASSOC_NONASSOC}
 };
 
 
@@ -389,8 +389,8 @@ void calc_test1()
 		
 		gmr = PSR_CreateGrammar(NULL);
 		
-		PSR_InsertTerm(gmr, L"(", 300, PSR_ASSOC_NOASSOC, 0, create_leaf);
-		PSR_InsertTerm(gmr, L")", 301, PSR_ASSOC_NOASSOC, 0, create_leaf);
+		PSR_InsertTerm(gmr, L"(", 300, PSR_ASSOC_NONASSOC, 0, create_leaf);
+		PSR_InsertTerm(gmr, L")", 301, PSR_ASSOC_NONASSOC, 0, create_leaf);
 		
 
 		PSR_InsertRuleByStr(gmr, L"S : ( S ) S", NULL, create_node);

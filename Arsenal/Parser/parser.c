@@ -278,16 +278,19 @@ static void __on_error(parser_t *parser, const psrToken_t		*tok)
 
 
 				AR_DEL(buf);
-
-				AR_AppendFormatString(str, L"Expected Term Type:\r\n");
-
-				for(i = 0; i < parser->msg_set[top_state].count; ++i)
+				
+				if(parser->msg_set[top_state].count > 0)
 				{
-						AR_AppendFormatString(str, L"\"%ls\" ", parser->msg_set[top_state].msg[i]);
+						AR_AppendFormatString(str, L"Expected Term Type:\r\n");
+
+						for(i = 0; i < parser->msg_set[top_state].count; ++i)
+						{
+								AR_AppendFormatString(str, L"\"%ls\" ", parser->msg_set[top_state].msg[i]);
+						}
+
+						AR_AppendFormatString(str, L"\r\n\r\n");
 				}
-
-				AR_AppendFormatString(str, L"\r\n\r\n");
-
+				
 				AR_printf_ctx((arIOCtx_t*)io, L"%ls\r\n", AR_GetStrString(str));
 
 				AR_DestroyString(str);

@@ -210,6 +210,7 @@ BOOL CInputEdit::PreTranslateMessage(MSG* pMsg)
 				return TRUE;
 		}
 		case WM_KEYDOWN:
+		case WM_SYSKEYDOWN:
 		{
 				switch(pMsg->wParam)
 				{
@@ -230,7 +231,6 @@ BOOL CInputEdit::PreTranslateMessage(MSG* pMsg)
 						SetSel(nPos, nEnd);
 						ReplaceSel(TEXT("\t"), TRUE);
 						return TRUE;
-
 				}
 				}
 		}
@@ -261,6 +261,7 @@ BEGIN_MESSAGE_MAP(CInputEdit, CRichEditCtrl)
 		ON_COMMAND(ID_POPUP_PARSE, &CInputEdit::OnPopupParse)
 		ON_UPDATE_COMMAND_UI(ID_POPUP_PARSE, &CInputEdit::OnUpdatePopupParse)
 
+		ON_COMMAND(ID_EDIT_UNDO, &CInputEdit::OnEditUndo)
 END_MESSAGE_MAP()
 
 void CInputEdit::OnContextMenu(CWnd* pWnd, CPoint point)
@@ -497,4 +498,11 @@ void CInputEdit::OnUpdatePopupParse(CCmdUI *pCmdUI)
 		
 		 pCmdUI->Enable(((CGrammarDesignerDoc*)main_frm->GetActiveDocument())->IsParseable());
 		 
+}
+
+void CInputEdit::OnEditUndo()
+{
+		// TODO: Add your command handler code here
+		
+		this->Undo();
 }

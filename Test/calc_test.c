@@ -134,15 +134,15 @@ static  void			AR_STDCALL on_error(const psrToken_t *tok, const wchar_t *expecte
 */
 
 /*
-{L"(", 354, 0, PSR_ASSOC_NOASSOC},
-		{L")", 355, 0, PSR_ASSOC_NOASSOC},
-		{L"+", 356, 0, PSR_ASSOC_NOASSOC},
-		{L"-", 357, 0, PSR_ASSOC_NOASSOC},
-		{L"*", 358, 0, PSR_ASSOC_NOASSOC},
-		{L"/", 359, 0, PSR_ASSOC_NOASSOC},
-		{L"%", 360, 0, PSR_ASSOC_NOASSOC},
-		{L"number", 361, 0, PSR_ASSOC_NOASSOC},
-		{L"UMINUS", 0xFFFF, 0, PSR_ASSOC_NOASSOC}
+{L"(", 354, 0, PSR_ASSOC_NONASSOC},
+		{L")", 355, 0, PSR_ASSOC_NONASSOC},
+		{L"+", 356, 0, PSR_ASSOC_NONASSOC},
+		{L"-", 357, 0, PSR_ASSOC_NONASSOC},
+		{L"*", 358, 0, PSR_ASSOC_NONASSOC},
+		{L"/", 359, 0, PSR_ASSOC_NONASSOC},
+		{L"%", 360, 0, PSR_ASSOC_NONASSOC},
+		{L"number", 361, 0, PSR_ASSOC_NONASSOC},
+		{L"UMINUS", 0xFFFF, 0, PSR_ASSOC_NONASSOC}
 */
 
 static lex_t* __build_lex()
@@ -187,14 +187,14 @@ static  parser_t* __build_parser()
 
 		gmr = PSR_CreateGrammar(&ctx, NULL);
 
-		PSR_InsertTerm(gmr, L"(", CLP, PSR_ASSOC_NOASSOC, 0, create_leaf);
-		PSR_InsertTerm(gmr, L")", RP, PSR_ASSOC_NOASSOC, 0, create_leaf);
+		PSR_InsertTerm(gmr, L"(", CLP, PSR_ASSOC_NONASSOC, 0, create_leaf);
+		PSR_InsertTerm(gmr, L")", RP, PSR_ASSOC_NONASSOC, 0, create_leaf);
 		PSR_InsertTerm(gmr, L"+", ADD, PSR_ASSOC_LEFT, 1, create_leaf);
 		PSR_InsertTerm(gmr, L"-", MINUS, PSR_ASSOC_LEFT, 1, create_leaf);
 		PSR_InsertTerm(gmr, L"*", MUL, PSR_ASSOC_LEFT, 2, create_leaf);
 		PSR_InsertTerm(gmr, L"/", DIV, PSR_ASSOC_LEFT, 2, create_leaf);
 		PSR_InsertTerm(gmr, L"%", MOD, PSR_ASSOC_LEFT, 2, create_leaf);
-		PSR_InsertTerm(gmr, L"number", NUMBER, PSR_ASSOC_NOASSOC, 0, create_leaf);
+		PSR_InsertTerm(gmr, L"number", NUMBER, PSR_ASSOC_NONASSOC, 0, create_leaf);
 		PSR_InsertTerm(gmr, L"UMINUS", 0xFFFF, PSR_ASSOC_RIGHT, 3, create_leaf);
 		
 		PSR_InsertRuleByStr(gmr, L"E : E + E", NULL, create_node, 0);
@@ -420,14 +420,14 @@ void calc_test3()
 		gmr = PSR_CreateGrammar(&ctx, NULL);
 		
 
-		PSR_InsertTerm(gmr, L"(", CLP, PSR_ASSOC_NOASSOC, 0, create_leaf);
-		PSR_InsertTerm(gmr, L")", RP, PSR_ASSOC_NOASSOC, 0, create_leaf);
+		PSR_InsertTerm(gmr, L"(", CLP, PSR_ASSOC_NONASSOC, 0, create_leaf);
+		PSR_InsertTerm(gmr, L")", RP, PSR_ASSOC_NONASSOC, 0, create_leaf);
 		PSR_InsertTerm(gmr, L"+", ADD, PSR_ASSOC_LEFT, 1, create_leaf);
 		PSR_InsertTerm(gmr, L"-", MINUS, PSR_ASSOC_LEFT, 1, create_leaf);
 		PSR_InsertTerm(gmr, L"*", MUL, PSR_ASSOC_LEFT, 2, create_leaf);
 		PSR_InsertTerm(gmr, L"/", DIV, PSR_ASSOC_LEFT, 2, create_leaf);
 		PSR_InsertTerm(gmr, L"%", MOD, PSR_ASSOC_LEFT, 2, create_leaf);
-		PSR_InsertTerm(gmr, L"number", NUMBER, PSR_ASSOC_NOASSOC, 0, create_leaf);
+		PSR_InsertTerm(gmr, L"number", NUMBER, PSR_ASSOC_NONASSOC, 0, create_leaf);
 		PSR_InsertTerm(gmr, L"UMINUS", 0xFFFF, PSR_ASSOC_RIGHT, 3, create_leaf);
 		
 		PSR_InsertRuleByStr(gmr, L"E : E + E", NULL, create_node, 0);

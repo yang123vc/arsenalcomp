@@ -212,9 +212,9 @@
 %left		"+"	"-"			;
 %left		"*"	"/"	"%"		;
 
-%noassoc	IF_STMT_PREC						;
-%noassoc	IF_STMT_ELSE_STMT_PREC				;
-%noassoc	SPEC_ACTION						;
+%nonassoc	IF_STMT_PREC						;
+%nonassoc	IF_STMT_ELSE_STMT_PREC				;
+%nonassoc	SPEC_ACTION						;
 %right	ERROR_SHIFT						;
 
 

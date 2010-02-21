@@ -209,7 +209,7 @@ uint32_t		AR_rand32();
 #define AR_towlower(_c)			towlower((_c))
 #define AR_iswspace(_c)			iswspace((_c))
 #define AR_iswgraph(_c)			iswgraph((_c))
-
+#define AR_iswprint(_c)			iswprint((_c))
 
 
 
@@ -245,7 +245,7 @@ const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *num);
 /*此函数相当于修改字符串，因此不存在_s版，且trim之后的字符串结尾为\0*/
 wchar_t*		AR_wcstrim_right(wchar_t *in, const wchar_t *trim);
 
-
+/*返回的是需要元素数组的长度包含0*/
 int_t			AR_i64tow_buf(wchar_t *out, size_t nbuf, int64_t num, size_t radix);
 int_t			AR_u64tow_buf(wchar_t *out, size_t nbuf, uint64_t num, size_t radix);
 
@@ -295,6 +295,10 @@ int_t				AR_wchartodigit(wchar_t ch);
 
 uint_t			AR_wcshash(const wchar_t *str);
 uint_t			AR_wcshash_n(const wchar_t *str, size_t n);
+
+
+wchar_t*		AR_str_to_escstr(const wchar_t *src);
+
 
 /********************************************************String*****************************************************************/
 

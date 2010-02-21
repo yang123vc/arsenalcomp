@@ -1,13 +1,14 @@
-#include "test.h"
-
-
+﻿#include "test.h"
 #include "../Arsenal/Lex/lex.h"
-#include "../Arsenal/Parser/parser.h"
 #include "../Arsenal/Parser/grammar.h"
-#include "../Arsenal/Ray/ray.h"
-#include "../Arsenal/Ray/rayparser.h"
+#include "../Arsenal/Parser/parser.h"
+#include "../Arsenal/Parser/lr_action.h"
+
+
+#if defined(__LIB)
 
 AR_NAMESPACE_BEGIN
+
 
 static const wchar_t *__g_lex_name[] = {
 L"delim = [ \\r\\n\\t]",
@@ -24,7 +25,7 @@ L"dec_literal = (0|[1-9][0-9]*){int_type_suffix}?",
 L"oct_literal = 0[0-7]+{int_type_suffix}?",
 L"exponet = (e|E)(\\+|\\-)?[0-9]+",
 L"float_type_suffix = (f|F|d|D)",
-L"float_literal = ([0-9]+\\.[0-9]*{exponet}?{float_type_suffix}?)",
+L"float_literal = ([0-9]*\\.[0-9]*{exponet}?{float_type_suffix}?)",
 L"skip_lexem = {delim}|{comment}|{comment_line}",
 L"escape_seq = (\\\\(b|t|n|f|r|\\x22|\\x27|\\\\))|{octal_escape}",
 L"string_literal = (\\x22({escape_seq}|[^\\x22\\\\])*\\x22)",
@@ -35,128 +36,130 @@ L"keyword_lhd = [A-Z_a-z0-9]"
 
 static struct {const wchar_t *name; size_t tokval; size_t lex_prec; const wchar_t *regex; bool_t skip; }__g_term_pattern[] =  {
 {NULL, 256, 1, L"{delim}+|{comment}+|{comment_line}+", true},
-{L"STRING_LITERAL", 257, 0, L"{string_literal}", false},
-{L"OCT_CONSTANT", 258, 0, L"{oct_literal}", false},
-{L"HEX_CONSTANT", 259, 0, L"{hex_literal}", false},
-{L"DEC_CONSTANT", 260, 0, L"{dec_literal}", false},
-{L"FLOAT_CONSTANT", 261, 0, L"{float_literal}", false},
-{L"CHAR_CONSTANT", 262, 0, L"{char_literal}", false},
+{L"CHAR_CONSTANT", 257, 0, L"{char_literal}", false},
+{L"STRING_LITERAL", 258, 0, L"{string_literal}", false},
+{L"FLOAT_CONSTANT", 259, 2, L"{float_literal}(?!{keyword_lhd})", false},
+{L"HEX_CONSTANT", 260, 2, L"{hex_literal}(?!{keyword_lhd})", false},
+{L"OCT_CONSTANT", 261, 1, L"{oct_literal}(?!{keyword_lhd})", false},
+{L"DEC_CONSTANT", 262, 1, L"{dec_literal}(?!{keyword_lhd})", false},
 {L"IDENTIFIER", 263, 0, L"{letter}({letter}|{digit})*", false},
-{L"auto", 264, 1, L"\"auto\"(?!{keyword_lhd})", false},
-{L"extern", 265, 1, L"\"extern\"(?!{keyword_lhd})", false},
-{L"register", 266, 1, L"\"register\"(?!{keyword_lhd})", false},
-{L"volatile", 267, 1, L"\"volatile\"(?!{keyword_lhd})", false},
-{L"static", 268, 1, L"\"static\"(?!{keyword_lhd})", false},
-{L"switch", 269, 1, L"\"switch\"(?!{keyword_lhd})", false},
-{L"for", 270, 1, L"\"for\"(?!{keyword_lhd})", false},
-{L"goto", 271, 1, L"\"goto\"(?!{keyword_lhd})", false},
-{L"return", 272, 1, L"\"return\"(?!{keyword_lhd})", false},
-{L"do", 273, 1, L"\"do\"(?!{keyword_lhd})", false},
-{L"while", 274, 1, L"\"while\"(?!{keyword_lhd})", false},
-{L"if", 275, 1, L"\"if\"(?!{keyword_lhd})", false},
-{L"else", 276, 1, L"\"else\"(?!{keyword_lhd})", false},
-{L"enum", 277, 1, L"\"enum\"(?!{keyword_lhd})", false},
-{L"continue", 278, 1, L"\"continue\"(?!{keyword_lhd})", false},
-{L"default", 279, 1, L"\"default\"(?!{keyword_lhd})", false},
-{L"case", 280, 1, L"\"case\"(?!{keyword_lhd})", false},
-{L"break", 281, 1, L"\"break\"(?!{keyword_lhd})", false},
-{L"const", 282, 1, L"\"const\"(?!{keyword_lhd})", false},
-{L"sizeof", 283, 1, L"\"sizeof\"(?!{keyword_lhd})", false},
-{L"struct", 284, 1, L"\"struct\"(?!{keyword_lhd})", false},
-{L"union", 285, 1, L"\"union\"(?!{keyword_lhd})", false},
-{L"typedef", 286, 1, L"\"typedef\"(?!{keyword_lhd})", false},
-{L"void", 287, 1, L"\"void\"(?!{keyword_lhd})", false},
-{L"signed", 288, 1, L"\"signed\"(?!{keyword_lhd})", false},
-{L"unsigned", 289, 1, L"\"unsigned\"(?!{keyword_lhd})", false},
-{L"byte", 290, 1, L"\"byte\"(?!{keyword_lhd})", false},
-{L"char", 291, 1, L"\"char\"(?!{keyword_lhd})", false},
-{L"short", 292, 1, L"\"short\"(?!{keyword_lhd})", false},
-{L"int", 293, 1, L"\"int\"(?!{keyword_lhd})", false},
-{L"long", 294, 1, L"\"long\"(?!{keyword_lhd})", false},
-{L"float", 295, 1, L"\"float\"(?!{keyword_lhd})", false},
-{L"double", 296, 1, L"\"double\"(?!{keyword_lhd})", false},
-{L"attribute", 297, 1, L"\"attribute\"", false},
-{L"...", 298, 1, L"\"...\"", false},
-{L">>=", 299, 2, L"\">>=\"", false},
-{L"<<=", 300, 2, L"\"<<=\"", false},
-{L"+=", 301, 1, L"\"+=\"", false},
-{L"-=", 302, 1, L"\"-=\"", false},
-{L"*=", 303, 1, L"\"*=\"", false},
-{L"/=", 304, 1, L"\"/=\"", false},
-{L"%=", 305, 1, L"\"%=\"", false},
-{L"&=", 306, 1, L"\"&=\"", false},
-{L"^=", 307, 1, L"\"^=\"", false},
-{L"|=", 308, 1, L"\"|=\"", false},
-{L">>", 309, 1, L"\">>\"", false},
-{L"<<", 310, 1, L"\"<<\"", false},
-{L"++", 311, 1, L"\"++\"", false},
-{L"--", 312, 1, L"\"--\"", false},
-{L"->", 313, 1, L"\"->\"", false},
-{L"&&", 314, 1, L"\"&&\"", false},
-{L"||", 315, 1, L"\"||\"", false},
-{L"<=", 316, 1, L"\"<=\"", false},
-{L">=", 317, 1, L"\">=\"", false},
-{L"==", 318, 1, L"\"==\"", false},
-{L"!=", 319, 1, L"\"!=\"", false},
-{L";", 320, 0, L"\";\"", false},
-{L"{", 321, 0, L"\"{\"", false},
-{L"}", 322, 0, L"\"}\"", false},
-{L",", 323, 0, L"\",\"", false},
-{L":", 324, 0, L"\":\"", false},
-{L"=", 325, 0, L"\"=\"", false},
-{L"(", 326, 0, L"\"(\"", false},
-{L")", 327, 0, L"\")\"", false},
-{L"[", 328, 0, L"\"[\"", false},
-{L"]", 329, 0, L"\"]\"", false},
-{L".", 330, 0, L"\".\"", false},
-{L"&", 331, 0, L"\"&\"", false},
-{L"!", 332, 0, L"\"!\"", false},
-{L"~", 333, 0, L"\"~\"", false},
-{L"-", 334, 0, L"\"-\"", false},
-{L"+", 335, 0, L"\"+\"", false},
-{L"*", 336, 0, L"\"*\"", false},
-{L"/", 337, 0, L"\"/\"", false},
-{L"%", 338, 0, L"\"%\"", false},
-{L"<", 339, 0, L"\"<\"", false},
-{L">", 340, 0, L"\">\"", false},
-{L"^", 341, 0, L"\"^\"", false},
-{L"|", 342, 0, L"\"|\"", false},
-{L"?", 343, 0, L"\"?\"", false},
-{L"TYPE_ID", 344, 0, L"^", false},
-{L"FAKE_EOI", 345, 0, L"^", false},
+{L"switch", 264, 1, L"\"switch\"(?!{keyword_lhd})", false},
+{L"for", 265, 1, L"\"for\"(?!{keyword_lhd})", false},
+{L"goto", 266, 1, L"\"goto\"(?!{keyword_lhd})", false},
+{L"return", 267, 1, L"\"return\"(?!{keyword_lhd})", false},
+{L"do", 268, 1, L"\"do\"(?!{keyword_lhd})", false},
+{L"while", 269, 1, L"\"while\"(?!{keyword_lhd})", false},
+{L"if", 270, 1, L"\"if\"(?!{keyword_lhd})", false},
+{L"else", 271, 1, L"\"else\"(?!{keyword_lhd})", false},
+{L"continue", 272, 1, L"\"continue\"(?!{keyword_lhd})", false},
+{L"default", 273, 1, L"\"default\"(?!{keyword_lhd})", false},
+{L"case", 274, 1, L"\"case\"(?!{keyword_lhd})", false},
+{L"break", 275, 1, L"\"break\"(?!{keyword_lhd})", false},
+{L"const", 276, 1, L"\"const\"(?!{keyword_lhd})", false},
+{L"sizeof", 277, 1, L"\"sizeof\"(?!{keyword_lhd})", false},
+{L"struct", 278, 1, L"\"struct\"(?!{keyword_lhd})", false},
+{L"typedef", 279, 1, L"\"typedef\"(?!{keyword_lhd})", false},
+{L"void", 280, 1, L"\"void\"(?!{keyword_lhd})", false},
+{L"byte", 281, 1, L"\"byte\"(?!{keyword_lhd})", false},
+{L"char", 282, 1, L"\"char\"(?!{keyword_lhd})", false},
+{L"short", 283, 1, L"\"short\"(?!{keyword_lhd})", false},
+{L"int", 284, 1, L"\"int\"(?!{keyword_lhd})", false},
+{L"long", 285, 1, L"\"long\"(?!{keyword_lhd})", false},
+{L"signed", 286, 1, L"\"signed\"(?!{keyword_lhd})", false},
+{L"unsigned", 287, 1, L"\"unsigned\"(?!{keyword_lhd})", false},
+{L"float", 288, 1, L"\"float\"(?!{keyword_lhd})", false},
+{L"double", 289, 1, L"\"double\"(?!{keyword_lhd})", false},
+{L"__attribute__", 290, 1, L"\"__attribute__\"", false},
+{L"__pack__", 291, 1, L"\"__pack__\"", false},
+{L">>=", 292, 2, L"\">>=\"", false},
+{L"<<=", 293, 2, L"\"<<=\"", false},
+{L"+=", 294, 1, L"\"+=\"", false},
+{L"-=", 295, 1, L"\"-=\"", false},
+{L"*=", 296, 1, L"\"*=\"", false},
+{L"/=", 297, 1, L"\"/=\"", false},
+{L"%=", 298, 1, L"\"%=\"", false},
+{L"&=", 299, 1, L"\"&=\"", false},
+{L"^=", 300, 1, L"\"^=\"", false},
+{L"|=", 301, 1, L"\"|=\"", false},
+{L">>", 302, 1, L"\">>\"", false},
+{L"<<", 303, 1, L"\"<<\"", false},
+{L"++", 304, 1, L"\"++\"", false},
+{L"--", 305, 1, L"\"--\"", false},
+{L"->", 306, 1, L"\"->\"", false},
+{L"&&", 307, 1, L"\"&&\"", false},
+{L"||", 308, 1, L"\"||\"", false},
+{L"<=", 309, 1, L"\"<=\"", false},
+{L">=", 310, 1, L"\">=\"", false},
+{L"==", 311, 1, L"\"==\"", false},
+{L"!=", 312, 1, L"\"!=\"", false},
+{L";", 313, 0, L"\";\"", false},
+{L"{", 314, 0, L"\"{\"", false},
+{L"}", 315, 0, L"\"}\"", false},
+{L",", 316, 0, L"\",\"", false},
+{L":", 317, 0, L"\":\"", false},
+{L"=", 318, 0, L"\"=\"", false},
+{L"(", 319, 0, L"\"(\"", false},
+{L")", 320, 0, L"\")\"", false},
+{L"[", 321, 0, L"\"[\"", false},
+{L"]", 322, 0, L"\"]\"", false},
+{L".", 323, 0, L"\".\"", false},
+{L"&", 324, 0, L"\"&\"", false},
+{L"!", 325, 0, L"\"!\"", false},
+{L"~", 326, 0, L"\"~\"", false},
+{L"-", 327, 0, L"\"-\"", false},
+{L"+", 328, 0, L"\"+\"", false},
+{L"*", 329, 0, L"\"*\"", false},
+{L"/", 330, 0, L"\"/\"", false},
+{L"%", 331, 0, L"\"%\"", false},
+{L"<", 332, 0, L"\"<\"", false},
+{L">", 333, 0, L"\">\"", false},
+{L"^", 334, 0, L"\"^\"", false},
+{L"|", 335, 0, L"\"|\"", false},
+{L"?", 336, 0, L"\"?\"", false},
+{L"TYPE_ID", 337, 0, L"^", false},
+{L"FAKE_EOI", 338, 0, L"\"$\"", false},
 {L"EOI", 0, 2, L"$", false}
 };
 
 
 static struct {const wchar_t *name; size_t tokval; size_t prec_level; psrAssocType_t	assoc;}__g_prec_pattern[] =  {
-{L"||", 315, 1, PSR_ASSOC_LEFT},
-{L"&&", 314, 2, PSR_ASSOC_LEFT},
-{L"|", 342, 3, PSR_ASSOC_LEFT},
-{L"^", 341, 4, PSR_ASSOC_LEFT},
-{L"&", 331, 5, PSR_ASSOC_LEFT},
-{L"==", 318, 6, PSR_ASSOC_LEFT},
-{L"!=", 319, 6, PSR_ASSOC_LEFT},
-{L"<", 339, 7, PSR_ASSOC_LEFT},
-{L"<=", 316, 7, PSR_ASSOC_LEFT},
-{L">", 340, 7, PSR_ASSOC_LEFT},
-{L">=", 317, 7, PSR_ASSOC_LEFT},
-{L"<<", 310, 8, PSR_ASSOC_LEFT},
-{L">>", 309, 8, PSR_ASSOC_LEFT},
-{L"+", 335, 9, PSR_ASSOC_LEFT},
-{L"-", 334, 9, PSR_ASSOC_LEFT},
-{L"*", 336, 10, PSR_ASSOC_LEFT},
-{L"/", 337, 10, PSR_ASSOC_LEFT},
-{L"%", 338, 10, PSR_ASSOC_LEFT},
-{L"IF_STMT_PREC", 346, 11, PSR_ASSOC_NOASSOC},
-{L"IF_STMT_ELSE_STMT_PREC", 347, 12, PSR_ASSOC_NOASSOC},
-{L"SPEC_ACTION", 348, 13, PSR_ASSOC_NOASSOC}
+{L"||", 308, 1, PSR_ASSOC_LEFT},
+{L"&&", 307, 2, PSR_ASSOC_LEFT},
+{L"|", 335, 3, PSR_ASSOC_LEFT},
+{L"^", 334, 4, PSR_ASSOC_LEFT},
+{L"&", 324, 5, PSR_ASSOC_LEFT},
+{L"==", 311, 6, PSR_ASSOC_LEFT},
+{L"!=", 312, 6, PSR_ASSOC_LEFT},
+{L"<", 332, 7, PSR_ASSOC_LEFT},
+{L"<=", 309, 7, PSR_ASSOC_LEFT},
+{L">", 333, 7, PSR_ASSOC_LEFT},
+{L">=", 310, 7, PSR_ASSOC_LEFT},
+{L"<<", 303, 8, PSR_ASSOC_LEFT},
+{L">>", 302, 8, PSR_ASSOC_LEFT},
+{L"+", 328, 9, PSR_ASSOC_LEFT},
+{L"-", 327, 9, PSR_ASSOC_LEFT},
+{L"*", 329, 10, PSR_ASSOC_LEFT},
+{L"/", 330, 10, PSR_ASSOC_LEFT},
+{L"%", 331, 10, PSR_ASSOC_LEFT},
+{L"IF_STMT_PREC", 339, 11, PSR_ASSOC_NONASSOC},
+{L"IF_STMT_ELSE_STMT_PREC", 340, 12, PSR_ASSOC_NONASSOC},
+{L"SPEC_ACTION", 341, 13, PSR_ASSOC_NONASSOC},
+{L"ERROR_SHIFT", 342, 14, PSR_ASSOC_RIGHT}
 };
 
 
-static psrNode_t* AR_STDCALL handle_program(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+static psrNode_t* AR_STDCALL handle_enter_scope(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*program	:	translation_unit FAKE_EOI */
-/*program	:	error FAKE_EOI */
+/*enter_scope	:	 */
+static psrNode_t* AR_STDCALL handle_exit_scope(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*exit_scope	:	 */
+static psrNode_t* AR_STDCALL handle_create_labels(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*create_labels	:	 */
+static psrNode_t* AR_STDCALL handle_destroy_labels(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*destroy_labels	:	 */
 static psrNode_t* AR_STDCALL handle_translation_unit(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*translation_unit	:	external_declaration */
@@ -167,40 +170,10 @@ static psrNode_t* AR_STDCALL handle_external_declaration(psrNode_t **nodes, size
 /*external_declaration	:	declaration */
 static psrNode_t* AR_STDCALL handle_function_definition(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*function_definition	:	declaration_specifiers declarator compound_statement */
-static psrNode_t* AR_STDCALL handle_declaration(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*function_definition	:	declaration_specifiers declarator create_labels compound_statement destroy_labels */
+static psrNode_t* AR_STDCALL handle_type_qualifier(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*declaration	:	declaration_specifiers ; */
-/*declaration	:	declaration_specifiers init_declarator_list ; */
-/*declaration	:	declaration_specifiers error ; */
-/*declaration	:	error ; */
-static psrNode_t* AR_STDCALL handle_declaration_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
-/*declaration_list	:	declaration */
-/*declaration_list	:	declaration_list declaration */
-static psrNode_t* AR_STDCALL handle_storage_class_specifier(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
-/*storage_class_specifier	:	typedef */
-/*storage_class_specifier	:	extern */
-/*storage_class_specifier	:	static */
-/*storage_class_specifier	:	auto */
-/*storage_class_specifier	:	register */
-static psrNode_t* AR_STDCALL handle_declaration_specifiers(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
-/*declaration_specifiers	:	storage_class_specifier */
-/*declaration_specifiers	:	storage_class_specifier declaration_specifiers */
-/*declaration_specifiers	:	type_specifier */
-/*declaration_specifiers	:	type_qualifier */
-/*declaration_specifiers	:	type_qualifier declaration_specifiers */
-/*declaration_specifiers	:	type_specifier declaration_specifiers */
-static psrNode_t* AR_STDCALL handle_init_declarator_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
-/*init_declarator_list	:	init_declarator */
-/*init_declarator_list	:	init_declarator_list , init_declarator */
-static psrNode_t* AR_STDCALL handle_init_declarator(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
-/*init_declarator	:	declarator */
-/*init_declarator	:	declarator = initializer */
+/*type_qualifier	:	const */
 static psrNode_t* AR_STDCALL handle_type_specifier(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*type_specifier	:	void */
@@ -213,90 +186,85 @@ static psrNode_t* AR_STDCALL handle_type_specifier(psrNode_t **nodes, size_t cou
 /*type_specifier	:	double */
 /*type_specifier	:	signed */
 /*type_specifier	:	unsigned */
-/*type_specifier	:	struct_or_union_specifier */
-/*type_specifier	:	enum_specifier */
+/*type_specifier	:	signed short */
+/*type_specifier	:	unsigned short */
+/*type_specifier	:	signed int */
+/*type_specifier	:	unsigned int */
+/*type_specifier	:	signed long */
+/*type_specifier	:	unsigned long */
+/*type_specifier	:	struct_specifier */
 /*type_specifier	:	TYPE_ID */
-static psrNode_t* AR_STDCALL handle_struct_or_union_specifier(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+static psrNode_t* AR_STDCALL handle_struct_specifier(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*struct_or_union_specifier	:	struct_or_union IDENTIFIER { struct_declaration_list } */
-/*struct_or_union_specifier	:	struct_or_union { struct_declaration_list } */
-/*struct_or_union_specifier	:	struct_or_union IDENTIFIER */
-/*struct_or_union_specifier	:	struct_or_union { error } */
-/*struct_or_union_specifier	:	struct_or_union error ; */
-static psrNode_t* AR_STDCALL handle_struct_or_union(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
-/*struct_or_union	:	struct */
-/*struct_or_union	:	union */
+/*struct_specifier	:	struct IDENTIFIER { enter_scope struct_declaration_list exit_scope } */
+/*struct_specifier	:	struct IDENTIFIER */
+/*struct_specifier	:	struct IDENTIFIER { enter_scope error exit_scope } */
+/*struct_specifier	:	struct error */
 static psrNode_t* AR_STDCALL handle_struct_declaration(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*struct_declaration	:	specifier_qualifier_list struct_declarator_list ; */
-/*struct_declaration	:	specifier_qualifier_list ; */
+/*struct_declaration	:	type_specifier struct_declarator_list ; */
 static psrNode_t* AR_STDCALL handle_struct_declaration_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*struct_declaration_list	:	struct_declaration */
 /*struct_declaration_list	:	struct_declaration_list struct_declaration */
-static psrNode_t* AR_STDCALL handle_specifier_qualifier_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
-/*specifier_qualifier_list	:	type_specifier specifier_qualifier_list */
-/*specifier_qualifier_list	:	type_specifier */
-/*specifier_qualifier_list	:	type_qualifier specifier_qualifier_list */
-/*specifier_qualifier_list	:	type_qualifier */
 static psrNode_t* AR_STDCALL handle_struct_declarator_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*struct_declarator_list	:	struct_declarator */
-/*struct_declarator_list	:	struct_declarator_list , struct_declarator */
-static psrNode_t* AR_STDCALL handle_struct_declarator(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*struct_declarator_list	:	declarator */
+/*struct_declarator_list	:	struct_declarator_list , declarator */
+static psrNode_t* AR_STDCALL handle_set_pack(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*struct_declarator	:	declarator */
-static psrNode_t* AR_STDCALL handle_enum_specifier(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*set_pack	:	__pack__ ( ) */
+/*set_pack	:	__pack__ ( DEC_CONSTANT ) */
+/*set_pack	:	__pack__ error */
+static psrNode_t* AR_STDCALL handle_declaration(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*enum_specifier	:	enum { enumerator_list } */
-/*enum_specifier	:	enum IDENTIFIER { enumerator_list } */
-/*enum_specifier	:	enum IDENTIFIER */
-static psrNode_t* AR_STDCALL handle_enumerator_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*declaration	:	declaration_specifiers init_declarator_list ; */
+/*declaration	:	declaration_specifiers ; */
+/*declaration	:	declaration_specifiers error */
+/*declaration	:	set_pack */
+static psrNode_t* AR_STDCALL handle_declaration_specifiers(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*enumerator_list	:	enumerator */
-/*enumerator_list	:	enumerator_list , enumerator */
-static psrNode_t* AR_STDCALL handle_enumerator(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*declaration_specifiers	:	typedef type_qualifier type_specifier */
+/*declaration_specifiers	:	typedef type_specifier */
+/*declaration_specifiers	:	type_qualifier type_specifier */
+/*declaration_specifiers	:	type_specifier */
+static psrNode_t* AR_STDCALL handle_declaration_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*enumerator	:	IDENTIFIER */
-/*enumerator	:	IDENTIFIER = constant_expression */
-static psrNode_t* AR_STDCALL handle_type_qualifier(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*declaration_list	:	declaration */
+/*declaration_list	:	declaration_list declaration */
+static psrNode_t* AR_STDCALL handle_init_declarator_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*type_qualifier	:	const */
-/*type_qualifier	:	volatile */
-static psrNode_t* AR_STDCALL handle_attribute_modifier(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*init_declarator_list	:	init_declarator */
+/*init_declarator_list	:	init_declarator_list , init_declarator */
+static psrNode_t* AR_STDCALL handle_init_declarator(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*attribute_modifier	:	attribute ( STRING_LITERAL ) */
-/*attribute_modifier	:	 */
+/*init_declarator	:	declarator */
+/*init_declarator	:	declarator = initializer */
+static psrNode_t* AR_STDCALL handle_initializer(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*initializer	:	assignment_expression */
+/*initializer	:	{ initializer_list } */
+static psrNode_t* AR_STDCALL handle_initializer_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*initializer_list	:	initializer */
+/*initializer_list	:	initializer_list , initializer */
 static psrNode_t* AR_STDCALL handle_declarator(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*declarator	:	attribute_modifier pointer direct_declarator */
-/*declarator	:	attribute_modifier direct_declarator */
+/*declarator	:	pointer direct_declarator */
+/*declarator	:	direct_declarator */
 static psrNode_t* AR_STDCALL handle_direct_declarator(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*direct_declarator	:	IDENTIFIER */
-/*direct_declarator	:	( declarator ) */
-/*direct_declarator	:	direct_declarator [ constant_expression ] */
-/*direct_declarator	:	direct_declarator [ ] */
-/*direct_declarator	:	direct_declarator ( parameter_type_list ) */
-/*direct_declarator	:	direct_declarator ( ) */
-/*direct_declarator	:	direct_declarator ( error ) */
-/*direct_declarator	:	direct_declarator [ error ] */
+/*direct_declarator	:	IDENTIFIER [ constant_expression ] */
+/*direct_declarator	:	IDENTIFIER [ ] */
+/*direct_declarator	:	IDENTIFIER ( parameter_list ) */
+/*direct_declarator	:	IDENTIFIER ( ) */
 static psrNode_t* AR_STDCALL handle_pointer(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*pointer	:	* */
-/*pointer	:	* type_qualifier_list */
-/*pointer	:	* type_qualifier_list pointer */
+/*pointer	:	* type_qualifier */
+/*pointer	:	* type_qualifier pointer */
 /*pointer	:	* pointer */
-static psrNode_t* AR_STDCALL handle_type_qualifier_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
-/*type_qualifier_list	:	type_qualifier */
-/*type_qualifier_list	:	type_qualifier_list type_qualifier */
-static psrNode_t* AR_STDCALL handle_parameter_type_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
-/*parameter_type_list	:	parameter_list */
-/*parameter_type_list	:	parameter_list , ... */
 static psrNode_t* AR_STDCALL handle_parameter_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*parameter_list	:	parameter_declaration */
@@ -304,40 +272,16 @@ static psrNode_t* AR_STDCALL handle_parameter_list(psrNode_t **nodes, size_t cou
 static psrNode_t* AR_STDCALL handle_parameter_declaration(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*parameter_declaration	:	declaration_specifiers declarator */
-/*parameter_declaration	:	declaration_specifiers abstract_declarator */
+/*parameter_declaration	:	declaration_specifiers pointer */
 /*parameter_declaration	:	declaration_specifiers */
 static psrNode_t* AR_STDCALL handle_type_name(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*type_name	:	specifier_qualifier_list */
-/*type_name	:	specifier_qualifier_list abstract_declarator */
-static psrNode_t* AR_STDCALL handle_abstract_declarator(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*type_name	:	specifier_qualifier_list pointer */
+static psrNode_t* AR_STDCALL handle_specifier_qualifier_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*abstract_declarator	:	pointer */
-/*abstract_declarator	:	direct_abstract_declarator */
-/*abstract_declarator	:	pointer direct_abstract_declarator */
-static psrNode_t* AR_STDCALL handle_direct_abstract_declarator(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
-/*direct_abstract_declarator	:	( abstract_declarator ) */
-/*direct_abstract_declarator	:	[ ] */
-/*direct_abstract_declarator	:	[ constant_expression ] */
-/*direct_abstract_declarator	:	direct_abstract_declarator [ ] */
-/*direct_abstract_declarator	:	direct_abstract_declarator [ constant_expression ] */
-/*direct_abstract_declarator	:	( ) */
-/*direct_abstract_declarator	:	( parameter_type_list ) */
-/*direct_abstract_declarator	:	direct_abstract_declarator ( ) */
-/*direct_abstract_declarator	:	direct_abstract_declarator ( parameter_type_list ) */
-/*direct_abstract_declarator	:	( error ) */
-/*direct_abstract_declarator	:	[ error ] */
-static psrNode_t* AR_STDCALL handle_initializer(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
-/*initializer	:	assignment_expression */
-/*initializer	:	{ initializer_list } */
-/*initializer	:	{ initializer_list , } */
-/*initializer	:	{ error } */
-static psrNode_t* AR_STDCALL handle_initializer_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
-/*initializer_list	:	initializer */
-/*initializer_list	:	initializer_list , initializer */
+/*specifier_qualifier_list	:	type_qualifier type_specifier */
+/*specifier_qualifier_list	:	type_specifier */
 static psrNode_t* AR_STDCALL handle_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*statement	:	labeled_statement */
@@ -351,21 +295,14 @@ static psrNode_t* AR_STDCALL handle_labeled_statement(psrNode_t **nodes, size_t 
 /*labeled_statement	:	case constant_expression : statement */
 /*labeled_statement	:	default : statement */
 /*labeled_statement	:	IDENTIFIER : statement */
-static psrNode_t* AR_STDCALL handle_push_symtbl(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
-/*push_symtbl	:	 */
-static psrNode_t* AR_STDCALL handle_pop_symtbl(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
-/*pop_symtbl	:	 */
 static psrNode_t* AR_STDCALL handle_compound_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*compound_statement	:	{ } */
 /*compound_statement	:	{ statement_list } */
-/*compound_statement	:	{ push_symtbl declaration_list pop_symtbl } */
-/*compound_statement	:	{ push_symtbl declaration_list statement_list pop_symtbl } */
+/*compound_statement	:	{ enter_scope declaration_list exit_scope } */
+/*compound_statement	:	{ enter_scope declaration_list statement_list exit_scope } */
+/*compound_statement	:	{ enter_scope declaration_list error exit_scope } */
 /*compound_statement	:	{ error } */
-/*compound_statement	:	{ push_symtbl declaration_list error pop_symtbl } */
-/*compound_statement	:	{ push_symtbl declaration_list statement_list error pop_symtbl } */
 static psrNode_t* AR_STDCALL handle_statement_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*statement_list	:	statement */
@@ -489,34 +426,16 @@ static psrNode_t* AR_STDCALL handle_constant(psrNode_t **nodes, size_t count, co
 
 
 static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	handler; size_t	auto_ret; } __g_rule_pattern[] = {
-{L"program  :  translation_unit FAKE_EOI ", NULL, handle_program, 0},
-{L"program  :  error FAKE_EOI ", NULL, handle_program, 0},
+{L"enter_scope  :   ", L"SPEC_ACTION", handle_enter_scope, 0},
+{L"exit_scope  :   ", L"SPEC_ACTION", handle_exit_scope, 0},
+{L"create_labels  :   ", L"SPEC_ACTION", handle_create_labels, 0},
+{L"destroy_labels  :   ", L"SPEC_ACTION", handle_destroy_labels, 0},
 {L"translation_unit  :  external_declaration ", NULL, handle_translation_unit, 0},
 {L"translation_unit  :  translation_unit external_declaration ", NULL, handle_translation_unit, 0},
 {L"external_declaration  :  function_definition ", NULL, handle_external_declaration, 0},
 {L"external_declaration  :  declaration ", NULL, handle_external_declaration, 0},
-{L"function_definition  :  declaration_specifiers declarator compound_statement ", NULL, handle_function_definition, 0},
-{L"declaration  :  declaration_specifiers ; ", NULL, handle_declaration, 0},
-{L"declaration  :  declaration_specifiers init_declarator_list ; ", NULL, handle_declaration, 0},
-{L"declaration  :  declaration_specifiers error ; ", NULL, handle_declaration, 0},
-{L"declaration  :  error ; ", NULL, handle_declaration, 0},
-{L"declaration_list  :  declaration ", NULL, handle_declaration_list, 0},
-{L"declaration_list  :  declaration_list declaration ", NULL, handle_declaration_list, 0},
-{L"storage_class_specifier  :  typedef ", NULL, handle_storage_class_specifier, 0},
-{L"storage_class_specifier  :  extern ", NULL, handle_storage_class_specifier, 0},
-{L"storage_class_specifier  :  static ", NULL, handle_storage_class_specifier, 0},
-{L"storage_class_specifier  :  auto ", NULL, handle_storage_class_specifier, 0},
-{L"storage_class_specifier  :  register ", NULL, handle_storage_class_specifier, 0},
-{L"declaration_specifiers  :  storage_class_specifier ", NULL, handle_declaration_specifiers, 0},
-{L"declaration_specifiers  :  storage_class_specifier declaration_specifiers ", NULL, handle_declaration_specifiers, 0},
-{L"declaration_specifiers  :  type_specifier ", NULL, handle_declaration_specifiers, 0},
-{L"declaration_specifiers  :  type_qualifier ", NULL, handle_declaration_specifiers, 0},
-{L"declaration_specifiers  :  type_qualifier declaration_specifiers ", NULL, handle_declaration_specifiers, 0},
-{L"declaration_specifiers  :  type_specifier declaration_specifiers ", NULL, handle_declaration_specifiers, 0},
-{L"init_declarator_list  :  init_declarator ", NULL, handle_init_declarator_list, 0},
-{L"init_declarator_list  :  init_declarator_list , init_declarator ", NULL, handle_init_declarator_list, 0},
-{L"init_declarator  :  declarator ", NULL, handle_init_declarator, 0},
-{L"init_declarator  :  declarator = initializer ", NULL, handle_init_declarator, 0},
+{L"function_definition  :  declaration_specifiers declarator create_labels compound_statement destroy_labels ", NULL, handle_function_definition, 0},
+{L"type_qualifier  :  const ", NULL, handle_type_qualifier, 0},
 {L"type_specifier  :  void ", NULL, handle_type_specifier, 0},
 {L"type_specifier  :  byte ", NULL, handle_type_specifier, 0},
 {L"type_specifier  :  char ", NULL, handle_type_specifier, 0},
@@ -527,83 +446,64 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"type_specifier  :  double ", NULL, handle_type_specifier, 0},
 {L"type_specifier  :  signed ", NULL, handle_type_specifier, 0},
 {L"type_specifier  :  unsigned ", NULL, handle_type_specifier, 0},
-{L"type_specifier  :  struct_or_union_specifier ", NULL, handle_type_specifier, 0},
-{L"type_specifier  :  enum_specifier ", NULL, handle_type_specifier, 0},
+{L"type_specifier  :  signed short ", NULL, handle_type_specifier, 0},
+{L"type_specifier  :  unsigned short ", NULL, handle_type_specifier, 0},
+{L"type_specifier  :  signed int ", NULL, handle_type_specifier, 0},
+{L"type_specifier  :  unsigned int ", NULL, handle_type_specifier, 0},
+{L"type_specifier  :  signed long ", NULL, handle_type_specifier, 0},
+{L"type_specifier  :  unsigned long ", NULL, handle_type_specifier, 0},
+{L"type_specifier  :  struct_specifier ", NULL, handle_type_specifier, 0},
 {L"type_specifier  :  TYPE_ID ", NULL, handle_type_specifier, 0},
-{L"struct_or_union_specifier  :  struct_or_union IDENTIFIER { struct_declaration_list } ", NULL, handle_struct_or_union_specifier, 0},
-{L"struct_or_union_specifier  :  struct_or_union { struct_declaration_list } ", NULL, handle_struct_or_union_specifier, 0},
-{L"struct_or_union_specifier  :  struct_or_union IDENTIFIER ", NULL, handle_struct_or_union_specifier, 0},
-{L"struct_or_union_specifier  :  struct_or_union { error } ", NULL, handle_struct_or_union_specifier, 0},
-{L"struct_or_union_specifier  :  struct_or_union error ; ", NULL, handle_struct_or_union_specifier, 0},
-{L"struct_or_union  :  struct ", NULL, handle_struct_or_union, 0},
-{L"struct_or_union  :  union ", NULL, handle_struct_or_union, 0},
-{L"struct_declaration  :  specifier_qualifier_list struct_declarator_list ; ", NULL, handle_struct_declaration, 0},
-{L"struct_declaration  :  specifier_qualifier_list ; ", NULL, handle_struct_declaration, 0},
+{L"struct_specifier  :  struct IDENTIFIER { enter_scope struct_declaration_list exit_scope } ", NULL, handle_struct_specifier, 0},
+{L"struct_specifier  :  struct IDENTIFIER ", NULL, handle_struct_specifier, 0},
+{L"struct_specifier  :  struct IDENTIFIER { enter_scope error exit_scope } ", NULL, handle_struct_specifier, 0},
+{L"struct_specifier  :  struct error ", NULL, handle_struct_specifier, 0},
+{L"struct_declaration  :  type_specifier struct_declarator_list ; ", NULL, handle_struct_declaration, 0},
 {L"struct_declaration_list  :  struct_declaration ", NULL, handle_struct_declaration_list, 0},
 {L"struct_declaration_list  :  struct_declaration_list struct_declaration ", NULL, handle_struct_declaration_list, 0},
-{L"specifier_qualifier_list  :  type_specifier specifier_qualifier_list ", NULL, handle_specifier_qualifier_list, 0},
-{L"specifier_qualifier_list  :  type_specifier ", NULL, handle_specifier_qualifier_list, 0},
-{L"specifier_qualifier_list  :  type_qualifier specifier_qualifier_list ", NULL, handle_specifier_qualifier_list, 0},
-{L"specifier_qualifier_list  :  type_qualifier ", NULL, handle_specifier_qualifier_list, 0},
-{L"struct_declarator_list  :  struct_declarator ", NULL, handle_struct_declarator_list, 0},
-{L"struct_declarator_list  :  struct_declarator_list , struct_declarator ", NULL, handle_struct_declarator_list, 0},
-{L"struct_declarator  :  declarator ", NULL, handle_struct_declarator, 0},
-{L"enum_specifier  :  enum { enumerator_list } ", NULL, handle_enum_specifier, 0},
-{L"enum_specifier  :  enum IDENTIFIER { enumerator_list } ", NULL, handle_enum_specifier, 0},
-{L"enum_specifier  :  enum IDENTIFIER ", NULL, handle_enum_specifier, 0},
-{L"enumerator_list  :  enumerator ", NULL, handle_enumerator_list, 0},
-{L"enumerator_list  :  enumerator_list , enumerator ", NULL, handle_enumerator_list, 0},
-{L"enumerator  :  IDENTIFIER ", NULL, handle_enumerator, 0},
-{L"enumerator  :  IDENTIFIER = constant_expression ", NULL, handle_enumerator, 0},
-{L"type_qualifier  :  const ", NULL, handle_type_qualifier, 0},
-{L"type_qualifier  :  volatile ", NULL, handle_type_qualifier, 0},
-{L"attribute_modifier  :  attribute ( STRING_LITERAL ) ", NULL, handle_attribute_modifier, 0},
-{L"attribute_modifier  :   ", L"SPEC_ACTION", handle_attribute_modifier, 0},
-{L"declarator  :  attribute_modifier pointer direct_declarator ", NULL, handle_declarator, 0},
-{L"declarator  :  attribute_modifier direct_declarator ", NULL, handle_declarator, 0},
+{L"struct_declarator_list  :  declarator ", NULL, handle_struct_declarator_list, 0},
+{L"struct_declarator_list  :  struct_declarator_list , declarator ", NULL, handle_struct_declarator_list, 0},
+{L"set_pack  :  __pack__ ( ) ", NULL, handle_set_pack, 0},
+{L"set_pack  :  __pack__ ( DEC_CONSTANT ) ", NULL, handle_set_pack, 0},
+{L"set_pack  :  __pack__ error ", NULL, handle_set_pack, 0},
+{L"declaration  :  declaration_specifiers init_declarator_list ; ", NULL, handle_declaration, 0},
+{L"declaration  :  declaration_specifiers ; ", NULL, handle_declaration, 0},
+{L"declaration  :  declaration_specifiers error ", NULL, handle_declaration, 0},
+{L"declaration  :  set_pack ", NULL, handle_declaration, 0},
+{L"declaration_specifiers  :  typedef type_qualifier type_specifier ", NULL, handle_declaration_specifiers, 0},
+{L"declaration_specifiers  :  typedef type_specifier ", NULL, handle_declaration_specifiers, 0},
+{L"declaration_specifiers  :  type_qualifier type_specifier ", NULL, handle_declaration_specifiers, 0},
+{L"declaration_specifiers  :  type_specifier ", NULL, handle_declaration_specifiers, 0},
+{L"declaration_list  :  declaration ", NULL, handle_declaration_list, 0},
+{L"declaration_list  :  declaration_list declaration ", NULL, handle_declaration_list, 0},
+{L"init_declarator_list  :  init_declarator ", NULL, handle_init_declarator_list, 0},
+{L"init_declarator_list  :  init_declarator_list , init_declarator ", NULL, handle_init_declarator_list, 0},
+{L"init_declarator  :  declarator ", NULL, handle_init_declarator, 0},
+{L"init_declarator  :  declarator = initializer ", NULL, handle_init_declarator, 0},
+{L"initializer  :  assignment_expression ", NULL, handle_initializer, 0},
+{L"initializer  :  { initializer_list } ", NULL, handle_initializer, 0},
+{L"initializer_list  :  initializer ", NULL, handle_initializer_list, 0},
+{L"initializer_list  :  initializer_list , initializer ", NULL, handle_initializer_list, 0},
+{L"declarator  :  pointer direct_declarator ", NULL, handle_declarator, 0},
+{L"declarator  :  direct_declarator ", NULL, handle_declarator, 0},
 {L"direct_declarator  :  IDENTIFIER ", NULL, handle_direct_declarator, 0},
-{L"direct_declarator  :  ( declarator ) ", NULL, handle_direct_declarator, 0},
-{L"direct_declarator  :  direct_declarator [ constant_expression ] ", NULL, handle_direct_declarator, 0},
-{L"direct_declarator  :  direct_declarator [ ] ", NULL, handle_direct_declarator, 0},
-{L"direct_declarator  :  direct_declarator ( parameter_type_list ) ", NULL, handle_direct_declarator, 0},
-{L"direct_declarator  :  direct_declarator ( ) ", NULL, handle_direct_declarator, 0},
-{L"direct_declarator  :  direct_declarator ( error ) ", NULL, handle_direct_declarator, 0},
-{L"direct_declarator  :  direct_declarator [ error ] ", NULL, handle_direct_declarator, 0},
+{L"direct_declarator  :  IDENTIFIER [ constant_expression ] ", NULL, handle_direct_declarator, 0},
+{L"direct_declarator  :  IDENTIFIER [ ] ", NULL, handle_direct_declarator, 0},
+{L"direct_declarator  :  IDENTIFIER ( parameter_list ) ", NULL, handle_direct_declarator, 0},
+{L"direct_declarator  :  IDENTIFIER ( ) ", NULL, handle_direct_declarator, 0},
 {L"pointer  :  * ", NULL, handle_pointer, 0},
-{L"pointer  :  * type_qualifier_list ", NULL, handle_pointer, 0},
-{L"pointer  :  * type_qualifier_list pointer ", NULL, handle_pointer, 0},
+{L"pointer  :  * type_qualifier ", NULL, handle_pointer, 0},
+{L"pointer  :  * type_qualifier pointer ", NULL, handle_pointer, 0},
 {L"pointer  :  * pointer ", NULL, handle_pointer, 0},
-{L"type_qualifier_list  :  type_qualifier ", NULL, handle_type_qualifier_list, 0},
-{L"type_qualifier_list  :  type_qualifier_list type_qualifier ", NULL, handle_type_qualifier_list, 0},
-{L"parameter_type_list  :  parameter_list ", NULL, handle_parameter_type_list, 0},
-{L"parameter_type_list  :  parameter_list , ... ", NULL, handle_parameter_type_list, 0},
 {L"parameter_list  :  parameter_declaration ", NULL, handle_parameter_list, 0},
 {L"parameter_list  :  parameter_list , parameter_declaration ", NULL, handle_parameter_list, 0},
 {L"parameter_declaration  :  declaration_specifiers declarator ", NULL, handle_parameter_declaration, 0},
-{L"parameter_declaration  :  declaration_specifiers abstract_declarator ", NULL, handle_parameter_declaration, 0},
+{L"parameter_declaration  :  declaration_specifiers pointer ", NULL, handle_parameter_declaration, 0},
 {L"parameter_declaration  :  declaration_specifiers ", NULL, handle_parameter_declaration, 0},
 {L"type_name  :  specifier_qualifier_list ", NULL, handle_type_name, 0},
-{L"type_name  :  specifier_qualifier_list abstract_declarator ", NULL, handle_type_name, 0},
-{L"abstract_declarator  :  pointer ", NULL, handle_abstract_declarator, 0},
-{L"abstract_declarator  :  direct_abstract_declarator ", NULL, handle_abstract_declarator, 0},
-{L"abstract_declarator  :  pointer direct_abstract_declarator ", NULL, handle_abstract_declarator, 0},
-{L"direct_abstract_declarator  :  ( abstract_declarator ) ", NULL, handle_direct_abstract_declarator, 0},
-{L"direct_abstract_declarator  :  [ ] ", NULL, handle_direct_abstract_declarator, 0},
-{L"direct_abstract_declarator  :  [ constant_expression ] ", NULL, handle_direct_abstract_declarator, 0},
-{L"direct_abstract_declarator  :  direct_abstract_declarator [ ] ", NULL, handle_direct_abstract_declarator, 0},
-{L"direct_abstract_declarator  :  direct_abstract_declarator [ constant_expression ] ", NULL, handle_direct_abstract_declarator, 0},
-{L"direct_abstract_declarator  :  ( ) ", NULL, handle_direct_abstract_declarator, 0},
-{L"direct_abstract_declarator  :  ( parameter_type_list ) ", NULL, handle_direct_abstract_declarator, 0},
-{L"direct_abstract_declarator  :  direct_abstract_declarator ( ) ", NULL, handle_direct_abstract_declarator, 0},
-{L"direct_abstract_declarator  :  direct_abstract_declarator ( parameter_type_list ) ", NULL, handle_direct_abstract_declarator, 0},
-{L"direct_abstract_declarator  :  ( error ) ", NULL, handle_direct_abstract_declarator, 0},
-{L"direct_abstract_declarator  :  [ error ] ", NULL, handle_direct_abstract_declarator, 0},
-{L"initializer  :  assignment_expression ", NULL, handle_initializer, 0},
-{L"initializer  :  { initializer_list } ", NULL, handle_initializer, 0},
-{L"initializer  :  { initializer_list , } ", NULL, handle_initializer, 0},
-{L"initializer  :  { error } ", NULL, handle_initializer, 0},
-{L"initializer_list  :  initializer ", NULL, handle_initializer_list, 0},
-{L"initializer_list  :  initializer_list , initializer ", NULL, handle_initializer_list, 0},
+{L"type_name  :  specifier_qualifier_list pointer ", NULL, handle_type_name, 0},
+{L"specifier_qualifier_list  :  type_qualifier type_specifier ", NULL, handle_specifier_qualifier_list, 0},
+{L"specifier_qualifier_list  :  type_specifier ", NULL, handle_specifier_qualifier_list, 0},
 {L"statement  :  labeled_statement ", NULL, handle_statement, 0},
 {L"statement  :  compound_statement ", NULL, handle_statement, 0},
 {L"statement  :  expression_statement ", NULL, handle_statement, 0},
@@ -613,15 +513,12 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"labeled_statement  :  case constant_expression : statement ", NULL, handle_labeled_statement, 0},
 {L"labeled_statement  :  default : statement ", NULL, handle_labeled_statement, 0},
 {L"labeled_statement  :  IDENTIFIER : statement ", NULL, handle_labeled_statement, 0},
-{L"push_symtbl  :   ", L"SPEC_ACTION", handle_push_symtbl, 0},
-{L"pop_symtbl  :   ", L"SPEC_ACTION", handle_pop_symtbl, 0},
 {L"compound_statement  :  { } ", NULL, handle_compound_statement, 0},
 {L"compound_statement  :  { statement_list } ", NULL, handle_compound_statement, 0},
-{L"compound_statement  :  { push_symtbl declaration_list pop_symtbl } ", NULL, handle_compound_statement, 0},
-{L"compound_statement  :  { push_symtbl declaration_list statement_list pop_symtbl } ", NULL, handle_compound_statement, 0},
-{L"compound_statement  :  { error } ", NULL, handle_compound_statement, 0},
-{L"compound_statement  :  { push_symtbl declaration_list error pop_symtbl } ", NULL, handle_compound_statement, 0},
-{L"compound_statement  :  { push_symtbl declaration_list statement_list error pop_symtbl } ", NULL, handle_compound_statement, 0},
+{L"compound_statement  :  { enter_scope declaration_list exit_scope } ", NULL, handle_compound_statement, 0},
+{L"compound_statement  :  { enter_scope declaration_list statement_list exit_scope } ", NULL, handle_compound_statement, 0},
+{L"compound_statement  :  { enter_scope declaration_list error exit_scope } ", NULL, handle_compound_statement, 0},
+{L"compound_statement  :  { error } ", L"ERROR_SHIFT", handle_compound_statement, 0},
 {L"statement_list  :  statement ", NULL, handle_statement_list, 0},
 {L"statement_list  :  statement_list statement ", NULL, handle_statement_list, 0},
 {L"expression_statement  :  ; ", NULL, handle_expression_statement, 0},
@@ -709,7 +606,7 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"constant  :  STRING_LITERAL ", NULL, handle_constant, 0}
 };
 
-#define START_RULE L"program"
+#define START_RULE L"translation_unit"
 
 static lex_t*	__build_lex(const arIOCtx_t *io)								
 {																				
@@ -750,7 +647,7 @@ static psrGrammar_t*	__build_grammar(const psrCtx_t	*psr_ctx, const arIOCtx_t *i
 			for(i = 0; i < AR_NELEMS(__g_term_pattern); ++i)																		
 			{																														
 					if(__g_term_pattern[i].skip || __g_term_pattern[i].tokval == 0)continue;										
-					if(!PSR_InsertTerm(grammar, __g_term_pattern[i].name, __g_term_pattern[i].tokval, PSR_ASSOC_NOASSOC,0, NULL))	
+					if(!PSR_InsertTerm(grammar, __g_term_pattern[i].name, __g_term_pattern[i].tokval, PSR_ASSOC_NONASSOC,0, NULL))	
 					{																												
 							PSR_DestroyGrammar(grammar);																			
 							grammar = NULL;																							
@@ -800,9 +697,29 @@ static psrGrammar_t*	__build_grammar(const psrCtx_t	*psr_ctx, const arIOCtx_t *i
 
 
 
-/*program	:	translation_unit FAKE_EOI */
-/*program	:	error FAKE_EOI */
-static psrNode_t* AR_STDCALL handle_program(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*enter_scope	:	 */
+static psrNode_t* AR_STDCALL handle_enter_scope(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*exit_scope	:	 */
+static psrNode_t* AR_STDCALL handle_exit_scope(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*create_labels	:	 */
+static psrNode_t* AR_STDCALL handle_create_labels(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*destroy_labels	:	 */
+static psrNode_t* AR_STDCALL handle_destroy_labels(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
@@ -824,18 +741,101 @@ static psrNode_t* AR_STDCALL handle_external_declaration(psrNode_t **nodes, size
 }
 
 
-/*function_definition	:	declaration_specifiers declarator compound_statement */
+/*function_definition	:	declaration_specifiers declarator create_labels compound_statement destroy_labels */
 static psrNode_t* AR_STDCALL handle_function_definition(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*declaration	:	declaration_specifiers ; */
+/*type_qualifier	:	const */
+static psrNode_t* AR_STDCALL handle_type_qualifier(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*type_specifier	:	void */
+/*type_specifier	:	byte */
+/*type_specifier	:	char */
+/*type_specifier	:	short */
+/*type_specifier	:	int */
+/*type_specifier	:	long */
+/*type_specifier	:	float */
+/*type_specifier	:	double */
+/*type_specifier	:	signed */
+/*type_specifier	:	unsigned */
+/*type_specifier	:	signed short */
+/*type_specifier	:	unsigned short */
+/*type_specifier	:	signed int */
+/*type_specifier	:	unsigned int */
+/*type_specifier	:	signed long */
+/*type_specifier	:	unsigned long */
+/*type_specifier	:	struct_specifier */
+/*type_specifier	:	TYPE_ID */
+static psrNode_t* AR_STDCALL handle_type_specifier(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*struct_specifier	:	struct IDENTIFIER { enter_scope struct_declaration_list exit_scope } */
+/*struct_specifier	:	struct IDENTIFIER */
+/*struct_specifier	:	struct IDENTIFIER { enter_scope error exit_scope } */
+/*struct_specifier	:	struct error */
+static psrNode_t* AR_STDCALL handle_struct_specifier(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*struct_declaration	:	type_specifier struct_declarator_list ; */
+static psrNode_t* AR_STDCALL handle_struct_declaration(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*struct_declaration_list	:	struct_declaration */
+/*struct_declaration_list	:	struct_declaration_list struct_declaration */
+static psrNode_t* AR_STDCALL handle_struct_declaration_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*struct_declarator_list	:	declarator */
+/*struct_declarator_list	:	struct_declarator_list , declarator */
+static psrNode_t* AR_STDCALL handle_struct_declarator_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*set_pack	:	__pack__ ( ) */
+/*set_pack	:	__pack__ ( DEC_CONSTANT ) */
+/*set_pack	:	__pack__ error */
+static psrNode_t* AR_STDCALL handle_set_pack(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
 /*declaration	:	declaration_specifiers init_declarator_list ; */
-/*declaration	:	declaration_specifiers error ; */
-/*declaration	:	error ; */
+/*declaration	:	declaration_specifiers ; */
+/*declaration	:	declaration_specifiers error */
+/*declaration	:	set_pack */
 static psrNode_t* AR_STDCALL handle_declaration(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*declaration_specifiers	:	typedef type_qualifier type_specifier */
+/*declaration_specifiers	:	typedef type_specifier */
+/*declaration_specifiers	:	type_qualifier type_specifier */
+/*declaration_specifiers	:	type_specifier */
+static psrNode_t* AR_STDCALL handle_declaration_specifiers(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
@@ -844,29 +844,6 @@ static psrNode_t* AR_STDCALL handle_declaration(psrNode_t **nodes, size_t count,
 /*declaration_list	:	declaration */
 /*declaration_list	:	declaration_list declaration */
 static psrNode_t* AR_STDCALL handle_declaration_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-	 return NULL;
-}
-
-
-/*storage_class_specifier	:	typedef */
-/*storage_class_specifier	:	extern */
-/*storage_class_specifier	:	static */
-/*storage_class_specifier	:	auto */
-/*storage_class_specifier	:	register */
-static psrNode_t* AR_STDCALL handle_storage_class_specifier(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-	 return NULL;
-}
-
-
-/*declaration_specifiers	:	storage_class_specifier */
-/*declaration_specifiers	:	storage_class_specifier declaration_specifiers */
-/*declaration_specifiers	:	type_specifier */
-/*declaration_specifiers	:	type_qualifier */
-/*declaration_specifiers	:	type_qualifier declaration_specifiers */
-/*declaration_specifiers	:	type_specifier declaration_specifiers */
-static psrNode_t* AR_STDCALL handle_declaration_specifiers(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
@@ -888,128 +865,24 @@ static psrNode_t* AR_STDCALL handle_init_declarator(psrNode_t **nodes, size_t co
 }
 
 
-/*type_specifier	:	void */
-/*type_specifier	:	byte */
-/*type_specifier	:	char */
-/*type_specifier	:	short */
-/*type_specifier	:	int */
-/*type_specifier	:	long */
-/*type_specifier	:	float */
-/*type_specifier	:	double */
-/*type_specifier	:	signed */
-/*type_specifier	:	unsigned */
-/*type_specifier	:	struct_or_union_specifier */
-/*type_specifier	:	enum_specifier */
-/*type_specifier	:	TYPE_ID */
-static psrNode_t* AR_STDCALL handle_type_specifier(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*initializer	:	assignment_expression */
+/*initializer	:	{ initializer_list } */
+static psrNode_t* AR_STDCALL handle_initializer(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*struct_or_union_specifier	:	struct_or_union IDENTIFIER { struct_declaration_list } */
-/*struct_or_union_specifier	:	struct_or_union { struct_declaration_list } */
-/*struct_or_union_specifier	:	struct_or_union IDENTIFIER */
-/*struct_or_union_specifier	:	struct_or_union { error } */
-/*struct_or_union_specifier	:	struct_or_union error ; */
-static psrNode_t* AR_STDCALL handle_struct_or_union_specifier(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*initializer_list	:	initializer */
+/*initializer_list	:	initializer_list , initializer */
+static psrNode_t* AR_STDCALL handle_initializer_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*struct_or_union	:	struct */
-/*struct_or_union	:	union */
-static psrNode_t* AR_STDCALL handle_struct_or_union(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-	 return NULL;
-}
-
-
-/*struct_declaration	:	specifier_qualifier_list struct_declarator_list ; */
-/*struct_declaration	:	specifier_qualifier_list ; */
-static psrNode_t* AR_STDCALL handle_struct_declaration(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-	 return NULL;
-}
-
-
-/*struct_declaration_list	:	struct_declaration */
-/*struct_declaration_list	:	struct_declaration_list struct_declaration */
-static psrNode_t* AR_STDCALL handle_struct_declaration_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-	 return NULL;
-}
-
-
-/*specifier_qualifier_list	:	type_specifier specifier_qualifier_list */
-/*specifier_qualifier_list	:	type_specifier */
-/*specifier_qualifier_list	:	type_qualifier specifier_qualifier_list */
-/*specifier_qualifier_list	:	type_qualifier */
-static psrNode_t* AR_STDCALL handle_specifier_qualifier_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-	 return NULL;
-}
-
-
-/*struct_declarator_list	:	struct_declarator */
-/*struct_declarator_list	:	struct_declarator_list , struct_declarator */
-static psrNode_t* AR_STDCALL handle_struct_declarator_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-	 return NULL;
-}
-
-
-/*struct_declarator	:	declarator */
-static psrNode_t* AR_STDCALL handle_struct_declarator(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-	 return NULL;
-}
-
-
-/*enum_specifier	:	enum { enumerator_list } */
-/*enum_specifier	:	enum IDENTIFIER { enumerator_list } */
-/*enum_specifier	:	enum IDENTIFIER */
-static psrNode_t* AR_STDCALL handle_enum_specifier(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-	 return NULL;
-}
-
-
-/*enumerator_list	:	enumerator */
-/*enumerator_list	:	enumerator_list , enumerator */
-static psrNode_t* AR_STDCALL handle_enumerator_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-	 return NULL;
-}
-
-
-/*enumerator	:	IDENTIFIER */
-/*enumerator	:	IDENTIFIER = constant_expression */
-static psrNode_t* AR_STDCALL handle_enumerator(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-	 return NULL;
-}
-
-
-/*type_qualifier	:	const */
-/*type_qualifier	:	volatile */
-static psrNode_t* AR_STDCALL handle_type_qualifier(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-	 return NULL;
-}
-
-
-/*attribute_modifier	:	attribute ( STRING_LITERAL ) */
-/*attribute_modifier	:	 */
-static psrNode_t* AR_STDCALL handle_attribute_modifier(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-	 return NULL;
-}
-
-
-/*declarator	:	attribute_modifier pointer direct_declarator */
-/*declarator	:	attribute_modifier direct_declarator */
+/*declarator	:	pointer direct_declarator */
+/*declarator	:	direct_declarator */
 static psrNode_t* AR_STDCALL handle_declarator(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
@@ -1017,13 +890,10 @@ static psrNode_t* AR_STDCALL handle_declarator(psrNode_t **nodes, size_t count, 
 
 
 /*direct_declarator	:	IDENTIFIER */
-/*direct_declarator	:	( declarator ) */
-/*direct_declarator	:	direct_declarator [ constant_expression ] */
-/*direct_declarator	:	direct_declarator [ ] */
-/*direct_declarator	:	direct_declarator ( parameter_type_list ) */
-/*direct_declarator	:	direct_declarator ( ) */
-/*direct_declarator	:	direct_declarator ( error ) */
-/*direct_declarator	:	direct_declarator [ error ] */
+/*direct_declarator	:	IDENTIFIER [ constant_expression ] */
+/*direct_declarator	:	IDENTIFIER [ ] */
+/*direct_declarator	:	IDENTIFIER ( parameter_list ) */
+/*direct_declarator	:	IDENTIFIER ( ) */
 static psrNode_t* AR_STDCALL handle_direct_declarator(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
@@ -1031,26 +901,10 @@ static psrNode_t* AR_STDCALL handle_direct_declarator(psrNode_t **nodes, size_t 
 
 
 /*pointer	:	* */
-/*pointer	:	* type_qualifier_list */
-/*pointer	:	* type_qualifier_list pointer */
+/*pointer	:	* type_qualifier */
+/*pointer	:	* type_qualifier pointer */
 /*pointer	:	* pointer */
 static psrNode_t* AR_STDCALL handle_pointer(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-	 return NULL;
-}
-
-
-/*type_qualifier_list	:	type_qualifier */
-/*type_qualifier_list	:	type_qualifier_list type_qualifier */
-static psrNode_t* AR_STDCALL handle_type_qualifier_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-	 return NULL;
-}
-
-
-/*parameter_type_list	:	parameter_list */
-/*parameter_type_list	:	parameter_list , ... */
-static psrNode_t* AR_STDCALL handle_parameter_type_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
@@ -1065,7 +919,7 @@ static psrNode_t* AR_STDCALL handle_parameter_list(psrNode_t **nodes, size_t cou
 
 
 /*parameter_declaration	:	declaration_specifiers declarator */
-/*parameter_declaration	:	declaration_specifiers abstract_declarator */
+/*parameter_declaration	:	declaration_specifiers pointer */
 /*parameter_declaration	:	declaration_specifiers */
 static psrNode_t* AR_STDCALL handle_parameter_declaration(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
@@ -1074,52 +928,16 @@ static psrNode_t* AR_STDCALL handle_parameter_declaration(psrNode_t **nodes, siz
 
 
 /*type_name	:	specifier_qualifier_list */
-/*type_name	:	specifier_qualifier_list abstract_declarator */
+/*type_name	:	specifier_qualifier_list pointer */
 static psrNode_t* AR_STDCALL handle_type_name(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*abstract_declarator	:	pointer */
-/*abstract_declarator	:	direct_abstract_declarator */
-/*abstract_declarator	:	pointer direct_abstract_declarator */
-static psrNode_t* AR_STDCALL handle_abstract_declarator(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-	 return NULL;
-}
-
-
-/*direct_abstract_declarator	:	( abstract_declarator ) */
-/*direct_abstract_declarator	:	[ ] */
-/*direct_abstract_declarator	:	[ constant_expression ] */
-/*direct_abstract_declarator	:	direct_abstract_declarator [ ] */
-/*direct_abstract_declarator	:	direct_abstract_declarator [ constant_expression ] */
-/*direct_abstract_declarator	:	( ) */
-/*direct_abstract_declarator	:	( parameter_type_list ) */
-/*direct_abstract_declarator	:	direct_abstract_declarator ( ) */
-/*direct_abstract_declarator	:	direct_abstract_declarator ( parameter_type_list ) */
-/*direct_abstract_declarator	:	( error ) */
-/*direct_abstract_declarator	:	[ error ] */
-static psrNode_t* AR_STDCALL handle_direct_abstract_declarator(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-	 return NULL;
-}
-
-
-/*initializer	:	assignment_expression */
-/*initializer	:	{ initializer_list } */
-/*initializer	:	{ initializer_list , } */
-/*initializer	:	{ error } */
-static psrNode_t* AR_STDCALL handle_initializer(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-	 return NULL;
-}
-
-
-/*initializer_list	:	initializer */
-/*initializer_list	:	initializer_list , initializer */
-static psrNode_t* AR_STDCALL handle_initializer_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*specifier_qualifier_list	:	type_qualifier type_specifier */
+/*specifier_qualifier_list	:	type_specifier */
+static psrNode_t* AR_STDCALL handle_specifier_qualifier_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
@@ -1146,27 +964,12 @@ static psrNode_t* AR_STDCALL handle_labeled_statement(psrNode_t **nodes, size_t 
 }
 
 
-/*push_symtbl	:	 */
-static psrNode_t* AR_STDCALL handle_push_symtbl(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-	 return NULL;
-}
-
-
-/*pop_symtbl	:	 */
-static psrNode_t* AR_STDCALL handle_pop_symtbl(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-	 return NULL;
-}
-
-
 /*compound_statement	:	{ } */
 /*compound_statement	:	{ statement_list } */
-/*compound_statement	:	{ push_symtbl declaration_list pop_symtbl } */
-/*compound_statement	:	{ push_symtbl declaration_list statement_list pop_symtbl } */
+/*compound_statement	:	{ enter_scope declaration_list exit_scope } */
+/*compound_statement	:	{ enter_scope declaration_list statement_list exit_scope } */
+/*compound_statement	:	{ enter_scope declaration_list error exit_scope } */
 /*compound_statement	:	{ error } */
-/*compound_statement	:	{ push_symtbl declaration_list error pop_symtbl } */
-/*compound_statement	:	{ push_symtbl declaration_list statement_list error pop_symtbl } */
 static psrNode_t* AR_STDCALL handle_compound_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
@@ -1362,4 +1165,10 @@ static psrNode_t* AR_STDCALL handle_constant(psrNode_t **nodes, size_t count, co
 
 
 
+
+
+
+
 AR_NAMESPACE_END
+
+#endif

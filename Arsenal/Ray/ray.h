@@ -27,6 +27,12 @@ void	RAY_Init();
 void	RAY_UnInit();
 
 
+struct __ray_compiler_tag;
+
+typedef struct __ray_compiler_tag		rayCompiler_t;
+
+
+
 AR_NAMESPACE_END
 
 #endif

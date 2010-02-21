@@ -33,6 +33,9 @@ typedef struct __parser_node_stack
 static AR_INLINE void PSR_InitNodeStack(psrNodeStack_t *stack)
 {
 		AR_memset(stack, 0, sizeof(*stack));
+
+		stack->cap = 1024;
+		stack->nodes = AR_REALLOC(psrNode_t*, stack->nodes, stack->cap);
 }
 
 static AR_INLINE void PSR_UnInitNodeStack(psrNodeStack_t *stack)
@@ -110,6 +113,11 @@ static AR_INLINE size_t PSR_TopStack(const psrStack_t *stack)
 static AR_INLINE void PSR_InitStack(psrStack_t *stack)
 {
 		AR_memset(stack, 0,sizeof(*stack));
+
+		stack->cap = 1024;
+		stack->states = AR_REALLOC(size_t, stack->states, stack->cap);
+
+
 }
 
 static AR_INLINE void PSR_UnInitStack(psrStack_t *stack)
@@ -179,7 +187,7 @@ static AR_INLINE bool_t			PSR_InsertToTermInfoRec(psrTermInfoRec_t *rec, const p
 
 
 
-#define TERM_BUCKET_SIZE		(20481 / AR_MEM_POLICY)
+#define TERM_BUCKET_SIZE		(256 / AR_MEM_POLICY)
 
 
 typedef struct __term_table_tag
@@ -238,8 +246,16 @@ static AR_INLINE const psrTermInfo_t* PSR_FindTermFromInfoTable(const psrTermInf
 		
 		rec = tbl->bucket[idx];
 
-		if(rec == NULL)return NULL;
-		return PSR_FindTermFromRec(rec, tokval);
+		if(rec == NULL)
+		{
+				return NULL;
+		}else if(rec->count == 1)
+		{
+				return rec->terms[0];
+		}else
+		{
+				return PSR_FindTermFromRec(rec, tokval);
+		}
 }
 
 

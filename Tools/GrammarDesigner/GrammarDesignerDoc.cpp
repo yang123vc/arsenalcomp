@@ -443,7 +443,7 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 				}
 
 				if(tok->is_skip || tok->tokval == 0)continue;
-				if(!grammar->Insert(tok->name, tok->tokval, ARSpace::PSR_ASSOC_NOASSOC, 0, build_leaf))
+				if(!grammar->Insert(tok->name, tok->tokval, ARSpace::PSR_ASSOC_NONASSOC, 0, build_leaf))
 				{
 						CString msg;
 
@@ -792,7 +792,7 @@ public:
 
 		virtual void	Error(const ArsenalCPP::psrToken_t *tok, const wchar_t *expected[], size_t count)
 		{
-				ASSERT(tok != NULL && expected != NULL && count > 0);
+				ASSERT(tok != NULL);
 		
 				
 				CString msg;
@@ -804,14 +804,21 @@ public:
 				{
 						token.Append(TEXT("%EOI"));
 				}
-
-				msg.Format(TEXT("Invalid Token \"%ls\", expected\t:\t"), token.GetString());
-
-				for(size_t i = 0; i < count; ++i)
+				
+				if(count > 0)
 				{
-						msg.AppendFormat(TEXT("%ls \t"), expected[i]);
-				}
+						msg.Format(TEXT("Invalid Token \"%ls\", expected\t:\t"), token.GetString());
 
+						for(size_t i = 0; i < count; ++i)
+						{
+								msg.AppendFormat(TEXT("\"%ls\" \t"), expected[i]);
+						}
+
+				}else
+				{
+						msg.Format(TEXT("Invalid Token \"%ls\""), token.GetString());
+				}
+				msg.Append(TEXT("."));
 				m_output.Append(msg, COutputList::MSG_ERROR, tok->line, &m_target);
 		}
 };
@@ -874,6 +881,10 @@ void CGrammarDesignerDoc::OnParserParse()
 
 		memset(&token, 0, sizeof(token));
 		
+		DWORD beg = 0, end = 0;
+
+		beg = ::GetTickCount();
+
 		while(is_ok)
 		{
 				
@@ -906,16 +917,27 @@ void CGrammarDesignerDoc::OnParserParse()
 				}
 		}
 
+		end = ::GetTickCount();
+
+		{
+		CString str;
+		str.Format(TEXT("Parse code Tick count %I64d"), (uint64_t)(end - beg));
+		output.Append(str.GetString());
+		}
+
 		if(is_ok)
 		{
 				CPrintNode *node = (CPrintNode*)m_parser->GetResult();
 				
 				ASSERT(node != NULL);
 
+				output.Append(TEXT("Parse code successful !"));
+				
+				
 				CSyntaxPane &tree = main_frm->GetSyntaxPnae();
 
 				tree.DrawTree(node);
-				output.Append(TEXT("Parse code successful!"));
+				
 				
 				main_frm->ShowPane(&tree, TRUE, TRUE, TRUE);
 		}else

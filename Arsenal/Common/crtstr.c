@@ -1081,6 +1081,83 @@ const wchar_t* AR_wtou32_s(const wchar_t *in, const wchar_t *end, uint32_t  *num
 
 
 
+wchar_t*		AR_str_to_escstr(const wchar_t *src)
+{
+		wchar_t	*res;
+		wchar_t *d;
+		const wchar_t *s;
+		size_t	src_len;
+		
+		if(src == NULL)return NULL;
+
+		src_len = AR_wcslen(src);
+		res = AR_NEWARR0(wchar_t, src_len * 5 + 1);
+
+		d = res; s = src;
+
+		while(*s)
+		{
+				switch(*s)
+				{
+				case L'\b': 
+						*d++ = L'\\';
+						*d++ = L'b';
+						break;
+				case L'\f':
+						*d++ = L'\\';
+						*d++ = L'f';
+						break;
+				case L'\n':
+						*d++ = L'\\';
+						*d++ = L'n';
+						break;
+				case L'\r':
+						*d++ = L'\\';
+						*d++ = L'r';
+						break;
+				case L'\t':
+						*d++ = L'\\';
+						*d++ = L't';
+						break;
+				case L'\v':
+						*d++ = L'\\';
+						*d++ = L'v';
+						break;
+				case L'\a':
+						*d++ = L'\\';
+						*d++ = L'a';
+						break;
+				case L'\\': 
+				case L'\"':
+						*d++ = L'\\';
+						*d++ = *s;
+						break;
+				default:
+				{
+						if(AR_iswprint(*s))
+						{
+								*d++ = *s;
+						}else
+						{
+								int_t l = 0;
+								wchar_t buf[128];
+								l = AR_u64tow_buf(buf, AR_NELEMS(buf), (uint64_t)(*s), 16);
+								AR_ASSERT(l > 0);
+								*d++ = L'\\';
+								*d++ = L'x';
+								for(l = 0; buf[l]; ++l) *d++ = buf[l];
+						}
+				}
+				}
+
+				s++;
+		}
+
+		*d = L'\0';
+
+		return res;
+}
+
 
 
 

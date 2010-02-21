@@ -20,7 +20,7 @@ static void		AR_STDCALL __free_func(psrNode_t *node, void *ctx)
 static void		AR_STDCALL __error_func(const psrToken_t *tok, const wchar_t *expected[], size_t count, void *ctx)
 {
 		NodeContext		*context;
-		AR_ASSERT(tok != NULL && expected != NULL && count > 0 && ctx != NULL);
+		AR_ASSERT(tok != NULL &&  ctx != NULL);
 
 		context = (NodeContext*)ctx;
 		context->Error(tok, expected, count);

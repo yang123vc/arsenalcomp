@@ -86,7 +86,7 @@ expr -> id | expr '-' expr;
 
 typedef enum 
 {
-		PSR_ASSOC_NOASSOC,
+		PSR_ASSOC_NONASSOC,
 		PSR_ASSOC_LEFT,
 		PSR_ASSOC_RIGHT
 }psrAssocType_t;/*终结符结合性*/

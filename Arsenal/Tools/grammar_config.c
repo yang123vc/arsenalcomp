@@ -100,7 +100,7 @@ static const cfgLexPattern_t	__cfg_pattern[] =
 {
 		{EOI,	L"$", false,2},
 		{DELIM, L"{skip_lexem}+", true, 1},
-		{ASSOC,	L"\"%\"(\"left\"|\"right\"|\"noassoc\")", false,1},
+		{ASSOC,	L"\"%\"(\"left\"|\"right\"|\"nonassoc\")", false,1},
 
 		{SKIP,	L"\"%skip\"", false,0},
 		{START,	L"\"%start\"", false,0},
@@ -964,7 +964,7 @@ static psrNode_t*		AR_STDCALL __handle_prec_def(psrNode_t **nodes, size_t count,
 
 		if(c == L'n')
 		{
-				res->prec.assoc	= PSR_ASSOC_NOASSOC;
+				res->prec.assoc	= PSR_ASSOC_NONASSOC;
 
 		}else if(c == L'l')
 		{
@@ -1413,7 +1413,7 @@ static psrGrammar_t*	__build_grammar(psrCtx_t *psr_ctx, arIOCtx_t *io)
 
 		for(i = 0; i < AR_NELEMS(__cfg_term); ++i)
 		{
-				if(!PSR_InsertTerm(gmr, __cfg_term[i].name, (size_t)__cfg_term[i].val, PSR_ASSOC_NOASSOC, 0, __build_leaf))
+				if(!PSR_InsertTerm(gmr, __cfg_term[i].name, (size_t)__cfg_term[i].val, PSR_ASSOC_NONASSOC, 0, __build_leaf))
 				{
 						AR_ASSERT(false);
 						AR_error(AR_ERR_FATAL, L"%hs\r\n", AR_FUNC_NAME);
@@ -1703,33 +1703,6 @@ void			CFG_DestroyGrammarConfig(cfgConfig_t *cfg)
 }
 
 
-wchar_t*		__str_to_cstr(const wchar_t *str)
-{
-		wchar_t	*ret;
-		wchar_t *l;
-		if(str == NULL)
-		{
-				return NULL;
-		}
-		
-		ret = AR_NEWARR0(wchar_t, AR_wcslen(str) * 2 + 1);
-		l = ret;
-		
-		while(*str)
-		{
-				if(*str == L'\\')
-				{
-						*l++ = L'\\';
-				}else if(*str == L'"')
-				{
-						*l++ = L'\\';
-				}
-
-				*l++ = *str++;
-		}
-		*l = L'\0';
-		return ret;
-}
 
 
 bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
@@ -1750,8 +1723,8 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 				{
 						/*#define CFG_NAME_DEF_ITEM		L"L\"%ls = %ls\""*/
 						wchar_t *name , *regex;
-						name =  __str_to_cstr(cfg->name[i].name);
-						regex = __str_to_cstr(cfg->name[i].regex);
+						name =  AR_str_to_escstr(cfg->name[i].name);
+						regex = AR_str_to_escstr(cfg->name[i].regex);
 
 						
 						
@@ -1780,8 +1753,8 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 				{
 						wchar_t *name , *regex;
 						
-						name =  __str_to_cstr(cfg->tok[i].name);
-						regex = __str_to_cstr(cfg->tok[i].regex);
+						name =  AR_str_to_escstr(cfg->tok[i].name);
+						regex = AR_str_to_escstr(cfg->tok[i].regex);
 
 						/*
 						AR_printf(L"regex == %ls\r\n", regex);
@@ -1825,8 +1798,8 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 
 						switch(cfg->prec[i].assoc)
 						{
-						case PSR_ASSOC_NOASSOC:
-								assoc = L"PSR_ASSOC_NOASSOC";
+						case PSR_ASSOC_NONASSOC:
+								assoc = L"PSR_ASSOC_NONASSOC";
 								break;
 						case PSR_ASSOC_LEFT:
 								assoc = L"PSR_ASSOC_LEFT";
@@ -1840,7 +1813,7 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 						{
 								wchar_t *name;
 								size_t tok_val;
-								name  =  __str_to_cstr(cfg->prec[i].prec_tok_set[k]);
+								name  =  AR_str_to_escstr(cfg->prec[i].prec_tok_set[k]);
 								tok_val = cfg->prec[i].prec_tok_val[k];
 								/*#define CFG_PREC_DEF_BEGIN	L"struct {const wchar_t *name; size_t tokval; size_t prec_level; psrAssocType_t	assoc;}__g_prec_pattern[] =  {"*/
 								/*#define CFG_PREC_DEF_ITEM 	L"{L\"%ls\", %d, %d, %ls}"*/
@@ -1883,10 +1856,10 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 								}
 								tmp = AR_NEWARR0(wchar_t, 2048 + 1);
 								AR_swprintf(tmp, 2048, CFG_RULE_HANDLER_DECL_2, cfg->rule[i].action_ins);
-								handler = __str_to_cstr(tmp);
+								handler = AR_str_to_escstr(tmp);
 
 								AR_swprintf(tmp, 2048, CFG_RULE_HANDLER_DEFINE_2, cfg->rule[i].action_ins);
-								handler_def = __str_to_cstr(tmp);
+								handler_def = AR_str_to_escstr(tmp);
 
 								if(tmp)
 								{
@@ -1897,10 +1870,12 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 						{
 								tmp = AR_NEWARR0(wchar_t, 2048 + 1);
 								AR_swprintf(tmp, 2048, CFG_RULE_HANDLER_DECL, cfg->rule[i].lhs);
-								handler = __str_to_cstr(tmp);
+								/*handler = AR_str_to_escstr(tmp);*/
+								handler = AR_wcsdup(tmp);
 
 								AR_swprintf(tmp, 2048, CFG_RULE_HANDLER_DEFINE, cfg->rule[i].lhs);
-								handler_def = __str_to_cstr(tmp);
+								/*handler_def = AR_str_to_escstr(tmp);*/
+								handler_def = AR_wcsdup(tmp);
 
 								if(tmp)
 								{
@@ -1972,23 +1947,23 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 						AR_wcscat(tmp, L"  :  ");
 						AR_wcscat(tmp, cfg->rule[i].rhs);
 
-						rule =  __str_to_cstr(tmp);
+						rule =  AR_str_to_escstr(tmp);
 						if(tmp)
 						{
 								AR_DEL(tmp);
 								tmp = NULL;
 						}
 
-						prec = __str_to_cstr(cfg->rule[i].prec_tok);
+						prec = AR_str_to_escstr(cfg->rule[i].prec_tok);
 						
 						if(cfg->rule[i].action_ins)
 						{
-								handler = __str_to_cstr(cfg->rule[i].action_ins);
+								handler = AR_str_to_escstr(cfg->rule[i].action_ins);
 						}else
 						{
 								tmp = AR_NEWARR0(wchar_t, 2048 + 1);
 								AR_swprintf(tmp, 2048, L"handle_%ls", cfg->rule[i].lhs);
-								handler = __str_to_cstr(tmp);
+								handler = AR_str_to_escstr(tmp);
 								if(tmp)
 								{
 										AR_DEL(tmp);
