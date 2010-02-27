@@ -298,6 +298,7 @@ uint_t			AR_wcshash_n(const wchar_t *str, size_t n);
 
 
 
+/***************************************************************Misc**********************************************************/
 #define	AR_ESCSTR_ERR_OK				0x00
 #define	AR_ESCSTR_ERR_VALUE				0x01
 #define	AR_ESCSTR_ERR_CHAR				0x02

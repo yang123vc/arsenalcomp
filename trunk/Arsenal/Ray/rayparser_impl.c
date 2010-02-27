@@ -41,7 +41,6 @@ UNION,			/*union*/
 #endif
 
 
-		
 typedef enum
 {
 		EOI		=		0x00,
@@ -783,7 +782,7 @@ lex_t*	__ray_build_lex_impl(const arIOCtx_t *io)
 }
 
 psrGrammar_t*	__ray_build_grammar_impl(const psrCtx_t	*psr_ctx, const arIOCtx_t *io)											
-	{																																
+{
 			psrGrammar_t	*grammar;																								
 			size_t i;																												
 			AR_ASSERT(psr_ctx != NULL);																								
@@ -836,7 +835,9 @@ psrGrammar_t*	__ray_build_grammar_impl(const psrCtx_t	*psr_ctx, const arIOCtx_t 
 					return NULL;																																				
 			}																																									
 			return grammar;																																						
-	}
+}
+
+
 
 
 
