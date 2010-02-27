@@ -994,6 +994,10 @@
 				RelativePath="..\..\..\Arsenal\Common\thread_win.h"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\utilities.c"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Parser"
