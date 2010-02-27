@@ -346,6 +346,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="$(ProjectDir)event_dll.bat"
 			/>
 		</Configuration>
 		<Configuration
@@ -424,6 +425,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="$(ProjectDir)event_dll.bat"
 			/>
 		</Configuration>
 		<Configuration
@@ -813,7 +815,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="$(ProjectDir)\event.bat"
+				CommandLine="$(ProjectDir)event_lib.bat"
 			/>
 		</Configuration>
 		<Configuration
@@ -891,7 +893,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="$(ProjectDir)\event.bat"
+				CommandLine="$(ProjectDir)event_lib.bat"
 			/>
 		</Configuration>
 		<Configuration

@@ -10,6 +10,9 @@
 #include "InputPane.h"
 #include "SyntaxPane.h"
 
+
+
+
 class CMainFrame : public CFrameWndEx
 {
 	
