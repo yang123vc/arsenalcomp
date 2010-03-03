@@ -151,7 +151,8 @@ bool_t	PSR_IsInError(const parser_t *parser);
 
 void	PSR_ClearError(parser_t *parser);
 
-
+size_t			PSR_GetNodeCount(const parser_t *parser);
+psrNode_t*		PSR_IndexOfNodeStack(parser_t *parser, size_t index);
 
 
 /***************************************Print************************************/

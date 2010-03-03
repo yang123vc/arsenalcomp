@@ -346,7 +346,7 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 								fianl_next = sp;
 
 								matched = true;
-								goto BREAK_POINT;
+								goto BREAK_POINT;/*这一步决定了优先级为left most*/
 								break;
 						}
 						case RGX_NOP_I:

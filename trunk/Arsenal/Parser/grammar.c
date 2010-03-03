@@ -220,9 +220,12 @@ psrRule_t* PSR_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRuleF
 
 		beg = p;
 
-		while(*p != L'\0' && (AR_iswalpha(*p) || *p == L'_'))p++;
+		if(!AR_iswalpha(*beg) && *beg != L'_')goto END_POINT;
+		
 
-		if(*p == L'\0' || p - beg == 0)return NULL;
+		while(*p != L'\0' && (AR_iswalnum(*p) || *p == L'_'))p++;
+
+		if(*p == L'\0' || p - beg == 0)goto END_POINT;
 		
 		{
 				
@@ -286,6 +289,7 @@ END_POINT:
 				}
 		}
 		PSR_UnInitSymbList(&body);
+		
 		return res;
 }
 

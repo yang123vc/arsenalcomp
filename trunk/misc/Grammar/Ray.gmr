@@ -230,10 +230,10 @@ enter_scope			:	.	%prec SPEC_ACTION
 exit_scope				:	.	%prec SPEC_ACTION	
 					;
 
-create_labels			:	.	%prec SPEC_ACTION	
+init_func_def			:	.	%prec SPEC_ACTION	
 					;
 
-destroy_labels			:	.	%prec SPEC_ACTION	
+uninit_func_def			:	.	%prec SPEC_ACTION	
 					;
 
 
@@ -249,7 +249,8 @@ external_declaration		:	function_definition
 					|	declaration
 					;
 
-function_definition		:	declaration_specifiers declarator create_labels compound_statement destroy_labels
+
+function_definition		:	declaration_specifiers declarator init_func_def compound_statement uninit_func_def
 					;
 
 
@@ -290,7 +291,6 @@ type_specifier			:	"void"
 
 struct_specifier		:	"struct" IDENTIFIER "{" enter_scope struct_declaration_list  exit_scope "}"
 					|	"struct" IDENTIFIER
-					
 					|	"struct" IDENTIFIER "{" enter_scope error  exit_scope "}"
 					|	"struct" error 
 					;
@@ -370,15 +370,14 @@ initializer_list		:	initializer
 
 declarator				:	pointer direct_declarator
 					|	direct_declarator
-
 					;
 
 
 direct_declarator		:	IDENTIFIER
-					|	IDENTIFIER	"[" constant_expression "]"
-					|	IDENTIFIER	"[" "]"
-					|	IDENTIFIER	"(" parameter_list	")"
-					|	IDENTIFIER	"(" ")"
+					|	IDENTIFIER	"[" constant_expression "]"	/*数组声明*/
+					|	IDENTIFIER	"[" "]"					/*数组声明*/
+					|	IDENTIFIER	"(" parameter_list ")"		/*带参数的函数声明*/
+					|	IDENTIFIER	"(" ")"					/*不带参数的函数声明*/
 					;
 
 
@@ -395,6 +394,7 @@ pointer				:	"*"
 parameter_list			:	parameter_declaration
 					|	parameter_list "," parameter_declaration
 					;
+
 
 
 parameter_declaration		:	declaration_specifiers declarator

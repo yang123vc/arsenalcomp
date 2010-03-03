@@ -102,6 +102,9 @@ PSR_IsAccepted
 PSR_IsInError			
 PSR_ClearError			
 
+PSR_GetNodeCount
+PSR_IndexOfNodeStack
+
 PSR_PrintParserActionTable
 PSR_PrintParserConflict
 PSR_CountParserConflict

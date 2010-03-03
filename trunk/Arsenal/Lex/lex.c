@@ -300,6 +300,7 @@ bool_t	LEX_Insert(lex_t *lex, const wchar_t *input)
 
 				act.is_skip = is_skip;
 				return LEX_InsertRule(lex, p, &act);
+		
 		}else if(AR_iswalpha(*p) || *p == L'_')
 		{
 				wchar_t name[AR_RGX_MAXNAME + 1];

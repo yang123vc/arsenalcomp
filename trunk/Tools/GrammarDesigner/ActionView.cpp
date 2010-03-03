@@ -331,9 +331,10 @@ void	CActionView::DrawConflictView(const ARSpace::psrConflictView_t *view)
 								lv.iItem   =  this->m_list.GetItemCount() - 1;
 
 						}
-
 						VERIFY(this->m_list.SetItem(&lv));
 				}
+				
+				VERIFY(this->m_list.InsertItem(this->m_list.GetItemCount(), TEXT("")));
 		}
 
 	//	this->ShowPane(TRUE, TRUE, TRUE);
