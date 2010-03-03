@@ -119,6 +119,9 @@
 		</Unit>
 		<Unit filename="../../../Arsenal/Common/thread_posix.h" />
 		<Unit filename="../../../Arsenal/Common/thread_win.h" />
+		<Unit filename="../../../Arsenal/Common/utilities.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="../../../Arsenal/Lex/lex.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -186,18 +189,25 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../Arsenal/Ray/rayparser.h" />
+		<Unit filename="../../../Arsenal/Ray/rayparser_impl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Arsenal/Ray/rayparser_impl.h" />
+		<Unit filename="../../../Arsenal/Ray/raysymbol.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Arsenal/Ray/raysymbol.h" />
 		<Unit filename="../../../Arsenal/Ray/raytype.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../Arsenal/Ray/raytype.h" />
-		<Unit filename="../../../Arsenal/Ray/symtbl.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../../../Arsenal/Ray/symtbl.h" />
 		<Unit filename="../../../Arsenal/Tools/grammar_config.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../Arsenal/Tools/grammar_config.h" />
+		<Unit filename="../../../Arsenal/Tools/tools.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="../../../Arsenal/Tools/tools.h" />
 		<Extensions>
 			<envvars />
