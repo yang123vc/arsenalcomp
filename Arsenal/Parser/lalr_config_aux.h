@@ -2,12 +2,12 @@
 /*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
- * 
+ *
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.It is provided "as is" without express 
+ * in supporting documentation.It is provided "as is" without express
  * or implied warranty.
  *
  */
@@ -81,7 +81,7 @@ static AR_INLINE void __init_config_freelist()
 		{
 				__destroy_config(AR_NEW(lalrConfig_t));
 		}
-		
+
 }
 
 static AR_INLINE void __uninit_config_freelist()
@@ -155,7 +155,7 @@ static AR_INLINE void __init_node_freelist()
 		AR_InitSpinLock(&__g_node_lock);
 		__free_node_list = NULL;
 
-		for(i = 0; i < LALR_DEFAULT_CONFIG_NODE_NUM; ++i)
+		for(i = 0; i < (size_t)LALR_DEFAULT_CONFIG_NODE_NUM; ++i)
 		{
 				__destroy_node(AR_NEW(lalrConfigNode_t));
 		}
@@ -221,7 +221,7 @@ static AR_INLINE lalrConfigList_t*		__create_config_list()
 static AR_INLINE void					__destroy_config_list(lalrConfigList_t *lst)
 {
 		AR_ASSERT(lst);
-		
+
 
 		AR_LockSpinLock(&__g_config_list_lock);
 		lst->head = (lalrConfigNode_t*)__free_config_list;
@@ -239,7 +239,7 @@ static AR_INLINE void __init_config_list_freelist()
 
 		for(i = 0; i < LALR_DEFAULT_CONFIG_LIST_NUM; ++i)
 		{
-				__destroy_config_list(AR_NEW(lalrConfigList_t)); 
+				__destroy_config_list(AR_NEW(lalrConfigList_t));
 		}
 }
 
@@ -254,7 +254,7 @@ static AR_INLINE void __uninit_config_list_freelist()
 				__free_config_list = tmp;
 				count++;
 		}
-		
+
 		{
 				wchar_t buf[1024];
 				AR_swprintf(buf, 1024, L"Total consume lalrConfigList_t == %u", count);

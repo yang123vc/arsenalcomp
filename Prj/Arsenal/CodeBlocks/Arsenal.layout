@@ -1,25 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
-	<ActiveTarget name="DLLRelease" />
-	<File name="../../../Arsenal/Arsenal.c" open="0" top="0" tabpos="0">
-		<Cursor position="485" topLine="0" />
+	<ActiveTarget name="LibRelease" />
+	<File name="../../../Arsenal/Common/crtstr.c" open="0" top="0" tabpos="0">
+		<Cursor position="17678" topLine="863" />
 	</File>
-	<File name="../../../Arsenal/Common/common.c" open="1" top="1" tabpos="6">
-		<Cursor position="605" topLine="0" />
+	<File name="../../../Arsenal/Common/thread_posix.h" open="0" top="0" tabpos="0">
+		<Cursor position="2221" topLine="78" />
 	</File>
-	<File name="../../../Arsenal/Common/common.h" open="1" top="0" tabpos="5">
-		<Cursor position="2899" topLine="105" />
+	<File name="../../../Arsenal/Parser/lalr_config_aux.h" open="0" top="0" tabpos="0">
+		<Cursor position="1840" topLine="63" />
 	</File>
-	<File name="../../../Arsenal/Common/crtstr.c" open="1" top="0" tabpos="1">
-		<Cursor position="17661" topLine="867" />
-	</File>
-	<File name="../../../Arsenal/Common/string.c" open="0" top="0" tabpos="7">
-		<Cursor position="0" topLine="0" />
-	</File>
-	<File name="../../../Arsenal/Common/thread.c" open="0" top="0" tabpos="6">
-		<Cursor position="591" topLine="7" />
-	</File>
-	<File name="../../../Arsenal/Common/thread_posix.h" open="0" top="0" tabpos="1">
-		<Cursor position="1430" topLine="86" />
+	<File name="../../../Arsenal/Ray/ray.h" open="0" top="0" tabpos="0">
+		<Cursor position="592" topLine="3" />
 	</File>
 </CodeBlocks_layout_file>
