@@ -235,6 +235,8 @@
 
 		
 
+		#define	AR_DEBUG_BREAK				__debugbreak
+
 #elif(AR_COMPILER == AR_GCC3 || AR_COMPILER == AR_GCC4)
 
 		#if defined(NDEBUG)
@@ -267,6 +269,8 @@
 
 		#define AR_FUNC_NAME			__PRETTY_FUNCTION__
 
+		
+		#define	AR_DEBUG_BREAK				__builtin_trap
 
 #else
 

@@ -21,7 +21,8 @@ AR_NAMESPACE_BEGIN
 
 
 /*
-type_specifier			:	"void"
+
+type_specifier		:	"void"
 					|	"byte"
 					|	"char"
 					|	"short"
@@ -41,6 +42,7 @@ type_specifier			:	"void"
 					|	TYPE_ID
 					;
 */
+
 
 
 typedef enum
@@ -76,6 +78,8 @@ typedef enum
 {
 		RAY_CONST_QUALIFIER
 }rayTypeQualifier_t;
+
+
 
 struct __ray_type_tag;
 

@@ -86,9 +86,10 @@ void	AR_error_ctx(arIOCtx_t *ctx, int_t level, const wchar_t *msg, ...);
 
 #if defined(AR_DEBUG)
 
-#define AR_DPRINT		AR_printf
+#define AR_DPRINT				AR_printf
 
 #define AR_ASSERT(_cond)		assert((_cond))
+
 
 #else
 

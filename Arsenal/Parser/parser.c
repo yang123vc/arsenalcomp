@@ -454,6 +454,10 @@ bool_t PSR_AddToken(parser_t *parser, const psrToken_t *tok)
 						break;
 				case PSR_ACCEPT:
 				{
+						/*
+								%start : first_rule EOI
+								这是头一个产生是，且不存在一个规约到%start的动作
+						*/
 						AR_ASSERT(PSR_CompSymb(term->term, PSR_EOISymb) == 0);
 						AR_ASSERT(action->reduce_count == 1);
 						AR_ASSERT(parser->state_stack->count == 2);
@@ -525,6 +529,28 @@ void	PSR_ClearError(parser_t *parser)
 		AR_ASSERT(parser != NULL);
 		parser->is_repair = false;
 }
+
+size_t			PSR_GetNodeCount(const parser_t *parser)
+{
+		AR_ASSERT(parser != NULL);
+		AR_ASSERT(parser->node_stack->count == parser->state_stack->count);
+		return parser->node_stack->count;
+}
+
+psrNode_t*		PSR_IndexOfNodeStack(parser_t *parser, size_t index)
+{
+		AR_ASSERT(parser != NULL && index < parser->node_stack->count);
+		AR_ASSERT(parser->node_stack->count == parser->state_stack->count);
+
+		if(index < parser->node_stack->count)
+		{
+				return parser->node_stack->nodes[index];
+		}else
+		{
+				return NULL;
+		}
+}
+
 
 AR_NAMESPACE_END
 
