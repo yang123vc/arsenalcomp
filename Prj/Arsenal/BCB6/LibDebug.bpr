@@ -7,8 +7,10 @@
     <OBJFILES value="algo.obj common.obj crtstr.obj memory.obj random.obj strconv.obj 
       string.obj strtable.obj thread.obj lex.obj match.obj rgx_compile.obj 
       rgx_exec.obj rgx_misc.obj rgx_node.obj rgx_parser.obj grammar.obj 
-      lr_action.obj lr_dfa.obj lr_item.obj parser.obj parser_in.obj symbol.obj 
-      ray.obj grammar_config.obj Arsenal.obj"/>
+      lr_action.obj parser.obj parser_in.obj symbol.obj ray.obj 
+      grammar_config.obj Arsenal.obj tools.obj utilities.obj lalr_build.obj 
+      lalr_config.obj lalr_state.obj report.obj rayparser.obj rayparser_impl.obj 
+      raysymbol.obj raytype.obj"/>
     <RESFILES value=""/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
@@ -80,11 +82,6 @@
       <FILE FILENAME="..\..\..\Arsenal\Parser\grammar.h" FORMNAME="" UNITNAME="grammar.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\Arsenal\Parser\lr_action.c" FORMNAME="" UNITNAME="lr_action.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\Arsenal\Parser\lr_action.h" FORMNAME="" UNITNAME="lr_action.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\Arsenal\Parser\lr_dfa.c" FORMNAME="" UNITNAME="lr_dfa.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\Arsenal\Parser\lr_dfa.h" FORMNAME="" UNITNAME="lr_dfa.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\Arsenal\Parser\lr_dfa_aux.h" FORMNAME="" UNITNAME="lr_dfa_aux.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\Arsenal\Parser\lr_item.c" FORMNAME="" UNITNAME="lr_item.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\Arsenal\Parser\lr_item.h" FORMNAME="" UNITNAME="lr_item.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\Arsenal\Parser\parser.c" FORMNAME="" UNITNAME="parser.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\Arsenal\Parser\parser.h" FORMNAME="" UNITNAME="parser.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\Arsenal\Parser\parser_aux.h" FORMNAME="" UNITNAME="parser_aux.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
@@ -99,6 +96,22 @@
       <FILE FILENAME="..\..\..\Arsenal\Tools\tools.h" FORMNAME="" UNITNAME="tools.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\Arsenal\Arsenal.c" FORMNAME="" UNITNAME="Arsenal.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\Arsenal\Arsenal.h" FORMNAME="" UNITNAME="Arsenal.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Tools\tools.c" FORMNAME="" UNITNAME="tools.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Common\utilities.c" FORMNAME="" UNITNAME="utilities.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Parser\lalr.h" FORMNAME="" UNITNAME="lalr.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Parser\lalr_build.c" FORMNAME="" UNITNAME="lalr_build.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Parser\lalr_config.c" FORMNAME="" UNITNAME="lalr_config.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Parser\lalr_config_aux.h" FORMNAME="" UNITNAME="lalr_config_aux.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Parser\lalr_state.c" FORMNAME="" UNITNAME="lalr_state.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Parser\report.c" FORMNAME="" UNITNAME="report.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Ray\rayparser.c" FORMNAME="" UNITNAME="rayparser.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Ray\rayparser.h" FORMNAME="" UNITNAME="rayparser.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Ray\rayparser_impl.c" FORMNAME="" UNITNAME="rayparser_impl.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Ray\rayparser_impl.h" FORMNAME="" UNITNAME="rayparser_impl.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Ray\raysymbol.c" FORMNAME="" UNITNAME="raysymbol.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Ray\raysymbol.h" FORMNAME="" UNITNAME="raysymbol.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Ray\raytype.c" FORMNAME="" UNITNAME="raytype.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Ray\raytype.h" FORMNAME="" UNITNAME="raytype.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>

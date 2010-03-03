@@ -141,9 +141,15 @@ void			AR_UnLockSpinLock(arSpinLock_t *lock)
 
 uint64_t		AR_GetClock_US()
 {
+#if(AR_COMPILER == AR_VC6 || AR_COMPILER == AR_BCB6)
+                return (uint64_t)GetTickCount() * (uint64_t)1000;
+
+#else
 		struct __timeb64  tb;
 		_ftime64(&tb);
 		return (tb.time * 1000LL + tb.millitm) * 1000LL;
+#endif
+
 }
 
 

@@ -1705,6 +1705,103 @@ void			CFG_DestroyGrammarConfig(cfgConfig_t *cfg)
 
 
 
+
+
+
+static const wchar_t CFG_DEF_BUILD_LEX[] = 
+L"static lex_t*	__build_lex(const arIOCtx_t *io)								\n"
+L"{																				\n"
+L"		lex_t	*lex;															\n"
+L"		size_t i;																\n"
+L"		lex = LEX_Create(io);													\n"
+L"		for(i = 0; i < AR_NELEMS(__g_lex_name); ++i)							\n"
+L"		{																		\n"
+L"				if(!LEX_Insert(lex, __g_lex_name[i]))							\n"
+L"				{																\n"
+L"						LEX_Destroy(lex);										\n"
+L"						AR_ASSERT(false);										\n"
+L"						return NULL;											\n"
+L"				}																\n"
+L"		}																		\n"
+L"		for(i = 0; i < AR_NELEMS(__g_term_pattern); ++i)						\n"
+L"		{																		\n"
+L"				lexAction_t		act;											\n"
+L"				act.is_skip		=		__g_term_pattern[i].skip;				\n"
+L"				act.priority	=		__g_term_pattern[i].lex_prec;			\n"
+L"				act.value		=		__g_term_pattern[i].tokval;				\n"
+L"				if(!LEX_InsertRule(lex, __g_term_pattern[i].regex, &act))		\n"
+L"				{																\n"
+L"						LEX_Destroy(lex);										\n"
+L"						AR_ASSERT(false);										\n"
+L"						return NULL;											\n"
+L"				}																\n"
+L"		}																		\n"
+L"		return lex;																\n"
+L"}"
+;
+
+static const wchar_t CFG_DEF_BUILD_GRAMMAR[] = 
+L"static psrGrammar_t*	__build_grammar(const psrCtx_t	*psr_ctx, const arIOCtx_t *io)											\n"
+L"{																																\n"
+L"		psrGrammar_t	*grammar;																								\n"
+L"		size_t i;																												\n"
+L"		AR_ASSERT(psr_ctx != NULL);																								\n"
+L"		grammar = PSR_CreateGrammar(psr_ctx, io);																				\n"
+L"		for(i = 0; i < AR_NELEMS(__g_term_pattern); ++i)																		\n"
+L"		{																														\n"
+L"				if(__g_term_pattern[i].skip || __g_term_pattern[i].tokval == 0)continue;										\n"
+L"				if(!PSR_InsertTerm(grammar, __g_term_pattern[i].name, __g_term_pattern[i].tokval, PSR_ASSOC_NONASSOC,0, NULL))	\n"
+L"				{																												\n"
+L"						PSR_DestroyGrammar(grammar);																			\n"
+L"						grammar = NULL;																							\n"
+L"						AR_ASSERT(false);																						\n"
+L"						return NULL;																							\n"
+L"				}																												\n"
+L"		}																														\n"
+L"		for(i = 0; i < AR_NELEMS(__g_prec_pattern); ++i)																		\n"
+L"		{																														\n"
+L"				psrTermInfo_t	*info;																							\n"
+L"				info = PSR_GetTermSymbInfoByName(grammar, __g_prec_pattern[i].name);											\n"
+L"				if(info == NULL)																								\n"
+L"				{																												\n"
+L"						if(!PSR_InsertTerm(grammar, __g_prec_pattern[i].name, __g_prec_pattern[i].tokval, __g_prec_pattern[i].assoc, __g_prec_pattern[i].prec_level, NULL))\n"
+L"						{																																					\n"
+L"								PSR_DestroyGrammar(grammar);																												\n"
+L"								grammar = NULL;																																\n"
+L"								AR_ASSERT(false);																															\n"
+L"								return NULL;																																\n"
+L"						}																																					\n"
+L"				}else																																						\n"
+L"				{																																							\n"
+L"						info->assoc = __g_prec_pattern[i].assoc;																											\n"
+L"						info->prec = __g_prec_pattern[i].prec_level;																										\n"
+L"				}																																							\n"
+L"		}																																									\n"
+L"		for(i = 0; i < AR_NELEMS(__g_rule_pattern); ++i)																													\n"
+L"		{																																									\n"
+L"				if(!PSR_InsertRuleByStr(grammar, __g_rule_pattern[i].rule, __g_rule_pattern[i].prec_token, __g_rule_pattern[i].handler, __g_rule_pattern[i].auto_ret))		\n"
+L"				{																																							\n"
+L"						PSR_DestroyGrammar(grammar);																														\n"
+L"						grammar = NULL;																																		\n"
+L"						AR_ASSERT(false);																																	\n"
+L"						return NULL;																																		\n"
+L"				}																																							\n"
+L"		}																																									\n"
+L"		if(!PSR_SetFirstRule(grammar,START_RULE) || !PSR_CheckIsValidGrammar(grammar))																						\n"
+L"		{																																									\n"
+L"				PSR_DestroyGrammar(grammar);																																\n"
+L"				grammar = NULL;																																				\n"
+L"				AR_ASSERT(false);																																			\n"
+L"				return NULL;																																				\n"
+L"		}																																									\n"
+L"		return grammar;																																						\n"
+L"}"
+;
+
+
+
+
+
 bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 {
 		size_t i;
