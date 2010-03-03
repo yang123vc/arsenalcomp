@@ -10,6 +10,7 @@
 AR_NAMESPACE_BEGIN
 
 
+
 static const wchar_t *__g_lex_name[] = {
 L"delim = [ \\r\\n\\t]",
 L"comment = /\\*([^\\*]|\\*+[^\\*/])*\\*+/",
@@ -154,12 +155,12 @@ static psrNode_t* AR_STDCALL handle_enter_scope(psrNode_t **nodes, size_t count,
 static psrNode_t* AR_STDCALL handle_exit_scope(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*exit_scope	:	 */
-static psrNode_t* AR_STDCALL handle_create_labels(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+static psrNode_t* AR_STDCALL handle_init_func_def(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*create_labels	:	 */
-static psrNode_t* AR_STDCALL handle_destroy_labels(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*init_func_def	:	 */
+static psrNode_t* AR_STDCALL handle_uninit_func_def(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*destroy_labels	:	 */
+/*uninit_func_def	:	 */
 static psrNode_t* AR_STDCALL handle_translation_unit(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*translation_unit	:	external_declaration */
@@ -170,7 +171,7 @@ static psrNode_t* AR_STDCALL handle_external_declaration(psrNode_t **nodes, size
 /*external_declaration	:	declaration */
 static psrNode_t* AR_STDCALL handle_function_definition(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*function_definition	:	declaration_specifiers declarator create_labels compound_statement destroy_labels */
+/*function_definition	:	declaration_specifiers declarator init_func_def compound_statement uninit_func_def */
 static psrNode_t* AR_STDCALL handle_type_qualifier(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*type_qualifier	:	const */
@@ -428,13 +429,13 @@ static psrNode_t* AR_STDCALL handle_constant(psrNode_t **nodes, size_t count, co
 static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	handler; size_t	auto_ret; } __g_rule_pattern[] = {
 {L"enter_scope  :   ", L"SPEC_ACTION", handle_enter_scope, 0},
 {L"exit_scope  :   ", L"SPEC_ACTION", handle_exit_scope, 0},
-{L"create_labels  :   ", L"SPEC_ACTION", handle_create_labels, 0},
-{L"destroy_labels  :   ", L"SPEC_ACTION", handle_destroy_labels, 0},
+{L"init_func_def  :   ", L"SPEC_ACTION", handle_init_func_def, 0},
+{L"uninit_func_def  :   ", L"SPEC_ACTION", handle_uninit_func_def, 0},
 {L"translation_unit  :  external_declaration ", NULL, handle_translation_unit, 0},
 {L"translation_unit  :  translation_unit external_declaration ", NULL, handle_translation_unit, 0},
 {L"external_declaration  :  function_definition ", NULL, handle_external_declaration, 0},
 {L"external_declaration  :  declaration ", NULL, handle_external_declaration, 0},
-{L"function_definition  :  declaration_specifiers declarator create_labels compound_statement destroy_labels ", NULL, handle_function_definition, 0},
+{L"function_definition  :  declaration_specifiers declarator init_func_def compound_statement uninit_func_def ", NULL, handle_function_definition, 0},
 {L"type_qualifier  :  const ", NULL, handle_type_qualifier, 0},
 {L"type_specifier  :  void ", NULL, handle_type_specifier, 0},
 {L"type_specifier  :  byte ", NULL, handle_type_specifier, 0},
@@ -639,60 +640,60 @@ static lex_t*	__build_lex(const arIOCtx_t *io)
 }
 
 static psrGrammar_t*	__build_grammar(const psrCtx_t	*psr_ctx, const arIOCtx_t *io)											
-	{																																
-			psrGrammar_t	*grammar;																								
-			size_t i;																												
-			AR_ASSERT(psr_ctx != NULL);																								
-			grammar = PSR_CreateGrammar(psr_ctx, io);																				
-			for(i = 0; i < AR_NELEMS(__g_term_pattern); ++i)																		
-			{																														
-					if(__g_term_pattern[i].skip || __g_term_pattern[i].tokval == 0)continue;										
-					if(!PSR_InsertTerm(grammar, __g_term_pattern[i].name, __g_term_pattern[i].tokval, PSR_ASSOC_NONASSOC,0, NULL))	
-					{																												
-							PSR_DestroyGrammar(grammar);																			
-							grammar = NULL;																							
-							AR_ASSERT(false);																						
-							return NULL;																							
-					}																												
-			}																														
-			for(i = 0; i < AR_NELEMS(__g_prec_pattern); ++i)																		
-			{																														
-					psrTermInfo_t	*info;																							
-					info = PSR_GetTermSymbInfoByName(grammar, __g_prec_pattern[i].name);											
-					if(info == NULL)																								
-					{																												
-							if(!PSR_InsertTerm(grammar, __g_prec_pattern[i].name, __g_prec_pattern[i].tokval, __g_prec_pattern[i].assoc, __g_prec_pattern[i].prec_level, NULL))
-							{																																					
-									PSR_DestroyGrammar(grammar);																												
-									grammar = NULL;																																
-									AR_ASSERT(false);																															
-									return NULL;																																
-							}																																					
-					}else																																						
-					{																																							
-							info->assoc = __g_prec_pattern[i].assoc;																											
-							info->prec = __g_prec_pattern[i].prec_level;																										
-					}																																							
-			}																																									
-			for(i = 0; i < AR_NELEMS(__g_rule_pattern); ++i)																													
-			{																																									
-					if(!PSR_InsertRuleByStr(grammar, __g_rule_pattern[i].rule, __g_rule_pattern[i].prec_token, __g_rule_pattern[i].handler, __g_rule_pattern[i].auto_ret))		
-					{																																							
-							PSR_DestroyGrammar(grammar);																														
-							grammar = NULL;																																		
-							AR_ASSERT(false);																																	
-							return NULL;																																		
-					}																																							
-			}																																									
-			if(!PSR_SetFirstRule(grammar,START_RULE) || !PSR_CheckIsValidGrammar(grammar))																						
-			{																																									
-					PSR_DestroyGrammar(grammar);																																
-					grammar = NULL;																																				
-					AR_ASSERT(false);																																			
-					return NULL;																																				
-			}																																									
-			return grammar;																																						
-	}
+{																																
+		psrGrammar_t	*grammar;																								
+		size_t i;																												
+		AR_ASSERT(psr_ctx != NULL);																								
+		grammar = PSR_CreateGrammar(psr_ctx, io);																				
+		for(i = 0; i < AR_NELEMS(__g_term_pattern); ++i)																		
+		{																														
+				if(__g_term_pattern[i].skip || __g_term_pattern[i].tokval == 0)continue;										
+				if(!PSR_InsertTerm(grammar, __g_term_pattern[i].name, __g_term_pattern[i].tokval, PSR_ASSOC_NONASSOC,0, NULL))	
+				{																												
+						PSR_DestroyGrammar(grammar);																			
+						grammar = NULL;																							
+						AR_ASSERT(false);																						
+						return NULL;																							
+				}																												
+		}																														
+		for(i = 0; i < AR_NELEMS(__g_prec_pattern); ++i)																		
+		{																														
+				psrTermInfo_t	*info;																							
+				info = PSR_GetTermSymbInfoByName(grammar, __g_prec_pattern[i].name);											
+				if(info == NULL)																								
+				{																												
+						if(!PSR_InsertTerm(grammar, __g_prec_pattern[i].name, __g_prec_pattern[i].tokval, __g_prec_pattern[i].assoc, __g_prec_pattern[i].prec_level, NULL))
+						{																																					
+								PSR_DestroyGrammar(grammar);																												
+								grammar = NULL;																																
+								AR_ASSERT(false);																															
+								return NULL;																																
+						}																																					
+				}else																																						
+				{																																							
+						info->assoc = __g_prec_pattern[i].assoc;																											
+						info->prec = __g_prec_pattern[i].prec_level;																										
+				}																																							
+		}																																									
+		for(i = 0; i < AR_NELEMS(__g_rule_pattern); ++i)																													
+		{																																									
+				if(!PSR_InsertRuleByStr(grammar, __g_rule_pattern[i].rule, __g_rule_pattern[i].prec_token, __g_rule_pattern[i].handler, __g_rule_pattern[i].auto_ret))		
+				{																																							
+						PSR_DestroyGrammar(grammar);																														
+						grammar = NULL;																																		
+						AR_ASSERT(false);																																	
+						return NULL;																																		
+				}																																							
+		}																																									
+		if(!PSR_SetFirstRule(grammar,START_RULE) || !PSR_CheckIsValidGrammar(grammar))																						
+		{																																									
+				PSR_DestroyGrammar(grammar);																																
+				grammar = NULL;																																				
+				AR_ASSERT(false);																																			
+				return NULL;																																				
+		}																																									
+		return grammar;																																						
+}
 
 
 
@@ -711,15 +712,15 @@ static psrNode_t* AR_STDCALL handle_exit_scope(psrNode_t **nodes, size_t count, 
 }
 
 
-/*create_labels	:	 */
-static psrNode_t* AR_STDCALL handle_create_labels(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*init_func_def	:	 */
+static psrNode_t* AR_STDCALL handle_init_func_def(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*destroy_labels	:	 */
-static psrNode_t* AR_STDCALL handle_destroy_labels(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*uninit_func_def	:	 */
+static psrNode_t* AR_STDCALL handle_uninit_func_def(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
@@ -741,7 +742,7 @@ static psrNode_t* AR_STDCALL handle_external_declaration(psrNode_t **nodes, size
 }
 
 
-/*function_definition	:	declaration_specifiers declarator create_labels compound_statement destroy_labels */
+/*function_definition	:	declaration_specifiers declarator init_func_def compound_statement uninit_func_def */
 static psrNode_t* AR_STDCALL handle_function_definition(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;

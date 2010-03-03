@@ -29,7 +29,8 @@ AR_GetLengthString
 
 ;common
 ;AR_qsort
-
+AR_escstr_to_str_buf
+AR_str_to_escstr_buf
 
 
 ;Lex
@@ -50,10 +51,11 @@ LEX_ResetMatch
 LEX_GetNextInput		
 LEX_Match				
 LEX_IsError
-
-
+LEX_ClearError
+LEX_Skip
 LEX_ResetInput			
 
+LEX_ResetIOContext
 
 ;Grammar
 
@@ -82,10 +84,12 @@ PSR_CalcFirstSet
 PSR_GetSymbolFromSymbMap 
 PSR_PrintSymbolMap
 
+PSR_ResetGrammarIOContext
+PSR_ResetGrammarParseContext
 
-CFG_CollectGrammarConfig
-CFG_DestroyGrammarConfig
-;CFG_ConfigToCode
+PSR_GetTermSymbInfoByValue
+PSR_GetTermSymbInfoByName
+PSR_SetFirstRule
 
 ;Parser
 
@@ -98,10 +102,28 @@ PSR_IsAccepted
 PSR_IsInError			
 PSR_ClearError			
 
+PSR_GetNodeCount
+PSR_IndexOfNodeStack
+
 PSR_PrintParserActionTable
 PSR_PrintParserConflict
 PSR_CountParserConflict
 
 
+PSR_CreateParserActionView
+PSR_DestroyParserActionView
 
 
+PSR_CreateParserConflictView
+PSR_DestroyParserConflictView
+
+
+PSR_CreateParserFirstFollowView
+PSR_DestroyParserFirstFollowView
+
+;Tools
+
+
+CFG_CollectGrammarConfig
+CFG_DestroyGrammarConfig
+CFG_ConfigToCode

@@ -139,6 +139,10 @@ SOURCE=..\..\..\Arsenal\Common\thread_posix.h
 
 SOURCE=..\..\..\Arsenal\Common\thread_win.h
 # End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Common\utilities.c
+# End Source File
 # End Group
 # Begin Group "Lex"
 
@@ -197,31 +201,31 @@ SOURCE=..\..\..\Arsenal\Parser\grammar.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\Arsenal\Parser\lalr.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Parser\lalr_build.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Parser\lalr_config.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Parser\lalr_config_aux.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Parser\lalr_state.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\Arsenal\Parser\lr_action.c
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\Arsenal\Parser\lr_action.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\Arsenal\Parser\lr_dfa.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\Arsenal\Parser\lr_dfa.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\Arsenal\Parser\lr_dfa_aux.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\Arsenal\Parser\lr_item.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\Arsenal\Parser\lr_item.h
 # End Source File
 # Begin Source File
 
@@ -245,6 +249,10 @@ SOURCE=..\..\..\Arsenal\Parser\parser_in.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\Arsenal\Parser\report.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\Arsenal\Parser\symbol.c
 # End Source File
 # Begin Source File
@@ -265,6 +273,10 @@ SOURCE=..\..\..\Arsenal\Tools\grammar_config.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\Arsenal\Tools\tools.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\Arsenal\Tools\tools.h
 # End Source File
 # End Group
@@ -278,6 +290,38 @@ SOURCE=..\..\..\Arsenal\Ray\ray.c
 # Begin Source File
 
 SOURCE=..\..\..\Arsenal\Ray\ray.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Ray\rayparser.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Ray\rayparser.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Ray\rayparser_impl.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Ray\rayparser_impl.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Ray\raysymbol.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Ray\raysymbol.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Ray\raytype.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Ray\raytype.h
 # End Source File
 # End Group
 # Begin Source File
