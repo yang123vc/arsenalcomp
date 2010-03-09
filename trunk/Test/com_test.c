@@ -720,6 +720,46 @@ void escstr_test_buf1()
 }
 
 
+void buffer_test()
+{
+		arBuffer_t		*buffer;
+		
+		buffer = AR_CreateBuffer(0);
+
+		FILE *f = fopen("d:\\temp\\lcc.rar", "rb");
+		FILE *tmp = fopen("d:\\temp\\tmp.rar", "wb");
+		assert(f != NULL && tmp != NULL);
+
+		byte_t buf[384];
+		
+		while(!ferror(f) && !feof(f))
+		{
+				size_t rn = fread(buf, sizeof(byte_t), sizeof(buf), f);
+				if(rn == 0)break;
+				AR_InsertToBuffer(buffer, buf, rn);
+
+				if(AR_GetBufferReadableLength(buffer) > 4096)
+				{
+						fwrite((void*)AR_GetBufferReadableData(buffer), 1, 4096, tmp);
+						AR_EraseFromBuffer(buffer, 4096);
+				}
+		}
+
+		fclose(f);
+
+		if(AR_GetBufferReadableLength(buffer) > 0)
+		{
+				fwrite((void*)AR_GetBufferReadableData(buffer), 1, AR_GetBufferReadableLength(buffer), tmp);
+				AR_EraseFromBuffer(buffer, AR_GetBufferReadableLength(buffer));
+		}
+
+		fclose(tmp);
+		
+		AR_DestroyBuffer(buffer);
+
+}
+
+
 
 void com_test()
 {
@@ -752,7 +792,9 @@ void com_test()
 
 		//escstr_test_buf0();
 
-		escstr_test_buf1();
+		//escstr_test_buf1();
+
+		buffer_test();
 
 }
 

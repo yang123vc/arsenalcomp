@@ -82,8 +82,10 @@ typedef enum
 
 
 struct __ray_type_tag;
-
 typedef struct __ray_type_tag	rayType_t;
+
+
+
 
 typedef struct __ray_basic_tag
 {
@@ -96,17 +98,13 @@ typedef struct __ray_array_tag
 		rayType_t		*type;
 }rayArray_t;
 
-typedef struct __ray_struct_tag
-{
-		void	*lst;
-		size_t	count;
-}rayStruct_t;
 
 
 typedef struct __ray_function_tag
 {
 		rayType_t		*ret;
 		rayType_t		**params;
+		wchar_t			**param_names;
 		size_t			count;
 }rayFunc_t;
 
@@ -123,12 +121,22 @@ typedef struct __ray_qual_tag
 		rayType_t				*type;
 }rayQual_t;
 
+
+typedef struct __ray_struct_tag
+{
+		struct __ray_symbol_block_tag	*fields;
+}rayStruct_t;
+
+
+
 struct __ray_type_tag
 {
+		size_t			refcnt;
+
 		rayTypeOper_t	kind;
-		
 		size_t			align;
 		size_t			size;
+		
 
 		union{
 				rayBasic_t		basic;
@@ -138,6 +146,8 @@ struct __ray_type_tag
 				rayPointer_t	pointer;
 				rayQual_t		qual;
 		};
+
+
 };
 
 

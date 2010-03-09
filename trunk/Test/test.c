@@ -61,6 +61,7 @@ extern void lalr_test();
 extern void grammar_test();
 extern void ray_test();
 void code_gen_lex_test();
+void sn_test();
 #endif
 
 
@@ -69,7 +70,7 @@ void AR_Test()
 {
 #if defined(__LIB)
 		
-		com_test();
+		//com_test();
 		//trie_tree_test();
 		//expr_test();
 		//lex_test();
@@ -117,6 +118,8 @@ void AR_Test()
 		//code_gen_lex_test();
 		//lalr_test();
 		//ray_test();
+
+		sn_test();
 		
 #else
 		AR_printf(L"dll version\r\n");

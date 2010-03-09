@@ -1057,6 +1057,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\Test\serialize_test.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\Test\test.c"
 				>
 			</File>

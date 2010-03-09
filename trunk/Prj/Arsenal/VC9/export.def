@@ -27,6 +27,21 @@ AR_GetStrString
 AR_GetLengthString
 
 
+
+AR_CreateBuffer
+AR_DestroyBuffer
+AR_ClearBuffer
+AR_AllocFromBuffer
+AR_InsertToBuffer
+AR_EraseFromBuffer
+AR_GetBufferCapacity
+AR_ReserveBuffer
+AR_GetBufferReadableData
+AR_GetBufferReadableLength
+
+
+
+
 ;common
 ;AR_qsort
 AR_escstr_to_str_buf

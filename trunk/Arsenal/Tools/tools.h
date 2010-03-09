@@ -14,7 +14,7 @@
 
 
 #include "grammar_config.h"
-
+#include "serializer.h"
 
 AR_NAMESPACE_BEGIN
 
