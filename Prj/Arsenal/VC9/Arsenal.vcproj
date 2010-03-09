@@ -943,6 +943,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\Arsenal\Common\buffer.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\Arsenal\Common\common.c"
 				>
 			</File>
@@ -1170,6 +1174,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\Arsenal\Tools\grammar_config.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Tools\serializer.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Tools\serializer.h"
 				>
 			</File>
 			<File

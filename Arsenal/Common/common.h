@@ -151,7 +151,7 @@ void	AR_memswap(void *a, void *b, size_t n);
 #define AR_memset				memset
 #define AR_memcpy				memcpy
 #define AR_memcmp				memcmp
-
+#define	AR_memmove				memmove
 
 
 
@@ -424,6 +424,39 @@ static AR_INLINE uint64_t AR_BIT_MARK(uint64_t pos) { return AR_BIGNUM_U64(0x01)
 #define AR_BIT_SET(_val, _pos)   ((_val) |= (AR_BIT_MARK((_pos))))
 
 #define AR_BIT_CLR(_val, _pos)   (((_val)) &=  (~(AR_BIT_MARK((_pos)))))
+
+
+
+
+/**************************************************Buffer**********************************************************************/
+
+struct arsenal_buffer_tag;
+typedef struct arsenal_buffer_tag		arBuffer_t;
+
+arBuffer_t*		AR_CreateBuffer(size_t nbytes);
+void			AR_DestroyBuffer(arBuffer_t		*buffer);
+
+void			AR_ClearBuffer(arBuffer_t		*buffer);
+
+/*分配nbytes个字节以供使用*/
+byte_t*			AR_AllocFromBuffer(arBuffer_t *buffer, size_t	nbytes);
+/*向buffer写入nbytes个字节*/
+void			AR_InsertToBuffer(arBuffer_t *buffer, const byte_t *data, size_t len);
+
+/*从buffer头擦除nbytes个字节*/
+size_t			AR_EraseFromBuffer(arBuffer_t *buffer, size_t nbytes);
+
+/*返回不重新分配内存还可以写的字节数*/
+size_t			AR_GetBufferCapacity(const arBuffer_t *buffer);
+
+/*AR_ReserveBuffer调用成功后，AR_GetBufferCapacity(buffer) >= nbytes*/
+void			AR_ReserveBuffer(arBuffer_t *buffer, size_t nbytes);
+
+/*可读内存块*/
+const byte_t*	AR_GetBufferReadableData(const arBuffer_t *buffer);
+/*可读内存块长度*/
+size_t			AR_GetBufferReadableLength(const arBuffer_t *buffer);
+
 
 
 

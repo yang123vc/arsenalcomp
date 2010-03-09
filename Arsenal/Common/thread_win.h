@@ -143,17 +143,14 @@ uint64_t		AR_GetClock_US()
 {
 #if(AR_COMPILER == AR_VC6 || AR_COMPILER == AR_BCB6)
 
-                struct timeb   tb;
-                ftime(&tb);
-
-                return ((uint64_t)tb.time * (uint64_t)1000 + (uint64_t)tb.millitm) * (uint64_t)1000;
-
+		struct timeb   tb;
+		ftime(&tb);
 #else
 		struct __timeb64  tb;
 		_ftime64(&tb);
-		return (tb.time * 1000LL + tb.millitm) * 1000LL;
 #endif
-
+		
+		return ((uint64_t)tb.time * (uint64_t)1000 + (uint64_t)tb.millitm) * (uint64_t)1000;
 }
 
 
