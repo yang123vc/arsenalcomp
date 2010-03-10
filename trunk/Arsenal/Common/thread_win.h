@@ -20,19 +20,27 @@
 #endif
 
 #include <windows.h>
-#include <sys/timeb.h>
 
+#if(OS_TYPE == OS_WINDOWS_CE)
+		#define __VOLATILE__
+#else
+		#define __VOLATILE__	volatile
+#endif
 
-#define COMP_EXCH(_dest, _exch, _comp_val)	InterlockedCompareExchange((volatile LONG*)(_dest), (LONG )(_exch), (LONG)(_comp_val))
+#define COMP_EXCH(_dest, _exch, _comp_val)	InterlockedCompareExchange((__VOLATILE__ LONG*)(_dest), (LONG )(_exch), (LONG)(_comp_val))
 
 #if(AR_ARCH_VER == ARCH_32)
-		#define ATOMIC_INC(_dest) (int_t)InterlockedIncrement((volatile LONG*)(_dest))
-		#define  ATOMIC_DEC(_dest) (int_t)InterlockedDecrement((volatile LONG*)(_dest))
+
+		
+
+		#define ATOMIC_INC(_dest) (int_t)InterlockedIncrement((__VOLATILE__ LONG*)(_dest))
+		#define  ATOMIC_DEC(_dest) (int_t)InterlockedDecrement((__VOLATILE__ LONG*)(_dest))
+
 		/*#define COMP_EXCH(_dest, _exch, _comp_val)	InterlockedCompareExchange((volatile LONG*)(_dest), (LONG )(_exch), (LONG)(_comp_val))*/
 #elif(AR_ARCH_VER == ARCH_64)
-		#define  ATOMIC_INC(_dest) (int_t)InterlockedIncrement64((volatile LONGLONG*)(_dest))
-		#define  ATOMIC_DEC(_dest) (int_t)InterlockedDecrement64((volatile LONGLONG*)(_dest))
-		/*#define COMP_EXCH(_dest, _exch, _comp_val)	InterlockedCompareExchange64((volatile LONGLONG*)(_dest), (LONGLONG )(_exch), (LONGLONG)(_comp_val))*/
+		#define  ATOMIC_INC(_dest) (int_t)InterlockedIncrement64((__VOLATILE__ LONGLONG*)(_dest))
+		#define  ATOMIC_DEC(_dest) (int_t)InterlockedDecrement64((__VOLATILE__ LONGLONG*)(_dest))
+		/*#define COMP_EXCH(_dest, _exch, _comp_val)	InterlockedCompareExchange64((__VOLATILE__ LONGLONG*)(_dest), (LONGLONG )(_exch), (LONGLONG)(_comp_val))*/
 #else
 		#error "Target ARCH  not supported"
 #endif
@@ -138,19 +146,33 @@ void			AR_UnLockSpinLock(arSpinLock_t *lock)
 }
 
 
+#if(OS_TYPE == OS_WINDOWS_CE)
 
-uint64_t		AR_GetClock_US()
+static AR_INLINE uint64_t __get_time_microseconds()
 {
-#if(AR_COMPILER == AR_VC6 || AR_COMPILER == AR_BCB6)
+		return 0;
+}
 
-		struct timeb   tb;
-		ftime(&tb);
 #else
-		struct __timeb64  tb;
-		_ftime64(&tb);
+static AR_INLINE uint64_t __get_time_microseconds()
+{
+		FILETIME ft;
+		ULARGE_INTEGER epoch; // UNIX epoch (1970-01-01 00:00:00) expressed in Windows NT FILETIME
+		ULARGE_INTEGER ts;
+		GetSystemTimeAsFileTime(&ft);
+
+		epoch.LowPart  = 0xD53E8000;
+		epoch.HighPart = 0x019DB1DE;
+		ts.LowPart  = ft.dwLowDateTime;
+		ts.HighPart = ft.dwHighDateTime;
+		ts.QuadPart -= epoch.QuadPart;
+		return ts.QuadPart/10;
+}
 #endif
-		
-		return ((uint64_t)tb.time * (uint64_t)1000 + (uint64_t)tb.millitm) * (uint64_t)1000;
+
+uint64_t		AR_GetTime_Microseconds()
+{
+		return __get_time_microseconds();
 }
 
 

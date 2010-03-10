@@ -148,7 +148,7 @@
 		#endif
 		
 		
-#if defined(AR_USE_CRT_ALLOCFUNC)
+#if defined(AR_USE_CRT_ALLOCFUNC) && (OS_TYPE != OS_WINDOWS_CE)
 
 	/*	
 		#define _CRTDBG_MAP_ALLOC 

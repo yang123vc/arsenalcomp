@@ -98,11 +98,13 @@ void			AR_UnLockSpinLock(arSpinLock_t *lock)
 
 /**********************************************************************************************************************************end*/
 
-uint64_t		AR_GetClock_US()
+#define RESOLUTION		1000000LL
+
+uint64_t		AR_GetTime_Microseconds()
 {
 		struct timeval tv;
 		gettimeofday(&tv, NULL);
-		return tv.tv_sec * 1000000LL + tv.tv_usec;
+		return (uint64_t)tv.tv_sec * (uint64_t)RESOLUTION + (uint64_t)tv.tv_usec;
 }
 
 
