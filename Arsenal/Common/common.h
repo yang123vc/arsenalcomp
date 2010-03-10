@@ -409,8 +409,11 @@ void			AR_UnLockSpinLock(arSpinLock_t *lock);
 void			AR_YieldThread();
 void			AR_Sleep(size_t millisecond);
 
-uint64_t		AR_GetClock_US();
+uint64_t		AR_GetTime_Microseconds();
+
+/*
 #define			AR_GetClock_MS()		(AR_GetClock_US() / 1000LL)
+*/
 
 /*******************************************************BitMark****************************************************************/
 
@@ -424,6 +427,9 @@ static AR_INLINE uint64_t AR_BIT_MARK(uint64_t pos) { return AR_BIGNUM_U64(0x01)
 #define AR_BIT_SET(_val, _pos)   ((_val) |= (AR_BIT_MARK((_pos))))
 
 #define AR_BIT_CLR(_val, _pos)   (((_val)) &=  (~(AR_BIT_MARK((_pos)))))
+
+
+
 
 
 
