@@ -1,0 +1,89 @@
+
+/*
+µ¥ÐÐ×¢ÊÍ,ÀýÈç
+
+;×¢ÊÍ:xxxxxxxx
+
+*/
+%token	%skip			:	"^[ \t\r]*;[^\r\n]*(\r)*\n"	,	3
+					;
+
+/*
+×·¼Ó×¢ÊÍ£¬ÀýÈç£º
+
+[section1] ;×¢ÊÍ:xxxxxxx
+
+*/
+%token	%skip			:	";[^\r\n]*"				,	1
+					;
+
+
+/*
+¿Õ°×
+*/
+%token	%skip			:	"[ \t\r]+"					,	1	
+					;
+
+
+/*
+¿ÕÐÐ
+*/
+%token	%skip			:	"^[ \t\r]*\n"				,	2	
+					;
+
+
+
+
+
+
+%token	LINE_END		:	"(\r)*\n"					,	2
+					;
+
+
+%token	string   		:	"[^ ;=\r\n\[\]][^;=\r\n\[\]]*"
+					;
+
+
+%token	"="			:	"="	,	2
+					;
+%token	"["			:	"\["	,	2
+					;
+%token	"]"			:	"\]"	,	2
+					;
+
+
+
+
+
+
+
+
+ini					:	section_list
+					;
+
+section_list			:	section_list	section
+					|	section
+					;
+
+section				:	section_header	line_list
+					|	section_header
+					;
+
+
+section_header			:	"[" string "]" 	LINE_END
+					|	"[" error "]"	LINE_END
+					;
+
+
+
+line_list				:	line_list line
+					|	line
+					;
+
+line					:	string   	"="	string  LINE_END
+					|	string   	"="		   LINE_END
+					|	error LINE_END
+					;
+
+
+

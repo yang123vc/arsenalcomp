@@ -226,7 +226,7 @@ void parse_code(const cfgConfig_t *cfg, const wchar_t *sources)
 				size_t tok_cnt = 0;
 				uint64_t beg, end;
 
-				beg = AR_GetClock_MS();
+				beg = AR_GetTime_Microseconds();
 				//DWORD beg, end;
 				//beg = GetTickCount();
 
@@ -255,7 +255,7 @@ void parse_code(const cfgConfig_t *cfg, const wchar_t *sources)
 
 				//end = GetTickCount();
 
-				end = AR_GetClock_MS();
+				end = AR_GetTime_Microseconds();
 
 				AR_printf(L"elapsed == %I64d\r\n", end - beg);
 		}
@@ -459,7 +459,7 @@ void parser_perf_test()
 				//beg = GetTickCount();
 
 				uint64_t beg ,end;
-				beg = AR_GetClock_MS();
+				beg = AR_GetTime_Microseconds();
 
 				cfg = CFG_CollectGrammarConfig(gmr_txt, NULL);
 
@@ -468,7 +468,7 @@ void parser_perf_test()
 				if(cfg)CFG_DestroyGrammarConfig(cfg);
 				
 				//end = GetTickCount();
-				end = AR_GetClock_MS();
+				end = AR_GetTime_Microseconds();
 
 				AR_printf(L"parser elapsed == %d\r\n", end - beg);
 				

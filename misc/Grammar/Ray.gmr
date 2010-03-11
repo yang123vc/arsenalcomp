@@ -195,7 +195,7 @@
 %token	"?"		:	'"?"'			,0		;	//?
 
 %token	TYPE_ID	:	'^'			,0		;	//占位符
-%token	FAKE_EOI	:	'"$"'			,0		;	//占位符
+%token	FAKE_EOI	:	'$'			,0		;	//占位符
 
 
 

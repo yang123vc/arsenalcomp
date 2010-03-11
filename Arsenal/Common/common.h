@@ -196,6 +196,21 @@ uint32_t		AR_rand32();
 
 
 #define AR_strlen(_s)			strlen((_s))
+#define AR_strcmp(_l, _r)		strcmp((_l), (_r))
+#define AR_strncmp(_l, _r,_n)	strncmp((_l), (_r), (_n))
+#define AR_strcpy(_d, _s)		strcpy((_d), (_s))
+#define AR_strncpy(_d, _s, _n)	strncpy((_d), (_s), (_n))
+#define AR_strchr(_s, _c)		strchr((_s),(_c))
+#define AR_strstr(_s1, _s2)		strstr((_s1), (_s2))
+#define AR_isalpha(_c)			isalpha((_c))
+#define AR_isalnum(_c)			isalnum((_c))
+#define AR_isdigit(_c)			isdigit((_c))
+#define AR_tolower(_c)			tolower((_c))
+#define AR_isspace(_c)			isspace((_c))
+#define AR_isgraph(_c)			isgraph((_c))
+#define AR_isprint(_c)			isprint((_c))
+
+
 
 #define AR_wcscmp(_l, _r)		wcscmp((_l), (_r))
 #define AR_wcsncmp(_l, _r,_n)	wcsncmp((_l), (_r), (_n))
@@ -410,10 +425,8 @@ void			AR_YieldThread();
 void			AR_Sleep(size_t millisecond);
 
 uint64_t		AR_GetTime_Microseconds();
+#define			AR_GetTime_Milliseconds()		(AR_GetTime_Microseconds() / 1000LL)
 
-/*
-#define			AR_GetClock_MS()		(AR_GetClock_US() / 1000LL)
-*/
 
 /*******************************************************BitMark****************************************************************/
 

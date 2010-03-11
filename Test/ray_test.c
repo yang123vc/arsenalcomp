@@ -73,7 +73,7 @@ static void parse_code(lex_t *lex, const wchar_t *sources)
 				size_t tok_cnt = 0;
 				uint64_t beg, end;
 
-				beg = AR_GetClock_MS();
+				beg = AR_GetTime_Microseconds();
 				//DWORD beg, end;
 				//beg = GetTickCount();
 
@@ -105,7 +105,7 @@ static void parse_code(lex_t *lex, const wchar_t *sources)
 						AR_printf(L"lex parse failed : %ls\r\n", AR_wcsndup(match.next, n > 10 ? 10 : n));
 				}
 
-				end = AR_GetClock_MS();
+				end = AR_GetTime_Microseconds();
 
 				AR_printf(L"elapsed == %I64d\r\n", end - beg);
 		}
@@ -142,7 +142,7 @@ void ray_test()
 		*/
 		uint64_t beg, end;
 		
-		beg = AR_GetClock_US();
+		beg = AR_GetTime_Microseconds();
 
 		gmr = RAY_BuildGrammar(NULL);
 		AR_ASSERT(gmr != NULL);
@@ -156,7 +156,7 @@ void ray_test()
 		
 		parser = RAY_BuildParser(gmr);
 
-		end = AR_GetClock_US();
+		end = AR_GetTime_Microseconds();
 
 		AR_printf(L"elapsed == %I64d us\r\n", end - beg);
 

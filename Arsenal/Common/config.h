@@ -25,8 +25,8 @@
 /**********************************************************确定编译器和平台***********************************************************************/
 
 
-#define ARCH_32			32u
-#define ARCH_64			64u
+#define ARCH_32			0x20u
+#define ARCH_64			0x40u
 
 
 #if(ARCH == ARCH_IA32 || ARCH == ARCH_ARM)
@@ -39,7 +39,7 @@
 
 #else
 
-#error "UnKnow Platform!"
+#error "Unknown platform not supported!"
 
 #endif
 
@@ -101,13 +101,6 @@
 		#pragma warning(disable : 4127)
 		#pragma warning(disable : 4201)
 
-#if(OS_TYPE == OS_WINDOWS_CE)
-		#pragma warning(disable : 4214)
-		#pragma warning(disable : 4201)
-		#pragma warning(disable : 4090)
-
-#endif
-
 /*
 
 		#pragma warning(disable : 4204)
@@ -116,6 +109,14 @@
 		#pragma warning(disable : 4514)
 		#pragma warning(disable : 4710)
 		#pragma warning(disable : 4761)
+*/
+
+/*
+#if(OS_TYPE == OS_WINDOWS_CE)
+		#pragma warning(disable : 4214)
+		#pragma warning(disable : 4201)
+		#pragma warning(disable : 4090)
+#endif
 */
 
 		#if !defined(_CRT_SECURE_NO_WARNINGS)
@@ -141,30 +142,29 @@
 				#define AR_USE_CRT_ALLOCFUNC	1
 		#endif
 		*/
-		#if(AR_COMPILER == AR_VC9)
+		#if(AR_COMPILER == AR_VC9 && OS_TYPE != OS_WINDOWS_CE)
 				#if !defined(NDEBUG)
 						#define AR_USE_CRT_ALLOCFUNC	1
 				#endif
 		#endif
-		
-		
-#if defined(AR_USE_CRT_ALLOCFUNC) && (OS_TYPE != OS_WINDOWS_CE)
 
-	/*	
-		#define _CRTDBG_MAP_ALLOC 
-		#include<crtdbg.h>
-		MSVC mem check tools "_CrtDumpMemoryLeaks();"
-		_CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-		#define AR_USE_CRT_ALLOCFUNC	1
-	*/
 
-		#define _CRTDBG_MAP_ALLOC 
-		#include<stdlib.h> 
-		#include<crtdbg.h> 
+		#if defined(AR_USE_CRT_ALLOCFUNC)
 
-#else
-		#include<stdlib.h>
-#endif
+		/*	
+				#define _CRTDBG_MAP_ALLOC 
+				#include<crtdbg.h>		
+				MSVC mem check tools "_CrtDumpMemoryLeaks();"
+				_CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+				#define AR_USE_CRT_ALLOCFUNC	1
+		*/
+				#define _CRTDBG_MAP_ALLOC 
+				#include<stdlib.h> 
+				#include<crtdbg.h> 
+
+		#else
+				#include<stdlib.h>
+		#endif
 //////////////////////////////////////
 		
 		

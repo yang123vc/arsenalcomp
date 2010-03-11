@@ -121,7 +121,7 @@ static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, const wchar_t *in
 						}
 						case RGX_BEGIN_I:
 						{
-								if(sp == input_beg)
+								if(sp == input_beg || *(sp-1) == L'\n')
 								{
 										__add_thread(next, RGX_BuildThread(pc + 1, sp, 0, 0), prog);
 								}
@@ -130,7 +130,7 @@ static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, const wchar_t *in
 						}
 						case RGX_END_I:
 						{
-								if(*sp == L'\0')
+								if(*sp == L'\0' || *sp == L'\n')
 								{
 										__add_thread(next, RGX_BuildThread(pc + 1, sp, 0, 0), prog);
 								}
@@ -279,7 +279,7 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 						}
 						case RGX_BEGIN_I:
 						{
-								if(sp == match->input)
+								if(sp == match->input || *(sp-1) == L'\n')
 								{
 										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y), prog);
 								}
@@ -287,7 +287,7 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 						}
 						case RGX_END_I:
 						{
-								if(*sp == L'\0')
+								if(*sp == L'\0' || *sp == L'\n')
 								{
 										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y), prog);
 								}
