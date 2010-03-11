@@ -759,7 +759,15 @@ void buffer_test()
 
 }
 
+void com_timer_test()
+{
+		uint64_t		beg = AR_GetTime_Milliseconds();
+		AR_Sleep(1000);
+		uint64_t		end = AR_GetTime_Milliseconds();
 
+		printf("elapsed == %I64d\r\n", end - beg);
+
+}
 
 void com_test()
 {
@@ -794,7 +802,9 @@ void com_test()
 
 		//escstr_test_buf1();
 
-		buffer_test();
+		//buffer_test();
+
+		com_timer_test();
 
 }
 

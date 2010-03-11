@@ -146,20 +146,21 @@ void			AR_UnLockSpinLock(arSpinLock_t *lock)
 }
 
 
-#if(OS_TYPE == OS_WINDOWS_CE)
-
-static AR_INLINE uint64_t __get_time_microseconds()
-{
-		return 0;
-}
-
-#else
 static AR_INLINE uint64_t __get_time_microseconds()
 {
 		FILETIME ft;
 		ULARGE_INTEGER epoch; // UNIX epoch (1970-01-01 00:00:00) expressed in Windows NT FILETIME
 		ULARGE_INTEGER ts;
+
+#if(OS_TYPE == OS_WINDOWS_CE)
+		{
+				SYSTEMTIME	st;
+				GetSystemTime(&st);
+				SystemTimeToFileTime(&st, &ft);
+		}
+#else
 		GetSystemTimeAsFileTime(&ft);
+#endif
 
 		epoch.LowPart  = 0xD53E8000;
 		epoch.HighPart = 0x019DB1DE;
@@ -168,7 +169,7 @@ static AR_INLINE uint64_t __get_time_microseconds()
 		ts.QuadPart -= epoch.QuadPart;
 		return ts.QuadPart/10;
 }
-#endif
+
 
 uint64_t		AR_GetTime_Microseconds()
 {
@@ -184,5 +185,25 @@ uint64_t		AR_GetTime_Microseconds()
 
 
 AR_NAMESPACE_END
+
+
+
+#if(0)
+
+static AR_INLINE uint64_t __get_time_microseconds()
+{
+		FILETIME ft;
+		ULARGE_INTEGER epoch; // UNIX epoch (1970-01-01 00:00:00) expressed in Windows NT FILETIME
+		ULARGE_INTEGER ts;
+		GetSystemTimeAsFileTime(&ft);
+
+		epoch.LowPart  = 0xD53E8000;
+		epoch.HighPart = 0x019DB1DE;
+		ts.LowPart  = ft.dwLowDateTime;
+		ts.HighPart = ft.dwHighDateTime;
+		ts.QuadPart -= epoch.QuadPart;
+		return ts.QuadPart/10;
+}
+#endif
 
 

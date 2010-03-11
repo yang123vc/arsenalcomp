@@ -74,7 +74,7 @@ void	SN_SetStringByWcs(snString_t	*dest, const wchar_t *str)
 
 int_t	SN_CompStringByString(const snString_t	*l,  const snString_t	*r)
 {
-		AR_ASSERT(l != NULL && r != NULL);
+		AR_ASSERT(l != NULL && r != NULL && l->len > 0 && r->len > 0 && l->data != NULL && r->data != NULL);
 		
 		if(l->len < r->len)
 		{
@@ -86,14 +86,15 @@ int_t	SN_CompStringByString(const snString_t	*l,  const snString_t	*r)
 		{
 				return AR_memcmp(l->data, r->data, l->len);
 		}
-
 }
+
+
 
 int_t	SN_CompStringByData(const snString_t	*l,  const byte_t *data, size_t len)
 {
 		snString_t		other;
 		int_t cmp;
-		AR_ASSERT(l != NULL && data != NULL && len > 0);
+		AR_ASSERT(l != NULL && l->len > 0 && data != NULL && len > 0);
 
 		SN_InitString(&other);
 		SN_SetStringByData(&other, data, len);
@@ -107,7 +108,7 @@ int_t	SN_CompStringByStr(const snString_t		*l,	 const char *str)
 {
 		snString_t		other;
 		int_t cmp;
-		AR_ASSERT(l != NULL && str != NULL);
+		AR_ASSERT(l != NULL && l->len > 0 && str != NULL);
 
 		SN_InitString(&other);
 		SN_SetStringByStr(&other, str);
@@ -120,7 +121,7 @@ int_t	SN_CompStringByWcs(const snString_t		*l,	 const wchar_t *str)
 {
 		snString_t		other;
 		int_t cmp;
-		AR_ASSERT(l != NULL && str != NULL);
+		AR_ASSERT(l != NULL && l->len > 0 && str != NULL);
 
 		SN_InitString(&other);
 		SN_SetStringByWcs(&other, str);
@@ -200,6 +201,8 @@ snObject_t*		SN_GetObjectFromList(snList_t *lst, size_t idx)
 		if(idx >= lst->count)return NULL;
 		return lst->lst[idx];
 }
+
+
 
 
 
@@ -389,7 +392,7 @@ snObject_t*	__get_int(arBuffer_t	*buffer)
 				idx = 1;
 		}
 		
-		while(idx < buf_len && isdigit(pbuf[idx]))
+		while(idx < buf_len && AR_isdigit(pbuf[idx]))
 		{
 				num *= 10;
 				num += (pbuf[idx] - '0');
@@ -427,7 +430,7 @@ snObject_t*		__get_str(arBuffer_t	*buffer)
 		
 		if(pbuf == NULL)return NULL;
 		
-		for(idx = 0; idx < buf_len && isdigit(pbuf[idx]); ++idx)
+		for(idx = 0; idx < buf_len && AR_isdigit(pbuf[idx]); ++idx)
 		{
 				l *= 10;
 				l += (pbuf[idx] - '0');
@@ -467,7 +470,7 @@ snObject_t*		__get_obj(arBuffer_t	*buffer)
 				return __get_list(buffer);
 		default:
 		{
-				if(isdigit(b) || b == '-')
+				if(AR_isdigit(b) || b == '-')
 				{
 						return __get_str(buffer);
 				}else
@@ -528,11 +531,11 @@ snObject_t*		__get_dict(arBuffer_t	*buffer)
 						SN_DestroyObject(key);
 						goto FAILED_POINT;
 				}
-
+RE_INSERT:
 				if(!SN_InsertToDict(&ret->dict, key, val))
 				{
-						SN_DestroyObject(key);
-						SN_DestroyObject(val);
+						SN_RemoveFromDict(&ret->dict, key);
+						goto RE_INSERT;
 				}
 		}
 		AR_EraseFromBuffer(buffer, 1);
@@ -595,7 +598,7 @@ void __put_string(arBuffer_t	*buffer, const snString_t *string)
 		size_t	l;
 		static const char _tbl[] = "0123456789";
 
-		AR_ASSERT(buf != NULL && string != NULL);
+		AR_ASSERT(buf != NULL && string != NULL && string->len > 0 && string->data != NULL);
 		
 		l = string->len;
 		
