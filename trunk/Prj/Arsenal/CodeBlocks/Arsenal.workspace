@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_workspace_file>
 	<Workspace title="Workspace">
-		<Project filename="Arsenal.cbp" active="1" />
-		<Project filename="../../Test/CodeBlocks/Test.cbp">
+		<Project filename="Arsenal.cbp" />
+		<Project filename="../../Test/CodeBlocks/Test.cbp" active="1">
 			<Depends filename="Arsenal.cbp" />
 		</Project>
 	</Workspace>
