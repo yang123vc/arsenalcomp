@@ -31,7 +31,8 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 		va_list save;
 		AR_ASSERT(fmt != NULL && args != NULL);
 		res = 0;
-		save = args;
+		AR_memcpy(&save, &args, sizeof(va_list));
+		//save = args;
 
 		while(*fmt)
 		{
@@ -314,10 +315,11 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 #undef	__MODIFIER_INT64
 
 
+
 int_t			AR_scwprintf(const wchar_t *fmt, ...)
 {
 		int_t len = -1;
-		va_list	arg_ptr = NULL;
+		va_list	arg_ptr;
 		AR_ASSERT(fmt != NULL);
 
 		va_start(arg_ptr, fmt);

@@ -95,7 +95,7 @@
     配置编译器相关的选项
 */
 #if(AR_COMPILER == AR_VC6 || AR_COMPILER == AR_VC9)
-		
+
 		#pragma warning(disable : 4100)
 		#pragma warning(disable : 4127)
 		#pragma warning(disable : 4201)
@@ -121,14 +121,14 @@
 		#if !defined(_CRT_SECURE_NO_WARNINGS)
 				#define _CRT_SECURE_NO_WARNINGS
 		#endif
-		
+
 		#if(AR_COMPILER == AR_VC9 && OS_TYPE != OS_WINDOWS_CE)
 				#if !defined(NDEBUG)
 						#define AR_USE_CRT_ALLOCFUNC
 						#define	AR_DISABLE_CRTSTDLIB
-						#define _CRTDBG_MAP_ALLOC 
-						#include<stdlib.h> 
-						#include<crtdbg.h> 
+						#define _CRTDBG_MAP_ALLOC
+						#include<stdlib.h>
+						#include<crtdbg.h>
 				#else
 
 
@@ -180,7 +180,7 @@
 
 
 #if (AR_COMPILER == AR_VC6 || AR_COMPILER == AR_VC9 || AR_COMPILER == AR_BCB6)
-		
+
 		#if defined(NDEBUG)
 				#define AR_NDEBUG
 		#else
@@ -222,7 +222,7 @@
 				#define AR_FUNC_NAME			__FUNC__
 		#endif
 
-		
+
 
 		#define	AR_DEBUG_BREAK				__debugbreak
 
@@ -258,12 +258,12 @@
 
 		#define AR_FUNC_NAME			__PRETTY_FUNCTION__
 
-		
+
 		#define	AR_DEBUG_BREAK				__builtin_trap
 
 #else
 
-		
+
 		#error "Unknown Compiler not supported!"
 
 
@@ -286,10 +286,10 @@
 
 
 		typedef bool					bool_t;
-		
+
 		#define AR_INLINE				inline
 #else
-		
+
 
 		#define AR_NAMESPACE_BEGIN
 		#define AR_NAMESPACE_END
