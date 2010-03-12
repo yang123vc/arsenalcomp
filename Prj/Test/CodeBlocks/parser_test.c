@@ -22,11 +22,12 @@ static const wchar_t* __load_txt(const char *path)
 
 		//pf = fopen("..\\..\\..\\misc\\book1.gmr", "r");
 
-		pf = fopen(path, "r");
+		pf = fopen(path, "rb");
 
 		AR_ASSERT(pf != NULL);
 		rn = fread((void*)buf, 1, LOAD_TXT_MAX_BUF, pf);
 		fclose(pf);
+
 		AR_ASSERT(rn > 3);
 		//printf("read size == %d\r\n", rn);
 		buf[rn] = 0;
@@ -186,7 +187,7 @@ void parse_code(const cfgConfig_t *cfg, const wchar_t *sources)
 				size_t tok_cnt = 0;
 				uint64_t beg, end;
 
-				beg = AR_GetClock_MS();
+				beg = AR_GetTime_Milliseconds();
 				//DWORD beg, end;
 				//beg = GetTickCount();
 
@@ -215,7 +216,7 @@ void parse_code(const cfgConfig_t *cfg, const wchar_t *sources)
 
 				//end = GetTickCount();
 
-				end = AR_GetClock_MS();
+				end = AR_GetTime_Milliseconds();
 
 				AR_printf(L"elapsed == %lld\r\n", end - beg);
 		}
@@ -276,7 +277,15 @@ void parser_test()
 
 		const wchar_t	*gmr_txt;
 		cfgConfig_t		*cfg;
-		gmr_txt = __load_txt(DEF_PAT_PATH);
+
+		char buf[1024];
+
+		AR_printf(L"%ls\r\n", L"Please enter pattern path!");
+		__gets_chk(buf,1024);
+        getchar();
+    //gmr_txt = __load_txt(DEF_PAT_PATH);
+
+		gmr_txt = __load_txt(buf);
 
 		if(gmr_txt == NULL)
 		{
@@ -354,9 +363,15 @@ void parser_test()
 		//		CFG_ConfigToCode(cfg, str);
 
 #endif
+
 				if(!cfg->has_error)
 				{
-						const wchar_t *input = __load_txt(DEF_SOUR_PATH);
+                        char buf[1024];
+                        AR_printf(L"%ls\r\n", "Please enter sources path");
+                        __gets_chk(buf,1024);
+
+						//const wchar_t *input = __load_txt(DEF_SOUR_PATH);
+						const wchar_t *input = __load_txt(buf);
 						parse_code(cfg, input);
 
 						AR_DEL(input);
@@ -396,7 +411,7 @@ void parser_perf_test()
 				//beg = GetTickCount();
 
 				uint64_t beg ,end;
-				beg = AR_GetClock_MS();
+				beg = AR_GetTime_Milliseconds();
 
 				cfg = CFG_CollectGrammarConfig(gmr_txt, NULL);
 
@@ -405,7 +420,7 @@ void parser_perf_test()
 				if(cfg)CFG_DestroyGrammarConfig(cfg);
 
 				//end = GetTickCount();
-				end = AR_GetClock_MS();
+				end = AR_GetTime_Milliseconds();
 
 				AR_printf(L"parser elapsed == %d\r\n", end - beg);
 
