@@ -90,6 +90,9 @@
 		<Unit filename="../../../Arsenal/Common/algo.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../../../Arsenal/Common/buffer.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="../../../Arsenal/Common/common.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -205,6 +208,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../Arsenal/Tools/grammar_config.h" />
+		<Unit filename="../../../Arsenal/Tools/serializer.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Arsenal/Tools/serializer.h" />
 		<Unit filename="../../../Arsenal/Tools/tools.c">
 			<Option compilerVar="CC" />
 		</Unit>
