@@ -122,6 +122,18 @@
 		#if !defined(_CRT_SECURE_NO_WARNINGS)
 				#define _CRT_SECURE_NO_WARNINGS
 		#endif
+		
+		#if(AR_COMPILER == AR_VC9 && OS_TYPE != OS_WINDOWS_CE)
+				#if !defined(NDEBUG)
+						#define AR_USE_CRT_ALLOCFUNC
+						#define	AR_DISABLE_CRTSTDLIB
+						#define _CRTDBG_MAP_ALLOC 
+						#include<stdlib.h> 
+						#include<crtdbg.h> 
+				#endif
+
+		#endif
+
 #elif(AR_COMPILER == AR_BCB6)
 
                 #pragma warn -8004
@@ -135,61 +147,28 @@
 
 
 
-#if(AR_COMPILER == AR_VC6 || AR_COMPILER == AR_VC9 || AR_COMPILER == AR_BCB6 || AR_COMPILER == AR_GCC3 || AR_COMPILER == AR_GCC4)
-		
-		/*
-		#if defined(AR_DEBUG)
-				#define AR_USE_CRT_ALLOCFUNC	1
-		#endif
-		*/
-		#if(AR_COMPILER == AR_VC9 && OS_TYPE != OS_WINDOWS_CE)
-				#if !defined(NDEBUG)
-						#define AR_USE_CRT_ALLOCFUNC	1
-				#endif
-		#endif
-
-
-		#if defined(AR_USE_CRT_ALLOCFUNC)
-
-		/*	
-				#define _CRTDBG_MAP_ALLOC 
-				#include<crtdbg.h>		
-				MSVC mem check tools "_CrtDumpMemoryLeaks();"
-				_CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-				#define AR_USE_CRT_ALLOCFUNC	1
-		*/
-				#define _CRTDBG_MAP_ALLOC 
-				#include<stdlib.h> 
-				#include<crtdbg.h> 
-
-		#else
-				#include<stdlib.h>
-		#endif
 //////////////////////////////////////
-		
-		
-
-		#include <stdio.h>
-		#include <wchar.h>
-		#include <stddef.h>
-		#include <stdarg.h>
-		#include <limits.h>
-		#include <assert.h>
-		#include <memory.h>
-		#include <string.h>
-		#include <math.h>
-		#include <wctype.h>
-		
-		
-#else
-    #error "Unknow Compiler!"
-
+#if !defined(AR_DISABLE_CRTSTDLIB)
+		#include<stdlib.h>
 #endif
 
+#include <stdio.h>
+#include <wchar.h>
+#include <stddef.h>
+#include <stdarg.h>
+#include <limits.h>
+#include <assert.h>
+#include <memory.h>
+#include <string.h>
+#include <math.h>
+#include <wctype.h>
+		
+		
 
 
-#if(AR_COMPILER == AR_VC6 || AR_COMPILER == AR_VC9 || AR_COMPILER == AR_BCB6)
 
+
+#if defined(OS_FAMILY_WINDOWS)
 		#if(AR_COMPILER == AR_VC6 || OS_TYPE == OS_WINDOWS_CE)
 				struct _RPC_ASYNC_STATE;
 		#endif
@@ -241,7 +220,7 @@
 
 		#define	AR_DEBUG_BREAK				__debugbreak
 
-#elif(AR_COMPILER == AR_GCC3 || AR_COMPILER == AR_GCC4)
+#elif defined(OS_FAMILY_UNIX)
 
 		#if defined(NDEBUG)
 				#define AR_NDEBUG
@@ -278,7 +257,8 @@
 
 #else
 
-
+		
+		#error "Unknown OS not supported!"
 
 
 #endif
@@ -328,18 +308,18 @@
 
 #if(AR_ARCH_VER	== ARCH_32)
 
-#define AR_PLAT_INT_T			AR_INT32_T
-#define AR_PLAT_UINT_T	        AR_UINT32_T
+		#define AR_PLAT_INT_T			AR_INT32_T
+		#define AR_PLAT_UINT_T	        AR_UINT32_T
 
-#define AR_PLAT_INT_FMT			L""
+		#define AR_PLAT_INT_FMT			L""
 
 #elif(AR_ARCH_VER == ARCH_64)
 
 
-#define AR_PLAT_INT_T			AR_INT64_T
-#define AR_PLAT_UINT_T	        AR_UINT64_T
+		#define AR_PLAT_INT_T			AR_INT64_T
+		#define AR_PLAT_UINT_T	        AR_UINT64_T
 
-#define AR_PLAT_INT_FMT			AR_INT_FMT64
+		#define AR_PLAT_INT_FMT			AR_INT_FMT64
 
 #else
 
@@ -481,9 +461,9 @@ typedef void*					ptr_t;
 		#define AR_vswprintf					_vsnwprintf
 
 		#if(OS_TYPE == OS_WINDOWS_CE)
-				#define AR_abort()						exit(3)
+				#define AR_abort()				exit(3)
 		#else
-				#define AR_abort						abort
+				#define AR_abort				abort
 		#endif
 
 
@@ -505,7 +485,7 @@ typedef void*					ptr_t;
 
 #else
 
-#error "Unknow Compiler!"
+		#error "Unknow Compiler!"
 
 #endif
 

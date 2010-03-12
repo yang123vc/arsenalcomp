@@ -26,6 +26,8 @@ static size_t __count(const rgxNode_t *node)
 		case RGX_FINAL_T:
 		case RGX_BEGIN_T:
 		case RGX_END_T:
+		case RGX_LINE_BEGIN_T:
+		case RGX_LINE_END_T:
 		{
 				return 1;
 				break;
@@ -112,6 +114,18 @@ static void __emit_code(rgxProg_t *prog, const rgxNode_t *node)
 		case RGX_END_T:
 		{
 				prog->pc->opcode = RGX_END_I;
+				prog->pc++;/*count = 1*/
+				break;
+		}
+		case RGX_LINE_BEGIN_T:
+		{
+				prog->pc->opcode = RGX_LINE_BEGIN_I;
+				prog->pc++;/*count = 1*/
+				break;
+		}
+		case RGX_LINE_END_T:
+		{
+				prog->pc->opcode = RGX_LINE_END_I;
 				prog->pc++;/*count = 1*/
 				break;
 		}
@@ -366,6 +380,8 @@ void			RGX_ProgToString(const rgxProg_t *prog, arString_t *str)
 				case RGX_LOOKAHEAD_END_I:
 				case RGX_BEGIN_I:
 				case RGX_END_I:
+				case RGX_LINE_BEGIN_I:
+				case RGX_LINE_END_I:
 				case RGX_MATCH_I:
 				{
 						AR_AppendFormatString(str, L"%2d. %ls\r\n", i, RGX_INS_NAME[pc->opcode]);

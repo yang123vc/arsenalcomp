@@ -45,6 +45,8 @@ static void __add_thread(rgxThreadList_t *lst,  rgxThread_t thd, rgxProg_t *prog
 		case RGX_CHAR_I:
 		case RGX_BEGIN_I:
 		case RGX_END_I:
+		case RGX_LINE_BEGIN_I:
+		case RGX_LINE_END_I:
 		case RGX_MATCH_I:
 		{
 				RGX_InsertToThreadList(lst, thd);
@@ -121,7 +123,7 @@ static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, const wchar_t *in
 						}
 						case RGX_BEGIN_I:
 						{
-								if(sp == input_beg || *(sp-1) == L'\n')
+								if(sp == input_beg)
 								{
 										__add_thread(next, RGX_BuildThread(pc + 1, sp, 0, 0), prog);
 								}
@@ -129,6 +131,23 @@ static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, const wchar_t *in
 								break;
 						}
 						case RGX_END_I:
+						{
+								if(*sp == L'\0')
+								{
+										__add_thread(next, RGX_BuildThread(pc + 1, sp, 0, 0), prog);
+								}
+								break;
+						}
+						case RGX_LINE_BEGIN_I:
+						{
+								if(sp == input_beg || *(sp-1) == L'\n')
+								{
+										__add_thread(next, RGX_BuildThread(pc + 1, sp, 0, 0), prog);
+								}
+								--sp;
+								break;
+						}
+						case RGX_LINE_END_I:
 						{
 								if(*sp == L'\0' || *sp == L'\n')
 								{
@@ -279,7 +298,7 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 						}
 						case RGX_BEGIN_I:
 						{
-								if(sp == match->input || *(sp-1) == L'\n')
+								if(sp == match->input)
 								{
 										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y), prog);
 								}
@@ -287,7 +306,23 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 						}
 						case RGX_END_I:
 						{
-								if(*sp == L'\0' || *sp == L'\n')
+								if(*sp == L'\0')
+								{
+										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y), prog);
+								}
+								break;
+						}
+						case RGX_LINE_BEGIN_I:
+						{
+								if(sp == match->input || *(sp-1) == L'\n')
+								{
+										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y), prog);
+								}
+								break;
+						}
+						case RGX_LINE_END_I:
+						{
+								if(*sp == L'\0' || *sp == L'\n') 
 								{
 										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y), prog);
 								}

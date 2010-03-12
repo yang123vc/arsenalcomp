@@ -91,10 +91,17 @@ rgxNode_t*		RGX_CreateNode(rgxNodeType_t type)
 		{
 		case RGX_BEGIN_T:
 		{
-
 				break;
 		}
 		case RGX_END_T:
+		{
+				break;
+		}
+		case RGX_LINE_BEGIN_T:
+		{
+				break;
+		}
+		case RGX_LINE_END_T:
 		{
 				break;
 		}
@@ -157,64 +164,7 @@ rgxNode_t*		RGX_CopyNode(const rgxNode_t *node)
 
 		AR_AtomicInc((volatile int_t*)&node->ref_count);
 
-		/*res->ref_count++;*/
 		return res;
-
-		/*
-		res = NULL;
-		switch(node->type)
-		{
-		case RGX_FINAL_T:
-		{
-				res = RGX_CreateNode(node->type);
-				res->final_val = node->final_val;
-				break;
-		}
-		case RGX_BEGIN_T:
-		case RGX_END_T:
-		{
-				res = RGX_CreateNode(node->type);
-				break;
-		}
-		case RGX_CSET_T:
-		{
-				res = RGX_CreateNode(node->type);
-				res->range = node->range;
-				break;
-		}
-		case RGX_CAT_T:
-		case RGX_BRANCH_T:
-		{
-				res = RGX_CreateNode(node->type);
-				if(node->left) res->left = RGX_CopyNode(node->left);
-				if(node->right) res->right = RGX_CopyNode(node->right);
-				break;
-		}
-		case RGX_STAR_T:
-		case RGX_QUEST_T:
-		case RGX_PLUS_T:
-		case RGX_LOOKAHEAD_T:
-		{
-				AR_ASSERT(node->left != NULL && node->right == NULL);
-				res = RGX_CreateNode(node->type);
-				res->left = RGX_CopyNode(node->left);
-
-				if(node->type == RGX_STAR_T || node->type == RGX_QUEST_T || node->type == RGX_PLUS_T)
-				{
-						res->non_greedy = node->non_greedy;
-				}
-				break;
-		}
-		default:
-		{
-				AR_ASSERT(false);
-				AR_abort();
-				break;
-		}
-		}
-
-		return res;
-		*/
 }
 
 
@@ -230,8 +180,6 @@ void			RGX_DestroyNode(rgxNode_t *node)
 		{
 				return;
 		}
-		
-		/*if(--node->ref_count > 0)return;*/
 
 		
 		
@@ -239,6 +187,8 @@ void			RGX_DestroyNode(rgxNode_t *node)
 		{
 		case RGX_FINAL_T:
 		case RGX_BEGIN_T:
+		case RGX_LINE_BEGIN_T:
+		case RGX_LINE_END_T:
 		case RGX_END_T:
 		{
 				break;
@@ -272,8 +222,6 @@ void			RGX_DestroyNode(rgxNode_t *node)
 				break;
 		}
 		}
-
-		/*AR_DEL(node);*/
 
 		__free_node(node);
 }
@@ -450,6 +398,17 @@ void			RGX_ToString(const rgxNode_t *node, arString_t *str)
 		case RGX_END_T:
 		{
 				AR_AppendString(str, L"$");
+		}
+				break;
+		case RGX_LINE_BEGIN_T:
+		{
+				AR_AppendString(str, L"~");
+		}
+				break;
+		
+		case RGX_LINE_END_T:
+		{
+				AR_AppendString(str, L"@");
 		}
 				break;
 		case RGX_FINAL_T:
