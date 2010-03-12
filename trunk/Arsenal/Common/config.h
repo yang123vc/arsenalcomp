@@ -45,12 +45,11 @@
 
 
 
-
-#define AR_VC6			1006
-#define AR_VC9			1009
-#define AR_BCB6			2006
-#define AR_GCC3			3003
-#define AR_GCC4			3004
+#define AR_VC6			0x1006
+#define AR_VC9			0x1009
+#define AR_BCB6			0x2006
+#define AR_GCC3			0x3003
+#define AR_GCC4			0x3004
 
 
 #if defined(_MSC_VER)
@@ -130,6 +129,9 @@
 						#define _CRTDBG_MAP_ALLOC 
 						#include<stdlib.h> 
 						#include<crtdbg.h> 
+				#else
+
+
 				#endif
 
 		#endif
@@ -162,11 +164,6 @@
 #include <string.h>
 #include <math.h>
 #include <wctype.h>
-		
-		
-
-
-
 
 #if defined(OS_FAMILY_WINDOWS)
 		#if(AR_COMPILER == AR_VC6 || OS_TYPE == OS_WINDOWS_CE)
@@ -174,7 +171,16 @@
 		#endif
 
 		#include <windows.h>
+#elif defined(OS_FAMILY_UNIX)
 
+#else
+		#error "Unknown OS not supported!"
+#endif
+
+
+
+#if (AR_COMPILER == AR_VC6 || AR_COMPILER == AR_VC9 || AR_COMPILER == AR_BCB6)
+		
 		#if defined(NDEBUG)
 				#define AR_NDEBUG
 		#else
@@ -220,7 +226,7 @@
 
 		#define	AR_DEBUG_BREAK				__debugbreak
 
-#elif defined(OS_FAMILY_UNIX)
+#elif(AR_COMPILER == AR_GCC3 || AR_COMPILER == AR_GCC4)
 
 		#if defined(NDEBUG)
 				#define AR_NDEBUG
@@ -258,7 +264,7 @@
 #else
 
 		
-		#error "Unknown OS not supported!"
+		#error "Unknown Compiler not supported!"
 
 
 #endif

@@ -14,12 +14,6 @@
 
 
 
-/*
-#if(AR_COMPILER == AR_VC6 || OS_TYPE == OS_WINDOWS_CE)
-		struct _RPC_ASYNC_STATE;
-#endif
-#include <windows.h>
-*/
 
 #if(OS_TYPE == OS_WINDOWS_CE)
 		#define __VOLATILE__
