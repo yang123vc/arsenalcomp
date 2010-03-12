@@ -347,6 +347,7 @@ static rgxResult_t	__handle_charset(const wchar_t *input)
 {
 		const wchar_t *p; 
 		rgxResult_t		g_res; 
+		rgxCharRange_t range;
 		AR_ASSERT(input != NULL);
 		p = input;
 
@@ -355,30 +356,39 @@ static rgxResult_t	__handle_charset(const wchar_t *input)
 		if(*p == L'[')
 		{
 				return __handle_cset_range(p+1);
+
 		}else if(*p == L'.')
 		{
-				g_res = __handle_charset(L"[^\\u0000]");
+				g_res = __handle_charset(L"[^\\u0000\\n]");
 				AR_ASSERT(g_res.node != NULL && g_res.err.pos == NULL);
 				g_res.next = ++p;
 				return g_res;
-		}else
+		
+		}else if(*p == L'\\')
 		{
-				rgxCharRange_t range;
-				
-				p = __get_charset(p, &range.beg, &g_res.err);
-				
-				if(p == NULL)
+				if(*(p + 1) == L'B' || *(p + 1) == L'E')
 				{
-						return g_res;
-				}else
-				{
-						range.end = range.beg;
-						g_res.node = RGX_CreateNode(RGX_CSET_T);
-						g_res.node->range.beg = range.beg;
-						g_res.node->range.end = range.end;
-						g_res.next = p;
+						++p;
+						g_res.node =  RGX_CreateNode(*p == L'B' ? RGX_LINE_BEGIN_T : RGX_LINE_END_T);
+						g_res.next = ++p;
 						return g_res;
 				}
+		}
+
+
+		p = __get_charset(p, &range.beg, &g_res.err);
+				
+		if(p == NULL)
+		{
+				return g_res;
+		}else
+		{
+				range.end = range.beg;
+				g_res.node = RGX_CreateNode(RGX_CSET_T);
+				g_res.node->range.beg = range.beg;
+				g_res.node->range.end = range.end;
+				g_res.next = p;
+				return g_res;
 		}
 }
 
@@ -617,8 +627,10 @@ static rgxResult_t __handle_factor(const wchar_t *input, const rgxNameSet_t *nam
 				break;
 		}
 		case L'"':
+		{
 				g_res = __handle_quote(p + 1);
 				break;
+		}
 		case L'(':
 		{
 				++p;

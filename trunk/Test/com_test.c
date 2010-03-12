@@ -638,13 +638,13 @@ void escstr_test1()
 				wchar_t buf[1024];
 				if(err.type == AR_ESCSTR_ERR_VALUE)
 				{
-						swprintf(buf, 1024, L"invalid value %I64d\r\n", err.value);
+						AR_swprintf(buf, 1024, L"invalid value %I64d\r\n", err.value);
 				}else if(err.type == AR_ESCSTR_ERR_CHAR)
 				{
-						swprintf(buf, 1024, L"invalid input %ls\r\n", err.pos);
+						AR_swprintf(buf, 1024, L"invalid input %ls\r\n", err.pos);
 				}else
 				{
-						swprintf(buf, 1024, L"%ls\r\n", d);
+						AR_swprintf(buf, 1024, L"%ls\r\n", d);
 				}
 
 				//wprintf(L"string == %ls\r\n", d);
@@ -701,13 +701,13 @@ void escstr_test_buf1()
 						
 				}else if(err.type == AR_ESCSTR_ERR_VALUE)
 				{
-						swprintf(buf, 1024, L"invalid value %I64d\r\n", err.value);
+						AR_swprintf(buf, 1024, L"invalid value %I64d\r\n", err.value);
 				}else if(err.type == AR_ESCSTR_ERR_CHAR)
 				{
-						swprintf(buf, 1024, L"invalid input %ls\r\n", err.pos);
+						AR_swprintf(buf, 1024, L"invalid input %ls\r\n", err.pos);
 				}else
 				{
-						swprintf(buf, 1024, L"%ls\r\n", out);
+						AR_swprintf(buf, 1024, L"%ls\r\n", out);
 				}
 
 				//wprintf(L"string == %ls\r\n", d);

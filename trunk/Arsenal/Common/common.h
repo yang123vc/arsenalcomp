@@ -305,7 +305,7 @@ int_t			AR_scwprintf(const wchar_t *fmt, ...);
 wchar_t*		AR_vtow(const wchar_t *fmt, ...);
 
 
-int_t				AR_wchartodigit(wchar_t ch);
+int_t			AR_wchartodigit(wchar_t ch);
 
 
 

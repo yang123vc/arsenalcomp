@@ -474,8 +474,7 @@ void parser_perf_test()
 				
 
 				//Sleep(500);
-
-				system("cls");
+				//system("cls");
 		}
 		
 		AR_DEL(src_txt);

@@ -337,7 +337,7 @@ bool_t	LEX_GenerateTransTable(lex_t *lex)
 		return (bool_t)(lex->prog_set->count > 0);
 }
 
-#define LEX_MAX_EMPTY_MATCH_CNT 200
+#define LEX_MAX_EMPTY_MATCH_CNT 1
 
 bool_t LEX_Match(lex_t *lex, lexMatch_t *match, lexToken_t *tok)
 {
