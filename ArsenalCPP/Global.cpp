@@ -1,5 +1,5 @@
 //#include "stdafx.h"
-#include "Global.h"
+#include "ArsenalCPP.h"
 
 namespace ArsenalCPP{
 
@@ -26,11 +26,11 @@ Arsenal::Arsenal(ARContext		*ctx)
 {
 		AR_ASSERT(ctx != NULL);
 		
-		arCtx_t		ar_ctx;
+		arInit_t	ar_ctx;
 		m_ctx = ctx;
-		ar_ctx.init.global_io_ctx.ctx = (void*)ctx;
-		ar_ctx.init.global_io_ctx.on_error = __error_func;
-		ar_ctx.init.global_io_ctx.on_print = __print_func;
+		ar_ctx.global_io_ctx.ctx = (void*)ctx;
+		ar_ctx.global_io_ctx.on_error = __error_func;
+		ar_ctx.global_io_ctx.on_print = __print_func;
 		Arsenal_Init(&ar_ctx);
 }
 

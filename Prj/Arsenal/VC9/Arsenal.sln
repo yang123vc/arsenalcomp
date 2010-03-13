@@ -20,6 +20,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GrammarDesigner", "..\..\..
 		{07325191-A3B8-44BD-B3F5-4EA631291A76} = {07325191-A3B8-44BD-B3F5-4EA631291A76}
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{5975F1FD-9F44-4A4C-89AD-7611E754DFDE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		DLLDebug|Itanium = DLLDebug|Itanium
@@ -187,5 +189,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9352D2FE-1361-41BB-92E9-E3EF40FE0312} = {5975F1FD-9F44-4A4C-89AD-7611E754DFDE}
 	EndGlobalSection
 EndGlobal

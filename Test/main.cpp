@@ -59,14 +59,12 @@ int main()
 #endif
 {
 		arInit_t ai = {{tiny_error, tiny_printf, NULL}};
-		arCtx_t ctx;
-		ctx.init = ai;
 
 #if(OS_TYPE != OS_WINDOWS_CE)		
 		printf("current locale == %ls\r\n", setlocale(LC_ALL,NULL));
 #endif
 
-		Arsenal_Init(&ctx);
+		Arsenal_Init(&ai);
 		
 		AR_Test();
 
