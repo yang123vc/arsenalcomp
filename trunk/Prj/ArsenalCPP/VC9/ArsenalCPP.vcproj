@@ -1225,23 +1225,11 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\ArsenalCPP\Global.h"
-			>
-		</File>
-		<File
 			RelativePath="..\..\..\ArsenalCPP\Lexer.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\ArsenalCPP\Lexer.h"
-			>
-		</File>
-		<File
 			RelativePath="..\..\..\ArsenalCPP\Parser.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\ArsenalCPP\Parser.h"
 			>
 		</File>
 	</Files>

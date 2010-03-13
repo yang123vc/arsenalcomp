@@ -19,10 +19,10 @@ AR_NAMESPACE_BEGIN
 
 
 
-void	Arsenal_Init(const arCtx_t *ctx)
+void	Arsenal_Init(const arInit_t *ctx)
 {
 		AR_ASSERT(ctx != NULL);
-		AR_Init(&ctx->init);
+		AR_Init(ctx);
 		LEX_Init();
 		PSR_Init();
 		

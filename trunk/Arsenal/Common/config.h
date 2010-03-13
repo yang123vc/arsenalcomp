@@ -165,6 +165,13 @@
 #include <math.h>
 #include <wctype.h>
 
+
+
+#if defined(_STDINT_H)
+    #define AR_HAS_STDINT
+#endif
+
+
 #if defined(OS_FAMILY_WINDOWS)
 		#if(AR_COMPILER == AR_VC6 || OS_TYPE == OS_WINDOWS_CE)
 				struct _RPC_ASYNC_STATE;
@@ -401,8 +408,7 @@
 
 
 
-
-
+#if !defined(AR_HAS_STDINT)
 
 typedef AR_INT8_T				int8_t;
 
@@ -419,6 +425,8 @@ typedef AR_UINT32_T				uint32_t;
 typedef AR_INT64_T				int64_t;
 
 typedef AR_UINT64_T				uint64_t;
+
+#endif
 
 typedef AR_PLAT_INT_T			int_t;/*跟所在处理器等长的有符号整数*/
 
@@ -484,10 +492,18 @@ typedef void*					ptr_t;
 
 #elif(AR_COMPILER == AR_GCC3 || AR_COMPILER == AR_GCC4)
 
-		#define AR_swprintf						swprintf
-		#define AR_vsprintf						vsprintf
-		#define AR_vswprintf					vswprintf
-		#define AR_abort						abort
+		#if defined(OS_FAMILY_WINDOWS)
+				#define AR_swprintf				_snwprintf
+				#define AR_vsprintf				_vsnprintf
+				#define AR_vswprintf			_vsnwprintf
+		#else
+				#define AR_swprintf						swprintf
+				#define AR_vsprintf						vsprintf
+				#define AR_vswprintf					vswprintf
+		#endif
+				
+		
+		#define AR_abort	            abort	
 
 #else
 

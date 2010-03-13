@@ -32,7 +32,6 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 		AR_ASSERT(fmt != NULL && args != NULL);
 		res = 0;
 		AR_memcpy(&save, &args, sizeof(va_list));
-		//save = args;
 
 		while(*fmt)
 		{
