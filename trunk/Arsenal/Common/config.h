@@ -87,6 +87,9 @@
 #endif
 
 
+#if(__STDC_VERSION__ >= 199901L)
+    #define     AR_HAS_C99_FEATURE
+#endif
 
 
 /**********************************************************±‡“Î∆˜œ‡πÿµƒ≈‰÷√***********************************************************************/
@@ -165,6 +168,9 @@
 #include <math.h>
 #include <wctype.h>
 
+#if defined(AR_HAS_C99_FEATURE)
+		#include <stdint.h>
+#endif
 
 
 #if defined(_STDINT_H)
@@ -244,12 +250,13 @@
 		#define AR_STDCALL		__attribute__((stdcall))
 		#define AR_CCALL		__attribute__((cdecl))
 
-		#define AR_INT8_T		__int8_t
-		#define AR_UINT8_T		__uint8_t
-		#define AR_INT32_T		__int32_t
-		#define AR_UINT32_T		__uint32_t
-		#define AR_INT64_T		__int64_t
-		#define AR_UINT64_T		__uint64_t
+		#define AR_INT8_T		signed char
+		#define AR_UINT8_T		unsigned char
+		#define AR_INT32_T		signed int
+		#define AR_UINT32_T		unsigned int
+		#define AR_INT64_T		signed long long int
+		#define AR_UINT64_T		unsigned long long int
+
 		#define AR_CHAR_T		char
 		#define AR_UCHAR_T		unsigned char
 		#define AR_BYTE_T		AR_UINT8_T
