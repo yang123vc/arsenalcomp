@@ -1,22 +1,22 @@
 # depslib dependency file v1.0
-1265117613 source:/root/Desktop/Programming/Arsenal/Prj/Test/CodeBlocks/main.c
+1268520498 source:/root/Desktop/Programming/Arsenal/Prj/Test/CodeBlocks/main.c
 	"test.h"
 	<iostream>
 
 1265117613 /root/Desktop/Programming/Arsenal/Prj/Test/CodeBlocks/test.h
 	"../../../Arsenal/Arsenal.h"
 
-1265117594 /root/Desktop/Programming/Arsenal/Arsenal/Arsenal.h
+1268520217 /root/Desktop/Programming/Arsenal/Arsenal/Arsenal.h
 	"./Common/common.h"
 	"./Lex/lex.h"
 	"./Parser/grammar.h"
 	"./Parser/parser.h"
 	"./Tools/tools.h"
 
-1268419348 /root/Desktop/Programming/Arsenal/Arsenal/Common/common.h
+1268520217 /root/Desktop/Programming/Arsenal/Arsenal/Common/common.h
 	"config.h"
 
-1268419348 /root/Desktop/Programming/Arsenal/Arsenal/Common/config.h
+1268520217 /root/Desktop/Programming/Arsenal/Arsenal/Common/config.h
 	"platform.h"
 	<stdlib.h>
 	<crtdbg.h>
@@ -60,13 +60,16 @@
 	"../Parser/parser.h"
 	"../Lex/lex.h"
 
-1265117613 source:/root/Desktop/Programming/Arsenal/Prj/Test/CodeBlocks/test.c
+1268520068 source:/root/Desktop/Programming/Arsenal/Prj/Test/CodeBlocks/test.c
 	"test.h"
 
-1268420445 source:/root/Desktop/Programming/Arsenal/Prj/Test/CodeBlocks/parser_test.c
+1268421499 source:/root/Desktop/Programming/Arsenal/Prj/Test/CodeBlocks/parser_test.c
 	<locale.h>
 	"test.h"
 
 1268419348 /root/Desktop/Programming/Arsenal/Arsenal/Tools/serializer.h
 	"../Common/common.h"
+
+1268520506 source:/root/Desktop/Programming/Arsenal/Prj/Test/CodeBlocks/com_test.c
+	"test.h"
 

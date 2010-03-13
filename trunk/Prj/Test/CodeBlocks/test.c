@@ -5,11 +5,14 @@
 AR_NAMESPACE_BEGIN
 
 
-extern     parser_test();
+extern     void parser_test();
+
+extern     void com_test();
 
 void AR_Test()
 {
-    parser_test();
+    //parser_test();
+    com_test();
 
 }
 

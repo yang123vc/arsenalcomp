@@ -1,12 +1,12 @@
 /*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
- * 
+ *
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.It is provided "as is" without express 
+ * in supporting documentation.It is provided "as is" without express
  * or implied warranty.
  *
  */
@@ -33,7 +33,7 @@ common.h -- misc founctions used in Arsenal
 
 
 /*******************************************************************************init********************************/
- 
+
 typedef void	(AR_STDCALL *AR_error_func_t)(int_t level, const wchar_t *msg, void *ctx);
 typedef void	(AR_STDCALL *AR_print_func_t)(const wchar_t *msg, void *ctx);
 
@@ -322,7 +322,7 @@ uint_t			AR_wcshash_n(const wchar_t *str, size_t n);
 
 typedef struct __escape_string_error_tag
 {
-		int_t			type;			
+		int_t			type;
 		const wchar_t	*pos;
 		uint64_t		value;
 }arEscStrErr_t;
@@ -412,9 +412,19 @@ void			AR_UnInitThread();
 int_t			AR_AtomicInc(volatile int_t *dest);
 int_t			AR_AtomicDec(volatile int_t *dest);
 
+
 #define			AR_MAXSPIN_COUNT		100000
 
-typedef			volatile int		arSpinLock_t;
+#if defined(OS_FAMILY_UNIX)
+
+    typedef			pthread_spinlock_t	        arSpinLock_t;
+
+#elif defined(OS_FAMILY_WINDOWS)
+
+    typedef         volatile int_t               arSpinLock_t;
+#else
+
+#endif
 
 void			AR_InitSpinLock(arSpinLock_t *lock);
 void			AR_UnInitSpinLock(arSpinLock_t *lock);
