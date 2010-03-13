@@ -92,6 +92,13 @@
 #endif
 
 
+
+#if(__STDC_VERSION__ >= 199901L)
+    #define     AR_HAS_C99_FEATURE
+#endif
+
+
+
 /**********************************************************±‡“Î∆˜œ‡πÿµƒ≈‰÷√***********************************************************************/
 
 /*
@@ -169,9 +176,12 @@
 #include <wctype.h>
 
 #if defined(AR_HAS_C99_FEATURE)
-		#include <stdint.h>
+    #include <stdint.h>
 #endif
 
+#if defined(AR_HAS_C99_FEATURE)
+		#include <stdint.h>
+#endif
 
 #if defined(_STDINT_H)
     #define AR_HAS_STDINT
@@ -185,7 +195,9 @@
 
 		#include <windows.h>
 #elif defined(OS_FAMILY_UNIX)
-
+        #include <unistd.h>
+        #include <pthread.h>
+        #include <sys/select.h>
 #else
 		#error "Unknown OS not supported!"
 #endif
@@ -508,9 +520,9 @@ typedef void*					ptr_t;
 				#define AR_vsprintf						vsprintf
 				#define AR_vswprintf					vswprintf
 		#endif
-				
-		
-		#define AR_abort	            abort	
+
+
+		#define AR_abort	            abort
 
 #else
 
