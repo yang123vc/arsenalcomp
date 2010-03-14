@@ -35,7 +35,7 @@ L"keyword_lhd = [A-Z_a-z0-9]"
 };
 
 
-static struct {const wchar_t *name; size_t tokval; size_t lex_prec; const wchar_t *regex; bool_t skip; }__g_term_pattern[] =  {
+static struct {const wchar_t *name; size_t tokval; size_t lex_prec; const wchar_t *regex; ar_bool_t skip; }__g_term_pattern[] =  {
 {NULL, 256, 1, L"{delim}+|{comment}+|{comment_line}+", true},
 {L"CHAR_CONSTANT", 257, 0, L"{char_literal}", false},
 {L"STRING_LITERAL", 258, 0, L"{string_literal}", false},

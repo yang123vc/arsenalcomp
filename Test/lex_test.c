@@ -9,7 +9,7 @@ AR_NAMESPACE_BEGIN
 
 
 #if(0)
-void charsetShowChar(wchar_t c, bool_t is_digit)
+void charsetShowChar(wchar_t c, ar_bool_t is_digit)
 {
 		const wchar_t *fmt;
 
@@ -43,7 +43,7 @@ void charsetShowChar(wchar_t c, bool_t is_digit)
 		}
 }
 
-void charsetShow(const lexCharSet_t	*cset, bool_t is_digit)
+void charsetShow(const lexCharSet_t	*cset, ar_bool_t is_digit)
 {
 		const lexCharRange_t	*curr;
 
@@ -471,7 +471,7 @@ void lex_test20()
 		lexToken_t tok;
 		lexMatch_t match;
 		size_t i;
-		bool_t  is_ok;
+		ar_bool_t  is_ok;
 		lex = LEX_Create(NULL);
 		LEX_InitMatch(&match,L"int int_x" );
 		
@@ -551,10 +551,26 @@ void lex_test20()
 }
 
 
+void lex_skip_test()
+{
+		lexMatch_t		match;
+		LEX_InitMatch(&match,L"struct {\r\n int x; int y;\r\n}test_t;" );
+		LEX_SkipTo(&match, L"}");
+		AR_printf(L"line = %d : col = %d : next = %ls\r\n", match.line, match.col, match.next);
+
+		LEX_SkipTo(&match, L"test_t");
+		AR_printf(L"line = %d : col = %d : next = %ls\r\n", match.line, match.col, match.next);
+
+		LEX_SkipTo(&match, L"ccc");
+		AR_printf(L"line = %d : col = %d : next = %ls\r\n", match.line, match.col, match.next);
+
+		
+}
+
 void lex_test()
 {
-
-		lex_test20();
+		lex_skip_test();
+		//lex_test20();
 }
 
 AR_NAMESPACE_END

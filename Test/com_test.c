@@ -312,11 +312,11 @@ void com_vscwprintf_test2()
 typedef struct __ac_automaton_tag		arACAutomaton_t;
 arACAutomaton_t*	AR_CreateACAutomaton();
 void				AR_DestroyACAutomaton(arACAutomaton_t *atm);
-bool_t				AR_InsertToACAutomaton(arACAutomaton_t *atm, const wchar_t *str, void *val);
-bool_t				AR_RemoveFromACAutomaton(arACAutomaton_t *atm, const wchar_t *str);
-bool_t				AR_BuildACAutomaton(arACAutomaton_t *atm);
+ar_bool_t				AR_InsertToACAutomaton(arACAutomaton_t *atm, const wchar_t *str, void *val);
+ar_bool_t				AR_RemoveFromACAutomaton(arACAutomaton_t *atm, const wchar_t *str);
+ar_bool_t				AR_BuildACAutomaton(arACAutomaton_t *atm);
 
-bool_t				AR_FindFromACAutomaton(arACAutomaton_t *atm, const wchar_t *key, bool_t sub_str);
+ar_bool_t				AR_FindFromACAutomaton(arACAutomaton_t *atm, const wchar_t *key, ar_bool_t sub_str);
 
 
 
@@ -736,21 +736,21 @@ void buffer_test()
 		{
 				size_t rn = fread(buf, sizeof(ar_byte_t), sizeof(buf), f);
 				if(rn == 0)break;
-				AR_InsertToBuffer(buffer, buf, rn);
+				AR_InsertBuffer(buffer, buf, rn);
 
-				if(AR_GetBufferReadableLength(buffer) > 4096)
+				if(AR_GetBufferAvailable(buffer) > 4096)
 				{
-						fwrite((void*)AR_GetBufferReadableData(buffer), 1, 4096, tmp);
-						AR_EraseFromBuffer(buffer, 4096);
+						fwrite((void*)AR_GetBufferData(buffer), 1, 4096, tmp);
+						AR_EraseBuffer(buffer, 4096);
 				}
 		}
 
 		fclose(f);
 
-		if(AR_GetBufferReadableLength(buffer) > 0)
+		if(AR_GetBufferAvailable(buffer) > 0)
 		{
-				fwrite((void*)AR_GetBufferReadableData(buffer), 1, AR_GetBufferReadableLength(buffer), tmp);
-				AR_EraseFromBuffer(buffer, AR_GetBufferReadableLength(buffer));
+				fwrite((void*)AR_GetBufferData(buffer), 1, AR_GetBufferAvailable(buffer), tmp);
+				AR_EraseBuffer(buffer, AR_GetBufferAvailable(buffer));
 		}
 
 		fclose(tmp);
@@ -775,7 +775,15 @@ void com_str_test_vscwprintf()
 {
 		ar_int_t l = AR_scwprintf(L"%C : %C : %C : %C\r\n", L'a', L'b', L'c', L'd');
 		printf("l == %d\r\n", l);
+}
 
+void com_str_test_cmp()
+{
+		printf("AR_stricmp == %d\r\n", AR_stricmp("abcdef", "abcdefg"));
+		printf("AR_strnicmp == %d\r\n", AR_strnicmp("abcdef", "abcdefg", 3));
+
+		printf("AR_wcsicmp == %d\r\n", AR_wcsicmp(L"abcdef", L"abcdefg"));
+		printf("AR_wcsnicmp == %d\r\n", AR_wcsnicmp(L"abcdef", L"abcdefg", 3));
 }
 
 void com_test()
@@ -816,6 +824,9 @@ void com_test()
 		//com_timer_test();
 
 		//com_str_test_vscwprintf();
+
+
+		com_str_test_cmp();
 
 }
 

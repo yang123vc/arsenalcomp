@@ -5,7 +5,11 @@ EXPORTS
 ;Arsenal
 
 Arsenal_Init			
-Arsenal_UnInit			
+Arsenal_UnInit
+
+
+;Common
+
 
 AR_global_ioctx
 
@@ -14,6 +18,20 @@ AR_printf
 
 AR_error_ctx
 AR_printf_ctx
+
+
+
+AR_malloc
+AR_calloc
+AR_realloc
+AR_free
+AR_memswap
+
+
+AR_stricmp
+AR_strnicmp
+AR_wcsicmp
+AR_wcsnicmp
 
 
 AR_CreateString			
@@ -31,21 +49,23 @@ AR_GetLengthString
 AR_CreateBuffer
 AR_DestroyBuffer
 AR_ClearBuffer
-AR_AllocFromBuffer
-AR_InsertToBuffer
-AR_EraseFromBuffer
+AR_AllocBuffer
+AR_InsertBuffer
+AR_EraseBuffer
 AR_GetBufferCapacity
 AR_ReserveBuffer
-AR_GetBufferReadableData
-AR_GetBufferReadableLength
+AR_GetBufferData
+AR_GetBufferAvailable
 
 
-
-
-;common
-;AR_qsort
+AR_qsort
 AR_escstr_to_str_buf
 AR_str_to_escstr_buf
+
+
+
+
+
 
 
 ;Lex
@@ -142,3 +162,4 @@ PSR_DestroyParserFirstFollowView
 CFG_CollectGrammarConfig
 CFG_DestroyGrammarConfig
 CFG_ConfigToCode
+

@@ -22,18 +22,18 @@ void sn_test_int()
 {
 		arBuffer_t		*buf = AR_CreateBuffer(0);
 		const char *str = "19840120e";
-		AR_InsertToBuffer(buf, (const ar_byte_t*)str, strlen(str));
+		AR_InsertBuffer(buf, (const ar_byte_t*)str, strlen(str));
 		snObject_t *obj = __get_int(buf);
-		printf("remain buf == %d\r\n", AR_GetBufferReadableLength(buf));
+		printf("remain buf == %d\r\n", AR_GetBufferAvailable(buf));
 }
 
 void sn_test_str()
 {
 		arBuffer_t		*buf = AR_CreateBuffer(0);
 		const char *str = ":abeeeee";
-		AR_InsertToBuffer(buf, (const ar_byte_t*)str, strlen(str));
+		AR_InsertBuffer(buf, (const ar_byte_t*)str, strlen(str));
 		snObject_t *obj = __get_str(buf);
-		printf("remain buf == %d\r\n", AR_GetBufferReadableLength(buf));
+		printf("remain buf == %d\r\n", AR_GetBufferAvailable(buf));
 
 }
 
@@ -42,10 +42,10 @@ void sn_test_list()
 {
 		arBuffer_t		*buf = AR_CreateBuffer(0);
 		const char *str = "2:abi3e2:dei888ee";
-		AR_InsertToBuffer(buf, (const ar_byte_t*)str, strlen(str));
+		AR_InsertBuffer(buf, (const ar_byte_t*)str, strlen(str));
 
 		snObject_t *obj = __get_list(buf);
-		printf("remain buf == %d\r\n", AR_GetBufferReadableLength(buf));
+		printf("remain buf == %d\r\n", AR_GetBufferAvailable(buf));
 }
 
 
@@ -53,9 +53,9 @@ void sn_test_dict()
 {
 		arBuffer_t		*buf = AR_CreateBuffer(0);
 		const char *str = "2:abi3e2:dei888ee";
-		AR_InsertToBuffer(buf, (const ar_byte_t*)str, strlen(str));
+		AR_InsertBuffer(buf, (const ar_byte_t*)str, strlen(str));
 		snObject_t *obj = __get_dict(buf);
-		printf("remain buf == %d\r\n", AR_GetBufferReadableLength(buf));
+		printf("remain buf == %d\r\n", AR_GetBufferAvailable(buf));
 }
 
 
@@ -63,9 +63,9 @@ void sn_test_obj()
 {
 		arBuffer_t		*buf = AR_CreateBuffer(0);
 		const char *str = "d2:abi3e2:dei888ee";
-		AR_InsertToBuffer(buf, (const ar_byte_t*)str, strlen(str));
+		AR_InsertBuffer(buf, (const ar_byte_t*)str, strlen(str));
 		snObject_t *obj = SN_GetObject(buf);
-		printf("remain buf == %d\r\n", AR_GetBufferReadableLength(buf));
+		printf("remain buf == %d\r\n", AR_GetBufferAvailable(buf));
 
 		AR_DestroyBuffer(buf);
 		SN_DestroyObject(obj);
@@ -123,7 +123,7 @@ void sn_test_torrent()
 		{
 				size_t rn = fread(buf, sizeof(ar_byte_t), sizeof(buf), f);
 				if(rn == 0)break;
-				AR_InsertToBuffer(buffer, buf, rn);
+				AR_InsertBuffer(buffer, buf, rn);
 		}
 		fclose(f);
 		
@@ -135,7 +135,7 @@ void sn_test_torrent()
 		FILE *new_f = fopen("d:\\temp\\new.torrent", "wb");
 		assert(new_f != NULL);
 
-		fwrite(AR_GetBufferReadableData(buffer), sizeof(ar_byte_t), AR_GetBufferReadableLength(buffer), new_f);
+		fwrite(AR_GetBufferData(buffer), sizeof(ar_byte_t), AR_GetBufferAvailable(buffer), new_f);
 
 		fclose(new_f);
 
@@ -160,7 +160,7 @@ void sn_test_path()
 		{
 				size_t rn = fread(buf, sizeof(ar_byte_t), sizeof(buf), f);
 				if(rn == 0)break;
-				AR_InsertToBuffer(buffer, buf, rn);
+				AR_InsertBuffer(buffer, buf, rn);
 		}
 		fclose(f);
 		
