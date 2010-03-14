@@ -65,16 +65,16 @@ const psrSymb_t*		PSR_CopyNewSymb(const psrSymb_t *sour)
 		/*
 		for(;;)
 		{
-				volatile int_t tmp = sour->ref_count;
+				volatile ar_int_t tmp = sour->ref_count;
 				AR_ASSERT(tmp >= 1);
 				
-				if(AR_CompExchange((uint_t*)&sour->ref_count, tmp+1, tmp) == (uint_t)tmp)
+				if(AR_CompExchange((ar_uint_t*)&sour->ref_count, tmp+1, tmp) == (ar_uint_t)tmp)
 				{
 						break;
 				}
 		}
 		*/
-		AR_AtomicInc((volatile int_t*)&sour->ref_count);
+		AR_AtomicInc((volatile ar_int_t*)&sour->ref_count);
 		return sour;
 
 }
@@ -88,10 +88,10 @@ void			PSR_DestroySymb(const psrSymb_t *symb)
 		/*
 		for(;;)
 		{
-				volatile int_t tmp = symb->ref_count;
+				volatile ar_int_t tmp = symb->ref_count;
 				AR_ASSERT(tmp >= 1);
 				
-				if(AR_CompExchange((uint_t*)&symb->ref_count, tmp-1, tmp) == (uint_t)tmp)
+				if(AR_CompExchange((ar_uint_t*)&symb->ref_count, tmp-1, tmp) == (ar_uint_t)tmp)
 				{
 						if(tmp == 1)
 						{
@@ -102,7 +102,7 @@ void			PSR_DestroySymb(const psrSymb_t *symb)
 		}
 		*/
 
-		if(AR_AtomicDec((volatile int_t*)&symb->ref_count) == 0)
+		if(AR_AtomicDec((volatile ar_int_t*)&symb->ref_count) == 0)
 		{
 				AR_DEL((psrSymb_t*)symb);
 		}
@@ -139,9 +139,9 @@ void			PSR_DestroySymb(const psrSymb_t *symb)
 
 
 #if(0)
-int_t					PSR_CompSymb(const psrSymb_t *l, const psrSymb_t *r)
+ar_int_t					PSR_CompSymb(const psrSymb_t *l, const psrSymb_t *r)
 {
-		int_t cmp;
+		ar_int_t cmp;
 		AR_ASSERT(l != NULL && r != NULL);
 		if(l == r)return 0;
 		cmp = AR_CMP(l->type, r->type);
@@ -155,19 +155,19 @@ int_t					PSR_CompSymb(const psrSymb_t *l, const psrSymb_t *r)
 }
 #endif
 
-int_t					PSR_CompSymb(const psrSymb_t *l, const psrSymb_t *r)
+ar_int_t					PSR_CompSymb(const psrSymb_t *l, const psrSymb_t *r)
 {
-		int_t cmp;
+		ar_int_t cmp;
 		AR_ASSERT(l != NULL && r != NULL);
 		if(l == r)return 0;
 
-		cmp = (int_t)l->type - (int_t)r->type;
+		cmp = (ar_int_t)l->type - (ar_int_t)r->type;
 		if(cmp != 0) return cmp;
 
 		cmp = l->hash_code - r->hash_code;
 		if(cmp != 0)return cmp;
 
-		cmp = (int_t)l->name - (int_t)r->name;
+		cmp = (ar_int_t)l->name - (ar_int_t)r->name;
 		return cmp;
 		
 }
@@ -250,11 +250,11 @@ const psrSymb_t*	PSR_IndexOfSymbList(const psrSymbList_t *symb_lst, size_t idx)
 		}
 }
 
-int_t				PSR_FindFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t* symb)
+ar_int_t				PSR_FindFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t* symb)
 {
-		int_t i;
+		ar_int_t i;
 
-		for(i = 0; i < (int_t)symb_lst->count; ++i)
+		for(i = 0; i < (ar_int_t)symb_lst->count; ++i)
 		{
 				if(PSR_CompSymb(symb_lst->lst[i], symb) == 0)return i;
 		}
@@ -263,9 +263,9 @@ int_t				PSR_FindFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t* sy
 
 
 
-int_t				PSR_BSearchFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t* symb)
+ar_int_t				PSR_BSearchFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t* symb)
 {
-		int_t l,r,m,cmp;
+		ar_int_t l,r,m,cmp;
 		AR_ASSERT(symb_lst != NULL && symb != NULL);
 
 
@@ -306,7 +306,7 @@ static int __comp_symb(const void *left, const void *right)
 
 */
 
-static int_t __comp_symb(const void *left, const void *right)
+static ar_int_t __comp_symb(const void *left, const void *right)
 {
 		const psrSymb_t *l,*r;
 		l = *(const psrSymb_t**)left;

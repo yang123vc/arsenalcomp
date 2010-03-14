@@ -100,7 +100,7 @@ void					PSR_ResetGrammarParseContext(psrGrammar_t *grammar, const psrCtx_t *io_
 const psrCtx_t*			PSR_GetGrammarContext(const psrGrammar_t *grammar);
 const arIOCtx_t*		PSR_GetGrammarIOContext(const psrGrammar_t *grammar);
 
-int_t					PSR_IndexOfGrammar(const psrGrammar_t *grammar, const psrRule_t *rule);
+ar_int_t					PSR_IndexOfGrammar(const psrGrammar_t *grammar, const psrRule_t *rule);
 
 #define					PSR_GetRuleOfGrammar(_gmr, _idx) ((_gmr)->rules[(_idx)])
 

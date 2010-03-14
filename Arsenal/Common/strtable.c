@@ -111,7 +111,7 @@ const wchar_t*			AR_GetStringN(arStringTable_t *tbl, const wchar_t *str, size_t 
 #if(0)
 static const wchar_t *__ctbl = L"0123456789ABCDEF";
 
-const wchar_t*			AR_GetStringInt(arStringTable_t *tbl, int64_t num, size_t radix)
+const wchar_t*			AR_GetStringInt(arStringTable_t *tbl, ar_int64_t num, size_t radix)
 {
 		wchar_t buf[100];
 		wchar_t *p;
@@ -137,7 +137,7 @@ const wchar_t*			AR_GetStringInt(arStringTable_t *tbl, int64_t num, size_t radix
 		return AR_GetString(tbl, p);
 }
 
-const wchar_t*			AR_GetStringUInt(arStringTable_t *tbl, uint64_t num, size_t radix)
+const wchar_t*			AR_GetStringUInt(arStringTable_t *tbl, ar_uint64_t num, size_t radix)
 {
 		wchar_t buf[100];
 		wchar_t *p;
@@ -155,7 +155,7 @@ const wchar_t*			AR_GetStringUInt(arStringTable_t *tbl, uint64_t num, size_t rad
 }
 #endif
 
-const wchar_t*			AR_GetStringInt(arStringTable_t *tbl, int64_t num, size_t radix)
+const wchar_t*			AR_GetStringInt(arStringTable_t *tbl, ar_int64_t num, size_t radix)
 {
 		wchar_t buf[1024];
 
@@ -164,7 +164,7 @@ const wchar_t*			AR_GetStringInt(arStringTable_t *tbl, int64_t num, size_t radix
 		return AR_GetString(tbl, buf);
 }
 
-const wchar_t*			AR_GetStringUInt(arStringTable_t *tbl, uint64_t num, size_t radix)
+const wchar_t*			AR_GetStringUInt(arStringTable_t *tbl, ar_uint64_t num, size_t radix)
 {
 		wchar_t buf[1024];
 		

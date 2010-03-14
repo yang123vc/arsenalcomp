@@ -119,12 +119,12 @@ void			PSR_InsertToStateSet(lalrStateSet_t *set, lalrState_t *state)
 		set->set[set->count++] = state;
 }
 
-int_t			PSR_IndexOfStateSet(const lalrStateSet_t *set, const lalrState_t *state)
+ar_int_t			PSR_IndexOfStateSet(const lalrStateSet_t *set, const lalrState_t *state)
 {
-		int_t i;
+		ar_int_t i;
 		AR_ASSERT(set != NULL && state != NULL);
 
-		for(i = 0; i < (int_t)set->count; ++i)
+		for(i = 0; i < (ar_int_t)set->count; ++i)
 		{
 				if(set->set[i] == state)return i;
 		}

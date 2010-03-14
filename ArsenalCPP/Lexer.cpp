@@ -6,7 +6,7 @@
 namespace ArsenalCPP{
 
 
-static void AR_STDCALL __error_func(int_t level, const wchar_t *msg, void *ctx)
+static void AR_STDCALL __error_func(ar_int_t level, const wchar_t *msg, void *ctx)
 {
 		ARContext		*context = (ARContext*)ctx;
 		

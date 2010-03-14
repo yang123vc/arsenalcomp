@@ -40,7 +40,7 @@ protected:
 class ARAPI ARContext : private NonCopyable
 {
 public:
-		virtual void OnError(int_t level, const wchar_t *msg) = 0;	
+		virtual void OnError(ar_int_t level, const wchar_t *msg) = 0;	
 		virtual void OnPrint(const wchar_t *msg) = 0;
 		virtual ~ARContext() = 0{}
 };
@@ -72,7 +72,7 @@ public:
 class ARAPI DummyContext : public ARContext
 {
 public:
-		virtual void OnError(int_t level, const wchar_t *msg)
+		virtual void OnError(ar_int_t level, const wchar_t *msg)
 		{
 
 		}

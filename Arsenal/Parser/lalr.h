@@ -50,7 +50,7 @@ void					PSR_UnionConfigList(lalrConfigList_t *l, lalrConfigList_t *r);
 void					PSR_CopyConfigList(lalrConfigList_t *l, const lalrConfigList_t *r);
 
 void					PSR_SortConfigList(lalrConfigList_t *l);
-int_t					PSR_CompConfigList(const lalrConfigList_t *l, const lalrConfigList_t *r);
+ar_int_t					PSR_CompConfigList(const lalrConfigList_t *l, const lalrConfigList_t *r);
 
 lalrConfig_t*			PSR_FindFromConfigList(lalrConfigList_t *lst, const psrRule_t *rule, size_t delim);
 lalrConfig_t*			PSR_InsertToConfigListByValue(lalrConfigList_t *lst, const psrRule_t *rule, size_t delim);
@@ -75,7 +75,7 @@ struct __lalr_config_tag
 
 void	PSR_InitConfig(lalrConfig_t *config, const psrRule_t *rule, size_t delim);
 void	PSR_UnInitConfig(lalrConfig_t *config);
-int_t	PSR_CompConfig(const lalrConfig_t *l, const lalrConfig_t *r);
+ar_int_t	PSR_CompConfig(const lalrConfig_t *l, const lalrConfig_t *r);
 
 
 
@@ -142,7 +142,7 @@ void			PSR_InsertToStateSet(lalrStateSet_t *set, lalrState_t *state);
 
 void			PSR_CollectState(lalrStateSet_t *empty_set, lalrState_t *start);
 lalrState_t*	PSR_FindStateByBasis(lalrStateSet_t *set, lalrConfigList_t *basis);
-int_t			PSR_IndexOfStateSet(const lalrStateSet_t *set, const lalrState_t *state);
+ar_int_t			PSR_IndexOfStateSet(const lalrStateSet_t *set, const lalrState_t *state);
 
 
 
