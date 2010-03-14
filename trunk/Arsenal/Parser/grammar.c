@@ -22,7 +22,7 @@ void			PSR_UnInitTermInfoList(psrTermInfoList_t	*lst);
 void			PSR_ClearTermInfoList(psrTermInfoList_t	*lst);
 psrTermInfo_t*	PSR_FindTermByName(psrTermInfoList_t	*lst, const wchar_t *name);
 psrTermInfo_t*	PSR_FindTermByValue(psrTermInfoList_t	*lst, size_t val);
-bool_t			PSR_InsertToTermInfoList(psrTermInfoList_t	*lst, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f);
+ar_bool_t			PSR_InsertToTermInfoList(psrTermInfoList_t	*lst, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f);
 */
 
 
@@ -92,7 +92,7 @@ psrTermInfo_t*	PSR_FindTermByValue(psrTermInfoList_t	*lst, size_t val)
 }
 
 
-bool_t			PSR_InsertToTermInfoList(psrTermInfoList_t	*lst, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f)
+ar_bool_t			PSR_InsertToTermInfoList(psrTermInfoList_t	*lst, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f)
 {
 		psrTermInfo_t *info;
 		AR_ASSERT(lst != NULL && name != NULL);
@@ -125,7 +125,7 @@ psrRule_t* PSR_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, cons
 {
 		psrRule_t		*rule;
 		size_t i;
-		bool_t			inerr;
+		ar_bool_t			inerr;
 		const wchar_t*  right_term;
 		AR_ASSERT(head != NULL && body != NULL && term_list != NULL);
 		
@@ -333,7 +333,7 @@ psrRule_t*		PSR_CopyNewRule(const psrRule_t *rule)
 
 }
 
-bool_t			PSR_IsEmptyRule(const psrRule_t *rule)
+ar_bool_t			PSR_IsEmptyRule(const psrRule_t *rule)
 {
 		AR_ASSERT(rule != NULL);
 
@@ -515,7 +515,7 @@ const arIOCtx_t*		PSR_GetGrammarIOContext(const psrGrammar_t *grammar)
 }
 
 
-bool_t					PSR_InsertTerm(psrGrammar_t *grammar, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f)
+ar_bool_t					PSR_InsertTerm(psrGrammar_t *grammar, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f)
 {
 		AR_ASSERT(grammar != NULL && name != NULL);
 		
@@ -548,7 +548,7 @@ bool_t					PSR_InsertTerm(psrGrammar_t *grammar, const wchar_t *name, size_t val
 		return PSR_InsertToTermInfoList(&grammar->term_list, name, val, assoc, prec, leaf_f);
 }
 
-bool_t					PSR_InsertRule(psrGrammar_t *grammar, psrRule_t *rule)
+ar_bool_t					PSR_InsertRule(psrGrammar_t *grammar, psrRule_t *rule)
 {
 		size_t i;
 		AR_ASSERT(grammar != NULL && rule != NULL);
@@ -579,7 +579,7 @@ bool_t					PSR_InsertRule(psrGrammar_t *grammar, psrRule_t *rule)
 		return true;
 }
 
-bool_t					PSR_InsertRuleByPartStr(psrGrammar_t *grammar, const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, size_t auto_ret)
+ar_bool_t					PSR_InsertRuleByPartStr(psrGrammar_t *grammar, const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, size_t auto_ret)
 {
 		psrRule_t		*rule;
 		AR_ASSERT(grammar != NULL && head != NULL && body != NULL);
@@ -592,7 +592,7 @@ bool_t					PSR_InsertRuleByPartStr(psrGrammar_t *grammar, const psrSymb_t *head,
 }
 
 
-bool_t					PSR_InsertRuleByStr(psrGrammar_t *grammar, const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, size_t auto_ret)
+ar_bool_t					PSR_InsertRuleByStr(psrGrammar_t *grammar, const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, size_t auto_ret)
 {
 
 		psrRule_t		*rule;
@@ -653,10 +653,10 @@ const psrSymbList_t* PSR_GetSymbList(const psrGrammar_t *grammar)
 
 
 /*效率成为问题时我才会考虑改这没什么用的东西！*/
-static bool_t __detect_left_recursion(const psrGrammar_t *grammar, const psrSymb_t *head, psrSymbList_t *lst, arString_t *output)
+static ar_bool_t __detect_left_recursion(const psrGrammar_t *grammar, const psrSymb_t *head, psrSymbList_t *lst, arString_t *output)
 {
 		size_t i;
-		bool_t is_recu = false;
+		ar_bool_t is_recu = false;
 		AR_ASSERT(grammar != NULL && head != NULL && lst != NULL);
 
 		/*AR_ASSERT(lst->count > 0);*/
@@ -717,11 +717,11 @@ static bool_t __detect_left_recursion(const psrGrammar_t *grammar, const psrSymb
 }
 
 
-bool_t					PSR_ReportLeftRecursion(const psrGrammar_t *grammar, arString_t *output)
+ar_bool_t					PSR_ReportLeftRecursion(const psrGrammar_t *grammar, arString_t *output)
 {
 		size_t i;
 		psrSymbList_t	lst;
-		bool_t			ret = false;
+		ar_bool_t			ret = false;
 		AR_ASSERT(grammar != NULL);
 		if(output)AR_ClearString(output);
 		PSR_InitSymbList(&lst);
@@ -750,10 +750,10 @@ bool_t					PSR_ReportLeftRecursion(const psrGrammar_t *grammar, arString_t *outp
 
 
 
-bool_t			PSR_CheckIsValidGrammar(const psrGrammar_t *grammar)
+ar_bool_t			PSR_CheckIsValidGrammar(const psrGrammar_t *grammar)
 {
 		size_t i,j,k;
-		bool_t result;
+		ar_bool_t result;
 		const psrSymbList_t *lst;
 		AR_ASSERT(grammar != NULL);
 		
@@ -772,7 +772,7 @@ bool_t			PSR_CheckIsValidGrammar(const psrGrammar_t *grammar)
 
 						if(symb->type == PSR_NONTERM)
 						{
-								bool_t is_ok;
+								ar_bool_t is_ok;
 								is_ok = false;
 								for(k = 0; !is_ok && k < grammar->count; ++k)
 								{
@@ -804,7 +804,7 @@ bool_t			PSR_CheckIsValidGrammar(const psrGrammar_t *grammar)
 
 				if(symb->type == PSR_NONTERM && PSR_CompSymb(symb, PSR_StartSymb) != 0)
 				{
-						bool_t is_ok;
+						ar_bool_t is_ok;
 						is_ok = false;
 						for(k = 0; !is_ok && k < grammar->count; ++k)
 						{
@@ -842,7 +842,7 @@ const psrRule_t*		PSR_GetStartRule(const psrGrammar_t *grammar)
 }
 
 
-bool_t					PSR_SetFirstRule(psrGrammar_t *grammar, const wchar_t *rule_name)
+ar_bool_t					PSR_SetFirstRule(psrGrammar_t *grammar, const wchar_t *rule_name)
 {
 		psrRule_t *start = grammar->rules[0];
 		const psrSymb_t *lhs = NULL;
@@ -983,7 +983,7 @@ firstset求法为，例如A->X(0)...X(n-1);
 void					PSR_CalcFirstSet(const psrGrammar_t *grammar, psrSymbMap_t *first_set)
 {
 		size_t i;
-		bool_t changed;
+		ar_bool_t changed;
 		const psrSymbList_t		*lst;
 		const psrSymb_t			*key;
 		AR_ASSERT(grammar != NULL && first_set != NULL && grammar->count > 1);
@@ -1105,7 +1105,7 @@ j == n-1:Follow(X(i)) += (First(X(j)) - {Epsilon})，循环结束，并将Follow(X(i) +=
 void					PSR_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *follow_set, const psrSymbMap_t *first_set)
 {
 		size_t i;
-		bool_t changed;
+		ar_bool_t changed;
 		const psrSymbList_t *lst;
 		psrMapRec_t *rec1 = NULL, *rec2 = NULL;
 

@@ -17,10 +17,11 @@
 
 AR_NAMESPACE_BEGIN
 
-#if defined(AR_DEBUG)
+#if defined(AR_DEBUG) || defined(AR_LOW_MEM_POLICY)
 		#define LALR_DEFAULT_CONFIG_NUM			0
 		#define LALR_DEFAULT_CONFIG_NODE_NUM	0
 		#define LALR_DEFAULT_CONFIG_LIST_NUM	0
+
 #else
 
 		#define LALR_DEFAULT_CONFIG_NUM		(2000)

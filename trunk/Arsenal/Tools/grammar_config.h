@@ -52,11 +52,11 @@ typedef struct __cfg_token_tag
 		size_t			tokval;
 		size_t			lex_prec;
 		const wchar_t	*regex;
-		bool_t			is_skip;
+		ar_bool_t			is_skip;
 }cfgToken_t;
 
 
-#define CFG_TERM_DEF_BEGIN	L"static struct {const wchar_t *name; size_t tokval; size_t lex_prec; const wchar_t *regex; bool_t skip; }__g_term_pattern[] =  {"
+#define CFG_TERM_DEF_BEGIN	L"static struct {const wchar_t *name; size_t tokval; size_t lex_prec; const wchar_t *regex; ar_bool_t skip; }__g_term_pattern[] =  {"
 #define CFG_TERM_DEF_END	L"};"
 #define CFG_TERM_DEF_ITEM_1	L"{L\"%ls\", %" AR_PLAT_INT_FMT L"d, %" AR_PLAT_INT_FMT L"d, L\"%ls\", %ls}"
 #define CFG_TERM_DEF_ITEM_2	L"{%ls, %" AR_PLAT_INT_FMT L"d, %" AR_PLAT_INT_FMT L"d, L\"%ls\", %ls}"
@@ -143,7 +143,7 @@ typedef struct __cfg_config_tag
 		
 		cfgStart_t		start;
 
-		bool_t			has_error;
+		ar_bool_t			has_error;
 }cfgConfig_t;
 
 
@@ -179,7 +179,7 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t	*repor
 
 void			CFG_DestroyGrammarConfig(cfgConfig_t *cfg);
 
-bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code);
+ar_bool_t		CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code);
 
 
 

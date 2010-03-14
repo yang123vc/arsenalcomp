@@ -105,10 +105,10 @@ static void __exch_set(lexProgSet_t *set, ar_int_t i,ar_int_t j)
 		set->action[j] = act;
 }
 
-bool_t	LEX_RemoveFromProgSet(lexProgSet_t *set, size_t value)
+ar_bool_t	LEX_RemoveFromProgSet(lexProgSet_t *set, size_t value)
 {
 		ar_int_t l,r,cnt;
-		bool_t res = false;
+		ar_bool_t res = false;
 		AR_ASSERT(set != NULL);
 		
 		l = 0; r = (ar_int_t)set->count - (ar_int_t)1, cnt = (ar_int_t)set->count;
@@ -172,7 +172,7 @@ void LEX_SortProgSet(lexProgSet_t *set)
 
 /**********************************lex**************************************************/
 
-bool_t	LEX_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr)
+ar_bool_t	LEX_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr)
 {
 		rgxResult_t res;
 		AR_ASSERT(name != NULL && AR_wcslen(name) > 0 && expr != NULL);
@@ -200,7 +200,7 @@ bool_t	LEX_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr)
 }
 
 
-bool_t	LEX_RemoveByName(lex_t *lex, const wchar_t *name)
+ar_bool_t	LEX_RemoveByName(lex_t *lex, const wchar_t *name)
 {
 		AR_ASSERT(lex != NULL && name != NULL);
 
@@ -209,7 +209,7 @@ bool_t	LEX_RemoveByName(lex_t *lex, const wchar_t *name)
 
 
 
-bool_t	LEX_RemoveByValue(lex_t *lex, size_t value)
+ar_bool_t	LEX_RemoveByValue(lex_t *lex, size_t value)
 {
 		AR_ASSERT(lex != NULL && lex->prog_set != NULL);
 
@@ -220,7 +220,7 @@ bool_t	LEX_RemoveByValue(lex_t *lex, size_t value)
 
 
 
-bool_t	LEX_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action)
+ar_bool_t	LEX_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action)
 {
 		rgxResult_t res;
 		rgxNode_t	*cat, *final;
@@ -262,7 +262,7 @@ bool_t	LEX_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action
 
 
 
-bool_t	LEX_Insert(lex_t *lex, const wchar_t *input)
+ar_bool_t	LEX_Insert(lex_t *lex, const wchar_t *input)
 {
 		const wchar_t *p;
 		
@@ -272,7 +272,7 @@ bool_t	LEX_Insert(lex_t *lex, const wchar_t *input)
 		if(AR_iswdigit(*p) || *p == L'%')/*action*/
 		{
 				lexAction_t		act;
-				bool_t			is_skip;
+				ar_bool_t			is_skip;
 				
 				is_skip = false;
 				if(*p == L'%')
@@ -329,17 +329,17 @@ bool_t	LEX_Insert(lex_t *lex, const wchar_t *input)
 }
 
 
-bool_t	LEX_GenerateTransTable(lex_t *lex)
+ar_bool_t	LEX_GenerateTransTable(lex_t *lex)
 {
 		AR_ASSERT(lex != NULL && lex->prog_set != NULL);
 
 		LEX_SortProgSet(lex->prog_set);
-		return (bool_t)(lex->prog_set->count > 0);
+		return (ar_bool_t)(lex->prog_set->count > 0);
 }
 
 #define LEX_MAX_EMPTY_MATCH_CNT 1
 
-bool_t LEX_Match(lex_t *lex, lexMatch_t *match, lexToken_t *tok)
+ar_bool_t LEX_Match(lex_t *lex, lexMatch_t *match, lexToken_t *tok)
 {
 		size_t i;
 		

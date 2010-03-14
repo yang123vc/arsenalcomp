@@ -275,8 +275,16 @@
 				#define AR_DEBUG
 		#endif
 
-		#define AR_STDCALL		__attribute__((stdcall))
-		#define AR_CCALL		__attribute__((cdecl))
+
+		#if(AR_ARCH_VER == ARCH_32)
+				#define AR_STDCALL		__attribute__((stdcall))
+				#define AR_CCALL		__attribute__((cdecl))
+		#else
+                #define AR_STDCALL
+				#define AR_CCALL
+		#endif
+
+
 
 		#define AR_INT8_T		signed char
 		#define AR_UINT8_T		unsigned char
@@ -343,12 +351,12 @@
 
 
 
-/*sizeof(bool_t) 必须等于1*/
+/*sizeof(ar_bool_t) 必须等于1*/
 
 #if defined(AR_HAS_BOOL_TRUE_FALSE)
-		typedef bool					bool_t;
+		typedef bool					ar_bool_t;
 #else
-		typedef	AR_INT8_T				bool_t;
+		typedef	AR_INT8_T				ar_bool_t;
 		#define	true					1
 		#define false					0
 #endif
@@ -520,6 +528,9 @@ typedef void*					ar_ptr_t;
 /*************************************************************************************************************/
 
 
+#if(OS_TYPE == OS_WINDOWS_CE)
+		#define AR_LOW_MEM_POLICY		1
+#endif
 
 
 #endif

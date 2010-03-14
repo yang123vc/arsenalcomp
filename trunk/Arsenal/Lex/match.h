@@ -32,7 +32,7 @@ typedef struct __lex_token_tag
 
 typedef struct __lex_match_result_tag
 {
-		bool_t					is_ok;
+		ar_bool_t					is_ok;
 		
 		const wchar_t			*input;
 		const wchar_t			*next;
@@ -42,20 +42,22 @@ typedef struct __lex_match_result_tag
 
 
 
-void LEX_InitMatch(lexMatch_t *pmatch, const wchar_t *input);
+void			LEX_InitMatch(lexMatch_t *pmatch, const wchar_t *input);
 
-void LEX_UnInitMatch(lexMatch_t *pmatch);
+void			LEX_UnInitMatch(lexMatch_t *pmatch);
 
-void LEX_ResetInput(lexMatch_t *pmatch, const wchar_t *input);
+void			LEX_ResetInput(lexMatch_t *pmatch, const wchar_t *input);
 
-void LEX_ResetMatch(lexMatch_t *pmatch);
+void			LEX_ResetMatch(lexMatch_t *pmatch);
 
-const wchar_t* LEX_GetNextInput(const lexMatch_t *match);
+const wchar_t*	LEX_GetNextInput(const lexMatch_t *match);
 
-bool_t	LEX_IsError(const lexMatch_t *match);
-void	LEX_ClearError(lexMatch_t *match);
-void	LEX_Skip(lexMatch_t *pmatch);
-
+ar_bool_t		LEX_IsError(const lexMatch_t *match);
+void			LEX_ClearError(lexMatch_t *match);
+/*跳到下一个非空白token*/
+void			LEX_Skip(lexMatch_t *pmatch);
+/*跳到与tok相同的符号，如果未找到,pmatch直接跳到符号结尾*/
+void			LEX_SkipTo(lexMatch_t *pmatch, const wchar_t *tok);
 AR_NAMESPACE_END
 
 

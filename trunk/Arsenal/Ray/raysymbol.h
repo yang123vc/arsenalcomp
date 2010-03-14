@@ -71,8 +71,8 @@ void			RAY_LeaveBlock(raySymbTable_t *tbl);
 raySymbBlock_t*	RAY_CurrentBlock(raySymbTable_t *tbl);
 
 
-bool_t			RAY_InsertName(raySymbBlock_t *block,	const wchar_t *name, const rayAttr_t *attr);
-bool_t			RAY_RemoveName(raySymbBlock_t *block,	const wchar_t *name);
+ar_bool_t			RAY_InsertName(raySymbBlock_t *block,	const wchar_t *name, const rayAttr_t *attr);
+ar_bool_t			RAY_RemoveName(raySymbBlock_t *block,	const wchar_t *name);
 rayAttr_t*		RAY_GetNameAttr(raySymbBlock_t *block,	const wchar_t *name);
 
 

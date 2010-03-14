@@ -26,7 +26,7 @@ struct arsenal_buffer_tag
 		ar_byte_t	*write_cur;
 };
 
-static AR_INLINE bool_t	__buffer_is_valid(const arBuffer_t *pbuf)
+static AR_INLINE ar_bool_t	__buffer_is_valid(const arBuffer_t *pbuf)
 {
 		if(pbuf == NULL)return false;
 
@@ -68,7 +68,7 @@ static AR_INLINE void		__increase_capability(arBuffer_t *pbuf, size_t inc_len)
 }
 
 
-static AR_INLINE  bool_t __move_internal(arBuffer_t *pbuf, size_t len)
+static AR_INLINE  ar_bool_t __move_internal(arBuffer_t *pbuf, size_t len)
 {
 		size_t data_len = 0;	/* r***w read_cur 至write_cur之间的可读数据成都*/
 		size_t vacancy_len = 0;	/* ***r read_cur之前的空白空间  */
@@ -147,7 +147,7 @@ void			AR_ReserveBuffer(arBuffer_t *pbuf, size_t nbytes)
 		}
 }
 
-ar_byte_t*			AR_AllocFromBuffer(arBuffer_t *buffer, size_t	nbytes)
+ar_byte_t*			AR_AllocBuffer(arBuffer_t *buffer, size_t	nbytes)
 {
 		size_t write_able = 0;
 		ar_byte_t *res = NULL;
@@ -169,24 +169,24 @@ ar_byte_t*			AR_AllocFromBuffer(arBuffer_t *buffer, size_t	nbytes)
 }
 
 
-void			AR_InsertToBuffer(arBuffer_t *buffer, const ar_byte_t *data, size_t len)
+void			AR_InsertBuffer(arBuffer_t *buffer, const ar_byte_t *data, size_t len)
 {
 		ar_byte_t *ptr = NULL;
 		AR_ASSERT(__buffer_is_valid(buffer));
 		if(len == 0)return;
-		ptr = AR_AllocFromBuffer(buffer, len);
+		ptr = AR_AllocBuffer(buffer, len);
 
 		AR_ASSERT(ptr != NULL);
 		memcpy(ptr, data, len);
 }
 
-size_t			AR_EraseFromBuffer(arBuffer_t *pbuf, size_t nbytes)
+size_t			AR_EraseBuffer(arBuffer_t *pbuf, size_t nbytes)
 {
 		size_t rm_data_len = 0;
 		AR_ASSERT(__buffer_is_valid(pbuf));
 		if(nbytes == 0)return 0;
 
-		rm_data_len = AR_MIN(AR_GetBufferReadableLength(pbuf), nbytes);
+		rm_data_len = AR_MIN(AR_GetBufferAvailable(pbuf), nbytes);
 		
 		pbuf->read_cur += rm_data_len;
 
@@ -204,17 +204,17 @@ size_t			AR_EraseFromBuffer(arBuffer_t *pbuf, size_t nbytes)
 size_t			AR_GetBufferCapacity(const arBuffer_t *buffer)
 {
 		AR_ASSERT(__buffer_is_valid(buffer));
-		return buffer->last - buffer->first - AR_GetBufferReadableLength(buffer);
+		return buffer->last - buffer->first - AR_GetBufferAvailable(buffer);
 }
 
 
-const ar_byte_t*	AR_GetBufferReadableData(const arBuffer_t *pbuf)
+const ar_byte_t*	AR_GetBufferData(const arBuffer_t *pbuf)
 {
 		AR_ASSERT(__buffer_is_valid(pbuf));
-		return AR_GetBufferReadableLength(pbuf) > 0 ? pbuf->read_cur : NULL;
+		return AR_GetBufferAvailable(pbuf) > 0 ? pbuf->read_cur : NULL;
 }
 
-size_t			AR_GetBufferReadableLength(const arBuffer_t *buffer)
+size_t			AR_GetBufferAvailable(const arBuffer_t *buffer)
 {
 		AR_ASSERT(__buffer_is_valid(buffer));
 		return (buffer->write_cur - buffer->read_cur);
