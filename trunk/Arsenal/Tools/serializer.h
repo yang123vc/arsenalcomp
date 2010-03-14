@@ -24,7 +24,7 @@ typedef	struct __serialize_object_tag	snObject_t;
 
 typedef struct __sn_int_tag
 {
-		ar_bool_t	is_signed;
+		bool_b_t	is_signed;
 		union{
 				uint_64_t		u;
 				int_64_t			s;
@@ -69,7 +69,7 @@ void	SN_InitList(snList_t	*lst);
 void	SN_UnInitList(snList_t	*lst);
 
 void	SN_InsertToList(snList_t	*lst, snObject_t *obj);
-ar_bool_t	SN_RemoveFromList(snList_t	*lst, size_t idx);
+bool_b_t	SN_RemoveFromList(snList_t	*lst, size_t idx);
 int_i_t	SN_IndexOfList(const snList_t *lst, const snObject_t *obj);
 snObject_t*		SN_GetObjectFromList(snList_t *lst, size_t idx);
 
@@ -88,8 +88,8 @@ typedef struct __sn_dict_tag
 
 void	SN_InitDict(snDict_t *dict);
 void	SN_UnInitDict(snDict_t *dict);
-ar_bool_t	SN_InsertToDict(snDict_t *dict, snObject_t *key, snObject_t *value);
-ar_bool_t	SN_RemoveFromDict(snDict_t *dict, const snObject_t *key);
+bool_b_t	SN_InsertToDict(snDict_t *dict, snObject_t *key, snObject_t *value);
+bool_b_t	SN_RemoveFromDict(snDict_t *dict, const snObject_t *key);
 snObject_t* SN_FindFromDict(snDict_t *dict, const snObject_t *key);
 
 

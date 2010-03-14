@@ -169,7 +169,7 @@ void	SN_InsertToList(snList_t	*lst, snObject_t *obj)
 
 
 
-ar_bool_t	SN_RemoveFromList(snList_t	*lst, size_t idx)
+bool_b_t	SN_RemoveFromList(snList_t	*lst, size_t idx)
 {
 		
 		AR_ASSERT(lst != NULL);
@@ -229,7 +229,7 @@ void	SN_UnInitDict(snDict_t *dict)
 }
 
 
-ar_bool_t	SN_InsertToDict(snDict_t *dict, snObject_t *key, snObject_t *value)
+bool_b_t	SN_InsertToDict(snDict_t *dict, snObject_t *key, snObject_t *value)
 {
 		AR_ASSERT(dict != NULL && key != NULL && key->type == SN_STRING_T && value != NULL);
 
@@ -247,7 +247,7 @@ ar_bool_t	SN_InsertToDict(snDict_t *dict, snObject_t *key, snObject_t *value)
 		return true;
 }
 
-ar_bool_t	SN_RemoveFromDict(snDict_t *dict, const snObject_t *key)
+bool_b_t	SN_RemoveFromDict(snDict_t *dict, const snObject_t *key)
 {
 		size_t i;
 		AR_ASSERT(dict != NULL && key != NULL && key->type == SN_STRING_T);
@@ -378,7 +378,7 @@ snObject_t*	__get_int(arBuffer_t	*buffer)
 		const byte_b_t	*pbuf;
 		
 		uint_64_t		num = 0;
-		ar_bool_t			is_neg = false;
+		bool_b_t			is_neg = false;
 		AR_ASSERT(buffer != NULL);
 
 		buf_len = AR_GetBufferAvailable(buffer);
@@ -560,7 +560,7 @@ void		__put_int(arBuffer_t	*buffer, const snInteger_t *integer)
 {
 		char buf[256];
 		char *p;
-		ar_bool_t	is_neg = false;
+		bool_b_t	is_neg = false;
 		uint_64_t		num;
 		static const char _tbl[] = "0123456789";
 

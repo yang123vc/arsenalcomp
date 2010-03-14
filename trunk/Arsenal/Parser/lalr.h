@@ -43,7 +43,7 @@ typedef struct __lalr_config_list_tag
 
 
 lalrConfigList_t*		PSR_CreateConfigList();
-void					PSR_DestroyConfigList(lalrConfigList_t *lst, ar_bool_t destroy_config);
+void					PSR_DestroyConfigList(lalrConfigList_t *lst, bool_b_t destroy_config);
 void					PSR_InsertToConfigList(lalrConfigList_t *lst, lalrConfig_t *cfg);
 
 void					PSR_UnionConfigList(lalrConfigList_t *l, lalrConfigList_t *r);
@@ -70,7 +70,7 @@ struct __lalr_config_tag
 		lalrConfigList_t		*forward;
 		lalrConfigList_t		*backward;
 /******************************************/
-		ar_bool_t					is_completed;
+		bool_b_t					is_completed;
 };
 
 void	PSR_InitConfig(lalrConfig_t *config, const psrRule_t *rule, size_t delim);

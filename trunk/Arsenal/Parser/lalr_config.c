@@ -51,7 +51,7 @@ lalrConfigList_t*		PSR_CreateConfigList()
 		return res;
 }
 
-void					PSR_DestroyConfigList(lalrConfigList_t *lst, ar_bool_t destroy_config)
+void					PSR_DestroyConfigList(lalrConfigList_t *lst, bool_b_t destroy_config)
 {
 		lalrConfigNode_t		*node;
 

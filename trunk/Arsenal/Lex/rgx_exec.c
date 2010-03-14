@@ -85,7 +85,7 @@ static void __clear_for_lookahead(rgxProg_t *prog)
 }
 
 
-static ar_bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, const wchar_t *input_beg)
+static bool_b_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, const wchar_t *input_beg)
 {
 		rgxThreadList_t *curr, *next;
 		rgxIns_t *pc;
@@ -223,10 +223,10 @@ static ar_bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, const wchar_t 
 
 
 
-static ar_bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
+static bool_b_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 {
 		rgxThreadList_t	*curr, *next;
-		ar_bool_t			matched;
+		bool_b_t			matched;
 		rgxIns_t		*pc;
 		const wchar_t	*sp, *fianl_next;
 		size_t i,x,y, final_row, final_col;
@@ -414,7 +414,7 @@ static ar_bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 
 
 
-ar_bool_t RGX_Match(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
+bool_b_t RGX_Match(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 {
 		AR_ASSERT(prog != NULL && match != NULL && tok != NULL);
 

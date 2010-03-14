@@ -663,7 +663,7 @@ int_i_t			AR_u64tow_buf(wchar_t *out, size_t nbuf, uint_64_t num, size_t radix)
 
 int_i_t			AR_i64tow_buf(wchar_t *out, size_t nbuf, int_64_t num, size_t radix)
 {
-		ar_bool_t is_neg;
+		bool_b_t is_neg;
 		wchar_t buf[__BUFFER_LEN];
 		wchar_t *p;
 		int_i_t len;
@@ -753,7 +753,7 @@ const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *out)
 		const wchar_t *p;
 		double num = 0.0f,frac = 0.0f, exp = 1.0f;
 		double result = 0.0f;
-		ar_bool_t is_neg = false, is_ok = false;
+		bool_b_t is_neg = false, is_ok = false;
 
 		AR_ASSERT(in != NULL && end != NULL && in <= end && out != NULL);
 
@@ -795,7 +795,7 @@ const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *out)
 
 		if(p < end && (*p == L'e' || *p == L'E'))
 		{
-				ar_bool_t factor;
+				bool_b_t factor;
 				size_t i, e;
 				++p;
 

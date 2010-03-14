@@ -218,7 +218,7 @@ void	PSR_InsertToSymbList(psrSymbList_t *symb_lst, const psrSymb_t *symb)
 
 
 
-ar_bool_t				PSR_RemoveFromSymbListByIndex(psrSymbList_t *symb_lst, size_t index)
+bool_b_t				PSR_RemoveFromSymbListByIndex(psrSymbList_t *symb_lst, size_t index)
 {
 		size_t i;
 		AR_ASSERT(symb_lst != NULL && index < symb_lst->count);
@@ -327,7 +327,7 @@ void			PSR_SortSymbList(psrSymbList_t *symb_lst)
 }
 
 
-ar_bool_t				PSR_InsertToSymbList_Unique(psrSymbList_t *symb_lst, const psrSymb_t *symb)
+bool_b_t				PSR_InsertToSymbList_Unique(psrSymbList_t *symb_lst, const psrSymb_t *symb)
 {
 		AR_ASSERT(symb_lst != NULL && symb != NULL);
 		if(PSR_FindFromSymbList(symb_lst, symb) != -1)return false;
@@ -394,7 +394,7 @@ void					PSR_UnInitSymbMap(psrSymbMap_t *map)
 }
 
 
-ar_bool_t					PSR_InsertToSymbMap(psrSymbMap_t *map, const psrSymb_t *key, const psrSymb_t *val)
+bool_b_t					PSR_InsertToSymbMap(psrSymbMap_t *map, const psrSymb_t *key, const psrSymb_t *val)
 {
 		psrMapRec_t *rec, *tmp;
 		AR_ASSERT(map != NULL && key != NULL);
@@ -458,7 +458,7 @@ psrMapRec_t*		PSR_GetSymbolFromSymbMap(const psrSymbMap_t *map, const psrSymb_t 
 }
 
 
-ar_bool_t					PSR_SetSymbEpsilon(psrSymbMap_t *map, const psrSymb_t *key, ar_bool_t is_epsilon)
+bool_b_t					PSR_SetSymbEpsilon(psrSymbMap_t *map, const psrSymb_t *key, bool_b_t is_epsilon)
 {
 		psrMapRec_t *rec;
 		AR_ASSERT(map != NULL && key != NULL);

@@ -312,11 +312,11 @@ void com_vscwprintf_test2()
 typedef struct __ac_automaton_tag		arACAutomaton_t;
 arACAutomaton_t*	AR_CreateACAutomaton();
 void				AR_DestroyACAutomaton(arACAutomaton_t *atm);
-ar_bool_t				AR_InsertToACAutomaton(arACAutomaton_t *atm, const wchar_t *str, void *val);
-ar_bool_t				AR_RemoveFromACAutomaton(arACAutomaton_t *atm, const wchar_t *str);
-ar_bool_t				AR_BuildACAutomaton(arACAutomaton_t *atm);
+bool_b_t				AR_InsertToACAutomaton(arACAutomaton_t *atm, const wchar_t *str, void *val);
+bool_b_t				AR_RemoveFromACAutomaton(arACAutomaton_t *atm, const wchar_t *str);
+bool_b_t				AR_BuildACAutomaton(arACAutomaton_t *atm);
 
-ar_bool_t				AR_FindFromACAutomaton(arACAutomaton_t *atm, const wchar_t *key, ar_bool_t sub_str);
+bool_b_t				AR_FindFromACAutomaton(arACAutomaton_t *atm, const wchar_t *key, bool_b_t sub_str);
 
 
 

@@ -321,7 +321,7 @@ static errRecovery_t __error_recovery(parser_t *parser, const psrToken_t *tok)
 
 		if(!parser->is_repair)
 		{
-				ar_bool_t found = false;
+				bool_b_t found = false;
 				
 				__on_error(parser, tok);
 				
@@ -397,10 +397,10 @@ static errRecovery_t __error_recovery(parser_t *parser, const psrToken_t *tok)
 		}
 }
 
-ar_bool_t PSR_AddToken(parser_t *parser, const psrToken_t *tok)
+bool_b_t PSR_AddToken(parser_t *parser, const psrToken_t *tok)
 {
 
-		ar_bool_t					is_done;
+		bool_b_t					is_done;
 		
 		const psrTermInfo_t		*term;
 
@@ -510,14 +510,14 @@ psrNode_t* PSR_GetResult(parser_t *parser)/*在状态为accepted之后才可以调用*/
 		return res;
 }
 
-ar_bool_t	   PSR_IsAccepted(const parser_t *parser)
+bool_b_t	   PSR_IsAccepted(const parser_t *parser)
 {
 		AR_ASSERT(parser != NULL);
 		return parser->is_accepted;
 }
 
 
-ar_bool_t	PSR_IsInError(const parser_t *parser)
+bool_b_t	PSR_IsInError(const parser_t *parser)
 {
 		AR_ASSERT(parser != NULL);
 		return parser->is_repair;

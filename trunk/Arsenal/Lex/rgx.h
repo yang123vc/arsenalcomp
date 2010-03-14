@@ -46,8 +46,8 @@ struct __rgx_name_set_tag
 
 void					RGX_InitNameSet(rgxNameSet_t	*set);
 void					RGX_UnInitNameSet(rgxNameSet_t	*set);
-ar_bool_t					RGX_InsertToNameSet(rgxNameSet_t	*set, const wchar_t	*name, rgxNode_t *node);
-ar_bool_t					RGX_RemoveFromNameSet(rgxNameSet_t	*set, const wchar_t	*name);
+bool_b_t					RGX_InsertToNameSet(rgxNameSet_t	*set, const wchar_t	*name, rgxNode_t *node);
+bool_b_t					RGX_RemoveFromNameSet(rgxNameSet_t	*set, const wchar_t	*name);
 const rgxNode_t*		RGX_FindFromNameSet(const rgxNameSet_t	*set, const wchar_t *name);
 void					RGX_ClearNameSet(rgxNameSet_t *set);
 
@@ -68,7 +68,7 @@ struct __rgx_char_range_tag
 
 struct __rgx_charset_tag
 {
-		ar_bool_t					is_neg;
+		bool_b_t					is_neg;
 		rgxCharRange_t			*range;
 };
 
@@ -119,8 +119,8 @@ struct __rgx_node_tag
 						wchar_t	beg;
 						wchar_t end;
 				}range;
-				ar_bool_t					negative_lookahead;
-				ar_bool_t					non_greedy;
+				bool_b_t					negative_lookahead;
+				bool_b_t					non_greedy;
 				size_t					final_val;
 		};
 };
@@ -225,7 +225,7 @@ struct __regex_instruction_tag
 				}range;
 				
 				struct {
-						ar_bool_t			negative;
+						bool_b_t			negative;
 				}lookahead;
 		};
 };
@@ -292,7 +292,7 @@ void			RGX_ProgToString(const rgxProg_t *prog, arString_t *str);
 
 
 
-ar_bool_t			RGX_Match(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok);
+bool_b_t			RGX_Match(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok);
 
 
 

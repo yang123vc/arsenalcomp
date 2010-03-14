@@ -351,12 +351,12 @@
 
 
 
-/*sizeof(ar_bool_t) 必须等于1*/
+/*sizeof(bool_b_t) 必须等于1*/
 
 #if defined(AR_HAS_BOOL_TRUE_FALSE)
-		typedef bool					ar_bool_t;
+		typedef bool					bool_b_t;
 #else
-		typedef	AR_INT8_T				ar_bool_t;
+		typedef	AR_INT8_T				bool_b_t;
 		#define	true					1
 		#define false					0
 #endif
