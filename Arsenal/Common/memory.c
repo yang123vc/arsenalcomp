@@ -22,10 +22,8 @@ AR_NAMESPACE_BEGIN
 
 
 /*****************************************************Memory*******************************/
-#if defined(AR_USE_CRT_ALLOCFUNC)
 
 
-#else
 
 void*	AR_malloc(size_t nbytes)
 {
@@ -69,7 +67,8 @@ void	AR_free(void *ptr)
 		if(ptr)free(ptr);
 }
 
-#endif
+
+
 
 
 void	AR_memswap(void *a, void *b, size_t n)

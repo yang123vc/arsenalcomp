@@ -171,7 +171,7 @@ static AR_INLINE const psrTermInfo_t* PSR_FindTermFromRec(const psrTermInfoRec_t
 		return NULL;
 }
 
-static AR_INLINE bool_t			PSR_InsertToTermInfoRec(psrTermInfoRec_t *rec, const psrTermInfo_t *term)
+static AR_INLINE ar_bool_t			PSR_InsertToTermInfoRec(psrTermInfoRec_t *rec, const psrTermInfo_t *term)
 {
 		AR_ASSERT(rec != NULL && term != NULL);
 		if(PSR_FindTermFromRec(rec, term->val) != NULL)return false;
@@ -212,7 +212,7 @@ static AR_INLINE void PSR_DestroyTermInfoTable(psrTermInfoTbl_t *tbl)
 		AR_DEL(tbl);
 }
 
-static AR_INLINE bool_t PSR_InsertToTermInfoTable(psrTermInfoTbl_t *tbl, const psrTermInfo_t *term)
+static AR_INLINE ar_bool_t PSR_InsertToTermInfoTable(psrTermInfoTbl_t *tbl, const psrTermInfo_t *term)
 {
 		size_t idx;
 		psrTermInfoRec_t		*rec;

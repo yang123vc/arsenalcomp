@@ -19,11 +19,11 @@
 AR_NAMESPACE_BEGIN
 
 
-static	void	__build_goto(lalrState_t *start, const psrGrammar_t *grammar, lalrStateSet_t *set, const psrSymbMap_t *first_set, bool_t lr0);
-static	void	__calc_lr0_closure(lalrConfigList_t *all_config, const psrGrammar_t *grammar, const psrSymbMap_t *first_set, bool_t lr0);
-static	lalrState_t* __build_state(lalrConfigList_t *basis, const psrGrammar_t *grammar, lalrStateSet_t *set, const psrSymbMap_t *first_set, bool_t lr0);
+static	void	__build_goto(lalrState_t *start, const psrGrammar_t *grammar, lalrStateSet_t *set, const psrSymbMap_t *first_set, ar_bool_t lr0);
+static	void	__calc_lr0_closure(lalrConfigList_t *all_config, const psrGrammar_t *grammar, const psrSymbMap_t *first_set, ar_bool_t lr0);
+static	lalrState_t* __build_state(lalrConfigList_t *basis, const psrGrammar_t *grammar, lalrStateSet_t *set, const psrSymbMap_t *first_set, ar_bool_t lr0);
 
-static	void	__build_goto(lalrState_t *start, const psrGrammar_t *grammar, lalrStateSet_t *set, const psrSymbMap_t *first_set, bool_t lr0)
+static	void	__build_goto(lalrState_t *start, const psrGrammar_t *grammar, lalrStateSet_t *set, const psrSymbMap_t *first_set, ar_bool_t lr0)
 {
 		lalrConfigNode_t		*node;
 		AR_ASSERT(start != NULL && grammar != NULL && set != NULL && first_set != NULL);
@@ -88,7 +88,7 @@ static	void	__build_goto(lalrState_t *start, const psrGrammar_t *grammar, lalrSt
 }
 
 
-static	void	__calc_lr0_closure(lalrConfigList_t *all_config, const psrGrammar_t *grammar, const psrSymbMap_t *first_set, bool_t lr0)
+static	void	__calc_lr0_closure(lalrConfigList_t *all_config, const psrGrammar_t *grammar, const psrSymbMap_t *first_set, ar_bool_t lr0)
 {
 
 		lalrConfigNode_t		*node;
@@ -171,7 +171,7 @@ static	void	__calc_lr0_closure(lalrConfigList_t *all_config, const psrGrammar_t 
 
 }
 
-static	lalrState_t* __build_state(lalrConfigList_t *basis, const psrGrammar_t *grammar, lalrStateSet_t *set, const psrSymbMap_t *first_set, bool_t lr0)
+static	lalrState_t* __build_state(lalrConfigList_t *basis, const psrGrammar_t *grammar, lalrStateSet_t *set, const psrSymbMap_t *first_set, ar_bool_t lr0)
 {
 		lalrState_t		*new_state;
 		AR_ASSERT(basis != NULL && basis->count > 0 && grammar != NULL && set != NULL && first_set != NULL);
@@ -296,7 +296,7 @@ lalrState_t*	PSR_Create_LR0_State(const psrGrammar_t *grammar)
 static void __build_propagation_links(lalrStateSet_t *set)
 {
 		size_t i;
-		bool_t changed;
+		ar_bool_t changed;
 		
 		AR_ASSERT(set != NULL);
 		

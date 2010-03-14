@@ -169,7 +169,7 @@ void	SN_InsertToList(snList_t	*lst, snObject_t *obj)
 
 
 
-bool_t	SN_RemoveFromList(snList_t	*lst, size_t idx)
+ar_bool_t	SN_RemoveFromList(snList_t	*lst, size_t idx)
 {
 		
 		AR_ASSERT(lst != NULL);
@@ -229,7 +229,7 @@ void	SN_UnInitDict(snDict_t *dict)
 }
 
 
-bool_t	SN_InsertToDict(snDict_t *dict, snObject_t *key, snObject_t *value)
+ar_bool_t	SN_InsertToDict(snDict_t *dict, snObject_t *key, snObject_t *value)
 {
 		AR_ASSERT(dict != NULL && key != NULL && key->type == SN_STRING_T && value != NULL);
 
@@ -247,7 +247,7 @@ bool_t	SN_InsertToDict(snDict_t *dict, snObject_t *key, snObject_t *value)
 		return true;
 }
 
-bool_t	SN_RemoveFromDict(snDict_t *dict, const snObject_t *key)
+ar_bool_t	SN_RemoveFromDict(snDict_t *dict, const snObject_t *key)
 {
 		size_t i;
 		AR_ASSERT(dict != NULL && key != NULL && key->type == SN_STRING_T);
@@ -378,11 +378,11 @@ snObject_t*	__get_int(arBuffer_t	*buffer)
 		const ar_byte_t	*pbuf;
 		
 		ar_uint64_t		num = 0;
-		bool_t			is_neg = false;
+		ar_bool_t			is_neg = false;
 		AR_ASSERT(buffer != NULL);
 
-		buf_len = AR_GetBufferReadableLength(buffer);
-		pbuf	= AR_GetBufferReadableData(buffer);
+		buf_len = AR_GetBufferAvailable(buffer);
+		pbuf	= AR_GetBufferData(buffer);
 		
 		if(pbuf == NULL)return NULL;
 		idx = 0;
@@ -411,7 +411,7 @@ snObject_t*	__get_int(arBuffer_t	*buffer)
 		{
 				ret->integer.u = num;
 		}
-		AR_EraseFromBuffer(buffer, idx + 1);
+		AR_EraseBuffer(buffer, idx + 1);
 		return ret;
 }
 
@@ -425,8 +425,8 @@ snObject_t*		__get_str(arBuffer_t	*buffer)
 
 		AR_ASSERT(buffer != NULL);
 
-		buf_len = AR_GetBufferReadableLength(buffer);
-		pbuf	= AR_GetBufferReadableData(buffer);
+		buf_len = AR_GetBufferAvailable(buffer);
+		pbuf	= AR_GetBufferData(buffer);
 		
 		if(pbuf == NULL)return NULL;
 		
@@ -443,7 +443,7 @@ snObject_t*		__get_str(arBuffer_t	*buffer)
 		ret = SN_CreateObject(SN_STRING_T);
 		idx++;
 		SN_SetStringByData(&ret->string, pbuf + idx, l);
-		AR_EraseFromBuffer(buffer, idx + l);
+		AR_EraseBuffer(buffer, idx + l);
 		return ret;
 }
 
@@ -453,20 +453,20 @@ snObject_t*		__get_dict(arBuffer_t	*buffer);
 snObject_t*		__get_obj(arBuffer_t	*buffer)
 {
 		ar_byte_t b;
-		AR_ASSERT(buffer != NULL && AR_GetBufferReadableLength(buffer) > 0);
+		AR_ASSERT(buffer != NULL && AR_GetBufferAvailable(buffer) > 0);
 
-		b = *(AR_GetBufferReadableData(buffer));
+		b = *(AR_GetBufferData(buffer));
 		
 		switch(b)
 		{
 		case 'd':
-				AR_EraseFromBuffer(buffer, 1);
+				AR_EraseBuffer(buffer, 1);
 				return __get_dict(buffer);
 		case 'i':
-				AR_EraseFromBuffer(buffer, 1);
+				AR_EraseBuffer(buffer, 1);
 				return __get_int(buffer);
 		case 'l':
-				AR_EraseFromBuffer(buffer, 1);
+				AR_EraseBuffer(buffer, 1);
 				return __get_list(buffer);
 		default:
 		{
@@ -486,21 +486,21 @@ snObject_t*		__get_list(arBuffer_t	*buffer)
 {
 		const ar_byte_t	*pb;
 		snObject_t		*ret;
-		AR_ASSERT(buffer != NULL && AR_GetBufferReadableLength(buffer) > 0);
+		AR_ASSERT(buffer != NULL && AR_GetBufferAvailable(buffer) > 0);
 		
 		ret = SN_CreateObject(SN_LIST_T);
 		
 		while(true)
 		{
 				snObject_t *obj;
-				pb = AR_GetBufferReadableData(buffer);
+				pb = AR_GetBufferData(buffer);
 				if(pb == NULL)goto FAILED_POINT;
 				if(*pb == 'e')break;
 				obj = __get_obj(buffer);
 				if(obj == NULL)goto FAILED_POINT;
 				SN_InsertToList(&ret->list, obj);
 		}
-		AR_EraseFromBuffer(buffer, 1);
+		AR_EraseBuffer(buffer, 1);
 		return ret;
 FAILED_POINT:
 		SN_DestroyObject(ret);
@@ -512,14 +512,14 @@ snObject_t*		__get_dict(arBuffer_t	*buffer)
 {
 		const ar_byte_t	*pb;
 		snObject_t		*ret;
-		AR_ASSERT(buffer != NULL && AR_GetBufferReadableLength(buffer) > 0);
+		AR_ASSERT(buffer != NULL && AR_GetBufferAvailable(buffer) > 0);
 		ret = SN_CreateObject(SN_DICT_T);
 		
 		while(true)
 		{
 				snObject_t *key, *val;
 				
-				pb = AR_GetBufferReadableData(buffer);
+				pb = AR_GetBufferData(buffer);
 				if(pb == NULL)goto FAILED_POINT;
 				if(*pb == 'e')break;
 
@@ -538,7 +538,7 @@ RE_INSERT:
 						goto RE_INSERT;
 				}
 		}
-		AR_EraseFromBuffer(buffer, 1);
+		AR_EraseBuffer(buffer, 1);
 		return ret;
 FAILED_POINT:
 		SN_DestroyObject(ret);
@@ -560,7 +560,7 @@ void		__put_int(arBuffer_t	*buffer, const snInteger_t *integer)
 {
 		char buf[256];
 		char *p;
-		bool_t	is_neg = false;
+		ar_bool_t	is_neg = false;
 		ar_uint64_t		num;
 		static const char _tbl[] = "0123456789";
 
@@ -588,7 +588,7 @@ void		__put_int(arBuffer_t	*buffer, const snInteger_t *integer)
 
 		if(is_neg)*--p = '-';
 		*--p = 'i';
-		AR_InsertToBuffer(buffer, (const ar_byte_t*)p, AR_strlen(p));
+		AR_InsertBuffer(buffer, (const ar_byte_t*)p, AR_strlen(p));
 }
 
 void __put_string(arBuffer_t	*buffer, const snString_t *string)
@@ -608,8 +608,8 @@ void __put_string(arBuffer_t	*buffer, const snString_t *string)
 
 		do{ *--p = _tbl[l % 10];}while((l /= 10));
 
-		AR_InsertToBuffer(buffer, (const ar_byte_t*)p, AR_strlen(p));
-		AR_InsertToBuffer(buffer, string->data, string->len);
+		AR_InsertBuffer(buffer, (const ar_byte_t*)p, AR_strlen(p));
+		AR_InsertBuffer(buffer, string->data, string->len);
 }
 
 
@@ -655,14 +655,14 @@ void __put_list(arBuffer_t	*buffer, const snList_t *lst)
 		size_t i;
 		AR_ASSERT(buffer != NULL && lst != NULL);
 
-		AR_InsertToBuffer(buffer, (const ar_byte_t*)h, 1);
+		AR_InsertBuffer(buffer, (const ar_byte_t*)h, 1);
 
 		for(i = 0; i < lst->count; ++i)
 		{
 				__put_obj(buffer, lst->lst[i]);
 		}
 
-		AR_InsertToBuffer(buffer, (const ar_byte_t*)e, 1);
+		AR_InsertBuffer(buffer, (const ar_byte_t*)e, 1);
 }
 
 void __put_dict(arBuffer_t	*buffer, const snDict_t *dict)
@@ -673,14 +673,14 @@ void __put_dict(arBuffer_t	*buffer, const snDict_t *dict)
 		AR_ASSERT(buffer != NULL && dict != NULL);
 		
 
-		AR_InsertToBuffer(buffer, (const ar_byte_t*)h, 1);
+		AR_InsertBuffer(buffer, (const ar_byte_t*)h, 1);
 
 		for(i = 0; i < dict->count; ++i)
 		{
 				__put_string(buffer, &dict->pairs[i].key->string);
 				__put_obj(buffer,  dict->pairs[i].val);
 		}
-		AR_InsertToBuffer(buffer, (const ar_byte_t*)e, 1);
+		AR_InsertBuffer(buffer, (const ar_byte_t*)e, 1);
 }
 
 

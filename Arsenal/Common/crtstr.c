@@ -17,6 +17,58 @@
 AR_NAMESPACE_BEGIN
 
 
+/*****************************************************cmp********************************************************************/
+
+
+ar_int_t	AR_stricmp(const char *l, const char *r)
+{
+		ar_int_t ret;
+		AR_ASSERT(l != NULL && r != NULL);
+
+		for(ret = 0; (ret = (AR_tolower(*l) - AR_tolower(*r))) == 0 && *l && *r; ++l, ++r);
+		
+		return ret;
+}
+
+ar_int_t	AR_strnicmp(const char *l, const char *r, size_t n)
+{
+		ar_int_t ret;
+		size_t i;
+		AR_ASSERT(l != NULL && r != NULL);
+
+		for(ret = 0, i = 0; i < n && (ret = (AR_tolower(l[i]) - AR_tolower(r[i]))) == 0 && l[i] && r[i]; ++i)
+		{
+
+		}
+		
+		return ret;
+
+}
+
+ar_int_t	AR_wcsicmp(const wchar_t *l, const wchar_t *r)
+{
+		ar_int_t ret;
+		AR_ASSERT(l != NULL && r != NULL);
+
+		for(ret = 0; (ret = (AR_towlower(*l) - AR_towlower(*r))) == 0 && *l && *r; ++l, ++r);
+		
+		return ret;
+
+}
+
+ar_int_t	AR_wcsnicmp(const wchar_t *l, const wchar_t *r, size_t n)
+{
+		ar_int_t ret;
+		size_t i;
+		AR_ASSERT(l != NULL && r != NULL);
+
+		for(ret = 0, i = 0; i < n && (ret = (AR_towlower(l[i]) - AR_towlower(r[i]))) == 0 && l[i] && r[i]; ++i);
+		
+		return ret;
+
+}
+
+
 
 /**********************************************************string*************************************************************/
 
@@ -611,7 +663,7 @@ ar_int_t			AR_u64tow_buf(wchar_t *out, size_t nbuf, ar_uint64_t num, size_t radi
 
 ar_int_t			AR_i64tow_buf(wchar_t *out, size_t nbuf, ar_int64_t num, size_t radix)
 {
-		bool_t is_neg;
+		ar_bool_t is_neg;
 		wchar_t buf[__BUFFER_LEN];
 		wchar_t *p;
 		ar_int_t len;
@@ -701,7 +753,7 @@ const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *out)
 		const wchar_t *p;
 		double num = 0.0f,frac = 0.0f, exp = 1.0f;
 		double result = 0.0f;
-		bool_t is_neg = false, is_ok = false;
+		ar_bool_t is_neg = false, is_ok = false;
 
 		AR_ASSERT(in != NULL && end != NULL && in <= end && out != NULL);
 
@@ -743,7 +795,7 @@ const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *out)
 
 		if(p < end && (*p == L'e' || *p == L'E'))
 		{
-				bool_t factor;
+				ar_bool_t factor;
 				size_t i, e;
 				++p;
 

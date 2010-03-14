@@ -574,10 +574,10 @@ static void __insert_to_symtbl_view(psrSymbolMapView_t *map_view, const wchar_t 
 
 
 
-static bool_t __detect_left_recursion(const psrGrammar_t *grammar, const psrSymb_t *head, psrSymbList_t *lst, psrSymbolMapView_t *output)
+static ar_bool_t __detect_left_recursion(const psrGrammar_t *grammar, const psrSymb_t *head, psrSymbList_t *lst, psrSymbolMapView_t *output)
 {
 		size_t i;
-		bool_t is_recu = false;
+		ar_bool_t is_recu = false;
 		AR_ASSERT(grammar != NULL && head != NULL && lst != NULL);
 
 		/*AR_ASSERT(lst->count > 0);*/
@@ -642,11 +642,11 @@ static bool_t __detect_left_recursion(const psrGrammar_t *grammar, const psrSymb
 }
 
 
-bool_t					__report_left_recursion(const psrGrammar_t *grammar, psrSymbolMapView_t *output)
+ar_bool_t					__report_left_recursion(const psrGrammar_t *grammar, psrSymbolMapView_t *output)
 {
 		size_t i;
 		psrSymbList_t	lst;
-		bool_t			ret = false;
+		ar_bool_t			ret = false;
 		AR_ASSERT(grammar != NULL);
 		
 		PSR_InitSymbList(&lst);

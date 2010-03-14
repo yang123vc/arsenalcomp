@@ -33,7 +33,7 @@ typedef struct __lex_action_tag
 {
 		size_t			value;
 		size_t			priority;
-		bool_t			is_skip;
+		ar_bool_t			is_skip;
 }lexAction_t;
 
 
@@ -55,20 +55,20 @@ lex_t*	LEX_Create(const arIOCtx_t *io);
 void	LEX_Destroy(lex_t *lex);
 void	LEX_ResetIOContext(lex_t *lex, const arIOCtx_t *io);
 
-bool_t	LEX_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr);
-bool_t	LEX_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action);
+ar_bool_t	LEX_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr);
+ar_bool_t	LEX_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action);
 
-bool_t	LEX_RemoveByName(lex_t *lex, const wchar_t *name);
-bool_t	LEX_RemoveByValue(lex_t *lex, size_t value);
+ar_bool_t	LEX_RemoveByName(lex_t *lex, const wchar_t *name);
+ar_bool_t	LEX_RemoveByValue(lex_t *lex, size_t value);
 
-bool_t	LEX_Insert(lex_t *lex, const wchar_t *input);
-bool_t	LEX_GenerateTransTable(lex_t *lex);
+ar_bool_t	LEX_Insert(lex_t *lex, const wchar_t *input);
+ar_bool_t	LEX_GenerateTransTable(lex_t *lex);
 void	LEX_Clear(lex_t *lex);
 
 
 
 
-bool_t LEX_Match(lex_t *lex, lexMatch_t *match, lexToken_t *tok);
+ar_bool_t LEX_Match(lex_t *lex, lexMatch_t *match, lexToken_t *tok);
 
 
 

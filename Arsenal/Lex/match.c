@@ -70,7 +70,7 @@ const wchar_t* LEX_GetNextInput(const lexMatch_t *match)
 		return match->next;
 }
 
-bool_t	LEX_IsError(const lexMatch_t *match)
+ar_bool_t	LEX_IsError(const lexMatch_t *match)
 {
 		AR_ASSERT(match != NULL);
 		return !match->is_ok;
@@ -109,7 +109,42 @@ void	LEX_Skip(lexMatch_t *pmatch)
 		}
 }
 
+void			LEX_SkipTo(lexMatch_t *pmatch, const wchar_t *tok)
+{
+		const wchar_t *next;
+		AR_ASSERT(pmatch != NULL && pmatch->next != NULL);
+		next = AR_wcsstr(pmatch->next, tok);
 
+		if(next == NULL)
+		{
+				while(*pmatch->next != L'\0')
+				{
+						if(*pmatch->next == L'\n')
+						{
+								pmatch->line++;
+								pmatch->col = 0;
+						}else
+						{
+								pmatch->col++;
+						}
+						pmatch->next++;
+				}
+		}else
+		{
+				while(pmatch->next != next)
+				{
+						if(*pmatch->next == L'\n')
+						{
+								pmatch->line++;
+								pmatch->col = 0;
+						}else
+						{
+								pmatch->col++;
+						}
+						pmatch->next++;
+				}
+		}
+}
 
 
 AR_NAMESPACE_END

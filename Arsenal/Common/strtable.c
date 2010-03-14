@@ -116,7 +116,7 @@ const wchar_t*			AR_GetStringInt(arStringTable_t *tbl, ar_int64_t num, size_t ra
 		wchar_t buf[100];
 		wchar_t *p;
 
-		bool_t is_neg;
+		ar_bool_t is_neg;
 		AR_ASSERT(tbl != NULL && radix > 0 && radix <= 16);
 
 		if(num < 0)

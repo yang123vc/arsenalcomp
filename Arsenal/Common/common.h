@@ -80,7 +80,7 @@ void	AR_error_ctx(arIOCtx_t *ctx, ar_int_t level, const wchar_t *msg, ...);
 
 #define AR_CHECK(_cond,_msg,_level) do {if(!(_cond))AR_error((_level), L"%ls\r\n", (_msg)); }while(0)
 
-#define AR_STATIC_CHECK(_expr)	typedef char __static_assert_t[ (bool_t)(_expr) ]
+#define AR_STATIC_CHECK(_expr)	typedef char __static_assert_t[ (ar_bool_t)(_expr) ]
 
 
 
@@ -127,22 +127,10 @@ static AR_INLINE const void* AR_GET_ELEM(const void *base, size_t width, size_t 
 
 /**********************************************************memory***************************************************************/
 
-#if defined(AR_USE_CRT_ALLOCFUNC)
-
-		#define AR_malloc(_bytes)		malloc((_bytes))
-		#define	AR_calloc(_n, _size)	calloc((_n), (_size))
-		#define AR_realloc(_b, _n)		realloc((_b), (_n))
-		#define AR_free(_p)				free(_p)
-#else
-
-		void*	AR_malloc(size_t nbytes);
-		void*	AR_calloc(size_t num, size_t size);
-		void*	AR_realloc(void *block, size_t nbytes);
-		void	AR_free(void *ptr);
-
-#endif
-
-
+void*	AR_malloc(size_t nbytes);
+void*	AR_calloc(size_t num, size_t size);
+void*	AR_realloc(void *block, size_t nbytes);
+void	AR_free(void *ptr);
 void	AR_memswap(void *a, void *b, size_t n);
 
 
@@ -157,20 +145,26 @@ void	AR_memswap(void *a, void *b, size_t n);
 
 
 
+#if defined(AR_USE_CRT_ALLOCFUNC)
+
+#define AR_NEW(_type) ((_type*)malloc(sizeof(_type)))
+#define AR_NEW0(_type) ((_type*)calloc(1, sizeof(_type)))
+#define AR_NEWARR(_type, _n) ((_type*)malloc(sizeof(_type) * (_n)))
+#define AR_NEWARR0(_type, _n) ((_type*)calloc((_n), sizeof(_type)))
+#define AR_REALLOC(_type, _ptr, _new_count) ((_type*)realloc((_ptr), sizeof(_type) * (_new_count)))
+#define AR_DEL(_ptr) free((void*)(_ptr))
+
+#else
 
 #define AR_NEW(_type) ((_type*)AR_malloc(sizeof(_type)))
-
 #define AR_NEW0(_type) ((_type*)AR_calloc(1, sizeof(_type)))
-
 #define AR_NEWARR(_type, _n) ((_type*)AR_malloc(sizeof(_type) * (_n)))
-
 #define AR_NEWARR0(_type, _n) ((_type*)AR_calloc((_n), sizeof(_type)))
-
 #define AR_REALLOC(_type, _ptr, _new_count) ((_type*)AR_realloc((_ptr), sizeof(_type) * (_new_count)))
-
 #define AR_DEL(_ptr) AR_free((void*)(_ptr))
 
 
+#endif
 
 
 /**********************************************************algo*************************************************************/
@@ -194,6 +188,12 @@ ar_uint32_t		AR_rand32();
 
 /********************************************************CRT String*****************************************************************/
 
+
+
+ar_int_t	AR_stricmp(const char *l, const char *r);
+ar_int_t	AR_strnicmp(const char *l, const char *r, size_t n);
+ar_int_t	AR_wcsicmp(const wchar_t *l, const wchar_t *r);
+ar_int_t	AR_wcsnicmp(const wchar_t *l, const wchar_t *r, size_t n);
 
 #define AR_strlen(_s)			strlen((_s))
 #define AR_strcmp(_l, _r)		strcmp((_l), (_r))
@@ -468,12 +468,12 @@ void			AR_DestroyBuffer(arBuffer_t		*buffer);
 void			AR_ClearBuffer(arBuffer_t		*buffer);
 
 /*分配nbytes个字节以供使用*/
-ar_byte_t*			AR_AllocFromBuffer(arBuffer_t *buffer, size_t	nbytes);
+ar_byte_t*			AR_AllocBuffer(arBuffer_t *buffer, size_t	nbytes);
 /*向buffer写入nbytes个字节*/
-void			AR_InsertToBuffer(arBuffer_t *buffer, const ar_byte_t *data, size_t len);
+void			AR_InsertBuffer(arBuffer_t *buffer, const ar_byte_t *data, size_t len);
 
 /*从buffer头擦除nbytes个字节*/
-size_t			AR_EraseFromBuffer(arBuffer_t *buffer, size_t nbytes);
+size_t			AR_EraseBuffer(arBuffer_t *buffer, size_t nbytes);
 
 /*返回不重新分配内存还可以写的字节数*/
 size_t			AR_GetBufferCapacity(const arBuffer_t *buffer);
@@ -482,9 +482,9 @@ size_t			AR_GetBufferCapacity(const arBuffer_t *buffer);
 void			AR_ReserveBuffer(arBuffer_t *buffer, size_t nbytes);
 
 /*可读内存块*/
-const ar_byte_t*	AR_GetBufferReadableData(const arBuffer_t *buffer);
+const ar_byte_t*	AR_GetBufferData(const arBuffer_t *buffer);
 /*可读内存块长度*/
-size_t			AR_GetBufferReadableLength(const arBuffer_t *buffer);
+size_t			AR_GetBufferAvailable(const arBuffer_t *buffer);
 
 
 
