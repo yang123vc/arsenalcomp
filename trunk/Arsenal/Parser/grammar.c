@@ -608,12 +608,12 @@ bool_t					PSR_InsertRuleByStr(psrGrammar_t *grammar, const wchar_t *str, const 
 
 
 
-int_t					PSR_IndexOfGrammar(const psrGrammar_t *grammar, const psrRule_t *rule)
+ar_int_t					PSR_IndexOfGrammar(const psrGrammar_t *grammar, const psrRule_t *rule)
 {
 		size_t i;
 		for(i = 0; i < grammar->count; ++i)
 		{
-				if(grammar->rules[i] == rule)return (int_t)i;
+				if(grammar->rules[i] == rule)return (ar_int_t)i;
 		}
 
 		return -1;
@@ -932,7 +932,7 @@ void			PSR_PrintGrammar(const psrGrammar_t *grammar, arString_t *str)
 						AR_ASSERT(info != NULL);
 						
 						/*AR_AppendFormatString(str, L" prec = %d assoc = %d prec_tok = %ls", info->prec, info->assoc, info->term->name);*/
-						AR_AppendFormatString(str, L" prec = %" AR_INT_FMT64 L"d assoc = %" AR_INT_FMT64 L"d prec_tok = %ls", (uint64_t)info->prec, (uint64_t)info->assoc, info->term->name);
+						AR_AppendFormatString(str, L" prec = %" AR_INT_FMT64 L"d assoc = %" AR_INT_FMT64 L"d prec_tok = %ls", (ar_uint64_t)info->prec, (ar_uint64_t)info->assoc, info->term->name);
 				}
 				
 				AR_AppendString(str, L"\r\n");

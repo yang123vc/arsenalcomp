@@ -89,7 +89,7 @@ void LEX_InserToProgSet(lexProgSet_t *set, rgxProg_t *prog, const lexAction_t *a
 }
 
 
-static void __exch_set(lexProgSet_t *set, int_t i,int_t j)
+static void __exch_set(lexProgSet_t *set, ar_int_t i,ar_int_t j)
 {
 		rgxProg_t		*prog;
 		lexAction_t		act;
@@ -107,11 +107,11 @@ static void __exch_set(lexProgSet_t *set, int_t i,int_t j)
 
 bool_t	LEX_RemoveFromProgSet(lexProgSet_t *set, size_t value)
 {
-		int_t l,r,cnt;
+		ar_int_t l,r,cnt;
 		bool_t res = false;
 		AR_ASSERT(set != NULL);
 		
-		l = 0; r = (int_t)set->count - (int_t)1, cnt = (int_t)set->count;
+		l = 0; r = (ar_int_t)set->count - (ar_int_t)1, cnt = (ar_int_t)set->count;
 
 		while(l <= r)
 		{
@@ -125,7 +125,7 @@ bool_t	LEX_RemoveFromProgSet(lexProgSet_t *set, size_t value)
 		}
 		
 		
-		for(l = r + 1; l < (int_t)set->count; ++l)
+		for(l = r + 1; l < (ar_int_t)set->count; ++l)
 		{
 				rgxProg_t *prog = set->prog[l];
 				set->prog[l] = NULL;
@@ -144,11 +144,11 @@ bool_t	LEX_RemoveFromProgSet(lexProgSet_t *set, size_t value)
 
 void LEX_SortProgSet(lexProgSet_t *set)
 {
-		int_t i,j;
+		ar_int_t i,j;
 
 		
 
-		for(i = (int_t)set->count - 1; i > 0; --i)
+		for(i = (ar_int_t)set->count - 1; i > 0; --i)
 		{
 				if(set->action[i].priority > set->action[i-1].priority)
 				{
@@ -158,7 +158,7 @@ void LEX_SortProgSet(lexProgSet_t *set)
 
 		
 
-		for(i = 1; i < (int_t)set->count; ++i)
+		for(i = 1; i < (ar_int_t)set->count; ++i)
 		{
 				for(j = i; j > 0 && set->action[j].priority > set->action[j-1].priority; --j)
 				{
@@ -241,7 +241,7 @@ bool_t	LEX_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action
 
 		cat = RGX_CreateNode(RGX_CAT_T);
 		final = RGX_CreateNode(RGX_FINAL_T);
-		final->final_val = (int_t)action->value;
+		final->final_val = (ar_int_t)action->value;
 		
 		cat->left = res.node;
 		cat->right = final;

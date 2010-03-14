@@ -34,7 +34,7 @@ common.h -- misc founctions used in Arsenal
 
 /*******************************************************************************init********************************/
 
-typedef void	(AR_STDCALL *AR_error_func_t)(int_t level, const wchar_t *msg, void *ctx);
+typedef void	(AR_STDCALL *AR_error_func_t)(ar_int_t level, const wchar_t *msg, void *ctx);
 typedef void	(AR_STDCALL *AR_print_func_t)(const wchar_t *msg, void *ctx);
 
 
@@ -60,15 +60,15 @@ arIOCtx_t*	AR_global_ioctx();
 void	AR_printf(const wchar_t *msg,...);
 
 /*库内部错误为负数*/
-#define AR_ERR_FATAL		((int_t)-0x0001)
-#define AR_ERR_WARNING		((int_t)-0x0002)
+#define AR_ERR_FATAL		((ar_int_t)-0x0001)
+#define AR_ERR_WARNING		((ar_int_t)-0x0002)
 
-void	AR_error(int_t level, const wchar_t *msg, ...);
+void	AR_error(ar_int_t level, const wchar_t *msg, ...);
 
 
 
 void	AR_printf_ctx(arIOCtx_t *ctx, const wchar_t *msg,...);
-void	AR_error_ctx(arIOCtx_t *ctx, int_t level, const wchar_t *msg, ...);
+void	AR_error_ctx(arIOCtx_t *ctx, ar_int_t level, const wchar_t *msg, ...);
 
 
 
@@ -119,7 +119,7 @@ void	AR_error_ctx(arIOCtx_t *ctx, int_t level, const wchar_t *msg, ...);
 static AR_INLINE const void* AR_GET_ELEM(const void *base, size_t width, size_t idx)
 {
 		AR_ASSERT(base != NULL && width > 0);
-		return (const void*)((byte_t*)base + (width * idx));
+		return (const void*)((ar_byte_t*)base + (width * idx));
 }
 
 
@@ -179,17 +179,17 @@ void	AR_memswap(void *a, void *b, size_t n);
 
 
 
-void	AR_qsort(void *base, size_t num, size_t width, int_t (*cmp_f)(const void*, const void*));
-int_t	AR_bsearch(const void *key, const void *base, size_t num, size_t width, int_t (*cmp_f)(const void*, const void*));
+void	AR_qsort(void *base, size_t num, size_t width, ar_int_t (*cmp_f)(const void*, const void*));
+ar_int_t	AR_bsearch(const void *key, const void *base, size_t num, size_t width, ar_int_t (*cmp_f)(const void*, const void*));
 
-/*void	AR_qsort(void *base, size_t num, size_t width, int_t (__cdecl *cmp_f)(void*,void*));*/
+/*void	AR_qsort(void *base, size_t num, size_t width, ar_int_t (__cdecl *cmp_f)(void*,void*));*/
 
 
 
 /**********************************************************rand*************************************************************/
-void			AR_srand(uint64_t seed);
-uint64_t		AR_rand64();
-uint32_t		AR_rand32();
+void			AR_srand(ar_uint64_t seed);
+ar_uint64_t		AR_rand64();
+ar_uint32_t		AR_rand32();
 
 
 /********************************************************CRT String*****************************************************************/
@@ -239,10 +239,10 @@ const wchar_t*	AR_wcstrim_space(const wchar_t *in);
 wchar_t*		AR_wcscat(wchar_t *dest, const wchar_t *sour);
 wchar_t*		AR_wcsncat(wchar_t *dest, const wchar_t *sour, size_t n);
 
-const wchar_t*	AR_wtoi32(const wchar_t *in, int32_t  *num, size_t base);
-const wchar_t*	AR_wtou32(const wchar_t *in, uint32_t *num, size_t base);
-const wchar_t*	AR_wtoi64(const wchar_t *in, int64_t  *num, size_t base);
-const wchar_t*	AR_wtou64(const wchar_t *in, uint64_t  *num, size_t base);
+const wchar_t*	AR_wtoi32(const wchar_t *in, ar_int32_t  *num, size_t base);
+const wchar_t*	AR_wtou32(const wchar_t *in, ar_uint32_t *num, size_t base);
+const wchar_t*	AR_wtoi64(const wchar_t *in, ar_int64_t  *num, size_t base);
+const wchar_t*	AR_wtou64(const wchar_t *in, ar_uint64_t  *num, size_t base);
 
 const wchar_t*	AR_wtod(const wchar_t *in, double *num);
 
@@ -250,11 +250,11 @@ const wchar_t*	AR_wtod(const wchar_t *in, double *num);
 const wchar_t*	AR_wcstrim_s(const wchar_t *in, const wchar_t *end, const wchar_t *trim);
 const wchar_t*	AR_wcstrim_space_s(const wchar_t *in, const wchar_t *end);
 
-const wchar_t*	AR_wtoi32_s(const wchar_t *in, const wchar_t *end, int32_t  *num, size_t base);
-const wchar_t*	AR_wtou32_s(const wchar_t *in, const wchar_t *end, uint32_t *num, size_t base);
+const wchar_t*	AR_wtoi32_s(const wchar_t *in, const wchar_t *end, ar_int32_t  *num, size_t base);
+const wchar_t*	AR_wtou32_s(const wchar_t *in, const wchar_t *end, ar_uint32_t *num, size_t base);
 
-const wchar_t*	AR_wtoi64_s(const wchar_t *in, const wchar_t *end, int64_t  *num, size_t base);
-const wchar_t*	AR_wtou64_s(const wchar_t *in, const wchar_t *end, uint64_t  *num, size_t base);
+const wchar_t*	AR_wtoi64_s(const wchar_t *in, const wchar_t *end, ar_int64_t  *num, size_t base);
+const wchar_t*	AR_wtou64_s(const wchar_t *in, const wchar_t *end, ar_uint64_t  *num, size_t base);
 const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *num);
 
 
@@ -262,8 +262,8 @@ const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *num);
 wchar_t*		AR_wcstrim_right(wchar_t *in, const wchar_t *trim);
 
 /*返回的是需要元素数组的长度包含0*/
-int_t			AR_i64tow_buf(wchar_t *out, size_t nbuf, int64_t num, size_t radix);
-int_t			AR_u64tow_buf(wchar_t *out, size_t nbuf, uint64_t num, size_t radix);
+ar_int_t			AR_i64tow_buf(wchar_t *out, size_t nbuf, ar_int64_t num, size_t radix);
+ar_int_t			AR_u64tow_buf(wchar_t *out, size_t nbuf, ar_uint64_t num, size_t radix);
 
 
 
@@ -300,17 +300,17 @@ int_t			AR_u64tow_buf(wchar_t *out, size_t nbuf, uint64_t num, size_t radix);
 
 
 /*返回一个长度，足够容乃fmt + args*/
-int_t			AR_vscwprintf(const wchar_t *fmt, va_list args);
-int_t			AR_scwprintf(const wchar_t *fmt, ...);
+ar_int_t			AR_vscwprintf(const wchar_t *fmt, va_list args);
+ar_int_t			AR_scwprintf(const wchar_t *fmt, ...);
 wchar_t*		AR_vtow(const wchar_t *fmt, ...);
 
 
-int_t			AR_wchartodigit(wchar_t ch);
+ar_int_t			AR_wchartodigit(wchar_t ch);
 
 
 
-uint_t			AR_wcshash(const wchar_t *str);
-uint_t			AR_wcshash_n(const wchar_t *str, size_t n);
+ar_uint_t			AR_wcshash(const wchar_t *str);
+ar_uint_t			AR_wcshash_n(const wchar_t *str, size_t n);
 
 
 
@@ -322,9 +322,9 @@ uint_t			AR_wcshash_n(const wchar_t *str, size_t n);
 
 typedef struct __escape_string_error_tag
 {
-		int_t			type;
+		ar_int_t			type;
 		const wchar_t	*pos;
-		uint64_t		value;
+		ar_uint64_t		value;
 }arEscStrErr_t;
 
 
@@ -332,8 +332,8 @@ wchar_t*		AR_escstr_to_str(const wchar_t *src, arEscStrErr_t *error);
 wchar_t*		AR_str_to_escstr(const wchar_t *src);
 
 
-int_t 		AR_escstr_to_str_buf(wchar_t *dest, size_t len, const wchar_t *src, arEscStrErr_t *error);
-int_t 		AR_str_to_escstr_buf(wchar_t *dest, size_t len, const wchar_t *src);
+ar_int_t 		AR_escstr_to_str_buf(wchar_t *dest, size_t len, const wchar_t *src, arEscStrErr_t *error);
+ar_int_t 		AR_str_to_escstr_buf(wchar_t *dest, size_t len, const wchar_t *src);
 
 /********************************************************String*****************************************************************/
 
@@ -384,8 +384,8 @@ void					AR_DestroyStrTable(arStringTable_t* tbl);
 const wchar_t*			AR_GetString(arStringTable_t *tbl, const wchar_t *str);
 const wchar_t*			AR_GetStringN(arStringTable_t *tbl, const wchar_t *str, size_t n);
 
-const wchar_t*			AR_GetStringUInt(arStringTable_t *tbl, uint64_t num, size_t radix);
-const wchar_t*			AR_GetStringInt(arStringTable_t *tbl, int64_t num, size_t radix);
+const wchar_t*			AR_GetStringUInt(arStringTable_t *tbl, ar_uint64_t num, size_t radix);
+const wchar_t*			AR_GetStringInt(arStringTable_t *tbl, ar_int64_t num, size_t radix);
 
 
 
@@ -407,10 +407,10 @@ wchar_t* AR_utf8_convto_wcs(const char *utf8);
 void			AR_InitThread();
 void			AR_UnInitThread();
 
-/*uint_t			AR_CompExchange(volatile uint_t *dest, uint_t exch, uint_t compval);*/
+/*ar_uint_t			AR_CompExchange(volatile ar_uint_t *dest, ar_uint_t exch, ar_uint_t compval);*/
 
-int_t			AR_AtomicInc(volatile int_t *dest);
-int_t			AR_AtomicDec(volatile int_t *dest);
+ar_int_t			AR_AtomicInc(volatile ar_int_t *dest);
+ar_int_t			AR_AtomicDec(volatile ar_int_t *dest);
 
 
 #define			AR_MAXSPIN_COUNT		100000
@@ -421,7 +421,7 @@ int_t			AR_AtomicDec(volatile int_t *dest);
 
 #elif defined(OS_FAMILY_WINDOWS)
 
-    typedef         volatile int_t               arSpinLock_t;
+    typedef         volatile ar_int_t               arSpinLock_t;
 #else
 
 #endif
@@ -434,16 +434,16 @@ void			AR_UnLockSpinLock(arSpinLock_t *lock);
 void			AR_YieldThread();
 void			AR_Sleep(size_t millisecond);
 
-uint64_t		AR_GetTime_Microseconds();
+ar_uint64_t		AR_GetTime_Microseconds();
 #define			AR_GetTime_Milliseconds()		(AR_GetTime_Microseconds() / 1000LL)
 
 
 /*******************************************************BitMark****************************************************************/
 
 
-/*#define AR_BIT_MARK(_pos)	(((uint64_t)0x01) << ((uint64_t)(_pos)))*/
+/*#define AR_BIT_MARK(_pos)	(((ar_uint64_t)0x01) << ((ar_uint64_t)(_pos)))*/
 
-static AR_INLINE uint64_t AR_BIT_MARK(uint64_t pos) { return AR_BIGNUM_U64(0x01) << pos; }
+static AR_INLINE ar_uint64_t AR_BIT_MARK(ar_uint64_t pos) { return AR_BIGNUM_U64(0x01) << pos; }
 
 #define AR_BIT_TEST(_val, _pos)  ((((_val) & (AR_BIT_MARK((_pos))))))
 
@@ -468,9 +468,9 @@ void			AR_DestroyBuffer(arBuffer_t		*buffer);
 void			AR_ClearBuffer(arBuffer_t		*buffer);
 
 /*分配nbytes个字节以供使用*/
-byte_t*			AR_AllocFromBuffer(arBuffer_t *buffer, size_t	nbytes);
+ar_byte_t*			AR_AllocFromBuffer(arBuffer_t *buffer, size_t	nbytes);
 /*向buffer写入nbytes个字节*/
-void			AR_InsertToBuffer(arBuffer_t *buffer, const byte_t *data, size_t len);
+void			AR_InsertToBuffer(arBuffer_t *buffer, const ar_byte_t *data, size_t len);
 
 /*从buffer头擦除nbytes个字节*/
 size_t			AR_EraseFromBuffer(arBuffer_t *buffer, size_t nbytes);
@@ -482,7 +482,7 @@ size_t			AR_GetBufferCapacity(const arBuffer_t *buffer);
 void			AR_ReserveBuffer(arBuffer_t *buffer, size_t nbytes);
 
 /*可读内存块*/
-const byte_t*	AR_GetBufferReadableData(const arBuffer_t *buffer);
+const ar_byte_t*	AR_GetBufferReadableData(const arBuffer_t *buffer);
 /*可读内存块长度*/
 size_t			AR_GetBufferReadableLength(const arBuffer_t *buffer);
 

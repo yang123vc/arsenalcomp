@@ -28,7 +28,7 @@ static void		AR_STDCALL __error_func(const psrToken_t *tok, const wchar_t *expec
 
 
 
-static void AR_STDCALL __io_error_func(int_t level, const wchar_t *msg, void *ctx)
+static void AR_STDCALL __io_error_func(ar_int_t level, const wchar_t *msg, void *ctx)
 {
 		ARContext		*context = (ARContext*)ctx;
 		

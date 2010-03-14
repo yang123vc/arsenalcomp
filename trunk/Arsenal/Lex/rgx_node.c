@@ -162,7 +162,7 @@ rgxNode_t*		RGX_CopyNode(const rgxNode_t *node)
 
 		res = (rgxNode_t*)node;
 
-		AR_AtomicInc((volatile int_t*)&node->ref_count);
+		AR_AtomicInc((volatile ar_int_t*)&node->ref_count);
 
 		return res;
 }
@@ -176,7 +176,7 @@ void			RGX_DestroyNode(rgxNode_t *node)
 		
 		AR_ASSERT(node->ref_count >= 1);
 
-		if(AR_AtomicDec((volatile int_t*)&node->ref_count) > 0)
+		if(AR_AtomicDec((volatile ar_int_t*)&node->ref_count) > 0)
 		{
 				return;
 		}

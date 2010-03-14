@@ -24,8 +24,8 @@ AR_NAMESPACE_BEGIN
 static AR_INLINE const wchar_t* __transform_char(const wchar_t *input, wchar_t *out, arEscStrErr_t *error)
 {
 		const wchar_t *p;
-		int_t			err = AR_ESCSTR_ERR_OK;
-		uint64_t		num = 0;
+		ar_int_t			err = AR_ESCSTR_ERR_OK;
+		ar_uint64_t		num = 0;
 		AR_ASSERT(input != NULL && out != NULL);
 
 		p = input;
@@ -83,7 +83,7 @@ static AR_INLINE const wchar_t* __transform_char(const wchar_t *input, wchar_t *
 				{
 						p = AR_wtou64(p + 1, &num, 16);
 
-						if(p == NULL || num > (uint64_t)AR_WCHARMAX)
+						if(p == NULL || num > (ar_uint64_t)AR_WCHARMAX)
 						{
 								p = NULL;
 								err = AR_ESCSTR_ERR_VALUE;
@@ -245,9 +245,9 @@ wchar_t*		AR_str_to_escstr(const wchar_t *src)
 								*d++ = *s;
 						}else
 						{
-								int_t l = 0;
+								ar_int_t l = 0;
 								wchar_t buf[128];
-								l = AR_u64tow_buf(buf, AR_NELEMS(buf), (uint64_t)(*s), 16);
+								l = AR_u64tow_buf(buf, AR_NELEMS(buf), (ar_uint64_t)(*s), 16);
 								AR_ASSERT(l > 0);
 								*d++ = L'\\';
 								*d++ = L'x';
@@ -267,7 +267,7 @@ wchar_t*		AR_str_to_escstr(const wchar_t *src)
 
 
 
-int_t 		AR_escstr_to_str_buf(wchar_t *dest, size_t len, const wchar_t *src, arEscStrErr_t *error)
+ar_int_t 		AR_escstr_to_str_buf(wchar_t *dest, size_t len, const wchar_t *src, arEscStrErr_t *error)
 {
 		size_t ret;
 		wchar_t *str;
@@ -282,7 +282,7 @@ int_t 		AR_escstr_to_str_buf(wchar_t *dest, size_t len, const wchar_t *src, arEs
 		if(dest == NULL)
 		{
 				AR_DEL(str);
-				return (int_t)ret + 1;
+				return (ar_int_t)ret + 1;
 		}else
 		{
 				if(len <= ret) 
@@ -295,13 +295,13 @@ int_t 		AR_escstr_to_str_buf(wchar_t *dest, size_t len, const wchar_t *src, arEs
 						AR_wcsncpy(dest, str, ret);
 						dest[ret] = L'\0';
 						AR_DEL(str);
-						return (int_t)ret + 1;
+						return (ar_int_t)ret + 1;
 				}
 		}
 }
 
 
-int_t 		AR_str_to_escstr_buf(wchar_t *dest, size_t len, const wchar_t *src)
+ar_int_t 		AR_str_to_escstr_buf(wchar_t *dest, size_t len, const wchar_t *src)
 {
 		size_t ret;
 		wchar_t *str;
@@ -316,7 +316,7 @@ int_t 		AR_str_to_escstr_buf(wchar_t *dest, size_t len, const wchar_t *src)
 		if(dest == NULL)
 		{
 				AR_DEL(str);
-				return (int_t)ret + 1;
+				return (ar_int_t)ret + 1;
 		}else
 		{
 				if(len <= ret) { AR_DEL(str); return -1;}
@@ -325,7 +325,7 @@ int_t 		AR_str_to_escstr_buf(wchar_t *dest, size_t len, const wchar_t *src)
 				dest[ret] = L'\0';
 
 				AR_DEL(str);
-				return (int_t)ret + 1;
+				return (ar_int_t)ret + 1;
 		}
 }
 

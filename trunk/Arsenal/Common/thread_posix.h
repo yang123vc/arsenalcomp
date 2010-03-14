@@ -32,7 +32,7 @@ void			AR_UnInitThread()
 
 }
 
-int_t			AR_AtomicInc(volatile int_t *dest)
+ar_int_t			AR_AtomicInc(volatile ar_int_t *dest)
 {
 		AR_LockSpinLock(&__g_spinlock);
 		*dest += 1;
@@ -40,7 +40,7 @@ int_t			AR_AtomicInc(volatile int_t *dest)
 		return *dest;
 }
 
-int_t			AR_AtomicDec(volatile int_t *dest)
+ar_int_t			AR_AtomicDec(volatile ar_int_t *dest)
 {
 		AR_LockSpinLock(&__g_spinlock);
 		*dest -= 1;
@@ -62,7 +62,7 @@ void			AR_Sleep(size_t millisecond)
 {
 		struct  timeval tv;
 		tv.tv_sec = 0LL;
-		tv.tv_usec = (int64_t)millisecond * 1000LL;
+		tv.tv_usec = (ar_int64_t)millisecond * 1000LL;
 		select(0,NULL,NULL,NULL,&tv);
 }
 
@@ -98,11 +98,11 @@ void			AR_UnLockSpinLock(arSpinLock_t *lock)
 
 #define RESOLUTION		1000000LL
 
-uint64_t		AR_GetTime_Microseconds()
+ar_uint64_t		AR_GetTime_Microseconds()
 {
 		struct timeval tv;
 		gettimeofday(&tv, NULL);
-		return (uint64_t)tv.tv_sec * (uint64_t)RESOLUTION + (uint64_t)tv.tv_usec;
+		return (ar_uint64_t)tv.tv_sec * (ar_uint64_t)RESOLUTION + (ar_uint64_t)tv.tv_usec;
 }
 
 

@@ -1458,13 +1458,13 @@ static parser_t*		__build_parser(const psrGrammar_t *gmr)
 
 
 /*
-typedef void	(AR_STDCALL *AR_error_func)(int_t level, const wchar_t *msg, void *ctx);
+typedef void	(AR_STDCALL *AR_error_func)(ar_int_t level, const wchar_t *msg, void *ctx);
 typedef void	(AR_STDCALL *AR_print_func)(const wchar_t *msg, void *ctx);
 */
 
 
 
-static void	AR_STDCALL cfg_on_error(int_t level, const wchar_t *msg, void *ctx)
+static void	AR_STDCALL cfg_on_error(ar_int_t level, const wchar_t *msg, void *ctx)
 {
 		cfgReport_t				*report = NULL;
 		cfgReportInfo_t			info;

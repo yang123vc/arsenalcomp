@@ -25,9 +25,9 @@ AR_NAMESPACE_BEGIN
 #define __MODIFIER_UNICODE		0x20000
 #define	__MODIFIER_INT64		0x40000
 
-int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
+ar_int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 {
-		int_t res;
+		ar_int_t res;
 		va_list save;
 		AR_ASSERT(fmt != NULL && args != NULL);
 		res = 0;
@@ -35,7 +35,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 
 		while(*fmt)
 		{
-				int_t len = 0, width = 0, prec = 0, modifier = 0;
+				ar_int_t len = 0, width = 0, prec = 0, modifier = 0;
 				if(*fmt != L'%' || *(++fmt) == L'%')
 				{
 						fmt++;
@@ -65,7 +65,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 
 				if(width == 0)
 				{
-						const wchar_t *s; int_t w;
+						const wchar_t *s; ar_int_t w;
 						s = AR_wtoi(fmt, &w, 10);
 						if(s != NULL)
 						{
@@ -73,7 +73,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 								width = w;
 						}
 						AR_ASSERT(fmt != NULL && width >= 0);
-						if(fmt == NULL || width < 0)return (int_t)-1;
+						if(fmt == NULL || width < 0)return (ar_int_t)-1;
 				}
 
 				if(*fmt == L'.')
@@ -82,11 +82,11 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 						fmt++;
 						if(*fmt == L'*')
 						{
-								prec = va_arg(args, int32_t);
+								prec = va_arg(args, ar_int32_t);
 								fmt++;
 						}else
 						{
-								const wchar_t *s; int_t p;
+								const wchar_t *s; ar_int_t p;
 								s = AR_wtoi(fmt, &p, 10);
 								if(s != NULL)
 								{
@@ -180,7 +180,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 								len = 6;/*(null)*/
 						}else
 						{
-								len =(int_t)AR_wcslen(str);
+								len =(ar_int_t)AR_wcslen(str);
 								len = AR_MAX(len, 1);
 						}
 						break;
@@ -193,7 +193,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 								len = 6;/*(null)*/
 						}else
 						{
-								len = (int_t)AR_strlen(str);
+								len = (ar_int_t)AR_strlen(str);
 								len = AR_MAX(len,1);
 						}
 						break;
@@ -207,7 +207,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 								len = 6;/*(null)*/
 						}else
 						{
-								len = (int_t)AR_strlen(str);
+								len = (ar_int_t)AR_strlen(str);
 								len = AR_MAX(len,1);
 						}
 						break;
@@ -221,7 +221,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 								len = 6;/*(null)*/
 						}else
 						{
-								len = (int_t)AR_wcslen(str);
+								len = (ar_int_t)AR_wcslen(str);
 								len = AR_MAX(len, 1);
 						}
 						break;
@@ -246,10 +246,10 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 						{
 								if(modifier & __MODIFIER_INT64)
 								{
-										va_arg(args, int64_t);
+										va_arg(args, ar_int64_t);
 								}else
 								{
-										va_arg(args, int32_t);
+										va_arg(args, ar_int32_t);
 								}
 								len = 32;
 								len = AR_MAX(len, width + prec);
@@ -267,7 +267,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 						}
 						case L'f':
 						{
-								int_t cclen;
+								ar_int_t cclen;
 								wchar_t *buf;
 								double f= va_arg(args, double);
 
@@ -315,9 +315,9 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 
 
 
-int_t			AR_scwprintf(const wchar_t *fmt, ...)
+ar_int_t			AR_scwprintf(const wchar_t *fmt, ...)
 {
-		int_t len = -1;
+		ar_int_t len = -1;
 		va_list	arg_ptr;
 		AR_ASSERT(fmt != NULL);
 
@@ -334,7 +334,7 @@ wchar_t*		AR_vtow(const wchar_t *fmt, ...)
 		va_list			args;
 
 		wchar_t			*buf;
-		int_t			len;
+		ar_int_t			len;
 
 		AR_ASSERT(fmt != NULL);
 
@@ -351,7 +351,7 @@ wchar_t*		AR_vtow(const wchar_t *fmt, ...)
 
 
 
-int_t AR_wchartodigit(wchar_t ch)
+ar_int_t AR_wchartodigit(wchar_t ch)
 {
 #define DIGIT_RANGE_TEST(zero)  \
     if (ch < zero)              \
@@ -492,23 +492,23 @@ const wchar_t*	AR_wcstrim_space(const wchar_t *in)
 }
 
 
-const wchar_t* AR_wtoi64(const wchar_t *in,	 int64_t  *num, size_t base)
+const wchar_t* AR_wtoi64(const wchar_t *in,	 ar_int64_t  *num, size_t base)
 {
 		return AR_wtoi64_s(in, in + AR_wcslen(in), num, base);
 }
 
-const wchar_t* AR_wtou64(const wchar_t *in,	 uint64_t  *num, size_t base)
+const wchar_t* AR_wtou64(const wchar_t *in,	 ar_uint64_t  *num, size_t base)
 {
 		return AR_wtou64_s(in, in + AR_wcslen(in), num, base);
 }
 
 
-const wchar_t* AR_wtoi32(const wchar_t *in,  int32_t *num, size_t base)
+const wchar_t* AR_wtoi32(const wchar_t *in,  ar_int32_t *num, size_t base)
 {
 		return AR_wtoi32_s(in, in + AR_wcslen(in), num, base);
 }
 
-const wchar_t* AR_wtou32(const wchar_t *in,  uint32_t *num, size_t base)
+const wchar_t* AR_wtou32(const wchar_t *in,  ar_uint32_t *num, size_t base)
 {
 		return AR_wtou32_s(in, in + AR_wcslen(in), num, base);
 }
@@ -519,9 +519,9 @@ const wchar_t* AR_wtou32(const wchar_t *in,  uint32_t *num, size_t base)
 
 
 
-uint_t	AR_wcshash(const wchar_t *str)
+ar_uint_t	AR_wcshash(const wchar_t *str)
 {
-		uint_t	ret;
+		ar_uint_t	ret;
 		size_t	i;
 		AR_ASSERT(str != NULL);
 
@@ -534,9 +534,9 @@ uint_t	AR_wcshash(const wchar_t *str)
 }
 
 
-uint_t		AR_wcshash_n(const wchar_t *str, size_t n)
+ar_uint_t		AR_wcshash_n(const wchar_t *str, size_t n)
 {
-		uint_t	ret;
+		ar_uint_t	ret;
 		size_t	i;
 		if(n == 0)return 0;
 		AR_ASSERT(str != NULL);
@@ -580,11 +580,11 @@ wchar_t* AR_wcsndup(const wchar_t *sour, size_t len)
 #define	__BUFFER_LEN	256
 
 
-int_t			AR_u64tow_buf(wchar_t *out, size_t nbuf, uint64_t num, size_t radix)
+ar_int_t			AR_u64tow_buf(wchar_t *out, size_t nbuf, ar_uint64_t num, size_t radix)
 {
 		wchar_t buf[__BUFFER_LEN];
 		wchar_t *p;
-		int_t len;
+		ar_int_t len;
 		static const wchar_t* __tbl = L"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		AR_ASSERT(radix >= 2 && radix <= 36);
 
@@ -592,7 +592,7 @@ int_t			AR_u64tow_buf(wchar_t *out, size_t nbuf, uint64_t num, size_t radix)
 		*--p = 0;
 		do{ *--p = __tbl[num % radix];}while((num /= radix) > 0);
 
-		len = (int_t)(buf + __BUFFER_LEN - p);/*返回的是需要元素数组的长度包含0*/
+		len = (ar_int_t)(buf + __BUFFER_LEN - p);/*返回的是需要元素数组的长度包含0*/
 
 		if(out != NULL)
 		{
@@ -609,12 +609,12 @@ int_t			AR_u64tow_buf(wchar_t *out, size_t nbuf, uint64_t num, size_t radix)
 
 
 
-int_t			AR_i64tow_buf(wchar_t *out, size_t nbuf, int64_t num, size_t radix)
+ar_int_t			AR_i64tow_buf(wchar_t *out, size_t nbuf, ar_int64_t num, size_t radix)
 {
 		bool_t is_neg;
 		wchar_t buf[__BUFFER_LEN];
 		wchar_t *p;
-		int_t len;
+		ar_int_t len;
 		//static const wchar_t* __tbl = L"0123456789ABCDEF";
 		static const wchar_t* __tbl = L"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		AR_ASSERT(radix >= 2 && radix <= 36);
@@ -627,7 +627,7 @@ int_t			AR_i64tow_buf(wchar_t *out, size_t nbuf, int64_t num, size_t radix)
 		do{ *--p = __tbl[num % radix];}while((num /= radix) > 0);
 		if(is_neg)*--p = L'-';
 
-		len = (int_t)(buf + __BUFFER_LEN - p);/*返回的是需要元素数组的长度包含0*/
+		len = (ar_int_t)(buf + __BUFFER_LEN - p);/*返回的是需要元素数组的长度包含0*/
 
 		if(out != NULL)
 		{
@@ -792,9 +792,9 @@ const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *out)
 #define __READDIGIT  0x08
 
 
-static const wchar_t* __wtou64_s(const wchar_t *in, const wchar_t *end, uint64_t  *num, size_t base, uint32_t flag)
+static const wchar_t* __wtou64_s(const wchar_t *in, const wchar_t *end, ar_uint64_t  *num, size_t base, ar_uint32_t flag)
 {
-		uint64_t val,digit, maxval;
+		ar_uint64_t val,digit, maxval;
 		const wchar_t *p;
 
 		AR_ASSERT(in != NULL && end != NULL && num != NULL && (base == 0 || (base > 1 && base <= 36)));
@@ -845,7 +845,7 @@ static const wchar_t* __wtou64_s(const wchar_t *in, const wchar_t *end, uint64_t
 
 		while(p < end)
 		{
-				int_t tmp;
+				ar_int_t tmp;
 				if((tmp = AR_wchartodigit(*p)) != -1)
 				{
 						//tmp = (*p - L'0');
@@ -860,7 +860,7 @@ static const wchar_t* __wtou64_s(const wchar_t *in, const wchar_t *end, uint64_t
 						break;
 				}
 
-				digit = (uint64_t)tmp;
+				digit = (ar_uint64_t)tmp;
 				if(digit >= base)break;
 				flag |= __READDIGIT;
 
@@ -889,7 +889,7 @@ static const wchar_t* __wtou64_s(const wchar_t *in, const wchar_t *end, uint64_t
 						val = AR_UINT64_MAX;
 				} else if (flag & __NEG )
 				{
-						val = (uint64_t)(-AR_INT64_MIN);
+						val = (ar_uint64_t)(-AR_INT64_MIN);
 				}else
 				{
 						val = AR_INT64_MAX;
@@ -898,7 +898,7 @@ static const wchar_t* __wtou64_s(const wchar_t *in, const wchar_t *end, uint64_t
 
 		if(flag & __NEG)
 		{
-				val = (uint64_t)(-(int64_t)val);
+				val = (ar_uint64_t)(-(ar_int64_t)val);
 		}
 		*num = val;
 		return p;
@@ -906,9 +906,9 @@ static const wchar_t* __wtou64_s(const wchar_t *in, const wchar_t *end, uint64_t
 
 
 
-static const wchar_t* __wtou32_s(const wchar_t *in, const wchar_t *end, uint32_t  *num, size_t base, uint32_t flag)
+static const wchar_t* __wtou32_s(const wchar_t *in, const wchar_t *end, ar_uint32_t  *num, size_t base, ar_uint32_t flag)
 {
-		uint32_t val,digit, maxval;
+		ar_uint32_t val,digit, maxval;
 		const wchar_t *p;
 
 		AR_ASSERT(in != NULL && end != NULL && num != NULL && (base == 0 || (base > 1 && base <= 36)));
@@ -953,13 +953,13 @@ static const wchar_t* __wtou32_s(const wchar_t *in, const wchar_t *end, uint32_t
 
 		if(p >= end)return NULL;
 
-		maxval = AR_UINT32_MAX / (uint32_t)base;
+		maxval = AR_UINT32_MAX / (ar_uint32_t)base;
 		digit = 0;
 		val = 0;
 
 		while(p < end)
 		{
-				int_t tmp;
+				ar_int_t tmp;
 				if((tmp = AR_wchartodigit(*p)) != -1)
 				{
 						//tmp = (*p - L'0');
@@ -974,7 +974,7 @@ static const wchar_t* __wtou32_s(const wchar_t *in, const wchar_t *end, uint32_t
 						break;
 				}
 
-				digit = (uint32_t)tmp;
+				digit = (ar_uint32_t)tmp;
 				if(digit >= base)break;
 				flag |= __READDIGIT;
 
@@ -982,7 +982,7 @@ static const wchar_t* __wtou32_s(const wchar_t *in, const wchar_t *end, uint32_t
 
 				if (val < maxval || (val == maxval && digit <= AR_UINT32_MAX % base))
 				{
-						val = val * (uint32_t)base + digit;
+						val = val * (ar_uint32_t)base + digit;
 				}else
 				{
 						flag |= __OVERFLOW;
@@ -1003,7 +1003,7 @@ static const wchar_t* __wtou32_s(const wchar_t *in, const wchar_t *end, uint32_t
 						val = AR_UINT32_MAX;
 				} else if (flag & __NEG )
 				{
-						val = (uint32_t)(-AR_INT32_MIN);
+						val = (ar_uint32_t)(-AR_INT32_MIN);
 				}else
 				{
 						val = AR_INT32_MAX;
@@ -1012,7 +1012,7 @@ static const wchar_t* __wtou32_s(const wchar_t *in, const wchar_t *end, uint32_t
 
 		if(flag & __NEG)
 		{
-				val = (uint32_t)(-(int32_t)val);
+				val = (ar_uint32_t)(-(ar_int32_t)val);
 		}
 		*num = val;
 		return p;
@@ -1023,24 +1023,24 @@ static const wchar_t* __wtou32_s(const wchar_t *in, const wchar_t *end, uint32_t
 
 
 
-const wchar_t* AR_wtoi64_s(const wchar_t *in, const wchar_t *end, int64_t  *num, size_t base)
+const wchar_t* AR_wtoi64_s(const wchar_t *in, const wchar_t *end, ar_int64_t  *num, size_t base)
 {
-		uint32_t flag = 0;
-		uint64_t val;
+		ar_uint32_t flag = 0;
+		ar_uint64_t val;
 		const wchar_t *p;
 		AR_ASSERT(in != NULL && end != NULL && num != NULL && (base == 0 || (base > 1 && base <= 36)));
 
 		p = __wtou64_s(in, end, &val, base, flag);
 
-		*num = (int64_t)val;
+		*num = (ar_int64_t)val;
 
 		return p;
 }
 
 
-const wchar_t* AR_wtou64_s(const wchar_t *in, const wchar_t *end, uint64_t  *num, size_t base)
+const wchar_t* AR_wtou64_s(const wchar_t *in, const wchar_t *end, ar_uint64_t  *num, size_t base)
 {
-		uint32_t flag = __UNSIGNED;
+		ar_uint32_t flag = __UNSIGNED;
 		const wchar_t *p;
 		AR_ASSERT(in != NULL && end != NULL && num != NULL && (base == 0 || (base > 1 && base <= 36)));
 
@@ -1054,24 +1054,24 @@ const wchar_t* AR_wtou64_s(const wchar_t *in, const wchar_t *end, uint64_t  *num
 
 
 
-const wchar_t* AR_wtoi32_s(const wchar_t *in, const wchar_t *end, int32_t  *num, size_t base)
+const wchar_t* AR_wtoi32_s(const wchar_t *in, const wchar_t *end, ar_int32_t  *num, size_t base)
 {
-		uint32_t flag = 0;
-		uint32_t val;
+		ar_uint32_t flag = 0;
+		ar_uint32_t val;
 		const wchar_t *p;
 		AR_ASSERT(in != NULL && end != NULL && num != NULL && (base == 0 || (base > 1 && base <= 36)));
 
 		p = __wtou32_s(in, end, &val, base, flag);
 
-		*num = (int32_t)val;
+		*num = (ar_int32_t)val;
 
 		return p;
 }
 
 
-const wchar_t* AR_wtou32_s(const wchar_t *in, const wchar_t *end, uint32_t  *num, size_t base)
+const wchar_t* AR_wtou32_s(const wchar_t *in, const wchar_t *end, ar_uint32_t  *num, size_t base)
 {
-		uint32_t flag = __UNSIGNED;
+		ar_uint32_t flag = __UNSIGNED;
 		const wchar_t *p;
 		AR_ASSERT(in != NULL && end != NULL && num != NULL && (base == 0 || (base > 1 && base <= 36)));
 

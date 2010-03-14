@@ -25,7 +25,7 @@ AR_NAMESPACE_BEGIN
 
 const psrAction_t*		PSR_GetAction(const psrActionTable_t *tbl, size_t state, const psrSymb_t *symb)
 {
-		int_t idx;
+		ar_int_t idx;
 		AR_ASSERT(state < tbl->row && symb->type == PSR_TERM);
 		idx = PSR_BSearchFromSymbList(&tbl->term_set,symb);
 		AR_ASSERT(idx != -1);
@@ -34,9 +34,9 @@ const psrAction_t*		PSR_GetAction(const psrActionTable_t *tbl, size_t state, con
 
 }
 
-int_t					PSR_GetState(const psrActionTable_t *tbl, size_t state, const psrSymb_t *symb)
+ar_int_t					PSR_GetState(const psrActionTable_t *tbl, size_t state, const psrSymb_t *symb)
 {
-		int_t idx;
+		ar_int_t idx;
 		AR_ASSERT(state < tbl->goto_row && symb->type == PSR_NONTERM);
 		idx = PSR_BSearchFromSymbList(&tbl->nonterm_set,symb);
 		return tbl->goto_tbl[AR_TBL_IDX_R(state,idx, tbl->goto_col)];
@@ -93,8 +93,8 @@ static void __build_goto_table(psrActionTable_t *tbl, const lalrStateSet_t *set)
 
 		tbl->goto_row = set->count;
 		tbl->goto_col = tbl->nonterm_set.count;
-		tbl->goto_tbl = AR_NEWARR(int_t, tbl->goto_row * tbl->goto_col);
-		AR_memset(tbl->goto_tbl, (int_t)-1, tbl->goto_row * tbl->goto_col * sizeof(int_t));
+		tbl->goto_tbl = AR_NEWARR(ar_int_t, tbl->goto_row * tbl->goto_col);
+		AR_memset(tbl->goto_tbl, (ar_int_t)-1, tbl->goto_row * tbl->goto_col * sizeof(ar_int_t));
 		
 
 		for(i = 0; i < tbl->goto_row; ++i)
@@ -106,7 +106,7 @@ static void __build_goto_table(psrActionTable_t *tbl, const lalrStateSet_t *set)
 				{
 						if(state->actions[j].symb->type == PSR_NONTERM && state->actions[j].act_type == PSR_SHIFT)
 						{
-								int_t idx;
+								ar_int_t idx;
 								idx = PSR_BSearchFromSymbList(&tbl->nonterm_set, state->actions[j].symb);
 								AR_ASSERT(idx != -1);
 								tbl->goto_tbl[AR_TBL_IDX_R(i, idx, tbl->goto_col)] = PSR_IndexOfStateSet(set, state->actions[j].to);
@@ -407,7 +407,7 @@ psrActionTable_t* __create_action_table(const psrGrammar_t *grammar, psrLRItemTy
 
 						if(action->act_type == LALR_ACT_REDUCE || action->act_type == LALR_ACT_ACCEPT)
 						{
-								int_t idx;
+								ar_int_t idx;
 								AR_ASSERT(body == NULL && action->to == NULL);
 								
 
@@ -422,7 +422,7 @@ psrActionTable_t* __create_action_table(const psrGrammar_t *grammar, psrLRItemTy
 
 						}else if(action->act_type == LALR_ACT_SHIFT && action->symb->type == PSR_TERM)
 						{
-								int_t trans_to_idx,idx;
+								ar_int_t trans_to_idx,idx;
 								
 								AR_ASSERT(action->config != NULL && action->to != NULL && action->symb != NULL);
 								
