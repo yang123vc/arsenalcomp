@@ -149,6 +149,8 @@ typedef enum
 
 
 
+#if(0)
+
 static const wchar_t *__g_lex_name[] = 
 {
 		L"delim = [ \\r\\n\\t]",
@@ -1303,6 +1305,8 @@ static psrNode_t* AR_STDCALL handle_constant(psrNode_t **nodes, size_t count, co
 	 return NULL;
 }
 
+
+#endif
 
 
 

@@ -87,15 +87,27 @@
 #endif
 
 
+
 #if(__STDC_VERSION__ >= 199901L)
-    #define     AR_HAS_C99_FEATURE
+    #define     AR_HAS_C99_FEATURE		1
+#endif
+
+
+#if defined(__cplusplus) || defined(AR_HAS_C99_FEATURE)
+		#define AR_HAS_INLINE	1
 #endif
 
 
 
-#if(__STDC_VERSION__ >= 199901L)
-    #define     AR_HAS_C99_FEATURE
+
+#if defined(__cplusplus)
+		#define AR_NAMESPACE_BEGIN		extern "C" { namespace ARSpace {
+		#define AR_NAMESPACE_END		} }
+#else
+		#define AR_NAMESPACE_BEGIN
+		#define AR_NAMESPACE_END
 #endif
+
 
 
 
@@ -177,14 +189,15 @@
 
 #if defined(AR_HAS_C99_FEATURE)
     #include <stdint.h>
-#endif
-
-#if defined(AR_HAS_C99_FEATURE)
-		#include <stdint.h>
+	#include <stdbool.h>
 #endif
 
 #if defined(_STDINT_H)
     #define AR_HAS_STDINT
+#endif
+
+#if defined(__bool_true_false_are_defined) || defined(__cplusplus)
+		#define AR_HAS_BOOL_TRUE_FALSE
 #endif
 
 
@@ -216,9 +229,12 @@
 		#define AR_STDCALL		__stdcall
 		#define AR_CCALL		__cdecl
 
+		#define AR_INT8_T		__int8
+		#define AR_UINT8_T		unsigned __int8
 
-		#define AR_INT8_T	__int8
-		#define AR_UINT8_T  unsigned __int8
+		#define AR_INT16_T		__int16
+		#define AR_UINT16_T		unsigned __int16
+
 		#define AR_INT32_T	int
 		#define AR_UINT32_T unsigned int
 		#define AR_INT64_T  __int64
@@ -264,6 +280,10 @@
 
 		#define AR_INT8_T		signed char
 		#define AR_UINT8_T		unsigned char
+		
+		#define AR_INT16_T		signed short
+		#define AR_UINT16_T		unsigned short
+
 		#define AR_INT32_T		signed int
 		#define AR_UINT32_T		unsigned int
 		#define AR_INT64_T		signed long long int
@@ -297,47 +317,6 @@
 
 
 
-
-
-
-#define			AR_MEM_POLICY		(1)
-
-
-/*sizeof(bool_t) 必须等于1*/
-
-
-#if defined(__cplusplus)
-		#define AR_NAMESPACE_BEGIN		extern "C" { namespace ARSpace {
-		#define AR_NAMESPACE_END		} }
-
-
-		typedef bool					bool_t;
-
-		#define AR_INLINE				inline
-#else
-
-
-		#define AR_NAMESPACE_BEGIN
-		#define AR_NAMESPACE_END
-
-		typedef	AR_INT8_T				bool_t;
-
-		#define	true					1
-		#define false					0
-
-		#if(__STDC_VERSION__ < 199901L) /*C99标准之前的编译器定义为无*/
-				#define AR_INLINE				/*static*/
-        #else
-                #define AR_INLINE				inline
-		#endif
-
-#endif
-
-
-
-/*********************************平台相关***************************************/
-
-
 #if(AR_ARCH_VER	== ARCH_32)
 
 		#define AR_PLAT_INT_T			AR_INT32_T
@@ -364,20 +343,30 @@
 
 
 
+/*sizeof(bool_t) 必须等于1*/
+
+#if defined(AR_HAS_BOOL_TRUE_FALSE)
+		typedef bool					bool_t;
+#else
+		typedef	AR_INT8_T				bool_t;
+		#define	true					1
+		#define false					0
+#endif
+
+
+#if defined(AR_HAS_INLINE)
+		AR_INLINE				inline
+#else
+		#define AR_INLINE		/*C99标准之前的编译器定义无*/
+#endif
+
+
 
 
 
 /************************平台无关的定义***********************************/
 
 
-#ifndef WCHAR_MAX
-#if defined(OS_FAMILY_UNIX)
-		#define WCHAR_MAX		0xFFFFFFFF
-#else
-		#define WCHAR_MAX		0xFFFF
-#endif
-
-#endif
 
 
 /*
@@ -426,25 +415,22 @@
 #define AR_TOSTR(_Value) __AR_STRINGIZE_STR(_Value)
 
 
-
 #if !defined(AR_HAS_STDINT)
+		typedef AR_INT8_T				int8_t;
 
-typedef AR_INT8_T				int8_t;
+		typedef AR_UINT8_T				uint8_t;
 
-typedef AR_UINT8_T				uint8_t;
+		typedef AR_INT16_T				int16_t;
 
-typedef short					int16_t;
+		typedef AR_UINT16_T				uint16_t;
 
-typedef unsigned short			uint16_t;
+		typedef AR_INT32_T				int32_t;
 
-typedef AR_INT32_T				int32_t;
+		typedef AR_UINT32_T				uint32_t;
 
-typedef AR_UINT32_T				uint32_t;
+		typedef AR_INT64_T				int64_t;
 
-typedef AR_INT64_T				int64_t;
-
-typedef AR_UINT64_T				uint64_t;
-
+		typedef AR_UINT64_T				uint64_t;
 #endif
 
 typedef AR_PLAT_INT_T			int_t;/*跟所在处理器等长的有符号整数*/
@@ -459,7 +445,7 @@ typedef void*					ptr_t;
 #define AR_CHARMAX				CHAR_MAX
 #define AR_WCHARMAX				WCHAR_MAX
 #define AR_BYTE_BITS			CHAR_BIT
-#define AR_SIZE_MAX				((uint_t)(~((uint_t)0)))
+#define AR_SIZE_MAX				((size_t)(~((size_t)0)))
 
 
 
@@ -532,8 +518,6 @@ typedef void*					ptr_t;
 
 
 /*************************************************************************************************************/
-
-
 
 
 

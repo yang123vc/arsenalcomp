@@ -104,7 +104,7 @@ typedef struct __parser_symbmap_record_tag
 }psrMapRec_t;
 
 
-#define MAP_BUCKET_SIZE (153 / AR_MEM_POLICY)
+#define MAP_BUCKET_SIZE (153)
 
 typedef struct __parser_symbmap_tag
 {
