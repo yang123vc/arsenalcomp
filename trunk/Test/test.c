@@ -70,7 +70,7 @@ void AR_Test()
 {
 #if defined(__LIB)
 		
-		com_test();
+		//com_test();
 		//trie_tree_test();
 		//expr_test();
 		//lex_test();
@@ -104,7 +104,7 @@ void AR_Test()
 
 		//trans_char_test();
 		
-		//lex_test();
+		lex_test();
 		
 
 		//parser_perf_test();

@@ -247,7 +247,7 @@ void lalr_test1()
 
 		psrSymbMap_t	first, follow;
 		size_t i,k;
-		bool_t is_ok;
+		ar_bool_t is_ok;
 		arString_t		*str;
 
 		//lex = __build_lex();
