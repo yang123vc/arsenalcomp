@@ -774,7 +774,6 @@ void com_timer_test()
 void com_str_test_vscwprintf()
 {
 		ar_int_t l = AR_scwprintf(L"%C : %C : %C : %C\r\n", L'a', L'b', L'c', L'd');
-
 		printf("l == %d\r\n", l);
 
 }
@@ -816,7 +815,7 @@ void com_test()
 
 		//com_timer_test();
 
-		com_str_test_vscwprintf();
+		//com_str_test_vscwprintf();
 
 }
 
