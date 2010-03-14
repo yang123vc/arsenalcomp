@@ -355,7 +355,7 @@
 
 
 #if defined(AR_HAS_INLINE)
-		AR_INLINE				inline
+		#define AR_INLINE				inline
 #else
 		#define AR_INLINE		/*C99标准之前的编译器定义无*/
 #endif
