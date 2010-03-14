@@ -80,7 +80,7 @@ void	AR_error_ctx(arIOCtx_t *ctx, int_i_t level, const wchar_t *msg, ...);
 
 #define AR_CHECK(_cond,_msg,_level) do {if(!(_cond))AR_error((_level), L"%ls\r\n", (_msg)); }while(0)
 
-#define AR_STATIC_CHECK(_expr)	typedef char __static_assert_t[ (ar_bool_t)(_expr) ]
+#define AR_STATIC_CHECK(_expr)	typedef char __static_assert_t[ (bool_b_t)(_expr) ]
 
 
 

@@ -17,7 +17,7 @@ const wchar_t *test =
 L"{"
 
 L"		int i; int j;  float[100] a; float v; float x;"
-L"	ar_bool_t x; char[1024] carr;"
+L"	bool_b_t x; char[1024] carr;"
 
 L"	while(true)"
 L"	{"

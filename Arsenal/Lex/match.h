@@ -32,7 +32,7 @@ typedef struct __lex_token_tag
 
 typedef struct __lex_match_result_tag
 {
-		ar_bool_t					is_ok;
+		bool_b_t					is_ok;
 		
 		const wchar_t			*input;
 		const wchar_t			*next;
@@ -52,7 +52,7 @@ void			LEX_ResetMatch(lexMatch_t *pmatch);
 
 const wchar_t*	LEX_GetNextInput(const lexMatch_t *match);
 
-ar_bool_t		LEX_IsError(const lexMatch_t *match);
+bool_b_t		LEX_IsError(const lexMatch_t *match);
 void			LEX_ClearError(lexMatch_t *match);
 /*跳到下一个非空白token*/
 void			LEX_Skip(lexMatch_t *pmatch);

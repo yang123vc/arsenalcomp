@@ -179,7 +179,7 @@ static struct {
 		size_t tokval; 
 		size_t lex_prec; 
 		const wchar_t *regex; 
-		ar_bool_t skip; 
+		bool_b_t skip; 
 }__g_term_pattern[] = 
 {
 		{NULL, DELIM, 1, L"{delim}+|{comment}+|{comment_line}+", true},

@@ -26,7 +26,7 @@ struct arsenal_buffer_tag
 		byte_b_t	*write_cur;
 };
 
-static AR_INLINE ar_bool_t	__buffer_is_valid(const arBuffer_t *pbuf)
+static AR_INLINE bool_b_t	__buffer_is_valid(const arBuffer_t *pbuf)
 {
 		if(pbuf == NULL)return false;
 
@@ -68,7 +68,7 @@ static AR_INLINE void		__increase_capability(arBuffer_t *pbuf, size_t inc_len)
 }
 
 
-static AR_INLINE  ar_bool_t __move_internal(arBuffer_t *pbuf, size_t len)
+static AR_INLINE  bool_b_t __move_internal(arBuffer_t *pbuf, size_t len)
 {
 		size_t data_len = 0;	/* r***w read_cur 至write_cur之间的可读数据成都*/
 		size_t vacancy_len = 0;	/* ***r read_cur之前的空白空间  */

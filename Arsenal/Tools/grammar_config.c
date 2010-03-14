@@ -92,7 +92,7 @@ typedef struct  __cfg_lex_pattern_tag
 {
 		size_t			val;
 		const wchar_t	*regex;
-		ar_bool_t			is_skip;
+		bool_b_t			is_skip;
 		size_t			prec;
 }cfgLexPattern_t;
 
@@ -1195,7 +1195,7 @@ static psrNode_t*		AR_STDCALL __handle_program(psrNode_t **nodes, size_t count, 
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res = NULL;
 		size_t	i;
-		ar_bool_t			has_err = false;
+		bool_b_t			has_err = false;
 		cfgNodeList_t name, token, prec, rule, error, empty;
 		cfgStart_t		*start_rule = NULL;
 
@@ -1562,7 +1562,7 @@ static void		AR_STDCALL cfg_error(const psrToken_t *tok, const wchar_t *expected
 cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *report)
 {
 
-		ar_bool_t is_ok, has_error;
+		bool_b_t is_ok, has_error;
 		lex_t *lex;
 		lexMatch_t match;
 		lexToken_t		tok;
@@ -1802,7 +1802,7 @@ L"}"
 
 
 
-ar_bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
+bool_b_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 {
 		size_t i;
 		arString_t		*handler_define = NULL;

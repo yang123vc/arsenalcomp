@@ -70,7 +70,7 @@ const wchar_t* LEX_GetNextInput(const lexMatch_t *match)
 		return match->next;
 }
 
-ar_bool_t	LEX_IsError(const lexMatch_t *match)
+bool_b_t	LEX_IsError(const lexMatch_t *match)
 {
 		AR_ASSERT(match != NULL);
 		return !match->is_ok;
