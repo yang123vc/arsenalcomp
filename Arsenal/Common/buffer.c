@@ -20,10 +20,10 @@ AR_NAMESPACE_BEGIN
 
 struct arsenal_buffer_tag
 {
-		ar_byte_t	*first;
-		ar_byte_t	*last;
-		ar_byte_t	*read_cur;
-		ar_byte_t	*write_cur;
+		byte_b_t	*first;
+		byte_b_t	*last;
+		byte_b_t	*read_cur;
+		byte_b_t	*write_cur;
 };
 
 static AR_INLINE ar_bool_t	__buffer_is_valid(const arBuffer_t *pbuf)
@@ -41,8 +41,8 @@ static AR_INLINE void		__increase_capability(arBuffer_t *pbuf, size_t inc_len)
 {
 		size_t cur_len = 0;
 		size_t data_len = 0;
-		ar_byte_t *new_buf = NULL;
-		ar_byte_t *old_buf = NULL;
+		byte_b_t *new_buf = NULL;
+		byte_b_t *old_buf = NULL;
 		AR_ASSERT(__buffer_is_valid(pbuf));
 		
 		if(inc_len == 0)return;
@@ -50,7 +50,7 @@ static AR_INLINE void		__increase_capability(arBuffer_t *pbuf, size_t inc_len)
 		cur_len = pbuf->last - pbuf->first;
 		data_len = pbuf->write_cur - pbuf->read_cur;
 
-		new_buf = AR_NEWARR(ar_byte_t, inc_len + cur_len);
+		new_buf = AR_NEWARR(byte_b_t, inc_len + cur_len);
 
 		AR_ASSERT(new_buf != NULL);
 
@@ -147,10 +147,10 @@ void			AR_ReserveBuffer(arBuffer_t *pbuf, size_t nbytes)
 		}
 }
 
-ar_byte_t*			AR_AllocBuffer(arBuffer_t *buffer, size_t	nbytes)
+byte_b_t*			AR_AllocBuffer(arBuffer_t *buffer, size_t	nbytes)
 {
 		size_t write_able = 0;
-		ar_byte_t *res = NULL;
+		byte_b_t *res = NULL;
 		AR_ASSERT(__buffer_is_valid(buffer));
 
 		if(nbytes == 0) return NULL;
@@ -169,9 +169,9 @@ ar_byte_t*			AR_AllocBuffer(arBuffer_t *buffer, size_t	nbytes)
 }
 
 
-void			AR_InsertBuffer(arBuffer_t *buffer, const ar_byte_t *data, size_t len)
+void			AR_InsertBuffer(arBuffer_t *buffer, const byte_b_t *data, size_t len)
 {
-		ar_byte_t *ptr = NULL;
+		byte_b_t *ptr = NULL;
 		AR_ASSERT(__buffer_is_valid(buffer));
 		if(len == 0)return;
 		ptr = AR_AllocBuffer(buffer, len);
@@ -208,7 +208,7 @@ size_t			AR_GetBufferCapacity(const arBuffer_t *buffer)
 }
 
 
-const ar_byte_t*	AR_GetBufferData(const arBuffer_t *pbuf)
+const byte_b_t*	AR_GetBufferData(const arBuffer_t *pbuf)
 {
 		AR_ASSERT(__buffer_is_valid(pbuf));
 		return AR_GetBufferAvailable(pbuf) > 0 ? pbuf->read_cur : NULL;

@@ -30,7 +30,7 @@ L"}"
 ;
 
 
-void AR_STDCALL tiny_error(ar_int_t level, const wchar_t* msg, void *ctx)
+void AR_STDCALL tiny_error(int_i_t level, const wchar_t* msg, void *ctx)
 {
 #if(OS_TYPE == OS_WINDOWS_CE)
 		::MessageBoxW(NULL, msg, L"MessageBox", 0);

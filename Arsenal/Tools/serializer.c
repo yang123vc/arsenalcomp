@@ -39,7 +39,7 @@ void	SN_UnInitString(snString_t	*str)
 		AR_memset(str, 0, sizeof(*str));
 }
 
-void	SN_SetStringByData(snString_t	*dest, const ar_byte_t *data, size_t len)
+void	SN_SetStringByData(snString_t	*dest, const byte_b_t *data, size_t len)
 {
 		AR_ASSERT(dest != NULL && data != NULL && len > 0);
 
@@ -47,7 +47,7 @@ void	SN_SetStringByData(snString_t	*dest, const ar_byte_t *data, size_t len)
 		{
 				AR_DEL(dest->data);
 		}
-		dest->data = AR_NEWARR(ar_byte_t, len);
+		dest->data = AR_NEWARR(byte_b_t, len);
 		AR_memcpy(dest->data, data, len);
 		dest->len = len;
 }
@@ -58,7 +58,7 @@ void	SN_SetStringByStr(snString_t	*dest, const char *str)
 		AR_ASSERT(dest != NULL && str != NULL);
 		l = AR_strlen(str);
 		AR_ASSERT(l > 0);
-		SN_SetStringByData(dest, (const ar_byte_t*)str, l);
+		SN_SetStringByData(dest, (const byte_b_t*)str, l);
 }
 
 void	SN_SetStringByWcs(snString_t	*dest, const wchar_t *str)
@@ -72,7 +72,7 @@ void	SN_SetStringByWcs(snString_t	*dest, const wchar_t *str)
 }
 
 
-ar_int_t	SN_CompStringByString(const snString_t	*l,  const snString_t	*r)
+int_i_t	SN_CompStringByString(const snString_t	*l,  const snString_t	*r)
 {
 		AR_ASSERT(l != NULL && r != NULL && l->len > 0 && r->len > 0 && l->data != NULL && r->data != NULL);
 		
@@ -90,10 +90,10 @@ ar_int_t	SN_CompStringByString(const snString_t	*l,  const snString_t	*r)
 
 
 
-ar_int_t	SN_CompStringByData(const snString_t	*l,  const ar_byte_t *data, size_t len)
+int_i_t	SN_CompStringByData(const snString_t	*l,  const byte_b_t *data, size_t len)
 {
 		snString_t		other;
-		ar_int_t cmp;
+		int_i_t cmp;
 		AR_ASSERT(l != NULL && l->len > 0 && data != NULL && len > 0);
 
 		SN_InitString(&other);
@@ -104,10 +104,10 @@ ar_int_t	SN_CompStringByData(const snString_t	*l,  const ar_byte_t *data, size_t
 		return cmp;
 }
 
-ar_int_t	SN_CompStringByStr(const snString_t		*l,	 const char *str)
+int_i_t	SN_CompStringByStr(const snString_t		*l,	 const char *str)
 {
 		snString_t		other;
-		ar_int_t cmp;
+		int_i_t cmp;
 		AR_ASSERT(l != NULL && l->len > 0 && str != NULL);
 
 		SN_InitString(&other);
@@ -117,10 +117,10 @@ ar_int_t	SN_CompStringByStr(const snString_t		*l,	 const char *str)
 		return cmp;
 }
 
-ar_int_t	SN_CompStringByWcs(const snString_t		*l,	 const wchar_t *str)
+int_i_t	SN_CompStringByWcs(const snString_t		*l,	 const wchar_t *str)
 {
 		snString_t		other;
-		ar_int_t cmp;
+		int_i_t cmp;
 		AR_ASSERT(l != NULL && l->len > 0 && str != NULL);
 
 		SN_InitString(&other);
@@ -182,12 +182,12 @@ ar_bool_t	SN_RemoveFromList(snList_t	*lst, size_t idx)
 }
 
 
-ar_int_t	SN_IndexOfList(const snList_t *lst, const snObject_t *obj)
+int_i_t	SN_IndexOfList(const snList_t *lst, const snObject_t *obj)
 {
-		ar_int_t i;
+		int_i_t i;
 		AR_ASSERT(lst != NULL && obj != NULL);
 
-		for(i = 0; i < (ar_int_t)lst->count; ++i)
+		for(i = 0; i < (int_i_t)lst->count; ++i)
 		{
 				if(obj == lst->lst[i])return i;
 		}
@@ -375,9 +375,9 @@ snObject_t*	__get_int(arBuffer_t	*buffer)
 {
 		snObject_t		*ret = NULL;
 		size_t	buf_len, idx;
-		const ar_byte_t	*pbuf;
+		const byte_b_t	*pbuf;
 		
-		ar_uint64_t		num = 0;
+		uint_64_t		num = 0;
 		ar_bool_t			is_neg = false;
 		AR_ASSERT(buffer != NULL);
 
@@ -406,7 +406,7 @@ snObject_t*	__get_int(arBuffer_t	*buffer)
 		ret->integer.is_signed = is_neg;
 		if(is_neg)
 		{
-				ret->integer.s = 0 - (ar_int64_t)num;
+				ret->integer.s = 0 - (int_64_t)num;
 		}else
 		{
 				ret->integer.u = num;
@@ -419,7 +419,7 @@ snObject_t*		__get_str(arBuffer_t	*buffer)
 {
 		snObject_t		*ret = NULL;
 		size_t	buf_len, idx;
-		const ar_byte_t	*pbuf;
+		const byte_b_t	*pbuf;
 		
 		size_t	l = 0;
 
@@ -452,7 +452,7 @@ snObject_t*		__get_dict(arBuffer_t	*buffer);
 
 snObject_t*		__get_obj(arBuffer_t	*buffer)
 {
-		ar_byte_t b;
+		byte_b_t b;
 		AR_ASSERT(buffer != NULL && AR_GetBufferAvailable(buffer) > 0);
 
 		b = *(AR_GetBufferData(buffer));
@@ -484,7 +484,7 @@ snObject_t*		__get_obj(arBuffer_t	*buffer)
 
 snObject_t*		__get_list(arBuffer_t	*buffer)
 {
-		const ar_byte_t	*pb;
+		const byte_b_t	*pb;
 		snObject_t		*ret;
 		AR_ASSERT(buffer != NULL && AR_GetBufferAvailable(buffer) > 0);
 		
@@ -510,7 +510,7 @@ FAILED_POINT:
 
 snObject_t*		__get_dict(arBuffer_t	*buffer)
 {
-		const ar_byte_t	*pb;
+		const byte_b_t	*pb;
 		snObject_t		*ret;
 		AR_ASSERT(buffer != NULL && AR_GetBufferAvailable(buffer) > 0);
 		ret = SN_CreateObject(SN_DICT_T);
@@ -561,7 +561,7 @@ void		__put_int(arBuffer_t	*buffer, const snInteger_t *integer)
 		char buf[256];
 		char *p;
 		ar_bool_t	is_neg = false;
-		ar_uint64_t		num;
+		uint_64_t		num;
 		static const char _tbl[] = "0123456789";
 
 		AR_ASSERT(buf != NULL && integer != NULL);
@@ -571,10 +571,10 @@ void		__put_int(arBuffer_t	*buffer, const snInteger_t *integer)
 				if(integer->s < 0)
 				{
 						is_neg = true;
-						num = (ar_uint64_t)(-integer->s);
+						num = (uint_64_t)(-integer->s);
 				}else
 				{
-						num = (ar_uint64_t)integer->s;
+						num = (uint_64_t)integer->s;
 				}
 		}else
 		{
@@ -588,7 +588,7 @@ void		__put_int(arBuffer_t	*buffer, const snInteger_t *integer)
 
 		if(is_neg)*--p = '-';
 		*--p = 'i';
-		AR_InsertBuffer(buffer, (const ar_byte_t*)p, AR_strlen(p));
+		AR_InsertBuffer(buffer, (const byte_b_t*)p, AR_strlen(p));
 }
 
 void __put_string(arBuffer_t	*buffer, const snString_t *string)
@@ -608,7 +608,7 @@ void __put_string(arBuffer_t	*buffer, const snString_t *string)
 
 		do{ *--p = _tbl[l % 10];}while((l /= 10));
 
-		AR_InsertBuffer(buffer, (const ar_byte_t*)p, AR_strlen(p));
+		AR_InsertBuffer(buffer, (const byte_b_t*)p, AR_strlen(p));
 		AR_InsertBuffer(buffer, string->data, string->len);
 }
 
@@ -655,14 +655,14 @@ void __put_list(arBuffer_t	*buffer, const snList_t *lst)
 		size_t i;
 		AR_ASSERT(buffer != NULL && lst != NULL);
 
-		AR_InsertBuffer(buffer, (const ar_byte_t*)h, 1);
+		AR_InsertBuffer(buffer, (const byte_b_t*)h, 1);
 
 		for(i = 0; i < lst->count; ++i)
 		{
 				__put_obj(buffer, lst->lst[i]);
 		}
 
-		AR_InsertBuffer(buffer, (const ar_byte_t*)e, 1);
+		AR_InsertBuffer(buffer, (const byte_b_t*)e, 1);
 }
 
 void __put_dict(arBuffer_t	*buffer, const snDict_t *dict)
@@ -673,14 +673,14 @@ void __put_dict(arBuffer_t	*buffer, const snDict_t *dict)
 		AR_ASSERT(buffer != NULL && dict != NULL);
 		
 
-		AR_InsertBuffer(buffer, (const ar_byte_t*)h, 1);
+		AR_InsertBuffer(buffer, (const byte_b_t*)h, 1);
 
 		for(i = 0; i < dict->count; ++i)
 		{
 				__put_string(buffer, &dict->pairs[i].key->string);
 				__put_obj(buffer,  dict->pairs[i].val);
 		}
-		AR_InsertBuffer(buffer, (const ar_byte_t*)e, 1);
+		AR_InsertBuffer(buffer, (const byte_b_t*)e, 1);
 }
 
 
@@ -735,7 +735,7 @@ snObject_t*		SN_FindPathByWcs(snObject_t *pobj, const wchar_t *path)
 				{
 						
 						size_t idx;
-						AR_wtou(pbuf, (ar_uint_t*)&idx, 10);
+						AR_wtou(pbuf, (uint_u_t*)&idx, 10);
 						pobj = SN_GetObjectFromList(&pobj->list, idx);
 
 				}else if(pobj->type == SN_DICT_T)

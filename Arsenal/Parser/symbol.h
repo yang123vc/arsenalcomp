@@ -31,7 +31,7 @@ struct __parser_symbol_tag
 {
 		psrSymbType_t	type;
 		const wchar_t	*name;
-		ar_uint_t			hash_code;
+		uint_u_t			hash_code;
 		size_t			ref_count;
 };
 
@@ -39,7 +39,7 @@ struct __parser_symbol_tag
 const psrSymb_t*		PSR_CreateSymb(const wchar_t *name, psrSymbType_t t);
 const psrSymb_t*		PSR_CopyNewSymb(const psrSymb_t *sour);
 void					PSR_DestroySymb(const psrSymb_t *symb);
-ar_int_t					PSR_CompSymb(const psrSymb_t *l, const psrSymb_t *r);
+int_i_t					PSR_CompSymb(const psrSymb_t *l, const psrSymb_t *r);
 
 
 /***************************************symbol_list***************************************************/
@@ -72,11 +72,11 @@ void				PSR_InsertToSymbList(psrSymbList_t *symb_lst, const psrSymb_t *symb);
 */
 
 const psrSymb_t*	PSR_IndexOfSymbList(const psrSymbList_t *symb_lst, size_t idx);
-ar_int_t				PSR_FindFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t* symb);
+int_i_t				PSR_FindFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t* symb);
 
 ar_bool_t				PSR_RemoveFromSymbListByIndex(psrSymbList_t *symb_lst, size_t index);
 
-ar_int_t				PSR_BSearchFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t* symb);
+int_i_t				PSR_BSearchFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t* symb);
 void				PSR_SortSymbList(psrSymbList_t *symb_lst);
 
 

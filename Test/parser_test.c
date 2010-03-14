@@ -23,10 +23,10 @@ AR_NAMESPACE_BEGIN
 static const wchar_t* __load_txt(const wchar_t *path)
 {
 		FILE *pf;
-		ar_byte_t	*buf;
+		byte_b_t	*buf;
 		size_t rn;
 		const wchar_t *ret;
-		buf = AR_NEWARR(ar_byte_t, LOAD_TXT_MAX_BUF);
+		buf = AR_NEWARR(byte_b_t, LOAD_TXT_MAX_BUF);
 
 		AR_ASSERT(path != NULL);
 
@@ -224,7 +224,7 @@ void parse_code(const cfgConfig_t *cfg, const wchar_t *sources)
 		{
 				
 				size_t tok_cnt = 0;
-				ar_uint64_t beg, end;
+				uint_64_t beg, end;
 
 				beg = AR_GetTime_Microseconds();
 				//DWORD beg, end;
@@ -458,7 +458,7 @@ void parser_perf_test()
 				//DWORD beg, end;
 				//beg = GetTickCount();
 
-				ar_uint64_t beg ,end;
+				uint_64_t beg ,end;
 				beg = AR_GetTime_Microseconds();
 
 				cfg = CFG_CollectGrammarConfig(gmr_txt, NULL);

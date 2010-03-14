@@ -161,7 +161,7 @@ typedef struct __cfg_report_info_tag
 		cfgReportType_t			type;
 		const	psrToken_t		*tok;
 		const	wchar_t			*message;
-		ar_int_t					err_level;
+		int_i_t					err_level;
 }cfgReportInfo_t;
 
 

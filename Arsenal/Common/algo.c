@@ -10,14 +10,14 @@ AR_NAMESPACE_BEGIN
 
 
 
-typedef ar_int_t (*cmp_func_t)(const void *l, const void *r);
+typedef int_i_t (*cmp_func_t)(const void *l, const void *r);
 
 
 
 
-void __insertion_sort(ar_byte_t *lo, ar_byte_t *hi, size_t width, cmp_func_t cmp_f)
+void __insertion_sort(byte_b_t *lo, byte_b_t *hi, size_t width, cmp_func_t cmp_f)
 {
-		ar_byte_t *p,*t;
+		byte_b_t *p,*t;
 		AR_ASSERT(lo != NULL && hi != NULL && lo < hi && width > 0 && cmp_f != NULL);
 		
 		for(p = hi; p > lo; p -= width)
@@ -44,19 +44,19 @@ void __insertion_sort(ar_byte_t *lo, ar_byte_t *hi, size_t width, cmp_func_t cmp
 
 typedef struct __qsort_range_tag
 {
-		ar_byte_t*	l_beg;
-		ar_byte_t*	l_end;
+		byte_b_t*	l_beg;
+		byte_b_t*	l_end;
 
-		ar_byte_t*	r_beg;
-		ar_byte_t*	r_end;
+		byte_b_t*	r_beg;
+		byte_b_t*	r_end;
 }qsort_range_t;
 
 
-static qsort_range_t __partition(ar_byte_t *lo, ar_byte_t *hi, size_t width, cmp_func_t cmp_f)
+static qsort_range_t __partition(byte_b_t *lo, byte_b_t *hi, size_t width, cmp_func_t cmp_f)
 {
 		qsort_range_t res;
 		
-		ar_byte_t *mid, *loguy, *higuy;
+		byte_b_t *mid, *loguy, *higuy;
 
 		AR_ASSERT(lo != NULL && hi != NULL && lo < hi && width > 0 && cmp_f != NULL);
 		
@@ -145,10 +145,10 @@ static qsort_range_t __partition(ar_byte_t *lo, ar_byte_t *hi, size_t width, cmp
 
 
 
-static void __qsort(ar_byte_t *lo, ar_byte_t *hi, size_t width, cmp_func_t cmp_f)
+static void __qsort(byte_b_t *lo, byte_b_t *hi, size_t width, cmp_func_t cmp_f)
 {
-		ar_byte_t	*lo_stk[__QSORT_STKSIZE], *hi_stk[__QSORT_STKSIZE];/*这玩意儿要还是溢出了也没得办法~~*/
-		ar_int_t	stk_top = 0;
+		byte_b_t	*lo_stk[__QSORT_STKSIZE], *hi_stk[__QSORT_STKSIZE];/*这玩意儿要还是溢出了也没得办法~~*/
+		int_i_t	stk_top = 0;
 		
 		qsort_range_t	range;
 		AR_ASSERT(lo != NULL && hi != NULL && lo <= hi && width > 0 && cmp_f != NULL);
@@ -213,23 +213,23 @@ __RECURSE_POINT:
 
 
 
-void AR_qsort(void *base, size_t num, size_t width, ar_int_t (*cmp_f)(const void*, const void*))
+void AR_qsort(void *base, size_t num, size_t width, int_i_t (*cmp_f)(const void*, const void*))
 {
 		AR_ASSERT(base != NULL && width > 0 && cmp_f != NULL);
 		
 		if(num > 0)
 		{
-				__qsort((ar_byte_t*)base, (ar_byte_t*)base + (width * (num-1)), width,cmp_f);
+				__qsort((byte_b_t*)base, (byte_b_t*)base + (width * (num-1)), width,cmp_f);
 		}
 }
 
 
-ar_int_t AR_bsearch(const void *key, const void *base, size_t num, size_t width, ar_int_t (*cmp_f)(const void*, const void*))
+int_i_t AR_bsearch(const void *key, const void *base, size_t num, size_t width, int_i_t (*cmp_f)(const void*, const void*))
 {
-		ar_int_t l,r,m,cmp;
+		int_i_t l,r,m,cmp;
 		AR_ASSERT(base != NULL && width > 0 && cmp_f != NULL && key != NULL);
 
-		l = 0; r = (ar_int_t)(num -1);
+		l = 0; r = (int_i_t)(num -1);
 
 		while(l <= r)
 		{

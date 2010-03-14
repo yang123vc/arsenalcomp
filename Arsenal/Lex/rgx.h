@@ -215,10 +215,10 @@ struct __regex_instruction_tag
 		rgxIns_t		*left;
 		rgxIns_t		*right;
 
-		ar_int_t			mark;
+		int_i_t			mark;
 
 		union{
-				ar_int_t			final;
+				int_i_t			final;
 				struct {
 						wchar_t	beg;
 						wchar_t end;
@@ -272,7 +272,7 @@ struct __regex_program_tag
 		size_t					count;
 		
 		rgxIns_t				*pc;
-		ar_int_t					mark;
+		int_i_t					mark;
 		
 		rgxThreadList_t			*curr;
 		rgxThreadList_t			*next;

@@ -232,7 +232,7 @@ const psrActionView_t*	PSR_CreateActionView(const psrActionTable_t *tbl, const p
 
 				for(k = 0; k < tbl->goto_col; ++k)
 				{
-						ar_int_t state =  tbl->goto_tbl[AR_TBL_IDX_R(r, k, tbl->goto_col)];
+						int_i_t state =  tbl->goto_tbl[AR_TBL_IDX_R(r, k, tbl->goto_col)];
 						msg = AR_vtow(L"%" AR_PLAT_INT_FMT L"d", state);
 
 						view->action_tbl[AR_TBL_IDX_R(r, c, view->col)] = msg;
@@ -326,12 +326,12 @@ void PSR_PrintActionTable(const psrActionTable_t *tbl, const psrGrammar_t *gramm
 				{
 						AR_AppendFormatString(str, L"%*" AR_PLAT_INT_FMT L"d", __WIDTH__, tbl->goto_tbl[AR_TBL_IDX_R(i,j,tbl->goto_col)]);
 						/*
-						ar_int_t xxx,xxx_idx;
+						int_i_t xxx,xxx_idx;
 						
 						xxx_idx = AR_TBL_IDX_R(i,j,tbl->goto_col);
 						xxx = tbl->goto_tbl[xxx_idx];
 						printf("xxx_idx == %I64d, xxx == %I64d\r\n", xxx_idx, xxx);
-						AR_AppendFormatString(str, L"%*I64d", __WIDTH__, (ar_int64_t)tbl->goto_tbl[AR_TBL_IDX_R(i,j,tbl->goto_col)]);
+						AR_AppendFormatString(str, L"%*I64d", __WIDTH__, (int_64_t)tbl->goto_tbl[AR_TBL_IDX_R(i,j,tbl->goto_col)]);
 						*/
 				}
 				AR_AppendString(str,L"\r\n");
@@ -352,7 +352,7 @@ void PSR_PrintActionTable(const psrActionTable_t *tbl, const psrGrammar_t *gramm
 
 		for(i = 0; i < tbl->row; ++i)
 		{
-				AR_swprintf(buf, 1024, L"I[%d]", (ar_uint32_t)i);
+				AR_swprintf(buf, 1024, L"I[%d]", (uint_32_t)i);
 				AR_AppendFormatString(str,L"%*ls:", __WIDTH__,buf);
 				for(j = 0; j < tbl->col; ++j)
 				{

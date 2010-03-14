@@ -143,6 +143,7 @@
 				AssemblerOutput="2"
 				WarningLevel="4"
 				DebugInformationFormat="4"
+				CompileAs="2"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -472,6 +473,7 @@
 				UsePrecompiledHeader="0"
 				WarningLevel="4"
 				DebugInformationFormat="3"
+				CompileAs="2"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -556,6 +558,7 @@
 				UsePrecompiledHeader="0"
 				WarningLevel="4"
 				DebugInformationFormat="3"
+				CompileAs="2"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -796,6 +799,7 @@
 				RuntimeTypeInfo="false"
 				WarningLevel="4"
 				DebugInformationFormat="4"
+				CompileAs="2"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"

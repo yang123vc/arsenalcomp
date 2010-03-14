@@ -66,7 +66,7 @@ void com_test2()
 		const wchar_t *p;
 		const wchar_t *str = L"			 -abcdef";
 		
-		ar_int32_t num;
+		int_32_t num;
 		
 		p = AR_wtoi32(str, &num, 16);
 		AR_printf(L"%ls : %d\n", p, num);
@@ -203,9 +203,9 @@ void com_conv()
 
 
 
-AR_INLINE ar_uint_t str_hash_test(const wchar_t *str, size_t n)
+AR_INLINE uint_u_t str_hash_test(const wchar_t *str, size_t n)
 {
-		ar_uint_t	ret;
+		uint_u_t	ret;
 		size_t	i;
 		
 		AR_ASSERT(str != NULL);
@@ -218,16 +218,16 @@ AR_INLINE ar_uint_t str_hash_test(const wchar_t *str, size_t n)
 		return ret;
 }
 
-AR_INLINE ar_uint_t str_hash_test2(const wchar_t *s)
+AR_INLINE uint_u_t str_hash_test2(const wchar_t *s)
 {
 		return str_hash_test(s, AR_wcslen(s));
 
 }
 
 
-AR_INLINE ar_uint_t str_hash_test3(const wchar_t *str, size_t n)
+AR_INLINE uint_u_t str_hash_test3(const wchar_t *str, size_t n)
 {
-		ar_uint_t	ret;
+		uint_u_t	ret;
 		size_t	i;
 
 		const size_t a = 1;
@@ -238,12 +238,12 @@ AR_INLINE ar_uint_t str_hash_test3(const wchar_t *str, size_t n)
 		ret = 0;
 		for(i = 0; i < n; ++i)
 		{
-				ret += ((a << (n-i)) * (ar_uint_t)str[i]);
+				ret += ((a << (n-i)) * (uint_u_t)str[i]);
 		}
 		return ret;
 }
 
-AR_INLINE ar_uint_t str_hash_test4(const wchar_t *s)
+AR_INLINE uint_u_t str_hash_test4(const wchar_t *s)
 {
 		return str_hash_test3(s, AR_wcslen(s));
 
@@ -267,7 +267,7 @@ void com_hash_test()
 
 void __format_v(const wchar_t *fmt, ...)
 {
-		ar_int_t len;
+		int_i_t len;
 		va_list	arg_ptr;
 		va_start(arg_ptr, fmt);
 		len = AR_vscwprintf(fmt, arg_ptr);
@@ -280,13 +280,13 @@ void __format_v(const wchar_t *fmt, ...)
 
 void com_vscwprintf_test()
 {
-		ar_uint64_t  x = 7332201052963203716;
+		uint_64_t  x = 7332201052963203716;
 
 		__format_v(L"%       .f%*.*f\r\n", 3344.333333333333333333333333, 20,20,3344.333333333333333333333333);
 
 		__format_v(L"%33.54f", 3.14);
 
-		__format_v(L"%d:%u:%I64d:%ls:%f\r\n", 33,44,(ar_uint64_t)198401010, L"aaaaaaaaa",3.1415);
+		__format_v(L"%d:%u:%I64d:%ls:%f\r\n", 33,44,(uint_64_t)198401010, L"aaaaaaaaa",3.1415);
 
 		__format_v(L"abcdefg");
 		
@@ -302,7 +302,7 @@ void com_vscwprintf_test()
 
 void com_vscwprintf_test2()
 {
-		__format_v(L"%Id : %I32d : %I64d : %lld : %d : %ld\r\n", (int)111, (ar_int32_t)222, (ar_int64_t)333, (ar_int64_t)444, (int)555, (int)666);
+		__format_v(L"%Id : %I32d : %I64d : %lld : %d : %ld\r\n", (int)111, (int_32_t)222, (int_64_t)333, (int_64_t)444, (int)555, (int)666);
 		__format_v(L"%Id : %Id\r\n", (size_t)1024, (size_t)2048);
 
 }
@@ -348,7 +348,7 @@ void str_test1()
 {
 
 		{
-				ar_int64_t		num;
+				int_64_t		num;
 				const wchar_t *s, *p;
 				s = L"-11111111111111111111111111111111";
 				
@@ -363,7 +363,7 @@ void str_test1()
 		
 
 		{
-				ar_uint32_t		num;
+				uint_32_t		num;
 				const wchar_t *s = L"11111111111111111111111111111111";
 
 				const wchar_t *p = AR_wtou32(s, &num, 10);
@@ -377,7 +377,7 @@ void str_test1()
 
 
 		{
-				ar_int32_t		num;
+				int_32_t		num;
 				const wchar_t *s = L"-11111111111111111111111111111111";
 				
 				const wchar_t *p = AR_wtoi32(s, &num, 10);
@@ -390,7 +390,7 @@ void str_test1()
 
 
 		{
-				ar_int32_t		num;
+				int_32_t		num;
 				const wchar_t *s = L"11111111111111111111111111111111";
 				
 				const wchar_t *p = AR_wtoi32(s, &num, 10);
@@ -402,7 +402,7 @@ void str_test1()
 		}
 
 		{
-				ar_int32_t		num;
+				int_32_t		num;
 				const wchar_t *s = L"0x468321xyz";
 				
 				const wchar_t *p = AR_wtoi32(s, &num, 0);
@@ -416,7 +416,7 @@ void str_test1()
 
 
 		{
-				ar_int32_t		num;
+				int_32_t		num;
 				const wchar_t *s = L"-0x468321xyz";
 				
 				const wchar_t *p = AR_wtoi32(s, &num, 0);
@@ -428,7 +428,7 @@ void str_test1()
 
 
 		{
-				ar_int32_t		num;
+				int_32_t		num;
 				const wchar_t *s = L"0464321xyz";
 				
 				const wchar_t *p = AR_wtoi32(s, &num, 0);
@@ -440,7 +440,7 @@ void str_test1()
 
 
 				{
-				ar_int32_t		num;
+				int_32_t		num;
 				const wchar_t *s = L"0464321xyz";
 				
 				const wchar_t *p = AR_wtoi32(s, &num, 0);
@@ -458,7 +458,7 @@ void str_test1()
 
 void str_test3()
 {
-		ar_int_t len;
+		int_i_t len;
 
 		len = AR_scwprintf(L"%ls : %ls : %ls\r\n", L"ABCDEFÖí°Ë½ä",L"ABCDEFÖí°Ë½ä",L"ABCDEFÖí°Ë½ä");
 
@@ -478,16 +478,16 @@ void str_test4()
 void str_test5()
 {
 		//AR_report();
-		AR_printf(L"%lld  :  %ld\r\n", (ar_uint64_t)345,(ar_uint64_t)453);
+		AR_printf(L"%lld  :  %ld\r\n", (uint_64_t)345,(uint_64_t)453);
 
 }
 
 
 static void test_bittest()
 {
-		ar_uint32_t x = 0;
+		uint_32_t x = 0;
 
-		x = (ar_uint32_t)AR_BIT_MARK(32);
+		x = (uint_32_t)AR_BIT_MARK(32);
 
 		AR_BIT_SET(x,0);
 
@@ -511,7 +511,7 @@ void bug_test()
 }
 
 
-ar_int_t __cmp_size_t(const void *l, const void *r)
+int_i_t __cmp_size_t(const void *l, const void *r)
 {
 		return AR_CMP(*(size_t*)l, *(size_t*)r);
 
@@ -533,7 +533,7 @@ void sort_test()
 		size_t *vi = AR_NEWARR(size_t, SORT_TEST_CNT);
 		int i;
 		DWORD beg,end;
-		ar_int_t cnt = 3;
+		int_i_t cnt = 3;
 		AR_srand(time(NULL));
 
 		__int64 n = (__int64)SORT_TEST_CNT;
@@ -587,7 +587,7 @@ void search_test()
 		
 		for(i = 0; i < sizeof(arr)/sizeof(arr[0]); ++i)
 		{
-				ar_int_t m = AR_bsearch(&i, arr,sizeof(arr)/sizeof(arr[0]), sizeof(int), __cmp_size_t);
+				int_i_t m = AR_bsearch(&i, arr,sizeof(arr)/sizeof(arr[0]), sizeof(int), __cmp_size_t);
 		
 				printf("arr[%d] == %d\r\n", m,arr[m]);
 		}
@@ -670,7 +670,7 @@ void escstr_test_buf0()
 				_getws(buf);
 				if(AR_wcscmp(buf, L"quit") == 0)break;
 
-				ar_int_t l = AR_str_to_escstr_buf(tmp, 1024, buf);
+				int_i_t l = AR_str_to_escstr_buf(tmp, 1024, buf);
 
 				AR_ASSERT(l >= 0);
 				
@@ -692,7 +692,7 @@ void escstr_test_buf1()
 				if(AR_wcscmp(tmp, L"quit") == 0)break;
 
 				arEscStrErr_t	err;
-				ar_int_t l = AR_escstr_to_str_buf(out, 1024, tmp, &err);
+				int_i_t l = AR_escstr_to_str_buf(out, 1024, tmp, &err);
 				
 				wchar_t buf[1024];
 				if(err.type == AR_ESCSTR_ERR_BUFFER)
@@ -730,11 +730,11 @@ void buffer_test()
 		FILE *tmp = fopen("d:\\temp\\tmp.rar", "wb");
 		assert(f != NULL && tmp != NULL);
 
-		ar_byte_t buf[384];
+		byte_b_t buf[384];
 		
 		while(!ferror(f) && !feof(f))
 		{
-				size_t rn = fread(buf, sizeof(ar_byte_t), sizeof(buf), f);
+				size_t rn = fread(buf, sizeof(byte_b_t), sizeof(buf), f);
 				if(rn == 0)break;
 				AR_InsertBuffer(buffer, buf, rn);
 
@@ -761,9 +761,9 @@ void buffer_test()
 
 void com_timer_test()
 {
-		ar_uint64_t		beg = AR_GetTime_Milliseconds();
+		uint_64_t		beg = AR_GetTime_Milliseconds();
 		AR_Sleep(1000);
-		ar_uint64_t		end = AR_GetTime_Milliseconds();
+		uint_64_t		end = AR_GetTime_Milliseconds();
 
 		printf("elapsed == %I64d\r\n", end - beg);
 
@@ -773,7 +773,7 @@ void com_timer_test()
 
 void com_str_test_vscwprintf()
 {
-		ar_int_t l = AR_scwprintf(L"%C : %C : %C : %C\r\n", L'a', L'b', L'c', L'd');
+		int_i_t l = AR_scwprintf(L"%C : %C : %C : %C\r\n", L'a', L'b', L'c', L'd');
 		printf("l == %d\r\n", l);
 }
 

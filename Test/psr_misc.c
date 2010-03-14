@@ -342,13 +342,13 @@ void grammar_test2()
 psrNode_t*		AR_STDCALL create_leaf(const psrToken_t *tok,void *ctx)
 {
 		printf("shift\r\n");
-		return (psrNode_t*)(ar_uint_t)1;
+		return (psrNode_t*)(uint_u_t)1;
 }
 
 psrNode_t*		AR_STDCALL create_node(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		AR_printf(L"reduce count == %d\r\n", count);
-		return (psrNode_t*)(ar_uint_t)2;
+		return (psrNode_t*)(uint_u_t)2;
 }
 
 

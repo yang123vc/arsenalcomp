@@ -109,7 +109,7 @@ size_t	AR_AppendString(arString_t *str, const wchar_t *sour)
 
 void	AR_FormatString(arString_t *str, const wchar_t *fmt, ...)
 {
-		ar_int_t len;
+		int_i_t len;
 		va_list args;
 		AR_ASSERT(str != NULL && fmt != NULL);
 		AR_ClearString(str);
@@ -134,7 +134,7 @@ void	AR_FormatString(arString_t *str, const wchar_t *fmt, ...)
 
 void	AR_AppendFormatString(arString_t *str, const wchar_t *fmt, ...)
 {
-		ar_int_t len;
+		int_i_t len;
 		wchar_t *buf;
 		va_list args;
 		AR_ASSERT(str != NULL && fmt != NULL);

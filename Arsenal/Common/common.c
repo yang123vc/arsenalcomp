@@ -24,7 +24,7 @@ AR_NAMESPACE_BEGIN
 /***********************************************************Init****************************************************************/
 
 
-void AR_STDCALL AR_def_error(ar_int_t level, const wchar_t* msg, void *ctx)
+void AR_STDCALL AR_def_error(int_i_t level, const wchar_t* msg, void *ctx)
 {
 		printf("%ls", msg);
 }
@@ -61,7 +61,7 @@ arIOCtx_t*	AR_global_ioctx()
 void	AR_printf_ctx(arIOCtx_t *ctx, const wchar_t *msg,...)
 {
 		wchar_t *buf;
-		ar_int_t len;
+		int_i_t len;
 		va_list arg_ptr;
 		
 		if(ctx && ctx->on_print)
@@ -81,10 +81,10 @@ void	AR_printf_ctx(arIOCtx_t *ctx, const wchar_t *msg,...)
 }
 
 
-void	AR_error_ctx(arIOCtx_t *ctx, ar_int_t level, const wchar_t *msg, ...)
+void	AR_error_ctx(arIOCtx_t *ctx, int_i_t level, const wchar_t *msg, ...)
 {		
 		wchar_t *buf;
-		ar_int_t len;
+		int_i_t len;
 		va_list arg_ptr;
 		
 		if(ctx && ctx->on_error)
@@ -109,10 +109,10 @@ void	AR_error_ctx(arIOCtx_t *ctx, ar_int_t level, const wchar_t *msg, ...)
 
 
 
-void AR_error(ar_int_t level, const wchar_t *msg, ...)
+void AR_error(int_i_t level, const wchar_t *msg, ...)
 {
 		wchar_t *buf;
-		ar_int_t len;
+		int_i_t len;
 		va_list arg_ptr;
 		
 		if(__g_ctx.global_io_ctx.on_error != NULL)
@@ -149,7 +149,7 @@ void AR_error(ar_int_t level, const wchar_t *msg, ...)
 void AR_printf(const wchar_t *msg,...)
 {
 		wchar_t *buf;
-		ar_int_t len;
+		int_i_t len;
 		va_list arg_ptr;
 
 		if(__g_ctx.global_io_ctx.on_print != NULL)
