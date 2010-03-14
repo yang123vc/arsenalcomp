@@ -2,12 +2,12 @@
 /*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
- * 
+ *
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.It is provided "as is" without express 
+ * in supporting documentation.It is provided "as is" without express
  * or implied warranty.
  *
  */
@@ -53,10 +53,10 @@ void					RGX_UnInitNameSet(rgxNameSet_t	*set)
 
 bool_t					RGX_InsertToNameSet(rgxNameSet_t	*set, const wchar_t	*name, rgxNode_t *node)
 {
-		
+
 		AR_ASSERT(set != NULL && name != NULL && node != NULL);
 		if(RGX_FindFromNameSet(set, name) != NULL)return false;
-		
+
 		if(set->count == set->cap)
 		{
 				set->cap = (set->cap + 4)*2;
@@ -83,7 +83,7 @@ bool_t					RGX_RemoveFromNameSet(rgxNameSet_t	*set, const wchar_t	*name)
 						break;
 				}
 		}
-		
+
 		if(i == set->count)return false;
 
 		while(i < set->count - 1)
@@ -147,7 +147,7 @@ void RGX_CopyCharSet(rgxCharSet_t *dest, const rgxCharSet_t *sour)
 {
 		rgxCharRange_t *curr;
 		AR_ASSERT(dest != NULL && sour != NULL);
-		
+
 		RGX_UnInitCharSet(dest);
 		RGX_InitCharSet(dest);
 		dest->is_neg = sour->is_neg;
@@ -177,8 +177,8 @@ void RGX_InsertRangeToCharSet(rgxCharSet_t *cset, const rgxCharRange_t *new_rang
 		rgxCharRange_t		*curr, *prev;
 		rgxCharRange_t		range;
 		AR_ASSERT(cset != NULL && new_range != NULL && new_range->beg <= new_range->end);
-		
-		prev = NULL; curr = cset->range; 
+
+		prev = NULL; curr = cset->range;
 		range	= *new_range;
 
 		while(curr != NULL)
@@ -199,43 +199,43 @@ void RGX_InsertRangeToCharSet(rgxCharSet_t *cset, const rgxCharRange_t *new_rang
 							[ curr ]
 								[ range ]
 								*/
-								
+
 								rgxCharRange_t		*tmp = __new_range(curr->beg, range.beg - 1, curr);
-								
+
 								if(prev == NULL)
 								{
 										cset->range = tmp;
 										prev = tmp;
-								}else 
+								}else
 								{
-										prev->next = tmp; 
+										prev->next = tmp;
 								}
 
 								curr->beg = range.beg; range.beg = curr->end + 1;
-						
+
 						}else if(curr->end == range.end)
 						{
 								/*
 							[     curr      ]
 									 [ range]
-							
+
 								*/
-								
+
 								rgxCharRange_t		*tmp = __new_range(curr->beg, range.beg - 1, curr);
 								if(prev == NULL)
 								{
 										cset->range = tmp;
 										prev = tmp;
-								}else 
+								}else
 								{
-										prev->next = tmp; 
+										prev->next = tmp;
 								}
 
 								curr->beg = range.beg;
 								return;
 						}else if(curr->end > range.end)
 						{
-								
+
 								/*
 								[  curr      ]
 								  [ range ]
@@ -246,9 +246,9 @@ void RGX_InsertRangeToCharSet(rgxCharSet_t *cset, const rgxCharRange_t *new_rang
 								{
 										cset->range = tmp1;
 										prev = tmp1;
-								}else 
+								}else
 								{
-										prev->next = tmp1; 
+										prev->next = tmp1;
 								}
 
 								tmp2 = __new_range(range.beg, range.end, curr);
@@ -266,7 +266,7 @@ void RGX_InsertRangeToCharSet(rgxCharSet_t *cset, const rgxCharRange_t *new_rang
 								[ range ]
 								*/
 								range.beg = curr->end + 1;
-						
+
 						}else if(curr->end == range.end)
 						{
 								/*
@@ -282,14 +282,14 @@ void RGX_InsertRangeToCharSet(rgxCharSet_t *cset, const rgxCharRange_t *new_rang
 								[  range  ]
 
 								*/
-								
+
 								rgxCharRange_t		*tmp;
 								tmp = __new_range(range.beg, range.end, curr);
 								if(prev == NULL)
 								{
 										cset->range = tmp;
 										prev = tmp;
-								}else 
+								}else
 								{
 										prev->next = tmp;
 								}
@@ -312,7 +312,7 @@ void RGX_InsertRangeToCharSet(rgxCharSet_t *cset, const rgxCharRange_t *new_rang
 								{
 										cset->range = tmp;
 										prev = tmp;
-								}else 
+								}else
 								{
 										prev->next = tmp;
 								}
@@ -332,7 +332,7 @@ void RGX_InsertRangeToCharSet(rgxCharSet_t *cset, const rgxCharRange_t *new_rang
 								{
 										cset->range = tmp;
 										prev = tmp;
-								}else 
+								}else
 								{
 										prev->next = tmp;
 								}
@@ -354,7 +354,7 @@ void RGX_InsertRangeToCharSet(rgxCharSet_t *cset, const rgxCharRange_t *new_rang
 										{
 												cset->range = tmp1;
 												prev = tmp1;
-										}else 
+										}else
 										{
 												prev->next = tmp1;
 										}
@@ -385,7 +385,7 @@ void RGX_InsertRangeToCharSet(rgxCharSet_t *cset, const rgxCharRange_t *new_rang
 								}
 						}
 				}
-				
+
 				prev = curr;
 				curr = curr->next;
 		}
@@ -397,7 +397,7 @@ void RGX_InsertRangeToCharSet(rgxCharSet_t *cset, const rgxCharRange_t *new_rang
 		{
 				prev->next = __new_range(range.beg, range.end, NULL);
 		}
-		
+
 
 }
 
@@ -405,16 +405,16 @@ void RGX_ReverseNegativeCharSet(rgxCharSet_t *cset)
 {
 		rgxCharRange_t			*curr, *prev, old;
 		rgxCharSet_t			new_set;
-		
+
 		AR_ASSERT(cset != NULL);
 		if(!cset->is_neg)return;
 
 		cset->is_neg = false;
 
 		RGX_InitCharSet(&new_set);
-		
+
 		old.beg =  L'\0'; old.end = AR_WCHARMAX;
-		
+
 		prev = NULL;
 		for(curr = cset->range; curr != NULL; curr = curr->next)
 		{
@@ -423,14 +423,14 @@ void RGX_ReverseNegativeCharSet(rgxCharSet_t *cset)
 						old.end = curr->beg - 1;
 						RGX_InsertRangeToCharSet(&new_set, &old);
 				}
-				
+
 				old.beg = curr->end < AR_WCHARMAX ? curr->end + 1 : curr->end;
 				old.end = AR_WCHARMAX;
 				prev = curr;
 		}
 
 		if(old.beg < AR_WCHARMAX) RGX_InsertRangeToCharSet(&new_set, &old);
-		
+
 		curr = cset->range;
 		cset->range = new_set.range;
 		new_set.range = curr;
@@ -482,8 +482,8 @@ static arSpinLock_t		__g_spin_lock;
 		#define RGX_THREAD_LIST_INIT_COUNT		0
 		#define RGX_THREAD_LIST_POOL_NUM		0
 #else
-		#define RGX_THREAD_LIST_INIT_COUNT		( 64   / AR_MEM_POLICY )
-		#define RGX_THREAD_LIST_POOL_NUM		( 256  / AR_MEM_POLICY )
+		#define RGX_THREAD_LIST_INIT_COUNT		( 64 )
+		#define RGX_THREAD_LIST_POOL_NUM		( 256 )
 #endif
 
 
@@ -493,16 +493,16 @@ void	RGX_InitMisc()
 		rgxThreadList_t	**tmp;
 		AR_InitSpinLock(&__g_spin_lock);
 		__g_free_list = NULL;
-		
+
 		if(RGX_THREAD_LIST_POOL_NUM == 0)return;
 
 		tmp = AR_NEWARR0(rgxThreadList_t*, RGX_THREAD_LIST_POOL_NUM);
-		
+
 		for(i = 0; i < RGX_THREAD_LIST_POOL_NUM; ++i)
 		{
 				tmp[i] = RGX_CreateThreadList();
 		}
-		
+
 		for(i = 0; i < RGX_THREAD_LIST_POOL_NUM; ++i)
 		{
 				RGX_DestroyThreadList(tmp[i]);
@@ -522,7 +522,7 @@ void	RGX_UnInitMisc()
 				__g_free_list = __g_free_list->next;
 
 				if(lst->lst)AR_DEL(lst->lst);
-				
+
 				max_lst_cap = AR_MAX(max_lst_cap, lst->cap);
 
 				AR_DEL(lst);
@@ -552,22 +552,22 @@ rgxThreadList_t*	RGX_CreateThreadList()
 		{
 				res = AR_NEW0(rgxThreadList_t);
 				res->cap = RGX_THREAD_LIST_INIT_COUNT;
-				
+
 				if(res->cap > 0)
 				{
 						res->lst = AR_NEWARR(rgxThread_t, res->cap);
 				}
-				
+
 				return res;
 		}
 
 		AR_LockSpinLock(&__g_spin_lock);
-		
+
 		res = __g_free_list;
 		__g_free_list = __g_free_list->next;
 		AR_UnLockSpinLock(&__g_spin_lock);
 		res->next = NULL;
-		
+
 		RGX_ClearThreadList(res);
 		return res;
 }
@@ -592,13 +592,13 @@ void RGX_InsertToThreadList(rgxThreadList_t *lst, rgxThread_t thd)
 {
 		AR_ASSERT(lst != NULL);
 		AR_ASSERT(thd.pc != NULL && thd.sp != NULL);
-		
+
 		if(lst->count == lst->cap)
 		{
 				lst->cap = (lst->cap + 1)*2;
 				lst->lst = AR_REALLOC(rgxThread_t, lst->lst, lst->cap);
 		}
-		
+
 		lst->lst[lst->count++] = thd;
 }
 

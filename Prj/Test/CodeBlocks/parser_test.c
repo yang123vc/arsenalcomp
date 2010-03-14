@@ -12,10 +12,10 @@ AR_NAMESPACE_BEGIN
 static const wchar_t* __load_txt(const char *path)
 {
 		FILE *pf;
-		byte_t	*buf;
+		ar_byte_t	*buf;
 		size_t rn;
 		const wchar_t *ret;
-		buf = AR_NEWARR(byte_t, LOAD_TXT_MAX_BUF);
+		buf = AR_NEWARR(ar_byte_t, LOAD_TXT_MAX_BUF);
 
 		AR_ASSERT(path != NULL);
 
@@ -185,7 +185,7 @@ void parse_code(const cfgConfig_t *cfg, const wchar_t *sources)
 		{
 
 				size_t tok_cnt = 0;
-				uint64_t beg, end;
+				ar_uint64_t beg, end;
 
 				beg = AR_GetTime_Milliseconds();
 				//DWORD beg, end;
@@ -282,7 +282,7 @@ void parser_test()
 
 		AR_printf(L"%ls\r\n", L"Please enter pattern path!");
 		__gets_chk(buf,1024);
-        getchar();
+                getchar();
     //gmr_txt = __load_txt(DEF_PAT_PATH);
 
 		gmr_txt = __load_txt(buf);
@@ -410,7 +410,7 @@ void parser_perf_test()
 				//DWORD beg, end;
 				//beg = GetTickCount();
 
-				uint64_t beg ,end;
+				ar_uint64_t beg ,end;
 				beg = AR_GetTime_Milliseconds();
 
 				cfg = CFG_CollectGrammarConfig(gmr_txt, NULL);

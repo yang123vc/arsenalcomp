@@ -3,8 +3,8 @@
 
 #include "test.h"
 #include <iostream>
-
-
+#include <locale.h>
+#include <wchar.h>
 
 //using namespace std;
 using namespace ARSpace;
@@ -27,14 +27,14 @@ L"}"
 ;
 
 
-void AR_STDCALL tiny_error(int_t level, const wchar_t* msg, void *ctx)
+void AR_STDCALL tiny_error(ar_int_t level, const wchar_t* msg, void *ctx)
 {
-		printf("%ls\r\n", msg);
+        printf("%ls\r\n", msg);
 }
 
 void AR_STDCALL tiny_printf(const wchar_t *msg, void *ctx)
 {
-		printf("%ls", msg);
+        printf("%ls\r\n", msg);
 }
 
 
@@ -44,23 +44,26 @@ void AR_STDCALL tiny_printf(const wchar_t *msg, void *ctx)
 
 int main()
 {
-		arInit_t ai = {{tiny_error, tiny_printf, NULL}};
 
 
-		Arsenal_Init(&ai);
+        arInit_t ai = {{tiny_error, tiny_printf, NULL}};
 
-		AR_Test();
+        //printf("%s\r\n", setlocale(LC_ALL, NULL));
 
+        Arsenal_Init(&ai);
 
-		Arsenal_UnInit();
-
-
-
-		printf("done\r\n");
+        AR_Test();
 
 
-		getchar();
+	Arsenal_UnInit();
 
-		return 0;
+
+
+	printf("done\r\n");
+
+
+	getchar();
+
+	return 0;
 
 }
