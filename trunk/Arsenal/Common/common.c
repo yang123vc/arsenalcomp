@@ -69,9 +69,10 @@ void	AR_printf_ctx(arIOCtx_t *ctx, const wchar_t *msg,...)
 				va_start(arg_ptr, msg);
 				len = AR_vscwprintf(msg, arg_ptr);
 				if(len <= 0)return;
-				
+				va_end(arg_ptr);
 				buf = AR_NEWARR0(wchar_t, len + 1);
-
+				
+				va_start(arg_ptr, msg);
 				AR_vswprintf(buf, len + 1, msg, arg_ptr);
 				va_end(arg_ptr);
 				ctx->on_print(buf, ctx->ctx);
@@ -90,12 +91,13 @@ void	AR_error_ctx(arIOCtx_t *ctx, ar_int_t level, const wchar_t *msg, ...)
 		{
 				
 				va_start(arg_ptr, msg);
-				
 				len = AR_vscwprintf(msg, arg_ptr);
+				va_end(arg_ptr);
 				if(len <= 0)return;
 				
 				buf = AR_NEWARR0(wchar_t, len + 1);
 
+				va_start(arg_ptr, msg);
 				AR_vswprintf(buf, len + 1, msg, arg_ptr);
 				va_end(arg_ptr);
 				ctx->on_error(level, buf, ctx->ctx);
@@ -117,12 +119,14 @@ void AR_error(ar_int_t level, const wchar_t *msg, ...)
 		{
 				
 				va_start(arg_ptr, msg);
-				
 				len = AR_vscwprintf(msg, arg_ptr);
+				va_end(arg_ptr);
+
 				if(len <= 0)return;
 				
 				buf = AR_NEWARR0(wchar_t, len + 1);
-
+				
+				va_start(arg_ptr, msg);
 				AR_vswprintf(buf, len + 1, msg, arg_ptr);
 				va_end(arg_ptr);
 		
@@ -153,12 +157,13 @@ void AR_printf(const wchar_t *msg,...)
 		
 				
 				va_start(arg_ptr, msg);
-				
 				len = AR_vscwprintf(msg, arg_ptr);
+				va_end(arg_ptr);
+
 				if(len <= 0)return;
-				
 				buf = AR_NEWARR0(wchar_t, len + 1);
 
+				va_start(arg_ptr, msg);
 				AR_vswprintf(buf, len + 1, msg, arg_ptr);
 				va_end(arg_ptr);
 		
