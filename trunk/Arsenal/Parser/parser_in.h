@@ -38,8 +38,8 @@ extern const struct __parser_symbol_tag	*PSR_StartSymb;/*第一个符号，被转换为 %S
 const wchar_t*	PSR_AllocString(const wchar_t *str);
 const wchar_t*	PSR_AllocStringN(const wchar_t *str, size_t n);
 
-const wchar_t*  PSR_AllocStringInt(ar_int64_t num, size_t radix);
-const wchar_t*  PSR_AllocStringUInt(ar_uint64_t num, size_t radix);
+const wchar_t*  PSR_AllocStringInt(int_64_t num, size_t radix);
+const wchar_t*  PSR_AllocStringUInt(uint_64_t num, size_t radix);
 
 
 

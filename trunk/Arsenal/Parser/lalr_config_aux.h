@@ -87,7 +87,7 @@ static AR_INLINE void __init_config_freelist()
 
 static AR_INLINE void __uninit_config_freelist()
 {
-		ar_uint32_t count = 0;
+		uint_32_t count = 0;
 
 		while(__g_free_list)
 		{
@@ -165,7 +165,7 @@ static AR_INLINE void __init_node_freelist()
 
 static AR_INLINE void __uninit_node_freelist()
 {
-		ar_uint32_t count = 0;
+		uint_32_t count = 0;
 		while(__free_node_list)
 		{
 				lalrConfigNode_t *tmp = __free_node_list->next;
@@ -247,7 +247,7 @@ static AR_INLINE void __init_config_list_freelist()
 
 static AR_INLINE void __uninit_config_list_freelist()
 {
-		ar_uint32_t count = 0;
+		uint_32_t count = 0;
 		while(__free_config_list)
 		{
 				lalrConfigList_t	*tmp = (lalrConfigList_t*)__free_config_list->head;

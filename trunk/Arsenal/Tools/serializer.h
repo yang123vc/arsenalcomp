@@ -26,8 +26,8 @@ typedef struct __sn_int_tag
 {
 		ar_bool_t	is_signed;
 		union{
-				ar_uint64_t		u;
-				ar_int64_t			s;
+				uint_64_t		u;
+				int_64_t			s;
 		};
 }snInteger_t;
 
@@ -39,22 +39,22 @@ void	SN_UnInitInteger(snInteger_t *dest);
 
 typedef struct __sn_string_tag
 {
-		ar_byte_t	*data;
+		byte_b_t	*data;
 		size_t	len;
 }snString_t;
 
 void	SN_InitString(snString_t	*str);
 void	SN_UnInitString(snString_t	*dest);
 
-void	SN_SetStringByData(snString_t	*dest, const ar_byte_t *data, size_t len);
+void	SN_SetStringByData(snString_t	*dest, const byte_b_t *data, size_t len);
 void	SN_SetStringByStr(snString_t	*dest, const char *str);
 void	SN_SetStringByWcs(snString_t	*dest, const wchar_t *str);
 
 
-ar_int_t	SN_CompStringByString(const snString_t	*l,  const snString_t	*r);
-ar_int_t	SN_CompStringByData(const snString_t	*l,  const ar_byte_t *data, size_t len);
-ar_int_t	SN_CompStringByStr(const snString_t		*l,	 const char *str);
-ar_int_t	SN_CompStringByWcs(const snString_t		*l,	 const wchar_t *str);
+int_i_t	SN_CompStringByString(const snString_t	*l,  const snString_t	*r);
+int_i_t	SN_CompStringByData(const snString_t	*l,  const byte_b_t *data, size_t len);
+int_i_t	SN_CompStringByStr(const snString_t		*l,	 const char *str);
+int_i_t	SN_CompStringByWcs(const snString_t		*l,	 const wchar_t *str);
 
 
 
@@ -70,7 +70,7 @@ void	SN_UnInitList(snList_t	*lst);
 
 void	SN_InsertToList(snList_t	*lst, snObject_t *obj);
 ar_bool_t	SN_RemoveFromList(snList_t	*lst, size_t idx);
-ar_int_t	SN_IndexOfList(const snList_t *lst, const snObject_t *obj);
+int_i_t	SN_IndexOfList(const snList_t *lst, const snObject_t *obj);
 snObject_t*		SN_GetObjectFromList(snList_t *lst, size_t idx);
 
 typedef struct __sn_dict_pair_tag

@@ -378,7 +378,7 @@ class ReportIOContext : public ArsenalCPP::ARContext
 public:
 		COutputWnd		&m_output;
 public:
-		virtual void OnError(ar_int_t level, const wchar_t *msg)
+		virtual void OnError(int_i_t level, const wchar_t *msg)
 		{
 				m_output.Append(msg, COutputList::MSG_ERROR, 0, NULL);
 		}
@@ -552,7 +552,7 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 
 				if(conflict > 0)
 				{
-						str.Format(TEXT("The grammar has %d conflicts !"), (ar_uint32_t)conflict);
+						str.Format(TEXT("The grammar has %d conflicts !"), (uint_32_t)conflict);
 						output.Append(str, COutputList::MSG_MESSAGE, 0, tar);
 				}
 				
@@ -756,7 +756,7 @@ public:
 		}
 
 public:
-		virtual void OnError(ar_int_t level, const wchar_t *msg)
+		virtual void OnError(int_i_t level, const wchar_t *msg)
 		{
 				m_output.Append(msg);
 
@@ -923,7 +923,7 @@ void CGrammarDesignerDoc::OnParserParse()
 
 		{
 		CString str;
-		str.Format(TEXT("Parse code Tick count %I64d"), (ar_uint64_t)(end - beg));
+		str.Format(TEXT("Parse code Tick count %I64d"), (uint_64_t)(end - beg));
 		output.Append(str.GetString());
 		}
 

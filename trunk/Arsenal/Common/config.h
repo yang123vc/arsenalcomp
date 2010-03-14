@@ -424,30 +424,30 @@
 
 
 
-typedef AR_INT8_T				ar_int8_t;
+typedef AR_INT8_T				int_8_t;
 
-typedef AR_UINT8_T				ar_uint8_t;
+typedef AR_UINT8_T				uint_8_t;
 
-typedef AR_INT16_T				ar_int16_t;
+typedef AR_INT16_T				int_16_t;
 
-typedef AR_UINT16_T				ar_uint16_t;
+typedef AR_UINT16_T				uint_16_t;
 
-typedef AR_INT32_T				ar_int32_t;
+typedef AR_INT32_T				int_32_t;
 
-typedef AR_UINT32_T				ar_uint32_t;
+typedef AR_UINT32_T				uint_32_t;
 
-typedef AR_INT64_T				ar_int64_t;
+typedef AR_INT64_T				int_64_t;
 
-typedef AR_UINT64_T				ar_uint64_t;
+typedef AR_UINT64_T				uint_64_t;
 
 
-typedef AR_PLAT_INT_T			ar_int_t;/*跟所在处理器等长的有符号整数*/
+typedef AR_PLAT_INT_T			int_i_t;/*跟所在处理器等长的有符号整数*/
 
-typedef AR_PLAT_UINT_T			ar_uint_t;/*跟所在处理器等长的无符号整数,理论上总是等于size_t*/
+typedef AR_PLAT_UINT_T			uint_u_t;/*跟所在处理器等长的无符号整数,理论上总是等于size_t*/
 
-typedef ar_uint8_t				ar_byte_t;
+typedef uint_8_t				byte_b_t;
 
-typedef void*					ar_ptr_t;
+typedef void*					ptr_p_t;
 
 
 #define AR_CHARMAX				CHAR_MAX

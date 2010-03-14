@@ -53,7 +53,7 @@ typedef struct __parser_action_tag
 		psrSymbList_t	term_set;
 		psrSymbList_t	nonterm_set;
 
-		ar_int_t			*goto_tbl;
+		int_i_t			*goto_tbl;
 		size_t			goto_row;
 		size_t			goto_col;
 
@@ -67,7 +67,7 @@ typedef struct __parser_action_tag
 
 
 const psrAction_t*		PSR_GetAction(const psrActionTable_t *tbl, size_t state, const psrSymb_t *symb);
-ar_int_t					PSR_GetState(const psrActionTable_t *tbl, size_t state, const psrSymb_t *symb);
+int_i_t					PSR_GetState(const psrActionTable_t *tbl, size_t state, const psrSymb_t *symb);
 
 const psrSymbList_t*	PSR_GetExpectedSymb(const psrActionTable_t *tbl, size_t state);
 

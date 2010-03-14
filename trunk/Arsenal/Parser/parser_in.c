@@ -90,7 +90,7 @@ const wchar_t*	PSR_AllocStringN(const wchar_t *str, size_t n)
 }
 
 
-const wchar_t*  PSR_AllocStringInt(ar_int64_t num, size_t radix)
+const wchar_t*  PSR_AllocStringInt(int_64_t num, size_t radix)
 {
 		const wchar_t *res;
 		AR_LockSpinLock(&__tbl_lock);
@@ -99,7 +99,7 @@ const wchar_t*  PSR_AllocStringInt(ar_int64_t num, size_t radix)
 		return res;
 }
 
-const wchar_t*  PSR_AllocStringUInt(ar_uint64_t num, size_t radix)
+const wchar_t*  PSR_AllocStringUInt(uint_64_t num, size_t radix)
 {
 		const wchar_t *res;
 		AR_LockSpinLock(&__tbl_lock);

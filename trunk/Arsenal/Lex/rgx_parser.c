@@ -74,7 +74,7 @@ static const wchar_t*	__transform_char(const wchar_t *input, wchar_t *c, rgxErro
 				return ++p;
 		case L'u':
 		{
-				const wchar_t *ret; ar_uint32_t val;
+				const wchar_t *ret; uint_32_t val;
 				p += 1;
 				ret = AR_wtou32_s(p,p+4, &val, 10);
 				if(ret == NULL)
@@ -91,7 +91,7 @@ static const wchar_t*	__transform_char(const wchar_t *input, wchar_t *c, rgxErro
 				break;
 		case L'x':
 		{
-				const wchar_t *ret;  ar_uint32_t val;
+				const wchar_t *ret;  uint_32_t val;
 
 				p += 1;
 				
@@ -531,7 +531,7 @@ static rgxResult_t	__handle_postfix(rgxNode_t *expr, const wchar_t *input, const
 		{
 				ar_bool_t non_greedy = false;
 				const wchar_t *beg = p + 1;
-				ar_uint_t min,max;
+				uint_u_t min,max;
 				
 				/*beg = AR_wcstrim(beg,L" \t");*/
 				beg = AR_wcstrim_space(beg);

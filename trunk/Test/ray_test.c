@@ -18,10 +18,10 @@ AR_NAMESPACE_BEGIN
 static const wchar_t* __load_txt(const wchar_t *path)
 {
 		FILE *pf;
-		ar_byte_t	*buf;
+		byte_b_t	*buf;
 		size_t rn;
 		const wchar_t *ret;
-		buf = AR_NEWARR(ar_byte_t, LOAD_TXT_MAX_BUF);
+		buf = AR_NEWARR(byte_b_t, LOAD_TXT_MAX_BUF);
 
 		AR_ASSERT(path != NULL);
 		
@@ -71,7 +71,7 @@ static void parse_code(lex_t *lex, const wchar_t *sources)
 		{
 				
 				size_t tok_cnt = 0;
-				ar_uint64_t beg, end;
+				uint_64_t beg, end;
 
 				beg = AR_GetTime_Microseconds();
 				//DWORD beg, end;
@@ -140,7 +140,7 @@ void ray_test()
 		AR_DEL(sources);
 		sources = NULL;
 		*/
-		ar_uint64_t beg, end;
+		uint_64_t beg, end;
 		
 		beg = AR_GetTime_Microseconds();
 
