@@ -23,9 +23,9 @@ AR_NAMESPACE_BEGIN
 		#define LALR_DEFAULT_CONFIG_LIST_NUM	0
 #else
 
-		#define LALR_DEFAULT_CONFIG_NUM			(2000 / AR_MEM_POLICY)
-		#define LALR_DEFAULT_CONFIG_NODE_NUM	(2000 / AR_MEM_POLICY)
-		#define LALR_DEFAULT_CONFIG_LIST_NUM	(2000 / AR_MEM_POLICY)
+		#define LALR_DEFAULT_CONFIG_NUM		(2000)
+		#define LALR_DEFAULT_CONFIG_NODE_NUM	(2000)
+		#define LALR_DEFAULT_CONFIG_LIST_NUM	(2000)
 #endif
 /****************************************lalrConfig aux*****************************************/
 

@@ -280,7 +280,7 @@
 
 		#define AR_INT8_T		signed char
 		#define AR_UINT8_T		unsigned char
-		
+
 		#define AR_INT16_T		signed short
 		#define AR_UINT16_T		unsigned short
 
@@ -415,23 +415,23 @@
 #define AR_TOSTR(_Value) __AR_STRINGIZE_STR(_Value)
 
 
-#if !defined(AR_HAS_STDINT)
-		typedef AR_INT8_T				ar_int8_t;
 
-		typedef AR_UINT8_T				ar_uint8_t;
+typedef AR_INT8_T				ar_int8_t;
 
-		typedef AR_INT16_T				ar_int16_t;
+typedef AR_UINT8_T				ar_uint8_t;
 
-		typedef AR_UINT16_T				ar_uint16_t;
+typedef AR_INT16_T				ar_int16_t;
 
-		typedef AR_INT32_T				ar_int32_t;
+typedef AR_UINT16_T				ar_uint16_t;
 
-		typedef AR_UINT32_T				ar_uint32_t;
+typedef AR_INT32_T				ar_int32_t;
 
-		typedef AR_INT64_T				ar_int64_t;
+typedef AR_UINT32_T				ar_uint32_t;
 
-		typedef AR_UINT64_T				ar_uint64_t;
-#endif
+typedef AR_INT64_T				ar_int64_t;
+
+typedef AR_UINT64_T				ar_uint64_t;
+
 
 typedef AR_PLAT_INT_T			ar_int_t;/*跟所在处理器等长的有符号整数*/
 

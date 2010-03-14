@@ -1,22 +1,24 @@
 # depslib dependency file v1.0
-1268520498 source:/root/Desktop/Programming/Arsenal/Prj/Test/CodeBlocks/main.c
+1268537233 source:/root/Desktop/Programming/Arsenal/Prj/Test/CodeBlocks/main.c
 	"test.h"
 	<iostream>
+	<locale.h>
+	<wchar.h>
 
-1265117613 /root/Desktop/Programming/Arsenal/Prj/Test/CodeBlocks/test.h
+1268533350 /root/Desktop/Programming/Arsenal/Prj/Test/CodeBlocks/test.h
 	"../../../Arsenal/Arsenal.h"
 
-1268520217 /root/Desktop/Programming/Arsenal/Arsenal/Arsenal.h
+1268533347 /root/Desktop/Programming/Arsenal/Arsenal/Arsenal.h
 	"./Common/common.h"
 	"./Lex/lex.h"
 	"./Parser/grammar.h"
 	"./Parser/parser.h"
 	"./Tools/tools.h"
 
-1268520217 /root/Desktop/Programming/Arsenal/Arsenal/Common/common.h
+1268536130 /root/Desktop/Programming/Arsenal/Arsenal/Common/common.h
 	"config.h"
 
-1268520217 /root/Desktop/Programming/Arsenal/Arsenal/Common/config.h
+1268536263 /root/Desktop/Programming/Arsenal/Arsenal/Common/config.h
 	"platform.h"
 	<stdlib.h>
 	<crtdbg.h>
@@ -31,45 +33,50 @@
 	<string.h>
 	<math.h>
 	<wctype.h>
+	<stdint.h>
+	<stdbool.h>
 	<windows.h>
+	<unistd.h>
+	<pthread.h>
+	<sys/select.h>
 
-1267618457 /root/Desktop/Programming/Arsenal/Arsenal/Common/platform.h
+1268533347 /root/Desktop/Programming/Arsenal/Arsenal/Common/platform.h
 
-1265117585 /root/Desktop/Programming/Arsenal/Arsenal/Lex/lex.h
+1268533347 /root/Desktop/Programming/Arsenal/Arsenal/Lex/lex.h
 	"../Common/common.h"
 	"match.h"
 
-1265117585 /root/Desktop/Programming/Arsenal/Arsenal/Lex/match.h
+1268533347 /root/Desktop/Programming/Arsenal/Arsenal/Lex/match.h
 	"../Common/common.h"
 
-1267618426 /root/Desktop/Programming/Arsenal/Arsenal/Parser/grammar.h
+1268536131 /root/Desktop/Programming/Arsenal/Arsenal/Parser/grammar.h
 	"symbol.h"
 
-1265117594 /root/Desktop/Programming/Arsenal/Arsenal/Parser/symbol.h
+1268536130 /root/Desktop/Programming/Arsenal/Arsenal/Parser/symbol.h
 	"parser.h"
 
-1267618426 /root/Desktop/Programming/Arsenal/Arsenal/Parser/parser.h
+1268533347 /root/Desktop/Programming/Arsenal/Arsenal/Parser/parser.h
 	"../Common/common.h"
 
-1268419348 /root/Desktop/Programming/Arsenal/Arsenal/Tools/tools.h
+1268533346 /root/Desktop/Programming/Arsenal/Arsenal/Tools/tools.h
 	"grammar_config.h"
 	"serializer.h"
 
-1268419348 /root/Desktop/Programming/Arsenal/Arsenal/Tools/grammar_config.h
+1268536130 /root/Desktop/Programming/Arsenal/Arsenal/Tools/grammar_config.h
 	"../Parser/grammar.h"
 	"../Parser/parser.h"
 	"../Lex/lex.h"
 
-1268520068 source:/root/Desktop/Programming/Arsenal/Prj/Test/CodeBlocks/test.c
+1268536726 source:/root/Desktop/Programming/Arsenal/Prj/Test/CodeBlocks/test.c
 	"test.h"
 
-1268421499 source:/root/Desktop/Programming/Arsenal/Prj/Test/CodeBlocks/parser_test.c
+1268536677 source:/root/Desktop/Programming/Arsenal/Prj/Test/CodeBlocks/parser_test.c
 	<locale.h>
 	"test.h"
 
-1268419348 /root/Desktop/Programming/Arsenal/Arsenal/Tools/serializer.h
+1268536130 /root/Desktop/Programming/Arsenal/Arsenal/Tools/serializer.h
 	"../Common/common.h"
 
-1268520506 source:/root/Desktop/Programming/Arsenal/Prj/Test/CodeBlocks/com_test.c
+1268536751 source:/root/Desktop/Programming/Arsenal/Prj/Test/CodeBlocks/com_test.c
 	"test.h"
 
