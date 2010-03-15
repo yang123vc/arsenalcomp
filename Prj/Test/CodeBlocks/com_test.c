@@ -21,8 +21,7 @@ void com_str_test_vscwprintf()
 
 void com_test()
 {
-        //printf("%s\r\n", "aaaaaaaaa");
-        AR_printf(L"%ls\r\n", L"abcdef");
+        com_str_test_vscwprintf();
 }
 
 

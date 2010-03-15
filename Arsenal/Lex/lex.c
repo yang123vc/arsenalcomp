@@ -1,12 +1,12 @@
 /*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
- * 
+ *
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.It is provided "as is" without express 
+ * in supporting documentation.It is provided "as is" without express
  * or implied warranty.
  *
  */
@@ -62,7 +62,7 @@ void LEX_ClearProgSet(lexProgSet_t *set)
 
 void		LEX_DestroyProgSet(lexProgSet_t *set)
 {
-		
+
 		if(set)
 		{
 				LEX_ClearProgSet(set);
@@ -110,7 +110,7 @@ bool_b_t	LEX_RemoveFromProgSet(lexProgSet_t *set, size_t value)
 		int_i_t l,r,cnt;
 		bool_b_t res = false;
 		AR_ASSERT(set != NULL);
-		
+
 		l = 0; r = (int_i_t)set->count - (int_i_t)1, cnt = (int_i_t)set->count;
 
 		while(l <= r)
@@ -123,8 +123,8 @@ bool_b_t	LEX_RemoveFromProgSet(lexProgSet_t *set, size_t value)
 				}
 				l++;
 		}
-		
-		
+
+
 		for(l = r + 1; l < (int_i_t)set->count; ++l)
 		{
 				rgxProg_t *prog = set->prog[l];
@@ -146,7 +146,7 @@ void LEX_SortProgSet(lexProgSet_t *set)
 {
 		int_i_t i,j;
 
-		
+
 
 		for(i = (int_i_t)set->count - 1; i > 0; --i)
 		{
@@ -156,7 +156,7 @@ void LEX_SortProgSet(lexProgSet_t *set)
 				}
 		}
 
-		
+
 
 		for(i = 1; i < (int_i_t)set->count; ++i)
 		{
@@ -176,7 +176,7 @@ bool_b_t	LEX_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr)
 {
 		rgxResult_t res;
 		AR_ASSERT(name != NULL && AR_wcslen(name) > 0 && expr != NULL);
-		
+
 		if(RGX_FindFromNameSet(lex->name_tbl, name) != NULL)
 		{
 				/*AR_error( L"Lex Rule Error : Duplicate name defination %ls: %ls\r\n", name, expr);*/
@@ -185,7 +185,7 @@ bool_b_t	LEX_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr)
 		}
 
 		res = RGX_ParseExpr(expr, lex->name_tbl);
-		
+
 		if(res.node == NULL)
 		{
 				/*AR_error(L"Lex Rule Error : %ls: %ls\r\n", name, res.err.pos);*/
@@ -195,7 +195,7 @@ bool_b_t	LEX_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr)
 
 
 		/*RGX_CorrectTree(res.node);*/
-		
+
 		return RGX_InsertToNameSet(lex->name_tbl, name, res.node);
 }
 
@@ -234,7 +234,7 @@ bool_b_t	LEX_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *acti
 		{
 				/*AR_error(AR_LEX, L"Lex Rule Error : %d : %ls\n", action->type, res.err.pos);*/
 				/*AR_error(L"Lex Rule Error : %" AR_PLAT_INT_FMT L"d : %ls\n", (size_t)action->type, (size_t)res.err.pos);*/
-				
+
 				AR_printf_ctx(&lex->io_ctx, L"Lex Rule Error : %" AR_PLAT_INT_FMT L"d : %ls\n", (size_t)action->value, res.err.pos);
 				return false;
 		}
@@ -242,18 +242,18 @@ bool_b_t	LEX_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *acti
 		cat = RGX_CreateNode(RGX_CAT_T);
 		final = RGX_CreateNode(RGX_FINAL_T);
 		final->final_val = (int_i_t)action->value;
-		
+
 		cat->left = res.node;
 		cat->right = final;
-		
+
 		/*RGX_CorrectTree(cat);*/
 
 		prog = AR_NEW(rgxProg_t);
-		
+
 		RGX_InitProg(prog);
-		
+
 		RGX_Compile(prog, cat);
-		
+
 		LEX_InserToProgSet(lex->prog_set, prog, action);
 		RGX_DestroyNode(cat);
 
@@ -265,34 +265,34 @@ bool_b_t	LEX_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *acti
 bool_b_t	LEX_Insert(lex_t *lex, const wchar_t *input)
 {
 		const wchar_t *p;
-		
+
 		AR_ASSERT(lex != NULL && input != NULL);
 		p = AR_wcstrim_space(input);
-		
+
 		if(AR_iswdigit(*p) || *p == L'%')/*action*/
 		{
 				lexAction_t		act;
 				bool_b_t			is_skip;
-				
+
 				is_skip = false;
 				if(*p == L'%')
 				{
 						if(AR_wcsstr(p, L"%skip") == NULL)return false;
-						
+
 						p = AR_wcstrim_space(p + AR_wcslen(L"%skip"));
 
 						is_skip = true;
 				}
-				
+
 				act.priority = act.value = 0;
-				p = AR_wtou(p, &act.value, 10);
+				p = AR_wtou(p, (uint_u_t*)&act.value, 10);
 				if(p == NULL)return false;
 
 				p = AR_wcstrim_space(p);
 
 				if(*p == L',')
 				{
-						p = AR_wtou(++p, &act.priority, 10);
+						p = AR_wtou(++p, (uint_u_t*)&act.priority, 10);
 						if(p == NULL)return false;
 				}
 
@@ -300,7 +300,7 @@ bool_b_t	LEX_Insert(lex_t *lex, const wchar_t *input)
 
 				act.is_skip = is_skip;
 				return LEX_InsertRule(lex, p, &act);
-		
+
 		}else if(AR_iswalpha(*p) || *p == L'_')
 		{
 				wchar_t name[AR_RGX_MAXNAME + 1];
@@ -316,7 +316,7 @@ bool_b_t	LEX_Insert(lex_t *lex, const wchar_t *input)
 				if(*p != L'=')return false;
 				p = AR_wcstrim_space(++p);
 				return LEX_InsertName(lex, name, p);
-		
+
 		}else
 		{
 				/*AR_error(L"Lex Rule Error : Invalid Input %ls\r\n", p);*/
@@ -324,8 +324,8 @@ bool_b_t	LEX_Insert(lex_t *lex, const wchar_t *input)
 				AR_printf_ctx(&lex->io_ctx, L"Lex Rule Error : Invalid Input %ls\r\n", p);
 				return false;
 		}
-		
-		
+
+
 }
 
 
@@ -342,7 +342,7 @@ bool_b_t	LEX_GenerateTransTable(lex_t *lex)
 bool_b_t LEX_Match(lex_t *lex, lexMatch_t *match, lexToken_t *tok)
 {
 		size_t i;
-		
+
 		size_t empty_match_cnt = 0;
 
 		AR_ASSERT(lex != NULL && match != NULL && tok != NULL);
@@ -362,7 +362,7 @@ REMATCH:
 				AR_printf(L"%ls\r\n", AR_GetStrString(str));
 				AR_DestroyString(str);
 				*/
-				
+
 				if(RGX_Match(lex->prog_set->prog[i], match, tok))
 				{
 						if(lex->prog_set->action[i].is_skip)
@@ -386,14 +386,14 @@ REMATCH:
 lex_t*	LEX_Create(const arIOCtx_t *io)
 {
 		lex_t *res;
-		
+
 		res = AR_NEW0(lex_t);
-		
-		
+
+
 		res->prog_set = LEX_CreateProgSet();
 		res->name_tbl = AR_NEW(rgxNameSet_t);
 		RGX_InitNameSet(res->name_tbl);
-		
+
 		res->io_ctx = io == NULL ? *AR_global_ioctx() : *io;
 
 		return res;
@@ -403,7 +403,7 @@ lex_t*	LEX_Create(const arIOCtx_t *io)
 
 void	LEX_Clear(lex_t *lex)
 {
-		
+
 		RGX_ClearNameSet(lex->name_tbl);
 		LEX_ClearProgSet(lex->prog_set);
 }
@@ -426,10 +426,10 @@ void	LEX_Destroy(lex_t *lex)
 void	LEX_ResetIOContext(lex_t *lex, const arIOCtx_t *io)
 {
 		AR_ASSERT(lex != NULL && io != NULL);
-		
+
 		lex->io_ctx = io == NULL ? *AR_global_ioctx() : *io;
-				
-		
+
+
 }
 
 

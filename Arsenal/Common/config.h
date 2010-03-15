@@ -186,6 +186,7 @@
 #include <string.h>
 #include <math.h>
 #include <wctype.h>
+#include <string.h>
 
 #if defined(AR_HAS_C99_FEATURE)
     #include <stdint.h>
@@ -211,6 +212,7 @@
         #include <unistd.h>
         #include <pthread.h>
         #include <sys/select.h>
+        #include <sys/time.h>
 #else
 		#error "Unknown OS not supported!"
 #endif
