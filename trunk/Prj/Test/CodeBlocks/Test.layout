@@ -1,19 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="LibDebug" />
-	<File name="com_test.c" open="0" top="0" tabpos="5">
-		<Cursor position="274" topLine="9" />
+	<File name="com_test.c" open="1" top="0" tabpos="2">
+		<Cursor position="196" topLine="0" />
 	</File>
-	<File name="main.c" open="1" top="1" tabpos="1">
-		<Cursor position="649" topLine="25" />
-	</File>
-	<File name="parser_test.c" open="0" top="0" tabpos="1">
-		<Cursor position="5316" topLine="271" />
-	</File>
-	<File name="test.c" open="0" top="0" tabpos="3">
-		<Cursor position="156" topLine="0" />
-	</File>
-	<File name="test.h" open="0" top="0" tabpos="4">
-		<Cursor position="139" topLine="0" />
+	<File name="main.c" open="1" top="0" tabpos="1">
+		<Cursor position="653" topLine="30" />
 	</File>
 </CodeBlocks_layout_file>

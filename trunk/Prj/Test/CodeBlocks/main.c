@@ -29,11 +29,13 @@ L"}"
 
 void AR_STDCALL tiny_error(ar_int_t level, const wchar_t* msg, void *ctx)
 {
+
         printf("%ls\r\n", msg);
 }
 
 void AR_STDCALL tiny_printf(const wchar_t *msg, void *ctx)
 {
+
         printf("%ls\r\n", msg);
 }
 
@@ -42,10 +44,9 @@ void AR_STDCALL tiny_printf(const wchar_t *msg, void *ctx)
 
 
 
-int main()
+int  main()
 {
-
-
+        printf("%s\r\n", AR_FUNC_NAME);
         arInit_t ai = {{tiny_error, tiny_printf, NULL}};
 
         //printf("%s\r\n", setlocale(LC_ALL, NULL));

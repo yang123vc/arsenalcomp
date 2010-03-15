@@ -55,7 +55,7 @@ int_i_t			AR_AtomicDec(volatile int_i_t *dest)
 
 void			AR_YieldThread()
 {
-		pthread_yield();
+	pthread_yield();
 }
 
 void			AR_Sleep(size_t millisecond)
