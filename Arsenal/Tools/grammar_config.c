@@ -92,7 +92,7 @@ typedef struct  __cfg_lex_pattern_tag
 {
 		size_t			val;
 		const wchar_t	*regex;
-		bool_b_t			is_skip;
+		bool_t			is_skip;
 		size_t			prec;
 }cfgLexPattern_t;
 
@@ -1043,7 +1043,7 @@ static psrNode_t*		AR_STDCALL __handle_token_def(psrNode_t **nodes, size_t count
 
 		if(ns[2])
 		{
-				AR_wtou(ns[2]->lexeme.lexeme, (uint_u_t*)&res->token.tokval, 10);
+				AR_wtou(ns[2]->lexeme.lexeme, (uint_t*)&res->token.tokval, 10);
 		}else
 		{
 				res->token.tokval = 0;
@@ -1051,7 +1051,7 @@ static psrNode_t*		AR_STDCALL __handle_token_def(psrNode_t **nodes, size_t count
 
 		if(ns[5])
 		{
-				AR_wtou(ns[5]->lexeme.lexeme, (uint_u_t*)&res->token.lex_prec, 10);
+				AR_wtou(ns[5]->lexeme.lexeme, (uint_t*)&res->token.lex_prec, 10);
 		}
 
 		return res;
@@ -1195,7 +1195,7 @@ static psrNode_t*		AR_STDCALL __handle_program(psrNode_t **nodes, size_t count, 
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res = NULL;
 		size_t	i;
-		bool_b_t			has_err = false;
+		bool_t			has_err = false;
 		cfgNodeList_t name, token, prec, rule, error, empty;
 		cfgStart_t		*start_rule = NULL;
 
@@ -1458,13 +1458,13 @@ static parser_t*		__build_parser(const psrGrammar_t *gmr)
 
 
 /*
-typedef void	(AR_STDCALL *AR_error_func)(int_i_t level, const wchar_t *msg, void *ctx);
+typedef void	(AR_STDCALL *AR_error_func)(int_t level, const wchar_t *msg, void *ctx);
 typedef void	(AR_STDCALL *AR_print_func)(const wchar_t *msg, void *ctx);
 */
 
 
 
-static void	AR_STDCALL cfg_on_error(int_i_t level, const wchar_t *msg, void *ctx)
+static void	AR_STDCALL cfg_on_error(int_t level, const wchar_t *msg, void *ctx)
 {
 		cfgReport_t				*report = NULL;
 		cfgReportInfo_t			info;
@@ -1562,7 +1562,7 @@ static void		AR_STDCALL cfg_error(const psrToken_t *tok, const wchar_t *expected
 cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *report)
 {
 
-		bool_b_t is_ok, has_error;
+		bool_t is_ok, has_error;
 		lex_t *lex;
 		lexMatch_t match;
 		lexToken_t		tok;
@@ -1706,15 +1706,13 @@ void			CFG_DestroyGrammarConfig(cfgConfig_t *cfg)
 
 
 
-
-
 static const wchar_t CFG_DEF_BUILD_LEX[] =
 L"static lex_t*	__build_lex(const arIOCtx_t *io)								\n"
 L"{																				\n"
 L"		lex_t	*lex;															\n"
 L"		size_t i;																\n"
 L"		lex = LEX_Create(io);													\n"
-L"		for(i = 0; i < AR_NELEMS(__g_lex_name); ++i)							\n"
+L"		for(i = 0; i < __NAME_COUNT__; ++i)										\n"
 L"		{																		\n"
 L"				if(!LEX_Insert(lex, __g_lex_name[i]))							\n"
 L"				{																\n"
@@ -1723,7 +1721,7 @@ L"						AR_ASSERT(false);										\n"
 L"						return NULL;											\n"
 L"				}																\n"
 L"		}																		\n"
-L"		for(i = 0; i < AR_NELEMS(__g_term_pattern); ++i)						\n"
+L"		for(i = 0; i < __TERM_COUNT__; ++i)										\n"
 L"		{																		\n"
 L"				lexAction_t		act;											\n"
 L"				act.is_skip		=		__g_term_pattern[i].skip;				\n"
@@ -1747,7 +1745,7 @@ L"		psrGrammar_t	*grammar;																								\n"
 L"		size_t i;																												\n"
 L"		AR_ASSERT(psr_ctx != NULL);																								\n"
 L"		grammar = PSR_CreateGrammar(psr_ctx, io);																				\n"
-L"		for(i = 0; i < AR_NELEMS(__g_term_pattern); ++i)																		\n"
+L"		for(i = 0; i < __TERM_COUNT__; ++i)																						\n"
 L"		{																														\n"
 L"				if(__g_term_pattern[i].skip || __g_term_pattern[i].tokval == 0)continue;										\n"
 L"				if(!PSR_InsertTerm(grammar, __g_term_pattern[i].name, __g_term_pattern[i].tokval, PSR_ASSOC_NONASSOC,0, NULL))	\n"
@@ -1758,7 +1756,7 @@ L"						AR_ASSERT(false);																						\n"
 L"						return NULL;																							\n"
 L"				}																												\n"
 L"		}																														\n"
-L"		for(i = 0; i < AR_NELEMS(__g_prec_pattern); ++i)																		\n"
+L"		for(i = 0; i < __PREC_COUNT__; ++i)																						\n"
 L"		{																														\n"
 L"				psrTermInfo_t	*info;																							\n"
 L"				info = PSR_GetTermSymbInfoByName(grammar, __g_prec_pattern[i].name);											\n"
@@ -1777,7 +1775,7 @@ L"						info->assoc = __g_prec_pattern[i].assoc;																											\n"
 L"						info->prec = __g_prec_pattern[i].prec_level;																										\n"
 L"				}																																							\n"
 L"		}																																									\n"
-L"		for(i = 0; i < AR_NELEMS(__g_rule_pattern); ++i)																													\n"
+L"		for(i = 0; i < __RULE_COUNT__; ++i)																													\n"
 L"		{																																									\n"
 L"				if(!PSR_InsertRuleByStr(grammar, __g_rule_pattern[i].rule, __g_rule_pattern[i].prec_token, __g_rule_pattern[i].handler, __g_rule_pattern[i].auto_ret))		\n"
 L"				{																																							\n"
@@ -1798,11 +1796,17 @@ L"		return grammar;																																						\n"
 L"}"
 ;
 
+/*
+__NAME_COUNT__
+__TERM_COUNT__
 
+__PREC_COUNT__
+__RULE_COUNT__
+*/
 
+#define CFG_CNT_DEF		L"#define %ls ((size_t)%u)\r\n"
 
-
-bool_b_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
+bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 {
 		size_t i;
 		arString_t		*handler_define = NULL;
@@ -1836,7 +1840,18 @@ bool_b_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 				AR_AppendString(code, CFG_NAME_DEF_END);
 				AR_AppendString(code, L"\n");
 				AR_AppendString(code, L"\n");
+		}else
+		{
+				AR_AppendString(code, L"\n");
+				AR_AppendString(code, CFG_NAME_DEF_BEGIN);
+				AR_AppendString(code, L"\n");
+				AR_AppendString(code, L"NULL\r\n");
+				AR_AppendString(code, CFG_NAME_DEF_END);
+				AR_AppendString(code, L"\n");
+				AR_AppendString(code, L"\n");
 		}
+
+		AR_AppendFormatString(code,  CFG_CNT_DEF, L"__NAME_COUNT__", cfg->name_cnt);
 
 		if(cfg->tok_cnt > 0)
 		{
@@ -1878,6 +1893,8 @@ bool_b_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 				AR_AppendString(code, L"\n");
 				AR_AppendString(code, L"\n");
 		}
+
+		AR_AppendFormatString(code,  CFG_CNT_DEF, L"__TERM_COUNT__", cfg->tok_cnt);
 
 		if(cfg->prec_cnt > 0)
 		{
@@ -1932,8 +1949,19 @@ bool_b_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 				AR_AppendString(code, CFG_PREC_DEF_END);
 				AR_AppendString(code, L"\n");
 				AR_AppendString(code, L"\n");
+		}else
+		{
+				AR_AppendString(code, L"\n");
+				AR_AppendString(code, CFG_PREC_DEF_BEGIN);
+				AR_AppendString(code, L"\n");
+				AR_AppendString(code, L"NULL\r\n");
+				AR_AppendString(code, CFG_PREC_DEF_END);
+				AR_AppendString(code, L"\n");
+				AR_AppendString(code, L"\n");
 		}
-
+		
+		
+		AR_AppendFormatString(code,  CFG_CNT_DEF, L"__PREC_COUNT__", cfg->prec_cnt);
 
 		if(cfg->rule_cnt > 0)
 		{
@@ -2026,6 +2054,7 @@ bool_b_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 
 
 
+
 		if(cfg->rule_cnt > 0)
 		{
 
@@ -2097,6 +2126,9 @@ bool_b_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 				#define CFG_RULE_DEF_BEGIN	L"struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	handler; size_t	auto_ret; } __g_rule_pattern[] = {"
 				*/
 		}
+
+		AR_AppendFormatString(code,  CFG_CNT_DEF, L"__RULE_COUNT__", cfg->rule_cnt);
+
 
 		if(cfg->start.start_rule != NULL)
 		{

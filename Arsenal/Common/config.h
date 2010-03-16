@@ -353,12 +353,12 @@
 
 
 
-/*sizeof(bool_b_t) 必须等于1*/
+/*sizeof(bool_t) 必须等于1*/
 
 #if defined(AR_HAS_BOOL_TRUE_FALSE)
-		typedef bool					bool_b_t;
+		typedef bool					bool_t;
 #else
-		typedef	AR_INT8_T				bool_b_t;
+		typedef	AR_INT8_T				bool_t;
 		#define	true					1
 		#define false					0
 #endif
@@ -443,13 +443,13 @@ typedef AR_INT64_T				int_64_t;
 typedef AR_UINT64_T				uint_64_t;
 
 
-typedef AR_PLAT_INT_T			int_i_t;/*跟所在处理器等长的有符号整数*/
+typedef AR_PLAT_INT_T			int_t;/*跟所在处理器等长的有符号整数*/
 
-typedef AR_PLAT_UINT_T			uint_u_t;/*跟所在处理器等长的无符号整数,理论上总是等于size_t*/
+typedef AR_PLAT_UINT_T			uint_t;/*跟所在处理器等长的无符号整数,理论上总是等于size_t*/
 
-typedef uint_8_t				byte_b_t;
+typedef uint_8_t				byte_t;
 
-typedef void*					ptr_p_t;
+typedef void*					ptr_t;
 
 
 #define AR_CHARMAX				CHAR_MAX

@@ -23,14 +23,14 @@
 
 #if(AR_ARCH_VER == ARCH_32)
 		
-		#define ATOMIC_INC(_dest) (int_i_t)InterlockedIncrement((__VOLATILE__ LONG*)(_dest))
-		#define  ATOMIC_DEC(_dest) (int_i_t)InterlockedDecrement((__VOLATILE__ LONG*)(_dest))
+		#define ATOMIC_INC(_dest) (int_t)InterlockedIncrement((__VOLATILE__ LONG*)(_dest))
+		#define  ATOMIC_DEC(_dest) (int_t)InterlockedDecrement((__VOLATILE__ LONG*)(_dest))
 		#define COMP_EXCH(_dest, _exch, _comp_val)	InterlockedCompareExchange((__VOLATILE__ LONG*)(_dest), (LONG )(_exch), (LONG)(_comp_val))
 
 #elif(AR_ARCH_VER == ARCH_64)
 		
-		#define  ATOMIC_INC(_dest) (int_i_t)InterlockedIncrement64((__VOLATILE__ LONGLONG*)(_dest))
-		#define  ATOMIC_DEC(_dest) (int_i_t)InterlockedDecrement64((__VOLATILE__ LONGLONG*)(_dest))
+		#define  ATOMIC_INC(_dest) (int_t)InterlockedIncrement64((__VOLATILE__ LONGLONG*)(_dest))
+		#define  ATOMIC_DEC(_dest) (int_t)InterlockedDecrement64((__VOLATILE__ LONGLONG*)(_dest))
 		#define COMP_EXCH(_dest, _exch, _comp_val)	InterlockedCompareExchange64((__VOLATILE__ LONGLONG*)(_dest), (LONGLONG )(_exch), (LONGLONG)(_comp_val))
 #else
 		#error "Target ARCH  not supported"
@@ -71,20 +71,20 @@ void			AR_Sleep(size_t millisecond)
 }
 
 /*
-uint_u_t			AR_CompExchange(volatile uint_u_t *dest, uint_u_t exch, uint_u_t compval)
+uint_t			AR_CompExchange(volatile uint_t *dest, uint_t exch, uint_t compval)
 {
-		return (uint_u_t)COMP_EXCH(dest, exch, compval);
+		return (uint_t)COMP_EXCH(dest, exch, compval);
 }
 */
 
-int_i_t			AR_AtomicInc(volatile int_i_t *dest)
+int_t			AR_AtomicInc(volatile int_t *dest)
 {
-		//return (uint_u_t)ATOMIC_INC(dest);
+		//return (uint_t)ATOMIC_INC(dest);
 		
-		return (int_i_t)ATOMIC_INC(dest);
+		return (int_t)ATOMIC_INC(dest);
 }
 
-int_i_t			AR_AtomicDec(volatile int_i_t *dest)
+int_t			AR_AtomicDec(volatile int_t *dest)
 {
 		return ATOMIC_DEC(dest);
 }

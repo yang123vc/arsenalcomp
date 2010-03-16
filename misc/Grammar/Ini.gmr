@@ -1,4 +1,5 @@
 
+
 /*
 µ¥ÐÐ×¢ÊÍ,ÀýÈç
 
@@ -40,9 +41,8 @@
 					;
 
 
-%token	string   		:	"[^ ;=\r\n\[\]][^;=\r\n\[\]]*"
+%token	string   		:	"[^ ;\r\n\[\]][^;\r\n\[\]]*"
 					;
-
 
 %token	"="			:	"="	,	2
 					;
@@ -52,9 +52,9 @@
 					;
 
 
+%start	ini_file		;
 
-
-ini					:	section_list
+ini_file				:	section_list
 					;
 
 section_list			:	section_list	section
@@ -76,8 +76,7 @@ line_list				:	line_list line
 					|	line
 					;
 
-line					:	string   	"="	string  LINE_END
-					|	string   	"="		   LINE_END
+line					:	string LINE_END
 					|	error LINE_END
 					;
 

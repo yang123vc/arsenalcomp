@@ -85,13 +85,14 @@ static void __clear_for_lookahead(rgxProg_t *prog)
 }
 
 
-static bool_b_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, const wchar_t *input_beg)
+static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match)
 {
 		rgxThreadList_t *curr, *next;
 		rgxIns_t *pc;
 		size_t i;
-		AR_ASSERT(prog != NULL && sp != NULL && input_beg != NULL);
-		
+		const wchar_t *input_beg;
+		AR_ASSERT(prog != NULL && sp != NULL && match != NULL);
+		input_beg = match->input;
 		curr = RGX_CreateThreadList();
 		next = RGX_CreateThreadList();
 
@@ -167,7 +168,7 @@ static bool_b_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, const wchar_t *
 								/*__clear_ins_set(lhd.start);*/
 
 
-								if(__lookahead(&lhd, sp, input_beg))
+								if(__lookahead(&lhd, sp, match))
 								{
 										if(pc->lookahead.negative)
 										{
@@ -223,10 +224,10 @@ static bool_b_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, const wchar_t *
 
 
 
-static bool_b_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
+static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 {
 		rgxThreadList_t	*curr, *next;
-		bool_b_t			matched;
+		bool_t			matched;
 		rgxIns_t		*pc;
 		const wchar_t	*sp, *fianl_next;
 		size_t i,x,y, final_row, final_col;
@@ -340,7 +341,7 @@ static bool_b_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 								/*__clear_ins_set(lhd.start);*/
 
 
-								if(__lookahead(&lhd, sp, match->input))
+								if(__lookahead(&lhd, sp, match))
 								{
 										if(pc->lookahead.negative)
 										{
@@ -414,7 +415,7 @@ static bool_b_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 
 
 
-bool_b_t RGX_Match(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
+bool_t RGX_Match(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 {
 		AR_ASSERT(prog != NULL && match != NULL && tok != NULL);
 

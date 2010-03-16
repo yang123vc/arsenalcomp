@@ -24,7 +24,7 @@ typedef	struct __serialize_object_tag	snObject_t;
 
 typedef struct __sn_int_tag
 {
-		bool_b_t	is_signed;
+		bool_t	is_signed;
 		union{
 				uint_64_t		u;
 				int_64_t			s;
@@ -39,22 +39,22 @@ void	SN_UnInitInteger(snInteger_t *dest);
 
 typedef struct __sn_string_tag
 {
-		byte_b_t	*data;
+		byte_t	*data;
 		size_t	len;
 }snString_t;
 
 void	SN_InitString(snString_t	*str);
 void	SN_UnInitString(snString_t	*dest);
 
-void	SN_SetStringByData(snString_t	*dest, const byte_b_t *data, size_t len);
+void	SN_SetStringByData(snString_t	*dest, const byte_t *data, size_t len);
 void	SN_SetStringByStr(snString_t	*dest, const char *str);
 void	SN_SetStringByWcs(snString_t	*dest, const wchar_t *str);
 
 
-int_i_t	SN_CompStringByString(const snString_t	*l,  const snString_t	*r);
-int_i_t	SN_CompStringByData(const snString_t	*l,  const byte_b_t *data, size_t len);
-int_i_t	SN_CompStringByStr(const snString_t		*l,	 const char *str);
-int_i_t	SN_CompStringByWcs(const snString_t		*l,	 const wchar_t *str);
+int_t	SN_CompStringByString(const snString_t	*l,  const snString_t	*r);
+int_t	SN_CompStringByData(const snString_t	*l,  const byte_t *data, size_t len);
+int_t	SN_CompStringByStr(const snString_t		*l,	 const char *str);
+int_t	SN_CompStringByWcs(const snString_t		*l,	 const wchar_t *str);
 
 
 
@@ -69,8 +69,8 @@ void	SN_InitList(snList_t	*lst);
 void	SN_UnInitList(snList_t	*lst);
 
 void	SN_InsertToList(snList_t	*lst, snObject_t *obj);
-bool_b_t	SN_RemoveFromList(snList_t	*lst, size_t idx);
-int_i_t	SN_IndexOfList(const snList_t *lst, const snObject_t *obj);
+bool_t	SN_RemoveFromList(snList_t	*lst, size_t idx);
+int_t	SN_IndexOfList(const snList_t *lst, const snObject_t *obj);
 snObject_t*		SN_GetObjectFromList(snList_t *lst, size_t idx);
 
 typedef struct __sn_dict_pair_tag
@@ -88,8 +88,8 @@ typedef struct __sn_dict_tag
 
 void	SN_InitDict(snDict_t *dict);
 void	SN_UnInitDict(snDict_t *dict);
-bool_b_t	SN_InsertToDict(snDict_t *dict, snObject_t *key, snObject_t *value);
-bool_b_t	SN_RemoveFromDict(snDict_t *dict, const snObject_t *key);
+bool_t	SN_InsertToDict(snDict_t *dict, snObject_t *key, snObject_t *value);
+bool_t	SN_RemoveFromDict(snDict_t *dict, const snObject_t *key);
 snObject_t* SN_FindFromDict(snDict_t *dict, const snObject_t *key);
 
 

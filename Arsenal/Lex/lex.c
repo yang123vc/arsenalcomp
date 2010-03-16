@@ -89,7 +89,7 @@ void LEX_InserToProgSet(lexProgSet_t *set, rgxProg_t *prog, const lexAction_t *a
 }
 
 
-static void __exch_set(lexProgSet_t *set, int_i_t i,int_i_t j)
+static void __exch_set(lexProgSet_t *set, int_t i,int_t j)
 {
 		rgxProg_t		*prog;
 		lexAction_t		act;
@@ -105,13 +105,13 @@ static void __exch_set(lexProgSet_t *set, int_i_t i,int_i_t j)
 		set->action[j] = act;
 }
 
-bool_b_t	LEX_RemoveFromProgSet(lexProgSet_t *set, size_t value)
+bool_t	LEX_RemoveFromProgSet(lexProgSet_t *set, size_t value)
 {
-		int_i_t l,r,cnt;
-		bool_b_t res = false;
+		int_t l,r,cnt;
+		bool_t res = false;
 		AR_ASSERT(set != NULL);
 
-		l = 0; r = (int_i_t)set->count - (int_i_t)1, cnt = (int_i_t)set->count;
+		l = 0; r = (int_t)set->count - (int_t)1, cnt = (int_t)set->count;
 
 		while(l <= r)
 		{
@@ -125,7 +125,7 @@ bool_b_t	LEX_RemoveFromProgSet(lexProgSet_t *set, size_t value)
 		}
 
 
-		for(l = r + 1; l < (int_i_t)set->count; ++l)
+		for(l = r + 1; l < (int_t)set->count; ++l)
 		{
 				rgxProg_t *prog = set->prog[l];
 				set->prog[l] = NULL;
@@ -144,11 +144,11 @@ bool_b_t	LEX_RemoveFromProgSet(lexProgSet_t *set, size_t value)
 
 void LEX_SortProgSet(lexProgSet_t *set)
 {
-		int_i_t i,j;
+		int_t i,j;
 
 
 
-		for(i = (int_i_t)set->count - 1; i > 0; --i)
+		for(i = (int_t)set->count - 1; i > 0; --i)
 		{
 				if(set->action[i].priority > set->action[i-1].priority)
 				{
@@ -158,7 +158,7 @@ void LEX_SortProgSet(lexProgSet_t *set)
 
 
 
-		for(i = 1; i < (int_i_t)set->count; ++i)
+		for(i = 1; i < (int_t)set->count; ++i)
 		{
 				for(j = i; j > 0 && set->action[j].priority > set->action[j-1].priority; --j)
 				{
@@ -172,7 +172,7 @@ void LEX_SortProgSet(lexProgSet_t *set)
 
 /**********************************lex**************************************************/
 
-bool_b_t	LEX_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr)
+bool_t	LEX_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr)
 {
 		rgxResult_t res;
 		AR_ASSERT(name != NULL && AR_wcslen(name) > 0 && expr != NULL);
@@ -200,7 +200,7 @@ bool_b_t	LEX_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr)
 }
 
 
-bool_b_t	LEX_RemoveByName(lex_t *lex, const wchar_t *name)
+bool_t	LEX_RemoveByName(lex_t *lex, const wchar_t *name)
 {
 		AR_ASSERT(lex != NULL && name != NULL);
 
@@ -209,7 +209,7 @@ bool_b_t	LEX_RemoveByName(lex_t *lex, const wchar_t *name)
 
 
 
-bool_b_t	LEX_RemoveByValue(lex_t *lex, size_t value)
+bool_t	LEX_RemoveByValue(lex_t *lex, size_t value)
 {
 		AR_ASSERT(lex != NULL && lex->prog_set != NULL);
 
@@ -220,7 +220,7 @@ bool_b_t	LEX_RemoveByValue(lex_t *lex, size_t value)
 
 
 
-bool_b_t	LEX_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action)
+bool_t	LEX_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action)
 {
 		rgxResult_t res;
 		rgxNode_t	*cat, *final;
@@ -241,7 +241,7 @@ bool_b_t	LEX_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *acti
 
 		cat = RGX_CreateNode(RGX_CAT_T);
 		final = RGX_CreateNode(RGX_FINAL_T);
-		final->final_val = (int_i_t)action->value;
+		final->final_val = (int_t)action->value;
 
 		cat->left = res.node;
 		cat->right = final;
@@ -262,7 +262,7 @@ bool_b_t	LEX_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *acti
 
 
 
-bool_b_t	LEX_Insert(lex_t *lex, const wchar_t *input)
+bool_t	LEX_Insert(lex_t *lex, const wchar_t *input)
 {
 		const wchar_t *p;
 
@@ -272,7 +272,7 @@ bool_b_t	LEX_Insert(lex_t *lex, const wchar_t *input)
 		if(AR_iswdigit(*p) || *p == L'%')/*action*/
 		{
 				lexAction_t		act;
-				bool_b_t			is_skip;
+				bool_t			is_skip;
 
 				is_skip = false;
 				if(*p == L'%')
@@ -285,14 +285,14 @@ bool_b_t	LEX_Insert(lex_t *lex, const wchar_t *input)
 				}
 
 				act.priority = act.value = 0;
-				p = AR_wtou(p, (uint_u_t*)&act.value, 10);
+				p = AR_wtou(p, (uint_t*)&act.value, 10);
 				if(p == NULL)return false;
 
 				p = AR_wcstrim_space(p);
 
 				if(*p == L',')
 				{
-						p = AR_wtou(++p, (uint_u_t*)&act.priority, 10);
+						p = AR_wtou(++p, (uint_t*)&act.priority, 10);
 						if(p == NULL)return false;
 				}
 
@@ -329,17 +329,17 @@ bool_b_t	LEX_Insert(lex_t *lex, const wchar_t *input)
 }
 
 
-bool_b_t	LEX_GenerateTransTable(lex_t *lex)
+bool_t	LEX_GenerateTransTable(lex_t *lex)
 {
 		AR_ASSERT(lex != NULL && lex->prog_set != NULL);
 
 		LEX_SortProgSet(lex->prog_set);
-		return (bool_b_t)(lex->prog_set->count > 0);
+		return (bool_t)(lex->prog_set->count > 0);
 }
 
 #define LEX_MAX_EMPTY_MATCH_CNT 1
 
-bool_b_t LEX_Match(lex_t *lex, lexMatch_t *match, lexToken_t *tok)
+bool_t LEX_Match(lex_t *lex, lexMatch_t *match, lexToken_t *tok)
 {
 		size_t i;
 
@@ -370,6 +370,13 @@ REMATCH:
 								if(tok->count == 0)
 								{
 										empty_match_cnt++;
+								}
+
+								if(match->flags & LEX_REPORT_SKIP && tok->count > 0)
+								{
+										wchar_t *tmp = AR_wcsndup(tok->str, tok->count);
+										AR_printf_ctx(&lex->io_ctx, L"Skip token \"%ls\"\r\n", tmp);
+										AR_DEL(tmp);
 								}
 								goto REMATCH;
 						}else

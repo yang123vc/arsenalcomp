@@ -18,10 +18,10 @@
 AR_NAMESPACE_BEGIN
 
 
-static size_t __utf8_to_unicode_char(const byte_b_t *utf8, size_t len, wchar_t *uch)
+static size_t __utf8_to_unicode_char(const byte_t *utf8, size_t len, wchar_t *uch)
 {
 		size_t v,n,e;
-		const byte_b_t *p;
+		const byte_t *p;
 		
 		AR_ASSERT(utf8 != NULL && len > 0);
 		
@@ -80,52 +80,52 @@ static size_t __utf8_to_unicode_char(const byte_b_t *utf8, size_t len, wchar_t *
 }
 
 
-static size_t __unicode_to_utf8_char(wchar_t uch, byte_b_t *utf8)
+static size_t __unicode_to_utf8_char(wchar_t uch, byte_t *utf8)
 {
-		byte_b_t buf[10];
-		byte_b_t *e;
+		byte_t buf[10];
+		byte_t *e;
 		uint_32_t	uc = (uint_32_t)uch;
 		
 		e = (utf8 ? utf8 : buf);
     
 		if(uc < 0x80)
 		{
-				*e++ = (byte_b_t)uc;
+				*e++ = (byte_t)uc;
 		}else if(uc < 0x800)
 		{
 				/*<11011111> < 000 0000 0000>*/
-				*e++ = (byte_b_t)((uc >> 6) & 0x1f)|0xc0;
-				*e++ = (byte_b_t)(uc & 0x3f)|0x80; 
+				*e++ = (byte_t)((uc >> 6) & 0x1f)|0xc0;
+				*e++ = (byte_t)(uc & 0x3f)|0x80; 
 		}else if(uc < 0x10000)
 		{
 				/*<11101111> <0000 0000 0000 0000>*/
-				*e++ = (byte_b_t)(((uc >> 12) & 0x0f)|0xe0);
-				*e++ = (byte_b_t)(((uc >> 6) & 0x3f)|0x80);
-				*e++ = (byte_b_t)((uc & 0x3f)|0x80);
+				*e++ = (byte_t)(((uc >> 12) & 0x0f)|0xe0);
+				*e++ = (byte_t)(((uc >> 6) & 0x3f)|0x80);
+				*e++ = (byte_t)((uc & 0x3f)|0x80);
 		}else if(uc < 0x200000)
 		{
 				/*<11110111> <0 0000 0000 0000 0000 0000>*/
-				*e++ = (byte_b_t)(((uc >> 18) & 0x07)|0xf0);
-				*e++ = (byte_b_t)(((uc >> 12) & 0x3f)|0x80);
-				*e++ = (byte_b_t)(((uc >> 6) & 0x3f)|0x80);
-				*e++ = (byte_b_t)((uc & 0x3f)|0x80);
+				*e++ = (byte_t)(((uc >> 18) & 0x07)|0xf0);
+				*e++ = (byte_t)(((uc >> 12) & 0x3f)|0x80);
+				*e++ = (byte_t)(((uc >> 6) & 0x3f)|0x80);
+				*e++ = (byte_t)((uc & 0x3f)|0x80);
 		}else if(uc < 0x4000000)
 		{
 				/*<11111011> <00 0000 0000 0000 0000 0000 0000>*/
-				*e++ = (byte_b_t)(((uc >> 24) & 0x03)|0xf8);
-				*e++ = (byte_b_t)(((uc >> 18) & 0x3f)|0x80);
-				*e++ = (byte_b_t)(((uc >> 12) & 0x3f)|0x80);
-				*e++ = (byte_b_t)(((uc >> 6) & 0x3f)|0x80);
-				*e++ = (byte_b_t)((uc & 0x3f)|0x80);
+				*e++ = (byte_t)(((uc >> 24) & 0x03)|0xf8);
+				*e++ = (byte_t)(((uc >> 18) & 0x3f)|0x80);
+				*e++ = (byte_t)(((uc >> 12) & 0x3f)|0x80);
+				*e++ = (byte_t)(((uc >> 6) & 0x3f)|0x80);
+				*e++ = (byte_t)((uc & 0x3f)|0x80);
 		}else
 		{
 				/*<11111101> <0000 0000 0000 0000 0000 0000 0000 0000>*/
-				*e++ = (byte_b_t)(((uc >> 30) & 0x01)|0xfc);
-				*e++ = (byte_b_t)(((uc >> 24) & 0x3f)|0x80);
-				*e++ = (byte_b_t)(((uc >> 18) & 0x3f)|0x80);
-				*e++ = (byte_b_t)(((uc >> 12) & 0x3f)|0x80);
-				*e++ = (byte_b_t)(((uc >> 6) & 0x3f)|0x80);
-				*e++ = (byte_b_t)((uc & 0x3f)|0x80);
+				*e++ = (byte_t)(((uc >> 30) & 0x01)|0xfc);
+				*e++ = (byte_t)(((uc >> 24) & 0x3f)|0x80);
+				*e++ = (byte_t)(((uc >> 18) & 0x3f)|0x80);
+				*e++ = (byte_t)(((uc >> 12) & 0x3f)|0x80);
+				*e++ = (byte_t)(((uc >> 6) & 0x3f)|0x80);
+				*e++ = (byte_t)((uc & 0x3f)|0x80);
 		}
 
 		return utf8 ? e - utf8 : e - buf;
@@ -143,7 +143,7 @@ size_t AR_wcs_to_utf8(const wchar_t *unicode, size_t n, char *out, size_t out_le
 		{
 				p = out;
 				if(out_len < need)return 0;
-				for(i = 0; i < n; ++i)p += __unicode_to_utf8_char(unicode[i], (byte_b_t*)p);
+				for(i = 0; i < n; ++i)p += __unicode_to_utf8_char(unicode[i], (byte_t*)p);
 		}
 		return need;
 }
@@ -151,13 +151,13 @@ size_t AR_wcs_to_utf8(const wchar_t *unicode, size_t n, char *out, size_t out_le
 size_t AR_utf8_to_wcs(const char *utf8, size_t n, wchar_t *out, size_t out_len)
 {
 		const char *p;
-		size_t need; int_i_t l;
+		size_t need; int_t l;
 		AR_ASSERT(utf8 != NULL && n > 0);
-		p = utf8; need = 0; l = (int_i_t)n;
+		p = utf8; need = 0; l = (int_t)n;
 		
 		while(l > 0)
 		{
-				size_t nc = __utf8_to_unicode_char((const byte_b_t*)p, (size_t)l, NULL);
+				size_t nc = __utf8_to_unicode_char((const byte_t*)p, (size_t)l, NULL);
 				if(nc == 0)return 0;
 				need++;
 				p += nc;
@@ -171,7 +171,7 @@ size_t AR_utf8_to_wcs(const char *utf8, size_t n, wchar_t *out, size_t out_len)
 				l = n; p = utf8; need = 0;
 				while(l > 0)
 				{
-						size_t nc = __utf8_to_unicode_char((const byte_b_t*)p, (size_t)l, &out[need]);
+						size_t nc = __utf8_to_unicode_char((const byte_t*)p, (size_t)l, &out[need]);
 						need++;
 						l -= nc;
 						p += nc;

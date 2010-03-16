@@ -51,7 +51,7 @@ void					RGX_UnInitNameSet(rgxNameSet_t	*set)
 		AR_memset(set,0,sizeof(*set));
 }
 
-bool_b_t					RGX_InsertToNameSet(rgxNameSet_t	*set, const wchar_t	*name, rgxNode_t *node)
+bool_t					RGX_InsertToNameSet(rgxNameSet_t	*set, const wchar_t	*name, rgxNode_t *node)
 {
 
 		AR_ASSERT(set != NULL && name != NULL && node != NULL);
@@ -70,7 +70,7 @@ bool_b_t					RGX_InsertToNameSet(rgxNameSet_t	*set, const wchar_t	*name, rgxNode
 }
 
 
-bool_b_t					RGX_RemoveFromNameSet(rgxNameSet_t	*set, const wchar_t	*name)
+bool_t					RGX_RemoveFromNameSet(rgxNameSet_t	*set, const wchar_t	*name)
 {
 		size_t i;
 		AR_ASSERT(set != NULL && name != NULL);

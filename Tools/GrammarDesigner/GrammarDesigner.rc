@@ -254,6 +254,13 @@ BEGIN
             MENUITEM "&Input",                      ID_SHOW_INPUT
         END
     END
+    POPUP "&Lexer"
+    BEGIN
+        POPUP "&Flags"
+        BEGIN
+            MENUITEM "&Report Skip",                ID_FLAGS_REPORTSKIP, CHECKED
+        END
+    END
     POPUP "&Parser"
     BEGIN
         POPUP "Mode"

@@ -203,9 +203,9 @@ void com_conv()
 
 
 
-AR_INLINE uint_u_t str_hash_test(const wchar_t *str, size_t n)
+AR_INLINE uint_t str_hash_test(const wchar_t *str, size_t n)
 {
-		uint_u_t	ret;
+		uint_t	ret;
 		size_t	i;
 		
 		AR_ASSERT(str != NULL);
@@ -218,16 +218,16 @@ AR_INLINE uint_u_t str_hash_test(const wchar_t *str, size_t n)
 		return ret;
 }
 
-AR_INLINE uint_u_t str_hash_test2(const wchar_t *s)
+AR_INLINE uint_t str_hash_test2(const wchar_t *s)
 {
 		return str_hash_test(s, AR_wcslen(s));
 
 }
 
 
-AR_INLINE uint_u_t str_hash_test3(const wchar_t *str, size_t n)
+AR_INLINE uint_t str_hash_test3(const wchar_t *str, size_t n)
 {
-		uint_u_t	ret;
+		uint_t	ret;
 		size_t	i;
 
 		const size_t a = 1;
@@ -238,12 +238,12 @@ AR_INLINE uint_u_t str_hash_test3(const wchar_t *str, size_t n)
 		ret = 0;
 		for(i = 0; i < n; ++i)
 		{
-				ret += ((a << (n-i)) * (uint_u_t)str[i]);
+				ret += ((a << (n-i)) * (uint_t)str[i]);
 		}
 		return ret;
 }
 
-AR_INLINE uint_u_t str_hash_test4(const wchar_t *s)
+AR_INLINE uint_t str_hash_test4(const wchar_t *s)
 {
 		return str_hash_test3(s, AR_wcslen(s));
 
@@ -267,7 +267,7 @@ void com_hash_test()
 
 void __format_v(const wchar_t *fmt, ...)
 {
-		int_i_t len;
+		int_t len;
 		va_list	arg_ptr;
 		va_start(arg_ptr, fmt);
 		len = AR_vscwprintf(fmt, arg_ptr);
@@ -312,11 +312,11 @@ void com_vscwprintf_test2()
 typedef struct __ac_automaton_tag		arACAutomaton_t;
 arACAutomaton_t*	AR_CreateACAutomaton();
 void				AR_DestroyACAutomaton(arACAutomaton_t *atm);
-bool_b_t				AR_InsertToACAutomaton(arACAutomaton_t *atm, const wchar_t *str, void *val);
-bool_b_t				AR_RemoveFromACAutomaton(arACAutomaton_t *atm, const wchar_t *str);
-bool_b_t				AR_BuildACAutomaton(arACAutomaton_t *atm);
+bool_t				AR_InsertToACAutomaton(arACAutomaton_t *atm, const wchar_t *str, void *val);
+bool_t				AR_RemoveFromACAutomaton(arACAutomaton_t *atm, const wchar_t *str);
+bool_t				AR_BuildACAutomaton(arACAutomaton_t *atm);
 
-bool_b_t				AR_FindFromACAutomaton(arACAutomaton_t *atm, const wchar_t *key, bool_b_t sub_str);
+bool_t				AR_FindFromACAutomaton(arACAutomaton_t *atm, const wchar_t *key, bool_t sub_str);
 
 
 
@@ -458,7 +458,7 @@ void str_test1()
 
 void str_test3()
 {
-		int_i_t len;
+		int_t len;
 
 		len = AR_scwprintf(L"%ls : %ls : %ls\r\n", L"ABCDEFÖí°Ë½ä",L"ABCDEFÖí°Ë½ä",L"ABCDEFÖí°Ë½ä");
 
@@ -511,7 +511,7 @@ void bug_test()
 }
 
 
-int_i_t __cmp_size_t(const void *l, const void *r)
+int_t __cmp_size_t(const void *l, const void *r)
 {
 		return AR_CMP(*(size_t*)l, *(size_t*)r);
 
@@ -533,7 +533,7 @@ void sort_test()
 		size_t *vi = AR_NEWARR(size_t, SORT_TEST_CNT);
 		int i;
 		DWORD beg,end;
-		int_i_t cnt = 3;
+		int_t cnt = 3;
 		AR_srand(time(NULL));
 
 		__int64 n = (__int64)SORT_TEST_CNT;
@@ -587,7 +587,7 @@ void search_test()
 		
 		for(i = 0; i < sizeof(arr)/sizeof(arr[0]); ++i)
 		{
-				int_i_t m = AR_bsearch(&i, arr,sizeof(arr)/sizeof(arr[0]), sizeof(int), __cmp_size_t);
+				int_t m = AR_bsearch(&i, arr,sizeof(arr)/sizeof(arr[0]), sizeof(int), __cmp_size_t);
 		
 				printf("arr[%d] == %d\r\n", m,arr[m]);
 		}
@@ -670,7 +670,7 @@ void escstr_test_buf0()
 				_getws(buf);
 				if(AR_wcscmp(buf, L"quit") == 0)break;
 
-				int_i_t l = AR_str_to_escstr_buf(tmp, 1024, buf);
+				int_t l = AR_str_to_escstr_buf(tmp, 1024, buf);
 
 				AR_ASSERT(l >= 0);
 				
@@ -692,7 +692,7 @@ void escstr_test_buf1()
 				if(AR_wcscmp(tmp, L"quit") == 0)break;
 
 				arEscStrErr_t	err;
-				int_i_t l = AR_escstr_to_str_buf(out, 1024, tmp, &err);
+				int_t l = AR_escstr_to_str_buf(out, 1024, tmp, &err);
 				
 				wchar_t buf[1024];
 				if(err.type == AR_ESCSTR_ERR_BUFFER)
@@ -730,11 +730,11 @@ void buffer_test()
 		FILE *tmp = fopen("d:\\temp\\tmp.rar", "wb");
 		assert(f != NULL && tmp != NULL);
 
-		byte_b_t buf[384];
+		byte_t buf[384];
 		
 		while(!ferror(f) && !feof(f))
 		{
-				size_t rn = fread(buf, sizeof(byte_b_t), sizeof(buf), f);
+				size_t rn = fread(buf, sizeof(byte_t), sizeof(buf), f);
 				if(rn == 0)break;
 				AR_InsertBuffer(buffer, buf, rn);
 
@@ -773,7 +773,7 @@ void com_timer_test()
 
 void com_str_test_vscwprintf()
 {
-		int_i_t l = AR_scwprintf(L"%C : %C : %C : %C\r\n", L'a', L'b', L'c', L'd');
+		int_t l = AR_scwprintf(L"%C : %C : %C : %C\r\n", L'a', L'b', L'c', L'd');
 		printf("l == %d\r\n", l);
 }
 

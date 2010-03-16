@@ -18,6 +18,22 @@
 AR_NAMESPACE_BEGIN
 
 /*********************************lexMatch_t***************************/
+
+#define __ALL_FLAGS		LEX_REPORT_SKIP
+void			LEX_MatchFlags(lexMatch_t *pmatch, uint_t flags, bool_t is_on)
+{
+		AR_ASSERT(pmatch != NULL);
+		flags &= __ALL_FLAGS;
+		if(is_on)
+		{
+				pmatch->flags |= flags;
+		}else
+		{
+				pmatch->flags &= ~flags;
+		}
+}
+#undef __ALL_FLAGS
+
 void LEX_ResetInput(lexMatch_t *pmatch, const wchar_t *input)
 {
 		AR_ASSERT(pmatch != NULL && input != NULL);
@@ -32,6 +48,7 @@ void LEX_ResetMatch(lexMatch_t *pmatch)
 		pmatch->is_ok = true;
 		pmatch->col = pmatch->line = 0;
 		pmatch->next = pmatch->input;
+		pmatch->flags = 0;
 }
 
 
@@ -48,6 +65,7 @@ void LEX_InitMatch(lexMatch_t *pmatch, const wchar_t *input)
 		pmatch->input = input;
 		pmatch->next = pmatch->input;
 		pmatch->is_ok = true;
+		pmatch->flags = 0;
 
 }
 
@@ -70,7 +88,7 @@ const wchar_t* LEX_GetNextInput(const lexMatch_t *match)
 		return match->next;
 }
 
-bool_b_t	LEX_IsError(const lexMatch_t *match)
+bool_t	LEX_IsError(const lexMatch_t *match)
 {
 		AR_ASSERT(match != NULL);
 		return !match->is_ok;
@@ -146,6 +164,26 @@ void			LEX_SkipTo(lexMatch_t *pmatch, const wchar_t *tok)
 		}
 }
 
+
+
+void			LEX_SkipN(lexMatch_t *pmatch, size_t nchar)
+{
+		size_t i;
+		AR_ASSERT(pmatch != NULL && pmatch->next != NULL);
+		
+		for(i = 0; *pmatch->next != L'\0' && i < nchar; ++i)
+		{
+				if(*pmatch->next == L'\n')
+				{
+						pmatch->line++;
+						pmatch->col = 0;
+				}else
+				{
+						pmatch->col++;
+				}
+				pmatch->next++;
+		}
+}
 
 AR_NAMESPACE_END
 

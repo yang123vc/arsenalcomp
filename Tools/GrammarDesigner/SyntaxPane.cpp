@@ -273,7 +273,7 @@ void CSyntaxTree::OnUpdatePopupClear32865(CCmdUI *pCmdUI)
 }
 
 
-static void __expand_tree(int_i_t level, CTreeCtrl &tree, HTREEITEM	item)
+static void __expand_tree(int_t level, CTreeCtrl &tree, HTREEITEM	item)
 {
 		if(level <= 0 || item == NULL)return;
 		

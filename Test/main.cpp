@@ -17,7 +17,7 @@ const wchar_t *test =
 L"{"
 
 L"		int i; int j;  float[100] a; float v; float x;"
-L"	bool_b_t x; char[1024] carr;"
+L"	bool_t x; char[1024] carr;"
 
 L"	while(true)"
 L"	{"
@@ -30,7 +30,7 @@ L"}"
 ;
 
 
-void AR_STDCALL tiny_error(int_i_t level, const wchar_t* msg, void *ctx)
+void AR_STDCALL tiny_error(int_t level, const wchar_t* msg, void *ctx)
 {
 #if(OS_TYPE == OS_WINDOWS_CE)
 		::MessageBoxW(NULL, msg, L"MessageBox", 0);

@@ -31,7 +31,7 @@ struct __parser_symbol_tag
 {
 		psrSymbType_t	type;
 		const wchar_t	*name;
-		uint_u_t			hash_code;
+		uint_t			hash_code;
 		size_t			ref_count;
 };
 
@@ -39,7 +39,7 @@ struct __parser_symbol_tag
 const psrSymb_t*		PSR_CreateSymb(const wchar_t *name, psrSymbType_t t);
 const psrSymb_t*		PSR_CopyNewSymb(const psrSymb_t *sour);
 void					PSR_DestroySymb(const psrSymb_t *symb);
-int_i_t					PSR_CompSymb(const psrSymb_t *l, const psrSymb_t *r);
+int_t					PSR_CompSymb(const psrSymb_t *l, const psrSymb_t *r);
 
 
 /***************************************symbol_list***************************************************/
@@ -72,16 +72,16 @@ void				PSR_InsertToSymbList(psrSymbList_t *symb_lst, const psrSymb_t *symb);
 */
 
 const psrSymb_t*	PSR_IndexOfSymbList(const psrSymbList_t *symb_lst, size_t idx);
-int_i_t				PSR_FindFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t* symb);
+int_t				PSR_FindFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t* symb);
 
-bool_b_t				PSR_RemoveFromSymbListByIndex(psrSymbList_t *symb_lst, size_t index);
+bool_t				PSR_RemoveFromSymbListByIndex(psrSymbList_t *symb_lst, size_t index);
 
-int_i_t				PSR_BSearchFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t* symb);
+int_t				PSR_BSearchFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t* symb);
 void				PSR_SortSymbList(psrSymbList_t *symb_lst);
 
 
 
-bool_b_t				PSR_InsertToSymbList_Unique(psrSymbList_t *symb_lst, const psrSymb_t *symb);
+bool_t				PSR_InsertToSymbList_Unique(psrSymbList_t *symb_lst, const psrSymb_t *symb);
 
 
 
@@ -99,7 +99,7 @@ typedef struct __parser_symbmap_record_tag
 {
 		const psrSymb_t			*key;
 		psrSymbList_t			lst;
-		bool_b_t					can_empty;
+		bool_t					can_empty;
 		struct __parser_symbmap_record_tag		*next;
 }psrMapRec_t;
 
@@ -116,8 +116,8 @@ typedef struct __parser_symbmap_tag
 void					PSR_InitSymbMap(psrSymbMap_t *map);
 void					PSR_UnInitSymbMap(psrSymbMap_t *map);
 
-bool_b_t					PSR_InsertToSymbMap(psrSymbMap_t *map, const psrSymb_t *key, const psrSymb_t *val);
-bool_b_t					PSR_SetSymbEpsilon(psrSymbMap_t *map, const psrSymb_t *key, bool_b_t is_epsilon);
+bool_t					PSR_InsertToSymbMap(psrSymbMap_t *map, const psrSymb_t *key, const psrSymb_t *val);
+bool_t					PSR_SetSymbEpsilon(psrSymbMap_t *map, const psrSymb_t *key, bool_t is_epsilon);
 
 psrMapRec_t*			PSR_GetSymbolFromSymbMap(const psrSymbMap_t *map, const psrSymb_t *key);
 

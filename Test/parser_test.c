@@ -23,10 +23,10 @@ AR_NAMESPACE_BEGIN
 static const wchar_t* __load_txt(const wchar_t *path)
 {
 		FILE *pf;
-		byte_b_t	*buf;
+		byte_t	*buf;
 		size_t rn;
 		const wchar_t *ret;
-		buf = AR_NEWARR(byte_b_t, LOAD_TXT_MAX_BUF);
+		buf = AR_NEWARR(byte_t, LOAD_TXT_MAX_BUF);
 
 		AR_ASSERT(path != NULL);
 

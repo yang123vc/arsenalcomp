@@ -32,7 +32,7 @@ void			AR_UnInitThread()
 
 }
 
-int_i_t			AR_AtomicInc(volatile int_i_t *dest)
+int_t			AR_AtomicInc(volatile int_t *dest)
 {
 		AR_LockSpinLock(&__g_spinlock);
 		*dest += 1;
@@ -40,7 +40,7 @@ int_i_t			AR_AtomicInc(volatile int_i_t *dest)
 		return *dest;
 }
 
-int_i_t			AR_AtomicDec(volatile int_i_t *dest)
+int_t			AR_AtomicDec(volatile int_t *dest)
 {
 		AR_LockSpinLock(&__g_spinlock);
 		*dest -= 1;

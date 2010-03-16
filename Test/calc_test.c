@@ -281,7 +281,7 @@ void calc_test()
 		lexMatch_t		match;
 		lexToken_t		tok;
 		size_t i,k;
-		bool_b_t is_ok;
+		bool_t is_ok;
 		arString_t		*str;
 		/*
 		const psrActionView_t *view;

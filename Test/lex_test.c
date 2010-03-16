@@ -9,7 +9,7 @@ AR_NAMESPACE_BEGIN
 
 
 #if(0)
-void charsetShowChar(wchar_t c, bool_b_t is_digit)
+void charsetShowChar(wchar_t c, bool_t is_digit)
 {
 		const wchar_t *fmt;
 
@@ -43,7 +43,7 @@ void charsetShowChar(wchar_t c, bool_b_t is_digit)
 		}
 }
 
-void charsetShow(const lexCharSet_t	*cset, bool_b_t is_digit)
+void charsetShow(const lexCharSet_t	*cset, bool_t is_digit)
 {
 		const lexCharRange_t	*curr;
 
@@ -471,7 +471,7 @@ void lex_test20()
 		lexToken_t tok;
 		lexMatch_t match;
 		size_t i;
-		bool_b_t  is_ok;
+		bool_t  is_ok;
 		lex = LEX_Create(NULL);
 		LEX_InitMatch(&match,L"int int_x" );
 		
@@ -487,7 +487,7 @@ void lex_test20()
 				AR_abort();
 		}
 		
-		if(!LEX_Insert(lex, L"3,0 int(?!={})"))
+		if(!LEX_Insert(lex, L"3,0 int(?!={keyword_lookahead})"))
 		{
 				AR_abort();
 		}
@@ -569,8 +569,8 @@ void lex_skip_test()
 
 void lex_test()
 {
-		lex_skip_test();
-		//lex_test20();
+		//lex_skip_test();
+		lex_test20();
 }
 
 AR_NAMESPACE_END

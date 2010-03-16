@@ -35,6 +35,7 @@ struct __ray_symbol_table_tag;
 typedef struct __ray_symbol_table_tag	raySymbTable_t;
 
 
+
 #define RAY_SYMBOL_BUCKET_SIZE			139
 
 struct __ray_symbol_tag
@@ -71,8 +72,8 @@ void			RAY_LeaveBlock(raySymbTable_t *tbl);
 raySymbBlock_t*	RAY_CurrentBlock(raySymbTable_t *tbl);
 
 
-bool_b_t			RAY_InsertName(raySymbBlock_t *block,	const wchar_t *name, const rayAttr_t *attr);
-bool_b_t			RAY_RemoveName(raySymbBlock_t *block,	const wchar_t *name);
+bool_t		RAY_InsertName(raySymbBlock_t *block,	const wchar_t *name, const rayAttr_t *attr);
+bool_t		RAY_RemoveName(raySymbBlock_t *block,	const wchar_t *name);
 rayAttr_t*		RAY_GetNameAttr(raySymbBlock_t *block,	const wchar_t *name);
 
 

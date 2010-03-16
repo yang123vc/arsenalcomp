@@ -56,6 +56,8 @@ BEGIN_MESSAGE_MAP(CGrammarDesignerDoc, CRichEditDoc)
 		ON_COMMAND(ID_TEST_TEST2, &CGrammarDesignerDoc::OnTestTest2)
 		ON_COMMAND(ID_GENERATE_TEMPLATE, &CGrammarDesignerDoc::OnGenerateTemplate)
 		ON_COMMAND(ID_STRINGS_STRINGCONVERTER, &CGrammarDesignerDoc::OnStringsStringconverter)
+		ON_COMMAND(ID_FLAGS_REPORTSKIP, &CGrammarDesignerDoc::OnFlagsReportskip)
+		ON_UPDATE_COMMAND_UI(ID_FLAGS_REPORTSKIP, &CGrammarDesignerDoc::OnUpdateFlagsReportskip)
 END_MESSAGE_MAP()
 
 
@@ -70,6 +72,7 @@ CGrammarDesignerDoc::CGrammarDesignerDoc()
 	// TODO: add one-time construction code here
 		m_encoding		= CTextFileBase::ASCII;
 		m_parser_mode	= ARSpace::PSR_LALR;
+		m_lexer_mode	= 0;
 		m_lexer			= NULL;
 		m_parser		=	NULL;
 		
@@ -258,6 +261,27 @@ void CGrammarDesignerDoc::OnUpdateParserModeSlr(CCmdUI *pCmdUI)
 }
 
 
+
+void CGrammarDesignerDoc::OnFlagsReportskip()
+{
+		// TODO: Add your command handler code here
+		if(m_lexer_mode & ARSpace::LEX_REPORT_SKIP)
+		{
+				m_lexer_mode &= ~ARSpace::LEX_REPORT_SKIP;
+		}else
+		{
+				m_lexer_mode |= ARSpace::LEX_REPORT_SKIP;
+		}
+}
+
+
+void CGrammarDesignerDoc::OnUpdateFlagsReportskip(CCmdUI *pCmdUI)
+{
+		// TODO: Add your command update UI handler code here
+		pCmdUI->SetCheck(m_lexer_mode & ARSpace::LEX_REPORT_SKIP);
+}
+
+
 void CGrammarDesignerDoc::OnEditGotoDecl()
 {
 		// TODO: Add your command handler code here
@@ -378,7 +402,7 @@ class ReportIOContext : public ArsenalCPP::ARContext
 public:
 		COutputWnd		&m_output;
 public:
-		virtual void OnError(int_i_t level, const wchar_t *msg)
+		virtual void OnError(int_t level, const wchar_t *msg)
 		{
 				m_output.Append(msg, COutputList::MSG_ERROR, 0, NULL);
 		}
@@ -756,7 +780,7 @@ public:
 		}
 
 public:
-		virtual void OnError(int_i_t level, const wchar_t *msg)
+		virtual void OnError(int_t level, const wchar_t *msg)
 		{
 				m_output.Append(msg);
 
@@ -879,6 +903,9 @@ void CGrammarDesignerDoc::OnParserParse()
 		
 
 		m_lexer->SetInput(str.GetString());
+		m_lexer->SetFlags(0);
+		m_lexer->SetFlags(m_lexer_mode);
+
 		ARSpace::lexToken_t		token;
 
 		memset(&token, 0, sizeof(token));
