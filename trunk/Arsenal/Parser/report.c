@@ -232,7 +232,7 @@ const psrActionView_t*	PSR_CreateActionView(const psrActionTable_t *tbl, const p
 
 				for(k = 0; k < tbl->goto_col; ++k)
 				{
-						int_i_t state =  tbl->goto_tbl[AR_TBL_IDX_R(r, k, tbl->goto_col)];
+						int_t state =  tbl->goto_tbl[AR_TBL_IDX_R(r, k, tbl->goto_col)];
 						msg = AR_vtow(L"%" AR_PLAT_INT_FMT L"d", state);
 
 						view->action_tbl[AR_TBL_IDX_R(r, c, view->col)] = msg;
@@ -326,7 +326,7 @@ void PSR_PrintActionTable(const psrActionTable_t *tbl, const psrGrammar_t *gramm
 				{
 						AR_AppendFormatString(str, L"%*" AR_PLAT_INT_FMT L"d", __WIDTH__, tbl->goto_tbl[AR_TBL_IDX_R(i,j,tbl->goto_col)]);
 						/*
-						int_i_t xxx,xxx_idx;
+						int_t xxx,xxx_idx;
 						
 						xxx_idx = AR_TBL_IDX_R(i,j,tbl->goto_col);
 						xxx = tbl->goto_tbl[xxx_idx];
@@ -574,10 +574,10 @@ static void __insert_to_symtbl_view(psrSymbolMapView_t *map_view, const wchar_t 
 
 
 
-static bool_b_t __detect_left_recursion(const psrGrammar_t *grammar, const psrSymb_t *head, psrSymbList_t *lst, psrSymbolMapView_t *output)
+static bool_t __detect_left_recursion(const psrGrammar_t *grammar, const psrSymb_t *head, psrSymbList_t *lst, psrSymbolMapView_t *output)
 {
 		size_t i;
-		bool_b_t is_recu = false;
+		bool_t is_recu = false;
 		AR_ASSERT(grammar != NULL && head != NULL && lst != NULL);
 
 		/*AR_ASSERT(lst->count > 0);*/
@@ -642,11 +642,11 @@ static bool_b_t __detect_left_recursion(const psrGrammar_t *grammar, const psrSy
 }
 
 
-bool_b_t					__report_left_recursion(const psrGrammar_t *grammar, psrSymbolMapView_t *output)
+bool_t					__report_left_recursion(const psrGrammar_t *grammar, psrSymbolMapView_t *output)
 {
 		size_t i;
 		psrSymbList_t	lst;
-		bool_b_t			ret = false;
+		bool_t			ret = false;
 		AR_ASSERT(grammar != NULL);
 		
 		PSR_InitSymbList(&lst);

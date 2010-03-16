@@ -2,12 +2,12 @@
 /*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
- * 
+ *
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.It is provided "as is" without express 
+ * in supporting documentation.It is provided "as is" without express
  * or implied warranty.
  *
  */
@@ -28,7 +28,7 @@ typedef struct __lalr_config_tag lalrConfig_t;
 
 
 /**************************************************LALR config list***************************************/
-typedef struct __lalr_config_node_tag	
+typedef struct __lalr_config_node_tag
 {
 		lalrConfig_t					*config;
 		struct __lalr_config_node_tag	*next;
@@ -43,14 +43,14 @@ typedef struct __lalr_config_list_tag
 
 
 lalrConfigList_t*		PSR_CreateConfigList();
-void					PSR_DestroyConfigList(lalrConfigList_t *lst, bool_b_t destroy_config);
+void					PSR_DestroyConfigList(lalrConfigList_t *lst, bool_t destroy_config);
 void					PSR_InsertToConfigList(lalrConfigList_t *lst, lalrConfig_t *cfg);
 
 void					PSR_UnionConfigList(lalrConfigList_t *l, lalrConfigList_t *r);
 void					PSR_CopyConfigList(lalrConfigList_t *l, const lalrConfigList_t *r);
 
 void					PSR_SortConfigList(lalrConfigList_t *l);
-int_i_t					PSR_CompConfigList(const lalrConfigList_t *l, const lalrConfigList_t *r);
+int_t					PSR_CompConfigList(const lalrConfigList_t *l, const lalrConfigList_t *r);
 
 lalrConfig_t*			PSR_FindFromConfigList(lalrConfigList_t *lst, const psrRule_t *rule, size_t delim);
 lalrConfig_t*			PSR_InsertToConfigListByValue(lalrConfigList_t *lst, const psrRule_t *rule, size_t delim);
@@ -70,12 +70,12 @@ struct __lalr_config_tag
 		lalrConfigList_t		*forward;
 		lalrConfigList_t		*backward;
 /******************************************/
-		bool_b_t					is_completed;
+		bool_t					is_completed;
 };
 
 void	PSR_InitConfig(lalrConfig_t *config, const psrRule_t *rule, size_t delim);
 void	PSR_UnInitConfig(lalrConfig_t *config);
-int_i_t	PSR_CompConfig(const lalrConfig_t *l, const lalrConfig_t *r);
+int_t	PSR_CompConfig(const lalrConfig_t *l, const lalrConfig_t *r);
 
 
 
@@ -90,7 +90,7 @@ void PSR_UnInit_LALR_Config();
 typedef struct	__lalr_action_tag			lalrAction_t;
 typedef struct	__lalr_state_tag			lalrState_t;
 
-typedef enum 
+typedef enum
 {
 		LALR_ACT_SHIFT,
 		LALR_ACT_REDUCE,
@@ -142,7 +142,7 @@ void			PSR_InsertToStateSet(lalrStateSet_t *set, lalrState_t *state);
 
 void			PSR_CollectState(lalrStateSet_t *empty_set, lalrState_t *start);
 lalrState_t*	PSR_FindStateByBasis(lalrStateSet_t *set, lalrConfigList_t *basis);
-int_i_t			PSR_IndexOfStateSet(const lalrStateSet_t *set, const lalrState_t *state);
+int_t			PSR_IndexOfStateSet(const lalrStateSet_t *set, const lalrState_t *state);
 
 
 
@@ -158,3 +158,4 @@ lalrState_t*	PSR_Create_LALR_State(const psrGrammar_t *grammar);
 AR_NAMESPACE_END
 
 #endif
+

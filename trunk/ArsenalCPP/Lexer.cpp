@@ -6,7 +6,7 @@
 namespace ArsenalCPP{
 
 
-static void AR_STDCALL __error_func(int_i_t level, const wchar_t *msg, void *ctx)
+static void AR_STDCALL __error_func(int_t level, const wchar_t *msg, void *ctx)
 {
 		ARContext		*context = (ARContext*)ctx;
 		
@@ -138,6 +138,10 @@ void	Lexer::SetInput(const wchar_t *input)
 		LEX_ResetInput(m_match, input);
 }
 
+void	Lexer::SetFlags(uint_t flags, bool_t is_on )
+{
+		LEX_MatchFlags(m_match, flags, is_on);
+}
 
 void	Lexer::Reset()
 {

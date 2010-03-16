@@ -81,14 +81,18 @@ LEX_Insert
 LEX_GenerateTransTable	
 LEX_Clear				
 LEX_InitMatch			
-LEX_UnInitMatch			
+LEX_UnInitMatch	
+LEX_MatchFlags		
 LEX_ResetMatch			
 LEX_GetNextInput		
 LEX_Match				
 LEX_IsError
 LEX_ClearError
-LEX_Skip
 LEX_ResetInput			
+
+LEX_Skip
+LEX_SkipTo
+LEX_SkipN
 
 LEX_ResetIOContext
 

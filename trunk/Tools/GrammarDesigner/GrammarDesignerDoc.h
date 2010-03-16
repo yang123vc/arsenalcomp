@@ -22,7 +22,7 @@ private:
 		EncodingType	m_encoding;
 
 		ARSpace::psrModeType_t	m_parser_mode;
-		
+		uint_t					m_lexer_mode;
 private:
 		CString			m_src_cache;
 
@@ -106,6 +106,8 @@ public:
 		afx_msg void OnTestTest2();
 		afx_msg void OnGenerateTemplate();
 		afx_msg void OnStringsStringconverter();
+		afx_msg void OnFlagsReportskip();
+		afx_msg void OnUpdateFlagsReportskip(CCmdUI *pCmdUI);
 };
 
 

@@ -30,14 +30,21 @@ typedef struct __lex_token_tag
 		size_t			col;
 }lexToken_t;
 
+
+enum
+{
+		LEX_REPORT_SKIP		=		0x0001
+};
+
 typedef struct __lex_match_result_tag
 {
-		bool_b_t					is_ok;
-		
+		bool_t				is_ok;
 		const wchar_t			*input;
 		const wchar_t			*next;
 		size_t					line;
 		size_t					col;
+
+		uint_t				flags;
 }lexMatch_t;
 
 
@@ -46,18 +53,28 @@ void			LEX_InitMatch(lexMatch_t *pmatch, const wchar_t *input);
 
 void			LEX_UnInitMatch(lexMatch_t *pmatch);
 
+
 void			LEX_ResetInput(lexMatch_t *pmatch, const wchar_t *input);
 
 void			LEX_ResetMatch(lexMatch_t *pmatch);
 
 const wchar_t*	LEX_GetNextInput(const lexMatch_t *match);
 
-bool_b_t		LEX_IsError(const lexMatch_t *match);
+bool_t		LEX_IsError(const lexMatch_t *match);
 void			LEX_ClearError(lexMatch_t *match);
+
 /*跳到下一个非空白token*/
 void			LEX_Skip(lexMatch_t *pmatch);
 /*跳到与tok相同的符号，如果未找到,pmatch直接跳到符号结尾*/
 void			LEX_SkipTo(lexMatch_t *pmatch, const wchar_t *tok);
+
+/*丢弃N个字符*/
+void			LEX_SkipN(lexMatch_t *pmatch, size_t nchar);
+
+
+void			LEX_MatchFlags(lexMatch_t *pmatch, uint_t flags, bool_t is_on);
+
+
 AR_NAMESPACE_END
 
 

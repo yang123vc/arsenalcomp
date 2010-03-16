@@ -393,9 +393,9 @@ static rgxResult_t	__handle_charset(const wchar_t *input)
 }
 
 
-static rgxNode_t*	__handle_loopcount(rgxNode_t *expr, size_t min, size_t max, bool_b_t non_greedy)
+static rgxNode_t*	__handle_loopcount(rgxNode_t *expr, size_t min, size_t max, bool_t non_greedy)
 {
-		bool_b_t is_infinite;
+		bool_t is_infinite;
 		rgxNode_t *cat, *loop;
 		size_t i;
 		AR_ASSERT(expr != NULL && min <= max && max > 0);
@@ -529,9 +529,9 @@ static rgxResult_t	__handle_postfix(rgxNode_t *expr, const wchar_t *input, const
 				break;
 		case '{':
 		{
-				bool_b_t non_greedy = false;
+				bool_t non_greedy = false;
 				const wchar_t *beg = p + 1;
-				uint_u_t min,max;
+				uint_t min,max;
 				
 				/*beg = AR_wcstrim(beg,L" \t");*/
 				beg = AR_wcstrim_space(beg);
@@ -722,7 +722,9 @@ static rgxResult_t __handle_factor(const wchar_t *input, const rgxNameSet_t *nam
 
 				}else
 				{
+						/*
 						AR_ASSERT(0);
+						*/
 						g_res.err.pos = p;
 						g_res.next = NULL;
 						g_res.node = NULL;

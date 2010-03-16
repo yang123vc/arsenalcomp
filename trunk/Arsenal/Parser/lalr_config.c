@@ -34,9 +34,6 @@ void PSR_UnInit_LALR_Config()
 		__uninit_node_freelist();
 		__uninit_config_list_freelist();
 		__uninit_config_freelist();
-		
-
-		
 }
 
 
@@ -51,7 +48,7 @@ lalrConfigList_t*		PSR_CreateConfigList()
 		return res;
 }
 
-void					PSR_DestroyConfigList(lalrConfigList_t *lst, bool_b_t destroy_config)
+void					PSR_DestroyConfigList(lalrConfigList_t *lst, bool_t destroy_config)
 {
 		lalrConfigNode_t		*node;
 
@@ -157,9 +154,9 @@ void					PSR_CopyConfigList(lalrConfigList_t *l, const lalrConfigList_t *r)
 
 
 #if(0)
-int_i_t					PSR_CompConfigList(const lalrConfigList_t *l, const lalrConfigList_t *r)
+int_t					PSR_CompConfigList(const lalrConfigList_t *l, const lalrConfigList_t *r)
 {
-		int_i_t cmp = 0;
+		int_t cmp = 0;
 		const lalrConfigNode_t		*a, *b;
 		AR_ASSERT(l != NULL && r != NULL);
 		if(l == r)return 0;
@@ -185,14 +182,14 @@ int_i_t					PSR_CompConfigList(const lalrConfigList_t *l, const lalrConfigList_t
 }
 #endif
 
-int_i_t					PSR_CompConfigList(const lalrConfigList_t *l, const lalrConfigList_t *r)
+int_t					PSR_CompConfigList(const lalrConfigList_t *l, const lalrConfigList_t *r)
 {
-		int_i_t cmp = 0;
+		int_t cmp = 0;
 		const lalrConfigNode_t		*a, *b;
 		AR_ASSERT(l != NULL && r != NULL);
 		if(l == r)return 0;
 		
-		cmp = (int_i_t)l->count - (int_i_t)r->count;
+		cmp = (int_t)l->count - (int_t)r->count;
 		if(cmp != 0)return cmp;
 		for(a = l->head, b = r->head; a != NULL && b != NULL; a = a->next, b = b->next)
 		{
@@ -200,7 +197,7 @@ int_i_t					PSR_CompConfigList(const lalrConfigList_t *l, const lalrConfigList_t
 				if(cmp != 0)return cmp;
 		}
 		
-		return (int_i_t)a - (int_i_t)b;
+		return (int_t)a - (int_t)b;
 
 }
 
@@ -242,7 +239,7 @@ static AR_INLINE void __merge_list(lalrConfigList_t *dest, lalrConfigList_t *a, 
 
 		while(l && r)
 		{
-				int_i_t cmp;
+				int_t cmp;
 
 				cmp = PSR_CompConfig(l->config, r->config);
 
@@ -346,7 +343,7 @@ static AR_INLINE void		__insert_back(lalrConfigList_t *lst, lalrConfigNode_t *no
 
 static AR_INLINE void __sort_list(lalrConfigList_t *sour_list)
 {
-		int_i_t i,fill;
+		int_t i,fill;
 		lalrConfigList_t lst, carry, tmp_list[64];
 
 		AR_ASSERT(sour_list != NULL);
@@ -432,9 +429,9 @@ void	PSR_UnInitConfig(lalrConfig_t *config)
 
 #if(0)
 
-int_i_t	PSR_CompConfig(const lalrConfig_t *l, const lalrConfig_t *r)
+int_t	PSR_CompConfig(const lalrConfig_t *l, const lalrConfig_t *r)
 {
-		int_i_t cmp;
+		int_t cmp;
 		AR_ASSERT(l != NULL && r != NULL);
 
 		if(l == r)return 0;
@@ -450,18 +447,18 @@ int_i_t	PSR_CompConfig(const lalrConfig_t *l, const lalrConfig_t *r)
 #endif
 
 
-int_i_t	PSR_CompConfig(const lalrConfig_t *l, const lalrConfig_t *r)
+int_t	PSR_CompConfig(const lalrConfig_t *l, const lalrConfig_t *r)
 {
-		int_i_t cmp;
+		int_t cmp;
 		AR_ASSERT(l != NULL && r != NULL);
 
 		if(l == r)return 0;
 		
-		cmp = (int_i_t)l->rule - (int_i_t)r->rule;
+		cmp = (int_t)l->rule - (int_t)r->rule;
 		if(cmp != 0)return cmp;
 		
 		
-		cmp = (int_i_t)l->delim - (int_i_t)r->delim;
+		cmp = (int_t)l->delim - (int_t)r->delim;
 		return cmp;
 }
 
