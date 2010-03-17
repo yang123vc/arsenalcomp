@@ -1394,6 +1394,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\..\..\Test\perf_test.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\Test\psr_misc.c"
 				>
 			</File>

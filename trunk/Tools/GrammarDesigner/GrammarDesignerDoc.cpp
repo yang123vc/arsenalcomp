@@ -58,6 +58,10 @@ BEGIN_MESSAGE_MAP(CGrammarDesignerDoc, CRichEditDoc)
 		ON_COMMAND(ID_STRINGS_STRINGCONVERTER, &CGrammarDesignerDoc::OnStringsStringconverter)
 		ON_COMMAND(ID_FLAGS_REPORTSKIP, &CGrammarDesignerDoc::OnFlagsReportskip)
 		ON_UPDATE_COMMAND_UI(ID_FLAGS_REPORTSKIP, &CGrammarDesignerDoc::OnUpdateFlagsReportskip)
+		ON_COMMAND(ID_FLAGS_SINGLELINE, &CGrammarDesignerDoc::OnFlagsSingleline)
+		ON_UPDATE_COMMAND_UI(ID_FLAGS_SINGLELINE, &CGrammarDesignerDoc::OnUpdateFlagsSingleline)
+		ON_COMMAND(ID_FLAGS_IGNORECASE, &CGrammarDesignerDoc::OnFlagsIgnorecase)
+		ON_UPDATE_COMMAND_UI(ID_FLAGS_IGNORECASE, &CGrammarDesignerDoc::OnUpdateFlagsIgnorecase)
 END_MESSAGE_MAP()
 
 
@@ -278,8 +282,59 @@ void CGrammarDesignerDoc::OnFlagsReportskip()
 void CGrammarDesignerDoc::OnUpdateFlagsReportskip(CCmdUI *pCmdUI)
 {
 		// TODO: Add your command update UI handler code here
-		pCmdUI->SetCheck(m_lexer_mode & ARSpace::LEX_REPORT_SKIP);
+		if(m_lexer_mode & ARSpace::LEX_REPORT_SKIP)
+		{
+				pCmdUI->SetCheck(1);
+		}
 }
+
+
+void CGrammarDesignerDoc::OnFlagsSingleline()
+{
+		// TODO: Add your command handler code here
+
+		if(m_lexer_mode & ARSpace::LEX_SINGLE_LINE)
+		{
+				m_lexer_mode &= ~ARSpace::LEX_SINGLE_LINE;
+		}else
+		{
+				m_lexer_mode |= ARSpace::LEX_SINGLE_LINE;
+		}
+
+}
+
+void CGrammarDesignerDoc::OnUpdateFlagsSingleline(CCmdUI *pCmdUI)
+{
+		// TODO: Add your command update UI handler code here
+		if(m_lexer_mode & ARSpace::LEX_SINGLE_LINE)
+		{
+				pCmdUI->SetCheck(1);
+		}
+}
+
+
+void CGrammarDesignerDoc::OnFlagsIgnorecase()
+{
+		// TODO: Add your command handler code here
+		if(m_lexer_mode & ARSpace::LEX_IGNORE_CASE)
+		{
+				m_lexer_mode &= ~ARSpace::LEX_IGNORE_CASE;
+		}else
+		{
+				m_lexer_mode |= ARSpace::LEX_IGNORE_CASE;
+		}
+
+}
+
+void CGrammarDesignerDoc::OnUpdateFlagsIgnorecase(CCmdUI *pCmdUI)
+{
+		// TODO: Add your command update UI handler code here
+		if(m_lexer_mode & ARSpace::LEX_IGNORE_CASE)
+		{
+				pCmdUI->SetCheck(1);
+		}
+}
+
 
 
 void CGrammarDesignerDoc::OnEditGotoDecl()

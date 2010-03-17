@@ -24,10 +24,15 @@ const psrSymb_t*		PSR_CreateSymb(const wchar_t *name, psrSymbType_t t)
 {
 		psrSymb_t		*res;
 		res = AR_NEW0(psrSymb_t);
+		
 		res->name = PSR_AllocString(name);
 		res->type = t;
 		res->hash_code = AR_wcshash(res->name);
 		res->ref_count = 1;
+		
+		/*
+		wprintf(L"%s : (%s : %p) : %d\r\n", name, res->name, res->name, res->hash_code);
+		*/
 		return res;
 
 }
@@ -159,17 +164,18 @@ int_t					PSR_CompSymb(const psrSymb_t *l, const psrSymb_t *r)
 {
 		int_t cmp;
 		AR_ASSERT(l != NULL && r != NULL);
+		
 		if(l == r)return 0;
 
 		cmp = (int_t)l->type - (int_t)r->type;
 		if(cmp != 0) return cmp;
 
 		cmp = l->hash_code - r->hash_code;
-		if(cmp != 0)return cmp;
+		if(cmp != 0) return cmp;
 
 		cmp = (int_t)l->name - (int_t)r->name;
-		return cmp;
 		
+		return cmp;
 }
 
 

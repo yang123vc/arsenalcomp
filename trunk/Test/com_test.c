@@ -786,6 +786,22 @@ void com_str_test_cmp()
 		printf("AR_wcsnicmp == %d\r\n", AR_wcsnicmp(L"abcdef", L"abcdefg", 3));
 }
 
+
+void str_tbl_test()
+{
+		arStringTable_t	*tbl =	AR_CreateStrTable(1);
+
+		const wchar_t *a, *b;
+
+		a = AR_GetString(tbl, L"abc");
+		b = AR_GetString(tbl, L"abc");
+
+
+		AR_ASSERT(a == b);
+
+
+}
+
 void com_test()
 {
 
@@ -825,8 +841,8 @@ void com_test()
 
 		//com_str_test_vscwprintf();
 
-
-		com_str_test_cmp();
+		//com_str_test_cmp();
+		str_tbl_test();
 
 }
 

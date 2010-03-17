@@ -108,6 +108,10 @@ public:
 		afx_msg void OnStringsStringconverter();
 		afx_msg void OnFlagsReportskip();
 		afx_msg void OnUpdateFlagsReportskip(CCmdUI *pCmdUI);
+		afx_msg void OnFlagsSingleline();
+		afx_msg void OnUpdateFlagsSingleline(CCmdUI *pCmdUI);
+		afx_msg void OnFlagsIgnorecase();
+		afx_msg void OnUpdateFlagsIgnorecase(CCmdUI *pCmdUI);
 };
 
 

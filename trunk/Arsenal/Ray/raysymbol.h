@@ -35,34 +35,41 @@ struct __ray_symbol_table_tag;
 typedef struct __ray_symbol_table_tag	raySymbTable_t;
 
 
-
-#define RAY_SYMBOL_BUCKET_SIZE			139
+typedef struct __ray_coordinate_tag
+{
+		size_t	line;
+		size_t	col;
+}rayCoord_t;
 
 struct __ray_symbol_tag
 {
 		const wchar_t		*name;
+		rayCoord_t			coord;
+
 		rayAttr_t			*attr;
 		raySymbol_t			*next;
 };
 
 
+
+
+#define RAY_SYMBOL_BUCKET_SIZE			139
+
 struct __ray_symbol_block_tag
 {
 		raySymbol_t		*bucket[RAY_SYMBOL_BUCKET_SIZE];
 		size_t			count;
-		raySymbBlock_t	*parent_block;
+		raySymbBlock_t	*up;
 		
 /*内部使用*/
 		raySymbBlock_t	*next;
 };
-
 
 struct __ray_symbol_table_tag
 {
 		raySymbBlock_t	*global;
 		raySymbBlock_t	*current;
 };
-
 
 void			RAY_InitSymbTable(raySymbTable_t *tbl);
 void			RAY_UnInitSymbTable(raySymbTable_t *tbl);
@@ -72,9 +79,9 @@ void			RAY_LeaveBlock(raySymbTable_t *tbl);
 raySymbBlock_t*	RAY_CurrentBlock(raySymbTable_t *tbl);
 
 
-bool_t		RAY_InsertName(raySymbBlock_t *block,	const wchar_t *name, const rayAttr_t *attr);
-bool_t		RAY_RemoveName(raySymbBlock_t *block,	const wchar_t *name);
-rayAttr_t*		RAY_GetNameAttr(raySymbBlock_t *block,	const wchar_t *name);
+bool_t			RAY_InsertName(raySymbBlock_t *block,	const wchar_t *name, rayCoord_t coord, const rayAttr_t *attr);
+bool_t			RAY_RemoveName(raySymbBlock_t *block,	const wchar_t *name);
+raySymbol_t*	RAY_GetSymbol(raySymbBlock_t *block,	const wchar_t *name);
 
 
 

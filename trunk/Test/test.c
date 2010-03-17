@@ -62,7 +62,7 @@ extern void grammar_test();
 extern void ray_test();
 void code_gen_lex_test();
 void sn_test();
-
+void perf_test();
 void gen_code_test();
 #endif
 
@@ -114,7 +114,7 @@ void AR_Test()
 		//rgx_test();
 		//calc_test();
 
-		//parser_test();
+		parser_test();
 		
 		//grammar_test();
 		
@@ -124,7 +124,9 @@ void AR_Test()
 
 		//sn_test();
 
-		gen_code_test();
+		//gen_code_test();
+
+		//perf_test();
 		
 #else
 		AR_printf(L"dll version\r\n");

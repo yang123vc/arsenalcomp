@@ -145,6 +145,8 @@
 #define ID_Menu32883                    32883
 #define ID_PARSER_FLAGS32884            32884
 #define ID_FLAGS_REPORTSKIP             32885
+#define ID_FLAGS_SINGLELINE             32886
+#define ID_FLAGS_IGNORECASE             32887
 #define ID_INDICATOR_LINE               59142
 #define ID_INDICATOR_COL                59143
 #define IDS_ACTVIEW_WND                 61204
@@ -158,7 +160,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        324
-#define _APS_NEXT_COMMAND_VALUE         32886
+#define _APS_NEXT_COMMAND_VALUE         32888
 #define _APS_NEXT_CONTROL_VALUE         1007
 #define _APS_NEXT_SYMED_VALUE           310
 #endif

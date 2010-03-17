@@ -14,8 +14,6 @@
 
 
 
-
-
 AR_NAMESPACE_BEGIN
 
 
@@ -79,81 +77,60 @@ const wchar_t*			AR_GetString(arStringTable_t *tbl, const wchar_t *str)
 }
 
 
+bool_t					AR_HasString(const arStringTable_t *tbl, const wchar_t *str)
+{
+		AR_ASSERT(tbl != NULL && str != NULL);
+		return AR_HasStringN(tbl, str, AR_wcslen(str));
+}
 
 
+
+bool_t					AR_HasStringN(const arStringTable_t *tbl, const wchar_t *str, size_t n)
+{
+		const arStringRec_t		*record;
+		AR_ASSERT(tbl != NULL && str != NULL);
+		record = tbl->bucket[AR_wcshash_n(str, n) % tbl->count];
+		
+		while(record)
+		{
+				if(record->len == n && AR_wcsncmp(record->str, str, n) == 0)
+				{
+						return true;
+				}
+				record=record->next;
+		}
+		return false;
+}
 
 const wchar_t*			AR_GetStringN(arStringTable_t *tbl, const wchar_t *str, size_t n)
 {
+
 		size_t idx;
 		arStringRec_t		*record;
 		AR_ASSERT(tbl != NULL && str != NULL);
-
+		
 		idx =  AR_wcshash_n(str, n) % tbl->count;
-
 		record = tbl->bucket[idx];
-
+		
 		while(record)
 		{
-				if(AR_wcsncmp(record->str, str, n) == 0)return record->str;
+				if(n == record->len && AR_wcsncmp(record->str, str, n) == 0)
+				{
+						return record->str;
+				}
 				record=record->next;
 		}
+
 		
 		record = AR_NEW0(arStringRec_t);
+		record->str = AR_wcsndup(str, n);
 		record->len = n;
-		record->str = AR_NEWARR0(wchar_t, n + 1);
-		AR_wcsncpy(record->str, str, n);
-		record->str[n] = L'\0';
 		record->next = tbl->bucket[idx];
 		tbl->bucket[idx] = record;
 		return record->str;
 }
 
-#if(0)
-static const wchar_t *__ctbl = L"0123456789ABCDEF";
 
-const wchar_t*			AR_GetStringInt(arStringTable_t *tbl, int_64_t num, size_t radix)
-{
-		wchar_t buf[100];
-		wchar_t *p;
-
-		bool_t is_neg;
-		AR_ASSERT(tbl != NULL && radix > 0 && radix <= 16);
-
-		if(num < 0)
-		{
-				is_neg = true;
-				num = -num;
-		}else
-		{
-				is_neg = false;
-		}
-
-		p = buf + sizeof(buf)/sizeof(buf[0]);
-		*--p = L'\0';
-		
-		do{ *--p = __ctbl[num%radix]; }while((num /= radix) > 0);
-		
-		if(is_neg)*--p = L'-';
-		return AR_GetString(tbl, p);
-}
-
-const wchar_t*			AR_GetStringUInt(arStringTable_t *tbl, uint_64_t num, size_t radix)
-{
-		wchar_t buf[100];
-		wchar_t *p;
-		
-		AR_ASSERT(tbl != NULL && radix > 0 && radix <= 16);
-		
-
-		p = buf + sizeof(buf)/sizeof(buf[0]);
-		*--p = L'\0';
-		
-		do{ *--p = __ctbl[num%radix]; }while((num /= radix) > 0);
-		
-		return AR_GetString(tbl, p);
-
-}
-#endif
 
 const wchar_t*			AR_GetStringInt(arStringTable_t *tbl, int_64_t num, size_t radix)
 {

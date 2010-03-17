@@ -359,8 +359,11 @@ static rgxResult_t	__handle_charset(const wchar_t *input)
 
 		}else if(*p == L'.')
 		{
+				/*
 				g_res = __handle_charset(L"[^\\u0000\\n]");
 				AR_ASSERT(g_res.node != NULL && g_res.err.pos == NULL);
+				*/
+				g_res.node =  RGX_CreateNode(RGX_ANY_CHAR_T);
 				g_res.next = ++p;
 				return g_res;
 		

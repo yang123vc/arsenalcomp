@@ -43,7 +43,7 @@ type_specifier		:	"void"
 					;
 */
 
-
+#if(0)
 
 typedef enum
 {
@@ -150,7 +150,7 @@ struct __ray_type_tag
 
 };
 
-
+#endif
 
 
 AR_NAMESPACE_END
