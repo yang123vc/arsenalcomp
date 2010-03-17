@@ -105,6 +105,10 @@ rgxNode_t*		RGX_CreateNode(rgxNodeType_t type)
 		{
 				break;
 		}
+		case RGX_ANY_CHAR_T:
+		{
+				break;
+		}
 		case RGX_CSET_T:
 		{
 				
@@ -190,6 +194,7 @@ void			RGX_DestroyNode(rgxNode_t *node)
 		case RGX_LINE_BEGIN_T:
 		case RGX_LINE_END_T:
 		case RGX_END_T:
+		case RGX_ANY_CHAR_T:
 		{
 				break;
 		}
@@ -402,15 +407,20 @@ void			RGX_ToString(const rgxNode_t *node, arString_t *str)
 				break;
 		case RGX_LINE_BEGIN_T:
 		{
-				AR_AppendString(str, L"~");
+				AR_AppendString(str, L"\\B");
 		}
 				break;
 		
 		case RGX_LINE_END_T:
 		{
-				AR_AppendString(str, L"@");
+				AR_AppendString(str, L"\\E");
 		}
 				break;
+		case RGX_ANY_CHAR_T:
+		{
+				AR_AppendString(str, L".");
+				break;
+		}
 		case RGX_FINAL_T:
 		{
 				AR_AppendFormatString(str, L"[final : %" AR_PLAT_INT_FMT L"d]", node->final_val);

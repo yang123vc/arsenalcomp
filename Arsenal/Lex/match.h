@@ -33,7 +33,9 @@ typedef struct __lex_token_tag
 
 enum
 {
-		LEX_REPORT_SKIP		=		0x0001
+		LEX_REPORT_SKIP		=		0x0001,
+		LEX_SINGLE_LINE		=		0x0002,
+		LEX_IGNORE_CASE		=		0x0004
 };
 
 typedef struct __lex_match_result_tag

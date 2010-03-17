@@ -223,6 +223,7 @@ int_t	AR_wcsnicmp(const wchar_t *l, const wchar_t *r, size_t n);
 #define AR_iswalnum(_c)			iswalnum((_c))
 #define AR_iswdigit(_c)			iswdigit((_c))
 #define AR_towlower(_c)			towlower((_c))
+#define AR_towupper(_c)			towupper((_c))
 #define AR_iswspace(_c)			iswspace((_c))
 #define AR_iswgraph(_c)			iswgraph((_c))
 #define AR_iswprint(_c)			iswprint((_c))
@@ -374,7 +375,7 @@ typedef struct __string_table_			arStringTable_t;
 
 
 
-#define		MIN_BUCKET_SIZE		(1024)
+#define		MIN_BUCKET_SIZE		(139)
 
 
 arStringTable_t*		AR_CreateStrTable(size_t count);
@@ -383,6 +384,9 @@ void					AR_DestroyStrTable(arStringTable_t* tbl);
 
 const wchar_t*			AR_GetString(arStringTable_t *tbl, const wchar_t *str);
 const wchar_t*			AR_GetStringN(arStringTable_t *tbl, const wchar_t *str, size_t n);
+
+bool_t					AR_HasString(const arStringTable_t *tbl, const wchar_t *str);
+bool_t					AR_HasStringN(const arStringTable_t *tbl, const wchar_t *str, size_t n);
 
 const wchar_t*			AR_GetStringUInt(arStringTable_t *tbl, uint_64_t num, size_t radix);
 const wchar_t*			AR_GetStringInt(arStringTable_t *tbl, int_64_t num, size_t radix);

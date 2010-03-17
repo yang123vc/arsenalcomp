@@ -19,7 +19,8 @@ AR_NAMESPACE_BEGIN
 
 /*********************************lexMatch_t***************************/
 
-#define __ALL_FLAGS		LEX_REPORT_SKIP
+#define __ALL_FLAGS		(LEX_REPORT_SKIP|LEX_IGNORE_CASE|LEX_SINGLE_LINE)
+
 void			LEX_MatchFlags(lexMatch_t *pmatch, uint_t flags, bool_t is_on)
 {
 		AR_ASSERT(pmatch != NULL);

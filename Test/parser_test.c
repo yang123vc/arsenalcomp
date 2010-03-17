@@ -314,7 +314,7 @@ static cfgReport_t __g_report = { report_func, NULL};
 #define DEF_SAVE_PATH  L"..\\..\\..\\misc\\gen_code.c"
 
 
-void parser_test()
+void parser_test_test()
 {
 		
 		const wchar_t	*gmr_txt;
@@ -481,7 +481,17 @@ void parser_perf_test()
 		AR_DEL(gmr_txt);
 }
 
+void parser_test()
+{
+		cfgConfig_t		*cfg;
+		
+		cfg = CFG_CollectGrammarConfig(L"aaaaaaaaaaaaaaaaaaa", NULL);
 
+
+
+
+
+}
 
 AR_NAMESPACE_END
 

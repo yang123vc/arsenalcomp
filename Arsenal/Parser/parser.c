@@ -222,7 +222,13 @@ static void __handle_shift(parser_t *parser, size_t shift_to, const psrToken_t *
 		AR_ASSERT(user != NULL);
 
 		PSR_PushStack(parser->state_stack, shift_to);
-		new_node = term->leaf_f(tok, user->ctx);
+		if(term->leaf_f)
+		{
+				new_node = term->leaf_f(tok, user->ctx);
+		}else
+		{
+				new_node = NULL;
+		}
 		PSR_PushNodeStack(parser->node_stack, new_node);
 
 /*

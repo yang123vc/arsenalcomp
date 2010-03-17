@@ -47,6 +47,7 @@ static void __add_thread(rgxThreadList_t *lst,  rgxThread_t thd, rgxProg_t *prog
 		case RGX_END_I:
 		case RGX_LINE_BEGIN_I:
 		case RGX_LINE_END_I:
+		case RGX_ANY_CHAR_I:
 		case RGX_MATCH_I:
 		{
 				RGX_InsertToThreadList(lst, thd);
@@ -115,11 +116,52 @@ static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match
 						{
 						case RGX_CHAR_I:
 						{
-								if(*sp != L'\0' && *sp >= pc->range.beg && *sp <= pc->range.end)
+								bool_t is_ok = false;
+								if(*sp != L'\0')
+								{
+										if(match->flags & LEX_IGNORE_CASE)
+										{
+												wchar_t lower = (wchar_t)AR_tolower(*sp), upper = (wchar_t)AR_towupper(*sp);
+												
+												if(lower >=  pc->range.beg && lower <= pc->range.end)
+												{
+														is_ok = true;
+												}else if(upper >=  pc->range.beg && upper <= pc->range.end)
+												{
+														is_ok = true;
+												}
+										}else
+										{
+												is_ok = (*sp >= pc->range.beg && *sp <= pc->range.end);
+										}
+								}
+
+								if(is_ok)
 								{
 										__add_thread(next, RGX_BuildThread(pc + 1, sp + 1, 0, 0), prog);
 								}
 
+								break;
+						}
+						case RGX_ANY_CHAR_I:
+						{
+								bool_t is_ok = false;
+
+								if(*sp != L'\0')
+								{
+										if(match->flags & LEX_SINGLE_LINE)/*single line 可以匹配包含\n在内的所有字符*/
+										{
+												is_ok = true;
+										}else
+										{
+												is_ok = *sp != L'\n';/*否则*sp不可以为'\n'*/
+										}
+								}
+
+								if(is_ok)
+								{
+										__add_thread(next, RGX_BuildThread(pc + 1, sp + 1, 0, 0), prog);
+								}
 								break;
 						}
 						case RGX_BEGIN_I:
@@ -280,8 +322,27 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 						{
 						case RGX_CHAR_I:
 						{
-								
-								if(*sp != L'\0' && *sp >= pc->range.beg && *sp <= pc->range.end)
+								bool_t is_ok = false;
+								if(*sp != L'\0')
+								{
+										if(match->flags & LEX_IGNORE_CASE)
+										{
+												wchar_t lower = (wchar_t)AR_tolower(*sp), upper = (wchar_t)AR_towupper(*sp);
+												
+												if(lower >=  pc->range.beg && lower <= pc->range.end)
+												{
+														is_ok = true;
+												}else if(upper >=  pc->range.beg && upper <= pc->range.end)
+												{
+														is_ok = true;
+												}
+										}else
+										{
+												is_ok = (*sp >= pc->range.beg && *sp <= pc->range.end);
+										}
+								}
+
+								if(is_ok)
 								{
 										if(*sp == L'\n')
 										{
@@ -295,6 +356,37 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 										sp++;
 										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y), prog);
 								}
+								break;
+						}
+						case RGX_ANY_CHAR_I:
+						{
+								bool_t is_ok = false;
+
+								if(*sp != L'\0')
+								{
+										if(match->flags & LEX_SINGLE_LINE)/*single line 可以匹配包含\n在内的所有字符*/
+										{
+												is_ok = true;
+										}else
+										{
+												is_ok = *sp != L'\n';/*否则*sp不可以为'\n'*/
+										}
+								}
+
+								if(is_ok)
+								{
+										if(*sp == L'\n')
+										{
+												y = 0;
+												x++;
+										}else
+										{
+												y++;
+										}
+										sp++;
+										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y), prog);
+								}
+
 								break;
 						}
 						case RGX_BEGIN_I:

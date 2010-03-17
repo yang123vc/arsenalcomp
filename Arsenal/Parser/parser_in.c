@@ -14,8 +14,6 @@
 #include "lalr.h"
 #include "parser_in.h"
 
-
-
 AR_NAMESPACE_BEGIN
 
 
@@ -42,7 +40,7 @@ void	PSR_Init()
 		
 		PSR_DefPrecSymb	=		PSR_CreateSymb(L"%PREC_ASSOC", PSR_TERM);
 
-		PSR_StartSymb	=		PSR_CreateSymb(L"%Start", PSR_NONTERM);
+		PSR_StartSymb	=		PSR_CreateSymb(L"%START", PSR_NONTERM);
 
 		PSR_Init_LALR_Config();
 		
@@ -70,6 +68,10 @@ void	PSR_UnInit()
 
 
 /***********************************************StringTable************************************/
+
+
+
+
 
 const wchar_t*	PSR_AllocString(const wchar_t *str)
 {

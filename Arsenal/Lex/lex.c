@@ -356,15 +356,17 @@ REMATCH:
 
 		for(i = 0; i < lex->prog_set->count; ++i)
 		{
-				/*
-				arString_t *str = AR_CreateString();
-				RGX_ProgToString(lex->prog_set->prog[i],str);
-				AR_printf(L"%ls\r\n", AR_GetStrString(str));
-				AR_DestroyString(str);
-				*/
-
 				if(RGX_Match(lex->prog_set->prog[i], match, tok))
 				{
+						/*
+						{
+								arString_t *str = AR_CreateString();
+								RGX_ProgToString(lex->prog_set->prog[i],str);
+								AR_printf_ctx(&lex->io_ctx, L"Matched : %ls\r\n", AR_GetStrString(str));
+								AR_DestroyString(str);
+						}
+						*/
+
 						if(lex->prog_set->action[i].is_skip)
 						{
 								if(tok->count == 0)

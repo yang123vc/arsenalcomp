@@ -473,14 +473,13 @@ void lex_test20()
 		size_t i;
 		bool_t  is_ok;
 		lex = LEX_Create(NULL);
-		LEX_InitMatch(&match,L"int int_x" );
+		LEX_InitMatch(&match,L"intadfasdfef\r\n" );
 		
 #if(0)
 		if(!LEX_Insert(lex, L"1,0 (/\\*([^\\*]|\\*+[^\\*/])*\\*+/)|(/\\*)"))
 		{
 				AR_abort();
 		}
-#endif	
 		
 		if(!LEX_InsertName(lex, L"keyword_lookahead", L"[A-Z_a-z0-9]"))
 		{
@@ -491,11 +490,12 @@ void lex_test20()
 		{
 				AR_abort();
 		}
-		
-		if(3 && 4 || 5 && 6)
+#endif	
+		if(!LEX_Insert(lex, L"3,0 int.+"))
 		{
-
+				AR_abort();
 		}
+		
 
 		/*
 		

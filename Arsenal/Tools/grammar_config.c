@@ -18,6 +18,7 @@
 
 AR_NAMESPACE_BEGIN
 
+
 typedef enum
 {
 		CFG_EMPTY_T,
@@ -1557,7 +1558,17 @@ static void		AR_STDCALL cfg_error(const psrToken_t *tok, const wchar_t *expected
 
 
 
+static void AR_STDCALL __default_report_func(const cfgReportInfo_t *report, void *context)
+{
+				
+}
 
+
+static cfgReport_t		__g_def_report = 
+{
+		__default_report_func,
+		NULL
+};
 
 cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *report)
 {
@@ -1574,7 +1585,9 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 		arIOCtx_t	io_ctx ;
 		psrCtx_t	psr_ctx;
 
-		AR_ASSERT(gmr_txt != NULL && report != NULL);
+		AR_ASSERT(gmr_txt != NULL);
+
+		if(report == NULL)report = &__g_def_report;
 
 		io_ctx.on_error = cfg_on_error;
 		io_ctx.on_print = cfg_on_print;

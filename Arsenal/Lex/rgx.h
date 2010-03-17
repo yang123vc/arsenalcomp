@@ -90,6 +90,7 @@ typedef enum
 		RGX_END_T,
 		RGX_LINE_BEGIN_T,
 		RGX_LINE_END_T,
+		RGX_ANY_CHAR_T,
 
 		RGX_CSET_T,
 
@@ -184,6 +185,7 @@ typedef enum
 		RGX_END_I,
 		RGX_LINE_BEGIN_I,
 		RGX_LINE_END_I,
+		RGX_ANY_CHAR_I,
 		RGX_LOOKAHEAD_BEG_I,
 		RGX_LOOKAHEAD_END_I,
 		RGX_JMP_I,
@@ -199,6 +201,7 @@ static const wchar_t *RGX_INS_NAME[] =
 		L"match_end",
 		L"match_line_begin",
 		L"match_line_end",
+		L"match_any_char",
 		L"lookahead_begin",
 		L"lookahead_end",
 		L"jmp",
