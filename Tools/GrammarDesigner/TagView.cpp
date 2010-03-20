@@ -199,7 +199,8 @@ void	CTagTree::UpdateTag(const ARSpace::cfgConfig_t *cfg)
 				for(k = 0; k < prec->count; ++k)
 				{
 						ASSERT(prec->prec_tok_set[k] != NULL);
-						str = prec->prec_tok_set[k];
+						//str = prec->prec_tok_set[k];
+						str.Format(TEXT("%ls : %d"), prec->prec_tok_set[k], prec->prec_level);
 						update_table(m_prec_tbl, str, prec->line);
 				}
 				

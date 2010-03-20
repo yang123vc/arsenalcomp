@@ -5,9 +5,6 @@
 %name	number		:	"{digit}+"			;
 
 
-
-
-
 %token	%skip 	:	"{delim}+|{comment}+|{comment_line}+",1;
 
 %token	NUM		: 	"{number}"	;
@@ -20,16 +17,17 @@
 %token	"%"		:	'"%"';
 %token	";"		:	'";"';
 
-
-%left		"+" "-";
-%left		"*" "/" "%";
-%right 	UMINUS;
-
-
-Unit	:	Unit	E ";"
-	|	E ";"
-	|	error ";"
+/*
+Unit	:	E Unit 
+	|	E 
 	;
+*/
+
+/**********************LR***************************/
+
+%left		"+"	"-"		;
+%left		"*"	"/"	"%"	;
+%right 	UMINUS		;
 
 E	:	E	"+" 	E	
 	|	E	"-"	E
@@ -40,4 +38,93 @@ E	:	E	"+" 	E
 	|	"-"	E 	%prec UMINUS
 	|	NUM
 	;
+
+/***************************************************/
+
+
+
+
+
+
+/***********************LR无优先级文法*************************
+E	:	E	"+"	Term
+	|	E	"-"	Term
+	|	Term
+	;
+
+Term	:	Term	"*"	Factor
+	|	Term	"/"	Factor
+	|	Term	"%"	Factor
+	|	Factor
+	;
+
+
+
+Factor	:	"("	E ")"
+		|	NUM
+		|	"-"	Factor
+		;
+
+/*****************************************************/
+
+
+/***********************LL无左递归文法*************************
+
+
+
+expr			:	term	expr_suffix
+			;
+
+expr_suffix	:	"+" term	expr_suffix  
+			|	"-" term	expr_suffix 
+			| 	.
+			;
+
+term			:	factor	term_suffix
+			;
+
+term_suffix	:	"*" factor term_suffix 
+			| 	"/" factor term_suffix 
+			|	"%" factor term_suffix	
+			|	.
+			;
+
+
+
+factor		:	NUM
+			|	"(" expr ")"
+			|	"-"	factor	
+			;
+
+/*****************************************************/
+
+
+
+
+
+
+/***********************错误的LL文法*************************
+E	:	Term	"+"	E
+	|	Term	"-"	E
+	|	Term
+	;
+
+Term	:	Factor	"*"	Term
+	|	Factor	"/"	Term
+	|	Factor	"%"	Term
+	|	Factor
+	;
+
+
+
+Factor	:	"("	E ")"
+		|	NUM
+		|	"-"	Factor
+		;
+
+/*****************************************************/
+
+
+
+
 

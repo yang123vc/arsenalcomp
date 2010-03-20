@@ -1001,8 +1001,10 @@ void					PSR_CalcFirstSet(const psrGrammar_t *grammar, psrSymbMap_t *first_set)
 						PSR_InsertToSymbMap(first_set, key, key);
 				}
 		}
-
-		changed = false;
+		
+		/*changed = false; */
+		
+		/*首先计算哪个非终结符可以推导出空串Epsilon*/
 		do{
 				changed = false;
 
@@ -1015,7 +1017,6 @@ void					PSR_CalcFirstSet(const psrGrammar_t *grammar, psrSymbMap_t *first_set)
 
 						if(rec->can_empty)continue;
 						
-						
 						for(k = 0; k < rule->body.count; ++k)
 						{
 								const psrSymb_t *symb = NULL;
@@ -1026,7 +1027,7 @@ void					PSR_CalcFirstSet(const psrGrammar_t *grammar, psrSymbMap_t *first_set)
 								if(!tmp_rec->can_empty)break;
 						}
 
-						if(k == rule->body.count)
+						if(k == rule->body.count)/*如果产生式体中无任何符号或所有符号均可以推导出空串，则此产生式头被认为可推导出空*/
 						{
 								rec->can_empty = true;
 								changed = true;
@@ -1053,25 +1054,27 @@ void					PSR_CalcFirstSet(const psrGrammar_t *grammar, psrSymbMap_t *first_set)
 
 						for(k = 0; k < rule->body.count; ++k)
 						{
-								s2 = rule->body.lst[k];
+								s2 = rule->body.lst[k];/*产生式体中第k个符号*/
 								
 								if(s2->type == PSR_TERM)
 								{
+										/*当前产生式体中存在终结符，则将其加入后终止循环*/
 										if(PSR_InsertToSymbList_Unique(&rec->lst, s2))
 										{
 												changed = true;
 										}
 										break;
-								}else if(PSR_CompSymb(s1, s2) == 0)
+								}else if(PSR_CompSymb(s1, s2) == 0)/*非终结符，且与产生式头相同的符号*/
 								{
-										if(!rec->can_empty)break;
+										if(!rec->can_empty)break;/*如果当前产生式头不为空，则终止循环*/
 								}
 								else
 								{
+										/*非终结符，且与产生式头不同*/
 										const psrMapRec_t *rec2 = NULL;
 										size_t x;
 										rec2 = PSR_GetSymbolFromSymbMap(first_set, s2);
-
+										/*将当前非终结符号的所有first符号加入到当前产生式头的first-set中*/
 										for(x = 0; x < rec2->lst.count; ++x)
 										{
 												if(PSR_InsertToSymbList_Unique(&rec->lst, rec2->lst.lst[x]))
@@ -1079,7 +1082,7 @@ void					PSR_CalcFirstSet(const psrGrammar_t *grammar, psrSymbMap_t *first_set)
 														changed = true;
 												}
 										}
-
+										/*如果当前符号不可导出空串则终止循环*/
 										if(!rec2->can_empty)break;
 								}
 
@@ -1145,7 +1148,7 @@ void					PSR_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *follow_set
 								const psrSymb_t *key;
 								size_t next_idx;
 								key = rule->body.lst[k];
-
+								/*非终结符无follow-set*/
 								if(key->type == PSR_TERM)continue;
 
 								next_idx = k + 1;
@@ -1157,9 +1160,10 @@ void					PSR_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *follow_set
 										psrMapRec_t *rec_tmp = NULL;
 										size_t x;
 										
-										next = PSR_IndexOfSymbList(&rule->body, next_idx);
-										first_rec = PSR_GetSymbolFromSymbMap(first_set, next);
-										rec_tmp  = PSR_GetSymbolFromSymbMap(follow_set, key);
+										next = PSR_IndexOfSymbList(&rule->body, next_idx);/*next为key之后的符号*/
+										first_rec = PSR_GetSymbolFromSymbMap(first_set, next);/*next的first-set*/
+										rec_tmp  = PSR_GetSymbolFromSymbMap(follow_set, key);/*key的follow-set*/
+										/*将key之后的符号next的first-set加入到key的follow-set中*/
 										for(x = 0; first_rec && x < first_rec->lst.count; ++x)
 										{
 												const psrSymb_t *f_symb;
@@ -1171,15 +1175,15 @@ void					PSR_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *follow_set
 														changed = true;	/*任何一步的改动都需要重新计算follow集合*/
 												}
 										}
+										/*如果next不可导出空串，则循环终止*/
 										if(!first_rec->can_empty)break;
 								}
-
-								if(next_idx == rule->body.count)
+								
+								if(next_idx == rule->body.count)/*如果key为当前产生式最后一个符号或key之后的所有符号都可导出空串*/
 								{
-										
+										/*则将产生式头的follow-set加入到符号key的follow-set中*/
 										size_t x;
 										psrMapRec_t *rec_tmp = PSR_GetSymbolFromSymbMap(follow_set, key);
-
 										for(x = 0; x < head_follow->lst.count; ++x)
 										{
 												if(PSR_InsertToSymbList_Unique(&rec_tmp->lst,head_follow->lst.lst[x]))

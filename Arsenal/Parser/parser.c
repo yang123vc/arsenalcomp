@@ -369,7 +369,7 @@ static errRecovery_t __error_recovery(parser_t *parser, const psrToken_t *tok)
 						{
 								/*只有EOI符号才可能导致一个accept动作*/
 								AR_ASSERT(false);
-
+								AR_error_ctx((arIOCtx_t*)PSR_GetGrammarIOContext(parser->grammar), AR_ERR_FATAL, L"%ls\r\n", L"Parser : Internal Error");
 						}
 				}
 				

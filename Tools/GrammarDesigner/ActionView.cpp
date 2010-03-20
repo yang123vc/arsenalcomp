@@ -124,9 +124,14 @@ void CActionCtrl::OnRButtonDown(UINT nFlags, CPoint point)
 {
 		// TODO: Add your message handler code here and/or call default
 		
-		int idx = GetSelectIndex(*this, point);
+		//int idx = GetSelectIndex(*this, point);
 		
-		if(idx != -1)this->SetSelectionMark(idx);
+		//if(idx != -1)this->SetSelectionMark(idx);
+
+		if(GetSelectIndex(*this, point) == -1)
+		{
+				this->SetSelectionMark(-1);
+		}
 
 		CListCtrl::OnRButtonDown(nFlags, point);
 }
@@ -136,9 +141,52 @@ void CActionCtrl::OnEditCopy()
 {
 		// TODO: Add your command handler code here
 
-		int idx = this->GetSelectionMark();
+		UINT cnt = this->GetSelectedCount();
+	
 
-		if(idx >= 0)
+		if(cnt > 0)
+		{
+				CString src;
+				const int ncol = this->GetHeaderCtrl()->GetItemCount();
+				
+				POSITION pos = GetFirstSelectedItemPosition();
+				
+				while (pos)
+				{
+						int idx = GetNextSelectedItem(pos);
+						
+						for(int i = 0; i < ncol; ++i)
+						{
+								src.Append(GetItemText(idx, i));
+								src.Append(TEXT("\t"));
+						}
+						src.Append(TEXT("\r\n"));
+				}
+				
+				if (OpenClipboard())
+				{
+						EmptyClipboard();                        
+						HGLOBAL hClip =GlobalAlloc(GMEM_MOVEABLE,(src.GetLength() + 1) * sizeof(TCHAR));  
+						TCHAR *buf = (TCHAR*)GlobalLock(hClip); 
+						lstrcpy(buf, src.GetString());
+						GlobalUnlock(hClip);     
+						SetClipboardData(CF_UNICODETEXT,hClip); 
+						CloseClipboard();            
+				}
+
+		}
+}
+
+
+#if(0)
+void CActionCtrl::OnEditCopy()
+{
+		// TODO: Add your command handler code here
+
+		int idx = this->GetSelectionMark();
+	
+
+		if(idx != -1)
 		{
 				CString src;
 				int ncol = this->GetHeaderCtrl()->GetItemCount();
@@ -161,7 +209,7 @@ void CActionCtrl::OnEditCopy()
 				}
 		}
 }
-
+#endif
 
 
 void CActionCtrl::OnUpdateOutputwndFont(CCmdUI *pCmdUI)
@@ -223,7 +271,7 @@ int CActionView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		CRect rectDummy;
 		rectDummy.SetRectEmpty();
 		
-		const DWORD dwStyle = LVS_REPORT | LVS_SINGLESEL 
+		const DWORD dwStyle = LVS_REPORT //| LVS_SINGLESEL 
 							| WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_VSCROLL;
 
 		// Create tabs window:

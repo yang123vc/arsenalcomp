@@ -206,6 +206,7 @@ int_t	AR_wcsnicmp(const wchar_t *l, const wchar_t *r, size_t n);
 #define AR_isalnum(_c)			isalnum((_c))
 #define AR_isdigit(_c)			isdigit((_c))
 #define AR_tolower(_c)			tolower((_c))
+#define AR_toupper(_c)			toupper((_c))
 #define AR_isspace(_c)			isspace((_c))
 #define AR_isgraph(_c)			isgraph((_c))
 #define AR_isprint(_c)			isprint((_c))
