@@ -109,6 +109,7 @@ const psrSymbList_t*	PSR_GetSymbList(const psrGrammar_t *grammar);
 
 bool_t					PSR_CheckIsValidGrammar(const psrGrammar_t *grammar);
 bool_t					PSR_ReportLeftRecursion(const psrGrammar_t *grammar, arString_t *output);
+bool_t					PSR_ReportLeftFactor(const psrGrammar_t *grammar, arString_t *output);
 void					PSR_PrintGrammar(const psrGrammar_t *grammar, arString_t *str);
 
 

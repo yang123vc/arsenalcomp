@@ -208,12 +208,16 @@ typedef struct __sym_tbl_view_tag
 		size_t	cap;
 }psrSymbolMapView_t;
 
+
+
+
 typedef struct __first_follow_view_tag
 {
 		psrSymbolMapView_t		first_set;
 		psrSymbolMapView_t		follow_set;
 
 		psrSymbolMapView_t		left_recursion;
+		psrSymbolMapView_t		left_factor;
 }psrFirstFollowView_t;
 
 const psrFirstFollowView_t*		PSR_CreateParserFirstFollowView(const parser_t *parser);

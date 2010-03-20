@@ -96,7 +96,7 @@ void AR_Test()
 		//calc_test1();
 		//calc_test();
 		//calc_test3();
-		//calc_test();
+		calc_test();
 
 		//db_test();
 
@@ -114,7 +114,7 @@ void AR_Test()
 		//rgx_test();
 		//calc_test();
 
-		parser_test();
+		//parser_test();
 		
 		//grammar_test();
 		
