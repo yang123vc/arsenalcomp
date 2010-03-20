@@ -41,10 +41,10 @@ enum
 typedef struct __lex_match_result_tag
 {
 		bool_t				is_ok;
-		const wchar_t			*input;
-		const wchar_t			*next;
-		size_t					line;
-		size_t					col;
+		const wchar_t		*input;
+		const wchar_t		*next;
+		size_t				line;
+		size_t				col;
 
 		uint_t				flags;
 }lexMatch_t;
@@ -62,7 +62,7 @@ void			LEX_ResetMatch(lexMatch_t *pmatch);
 
 const wchar_t*	LEX_GetNextInput(const lexMatch_t *match);
 
-bool_t		LEX_IsError(const lexMatch_t *match);
+bool_t			LEX_IsError(const lexMatch_t *match);
 void			LEX_ClearError(lexMatch_t *match);
 
 /*跳到下一个非空白token*/
