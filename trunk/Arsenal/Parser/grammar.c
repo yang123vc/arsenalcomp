@@ -750,6 +750,168 @@ bool_t					PSR_ReportLeftRecursion(const psrGrammar_t *grammar, arString_t *outp
 
 
 
+
+static size_t __calc_leftfactor(const psrRule_t *l, const psrRule_t *r)
+{
+		size_t cnt = 0;
+		AR_ASSERT(l != NULL && r != NULL);
+
+		while(cnt < l->body.count && cnt < r->body.count && PSR_CompSymb(l->body.lst[cnt], r->body.lst[cnt]) == 0)
+		{
+				cnt++;
+		}
+		return cnt;
+}
+
+
+
+static bool_t	__report_rule_left_factor(const psrSymb_t *lhs, const psrRule_t **rules, size_t n, arString_t *output)
+{
+		size_t i,k;
+		size_t	*bk;
+		size_t			max,cnt;
+		bool_t			has_left_factor = false;
+		arString_t		*tmp;
+		AR_ASSERT(lhs != NULL && rules != NULL);
+
+		if(n < 2)return false;
+		tmp = AR_CreateString();
+		bk = AR_NEWARR0(size_t, n);
+
+RECHECK_POINT:
+		
+		max = 0;
+		cnt = 0;
+
+		for(i = 0; i < n; ++i)
+		{
+				if(rules[i] == NULL)continue;
+				AR_ASSERT(PSR_CompSymb(lhs, rules[i]->head) == 0);
+				for(k = 0; k < n; ++k)
+				{
+						if(rules[k] == NULL)continue;
+
+						if(k != i)
+						{
+								size_t x = __calc_leftfactor(rules[i], rules[k]);
+								
+								if(x > max)
+								{
+										max = x;
+										AR_memset(bk, 0, sizeof(size_t)*n);
+										cnt = 0;
+										bk[cnt++] = i;
+										bk[cnt++] = k;
+								}else if(x > 0 && x == max && __calc_leftfactor(rules[bk[0]], rules[i]) == x)
+								{
+										size_t j;
+										bool_t need_i = true, need_k = true;
+										for(j = 0; j < n; ++j)
+										{
+												if(bk[j] == i)need_i = false;
+												if(bk[j] == k)need_k = false;
+										}
+										
+										if(need_i)bk[cnt++] = i;
+										if(need_k)bk[cnt++] = k;
+								}else
+								{
+								}
+						}
+				}
+		}
+
+		if(cnt == 0)
+		{
+				goto RETURN_POINT;
+		}else
+		{
+				has_left_factor = true;
+		}
+		
+		
+		for(i = 0; i < cnt ; ++i)
+		{
+				if(output)
+				{
+						AR_AppendString(tmp, lhs->name);
+						AR_AppendString(tmp, L"\t:\t");
+						PSR_PrintSymbolList(&rules[bk[i]]->body, tmp);
+						AR_AppendFormatString(tmp, L"\t:\t%d", max);
+						AR_AppendString(tmp, L"\r\n");
+				}
+				rules[bk[i]] = NULL;
+		}
+		
+		if(cnt > 0)
+		{
+				if(output)
+				{
+						AR_AppendString(tmp, L"\r\n");
+				}
+				goto RECHECK_POINT;
+		}
+
+RETURN_POINT:
+		AR_DEL(bk);
+		
+		if(has_left_factor)
+		{
+				AR_AppendFormatString(output, L"%ls:\r\n",lhs->name);
+				AR_AppendString(output, AR_GetStrString(tmp));
+		}
+		AR_DestroyString(tmp);
+		return has_left_factor;
+}
+
+
+
+
+bool_t					PSR_ReportLeftFactor(const psrGrammar_t *grammar, arString_t *output)
+{
+		const psrRule_t	**rules;
+		bool_t has_left_factor;
+		size_t	cnt;
+		size_t	i,k;
+		AR_ASSERT(grammar != NULL);
+		
+		cnt = 0;
+		has_left_factor = false;
+		rules = AR_NEWARR0(const psrRule_t*, grammar->symb_list.count);
+		
+		if(output)AR_ClearString(output);
+
+		for(i = 0; i < grammar->symb_list.count; ++i)
+		{
+				const psrSymb_t *lhs = grammar->symb_list.lst[i];
+				if(lhs->type == PSR_TERM)continue;
+				
+				AR_memset((void*)rules, 0, sizeof(const psrRule_t*) * grammar->symb_list.count);
+				
+				cnt = 0;
+				
+				for(k = 0; k < grammar->count; ++k)
+				{
+						if(PSR_CompSymb(lhs, grammar->rules[k]->head) == 0)
+						{
+								rules[cnt++] = grammar->rules[k];
+						}
+				}
+		
+				if(__report_rule_left_factor(lhs, rules, cnt,output))
+				{
+						has_left_factor = true;
+				}
+		}
+
+		AR_DEL(rules);
+		return has_left_factor;
+
+}
+
+
+
+
 bool_t			PSR_CheckIsValidGrammar(const psrGrammar_t *grammar)
 {
 		size_t i,j,k;

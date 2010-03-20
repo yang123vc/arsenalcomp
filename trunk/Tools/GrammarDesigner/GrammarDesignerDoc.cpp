@@ -62,6 +62,8 @@ BEGIN_MESSAGE_MAP(CGrammarDesignerDoc, CRichEditDoc)
 		ON_UPDATE_COMMAND_UI(ID_FLAGS_SINGLELINE, &CGrammarDesignerDoc::OnUpdateFlagsSingleline)
 		ON_COMMAND(ID_FLAGS_IGNORECASE, &CGrammarDesignerDoc::OnFlagsIgnorecase)
 		ON_UPDATE_COMMAND_UI(ID_FLAGS_IGNORECASE, &CGrammarDesignerDoc::OnUpdateFlagsIgnorecase)
+		ON_COMMAND(ID_SHOW_LEFTFACTOR, &CGrammarDesignerDoc::OnShowLeftfactor)
+		ON_UPDATE_COMMAND_UI(ID_SHOW_LEFTFACTOR, &CGrammarDesignerDoc::OnUpdateShowLeftfactor)
 END_MESSAGE_MAP()
 
 
@@ -802,6 +804,34 @@ void CGrammarDesignerDoc::OnShowLeftrecursion()
 
 
 }
+
+
+
+void CGrammarDesignerDoc::OnShowLeftfactor()
+{
+		// TODO: Add your command handler code here
+
+		ASSERT(m_parser != NULL);
+
+		const ARSpace::psrFirstFollowView_t		*view = m_parser->CreateFirstFollowView();
+		
+
+		ASSERT(view != NULL);
+
+		CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
+		CActionView	&action = main_frm->GetActionView();
+		action.DrawLeftFactorView(view);
+		m_parser->DestroyFirstFollowView(view);
+		main_frm->ShowPane(&action, TRUE, TRUE, TRUE);
+
+}
+
+void CGrammarDesignerDoc::OnUpdateShowLeftfactor(CCmdUI *pCmdUI)
+{
+		// TODO: Add your command update UI handler code here
+		pCmdUI->Enable(m_parser != NULL);
+}
+
 
 
 void CGrammarDesignerDoc::OnUpdateShowLeftrecursion(CCmdUI *pCmdUI)

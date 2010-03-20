@@ -179,6 +179,9 @@ static lex_t* __build_lex()
 		
 }
 
+
+
+
 static psrGrammar_t *__g_gmr = NULL;
 static  parser_t* __build_parser()
 {
@@ -204,7 +207,6 @@ static  parser_t* __build_parser()
 		PSR_InsertRuleByStr(gmr, L"E : E % E", NULL, create_node, 0);
 		PSR_InsertRuleByStr(gmr, L"E : ( E )", NULL, create_node1, 0);
 		PSR_InsertRuleByStr(gmr, L"E : - E", L"UMINUS", create_node2, 0);
-
 		PSR_InsertRuleByStr(gmr, L"E : number", NULL, create_node1, 0);
 
 		//PSR_InsertRuleByStr(gmr, L"E : X number", NULL, create_node1, 0);
@@ -220,23 +222,33 @@ static  parser_t* __build_parser()
 				str = AR_CreateString();
 				PSR_PrintGrammar(gmr, str);
 				AR_printf(L"%ls\r\n", AR_GetStrString(str));
+				AR_DestroyString(str);
 
 				__g_gmr = gmr;
 				getchar();
 		}
 
-
-
+		
 		{
 				parser_t *psr;
 				
 				
 				psr =  PSR_CreateParser(gmr, PSR_SLR);
 				
-				AR_printf(L"Conflict == %d\r\n", PSR_CountParserConflict(psr));
+				//AR_printf(L"Conflict == %d\r\n", PSR_CountParserConflict(psr));
 				/*PSR_DestroyGrammar(gmr);*/
+				arString_t *str = AR_CreateString();
+
+				if(PSR_ReportLeftFactor(gmr, str))
+				{
+						AR_StrPrint(str);
+				}
+				
+				AR_DestroyString(str);
+				getchar();
 				return psr;
 		}
+
 }
 
 int post_order(Node_t *node)
@@ -361,12 +373,13 @@ void calc_test()
 
 #endif
 
+
 		AR_printf(L"-----------------------------------------\r\n");
 
 		getchar();
 
 		LEX_InitMatch(&match, L"10 + (5 + 4) / 3");
-		
+#if(0)
 		is_ok = true;
 		while(is_ok)
 		{
@@ -402,11 +415,13 @@ void calc_test()
 				printf("num == %d\r\n", v);
 
 		}
-		
+#endif
 		PSR_DestroyParser(psr);
 		PSR_DestroyGrammar(__g_gmr);
 		LEX_Destroy(lex);
 		LEX_UnInitMatch(&match);
+
+
 }
 
 

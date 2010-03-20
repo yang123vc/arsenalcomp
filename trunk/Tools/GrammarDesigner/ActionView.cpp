@@ -446,10 +446,84 @@ void	CActionView::DrawFirstFollowView(const ARSpace::psrFirstFollowView_t *view)
 				lv.iSubItem = 1;
 				this->m_list.SetItem(&lv);
 		}
-
-
 }
 
+
+
+void	CActionView::DrawLeftFactorView(const ARSpace::psrFirstFollowView_t *view)
+{
+		size_t	i;
+		ASSERT(view != NULL);
+		
+		this->Clear();
+
+		
+		CRect rect;
+		this->GetWindowRect(&rect);
+
+		this->m_list.InsertColumn(0, TEXT("LHS"), 0, rect.Width()/ 3 * 1);
+		this->m_list.InsertColumn(1, TEXT("Rule"), 0, rect.Width() / 3 * 2);
+
+		const wchar_t *curr_head = NULL;
+		for(i = 0; i < view->left_factor.count; ++i)
+		{
+				
+				LVITEM	lv;
+				memset(&lv, 0, sizeof(lv));
+				lv.mask   =   LVIF_TEXT;   
+
+				if(curr_head == NULL)
+				{
+						curr_head = view->left_factor.name[i];
+						ASSERT(curr_head != NULL);
+						lv.pszText   =   (LPWSTR)curr_head;
+				}else if(wcscmp(curr_head, view->left_factor.name[i]) != 0)
+				{
+						curr_head = view->left_factor.name[i];
+						lv.pszText   =   (LPWSTR)curr_head;
+				}else
+				{
+						lv.pszText   =   (LPWSTR)L"";
+				}
+				
+				lv.iItem   =  this->m_list.GetItemCount();
+				this->m_list.InsertItem(&lv);
+
+				lv.iSubItem = 1;
+				lv.pszText = (LPWSTR)view->left_factor.name_set[i];
+				this->m_list.SetItem(&lv);
+
+
+#if(0)
+				for(k = 0; k < item->count; ++k)
+				{
+						
+						lv.pszText   =   (LPWSTR)item->items[k];
+						lv.cchTextMax   =  (int)(wcslen(item->items[k]) + 1);
+						
+						lv.iSubItem = 1;
+
+						if(k == 0)
+						{
+								lv.iItem   =  this->m_list.GetItemCount() - 1;
+
+						}else
+						{
+								VERIFY(this->m_list.InsertItem(this->m_list.GetItemCount(), TEXT("")));
+								lv.iItem   =  this->m_list.GetItemCount() - 1;
+
+						}
+						VERIFY(this->m_list.SetItem(&lv));
+				}
+				
+				VERIFY(this->m_list.InsertItem(this->m_list.GetItemCount(), TEXT("")));
+#endif
+
+		}
+
+
+		
+}
 
 void	CActionView::DrawLeftRecursionView(const ARSpace::psrFirstFollowView_t *view)
 {

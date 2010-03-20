@@ -319,6 +319,7 @@ BEGIN
             MENUITEM "&Conflict",                   ID_PARSER_SHOWCONFLICT
             MENUITEM "&FirstFollow",                ID_PARSER_SHOWFIRSTFOLLOW
             MENUITEM "Left Recursion",              ID_SHOW_LEFTRECURSION
+            MENUITEM "Left Factor",                 ID_SHOW_LEFTFACTOR
         END
         MENUITEM SEPARATOR
         MENUITEM "Cu&t\tCtrl+X",                ID_EDIT_CUT

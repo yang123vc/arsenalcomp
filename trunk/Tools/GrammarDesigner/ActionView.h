@@ -53,7 +53,8 @@ public:
 		void	DrawFirstFollowView(const ARSpace::psrFirstFollowView_t *view);
 
 		void	DrawLeftRecursionView(const ARSpace::psrFirstFollowView_t *view);
-
+		void	DrawLeftFactorView(const ARSpace::psrFirstFollowView_t *view);
+		
 		void	Clear();
 };
 
