@@ -157,8 +157,8 @@ PSR_CreateParserConflictView
 PSR_DestroyParserConflictView
 
 
-PSR_CreateParserFirstFollowView
-PSR_DestroyParserFirstFollowView
+PSR_CreateParserStatusView
+PSR_DestroyParserStatusView
 
 ;Tools
 

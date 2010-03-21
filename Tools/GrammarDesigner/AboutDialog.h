@@ -1,11 +1,18 @@
 #pragma once
-
+#include "HyperLink.h"
 
 
 // CAboutDlg dialog used for App About
 
 class CAboutDlg : public CDialog
 {
+private:
+		CString			m_name;
+		CString			m_ver;
+		CString			m_copyright;
+		CString			m_homepage;
+private:
+		CHyperLink		m_hplink;
 public:
 	CAboutDlg();
 
@@ -18,4 +25,7 @@ protected:
 // Implementation
 protected:
 	DECLARE_MESSAGE_MAP()
+public:
+		virtual BOOL OnInitDialog();
+		afx_msg void OnStnClickedHomepage();
 };

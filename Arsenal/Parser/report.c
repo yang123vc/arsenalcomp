@@ -552,7 +552,7 @@ typedef struct __first_follow_view_tag
 {
 		psrSymbolMapView_t		first_set;
 		psrSymbolMapView_t		follow_set;
-}psrFirstFollowView_t;
+}psrStatusView_t;
 */
 
 void __insert_to_symtbl_view(psrSymbolMapView_t *map_view, const wchar_t *name, const wchar_t *set)
@@ -835,12 +835,12 @@ static bool_t					__report_left_factor(const psrGrammar_t *grammar, psrSymbolMap
 
 
 
-const psrFirstFollowView_t*		PSR_CreateParserFirstFollowView(const parser_t *parser)
+const psrStatusView_t*		PSR_CreateParserStatusView(const parser_t *parser)
 {
 		psrSymbMap_t	first, follow;
 		arString_t		*str;
 		psrSymbolMapView_t		first_view, follow_view, left_recu, left_factor;
-		psrFirstFollowView_t	*ret;
+		psrStatusView_t	*ret;
 		size_t i;
 		
 		AR_ASSERT(parser != NULL && parser->grammar != NULL);
@@ -902,7 +902,7 @@ const psrFirstFollowView_t*		PSR_CreateParserFirstFollowView(const parser_t *par
 		__report_left_recursion(parser->grammar, &left_recu);
 		__report_left_factor(parser->grammar, &left_factor);
 
-		ret = AR_NEW0(psrFirstFollowView_t);
+		ret = AR_NEW0(psrStatusView_t);
 		ret->first_set = first_view;
 		ret->follow_set = follow_view;
 		ret->left_recursion = left_recu;
@@ -915,13 +915,13 @@ const psrFirstFollowView_t*		PSR_CreateParserFirstFollowView(const parser_t *par
 }
 
 
-void							PSR_DestroyParserFirstFollowView(const psrFirstFollowView_t *follow_view)
+void							PSR_DestroyParserStatusView(const psrStatusView_t *follow_view)
 {
 		size_t i;
 
 		if(follow_view != NULL)
 		{
-				psrFirstFollowView_t *view = (psrFirstFollowView_t*)follow_view;
+				psrStatusView_t *view = (psrStatusView_t*)follow_view;
 
 				for(i = 0; i < view->first_set.count; ++i)
 				{

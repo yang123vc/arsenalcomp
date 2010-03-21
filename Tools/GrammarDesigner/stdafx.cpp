@@ -10,6 +10,7 @@
 #define new DEBUG_NEW
 #endif
 
+
 void test_func()
 {
 		//int *x = new int[33];
