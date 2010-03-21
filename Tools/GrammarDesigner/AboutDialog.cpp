@@ -74,7 +74,6 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_APP_HOMEPAGE, m_homepage);
 
 	DDX_Control(pDX, IDC_APP_HOMEPAGE, m_hplink);
-
 	m_hplink.SetLinkUrl(m_homepage);
 		
 }
