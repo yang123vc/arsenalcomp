@@ -67,12 +67,15 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 		
-	DDX_Control(pDX, IDC_HOMEPAGE, m_hplink);
-
-
+	
 	DDX_Text(pDX, IDC_APP_NAME, m_name);
 	DDX_Text(pDX, IDC_APP_VERSION, m_ver);
 	DDX_Text(pDX, IDC_APP_COPYRIGHT, m_copyright);
+	DDX_Text(pDX, IDC_APP_HOMEPAGE, m_homepage);
+
+	DDX_Control(pDX, IDC_APP_HOMEPAGE, m_hplink);
+
+	m_hplink.SetLinkUrl(m_homepage);
 		
 }
 
@@ -84,7 +87,8 @@ BOOL CAboutDlg::OnInitDialog()
 
 		// TODO:  Add extra initialization here
 		
-		m_hplink.SetWindowText(m_homepage);
+		//m_hplink.SetWindowText(m_homepage);
+		
 
 		return TRUE;  // return TRUE unless you set the focus to a control
 		// EXCEPTION: OCX Property Pages should return FALSE
@@ -99,8 +103,6 @@ END_MESSAGE_MAP()
 void CAboutDlg::OnStnClickedHomepage()
 {
 		// TODO: Add your control notification handler code here
-
-		//ShellExecute(NULL,   NULL,   TEXT("iexplore"),  m_homepage ,NULL,   SW_SHOW);   
-		ShellExecute(NULL,	 TEXT("open"), m_homepage, NULL, NULL, SW_SHOWNORMAL);
+		
 
 }

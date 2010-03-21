@@ -53,8 +53,8 @@
 #define IDC_APP_VERSION                 1007
 #define IDC_APP_COPYRIGHT               1008
 #define IDC_APP_NAME                    1009
-#define IDC_HYPERLINK                   1010
 #define IDC_HOMEPAGE                    1010
+#define IDC_APP_HOMEPAGE                1010
 #define ID_EDIT_UNDO32771               32771
 #define ID_EDIT_SELECTALL               32772
 #define ID_EDIT_SELECTALL32773          32773
