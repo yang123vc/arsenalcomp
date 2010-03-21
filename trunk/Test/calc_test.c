@@ -298,7 +298,7 @@ void calc_test()
 		/*
 		const psrActionView_t *view;
 		const psrConflictView_t	*conflict;
-		const psrFirstFollowView_t *first_follow;
+		const psrStatusView_t *first_follow;
 		*/
 
 		lex = __build_lex();
@@ -315,7 +315,7 @@ void calc_test()
 		*/
 
 		/*
-		first_follow = PSR_CreateParserFirstFollowView(psr);
+		first_follow = PSR_CreateParserStatusView(psr);
 		
 
 		AR_printf(L"------------------first------------------\r\n");

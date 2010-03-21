@@ -50,6 +50,11 @@
 #define IDC_EDIT_CODE                   1003
 #define IDC_BUTTON_TO_CODE              1005
 #define IDC_BUTTON_TO_STRING            1006
+#define IDC_APP_VERSION                 1007
+#define IDC_APP_COPYRIGHT               1008
+#define IDC_APP_NAME                    1009
+#define IDC_HYPERLINK                   1010
+#define IDC_HOMEPAGE                    1010
 #define ID_EDIT_UNDO32771               32771
 #define ID_EDIT_SELECTALL               32772
 #define ID_EDIT_SELECTALL32773          32773
@@ -162,7 +167,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        324
 #define _APS_NEXT_COMMAND_VALUE         32889
-#define _APS_NEXT_CONTROL_VALUE         1007
+#define _APS_NEXT_CONTROL_VALUE         1011
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

@@ -389,7 +389,7 @@ void	CActionView::DrawConflictView(const ARSpace::psrConflictView_t *view)
 }
 
 
-void	CActionView::DrawFirstFollowView(const ARSpace::psrFirstFollowView_t *view)
+void	CActionView::DrawFirstFollowView(const ARSpace::psrStatusView_t *view)
 {
 		size_t	i;
 		ASSERT(view != NULL);
@@ -450,7 +450,7 @@ void	CActionView::DrawFirstFollowView(const ARSpace::psrFirstFollowView_t *view)
 
 
 
-void	CActionView::DrawLeftFactorView(const ARSpace::psrFirstFollowView_t *view)
+void	CActionView::DrawLeftFactorView(const ARSpace::psrStatusView_t *view)
 {
 		size_t	i;
 		ASSERT(view != NULL);
@@ -487,53 +487,21 @@ void	CActionView::DrawLeftFactorView(const ARSpace::psrFirstFollowView_t *view)
 				}
 				
 				lv.iItem   =  this->m_list.GetItemCount();
-				this->m_list.InsertItem(&lv);
+				VERIFY(this->m_list.InsertItem(&lv));
 
 				lv.iSubItem = 1;
 				lv.pszText = (LPWSTR)view->left_factor.name_set[i];
-				this->m_list.SetItem(&lv);
-
-
-#if(0)
-				for(k = 0; k < item->count; ++k)
-				{
-						
-						lv.pszText   =   (LPWSTR)item->items[k];
-						lv.cchTextMax   =  (int)(wcslen(item->items[k]) + 1);
-						
-						lv.iSubItem = 1;
-
-						if(k == 0)
-						{
-								lv.iItem   =  this->m_list.GetItemCount() - 1;
-
-						}else
-						{
-								VERIFY(this->m_list.InsertItem(this->m_list.GetItemCount(), TEXT("")));
-								lv.iItem   =  this->m_list.GetItemCount() - 1;
-
-						}
-						VERIFY(this->m_list.SetItem(&lv));
-				}
-				
-				VERIFY(this->m_list.InsertItem(this->m_list.GetItemCount(), TEXT("")));
-#endif
-
+				VERIFY(this->m_list.SetItem(&lv));
 		}
-
-
-		
 }
 
-void	CActionView::DrawLeftRecursionView(const ARSpace::psrFirstFollowView_t *view)
+void	CActionView::DrawLeftRecursionView(const ARSpace::psrStatusView_t *view)
 {
 		size_t	i;
 		ASSERT(view != NULL);
 		
 		this->Clear();
-
 		
-
 		CRect rect;
 		this->GetWindowRect(&rect);
 

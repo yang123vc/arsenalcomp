@@ -211,17 +211,17 @@ typedef struct __sym_tbl_view_tag
 
 
 
-typedef struct __first_follow_view_tag
+typedef struct __view_info_tag
 {
 		psrSymbolMapView_t		first_set;
 		psrSymbolMapView_t		follow_set;
 
 		psrSymbolMapView_t		left_recursion;
 		psrSymbolMapView_t		left_factor;
-}psrFirstFollowView_t;
+}psrStatusView_t;
 
-const psrFirstFollowView_t*		PSR_CreateParserFirstFollowView(const parser_t *parser);
-void							PSR_DestroyParserFirstFollowView(const psrFirstFollowView_t *view);
+const psrStatusView_t*		PSR_CreateParserStatusView(const parser_t *parser);
+void							PSR_DestroyParserStatusView(const psrStatusView_t *view);
 
 AR_NAMESPACE_END
 

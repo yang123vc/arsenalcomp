@@ -761,7 +761,7 @@ void CGrammarDesignerDoc::OnParserShowfirstfollow()
 
 		ASSERT(m_parser != NULL);
 
-		const ARSpace::psrFirstFollowView_t		*view = m_parser->CreateFirstFollowView();
+		const ARSpace::psrStatusView_t		*view = m_parser->CreateStatusView();
 		
 
 		ASSERT(view != NULL);
@@ -771,7 +771,7 @@ void CGrammarDesignerDoc::OnParserShowfirstfollow()
 		
 		action.DrawFirstFollowView(view);
 
-		m_parser->DestroyFirstFollowView(view);
+		m_parser->DestroyStatusView(view);
 		main_frm->ShowPane(&action, TRUE, TRUE, TRUE);
 
 }
@@ -789,7 +789,7 @@ void CGrammarDesignerDoc::OnShowLeftrecursion()
 
 		ASSERT(m_parser != NULL);
 
-		const ARSpace::psrFirstFollowView_t		*view = m_parser->CreateFirstFollowView();
+		const ARSpace::psrStatusView_t		*view = m_parser->CreateStatusView();
 		
 
 		ASSERT(view != NULL);
@@ -799,7 +799,7 @@ void CGrammarDesignerDoc::OnShowLeftrecursion()
 		
 		action.DrawLeftRecursionView(view);
 
-		m_parser->DestroyFirstFollowView(view);
+		m_parser->DestroyStatusView(view);
 		main_frm->ShowPane(&action, TRUE, TRUE, TRUE);
 
 
@@ -813,7 +813,7 @@ void CGrammarDesignerDoc::OnShowLeftfactor()
 
 		ASSERT(m_parser != NULL);
 
-		const ARSpace::psrFirstFollowView_t		*view = m_parser->CreateFirstFollowView();
+		const ARSpace::psrStatusView_t		*view = m_parser->CreateStatusView();
 		
 
 		ASSERT(view != NULL);
@@ -821,7 +821,7 @@ void CGrammarDesignerDoc::OnShowLeftfactor()
 		CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
 		CActionView	&action = main_frm->GetActionView();
 		action.DrawLeftFactorView(view);
-		m_parser->DestroyFirstFollowView(view);
+		m_parser->DestroyStatusView(view);
 		main_frm->ShowPane(&action, TRUE, TRUE, TRUE);
 
 }

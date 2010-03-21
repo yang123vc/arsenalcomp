@@ -266,8 +266,8 @@ public:
 
 		
 
-		const psrFirstFollowView_t*		CreateFirstFollowView()const;
-		void							DestroyFirstFollowView(const psrFirstFollowView_t *view);
+		const psrStatusView_t*		CreateStatusView()const;
+		void							DestroyStatusView(const psrStatusView_t *view);
 };
 
 

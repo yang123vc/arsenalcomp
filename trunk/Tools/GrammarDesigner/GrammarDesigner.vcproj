@@ -1348,6 +1348,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\BufferDC.h"
+				>
+			</File>
+			<File
 				RelativePath=".\DocManagerEx.h"
 				>
 			</File>
@@ -1361,6 +1365,10 @@
 			</File>
 			<File
 				RelativePath=".\GrammarDesignerView.h"
+				>
+			</File>
+			<File
+				RelativePath=".\HyperLink.h"
 				>
 			</File>
 			<File
@@ -1478,6 +1486,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\BufferDC.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\DocManagerEx.cpp"
 				>
 			</File>
@@ -1491,6 +1503,10 @@
 			</File>
 			<File
 				RelativePath=".\GrammarDesignerView.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\HyperLink.cpp"
 				>
 			</File>
 			<File
