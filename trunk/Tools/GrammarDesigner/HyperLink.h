@@ -87,8 +87,9 @@ public:
 	TCHAR* GetLinkText();
 	void SetLinkText(TCHAR* lpText);
 
-	TCHAR* GetLinkUrl();
+	CString GetLinkUrl();
 	void SetLinkUrl(const TCHAR* lpUrl);
+	void SetLinkUrl(const CString &url);
 
 	void LockInPosition(BOOL bLockInPosition = FALSE);
 

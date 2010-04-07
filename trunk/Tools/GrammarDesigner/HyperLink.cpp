@@ -157,15 +157,25 @@ void CHyperLink::SetLinkText(TCHAR* lpText)
 		m_lpLinkText = NULL;
 }
 
-TCHAR* CHyperLink::GetLinkUrl()
+CString CHyperLink::GetLinkUrl()
 {
+		CString ret;
 	if (m_lpLinkUrl == NULL)
-		return NULL;
+	{
+			return ret;
+	}else
+	{
+			ret = CString(m_lpLinkUrl);
+			return ret;
+	}
+/*
 
 	size_t len = _tcslen(m_lpLinkUrl)+1;
 	TCHAR* lpRet = new TCHAR[len];
 	_tcsncpy_s(lpRet,len,m_lpLinkUrl,len);
 	return lpRet;
+*/
+
 }
 
 void CHyperLink::SetLinkUrl(const TCHAR* lpUrl)
@@ -186,6 +196,12 @@ void CHyperLink::SetLinkUrl(const TCHAR* lpUrl)
 
 	m_pToolTip->UpdateTipText(m_lpLinkUrl,this);
 }
+
+void CHyperLink::SetLinkUrl(const CString &url)
+{
+		SetLinkUrl((const TCHAR*)url);
+}
+
 
 void CHyperLink::LockInPosition( BOOL bLockInPosition /*= FALSE*/ )
 {
