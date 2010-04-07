@@ -53,7 +53,7 @@ struct __ray_symbol_tag
 
 
 
-#define RAY_SYMBOL_BUCKET_SIZE			139
+#define RAY_SYMBOL_BUCKET_SIZE			193
 
 struct __ray_symbol_block_tag
 {
