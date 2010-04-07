@@ -2,13 +2,13 @@
 
 
 :x86
-set s_dir=..\..\binary\x86\DLL\Release
+set s_dir=..\..\binary\win32\DLLRelease
 set d_dir=..\..\misc\GrammarDesigner_x86
 call :copy_files %s_dir% %d_dir%
 
 
 :X64
-set s_dir=..\..\binary\X64\DLL\Release
+set s_dir=..\..\binary\X64\DLLRelease
 set d_dir=..\..\misc\GrammarDesigner_X64
 call :copy_files %s_dir% %d_dir%
 

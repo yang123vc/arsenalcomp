@@ -3,6 +3,7 @@
 
 IMPLEMENT_DYNAMIC(CBufferDC, CPaintDC)
 
+
 CBufferDC::CBufferDC(CWnd* pWnd) : CPaintDC(pWnd)
 {
 	if (pWnd != NULL && CPaintDC::m_hDC != NULL)
