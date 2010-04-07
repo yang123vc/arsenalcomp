@@ -27,8 +27,8 @@
 	<Configurations>
 		<Configuration
 			Name="DLLDebug|Win32"
-			OutputDirectory="..\..\..\binary\x86\DLL\Debug"
-			IntermediateDirectory="..\..\..\Temp\ArsenalCPP\x86\DLLDebug"
+			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
 			>
@@ -107,8 +107,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLLDebug|x64"
-			OutputDirectory="..\..\..\binary\x64\DLL\Debug"
-			IntermediateDirectory="..\..\..\Temp\ArsenalCPP\x64\DLLDebug"
+			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
 			>
@@ -187,8 +187,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLLDebug|Itanium"
-			OutputDirectory="..\..\..\binary\ia64\DLL\Debug"
-			IntermediateDirectory="..\..\..\Temp\ArsenalCPP\ia64\DLLDebug"
+			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
 			>
@@ -268,8 +268,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLLDebug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
-			OutputDirectory="..\..\..\binary\ppc\DLL\Debug"
-			IntermediateDirectory="..\..\..\Temp\ArsenalCPP\ppc\DLLDebug"
+			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
 			>
@@ -353,8 +353,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLLRelease|Win32"
-			OutputDirectory="..\..\..\binary\x86\DLL\Release"
-			IntermediateDirectory="..\..\..\Temp\ArsenalCPP\x86\DLLRelease"
+			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
@@ -436,8 +436,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLLRelease|x64"
-			OutputDirectory="..\..\..\binary\x64\DLL\Release"
-			IntermediateDirectory="..\..\..\Temp\ArsenalCPP\x64\DLLRelease"
+			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
@@ -520,8 +520,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLLRelease|Itanium"
-			OutputDirectory="..\..\..\binary\ia64\DLL\Release"
-			IntermediateDirectory="..\..\..\Temp\ArsenalCPP\ia64\DLLRelease"
+			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
@@ -604,8 +604,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLLRelease|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
-			OutputDirectory="..\..\..\binary\ppc\DLL\Release"
-			IntermediateDirectory="..\..\..\Temp\ArsenalCPP\ppc\DLLRelease"
+			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
 			>
@@ -688,8 +688,8 @@
 		</Configuration>
 		<Configuration
 			Name="LibDebug|Win32"
-			OutputDirectory="..\..\..\binary\x86\Lib\Debug"
-			IntermediateDirectory="..\..\..\Temp\ArsenalCPP\x86\LibDebug"
+			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="4"
 			CharacterSet="0"
 			>
@@ -751,8 +751,8 @@
 		</Configuration>
 		<Configuration
 			Name="LibDebug|x64"
-			OutputDirectory="..\..\..\binary\x64\Lib\Debug"
-			IntermediateDirectory="..\..\..\Temp\ArsenalCPP\x64\LibDebug"
+			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="4"
 			>
 			<Tool
@@ -813,8 +813,8 @@
 		</Configuration>
 		<Configuration
 			Name="LibDebug|Itanium"
-			OutputDirectory="..\..\..\binary\ia64\Lib\Debug"
-			IntermediateDirectory="..\..\..\Temp\ArsenalCPP\ia64\LibDebug"
+			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="4"
 			CharacterSet="0"
 			>
@@ -877,8 +877,8 @@
 		</Configuration>
 		<Configuration
 			Name="LibDebug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
-			OutputDirectory="..\..\..\binary\ppc\Lib\Debug"
-			IntermediateDirectory="..\..\..\Temp\ArsenalCPP\ppc\LibDebug"
+			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="4"
 			CharacterSet="1"
 			>
@@ -952,8 +952,8 @@
 		</Configuration>
 		<Configuration
 			Name="LibRelease|Win32"
-			OutputDirectory="..\..\..\binary\x86\Lib\Release"
-			IntermediateDirectory="..\..\..\Temp\ArsenalCPP\x86\LibRelease"
+			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="4"
 			>
 			<Tool
@@ -1014,8 +1014,8 @@
 		</Configuration>
 		<Configuration
 			Name="LibRelease|x64"
-			OutputDirectory="..\..\..\binary\x64\Lib\Release"
-			IntermediateDirectory="..\..\..\Temp\ArsenalCPP\x64\LibRelease"
+			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="4"
 			>
 			<Tool
@@ -1076,8 +1076,8 @@
 		</Configuration>
 		<Configuration
 			Name="LibRelease|Itanium"
-			OutputDirectory="..\..\..\binary\ia64\Lib\Release"
-			IntermediateDirectory="..\..\..\Temp\ArsenalCPP\ia64\LibRelease"
+			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="4"
 			>
 			<Tool
@@ -1139,8 +1139,8 @@
 		</Configuration>
 		<Configuration
 			Name="LibRelease|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
-			OutputDirectory="..\..\..\binary\ppc\Lib\Release"
-			IntermediateDirectory="..\..\..\Temp\ArsenalCPP\ppc\LibRelease"
+			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="4"
 			CharacterSet="1"
 			>

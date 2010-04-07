@@ -2,13 +2,13 @@
 
 
 :x86
-set s_path=..\..\binary\x86\Lib\Release\GrammarDesigner.exe
+set s_path=..\..\binary\Win32\LibRelease\GrammarDesigner.exe
 set d_path=..\..\misc\GrammarDesigner_x86.exe
 call :copy_file %s_path% %d_path%
 
 
 :X64
-set s_path=..\..\binary\X64\Lib\Release\GrammarDesigner.exe
+set s_path=..\..\binary\X64\LibRelease\GrammarDesigner.exe
 set d_path=..\..\misc\GrammarDesigner_X64.exe
 call :copy_file %s_path% %d_path%
 

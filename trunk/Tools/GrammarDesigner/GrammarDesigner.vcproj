@@ -27,8 +27,8 @@
 	<Configurations>
 		<Configuration
 			Name="DLLDebug|Win32"
-			OutputDirectory="..\..\binary\x86\DLL\Debug"
-			IntermediateDirectory="..\..\Temp\GrammarDesigner\x86\DLLDebug"
+			OutputDirectory="..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			UseOfMFC="2"
 			CharacterSet="1"
@@ -110,8 +110,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLLDebug|x64"
-			OutputDirectory="..\..\binary\x64\DLL\Debug"
-			IntermediateDirectory="..\..\Temp\GrammarDesigner\x64\DLLDebug"
+			OutputDirectory="..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			UseOfMFC="2"
 			CharacterSet="1"
@@ -187,8 +187,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLLDebug|Itanium"
-			OutputDirectory="..\..\binary\ia64\DLL\Debug"
-			IntermediateDirectory="..\..\Temp\GrammarDesigner\ia64\DLLDebug"
+			OutputDirectory="..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			UseOfMFC="2"
 			CharacterSet="1"
@@ -264,8 +264,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLLDebug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
-			OutputDirectory="..\..\binary\ppc\DLL\Debug"
-			IntermediateDirectory="..\..\Temp\GrammarDesigner\ppc\DLLDebug"
+			OutputDirectory="..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			UseOfMFC="2"
 			CharacterSet="1"
@@ -352,8 +352,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLLRelease|Win32"
-			OutputDirectory="..\..\binary\x86\DLL\Release"
-			IntermediateDirectory="..\..\Temp\GrammarDesigner\x86\DLLRelease"
+			OutputDirectory="..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			UseOfMFC="2"
 			CharacterSet="1"
@@ -442,8 +442,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLLRelease|x64"
-			OutputDirectory="..\..\binary\x64\DLL\Release"
-			IntermediateDirectory="..\..\Temp\GrammarDesigner\x64\DLLRelease"
+			OutputDirectory="..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			UseOfMFC="2"
 			CharacterSet="1"
@@ -521,8 +521,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLLRelease|Itanium"
-			OutputDirectory="..\..\binary\ia64\DLL\Release"
-			IntermediateDirectory="..\..\Temp\GrammarDesigner\ia64\DLRelease"
+			OutputDirectory="..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			UseOfMFC="2"
 			CharacterSet="1"
@@ -599,8 +599,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLLRelease|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
-			OutputDirectory="..\..\binary\ppc\DLL\Release"
-			IntermediateDirectory="..\..\Temp\GrammarDesigner\ppc\DLLRelease"
+			OutputDirectory="..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			UseOfMFC="2"
 			CharacterSet="1"
@@ -684,8 +684,8 @@
 		</Configuration>
 		<Configuration
 			Name="LibDebug|Win32"
-			OutputDirectory="..\..\binary\x86\Lib\Debug"
-			IntermediateDirectory="..\..\Temp\GrammarDesigner\x86\LibDebug"
+			OutputDirectory="..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			UseOfMFC="1"
 			CharacterSet="1"
@@ -761,8 +761,8 @@
 		</Configuration>
 		<Configuration
 			Name="LibDebug|x64"
-			OutputDirectory="..\..\binary\x64\Lib\Debug"
-			IntermediateDirectory="..\..\Temp\GrammarDesigner\x64\LibDebug"
+			OutputDirectory="..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			UseOfMFC="1"
 			CharacterSet="1"
@@ -838,8 +838,8 @@
 		</Configuration>
 		<Configuration
 			Name="LibDebug|Itanium"
-			OutputDirectory="..\..\binary\ia64\Lib\Debug"
-			IntermediateDirectory="..\..\Temp\GrammarDesigner\ia64\LibDebug"
+			OutputDirectory="..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			UseOfMFC="1"
 			CharacterSet="1"
@@ -915,8 +915,8 @@
 		</Configuration>
 		<Configuration
 			Name="LibDebug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
-			OutputDirectory="..\..\binary\ppc\Lib\Debug"
-			IntermediateDirectory="..\..\Temp\GrammarDesigner\ppc\LibDebug"
+			OutputDirectory="..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			UseOfMFC="1"
 			CharacterSet="1"
@@ -1003,8 +1003,8 @@
 		</Configuration>
 		<Configuration
 			Name="LibRelease|Win32"
-			OutputDirectory="..\..\binary\x86\Lib\Release"
-			IntermediateDirectory="..\..\Temp\GrammarDesigner\x86\LibRelease"
+			OutputDirectory="..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			UseOfMFC="1"
 			CharacterSet="1"
@@ -1084,8 +1084,8 @@
 		</Configuration>
 		<Configuration
 			Name="LibRelease|x64"
-			OutputDirectory="..\..\binary\x64\Lib\Release"
-			IntermediateDirectory="..\..\Temp\GrammarDesigner\x64\LibRelease"
+			OutputDirectory="..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			UseOfMFC="1"
 			CharacterSet="1"
@@ -1162,8 +1162,8 @@
 		</Configuration>
 		<Configuration
 			Name="LibRelease|Itanium"
-			OutputDirectory="..\..\binary\ia64\Lib\Release"
-			IntermediateDirectory="..\..\Temp\GrammarDesigner\ia64\LibRelease"
+			OutputDirectory="..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			UseOfMFC="1"
 			CharacterSet="1"
@@ -1240,8 +1240,8 @@
 		</Configuration>
 		<Configuration
 			Name="LibRelease|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
-			OutputDirectory="..\..\binary\ppc\Lib\Release"
-			IntermediateDirectory="..\..\Temp\GrammarDesigner\ppc\LibRelease"
+			OutputDirectory="..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			UseOfMFC="1"
 			CharacterSet="1"
@@ -1426,7 +1426,11 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath=".\event.bat"
+				RelativePath=".\event_dll.bat"
+				>
+			</File>
+			<File
+				RelativePath=".\event_lib.bat"
 				>
 			</File>
 			<File
