@@ -39,9 +39,27 @@ protected:
 
 class ARAPI ARContext : private NonCopyable
 {
+		bool	m_is_enable;
+public:
+		virtual void Enable()
+		{
+				m_is_enable = true;
+		}
+
+		virtual void Disable()
+		{
+				m_is_enable = false;
+		}
+
+		virtual bool IsEnable()
+		{
+				return m_is_enable;
+		}
 public:
 		virtual void OnError(int_t level, const wchar_t *msg) = 0;	
 		virtual void OnPrint(const wchar_t *msg) = 0;
+
+		ARContext() : m_is_enable(true) { }
 		virtual ~ARContext() = 0{}
 };
 

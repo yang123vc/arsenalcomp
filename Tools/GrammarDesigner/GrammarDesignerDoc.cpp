@@ -458,15 +458,16 @@ class ReportIOContext : public ArsenalCPP::ARContext
 {
 public:
 		COutputWnd		&m_output;
+
 public:
 		virtual void OnError(int_t level, const wchar_t *msg)
 		{
-				m_output.Append(msg, COutputList::MSG_ERROR, 0, NULL);
+				if(IsEnable())m_output.Append(msg, COutputList::MSG_ERROR, 0, NULL);
 		}
 
 		virtual void OnPrint(const wchar_t *msg)
 		{
-				m_output.Append(msg, COutputList::MSG_MESSAGE, 0, NULL);
+				if(IsEnable())m_output.Append(msg, COutputList::MSG_MESSAGE, 0, NULL);
 		}
 public:
 		ReportIOContext(COutputWnd &output) : m_output(output)
@@ -477,6 +478,7 @@ public:
 		virtual ~ReportIOContext()
 		{
 		}
+
 };
 
 
@@ -616,12 +618,14 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 				m_lexer = lexer;
 				m_lexer->Generate();
 
-
+				grammar->IOContext()->Disable();
 				beg = GetTickCount();
 				
 				m_parser = new ArsenalCPP::Parser(grammar, m_parser_mode);
 				
 				end = GetTickCount();
+				
+				grammar->IOContext()->Enable();
 
 				CString str;
 
@@ -852,6 +856,7 @@ class ParserReport : public ArsenalCPP::ARContext
 private:
 		CInputPane		&m_target;
 		COutputWnd		&m_output;
+		
 public:
 		ParserReport(CInputPane		&tar, COutputWnd	&output) : m_target(tar), m_output(output)
 		{
@@ -867,14 +872,15 @@ public:
 public:
 		virtual void OnError(int_t level, const wchar_t *msg)
 		{
-				m_output.Append(msg);
+				if(IsEnable())m_output.Append(msg);
 
 		}
 
 		virtual void OnPrint(const wchar_t *msg)
 		{
-				m_output.Append(msg);
+				if(IsEnable())m_output.Append(msg);
 		}
+
 };
 
 
