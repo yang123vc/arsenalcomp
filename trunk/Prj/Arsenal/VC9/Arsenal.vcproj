@@ -1433,14 +1433,6 @@
 				RelativePath="..\..\..\Arsenal\Ray\raysymbol.h"
 				>
 			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Ray\raytype.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Ray\raytype.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Lex"
