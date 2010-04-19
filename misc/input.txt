@@ -154,7 +154,7 @@ float 	f	=	.0e10f;
 float 	f	=	.12e10;
 
 
-/*错误的constant*/
+/*错误的constant
 
 
 int		dec	=	0La;
@@ -178,6 +178,7 @@ float 	f	=	W.12W;
 
 
 
+*/
 
 
 
