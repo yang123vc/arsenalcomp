@@ -20,13 +20,27 @@ AR_NAMESPACE_BEGIN
 static arSpinLock_t		__tbl_lock;
 static arStringTable_t *__tbl = NULL;
 
-const struct __parser_symbol_tag	*PSR_EOISymb = NULL;   /*表示输入结尾符号*/
-const struct __parser_symbol_tag	*PSR_ErrorSymb= NULL;/*特殊的错误处理产生式标记终结符，*/
-const struct __parser_symbol_tag	*PSR_DefPrecSymb = NULL;/*提供默认prec和assoc属性的终结符*/
+const psrSymb_t	*PSR_EOISymb = NULL;   /*表示输入结尾符号*/
+const psrSymb_t	*PSR_ErrorSymb= NULL;/*特殊的错误处理产生式标记终结符，*/
+const psrSymb_t	*PSR_DefPrecSymb = NULL;/*提供默认prec和assoc属性的终结符*/
 
 /*以下都为非终结符*/
-const struct __parser_symbol_tag	*PSR_StartSymb = NULL;
+const psrSymb_t	*PSR_StartSymb = NULL;
 
+
+bool_t				PSR_IsBuildInSymbol(const struct __parser_symbol_tag		*symb)
+{
+		AR_ASSERT(symb != NULL);
+
+		if(PSR_CompSymb(symb,PSR_EOISymb) == 0)return true;
+		if(PSR_CompSymb(symb,PSR_ErrorSymb) == 0)return true;
+		if(PSR_CompSymb(symb,PSR_DefPrecSymb) == 0)return true;
+		if(PSR_CompSymb(symb,PSR_StartSymb) == 0)return true;
+
+		
+
+		return false;
+}
 
 /******************************************************************************************************************************************/
 

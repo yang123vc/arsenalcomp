@@ -917,9 +917,13 @@ bool_t			PSR_CheckIsValidGrammar(const psrGrammar_t *grammar)
 		size_t i,j,k;
 		bool_t result;
 		const psrSymbList_t *lst;
+		bool_t	*mark_tbl; 
 		AR_ASSERT(grammar != NULL);
 		
 		if(grammar->count < 2)return false;/*Start和输入的第一个产生式一定>=2*/
+
+		lst = PSR_GetSymbList(grammar);
+		mark_tbl = AR_NEWARR0(bool_t, lst->count * lst->count);
 
 		result = true;
 		for(i = 0; i < grammar->count; ++i)
@@ -946,8 +950,15 @@ bool_t			PSR_CheckIsValidGrammar(const psrGrammar_t *grammar)
 
 								if(!is_ok)
 								{
-										/*AR_error(L"Grammar Error : The rule <%ls> not exist in this grammar\r\n", symb->name);*/
-										AR_printf_ctx((arIOCtx_t*)&grammar->io_ctx, L"Grammar Error : The rule <%ls> not exist in this grammar <%ls>\r\n", symb->name, rule->head->name);
+										size_t h,s;
+										h = (size_t)PSR_FindFromSymbList(lst, rule->head);
+										s = (size_t)PSR_FindFromSymbList(lst, symb);
+
+										if(!mark_tbl[AR_TBL_IDX_R(h,s,lst->count)])
+										{
+												AR_printf_ctx((arIOCtx_t*)&grammar->io_ctx, L"Grammar Error : The rule <%ls> not exist in this grammar <%ls>\r\n", symb->name, rule->head->name);
+												mark_tbl[AR_TBL_IDX_R(h,s,lst->count)] = true;
+										}
 										result = false;
 								}
 						}
@@ -955,9 +966,42 @@ bool_t			PSR_CheckIsValidGrammar(const psrGrammar_t *grammar)
 				}
 		}
 
-		lst = PSR_GetSymbList(grammar);
-
+		AR_DEL(mark_tbl);
 		
+		for(i = 0; i < lst->count; ++i)
+		{
+				const psrSymb_t *symb;
+				bool_t is_ok;
+				symb = lst->lst[i];
+				is_ok = false;
+				
+				if(PSR_IsBuildInSymbol(symb) ||	symb->type == PSR_TERM)continue;
+
+				for(k = 0; !is_ok && k < grammar->count; ++k)
+				{
+						const psrRule_t *rule;
+						rule = grammar->rules[k];
+						
+
+						if(PSR_CompSymb(rule->head, symb) == 0)continue;/*自己引用自己不算*/
+						
+						for(j = 0; j < rule->body.count; ++j)
+						{
+								if(PSR_CompSymb(rule->body.lst[j], symb) == 0)
+								{
+										is_ok = true;
+										break;
+								}
+						}
+				}
+
+				if(!is_ok)
+				{
+						AR_printf_ctx((arIOCtx_t*)&grammar->io_ctx,L"Grammar Warning : The rule <%ls> is declared but never used\r\n", symb->name);
+				}
+		}
+
+#if(0)		
 		for(i = 0; i < lst->count; ++i)
 		{
 				const psrSymb_t *symb;
@@ -989,11 +1033,15 @@ bool_t			PSR_CheckIsValidGrammar(const psrGrammar_t *grammar)
 						if(!is_ok)
 						{
 								/*AR_error(L"Grammar Warning : The rule %ls is declared but never used\r\n", symb->name);*/
-
-								AR_printf_ctx((arIOCtx_t*)&grammar->io_ctx,L"Grammar Warning : The rule <%ls> is declared but never used\r\n", symb->name);
+								if(!mark_tbl[i])
+								{
+										AR_printf_ctx((arIOCtx_t*)&grammar->io_ctx,L"Grammar Warning : The rule <%ls> is declared but never used\r\n", symb->name);
+										mark_tbl[i] = true;
+								}
 						}
 				}
 		}
+#endif
 
 		return result;
 }
