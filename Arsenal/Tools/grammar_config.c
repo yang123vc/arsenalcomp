@@ -1819,6 +1819,8 @@ __RULE_COUNT__
 
 #define CFG_CNT_DEF		L"#define %ls ((size_t)%u)\r\n"
 
+
+
 bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 {
 		size_t i;
@@ -1978,7 +1980,10 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 
 		if(cfg->rule_cnt > 0)
 		{
+				arStringTable_t	*handler_mark;
 				handler_define	= AR_CreateString();
+				handler_mark = 		AR_CreateStrTable(cfg->rule_cnt);
+
 
 				AR_AppendString(code, L"\n");
 
@@ -1994,10 +1999,10 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 								}
 								tmp = AR_NEWARR0(wchar_t, 2048 + 1);
 								AR_swprintf(tmp, 2048, CFG_RULE_HANDLER_DECL_2, cfg->rule[i].action_ins);
-								handler = AR_str_to_escstr(tmp);
+								handler = AR_wcsdup(tmp);
 
 								AR_swprintf(tmp, 2048, CFG_RULE_HANDLER_DEFINE_2, cfg->rule[i].action_ins);
-								handler_def = AR_str_to_escstr(tmp);
+								handler_def = AR_wcsdup(tmp);
 
 								if(tmp)
 								{
@@ -2008,11 +2013,9 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 						{
 								tmp = AR_NEWARR0(wchar_t, 2048 + 1);
 								AR_swprintf(tmp, 2048, CFG_RULE_HANDLER_DECL, cfg->rule[i].lhs);
-								/*handler = AR_str_to_escstr(tmp);*/
 								handler = AR_wcsdup(tmp);
 
 								AR_swprintf(tmp, 2048, CFG_RULE_HANDLER_DEFINE, cfg->rule[i].lhs);
-								/*handler_def = AR_str_to_escstr(tmp);*/
 								handler_def = AR_wcsdup(tmp);
 
 								if(tmp)
@@ -2022,35 +2025,47 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 								}
 						}
 
-						if(AR_wcsstr(AR_GetStrString(code), handler) == NULL)
+						/*if(AR_wcsstr(AR_GetStrString(code), handler) == NULL)*/
+
+						if(!AR_HasString(handler_mark, handler))
 						{
 								size_t k;
 								arString_t *comment = AR_CreateString();
 
 								for(k = 0; k < cfg->rule_cnt; ++k)
 								{
-										if(AR_wcscmp(cfg->rule[k].lhs, cfg->rule[i].lhs) == 0)
+										bool_t insert_comment = false;
+
+										if(cfg->rule[k].action_ins == NULL && cfg->rule[i].action_ins == NULL)
+										{
+												insert_comment	= AR_wcscmp(cfg->rule[k].lhs, cfg->rule[i].lhs) == 0 ? true : false;
+										}else if(cfg->rule[k].action_ins != NULL && cfg->rule[i].action_ins != NULL)
+										{
+												insert_comment = AR_wcscmp(cfg->rule[k].action_ins, cfg->rule[i].action_ins) == 0 ? true : false;
+										}
+
+										if(insert_comment)
 										{
 												AR_AppendString(comment, L"/*");
 												AR_AppendString(comment, cfg->rule[k].lhs);
 												AR_AppendString(comment, L"\t:\t");
 												AR_AppendString(comment, cfg->rule[k].rhs);
 												AR_AppendString(comment, L"*/");
-												AR_AppendString(comment, L"\n");
+												AR_AppendString(comment, L"\r\n");
 										}
 								}
 
 								AR_AppendString(handler_define, AR_GetStrString(comment));
 								AR_AppendString(handler_define, handler_def);
-								AR_AppendString(handler_define, L"\n");
-								AR_AppendString(handler_define, L"\n");
-
-								AR_AppendString(code, handler);
-								AR_AppendString(code, L"\n");
-								AR_AppendString(code, L"\n");
+								AR_AppendString(handler_define, L"\r\n\n");
 
 								AR_AppendString(code, AR_GetStrString(comment));
+								AR_AppendString(code, handler);
+								AR_AppendString(code, L"\r\n\n");
+								
 								AR_DestroyString(comment);
+
+								AR_GetString(handler_mark, handler);
 						}
 
 						//AR_AppendString(code, L"\r\n");
@@ -2062,7 +2077,7 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 				AR_AppendString(code, L"\n");
 				AR_AppendString(code, L"\n");
 
-
+				AR_DestroyStrTable(handler_mark);
 		}
 
 

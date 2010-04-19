@@ -29,6 +29,9 @@ extern const struct __parser_symbol_tag	*PSR_DefPrecSymb;/*ËùÓĞÎŞÖÕ½á·ûµÄ²úÉúÊ½Ç
 /*ÒÔÏÂ¶¼Îª·ÇÖÕ½á·û*/
 extern const struct __parser_symbol_tag	*PSR_StartSymb;/*µÚÒ»¸ö·ûºÅ£¬±»×ª»»Îª %Start -> gmr->head[0]*/
 
+bool_t				PSR_IsBuildInSymbol(const struct __parser_symbol_tag	*symb);
+
+
 
 /*ËùÓĞparserÅäÖÃÏà¹ØµÄ·ûºÅ¶¼ÓÉÒÔÏÂº¯Êı·ÖÅä£¬´Ë¹¦ÄÜÎª·ûºÅ¶Ô±ÈÌá¹©ÁËO(1)µÄĞÔÄÜ(Ö»Ğè¶Ô±ÈÖ¸Õë)*/
 
