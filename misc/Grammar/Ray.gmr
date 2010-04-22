@@ -14,6 +14,8 @@
 				;
 
 
+
+
 %name	int_type_suffix	:	"((u|U)?(l|L))|((u|U)(l|L)?)"
 				;
 
@@ -124,9 +126,10 @@
 
 
 %token	"struct"	:	'"struct"(?!{keyword_lhd})'		,1		;	//STRUCT
+%token	"union"	:	'"union"(?!{keyword_lhd})'		,1		;	//UNION
 %token	"typedef"	:	'"typedef"(?!{keyword_lhd})'	,1		;	//TYPEDEF
 
-%token	"extern"	:	'"extern"(?!{keyword_lhd})'	,1		;	//EXTERN
+
 %token	"static"	:	'"static"(?!{keyword_lhd})'		,1		;	//STATIC
 
 
@@ -134,20 +137,21 @@
 %token	"void"	:	'"void"(?!{keyword_lhd})'		,1		;	//VOID
 
 
-%token	"byte"	:	'"byte"(?!{keyword_lhd})'	,1		;	//BYTE	sizeof(byte) == 1
-%token	"char"	:	'"char"(?!{keyword_lhd})'	,1		;	//CHAR	sizeof(char) == 2
-%token	"short"	:	'"short"(?!{keyword_lhd})'	,1	;	//SHORT	sizeof(short) == 3
-%token	"int"		:	'"int"(?!{keyword_lhd})'	,1		;	//INT		sizeof(int)	== 4
-%token	"long"	:	'"long"(?!{keyword_lhd})'	,1	;	//LONG	sizeof(long)	== 8
-%token	"signed"	:	'"signed"(?!{keyword_lhd})'	,1	;	//SIGNED	sizeof(signed)	== sizeof(int)
-%token	"unsigned"	:	'"unsigned"(?!{keyword_lhd})'	,1	;	//UNSIGNED	sizeof(signed)	== sizeof(int)
+%token	"byte"	:	'"byte"(?!{keyword_lhd})'		,1		;	//BYTE	sizeof(byte) == 1
+%token	"char"	:	'"char"(?!{keyword_lhd})'		,1		;	//CHAR	sizeof(char) == 2
+%token	"short"	:	'"short"(?!{keyword_lhd})'		,1		;	//SHORT	sizeof(short) == 3
+%token	"int"		:	'"int"(?!{keyword_lhd})'		,1		;	//INT		sizeof(int)	== 4
+%token	"long"	:	'"long"(?!{keyword_lhd})'		,1		;	//LONG	sizeof(long)	== 8
+%token	"signed"	:	'"signed"(?!{keyword_lhd})'	,1		;	//SIGNED	sizeof(signed)	== sizeof(int)
+%token	"unsigned"	:	'"unsigned"(?!{keyword_lhd})'	,1		;	//UNSIGNED	sizeof(signed)	== sizeof(int)
 
 
-%token	"float"	:	'"float"(?!{keyword_lhd})'	,1		;	//FLOAT	sizeof(float)	== 4
-%token	"double"	:	'"double"(?!{keyword_lhd})'	,1	;	//DOUBLE	sizeof(double) == 8
+%token	"float"	:	'"float"(?!{keyword_lhd})'		,1		;	//FLOAT	sizeof(float)	== 4
+%token	"double"	:	'"double"(?!{keyword_lhd})'	,1		;	//DOUBLE	sizeof(double) == 8
 
 
-
+%token	"import"	:	'"import"(?!{keyword_lhd})'	,1		;	//IMPORT
+%token	"export"	:	'"export"(?!{keyword_lhd})'	,1		;	//EXPORT
 
 
 
@@ -233,7 +237,6 @@
 %nonassoc	IF_STMT_ELSE_STMT_PREC				;
 
 
-
 %start	translation_unit;
 
 
@@ -249,17 +252,23 @@ translation_unit	:	external_declaration
 
 
 
-/*
-translation_unit	:	external_declaration	DONE_ID	
-				|	DONE_ID	
-				;
-*/
-
-
 /*函数定义或声明*/
 external_declaration		:	function_definition
 					|	declaration
+					|	access_unit
 					;
+
+
+access_unit			:	import_or_export	STRING_LITERAL ";"
+					|	import_or_export 	error ";"
+					;
+
+import_or_export		:	"import"
+					|	"export"
+					;
+
+
+
 
 
 function_declaration		:	declaration_specifiers declarator
@@ -267,6 +276,7 @@ function_declaration		:	declaration_specifiers declarator
 
 function_definition		:	function_declaration	compound_statement
 					;
+
 
 
 /****************************************类型********************************************/
@@ -293,16 +303,20 @@ type_specifier			:	"void"
 					|	"double"
 					|	"signed"
 					|	"unsigned"
-					|	struct_specifier
+					|	struct_or_union_specifier
 					|	TYPE_ID
 					;
 
 
 /*结构声明*/
 
-struct_specifier		:	"struct" IDENTIFIER "{" struct_declaration_list  "}"
-					|	"struct" "{" struct_declaration_list  "}"
-					|	"struct" IDENTIFIER
+struct_or_union_specifier	:	struct_or_union  IDENTIFIER "{" struct_declaration_list  "}"
+					|	struct_or_union  "{" struct_declaration_list  "}"
+					|	struct_or_union  IDENTIFIER
+					;
+
+struct_or_union 		:	"struct"
+					|	"union"
 					;
 
 
@@ -312,7 +326,6 @@ struct_declaration_list	:	struct_declaration
 
 
 struct_declaration		:	specifier_qualifier_list  struct_declarator_list ";"
-					|	error 
 					;
 
 
@@ -328,11 +341,11 @@ struct_declarator_list	:	declarator
 declaration			:	declaration_specifiers init_declarator_list ";"
 					|	declaration_specifiers ";"	
 					|	declaration_specifiers error
+					|	error 
 					;
 
 
 storage_class_specifier	:	"typedef"	
-					|	"extern"
 					|	"static"
 					;
 
@@ -376,28 +389,42 @@ initializer_list		:	initializer
 
 
 
+/*****************************************************************/
 
 
-
-
-declarator				:	pointer direct_declarator
-					|	direct_declarator
+declarator				:	direct_declarator
+					|	pointer direct_declarator
 					;
 
 
-direct_declarator		:	IDENTIFIER							
-					|	IDENTIFIER	"[" constant_expression "]"	/*数组声明*/
-					|	IDENTIFIER	"[" "]"					/*数组声明*/
-					|	IDENTIFIER	"(" parameter_list ")"		/*带参数的函数声明*/
-					|	IDENTIFIER	"(" ")"					/*不带参数的函数声明*/
+direct_declarator		:	IDENTIFIER								//variable
+					|	IDENTIFIER 	"[" constant_expression "]"	//array
+					|	IDENTIFIER 	"[" "]"					//undefined array
+					|	IDENTIFIER 	"(" parameter_list ")"		//function
+					|	IDENTIFIER		"(" ")"					// zero parameter function
 					;
+
+
+
+abstract_declarator		:	pointer
+					|	direct_abstract_declarator
+					|	pointer direct_abstract_declarator
+					;
+
+
+direct_abstract_declarator	:	"[" "]"
+					|	"[" constant_expression "]"
+					;
+
+
+
 
 
 
 pointer				:	"*"
 					|	"*" type_qualifier_list
-					|	"*" type_qualifier_list	pointer
-					|	"*" pointer
+					|	pointer "*" type_qualifier_list
+					|	pointer "*" 
 					;
 
 
@@ -410,38 +437,26 @@ parameter_list			:	parameter_declaration
 
 
 parameter_declaration		:	declaration_specifiers declarator
-					|	declaration_specifiers pointer
+					|	declaration_specifiers abstract_declarator
 					|	declaration_specifiers
-					|	declaration_specifiers parameter_array
-					|	declaration_specifiers pointer parameter_array
 					;
-
-parameter_array			:	"[" "]"
-					|	"[" constant_expression  "]"
-					;
-
 
 
 
 type_name				:	specifier_qualifier_list
-					|	specifier_qualifier_list pointer
+					|	specifier_qualifier_list abstract_declarator
 					;
+
+
+
+
+
 
 specifier_qualifier_list	:	type_qualifier
 					|	type_specifier
 					|	type_qualifier	specifier_qualifier_list
 					|	type_specifier	specifier_qualifier_list
 					;
-
-
-
-
-
-
-
-
-
-
 
 
 /*************************************语句***************************************************/
@@ -471,7 +486,6 @@ start_block			:	"{"
 
 compound_statement_body	:	compound_statement_declarations	"}"
 					|	compound_statement_declarations statement_list	"}"
-					|	error "}"
 					;
 
 compound_statement_declarations	:	declaration_list
@@ -669,8 +683,6 @@ string_list		:	string_list	STRING_LITERAL
 丢弃的终结符
 
 
-%token	IMPORT	:	"import"		,1		;	//import
-%token	"union"	:	'"union"(?!{keyword_lhd})'		,1		;	//UNION
 %token	"enum"	:	'"enum"(?!{keyword_lhd})'	,1		;	//ENUM					;
 %token	"..."		:	'"..."'		,1		;	//ELLIPSIS
 
@@ -678,7 +690,7 @@ string_list		:	string_list	STRING_LITERAL
 %token	"register"	:	'"register"(?!{keyword_lhd})'	,1		;	//REGISTER
 
 
-
+%token	"extern"	:	'"extern"(?!{keyword_lhd})'	,1		;	//EXTERN
 
 
 %token	"__attribute__" 	:	'"__attribute__"'			,1	;

@@ -357,17 +357,15 @@ type_qualifier			:	"const"
 					;
 
 
-/*声明修饰符*/
-attribute_modifier		:	"__attribute__" "(" STRING_LITERAL ")"
-					|	.	%prec SPEC_ACTION
-					;
 
-/*所有声明的变量，函数指针，类型，等等都会被规约为declarator或declarator_list*/
+/*
+所有声明的变量，函数指针，类型，等等都会被规约为declarator或declarator_list
+*/
 
 declarator				:	pointer direct_declarator
 					|	direct_declarator
-
 					;
+
 
 
 
@@ -377,10 +375,28 @@ direct_declarator		:	IDENTIFIER
 					|	direct_declarator "[" "]"
 					|	direct_declarator "(" parameter_type_list ")"
 					|	direct_declarator "(" ")"
-
-					|	direct_declarator "(" error ")"
-					|	direct_declarator "[" error "]"
 					;
+
+
+abstract_declarator		:	pointer
+					|	direct_abstract_declarator
+					|	pointer direct_abstract_declarator
+					;
+
+
+direct_abstract_declarator	:	"(" abstract_declarator ")"
+					|	"[" "]"
+					|	"[" constant_expression "]"
+					|	direct_abstract_declarator "[" "]"
+					|	direct_abstract_declarator "[" constant_expression "]"
+					|	"(" ")"
+					|	"(" parameter_type_list ")"
+					|	direct_abstract_declarator "(" ")"
+					|	direct_abstract_declarator "(" parameter_type_list ")"
+					;
+
+
+
 
 pointer				:	"*"
 					|	"*" type_qualifier_list
@@ -403,31 +419,11 @@ parameter_list			:	parameter_declaration
 parameter_declaration		:	declaration_specifiers declarator
 					|	declaration_specifiers abstract_declarator
 					|	declaration_specifiers
-					|	declaration_specifiers "[" "]"
 					;
 		
 
 type_name				:	specifier_qualifier_list
 					|	specifier_qualifier_list abstract_declarator
-					;
-
-abstract_declarator		:	pointer
-					|	direct_abstract_declarator
-					|	pointer direct_abstract_declarator
-					;
-
-direct_abstract_declarator	:	"(" abstract_declarator ")"
-					|	"[" "]"
-					|	"[" constant_expression "]"
-					|	direct_abstract_declarator "[" "]"
-					|	direct_abstract_declarator "[" constant_expression "]"
-					|	"(" ")"
-					|	"(" parameter_type_list ")"
-					|	direct_abstract_declarator "(" ")"
-					|	direct_abstract_declarator "(" parameter_type_list ")"
-
-					|	"(" error ")"
-					|	"["	error "]"
 					;
 
 initializer			:	assignment_expression
@@ -609,4 +605,13 @@ constant			:	OCT_CONSTANT
 				;
 
 
+
+/*
+
+// 声明修饰符
+attribute_modifier		:	"__attribute__" "(" STRING_LITERAL ")"
+					|	.	%prec SPEC_ACTION
+					;
+
+*/
 
