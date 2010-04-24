@@ -11,7 +11,7 @@
 #include "SyntaxPane.h"
 
 
-
+class CTrayIcon;
 
 class CMainFrame : public CFrameWndEx
 {
@@ -65,6 +65,7 @@ protected:
 	afx_msg void CMainFrame::OnUpdateStatusBarPanes(CCmdUI* pCmdUI);
 
 	
+	
 
 	DECLARE_MESSAGE_MAP()
 
@@ -93,6 +94,8 @@ public:
 		afx_msg void OnShowActionview();
 		afx_msg void OnShowTagview();
 		afx_msg void OnShowInput();
+		afx_msg void OnClose();
+		afx_msg void OnAppExit();
 };
 
 

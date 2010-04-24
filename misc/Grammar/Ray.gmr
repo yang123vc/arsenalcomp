@@ -150,9 +150,9 @@
 %token	"double"	:	'"double"(?!{keyword_lhd})'	,1		;	//DOUBLE	sizeof(double) == 8
 
 
-%token	"import"	:	'"import"(?!{keyword_lhd})'	,1		;	//IMPORT
-%token	"export"	:	'"export"(?!{keyword_lhd})'	,1		;	//EXPORT
-
+%token	"import"		:	'"import"(?!{keyword_lhd})'	,1		;	//IMPORT
+%token	"export"		:	'"export"(?!{keyword_lhd})'	,1		;	//EXPORT
+%token	"attribute" 	:	'"attribute"'				,1		;	//ATTRIBUTE
 
 
 %token	">>="		:	'">>="'		,2		;	//RIGHT_ASSIGN
@@ -256,6 +256,7 @@ translation_unit	:	external_declaration
 external_declaration		:	function_definition
 					|	declaration
 					|	access_unit
+					|	attribute_unit
 					;
 
 
@@ -267,7 +268,9 @@ import_or_export		:	"import"
 					|	"export"
 					;
 
-
+attribute_unit			:	"attribute"  	STRING_LITERAL  ";"	
+					|	"attribute"	error ";"
+					;
 
 
 
@@ -340,7 +343,6 @@ struct_declarator_list	:	declarator
 
 declaration			:	declaration_specifiers init_declarator_list ";"
 					|	declaration_specifiers ";"	
-					|	declaration_specifiers error
 					|	error 
 					;
 
@@ -423,8 +425,8 @@ direct_abstract_declarator	:	"[" "]"
 
 pointer				:	"*"
 					|	"*" type_qualifier_list
-					|	pointer "*" type_qualifier_list
-					|	pointer "*" 
+					|	"*" type_qualifier_list pointer 
+					|	"*" pointer
 					;
 
 
@@ -537,11 +539,17 @@ primary_expression	:	"(" expression ")"	%action	"semantic_auto_return_1"
 				|	IDENTIFIER	
 				|	HEX_CONSTANT
 				|	DEC_CONSTANT
+				|	OCT_CONSTANT
 				|	FLOAT_CONSTANT
 				|	CHAR_CONSTANT
 				|	string_list
-
 				;
+
+string_list		:	string_list	STRING_LITERAL
+				|	STRING_LITERAL
+				;
+
+
 
 postfix_expression	:	primary_expression						%action	"semantic_auto_return_0"
 				|	postfix_expression "[" expression "]"				
@@ -630,22 +638,6 @@ assignment_operator		:	"="
 
 
 /****************************************³£Á¿**********************************************/
-/*
-constant			:	OCT_CONSTANT
-				|	HEX_CONSTANT
-				|	DEC_CONSTANT
-				|	FLOAT_CONSTANT
-				|	CHAR_CONSTANT
-				|	string_list
-				;
-*/
-
-string_list		:	string_list	STRING_LITERAL
-				|	STRING_LITERAL
-				;
-
-
-
 
 
 
@@ -694,7 +686,7 @@ string_list		:	string_list	STRING_LITERAL
 
 
 %token	"__attribute__" 	:	'"__attribute__"'			,1	;
-%token	"__pack__" 		:	'"__pack__"'				,1	;
+
 
 
 */

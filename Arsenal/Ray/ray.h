@@ -27,8 +27,11 @@ void	RAY_Init();
 void	RAY_UnInit();
 
 
-struct __ray_compiler_tag;
+struct __ray_parser_tag;
+typedef struct __ray_parser_tag		rayParser_t;
 
+
+struct __ray_compiler_tag;
 typedef struct __ray_compiler_tag		rayCompiler_t;
 
 
