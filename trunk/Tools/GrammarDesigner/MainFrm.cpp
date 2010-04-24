@@ -45,6 +45,9 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 
 	//ON_COMMAND(ID_TEST_TEST, &CMainFrame::OnTestTest)
 
+	
+	ON_WM_CLOSE()
+	ON_COMMAND(ID_APP_EXIT, &CMainFrame::OnAppExit)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -59,7 +62,7 @@ static UINT indicators[] =
 
 // CMainFrame construction/destruction
 
-CMainFrame::CMainFrame()
+CMainFrame::CMainFrame() 
 {
 	// TODO: add member initialization code here
 	theApp.m_nAppLook = theApp.GetInt(_T("ApplicationLook"), ID_VIEW_APPLOOK_OFF_2007_AQUA);
@@ -68,6 +71,12 @@ CMainFrame::CMainFrame()
 CMainFrame::~CMainFrame()
 {
 }
+
+
+/**************************************************************************************/
+
+
+
 
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
@@ -192,8 +201,27 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	HICON ico = AfxGetApp()->LoadIconW(IDR_MAINFRAME);
 	SetIcon(ico,true);
 
+/*******************************************************/
+	
+
 	return 0;
 }
+
+void CMainFrame::OnClose()
+{
+		// TODO: Add your message handler code here and/or call default
+		CFrameWndEx::OnClose();
+}
+
+
+
+void CMainFrame::OnAppExit()
+{
+		// TODO: Add your command handler code here
+		SendMessage(WM_CLOSE);	
+}
+
+
 
 BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 {
@@ -616,3 +644,4 @@ void CMainFrame::OnTestTest()
 		OnShowInput();
 		
 }
+

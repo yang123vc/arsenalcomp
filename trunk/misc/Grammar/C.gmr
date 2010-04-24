@@ -477,15 +477,30 @@ expression_statement		:	";"
 					|	expression ";"
 					;
 
-selection_statement		:	"if" "(" expression ")" statement	%prec IF_STMT_PREC
-					|	"if" "(" expression ")" statement "else" statement	%prec IF_STMT_ELSE_STMT_PREC
-					|	"switch" "(" expression ")" statement
+
+
+SWITCH				:	"switch"
 					;
 
-iteration_statement		:	"while" "(" expression ")" statement
-					|	"do" statement "while" "(" expression ")" ";"
-					|	"for" "(" expression_statement expression_statement ")" statement
-					|	"for" "(" expression_statement expression_statement expression ")" statement
+WHILE					:	"while"
+					;
+
+DO					:	"do"
+					;
+
+FOR					:	"for"
+					;
+
+selection_statement		:	"if" "(" expression ")" statement	%prec IF_STMT_PREC
+					|	"if" "(" expression ")" statement "else" statement	%prec IF_STMT_ELSE_STMT_PREC
+					|	SWITCH "(" expression ")" statement
+					;
+
+
+iteration_statement		:	WHILE "(" expression ")" statement
+					|	DO statement "while" "(" expression ")" ";"
+					|	FOR "(" expression_statement expression_statement ")" statement
+					|	FOR "(" expression_statement expression_statement expression ")" statement
 					;
 
 jump_statement			:	"goto" IDENTIFIER ";"
