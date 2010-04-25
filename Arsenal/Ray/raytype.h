@@ -17,6 +17,122 @@ AR_NAMESPACE_BEGIN
 
 
 
+typedef enum
+{
+		TOK_EOI_ID				=		0x00,/*\0*/
+		TOK_DELIM_ID			=		0x1000,	
+
+		
+		TOK_STRING_LITERAL,	/*STRING_LITERAL*/
+		TOK_OCT_CONSTANT,	/*OCT_CONSTANT*/
+		TOK_HEX_CONSTANT,	/*HEX_CONSTANT*/
+		TOK_DEC_CONSTANT,	/*DEC_CONSTANT*/
+		TOK_FLOAT_CONSTANT,	/*FLOAT_CONSTANT*/
+		TOK_CHAR_CONSTANT,	/*CHAR_CONSTANT*/
+		TOK_IDENTIFIER,		/*IDENTIFIER*/
+
+		TOK_TYPE_ID,		/*占位符，提取出的lexeme需要到符号表检查是否为一个类型*/
+		TOK_DONE_ID,		/*占位符, 伪终结符*/
+
+
+		
+		TOK_SWITCH,			/*switch*/
+		TOK_FOR,			/*for*/
+		TOK_GOTO,			/*goto*/
+		TOK_RETURN,			/*return*/
+		TOK_DO,				/*do*/
+		TOK_WHILE,			/*while*/
+		TOK_IF,				/*if*/
+		TOK_ELSE,			/*else*/
+
+		TOK_CONTINUE,		/*continue*/
+		TOK_DEFAULT,		/*default*/
+		TOK_CASE,			/*case*/
+		TOK_BREAK,			/*break*/
+		TOK_CONST,			/*const*/
+		TOK_VOLATILE,		/*volatile*/
+		TOK_SIZEOF,			/*size*/
+		TOK_STRUCT,			/*struct*/
+		TOK_UNION,			/*union*/
+		
+		TOK_TYPEDEF,		/*typedef*/
+		TOK_STATIC,			/*static*/
+		TOK_IMPORT,			/*import*/
+		TOK_EXPORT,			/*export*/
+		TOK_ATTRIBUTE,		/*attribute*/
+
+		TOK_SIGNED,			/*signed*/
+		TOK_UNSIGNED,		/*unsigned*/
+		TOK_VOID,		/*void*/
+		TOK_BYTE,		/*byte*/
+		TOK_SHORT,		/*short*/
+		TOK_INT,		/*int*/
+		TOK_LONG,		/*long*/
+		TOK_CHAR,		/*char*/
+		TOK_FLOAT,		/*float*/
+		TOK_DOUBLE,	/*double*/
+		
+		TOK_RIGHT_ASSIGN,	/*>>=*/
+		TOK_LEFT_ASSIGN,	/*<<=*/
+		TOK_ADD_ASSIGN,		/*+=*/
+		TOK_SUB_ASSIGN,		/*-=*/
+		TOK_MUL_ASSIGN,		/**=*/
+		TOK_DIV_ASSIGN,		/*/=*/
+		TOK_MOD_ASSIGN,		/*%=*/
+		TOK_AND_ASSIGN,		/*&=*/
+		TOK_XOR_ASSIGN,		/*^=*/
+		TOK_OR_ASSIGN,		/*|=*/
+		TOK_INC_OP,			/*++*/
+		TOK_DEC_OP,			/*--*/
+		TOK_PTR_OP,			/*->*/
+		TOK_AND_OP,			/*&&*/
+		TOK_OR_OP,			/*||*/
+
+		TOK_RIGHT_OP,			/*>>*/
+		TOK_LEFT_OP,			/*<<*/		
+		
+		TOK_LE_OP,				/*<=*/
+		TOK_GE_OP,				/*>=*/		
+		TOK_EQ_OP,				/*==*/
+		TOK_NE_OP,				/*!=*/			
+		TOK_LESS_OP,			/*<*/
+		TOK_GREATER_OP,		/*>*/
+
+		TOK_AND,			/*&*/
+		TOK_XOR,			/*^*/
+		TOK_OR,				/*|*/
+
+		TOK_NOT,			/*!*/
+		TOK_TILDE,			/* ~ */
+		TOK_ADD,			/* + */
+		TOK_SUB,			/* - */
+		TOK_MUL,			/* * */
+		TOK_DIV,			/* / */
+		TOK_MOD,			/* % */
+		
+		TOK_SEMICOLON,		/*;*/
+		TOK_L_BRACES,		/*{*/
+		TOK_R_BRACES,		/*}*/
+		TOK_L_SQUARE,		/*[*/
+		TOK_R_SQUARE,		/*]*/
+		TOK_L_PAREN,		/*(*/
+		TOK_R_PAREN,		/*)*/
+		TOK_COMMA,			/*,*/
+		TOK_COLON,			/*:*/
+		TOK_ASSIGN,			/*=*/
+		TOK_DOT,			/*.*/
+		TOK_QUEST,			/*?*/
+
+		
+		/*以下为优先级符号*/
+		IF_STMT_PREC,					/*if(stmt)...*/
+		IF_STMT_ELSE_STMT_PREC			/*if(stmt)else stmt....*/
+}rayTokType_t;
+
+
+
+
+/******************************************************************************/
 
 typedef struct __src_info_tag
 {
@@ -113,10 +229,11 @@ typedef struct __array_tag
 typedef struct __func_type_tag
 {
 		rayType_t			*ret_type;
+		
 		bool_t				has_id_list;
-
 		rayVar_t			*params;
 		size_t				params_cnt;
+		
 		raySrcInfo_t		src;
 }rayFuncType_t;
 
@@ -224,17 +341,13 @@ struct __block_tag
 
 
 
-
-struct __func_tag;
-typedef struct __func_tag		rayFunc_t;
-
-struct __func_tag
+typedef struct __func_tag		
 {
 		const char			*name;		
 		rayType_t			*func_type;
 		rayStatement_t		*statement;
 		raySrcInfo_t		src;
-};
+}rayFunc_t;
 
 
 /*********************************************expression**********************************************************/
@@ -582,6 +695,7 @@ typedef enum
 		STT_CONTINUE,
 		STT_BREAK
 }rayStmtType_t;
+
 
 struct __statement_tag {
 		rayStmtType_t		type;

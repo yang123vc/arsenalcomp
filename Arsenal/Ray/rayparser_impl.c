@@ -1,4 +1,11 @@
-﻿
+﻿#include "rayparser.h"
+
+
+
+
+AR_NAMESPACE_BEGIN
+
+
 static const wchar_t *__g_lex_name[] = {
 L"delim = [ \\r\\n\\t]",
 L"comment = /\\*([^\\*]|\\*+[^\\*/])*\\*+/",
@@ -1243,4 +1250,12 @@ static psrNode_t* AR_STDCALL handle_assignment_operator(psrNode_t **nodes, size_
 	 return NULL;
 }
 
+
+
+
+
+
+
+
+AR_NAMESPACE_END
 

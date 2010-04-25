@@ -231,8 +231,8 @@ int_t	AR_wcsnicmp(const wchar_t *l, const wchar_t *r, size_t n);
 
 
 
-wchar_t* AR_wcsdup(const wchar_t *sour);
-wchar_t* AR_wcsndup(const wchar_t *sour, size_t len);
+wchar_t*		AR_wcsdup(const wchar_t *sour);
+wchar_t*		AR_wcsndup(const wchar_t *sour, size_t len);
 
 
 const wchar_t*	AR_wcstrim(const wchar_t *in, const wchar_t *trim);

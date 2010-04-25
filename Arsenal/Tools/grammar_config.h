@@ -53,13 +53,21 @@ typedef struct __cfg_token_tag
 		size_t			lex_prec;
 		const wchar_t	*regex;
 		bool_t			is_skip;
+
+		const wchar_t	*code_name;
 }cfgToken_t;
 
 
 #define CFG_TERM_DEF_BEGIN	L"static struct {const wchar_t *name; size_t tokval; size_t lex_prec; const wchar_t *regex; bool_t skip; }__g_term_pattern[] =  {"
 #define CFG_TERM_DEF_END	L"};"
+
+#define CFG_TERM_DEF_ITEM_1	L"{L\"%ls\", %ls, " L"%" AR_PLAT_INT_FMT L"d, L\"%ls\", %ls}"
+#define CFG_TERM_DEF_ITEM_2	L"{%ls, %ls," L"%" AR_PLAT_INT_FMT L"d, L\"%ls\", %ls}"
+
+/*
 #define CFG_TERM_DEF_ITEM_1	L"{L\"%ls\", %" AR_PLAT_INT_FMT L"d, %" AR_PLAT_INT_FMT L"d, L\"%ls\", %ls}"
 #define CFG_TERM_DEF_ITEM_2	L"{%ls, %" AR_PLAT_INT_FMT L"d, %" AR_PLAT_INT_FMT L"d, L\"%ls\", %ls}"
+*/
 
 
 
@@ -79,7 +87,12 @@ typedef struct __cfg_prec_tag
 
 #define CFG_PREC_DEF_BEGIN	L"static struct {const wchar_t *name; size_t tokval; size_t prec_level; psrAssocType_t	assoc;}__g_prec_pattern[] =  {"
 #define CFG_PREC_DEF_END	L"};"
+
+#define CFG_PREC_DEF_ITEM 	L"{L\"%ls\", %ls," L"%" AR_PLAT_INT_FMT L"d, %ls}"
+
+/*
 #define CFG_PREC_DEF_ITEM 	L"{L\"%ls\", %" AR_PLAT_INT_FMT L"d, %" AR_PLAT_INT_FMT L"d, %ls}"
+*/
 
 
 typedef struct __cfg_start_tag

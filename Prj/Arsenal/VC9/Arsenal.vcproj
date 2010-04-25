@@ -1418,6 +1418,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\Arsenal\Ray\rayparser_impl.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\Arsenal\Ray\raysymbol.c"
 				>
 			</File>
