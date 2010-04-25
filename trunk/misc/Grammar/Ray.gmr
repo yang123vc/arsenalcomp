@@ -75,8 +75,14 @@
 
 
 
-%token	CHAR_CONSTANT	:	"{char_literal}";
-%token	STRING_LITERAL	:	"{string_literal}";
+
+%token	TYPE_ID		:	'^$'			,0			%action 	"TOK_TYPE_ID"						;//占位符
+%token	DONE_ID		:	'^$'			,0			%action	"TOK_DONE_ID"						;//占位符
+
+
+%token	CHAR_CONSTANT	:	"{char_literal}"			%action "TOK_CHAR_CONSTANT"					;
+%token	STRING_LITERAL	:	"{string_literal}"			%action "TOK_STRING_LITERAL"					;
+
 
 /*
 由于引擎本身的算法原因，必须把相同前缀最长的匹配的优先级提到最高，例如匹配
@@ -84,138 +90,140 @@
 */
 
 
-%token	FLOAT_CONSTANT	:	"{float_literal}(?!{keyword_lhd})"			,2	;
-%token	HEX_CONSTANT	:	"{hex_literal}(?!{keyword_lhd})"			,2	;
-%token	OCT_CONSTANT	:	"{oct_literal}(?!{keyword_lhd})"			,1	;
-%token	DEC_CONSTANT	:	"{dec_literal}(?!{keyword_lhd})"			,1	;
+%token	FLOAT_CONSTANT	:	"{float_literal}(?!{keyword_lhd})"			,2	%action "TOK_FLOAT_CONSTANT"	;
+%token	HEX_CONSTANT	:	"{hex_literal}(?!{keyword_lhd})"			,2	%action "TOK_HEX_CONSTANT"		;
+%token	OCT_CONSTANT	:	"{oct_literal}(?!{keyword_lhd})"			,1	%action "TOK_OCT_CONSTANT"		;
+%token	DEC_CONSTANT	:	"{dec_literal}(?!{keyword_lhd})"			,1	%action "TOK_DEC_CONSTANT"		;
 
 
 
 
-%token	IDENTIFIER		:	"{letter}({letter}|{digit})*";
+%token	IDENTIFIER		:	"{letter}({letter}|{digit})*"					%action "TOK_IDENTIFIER"		;
 
 
-%name		keyword_lhd	:	"[A-Z_a-z0-9]"
-					;
-
-
-
-
-%token	"switch"	:	'"switch"(?!{keyword_lhd})'		,1		;	//SWITCH
-%token	"for"		:	'"for"(?!{keyword_lhd})'	,1		;	//FOR
-%token	"goto"	:	'"goto"(?!{keyword_lhd})'	,1		;	//GOTO
-%token	"return"	:	'"return"(?!{keyword_lhd})'		,1		;	//RETURN
-%token	"do"		:	'"do"(?!{keyword_lhd})'		,1		;	//DO
-%token	"while"	:	'"while"(?!{keyword_lhd})'	,1		;	//WHILE
-%token	"if"		:	'"if"(?!{keyword_lhd})'		,1		;	//IF
-%token	"else"	:	'"else"(?!{keyword_lhd})'	,1		;	//ELSE
-
-
-%token	"continue"	:	'"continue"(?!{keyword_lhd})'	,1		;	//CONTINUE
-%token	"default"	:	'"default"(?!{keyword_lhd})'	,1		;	//DEFAULT
-%token	"case"	:	'"case"(?!{keyword_lhd})'	,1		;	//CASE
-%token	"break"	:	'"break"(?!{keyword_lhd})'	,1		;	//BREAK
-
-
-
-%token	"sizeof"	:	'"sizeof"(?!{keyword_lhd})'		,1		;	//SIZEOF
-
-
-%token	"const"	:	'"const"(?!{keyword_lhd})'	,1		;	//CONST
-%token	"volatile"	:	'"volatile"(?!{keyword_lhd})'	,1		;	//VOLATILE 
-
-
-%token	"struct"	:	'"struct"(?!{keyword_lhd})'		,1		;	//STRUCT
-%token	"union"	:	'"union"(?!{keyword_lhd})'		,1		;	//UNION
-%token	"typedef"	:	'"typedef"(?!{keyword_lhd})'	,1		;	//TYPEDEF
-
-
-%token	"static"	:	'"static"(?!{keyword_lhd})'		,1		;	//STATIC
-
-
-
-%token	"void"	:	'"void"(?!{keyword_lhd})'		,1		;	//VOID
-
-
-%token	"byte"	:	'"byte"(?!{keyword_lhd})'		,1		;	//BYTE	sizeof(byte) == 1
-%token	"char"	:	'"char"(?!{keyword_lhd})'		,1		;	//CHAR	sizeof(char) == 2
-%token	"short"	:	'"short"(?!{keyword_lhd})'		,1		;	//SHORT	sizeof(short) == 3
-%token	"int"		:	'"int"(?!{keyword_lhd})'		,1		;	//INT		sizeof(int)	== 4
-%token	"long"	:	'"long"(?!{keyword_lhd})'		,1		;	//LONG	sizeof(long)	== 8
-%token	"signed"	:	'"signed"(?!{keyword_lhd})'	,1		;	//SIGNED	sizeof(signed)	== sizeof(int)
-%token	"unsigned"	:	'"unsigned"(?!{keyword_lhd})'	,1		;	//UNSIGNED	sizeof(signed)	== sizeof(int)
-
-
-%token	"float"	:	'"float"(?!{keyword_lhd})'		,1		;	//FLOAT	sizeof(float)	== 4
-%token	"double"	:	'"double"(?!{keyword_lhd})'	,1		;	//DOUBLE	sizeof(double) == 8
-
-
-%token	"import"		:	'"import"(?!{keyword_lhd})'	,1		;	//IMPORT
-%token	"export"		:	'"export"(?!{keyword_lhd})'	,1		;	//EXPORT
-%token	"attribute" 	:	'"attribute"'				,1		;	//ATTRIBUTE
-
-
-%token	">>="		:	'">>="'		,2		;	//RIGHT_ASSIGN
-%token	"<<="		:	'"<<="'		,2		;	//LEFT_ASSIGN
-
-
-
-%token	"+="		:	'"+="'		,1		;	//ADD_ASSIGN
-%token	"-="		:	'"-="'		,1		;	//SUB_ASSIGN
-%token	"*="		:	'"*="'		,1		;	//MUL_ASSIGN
-%token	"/="		:	'"/="'		,1		;	//DIV_ASSIGN
-%token	"%="		:	'"%="'		,1		;	//MOD_ASSIGN
-%token	"&="		:	'"&="'		,1		;	//AND_ASSIGN
-
-
-%token	"^="		:	'"^="'		,1		;	//XOR_ASSIGN
-%token	"|="		:	'"|="'		,1		;	//OR_ASSIGN
-%token	">>"		:	'">>"'		,1		;	//RIGHT_OP
-%token	"<<"		:	'"<<"'		,1		;	//LEFT_OP
-%token	"++"		:	'"++"'		,1		;	//INC_OP
-%token	"--"		:	'"--"'		,1		;	//DEC_OP
-
-
-%token	"->"		:	'"->"'		,1		;	//PTR_OP
-%token	"&&"		:	'"&&"'		,1		;	//AND_OP
-%token	"||"		:	'"||"'		,1		;	//OR_OP
-
-%token	"<="		:	'"<="'		,1		;	//LE_OP
-%token	">="		:	'">="'		,1		;	//GE_OP
-%token	"=="		:	'"=="'		,1		;	//EQ_OP
-%token	"!="		:	'"!="'		,1		;	//NE_OP
-
-%token	";"		:	'";"'			,0		;	//;
-%token	"{"		:	'"{"'			,0		;	//{
-%token	"}"		:	'"}"'			,0		;	//}
-%token	","		:	'","'			,0		;	//,
-%token	":"		:	'":"'			,0		;	//:
-%token	"="		:	'"="'			,0		;	//=
-%token	"("		:	'"("'			,0		;	//(
-%token	")"		:	'")"'			,0		;	//)
-%token	"["		:	'"["'			,0		;	//[
-%token	"]"		:	'"]"'			,0		;	//]
-%token	"."		:	'"."'			,0		;	//.
-%token	"&"		:	'"&"'			,0		;	//&
-%token	"!"		:	'"!"'			,0		;	//!
-%token	"~"		:	'"~"'			,0		;	//~
-%token	"-"		:	'"-"'			,0		;	//-
-%token	"+"		:	'"+"'			,0		;	//+
-%token	"*"		:	'"*"'			,0		;	//*
-%token	"/"		:	'"/"'			,0		;	///
-%token	"%"		:	'"%"'			,0		;	//%
-%token	"<"		:	'"<"'			,0		;	//<
-%token	">"		:	'">"'			,0		;	//>
-%token	"^"		:	'"^"'			,0		;	//^
-%token	"|"		:	'"|"'			,0		;	//|
-%token	"?"		:	'"?"'			,0		;	//?
+%name		keyword_lhd	:	"[A-Z_a-z0-9]"														;
 
 
 
 
+%token	"switch"	:	'"switch"(?!{keyword_lhd})'	,1					%action 	"TOK_SWITCH"		;//SWITCH
+%token	"for"		:	'"for"(?!{keyword_lhd})'		,1					%action	"TOK_FOR"			;//FOR
+%token	"goto"	:	'"goto"(?!{keyword_lhd})'		,1					%action	"TOK_GOTO"			;//GOTO
+%token	"return"	:	'"return"(?!{keyword_lhd})'	,1					%action	"TOK_RETURN"		;//RETURN
+%token	"do"		:	'"do"(?!{keyword_lhd})'		,1					%action	"TOK_DO"			;//DO
+%token	"while"	:	'"while"(?!{keyword_lhd})'		,1					%action	"TOK_WHILE"		;//WHILE
+%token	"if"		:	'"if"(?!{keyword_lhd})'		,1					%action	"TOK_IF"			;//IF
+%token	"else"	:	'"else"(?!{keyword_lhd})'		,1					%action	"TOK_ELSE"			;//ELSE
 
-%token	TYPE_ID	:	'^$'			,0		;	//占位符
-%token	DONE_ID	:	'^$'			,0		;	//占位符
+
+%token	"continue"	:	'"continue"(?!{keyword_lhd})'	,1					%action	"TOK_CONTINUE"		;//CONTINUE
+%token	"default"	:	'"default"(?!{keyword_lhd})'	,1					%action	"TOK_DEFAULT"		;//DEFAULT
+%token	"case"	:	'"case"(?!{keyword_lhd})'		,1					%action	"TOK_CASE"			;//CASE
+%token	"break"	:	'"break"(?!{keyword_lhd})'		,1					%action	"TOK_BREAK"		;//BREAK
+
+
+
+%token	"sizeof"	:	'"sizeof"(?!{keyword_lhd})'	,1					%action	"TOK_SIZEOF"		;//SIZEOF
+
+%token	"const"	:	'"const"(?!{keyword_lhd})'		,1					%action	"TOK_CONST"		;//CONST
+%token	"volatile"	:	'"volatile"(?!{keyword_lhd})'	,1					%action	"TOK_VOLATILE"		;//VOLATILE
+
+
+%token	"struct"	:	'"struct"(?!{keyword_lhd})'	,1					%action	"TOK_STRUCT"		;//STRUCT
+%token	"union"	:	'"union"(?!{keyword_lhd})'		,1					%action	"TOK_UNION"		;//UNION
+%token	"typedef"	:	'"typedef"(?!{keyword_lhd})'	,1					%action	"TOK_TYPEDEF"		;//TYPEDEF
+
+
+%token	"static"	:	'"static"(?!{keyword_lhd})'	,1					%action	"TOK_STATIC"		;//STATIC
+
+
+
+%token	"void"	:	'"void"(?!{keyword_lhd})'		,1					%action	"TOK_VOID"			;//VOID
+
+
+%token	"byte"	:	'"byte"(?!{keyword_lhd})'		,1					%action	"TOK_BYTE"			;//BYTE		sizeof(byte) == 1
+%token	"char"	:	'"char"(?!{keyword_lhd})'		,1					%action	"TOK_CHAR"			;//CHAR		sizeof(char) == 2
+%token	"short"	:	'"short"(?!{keyword_lhd})'		,1					%action	"TOK_SHORT"		;//SHORT		sizeof(short) == 3
+%token	"int"		:	'"int"(?!{keyword_lhd})'		,1					%action	"TOK_INT"			;//INT		sizeof(int)	== 4
+%token	"long"	:	'"long"(?!{keyword_lhd})'		,1					%action	"TOK_LONG"			;//LONG		sizeof(long)	== 8
+%token	"signed"	:	'"signed"(?!{keyword_lhd})'	,1					%action	"TOK_SIGNED"		;//SIGNED		sizeof(signed)	== sizeof(int)
+%token	"unsigned"	:	'"unsigned"(?!{keyword_lhd})'	,1					%action	"TOK_UNSIGNED"		;//UNSIGNED	sizeof(signed)	== sizeof(int)
+
+
+%token	"float"	:	'"float"(?!{keyword_lhd})'		,1					%action	"TOK_FLOAT"		;//FLOAT		sizeof(float)	== 4
+%token	"double"	:	'"double"(?!{keyword_lhd})'	,1					%action	"TOK_DOUBLE"		;//DOUBLE		sizeof(double) == 8
+
+
+%token	"import"		:	'"import"(?!{keyword_lhd})'	,1				%action	"TOK_IMPORT"		;//IMPORT
+%token	"export"		:	'"export"(?!{keyword_lhd})'	,1				%action	"TOK_EXPORT"		;//EXPORT
+%token	"attribute" 	:	'"attribute"'				,1				%action	"TOK_ATTRIBUTE"		;//ATTRIBUTE
+
+
+%token	">>="		:	'">>="'		,2								%action	"TOK_RIGHT_ASSIGN"	;//RIGHT_ASSIGN
+%token	"<<="		:	'"<<="'		,2								%action	"TOK_LEFT_ASSIGN"	;//LEFT_ASSIGN
+
+
+
+%token	"+="		:	'"+="'		,1								%action	"TOK_ADD_ASSIGN"	;//ADD_ASSIGN
+%token	"-="		:	'"-="'		,1								%action	"TOK_SUB_ASSIGN"	;//SUB_ASSIGN
+%token	"*="		:	'"*="'		,1								%action	"TOK_MUL_ASSIGN"	;//MUL_ASSIGN
+%token	"/="		:	'"/="'		,1								%action	"TOK_DIV_ASSIGN"	;//DIV_ASSIGN
+%token	"%="		:	'"%="'		,1								%action	"TOK_MOD_ASSIGN"	;//MOD_ASSIGN
+%token	"&="		:	'"&="'		,1								%action	"TOK_AND_ASSIGN"	;//AND_ASSIGN
+
+%token	"^="		:	'"^="'		,1								%action	"TOK_XOR_ASSIGN"	;//XOR_ASSIGN
+%token	"|="		:	'"|="'		,1								%action	"TOK_OR_ASSIGN"		;//OR_ASSIGN
+%token	">>"		:	'">>"'		,1								%action	"TOK_RIGHT_OP"		;//RIGHT_OP
+%token	"<<"		:	'"<<"'		,1								%action	"TOK_LEFT_OP"		;//LEFT_OP
+%token	"++"		:	'"++"'		,1								%action	"TOK_INC_OP"		;//INC_OP
+%token	"--"		:	'"--"'		,1								%action	"TOK_DEC_OP"		;//DEC_OP
+
+
+%token	"->"		:	'"->"'		,1								%action	"TOK_PTR_OP"		;//PTR_OP
+%token	"&&"		:	'"&&"'		,1								%action	"TOK_AND_OP"		;//AND_OP
+%token	"||"		:	'"||"'		,1								%action	"TOK_OR_OP"		;//OR_OP
+
+%token	"<="		:	'"<="'		,1								%action 	"TOK_LE_OP"		;//LE_OP
+%token	">="		:	'">="'		,1								%action 	"TOK_GE_OP"		;//GE_OP
+%token	"=="		:	'"=="'		,1								%action 	"TOK_EQ_OP"		;//EQ_OP
+%token	"!="		:	'"!="'		,1								%action	"TOK_NE_OP"		;//NE_OP
+%token	"<"		:	'"<"'			,0								%action	"TOK_LESS_OP"		;//<
+%token	">"		:	'">"'			,0								%action	"TOK_GREATER_OP"	;//>
+
+
+
+			/* ~ */
+
+
+%token	";"		:	'";"'			,0								%action "TOK_SEMICOLON"			;//;
+%token	"{"		:	'"{"'			,0								%action "TOK_L_BRACES"			;//{
+%token	"}"		:	'"}"'			,0								%action "TOK_R_BRACES"			;//}
+%token	","		:	'","'			,0								%action "TOK_COMMA"				;//,
+%token	":"		:	'":"'			,0								%action "TOK_COLON"				;//:
+%token	"="		:	'"="'			,0								%action "TOK_ASSIGN"				;//=
+%token	"("		:	'"("'			,0								%action "TOK_L_PAREN"				;//(
+%token	")"		:	'")"'			,0								%action "TOK_R_PAREN"				;//)
+%token	"["		:	'"["'			,0								%action "TOK_L_SQUARE"			;//[
+%token	"]"		:	'"]"'			,0								%action "TOK_R_SQUARE"			;//]
+%token	"."		:	'"."'			,0								%action "TOK_DOT"				;//.
+%token	"&"		:	'"&"'			,0								%action "TOK_AND"				;//&
+%token	"!"		:	'"!"'			,0								%action "TOK_NOT"				;//!
+%token	"~"		:	'"~"'			,0								%action "TOK_TILDE"				;//~
+%token	"+"		:	'"+"'			,0								%action "TOK_ADD"				;//+
+%token	"-"		:	'"-"'			,0								%action "TOK_SUB"				;//-
+%token	"*"		:	'"*"'			,0								%action "TOK_MUL"				;//*
+%token	"/"		:	'"/"'			,0								%action "TOK_DIV"				;///
+%token	"%"		:	'"%"'			,0								%action "TOK_MOD"				;//%
+
+%token	"^"		:	'"^"'			,0								%action "TOK_XOR"				;//^
+%token	"|"		:	'"|"'			,0								%action "TOK_OR"				;//|
+%token	"?"		:	'"?"'			,0								%action "TOK_QUEST"				;//?
+
+
+
+
+
+
 
 
 
@@ -244,6 +252,10 @@
 
 
 /**************************************************************************************/
+/*
+program			:	translation_unit	DONE_ID
+				;
+*/
 
 /*编译单元*/
 translation_unit	:	external_declaration	
@@ -634,36 +646,6 @@ assignment_operator		:	"="
 					|	"^="
 					|	"|="
 					;
-
-
-
-/****************************************常量**********************************************/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

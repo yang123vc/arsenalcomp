@@ -316,6 +316,15 @@ static void CFG_InitConfig(cfgConfig_t *cfg, cfgNodeList_t *name, cfgNodeList_t 
 								cfg->tok[cfg->tok_cnt] = token->lst[i]->token;
 								cfg->tok[cfg->tok_cnt].name = token->lst[i]->token.name != NULL ? AR_wcsdup(token->lst[i]->token.name) : NULL;
 								cfg->tok[cfg->tok_cnt].regex = AR_wcsdup(token->lst[i]->token.regex);
+
+								if(token->lst[i]->token.code_name == NULL)
+								{
+										cfg->tok[cfg->tok_cnt].code_name = NULL;
+								}else
+								{
+										cfg->tok[cfg->tok_cnt].code_name = AR_wcsdup(token->lst[i]->token.code_name);
+								}
+
 								cfg->tok_cnt++;
 						}
 				}
@@ -348,6 +357,16 @@ RE_CHECK_POINT:
 				cfg->tok[cfg->tok_cnt ].regex = AR_wcsdup(L"$");
 
 				cfg->tok_cnt++;
+
+
+				for(i = 0; i < cfg->tok_cnt ; ++i)
+				{
+						if(cfg->tok[i].code_name == NULL)
+						{
+								cfg->tok[i].code_name = AR_vtow(L"%d", (uint_32_t)cfg->tok[i].tokval);
+						}
+				}
+
 
 		}
 
@@ -468,8 +487,10 @@ static void CFG_UnInitConfig(cfgConfig_t *cfg)
 
 		for(i = 0; i < cfg->tok_cnt; ++i)
 		{
+				AR_DEL(cfg->tok[i].code_name);
 				AR_DEL(cfg->tok[i].name);
 				AR_DEL(cfg->tok[i].regex);
+				
 		}
 
 		if(cfg->tok)AR_DEL(cfg->tok);
@@ -646,6 +667,7 @@ static void CFG_DestroyNode(cfgNode_t *node)
 				{
 						if(node->token.name)AR_DEL(node->token.name);
 						if(node->token.regex)AR_DEL(node->token.regex);
+						if(node->token.code_name)AR_DEL(node->token.code_name);
 						break;
 				}
 				case CFG_PREC_T:
@@ -996,8 +1018,8 @@ static psrNode_t*		AR_STDCALL __handle_prec_def(psrNode_t **nodes, size_t count,
 
 
 /*
-{ L"token_def			:  		%token %skip token_val_prec : lexeme token_val_prec ",	__handle_token_def},
-{ L"token_def			:  		%token lexeme token_val_prec : lexeme token_val_prec ",	__handle_token_def},
+{ L"token_def			:  		%token %skip token_val_prec : lexeme token_val_prec action_decl",	__handle_token_def},
+{ L"token_def			:  		%token lexeme token_val_prec : lexeme token_val_prec action_decl",	__handle_token_def},
 */
 
 
@@ -1006,7 +1028,7 @@ static psrNode_t*		AR_STDCALL __handle_token_def(psrNode_t **nodes, size_t count
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res;
 
-		AR_ASSERT(count == 6);
+		AR_ASSERT(count == 7);
 
 		/*AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T && ns[1] && ns[1]->type == CFG_LEXEME_T && ns[2] && ns[2]->type == CFG_LEXEME_T && ns[4] && ns[4]->type == CFG_LEXEME_T);*/
 
@@ -1018,6 +1040,8 @@ static psrNode_t*		AR_STDCALL __handle_token_def(psrNode_t **nodes, size_t count
 
 		AR_ASSERT((ns[2] == NULL) || (ns[2]->type == CFG_LEXEME_T));
 		AR_ASSERT((ns[5] == NULL) || (ns[5]->type == CFG_LEXEME_T));
+
+		AR_ASSERT((ns[6] == NULL) || (ns[6]->type == CFG_LEXEME_T));
 
 
 
@@ -1053,6 +1077,12 @@ static psrNode_t*		AR_STDCALL __handle_token_def(psrNode_t **nodes, size_t count
 		if(ns[5])
 		{
 				AR_wtou(ns[5]->lexeme.lexeme, (uint_t*)&res->token.lex_prec, 10);
+		}
+
+
+		if(ns[6])
+		{
+				res->token.code_name = AR_wcsdup(ns[6]->lexeme.lexeme);
 		}
 
 		return res;
@@ -1318,8 +1348,8 @@ static const cfgRuleDef_t	__cfg_rule[] =
 
 		{ L"name_def 			:		%name lexeme : lexeme ",								__handle_name_def,0},
 
-		{ L"token_def			:  		%token %skip token_val_prec : lexeme token_val_prec ",	__handle_token_def,0},
-		{ L"token_def			:  		%token lexeme token_val_prec : lexeme token_val_prec ",	__handle_token_def,0},
+		{ L"token_def			:  		%token %skip token_val_prec : lexeme token_val_prec action_decl",	__handle_token_def,0},
+		{ L"token_def			:  		%token lexeme token_val_prec : lexeme token_val_prec action_decl",	__handle_token_def,0},
 
 		{ L"token_val_prec 		:		, number",												NULL,1},
 		{ L"token_val_prec 		:		",														NULL,0},
@@ -1345,7 +1375,7 @@ static const cfgRuleDef_t	__cfg_rule[] =
 		{ L"prec_decl			:		%prec lexeme",									NULL,1},
 
 		{ L"prec_decl			:		",												NULL,0},
-		{ L"action_decl			:		%action lexeme",								__handle_action_decl,0},
+		{ L"action_decl			:		%action lexeme",						__handle_action_decl,0},
 		{ L"action_decl			:		",										NULL,0},
 
 		{ L"start_def			:  		%start lexeme",							__handle_start_def,0},
@@ -1891,10 +1921,10 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 
 						if(name != NULL)
 						{
-								AR_AppendFormatString(code, CFG_TERM_DEF_ITEM_1, name, cfg->tok[i].tokval, cfg->tok[i].lex_prec, regex, cfg->tok[i].is_skip ? L"true" : L"false");
+								AR_AppendFormatString(code, CFG_TERM_DEF_ITEM_1, name, cfg->tok[i].code_name, cfg->tok[i].lex_prec, regex, cfg->tok[i].is_skip ? L"true" : L"false");
 						}else
 						{
-								AR_AppendFormatString(code, CFG_TERM_DEF_ITEM_2, L"NULL", cfg->tok[i].tokval, cfg->tok[i].lex_prec, regex, cfg->tok[i].is_skip ? L"true" : L"false");
+								AR_AppendFormatString(code, CFG_TERM_DEF_ITEM_2, L"NULL", cfg->tok[i].code_name, cfg->tok[i].lex_prec, regex, cfg->tok[i].is_skip ? L"true" : L"false");
 						}
 						if(i < cfg->tok_cnt - 1)AR_AppendString(code, L",");
 						AR_AppendString(code, L"\n");
@@ -1940,14 +1970,41 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 
 						for(k = 0; k < cfg->prec[i].count; ++k)
 						{
-								wchar_t *name;
+								wchar_t *name = NULL;
+								const wchar_t	*code_name = NULL;
 								size_t tok_val;
+								size_t z = 0;
 								name  =  AR_str_to_escstr(cfg->prec[i].prec_tok_set[k]);
 								tok_val = cfg->prec[i].prec_tok_val[k];
+
+								for(z = 0; z < cfg->tok_cnt; ++z)
+								{
+										if(tok_val == cfg->tok[z].tokval)
+										{
+												AR_ASSERT(cfg->tok[z].code_name != NULL);
+												
+												code_name = cfg->tok[z].code_name;
+												break;
+										}
+								}
+								
+								if(code_name == NULL)
+								{
+										/*一些后期定义的prec token不会在cfg->tok中，因此也没有code_name*/
+										code_name = AR_vtow(L"%d", (uint_32_t)tok_val);
+								}
+
+
 								/*#define CFG_PREC_DEF_BEGIN	L"struct {const wchar_t *name; size_t tokval; size_t prec_level; psrAssocType_t	assoc;}__g_prec_pattern[] =  {"*/
-								/*#define CFG_PREC_DEF_ITEM 	L"{L\"%ls\", %d, %d, %ls}"*/
-								AR_AppendFormatString(code, CFG_PREC_DEF_ITEM, name, tok_val, prec, assoc);
+								/*#define CFG_PREC_DEF_ITEM 	L"{L\"%ls\", (size_t)%ls," L"%" AR_PLAT_INT_FMT L"d, %ls}"*/
+								
+								AR_AppendFormatString(code, CFG_PREC_DEF_ITEM, name, code_name, prec, assoc);
 								if(name)AR_DEL(name);
+								
+								if(z == cfg->tok_cnt)
+								{
+										AR_DEL(code_name);
+								}
 
 								if(i == cfg->prec_cnt - 1 && k == cfg->prec[i].count - 1)
 								{
