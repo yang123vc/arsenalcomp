@@ -71,7 +71,7 @@
 				;
 
 
-%token %skip 	:	"{delim}+|{comment}+|{comment_line}+",1;
+%token %skip 	:	"{delim}+|{comment}+|{comment_line}+"				,1		%action	"TOK_DELIM_ID"		;
 
 
 
@@ -141,13 +141,13 @@
 %token	"void"	:	'"void"(?!{keyword_lhd})'		,1					%action	"TOK_VOID"			;//VOID
 
 
-%token	"byte"	:	'"byte"(?!{keyword_lhd})'		,1					%action	"TOK_BYTE"			;//BYTE		sizeof(byte) == 1
-%token	"char"	:	'"char"(?!{keyword_lhd})'		,1					%action	"TOK_CHAR"			;//CHAR		sizeof(char) == 2
-%token	"short"	:	'"short"(?!{keyword_lhd})'		,1					%action	"TOK_SHORT"		;//SHORT		sizeof(short) == 3
-%token	"int"		:	'"int"(?!{keyword_lhd})'		,1					%action	"TOK_INT"			;//INT		sizeof(int)	== 4
-%token	"long"	:	'"long"(?!{keyword_lhd})'		,1					%action	"TOK_LONG"			;//LONG		sizeof(long)	== 8
-%token	"signed"	:	'"signed"(?!{keyword_lhd})'	,1					%action	"TOK_SIGNED"		;//SIGNED		sizeof(signed)	== sizeof(int)
-%token	"unsigned"	:	'"unsigned"(?!{keyword_lhd})'	,1					%action	"TOK_UNSIGNED"		;//UNSIGNED	sizeof(signed)	== sizeof(int)
+%token	"byte"	:	'"byte"(?!{keyword_lhd})'		,1					%action	"TOK_BYTE"			;//BYTE	sizeof(byte) == 1
+%token	"char"	:	'"char"(?!{keyword_lhd})'		,1					%action	"TOK_CHAR"			;//CHAR	sizeof(char) == 2
+%token	"short"	:	'"short"(?!{keyword_lhd})'		,1					%action	"TOK_SHORT"		;//SHORT	sizeof(short) == 3
+%token	"int"		:	'"int"(?!{keyword_lhd})'		,1					%action	"TOK_INT"			;//INT	sizeof(int)	== 4
+%token	"long"	:	'"long"(?!{keyword_lhd})'		,1					%action	"TOK_LONG"			;//LONG	sizeof(long)	== 8
+%token	"signed"	:	'"signed"(?!{keyword_lhd})'	,1					%action	"TOK_SIGNED"		;//SIGNED	sizeof(signed)	== sizeof(int)
+%token	"unsigned"	:	'"unsigned"(?!{keyword_lhd})'	,1					%action	"TOK_UNSIGNED"		;//UNSIGNED sizeof(signed)	== sizeof(int)
 
 
 %token	"float"	:	'"float"(?!{keyword_lhd})'		,1					%action	"TOK_FLOAT"		;//FLOAT		sizeof(float)	== 4
@@ -252,10 +252,7 @@
 
 
 /**************************************************************************************/
-/*
-program			:	translation_unit	DONE_ID
-				;
-*/
+
 
 /*±àÒëµ¥Ôª*/
 translation_unit	:	external_declaration	

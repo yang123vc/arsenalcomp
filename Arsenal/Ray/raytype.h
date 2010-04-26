@@ -19,9 +19,11 @@ AR_NAMESPACE_BEGIN
 
 typedef enum
 {
-		TOK_EOI_ID				=		0x00,/*\0*/
-		TOK_DELIM_ID			=		0x1000,	
-
+		TOK_EOI_ID				=		0x00	,/*\0*/
+		TOK_DELIM_ID			=		0x1000	,	
+		
+		TOK_TYPE_ID	,							/*占位符，提取出的lexeme需要到符号表检查是否为一个类型*/
+		TOK_DONE_ID	,							/*占位符, 伪终结符*/
 		
 		TOK_STRING_LITERAL,	/*STRING_LITERAL*/
 		TOK_OCT_CONSTANT,	/*OCT_CONSTANT*/
@@ -30,10 +32,6 @@ typedef enum
 		TOK_FLOAT_CONSTANT,	/*FLOAT_CONSTANT*/
 		TOK_CHAR_CONSTANT,	/*CHAR_CONSTANT*/
 		TOK_IDENTIFIER,		/*IDENTIFIER*/
-
-		TOK_TYPE_ID,		/*占位符，提取出的lexeme需要到符号表检查是否为一个类型*/
-		TOK_DONE_ID,		/*占位符, 伪终结符*/
-
 
 		
 		TOK_SWITCH,			/*switch*/
@@ -121,12 +119,11 @@ typedef enum
 		TOK_COLON,			/*:*/
 		TOK_ASSIGN,			/*=*/
 		TOK_DOT,			/*.*/
-		TOK_QUEST,			/*?*/
-
-		
-		/*以下为优先级符号*/
-		IF_STMT_PREC,					/*if(stmt)...*/
-		IF_STMT_ELSE_STMT_PREC			/*if(stmt)else stmt....*/
+		TOK_QUEST			/*?*/
+/*		,
+		TOK_IF_STMT_PREC,		
+		TOK_IF_STMT_ELSE_STMT_PREC		
+		*/
 }rayTokType_t;
 
 
@@ -134,11 +131,6 @@ typedef enum
 
 /******************************************************************************/
 
-typedef struct __src_info_tag
-{
-		size_t	col;
-		size_t	line;
-}raySrcInfo_t;
 
 
 typedef enum 
@@ -198,9 +190,8 @@ struct __aggregate_tag
 		size_t				size;
 		size_t				alignment;
 
-		rayVar_t			**members;
-		size_t				member_cnt;
-
+		rayVar_t			*members;
+		
 		raySrcInfo_t		src;
 };
 
@@ -232,7 +223,6 @@ typedef struct __func_type_tag
 		
 		bool_t				has_id_list;
 		rayVar_t			*params;
-		size_t				params_cnt;
 		
 		raySrcInfo_t		src;
 }rayFuncType_t;
@@ -273,14 +263,13 @@ struct __ray_type_tag
 typedef enum 
 {
 		CL_NOCLASS,	
-		CL_DECL,	
 		CL_LOCAL,
 		CL_STATIC,	
-		CL_TYPEDEF,	
-
+		CL_LOCAL_STATIC,
+		
 		CL_ARGUMENT,
 		CL_MEMBER_OF_STRUCT,
-		CL_LOCAL_STATIC
+		CL_TYPEDEF
 }rayStorageClass_t;
 
 
@@ -290,16 +279,16 @@ typedef struct __initializer_tag		rayInitializer_t;
 struct	__var_tag 
 {
 
-		const wchar_t		*va_name;	
-		rayStorageClass_t	va_class;	
-		rayType_t			*va_type;	
+		const wchar_t		*name;	
+		rayStorageClass_t	storage;	
+		rayType_t			*type;	
 		uint_64_t			addr;
 
-		rayInitializer_t	*va_init;
+		rayInitializer_t	*init;
 
-		raySrcInfo_t		va_src;
+		raySrcInfo_t		src;
 
-		rayVar_t			*va_next;
+		rayVar_t			*next;
 };
 
 

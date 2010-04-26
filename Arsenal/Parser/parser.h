@@ -220,7 +220,7 @@ typedef struct __view_info_tag
 		psrSymbolMapView_t		left_factor;
 }psrStatusView_t;
 
-const psrStatusView_t*		PSR_CreateParserStatusView(const parser_t *parser);
+const psrStatusView_t*			PSR_CreateParserStatusView(const parser_t *parser);
 void							PSR_DestroyParserStatusView(const psrStatusView_t *view);
 
 AR_NAMESPACE_END

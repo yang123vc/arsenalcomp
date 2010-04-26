@@ -192,7 +192,7 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t	*repor
 
 void			CFG_DestroyGrammarConfig(cfgConfig_t *cfg);
 
-bool_t		CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code);
+bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code);
 
 
 
