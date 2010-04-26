@@ -1,0 +1,561 @@
+%name	delim 		:	"[ \r\n\t]"			
+				;
+%name	comment		:	"/\*([^\*]|\*+[^\*/])*\*+/"	
+				;
+%name	comment_line	:	"//[^\n]*\n"			
+				;
+%name	digit			:	"[0-9]"				
+				;
+%name	number		:	"{digit}+"				
+				;
+%name	letter		:	"[A-Z_a-z]"
+				;
+
+
+
+
+%name	int_type_suffix	:	"((u|U)?(l|L))|((u|U)(l|L)?)"
+				;
+
+
+
+
+
+%name	octal_escape	:	"(\\[0-3][0-7][0-7])|(\\[0-7][0-7])|(\\[0-7])"
+				;
+
+
+%name hex_digit		:	"[0-9a-fA-F]"
+				;
+
+%name hex_literal 	:	"0(x|X){hex_digit}+{int_type_suffix}?"
+				;
+
+
+%name dec_literal	:	"(0|[1-9][0-9]*){int_type_suffix}?"
+				;
+
+
+%name oct_literal	:	"0[0-7]+{int_type_suffix}?"
+				;
+
+
+
+
+%name skip_lexem	: 	"{delim}|{comment}|{comment_line}"
+				;
+
+/*  '"'  == \x22,  '\'' == \x27 */
+
+%name	escape_seq		:	"(\\(b|t|n|f|r|\x22|\x27|\\))|{octal_escape}"
+				;
+
+%name	string_literal	: 	"(\x22({escape_seq}|[^\x22\\])*\x22)"
+				;
+
+%name	char_literal	:	"\x27({escape_seq}|[^\x27\\])\x27"
+				;
+
+
+%token %skip 		:	"{delim}+|{comment}+|{comment_line}+"				,1		%action	"TOK_DELIM_ID"		;
+
+
+
+			
+
+
+/*
+由于引擎本身的算法原因，必须把相同前缀最长的匹配的优先级提到最高，例如匹配
+"=" 和"=="，需要把==的优先级设置到大于"="才可以正常匹配
+*/
+
+
+%token	HEX_CONSTANT	:	"{hex_literal}(?!{keyword_lhd})"			,2	%action "TOK_HEX_CONSTANT"		;
+%token	OCT_CONSTANT	:	"{oct_literal}(?!{keyword_lhd})"			,1	%action "TOK_OCT_CONSTANT"		;
+%token	DEC_CONSTANT	:	"{dec_literal}(?!{keyword_lhd})"			,1	%action "TOK_DEC_CONSTANT"		;
+
+
+%token	STRING_LITERAL	:	"{string_literal}"							%action "TOK_STRING_LITERAL"	;	
+%token	IDENTIFIER		:	"{letter}({letter}|{digit})*"					%action "TOK_IDENTIFIER"		;
+
+
+%name		keyword_lhd	:	"[A-Z_a-z0-9]"														;
+
+
+
+
+%token	"switch"	:	'"switch"(?!{keyword_lhd})'	,1					%action 	"TOK_SWITCH"		;//SWITCH
+%token	"for"		:	'"for"(?!{keyword_lhd})'		,1					%action	"TOK_FOR"			;//FOR
+
+%token	"return"	:	'"return"(?!{keyword_lhd})'	,1					%action	"TOK_RETURN"		;//RETURN
+%token	"do"		:	'"do"(?!{keyword_lhd})'		,1					%action	"TOK_DO"			;//DO
+%token	"while"	:	'"while"(?!{keyword_lhd})'		,1					%action	"TOK_WHILE"		;//WHILE
+%token	"if"		:	'"if"(?!{keyword_lhd})'		,1					%action	"TOK_IF"			;//IF
+%token	"else"	:	'"else"(?!{keyword_lhd})'		,1					%action	"TOK_ELSE"			;//ELSE
+
+
+
+%token	"true"	:	'"true"(?!{keyword_lhd})'		,1					%action	"TOK_TRUE"			;
+%token	"false"	:	'"false"(?!{keyword_lhd})'		,1					%action	"TOK_FALSE"		;
+%token	"this"	:	'"this"(?!{keyword_lhd})'		,1					%action	"TOK_THIS"			;
+
+%token	"null"	:	'"null"(?!{keyword_lhd})'		,1					%action	"TOK_NULL"			;
+%token	"in"		:	'"in"(?!{keyword_lhd})'		,1					%action	"TOK_IN"			;
+%token	"new"		:	'"new"(?!{keyword_lhd})'		,1					%action	"TOK_NEW"			;
+%token	"delete"	:	'"delete"(?!{keyword_lhd})'		,1				%action	"TOK_DELETE"		;
+%token	"typeof"	:	'"typeof"(?!{keyword_lhd})'		,1				%action	"TOK_TYPEOF"		;
+%token	"function"	:	'"function"(?!{keyword_lhd})'		,1				%action	"TOK_FUNCTION"		;
+%token	"var"		:	'"var"(?!{keyword_lhd})'			,1				%action	"TOK_VAR"			;
+%token	"with"	:	'"with"(?!{keyword_lhd})'			,1				%action	"TOK_WITH"			;
+%token	"instanceof"	:	'"instanceof"(?!{keyword_lhd})'		,1			%action	"TOK_INSTANCEOF"	;
+%token	"try"		:	'"try"(?!{keyword_lhd})'		,1					%action	"TOK_TRY"			;
+%token	"catch"	:	'"catch"(?!{keyword_lhd})'		,1					%action	"TOK_CATCH"		;
+%token	"finally"	:	'"finally"(?!{keyword_lhd})'	,1					%action	"TOK_FINALLY"		;
+%token	"throw"	:	'"throw"(?!{keyword_lhd})'		,1					%action	"TOK_THROW"		;
+
+%token	"set"		:	'"set"(?!{keyword_lhd})'		,1					%action	"TOK_SET"			;
+%token	"get"		:	'"get"(?!{keyword_lhd})'		,1					%action	"TOK_GET"			;
+
+
+%token	"continue"	:	'"continue"(?!{keyword_lhd})'	,1					%action	"TOK_CONTINUE"		;//CONTINUE
+%token	"default"	:	'"default"(?!{keyword_lhd})'	,1					%action	"TOK_DEFAULT"		;//DEFAULT
+%token	"case"	:	'"case"(?!{keyword_lhd})'		,1					%action	"TOK_CASE"			;//CASE
+%token	"break"	:	'"break"(?!{keyword_lhd})'		,1					%action	"TOK_BREAK"		;//BREAK
+
+
+
+
+
+%token	"void"	:	'"void"(?!{keyword_lhd})'		,1					%action	"TOK_VOID"			;//VOID
+
+
+
+
+%token	">>="		:	'">>="'		,2								%action	"TOK_RIGHT_ASSIGN"	;//RIGHT_ASSIGN
+%token	"<<="		:	'"<<="'		,2								%action	"TOK_LEFT_ASSIGN"	;//LEFT_ASSIGN
+
+
+%token	">>>="	:	'">>>="'		,3								%action	"TOK_UNSIGNED_RIGHT_ASSIGN"	;
+
+%token	">>>"		:	'">>>"'		,2								%action	"TOK_UNSIGNED_RIGHT"			;
+
+%token	"==="		:	'"==="'		,2								%action	"TOK_STRICT_EQ_OP"			;
+%token	"!=="		:	'"!=="'		,2								%action	"TOK_STRICT_NE_OP"			;
+
+
+
+
+
+
+%token	"+="		:	'"+="'		,1								%action	"TOK_ADD_ASSIGN"	;//ADD_ASSIGN
+%token	"-="		:	'"-="'		,1								%action	"TOK_SUB_ASSIGN"	;//SUB_ASSIGN
+%token	"*="		:	'"*="'		,1								%action	"TOK_MUL_ASSIGN"	;//MUL_ASSIGN
+%token	"/="		:	'"/="'		,1								%action	"TOK_DIV_ASSIGN"	;//DIV_ASSIGN
+%token	"%="		:	'"%="'		,1								%action	"TOK_MOD_ASSIGN"	;//MOD_ASSIGN
+%token	"&="		:	'"&="'		,1								%action	"TOK_AND_ASSIGN"	;//AND_ASSIGN
+
+%token	"^="		:	'"^="'		,1								%action	"TOK_XOR_ASSIGN"	;//XOR_ASSIGN
+%token	"|="		:	'"|="'		,1								%action	"TOK_OR_ASSIGN"		;//OR_ASSIGN
+%token	">>"		:	'">>"'		,1								%action	"TOK_RIGHT_OP"		;//RIGHT_OP
+%token	"<<"		:	'"<<"'		,1								%action	"TOK_LEFT_OP"		;//LEFT_OP
+%token	"++"		:	'"++"'		,1								%action	"TOK_INC_OP"		;//INC_OP
+%token	"--"		:	'"--"'		,1								%action	"TOK_DEC_OP"		;//DEC_OP
+
+
+
+%token	"&&"		:	'"&&"'		,1								%action	"TOK_AND_OP"		;//AND_OP
+%token	"||"		:	'"||"'		,1								%action	"TOK_OR_OP"		;//OR_OP
+
+%token	"<="		:	'"<="'		,1								%action 	"TOK_LE_OP"		;//LE_OP
+%token	">="		:	'">="'		,1								%action 	"TOK_GE_OP"		;//GE_OP
+%token	"=="		:	'"=="'		,1								%action 	"TOK_EQ_OP"		;//EQ_OP
+%token	"!="		:	'"!="'		,1								%action	"TOK_NE_OP"		;//NE_OP
+%token	"<"		:	'"<"'			,0								%action	"TOK_LESS_OP"		;//<
+%token	">"		:	'">"'			,0								%action	"TOK_GREATER_OP"	;//>
+
+
+
+			/* ~ */
+
+
+%token	";"		:	'";"'			,0								%action "TOK_SEMICOLON"			;//;
+%token	"{"		:	'"{"'			,0								%action "TOK_L_BRACES"			;//{
+%token	"}"		:	'"}"'			,0								%action "TOK_R_BRACES"			;//}
+%token	","		:	'","'			,0								%action "TOK_COMMA"				;//,
+%token	":"		:	'":"'			,0								%action "TOK_COLON"				;//:
+%token	"="		:	'"="'			,0								%action "TOK_ASSIGN"				;//=
+%token	"("		:	'"("'			,0								%action "TOK_L_PAREN"				;//(
+%token	")"		:	'")"'			,0								%action "TOK_R_PAREN"				;//)
+%token	"["		:	'"["'			,0								%action "TOK_L_SQUARE"			;//[
+%token	"]"		:	'"]"'			,0								%action "TOK_R_SQUARE"			;//]
+%token	"."		:	'"."'			,0								%action "TOK_DOT"				;//.
+%token	"&"		:	'"&"'			,0								%action "TOK_AND"				;//&
+%token	"!"		:	'"!"'			,0								%action "TOK_NOT"				;//!
+%token	"~"		:	'"~"'			,0								%action "TOK_TILDE"				;//~
+%token	"+"		:	'"+"'			,0								%action "TOK_ADD"				;//+
+%token	"-"		:	'"-"'			,0								%action "TOK_SUB"				;//-
+%token	"*"		:	'"*"'			,0								%action "TOK_MUL"				;//*
+%token	"/"		:	'"/"'			,0								%action "TOK_DIV"				;///
+%token	"%"		:	'"%"'			,0								%action "TOK_MOD"				;//%
+
+%token	"^"		:	'"^"'			,0								%action "TOK_XOR"				;//^
+%token	"|"		:	'"|"'			,0								%action "TOK_OR"				;//|
+%token	"?"		:	'"?"'			,0								%action "TOK_QUEST"				;//?
+
+
+
+
+%left		"||"											;
+%left		"&&"											;
+%left		"|"											;
+%left		"^"											;
+%left		"&"											;
+%left		"=="	"!="	"==="	"!=="								;
+%left		"<"	"<="	">"	">="								;
+%left		"<<"		">>"		">>>"		"instanceof"			;
+%left		"+"	"-"										;
+%left		"*"	"/"	"%"									;
+
+%right	SHIFT_PREC										;
+
+%start	Program;
+
+
+
+Literal 		:	NullLiteral    
+            	|	BooleanLiteral
+            	|	NumericLiteral
+            	| 	STRING_LITERAL
+			;
+
+NullLiteral    	:	"null"
+			;
+
+
+BooleanLiteral 	:	"true"
+                |	"false"
+			;
+
+NumericLiteral 	:	HEX_CONSTANT
+			|	OCT_CONSTANT
+			|	DEC_CONSTANT
+			;
+
+
+
+PrimaryExpression 		:	"this"
+                       	|	IDENTIFIER
+                       	|	Literal
+                       	|	ArrayLiteral
+                       	|	ObjectLiteral
+                       	| 	"(" 	Expression	")"
+					;
+
+
+ArrayLiteral 			: 	"["	"]"
+                  		| 	"[" 	Elision 	"]"
+                  		|	"[" 	ElementList "]"
+                  		|	"[" 	ElementList 	","	Elision "]"
+					;
+
+Elision 				:	","
+            			|	Elision	","
+					;
+
+ElementList			: 	Elision AssignmentExpression
+                 		|	ElementList	","	Elision  AssignmentExpression
+                 		|	ElementList	","	AssignmentExpression
+                 		|	AssignmentExpression
+					;
+
+
+ObjectLiteral			: 	"{" PropertyNameAndValueList	"}"
+					;
+
+PropertyNameAndValueList	: 	PropertyAssignment
+                           | 	PropertyNameAndValueList 	"," 	PropertyAssignment ":" 	AssignmentExpression
+					;
+
+PropertyAssignment 		:	PropertyName	":"	AssignmentExpression
+					|	"get"	 PropertyName	"("	")" "{"	FunctionBody	"}"
+					|	"set"	 PropertyName	"("	")" "{"	FunctionBody	"}"
+					;
+
+PropertyName	 		:	IDENTIFIER
+                  		|	STRING_LITERAL
+                  		|	NumericLiteral
+					;
+
+
+
+
+
+MemberExpression 		:	PrimaryExpression
+                       	| 	FunctionExpression
+                       	|	MemberExpression	"[" Expression	"]"				%prec	SHIFT_PREC
+                       	|	MemberExpression	"." IDENTIFIER
+                       	|	"new" 			MemberExpression 	Arguments
+					;
+
+
+NewExpression			: 	MemberExpression			
+                   		| 	"new" 	NewExpression		
+					;
+
+
+CallExpression			:	MemberExpression 		Arguments
+                    		| 	CallExpression	 		Arguments
+                    		|	CallExpression		"[" 	Expression		"]"		%prec		SHIFT_PREC
+                    		| 	CallExpression		"."	IDENTIFIER				
+					;
+
+Arguments 				: 	"(" 	")"				%prec		SHIFT_PREC
+              			| 	"(" ArgumentList	")"		%prec		SHIFT_PREC
+					;
+
+
+
+ArgumentList	 		:	AssignmentExpression
+                  		| 	ArgumentList	"," 	AssignmentExpression
+					;
+
+
+
+LeftHandSideExpression	: 	NewExpression 
+					| 	CallExpression
+					;
+
+
+PostfixExpression		: 	LeftHandSideExpression
+                       	| 	LeftHandSideExpression	"++"		%prec		SHIFT_PREC
+                       	|	LeftHandSideExpression	"--"		%prec		SHIFT_PREC
+					;
+
+
+
+UnaryExpression			: 	PostfixExpression
+                     		| 	"delete" 	UnaryExpression
+                     		| 	"void" 	UnaryExpression
+                     		|	"typeof" 	UnaryExpression
+                     		|	"++" 		UnaryExpression		
+                     		| 	"--" 		UnaryExpression		
+                     		| 	"+" 		UnaryExpression
+                     		| 	"-" 		UnaryExpression
+                     		|	"~" 		UnaryExpression
+                     		|	"!" 		UnaryExpression
+					;
+
+
+binary_expression	:	binary_expression	"+"	binary_expression
+				|	binary_expression	"-"	binary_expression
+				|	binary_expression	"*"	binary_expression
+				|	binary_expression	"/"	binary_expression
+				|	binary_expression	"%"	binary_expression
+				|	binary_expression	"<<"	binary_expression
+				|	binary_expression	">>"	binary_expression
+				|	binary_expression	">>>"	binary_expression
+				|	binary_expression	"<"	binary_expression
+				|	binary_expression	"<="	binary_expression
+				|	binary_expression	">"	binary_expression
+				|	binary_expression	">="	binary_expression
+				|	binary_expression	"=="	binary_expression
+				|	binary_expression	"!="	binary_expression
+				|	binary_expression	"==="	binary_expression
+				|	binary_expression	"!=="	binary_expression
+				|	binary_expression	"&"	binary_expression
+				|	binary_expression	"^"	binary_expression
+				|	binary_expression	"|"	binary_expression
+				|	binary_expression	"&&"	binary_expression
+				|	binary_expression	"||"	binary_expression
+				|	binary_expression	"instanceof" 	binary_expression
+				|	UnaryExpression
+				;
+
+
+
+
+ConditionalExpression 		: 	binary_expression
+					|	binary_expression	"?" 	AssignmentExpression 	":" 	AssignmentExpression
+					;
+
+
+
+
+
+AssignmentExpression	 	:	ConditionalExpression
+					|	LeftHandSideExpression	AssignmentOperator		AssignmentExpression
+					;
+
+                          
+AssignmentOperator		: 	"=" 	
+					|	"*=" 
+					|	"/="
+					|	"%="
+					|	"+=" 
+					|	"-=" 
+					|	"<<=" 
+					|	">>=" 
+					|	">>>="
+					|	"&=" 
+					|	"^=" 
+					|	"|="
+					;
+
+
+Expression	 			:	AssignmentExpression
+               			|	Expression ","	AssignmentExpression
+					;
+
+
+Statement				:	Block
+              			|	VariableStatement
+              			|	EmptyStatement
+              			|	IfStatement
+              			|	IfElseStatement
+              			|	IterationStatement
+              			|	ContinueStatement
+              			|	BreakStatement
+              			|	ReturnStatement
+              			|	WithStatement
+              			|	LabelledStatement
+              			|	SwitchStatement
+              			|	ThrowStatement
+              			|	TryStatement
+              			|	Expression
+					;
+
+
+Block					:	"{"	"}"
+           			|	"{" 	StatementList "}"
+					;
+
+StatementList 			: 	Statement
+                   		|	StatementList Statement
+					;
+
+VariableStatement 		: 	"var" 	VariableDeclarationList	";"
+					;
+
+VariableDeclarationList 	: 	VariableDeclaration
+					|	VariableDeclarationList 	","	VariableDeclaration
+					;
+
+
+VariableDeclaration		:	IDENTIFIER
+                         	|	IDENTIFIER	Initializer
+					;
+
+
+Initializer 			: 	"=" 	AssignmentExpression
+					;
+
+EmptyStatement			:	";"
+					;
+
+
+IfStatement 			:	"if" "(" 	Expression ")"	Statement		
+					;
+
+IfElseStatement			:	"if" "("	Expression	")"	Statement "else" 	Statement	%prec		SHIFT_PREC	
+					;
+
+
+IterationStatement 		: 	"do" 	Statement		"while" 	"(" 	Expression ")" 	";"
+                        	|	"while"	"("	Expression		")" 	Statement
+                        	|	"for" 	"(" 	Expression 	";" 	Expression 	";"	Expression	 ")" Statement
+                        	|	"for" 	"("	"var" 		VariableDeclarationList	";"	Expression ";"	Expression ")" 	Statement
+                        	|	"for"		"(" 	LeftHandSideExpression "in" Expression 	")" 	Statement
+                        	|	"for" 	"(" 	"var" 	VariableDeclaration "in" 	Expression ")" 	Statement
+					;
+
+
+ContinueStatement 		:	"continue" ";"
+                       	|	"continue"	IDENTIFIER";"
+					;
+
+BreakStatement			: 	"break"	";"
+                       	|	"break"	IDENTIFIER	";"
+					;
+
+ReturnStatement 		:	"return"	";"
+                       	|	"return"	Expression 	";"
+					;
+
+WithStatement			:	"with"	"("	Expression 	")"	Statement	";"
+					;
+
+SwitchStatement 		:	"switch"	"("	Expression 	")"	CaseBlock
+					;
+
+CaseBlock 				:	"{"	"}"
+               			|	"{"	CaseClauses 	"}"
+               			|	"{"	CaseClauses 	DefaultClause "}"
+              			|	"{"	CaseClauses 	DefaultClause 	CaseClauses "}"
+              			|	"{" 	DefaultClause 	CaseClauses	"}"
+               			|	"{" 	DefaultClause 	"}"
+					;
+
+CaseClauses 			:	CaseClause
+                 		|	CaseClauses 	CaseClause
+					;
+
+
+CaseClause				:	"case" 	Expression	":"	StatementList
+                		|	"case"	Expression	":"
+					;
+
+DefaultClause			:	"default" ":" 
+                   		|	"default"	":"	StatementList
+					;
+
+LabelledStatement 		:	IDENTIFIER ":" Statement		%prec	SHIFT_PREC
+					;
+
+ThrowStatement		 	:	"throw"	Expression
+					;
+
+TryStatement 			: 	"try" 	Block 	Catch
+                  		|	"try"		Block		Finally
+                  		|	"try" 	Block		Catch		Finally
+					;
+
+Catch 				:	"catch"	"("		IDENTIFIER ")" 	Block
+					;
+
+Finally				:	"finally" 	Block
+					;
+
+
+FunctionDeclaration		:	"function" 	IDENTIFIER 	"("	FormalParameterList 	")"	"{"	FunctionBody	"}"
+                         	|	"function" 	IDENTIFIER 	"("	")"	"{"	FunctionBody	 "}"
+					;
+
+
+FunctionExpression		:	"function"	"(" 	")" 	"{" 	FunctionBody	 "}"
+                        	|	"function"	"(" 	FormalParameterList	")"	"{" 	FunctionBody "}"
+					;
+
+
+FormalParameterList		:	IDENTIFIER
+					|	FormalParameterList	","	IDENTIFIER
+					;
+
+FunctionBody	 		:	SourceElements
+                  		|	.
+					;
+
+Program				:	SourceElements
+					;
+
+SourceElements 			:	SourceElement
+                    		|	SourceElements 	SourceElement
+					;
+
+
+SourceElement 			:	Statement
+                   		|	FunctionDeclaration
+					;
+
+
+
+    
