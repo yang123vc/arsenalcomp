@@ -2032,8 +2032,13 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 				AR_AppendString(code, L"\n");
 		}
 		
-		
-		AR_AppendFormatString(code,  CFG_CNT_DEF, L"__PREC_COUNT__", cfg->prec_cnt);
+		{
+				size_t	prec_cnt = 0;
+				size_t i;
+				for(i = 0; i < cfg->prec_cnt; ++i)prec_cnt += cfg->prec[i].count;
+				
+				AR_AppendFormatString(code,  CFG_CNT_DEF, L"__PREC_COUNT__", prec_cnt);
+		}
 
 		if(cfg->rule_cnt > 0)
 		{

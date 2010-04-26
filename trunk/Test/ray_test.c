@@ -116,7 +116,7 @@ static void parse_code(lex_t *lex, const wchar_t *sources)
 }
 
 
-
+#if(0)
 
 void ray_test()
 {
@@ -187,9 +187,44 @@ void ray_test()
 		LEX_Destroy(lex);
 		AR_DestroyString(str);
 }
+#endif
+
+
+void AR_STDCALL ray_report_func(const rayReportMsg_t *report, void *context)
+{
+		printf("%ls\r\n", report->message);
+}
+
+
+static rayReport_t		__def_report = 
+{
+		ray_report_func,
+		NULL
+};
+
+void ray_test()
+{
+		
+		rayParser_t		*parser;
+		uint_64_t beg, end;
+
+		
+		beg = AR_GetTime_Milliseconds();
+
+		parser = RAY_CreateParser(&__def_report);
+
+		end = AR_GetTime_Milliseconds();
+		
+		AR_printf(L"build ray parser elapsed == %I64d\r\n", end - beg);
+		
+		getchar();
+
+		RAY_DestroyParser(parser);
+}
 
 
 AR_NAMESPACE_END
 
 #endif
+
 

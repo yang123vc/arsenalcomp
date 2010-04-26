@@ -36,6 +36,45 @@ typedef struct __ray_compiler_tag		rayCompiler_t;
 
 
 
+
+/************************************************src info******************************/
+typedef struct __src_info_tag
+{
+		size_t	col;
+		size_t	line;
+}raySrcInfo_t;
+
+
+/********************************************´íÎó±¨¸æ*****************************************/
+
+typedef enum
+{
+		RAY_REPORT_MESSAGE,
+		RAY_REPORT_ERROR,
+		RAY_REPORT_WARNING
+}rayReportType_t;
+
+typedef struct __ray_report_msg_tag
+{
+		rayReportType_t			type;
+		
+		const	wchar_t			*message;
+		raySrcInfo_t			src;
+}rayReportMsg_t;
+
+
+typedef void (AR_STDCALL *rayReportFunc_t)(const rayReportMsg_t *report, void *context);
+
+typedef struct __ray_report_tag
+{
+		rayReportFunc_t			report_func;
+		void					*ctx;
+}rayReport_t;
+
+
+
+
+
 AR_NAMESPACE_END
 
 #endif

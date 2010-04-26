@@ -96,7 +96,7 @@ void AR_Test()
 		//calc_test1();
 		//calc_test();
 		//calc_test3();
-		calc_test();
+		//calc_test();
 
 		//db_test();
 
@@ -127,6 +127,8 @@ void AR_Test()
 		//gen_code_test();
 
 		//perf_test();
+
+		ray_test();
 		
 #else
 		AR_printf(L"dll version\r\n");
