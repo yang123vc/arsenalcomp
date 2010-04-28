@@ -48,6 +48,14 @@ typedef struct __parser_token_tag
 		}while(0)
 
 
+#define PSR_TOLEXTOK(_psr_tok,_ltok)							\
+		do{														\
+				(_ltok)->str = (_psr_tok)->str;					\
+				(_ltok)->count = (_psr_tok)->str_cnt;			\
+				(_ltok)->value = (_psr_tok)->term_val;			\
+				(_ltok)->line = (_psr_tok)->line;				\
+				(_ltok)->col = (_psr_tok)->col;					\
+		}while(0)
 
 
 typedef psrNode_t*		(AR_STDCALL *psrTermFunc_t)(const psrToken_t *tok,void *ctx);
@@ -114,28 +122,46 @@ typedef struct __parser_context_tag
 }psrCtx_t;
 
 
+struct __parser_symbol_tag;
+typedef struct __parser_symbol_tag		psrSymb_t;
+
+struct __parser_grammar_tag;
+typedef struct __parser_grammar_tag		psrGrammar_t;
+
+
+struct __parser_action_tag;
+typedef struct __parser_action_tag		psrActionTable_t;
+
+struct __term_table_tag;
+typedef struct __term_table_tag			psrTermInfoTbl_t;
+
+struct __expected_message_tag;
+typedef	struct __expected_message_tag	psrExpectedMsg_t;
 
 typedef struct __parser_tag
 {
-		const struct __parser_grammar_tag		*grammar;
-		struct __parser_action_tag				*tbl;
-		struct __parser_stack_tag				*state_stack;
-		struct __parser_node_stack				*node_stack;
-		struct __term_table_tag					*term_tbl;
-		struct __expected_message_tag			*msg_set;
+		const psrGrammar_t						*grammar;
+		const psrActionTable_t					*tbl;
+
+		psrTermInfoTbl_t						*term_tbl;
+		psrExpectedMsg_t						*msg_set;
+		size_t									msg_count;
+
 		bool_t									is_repair;
 		bool_t									is_accepted;
-		size_t									msg_count;
+		struct __parser_stack_tag				*state_stack;
+		struct __parser_node_stack				*node_stack;
+		
 }parser_t;
 
 
-parser_t* PSR_CreateParser(const struct __parser_grammar_tag *grammar, psrModeType_t type);
+parser_t* PSR_CreateParser(const psrGrammar_t *grammar, psrModeType_t type);
 
 void	  PSR_DestroyParser(parser_t *parser);
 
 void	  PSR_Clear(parser_t *parser);
 
-
+#define	  PSR_GetGrammar(_psr)	((psrGrammar_t*)((_psr)->grammar))
 
 /*
 		由于采用了一个增广的文法，所以当EOI被增加到stack中时，只可能出现错误或者成为接受状态，EOI永远不会被SHIFT到parser中

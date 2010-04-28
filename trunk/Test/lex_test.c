@@ -491,7 +491,7 @@ void lex_test20()
 				AR_abort();
 		}
 #endif	
-		if(!LEX_Insert(lex, L"3,0 int.+"))
+		if(!LEX_Insert(lex, L"3,0 int"))
 		{
 				AR_abort();
 		}
@@ -529,6 +529,7 @@ void lex_test20()
 				{
 						//LEX_Skip(&match);
 						//LEX_ClearError(&match);
+						printf("failed\r\n");
 						break;
 						continue;
 				}else
@@ -540,8 +541,10 @@ void lex_test20()
 						buf[tok.count] = L'\0';
 
 						AR_printf(L"%ls : type == %d : count == %d\r\n", buf, tok.value, tok.count);
-
 						if(tok.value == 0)break;
+
+						LEX_PutBack(&match, &tok);
+						getchar();
 				}
 		}
 
@@ -563,9 +566,10 @@ void lex_skip_test()
 
 		LEX_SkipTo(&match, L"ccc");
 		AR_printf(L"line = %d : col = %d : next = %ls\r\n", match.line, match.col, match.next);
-
-		
 }
+
+
+
 
 void lex_test()
 {

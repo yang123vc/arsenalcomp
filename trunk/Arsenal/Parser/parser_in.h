@@ -22,14 +22,14 @@ AR_NAMESPACE_BEGIN
 /*typedef struct __parser_symbol_tag psrSymb_t;*/
 
 /*以下为终结符*/
-extern const struct __parser_symbol_tag	*PSR_EOISymb;   /*表示输入结尾符号*/
-extern const struct __parser_symbol_tag	*PSR_ErrorSymb;/*特殊的错误处理产生式标记终结符，*/
-extern const struct __parser_symbol_tag	*PSR_DefPrecSymb;/*所有无终结符的产生式且未指定prec_tok的产生式所相关的终结符*/
+extern const psrSymb_t	*PSR_EOISymb;   /*表示输入结尾符号*/
+extern const psrSymb_t	*PSR_ErrorSymb;/*特殊的错误处理产生式标记终结符，*/
+extern const psrSymb_t	*PSR_DefPrecSymb;/*所有无终结符的产生式且未指定prec_tok的产生式所相关的终结符*/
 
 /*以下都为非终结符*/
-extern const struct __parser_symbol_tag	*PSR_StartSymb;/*第一个符号，被转换为 %Start -> gmr->head[0]*/
+extern const psrSymb_t	*PSR_StartSymb;/*第一个符号，被转换为 %Start -> gmr->head[0]*/
 
-bool_t				PSR_IsBuildInSymbol(const struct __parser_symbol_tag	*symb);
+bool_t				PSR_IsBuildInSymbol(const psrSymb_t	*symb);
 
 
 

@@ -48,7 +48,9 @@ typedef struct __action_record_tag
 
 extern const psrAction_t	*PSR_ErrorAction;
 
-typedef struct __parser_action_tag
+
+
+struct __parser_action_tag
 {
 		psrSymbList_t	term_set;
 		psrSymbList_t	nonterm_set;
@@ -61,7 +63,7 @@ typedef struct __parser_action_tag
 		size_t			col;
 		psrAction_t		**actions;
 		psrSymbList_t	*expected_set;
-}psrActionTable_t;
+};
 
 
 
@@ -72,10 +74,10 @@ int_t					PSR_GetState(const psrActionTable_t *tbl, size_t state, const psrSymb_
 const psrSymbList_t*	PSR_GetExpectedSymb(const psrActionTable_t *tbl, size_t state);
 
 
-psrActionTable_t*		PSR_CreateActionTable_SLR(const psrGrammar_t *grammar);
-psrActionTable_t*		PSR_CreateActionTable_LALR(const psrGrammar_t *grammar);
+const psrActionTable_t*		PSR_CreateActionTable_SLR(const psrGrammar_t *grammar);
+const psrActionTable_t*		PSR_CreateActionTable_LALR(const psrGrammar_t *grammar);
 
-void					PSR_DestroyActionTable(psrActionTable_t *tbl);
+void					PSR_DestroyActionTable(const psrActionTable_t *tbl);
 
 
 

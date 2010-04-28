@@ -10,6 +10,7 @@
 #define new DEBUG_NEW
 #endif
 
+
 static CString __get_version_info()
 {
 		TCHAR szFullPath[MAX_PATH];

@@ -112,7 +112,7 @@ void AR_Test()
 		//parser_perf_test();
 		
 		//rgx_test();
-		//calc_test();
+		calc_test();
 
 		//parser_test();
 		
@@ -128,7 +128,7 @@ void AR_Test()
 
 		//perf_test();
 
-		ray_test();
+		//ray_test();
 		
 #else
 		AR_printf(L"dll version\r\n");

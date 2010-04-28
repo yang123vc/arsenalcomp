@@ -22,6 +22,9 @@ AR_NAMESPACE_BEGIN
 
 
 
+void			CFG_Init();
+void			CFG_UnInit();
+
 
 struct __cfg_node_tag;
 typedef struct __cfg_node_tag	cfgNode_t;
@@ -55,6 +58,7 @@ typedef struct __cfg_token_tag
 		bool_t			is_skip;
 
 		const wchar_t	*code_name;
+		bool_t			is_assigned_code_name;
 }cfgToken_t;
 
 
@@ -64,10 +68,6 @@ typedef struct __cfg_token_tag
 #define CFG_TERM_DEF_ITEM_1	L"{L\"%ls\", %ls, " L"%" AR_PLAT_INT_FMT L"d, L\"%ls\", %ls}"
 #define CFG_TERM_DEF_ITEM_2	L"{%ls, %ls," L"%" AR_PLAT_INT_FMT L"d, L\"%ls\", %ls}"
 
-/*
-#define CFG_TERM_DEF_ITEM_1	L"{L\"%ls\", %" AR_PLAT_INT_FMT L"d, %" AR_PLAT_INT_FMT L"d, L\"%ls\", %ls}"
-#define CFG_TERM_DEF_ITEM_2	L"{%ls, %" AR_PLAT_INT_FMT L"d, %" AR_PLAT_INT_FMT L"d, L\"%ls\", %ls}"
-*/
 
 
 
@@ -90,9 +90,6 @@ typedef struct __cfg_prec_tag
 
 #define CFG_PREC_DEF_ITEM 	L"{L\"%ls\", %ls," L"%" AR_PLAT_INT_FMT L"d, %ls}"
 
-/*
-#define CFG_PREC_DEF_ITEM 	L"{L\"%ls\", %" AR_PLAT_INT_FMT L"d, %" AR_PLAT_INT_FMT L"d, %ls}"
-*/
 
 
 typedef struct __cfg_start_tag
@@ -197,8 +194,17 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code);
 
 
 
-void			CFG_Init();
-void			CFG_UnInit();
+
+
+
+
+
+
+
+
+
+
+
 
 AR_NAMESPACE_END
 

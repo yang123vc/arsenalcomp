@@ -63,6 +63,7 @@ void			LEX_ResetMatch(lexMatch_t *pmatch);
 const wchar_t*	LEX_GetNextInput(const lexMatch_t *match);
 
 bool_t			LEX_IsError(const lexMatch_t *match);
+
 void			LEX_ClearError(lexMatch_t *match);
 
 /*跳到下一个非空白token*/
@@ -73,8 +74,12 @@ void			LEX_SkipTo(lexMatch_t *pmatch, const wchar_t *tok);
 /*丢弃N个字符*/
 void			LEX_SkipN(lexMatch_t *pmatch, size_t nchar);
 
+/*LEX_PutBack会重置Match_t的行列号及next指针为此token的，并不会簿记一个队列*/
+void			LEX_PutBack(lexMatch_t *pmatch, const lexToken_t *tok);
+
 
 void			LEX_MatchFlags(lexMatch_t *pmatch, uint_t flags, bool_t is_on);
+
 
 
 AR_NAMESPACE_END

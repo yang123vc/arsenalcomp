@@ -401,16 +401,15 @@ EqualityExprNoIn	:	RelationalExprNoIn
 				;
 
 EqualityExprNoBF	:    RelationalExprNoBF
-  | EqualityExprNoBF "==" RelationalExpr
-  | EqualityExprNoBF "!=" RelationalExpr  
-  | EqualityExprNoBF "===" RelationalExpr
-  | EqualityExprNoBF "!==" RelationalExpr
-	;
+  				|	EqualityExprNoBF "==" RelationalExpr
+  				| 	EqualityExprNoBF "!=" RelationalExpr  
+  				|	EqualityExprNoBF "===" RelationalExpr
+  				|	EqualityExprNoBF "!==" RelationalExpr
+				;
 
-BitwiseANDExpr:
-    EqualityExpr
-  | BitwiseANDExpr "&" EqualityExpr     
-;
+BitwiseANDExpr		:	EqualityExpr
+  				| 	BitwiseANDExpr "&" EqualityExpr     
+				;
 
 BitwiseANDExprNoIn:
     EqualityExprNoIn
