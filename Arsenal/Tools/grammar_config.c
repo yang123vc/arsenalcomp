@@ -19,6 +19,7 @@
 AR_NAMESPACE_BEGIN
 
 
+
 typedef enum
 {
 		CFG_EMPTY_T,
@@ -268,7 +269,7 @@ static void CFG_InsertToNodeList(cfgNodeList_t *lst, cfgNode_t *node)
 static void CFG_InitConfig(cfgConfig_t *cfg, cfgNodeList_t *name, cfgNodeList_t *token, cfgNodeList_t *prec, cfgNodeList_t *rule, cfgStart_t *start_rule)
 {
 		size_t i;
-		size_t tmp_tok_val = PSR_MIN_TOKENVAL;
+		size_t tmp_tok_val = PSR_MIN_TOKENVAL + 1;
 
 		AR_ASSERT(cfg != NULL);
 
@@ -323,6 +324,7 @@ static void CFG_InitConfig(cfgConfig_t *cfg, cfgNodeList_t *name, cfgNodeList_t 
 								}else
 								{
 										cfg->tok[cfg->tok_cnt].code_name = AR_wcsdup(token->lst[i]->token.code_name);
+										cfg->tok[cfg->tok_cnt].is_assigned_code_name = true;
 								}
 
 								cfg->tok_cnt++;
@@ -607,15 +609,6 @@ static void __uninit_cfg_node_list()
 }
 
 
-void			CFG_Init()
-{
-		__init_cfg_node_list();
-}
-
-void			CFG_UnInit()
-{
-		__uninit_cfg_node_list();
-}
 
 
 static cfgNode_t* CFG_CreateNode(cfgNodeType_t type)
@@ -1600,16 +1593,111 @@ static cfgReport_t		__g_def_report =
 		NULL
 };
 
+
+static arIOCtx_t	__def_io_ctx = 
+{		
+		cfg_on_error,
+		cfg_on_print,
+		NULL
+};
+
+static psrCtx_t		__def_psr_ctx = 
+{
+		cfg_error,
+		cfg_free,
+		NULL,
+};
+
+
+typedef struct __collect_core_tag
+{
+		lex_t							*lex;
+		psrGrammar_t					*grammar;
+		parser_t						*parser;
+		struct __collect_core_tag		*next;
+}collect_core_t;
+
+static arSpinLock_t			__g_core_lock;
+static collect_core_t		*__g_core_list = NULL;
+
+static void	__init_core_list()
+{
+		AR_InitSpinLock(&__g_core_lock);
+		__g_core_list = NULL;
+}
+
+static void __uninit_core_list()
+{
+		while(__g_core_list)
+		{
+				collect_core_t *tmp = __g_core_list;
+				__g_core_list = __g_core_list->next;
+				
+				AR_ASSERT(tmp->lex != NULL && tmp->grammar != NULL && tmp->parser != NULL);
+				PSR_DestroyParser(tmp->parser);
+				PSR_DestroyGrammar(tmp->grammar);
+				LEX_Destroy(tmp->lex);
+				AR_DEL(tmp);
+		}
+		
+		__g_core_list = NULL;
+}
+
+static collect_core_t* __create_parser_core()
+{
+		collect_core_t	*core = NULL;
+		
+		AR_LockSpinLock(&__g_core_lock);
+		
+		if(__g_core_list == NULL)
+		{
+				core = NULL;
+		}else
+		{
+				core = __g_core_list;
+				__g_core_list = __g_core_list->next;
+		}
+		AR_UnLockSpinLock(&__g_core_lock);
+
+		if(core == NULL)
+		{
+				core = AR_NEW0(collect_core_t);
+				core->lex = __build_lex(&__def_io_ctx);
+				core->grammar = __build_grammar(&__def_psr_ctx, &__def_io_ctx);
+				core->parser = __build_parser(core->grammar);
+		}
+		return core;
+}
+
+
+static void __destroy_parser_core(collect_core_t *core)
+{
+		AR_ASSERT(core != NULL);
+		PSR_ResetGrammarIOContext(PSR_GetGrammar(core->parser), &__def_io_ctx);
+		PSR_ResetGrammarParseContext(PSR_GetGrammar(core->parser), &__def_psr_ctx);
+
+		AR_LockSpinLock(&__g_core_lock);
+		core->next = __g_core_list;
+		__g_core_list = core;
+		AR_UnLockSpinLock(&__g_core_lock);
+
+}
+
+
+
 cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *report)
 {
 
 		bool_t is_ok, has_error;
-		lex_t *lex;
-		lexMatch_t match;
-		lexToken_t		tok;
-		psrToken_t		term;
+		collect_core_t	*core;
+		lex_t			*lex;
 		psrGrammar_t	*gmr;
 		parser_t		*parser;
+
+		lexMatch_t		match;
+		lexToken_t		tok;
+		psrToken_t		term;
+		
 		cfgNode_t		*result = NULL;
 
 		arIOCtx_t	io_ctx ;
@@ -1628,14 +1716,23 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 		psr_ctx.ctx = (void*)report;
 
 
+		core = __create_parser_core();
+		lex = core->lex;
+		gmr = core->grammar;
+		parser = core->parser;
+
+		PSR_ResetGrammarIOContext(PSR_GetGrammar(parser), &io_ctx);
+		PSR_ResetGrammarParseContext(PSR_GetGrammar(parser), &psr_ctx);
 
 
-
+#if(0)
 		lex = __build_lex(&io_ctx);
-
 		gmr = __build_grammar(&psr_ctx, &io_ctx);
-
 		parser = __build_parser(gmr);
+
+
+
+#endif
 
 		LEX_InitMatch(&match, gmr_txt);
 
@@ -1726,12 +1823,15 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 		}
 
 
+#if(0)
 		PSR_DestroyParser(parser);
 		PSR_DestroyGrammar(gmr);
-		LEX_UnInitMatch(&match);
-
-
 		LEX_Destroy(lex);
+#endif
+		LEX_UnInitMatch(&match);
+		
+		AR_ASSERT(core != NULL && core->grammar != NULL && core->lex != NULL && core->parser != NULL);
+		__destroy_parser_core(core);
 
 
 
@@ -1744,6 +1844,10 @@ void			CFG_DestroyGrammarConfig(cfgConfig_t *cfg)
 		CFG_DestroyNode((cfgNode_t*)cfg);
 
 }
+
+
+
+
 
 
 
@@ -1897,6 +2001,26 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 		}
 
 		AR_AppendFormatString(code,  CFG_CNT_DEF, L"__NAME_COUNT__", cfg->name_cnt);
+
+		if(cfg->tok_cnt > 0)
+		{
+				arString_t		*enum_str;
+				enum_str = AR_CreateString();
+				AR_AppendString(enum_str, L"\r\n\r\n/*\r\nenum{\r\n");
+				for(i = 0; i < cfg->tok_cnt; ++i)
+				{
+						/*if(cfg->tok[i].code_name == NULL)continue;*/
+						AR_ASSERT(cfg->tok[i].code_name != NULL);
+
+						if(cfg->tok[i].is_assigned_code_name)
+						{
+								AR_AppendFormatString(enum_str, L"%s = %d,\r\n", cfg->tok[i].code_name, (uint_32_t)cfg->tok[i].tokval);
+						}
+				}
+				AR_AppendString(enum_str, L"};\r\n*/\r\n\r\n\r\n");
+				AR_AppendString(code, AR_GetStrString(enum_str));
+				AR_DestroyString(enum_str);
+		}
 
 		if(cfg->tok_cnt > 0)
 		{
@@ -2251,6 +2375,159 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 
 		return true;
 }
+
+
+/*************************************************************************************************************************************************/
+
+typedef struct __config_token_pattern_tag
+{
+		const wchar_t *name; 
+		size_t tokval; 
+		size_t lex_prec; 
+		const wchar_t *regex; 
+		bool_t skip;
+}cfgTokenPattern_t;
+
+
+typedef struct __config_prec_pattern_tag
+{
+		const wchar_t *name; 
+		size_t tokval; 
+		size_t prec_level; 
+		psrAssocType_t	assoc;
+}cfgPrecPattern_t;
+
+
+typedef struct __config_rule_pattern_tag
+{
+		const wchar_t	*rule; 
+		const wchar_t	*prec_token; 
+		psrRuleFunc_t	handler; 
+		size_t	auto_ret; 
+}cfgRulePattern_t;
+
+
+lex_t*	CFG_BuildLexer(const arIOCtx_t *io, const wchar_t **name, size_t name_cnt, const cfgTokenPattern_t *tok_pattern, size_t tok_cnt)
+{																				
+		lex_t	*lex;
+		size_t i;
+		lex = LEX_Create(io);
+		for(i = 0; i < name_cnt; ++i)
+		{
+				if(!LEX_Insert(lex, name[i]))							
+				{																
+						LEX_Destroy(lex);										
+						AR_ASSERT(false);										
+						return NULL;											
+				}																
+		}																		
+		for(i = 0; i < tok_cnt; ++i)										
+		{																		
+				lexAction_t		act;											
+				act.is_skip		=		tok_pattern[i].skip;				
+				act.priority	=		tok_pattern[i].lex_prec;			
+				act.value		=		tok_pattern[i].tokval;				
+				if(!LEX_InsertRule(lex, tok_pattern[i].regex, &act))		
+				{																
+						LEX_Destroy(lex);										
+						AR_ASSERT(false);										
+						return NULL;											
+				}																
+		}																		
+		return lex;																
+}
+
+
+
+
+psrGrammar_t*	CFG_BuildGrammar(  const psrCtx_t	*psr_ctx
+								 , const arIOCtx_t *io
+								 , const cfgTokenPattern_t *tok_pattern
+								 , size_t tok_cnt
+								 , const cfgPrecPattern_t	*prec_pattern
+								 , size_t prec_cnt
+								 , const cfgRulePattern_t	 *rule
+								 , size_t rule_cnt
+								 , psrTermFunc_t		leaf_func
+								 , const wchar_t *start_rule
+								 )
+{																																
+		psrGrammar_t	*grammar;																								
+		size_t i;																												
+		AR_ASSERT(psr_ctx != NULL);																								
+		grammar = PSR_CreateGrammar(psr_ctx, io);																				
+		for(i = 0; i < tok_cnt; ++i)																						
+		{																														
+				if(tok_pattern[i].skip || tok_pattern[i].tokval == 0)continue;										
+				if(!PSR_InsertTerm(grammar, tok_pattern[i].name, tok_pattern[i].tokval, PSR_ASSOC_NONASSOC,0, leaf_func))	
+				{																												
+						PSR_DestroyGrammar(grammar);																			
+						grammar = NULL;																							
+						AR_ASSERT(false);																						
+						return NULL;																							
+				}																												
+		}																														
+		for(i = 0; i < prec_cnt; ++i)																						
+		{																														
+				psrTermInfo_t	*info;																							
+				info = PSR_GetTermSymbInfoByName(grammar, prec_pattern[i].name);											
+
+				
+				if(info == NULL)																								
+				{																												
+						if(!PSR_InsertTerm(grammar, prec_pattern[i].name, prec_pattern[i].tokval, prec_pattern[i].assoc, prec_pattern[i].prec_level, NULL))
+						{																																					
+								PSR_DestroyGrammar(grammar);																												
+								grammar = NULL;																																
+								AR_ASSERT(false);																															
+								return NULL;																																
+						}																																					
+				}else																																						
+				{																																							
+						info->assoc = prec_pattern[i].assoc;																											
+						info->prec = prec_pattern[i].prec_level;																										
+				}																																							
+		}																																									
+		for(i = 0; i < rule_cnt; ++i)																													
+		{
+				
+				
+
+				if(!PSR_InsertRuleByStr(grammar, rule[i].rule, rule[i].prec_token, rule[i].handler, rule[i].auto_ret))		
+				{																																							
+						PSR_DestroyGrammar(grammar);																														
+						grammar = NULL;																																		
+						AR_ASSERT(false);																																	
+						return NULL;																																		
+				}																																							
+		}		
+		
+		if(start_rule == NULL)start_rule = L"";
+
+		if(!PSR_SetFirstRule(grammar,start_rule) || !PSR_CheckIsValidGrammar(grammar))																						
+		{																																									
+				PSR_DestroyGrammar(grammar);																																
+				grammar = NULL;																																				
+				AR_ASSERT(false);																																			
+				return NULL;																																				
+		}																																									
+		return grammar;																																						
+}
+
+
+
+void			CFG_Init()
+{
+		__init_cfg_node_list();
+		__init_core_list();
+}
+
+void			CFG_UnInit()
+{
+		__uninit_core_list();
+		__uninit_cfg_node_list();
+}
+
 
 AR_NAMESPACE_END
 

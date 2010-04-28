@@ -70,13 +70,12 @@ typedef struct __parser_rule_tag
 psrRule_t*		PSR_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, size_t auto_ret, const psrTermInfoList_t *term_list, arIOCtx_t *ctx);
 psrRule_t*		PSR_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, size_t auto_ret, const psrTermInfoList_t *term_list, arIOCtx_t *ctx);
 void			PSR_DestroyRule(psrRule_t *rule);
-psrRule_t*		PSR_CopyNewRule(const psrRule_t *rule);
-bool_t			PSR_IsEmptyRule(const psrRule_t *rule);
 
 /****************************************************************************************************************************************/
 
 
-typedef struct __parser_grammar_tag
+
+struct __parser_grammar_tag
 {
 		psrRule_t				**rules;
 		size_t					count;
@@ -87,7 +86,7 @@ typedef struct __parser_grammar_tag
 
 		psrCtx_t				psr_ctx;
 		arIOCtx_t				io_ctx;
-}psrGrammar_t;
+};
 
 psrGrammar_t*			PSR_CreateGrammar(const psrCtx_t *ctx, const arIOCtx_t *io_ctx);
 void					PSR_DestroyGrammar(psrGrammar_t *grammar);

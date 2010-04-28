@@ -28,7 +28,7 @@ const psrSymb_t	*PSR_DefPrecSymb = NULL;/*提供默认prec和assoc属性的终结符*/
 const psrSymb_t	*PSR_StartSymb = NULL;
 
 
-bool_t				PSR_IsBuildInSymbol(const struct __parser_symbol_tag		*symb)
+bool_t				PSR_IsBuildInSymbol(const psrSymb_t		*symb)
 {
 		AR_ASSERT(symb != NULL);
 

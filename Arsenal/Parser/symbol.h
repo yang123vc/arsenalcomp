@@ -24,7 +24,7 @@ typedef enum
 		PSR_NONTERM
 }psrSymbType_t;
 
-typedef struct __parser_symbol_tag psrSymb_t;
+
 
 
 struct __parser_symbol_tag

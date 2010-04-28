@@ -311,7 +311,7 @@ void			PSR_DestroyRule(psrRule_t *rule)
 }
 
 
-
+/*
 psrRule_t*		PSR_CopyNewRule(const psrRule_t *rule)
 {
 		psrRule_t *dest;
@@ -339,7 +339,7 @@ bool_t			PSR_IsEmptyRule(const psrRule_t *rule)
 
 		return rule->body.count == 0;
 }
-
+*/
 
 /******************************************Grammar************************************************************/
 

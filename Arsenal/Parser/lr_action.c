@@ -159,10 +159,13 @@ static void __destroy_expected_list(psrActionTable_t *tbl)
 
 
 
-void					PSR_DestroyActionTable(psrActionTable_t *tbl)
+void					PSR_DestroyActionTable(const psrActionTable_t *table)
 {
 		size_t i;
-		
+		psrActionTable_t *tbl;
+		AR_ASSERT(table != NULL);
+		tbl = (psrActionTable_t*)table;
+
 		__destroy_expected_list(tbl);
 
 		for(i = 0; i < tbl->term_set.count; ++i)
@@ -458,13 +461,13 @@ psrActionTable_t* __create_action_table(const psrGrammar_t *grammar, psrLRItemTy
 
 }
 
-psrActionTable_t* PSR_CreateActionTable_SLR(const psrGrammar_t *grammar)
+const psrActionTable_t* PSR_CreateActionTable_SLR(const psrGrammar_t *grammar)
 {
 		return __create_action_table(grammar, PSR_SLR);
 }
 
 
-psrActionTable_t* PSR_CreateActionTable_LALR(const psrGrammar_t *grammar)
+const psrActionTable_t* PSR_CreateActionTable_LALR(const psrGrammar_t *grammar)
 {
 		return __create_action_table(grammar, PSR_LALR);
 }

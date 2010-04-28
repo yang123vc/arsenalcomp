@@ -147,23 +147,13 @@
 					;
 
 
-
-/*
-
-
-
-
-
-
-*/
-
 %token	%skip			:	"{Separator}"
 					;
 %token	%skip			:	"{Delimiter1}"
 					;
 %token 	%skip			:	"{WhiteSpace}+";
 
-//%token 	OP_DIM		:	"{Dimension}";
+%token 	OP_DIM		:	"{Dimension}";
 %token	IDENTIFIER		:	"{Identifier}";
 %token	LITERAL		:	"{Literal}"	;
 %token	BOOLLIT		:	'"true"|"false"';
@@ -178,7 +168,7 @@
 %token	CAST 			:	"cast";
 %token	CATCH			:	"catch";
 %token	CHAR 			:	"char";
-%token	CLASS 		:	"class";
+%token	CLASS 		:	'"class"';
 %token	CONST 		:	"const";
 %token	CONTINUE 		:	"continue";
 %token	DEFAULT 		:	"default";
@@ -280,15 +270,14 @@
 
 
 
-%noassoc	IF_STMT_PREC	;
-%noassoc	IF_STMT_ELSE_STMT_PREC;
+%nonassoc	IF_STMT_PREC	;
+%nonassoc	IF_STMT_ELSE_STMT_PREC;
 
 
 CompilationUnit		:	CompilationUnit	LITERAL
 				|	LITERAL
 				;
 
-/*
 CompilationUnit
 	: ProgramFile
         ;
@@ -841,4 +830,3 @@ ConstantExpression
 	: ConditionalExpression
 	;
 
-*/

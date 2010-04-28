@@ -19,113 +19,94 @@ AR_NAMESPACE_BEGIN
 
 typedef enum
 {
-		TOK_EOI_ID				=		0x00	,/*\0*/
-		TOK_DELIM_ID			=		0x1000	,	
-		
-		TOK_TYPE_ID	,							/*占位符，提取出的lexeme需要到符号表检查是否为一个类型*/
-		TOK_DONE_ID	,							/*占位符, 伪终结符*/
-		
-		TOK_STRING_LITERAL,	/*STRING_LITERAL*/
-		TOK_OCT_CONSTANT,	/*OCT_CONSTANT*/
-		TOK_HEX_CONSTANT,	/*HEX_CONSTANT*/
-		TOK_DEC_CONSTANT,	/*DEC_CONSTANT*/
-		TOK_FLOAT_CONSTANT,	/*FLOAT_CONSTANT*/
-		TOK_CHAR_CONSTANT,	/*CHAR_CONSTANT*/
-		TOK_IDENTIFIER,		/*IDENTIFIER*/
-
-		
-		TOK_SWITCH,			/*switch*/
-		TOK_FOR,			/*for*/
-		TOK_GOTO,			/*goto*/
-		TOK_RETURN,			/*return*/
-		TOK_DO,				/*do*/
-		TOK_WHILE,			/*while*/
-		TOK_IF,				/*if*/
-		TOK_ELSE,			/*else*/
-
-		TOK_CONTINUE,		/*continue*/
-		TOK_DEFAULT,		/*default*/
-		TOK_CASE,			/*case*/
-		TOK_BREAK,			/*break*/
-		TOK_CONST,			/*const*/
-		TOK_VOLATILE,		/*volatile*/
-		TOK_SIZEOF,			/*size*/
-		TOK_STRUCT,			/*struct*/
-		TOK_UNION,			/*union*/
-		
-		TOK_TYPEDEF,		/*typedef*/
-		TOK_STATIC,			/*static*/
-		TOK_IMPORT,			/*import*/
-		TOK_EXPORT,			/*export*/
-		TOK_ATTRIBUTE,		/*attribute*/
-
-		TOK_SIGNED,			/*signed*/
-		TOK_UNSIGNED,		/*unsigned*/
-		TOK_VOID,		/*void*/
-		TOK_BYTE,		/*byte*/
-		TOK_SHORT,		/*short*/
-		TOK_INT,		/*int*/
-		TOK_LONG,		/*long*/
-		TOK_CHAR,		/*char*/
-		TOK_FLOAT,		/*float*/
-		TOK_DOUBLE,	/*double*/
-		
-		TOK_RIGHT_ASSIGN,	/*>>=*/
-		TOK_LEFT_ASSIGN,	/*<<=*/
-		TOK_ADD_ASSIGN,		/*+=*/
-		TOK_SUB_ASSIGN,		/*-=*/
-		TOK_MUL_ASSIGN,		/**=*/
-		TOK_DIV_ASSIGN,		/*/=*/
-		TOK_MOD_ASSIGN,		/*%=*/
-		TOK_AND_ASSIGN,		/*&=*/
-		TOK_XOR_ASSIGN,		/*^=*/
-		TOK_OR_ASSIGN,		/*|=*/
-		TOK_INC_OP,			/*++*/
-		TOK_DEC_OP,			/*--*/
-		TOK_PTR_OP,			/*->*/
-		TOK_AND_OP,			/*&&*/
-		TOK_OR_OP,			/*||*/
-
-		TOK_RIGHT_OP,			/*>>*/
-		TOK_LEFT_OP,			/*<<*/		
-		
-		TOK_LE_OP,				/*<=*/
-		TOK_GE_OP,				/*>=*/		
-		TOK_EQ_OP,				/*==*/
-		TOK_NE_OP,				/*!=*/			
-		TOK_LESS_OP,			/*<*/
-		TOK_GREATER_OP,		/*>*/
-
-		TOK_AND,			/*&*/
-		TOK_XOR,			/*^*/
-		TOK_OR,				/*|*/
-
-		TOK_NOT,			/*!*/
-		TOK_TILDE,			/* ~ */
-		TOK_ADD,			/* + */
-		TOK_SUB,			/* - */
-		TOK_MUL,			/* * */
-		TOK_DIV,			/* / */
-		TOK_MOD,			/* % */
-		
-		TOK_SEMICOLON,		/*;*/
-		TOK_L_BRACES,		/*{*/
-		TOK_R_BRACES,		/*}*/
-		TOK_L_SQUARE,		/*[*/
-		TOK_R_SQUARE,		/*]*/
-		TOK_L_PAREN,		/*(*/
-		TOK_R_PAREN,		/*)*/
-		TOK_COMMA,			/*,*/
-		TOK_COLON,			/*:*/
-		TOK_ASSIGN,			/*=*/
-		TOK_DOT,			/*.*/
-		TOK_QUEST			/*?*/
-/*		,
-		TOK_IF_STMT_PREC,		
-		TOK_IF_STMT_ELSE_STMT_PREC		
-		*/
+		TOK_DELIM_ID = 257,				/*过滤掉的空白或注释*/
+		TOK_TYPE_ID = 258,				/*typedef id*/
+		TOK_DONE_ID = 259,				/*遇到EOI词法分析器会将此符号add到parser中*/
+		TOK_CHAR_CONSTANT = 260,		/**/
+		TOK_STRING_LITERAL = 261,		/**/
+		TOK_FLOAT_CONSTANT = 262,		/**/
+		TOK_HEX_CONSTANT = 263,		/**/
+		TOK_OCT_CONSTANT = 264,		/**/
+		TOK_DEC_CONSTANT = 265,		/**/
+		TOK_IDENTIFIER = 266,		/**/
+		TOK_SWITCH = 267,		/**/
+		TOK_FOR = 268,		/**/
+		TOK_GOTO = 269,		/**/
+		TOK_RETURN = 270,		/**/
+		TOK_DO = 271,		/**/
+		TOK_WHILE = 272,		/**/
+		TOK_IF = 273,		/**/
+		TOK_ELSE = 274,		/**/
+		TOK_CONTINUE = 275,		/**/
+		TOK_DEFAULT = 276,		/**/
+		TOK_CASE = 277,		/**/
+		TOK_BREAK = 278,		/**/
+		TOK_CONST = 279,		/**/
+		TOK_VOLATILE = 280,		/**/
+		TOK_STRUCT = 281,		/**/
+		TOK_UNION = 282,		/**/
+		TOK_TYPEDEF = 283,		/**/
+		TOK_STATIC = 284,		/**/
+		TOK_SIZEOF = 285,		/**/
+		TOK_VOID = 286,		/**/
+		TOK_BYTE = 287,		/**/
+		TOK_CHAR = 288,		/**/
+		TOK_SHORT = 289,		/**/
+		TOK_INT = 290,		/**/
+		TOK_LONG = 291,		/**/
+		TOK_SIGNED = 292,		/**/
+		TOK_UNSIGNED = 293,		/**/
+		TOK_FLOAT = 294,		/**/
+		TOK_DOUBLE = 295,		/**/
+		TOK_IMPORT = 296,		/**/
+		TOK_EXPORT = 297,		/**/
+		TOK_ATTRIBUTE = 298,		/**/
+		TOK_RSHIFT_ASSIGN = 299,		/**/
+		TOK_LSHIFT_ASSIGN = 300,		/**/
+		TOK_ADD_ASSIGN = 301,		/**/
+		TOK_SUB_ASSIGN = 302,		/**/
+		TOK_MUL_ASSIGN = 303,		/**/
+		TOK_DIV_ASSIGN = 304,		/**/
+		TOK_MOD_ASSIGN = 305,		/**/
+		TOK_AND_ASSIGN = 306,		/**/
+		TOK_XOR_ASSIGN = 307,		/**/
+		TOK_OR_ASSIGN = 308,		/**/
+		TOK_RSHIFT = 309,			/**/
+		TOK_LSHIFT = 310,			/**/
+		TOK_INC = 311,				/**/		
+		TOK_DEC = 312,				/**/
+		TOK_PTR = 313,				/**/
+		TOK_ANDAND = 314,			/*&&*/
+		TOK_OROR = 315,				/*||*/
+		TOK_LE = 316,				/*<=*/
+		TOK_GE = 317,				/*>=*/
+		TOK_EQ = 318,				/*==*/
+		TOK_NE = 319,				/*!=*/
+		TOK_LESS = 320,				/*<*/
+		TOK_GREATER = 321,			/*>*/
+		TOK_L_BRACES = 322,			/*{*/
+		TOK_R_BRACES = 323,			/*}*/
+		TOK_L_PAREN = 324,			/*(*/
+		TOK_R_PAREN = 325,			/*)*/
+		TOK_L_SQUARE = 326,			/*[*/
+		TOK_R_SQUARE = 327,			/*]*/
+		TOK_SEMICOLON = 328,		/*;*/
+		TOK_COMMA = 329,			/*,*/
+		TOK_COLON = 330,			/*:*/
+		TOK_ASSIGN = 331,			/*=*/
+		TOK_DOT = 332,				/*.*/
+		TOK_AND = 333,				/*&*/
+		TOK_NOT = 334,				/*!*/
+		TOK_TILDE = 335,			/*~*/
+		TOK_ADD = 336,				/*+*/
+		TOK_SUB = 337,				/*-*/
+		TOK_MUL = 338,				/* * */
+		TOK_DIV = 339,				/* / */
+		TOK_MOD = 340,				/*%*/
+		TOK_XOR = 341,				/*^*/
+		TOK_OR = 342,				/*|*/
+		TOK_QUEST = 343,			/*?*/
 }rayTokType_t;
-
 
 
 
@@ -165,6 +146,20 @@ typedef enum
 		TY_FP_64,
 }rayTypeCode_t;
 
+
+
+#define TF_VOID			0x0001
+#define TF_BYTE			0x0002
+#define TF_CHAR			0x0004
+#define TF_SHORT		0x0008
+#define TF_INT			0x0010
+#define TF_LONG			0x0020
+#define TF_FLOAT		0x0040
+#define TF_DOUBLE		0x0080
+#define TF_SIGNED		0x0100
+#define TF_UNSIGNED		0x0200
+#define TF_STRUCT		0x0400
+#define TF_UNION		0x0800
 
 
 /*********************************************************************************************************************/
@@ -286,12 +281,14 @@ struct	__var_tag
 
 		rayInitializer_t	*init;
 
-		raySrcInfo_t		src;
-
 		rayVar_t			*next;
+
+		raySrcInfo_t		src;
 };
 
 
+
+/*********************************************block**********************************************************/
 
 typedef struct __typedef_tag
 {
@@ -299,10 +296,6 @@ typedef struct __typedef_tag
 		rayType_t		*type;	
 		raySrcInfo_t	src;
 }rayTypedef_t;
-
-
-
-
 
 struct __block_tag;
 typedef struct __block_tag		rayBlock_t;
@@ -321,11 +314,16 @@ struct __block_tag
 		rayType_t			**structs;
 		size_t				struct_cnt;
 
-
 		rayBlock_t			*next;
 		rayBlock_t			*subblocks;
 		rayBlock_t			*parent;
 };
+
+
+rayBlock_t*		RAY_CreateBlock(rayBlock_t		*parent);
+void			RAY_DestroyBlock(rayBlock_t		*block);
+
+
 
 
 

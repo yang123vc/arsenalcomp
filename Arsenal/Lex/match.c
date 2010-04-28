@@ -186,6 +186,22 @@ void			LEX_SkipN(lexMatch_t *pmatch, size_t nchar)
 		}
 }
 
+
+void			LEX_PutBack(lexMatch_t *pmatch, const lexToken_t *tok)
+{
+		AR_ASSERT(pmatch !=  NULL && tok != NULL && tok->str != NULL);
+
+#if defined(AR_DEBUG)
+		{
+				const wchar_t *beg = pmatch->input, *end = pmatch->input + AR_wcslen(pmatch->input);
+				AR_ASSERT(tok->str >= beg && tok->str < end);
+		}
+#endif
+		pmatch->next = tok->str;
+		pmatch->line = tok->line;
+		pmatch->col = tok->col;
+}
+
 AR_NAMESPACE_END
 
 

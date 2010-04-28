@@ -26,7 +26,7 @@ AR_NAMESPACE_BEGIN
 
 
 
-parser_t* PSR_CreateParser(const struct __parser_grammar_tag *grammar, psrModeType_t type)
+parser_t* PSR_CreateParser(const psrGrammar_t *grammar, psrModeType_t type)
 {
 		parser_t *parser;
 		size_t i;

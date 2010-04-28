@@ -190,11 +190,11 @@ static AR_INLINE bool_t			PSR_InsertToTermInfoRec(psrTermInfoRec_t *rec, const p
 #define TERM_BUCKET_SIZE		(256)
 
 
-typedef struct __term_table_tag
+struct __term_table_tag
 {
 		psrTermInfoRec_t		*bucket[TERM_BUCKET_SIZE];
 		size_t					item_count;
-}psrTermInfoTbl_t;
+};
 
 static AR_INLINE psrTermInfoTbl_t* PSR_CreateTermInfoTable()
 {
@@ -204,6 +204,7 @@ static AR_INLINE psrTermInfoTbl_t* PSR_CreateTermInfoTable()
 static AR_INLINE void PSR_DestroyTermInfoTable(psrTermInfoTbl_t *tbl)
 {
 		size_t i;
+		AR_ASSERT(tbl != NULL);
 		
 		for(i = 0; i < TERM_BUCKET_SIZE; ++i)
 		{
@@ -261,11 +262,11 @@ static AR_INLINE const psrTermInfo_t* PSR_FindTermFromInfoTable(const psrTermInf
 
 
 
-typedef struct __expected_message_tag
+struct __expected_message_tag
 {
 		const wchar_t	**msg;
 		size_t			count;
-}psrExpectedMsg_t;
+};
 
 
 
