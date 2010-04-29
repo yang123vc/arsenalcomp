@@ -16,6 +16,9 @@
 
 AR_NAMESPACE_BEGIN
 
+
+
+
 /*
 void			PSR_InitTermInfoList(psrTermInfoList_t	*lst);
 void			PSR_UnInitTermInfoList(psrTermInfoList_t	*lst);

@@ -38,6 +38,11 @@ bool_t			RAY_IsOuterBlock(const rayParser_t *parser, const rayBlock_t *block);
 
 rayBlock_t*		RAY_GetCurrentBlock(const rayParser_t *parser);
 
+size_t			RAY_GetAlignment(const rayParser_t	*parser);
+void			RAY_PushAlignment(rayParser_t	*parser, size_t align);
+void			RAY_PopAlignment(rayParser_t	*parser, size_t align);
+
+
 
 
 typedef enum

@@ -138,6 +138,7 @@ typedef struct __term_table_tag			psrTermInfoTbl_t;
 struct __expected_message_tag;
 typedef	struct __expected_message_tag	psrExpectedMsg_t;
 
+
 typedef struct __parser_tag
 {
 		const psrGrammar_t						*grammar;
@@ -167,15 +168,15 @@ void	  PSR_Clear(parser_t *parser);
 		由于采用了一个增广的文法，所以当EOI被增加到stack中时，只可能出现错误或者成为接受状态，EOI永远不会被SHIFT到parser中
 */
 
-bool_t	PSR_AddToken(parser_t *parser, const psrToken_t *tok);
+bool_t		PSR_AddToken(parser_t *parser, const psrToken_t *tok);
 
-psrNode_t* PSR_GetResult(parser_t *parser);/*在状态为accepted之后才可以调用*/
+psrNode_t*	PSR_GetResult(parser_t *parser);/*在状态为accepted之后才可以调用*/
 
-bool_t	PSR_IsAccepted(const parser_t *parser);
+bool_t		PSR_IsAccepted(const parser_t *parser);
 
-bool_t	PSR_IsInError(const parser_t *parser);
+bool_t		PSR_IsInError(const parser_t *parser);
 
-void	PSR_ClearError(parser_t *parser);
+void		PSR_ClearError(parser_t *parser);
 
 size_t			PSR_GetNodeCount(const parser_t *parser);
 psrNode_t*		PSR_IndexOfNodeStack(parser_t *parser, size_t index);
