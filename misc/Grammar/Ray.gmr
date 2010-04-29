@@ -1,11 +1,15 @@
 
-
 %name	delim 		:	"[ \r\n\t]"			
 				;
 %name	comment		:	"/\*([^\*]|\*+[^\*/])*\*+/"	
 				;
 %name	comment_line	:	"//[^\n]*\n"			
 				;
+%name skip_lexem	: 	"{delim}|{comment}|{comment_line}"
+				;
+
+
+
 %name	digit			:	"[0-9]"				
 				;
 %name	number		:	"{digit}+"				
@@ -14,32 +18,22 @@
 				;
 
 
-
-
 %name	int_type_suffix	:	"((u|U)?(l|L))|((u|U)(l|L)?)"
 				;
 
-
-
-
-
-%name	octal_escape	:	"(\\[0-3][0-7][0-7])|(\\[0-7][0-7])|(\\[0-7])"
-				;
-
-
 %name hex_digit		:	"[0-9a-fA-F]"
 				;
-
 %name hex_literal 	:	"0(x|X){hex_digit}+{int_type_suffix}?"
 				;
 
+%name oct_literal	:	"0[0-7]+{int_type_suffix}?"
+				;
 
 %name dec_literal	:	"(0|[1-9][0-9]*){int_type_suffix}?"
 				;
 
 
-%name oct_literal	:	"0[0-7]+{int_type_suffix}?"
-				;
+
 
 
 
@@ -56,44 +50,45 @@
 
 
 
-%name skip_lexem	: 	"{delim}|{comment}|{comment_line}"
-				;
 
 /*  '"'  == \x22,  '\'' == \x27 */
 
-%name	escape_seq		:	"(\\(b|t|n|f|r|\x22|\x27|\\))|{octal_escape}"
+%name	escape_seq		:	"(\\(\x22|\x27))"	
 				;
 
-%name	string_literal	: 	"(\x22({escape_seq}|[^\x22\\])*\x22)"
+%name	string_literal	: 	"(\x22({escape_seq}|[^\x22])*\x22)"			
 				;
 
-%name	char_literal	:	"\x27({escape_seq}|[^\x27\\])\x27"
+%name	char_literal	:	"\x27({escape_seq}|[^\x27])*\x27"			
 				;
 
 
-%token %skip 	:	"{delim}+|{comment}+|{comment_line}+"				,1		%action	"TOK_DELIM_ID"		;
+%name	keyword_lhd	:	"[A-Z_a-z0-9]"
+				;
 
 
+%name		float_constant	:	"{float_literal}(?!{keyword_lhd})"			
+					;
+%name		hex_constant	:	"{hex_literal}(?!{keyword_lhd})"			
+					;
+%name		oct_constant	:	"{oct_literal}(?!{keyword_lhd})"			
+					;
+%name		dec_constant	:	"{dec_literal}(?!{keyword_lhd})"			
+					;
 
 
-%token	TYPE_ID		:	'^$'			,0			%action 	"TOK_TYPE_ID"						;//不会出现在输入流中
-%token	DONE_ID		:	'^$'			,0			%action	"TOK_DONE_ID"						;//不会出现在输入流中
+%token 	%skip			:	"{skip_lexem}+"				,1		%action	"TOK_DELIM_ID"	;
+%token	TYPE_ID		:	'^$'						,0		%action 	"TOK_TYPE_ID"	;//不会出现在输入流中
+%token	DONE_ID		:	'^$'						,0		%action	"TOK_DONE_ID"	;//不会出现在输入流中
 
 
 %token	CHAR_CONSTANT	:	"{char_literal}"			%action "TOK_CHAR_CONSTANT"					;
 %token	STRING_LITERAL	:	"{string_literal}"			%action "TOK_STRING_LITERAL"					;
 
-
-/*
-由于引擎本身的算法原因，必须把相同前缀最长的匹配的优先级提到最高，例如匹配
-"=" 和"=="，需要把==的优先级设置到大于"="才可以正常匹配
-*/
+%token	FLOAT_NUMBER	:	"{float_constant}"						,2	%action "TOK_FLOAT_NUMBER"	;
+%token	INT_NUMBER		:	"{hex_constant}|{oct_constant}|{dec_constant}"	,2	%action "TOK_INT_NUMBER"	;
 
 
-%token	FLOAT_CONSTANT	:	"{float_literal}(?!{keyword_lhd})"			,2	%action "TOK_FLOAT_CONSTANT"	;
-%token	HEX_CONSTANT	:	"{hex_literal}(?!{keyword_lhd})"			,2	%action "TOK_HEX_CONSTANT"		;
-%token	OCT_CONSTANT	:	"{oct_literal}(?!{keyword_lhd})"			,1	%action "TOK_OCT_CONSTANT"		;
-%token	DEC_CONSTANT	:	"{dec_literal}(?!{keyword_lhd})"			,1	%action "TOK_DEC_CONSTANT"		;
 
 
 
@@ -101,7 +96,6 @@
 %token	IDENTIFIER		:	"{letter}({letter}|{digit})*"					%action "TOK_IDENTIFIER"		;
 
 
-%name		keyword_lhd	:	"[A-Z_a-z0-9]"														;
 
 
 
@@ -233,19 +227,20 @@
 %left		"+"	"-"							;
 %left		"*"	"/"	"%"						;
 
-%nonassoc	IF_STMT_PREC						;
-%nonassoc	IF_STMT_ELSE_STMT_PREC				;
-
-
-%start		program	;
-
-
-/****************************************特殊动作钩子**********************************************/
+/*
+"if" "(" expression ")" statement "else" statement 
+产生式的优先级依赖于其最右终结符或显性指定,这里就是"else"
+*/
+%nonassoc IF_WITHOUT_ELSE						;
+%nonassoc "else"							;	
 
 
 /**************************************************************************************/
+%start 				program				;
 
-program			:	translation_unit	DONE_ID
+
+
+program			:	translation_unit	//DONE_ID
 				|	DONE_ID
 				;
 
@@ -511,8 +506,8 @@ expression_statement		:	";"
 					|	expression	error
 					;
 
-selection_statement		:	"if" "(" expression ")" statement	%prec IF_STMT_PREC
-					|	"if" "(" expression ")" statement "else" statement	%prec IF_STMT_ELSE_STMT_PREC
+selection_statement		:	"if" "(" expression ")" statement				%prec IF_WITHOUT_ELSE
+					|	"if" "(" expression ")" statement "else" statement	
 					|	"switch" "(" expression ")" statement
 					;
 
@@ -552,10 +547,8 @@ expression			:	assignment_expression
 
 primary_expression	:	"(" expression ")"	%action	"semantic_auto_return_1"
 				|	IDENTIFIER	
-				|	HEX_CONSTANT
-				|	DEC_CONSTANT
-				|	OCT_CONSTANT
-				|	FLOAT_CONSTANT
+				|	FLOAT_NUMBER
+				|	INT_NUMBER
 				|	CHAR_CONSTANT
 				|	string_list
 				;
@@ -581,7 +574,8 @@ argument_expression_list	:	assignment_expression							%action	"semantic_auto_re
 					|	argument_expression_list "," assignment_expression
 					;
 
-unary_expression	:	postfix_expression		%action	"semantic_auto_return_0"
+
+unary_expression	:	postfix_expression								%action	"semantic_auto_return_0"
 				|	"++" unary_expression		
 				|	"--" unary_expression		
 				|	"&"	cast_expression		
@@ -665,9 +659,15 @@ assignment_operator		:	"="
 丢弃的终结符
 %token	"enum"	:	'"enum"(?!{keyword_lhd})'			,1		;	//ENUM					;
 %token	"..."		:	'"..."'						,1		;	//ELLIPSIS
-%token	"auto"	:	'"auto"(?!{keyword_lhd})'			,1		;		//AUTO
+%token	"auto"	:	'"auto"(?!{keyword_lhd})'			,1		;	//AUTO
 %token	"register"	:	'"register"(?!{keyword_lhd})'		,1		;	//REGISTER
 %token	"extern"	:	'"extern"(?!{keyword_lhd})'		,1		;	//EXTERN
+
+%name	octal_escape	:	"(\\[0-3][0-7][0-7])|(\\[0-7][0-7])|(\\[0-7])"	;
+%name	escape_seq		:	"(\\(b|t|n|f|r|\x22|\x27|\\))|{octal_escape}"	;
+%name	string_literal	: 	"(\x22({escape_seq}|[^\x22\\])*\x22)"			;
+%name	char_literal	:	"\x27({escape_seq}|[^\x27\\])\x27"			;
+
 */
 
 

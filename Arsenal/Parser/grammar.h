@@ -73,8 +73,6 @@ void			PSR_DestroyRule(psrRule_t *rule);
 
 /****************************************************************************************************************************************/
 
-
-
 struct __parser_grammar_tag
 {
 		psrRule_t				**rules;
@@ -88,6 +86,7 @@ struct __parser_grammar_tag
 		arIOCtx_t				io_ctx;
 };
 
+
 psrGrammar_t*			PSR_CreateGrammar(const psrCtx_t *ctx, const arIOCtx_t *io_ctx);
 void					PSR_DestroyGrammar(psrGrammar_t *grammar);
 void					PSR_ClearGrammar(psrGrammar_t *grammar);
@@ -98,6 +97,7 @@ void					PSR_ResetGrammarParseContext(psrGrammar_t *grammar, const psrCtx_t *io_
 
 const psrCtx_t*			PSR_GetGrammarContext(const psrGrammar_t *grammar);
 const arIOCtx_t*		PSR_GetGrammarIOContext(const psrGrammar_t *grammar);
+
 
 int_t					PSR_IndexOfGrammar(const psrGrammar_t *grammar, const psrRule_t *rule);
 

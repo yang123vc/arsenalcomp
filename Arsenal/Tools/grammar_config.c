@@ -1628,6 +1628,8 @@ static void	__init_core_list()
 
 static void __uninit_core_list()
 {
+		size_t	count = 0;
+
 		while(__g_core_list)
 		{
 				collect_core_t *tmp = __g_core_list;
@@ -1638,9 +1640,18 @@ static void __uninit_core_list()
 				PSR_DestroyGrammar(tmp->grammar);
 				LEX_Destroy(tmp->lex);
 				AR_DEL(tmp);
+				count++;
 		}
-		
 		__g_core_list = NULL;
+
+
+		{
+				wchar_t buf[1024];
+				AR_swprintf(buf, 1024, L"Total consume Config Parser == %u", count);
+				AR_printf(L"%ls\r\n", buf);
+		}
+
+
 }
 
 static collect_core_t* __create_parser_core()
@@ -1680,7 +1691,6 @@ static void __destroy_parser_core(collect_core_t *core)
 		core->next = __g_core_list;
 		__g_core_list = core;
 		AR_UnLockSpinLock(&__g_core_lock);
-
 }
 
 

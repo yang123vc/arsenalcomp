@@ -129,30 +129,39 @@ static struct {const wchar_t *name; size_t tokval; size_t lex_prec; const wchar_
 
 #define __TERM_COUNT__ ((size_t)88)
 
-static struct {const wchar_t *name; size_t tokval; size_t prec_level; psrAssocType_t	assoc;}__g_prec_pattern[] =  {
-{L"||", TOK_OROR,1, PSR_ASSOC_LEFT},
-{L"&&", TOK_ANDAND,2, PSR_ASSOC_LEFT},
-{L"|", TOK_OR,3, PSR_ASSOC_LEFT},
-{L"^", TOK_XOR,4, PSR_ASSOC_LEFT},
-{L"&", TOK_AND,5, PSR_ASSOC_LEFT},
-{L"==", TOK_EQ,6, PSR_ASSOC_LEFT},
-{L"!=", TOK_NE,6, PSR_ASSOC_LEFT},
-{L"<", TOK_LESS,7, PSR_ASSOC_LEFT},
-{L"<=", TOK_LE,7, PSR_ASSOC_LEFT},
-{L">", TOK_GREATER,7, PSR_ASSOC_LEFT},
-{L">=", TOK_GE,7, PSR_ASSOC_LEFT},
-{L"<<", TOK_LSHIFT,8, PSR_ASSOC_LEFT},
-{L">>", TOK_RSHIFT,8, PSR_ASSOC_LEFT},
-{L"+", TOK_ADD,9, PSR_ASSOC_LEFT},
-{L"-", TOK_SUB,9, PSR_ASSOC_LEFT},
-{L"*", TOK_MUL,10, PSR_ASSOC_LEFT},
-{L"/", TOK_DIV,10, PSR_ASSOC_LEFT},
-{L"%", TOK_MOD,10, PSR_ASSOC_LEFT},
-{L"IF_STMT_PREC", 344,11, PSR_ASSOC_NONASSOC},
-{L"IF_STMT_ELSE_STMT_PREC", 345,12, PSR_ASSOC_NONASSOC}
+static struct 
+{
+		const wchar_t *name; 
+		size_t tokval; 
+		size_t prec_level; 
+		psrAssocType_t	assoc;
+}__g_prec_pattern[] =  
+{
+		{L"||", TOK_OROR,1, PSR_ASSOC_LEFT},
+		{L"&&", TOK_ANDAND,2, PSR_ASSOC_LEFT},
+		{L"|", TOK_OR,3, PSR_ASSOC_LEFT},
+		{L"^", TOK_XOR,4, PSR_ASSOC_LEFT},
+		{L"&", TOK_AND,5, PSR_ASSOC_LEFT},
+		{L"==", TOK_EQ,6, PSR_ASSOC_LEFT},
+		{L"!=", TOK_NE,6, PSR_ASSOC_LEFT},
+		{L"<", TOK_LESS,7, PSR_ASSOC_LEFT},
+		{L"<=", TOK_LE,7, PSR_ASSOC_LEFT},
+		{L">", TOK_GREATER,7, PSR_ASSOC_LEFT},
+		{L">=", TOK_GE,7, PSR_ASSOC_LEFT},
+		{L"<<", TOK_LSHIFT,8, PSR_ASSOC_LEFT},
+		{L">>", TOK_RSHIFT,8, PSR_ASSOC_LEFT},
+		{L"+", TOK_ADD,9, PSR_ASSOC_LEFT},
+		{L"-", TOK_SUB,9, PSR_ASSOC_LEFT},
+		{L"*", TOK_MUL,10, PSR_ASSOC_LEFT},
+		{L"/", TOK_DIV,10, PSR_ASSOC_LEFT},
+		{L"%", TOK_MOD,10, PSR_ASSOC_LEFT},
+		{L"IF_WITHOUT_ELSE", 344,11, PSR_ASSOC_NONASSOC},
+		{L"else", TOK_ELSE,12, PSR_ASSOC_NONASSOC}
 };
 
 #define __PREC_COUNT__ ((size_t)20)
+
+
 
 /*program	:	translation_unit DONE_ID */
 /*program	:	DONE_ID */
@@ -671,7 +680,7 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 };
 
 #define __RULE_COUNT__ ((size_t)199)
-#define START_RULE L"program"
+#define START_RULE		L"program"
 
 
 
