@@ -139,10 +139,11 @@ typedef struct __parser_tag
 {
 		const psrGrammar_t						*grammar;
 		const psrActionTable_t					*tbl;
-
 		psrTermInfoTbl_t						*term_tbl;
 		psrExpectedMsg_t						*msg_set;
 		size_t									msg_count;
+
+		size_t									ref_cnt;
 }parser_t;
 
 
