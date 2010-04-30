@@ -54,11 +54,37 @@ CGrammarDesignerApp theApp;
 
 
 // CGrammarDesignerApp initialization
+/*
+typedef struct __ar_init_tag
+{
+		arIOCtx_t		global_io_ctx;
+}arInit_t;
+*/
+
+static void	AR_STDCALL	__dummy_error_func(int_t level, const wchar_t *msg, void *ctx)
+{
+
+}
+
+static void	AR_STDCALL	__dummy_print_func(const wchar_t *msg, void *ctx)
+{
+
+}
+
+static const ARSpace::arInit_t	__dummy_context = 
+{
+		{
+		__dummy_error_func,
+		__dummy_print_func,
+		NULL
+		}
+};
 
 BOOL CGrammarDesignerApp::InitInstance()
 {
 
-	ArsenalCPP::Arsenal::Instance(new ArsenalCPP::DummyContext());
+		ARSpace::Arsenal_Init(&__dummy_context);
+	
 
 	// InitCommonControlsEx() is required on Windows XP if an application
 	// manifest specifies use of ComCtl32.dll version 6 or later to enable
@@ -153,7 +179,7 @@ int CGrammarDesignerApp::ExitInstance()
 		
 		
 		int stat = CWinAppEx::ExitInstance();
-		ArsenalCPP::Arsenal::UnInstance();
+		ARSpace::Arsenal_UnInit();
 		return stat;
 }
 

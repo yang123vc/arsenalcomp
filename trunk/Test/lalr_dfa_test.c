@@ -182,7 +182,7 @@ static lex_t* __build_lex()
 static  psrGrammar_t* __build_grammar()
 {
 		psrGrammar_t	*gmr;
-		psrCtx_t ctx = {NULL, free_node,  NULL};
+		psrHandler_t ctx = {NULL, free_node};
 
 		gmr = PSR_CreateGrammar(&ctx, NULL);
 

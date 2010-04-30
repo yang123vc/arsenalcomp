@@ -183,10 +183,10 @@ static lex_t* __build_lex()
 
 
 static psrGrammar_t *__g_gmr = NULL;
-static  parser_t* __build_parser()
+static  const parser_t* __build_parser()
 {
 		psrGrammar_t	*gmr;
-		psrCtx_t ctx = {NULL, free_node,  NULL};
+		psrHandler_t ctx = {NULL, free_node,};
 
 		gmr = PSR_CreateGrammar(&ctx, NULL);
 
@@ -230,7 +230,7 @@ static  parser_t* __build_parser()
 
 		
 		{
-				parser_t *psr;
+				const parser_t *psr;
 				
 				
 				psr =  PSR_CreateParser(gmr, PSR_SLR);
@@ -288,7 +288,8 @@ int post_order(Node_t *node)
 
 void calc_test()
 {
-		parser_t *psr;
+		const parser_t *psr;
+		psrContext_t	*pc1, *pc2;
 		lex_t	*lex;
 		lexMatch_t		match;
 		lexToken_t		tok;
@@ -304,6 +305,9 @@ void calc_test()
 		lex = __build_lex();
 		AR_ASSERT(lex);
 		psr = __build_parser();
+		
+		pc1 = PSR_CreateContext(psr, NULL);
+		pc2 = PSR_CreateContext(psr, NULL);
 
 		/*
 		str = AR_CreateString();
@@ -379,7 +383,7 @@ void calc_test()
 		getchar();
 
 		LEX_InitMatch(&match, L"10 + (5 + 4) / 3");
-#if(0)
+#if(1)
 		is_ok = true;
 		while(is_ok)
 		{
@@ -393,7 +397,8 @@ void calc_test()
 				
 				AR_printf(L"token == %ls : val = %d\r\n", AR_wcsndup(tok.str, tok.count), tok.value);
 				PSR_TOTERMTOK(&tok, &term);
-				is_ok = PSR_AddToken(psr, &term);
+				is_ok = PSR_AddToken(pc1, &term);
+				is_ok = PSR_AddToken(pc2, &term);
 
 				if(!is_ok)continue;
 				
@@ -409,13 +414,26 @@ void calc_test()
 		{
 				Node_t *res;
 				int v;
-				res = (Node_t*)PSR_GetResult(psr);
+				res = (Node_t*)PSR_GetResult(pc1);
 				v = post_order(res);
 				printf("\r\n");
 				printf("num == %d\r\n", v);
 
 		}
+
+		{
+				Node_t *res;
+				int v;
+				res = (Node_t*)PSR_GetResult(pc2);
+				v = post_order(res);
+				printf("\r\n");
+				printf("num == %d\r\n", v);
+
+		}
+
 #endif
+		PSR_DestroyContext(pc1);
+		PSR_DestroyContext(pc2);
 		PSR_DestroyParser(psr);
 		PSR_DestroyGrammar(__g_gmr);
 		LEX_Destroy(lex);
@@ -430,7 +448,7 @@ void calc_test()
 void calc_test3()
 {
 		psrGrammar_t	*gmr, *gmr2;
-		psrCtx_t ctx = {NULL, free_node,  NULL};
+		psrHandler_t ctx = {NULL, free_node};
 
 		gmr = PSR_CreateGrammar(&ctx, NULL);
 		

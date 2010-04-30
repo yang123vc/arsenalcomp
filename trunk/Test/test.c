@@ -112,9 +112,9 @@ void AR_Test()
 		//parser_perf_test();
 		
 		//rgx_test();
-		calc_test();
+		//calc_test();
 
-		//parser_test();
+		parser_test();
 		
 		//grammar_test();
 		

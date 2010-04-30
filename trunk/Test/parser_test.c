@@ -1,11 +1,10 @@
+#if(1)
 
 #include "test.h"
 
 
 #include "../Arsenal/Parser/grammar.h"
 #include "../Arsenal/Parser/parser.h"
-
-
 
 
 #include "../Arsenal/Tools/tools.h"
@@ -338,7 +337,7 @@ void parser_test_test()
 		{
 				
 
-#if(0)
+#if(1)
 				size_t i;
 				
 				AR_printf(L"----------------------\r\n");
@@ -483,12 +482,12 @@ void parser_perf_test()
 
 void parser_test()
 {
+		/*
 		cfgConfig_t		*cfg;
-		
 		cfg = CFG_CollectGrammarConfig(L"aaaaaaaaaaaaaaaaaaa", NULL);
+		*/
 
-
-
+		parser_test_test();
 
 
 }
@@ -498,4 +497,6 @@ AR_NAMESPACE_END
 #endif
 
 
+
+#endif
 
