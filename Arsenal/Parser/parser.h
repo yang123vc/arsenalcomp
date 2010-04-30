@@ -26,7 +26,6 @@ AR_NAMESPACE_BEGIN
 
 
 typedef void			psrNode_t;
-/*typedef lexToken_t		psrToken_t;*/
 
 
 typedef struct __parser_token_tag
@@ -66,6 +65,12 @@ typedef void			(AR_STDCALL *psrFreeFunc_t)(psrNode_t *node, void *ctx);
 typedef void			(AR_STDCALL *psrErrorFunc_t)(const psrToken_t *tok, const wchar_t *expected[], size_t count, void *ctx);
 
 
+
+typedef struct __parser_handler_tag
+{
+		psrErrorFunc_t	error_f;
+		psrFreeFunc_t	free_f;
+}psrHandler_t;
 
 
 /**********************************必须在所有其它PSR族函数之前调用，否则行为未定义***************************/
@@ -111,17 +116,6 @@ typedef psrLRItemType_t psrModeType_t;
 
 
 
-
-
-
-typedef struct __parser_context_tag
-{
-		psrErrorFunc_t	error_f;
-		psrFreeFunc_t	free_f;
-		void			*ctx;
-}psrCtx_t;
-
-
 struct __parser_symbol_tag;
 typedef struct __parser_symbol_tag		psrSymb_t;
 
@@ -139,6 +133,8 @@ struct __expected_message_tag;
 typedef	struct __expected_message_tag	psrExpectedMsg_t;
 
 
+
+
 typedef struct __parser_tag
 {
 		const psrGrammar_t						*grammar;
@@ -147,39 +143,61 @@ typedef struct __parser_tag
 		psrTermInfoTbl_t						*term_tbl;
 		psrExpectedMsg_t						*msg_set;
 		size_t									msg_count;
-
-		bool_t									is_repair;
-		bool_t									is_accepted;
-		struct __parser_stack_tag				*state_stack;
-		struct __parser_node_stack				*node_stack;
-		
 }parser_t;
 
 
-parser_t* PSR_CreateParser(const psrGrammar_t *grammar, psrModeType_t type);
 
-void	  PSR_DestroyParser(parser_t *parser);
+struct __parser_stack_tag;
+typedef struct __parser_stack_tag		psrStack_t;
 
-void	  PSR_Clear(parser_t *parser);
+struct __parser_node_stack;
+typedef struct __parser_node_stack		psrNodeStack_t;
 
-#define	  PSR_GetGrammar(_psr)	((psrGrammar_t*)((_psr)->grammar))
+typedef struct __parser_context_tag
+{
+		const parser_t							*parser;
+		bool_t									is_repair;
+		bool_t									is_accepted;
+		psrStack_t								*state_stack;
+		psrNodeStack_t							*node_stack;
+		void									*ctx;
+}psrContext_t;
+
+
+const parser_t* PSR_CreateParser(const psrGrammar_t *grammar, psrModeType_t type);
+
+void			PSR_DestroyParser(const parser_t *parser);
+
+#define			PSR_GetGrammar(_psr)	((const psrGrammar_t*)((_psr)->grammar))
+
+
+psrContext_t*	PSR_CreateContext(const parser_t *parser, void *ctx);
+void			PSR_DestroyContext(psrContext_t	*ctx);
+
+
+/*****************************************Context*****************************************/
 
 /*
 		由于采用了一个增广的文法，所以当EOI被增加到stack中时，只可能出现错误或者成为接受状态，EOI永远不会被SHIFT到parser中
 */
 
-bool_t		PSR_AddToken(parser_t *parser, const psrToken_t *tok);
+void		PSR_Clear(psrContext_t *parser);
 
-psrNode_t*	PSR_GetResult(parser_t *parser);/*在状态为accepted之后才可以调用*/
+psrNode_t*	PSR_GetResult(psrContext_t *parser);/*在状态为accepted之后才可以调用*/
 
-bool_t		PSR_IsAccepted(const parser_t *parser);
+bool_t		PSR_IsAccepted(const psrContext_t *parser);
 
-bool_t		PSR_IsInError(const parser_t *parser);
+bool_t		PSR_IsInError(const psrContext_t *parser);
 
-void		PSR_ClearError(parser_t *parser);
+void		PSR_ClearError(psrContext_t *parser);
 
-size_t			PSR_GetNodeCount(const parser_t *parser);
-psrNode_t*		PSR_IndexOfNodeStack(parser_t *parser, size_t index);
+size_t		PSR_GetNodeCount(const psrContext_t *parser);
+
+psrNode_t*	PSR_IndexOfNodeStack(psrContext_t *parser, size_t index);
+
+bool_t		PSR_AddToken(psrContext_t *parser_context, const psrToken_t *tok);
+
+
 
 
 /***************************************Print************************************/
@@ -249,6 +267,10 @@ typedef struct __view_info_tag
 
 const psrStatusView_t*			PSR_CreateParserStatusView(const parser_t *parser);
 void							PSR_DestroyParserStatusView(const psrStatusView_t *view);
+
+
+
+
 
 AR_NAMESPACE_END
 

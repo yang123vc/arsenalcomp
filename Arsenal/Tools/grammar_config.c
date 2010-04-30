@@ -1380,6 +1380,8 @@ static const cfgRuleDef_t	__cfg_rule[] =
 };
 
 
+
+
 static lex_t* __build_lex(arIOCtx_t		*io)
 {
 		lex_t *lex;
@@ -1425,13 +1427,13 @@ static lex_t* __build_lex(arIOCtx_t		*io)
 }
 
 
-static psrGrammar_t*	__build_grammar(psrCtx_t *psr_ctx, arIOCtx_t *io)
+static psrGrammar_t*	__build_grammar(psrHandler_t *handler, arIOCtx_t *io)
 {
 		psrGrammar_t	*gmr;
 		size_t i;
-		AR_ASSERT(psr_ctx != NULL);
+		AR_ASSERT(handler != NULL);
 
-		gmr = PSR_CreateGrammar(psr_ctx, io);
+		gmr = PSR_CreateGrammar(handler, io);
 
 		if(gmr == NULL)return NULL;
 
@@ -1470,15 +1472,19 @@ static psrGrammar_t*	__build_grammar(psrCtx_t *psr_ctx, arIOCtx_t *io)
 		return gmr;
 }
 
-static parser_t*		__build_parser(const psrGrammar_t *gmr)
+
+
+static const parser_t*		__build_parser(const psrGrammar_t *gmr)
 {
-		parser_t *parser;
+		const parser_t *parser;
 		AR_ASSERT(gmr && PSR_CheckIsValidGrammar(gmr));
 
 		parser = PSR_CreateParser(gmr, PSR_SLR);
 		AR_ASSERT(parser && PSR_CountParserConflict(parser) == 0);
 		return parser;
 }
+
+
 
 
 /*
@@ -1525,10 +1531,12 @@ void	AR_STDCALL cfg_on_print(const wchar_t *msg, void *ctx)
 
 
 
+
 static void	AR_STDCALL cfg_free(psrNode_t *node, void *ctx)
 {
 		CFG_DestroyNode((cfgNode_t*)node);
 }
+
 
 static void		AR_STDCALL cfg_error(const psrToken_t *tok, const wchar_t *expected[], size_t count, void *ctx)
 {
@@ -1601,108 +1609,64 @@ static arIOCtx_t	__def_io_ctx =
 		NULL
 };
 
-static psrCtx_t		__def_psr_ctx = 
+static psrHandler_t		__def_handler_ctx = 
 {
 		cfg_error,
 		cfg_free,
-		NULL,
 };
 
 
-typedef struct __collect_core_tag
+static arSpinLock_t				__g_lock;
+static psrGrammar_t				*__g_grammar = NULL;
+static const parser_t			*__g_parser = NULL;
+
+static void __init_parser_tag()
 {
-		lex_t							*lex;
-		psrGrammar_t					*grammar;
-		parser_t						*parser;
-		struct __collect_core_tag		*next;
-}collect_core_t;
-
-static arSpinLock_t			__g_core_lock;
-static collect_core_t		*__g_core_list = NULL;
-
-static void	__init_core_list()
-{
-		AR_InitSpinLock(&__g_core_lock);
-		__g_core_list = NULL;
-}
-
-static void __uninit_core_list()
-{
-		size_t	count = 0;
-
-		while(__g_core_list)
-		{
-				collect_core_t *tmp = __g_core_list;
-				__g_core_list = __g_core_list->next;
-				
-				AR_ASSERT(tmp->lex != NULL && tmp->grammar != NULL && tmp->parser != NULL);
-				PSR_DestroyParser(tmp->parser);
-				PSR_DestroyGrammar(tmp->grammar);
-				LEX_Destroy(tmp->lex);
-				AR_DEL(tmp);
-				count++;
-		}
-		__g_core_list = NULL;
-
-
-		{
-				wchar_t buf[1024];
-				AR_swprintf(buf, 1024, L"Total consume Config Parser == %u", count);
-				AR_printf(L"%ls\r\n", buf);
-		}
-
-
-}
-
-static collect_core_t* __create_parser_core()
-{
-		collect_core_t	*core = NULL;
+		psrHandler_t	psr_handler;
+		AR_InitSpinLock(&__g_lock);
 		
-		AR_LockSpinLock(&__g_core_lock);
-		
-		if(__g_core_list == NULL)
-		{
-				core = NULL;
-		}else
-		{
-				core = __g_core_list;
-				__g_core_list = __g_core_list->next;
-		}
-		AR_UnLockSpinLock(&__g_core_lock);
-
-		if(core == NULL)
-		{
-				core = AR_NEW0(collect_core_t);
-				core->lex = __build_lex(&__def_io_ctx);
-				core->grammar = __build_grammar(&__def_psr_ctx, &__def_io_ctx);
-				core->parser = __build_parser(core->grammar);
-		}
-		return core;
+		psr_handler.error_f = cfg_error;
+		psr_handler.free_f = cfg_free;
+		__g_grammar = __build_grammar(&psr_handler, NULL);
+		__g_parser	= __build_parser(__g_grammar);
 }
 
 
-static void __destroy_parser_core(collect_core_t *core)
+static void __uninit_parser_tag()
 {
-		AR_ASSERT(core != NULL);
-		PSR_ResetGrammarIOContext(PSR_GetGrammar(core->parser), &__def_io_ctx);
-		PSR_ResetGrammarParseContext(PSR_GetGrammar(core->parser), &__def_psr_ctx);
-
-		AR_LockSpinLock(&__g_core_lock);
-		core->next = __g_core_list;
-		__g_core_list = core;
-		AR_UnLockSpinLock(&__g_core_lock);
+		PSR_DestroyParser(__g_parser);
+		PSR_DestroyGrammar(__g_grammar);
+		__g_parser = NULL;
+		__g_grammar = NULL;
+		AR_UnInitSpinLock(&__g_lock);
+		
 }
 
+
+
+static psrContext_t*	__create_parser_context(void *ctx)
+{
+		psrContext_t	*parser_context = NULL;
+		AR_LockSpinLock(&__g_lock);
+		parser_context = PSR_CreateContext(__g_parser, ctx);
+		AR_UnLockSpinLock(&__g_lock);
+		return parser_context;
+}
+
+static void				__destroy_parser_context(psrContext_t *parser_context)
+{
+		AR_ASSERT(parser_context != NULL);
+		PSR_DestroyContext(parser_context);
+}
 
 
 cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *report)
 {
 
 		bool_t is_ok, has_error;
-		collect_core_t	*core;
+		
 		lex_t			*lex;
-		psrGrammar_t	*gmr;
-		parser_t		*parser;
+		psrContext_t	*parser_context;
 
 		lexMatch_t		match;
 		lexToken_t		tok;
@@ -1710,8 +1674,8 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 		
 		cfgNode_t		*result = NULL;
 
-		arIOCtx_t	io_ctx ;
-		psrCtx_t	psr_ctx;
+		arIOCtx_t		io_ctx ;
+		
 
 		AR_ASSERT(gmr_txt != NULL);
 
@@ -1719,30 +1683,12 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 
 		io_ctx.on_error = cfg_on_error;
 		io_ctx.on_print = cfg_on_print;
-		io_ctx.ctx = (void*)report;
+		io_ctx.ctx		= (void*)report;
 
-		psr_ctx.error_f = cfg_error;
-		psr_ctx.free_f = cfg_free;
-		psr_ctx.ctx = (void*)report;
-
-
-		core = __create_parser_core();
-		lex = core->lex;
-		gmr = core->grammar;
-		parser = core->parser;
-
-		PSR_ResetGrammarIOContext(PSR_GetGrammar(parser), &io_ctx);
-		PSR_ResetGrammarParseContext(PSR_GetGrammar(parser), &psr_ctx);
-
-
-#if(0)
+		
+		
 		lex = __build_lex(&io_ctx);
-		gmr = __build_grammar(&psr_ctx, &io_ctx);
-		parser = __build_parser(gmr);
-
-
-
-#endif
+		parser_context = __create_parser_context((void*)report);
 
 		LEX_InitMatch(&match, gmr_txt);
 
@@ -1769,6 +1715,7 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 						str = AR_CreateString();
 
 						AR_AppendFormatString(str, L"Invalid Token %ls...(%"AR_PLAT_INT_FMT L"d : %"AR_PLAT_INT_FMT L"d)\r\n", tok, match.line, match.col);
+
 						if(tok)AR_DEL(tok);
 
 						info.type = CFG_REPORT_ERR_LEX_T;
@@ -1780,11 +1727,12 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 						tmp_tok.str =  match.input;
 						tmp_tok.line = match.line;
 						tmp_tok.col = match.col;
+
 						info.tok = &tmp_tok;
 						info.err_level = 0;
-
+						
 						report->report_func(&info, report->report_ctx);
-
+						
 						AR_DestroyString(str);
 
 						AR_ASSERT(*match.next != L'\0');
@@ -1809,13 +1757,13 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 						end.str_cnt = 1;
 						end.term_val = FAKE_EOI;
 
-						if(!PSR_AddToken(parser, &end))
+						if(!PSR_AddToken(parser_context, &end))
 						{
 								AR_error(AR_ERR_FATAL, L"%hs\r\n", AR_FUNC_NAME);
 						}
 				}
 
-				is_ok = PSR_AddToken(parser, &term);
+				is_ok = PSR_AddToken(parser_context, &term);
 
 
 				if(tok.value == EOI)break;
@@ -1823,7 +1771,7 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 
 		if(is_ok)
 		{
-				result = (cfgNode_t*)PSR_GetResult(parser);
+				result = (cfgNode_t*)PSR_GetResult(parser_context);
 				AR_ASSERT(result->type == CFG_CONFIG_T);
 
 				if(result && !result->config.has_error)
@@ -1832,18 +1780,11 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 				}
 		}
 
-
-#if(0)
-		PSR_DestroyParser(parser);
-		PSR_DestroyGrammar(gmr);
+		
+		__destroy_parser_context(parser_context);
 		LEX_Destroy(lex);
-#endif
 		LEX_UnInitMatch(&match);
 		
-		AR_ASSERT(core != NULL && core->grammar != NULL && core->lex != NULL && core->parser != NULL);
-		__destroy_parser_core(core);
-
-
 
 		return (cfgConfig_t*)result;
 
@@ -1896,12 +1837,12 @@ L"}"
 ;
 
 static const wchar_t CFG_DEF_BUILD_GRAMMAR[] =
-L"static psrGrammar_t*	__build_grammar(const psrCtx_t	*psr_ctx, const arIOCtx_t *io)											\n"
+L"static psrGrammar_t*	__build_grammar(const psrHandler_t	*handler, const arIOCtx_t *io)										\n"
 L"{																																\n"
 L"		psrGrammar_t	*grammar;																								\n"
 L"		size_t i;																												\n"
-L"		AR_ASSERT(psr_ctx != NULL);																								\n"
-L"		grammar = PSR_CreateGrammar(psr_ctx, io);																				\n"
+L"		AR_ASSERT(handler != NULL);																								\n"
+L"		grammar = PSR_CreateGrammar(handler, io);																				\n"
 L"		for(i = 0; i < __TERM_COUNT__; ++i)																						\n"
 L"		{																														\n"
 L"				if(__g_term_pattern[i].skip || __g_term_pattern[i].tokval == 0)continue;										\n"
@@ -2394,14 +2335,16 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 void			CFG_Init()
 {
 		__init_cfg_node_list();
-		__init_core_list();
+		__init_parser_tag();
 }
 
 void			CFG_UnInit()
 {
-		__uninit_core_list();
+		__uninit_parser_tag();
 		__uninit_cfg_node_list();
 }
+
+
 
 
 AR_NAMESPACE_END

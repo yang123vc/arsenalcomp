@@ -26,7 +26,6 @@ void	Tools_Init()
 void	Tools_UnInit()
 {
 		CFG_UnInit();
-
 }
 
 

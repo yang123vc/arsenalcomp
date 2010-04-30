@@ -33,6 +33,13 @@ void			LEX_MatchFlags(lexMatch_t *pmatch, uint_t flags, bool_t is_on)
 				pmatch->flags &= ~flags;
 		}
 }
+
+void			LEX_MatchClearFlags(lexMatch_t *pmatch)
+{
+		AR_ASSERT(pmatch != NULL);
+		pmatch->flags = 0;
+}
+
 #undef __ALL_FLAGS
 
 void LEX_ResetInput(lexMatch_t *pmatch, const wchar_t *input)

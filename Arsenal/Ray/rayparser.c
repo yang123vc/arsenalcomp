@@ -20,6 +20,8 @@ AR_NAMESPACE_BEGIN
 
 
 
+
+
 struct __ray_parser_tag
 {
 		rayReport_t		report;
@@ -39,21 +41,26 @@ struct __ray_parser_tag
 
 static void AR_STDCALL __def_print(const wchar_t *msg, void *ctx)
 {
+		/*
 		rayReportMsg_t	report_msg;
 		rayReport_t		*report = (rayReport_t*)ctx;
-		
 
 		AR_memset(&report_msg, 0, sizeof(report_msg));
 		report_msg.type = RAY_REPORT_MESSAGE;
 		report_msg.message = msg;
 		report->report_func(&report_msg, report->ctx);
+		*/
+		AR_ASSERT(false);
 
 }
 
 
 static void AR_STDCALL __def_error(int_t level, const wchar_t* msg, void *ctx)
 {
+		/*
 		__def_print(msg, ctx);
+		*/
+		AR_ASSERT(false);
 }
 
 
@@ -114,6 +121,7 @@ void			RAY_DestroyParser(rayParser_t		*parser)
 }
 
 
+
 bool_t			RAY_ParserHasError(const rayParser_t	*parser)
 {
 		AR_ASSERT(parser != NULL);
@@ -165,6 +173,8 @@ void			RAY_DestroyParserNode(rayNode_t	   *node)
 {
 		
 }
+
+
 
 
 AR_NAMESPACE_END

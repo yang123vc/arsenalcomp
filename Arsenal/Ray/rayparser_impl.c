@@ -717,12 +717,12 @@ lex_t*	RAY_BuildLexer(const arIOCtx_t *io)
 		return lex;																
 }
 
-psrGrammar_t*	RAY_BuildGrammar(const psrCtx_t	*psr_ctx, const arIOCtx_t *io)											
+psrGrammar_t*	RAY_BuildGrammar(const psrHandler_t	*handler, const arIOCtx_t *io)											
 {																																
 		psrGrammar_t	*grammar;																								
 		size_t i;																												
-		AR_ASSERT(psr_ctx != NULL);																								
-		grammar = PSR_CreateGrammar(psr_ctx, io);																				
+		AR_ASSERT(handler != NULL);																								
+		grammar = PSR_CreateGrammar(handler, io);																				
 		for(i = 0; i < __TERM_COUNT__; ++i)																						
 		{																														
 				if(__g_term_pattern[i].skip || __g_term_pattern[i].tokval == 0)continue;										
@@ -738,8 +738,6 @@ psrGrammar_t*	RAY_BuildGrammar(const psrCtx_t	*psr_ctx, const arIOCtx_t *io)
 		{																														
 				psrTermInfo_t	*info;																							
 				info = PSR_GetTermSymbInfoByName(grammar, __g_prec_pattern[i].name);											
-
-				
 				if(info == NULL)																								
 				{																												
 						if(!PSR_InsertTerm(grammar, __g_prec_pattern[i].name, __g_prec_pattern[i].tokval, __g_prec_pattern[i].assoc, __g_prec_pattern[i].prec_level, NULL))
@@ -756,10 +754,7 @@ psrGrammar_t*	RAY_BuildGrammar(const psrCtx_t	*psr_ctx, const arIOCtx_t *io)
 				}																																							
 		}																																									
 		for(i = 0; i < __RULE_COUNT__; ++i)																													
-		{
-				
-				
-
+		{																																									
 				if(!PSR_InsertRuleByStr(grammar, __g_rule_pattern[i].rule, __g_rule_pattern[i].prec_token, __g_rule_pattern[i].handler, __g_rule_pattern[i].auto_ret))		
 				{																																							
 						PSR_DestroyGrammar(grammar);																														

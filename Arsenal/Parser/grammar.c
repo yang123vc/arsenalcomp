@@ -386,19 +386,19 @@ void					PSR_ResetGrammarIOContext(psrGrammar_t *gmr, const arIOCtx_t *io_ctx)
 		gmr->io_ctx = io_ctx != NULL ? *io_ctx : *AR_global_ioctx();
 }
 
-void					PSR_ResetGrammarParseContext(psrGrammar_t *gmr, const psrCtx_t *psr_ctx)
+void					PSR_ResetGrammarParseHandler(psrGrammar_t *gmr, const psrHandler_t *handler)
 {
-		AR_ASSERT(gmr != NULL && psr_ctx != NULL);
-		gmr->psr_ctx = *psr_ctx;
+		AR_ASSERT(gmr != NULL && handler != NULL);
+		gmr->psr_handler = *handler;
 }
 
-psrGrammar_t*			PSR_CreateGrammar(const psrCtx_t *ctx, const arIOCtx_t *io_ctx)
+psrGrammar_t*			PSR_CreateGrammar(const psrHandler_t *handler, const arIOCtx_t *io_ctx)
 {
 		psrGrammar_t* gmr;
 
-		AR_ASSERT(ctx != NULL && ctx->free_f != NULL);
+		AR_ASSERT(handler != NULL && handler->free_f != NULL);
 		gmr = AR_NEW0(psrGrammar_t);
-		gmr->psr_ctx = *ctx;
+		gmr->psr_handler = *handler;
 		gmr->io_ctx = io_ctx != NULL ? *io_ctx : *AR_global_ioctx();
 
 		PSR_InitTermInfoList(&gmr->term_list);
@@ -434,22 +434,6 @@ void	PSR_ClearGrammar(psrGrammar_t *grammar)
 		__init_grammar_component_unit(grammar);
 }
 
-/*
-void					PSR_ClearGrammar(psrGrammar_t *grammar)
-{
-		size_t i;
-		for(i = 0; i < grammar->count; ++i)
-		{
-				PSR_DestroyRule(grammar->rules[i]);
-				grammar->rules[i] = NULL;
-		}
-		
-		grammar->count = 0;
-		PSR_ClearTermInfoList(&grammar->term_list);
-		PSR_ClearSymbList(&grammar->symb_list);
-		__init_grammar_component_unit(grammar);
-}
-*/
 
 
 void					PSR_DestroyGrammar(psrGrammar_t *grammar)
@@ -466,56 +450,20 @@ void					PSR_DestroyGrammar(psrGrammar_t *grammar)
 }
 
 
+
+const psrHandler_t*		PSR_GetGrammarHandler(const psrGrammar_t *grammar)
+{
+		AR_ASSERT(grammar != NULL);
+		return &grammar->psr_handler;
+}
+
 /*
-
-psrGrammar_t*			PSR_CopyNewGrammar(const psrGrammar_t* grammar)
-{
-		psrGrammar_t	*gmr;
-		size_t i;
-		AR_ASSERT(grammar != NULL);
-
-		gmr = AR_NEW0(psrGrammar_t);
-
-		gmr->user = grammar->user;
-
-		gmr->count = gmr->cap = grammar->count;
-
-		gmr->rules = AR_NEWARR0(psrRule_t*, gmr->cap);
-
-		for(i = 0; i < gmr->cap; ++i)
-		{
-				gmr->rules[i] = PSR_CopyNewRule(grammar->rules[i]);
-		}
-
-		PSR_InitSymbList(&gmr->symb_list);
-		PSR_InitTermInfoList(&gmr->term_list);
-
-		for(i = 0; i < grammar->symb_list.count; ++i)
-		{
-				PSR_InsertToSymbList(&gmr->symb_list, grammar->symb_list.lst[i]);
-		}
-	
-		for(i = 0; i < grammar->term_list.count; ++i)
-		{
-				const psrTermInfo_t *term = &grammar->term_list.lst[i];
-				PSR_InsertToTermInfoList(&gmr->term_list, term->term->name, term->val, term->assoc, term->prec, term->leaf_f);
-		}
-
-		return gmr;
-}
-*/
-
-const psrCtx_t*			PSR_GetGrammarContext(const psrGrammar_t *grammar)
-{
-		AR_ASSERT(grammar != NULL);
-		return &grammar->psr_ctx;
-}
-
 const arIOCtx_t*		PSR_GetGrammarIOContext(const psrGrammar_t *grammar)
 {
 		AR_ASSERT(grammar != NULL);
 		return &grammar->io_ctx;
 }
+*/
 
 
 bool_t					PSR_InsertTerm(psrGrammar_t *grammar, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f)
