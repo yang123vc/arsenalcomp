@@ -1,7 +1,7 @@
 #pragma once
 
 
-class CPrintNode :	public ArsenalCPP::Node
+class CPrintNode
 {
 private:
 		
@@ -21,8 +21,10 @@ public:
 };
 
 
-ARSpace::psrNode_t*		AR_STDCALL build_leaf(const ARSpace::psrToken_t *tok, void *ctx);
+ARSpace::psrNode_t*	 AR_STDCALL build_leaf(const ARSpace::psrToken_t *tok, void *ctx);
 ARSpace::psrNode_t*	 AR_STDCALL build_rule(ARSpace::psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+
 
 
 

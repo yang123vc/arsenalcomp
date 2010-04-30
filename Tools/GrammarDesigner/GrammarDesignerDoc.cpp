@@ -19,7 +19,6 @@
 #endif
 
 
-
 // CGrammarDesignerDoc
 
 IMPLEMENT_DYNCREATE(CGrammarDesignerDoc, CRichEditDoc);
@@ -76,16 +75,13 @@ CRichEditCntrItem* CGrammarDesignerDoc::CreateClientItem(REOBJECT* preo ) const
 CGrammarDesignerDoc::CGrammarDesignerDoc()
 {
 	// TODO: add one-time construction code here
-		m_encoding		= CTextFileBase::ASCII;
-		m_parser_mode	= ARSpace::PSR_LALR;
-		m_lexer_mode	= 0;
-		m_lexer			= NULL;
-		m_parser		=	NULL;
-		
+		m_encoding		=		CTextFileBase::ASCII;
+		m_parser_mode	=		ARSpace::PSR_LALR;
+		m_lexer_mode	=		0;
+		m_lexer			=		NULL;
+		m_parser		=		NULL;
+		m_grammar		=		NULL;
 		VERIFY(m_thread.CreateThread());
-
-		
-
 }
 
 CGrammarDesignerDoc::~CGrammarDesignerDoc()
@@ -388,6 +384,291 @@ void CGrammarDesignerDoc::OnUpdateEditGotoDecl(CCmdUI *pCmdUI)
 
 
 
+
+
+
+
+static void	AR_STDCALL	__report_io_error_func(int_t level, const wchar_t *msg, void *ctx)
+{
+		COutputWnd		*output;
+		AR_ASSERT(ctx != NULL);
+		output = (COutputWnd*)ctx;
+		output->Append(msg, COutputList::MSG_MESSAGE, 0, NULL);
+}
+
+static void	AR_STDCALL	__report_io_print_func(const wchar_t *msg, void *ctx)
+{
+		COutputWnd		*output;
+		AR_ASSERT(ctx != NULL);
+		output = (COutputWnd*)ctx;
+		output->Append(msg, COutputList::MSG_MESSAGE, 0, NULL);
+} 
+
+
+
+
+
+static void	AR_STDCALL	__silence_io_error_func(int_t level, const wchar_t *msg, void *ctx)
+{
+		
+}
+
+static void	AR_STDCALL	__silence_io_print_func(const wchar_t *msg, void *ctx)
+{
+		
+} 
+
+static const ARSpace::arIOCtx_t	__g_silence = 
+{
+		__silence_io_error_func,
+		__silence_io_print_func,
+		NULL
+};
+
+
+struct OutputContext
+{
+		COutputWnd		*m_output;
+		CInputPane		*m_target;
+
+};
+
+static void	AR_STDCALL	__free_node(ARSpace::psrNode_t *node, void *ctx)
+{
+		CPrintNode		*print_node = (CPrintNode*)node;
+		AR_ASSERT(print_node != NULL);
+		delete print_node;
+}
+
+
+static void	AR_STDCALL	__on_parse_error(const ARSpace::psrToken_t *tok, const wchar_t *expected[], size_t count, void *ctx)
+{
+
+		OutputContext	*context;
+		AR_ASSERT(ctx != NULL);
+		context = (OutputContext*)ctx;
+		
+		CString msg;
+
+		CString token;
+		if(tok->str_cnt > 0)
+		{
+				token.Append(tok->str, (int)tok->str_cnt);
+		}else
+		{
+				token.Append(TEXT("%EOI"));
+		}
+
+		if(count > 0)
+		{
+				msg.Format(TEXT("Invalid Token \"%ls\", expected\t:\t"), token.GetString());
+
+				for(size_t i = 0; i < count; ++i)
+				{
+						msg.AppendFormat(TEXT("\"%ls\" \t"), expected[i]);
+				}
+
+		}else
+		{
+				msg.Format(TEXT("Invalid Token \"%ls\""), token.GetString());
+		}
+		msg.Append(TEXT("."));
+		
+		context->m_output->Append(msg, COutputList::MSG_ERROR, tok->line, context->m_target);
+				
+
+}
+
+
+static const ARSpace::psrHandler_t		__def_handler = 
+{
+		__on_parse_error,
+		__free_node
+};
+
+
+
+
+
+bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
+{
+		
+		CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
+		COutputWnd		&output = main_frm->GetOutputView();
+
+		bool has_error = false;
+		
+		ClearParser();
+
+		
+		ARSpace::lex_t			*lexer = ARSpace::LEX_Create(&__g_silence);
+		
+		ARSpace::psrGrammar_t	*grammar = ARSpace::PSR_CreateGrammar(&__def_handler, &__g_silence);
+
+		
+		
+		CWnd	*tar	= main_frm->GetActiveView();
+
+
+		for(size_t i = 0; i < cfg->name_cnt; ++i)
+		{
+				const ARSpace::cfgName_t		*name = &cfg->name[i];
+
+				if(!ARSpace::LEX_InsertName(lexer, name->name, name->regex))
+				{
+						CString msg;
+						msg.Format(TEXT("Name Error : \"%ls : %ls\""), name->name, name->regex);
+						output.Append(msg, COutputList::MSG_ERROR, name->line, tar);
+						has_error = true;
+				}
+		}
+
+		for(size_t i = 0; i < cfg->tok_cnt; ++i)
+		{
+				const ARSpace::cfgToken_t		*tok = &cfg->tok[i];
+
+				ARSpace::lexAction_t	action;
+				action.is_skip = tok->is_skip;
+				action.priority = tok->lex_prec;
+				action.value = tok->tokval;
+				if(!ARSpace::LEX_InsertRule(lexer, tok->regex, &action))
+				{
+						CString msg;
+						msg.Format(TEXT("Token Error :  \"%ls : %ls\""), tok->name, tok->regex);
+						output.Append(msg, COutputList::MSG_ERROR, tok->line, tar);
+						has_error = true;
+						continue;
+				}
+
+				if(tok->is_skip || tok->tokval == 0)continue;
+
+				if(!ARSpace::PSR_InsertTerm(grammar, tok->name, tok->tokval, ARSpace::PSR_ASSOC_NONASSOC, 0, build_leaf))
+				{
+						CString msg;
+
+						msg.Format(TEXT("Token Error : \"%ls : %ls\""), tok->name, tok->regex);
+						output.Append(msg, COutputList::MSG_ERROR, tok->line, tar);
+						has_error = true;
+				}
+		}
+
+		for(size_t i = 0; i < cfg->prec_cnt; ++i)
+		{
+				const ARSpace::cfgPrec_t		*prec = &cfg->prec[i];
+				
+				for(size_t k = 0; k < prec->count; ++k)
+				{
+						ARSpace::psrTermInfo_t *info = ARSpace::PSR_GetTermSymbInfoByName(grammar,prec->prec_tok_set[k]);
+
+						if(info == NULL)
+						{
+								if(!ARSpace::PSR_InsertTerm(grammar, prec->prec_tok_set[k], prec->prec_tok_val[k], prec->assoc, prec->prec_level, NULL))
+								{
+										CString msg;
+										msg.Format(TEXT("Prec Error : \"%ls\"!"), prec->prec_tok_set[k]);
+										output.Append(msg, COutputList::MSG_ERROR, prec->line, tar);
+										has_error = true;
+								}
+						}else
+						{
+								info->assoc = prec->assoc;
+								info->prec = prec->prec_level;
+						}
+				}
+
+		}
+
+
+		for(size_t i = 0; i < cfg->rule_cnt; ++i)
+		{
+				const ARSpace::cfgRule_t		*rule = &cfg->rule[i];
+				CString str;
+				str.Format(TEXT("%ls : %ls"), rule->lhs, rule->rhs);
+				if(!ARSpace::PSR_InsertRuleByStr(grammar, str.GetString(), rule->prec_tok,  build_rule, 0))
+				{
+						CString msg;
+						msg.Format(TEXT("Rule Error : \"%ls\"!"), str.GetString());
+						output.Append(msg, COutputList::MSG_ERROR, rule->line, tar);
+						has_error = true;
+				}
+		}
+
+		if(cfg->start.start_rule != NULL)
+		{
+				has_error = true;
+				for(size_t i = 0; i < cfg->rule_cnt; ++i)
+				{
+						if(AR_wcscmp(cfg->start.start_rule, cfg->rule[i].lhs) == 0)
+						{
+								has_error = false;
+								break;
+						}
+				}
+
+				
+				if(has_error || !ARSpace::PSR_SetFirstRule(grammar, cfg->start.start_rule))
+				{
+						CString msg;
+						msg.Format(TEXT("Start Rule Error : \"%ls\"!"), cfg->start.start_rule);
+						output.Append(msg, COutputList::MSG_ERROR, cfg->start.line, tar);
+				}
+		}
+
+		const ARSpace::arIOCtx_t	io_context = 
+		{
+				__report_io_error_func,
+				__report_io_print_func,
+				(void*)&output
+				
+		};
+
+		ARSpace::PSR_ResetGrammarIOContext(grammar, &io_context);
+		
+		if(!ARSpace::PSR_CheckIsValidGrammar(grammar))
+		{
+				has_error = true;
+		}
+
+		ARSpace::PSR_ResetGrammarIOContext(grammar, &__g_silence);
+
+		if(has_error)
+		{
+				ARSpace::LEX_Destroy(lexer);
+				ARSpace::PSR_DestroyGrammar(grammar);
+				return false;
+		}else
+		{
+				DWORD beg, end;
+
+				m_lexer = lexer;
+				ARSpace::LEX_GenerateTransTable(m_lexer);
+				m_grammar	= grammar;
+				beg = GetTickCount();
+				
+				 m_parser = ARSpace::PSR_CreateParser(m_grammar, m_parser_mode);
+				
+				end = GetTickCount();
+				
+				CString str;
+
+				str.Format(TEXT("Build Parser Tick count %d"), end - beg);
+
+				output.Append(str, COutputList::MSG_MESSAGE, 0, tar);
+
+				size_t conflict = ARSpace::PSR_CountParserConflict(m_parser);
+
+				if(conflict > 0)
+				{
+						str.Format(TEXT("The grammar has %d conflicts !"), (uint_32_t)conflict);
+						output.Append(str, COutputList::MSG_MESSAGE, 0, tar);
+				}
+				
+				return true;
+		}
+
+}
+
+
 static void AR_STDCALL report_build_func(const ARSpace::cfgReportInfo_t *report, void *context)
 {
 		COutputWnd *output;
@@ -444,206 +725,15 @@ void	CGrammarDesignerDoc::ClearParser()
 		
 		if(m_lexer != NULL && m_parser != NULL)
 		{
-				delete m_lexer;
-				delete m_parser;
-
+				ARSpace::LEX_Destroy(m_lexer);
+				ARSpace::PSR_DestroyParser(m_parser);
+				ARSpace::PSR_DestroyGrammar(m_grammar);
 				m_lexer = NULL;
 				m_parser = NULL;
+				m_grammar = NULL;
 		}
 }
 
-
-
-class ReportIOContext : public ArsenalCPP::ARContext
-{
-public:
-		COutputWnd		&m_output;
-
-public:
-		virtual void OnError(int_t level, const wchar_t *msg)
-		{
-				if(IsEnable())m_output.Append(msg, COutputList::MSG_ERROR, 0, NULL);
-		}
-
-		virtual void OnPrint(const wchar_t *msg)
-		{
-				if(IsEnable())m_output.Append(msg, COutputList::MSG_MESSAGE, 0, NULL);
-		}
-public:
-		ReportIOContext(COutputWnd &output) : m_output(output)
-		{
-
-		}
-
-		virtual ~ReportIOContext()
-		{
-		}
-
-};
-
-
-
-
-
-
-bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
-{
-		
-		CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
-		COutputWnd		&output = main_frm->GetOutputView();
-
-		bool has_error = false;
-		
-		ClearParser();
-
-		ArsenalCPP::Lexer		*lexer = new ArsenalCPP::Lexer(new ReportIOContext(output));
-		ArsenalCPP::Grammar		*grammar = new ArsenalCPP::Grammar(new ArsenalCPP::DummyNodeContext(), new ReportIOContext(output));
-		
-		CWnd	*tar	= main_frm->GetActiveView();
-
-
-		for(size_t i = 0; i < cfg->name_cnt; ++i)
-		{
-				const ARSpace::cfgName_t		*name = &cfg->name[i];
-				if(!lexer->Insert(name->name, name->regex))
-				{
-						CString msg;
-						msg.Format(TEXT("Name Error : \"%ls : %ls\""), name->name, name->regex);
-						output.Append(msg, COutputList::MSG_ERROR, name->line, tar);
-						has_error = true;
-				}
-		}
-
-		for(size_t i = 0; i < cfg->tok_cnt; ++i)
-		{
-				const ARSpace::cfgToken_t		*tok = &cfg->tok[i];
-
-				if(!lexer->Insert(tok->regex, tok->tokval, tok->lex_prec, tok->is_skip))
-				{
-						CString msg;
-						msg.Format(TEXT("Token Error :  \"%ls : %ls\""), tok->name, tok->regex);
-						output.Append(msg, COutputList::MSG_ERROR, tok->line, tar);
-						has_error = true;
-						continue;
-				}
-
-				if(tok->is_skip || tok->tokval == 0)continue;
-				if(!grammar->Insert(tok->name, tok->tokval, ARSpace::PSR_ASSOC_NONASSOC, 0, build_leaf))
-				{
-						CString msg;
-
-						msg.Format(TEXT("Token Error : \"%ls : %ls\""), tok->name, tok->regex);
-						output.Append(msg, COutputList::MSG_ERROR, tok->line, tar);
-						has_error = true;
-				}
-		}
-
-		
-		for(size_t i = 0; i < cfg->prec_cnt; ++i)
-		{
-				const ARSpace::cfgPrec_t		*prec = &cfg->prec[i];
-				
-				for(size_t k = 0; k < prec->count; ++k)
-				{
-						ARSpace::psrTermInfo_t *info = grammar->GetTermInfo(prec->prec_tok_set[k]);
-
-						if(info == NULL)
-						{
-								if(!grammar->Insert(prec->prec_tok_set[k], prec->prec_tok_val[k], prec->assoc, prec->prec_level, NULL))
-								{
-										CString msg;
-										msg.Format(TEXT("Prec Error : \"%ls\"!"), prec->prec_tok_set[k]);
-										output.Append(msg, COutputList::MSG_ERROR, prec->line, tar);
-										has_error = true;
-								}
-						}else
-						{
-								info->assoc = prec->assoc;
-								info->prec = prec->prec_level;
-						}
-				}
-
-		}
-
-
-		for(size_t i = 0; i < cfg->rule_cnt; ++i)
-		{
-				const ARSpace::cfgRule_t		*rule = &cfg->rule[i];
-				CString str;
-				str.Format(TEXT("%ls : %ls"), rule->lhs, rule->rhs);
-				if(!grammar->Insert(str.GetString(), rule->prec_tok, build_rule))
-				{
-						CString msg;
-						msg.Format(TEXT("Rule Error : \"%ls\"!"), str.GetString());
-						output.Append(msg, COutputList::MSG_ERROR, rule->line, tar);
-						has_error = true;
-				}
-		}
-
-		if(cfg->start.start_rule != NULL)
-		{
-				has_error = true;
-				for(size_t i = 0; i < cfg->rule_cnt; ++i)
-				{
-						if(AR_wcscmp(cfg->start.start_rule, cfg->rule[i].lhs) == 0)
-						{
-								has_error = false;
-								break;
-						}
-				}
-
-				if(has_error || !grammar->SetFirstRule(cfg->start.start_rule))
-				{
-						CString msg;
-						msg.Format(TEXT("Start Rule Error : \"%ls\"!"), cfg->start.start_rule);
-						output.Append(msg, COutputList::MSG_ERROR, cfg->start.line, tar);
-				}
-		}
-
-		if(!grammar->IsValid())
-		{
-				has_error = true;
-		}
-
-
-		if(has_error)
-		{
-				delete lexer;
-				delete grammar;
-				return false;
-		}else
-		{
-				DWORD beg, end;
-
-				m_lexer = lexer;
-				m_lexer->Generate();
-
-				grammar->IOContext()->Disable();
-				beg = GetTickCount();
-				
-				m_parser = new ArsenalCPP::Parser(grammar, m_parser_mode);
-				
-				end = GetTickCount();
-				
-				grammar->IOContext()->Enable();
-
-				CString str;
-
-				str.Format(TEXT("Build Parser Tick count %d"), end - beg);
-
-				output.Append(str, COutputList::MSG_MESSAGE, 0, tar);
-
-				size_t conflict = m_parser->CountConflict();
-
-				if(conflict > 0)
-				{
-						str.Format(TEXT("The grammar has %d conflicts !"), (uint_32_t)conflict);
-						output.Append(str, COutputList::MSG_MESSAGE, 0, tar);
-				}
-				
-				return true;
-		}
-}
 
 
 
@@ -688,8 +778,6 @@ void CGrammarDesignerDoc::OnParserBuild()
 		if(cfg)ARSpace::CFG_DestroyGrammarConfig(cfg);
 		
 
-
-		
 		output.Append(TEXT("Build Parser successful!"),COutputList::MSG_MESSAGE, 0, NULL);
 		main_frm->ShowPane(&output, TRUE, TRUE, TRUE);
 		return;
@@ -710,7 +798,7 @@ void CGrammarDesignerDoc::OnParserShowactiontable()
 
 		ASSERT(m_parser != NULL);
 
-		const ARSpace::psrActionView_t		*view = m_parser->CreateActionView();
+		const ARSpace::psrActionView_t		*view = ARSpace::PSR_CreateParserActionView(m_parser);
 
 		ASSERT(view != NULL);
 
@@ -719,11 +807,12 @@ void CGrammarDesignerDoc::OnParserShowactiontable()
 
 		action.DrawActionView(view);
 		
-		m_parser->DestroyActionView(view);
+		ARSpace::PSR_DestroyParserActionView(view);
 
 		main_frm->ShowPane(&action, TRUE, TRUE, TRUE);
 
 }
+
 
 void CGrammarDesignerDoc::OnUpdateParserShowactiontable(CCmdUI *pCmdUI)
 {
@@ -732,12 +821,13 @@ void CGrammarDesignerDoc::OnUpdateParserShowactiontable(CCmdUI *pCmdUI)
 		pCmdUI->Enable(m_parser != NULL);
 }
 
+
 void CGrammarDesignerDoc::OnParserShowconflict()
 {
 		// TODO: Add your command handler code here
 		ASSERT(m_parser != NULL);
 
-		const ARSpace::psrConflictView_t		*view = m_parser->CreateConflictView();
+		const ARSpace::psrConflictView_t		*view = ARSpace::PSR_CreateParserConflictView(m_parser);
 		
 
 		ASSERT(view != NULL);
@@ -747,7 +837,7 @@ void CGrammarDesignerDoc::OnParserShowconflict()
 
 		action.DrawConflictView(view);
 		
-		m_parser->DestroyConflictView(view);
+		ARSpace::PSR_DestroyParserConflictView(view);
 
 		main_frm->ShowPane(&action, TRUE, TRUE, TRUE);
 }
@@ -765,8 +855,7 @@ void CGrammarDesignerDoc::OnParserShowfirstfollow()
 
 		ASSERT(m_parser != NULL);
 
-		const ARSpace::psrStatusView_t		*view = m_parser->CreateStatusView();
-		
+		const ARSpace::psrStatusView_t		*view = ARSpace::PSR_CreateParserStatusView(m_parser);
 
 		ASSERT(view != NULL);
 
@@ -775,10 +864,11 @@ void CGrammarDesignerDoc::OnParserShowfirstfollow()
 		
 		action.DrawFirstFollowView(view);
 
-		m_parser->DestroyStatusView(view);
+		ARSpace::PSR_DestroyParserStatusView(view);
 		main_frm->ShowPane(&action, TRUE, TRUE, TRUE);
 
 }
+
 
 void CGrammarDesignerDoc::OnUpdateParserShowfirstfollow(CCmdUI *pCmdUI)
 {
@@ -793,7 +883,7 @@ void CGrammarDesignerDoc::OnShowLeftrecursion()
 
 		ASSERT(m_parser != NULL);
 
-		const ARSpace::psrStatusView_t		*view = m_parser->CreateStatusView();
+		const ARSpace::psrStatusView_t		*view = ARSpace::PSR_CreateParserStatusView(m_parser);
 		
 
 		ASSERT(view != NULL);
@@ -803,11 +893,13 @@ void CGrammarDesignerDoc::OnShowLeftrecursion()
 		
 		action.DrawLeftRecursionView(view);
 
-		m_parser->DestroyStatusView(view);
+		ARSpace::PSR_DestroyParserStatusView(view);
 		main_frm->ShowPane(&action, TRUE, TRUE, TRUE);
 
 
 }
+
+
 
 
 
@@ -817,7 +909,7 @@ void CGrammarDesignerDoc::OnShowLeftfactor()
 
 		ASSERT(m_parser != NULL);
 
-		const ARSpace::psrStatusView_t		*view = m_parser->CreateStatusView();
+		const ARSpace::psrStatusView_t		*view = ARSpace::PSR_CreateParserStatusView(m_parser);
 		
 
 		ASSERT(view != NULL);
@@ -825,7 +917,7 @@ void CGrammarDesignerDoc::OnShowLeftfactor()
 		CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
 		CActionView	&action = main_frm->GetActionView();
 		action.DrawLeftFactorView(view);
-		m_parser->DestroyStatusView(view);
+		ARSpace::PSR_DestroyParserStatusView(view);
 		main_frm->ShowPane(&action, TRUE, TRUE, TRUE);
 
 }
@@ -850,96 +942,6 @@ void CGrammarDesignerDoc::OnUpdateShowLeftrecursion(CCmdUI *pCmdUI)
 
 
 
-class ParserReport : public ArsenalCPP::ARContext
-{
-
-private:
-		CInputPane		&m_target;
-		COutputWnd		&m_output;
-		
-public:
-		ParserReport(CInputPane		&tar, COutputWnd	&output) : m_target(tar), m_output(output)
-		{
-
-		}
-
-		virtual ~ParserReport()
-		{
-
-
-		}
-
-public:
-		virtual void OnError(int_t level, const wchar_t *msg)
-		{
-				if(IsEnable())m_output.Append(msg);
-
-		}
-
-		virtual void OnPrint(const wchar_t *msg)
-		{
-				if(IsEnable())m_output.Append(msg);
-		}
-
-};
-
-
-
-class ParserContext : public ArsenalCPP::NodeContext
-{
-private:
-		CInputPane		&m_target;
-		COutputWnd		&m_output;
-public:
-		ParserContext(CInputPane		&tar, COutputWnd	&output) : m_target(tar), m_output(output)
-		{
-
-
-		}
-		
-		virtual ~ParserContext()
-		{
-
-		}
-public:
-		virtual void	Free(ArsenalCPP::Node *node)
-		{
-				delete node;
-		}
-
-		virtual void	Error(const ArsenalCPP::psrToken_t *tok, const wchar_t *expected[], size_t count)
-		{
-				ASSERT(tok != NULL);
-		
-				
-				CString msg;
-				CString token;
-				if(tok->str_cnt > 0)
-				{
-						token.Append(tok->str, (int)tok->str_cnt);
-				}else
-				{
-						token.Append(TEXT("%EOI"));
-				}
-				
-				if(count > 0)
-				{
-						msg.Format(TEXT("Invalid Token \"%ls\", expected\t:\t"), token.GetString());
-
-						for(size_t i = 0; i < count; ++i)
-						{
-								msg.AppendFormat(TEXT("\"%ls\" \t"), expected[i]);
-						}
-
-				}else
-				{
-						msg.Format(TEXT("Invalid Token \"%ls\""), token.GetString());
-				}
-				msg.Append(TEXT("."));
-				m_output.Append(msg, COutputList::MSG_ERROR, tok->line, &m_target);
-		}
-};
-
 
 void CGrammarDesignerDoc::OnParserParse()
 {
@@ -949,17 +951,17 @@ void CGrammarDesignerDoc::OnParserParse()
 		CInputPane		&input = main_frm->GetInputPane();
 		COutputWnd		&output = main_frm->GetOutputView();
 		
+		OutputContext	output_context;
+		output_context.m_output = &output;
+		output_context.m_target = &input;
+
 		if(this->IsModified())
 		{
 				OnParserBuild();
 		}
-
-		//if(this->IsModified())return;
-
+		
 		main_frm->ClearShow();
 
-		//if(m_parser == NULL)return;
-		//if(input.GetInputLength() <= 0)return;
 
 		ASSERT((m_lexer == NULL && m_parser == NULL) || (m_lexer != NULL && m_parser != NULL));
 		
@@ -979,24 +981,21 @@ void CGrammarDesignerDoc::OnParserParse()
 
 		ASSERT(m_lexer != NULL && m_parser != NULL);
 
-		m_lexer->ResetContext(new ParserReport(input, output));
+		ARSpace::psrContext_t	*parser_context = ARSpace::PSR_CreateContext(m_parser, (void*)&output_context);
+		
 
-		m_parser->ResetIOContext(new ParserReport(input, output));
-
-		m_parser->ResetParseContext(new ParserContext(input, output));
-
-		m_parser->Clear();
 
 		CString str = input.GetInput();
 
 
 		bool is_ok = true;
 		
-
-		m_lexer->SetInput(str.GetString());
-		m_lexer->SetFlags(0);
-		m_lexer->SetFlags(m_lexer_mode);
-
+		ARSpace::lexMatch_t match;
+		ARSpace::LEX_InitMatch(&match, str.GetString());
+		
+		ARSpace::LEX_MatchClearFlags(&match);
+		ARSpace::LEX_MatchFlags(&match, m_lexer_mode, true);
+		
 		ARSpace::lexToken_t		token;
 
 		memset(&token, 0, sizeof(token));
@@ -1008,28 +1007,29 @@ void CGrammarDesignerDoc::OnParserParse()
 		while(is_ok)
 		{
 				
-				if(!m_lexer->GetToken(token))
+				//if(!m_lexer->GetToken(token))
+				if(!ARSpace::LEX_Match(m_lexer, &match, &token))
 				{
-						const ArsenalCPP::Lexer::lastError_t &last_err = m_lexer->GetLastError();
-
-						size_t len = wcslen(last_err.str);
+						size_t len = wcslen(ARSpace::LEX_GetNextInput(&match));
 						if(len > 10) len = 10;
 
 						CString lex_err;
 						CString msg;
-						msg.Append(last_err.str,  (int)len);
+						msg.Append(ARSpace::LEX_GetNextInput(&match),  (int)len);
 					
 						lex_err.Format(TEXT("Lexer Error : %ls"), msg.GetString());
 						
 
-						output.Append(lex_err, COutputList::MSG_ERROR, last_err.line, &input);
-						
-						m_lexer->Skip();
-						m_lexer->ClearError();
+						output.Append(lex_err, COutputList::MSG_ERROR, match.line, &input);
+
+						ARSpace::LEX_Skip(&match);
+						ARSpace::LEX_ClearError(&match);
 				}else
 				{
-						is_ok = m_parser->AddToken(token);
+						ARSpace::psrToken_t		psr_tok;
 
+						PSR_TOTERMTOK(&token, &psr_tok);
+						is_ok = ARSpace::PSR_AddToken(parser_context, &psr_tok);
 						if(token.value == 0)
 						{
 								break;
@@ -1047,7 +1047,7 @@ void CGrammarDesignerDoc::OnParserParse()
 
 		if(is_ok)
 		{
-				CPrintNode *node = (CPrintNode*)m_parser->GetResult();
+				CPrintNode *node = (CPrintNode*)ARSpace::PSR_GetResult(parser_context);
 				
 				ASSERT(node != NULL);
 
@@ -1067,7 +1067,10 @@ void CGrammarDesignerDoc::OnParserParse()
 
 		main_frm->ShowPane(&output, TRUE, TRUE, TRUE);
 
+		ARSpace::LEX_UnInitMatch(&match);
+		ARSpace::PSR_DestroyContext(parser_context);
 }
+
 
 
 
@@ -1314,3 +1317,8 @@ void CGrammarDesignerDoc::OnStringsStringconverter()
 
 		
 }
+
+#if(0)
+#endif
+
+

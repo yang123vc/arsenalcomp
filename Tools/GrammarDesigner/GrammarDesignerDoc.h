@@ -27,8 +27,9 @@ private:
 		CString			m_src_cache;
 
 private:
-		ArsenalCPP::Lexer		*m_lexer;
-		ArsenalCPP::Parser		*m_parser;
+		ARSpace::lex_t			*m_lexer;
+		ARSpace::psrGrammar_t	*m_grammar;
+		const ARSpace::parser_t	*m_parser;
 
 private:
 		CBackEndThread			m_thread;

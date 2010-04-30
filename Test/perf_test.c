@@ -1,4 +1,4 @@
-
+#if(0)
 #include "test.h"
 
 #include "../Arsenal/Parser/grammar.h"
@@ -91,3 +91,6 @@ AR_NAMESPACE_END
 
 
 #endif
+
+#endif
+

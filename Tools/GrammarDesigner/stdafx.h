@@ -68,8 +68,8 @@
 #include "textfile.h"
 
 
-#include "ArsenalCPP.h"
-#pragma comment(lib, "ArsenalCPP.lib")
+#include "Arsenal.h"
+#pragma comment(lib, "Arsenal.lib")
 
 
 void test_func();

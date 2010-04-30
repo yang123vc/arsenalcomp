@@ -487,11 +487,11 @@ void	CActionView::DrawLeftFactorView(const ARSpace::psrStatusView_t *view)
 				}
 				
 				lv.iItem   =  this->m_list.GetItemCount();
-				VERIFY(this->m_list.InsertItem(&lv));
+				VERIFY(this->m_list.InsertItem(&lv) != -1);
 
 				lv.iSubItem = 1;
 				lv.pszText = (LPWSTR)view->left_factor.name_set[i];
-				VERIFY(this->m_list.SetItem(&lv));
+				VERIFY(this->m_list.SetItem(&lv) != -1);
 		}
 }
 
