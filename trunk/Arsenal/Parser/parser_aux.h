@@ -23,12 +23,13 @@ AR_NAMESPACE_BEGIN
 /***************************************************辅助数据结构**********************************************/
 
 
-typedef struct __parser_node_stack
+
+struct __parser_node_stack
 {
 		psrNode_t		**nodes;
 		size_t			count;
 		size_t			cap;
-}psrNodeStack_t;
+};
 
 static AR_INLINE void PSR_InitNodeStack(psrNodeStack_t *stack)
 {
@@ -77,13 +78,12 @@ static AR_INLINE psrNode_t* PSR_TopNodeStack(psrNodeStack_t *stack)
 
 
 
-
-typedef struct __parser_stack_tag
+struct __parser_stack_tag
 {
 		size_t			 *states;
 		size_t			 count;
 		size_t			 cap;
-}psrStack_t;
+};
 
 
 static AR_INLINE void PSR_PushStack(psrStack_t *stack, size_t state)

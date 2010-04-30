@@ -79,7 +79,7 @@ void			LEX_PutBack(lexMatch_t *pmatch, const lexToken_t *tok);
 
 
 void			LEX_MatchFlags(lexMatch_t *pmatch, uint_t flags, bool_t is_on);
-
+void			LEX_MatchClearFlags(lexMatch_t *pmatch);
 
 
 AR_NAMESPACE_END

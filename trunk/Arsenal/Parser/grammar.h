@@ -82,21 +82,22 @@ struct __parser_grammar_tag
 		psrTermInfoList_t		term_list;
 		psrSymbList_t			symb_list;
 
-		psrCtx_t				psr_ctx;
+		psrHandler_t			psr_handler;
+		
 		arIOCtx_t				io_ctx;
 };
 
 
-psrGrammar_t*			PSR_CreateGrammar(const psrCtx_t *ctx, const arIOCtx_t *io_ctx);
+psrGrammar_t*			PSR_CreateGrammar(const psrHandler_t *ctx, const arIOCtx_t *io_ctx);
 void					PSR_DestroyGrammar(psrGrammar_t *grammar);
 void					PSR_ClearGrammar(psrGrammar_t *grammar);
 
 void					PSR_ResetGrammarIOContext(psrGrammar_t *grammar, const arIOCtx_t *io_ctx);
-void					PSR_ResetGrammarParseContext(psrGrammar_t *grammar, const psrCtx_t *io_ctx);
+void					PSR_ResetGrammarParseHandler(psrGrammar_t *grammar, const psrHandler_t *io_ctx);
 
 
-const psrCtx_t*			PSR_GetGrammarContext(const psrGrammar_t *grammar);
-const arIOCtx_t*		PSR_GetGrammarIOContext(const psrGrammar_t *grammar);
+const psrHandler_t*		PSR_GetGrammarHandler(const psrGrammar_t *grammar);
+
 
 
 int_t					PSR_IndexOfGrammar(const psrGrammar_t *grammar, const psrRule_t *rule);
@@ -107,9 +108,8 @@ const psrSymbList_t*	PSR_GetSymbList(const psrGrammar_t *grammar);
 
 
 bool_t					PSR_CheckIsValidGrammar(const psrGrammar_t *grammar);
-bool_t					PSR_ReportLeftRecursion(const psrGrammar_t *grammar, arString_t *output);
-bool_t					PSR_ReportLeftFactor(const psrGrammar_t *grammar, arString_t *output);
-void					PSR_PrintGrammar(const psrGrammar_t *grammar, arString_t *str);
+
+
 
 
 const psrRule_t*		PSR_GetStartRule(const psrGrammar_t *grammar);
@@ -134,8 +134,10 @@ void					PSR_CalcFirstSet(const psrGrammar_t *grammar, psrSymbMap_t *first_set);
 void					PSR_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *follow_set, const psrSymbMap_t *first_set);
 
 
-
-
+/**************************************************Print**************************************************************************************/
+bool_t					PSR_ReportLeftRecursion(const psrGrammar_t *grammar, arString_t *output);
+bool_t					PSR_ReportLeftFactor(const psrGrammar_t *grammar, arString_t *output);
+void					PSR_PrintGrammar(const psrGrammar_t *grammar, arString_t *str);
 
 
 
