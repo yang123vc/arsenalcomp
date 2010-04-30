@@ -83,6 +83,7 @@ LEX_Clear
 LEX_InitMatch			
 LEX_UnInitMatch	
 LEX_MatchFlags		
+LEX_MatchClearFlags
 LEX_ResetMatch			
 LEX_GetNextInput		
 LEX_Match				
@@ -124,7 +125,7 @@ PSR_GetSymbolFromSymbMap
 PSR_PrintSymbolMap
 
 PSR_ResetGrammarIOContext
-PSR_ResetGrammarParseContext
+PSR_ResetGrammarParseHandler
 
 PSR_GetTermSymbInfoByValue
 PSR_GetTermSymbInfoByName
@@ -134,6 +135,8 @@ PSR_SetFirstRule
 
 PSR_CreateParser		
 PSR_DestroyParser		
+PSR_CreateContext
+PSR_DestroyContext
 PSR_Clear				
 PSR_GetResult			
 PSR_AddToken			

@@ -1401,46 +1401,6 @@
 		<Filter
 			Name="Ray"
 			>
-			<File
-				RelativePath="..\..\..\Arsenal\Ray\ray.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Ray\ray.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Ray\rayparser.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Ray\rayparser.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Ray\rayparser_impl.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Ray\rayparser_impl.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Ray\raysymbol.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Ray\raysymbol.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Ray\raytype.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Ray\raytype.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Lex"
