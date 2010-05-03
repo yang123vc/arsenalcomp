@@ -264,8 +264,7 @@ typedef enum
 }rayStorageClass_t;
 
 
-struct __initializer_tag;
-typedef struct __initializer_tag		rayInitializer_t;
+
 
 struct	__var_tag 
 {
