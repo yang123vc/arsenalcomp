@@ -537,7 +537,7 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 						msg.Format(TEXT("Token Error :  \"%ls : %ls\""), tok->name, tok->regex);
 						output.Append(msg, COutputList::MSG_ERROR, tok->line, tar);
 						has_error = true;
-						continue;
+						//continue;
 				}
 
 				if(tok->is_skip || tok->tokval == 0)continue;

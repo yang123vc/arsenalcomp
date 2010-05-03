@@ -38,6 +38,10 @@ typedef void	(AR_STDCALL *AR_error_func_t)(int_t level, const wchar_t *msg, void
 typedef void	(AR_STDCALL *AR_print_func_t)(const wchar_t *msg, void *ctx);
 
 
+
+
+
+
 typedef struct __arsenal_io_context_tag
 {
 		AR_error_func_t	on_error;

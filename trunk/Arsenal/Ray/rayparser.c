@@ -19,6 +19,20 @@
 AR_NAMESPACE_BEGIN
 
 
+void			RAY_InitParser()
+{
+		RAY_InitParserImpl();
+
+
+}
+
+void			RAY_UnInitParser()
+{
+		RAY_UnInitParserImpl();
+}
+
+
+
 
 
 
@@ -27,85 +41,39 @@ struct __ray_parser_tag
 		rayReport_t		report;
 		
 		bool_t			is_error;
-		lex_t			*lex;
-		psrGrammar_t	*grammar;
-		parser_t		*parser;
+		lex_t			*lexer;
+		psrContext_t	*parser_ctx;
 
 		rayBlock_t		*outer_block;
 		rayBlock_t		*current_block;
 
+		size_t			*alignment;
+		size_t			align_cnt;
+		size_t			align_cap;
+
 };
-
-
-/*************************************************default io***************************************/
-
-static void AR_STDCALL __def_print(const wchar_t *msg, void *ctx)
-{
-		/*
-		rayReportMsg_t	report_msg;
-		rayReport_t		*report = (rayReport_t*)ctx;
-
-		AR_memset(&report_msg, 0, sizeof(report_msg));
-		report_msg.type = RAY_REPORT_MESSAGE;
-		report_msg.message = msg;
-		report->report_func(&report_msg, report->ctx);
-		*/
-		AR_ASSERT(false);
-
-}
-
-
-static void AR_STDCALL __def_error(int_t level, const wchar_t* msg, void *ctx)
-{
-		/*
-		__def_print(msg, ctx);
-		*/
-		AR_ASSERT(false);
-}
 
 
 /*************************************************default parser ctx***************************************/
 
 
-static void		AR_STDCALL __def_free_node(psrNode_t *node, void *ctx)
-{
-		AR_ASSERT(node != NULL);
-		if(node)RAY_DestroyParserNode((rayNode_t*)node);
-
-}
-
-static void		AR_STDCALL __def_on_error(const psrToken_t *tok, const wchar_t *expected[], size_t count, void *ctx)
-{
-
-
-}
-
+#define RAY_DEF_ALIGNMENT		4
 
 rayParser_t*	RAY_CreateParser(const rayReport_t *report)
 {
-		arIOCtx_t		io;
-		psrCtx_t		psr_ctx;
 		rayParser_t		*parser;
 		
 		AR_ASSERT(report != NULL && report->report_func != NULL);
 
 		parser		=	AR_NEW0(rayParser_t);
 		parser->report = *report;
-
-		io.on_error = __def_error;
-		io.on_print = __def_print;
-		io.ctx = (void*)&parser->report;
-
-		psr_ctx.error_f = __def_on_error;
-		psr_ctx.free_f	= __def_free_node;
-		psr_ctx.ctx = (void*)parser;
-
-		parser->lex = RAY_BuildLexer(&io);
-		AR_ASSERT(parser->lex != NULL);
-		parser->grammar = RAY_BuildGrammar(&psr_ctx, &io);
-		AR_ASSERT(parser->grammar != NULL);
-		parser->parser = PSR_CreateParser(parser->grammar, PSR_LALR);
-		AR_ASSERT(parser->parser != NULL);
+		
+		parser->lexer = RAY_BuildLexer();
+		AR_ASSERT(parser->lexer != NULL);
+		parser->parser_ctx = RAY_BuildParserContext(&parser->report);
+		AR_ASSERT(parser->parser_ctx != NULL);
+		
+		RAY_PushAlignment(parser, RAY_DEF_ALIGNMENT);
 
 		return parser;
 }
@@ -114,9 +82,8 @@ void			RAY_DestroyParser(rayParser_t		*parser)
 {
 		AR_ASSERT(parser != NULL);
 
-		PSR_DestroyParser(parser->parser);
-		PSR_DestroyGrammar(parser->grammar);
-		LEX_Destroy(parser->lex);
+		RAY_ReleaseParserContext(parser->parser_ctx);
+		RAY_ReleaseLexer(parser->lexer);
 		AR_DEL(parser);
 }
 
@@ -133,6 +100,34 @@ void			RAY_SetParserError(rayParser_t	*parser, bool_t is_error)
 		AR_ASSERT(parser != NULL);
 		parser->is_error = is_error;
 }
+
+
+
+
+size_t			RAY_GetAlignment(const rayParser_t	*parser)
+{
+		AR_ASSERT(parser != NULL && parser->align_cnt > 0);
+		return parser->alignment[parser->align_cnt-1];
+}
+
+void			RAY_PushAlignment(rayParser_t	*parser, size_t align)
+{
+		AR_ASSERT(parser != NULL);
+		if(parser->align_cnt == parser->align_cap)
+		{
+				parser->align_cap = (parser->align_cap + 1) * 2;
+				parser->alignment = AR_REALLOC(size_t, parser->alignment, parser->align_cap);
+		}
+		parser->alignment[parser->align_cnt++] = align;
+}
+
+void			RAY_PopAlignment(rayParser_t	*parser)
+{
+		AR_ASSERT(parser != NULL);
+		if(parser->align_cnt > 1)parser->align_cnt--;
+}
+
+
 
 /***********************************************Block****************************************/
 
@@ -175,6 +170,43 @@ void			RAY_DestroyParserNode(rayNode_t	   *node)
 }
 
 
+
+
+
+
+
+
+/*******************************************************************************************************/
+
+rayNode_t*		RAY_Parse(rayParser_t			*parser, const wchar_t *src)
+{
+		lexMatch_t		match;
+		lexToken_t		tok;
+		bool_t			has_error;
+		AR_ASSERT(parser != NULL && src != NULL);
+
+		LEX_InitMatch(&match, src);
+		has_error = false;
+
+		while(!has_error)
+		{
+				if(LEX_Match(parser->lexer, &match, &tok))
+				{
+						wchar_t buf[1024];
+						AR_wcsncpy(buf, tok.str, tok.count);
+						buf[tok.count] = 0;
+						AR_printf(L"%ls\r\n",buf);
+						if(tok.value == 0)break;
+				}else
+				{
+						has_error = true;
+				}
+		}
+		
+		LEX_UnInitMatch(&match);
+		PSR_Clear(parser->parser_ctx);
+		return NULL;
+}
 
 
 AR_NAMESPACE_END

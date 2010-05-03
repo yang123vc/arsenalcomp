@@ -11,41 +11,41 @@ static const wchar_t *__g_lex_name[] = {
 L"delim = [ \\r\\n\\t]",
 L"comment = /\\*([^\\*]|\\*+[^\\*/])*\\*+/",
 L"comment_line = //[^\\n]*\\n",
+L"skip_lexem = {delim}|{comment}|{comment_line}",
 L"digit = [0-9]",
 L"number = {digit}+",
 L"letter = [A-Z_a-z]",
 L"int_type_suffix = ((u|U)?(l|L))|((u|U)(l|L)?)",
-L"octal_escape = (\\\\[0-3][0-7][0-7])|(\\\\[0-7][0-7])|(\\\\[0-7])",
 L"hex_digit = [0-9a-fA-F]",
 L"hex_literal = 0(x|X){hex_digit}+{int_type_suffix}?",
-L"dec_literal = (0|[1-9][0-9]*){int_type_suffix}?",
 L"oct_literal = 0[0-7]+{int_type_suffix}?",
+L"dec_literal = (0|[1-9][0-9]*){int_type_suffix}?",
 L"exponet = (e|E)(\\+|\\-)?[0-9]+",
 L"float_type_suffix = (f|F|d|D)",
 L"float_literal = ([0-9]*\\.[0-9]*{exponet}?{float_type_suffix}?)",
-L"skip_lexem = {delim}|{comment}|{comment_line}",
-L"escape_seq = (\\\\(b|t|n|f|r|\\x22|\\x27|\\\\))|{octal_escape}",
-L"string_literal = (\\x22({escape_seq}|[^\\x22\\\\])*\\x22)",
-L"char_literal = \\x27({escape_seq}|[^\\x27\\\\])\\x27",
-L"keyword_lhd = [A-Z_a-z0-9]"
+L"escape_seq = (\\\\(\\x22|\\x27))",
+L"string_literal = (\\x22({escape_seq}|[^\\x22])*\\x22)",
+L"char_literal = \\x27({escape_seq}|[^\\x27])*\\x27",
+L"keyword_lhd = [A-Z_a-z0-9]",
+L"float_constant = {float_literal}(?!{keyword_lhd})",
+L"hex_constant = {hex_literal}(?!{keyword_lhd})",
+L"oct_constant = {oct_literal}(?!{keyword_lhd})",
+L"dec_constant = {dec_literal}(?!{keyword_lhd})"
 };
 
-#define __NAME_COUNT__ ((size_t)20)
-
+#define __NAME_COUNT__ ((size_t)23)
 
 
 
 
 static struct {const wchar_t *name; size_t tokval; size_t lex_prec; const wchar_t *regex; bool_t skip; }__g_term_pattern[] =  {
-{NULL, TOK_DELIM_ID,1, L"{delim}+|{comment}+|{comment_line}+", true},
+{NULL, TOK_DELIM_ID,1, L"{skip_lexem}+", true},
 {L"TYPE_ID", TOK_TYPE_ID, 0, L"^$", false},
 {L"DONE_ID", TOK_DONE_ID, 0, L"^$", false},
 {L"CHAR_CONSTANT", TOK_CHAR_CONSTANT, 0, L"{char_literal}", false},
 {L"STRING_LITERAL", TOK_STRING_LITERAL, 0, L"{string_literal}", false},
-{L"FLOAT_CONSTANT", TOK_FLOAT_CONSTANT, 2, L"{float_literal}(?!{keyword_lhd})", false},
-{L"HEX_CONSTANT", TOK_HEX_CONSTANT, 2, L"{hex_literal}(?!{keyword_lhd})", false},
-{L"OCT_CONSTANT", TOK_OCT_CONSTANT, 1, L"{oct_literal}(?!{keyword_lhd})", false},
-{L"DEC_CONSTANT", TOK_DEC_CONSTANT, 1, L"{dec_literal}(?!{keyword_lhd})", false},
+{L"FLOAT_NUMBER", TOK_FLOAT_NUMBER, 2, L"{float_constant}", false},
+{L"INT_NUMBER", TOK_INT_NUMBER, 2, L"{hex_constant}|{oct_constant}|{dec_constant}", false},
 {L"IDENTIFIER", TOK_IDENTIFIER, 0, L"{letter}({letter}|{digit})*", false},
 {L"switch", TOK_SWITCH, 1, L"\"switch\"(?!{keyword_lhd})", false},
 {L"for", TOK_FOR, 1, L"\"for\"(?!{keyword_lhd})", false},
@@ -127,41 +127,32 @@ static struct {const wchar_t *name; size_t tokval; size_t lex_prec; const wchar_
 {L"EOI", 0, 2, L"$", false}
 };
 
-#define __TERM_COUNT__ ((size_t)88)
+#define __TERM_COUNT__ ((size_t)86)
 
-static struct 
-{
-		const wchar_t *name; 
-		size_t tokval; 
-		size_t prec_level; 
-		psrAssocType_t	assoc;
-}__g_prec_pattern[] =  
-{
-		{L"||", TOK_OROR,1, PSR_ASSOC_LEFT},
-		{L"&&", TOK_ANDAND,2, PSR_ASSOC_LEFT},
-		{L"|", TOK_OR,3, PSR_ASSOC_LEFT},
-		{L"^", TOK_XOR,4, PSR_ASSOC_LEFT},
-		{L"&", TOK_AND,5, PSR_ASSOC_LEFT},
-		{L"==", TOK_EQ,6, PSR_ASSOC_LEFT},
-		{L"!=", TOK_NE,6, PSR_ASSOC_LEFT},
-		{L"<", TOK_LESS,7, PSR_ASSOC_LEFT},
-		{L"<=", TOK_LE,7, PSR_ASSOC_LEFT},
-		{L">", TOK_GREATER,7, PSR_ASSOC_LEFT},
-		{L">=", TOK_GE,7, PSR_ASSOC_LEFT},
-		{L"<<", TOK_LSHIFT,8, PSR_ASSOC_LEFT},
-		{L">>", TOK_RSHIFT,8, PSR_ASSOC_LEFT},
-		{L"+", TOK_ADD,9, PSR_ASSOC_LEFT},
-		{L"-", TOK_SUB,9, PSR_ASSOC_LEFT},
-		{L"*", TOK_MUL,10, PSR_ASSOC_LEFT},
-		{L"/", TOK_DIV,10, PSR_ASSOC_LEFT},
-		{L"%", TOK_MOD,10, PSR_ASSOC_LEFT},
-		{L"IF_WITHOUT_ELSE", 344,11, PSR_ASSOC_NONASSOC},
-		{L"else", TOK_ELSE,12, PSR_ASSOC_NONASSOC}
+static struct {const wchar_t *name; size_t tokval; size_t prec_level; psrAssocType_t	assoc;}__g_prec_pattern[] =  {
+{L"||", TOK_OROR,1, PSR_ASSOC_LEFT},
+{L"&&", TOK_ANDAND,2, PSR_ASSOC_LEFT},
+{L"|", TOK_OR,3, PSR_ASSOC_LEFT},
+{L"^", TOK_XOR,4, PSR_ASSOC_LEFT},
+{L"&", TOK_AND,5, PSR_ASSOC_LEFT},
+{L"==", TOK_EQ,6, PSR_ASSOC_LEFT},
+{L"!=", TOK_NE,6, PSR_ASSOC_LEFT},
+{L"<", TOK_LESS,7, PSR_ASSOC_LEFT},
+{L"<=", TOK_LE,7, PSR_ASSOC_LEFT},
+{L">", TOK_GREATER,7, PSR_ASSOC_LEFT},
+{L">=", TOK_GE,7, PSR_ASSOC_LEFT},
+{L"<<", TOK_LSHIFT,8, PSR_ASSOC_LEFT},
+{L">>", TOK_RSHIFT,8, PSR_ASSOC_LEFT},
+{L"+", TOK_ADD,9, PSR_ASSOC_LEFT},
+{L"-", TOK_SUB,9, PSR_ASSOC_LEFT},
+{L"*", TOK_MUL,10, PSR_ASSOC_LEFT},
+{L"/", TOK_DIV,10, PSR_ASSOC_LEFT},
+{L"%", TOK_MOD,10, PSR_ASSOC_LEFT},
+{L"IF_WITHOUT_ELSE", 342,11, PSR_ASSOC_NONASSOC},
+{L"else", TOK_ELSE,12, PSR_ASSOC_NONASSOC}
 };
 
 #define __PREC_COUNT__ ((size_t)20)
-
-
 
 /*program	:	translation_unit DONE_ID */
 /*program	:	DONE_ID */
@@ -396,10 +387,8 @@ static psrNode_t* AR_STDCALL handle_expression(psrNode_t **nodes, size_t count, 
 static psrNode_t* AR_STDCALL semantic_auto_return_1(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*primary_expression	:	IDENTIFIER */
-/*primary_expression	:	HEX_CONSTANT */
-/*primary_expression	:	DEC_CONSTANT */
-/*primary_expression	:	OCT_CONSTANT */
-/*primary_expression	:	FLOAT_CONSTANT */
+/*primary_expression	:	FLOAT_NUMBER */
+/*primary_expression	:	INT_NUMBER */
 /*primary_expression	:	CHAR_CONSTANT */
 /*primary_expression	:	string_list */
 static psrNode_t* AR_STDCALL handle_primary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
@@ -477,301 +466,220 @@ static psrNode_t* AR_STDCALL handle_assignment_operator(psrNode_t **nodes, size_
 
 
 
-static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	handler; size_t	auto_ret; } __g_rule_pattern[] = {
-{L"program  :  translation_unit DONE_ID ", NULL, handle_program, 0},
-{L"program  :  DONE_ID ", NULL, handle_program, 0},
-{L"translation_unit  :  external_declaration ", NULL, handle_translation_unit, 0},
-{L"translation_unit  :  translation_unit external_declaration ", NULL, handle_translation_unit, 0},
-{L"external_declaration  :  function_definition ", NULL, handle_external_declaration, 0},
-{L"external_declaration  :  declaration ", NULL, handle_external_declaration, 0},
-{L"external_declaration  :  access_unit ", NULL, handle_external_declaration, 0},
-{L"external_declaration  :  attribute_unit ", NULL, handle_external_declaration, 0},
-{L"access_unit  :  import_or_export STRING_LITERAL ; ", NULL, handle_access_unit, 0},
-{L"access_unit  :  import_or_export error ", NULL, handle_access_unit, 0},
-{L"import_or_export  :  import ", NULL, handle_import_or_export, 0},
-{L"import_or_export  :  export ", NULL, handle_import_or_export, 0},
-{L"attribute_unit  :  attribute STRING_LITERAL ; ", NULL, handle_attribute_unit, 0},
-{L"attribute_unit  :  attribute error ", NULL, handle_attribute_unit, 0},
-{L"function_declaration  :  declaration_specifiers declarator ", NULL, handle_function_declaration, 0},
-{L"function_definition  :  function_declaration compound_statement ", NULL, handle_function_definition, 0},
-{L"type_qualifier  :  const ", NULL, handle_type_qualifier, 0},
-{L"type_qualifier  :  volatile ", NULL, handle_type_qualifier, 0},
-{L"type_qualifier_list  :  type_qualifier_list type_qualifier ", NULL, handle_type_qualifier_list, 0},
-{L"type_qualifier_list  :  type_qualifier ", NULL, handle_type_qualifier_list, 0},
-{L"type_specifier  :  void ", NULL, handle_type_specifier, 0},
-{L"type_specifier  :  byte ", NULL, handle_type_specifier, 0},
-{L"type_specifier  :  char ", NULL, handle_type_specifier, 0},
-{L"type_specifier  :  short ", NULL, handle_type_specifier, 0},
-{L"type_specifier  :  int ", NULL, handle_type_specifier, 0},
-{L"type_specifier  :  long ", NULL, handle_type_specifier, 0},
-{L"type_specifier  :  float ", NULL, handle_type_specifier, 0},
-{L"type_specifier  :  double ", NULL, handle_type_specifier, 0},
-{L"type_specifier  :  signed ", NULL, handle_type_specifier, 0},
-{L"type_specifier  :  unsigned ", NULL, handle_type_specifier, 0},
-{L"type_specifier  :  struct_or_union_specifier ", NULL, handle_type_specifier, 0},
-{L"type_specifier  :  TYPE_ID ", NULL, handle_type_specifier, 0},
-{L"struct_or_union_specifier  :  struct_or_union IDENTIFIER { struct_declaration_list } ", NULL, handle_struct_or_union_specifier, 0},
-{L"struct_or_union_specifier  :  struct_or_union { struct_declaration_list } ", NULL, handle_struct_or_union_specifier, 0},
-{L"struct_or_union_specifier  :  struct_or_union IDENTIFIER ", NULL, handle_struct_or_union_specifier, 0},
-{L"struct_or_union  :  struct ", NULL, handle_struct_or_union, 0},
-{L"struct_or_union  :  union ", NULL, handle_struct_or_union, 0},
-{L"struct_declaration_list  :  struct_declaration ", NULL, handle_struct_declaration_list, 0},
-{L"struct_declaration_list  :  struct_declaration_list struct_declaration ", NULL, handle_struct_declaration_list, 0},
-{L"struct_declaration  :  specifier_qualifier_list struct_declarator_list ; ", NULL, handle_struct_declaration, 0},
-{L"struct_declaration  :  specifier_qualifier_list struct_declarator_list error ", NULL, handle_struct_declaration, 0},
-{L"struct_declarator_list  :  declarator ", NULL, handle_struct_declarator_list, 0},
-{L"struct_declarator_list  :  struct_declarator_list , declarator ", NULL, handle_struct_declarator_list, 0},
-{L"declaration  :  declaration_specifiers init_declarator_list ; ", NULL, handle_declaration, 0},
-{L"declaration  :  declaration_specifiers ; ", NULL, handle_declaration, 0},
-{L"declaration  :  declaration_specifiers init_declarator_list error ", NULL, handle_declaration, 0},
-{L"declaration  :  declaration_specifiers error ", NULL, handle_declaration, 0},
-{L"storage_class_specifier  :  typedef ", NULL, handle_storage_class_specifier, 0},
-{L"storage_class_specifier  :  static ", NULL, handle_storage_class_specifier, 0},
-{L"declaration_specifiers  :  storage_class_specifier ", NULL, handle_declaration_specifiers, 0},
-{L"declaration_specifiers  :  storage_class_specifier declaration_specifiers ", NULL, handle_declaration_specifiers, 0},
-{L"declaration_specifiers  :  type_specifier ", NULL, handle_declaration_specifiers, 0},
-{L"declaration_specifiers  :  type_specifier declaration_specifiers ", NULL, handle_declaration_specifiers, 0},
-{L"declaration_specifiers  :  type_qualifier ", NULL, handle_declaration_specifiers, 0},
-{L"declaration_specifiers  :  type_qualifier declaration_specifiers ", NULL, handle_declaration_specifiers, 0},
-{L"declaration_list  :  declaration ", NULL, handle_declaration_list, 0},
-{L"declaration_list  :  declaration_list declaration ", NULL, handle_declaration_list, 0},
-{L"init_declarator_list  :  init_declarator ", NULL, handle_init_declarator_list, 0},
-{L"init_declarator_list  :  init_declarator_list , init_declarator ", NULL, handle_init_declarator_list, 0},
-{L"init_declarator  :  declarator ", NULL, handle_init_declarator, 0},
-{L"init_declarator  :  declarator = initializer ", NULL, handle_init_declarator, 0},
-{L"initializer  :  assignment_expression ", NULL, handle_initializer, 0},
-{L"initializer  :  { initializer_list } ", NULL, handle_initializer, 0},
-{L"initializer_list  :  initializer ", NULL, handle_initializer_list, 0},
-{L"initializer_list  :  initializer_list , initializer ", NULL, handle_initializer_list, 0},
-{L"declarator  :  direct_declarator ", NULL, handle_declarator, 0},
-{L"declarator  :  pointer direct_declarator ", NULL, handle_declarator, 0},
-{L"direct_declarator  :  IDENTIFIER ", NULL, handle_direct_declarator, 0},
-{L"direct_declarator  :  IDENTIFIER [ constant_expression ] ", NULL, handle_direct_declarator, 0},
-{L"direct_declarator  :  IDENTIFIER [ ] ", NULL, handle_direct_declarator, 0},
-{L"direct_declarator  :  IDENTIFIER ( parameter_list ) ", NULL, handle_direct_declarator, 0},
-{L"direct_declarator  :  IDENTIFIER ( ) ", NULL, handle_direct_declarator, 0},
-{L"abstract_declarator  :  pointer ", NULL, handle_abstract_declarator, 0},
-{L"abstract_declarator  :  direct_abstract_declarator ", NULL, handle_abstract_declarator, 0},
-{L"abstract_declarator  :  pointer direct_abstract_declarator ", NULL, handle_abstract_declarator, 0},
-{L"direct_abstract_declarator  :  [ ] ", NULL, handle_direct_abstract_declarator, 0},
-{L"direct_abstract_declarator  :  [ constant_expression ] ", NULL, handle_direct_abstract_declarator, 0},
-{L"pointer  :  * ", NULL, handle_pointer, 0},
-{L"pointer  :  * type_qualifier_list ", NULL, handle_pointer, 0},
-{L"pointer  :  * type_qualifier_list pointer ", NULL, handle_pointer, 0},
-{L"pointer  :  * pointer ", NULL, handle_pointer, 0},
-{L"parameter_list  :  parameter_declaration ", NULL, handle_parameter_list, 0},
-{L"parameter_list  :  parameter_list , parameter_declaration ", NULL, handle_parameter_list, 0},
-{L"parameter_declaration  :  declaration_specifiers declarator ", NULL, handle_parameter_declaration, 0},
-{L"parameter_declaration  :  declaration_specifiers abstract_declarator ", NULL, handle_parameter_declaration, 0},
-{L"parameter_declaration  :  declaration_specifiers ", NULL, handle_parameter_declaration, 0},
-{L"type_name  :  specifier_qualifier_list ", NULL, handle_type_name, 0},
-{L"type_name  :  specifier_qualifier_list abstract_declarator ", NULL, handle_type_name, 0},
-{L"specifier_qualifier_list  :  type_qualifier ", NULL, handle_specifier_qualifier_list, 0},
-{L"specifier_qualifier_list  :  type_specifier ", NULL, handle_specifier_qualifier_list, 0},
-{L"specifier_qualifier_list  :  type_qualifier specifier_qualifier_list ", NULL, handle_specifier_qualifier_list, 0},
-{L"specifier_qualifier_list  :  type_specifier specifier_qualifier_list ", NULL, handle_specifier_qualifier_list, 0},
-{L"statement  :  labeled_statement ", NULL, semantic_auto_return_0, 0},
-{L"statement  :  compound_statement ", NULL, semantic_auto_return_0, 0},
-{L"statement  :  expression_statement ", NULL, semantic_auto_return_0, 0},
-{L"statement  :  selection_statement ", NULL, semantic_auto_return_0, 0},
-{L"statement  :  iteration_statement ", NULL, semantic_auto_return_0, 0},
-{L"statement  :  jump_statement ", NULL, semantic_auto_return_0, 0},
-{L"labeled_statement  :  case constant_expression : statement ", NULL, handle_labeled_statement, 0},
-{L"labeled_statement  :  default : statement ", NULL, handle_labeled_statement, 0},
-{L"labeled_statement  :  IDENTIFIER : statement ", NULL, handle_labeled_statement, 0},
-{L"compound_statement  :  start_block compound_statement_body ", NULL, handle_compound_statement, 0},
-{L"start_block  :  { ", NULL, handle_start_block, 0},
-{L"compound_statement_body  :  compound_statement_declarations } ", NULL, handle_compound_statement_body, 0},
-{L"compound_statement_body  :  compound_statement_declarations statement_list } ", NULL, handle_compound_statement_body, 0},
-{L"compound_statement_declarations  :  declaration_list ", NULL, handle_compound_statement_declarations, 0},
-{L"compound_statement_declarations  :   ", NULL, handle_compound_statement_declarations, 0},
-{L"statement_list  :  statement ", NULL, handle_statement_list, 0},
-{L"statement_list  :  statement_list statement ", NULL, handle_statement_list, 0},
-{L"expression_statement  :  ; ", NULL, handle_expression_statement, 0},
-{L"expression_statement  :  expression ; ", NULL, handle_expression_statement, 0},
-{L"expression_statement  :  expression error ", NULL, handle_expression_statement, 0},
-{L"selection_statement  :  if ( expression ) statement ", L"IF_STMT_PREC", handle_selection_statement, 0},
-{L"selection_statement  :  if ( expression ) statement else statement ", L"IF_STMT_ELSE_STMT_PREC", handle_selection_statement, 0},
-{L"selection_statement  :  switch ( expression ) statement ", NULL, handle_selection_statement, 0},
-{L"iteration_statement  :  while ( expression ) statement ", NULL, handle_iteration_statement, 0},
-{L"iteration_statement  :  do statement while ( expression ) ; ", NULL, handle_iteration_statement, 0},
-{L"iteration_statement  :  do statement while ( expression ) error ", NULL, handle_iteration_statement, 0},
-{L"iteration_statement  :  for ( expression_statement expression_statement ) statement ", NULL, handle_iteration_statement, 0},
-{L"iteration_statement  :  for ( expression_statement expression_statement expression ) statement ", NULL, handle_iteration_statement, 0},
-{L"jump_statement  :  goto IDENTIFIER ; ", NULL, handle_jump_statement, 0},
-{L"jump_statement  :  continue ; ", NULL, handle_jump_statement, 0},
-{L"jump_statement  :  break ; ", NULL, handle_jump_statement, 0},
-{L"jump_statement  :  return ; ", NULL, handle_jump_statement, 0},
-{L"jump_statement  :  return expression ; ", NULL, handle_jump_statement, 0},
-{L"jump_statement  :  goto IDENTIFIER error ", NULL, handle_jump_statement, 0},
-{L"jump_statement  :  continue error ", NULL, handle_jump_statement, 0},
-{L"jump_statement  :  break error ", NULL, handle_jump_statement, 0},
-{L"jump_statement  :  return error ", NULL, handle_jump_statement, 0},
-{L"jump_statement  :  return expression error ", NULL, handle_jump_statement, 0},
-{L"expression  :  assignment_expression ", NULL, handle_expression, 0},
-{L"expression  :  expression , assignment_expression ", NULL, handle_expression, 0},
-{L"primary_expression  :  ( expression ) ", NULL, semantic_auto_return_1, 0},
-{L"primary_expression  :  IDENTIFIER ", NULL, handle_primary_expression, 0},
-{L"primary_expression  :  HEX_CONSTANT ", NULL, handle_primary_expression, 0},
-{L"primary_expression  :  DEC_CONSTANT ", NULL, handle_primary_expression, 0},
-{L"primary_expression  :  OCT_CONSTANT ", NULL, handle_primary_expression, 0},
-{L"primary_expression  :  FLOAT_CONSTANT ", NULL, handle_primary_expression, 0},
-{L"primary_expression  :  CHAR_CONSTANT ", NULL, handle_primary_expression, 0},
-{L"primary_expression  :  string_list ", NULL, handle_primary_expression, 0},
-{L"string_list  :  string_list STRING_LITERAL ", NULL, handle_string_list, 0},
-{L"string_list  :  STRING_LITERAL ", NULL, handle_string_list, 0},
-{L"postfix_expression  :  primary_expression ", NULL, semantic_auto_return_0, 0},
-{L"postfix_expression  :  postfix_expression [ expression ] ", NULL, handle_postfix_expression, 0},
-{L"postfix_expression  :  postfix_expression ( ) ", NULL, handle_postfix_expression, 0},
-{L"postfix_expression  :  postfix_expression ( argument_expression_list ) ", NULL, handle_postfix_expression, 0},
-{L"postfix_expression  :  postfix_expression . IDENTIFIER ", NULL, handle_postfix_expression, 0},
-{L"postfix_expression  :  postfix_expression -> IDENTIFIER ", NULL, handle_postfix_expression, 0},
-{L"postfix_expression  :  postfix_expression ++ ", NULL, handle_postfix_expression, 0},
-{L"postfix_expression  :  postfix_expression -- ", NULL, handle_postfix_expression, 0},
-{L"argument_expression_list  :  assignment_expression ", NULL, semantic_auto_return_0, 0},
-{L"argument_expression_list  :  argument_expression_list , assignment_expression ", NULL, handle_argument_expression_list, 0},
-{L"unary_expression  :  postfix_expression ", NULL, semantic_auto_return_0, 0},
-{L"unary_expression  :  ++ unary_expression ", NULL, handle_unary_expression, 0},
-{L"unary_expression  :  -- unary_expression ", NULL, handle_unary_expression, 0},
-{L"unary_expression  :  & cast_expression ", NULL, handle_unary_expression, 0},
-{L"unary_expression  :  * cast_expression ", NULL, handle_unary_expression, 0},
-{L"unary_expression  :  + cast_expression ", NULL, handle_unary_expression, 0},
-{L"unary_expression  :  - cast_expression ", NULL, handle_unary_expression, 0},
-{L"unary_expression  :  ~ cast_expression ", NULL, handle_unary_expression, 0},
-{L"unary_expression  :  ! cast_expression ", NULL, handle_unary_expression, 0},
-{L"unary_expression  :  sizeof unary_expression ", NULL, handle_unary_expression, 0},
-{L"unary_expression  :  sizeof ( type_name ) ", NULL, handle_unary_expression, 0},
-{L"cast_expression  :  unary_expression ", NULL, semantic_auto_return_0, 0},
-{L"cast_expression  :  ( type_name ) cast_expression ", NULL, handle_cast_expression, 0},
-{L"binary_expression  :  cast_expression ", NULL, semantic_auto_return_0, 0},
-{L"binary_expression  :  binary_expression + binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression - binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression * binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression / binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression % binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression << binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression >> binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression < binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression <= binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression > binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression >= binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression == binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression != binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression & binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression ^ binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression | binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression && binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression || binary_expression ", NULL, handle_binary_expression, 0},
-{L"constant_expression  :  binary_expression ", NULL, semantic_auto_return_0, 0},
-{L"constant_expression  :  binary_expression ? expression : constant_expression ", NULL, handle_constant_expression, 0},
-{L"assignment_expression  :  constant_expression ", NULL, semantic_auto_return_0, 0},
-{L"assignment_expression  :  unary_expression assignment_operator assignment_expression ", NULL, handle_assignment_expression, 0},
-{L"assignment_operator  :  = ", NULL, handle_assignment_operator, 0},
-{L"assignment_operator  :  *= ", NULL, handle_assignment_operator, 0},
-{L"assignment_operator  :  /= ", NULL, handle_assignment_operator, 0},
-{L"assignment_operator  :  %= ", NULL, handle_assignment_operator, 0},
-{L"assignment_operator  :  += ", NULL, handle_assignment_operator, 0},
-{L"assignment_operator  :  -= ", NULL, handle_assignment_operator, 0},
-{L"assignment_operator  :  <<= ", NULL, handle_assignment_operator, 0},
-{L"assignment_operator  :  >>= ", NULL, handle_assignment_operator, 0},
-{L"assignment_operator  :  &= ", NULL, handle_assignment_operator, 0},
-{L"assignment_operator  :  ^= ", NULL, handle_assignment_operator, 0},
-{L"assignment_operator  :  |= ", NULL, handle_assignment_operator, 0}
+static struct 
+{
+		const wchar_t	*rule; 
+		const wchar_t	*prec_token; 
+		psrRuleFunc_t	handler; 
+		size_t			auto_ret; 
+
+} __g_rule_pattern[] = 
+{
+		{L"program						:  translation_unit DONE_ID ", NULL, handle_program, 0},
+		{L"program						:  DONE_ID ", NULL, handle_program, 0},
+		{L"translation_unit				:  external_declaration ", NULL, handle_translation_unit, 0},
+		{L"translation_unit				:  translation_unit external_declaration ", NULL, handle_translation_unit, 0},
+		{L"external_declaration			:  function_definition ", NULL, handle_external_declaration, 0},
+		{L"external_declaration			:  declaration ", NULL, handle_external_declaration, 0},
+		{L"external_declaration			:  access_unit ", NULL, handle_external_declaration, 0},
+		{L"external_declaration			:  attribute_unit ", NULL, handle_external_declaration, 0},
+		{L"access_unit					:  import_or_export STRING_LITERAL ; ", NULL, handle_access_unit, 0},
+		{L"access_unit					:  import_or_export error ", NULL, handle_access_unit, 0},
+		{L"import_or_export				:  import ", NULL, handle_import_or_export, 0},
+		{L"import_or_export				:  export ", NULL, handle_import_or_export, 0},
+		{L"attribute_unit				:  attribute STRING_LITERAL ; ", NULL, handle_attribute_unit, 0},
+		{L"attribute_unit				:  attribute error ", NULL, handle_attribute_unit, 0},
+		{L"function_declaration			:  declaration_specifiers declarator ", NULL, handle_function_declaration, 0},
+		{L"function_definition			:  function_declaration compound_statement ", NULL, handle_function_definition, 0},
+		{L"type_qualifier				:  const ", NULL, handle_type_qualifier, 0},
+		{L"type_qualifier				:  volatile ", NULL, handle_type_qualifier, 0},
+		{L"type_qualifier_list			:  type_qualifier_list type_qualifier ", NULL, handle_type_qualifier_list, 0},
+		{L"type_qualifier_list			:  type_qualifier ", NULL, handle_type_qualifier_list, 0},
+		{L"type_specifier				:  void ", NULL, handle_type_specifier, 0},
+		{L"type_specifier				:  byte ", NULL, handle_type_specifier, 0},
+		{L"type_specifier				:  char ", NULL, handle_type_specifier, 0},
+		{L"type_specifier				:  short ", NULL, handle_type_specifier, 0},
+		{L"type_specifier				:  int ", NULL, handle_type_specifier, 0},
+		{L"type_specifier				:  long ", NULL, handle_type_specifier, 0},
+		{L"type_specifier				:  float ", NULL, handle_type_specifier, 0},
+		{L"type_specifier				:  double ", NULL, handle_type_specifier, 0},
+		{L"type_specifier				:  signed ", NULL, handle_type_specifier, 0},
+		{L"type_specifier				:  unsigned ", NULL, handle_type_specifier, 0},
+		{L"type_specifier				:  struct_or_union_specifier ", NULL, handle_type_specifier, 0},
+		{L"type_specifier				:  TYPE_ID ", NULL, handle_type_specifier, 0},
+		{L"struct_or_union_specifier	:  struct_or_union IDENTIFIER { struct_declaration_list } ", NULL, handle_struct_or_union_specifier, 0},
+		{L"struct_or_union_specifier	:  struct_or_union { struct_declaration_list } ", NULL, handle_struct_or_union_specifier, 0},
+		{L"struct_or_union_specifier	:  struct_or_union IDENTIFIER ", NULL, handle_struct_or_union_specifier, 0},
+		{L"struct_or_union				:  struct ", NULL, handle_struct_or_union, 0},
+		{L"struct_or_union				:  union ", NULL, handle_struct_or_union, 0},
+		{L"struct_declaration_list		:  struct_declaration ", NULL, handle_struct_declaration_list, 0},
+		{L"struct_declaration_list		:  struct_declaration_list struct_declaration ", NULL, handle_struct_declaration_list, 0},
+		{L"struct_declaration			:  specifier_qualifier_list struct_declarator_list ; ", NULL, handle_struct_declaration, 0},
+		{L"struct_declaration			:  specifier_qualifier_list struct_declarator_list error ", NULL, handle_struct_declaration, 0},
+		{L"struct_declarator_list		:  declarator ", NULL, handle_struct_declarator_list, 0},
+		{L"struct_declarator_list		:  struct_declarator_list , declarator ", NULL, handle_struct_declarator_list, 0},
+		{L"declaration					:  declaration_specifiers init_declarator_list ; ", NULL, handle_declaration, 0},
+		{L"declaration					:  declaration_specifiers ; ", NULL, handle_declaration, 0},
+		{L"declaration					:  declaration_specifiers init_declarator_list error ", NULL, handle_declaration, 0},
+		{L"declaration					:  declaration_specifiers error ", NULL, handle_declaration, 0},
+		{L"storage_class_specifier		:  typedef ", NULL, handle_storage_class_specifier, 0},
+		{L"storage_class_specifier		:  static ", NULL, handle_storage_class_specifier, 0},
+		{L"declaration_specifiers		:  storage_class_specifier ", NULL, handle_declaration_specifiers, 0},
+		{L"declaration_specifiers		:  storage_class_specifier declaration_specifiers ", NULL, handle_declaration_specifiers, 0},
+		{L"declaration_specifiers		:  type_specifier ", NULL, handle_declaration_specifiers, 0},
+		{L"declaration_specifiers		:  type_specifier declaration_specifiers ", NULL, handle_declaration_specifiers, 0},
+		{L"declaration_specifiers		:  type_qualifier ", NULL, handle_declaration_specifiers, 0},
+		{L"declaration_specifiers		:  type_qualifier declaration_specifiers ", NULL, handle_declaration_specifiers, 0},
+		{L"declaration_list				:  declaration ", NULL, handle_declaration_list, 0},
+		{L"declaration_list				:  declaration_list declaration ", NULL, handle_declaration_list, 0},
+		{L"init_declarator_list			:  init_declarator ", NULL, handle_init_declarator_list, 0},
+		{L"init_declarator_list			:  init_declarator_list , init_declarator ", NULL, handle_init_declarator_list, 0},
+		{L"init_declarator				:  declarator ", NULL, handle_init_declarator, 0},
+		{L"init_declarator				:  declarator = initializer ", NULL, handle_init_declarator, 0},
+		{L"initializer					:  assignment_expression ", NULL, handle_initializer, 0},
+		{L"initializer					:  { initializer_list } ", NULL, handle_initializer, 0},
+		{L"initializer_list				:  initializer ", NULL, handle_initializer_list, 0},
+		{L"initializer_list				:  initializer_list , initializer ", NULL, handle_initializer_list, 0},
+		{L"declarator					:  direct_declarator ", NULL, handle_declarator, 0},
+		{L"declarator					:  pointer direct_declarator ", NULL, handle_declarator, 0},
+		{L"direct_declarator			:  IDENTIFIER ", NULL, handle_direct_declarator, 0},
+		{L"direct_declarator			:  IDENTIFIER [ constant_expression ] ", NULL, handle_direct_declarator, 0},
+		{L"direct_declarator			:  IDENTIFIER [ ] ", NULL, handle_direct_declarator, 0},
+		{L"direct_declarator			:  IDENTIFIER ( parameter_list ) ", NULL, handle_direct_declarator, 0},
+		{L"direct_declarator			:  IDENTIFIER ( ) ", NULL, handle_direct_declarator, 0},
+		{L"abstract_declarator			:  pointer ", NULL, handle_abstract_declarator, 0},
+		{L"abstract_declarator			:  direct_abstract_declarator ", NULL, handle_abstract_declarator, 0},
+		{L"abstract_declarator			:  pointer direct_abstract_declarator ", NULL, handle_abstract_declarator, 0},
+		{L"direct_abstract_declarator	:  [ ] ", NULL, handle_direct_abstract_declarator, 0},
+		{L"direct_abstract_declarator	:  [ constant_expression ] ", NULL, handle_direct_abstract_declarator, 0},
+		{L"pointer						:  * ", NULL, handle_pointer, 0},
+		{L"pointer						:  * type_qualifier_list ", NULL, handle_pointer, 0},
+		{L"pointer						:  * type_qualifier_list pointer ", NULL, handle_pointer, 0},
+		{L"pointer						:  * pointer ", NULL, handle_pointer, 0},
+		{L"parameter_list				:  parameter_declaration ", NULL, handle_parameter_list, 0},
+		{L"parameter_list				:  parameter_list , parameter_declaration ", NULL, handle_parameter_list, 0},
+		{L"parameter_declaration		:  declaration_specifiers declarator ", NULL, handle_parameter_declaration, 0},
+		{L"parameter_declaration		:  declaration_specifiers abstract_declarator ", NULL, handle_parameter_declaration, 0},
+		{L"parameter_declaration		:  declaration_specifiers ", NULL, handle_parameter_declaration, 0},
+		{L"type_name					:  specifier_qualifier_list ", NULL, handle_type_name, 0},
+		{L"type_name					:  specifier_qualifier_list abstract_declarator ", NULL, handle_type_name, 0},
+		{L"specifier_qualifier_list		:  type_qualifier ", NULL, handle_specifier_qualifier_list, 0},
+		{L"specifier_qualifier_list		:  type_specifier ", NULL, handle_specifier_qualifier_list, 0},
+		{L"specifier_qualifier_list		:  type_qualifier specifier_qualifier_list ", NULL, handle_specifier_qualifier_list, 0},
+		{L"specifier_qualifier_list		:  type_specifier specifier_qualifier_list ", NULL, handle_specifier_qualifier_list, 0},
+		{L"statement					:  labeled_statement ", NULL, semantic_auto_return_0, 0},
+		{L"statement					:  compound_statement ", NULL, semantic_auto_return_0, 0},
+		{L"statement					:  expression_statement ", NULL, semantic_auto_return_0, 0},
+		{L"statement					:  selection_statement ", NULL, semantic_auto_return_0, 0},
+		{L"statement					:  iteration_statement ", NULL, semantic_auto_return_0, 0},
+		{L"statement					:  jump_statement ", NULL, semantic_auto_return_0, 0},
+		{L"labeled_statement			:  case constant_expression : statement ", NULL, handle_labeled_statement, 0},
+		{L"labeled_statement			:  default : statement ", NULL, handle_labeled_statement, 0},
+		{L"labeled_statement			:  IDENTIFIER : statement ", NULL, handle_labeled_statement, 0},
+		{L"compound_statement			:  start_block compound_statement_body ", NULL, handle_compound_statement, 0},
+		{L"start_block					:  { ", NULL, handle_start_block, 0},
+		{L"compound_statement_body		:  compound_statement_declarations } ", NULL, handle_compound_statement_body, 0},
+		{L"compound_statement_body		:  compound_statement_declarations statement_list } ", NULL, handle_compound_statement_body, 0},
+		{L"compound_statement_declarations  :  declaration_list ", NULL, handle_compound_statement_declarations, 0},
+		{L"compound_statement_declarations  :   ", NULL, handle_compound_statement_declarations, 0},
+		{L"statement_list				:  statement ", NULL, handle_statement_list, 0},
+		{L"statement_list				:  statement_list statement ", NULL, handle_statement_list, 0},
+		{L"expression_statement			:  ; ", NULL, handle_expression_statement, 0},
+		{L"expression_statement			:  expression ; ", NULL, handle_expression_statement, 0},
+		{L"expression_statement			:  expression error ", NULL, handle_expression_statement, 0},
+		{L"selection_statement  :  if ( expression ) statement ", L"IF_WITHOUT_ELSE", handle_selection_statement, 0},
+		{L"selection_statement  :  if ( expression ) statement else statement ", NULL, handle_selection_statement, 0},
+		{L"selection_statement  :  switch ( expression ) statement ", NULL, handle_selection_statement, 0},
+		{L"iteration_statement  :  while ( expression ) statement ", NULL, handle_iteration_statement, 0},
+		{L"iteration_statement  :  do statement while ( expression ) ; ", NULL, handle_iteration_statement, 0},
+		{L"iteration_statement  :  do statement while ( expression ) error ", NULL, handle_iteration_statement, 0},
+		{L"iteration_statement  :  for ( expression_statement expression_statement ) statement ", NULL, handle_iteration_statement, 0},
+		{L"iteration_statement  :  for ( expression_statement expression_statement expression ) statement ", NULL, handle_iteration_statement, 0},
+		{L"jump_statement  :  goto IDENTIFIER ; ", NULL, handle_jump_statement, 0},
+		{L"jump_statement  :  continue ; ", NULL, handle_jump_statement, 0},
+		{L"jump_statement  :  break ; ", NULL, handle_jump_statement, 0},
+		{L"jump_statement  :  return ; ", NULL, handle_jump_statement, 0},
+		{L"jump_statement  :  return expression ; ", NULL, handle_jump_statement, 0},
+		{L"jump_statement  :  goto IDENTIFIER error ", NULL, handle_jump_statement, 0},
+		{L"jump_statement  :  continue error ", NULL, handle_jump_statement, 0},
+		{L"jump_statement  :  break error ", NULL, handle_jump_statement, 0},
+		{L"jump_statement  :  return error ", NULL, handle_jump_statement, 0},
+		{L"jump_statement  :  return expression error ", NULL, handle_jump_statement, 0},
+		{L"expression					:		assignment_expression ", NULL, handle_expression, 0},
+		{L"expression					:		expression , assignment_expression ", NULL, handle_expression, 0},
+		{L"primary_expression			:		( expression ) ", NULL, semantic_auto_return_1, 0},
+		{L"primary_expression			:		IDENTIFIER ", NULL, handle_primary_expression, 0},
+		{L"primary_expression			:		FLOAT_NUMBER ", NULL, handle_primary_expression, 0},
+		{L"primary_expression			:		INT_NUMBER ", NULL, handle_primary_expression, 0},
+		{L"primary_expression			:		CHAR_CONSTANT ", NULL, handle_primary_expression, 0},
+		{L"primary_expression			:		string_list ", NULL, handle_primary_expression, 0},
+		{L"string_list					:		string_list STRING_LITERAL ", NULL, handle_string_list, 0},
+		{L"string_list					:		STRING_LITERAL ", NULL, handle_string_list, 0},
+		{L"postfix_expression			:		primary_expression ", NULL, semantic_auto_return_0, 0},
+		{L"postfix_expression			:		postfix_expression [ expression ] ", NULL, handle_postfix_expression, 0},
+		{L"postfix_expression			:		postfix_expression ( ) ", NULL, handle_postfix_expression, 0},
+		{L"postfix_expression			:		postfix_expression ( argument_expression_list ) ", NULL, handle_postfix_expression, 0},
+		{L"postfix_expression			:		postfix_expression . IDENTIFIER ", NULL, handle_postfix_expression, 0},
+		{L"postfix_expression			:		postfix_expression -> IDENTIFIER ", NULL, handle_postfix_expression, 0},
+		{L"postfix_expression			:		postfix_expression ++ ", NULL, handle_postfix_expression, 0},
+		{L"postfix_expression			:		postfix_expression -- ", NULL, handle_postfix_expression, 0},
+		{L"argument_expression_list		:		assignment_expression ", NULL, semantic_auto_return_0, 0},
+		{L"argument_expression_list		:		argument_expression_list , assignment_expression ", NULL, handle_argument_expression_list, 0},
+		{L"unary_expression				:		postfix_expression ", NULL, semantic_auto_return_0, 0},
+		{L"unary_expression				:		++ unary_expression ", NULL, handle_unary_expression, 0},
+		{L"unary_expression				:		-- unary_expression ", NULL, handle_unary_expression, 0},
+		{L"unary_expression				:		& cast_expression ", NULL, handle_unary_expression, 0},
+		{L"unary_expression				:		* cast_expression ", NULL, handle_unary_expression, 0},
+		{L"unary_expression				:		+ cast_expression ", NULL, handle_unary_expression, 0},
+		{L"unary_expression				:		- cast_expression ", NULL, handle_unary_expression, 0},
+		{L"unary_expression				:		~ cast_expression ", NULL, handle_unary_expression, 0},
+		{L"unary_expression				:		! cast_expression ", NULL, handle_unary_expression, 0},
+		{L"unary_expression				:		sizeof unary_expression ", NULL, handle_unary_expression, 0},
+		{L"unary_expression				:		sizeof ( type_name ) ", NULL, handle_unary_expression, 0},
+		{L"cast_expression				:		unary_expression ", NULL, semantic_auto_return_0, 0},
+		{L"cast_expression				:		( type_name ) cast_expression ", NULL, handle_cast_expression, 0},
+		{L"binary_expression			:		cast_expression ", NULL, semantic_auto_return_0, 0},
+		{L"binary_expression			:		binary_expression + binary_expression ", NULL, handle_binary_expression, 0},
+		{L"binary_expression			:		binary_expression - binary_expression ", NULL, handle_binary_expression, 0},
+		{L"binary_expression			:		binary_expression * binary_expression ", NULL, handle_binary_expression, 0},
+		{L"binary_expression			:		binary_expression / binary_expression ", NULL, handle_binary_expression, 0},
+		{L"binary_expression			:		binary_expression % binary_expression ", NULL, handle_binary_expression, 0},
+		{L"binary_expression			:		binary_expression << binary_expression ", NULL, handle_binary_expression, 0},
+		{L"binary_expression			:		binary_expression >> binary_expression ", NULL, handle_binary_expression, 0},
+		{L"binary_expression			:		binary_expression < binary_expression ", NULL, handle_binary_expression, 0},
+		{L"binary_expression			:		binary_expression <= binary_expression ", NULL, handle_binary_expression, 0},
+		{L"binary_expression			:		binary_expression > binary_expression ", NULL, handle_binary_expression, 0},
+		{L"binary_expression			:		binary_expression >= binary_expression ", NULL, handle_binary_expression, 0},
+		{L"binary_expression			:		binary_expression == binary_expression ", NULL, handle_binary_expression, 0},
+		{L"binary_expression			:		binary_expression != binary_expression ", NULL, handle_binary_expression, 0},
+		{L"binary_expression			:		binary_expression & binary_expression ", NULL, handle_binary_expression, 0},
+		{L"binary_expression			:		binary_expression ^ binary_expression ", NULL, handle_binary_expression, 0},
+		{L"binary_expression			:		binary_expression | binary_expression ", NULL, handle_binary_expression, 0},
+		{L"binary_expression			:		binary_expression && binary_expression ", NULL, handle_binary_expression, 0},
+		{L"binary_expression			:		binary_expression || binary_expression ", NULL, handle_binary_expression, 0},
+		{L"constant_expression			:		binary_expression ", NULL, semantic_auto_return_0, 0},
+		{L"constant_expression			:		binary_expression ? expression : constant_expression ", NULL, handle_constant_expression, 0},
+		{L"assignment_expression		:		constant_expression ", NULL, semantic_auto_return_0, 0},
+		{L"assignment_expression		:		unary_expression assignment_operator assignment_expression ", NULL, handle_assignment_expression, 0},
+
+		{L"assignment_operator			:		= ", NULL, handle_assignment_operator, 0},
+		{L"assignment_operator			:		*= ", NULL, handle_assignment_operator, 0},
+		{L"assignment_operator			:		/= ", NULL, handle_assignment_operator, 0},
+		{L"assignment_operator			:		%= ", NULL, handle_assignment_operator, 0},
+		{L"assignment_operator			:		+= ", NULL, handle_assignment_operator, 0},
+		{L"assignment_operator			:		-= ", NULL, handle_assignment_operator, 0},
+		{L"assignment_operator			:		<<= ", NULL, handle_assignment_operator, 0},
+		{L"assignment_operator			:		>>= ", NULL, handle_assignment_operator, 0},
+		{L"assignment_operator			:		&= ", NULL, handle_assignment_operator, 0},
+		{L"assignment_operator			:		^= ", NULL, handle_assignment_operator, 0},
+		{L"assignment_operator			:		|= ", NULL, handle_assignment_operator, 0}
 };
 
-#define __RULE_COUNT__ ((size_t)199)
-#define START_RULE		L"program"
-
+#define __RULE_COUNT__ ((size_t)197)
+#define START_RULE L"program"
 
 
 static psrNode_t* AR_STDCALL __build_leaf(const psrToken_t *tok,  void *ctx);
-
-
-lex_t*	RAY_BuildLexer(const arIOCtx_t *io)
-{																				
-		lex_t	*lex;															
-		size_t i;																
-		lex = LEX_Create(io);													
-		for(i = 0; i < __NAME_COUNT__; ++i)										
-		{																		
-				if(!LEX_Insert(lex, __g_lex_name[i]))							
-				{																
-						LEX_Destroy(lex);										
-						AR_ASSERT(false);										
-						return NULL;											
-				}																
-		}																		
-		for(i = 0; i < __TERM_COUNT__; ++i)										
-		{																		
-				lexAction_t		act;											
-				act.is_skip		=		__g_term_pattern[i].skip;				
-				act.priority	=		__g_term_pattern[i].lex_prec;			
-				act.value		=		__g_term_pattern[i].tokval;				
-				if(!LEX_InsertRule(lex, __g_term_pattern[i].regex, &act))		
-				{																
-						LEX_Destroy(lex);										
-						AR_ASSERT(false);										
-						return NULL;											
-				}																
-		}																		
-		return lex;																
-}
-
-psrGrammar_t*	RAY_BuildGrammar(const psrHandler_t	*handler, const arIOCtx_t *io)											
-{																																
-		psrGrammar_t	*grammar;																								
-		size_t i;																												
-		AR_ASSERT(handler != NULL);																								
-		grammar = PSR_CreateGrammar(handler, io);																				
-		for(i = 0; i < __TERM_COUNT__; ++i)																						
-		{																														
-				if(__g_term_pattern[i].skip || __g_term_pattern[i].tokval == 0)continue;										
-				if(!PSR_InsertTerm(grammar, __g_term_pattern[i].name, __g_term_pattern[i].tokval, PSR_ASSOC_NONASSOC,0, __build_leaf))	
-				{																												
-						PSR_DestroyGrammar(grammar);																			
-						grammar = NULL;																							
-						AR_ASSERT(false);																						
-						return NULL;																							
-				}																												
-		}																														
-		for(i = 0; i < __PREC_COUNT__; ++i)																						
-		{																														
-				psrTermInfo_t	*info;																							
-				info = PSR_GetTermSymbInfoByName(grammar, __g_prec_pattern[i].name);											
-				if(info == NULL)																								
-				{																												
-						if(!PSR_InsertTerm(grammar, __g_prec_pattern[i].name, __g_prec_pattern[i].tokval, __g_prec_pattern[i].assoc, __g_prec_pattern[i].prec_level, NULL))
-						{																																					
-								PSR_DestroyGrammar(grammar);																												
-								grammar = NULL;																																
-								AR_ASSERT(false);																															
-								return NULL;																																
-						}																																					
-				}else																																						
-				{																																							
-						info->assoc = __g_prec_pattern[i].assoc;																											
-						info->prec = __g_prec_pattern[i].prec_level;																										
-				}																																							
-		}																																									
-		for(i = 0; i < __RULE_COUNT__; ++i)																													
-		{																																									
-				if(!PSR_InsertRuleByStr(grammar, __g_rule_pattern[i].rule, __g_rule_pattern[i].prec_token, __g_rule_pattern[i].handler, __g_rule_pattern[i].auto_ret))		
-				{																																							
-						PSR_DestroyGrammar(grammar);																														
-						grammar = NULL;																																		
-						AR_ASSERT(false);																																	
-						return NULL;																																		
-				}																																							
-		}																																									
-		if(!PSR_SetFirstRule(grammar,START_RULE) || !PSR_CheckIsValidGrammar(grammar))																						
-		{																																									
-				PSR_DestroyGrammar(grammar);																																
-				grammar = NULL;																																				
-				AR_ASSERT(false);																																			
-				return NULL;																																				
-		}																																									
-		return grammar;																																						
-}
 
 
 
@@ -1212,10 +1120,8 @@ static psrNode_t* AR_STDCALL semantic_auto_return_1(psrNode_t **nodes, size_t co
 
 
 /*primary_expression	:	IDENTIFIER */
-/*primary_expression	:	HEX_CONSTANT */
-/*primary_expression	:	DEC_CONSTANT */
-/*primary_expression	:	OCT_CONSTANT */
-/*primary_expression	:	FLOAT_CONSTANT */
+/*primary_expression	:	FLOAT_NUMBER */
+/*primary_expression	:	INT_NUMBER */
 /*primary_expression	:	CHAR_CONSTANT */
 /*primary_expression	:	string_list */
 static psrNode_t* AR_STDCALL handle_primary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
@@ -1328,6 +1234,185 @@ static psrNode_t* AR_STDCALL handle_assignment_operator(psrNode_t **nodes, size_
 {
 	 return NULL;
 }
+
+
+
+
+/***************************************************************************************************/
+
+static void		AR_STDCALL handle_free_node(psrNode_t *node, void *ctx)
+{
+		AR_ASSERT(node != NULL);
+		if(node)RAY_DestroyParserNode((rayNode_t*)node);
+}
+
+static void		AR_STDCALL handle_on_error(const psrToken_t *tok, const wchar_t *expected[], size_t count, void *ctx)
+{
+		AR_ASSERT(ctx != NULL && tok != NULL);
+		
+		AR_ASSERT(false);
+}
+
+static const psrHandler_t		__g_handler = 
+{
+		handle_on_error,
+		handle_free_node
+};
+
+
+
+
+
+
+
+
+
+/**********************************************************************************************************************************/
+
+
+lex_t*	RAY_BuildLexer()
+{																				
+		lex_t	*lex;															
+		size_t i;
+		lex = LEX_Create(NULL);
+		for(i = 0; i < __NAME_COUNT__; ++i)
+		{
+				if(!LEX_Insert(lex, __g_lex_name[i]))
+				{
+						LEX_Destroy(lex);
+						AR_ASSERT(false);
+						return NULL;
+				}
+		}																		
+		for(i = 0; i < __TERM_COUNT__; ++i)
+		{																		
+				lexAction_t		act;											
+				act.is_skip		=		__g_term_pattern[i].skip;				
+				act.priority	=		__g_term_pattern[i].lex_prec;			
+				act.value		=		__g_term_pattern[i].tokval;				
+				if(!LEX_InsertRule(lex, __g_term_pattern[i].regex, &act))		
+				{																
+						LEX_Destroy(lex);										
+						AR_ASSERT(false);										
+						return NULL;											
+				}																
+		}																		
+		return lex;																
+}
+
+
+
+void				RAY_ReleaseLexer(lex_t *lexer)
+{
+		AR_ASSERT(lexer != NULL);
+		LEX_Destroy(lexer);
+}
+
+
+
+
+const psrGrammar_t*	RAY_BuildGrammar()											
+{		
+		psrGrammar_t	*grammar;																								
+		size_t i;
+		
+		grammar = PSR_CreateGrammar(&__g_handler, NULL);
+		for(i = 0; i < __TERM_COUNT__; ++i)																						
+		{																														
+				if(__g_term_pattern[i].skip || __g_term_pattern[i].tokval == 0)continue;										
+				if(!PSR_InsertTerm(grammar, __g_term_pattern[i].name, __g_term_pattern[i].tokval, PSR_ASSOC_NONASSOC,0, __build_leaf))	
+				{																												
+						PSR_DestroyGrammar(grammar);																			
+						grammar = NULL;																							
+						AR_ASSERT(false);																						
+						return NULL;																							
+				}																												
+		}
+
+		for(i = 0; i < __PREC_COUNT__; ++i)																						
+		{																														
+				psrTermInfo_t	*info;																							
+				info = PSR_GetTermSymbInfoByName(grammar, __g_prec_pattern[i].name);											
+				if(info == NULL)																								
+				{
+						if(!PSR_InsertTerm(grammar, __g_prec_pattern[i].name, __g_prec_pattern[i].tokval, __g_prec_pattern[i].assoc, __g_prec_pattern[i].prec_level, NULL))
+						{																																					
+								PSR_DestroyGrammar(grammar);																												
+								grammar = NULL;																																
+								AR_ASSERT(false);																															
+								return NULL;																																
+						}																																					
+				}else																																						
+				{																																							
+						info->assoc = __g_prec_pattern[i].assoc;																											
+						info->prec = __g_prec_pattern[i].prec_level;																										
+				}																																							
+		}
+
+		for(i = 0; i < __RULE_COUNT__; ++i)																													
+		{																																									
+				if(!PSR_InsertRuleByStr(grammar, __g_rule_pattern[i].rule, __g_rule_pattern[i].prec_token, __g_rule_pattern[i].handler, __g_rule_pattern[i].auto_ret))		
+				{																																							
+						PSR_DestroyGrammar(grammar);																														
+						grammar = NULL;																																		
+						AR_ASSERT(false);																																	
+						return NULL;																																		
+				}																																							
+		}
+
+		if(!PSR_SetFirstRule(grammar,START_RULE) || !PSR_CheckIsValidGrammar(grammar))																						
+		{																																									
+				PSR_DestroyGrammar(grammar);																																
+				grammar = NULL;																																				
+				AR_ASSERT(false);																																			
+				return NULL;																																				
+		}
+		
+		return grammar;
+}
+
+static			arSpinLock_t	__g_lock;
+static	const	psrGrammar_t	*__g_grammar = NULL;
+static	const	parser_t		*__g_parser = NULL;
+
+void				RAY_InitParserImpl()
+{
+		AR_InitSpinLock(&__g_lock);
+		__g_grammar	= RAY_BuildGrammar();
+		__g_parser	= PSR_CreateParser(__g_grammar, PSR_LALR);
+}
+
+void				RAY_UnInitParserImpl()
+{
+		PSR_DestroyGrammar((psrGrammar_t*)__g_grammar);
+		PSR_DestroyParser(__g_parser);
+		__g_grammar = NULL;
+		__g_parser = NULL;
+		AR_UnInitSpinLock(&__g_lock);
+}
+
+
+psrContext_t*		RAY_BuildParserContext(void *ctx)
+{
+		psrContext_t	*parser_context;
+		AR_ASSERT(__g_parser != NULL && __g_grammar != NULL);
+		AR_LockSpinLock(&__g_lock);
+		parser_context = PSR_CreateContext(__g_parser, ctx);
+		AR_UnLockSpinLock(&__g_lock);
+		return parser_context;
+}
+
+
+void				RAY_ReleaseParserContext(psrContext_t		*parser_context)
+{
+		AR_ASSERT(__g_parser != NULL && __g_grammar != NULL);
+		AR_ASSERT(parser_context != NULL);
+		AR_LockSpinLock(&__g_lock);
+		PSR_DestroyContext(parser_context);
+		AR_UnLockSpinLock(&__g_lock);
+}
+
+
 
 
 

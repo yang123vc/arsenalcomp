@@ -166,7 +166,6 @@ psrRule_t* PSR_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, cons
 						{
 								if(inerr)
 								{
-										/*AR_error(L"Grammar Error: Duplicate error definition in <%ls>!\r\n", head->name);*/
 										AR_printf_ctx(ctx, L"Grammar Error: Duplicate error definition in <%ls>!\r\n", head->name);
 										return NULL;
 								}else
@@ -577,21 +576,31 @@ const psrSymbList_t* PSR_GetSymbList(const psrGrammar_t *grammar)
 		
 		lst = (psrSymbList_t*)(&grammar->symb_list);
 
-		if(grammar->symb_list.count == 0)
-		{
-				size_t i;
+	/*	if(grammar->symb_list.count == 0)*/
 
+		PSR_ClearSymbList(lst);
+		
+		{
+				size_t i,k;
+				/*先插入所有终结符*/
 				for(i = 0; i < grammar->term_list.count; ++i)PSR_InsertToSymbList(lst, grammar->term_list.lst[i].term);
 				
-				
-				
+				/*插入每一条产生式的每一个符号，终结符或非终结符*/
 				for(i = 0; i < grammar->count; ++i)
 				{
-						const psrSymb_t *head = grammar->rules[i]->head;
-
-						if(PSR_FindFromSymbList(lst, head) == -1)
+						const psrRule_t	*rule = grammar->rules[i];
+						
+						if(PSR_FindFromSymbList(lst, rule->head) == -1)
 						{
-								PSR_InsertToSymbList(lst, head);
+								PSR_InsertToSymbList(lst, rule->head);
+						}
+						
+						for(k = 0; k < rule->body.count; ++k)
+						{
+								if(PSR_FindFromSymbList(lst, rule->body.lst[k]) == -1)
+								{
+										PSR_InsertToSymbList(lst, rule->body.lst[k]);
+								}
 						}
 				}
 		}
@@ -601,6 +610,425 @@ const psrSymbList_t* PSR_GetSymbList(const psrGrammar_t *grammar)
 
 
 
+
+
+
+
+bool_t			PSR_CheckIsValidGrammar(const psrGrammar_t *grammar)
+{
+		size_t i,j,k;
+		bool_t result;
+		const psrSymbList_t *lst;
+		bool_t	*mark_tbl; 
+		AR_ASSERT(grammar != NULL);
+		
+		if(grammar->count < 2)return false;/*Start和输入的第一个产生式一定>=2*/
+
+		lst = PSR_GetSymbList(grammar);
+		mark_tbl = AR_NEWARR0(bool_t, lst->count * lst->count);
+
+		result = true;
+		for(i = 0; i < grammar->count; ++i)
+		{
+				const psrRule_t *rule;
+				rule = grammar->rules[i];
+
+				for(j = 0; j < rule->body.count; ++j)
+				{
+						const psrSymb_t *symb;
+						symb = rule->body.lst[j];
+
+						if(symb->type == PSR_NONTERM)
+						{
+								bool_t is_ok;
+								is_ok = false;
+								for(k = 0; !is_ok && k < grammar->count; ++k)
+								{
+										if(PSR_CompSymb(symb, grammar->rules[k]->head) == 0)
+										{
+												is_ok = true;
+										}
+								}
+
+								if(!is_ok)
+								{
+										size_t h,s;
+										h = (size_t)PSR_FindFromSymbList(lst, rule->head);
+										s = (size_t)PSR_FindFromSymbList(lst, symb);
+
+										if(!mark_tbl[AR_TBL_IDX_R(h,s,lst->count)])
+										{
+												AR_printf_ctx((arIOCtx_t*)&grammar->io_ctx, L"Grammar Error : The rule <%ls> not exist in this grammar <%ls>\r\n", symb->name, rule->head->name);
+												mark_tbl[AR_TBL_IDX_R(h,s,lst->count)] = true;
+										}
+										result = false;
+								}
+						}
+
+				}
+		}
+
+		AR_DEL(mark_tbl);
+		
+		for(i = 0; i < lst->count; ++i)
+		{
+				const psrSymb_t *symb;
+				bool_t is_ok;
+				symb = lst->lst[i];
+				is_ok = false;
+				
+				if(PSR_IsBuildInSymbol(symb) ||	symb->type == PSR_TERM)continue;
+
+				for(k = 0; !is_ok && k < grammar->count; ++k)
+				{
+						const psrRule_t *rule;
+						rule = grammar->rules[k];
+						
+
+						if(PSR_CompSymb(rule->head, symb) == 0)continue;/*自己引用自己不算*/
+						
+						for(j = 0; j < rule->body.count; ++j)
+						{
+								if(PSR_CompSymb(rule->body.lst[j], symb) == 0)
+								{
+										is_ok = true;
+										break;
+								}
+						}
+				}
+
+				if(!is_ok)
+				{
+						AR_printf_ctx((arIOCtx_t*)&grammar->io_ctx,L"Grammar Warning : The rule <%ls> is declared but never used\r\n", symb->name);
+				}
+		}
+
+		return result;
+}
+
+const psrRule_t*		PSR_GetStartRule(const psrGrammar_t *grammar)
+{
+		return grammar->rules[0];
+}
+
+
+bool_t					PSR_SetFirstRule(psrGrammar_t *grammar, const wchar_t *rule_name)
+{
+		psrRule_t *start = grammar->rules[0];
+		const psrSymb_t *lhs = NULL;
+		size_t i;
+		AR_ASSERT(grammar != NULL && grammar->count > 0 && rule_name != NULL);
+
+		if(PSR_GetTermSymbInfoByName(grammar, rule_name) != NULL)
+		{
+				return false;
+		}
+
+		if(AR_wcscmp(PSR_StartSymb->name, rule_name) == 0)return false;
+
+
+		for(i = 0; i < grammar->count; ++i)
+		{
+				if(AR_wcscmp(rule_name, grammar->rules[i]->head->name) == 0)
+				{
+						lhs = PSR_CopyNewSymb(grammar->rules[i]->head);
+						break;
+				}
+		}
+
+		if(lhs == NULL)return false;
+
+		AR_ASSERT(grammar->count > 1);
+		AR_ASSERT(start != NULL && start->body.count > 0);
+
+		PSR_DestroySymb(start->body.lst[0]);
+		start->body.lst[0] = lhs;
+		
+		return true;
+}
+
+const psrTermInfo_t* PSR_GetRulePrecAssocInfo(const psrGrammar_t *grammar, const psrRule_t *rule)
+{
+		AR_ASSERT(grammar != NULL && rule != NULL && rule->prec_tok != NULL);
+		return PSR_FindTermByName((psrTermInfoList_t*)&grammar->term_list, rule->prec_tok);
+
+}
+
+psrTermInfo_t*	PSR_GetTermSymbInfo(const psrGrammar_t	*grammar, const psrSymb_t *term)
+{
+		AR_ASSERT(grammar != NULL && term != NULL && term->type == PSR_TERM);
+		return  PSR_FindTermByName((psrTermInfoList_t*)&grammar->term_list, term->name);
+		
+}
+
+psrTermInfo_t*			PSR_GetTermSymbInfoByName(const psrGrammar_t	*grammar, const wchar_t *name)
+{
+		AR_ASSERT(grammar != NULL && name != NULL);
+
+		return  PSR_FindTermByName((psrTermInfoList_t*)&grammar->term_list, name);
+
+}
+
+psrTermInfo_t*			PSR_GetTermSymbInfoByValue(const psrGrammar_t	*grammar, size_t val)
+{
+		AR_ASSERT(grammar != NULL);
+		return PSR_FindTermByValue((psrTermInfoList_t*)&grammar->term_list, val);
+}
+
+
+
+
+
+/************************************************************************************************************************************/
+
+
+
+/*
+firstset求法为，例如A->X(0)...X(n-1);
+设First(Term) = {Term}; First(Epsilon) = {Epsilon}; i = 0;
+如果First(X(i))存在{Epsilon}，则 First(A) += (First(X(i) - {Epsilon}); 如果i == n-1，则First(A) += {Epsilon}，本次循环终止；
+如果不存在{Epsilon}，则循环终止；
+
+因为每次都会处理至少一个符号，所以能确保循环终止，除非无任何符号加入到First集合中(changed == False);
+*/
+void					PSR_CalcFirstSet(const psrGrammar_t *grammar, psrSymbMap_t *first_set)
+{
+		size_t i;
+		bool_t changed;
+		const psrSymbList_t		*lst;
+		const psrSymb_t			*key;
+		AR_ASSERT(grammar != NULL && first_set != NULL && grammar->count > 1);
+		
+		lst = PSR_GetSymbList(grammar);
+
+		for(i = 0; i < lst->count; ++i)
+		{
+				key = lst->lst[i];
+				if(key->type == PSR_NONTERM)
+				{
+						PSR_InsertToSymbMap(first_set, key, NULL);
+				}else
+				{
+						PSR_InsertToSymbMap(first_set, key, key);
+				}
+		}
+		
+		/*changed = false; */
+		
+		/*首先计算哪个非终结符可以推导出空串Epsilon*/
+		do{
+				changed = false;
+
+				for(i = 0; i < grammar->count; ++i)
+				{
+						psrMapRec_t *rec = NULL;
+						size_t k = 0;
+						psrRule_t *rule = grammar->rules[i];
+						rec= PSR_GetSymbolFromSymbMap(first_set, rule->head);
+
+						if(rec->can_empty)continue;
+						
+						for(k = 0; k < rule->body.count; ++k)
+						{
+								const psrSymb_t *symb = NULL;
+								const psrMapRec_t *tmp_rec = NULL;
+								symb = rule->body.lst[k];
+								if(symb->type == PSR_TERM)break;
+								tmp_rec= PSR_GetSymbolFromSymbMap(first_set, symb);
+								if(!tmp_rec->can_empty)break;
+						}
+
+						if(k == rule->body.count)/*如果产生式体中无任何符号或所有符号均可以推导出空串，则此产生式头被认为可推导出空*/
+						{
+								rec->can_empty = true;
+								changed = true;
+						}
+				}
+
+		}while(changed);
+
+
+		do{
+				const psrSymb_t *s1, *s2;
+				changed = false;
+
+				for(i = 0; i < grammar->count; ++i)
+				{
+						const psrRule_t *rule;
+						psrMapRec_t *rec = NULL;
+						size_t k;
+						rule = grammar->rules[i];
+
+						s1 = rule->head;
+						rec= PSR_GetSymbolFromSymbMap(first_set, s1);
+
+
+						for(k = 0; k < rule->body.count; ++k)
+						{
+								s2 = rule->body.lst[k];/*产生式体中第k个符号*/
+								
+								if(s2->type == PSR_TERM)
+								{
+										/*当前产生式体中存在终结符，则将其加入后终止循环*/
+										if(PSR_InsertToSymbList_Unique(&rec->lst, s2))
+										{
+												changed = true;
+										}
+										break;
+								}else if(PSR_CompSymb(s1, s2) == 0)/*非终结符，且与产生式头相同的符号*/
+								{
+										if(!rec->can_empty)break;/*如果当前产生式头不为空，则终止循环*/
+								}
+								else
+								{
+										/*非终结符，且与产生式头不同*/
+										const psrMapRec_t *rec2 = NULL;
+										size_t x;
+										rec2 = PSR_GetSymbolFromSymbMap(first_set, s2);
+										/*将当前非终结符号的所有first符号加入到当前产生式头的first-set中*/
+										for(x = 0; x < rec2->lst.count; ++x)
+										{
+												if(PSR_InsertToSymbList_Unique(&rec->lst, rec2->lst.lst[x]))
+												{
+														changed = true;
+												}
+										}
+										/*如果当前符号不可导出空串则终止循环*/
+										if(!rec2->can_empty)break;
+								}
+
+						}
+				}
+		}while(changed);
+
+}
+
+
+
+/*
+FollowSet的求法为: 例如A->X(0)...X(n-1);
+设i = 0->n-1, Follow(NULL)= {Epsilon};
+如果X(i)为非终结符,则要对X(j)->X(n)循环检测,设j = i+1 && j < n;
+如果First(X(j))不包含{Epsilon},则Follow(X(i)) += First(X(j)，循环结束，否则
+j < n-1:Follow(X(i)) += (First(X(j)) - {Epsilon})，循环继续;
+j == n-1:Follow(X(i)) += (First(X(j)) - {Epsilon})，循环结束，并将Follow(X(i) += Follow(A);
+注意，当i == n-1时，Follow(X(i)) += Follow(A);,因为Follow(NULL)= {Epsilon};
+*/
+
+
+void					PSR_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *follow_set, const psrSymbMap_t *first_set)
+{
+		size_t i;
+		bool_t changed;
+		const psrSymbList_t *lst;
+		psrMapRec_t *rec1 = NULL, *rec2 = NULL;
+
+		AR_ASSERT(grammar != NULL && grammar->count > 1 && follow_set != NULL && first_set != NULL);
+
+		changed = true;
+		lst = PSR_GetSymbList(grammar);
+		for(i = 0; i < lst->count; i++)
+		{
+				const psrSymb_t *key = lst->lst[i];
+				if(key->type == PSR_NONTERM)
+				{
+						PSR_InsertToSymbMap(follow_set, key, NULL);
+
+						rec1 = PSR_GetSymbolFromSymbMap(first_set, key);
+						rec2 = PSR_GetSymbolFromSymbMap(follow_set, key);
+						rec2->can_empty = rec1->can_empty;
+				}
+		}
+
+		PSR_InsertToSymbMap(follow_set, PSR_StartSymb, PSR_EOISymb);
+		
+		do{
+				changed = false;
+				
+				for(i = 0; i < grammar->count; ++i)/*对每一条产生式*/
+				{
+						const psrRule_t *rule;
+						const psrMapRec_t *head_follow;
+						size_t k;
+						rule = grammar->rules[i];
+
+						head_follow = PSR_GetSymbolFromSymbMap(follow_set,rule->head);/*grammar->head[i]所对应的follow集合*/
+						
+						for(k = 0; k < rule->body.count; ++k)
+						{
+								const psrSymb_t *key;
+								size_t next_idx;
+								key = rule->body.lst[k];
+								/*非终结符无follow-set*/
+								if(key->type == PSR_TERM)continue;
+
+								next_idx = k + 1;
+								
+								for(next_idx = k + 1; next_idx < rule->body.count; ++next_idx)
+								{
+										const psrSymb_t *next = NULL;
+										const psrMapRec_t *first_rec;
+										psrMapRec_t *rec_tmp = NULL;
+										size_t x;
+										
+										next = PSR_IndexOfSymbList(&rule->body, next_idx);/*next为key之后的符号*/
+										first_rec = PSR_GetSymbolFromSymbMap(first_set, next);/*next的first-set*/
+										rec_tmp  = PSR_GetSymbolFromSymbMap(follow_set, key);/*key的follow-set*/
+										/*将key之后的符号next的first-set加入到key的follow-set中*/
+										for(x = 0; first_rec && x < first_rec->lst.count; ++x)
+										{
+												const psrSymb_t *f_symb;
+												f_symb = first_rec->lst.lst[x];
+												AR_ASSERT(f_symb->type == PSR_TERM);				/*first不可能为非终结符*/
+
+												if(PSR_InsertToSymbList_Unique(&rec_tmp->lst, f_symb))
+												{
+														changed = true;	/*任何一步的改动都需要重新计算follow集合*/
+												}
+										}
+										/*如果next不可导出空串，则循环终止*/
+										if(!first_rec->can_empty)break;
+								}
+								
+								if(next_idx == rule->body.count)/*如果key为当前产生式最后一个符号或key之后的所有符号都可导出空串*/
+								{
+										/*则将产生式头的follow-set加入到符号key的follow-set中*/
+										size_t x;
+										psrMapRec_t *rec_tmp = PSR_GetSymbolFromSymbMap(follow_set, key);
+										for(x = 0; x < head_follow->lst.count; ++x)
+										{
+												if(PSR_InsertToSymbList_Unique(&rec_tmp->lst,head_follow->lst.lst[x]))
+												{
+														changed = true;	/*任何一步的改动都需要重新计算follow集合*/
+												}
+										}
+								}
+						}
+				}
+		}while(changed);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**********************************************Print*******************************************/
 
 
 /*效率成为问题时我才会考虑改这没什么用的东西！*/
@@ -862,212 +1290,6 @@ bool_t					PSR_ReportLeftFactor(const psrGrammar_t *grammar, arString_t *output)
 
 
 
-
-bool_t			PSR_CheckIsValidGrammar(const psrGrammar_t *grammar)
-{
-		size_t i,j,k;
-		bool_t result;
-		const psrSymbList_t *lst;
-		bool_t	*mark_tbl; 
-		AR_ASSERT(grammar != NULL);
-		
-		if(grammar->count < 2)return false;/*Start和输入的第一个产生式一定>=2*/
-
-		lst = PSR_GetSymbList(grammar);
-		mark_tbl = AR_NEWARR0(bool_t, lst->count * lst->count);
-
-		result = true;
-		for(i = 0; i < grammar->count; ++i)
-		{
-				const psrRule_t *rule;
-				rule = grammar->rules[i];
-
-				for(j = 0; j < rule->body.count; ++j)
-				{
-						const psrSymb_t *symb;
-						symb = rule->body.lst[j];
-
-						if(symb->type == PSR_NONTERM)
-						{
-								bool_t is_ok;
-								is_ok = false;
-								for(k = 0; !is_ok && k < grammar->count; ++k)
-								{
-										if(PSR_CompSymb(symb, grammar->rules[k]->head) == 0)
-										{
-												is_ok = true;
-										}
-								}
-
-								if(!is_ok)
-								{
-										size_t h,s;
-										h = (size_t)PSR_FindFromSymbList(lst, rule->head);
-										s = (size_t)PSR_FindFromSymbList(lst, symb);
-
-										if(!mark_tbl[AR_TBL_IDX_R(h,s,lst->count)])
-										{
-												AR_printf_ctx((arIOCtx_t*)&grammar->io_ctx, L"Grammar Error : The rule <%ls> not exist in this grammar <%ls>\r\n", symb->name, rule->head->name);
-												mark_tbl[AR_TBL_IDX_R(h,s,lst->count)] = true;
-										}
-										result = false;
-								}
-						}
-
-				}
-		}
-
-		AR_DEL(mark_tbl);
-		
-		for(i = 0; i < lst->count; ++i)
-		{
-				const psrSymb_t *symb;
-				bool_t is_ok;
-				symb = lst->lst[i];
-				is_ok = false;
-				
-				if(PSR_IsBuildInSymbol(symb) ||	symb->type == PSR_TERM)continue;
-
-				for(k = 0; !is_ok && k < grammar->count; ++k)
-				{
-						const psrRule_t *rule;
-						rule = grammar->rules[k];
-						
-
-						if(PSR_CompSymb(rule->head, symb) == 0)continue;/*自己引用自己不算*/
-						
-						for(j = 0; j < rule->body.count; ++j)
-						{
-								if(PSR_CompSymb(rule->body.lst[j], symb) == 0)
-								{
-										is_ok = true;
-										break;
-								}
-						}
-				}
-
-				if(!is_ok)
-				{
-						AR_printf_ctx((arIOCtx_t*)&grammar->io_ctx,L"Grammar Warning : The rule <%ls> is declared but never used\r\n", symb->name);
-				}
-		}
-
-#if(0)		
-		for(i = 0; i < lst->count; ++i)
-		{
-				const psrSymb_t *symb;
-
-				symb = lst->lst[i];
-
-				if(symb->type == PSR_NONTERM && PSR_CompSymb(symb, PSR_StartSymb) != 0)
-				{
-						bool_t is_ok;
-						is_ok = false;
-						for(k = 0; !is_ok && k < grammar->count; ++k)
-						{
-								const psrRule_t *rule;
-								
-								rule = grammar->rules[k];
-
-								if(PSR_CompSymb(rule->head, symb) == 0)continue;/*自己引用自己不算*/
-								
-								for(j = 0; j < rule->body.count; ++j)
-								{
-										if(PSR_CompSymb(rule->body.lst[j], symb) == 0)
-										{
-												is_ok = true;
-												break;
-										}
-								}
-						}
-
-						if(!is_ok)
-						{
-								/*AR_error(L"Grammar Warning : The rule %ls is declared but never used\r\n", symb->name);*/
-								if(!mark_tbl[i])
-								{
-										AR_printf_ctx((arIOCtx_t*)&grammar->io_ctx,L"Grammar Warning : The rule <%ls> is declared but never used\r\n", symb->name);
-										mark_tbl[i] = true;
-								}
-						}
-				}
-		}
-#endif
-
-		return result;
-}
-
-const psrRule_t*		PSR_GetStartRule(const psrGrammar_t *grammar)
-{
-		return grammar->rules[0];
-}
-
-
-bool_t					PSR_SetFirstRule(psrGrammar_t *grammar, const wchar_t *rule_name)
-{
-		psrRule_t *start = grammar->rules[0];
-		const psrSymb_t *lhs = NULL;
-		size_t i;
-		AR_ASSERT(grammar != NULL && grammar->count > 0 && rule_name != NULL);
-
-		if(PSR_GetTermSymbInfoByName(grammar, rule_name) != NULL)
-		{
-				return false;
-		}
-
-		if(AR_wcscmp(PSR_StartSymb->name, rule_name) == 0)return false;
-
-
-		for(i = 0; i < grammar->count; ++i)
-		{
-				if(AR_wcscmp(rule_name, grammar->rules[i]->head->name) == 0)
-				{
-						lhs = PSR_CopyNewSymb(grammar->rules[i]->head);
-						break;
-				}
-		}
-
-		if(lhs == NULL)return false;
-
-		AR_ASSERT(grammar->count > 1);
-		AR_ASSERT(start != NULL && start->body.count > 0);
-
-		PSR_DestroySymb(start->body.lst[0]);
-		start->body.lst[0] = lhs;
-		
-		return true;
-}
-
-const psrTermInfo_t* PSR_GetRulePrecAssocInfo(const psrGrammar_t *grammar, const psrRule_t *rule)
-{
-		AR_ASSERT(grammar != NULL && rule != NULL && rule->prec_tok != NULL);
-		return PSR_FindTermByName((psrTermInfoList_t*)&grammar->term_list, rule->prec_tok);
-
-}
-
-psrTermInfo_t*	PSR_GetTermSymbInfo(const psrGrammar_t	*grammar, const psrSymb_t *term)
-{
-		AR_ASSERT(grammar != NULL && term != NULL && term->type == PSR_TERM);
-		return  PSR_FindTermByName((psrTermInfoList_t*)&grammar->term_list, term->name);
-		
-}
-
-psrTermInfo_t*			PSR_GetTermSymbInfoByName(const psrGrammar_t	*grammar, const wchar_t *name)
-{
-		AR_ASSERT(grammar != NULL && name != NULL);
-
-		return  PSR_FindTermByName((psrTermInfoList_t*)&grammar->term_list, name);
-
-}
-
-psrTermInfo_t*			PSR_GetTermSymbInfoByValue(const psrGrammar_t	*grammar, size_t val)
-{
-		AR_ASSERT(grammar != NULL);
-		return PSR_FindTermByValue((psrTermInfoList_t*)&grammar->term_list, val);
-}
-
-
-
 void			PSR_PrintGrammar(const psrGrammar_t *grammar, arString_t *str)
 {
 		size_t i;
@@ -1126,237 +1348,6 @@ void			PSR_PrintGrammar(const psrGrammar_t *grammar, arString_t *str)
 		AR_AppendString(str, L"\r\n\r\n");
 }
 
-
-
-
-/************************************************************************************************************************************/
-
-
-
-/*
-firstset求法为，例如A->X(0)...X(n-1);
-设First(Term) = {Term}; First(Epsilon) = {Epsilon}; i = 0;
-如果First(X(i))存在{Epsilon}，则 First(A) += (First(X(i) - {Epsilon}); 如果i == n-1，则First(A) += {Epsilon}，本次循环终止；
-如果不存在{Epsilon}，则循环终止；
-
-因为每次都会处理至少一个符号，所以能确保循环终止，除非无任何符号加入到First集合中(changed == False);
-*/
-void					PSR_CalcFirstSet(const psrGrammar_t *grammar, psrSymbMap_t *first_set)
-{
-		size_t i;
-		bool_t changed;
-		const psrSymbList_t		*lst;
-		const psrSymb_t			*key;
-		AR_ASSERT(grammar != NULL && first_set != NULL && grammar->count > 1);
-		
-		lst = PSR_GetSymbList(grammar);
-
-		for(i = 0; i < lst->count; ++i)
-		{
-				key = lst->lst[i];
-				if(key->type == PSR_NONTERM)
-				{
-						PSR_InsertToSymbMap(first_set, key, NULL);
-				}else
-				{
-						PSR_InsertToSymbMap(first_set, key, key);
-				}
-		}
-		
-		/*changed = false; */
-		
-		/*首先计算哪个非终结符可以推导出空串Epsilon*/
-		do{
-				changed = false;
-
-				for(i = 0; i < grammar->count; ++i)
-				{
-						psrMapRec_t *rec = NULL;
-						size_t k = 0;
-						psrRule_t *rule = grammar->rules[i];
-						rec= PSR_GetSymbolFromSymbMap(first_set, rule->head);
-
-						if(rec->can_empty)continue;
-						
-						for(k = 0; k < rule->body.count; ++k)
-						{
-								const psrSymb_t *symb = NULL;
-								const psrMapRec_t *tmp_rec = NULL;
-								symb = rule->body.lst[k];
-								if(symb->type == PSR_TERM)break;
-								tmp_rec= PSR_GetSymbolFromSymbMap(first_set, symb);
-								if(!tmp_rec->can_empty)break;
-						}
-
-						if(k == rule->body.count)/*如果产生式体中无任何符号或所有符号均可以推导出空串，则此产生式头被认为可推导出空*/
-						{
-								rec->can_empty = true;
-								changed = true;
-						}
-				}
-
-		}while(changed);
-
-
-		do{
-				const psrSymb_t *s1, *s2;
-				changed = false;
-
-				for(i = 0; i < grammar->count; ++i)
-				{
-						const psrRule_t *rule;
-						psrMapRec_t *rec = NULL;
-						size_t k;
-						rule = grammar->rules[i];
-
-						s1 = rule->head;
-						rec= PSR_GetSymbolFromSymbMap(first_set, s1);
-
-
-						for(k = 0; k < rule->body.count; ++k)
-						{
-								s2 = rule->body.lst[k];/*产生式体中第k个符号*/
-								
-								if(s2->type == PSR_TERM)
-								{
-										/*当前产生式体中存在终结符，则将其加入后终止循环*/
-										if(PSR_InsertToSymbList_Unique(&rec->lst, s2))
-										{
-												changed = true;
-										}
-										break;
-								}else if(PSR_CompSymb(s1, s2) == 0)/*非终结符，且与产生式头相同的符号*/
-								{
-										if(!rec->can_empty)break;/*如果当前产生式头不为空，则终止循环*/
-								}
-								else
-								{
-										/*非终结符，且与产生式头不同*/
-										const psrMapRec_t *rec2 = NULL;
-										size_t x;
-										rec2 = PSR_GetSymbolFromSymbMap(first_set, s2);
-										/*将当前非终结符号的所有first符号加入到当前产生式头的first-set中*/
-										for(x = 0; x < rec2->lst.count; ++x)
-										{
-												if(PSR_InsertToSymbList_Unique(&rec->lst, rec2->lst.lst[x]))
-												{
-														changed = true;
-												}
-										}
-										/*如果当前符号不可导出空串则终止循环*/
-										if(!rec2->can_empty)break;
-								}
-
-						}
-				}
-		}while(changed);
-
-}
-
-
-
-/*
-FollowSet的求法为: 例如A->X(0)...X(n-1);
-设i = 0->n-1, Follow(NULL)= {Epsilon};
-如果X(i)为非终结符,则要对X(j)->X(n)循环检测,设j = i+1 && j < n;
-如果First(X(j))不包含{Epsilon},则Follow(X(i)) += First(X(j)，循环结束，否则
-j < n-1:Follow(X(i)) += (First(X(j)) - {Epsilon})，循环继续;
-j == n-1:Follow(X(i)) += (First(X(j)) - {Epsilon})，循环结束，并将Follow(X(i) += Follow(A);
-注意，当i == n-1时，Follow(X(i)) += Follow(A);,因为Follow(NULL)= {Epsilon};
-*/
-
-
-void					PSR_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *follow_set, const psrSymbMap_t *first_set)
-{
-		size_t i;
-		bool_t changed;
-		const psrSymbList_t *lst;
-		psrMapRec_t *rec1 = NULL, *rec2 = NULL;
-
-		AR_ASSERT(grammar != NULL && grammar->count > 1 && follow_set != NULL && first_set != NULL);
-
-		changed = true;
-		lst = PSR_GetSymbList(grammar);
-		for(i = 0; i < lst->count; i++)
-		{
-				const psrSymb_t *key = lst->lst[i];
-				if(key->type == PSR_NONTERM)
-				{
-						PSR_InsertToSymbMap(follow_set, key, NULL);
-
-						rec1 = PSR_GetSymbolFromSymbMap(first_set, key);
-						rec2 = PSR_GetSymbolFromSymbMap(follow_set, key);
-						rec2->can_empty = rec1->can_empty;
-				}
-		}
-
-		PSR_InsertToSymbMap(follow_set, PSR_StartSymb, PSR_EOISymb);
-		
-		do{
-				changed = false;
-				
-				for(i = 0; i < grammar->count; ++i)/*对每一条产生式*/
-				{
-						const psrRule_t *rule;
-						const psrMapRec_t *head_follow;
-						size_t k;
-						rule = grammar->rules[i];
-
-						head_follow = PSR_GetSymbolFromSymbMap(follow_set,rule->head);/*grammar->head[i]所对应的follow集合*/
-						
-						for(k = 0; k < rule->body.count; ++k)
-						{
-								const psrSymb_t *key;
-								size_t next_idx;
-								key = rule->body.lst[k];
-								/*非终结符无follow-set*/
-								if(key->type == PSR_TERM)continue;
-
-								next_idx = k + 1;
-								
-								for(next_idx = k + 1; next_idx < rule->body.count; ++next_idx)
-								{
-										const psrSymb_t *next = NULL;
-										const psrMapRec_t *first_rec;
-										psrMapRec_t *rec_tmp = NULL;
-										size_t x;
-										
-										next = PSR_IndexOfSymbList(&rule->body, next_idx);/*next为key之后的符号*/
-										first_rec = PSR_GetSymbolFromSymbMap(first_set, next);/*next的first-set*/
-										rec_tmp  = PSR_GetSymbolFromSymbMap(follow_set, key);/*key的follow-set*/
-										/*将key之后的符号next的first-set加入到key的follow-set中*/
-										for(x = 0; first_rec && x < first_rec->lst.count; ++x)
-										{
-												const psrSymb_t *f_symb;
-												f_symb = first_rec->lst.lst[x];
-												AR_ASSERT(f_symb->type == PSR_TERM);				/*first不可能为非终结符*/
-
-												if(PSR_InsertToSymbList_Unique(&rec_tmp->lst, f_symb))
-												{
-														changed = true;	/*任何一步的改动都需要重新计算follow集合*/
-												}
-										}
-										/*如果next不可导出空串，则循环终止*/
-										if(!first_rec->can_empty)break;
-								}
-								
-								if(next_idx == rule->body.count)/*如果key为当前产生式最后一个符号或key之后的所有符号都可导出空串*/
-								{
-										/*则将产生式头的follow-set加入到符号key的follow-set中*/
-										size_t x;
-										psrMapRec_t *rec_tmp = PSR_GetSymbolFromSymbMap(follow_set, key);
-										for(x = 0; x < head_follow->lst.count; ++x)
-										{
-												if(PSR_InsertToSymbList_Unique(&rec_tmp->lst,head_follow->lst.lst[x]))
-												{
-														changed = true;	/*任何一步的改动都需要重新计算follow集合*/
-												}
-										}
-								}
-						}
-				}
-		}while(changed);
-}
 
 
 AR_NAMESPACE_END

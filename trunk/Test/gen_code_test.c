@@ -15,174 +15,152 @@ static const wchar_t *__g_lex_name[] = {
 L"delim = [ \\r\\n\\t]",
 L"comment = /\\*([^\\*]|\\*+[^\\*/])*\\*+/",
 L"comment_line = //[^\\n]*\\n",
-L"skip_lexem = {delim}|{comment}|{comment_line}",
 L"digit = [0-9]",
 L"number = {digit}+",
 L"letter = [A-Z_a-z]",
-L"int_type_suffix = ((u|U)?(l|L))|((u|U)(l|L)?)",
 L"hex_digit = [0-9a-fA-F]",
-L"hex_literal = 0(x|X){hex_digit}+{int_type_suffix}?",
-L"oct_literal = 0[0-7]+{int_type_suffix}?",
-L"dec_literal = (0|[1-9][0-9]*){int_type_suffix}?",
-L"exponet = (e|E)(\\+|\\-)?[0-9]+",
-L"float_type_suffix = (f|F|d|D)",
-L"float_literal = ([0-9]*\\.[0-9]*{exponet}?{float_type_suffix}?)",
-L"escape_seq = (\\\\(\\x22|\\x27))",
-L"string_literal = (\\x22({escape_seq}|[^\\x22])*\\x22)",
-L"char_literal = \\x27({escape_seq}|[^\\x27])*\\x27",
-L"keyword_lhd = [A-Z_a-z0-9]",
-L"float_constant = {float_literal}(?!{keyword_lhd})",
-L"hex_constant = {hex_literal}(?!{keyword_lhd})",
-L"oct_constant = {oct_literal}(?!{keyword_lhd})",
-L"dec_constant = {dec_literal}(?!{keyword_lhd})"
+L"hex_literal = 0(x|X){hex_digit}+",
+L"dec_literal = (0|[1-9][0-9]*)",
+L"skip_lexem = {delim}|{comment}|{comment_line}",
+L"escape_seq = (\\\\(b|t|n|f|r|\\x22|\\x27|\\\\))",
+L"string_literal = (\\x22({escape_seq}|[^\\x22\\\\])*\\x22)",
+L"char_literal = \\x27({escape_seq}|[^\\x27\\\\])\\x27",
+L"keyword_lhd = [A-Z_a-z0-9]"
 };
 
-#define __NAME_COUNT__ ((size_t)23)
+#define __NAME_COUNT__ ((size_t)14)
 
 
 
 enum{
-		TOK_DELIM_ID = 257,
-		TOK_TYPE_ID = 258,
-		TOK_DONE_ID = 259,
-		TOK_CHAR_CONSTANT = 260,
-		TOK_STRING_LITERAL = 261,
-		TOK_FLOAT_NUMBER = 262,
-		TOK_INT_NUMBER = 263,
-		TOK_IDENTIFIER = 264,
-		TOK_SWITCH = 265,
-		TOK_FOR = 266,
-		TOK_GOTO = 267,
-		TOK_RETURN = 268,
-		TOK_DO = 269,
-		TOK_WHILE = 270,
-		TOK_IF = 271,
-		TOK_ELSE = 272,
-		TOK_CONTINUE = 273,
-		TOK_DEFAULT = 274,
-		TOK_CASE = 275,
-		TOK_BREAK = 276,
-		TOK_CONST = 277,
-		TOK_VOLATILE = 278,
-		TOK_STRUCT = 279,
-		TOK_UNION = 280,
-		TOK_TYPEDEF = 281,
-		TOK_STATIC = 282,
-		TOK_SIZEOF = 283,
-		TOK_VOID = 284,
-		TOK_BYTE = 285,
-		TOK_CHAR = 286,
-		TOK_SHORT = 287,
-		TOK_INT = 288,
-		TOK_LONG = 289,
-		TOK_SIGNED = 290,
-		TOK_UNSIGNED = 291,
-		TOK_FLOAT = 292,
-		TOK_DOUBLE = 293,
-		TOK_IMPORT = 294,
-		TOK_EXPORT = 295,
-		TOK_ATTRIBUTE = 296,
-		TOK_RSHIFT_ASSIGN = 297,
-		TOK_LSHIFT_ASSIGN = 298,
-		TOK_ADD_ASSIGN = 299,
-		TOK_SUB_ASSIGN = 300,
-		TOK_MUL_ASSIGN = 301,
-		TOK_DIV_ASSIGN = 302,
-		TOK_MOD_ASSIGN = 303,
-		TOK_AND_ASSIGN = 304,
-		TOK_XOR_ASSIGN = 305,
-		TOK_OR_ASSIGN = 306,
-		TOK_RSHIFT = 307,
-		TOK_LSHIFT = 308,
-		TOK_INC = 309,
-		TOK_DEC = 310,
-		TOK_PTR = 311,
-		TOK_ANDAND = 312,
-		TOK_OROR = 313,
-		TOK_LE = 314,
-		TOK_GE = 315,
-		TOK_EQ = 316,
-		TOK_NE = 317,
-		TOK_LESS = 318,
-		TOK_GREATER = 319,
-		TOK_L_BRACES = 320,
-		TOK_R_BRACES = 321,
-		TOK_L_PAREN = 322,
-		TOK_R_PAREN = 323,
-		TOK_L_SQUARE = 324,
-		TOK_R_SQUARE = 325,
-		TOK_SEMICOLON = 326,
-		TOK_COMMA = 327,
-		TOK_COLON = 328,
-		TOK_ASSIGN = 329,
-		TOK_DOT = 330,
-		TOK_AND = 331,
-		TOK_NOT = 332,
-		TOK_TILDE = 333,
-		TOK_ADD = 334,
-		TOK_SUB = 335,
-		TOK_MUL = 336,
-		TOK_DIV = 337,
-		TOK_MOD = 338,
-		TOK_XOR = 339,
-		TOK_OR = 340,
-		TOK_QUEST = 341,
+TOK_DELIM_ID = 257,
+TOK_NUMBER = 258,
+TOK_STRING_LITERAL = 259,
+TOK_IDENTIFIER = 260,
+TOK_SWITCH = 261,
+TOK_FOR = 262,
+TOK_RETURN = 263,
+TOK_DO = 264,
+TOK_WHILE = 265,
+TOK_IF = 266,
+TOK_ELSE = 267,
+TOK_TRUE = 268,
+TOK_FALSE = 269,
+TOK_THIS = 270,
+TOK_NULL = 271,
+TOK_CONST = 272,
+TOK_IN = 273,
+TOK_NEW = 274,
+TOK_DELETE = 275,
+TOK_TYPEOF = 276,
+TOK_FUNCTION = 277,
+TOK_VAR = 278,
+TOK_WITH = 279,
+TOK_INSTANCEOF = 280,
+TOK_DEBUGGER = 281,
+TOK_TRY = 282,
+TOK_CATCH = 283,
+TOK_FINALLY = 284,
+TOK_THROW = 285,
+TOK_CONTINUE = 286,
+TOK_DEFAULT = 287,
+TOK_CASE = 288,
+TOK_BREAK = 289,
+TOK_VOID = 290,
+TOK_RIGHT_ASSIGN = 291,
+TOK_LEFT_ASSIGN = 292,
+TOK_UNSIGNED_RIGHT_ASSIGN = 293,
+TOK_UNSIGNED_RIGHT = 294,
+TOK_STRICT_EQ_OP = 295,
+TOK_STRICT_NE_OP = 296,
+TOK_ADD_ASSIGN = 297,
+TOK_SUB_ASSIGN = 298,
+TOK_MUL_ASSIGN = 299,
+TOK_DIV_ASSIGN = 300,
+TOK_MOD_ASSIGN = 301,
+TOK_AND_ASSIGN = 302,
+TOK_XOR_ASSIGN = 303,
+TOK_OR_ASSIGN = 304,
+TOK_RIGHT_OP = 305,
+TOK_LEFT_OP = 306,
+TOK_INC_OP = 307,
+TOK_DEC_OP = 308,
+TOK_AND_OP = 309,
+TOK_OR_OP = 310,
+TOK_LE_OP = 311,
+TOK_GE_OP = 312,
+TOK_EQ_OP = 313,
+TOK_NE_OP = 314,
+TOK_LESS_OP = 315,
+TOK_GREATER_OP = 316,
+TOK_SEMICOLON = 317,
+TOK_L_BRACES = 318,
+TOK_R_BRACES = 319,
+TOK_COMMA = 320,
+TOK_COLON = 321,
+TOK_ASSIGN = 322,
+TOK_L_PAREN = 323,
+TOK_R_PAREN = 324,
+TOK_L_SQUARE = 325,
+TOK_R_SQUARE = 326,
+TOK_DOT = 327,
+TOK_AND = 328,
+TOK_NOT = 329,
+TOK_TILDE = 330,
+TOK_ADD = 331,
+TOK_SUB = 332,
+TOK_MUL = 333,
+TOK_DIV = 334,
+TOK_MOD = 335,
+TOK_XOR = 336,
+TOK_OR = 337,
+TOK_QUEST = 338,
 };
 
 
 
 
-static struct 
-{
-		const wchar_t	*name;
-		size_t			tokval;
-		size_t			lex_prec;
-		const wchar_t	*regex;
-		bool_t			skip;
-}__g_term_pattern[] =  
-{
-{NULL, TOK_DELIM_ID,1, L"{skip_lexem}+", true},
-{L"TYPE_ID", TOK_TYPE_ID, 0, L"^$", false},
-{L"DONE_ID", TOK_DONE_ID, 0, L"^$", false},
-{L"CHAR_CONSTANT", TOK_CHAR_CONSTANT, 0, L"{char_literal}", false},
+static struct {const wchar_t *name; size_t tokval; size_t lex_prec; const wchar_t *regex; bool_t skip; }__g_term_pattern[] =  {
+{NULL, TOK_DELIM_ID,1, L"{delim}+|{comment}+|{comment_line}+", true},
+{L"NUMBER", TOK_NUMBER, 2, L"({hex_literal}|{dec_literal})(?!{keyword_lhd})", false},
 {L"STRING_LITERAL", TOK_STRING_LITERAL, 0, L"{string_literal}", false},
-{L"FLOAT_NUMBER", TOK_FLOAT_NUMBER, 2, L"{float_constant}", false},
-{L"INT_NUMBER", TOK_INT_NUMBER, 2, L"{hex_constant}|{oct_constant}|{dec_constant}", false},
 {L"IDENTIFIER", TOK_IDENTIFIER, 0, L"{letter}({letter}|{digit})*", false},
 {L"switch", TOK_SWITCH, 1, L"\"switch\"(?!{keyword_lhd})", false},
 {L"for", TOK_FOR, 1, L"\"for\"(?!{keyword_lhd})", false},
-{L"goto", TOK_GOTO, 1, L"\"goto\"(?!{keyword_lhd})", false},
 {L"return", TOK_RETURN, 1, L"\"return\"(?!{keyword_lhd})", false},
 {L"do", TOK_DO, 1, L"\"do\"(?!{keyword_lhd})", false},
 {L"while", TOK_WHILE, 1, L"\"while\"(?!{keyword_lhd})", false},
 {L"if", TOK_IF, 1, L"\"if\"(?!{keyword_lhd})", false},
 {L"else", TOK_ELSE, 1, L"\"else\"(?!{keyword_lhd})", false},
+{L"true", TOK_TRUE, 1, L"\"true\"(?!{keyword_lhd})", false},
+{L"false", TOK_FALSE, 1, L"\"false\"(?!{keyword_lhd})", false},
+{L"this", TOK_THIS, 1, L"\"this\"(?!{keyword_lhd})", false},
+{L"null", TOK_NULL, 1, L"\"null\"(?!{keyword_lhd})", false},
+{L"const", TOK_CONST, 1, L"\"const\"(?!{keyword_lhd})", false},
+{L"in", TOK_IN, 1, L"\"in\"(?!{keyword_lhd})", false},
+{L"new", TOK_NEW, 1, L"\"new\"(?!{keyword_lhd})", false},
+{L"delete", TOK_DELETE, 1, L"\"delete\"(?!{keyword_lhd})", false},
+{L"typeof", TOK_TYPEOF, 1, L"\"typeof\"(?!{keyword_lhd})", false},
+{L"function", TOK_FUNCTION, 1, L"\"function\"(?!{keyword_lhd})", false},
+{L"var", TOK_VAR, 1, L"\"var\"(?!{keyword_lhd})", false},
+{L"with", TOK_WITH, 1, L"\"with\"(?!{keyword_lhd})", false},
+{L"instanceof", TOK_INSTANCEOF, 1, L"\"instanceof\"(?!{keyword_lhd})", false},
+{L"debugger", TOK_DEBUGGER, 1, L"\"debugger\"(?!{keyword_lhd})", false},
+{L"try", TOK_TRY, 1, L"\"try\"(?!{keyword_lhd})", false},
+{L"catch", TOK_CATCH, 1, L"\"catch\"(?!{keyword_lhd})", false},
+{L"finally", TOK_FINALLY, 1, L"\"finally\"(?!{keyword_lhd})", false},
+{L"throw", TOK_THROW, 1, L"\"throw\"(?!{keyword_lhd})", false},
 {L"continue", TOK_CONTINUE, 1, L"\"continue\"(?!{keyword_lhd})", false},
 {L"default", TOK_DEFAULT, 1, L"\"default\"(?!{keyword_lhd})", false},
 {L"case", TOK_CASE, 1, L"\"case\"(?!{keyword_lhd})", false},
 {L"break", TOK_BREAK, 1, L"\"break\"(?!{keyword_lhd})", false},
-{L"const", TOK_CONST, 1, L"\"const\"(?!{keyword_lhd})", false},
-{L"volatile", TOK_VOLATILE, 1, L"\"volatile\"(?!{keyword_lhd})", false},
-{L"struct", TOK_STRUCT, 1, L"\"struct\"(?!{keyword_lhd})", false},
-{L"union", TOK_UNION, 1, L"\"union\"(?!{keyword_lhd})", false},
-{L"typedef", TOK_TYPEDEF, 1, L"\"typedef\"(?!{keyword_lhd})", false},
-{L"static", TOK_STATIC, 1, L"\"static\"(?!{keyword_lhd})", false},
-{L"sizeof", TOK_SIZEOF, 1, L"\"sizeof\"(?!{keyword_lhd})", false},
 {L"void", TOK_VOID, 1, L"\"void\"(?!{keyword_lhd})", false},
-{L"byte", TOK_BYTE, 1, L"\"byte\"(?!{keyword_lhd})", false},
-{L"char", TOK_CHAR, 1, L"\"char\"(?!{keyword_lhd})", false},
-{L"short", TOK_SHORT, 1, L"\"short\"(?!{keyword_lhd})", false},
-{L"int", TOK_INT, 1, L"\"int\"(?!{keyword_lhd})", false},
-{L"long", TOK_LONG, 1, L"\"long\"(?!{keyword_lhd})", false},
-{L"signed", TOK_SIGNED, 1, L"\"signed\"(?!{keyword_lhd})", false},
-{L"unsigned", TOK_UNSIGNED, 1, L"\"unsigned\"(?!{keyword_lhd})", false},
-{L"float", TOK_FLOAT, 1, L"\"float\"(?!{keyword_lhd})", false},
-{L"double", TOK_DOUBLE, 1, L"\"double\"(?!{keyword_lhd})", false},
-{L"import", TOK_IMPORT, 1, L"\"import\"(?!{keyword_lhd})", false},
-{L"export", TOK_EXPORT, 1, L"\"export\"(?!{keyword_lhd})", false},
-{L"attribute", TOK_ATTRIBUTE, 1, L"\"attribute\"", false},
-{L">>=", TOK_RSHIFT_ASSIGN, 2, L"\">>=\"", false},
-{L"<<=", TOK_LSHIFT_ASSIGN, 2, L"\"<<=\"", false},
+{L">>=", TOK_RIGHT_ASSIGN, 2, L"\">>=\"", false},
+{L"<<=", TOK_LEFT_ASSIGN, 2, L"\"<<=\"", false},
+{L">>>=", TOK_UNSIGNED_RIGHT_ASSIGN, 3, L"\">>>=\"", false},
+{L">>>", TOK_UNSIGNED_RIGHT, 2, L"\">>>\"", false},
+{L"===", TOK_STRICT_EQ_OP, 2, L"\"===\"", false},
+{L"!==", TOK_STRICT_NE_OP, 2, L"\"!==\"", false},
 {L"+=", TOK_ADD_ASSIGN, 1, L"\"+=\"", false},
 {L"-=", TOK_SUB_ASSIGN, 1, L"\"-=\"", false},
 {L"*=", TOK_MUL_ASSIGN, 1, L"\"*=\"", false},
@@ -191,29 +169,28 @@ static struct
 {L"&=", TOK_AND_ASSIGN, 1, L"\"&=\"", false},
 {L"^=", TOK_XOR_ASSIGN, 1, L"\"^=\"", false},
 {L"|=", TOK_OR_ASSIGN, 1, L"\"|=\"", false},
-{L">>", TOK_RSHIFT, 1, L"\">>\"", false},
-{L"<<", TOK_LSHIFT, 1, L"\"<<\"", false},
-{L"++", TOK_INC, 1, L"\"++\"", false},
-{L"--", TOK_DEC, 1, L"\"--\"", false},
-{L"->", TOK_PTR, 1, L"\"->\"", false},
-{L"&&", TOK_ANDAND, 1, L"\"&&\"", false},
-{L"||", TOK_OROR, 1, L"\"||\"", false},
-{L"<=", TOK_LE, 1, L"\"<=\"", false},
-{L">=", TOK_GE, 1, L"\">=\"", false},
-{L"==", TOK_EQ, 1, L"\"==\"", false},
-{L"!=", TOK_NE, 1, L"\"!=\"", false},
-{L"<", TOK_LESS, 0, L"\"<\"", false},
-{L">", TOK_GREATER, 0, L"\">\"", false},
+{L">>", TOK_RIGHT_OP, 1, L"\">>\"", false},
+{L"<<", TOK_LEFT_OP, 1, L"\"<<\"", false},
+{L"++", TOK_INC_OP, 1, L"\"++\"", false},
+{L"--", TOK_DEC_OP, 1, L"\"--\"", false},
+{L"&&", TOK_AND_OP, 1, L"\"&&\"", false},
+{L"||", TOK_OR_OP, 1, L"\"||\"", false},
+{L"<=", TOK_LE_OP, 1, L"\"<=\"", false},
+{L">=", TOK_GE_OP, 1, L"\">=\"", false},
+{L"==", TOK_EQ_OP, 1, L"\"==\"", false},
+{L"!=", TOK_NE_OP, 1, L"\"!=\"", false},
+{L"<", TOK_LESS_OP, 0, L"\"<\"", false},
+{L">", TOK_GREATER_OP, 0, L"\">\"", false},
+{L";", TOK_SEMICOLON, 0, L"\";\"", false},
 {L"{", TOK_L_BRACES, 0, L"\"{\"", false},
 {L"}", TOK_R_BRACES, 0, L"\"}\"", false},
+{L",", TOK_COMMA, 0, L"\",\"", false},
+{L":", TOK_COLON, 0, L"\":\"", false},
+{L"=", TOK_ASSIGN, 0, L"\"=\"", false},
 {L"(", TOK_L_PAREN, 0, L"\"(\"", false},
 {L")", TOK_R_PAREN, 0, L"\")\"", false},
 {L"[", TOK_L_SQUARE, 0, L"\"[\"", false},
 {L"]", TOK_R_SQUARE, 0, L"\"]\"", false},
-{L";", TOK_SEMICOLON, 0, L"\";\"", false},
-{L",", TOK_COMMA, 0, L"\",\"", false},
-{L":", TOK_COLON, 0, L"\":\"", false},
-{L"=", TOK_ASSIGN, 0, L"\"=\"", false},
 {L".", TOK_DOT, 0, L"\".\"", false},
 {L"&", TOK_AND, 0, L"\"&\"", false},
 {L"!", TOK_NOT, 0, L"\"!\"", false},
@@ -229,547 +206,1608 @@ static struct
 {L"EOI", 0, 2, L"$", false}
 };
 
-#define __TERM_COUNT__ ((size_t)86)
+#define __TERM_COUNT__ ((size_t)83)
 
 static struct {const wchar_t *name; size_t tokval; size_t prec_level; psrAssocType_t	assoc;}__g_prec_pattern[] =  {
-{L"||", TOK_OROR,1, PSR_ASSOC_LEFT},
-{L"&&", TOK_ANDAND,2, PSR_ASSOC_LEFT},
-{L"|", TOK_OR,3, PSR_ASSOC_LEFT},
-{L"^", TOK_XOR,4, PSR_ASSOC_LEFT},
-{L"&", TOK_AND,5, PSR_ASSOC_LEFT},
-{L"==", TOK_EQ,6, PSR_ASSOC_LEFT},
-{L"!=", TOK_NE,6, PSR_ASSOC_LEFT},
-{L"<", TOK_LESS,7, PSR_ASSOC_LEFT},
-{L"<=", TOK_LE,7, PSR_ASSOC_LEFT},
-{L">", TOK_GREATER,7, PSR_ASSOC_LEFT},
-{L">=", TOK_GE,7, PSR_ASSOC_LEFT},
-{L"<<", TOK_LSHIFT,8, PSR_ASSOC_LEFT},
-{L">>", TOK_RSHIFT,8, PSR_ASSOC_LEFT},
-{L"+", TOK_ADD,9, PSR_ASSOC_LEFT},
-{L"-", TOK_SUB,9, PSR_ASSOC_LEFT},
-{L"*", TOK_MUL,10, PSR_ASSOC_LEFT},
-{L"/", TOK_DIV,10, PSR_ASSOC_LEFT},
-{L"%", TOK_MOD,10, PSR_ASSOC_LEFT},
-{L"IF_WITHOUT_ELSE", 342,11, PSR_ASSOC_NONASSOC},
-{L"else", TOK_ELSE,12, PSR_ASSOC_NONASSOC}
+{L"IF_WITHOUT_ELSE", 339,1, PSR_ASSOC_NONASSOC},
+{L"else", TOK_ELSE,2, PSR_ASSOC_NONASSOC}
 };
 
-#define __PREC_COUNT__ ((size_t)20)
+#define __PREC_COUNT__ ((size_t)2)
 
-/*program	:	translation_unit */
-/*program	:	DONE_ID */
-static psrNode_t* AR_STDCALL handle_program(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*Literal	:	null */
+/*Literal	:	true */
+/*Literal	:	false */
+/*Literal	:	NUMBER */
+/*Literal	:	STRING_LITERAL */
+static psrNode_t* AR_STDCALL handle_Literal(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*translation_unit	:	external_declaration */
-/*translation_unit	:	translation_unit external_declaration */
-static psrNode_t* AR_STDCALL handle_translation_unit(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*Property	:	IDENTIFIER : AssignmentExpr */
+/*Property	:	STRING_LITERAL : AssignmentExpr */
+/*Property	:	NUMBER : AssignmentExpr */
+/*Property	:	IDENTIFIER IDENTIFIER ( ) { FunctionBody } */
+/*Property	:	IDENTIFIER IDENTIFIER ( FormalParameterList ) { FunctionBody } */
+static psrNode_t* AR_STDCALL handle_Property(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*external_declaration	:	function_definition */
-/*external_declaration	:	declaration */
-/*external_declaration	:	access_unit */
-/*external_declaration	:	attribute_unit */
-static psrNode_t* AR_STDCALL handle_external_declaration(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*PropertyList	:	Property */
+/*PropertyList	:	PropertyList , Property */
+static psrNode_t* AR_STDCALL handle_PropertyList(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*access_unit	:	import_or_export STRING_LITERAL ; */
-/*access_unit	:	import_or_export error */
-static psrNode_t* AR_STDCALL handle_access_unit(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*PrimaryExpr	:	PrimaryExprNoBrace */
+/*PrimaryExpr	:	{ } */
+/*PrimaryExpr	:	{ PropertyList } */
+/*PrimaryExpr	:	{ PropertyList , } */
+static psrNode_t* AR_STDCALL handle_PrimaryExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*import_or_export	:	import */
-/*import_or_export	:	export */
-static psrNode_t* AR_STDCALL handle_import_or_export(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*PrimaryExprNoBrace	:	this */
+/*PrimaryExprNoBrace	:	Literal */
+/*PrimaryExprNoBrace	:	ArrayLiteral */
+/*PrimaryExprNoBrace	:	IDENTIFIER */
+/*PrimaryExprNoBrace	:	( Expr ) */
+static psrNode_t* AR_STDCALL handle_PrimaryExprNoBrace(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*attribute_unit	:	attribute STRING_LITERAL ; */
-/*attribute_unit	:	attribute error */
-static psrNode_t* AR_STDCALL handle_attribute_unit(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*ArrayLiteral	:	[ ElisionOpt ] */
+/*ArrayLiteral	:	[ ElementList ] */
+/*ArrayLiteral	:	[ ElementList , ElisionOpt ] */
+static psrNode_t* AR_STDCALL handle_ArrayLiteral(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*function_declaration	:	declaration_specifiers declarator */
-static psrNode_t* AR_STDCALL handle_function_declaration(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*ElementList	:	ElisionOpt AssignmentExpr */
+/*ElementList	:	ElementList , ElisionOpt AssignmentExpr */
+static psrNode_t* AR_STDCALL handle_ElementList(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*function_definition	:	function_declaration compound_statement */
-static psrNode_t* AR_STDCALL handle_function_definition(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*ElisionOpt	:	 */
+/*ElisionOpt	:	Elision */
+static psrNode_t* AR_STDCALL handle_ElisionOpt(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*type_qualifier	:	const */
-/*type_qualifier	:	volatile */
-static psrNode_t* AR_STDCALL handle_type_qualifier(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*Elision	:	, */
+/*Elision	:	Elision , */
+static psrNode_t* AR_STDCALL handle_Elision(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*type_qualifier_list	:	type_qualifier_list type_qualifier */
-/*type_qualifier_list	:	type_qualifier */
-static psrNode_t* AR_STDCALL handle_type_qualifier_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*MemberExpr	:	PrimaryExpr */
+/*MemberExpr	:	FunctionExpr */
+/*MemberExpr	:	MemberExpr [ Expr ] */
+/*MemberExpr	:	MemberExpr . IDENTIFIER */
+/*MemberExpr	:	new MemberExpr Arguments */
+static psrNode_t* AR_STDCALL handle_MemberExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*type_specifier	:	void */
-/*type_specifier	:	byte */
-/*type_specifier	:	char */
-/*type_specifier	:	short */
-/*type_specifier	:	int */
-/*type_specifier	:	long */
-/*type_specifier	:	float */
-/*type_specifier	:	double */
-/*type_specifier	:	signed */
-/*type_specifier	:	unsigned */
-/*type_specifier	:	struct_or_union_specifier */
-/*type_specifier	:	TYPE_ID */
-static psrNode_t* AR_STDCALL handle_type_specifier(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*MemberExprNoBF	:	PrimaryExprNoBrace */
+/*MemberExprNoBF	:	MemberExprNoBF [ Expr ] */
+/*MemberExprNoBF	:	MemberExprNoBF . IDENTIFIER */
+/*MemberExprNoBF	:	new MemberExpr Arguments */
+static psrNode_t* AR_STDCALL handle_MemberExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*struct_or_union_specifier	:	struct_or_union IDENTIFIER { struct_declaration_list } */
-/*struct_or_union_specifier	:	struct_or_union { struct_declaration_list } */
-/*struct_or_union_specifier	:	struct_or_union IDENTIFIER */
-static psrNode_t* AR_STDCALL handle_struct_or_union_specifier(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*NewExpr	:	MemberExpr */
+/*NewExpr	:	new NewExpr */
+static psrNode_t* AR_STDCALL handle_NewExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*struct_or_union	:	struct */
-/*struct_or_union	:	union */
-static psrNode_t* AR_STDCALL handle_struct_or_union(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*NewExprNoBF	:	MemberExprNoBF */
+/*NewExprNoBF	:	new NewExpr */
+static psrNode_t* AR_STDCALL handle_NewExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*struct_declaration_list	:	struct_declaration */
-/*struct_declaration_list	:	struct_declaration_list struct_declaration */
-static psrNode_t* AR_STDCALL handle_struct_declaration_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*CallExpr	:	MemberExpr Arguments */
+/*CallExpr	:	CallExpr Arguments */
+/*CallExpr	:	CallExpr [ Expr ] */
+/*CallExpr	:	CallExpr . IDENTIFIER */
+static psrNode_t* AR_STDCALL handle_CallExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*struct_declaration	:	specifier_qualifier_list struct_declarator_list ; */
-/*struct_declaration	:	specifier_qualifier_list struct_declarator_list error */
-static psrNode_t* AR_STDCALL handle_struct_declaration(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*CallExprNoBF	:	MemberExprNoBF Arguments */
+/*CallExprNoBF	:	CallExprNoBF Arguments */
+/*CallExprNoBF	:	CallExprNoBF [ Expr ] */
+/*CallExprNoBF	:	CallExprNoBF . IDENTIFIER */
+static psrNode_t* AR_STDCALL handle_CallExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*struct_declarator_list	:	declarator */
-/*struct_declarator_list	:	struct_declarator_list , declarator */
-static psrNode_t* AR_STDCALL handle_struct_declarator_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*Arguments	:	( ) */
+/*Arguments	:	( ArgumentList ) */
+static psrNode_t* AR_STDCALL handle_Arguments(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*declaration	:	declaration_specifiers init_declarator_list ; */
-/*declaration	:	declaration_specifiers ; */
-/*declaration	:	declaration_specifiers init_declarator_list error */
-/*declaration	:	declaration_specifiers error */
-static psrNode_t* AR_STDCALL handle_declaration(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*ArgumentList	:	AssignmentExpr */
+/*ArgumentList	:	ArgumentList , AssignmentExpr */
+static psrNode_t* AR_STDCALL handle_ArgumentList(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*storage_class_specifier	:	typedef */
-/*storage_class_specifier	:	static */
-static psrNode_t* AR_STDCALL handle_storage_class_specifier(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*LeftHandSideExpr	:	NewExpr */
+/*LeftHandSideExpr	:	CallExpr */
+static psrNode_t* AR_STDCALL handle_LeftHandSideExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*declaration_specifiers	:	storage_class_specifier */
-/*declaration_specifiers	:	storage_class_specifier declaration_specifiers */
-/*declaration_specifiers	:	type_specifier */
-/*declaration_specifiers	:	type_specifier declaration_specifiers */
-/*declaration_specifiers	:	type_qualifier */
-/*declaration_specifiers	:	type_qualifier declaration_specifiers */
-static psrNode_t* AR_STDCALL handle_declaration_specifiers(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*LeftHandSideExprNoBF	:	NewExprNoBF */
+/*LeftHandSideExprNoBF	:	CallExprNoBF */
+static psrNode_t* AR_STDCALL handle_LeftHandSideExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*declaration_list	:	declaration */
-/*declaration_list	:	declaration_list declaration */
-static psrNode_t* AR_STDCALL handle_declaration_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*PostfixExpr	:	LeftHandSideExpr */
+/*PostfixExpr	:	LeftHandSideExpr ++ */
+/*PostfixExpr	:	LeftHandSideExpr -- */
+static psrNode_t* AR_STDCALL handle_PostfixExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*init_declarator_list	:	init_declarator */
-/*init_declarator_list	:	init_declarator_list , init_declarator */
-static psrNode_t* AR_STDCALL handle_init_declarator_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*PostfixExprNoBF	:	LeftHandSideExprNoBF */
+/*PostfixExprNoBF	:	LeftHandSideExprNoBF ++ */
+/*PostfixExprNoBF	:	LeftHandSideExprNoBF -- */
+static psrNode_t* AR_STDCALL handle_PostfixExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*init_declarator	:	declarator */
-/*init_declarator	:	declarator = initializer */
-static psrNode_t* AR_STDCALL handle_init_declarator(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*UnaryExprCommon	:	delete UnaryExpr */
+/*UnaryExprCommon	:	void UnaryExpr */
+/*UnaryExprCommon	:	typeof UnaryExpr */
+/*UnaryExprCommon	:	++ UnaryExpr */
+/*UnaryExprCommon	:	-- UnaryExpr */
+/*UnaryExprCommon	:	+ UnaryExpr */
+/*UnaryExprCommon	:	- UnaryExpr */
+/*UnaryExprCommon	:	~ UnaryExpr */
+/*UnaryExprCommon	:	! UnaryExpr */
+static psrNode_t* AR_STDCALL handle_UnaryExprCommon(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*initializer	:	assignment_expression */
-/*initializer	:	{ initializer_list } */
-static psrNode_t* AR_STDCALL handle_initializer(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*UnaryExpr	:	PostfixExpr */
+/*UnaryExpr	:	UnaryExprCommon */
+static psrNode_t* AR_STDCALL handle_UnaryExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*initializer_list	:	initializer */
-/*initializer_list	:	initializer_list , initializer */
-static psrNode_t* AR_STDCALL handle_initializer_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*UnaryExprNoBF	:	PostfixExprNoBF */
+/*UnaryExprNoBF	:	UnaryExprCommon */
+static psrNode_t* AR_STDCALL handle_UnaryExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*declarator	:	direct_declarator */
-/*declarator	:	pointer direct_declarator */
-static psrNode_t* AR_STDCALL handle_declarator(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*MultiplicativeExpr	:	UnaryExpr */
+/*MultiplicativeExpr	:	MultiplicativeExpr * UnaryExpr */
+/*MultiplicativeExpr	:	MultiplicativeExpr / UnaryExpr */
+/*MultiplicativeExpr	:	MultiplicativeExpr % UnaryExpr */
+static psrNode_t* AR_STDCALL handle_MultiplicativeExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*direct_declarator	:	IDENTIFIER */
-/*direct_declarator	:	IDENTIFIER [ constant_expression ] */
-/*direct_declarator	:	IDENTIFIER [ ] */
-/*direct_declarator	:	IDENTIFIER ( parameter_list ) */
-/*direct_declarator	:	IDENTIFIER ( ) */
-static psrNode_t* AR_STDCALL handle_direct_declarator(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*MultiplicativeExprNoBF	:	UnaryExprNoBF */
+/*MultiplicativeExprNoBF	:	MultiplicativeExprNoBF * UnaryExpr */
+/*MultiplicativeExprNoBF	:	MultiplicativeExprNoBF / UnaryExpr */
+/*MultiplicativeExprNoBF	:	MultiplicativeExprNoBF % UnaryExpr */
+static psrNode_t* AR_STDCALL handle_MultiplicativeExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*abstract_declarator	:	pointer */
-/*abstract_declarator	:	direct_abstract_declarator */
-/*abstract_declarator	:	pointer direct_abstract_declarator */
-static psrNode_t* AR_STDCALL handle_abstract_declarator(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*AdditiveExpr	:	MultiplicativeExpr */
+/*AdditiveExpr	:	AdditiveExpr + MultiplicativeExpr */
+/*AdditiveExpr	:	AdditiveExpr - MultiplicativeExpr */
+static psrNode_t* AR_STDCALL handle_AdditiveExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*direct_abstract_declarator	:	[ ] */
-/*direct_abstract_declarator	:	[ constant_expression ] */
-static psrNode_t* AR_STDCALL handle_direct_abstract_declarator(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*AdditiveExprNoBF	:	MultiplicativeExprNoBF */
+/*AdditiveExprNoBF	:	AdditiveExprNoBF + MultiplicativeExpr */
+/*AdditiveExprNoBF	:	AdditiveExprNoBF - MultiplicativeExpr */
+static psrNode_t* AR_STDCALL handle_AdditiveExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*pointer	:	* */
-/*pointer	:	* type_qualifier_list */
-/*pointer	:	* type_qualifier_list pointer */
-/*pointer	:	* pointer */
-static psrNode_t* AR_STDCALL handle_pointer(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*ShiftExpr	:	AdditiveExpr */
+/*ShiftExpr	:	ShiftExpr << AdditiveExpr */
+/*ShiftExpr	:	ShiftExpr >> AdditiveExpr */
+/*ShiftExpr	:	ShiftExpr >>> AdditiveExpr */
+static psrNode_t* AR_STDCALL handle_ShiftExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*parameter_list	:	parameter_declaration */
-/*parameter_list	:	parameter_list , parameter_declaration */
-static psrNode_t* AR_STDCALL handle_parameter_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*ShiftExprNoBF	:	AdditiveExprNoBF */
+/*ShiftExprNoBF	:	ShiftExprNoBF << AdditiveExpr */
+/*ShiftExprNoBF	:	ShiftExprNoBF >> AdditiveExpr */
+/*ShiftExprNoBF	:	ShiftExprNoBF >>> AdditiveExpr */
+static psrNode_t* AR_STDCALL handle_ShiftExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*parameter_declaration	:	declaration_specifiers declarator */
-/*parameter_declaration	:	declaration_specifiers abstract_declarator */
-/*parameter_declaration	:	declaration_specifiers */
-static psrNode_t* AR_STDCALL handle_parameter_declaration(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*RelationalExpr	:	ShiftExpr */
+/*RelationalExpr	:	RelationalExpr < ShiftExpr */
+/*RelationalExpr	:	RelationalExpr > ShiftExpr */
+/*RelationalExpr	:	RelationalExpr <= ShiftExpr */
+/*RelationalExpr	:	RelationalExpr >= ShiftExpr */
+/*RelationalExpr	:	RelationalExpr instanceof ShiftExpr */
+/*RelationalExpr	:	RelationalExpr in ShiftExpr */
+static psrNode_t* AR_STDCALL handle_RelationalExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*type_name	:	specifier_qualifier_list */
-/*type_name	:	specifier_qualifier_list abstract_declarator */
-static psrNode_t* AR_STDCALL handle_type_name(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*RelationalExprNoIn	:	ShiftExpr */
+/*RelationalExprNoIn	:	RelationalExprNoIn < ShiftExpr */
+/*RelationalExprNoIn	:	RelationalExprNoIn > ShiftExpr */
+/*RelationalExprNoIn	:	RelationalExprNoIn <= ShiftExpr */
+/*RelationalExprNoIn	:	RelationalExprNoIn >= ShiftExpr */
+/*RelationalExprNoIn	:	RelationalExprNoIn instanceof ShiftExpr */
+static psrNode_t* AR_STDCALL handle_RelationalExprNoIn(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*specifier_qualifier_list	:	type_qualifier */
-/*specifier_qualifier_list	:	type_specifier */
-/*specifier_qualifier_list	:	type_qualifier specifier_qualifier_list */
-/*specifier_qualifier_list	:	type_specifier specifier_qualifier_list */
-static psrNode_t* AR_STDCALL handle_specifier_qualifier_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*RelationalExprNoBF	:	ShiftExprNoBF */
+/*RelationalExprNoBF	:	RelationalExprNoBF < ShiftExpr */
+/*RelationalExprNoBF	:	RelationalExprNoBF > ShiftExpr */
+/*RelationalExprNoBF	:	RelationalExprNoBF <= ShiftExpr */
+/*RelationalExprNoBF	:	RelationalExprNoBF >= ShiftExpr */
+/*RelationalExprNoBF	:	RelationalExprNoBF instanceof ShiftExpr */
+/*RelationalExprNoBF	:	RelationalExprNoBF in ShiftExpr */
+static psrNode_t* AR_STDCALL handle_RelationalExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*statement	:	labeled_statement */
-/*statement	:	compound_statement */
-/*statement	:	expression_statement */
-/*statement	:	selection_statement */
-/*statement	:	iteration_statement */
-/*statement	:	jump_statement */
-/*postfix_expression	:	primary_expression */
-/*argument_expression_list	:	assignment_expression */
-/*unary_expression	:	postfix_expression */
-/*cast_expression	:	unary_expression */
-/*binary_expression	:	cast_expression */
-/*constant_expression	:	binary_expression */
-/*assignment_expression	:	constant_expression */
-static psrNode_t* AR_STDCALL semantic_auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*EqualityExpr	:	RelationalExpr */
+/*EqualityExpr	:	EqualityExpr == RelationalExpr */
+/*EqualityExpr	:	EqualityExpr != RelationalExpr */
+/*EqualityExpr	:	EqualityExpr === RelationalExpr */
+/*EqualityExpr	:	EqualityExpr !== RelationalExpr */
+static psrNode_t* AR_STDCALL handle_EqualityExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*labeled_statement	:	case constant_expression : statement */
-/*labeled_statement	:	default : statement */
-/*labeled_statement	:	IDENTIFIER : statement */
-static psrNode_t* AR_STDCALL handle_labeled_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*EqualityExprNoIn	:	RelationalExprNoIn */
+/*EqualityExprNoIn	:	EqualityExprNoIn == RelationalExprNoIn */
+/*EqualityExprNoIn	:	EqualityExprNoIn != RelationalExprNoIn */
+/*EqualityExprNoIn	:	EqualityExprNoIn === RelationalExprNoIn */
+/*EqualityExprNoIn	:	EqualityExprNoIn !== RelationalExprNoIn */
+static psrNode_t* AR_STDCALL handle_EqualityExprNoIn(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*compound_statement	:	start_block compound_statement_body */
-static psrNode_t* AR_STDCALL handle_compound_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*EqualityExprNoBF	:	RelationalExprNoBF */
+/*EqualityExprNoBF	:	EqualityExprNoBF == RelationalExpr */
+/*EqualityExprNoBF	:	EqualityExprNoBF != RelationalExpr */
+/*EqualityExprNoBF	:	EqualityExprNoBF === RelationalExpr */
+/*EqualityExprNoBF	:	EqualityExprNoBF !== RelationalExpr */
+static psrNode_t* AR_STDCALL handle_EqualityExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*start_block	:	{ */
-static psrNode_t* AR_STDCALL handle_start_block(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*BitwiseANDExpr	:	EqualityExpr */
+/*BitwiseANDExpr	:	BitwiseANDExpr & EqualityExpr */
+static psrNode_t* AR_STDCALL handle_BitwiseANDExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*compound_statement_body	:	compound_statement_declarations } */
-/*compound_statement_body	:	compound_statement_declarations statement_list } */
-static psrNode_t* AR_STDCALL handle_compound_statement_body(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*BitwiseANDExprNoIn	:	EqualityExprNoIn */
+/*BitwiseANDExprNoIn	:	BitwiseANDExprNoIn & EqualityExprNoIn */
+static psrNode_t* AR_STDCALL handle_BitwiseANDExprNoIn(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*compound_statement_declarations	:	declaration_list */
-/*compound_statement_declarations	:	 */
-static psrNode_t* AR_STDCALL handle_compound_statement_declarations(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*BitwiseANDExprNoBF	:	EqualityExprNoBF */
+/*BitwiseANDExprNoBF	:	BitwiseANDExprNoBF & EqualityExpr */
+static psrNode_t* AR_STDCALL handle_BitwiseANDExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*statement_list	:	statement */
-/*statement_list	:	statement_list statement */
-static psrNode_t* AR_STDCALL handle_statement_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*BitwiseXORExpr	:	BitwiseANDExpr */
+/*BitwiseXORExpr	:	BitwiseXORExpr ^ BitwiseANDExpr */
+static psrNode_t* AR_STDCALL handle_BitwiseXORExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*expression_statement	:	; */
-/*expression_statement	:	expression ; */
-/*expression_statement	:	expression error */
-static psrNode_t* AR_STDCALL handle_expression_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*BitwiseXORExprNoIn	:	BitwiseANDExprNoIn */
+/*BitwiseXORExprNoIn	:	BitwiseXORExprNoIn ^ BitwiseANDExprNoIn */
+static psrNode_t* AR_STDCALL handle_BitwiseXORExprNoIn(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*selection_statement	:	if ( expression ) statement */
-/*selection_statement	:	if ( expression ) statement else statement */
-/*selection_statement	:	switch ( expression ) statement */
-static psrNode_t* AR_STDCALL handle_selection_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*BitwiseXORExprNoBF	:	BitwiseANDExprNoBF */
+/*BitwiseXORExprNoBF	:	BitwiseXORExprNoBF ^ BitwiseANDExpr */
+static psrNode_t* AR_STDCALL handle_BitwiseXORExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*iteration_statement	:	while ( expression ) statement */
-/*iteration_statement	:	do statement while ( expression ) ; */
-/*iteration_statement	:	do statement while ( expression ) error */
-/*iteration_statement	:	for ( expression_statement expression_statement ) statement */
-/*iteration_statement	:	for ( expression_statement expression_statement expression ) statement */
-static psrNode_t* AR_STDCALL handle_iteration_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*BitwiseORExpr	:	BitwiseXORExpr */
+/*BitwiseORExpr	:	BitwiseORExpr | BitwiseXORExpr */
+static psrNode_t* AR_STDCALL handle_BitwiseORExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*jump_statement	:	goto IDENTIFIER ; */
-/*jump_statement	:	continue ; */
-/*jump_statement	:	break ; */
-/*jump_statement	:	return ; */
-/*jump_statement	:	return expression ; */
-/*jump_statement	:	goto IDENTIFIER error */
-/*jump_statement	:	continue error */
-/*jump_statement	:	break error */
-/*jump_statement	:	return error */
-/*jump_statement	:	return expression error */
-static psrNode_t* AR_STDCALL handle_jump_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*BitwiseORExprNoIn	:	BitwiseXORExprNoIn */
+/*BitwiseORExprNoIn	:	BitwiseORExprNoIn | BitwiseXORExprNoIn */
+static psrNode_t* AR_STDCALL handle_BitwiseORExprNoIn(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*expression	:	assignment_expression */
-/*expression	:	expression , assignment_expression */
-static psrNode_t* AR_STDCALL handle_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*BitwiseORExprNoBF	:	BitwiseXORExprNoBF */
+/*BitwiseORExprNoBF	:	BitwiseORExprNoBF | BitwiseXORExpr */
+static psrNode_t* AR_STDCALL handle_BitwiseORExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*primary_expression	:	( expression ) */
-static psrNode_t* AR_STDCALL semantic_auto_return_1(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*LogicalANDExpr	:	BitwiseORExpr */
+/*LogicalANDExpr	:	LogicalANDExpr && BitwiseORExpr */
+static psrNode_t* AR_STDCALL handle_LogicalANDExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*primary_expression	:	IDENTIFIER */
-/*primary_expression	:	FLOAT_NUMBER */
-/*primary_expression	:	INT_NUMBER */
-/*primary_expression	:	CHAR_CONSTANT */
-/*primary_expression	:	string_list */
-static psrNode_t* AR_STDCALL handle_primary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*LogicalANDExprNoIn	:	BitwiseORExprNoIn */
+/*LogicalANDExprNoIn	:	LogicalANDExprNoIn && BitwiseORExprNoIn */
+static psrNode_t* AR_STDCALL handle_LogicalANDExprNoIn(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*string_list	:	string_list STRING_LITERAL */
-/*string_list	:	STRING_LITERAL */
-static psrNode_t* AR_STDCALL handle_string_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*LogicalANDExprNoBF	:	BitwiseORExprNoBF */
+/*LogicalANDExprNoBF	:	LogicalANDExprNoBF && BitwiseORExpr */
+static psrNode_t* AR_STDCALL handle_LogicalANDExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*postfix_expression	:	postfix_expression [ expression ] */
-/*postfix_expression	:	postfix_expression ( ) */
-/*postfix_expression	:	postfix_expression ( argument_expression_list ) */
-/*postfix_expression	:	postfix_expression . IDENTIFIER */
-/*postfix_expression	:	postfix_expression -> IDENTIFIER */
-/*postfix_expression	:	postfix_expression ++ */
-/*postfix_expression	:	postfix_expression -- */
-static psrNode_t* AR_STDCALL handle_postfix_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*LogicalORExpr	:	LogicalANDExpr */
+/*LogicalORExpr	:	LogicalORExpr || LogicalANDExpr */
+static psrNode_t* AR_STDCALL handle_LogicalORExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*argument_expression_list	:	argument_expression_list , assignment_expression */
-static psrNode_t* AR_STDCALL handle_argument_expression_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*LogicalORExprNoIn	:	LogicalANDExprNoIn */
+/*LogicalORExprNoIn	:	LogicalORExprNoIn || LogicalANDExprNoIn */
+static psrNode_t* AR_STDCALL handle_LogicalORExprNoIn(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*unary_expression	:	++ unary_expression */
-/*unary_expression	:	-- unary_expression */
-/*unary_expression	:	& cast_expression */
-/*unary_expression	:	* cast_expression */
-/*unary_expression	:	+ cast_expression */
-/*unary_expression	:	- cast_expression */
-/*unary_expression	:	~ cast_expression */
-/*unary_expression	:	! cast_expression */
-/*unary_expression	:	sizeof unary_expression */
-/*unary_expression	:	sizeof ( type_name ) */
-static psrNode_t* AR_STDCALL handle_unary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*LogicalORExprNoBF	:	LogicalANDExprNoBF */
+/*LogicalORExprNoBF	:	LogicalORExprNoBF || LogicalANDExpr */
+static psrNode_t* AR_STDCALL handle_LogicalORExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*cast_expression	:	( type_name ) cast_expression */
-static psrNode_t* AR_STDCALL handle_cast_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*ConditionalExpr	:	LogicalORExpr */
+/*ConditionalExpr	:	LogicalORExpr ? AssignmentExpr : AssignmentExpr */
+static psrNode_t* AR_STDCALL handle_ConditionalExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*binary_expression	:	binary_expression + binary_expression */
-/*binary_expression	:	binary_expression - binary_expression */
-/*binary_expression	:	binary_expression * binary_expression */
-/*binary_expression	:	binary_expression / binary_expression */
-/*binary_expression	:	binary_expression % binary_expression */
-/*binary_expression	:	binary_expression << binary_expression */
-/*binary_expression	:	binary_expression >> binary_expression */
-/*binary_expression	:	binary_expression < binary_expression */
-/*binary_expression	:	binary_expression <= binary_expression */
-/*binary_expression	:	binary_expression > binary_expression */
-/*binary_expression	:	binary_expression >= binary_expression */
-/*binary_expression	:	binary_expression == binary_expression */
-/*binary_expression	:	binary_expression != binary_expression */
-/*binary_expression	:	binary_expression & binary_expression */
-/*binary_expression	:	binary_expression ^ binary_expression */
-/*binary_expression	:	binary_expression | binary_expression */
-/*binary_expression	:	binary_expression && binary_expression */
-/*binary_expression	:	binary_expression || binary_expression */
-static psrNode_t* AR_STDCALL handle_binary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*ConditionalExprNoIn	:	LogicalORExprNoIn */
+/*ConditionalExprNoIn	:	LogicalORExprNoIn ? AssignmentExprNoIn : AssignmentExprNoIn */
+static psrNode_t* AR_STDCALL handle_ConditionalExprNoIn(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*constant_expression	:	binary_expression ? expression : constant_expression */
-static psrNode_t* AR_STDCALL handle_constant_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*ConditionalExprNoBF	:	LogicalORExprNoBF */
+/*ConditionalExprNoBF	:	LogicalORExprNoBF ? AssignmentExpr : AssignmentExpr */
+static psrNode_t* AR_STDCALL handle_ConditionalExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*assignment_expression	:	unary_expression assignment_operator assignment_expression */
-static psrNode_t* AR_STDCALL handle_assignment_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*AssignmentExpr	:	ConditionalExpr */
+/*AssignmentExpr	:	LeftHandSideExpr AssignmentOperator AssignmentExpr */
+static psrNode_t* AR_STDCALL handle_AssignmentExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*assignment_operator	:	= */
-/*assignment_operator	:	*= */
-/*assignment_operator	:	/= */
-/*assignment_operator	:	%= */
-/*assignment_operator	:	+= */
-/*assignment_operator	:	-= */
-/*assignment_operator	:	<<= */
-/*assignment_operator	:	>>= */
-/*assignment_operator	:	&= */
-/*assignment_operator	:	^= */
-/*assignment_operator	:	|= */
-static psrNode_t* AR_STDCALL handle_assignment_operator(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*AssignmentExprNoIn	:	ConditionalExprNoIn */
+/*AssignmentExprNoIn	:	LeftHandSideExpr AssignmentOperator AssignmentExprNoIn */
+static psrNode_t* AR_STDCALL handle_AssignmentExprNoIn(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*AssignmentExprNoBF	:	ConditionalExprNoBF */
+/*AssignmentExprNoBF	:	LeftHandSideExprNoBF AssignmentOperator AssignmentExpr */
+static psrNode_t* AR_STDCALL handle_AssignmentExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*AssignmentOperator	:	= */
+/*AssignmentOperator	:	+= */
+/*AssignmentOperator	:	-= */
+/*AssignmentOperator	:	*= */
+/*AssignmentOperator	:	/= */
+/*AssignmentOperator	:	<<= */
+/*AssignmentOperator	:	>>= */
+/*AssignmentOperator	:	>>>= */
+/*AssignmentOperator	:	&= */
+/*AssignmentOperator	:	^= */
+/*AssignmentOperator	:	|= */
+/*AssignmentOperator	:	%= */
+static psrNode_t* AR_STDCALL handle_AssignmentOperator(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*Expr	:	AssignmentExpr */
+/*Expr	:	Expr , AssignmentExpr */
+static psrNode_t* AR_STDCALL handle_Expr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*ExprNoIn	:	AssignmentExprNoIn */
+/*ExprNoIn	:	ExprNoIn , AssignmentExprNoIn */
+static psrNode_t* AR_STDCALL handle_ExprNoIn(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*ExprNoBF	:	AssignmentExprNoBF */
+/*ExprNoBF	:	ExprNoBF , AssignmentExpr */
+static psrNode_t* AR_STDCALL handle_ExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*Statement	:	Block */
+/*Statement	:	VariableStatement */
+/*Statement	:	ConstStatement */
+/*Statement	:	FunctionDeclaration */
+/*Statement	:	EmptyStatement */
+/*Statement	:	ExprStatement */
+/*Statement	:	IfStatement */
+/*Statement	:	IterationStatement */
+/*Statement	:	ContinueStatement */
+/*Statement	:	BreakStatement */
+/*Statement	:	ReturnStatement */
+/*Statement	:	WithStatement */
+/*Statement	:	SwitchStatement */
+/*Statement	:	LabelledStatement */
+/*Statement	:	ThrowStatement */
+/*Statement	:	TryStatement */
+/*Statement	:	DebuggerStatement */
+static psrNode_t* AR_STDCALL handle_Statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*Block	:	{ } */
+/*Block	:	{ SourceElements } */
+static psrNode_t* AR_STDCALL handle_Block(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*VariableStatement	:	var VariableDeclarationList ; */
+/*VariableStatement	:	var VariableDeclarationList error */
+static psrNode_t* AR_STDCALL handle_VariableStatement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*VariableDeclarationList	:	IDENTIFIER */
+/*VariableDeclarationList	:	IDENTIFIER Initializer */
+/*VariableDeclarationList	:	VariableDeclarationList , IDENTIFIER */
+/*VariableDeclarationList	:	VariableDeclarationList , IDENTIFIER Initializer */
+static psrNode_t* AR_STDCALL handle_VariableDeclarationList(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*VariableDeclarationListNoIn	:	IDENTIFIER */
+/*VariableDeclarationListNoIn	:	IDENTIFIER InitializerNoIn */
+/*VariableDeclarationListNoIn	:	VariableDeclarationListNoIn , IDENTIFIER */
+/*VariableDeclarationListNoIn	:	VariableDeclarationListNoIn , IDENTIFIER InitializerNoIn */
+static psrNode_t* AR_STDCALL handle_VariableDeclarationListNoIn(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*ConstStatement	:	const ConstDeclarationList ; */
+/*ConstStatement	:	const ConstDeclarationList error */
+static psrNode_t* AR_STDCALL handle_ConstStatement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*ConstDeclarationList	:	ConstDeclaration */
+/*ConstDeclarationList	:	ConstDeclarationList , ConstDeclaration */
+static psrNode_t* AR_STDCALL handle_ConstDeclarationList(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*ConstDeclaration	:	IDENTIFIER */
+/*ConstDeclaration	:	IDENTIFIER Initializer */
+static psrNode_t* AR_STDCALL handle_ConstDeclaration(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*Initializer	:	= AssignmentExpr */
+static psrNode_t* AR_STDCALL handle_Initializer(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*InitializerNoIn	:	= AssignmentExprNoIn */
+static psrNode_t* AR_STDCALL handle_InitializerNoIn(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*EmptyStatement	:	; */
+static psrNode_t* AR_STDCALL handle_EmptyStatement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*ExprStatement	:	ExprNoBF ; */
+/*ExprStatement	:	ExprNoBF error */
+static psrNode_t* AR_STDCALL handle_ExprStatement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*IfStatement	:	if ( Expr ) Statement */
+/*IfStatement	:	if ( Expr ) Statement else Statement */
+static psrNode_t* AR_STDCALL handle_IfStatement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*IterationStatement	:	do Statement while ( Expr ) ; */
+/*IterationStatement	:	do Statement while ( Expr ) error */
+/*IterationStatement	:	while ( Expr ) Statement */
+/*IterationStatement	:	for ( ExprNoInOpt ; ExprOpt ; ExprOpt ) Statement */
+/*IterationStatement	:	for ( var VariableDeclarationListNoIn ; ExprOpt ; ExprOpt ) Statement */
+/*IterationStatement	:	for ( LeftHandSideExpr in Expr ) Statement */
+/*IterationStatement	:	for ( var IDENTIFIER in Expr ) Statement */
+/*IterationStatement	:	for ( var IDENTIFIER InitializerNoIn in Expr ) Statement */
+static psrNode_t* AR_STDCALL handle_IterationStatement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*ExprOpt	:	 */
+/*ExprOpt	:	Expr */
+static psrNode_t* AR_STDCALL handle_ExprOpt(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*ExprNoInOpt	:	 */
+/*ExprNoInOpt	:	ExprNoIn */
+static psrNode_t* AR_STDCALL handle_ExprNoInOpt(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*ContinueStatement	:	continue ; */
+/*ContinueStatement	:	continue error */
+/*ContinueStatement	:	continue IDENTIFIER ; */
+/*ContinueStatement	:	continue IDENTIFIER error */
+static psrNode_t* AR_STDCALL handle_ContinueStatement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*BreakStatement	:	break ; */
+/*BreakStatement	:	break error */
+/*BreakStatement	:	break IDENTIFIER ; */
+/*BreakStatement	:	break IDENTIFIER error */
+static psrNode_t* AR_STDCALL handle_BreakStatement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*ReturnStatement	:	return ; */
+/*ReturnStatement	:	return error */
+/*ReturnStatement	:	return Expr ; */
+/*ReturnStatement	:	return Expr error */
+static psrNode_t* AR_STDCALL handle_ReturnStatement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*WithStatement	:	with ( Expr ) Statement */
+static psrNode_t* AR_STDCALL handle_WithStatement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*SwitchStatement	:	switch ( Expr ) CaseBlock */
+static psrNode_t* AR_STDCALL handle_SwitchStatement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*CaseBlock	:	{ CaseClausesOpt } */
+/*CaseBlock	:	{ CaseClausesOpt DefaultClause CaseClausesOpt } */
+static psrNode_t* AR_STDCALL handle_CaseBlock(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*CaseClausesOpt	:	 */
+/*CaseClausesOpt	:	CaseClauses */
+static psrNode_t* AR_STDCALL handle_CaseClausesOpt(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*CaseClauses	:	CaseClause */
+/*CaseClauses	:	CaseClauses CaseClause */
+static psrNode_t* AR_STDCALL handle_CaseClauses(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*CaseClause	:	case Expr : */
+/*CaseClause	:	case Expr : SourceElements */
+static psrNode_t* AR_STDCALL handle_CaseClause(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*DefaultClause	:	default : */
+/*DefaultClause	:	default : SourceElements */
+static psrNode_t* AR_STDCALL handle_DefaultClause(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*LabelledStatement	:	IDENTIFIER : Statement */
+static psrNode_t* AR_STDCALL handle_LabelledStatement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*ThrowStatement	:	throw Expr ; */
+/*ThrowStatement	:	throw Expr error */
+static psrNode_t* AR_STDCALL handle_ThrowStatement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*TryStatement	:	try Block finally Block */
+/*TryStatement	:	try Block catch ( IDENTIFIER ) Block */
+/*TryStatement	:	try Block catch ( IDENTIFIER ) Block finally Block */
+static psrNode_t* AR_STDCALL handle_TryStatement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*DebuggerStatement	:	debugger ; */
+/*DebuggerStatement	:	debugger error */
+static psrNode_t* AR_STDCALL handle_DebuggerStatement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*FunctionDeclaration	:	function IDENTIFIER ( ) { FunctionBody } */
+/*FunctionDeclaration	:	function IDENTIFIER ( FormalParameterList ) { FunctionBody } */
+static psrNode_t* AR_STDCALL handle_FunctionDeclaration(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*FunctionExpr	:	function ( ) { FunctionBody } */
+/*FunctionExpr	:	function ( FormalParameterList ) { FunctionBody } */
+/*FunctionExpr	:	function IDENTIFIER ( ) { FunctionBody } */
+/*FunctionExpr	:	function IDENTIFIER ( FormalParameterList ) { FunctionBody } */
+static psrNode_t* AR_STDCALL handle_FunctionExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*FormalParameterList	:	IDENTIFIER */
+/*FormalParameterList	:	FormalParameterList , IDENTIFIER */
+static psrNode_t* AR_STDCALL handle_FormalParameterList(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*FunctionBody	:	 */
+/*FunctionBody	:	SourceElements_NoNode */
+static psrNode_t* AR_STDCALL handle_FunctionBody(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*Program	:	 */
+/*Program	:	SourceElements */
+static psrNode_t* AR_STDCALL handle_Program(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*SourceElements	:	Statement */
+/*SourceElements	:	SourceElements Statement */
+static psrNode_t* AR_STDCALL handle_SourceElements(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*Literal_NoNode	:	null */
+/*Literal_NoNode	:	true */
+/*Literal_NoNode	:	false */
+/*Literal_NoNode	:	NUMBER */
+/*Literal_NoNode	:	STRING_LITERAL */
+static psrNode_t* AR_STDCALL handle_Literal_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*Property_NoNode	:	IDENTIFIER : AssignmentExpr_NoNode */
+/*Property_NoNode	:	STRING_LITERAL : AssignmentExpr_NoNode */
+/*Property_NoNode	:	NUMBER : AssignmentExpr_NoNode */
+/*Property_NoNode	:	IDENTIFIER IDENTIFIER ( ) { FunctionBody_NoNode } */
+/*Property_NoNode	:	IDENTIFIER IDENTIFIER ( FormalParameterList_NoNode ) { FunctionBody_NoNode } */
+static psrNode_t* AR_STDCALL handle_Property_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*PropertyList_NoNode	:	Property_NoNode */
+/*PropertyList_NoNode	:	PropertyList_NoNode , Property_NoNode */
+static psrNode_t* AR_STDCALL handle_PropertyList_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*PrimaryExpr_NoNode	:	PrimaryExprNoBrace_NoNode */
+/*PrimaryExpr_NoNode	:	{ } */
+/*PrimaryExpr_NoNode	:	{ PropertyList_NoNode } */
+/*PrimaryExpr_NoNode	:	{ PropertyList_NoNode , } */
+static psrNode_t* AR_STDCALL handle_PrimaryExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*PrimaryExprNoBrace_NoNode	:	this */
+/*PrimaryExprNoBrace_NoNode	:	Literal_NoNode */
+/*PrimaryExprNoBrace_NoNode	:	ArrayLiteral_NoNode */
+/*PrimaryExprNoBrace_NoNode	:	IDENTIFIER */
+/*PrimaryExprNoBrace_NoNode	:	( Expr_NoNode ) */
+static psrNode_t* AR_STDCALL handle_PrimaryExprNoBrace_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*ArrayLiteral_NoNode	:	[ ElisionOpt_NoNode ] */
+/*ArrayLiteral_NoNode	:	[ ElementList_NoNode ] */
+/*ArrayLiteral_NoNode	:	[ ElementList_NoNode , ElisionOpt_NoNode ] */
+static psrNode_t* AR_STDCALL handle_ArrayLiteral_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*ElementList_NoNode	:	ElisionOpt_NoNode AssignmentExpr_NoNode */
+/*ElementList_NoNode	:	ElementList_NoNode , ElisionOpt_NoNode AssignmentExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_ElementList_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*ElisionOpt_NoNode	:	 */
+/*ElisionOpt_NoNode	:	Elision_NoNode */
+static psrNode_t* AR_STDCALL handle_ElisionOpt_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*Elision_NoNode	:	, */
+/*Elision_NoNode	:	Elision_NoNode , */
+static psrNode_t* AR_STDCALL handle_Elision_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*MemberExpr_NoNode	:	PrimaryExpr_NoNode */
+/*MemberExpr_NoNode	:	FunctionExpr_NoNode */
+/*MemberExpr_NoNode	:	MemberExpr_NoNode [ Expr_NoNode ] */
+/*MemberExpr_NoNode	:	MemberExpr_NoNode . IDENTIFIER */
+/*MemberExpr_NoNode	:	new MemberExpr_NoNode Arguments_NoNode */
+static psrNode_t* AR_STDCALL handle_MemberExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*MemberExprNoBF_NoNode	:	PrimaryExprNoBrace_NoNode */
+/*MemberExprNoBF_NoNode	:	MemberExprNoBF_NoNode [ Expr_NoNode ] */
+/*MemberExprNoBF_NoNode	:	MemberExprNoBF_NoNode . IDENTIFIER */
+/*MemberExprNoBF_NoNode	:	new MemberExpr_NoNode Arguments_NoNode */
+static psrNode_t* AR_STDCALL handle_MemberExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*NewExpr_NoNode	:	MemberExpr_NoNode */
+/*NewExpr_NoNode	:	new NewExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_NewExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*NewExprNoBF_NoNode	:	MemberExprNoBF_NoNode */
+/*NewExprNoBF_NoNode	:	new NewExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_NewExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*CallExpr_NoNode	:	MemberExpr_NoNode Arguments_NoNode */
+/*CallExpr_NoNode	:	CallExpr_NoNode Arguments_NoNode */
+/*CallExpr_NoNode	:	CallExpr_NoNode [ Expr_NoNode ] */
+/*CallExpr_NoNode	:	CallExpr_NoNode . IDENTIFIER */
+static psrNode_t* AR_STDCALL handle_CallExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*CallExprNoBF_NoNode	:	MemberExprNoBF_NoNode Arguments_NoNode */
+/*CallExprNoBF_NoNode	:	CallExprNoBF_NoNode Arguments_NoNode */
+/*CallExprNoBF_NoNode	:	CallExprNoBF_NoNode [ Expr_NoNode ] */
+/*CallExprNoBF_NoNode	:	CallExprNoBF_NoNode . IDENTIFIER */
+static psrNode_t* AR_STDCALL handle_CallExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*Arguments_NoNode	:	( ) */
+/*Arguments_NoNode	:	( ArgumentList_NoNode ) */
+static psrNode_t* AR_STDCALL handle_Arguments_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*ArgumentList_NoNode	:	AssignmentExpr_NoNode */
+/*ArgumentList_NoNode	:	ArgumentList_NoNode , AssignmentExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_ArgumentList_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*LeftHandSideExpr_NoNode	:	NewExpr_NoNode */
+/*LeftHandSideExpr_NoNode	:	CallExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_LeftHandSideExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*LeftHandSideExprNoBF_NoNode	:	NewExprNoBF_NoNode */
+/*LeftHandSideExprNoBF_NoNode	:	CallExprNoBF_NoNode */
+static psrNode_t* AR_STDCALL handle_LeftHandSideExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*PostfixExpr_NoNode	:	LeftHandSideExpr_NoNode */
+/*PostfixExpr_NoNode	:	LeftHandSideExpr_NoNode ++ */
+/*PostfixExpr_NoNode	:	LeftHandSideExpr_NoNode -- */
+static psrNode_t* AR_STDCALL handle_PostfixExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*PostfixExprNoBF_NoNode	:	LeftHandSideExprNoBF_NoNode */
+/*PostfixExprNoBF_NoNode	:	LeftHandSideExprNoBF_NoNode ++ */
+/*PostfixExprNoBF_NoNode	:	LeftHandSideExprNoBF_NoNode -- */
+static psrNode_t* AR_STDCALL handle_PostfixExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*UnaryExprCommon_NoNode	:	delete UnaryExpr_NoNode */
+/*UnaryExprCommon_NoNode	:	void UnaryExpr_NoNode */
+/*UnaryExprCommon_NoNode	:	typeof UnaryExpr_NoNode */
+/*UnaryExprCommon_NoNode	:	++ UnaryExpr_NoNode */
+/*UnaryExprCommon_NoNode	:	-- UnaryExpr_NoNode */
+/*UnaryExprCommon_NoNode	:	+ UnaryExpr_NoNode */
+/*UnaryExprCommon_NoNode	:	- UnaryExpr_NoNode */
+/*UnaryExprCommon_NoNode	:	~ UnaryExpr_NoNode */
+/*UnaryExprCommon_NoNode	:	! UnaryExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_UnaryExprCommon_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*UnaryExpr_NoNode	:	PostfixExpr_NoNode */
+/*UnaryExpr_NoNode	:	UnaryExprCommon_NoNode */
+static psrNode_t* AR_STDCALL handle_UnaryExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*UnaryExprNoBF_NoNode	:	PostfixExprNoBF_NoNode */
+/*UnaryExprNoBF_NoNode	:	UnaryExprCommon_NoNode */
+static psrNode_t* AR_STDCALL handle_UnaryExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*MultiplicativeExpr_NoNode	:	UnaryExpr_NoNode */
+/*MultiplicativeExpr_NoNode	:	MultiplicativeExpr_NoNode * UnaryExpr_NoNode */
+/*MultiplicativeExpr_NoNode	:	MultiplicativeExpr_NoNode / UnaryExpr_NoNode */
+/*MultiplicativeExpr_NoNode	:	MultiplicativeExpr_NoNode % UnaryExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_MultiplicativeExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*MultiplicativeExprNoBF_NoNode	:	UnaryExprNoBF_NoNode */
+/*MultiplicativeExprNoBF_NoNode	:	MultiplicativeExprNoBF_NoNode * UnaryExpr_NoNode */
+/*MultiplicativeExprNoBF_NoNode	:	MultiplicativeExprNoBF_NoNode / UnaryExpr_NoNode */
+/*MultiplicativeExprNoBF_NoNode	:	MultiplicativeExprNoBF_NoNode % UnaryExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_MultiplicativeExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*AdditiveExpr_NoNode	:	MultiplicativeExpr_NoNode */
+/*AdditiveExpr_NoNode	:	AdditiveExpr_NoNode + MultiplicativeExpr_NoNode */
+/*AdditiveExpr_NoNode	:	AdditiveExpr_NoNode - MultiplicativeExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_AdditiveExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*AdditiveExprNoBF_NoNode	:	MultiplicativeExprNoBF_NoNode */
+/*AdditiveExprNoBF_NoNode	:	AdditiveExprNoBF_NoNode + MultiplicativeExpr_NoNode */
+/*AdditiveExprNoBF_NoNode	:	AdditiveExprNoBF_NoNode - MultiplicativeExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_AdditiveExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*ShiftExpr_NoNode	:	AdditiveExpr_NoNode */
+/*ShiftExpr_NoNode	:	ShiftExpr_NoNode << AdditiveExpr_NoNode */
+/*ShiftExpr_NoNode	:	ShiftExpr_NoNode >> AdditiveExpr_NoNode */
+/*ShiftExpr_NoNode	:	ShiftExpr_NoNode >>> AdditiveExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_ShiftExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*ShiftExprNoBF_NoNode	:	AdditiveExprNoBF_NoNode */
+/*ShiftExprNoBF_NoNode	:	ShiftExprNoBF_NoNode << AdditiveExpr_NoNode */
+/*ShiftExprNoBF_NoNode	:	ShiftExprNoBF_NoNode >> AdditiveExpr_NoNode */
+/*ShiftExprNoBF_NoNode	:	ShiftExprNoBF_NoNode >>> AdditiveExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_ShiftExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*RelationalExpr_NoNode	:	ShiftExpr_NoNode */
+/*RelationalExpr_NoNode	:	RelationalExpr_NoNode < ShiftExpr_NoNode */
+/*RelationalExpr_NoNode	:	RelationalExpr_NoNode > ShiftExpr_NoNode */
+/*RelationalExpr_NoNode	:	RelationalExpr_NoNode <= ShiftExpr_NoNode */
+/*RelationalExpr_NoNode	:	RelationalExpr_NoNode >= ShiftExpr_NoNode */
+/*RelationalExpr_NoNode	:	RelationalExpr_NoNode instanceof ShiftExpr_NoNode */
+/*RelationalExpr_NoNode	:	RelationalExpr_NoNode in ShiftExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_RelationalExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*RelationalExprNoIn_NoNode	:	ShiftExpr_NoNode */
+/*RelationalExprNoIn_NoNode	:	RelationalExprNoIn_NoNode < ShiftExpr_NoNode */
+/*RelationalExprNoIn_NoNode	:	RelationalExprNoIn_NoNode > ShiftExpr_NoNode */
+/*RelationalExprNoIn_NoNode	:	RelationalExprNoIn_NoNode <= ShiftExpr_NoNode */
+/*RelationalExprNoIn_NoNode	:	RelationalExprNoIn_NoNode >= ShiftExpr_NoNode */
+/*RelationalExprNoIn_NoNode	:	RelationalExprNoIn_NoNode instanceof ShiftExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_RelationalExprNoIn_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*RelationalExprNoBF_NoNode	:	ShiftExprNoBF_NoNode */
+/*RelationalExprNoBF_NoNode	:	RelationalExprNoBF_NoNode < ShiftExpr_NoNode */
+/*RelationalExprNoBF_NoNode	:	RelationalExprNoBF_NoNode > ShiftExpr_NoNode */
+/*RelationalExprNoBF_NoNode	:	RelationalExprNoBF_NoNode <= ShiftExpr_NoNode */
+/*RelationalExprNoBF_NoNode	:	RelationalExprNoBF_NoNode >= ShiftExpr_NoNode */
+/*RelationalExprNoBF_NoNode	:	RelationalExprNoBF_NoNode instanceof ShiftExpr_NoNode */
+/*RelationalExprNoBF_NoNode	:	RelationalExprNoBF_NoNode in ShiftExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_RelationalExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*EqualityExpr_NoNode	:	RelationalExpr_NoNode */
+/*EqualityExpr_NoNode	:	EqualityExpr_NoNode == RelationalExpr_NoNode */
+/*EqualityExpr_NoNode	:	EqualityExpr_NoNode != RelationalExpr_NoNode */
+/*EqualityExpr_NoNode	:	EqualityExpr_NoNode === RelationalExpr_NoNode */
+/*EqualityExpr_NoNode	:	EqualityExpr_NoNode !== RelationalExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_EqualityExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*EqualityExprNoIn_NoNode	:	RelationalExprNoIn_NoNode */
+/*EqualityExprNoIn_NoNode	:	EqualityExprNoIn_NoNode == RelationalExprNoIn_NoNode */
+/*EqualityExprNoIn_NoNode	:	EqualityExprNoIn_NoNode != RelationalExprNoIn_NoNode */
+/*EqualityExprNoIn_NoNode	:	EqualityExprNoIn_NoNode === RelationalExprNoIn_NoNode */
+/*EqualityExprNoIn_NoNode	:	EqualityExprNoIn_NoNode !== RelationalExprNoIn_NoNode */
+static psrNode_t* AR_STDCALL handle_EqualityExprNoIn_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*EqualityExprNoBF_NoNode	:	RelationalExprNoBF_NoNode */
+/*EqualityExprNoBF_NoNode	:	EqualityExprNoBF_NoNode == RelationalExpr_NoNode */
+/*EqualityExprNoBF_NoNode	:	EqualityExprNoBF_NoNode != RelationalExpr_NoNode */
+/*EqualityExprNoBF_NoNode	:	EqualityExprNoBF_NoNode === RelationalExpr_NoNode */
+/*EqualityExprNoBF_NoNode	:	EqualityExprNoBF_NoNode !== RelationalExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_EqualityExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*BitwiseANDExpr_NoNode	:	EqualityExpr_NoNode */
+/*BitwiseANDExpr_NoNode	:	BitwiseANDExpr_NoNode & EqualityExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_BitwiseANDExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*BitwiseANDExprNoIn_NoNode	:	EqualityExprNoIn_NoNode */
+/*BitwiseANDExprNoIn_NoNode	:	BitwiseANDExprNoIn_NoNode & EqualityExprNoIn_NoNode */
+static psrNode_t* AR_STDCALL handle_BitwiseANDExprNoIn_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*BitwiseANDExprNoBF_NoNode	:	EqualityExprNoBF_NoNode */
+/*BitwiseANDExprNoBF_NoNode	:	BitwiseANDExprNoBF_NoNode & EqualityExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_BitwiseANDExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*BitwiseXORExpr_NoNode	:	BitwiseANDExpr_NoNode */
+/*BitwiseXORExpr_NoNode	:	BitwiseXORExpr_NoNode ^ BitwiseANDExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_BitwiseXORExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*BitwiseXORExprNoIn_NoNode	:	BitwiseANDExprNoIn_NoNode */
+/*BitwiseXORExprNoIn_NoNode	:	BitwiseXORExprNoIn_NoNode ^ BitwiseANDExprNoIn_NoNode */
+static psrNode_t* AR_STDCALL handle_BitwiseXORExprNoIn_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*BitwiseXORExprNoBF_NoNode	:	BitwiseANDExprNoBF_NoNode */
+/*BitwiseXORExprNoBF_NoNode	:	BitwiseXORExprNoBF_NoNode ^ BitwiseANDExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_BitwiseXORExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*BitwiseORExpr_NoNode	:	BitwiseXORExpr_NoNode */
+/*BitwiseORExpr_NoNode	:	BitwiseORExpr_NoNode | BitwiseXORExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_BitwiseORExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*BitwiseORExprNoIn_NoNode	:	BitwiseXORExprNoIn_NoNode */
+/*BitwiseORExprNoIn_NoNode	:	BitwiseORExprNoIn_NoNode | BitwiseXORExprNoIn_NoNode */
+static psrNode_t* AR_STDCALL handle_BitwiseORExprNoIn_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*BitwiseORExprNoBF_NoNode	:	BitwiseXORExprNoBF_NoNode */
+/*BitwiseORExprNoBF_NoNode	:	BitwiseORExprNoBF_NoNode | BitwiseXORExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_BitwiseORExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*LogicalANDExpr_NoNode	:	BitwiseORExpr_NoNode */
+/*LogicalANDExpr_NoNode	:	LogicalANDExpr_NoNode && BitwiseORExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_LogicalANDExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*LogicalANDExprNoIn_NoNode	:	BitwiseORExprNoIn_NoNode */
+/*LogicalANDExprNoIn_NoNode	:	LogicalANDExprNoIn_NoNode && BitwiseORExprNoIn_NoNode */
+static psrNode_t* AR_STDCALL handle_LogicalANDExprNoIn_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*LogicalANDExprNoBF_NoNode	:	BitwiseORExprNoBF_NoNode */
+/*LogicalANDExprNoBF_NoNode	:	LogicalANDExprNoBF_NoNode && BitwiseORExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_LogicalANDExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*LogicalORExpr_NoNode	:	LogicalANDExpr_NoNode */
+/*LogicalORExpr_NoNode	:	LogicalORExpr_NoNode || LogicalANDExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_LogicalORExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*LogicalORExprNoIn_NoNode	:	LogicalANDExprNoIn_NoNode */
+/*LogicalORExprNoIn_NoNode	:	LogicalORExprNoIn_NoNode || LogicalANDExprNoIn_NoNode */
+static psrNode_t* AR_STDCALL handle_LogicalORExprNoIn_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*LogicalORExprNoBF_NoNode	:	LogicalANDExprNoBF_NoNode */
+/*LogicalORExprNoBF_NoNode	:	LogicalORExprNoBF_NoNode || LogicalANDExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_LogicalORExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*ConditionalExpr_NoNode	:	LogicalORExpr_NoNode */
+/*ConditionalExpr_NoNode	:	LogicalORExpr_NoNode ? AssignmentExpr_NoNode : AssignmentExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_ConditionalExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*ConditionalExprNoIn_NoNode	:	LogicalORExprNoIn_NoNode */
+/*ConditionalExprNoIn_NoNode	:	LogicalORExprNoIn_NoNode ? AssignmentExprNoIn_NoNode : AssignmentExprNoIn_NoNode */
+static psrNode_t* AR_STDCALL handle_ConditionalExprNoIn_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*ConditionalExprNoBF_NoNode	:	LogicalORExprNoBF_NoNode */
+/*ConditionalExprNoBF_NoNode	:	LogicalORExprNoBF_NoNode ? AssignmentExpr_NoNode : AssignmentExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_ConditionalExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*AssignmentExpr_NoNode	:	ConditionalExpr_NoNode */
+/*AssignmentExpr_NoNode	:	LeftHandSideExpr_NoNode AssignmentOperator_NoNode AssignmentExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_AssignmentExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*AssignmentExprNoIn_NoNode	:	ConditionalExprNoIn_NoNode */
+/*AssignmentExprNoIn_NoNode	:	LeftHandSideExpr_NoNode AssignmentOperator_NoNode AssignmentExprNoIn_NoNode */
+static psrNode_t* AR_STDCALL handle_AssignmentExprNoIn_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*AssignmentExprNoBF_NoNode	:	ConditionalExprNoBF_NoNode */
+/*AssignmentExprNoBF_NoNode	:	LeftHandSideExprNoBF_NoNode AssignmentOperator_NoNode AssignmentExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_AssignmentExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*AssignmentOperator_NoNode	:	= */
+/*AssignmentOperator_NoNode	:	+= */
+/*AssignmentOperator_NoNode	:	-= */
+/*AssignmentOperator_NoNode	:	*= */
+/*AssignmentOperator_NoNode	:	/= */
+/*AssignmentOperator_NoNode	:	<<= */
+/*AssignmentOperator_NoNode	:	>>= */
+/*AssignmentOperator_NoNode	:	>>>= */
+/*AssignmentOperator_NoNode	:	&= */
+/*AssignmentOperator_NoNode	:	^= */
+/*AssignmentOperator_NoNode	:	|= */
+/*AssignmentOperator_NoNode	:	%= */
+static psrNode_t* AR_STDCALL handle_AssignmentOperator_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*Expr_NoNode	:	AssignmentExpr_NoNode */
+/*Expr_NoNode	:	Expr_NoNode , AssignmentExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_Expr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*ExprNoIn_NoNode	:	AssignmentExprNoIn_NoNode */
+/*ExprNoIn_NoNode	:	ExprNoIn_NoNode , AssignmentExprNoIn_NoNode */
+static psrNode_t* AR_STDCALL handle_ExprNoIn_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*ExprNoBF_NoNode	:	AssignmentExprNoBF_NoNode */
+/*ExprNoBF_NoNode	:	ExprNoBF_NoNode , AssignmentExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_ExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*Statement_NoNode	:	Block_NoNode */
+/*Statement_NoNode	:	VariableStatement_NoNode */
+/*Statement_NoNode	:	ConstStatement_NoNode */
+/*Statement_NoNode	:	FunctionDeclaration_NoNode */
+/*Statement_NoNode	:	EmptyStatement_NoNode */
+/*Statement_NoNode	:	ExprStatement_NoNode */
+/*Statement_NoNode	:	IfStatement_NoNode */
+/*Statement_NoNode	:	IterationStatement_NoNode */
+/*Statement_NoNode	:	ContinueStatement_NoNode */
+/*Statement_NoNode	:	BreakStatement_NoNode */
+/*Statement_NoNode	:	ReturnStatement_NoNode */
+/*Statement_NoNode	:	WithStatement_NoNode */
+/*Statement_NoNode	:	SwitchStatement_NoNode */
+/*Statement_NoNode	:	LabelledStatement_NoNode */
+/*Statement_NoNode	:	ThrowStatement_NoNode */
+/*Statement_NoNode	:	TryStatement_NoNode */
+/*Statement_NoNode	:	DebuggerStatement_NoNode */
+static psrNode_t* AR_STDCALL handle_Statement_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*Block_NoNode	:	{ } */
+/*Block_NoNode	:	{ SourceElements_NoNode } */
+static psrNode_t* AR_STDCALL handle_Block_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*VariableStatement_NoNode	:	var VariableDeclarationList_NoNode ; */
+/*VariableStatement_NoNode	:	var VariableDeclarationList_NoNode error */
+static psrNode_t* AR_STDCALL handle_VariableStatement_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*VariableDeclarationList_NoNode	:	IDENTIFIER */
+/*VariableDeclarationList_NoNode	:	IDENTIFIER Initializer_NoNode */
+/*VariableDeclarationList_NoNode	:	VariableDeclarationList_NoNode , IDENTIFIER */
+/*VariableDeclarationList_NoNode	:	VariableDeclarationList_NoNode , IDENTIFIER Initializer_NoNode */
+static psrNode_t* AR_STDCALL handle_VariableDeclarationList_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*VariableDeclarationListNoIn_NoNode	:	IDENTIFIER */
+/*VariableDeclarationListNoIn_NoNode	:	IDENTIFIER InitializerNoIn_NoNode */
+/*VariableDeclarationListNoIn_NoNode	:	VariableDeclarationListNoIn_NoNode , IDENTIFIER */
+/*VariableDeclarationListNoIn_NoNode	:	VariableDeclarationListNoIn_NoNode , IDENTIFIER InitializerNoIn_NoNode */
+static psrNode_t* AR_STDCALL handle_VariableDeclarationListNoIn_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*ConstStatement_NoNode	:	const ConstDeclarationList_NoNode ; */
+/*ConstStatement_NoNode	:	const ConstDeclarationList_NoNode error */
+static psrNode_t* AR_STDCALL handle_ConstStatement_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*ConstDeclarationList_NoNode	:	ConstDeclaration_NoNode */
+/*ConstDeclarationList_NoNode	:	ConstDeclarationList_NoNode , ConstDeclaration_NoNode */
+static psrNode_t* AR_STDCALL handle_ConstDeclarationList_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*ConstDeclaration_NoNode	:	IDENTIFIER */
+/*ConstDeclaration_NoNode	:	IDENTIFIER Initializer_NoNode */
+static psrNode_t* AR_STDCALL handle_ConstDeclaration_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*Initializer_NoNode	:	= AssignmentExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_Initializer_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*InitializerNoIn_NoNode	:	= AssignmentExprNoIn_NoNode */
+static psrNode_t* AR_STDCALL handle_InitializerNoIn_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*EmptyStatement_NoNode	:	; */
+static psrNode_t* AR_STDCALL handle_EmptyStatement_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*ExprStatement_NoNode	:	ExprNoBF_NoNode ; */
+/*ExprStatement_NoNode	:	ExprNoBF_NoNode error */
+static psrNode_t* AR_STDCALL handle_ExprStatement_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*IfStatement_NoNode	:	if ( Expr_NoNode ) Statement_NoNode */
+/*IfStatement_NoNode	:	if ( Expr_NoNode ) Statement_NoNode else Statement_NoNode */
+static psrNode_t* AR_STDCALL handle_IfStatement_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*IterationStatement_NoNode	:	do Statement_NoNode while ( Expr_NoNode ) ; */
+/*IterationStatement_NoNode	:	do Statement_NoNode while ( Expr_NoNode ) error */
+/*IterationStatement_NoNode	:	while ( Expr_NoNode ) Statement_NoNode */
+/*IterationStatement_NoNode	:	for ( ExprNoInOpt_NoNode ; ExprOpt_NoNode ; ExprOpt_NoNode ) Statement_NoNode */
+/*IterationStatement_NoNode	:	for ( var VariableDeclarationListNoIn_NoNode ; ExprOpt_NoNode ; ExprOpt_NoNode ) Statement_NoNode */
+/*IterationStatement_NoNode	:	for ( LeftHandSideExpr_NoNode in Expr_NoNode ) Statement_NoNode */
+/*IterationStatement_NoNode	:	for ( var IDENTIFIER in Expr_NoNode ) Statement_NoNode */
+/*IterationStatement_NoNode	:	for ( var IDENTIFIER InitializerNoIn_NoNode in Expr_NoNode ) Statement_NoNode */
+static psrNode_t* AR_STDCALL handle_IterationStatement_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*ExprOpt_NoNode	:	 */
+/*ExprOpt_NoNode	:	Expr_NoNode */
+static psrNode_t* AR_STDCALL handle_ExprOpt_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*ExprNoInOpt_NoNode	:	 */
+/*ExprNoInOpt_NoNode	:	ExprNoIn_NoNode */
+static psrNode_t* AR_STDCALL handle_ExprNoInOpt_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*ContinueStatement_NoNode	:	continue ; */
+/*ContinueStatement_NoNode	:	continue error */
+/*ContinueStatement_NoNode	:	continue IDENTIFIER ; */
+/*ContinueStatement_NoNode	:	continue IDENTIFIER error */
+static psrNode_t* AR_STDCALL handle_ContinueStatement_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*BreakStatement_NoNode	:	break ; */
+/*BreakStatement_NoNode	:	break error */
+/*BreakStatement_NoNode	:	break IDENTIFIER ; */
+/*BreakStatement_NoNode	:	break IDENTIFIER error */
+static psrNode_t* AR_STDCALL handle_BreakStatement_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*ReturnStatement_NoNode	:	return ; */
+/*ReturnStatement_NoNode	:	return error */
+/*ReturnStatement_NoNode	:	return Expr_NoNode ; */
+/*ReturnStatement_NoNode	:	return Expr_NoNode error */
+static psrNode_t* AR_STDCALL handle_ReturnStatement_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*WithStatement_NoNode	:	with ( Expr_NoNode ) Statement_NoNode */
+static psrNode_t* AR_STDCALL handle_WithStatement_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*SwitchStatement_NoNode	:	switch ( Expr_NoNode ) CaseBlock_NoNode */
+static psrNode_t* AR_STDCALL handle_SwitchStatement_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*CaseBlock_NoNode	:	{ CaseClausesOpt_NoNode } */
+/*CaseBlock_NoNode	:	{ CaseClausesOpt_NoNode DefaultClause_NoNode CaseClausesOpt_NoNode } */
+static psrNode_t* AR_STDCALL handle_CaseBlock_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*CaseClausesOpt_NoNode	:	 */
+/*CaseClausesOpt_NoNode	:	CaseClauses_NoNode */
+static psrNode_t* AR_STDCALL handle_CaseClausesOpt_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*CaseClauses_NoNode	:	CaseClause_NoNode */
+/*CaseClauses_NoNode	:	CaseClauses_NoNode CaseClause_NoNode */
+static psrNode_t* AR_STDCALL handle_CaseClauses_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*CaseClause_NoNode	:	case Expr_NoNode : */
+/*CaseClause_NoNode	:	case Expr_NoNode : SourceElements_NoNode */
+static psrNode_t* AR_STDCALL handle_CaseClause_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*DefaultClause_NoNode	:	default : */
+/*DefaultClause_NoNode	:	default : SourceElements_NoNode */
+static psrNode_t* AR_STDCALL handle_DefaultClause_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*LabelledStatement_NoNode	:	IDENTIFIER : Statement_NoNode */
+static psrNode_t* AR_STDCALL handle_LabelledStatement_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*ThrowStatement_NoNode	:	throw Expr_NoNode ; */
+/*ThrowStatement_NoNode	:	throw Expr_NoNode error */
+static psrNode_t* AR_STDCALL handle_ThrowStatement_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*TryStatement_NoNode	:	try Block_NoNode finally Block_NoNode */
+/*TryStatement_NoNode	:	try Block_NoNode catch ( IDENTIFIER ) Block_NoNode */
+/*TryStatement_NoNode	:	try Block_NoNode catch ( IDENTIFIER ) Block_NoNode finally Block_NoNode */
+static psrNode_t* AR_STDCALL handle_TryStatement_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*DebuggerStatement_NoNode	:	debugger ; */
+/*DebuggerStatement_NoNode	:	debugger error */
+static psrNode_t* AR_STDCALL handle_DebuggerStatement_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*FunctionDeclaration_NoNode	:	function IDENTIFIER ( ) { FunctionBody_NoNode } */
+/*FunctionDeclaration_NoNode	:	function IDENTIFIER ( FormalParameterList_NoNode ) { FunctionBody_NoNode } */
+static psrNode_t* AR_STDCALL handle_FunctionDeclaration_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*FunctionExpr_NoNode	:	function ( ) { FunctionBody_NoNode } */
+/*FunctionExpr_NoNode	:	function ( FormalParameterList_NoNode ) { FunctionBody_NoNode } */
+/*FunctionExpr_NoNode	:	function IDENTIFIER ( ) { FunctionBody_NoNode } */
+/*FunctionExpr_NoNode	:	function IDENTIFIER ( FormalParameterList_NoNode ) { FunctionBody_NoNode } */
+static psrNode_t* AR_STDCALL handle_FunctionExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*FormalParameterList_NoNode	:	IDENTIFIER */
+/*FormalParameterList_NoNode	:	FormalParameterList_NoNode , IDENTIFIER */
+static psrNode_t* AR_STDCALL handle_FormalParameterList_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*FunctionBody_NoNode	:	 */
+/*FunctionBody_NoNode	:	SourceElements_NoNode */
+static psrNode_t* AR_STDCALL handle_FunctionBody_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*SourceElements_NoNode	:	Statement_NoNode */
+/*SourceElements_NoNode	:	SourceElements_NoNode Statement_NoNode */
+static psrNode_t* AR_STDCALL handle_SourceElements_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 
 
 
 static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	handler; size_t	auto_ret; } __g_rule_pattern[] = {
-{L"program  :  translation_unit ", NULL, handle_program, 0},
-{L"program  :  DONE_ID ", NULL, handle_program, 0},
-{L"translation_unit  :  external_declaration ", NULL, handle_translation_unit, 0},
-{L"translation_unit  :  translation_unit external_declaration ", NULL, handle_translation_unit, 0},
-{L"external_declaration  :  function_definition ", NULL, handle_external_declaration, 0},
-{L"external_declaration  :  declaration ", NULL, handle_external_declaration, 0},
-{L"external_declaration  :  access_unit ", NULL, handle_external_declaration, 0},
-{L"external_declaration  :  attribute_unit ", NULL, handle_external_declaration, 0},
-{L"access_unit  :  import_or_export STRING_LITERAL ; ", NULL, handle_access_unit, 0},
-{L"access_unit  :  import_or_export error ", NULL, handle_access_unit, 0},
-{L"import_or_export  :  import ", NULL, handle_import_or_export, 0},
-{L"import_or_export  :  export ", NULL, handle_import_or_export, 0},
-{L"attribute_unit  :  attribute STRING_LITERAL ; ", NULL, handle_attribute_unit, 0},
-{L"attribute_unit  :  attribute error ", NULL, handle_attribute_unit, 0},
-{L"function_declaration  :  declaration_specifiers declarator ", NULL, handle_function_declaration, 0},
-{L"function_definition  :  function_declaration compound_statement ", NULL, handle_function_definition, 0},
-{L"type_qualifier  :  const ", NULL, handle_type_qualifier, 0},
-{L"type_qualifier  :  volatile ", NULL, handle_type_qualifier, 0},
-{L"type_qualifier_list  :  type_qualifier_list type_qualifier ", NULL, handle_type_qualifier_list, 0},
-{L"type_qualifier_list  :  type_qualifier ", NULL, handle_type_qualifier_list, 0},
-{L"type_specifier  :  void ", NULL, handle_type_specifier, 0},
-{L"type_specifier  :  byte ", NULL, handle_type_specifier, 0},
-{L"type_specifier  :  char ", NULL, handle_type_specifier, 0},
-{L"type_specifier  :  short ", NULL, handle_type_specifier, 0},
-{L"type_specifier  :  int ", NULL, handle_type_specifier, 0},
-{L"type_specifier  :  long ", NULL, handle_type_specifier, 0},
-{L"type_specifier  :  float ", NULL, handle_type_specifier, 0},
-{L"type_specifier  :  double ", NULL, handle_type_specifier, 0},
-{L"type_specifier  :  signed ", NULL, handle_type_specifier, 0},
-{L"type_specifier  :  unsigned ", NULL, handle_type_specifier, 0},
-{L"type_specifier  :  struct_or_union_specifier ", NULL, handle_type_specifier, 0},
-{L"type_specifier  :  TYPE_ID ", NULL, handle_type_specifier, 0},
-{L"struct_or_union_specifier  :  struct_or_union IDENTIFIER { struct_declaration_list } ", NULL, handle_struct_or_union_specifier, 0},
-{L"struct_or_union_specifier  :  struct_or_union { struct_declaration_list } ", NULL, handle_struct_or_union_specifier, 0},
-{L"struct_or_union_specifier  :  struct_or_union IDENTIFIER ", NULL, handle_struct_or_union_specifier, 0},
-{L"struct_or_union  :  struct ", NULL, handle_struct_or_union, 0},
-{L"struct_or_union  :  union ", NULL, handle_struct_or_union, 0},
-{L"struct_declaration_list  :  struct_declaration ", NULL, handle_struct_declaration_list, 0},
-{L"struct_declaration_list  :  struct_declaration_list struct_declaration ", NULL, handle_struct_declaration_list, 0},
-{L"struct_declaration  :  specifier_qualifier_list struct_declarator_list ; ", NULL, handle_struct_declaration, 0},
-{L"struct_declaration  :  specifier_qualifier_list struct_declarator_list error ", NULL, handle_struct_declaration, 0},
-{L"struct_declarator_list  :  declarator ", NULL, handle_struct_declarator_list, 0},
-{L"struct_declarator_list  :  struct_declarator_list , declarator ", NULL, handle_struct_declarator_list, 0},
-{L"declaration  :  declaration_specifiers init_declarator_list ; ", NULL, handle_declaration, 0},
-{L"declaration  :  declaration_specifiers ; ", NULL, handle_declaration, 0},
-{L"declaration  :  declaration_specifiers init_declarator_list error ", NULL, handle_declaration, 0},
-{L"declaration  :  declaration_specifiers error ", NULL, handle_declaration, 0},
-{L"storage_class_specifier  :  typedef ", NULL, handle_storage_class_specifier, 0},
-{L"storage_class_specifier  :  static ", NULL, handle_storage_class_specifier, 0},
-{L"declaration_specifiers  :  storage_class_specifier ", NULL, handle_declaration_specifiers, 0},
-{L"declaration_specifiers  :  storage_class_specifier declaration_specifiers ", NULL, handle_declaration_specifiers, 0},
-{L"declaration_specifiers  :  type_specifier ", NULL, handle_declaration_specifiers, 0},
-{L"declaration_specifiers  :  type_specifier declaration_specifiers ", NULL, handle_declaration_specifiers, 0},
-{L"declaration_specifiers  :  type_qualifier ", NULL, handle_declaration_specifiers, 0},
-{L"declaration_specifiers  :  type_qualifier declaration_specifiers ", NULL, handle_declaration_specifiers, 0},
-{L"declaration_list  :  declaration ", NULL, handle_declaration_list, 0},
-{L"declaration_list  :  declaration_list declaration ", NULL, handle_declaration_list, 0},
-{L"init_declarator_list  :  init_declarator ", NULL, handle_init_declarator_list, 0},
-{L"init_declarator_list  :  init_declarator_list , init_declarator ", NULL, handle_init_declarator_list, 0},
-{L"init_declarator  :  declarator ", NULL, handle_init_declarator, 0},
-{L"init_declarator  :  declarator = initializer ", NULL, handle_init_declarator, 0},
-{L"initializer  :  assignment_expression ", NULL, handle_initializer, 0},
-{L"initializer  :  { initializer_list } ", NULL, handle_initializer, 0},
-{L"initializer_list  :  initializer ", NULL, handle_initializer_list, 0},
-{L"initializer_list  :  initializer_list , initializer ", NULL, handle_initializer_list, 0},
-{L"declarator  :  direct_declarator ", NULL, handle_declarator, 0},
-{L"declarator  :  pointer direct_declarator ", NULL, handle_declarator, 0},
-{L"direct_declarator  :  IDENTIFIER ", NULL, handle_direct_declarator, 0},
-{L"direct_declarator  :  IDENTIFIER [ constant_expression ] ", NULL, handle_direct_declarator, 0},
-{L"direct_declarator  :  IDENTIFIER [ ] ", NULL, handle_direct_declarator, 0},
-{L"direct_declarator  :  IDENTIFIER ( parameter_list ) ", NULL, handle_direct_declarator, 0},
-{L"direct_declarator  :  IDENTIFIER ( ) ", NULL, handle_direct_declarator, 0},
-{L"abstract_declarator  :  pointer ", NULL, handle_abstract_declarator, 0},
-{L"abstract_declarator  :  direct_abstract_declarator ", NULL, handle_abstract_declarator, 0},
-{L"abstract_declarator  :  pointer direct_abstract_declarator ", NULL, handle_abstract_declarator, 0},
-{L"direct_abstract_declarator  :  [ ] ", NULL, handle_direct_abstract_declarator, 0},
-{L"direct_abstract_declarator  :  [ constant_expression ] ", NULL, handle_direct_abstract_declarator, 0},
-{L"pointer  :  * ", NULL, handle_pointer, 0},
-{L"pointer  :  * type_qualifier_list ", NULL, handle_pointer, 0},
-{L"pointer  :  * type_qualifier_list pointer ", NULL, handle_pointer, 0},
-{L"pointer  :  * pointer ", NULL, handle_pointer, 0},
-{L"parameter_list  :  parameter_declaration ", NULL, handle_parameter_list, 0},
-{L"parameter_list  :  parameter_list , parameter_declaration ", NULL, handle_parameter_list, 0},
-{L"parameter_declaration  :  declaration_specifiers declarator ", NULL, handle_parameter_declaration, 0},
-{L"parameter_declaration  :  declaration_specifiers abstract_declarator ", NULL, handle_parameter_declaration, 0},
-{L"parameter_declaration  :  declaration_specifiers ", NULL, handle_parameter_declaration, 0},
-{L"type_name  :  specifier_qualifier_list ", NULL, handle_type_name, 0},
-{L"type_name  :  specifier_qualifier_list abstract_declarator ", NULL, handle_type_name, 0},
-{L"specifier_qualifier_list  :  type_qualifier ", NULL, handle_specifier_qualifier_list, 0},
-{L"specifier_qualifier_list  :  type_specifier ", NULL, handle_specifier_qualifier_list, 0},
-{L"specifier_qualifier_list  :  type_qualifier specifier_qualifier_list ", NULL, handle_specifier_qualifier_list, 0},
-{L"specifier_qualifier_list  :  type_specifier specifier_qualifier_list ", NULL, handle_specifier_qualifier_list, 0},
-{L"statement  :  labeled_statement ", NULL, semantic_auto_return_0, 0},
-{L"statement  :  compound_statement ", NULL, semantic_auto_return_0, 0},
-{L"statement  :  expression_statement ", NULL, semantic_auto_return_0, 0},
-{L"statement  :  selection_statement ", NULL, semantic_auto_return_0, 0},
-{L"statement  :  iteration_statement ", NULL, semantic_auto_return_0, 0},
-{L"statement  :  jump_statement ", NULL, semantic_auto_return_0, 0},
-{L"labeled_statement  :  case constant_expression : statement ", NULL, handle_labeled_statement, 0},
-{L"labeled_statement  :  default : statement ", NULL, handle_labeled_statement, 0},
-{L"labeled_statement  :  IDENTIFIER : statement ", NULL, handle_labeled_statement, 0},
-{L"compound_statement  :  start_block compound_statement_body ", NULL, handle_compound_statement, 0},
-{L"start_block  :  { ", NULL, handle_start_block, 0},
-{L"compound_statement_body  :  compound_statement_declarations } ", NULL, handle_compound_statement_body, 0},
-{L"compound_statement_body  :  compound_statement_declarations statement_list } ", NULL, handle_compound_statement_body, 0},
-{L"compound_statement_declarations  :  declaration_list ", NULL, handle_compound_statement_declarations, 0},
-{L"compound_statement_declarations  :   ", NULL, handle_compound_statement_declarations, 0},
-{L"statement_list  :  statement ", NULL, handle_statement_list, 0},
-{L"statement_list  :  statement_list statement ", NULL, handle_statement_list, 0},
-{L"expression_statement  :  ; ", NULL, handle_expression_statement, 0},
-{L"expression_statement  :  expression ; ", NULL, handle_expression_statement, 0},
-{L"expression_statement  :  expression error ", NULL, handle_expression_statement, 0},
-{L"selection_statement  :  if ( expression ) statement ", L"IF_WITHOUT_ELSE", handle_selection_statement, 0},
-{L"selection_statement  :  if ( expression ) statement else statement ", NULL, handle_selection_statement, 0},
-{L"selection_statement  :  switch ( expression ) statement ", NULL, handle_selection_statement, 0},
-{L"iteration_statement  :  while ( expression ) statement ", NULL, handle_iteration_statement, 0},
-{L"iteration_statement  :  do statement while ( expression ) ; ", NULL, handle_iteration_statement, 0},
-{L"iteration_statement  :  do statement while ( expression ) error ", NULL, handle_iteration_statement, 0},
-{L"iteration_statement  :  for ( expression_statement expression_statement ) statement ", NULL, handle_iteration_statement, 0},
-{L"iteration_statement  :  for ( expression_statement expression_statement expression ) statement ", NULL, handle_iteration_statement, 0},
-{L"jump_statement  :  goto IDENTIFIER ; ", NULL, handle_jump_statement, 0},
-{L"jump_statement  :  continue ; ", NULL, handle_jump_statement, 0},
-{L"jump_statement  :  break ; ", NULL, handle_jump_statement, 0},
-{L"jump_statement  :  return ; ", NULL, handle_jump_statement, 0},
-{L"jump_statement  :  return expression ; ", NULL, handle_jump_statement, 0},
-{L"jump_statement  :  goto IDENTIFIER error ", NULL, handle_jump_statement, 0},
-{L"jump_statement  :  continue error ", NULL, handle_jump_statement, 0},
-{L"jump_statement  :  break error ", NULL, handle_jump_statement, 0},
-{L"jump_statement  :  return error ", NULL, handle_jump_statement, 0},
-{L"jump_statement  :  return expression error ", NULL, handle_jump_statement, 0},
-{L"expression  :  assignment_expression ", NULL, handle_expression, 0},
-{L"expression  :  expression , assignment_expression ", NULL, handle_expression, 0},
-{L"primary_expression  :  ( expression ) ", NULL, semantic_auto_return_1, 0},
-{L"primary_expression  :  IDENTIFIER ", NULL, handle_primary_expression, 0},
-{L"primary_expression  :  FLOAT_NUMBER ", NULL, handle_primary_expression, 0},
-{L"primary_expression  :  INT_NUMBER ", NULL, handle_primary_expression, 0},
-{L"primary_expression  :  CHAR_CONSTANT ", NULL, handle_primary_expression, 0},
-{L"primary_expression  :  string_list ", NULL, handle_primary_expression, 0},
-{L"string_list  :  string_list STRING_LITERAL ", NULL, handle_string_list, 0},
-{L"string_list  :  STRING_LITERAL ", NULL, handle_string_list, 0},
-{L"postfix_expression  :  primary_expression ", NULL, semantic_auto_return_0, 0},
-{L"postfix_expression  :  postfix_expression [ expression ] ", NULL, handle_postfix_expression, 0},
-{L"postfix_expression  :  postfix_expression ( ) ", NULL, handle_postfix_expression, 0},
-{L"postfix_expression  :  postfix_expression ( argument_expression_list ) ", NULL, handle_postfix_expression, 0},
-{L"postfix_expression  :  postfix_expression . IDENTIFIER ", NULL, handle_postfix_expression, 0},
-{L"postfix_expression  :  postfix_expression -> IDENTIFIER ", NULL, handle_postfix_expression, 0},
-{L"postfix_expression  :  postfix_expression ++ ", NULL, handle_postfix_expression, 0},
-{L"postfix_expression  :  postfix_expression -- ", NULL, handle_postfix_expression, 0},
-{L"argument_expression_list  :  assignment_expression ", NULL, semantic_auto_return_0, 0},
-{L"argument_expression_list  :  argument_expression_list , assignment_expression ", NULL, handle_argument_expression_list, 0},
-{L"unary_expression  :  postfix_expression ", NULL, semantic_auto_return_0, 0},
-{L"unary_expression  :  ++ unary_expression ", NULL, handle_unary_expression, 0},
-{L"unary_expression  :  -- unary_expression ", NULL, handle_unary_expression, 0},
-{L"unary_expression  :  & cast_expression ", NULL, handle_unary_expression, 0},
-{L"unary_expression  :  * cast_expression ", NULL, handle_unary_expression, 0},
-{L"unary_expression  :  + cast_expression ", NULL, handle_unary_expression, 0},
-{L"unary_expression  :  - cast_expression ", NULL, handle_unary_expression, 0},
-{L"unary_expression  :  ~ cast_expression ", NULL, handle_unary_expression, 0},
-{L"unary_expression  :  ! cast_expression ", NULL, handle_unary_expression, 0},
-{L"unary_expression  :  sizeof unary_expression ", NULL, handle_unary_expression, 0},
-{L"unary_expression  :  sizeof ( type_name ) ", NULL, handle_unary_expression, 0},
-{L"cast_expression  :  unary_expression ", NULL, semantic_auto_return_0, 0},
-{L"cast_expression  :  ( type_name ) cast_expression ", NULL, handle_cast_expression, 0},
-{L"binary_expression  :  cast_expression ", NULL, semantic_auto_return_0, 0},
-{L"binary_expression  :  binary_expression + binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression - binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression * binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression / binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression % binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression << binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression >> binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression < binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression <= binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression > binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression >= binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression == binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression != binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression & binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression ^ binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression | binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression && binary_expression ", NULL, handle_binary_expression, 0},
-{L"binary_expression  :  binary_expression || binary_expression ", NULL, handle_binary_expression, 0},
-{L"constant_expression  :  binary_expression ", NULL, semantic_auto_return_0, 0},
-{L"constant_expression  :  binary_expression ? expression : constant_expression ", NULL, handle_constant_expression, 0},
-{L"assignment_expression  :  constant_expression ", NULL, semantic_auto_return_0, 0},
-{L"assignment_expression  :  unary_expression assignment_operator assignment_expression ", NULL, handle_assignment_expression, 0},
-{L"assignment_operator  :  = ", NULL, handle_assignment_operator, 0},
-{L"assignment_operator  :  *= ", NULL, handle_assignment_operator, 0},
-{L"assignment_operator  :  /= ", NULL, handle_assignment_operator, 0},
-{L"assignment_operator  :  %= ", NULL, handle_assignment_operator, 0},
-{L"assignment_operator  :  += ", NULL, handle_assignment_operator, 0},
-{L"assignment_operator  :  -= ", NULL, handle_assignment_operator, 0},
-{L"assignment_operator  :  <<= ", NULL, handle_assignment_operator, 0},
-{L"assignment_operator  :  >>= ", NULL, handle_assignment_operator, 0},
-{L"assignment_operator  :  &= ", NULL, handle_assignment_operator, 0},
-{L"assignment_operator  :  ^= ", NULL, handle_assignment_operator, 0},
-{L"assignment_operator  :  |= ", NULL, handle_assignment_operator, 0}
+{L"Literal  :  null ", NULL, handle_Literal, 0},
+{L"Literal  :  true ", NULL, handle_Literal, 0},
+{L"Literal  :  false ", NULL, handle_Literal, 0},
+{L"Literal  :  NUMBER ", NULL, handle_Literal, 0},
+{L"Literal  :  STRING_LITERAL ", NULL, handle_Literal, 0},
+{L"Property  :  IDENTIFIER : AssignmentExpr ", NULL, handle_Property, 0},
+{L"Property  :  STRING_LITERAL : AssignmentExpr ", NULL, handle_Property, 0},
+{L"Property  :  NUMBER : AssignmentExpr ", NULL, handle_Property, 0},
+{L"Property  :  IDENTIFIER IDENTIFIER ( ) { FunctionBody } ", NULL, handle_Property, 0},
+{L"Property  :  IDENTIFIER IDENTIFIER ( FormalParameterList ) { FunctionBody } ", NULL, handle_Property, 0},
+{L"PropertyList  :  Property ", NULL, handle_PropertyList, 0},
+{L"PropertyList  :  PropertyList , Property ", NULL, handle_PropertyList, 0},
+{L"PrimaryExpr  :  PrimaryExprNoBrace ", NULL, handle_PrimaryExpr, 0},
+{L"PrimaryExpr  :  { } ", NULL, handle_PrimaryExpr, 0},
+{L"PrimaryExpr  :  { PropertyList } ", NULL, handle_PrimaryExpr, 0},
+{L"PrimaryExpr  :  { PropertyList , } ", NULL, handle_PrimaryExpr, 0},
+{L"PrimaryExprNoBrace  :  this ", NULL, handle_PrimaryExprNoBrace, 0},
+{L"PrimaryExprNoBrace  :  Literal ", NULL, handle_PrimaryExprNoBrace, 0},
+{L"PrimaryExprNoBrace  :  ArrayLiteral ", NULL, handle_PrimaryExprNoBrace, 0},
+{L"PrimaryExprNoBrace  :  IDENTIFIER ", NULL, handle_PrimaryExprNoBrace, 0},
+{L"PrimaryExprNoBrace  :  ( Expr ) ", NULL, handle_PrimaryExprNoBrace, 0},
+{L"ArrayLiteral  :  [ ElisionOpt ] ", NULL, handle_ArrayLiteral, 0},
+{L"ArrayLiteral  :  [ ElementList ] ", NULL, handle_ArrayLiteral, 0},
+{L"ArrayLiteral  :  [ ElementList , ElisionOpt ] ", NULL, handle_ArrayLiteral, 0},
+{L"ElementList  :  ElisionOpt AssignmentExpr ", NULL, handle_ElementList, 0},
+{L"ElementList  :  ElementList , ElisionOpt AssignmentExpr ", NULL, handle_ElementList, 0},
+{L"ElisionOpt  :   ", NULL, handle_ElisionOpt, 0},
+{L"ElisionOpt  :  Elision ", NULL, handle_ElisionOpt, 0},
+{L"Elision  :  , ", NULL, handle_Elision, 0},
+{L"Elision  :  Elision , ", NULL, handle_Elision, 0},
+{L"MemberExpr  :  PrimaryExpr ", NULL, handle_MemberExpr, 0},
+{L"MemberExpr  :  FunctionExpr ", NULL, handle_MemberExpr, 0},
+{L"MemberExpr  :  MemberExpr [ Expr ] ", NULL, handle_MemberExpr, 0},
+{L"MemberExpr  :  MemberExpr . IDENTIFIER ", NULL, handle_MemberExpr, 0},
+{L"MemberExpr  :  new MemberExpr Arguments ", NULL, handle_MemberExpr, 0},
+{L"MemberExprNoBF  :  PrimaryExprNoBrace ", NULL, handle_MemberExprNoBF, 0},
+{L"MemberExprNoBF  :  MemberExprNoBF [ Expr ] ", NULL, handle_MemberExprNoBF, 0},
+{L"MemberExprNoBF  :  MemberExprNoBF . IDENTIFIER ", NULL, handle_MemberExprNoBF, 0},
+{L"MemberExprNoBF  :  new MemberExpr Arguments ", NULL, handle_MemberExprNoBF, 0},
+{L"NewExpr  :  MemberExpr ", NULL, handle_NewExpr, 0},
+{L"NewExpr  :  new NewExpr ", NULL, handle_NewExpr, 0},
+{L"NewExprNoBF  :  MemberExprNoBF ", NULL, handle_NewExprNoBF, 0},
+{L"NewExprNoBF  :  new NewExpr ", NULL, handle_NewExprNoBF, 0},
+{L"CallExpr  :  MemberExpr Arguments ", NULL, handle_CallExpr, 0},
+{L"CallExpr  :  CallExpr Arguments ", NULL, handle_CallExpr, 0},
+{L"CallExpr  :  CallExpr [ Expr ] ", NULL, handle_CallExpr, 0},
+{L"CallExpr  :  CallExpr . IDENTIFIER ", NULL, handle_CallExpr, 0},
+{L"CallExprNoBF  :  MemberExprNoBF Arguments ", NULL, handle_CallExprNoBF, 0},
+{L"CallExprNoBF  :  CallExprNoBF Arguments ", NULL, handle_CallExprNoBF, 0},
+{L"CallExprNoBF  :  CallExprNoBF [ Expr ] ", NULL, handle_CallExprNoBF, 0},
+{L"CallExprNoBF  :  CallExprNoBF . IDENTIFIER ", NULL, handle_CallExprNoBF, 0},
+{L"Arguments  :  ( ) ", NULL, handle_Arguments, 0},
+{L"Arguments  :  ( ArgumentList ) ", NULL, handle_Arguments, 0},
+{L"ArgumentList  :  AssignmentExpr ", NULL, handle_ArgumentList, 0},
+{L"ArgumentList  :  ArgumentList , AssignmentExpr ", NULL, handle_ArgumentList, 0},
+{L"LeftHandSideExpr  :  NewExpr ", NULL, handle_LeftHandSideExpr, 0},
+{L"LeftHandSideExpr  :  CallExpr ", NULL, handle_LeftHandSideExpr, 0},
+{L"LeftHandSideExprNoBF  :  NewExprNoBF ", NULL, handle_LeftHandSideExprNoBF, 0},
+{L"LeftHandSideExprNoBF  :  CallExprNoBF ", NULL, handle_LeftHandSideExprNoBF, 0},
+{L"PostfixExpr  :  LeftHandSideExpr ", NULL, handle_PostfixExpr, 0},
+{L"PostfixExpr  :  LeftHandSideExpr ++ ", NULL, handle_PostfixExpr, 0},
+{L"PostfixExpr  :  LeftHandSideExpr -- ", NULL, handle_PostfixExpr, 0},
+{L"PostfixExprNoBF  :  LeftHandSideExprNoBF ", NULL, handle_PostfixExprNoBF, 0},
+{L"PostfixExprNoBF  :  LeftHandSideExprNoBF ++ ", NULL, handle_PostfixExprNoBF, 0},
+{L"PostfixExprNoBF  :  LeftHandSideExprNoBF -- ", NULL, handle_PostfixExprNoBF, 0},
+{L"UnaryExprCommon  :  delete UnaryExpr ", NULL, handle_UnaryExprCommon, 0},
+{L"UnaryExprCommon  :  void UnaryExpr ", NULL, handle_UnaryExprCommon, 0},
+{L"UnaryExprCommon  :  typeof UnaryExpr ", NULL, handle_UnaryExprCommon, 0},
+{L"UnaryExprCommon  :  ++ UnaryExpr ", NULL, handle_UnaryExprCommon, 0},
+{L"UnaryExprCommon  :  -- UnaryExpr ", NULL, handle_UnaryExprCommon, 0},
+{L"UnaryExprCommon  :  + UnaryExpr ", NULL, handle_UnaryExprCommon, 0},
+{L"UnaryExprCommon  :  - UnaryExpr ", NULL, handle_UnaryExprCommon, 0},
+{L"UnaryExprCommon  :  ~ UnaryExpr ", NULL, handle_UnaryExprCommon, 0},
+{L"UnaryExprCommon  :  ! UnaryExpr ", NULL, handle_UnaryExprCommon, 0},
+{L"UnaryExpr  :  PostfixExpr ", NULL, handle_UnaryExpr, 0},
+{L"UnaryExpr  :  UnaryExprCommon ", NULL, handle_UnaryExpr, 0},
+{L"UnaryExprNoBF  :  PostfixExprNoBF ", NULL, handle_UnaryExprNoBF, 0},
+{L"UnaryExprNoBF  :  UnaryExprCommon ", NULL, handle_UnaryExprNoBF, 0},
+{L"MultiplicativeExpr  :  UnaryExpr ", NULL, handle_MultiplicativeExpr, 0},
+{L"MultiplicativeExpr  :  MultiplicativeExpr * UnaryExpr ", NULL, handle_MultiplicativeExpr, 0},
+{L"MultiplicativeExpr  :  MultiplicativeExpr / UnaryExpr ", NULL, handle_MultiplicativeExpr, 0},
+{L"MultiplicativeExpr  :  MultiplicativeExpr % UnaryExpr ", NULL, handle_MultiplicativeExpr, 0},
+{L"MultiplicativeExprNoBF  :  UnaryExprNoBF ", NULL, handle_MultiplicativeExprNoBF, 0},
+{L"MultiplicativeExprNoBF  :  MultiplicativeExprNoBF * UnaryExpr ", NULL, handle_MultiplicativeExprNoBF, 0},
+{L"MultiplicativeExprNoBF  :  MultiplicativeExprNoBF / UnaryExpr ", NULL, handle_MultiplicativeExprNoBF, 0},
+{L"MultiplicativeExprNoBF  :  MultiplicativeExprNoBF % UnaryExpr ", NULL, handle_MultiplicativeExprNoBF, 0},
+{L"AdditiveExpr  :  MultiplicativeExpr ", NULL, handle_AdditiveExpr, 0},
+{L"AdditiveExpr  :  AdditiveExpr + MultiplicativeExpr ", NULL, handle_AdditiveExpr, 0},
+{L"AdditiveExpr  :  AdditiveExpr - MultiplicativeExpr ", NULL, handle_AdditiveExpr, 0},
+{L"AdditiveExprNoBF  :  MultiplicativeExprNoBF ", NULL, handle_AdditiveExprNoBF, 0},
+{L"AdditiveExprNoBF  :  AdditiveExprNoBF + MultiplicativeExpr ", NULL, handle_AdditiveExprNoBF, 0},
+{L"AdditiveExprNoBF  :  AdditiveExprNoBF - MultiplicativeExpr ", NULL, handle_AdditiveExprNoBF, 0},
+{L"ShiftExpr  :  AdditiveExpr ", NULL, handle_ShiftExpr, 0},
+{L"ShiftExpr  :  ShiftExpr << AdditiveExpr ", NULL, handle_ShiftExpr, 0},
+{L"ShiftExpr  :  ShiftExpr >> AdditiveExpr ", NULL, handle_ShiftExpr, 0},
+{L"ShiftExpr  :  ShiftExpr >>> AdditiveExpr ", NULL, handle_ShiftExpr, 0},
+{L"ShiftExprNoBF  :  AdditiveExprNoBF ", NULL, handle_ShiftExprNoBF, 0},
+{L"ShiftExprNoBF  :  ShiftExprNoBF << AdditiveExpr ", NULL, handle_ShiftExprNoBF, 0},
+{L"ShiftExprNoBF  :  ShiftExprNoBF >> AdditiveExpr ", NULL, handle_ShiftExprNoBF, 0},
+{L"ShiftExprNoBF  :  ShiftExprNoBF >>> AdditiveExpr ", NULL, handle_ShiftExprNoBF, 0},
+{L"RelationalExpr  :  ShiftExpr ", NULL, handle_RelationalExpr, 0},
+{L"RelationalExpr  :  RelationalExpr < ShiftExpr ", NULL, handle_RelationalExpr, 0},
+{L"RelationalExpr  :  RelationalExpr > ShiftExpr ", NULL, handle_RelationalExpr, 0},
+{L"RelationalExpr  :  RelationalExpr <= ShiftExpr ", NULL, handle_RelationalExpr, 0},
+{L"RelationalExpr  :  RelationalExpr >= ShiftExpr ", NULL, handle_RelationalExpr, 0},
+{L"RelationalExpr  :  RelationalExpr instanceof ShiftExpr ", NULL, handle_RelationalExpr, 0},
+{L"RelationalExpr  :  RelationalExpr in ShiftExpr ", NULL, handle_RelationalExpr, 0},
+{L"RelationalExprNoIn  :  ShiftExpr ", NULL, handle_RelationalExprNoIn, 0},
+{L"RelationalExprNoIn  :  RelationalExprNoIn < ShiftExpr ", NULL, handle_RelationalExprNoIn, 0},
+{L"RelationalExprNoIn  :  RelationalExprNoIn > ShiftExpr ", NULL, handle_RelationalExprNoIn, 0},
+{L"RelationalExprNoIn  :  RelationalExprNoIn <= ShiftExpr ", NULL, handle_RelationalExprNoIn, 0},
+{L"RelationalExprNoIn  :  RelationalExprNoIn >= ShiftExpr ", NULL, handle_RelationalExprNoIn, 0},
+{L"RelationalExprNoIn  :  RelationalExprNoIn instanceof ShiftExpr ", NULL, handle_RelationalExprNoIn, 0},
+{L"RelationalExprNoBF  :  ShiftExprNoBF ", NULL, handle_RelationalExprNoBF, 0},
+{L"RelationalExprNoBF  :  RelationalExprNoBF < ShiftExpr ", NULL, handle_RelationalExprNoBF, 0},
+{L"RelationalExprNoBF  :  RelationalExprNoBF > ShiftExpr ", NULL, handle_RelationalExprNoBF, 0},
+{L"RelationalExprNoBF  :  RelationalExprNoBF <= ShiftExpr ", NULL, handle_RelationalExprNoBF, 0},
+{L"RelationalExprNoBF  :  RelationalExprNoBF >= ShiftExpr ", NULL, handle_RelationalExprNoBF, 0},
+{L"RelationalExprNoBF  :  RelationalExprNoBF instanceof ShiftExpr ", NULL, handle_RelationalExprNoBF, 0},
+{L"RelationalExprNoBF  :  RelationalExprNoBF in ShiftExpr ", NULL, handle_RelationalExprNoBF, 0},
+{L"EqualityExpr  :  RelationalExpr ", NULL, handle_EqualityExpr, 0},
+{L"EqualityExpr  :  EqualityExpr == RelationalExpr ", NULL, handle_EqualityExpr, 0},
+{L"EqualityExpr  :  EqualityExpr != RelationalExpr ", NULL, handle_EqualityExpr, 0},
+{L"EqualityExpr  :  EqualityExpr === RelationalExpr ", NULL, handle_EqualityExpr, 0},
+{L"EqualityExpr  :  EqualityExpr !== RelationalExpr ", NULL, handle_EqualityExpr, 0},
+{L"EqualityExprNoIn  :  RelationalExprNoIn ", NULL, handle_EqualityExprNoIn, 0},
+{L"EqualityExprNoIn  :  EqualityExprNoIn == RelationalExprNoIn ", NULL, handle_EqualityExprNoIn, 0},
+{L"EqualityExprNoIn  :  EqualityExprNoIn != RelationalExprNoIn ", NULL, handle_EqualityExprNoIn, 0},
+{L"EqualityExprNoIn  :  EqualityExprNoIn === RelationalExprNoIn ", NULL, handle_EqualityExprNoIn, 0},
+{L"EqualityExprNoIn  :  EqualityExprNoIn !== RelationalExprNoIn ", NULL, handle_EqualityExprNoIn, 0},
+{L"EqualityExprNoBF  :  RelationalExprNoBF ", NULL, handle_EqualityExprNoBF, 0},
+{L"EqualityExprNoBF  :  EqualityExprNoBF == RelationalExpr ", NULL, handle_EqualityExprNoBF, 0},
+{L"EqualityExprNoBF  :  EqualityExprNoBF != RelationalExpr ", NULL, handle_EqualityExprNoBF, 0},
+{L"EqualityExprNoBF  :  EqualityExprNoBF === RelationalExpr ", NULL, handle_EqualityExprNoBF, 0},
+{L"EqualityExprNoBF  :  EqualityExprNoBF !== RelationalExpr ", NULL, handle_EqualityExprNoBF, 0},
+{L"BitwiseANDExpr  :  EqualityExpr ", NULL, handle_BitwiseANDExpr, 0},
+{L"BitwiseANDExpr  :  BitwiseANDExpr & EqualityExpr ", NULL, handle_BitwiseANDExpr, 0},
+{L"BitwiseANDExprNoIn  :  EqualityExprNoIn ", NULL, handle_BitwiseANDExprNoIn, 0},
+{L"BitwiseANDExprNoIn  :  BitwiseANDExprNoIn & EqualityExprNoIn ", NULL, handle_BitwiseANDExprNoIn, 0},
+{L"BitwiseANDExprNoBF  :  EqualityExprNoBF ", NULL, handle_BitwiseANDExprNoBF, 0},
+{L"BitwiseANDExprNoBF  :  BitwiseANDExprNoBF & EqualityExpr ", NULL, handle_BitwiseANDExprNoBF, 0},
+{L"BitwiseXORExpr  :  BitwiseANDExpr ", NULL, handle_BitwiseXORExpr, 0},
+{L"BitwiseXORExpr  :  BitwiseXORExpr ^ BitwiseANDExpr ", NULL, handle_BitwiseXORExpr, 0},
+{L"BitwiseXORExprNoIn  :  BitwiseANDExprNoIn ", NULL, handle_BitwiseXORExprNoIn, 0},
+{L"BitwiseXORExprNoIn  :  BitwiseXORExprNoIn ^ BitwiseANDExprNoIn ", NULL, handle_BitwiseXORExprNoIn, 0},
+{L"BitwiseXORExprNoBF  :  BitwiseANDExprNoBF ", NULL, handle_BitwiseXORExprNoBF, 0},
+{L"BitwiseXORExprNoBF  :  BitwiseXORExprNoBF ^ BitwiseANDExpr ", NULL, handle_BitwiseXORExprNoBF, 0},
+{L"BitwiseORExpr  :  BitwiseXORExpr ", NULL, handle_BitwiseORExpr, 0},
+{L"BitwiseORExpr  :  BitwiseORExpr | BitwiseXORExpr ", NULL, handle_BitwiseORExpr, 0},
+{L"BitwiseORExprNoIn  :  BitwiseXORExprNoIn ", NULL, handle_BitwiseORExprNoIn, 0},
+{L"BitwiseORExprNoIn  :  BitwiseORExprNoIn | BitwiseXORExprNoIn ", NULL, handle_BitwiseORExprNoIn, 0},
+{L"BitwiseORExprNoBF  :  BitwiseXORExprNoBF ", NULL, handle_BitwiseORExprNoBF, 0},
+{L"BitwiseORExprNoBF  :  BitwiseORExprNoBF | BitwiseXORExpr ", NULL, handle_BitwiseORExprNoBF, 0},
+{L"LogicalANDExpr  :  BitwiseORExpr ", NULL, handle_LogicalANDExpr, 0},
+{L"LogicalANDExpr  :  LogicalANDExpr && BitwiseORExpr ", NULL, handle_LogicalANDExpr, 0},
+{L"LogicalANDExprNoIn  :  BitwiseORExprNoIn ", NULL, handle_LogicalANDExprNoIn, 0},
+{L"LogicalANDExprNoIn  :  LogicalANDExprNoIn && BitwiseORExprNoIn ", NULL, handle_LogicalANDExprNoIn, 0},
+{L"LogicalANDExprNoBF  :  BitwiseORExprNoBF ", NULL, handle_LogicalANDExprNoBF, 0},
+{L"LogicalANDExprNoBF  :  LogicalANDExprNoBF && BitwiseORExpr ", NULL, handle_LogicalANDExprNoBF, 0},
+{L"LogicalORExpr  :  LogicalANDExpr ", NULL, handle_LogicalORExpr, 0},
+{L"LogicalORExpr  :  LogicalORExpr || LogicalANDExpr ", NULL, handle_LogicalORExpr, 0},
+{L"LogicalORExprNoIn  :  LogicalANDExprNoIn ", NULL, handle_LogicalORExprNoIn, 0},
+{L"LogicalORExprNoIn  :  LogicalORExprNoIn || LogicalANDExprNoIn ", NULL, handle_LogicalORExprNoIn, 0},
+{L"LogicalORExprNoBF  :  LogicalANDExprNoBF ", NULL, handle_LogicalORExprNoBF, 0},
+{L"LogicalORExprNoBF  :  LogicalORExprNoBF || LogicalANDExpr ", NULL, handle_LogicalORExprNoBF, 0},
+{L"ConditionalExpr  :  LogicalORExpr ", NULL, handle_ConditionalExpr, 0},
+{L"ConditionalExpr  :  LogicalORExpr ? AssignmentExpr : AssignmentExpr ", NULL, handle_ConditionalExpr, 0},
+{L"ConditionalExprNoIn  :  LogicalORExprNoIn ", NULL, handle_ConditionalExprNoIn, 0},
+{L"ConditionalExprNoIn  :  LogicalORExprNoIn ? AssignmentExprNoIn : AssignmentExprNoIn ", NULL, handle_ConditionalExprNoIn, 0},
+{L"ConditionalExprNoBF  :  LogicalORExprNoBF ", NULL, handle_ConditionalExprNoBF, 0},
+{L"ConditionalExprNoBF  :  LogicalORExprNoBF ? AssignmentExpr : AssignmentExpr ", NULL, handle_ConditionalExprNoBF, 0},
+{L"AssignmentExpr  :  ConditionalExpr ", NULL, handle_AssignmentExpr, 0},
+{L"AssignmentExpr  :  LeftHandSideExpr AssignmentOperator AssignmentExpr ", NULL, handle_AssignmentExpr, 0},
+{L"AssignmentExprNoIn  :  ConditionalExprNoIn ", NULL, handle_AssignmentExprNoIn, 0},
+{L"AssignmentExprNoIn  :  LeftHandSideExpr AssignmentOperator AssignmentExprNoIn ", NULL, handle_AssignmentExprNoIn, 0},
+{L"AssignmentExprNoBF  :  ConditionalExprNoBF ", NULL, handle_AssignmentExprNoBF, 0},
+{L"AssignmentExprNoBF  :  LeftHandSideExprNoBF AssignmentOperator AssignmentExpr ", NULL, handle_AssignmentExprNoBF, 0},
+{L"AssignmentOperator  :  = ", NULL, handle_AssignmentOperator, 0},
+{L"AssignmentOperator  :  += ", NULL, handle_AssignmentOperator, 0},
+{L"AssignmentOperator  :  -= ", NULL, handle_AssignmentOperator, 0},
+{L"AssignmentOperator  :  *= ", NULL, handle_AssignmentOperator, 0},
+{L"AssignmentOperator  :  /= ", NULL, handle_AssignmentOperator, 0},
+{L"AssignmentOperator  :  <<= ", NULL, handle_AssignmentOperator, 0},
+{L"AssignmentOperator  :  >>= ", NULL, handle_AssignmentOperator, 0},
+{L"AssignmentOperator  :  >>>= ", NULL, handle_AssignmentOperator, 0},
+{L"AssignmentOperator  :  &= ", NULL, handle_AssignmentOperator, 0},
+{L"AssignmentOperator  :  ^= ", NULL, handle_AssignmentOperator, 0},
+{L"AssignmentOperator  :  |= ", NULL, handle_AssignmentOperator, 0},
+{L"AssignmentOperator  :  %= ", NULL, handle_AssignmentOperator, 0},
+{L"Expr  :  AssignmentExpr ", NULL, handle_Expr, 0},
+{L"Expr  :  Expr , AssignmentExpr ", NULL, handle_Expr, 0},
+{L"ExprNoIn  :  AssignmentExprNoIn ", NULL, handle_ExprNoIn, 0},
+{L"ExprNoIn  :  ExprNoIn , AssignmentExprNoIn ", NULL, handle_ExprNoIn, 0},
+{L"ExprNoBF  :  AssignmentExprNoBF ", NULL, handle_ExprNoBF, 0},
+{L"ExprNoBF  :  ExprNoBF , AssignmentExpr ", NULL, handle_ExprNoBF, 0},
+{L"Statement  :  Block ", NULL, handle_Statement, 0},
+{L"Statement  :  VariableStatement ", NULL, handle_Statement, 0},
+{L"Statement  :  ConstStatement ", NULL, handle_Statement, 0},
+{L"Statement  :  FunctionDeclaration ", NULL, handle_Statement, 0},
+{L"Statement  :  EmptyStatement ", NULL, handle_Statement, 0},
+{L"Statement  :  ExprStatement ", NULL, handle_Statement, 0},
+{L"Statement  :  IfStatement ", NULL, handle_Statement, 0},
+{L"Statement  :  IterationStatement ", NULL, handle_Statement, 0},
+{L"Statement  :  ContinueStatement ", NULL, handle_Statement, 0},
+{L"Statement  :  BreakStatement ", NULL, handle_Statement, 0},
+{L"Statement  :  ReturnStatement ", NULL, handle_Statement, 0},
+{L"Statement  :  WithStatement ", NULL, handle_Statement, 0},
+{L"Statement  :  SwitchStatement ", NULL, handle_Statement, 0},
+{L"Statement  :  LabelledStatement ", NULL, handle_Statement, 0},
+{L"Statement  :  ThrowStatement ", NULL, handle_Statement, 0},
+{L"Statement  :  TryStatement ", NULL, handle_Statement, 0},
+{L"Statement  :  DebuggerStatement ", NULL, handle_Statement, 0},
+{L"Block  :  { } ", NULL, handle_Block, 0},
+{L"Block  :  { SourceElements } ", NULL, handle_Block, 0},
+{L"VariableStatement  :  var VariableDeclarationList ; ", NULL, handle_VariableStatement, 0},
+{L"VariableStatement  :  var VariableDeclarationList error ", NULL, handle_VariableStatement, 0},
+{L"VariableDeclarationList  :  IDENTIFIER ", NULL, handle_VariableDeclarationList, 0},
+{L"VariableDeclarationList  :  IDENTIFIER Initializer ", NULL, handle_VariableDeclarationList, 0},
+{L"VariableDeclarationList  :  VariableDeclarationList , IDENTIFIER ", NULL, handle_VariableDeclarationList, 0},
+{L"VariableDeclarationList  :  VariableDeclarationList , IDENTIFIER Initializer ", NULL, handle_VariableDeclarationList, 0},
+{L"VariableDeclarationListNoIn  :  IDENTIFIER ", NULL, handle_VariableDeclarationListNoIn, 0},
+{L"VariableDeclarationListNoIn  :  IDENTIFIER InitializerNoIn ", NULL, handle_VariableDeclarationListNoIn, 0},
+{L"VariableDeclarationListNoIn  :  VariableDeclarationListNoIn , IDENTIFIER ", NULL, handle_VariableDeclarationListNoIn, 0},
+{L"VariableDeclarationListNoIn  :  VariableDeclarationListNoIn , IDENTIFIER InitializerNoIn ", NULL, handle_VariableDeclarationListNoIn, 0},
+{L"ConstStatement  :  const ConstDeclarationList ; ", NULL, handle_ConstStatement, 0},
+{L"ConstStatement  :  const ConstDeclarationList error ", NULL, handle_ConstStatement, 0},
+{L"ConstDeclarationList  :  ConstDeclaration ", NULL, handle_ConstDeclarationList, 0},
+{L"ConstDeclarationList  :  ConstDeclarationList , ConstDeclaration ", NULL, handle_ConstDeclarationList, 0},
+{L"ConstDeclaration  :  IDENTIFIER ", NULL, handle_ConstDeclaration, 0},
+{L"ConstDeclaration  :  IDENTIFIER Initializer ", NULL, handle_ConstDeclaration, 0},
+{L"Initializer  :  = AssignmentExpr ", NULL, handle_Initializer, 0},
+{L"InitializerNoIn  :  = AssignmentExprNoIn ", NULL, handle_InitializerNoIn, 0},
+{L"EmptyStatement  :  ; ", NULL, handle_EmptyStatement, 0},
+{L"ExprStatement  :  ExprNoBF ; ", NULL, handle_ExprStatement, 0},
+{L"ExprStatement  :  ExprNoBF error ", NULL, handle_ExprStatement, 0},
+{L"IfStatement  :  if ( Expr ) Statement ", L"IF_WITHOUT_ELSE", handle_IfStatement, 0},
+{L"IfStatement  :  if ( Expr ) Statement else Statement ", NULL, handle_IfStatement, 0},
+{L"IterationStatement  :  do Statement while ( Expr ) ; ", NULL, handle_IterationStatement, 0},
+{L"IterationStatement  :  do Statement while ( Expr ) error ", NULL, handle_IterationStatement, 0},
+{L"IterationStatement  :  while ( Expr ) Statement ", NULL, handle_IterationStatement, 0},
+{L"IterationStatement  :  for ( ExprNoInOpt ; ExprOpt ; ExprOpt ) Statement ", NULL, handle_IterationStatement, 0},
+{L"IterationStatement  :  for ( var VariableDeclarationListNoIn ; ExprOpt ; ExprOpt ) Statement ", NULL, handle_IterationStatement, 0},
+{L"IterationStatement  :  for ( LeftHandSideExpr in Expr ) Statement ", NULL, handle_IterationStatement, 0},
+{L"IterationStatement  :  for ( var IDENTIFIER in Expr ) Statement ", NULL, handle_IterationStatement, 0},
+{L"IterationStatement  :  for ( var IDENTIFIER InitializerNoIn in Expr ) Statement ", NULL, handle_IterationStatement, 0},
+{L"ExprOpt  :   ", NULL, handle_ExprOpt, 0},
+{L"ExprOpt  :  Expr ", NULL, handle_ExprOpt, 0},
+{L"ExprNoInOpt  :   ", NULL, handle_ExprNoInOpt, 0},
+{L"ExprNoInOpt  :  ExprNoIn ", NULL, handle_ExprNoInOpt, 0},
+{L"ContinueStatement  :  continue ; ", NULL, handle_ContinueStatement, 0},
+{L"ContinueStatement  :  continue error ", NULL, handle_ContinueStatement, 0},
+{L"ContinueStatement  :  continue IDENTIFIER ; ", NULL, handle_ContinueStatement, 0},
+{L"ContinueStatement  :  continue IDENTIFIER error ", NULL, handle_ContinueStatement, 0},
+{L"BreakStatement  :  break ; ", NULL, handle_BreakStatement, 0},
+{L"BreakStatement  :  break error ", NULL, handle_BreakStatement, 0},
+{L"BreakStatement  :  break IDENTIFIER ; ", NULL, handle_BreakStatement, 0},
+{L"BreakStatement  :  break IDENTIFIER error ", NULL, handle_BreakStatement, 0},
+{L"ReturnStatement  :  return ; ", NULL, handle_ReturnStatement, 0},
+{L"ReturnStatement  :  return error ", NULL, handle_ReturnStatement, 0},
+{L"ReturnStatement  :  return Expr ; ", NULL, handle_ReturnStatement, 0},
+{L"ReturnStatement  :  return Expr error ", NULL, handle_ReturnStatement, 0},
+{L"WithStatement  :  with ( Expr ) Statement ", NULL, handle_WithStatement, 0},
+{L"SwitchStatement  :  switch ( Expr ) CaseBlock ", NULL, handle_SwitchStatement, 0},
+{L"CaseBlock  :  { CaseClausesOpt } ", NULL, handle_CaseBlock, 0},
+{L"CaseBlock  :  { CaseClausesOpt DefaultClause CaseClausesOpt } ", NULL, handle_CaseBlock, 0},
+{L"CaseClausesOpt  :   ", NULL, handle_CaseClausesOpt, 0},
+{L"CaseClausesOpt  :  CaseClauses ", NULL, handle_CaseClausesOpt, 0},
+{L"CaseClauses  :  CaseClause ", NULL, handle_CaseClauses, 0},
+{L"CaseClauses  :  CaseClauses CaseClause ", NULL, handle_CaseClauses, 0},
+{L"CaseClause  :  case Expr : ", NULL, handle_CaseClause, 0},
+{L"CaseClause  :  case Expr : SourceElements ", NULL, handle_CaseClause, 0},
+{L"DefaultClause  :  default : ", NULL, handle_DefaultClause, 0},
+{L"DefaultClause  :  default : SourceElements ", NULL, handle_DefaultClause, 0},
+{L"LabelledStatement  :  IDENTIFIER : Statement ", NULL, handle_LabelledStatement, 0},
+{L"ThrowStatement  :  throw Expr ; ", NULL, handle_ThrowStatement, 0},
+{L"ThrowStatement  :  throw Expr error ", NULL, handle_ThrowStatement, 0},
+{L"TryStatement  :  try Block finally Block ", NULL, handle_TryStatement, 0},
+{L"TryStatement  :  try Block catch ( IDENTIFIER ) Block ", NULL, handle_TryStatement, 0},
+{L"TryStatement  :  try Block catch ( IDENTIFIER ) Block finally Block ", NULL, handle_TryStatement, 0},
+{L"DebuggerStatement  :  debugger ; ", NULL, handle_DebuggerStatement, 0},
+{L"DebuggerStatement  :  debugger error ", NULL, handle_DebuggerStatement, 0},
+{L"FunctionDeclaration  :  function IDENTIFIER ( ) { FunctionBody } ", NULL, handle_FunctionDeclaration, 0},
+{L"FunctionDeclaration  :  function IDENTIFIER ( FormalParameterList ) { FunctionBody } ", NULL, handle_FunctionDeclaration, 0},
+{L"FunctionExpr  :  function ( ) { FunctionBody } ", NULL, handle_FunctionExpr, 0},
+{L"FunctionExpr  :  function ( FormalParameterList ) { FunctionBody } ", NULL, handle_FunctionExpr, 0},
+{L"FunctionExpr  :  function IDENTIFIER ( ) { FunctionBody } ", NULL, handle_FunctionExpr, 0},
+{L"FunctionExpr  :  function IDENTIFIER ( FormalParameterList ) { FunctionBody } ", NULL, handle_FunctionExpr, 0},
+{L"FormalParameterList  :  IDENTIFIER ", NULL, handle_FormalParameterList, 0},
+{L"FormalParameterList  :  FormalParameterList , IDENTIFIER ", NULL, handle_FormalParameterList, 0},
+{L"FunctionBody  :   ", NULL, handle_FunctionBody, 0},
+{L"FunctionBody  :  SourceElements_NoNode ", NULL, handle_FunctionBody, 0},
+{L"Program  :   ", NULL, handle_Program, 0},
+{L"Program  :  SourceElements ", NULL, handle_Program, 0},
+{L"SourceElements  :  Statement ", NULL, handle_SourceElements, 0},
+{L"SourceElements  :  SourceElements Statement ", NULL, handle_SourceElements, 0},
+{L"Literal_NoNode  :  null ", NULL, handle_Literal_NoNode, 0},
+{L"Literal_NoNode  :  true ", NULL, handle_Literal_NoNode, 0},
+{L"Literal_NoNode  :  false ", NULL, handle_Literal_NoNode, 0},
+{L"Literal_NoNode  :  NUMBER ", NULL, handle_Literal_NoNode, 0},
+{L"Literal_NoNode  :  STRING_LITERAL ", NULL, handle_Literal_NoNode, 0},
+{L"Property_NoNode  :  IDENTIFIER : AssignmentExpr_NoNode ", NULL, handle_Property_NoNode, 0},
+{L"Property_NoNode  :  STRING_LITERAL : AssignmentExpr_NoNode ", NULL, handle_Property_NoNode, 0},
+{L"Property_NoNode  :  NUMBER : AssignmentExpr_NoNode ", NULL, handle_Property_NoNode, 0},
+{L"Property_NoNode  :  IDENTIFIER IDENTIFIER ( ) { FunctionBody_NoNode } ", NULL, handle_Property_NoNode, 0},
+{L"Property_NoNode  :  IDENTIFIER IDENTIFIER ( FormalParameterList_NoNode ) { FunctionBody_NoNode } ", NULL, handle_Property_NoNode, 0},
+{L"PropertyList_NoNode  :  Property_NoNode ", NULL, handle_PropertyList_NoNode, 0},
+{L"PropertyList_NoNode  :  PropertyList_NoNode , Property_NoNode ", NULL, handle_PropertyList_NoNode, 0},
+{L"PrimaryExpr_NoNode  :  PrimaryExprNoBrace_NoNode ", NULL, handle_PrimaryExpr_NoNode, 0},
+{L"PrimaryExpr_NoNode  :  { } ", NULL, handle_PrimaryExpr_NoNode, 0},
+{L"PrimaryExpr_NoNode  :  { PropertyList_NoNode } ", NULL, handle_PrimaryExpr_NoNode, 0},
+{L"PrimaryExpr_NoNode  :  { PropertyList_NoNode , } ", NULL, handle_PrimaryExpr_NoNode, 0},
+{L"PrimaryExprNoBrace_NoNode  :  this ", NULL, handle_PrimaryExprNoBrace_NoNode, 0},
+{L"PrimaryExprNoBrace_NoNode  :  Literal_NoNode ", NULL, handle_PrimaryExprNoBrace_NoNode, 0},
+{L"PrimaryExprNoBrace_NoNode  :  ArrayLiteral_NoNode ", NULL, handle_PrimaryExprNoBrace_NoNode, 0},
+{L"PrimaryExprNoBrace_NoNode  :  IDENTIFIER ", NULL, handle_PrimaryExprNoBrace_NoNode, 0},
+{L"PrimaryExprNoBrace_NoNode  :  ( Expr_NoNode ) ", NULL, handle_PrimaryExprNoBrace_NoNode, 0},
+{L"ArrayLiteral_NoNode  :  [ ElisionOpt_NoNode ] ", NULL, handle_ArrayLiteral_NoNode, 0},
+{L"ArrayLiteral_NoNode  :  [ ElementList_NoNode ] ", NULL, handle_ArrayLiteral_NoNode, 0},
+{L"ArrayLiteral_NoNode  :  [ ElementList_NoNode , ElisionOpt_NoNode ] ", NULL, handle_ArrayLiteral_NoNode, 0},
+{L"ElementList_NoNode  :  ElisionOpt_NoNode AssignmentExpr_NoNode ", NULL, handle_ElementList_NoNode, 0},
+{L"ElementList_NoNode  :  ElementList_NoNode , ElisionOpt_NoNode AssignmentExpr_NoNode ", NULL, handle_ElementList_NoNode, 0},
+{L"ElisionOpt_NoNode  :   ", NULL, handle_ElisionOpt_NoNode, 0},
+{L"ElisionOpt_NoNode  :  Elision_NoNode ", NULL, handle_ElisionOpt_NoNode, 0},
+{L"Elision_NoNode  :  , ", NULL, handle_Elision_NoNode, 0},
+{L"Elision_NoNode  :  Elision_NoNode , ", NULL, handle_Elision_NoNode, 0},
+{L"MemberExpr_NoNode  :  PrimaryExpr_NoNode ", NULL, handle_MemberExpr_NoNode, 0},
+{L"MemberExpr_NoNode  :  FunctionExpr_NoNode ", NULL, handle_MemberExpr_NoNode, 0},
+{L"MemberExpr_NoNode  :  MemberExpr_NoNode [ Expr_NoNode ] ", NULL, handle_MemberExpr_NoNode, 0},
+{L"MemberExpr_NoNode  :  MemberExpr_NoNode . IDENTIFIER ", NULL, handle_MemberExpr_NoNode, 0},
+{L"MemberExpr_NoNode  :  new MemberExpr_NoNode Arguments_NoNode ", NULL, handle_MemberExpr_NoNode, 0},
+{L"MemberExprNoBF_NoNode  :  PrimaryExprNoBrace_NoNode ", NULL, handle_MemberExprNoBF_NoNode, 0},
+{L"MemberExprNoBF_NoNode  :  MemberExprNoBF_NoNode [ Expr_NoNode ] ", NULL, handle_MemberExprNoBF_NoNode, 0},
+{L"MemberExprNoBF_NoNode  :  MemberExprNoBF_NoNode . IDENTIFIER ", NULL, handle_MemberExprNoBF_NoNode, 0},
+{L"MemberExprNoBF_NoNode  :  new MemberExpr_NoNode Arguments_NoNode ", NULL, handle_MemberExprNoBF_NoNode, 0},
+{L"NewExpr_NoNode  :  MemberExpr_NoNode ", NULL, handle_NewExpr_NoNode, 0},
+{L"NewExpr_NoNode  :  new NewExpr_NoNode ", NULL, handle_NewExpr_NoNode, 0},
+{L"NewExprNoBF_NoNode  :  MemberExprNoBF_NoNode ", NULL, handle_NewExprNoBF_NoNode, 0},
+{L"NewExprNoBF_NoNode  :  new NewExpr_NoNode ", NULL, handle_NewExprNoBF_NoNode, 0},
+{L"CallExpr_NoNode  :  MemberExpr_NoNode Arguments_NoNode ", NULL, handle_CallExpr_NoNode, 0},
+{L"CallExpr_NoNode  :  CallExpr_NoNode Arguments_NoNode ", NULL, handle_CallExpr_NoNode, 0},
+{L"CallExpr_NoNode  :  CallExpr_NoNode [ Expr_NoNode ] ", NULL, handle_CallExpr_NoNode, 0},
+{L"CallExpr_NoNode  :  CallExpr_NoNode . IDENTIFIER ", NULL, handle_CallExpr_NoNode, 0},
+{L"CallExprNoBF_NoNode  :  MemberExprNoBF_NoNode Arguments_NoNode ", NULL, handle_CallExprNoBF_NoNode, 0},
+{L"CallExprNoBF_NoNode  :  CallExprNoBF_NoNode Arguments_NoNode ", NULL, handle_CallExprNoBF_NoNode, 0},
+{L"CallExprNoBF_NoNode  :  CallExprNoBF_NoNode [ Expr_NoNode ] ", NULL, handle_CallExprNoBF_NoNode, 0},
+{L"CallExprNoBF_NoNode  :  CallExprNoBF_NoNode . IDENTIFIER ", NULL, handle_CallExprNoBF_NoNode, 0},
+{L"Arguments_NoNode  :  ( ) ", NULL, handle_Arguments_NoNode, 0},
+{L"Arguments_NoNode  :  ( ArgumentList_NoNode ) ", NULL, handle_Arguments_NoNode, 0},
+{L"ArgumentList_NoNode  :  AssignmentExpr_NoNode ", NULL, handle_ArgumentList_NoNode, 0},
+{L"ArgumentList_NoNode  :  ArgumentList_NoNode , AssignmentExpr_NoNode ", NULL, handle_ArgumentList_NoNode, 0},
+{L"LeftHandSideExpr_NoNode  :  NewExpr_NoNode ", NULL, handle_LeftHandSideExpr_NoNode, 0},
+{L"LeftHandSideExpr_NoNode  :  CallExpr_NoNode ", NULL, handle_LeftHandSideExpr_NoNode, 0},
+{L"LeftHandSideExprNoBF_NoNode  :  NewExprNoBF_NoNode ", NULL, handle_LeftHandSideExprNoBF_NoNode, 0},
+{L"LeftHandSideExprNoBF_NoNode  :  CallExprNoBF_NoNode ", NULL, handle_LeftHandSideExprNoBF_NoNode, 0},
+{L"PostfixExpr_NoNode  :  LeftHandSideExpr_NoNode ", NULL, handle_PostfixExpr_NoNode, 0},
+{L"PostfixExpr_NoNode  :  LeftHandSideExpr_NoNode ++ ", NULL, handle_PostfixExpr_NoNode, 0},
+{L"PostfixExpr_NoNode  :  LeftHandSideExpr_NoNode -- ", NULL, handle_PostfixExpr_NoNode, 0},
+{L"PostfixExprNoBF_NoNode  :  LeftHandSideExprNoBF_NoNode ", NULL, handle_PostfixExprNoBF_NoNode, 0},
+{L"PostfixExprNoBF_NoNode  :  LeftHandSideExprNoBF_NoNode ++ ", NULL, handle_PostfixExprNoBF_NoNode, 0},
+{L"PostfixExprNoBF_NoNode  :  LeftHandSideExprNoBF_NoNode -- ", NULL, handle_PostfixExprNoBF_NoNode, 0},
+{L"UnaryExprCommon_NoNode  :  delete UnaryExpr_NoNode ", NULL, handle_UnaryExprCommon_NoNode, 0},
+{L"UnaryExprCommon_NoNode  :  void UnaryExpr_NoNode ", NULL, handle_UnaryExprCommon_NoNode, 0},
+{L"UnaryExprCommon_NoNode  :  typeof UnaryExpr_NoNode ", NULL, handle_UnaryExprCommon_NoNode, 0},
+{L"UnaryExprCommon_NoNode  :  ++ UnaryExpr_NoNode ", NULL, handle_UnaryExprCommon_NoNode, 0},
+{L"UnaryExprCommon_NoNode  :  -- UnaryExpr_NoNode ", NULL, handle_UnaryExprCommon_NoNode, 0},
+{L"UnaryExprCommon_NoNode  :  + UnaryExpr_NoNode ", NULL, handle_UnaryExprCommon_NoNode, 0},
+{L"UnaryExprCommon_NoNode  :  - UnaryExpr_NoNode ", NULL, handle_UnaryExprCommon_NoNode, 0},
+{L"UnaryExprCommon_NoNode  :  ~ UnaryExpr_NoNode ", NULL, handle_UnaryExprCommon_NoNode, 0},
+{L"UnaryExprCommon_NoNode  :  ! UnaryExpr_NoNode ", NULL, handle_UnaryExprCommon_NoNode, 0},
+{L"UnaryExpr_NoNode  :  PostfixExpr_NoNode ", NULL, handle_UnaryExpr_NoNode, 0},
+{L"UnaryExpr_NoNode  :  UnaryExprCommon_NoNode ", NULL, handle_UnaryExpr_NoNode, 0},
+{L"UnaryExprNoBF_NoNode  :  PostfixExprNoBF_NoNode ", NULL, handle_UnaryExprNoBF_NoNode, 0},
+{L"UnaryExprNoBF_NoNode  :  UnaryExprCommon_NoNode ", NULL, handle_UnaryExprNoBF_NoNode, 0},
+{L"MultiplicativeExpr_NoNode  :  UnaryExpr_NoNode ", NULL, handle_MultiplicativeExpr_NoNode, 0},
+{L"MultiplicativeExpr_NoNode  :  MultiplicativeExpr_NoNode * UnaryExpr_NoNode ", NULL, handle_MultiplicativeExpr_NoNode, 0},
+{L"MultiplicativeExpr_NoNode  :  MultiplicativeExpr_NoNode / UnaryExpr_NoNode ", NULL, handle_MultiplicativeExpr_NoNode, 0},
+{L"MultiplicativeExpr_NoNode  :  MultiplicativeExpr_NoNode % UnaryExpr_NoNode ", NULL, handle_MultiplicativeExpr_NoNode, 0},
+{L"MultiplicativeExprNoBF_NoNode  :  UnaryExprNoBF_NoNode ", NULL, handle_MultiplicativeExprNoBF_NoNode, 0},
+{L"MultiplicativeExprNoBF_NoNode  :  MultiplicativeExprNoBF_NoNode * UnaryExpr_NoNode ", NULL, handle_MultiplicativeExprNoBF_NoNode, 0},
+{L"MultiplicativeExprNoBF_NoNode  :  MultiplicativeExprNoBF_NoNode / UnaryExpr_NoNode ", NULL, handle_MultiplicativeExprNoBF_NoNode, 0},
+{L"MultiplicativeExprNoBF_NoNode  :  MultiplicativeExprNoBF_NoNode % UnaryExpr_NoNode ", NULL, handle_MultiplicativeExprNoBF_NoNode, 0},
+{L"AdditiveExpr_NoNode  :  MultiplicativeExpr_NoNode ", NULL, handle_AdditiveExpr_NoNode, 0},
+{L"AdditiveExpr_NoNode  :  AdditiveExpr_NoNode + MultiplicativeExpr_NoNode ", NULL, handle_AdditiveExpr_NoNode, 0},
+{L"AdditiveExpr_NoNode  :  AdditiveExpr_NoNode - MultiplicativeExpr_NoNode ", NULL, handle_AdditiveExpr_NoNode, 0},
+{L"AdditiveExprNoBF_NoNode  :  MultiplicativeExprNoBF_NoNode ", NULL, handle_AdditiveExprNoBF_NoNode, 0},
+{L"AdditiveExprNoBF_NoNode  :  AdditiveExprNoBF_NoNode + MultiplicativeExpr_NoNode ", NULL, handle_AdditiveExprNoBF_NoNode, 0},
+{L"AdditiveExprNoBF_NoNode  :  AdditiveExprNoBF_NoNode - MultiplicativeExpr_NoNode ", NULL, handle_AdditiveExprNoBF_NoNode, 0},
+{L"ShiftExpr_NoNode  :  AdditiveExpr_NoNode ", NULL, handle_ShiftExpr_NoNode, 0},
+{L"ShiftExpr_NoNode  :  ShiftExpr_NoNode << AdditiveExpr_NoNode ", NULL, handle_ShiftExpr_NoNode, 0},
+{L"ShiftExpr_NoNode  :  ShiftExpr_NoNode >> AdditiveExpr_NoNode ", NULL, handle_ShiftExpr_NoNode, 0},
+{L"ShiftExpr_NoNode  :  ShiftExpr_NoNode >>> AdditiveExpr_NoNode ", NULL, handle_ShiftExpr_NoNode, 0},
+{L"ShiftExprNoBF_NoNode  :  AdditiveExprNoBF_NoNode ", NULL, handle_ShiftExprNoBF_NoNode, 0},
+{L"ShiftExprNoBF_NoNode  :  ShiftExprNoBF_NoNode << AdditiveExpr_NoNode ", NULL, handle_ShiftExprNoBF_NoNode, 0},
+{L"ShiftExprNoBF_NoNode  :  ShiftExprNoBF_NoNode >> AdditiveExpr_NoNode ", NULL, handle_ShiftExprNoBF_NoNode, 0},
+{L"ShiftExprNoBF_NoNode  :  ShiftExprNoBF_NoNode >>> AdditiveExpr_NoNode ", NULL, handle_ShiftExprNoBF_NoNode, 0},
+{L"RelationalExpr_NoNode  :  ShiftExpr_NoNode ", NULL, handle_RelationalExpr_NoNode, 0},
+{L"RelationalExpr_NoNode  :  RelationalExpr_NoNode < ShiftExpr_NoNode ", NULL, handle_RelationalExpr_NoNode, 0},
+{L"RelationalExpr_NoNode  :  RelationalExpr_NoNode > ShiftExpr_NoNode ", NULL, handle_RelationalExpr_NoNode, 0},
+{L"RelationalExpr_NoNode  :  RelationalExpr_NoNode <= ShiftExpr_NoNode ", NULL, handle_RelationalExpr_NoNode, 0},
+{L"RelationalExpr_NoNode  :  RelationalExpr_NoNode >= ShiftExpr_NoNode ", NULL, handle_RelationalExpr_NoNode, 0},
+{L"RelationalExpr_NoNode  :  RelationalExpr_NoNode instanceof ShiftExpr_NoNode ", NULL, handle_RelationalExpr_NoNode, 0},
+{L"RelationalExpr_NoNode  :  RelationalExpr_NoNode in ShiftExpr_NoNode ", NULL, handle_RelationalExpr_NoNode, 0},
+{L"RelationalExprNoIn_NoNode  :  ShiftExpr_NoNode ", NULL, handle_RelationalExprNoIn_NoNode, 0},
+{L"RelationalExprNoIn_NoNode  :  RelationalExprNoIn_NoNode < ShiftExpr_NoNode ", NULL, handle_RelationalExprNoIn_NoNode, 0},
+{L"RelationalExprNoIn_NoNode  :  RelationalExprNoIn_NoNode > ShiftExpr_NoNode ", NULL, handle_RelationalExprNoIn_NoNode, 0},
+{L"RelationalExprNoIn_NoNode  :  RelationalExprNoIn_NoNode <= ShiftExpr_NoNode ", NULL, handle_RelationalExprNoIn_NoNode, 0},
+{L"RelationalExprNoIn_NoNode  :  RelationalExprNoIn_NoNode >= ShiftExpr_NoNode ", NULL, handle_RelationalExprNoIn_NoNode, 0},
+{L"RelationalExprNoIn_NoNode  :  RelationalExprNoIn_NoNode instanceof ShiftExpr_NoNode ", NULL, handle_RelationalExprNoIn_NoNode, 0},
+{L"RelationalExprNoBF_NoNode  :  ShiftExprNoBF_NoNode ", NULL, handle_RelationalExprNoBF_NoNode, 0},
+{L"RelationalExprNoBF_NoNode  :  RelationalExprNoBF_NoNode < ShiftExpr_NoNode ", NULL, handle_RelationalExprNoBF_NoNode, 0},
+{L"RelationalExprNoBF_NoNode  :  RelationalExprNoBF_NoNode > ShiftExpr_NoNode ", NULL, handle_RelationalExprNoBF_NoNode, 0},
+{L"RelationalExprNoBF_NoNode  :  RelationalExprNoBF_NoNode <= ShiftExpr_NoNode ", NULL, handle_RelationalExprNoBF_NoNode, 0},
+{L"RelationalExprNoBF_NoNode  :  RelationalExprNoBF_NoNode >= ShiftExpr_NoNode ", NULL, handle_RelationalExprNoBF_NoNode, 0},
+{L"RelationalExprNoBF_NoNode  :  RelationalExprNoBF_NoNode instanceof ShiftExpr_NoNode ", NULL, handle_RelationalExprNoBF_NoNode, 0},
+{L"RelationalExprNoBF_NoNode  :  RelationalExprNoBF_NoNode in ShiftExpr_NoNode ", NULL, handle_RelationalExprNoBF_NoNode, 0},
+{L"EqualityExpr_NoNode  :  RelationalExpr_NoNode ", NULL, handle_EqualityExpr_NoNode, 0},
+{L"EqualityExpr_NoNode  :  EqualityExpr_NoNode == RelationalExpr_NoNode ", NULL, handle_EqualityExpr_NoNode, 0},
+{L"EqualityExpr_NoNode  :  EqualityExpr_NoNode != RelationalExpr_NoNode ", NULL, handle_EqualityExpr_NoNode, 0},
+{L"EqualityExpr_NoNode  :  EqualityExpr_NoNode === RelationalExpr_NoNode ", NULL, handle_EqualityExpr_NoNode, 0},
+{L"EqualityExpr_NoNode  :  EqualityExpr_NoNode !== RelationalExpr_NoNode ", NULL, handle_EqualityExpr_NoNode, 0},
+{L"EqualityExprNoIn_NoNode  :  RelationalExprNoIn_NoNode ", NULL, handle_EqualityExprNoIn_NoNode, 0},
+{L"EqualityExprNoIn_NoNode  :  EqualityExprNoIn_NoNode == RelationalExprNoIn_NoNode ", NULL, handle_EqualityExprNoIn_NoNode, 0},
+{L"EqualityExprNoIn_NoNode  :  EqualityExprNoIn_NoNode != RelationalExprNoIn_NoNode ", NULL, handle_EqualityExprNoIn_NoNode, 0},
+{L"EqualityExprNoIn_NoNode  :  EqualityExprNoIn_NoNode === RelationalExprNoIn_NoNode ", NULL, handle_EqualityExprNoIn_NoNode, 0},
+{L"EqualityExprNoIn_NoNode  :  EqualityExprNoIn_NoNode !== RelationalExprNoIn_NoNode ", NULL, handle_EqualityExprNoIn_NoNode, 0},
+{L"EqualityExprNoBF_NoNode  :  RelationalExprNoBF_NoNode ", NULL, handle_EqualityExprNoBF_NoNode, 0},
+{L"EqualityExprNoBF_NoNode  :  EqualityExprNoBF_NoNode == RelationalExpr_NoNode ", NULL, handle_EqualityExprNoBF_NoNode, 0},
+{L"EqualityExprNoBF_NoNode  :  EqualityExprNoBF_NoNode != RelationalExpr_NoNode ", NULL, handle_EqualityExprNoBF_NoNode, 0},
+{L"EqualityExprNoBF_NoNode  :  EqualityExprNoBF_NoNode === RelationalExpr_NoNode ", NULL, handle_EqualityExprNoBF_NoNode, 0},
+{L"EqualityExprNoBF_NoNode  :  EqualityExprNoBF_NoNode !== RelationalExpr_NoNode ", NULL, handle_EqualityExprNoBF_NoNode, 0},
+{L"BitwiseANDExpr_NoNode  :  EqualityExpr_NoNode ", NULL, handle_BitwiseANDExpr_NoNode, 0},
+{L"BitwiseANDExpr_NoNode  :  BitwiseANDExpr_NoNode & EqualityExpr_NoNode ", NULL, handle_BitwiseANDExpr_NoNode, 0},
+{L"BitwiseANDExprNoIn_NoNode  :  EqualityExprNoIn_NoNode ", NULL, handle_BitwiseANDExprNoIn_NoNode, 0},
+{L"BitwiseANDExprNoIn_NoNode  :  BitwiseANDExprNoIn_NoNode & EqualityExprNoIn_NoNode ", NULL, handle_BitwiseANDExprNoIn_NoNode, 0},
+{L"BitwiseANDExprNoBF_NoNode  :  EqualityExprNoBF_NoNode ", NULL, handle_BitwiseANDExprNoBF_NoNode, 0},
+{L"BitwiseANDExprNoBF_NoNode  :  BitwiseANDExprNoBF_NoNode & EqualityExpr_NoNode ", NULL, handle_BitwiseANDExprNoBF_NoNode, 0},
+{L"BitwiseXORExpr_NoNode  :  BitwiseANDExpr_NoNode ", NULL, handle_BitwiseXORExpr_NoNode, 0},
+{L"BitwiseXORExpr_NoNode  :  BitwiseXORExpr_NoNode ^ BitwiseANDExpr_NoNode ", NULL, handle_BitwiseXORExpr_NoNode, 0},
+{L"BitwiseXORExprNoIn_NoNode  :  BitwiseANDExprNoIn_NoNode ", NULL, handle_BitwiseXORExprNoIn_NoNode, 0},
+{L"BitwiseXORExprNoIn_NoNode  :  BitwiseXORExprNoIn_NoNode ^ BitwiseANDExprNoIn_NoNode ", NULL, handle_BitwiseXORExprNoIn_NoNode, 0},
+{L"BitwiseXORExprNoBF_NoNode  :  BitwiseANDExprNoBF_NoNode ", NULL, handle_BitwiseXORExprNoBF_NoNode, 0},
+{L"BitwiseXORExprNoBF_NoNode  :  BitwiseXORExprNoBF_NoNode ^ BitwiseANDExpr_NoNode ", NULL, handle_BitwiseXORExprNoBF_NoNode, 0},
+{L"BitwiseORExpr_NoNode  :  BitwiseXORExpr_NoNode ", NULL, handle_BitwiseORExpr_NoNode, 0},
+{L"BitwiseORExpr_NoNode  :  BitwiseORExpr_NoNode | BitwiseXORExpr_NoNode ", NULL, handle_BitwiseORExpr_NoNode, 0},
+{L"BitwiseORExprNoIn_NoNode  :  BitwiseXORExprNoIn_NoNode ", NULL, handle_BitwiseORExprNoIn_NoNode, 0},
+{L"BitwiseORExprNoIn_NoNode  :  BitwiseORExprNoIn_NoNode | BitwiseXORExprNoIn_NoNode ", NULL, handle_BitwiseORExprNoIn_NoNode, 0},
+{L"BitwiseORExprNoBF_NoNode  :  BitwiseXORExprNoBF_NoNode ", NULL, handle_BitwiseORExprNoBF_NoNode, 0},
+{L"BitwiseORExprNoBF_NoNode  :  BitwiseORExprNoBF_NoNode | BitwiseXORExpr_NoNode ", NULL, handle_BitwiseORExprNoBF_NoNode, 0},
+{L"LogicalANDExpr_NoNode  :  BitwiseORExpr_NoNode ", NULL, handle_LogicalANDExpr_NoNode, 0},
+{L"LogicalANDExpr_NoNode  :  LogicalANDExpr_NoNode && BitwiseORExpr_NoNode ", NULL, handle_LogicalANDExpr_NoNode, 0},
+{L"LogicalANDExprNoIn_NoNode  :  BitwiseORExprNoIn_NoNode ", NULL, handle_LogicalANDExprNoIn_NoNode, 0},
+{L"LogicalANDExprNoIn_NoNode  :  LogicalANDExprNoIn_NoNode && BitwiseORExprNoIn_NoNode ", NULL, handle_LogicalANDExprNoIn_NoNode, 0},
+{L"LogicalANDExprNoBF_NoNode  :  BitwiseORExprNoBF_NoNode ", NULL, handle_LogicalANDExprNoBF_NoNode, 0},
+{L"LogicalANDExprNoBF_NoNode  :  LogicalANDExprNoBF_NoNode && BitwiseORExpr_NoNode ", NULL, handle_LogicalANDExprNoBF_NoNode, 0},
+{L"LogicalORExpr_NoNode  :  LogicalANDExpr_NoNode ", NULL, handle_LogicalORExpr_NoNode, 0},
+{L"LogicalORExpr_NoNode  :  LogicalORExpr_NoNode || LogicalANDExpr_NoNode ", NULL, handle_LogicalORExpr_NoNode, 0},
+{L"LogicalORExprNoIn_NoNode  :  LogicalANDExprNoIn_NoNode ", NULL, handle_LogicalORExprNoIn_NoNode, 0},
+{L"LogicalORExprNoIn_NoNode  :  LogicalORExprNoIn_NoNode || LogicalANDExprNoIn_NoNode ", NULL, handle_LogicalORExprNoIn_NoNode, 0},
+{L"LogicalORExprNoBF_NoNode  :  LogicalANDExprNoBF_NoNode ", NULL, handle_LogicalORExprNoBF_NoNode, 0},
+{L"LogicalORExprNoBF_NoNode  :  LogicalORExprNoBF_NoNode || LogicalANDExpr_NoNode ", NULL, handle_LogicalORExprNoBF_NoNode, 0},
+{L"ConditionalExpr_NoNode  :  LogicalORExpr_NoNode ", NULL, handle_ConditionalExpr_NoNode, 0},
+{L"ConditionalExpr_NoNode  :  LogicalORExpr_NoNode ? AssignmentExpr_NoNode : AssignmentExpr_NoNode ", NULL, handle_ConditionalExpr_NoNode, 0},
+{L"ConditionalExprNoIn_NoNode  :  LogicalORExprNoIn_NoNode ", NULL, handle_ConditionalExprNoIn_NoNode, 0},
+{L"ConditionalExprNoIn_NoNode  :  LogicalORExprNoIn_NoNode ? AssignmentExprNoIn_NoNode : AssignmentExprNoIn_NoNode ", NULL, handle_ConditionalExprNoIn_NoNode, 0},
+{L"ConditionalExprNoBF_NoNode  :  LogicalORExprNoBF_NoNode ", NULL, handle_ConditionalExprNoBF_NoNode, 0},
+{L"ConditionalExprNoBF_NoNode  :  LogicalORExprNoBF_NoNode ? AssignmentExpr_NoNode : AssignmentExpr_NoNode ", NULL, handle_ConditionalExprNoBF_NoNode, 0},
+{L"AssignmentExpr_NoNode  :  ConditionalExpr_NoNode ", NULL, handle_AssignmentExpr_NoNode, 0},
+{L"AssignmentExpr_NoNode  :  LeftHandSideExpr_NoNode AssignmentOperator_NoNode AssignmentExpr_NoNode ", NULL, handle_AssignmentExpr_NoNode, 0},
+{L"AssignmentExprNoIn_NoNode  :  ConditionalExprNoIn_NoNode ", NULL, handle_AssignmentExprNoIn_NoNode, 0},
+{L"AssignmentExprNoIn_NoNode  :  LeftHandSideExpr_NoNode AssignmentOperator_NoNode AssignmentExprNoIn_NoNode ", NULL, handle_AssignmentExprNoIn_NoNode, 0},
+{L"AssignmentExprNoBF_NoNode  :  ConditionalExprNoBF_NoNode ", NULL, handle_AssignmentExprNoBF_NoNode, 0},
+{L"AssignmentExprNoBF_NoNode  :  LeftHandSideExprNoBF_NoNode AssignmentOperator_NoNode AssignmentExpr_NoNode ", NULL, handle_AssignmentExprNoBF_NoNode, 0},
+{L"AssignmentOperator_NoNode  :  = ", NULL, handle_AssignmentOperator_NoNode, 0},
+{L"AssignmentOperator_NoNode  :  += ", NULL, handle_AssignmentOperator_NoNode, 0},
+{L"AssignmentOperator_NoNode  :  -= ", NULL, handle_AssignmentOperator_NoNode, 0},
+{L"AssignmentOperator_NoNode  :  *= ", NULL, handle_AssignmentOperator_NoNode, 0},
+{L"AssignmentOperator_NoNode  :  /= ", NULL, handle_AssignmentOperator_NoNode, 0},
+{L"AssignmentOperator_NoNode  :  <<= ", NULL, handle_AssignmentOperator_NoNode, 0},
+{L"AssignmentOperator_NoNode  :  >>= ", NULL, handle_AssignmentOperator_NoNode, 0},
+{L"AssignmentOperator_NoNode  :  >>>= ", NULL, handle_AssignmentOperator_NoNode, 0},
+{L"AssignmentOperator_NoNode  :  &= ", NULL, handle_AssignmentOperator_NoNode, 0},
+{L"AssignmentOperator_NoNode  :  ^= ", NULL, handle_AssignmentOperator_NoNode, 0},
+{L"AssignmentOperator_NoNode  :  |= ", NULL, handle_AssignmentOperator_NoNode, 0},
+{L"AssignmentOperator_NoNode  :  %= ", NULL, handle_AssignmentOperator_NoNode, 0},
+{L"Expr_NoNode  :  AssignmentExpr_NoNode ", NULL, handle_Expr_NoNode, 0},
+{L"Expr_NoNode  :  Expr_NoNode , AssignmentExpr_NoNode ", NULL, handle_Expr_NoNode, 0},
+{L"ExprNoIn_NoNode  :  AssignmentExprNoIn_NoNode ", NULL, handle_ExprNoIn_NoNode, 0},
+{L"ExprNoIn_NoNode  :  ExprNoIn_NoNode , AssignmentExprNoIn_NoNode ", NULL, handle_ExprNoIn_NoNode, 0},
+{L"ExprNoBF_NoNode  :  AssignmentExprNoBF_NoNode ", NULL, handle_ExprNoBF_NoNode, 0},
+{L"ExprNoBF_NoNode  :  ExprNoBF_NoNode , AssignmentExpr_NoNode ", NULL, handle_ExprNoBF_NoNode, 0},
+{L"Statement_NoNode  :  Block_NoNode ", NULL, handle_Statement_NoNode, 0},
+{L"Statement_NoNode  :  VariableStatement_NoNode ", NULL, handle_Statement_NoNode, 0},
+{L"Statement_NoNode  :  ConstStatement_NoNode ", NULL, handle_Statement_NoNode, 0},
+{L"Statement_NoNode  :  FunctionDeclaration_NoNode ", NULL, handle_Statement_NoNode, 0},
+{L"Statement_NoNode  :  EmptyStatement_NoNode ", NULL, handle_Statement_NoNode, 0},
+{L"Statement_NoNode  :  ExprStatement_NoNode ", NULL, handle_Statement_NoNode, 0},
+{L"Statement_NoNode  :  IfStatement_NoNode ", NULL, handle_Statement_NoNode, 0},
+{L"Statement_NoNode  :  IterationStatement_NoNode ", NULL, handle_Statement_NoNode, 0},
+{L"Statement_NoNode  :  ContinueStatement_NoNode ", NULL, handle_Statement_NoNode, 0},
+{L"Statement_NoNode  :  BreakStatement_NoNode ", NULL, handle_Statement_NoNode, 0},
+{L"Statement_NoNode  :  ReturnStatement_NoNode ", NULL, handle_Statement_NoNode, 0},
+{L"Statement_NoNode  :  WithStatement_NoNode ", NULL, handle_Statement_NoNode, 0},
+{L"Statement_NoNode  :  SwitchStatement_NoNode ", NULL, handle_Statement_NoNode, 0},
+{L"Statement_NoNode  :  LabelledStatement_NoNode ", NULL, handle_Statement_NoNode, 0},
+{L"Statement_NoNode  :  ThrowStatement_NoNode ", NULL, handle_Statement_NoNode, 0},
+{L"Statement_NoNode  :  TryStatement_NoNode ", NULL, handle_Statement_NoNode, 0},
+{L"Statement_NoNode  :  DebuggerStatement_NoNode ", NULL, handle_Statement_NoNode, 0},
+{L"Block_NoNode  :  { } ", NULL, handle_Block_NoNode, 0},
+{L"Block_NoNode  :  { SourceElements_NoNode } ", NULL, handle_Block_NoNode, 0},
+{L"VariableStatement_NoNode  :  var VariableDeclarationList_NoNode ; ", NULL, handle_VariableStatement_NoNode, 0},
+{L"VariableStatement_NoNode  :  var VariableDeclarationList_NoNode error ", NULL, handle_VariableStatement_NoNode, 0},
+{L"VariableDeclarationList_NoNode  :  IDENTIFIER ", NULL, handle_VariableDeclarationList_NoNode, 0},
+{L"VariableDeclarationList_NoNode  :  IDENTIFIER Initializer_NoNode ", NULL, handle_VariableDeclarationList_NoNode, 0},
+{L"VariableDeclarationList_NoNode  :  VariableDeclarationList_NoNode , IDENTIFIER ", NULL, handle_VariableDeclarationList_NoNode, 0},
+{L"VariableDeclarationList_NoNode  :  VariableDeclarationList_NoNode , IDENTIFIER Initializer_NoNode ", NULL, handle_VariableDeclarationList_NoNode, 0},
+{L"VariableDeclarationListNoIn_NoNode  :  IDENTIFIER ", NULL, handle_VariableDeclarationListNoIn_NoNode, 0},
+{L"VariableDeclarationListNoIn_NoNode  :  IDENTIFIER InitializerNoIn_NoNode ", NULL, handle_VariableDeclarationListNoIn_NoNode, 0},
+{L"VariableDeclarationListNoIn_NoNode  :  VariableDeclarationListNoIn_NoNode , IDENTIFIER ", NULL, handle_VariableDeclarationListNoIn_NoNode, 0},
+{L"VariableDeclarationListNoIn_NoNode  :  VariableDeclarationListNoIn_NoNode , IDENTIFIER InitializerNoIn_NoNode ", NULL, handle_VariableDeclarationListNoIn_NoNode, 0},
+{L"ConstStatement_NoNode  :  const ConstDeclarationList_NoNode ; ", NULL, handle_ConstStatement_NoNode, 0},
+{L"ConstStatement_NoNode  :  const ConstDeclarationList_NoNode error ", NULL, handle_ConstStatement_NoNode, 0},
+{L"ConstDeclarationList_NoNode  :  ConstDeclaration_NoNode ", NULL, handle_ConstDeclarationList_NoNode, 0},
+{L"ConstDeclarationList_NoNode  :  ConstDeclarationList_NoNode , ConstDeclaration_NoNode ", NULL, handle_ConstDeclarationList_NoNode, 0},
+{L"ConstDeclaration_NoNode  :  IDENTIFIER ", NULL, handle_ConstDeclaration_NoNode, 0},
+{L"ConstDeclaration_NoNode  :  IDENTIFIER Initializer_NoNode ", NULL, handle_ConstDeclaration_NoNode, 0},
+{L"Initializer_NoNode  :  = AssignmentExpr_NoNode ", NULL, handle_Initializer_NoNode, 0},
+{L"InitializerNoIn_NoNode  :  = AssignmentExprNoIn_NoNode ", NULL, handle_InitializerNoIn_NoNode, 0},
+{L"EmptyStatement_NoNode  :  ; ", NULL, handle_EmptyStatement_NoNode, 0},
+{L"ExprStatement_NoNode  :  ExprNoBF_NoNode ; ", NULL, handle_ExprStatement_NoNode, 0},
+{L"ExprStatement_NoNode  :  ExprNoBF_NoNode error ", NULL, handle_ExprStatement_NoNode, 0},
+{L"IfStatement_NoNode  :  if ( Expr_NoNode ) Statement_NoNode ", L"IF_WITHOUT_ELSE", handle_IfStatement_NoNode, 0},
+{L"IfStatement_NoNode  :  if ( Expr_NoNode ) Statement_NoNode else Statement_NoNode ", NULL, handle_IfStatement_NoNode, 0},
+{L"IterationStatement_NoNode  :  do Statement_NoNode while ( Expr_NoNode ) ; ", NULL, handle_IterationStatement_NoNode, 0},
+{L"IterationStatement_NoNode  :  do Statement_NoNode while ( Expr_NoNode ) error ", NULL, handle_IterationStatement_NoNode, 0},
+{L"IterationStatement_NoNode  :  while ( Expr_NoNode ) Statement_NoNode ", NULL, handle_IterationStatement_NoNode, 0},
+{L"IterationStatement_NoNode  :  for ( ExprNoInOpt_NoNode ; ExprOpt_NoNode ; ExprOpt_NoNode ) Statement_NoNode ", NULL, handle_IterationStatement_NoNode, 0},
+{L"IterationStatement_NoNode  :  for ( var VariableDeclarationListNoIn_NoNode ; ExprOpt_NoNode ; ExprOpt_NoNode ) Statement_NoNode ", NULL, handle_IterationStatement_NoNode, 0},
+{L"IterationStatement_NoNode  :  for ( LeftHandSideExpr_NoNode in Expr_NoNode ) Statement_NoNode ", NULL, handle_IterationStatement_NoNode, 0},
+{L"IterationStatement_NoNode  :  for ( var IDENTIFIER in Expr_NoNode ) Statement_NoNode ", NULL, handle_IterationStatement_NoNode, 0},
+{L"IterationStatement_NoNode  :  for ( var IDENTIFIER InitializerNoIn_NoNode in Expr_NoNode ) Statement_NoNode ", NULL, handle_IterationStatement_NoNode, 0},
+{L"ExprOpt_NoNode  :   ", NULL, handle_ExprOpt_NoNode, 0},
+{L"ExprOpt_NoNode  :  Expr_NoNode ", NULL, handle_ExprOpt_NoNode, 0},
+{L"ExprNoInOpt_NoNode  :   ", NULL, handle_ExprNoInOpt_NoNode, 0},
+{L"ExprNoInOpt_NoNode  :  ExprNoIn_NoNode ", NULL, handle_ExprNoInOpt_NoNode, 0},
+{L"ContinueStatement_NoNode  :  continue ; ", NULL, handle_ContinueStatement_NoNode, 0},
+{L"ContinueStatement_NoNode  :  continue error ", NULL, handle_ContinueStatement_NoNode, 0},
+{L"ContinueStatement_NoNode  :  continue IDENTIFIER ; ", NULL, handle_ContinueStatement_NoNode, 0},
+{L"ContinueStatement_NoNode  :  continue IDENTIFIER error ", NULL, handle_ContinueStatement_NoNode, 0},
+{L"BreakStatement_NoNode  :  break ; ", NULL, handle_BreakStatement_NoNode, 0},
+{L"BreakStatement_NoNode  :  break error ", NULL, handle_BreakStatement_NoNode, 0},
+{L"BreakStatement_NoNode  :  break IDENTIFIER ; ", NULL, handle_BreakStatement_NoNode, 0},
+{L"BreakStatement_NoNode  :  break IDENTIFIER error ", NULL, handle_BreakStatement_NoNode, 0},
+{L"ReturnStatement_NoNode  :  return ; ", NULL, handle_ReturnStatement_NoNode, 0},
+{L"ReturnStatement_NoNode  :  return error ", NULL, handle_ReturnStatement_NoNode, 0},
+{L"ReturnStatement_NoNode  :  return Expr_NoNode ; ", NULL, handle_ReturnStatement_NoNode, 0},
+{L"ReturnStatement_NoNode  :  return Expr_NoNode error ", NULL, handle_ReturnStatement_NoNode, 0},
+{L"WithStatement_NoNode  :  with ( Expr_NoNode ) Statement_NoNode ", NULL, handle_WithStatement_NoNode, 0},
+{L"SwitchStatement_NoNode  :  switch ( Expr_NoNode ) CaseBlock_NoNode ", NULL, handle_SwitchStatement_NoNode, 0},
+{L"CaseBlock_NoNode  :  { CaseClausesOpt_NoNode } ", NULL, handle_CaseBlock_NoNode, 0},
+{L"CaseBlock_NoNode  :  { CaseClausesOpt_NoNode DefaultClause_NoNode CaseClausesOpt_NoNode } ", NULL, handle_CaseBlock_NoNode, 0},
+{L"CaseClausesOpt_NoNode  :   ", NULL, handle_CaseClausesOpt_NoNode, 0},
+{L"CaseClausesOpt_NoNode  :  CaseClauses_NoNode ", NULL, handle_CaseClausesOpt_NoNode, 0},
+{L"CaseClauses_NoNode  :  CaseClause_NoNode ", NULL, handle_CaseClauses_NoNode, 0},
+{L"CaseClauses_NoNode  :  CaseClauses_NoNode CaseClause_NoNode ", NULL, handle_CaseClauses_NoNode, 0},
+{L"CaseClause_NoNode  :  case Expr_NoNode : ", NULL, handle_CaseClause_NoNode, 0},
+{L"CaseClause_NoNode  :  case Expr_NoNode : SourceElements_NoNode ", NULL, handle_CaseClause_NoNode, 0},
+{L"DefaultClause_NoNode  :  default : ", NULL, handle_DefaultClause_NoNode, 0},
+{L"DefaultClause_NoNode  :  default : SourceElements_NoNode ", NULL, handle_DefaultClause_NoNode, 0},
+{L"LabelledStatement_NoNode  :  IDENTIFIER : Statement_NoNode ", NULL, handle_LabelledStatement_NoNode, 0},
+{L"ThrowStatement_NoNode  :  throw Expr_NoNode ; ", NULL, handle_ThrowStatement_NoNode, 0},
+{L"ThrowStatement_NoNode  :  throw Expr_NoNode error ", NULL, handle_ThrowStatement_NoNode, 0},
+{L"TryStatement_NoNode  :  try Block_NoNode finally Block_NoNode ", NULL, handle_TryStatement_NoNode, 0},
+{L"TryStatement_NoNode  :  try Block_NoNode catch ( IDENTIFIER ) Block_NoNode ", NULL, handle_TryStatement_NoNode, 0},
+{L"TryStatement_NoNode  :  try Block_NoNode catch ( IDENTIFIER ) Block_NoNode finally Block_NoNode ", NULL, handle_TryStatement_NoNode, 0},
+{L"DebuggerStatement_NoNode  :  debugger ; ", NULL, handle_DebuggerStatement_NoNode, 0},
+{L"DebuggerStatement_NoNode  :  debugger error ", NULL, handle_DebuggerStatement_NoNode, 0},
+{L"FunctionDeclaration_NoNode  :  function IDENTIFIER ( ) { FunctionBody_NoNode } ", NULL, handle_FunctionDeclaration_NoNode, 0},
+{L"FunctionDeclaration_NoNode  :  function IDENTIFIER ( FormalParameterList_NoNode ) { FunctionBody_NoNode } ", NULL, handle_FunctionDeclaration_NoNode, 0},
+{L"FunctionExpr_NoNode  :  function ( ) { FunctionBody_NoNode } ", NULL, handle_FunctionExpr_NoNode, 0},
+{L"FunctionExpr_NoNode  :  function ( FormalParameterList_NoNode ) { FunctionBody_NoNode } ", NULL, handle_FunctionExpr_NoNode, 0},
+{L"FunctionExpr_NoNode  :  function IDENTIFIER ( ) { FunctionBody_NoNode } ", NULL, handle_FunctionExpr_NoNode, 0},
+{L"FunctionExpr_NoNode  :  function IDENTIFIER ( FormalParameterList_NoNode ) { FunctionBody_NoNode } ", NULL, handle_FunctionExpr_NoNode, 0},
+{L"FormalParameterList_NoNode  :  IDENTIFIER ", NULL, handle_FormalParameterList_NoNode, 0},
+{L"FormalParameterList_NoNode  :  FormalParameterList_NoNode , IDENTIFIER ", NULL, handle_FormalParameterList_NoNode, 0},
+{L"FunctionBody_NoNode  :   ", NULL, handle_FunctionBody_NoNode, 0},
+{L"FunctionBody_NoNode  :  SourceElements_NoNode ", NULL, handle_FunctionBody_NoNode, 0},
+{L"SourceElements_NoNode  :  Statement_NoNode ", NULL, handle_SourceElements_NoNode, 0},
+{L"SourceElements_NoNode  :  SourceElements_NoNode Statement_NoNode ", NULL, handle_SourceElements_NoNode, 0}
 };
 
-#define __RULE_COUNT__ ((size_t)197)
-#define START_RULE L"program"
+#define __RULE_COUNT__ ((size_t)588)
+#define START_RULE L"Program"
+
+
+static void		AR_STDCALL handle_free_node(psrNode_t *node, void *ctx)
+{
+		AR_ASSERT(node != NULL);
+		
+}
+
+static void		AR_STDCALL handle_on_error(const psrToken_t *tok, const wchar_t *expected[], size_t count, void *ctx)
+{
+		AR_ASSERT(ctx != NULL && tok != NULL);
+		
+		AR_ASSERT(false);
+}
+
+static const psrHandler_t		__g_handler = 
+{
+		handle_on_error,
+		handle_free_node
+};
+
+
+
 
 static lex_t*	__build_lex(const arIOCtx_t *io)								
 {																				
@@ -800,6 +1838,8 @@ static lex_t*	__build_lex(const arIOCtx_t *io)
 		}																		
 		return lex;																
 }
+
+
 
 static psrGrammar_t*	__build_grammar(const psrHandler_t	*handler, const arIOCtx_t *io)										
 {																																
@@ -860,537 +1900,1752 @@ static psrGrammar_t*	__build_grammar(const psrHandler_t	*handler, const arIOCtx_
 
 
 
-/*program	:	translation_unit */
-/*program	:	DONE_ID */
-static psrNode_t* AR_STDCALL handle_program(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*Literal	:	null */
+/*Literal	:	true */
+/*Literal	:	false */
+/*Literal	:	NUMBER */
+/*Literal	:	STRING_LITERAL */
+static psrNode_t* AR_STDCALL handle_Literal(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*translation_unit	:	external_declaration */
-/*translation_unit	:	translation_unit external_declaration */
-static psrNode_t* AR_STDCALL handle_translation_unit(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*Property	:	IDENTIFIER : AssignmentExpr */
+/*Property	:	STRING_LITERAL : AssignmentExpr */
+/*Property	:	NUMBER : AssignmentExpr */
+/*Property	:	IDENTIFIER IDENTIFIER ( ) { FunctionBody } */
+/*Property	:	IDENTIFIER IDENTIFIER ( FormalParameterList ) { FunctionBody } */
+static psrNode_t* AR_STDCALL handle_Property(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*external_declaration	:	function_definition */
-/*external_declaration	:	declaration */
-/*external_declaration	:	access_unit */
-/*external_declaration	:	attribute_unit */
-static psrNode_t* AR_STDCALL handle_external_declaration(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*PropertyList	:	Property */
+/*PropertyList	:	PropertyList , Property */
+static psrNode_t* AR_STDCALL handle_PropertyList(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*access_unit	:	import_or_export STRING_LITERAL ; */
-/*access_unit	:	import_or_export error */
-static psrNode_t* AR_STDCALL handle_access_unit(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*PrimaryExpr	:	PrimaryExprNoBrace */
+/*PrimaryExpr	:	{ } */
+/*PrimaryExpr	:	{ PropertyList } */
+/*PrimaryExpr	:	{ PropertyList , } */
+static psrNode_t* AR_STDCALL handle_PrimaryExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*import_or_export	:	import */
-/*import_or_export	:	export */
-static psrNode_t* AR_STDCALL handle_import_or_export(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*PrimaryExprNoBrace	:	this */
+/*PrimaryExprNoBrace	:	Literal */
+/*PrimaryExprNoBrace	:	ArrayLiteral */
+/*PrimaryExprNoBrace	:	IDENTIFIER */
+/*PrimaryExprNoBrace	:	( Expr ) */
+static psrNode_t* AR_STDCALL handle_PrimaryExprNoBrace(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*attribute_unit	:	attribute STRING_LITERAL ; */
-/*attribute_unit	:	attribute error */
-static psrNode_t* AR_STDCALL handle_attribute_unit(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*ArrayLiteral	:	[ ElisionOpt ] */
+/*ArrayLiteral	:	[ ElementList ] */
+/*ArrayLiteral	:	[ ElementList , ElisionOpt ] */
+static psrNode_t* AR_STDCALL handle_ArrayLiteral(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*function_declaration	:	declaration_specifiers declarator */
-static psrNode_t* AR_STDCALL handle_function_declaration(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*ElementList	:	ElisionOpt AssignmentExpr */
+/*ElementList	:	ElementList , ElisionOpt AssignmentExpr */
+static psrNode_t* AR_STDCALL handle_ElementList(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*function_definition	:	function_declaration compound_statement */
-static psrNode_t* AR_STDCALL handle_function_definition(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*ElisionOpt	:	 */
+/*ElisionOpt	:	Elision */
+static psrNode_t* AR_STDCALL handle_ElisionOpt(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*type_qualifier	:	const */
-/*type_qualifier	:	volatile */
-static psrNode_t* AR_STDCALL handle_type_qualifier(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*Elision	:	, */
+/*Elision	:	Elision , */
+static psrNode_t* AR_STDCALL handle_Elision(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*type_qualifier_list	:	type_qualifier_list type_qualifier */
-/*type_qualifier_list	:	type_qualifier */
-static psrNode_t* AR_STDCALL handle_type_qualifier_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*MemberExpr	:	PrimaryExpr */
+/*MemberExpr	:	FunctionExpr */
+/*MemberExpr	:	MemberExpr [ Expr ] */
+/*MemberExpr	:	MemberExpr . IDENTIFIER */
+/*MemberExpr	:	new MemberExpr Arguments */
+static psrNode_t* AR_STDCALL handle_MemberExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*type_specifier	:	void */
-/*type_specifier	:	byte */
-/*type_specifier	:	char */
-/*type_specifier	:	short */
-/*type_specifier	:	int */
-/*type_specifier	:	long */
-/*type_specifier	:	float */
-/*type_specifier	:	double */
-/*type_specifier	:	signed */
-/*type_specifier	:	unsigned */
-/*type_specifier	:	struct_or_union_specifier */
-/*type_specifier	:	TYPE_ID */
-static psrNode_t* AR_STDCALL handle_type_specifier(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*MemberExprNoBF	:	PrimaryExprNoBrace */
+/*MemberExprNoBF	:	MemberExprNoBF [ Expr ] */
+/*MemberExprNoBF	:	MemberExprNoBF . IDENTIFIER */
+/*MemberExprNoBF	:	new MemberExpr Arguments */
+static psrNode_t* AR_STDCALL handle_MemberExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*struct_or_union_specifier	:	struct_or_union IDENTIFIER { struct_declaration_list } */
-/*struct_or_union_specifier	:	struct_or_union { struct_declaration_list } */
-/*struct_or_union_specifier	:	struct_or_union IDENTIFIER */
-static psrNode_t* AR_STDCALL handle_struct_or_union_specifier(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*NewExpr	:	MemberExpr */
+/*NewExpr	:	new NewExpr */
+static psrNode_t* AR_STDCALL handle_NewExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*struct_or_union	:	struct */
-/*struct_or_union	:	union */
-static psrNode_t* AR_STDCALL handle_struct_or_union(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*NewExprNoBF	:	MemberExprNoBF */
+/*NewExprNoBF	:	new NewExpr */
+static psrNode_t* AR_STDCALL handle_NewExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*struct_declaration_list	:	struct_declaration */
-/*struct_declaration_list	:	struct_declaration_list struct_declaration */
-static psrNode_t* AR_STDCALL handle_struct_declaration_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*CallExpr	:	MemberExpr Arguments */
+/*CallExpr	:	CallExpr Arguments */
+/*CallExpr	:	CallExpr [ Expr ] */
+/*CallExpr	:	CallExpr . IDENTIFIER */
+static psrNode_t* AR_STDCALL handle_CallExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*struct_declaration	:	specifier_qualifier_list struct_declarator_list ; */
-/*struct_declaration	:	specifier_qualifier_list struct_declarator_list error */
-static psrNode_t* AR_STDCALL handle_struct_declaration(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*CallExprNoBF	:	MemberExprNoBF Arguments */
+/*CallExprNoBF	:	CallExprNoBF Arguments */
+/*CallExprNoBF	:	CallExprNoBF [ Expr ] */
+/*CallExprNoBF	:	CallExprNoBF . IDENTIFIER */
+static psrNode_t* AR_STDCALL handle_CallExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*struct_declarator_list	:	declarator */
-/*struct_declarator_list	:	struct_declarator_list , declarator */
-static psrNode_t* AR_STDCALL handle_struct_declarator_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*Arguments	:	( ) */
+/*Arguments	:	( ArgumentList ) */
+static psrNode_t* AR_STDCALL handle_Arguments(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*declaration	:	declaration_specifiers init_declarator_list ; */
-/*declaration	:	declaration_specifiers ; */
-/*declaration	:	declaration_specifiers init_declarator_list error */
-/*declaration	:	declaration_specifiers error */
-static psrNode_t* AR_STDCALL handle_declaration(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*ArgumentList	:	AssignmentExpr */
+/*ArgumentList	:	ArgumentList , AssignmentExpr */
+static psrNode_t* AR_STDCALL handle_ArgumentList(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*storage_class_specifier	:	typedef */
-/*storage_class_specifier	:	static */
-static psrNode_t* AR_STDCALL handle_storage_class_specifier(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*LeftHandSideExpr	:	NewExpr */
+/*LeftHandSideExpr	:	CallExpr */
+static psrNode_t* AR_STDCALL handle_LeftHandSideExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*declaration_specifiers	:	storage_class_specifier */
-/*declaration_specifiers	:	storage_class_specifier declaration_specifiers */
-/*declaration_specifiers	:	type_specifier */
-/*declaration_specifiers	:	type_specifier declaration_specifiers */
-/*declaration_specifiers	:	type_qualifier */
-/*declaration_specifiers	:	type_qualifier declaration_specifiers */
-static psrNode_t* AR_STDCALL handle_declaration_specifiers(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*LeftHandSideExprNoBF	:	NewExprNoBF */
+/*LeftHandSideExprNoBF	:	CallExprNoBF */
+static psrNode_t* AR_STDCALL handle_LeftHandSideExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*declaration_list	:	declaration */
-/*declaration_list	:	declaration_list declaration */
-static psrNode_t* AR_STDCALL handle_declaration_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*PostfixExpr	:	LeftHandSideExpr */
+/*PostfixExpr	:	LeftHandSideExpr ++ */
+/*PostfixExpr	:	LeftHandSideExpr -- */
+static psrNode_t* AR_STDCALL handle_PostfixExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*init_declarator_list	:	init_declarator */
-/*init_declarator_list	:	init_declarator_list , init_declarator */
-static psrNode_t* AR_STDCALL handle_init_declarator_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*PostfixExprNoBF	:	LeftHandSideExprNoBF */
+/*PostfixExprNoBF	:	LeftHandSideExprNoBF ++ */
+/*PostfixExprNoBF	:	LeftHandSideExprNoBF -- */
+static psrNode_t* AR_STDCALL handle_PostfixExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*init_declarator	:	declarator */
-/*init_declarator	:	declarator = initializer */
-static psrNode_t* AR_STDCALL handle_init_declarator(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*UnaryExprCommon	:	delete UnaryExpr */
+/*UnaryExprCommon	:	void UnaryExpr */
+/*UnaryExprCommon	:	typeof UnaryExpr */
+/*UnaryExprCommon	:	++ UnaryExpr */
+/*UnaryExprCommon	:	-- UnaryExpr */
+/*UnaryExprCommon	:	+ UnaryExpr */
+/*UnaryExprCommon	:	- UnaryExpr */
+/*UnaryExprCommon	:	~ UnaryExpr */
+/*UnaryExprCommon	:	! UnaryExpr */
+static psrNode_t* AR_STDCALL handle_UnaryExprCommon(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*initializer	:	assignment_expression */
-/*initializer	:	{ initializer_list } */
-static psrNode_t* AR_STDCALL handle_initializer(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*UnaryExpr	:	PostfixExpr */
+/*UnaryExpr	:	UnaryExprCommon */
+static psrNode_t* AR_STDCALL handle_UnaryExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*initializer_list	:	initializer */
-/*initializer_list	:	initializer_list , initializer */
-static psrNode_t* AR_STDCALL handle_initializer_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*UnaryExprNoBF	:	PostfixExprNoBF */
+/*UnaryExprNoBF	:	UnaryExprCommon */
+static psrNode_t* AR_STDCALL handle_UnaryExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*declarator	:	direct_declarator */
-/*declarator	:	pointer direct_declarator */
-static psrNode_t* AR_STDCALL handle_declarator(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*MultiplicativeExpr	:	UnaryExpr */
+/*MultiplicativeExpr	:	MultiplicativeExpr * UnaryExpr */
+/*MultiplicativeExpr	:	MultiplicativeExpr / UnaryExpr */
+/*MultiplicativeExpr	:	MultiplicativeExpr % UnaryExpr */
+static psrNode_t* AR_STDCALL handle_MultiplicativeExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*direct_declarator	:	IDENTIFIER */
-/*direct_declarator	:	IDENTIFIER [ constant_expression ] */
-/*direct_declarator	:	IDENTIFIER [ ] */
-/*direct_declarator	:	IDENTIFIER ( parameter_list ) */
-/*direct_declarator	:	IDENTIFIER ( ) */
-static psrNode_t* AR_STDCALL handle_direct_declarator(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*MultiplicativeExprNoBF	:	UnaryExprNoBF */
+/*MultiplicativeExprNoBF	:	MultiplicativeExprNoBF * UnaryExpr */
+/*MultiplicativeExprNoBF	:	MultiplicativeExprNoBF / UnaryExpr */
+/*MultiplicativeExprNoBF	:	MultiplicativeExprNoBF % UnaryExpr */
+static psrNode_t* AR_STDCALL handle_MultiplicativeExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*abstract_declarator	:	pointer */
-/*abstract_declarator	:	direct_abstract_declarator */
-/*abstract_declarator	:	pointer direct_abstract_declarator */
-static psrNode_t* AR_STDCALL handle_abstract_declarator(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*AdditiveExpr	:	MultiplicativeExpr */
+/*AdditiveExpr	:	AdditiveExpr + MultiplicativeExpr */
+/*AdditiveExpr	:	AdditiveExpr - MultiplicativeExpr */
+static psrNode_t* AR_STDCALL handle_AdditiveExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*direct_abstract_declarator	:	[ ] */
-/*direct_abstract_declarator	:	[ constant_expression ] */
-static psrNode_t* AR_STDCALL handle_direct_abstract_declarator(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*AdditiveExprNoBF	:	MultiplicativeExprNoBF */
+/*AdditiveExprNoBF	:	AdditiveExprNoBF + MultiplicativeExpr */
+/*AdditiveExprNoBF	:	AdditiveExprNoBF - MultiplicativeExpr */
+static psrNode_t* AR_STDCALL handle_AdditiveExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*pointer	:	* */
-/*pointer	:	* type_qualifier_list */
-/*pointer	:	* type_qualifier_list pointer */
-/*pointer	:	* pointer */
-static psrNode_t* AR_STDCALL handle_pointer(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*ShiftExpr	:	AdditiveExpr */
+/*ShiftExpr	:	ShiftExpr << AdditiveExpr */
+/*ShiftExpr	:	ShiftExpr >> AdditiveExpr */
+/*ShiftExpr	:	ShiftExpr >>> AdditiveExpr */
+static psrNode_t* AR_STDCALL handle_ShiftExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*parameter_list	:	parameter_declaration */
-/*parameter_list	:	parameter_list , parameter_declaration */
-static psrNode_t* AR_STDCALL handle_parameter_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*ShiftExprNoBF	:	AdditiveExprNoBF */
+/*ShiftExprNoBF	:	ShiftExprNoBF << AdditiveExpr */
+/*ShiftExprNoBF	:	ShiftExprNoBF >> AdditiveExpr */
+/*ShiftExprNoBF	:	ShiftExprNoBF >>> AdditiveExpr */
+static psrNode_t* AR_STDCALL handle_ShiftExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*parameter_declaration	:	declaration_specifiers declarator */
-/*parameter_declaration	:	declaration_specifiers abstract_declarator */
-/*parameter_declaration	:	declaration_specifiers */
-static psrNode_t* AR_STDCALL handle_parameter_declaration(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*RelationalExpr	:	ShiftExpr */
+/*RelationalExpr	:	RelationalExpr < ShiftExpr */
+/*RelationalExpr	:	RelationalExpr > ShiftExpr */
+/*RelationalExpr	:	RelationalExpr <= ShiftExpr */
+/*RelationalExpr	:	RelationalExpr >= ShiftExpr */
+/*RelationalExpr	:	RelationalExpr instanceof ShiftExpr */
+/*RelationalExpr	:	RelationalExpr in ShiftExpr */
+static psrNode_t* AR_STDCALL handle_RelationalExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*type_name	:	specifier_qualifier_list */
-/*type_name	:	specifier_qualifier_list abstract_declarator */
-static psrNode_t* AR_STDCALL handle_type_name(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*RelationalExprNoIn	:	ShiftExpr */
+/*RelationalExprNoIn	:	RelationalExprNoIn < ShiftExpr */
+/*RelationalExprNoIn	:	RelationalExprNoIn > ShiftExpr */
+/*RelationalExprNoIn	:	RelationalExprNoIn <= ShiftExpr */
+/*RelationalExprNoIn	:	RelationalExprNoIn >= ShiftExpr */
+/*RelationalExprNoIn	:	RelationalExprNoIn instanceof ShiftExpr */
+static psrNode_t* AR_STDCALL handle_RelationalExprNoIn(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*specifier_qualifier_list	:	type_qualifier */
-/*specifier_qualifier_list	:	type_specifier */
-/*specifier_qualifier_list	:	type_qualifier specifier_qualifier_list */
-/*specifier_qualifier_list	:	type_specifier specifier_qualifier_list */
-static psrNode_t* AR_STDCALL handle_specifier_qualifier_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*RelationalExprNoBF	:	ShiftExprNoBF */
+/*RelationalExprNoBF	:	RelationalExprNoBF < ShiftExpr */
+/*RelationalExprNoBF	:	RelationalExprNoBF > ShiftExpr */
+/*RelationalExprNoBF	:	RelationalExprNoBF <= ShiftExpr */
+/*RelationalExprNoBF	:	RelationalExprNoBF >= ShiftExpr */
+/*RelationalExprNoBF	:	RelationalExprNoBF instanceof ShiftExpr */
+/*RelationalExprNoBF	:	RelationalExprNoBF in ShiftExpr */
+static psrNode_t* AR_STDCALL handle_RelationalExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*statement	:	labeled_statement */
-/*statement	:	compound_statement */
-/*statement	:	expression_statement */
-/*statement	:	selection_statement */
-/*statement	:	iteration_statement */
-/*statement	:	jump_statement */
-/*postfix_expression	:	primary_expression */
-/*argument_expression_list	:	assignment_expression */
-/*unary_expression	:	postfix_expression */
-/*cast_expression	:	unary_expression */
-/*binary_expression	:	cast_expression */
-/*constant_expression	:	binary_expression */
-/*assignment_expression	:	constant_expression */
-static psrNode_t* AR_STDCALL semantic_auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*EqualityExpr	:	RelationalExpr */
+/*EqualityExpr	:	EqualityExpr == RelationalExpr */
+/*EqualityExpr	:	EqualityExpr != RelationalExpr */
+/*EqualityExpr	:	EqualityExpr === RelationalExpr */
+/*EqualityExpr	:	EqualityExpr !== RelationalExpr */
+static psrNode_t* AR_STDCALL handle_EqualityExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*labeled_statement	:	case constant_expression : statement */
-/*labeled_statement	:	default : statement */
-/*labeled_statement	:	IDENTIFIER : statement */
-static psrNode_t* AR_STDCALL handle_labeled_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*EqualityExprNoIn	:	RelationalExprNoIn */
+/*EqualityExprNoIn	:	EqualityExprNoIn == RelationalExprNoIn */
+/*EqualityExprNoIn	:	EqualityExprNoIn != RelationalExprNoIn */
+/*EqualityExprNoIn	:	EqualityExprNoIn === RelationalExprNoIn */
+/*EqualityExprNoIn	:	EqualityExprNoIn !== RelationalExprNoIn */
+static psrNode_t* AR_STDCALL handle_EqualityExprNoIn(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*compound_statement	:	start_block compound_statement_body */
-static psrNode_t* AR_STDCALL handle_compound_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*EqualityExprNoBF	:	RelationalExprNoBF */
+/*EqualityExprNoBF	:	EqualityExprNoBF == RelationalExpr */
+/*EqualityExprNoBF	:	EqualityExprNoBF != RelationalExpr */
+/*EqualityExprNoBF	:	EqualityExprNoBF === RelationalExpr */
+/*EqualityExprNoBF	:	EqualityExprNoBF !== RelationalExpr */
+static psrNode_t* AR_STDCALL handle_EqualityExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*start_block	:	{ */
-static psrNode_t* AR_STDCALL handle_start_block(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*BitwiseANDExpr	:	EqualityExpr */
+/*BitwiseANDExpr	:	BitwiseANDExpr & EqualityExpr */
+static psrNode_t* AR_STDCALL handle_BitwiseANDExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*compound_statement_body	:	compound_statement_declarations } */
-/*compound_statement_body	:	compound_statement_declarations statement_list } */
-static psrNode_t* AR_STDCALL handle_compound_statement_body(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*BitwiseANDExprNoIn	:	EqualityExprNoIn */
+/*BitwiseANDExprNoIn	:	BitwiseANDExprNoIn & EqualityExprNoIn */
+static psrNode_t* AR_STDCALL handle_BitwiseANDExprNoIn(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*compound_statement_declarations	:	declaration_list */
-/*compound_statement_declarations	:	 */
-static psrNode_t* AR_STDCALL handle_compound_statement_declarations(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*BitwiseANDExprNoBF	:	EqualityExprNoBF */
+/*BitwiseANDExprNoBF	:	BitwiseANDExprNoBF & EqualityExpr */
+static psrNode_t* AR_STDCALL handle_BitwiseANDExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*statement_list	:	statement */
-/*statement_list	:	statement_list statement */
-static psrNode_t* AR_STDCALL handle_statement_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*BitwiseXORExpr	:	BitwiseANDExpr */
+/*BitwiseXORExpr	:	BitwiseXORExpr ^ BitwiseANDExpr */
+static psrNode_t* AR_STDCALL handle_BitwiseXORExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*expression_statement	:	; */
-/*expression_statement	:	expression ; */
-/*expression_statement	:	expression error */
-static psrNode_t* AR_STDCALL handle_expression_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*BitwiseXORExprNoIn	:	BitwiseANDExprNoIn */
+/*BitwiseXORExprNoIn	:	BitwiseXORExprNoIn ^ BitwiseANDExprNoIn */
+static psrNode_t* AR_STDCALL handle_BitwiseXORExprNoIn(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*selection_statement	:	if ( expression ) statement */
-/*selection_statement	:	if ( expression ) statement else statement */
-/*selection_statement	:	switch ( expression ) statement */
-static psrNode_t* AR_STDCALL handle_selection_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*BitwiseXORExprNoBF	:	BitwiseANDExprNoBF */
+/*BitwiseXORExprNoBF	:	BitwiseXORExprNoBF ^ BitwiseANDExpr */
+static psrNode_t* AR_STDCALL handle_BitwiseXORExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*iteration_statement	:	while ( expression ) statement */
-/*iteration_statement	:	do statement while ( expression ) ; */
-/*iteration_statement	:	do statement while ( expression ) error */
-/*iteration_statement	:	for ( expression_statement expression_statement ) statement */
-/*iteration_statement	:	for ( expression_statement expression_statement expression ) statement */
-static psrNode_t* AR_STDCALL handle_iteration_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*BitwiseORExpr	:	BitwiseXORExpr */
+/*BitwiseORExpr	:	BitwiseORExpr | BitwiseXORExpr */
+static psrNode_t* AR_STDCALL handle_BitwiseORExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*jump_statement	:	goto IDENTIFIER ; */
-/*jump_statement	:	continue ; */
-/*jump_statement	:	break ; */
-/*jump_statement	:	return ; */
-/*jump_statement	:	return expression ; */
-/*jump_statement	:	goto IDENTIFIER error */
-/*jump_statement	:	continue error */
-/*jump_statement	:	break error */
-/*jump_statement	:	return error */
-/*jump_statement	:	return expression error */
-static psrNode_t* AR_STDCALL handle_jump_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*BitwiseORExprNoIn	:	BitwiseXORExprNoIn */
+/*BitwiseORExprNoIn	:	BitwiseORExprNoIn | BitwiseXORExprNoIn */
+static psrNode_t* AR_STDCALL handle_BitwiseORExprNoIn(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*expression	:	assignment_expression */
-/*expression	:	expression , assignment_expression */
-static psrNode_t* AR_STDCALL handle_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*BitwiseORExprNoBF	:	BitwiseXORExprNoBF */
+/*BitwiseORExprNoBF	:	BitwiseORExprNoBF | BitwiseXORExpr */
+static psrNode_t* AR_STDCALL handle_BitwiseORExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*primary_expression	:	( expression ) */
-static psrNode_t* AR_STDCALL semantic_auto_return_1(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*LogicalANDExpr	:	BitwiseORExpr */
+/*LogicalANDExpr	:	LogicalANDExpr && BitwiseORExpr */
+static psrNode_t* AR_STDCALL handle_LogicalANDExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*primary_expression	:	IDENTIFIER */
-/*primary_expression	:	FLOAT_NUMBER */
-/*primary_expression	:	INT_NUMBER */
-/*primary_expression	:	CHAR_CONSTANT */
-/*primary_expression	:	string_list */
-static psrNode_t* AR_STDCALL handle_primary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*LogicalANDExprNoIn	:	BitwiseORExprNoIn */
+/*LogicalANDExprNoIn	:	LogicalANDExprNoIn && BitwiseORExprNoIn */
+static psrNode_t* AR_STDCALL handle_LogicalANDExprNoIn(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*string_list	:	string_list STRING_LITERAL */
-/*string_list	:	STRING_LITERAL */
-static psrNode_t* AR_STDCALL handle_string_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*LogicalANDExprNoBF	:	BitwiseORExprNoBF */
+/*LogicalANDExprNoBF	:	LogicalANDExprNoBF && BitwiseORExpr */
+static psrNode_t* AR_STDCALL handle_LogicalANDExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*postfix_expression	:	postfix_expression [ expression ] */
-/*postfix_expression	:	postfix_expression ( ) */
-/*postfix_expression	:	postfix_expression ( argument_expression_list ) */
-/*postfix_expression	:	postfix_expression . IDENTIFIER */
-/*postfix_expression	:	postfix_expression -> IDENTIFIER */
-/*postfix_expression	:	postfix_expression ++ */
-/*postfix_expression	:	postfix_expression -- */
-static psrNode_t* AR_STDCALL handle_postfix_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*LogicalORExpr	:	LogicalANDExpr */
+/*LogicalORExpr	:	LogicalORExpr || LogicalANDExpr */
+static psrNode_t* AR_STDCALL handle_LogicalORExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*argument_expression_list	:	argument_expression_list , assignment_expression */
-static psrNode_t* AR_STDCALL handle_argument_expression_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*LogicalORExprNoIn	:	LogicalANDExprNoIn */
+/*LogicalORExprNoIn	:	LogicalORExprNoIn || LogicalANDExprNoIn */
+static psrNode_t* AR_STDCALL handle_LogicalORExprNoIn(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*unary_expression	:	++ unary_expression */
-/*unary_expression	:	-- unary_expression */
-/*unary_expression	:	& cast_expression */
-/*unary_expression	:	* cast_expression */
-/*unary_expression	:	+ cast_expression */
-/*unary_expression	:	- cast_expression */
-/*unary_expression	:	~ cast_expression */
-/*unary_expression	:	! cast_expression */
-/*unary_expression	:	sizeof unary_expression */
-/*unary_expression	:	sizeof ( type_name ) */
-static psrNode_t* AR_STDCALL handle_unary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*LogicalORExprNoBF	:	LogicalANDExprNoBF */
+/*LogicalORExprNoBF	:	LogicalORExprNoBF || LogicalANDExpr */
+static psrNode_t* AR_STDCALL handle_LogicalORExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*cast_expression	:	( type_name ) cast_expression */
-static psrNode_t* AR_STDCALL handle_cast_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*ConditionalExpr	:	LogicalORExpr */
+/*ConditionalExpr	:	LogicalORExpr ? AssignmentExpr : AssignmentExpr */
+static psrNode_t* AR_STDCALL handle_ConditionalExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*binary_expression	:	binary_expression + binary_expression */
-/*binary_expression	:	binary_expression - binary_expression */
-/*binary_expression	:	binary_expression * binary_expression */
-/*binary_expression	:	binary_expression / binary_expression */
-/*binary_expression	:	binary_expression % binary_expression */
-/*binary_expression	:	binary_expression << binary_expression */
-/*binary_expression	:	binary_expression >> binary_expression */
-/*binary_expression	:	binary_expression < binary_expression */
-/*binary_expression	:	binary_expression <= binary_expression */
-/*binary_expression	:	binary_expression > binary_expression */
-/*binary_expression	:	binary_expression >= binary_expression */
-/*binary_expression	:	binary_expression == binary_expression */
-/*binary_expression	:	binary_expression != binary_expression */
-/*binary_expression	:	binary_expression & binary_expression */
-/*binary_expression	:	binary_expression ^ binary_expression */
-/*binary_expression	:	binary_expression | binary_expression */
-/*binary_expression	:	binary_expression && binary_expression */
-/*binary_expression	:	binary_expression || binary_expression */
-static psrNode_t* AR_STDCALL handle_binary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*ConditionalExprNoIn	:	LogicalORExprNoIn */
+/*ConditionalExprNoIn	:	LogicalORExprNoIn ? AssignmentExprNoIn : AssignmentExprNoIn */
+static psrNode_t* AR_STDCALL handle_ConditionalExprNoIn(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*constant_expression	:	binary_expression ? expression : constant_expression */
-static psrNode_t* AR_STDCALL handle_constant_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*ConditionalExprNoBF	:	LogicalORExprNoBF */
+/*ConditionalExprNoBF	:	LogicalORExprNoBF ? AssignmentExpr : AssignmentExpr */
+static psrNode_t* AR_STDCALL handle_ConditionalExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*assignment_expression	:	unary_expression assignment_operator assignment_expression */
-static psrNode_t* AR_STDCALL handle_assignment_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*AssignmentExpr	:	ConditionalExpr */
+/*AssignmentExpr	:	LeftHandSideExpr AssignmentOperator AssignmentExpr */
+static psrNode_t* AR_STDCALL handle_AssignmentExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
 
 
-/*assignment_operator	:	= */
-/*assignment_operator	:	*= */
-/*assignment_operator	:	/= */
-/*assignment_operator	:	%= */
-/*assignment_operator	:	+= */
-/*assignment_operator	:	-= */
-/*assignment_operator	:	<<= */
-/*assignment_operator	:	>>= */
-/*assignment_operator	:	&= */
-/*assignment_operator	:	^= */
-/*assignment_operator	:	|= */
-static psrNode_t* AR_STDCALL handle_assignment_operator(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*AssignmentExprNoIn	:	ConditionalExprNoIn */
+/*AssignmentExprNoIn	:	LeftHandSideExpr AssignmentOperator AssignmentExprNoIn */
+static psrNode_t* AR_STDCALL handle_AssignmentExprNoIn(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
 }
+
+
+/*AssignmentExprNoBF	:	ConditionalExprNoBF */
+/*AssignmentExprNoBF	:	LeftHandSideExprNoBF AssignmentOperator AssignmentExpr */
+static psrNode_t* AR_STDCALL handle_AssignmentExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*AssignmentOperator	:	= */
+/*AssignmentOperator	:	+= */
+/*AssignmentOperator	:	-= */
+/*AssignmentOperator	:	*= */
+/*AssignmentOperator	:	/= */
+/*AssignmentOperator	:	<<= */
+/*AssignmentOperator	:	>>= */
+/*AssignmentOperator	:	>>>= */
+/*AssignmentOperator	:	&= */
+/*AssignmentOperator	:	^= */
+/*AssignmentOperator	:	|= */
+/*AssignmentOperator	:	%= */
+static psrNode_t* AR_STDCALL handle_AssignmentOperator(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*Expr	:	AssignmentExpr */
+/*Expr	:	Expr , AssignmentExpr */
+static psrNode_t* AR_STDCALL handle_Expr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*ExprNoIn	:	AssignmentExprNoIn */
+/*ExprNoIn	:	ExprNoIn , AssignmentExprNoIn */
+static psrNode_t* AR_STDCALL handle_ExprNoIn(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*ExprNoBF	:	AssignmentExprNoBF */
+/*ExprNoBF	:	ExprNoBF , AssignmentExpr */
+static psrNode_t* AR_STDCALL handle_ExprNoBF(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*Statement	:	Block */
+/*Statement	:	VariableStatement */
+/*Statement	:	ConstStatement */
+/*Statement	:	FunctionDeclaration */
+/*Statement	:	EmptyStatement */
+/*Statement	:	ExprStatement */
+/*Statement	:	IfStatement */
+/*Statement	:	IterationStatement */
+/*Statement	:	ContinueStatement */
+/*Statement	:	BreakStatement */
+/*Statement	:	ReturnStatement */
+/*Statement	:	WithStatement */
+/*Statement	:	SwitchStatement */
+/*Statement	:	LabelledStatement */
+/*Statement	:	ThrowStatement */
+/*Statement	:	TryStatement */
+/*Statement	:	DebuggerStatement */
+static psrNode_t* AR_STDCALL handle_Statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*Block	:	{ } */
+/*Block	:	{ SourceElements } */
+static psrNode_t* AR_STDCALL handle_Block(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*VariableStatement	:	var VariableDeclarationList ; */
+/*VariableStatement	:	var VariableDeclarationList error */
+static psrNode_t* AR_STDCALL handle_VariableStatement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*VariableDeclarationList	:	IDENTIFIER */
+/*VariableDeclarationList	:	IDENTIFIER Initializer */
+/*VariableDeclarationList	:	VariableDeclarationList , IDENTIFIER */
+/*VariableDeclarationList	:	VariableDeclarationList , IDENTIFIER Initializer */
+static psrNode_t* AR_STDCALL handle_VariableDeclarationList(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*VariableDeclarationListNoIn	:	IDENTIFIER */
+/*VariableDeclarationListNoIn	:	IDENTIFIER InitializerNoIn */
+/*VariableDeclarationListNoIn	:	VariableDeclarationListNoIn , IDENTIFIER */
+/*VariableDeclarationListNoIn	:	VariableDeclarationListNoIn , IDENTIFIER InitializerNoIn */
+static psrNode_t* AR_STDCALL handle_VariableDeclarationListNoIn(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*ConstStatement	:	const ConstDeclarationList ; */
+/*ConstStatement	:	const ConstDeclarationList error */
+static psrNode_t* AR_STDCALL handle_ConstStatement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*ConstDeclarationList	:	ConstDeclaration */
+/*ConstDeclarationList	:	ConstDeclarationList , ConstDeclaration */
+static psrNode_t* AR_STDCALL handle_ConstDeclarationList(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*ConstDeclaration	:	IDENTIFIER */
+/*ConstDeclaration	:	IDENTIFIER Initializer */
+static psrNode_t* AR_STDCALL handle_ConstDeclaration(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*Initializer	:	= AssignmentExpr */
+static psrNode_t* AR_STDCALL handle_Initializer(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*InitializerNoIn	:	= AssignmentExprNoIn */
+static psrNode_t* AR_STDCALL handle_InitializerNoIn(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*EmptyStatement	:	; */
+static psrNode_t* AR_STDCALL handle_EmptyStatement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*ExprStatement	:	ExprNoBF ; */
+/*ExprStatement	:	ExprNoBF error */
+static psrNode_t* AR_STDCALL handle_ExprStatement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*IfStatement	:	if ( Expr ) Statement */
+/*IfStatement	:	if ( Expr ) Statement else Statement */
+static psrNode_t* AR_STDCALL handle_IfStatement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*IterationStatement	:	do Statement while ( Expr ) ; */
+/*IterationStatement	:	do Statement while ( Expr ) error */
+/*IterationStatement	:	while ( Expr ) Statement */
+/*IterationStatement	:	for ( ExprNoInOpt ; ExprOpt ; ExprOpt ) Statement */
+/*IterationStatement	:	for ( var VariableDeclarationListNoIn ; ExprOpt ; ExprOpt ) Statement */
+/*IterationStatement	:	for ( LeftHandSideExpr in Expr ) Statement */
+/*IterationStatement	:	for ( var IDENTIFIER in Expr ) Statement */
+/*IterationStatement	:	for ( var IDENTIFIER InitializerNoIn in Expr ) Statement */
+static psrNode_t* AR_STDCALL handle_IterationStatement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*ExprOpt	:	 */
+/*ExprOpt	:	Expr */
+static psrNode_t* AR_STDCALL handle_ExprOpt(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*ExprNoInOpt	:	 */
+/*ExprNoInOpt	:	ExprNoIn */
+static psrNode_t* AR_STDCALL handle_ExprNoInOpt(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*ContinueStatement	:	continue ; */
+/*ContinueStatement	:	continue error */
+/*ContinueStatement	:	continue IDENTIFIER ; */
+/*ContinueStatement	:	continue IDENTIFIER error */
+static psrNode_t* AR_STDCALL handle_ContinueStatement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*BreakStatement	:	break ; */
+/*BreakStatement	:	break error */
+/*BreakStatement	:	break IDENTIFIER ; */
+/*BreakStatement	:	break IDENTIFIER error */
+static psrNode_t* AR_STDCALL handle_BreakStatement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*ReturnStatement	:	return ; */
+/*ReturnStatement	:	return error */
+/*ReturnStatement	:	return Expr ; */
+/*ReturnStatement	:	return Expr error */
+static psrNode_t* AR_STDCALL handle_ReturnStatement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*WithStatement	:	with ( Expr ) Statement */
+static psrNode_t* AR_STDCALL handle_WithStatement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*SwitchStatement	:	switch ( Expr ) CaseBlock */
+static psrNode_t* AR_STDCALL handle_SwitchStatement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*CaseBlock	:	{ CaseClausesOpt } */
+/*CaseBlock	:	{ CaseClausesOpt DefaultClause CaseClausesOpt } */
+static psrNode_t* AR_STDCALL handle_CaseBlock(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*CaseClausesOpt	:	 */
+/*CaseClausesOpt	:	CaseClauses */
+static psrNode_t* AR_STDCALL handle_CaseClausesOpt(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*CaseClauses	:	CaseClause */
+/*CaseClauses	:	CaseClauses CaseClause */
+static psrNode_t* AR_STDCALL handle_CaseClauses(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*CaseClause	:	case Expr : */
+/*CaseClause	:	case Expr : SourceElements */
+static psrNode_t* AR_STDCALL handle_CaseClause(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*DefaultClause	:	default : */
+/*DefaultClause	:	default : SourceElements */
+static psrNode_t* AR_STDCALL handle_DefaultClause(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*LabelledStatement	:	IDENTIFIER : Statement */
+static psrNode_t* AR_STDCALL handle_LabelledStatement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*ThrowStatement	:	throw Expr ; */
+/*ThrowStatement	:	throw Expr error */
+static psrNode_t* AR_STDCALL handle_ThrowStatement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*TryStatement	:	try Block finally Block */
+/*TryStatement	:	try Block catch ( IDENTIFIER ) Block */
+/*TryStatement	:	try Block catch ( IDENTIFIER ) Block finally Block */
+static psrNode_t* AR_STDCALL handle_TryStatement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*DebuggerStatement	:	debugger ; */
+/*DebuggerStatement	:	debugger error */
+static psrNode_t* AR_STDCALL handle_DebuggerStatement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*FunctionDeclaration	:	function IDENTIFIER ( ) { FunctionBody } */
+/*FunctionDeclaration	:	function IDENTIFIER ( FormalParameterList ) { FunctionBody } */
+static psrNode_t* AR_STDCALL handle_FunctionDeclaration(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*FunctionExpr	:	function ( ) { FunctionBody } */
+/*FunctionExpr	:	function ( FormalParameterList ) { FunctionBody } */
+/*FunctionExpr	:	function IDENTIFIER ( ) { FunctionBody } */
+/*FunctionExpr	:	function IDENTIFIER ( FormalParameterList ) { FunctionBody } */
+static psrNode_t* AR_STDCALL handle_FunctionExpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*FormalParameterList	:	IDENTIFIER */
+/*FormalParameterList	:	FormalParameterList , IDENTIFIER */
+static psrNode_t* AR_STDCALL handle_FormalParameterList(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*FunctionBody	:	 */
+/*FunctionBody	:	SourceElements_NoNode */
+static psrNode_t* AR_STDCALL handle_FunctionBody(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*Program	:	 */
+/*Program	:	SourceElements */
+static psrNode_t* AR_STDCALL handle_Program(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*SourceElements	:	Statement */
+/*SourceElements	:	SourceElements Statement */
+static psrNode_t* AR_STDCALL handle_SourceElements(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*Literal_NoNode	:	null */
+/*Literal_NoNode	:	true */
+/*Literal_NoNode	:	false */
+/*Literal_NoNode	:	NUMBER */
+/*Literal_NoNode	:	STRING_LITERAL */
+static psrNode_t* AR_STDCALL handle_Literal_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*Property_NoNode	:	IDENTIFIER : AssignmentExpr_NoNode */
+/*Property_NoNode	:	STRING_LITERAL : AssignmentExpr_NoNode */
+/*Property_NoNode	:	NUMBER : AssignmentExpr_NoNode */
+/*Property_NoNode	:	IDENTIFIER IDENTIFIER ( ) { FunctionBody_NoNode } */
+/*Property_NoNode	:	IDENTIFIER IDENTIFIER ( FormalParameterList_NoNode ) { FunctionBody_NoNode } */
+static psrNode_t* AR_STDCALL handle_Property_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*PropertyList_NoNode	:	Property_NoNode */
+/*PropertyList_NoNode	:	PropertyList_NoNode , Property_NoNode */
+static psrNode_t* AR_STDCALL handle_PropertyList_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*PrimaryExpr_NoNode	:	PrimaryExprNoBrace_NoNode */
+/*PrimaryExpr_NoNode	:	{ } */
+/*PrimaryExpr_NoNode	:	{ PropertyList_NoNode } */
+/*PrimaryExpr_NoNode	:	{ PropertyList_NoNode , } */
+static psrNode_t* AR_STDCALL handle_PrimaryExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*PrimaryExprNoBrace_NoNode	:	this */
+/*PrimaryExprNoBrace_NoNode	:	Literal_NoNode */
+/*PrimaryExprNoBrace_NoNode	:	ArrayLiteral_NoNode */
+/*PrimaryExprNoBrace_NoNode	:	IDENTIFIER */
+/*PrimaryExprNoBrace_NoNode	:	( Expr_NoNode ) */
+static psrNode_t* AR_STDCALL handle_PrimaryExprNoBrace_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*ArrayLiteral_NoNode	:	[ ElisionOpt_NoNode ] */
+/*ArrayLiteral_NoNode	:	[ ElementList_NoNode ] */
+/*ArrayLiteral_NoNode	:	[ ElementList_NoNode , ElisionOpt_NoNode ] */
+static psrNode_t* AR_STDCALL handle_ArrayLiteral_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*ElementList_NoNode	:	ElisionOpt_NoNode AssignmentExpr_NoNode */
+/*ElementList_NoNode	:	ElementList_NoNode , ElisionOpt_NoNode AssignmentExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_ElementList_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*ElisionOpt_NoNode	:	 */
+/*ElisionOpt_NoNode	:	Elision_NoNode */
+static psrNode_t* AR_STDCALL handle_ElisionOpt_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*Elision_NoNode	:	, */
+/*Elision_NoNode	:	Elision_NoNode , */
+static psrNode_t* AR_STDCALL handle_Elision_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*MemberExpr_NoNode	:	PrimaryExpr_NoNode */
+/*MemberExpr_NoNode	:	FunctionExpr_NoNode */
+/*MemberExpr_NoNode	:	MemberExpr_NoNode [ Expr_NoNode ] */
+/*MemberExpr_NoNode	:	MemberExpr_NoNode . IDENTIFIER */
+/*MemberExpr_NoNode	:	new MemberExpr_NoNode Arguments_NoNode */
+static psrNode_t* AR_STDCALL handle_MemberExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*MemberExprNoBF_NoNode	:	PrimaryExprNoBrace_NoNode */
+/*MemberExprNoBF_NoNode	:	MemberExprNoBF_NoNode [ Expr_NoNode ] */
+/*MemberExprNoBF_NoNode	:	MemberExprNoBF_NoNode . IDENTIFIER */
+/*MemberExprNoBF_NoNode	:	new MemberExpr_NoNode Arguments_NoNode */
+static psrNode_t* AR_STDCALL handle_MemberExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*NewExpr_NoNode	:	MemberExpr_NoNode */
+/*NewExpr_NoNode	:	new NewExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_NewExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*NewExprNoBF_NoNode	:	MemberExprNoBF_NoNode */
+/*NewExprNoBF_NoNode	:	new NewExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_NewExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*CallExpr_NoNode	:	MemberExpr_NoNode Arguments_NoNode */
+/*CallExpr_NoNode	:	CallExpr_NoNode Arguments_NoNode */
+/*CallExpr_NoNode	:	CallExpr_NoNode [ Expr_NoNode ] */
+/*CallExpr_NoNode	:	CallExpr_NoNode . IDENTIFIER */
+static psrNode_t* AR_STDCALL handle_CallExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*CallExprNoBF_NoNode	:	MemberExprNoBF_NoNode Arguments_NoNode */
+/*CallExprNoBF_NoNode	:	CallExprNoBF_NoNode Arguments_NoNode */
+/*CallExprNoBF_NoNode	:	CallExprNoBF_NoNode [ Expr_NoNode ] */
+/*CallExprNoBF_NoNode	:	CallExprNoBF_NoNode . IDENTIFIER */
+static psrNode_t* AR_STDCALL handle_CallExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*Arguments_NoNode	:	( ) */
+/*Arguments_NoNode	:	( ArgumentList_NoNode ) */
+static psrNode_t* AR_STDCALL handle_Arguments_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*ArgumentList_NoNode	:	AssignmentExpr_NoNode */
+/*ArgumentList_NoNode	:	ArgumentList_NoNode , AssignmentExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_ArgumentList_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*LeftHandSideExpr_NoNode	:	NewExpr_NoNode */
+/*LeftHandSideExpr_NoNode	:	CallExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_LeftHandSideExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*LeftHandSideExprNoBF_NoNode	:	NewExprNoBF_NoNode */
+/*LeftHandSideExprNoBF_NoNode	:	CallExprNoBF_NoNode */
+static psrNode_t* AR_STDCALL handle_LeftHandSideExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*PostfixExpr_NoNode	:	LeftHandSideExpr_NoNode */
+/*PostfixExpr_NoNode	:	LeftHandSideExpr_NoNode ++ */
+/*PostfixExpr_NoNode	:	LeftHandSideExpr_NoNode -- */
+static psrNode_t* AR_STDCALL handle_PostfixExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*PostfixExprNoBF_NoNode	:	LeftHandSideExprNoBF_NoNode */
+/*PostfixExprNoBF_NoNode	:	LeftHandSideExprNoBF_NoNode ++ */
+/*PostfixExprNoBF_NoNode	:	LeftHandSideExprNoBF_NoNode -- */
+static psrNode_t* AR_STDCALL handle_PostfixExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*UnaryExprCommon_NoNode	:	delete UnaryExpr_NoNode */
+/*UnaryExprCommon_NoNode	:	void UnaryExpr_NoNode */
+/*UnaryExprCommon_NoNode	:	typeof UnaryExpr_NoNode */
+/*UnaryExprCommon_NoNode	:	++ UnaryExpr_NoNode */
+/*UnaryExprCommon_NoNode	:	-- UnaryExpr_NoNode */
+/*UnaryExprCommon_NoNode	:	+ UnaryExpr_NoNode */
+/*UnaryExprCommon_NoNode	:	- UnaryExpr_NoNode */
+/*UnaryExprCommon_NoNode	:	~ UnaryExpr_NoNode */
+/*UnaryExprCommon_NoNode	:	! UnaryExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_UnaryExprCommon_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*UnaryExpr_NoNode	:	PostfixExpr_NoNode */
+/*UnaryExpr_NoNode	:	UnaryExprCommon_NoNode */
+static psrNode_t* AR_STDCALL handle_UnaryExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*UnaryExprNoBF_NoNode	:	PostfixExprNoBF_NoNode */
+/*UnaryExprNoBF_NoNode	:	UnaryExprCommon_NoNode */
+static psrNode_t* AR_STDCALL handle_UnaryExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*MultiplicativeExpr_NoNode	:	UnaryExpr_NoNode */
+/*MultiplicativeExpr_NoNode	:	MultiplicativeExpr_NoNode * UnaryExpr_NoNode */
+/*MultiplicativeExpr_NoNode	:	MultiplicativeExpr_NoNode / UnaryExpr_NoNode */
+/*MultiplicativeExpr_NoNode	:	MultiplicativeExpr_NoNode % UnaryExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_MultiplicativeExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*MultiplicativeExprNoBF_NoNode	:	UnaryExprNoBF_NoNode */
+/*MultiplicativeExprNoBF_NoNode	:	MultiplicativeExprNoBF_NoNode * UnaryExpr_NoNode */
+/*MultiplicativeExprNoBF_NoNode	:	MultiplicativeExprNoBF_NoNode / UnaryExpr_NoNode */
+/*MultiplicativeExprNoBF_NoNode	:	MultiplicativeExprNoBF_NoNode % UnaryExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_MultiplicativeExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*AdditiveExpr_NoNode	:	MultiplicativeExpr_NoNode */
+/*AdditiveExpr_NoNode	:	AdditiveExpr_NoNode + MultiplicativeExpr_NoNode */
+/*AdditiveExpr_NoNode	:	AdditiveExpr_NoNode - MultiplicativeExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_AdditiveExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*AdditiveExprNoBF_NoNode	:	MultiplicativeExprNoBF_NoNode */
+/*AdditiveExprNoBF_NoNode	:	AdditiveExprNoBF_NoNode + MultiplicativeExpr_NoNode */
+/*AdditiveExprNoBF_NoNode	:	AdditiveExprNoBF_NoNode - MultiplicativeExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_AdditiveExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*ShiftExpr_NoNode	:	AdditiveExpr_NoNode */
+/*ShiftExpr_NoNode	:	ShiftExpr_NoNode << AdditiveExpr_NoNode */
+/*ShiftExpr_NoNode	:	ShiftExpr_NoNode >> AdditiveExpr_NoNode */
+/*ShiftExpr_NoNode	:	ShiftExpr_NoNode >>> AdditiveExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_ShiftExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*ShiftExprNoBF_NoNode	:	AdditiveExprNoBF_NoNode */
+/*ShiftExprNoBF_NoNode	:	ShiftExprNoBF_NoNode << AdditiveExpr_NoNode */
+/*ShiftExprNoBF_NoNode	:	ShiftExprNoBF_NoNode >> AdditiveExpr_NoNode */
+/*ShiftExprNoBF_NoNode	:	ShiftExprNoBF_NoNode >>> AdditiveExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_ShiftExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*RelationalExpr_NoNode	:	ShiftExpr_NoNode */
+/*RelationalExpr_NoNode	:	RelationalExpr_NoNode < ShiftExpr_NoNode */
+/*RelationalExpr_NoNode	:	RelationalExpr_NoNode > ShiftExpr_NoNode */
+/*RelationalExpr_NoNode	:	RelationalExpr_NoNode <= ShiftExpr_NoNode */
+/*RelationalExpr_NoNode	:	RelationalExpr_NoNode >= ShiftExpr_NoNode */
+/*RelationalExpr_NoNode	:	RelationalExpr_NoNode instanceof ShiftExpr_NoNode */
+/*RelationalExpr_NoNode	:	RelationalExpr_NoNode in ShiftExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_RelationalExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*RelationalExprNoIn_NoNode	:	ShiftExpr_NoNode */
+/*RelationalExprNoIn_NoNode	:	RelationalExprNoIn_NoNode < ShiftExpr_NoNode */
+/*RelationalExprNoIn_NoNode	:	RelationalExprNoIn_NoNode > ShiftExpr_NoNode */
+/*RelationalExprNoIn_NoNode	:	RelationalExprNoIn_NoNode <= ShiftExpr_NoNode */
+/*RelationalExprNoIn_NoNode	:	RelationalExprNoIn_NoNode >= ShiftExpr_NoNode */
+/*RelationalExprNoIn_NoNode	:	RelationalExprNoIn_NoNode instanceof ShiftExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_RelationalExprNoIn_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*RelationalExprNoBF_NoNode	:	ShiftExprNoBF_NoNode */
+/*RelationalExprNoBF_NoNode	:	RelationalExprNoBF_NoNode < ShiftExpr_NoNode */
+/*RelationalExprNoBF_NoNode	:	RelationalExprNoBF_NoNode > ShiftExpr_NoNode */
+/*RelationalExprNoBF_NoNode	:	RelationalExprNoBF_NoNode <= ShiftExpr_NoNode */
+/*RelationalExprNoBF_NoNode	:	RelationalExprNoBF_NoNode >= ShiftExpr_NoNode */
+/*RelationalExprNoBF_NoNode	:	RelationalExprNoBF_NoNode instanceof ShiftExpr_NoNode */
+/*RelationalExprNoBF_NoNode	:	RelationalExprNoBF_NoNode in ShiftExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_RelationalExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*EqualityExpr_NoNode	:	RelationalExpr_NoNode */
+/*EqualityExpr_NoNode	:	EqualityExpr_NoNode == RelationalExpr_NoNode */
+/*EqualityExpr_NoNode	:	EqualityExpr_NoNode != RelationalExpr_NoNode */
+/*EqualityExpr_NoNode	:	EqualityExpr_NoNode === RelationalExpr_NoNode */
+/*EqualityExpr_NoNode	:	EqualityExpr_NoNode !== RelationalExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_EqualityExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*EqualityExprNoIn_NoNode	:	RelationalExprNoIn_NoNode */
+/*EqualityExprNoIn_NoNode	:	EqualityExprNoIn_NoNode == RelationalExprNoIn_NoNode */
+/*EqualityExprNoIn_NoNode	:	EqualityExprNoIn_NoNode != RelationalExprNoIn_NoNode */
+/*EqualityExprNoIn_NoNode	:	EqualityExprNoIn_NoNode === RelationalExprNoIn_NoNode */
+/*EqualityExprNoIn_NoNode	:	EqualityExprNoIn_NoNode !== RelationalExprNoIn_NoNode */
+static psrNode_t* AR_STDCALL handle_EqualityExprNoIn_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*EqualityExprNoBF_NoNode	:	RelationalExprNoBF_NoNode */
+/*EqualityExprNoBF_NoNode	:	EqualityExprNoBF_NoNode == RelationalExpr_NoNode */
+/*EqualityExprNoBF_NoNode	:	EqualityExprNoBF_NoNode != RelationalExpr_NoNode */
+/*EqualityExprNoBF_NoNode	:	EqualityExprNoBF_NoNode === RelationalExpr_NoNode */
+/*EqualityExprNoBF_NoNode	:	EqualityExprNoBF_NoNode !== RelationalExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_EqualityExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*BitwiseANDExpr_NoNode	:	EqualityExpr_NoNode */
+/*BitwiseANDExpr_NoNode	:	BitwiseANDExpr_NoNode & EqualityExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_BitwiseANDExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*BitwiseANDExprNoIn_NoNode	:	EqualityExprNoIn_NoNode */
+/*BitwiseANDExprNoIn_NoNode	:	BitwiseANDExprNoIn_NoNode & EqualityExprNoIn_NoNode */
+static psrNode_t* AR_STDCALL handle_BitwiseANDExprNoIn_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*BitwiseANDExprNoBF_NoNode	:	EqualityExprNoBF_NoNode */
+/*BitwiseANDExprNoBF_NoNode	:	BitwiseANDExprNoBF_NoNode & EqualityExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_BitwiseANDExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*BitwiseXORExpr_NoNode	:	BitwiseANDExpr_NoNode */
+/*BitwiseXORExpr_NoNode	:	BitwiseXORExpr_NoNode ^ BitwiseANDExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_BitwiseXORExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*BitwiseXORExprNoIn_NoNode	:	BitwiseANDExprNoIn_NoNode */
+/*BitwiseXORExprNoIn_NoNode	:	BitwiseXORExprNoIn_NoNode ^ BitwiseANDExprNoIn_NoNode */
+static psrNode_t* AR_STDCALL handle_BitwiseXORExprNoIn_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*BitwiseXORExprNoBF_NoNode	:	BitwiseANDExprNoBF_NoNode */
+/*BitwiseXORExprNoBF_NoNode	:	BitwiseXORExprNoBF_NoNode ^ BitwiseANDExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_BitwiseXORExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*BitwiseORExpr_NoNode	:	BitwiseXORExpr_NoNode */
+/*BitwiseORExpr_NoNode	:	BitwiseORExpr_NoNode | BitwiseXORExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_BitwiseORExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*BitwiseORExprNoIn_NoNode	:	BitwiseXORExprNoIn_NoNode */
+/*BitwiseORExprNoIn_NoNode	:	BitwiseORExprNoIn_NoNode | BitwiseXORExprNoIn_NoNode */
+static psrNode_t* AR_STDCALL handle_BitwiseORExprNoIn_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*BitwiseORExprNoBF_NoNode	:	BitwiseXORExprNoBF_NoNode */
+/*BitwiseORExprNoBF_NoNode	:	BitwiseORExprNoBF_NoNode | BitwiseXORExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_BitwiseORExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*LogicalANDExpr_NoNode	:	BitwiseORExpr_NoNode */
+/*LogicalANDExpr_NoNode	:	LogicalANDExpr_NoNode && BitwiseORExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_LogicalANDExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*LogicalANDExprNoIn_NoNode	:	BitwiseORExprNoIn_NoNode */
+/*LogicalANDExprNoIn_NoNode	:	LogicalANDExprNoIn_NoNode && BitwiseORExprNoIn_NoNode */
+static psrNode_t* AR_STDCALL handle_LogicalANDExprNoIn_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*LogicalANDExprNoBF_NoNode	:	BitwiseORExprNoBF_NoNode */
+/*LogicalANDExprNoBF_NoNode	:	LogicalANDExprNoBF_NoNode && BitwiseORExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_LogicalANDExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*LogicalORExpr_NoNode	:	LogicalANDExpr_NoNode */
+/*LogicalORExpr_NoNode	:	LogicalORExpr_NoNode || LogicalANDExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_LogicalORExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*LogicalORExprNoIn_NoNode	:	LogicalANDExprNoIn_NoNode */
+/*LogicalORExprNoIn_NoNode	:	LogicalORExprNoIn_NoNode || LogicalANDExprNoIn_NoNode */
+static psrNode_t* AR_STDCALL handle_LogicalORExprNoIn_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*LogicalORExprNoBF_NoNode	:	LogicalANDExprNoBF_NoNode */
+/*LogicalORExprNoBF_NoNode	:	LogicalORExprNoBF_NoNode || LogicalANDExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_LogicalORExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*ConditionalExpr_NoNode	:	LogicalORExpr_NoNode */
+/*ConditionalExpr_NoNode	:	LogicalORExpr_NoNode ? AssignmentExpr_NoNode : AssignmentExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_ConditionalExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*ConditionalExprNoIn_NoNode	:	LogicalORExprNoIn_NoNode */
+/*ConditionalExprNoIn_NoNode	:	LogicalORExprNoIn_NoNode ? AssignmentExprNoIn_NoNode : AssignmentExprNoIn_NoNode */
+static psrNode_t* AR_STDCALL handle_ConditionalExprNoIn_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*ConditionalExprNoBF_NoNode	:	LogicalORExprNoBF_NoNode */
+/*ConditionalExprNoBF_NoNode	:	LogicalORExprNoBF_NoNode ? AssignmentExpr_NoNode : AssignmentExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_ConditionalExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*AssignmentExpr_NoNode	:	ConditionalExpr_NoNode */
+/*AssignmentExpr_NoNode	:	LeftHandSideExpr_NoNode AssignmentOperator_NoNode AssignmentExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_AssignmentExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*AssignmentExprNoIn_NoNode	:	ConditionalExprNoIn_NoNode */
+/*AssignmentExprNoIn_NoNode	:	LeftHandSideExpr_NoNode AssignmentOperator_NoNode AssignmentExprNoIn_NoNode */
+static psrNode_t* AR_STDCALL handle_AssignmentExprNoIn_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*AssignmentExprNoBF_NoNode	:	ConditionalExprNoBF_NoNode */
+/*AssignmentExprNoBF_NoNode	:	LeftHandSideExprNoBF_NoNode AssignmentOperator_NoNode AssignmentExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_AssignmentExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*AssignmentOperator_NoNode	:	= */
+/*AssignmentOperator_NoNode	:	+= */
+/*AssignmentOperator_NoNode	:	-= */
+/*AssignmentOperator_NoNode	:	*= */
+/*AssignmentOperator_NoNode	:	/= */
+/*AssignmentOperator_NoNode	:	<<= */
+/*AssignmentOperator_NoNode	:	>>= */
+/*AssignmentOperator_NoNode	:	>>>= */
+/*AssignmentOperator_NoNode	:	&= */
+/*AssignmentOperator_NoNode	:	^= */
+/*AssignmentOperator_NoNode	:	|= */
+/*AssignmentOperator_NoNode	:	%= */
+static psrNode_t* AR_STDCALL handle_AssignmentOperator_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*Expr_NoNode	:	AssignmentExpr_NoNode */
+/*Expr_NoNode	:	Expr_NoNode , AssignmentExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_Expr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*ExprNoIn_NoNode	:	AssignmentExprNoIn_NoNode */
+/*ExprNoIn_NoNode	:	ExprNoIn_NoNode , AssignmentExprNoIn_NoNode */
+static psrNode_t* AR_STDCALL handle_ExprNoIn_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*ExprNoBF_NoNode	:	AssignmentExprNoBF_NoNode */
+/*ExprNoBF_NoNode	:	ExprNoBF_NoNode , AssignmentExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_ExprNoBF_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*Statement_NoNode	:	Block_NoNode */
+/*Statement_NoNode	:	VariableStatement_NoNode */
+/*Statement_NoNode	:	ConstStatement_NoNode */
+/*Statement_NoNode	:	FunctionDeclaration_NoNode */
+/*Statement_NoNode	:	EmptyStatement_NoNode */
+/*Statement_NoNode	:	ExprStatement_NoNode */
+/*Statement_NoNode	:	IfStatement_NoNode */
+/*Statement_NoNode	:	IterationStatement_NoNode */
+/*Statement_NoNode	:	ContinueStatement_NoNode */
+/*Statement_NoNode	:	BreakStatement_NoNode */
+/*Statement_NoNode	:	ReturnStatement_NoNode */
+/*Statement_NoNode	:	WithStatement_NoNode */
+/*Statement_NoNode	:	SwitchStatement_NoNode */
+/*Statement_NoNode	:	LabelledStatement_NoNode */
+/*Statement_NoNode	:	ThrowStatement_NoNode */
+/*Statement_NoNode	:	TryStatement_NoNode */
+/*Statement_NoNode	:	DebuggerStatement_NoNode */
+static psrNode_t* AR_STDCALL handle_Statement_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*Block_NoNode	:	{ } */
+/*Block_NoNode	:	{ SourceElements_NoNode } */
+static psrNode_t* AR_STDCALL handle_Block_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*VariableStatement_NoNode	:	var VariableDeclarationList_NoNode ; */
+/*VariableStatement_NoNode	:	var VariableDeclarationList_NoNode error */
+static psrNode_t* AR_STDCALL handle_VariableStatement_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*VariableDeclarationList_NoNode	:	IDENTIFIER */
+/*VariableDeclarationList_NoNode	:	IDENTIFIER Initializer_NoNode */
+/*VariableDeclarationList_NoNode	:	VariableDeclarationList_NoNode , IDENTIFIER */
+/*VariableDeclarationList_NoNode	:	VariableDeclarationList_NoNode , IDENTIFIER Initializer_NoNode */
+static psrNode_t* AR_STDCALL handle_VariableDeclarationList_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*VariableDeclarationListNoIn_NoNode	:	IDENTIFIER */
+/*VariableDeclarationListNoIn_NoNode	:	IDENTIFIER InitializerNoIn_NoNode */
+/*VariableDeclarationListNoIn_NoNode	:	VariableDeclarationListNoIn_NoNode , IDENTIFIER */
+/*VariableDeclarationListNoIn_NoNode	:	VariableDeclarationListNoIn_NoNode , IDENTIFIER InitializerNoIn_NoNode */
+static psrNode_t* AR_STDCALL handle_VariableDeclarationListNoIn_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*ConstStatement_NoNode	:	const ConstDeclarationList_NoNode ; */
+/*ConstStatement_NoNode	:	const ConstDeclarationList_NoNode error */
+static psrNode_t* AR_STDCALL handle_ConstStatement_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*ConstDeclarationList_NoNode	:	ConstDeclaration_NoNode */
+/*ConstDeclarationList_NoNode	:	ConstDeclarationList_NoNode , ConstDeclaration_NoNode */
+static psrNode_t* AR_STDCALL handle_ConstDeclarationList_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*ConstDeclaration_NoNode	:	IDENTIFIER */
+/*ConstDeclaration_NoNode	:	IDENTIFIER Initializer_NoNode */
+static psrNode_t* AR_STDCALL handle_ConstDeclaration_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*Initializer_NoNode	:	= AssignmentExpr_NoNode */
+static psrNode_t* AR_STDCALL handle_Initializer_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*InitializerNoIn_NoNode	:	= AssignmentExprNoIn_NoNode */
+static psrNode_t* AR_STDCALL handle_InitializerNoIn_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*EmptyStatement_NoNode	:	; */
+static psrNode_t* AR_STDCALL handle_EmptyStatement_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*ExprStatement_NoNode	:	ExprNoBF_NoNode ; */
+/*ExprStatement_NoNode	:	ExprNoBF_NoNode error */
+static psrNode_t* AR_STDCALL handle_ExprStatement_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*IfStatement_NoNode	:	if ( Expr_NoNode ) Statement_NoNode */
+/*IfStatement_NoNode	:	if ( Expr_NoNode ) Statement_NoNode else Statement_NoNode */
+static psrNode_t* AR_STDCALL handle_IfStatement_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*IterationStatement_NoNode	:	do Statement_NoNode while ( Expr_NoNode ) ; */
+/*IterationStatement_NoNode	:	do Statement_NoNode while ( Expr_NoNode ) error */
+/*IterationStatement_NoNode	:	while ( Expr_NoNode ) Statement_NoNode */
+/*IterationStatement_NoNode	:	for ( ExprNoInOpt_NoNode ; ExprOpt_NoNode ; ExprOpt_NoNode ) Statement_NoNode */
+/*IterationStatement_NoNode	:	for ( var VariableDeclarationListNoIn_NoNode ; ExprOpt_NoNode ; ExprOpt_NoNode ) Statement_NoNode */
+/*IterationStatement_NoNode	:	for ( LeftHandSideExpr_NoNode in Expr_NoNode ) Statement_NoNode */
+/*IterationStatement_NoNode	:	for ( var IDENTIFIER in Expr_NoNode ) Statement_NoNode */
+/*IterationStatement_NoNode	:	for ( var IDENTIFIER InitializerNoIn_NoNode in Expr_NoNode ) Statement_NoNode */
+static psrNode_t* AR_STDCALL handle_IterationStatement_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*ExprOpt_NoNode	:	 */
+/*ExprOpt_NoNode	:	Expr_NoNode */
+static psrNode_t* AR_STDCALL handle_ExprOpt_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*ExprNoInOpt_NoNode	:	 */
+/*ExprNoInOpt_NoNode	:	ExprNoIn_NoNode */
+static psrNode_t* AR_STDCALL handle_ExprNoInOpt_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*ContinueStatement_NoNode	:	continue ; */
+/*ContinueStatement_NoNode	:	continue error */
+/*ContinueStatement_NoNode	:	continue IDENTIFIER ; */
+/*ContinueStatement_NoNode	:	continue IDENTIFIER error */
+static psrNode_t* AR_STDCALL handle_ContinueStatement_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*BreakStatement_NoNode	:	break ; */
+/*BreakStatement_NoNode	:	break error */
+/*BreakStatement_NoNode	:	break IDENTIFIER ; */
+/*BreakStatement_NoNode	:	break IDENTIFIER error */
+static psrNode_t* AR_STDCALL handle_BreakStatement_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*ReturnStatement_NoNode	:	return ; */
+/*ReturnStatement_NoNode	:	return error */
+/*ReturnStatement_NoNode	:	return Expr_NoNode ; */
+/*ReturnStatement_NoNode	:	return Expr_NoNode error */
+static psrNode_t* AR_STDCALL handle_ReturnStatement_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*WithStatement_NoNode	:	with ( Expr_NoNode ) Statement_NoNode */
+static psrNode_t* AR_STDCALL handle_WithStatement_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*SwitchStatement_NoNode	:	switch ( Expr_NoNode ) CaseBlock_NoNode */
+static psrNode_t* AR_STDCALL handle_SwitchStatement_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*CaseBlock_NoNode	:	{ CaseClausesOpt_NoNode } */
+/*CaseBlock_NoNode	:	{ CaseClausesOpt_NoNode DefaultClause_NoNode CaseClausesOpt_NoNode } */
+static psrNode_t* AR_STDCALL handle_CaseBlock_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*CaseClausesOpt_NoNode	:	 */
+/*CaseClausesOpt_NoNode	:	CaseClauses_NoNode */
+static psrNode_t* AR_STDCALL handle_CaseClausesOpt_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*CaseClauses_NoNode	:	CaseClause_NoNode */
+/*CaseClauses_NoNode	:	CaseClauses_NoNode CaseClause_NoNode */
+static psrNode_t* AR_STDCALL handle_CaseClauses_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*CaseClause_NoNode	:	case Expr_NoNode : */
+/*CaseClause_NoNode	:	case Expr_NoNode : SourceElements_NoNode */
+static psrNode_t* AR_STDCALL handle_CaseClause_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*DefaultClause_NoNode	:	default : */
+/*DefaultClause_NoNode	:	default : SourceElements_NoNode */
+static psrNode_t* AR_STDCALL handle_DefaultClause_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*LabelledStatement_NoNode	:	IDENTIFIER : Statement_NoNode */
+static psrNode_t* AR_STDCALL handle_LabelledStatement_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*ThrowStatement_NoNode	:	throw Expr_NoNode ; */
+/*ThrowStatement_NoNode	:	throw Expr_NoNode error */
+static psrNode_t* AR_STDCALL handle_ThrowStatement_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*TryStatement_NoNode	:	try Block_NoNode finally Block_NoNode */
+/*TryStatement_NoNode	:	try Block_NoNode catch ( IDENTIFIER ) Block_NoNode */
+/*TryStatement_NoNode	:	try Block_NoNode catch ( IDENTIFIER ) Block_NoNode finally Block_NoNode */
+static psrNode_t* AR_STDCALL handle_TryStatement_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*DebuggerStatement_NoNode	:	debugger ; */
+/*DebuggerStatement_NoNode	:	debugger error */
+static psrNode_t* AR_STDCALL handle_DebuggerStatement_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*FunctionDeclaration_NoNode	:	function IDENTIFIER ( ) { FunctionBody_NoNode } */
+/*FunctionDeclaration_NoNode	:	function IDENTIFIER ( FormalParameterList_NoNode ) { FunctionBody_NoNode } */
+static psrNode_t* AR_STDCALL handle_FunctionDeclaration_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*FunctionExpr_NoNode	:	function ( ) { FunctionBody_NoNode } */
+/*FunctionExpr_NoNode	:	function ( FormalParameterList_NoNode ) { FunctionBody_NoNode } */
+/*FunctionExpr_NoNode	:	function IDENTIFIER ( ) { FunctionBody_NoNode } */
+/*FunctionExpr_NoNode	:	function IDENTIFIER ( FormalParameterList_NoNode ) { FunctionBody_NoNode } */
+static psrNode_t* AR_STDCALL handle_FunctionExpr_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*FormalParameterList_NoNode	:	IDENTIFIER */
+/*FormalParameterList_NoNode	:	FormalParameterList_NoNode , IDENTIFIER */
+static psrNode_t* AR_STDCALL handle_FormalParameterList_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*FunctionBody_NoNode	:	 */
+/*FunctionBody_NoNode	:	SourceElements_NoNode */
+static psrNode_t* AR_STDCALL handle_FunctionBody_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+/*SourceElements_NoNode	:	Statement_NoNode */
+/*SourceElements_NoNode	:	SourceElements_NoNode Statement_NoNode */
+static psrNode_t* AR_STDCALL handle_SourceElements_NoNode(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
 
 
 
@@ -1402,13 +3657,30 @@ static psrNode_t* AR_STDCALL handle_assignment_operator(psrNode_t **nodes, size_
 
 void gen_code_test()
 {
-		psrGrammar_t	*gmr;
-		lex_t *lex = __build_lex(NULL);
-		gmr = __build_grammar(NULL, NULL);
+		uint_64_t sum = 0;
+		for(int i = 0; i < 10; ++i)
+		{
+				psrGrammar_t	*gmr;
+				uint_64_t		beg, end;
+				beg = AR_GetTime_Milliseconds();
+				lex_t *lex = __build_lex(NULL);
+				gmr = __build_grammar(&__g_handler, NULL);
+				const parser_t		*parser = PSR_CreateParser(gmr, PSR_LALR);
+				end = AR_GetTime_Milliseconds();
+				sum += (end - beg);
+				AR_printf(L"%ls : tickcount == %I64d\r\n", L"parser build successful", end - beg);
+				//getchar();
 
-		LEX_Destroy(lex);
-		PSR_DestroyGrammar(gmr);
+				PSR_DestroyParser(parser);
+				LEX_Destroy(lex);
+				PSR_DestroyGrammar(gmr);
+
+				AR_printf(L"%ls\r\n", L"after parser release\r\n");
+				AR_printf(L"-------------------------------\r\n");
+		}
 		
+		AR_printf(L"average time == %I64d\r\n", sum / 10);
+		AR_printf(L"-------------------------------\r\n");
 }
 
 

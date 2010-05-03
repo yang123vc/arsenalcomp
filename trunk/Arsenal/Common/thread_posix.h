@@ -18,33 +18,33 @@
 
 AR_NAMESPACE_BEGIN
 
-static arSpinLock_t		__g_spinlock;
+static arSpinLock_t		__g_atomic_lock;
 
 void			AR_InitThread()
 {
-		AR_InitSpinLock(&__g_spinlock);
+		AR_InitSpinLock(&__g_atomic_lock);
 
 }
 
 void			AR_UnInitThread()
 {
-		AR_UnInitSpinLock(&__g_spinlock);
+		AR_UnInitSpinLock(&__g_atomic_lock);
 
 }
 
 int_t			AR_AtomicInc(volatile int_t *dest)
 {
-		AR_LockSpinLock(&__g_spinlock);
+		AR_LockSpinLock(&__g_atomic_lock);
 		*dest += 1;
-		AR_UnLockSpinLock(&__g_spinlock);
+		AR_UnLockSpinLock(&__g_atomic_lock);
 		return *dest;
 }
 
 int_t			AR_AtomicDec(volatile int_t *dest)
 {
-		AR_LockSpinLock(&__g_spinlock);
+		AR_LockSpinLock(&__g_atomic_lock);
 		*dest -= 1;
-		AR_UnLockSpinLock(&__g_spinlock);
+		AR_UnLockSpinLock(&__g_atomic_lock);
 		return *dest;
 }
 

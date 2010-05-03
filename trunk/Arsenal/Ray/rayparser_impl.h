@@ -5,8 +5,15 @@
 
 AR_NAMESPACE_BEGIN
 
-lex_t*			RAY_BuildLexer(const arIOCtx_t *io);
-psrGrammar_t*	RAY_BuildGrammar(const psrHandler_t	*handler, const arIOCtx_t *io);
+void				RAY_InitParserImpl();
+void				RAY_UnInitParserImpl();
+
+lex_t*				RAY_BuildLexer();
+void				RAY_ReleaseLexer(lex_t *lexer);
+
+psrContext_t*		RAY_BuildParserContext(void *ctx);
+void				RAY_ReleaseParserContext(psrContext_t		*parser_context);
+
 
 
 AR_NAMESPACE_END

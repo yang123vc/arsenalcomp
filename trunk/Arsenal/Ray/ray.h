@@ -57,9 +57,12 @@ typedef enum
 typedef struct __ray_report_msg_tag
 {
 		rayReportType_t			type;
+		raySrcInfo_t			location;
 		
-		const	wchar_t			*message;
-		raySrcInfo_t			src;
+		union{
+				const	wchar_t			*message;
+				psrToken_t				token;
+		};
 }rayReportMsg_t;
 
 

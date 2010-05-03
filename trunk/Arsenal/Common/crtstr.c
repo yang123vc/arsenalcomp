@@ -36,10 +36,7 @@ int_t	AR_strnicmp(const char *l, const char *r, size_t n)
 		size_t i;
 		AR_ASSERT(l != NULL && r != NULL);
 
-		for(ret = 0, i = 0; i < n && (ret = (AR_tolower(l[i]) - AR_tolower(r[i]))) == 0 && l[i] && r[i]; ++i)
-		{
-
-		}
+		for(ret = 0, i = 0; i < n && (ret = (AR_tolower(l[i]) - AR_tolower(r[i]))) == 0 && l[i] && r[i]; ++i);
 		
 		return ret;
 
@@ -403,48 +400,49 @@ wchar_t*		AR_vtow(const wchar_t *fmt, ...)
 
 
 
+
 int_t AR_wchartodigit(wchar_t ch)
 {
-#define DIGIT_RANGE_TEST(zero)  \
-    if (ch < zero)              \
-        return -1;              \
-    if (ch < zero + 10)         \
-    {                           \
-        return ch - zero;       \
-    }
 
-    DIGIT_RANGE_TEST(0x0030)        // 0030;DIGIT ZERO
-    if (ch < 0xFF10)                // FF10;FULLWIDTH DIGIT ZERO
-    {
-        DIGIT_RANGE_TEST(0x0660)    // 0660;ARABIC-INDIC DIGIT ZERO
-        DIGIT_RANGE_TEST(0x06F0)    // 06F0;EXTENDED ARABIC-INDIC DIGIT ZERO
-        DIGIT_RANGE_TEST(0x0966)    // 0966;DEVANAGARI DIGIT ZERO
-        DIGIT_RANGE_TEST(0x09E6)    // 09E6;BENGALI DIGIT ZERO
-        DIGIT_RANGE_TEST(0x0A66)    // 0A66;GURMUKHI DIGIT ZERO
-        DIGIT_RANGE_TEST(0x0AE6)    // 0AE6;GUJARATI DIGIT ZERO
-        DIGIT_RANGE_TEST(0x0B66)    // 0B66;ORIYA DIGIT ZERO
-        DIGIT_RANGE_TEST(0x0C66)    // 0C66;TELUGU DIGIT ZERO
-        DIGIT_RANGE_TEST(0x0CE6)    // 0CE6;KANNADA DIGIT ZERO
-        DIGIT_RANGE_TEST(0x0D66)    // 0D66;MALAYALAM DIGIT ZERO
-        DIGIT_RANGE_TEST(0x0E50)    // 0E50;THAI DIGIT ZERO
-        DIGIT_RANGE_TEST(0x0ED0)    // 0ED0;LAO DIGIT ZERO
-        DIGIT_RANGE_TEST(0x0F20)    // 0F20;TIBETAN DIGIT ZERO
-        DIGIT_RANGE_TEST(0x1040)    // 1040;MYANMAR DIGIT ZERO
-        DIGIT_RANGE_TEST(0x17E0)    // 17E0;KHMER DIGIT ZERO
-        DIGIT_RANGE_TEST(0x1810)    // 1810;MONGOLIAN DIGIT ZERO
+		#define DIGIT_RANGE_TEST(zero)  \
+		if (ch < zero)					\
+				return -1;              \
+		if (ch < zero + 10)				\
+		{								\
+				return ch - zero;       \
+		}
 
+		
+		DIGIT_RANGE_TEST(0x0030)        // 0030;DIGIT ZERO
+		if (ch < 0xFF10)                // FF10;FULLWIDTH DIGIT ZERO
+		{
+				DIGIT_RANGE_TEST(0x0660)    // 0660;ARABIC-INDIC DIGIT ZERO
+				DIGIT_RANGE_TEST(0x06F0)    // 06F0;EXTENDED ARABIC-INDIC DIGIT ZERO
+				DIGIT_RANGE_TEST(0x0966)    // 0966;DEVANAGARI DIGIT ZERO
+				DIGIT_RANGE_TEST(0x09E6)    // 09E6;BENGALI DIGIT ZERO
+				DIGIT_RANGE_TEST(0x0A66)    // 0A66;GURMUKHI DIGIT ZERO
+				DIGIT_RANGE_TEST(0x0AE6)    // 0AE6;GUJARATI DIGIT ZERO
+				DIGIT_RANGE_TEST(0x0B66)    // 0B66;ORIYA DIGIT ZERO
+				DIGIT_RANGE_TEST(0x0C66)    // 0C66;TELUGU DIGIT ZERO
+				DIGIT_RANGE_TEST(0x0CE6)    // 0CE6;KANNADA DIGIT ZERO
+				DIGIT_RANGE_TEST(0x0D66)    // 0D66;MALAYALAM DIGIT ZERO
+				DIGIT_RANGE_TEST(0x0E50)    // 0E50;THAI DIGIT ZERO
+				DIGIT_RANGE_TEST(0x0ED0)    // 0ED0;LAO DIGIT ZERO
+				DIGIT_RANGE_TEST(0x0F20)    // 0F20;TIBETAN DIGIT ZERO
+				DIGIT_RANGE_TEST(0x1040)    // 1040;MYANMAR DIGIT ZERO
+				DIGIT_RANGE_TEST(0x17E0)    // 17E0;KHMER DIGIT ZERO
+				DIGIT_RANGE_TEST(0x1810)    // 1810;MONGOLIAN DIGIT ZERO
+				
+				return -1;
+		}
+		
+		if (ch < 0xFF10 + 10)// FF10;FULLWIDTH DIGIT ZERO
+		{
+				return ch - 0xFF10;
+		}
+		return -1;
 
-        return -1;
-    }
-#undef DIGIT_RANGE_TEST
-
-                                    // FF10;FULLWIDTH DIGIT ZERO
-    if (ch < 0xFF10 + 10)
-    {
-        return ch - 0xFF10;
-    }
-    return -1;
-
+		#undef DIGIT_RANGE_TEST
 }
 
 

@@ -70,23 +70,14 @@ void			AR_Sleep(size_t millisecond)
 		Sleep((DWORD)millisecond);
 }
 
-/*
-uint_t			AR_CompExchange(volatile uint_t *dest, uint_t exch, uint_t compval)
-{
-		return (uint_t)COMP_EXCH(dest, exch, compval);
-}
-*/
-
 int_t			AR_AtomicInc(volatile int_t *dest)
 {
-		//return (uint_t)ATOMIC_INC(dest);
-		
 		return (int_t)ATOMIC_INC(dest);
 }
 
 int_t			AR_AtomicDec(volatile int_t *dest)
 {
-		return ATOMIC_DEC(dest);
+		return (int_t)ATOMIC_DEC(dest);
 }
 
 
@@ -179,22 +170,5 @@ AR_NAMESPACE_END
 
 
 
-#if(0)
-
-static AR_INLINE uint_64_t __get_time_microseconds()
-{
-		FILETIME ft;
-		ULARGE_INTEGER epoch; // UNIX epoch (1970-01-01 00:00:00) expressed in Windows NT FILETIME
-		ULARGE_INTEGER ts;
-		GetSystemTimeAsFileTime(&ft);
-
-		epoch.LowPart  = 0xD53E8000;
-		epoch.HighPart = 0x019DB1DE;
-		ts.LowPart  = ft.dwLowDateTime;
-		ts.HighPart = ft.dwHighDateTime;
-		ts.QuadPart -= epoch.QuadPart;
-		return ts.QuadPart/10;
-}
-#endif
 
 

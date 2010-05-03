@@ -12,14 +12,6 @@
 				;
 
 
-
-
-
-
-
-
-
-
 %name hex_digit		:	"[0-9a-fA-F]"
 				;
 
@@ -609,7 +601,7 @@ ConstStatement	:    "const" ConstDeclarationList ";"
 			;
 
 
-ConstDeclarationList	:    ConstDeclaration                    
+ConstDeclarationList	:	ConstDeclaration                    
   				|	ConstDeclarationList "," ConstDeclaration
 				;
 

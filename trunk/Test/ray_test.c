@@ -54,7 +54,7 @@ static const wchar_t* __load_txt(const wchar_t *path)
 
 
 
-
+#if(0)
 static void parse_code(lex_t *lex, const wchar_t *sources)
 {
 		lexMatch_t match;
@@ -116,77 +116,8 @@ static void parse_code(lex_t *lex, const wchar_t *sources)
 }
 
 
-#if(0)
 
-void ray_test()
-{
-		
-		lex_t *lex;
-		psrGrammar_t	*gmr;
-		parser_t		*parser;
-		psrSymbMap_t	first, follow;
-		const wchar_t *sources = NULL;
-		arString_t *str;
 
-		str = AR_CreateString();
-
-		lex = RAY_BuildLexer(NULL);
-		AR_ASSERT(lex != NULL);
-		
-		/*
-		sources = __load_txt(DEF_SOUR_PATH);
-		parse_code(lex, sources);
-
-		AR_DEL(sources);
-		sources = NULL;
-		*/
-		uint_64_t beg, end;
-		
-		beg = AR_GetTime_Microseconds();
-
-		gmr = RAY_BuildGrammar(NULL);
-		AR_ASSERT(gmr != NULL);
-		
-
-		
-		
-
-		
-		
-		
-		parser = RAY_BuildParser(gmr);
-
-		end = AR_GetTime_Microseconds();
-
-		AR_printf(L"elapsed == %I64d us\r\n", end - beg);
-
-		getchar();
-		
-		PSR_InitSymbMap(&first);
-		PSR_InitSymbMap(&follow);
-
-		PSR_CalcFirstSet(gmr, &first);
-		PSR_CalcFollowSet(gmr, &follow, &first);
-		
-		AR_ClearString(str);
-		PSR_PrintSymbolMap(&first, str);
-
-		AR_StrPrint(str);
-
-		AR_ClearString(str);
-		PSR_PrintSymbolMap(&follow, str);
-
-		AR_StrPrint(str);
-
-		PSR_UnInitSymbMap(&first);
-		PSR_UnInitSymbMap(&follow);
-		if(sources)AR_DEL(sources);
-		PSR_DestroyParser(parser);
-		PSR_DestroyGrammar(gmr);
-		
-		LEX_Destroy(lex);
-		AR_DestroyString(str);
-}
 #endif
 
 
@@ -201,6 +132,18 @@ static rayReport_t		__def_report =
 		ray_report_func,
 		NULL
 };
+
+
+void align_test(rayParser_t		*parser)
+{
+		AR_printf(L"Default alignment == %d\r\n", RAY_GetAlignment(parser));
+		
+		RAY_PushAlignment(parser, 16);
+		AR_printf(L"After push alignment == %d\r\n", RAY_GetAlignment(parser));
+
+		RAY_PopAlignment(parser);
+		AR_printf(L"After pop alignment == %d\r\n", RAY_GetAlignment(parser));
+}
 
 void ray_test()
 {
@@ -217,13 +160,22 @@ void ray_test()
 		
 		AR_printf(L"build ray parser elapsed == %I64d\r\n", end - beg);
 		
+		align_test(parser);
 		getchar();
+		
+		const wchar_t *src = __load_txt(DEF_SOUR_PATH);
+		AR_ASSERT(src != NULL);
+		
+		RAY_Parse(parser, src);
 
 		RAY_DestroyParser(parser);
+
+		AR_DEL(src);
 }
 
 
 AR_NAMESPACE_END
+
 
 #endif
 

@@ -25,8 +25,9 @@ void	Arsenal_Init(const arInit_t *ctx)
 		AR_Init(ctx);
 		LEX_Init();
 		PSR_Init();
-		
 		Tools_Init();
+
+		RAY_Init();
 }
 
 
@@ -34,8 +35,8 @@ void	Arsenal_Init(const arInit_t *ctx)
 
 void	Arsenal_UnInit()
 {
+		RAY_UnInit();
 		Tools_UnInit();
-
 		PSR_UnInit();
 		LEX_UnInit();
 		AR_UnInit();

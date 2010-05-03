@@ -17,97 +17,93 @@ AR_NAMESPACE_BEGIN
 
 
 
-typedef enum
-{
-		TOK_DELIM_ID = 257,				/*过滤掉的空白或注释*/
-		TOK_TYPE_ID = 258,				/*typedef id*/
-		TOK_DONE_ID = 259,				/*遇到EOI词法分析器会将此符号add到parser中*/
-		TOK_CHAR_CONSTANT = 260,		/**/
-		TOK_STRING_LITERAL = 261,		/**/
-		TOK_FLOAT_CONSTANT = 262,		/**/
-		TOK_HEX_CONSTANT = 263,		/**/
-		TOK_OCT_CONSTANT = 264,		/**/
-		TOK_DEC_CONSTANT = 265,		/**/
-		TOK_IDENTIFIER = 266,		/**/
-		TOK_SWITCH = 267,		/**/
-		TOK_FOR = 268,		/**/
-		TOK_GOTO = 269,		/**/
-		TOK_RETURN = 270,		/**/
-		TOK_DO = 271,		/**/
-		TOK_WHILE = 272,		/**/
-		TOK_IF = 273,		/**/
-		TOK_ELSE = 274,		/**/
-		TOK_CONTINUE = 275,		/**/
-		TOK_DEFAULT = 276,		/**/
-		TOK_CASE = 277,		/**/
-		TOK_BREAK = 278,		/**/
-		TOK_CONST = 279,		/**/
-		TOK_VOLATILE = 280,		/**/
-		TOK_STRUCT = 281,		/**/
-		TOK_UNION = 282,		/**/
-		TOK_TYPEDEF = 283,		/**/
-		TOK_STATIC = 284,		/**/
-		TOK_SIZEOF = 285,		/**/
-		TOK_VOID = 286,		/**/
-		TOK_BYTE = 287,		/**/
-		TOK_CHAR = 288,		/**/
-		TOK_SHORT = 289,		/**/
-		TOK_INT = 290,		/**/
-		TOK_LONG = 291,		/**/
-		TOK_SIGNED = 292,		/**/
-		TOK_UNSIGNED = 293,		/**/
-		TOK_FLOAT = 294,		/**/
-		TOK_DOUBLE = 295,		/**/
-		TOK_IMPORT = 296,		/**/
-		TOK_EXPORT = 297,		/**/
-		TOK_ATTRIBUTE = 298,		/**/
-		TOK_RSHIFT_ASSIGN = 299,		/**/
-		TOK_LSHIFT_ASSIGN = 300,		/**/
-		TOK_ADD_ASSIGN = 301,		/**/
-		TOK_SUB_ASSIGN = 302,		/**/
-		TOK_MUL_ASSIGN = 303,		/**/
-		TOK_DIV_ASSIGN = 304,		/**/
-		TOK_MOD_ASSIGN = 305,		/**/
-		TOK_AND_ASSIGN = 306,		/**/
-		TOK_XOR_ASSIGN = 307,		/**/
-		TOK_OR_ASSIGN = 308,		/**/
-		TOK_RSHIFT = 309,			/**/
-		TOK_LSHIFT = 310,			/**/
-		TOK_INC = 311,				/**/		
-		TOK_DEC = 312,				/**/
-		TOK_PTR = 313,				/**/
-		TOK_ANDAND = 314,			/*&&*/
-		TOK_OROR = 315,				/*||*/
-		TOK_LE = 316,				/*<=*/
-		TOK_GE = 317,				/*>=*/
-		TOK_EQ = 318,				/*==*/
-		TOK_NE = 319,				/*!=*/
-		TOK_LESS = 320,				/*<*/
-		TOK_GREATER = 321,			/*>*/
-		TOK_L_BRACES = 322,			/*{*/
-		TOK_R_BRACES = 323,			/*}*/
-		TOK_L_PAREN = 324,			/*(*/
-		TOK_R_PAREN = 325,			/*)*/
-		TOK_L_SQUARE = 326,			/*[*/
-		TOK_R_SQUARE = 327,			/*]*/
-		TOK_SEMICOLON = 328,		/*;*/
-		TOK_COMMA = 329,			/*,*/
-		TOK_COLON = 330,			/*:*/
-		TOK_ASSIGN = 331,			/*=*/
-		TOK_DOT = 332,				/*.*/
-		TOK_AND = 333,				/*&*/
-		TOK_NOT = 334,				/*!*/
-		TOK_TILDE = 335,			/*~*/
-		TOK_ADD = 336,				/*+*/
-		TOK_SUB = 337,				/*-*/
-		TOK_MUL = 338,				/* * */
-		TOK_DIV = 339,				/* / */
-		TOK_MOD = 340,				/*%*/
-		TOK_XOR = 341,				/*^*/
-		TOK_OR = 342,				/*|*/
-		TOK_QUEST = 343,			/*?*/
+typedef enum{
+		TOK_DELIM_ID = 257,
+		TOK_TYPE_ID = 258,
+		TOK_DONE_ID = 259,
+		TOK_CHAR_CONSTANT = 260,
+		TOK_STRING_LITERAL = 261,
+		TOK_FLOAT_NUMBER = 262,
+		TOK_INT_NUMBER = 263,
+		TOK_IDENTIFIER = 264,
+		TOK_SWITCH = 265,
+		TOK_FOR = 266,
+		TOK_GOTO = 267,
+		TOK_RETURN = 268,
+		TOK_DO = 269,
+		TOK_WHILE = 270,
+		TOK_IF = 271,
+		TOK_ELSE = 272,
+		TOK_CONTINUE = 273,
+		TOK_DEFAULT = 274,
+		TOK_CASE = 275,
+		TOK_BREAK = 276,
+		TOK_CONST = 277,
+		TOK_VOLATILE = 278,
+		TOK_STRUCT = 279,
+		TOK_UNION = 280,
+		TOK_TYPEDEF = 281,
+		TOK_STATIC = 282,
+		TOK_SIZEOF = 283,
+		TOK_VOID = 284,
+		TOK_BYTE = 285,
+		TOK_CHAR = 286,
+		TOK_SHORT = 287,
+		TOK_INT = 288,
+		TOK_LONG = 289,
+		TOK_SIGNED = 290,
+		TOK_UNSIGNED = 291,
+		TOK_FLOAT = 292,
+		TOK_DOUBLE = 293,
+		TOK_IMPORT = 294,
+		TOK_EXPORT = 295,
+		TOK_ATTRIBUTE = 296,
+		TOK_RSHIFT_ASSIGN = 297,
+		TOK_LSHIFT_ASSIGN = 298,
+		TOK_ADD_ASSIGN = 299,
+		TOK_SUB_ASSIGN = 300,
+		TOK_MUL_ASSIGN = 301,
+		TOK_DIV_ASSIGN = 302,
+		TOK_MOD_ASSIGN = 303,
+		TOK_AND_ASSIGN = 304,
+		TOK_XOR_ASSIGN = 305,
+		TOK_OR_ASSIGN = 306,
+		TOK_RSHIFT = 307,
+		TOK_LSHIFT = 308,
+		TOK_INC = 309,
+		TOK_DEC = 310,
+		TOK_PTR = 311,
+		TOK_ANDAND = 312,
+		TOK_OROR = 313,
+		TOK_LE = 314,
+		TOK_GE = 315,
+		TOK_EQ = 316,
+		TOK_NE = 317,
+		TOK_LESS = 318,
+		TOK_GREATER = 319,
+		TOK_L_BRACES = 320,
+		TOK_R_BRACES = 321,
+		TOK_L_PAREN = 322,
+		TOK_R_PAREN = 323,
+		TOK_L_SQUARE = 324,
+		TOK_R_SQUARE = 325,
+		TOK_SEMICOLON = 326,
+		TOK_COMMA = 327,
+		TOK_COLON = 328,
+		TOK_ASSIGN = 329,
+		TOK_DOT = 330,
+		TOK_AND = 331,
+		TOK_NOT = 332,
+		TOK_TILDE = 333,
+		TOK_ADD = 334,
+		TOK_SUB = 335,
+		TOK_MUL = 336,
+		TOK_DIV = 337,
+		TOK_MOD = 338,
+		TOK_XOR = 339,
+		TOK_OR = 340,
+		TOK_QUEST = 341
 }rayTokType_t;
-
 
 
 /******************************************************************************/
@@ -116,9 +112,9 @@ typedef enum
 
 typedef enum 
 {
-		TY_NOTYPE,
+		TY_NOTYPE = 0,
 
-		DT_PTR_TO = 0,		/* 指针 */
+		DT_PTR_TO ,		/* 指针 */
 		DT_FUNC_TYPE,		/*函数签名 */
 		DT_ARRAY_OF,	 	/*数组*/
 
@@ -142,8 +138,8 @@ typedef enum
 		TY_INT_32,
 		TY_UINT_64,
 		TY_INT_64,
-		TY_FP_32,
-		TY_FP_64,
+		TY_FP_SINGLE,
+		TY_FP_DOUBLE,
 }rayTypeCode_t;
 
 

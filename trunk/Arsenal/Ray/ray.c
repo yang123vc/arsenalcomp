@@ -12,11 +12,22 @@
  */
 
 #include "ray.h"
+#include "rayparser.h"
 
 
 AR_NAMESPACE_BEGIN
 
 
+void	RAY_Init()
+{
+		RAY_InitParser();
+}
+
+void	RAY_UnInit()
+{
+		RAY_UnInitParser();
+
+}
 
 AR_NAMESPACE_END
 

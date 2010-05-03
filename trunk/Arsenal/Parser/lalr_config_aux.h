@@ -17,6 +17,14 @@
 
 AR_NAMESPACE_BEGIN
 
+
+/*
+#define __LALR_CONFIG_POOL__	1
+*/
+
+#if defined(__LALR_CONFIG_POOL__)
+
+/*这段东西太SB了*/
 #if defined(AR_DEBUG) || defined(AR_LOW_MEM_POLICY)
 		#define LALR_DEFAULT_CONFIG_NUM			0
 		#define LALR_DEFAULT_CONFIG_NODE_NUM	0
@@ -24,21 +32,23 @@ AR_NAMESPACE_BEGIN
 
 #else
 
-		#define LALR_DEFAULT_CONFIG_NUM		(2000)
+		#define LALR_DEFAULT_CONFIG_NUM			(2000)
 		#define LALR_DEFAULT_CONFIG_NODE_NUM	(2000)
 		#define LALR_DEFAULT_CONFIG_LIST_NUM	(2000)
 #endif
 /****************************************lalrConfig aux*****************************************/
 
 
-static lalrConfig_t		*__g_free_list = NULL;
-static arSpinLock_t		__g_config_lock;
+static	lalrConfig_t		*__g_free_list = NULL;
+static	arSpinLock_t		__g_config_lock;
+
 
 
 
 
 static AR_INLINE lalrConfig_t*	__create_config()
 {
+
 		if(__g_free_list == NULL)
 		{
 				return AR_NEW(lalrConfig_t);
@@ -64,10 +74,12 @@ static AR_INLINE lalrConfig_t*	__create_config()
 static AR_INLINE void	__destroy_config(lalrConfig_t *config)
 {
 		AR_ASSERT(config);
+
 		AR_LockSpinLock(&__g_config_lock);
 		config->forward = (lalrConfigList_t*)__g_free_list;
 		__g_free_list = config;
 		AR_UnLockSpinLock(&__g_config_lock);
+
 
 }
 
@@ -265,6 +277,90 @@ static AR_INLINE void __uninit_config_list_freelist()
 		AR_UnInitSpinLock(&__g_config_list_lock);
 }
 
+#else
+
+/****************************************lalrConfig aux*****************************************/
+
+static AR_INLINE lalrConfig_t*	__create_config()
+{
+		return AR_NEW(lalrConfig_t);
+}
+
+static AR_INLINE void	__destroy_config(lalrConfig_t *config)
+{
+		AR_ASSERT(config);
+		AR_DEL(config);
+}
+
+
+static AR_INLINE void __init_config_freelist()
+{
+		
+}
+
+static AR_INLINE void __uninit_config_freelist()
+{
+		
+}
+
+
+/****************************************lalrConfigNode_t aux*****************************************/
+
+
+static AR_INLINE lalrConfigNode_t*		__create_node()
+{
+		return AR_NEW(lalrConfigNode_t);
+}
+
+static AR_INLINE void					__destroy_node(lalrConfigNode_t *node)
+{
+		AR_ASSERT(node);
+		AR_DEL(node);
+}
+
+
+static AR_INLINE void __init_node_freelist()
+{
+
+}
+
+
+static AR_INLINE void __uninit_node_freelist()
+{
+		
+}
+
+
+
+
+/****************************************lalrConfigList_t aux*****************************************/
+
+
+static AR_INLINE lalrConfigList_t*		__create_config_list()
+{
+		return AR_NEW(lalrConfigList_t);
+}
+
+static AR_INLINE void	__destroy_config_list(lalrConfigList_t *lst)
+{
+		AR_ASSERT(lst);
+		AR_DEL(lst);
+}
+
+
+
+static AR_INLINE void __init_config_list_freelist()
+{
+		
+}
+
+
+static AR_INLINE void __uninit_config_list_freelist()
+{
+
+}
+
+#endif
 
 
 
