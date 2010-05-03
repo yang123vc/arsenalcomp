@@ -24,6 +24,8 @@
 AR_NAMESPACE_BEGIN
 
 
+void			RAY_InitParser();
+void			RAY_UnInitParser();
 
 
 rayParser_t*	RAY_CreateParser(const rayReport_t *report);
@@ -35,12 +37,12 @@ void			RAY_SetParserError(rayParser_t	*parser, bool_t is_error);
 void			RAY_SetOuterBlock(rayParser_t	*parser, rayBlock_t		*block);
 rayBlock_t*		RAY_GetOuterBlock(const rayParser_t *parser);
 bool_t			RAY_IsOuterBlock(const rayParser_t *parser, const rayBlock_t *block);
-
 rayBlock_t*		RAY_GetCurrentBlock(const rayParser_t *parser);
+
 
 size_t			RAY_GetAlignment(const rayParser_t	*parser);
 void			RAY_PushAlignment(rayParser_t	*parser, size_t align);
-void			RAY_PopAlignment(rayParser_t	*parser, size_t align);
+void			RAY_PopAlignment(rayParser_t	*parser);
 
 
 
@@ -80,6 +82,10 @@ typedef struct __ray_parser_node_tag
 rayNode_t*		RAY_CreateParserNode(rayNodeType_t type);
 void			RAY_DestroyParserNode(rayNode_t	   *node);
 
+
+/*********************************************************************************************************/
+
+rayNode_t*		RAY_Parse(rayParser_t			*parser, const wchar_t *src);
 
 AR_NAMESPACE_END
 

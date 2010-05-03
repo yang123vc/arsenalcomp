@@ -15,7 +15,6 @@
 #include "grammar.h"
 #include "lalr.h"
 #include "lr_action.h"
-#include "parser_aux.h"
 #include "parser.h"
 
 
@@ -963,8 +962,8 @@ void							PSR_DestroyParserStatusView(const psrStatusView_t *follow_view)
 
 				AR_DEL(view);
 		}
-
 }
+
 
 
 

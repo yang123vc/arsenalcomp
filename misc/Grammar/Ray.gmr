@@ -23,6 +23,7 @@
 
 %name hex_digit		:	"[0-9a-fA-F]"
 				;
+
 %name hex_literal 	:	"0(x|X){hex_digit}+{int_type_suffix}?"
 				;
 
@@ -35,14 +36,14 @@
 
 
 
-%name	exponet		:	"(e|E)(\+|\-)?[0-9]+"
-				;
+%name	exponet			:	"(e|E)(\+|\-)?[0-9]+"
+					;
 
 %name float_type_suffix	:	"(f|F|d|D)"
 					;
 
-%name float_literal	:	"([0-9]*\.[0-9]*{exponet}?{float_type_suffix}?)"
-				;
+%name float_literal		:	"([0-9]*\.[0-9]*{exponet}?{float_type_suffix}?)"
+					;
 
 
 
@@ -53,28 +54,27 @@
 %name	escape_seq		:	"(\\(\x22|\x27))"	
 				;
 
-%name	string_literal	: 	"(\x22({escape_seq}|[^\x22])*\x22)"			
+%name	string_literal	: 	"(\x22({escape_seq}|[^\x22])*\x22)"		//只能提取"..."或"\""此类串，其它C规则要到语义例程中处理	
 				;
 
-%name	char_literal	:	"\x27({escape_seq}|[^\x27])*\x27"			
+%name	char_literal	:	"\x27({escape_seq}|[^\x27])*\x27"		//提取'...'或'\''此类串，其它C规则要到语义例程中处理	
 				;
-
 
 %name	keyword_lhd	:	"[A-Z_a-z0-9]"
 				;
 
 
-%name		float_constant	:	"{float_literal}(?!{keyword_lhd})"			
+%name		float_constant	:	"{float_literal}(?!{keyword_lhd})"
 					;
-%name		hex_constant	:	"{hex_literal}(?!{keyword_lhd})"			
+%name		hex_constant	:	"{hex_literal}(?!{keyword_lhd})"
 					;
-%name		oct_constant	:	"{oct_literal}(?!{keyword_lhd})"			
+%name		oct_constant	:	"{oct_literal}(?!{keyword_lhd})"
 					;
-%name		dec_constant	:	"{dec_literal}(?!{keyword_lhd})"			
+%name		dec_constant	:	"{dec_literal}(?!{keyword_lhd})"
 					;
 
 
-%token 	%skip			:	"{skip_lexem}+"				,1		%action	"TOK_DELIM_ID"	;
+%token 	%skip			:	"{skip_lexem}+"				,1		%action	"TOK_DELIM_ID"	;//空白，需要过滤
 %token	TYPE_ID		:	'^$'						,0		%action 	"TOK_TYPE_ID"	;//不会出现在输入流中
 %token	DONE_ID		:	'^$'						,0		%action	"TOK_DONE_ID"	;//不会出现在输入流中
 
@@ -237,7 +237,7 @@
 
 
 
-program			:	translation_unit	//DONE_ID
+program			:	translation_unit	DONE_ID
 				|	DONE_ID
 				;
 
@@ -620,7 +620,7 @@ binary_expression	:	cast_expression							%action	"semantic_auto_return_0"
 
 
 
-constant_expression		:	binary_expression			%action	"semantic_auto_return_0"							
+constant_expression		:	binary_expression			%action	"semantic_auto_return_0"
 					|	binary_expression	"?"	expression	":"	constant_expression
 					;
 
