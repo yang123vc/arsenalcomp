@@ -70,7 +70,7 @@ rayParser_t*	RAY_CreateParser(const rayReport_t *report)
 		
 		parser->lexer = RAY_BuildLexer();
 		AR_ASSERT(parser->lexer != NULL);
-		parser->parser_ctx = RAY_BuildParserContext(&parser->report);
+		parser->parser_ctx = RAY_BuildParserContext((void*)parser);
 		AR_ASSERT(parser->parser_ctx != NULL);
 		
 		RAY_PushAlignment(parser, RAY_DEF_ALIGNMENT);
@@ -182,25 +182,55 @@ rayNode_t*		RAY_Parse(rayParser_t			*parser, const wchar_t *src)
 {
 		lexMatch_t		match;
 		lexToken_t		tok;
+		psrToken_t		psr_tok;
 		bool_t			has_error;
+
+		rayNode_t		*result;
 		AR_ASSERT(parser != NULL && src != NULL);
 
+		result = NULL;
 		LEX_InitMatch(&match, src);
 		has_error = false;
-
+		
 		while(!has_error)
 		{
 				if(LEX_Match(parser->lexer, &match, &tok))
 				{
+						/*
 						wchar_t buf[1024];
 						AR_wcsncpy(buf, tok.str, tok.count);
 						buf[tok.count] = 0;
 						AR_printf(L"%ls\r\n",buf);
-						if(tok.value == 0)break;
+						*/
+						
+						PSR_TOTERMTOK(&tok, &psr_tok);
+						if(psr_tok.term_val == TOK_EOI)
+						{
+								psr_tok.term_val = TOK_DONE_ID;
+								if(!PSR_AddToken(parser->parser_ctx, &psr_tok))
+								{
+										has_error = true;
+										continue;
+								}
+								psr_tok.term_val = TOK_EOI;
+						}
+						
+						if(!PSR_AddToken(parser->parser_ctx, &psr_tok))
+						{
+								has_error = true;
+						}
 				}else
 				{
 						has_error = true;
 				}
+		}
+
+		if(has_error)
+		{
+				parser->is_error = true;
+		}else
+		{
+				result = (rayNode_t*)PSR_GetResult(parser->parser_ctx);
 		}
 		
 		LEX_UnInitMatch(&match);

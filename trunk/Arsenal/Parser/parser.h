@@ -62,7 +62,7 @@ typedef psrNode_t*		(AR_STDCALL *psrRuleFunc_t)(psrNode_t **nodes, size_t count,
 
 typedef void			(AR_STDCALL *psrFreeFunc_t)(psrNode_t *node, void *ctx);
 
-typedef void			(AR_STDCALL *psrErrorFunc_t)(const psrToken_t *tok, const wchar_t *expected[], size_t count, void *ctx);
+typedef void			(AR_STDCALL *psrErrorFunc_t)(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx);
 
 
 
@@ -169,7 +169,9 @@ const parser_t* PSR_CreateParser(const psrGrammar_t *grammar, psrModeType_t type
 
 void			PSR_DestroyParser(const parser_t *parser);
 
-#define			PSR_GetGrammar(_psr)	((const psrGrammar_t*)((_psr)->grammar))
+const	psrGrammar_t*	PSR_GetGrammar(const parser_t *parser);
+
+/*#define			PSR_GetGrammar(_psr)	((const psrGrammar_t*)((_psr)->grammar))*/
 
 
 psrContext_t*	PSR_CreateContext(const parser_t *parser, void *ctx);

@@ -428,8 +428,9 @@ static const ARSpace::arIOCtx_t	__g_silence =
 
 struct OutputContext
 {
-		COutputWnd		*m_output;
-		CInputPane		*m_target;
+		COutputWnd					*m_output;
+		CInputPane					*m_target;
+		const ARSpace::parser_t		*m_parser;
 
 };
 
@@ -441,18 +442,21 @@ static void	AR_STDCALL	__free_node(ARSpace::psrNode_t *node, void *ctx)
 }
 
 
-static void	AR_STDCALL	__on_parse_error(const ARSpace::psrToken_t *tok, const wchar_t *expected[], size_t count, void *ctx)
+static void	AR_STDCALL	__on_parse_error(const ARSpace::psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
 {
 
 		OutputContext	*context;
 		AR_ASSERT(ctx != NULL);
 		context = (OutputContext*)ctx;
+
+		AR_ASSERT(context->m_parser != NULL);
 		
 		CString msg;
 
 		CString token;
-		if(tok->str_cnt > 0)
+		if(tok->term_val != 0)
 		{
+				AR_ASSERT(tok->str_cnt > 0);
 				token.Append(tok->str, (int)tok->str_cnt);
 		}else
 		{
@@ -465,9 +469,10 @@ static void	AR_STDCALL	__on_parse_error(const ARSpace::psrToken_t *tok, const wc
 
 				for(size_t i = 0; i < count; ++i)
 				{
-						msg.AppendFormat(TEXT("\"%ls\" \t"), expected[i]);
+						const ARSpace::psrGrammar_t *grammar = ARSpace::PSR_GetGrammar(context->m_parser);
+						const ARSpace::psrTermInfo_t	*term_info = ARSpace::PSR_GetTermSymbInfoByValue(grammar, expected[i]);
+						msg.AppendFormat(TEXT("\"%ls\" \t"), term_info->term->name);
 				}
-
 		}else
 		{
 				msg.Format(TEXT("Invalid Token \"%ls\""), token.GetString());
@@ -954,6 +959,7 @@ void CGrammarDesignerDoc::OnParserParse()
 		OutputContext	output_context;
 		output_context.m_output = &output;
 		output_context.m_target = &input;
+		
 
 		if(this->IsModified())
 		{
@@ -979,6 +985,7 @@ void CGrammarDesignerDoc::OnParserParse()
 				return;
 		}
 
+		output_context.m_parser = m_parser;
 		ASSERT(m_lexer != NULL && m_parser != NULL);
 
 		ARSpace::psrContext_t	*parser_context = ARSpace::PSR_CreateContext(m_parser, (void*)&output_context);

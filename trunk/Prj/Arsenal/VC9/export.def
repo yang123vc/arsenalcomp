@@ -102,7 +102,7 @@ LEX_ResetIOContext
 
 
 PSR_CreateGrammar			
-PSR_DestroyGrammar		
+PSR_DestroyGrammar
 PSR_ClearGrammar		
 PSR_InsertTerm			
 PSR_FindTermByName		
@@ -133,8 +133,9 @@ PSR_SetFirstRule
 
 ;Parser
 
+PSR_GetGrammar
 PSR_CreateParser		
-PSR_DestroyParser		
+PSR_DestroyParser
 PSR_CreateContext
 PSR_DestroyContext
 PSR_Clear				
