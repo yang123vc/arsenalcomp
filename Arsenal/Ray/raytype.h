@@ -18,6 +18,7 @@ AR_NAMESPACE_BEGIN
 
 
 typedef enum{
+		TOK_EOI		= 0,
 		TOK_DELIM_ID = 257,
 		TOK_TYPE_ID = 258,
 		TOK_DONE_ID = 259,
@@ -268,10 +269,9 @@ typedef enum
 
 struct	__var_tag 
 {
-
-		const wchar_t		*name;	
-		rayStorageClass_t	storage;	
-		rayType_t			*type;	
+		const wchar_t		*name;
+		rayStorageClass_t	storage;
+		rayType_t			*type;
 		uint_64_t			addr;
 
 		rayInitializer_t	*init;
@@ -306,8 +306,8 @@ struct __block_tag
 		rayInitializer_t	**initializer;	
 		size_t				init_cnt;
 
-		rayType_t			**structs;
-		size_t				struct_cnt;
+		rayType_t			**types;
+		size_t				types_cnt;
 
 		rayBlock_t			*next;
 		rayBlock_t			*subblocks;
@@ -322,12 +322,18 @@ void			RAY_DestroyBlock(rayBlock_t		*block);
 
 
 
-
 typedef struct __func_tag		
 {
-		const char			*name;		
+		const char			*name;
 		rayType_t			*func_type;
-		rayStatement_t		*statement;
+
+		bool_t				build_in;
+		
+		union{
+				rayStatement_t		*statement;
+				uint_64_t			extern_func;
+		};
+
 		raySrcInfo_t		src;
 }rayFunc_t;
 

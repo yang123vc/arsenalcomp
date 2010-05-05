@@ -36,9 +36,6 @@ exit
 	set d=%d_dir%\Arsenal.dll
 	call :copy_file %s% %d%
 
-	set s=%s_dir%\ArsenalCPP.dll
-	set d=%d_dir%\ArsenalCPP.dll
-	call :copy_file %s% %d%
 	goto :eof
 
 

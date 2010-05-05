@@ -1787,24 +1787,8 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 #define START_RULE L"Program"
 
 
-static void		AR_STDCALL handle_free_node(psrNode_t *node, void *ctx)
-{
-		AR_ASSERT(node != NULL);
-		
-}
 
-static void		AR_STDCALL handle_on_error(const psrToken_t *tok, const wchar_t *expected[], size_t count, void *ctx)
-{
-		AR_ASSERT(ctx != NULL && tok != NULL);
-		
-		AR_ASSERT(false);
-}
 
-static const psrHandler_t		__g_handler = 
-{
-		handle_on_error,
-		handle_free_node
-};
 
 
 
@@ -3649,9 +3633,28 @@ static psrNode_t* AR_STDCALL handle_SourceElements_NoNode(psrNode_t **nodes, siz
 
 
 
+/**********************************************************************************************************************************/
 
 
 
+
+static void		AR_STDCALL handle_free_node(psrNode_t *node, void *ctx)
+{
+		AR_ASSERT(node != NULL);
+}
+
+static void		AR_STDCALL handle_on_error(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
+{
+		AR_ASSERT(ctx != NULL && tok != NULL);
+		
+		AR_ASSERT(false);
+}
+
+static const psrHandler_t		__g_handler = 
+{
+		handle_on_error,
+		handle_free_node
+};
 
 
 

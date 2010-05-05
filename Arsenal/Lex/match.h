@@ -40,13 +40,13 @@ enum
 
 typedef struct __lex_match_result_tag
 {
-		bool_t				is_ok;
-		const wchar_t		*input;
-		const wchar_t		*next;
-		size_t				line;
-		size_t				col;
+		bool_t							is_ok;
+		const wchar_t					*input;
+		const wchar_t					*next;
+		size_t							line;
+		size_t							col;
 
-		uint_t				flags;
+		uint_t							flags;
 }lexMatch_t;
 
 

@@ -1540,7 +1540,7 @@ static void	AR_STDCALL cfg_free(psrNode_t *node, void *ctx)
 }
 
 
-static void		AR_STDCALL cfg_error(const psrToken_t *tok, const wchar_t *expected[], size_t count, void *ctx)
+static void		AR_STDCALL cfg_error(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
 {
 		cfgReport_t				*report = NULL;
 		cfgReportInfo_t			info;
@@ -1574,11 +1574,22 @@ static void		AR_STDCALL cfg_error(const psrToken_t *tok, const wchar_t *expected
 						, tok->col
 						);
 		AR_DEL(buf);
-		AR_AppendFormatString(str, L"Expected Term Type:\r\n");
+		AR_AppendFormatString(str, L"Expected Term :\r\n");
 
 		for(i = 0; i < count; ++i)
 		{
-				AR_AppendFormatString(str, L"\"%ls\" ", expected[i]);
+				const wchar_t *term = NULL;
+				size_t x;
+				for(x = 0; x < sizeof(__cfg_term) / sizeof(__cfg_term[0]); ++x)
+				{
+						if((size_t)(__cfg_term[x].val) == expected[i])
+						{
+								term = __cfg_term[x].name;
+						}
+				}
+
+				AR_ASSERT(term != NULL);
+				AR_AppendFormatString(str, L"\"%ls\" ", term);
 		}
 		AR_AppendFormatString(str, L"\r\n\r\n");
 		/******************************************************************************************/

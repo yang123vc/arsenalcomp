@@ -264,7 +264,7 @@ void				RGX_SwapThreadList(rgxThreadList_t *l, rgxThreadList_t *r);
 void				RGX_ClearThreadList(rgxThreadList_t *l);
 
 
-
+struct __regex_program_tag;
 typedef struct __regex_program_tag		rgxProg_t;
 
 

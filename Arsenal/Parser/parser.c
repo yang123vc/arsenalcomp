@@ -264,29 +264,32 @@ static AR_INLINE const psrTermInfo_t* PSR_FindTermFromInfoTable(const psrTermInf
 
 struct __expected_message_tag
 {
-		const wchar_t	**msg;
+		size_t			*msg;
 		size_t			count;
 };
 
 
 
 
-static AR_INLINE void PSR_InitExpectedMsg(psrExpectedMsg_t *msg, const psrSymbList_t *lst)
+static AR_INLINE void PSR_InitExpectedMsg(psrExpectedMsg_t *msg, const psrSymbList_t *lst, const psrGrammar_t *grammar)
 {
 		size_t i;
-		AR_ASSERT(msg != NULL && lst != NULL);
+		AR_ASSERT(msg != NULL && lst != NULL && grammar != NULL);
 
 		AR_memset(msg, 0, sizeof(*msg));
 		if(lst->count == 0)return;
 		
 		msg->count = lst->count;
 		
-		msg->msg = AR_NEWARR(const wchar_t*, msg->count);
+		msg->msg = AR_NEWARR(size_t,	msg->count);
 		
 		for(i = 0; i < msg->count; ++i)
 		{
+				const psrTermInfo_t		*term_info; 
 				AR_ASSERT(lst->lst[i]->type == PSR_TERM);
-				msg->msg[i] = PSR_AllocString(lst->lst[i]->name);
+				term_info = PSR_GetTermSymbInfo(grammar, lst->lst[i]);
+				AR_ASSERT(term_info != NULL);
+				msg->msg[i] = term_info->val;
 		}
 }
 
@@ -326,7 +329,7 @@ const parser_t* PSR_CreateParser(const psrGrammar_t *grammar, psrModeType_t type
 
 		for(i = 0; i < parser->msg_count; ++i)
 		{
-				PSR_InitExpectedMsg(&parser->msg_set[i], PSR_GetExpectedSymb(parser->tbl, i));
+				PSR_InitExpectedMsg(&parser->msg_set[i], PSR_GetExpectedSymb(parser->tbl, i), parser->grammar);
 		}
 
 		parser->term_tbl = PSR_CreateTermInfoTable();
@@ -344,7 +347,11 @@ const parser_t* PSR_CreateParser(const psrGrammar_t *grammar, psrModeType_t type
 		return parser;
 }
 
-
+const	psrGrammar_t*	PSR_GetGrammar(const parser_t *parser)
+{
+		AR_ASSERT(parser != NULL && parser->grammar != NULL);
+		return parser->grammar;
+}
 
 void	  PSR_DestroyParser(const parser_t *parser)
 {

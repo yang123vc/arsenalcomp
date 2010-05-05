@@ -7,30 +7,31 @@ AR_NAMESPACE_BEGIN
 
 
 
-static const wchar_t *__g_lex_name[] = {
-L"delim = [ \\r\\n\\t]",
-L"comment = /\\*([^\\*]|\\*+[^\\*/])*\\*+/",
-L"comment_line = //[^\\n]*\\n",
-L"skip_lexem = {delim}|{comment}|{comment_line}",
-L"digit = [0-9]",
-L"number = {digit}+",
-L"letter = [A-Z_a-z]",
-L"int_type_suffix = ((u|U)?(l|L))|((u|U)(l|L)?)",
-L"hex_digit = [0-9a-fA-F]",
-L"hex_literal = 0(x|X){hex_digit}+{int_type_suffix}?",
-L"oct_literal = 0[0-7]+{int_type_suffix}?",
-L"dec_literal = (0|[1-9][0-9]*){int_type_suffix}?",
-L"exponet = (e|E)(\\+|\\-)?[0-9]+",
-L"float_type_suffix = (f|F|d|D)",
-L"float_literal = ([0-9]*\\.[0-9]*{exponet}?{float_type_suffix}?)",
-L"escape_seq = (\\\\(\\x22|\\x27))",
-L"string_literal = (\\x22({escape_seq}|[^\\x22])*\\x22)",
-L"char_literal = \\x27({escape_seq}|[^\\x27])*\\x27",
-L"keyword_lhd = [A-Z_a-z0-9]",
-L"float_constant = {float_literal}(?!{keyword_lhd})",
-L"hex_constant = {hex_literal}(?!{keyword_lhd})",
-L"oct_constant = {oct_literal}(?!{keyword_lhd})",
-L"dec_constant = {dec_literal}(?!{keyword_lhd})"
+static const wchar_t *__g_lex_name[] = 
+{
+		L"delim = [ \\r\\n\\t]",
+		L"comment = /\\*([^\\*]|\\*+[^\\*/])*\\*+/",
+		L"comment_line = //[^\\n]*\\n",
+		L"skip_lexem = {delim}|{comment}|{comment_line}",
+		L"digit = [0-9]",
+		L"number = {digit}+",
+		L"letter = [A-Z_a-z]",
+		L"int_type_suffix = ((u|U)?(l|L))|((u|U)(l|L)?)",
+		L"hex_digit = [0-9a-fA-F]",
+		L"hex_literal = 0(x|X){hex_digit}+{int_type_suffix}?",
+		L"oct_literal = 0[0-7]+{int_type_suffix}?",
+		L"dec_literal = (0|[1-9][0-9]*){int_type_suffix}?",
+		L"exponet = (e|E)(\\+|\\-)?[0-9]+",
+		L"float_type_suffix = (f|F|d|D)",
+		L"float_literal = ([0-9]*\\.[0-9]*{exponet}?{float_type_suffix}?)",
+		L"escape_seq = (\\\\(\\x22|\\x27))",
+		L"string_literal = (\\x22({escape_seq}|[^\\x22])*\\x22)",
+		L"char_literal = \\x27({escape_seq}|[^\\x27])*\\x27",
+		L"keyword_lhd = [A-Z_a-z0-9]",
+		L"float_constant = {float_literal}(?!{keyword_lhd})",
+		L"hex_constant = {hex_literal}(?!{keyword_lhd})",
+		L"oct_constant = {oct_literal}(?!{keyword_lhd})",
+		L"dec_constant = {dec_literal}(?!{keyword_lhd})"
 };
 
 #define __NAME_COUNT__ ((size_t)23)
@@ -39,120 +40,129 @@ L"dec_constant = {dec_literal}(?!{keyword_lhd})"
 
 
 static struct {const wchar_t *name; size_t tokval; size_t lex_prec; const wchar_t *regex; bool_t skip; }__g_term_pattern[] =  {
-{NULL, TOK_DELIM_ID,1, L"{skip_lexem}+", true},
-{L"TYPE_ID", TOK_TYPE_ID, 0, L"^$", false},
-{L"DONE_ID", TOK_DONE_ID, 0, L"^$", false},
-{L"CHAR_CONSTANT", TOK_CHAR_CONSTANT, 0, L"{char_literal}", false},
-{L"STRING_LITERAL", TOK_STRING_LITERAL, 0, L"{string_literal}", false},
-{L"FLOAT_NUMBER", TOK_FLOAT_NUMBER, 2, L"{float_constant}", false},
-{L"INT_NUMBER", TOK_INT_NUMBER, 2, L"{hex_constant}|{oct_constant}|{dec_constant}", false},
-{L"IDENTIFIER", TOK_IDENTIFIER, 0, L"{letter}({letter}|{digit})*", false},
-{L"switch", TOK_SWITCH, 1, L"\"switch\"(?!{keyword_lhd})", false},
-{L"for", TOK_FOR, 1, L"\"for\"(?!{keyword_lhd})", false},
-{L"goto", TOK_GOTO, 1, L"\"goto\"(?!{keyword_lhd})", false},
-{L"return", TOK_RETURN, 1, L"\"return\"(?!{keyword_lhd})", false},
-{L"do", TOK_DO, 1, L"\"do\"(?!{keyword_lhd})", false},
-{L"while", TOK_WHILE, 1, L"\"while\"(?!{keyword_lhd})", false},
-{L"if", TOK_IF, 1, L"\"if\"(?!{keyword_lhd})", false},
-{L"else", TOK_ELSE, 1, L"\"else\"(?!{keyword_lhd})", false},
-{L"continue", TOK_CONTINUE, 1, L"\"continue\"(?!{keyword_lhd})", false},
-{L"default", TOK_DEFAULT, 1, L"\"default\"(?!{keyword_lhd})", false},
-{L"case", TOK_CASE, 1, L"\"case\"(?!{keyword_lhd})", false},
-{L"break", TOK_BREAK, 1, L"\"break\"(?!{keyword_lhd})", false},
-{L"const", TOK_CONST, 1, L"\"const\"(?!{keyword_lhd})", false},
-{L"volatile", TOK_VOLATILE, 1, L"\"volatile\"(?!{keyword_lhd})", false},
-{L"struct", TOK_STRUCT, 1, L"\"struct\"(?!{keyword_lhd})", false},
-{L"union", TOK_UNION, 1, L"\"union\"(?!{keyword_lhd})", false},
-{L"typedef", TOK_TYPEDEF, 1, L"\"typedef\"(?!{keyword_lhd})", false},
-{L"static", TOK_STATIC, 1, L"\"static\"(?!{keyword_lhd})", false},
-{L"sizeof", TOK_SIZEOF, 1, L"\"sizeof\"(?!{keyword_lhd})", false},
-{L"void", TOK_VOID, 1, L"\"void\"(?!{keyword_lhd})", false},
-{L"byte", TOK_BYTE, 1, L"\"byte\"(?!{keyword_lhd})", false},
-{L"char", TOK_CHAR, 1, L"\"char\"(?!{keyword_lhd})", false},
-{L"short", TOK_SHORT, 1, L"\"short\"(?!{keyword_lhd})", false},
-{L"int", TOK_INT, 1, L"\"int\"(?!{keyword_lhd})", false},
-{L"long", TOK_LONG, 1, L"\"long\"(?!{keyword_lhd})", false},
-{L"signed", TOK_SIGNED, 1, L"\"signed\"(?!{keyword_lhd})", false},
-{L"unsigned", TOK_UNSIGNED, 1, L"\"unsigned\"(?!{keyword_lhd})", false},
-{L"float", TOK_FLOAT, 1, L"\"float\"(?!{keyword_lhd})", false},
-{L"double", TOK_DOUBLE, 1, L"\"double\"(?!{keyword_lhd})", false},
-{L"import", TOK_IMPORT, 1, L"\"import\"(?!{keyword_lhd})", false},
-{L"export", TOK_EXPORT, 1, L"\"export\"(?!{keyword_lhd})", false},
-{L"attribute", TOK_ATTRIBUTE, 1, L"\"attribute\"", false},
-{L">>=", TOK_RSHIFT_ASSIGN, 2, L"\">>=\"", false},
-{L"<<=", TOK_LSHIFT_ASSIGN, 2, L"\"<<=\"", false},
-{L"+=", TOK_ADD_ASSIGN, 1, L"\"+=\"", false},
-{L"-=", TOK_SUB_ASSIGN, 1, L"\"-=\"", false},
-{L"*=", TOK_MUL_ASSIGN, 1, L"\"*=\"", false},
-{L"/=", TOK_DIV_ASSIGN, 1, L"\"/=\"", false},
-{L"%=", TOK_MOD_ASSIGN, 1, L"\"%=\"", false},
-{L"&=", TOK_AND_ASSIGN, 1, L"\"&=\"", false},
-{L"^=", TOK_XOR_ASSIGN, 1, L"\"^=\"", false},
-{L"|=", TOK_OR_ASSIGN, 1, L"\"|=\"", false},
-{L">>", TOK_RSHIFT, 1, L"\">>\"", false},
-{L"<<", TOK_LSHIFT, 1, L"\"<<\"", false},
-{L"++", TOK_INC, 1, L"\"++\"", false},
-{L"--", TOK_DEC, 1, L"\"--\"", false},
-{L"->", TOK_PTR, 1, L"\"->\"", false},
-{L"&&", TOK_ANDAND, 1, L"\"&&\"", false},
-{L"||", TOK_OROR, 1, L"\"||\"", false},
-{L"<=", TOK_LE, 1, L"\"<=\"", false},
-{L">=", TOK_GE, 1, L"\">=\"", false},
-{L"==", TOK_EQ, 1, L"\"==\"", false},
-{L"!=", TOK_NE, 1, L"\"!=\"", false},
-{L"<", TOK_LESS, 0, L"\"<\"", false},
-{L">", TOK_GREATER, 0, L"\">\"", false},
-{L"{", TOK_L_BRACES, 0, L"\"{\"", false},
-{L"}", TOK_R_BRACES, 0, L"\"}\"", false},
-{L"(", TOK_L_PAREN, 0, L"\"(\"", false},
-{L")", TOK_R_PAREN, 0, L"\")\"", false},
-{L"[", TOK_L_SQUARE, 0, L"\"[\"", false},
-{L"]", TOK_R_SQUARE, 0, L"\"]\"", false},
-{L";", TOK_SEMICOLON, 0, L"\";\"", false},
-{L",", TOK_COMMA, 0, L"\",\"", false},
-{L":", TOK_COLON, 0, L"\":\"", false},
-{L"=", TOK_ASSIGN, 0, L"\"=\"", false},
-{L".", TOK_DOT, 0, L"\".\"", false},
-{L"&", TOK_AND, 0, L"\"&\"", false},
-{L"!", TOK_NOT, 0, L"\"!\"", false},
-{L"~", TOK_TILDE, 0, L"\"~\"", false},
-{L"+", TOK_ADD, 0, L"\"+\"", false},
-{L"-", TOK_SUB, 0, L"\"-\"", false},
-{L"*", TOK_MUL, 0, L"\"*\"", false},
-{L"/", TOK_DIV, 0, L"\"/\"", false},
-{L"%", TOK_MOD, 0, L"\"%\"", false},
-{L"^", TOK_XOR, 0, L"\"^\"", false},
-{L"|", TOK_OR, 0, L"\"|\"", false},
-{L"?", TOK_QUEST, 0, L"\"?\"", false},
-{L"EOI", 0, 2, L"$", false}
+		{NULL, TOK_DELIM_ID,1, L"{skip_lexem}+", true},
+		{L"TYPE_ID", TOK_TYPE_ID, 0, L"^$", false},
+		{L"DONE_ID", TOK_DONE_ID, 0, L"^$", false},
+		{L"CHAR_CONSTANT", TOK_CHAR_CONSTANT, 0, L"{char_literal}", false},
+		{L"STRING_LITERAL", TOK_STRING_LITERAL, 0, L"{string_literal}", false},
+		{L"FLOAT_NUMBER", TOK_FLOAT_NUMBER, 2, L"{float_constant}", false},
+		{L"INT_NUMBER", TOK_INT_NUMBER, 2, L"{hex_constant}|{oct_constant}|{dec_constant}", false},
+		{L"IDENTIFIER", TOK_IDENTIFIER, 0, L"{letter}({letter}|{digit})*", false},
+		{L"switch", TOK_SWITCH, 1, L"\"switch\"(?!{keyword_lhd})", false},
+		{L"for", TOK_FOR, 1, L"\"for\"(?!{keyword_lhd})", false},
+		{L"goto", TOK_GOTO, 1, L"\"goto\"(?!{keyword_lhd})", false},
+		{L"return", TOK_RETURN, 1, L"\"return\"(?!{keyword_lhd})", false},
+		{L"do", TOK_DO, 1, L"\"do\"(?!{keyword_lhd})", false},
+		{L"while", TOK_WHILE, 1, L"\"while\"(?!{keyword_lhd})", false},
+		{L"if", TOK_IF, 1, L"\"if\"(?!{keyword_lhd})", false},
+		{L"else", TOK_ELSE, 1, L"\"else\"(?!{keyword_lhd})", false},
+		{L"continue", TOK_CONTINUE, 1, L"\"continue\"(?!{keyword_lhd})", false},
+		{L"default", TOK_DEFAULT, 1, L"\"default\"(?!{keyword_lhd})", false},
+		{L"case", TOK_CASE, 1, L"\"case\"(?!{keyword_lhd})", false},
+		{L"break", TOK_BREAK, 1, L"\"break\"(?!{keyword_lhd})", false},
+		{L"const", TOK_CONST, 1, L"\"const\"(?!{keyword_lhd})", false},
+		{L"volatile", TOK_VOLATILE, 1, L"\"volatile\"(?!{keyword_lhd})", false},
+		{L"struct", TOK_STRUCT, 1, L"\"struct\"(?!{keyword_lhd})", false},
+		{L"union", TOK_UNION, 1, L"\"union\"(?!{keyword_lhd})", false},
+		{L"typedef", TOK_TYPEDEF, 1, L"\"typedef\"(?!{keyword_lhd})", false},
+		{L"static", TOK_STATIC, 1, L"\"static\"(?!{keyword_lhd})", false},
+		{L"sizeof", TOK_SIZEOF, 1, L"\"sizeof\"(?!{keyword_lhd})", false},
+		{L"void", TOK_VOID, 1, L"\"void\"(?!{keyword_lhd})", false},
+		{L"byte", TOK_BYTE, 1, L"\"byte\"(?!{keyword_lhd})", false},
+		{L"char", TOK_CHAR, 1, L"\"char\"(?!{keyword_lhd})", false},
+		{L"short", TOK_SHORT, 1, L"\"short\"(?!{keyword_lhd})", false},
+		{L"int", TOK_INT, 1, L"\"int\"(?!{keyword_lhd})", false},
+		{L"long", TOK_LONG, 1, L"\"long\"(?!{keyword_lhd})", false},
+		{L"signed", TOK_SIGNED, 1, L"\"signed\"(?!{keyword_lhd})", false},
+		{L"unsigned", TOK_UNSIGNED, 1, L"\"unsigned\"(?!{keyword_lhd})", false},
+		{L"float", TOK_FLOAT, 1, L"\"float\"(?!{keyword_lhd})", false},
+		{L"double", TOK_DOUBLE, 1, L"\"double\"(?!{keyword_lhd})", false},
+		{L"import", TOK_IMPORT, 1, L"\"import\"(?!{keyword_lhd})", false},
+		{L"export", TOK_EXPORT, 1, L"\"export\"(?!{keyword_lhd})", false},
+		{L"attribute", TOK_ATTRIBUTE, 1, L"\"attribute\"", false},
+		{L">>=", TOK_RSHIFT_ASSIGN, 2, L"\">>=\"", false},
+		{L"<<=", TOK_LSHIFT_ASSIGN, 2, L"\"<<=\"", false},
+		{L"+=", TOK_ADD_ASSIGN, 1, L"\"+=\"", false},
+		{L"-=", TOK_SUB_ASSIGN, 1, L"\"-=\"", false},
+		{L"*=", TOK_MUL_ASSIGN, 1, L"\"*=\"", false},
+		{L"/=", TOK_DIV_ASSIGN, 1, L"\"/=\"", false},
+		{L"%=", TOK_MOD_ASSIGN, 1, L"\"%=\"", false},
+		{L"&=", TOK_AND_ASSIGN, 1, L"\"&=\"", false},
+		{L"^=", TOK_XOR_ASSIGN, 1, L"\"^=\"", false},
+		{L"|=", TOK_OR_ASSIGN, 1, L"\"|=\"", false},
+		{L">>", TOK_RSHIFT, 1, L"\">>\"", false},
+		{L"<<", TOK_LSHIFT, 1, L"\"<<\"", false},
+		{L"++", TOK_INC, 1, L"\"++\"", false},
+		{L"--", TOK_DEC, 1, L"\"--\"", false},
+		{L"->", TOK_PTR, 1, L"\"->\"", false},
+		{L"&&", TOK_ANDAND, 1, L"\"&&\"", false},
+		{L"||", TOK_OROR, 1, L"\"||\"", false},
+		{L"<=", TOK_LE, 1, L"\"<=\"", false},
+		{L">=", TOK_GE, 1, L"\">=\"", false},
+		{L"==", TOK_EQ, 1, L"\"==\"", false},
+		{L"!=", TOK_NE, 1, L"\"!=\"", false},
+		{L"<", TOK_LESS, 0, L"\"<\"", false},
+		{L">", TOK_GREATER, 0, L"\">\"", false},
+		{L"{", TOK_L_BRACES, 0, L"\"{\"", false},
+		{L"}", TOK_R_BRACES, 0, L"\"}\"", false},
+		{L"(", TOK_L_PAREN, 0, L"\"(\"", false},
+		{L")", TOK_R_PAREN, 0, L"\")\"", false},
+		{L"[", TOK_L_SQUARE, 0, L"\"[\"", false},
+		{L"]", TOK_R_SQUARE, 0, L"\"]\"", false},
+		{L";", TOK_SEMICOLON, 0, L"\";\"", false},
+		{L",", TOK_COMMA, 0, L"\",\"", false},
+		{L":", TOK_COLON, 0, L"\":\"", false},
+		{L"=", TOK_ASSIGN, 0, L"\"=\"", false},
+		{L".", TOK_DOT, 0, L"\".\"", false},
+		{L"&", TOK_AND, 0, L"\"&\"", false},
+		{L"!", TOK_NOT, 0, L"\"!\"", false},
+		{L"~", TOK_TILDE, 0, L"\"~\"", false},
+		{L"+", TOK_ADD, 0, L"\"+\"", false},
+		{L"-", TOK_SUB, 0, L"\"-\"", false},
+		{L"*", TOK_MUL, 0, L"\"*\"", false},
+		{L"/", TOK_DIV, 0, L"\"/\"", false},
+		{L"%", TOK_MOD, 0, L"\"%\"", false},
+		{L"^", TOK_XOR, 0, L"\"^\"", false},
+		{L"|", TOK_OR, 0, L"\"|\"", false},
+		{L"?", TOK_QUEST, 0, L"\"?\"", false},
+		{L"EOI", TOK_EOI, 2, L"$", false}
 };
 
 #define __TERM_COUNT__ ((size_t)86)
 
-static struct {const wchar_t *name; size_t tokval; size_t prec_level; psrAssocType_t	assoc;}__g_prec_pattern[] =  {
-{L"||", TOK_OROR,1, PSR_ASSOC_LEFT},
-{L"&&", TOK_ANDAND,2, PSR_ASSOC_LEFT},
-{L"|", TOK_OR,3, PSR_ASSOC_LEFT},
-{L"^", TOK_XOR,4, PSR_ASSOC_LEFT},
-{L"&", TOK_AND,5, PSR_ASSOC_LEFT},
-{L"==", TOK_EQ,6, PSR_ASSOC_LEFT},
-{L"!=", TOK_NE,6, PSR_ASSOC_LEFT},
-{L"<", TOK_LESS,7, PSR_ASSOC_LEFT},
-{L"<=", TOK_LE,7, PSR_ASSOC_LEFT},
-{L">", TOK_GREATER,7, PSR_ASSOC_LEFT},
-{L">=", TOK_GE,7, PSR_ASSOC_LEFT},
-{L"<<", TOK_LSHIFT,8, PSR_ASSOC_LEFT},
-{L">>", TOK_RSHIFT,8, PSR_ASSOC_LEFT},
-{L"+", TOK_ADD,9, PSR_ASSOC_LEFT},
-{L"-", TOK_SUB,9, PSR_ASSOC_LEFT},
-{L"*", TOK_MUL,10, PSR_ASSOC_LEFT},
-{L"/", TOK_DIV,10, PSR_ASSOC_LEFT},
-{L"%", TOK_MOD,10, PSR_ASSOC_LEFT},
-{L"IF_WITHOUT_ELSE", 342,11, PSR_ASSOC_NONASSOC},
-{L"else", TOK_ELSE,12, PSR_ASSOC_NONASSOC}
+static struct 
+{
+		const wchar_t *name; 
+		size_t tokval; 
+		size_t prec_level; 
+		psrAssocType_t	assoc;
+}__g_prec_pattern[] =  
+{
+		{L"||", TOK_OROR,1, PSR_ASSOC_LEFT},
+		{L"&&", TOK_ANDAND,2, PSR_ASSOC_LEFT},
+		{L"|", TOK_OR,3, PSR_ASSOC_LEFT},
+		{L"^", TOK_XOR,4, PSR_ASSOC_LEFT},
+		{L"&", TOK_AND,5, PSR_ASSOC_LEFT},
+		{L"==", TOK_EQ,6, PSR_ASSOC_LEFT},
+		{L"!=", TOK_NE,6, PSR_ASSOC_LEFT},
+		{L"<", TOK_LESS,7, PSR_ASSOC_LEFT},
+		{L"<=", TOK_LE,7, PSR_ASSOC_LEFT},
+		{L">", TOK_GREATER,7, PSR_ASSOC_LEFT},
+		{L">=", TOK_GE,7, PSR_ASSOC_LEFT},
+		{L"<<", TOK_LSHIFT,8, PSR_ASSOC_LEFT},
+		{L">>", TOK_RSHIFT,8, PSR_ASSOC_LEFT},
+		{L"+", TOK_ADD,9, PSR_ASSOC_LEFT},
+		{L"-", TOK_SUB,9, PSR_ASSOC_LEFT},
+		{L"*", TOK_MUL,10, PSR_ASSOC_LEFT},
+		{L"/", TOK_DIV,10, PSR_ASSOC_LEFT},
+		{L"%", TOK_MOD,10, PSR_ASSOC_LEFT},
+		{L"IF_WITHOUT_ELSE", 342,11, PSR_ASSOC_NONASSOC},
+		{L"else", TOK_ELSE,12, PSR_ASSOC_NONASSOC}
 };
 
 #define __PREC_COUNT__ ((size_t)20)
+
+
 
 /*program	:	translation_unit DONE_ID */
 /*program	:	DONE_ID */
@@ -1238,6 +1248,19 @@ static psrNode_t* AR_STDCALL handle_assignment_operator(psrNode_t **nodes, size_
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 /***************************************************************************************************/
 
 static void		AR_STDCALL handle_free_node(psrNode_t *node, void *ctx)
@@ -1246,7 +1269,7 @@ static void		AR_STDCALL handle_free_node(psrNode_t *node, void *ctx)
 		if(node)RAY_DestroyParserNode((rayNode_t*)node);
 }
 
-static void		AR_STDCALL handle_on_error(const psrToken_t *tok, const wchar_t *expected[], size_t count, void *ctx)
+static void		AR_STDCALL handle_on_error(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
 {
 		AR_ASSERT(ctx != NULL && tok != NULL);
 		
@@ -1258,13 +1281,6 @@ static const psrHandler_t		__g_handler =
 		handle_on_error,
 		handle_free_node
 };
-
-
-
-
-
-
-
 
 
 /**********************************************************************************************************************************/
@@ -1284,6 +1300,7 @@ lex_t*	RAY_BuildLexer()
 						return NULL;
 				}
 		}																		
+		
 		for(i = 0; i < __TERM_COUNT__; ++i)
 		{																		
 				lexAction_t		act;											
@@ -1295,8 +1312,8 @@ lex_t*	RAY_BuildLexer()
 						LEX_Destroy(lex);										
 						AR_ASSERT(false);										
 						return NULL;											
-				}																
-		}																		
+				}
+		}
 		return lex;																
 }
 
@@ -1317,55 +1334,55 @@ const psrGrammar_t*	RAY_BuildGrammar()
 		size_t i;
 		
 		grammar = PSR_CreateGrammar(&__g_handler, NULL);
-		for(i = 0; i < __TERM_COUNT__; ++i)																						
+		for(i = 0; i < __TERM_COUNT__; ++i)
 		{																														
-				if(__g_term_pattern[i].skip || __g_term_pattern[i].tokval == 0)continue;										
+				if(__g_term_pattern[i].skip || __g_term_pattern[i].tokval == 0)continue;
 				if(!PSR_InsertTerm(grammar, __g_term_pattern[i].name, __g_term_pattern[i].tokval, PSR_ASSOC_NONASSOC,0, __build_leaf))	
-				{																												
-						PSR_DestroyGrammar(grammar);																			
-						grammar = NULL;																							
-						AR_ASSERT(false);																						
-						return NULL;																							
-				}																												
+				{
+						PSR_DestroyGrammar(grammar);
+						grammar = NULL;
+						AR_ASSERT(false);
+						return NULL;
+				}
 		}
 
 		for(i = 0; i < __PREC_COUNT__; ++i)																						
-		{																														
-				psrTermInfo_t	*info;																							
-				info = PSR_GetTermSymbInfoByName(grammar, __g_prec_pattern[i].name);											
-				if(info == NULL)																								
+		{
+				psrTermInfo_t	*info;
+				info = PSR_GetTermSymbInfoByName(grammar, __g_prec_pattern[i].name);
+				if(info == NULL)
 				{
 						if(!PSR_InsertTerm(grammar, __g_prec_pattern[i].name, __g_prec_pattern[i].tokval, __g_prec_pattern[i].assoc, __g_prec_pattern[i].prec_level, NULL))
-						{																																					
-								PSR_DestroyGrammar(grammar);																												
-								grammar = NULL;																																
-								AR_ASSERT(false);																															
-								return NULL;																																
-						}																																					
-				}else																																						
-				{																																							
-						info->assoc = __g_prec_pattern[i].assoc;																											
-						info->prec = __g_prec_pattern[i].prec_level;																										
-				}																																							
+						{
+								PSR_DestroyGrammar(grammar);
+								grammar = NULL;
+								AR_ASSERT(false);
+								return NULL;
+						}
+				}else
+				{
+						info->assoc = __g_prec_pattern[i].assoc;
+						info->prec = __g_prec_pattern[i].prec_level;
+				}
 		}
 
 		for(i = 0; i < __RULE_COUNT__; ++i)																													
-		{																																									
-				if(!PSR_InsertRuleByStr(grammar, __g_rule_pattern[i].rule, __g_rule_pattern[i].prec_token, __g_rule_pattern[i].handler, __g_rule_pattern[i].auto_ret))		
-				{																																							
-						PSR_DestroyGrammar(grammar);																														
-						grammar = NULL;																																		
-						AR_ASSERT(false);																																	
-						return NULL;																																		
-				}																																							
+		{
+				if(!PSR_InsertRuleByStr(grammar, __g_rule_pattern[i].rule, __g_rule_pattern[i].prec_token, __g_rule_pattern[i].handler, __g_rule_pattern[i].auto_ret))
+				{
+						PSR_DestroyGrammar(grammar);
+						grammar = NULL;
+						AR_ASSERT(false);
+						return NULL;
+				}
 		}
 
-		if(!PSR_SetFirstRule(grammar,START_RULE) || !PSR_CheckIsValidGrammar(grammar))																						
-		{																																									
-				PSR_DestroyGrammar(grammar);																																
-				grammar = NULL;																																				
-				AR_ASSERT(false);																																			
-				return NULL;																																				
+		if(!PSR_SetFirstRule(grammar,START_RULE) || !PSR_CheckIsValidGrammar(grammar))
+		{
+				PSR_DestroyGrammar(grammar);
+				grammar = NULL;	
+				AR_ASSERT(false);
+				return NULL;
 		}
 		
 		return grammar;
@@ -1384,8 +1401,9 @@ void				RAY_InitParserImpl()
 
 void				RAY_UnInitParserImpl()
 {
-		PSR_DestroyGrammar((psrGrammar_t*)__g_grammar);
 		PSR_DestroyParser(__g_parser);
+		PSR_DestroyGrammar((psrGrammar_t*)__g_grammar);
+		
 		__g_grammar = NULL;
 		__g_parser = NULL;
 		AR_UnInitSpinLock(&__g_lock);
