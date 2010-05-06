@@ -41,7 +41,7 @@ struct __ray_parser_tag
 		rayReport_t		report;
 		
 		bool_t			is_error;
-		lex_t			*lexer;
+		lexMatch_t		*lexer;
 		psrContext_t	*parser_ctx;
 
 		rayBlock_t		*outer_block;
@@ -70,10 +70,15 @@ rayParser_t*	RAY_CreateParser(const rayReport_t *report)
 		
 		parser->lexer = RAY_BuildLexer();
 		AR_ASSERT(parser->lexer != NULL);
+		
 		parser->parser_ctx = RAY_BuildParserContext((void*)parser);
 		AR_ASSERT(parser->parser_ctx != NULL);
 		
 		RAY_PushAlignment(parser, RAY_DEF_ALIGNMENT);
+		
+		/*
+		LEX_MatchFlags(parser->lexer, LEX_REPORT_SKIP, true);
+		*/
 
 		return parser;
 }
@@ -84,6 +89,8 @@ void			RAY_DestroyParser(rayParser_t		*parser)
 
 		RAY_ReleaseParserContext(parser->parser_ctx);
 		RAY_ReleaseLexer(parser->lexer);
+
+		if(parser->alignment)AR_DEL(parser->alignment);
 		AR_DEL(parser);
 }
 
@@ -177,10 +184,9 @@ void			RAY_DestroyParserNode(rayNode_t	   *node)
 
 
 /*******************************************************************************************************/
-
+#if(0)
 rayNode_t*		RAY_Parse(rayParser_t			*parser, const wchar_t *src)
 {
-		lexMatch_t		match;
 		lexToken_t		tok;
 		psrToken_t		psr_tok;
 		bool_t			has_error;
@@ -189,12 +195,13 @@ rayNode_t*		RAY_Parse(rayParser_t			*parser, const wchar_t *src)
 		AR_ASSERT(parser != NULL && src != NULL);
 
 		result = NULL;
-		LEX_InitMatch(&match, src);
+		LEX_ResetInput(parser->lexer, src);
+		
 		has_error = false;
 		
 		while(!has_error)
 		{
-				if(LEX_Match(parser->lexer, &match, &tok))
+				if(LEX_Match(parser->lexer, &tok))
 				{
 						/*
 						wchar_t buf[1024];
@@ -202,7 +209,7 @@ rayNode_t*		RAY_Parse(rayParser_t			*parser, const wchar_t *src)
 						buf[tok.count] = 0;
 						AR_printf(L"%ls\r\n",buf);
 						*/
-						
+
 						PSR_TOTERMTOK(&tok, &psr_tok);
 						if(psr_tok.term_val == TOK_EOI)
 						{
@@ -233,10 +240,60 @@ rayNode_t*		RAY_Parse(rayParser_t			*parser, const wchar_t *src)
 				result = (rayNode_t*)PSR_GetResult(parser->parser_ctx);
 		}
 		
-		LEX_UnInitMatch(&match);
+		LEX_ClearInput(parser->lexer);
 		PSR_Clear(parser->parser_ctx);
 		return NULL;
 }
+#endif
+
+rayNode_t*		RAY_Parse(rayParser_t			*parser, const wchar_t *src)
+{
+		lexToken_t		tok;
+
+		bool_t			has_error;
+
+		rayNode_t		*result;
+		AR_ASSERT(parser != NULL && src != NULL);
+
+		result = NULL;
+		LEX_ResetInput(parser->lexer, src);
+		
+		has_error = false;
+		
+		while(!has_error)
+		{
+				if(LEX_Match(parser->lexer, &tok))
+				{
+						wchar_t buf[1024];
+						AR_wcsncpy(buf, tok.str, tok.count);
+						buf[tok.count] = 0;
+						AR_printf(L"%ls\r\n",buf);
+
+						if(tok.value == TOK_EOI)
+						{
+								break;
+						}
+						
+						
+				}else
+				{
+						has_error = true;
+				}
+		}
+
+		if(has_error)
+		{
+				parser->is_error = true;
+		}else
+		{
+				AR_printf(L"%ls\r\n", L"success!");
+		}
+		
+		LEX_ClearInput(parser->lexer);
+		PSR_Clear(parser->parser_ctx);
+		return NULL;
+}
+
 
 
 AR_NAMESPACE_END

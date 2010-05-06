@@ -6,6 +6,8 @@
 #include "../Arsenal/Parser/parser.h"
 #include "../Arsenal/Parser/lr_action.h"
 
+#if(0)
+
 #if defined(__LIB)
 
 AR_NAMESPACE_BEGIN
@@ -502,4 +504,8 @@ void calc_test3()
 AR_NAMESPACE_END
 
 #endif
+
+#endif
+
+
 

@@ -167,6 +167,10 @@ void ray_test()
 		AR_ASSERT(src != NULL);
 		
 		RAY_Parse(parser, src);
+		getchar();
+		AR_printf(L"%ls\r\n", L"----------------------------------------------\r\n");
+		RAY_Parse(parser, src);
+		getchar();
 
 		RAY_DestroyParser(parser);
 

@@ -2,7 +2,9 @@
 #include "../Arsenal/Lex/lex.h"
 #include "../Arsenal/Lex/rgx.h"
 
+#if(0)
 #if defined(__LIB)
+
 
 AR_NAMESPACE_BEGIN
 
@@ -580,5 +582,7 @@ void lex_test()
 AR_NAMESPACE_END
 
 
+
+#endif
 
 #endif
