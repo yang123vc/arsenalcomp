@@ -237,7 +237,7 @@
 
 
 
-program			:	translation_unit	DONE_ID
+program			:	translation_unit	//	DONE_ID
 				|	DONE_ID
 				;
 

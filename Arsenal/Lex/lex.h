@@ -16,7 +16,7 @@
 #define __LEX_H__
 
 #include "../Common/common.h"
-#include "match.h"
+
 
 AR_NAMESPACE_BEGIN
 
@@ -39,13 +39,24 @@ typedef struct __lex_action_tag
 
 
 
-/*typedef struct __lex_tag lex_t;*/
+
+typedef struct __lex_rule_set
+{
+		lexAction_t				*action;
+		struct __rgx_node_tag	**nodes;
+		size_t					count;
+		size_t					cap;
+}lexRuleSet_t;
+
+
+
+
 
 typedef struct __lex_tag 
 {
 		struct __rgx_name_set_tag		*name_tbl;
 		
-		struct __prog_set_tag			*prog_set;
+		lexRuleSet_t					rule_set;
 		
 		arIOCtx_t						io_ctx;
 }lex_t;
@@ -68,12 +79,83 @@ void	LEX_Clear(lex_t *lex);
 
 
 
-bool_t LEX_Match(lex_t *lex, lexMatch_t *match, lexToken_t *tok);
+
+
+
+
+typedef struct __lex_token_tag
+{
+		const wchar_t	*str;
+		size_t			count;
+		size_t			value;
+		size_t			line;
+		size_t			col;
+}lexToken_t;
+
+
+enum
+{
+		LEX_REPORT_SKIP		=		0x0001,
+		LEX_SINGLE_LINE		=		0x0002,
+		LEX_IGNORE_CASE		=		0x0004
+};
+
+struct __prog_set_tag;
+typedef struct __prog_set_tag	lexProgSet_t;
+
+typedef struct __lex_match_result_tag
+{
+		bool_t							is_ok;
+		const wchar_t					*input;
+		const wchar_t					*next;
+		size_t							line;
+		size_t							col;
+
+		uint_t							flags;
+		lexProgSet_t					*prog_set;
+		arIOCtx_t						io_ctx;
+}lexMatch_t;
+
+
+
+void			LEX_InitMatch(lexMatch_t *pmatch, const lex_t *lex, const arIOCtx_t *io);
+
+void			LEX_UnInitMatch(lexMatch_t *pmatch);
+
+void			LEX_ResetMatchIOContext(lexMatch_t *pmatch, const arIOCtx_t *io);
+
+void			LEX_ResetInput(lexMatch_t *pmatch, const wchar_t *input);
+
+void			LEX_ClearInput(lexMatch_t *pmatch);
+
+void			LEX_ResetMatch(lexMatch_t *pmatch);
+
+const wchar_t*	LEX_GetNextInput(const lexMatch_t *match);
+
+bool_t			LEX_IsError(const lexMatch_t *match);
+
+void			LEX_ClearError(lexMatch_t *match);
+
+/*跳到下一个非空白token*/
+void			LEX_Skip(lexMatch_t *pmatch);
+/*跳到与tok相同的符号，如果未找到,pmatch直接跳到符号结尾*/
+void			LEX_SkipTo(lexMatch_t *pmatch, const wchar_t *tok);
+
+/*丢弃N个字符*/
+void			LEX_SkipN(lexMatch_t *pmatch, size_t nchar);
+
+/*LEX_PutBack会重置Match_t的行列号及next指针为此token的，并不会簿记一个队列*/
+void			LEX_PutBack(lexMatch_t *pmatch, const lexToken_t *tok);
+
+
+void			LEX_MatchFlags(lexMatch_t *pmatch, uint_t flags, bool_t is_on);
+void			LEX_MatchClearFlags(lexMatch_t *pmatch);
 
 
 
 
 
+bool_t LEX_Match(lexMatch_t *match, lexToken_t *tok);
 
 
 AR_NAMESPACE_END

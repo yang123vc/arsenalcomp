@@ -7,6 +7,7 @@ AR_NAMESPACE_BEGIN
 
 
 
+
 static const wchar_t *__g_lex_name[] = 
 {
 		L"delim = [ \\r\\n\\t]",
@@ -700,7 +701,7 @@ static psrNode_t* AR_STDCALL __build_leaf(const psrToken_t *tok,  void *ctx);
 /*处理词法输入*/
 static psrNode_t* AR_STDCALL __build_leaf(const psrToken_t *tok,  void *ctx)
 {
-		rayNode_t		*node;
+		rayNode_t		*node = NULL;
 		
 		AR_ASSERT(tok != NULL);
 
@@ -1266,7 +1267,7 @@ static psrNode_t* AR_STDCALL handle_assignment_operator(psrNode_t **nodes, size_
 static void		AR_STDCALL handle_free_node(psrNode_t *node, void *ctx)
 {
 		AR_ASSERT(node != NULL);
-		if(node)RAY_DestroyParserNode((rayNode_t*)node);
+		//if(node)RAY_DestroyParserNode((rayNode_t*)node);
 }
 
 static void		AR_STDCALL handle_on_error(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
@@ -1286,10 +1287,10 @@ static const psrHandler_t		__g_handler =
 /**********************************************************************************************************************************/
 
 
-lex_t*	RAY_BuildLexer()
+const lex_t*	__build_lexer()
 {																				
-		lex_t	*lex;															
-		size_t i;
+		lex_t			*lex;
+		size_t			i;
 		lex = LEX_Create(NULL);
 		for(i = 0; i < __NAME_COUNT__; ++i)
 		{
@@ -1299,7 +1300,7 @@ lex_t*	RAY_BuildLexer()
 						AR_ASSERT(false);
 						return NULL;
 				}
-		}																		
+		}
 		
 		for(i = 0; i < __TERM_COUNT__; ++i)
 		{																		
@@ -1309,21 +1310,19 @@ lex_t*	RAY_BuildLexer()
 				act.value		=		__g_term_pattern[i].tokval;				
 				if(!LEX_InsertRule(lex, __g_term_pattern[i].regex, &act))		
 				{																
-						LEX_Destroy(lex);										
-						AR_ASSERT(false);										
-						return NULL;											
+						LEX_Destroy(lex);
+						AR_ASSERT(false);
+						return NULL;
 				}
 		}
-		return lex;																
+
+		if(!LEX_GenerateTransTable(lex))
+		{
+				AR_ASSERT(false);
+		}
+		return lex;
 }
 
-
-
-void				RAY_ReleaseLexer(lex_t *lexer)
-{
-		AR_ASSERT(lexer != NULL);
-		LEX_Destroy(lexer);
-}
 
 
 
@@ -1389,12 +1388,14 @@ const psrGrammar_t*	RAY_BuildGrammar()
 }
 
 static			arSpinLock_t	__g_lock;
+static	const	lex_t			*__g_lex	 = NULL;
 static	const	psrGrammar_t	*__g_grammar = NULL;
 static	const	parser_t		*__g_parser = NULL;
 
 void				RAY_InitParserImpl()
 {
 		AR_InitSpinLock(&__g_lock);
+		__g_lex     = __build_lexer();
 		__g_grammar	= RAY_BuildGrammar();
 		__g_parser	= PSR_CreateParser(__g_grammar, PSR_LALR);
 }
@@ -1403,10 +1404,31 @@ void				RAY_UnInitParserImpl()
 {
 		PSR_DestroyParser(__g_parser);
 		PSR_DestroyGrammar((psrGrammar_t*)__g_grammar);
-		
+		LEX_Destroy((lex_t*)__g_lex);
+		__g_lex	= NULL;
 		__g_grammar = NULL;
 		__g_parser = NULL;
 		AR_UnInitSpinLock(&__g_lock);
+}
+
+
+lexMatch_t*			RAY_BuildLexer()
+{
+		lexMatch_t		*match;
+		AR_ASSERT(__g_lex != NULL);
+
+		match = AR_NEW0(lexMatch_t);
+		AR_LockSpinLock(&__g_lock);
+		LEX_InitMatch(match, __g_lex, NULL);
+		AR_UnLockSpinLock(&__g_lock);
+		return match;
+}
+
+void				RAY_ReleaseLexer(lexMatch_t	*match)
+{
+		AR_ASSERT(match != NULL);
+		LEX_UnInitMatch(match);
+		AR_DEL(match);
 }
 
 

@@ -16,7 +16,7 @@
 
 
 #include "../Common/common.h"
-#include "match.h"
+#include "lex.h"
 
 AR_NAMESPACE_BEGIN
 
@@ -24,11 +24,15 @@ AR_NAMESPACE_BEGIN
 /*NameSet*/
 #define	AR_RGX_MAXNAME			256
 
-
+struct __rgx_name_tag;
 typedef struct __rgx_name_tag			rgxName_t;
+
+struct __rgx_name_set_tag;
 typedef struct __rgx_name_set_tag		rgxNameSet_t;
 
+struct __rgx_node_tag;
 typedef struct __rgx_node_tag			rgxNode_t;
+
 
 struct __rgx_name_tag
 {
@@ -56,7 +60,10 @@ void					RGX_ClearNameSet(rgxNameSet_t *set);
 
 
 /*CharSet*/
+struct __rgx_char_range_tag;
 typedef struct __rgx_char_range_tag		rgxCharRange_t;
+
+struct __rgx_charset_tag;
 typedef struct __rgx_charset_tag		rgxCharSet_t;
 
 struct __rgx_char_range_tag

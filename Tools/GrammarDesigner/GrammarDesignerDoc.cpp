@@ -997,8 +997,17 @@ void CGrammarDesignerDoc::OnParserParse()
 
 		bool is_ok = true;
 		
+		const ARSpace::arIOCtx_t	io_context = 
+		{
+				__report_io_error_func,
+				__report_io_print_func,
+				(void*)&output
+				
+		};
+
 		ARSpace::lexMatch_t match;
-		ARSpace::LEX_InitMatch(&match, str.GetString());
+		ARSpace::LEX_InitMatch(&match, this->m_lexer, &io_context);
+		ARSpace::LEX_ResetInput(&match, str.GetString());
 		
 		ARSpace::LEX_MatchClearFlags(&match);
 		ARSpace::LEX_MatchFlags(&match, m_lexer_mode, true);
@@ -1015,7 +1024,7 @@ void CGrammarDesignerDoc::OnParserParse()
 		{
 				
 				//if(!m_lexer->GetToken(token))
-				if(!ARSpace::LEX_Match(m_lexer, &match, &token))
+				if(!ARSpace::LEX_Match(&match, &token))
 				{
 						size_t len = wcslen(ARSpace::LEX_GetNextInput(&match));
 						if(len > 10) len = 10;

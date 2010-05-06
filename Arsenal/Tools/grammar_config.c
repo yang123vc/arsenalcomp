@@ -1630,8 +1630,10 @@ static psrHandler_t		__def_handler_ctx =
 
 
 static arSpinLock_t				__g_lock;
+static lex_t					*__g_lex;
 static psrGrammar_t				*__g_grammar = NULL;
 static const parser_t			*__g_parser = NULL;
+
 
 static void __init_parser_tag()
 {
@@ -1640,6 +1642,7 @@ static void __init_parser_tag()
 		
 		psr_handler.error_f = cfg_error;
 		psr_handler.free_f = cfg_free;
+		__g_lex		= __build_lex(NULL);
 		__g_grammar = __build_grammar(&psr_handler, NULL);
 		__g_parser	= __build_parser(__g_grammar);
 }
@@ -1649,13 +1652,32 @@ static void __uninit_parser_tag()
 {
 		PSR_DestroyParser(__g_parser);
 		PSR_DestroyGrammar(__g_grammar);
+		LEX_Destroy(__g_lex);
+		__g_lex = NULL;
 		__g_parser = NULL;
 		__g_grammar = NULL;
 		AR_UnInitSpinLock(&__g_lock);
 		
 }
 
+static lexMatch_t*		__create_lex_match(const arIOCtx_t		*io_ctx)
+{
+		lexMatch_t		*match;
 
+		AR_LockSpinLock(&__g_lock);
+		match = AR_NEW0(lexMatch_t);
+		AR_UnLockSpinLock(&__g_lock);
+
+		LEX_InitMatch(match, __g_lex, io_ctx);
+		return match;
+}
+
+static void				__destroy_lex_match(lexMatch_t *match)
+{
+		AR_ASSERT(match != NULL);
+		LEX_UnInitMatch(match);
+		AR_DEL(match);
+}
 
 static psrContext_t*	__create_parser_context(void *ctx)
 {
@@ -1678,10 +1700,9 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 
 		bool_t is_ok, has_error;
 		
-		lex_t			*lex;
 		psrContext_t	*parser_context;
+		lexMatch_t		*match;
 
-		lexMatch_t		match;
 		lexToken_t		tok;
 		psrToken_t		term;
 		
@@ -1700,10 +1721,10 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 
 		
 		
-		lex = __build_lex(&io_ctx);
+		match		   = __create_lex_match(&io_ctx);
 		parser_context = __create_parser_context((void*)report);
-
-		LEX_InitMatch(&match, gmr_txt);
+		
+		LEX_ResetInput(match, gmr_txt);
 
 		is_ok = true;
 		has_error = false;
@@ -1711,7 +1732,7 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 
 		while(is_ok)
 		{
-				is_ok = LEX_Match(lex, &match, &tok);
+				is_ok = LEX_Match(match, &tok);
 
 				if(!is_ok)
 				{
@@ -1722,12 +1743,12 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 						const wchar_t *tok = NULL;
 
 						AR_memset(&info, 0, sizeof(info));
-						n = AR_wcslen(match.next);
-						tok = AR_wcsndup(match.next, n > 5 ? 5 : n);
+						n = AR_wcslen(LEX_GetNextInput(match));
+						tok = AR_wcsndup(LEX_GetNextInput(match), n > 5 ? 5 : n);
 
 						str = AR_CreateString();
 
-						AR_AppendFormatString(str, L"Invalid Token %ls...(%"AR_PLAT_INT_FMT L"d : %"AR_PLAT_INT_FMT L"d)\r\n", tok, match.line, match.col);
+						AR_AppendFormatString(str, L"Invalid Token %ls...(%"AR_PLAT_INT_FMT L"d : %"AR_PLAT_INT_FMT L"d)\r\n", tok, match->line, match->col);
 
 						if(tok)AR_DEL(tok);
 
@@ -1737,9 +1758,9 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 
 						tmp_tok.term_val = 0;
 						tmp_tok.str_cnt = 0;
-						tmp_tok.str =  match.input;
-						tmp_tok.line = match.line;
-						tmp_tok.col = match.col;
+						tmp_tok.str =  LEX_GetNextInput(match);
+						tmp_tok.line = match->line;
+						tmp_tok.col = match->col;
 
 						info.tok = &tmp_tok;
 						info.err_level = 0;
@@ -1748,9 +1769,9 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 						
 						AR_DestroyString(str);
 
-						AR_ASSERT(*match.next != L'\0');
-						LEX_Skip(&match);
-						LEX_ClearError(&match);
+						AR_ASSERT(*LEX_GetNextInput(match) != L'\0');
+						LEX_Skip(match);
+						LEX_ClearError(match);
 						is_ok = true;
 						has_error = true;
 						continue;
@@ -1795,8 +1816,8 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 
 		
 		__destroy_parser_context(parser_context);
-		LEX_Destroy(lex);
-		LEX_UnInitMatch(&match);
+		__destroy_lex_match(match);
+		
 		
 
 		return (cfgConfig_t*)result;
