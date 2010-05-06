@@ -1665,18 +1665,16 @@ static lexMatch_t*		__create_lex_match(const arIOCtx_t		*io_ctx)
 		lexMatch_t		*match;
 
 		AR_LockSpinLock(&__g_lock);
-		match = AR_NEW0(lexMatch_t);
+		match = LEX_CreateMatch(__g_lex, io_ctx);
 		AR_UnLockSpinLock(&__g_lock);
 
-		LEX_InitMatch(match, __g_lex, io_ctx);
 		return match;
 }
 
 static void				__destroy_lex_match(lexMatch_t *match)
 {
 		AR_ASSERT(match != NULL);
-		LEX_UnInitMatch(match);
-		AR_DEL(match);
+		LEX_DestroyMatch(match);
 }
 
 static psrContext_t*	__create_parser_context(void *ctx)
@@ -1740,6 +1738,7 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 						psrToken_t		tmp_tok;
 						arString_t		*str;
 						size_t n;
+						size_t	line, col;
 						const wchar_t *tok = NULL;
 
 						AR_memset(&info, 0, sizeof(info));
@@ -1747,8 +1746,9 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 						tok = AR_wcsndup(LEX_GetNextInput(match), n > 5 ? 5 : n);
 
 						str = AR_CreateString();
-
-						AR_AppendFormatString(str, L"Invalid Token %ls...(%"AR_PLAT_INT_FMT L"d : %"AR_PLAT_INT_FMT L"d)\r\n", tok, match->line, match->col);
+						
+						LEX_MatchGetCoordinate(match, &line, &col);
+						AR_AppendFormatString(str, L"Invalid Token %ls...(%"AR_PLAT_INT_FMT L"d : %"AR_PLAT_INT_FMT L"d)\r\n", tok, line, col);
 
 						if(tok)AR_DEL(tok);
 
@@ -1759,8 +1759,10 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 						tmp_tok.term_val = 0;
 						tmp_tok.str_cnt = 0;
 						tmp_tok.str =  LEX_GetNextInput(match);
-						tmp_tok.line = match->line;
-						tmp_tok.col = match->col;
+
+						LEX_MatchGetCoordinate(match, &line, &col);
+						tmp_tok.line = line;
+						tmp_tok.col = col;
 
 						info.tok = &tmp_tok;
 						info.err_level = 0;

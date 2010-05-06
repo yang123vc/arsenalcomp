@@ -80,11 +80,11 @@ LEX_RemoveByName
 LEX_Insert				
 LEX_GenerateTransTable	
 LEX_Clear				
-LEX_InitMatch			
-LEX_UnInitMatch	
+LEX_CreateMatch			
+LEX_DestroyMatch	
 LEX_MatchFlags		
 LEX_MatchClearFlags
-LEX_ResetMatch			
+LEX_ResetMatchState			
 LEX_GetNextInput		
 LEX_Match				
 LEX_IsError
@@ -94,7 +94,7 @@ LEX_ResetInput
 LEX_Skip
 LEX_SkipTo
 LEX_SkipN
-
+LEX_MatchGetCoordinate
 LEX_ResetIOContext
 
 ;Grammar

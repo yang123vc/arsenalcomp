@@ -13,7 +13,7 @@
 
 
 
-#include "rayparser.h"
+#include "ray.h"
 #include "rayparser_impl.h"
 
 AR_NAMESPACE_BEGIN
@@ -161,23 +161,6 @@ rayBlock_t*		RAY_GetCurrentBlock(const rayParser_t *parser)
 {
 		return (rayBlock_t*)parser->current_block;
 }
-
-/**************************************************parser Node****************************************************/
-
-
-
-rayNode_t*		RAY_CreateParserNode(rayNodeType_t type)
-{
-		return NULL;
-}
-
-void			RAY_DestroyParserNode(rayNode_t	   *node)
-{
-		
-}
-
-
-
 
 
 

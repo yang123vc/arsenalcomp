@@ -1410,11 +1410,19 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\Arsenal\Ray\rayparser.c"
+				RelativePath="..\..\..\Arsenal\Ray\rayblock.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\Arsenal\Ray\rayparser.h"
+				RelativePath="..\..\..\Arsenal\Ray\raycompiler.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Ray\raynode.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Ray\rayparser.c"
 				>
 			</File>
 			<File
@@ -1423,22 +1431,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\Arsenal\Ray\rayparser_impl.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Ray\raysymbol.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Ray\raysymbol.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Ray\raytype.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Ray\raytype.h"
 				>
 			</File>
 		</Filter>

@@ -12,7 +12,7 @@
  */
 
 #include "ray.h"
-#include "rayparser.h"
+
 
 
 AR_NAMESPACE_BEGIN

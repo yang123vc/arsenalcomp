@@ -11,10 +11,27 @@
  *
  */
 
-#include "raytype.h"
+
+
+#include "ray.h"
 
 AR_NAMESPACE_BEGIN
 
+/**************************************************parser Node****************************************************/
+
+
+
+
+
+rayNode_t*		RAY_CreateParserNode(rayNodeType_t type)
+{
+		return NULL;
+}
+
+void			RAY_DestroyParserNode(rayNode_t	   *node)
+{
+		
+}
 
 
 

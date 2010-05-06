@@ -28,11 +28,7 @@ AR_NAMESPACE_BEGIN
 void*	AR_malloc(size_t nbytes)
 {
 		void *ptr;
-		/*
-		do{
-				ptr = malloc(nbytes);
-		}while(ptr == NULL);
-		*/
+		
 		while((ptr = malloc(nbytes)) == NULL)AR_YieldThread();
 
 		return ptr;
