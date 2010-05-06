@@ -100,10 +100,17 @@ enum
 		LEX_IGNORE_CASE		=		0x0004
 };
 
+
+
 struct __prog_set_tag;
 typedef struct __prog_set_tag	lexProgSet_t;
 
-typedef struct __lex_match_result_tag
+struct __lex_match_result_tag;
+typedef struct __lex_match_result_tag	lexMatch_t;
+
+
+
+struct __lex_match_result_tag
 {
 		bool_t							is_ok;
 		const wchar_t					*input;
@@ -114,13 +121,13 @@ typedef struct __lex_match_result_tag
 		uint_t							flags;
 		lexProgSet_t					*prog_set;
 		arIOCtx_t						io_ctx;
-}lexMatch_t;
+};
 
 
 
-void			LEX_InitMatch(lexMatch_t *pmatch, const lex_t *lex, const arIOCtx_t *io);
+lexMatch_t*		LEX_CreateMatch(const lex_t *lex, const arIOCtx_t *io);
 
-void			LEX_UnInitMatch(lexMatch_t *pmatch);
+void			LEX_DestroyMatch(lexMatch_t *pmatch);
 
 void			LEX_ResetMatchIOContext(lexMatch_t *pmatch, const arIOCtx_t *io);
 
@@ -128,7 +135,9 @@ void			LEX_ResetInput(lexMatch_t *pmatch, const wchar_t *input);
 
 void			LEX_ClearInput(lexMatch_t *pmatch);
 
-void			LEX_ResetMatch(lexMatch_t *pmatch);
+void			LEX_ResetMatchState(lexMatch_t *pmatch);
+
+void			LEX_ResetMatchIoContext(lexMatch_t *pmatch, const arIOCtx_t *io);
 
 const wchar_t*	LEX_GetNextInput(const lexMatch_t *match);
 
@@ -151,7 +160,7 @@ void			LEX_PutBack(lexMatch_t *pmatch, const lexToken_t *tok);
 void			LEX_MatchFlags(lexMatch_t *pmatch, uint_t flags, bool_t is_on);
 void			LEX_MatchClearFlags(lexMatch_t *pmatch);
 
-
+void			LEX_MatchGetCoordinate(const lexMatch_t *pmatch, size_t *line, size_t *col);
 
 
 

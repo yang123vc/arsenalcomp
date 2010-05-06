@@ -1,4 +1,5 @@
-﻿#include "rayparser_impl.h"
+﻿
+#include "rayparser_impl.h"
 
 
 
@@ -1416,10 +1417,9 @@ lexMatch_t*			RAY_BuildLexer()
 {
 		lexMatch_t		*match;
 		AR_ASSERT(__g_lex != NULL);
-
-		match = AR_NEW0(lexMatch_t);
+		
 		AR_LockSpinLock(&__g_lock);
-		LEX_InitMatch(match, __g_lex, NULL);
+		match = LEX_CreateMatch(__g_lex, NULL);
 		AR_UnLockSpinLock(&__g_lock);
 		return match;
 }
@@ -1427,8 +1427,8 @@ lexMatch_t*			RAY_BuildLexer()
 void				RAY_ReleaseLexer(lexMatch_t	*match)
 {
 		AR_ASSERT(match != NULL);
-		LEX_UnInitMatch(match);
-		AR_DEL(match);
+		LEX_DestroyMatch(match);
+		
 }
 
 

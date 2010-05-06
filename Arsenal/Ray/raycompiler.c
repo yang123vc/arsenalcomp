@@ -11,20 +11,13 @@
  *
  */
 
-#ifndef __RAY_SYMBOL_TABLE_H__
-#define __RAY_SYMBOL_TABLE_H__
 
 #include "ray.h"
-#include "raytype.h"
 
 AR_NAMESPACE_BEGIN
-
-
 
 
 AR_NAMESPACE_END
 
 
-
-#endif
 

@@ -1005,12 +1005,15 @@ void CGrammarDesignerDoc::OnParserParse()
 				
 		};
 
-		ARSpace::lexMatch_t match;
+		ARSpace::lexMatch_t *match;
+		match = ARSpace::LEX_CreateMatch(this->m_lexer, &io_context);
+		/*
 		ARSpace::LEX_InitMatch(&match, this->m_lexer, &io_context);
-		ARSpace::LEX_ResetInput(&match, str.GetString());
+		*/
+		ARSpace::LEX_ResetInput(match, str.GetString());
 		
-		ARSpace::LEX_MatchClearFlags(&match);
-		ARSpace::LEX_MatchFlags(&match, m_lexer_mode, true);
+		ARSpace::LEX_MatchClearFlags(match);
+		ARSpace::LEX_MatchFlags(match, m_lexer_mode, true);
 		
 		ARSpace::lexToken_t		token;
 
@@ -1024,22 +1027,23 @@ void CGrammarDesignerDoc::OnParserParse()
 		{
 				
 				//if(!m_lexer->GetToken(token))
-				if(!ARSpace::LEX_Match(&match, &token))
+				if(!ARSpace::LEX_Match(match, &token))
 				{
-						size_t len = wcslen(ARSpace::LEX_GetNextInput(&match));
+						size_t len = wcslen(ARSpace::LEX_GetNextInput(match));
 						if(len > 10) len = 10;
 
 						CString lex_err;
 						CString msg;
-						msg.Append(ARSpace::LEX_GetNextInput(&match),  (int)len);
+						msg.Append(ARSpace::LEX_GetNextInput(match),  (int)len);
 					
 						lex_err.Format(TEXT("Lexer Error : %ls"), msg.GetString());
 						
+						size_t line;
+						ARSpace::LEX_MatchGetCoordinate(match, &line, NULL);
+						output.Append(lex_err, COutputList::MSG_ERROR, line, &input);
 
-						output.Append(lex_err, COutputList::MSG_ERROR, match.line, &input);
-
-						ARSpace::LEX_Skip(&match);
-						ARSpace::LEX_ClearError(&match);
+						ARSpace::LEX_Skip(match);
+						ARSpace::LEX_ClearError(match);
 				}else
 				{
 						ARSpace::psrToken_t		psr_tok;
@@ -1083,7 +1087,7 @@ void CGrammarDesignerDoc::OnParserParse()
 
 		main_frm->ShowPane(&output, TRUE, TRUE, TRUE);
 
-		ARSpace::LEX_UnInitMatch(&match);
+		ARSpace::LEX_DestroyMatch(match);
 		ARSpace::PSR_DestroyContext(parser_context);
 }
 

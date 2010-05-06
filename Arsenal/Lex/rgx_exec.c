@@ -11,6 +11,7 @@
  *
  */
 
+#include "lex.h"
 #include "rgx.h"
 
 
