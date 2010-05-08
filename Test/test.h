@@ -10,7 +10,7 @@
 #if defined(__LIB)
 
 
-#if(AR_COMPILER == AR_VC6)
+#if(AR_COMPILER == AR_VC_LEGACY)
 struct _RPC_ASYNC_STATE;
 #endif
 

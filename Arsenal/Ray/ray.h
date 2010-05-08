@@ -89,6 +89,39 @@ typedef struct __ray_parser_tag		rayParser_t;
 
 
 
+struct __ray_type_tag;
+typedef	struct __ray_type_tag	rayType_t;
+
+
+struct	__var_tag;
+typedef struct __var_tag		rayVar_t;
+
+
+struct __aggregate_tag;
+typedef struct __aggregate_tag		rayAggregate_t;
+
+
+struct __typedef_tag;
+typedef struct __typedef_tag	rayTypedef_t;
+
+struct __block_tag;
+typedef struct __block_tag		rayBlock_t;
+
+struct	__statement_tag;
+typedef struct __statement_tag	rayStatement_t;
+
+
+struct	__expr_tag;
+typedef	struct	__expr_tag		rayExpr_t;
+
+
+
+struct __declarator_tag;
+typedef struct __declarator_tag	rayDeclarator_t;
+
+struct __declaration_tag;
+typedef struct __declaration_tag		rayDeclaration_t;
+
 /*******************************************************************type*********************************************************/
 
 
@@ -171,7 +204,7 @@ typedef enum{
 		TOK_DOT = 330,
 		TOK_AND = 331,
 		TOK_NOT = 332,
-		TOK_TILDE = 333,
+		TOK_TILDE = 333,		/* ~ */
 		TOK_ADD = 334,
 		TOK_SUB = 335,
 		TOK_MUL = 336,
@@ -237,43 +270,22 @@ typedef enum
 
 /*********************************************************************************************************************/
 
-struct __ray_type_tag;
-typedef	struct __ray_type_tag	rayType_t;
 
-
-
-
-struct	__var_tag;
-typedef struct __var_tag		rayVar_t;
-
-
-struct __aggregate_tag;
-typedef struct __aggregate_tag		rayAggregate_t;
-
-
-struct __typedef_tag;
-typedef struct __typedef_tag	rayTypedef_t;
-
-struct __block_tag;
-typedef struct __block_tag		rayBlock_t;
-
-
+typedef enum
+{
+		AT_UNION_T,
+		AT_STRUCT_T
+}rayAggrType_t;
 
 struct __aggregate_tag
 {
+		rayAggrType_t		at_type;
+
 		const wchar_t		*tag_name;
-		bool_t				is_union;
 		size_t				size;
 		size_t				alignment;
 		rayVar_t			*members;			/*拥有*/
 };
-
-/*********************************************************************************/
-
-
-struct	__initializer_tag;
-typedef struct	__initializer_tag		rayInitializer_t;
-
 
 
 /*********************************************************************************/
@@ -281,11 +293,9 @@ typedef struct	__initializer_tag		rayInitializer_t;
 typedef struct __array_tag 
 {
 		rayType_t	*type;						/*引用*/
-		size_t		size;						
-		bool_t		is_completed;				
+		size_t		nelem;
+		bool_t		is_completed;
 }rayArray_t;
-
-
 
 
 typedef struct __func_type_tag
@@ -309,7 +319,6 @@ typedef struct __pointer_tag
 
 
 
-
 struct __ray_type_tag
 {
 		raySrcInfo_t		src;
@@ -318,15 +327,39 @@ struct __ray_type_tag
 		size_t				qualifiers;
 		
 		union{
-				rayPointer_t		*pointer;			/*拥有*/
-				rayArray_t			*arr;				/*拥有*/
-				rayAggregate_t		*aggregate;			/*拥有*/
-				rayFuncType_t		*func_type;			/*拥有*/
+				rayPointer_t		pointer;	
+				rayArray_t			arr;			
+				rayAggregate_t		aggregate;		
+				rayFuncType_t		func_type;		
 		};
 
 		rayType_t			*next;
 };
 
+rayType_t*		RAY_CreateBasicType(rayParser_t	*parser,		rayTypeCode_t	code);
+rayType_t*		RAY_CreatePointerType(rayParser_t	*parser,	rayType_t		*base);
+rayType_t*		RAY_CreateArrayType(rayParser_t	*parser,		rayType_t		*base,			rayExpr_t *expr);
+rayType_t*		RAY_CreateFuncType(rayParser_t	*parser,		rayType_t		*ret_type,		rayDeclaration_t *decl);
+
+rayType_t*		RAY_CreateAggregateType(rayParser_t	*parser,	rayTypeCode_t	code, const wchar_t *tag, bool_t is_completed, rayDeclaration_t *member, bool_t is_define);
+
+void			RAY_DestroyType(rayParser_t	*parser, rayType_t	*type);
+void			RAY_SetSrcInfo(rayParser_t	*parser, rayType_t	*type, const raySrcInfo_t *info);
+void			RAY_AddQualifier(rayParser_t	*parser, rayType_t	*type, size_t	qualifier);
+
+bool_t			RAY_IsSameType(const rayType_t	*l, const rayType_t *r);
+size_t			RAY_GetTypeAlign(const rayParser_t *parser, const rayType_t *type);
+size_t			RAY_GetTypeSize(const rayType_t *type);
+
+AR_INLINE		size_t	RAY_AlignAddr(size_t addr, size_t align){ size_t		pad = align - addr % align; return pad == align ? addr : addr + pad; }
+
+
+		
+		
+
+
+struct	__initializer_tag;
+typedef struct	__initializer_tag		rayInitializer_t;
 
 typedef enum 
 {
@@ -342,7 +375,6 @@ typedef enum
 
 
 
-
 struct	__var_tag 
 {
 		raySrcInfo_t		src;
@@ -354,10 +386,100 @@ struct	__var_tag
 		rayInitializer_t	*init;		/*拥有*/
 
 		rayVar_t			*next;
+};
 
+
+/*********************************************block**********************************************************/
+
+
+
+typedef enum
+{
+		NT_VAR_T,
+		NT_TAG_T,
+		NT_TYPEDEF_T
+}rayNameType_t;
+
+typedef struct __lookup_name_tag
+{
+		rayNameType_t			nt;
+		const wchar_t			*name;
+
+		union{
+				rayVar_t		*var;
+				rayTypedef_t	*type_def;
+				rayType_t		*type;
+		};
+}rayName_t;
+
+
+
+struct __typedef_tag
+{
+		raySrcInfo_t	src;
+		const wchar_t	*name;
+		rayType_t		*type;							/*引用*/
+		
+		rayTypedef_t	*next;
+};
+
+rayTypedef_t*	RAY_CreateTypedef(rayParser_t	*parser, const wchar_t	*name, rayType_t *type, const raySrcInfo_t *src);
+void			RAY_DestroyTypedef(rayParser_t	*parser, rayTypedef_t	*type_def);
+
+
+
+struct __block_tag
+{
+		rayVar_t			*vars;						/*拥有*/
+		rayTypedef_t		*typedefs;					/*拥有*/
+		rayType_t			*aggregates;				/*拥有*/
+		
+		rayBlock_t			*parent;
+		rayBlock_t			*next;						
+		rayBlock_t			*subblocks;
 		
 };
 
+
+
+rayBlock_t*				RAY_CreateBlock(rayParser_t	*parser, rayBlock_t		*parent);
+void					RAY_DestroyBlock(rayParser_t	*parser, rayBlock_t		*block);
+
+void					RAY_InsertVariable(rayParser_t	*parser, rayBlock_t	*block, rayVar_t	 *var);
+void					RAY_InsertTypedef(rayParser_t	*parser, rayBlock_t	*block, rayTypedef_t *type_def);
+void					RAY_InsertType(rayParser_t		*parser, rayBlock_t	*block,	rayType_t	 *type);
+
+rayVar_t*				RAY_LookupVar(rayParser_t	*parser,	rayBlock_t	*block,	const wchar_t *name, bool_t		current);
+rayTypedef_t*			RAY_LookupTypedef(rayParser_t	*parser,rayBlock_t	*block, const wchar_t *name, bool_t		current);
+rayType_t*				RAY_LookupType(rayParser_t	*parser,	rayBlock_t	*block, const wchar_t *name, bool_t		current);
+const rayName_t*		RAY_LookupName(rayParser_t	*parser,	rayBlock_t	*block, const wchar_t *name, bool_t		current);
+
+
+
+
+
+typedef struct __func_tag		
+{
+		raySrcInfo_t			src;
+		const char				*name;
+		rayType_t				*func_type;					/*引用*/
+
+		bool_t					build_in;
+		
+		union{
+				rayStatement_t	*statement;					/*拥有*/
+				uint_64_t		extern_func;
+		};
+		
+		struct __func_tag		*next;
+}rayFunc_t;
+
+
+typedef struct __parse_result_tag
+{
+		rayBlock_t		*block;
+		rayFunc_t		*function;
+}rayParseResult_t;
 
 
 /*********************************************expression**********************************************************/
@@ -406,8 +528,6 @@ typedef enum
 
 
 
-struct	__expr_tag;
-typedef	struct	__expr_tag		rayExpr_t;
 
 typedef struct __expr_list_tag
 {
@@ -597,8 +717,7 @@ struct __initializer_tag
 };
 
 
-struct __declarator_tag;
-typedef struct __declarator_tag	rayDeclarator_t;
+
 
 struct __ray_declarator_tag
 {
@@ -608,9 +727,6 @@ struct __ray_declarator_tag
 		rayDeclarator_t			*next;
 };
 
-
-struct __declaration_tag;
-typedef struct __declaration_tag		rayDeclaration_t;
 
 struct __declaration_tag
 {
@@ -627,8 +743,7 @@ struct __declaration_tag
 
 /**********************************************stat**********************************************/
 
-struct	__statement_tag;
-typedef struct __statement_tag	rayStatement_t;
+
 
 typedef struct __statement_list_tag
 {
@@ -741,84 +856,6 @@ struct __statement_tag {
 
 
 
-/*********************************************block**********************************************************/
-
-
-
-typedef enum
-{
-		NT_VAR_T,
-		NT_TAG_T,
-		NT_TYPEDEF_T
-}rayNameType_t;
-
-typedef struct __lookup_name_tag
-{
-		rayNameType_t	nt;
-		const wchar_t	*name;
-
-		union{
-				rayVar_t		*var;
-				rayTypedef_t	*type_def;
-				rayType_t		*type;
-		};
-}rayName_t;
-
-struct __typedef_tag
-{
-		raySrcInfo_t	src;
-		const wchar_t	*name;
-		rayType_t		*type;							/*引用*/
-		
-		rayTypedef_t	*next;
-};
-
-
-
-
-struct __block_tag
-{
-		rayVar_t			*vars;						/*拥有*/
-		rayTypedef_t		*typedefs;					/*拥有*/
-		rayType_t			*aggregates;				/*拥有*/
-		
-		rayBlock_t			*next;						
-		rayBlock_t			*subblocks;
-		rayBlock_t			*parent;
-};
-
-
-
-rayBlock_t*				RAY_CreateBlock(rayBlock_t		*parent);
-void					RAY_DestroyBlock(rayBlock_t		*block);
-
-void					RAY_InsertVariable(rayBlock_t	*block, rayVar_t	 *var);
-void					RAY_InsertTypedef(rayBlock_t	*block, rayTypedef_t *type_def);
-void					RAY_InsertType(rayBlock_t		*block,	rayType_t	 *type);
-
-rayVar_t*				RAY_LookupVar(rayBlock_t		*block,	const wchar_t *name);
-rayTypedef_t*			RAY_LookupTypedef(rayBlock_t	*block, const wchar_t *name);
-rayType_t*				RAY_LookupType(rayBlock_t		*block, const wchar_t *name);
-const rayName_t*		RAY_LookupName(rayBlock_t		*block, const wchar_t *name);
-
-
-
-
-
-typedef struct __func_tag		
-{
-		const char			*name;
-		rayType_t			*func_type;
-
-		bool_t				build_in;
-		
-		union{
-				rayStatement_t		*statement;
-				uint_64_t			extern_func;
-		};
-
-		raySrcInfo_t		src;
-}rayFunc_t;
 
 
 
@@ -835,7 +872,8 @@ typedef enum
 		NODE_STORAGE_CLASS_T,
 		NODE_DECLARATOR_T,
 		NODE_DECLARATION_T,
-
+		
+		NODE_FUNCTION_T
 }rayNodeType_t;
 
 struct __ray_parser_node_tag
@@ -853,7 +891,7 @@ struct __ray_parser_node_tag
 				rayType_t				*type;
 				rayDeclarator_t			*declarator;
 				rayDeclaration_t		*declaration;
-
+				rayFunc_t				*function;
 		};
 };
 
@@ -868,6 +906,7 @@ void			RAY_DestroyParserNode(rayNode_t	   *node);
 void			RAY_InitParser();
 void			RAY_UnInitParser();
 
+void			RAY_Report(const rayParser_t *parser, const rayReportMsg_t *msg);
 
 rayParser_t*	RAY_CreateParser(const rayReport_t *report);
 void			RAY_DestroyParser(rayParser_t		*parser);
@@ -881,13 +920,14 @@ bool_t			RAY_IsOuterBlock(const rayParser_t *parser, const rayBlock_t *block);
 rayBlock_t*		RAY_GetCurrentBlock(const rayParser_t *parser);
 
 
+
 size_t			RAY_GetAlignment(const rayParser_t	*parser);
 void			RAY_PushAlignment(rayParser_t	*parser, size_t align);
 void			RAY_PopAlignment(rayParser_t	*parser);
 
 
 
-rayNode_t*		RAY_Parse(rayParser_t			*parser, const wchar_t *src);
+rayParseResult_t* RAY_Parse(rayParser_t			*parser, const wchar_t *src);
 
 
 

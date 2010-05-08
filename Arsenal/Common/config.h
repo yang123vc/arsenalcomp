@@ -45,20 +45,20 @@
 
 
 
-#define AR_VC6			0x1006
-#define AR_VC9			0x1009
-#define AR_BCB6			0x2006
-#define AR_GCC3			0x3003
-#define AR_GCC4			0x3004
+#define AR_VC_LEGACY			0x1006
+#define AR_VC					0x1009
+#define AR_BCB6					0x2006
+#define AR_GCC3					0x3003
+#define AR_GCC4					0x3004
 
 
 #if defined(_MSC_VER)
 
 		#if (_MSC_VER < 1300)
 
-				#define AR_COMPILER		AR_VC6
+				#define AR_COMPILER		AR_VC_LEGACY
 		#else
-				#define	AR_COMPILER		AR_VC9
+				#define	AR_COMPILER		AR_VC
 		#endif
 
 
@@ -116,7 +116,7 @@
 /*
     配置编译器相关的选项
 */
-#if(AR_COMPILER == AR_VC6 || AR_COMPILER == AR_VC9)
+#if(AR_COMPILER == AR_VC_LEGACY || AR_COMPILER == AR_VC)
 
 		#pragma warning(disable : 4100)
 		#pragma warning(disable : 4127)
@@ -144,7 +144,7 @@
 				#define _CRT_SECURE_NO_WARNINGS
 		#endif
 
-		#if(AR_COMPILER == AR_VC9 && OS_TYPE != OS_WINDOWS_CE)
+		#if(AR_COMPILER == AR_VC && OS_TYPE != OS_WINDOWS_CE)
 				#if !defined(NDEBUG)
 						#define AR_USE_CRT_ALLOCFUNC
 						#define	AR_DISABLE_CRTSTDLIB
@@ -203,7 +203,7 @@
 
 
 #if defined(OS_FAMILY_WINDOWS)
-		#if(AR_COMPILER == AR_VC6 || OS_TYPE == OS_WINDOWS_CE)
+		#if(AR_COMPILER == AR_VC_LEGACY || OS_TYPE == OS_WINDOWS_CE)
 				struct _RPC_ASYNC_STATE;
 		#endif
 
@@ -219,7 +219,7 @@
 
 
 
-#if (AR_COMPILER == AR_VC6 || AR_COMPILER == AR_VC9 || AR_COMPILER == AR_BCB6)
+#if (AR_COMPILER == AR_VC_LEGACY || AR_COMPILER == AR_VC || AR_COMPILER == AR_BCB6)
 
 		#if defined(NDEBUG)
 				#define AR_NDEBUG
@@ -251,11 +251,11 @@
 
 		#define AR_INT_FMT64		L"I64"
 
-		#if(AR_COMPILER == AR_VC6)
+		#if(AR_COMPILER == AR_VC_LEGACY)
 				#define AR_NOOP					((void)0)
 				#define AR_FUNC_NAME			"--"
 
-		#elif (AR_COMPILER == AR_VC9)
+		#elif (AR_COMPILER == AR_VC)
 
 				#define AR_NOOP					__noop
 				#define AR_FUNC_NAME			__FUNCSIG__
@@ -475,7 +475,7 @@ typedef void*					ptr_t;
 
 
 
-#if (AR_COMPILER == AR_VC6)
+#if (AR_COMPILER == AR_VC_LEGACY)
 
 		#define AR_swprintf						_snwprintf
 		#define AR_vsprintf						_vsnprintf
@@ -483,7 +483,7 @@ typedef void*					ptr_t;
 		#define AR_abort						abort
 
 
-#elif (AR_COMPILER == AR_VC9)
+#elif (AR_COMPILER == AR_VC)
 
 		#define AR_swprintf						_snwprintf
 		#define AR_vsprintf						_vsnprintf
