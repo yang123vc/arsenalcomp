@@ -96,10 +96,12 @@ static qsort_range_t __partition(byte_t *lo, byte_t *hi, size_t width, cmp_func_
 								loguy += width;
 						}while(loguy <= hi && cmp_f(loguy, mid) <= 0);
 				}
+				/*执行到此，保证[lo->loguy) <= mid*/
 				
 				do{
 						higuy -= width;
 				} while (higuy > mid && cmp_f(higuy, mid) > 0);
+				/*执行到此，保证(higuy->hi] > mid*/
 
 
 				if(higuy < loguy)break;
@@ -139,9 +141,9 @@ static qsort_range_t __partition(byte_t *lo, byte_t *hi, size_t width, cmp_func_
 
 
 
-#define __QSORT_CUTOFF			32
+#define __QSORT_CUTOFF			64
 /*log(N)-log(cutoff) + 1*/
-#define __QSORT_STKSIZE			(32 * sizeof(void*))
+#define __QSORT_STKSIZE			(64 * sizeof(void*))
 
 
 

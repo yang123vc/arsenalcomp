@@ -1134,6 +1134,55 @@ const wchar_t* AR_wtou32_s(const wchar_t *in, const wchar_t *end, uint_32_t  *nu
 
 
 
+const wchar_t* AR_wcsstr_kmp(const wchar_t *s, const wchar_t *p)
+{
+		AR_ASSERT(s != NULL && p != NULL);
+		return AR_wcsstr_kmp_s(s, s + AR_wcslen(s), p);
+		
+} 
+
+
+const wchar_t* AR_wcsstr_kmp_s(const wchar_t *beg, const wchar_t *end, const wchar_t *p)
+{
+		
+		size_t i,k,m,n;
+		size_t *next;
+		const wchar_t *ret, *s;
+		AR_ASSERT(beg != NULL && p != NULL && end != NULL);
+		n = end - beg;
+		m = AR_wcslen(p);
+		if(n == 0 || m == 0)return NULL;
+		
+		next = AR_NEWARR0(size_t, m);
+		next[0] = 0;
+		
+		for(i = 1,k = 0; i < m; ++i)
+		{
+				/*
+				如果p[k]处不相等， 则证明有k个前缀相等，则所对应的真后缀为next[k-1];
+				因为改变k长度的只有下面k++一行，且只有k > 0时才有读取next数组的操作， 
+				所以k读取的永远时已经被计算好的 
+				*/
+				while(k > 0 && p[k] != p[i])k = next[k-1];
+				if(p[k] == p[i])k++;
+				next[i] = k;
+		}
+		
+		ret = NULL;
+		s = beg;
+		
+		for(k = 0; k < m && s != end; ++s)
+		{
+				while(k > 0 && p[k] != *s) k = next[k-1];
+				if(p[k] == *s)k++;
+		}
+		
+		ret = k == m ? s - m : NULL;
+		
+		AR_DEL(next);
+		return ret;
+} 
+
 
 AR_NAMESPACE_END
 
