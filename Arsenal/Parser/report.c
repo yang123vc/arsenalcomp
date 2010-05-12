@@ -12,11 +12,11 @@
  */
 
 
-#include "grammar.h"
+
 #include "lalr.h"
 #include "lr_action.h"
 #include "parser.h"
-
+#include "parser_in.h"
 
 
 

@@ -17,7 +17,6 @@
 
 #include "./Common/common.h"
 #include "./Lex/lex.h"
-#include "./Parser/grammar.h"
 #include "./Parser/parser.h"
 #include "./Ray/ray.h"
 #include "./Tools/tools.h"

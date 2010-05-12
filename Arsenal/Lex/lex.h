@@ -164,7 +164,7 @@ void			LEX_MatchGetCoordinate(const lexMatch_t *pmatch, size_t *line, size_t *co
 
 
 
-bool_t LEX_Match(lexMatch_t *match, lexToken_t *tok);
+bool_t			LEX_Match(lexMatch_t *match, lexToken_t *tok);
 
 
 AR_NAMESPACE_END

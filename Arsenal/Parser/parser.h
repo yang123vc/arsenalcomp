@@ -22,7 +22,7 @@ AR_NAMESPACE_BEGIN
 
 
 
-
+/*******************************************辅助模块********************************************/
 
 
 typedef void			psrNode_t;
@@ -73,8 +73,10 @@ typedef struct __parser_handler_tag
 }psrHandler_t;
 
 
-/**********************************必须在所有其它PSR族函数之前调用，否则行为未定义***************************/
 
+
+
+/**********************************必须在所有其它PSR族函数之前调用，否则行为未定义***************************/
 void	PSR_Init();
 void	PSR_UnInit();
 
@@ -114,13 +116,16 @@ typedef enum
 
 typedef psrLRItemType_t psrModeType_t;
 
+/*******************************************辅助模块结束****************************************************************/
 
+/***************************************************前向声明************************************************/
 
 struct __parser_symbol_tag;
 typedef struct __parser_symbol_tag		psrSymb_t;
 
 struct __parser_grammar_tag;
 typedef struct __parser_grammar_tag		psrGrammar_t;
+
 
 
 struct __parser_action_tag;
@@ -133,36 +138,294 @@ struct __expected_message_tag;
 typedef	struct __expected_message_tag	psrExpectedMsg_t;
 
 
-
-
-typedef struct __parser_tag
-{
-		const psrGrammar_t						*grammar;
-		const psrActionTable_t					*tbl;
-		psrTermInfoTbl_t						*term_tbl;
-		psrExpectedMsg_t						*msg_set;
-		size_t									msg_count;
-
-		size_t									ref_cnt;
-}parser_t;
-
-
-
 struct __parser_stack_tag;
 typedef struct __parser_stack_tag		psrStack_t;
 
 struct __parser_node_stack;
 typedef struct __parser_node_stack		psrNodeStack_t;
 
-typedef struct __parser_context_tag
+
+struct __parser_tag;
+typedef struct __parser_tag				parser_t;
+
+
+
+struct __parser_context_tag;
+typedef struct __parser_context_tag			psrContext_t;
+
+
+/***************************************************前向声明结束************************************************/
+
+
+
+
+
+/****************************************************************Symbol***********************************************************************/
+
+
+typedef enum
 {
-		const parser_t							*parser;
-		bool_t									is_repair;
-		bool_t									is_accepted;
-		psrStack_t								*state_stack;
-		psrNodeStack_t							*node_stack;
-		void									*ctx;
-}psrContext_t;
+		PSR_TERM,
+		PSR_NONTERM
+}psrSymbType_t;
+
+
+
+
+struct __parser_symbol_tag
+{
+		psrSymbType_t	type;
+		const wchar_t	*name;
+		uint_t			hash_code;
+		size_t			ref_count;
+};
+
+
+const psrSymb_t*		PSR_CreateSymb(const wchar_t *name, psrSymbType_t t);
+const psrSymb_t*		PSR_CopyNewSymb(const psrSymb_t *sour);
+void					PSR_DestroySymb(const psrSymb_t *symb);
+int_t					PSR_CompSymb(const psrSymb_t *l, const psrSymb_t *r);
+
+
+/***************************************symbol_list***************************************************/
+
+typedef struct __parser_symbol_list_tag
+{
+		const psrSymb_t **lst;
+		size_t			count;
+		size_t			cap;	
+}psrSymbList_t;
+
+void				PSR_InitSymbList(psrSymbList_t *symb_lst);
+void				PSR_UnInitSymbList(psrSymbList_t *symb_lst);
+void				PSR_ClearSymbList(psrSymbList_t *symb_lst);
+
+void				PSR_CopySymbList(psrSymbList_t *dest, const psrSymbList_t *sour);
+
+void				PSR_InsertToSymbList(psrSymbList_t *symb_lst, const psrSymb_t *symb);
+
+const psrSymb_t*	PSR_IndexOfSymbList(const psrSymbList_t *symb_lst, size_t idx);
+int_t				PSR_FindFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t* symb);
+
+bool_t				PSR_RemoveFromSymbListByIndex(psrSymbList_t *symb_lst, size_t index);
+
+int_t				PSR_BSearchFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t* symb);
+void				PSR_SortSymbList(psrSymbList_t *symb_lst);
+
+
+
+bool_t				PSR_InsertToSymbList_Unique(psrSymbList_t *symb_lst, const psrSymb_t *symb);
+
+
+
+/********************************************************************************************************/
+void			PSR_PrintSymbol(const psrSymb_t *symb,	arString_t *str);
+void			PSR_PrintSymbolList(const psrSymbList_t *lst, arString_t *str);
+
+
+
+/**************************************Symbol Map**********************************************************/
+
+
+
+typedef struct __parser_symbmap_record_tag
+{
+		const psrSymb_t			*key;
+		psrSymbList_t			lst;
+		bool_t					can_empty;
+		struct __parser_symbmap_record_tag		*next;
+}psrMapRec_t;
+
+
+#define MAP_BUCKET_SIZE (153)
+
+typedef struct __parser_symbmap_tag
+{
+		psrMapRec_t		*bucket[MAP_BUCKET_SIZE];
+		size_t			item_count;
+}psrSymbMap_t;
+
+
+void					PSR_InitSymbMap(psrSymbMap_t *map);
+void					PSR_UnInitSymbMap(psrSymbMap_t *map);
+
+bool_t					PSR_InsertToSymbMap(psrSymbMap_t *map, const psrSymb_t *key, const psrSymb_t *val);
+bool_t					PSR_SetSymbEpsilon(psrSymbMap_t *map, const psrSymb_t *key, bool_t is_epsilon);
+
+psrMapRec_t*			PSR_GetSymbolFromSymbMap(const psrSymbMap_t *map, const psrSymb_t *key);
+
+void					PSR_PrintSymbolMap(const psrSymbMap_t *map, arString_t *str);
+
+
+
+/****************************************************************Symbol结束***********************************************************************/
+
+
+
+
+
+
+/*******************************************************************Grammar*******************************************************************/
+
+
+typedef struct __terminal_info_tag
+{
+		const	psrSymb_t		*term;
+		size_t					prec;
+		psrAssocType_t			assoc;
+		size_t					val;
+		psrTermFunc_t			leaf_f;	/*当有合法的token移入时，将调用对应的leaf_f*/
+}psrTermInfo_t;
+
+
+
+typedef struct __term_info_list_tag
+{
+		psrTermInfo_t		*lst;
+		size_t				count;
+		size_t				cap;
+}psrTermInfoList_t;
+
+
+void			PSR_InitTermInfoList(psrTermInfoList_t	*lst);
+void			PSR_UnInitTermInfoList(psrTermInfoList_t	*lst);
+void			PSR_ClearTermInfoList(psrTermInfoList_t	*lst);
+
+bool_t			PSR_InsertToTermInfoList(psrTermInfoList_t	*lst, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f);
+psrTermInfo_t*	PSR_FindTermByValue(psrTermInfoList_t	*lst, size_t val);
+psrTermInfo_t*	PSR_FindTermByName(psrTermInfoList_t	*lst, const wchar_t *name);
+
+
+
+
+/***********************************************************Rule*********************************************************************/
+
+
+
+
+typedef struct __parser_rule_tag
+{
+		const psrSymb_t			*head;
+		psrSymbList_t			body;
+		const	wchar_t			*prec_tok;
+		psrRuleFunc_t			rule_f;
+		size_t					auto_ret;
+
+}psrRule_t;
+
+psrRule_t*		PSR_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, size_t auto_ret, const psrTermInfoList_t *term_list, arIOCtx_t *ctx);
+psrRule_t*		PSR_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, size_t auto_ret, const psrTermInfoList_t *term_list, arIOCtx_t *ctx);
+void			PSR_DestroyRule(psrRule_t *rule);
+
+/****************************************************************************************************************************************/
+
+struct __parser_grammar_tag
+{
+		psrRule_t				**rules;
+		size_t					count;
+		size_t					cap;
+		
+		psrTermInfoList_t		term_list;
+		psrSymbList_t			symb_list;
+
+		psrHandler_t			psr_handler;
+		
+		arIOCtx_t				io_ctx;
+};
+
+
+psrGrammar_t*			PSR_CreateGrammar(const psrHandler_t *ctx, const arIOCtx_t *io_ctx);
+void					PSR_DestroyGrammar(psrGrammar_t *grammar);
+void					PSR_ClearGrammar(psrGrammar_t *grammar);
+
+void					PSR_ResetGrammarIOContext(psrGrammar_t *grammar, const arIOCtx_t *io_ctx);
+void					PSR_ResetGrammarParseHandler(psrGrammar_t *grammar, const psrHandler_t *io_ctx);
+
+
+const psrHandler_t*		PSR_GetGrammarHandler(const psrGrammar_t *grammar);
+
+
+
+int_t					PSR_IndexOfGrammar(const psrGrammar_t *grammar, const psrRule_t *rule);
+
+#define					PSR_GetRuleOfGrammar(_gmr, _idx) ((_gmr)->rules[(_idx)])
+
+const psrSymbList_t*	PSR_GetSymbList(const psrGrammar_t *grammar);
+
+
+bool_t					PSR_CheckIsValidGrammar(const psrGrammar_t *grammar);
+
+
+
+
+const psrRule_t*		PSR_GetStartRule(const psrGrammar_t *grammar);
+bool_t					PSR_SetFirstRule(psrGrammar_t *grammar, const wchar_t *rule_name);
+
+const psrTermInfo_t*	PSR_GetRulePrecAssocInfo(const psrGrammar_t *grammar, const psrRule_t *rule);
+
+psrTermInfo_t*			PSR_GetTermSymbInfo(const psrGrammar_t	*grammar, const psrSymb_t *term);
+psrTermInfo_t*			PSR_GetTermSymbInfoByName(const psrGrammar_t	*grammar, const wchar_t *name);
+psrTermInfo_t*			PSR_GetTermSymbInfoByValue(const psrGrammar_t	*grammar, size_t val);
+
+
+bool_t					PSR_InsertTerm(psrGrammar_t *grammar, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f);
+bool_t					PSR_InsertRule(psrGrammar_t *grammar, psrRule_t *rule);
+bool_t					PSR_InsertRuleByPartStr(psrGrammar_t *grammar, const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, size_t auto_ret);
+bool_t					PSR_InsertRuleByStr(psrGrammar_t *grammar, const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, size_t auto_ret);
+
+
+
+
+void					PSR_CalcFirstSet(const psrGrammar_t *grammar, psrSymbMap_t *first_set);
+void					PSR_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *follow_set, const psrSymbMap_t *first_set);
+
+
+#if(0)
+bool_t					PSR_ReportLeftFactor(const psrGrammar_t *grammar, arString_t *output);
+bool_t					PSR_ReportLeftRecursion(const psrGrammar_t *grammar, arString_t *output);
+void					PSR_PrintGrammar(const psrGrammar_t *grammar, arString_t *str);
+#endif
+
+
+/*******************************************************************Grammar结束*******************************************************************/
+
+
+
+
+
+
+
+
+/***************************************************************Parser************************************************************************/
+
+struct __parser_tag
+{
+		const psrGrammar_t			*grammar;
+		const psrActionTable_t		*tbl;
+		psrTermInfoTbl_t			*term_tbl;
+		psrExpectedMsg_t			*msg_set;
+		size_t						msg_count;
+
+		size_t						ref_cnt;
+};
+
+
+
+struct __parser_context_tag
+{
+		const parser_t				*parser;
+		bool_t						is_repair;
+		bool_t						is_accepted;
+		psrStack_t					*state_stack;
+		psrNodeStack_t				*node_stack;
+		void						*ctx;
+};
+
+
+
+
+
+
 
 
 const parser_t* PSR_CreateParser(const psrGrammar_t *grammar, psrModeType_t type);
@@ -203,7 +466,12 @@ bool_t		PSR_AddToken(psrContext_t *parser_context, const psrToken_t *tok);
 
 
 
-/***************************************Print************************************/
+
+/***************************************************************Parser结束************************************************************************/
+
+
+
+/**************************************************************************报告*******************************************************************/
 
 void	PSR_PrintParserConflict(const parser_t *parser, arString_t *out);
 size_t	PSR_CountParserConflict(const parser_t *parser);
@@ -273,7 +541,7 @@ void							PSR_DestroyParserStatusView(const psrStatusView_t *view);
 
 
 
-
+/**************************************************************************报告结束*******************************************************************/
 
 AR_NAMESPACE_END
 

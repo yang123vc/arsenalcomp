@@ -113,8 +113,7 @@ PSR_InsertRuleByPartStr
 
 PSR_GetSymbList			
 PSR_CheckIsValidGrammar	
-PSR_ReportLeftRecursion
-PSR_PrintGrammar		
+
 
 PSR_InitSymbMap			
 PSR_UnInitSymbMap		

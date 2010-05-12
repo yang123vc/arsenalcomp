@@ -14,11 +14,15 @@
 
 
 #include "parser.h"
-#include "grammar.h"
+#include "parser_in.h"
 #include "lr_action.h"
 
 
 AR_NAMESPACE_BEGIN
+
+
+
+
 
 /***************************************************辅助数据结构**********************************************/
 

@@ -1334,10 +1334,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\Arsenal\Parser\grammar.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\Arsenal\Parser\lalr.h"
 				>
 			</File>
@@ -1374,10 +1370,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\Arsenal\Parser\parser_aux.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\Arsenal\Parser\parser_in.c"
 				>
 			</File>
@@ -1391,10 +1383,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\Arsenal\Parser\symbol.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Parser\symbol.h"
 				>
 			</File>
 		</Filter>

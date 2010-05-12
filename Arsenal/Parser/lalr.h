@@ -16,7 +16,7 @@
 #ifndef __PARSER_LALR_DFA_H__
 #define __PARSER_LALR_DFA_H__
 
-#include "grammar.h"
+#include "parser.h"
 
 
 AR_NAMESPACE_BEGIN

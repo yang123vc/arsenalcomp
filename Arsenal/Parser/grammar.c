@@ -11,7 +11,7 @@
  *
  */
 
-#include "grammar.h"
+#include "parser.h"
 #include "parser_in.h"
 
 AR_NAMESPACE_BEGIN
@@ -1027,7 +1027,7 @@ void					PSR_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *follow_set
 
 
 
-
+#if(0)
 /**********************************************Print*******************************************/
 
 
@@ -1245,7 +1245,6 @@ RETURN_POINT:
 
 
 
-
 bool_t					PSR_ReportLeftFactor(const psrGrammar_t *grammar, arString_t *output)
 {
 		const psrRule_t	**rules;
@@ -1347,6 +1346,7 @@ void			PSR_PrintGrammar(const psrGrammar_t *grammar, arString_t *str)
 		PSR_PrintSymbolList(PSR_GetSymbList(grammar), str);
 		AR_AppendString(str, L"\r\n\r\n");
 }
+#endif
 
 
 

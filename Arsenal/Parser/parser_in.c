@@ -10,7 +10,7 @@
  * or implied warranty.
  *
  */
-#include "symbol.h"
+
 #include "lalr.h"
 #include "parser_in.h"
 
