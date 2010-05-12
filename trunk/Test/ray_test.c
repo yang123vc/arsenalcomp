@@ -2,7 +2,7 @@
 
 
 #include "../Arsenal/Ray/ray.h"
-#include "../Arsenal/Ray/rayparser.h"
+
 
 
 
@@ -14,38 +14,6 @@
 AR_NAMESPACE_BEGIN
 
 
-#define LOAD_TXT_MAX_BUF  (1024*1024 * 5)
-static const wchar_t* __load_txt(const wchar_t *path)
-{
-		FILE *pf;
-		byte_t	*buf;
-		size_t rn;
-		const wchar_t *ret;
-		buf = AR_NEWARR(byte_t, LOAD_TXT_MAX_BUF);
-
-		AR_ASSERT(path != NULL);
-		
-		//pf = fopen("..\\..\\..\\misc\\book1.gmr", "r");
-
-		pf = _wfopen(path, L"r");
-
-		AR_ASSERT(pf != NULL);
-		rn = fread((void*)buf, 1, LOAD_TXT_MAX_BUF, pf);
-		fclose(pf);
-		AR_ASSERT(rn > 3);
-		//printf("read size == %d\r\n", rn);
-		buf[rn] = 0;
-
-		AR_ASSERT(buf[0] == 0xEF && buf[1] == 0xBB && buf[2] == 0xBF);
-
-		//printf("%s\r\n", buf + 3);
-		
-
-		ret = AR_utf8_convto_wcs((const char*)(buf + 3));
-
-		AR_DEL(buf);
-		return ret;
-}
 
 
 #define DEF_PAT_PATH  L"..\\..\\..\\misc\\test.gmr"

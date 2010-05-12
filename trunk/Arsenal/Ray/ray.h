@@ -17,7 +17,6 @@
 
 #include "../Common/common.h"
 #include "../Lex/lex.h"
-#include "../Parser/grammar.h"
 #include "../Parser/parser.h"
 
 
@@ -303,7 +302,7 @@ typedef struct __func_type_tag
 		rayType_t			*ret_type;			/*引用*/
 		bool_t				has_id_list;
 		rayVar_t			*params;			/*拥有*/
-}rayFuncType_t;
+}rayFuncProtoType_t;
 
 
 
@@ -330,7 +329,7 @@ struct __ray_type_tag
 				rayPointer_t		pointer;	
 				rayArray_t			arr;			
 				rayAggregate_t		aggregate;		
-				rayFuncType_t		func_type;		
+				rayFuncProtoType_t	func_type;		
 		};
 
 		rayType_t			*next;
@@ -339,7 +338,7 @@ struct __ray_type_tag
 rayType_t*		RAY_CreateBasicType(rayParser_t	*parser,		rayTypeCode_t	code);
 rayType_t*		RAY_CreatePointerType(rayParser_t	*parser,	rayType_t		*base);
 rayType_t*		RAY_CreateArrayType(rayParser_t	*parser,		rayType_t		*base,			rayExpr_t *expr);
-rayType_t*		RAY_CreateFuncType(rayParser_t	*parser,		rayType_t		*ret_type,		rayDeclaration_t *decl);
+rayType_t*		RAY_CreateFuncProtoType(rayParser_t	*parser,		rayType_t		*ret_type,		rayDeclaration_t *decl);
 
 rayType_t*		RAY_CreateAggregateType(rayParser_t	*parser,	rayTypeCode_t	code, const wchar_t *tag, bool_t is_completed, rayDeclaration_t *member, bool_t is_define);
 
@@ -351,11 +350,11 @@ bool_t			RAY_IsSameType(const rayType_t	*l, const rayType_t *r);
 size_t			RAY_GetTypeAlign(const rayParser_t *parser, const rayType_t *type);
 size_t			RAY_GetTypeSize(const rayType_t *type);
 
-AR_INLINE		size_t	RAY_AlignAddr(size_t addr, size_t align){ size_t		pad = align - addr % align; return pad == align ? addr : addr + pad; }
 
-
-		
-		
+static AR_INLINE		size_t	RAY_AlignAddr(size_t addr, size_t align)
+{
+		size_t		pad = align - addr % align; return pad == align ? addr : addr + pad; 
+}
 
 
 struct	__initializer_tag;
@@ -462,7 +461,7 @@ typedef struct __func_tag
 {
 		raySrcInfo_t			src;
 		const char				*name;
-		rayType_t				*func_type;					/*引用*/
+		rayType_t				*prototype;					/*引用*/
 
 		bool_t					build_in;
 		

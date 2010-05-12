@@ -17,7 +17,7 @@
 
 #include "parser.h"
 #include "parser_in.h"
-#include "grammar.h"
+
 
 AR_NAMESPACE_BEGIN
 
@@ -46,7 +46,7 @@ typedef struct __action_record_tag
 		struct __action_record_tag		*next;
 }psrAction_t;
 
-extern const psrAction_t	*PSR_ErrorAction;
+extern const psrAction_t	*	const PSR_ErrorAction;
 
 
 
@@ -68,16 +68,16 @@ struct __parser_action_tag
 
 
 
-const psrAction_t*		PSR_GetAction(const psrActionTable_t *tbl, size_t state, const psrSymb_t *symb);
-int_t					PSR_GetState(const psrActionTable_t *tbl, size_t state, const psrSymb_t *symb);
+const psrAction_t*			PSR_GetAction(const psrActionTable_t *tbl, size_t state, const psrSymb_t *symb);
+int_t						PSR_GetState(const psrActionTable_t *tbl, size_t state, const psrSymb_t *symb);
 
-const psrSymbList_t*	PSR_GetExpectedSymb(const psrActionTable_t *tbl, size_t state);
+const psrSymbList_t*		PSR_GetExpectedSymb(const psrActionTable_t *tbl, size_t state);
 
 
 const psrActionTable_t*		PSR_CreateActionTable_SLR(const psrGrammar_t *grammar);
 const psrActionTable_t*		PSR_CreateActionTable_LALR(const psrGrammar_t *grammar);
 
-void					PSR_DestroyActionTable(const psrActionTable_t *tbl);
+void						PSR_DestroyActionTable(const psrActionTable_t *tbl);
 
 
 

@@ -72,7 +72,7 @@ void AR_Test()
 {
 #if defined(__LIB)
 		
-		//com_test();
+		com_test();
 		//trie_tree_test();
 		//expr_test();
 		//lex_test();
@@ -128,7 +128,7 @@ void AR_Test()
 
 		//perf_test();
 
-		ray_test();
+		//ray_test();
 		
 #else
 		AR_printf(L"dll version\r\n");

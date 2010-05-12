@@ -802,6 +802,81 @@ void str_tbl_test()
 
 }
 
+
+void kmp_test()
+{
+		const wchar_t *s = L"abcdef";
+		const wchar_t *p = L"c";
+		size_t	n = AR_wcslen(s);
+		AR_printf(L"%ls\r\n", AR_wcsstr_kmp(s,p));
+
+		AR_printf(L"%ls\r\n", AR_wcsstr_kmp_s(s,s + n,p));
+}
+
+
+const wchar_t *AR_wcsstr_ex(const wchar_t *s, const wchar_t *p)
+{
+		for(s; *s != L'\0'; ++s)
+		{
+				size_t i;
+				for(i = 0; p[i] != L'\0' && s[i] != L'\0' && p[i] == s[i]; ++i);
+
+				if(p[i] == L'\0')return s;
+		}
+
+		return NULL;
+		
+}
+
+void kmp_test2()
+{
+		const wchar_t *src = __load_txt(L"z:\\1.txt");
+
+		//AR_printf(L"%ls\r\n",src);
+
+		for(int a = 0; a < 3; ++a)
+		{
+				const wchar_t *s = src;
+				const wchar_t *p = L"abcdefhigklmnopqrstuvwxyz";
+				size_t m = AR_wcslen(p);
+
+				uint_64_t beg = AR_GetTime_Milliseconds();
+				size_t cnt = 0;
+				while((s = AR_wcsstr_ex(s,p)) != NULL)
+				{
+						s += m;
+						cnt ++;
+				}
+				uint_64_t end = AR_GetTime_Milliseconds();
+				AR_printf(L"elapsed == %I64d match == %d\r\n", end - beg, cnt);
+		}
+		
+		getchar();
+
+		for(int a = 0; a < 3; ++a)
+		{
+				const wchar_t *s = src;
+				const wchar_t *p = L"abcdefhigklmnopqrstuvwxyz";
+				size_t m = AR_wcslen(p);
+				uint_64_t beg = AR_GetTime_Milliseconds();
+				size_t cnt = 0;
+				while((s = AR_wcsstr_kmp(s,p)) != NULL)
+				{
+						s += m;
+						cnt ++;
+				}
+				uint_64_t end = AR_GetTime_Milliseconds();
+				AR_printf(L"elapsed == %I64d match == %d\r\n", end - beg, cnt);
+		}
+
+
+		AR_DEL(src);
+		getchar();
+
+		
+
+}
+
 void com_test()
 {
 
@@ -842,7 +917,10 @@ void com_test()
 		//com_str_test_vscwprintf();
 
 		//com_str_test_cmp();
-		str_tbl_test();
+		//str_tbl_test();
+
+		//kmp_test();
+		kmp_test2();
 
 }
 

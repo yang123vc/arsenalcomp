@@ -11,9 +11,8 @@
  *
  */
 
+#include "parser.h"
 #include "parser_in.h"
-
-#include "symbol.h"
 
 
 AR_NAMESPACE_BEGIN

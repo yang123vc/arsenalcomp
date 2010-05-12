@@ -210,7 +210,7 @@ void					PSR_DestroyActionTable(const psrActionTable_t *table)
 
 static const psrAction_t error_action = {PSR_ERROR, 0, 0, 0, 0,0, NULL};
 
-const psrAction_t	*PSR_ErrorAction = &error_action;
+const psrAction_t	* const PSR_ErrorAction = &error_action;
 
 
 
