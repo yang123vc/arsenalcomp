@@ -351,6 +351,7 @@ static void		AR_STDCALL handle_on_error(const psrToken_t *tok, const size_t expe
 		}
 
 		AR_printf(L"\r\n");
+	
 }
 
 static const psrHandler_t		__g_handler = 
