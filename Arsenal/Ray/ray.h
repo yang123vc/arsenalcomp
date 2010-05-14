@@ -338,8 +338,7 @@ struct __ray_type_tag
 rayType_t*		RAY_CreateBasicType(rayParser_t	*parser,		rayTypeCode_t	code);
 rayType_t*		RAY_CreatePointerType(rayParser_t	*parser,	rayType_t		*base);
 rayType_t*		RAY_CreateArrayType(rayParser_t	*parser,		rayType_t		*base,			rayExpr_t *expr);
-rayType_t*		RAY_CreateFuncProtoType(rayParser_t	*parser,		rayType_t		*ret_type,		rayDeclaration_t *decl);
-
+rayType_t*		RAY_CreateFuncProtoType(rayParser_t	*parser,	rayType_t		*proto_type,	rayDeclaration_t *decl);
 rayType_t*		RAY_CreateAggregateType(rayParser_t	*parser,	rayTypeCode_t	code, const wchar_t *tag, bool_t is_completed, rayDeclaration_t *member, bool_t is_define);
 
 void			RAY_DestroyType(rayParser_t	*parser, rayType_t	*type);
@@ -917,6 +916,8 @@ void			RAY_SetOuterBlock(rayParser_t	*parser, rayBlock_t		*block);
 rayBlock_t*		RAY_GetOuterBlock(const rayParser_t *parser);
 bool_t			RAY_IsOuterBlock(const rayParser_t *parser, const rayBlock_t *block);
 rayBlock_t*		RAY_GetCurrentBlock(const rayParser_t *parser);
+rayBlock_t*		RAY_StartBlock(rayParser_t *parser);
+rayBlock_t*		RAY_EndBlock(rayParser_t *parser);
 
 
 

@@ -153,6 +153,10 @@ float 	f	=	0.0e-10F;
 float 	f	=	.0e10f;
 float 	f	=	.12e10;
 
+float 	f	=	1e-6;
+float 	f	=	.1e-6;
+float 	f	=	0.1e-6;
+
 
 /*错误的constant
 

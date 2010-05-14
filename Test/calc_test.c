@@ -2,7 +2,7 @@
 #include "../Arsenal/Lex/lex.h"
 
 
-#include "../Arsenal/Parser/grammar.h"
+
 #include "../Arsenal/Parser/parser.h"
 #include "../Arsenal/Parser/lr_action.h"
 

@@ -1,5 +1,4 @@
 #include "../Arsenal/Lex/lex.h"
-#include "../Arsenal/Parser/grammar.h"
 #include "../Arsenal/Parser/lalr.h"
 
 
@@ -225,8 +224,8 @@ static  psrGrammar_t* __build_grammar()
 				arString_t		*str;
 
 				str = AR_CreateString();
-				PSR_PrintGrammar(gmr, str);
-				AR_printf(L"%ls\r\n", AR_GetStrString(str));
+//				PSR_PrintGrammar(gmr, str);
+//				AR_printf(L"%ls\r\n", AR_GetStrString(str));
 
 				AR_DestroyString(str);
 				getchar();

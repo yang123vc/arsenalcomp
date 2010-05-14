@@ -180,31 +180,19 @@ static psrGrammar_t*	__build_grammar(const psrHandler_t	*handler, const arIOCtx_
 
 
 
-typedef struct __value_tag
-{
-		bool_t	is_num;
-		union{
-		int		op_code;
-		int		num;
-		};
-}value_t;
-
-
 static psrNode_t* AR_STDCALL __build_leaf(const psrToken_t *tok,  void *ctx)
 {
-		value_t *v = AR_NEW0(value_t);
+		int v;
 
 		if(tok->term_val == OP_NUM)
 		{
-				v->is_num = true;
-				if(AR_wtoi32_s(tok->str, tok->str + tok->str_cnt, &v->num, 10) == NULL)
+				if(AR_wtoi32_s(tok->str, tok->str + tok->str_cnt, &v, 10) == NULL)
 				{
 						AR_ASSERT(false);
 				}
 		}else
 		{
-				v->is_num = false;
-				v->op_code = tok->term_val;
+				v = tok->term_val;
 		}
 
 		return (psrNode_t*)v;
@@ -220,49 +208,47 @@ static psrNode_t* AR_STDCALL __build_leaf(const psrToken_t *tok,  void *ctx)
 /*E	:	NUM */
 static psrNode_t* AR_STDCALL handle_E(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
-		value_t	*res;
-		value_t	**nv = (value_t**)nodes;
-		res = NULL;
+		int	*nv = (int*)nodes;
+		int res = 0;
+
 		if(count == 3)
 		{
 				
-				if(nv[0]->op_code == OP_LP)
+				if(nv[0] == OP_LP)
 				{
 						res = nv[1];
-						nv[1] = NULL;
+						nv[1] = 0;
 				}else
 				{
-						res = AR_NEW0(value_t);
-						res->is_num = true;
-						switch(nv[1]->op_code)
+						switch(nv[1])
 						{
 						case OP_ADD:
-								res->num = nv[0]->num + nv[2]->num;
+								res = nv[0] + nv[2];
 								break;
 						case OP_MINUS:
-								res->num = nv[0]->num - nv[2]->num;
+								res = nv[0] - nv[2];
 								break;
 						case OP_MUL:
-								res->num = nv[0]->num * nv[2]->num;
+								res = nv[0] * nv[2];
 								break;
 						case OP_DIV:
-								if(nv[2]->num == 0)
+								if(nv[2] == 0)
 								{
 										AR_printf(L"Div by 0\r\n");
-										res->num = 0;
+										res = 0;
 								}else
 								{
-										res->num = nv[0]->num / nv[2]->num;
+										res = nv[0] / nv[2];
 								}
 								break;
 						case OP_MOD:
-								if(nv[2]->num == 0)
+								if(nv[2] == 0)
 								{
 										AR_printf(L"Mod by 0\r\n");
-										res->num = 0;
+										res = 0;
 								}else
 								{
-										res->num = nv[0]->num % nv[2]->num;
+										res = nv[0] % nv[2];
 								}
 								break;
 						default:
@@ -272,27 +258,25 @@ static psrNode_t* AR_STDCALL handle_E(psrNode_t **nodes, size_t count, const wch
 		}else if(count == 2)
 		{
 				res = nv[1];
-				nv[1] = NULL;
-				res->num = -res->num;
+				nv[1] = 0;
+				res = -res;
 		}else if(count == 1)
 		{
 				res = nv[0];
-				nv[0] = NULL;
+				nv[0] = 0;
 				
 		}else
 		{
 				AR_ASSERT(false);
 		}
 		
-		return res;
-
+		return (psrNode_t*)res;
 }
 
 
 static void		AR_STDCALL handle_free_node(psrNode_t *node, void *ctx)
 {
 		AR_ASSERT(node != NULL);
-		AR_DEL(node);
 }
 
 
@@ -423,10 +407,10 @@ static int calc(const wchar_t *input)
 				}
 		}
 		
-		value_t *v = NULL;
+		int v = 0;
 		if(is_ok)
 		{
-				v = (value_t*)PSR_GetResult(ctx);
+				v = (int)PSR_GetResult(ctx);
 		}
 
 		LEX_DestroyMatch(match);
@@ -434,9 +418,8 @@ static int calc(const wchar_t *input)
 		PSR_DestroyContext(ctx);
 		PSR_DestroyParser(parser);
 		PSR_DestroyGrammar(grammar);
-		int tmp = v == NULL ? 0 : v->num;
-		AR_DEL(v);
-		return tmp;
+		
+		return v;
 }
 
 

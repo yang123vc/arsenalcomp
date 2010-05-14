@@ -28,7 +28,7 @@ AR_NAMESPACE_BEGIN
 void*	AR_malloc(size_t nbytes)
 {
 		void *ptr;
-		
+		AR_ASSERT(nbytes > 0);
 		while((ptr = malloc(nbytes)) == NULL)AR_YieldThread();
 
 		return ptr;
@@ -42,6 +42,7 @@ void*	AR_calloc(size_t num, size_t size)
 			ptr = calloc(num , size);
 		}while(ptr == NULL);
 		*/
+		AR_ASSERT(num > 0 && size > 0);
 		while((ptr = calloc(num,size)) == NULL)AR_YieldThread();
 		return ptr;
 }		
@@ -49,6 +50,9 @@ void*	AR_calloc(size_t num, size_t size)
 void*	AR_realloc(void *block, size_t nbytes)
 {
 		void *ptr;
+
+		AR_ASSERT(nbytes > 0);
+
 		/*
 		do{
 				ptr = realloc(block, nbytes);		
@@ -60,6 +64,7 @@ void*	AR_realloc(void *block, size_t nbytes)
 
 void	AR_free(void *ptr)
 {
+		AR_ASSERT(ptr != NULL);
 		if(ptr)free(ptr);
 }
 
