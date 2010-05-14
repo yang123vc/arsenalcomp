@@ -64,6 +64,8 @@ void code_gen_lex_test();
 void sn_test();
 void perf_test();
 void gen_code_test();
+
+extern void calc2_test();
 #endif
 
 
@@ -72,7 +74,7 @@ void AR_Test()
 {
 #if defined(__LIB)
 		
-		com_test();
+		//com_test();
 		//trie_tree_test();
 		//expr_test();
 		//lex_test();
@@ -129,6 +131,8 @@ void AR_Test()
 		//perf_test();
 
 		//ray_test();
+
+		calc2_test();
 		
 #else
 		AR_printf(L"dll version\r\n");

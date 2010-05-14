@@ -29,7 +29,7 @@ Unit	:	E Unit
 %right 	UMINUS		;
 
 E	:	E	"+" 	E	
-	|	E	"-"	E
+	|	E	"-"	E	
 	|	E	"*"	E
 	|	E	"/"	E
 	|	E	"%"	E

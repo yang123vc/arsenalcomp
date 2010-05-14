@@ -437,37 +437,37 @@ const	psrGrammar_t*	PSR_GetGrammar(const parser_t *parser);
 /*#define			PSR_GetGrammar(_psr)	((const psrGrammar_t*)((_psr)->grammar))*/
 
 
-psrContext_t*	PSR_CreateContext(const parser_t *parser, void *ctx);
-void			PSR_DestroyContext(psrContext_t	*ctx);
+
 
 
 /*****************************************Context*****************************************/
 
+psrContext_t*	PSR_CreateContext(const parser_t *parser, void *ctx);
+void			PSR_DestroyContext(psrContext_t	*ctx);
+
+void			PSR_Clear(psrContext_t *parser);
+
+psrNode_t*		PSR_GetResult(psrContext_t *parser);/*在状态为accepted之后才可以调用*/
+
+bool_t			PSR_IsAccepted(const psrContext_t *parser);
+
+bool_t			PSR_IsInError(const psrContext_t *parser);
+
+void			PSR_ClearError(psrContext_t *parser);
+
+size_t			PSR_GetNodeCount(const psrContext_t *parser);
+
+psrNode_t*		PSR_IndexOfNodeStack(psrContext_t *parser, size_t index);
+
 /*
 		由于采用了一个增广的文法，所以当EOI被增加到stack中时，只可能出现错误或者成为接受状态，EOI永远不会被SHIFT到parser中
 */
-
-void		PSR_Clear(psrContext_t *parser);
-
-psrNode_t*	PSR_GetResult(psrContext_t *parser);/*在状态为accepted之后才可以调用*/
-
-bool_t		PSR_IsAccepted(const psrContext_t *parser);
-
-bool_t		PSR_IsInError(const psrContext_t *parser);
-
-void		PSR_ClearError(psrContext_t *parser);
-
-size_t		PSR_GetNodeCount(const psrContext_t *parser);
-
-psrNode_t*	PSR_IndexOfNodeStack(psrContext_t *parser, size_t index);
-
-bool_t		PSR_AddToken(psrContext_t *parser_context, const psrToken_t *tok);
-
-
-
+bool_t			PSR_AddToken(psrContext_t *parser_context, const psrToken_t *tok);
 
 
 /***************************************************************Parser结束************************************************************************/
+
+
 
 
 

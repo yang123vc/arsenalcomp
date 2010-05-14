@@ -88,9 +88,9 @@ static void		__insert_to_rule_set(lexRuleSet_t *set, rgxNode_t *node, const lexA
 		set->action[set->count] = *action;
 		set->nodes[set->count] = node;
 		set->count++;
-
-
 }
+
+
 static bool_t		__remove_from_rule_set(lexRuleSet_t *set, size_t value)
 {
 		size_t i;

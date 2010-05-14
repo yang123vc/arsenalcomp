@@ -106,6 +106,7 @@ typedef struct __rule_tag
 		const wchar_t			*lhs;
 		const wchar_t			*rhs;
 		const wchar_t			*prec_tok;
+		const wchar_t			*action_name;
 		const wchar_t			*action_ins;
 }cfgRule_t;
 
@@ -115,6 +116,7 @@ typedef struct __rule_tag
 
 #define	CFG_RULE_HANDLER_DEFINE	L"static psrNode_t* AR_STDCALL handle_%ls(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)\n{\n\t return NULL;\n}\n"
 #define	CFG_RULE_HANDLER_DEFINE_2	L"static psrNode_t* AR_STDCALL %ls(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)\n{\n\t return NULL;\n}\n"
+#define	CFG_RULE_HANDLER_DEFINE_3	L"static psrNode_t* AR_STDCALL %ls(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)\n{\n\t %ls\n}\n"
 
 
 

@@ -250,9 +250,12 @@ lexMatch_t*		LEX_CreateMatch(const lex_t *lex, const arIOCtx_t *io)
 				prog = AR_NEW(rgxProg_t);
 				RGX_InitProg(prog);
 				RGX_Compile(prog, lex->rule_set.nodes[i]);
+				
 				LEX_InserToProgSet(pmatch->prog_set, prog, &lex->rule_set.action[i]);
 		}
+
 		LEX_SortProgSet(pmatch->prog_set);
+		
 		return pmatch;
 }
 

@@ -105,7 +105,11 @@
 %token	"return"	:	'"return"(?!{keyword_lhd})'	,1					%action	"TOK_RETURN"		;
 
 %token	"function"	:	'"function"(?!{keyword_lhd})'	,1					%action	"TOK_FUNCTION"		;
-%token	"nil"		:	'"nil"(?!{keyword_lhd})'		,1					%action	"TOK_NIL"			;
+%token	"null"	:	'"null"(?!{keyword_lhd})'		,1					%action	"TOK_NULL"			;
+%token	"in"		:	'"in"(?!{keyword_lhd})'		,1					%action	"TOK_IN"			;
+%token	"true"	:	'"true"(?!{keyword_lhd})'		,1					%action	"TOK_TRUE"			;
+%token	"false"	:	'"false"(?!{keyword_lhd})'		,1					%action	"TOK_FALSE"		;
+
 
 
 %token	"..."		:	'"..."'		,2								%action 	"TOK_ELLIPSIS"		;	
@@ -247,9 +251,15 @@ empty_statement			:	semi
 
 
 
-for_expression_list	:	expression ";" expression 
-				|	expression ";" expression ";" expression 
-				|	NAME "=" expression ";" expression ";" expression 
+for_expression_list	:	for_initializer ";" expression ";" expression 
+				|	NAME  "in" expression
+				;
+
+for_initializer		:	NAME "=" expression
+				|	expression
+				|	for_initializer	"," NAME "=" expression
+				|	for_initializer	"," expression
+				|	.
 				;
 
 
@@ -292,7 +302,9 @@ semi					:	";"
 expression				:	FLOAT_NUMBER
 					|	INT_NUMBER
 					|	STRING
-					|	"nil"
+					|	"null"
+					|	"true"
+					|	"false"
 					|	"{"	expression_list "}"
 					|	postfix_expression 
 					|	"++" expression		
@@ -322,8 +334,8 @@ expression_list			:	expression
 
 postfix_expression 		:	"(" expression ")"
 					|	var
-					|	postfix_expression "++"						
-					|	postfix_expression "--"		
+					|	postfix_expression "++"
+					|	postfix_expression "--"
 					|	call_expression
 					;
 
