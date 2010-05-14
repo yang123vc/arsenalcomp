@@ -112,7 +112,7 @@ static const cfgLexPattern_t	__cfg_pattern[] =
 		{PREC,	L"\"%prec\"(?={key_lookahead})", false,0},
 
 		{ACTION, L"\"%action\"(?={skip_lexem}+)", false, 0},
-		{ACTION_INS, L"\\{(.|\\n)*?\\}", false, 0},
+		{ACTION_INS, L"\\{((\\\\\\{|\\\\\\})|[^\\{\\}])*?\\}", false, 0},
 
 		{LEXEME,	L"{lexeme}", false,0},
 		{NUMBER,	L"{number}", false,0},
@@ -756,6 +756,25 @@ static psrNode_t* AR_STDCALL __build_leaf(const psrToken_t *tok,  void *ctx)
 
 				node->lexeme.lexeme = AR_wcsndup(tok->str + 1, tok->str_cnt-2);
 				AR_ASSERT(node->lexeme.lexeme != NULL);
+		}else if(tok->term_val == ACTION_INS)
+		{
+				wchar_t *buf, *d;
+				const wchar_t *s, *e;
+				AR_ASSERT(tok->str_cnt > 0);
+				buf = AR_NEWARR(wchar_t,tok->str_cnt + 1);
+				d = buf; s = tok->str; e = tok->str + tok->str_cnt;
+
+				while(s < e)
+				{
+						if(*s == L'\\' && (*(s+1) == L'{' || *(s+1) == L'}'))
+						{
+								++s;
+						}
+						*d++ = *s++;
+				}
+				
+				*d = L'\0';
+				node->lexeme.lexeme = buf;
 		}else if(tok->str_cnt > 0)
 		{
 				node->lexeme.lexeme = AR_wcsndup(tok->str, tok->str_cnt);
