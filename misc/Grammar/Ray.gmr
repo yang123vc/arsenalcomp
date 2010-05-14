@@ -43,8 +43,11 @@
 %name float_type_suffix	:	"(f|F|d|D)"
 					;
 
-%name float_literal		:	"([0-9]*\.[0-9]*{exponet}?{float_type_suffix}?)"
+
+
+%name float_literal		:	"(((([0-9]\.[0-9]*)|(\.[0-9]+)){exponet}?)|([0-9]+{exponet})){float_type_suffix}?"
 					;
+
 
 
 
@@ -159,13 +162,13 @@
 
 %token	">>"		:	'">>"'		,1								%action	"TOK_RSHIFT"		;
 %token	"<<"		:	'"<<"'		,1								%action	"TOK_LSHIFT"		;
-%token	"++"		:	'"++"'		,1								%action	"TOK_INC"		;
-%token	"--"		:	'"--"'		,1								%action	"TOK_DEC"		;
+%token	"++"		:	'"++"'		,1								%action	"TOK_INC"			;
+%token	"--"		:	'"--"'		,1								%action	"TOK_DEC"			;
 
 
-%token	"->"		:	'"->"'		,1								%action	"TOK_PTR"		;
+%token	"->"		:	'"->"'		,1								%action	"TOK_PTR"			;
 %token	"&&"		:	'"&&"'		,1								%action	"TOK_ANDAND"		;
-%token	"||"		:	'"||"'		,1								%action	"TOK_OROR"		;
+%token	"||"		:	'"||"'		,1								%action	"TOK_OROR"			;
 
 %token	"<="		:	'"<="'		,1								%action 	"TOK_LE"		;
 %token	">="		:	'">="'		,1								%action 	"TOK_GE"		;
@@ -177,12 +180,12 @@
 
 
 
-%token	"{"		:	'"{"'			,0								%action "TOK_L_BRACES"			;
-%token	"}"		:	'"}"'			,0								%action "TOK_R_BRACES"			;
-%token	"("		:	'"("'			,0								%action "TOK_L_PAREN"				;
-%token	")"		:	'")"'			,0								%action "TOK_R_PAREN"				;
-%token	"["		:	'"["'			,0								%action "TOK_L_SQUARE"			;
-%token	"]"		:	'"]"'			,0								%action "TOK_R_SQUARE"			;
+%token	"{"		:	'"{"'			,0								%action "TOK_L_BRACES"		;
+%token	"}"		:	'"}"'			,0								%action "TOK_R_BRACES"		;
+%token	"("		:	'"("'			,0								%action "TOK_L_PAREN"			;
+%token	")"		:	'")"'			,0								%action "TOK_R_PAREN"			;
+%token	"["		:	'"["'			,0								%action "TOK_L_SQUARE"		;
+%token	"]"		:	'"]"'			,0								%action "TOK_R_SQUARE"		;
 
 %token	";"		:	'";"'			,0								%action "TOK_SEMICOLON"			;
 %token	","		:	'","'			,0								%action "TOK_COMMA"				;
@@ -230,7 +233,7 @@
 产生式的优先级依赖于其最右终结符或显性指定,这里就是"else"
 */
 %nonassoc IF_WITHOUT_ELSE						;
-%nonassoc "else"							;	
+%nonassoc "else"							;
 
 
 /**************************************************************************************/
@@ -402,7 +405,7 @@ direct_declarator		:	IDENTIFIER								//variable
 					|	IDENTIFIER 	"[" constant_expression "]"	//array
 					|	IDENTIFIER 	"[" "]"					//undefined array
 					|	IDENTIFIER 	"(" parameter_list ")"		//function
-					|	IDENTIFIER		"(" ")"					// zero parameter function
+					|	IDENTIFIER		"(" ")"					//zero parameter function
 					;
 
 

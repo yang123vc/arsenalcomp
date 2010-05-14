@@ -15,7 +15,6 @@
 %token	"("		:	'"("';
 %token	")"		:	'")"';
 %token	"%"		:	'"%"';
-%token	";"		:	'";"';
 
 /*
 Unit	:	E Unit 
