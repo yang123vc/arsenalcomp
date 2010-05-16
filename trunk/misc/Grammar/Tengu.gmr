@@ -165,13 +165,14 @@
 
 
 
-%left		"?"	":"							;
+%right	"?"	":"							;
 %left		"||"								;
 %left		"&&"								;
 %left		"=="	"!="	"<"	"<="	">"	">="			;
 %left		"+"	"-"							;
 %left		"*"	"/"	"%"						;
 %right	PREC_UNARY							;
+
 
 /*
 "if" "(" expression ")" statement "else" statement 
@@ -187,6 +188,7 @@
 
 
 program			:	translation_unit
+				|	.
 				;
 
 translation_unit	:	element
@@ -195,14 +197,25 @@ translation_unit	:	element
 
 
 
-element				:	declaration
+element				:	statement
 					|	function_defination
-					|	statement
 					;
 
 
 
-function_defination		:	"var"		NAME	"("	params	")"	compound_statement
+function_defination		:	"var"		dotname	"("	params	")"	compound_statement
+					;
+
+
+dotname				:	NAME
+					|	dotname "." NAME
+					;
+
+
+params				:	namelist	","	"..."
+					|	namelist
+					|	"..."
+					|	.
 					;
 
 
@@ -211,23 +224,31 @@ namelist				:	namelist	"," NAME
 					;
 
 
-params				:	.
-					|	namelist
-					|	"..."
-					|	namelist	","	"..."
+
+
+
+
+
+/*************************************Óï¾ä***************************************************/
+
+
+statement				:	compound_statement	
+					|	expression_statement	
+					|	selection_statement	
+					|	iteration_statement	
+					|	jump_statement		
+					|	assignment_statement	
+					|	declaration_statement	
 					;
 
 
 
+/*************************************ÉùÃ÷Óï¾ä***************************************************/
 
-/*************************************ÉùÃ÷***************************************************/
-
-declaration			:	"var"		init_declarator_list 	semi
+declaration_statement		:	"var"		init_declarator_list 	semi
 					;
 
-declaration_list		:	declaration
-					|	declaration_list declaration
-					;
+
 
 init_declarator_list		:	init_declarator
 					|	init_declarator_list "," init_declarator
@@ -247,37 +268,16 @@ initializer			:	expression
 
 
 
+/************************************¸³ÖµÓï¾ä***************************************/
 
-/*************************************Óï¾ä***************************************************/
-
-
-statement				:	compound_statement	
-					|	expression_statement	
-					|	selection_statement	
-					|	iteration_statement	
-					|	jump_statement		
-					|	assignment_statement	
-					;
-
-/************************************************************************************/
-
-assignment_statement		:	variable	"="	expression	semi
+assignment_statement		:	variable	"="	expression			semi
 					|	variable	"="	table_constructor	semi
 					;
 
-
-
-variable				:	NAME
-					|	postfix_expression "["	expression  "]"
-					|	postfix_expression "."	NAME
-					;
-
-
-
 /**************************************compound_statement*****************************/
 
-
-compound_statement		:	start_block	compound_statement_body	close_block
+compound_statement		:	start_block	statement_list	close_block
+					|	"{" "}"
 					;
 
 start_block			:	"{"
@@ -286,21 +286,16 @@ start_block			:	"{"
 close_block			:	"}"
 					;
 
-compound_statement_body	:	compound_statement_declarations	
-					|	compound_statement_declarations statement_list	
+
+
+
+statement_list			:	statement_list statement
+					|	statement
 					;
-
-compound_statement_declarations	:	declaration_list
-						|	.
-						;
-
 
 
 /*****************************************************************************/
 
-statement_list			:	statement
-					|	statement_list statement
-					;
 
 expression_statement		:	semi
 					|	expression	 semi
@@ -311,6 +306,13 @@ selection_statement		:	"if" "(" expression ")" statement				%prec IF_WITHOUT_ELS
 					;
 
 
+iteration_statement		:	"while" "(" expression ")" statement
+					|	"do" statement "while" "(" expression ")" semi
+					|	"for" "(" for_expression")" statement
+					;
+
+
+
 for_expression			:	assignment_statement expression_statement	expression
 					|	assignment_statement expression_statement
 					|	expression_statement expression_statement	expression
@@ -319,11 +321,6 @@ for_expression			:	assignment_statement expression_statement	expression
 					;
 
 
-
-iteration_statement		:	"while" "(" expression ")" statement
-					|	"do" statement "while" "(" expression ")" semi
-					|	"for" "(" for_expression")" statement
-					;
 
 jump_statement			:	"continue" semi
 					|	"break" 	semi
@@ -339,18 +336,26 @@ semi					:	";"
 /*****************************************±í´ïÊ½*********************************************/
 
 
-
-expression			:	binary_expression		
-				|	binary_expression	"?"	expression	":"	expression
-				;
-
-expression_list		:	expression_list "," expression
-				|	expression
-				;
-
-
-primary_expression	:	"(" expression")"	
-				|	NAME	
+expression			:	expression		"?"	expression	":"	expression
+				|	expression		"+"	expression
+				|	expression		"-"	expression
+				|	expression		"*"	expression
+				|	expression		"/"	expression
+				|	expression		"%"	expression
+				|	expression		"<"	expression
+				|	expression		"<="	expression
+				|	expression		">"	expression
+				|	expression		">="	expression
+				|	expression		"=="	expression
+				|	expression		"!="	expression
+				|	expression		"&&"	expression
+				|	expression		"||"	expression
+				|	"++" 	postfix_expression		%prec	PREC_UNARY
+				|	"--"	postfix_expression		%prec	PREC_UNARY
+				|	"+"	postfix_expression		%prec	PREC_UNARY
+				|	"-"	postfix_expression		%prec	PREC_UNARY
+				|	"!"	postfix_expression		%prec	PREC_UNARY
+				|	postfix_expression
 				|	FLOAT_NUMBER
 				|	INT_NUMBER
 				|	STRING
@@ -361,41 +366,29 @@ primary_expression	:	"(" expression")"
 
 
 
-postfix_expression	:	primary_expression
-				|	postfix_expression "[" expression "]"				
-				|	postfix_expression "(" ")"						
-				|	postfix_expression "(" expression_list")"	
-				|	postfix_expression "++"
-				|	postfix_expression "--"						
+
+postfix_expression	:	postfix_expression	"++"
+				|	postfix_expression	"--"
+				|	"(" expression")"
+				|	call_expression
+				|	variable
+				;
+
+
+call_expression		:	postfix_expression "(" expression_list")"	
+				|	postfix_expression "(" 	")"	
+				;
+
+expression_list		:	expression_list "," expression
+				|	expression
 				;
 
 
 
-unary_expression	:	postfix_expression							
-				|	"++" unary_expression		
-				|	"--" unary_expression		
-				|	"+"	unary_expression
-				|	"-"	unary_expression
-				|	"!"	unary_expression
+variable			:	NAME
+				|	variable "["	expression  "]"
+				|	variable "." NAME
 				;
-
-
-binary_expression	:	unary_expression							
-				|	binary_expression	"+"	binary_expression
-				|	binary_expression	"-"	binary_expression
-				|	binary_expression	"*"	binary_expression
-				|	binary_expression	"/"	binary_expression
-				|	binary_expression	"%"	binary_expression
-				|	binary_expression	"<"	binary_expression
-				|	binary_expression	"<="	binary_expression
-				|	binary_expression	">"	binary_expression
-				|	binary_expression	">="	binary_expression
-				|	binary_expression	"=="	binary_expression
-				|	binary_expression	"!="	binary_expression
-				|	binary_expression	"&&"	binary_expression
-				|	binary_expression	"||"	binary_expression
-				;
-
 
 
 
