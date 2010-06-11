@@ -18,7 +18,7 @@
 #include "./Common/common.h"
 #include "./Lex/lex.h"
 #include "./Parser/parser.h"
-#include "./Ray/ray.h"
+#include "./Tengu/tengu.h"
 #include "./Tools/tools.h"
 
 

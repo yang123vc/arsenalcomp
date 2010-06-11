@@ -100,6 +100,14 @@ typedef struct __cfg_start_tag
 
 #define CFG_START_ITEM L"#define START_RULE L\"%ls\""
 
+
+typedef struct __cfg_predef_tag
+{
+		size_t	line;
+		wchar_t	*code;
+}cfgPreDef_t;
+
+
 typedef struct __rule_tag
 {
 		size_t					line;
@@ -152,6 +160,9 @@ typedef struct __cfg_config_tag
 
 		cfgRule_t		*rule;
 		size_t			rule_cnt;
+
+		cfgPreDef_t		*pre_def;
+		size_t			predef_cnt;
 		
 		cfgStart_t		start;
 
