@@ -668,6 +668,7 @@ bool_t			PSR_CheckIsValidGrammar(const psrGrammar_t *grammar)
 				}
 		}
 
+
 		AR_DEL(mark_tbl);
 		
 		for(i = 0; i < lst->count; ++i)
@@ -683,7 +684,6 @@ bool_t			PSR_CheckIsValidGrammar(const psrGrammar_t *grammar)
 				{
 						const psrRule_t *rule;
 						rule = grammar->rules[k];
-						
 
 						if(PSR_CompSymb(rule->head, symb) == 0)continue;/*自己引用自己不算*/
 						
@@ -702,6 +702,9 @@ bool_t			PSR_CheckIsValidGrammar(const psrGrammar_t *grammar)
 						AR_printf_ctx((arIOCtx_t*)&grammar->io_ctx,L"Grammar Warning : The rule <%ls> is declared but never used\r\n", symb->name);
 				}
 		}
+
+
+
 
 		return result;
 }
