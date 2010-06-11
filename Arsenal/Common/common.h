@@ -127,7 +127,7 @@ static AR_INLINE const void* AR_GET_ELEM(const void *base, size_t width, size_t 
 }
 
 
-
+#define AR_OFFSETOF(_ty, _filed)		((byte_t*)&((_ty*)0)->_filed) - ((byte_t*)(_ty*)0)
 
 /**********************************************************memory***************************************************************/
 
@@ -467,7 +467,11 @@ static AR_INLINE uint_64_t AR_BIT_MARK(uint_64_t pos) { return AR_BIGNUM_U64(0x0
 
 
 
+/* 在第p位上设置n个1 */
+#define AR_MASK1(_n,_p)	( (~( (~(uint_64_t)0) << (_n))) << (_p) )
 
+/* 在第p位上设置n个0 */
+#define AR_MASK0(_n,_p)	(~AR_MASK1((_n),(_p)))
 
 
 
