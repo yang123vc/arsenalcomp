@@ -53,21 +53,30 @@ void	CTagTree::Clear()
 		change_state(m_prec_tbl);
 		change_state(m_rule_tbl);
 
-		update_tree_node(m_name_tbl, m_name);
-		update_tree_node(m_prec_tbl, m_prec);
-		update_tree_node(m_term_tbl, m_term);
-		update_tree_node(m_rule_tbl, m_rule);
+		change_state(m_predef_tbl);
+		
+
+		update_tree_node(m_name_tbl,	m_name);
+		update_tree_node(m_prec_tbl,	m_prec);
+		update_tree_node(m_term_tbl,	m_term);
+		update_tree_node(m_rule_tbl,	m_rule);
+
+		update_tree_node(m_predef_tbl,	m_predef);
 		
 		__delete_items(this, m_name);
 		__delete_items(this, m_term);
 		__delete_items(this, m_prec);
 		__delete_items(this, m_rule);
+
+		__delete_items(this, m_predef);
+
+		
 		
 		m_name_tbl.RemoveAll();
 		m_term_tbl.RemoveAll();
 		m_prec_tbl.RemoveAll();
 		m_rule_tbl.RemoveAll();
-
+		m_predef_tbl.RemoveAll();
 		
 }
 
@@ -159,6 +168,7 @@ void	CTagTree::UpdateTag(const ARSpace::cfgConfig_t *cfg)
 		change_state(m_term_tbl);
 		change_state(m_prec_tbl);
 		change_state(m_rule_tbl);
+		change_state(m_predef_tbl);
 
 		for(size_t i = 0; i < cfg->name_cnt; ++i)
 		{
@@ -227,10 +237,19 @@ void	CTagTree::UpdateTag(const ARSpace::cfgConfig_t *cfg)
 				update_table(m_rule_tbl, rule->lhs, rule->line);
 		}
 
+		for(size_t i = 0; i < cfg->predef_cnt; ++i)
+		{
+				const ARSpace::cfgPreDef_t *def = &cfg->pre_def[i];
+				CString name;
+				name.Format(L"Code %d", i);
+				update_table(m_predef_tbl, name.GetString(), def->line);
+		}
+
 		update_tree_node(m_name_tbl, m_name);
 		update_tree_node(m_term_tbl, m_term);
 		update_tree_node(m_prec_tbl, m_prec);
 		update_tree_node(m_rule_tbl, m_rule);
+		update_tree_node(m_predef_tbl, m_predef);
 
 
 
@@ -249,6 +268,9 @@ void	CTagTree::UpdateTag(const ARSpace::cfgConfig_t *cfg)
 		str.Format(TEXT("Rule (%d)"), cfg->rule_cnt);
 		this->SetItemText(m_rule, str);
 
+
+		str.Format(TEXT("PreDef (%d)"), cfg->predef_cnt);
+		this->SetItemText(m_predef, str);
 }
 
 
@@ -281,6 +303,7 @@ int CTagTree::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		m_term = this->InsertItem(TEXT("Term"));
 		m_prec = this->InsertItem(TEXT("Prec"));
 		m_rule = this->InsertItem(TEXT("Rule"));
+		m_predef = this->InsertItem(TEXT("PreDef"));
 
 		//Clear();
 		return 0;

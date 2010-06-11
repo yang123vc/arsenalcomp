@@ -58,6 +58,7 @@ private:
 		HTREEITEM		m_term;
 		HTREEITEM		m_prec;
 		HTREEITEM		m_rule;
+		HTREEITEM		m_predef;
 		CFont			m_font;
 
 
@@ -67,6 +68,7 @@ private:
 		CMapTable		m_term_tbl;
 		CMapTable		m_prec_tbl;
 		CMapTable		m_rule_tbl;
+		CMapTable		m_predef_tbl;
 
 protected:
 		void	CTagTree::update_table(CMapTable &src, LPCTSTR name, size_t line);
