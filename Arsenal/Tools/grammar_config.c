@@ -27,6 +27,7 @@ typedef enum
 		CFG_NAME_T,
 		CFG_TOKEN_T,
 		CFG_PREC_T,
+		CFG_PREDEF_T,
 		CFG_START_T,
 		CFG_RULE_T,
 		CFG_NODE_LIST_T,
@@ -45,8 +46,9 @@ struct __cfg_node_tag
 				cfgRule_t		rule;
 				cfgConfig_t		config;
 				cfgStart_t		start;
+				cfgPreDef_t		predef;
 		};
-
+		
 		cfgNodeType_t	type;
 		cfgNode_t		*next;
 };
@@ -268,7 +270,7 @@ static void CFG_InsertToNodeList(cfgNodeList_t *lst, cfgNode_t *node)
 
 
 
-static void CFG_InitConfig(cfgConfig_t *cfg, cfgNodeList_t *name, cfgNodeList_t *token, cfgNodeList_t *prec, cfgNodeList_t *rule, cfgStart_t *start_rule)
+static void CFG_InitConfig(cfgConfig_t *cfg, cfgNodeList_t *name, cfgNodeList_t *token, cfgNodeList_t *prec, cfgNodeList_t *rule, cfgStart_t *start_rule, cfgNodeList_t *pre_def)
 {
 		size_t i;
 		size_t tmp_tok_val = PSR_MIN_TOKENVAL + 1;
@@ -476,6 +478,20 @@ RE_CHECK_POINT:
 				cfg->start.line = 0;
 		}
 
+
+		if(pre_def)
+		{
+				cfg->pre_def = pre_def->count > 0 ? AR_NEWARR0(cfgPreDef_t, pre_def->count) : NULL;
+				cfg->predef_cnt = pre_def->count;
+
+				for(i = 0; i < pre_def->count; ++i)
+				{
+						AR_ASSERT(pre_def->lst[i]->type == CFG_PREDEF_T);
+						cfg->pre_def[i].code = AR_wcsdup(pre_def->lst[i]->predef.code);
+						cfg->pre_def[i].line = pre_def->lst[i]->predef.line;
+				}
+		}
+
 }
 
 
@@ -529,6 +545,14 @@ static void CFG_UnInitConfig(cfgConfig_t *cfg)
 		}
 
 		AR_DEL(cfg->rule);
+
+
+		for(i = 0; i < cfg->predef_cnt; ++i)
+		{
+				if(cfg->pre_def[i].code)AR_DEL(cfg->pre_def[i].code);
+		}
+
+		if(cfg->pre_def)AR_DEL(cfg->pre_def);
 
 }
 
@@ -719,6 +743,11 @@ static void CFG_DestroyNode(cfgNode_t *node)
 				}
 				case CFG_ERROR_T:
 				{
+						break;
+				}
+				case CFG_PREDEF_T:
+				{
+						if(node->predef.code)AR_DEL(node->predef.code);
 						break;
 				}
 				default:
@@ -1078,7 +1107,7 @@ static psrNode_t*		AR_STDCALL __handle_token_def(psrNode_t **nodes, size_t count
 		AR_ASSERT((ns[2] == NULL) || (ns[2]->type == CFG_LEXEME_T));
 		AR_ASSERT((ns[5] == NULL) || (ns[5]->type == CFG_LEXEME_T));
 
-		AR_ASSERT((ns[6] == NULL) || (ns[6]->type == CFG_LEXEME_T));
+		AR_ASSERT((ns[6] == NULL) || (ns[6]->type == CFG_NODE_LIST_T));
 
 
 
@@ -1119,7 +1148,8 @@ static psrNode_t*		AR_STDCALL __handle_token_def(psrNode_t **nodes, size_t count
 
 		if(ns[6])
 		{
-				res->token.code_name = AR_wcsdup(ns[6]->lexeme.lexeme);
+				AR_ASSERT(ns[6]->lst.count > 0);
+				res->token.code_name = AR_wcsdup(ns[6]->lst.lst[0]->lexeme.lexeme);
 		}
 
 		return res;
@@ -1167,6 +1197,8 @@ static psrNode_t*		AR_STDCALL __handle_name_def(psrNode_t **nodes, size_t count,
 { L"item				:		rule_def ;",	__handle_item},
 { L"item				:		error ; ",	__handle_item},
 { L"item				:		; ",	__handle_item},
+{ L"item				:		pre_code_decl ;",	 __handle_item,0},
+
 */
 
 static psrNode_t*		AR_STDCALL __handle_item(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
@@ -1255,6 +1287,41 @@ static psrNode_t*		AR_STDCALL __handle_start_def(psrNode_t **nodes, size_t count
 }
 
 /*
+{ L"pre_code_decl		:		action_ins",				__handle_pre_def,0},
+*/
+static psrNode_t*		AR_STDCALL __handle_pre_def(psrNode_t **nodes, size_t count, const wchar_t * name_tmp, void *ctx)
+{
+		cfgNode_t		**ns = (cfgNode_t**)nodes;
+		cfgNode_t		*res;
+		size_t			len;
+		AR_ASSERT(count == 1);
+
+		AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T && ns[0]->lexeme.lex_val == ACTION_INS);
+
+
+		res = CFG_CreateNode(CFG_PREDEF_T);
+		res->predef.line = ns[0]->lexeme.line;
+		
+		len = AR_wcslen(ns[0]->lexeme.lexeme);
+		AR_ASSERT(len >= 2);
+		
+		if(len >= 2)
+		{
+				res->predef.code = AR_wcsndup(ns[0]->lexeme.lexeme+1, len - 2);
+		}else
+		{
+				res->predef.code = AR_wcsdup(L"");
+		}
+
+		return res;
+
+}
+
+
+
+
+
+/*
 { L"program				:		item_list #",			__handle_program, 0},
 { L"program				:		item_list error #",		__handle_program, 0},
 */
@@ -1264,7 +1331,7 @@ static psrNode_t*		AR_STDCALL __handle_program(psrNode_t **nodes, size_t count, 
 		cfgNode_t		*res = NULL;
 		size_t	i;
 		bool_t			has_err = false;
-		cfgNodeList_t name, token, prec, rule, error, empty;
+		cfgNodeList_t name, token, prec, rule, error, empty, predef;
 		cfgStart_t		*start_rule = NULL;
 
 		AR_ASSERT(count == 2 || count == 3);
@@ -1285,7 +1352,8 @@ static psrNode_t*		AR_STDCALL __handle_program(psrNode_t **nodes, size_t count, 
 		CFG_InitNodeList(&rule);
 		CFG_InitNodeList(&error);
 		CFG_InitNodeList(&empty);
-
+		CFG_InitNodeList(&predef);
+		 
 
 		for(i = 0; ns[0] && i < ns[0]->lst.count; ++i)
 		{
@@ -1329,6 +1397,11 @@ static psrNode_t*		AR_STDCALL __handle_program(psrNode_t **nodes, size_t count, 
 						CFG_InsertToNodeList(&error, node);
 						break;
 				}
+				case CFG_PREDEF_T:
+				{
+						CFG_InsertToNodeList(&predef, node);
+						break;
+				}
 				case CFG_NODE_LIST_T:
 				case CFG_CONFIG_T:
 				case CFG_LEXEME_T:
@@ -1341,7 +1414,7 @@ static psrNode_t*		AR_STDCALL __handle_program(psrNode_t **nodes, size_t count, 
 		}
 
 		res = CFG_CreateNode(CFG_CONFIG_T);
-		CFG_InitConfig(&res->config, &name, &token, &prec, &rule, start_rule);
+		CFG_InitConfig(&res->config, &name, &token, &prec, &rule, start_rule, &predef);
 
 		if(error.count > 0 || has_err)
 		{
@@ -1354,6 +1427,7 @@ static psrNode_t*		AR_STDCALL __handle_program(psrNode_t **nodes, size_t count, 
 		CFG_UnInitNodeList(&rule);
 		CFG_UnInitNodeList(&error);
 		CFG_UnInitNodeList(&empty);
+		CFG_UnInitNodeList(&predef);
 		return (psrNode_t*)res;
 }
 
@@ -1374,7 +1448,8 @@ static const cfgRuleDef_t	__cfg_rule[] =
 
 		{ L"item_list			:		item_list item",	__handle_item_list, 0},
 		{ L"item_list			:		",	NULL, 0},
-
+		
+		{ L"item				:		pre_code_decl ;",	 __handle_item,0},
 		{ L"item				:		start_def ;",	__handle_item, 0},
 		{ L"item				:		name_def ;",	__handle_item, 0},
 		{ L"item				:		token_def ;",	__handle_item,0},
@@ -1418,6 +1493,9 @@ static const cfgRuleDef_t	__cfg_rule[] =
 		{ L"action_decl			:		",										NULL,0},
 
 		{ L"start_def			:  		%start lexeme",							__handle_start_def,0},
+
+		
+		{ L"pre_code_decl		:		action_ins",				__handle_pre_def,0},
 
 
 		{ L"program				:		item_list #",			__handle_program, 0},
@@ -1992,7 +2070,18 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 		arString_t		*handler_define = NULL;
 		AR_ASSERT(cfg != NULL && code != NULL);
 
+
 		if(cfg->has_error)return false;
+
+		if(cfg->predef_cnt > 0)
+		{
+				for(i = 0; i < cfg->predef_cnt; ++i)
+				{
+						AR_AppendString(code, L"\r\n");
+						AR_AppendString(code,  cfg->pre_def[i].code);
+						AR_AppendString(code, L"\r\n");
+				}
+		}
 
 		if(cfg->name_cnt > 0)
 		{
@@ -2206,26 +2295,36 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 
 				for(i = 0; i < cfg->rule_cnt; ++i)
 				{
+						size_t tmp_len;
 						wchar_t *handler, *handler_def, *tmp;
-
+								
 						if(cfg->rule[i].action_name)
 						{
 								if(AR_wcscmp(cfg->rule[i].action_name, L"NULL") == 0)
 								{
 										continue;
 								}
+								
+								tmp_len = AR_wcslen(cfg->rule[i].action_name);
 
-								tmp = AR_NEWARR0(wchar_t, 20480 + 1);
-								AR_swprintf(tmp, 20480, CFG_RULE_HANDLER_DECL_2, cfg->rule[i].action_name);
+								if(cfg->rule[i].action_ins)
+								{
+										tmp_len += AR_wcslen(cfg->rule[i].action_ins);
+								}
+								
+								tmp_len += 4096;
+
+								tmp = AR_NEWARR0(wchar_t, tmp_len + 1);
+								AR_swprintf(tmp, tmp_len, CFG_RULE_HANDLER_DECL_2, cfg->rule[i].action_name);
 								handler = AR_wcsdup(tmp);
 
 								if(cfg->rule[i].action_ins == NULL)
 								{
-										AR_swprintf(tmp, 20480, CFG_RULE_HANDLER_DEFINE_2, cfg->rule[i].action_name);
+										AR_swprintf(tmp, tmp_len, CFG_RULE_HANDLER_DEFINE_2, cfg->rule[i].action_name);
 										handler_def = AR_wcsdup(tmp);
 								}else
 								{
-										AR_swprintf(tmp, 20480, CFG_RULE_HANDLER_DEFINE_3, cfg->rule[i].action_name, cfg->rule[i].action_ins);
+										AR_swprintf(tmp, tmp_len, CFG_RULE_HANDLER_DEFINE_3, cfg->rule[i].action_name, cfg->rule[i].action_ins);
 										handler_def = AR_wcsdup(tmp);
 								}
 
@@ -2236,11 +2335,12 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 								}
 						}else
 						{
-								tmp = AR_NEWARR0(wchar_t, 2048 + 1);
-								AR_swprintf(tmp, 2048, CFG_RULE_HANDLER_DECL, cfg->rule[i].lhs);
+								tmp_len = 20480;
+								tmp = AR_NEWARR0(wchar_t, tmp_len + 1);
+								AR_swprintf(tmp, tmp_len, CFG_RULE_HANDLER_DECL, cfg->rule[i].lhs);
 								handler = AR_wcsdup(tmp);
 
-								AR_swprintf(tmp, 2048, CFG_RULE_HANDLER_DEFINE, cfg->rule[i].lhs);
+								AR_swprintf(tmp, tmp_len, CFG_RULE_HANDLER_DEFINE, cfg->rule[i].lhs);
 								handler_def = AR_wcsdup(tmp);
 
 								if(tmp)

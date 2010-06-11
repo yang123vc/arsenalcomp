@@ -27,7 +27,7 @@ void	Arsenal_Init(const arInit_t *ctx)
 		PSR_Init();
 		Tools_Init();
 
-		RAY_Init();
+		TGU_Init();
 }
 
 
@@ -35,7 +35,7 @@ void	Arsenal_Init(const arInit_t *ctx)
 
 void	Arsenal_UnInit()
 {
-		RAY_UnInit();
+		TGU_UnInit();
 		Tools_UnInit();
 		PSR_UnInit();
 		LEX_UnInit();
