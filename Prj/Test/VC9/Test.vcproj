@@ -1437,6 +1437,30 @@
 				</FileConfiguration>
 			</File>
 		</Filter>
+		<Filter
+			Name="DSTest"
+			>
+			<File
+				RelativePath="..\..\..\Test\avltree.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Test\avltree.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Test\ds_test.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Test\rbtree.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Test\rbtree.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

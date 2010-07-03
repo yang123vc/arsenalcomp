@@ -1387,42 +1387,6 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Ray"
-			>
-			<File
-				RelativePath="..\..\..\Arsenal\Ray\ray.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Ray\ray.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Ray\rayblock.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Ray\raycompiler.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Ray\raynode.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Ray\rayparser.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Ray\rayparser_impl.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Ray\rayparser_impl.h"
-				>
-			</File>
-		</Filter>
-		<Filter
 			Name="Lex"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
@@ -1489,6 +1453,34 @@
 			</File>
 			<File
 				RelativePath="..\..\..\Arsenal\Tools\tools.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Tengu"
+			>
+			<File
+				RelativePath="..\..\..\Arsenal\Tengu\tengu.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Tengu\tengu.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Tengu\tguparser.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Tengu\tguparser.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Tengu\tguvm.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Tengu\tguvm.h"
 				>
 			</File>
 		</Filter>
