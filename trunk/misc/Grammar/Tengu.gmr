@@ -9,8 +9,6 @@
 				;
 
 
-
-
 %name	digit			:	"[0-9]"				
 				;
 %name	number		:	"{digit}+"				
@@ -52,10 +50,10 @@
 %name	escape_seq		:	"(\\(\x22|\x27))"	
 				;
 
-%name	string_dq		: 	"(\x22({escape_seq}|[^\x22])*\x22)"		//只能提取"..."或"\""此类串，其它C规则要到语义例程中处理	
+%name	string_dq		: 	"(\x22({escape_seq}|[^\x22])*\x22)"		//只能提取"..."或"\""此类串，其它词法规则要到语义例程中处理	
 				;
 
-%name	string_sq		:	"\x27({escape_seq}|[^\x27])*\x27"		//提取'...'或'\''此类串，其它C规则要到语义例程中处理	
+%name	string_sq		:	"\x27({escape_seq}|[^\x27])*\x27"		//提取'...'或'\''此类串，其它词法规则要到语义例程中处理	
 				;
 
 
@@ -103,11 +101,11 @@
 %token	"return"	:	'"return"(?!{keyword_lhd})'	,1					%action	"TOK_RETURN"		;
 
 %token	"null"	:	'"null"(?!{keyword_lhd})'		,1					%action	"TOK_NULL"			;
-%token	"in"		:	'"in"(?!{keyword_lhd})'		,1					%action	"TOK_IN"			;
 %token	"true"	:	'"true"(?!{keyword_lhd})'		,1					%action	"TOK_TRUE"			;
 %token	"false"	:	'"false"(?!{keyword_lhd})'		,1					%action	"TOK_FALSE"		;
 %token	"var"		:	'"var"(?!{keyword_lhd})'		,1					%action	"TOK_VAR"			;
 
+//%token	"in"		:	'"in"(?!{keyword_lhd})'		,1					%action	"TOK_IN"			;
 
 
 %token	"..."		:	'"..."'		,2								%action 	"TOK_ELLIPSIS"		;	
@@ -154,12 +152,9 @@
 
 %token	"!"		:	'"!"'			,0								%action "TOK_NOT"				;
 
-%token	"."		:	'"."'			,0								%action "TOK_DOT"				;
+//%token	"."		:	'"."'			,0								%action "TOK_DOT"				;
 %token	":"		:	'":"'			,0								%action "TOK_COLON"				;
 %token	"?"		:	'"?"'			,0								%action "TOK_QUEST"				;
-
-
-
 
 
 
@@ -182,12 +177,16 @@
 %nonassoc "else"							;
 
 
+
 /**************************************************************************************/
 %start 				program				;
 
 
 
-program			:	translation_unit
+program			:	translation_unit	%action handle_translation_unit
+				{
+					return ns[0];
+				}
 				|	.
 				;
 
@@ -201,27 +200,6 @@ element				:	statement
 					|	function_defination
 					;
 
-
-
-function_defination		:	"var"		dotname	"("	params	")"	compound_statement
-					;
-
-
-dotname				:	NAME
-					|	dotname "." NAME
-					;
-
-
-params				:	namelist	","	"..."
-					|	namelist
-					|	"..."
-					|	.
-					;
-
-
-namelist				:	namelist	"," NAME
-					|	NAME
-					;
 
 
 
@@ -317,7 +295,6 @@ for_expression			:	assignment_statement expression_statement	expression
 					|	assignment_statement expression_statement
 					|	expression_statement expression_statement	expression
 					|	expression_statement expression_statement
-					|	NAME  "in" expression
 					;
 
 
@@ -387,7 +364,6 @@ expression_list		:	expression_list "," expression
 
 variable			:	NAME
 				|	variable "["	expression  "]"
-				|	variable "." NAME
 				;
 
 
@@ -422,4 +398,76 @@ filed					:	expression
 
 
 
+/**********************************************************************************************/
+
+
+function_defination		:	"var"		NAME	"("	params	")"	compound_statement
+					;
+
+
+params				:	namelist	","	"..."
+					|	namelist
+					|	"..."
+					|	.
+					;
+
+
+namelist				:	namelist	"," NAME
+					|	NAME
+					;
+
+
+
+
+
+
+
+
+
+/******************************************PreDefined code********************************************/
+
+
+{
+/*
+ * The Arsenal Library
+ * Copyright (c) 2009 by Solidus
+ * 
+ * Permission to use, copy, modify, distribute and sell this software
+ * and its documentation for any purpose is hereby granted without fee,
+ * provided that the above copyright notice appear in all copies and
+ * that both that copyright notice and this permission notice appear
+ * in supporting documentation.It is provided "as is" without express 
+ * or implied warranty.
+ *
+ */
+
+#include "tguparser.h"
+
+
+
+/*******************************************decl****************************************/
+
+struct __parser_node_tag;
+typedef struct __parser_node_tag		parserNode_t;
+
+
+/********************************************************************************************/
+
+typedef enum
+\{
+		TOKEN_T,
+\}parserNodeType_t;
+
+struct __parser_node_tag
+\{
+		parserNodeType_t		type;
+
+\};
+
+static parserNode_t*	TGU_CreateParserNode(parserNodeType_t	type);
+static void				TGU_DestroyParserNode(parserNode_t		*node);
+
+/**************************************************************************************************/
+
+};
 

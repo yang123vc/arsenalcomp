@@ -1,3 +1,4 @@
+
 %name	delim 		:	"[ \r\n\t]"			;
 %name	comment		:	"/\*([^\*]|\*+[^\*/])*\*+/"	;
 %name	comment_line	:	"//[^\n]*\n"			;
@@ -16,11 +17,6 @@
 %token	")"		:	'")"';
 %token	"%"		:	'"%"';
 
-/*
-Unit	:	E Unit 
-	|	E 
-	;
-*/
 
 /**********************LR***************************/
 
@@ -33,19 +29,33 @@ E	:	E	"+" 	E	%action	"handle_calc"
 		AR_ASSERT(nodes != NULL && count > 0);
 		return NULL;
 	}
-	|	E	"-"	E		%action	"handle_calc"
-	|	E	"*"	E		%action	"handle_calc"
-	|	E	"/"	E		%action	"handle_calc"
-	|	E	"%"	E		%action	"handle_calc"
-	|	"("	E	")"		%action	"handle_calc"
+	|	E	"-"	E		%action		"handle_calc"
+	|	E	"*"	E		%action		"handle_calc"
+	|	E	"/"	E		%action		"handle_calc"
+	|	E	"%"	E		%action		"handle_calc"
+	|	"("	E	")"		%action		"handle_calc"
 	|	"-"	E 	%prec UMINUS	%action	"handle_calc"
 	|	NUM					%action	"handle_calc"
 	;
 
 
 
-
 /***************************************************/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -72,6 +82,10 @@ Factor	:	"("	E ")"
 		;
 
 /*****************************************************/
+
+
+
+
 
 
 /***********************LLÎÞ×óµÝ¹éÎÄ·¨*************************
@@ -130,8 +144,6 @@ Factor	:	"("	E ")"
 		;
 
 /*****************************************************/
-
-
 
 
 
