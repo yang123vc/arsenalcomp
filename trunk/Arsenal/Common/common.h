@@ -84,7 +84,7 @@ void	AR_error_ctx(arIOCtx_t *ctx, int_t level, const wchar_t *msg, ...);
 
 #define AR_CHECK(_cond,_msg,_level) do {if(!(_cond))AR_error((_level), L"%ls\r\n", (_msg)); }while(0)
 
-#define AR_STATIC_CHECK(_expr)	typedef char __static_assert_t[ (bool_t)(_expr) ]
+#define AR_STATIC_CHECK(_expr)	do {typedef char __static_assert_t[ (bool_t)(_expr) ]; }while(0)
 
 
 
@@ -129,22 +129,39 @@ static AR_INLINE const void* AR_GET_ELEM(const void *base, size_t width, size_t 
 
 #define AR_OFFSETOF(_ty, _filed)		((byte_t*)&((_ty*)0)->_filed) - ((byte_t*)(_ty*)0)
 
+
+/*float macro_oper*/
+
+
+#define AR_FLT_EQ(_x, _y)		(bool_t)(fabsf( (((float)(_x)) - ((float)(_y)))) < FLT_EPSILON)
+#define AR_FLT_LE(_x, _y)		(bool_t)( ((float)(_x)) < ((float)(_y)) )
+#define AR_FLT_GE(_x, _y)		(bool_t)( ((float)(_x)) > ((float)(_y)) )
+#define AR_FLT_LEEQ(_x, _y)		(bool_t)( AR_FLT_EQ((_x), (_y)) || AR_FLT_LE((_x), (_y)) )
+#define AR_FLT_GEEQ(_x, _y)		(bool_t)( AR_FLT_EQ((_x), (_y)) || AR_FLT_GE((_x), (_y)) )
+
+
+
+#define AR_DBL_EQ(_x, _y)		(bool_t)(fabs( (((double)(_x)) - ((double)(_y)))) < DBL_EPSILON)
+#define AR_DBL_LE(_x, _y)		(bool_t)(((double)(_x)) < ((double)(_y)))
+#define AR_DBL_GE(_x, _y)		(bool_t)(((double)(_x)) > ((double)(_y)))
+#define AR_DBL_LEEQ(_x, _y)		(bool_t)( AR_DBL_EQ((_x), (_y)) || AR_DBL_LE((_x), (_y)))
+#define AR_DBL_GEEQ(_x, _y)		(bool_t)( AR_DBL_EQ((_x), (_y)) || AR_DBL_GE((_x), (_y)))
+
+
+
 /**********************************************************memory***************************************************************/
 
 void*	AR_malloc(size_t nbytes);
 void*	AR_calloc(size_t num, size_t size);
 void*	AR_realloc(void *block, size_t nbytes);
 void	AR_free(void *ptr);
-void	AR_memswap(void *a, void *b, size_t n);
-
-
 
 
 #define AR_memset				memset
 #define AR_memcpy				memcpy
 #define AR_memcmp				memcmp
 #define	AR_memmove				memmove
-
+void	AR_memswap(void *a, void *b, size_t n);
 
 
 

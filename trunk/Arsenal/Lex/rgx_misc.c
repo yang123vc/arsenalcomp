@@ -60,7 +60,10 @@ bool_t					RGX_InsertToNameSet(rgxNameSet_t	*set, const wchar_t	*name, rgxNode_t
 		if(set->count == set->cap)
 		{
 				set->cap = (set->cap + 4)*2;
+				set->name = AR_REALLOC(rgxName_t, set->name, set->cap);
+				/*
 				set->name = (rgxName_t*)AR_realloc(set->name, sizeof(rgxName_t) * set->cap);
+				*/
 		}
 
 		AR_wcscpy(set->name[set->count].name, name);

@@ -232,8 +232,9 @@ static AR_INLINE void __merge_list(lalrConfigList_t *dest, lalrConfigList_t *a, 
 {
 		lalrConfigNode_t *l, *r;
 		lalrConfigNode_t *prev , *tmp, *head;
+		size_t	cnt;
 		AR_ASSERT(a != NULL && b != NULL && dest != NULL);
-
+		cnt = a->count + b->count;
 		l = a->head; r = b->head;
 		prev = NULL, head = NULL;
 
@@ -266,37 +267,23 @@ static AR_INLINE void __merge_list(lalrConfigList_t *dest, lalrConfigList_t *a, 
 				}
 		}
 
-		if(l)
+		tmp = l != NULL ? l : r;
+		if(tmp)
 		{
 				if(prev)
 				{
-						prev->next = l;
+						prev->next = tmp;
 				}else
 				{
-						head = l;
-				}
-		}else
-		{
-				if(prev)
-				{
-						prev->next = r;
-				}else
-				{
-						head = r;
+						head = tmp;
 				}
 		}
 		
 		AR_memset(a, 0, sizeof(*a));
 		AR_memset(b, 0, sizeof(*b));
-
+		AR_memset(dest, 0, sizeof(*dest));
 		dest->head = head;
-		
-		tmp = dest->head;
-		while(tmp)
-		{
-				dest->count++;
-				tmp = tmp->next;
-		}
+		dest->count = cnt;
 }
 
 static AR_INLINE lalrConfigNode_t* __pop_head(lalrConfigList_t *lst)
@@ -316,6 +303,7 @@ static AR_INLINE lalrConfigNode_t* __pop_head(lalrConfigList_t *lst)
 		}
 
 		lst->count--;
+		res->next = NULL;
 		return res;
 }
 
@@ -340,13 +328,17 @@ static AR_INLINE void		__insert_back(lalrConfigList_t *lst, lalrConfigNode_t *no
 
 }
 
+#define __SORT_BUCKET__	64
 
 static AR_INLINE void __sort_list(lalrConfigList_t *sour_list)
 {
 		int_t i,fill;
-		lalrConfigList_t lst, carry, tmp_list[64];
+		lalrConfigList_t lst, carry, tmp_list[__SORT_BUCKET__];
 
+		AR_STATIC_CHECK(__SORT_BUCKET__);
 		AR_ASSERT(sour_list != NULL);
+
+		if(sour_list->count < 2)return;
 
 		AR_memset(&lst, 0, sizeof(lst));
 		AR_memset(&carry, 0, sizeof(carry));
@@ -358,30 +350,29 @@ static AR_INLINE void __sort_list(lalrConfigList_t *sour_list)
 
 		while(lst.count > 0)
 		{
-				lalrConfigNode_t		*tmp;
-				tmp = __pop_head(&lst);
-				tmp->next = NULL;
-				
-				__insert_back(&carry, tmp);
+				__insert_back(&carry, __pop_head(&lst));
 				
 				for(i = 0; i < fill && tmp_list[i].count > 0; ++i)
 				{
 						__merge_list(&carry,&tmp_list[i], &carry);
 				}
-				if(i == fill)fill++;
-				tmp_list[i] = carry;/*把前面归并排序好的放入下一个桶，carry清空*/
-				
+
+				if(i == __SORT_BUCKET__)
+				{
+						__merge_list(&tmp_list[i-1], &carry, &tmp_list[i-1]);
+				}else
+				{
+						AR_ASSERT(tmp_list[i].count == 0);
+						tmp_list[i] = carry;
+						if(i == fill)fill++;
+				}
+
 				AR_memset(&carry, 0, sizeof(carry));
 		}
 
 		for(i = 1; i < fill; ++i)
 		{
-				lalrConfigList_t		*dest, *l, *r;
-
-				dest	=		&tmp_list[i];
-				l		=		&tmp_list[i];
-				r		=		&tmp_list[i-1];
-				__merge_list(dest, l, r);
+				__merge_list(&tmp_list[i], &tmp_list[i], &tmp_list[i-1]);
 		}
 
 		*sour_list = tmp_list[fill-1];
