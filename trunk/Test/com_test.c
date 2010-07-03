@@ -872,10 +872,99 @@ void kmp_test2()
 
 		AR_DEL(src);
 		getchar();
+}
+
+
+
+#if(AR_COMPILER == AR_VC_LEGACY || AR_COMPILER == AR_VC)
+
+static void test_align()
+{
+#pragma pack(push, 16)
+		//32 actual align == 4
+		//64 actual align == 8
+
+		struct test
+		{
+				char a;			//offset == 0, 占用1字节
+				//char __pad1[3];
+				int  b;			//填充前offset == 1,A =4, A - 1 % A == 3,则补充3字节，填充后，offset = 4,
+				long c;			//offset ==8 , A == 4,  8 % 4 == 0,						无填充
+				short d;		//offset == 12, A == 2 12 % 2 == 0,						无填充
+				//char __pad2[2];
+				int *p;			//填充前offset == 14, A = 8, 14 % 8 == 6, A-6 == 2，   填充2,填充后，offset == 16, 占8字节
+		};
+#pragma pack(pop)
+		
+		printf("a == %d\r\n", AR_OFFSETOF(struct test, a));
+		printf("b == %d\r\n", AR_OFFSETOF(struct test, b));
+		printf("c == %d\r\n", AR_OFFSETOF(struct test, c));
+		printf("d == %d\r\n", AR_OFFSETOF(struct test, d));
+		printf("p == %d\r\n", AR_OFFSETOF(struct test, p));
+
 
 		
-
+		AR_printf(L"sizeof(test) == %d\r\n", sizeof(test));
 }
+
+
+
+static void test_align2()
+{
+#pragma pack(push,16)
+		struct test
+		{
+				char	a;		//offset == 0, 占用1字节
+				//char __pad[1];
+				short	b;		//填充前 offset == 1, A = 2; 1 % A = 1; A-1 = 1; 填充1后，offset == 2;
+				int		c;		//offset == 4, A = 4; 4 % 4 == 0
+				long	d;		//offset == 8, A = 4; 8 % 4 == 0
+				int		*p;		//offset == 12, A = 4; 12 % 4 == 0
+		};
+#pragma pack(pop)
+		
+		printf("a == %d\r\n", AR_OFFSETOF(struct test, a));
+		printf("b == %d\r\n", AR_OFFSETOF(struct test, b));
+		printf("c == %d\r\n", AR_OFFSETOF(struct test, c));
+		printf("d == %d\r\n", AR_OFFSETOF(struct test, d));
+		printf("p == %d\r\n", AR_OFFSETOF(struct test, p));
+
+
+		
+		AR_printf(L"sizeof(test) == %d\r\n", sizeof(test));
+}
+
+
+static void test_align3()
+{
+
+#pragma pack(push,16)
+		struct test
+		{
+				int		a;
+				double	b;
+				char	c;
+		};
+#pragma pack(pop)
+
+		
+		printf("a == %d\r\n", AR_OFFSETOF(struct test, a));
+		printf("b == %d\r\n", AR_OFFSETOF(struct test, b));
+		printf("c == %d\r\n", AR_OFFSETOF(struct test, c));
+
+
+		
+		AR_printf(L"sizeof(test) == %d\r\n", sizeof(test));
+}
+
+
+
+#else
+
+#define test_align
+#define test_align2
+
+#endif
 
 void com_test()
 {
@@ -920,7 +1009,9 @@ void com_test()
 		//str_tbl_test();
 
 		//kmp_test();
-		kmp_test2();
+		//kmp_test2();
+
+		test_align3();
 
 }
 

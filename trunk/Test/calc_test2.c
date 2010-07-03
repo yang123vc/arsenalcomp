@@ -1,4 +1,7 @@
 ﻿
+
+#if defined(__LIB)
+
 #include "../Arsenal/Common/common.h"
 #include "../Arsenal/Lex/lex.h"
 #include "../Arsenal/Parser/parser.h"
@@ -369,11 +372,12 @@ static int calc(const wchar_t *input)
 		lexToken_t		tok;
 		psrGrammar_t	*grammar;
 		const parser_t		*parser;
+		psrContext_t *ctx;
 		bool_t is_ok;
 		lex = __build_lex(NULL);
 		grammar = __build_grammar(&__g_handler, NULL);
 		parser = PSR_CreateParser(grammar, PSR_SLR);
-		psrContext_t *ctx = PSR_CreateContext(parser, NULL);
+		ctx = PSR_CreateContext(parser, NULL);
 
 
 		match = LEX_CreateMatch(lex, NULL);
@@ -440,3 +444,8 @@ void calc2_test()
 
 
 AR_NAMESPACE_END
+
+
+
+#endif
+

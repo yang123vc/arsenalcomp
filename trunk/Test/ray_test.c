@@ -1,11 +1,10 @@
 #include "test.h"
 
 
-#include "../Arsenal/Ray/ray.h"
+#include "../Arsenal/Tengu/tengu.h"
 
 
-
-
+#if(0)
 
 
 
@@ -22,7 +21,7 @@ AR_NAMESPACE_BEGIN
 
 
 
-#if(0)
+
 static void parse_code(lex_t *lex, const wchar_t *sources)
 {
 		lexMatch_t match;
@@ -150,5 +149,6 @@ AR_NAMESPACE_END
 
 
 #endif
+
 
 

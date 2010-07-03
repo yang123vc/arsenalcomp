@@ -4,7 +4,7 @@
 
 #define _CRT_SECURE_NO_WARNINGS 1
 #include "../Arsenal/Common/common.h"
-
+#include <time.h>
 
 /*
 #if defined(__LIB)

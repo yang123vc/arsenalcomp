@@ -66,6 +66,9 @@ void perf_test();
 void gen_code_test();
 
 extern void calc2_test();
+
+void ds_test();
+
 #endif
 
 
@@ -132,7 +135,9 @@ void AR_Test()
 
 		//ray_test();
 
-		calc2_test();
+		//calc2_test();
+
+		ds_test();
 		
 #else
 		AR_printf(L"dll version\r\n");
