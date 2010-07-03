@@ -187,6 +187,7 @@
 #include <math.h>
 #include <wctype.h>
 #include <string.h>
+#include <float.h>
 
 #if defined(AR_HAS_C99_FEATURE)
     #include <stdint.h>

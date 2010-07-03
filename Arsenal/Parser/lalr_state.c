@@ -186,7 +186,8 @@ lalrState_t*   PSR_GetTransTo(lalrState_t *state, const psrSymb_t *symb)
 
 		for(i = 0; i < state->count; ++i)
 		{
-				if(state->actions[i].act_type == LALR_ACT_REDUCE)continue;
+				/*if(state->actions[i].act_type == LALR_ACT_REDUCE)continue;*/
+				if(state->actions[i].act_type != LALR_ACT_SHIFT)continue;
 
 				if(PSR_CompSymb(state->actions[i].symb, symb) == 0)return state->actions[i].to;
 		}
