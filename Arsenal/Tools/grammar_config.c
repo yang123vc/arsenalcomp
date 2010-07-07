@@ -270,13 +270,14 @@ static void CFG_InsertToNodeList(cfgNodeList_t *lst, cfgNode_t *node)
 
 
 
-static void CFG_InitConfig(cfgConfig_t *cfg, cfgNodeList_t *name, cfgNodeList_t *token, cfgNodeList_t *prec, cfgNodeList_t *rule, cfgStart_t *start_rule, cfgNodeList_t *pre_def)
+static void CFG_InitConfig(cfgConfig_t *cfg, cfgNodeList_t *name, cfgNodeList_t *token, cfgNodeList_t *prec, cfgNodeList_t *rule, cfgStart_t *start_rule, cfgNodeList_t *pre_def, cfgReport_t *report)
 {
 		size_t i;
 		size_t tmp_tok_val = PSR_MIN_TOKENVAL + 1;
 
 		AR_ASSERT(cfg != NULL);
-
+		AR_ASSERT(report != NULL);
+		
 		AR_memset(cfg, 0, sizeof(*cfg));
 
 		if(name)
@@ -327,6 +328,35 @@ static void CFG_InitConfig(cfgConfig_t *cfg, cfgNodeList_t *name, cfgNodeList_t 
 										cfg->tok[cfg->tok_cnt].code_name = NULL;
 								}else
 								{
+										
+										/*********************warning******************/
+										size_t w;
+										for(w = 0; w < cfg->tok_cnt; ++w)
+										{
+												if(cfg->tok[w].code_name && AR_wcscmp(cfg->tok[w].code_name, token->lst[i]->token.code_name) == 0)
+												{
+														break;
+												}
+										}
+
+										if(w != cfg->tok_cnt)
+										{
+												cfgReportInfo_t	msg;
+												wchar_t buf[1024];
+												psrToken_t		tok;
+												tok.col = 0;
+												tok.line = token->lst[i]->token.line;
+												tok.str = token->lst[i]->token.code_name;
+												tok.str_cnt = AR_wcslen(token->lst[i]->token.code_name);
+												msg.type = CFG_REPORT_ERR_SYNTAX_T;
+												msg.tok = &tok;
+												AR_swprintf(buf, 1024, L"Duplicate token value definition\"%ls\"!", token->lst[i]->token.code_name);
+												msg.message = buf;
+
+												report->report_func(&msg, report->report_ctx);
+										}
+										/***************************************/
+
 										cfg->tok[cfg->tok_cnt].code_name = AR_wcsdup(token->lst[i]->token.code_name);
 										cfg->tok[cfg->tok_cnt].is_assigned_code_name = true;
 								}
@@ -1333,6 +1363,7 @@ static psrNode_t*		AR_STDCALL __handle_program(psrNode_t **nodes, size_t count, 
 		bool_t			has_err = false;
 		cfgNodeList_t name, token, prec, rule, error, empty, predef;
 		cfgStart_t		*start_rule = NULL;
+		
 
 		AR_ASSERT(count == 2 || count == 3);
 		AR_ASSERT((ns[0] == NULL) || (ns[0] && ns[0]->type == CFG_NODE_LIST_T));
@@ -1414,7 +1445,7 @@ static psrNode_t*		AR_STDCALL __handle_program(psrNode_t **nodes, size_t count, 
 		}
 
 		res = CFG_CreateNode(CFG_CONFIG_T);
-		CFG_InitConfig(&res->config, &name, &token, &prec, &rule, start_rule, &predef);
+		CFG_InitConfig(&res->config, &name, &token, &prec, &rule, start_rule, &predef, (cfgReport_t*)ctx);
 
 		if(error.count > 0 || has_err)
 		{

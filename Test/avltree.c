@@ -100,12 +100,6 @@ NewBal(B):
 
 
 
-
-同上
-NewBal(A) = OldBal(A) + 1 - min(OldBal(B), 0)
-NewBal(B) = OldBal(B) + 1 + max(NewBal(A), 0)
-
-
 综上所述：
 LEFT Rotate:
 		NewBal(A) = OldBal(A) - 1 - max (OldBal(B), 0)
