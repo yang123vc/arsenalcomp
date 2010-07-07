@@ -45,17 +45,17 @@ void RGX_UnInitNode()
 static rgxNode_t* __alloc_node()
 {
 		rgxNode_t *node;
-		
-		AR_LockSpinLock(&__g_lock);
+
 		if(__g_node_list == NULL)
 		{
-				__g_node_list = AR_NEW0(rgxNode_t);
+				node = AR_NEW0(rgxNode_t);
+		}else
+		{
+				AR_LockSpinLock(&__g_lock);
+				node = __g_node_list;
+				__g_node_list = __g_node_list->left;
+				AR_UnLockSpinLock(&__g_lock);
 		}
-
-		node = __g_node_list;
-		__g_node_list = __g_node_list->left;
-		AR_UnLockSpinLock(&__g_lock);
-		
 		AR_memset(node, 0, sizeof(*node));
 		return node;
 }
