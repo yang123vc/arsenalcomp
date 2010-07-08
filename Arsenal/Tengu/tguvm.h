@@ -151,7 +151,7 @@ typedef enum
 		OP_JMPONF,/*	J	x			(x==null)? x : -	(x==nil)? PC+=s	*/
 		OP_JMP,/*	J	-		-		PC+=s		*/
 
-		OP_PUSHNULLJMP/* -	-		nil		PC++;		*/
+		OP_PUSHNULLJMP/* -	-			nil		PC++;		*/
 
 }tguOpCode;
 

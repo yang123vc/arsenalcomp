@@ -99,7 +99,7 @@ void	AR_error_ctx(arIOCtx_t *ctx, int_t level, const wchar_t *msg, ...);
 
 #define AR_DPRINT
 
-#define AR_ASSERT(_cond)		(_cond)
+#define AR_ASSERT(_cond)		/*(_cond)*/
 
 #endif
 
@@ -314,9 +314,8 @@ const wchar_t* AR_wcsstr_kmp_s(const wchar_t *beg, const wchar_t *end, const wch
 		#define AR_wtoi_s	AR_wtoi64_s
 
 #else
-
-
-
+		
+		#error "Not Support Platform!"
 
 #endif
 

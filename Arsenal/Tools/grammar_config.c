@@ -19,6 +19,135 @@
 AR_NAMESPACE_BEGIN
 
 
+/*********************************************************************************************************************************************/
+
+typedef enum
+{
+		CFG_STR_NAME,
+		CFG_STR_TOKEN,
+		CFG_STR_TOKEN_VALUE,
+		CFG_STR_PREC
+}cfgStrType_t;
+
+typedef struct __config_parser_data_tag
+{
+		cfgReport_t				*report;
+		arStringTable_t			*name;
+		arStringTable_t			*token;
+		arStringTable_t			*token_val;
+		arStringTable_t			*prec;
+}cfgParserData_t;
+
+static	AR_INLINE		void	__init_parser_data(cfgParserData_t		*psr_data, cfgReport_t	*report)
+{
+		AR_ASSERT(psr_data != NULL && report != NULL);
+
+		AR_memset(psr_data, 0, sizeof(*psr_data));
+
+		psr_data->report = report;
+		psr_data->name = AR_CreateStrTable(0);
+		psr_data->token = AR_CreateStrTable(0);
+		psr_data->token_val = AR_CreateStrTable(0);
+		psr_data->prec  = AR_CreateStrTable(0);
+}
+
+static AR_INLINE		void	__uninit_parser_data(cfgParserData_t	*psr_data)
+{
+		AR_ASSERT(psr_data != NULL);
+
+		AR_DestroyStrTable(psr_data->name);
+		AR_DestroyStrTable(psr_data->token);
+		AR_DestroyStrTable(psr_data->token_val);
+		AR_DestroyStrTable(psr_data->prec);
+		
+		AR_memset(psr_data, 0, sizeof(*psr_data));
+}
+
+
+
+
+static AR_INLINE		arStringTable_t*		__get_parser_data_tbl(cfgParserData_t	*psr_data, cfgStrType_t t)
+{
+		switch(t)
+		{
+		case CFG_STR_NAME:
+				return psr_data->name;
+		case CFG_STR_TOKEN:
+				return psr_data->token;
+		case CFG_STR_TOKEN_VALUE:
+				return psr_data->token_val;
+		case CFG_STR_PREC:
+				return psr_data->prec;
+		default:
+				AR_ASSERT(false);
+				return NULL;
+
+		}
+}
+
+
+static AR_INLINE		void	__insert_str_to_parser_data(cfgParserData_t	*psr_data, const wchar_t *str, cfgStrType_t t)
+{
+		arStringTable_t	*tbl;
+		AR_ASSERT(psr_data != NULL && str != NULL);
+		tbl = __get_parser_data_tbl(psr_data, t);
+		AR_GetString(tbl, str);
+}
+
+
+static AR_INLINE		bool_t	__has_str_in_parser_data(cfgParserData_t	*psr_data, const wchar_t *str, cfgStrType_t t)
+{
+		arStringTable_t	*tbl;
+		AR_ASSERT(psr_data != NULL && str != NULL);
+		tbl = __get_parser_data_tbl(psr_data, t);
+		return AR_HasString(tbl, str);
+}
+
+
+static AR_INLINE		void	__check_name_from_parser_data(cfgParserData_t *psr_data, const wchar_t *name, size_t line, cfgStrType_t t)
+{
+
+		AR_ASSERT(psr_data != NULL && name != NULL);
+
+		if(__has_str_in_parser_data(psr_data, name, t))
+		{
+				cfgReportInfo_t	msg;
+				wchar_t	buf[1024];
+
+				msg.warning.line = line;
+				switch(t)
+				{
+				case CFG_STR_NAME:
+						AR_swprintf(buf, 1024, L"Duplicate name definition %ls\r\n", name);
+						break;
+				case CFG_STR_TOKEN:
+						AR_swprintf(buf, 1024, L"Duplicate token definition %ls\r\n", name);
+						break;
+				case CFG_STR_TOKEN_VALUE:
+						AR_swprintf(buf, 1024, L"Duplicate token value definition %ls\r\n", name);
+						break;
+				case CFG_STR_PREC:
+						AR_swprintf(buf, 1024, L"Duplicate prec definition %ls\r\n", name);
+						break;
+				default:
+						AR_ASSERT(false);
+				}
+				
+				msg.warning.msg = buf;
+				msg.type = CFG_REPORT_WARNING_SYNTAX_T;
+				psr_data->report->report_func(&msg, psr_data->report->report_ctx);
+		}else
+		{
+				__insert_str_to_parser_data(psr_data, name, t);
+		}
+
+}
+
+
+/*********************************************************************************************************************************************/
+
+
+
 
 typedef enum
 {
@@ -101,14 +230,15 @@ typedef struct  __cfg_lex_pattern_tag
 		size_t			prec;
 }cfgLexPattern_t;
 
+
 static const cfgLexPattern_t	__cfg_pattern[] =
 {
 		{EOI,	L"$", false,2},
 		{DELIM, L"{skip_lexem}+", true, 1},
-		{ASSOC,	L"\"%\"(\"left\"|\"right\"|\"nonassoc\")", false,1},
+		{ASSOC,	L"\"%\"(\"left\"|\"right\"|\"nonassoc\")(?={key_lookahead})", false,1},
 
-		{SKIP,	L"\"%skip\"", false,0},
-		{START,	L"\"%start\"", false,0},
+		{SKIP,	L"\"%skip\"(?={key_lookahead})", false,0},
+		{START,	L"\"%start\"(?={key_lookahead})", false,0},
 		{NAME,	L"\"%name\"(?={key_lookahead})", false,0},
 		{TOKEN,	L"\"%token\"(?={key_lookahead})", false,0},
 		{PREC,	L"\"%prec\"(?={key_lookahead})", false,0},
@@ -270,13 +400,12 @@ static void CFG_InsertToNodeList(cfgNodeList_t *lst, cfgNode_t *node)
 
 
 
-static void CFG_InitConfig(cfgConfig_t *cfg, cfgNodeList_t *name, cfgNodeList_t *token, cfgNodeList_t *prec, cfgNodeList_t *rule, cfgStart_t *start_rule, cfgNodeList_t *pre_def, cfgReport_t *report)
+static void CFG_InitConfig(cfgConfig_t *cfg, cfgNodeList_t *name, cfgNodeList_t *token, cfgNodeList_t *prec, cfgNodeList_t *rule, cfgStart_t *start_rule, cfgNodeList_t *pre_def)
 {
 		size_t i;
 		size_t tmp_tok_val = PSR_MIN_TOKENVAL + 1;
 
 		AR_ASSERT(cfg != NULL);
-		AR_ASSERT(report != NULL);
 		
 		AR_memset(cfg, 0, sizeof(*cfg));
 
@@ -328,35 +457,6 @@ static void CFG_InitConfig(cfgConfig_t *cfg, cfgNodeList_t *name, cfgNodeList_t 
 										cfg->tok[cfg->tok_cnt].code_name = NULL;
 								}else
 								{
-										
-										/*********************warning******************/
-										size_t w;
-										for(w = 0; w < cfg->tok_cnt; ++w)
-										{
-												if(cfg->tok[w].code_name && AR_wcscmp(cfg->tok[w].code_name, token->lst[i]->token.code_name) == 0)
-												{
-														break;
-												}
-										}
-
-										if(w != cfg->tok_cnt)
-										{
-												cfgReportInfo_t	msg;
-												wchar_t buf[1024];
-												psrToken_t		tok;
-												tok.col = 0;
-												tok.line = token->lst[i]->token.line;
-												tok.str = token->lst[i]->token.code_name;
-												tok.str_cnt = AR_wcslen(token->lst[i]->token.code_name);
-												msg.type = CFG_REPORT_ERR_SYNTAX_T;
-												msg.tok = &tok;
-												AR_swprintf(buf, 1024, L"Duplicate token value definition\"%ls\"!", token->lst[i]->token.code_name);
-												msg.message = buf;
-
-												report->report_func(&msg, report->report_ctx);
-										}
-										/***************************************/
-
 										cfg->tok[cfg->tok_cnt].code_name = AR_wcsdup(token->lst[i]->token.code_name);
 										cfg->tok[cfg->tok_cnt].is_assigned_code_name = true;
 								}
@@ -941,6 +1041,8 @@ static psrNode_t*		AR_STDCALL __handle_rhs(psrNode_t **nodes, size_t count, cons
 		{
 				AR_wcscat((wchar_t*)res->rule.rhs, L" ");
 
+				res->rule.line = ns[0]->lexeme.line;
+
 		}else if(ns[0]->type == CFG_NODE_LIST_T)
 		{
 				for(i = 0; i < ns[0]->lst.count; ++i)
@@ -951,7 +1053,14 @@ static psrNode_t*		AR_STDCALL __handle_rhs(psrNode_t **nodes, size_t count, cons
 
 						AR_wcscat((wchar_t*)res->rule.rhs, tmp->lexeme.lexeme);
 						AR_wcscat((wchar_t*)res->rule.rhs, L" ");
+
+						if(i == 0)
+						{
+								res->rule.line = tmp->lexeme.line;
+						}
 				}
+
+				
 		}else
 		{
 				AR_ASSERT(false);
@@ -1103,6 +1212,9 @@ static psrNode_t*		AR_STDCALL __handle_prec_def(psrNode_t **nodes, size_t count,
 				const cfgNode_t *node = ns[1]->lst.lst[i];
 				AR_ASSERT(node->type == CFG_LEXEME_T);
 				CFG_InsertTokenToPrec(&res->prec, node->lexeme.lexeme, 0);
+				
+				__check_name_from_parser_data((cfgParserData_t*)ctx, node->lexeme.lexeme, node->lexeme.line, CFG_STR_PREC);
+
 		}
 		return res;
 
@@ -1151,8 +1263,9 @@ static psrNode_t*		AR_STDCALL __handle_token_def(psrNode_t **nodes, size_t count
 				res->token.name = NULL;
 		}else
 		{
-				res->token.is_skip = false;
+				__check_name_from_parser_data((cfgParserData_t*)ctx, ns[1]->lexeme.lexeme, ns[1]->lexeme.line, CFG_STR_TOKEN);
 
+				res->token.is_skip = false;
 				res->token.name = ns[1]->lexeme.lexeme;
 				ns[1]->lexeme.lexeme = NULL;
 		}
@@ -1180,7 +1293,11 @@ static psrNode_t*		AR_STDCALL __handle_token_def(psrNode_t **nodes, size_t count
 		{
 				AR_ASSERT(ns[6]->lst.count > 0);
 				res->token.code_name = AR_wcsdup(ns[6]->lst.lst[0]->lexeme.lexeme);
+
+				__check_name_from_parser_data((cfgParserData_t*)ctx, ns[6]->lst.lst[0]->lexeme.lexeme, ns[6]->lst.lst[0]->lexeme.line, CFG_STR_TOKEN_VALUE);
 		}
+
+		
 
 		return res;
 
@@ -1196,6 +1313,7 @@ static psrNode_t*		AR_STDCALL __handle_token_def(psrNode_t **nodes, size_t count
 
 static psrNode_t*		AR_STDCALL __handle_name_def(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
+		cfgParserData_t			*psr_data;
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res;
 
@@ -1209,6 +1327,8 @@ static psrNode_t*		AR_STDCALL __handle_name_def(psrNode_t **nodes, size_t count,
 
 		res = CFG_CreateNode(CFG_NAME_T);
 
+
+
 		res->name.line = ns[1]->lexeme.line;
 		res->name.name = ns[1]->lexeme.lexeme;
 		ns[1]->lexeme.lexeme = NULL;
@@ -1216,6 +1336,10 @@ static psrNode_t*		AR_STDCALL __handle_name_def(psrNode_t **nodes, size_t count,
 		res->name.regex = ns[3]->lexeme.lexeme;
 		ns[3]->lexeme.lexeme = NULL;
 
+		psr_data = (cfgParserData_t*)ctx;
+
+		__check_name_from_parser_data(psr_data, res->name.name, res->name.line, CFG_STR_NAME);
+		
 		return res;
 }
 
@@ -1272,7 +1396,10 @@ static psrNode_t*		AR_STDCALL __handle_item_list(psrNode_t **nodes, size_t count
 		AR_ASSERT(ns[1]);
 
 		res = ns[0];
-		if(res == NULL)res = CFG_CreateNode(CFG_NODE_LIST_T);
+		if(res == NULL)
+		{
+				res = CFG_CreateNode(CFG_NODE_LIST_T);
+		}
 		ns[0] = NULL;
 
 		if(ns[1]->type == CFG_NODE_LIST_T)
@@ -1445,7 +1572,7 @@ static psrNode_t*		AR_STDCALL __handle_program(psrNode_t **nodes, size_t count, 
 		}
 
 		res = CFG_CreateNode(CFG_CONFIG_T);
-		CFG_InitConfig(&res->config, &name, &token, &prec, &rule, start_rule, &predef, (cfgReport_t*)ctx);
+		CFG_InitConfig(&res->config, &name, &token, &prec, &rule, start_rule, &predef);
 
 		if(error.count > 0 || has_err)
 		{
@@ -1642,6 +1769,8 @@ static const parser_t*		__build_parser(const psrGrammar_t *gmr)
 
 
 
+
+
 /*
 typedef void	(AR_STDCALL *AR_error_func)(int_t level, const wchar_t *msg, void *ctx);
 typedef void	(AR_STDCALL *AR_print_func)(const wchar_t *msg, void *ctx);
@@ -1655,14 +1784,13 @@ static void	AR_STDCALL cfg_on_error(int_t level, const wchar_t *msg, void *ctx)
 		cfgReportInfo_t			info;
 		AR_ASSERT(msg != NULL && ctx != NULL);
 
-		report = (cfgReport_t*)ctx;
+		report = ((cfgParserData_t*)ctx)->report;
 
 		AR_memset(&info, 0, sizeof(info));
 
 		info.type = CFG_REPORT_ERROR_T;
-		info.tok = NULL;
-		info.message = msg;
-		info.err_level = level;
+		info.error.err_level = level;
+		info.error.err_msg = msg;
 		report->report_func(&info, report->report_ctx);
 }
 
@@ -1673,18 +1801,14 @@ void	AR_STDCALL cfg_on_print(const wchar_t *msg, void *ctx)
 		cfgReportInfo_t			info;
 		AR_ASSERT(msg != NULL && ctx != NULL);
 
-		report = (cfgReport_t*)ctx;
+		report = ((cfgParserData_t*)ctx)->report;
 
 		AR_memset(&info, 0, sizeof(info));
 
 		info.type = CFG_REPORT_MESSAGE_T;
-		info.tok = NULL;
-		info.message = msg;
-		info.err_level = 0;
+		info.std_msg.message = msg;
 		report->report_func(&info, report->report_ctx);
 }
-
-
 
 
 static void	AR_STDCALL cfg_free(psrNode_t *node, void *ctx)
@@ -1709,11 +1833,9 @@ static void		AR_STDCALL cfg_error(const psrToken_t *tok, const size_t expected[]
 		}
 */
 
-		if(ctx == NULL)return;
-
 		AR_ASSERT(tok != NULL && ctx != NULL && expected != NULL && count > 0);
 
-		report = (cfgReport_t*)ctx;
+		report = ((cfgParserData_t*)ctx)->report;
 		AR_memset(&info, 0, sizeof(info));
 
 		/******************************************************************************************/
@@ -1746,8 +1868,8 @@ static void		AR_STDCALL cfg_error(const psrToken_t *tok, const size_t expected[]
 		}
 		AR_AppendFormatString(str, L"\r\n\r\n");
 		/******************************************************************************************/
-		info.message = AR_GetStrString(str);
-		info.tok = tok;
+		info.syntax_error.msg = AR_GetStrString(str);
+		info.syntax_error.tok = tok;
 		info.type = CFG_REPORT_ERR_SYNTAX_T;
 		report->report_func(&info, report->report_ctx);
 		AR_DestroyString(str);
@@ -1854,6 +1976,7 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 		bool_t is_ok, has_error;
 		
 		psrContext_t	*parser_context;
+		cfgParserData_t	psr_data;
 		lexMatch_t		*match;
 
 		lexToken_t		tok;
@@ -1875,7 +1998,9 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 		
 		
 		match		   = __create_lex_match(&io_ctx);
-		parser_context = __create_parser_context((void*)report);
+
+		__init_parser_data(&psr_data, report);
+		parser_context = __create_parser_context((void*)&psr_data);
 		
 		LEX_ResetInput(match, gmr_txt);
 
@@ -1908,8 +2033,7 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 						if(tok)AR_DEL(tok);
 
 						info.type = CFG_REPORT_ERR_LEX_T;
-						info.message = AR_GetStrString(str);
-
+						info.lex_error.msg = AR_GetStrString(str);
 
 						tmp_tok.term_val = 0;
 						tmp_tok.str_cnt = 0;
@@ -1919,8 +2043,7 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 						tmp_tok.line = line;
 						tmp_tok.col = col;
 
-						info.tok = &tmp_tok;
-						info.err_level = 0;
+						info.lex_error.tok = &tmp_tok;
 						
 						report->report_func(&info, report->report_ctx);
 						
@@ -1974,6 +2097,7 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 		
 		__destroy_parser_context(parser_context);
 		__destroy_lex_match(match);
+		__uninit_parser_data(&psr_data);
 		
 		return (cfgConfig_t*)result;
 

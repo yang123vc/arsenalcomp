@@ -317,7 +317,7 @@ void CTagTree::OnLButtonDblClk(UINT nFlags, CPoint point)
 
 		HTREEITEM curr = this->GetSelectedItem();
 
-		if(curr != NULL && curr != m_name && curr != m_term && curr != m_prec && curr != m_rule)
+		if(curr != NULL && curr != m_name && curr != m_term && curr != m_prec && curr != m_rule && curr != m_predef)
 		{
 				CString txt = this->GetItemText(curr);
 				
