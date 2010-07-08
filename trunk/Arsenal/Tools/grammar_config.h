@@ -176,15 +176,44 @@ typedef enum
 		CFG_REPORT_MESSAGE_T,
 		CFG_REPORT_ERROR_T,
 		CFG_REPORT_ERR_LEX_T,
-		CFG_REPORT_ERR_SYNTAX_T
+		CFG_REPORT_ERR_SYNTAX_T,
+		CFG_REPORT_WARNING_SYNTAX_T
 }cfgReportType_t;
+
 
 typedef struct __cfg_report_info_tag
 {
 		cfgReportType_t			type;
-		const	psrToken_t		*tok;
-		const	wchar_t			*message;
-		int_t					err_level;
+		
+		union{
+		struct					{
+				const	wchar_t			*message;
+		
+		}								std_msg;
+		
+		struct			{
+				const	wchar_t			*msg;
+				const	psrToken_t		*tok;
+		
+		}								lex_error;
+		
+		struct			{
+				const	wchar_t			*msg;
+				const	psrToken_t		*tok;
+		
+		}								syntax_error;
+
+		struct	{
+				int_t					err_level;
+				const	wchar_t			*err_msg;
+		
+		}								error;
+
+		struct	{
+				size_t					line;
+				const wchar_t			*msg;
+		}								warning;
+		};
 }cfgReportInfo_t;
 
 

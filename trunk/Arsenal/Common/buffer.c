@@ -26,6 +26,9 @@ struct arsenal_buffer_tag
 		byte_t	*write_cur;
 };
 
+
+#if defined(AR_DEBUG)
+
 static AR_INLINE bool_t	__buffer_is_valid(const arBuffer_t *pbuf)
 {
 		if(pbuf == NULL)return false;
@@ -36,6 +39,12 @@ static AR_INLINE bool_t	__buffer_is_valid(const arBuffer_t *pbuf)
 
 		return true;
 }
+
+#else
+
+
+
+#endif
 
 static AR_INLINE void		__increase_capability(arBuffer_t *pbuf, size_t inc_len)
 {

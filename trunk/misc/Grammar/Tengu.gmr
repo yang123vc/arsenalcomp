@@ -1,3 +1,69 @@
+/******************************************PreDefined code********************************************/
+
+{
+/*
+ * The Arsenal Library
+ * Copyright (c) 2009 by Solidus
+ * 
+ * Permission to use, copy, modify, distribute and sell this software
+ * and its documentation for any purpose is hereby granted without fee,
+ * provided that the above copyright notice appear in all copies and
+ * that both that copyright notice and this permission notice appear
+ * in supporting documentation.It is provided "as is" without express 
+ * or implied warranty.
+ *
+ */
+
+#include "tguparser.h"
+
+
+
+/*******************************************decl****************************************/
+
+struct __parser_node_tag;
+typedef struct __parser_node_tag		parserNode_t;
+
+
+/********************************************************************************************/
+
+typedef enum
+\{
+		TOKEN_T,
+\}parserNodeType_t;
+
+struct __parser_node_tag
+\{
+		parserNodeType_t		type;
+
+\};
+
+static parserNode_t*	TGU_CreateParserNode(parserNodeType_t	type);
+static void				TGU_DestroyParserNode(parserNode_t		*node);
+
+/**************************************************************************************************/
+
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 %name	delim 		:	"[ \r\n\t]"			
 				;
@@ -5,6 +71,7 @@
 				;
 %name	comment_line	:	"//[^\n]*\n"			
 				;
+
 %name skip_lexem	: 	"{delim}|{comment}|{comment_line}"
 				;
 
@@ -72,12 +139,14 @@
 					;
 
 
-%token 	%skip			:	"{skip_lexem}+"				,1		%action	"TOK_DELIM_ID"	;//空白，需要过滤
+%token 	%skip			:	"{skip_lexem}+"				,1				%action	"TOK_DELIM_ID"	;//空白，需要过滤
 
 
 
 
 %token	NAME			:	"{letter}({letter}|{digit})*"					%action "TOK_NAME"					;
+
+
 %token	STRING		:	"{string_dq}|{string_sq}"						%action "TOK_STRING"					;
 %token	FLOAT_NUMBER	:	"{float_constant}"						,2	%action "TOK_FLOAT_NUMBER"				;
 %token	INT_NUMBER		:	"{hex_constant}|{oct_constant}|{dec_constant}"	,2	%action "TOK_INT_NUMBER"				;
@@ -105,7 +174,6 @@
 %token	"false"	:	'"false"(?!{keyword_lhd})'		,1					%action	"TOK_FALSE"		;
 %token	"var"		:	'"var"(?!{keyword_lhd})'		,1					%action	"TOK_VAR"			;
 
-//%token	"in"		:	'"in"(?!{keyword_lhd})'		,1					%action	"TOK_IN"			;
 
 
 %token	"..."		:	'"..."'		,2								%action 	"TOK_ELLIPSIS"		;	
@@ -117,7 +185,6 @@
 
 %token	"&&"		:	'"&&"'		,1								%action	"TOK_ANDAND"	;
 %token	"||"		:	'"||"'		,1								%action	"TOK_OROR"		;
-
 
 
 
@@ -152,10 +219,9 @@
 
 %token	"!"		:	'"!"'			,0								%action "TOK_NOT"				;
 
-//%token	"."		:	'"."'			,0								%action "TOK_DOT"				;
+
 %token	":"		:	'":"'			,0								%action "TOK_COLON"				;
 %token	"?"		:	'"?"'			,0								%action "TOK_QUEST"				;
-
 
 
 
@@ -166,7 +232,8 @@
 %left		"=="	"!="	"<"	"<="	">"	">="			;
 %left		"+"	"-"							;
 %left		"*"	"/"	"%"						;
-%right	PREC_UNARY							;
+%right	PREC_UNARY 						;
+
 
 
 /*
@@ -179,7 +246,7 @@
 
 
 /**************************************************************************************/
-%start 				program				;
+%start	program	;			
 
 
 
@@ -261,7 +328,11 @@ compound_statement		:	start_block	statement_list	close_block
 start_block			:	"{"
 					;
 
-close_block			:	"}"
+close_block			:	"}"	%action "handle_close_block"
+{
+	AR_ASSERT(nodes != NULL && count > 0);
+	TGU_PopBlock();
+}
 					;
 
 
@@ -303,8 +374,8 @@ jump_statement			:	"continue" semi
 					|	"break" 	semi
 					|	"return" 	semi
 					|	"return" expression semi
-
 					;
+
 
 semi					:	";"
 					|	error
@@ -424,50 +495,4 @@ namelist				:	namelist	"," NAME
 
 
 
-/******************************************PreDefined code********************************************/
-
-
-{
-/*
- * The Arsenal Library
- * Copyright (c) 2009 by Solidus
- * 
- * Permission to use, copy, modify, distribute and sell this software
- * and its documentation for any purpose is hereby granted without fee,
- * provided that the above copyright notice appear in all copies and
- * that both that copyright notice and this permission notice appear
- * in supporting documentation.It is provided "as is" without express 
- * or implied warranty.
- *
- */
-
-#include "tguparser.h"
-
-
-
-/*******************************************decl****************************************/
-
-struct __parser_node_tag;
-typedef struct __parser_node_tag		parserNode_t;
-
-
-/********************************************************************************************/
-
-typedef enum
-\{
-		TOKEN_T,
-\}parserNodeType_t;
-
-struct __parser_node_tag
-\{
-		parserNodeType_t		type;
-
-\};
-
-static parserNode_t*	TGU_CreateParserNode(parserNodeType_t	type);
-static void				TGU_DestroyParserNode(parserNode_t		*node);
-
-/**************************************************************************************************/
-
-};
 

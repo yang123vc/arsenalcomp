@@ -677,7 +677,7 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 static void AR_STDCALL report_build_func(const ARSpace::cfgReportInfo_t *report, void *context)
 {
 		COutputWnd *output;
-		COutputList::Param		param;
+		//COutputList::Param		param;
 		CString str;
 
 		CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
@@ -689,31 +689,37 @@ static void AR_STDCALL report_build_func(const ARSpace::cfgReportInfo_t *report,
 		switch(report->type)
 		{
 		case ARSpace::CFG_REPORT_MESSAGE_T:
-				output->Append(report->message, COutputList::MSG_MESSAGE, 0, tar);
+				output->Append(report->std_msg.message, COutputList::MSG_MESSAGE, 0, tar);
 				//AR_printf(L"%ls\r\n", report->message);
 				break;
 		case ARSpace::CFG_REPORT_ERROR_T:
-				str.Format(TEXT("%ls : %d"), report->message, report->err_level);
+				str.Format(TEXT("%ls : %d"), report->error.err_msg, report->error.err_level);
 				/*param.type = COutputList::MSG_ERROR;
 				param.line = report->tok->line;
 				*/
-				output->Append(str, COutputList::MSG_ERROR, report->tok->line, tar); 
+				output->Append(str, COutputList::MSG_ERROR, 0, tar); 
 				break;
 		case ARSpace::CFG_REPORT_ERR_LEX_T:
-				str.Format(TEXT("Lex error %ls"), report->message);
-				param.type = COutputList::MSG_ERROR;
-				param.line = report->tok->line;
-				output->Append(str, COutputList::MSG_ERROR, report->tok->line, tar);
+				str.Format(TEXT("Lex error : %ls"), report->lex_error.msg);
+//				param.type = COutputList::MSG_ERROR;
+//				param.line = report->lex_error.tok->line;
+				output->Append(str, COutputList::MSG_ERROR, report->lex_error.tok->line, tar);
 
 				//::AfxMessageBox(report->message);
 				//AR_printf(L"lex error %ls\r\n", report->message);
 				break;
 		case ARSpace::CFG_REPORT_ERR_SYNTAX_T:
-				str.Format(TEXT("Syntax error %ls"), report->message);
-				param.type = COutputList::MSG_ERROR;
-				param.line = report->tok->line;
+				str.Format(TEXT("Syntax error : %ls"), report->syntax_error.msg);
+//				param.type = COutputList::MSG_ERROR;
+//				param.line = report->syntax_error.tok->line;
 				//output->Append(str, param);
-				output->Append(str, COutputList::MSG_ERROR, report->tok->line, tar);
+				output->Append(str, COutputList::MSG_ERROR, report->syntax_error.tok->line, tar);
+				break;
+		case	ARSpace::CFG_REPORT_WARNING_SYNTAX_T:
+				str.Format(TEXT("Syntax warning : %ls"), report->warning.msg);
+//				param.type = COutputList::MSG_ERROR;
+//				param.line = report->warning.line;
+				output->Append(str, COutputList::MSG_ERROR, report->warning.line, tar);
 				break;
 		default:
 				AR_ASSERT(false);
@@ -1142,6 +1148,8 @@ static void AR_STDCALL report_tag_func(const ARSpace::cfgReportInfo_t *report, v
 		case ARSpace::CFG_REPORT_ERR_SYNTAX_T:
 				//::AfxMessageBox(report->message);
 				//AR_printf(L"syntax error %ls\r\n", report->message);
+				break;
+		case ARSpace::CFG_REPORT_WARNING_SYNTAX_T:
 				break;
 		default:
 				AR_ASSERT(false);
