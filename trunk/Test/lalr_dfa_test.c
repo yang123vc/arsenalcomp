@@ -231,10 +231,31 @@ static  psrGrammar_t* __build_grammar()
 				getchar();
 		}
 
-
-
 		return gmr;
 }
+
+
+
+
+static  psrGrammar_t* __build_grammar1()
+{
+		psrGrammar_t	*gmr;
+		psrHandler_t ctx = {NULL, free_node};
+
+		gmr = PSR_CreateGrammar(&ctx, NULL);
+
+		PSR_InsertTerm(gmr, L"(", CLP, PSR_ASSOC_NONASSOC, 0, create_leaf);
+		PSR_InsertTerm(gmr, L")", RP, PSR_ASSOC_NONASSOC, 0, create_leaf);
+		PSR_InsertTerm(gmr, L"a", NUMBER, PSR_ASSOC_NONASSOC, 1, create_leaf);
+
+		
+
+		
+		PSR_InsertRuleByStr(gmr, L"A : ( A )", NULL, create_node, 0);
+		PSR_InsertRuleByStr(gmr, L"A : a", NULL, create_node, 0);
+		return gmr;
+}
+
 
 
 void lalr_test1()
@@ -251,7 +272,10 @@ void lalr_test1()
 
 		//lex = __build_lex();
 		//AR_ASSERT(lex);
-		gmr = __build_grammar();
+		
+		//gmr = __build_grammar();
+
+		gmr = __build_grammar1();
 
 		str = AR_CreateString();
 		
@@ -264,13 +288,12 @@ void lalr_test1()
 		PSR_PrintSymbolMap(&first, str);
 		AR_printf(L"First Set:\r\n%ls\r\n", AR_GetStrString(str));
 
-/*
 		AR_ClearString(str);
 		PSR_PrintSymbolMap(&follow, str);
 		AR_printf(L"Follow Set:\r\n%ls\r\n", AR_GetStrString(str));
-
-		PSR_CheckIsValidGrammar(gmr);
 		
+		PSR_CheckIsValidGrammar(gmr);
+/*
 		AR_ClearString(str);
 		PSR_ReportLeftRecursion(gmr, str);
 		AR_printf(L"Left Recursion:\r\n%ls\r\n", AR_GetStrString(str));

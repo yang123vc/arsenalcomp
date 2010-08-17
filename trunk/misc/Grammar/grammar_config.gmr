@@ -36,25 +36,25 @@
 %token	%skip			:	"{skip_lexem}+"
 					;
 
-%token	"%skip"		: 	"%skip(?={key_lookahead})"
+%token	SKIP			: 	"%skip(?={key_lookahead})"
 					;
 
-%token	"%start"		:	"%start(?={key_lookahead})"
+%token	START			:	"%start(?={key_lookahead})"
 					;
 
-%token	"%name"		:	"%name(?={key_lookahead})"
+%token	NAME			:	"%name(?={key_lookahead})"
 					;
 
-%token	"%token"		:	"%token(?={key_lookahead})"
+%token	TOKEN			:	"%token(?={key_lookahead})"
 					;
 
-%token	"%prec"		:	"%prec(?={key_lookahead})"
+%token	PREC			:	"%prec(?={key_lookahead})"
 					;
 
-%token	"%action"		:	"%action(?={skip_lexem}+)"
+%token	ACTION		:	"%action(?={skip_lexem}+)"
 					;
 
-%token	ACTION_INS		:	'\{((\\\{|\\\})|[^\{\}])*?\}'
+%token	CODE_BLOCK		:	'\{((\\\{|\\\})|[^\{\}])*?\}'
 					;
 
 %token	ASSOC			:	'"%"(left|right|nonassoc)(?={key_lookahead})'
@@ -64,8 +64,14 @@
 					;
 				
 
-%token	NUMBER	:	"{number}"
-				;
+%token	NUMBER		:	"{number}"
+					;
+
+
+%token	CODE			:	"%code"
+					;
+
+
 
 %token	"."		:	'"."'
 				;
@@ -87,7 +93,7 @@
 %start			program	;
 
 
-program			:		item_list 		
+program			:		item_list 
 				|		item_list error
 				;
 
@@ -95,7 +101,7 @@ item_list			:		item_list item
 				|		.
 				;
 		
-item				:		pre_code_decl	";"
+item				:		code_decl		";"
 				|		start_def		";"		
 				|		name_def		";"		
 				|		token_def		";"	
@@ -105,11 +111,11 @@ item				:		pre_code_decl	";"
 				|		";" 		
 				;
 
-name_def 			:		"%name" LEXEME ":" LEXEME 
+name_def 			:		NAME LEXEME ":" LEXEME 
 				;
 
-token_def			:  		"%token" "%skip" token_val_prec ":" LEXEME token_val_prec action_decl  	
-				|  		"%token" LEXEME token_val_prec ":" LEXEME token_val_prec action_decl 	
+token_def			:  		TOKEN SKIP token_val_prec ":" LEXEME token_val_prec action_decl  	
+				|  		TOKEN LEXEME token_val_prec ":" LEXEME token_val_prec action_decl 	
 				;
 
 token_val_prec 		:		"," NUMBER			
@@ -138,21 +144,21 @@ term_list			:		term_list LEXEME
 				;
 
 
-prec_decl			:		"%prec" LEXEME 			
+prec_decl			:		PREC LEXEME 			
 				|		.					
 				;
-		
-action_decl		:		"%action" LEXEME ACTION_INS
-				|		"%action" LEXEME 			
+
+action_decl		:		ACTION LEXEME CODE_BLOCK
+				|		ACTION LEXEME 			
 				|		.	
 				;
 
 
-start_def			:  		"%start" LEXEME 
+start_def			:  		START LEXEME 
 				;
 
 
-pre_code_decl		:		ACTION_INS
+code_decl			:		CODE CODE_BLOCK
 				;
 
 

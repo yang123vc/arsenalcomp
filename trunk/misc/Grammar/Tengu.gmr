@@ -1,3 +1,5 @@
+
+
 /******************************************PreDefined code********************************************/
 
 {
@@ -37,8 +39,8 @@ struct __parser_node_tag
 
 \};
 
-static parserNode_t*	TGU_CreateParserNode(parserNodeType_t	type);
-static void				TGU_DestroyParserNode(parserNode_t		*node);
+static parserNode_t*			TGU_CreateParserNode(parserNodeType_t	type)		;
+static void				TGU_DestroyParserNode(parserNode_t	*node)	;
 
 /**************************************************************************************************/
 
@@ -474,6 +476,7 @@ filed					:	expression
 
 function_defination		:	"var"		NAME	"("	params	")"	compound_statement
 					;
+
 
 
 params				:	namelist	","	"..."

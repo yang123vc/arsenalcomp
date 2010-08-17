@@ -173,7 +173,7 @@ CInputEdit::CInputEdit()
 {
 		VERIFY(m_font.CreatePointFont(120, TEXT("Consolas")));
 
-		m_acctbl = ::LoadAccelerators(AfxGetResourceHandle(), MAKEINTRESOURCE(IDR_MAINFRAME));
+		m_acctbl = ::LoadAccelerators(AfxGetResourceHandle(), MAKEINTRESOURCE(IDR_INPUT_VIEW));
 		VERIFY(m_acctbl);
 }
 

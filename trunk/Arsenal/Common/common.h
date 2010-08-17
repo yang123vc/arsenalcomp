@@ -108,6 +108,64 @@ void	AR_error_ctx(arIOCtx_t *ctx, int_t level, const wchar_t *msg, ...);
 
 
 /***********************************************************macro_oper*********************************************************/
+
+
+
+#define __AR_CNT_BIT__(_n)		((_n) * AR_BYTE_BITS)
+
+#define AR_BYTEFLIP_16(_v)		( (((uint_16_t)(_v) >> __AR_CNT_BIT__(1)) & 0x00FF)								\
+								| (((uint_16_t)(_v) << __AR_CNT_BIT__(1)) & 0xFF00)								\
+								)
+
+#define AR_BYTEFLIP_32(_v)		( (((uint_32_t)(_v) >> __AR_CNT_BIT__(3)) & 0x000000FF)							\
+								| (((uint_32_t)(_v) >> __AR_CNT_BIT__(1)) & 0x0000FF00)							\
+								| (((uint_32_t)(_v) << __AR_CNT_BIT__(1)) & 0x00FF0000)							\
+								| (((uint_32_t)(_v) << __AR_CNT_BIT__(3)) & 0xFF000000)							\
+								)
+
+
+#define AR_BYTEFLIP_64(_v)		( (((uint_64_t)(_v) >> __AR_CNT_BIT__(7)) & AR_BIGNUM_U64(0x00000000000000FF))		\
+								| (((uint_64_t)(_v) >> __AR_CNT_BIT__(5)) & AR_BIGNUM_U64(0x000000000000FF00))		\
+								| (((uint_64_t)(_v) >> __AR_CNT_BIT__(3)) & AR_BIGNUM_U64(0x0000000000FF0000))		\
+								| (((uint_64_t)(_v) >> __AR_CNT_BIT__(1)) & AR_BIGNUM_U64(0x00000000FF000000))		\
+								| (((uint_64_t)(_v) << __AR_CNT_BIT__(1)) & AR_BIGNUM_U64(0x000000FF00000000))		\
+								| (((uint_64_t)(_v) << __AR_CNT_BIT__(3)) & AR_BIGNUM_U64(0x0000FF0000000000))		\
+								| (((uint_64_t)(_v) << __AR_CNT_BIT__(5)) & AR_BIGNUM_U64(0x00FF000000000000))		\
+								| (((uint_64_t)(_v) << __AR_CNT_BIT__(7)) & AR_BIGNUM_U64(0xFF00000000000000))		\
+								)
+
+
+
+
+
+#if defined(ARCH_LITTLE_ENDIAN)
+
+		#define AR_LTON_16(_n)			AR_BYTEFLIP_16((_n))
+		#define AR_LTON_32(_n)			AR_BYTEFLIP_32((_n))
+		#define AR_LTON_64(_n)			AR_BYTEFLIP_64((_n))
+
+		#define AR_NTOL_16(_n)			AR_BYTEFLIP_16((_n))
+		#define AR_NTOL_32(_n)			AR_BYTEFLIP_32((_n))
+		#define AR_NTOL_64(_n)			AR_BYTEFLIP_64((_n))
+
+#else
+
+		#define AR_LTON_16(_n)			(_n)
+		#define AR_LTON_32(_n)			(_n)
+		#define AR_LTON_64(_n)			(_n)
+
+		#define AR_NTOL_16(_n)			(_n)
+		#define AR_NTOL_32(_n)			(_n)
+		#define AR_NTOL_64(_n)			(_n)
+
+#endif
+
+
+
+
+
+
+
 #define AR_MAX(_a,_b) ((_a) > (_b) ? (_a) : (_b))
 #define AR_MIN(_a,_b) ((_a) < (_b) ? (_a) : (_b))
 

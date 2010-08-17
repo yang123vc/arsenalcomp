@@ -48,17 +48,17 @@ static	void	__build_goto(lalrState_t *start, const psrGrammar_t *grammar, lalrSt
 				if(node->config->is_completed)continue;
 				if(node->config->delim >= rule->body.count)continue;
 
-				symb = rule->body.lst[node->config->delim];
+				symb = rule->body.lst[node->config->delim]; 
 
 				new_state = NULL;
 				goto_list = PSR_CreateConfigList();
-
+				/*以下为求状态(项集)start的所有项在符号symb上的转移*/
 				for(inner_node = start->all_config->head; inner_node != NULL; inner_node = inner_node->next)
 				{
 						const psrSymb_t			*bsp;
 						lalrConfig_t			*new_config;
 
-						if(inner_node->config->is_completed)continue;
+						if(inner_node->config->is_completed)continue;/*被计算过则不再计算*/
 						if(inner_node->config->delim >= inner_node->config->rule->body.count)continue;
 
 						bsp = inner_node->config->rule->body.lst[inner_node->config->delim];
@@ -75,6 +75,33 @@ static	void	__build_goto(lalrState_t *start, const psrGrammar_t *grammar, lalrSt
 						
 						if(!lr0)
 						{
+								/*
+										A  :   ( A ) | a
+										   ;
+
+										s0 :	[A'		: . A, $]				config0
+												[A		: . ( A ), $]			
+												[A		: . a, $]
+										
+										s1 :    [A'		: A . $ ] //config 1
+
+										
+
+										s2 :	[A		:	( . A )		, $]
+												[A		: . ( A )		, )]
+												[A		: . a			, )]
+
+
+										
+										config0的$需要传递到config1
+										
+								*/
+
+								/*
+										记录从项inner_node->config 经过符号symb，转移到new_config,
+								例如：s0 -> [A'		: . A, $] 经过符号A转移到  s1 :    [A'		: A . $ ] 
+
+								*/
 								PSR_InsertToConfigList(new_config->backward, inner_node->config);
 						}
 				}
@@ -131,7 +158,14 @@ static	void	__calc_lr0_closure(lalrConfigList_t *all_config, const psrGrammar_t 
 
 										/*lr0模式，不计算传播链以及follow set*/
 										if(lr0)continue;
+										
+										/*
+												S : A . B C D
+												  ;
 
+												body[delim] == B;
+												body[k] == C 
+										*/
 										for(k = delim + 1; k < rule->body.count; ++k)
 										{
 												const psrSymb_t *sp = rule->body.lst[k];
@@ -184,13 +218,14 @@ static	lalrState_t* __build_state(lalrConfigList_t *basis, const psrGrammar_t *g
 				if(!lr0)
 				{
 						lalrConfigNode_t *l, *r;
-
+						/*将新的核心项的backward list copy到已存在的状态（项集）中*/
 						for(l = basis->head, r = new_state->basis->head; l != NULL && r != NULL; l = l->next, r = r->next)
 						{
 								PSR_UnionConfigList(r->config->backward, l->config->backward);
 						}
 				}
 				
+				/*销毁无用核心项*/
 				PSR_DestroyConfigList(basis, true);
 		}else
 		{
@@ -363,7 +398,6 @@ static void __build_propagation_links(lalrStateSet_t *set)
 								node->config->is_completed = true;
 						}
 				}
-
 		}while(changed);
 
 

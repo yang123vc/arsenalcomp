@@ -424,7 +424,7 @@ static AR_INLINE void __fixup(avlNode_t *node, avlNode_t **proot, int_t bf, cmd_
 						
 						
 								АэИзЈє
-								A                                     A							B
+								A                                     A								B
 								 \                                     \						   / \			
 								  \                                     \						  /	  \
 						           B           ==>                       B			==>			  A    c 
@@ -696,6 +696,7 @@ static AR_INLINE avlNode_t* __unlink_node(avlNode_t *node, avlNode_t **proot, av
 		{
 				p = node->parent;
 				if(chd != NULL) chd->parent = p;
+
 				if(node == *proot)
 				{
 						*proot = chd;
@@ -775,7 +776,6 @@ bool_t	avl_remove(avlTree_t	*tree, int_t key)
 		{
 				if(tree->count == 1)
 				{
-						tree->count = 0;
 						tree->root = tree->left_most = tree->right_most = NULL;
 				}else
 				{

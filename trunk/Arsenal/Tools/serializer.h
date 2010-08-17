@@ -27,7 +27,7 @@ typedef struct __sn_int_tag
 		bool_t	is_signed;
 		union{
 				uint_64_t		u;
-				int_64_t			s;
+				int_64_t		s;
 		};
 }snInteger_t;
 

@@ -96,7 +96,7 @@ BOOL CAboutDlg::OnInitDialog()
 
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialog)
-		ON_STN_CLICKED(IDC_HOMEPAGE, &CAboutDlg::OnStnClickedHomepage)
+		ON_STN_CLICKED(IDC_APP_HOMEPAGE, &CAboutDlg::OnStnClickedHomepage)
 END_MESSAGE_MAP()
 
 
@@ -104,5 +104,4 @@ void CAboutDlg::OnStnClickedHomepage()
 {
 		// TODO: Add your control notification handler code here
 		
-
 }

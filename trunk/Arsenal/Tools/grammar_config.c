@@ -2582,6 +2582,7 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 						AR_wcscat(tmp, cfg->rule[i].rhs);
 
 						rule =  AR_str_to_escstr(tmp);
+
 						if(tmp)
 						{
 								AR_DEL(tmp);

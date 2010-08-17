@@ -12,3 +12,4 @@ public:
 		
 		virtual BOOL DoPromptFileName(CString& fileName, UINT nIDSTitle,DWORD lFlags, BOOL bOpenFileDialog, CDocTemplate* pTemplate);
 };
+

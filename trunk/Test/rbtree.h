@@ -29,19 +29,6 @@ struct __rb_node_tag
 		int_t			data;
 };
 
-static AR_INLINE rbNode_t*		__create_node(int d, rbColor_t color)
-{
-		rbNode_t		*node = AR_NEW0(rbNode_t);
-		node->data = d;
-		node->color = color;
-		return node;
-}
-
-static AR_INLINE void			__destroy_node(rbNode_t *node)
-{
-		AR_ASSERT(node != NULL);
-		AR_DEL(node);
-}
 
 
 struct __rb_tree_tag
@@ -52,11 +39,16 @@ struct __rb_tree_tag
 		size_t			count;
 };
 
+void	rb_init(rbTree_t		*tree);
+void	rb_uninit(rbTree_t		*tree);
+void	rb_clear(rbTree_t		*tree);
+
+rbNode_t*		rb_get_successor(rbNode_t *node);
+rbNode_t*		rb_get_previous(rbNode_t  *node);
 
 
-
-
-
+rbNode_t*		rb_insert_equal(rbTree_t	*tree, int_t data);
+bool_t			rb_remove(rbTree_t	*tree, int_t key);
 
 AR_NAMESPACE_END
 

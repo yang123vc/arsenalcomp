@@ -11,7 +11,6 @@
 #include "SyntaxPane.h"
 
 
-class CTrayIcon;
 
 class CMainFrame : public CFrameWndEx
 {
@@ -96,6 +95,21 @@ public:
 		afx_msg void OnShowInput();
 		afx_msg void OnClose();
 		afx_msg void OnAppExit();
+
+protected:
+		WINDOWPLACEMENT			m_OldWndPlacement;//用来保存原窗口位置 
+		BOOL					m_bFullScreen;//全屏显示标志 
+		CRect					m_FullScreenRect;//表示全屏显示时的窗口位置
+
+protected:
+		HACCEL					m_acctbl;
+
+		
+
+public:
+		afx_msg void OnViewFullscreen();
+		afx_msg void OnGetMinMaxInfo(MINMAXINFO* lpMMI);
+		virtual BOOL PreTranslateMessage(MSG* pMsg);
 };
 
 

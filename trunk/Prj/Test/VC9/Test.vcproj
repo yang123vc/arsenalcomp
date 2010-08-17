@@ -1460,6 +1460,14 @@
 				RelativePath="..\..\..\Test\rbtree.h"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\Test\splaytree.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Test\splaytree.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

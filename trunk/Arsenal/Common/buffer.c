@@ -106,7 +106,7 @@ static AR_INLINE  bool_t __move_internal(arBuffer_t *pbuf, size_t len)
 
 
 
-#define INIT_BUF_LEN	4096
+#define INIT_BUF_LEN	1024
 
 arBuffer_t*		AR_CreateBuffer(size_t nbytes)
 {

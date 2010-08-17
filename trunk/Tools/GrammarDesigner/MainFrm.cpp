@@ -48,6 +48,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 	
 	ON_WM_CLOSE()
 	ON_COMMAND(ID_APP_EXIT, &CMainFrame::OnAppExit)
+	ON_COMMAND(ID_VIEW_FULLSCREEN, &CMainFrame::OnViewFullscreen)
+	ON_WM_GETMINMAXINFO()
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -66,6 +68,14 @@ CMainFrame::CMainFrame()
 {
 	// TODO: add member initialization code here
 	theApp.m_nAppLook = theApp.GetInt(_T("ApplicationLook"), ID_VIEW_APPLOOK_OFF_2007_AQUA);
+
+	m_bFullScreen	= FALSE;
+	memset(&m_OldWndPlacement, 0, sizeof(m_OldWndPlacement));
+	memset(&m_FullScreenRect, 0, sizeof(m_FullScreenRect));
+	
+
+	m_acctbl = ::LoadAccelerators(AfxGetResourceHandle(), MAKEINTRESOURCE(IDR_MAINFRAME));
+	VERIFY(m_acctbl);
 }
 
 CMainFrame::~CMainFrame()
@@ -80,6 +90,8 @@ CMainFrame::~CMainFrame()
 
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
+	
+
 	if (CFrameWndEx::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
@@ -203,7 +215,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 /*******************************************************/
 	
-
+	
 	return 0;
 }
 
@@ -645,3 +657,93 @@ void CMainFrame::OnTestTest()
 		
 }
 
+
+void CMainFrame::OnViewFullscreen()
+{
+		
+		if(!m_bFullScreen)
+		{
+				((CWinAppEx*)AfxGetApp())->SaveState(this, TEXT("FullScreen"));
+
+				GetWindowPlacement(&m_OldWndPlacement); 
+				CRect WindowRect;
+				GetWindowRect(&WindowRect); 
+				CRect ClientRect; 
+				RepositionBars(0, 0xffff, AFX_IDW_PANE_FIRST, reposQuery, &ClientRect);
+				ClientToScreen(&ClientRect); 
+				// 获取屏幕的分辨率 
+
+				int nFullWidth=GetSystemMetrics(SM_CXSCREEN); 
+				int nFullHeight=GetSystemMetrics(SM_CYSCREEN); 
+				//将除控制条外的客户区全屏显示到从(0,0)到(nFullWidth, nFullHeight)区域, 
+				//将(0,0)和(nFullWidth, nFullHeight)两个点外扩充原窗口和除控制条之外的 客户区位置间的差值, 就得到全屏显示的窗口位置 
+
+				m_FullScreenRect.left = WindowRect.left - ClientRect.left; 
+				m_FullScreenRect.top = WindowRect.top - ClientRect.top; 
+				m_FullScreenRect.right = WindowRect.right - ClientRect.right + nFullWidth; 
+				m_FullScreenRect.bottom = WindowRect.bottom - ClientRect.bottom + nFullHeight;
+				m_bFullScreen = TRUE;  //设置全屏显示标志为 TRUE 
+				//进入全屏显示状态 
+
+				WINDOWPLACEMENT wndpl;
+				wndpl.length=sizeof(WINDOWPLACEMENT); 
+				wndpl.flags=0; 
+				wndpl.showCmd=SW_SHOWNORMAL; 
+				wndpl.rcNormalPosition=m_FullScreenRect; 
+				SetWindowPlacement(&wndpl);
+		}else
+		{
+				//退出全屏显示, 恢复原窗口显示
+				m_bFullScreen = FALSE;
+				ShowWindow(SW_HIDE); 
+				SetWindowPlacement(&m_OldWndPlacement);
+
+				((CWinAppEx*)AfxGetApp())->LoadState(this, TEXT("FullScreen"));
+				
+		}
+
+
+
+
+		
+		
+} 
+
+
+
+
+void CMainFrame::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
+{
+		// TODO: Add your message handler code here and/or call default
+
+		if(m_bFullScreen)
+		{
+				lpMMI->ptMaxSize.x=m_FullScreenRect.Width(); 
+				lpMMI->ptMaxSize.y=m_FullScreenRect.Height(); 
+				lpMMI->ptMaxPosition.x=m_FullScreenRect.Width(); 
+				lpMMI->ptMaxPosition.y=m_FullScreenRect.Height(); 
+				// 最大的Track尺寸也要改变 
+				lpMMI->ptMaxTrackSize.x=m_FullScreenRect.Width(); 
+				lpMMI->ptMaxTrackSize.y=m_FullScreenRect.Height(); 
+		}
+
+
+		CFrameWnd::OnGetMinMaxInfo(lpMMI) ; 
+
+
+}
+
+BOOL CMainFrame::PreTranslateMessage(MSG* pMsg)
+{
+		// TODO: Add your specialized code here and/or call the base class
+
+		if(WM_KEYFIRST <= pMsg->message && pMsg->message <= WM_KEYLAST) 
+		{ 
+				if(::TranslateAccelerator(this->GetSafeHwnd(), m_acctbl, pMsg))
+				{
+						return true;
+				}
+		}
+
+		return CFrameWndEx::PreTranslateMessage(pMsg);
+}

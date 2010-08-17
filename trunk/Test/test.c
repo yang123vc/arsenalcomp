@@ -124,7 +124,9 @@ void AR_Test()
 		//grammar_test();
 		
 		//code_gen_lex_test();
-		//lalr_test();
+		
+		lalr_test();
+
 		//ray_test();
 
 		//sn_test();
@@ -137,7 +139,7 @@ void AR_Test()
 
 		//calc2_test();
 
-		ds_test();
+		//ds_test();
 		
 #else
 		AR_printf(L"dll version\r\n");
