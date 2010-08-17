@@ -966,9 +966,138 @@ static void test_align3()
 
 #endif
 
+
+
+/*
+t_uint32 ByteOrder::FlipBytes(t_uint32 val)
+{
+		return (
+				((val >> 24) &0x000000FF)|
+				((val >> 8) & 0x0000FF00)|
+				((val << 8) & 0x00FF0000)|
+				((val << 24) & 0xFF000000)
+				);
+}
+
+t_uint64 ByteOrder::FlipBytes(t_uint64 val)
+{
+		t_uint32 hi = t_uint32( val >> 32);
+		t_uint32 lo = t_uint32(val  & 0xFFFFFFFF);
+
+		t_uint64 fhi = t_uint64(FlipBytes(hi));
+		t_uint64 flo = t_uint64(FlipBytes(lo));
+
+		flo <<= 32;
+		return (flo | fhi);
+
+}
+*/
+
+
+#if defined(ARCH_LITTLE_ENDIAN)
+
+#define AR_LTON_16(_n)			AR_BYTEFLIP_16((_n))
+
+#define AR_LTON_32(_n)			AR_BYTEFLIP_32((_n))
+
+#define AR_LTON_64(_n)			AR_BYTEFLIP_64((_n))
+
+#else
+
+#define AR_LTON_16(_n)			(_n)
+
+#define AR_LTON_32(_n)			(_n)
+
+#define AR_LTON_64(_n)			(_n)
+
+#endif
+
+
+
+void byte_filp_test()
+{
+		uint_16_t		val16 = 0x1234;
+
+		uint_32_t		val32 = 0x12345678;
+		
+		uint_64_t		val64 = 0xAA12345678ABCDEF;
+
+		
+		AR_printf(L"0x%X\r\n", AR_BYTEFLIP_16(val16));
+		AR_printf(L"0x%X\r\n", AR_BYTEFLIP_32(val32));
+		AR_printf(L"0x%I64X\r\n", AR_BYTEFLIP_64(val64));
+
+
+		AR_printf(L"0x%X\r\n", AR_LTON_16(val16));
+		AR_printf(L"0x%X\r\n", AR_LTON_32(val32));
+		AR_printf(L"0x%I64X\r\n", AR_LTON_64(val64));
+}
+
+
+static void shuffle(int_t *arr, size_t n)
+{
+		int_t i;
+		for(i = (int_t)n - 1; i > 0; --i)
+		{
+				int_t idx = rand()%i;
+				int_t t = arr[i];
+				arr[i] = arr[idx];
+				arr[idx] = t;
+		}
+}
+
+void algo_test1()
+{
+		int_t a[] = {1,2,3,4,5,6}, i = 0;
+
+		shuffle(a, sizeof(a)/sizeof(a[0]));
+
+		for(i = 0; i < sizeof(a)/sizeof(a[0]); ++i)
+		{
+				AR_printf(L"%d ", a[i]);
+		}
+
+		AR_printf(L"\r\n");
+
+}
+
+
+static int_t cmp_int(const void *l, const void *r)
+{
+		int a = *(int*)l;
+		int b = *(int*)r;
+		return AR_CMP(a,b);
+}
+void bsearch_test()
+{
+		size_t i;
+		AR_printf(L"%ls\r\n", L"bsearch test");
+		
+		int arr[] = {0,1, 4, 42, 55, 67, 87, 100, 245};
+		
+		int key = 42;
+		AR_ASSERT(AR_bsearch(&key, arr, AR_NELEMS(arr), sizeof(int), cmp_int) == 3);
+		key = 43;
+		AR_ASSERT(AR_bsearch(&key, arr, AR_NELEMS(arr), sizeof(int), cmp_int) == -1);
+
+		for(i = 0; i < AR_NELEMS(arr); ++i)
+		{
+				int_t result;
+				key = arr[i];
+				result = AR_bsearch(&key, arr, AR_NELEMS(arr), sizeof(int), cmp_int);
+				AR_printf(L"key == %d : idx == %d\r\n", key, result);
+				AR_ASSERT(result == i);
+		}
+		
+		//assertEquals(2, Util.binarySearch(arrayWith42, 42));
+		//assertEquals(-1, Util.binarySearch(arrayWith42, 43));
+
+}
+
 void com_test()
 {
-
+		bsearch_test();
+		//algo_test1();
 		//str_test1();
 		//str_test2();
 		//str_test3();
@@ -1011,7 +1140,9 @@ void com_test()
 		//kmp_test();
 		//kmp_test2();
 
-		test_align3();
+		//test_align3();
+
+		//byte_filp_test();
 
 }
 

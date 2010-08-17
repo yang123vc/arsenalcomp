@@ -1,0 +1,28 @@
+﻿var test2()
+{
+	var test = func_test;
+	
+	test(test2(),a,b,c)()()()();
+}
+
+
+
+var t = 
+{
+	{1,2,3},
+	{"a","b","c"},
+	{x,y,z}
+};
+
+/*
+测试注释1
+*/
+
+var func_test(a,b,c)
+{
+//测试注释2
+	print(a,b,c);
+}
+
+
+

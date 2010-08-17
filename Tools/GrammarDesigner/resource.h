@@ -15,7 +15,9 @@
 #define ID_VIEW_CUSTOMIZE               126
 #define IDR_MAINFRAME                   128
 #define IDR_MAINFRAME_256               129
+#define IDR_MAIN_VIEW                   129
 #define IDR_GrammarDesignerTYPE         130
+#define IDR_INPUT_VIEW                  130
 #define ID_VIEW_OUTPUTWND               149
 #define IDS_OUTPUT_WND                  157
 #define IDI_OUTPUT_WND                  165
@@ -53,7 +55,6 @@
 #define IDC_APP_VERSION                 1007
 #define IDC_APP_COPYRIGHT               1008
 #define IDC_APP_NAME                    1009
-#define IDC_HOMEPAGE                    1010
 #define IDC_APP_HOMEPAGE                1010
 #define ID_EDIT_UNDO32771               32771
 #define ID_EDIT_SELECTALL               32772
@@ -153,6 +154,8 @@
 #define ID_FLAGS_SINGLELINE             32886
 #define ID_FLAGS_IGNORECASE             32887
 #define ID_SHOW_LEFTFACTOR              32888
+#define ID_VIEW_FULLSCREEN              32889
+#define ID_INPUT_FONTDLG                32897
 #define ID_INDICATOR_LINE               59142
 #define ID_INDICATOR_COL                59143
 #define IDS_ACTVIEW_WND                 61204
@@ -166,7 +169,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        324
-#define _APS_NEXT_COMMAND_VALUE         32889
+#define _APS_NEXT_COMMAND_VALUE         32898
 #define _APS_NEXT_CONTROL_VALUE         1011
 #define _APS_NEXT_SYMED_VALUE           310
 #endif

@@ -712,7 +712,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;__LIB"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				UsePrecompiledHeader="2"
+				UsePrecompiledHeader="1"
 				AssemblerOutput="0"
 				WarningLevel="4"
 				DebugInformationFormat="4"

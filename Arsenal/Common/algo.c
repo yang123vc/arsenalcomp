@@ -225,7 +225,7 @@ void AR_qsort(void *base, size_t num, size_t width, int_t (*cmp_f)(const void*, 
 		}
 }
 
-
+/*
 int_t AR_bsearch(const void *key, const void *base, size_t num, size_t width, int_t (*cmp_f)(const void*, const void*))
 {
 		int_t l,r,m,cmp;
@@ -251,6 +251,56 @@ int_t AR_bsearch(const void *key, const void *base, size_t num, size_t width, in
 				}
 		}
 
+		return -1;
+}
+*/
+
+
+int_t AR_bsearch(const void *key, const void *base, size_t num, size_t width, int_t (*cmp_f)(const void*, const void*))
+{
+		const byte_t	*lo, *hi, *mid;
+		size_t	half;
+		int_t	result;
+		AR_ASSERT(base != NULL && width > 0 && cmp_f != NULL && key != NULL);
+
+		lo = (const byte_t*)base; hi = (const byte_t*)base + (num - 1) * width;
+		
+		while(lo <= hi)
+		{
+				if((half = num /2) != 0)
+				{
+						mid = lo + (num & 1 ? half : (half - 1)) * width;
+						result = cmp_f(key, mid);
+						
+						if(result == 0)
+						{
+								return (mid - (const byte_t*)base) / width;
+
+						}else if(result < 0)
+						{
+								hi = mid - width;
+								num = num & 1 ? half : half - 1;
+						}else
+						{
+								lo = mid + width;
+								num = half;
+						}
+				}else if(num != 0)
+				{
+						result = cmp_f(key, (const void*)lo);
+						if(result == 0)
+						{
+								return (lo - (const byte_t*)base) / width;
+						}else
+						{
+								break;
+						}
+				}else
+				{
+						break;
+				}
+				
+		}
 		return -1;
 }
 

@@ -16,6 +16,7 @@
 [section1] ;×¢ÊÍ:xxxxxxx
 
 */
+
 %token	comment_post	:	";[^\r\n]*"				,	1
 					;
 
@@ -42,16 +43,23 @@
 					;
 
 
-%token	string   		:	"[^ ;\r\n\[\]][^;\r\n\[\]]*"
+%token	section		:	"\[.+\]"
 					;
+
+%token	string   		:	"[^ ;\r\n][^;\r\n]*"
 					;
-%token	"["			:	"\["	,	2
+
+
+
+%token	combine_str	:	"([^ ;\r\n][^;\r\n]*\\[ \t\r]*)(?=((\r)*\n))" , 2
 					;
-%token	"]"			:	"\]"	,	2
-					;
+
+
+
 
 
 %start	ini_file		;
+
 
 ini_file				:	item_list
 					;
@@ -61,25 +69,32 @@ item_list				:	item_list	item
 					|	item
 					;
 
+
 item					:	section_header
 					|	comment_line
 					|	info
 					;
 
+
 comment				:	comment_post
 					|	.
 					;
 
-section_header			:	"[" string "]" 	comment LINE_END
-					|	"[" error "]"	comment LINE_END
+
+section_header			:	section 	comment LINE_END
 					;
 
-
-
 info					:	string comment LINE_END
+					|	combine_string comment LINE_END
 					|	error comment LINE_END
 					;
 
+combine_string			:	combine_list	string
+					;
+
+combine_list			:	combine_str comment LINE_END combine_list
+					|	combine_str comment LINE_END
+					;
 
 
 
