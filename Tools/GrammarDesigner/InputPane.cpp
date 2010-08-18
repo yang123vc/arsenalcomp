@@ -139,6 +139,8 @@ LRESULT CInputPane::OnLocateToken(WPARAM wp, LPARAM lp)
 		
 		ASSERT(node != NULL);
 
+		CString buf;
+		m_input.GetWindowText(buf);
 		int index = m_input.LineIndex((int)node->m_line);
 		
 		if(index != -1)
@@ -147,9 +149,18 @@ LRESULT CInputPane::OnLocateToken(WPARAM wp, LPARAM lp)
 				m_input.SetCaretPos(pt);
 				//int cnt = m_input.LineLength(index);
 
+
 				if(node->m_cnt)
 				{
-						m_input.SetSel(index + (int)node->m_col, index + (int)node->m_col + (int)node->m_cnt);
+						const wchar_t *p = node->m_name.GetString();
+						int cnt = (int)node->m_cnt;
+						while(*p)
+						{
+								if(*p == TEXT('\n'))cnt--;
+								++p;
+						}
+						//m_input.SetSel(index + (int)node->m_col, index + (int)node->m_col + (int)node->m_cnt);
+						m_input.SetSel(index + (int)node->m_col, index + (int)node->m_col + cnt);
 				}
 		}
 		
@@ -157,9 +168,6 @@ LRESULT CInputPane::OnLocateToken(WPARAM wp, LPARAM lp)
 		//m_input.Invalidate();
 	
 		return 0;
-
-		return 0;
-
 }
 
 
