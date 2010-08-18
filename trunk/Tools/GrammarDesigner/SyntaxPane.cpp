@@ -120,10 +120,10 @@ ON_NOTIFY_REFLECT(NM_RCLICK, &CSyntaxTree::OnNMRClick)
 ON_COMMAND(ID_POPUP_FONT32864, &CSyntaxTree::OnPopupFont32864)
 ON_COMMAND(ID_POPUP_CLEAR32865, &CSyntaxTree::OnPopupClear32865)
 ON_UPDATE_COMMAND_UI(ID_POPUP_CLEAR32865, &CSyntaxTree::OnUpdatePopupClear32865)
-ON_COMMAND(ID_SYNTAX_MENU_EXPANDALL, &CSyntaxTree::OnSyntaxMenuExpandall)
-ON_UPDATE_COMMAND_UI(ID_SYNTAX_MENU_EXPANDALL, &CSyntaxTree::OnUpdateSyntaxMenuExpandall)
-ON_COMMAND(ID_POPUP_COLLAPSEALL, &CSyntaxTree::OnPopupCollapseall)
-ON_UPDATE_COMMAND_UI(ID_POPUP_COLLAPSEALL, &CSyntaxTree::OnUpdatePopupCollapseall)
+ON_COMMAND(ID_SYNTAX_MENU_EXPAND, &CSyntaxTree::OnSyntaxMenuExpand)
+ON_UPDATE_COMMAND_UI(ID_SYNTAX_MENU_EXPAND, &CSyntaxTree::OnUpdateSyntaxMenuExpand)
+ON_COMMAND(ID_POPUP_COLLAPSE, &CSyntaxTree::OnPopupCollapse)
+ON_UPDATE_COMMAND_UI(ID_POPUP_COLLAPSE, &CSyntaxTree::OnUpdatePopupCollapse)
 END_MESSAGE_MAP()
 
 
@@ -235,11 +235,29 @@ void CSyntaxTree::OnContextMenu(CWnd* pWnd, CPoint point)
 void CSyntaxTree::OnNMRClick(NMHDR *pNMHDR, LRESULT *pResult)
 {
 		// TODO: Add your control notification handler code here
-		*pResult = 0;
-		
+	
+
+		POINT pos ;
+		if(!GetCursorPos(&pos))
+				return ;
+		this->ScreenToClient(&pos);
+		UINT uFlags;
+		HTREEITEM hItem = this->HitTest(pos, &uFlags);
+		if ((hItem != NULL) && (TVHT_ONITEM & uFlags))
+		{
+				this->Select(hItem, TVGN_CARET);
+		}else
+		{
+				this->SelectItem(NULL);
+		}
+
 		CPoint pt;
 		GetCursorPos(&pt);
 		OnContextMenu(this, pt);
+
+		*pResult = 0;
+		
+		
 }
 
 void CSyntaxTree::OnPopupFont32864()
@@ -330,30 +348,63 @@ void	CSyntaxTree::ExpandAll(DWORD action )
 		}
 } 
 
-
-
-
-void CSyntaxTree::OnSyntaxMenuExpandall()
+void CSyntaxTree::ExpandItem(HTREEITEM	item, DWORD action)
 {
-		// TODO: Add your command handler code here
-		ExpandAll();		
+		if(item == NULL)return ;
+
+		CList<HTREEITEM> que;
+		
+		if(item != NULL)que.AddTail(item);
+		
+		while(!que.IsEmpty())
+		{
+				item = que.RemoveHead();
+
+				if(this->ItemHasChildren(item))
+				{
+						//VERIFY(this->Expand(item, TVE_EXPAND));
+						this->Expand(item, action);
+						
+
+						HTREEITEM chd = this->GetChildItem(item);
+
+						while(chd != NULL)
+						{
+								que.AddTail(chd);
+								chd = this->GetNextSiblingItem(chd);
+						}
+				}
+		}
 }
 
-void CSyntaxTree::OnUpdateSyntaxMenuExpandall(CCmdUI *pCmdUI)
-{
-		// TODO: Add your command update UI handler code here
-		pCmdUI->Enable(m_root != NULL);
-}
 
-void CSyntaxTree::OnPopupCollapseall()
+void CSyntaxTree::OnSyntaxMenuExpand()
 {
 		// TODO: Add your command handler code here
-		ExpandAll(TVE_COLLAPSE);
+		/*ExpandAll();*/
+		
+		this->ExpandItem(this->GetSelectedItem(), TVE_EXPAND);
 		
 }
 
-void CSyntaxTree::OnUpdatePopupCollapseall(CCmdUI *pCmdUI)
+
+void CSyntaxTree::OnPopupCollapse()
+{
+		// TODO: Add your command handler code here
+		//ExpandAll(TVE_COLLAPSE);
+		
+		this->ExpandItem(this->GetSelectedItem(), TVE_COLLAPSE);
+}
+
+void CSyntaxTree::OnUpdateSyntaxMenuExpand(CCmdUI *pCmdUI)
 {
 		// TODO: Add your command update UI handler code here
-		pCmdUI->Enable(m_root != NULL);
+		pCmdUI->Enable(this->GetSelectedItem() != NULL);
+}
+
+
+void CSyntaxTree::OnUpdatePopupCollapse(CCmdUI *pCmdUI)
+{
+		// TODO: Add your command update UI handler code here
+		pCmdUI->Enable(this->GetSelectedItem() != NULL);
 }
