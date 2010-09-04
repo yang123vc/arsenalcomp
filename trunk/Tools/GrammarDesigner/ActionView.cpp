@@ -351,13 +351,15 @@ void	CActionView::DrawConflictView(const ARSpace::psrConflictView_t *view)
 
 		this->m_list.InsertColumn(0, TEXT("Name"), 0, rect.Width()/ 3 * 1);
 		this->m_list.InsertColumn(1, TEXT("Conflict"), 0, rect.Width() / 3 * 2);
-
+		
 
 		for(i = 0; i < view->count; ++i)
 		{
 				const ARSpace::psrConflictItem_t *item = view->conflict[i];
 				ASSERT(item->count > 0);
-				this->m_list.InsertItem(this->m_list.GetItemCount(), item->name);
+				CString name;
+				name.Format(TEXT("%s  :  %s"), item->name, item->lookahead);
+				this->m_list.InsertItem(this->m_list.GetItemCount(), name);
 				
 				for(k = 0; k < item->count; ++k)
 				{

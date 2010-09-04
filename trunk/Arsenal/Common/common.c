@@ -103,7 +103,6 @@ void	AR_error_ctx(arIOCtx_t *ctx, int_t level, const wchar_t *msg, ...)
 				ctx->on_error(level, buf, ctx->ctx);
 				AR_DEL(buf);
 		}
-
 }
 
 

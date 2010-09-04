@@ -275,8 +275,6 @@ void CGrammarDesignerView::OnEditFontdlg()
 
 BOOL   CGrammarDesignerView::SetWordWrap(BOOL   bWordWrap)
 {   
-
-
 		if(!bWordWrap)
 		{
 				this->m_nWordWrap = WrapNone;
@@ -441,7 +439,6 @@ void CGrammarDesignerView::OnLButtonDown(UINT nFlags, CPoint point)
 		*/
 
 		long start = -1, end = -1;
-		
 		this->GetRichEditCtrl().GetSel(start, end);
 
 		if(start != -1 && end != -1)
@@ -455,6 +452,72 @@ void CGrammarDesignerView::OnLButtonDown(UINT nFlags, CPoint point)
 
 		CRichEditView::OnLButtonDown(nFlags, point);
 }
+
+
+
+static void __get_line_col(CRichEditCtrl &ctrl, int &line, int &col)
+{
+		CPoint   VarCharPoint;                   //指定字符的位置   
+		CPoint   CurrPoint;                         //当前光标位置   
+		int   LineFirstIndex;                     //当前行首字符位置   
+		int   Length;                                     //当前行长度   
+
+		int   CurrentCharIndex = 0;                 //当前编辑光标所在字符序号。   
+		int   CurrentLine= 0;                           //当前编辑光标所在的行号   
+		int   CurrentRow= 0;                             //当前编辑光标所在的列号   
+		int   i;
+		CurrPoint		=   ctrl.GetCaretPos();                 //获取光标位置   
+		LineFirstIndex  =   ctrl.LineIndex(-1);       //获取当前行首字符位置   
+		Length			=   ctrl.LineLength(-1);                     //获取当前行长度.   
+
+		for   (i  =   0;   i   <   Length;   i++)   
+		{   
+				VarCharPoint   =  ctrl.GetCharPos(LineFirstIndex);   
+				if   (VarCharPoint.x   >=   CurrPoint.x)   
+				{   
+						CurrentCharIndex   =   LineFirstIndex;   
+						break;   
+				}   
+				LineFirstIndex++;   
+		}   
+
+		CurrentRow   =   i;   //列号   
+		CurrentLine   =   ctrl.LineFromChar(   -1   );   //行号   
+
+
+		line = CurrentLine;
+		col = CurrentRow;
+}
+
+
+
+
+void CGrammarDesignerView::OnLButtonDblClk(UINT nFlags, CPoint point)
+{
+		// TODO: Add your message handler code here and/or call default
+		
+		CRichEditCtrl	&ctrl = this->GetRichEditCtrl();
+		
+		int line,col;
+		__get_line_col(ctrl, line,col);
+		
+		if(line != -1 && col != -1)
+		{
+		
+				int len = ctrl.LineLength(ctrl.LineIndex(line));
+				if(len > 0)
+				{
+						TCHAR *buf = new TCHAR[len + 1];
+						this->GetRichEditCtrl().GetLine(line, buf, len + 1);
+						buf[len] = 0;
+						delete []buf;
+				}
+		}
+		
+		CRichEditView::OnLButtonDblClk(nFlags, point);
+
+}
+
 
 
 LRESULT CGrammarDesignerView::OnLocatePos(WPARAM wp, LPARAM lp)
@@ -736,13 +799,6 @@ LRESULT CGrammarDesignerView::OnBuildTagCompleted(WPARAM wp, LPARAM lp)
 
 
 
-void CGrammarDesignerView::OnLButtonDblClk(UINT nFlags, CPoint point)
-{
-		// TODO: Add your message handler code here and/or call default
-	
-		CRichEditView::OnLButtonDblClk(nFlags, point);
-
-}
 
 
 

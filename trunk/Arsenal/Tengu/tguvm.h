@@ -39,8 +39,7 @@ typedef struct	__insctruction_tag		tguIns_t;
 
 
 
-typedef	double							tguFloat_t;
-typedef	int_64_t						tguInt_t;
+typedef	double							tguNumber_t;
 
 typedef	bool_t							tguBoolean_t;
 
@@ -61,8 +60,7 @@ typedef	struct __tengu_function_tag		tguFunc_t;
 
 typedef union __tengu_value_tag
 {
-		tguFloat_t		float_num;
-		tguInt_t		int_num;
+		tguNumber_t		number;
 		tguBoolean_t	boolean;
 		tguString_t		*str;
 		tguTable_t		*table;
@@ -73,10 +71,9 @@ typedef union __tengu_value_tag
 
 enum
 {
-		TGU_TYPE_NIL,
-		TGU_TYPE_FLOAT,
-		TGU_TYPE_INT,
+		TGU_TYPE_NULL,
 		TGU_TYPE_BOOL,
+		TGU_TYPE_NUMBER,
 		TGU_TYPE_STR,
 		TGU_TYPE_TABLE,
 		TGU_TYPE_FUNC,
@@ -86,8 +83,8 @@ enum
 
 typedef struct __tgu_object_tag
 {
-		uint_8_t		type;
 		tguValue_t		val;
+		uint_8_t		type;
 }tguObject_t;
 
 
@@ -105,54 +102,44 @@ struct __tengu_function_tag
 
 typedef enum 
 {
-		/*----------------------------------------------------------------------
-		name		args	stack before	stack after	side effects
-		------------------------------------------------------------------------*/
-		OP_RETURN,	/*	U	v_n-v_x(at u)	(return)	returns v_x-v_n	*/
-		OP_CALL,		/*		A B	v_n-v_1 f(at a)	r_b-r_1		f(v1,...,v_n)	*/
 
-		OP_PUSHNULL,	/*		U	-		nil_1-nil_u			*/
-		OP_PUSHSTRING,	/* K	-		KSTR[k]				*/
-		OP_PUSHNUM,		/* N	-		KNUM[n]				*/
-		OP_POP,			/*	U	a_u-a_1		-				*/
+		OP_PUSH_NULL			,		
+		OP_PUSH_BOOL			,
+		OP_PUSH_NUMBER			,
+		OP_PUSH_STRING			,
+		OP_PUSH_FUNCTION		,
+		
+		OP_POP					,
+		
+		OP_ADJUST				,
+		
+		OP_GET_TABLE			,
+		OP_SET_TABLE			,
+		
+		OP_SET_LIST				,	
+		OP_NEW_TABLE			,
 
-		OP_GETLOCAL,/*	L	-		LOC[l]				*/
-		OP_GETGLOBAL,/*	K	-		VAR[KSTR[k]]			*/
+		
+		
+		OP_EQ					,
+		OP_LT					,
+		OP_LE					,
+		OP_GT					,
+		OP_GE					,
+		OP_ADD					,
+		OP_SUB					,
+		OP_MUL					,
+		OP_DIV					,
+		OP_MOD					,
+		OP_MINUS				,
+		OP_NOT					,
+		
+		OP_JMP					,
+		OP_TEST					,
+		OP_TESTTEST				,
 
-		OP_GETTABLE,/*	-	i t		t[i]				*/
-
-		OP_CREATETABLE,/* U	-		newarray(size = u)		*/
-
-		OP_SETLOCAL,/*	L	x		-		LOC[l]=x	*/
-		OP_SETGLOBAL,/*	K	x		-		VAR[KSTR[k]]=x	*/
-		OP_SETTABLE,/*	A B	v a_a-a_1 i t	(pops b values)	t[i]=v		*/
-
-		OP_SETLIST,/*	A B	v_b-v_1 t	t		t[i+a*FPF]=v_i	*/
-		OP_SETMAP,/*	U	v_u k_u - v_1 k_1 t	t	t[k_i]=v_i	*/
-
-		OP_ADD,/*	-	y x		x+y				*/
-		OP_SUB,/*	-	y x		x-y				*/
-		OP_MUL,/*	-	y x		x*y				*/
-		OP_DIV,/*	-	y x		x/y				*/
-		OP_MOD,/*	-	y x		x%y				convert to int*/
-		OP_UMINUS,/*	-	x		-x				*/
-		OP_NOT,	 /*	-	x		(x==nil)? 1 : nil		*/
-
-		OP_JMPNE,/*	J	y x		-		(x!=y)? PC+=s	*/
-		OP_JMPEQ,/*	J	y x		-		(x==y)? PC+=s	*/
-		OP_JMPLT,/*	J	y x		-		(x<y)? PC+=s	*/
-		OP_JMPLE,/*	J	y x		-		(x<y)? PC+=s	*/
-		OP_JMPGT,/*	J	y x		-		(x>y)? PC+=s	*/
-		OP_JMPGE,/*	J	y x		-		(x>=y)? PC+=s	*/
-
-		OP_JMPT,/*	J	x		-		(x!=null)? PC+=s	*/
-		OP_JMPF,/*	J	x		-		(x==null)? PC+=s	*/
-		OP_JMPONT,/*	J	x			(x!=null)? x : -	(x~=nil)? PC+=s	*/
-		OP_JMPONF,/*	J	x			(x==null)? x : -	(x==nil)? PC+=s	*/
-		OP_JMP,/*	J	-		-		PC+=s		*/
-
-		OP_PUSHNULLJMP/* -	-			nil		PC++;		*/
-
+		OP_CALL					,
+		OP_RETURN				
 }tguOpCode;
 
 
@@ -175,7 +162,7 @@ typedef struct __call_info_tag
 		tguStackID_t	*top;
 }tguCallInfo_t;
 
-#define	TGU_MAX_CALL			40
+#define	TGU_MAX_CALL			256
 
 typedef struct __tengu_call_stack_tag
 {
@@ -193,13 +180,14 @@ typedef struct __tengu_call_stack_tag
 struct	__tengu_machine_tag
 {
 /***************************Run************************/
-		tguIns_t		*pc;		
+		tguIns_t		*pc;
 		tguStackID_t	*base;
 		tguStackID_t	*top;
 
 		tguCallStack_t	stack;
 		tguCallInfo_t	ci[TGU_MAX_CALL];
 		size_t			call_cnt;
+
 /**************************POOL**********************/		
 		tguString_t		*str_root;
 		tguTable_t		*table_root;

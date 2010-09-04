@@ -1091,12 +1091,26 @@ void bsearch_test()
 		
 		//assertEquals(2, Util.binarySearch(arrayWith42, 42));
 		//assertEquals(-1, Util.binarySearch(arrayWith42, 43));
+}
+
+void float_test()
+{
+		AR_printf(L"%f\r\n", AR_FLT_MOD(5,0.8));
+		AR_printf(L"%f\r\n", AR_FLT_MOD(5,0.8));
+
+		AR_printf(L"%f\r\n", AR_DBL_MOD(5,4));
+		AR_printf(L"%f\r\n", AR_DBL_MOD(5,4));
+
+		AR_ASSERT(AR_DBL_EQ(AR_DBL_MOD(5,4), 1));
+		AR_ASSERT(AR_DBL_EQ(AR_DBL_MOD(5,3), 2));
+		AR_ASSERT(AR_DBL_EQ(AR_DBL_MOD(4,5), 4));
+		
 
 }
 
 void com_test()
 {
-		bsearch_test();
+		//bsearch_test();
 		//algo_test1();
 		//str_test1();
 		//str_test2();
@@ -1144,6 +1158,7 @@ void com_test()
 
 		//byte_filp_test();
 
+		float_test();
 }
 
 

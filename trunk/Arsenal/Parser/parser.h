@@ -499,6 +499,7 @@ void					PSR_DestroyParserActionView(const psrActionView_t *view);
 typedef struct __parser_conflict_item_tag
 {
 		wchar_t			*name;
+		wchar_t			*lookahead;
 		wchar_t			**items;
 		size_t			count;
 }psrConflictItem_t;
