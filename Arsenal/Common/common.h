@@ -197,6 +197,9 @@ static AR_INLINE const void* AR_GET_ELEM(const void *base, size_t width, size_t 
 #define AR_FLT_LEEQ(_x, _y)		(bool_t)( AR_FLT_EQ((_x), (_y)) || AR_FLT_LE((_x), (_y)) )
 #define AR_FLT_GEEQ(_x, _y)		(bool_t)( AR_FLT_EQ((_x), (_y)) || AR_FLT_GE((_x), (_y)) )
 
+#define AR_FLT_MOD(_x,_y)		((float)(_x) - floor((float)(_x) / (float)(_y)) * (float)(_y))
+#define AR_FLT_POW(_x,_y)		(float)pow((float)(_x), (float)(_y))
+
 
 
 #define AR_DBL_EQ(_x, _y)		(bool_t)(fabs( (((double)(_x)) - ((double)(_y)))) < DBL_EPSILON)
@@ -205,7 +208,8 @@ static AR_INLINE const void* AR_GET_ELEM(const void *base, size_t width, size_t 
 #define AR_DBL_LEEQ(_x, _y)		(bool_t)( AR_DBL_EQ((_x), (_y)) || AR_DBL_LE((_x), (_y)))
 #define AR_DBL_GEEQ(_x, _y)		(bool_t)( AR_DBL_EQ((_x), (_y)) || AR_DBL_GE((_x), (_y)))
 
-
+#define AR_DBL_MOD(_x,_y)		((double)(_x) - floor((double)(_x) / (double)(_y)) * (double)(_y))
+#define AR_DBL_POW(_x,_y)		(double)pow((double)(_x), (double)(_y))
 
 /**********************************************************memory***************************************************************/
 

@@ -197,6 +197,7 @@ int_t					PSR_CompConfigList(const lalrConfigList_t *l, const lalrConfigList_t *
 				if(cmp != 0)return cmp;
 		}
 		
+		AR_ASSERT((a - b) == 0);
 		return (int_t)a - (int_t)b;
 
 }

@@ -177,9 +177,9 @@ static void				TGU_DestroyParserNode(parserNode_t	*node)	;
 %token	"var"		:	'"var"(?!{keyword_lhd})'		,1					%action	"TOK_VAR"			;
 
 
-
+/*
 %token	"..."		:	'"..."'		,2								%action 	"TOK_ELLIPSIS"		;	
-
+*/
 
 %token	"++"		:	'"++"'		,1								%action	"TOK_INC"	;
 %token	"--"		:	'"--"'		,1								%action	"TOK_DEC"		;
@@ -225,7 +225,7 @@ static void				TGU_DestroyParserNode(parserNode_t	*node)	;
 %token	":"		:	'":"'			,0								%action "TOK_COLON"				;
 %token	"?"		:	'"?"'			,0								%action "TOK_QUEST"				;
 
-
+%token	"."		:	'"."'			,0								%action "TOK_DOT"				;
 
 
 %right	"?"	":"							;
@@ -248,8 +248,7 @@ static void				TGU_DestroyParserNode(parserNode_t	*node)	;
 
 
 /**************************************************************************************/
-%start	program	;			
-
+%start	program	;
 
 
 program			:	translation_unit	%action handle_translation_unit
@@ -435,8 +434,11 @@ expression_list		:	expression_list "," expression
 
 
 
-variable			:	NAME
-				|	variable "["	expression  "]"
+variable			:	variable "["	expression  "]"
+				|	NAME
+/*
+				|	variable  "."	NAME
+*/
 				;
 
 
@@ -463,9 +465,12 @@ filed_list 			:	filed
 
 filed					:	expression
 					|	table_constructor
-					|	"["	expression	"]"	"="  expression
+/*
 					|	NAME				"="	expression
 					|	NAME				"="	table_constructor
+					|	"["	expression	"]"	"="  expression
+*/
+
 					;
 
 
@@ -478,12 +483,14 @@ function_defination		:	"var"		NAME	"("	params	")"	compound_statement
 					;
 
 
-
-params				:	namelist	","	"..."
-					|	namelist
-					|	"..."
+params				:	namelist
 					|	.
+/*
+					|	"..."
+					|	namelist	","	"..."
+*/
 					;
+
 
 
 namelist				:	namelist	"," NAME

@@ -186,6 +186,7 @@ typedef struct __cfg_report_info_tag
 		cfgReportType_t			type;
 		
 		union{
+
 		struct					{
 				const	wchar_t			*message;
 		

@@ -56,9 +56,6 @@
 %token	ACTION		:	"%action(?={skip_lexem}+)"
 					;
 
-%token	CODE_BLOCK		:	'\{((\\\{|\\\})|[^\{\}])*?\}'
-					;
-
 %token	ASSOC			:	'"%"(left|right|nonassoc)(?={key_lookahead})'
 					;
 
@@ -70,8 +67,18 @@
 					;
 
 
-%token	CODE			:	"%code"
+
+%token	CODE			:	'"%code"'
 					;
+
+%token	CODE_BLOCK		:	'\{((\\\{|\\\})|[^\{\}])*?\}'
+					;
+
+/*
+%token	PRE_DEF_BLOCK	:	'%\{[^\u0000]*?%\}'	
+					;
+*/
+
 
 
 

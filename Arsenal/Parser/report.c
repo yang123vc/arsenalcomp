@@ -57,15 +57,21 @@ const	psrConflictView_t*		PSR_CreateConflictView(const psrActionTable_t *tbl, co
 				{
 						
 						const psrAction_t		*act = tbl->actions[AR_TBL_IDX_R(i,k,tbl->col)];
-						//const psrRule_t			*rule = PSR_GetRuleOfGrammar(grammar, act->rule_num);
+						/*
+						const psrRule_t			*rule = PSR_GetRuleOfGrammar(grammar, act->rule_num);
+						*/
 						
 						if(act->next == NULL)continue;
 						
 						AR_ClearString(str);
 						item = AR_NEW0(psrConflictItem_t);
+						/*
 						AR_AppendFormatString(str,L"state[%" AR_PLAT_INT_FMT L"d] : %ls",(size_t)i, tbl->term_set.lst[k]->name);
+						*/
+						AR_AppendFormatString(str,L"state[%" AR_PLAT_INT_FMT L"d]",(size_t)i);
 						item->name = AR_wcsdup(AR_GetStrString(str));
 						AR_ClearString(str);
+						item->lookahead = AR_wcsdup(tbl->term_set.lst[k]->name);
 
 						while(act != NULL)
 						{
@@ -138,6 +144,7 @@ void							PSR_DestroyConflictView(const psrConflictView_t *view)
 						psrConflictItem_t		*item = view->conflict[i];
 						
 						AR_DEL(item->name);
+						AR_DEL(item->lookahead);
 						for(k = 0; k < item->count; ++k)
 						{
 								AR_DEL(item->items[k]);
