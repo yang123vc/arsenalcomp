@@ -55,12 +55,12 @@ static struct {const wchar_t *name; size_t tokval; size_t lex_prec; const wchar_
 #define __TERM_COUNT__ ((size_t)10)
 
 static struct {const wchar_t *name; size_t tokval; size_t prec_level; psrAssocType_t	assoc;}__g_prec_pattern[] =  {
-{L"+", OP_ADD,1, PSR_ASSOC_LEFT},
-{L"-", OP_MINUS,1, PSR_ASSOC_LEFT},
-{L"*", OP_MUL,2, PSR_ASSOC_LEFT},
-{L"/", OP_DIV,2, PSR_ASSOC_LEFT},
-{L"%", OP_MOD,2, PSR_ASSOC_LEFT},
-{L"UMINUS", 267,3, PSR_ASSOC_RIGHT}
+{L"+", OP_ADD,1, PARSER_ASSOC_LEFT},
+{L"-", OP_MINUS,1, PARSER_ASSOC_LEFT},
+{L"*", OP_MUL,2, PARSER_ASSOC_LEFT},
+{L"/", OP_DIV,2, PARSER_ASSOC_LEFT},
+{L"%", OP_MOD,2, PARSER_ASSOC_LEFT},
+{L"UMINUS", 267,3, PARSER_ASSOC_RIGHT}
 };
 
 #define __PREC_COUNT__ ((size_t)6)
@@ -96,12 +96,12 @@ static lex_t*	__build_lex(const arIOCtx_t *io)
 {																				
 		lex_t	*lex;															
 		size_t i;																
-		lex = LEX_Create(io);													
+		lex = Lex_Create(io);													
 		for(i = 0; i < __NAME_COUNT__; ++i)										
 		{																		
-				if(!LEX_Insert(lex, __g_lex_name[i]))							
+				if(!Lex_Insert(lex, __g_lex_name[i]))							
 				{																
-						LEX_Destroy(lex);										
+						Lex_Destroy(lex);										
 						AR_ASSERT(false);										
 						return NULL;											
 				}																
@@ -112,9 +112,9 @@ static lex_t*	__build_lex(const arIOCtx_t *io)
 				act.is_skip		=		__g_term_pattern[i].skip;				
 				act.priority	=		__g_term_pattern[i].lex_prec;			
 				act.value		=		__g_term_pattern[i].tokval;				
-				if(!LEX_InsertRule(lex, __g_term_pattern[i].regex, &act))		
+				if(!Lex_InsertRule(lex, __g_term_pattern[i].regex, &act))		
 				{																
-						LEX_Destroy(lex);										
+						Lex_Destroy(lex);										
 						AR_ASSERT(false);										
 						return NULL;											
 				}																
@@ -127,13 +127,13 @@ static psrGrammar_t*	__build_grammar(const psrHandler_t	*handler, const arIOCtx_
 		psrGrammar_t	*grammar;																								
 		size_t i;																												
 		AR_ASSERT(handler != NULL);																								
-		grammar = PSR_CreateGrammar(handler, io);																				
+		grammar = Parser_CreateGrammar(handler, io);																				
 		for(i = 0; i < __TERM_COUNT__; ++i)																						
 		{																														
 				if(__g_term_pattern[i].skip || __g_term_pattern[i].tokval == 0)continue;										
-				if(!PSR_InsertTerm(grammar, __g_term_pattern[i].name, __g_term_pattern[i].tokval, PSR_ASSOC_NONASSOC,0, __build_leaf))	
+				if(!Parser_InsertTerm(grammar, __g_term_pattern[i].name, __g_term_pattern[i].tokval, PARSER_ASSOC_NONASSOC,0, __build_leaf))	
 				{																												
-						PSR_DestroyGrammar(grammar);																			
+						Parser_DestroyGrammar(grammar);																			
 						grammar = NULL;																							
 						AR_ASSERT(false);																						
 						return NULL;																							
@@ -142,12 +142,12 @@ static psrGrammar_t*	__build_grammar(const psrHandler_t	*handler, const arIOCtx_
 		for(i = 0; i < __PREC_COUNT__; ++i)																						
 		{																														
 				psrTermInfo_t	*info;																							
-				info = PSR_GetTermSymbInfoByName(grammar, __g_prec_pattern[i].name);											
+				info = Parser_GetTermSymbInfoByName(grammar, __g_prec_pattern[i].name);											
 				if(info == NULL)																								
 				{																												
-						if(!PSR_InsertTerm(grammar, __g_prec_pattern[i].name, __g_prec_pattern[i].tokval, __g_prec_pattern[i].assoc, __g_prec_pattern[i].prec_level, NULL))
+						if(!Parser_InsertTerm(grammar, __g_prec_pattern[i].name, __g_prec_pattern[i].tokval, __g_prec_pattern[i].assoc, __g_prec_pattern[i].prec_level, NULL))
 						{																																					
-								PSR_DestroyGrammar(grammar);																												
+								Parser_DestroyGrammar(grammar);																												
 								grammar = NULL;																																
 								AR_ASSERT(false);																															
 								return NULL;																																
@@ -160,17 +160,17 @@ static psrGrammar_t*	__build_grammar(const psrHandler_t	*handler, const arIOCtx_
 		}																																									
 		for(i = 0; i < __RULE_COUNT__; ++i)																													
 		{																																									
-				if(!PSR_InsertRuleByStr(grammar, __g_rule_pattern[i].rule, __g_rule_pattern[i].prec_token, __g_rule_pattern[i].handler, __g_rule_pattern[i].auto_ret))		
+				if(!Parser_InsertRuleByStr(grammar, __g_rule_pattern[i].rule, __g_rule_pattern[i].prec_token, __g_rule_pattern[i].handler, __g_rule_pattern[i].auto_ret))		
 				{																																							
-						PSR_DestroyGrammar(grammar);																														
+						Parser_DestroyGrammar(grammar);																														
 						grammar = NULL;																																		
 						AR_ASSERT(false);																																	
 						return NULL;																																		
 				}																																							
 		}																																									
-		if(!PSR_SetFirstRule(grammar,START_RULE) || !PSR_CheckIsValidGrammar(grammar))																						
+		if(!Parser_SetFirstRule(grammar,START_RULE) || !Parser_CheckIsValidGrammar(grammar))																						
 		{																																									
-				PSR_DestroyGrammar(grammar);																																
+				Parser_DestroyGrammar(grammar);																																
 				grammar = NULL;																																				
 				AR_ASSERT(false);																																			
 				return NULL;																																				
@@ -376,30 +376,30 @@ static int calc(const wchar_t *input)
 		bool_t is_ok;
 		lex = __build_lex(NULL);
 		grammar = __build_grammar(&__g_handler, NULL);
-		parser = PSR_CreateParser(grammar, PSR_SLR);
-		ctx = PSR_CreateContext(parser, NULL);
+		parser = Parser_CreateParser(grammar, PARSER_SLR);
+		ctx = Parser_CreateContext(parser, NULL);
 
 
-		match = LEX_CreateMatch(lex, NULL);
+		match = Lex_CreateMatch(lex, NULL);
 
-		LEX_ResetInput(match, input);
+		Lex_ResetInput(match, input);
 		
 		is_ok = true;
 		while(is_ok)
 		{
-				is_ok = LEX_Match(match, &tok);
+				is_ok = Lex_Match(match, &tok);
 
 				if(!is_ok)
 				{
-						AR_printf(L"Invalid Token == %ls\r\n", LEX_GetNextInput(match));
+						AR_printf(L"Invalid Token == %ls\r\n", Lex_GetNextInput(match));
 						continue;
 				}else
 				{
 						psrToken_t psr_tok;
 
-						PSR_TOTERMTOK(&tok, &psr_tok);
+						PARSER_TOTERMTOK(&tok, &psr_tok);
 						
-						is_ok = PSR_AddToken(ctx, &psr_tok);
+						is_ok = Parser_AddToken(ctx, &psr_tok);
 						
 						if(is_ok)
 						{
@@ -415,14 +415,14 @@ static int calc(const wchar_t *input)
 		int v = 0;
 		if(is_ok)
 		{
-				v = (int)PSR_GetResult(ctx);
+				v = (int)Parser_GetResult(ctx);
 		}
 
-		LEX_DestroyMatch(match);
-		LEX_Destroy(lex);
-		PSR_DestroyContext(ctx);
-		PSR_DestroyParser(parser);
-		PSR_DestroyGrammar(grammar);
+		Lex_DestroyMatch(match);
+		Lex_Destroy(lex);
+		Parser_DestroyContext(ctx);
+		Parser_DestroyParser(parser);
+		Parser_DestroyGrammar(grammar);
 		
 		return v;
 }

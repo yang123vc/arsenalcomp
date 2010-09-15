@@ -31,9 +31,9 @@ static void parse_code(lex_t *lex, const wchar_t *sources)
 		
 		AR_ASSERT(lex != NULL && sources != NULL);
 		
-		LEX_GenerateTransTable(lex);
+		Lex_GenerateTransTable(lex);
 
-		LEX_InitMatch(&match, sources);
+		Lex_InitMatch(&match, sources);
 
 		{
 				
@@ -46,7 +46,7 @@ static void parse_code(lex_t *lex, const wchar_t *sources)
 
 
 				
-				while(LEX_Match(lex, &match, &tok))
+				while(Lex_Match(lex, &match, &tok))
 				{
 						/*
 						AR_wcsncpy(buf, tok.str, tok.count);
@@ -77,7 +77,7 @@ static void parse_code(lex_t *lex, const wchar_t *sources)
 				AR_printf(L"elapsed == %I64d\r\n", end - beg);
 		}
 
-		LEX_UnInitMatch(&match);
+		Lex_UnInitMatch(&match);
 
 
 }

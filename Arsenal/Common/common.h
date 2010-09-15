@@ -273,10 +273,13 @@ uint_32_t		AR_rand32();
 
 
 
-int_t	AR_stricmp(const char *l, const char *r);
-int_t	AR_strnicmp(const char *l, const char *r, size_t n);
-int_t	AR_wcsicmp(const wchar_t *l, const wchar_t *r);
-int_t	AR_wcsnicmp(const wchar_t *l, const wchar_t *r, size_t n);
+int_t			AR_stricmp(const char *l, const char *r);
+int_t			AR_strnicmp(const char *l, const char *r, size_t n);
+int_t			AR_wcsicmp(const wchar_t *l, const wchar_t *r);
+int_t			AR_wcsnicmp(const wchar_t *l, const wchar_t *r, size_t n);
+
+
+
 
 #define AR_strlen(_s)			strlen((_s))
 #define AR_strcmp(_l, _r)		strcmp((_l), (_r))
@@ -294,6 +297,7 @@ int_t	AR_wcsnicmp(const wchar_t *l, const wchar_t *r, size_t n);
 #define AR_isgraph(_c)			isgraph((_c))
 #define AR_isprint(_c)			isprint((_c))
 
+const char*		AR_stristr(const char *s, const char *p);
 
 
 #define AR_wcscmp(_l, _r)		wcscmp((_l), (_r))
@@ -312,6 +316,7 @@ int_t	AR_wcsnicmp(const wchar_t *l, const wchar_t *r, size_t n);
 #define AR_iswgraph(_c)			iswgraph((_c))
 #define AR_iswprint(_c)			iswprint((_c))
 
+const wchar_t*		AR_wcsistr(const wchar_t *s, const wchar_t *p);
 
 
 wchar_t*		AR_wcsdup(const wchar_t *sour);
@@ -434,6 +439,7 @@ typedef struct __arsenal_string_tag		arString_t;
 arString_t*		AR_CreateString();
 void			AR_DestroyString(arString_t *str);
 
+/*Ô¤Áônum¸öwchar_tµÄ¿Õ¼ä*/
 void			AR_ReserveString(arString_t *str, size_t num);
 void			AR_ClearString(arString_t *str);
 size_t			AR_AppendString(arString_t *str, const wchar_t *sour);

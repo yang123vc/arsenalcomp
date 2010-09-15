@@ -13,7 +13,7 @@ AR_NAMESPACE_BEGIN
 static wchar_t *rule_pattern =
 L"%token{\r\n"
 
-L"	LEX_DEF : 500, LEX_LINE : 501,\r\n"
+L"	Lex_DEF : 500, Lex_LINE : 501,\r\n"
 L"	TOK_DEF : 601, PREC_DEF : 602, RULE_DEF : 603,\r\n"
 L"	LEXEME : 604, NUMBER : 605,  ASSOC_DECL : 606,\r\n"
 L"	\".\" : 607, \"=\" : 608,  \"->\" : 609, \":\" : 610, \"|\" : 611, \",\" : 612, \";\" : 613,\r\n"
@@ -159,22 +159,22 @@ void pcg_test2()
 		psrGrammar_t *gmr;
 		arString_t *str;
 
-		gmr = PSR_CreateGrammar();
+		gmr = Parser_CreateGrammar();
 		str = AR_CreateString();
 
-		//lex = LEX_Create();
-		//AR_ASSERT(LEX_Config(lex, lex_test_pat2));
+		//lex = Lex_Create();
+		//AR_ASSERT(Lex_Config(lex, lex_test_pat2));
 
-		if(PSR_ConfigGrammar(gmr, rule_pattern3))
+		if(Parser_ConfigGrammar(gmr, rule_pattern3))
 		{
-				PSR_PrintGrammar(gmr, str);
+				Parser_PrintGrammar(gmr, str);
 				AR_printf(L"%ls\r\n", AR_GetStrString(str));
 				AR_ClearString(str);
 		}
 		AR_printf(L"\r\n");
 		AR_ClearString(str);
-		//if(PSR_ReportLeftRecursion(gmr,str))
-		if(PSR_ReportLeftRecursion(gmr,NULL))
+		//if(Parser_ReportLeftRecursion(gmr,str))
+		if(Parser_ReportLeftRecursion(gmr,NULL))
 		{
 				AR_printf(L"Recursion:\r\n%ls\r\n", AR_GetStrString(str));
 		}
@@ -190,20 +190,20 @@ void pcg_test()
 		
 		lex = NULL;
 		psr = NULL;
-		gmr = PSR_CreateGrammar();
+		gmr = Parser_CreateGrammar();
 		str = AR_CreateString();
 
-		lex = LEX_Create();
-		AR_ASSERT(LEX_Config(lex, lex_test_pat2));
+		lex = Lex_Create();
+		AR_ASSERT(Lex_Config(lex, lex_test_pat2));
 
-		if(PSR_ConfigGrammar(gmr, rule_pattern))
+		if(Parser_ConfigGrammar(gmr, rule_pattern))
 		{
-				PSR_PrintGrammar(gmr, str);
+				Parser_PrintGrammar(gmr, str);
 				AR_printf(L"%ls\r\n", AR_GetStrString(str));
 				AR_ClearString(str);
 		}
 
-		psr = PSR_CreateParser(gmr, PSR_LR1, PSR_GetPrintNodeContext());
+		psr = Parser_CreateParser(gmr, Parser_LR1, Parser_GetPrintNodeContext());
 		AR_ASSERT(psr != NULL);
 #if(0)
 		getchar();
@@ -211,11 +211,11 @@ void pcg_test()
 
 		{
 				lexToken_t tok; lexMatch_t	match;
-				LEX_InitMatch(&match, L"3 + 4 * (78 + 5)");
+				Lex_InitMatch(&match, L"3 + 4 * (78 + 5)");
 
-				while(LEX_Match(lex, &match, &tok))
+				while(Lex_Match(lex, &match, &tok))
 				{
-						if(!PSR_AddToken(psr, &tok))
+						if(!Parser_AddToken(psr, &tok))
 						{
 								AR_ASSERT(false);
 						}
@@ -224,12 +224,12 @@ void pcg_test()
 		}
 		
 		{
-				printNode_t		*root = (printNode_t*)PSR_GetResult(psr);
+				printNode_t		*root = (printNode_t*)Parser_GetResult(psr);
 				AR_printf(L"%ls\r\n", root->name);
 		}
 #endif
 
-		PSR_DestroyGrammar(gmr);
+		Parser_DestroyGrammar(gmr);
 		AR_DestroyString(str);
 
 }		

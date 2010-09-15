@@ -35,7 +35,7 @@ struct __parser_node_stack
 		size_t			cap;
 };
 
-static AR_INLINE void PSR_InitNodeStack(psrNodeStack_t *stack)
+static AR_INLINE void Parser_InitNodeStack(psrNodeStack_t *stack)
 {
 		AR_memset(stack, 0, sizeof(*stack));
 
@@ -43,13 +43,13 @@ static AR_INLINE void PSR_InitNodeStack(psrNodeStack_t *stack)
 		stack->nodes = AR_REALLOC(psrNode_t*, stack->nodes, stack->cap);
 }
 
-static AR_INLINE void PSR_UnInitNodeStack(psrNodeStack_t *stack)
+static AR_INLINE void Parser_UnInitNodeStack(psrNodeStack_t *stack)
 {
 		AR_DEL(stack->nodes);
 		AR_memset(stack, 0, sizeof(*stack));
 }
 
-static AR_INLINE void PSR_PushNodeStack(psrNodeStack_t *stack, psrNode_t *node)
+static AR_INLINE void Parser_PushNodeStack(psrNodeStack_t *stack, psrNode_t *node)
 {
 		AR_ASSERT(stack != NULL);
 		if(stack->count == stack->cap)
@@ -60,19 +60,19 @@ static AR_INLINE void PSR_PushNodeStack(psrNodeStack_t *stack, psrNode_t *node)
 		stack->nodes[stack->count++] = node;
 }
 
-static AR_INLINE void PSR_PopNodeStack(psrNodeStack_t *stack, size_t n)
+static AR_INLINE void Parser_PopNodeStack(psrNodeStack_t *stack, size_t n)
 {
 		AR_ASSERT(stack != NULL && n <= stack->count);
 		stack->count -= n;
 }
 
-static AR_INLINE void PSR_ClearNodeStack(psrNodeStack_t *stack)
+static AR_INLINE void Parser_ClearNodeStack(psrNodeStack_t *stack)
 {
 		AR_ASSERT(stack != NULL);
 		stack->count = 0;
 }
 
-static AR_INLINE psrNode_t* PSR_TopNodeStack(psrNodeStack_t *stack)
+static AR_INLINE psrNode_t* Parser_TopNodeStack(psrNodeStack_t *stack)
 {
 		AR_ASSERT(stack != NULL && stack->count > 0);
 		return stack->nodes[stack->count-1];
@@ -90,7 +90,7 @@ struct __parser_stack_tag
 };
 
 
-static AR_INLINE void PSR_PushStack(psrStack_t *stack, size_t state)
+static AR_INLINE void Parser_PushStack(psrStack_t *stack, size_t state)
 {
 		if(stack->count == stack->cap)
 		{
@@ -101,20 +101,20 @@ static AR_INLINE void PSR_PushStack(psrStack_t *stack, size_t state)
 }
 
 
-static AR_INLINE void PSR_PopStack(psrStack_t *stack, size_t n)
+static AR_INLINE void Parser_PopStack(psrStack_t *stack, size_t n)
 {
 		AR_ASSERT(n <= stack->count);
 		stack->count -= n;
 }
 
-static AR_INLINE size_t PSR_TopStack(const psrStack_t *stack)
+static AR_INLINE size_t Parser_TopStack(const psrStack_t *stack)
 {
 		AR_ASSERT(stack->count > 0);
 		return stack->states[stack->count-1];
 }
 
 
-static AR_INLINE void PSR_InitStack(psrStack_t *stack)
+static AR_INLINE void Parser_InitStack(psrStack_t *stack)
 {
 		AR_memset(stack, 0,sizeof(*stack));
 
@@ -124,14 +124,14 @@ static AR_INLINE void PSR_InitStack(psrStack_t *stack)
 
 }
 
-static AR_INLINE void PSR_UnInitStack(psrStack_t *stack)
+static AR_INLINE void Parser_UnInitStack(psrStack_t *stack)
 {
 		AR_DEL(stack->states);
 		AR_memset(stack, 0,sizeof(*stack));
 }
 
 
-static AR_INLINE void PSR_ClearStack(psrStack_t *stack)
+static AR_INLINE void Parser_ClearStack(psrStack_t *stack)
 {
 		AR_ASSERT(stack != NULL);
 		stack->count = 0;
@@ -148,12 +148,12 @@ typedef struct __term_info_rec_tag
 		size_t	cap;
 }psrTermInfoRec_t;
 
-static AR_INLINE psrTermInfoRec_t* PSR_CreateTermInfoRec()
+static AR_INLINE psrTermInfoRec_t* Parser_CreateTermInfoRec()
 {
 		return AR_NEW0(psrTermInfoRec_t);
 }
 
-static AR_INLINE void			PSR_DestroyTermInfoRec(psrTermInfoRec_t *rec)
+static AR_INLINE void			Parser_DestroyTermInfoRec(psrTermInfoRec_t *rec)
 {
 		if(rec)
 		{
@@ -162,7 +162,7 @@ static AR_INLINE void			PSR_DestroyTermInfoRec(psrTermInfoRec_t *rec)
 		}
 }
 
-static AR_INLINE const psrTermInfo_t* PSR_FindTermFromRec(const psrTermInfoRec_t *rec, size_t val)
+static AR_INLINE const psrTermInfo_t* Parser_FindTermFromRec(const psrTermInfoRec_t *rec, size_t val)
 {
 		size_t i;
 		AR_ASSERT(rec != NULL);
@@ -175,10 +175,10 @@ static AR_INLINE const psrTermInfo_t* PSR_FindTermFromRec(const psrTermInfoRec_t
 		return NULL;
 }
 
-static AR_INLINE bool_t			PSR_InsertToTermInfoRec(psrTermInfoRec_t *rec, const psrTermInfo_t *term)
+static AR_INLINE bool_t			Parser_InsertToTermInfoRec(psrTermInfoRec_t *rec, const psrTermInfo_t *term)
 {
 		AR_ASSERT(rec != NULL && term != NULL);
-		if(PSR_FindTermFromRec(rec, term->val) != NULL)return false;
+		if(Parser_FindTermFromRec(rec, term->val) != NULL)return false;
 
 		if(rec->count == rec->cap)
 		{
@@ -200,24 +200,24 @@ struct __term_table_tag
 		size_t					item_count;
 };
 
-static AR_INLINE psrTermInfoTbl_t* PSR_CreateTermInfoTable()
+static AR_INLINE psrTermInfoTbl_t* Parser_CreateTermInfoTable()
 {
 		return AR_NEW0(psrTermInfoTbl_t);
 }
 
-static AR_INLINE void PSR_DestroyTermInfoTable(psrTermInfoTbl_t *tbl)
+static AR_INLINE void Parser_DestroyTermInfoTable(psrTermInfoTbl_t *tbl)
 {
 		size_t i;
 		AR_ASSERT(tbl != NULL);
 		
 		for(i = 0; i < TERM_BUCKET_SIZE; ++i)
 		{
-				PSR_DestroyTermInfoRec(tbl->bucket[i]);
+				Parser_DestroyTermInfoRec(tbl->bucket[i]);
 		}
 		AR_DEL(tbl);
 }
 
-static AR_INLINE bool_t PSR_InsertToTermInfoTable(psrTermInfoTbl_t *tbl, const psrTermInfo_t *term)
+static AR_INLINE bool_t Parser_InsertToTermInfoTable(psrTermInfoTbl_t *tbl, const psrTermInfo_t *term)
 {
 		size_t idx;
 		psrTermInfoRec_t		*rec;
@@ -227,12 +227,12 @@ static AR_INLINE bool_t PSR_InsertToTermInfoTable(psrTermInfoTbl_t *tbl, const p
 
 		if(tbl->bucket[idx] == NULL)
 		{
-				tbl->bucket[idx] = PSR_CreateTermInfoRec();
+				tbl->bucket[idx] = Parser_CreateTermInfoRec();
 		}
 
 		rec = tbl->bucket[idx];
 
-		if(PSR_InsertToTermInfoRec(rec, term))
+		if(Parser_InsertToTermInfoRec(rec, term))
 		{
 				tbl->item_count++;
 				return true;
@@ -242,7 +242,7 @@ static AR_INLINE bool_t PSR_InsertToTermInfoTable(psrTermInfoTbl_t *tbl, const p
 		}
 }
 
-static AR_INLINE const psrTermInfo_t* PSR_FindTermFromInfoTable(const psrTermInfoTbl_t *tbl, size_t tokval)
+static AR_INLINE const psrTermInfo_t* Parser_FindTermFromInfoTable(const psrTermInfoTbl_t *tbl, size_t tokval)
 {
 		size_t idx;
 		psrTermInfoRec_t		*rec;
@@ -259,7 +259,7 @@ static AR_INLINE const psrTermInfo_t* PSR_FindTermFromInfoTable(const psrTermInf
 				return rec->terms[0];
 		}else
 		{
-				return PSR_FindTermFromRec(rec, tokval);
+				return Parser_FindTermFromRec(rec, tokval);
 		}
 }
 
@@ -275,7 +275,7 @@ struct __expected_message_tag
 
 
 
-static AR_INLINE void PSR_InitExpectedMsg(psrExpectedMsg_t *msg, const psrSymbList_t *lst, const psrGrammar_t *grammar)
+static AR_INLINE void Parser_InitExpectedMsg(psrExpectedMsg_t *msg, const psrSymbList_t *lst, const psrGrammar_t *grammar)
 {
 		size_t i;
 		AR_ASSERT(msg != NULL && lst != NULL && grammar != NULL);
@@ -290,14 +290,14 @@ static AR_INLINE void PSR_InitExpectedMsg(psrExpectedMsg_t *msg, const psrSymbLi
 		for(i = 0; i < msg->count; ++i)
 		{
 				const psrTermInfo_t		*term_info; 
-				AR_ASSERT(lst->lst[i]->type == PSR_TERM);
-				term_info = PSR_GetTermSymbInfo(grammar, lst->lst[i]);
+				AR_ASSERT(lst->lst[i]->type == PARSER_TERM);
+				term_info = Parser_GetTermSymbInfo(grammar, lst->lst[i]);
 				AR_ASSERT(term_info != NULL);
 				msg->msg[i] = term_info->val;
 		}
 }
 
-static AR_INLINE void PSR_UnInitExpectedMsg(psrExpectedMsg_t *msg)
+static AR_INLINE void Parser_UnInitExpectedMsg(psrExpectedMsg_t *msg)
 {
 		AR_ASSERT(msg != NULL);
 		if(msg->msg)AR_DEL((void*)msg->msg);
@@ -307,7 +307,7 @@ static AR_INLINE void PSR_UnInitExpectedMsg(psrExpectedMsg_t *msg)
 /****************************************************Parser*****************************************************/
 
 
-const parser_t* PSR_CreateParser(const psrGrammar_t *grammar, psrModeType_t type)
+const parser_t* Parser_CreateParser(const psrGrammar_t *grammar, psrModeType_t type)
 {
 		parser_t *parser;
 		size_t i;
@@ -320,11 +320,11 @@ const parser_t* PSR_CreateParser(const psrGrammar_t *grammar, psrModeType_t type
 		
 		switch(type)
 		{
-		case PSR_SLR:
-				parser->tbl = PSR_CreateActionTable_SLR(parser->grammar);
+		case PARSER_SLR:
+				parser->tbl = Parser_CreateActionTable_SLR(parser->grammar);
 				break;
 		default:
-				parser->tbl = PSR_CreateActionTable_LALR(parser->grammar);
+				parser->tbl = Parser_CreateActionTable_LALR(parser->grammar);
 				break;
 		}
 
@@ -333,17 +333,17 @@ const parser_t* PSR_CreateParser(const psrGrammar_t *grammar, psrModeType_t type
 
 		for(i = 0; i < parser->msg_count; ++i)
 		{
-				PSR_InitExpectedMsg(&parser->msg_set[i], PSR_GetExpectedSymb(parser->tbl, i), parser->grammar);
+				Parser_InitExpectedMsg(&parser->msg_set[i], Parser_GetExpectedSymb(parser->tbl, i), parser->grammar);
 		}
 
-		parser->term_tbl = PSR_CreateTermInfoTable();
+		parser->term_tbl = Parser_CreateTermInfoTable();
 		
 		{
 				const psrTermInfoList_t *tlst = &parser->grammar->term_list;
 				
 				for(i = 0; i < tlst->count; ++i)
 				{
-						PSR_InsertToTermInfoTable(parser->term_tbl, &tlst->lst[i]);
+						Parser_InsertToTermInfoTable(parser->term_tbl, &tlst->lst[i]);
 				}
 		}
 		
@@ -351,13 +351,13 @@ const parser_t* PSR_CreateParser(const psrGrammar_t *grammar, psrModeType_t type
 		return parser;
 }
 
-const	psrGrammar_t*	PSR_GetGrammar(const parser_t *parser)
+const	psrGrammar_t*	Parser_GetGrammar(const parser_t *parser)
 {
 		AR_ASSERT(parser != NULL && parser->grammar != NULL);
 		return parser->grammar;
 }
 
-void	  PSR_DestroyParser(const parser_t *parser)
+void	  Parser_DestroyParser(const parser_t *parser)
 {
 		parser_t		*psr = (parser_t*)parser;
 		AR_ASSERT(parser != NULL);
@@ -369,12 +369,12 @@ void	  PSR_DestroyParser(const parser_t *parser)
 
 				for(i = 0; i < psr->msg_count; ++i)
 				{
-						PSR_UnInitExpectedMsg(&psr->msg_set[i]);
+						Parser_UnInitExpectedMsg(&psr->msg_set[i]);
 				}
 				AR_DEL(psr->msg_set);
 
-				PSR_DestroyTermInfoTable(psr->term_tbl);
-				PSR_DestroyActionTable(psr->tbl);
+				Parser_DestroyTermInfoTable(psr->term_tbl);
+				Parser_DestroyActionTable(psr->tbl);
 				AR_DEL(psr);
 		}
 }
@@ -390,7 +390,7 @@ typedef struct __parser_context_tag
 		struct __parser_node_stack				*node_stack;
 }psrContext_t;
 */
-psrContext_t*	PSR_CreateContext(const parser_t *parser, void *ctx)
+psrContext_t*	Parser_CreateContext(const parser_t *parser, void *ctx)
 {
 		psrContext_t	*psr_ctx = NULL;
 		AR_ASSERT(parser != NULL);
@@ -402,21 +402,21 @@ psrContext_t*	PSR_CreateContext(const parser_t *parser, void *ctx)
 		psr_ctx->is_repair = false;
 		psr_ctx->is_accepted = false;
 		psr_ctx->state_stack = AR_NEW0(psrStack_t);
-		PSR_InitStack(psr_ctx->state_stack);
+		Parser_InitStack(psr_ctx->state_stack);
 		psr_ctx->node_stack = AR_NEW0(psrNodeStack_t);
-		PSR_InitNodeStack(psr_ctx->node_stack);
+		Parser_InitNodeStack(psr_ctx->node_stack);
 
 		AR_AtomicInc((int_t*)&(((parser_t*)parser)->ref_cnt));
 		return psr_ctx;
 }
 
-void	  PSR_Clear(psrContext_t *parser_context)
+void	  Parser_Clear(psrContext_t *parser_context)
 {
 		size_t i;
 		const psrHandler_t *handler;
 		AR_ASSERT(parser_context != NULL && parser_context->parser != NULL);
 
-		handler = PSR_GetGrammarHandler(PSR_GetGrammar(parser_context->parser));
+		handler = Parser_GetGrammarHandler(Parser_GetGrammar(parser_context->parser));
 		AR_ASSERT(handler != NULL);
 		parser_context->is_repair = false;
 		parser_context->is_accepted = false;
@@ -426,19 +426,19 @@ void	  PSR_Clear(psrContext_t *parser_context)
 				if(parser_context->node_stack->nodes[i])handler->free_f(parser_context->node_stack->nodes[i], parser_context->ctx);
 		}
 
-		PSR_ClearNodeStack(parser_context->node_stack);
-		PSR_ClearStack(parser_context->state_stack);
+		Parser_ClearNodeStack(parser_context->node_stack);
+		Parser_ClearStack(parser_context->state_stack);
 }
 
-void			PSR_DestroyContext(psrContext_t	*parser_context)
+void			Parser_DestroyContext(psrContext_t	*parser_context)
 {
 		AR_ASSERT(parser_context != NULL);
 		AR_ASSERT(parser_context->parser->ref_cnt > 1);
 		AR_AtomicDec((int_t*)&(((parser_t*)(parser_context->parser))->ref_cnt));
 
-		PSR_Clear(parser_context);
-		PSR_UnInitNodeStack(parser_context->node_stack);
-		PSR_UnInitStack(parser_context->state_stack);
+		Parser_Clear(parser_context);
+		Parser_UnInitNodeStack(parser_context->node_stack);
+		Parser_UnInitStack(parser_context->state_stack);
 		AR_DEL(parser_context->node_stack);
 		AR_DEL(parser_context->state_stack);
 		AR_DEL(parser_context);
@@ -446,49 +446,49 @@ void			PSR_DestroyContext(psrContext_t	*parser_context)
 }
 
 
-psrNode_t*	PSR_GetResult(psrContext_t *parser_context)
+psrNode_t*	Parser_GetResult(psrContext_t *parser_context)
 {
 		psrNode_t *res;
 		AR_ASSERT(parser_context != NULL);
 		AR_ASSERT(parser_context->is_accepted);
 		if(!parser_context->is_accepted)return NULL;
 		AR_ASSERT(parser_context->state_stack->count == 2);
-		res = PSR_TopNodeStack(parser_context->node_stack);
+		res = Parser_TopNodeStack(parser_context->node_stack);
 		
-		PSR_PopStack(parser_context->state_stack, 1);
-		PSR_PopNodeStack(parser_context->node_stack, 1);
+		Parser_PopStack(parser_context->state_stack, 1);
+		Parser_PopNodeStack(parser_context->node_stack, 1);
 		parser_context->is_accepted = false;
 		return res;
 }
 
-bool_t	   PSR_IsAccepted(const psrContext_t *parser_context)
+bool_t	   Parser_IsAccepted(const psrContext_t *parser_context)
 {
 		AR_ASSERT(parser_context != NULL);
 		return parser_context->is_accepted;
 }
 
 
-bool_t	PSR_IsInError(const psrContext_t *parser_context)
+bool_t	Parser_IsInError(const psrContext_t *parser_context)
 {
 		AR_ASSERT(parser_context != NULL);
 		return parser_context->is_repair;
 
 }
 
-void	PSR_ClearError(psrContext_t *parser_context)
+void	Parser_ClearError(psrContext_t *parser_context)
 {
 		AR_ASSERT(parser_context != NULL);
 		parser_context->is_repair = false;
 }
 
-size_t			PSR_GetNodeCount(const psrContext_t *parser_context)
+size_t			Parser_GetNodeCount(const psrContext_t *parser_context)
 {
 		AR_ASSERT(parser_context != NULL);
 		AR_ASSERT(parser_context->node_stack->count == parser_context->state_stack->count);
 		return parser_context->node_stack->count;
 }
 
-psrNode_t*		PSR_IndexOfNodeStack(psrContext_t *parser_context, size_t index)
+psrNode_t*		Parser_IndexOfNodeStack(psrContext_t *parser_context, size_t index)
 {
 		AR_ASSERT(parser_context != NULL && index < parser_context->node_stack->count);
 		AR_ASSERT(parser_context->node_stack->count == parser_context->state_stack->count);
@@ -511,7 +511,7 @@ static void __handle_shift(psrContext_t *parser_context, size_t shift_to, const 
 		
 		AR_ASSERT(parser_context != NULL && tok != NULL && term != NULL && term->leaf_f != NULL);
 
-		PSR_PushStack(parser_context->state_stack, shift_to);
+		Parser_PushStack(parser_context->state_stack, shift_to);
 
 		if(term->leaf_f)
 		{
@@ -520,7 +520,7 @@ static void __handle_shift(psrContext_t *parser_context, size_t shift_to, const 
 		{
 				new_node = NULL;
 		}
-		PSR_PushNodeStack(parser_context->node_stack, new_node);
+		Parser_PushNodeStack(parser_context->node_stack, new_node);
 
 /*
 		将parser状态从error转回正常状态只有在当前状态上存在移入，例如：
@@ -548,9 +548,9 @@ static void __handle_reduce(psrContext_t *parser_context, const psrAction_t *act
 		size_t			next_state;
 		const	psrRule_t *rule;
 		
-		AR_ASSERT(parser_context != NULL && action != NULL && action->type == PSR_REDUCE);
+		AR_ASSERT(parser_context != NULL && action != NULL && action->type == PARSER_REDUCE);
 
-		rule = PSR_GetRuleOfGrammar(PSR_GetGrammar(parser_context->parser), action->rule_num);
+		rule = Parser_GetRuleOfGrammar(Parser_GetGrammar(parser_context->parser), action->rule_num);
 		
 
 		if(action->reduce_count > 0)
@@ -586,11 +586,11 @@ static void __handle_reduce(psrContext_t *parser_context, const psrAction_t *act
 
 		if(action->reduce_count > 0)
 		{
-				PSR_PopStack(parser_context->state_stack, action->reduce_count);
+				Parser_PopStack(parser_context->state_stack, action->reduce_count);
 
 				{
 						size_t i;
-						const psrHandler_t	*handler = PSR_GetGrammarHandler(PSR_GetGrammar(parser_context->parser));
+						const psrHandler_t	*handler = Parser_GetGrammarHandler(Parser_GetGrammar(parser_context->parser));
 						AR_ASSERT(handler != NULL);
 						for(i = 0; i < action->reduce_count; ++i)
 						{
@@ -602,12 +602,12 @@ static void __handle_reduce(psrContext_t *parser_context, const psrAction_t *act
 						}
 				}
 
-				PSR_PopNodeStack(parser_context->node_stack, action->reduce_count);
+				Parser_PopNodeStack(parser_context->node_stack, action->reduce_count);
 		}
 		
-		next_state = PSR_GetState(parser_context->parser->tbl, PSR_TopStack(parser_context->state_stack), rule->head);
-		PSR_PushStack(parser_context->state_stack, next_state);
-		PSR_PushNodeStack(parser_context->node_stack, new_node);
+		next_state = Parser_GetState(parser_context->parser->tbl, Parser_TopStack(parser_context->state_stack), rule->head);
+		Parser_PushStack(parser_context->state_stack, next_state);
+		Parser_PushNodeStack(parser_context->node_stack, new_node);
 }
 
 
@@ -620,12 +620,12 @@ static void __on_error(psrContext_t *parser_context, const psrToken_t		*tok)
 		
 		AR_ASSERT(parser_context != NULL && tok != NULL);
 		
-		handler = PSR_GetGrammarHandler(PSR_GetGrammar(parser_context->parser));
+		handler = Parser_GetGrammarHandler(Parser_GetGrammar(parser_context->parser));
 		
 
 		AR_ASSERT(handler != NULL);
 		
-		top_state = PSR_TopStack(parser_context->state_stack);
+		top_state = Parser_TopStack(parser_context->state_stack);
 		
 		if(handler->error_f == NULL)
 		{
@@ -653,7 +653,7 @@ static errRecovery_t __error_recovery(psrContext_t *parser_context, const psrTok
 		
 		AR_ASSERT(parser_context != NULL && parser_context->parser != NULL);
 		
-		handler = PSR_GetGrammarHandler(PSR_GetGrammar(parser_context->parser));
+		handler = Parser_GetGrammarHandler(Parser_GetGrammar(parser_context->parser));
 		AR_ASSERT(handler != NULL);
 
 		if(!parser_context->is_repair)
@@ -667,8 +667,8 @@ static errRecovery_t __error_recovery(psrContext_t *parser_context, const psrTok
 						size_t top;
 						const psrAction_t *action;
 
-						top = PSR_TopStack(parser_context->state_stack);
-						action = PSR_GetAction(parser_context->parser->tbl, top, PSR_ErrorSymb);
+						top = Parser_TopStack(parser_context->state_stack);
+						action = Parser_GetAction(parser_context->parser->tbl, top, PARSER_ErrorSymb);
 						
 						AR_ASSERT(action != NULL);
 						
@@ -676,25 +676,25 @@ static errRecovery_t __error_recovery(psrContext_t *parser_context, const psrTok
 		应该找到一个在error上有shift动作的状态，之后移入NULL替代终结符error，如果存在规约，则需要先行规约(当然，规约后就是移入error了),如果error不是合法的输入，
 		则向上pop stack和相关节点
 */
-						if(action->type == PSR_REDUCE)
+						if(action->type == PARSER_REDUCE)
 						{
 								__handle_reduce(parser_context, action);
-						}else if(action->type == PSR_ERROR)
+						}else if(action->type == PARSER_ERROR)
 						{
 								psrNode_t *top_node;
 								
-								top_node = PSR_TopNodeStack(parser_context->node_stack);
+								top_node = Parser_TopNodeStack(parser_context->node_stack);
 								if(top_node != NULL)handler->free_f(top_node, parser_context->ctx);
-								PSR_PopNodeStack(parser_context->node_stack, 1);
-								PSR_PopStack(parser_context->state_stack, 1);
+								Parser_PopNodeStack(parser_context->node_stack, 1);
+								Parser_PopStack(parser_context->state_stack, 1);
 								
 						
-						}else if(action->type == PSR_SHIFT)
+						}else if(action->type == PARSER_SHIFT)
 						{
-								PSR_PushStack(parser_context->state_stack, action->shift_to);
-								PSR_PushNodeStack(parser_context->node_stack, NULL);
+								Parser_PushStack(parser_context->state_stack, action->shift_to);
+								Parser_PushNodeStack(parser_context->node_stack, NULL);
 								found = true;
-						}else /*PSR_ACCEPT*/
+						}else /*PARSER_ACCEPT*/
 						{
 								/*只有EOI符号才可能导致一个accept动作*/
 								AR_ASSERT(false);
@@ -718,9 +718,9 @@ static errRecovery_t __error_recovery(psrContext_t *parser_context, const psrTok
 		在repair模式，任何不合法的输入都会丢弃，并且不显示任何错误信息，当输入为EOI时，则调用error_f报告已达EOI;
 */
 				const psrSymb_t *symb;
-				symb = PSR_FindTermFromInfoTable(parser_context->parser->term_tbl, tok->term_val)->term;
+				symb = Parser_FindTermFromInfoTable(parser_context->parser->term_tbl, tok->term_val)->term;
 				AR_ASSERT(symb != NULL);
-				if(PSR_CompSymb(PSR_EOISymb, symb) == 0)
+				if(Parser_CompSymb(PARSER_EOISymb, symb) == 0)
 				{
 						__on_error(parser_context, tok);
 
@@ -733,7 +733,7 @@ static errRecovery_t __error_recovery(psrContext_t *parser_context, const psrTok
 }
 
 
-bool_t		PSR_AddToken(psrContext_t *parser_context, const psrToken_t *tok)
+bool_t		Parser_AddToken(psrContext_t *parser_context, const psrToken_t *tok)
 {
 
 		bool_t					is_done;
@@ -747,16 +747,16 @@ bool_t		PSR_AddToken(psrContext_t *parser_context, const psrToken_t *tok)
 		
 		if(parser_context->state_stack->count == 0)
 		{
-				PSR_PushStack(parser_context->state_stack, 0);
-				PSR_PushNodeStack(parser_context->node_stack, NULL);
+				Parser_PushStack(parser_context->state_stack, 0);
+				Parser_PushNodeStack(parser_context->node_stack, NULL);
 		}
 		
-		term = PSR_FindTermFromInfoTable(parser_context->parser->term_tbl, tok->term_val);
+		term = Parser_FindTermFromInfoTable(parser_context->parser->term_tbl, tok->term_val);
 
 		
 		/*
 				移入进来的token必须在term_set中找到对应的symbol，
-				否则这里应该在调用PSR_AddToken之前由词法分析器检测出错误来
+				否则这里应该在调用Parser_AddToken之前由词法分析器检测出错误来
 		*/
 		
 		if(term == NULL)
@@ -771,30 +771,30 @@ bool_t		PSR_AddToken(psrContext_t *parser_context, const psrToken_t *tok)
 		{
 				const psrAction_t		*action;
 				size_t					top;
-				top = PSR_TopStack(parser_context->state_stack);
-				action = PSR_GetAction(parser_context->parser->tbl, top, term->term);
+				top = Parser_TopStack(parser_context->state_stack);
+				action = Parser_GetAction(parser_context->parser->tbl, top, term->term);
 				AR_ASSERT(action != NULL);
 				
 				switch(action->type)
 				{
-				case PSR_SHIFT:
+				case PARSER_SHIFT:
 				{
 						__handle_shift(parser_context, action->shift_to, tok, term);
 						is_done = true;
 				}
 						break;
-				case PSR_REDUCE:
+				case PARSER_REDUCE:
 				{
 						__handle_reduce(parser_context, action);
 				}
 						break;
-				case PSR_ACCEPT:
+				case PARSER_ACCEPT:
 				{
 						/*
 								%start : first_rule EOI
 								这是第一条rule %start，且不存在一个规约到%start的动作
 						*/
-						AR_ASSERT(PSR_CompSymb(term->term, PSR_EOISymb) == 0);
+						AR_ASSERT(Parser_CompSymb(term->term, PARSER_EOISymb) == 0);
 						AR_ASSERT(action->reduce_count == 1);
 						AR_ASSERT(parser_context->state_stack->count == 2);
 						
@@ -804,7 +804,7 @@ bool_t		PSR_AddToken(psrContext_t *parser_context, const psrToken_t *tok)
 						parser_context->is_accepted = true;
 				}
 						break;
-				case PSR_ERROR:
+				case PARSER_ERROR:
 				{
 						errRecovery_t stat = __error_recovery(parser_context, tok);
 						if(stat == ERR_RECOVERY_FAILED)

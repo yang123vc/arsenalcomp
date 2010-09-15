@@ -198,24 +198,24 @@ static struct {const wchar_t *name; size_t tokval; size_t lex_prec; const wchar_
 #define __TERM_COUNT__ ((size_t)48)
 
 static struct {const wchar_t *name; size_t tokval; size_t prec_level; psrAssocType_t	assoc;}__g_prec_pattern[] =  {
-{L"?", TOK_QUEST,1, PSR_ASSOC_RIGHT},
-{L":", TOK_COLON,1, PSR_ASSOC_RIGHT},
-{L"||", TOK_OROR,2, PSR_ASSOC_LEFT},
-{L"&&", TOK_ANDAND,3, PSR_ASSOC_LEFT},
-{L"==", TOK_EQ,4, PSR_ASSOC_LEFT},
-{L"!=", TOK_NE,4, PSR_ASSOC_LEFT},
-{L"<", TOK_LESS,4, PSR_ASSOC_LEFT},
-{L"<=", TOK_LE,4, PSR_ASSOC_LEFT},
-{L">", TOK_GREATER,4, PSR_ASSOC_LEFT},
-{L">=", TOK_GE,4, PSR_ASSOC_LEFT},
-{L"+", TOK_ADD,5, PSR_ASSOC_LEFT},
-{L"-", TOK_SUB,5, PSR_ASSOC_LEFT},
-{L"*", TOK_MUL,6, PSR_ASSOC_LEFT},
-{L"/", TOK_DIV,6, PSR_ASSOC_LEFT},
-{L"%", TOK_MOD,6, PSR_ASSOC_LEFT},
-{L"PREC_UNARY", 304,7, PSR_ASSOC_RIGHT},
-{L"IF_WITHOUT_ELSE", 305,8, PSR_ASSOC_NONASSOC},
-{L"else", TOK_ELSE,9, PSR_ASSOC_NONASSOC}
+{L"?", TOK_QUEST,1, PARSER_ASSOC_RIGHT},
+{L":", TOK_COLON,1, PARSER_ASSOC_RIGHT},
+{L"||", TOK_OROR,2, PARSER_ASSOC_LEFT},
+{L"&&", TOK_ANDAND,3, PARSER_ASSOC_LEFT},
+{L"==", TOK_EQ,4, PARSER_ASSOC_LEFT},
+{L"!=", TOK_NE,4, PARSER_ASSOC_LEFT},
+{L"<", TOK_LESS,4, PARSER_ASSOC_LEFT},
+{L"<=", TOK_LE,4, PARSER_ASSOC_LEFT},
+{L">", TOK_GREATER,4, PARSER_ASSOC_LEFT},
+{L">=", TOK_GE,4, PARSER_ASSOC_LEFT},
+{L"+", TOK_ADD,5, PARSER_ASSOC_LEFT},
+{L"-", TOK_SUB,5, PARSER_ASSOC_LEFT},
+{L"*", TOK_MUL,6, PARSER_ASSOC_LEFT},
+{L"/", TOK_DIV,6, PARSER_ASSOC_LEFT},
+{L"%", TOK_MOD,6, PARSER_ASSOC_LEFT},
+{L"PREC_UNARY", 304,7, PARSER_ASSOC_RIGHT},
+{L"IF_WITHOUT_ELSE", 305,8, PARSER_ASSOC_NONASSOC},
+{L"else", TOK_ELSE,9, PARSER_ASSOC_NONASSOC}
 };
 
 #define __PREC_COUNT__ ((size_t)18)
@@ -831,12 +831,12 @@ static const lex_t*	__build_lexer()
 {																				
 		lex_t			*lex;
 		size_t			i;
-		lex = LEX_Create(NULL);
+		lex = Lex_Create(NULL);
 		for(i = 0; i < __NAME_COUNT__; ++i)
 		{
-				if(!LEX_Insert(lex, __g_lex_name[i]))
+				if(!Lex_Insert(lex, __g_lex_name[i]))
 				{
-						LEX_Destroy(lex);
+						Lex_Destroy(lex);
 						AR_ASSERT(false);
 						return NULL;
 				}
@@ -848,15 +848,15 @@ static const lex_t*	__build_lexer()
 				act.is_skip		=		__g_term_pattern[i].skip;				
 				act.priority	=		__g_term_pattern[i].lex_prec;			
 				act.value		=		__g_term_pattern[i].tokval;				
-				if(!LEX_InsertRule(lex, __g_term_pattern[i].regex, &act))		
+				if(!Lex_InsertRule(lex, __g_term_pattern[i].regex, &act))		
 				{																
-						LEX_Destroy(lex);
+						Lex_Destroy(lex);
 						AR_ASSERT(false);
 						return NULL;
 				}
 		}
 
-		if(!LEX_GenerateTransTable(lex))
+		if(!Lex_GenerateTransTable(lex))
 		{
 				AR_ASSERT(false);
 		}
@@ -872,13 +872,13 @@ static const psrGrammar_t*	__build_grammar()
 		psrGrammar_t	*grammar;																								
 		size_t i;
 		
-		grammar = PSR_CreateGrammar(&__g_handler, NULL);
+		grammar = Parser_CreateGrammar(&__g_handler, NULL);
 		for(i = 0; i < __TERM_COUNT__; ++i)
 		{																														
 				if(__g_term_pattern[i].skip || __g_term_pattern[i].tokval == 0)continue;
-				if(!PSR_InsertTerm(grammar, __g_term_pattern[i].name, __g_term_pattern[i].tokval, PSR_ASSOC_NONASSOC,0, __build_leaf))	
+				if(!Parser_InsertTerm(grammar, __g_term_pattern[i].name, __g_term_pattern[i].tokval, PARSER_ASSOC_NONASSOC,0, __build_leaf))	
 				{
-						PSR_DestroyGrammar(grammar);
+						Parser_DestroyGrammar(grammar);
 						grammar = NULL;
 						AR_ASSERT(false);
 						return NULL;
@@ -888,12 +888,12 @@ static const psrGrammar_t*	__build_grammar()
 		for(i = 0; i < __PREC_COUNT__; ++i)																						
 		{
 				psrTermInfo_t	*info;
-				info = PSR_GetTermSymbInfoByName(grammar, __g_prec_pattern[i].name);
+				info = Parser_GetTermSymbInfoByName(grammar, __g_prec_pattern[i].name);
 				if(info == NULL)
 				{
-						if(!PSR_InsertTerm(grammar, __g_prec_pattern[i].name, __g_prec_pattern[i].tokval, __g_prec_pattern[i].assoc, __g_prec_pattern[i].prec_level, NULL))
+						if(!Parser_InsertTerm(grammar, __g_prec_pattern[i].name, __g_prec_pattern[i].tokval, __g_prec_pattern[i].assoc, __g_prec_pattern[i].prec_level, NULL))
 						{
-								PSR_DestroyGrammar(grammar);
+								Parser_DestroyGrammar(grammar);
 								grammar = NULL;
 								AR_ASSERT(false);
 								return NULL;
@@ -907,18 +907,18 @@ static const psrGrammar_t*	__build_grammar()
 
 		for(i = 0; i < __RULE_COUNT__; ++i)																													
 		{
-				if(!PSR_InsertRuleByStr(grammar, __g_rule_pattern[i].rule, __g_rule_pattern[i].prec_token, __g_rule_pattern[i].handler, __g_rule_pattern[i].auto_ret))
+				if(!Parser_InsertRuleByStr(grammar, __g_rule_pattern[i].rule, __g_rule_pattern[i].prec_token, __g_rule_pattern[i].handler, __g_rule_pattern[i].auto_ret))
 				{
-						PSR_DestroyGrammar(grammar);
+						Parser_DestroyGrammar(grammar);
 						grammar = NULL;
 						AR_ASSERT(false);
 						return NULL;
 				}
 		}
 
-		if(!PSR_SetFirstRule(grammar,START_RULE) || !PSR_CheckIsValidGrammar(grammar))
+		if(!Parser_SetFirstRule(grammar,START_RULE) || !Parser_CheckIsValidGrammar(grammar))
 		{
-				PSR_DestroyGrammar(grammar);
+				Parser_DestroyGrammar(grammar);
 				grammar = NULL;	
 				AR_ASSERT(false);
 				return NULL;
@@ -940,16 +940,16 @@ static	void	__parser_core_init()
 		AR_InitSpinLock(&__g_lock);
 		__g_lex     = __build_lexer();
 		__g_grammar	= __build_grammar();
-		__g_parser	= PSR_CreateParser(__g_grammar, PSR_LALR);
+		__g_parser	= Parser_CreateParser(__g_grammar, PARSER_LALR);
 }
 
 
 
 static	void	__parser_core_uninit()
 {
-		PSR_DestroyParser(__g_parser);
-		PSR_DestroyGrammar((psrGrammar_t*)__g_grammar);
-		LEX_Destroy((lex_t*)__g_lex);
+		Parser_DestroyParser(__g_parser);
+		Parser_DestroyGrammar((psrGrammar_t*)__g_grammar);
+		Lex_Destroy((lex_t*)__g_lex);
 		__g_lex	= NULL;
 		__g_grammar = NULL;
 		__g_parser = NULL;
@@ -964,7 +964,7 @@ static lexMatch_t*		__build_match()
 		AR_ASSERT(__g_lex != NULL);
 		
 		AR_LockSpinLock(&__g_lock);
-		match = LEX_CreateMatch(__g_lex, NULL);
+		match = Lex_CreateMatch(__g_lex, NULL);
 		AR_UnLockSpinLock(&__g_lock);
 		return match;
 }
@@ -972,7 +972,7 @@ static lexMatch_t*		__build_match()
 static void			__release_match(lexMatch_t	*match)
 {
 		AR_ASSERT(match != NULL);
-		LEX_DestroyMatch(match);
+		Lex_DestroyMatch(match);
 		
 }
 
@@ -983,7 +983,7 @@ static psrContext_t*		__build_parser_context(void *ctx)
 		psrContext_t	*parser_context;
 		AR_ASSERT(__g_parser != NULL && __g_grammar != NULL);
 		AR_LockSpinLock(&__g_lock);
-		parser_context = PSR_CreateContext(__g_parser, ctx);
+		parser_context = Parser_CreateContext(__g_parser, ctx);
 		AR_UnLockSpinLock(&__g_lock);
 		return parser_context;
 }
@@ -994,7 +994,7 @@ static void				__release_parser_context(psrContext_t		*parser_context)
 		AR_ASSERT(__g_parser != NULL && __g_grammar != NULL);
 		AR_ASSERT(parser_context != NULL);
 		AR_LockSpinLock(&__g_lock);
-		PSR_DestroyContext(parser_context);
+		Parser_DestroyContext(parser_context);
 		AR_UnLockSpinLock(&__g_lock);
 }
 

@@ -37,7 +37,7 @@ static void __insert_to_conflict_set(psrConflictView_t *view, psrConflictItem_t 
 }
 
 
-const	psrConflictView_t*		PSR_CreateConflictView(const psrActionTable_t *tbl, const psrGrammar_t *grammar)
+const	psrConflictView_t*		Parser_CreateConflictView(const psrActionTable_t *tbl, const psrGrammar_t *grammar)
 {
 		psrConflictView_t		*view;
 		arString_t				*str = NULL;
@@ -58,7 +58,7 @@ const	psrConflictView_t*		PSR_CreateConflictView(const psrActionTable_t *tbl, co
 						
 						const psrAction_t		*act = tbl->actions[AR_TBL_IDX_R(i,k,tbl->col)];
 						/*
-						const psrRule_t			*rule = PSR_GetRuleOfGrammar(grammar, act->rule_num);
+						const psrRule_t			*rule = Parser_GetRuleOfGrammar(grammar, act->rule_num);
 						*/
 						
 						if(act->next == NULL)continue;
@@ -89,26 +89,26 @@ const	psrConflictView_t*		PSR_CreateConflictView(const psrActionTable_t *tbl, co
 								psrLRItem_t tmp;
 								*/
 								lalrConfig_t	tmp;
-								const psrRule_t			*rule = PSR_GetRuleOfGrammar(grammar, act->rule_num);
+								const psrRule_t			*rule = Parser_GetRuleOfGrammar(grammar, act->rule_num);
 								AR_ASSERT(act != NULL);
 								
-								PSR_InitConfig(&tmp, rule, act->delim);
+								Parser_InitConfig(&tmp, rule, act->delim);
 								/*
-								PSR_InitLRItem(&tmp, rule, act->delim);
+								Parser_InitLRItem(&tmp, rule, act->delim);
 								*/
 
 								AR_ClearString(str);
 								switch(act->type)
 								{
-								case PSR_REDUCE:
+								case PARSER_REDUCE:
 										AR_AppendFormatString(str,L"Reduce: ");
-										PSR_PrintConfig(&tmp,grammar,str);
+										Parser_PrintConfig(&tmp,grammar,str);
 										break;
-								case PSR_SHIFT:
+								case PARSER_SHIFT:
 										AR_AppendFormatString(str,L"Shift: ");
-										PSR_PrintConfig(&tmp, grammar,str);
+										Parser_PrintConfig(&tmp, grammar,str);
 										break;
-								case PSR_ACCEPT:
+								case PARSER_ACCEPT:
 										AR_AppendFormatString(str,L"Accept ");
 										break;
 								default:
@@ -116,8 +116,8 @@ const	psrConflictView_t*		PSR_CreateConflictView(const psrActionTable_t *tbl, co
 								}
 								/*AR_AppendFormatString(str,L"\r\n");*/
 
-								/*PSR_UnInitLRItem(&tmp);*/
-								PSR_UnInitConfig(&tmp);
+								/*Parser_UnInitLRItem(&tmp);*/
+								Parser_UnInitConfig(&tmp);
 								item->items[l] = AR_wcsdup(AR_GetStrString(str));
 
 						}
@@ -131,7 +131,7 @@ const	psrConflictView_t*		PSR_CreateConflictView(const psrActionTable_t *tbl, co
 		return view;
 }
 
-void							PSR_DestroyConflictView(const psrConflictView_t *view)
+void							Parser_DestroyConflictView(const psrConflictView_t *view)
 {
 		
 		psrConflictView_t		*v = (psrConflictView_t*)view;
@@ -161,7 +161,7 @@ void							PSR_DestroyConflictView(const psrConflictView_t *view)
 
 
 
-const psrActionView_t*	PSR_CreateActionView(const psrActionTable_t *tbl, const psrGrammar_t *grammar)
+const psrActionView_t*	Parser_CreateActionView(const psrActionTable_t *tbl, const psrGrammar_t *grammar)
 {
 		psrActionView_t		*view;
 		size_t r, c, k;
@@ -208,20 +208,20 @@ const psrActionView_t*	PSR_CreateActionView(const psrActionTable_t *tbl, const p
 				{
 						
 						const psrAction_t *action = tbl->actions[AR_TBL_IDX_R(r, k, tbl->col)];
-						const psrRule_t	 *rule = PSR_GetRuleOfGrammar(grammar, action->rule_num);
+						const psrRule_t	 *rule = Parser_GetRuleOfGrammar(grammar, action->rule_num);
 						
 
 						switch(action->type)
 						{
-						case PSR_ACCEPT:
+						case PARSER_ACCEPT:
 								msg = AR_wcsdup(L"accept");
 								break;
-						case PSR_SHIFT:
+						case PARSER_SHIFT:
 								{
 										msg = AR_vtow(L"%" AR_PLAT_INT_FMT L"d", (size_t)action->shift_to);
 								}
 								break;
-						case PSR_REDUCE:
+						case PARSER_REDUCE:
 								{
 										msg = AR_vtow(L"[<%ls>:%" AR_PLAT_INT_FMT L"d]", rule->head->name, (size_t)action->reduce_count);
 								}
@@ -253,7 +253,7 @@ const psrActionView_t*	PSR_CreateActionView(const psrActionTable_t *tbl, const p
 }
 
 
-void PSR_DestroyActionView(const psrActionView_t *action_view)
+void Parser_DestroyActionView(const psrActionView_t *action_view)
 {
 		size_t i;
 		psrActionView_t *view;
@@ -285,7 +285,7 @@ void PSR_DestroyActionView(const psrActionView_t *action_view)
 
 
 
-void PSR_PrintActionTable(const psrActionTable_t *tbl, const psrGrammar_t *grammar, size_t width, arString_t *str)
+void Parser_PrintActionTable(const psrActionTable_t *tbl, const psrGrammar_t *grammar, size_t width, arString_t *str)
 {
 		/*这里必须用int，因为printf一族函数的对于%*d这类width的定义就是int*/
 		int __WIDTH__;
@@ -297,7 +297,7 @@ void PSR_PrintActionTable(const psrActionTable_t *tbl, const psrGrammar_t *gramm
 		AR_AppendString(str,L"TermSet:\r\n");
 		for(i = 0; i < tbl->term_set.count; ++i)
 		{
-				PSR_PrintSymbol(tbl->term_set.lst[i],str);
+				Parser_PrintSymbol(tbl->term_set.lst[i],str);
 				AR_AppendString(str,L"  ");
 		}
 		AR_AppendString(str,L"\r\n");
@@ -305,7 +305,7 @@ void PSR_PrintActionTable(const psrActionTable_t *tbl, const psrGrammar_t *gramm
 		AR_AppendString(str,L"NonTermSet:\r\n");
 		for(i = 0; i < tbl->nonterm_set.count; ++i)
 		{
-				PSR_PrintSymbol(tbl->nonterm_set.lst[i],str);
+				Parser_PrintSymbol(tbl->nonterm_set.lst[i],str);
 				AR_AppendString(str,L"  ");
 		}
 
@@ -365,19 +365,19 @@ void PSR_PrintActionTable(const psrActionTable_t *tbl, const psrGrammar_t *gramm
 						const psrAction_t *pact;
 						const psrRule_t	 *rule;
 						pact = tbl->actions[AR_TBL_IDX_R(i,j, tbl->col)];
-						rule = PSR_GetRuleOfGrammar(grammar, pact->rule_num);
+						rule = Parser_GetRuleOfGrammar(grammar, pact->rule_num);
 
 						switch(pact->type)
 						{
-						case PSR_ACCEPT:
+						case PARSER_ACCEPT:
 								AR_AppendFormatString(str,L"%*ls", __WIDTH__,L"accept");
 								break;
-						case PSR_SHIFT:
+						case PARSER_SHIFT:
 						{
 								AR_AppendFormatString(str,L"%*" AR_PLAT_INT_FMT L"d", __WIDTH__, (size_t)pact->shift_to);
 						}
 								break;
-						case PSR_REDUCE:
+						case PARSER_REDUCE:
 						{
 								AR_swprintf(buf, 1024, L"[<%ls>:%" AR_PLAT_INT_FMT L"d]",rule->head->name, (size_t)pact->reduce_count);
 								AR_AppendFormatString(str,L"%*ls", __WIDTH__,buf);
@@ -395,7 +395,7 @@ void PSR_PrintActionTable(const psrActionTable_t *tbl, const psrGrammar_t *gramm
 }
 
 
-void PSR_ReportConflict(const psrActionTable_t *tbl, const psrGrammar_t *grammar, arString_t *str)
+void Parser_ReportConflict(const psrActionTable_t *tbl, const psrGrammar_t *grammar, arString_t *str)
 {
 		size_t i,j;
 		const psrAction_t *action;
@@ -406,7 +406,7 @@ void PSR_ReportConflict(const psrActionTable_t *tbl, const psrGrammar_t *grammar
 				for(j = 0; j < tbl->col; ++j)
 				{
 						action = tbl->actions[AR_TBL_IDX_R(i,j,tbl->col)];
-						rule = PSR_GetRuleOfGrammar(grammar, action->rule_num);
+						rule = Parser_GetRuleOfGrammar(grammar, action->rule_num);
 						AR_ASSERT(action != NULL);
 						if(action->next == NULL)continue;
 
@@ -421,26 +421,26 @@ void PSR_ReportConflict(const psrActionTable_t *tbl, const psrGrammar_t *grammar
 								/*
 								psrLRItem_t tmp;
 								
-								PSR_InitLRItem(&tmp, rule, action->delim);
+								Parser_InitLRItem(&tmp, rule, action->delim);
 								*/
-								PSR_InitConfig(&tmp, rule, action->delim);
+								Parser_InitConfig(&tmp, rule, action->delim);
 								
 								switch(action->type)
 								{
-								case PSR_REDUCE:
+								case PARSER_REDUCE:
 										AR_AppendFormatString(str,L"Reduce: ");
-										PSR_PrintConfig(&tmp, grammar, str);
+										Parser_PrintConfig(&tmp, grammar, str);
 										
-										/*PSR_PrintLRItem(&tmp,grammar,str);*/
+										/*Parser_PrintLRItem(&tmp,grammar,str);*/
 
 										break;
-								case PSR_SHIFT:
+								case PARSER_SHIFT:
 										AR_AppendFormatString(str,L"Shift: ");
-										PSR_PrintConfig(&tmp, grammar,str);
+										Parser_PrintConfig(&tmp, grammar,str);
 										break;
-								case PSR_ACCEPT:
+								case PARSER_ACCEPT:
 										AR_AppendFormatString(str,L"Accept ");
-										//PSR_PrintLRItemName(&action->item,grammar);
+										//Parser_PrintLRItemName(&action->item,grammar);
 										break;
 								default:
 										AR_ASSERT(false);
@@ -448,9 +448,9 @@ void PSR_ReportConflict(const psrActionTable_t *tbl, const psrGrammar_t *grammar
 								AR_AppendFormatString(str,L"\r\n");
 								action = action->next;
 								
-								PSR_UnInitConfig(&tmp);
+								Parser_UnInitConfig(&tmp);
 								/*
-								PSR_UnInitLRItem(&tmp);
+								Parser_UnInitLRItem(&tmp);
 								*/
 						}
 
@@ -461,7 +461,7 @@ void PSR_ReportConflict(const psrActionTable_t *tbl, const psrGrammar_t *grammar
 }
 
 
-size_t PSR_CountConflict(const psrActionTable_t *tbl)
+size_t Parser_CountConflict(const psrActionTable_t *tbl)
 {
 		
 		size_t i, j, count;
@@ -488,61 +488,61 @@ size_t PSR_CountConflict(const psrActionTable_t *tbl)
 /************************Report*********************************/
 
 
-size_t	PSR_CountParserConflict(const parser_t *parser)
+size_t	Parser_CountParserConflict(const parser_t *parser)
 {
 		AR_ASSERT(parser != NULL);
 		AR_ASSERT(parser->tbl != NULL && parser->grammar != NULL);
 
-		return PSR_CountConflict(parser->tbl);
+		return Parser_CountConflict(parser->tbl);
 }
 
-void	PSR_PrintParserConflict(const parser_t *parser, arString_t *out)
+void	Parser_PrintParserConflict(const parser_t *parser, arString_t *out)
 {
 		AR_ASSERT(parser != NULL && out != NULL);
 		AR_ASSERT(parser->tbl != NULL && parser->grammar != NULL);
 		
-		PSR_ReportConflict(parser->tbl, parser->grammar, out);
+		Parser_ReportConflict(parser->tbl, parser->grammar, out);
 }
 
-void	PSR_PrintParserActionTable(const parser_t *parser, arString_t *out, size_t width)
+void	Parser_PrintParserActionTable(const parser_t *parser, arString_t *out, size_t width)
 {
 		AR_ASSERT(parser != NULL && out != NULL);
 		AR_ASSERT(parser->tbl != NULL && parser->grammar != NULL);
 
-		PSR_PrintActionTable(parser->tbl, parser->grammar, width, out);
+		Parser_PrintActionTable(parser->tbl, parser->grammar, width, out);
 }
 
 
 
-const psrActionView_t* PSR_CreateParserActionView(const parser_t *parser)
+const psrActionView_t* Parser_CreateParserActionView(const parser_t *parser)
 {
 		AR_ASSERT(parser != NULL);
-		return PSR_CreateActionView(parser->tbl, parser->grammar);
+		return Parser_CreateActionView(parser->tbl, parser->grammar);
 
 }
 
-void					PSR_DestroyParserActionView(const psrActionView_t *view)
+void					Parser_DestroyParserActionView(const psrActionView_t *view)
 {
 		AR_ASSERT(view != NULL);
-		PSR_DestroyActionView(view);
+		Parser_DestroyActionView(view);
 
 }
 
 
 
-const	psrConflictView_t*		PSR_CreateParserConflictView(const parser_t *parser)
+const	psrConflictView_t*		Parser_CreateParserConflictView(const parser_t *parser)
 {
 		AR_ASSERT(parser != NULL);
 
-		return PSR_CreateConflictView(parser->tbl, parser->grammar);
+		return Parser_CreateConflictView(parser->tbl, parser->grammar);
 }
 
 
-void							PSR_DestroyParserConflictView(const psrConflictView_t *view)
+void							Parser_DestroyParserConflictView(const psrConflictView_t *view)
 {
 		AR_ASSERT(view != NULL);
 
-		PSR_DestroyConflictView(view);
+		Parser_DestroyConflictView(view);
 }
 
 /*
@@ -588,9 +588,9 @@ static bool_t __detect_left_recursion(const psrGrammar_t *grammar, const psrSymb
 
 		/*AR_ASSERT(lst->count > 0);*/
 
-		AR_ASSERT(PSR_FindFromSymbList(lst, head) == -1);
+		AR_ASSERT(Parser_FindFromSymbList(lst, head) == -1);
 		
-		PSR_InsertToSymbList(lst, head);
+		Parser_InsertToSymbList(lst, head);
 		
 		
 		
@@ -599,18 +599,18 @@ static bool_t __detect_left_recursion(const psrGrammar_t *grammar, const psrSymb
 				const psrRule_t *rule;
 				rule = grammar->rules[i];
 				
-				if(PSR_CompSymb(rule->head, head) == 0)
+				if(Parser_CompSymb(rule->head, head) == 0)
 				{
 						const psrSymb_t *symb;
 
 						size_t x = 0;
 
 						
-						if(x < rule->body.count && rule->body.lst[x]->type == PSR_NONTERM)
+						if(x < rule->body.count && rule->body.lst[x]->type == PARSER_NONTERM)
 						{
 								symb = rule->body.lst[x];
 
-								if(PSR_CompSymb(lst->lst[0], symb) == 0)
+								if(Parser_CompSymb(lst->lst[0], symb) == 0)
 								{
 										is_recu = true;
 										if(output)
@@ -631,7 +631,7 @@ static bool_t __detect_left_recursion(const psrGrammar_t *grammar, const psrSymb
 
 										}
 
-								}else if(PSR_FindFromSymbList(lst, symb) != -1)
+								}else if(Parser_FindFromSymbList(lst, symb) != -1)
 								{
 										continue;
 								}else
@@ -642,7 +642,7 @@ static bool_t __detect_left_recursion(const psrGrammar_t *grammar, const psrSymb
 				}
 		}
 		
-		PSR_RemoveFromSymbListByIndex(lst, lst->count-1);
+		Parser_RemoveFromSymbListByIndex(lst, lst->count-1);
 		return is_recu;
 		
 }
@@ -656,7 +656,7 @@ bool_t					__report_left_recursion(const psrGrammar_t *grammar, psrSymbolMapView
 		bool_t			ret = false;
 		AR_ASSERT(grammar != NULL);
 		
-		PSR_InitSymbList(&lst);
+		Parser_InitSymbList(&lst);
 		
 		for(i = 0; i < grammar->symb_list.count; ++i)
 		{
@@ -664,9 +664,9 @@ bool_t					__report_left_recursion(const psrGrammar_t *grammar, psrSymbolMapView
 				
 				symb = grammar->symb_list.lst[i];
 
-				PSR_ClearSymbList(&lst);
+				Parser_ClearSymbList(&lst);
 				
-				if(symb->type == PSR_NONTERM)
+				if(symb->type == PARSER_NONTERM)
 				{
 						if(__detect_left_recursion(grammar, symb, &lst,output))
 						{
@@ -675,7 +675,7 @@ bool_t					__report_left_recursion(const psrGrammar_t *grammar, psrSymbolMapView
 				}
 		}
 
-		PSR_UnInitSymbList(&lst);
+		Parser_UnInitSymbList(&lst);
 		return ret;
 }
 
@@ -693,7 +693,7 @@ static size_t __calc_leftfactor(const psrRule_t *l, const psrRule_t *r)
 		size_t cnt = 0;
 		AR_ASSERT(l != NULL && r != NULL);
 
-		while(cnt < l->body.count && cnt < r->body.count && PSR_CompSymb(l->body.lst[cnt], r->body.lst[cnt]) == 0)
+		while(cnt < l->body.count && cnt < r->body.count && Parser_CompSymb(l->body.lst[cnt], r->body.lst[cnt]) == 0)
 		{
 				cnt++;
 		}
@@ -723,7 +723,7 @@ RECHECK_POINT:
 		for(i = 0; i < n; ++i)
 		{
 				if(rules[i] == NULL)continue;
-				AR_ASSERT(PSR_CompSymb(lhs, rules[i]->head) == 0);
+				AR_ASSERT(Parser_CompSymb(lhs, rules[i]->head) == 0);
 				for(k = 0; k < n; ++k)
 				{
 						if(rules[k] == NULL)continue;
@@ -774,7 +774,7 @@ RECHECK_POINT:
 						AR_ClearString(tmp);
 						AR_AppendString(tmp, lhs->name);
 						AR_AppendString(tmp, L"\t:\t");
-						PSR_PrintSymbolList(&rules[bk[i]]->body, tmp);
+						Parser_PrintSymbolList(&rules[bk[i]]->body, tmp);
 						AR_AppendFormatString(tmp, L"\t:\t%d", max);
 						__insert_to_symtbl_view(output, lhs->name, AR_GetStrString(tmp));
 				}
@@ -812,7 +812,7 @@ static bool_t					__report_left_factor(const psrGrammar_t *grammar, psrSymbolMap
 		for(i = 0; i < grammar->symb_list.count; ++i)
 		{
 				const psrSymb_t *lhs = grammar->symb_list.lst[i];
-				if(lhs->type == PSR_TERM)continue;
+				if(lhs->type == PARSER_TERM)continue;
 				
 				AR_memset((void*)rules, 0, sizeof(const psrRule_t*) * grammar->symb_list.count);
 				
@@ -820,7 +820,7 @@ static bool_t					__report_left_factor(const psrGrammar_t *grammar, psrSymbolMap
 				
 				for(k = 0; k < grammar->count; ++k)
 				{
-						if(PSR_CompSymb(lhs, grammar->rules[k]->head) == 0)
+						if(Parser_CompSymb(lhs, grammar->rules[k]->head) == 0)
 						{
 								rules[cnt++] = grammar->rules[k];
 						}
@@ -841,7 +841,7 @@ static bool_t					__report_left_factor(const psrGrammar_t *grammar, psrSymbolMap
 
 
 
-const psrStatusView_t*		PSR_CreateParserStatusView(const parser_t *parser)
+const psrStatusView_t*		Parser_CreateParserStatusView(const parser_t *parser)
 {
 		psrSymbMap_t	first, follow;
 		arString_t		*str;
@@ -859,11 +859,11 @@ const psrStatusView_t*		PSR_CreateParserStatusView(const parser_t *parser)
 
 		ret = NULL;
 
-		PSR_InitSymbMap(&first);
-		PSR_InitSymbMap(&follow);
+		Parser_InitSymbMap(&first);
+		Parser_InitSymbMap(&follow);
 
-		PSR_CalcFirstSet(parser->grammar, &first);
-		PSR_CalcFollowSet(parser->grammar, &follow, &first);
+		Parser_CalcFirstSet(parser->grammar, &first);
+		Parser_CalcFollowSet(parser->grammar, &follow, &first);
 
 		str = AR_CreateString();
 
@@ -872,13 +872,13 @@ const psrStatusView_t*		PSR_CreateParserStatusView(const parser_t *parser)
 				const psrMapRec_t		*rec;
 				const psrSymb_t	*symb = parser->grammar->symb_list.lst[i];
 				
-				rec = PSR_GetSymbolFromSymbMap(&first, symb);
+				rec = Parser_GetSymbolFromSymbMap(&first, symb);
 				
 				AR_ClearString(str);
 				if(rec)
 				{
 						
-						PSR_PrintSymbolList(&rec->lst, str);
+						Parser_PrintSymbolList(&rec->lst, str);
 						
 				}
 				__insert_to_symtbl_view(&first_view, rec->key->name, AR_GetStrString(str));
@@ -890,15 +890,15 @@ const psrStatusView_t*		PSR_CreateParserStatusView(const parser_t *parser)
 				const psrMapRec_t		*rec;
 				const psrSymb_t	*symb = parser->grammar->symb_list.lst[i];
 				
-				if(symb->type == PSR_NONTERM)
+				if(symb->type == PARSER_NONTERM)
 				{
-						rec = PSR_GetSymbolFromSymbMap(&follow, symb);
+						rec = Parser_GetSymbolFromSymbMap(&follow, symb);
 						
 						AR_ClearString(str);
 						if(rec)
 						{
 								
-								PSR_PrintSymbolList(&rec->lst, str);
+								Parser_PrintSymbolList(&rec->lst, str);
 								
 						}
 						__insert_to_symtbl_view(&follow_view, rec->key->name, AR_GetStrString(str));
@@ -914,14 +914,14 @@ const psrStatusView_t*		PSR_CreateParserStatusView(const parser_t *parser)
 		ret->left_recursion = left_recu;
 		ret->left_factor = left_factor;
 		
-		PSR_UnInitSymbMap(&first);
-		PSR_UnInitSymbMap(&follow);
+		Parser_UnInitSymbMap(&first);
+		Parser_UnInitSymbMap(&follow);
 		if(str)AR_DestroyString(str);
 		return ret;
 }
 
 
-void							PSR_DestroyParserStatusView(const psrStatusView_t *follow_view)
+void							Parser_DestroyParserStatusView(const psrStatusView_t *follow_view)
 {
 		size_t i;
 

@@ -157,9 +157,9 @@ typedef tguObject_t		tguStackID_t;
 
 typedef struct __call_info_tag
 {
-		tguIns_t		*save_pc;		
-		tguStackID_t	*base;
-		tguStackID_t	*top;
+		tguIns_t		*pc;		
+		tguStackID_t	*fp;
+		tguStackID_t	*sp;
 }tguCallInfo_t;
 
 #define	TGU_MAX_CALL			256
@@ -168,7 +168,7 @@ typedef struct __tengu_call_stack_tag
 {
 		tguStackID_t	*start;
 		tguStackID_t	*last;
-		tguStackID_t	*top;	/*last used slot*/
+		tguStackID_t	*sp;	/*last used slot*/
 }tguCallStack_t;
 
 #define	TGU_STACK_SIZE(_stk)	((size_t) ( (_stk)->top - (_stk)->start + 1) )
@@ -181,8 +181,8 @@ struct	__tengu_machine_tag
 {
 /***************************Run************************/
 		tguIns_t		*pc;
-		tguStackID_t	*base;
-		tguStackID_t	*top;
+		tguStackID_t	*fp;
+		tguStackID_t	*sp;
 
 		tguCallStack_t	stack;
 		tguCallInfo_t	ci[TGU_MAX_CALL];

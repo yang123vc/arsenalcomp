@@ -42,18 +42,18 @@ typedef struct __lalr_config_list_tag
 }lalrConfigList_t;
 
 
-lalrConfigList_t*		PSR_CreateConfigList();
-void					PSR_DestroyConfigList(lalrConfigList_t *lst, bool_t destroy_config);
-void					PSR_InsertToConfigList(lalrConfigList_t *lst, lalrConfig_t *cfg);
+lalrConfigList_t*		Parser_CreateConfigList();
+void					Parser_DestroyConfigList(lalrConfigList_t *lst, bool_t destroy_config);
+void					Parser_InsertToConfigList(lalrConfigList_t *lst, lalrConfig_t *cfg);
 
-void					PSR_UnionConfigList(lalrConfigList_t *l, lalrConfigList_t *r);
-void					PSR_CopyConfigList(lalrConfigList_t *l, const lalrConfigList_t *r);
+void					Parser_UnionConfigList(lalrConfigList_t *l, lalrConfigList_t *r);
+void					Parser_CopyConfigList(lalrConfigList_t *l, const lalrConfigList_t *r);
 
-void					PSR_SortConfigList(lalrConfigList_t *l);
-int_t					PSR_CompConfigList(const lalrConfigList_t *l, const lalrConfigList_t *r);
+void					Parser_SortConfigList(lalrConfigList_t *l);
+int_t					Parser_CompConfigList(const lalrConfigList_t *l, const lalrConfigList_t *r);
 
-lalrConfig_t*			PSR_FindFromConfigList(lalrConfigList_t *lst, const psrRule_t *rule, size_t delim);
-lalrConfig_t*			PSR_InsertToConfigListByValue(lalrConfigList_t *lst, const psrRule_t *rule, size_t delim);
+lalrConfig_t*			Parser_FindFromConfigList(lalrConfigList_t *lst, const psrRule_t *rule, size_t delim);
+lalrConfig_t*			Parser_InsertToConfigListByValue(lalrConfigList_t *lst, const psrRule_t *rule, size_t delim);
 
 /******************************************************************************************************/
 
@@ -73,18 +73,18 @@ struct __lalr_config_tag
 		bool_t					is_completed;
 };
 
-void	PSR_InitConfig(lalrConfig_t *config, const psrRule_t *rule, size_t delim);
-void	PSR_UnInitConfig(lalrConfig_t *config);
-int_t	PSR_CompConfig(const lalrConfig_t *l, const lalrConfig_t *r);
+void	Parser_InitConfig(lalrConfig_t *config, const psrRule_t *rule, size_t delim);
+void	Parser_UnInitConfig(lalrConfig_t *config);
+int_t	Parser_CompConfig(const lalrConfig_t *l, const lalrConfig_t *r);
 
 
 
-void PSR_PrintConfig(const lalrConfig_t *config, const psrGrammar_t *gmr, arString_t *str);
-void PSR_PrintConfigList(const lalrConfigList_t *lst, const psrGrammar_t *gmr, arString_t *str);
+void Parser_PrintConfig(const lalrConfig_t *config, const psrGrammar_t *gmr, arString_t *str);
+void Parser_PrintConfigList(const lalrConfigList_t *lst, const psrGrammar_t *gmr, arString_t *str);
 
 
-void PSR_Init_LALR_Config();
-void PSR_UnInit_LALR_Config();
+void Parser_Init_LALR_Config();
+void Parser_UnInit_LALR_Config();
 
 /**************************************************LALR State***************************************/
 typedef struct	__lalr_action_tag			lalrAction_t;
@@ -118,13 +118,13 @@ struct __lalr_state_tag
 };
 
 
-lalrState_t*	PSR_CreateState();
-void			PSR_DestroyState(lalrState_t *state);
+lalrState_t*	Parser_CreateState();
+void			Parser_DestroyState(lalrState_t *state);
 
-lalrAction_t*	PSR_InsertAction(lalrState_t *state, lalrState_t *to, const psrSymb_t *symb, const lalrConfig_t *config);
+lalrAction_t*	Parser_InsertAction(lalrState_t *state, lalrState_t *to, const psrSymb_t *symb, const lalrConfig_t *config);
 
 
-void			PSR_DestroyState_ALL(lalrState_t *state);
+void			Parser_DestroyState_ALL(lalrState_t *state);
 
 
 
@@ -136,23 +136,23 @@ typedef struct __lalr_state_set_tag
 		size_t			cap;
 }lalrStateSet_t;
 
-void			PSR_InitStateSet(lalrStateSet_t *set);
-void			PSR_UnInitStateSet(lalrStateSet_t *set);
-void			PSR_InsertToStateSet(lalrStateSet_t *set, lalrState_t *state);
+void			Parser_InitStateSet(lalrStateSet_t *set);
+void			Parser_UnInitStateSet(lalrStateSet_t *set);
+void			Parser_InsertToStateSet(lalrStateSet_t *set, lalrState_t *state);
 
-void			PSR_CollectState(lalrStateSet_t *empty_set, lalrState_t *start);
-lalrState_t*	PSR_FindStateByBasis(lalrStateSet_t *set, lalrConfigList_t *basis);
-int_t			PSR_IndexOfStateSet(const lalrStateSet_t *set, const lalrState_t *state);
+void			Parser_CollectState(lalrStateSet_t *empty_set, lalrState_t *start);
+lalrState_t*	Parser_FindStateByBasis(lalrStateSet_t *set, lalrConfigList_t *basis);
+int_t			Parser_IndexOfStateSet(const lalrStateSet_t *set, const lalrState_t *state);
 
 
 
-lalrState_t*   PSR_GetTransTo(lalrState_t *state, const psrSymb_t *symb);
+lalrState_t*   Parser_GetTransTo(lalrState_t *state, const psrSymb_t *symb);
 
 
 /*******************************************************************************************************/
 
-lalrState_t*	PSR_Create_LR0_State(const psrGrammar_t *grammar);
-lalrState_t*	PSR_Create_LALR_State(const psrGrammar_t *grammar);
+lalrState_t*	Parser_Create_LR0_State(const psrGrammar_t *grammar);
+lalrState_t*	Parser_Create_LALR_State(const psrGrammar_t *grammar);
 
 
 AR_NAMESPACE_END

@@ -24,8 +24,8 @@ AR_NAMESPACE_BEGIN
 
 
 
-void	LEX_Init();
-void	LEX_UnInit();
+void	Lex_Init();
+void	Lex_UnInit();
 
 
 
@@ -62,19 +62,19 @@ typedef struct __lex_tag
 }lex_t;
 
 
-lex_t*	LEX_Create(const arIOCtx_t *io);
-void	LEX_Destroy(lex_t *lex);
-void	LEX_ResetIOContext(lex_t *lex, const arIOCtx_t *io);
+lex_t*	Lex_Create(const arIOCtx_t *io);
+void	Lex_Destroy(lex_t *lex);
+void	Lex_ResetIOContext(lex_t *lex, const arIOCtx_t *io);
 
-bool_t	LEX_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr);
-bool_t	LEX_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action);
+bool_t	Lex_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr);
+bool_t	Lex_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action);
 
-bool_t	LEX_RemoveByName(lex_t *lex, const wchar_t *name);
-bool_t	LEX_RemoveByValue(lex_t *lex, size_t value);
+bool_t	Lex_RemoveByName(lex_t *lex, const wchar_t *name);
+bool_t	Lex_RemoveByValue(lex_t *lex, size_t value);
 
-bool_t	LEX_Insert(lex_t *lex, const wchar_t *input);
-bool_t	LEX_GenerateTransTable(lex_t *lex);
-void	LEX_Clear(lex_t *lex);
+bool_t	Lex_Insert(lex_t *lex, const wchar_t *input);
+bool_t	Lex_GenerateTransTable(lex_t *lex);
+void	Lex_Clear(lex_t *lex);
 
 
 
@@ -125,46 +125,46 @@ struct __lex_match_result_tag
 
 
 
-lexMatch_t*		LEX_CreateMatch(const lex_t *lex, const arIOCtx_t *io);
+lexMatch_t*		Lex_CreateMatch(const lex_t *lex, const arIOCtx_t *io);
 
-void			LEX_DestroyMatch(lexMatch_t *pmatch);
+void			Lex_DestroyMatch(lexMatch_t *pmatch);
 
-void			LEX_ResetMatchIOContext(lexMatch_t *pmatch, const arIOCtx_t *io);
+void			Lex_ResetMatchIOContext(lexMatch_t *pmatch, const arIOCtx_t *io);
 
-void			LEX_ResetInput(lexMatch_t *pmatch, const wchar_t *input);
+void			Lex_ResetInput(lexMatch_t *pmatch, const wchar_t *input);
 
-void			LEX_ClearInput(lexMatch_t *pmatch);
+void			Lex_ClearInput(lexMatch_t *pmatch);
 
-void			LEX_ResetMatchState(lexMatch_t *pmatch);
+void			Lex_ResetMatchState(lexMatch_t *pmatch);
 
-void			LEX_ResetMatchIoContext(lexMatch_t *pmatch, const arIOCtx_t *io);
+void			Lex_ResetMatchIoContext(lexMatch_t *pmatch, const arIOCtx_t *io);
 
-const wchar_t*	LEX_GetNextInput(const lexMatch_t *match);
+const wchar_t*	Lex_GetNextInput(const lexMatch_t *match);
 
-bool_t			LEX_IsError(const lexMatch_t *match);
+bool_t			Lex_IsError(const lexMatch_t *match);
 
-void			LEX_ClearError(lexMatch_t *match);
+void			Lex_ClearError(lexMatch_t *match);
 
 /*跳到下一个非空白token*/
-void			LEX_Skip(lexMatch_t *pmatch);
+void			Lex_Skip(lexMatch_t *pmatch);
 /*跳到与tok相同的符号，如果未找到,pmatch直接跳到符号结尾*/
-void			LEX_SkipTo(lexMatch_t *pmatch, const wchar_t *tok);
+void			Lex_SkipTo(lexMatch_t *pmatch, const wchar_t *tok);
 
 /*丢弃N个字符*/
-void			LEX_SkipN(lexMatch_t *pmatch, size_t nchar);
+void			Lex_SkipN(lexMatch_t *pmatch, size_t nchar);
 
-/*LEX_PutBack会重置Match_t的行列号及next指针为此token的，并不会簿记一个队列*/
-void			LEX_PutBack(lexMatch_t *pmatch, const lexToken_t *tok);
-
-
-void			LEX_MatchFlags(lexMatch_t *pmatch, uint_t flags, bool_t is_on);
-void			LEX_MatchClearFlags(lexMatch_t *pmatch);
-
-void			LEX_MatchGetCoordinate(const lexMatch_t *pmatch, size_t *line, size_t *col);
+/*Lex_PutBack会重置Match_t的行列号及next指针为此token的，并不会簿记一个队列*/
+void			Lex_PutBack(lexMatch_t *pmatch, const lexToken_t *tok);
 
 
+void			Lex_MatchFlags(lexMatch_t *pmatch, uint_t flags, bool_t is_on);
+void			Lex_MatchClearFlags(lexMatch_t *pmatch);
 
-bool_t			LEX_Match(lexMatch_t *match, lexToken_t *tok);
+void			Lex_MatchGetCoordinate(const lexMatch_t *pmatch, size_t *line, size_t *col);
+
+
+
+bool_t			Lex_Match(lexMatch_t *match, lexToken_t *tok);
 
 
 AR_NAMESPACE_END

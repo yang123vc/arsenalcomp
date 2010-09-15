@@ -23,8 +23,8 @@ void	Arsenal_Init(const arInit_t *ctx)
 {
 		AR_ASSERT(ctx != NULL);
 		AR_Init(ctx);
-		LEX_Init();
-		PSR_Init();
+		Lex_Init();
+		Parser_Init();
 		Tools_Init();
 
 		TGU_Init();
@@ -37,8 +37,8 @@ void	Arsenal_UnInit()
 {
 		TGU_UnInit();
 		Tools_UnInit();
-		PSR_UnInit();
-		LEX_UnInit();
+		Parser_UnInit();
+		Lex_UnInit();
 		AR_UnInit();
 }
 

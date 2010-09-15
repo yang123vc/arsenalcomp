@@ -36,8 +36,6 @@ void	TGU_UnInit();
 struct	__tengu_machine_tag;
 typedef struct	__tengu_machine_tag		tguMachine_t;
 
-typedef	int_t (AR_STDCALL *	tguExternFunc_t) (tguMachine_t	*vm);
-
 
 AR_NAMESPACE_END
 

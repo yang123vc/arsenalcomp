@@ -20,16 +20,16 @@ AR_NAMESPACE_BEGIN
 
 
 /*
-void			PSR_InitTermInfoList(psrTermInfoList_t	*lst);
-void			PSR_UnInitTermInfoList(psrTermInfoList_t	*lst);
-void			PSR_ClearTermInfoList(psrTermInfoList_t	*lst);
-psrTermInfo_t*	PSR_FindTermByName(psrTermInfoList_t	*lst, const wchar_t *name);
-psrTermInfo_t*	PSR_FindTermByValue(psrTermInfoList_t	*lst, size_t val);
-bool_t			PSR_InsertToTermInfoList(psrTermInfoList_t	*lst, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f);
+void			Parser_InitTermInfoList(psrTermInfoList_t	*lst);
+void			Parser_UnInitTermInfoList(psrTermInfoList_t	*lst);
+void			Parser_ClearTermInfoList(psrTermInfoList_t	*lst);
+psrTermInfo_t*	Parser_FindTermByName(psrTermInfoList_t	*lst, const wchar_t *name);
+psrTermInfo_t*	Parser_FindTermByValue(psrTermInfoList_t	*lst, size_t val);
+bool_t			Parser_InsertToTermInfoList(psrTermInfoList_t	*lst, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f);
 */
 
 
-void			PSR_InitTermInfoList(psrTermInfoList_t	*lst)
+void			Parser_InitTermInfoList(psrTermInfoList_t	*lst)
 {
 		AR_ASSERT(lst != NULL);
 		AR_memset(lst, 0, sizeof(*lst));
@@ -38,16 +38,16 @@ void			PSR_InitTermInfoList(psrTermInfoList_t	*lst)
 }
 
 
-void			PSR_UnInitTermInfoList(psrTermInfoList_t	*lst)
+void			Parser_UnInitTermInfoList(psrTermInfoList_t	*lst)
 {
 		AR_ASSERT(lst != NULL);
-		PSR_ClearTermInfoList(lst);
+		Parser_ClearTermInfoList(lst);
 		if(lst->lst)AR_DEL(lst->lst);
 		AR_memset(lst, 0, sizeof(*lst));
 }
 
 
-void			PSR_ClearTermInfoList(psrTermInfoList_t	*lst)
+void			Parser_ClearTermInfoList(psrTermInfoList_t	*lst)
 {
 		size_t i;
 		AR_ASSERT(lst != NULL);
@@ -56,7 +56,7 @@ void			PSR_ClearTermInfoList(psrTermInfoList_t	*lst)
 		{
 				psrTermInfo_t	*info = &lst->lst[i];
 
-				PSR_DestroySymb(info->term);
+				Parser_DestroySymb(info->term);
 		}
 		lst->count = 0;
 }
@@ -65,15 +65,15 @@ void			PSR_ClearTermInfoList(psrTermInfoList_t	*lst)
 
 
 
-psrTermInfo_t*	PSR_FindTermByName(psrTermInfoList_t	*lst, const wchar_t *name)
+psrTermInfo_t*	Parser_FindTermByName(psrTermInfoList_t	*lst, const wchar_t *name)
 {
 		size_t i;
 		AR_ASSERT(lst != NULL && name != NULL);
 		for(i = 0; i < lst->count; ++i)
 		{
 				psrTermInfo_t	*info = &lst->lst[i];
-				/*注意，这里的参数name可能是任何非PSR_StringTable分配的内存，
-				 *因此，这里必须用AR_wcscmp比较字符串而非类似PSR_CompSymb内部的比较str指针
+				/*注意，这里的参数name可能是任何非Parser_StringTable分配的内存，
+				 *因此，这里必须用AR_wcscmp比较字符串而非类似Parser_CompSymb内部的比较str指针
 				*/
 				if(AR_wcscmp(info->term->name, name) == 0)return info;
 		}
@@ -82,7 +82,7 @@ psrTermInfo_t*	PSR_FindTermByName(psrTermInfoList_t	*lst, const wchar_t *name)
 
 
 
-psrTermInfo_t*	PSR_FindTermByValue(psrTermInfoList_t	*lst, size_t val)
+psrTermInfo_t*	Parser_FindTermByValue(psrTermInfoList_t	*lst, size_t val)
 {
 		size_t i;
 		AR_ASSERT(lst != NULL);
@@ -95,7 +95,7 @@ psrTermInfo_t*	PSR_FindTermByValue(psrTermInfoList_t	*lst, size_t val)
 }
 
 
-bool_t			PSR_InsertToTermInfoList(psrTermInfoList_t	*lst, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f)
+bool_t			Parser_InsertToTermInfoList(psrTermInfoList_t	*lst, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f)
 {
 		psrTermInfo_t *info;
 		AR_ASSERT(lst != NULL && name != NULL);
@@ -107,7 +107,7 @@ bool_t			PSR_InsertToTermInfoList(psrTermInfoList_t	*lst, const wchar_t *name, s
 		}
 		info = &lst->lst[lst->count++];
 		
-		info->term = PSR_CreateSymb(name, PSR_TERM);
+		info->term = Parser_CreateSymb(name, PARSER_TERM);
 		info->assoc = assoc;
 		info->prec = prec;
 		info->val = val;
@@ -124,7 +124,7 @@ bool_t			PSR_InsertToTermInfoList(psrTermInfoList_t	*lst, const wchar_t *name, s
 
 
 
-psrRule_t* PSR_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, size_t auto_ret, const psrTermInfoList_t *term_list, arIOCtx_t *ctx)
+psrRule_t* Parser_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, size_t auto_ret, const psrTermInfoList_t *term_list, arIOCtx_t *ctx)
 {
 		psrRule_t		*rule;
 		size_t i;
@@ -136,13 +136,13 @@ psrRule_t* PSR_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, cons
 
 		AR_ASSERT(auto_ret <= body->count);
 
-		if(PSR_FindTermByName((psrTermInfoList_t*)term_list, head->name) != NULL)
+		if(Parser_FindTermByName((psrTermInfoList_t*)term_list, head->name) != NULL)
 		{
 				AR_printf_ctx(ctx, L"Grammar Error: Duplicate Rule name <%ls>!\r\n", head->name);
 				return NULL;
 		}
 
-		if(prec_tok != NULL && PSR_FindTermByName((psrTermInfoList_t*)term_list, prec_tok) == NULL)
+		if(prec_tok != NULL && Parser_FindTermByName((psrTermInfoList_t*)term_list, prec_tok) == NULL)
 		{
 				/*AR_error(L"Grammar Error: Invalid prec token in <%ls>!\r\n", head->name);*/
 				AR_printf_ctx(ctx, L"Grammar Error: Invalid prec \"%ls\" token <%ls>\r\n", prec_tok, head->name);
@@ -158,11 +158,11 @@ psrRule_t* PSR_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, cons
 
 				symb = body->lst[i];
 
-				if(body->lst[i]->type == PSR_TERM)
+				if(body->lst[i]->type == PARSER_TERM)
 				{
-						if(PSR_FindTermByName((psrTermInfoList_t*)term_list, symb->name) == NULL)return NULL;
+						if(Parser_FindTermByName((psrTermInfoList_t*)term_list, symb->name) == NULL)return NULL;
 						
-						if(PSR_CompSymb(symb, PSR_ErrorSymb) == 0)
+						if(Parser_CompSymb(symb, PARSER_ErrorSymb) == 0)
 						{
 								if(inerr)
 								{
@@ -176,20 +176,20 @@ psrRule_t* PSR_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, cons
 						right_term = symb->name;
 				}else
 				{
-						if(PSR_FindTermByName((psrTermInfoList_t*)term_list, symb->name) != NULL)return NULL;
+						if(Parser_FindTermByName((psrTermInfoList_t*)term_list, symb->name) != NULL)return NULL;
 				}
 		}
 		
-		if(right_term == NULL)right_term = PSR_DefPrecSymb->name;
+		if(right_term == NULL)right_term = PARSER_DefPrecSymb->name;
 		
 		rule = AR_NEW0(psrRule_t);
-		PSR_InitSymbList(&rule->body);
+		Parser_InitSymbList(&rule->body);
 		
-		rule->head = PSR_CopyNewSymb(head);
+		rule->head = Parser_CopyNewSymb(head);
 		
 		for(i = 0; i < body->count; ++i)
 		{
-				PSR_InsertToSymbList(&rule->body, PSR_CopyNewSymb(body->lst[i]));
+				Parser_InsertToSymbList(&rule->body, Parser_CopyNewSymb(body->lst[i]));
 				
 		}
 
@@ -204,7 +204,7 @@ psrRule_t* PSR_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, cons
 
 /*****************************************************************************************************************************************/
 
-psrRule_t* PSR_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, size_t auto_ret, const psrTermInfoList_t *term_list, arIOCtx_t *ctx)
+psrRule_t* Parser_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, size_t auto_ret, const psrTermInfoList_t *term_list, arIOCtx_t *ctx)
 {
 		const psrSymb_t *head;
 		psrSymbList_t	body;
@@ -217,7 +217,7 @@ psrRule_t* PSR_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRuleF
 		
 		res = NULL;
 		head = NULL; 
-		PSR_InitSymbList(&body);
+		Parser_InitSymbList(&body);
 		p = AR_wcstrim_space(str);
 
 		beg = p;
@@ -234,7 +234,7 @@ psrRule_t* PSR_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRuleF
 				wchar_t *name;
 				count = p - beg;
 				name = AR_wcsndup(beg, count);
-				head = PSR_CreateSymb(name, PSR_NONTERM);
+				head = Parser_CreateSymb(name, PARSER_NONTERM);
 				AR_DEL(name);
 		}
 		
@@ -263,70 +263,70 @@ psrRule_t* PSR_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRuleF
 								count = p - beg;
 								name = AR_wcsndup(beg, count);
 
-								if(PSR_FindTermByName((psrTermInfoList_t*)term_list, name) == NULL)
+								if(Parser_FindTermByName((psrTermInfoList_t*)term_list, name) == NULL)
 								{
-										tmp = PSR_CreateSymb(name, PSR_NONTERM);
+										tmp = Parser_CreateSymb(name, PARSER_NONTERM);
 								}else
 								{
-										tmp = PSR_CreateSymb(name, PSR_TERM);
+										tmp = Parser_CreateSymb(name, PARSER_TERM);
 								}
-								PSR_InsertToSymbList(&body, tmp);
+								Parser_InsertToSymbList(&body, tmp);
 								AR_DEL(name);
 						}
 				}
 		}
 		
 
-		res =  PSR_CreateRule(head, &body, prec, rule_f, auto_ret, term_list, ctx);
+		res =  Parser_CreateRule(head, &body, prec, rule_f, auto_ret, term_list, ctx);
 
 END_POINT:
-		if(head)PSR_DestroySymb(head);
+		if(head)Parser_DestroySymb(head);
 		
 		{
 				size_t i;
 				
 				for(i = 0; i < body.count; ++i)
 				{
-						PSR_DestroySymb(body.lst[i]);
+						Parser_DestroySymb(body.lst[i]);
 				}
 		}
-		PSR_UnInitSymbList(&body);
+		Parser_UnInitSymbList(&body);
 		
 		return res;
 }
 
 
-void			PSR_DestroyRule(psrRule_t *rule)
+void			Parser_DestroyRule(psrRule_t *rule)
 {
 		size_t i;
 		AR_ASSERT(rule != NULL);
 
-		PSR_DestroySymb(rule->head);
+		Parser_DestroySymb(rule->head);
 		for(i = 0; i < rule->body.count; ++i)
 		{
-				PSR_DestroySymb(rule->body.lst[i]);
+				Parser_DestroySymb(rule->body.lst[i]);
 		}
 
-		PSR_UnInitSymbList(&rule->body);
+		Parser_UnInitSymbList(&rule->body);
 		if(rule->prec_tok) AR_DEL(rule->prec_tok);
 		AR_DEL(rule);
 }
 
 
 /*
-psrRule_t*		PSR_CopyNewRule(const psrRule_t *rule)
+psrRule_t*		Parser_CopyNewRule(const psrRule_t *rule)
 {
 		psrRule_t *dest;
 		size_t i;
 		AR_ASSERT(rule != NULL);
 		dest = AR_NEW0(psrRule_t);
 
-		dest->head = PSR_CopyNewSymb(rule->head);
-		PSR_InitSymbList(&dest->body);
+		dest->head = Parser_CopyNewSymb(rule->head);
+		Parser_InitSymbList(&dest->body);
 
 		for(i = 0; i < rule->body.count; ++i)
 		{
-				PSR_InsertToSymbList(&dest->body, PSR_CopyNewSymb(rule->body.lst[i]));
+				Parser_InsertToSymbList(&dest->body, Parser_CopyNewSymb(rule->body.lst[i]));
 		}
 
 		dest->prec_tok = rule->prec_tok;
@@ -335,7 +335,7 @@ psrRule_t*		PSR_CopyNewRule(const psrRule_t *rule)
 
 }
 
-bool_t			PSR_IsEmptyRule(const psrRule_t *rule)
+bool_t			Parser_IsEmptyRule(const psrRule_t *rule)
 {
 		AR_ASSERT(rule != NULL);
 
@@ -361,37 +361,37 @@ static void __init_grammar_component_unit(psrGrammar_t *grammar)
 {
 		AR_ASSERT(grammar != NULL);
 
-		PSR_InsertToTermInfoList(&grammar->term_list, PSR_EOISymb->name,PSR_EOI_TOKVAL, PSR_ASSOC_NONASSOC, 0, NULL);
-		PSR_InsertToTermInfoList(&grammar->term_list, PSR_ErrorSymb->name, PSR_ERROR_TOKVAL, PSR_ASSOC_NONASSOC, 0, NULL);
-		PSR_InsertToTermInfoList(&grammar->term_list, PSR_DefPrecSymb->name, PSR_DEFPREC_TOKVAL, PSR_ASSOC_NONASSOC, 0, NULL);
+		Parser_InsertToTermInfoList(&grammar->term_list, PARSER_EOISymb->name,PARSER_EOI_TOKVAL, PARSER_ASSOC_NONASSOC, 0, NULL);
+		Parser_InsertToTermInfoList(&grammar->term_list, PARSER_ErrorSymb->name, PARSER_ERROR_TOKVAL, PARSER_ASSOC_NONASSOC, 0, NULL);
+		Parser_InsertToTermInfoList(&grammar->term_list, PARSER_DefPrecSymb->name, PARSER_DEFPREC_TOKVAL, PARSER_ASSOC_NONASSOC, 0, NULL);
 
 		{
 				psrRule_t *start;
 				psrSymbList_t	body;
-				PSR_InitSymbList(&body);
-				start = PSR_CreateRule(PSR_StartSymb, &body, NULL, NULL, 0, &grammar->term_list, &grammar->io_ctx);
+				Parser_InitSymbList(&body);
+				start = Parser_CreateRule(PARSER_StartSymb, &body, NULL, NULL, 0, &grammar->term_list, &grammar->io_ctx);
 				AR_ASSERT(start != NULL);
-				PSR_UnInitSymbList(&body);
+				Parser_UnInitSymbList(&body);
 				__insert_rule(grammar, start);
 		}
 }
 
 /******************************************************************************************************************/
 
-void					PSR_ResetGrammarIOContext(psrGrammar_t *gmr, const arIOCtx_t *io_ctx)
+void					Parser_ResetGrammarIOContext(psrGrammar_t *gmr, const arIOCtx_t *io_ctx)
 {
 		AR_ASSERT(gmr != NULL && io_ctx != NULL);
 
 		gmr->io_ctx = io_ctx != NULL ? *io_ctx : *AR_global_ioctx();
 }
 
-void					PSR_ResetGrammarParseHandler(psrGrammar_t *gmr, const psrHandler_t *handler)
+void					Parser_ResetGrammarParseHandler(psrGrammar_t *gmr, const psrHandler_t *handler)
 {
 		AR_ASSERT(gmr != NULL && handler != NULL);
 		gmr->psr_handler = *handler;
 }
 
-psrGrammar_t*			PSR_CreateGrammar(const psrHandler_t *handler, const arIOCtx_t *io_ctx)
+psrGrammar_t*			Parser_CreateGrammar(const psrHandler_t *handler, const arIOCtx_t *io_ctx)
 {
 		psrGrammar_t* gmr;
 
@@ -400,8 +400,8 @@ psrGrammar_t*			PSR_CreateGrammar(const psrHandler_t *handler, const arIOCtx_t *
 		gmr->psr_handler = *handler;
 		gmr->io_ctx = io_ctx != NULL ? *io_ctx : *AR_global_ioctx();
 
-		PSR_InitTermInfoList(&gmr->term_list);
-		PSR_InitSymbList(&gmr->symb_list);
+		Parser_InitTermInfoList(&gmr->term_list);
+		Parser_InitSymbList(&gmr->symb_list);
 		
 		__init_grammar_component_unit(gmr);
 		
@@ -415,17 +415,17 @@ static void __clear_grammar(psrGrammar_t *grammar)
 		
 		for(i = 0; i < grammar->count; ++i)
 		{
-				PSR_DestroyRule(grammar->rules[i]);
+				Parser_DestroyRule(grammar->rules[i]);
 				grammar->rules[i] = NULL;
 		}
 		
 		grammar->count = 0;
-		PSR_ClearTermInfoList(&grammar->term_list);
-		PSR_ClearSymbList(&grammar->symb_list);
+		Parser_ClearTermInfoList(&grammar->term_list);
+		Parser_ClearSymbList(&grammar->symb_list);
 }
 
 
-void	PSR_ClearGrammar(psrGrammar_t *grammar)
+void	Parser_ClearGrammar(psrGrammar_t *grammar)
 {
 		
 		AR_ASSERT(grammar != NULL);
@@ -435,29 +435,29 @@ void	PSR_ClearGrammar(psrGrammar_t *grammar)
 
 
 
-void					PSR_DestroyGrammar(psrGrammar_t *grammar)
+void					Parser_DestroyGrammar(psrGrammar_t *grammar)
 {
 
 		AR_ASSERT(grammar != NULL);
-		/*PSR_ClearGrammar(grammar);*/
+		/*Parser_ClearGrammar(grammar);*/
 		__clear_grammar(grammar);
 		
-		PSR_UnInitTermInfoList(&grammar->term_list);
-		PSR_UnInitSymbList(&grammar->symb_list);
+		Parser_UnInitTermInfoList(&grammar->term_list);
+		Parser_UnInitSymbList(&grammar->symb_list);
 		AR_DEL(grammar->rules);
 		AR_DEL(grammar);
 }
 
 
 
-const psrHandler_t*		PSR_GetGrammarHandler(const psrGrammar_t *grammar)
+const psrHandler_t*		Parser_GetGrammarHandler(const psrGrammar_t *grammar)
 {
 		AR_ASSERT(grammar != NULL);
 		return &grammar->psr_handler;
 }
 
 /*
-const arIOCtx_t*		PSR_GetGrammarIOContext(const psrGrammar_t *grammar)
+const arIOCtx_t*		Parser_GetGrammarIOContext(const psrGrammar_t *grammar)
 {
 		AR_ASSERT(grammar != NULL);
 		return &grammar->io_ctx;
@@ -465,11 +465,11 @@ const arIOCtx_t*		PSR_GetGrammarIOContext(const psrGrammar_t *grammar)
 */
 
 
-bool_t					PSR_InsertTerm(psrGrammar_t *grammar, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f)
+bool_t					Parser_InsertTerm(psrGrammar_t *grammar, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f)
 {
 		AR_ASSERT(grammar != NULL && name != NULL);
 		
-		if(val < PSR_MIN_TOKENVAL)
+		if(val < PARSER_MIN_TOKENVAL)
 		{
 				/*AR_error(AR_GRAMMAR, L"Grammar Error : invalid token value %d\r\n", val);*/
 				/*AR_error(L"Grammar Error : invalid token value %" AR_PLAT_INT_FMT L"d\r\n", (size_t)val);*/
@@ -480,14 +480,14 @@ bool_t					PSR_InsertTerm(psrGrammar_t *grammar, const wchar_t *name, size_t val
 		}
 		
 
-		if(PSR_FindTermByName(&grammar->term_list, name) != NULL)
+		if(Parser_FindTermByName(&grammar->term_list, name) != NULL)
 		{
 				/*AR_error( L"Grammar Error : duplicate name : %ls definition\r\n", name);*/
 				AR_printf_ctx(&grammar->io_ctx, L"Grammar Error : duplicate name : \"%ls\" definition\r\n", name);
 				return false;
 		}
 
-		if(PSR_FindTermByValue(&grammar->term_list, val) != NULL)
+		if(Parser_FindTermByValue(&grammar->term_list, val) != NULL)
 		{
 				/*AR_error(AR_GRAMMAR, L"Grammar Error : duplicate token value : %d definition\r\n", val);*/
 				/*AR_error(L"Grammar Error : duplicate token value : %" AR_PLAT_INT_FMT L"d definition\r\n", (size_t)val);*/
@@ -495,10 +495,10 @@ bool_t					PSR_InsertTerm(psrGrammar_t *grammar, const wchar_t *name, size_t val
 				return false;
 		}
 		
-		return PSR_InsertToTermInfoList(&grammar->term_list, name, val, assoc, prec, leaf_f);
+		return Parser_InsertToTermInfoList(&grammar->term_list, name, val, assoc, prec, leaf_f);
 }
 
-bool_t					PSR_InsertRule(psrGrammar_t *grammar, psrRule_t *rule)
+bool_t					Parser_InsertRule(psrGrammar_t *grammar, psrRule_t *rule)
 {
 		size_t i;
 		AR_ASSERT(grammar != NULL && rule != NULL);
@@ -508,7 +508,7 @@ bool_t					PSR_InsertRule(psrGrammar_t *grammar, psrRule_t *rule)
 				if(grammar->rules[i] == rule)return false;
 		}
 
-		if(PSR_CompSymb(rule->head, PSR_StartSymb) == 0)/*rule-head不可为%Start保留符号*/
+		if(Parser_CompSymb(rule->head, PARSER_StartSymb) == 0)/*rule-head不可为%Start保留符号*/
 		{
 				/*AR_error(L"Grammar Error : Non-term token %ls was reserved\r\n", rule->head->name);*/
 				AR_printf_ctx(&grammar->io_ctx, L"Grammar Error : Non-term token %ls was reserved\r\n", rule->head->name);
@@ -519,37 +519,37 @@ bool_t					PSR_InsertRule(psrGrammar_t *grammar, psrRule_t *rule)
 		{
 				AR_ASSERT(grammar->rules[0]->body.count == 0);
 				/*
-				PSR_DestroySymb(grammar->rules[0]->body.lst[0]);
-				grammar->rules[0]->body.lst[0] = PSR_CopyNewSymb(rule->head);
+				Parser_DestroySymb(grammar->rules[0]->body.lst[0]);
+				grammar->rules[0]->body.lst[0] = Parser_CopyNewSymb(rule->head);
 				*/
-				PSR_InsertToSymbList(&grammar->rules[0]->body, PSR_CopyNewSymb(rule->head));
+				Parser_InsertToSymbList(&grammar->rules[0]->body, Parser_CopyNewSymb(rule->head));
 		}
 		__insert_rule(grammar, rule);
 		
 		return true;
 }
 
-bool_t					PSR_InsertRuleByPartStr(psrGrammar_t *grammar, const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, size_t auto_ret)
+bool_t					Parser_InsertRuleByPartStr(psrGrammar_t *grammar, const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, size_t auto_ret)
 {
 		psrRule_t		*rule;
 		AR_ASSERT(grammar != NULL && head != NULL && body != NULL);
 
-		rule = PSR_CreateRule(head, body, prec_tok, rule_f, auto_ret, &grammar->term_list, &grammar->io_ctx);
+		rule = Parser_CreateRule(head, body, prec_tok, rule_f, auto_ret, &grammar->term_list, &grammar->io_ctx);
 		
 		if(rule == NULL)return false;
 
-		return PSR_InsertRule(grammar, rule);
+		return Parser_InsertRule(grammar, rule);
 }
 
 
-bool_t					PSR_InsertRuleByStr(psrGrammar_t *grammar, const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, size_t auto_ret)
+bool_t					Parser_InsertRuleByStr(psrGrammar_t *grammar, const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, size_t auto_ret)
 {
 
 		psrRule_t		*rule;
 		AR_ASSERT(grammar != NULL && str != NULL);
-		rule = PSR_CreateRuleByStr(str, prec, rule_f, auto_ret, &grammar->term_list, &grammar->io_ctx);
+		rule = Parser_CreateRuleByStr(str, prec, rule_f, auto_ret, &grammar->term_list, &grammar->io_ctx);
 		if(rule == NULL)return false;
-		return PSR_InsertRule(grammar, rule);
+		return Parser_InsertRule(grammar, rule);
 }
 
 
@@ -558,7 +558,7 @@ bool_t					PSR_InsertRuleByStr(psrGrammar_t *grammar, const wchar_t *str, const 
 
 
 
-int_t					PSR_IndexOfGrammar(const psrGrammar_t *grammar, const psrRule_t *rule)
+int_t					Parser_IndexOfGrammar(const psrGrammar_t *grammar, const psrRule_t *rule)
 {
 		size_t i;
 		for(i = 0; i < grammar->count; ++i)
@@ -569,7 +569,7 @@ int_t					PSR_IndexOfGrammar(const psrGrammar_t *grammar, const psrRule_t *rule)
 		return -1;
 }
 
-const psrSymbList_t* PSR_GetSymbList(const psrGrammar_t *grammar)
+const psrSymbList_t* Parser_GetSymbList(const psrGrammar_t *grammar)
 {
 		psrSymbList_t *lst;
 		AR_ASSERT(grammar != NULL);
@@ -578,28 +578,28 @@ const psrSymbList_t* PSR_GetSymbList(const psrGrammar_t *grammar)
 
 	/*	if(grammar->symb_list.count == 0)*/
 
-		PSR_ClearSymbList(lst);
+		Parser_ClearSymbList(lst);
 		
 		{
 				size_t i,k;
 				/*先插入所有终结符*/
-				for(i = 0; i < grammar->term_list.count; ++i)PSR_InsertToSymbList(lst, grammar->term_list.lst[i].term);
+				for(i = 0; i < grammar->term_list.count; ++i)Parser_InsertToSymbList(lst, grammar->term_list.lst[i].term);
 				
 				/*插入每一条产生式的每一个符号，终结符或非终结符*/
 				for(i = 0; i < grammar->count; ++i)
 				{
 						const psrRule_t	*rule = grammar->rules[i];
 						
-						if(PSR_FindFromSymbList(lst, rule->head) == -1)
+						if(Parser_FindFromSymbList(lst, rule->head) == -1)
 						{
-								PSR_InsertToSymbList(lst, rule->head);
+								Parser_InsertToSymbList(lst, rule->head);
 						}
 						
 						for(k = 0; k < rule->body.count; ++k)
 						{
-								if(PSR_FindFromSymbList(lst, rule->body.lst[k]) == -1)
+								if(Parser_FindFromSymbList(lst, rule->body.lst[k]) == -1)
 								{
-										PSR_InsertToSymbList(lst, rule->body.lst[k]);
+										Parser_InsertToSymbList(lst, rule->body.lst[k]);
 								}
 						}
 				}
@@ -614,7 +614,7 @@ const psrSymbList_t* PSR_GetSymbList(const psrGrammar_t *grammar)
 
 
 
-bool_t			PSR_CheckIsValidGrammar(const psrGrammar_t *grammar)
+bool_t			Parser_CheckIsValidGrammar(const psrGrammar_t *grammar)
 {
 		size_t i,j,k;
 		bool_t result;
@@ -624,7 +624,7 @@ bool_t			PSR_CheckIsValidGrammar(const psrGrammar_t *grammar)
 		
 		if(grammar->count < 2)return false;/*Start和输入的第一个产生式一定>=2*/
 
-		lst = PSR_GetSymbList(grammar);
+		lst = Parser_GetSymbList(grammar);
 		mark_tbl = AR_NEWARR0(bool_t, lst->count * lst->count);
 
 		result = true;
@@ -638,13 +638,13 @@ bool_t			PSR_CheckIsValidGrammar(const psrGrammar_t *grammar)
 						const psrSymb_t *symb;
 						symb = rule->body.lst[j];
 
-						if(symb->type == PSR_NONTERM)
+						if(symb->type == PARSER_NONTERM)
 						{
 								bool_t is_ok;
 								is_ok = false;
 								for(k = 0; !is_ok && k < grammar->count; ++k)
 								{
-										if(PSR_CompSymb(symb, grammar->rules[k]->head) == 0)
+										if(Parser_CompSymb(symb, grammar->rules[k]->head) == 0)
 										{
 												is_ok = true;
 										}
@@ -653,8 +653,8 @@ bool_t			PSR_CheckIsValidGrammar(const psrGrammar_t *grammar)
 								if(!is_ok)
 								{
 										size_t h,s;
-										h = (size_t)PSR_FindFromSymbList(lst, rule->head);
-										s = (size_t)PSR_FindFromSymbList(lst, symb);
+										h = (size_t)Parser_FindFromSymbList(lst, rule->head);
+										s = (size_t)Parser_FindFromSymbList(lst, symb);
 
 										if(!mark_tbl[AR_TBL_IDX_R(h,s,lst->count)])
 										{
@@ -678,18 +678,18 @@ bool_t			PSR_CheckIsValidGrammar(const psrGrammar_t *grammar)
 				symb = lst->lst[i];
 				is_ok = false;
 				
-				if(PSR_IsBuildInSymbol(symb) ||	symb->type == PSR_TERM)continue;
+				if(Parser_IsBuildInSymbol(symb) ||	symb->type == PARSER_TERM)continue;
 
 				for(k = 0; !is_ok && k < grammar->count; ++k)
 				{
 						const psrRule_t *rule;
 						rule = grammar->rules[k];
 
-						if(PSR_CompSymb(rule->head, symb) == 0)continue;/*自己引用自己不算*/
+						if(Parser_CompSymb(rule->head, symb) == 0)continue;/*自己引用自己不算*/
 						
 						for(j = 0; j < rule->body.count; ++j)
 						{
-								if(PSR_CompSymb(rule->body.lst[j], symb) == 0)
+								if(Parser_CompSymb(rule->body.lst[j], symb) == 0)
 								{
 										is_ok = true;
 										break;
@@ -709,32 +709,32 @@ bool_t			PSR_CheckIsValidGrammar(const psrGrammar_t *grammar)
 		return result;
 }
 
-const psrRule_t*		PSR_GetStartRule(const psrGrammar_t *grammar)
+const psrRule_t*		Parser_GetStartRule(const psrGrammar_t *grammar)
 {
 		return grammar->rules[0];
 }
 
 
-bool_t					PSR_SetFirstRule(psrGrammar_t *grammar, const wchar_t *rule_name)
+bool_t					Parser_SetFirstRule(psrGrammar_t *grammar, const wchar_t *rule_name)
 {
 		psrRule_t *start = grammar->rules[0];
 		const psrSymb_t *lhs = NULL;
 		size_t i;
 		AR_ASSERT(grammar != NULL && grammar->count > 0 && rule_name != NULL);
 
-		if(PSR_GetTermSymbInfoByName(grammar, rule_name) != NULL)
+		if(Parser_GetTermSymbInfoByName(grammar, rule_name) != NULL)
 		{
 				return false;
 		}
 
-		if(AR_wcscmp(PSR_StartSymb->name, rule_name) == 0)return false;
+		if(AR_wcscmp(PARSER_StartSymb->name, rule_name) == 0)return false;
 
 
 		for(i = 0; i < grammar->count; ++i)
 		{
 				if(AR_wcscmp(rule_name, grammar->rules[i]->head->name) == 0)
 				{
-						lhs = PSR_CopyNewSymb(grammar->rules[i]->head);
+						lhs = Parser_CopyNewSymb(grammar->rules[i]->head);
 						break;
 				}
 		}
@@ -744,38 +744,38 @@ bool_t					PSR_SetFirstRule(psrGrammar_t *grammar, const wchar_t *rule_name)
 		AR_ASSERT(grammar->count > 1);
 		AR_ASSERT(start != NULL && start->body.count > 0);
 
-		PSR_DestroySymb(start->body.lst[0]);
+		Parser_DestroySymb(start->body.lst[0]);
 		start->body.lst[0] = lhs;
 		
 		return true;
 }
 
-const psrTermInfo_t* PSR_GetRulePrecAssocInfo(const psrGrammar_t *grammar, const psrRule_t *rule)
+const psrTermInfo_t* Parser_GetRulePrecAssocInfo(const psrGrammar_t *grammar, const psrRule_t *rule)
 {
 		AR_ASSERT(grammar != NULL && rule != NULL && rule->prec_tok != NULL);
-		return PSR_FindTermByName((psrTermInfoList_t*)&grammar->term_list, rule->prec_tok);
+		return Parser_FindTermByName((psrTermInfoList_t*)&grammar->term_list, rule->prec_tok);
 
 }
 
-psrTermInfo_t*	PSR_GetTermSymbInfo(const psrGrammar_t	*grammar, const psrSymb_t *term)
+psrTermInfo_t*	Parser_GetTermSymbInfo(const psrGrammar_t	*grammar, const psrSymb_t *term)
 {
-		AR_ASSERT(grammar != NULL && term != NULL && term->type == PSR_TERM);
-		return  PSR_FindTermByName((psrTermInfoList_t*)&grammar->term_list, term->name);
+		AR_ASSERT(grammar != NULL && term != NULL && term->type == PARSER_TERM);
+		return  Parser_FindTermByName((psrTermInfoList_t*)&grammar->term_list, term->name);
 		
 }
 
-psrTermInfo_t*			PSR_GetTermSymbInfoByName(const psrGrammar_t	*grammar, const wchar_t *name)
+psrTermInfo_t*			Parser_GetTermSymbInfoByName(const psrGrammar_t	*grammar, const wchar_t *name)
 {
 		AR_ASSERT(grammar != NULL && name != NULL);
 
-		return  PSR_FindTermByName((psrTermInfoList_t*)&grammar->term_list, name);
+		return  Parser_FindTermByName((psrTermInfoList_t*)&grammar->term_list, name);
 
 }
 
-psrTermInfo_t*			PSR_GetTermSymbInfoByValue(const psrGrammar_t	*grammar, size_t val)
+psrTermInfo_t*			Parser_GetTermSymbInfoByValue(const psrGrammar_t	*grammar, size_t val)
 {
 		AR_ASSERT(grammar != NULL);
-		return PSR_FindTermByValue((psrTermInfoList_t*)&grammar->term_list, val);
+		return Parser_FindTermByValue((psrTermInfoList_t*)&grammar->term_list, val);
 }
 
 
@@ -794,7 +794,7 @@ firstset求法为，例如A->X(0)...X(n-1);
 
 因为每次都会处理至少一个符号，所以能确保循环终止，除非无任何符号加入到First集合中(changed == False);
 */
-void					PSR_CalcFirstSet(const psrGrammar_t *grammar, psrSymbMap_t *first_set)
+void					Parser_CalcFirstSet(const psrGrammar_t *grammar, psrSymbMap_t *first_set)
 {
 		size_t i;
 		bool_t changed;
@@ -802,17 +802,17 @@ void					PSR_CalcFirstSet(const psrGrammar_t *grammar, psrSymbMap_t *first_set)
 		const psrSymb_t			*key;
 		AR_ASSERT(grammar != NULL && first_set != NULL && grammar->count > 1);
 		
-		lst = PSR_GetSymbList(grammar);
+		lst = Parser_GetSymbList(grammar);
 
 		for(i = 0; i < lst->count; ++i)
 		{
 				key = lst->lst[i];
-				if(key->type == PSR_NONTERM)
+				if(key->type == PARSER_NONTERM)
 				{
-						PSR_InsertToSymbMap(first_set, key, NULL);
+						Parser_InsertToSymbMap(first_set, key, NULL);
 				}else
 				{
-						PSR_InsertToSymbMap(first_set, key, key);
+						Parser_InsertToSymbMap(first_set, key, key);
 				}
 		}
 		
@@ -827,7 +827,7 @@ void					PSR_CalcFirstSet(const psrGrammar_t *grammar, psrSymbMap_t *first_set)
 						psrMapRec_t *rec = NULL;
 						size_t k = 0;
 						psrRule_t *rule = grammar->rules[i];
-						rec= PSR_GetSymbolFromSymbMap(first_set, rule->head);
+						rec= Parser_GetSymbolFromSymbMap(first_set, rule->head);
 
 						if(rec->can_empty)continue;
 						
@@ -836,8 +836,8 @@ void					PSR_CalcFirstSet(const psrGrammar_t *grammar, psrSymbMap_t *first_set)
 								const psrSymb_t *symb = NULL;
 								const psrMapRec_t *tmp_rec = NULL;
 								symb = rule->body.lst[k];
-								if(symb->type == PSR_TERM)break;
-								tmp_rec= PSR_GetSymbolFromSymbMap(first_set, symb);
+								if(symb->type == PARSER_TERM)break;
+								tmp_rec= Parser_GetSymbolFromSymbMap(first_set, symb);
 								if(!tmp_rec->can_empty)break;
 						}
 
@@ -863,22 +863,22 @@ void					PSR_CalcFirstSet(const psrGrammar_t *grammar, psrSymbMap_t *first_set)
 						rule = grammar->rules[i];
 
 						s1 = rule->head;
-						rec= PSR_GetSymbolFromSymbMap(first_set, s1);
+						rec= Parser_GetSymbolFromSymbMap(first_set, s1);
 
 
 						for(k = 0; k < rule->body.count; ++k)
 						{
 								s2 = rule->body.lst[k];/*产生式体中第k个符号*/
 								
-								if(s2->type == PSR_TERM)
+								if(s2->type == PARSER_TERM)
 								{
 										/*当前产生式体中存在终结符，则将其加入后终止循环*/
-										if(PSR_InsertToSymbList_Unique(&rec->lst, s2))
+										if(Parser_InsertToSymbList_Unique(&rec->lst, s2))
 										{
 												changed = true;
 										}
 										break;
-								}else if(PSR_CompSymb(s1, s2) == 0)/*非终结符，且与产生式头相同的符号*/
+								}else if(Parser_CompSymb(s1, s2) == 0)/*非终结符，且与产生式头相同的符号*/
 								{
 										if(!rec->can_empty)break;/*如果当前产生式头不为空，则终止循环*/
 								}
@@ -887,11 +887,11 @@ void					PSR_CalcFirstSet(const psrGrammar_t *grammar, psrSymbMap_t *first_set)
 										/*非终结符，且与产生式头不同*/
 										const psrMapRec_t *rec2 = NULL;
 										size_t x;
-										rec2 = PSR_GetSymbolFromSymbMap(first_set, s2);
+										rec2 = Parser_GetSymbolFromSymbMap(first_set, s2);
 										/*将当前非终结符号的所有first符号加入到当前产生式头的first-set中*/
 										for(x = 0; x < rec2->lst.count; ++x)
 										{
-												if(PSR_InsertToSymbList_Unique(&rec->lst, rec2->lst.lst[x]))
+												if(Parser_InsertToSymbList_Unique(&rec->lst, rec2->lst.lst[x]))
 												{
 														changed = true;
 												}
@@ -919,7 +919,7 @@ j == n-1:Follow(X(i)) += (First(X(j)) - {Epsilon})，循环结束，并将Follow(X(i) +=
 */
 
 
-void					PSR_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *follow_set, const psrSymbMap_t *first_set)
+void					Parser_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *follow_set, const psrSymbMap_t *first_set)
 {
 		size_t i;
 		bool_t changed;
@@ -929,21 +929,21 @@ void					PSR_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *follow_set
 		AR_ASSERT(grammar != NULL && grammar->count > 1 && follow_set != NULL && first_set != NULL);
 
 		changed = true;
-		lst = PSR_GetSymbList(grammar);
+		lst = Parser_GetSymbList(grammar);
 		for(i = 0; i < lst->count; i++)
 		{
 				const psrSymb_t *key = lst->lst[i];
-				if(key->type == PSR_NONTERM)
+				if(key->type == PARSER_NONTERM)
 				{
-						PSR_InsertToSymbMap(follow_set, key, NULL);
+						Parser_InsertToSymbMap(follow_set, key, NULL);
 
-						rec1 = PSR_GetSymbolFromSymbMap(first_set, key);
-						rec2 = PSR_GetSymbolFromSymbMap(follow_set, key);
+						rec1 = Parser_GetSymbolFromSymbMap(first_set, key);
+						rec2 = Parser_GetSymbolFromSymbMap(follow_set, key);
 						rec2->can_empty = rec1->can_empty;
 				}
 		}
 
-		PSR_InsertToSymbMap(follow_set, PSR_StartSymb, PSR_EOISymb);
+		Parser_InsertToSymbMap(follow_set, PARSER_StartSymb, PARSER_EOISymb);
 		
 		do{
 				changed = false;
@@ -955,7 +955,7 @@ void					PSR_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *follow_set
 						size_t k;
 						rule = grammar->rules[i];
 
-						head_follow = PSR_GetSymbolFromSymbMap(follow_set,rule->head);/*grammar->head[i]所对应的follow集合*/
+						head_follow = Parser_GetSymbolFromSymbMap(follow_set,rule->head);/*grammar->head[i]所对应的follow集合*/
 						
 						for(k = 0; k < rule->body.count; ++k)
 						{
@@ -963,7 +963,7 @@ void					PSR_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *follow_set
 								size_t next_idx;
 								key = rule->body.lst[k];
 								/*非终结符无follow-set*/
-								if(key->type == PSR_TERM)continue;
+								if(key->type == PARSER_TERM)continue;
 
 								next_idx = k + 1;
 								
@@ -974,17 +974,17 @@ void					PSR_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *follow_set
 										psrMapRec_t *rec_tmp = NULL;
 										size_t x;
 										
-										next = PSR_IndexOfSymbList(&rule->body, next_idx);/*next为key之后的符号*/
-										first_rec = PSR_GetSymbolFromSymbMap(first_set, next);/*next的first-set*/
-										rec_tmp  = PSR_GetSymbolFromSymbMap(follow_set, key);/*key的follow-set*/
+										next = Parser_IndexOfSymbList(&rule->body, next_idx);/*next为key之后的符号*/
+										first_rec = Parser_GetSymbolFromSymbMap(first_set, next);/*next的first-set*/
+										rec_tmp  = Parser_GetSymbolFromSymbMap(follow_set, key);/*key的follow-set*/
 										/*将key之后的符号next的first-set加入到key的follow-set中*/
 										for(x = 0; first_rec && x < first_rec->lst.count; ++x)
 										{
 												const psrSymb_t *f_symb;
 												f_symb = first_rec->lst.lst[x];
-												AR_ASSERT(f_symb->type == PSR_TERM);				/*first不可能为非终结符*/
+												AR_ASSERT(f_symb->type == PARSER_TERM);				/*first不可能为非终结符*/
 
-												if(PSR_InsertToSymbList_Unique(&rec_tmp->lst, f_symb))
+												if(Parser_InsertToSymbList_Unique(&rec_tmp->lst, f_symb))
 												{
 														changed = true;	/*任何一步的改动都需要重新计算follow集合*/
 												}
@@ -997,10 +997,10 @@ void					PSR_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *follow_set
 								{
 										/*则将产生式头的follow-set加入到符号key的follow-set中*/
 										size_t x;
-										psrMapRec_t *rec_tmp = PSR_GetSymbolFromSymbMap(follow_set, key);
+										psrMapRec_t *rec_tmp = Parser_GetSymbolFromSymbMap(follow_set, key);
 										for(x = 0; x < head_follow->lst.count; ++x)
 										{
-												if(PSR_InsertToSymbList_Unique(&rec_tmp->lst,head_follow->lst.lst[x]))
+												if(Parser_InsertToSymbList_Unique(&rec_tmp->lst,head_follow->lst.lst[x]))
 												{
 														changed = true;	/*任何一步的改动都需要重新计算follow集合*/
 												}
@@ -1043,9 +1043,9 @@ static bool_t __detect_left_recursion(const psrGrammar_t *grammar, const psrSymb
 
 		/*AR_ASSERT(lst->count > 0);*/
 
-		AR_ASSERT(PSR_FindFromSymbList(lst, head) == -1);
+		AR_ASSERT(Parser_FindFromSymbList(lst, head) == -1);
 		
-		PSR_InsertToSymbList(lst, head);
+		Parser_InsertToSymbList(lst, head);
 		
 		
 		
@@ -1054,19 +1054,19 @@ static bool_t __detect_left_recursion(const psrGrammar_t *grammar, const psrSymb
 				const psrRule_t *rule;
 				rule = grammar->rules[i];
 				
-				if(PSR_CompSymb(rule->head, head) == 0)
+				if(Parser_CompSymb(rule->head, head) == 0)
 				{
 						const psrSymb_t *symb;
 
 						size_t x = 0;
 						
-						/*while(x < rule->body.count && PSR_CompSymb(rule->body.lst[x], PSR_EpsilonSymb) == 0)x++;*/
+						/*while(x < rule->body.count && Parser_CompSymb(rule->body.lst[x], Parser_EpsilonSymb) == 0)x++;*/
 						
-						if(x < rule->body.count && rule->body.lst[x]->type == PSR_NONTERM)
+						if(x < rule->body.count && rule->body.lst[x]->type == PARSER_NONTERM)
 						{
 								symb = rule->body.lst[x];
 
-								if(PSR_CompSymb(lst->lst[0], symb) == 0)
+								if(Parser_CompSymb(lst->lst[0], symb) == 0)
 								{
 										is_recu = true;
 										if(output)
@@ -1082,7 +1082,7 @@ static bool_t __detect_left_recursion(const psrGrammar_t *grammar, const psrSymb
 												AR_AppendFormatString(output, L"\r\n");
 										}
 
-								}else if(PSR_FindFromSymbList(lst, symb) != -1)
+								}else if(Parser_FindFromSymbList(lst, symb) != -1)
 								{
 										continue;
 								}else
@@ -1093,20 +1093,20 @@ static bool_t __detect_left_recursion(const psrGrammar_t *grammar, const psrSymb
 				}
 		}
 		
-		PSR_RemoveFromSymbListByIndex(lst, lst->count-1);
+		Parser_RemoveFromSymbListByIndex(lst, lst->count-1);
 		return is_recu;
 		
 }
 
 
-bool_t					PSR_ReportLeftRecursion(const psrGrammar_t *grammar, arString_t *output)
+bool_t					Parser_ReportLeftRecursion(const psrGrammar_t *grammar, arString_t *output)
 {
 		size_t i;
 		psrSymbList_t	lst;
 		bool_t			ret = false;
 		AR_ASSERT(grammar != NULL);
 		if(output)AR_ClearString(output);
-		PSR_InitSymbList(&lst);
+		Parser_InitSymbList(&lst);
 		
 		for(i = 0; i < grammar->symb_list.count; ++i)
 		{
@@ -1114,9 +1114,9 @@ bool_t					PSR_ReportLeftRecursion(const psrGrammar_t *grammar, arString_t *outp
 				
 				symb = grammar->symb_list.lst[i];
 
-				PSR_ClearSymbList(&lst);
+				Parser_ClearSymbList(&lst);
 				
-				if(symb->type == PSR_NONTERM)
+				if(symb->type == PARSER_NONTERM)
 				{
 						if(__detect_left_recursion(grammar, symb, &lst,output))
 						{
@@ -1125,7 +1125,7 @@ bool_t					PSR_ReportLeftRecursion(const psrGrammar_t *grammar, arString_t *outp
 				}
 		}
 
-		PSR_UnInitSymbList(&lst);
+		Parser_UnInitSymbList(&lst);
 		return ret;
 }
 
@@ -1138,7 +1138,7 @@ static size_t __calc_leftfactor(const psrRule_t *l, const psrRule_t *r)
 		size_t cnt = 0;
 		AR_ASSERT(l != NULL && r != NULL);
 
-		while(cnt < l->body.count && cnt < r->body.count && PSR_CompSymb(l->body.lst[cnt], r->body.lst[cnt]) == 0)
+		while(cnt < l->body.count && cnt < r->body.count && Parser_CompSymb(l->body.lst[cnt], r->body.lst[cnt]) == 0)
 		{
 				cnt++;
 		}
@@ -1168,7 +1168,7 @@ RECHECK_POINT:
 		for(i = 0; i < n; ++i)
 		{
 				if(rules[i] == NULL)continue;
-				AR_ASSERT(PSR_CompSymb(lhs, rules[i]->head) == 0);
+				AR_ASSERT(Parser_CompSymb(lhs, rules[i]->head) == 0);
 				for(k = 0; k < n; ++k)
 				{
 						if(rules[k] == NULL)continue;
@@ -1218,7 +1218,7 @@ RECHECK_POINT:
 				{
 						AR_AppendString(tmp, lhs->name);
 						AR_AppendString(tmp, L"\t:\t");
-						PSR_PrintSymbolList(&rules[bk[i]]->body, tmp);
+						Parser_PrintSymbolList(&rules[bk[i]]->body, tmp);
 						AR_AppendFormatString(tmp, L"\t:\t%d", max);
 						AR_AppendString(tmp, L"\r\n");
 				}
@@ -1248,7 +1248,7 @@ RETURN_POINT:
 
 
 
-bool_t					PSR_ReportLeftFactor(const psrGrammar_t *grammar, arString_t *output)
+bool_t					Parser_ReportLeftFactor(const psrGrammar_t *grammar, arString_t *output)
 {
 		const psrRule_t	**rules;
 		bool_t has_left_factor;
@@ -1265,7 +1265,7 @@ bool_t					PSR_ReportLeftFactor(const psrGrammar_t *grammar, arString_t *output)
 		for(i = 0; i < grammar->symb_list.count; ++i)
 		{
 				const psrSymb_t *lhs = grammar->symb_list.lst[i];
-				if(lhs->type == PSR_TERM)continue;
+				if(lhs->type == PARSER_TERM)continue;
 				
 				AR_memset((void*)rules, 0, sizeof(const psrRule_t*) * grammar->symb_list.count);
 				
@@ -1273,7 +1273,7 @@ bool_t					PSR_ReportLeftFactor(const psrGrammar_t *grammar, arString_t *output)
 				
 				for(k = 0; k < grammar->count; ++k)
 				{
-						if(PSR_CompSymb(lhs, grammar->rules[k]->head) == 0)
+						if(Parser_CompSymb(lhs, grammar->rules[k]->head) == 0)
 						{
 								rules[cnt++] = grammar->rules[k];
 						}
@@ -1292,7 +1292,7 @@ bool_t					PSR_ReportLeftFactor(const psrGrammar_t *grammar, arString_t *output)
 
 
 
-void			PSR_PrintGrammar(const psrGrammar_t *grammar, arString_t *str)
+void			Parser_PrintGrammar(const psrGrammar_t *grammar, arString_t *str)
 {
 		size_t i;
 		
@@ -1304,16 +1304,16 @@ void			PSR_PrintGrammar(const psrGrammar_t *grammar, arString_t *str)
 				const psrRule_t *rule;
 				rule = grammar->rules[i];
 				
-				PSR_PrintSymbol(rule->head, str);
+				Parser_PrintSymbol(rule->head, str);
 				AR_AppendString(str, L" -> ");
-				PSR_PrintSymbolList(&rule->body, str);
+				Parser_PrintSymbolList(&rule->body, str);
 				AR_AppendString(str, L"    ");
-				PSR_PrintSymbol(rule->head, str);
+				Parser_PrintSymbol(rule->head, str);
 				
 				{
 						const psrTermInfo_t *info;
 						AR_ASSERT(rule->prec_tok != NULL);
-						info = PSR_FindTermByName((psrTermInfoList_t*)&grammar->term_list, rule->prec_tok);
+						info = Parser_FindTermByName((psrTermInfoList_t*)&grammar->term_list, rule->prec_tok);
 						AR_ASSERT(info != NULL);
 						
 						/*AR_AppendFormatString(str, L" prec = %d assoc = %d prec_tok = %ls", info->prec, info->assoc, info->term->name);*/
@@ -1332,9 +1332,9 @@ void			PSR_PrintGrammar(const psrGrammar_t *grammar, arString_t *str)
 		for(i = 0; i < grammar->term_list.count; ++i)
 		{
 				size_t v;
-				PSR_PrintSymbol(grammar->term_list.lst[i].term, str);
+				Parser_PrintSymbol(grammar->term_list.lst[i].term, str);
 				
-				v = (size_t)PSR_GetTermSymbInfoByName(grammar,grammar->term_list.lst[i].term->name)->val;
+				v = (size_t)Parser_GetTermSymbInfoByName(grammar,grammar->term_list.lst[i].term->name)->val;
 				AR_AppendFormatString(str, L": %" AR_PLAT_INT_FMT L"d\r\n",  v);
 				/*
 				AR_AppendString(str, L"\r\n");
@@ -1346,7 +1346,7 @@ void			PSR_PrintGrammar(const psrGrammar_t *grammar, arString_t *str)
 		AR_AppendString(str, L"Symbol List:\r\n");
 		
 		
-		PSR_PrintSymbolList(PSR_GetSymbList(grammar), str);
+		Parser_PrintSymbolList(Parser_GetSymbList(grammar), str);
 		AR_AppendString(str, L"\r\n\r\n");
 }
 #endif

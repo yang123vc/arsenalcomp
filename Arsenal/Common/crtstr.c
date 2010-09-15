@@ -67,6 +67,35 @@ int_t	AR_wcsnicmp(const wchar_t *l, const wchar_t *r, size_t n)
 
 
 
+const char*		AR_stristr(const char *s, const char *p)
+{
+		size_t i;
+		AR_ASSERT(s != NULL && p != NULL);
+		while(*s)
+		{
+				for(i = 0; s[i] && p[i] && AR_tolower(s[i]) == AR_tolower(p[i]); ++i);
+				if(p[i] == '\0')return s;
+				++s;
+		}
+		return NULL;
+
+}
+
+const wchar_t*		AR_wcsistr(const wchar_t *s, const wchar_t *p)
+{
+		size_t i;
+		AR_ASSERT(s != NULL && p != NULL);
+		while(*s)
+		{
+				for(i = 0; s[i] && p[i] && AR_towlower(s[i]) == AR_towlower(p[i]); ++i);
+				if(p[i] == L'\0')return s;
+				++s;
+		}
+		return NULL;
+}
+
+
+
 /**********************************************************string*************************************************************/
 
 
@@ -105,6 +134,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 								width = va_arg(args, int);
 						}else if(*fmt == L'-' || *fmt == L'+' || *fmt == L'0' || *fmt == L' ')
 						{
+
 						}else
 						{
 								break;
@@ -116,11 +146,13 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 				{
 						const wchar_t *s; int_t w;
 						s = AR_wtoi(fmt, &w, 10);
+						
 						if(s != NULL)
 						{
 								fmt = s;
 								width = w;
 						}
+
 						AR_ASSERT(fmt != NULL && width >= 0);
 						if(fmt == NULL || width < 0)return (int_t)-1;
 				}
@@ -137,11 +169,13 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 						{
 								const wchar_t *s; int_t p;
 								s = AR_wtoi(fmt, &p, 10);
+								
 								if(s != NULL)
 								{
 										fmt = s;
 										prec = p;
 								}
+								
 								AR_ASSERT(fmt != NULL && prec >= 0);
 								if(fmt == NULL || prec < 0)return -1;
 						}
@@ -389,6 +423,12 @@ wchar_t*		AR_vtow(const wchar_t *fmt, ...)
 
 		va_start (args, fmt);
 		len = AR_vscwprintf(fmt, args);
+		
+		if(len < 0)
+		{
+				return NULL;
+		}
+
 		buf = AR_NEWARR(wchar_t, len + 1);
 		AR_vswprintf(buf, len + 1, fmt, args);
 		va_end (args);

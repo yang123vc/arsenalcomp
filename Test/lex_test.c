@@ -69,7 +69,7 @@ static void __in_lexnodeShow(lexNode_t *root)
 		lexCharRange_t *curr;
 		switch(root->t)
 		{
-		case LEX_CHARSET:
+		case Lex_CHARSET:
 				if(!root->charset.is_neg && root->charset.range->next == NULL && root->charset.range->beg == root->charset.range->end)
 				{
 						charsetShowChar(root->charset.range->beg, true);
@@ -93,7 +93,7 @@ static void __in_lexnodeShow(lexNode_t *root)
 						AR_printf(L"]");
 				}
 				break;
-		case LEX_BRANCH:
+		case Lex_BRANCH:
 				AR_printf(L"(");
 				for(i = 0; i < root->branch.count; ++i)
 				{
@@ -102,21 +102,21 @@ static void __in_lexnodeShow(lexNode_t *root)
 				}
 				AR_printf(L")");
 				break;
-		case LEX_CAT:
+		case Lex_CAT:
 				AR_printf(L"(");
 				__in_lexnodeShow(root->cat.left);
 				if(root->cat.right != NULL) __in_lexnodeShow(root->cat.right);
 				
 				AR_printf(L")");
 				break;
-		case LEX_LOOP:
+		case Lex_LOOP:
 				AR_printf(L"(");__in_lexnodeShow(root->loop);AR_printf(L")");
 				AR_printf(L"*");
 				break;
-		case LEX_FINAL:
+		case Lex_FINAL:
 				printf("final");
 				break;
-		case LEX_CCLASS_ID:
+		case Lex_CCLASS_ID:
 				printf("%d ", root->cclass_id);
 				break;
 		default:
@@ -124,7 +124,7 @@ static void __in_lexnodeShow(lexNode_t *root)
 				break;
 		}
 }
-static void LEX_ShowNode(LexNodeT *root)
+static void Lex_ShowNode(LexNodeT *root)
 {
 		__in_lexnodeShow(root);
 		printf("\n");
@@ -170,10 +170,10 @@ void expr_test()
 		lexDFA_t	 *dfa;
 		lexStateTable_t stat_tbl;
 		lexNode_t *cat,*tmp;
-		//AR_ASSERT(LEX_InsertNameToNameTable(&tbl, L"_name", L"a*") == LEX_NO_ERROR);
+		//AR_ASSERT(Lex_InsertNameToNameTable(&tbl, L"_name", L"a*") == Lex_NO_ERROR);
 		tbl = NULL;
-		LEX_InitCClass(&cclass);
-		LEX_InitStateTable(&stat_tbl);
+		Lex_InitCClass(&cclass);
+		Lex_InitStateTable(&stat_tbl);
 		//res = __handle_expr(L"(abc){0,}{1,4}|(b)|\"xxx\\\"\"+",L'\0', tbl);
 		
 		//res = __handle_expr(L"\\\"([^\\\\\\\"])*\\\"",L'\0', tbl);
@@ -187,32 +187,32 @@ void expr_test()
 
 
 		
-		cat = LEX_CreateNode(LEX_CAT);
-		tmp = LEX_CreateNode(LEX_FINAL);
+		cat = Lex_CreateNode(Lex_CAT);
+		tmp = Lex_CreateNode(Lex_FINAL);
 		tmp->action.type = 20;
-		LEX_InsertNodeToCat(&cat->cat, res.node);
-		LEX_InsertNodeToCat(&cat->cat, tmp);
+		Lex_InsertNodeToCat(&cat->cat, res.node);
+		Lex_InsertNodeToCat(&cat->cat, tmp);
 		
 		
 
-		LEX_CalcCClass(&cclass, cat);
+		Lex_CalcCClass(&cclass, cat);
 
 		
-		set = LEX_BuildLeafSet(cat, &cclass);
+		set = Lex_BuildLeafSet(cat, &cclass);
 		
 		
-		dfa = LEX_BuildDFA(&cclass, set);
+		dfa = Lex_BuildDFA(&cclass, set);
 		
-		LEX_BuildStateTable(&stat_tbl, dfa, &cclass);
+		Lex_BuildStateTable(&stat_tbl, dfa, &cclass);
 		
 		__print_dfatbl(&stat_tbl);
 
 
-		LEX_UnInitCClass(&cclass);
-		LEX_DestroyNode(res.node);
-		LEX_DestroyNameList(tbl);
-		LEX_DestroyLeafSet(set);
-		LEX_DestroyDFA_ALL(dfa);
+		Lex_UnInitCClass(&cclass);
+		Lex_DestroyNode(res.node);
+		Lex_DestroyNameList(tbl);
+		Lex_DestroyLeafSet(set);
+		Lex_DestroyDFA_ALL(dfa);
 
 }
 
@@ -257,25 +257,25 @@ void lex_test()
 		lexToken_t tok;
 		lexMatch_t match;
 
-		lex = LEX_Create(NULL);
-		LEX_InitMatch(&match, L"   345 abc ef\r\n 674  adfsd");
+		lex = Lex_Create(NULL);
+		Lex_InitMatch(&match, L"   345 abc ef\r\n 674  adfsd");
 
 		for(i = 0; i < sizeof(name_expr) / sizeof(name_expr[0]); ++i)
 		{
-				LEX_InsertName(lex, name_expr[i].name, name_expr[i].expr);
+				Lex_InsertName(lex, name_expr[i].name, name_expr[i].expr);
 		}
 
 		
 		for(i = 0; i < sizeof(expr_act) / sizeof(expr_act[0]); ++i)
 		{
 
-				LEX_InsertRule(lex, expr_act[i].expr, &expr_act[i].action);
+				Lex_InsertRule(lex, expr_act[i].expr, &expr_act[i].action);
 
 		}
 		
-		LEX_GenerateTransTable(lex);
+		Lex_GenerateTransTable(lex);
 		
-		while(LEX_Match(lex, &match, &tok))
+		while(Lex_Match(lex, &match, &tok))
 		{
 				AR_wcsncpy(buf, tok.str, tok.count);
 				buf[tok.count] = L'\0';
@@ -289,8 +289,8 @@ void lex_test()
 		AR_ASSERT(match.is_ok);
 
 		getchar();
-		LEX_UnInitMatch(&match);
-		LEX_Destroy(lex);
+		Lex_UnInitMatch(&match);
+		Lex_Destroy(lex);
 }
 
 const wchar_t *pat[] = 
@@ -329,20 +329,20 @@ void lex_test2()
 		lexMatch_t match;
 		size_t i;
 
-		lex = LEX_Create(NULL);
-		LEX_InitMatch(&match, L"  \"abc\\\"\"\"def\"  ");
+		lex = Lex_Create(NULL);
+		Lex_InitMatch(&match, L"  \"abc\\\"\"\"def\"  ");
 
 		for(i = 0; i < sizeof(pat2)/sizeof(pat2[0]);  ++i)
 		{
-				if(!LEX_Insert(lex, pat2[i]))
+				if(!Lex_Insert(lex, pat2[i]))
 				{
 						AR_abort();
 				}
 		}
 
-		LEX_GenerateTransTable(lex);
+		Lex_GenerateTransTable(lex);
 
-		while(LEX_Match(lex, &match, &tok))
+		while(Lex_Match(lex, &match, &tok))
 		{
 				wchar_t buf[1024];
 				AR_wcsncpy(buf, tok.str, tok.count);
@@ -355,7 +355,7 @@ void lex_test2()
 
 		getchar();
 
-		LEX_UnInitMatch(&match);
+		Lex_UnInitMatch(&match);
 }
 
 void lex_test3()
@@ -365,9 +365,9 @@ void lex_test3()
 //		lexMatch_t match;
 //		size_t i;
 
-		lex = LEX_Create(NULL);
+		lex = Lex_Create(NULL);
 		
-		LEX_GenerateTransTable(lex);
+		Lex_GenerateTransTable(lex);
 
 
 }
@@ -410,20 +410,20 @@ void lex_test4()
 
 
 
-		lex = LEX_Create();
-		LEX_InitMatchStream(&match, get_char, skip_char, (void*)&ctx);
+		lex = Lex_Create();
+		Lex_InitMatchStream(&match, get_char, skip_char, (void*)&ctx);
 
 		for(i = 0; i < sizeof(pat)/sizeof(pat[0]);  ++i)
 		{
-				if(!LEX_Insert(lex, pat[i]))
+				if(!Lex_Insert(lex, pat[i]))
 				{
 						abort();
 				}
 		}
 
-		LEX_GenerateTransTable(lex);
+		Lex_GenerateTransTable(lex);
 
-		while(LEX_MatchStream(lex, &match, &tok))
+		while(Lex_MatchStream(lex, &match, &tok))
 		{
 				wchar_t buf[1024];
 				AR_wcsncpy(buf, tok.str, tok.count);
@@ -444,7 +444,7 @@ void lex_test4()
 
 		getchar();
 
-		LEX_UnInitMatchStream(&match);
+		Lex_UnInitMatchStream(&match);
 #endif
 
 }
@@ -474,26 +474,26 @@ void lex_test20()
 		lexMatch_t match;
 		size_t i;
 		bool_t  is_ok;
-		lex = LEX_Create(NULL);
-		LEX_InitMatch(&match,L"intadfasdfef\r\n" );
+		lex = Lex_Create(NULL);
+		Lex_InitMatch(&match,L"intadfasdfef\r\n" );
 		
 #if(0)
-		if(!LEX_Insert(lex, L"1,0 (/\\*([^\\*]|\\*+[^\\*/])*\\*+/)|(/\\*)"))
+		if(!Lex_Insert(lex, L"1,0 (/\\*([^\\*]|\\*+[^\\*/])*\\*+/)|(/\\*)"))
 		{
 				AR_abort();
 		}
 		
-		if(!LEX_InsertName(lex, L"keyword_lookahead", L"[A-Z_a-z0-9]"))
+		if(!Lex_InsertName(lex, L"keyword_lookahead", L"[A-Z_a-z0-9]"))
 		{
 				AR_abort();
 		}
 		
-		if(!LEX_Insert(lex, L"3,0 int(?!={keyword_lookahead})"))
+		if(!Lex_Insert(lex, L"3,0 int(?!={keyword_lookahead})"))
 		{
 				AR_abort();
 		}
 #endif	
-		if(!LEX_Insert(lex, L"3,0 int"))
+		if(!Lex_Insert(lex, L"3,0 int"))
 		{
 				AR_abort();
 		}
@@ -501,36 +501,36 @@ void lex_test20()
 
 		/*
 		
-		if(!LEX_Insert(lex, L"3,0 [\\0]"))
+		if(!Lex_Insert(lex, L"3,0 [\\0]"))
 		{
 				AR_abort();
 		}
 		
-		if(!LEX_Insert(lex, L"3,0 [\\0]"))
+		if(!Lex_Insert(lex, L"3,0 [\\0]"))
 		{
 				AR_abort();
 		}
 		*/
 
-		if(!LEX_Insert(lex, L"0,1 $"))
+		if(!Lex_Insert(lex, L"0,1 $"))
 		{
 				AR_abort();
 		}
 
-		//AR_printf(L"remove result == %d\r\n", LEX_RemoveByValue(lex, 0));
+		//AR_printf(L"remove result == %d\r\n", Lex_RemoveByValue(lex, 0));
 
-		//AR_printf(L"remove result == %d\r\n", LEX_RemoveByValue(lex, 0));
+		//AR_printf(L"remove result == %d\r\n", Lex_RemoveByValue(lex, 0));
 
-		LEX_GenerateTransTable(lex);
+		Lex_GenerateTransTable(lex);
 
 		is_ok = true;
 
 		while(true)
 		{
-				if(!LEX_Match(lex, &match, &tok))
+				if(!Lex_Match(lex, &match, &tok))
 				{
-						//LEX_Skip(&match);
-						//LEX_ClearError(&match);
+						//Lex_Skip(&match);
+						//Lex_ClearError(&match);
 						printf("failed\r\n");
 						break;
 						continue;
@@ -545,28 +545,28 @@ void lex_test20()
 						AR_printf(L"%ls : type == %d : count == %d\r\n", buf, tok.value, tok.count);
 						if(tok.value == 0)break;
 
-						LEX_PutBack(&match, &tok);
+						Lex_PutBack(&match, &tok);
 						getchar();
 				}
 		}
 
 		getchar();
 
-		LEX_UnInitMatch(&match);
+		Lex_UnInitMatch(&match);
 }
 
 
 void lex_skip_test()
 {
 		lexMatch_t		match;
-		LEX_InitMatch(&match,L"struct {\r\n int x; int y;\r\n}test_t;" );
-		LEX_SkipTo(&match, L"}");
+		Lex_InitMatch(&match,L"struct {\r\n int x; int y;\r\n}test_t;" );
+		Lex_SkipTo(&match, L"}");
 		AR_printf(L"line = %d : col = %d : next = %ls\r\n", match.line, match.col, match.next);
 
-		LEX_SkipTo(&match, L"test_t");
+		Lex_SkipTo(&match, L"test_t");
 		AR_printf(L"line = %d : col = %d : next = %ls\r\n", match.line, match.col, match.next);
 
-		LEX_SkipTo(&match, L"ccc");
+		Lex_SkipTo(&match, L"ccc");
 		AR_printf(L"line = %d : col = %d : next = %ls\r\n", match.line, match.col, match.next);
 }
 

@@ -21,7 +21,7 @@ AR_NAMESPACE_BEGIN
 
 
 
-void PSR_Init_LALR_Config()
+void Parser_Init_LALR_Config()
 {
 		
 		__init_config_freelist();
@@ -29,7 +29,7 @@ void PSR_Init_LALR_Config()
 		__init_node_freelist();
 }
 
-void PSR_UnInit_LALR_Config()
+void Parser_UnInit_LALR_Config()
 {
 		__uninit_node_freelist();
 		__uninit_config_list_freelist();
@@ -41,14 +41,14 @@ void PSR_UnInit_LALR_Config()
 /**************************************lalr config list*********************************************/
 
 
-lalrConfigList_t*		PSR_CreateConfigList()
+lalrConfigList_t*		Parser_CreateConfigList()
 {
 		lalrConfigList_t *res = __create_config_list();
 		AR_memset(res, 0, sizeof(lalrConfigList_t));
 		return res;
 }
 
-void					PSR_DestroyConfigList(lalrConfigList_t *lst, bool_t destroy_config)
+void					Parser_DestroyConfigList(lalrConfigList_t *lst, bool_t destroy_config)
 {
 		lalrConfigNode_t		*node;
 
@@ -61,7 +61,7 @@ void					PSR_DestroyConfigList(lalrConfigList_t *lst, bool_t destroy_config)
 
 				if(destroy_config)
 				{
-						PSR_UnInitConfig(node->config);
+						Parser_UnInitConfig(node->config);
 						__destroy_config(node->config);
 				}
 				__destroy_node(node);
@@ -70,7 +70,7 @@ void					PSR_DestroyConfigList(lalrConfigList_t *lst, bool_t destroy_config)
 		__destroy_config_list(lst);
 }
 
-lalrConfig_t*			PSR_InsertToConfigListByValue(lalrConfigList_t *lst, const psrRule_t *rule, size_t delim)
+lalrConfig_t*			Parser_InsertToConfigListByValue(lalrConfigList_t *lst, const psrRule_t *rule, size_t delim)
 {
 		lalrConfig_t *cfg;
 		AR_ASSERT(lst != NULL && rule != NULL);
@@ -78,15 +78,15 @@ lalrConfig_t*			PSR_InsertToConfigListByValue(lalrConfigList_t *lst, const psrRu
 
 		cfg = __create_config();
 
-		PSR_InitConfig(cfg, rule, delim);
+		Parser_InitConfig(cfg, rule, delim);
 
-		PSR_InsertToConfigList(lst, cfg);
+		Parser_InsertToConfigList(lst, cfg);
 		
 		return cfg;
 }
 
 
-void					PSR_InsertToConfigList(lalrConfigList_t *lst, lalrConfig_t *cfg)
+void					Parser_InsertToConfigList(lalrConfigList_t *lst, lalrConfig_t *cfg)
 {
 		lalrConfigNode_t		*node;
 		AR_ASSERT(lst != NULL && cfg != NULL);
@@ -112,7 +112,7 @@ void					PSR_InsertToConfigList(lalrConfigList_t *lst, lalrConfig_t *cfg)
 }
 
 
-void					PSR_UnionConfigList(lalrConfigList_t *l, lalrConfigList_t *r)
+void					Parser_UnionConfigList(lalrConfigList_t *l, lalrConfigList_t *r)
 {
 		
 		AR_ASSERT(l != NULL && r != NULL);
@@ -141,20 +141,20 @@ void					PSR_UnionConfigList(lalrConfigList_t *l, lalrConfigList_t *r)
 }
 
 
-void					PSR_CopyConfigList(lalrConfigList_t *l, const lalrConfigList_t *r)
+void					Parser_CopyConfigList(lalrConfigList_t *l, const lalrConfigList_t *r)
 {
 		const lalrConfigNode_t		*node;
 		AR_ASSERT(l != NULL && r != NULL);
 		
 		for(node = r->head; node != NULL; node = node->next)
 		{
-				PSR_InsertToConfigList(l, node->config);
+				Parser_InsertToConfigList(l, node->config);
 		}
 }
 
 
 #if(0)
-int_t					PSR_CompConfigList(const lalrConfigList_t *l, const lalrConfigList_t *r)
+int_t					Parser_CompConfigList(const lalrConfigList_t *l, const lalrConfigList_t *r)
 {
 		int_t cmp = 0;
 		const lalrConfigNode_t		*a, *b;
@@ -165,7 +165,7 @@ int_t					PSR_CompConfigList(const lalrConfigList_t *l, const lalrConfigList_t *
 		if(cmp != 0)return cmp;
 		for(a = l->head, b = r->head; a != NULL && b != NULL; a = a->next, b = b->next)
 		{
-				cmp = PSR_CompConfig(a->config, b->config);
+				cmp = Parser_CompConfig(a->config, b->config);
 				if(cmp != 0)return cmp;
 		}
 		
@@ -182,7 +182,7 @@ int_t					PSR_CompConfigList(const lalrConfigList_t *l, const lalrConfigList_t *
 }
 #endif
 
-int_t					PSR_CompConfigList(const lalrConfigList_t *l, const lalrConfigList_t *r)
+int_t					Parser_CompConfigList(const lalrConfigList_t *l, const lalrConfigList_t *r)
 {
 		int_t cmp = 0;
 		const lalrConfigNode_t		*a, *b;
@@ -193,7 +193,7 @@ int_t					PSR_CompConfigList(const lalrConfigList_t *l, const lalrConfigList_t *
 		if(cmp != 0)return cmp;
 		for(a = l->head, b = r->head; a != NULL && b != NULL; a = a->next, b = b->next)
 		{
-				cmp = PSR_CompConfig(a->config, b->config);
+				cmp = Parser_CompConfig(a->config, b->config);
 				if(cmp != 0)return cmp;
 		}
 		
@@ -203,7 +203,7 @@ int_t					PSR_CompConfigList(const lalrConfigList_t *l, const lalrConfigList_t *
 }
 
 
-lalrConfig_t*			PSR_FindFromConfigList(lalrConfigList_t *lst, const psrRule_t *rule, size_t delim)
+lalrConfig_t*			Parser_FindFromConfigList(lalrConfigList_t *lst, const psrRule_t *rule, size_t delim)
 {
 		lalrConfigNode_t		*node;
 		
@@ -243,7 +243,7 @@ static AR_INLINE void __merge_list(lalrConfigList_t *dest, lalrConfigList_t *a, 
 		{
 				int_t cmp;
 
-				cmp = PSR_CompConfig(l->config, r->config);
+				cmp = Parser_CompConfig(l->config, r->config);
 
 				if(cmp < 0)
 				{
@@ -383,7 +383,7 @@ static AR_INLINE void __sort_list(lalrConfigList_t *sour_list)
 /***************************************************************************************************************************/
 
 
-void					PSR_SortConfigList(lalrConfigList_t *l)
+void					Parser_SortConfigList(lalrConfigList_t *l)
 {
 		__sort_list(l);
 
@@ -393,7 +393,7 @@ void					PSR_SortConfigList(lalrConfigList_t *l)
 /***************************************lalr config******************************************************/
 
 
-void	PSR_InitConfig(lalrConfig_t *config, const psrRule_t *rule, size_t delim)
+void	Parser_InitConfig(lalrConfig_t *config, const psrRule_t *rule, size_t delim)
 {
 		AR_ASSERT(config != NULL && rule != NULL);
 
@@ -401,27 +401,27 @@ void	PSR_InitConfig(lalrConfig_t *config, const psrRule_t *rule, size_t delim)
 		config->rule = rule;
 		config->delim = delim;
 		
-		config->forward = PSR_CreateConfigList();
-		config->backward = PSR_CreateConfigList();
-		PSR_InitSymbList(&config->follow_set);
+		config->forward = Parser_CreateConfigList();
+		config->backward = Parser_CreateConfigList();
+		Parser_InitSymbList(&config->follow_set);
 		config->is_completed = false;
 }
 
 
-void	PSR_UnInitConfig(lalrConfig_t *config)
+void	Parser_UnInitConfig(lalrConfig_t *config)
 {
 		AR_ASSERT(config != NULL);
 
-		PSR_DestroyConfigList(config->forward, false);
-		PSR_DestroyConfigList(config->backward, false);
-		PSR_UnInitSymbList(&config->follow_set);
+		Parser_DestroyConfigList(config->forward, false);
+		Parser_DestroyConfigList(config->backward, false);
+		Parser_UnInitSymbList(&config->follow_set);
 
 		AR_memset(config, 0, sizeof(*config));
 }
 
 #if(0)
 
-int_t	PSR_CompConfig(const lalrConfig_t *l, const lalrConfig_t *r)
+int_t	Parser_CompConfig(const lalrConfig_t *l, const lalrConfig_t *r)
 {
 		int_t cmp;
 		AR_ASSERT(l != NULL && r != NULL);
@@ -439,7 +439,7 @@ int_t	PSR_CompConfig(const lalrConfig_t *l, const lalrConfig_t *r)
 #endif
 
 
-int_t	PSR_CompConfig(const lalrConfig_t *l, const lalrConfig_t *r)
+int_t	Parser_CompConfig(const lalrConfig_t *l, const lalrConfig_t *r)
 {
 		int_t cmp;
 		AR_ASSERT(l != NULL && r != NULL);
@@ -455,7 +455,7 @@ int_t	PSR_CompConfig(const lalrConfig_t *l, const lalrConfig_t *r)
 }
 
 
-void PSR_PrintConfig(const lalrConfig_t *config, const psrGrammar_t *gmr, arString_t *str)
+void Parser_PrintConfig(const lalrConfig_t *config, const psrGrammar_t *gmr, arString_t *str)
 {
 		size_t i;
 		const psrRule_t *rule;
@@ -472,8 +472,8 @@ void PSR_PrintConfig(const lalrConfig_t *config, const psrGrammar_t *gmr, arStri
 		for(i = 0; i < config->delim; ++i)
 		{
 				const psrSymb_t	*curr;
-				curr = PSR_IndexOfSymbList(&rule->body, i);
-				PSR_PrintSymbol(curr, str);
+				curr = Parser_IndexOfSymbList(&rule->body, i);
+				Parser_PrintSymbol(curr, str);
 		}
 		
 		AR_AppendString(str, L". ");
@@ -481,14 +481,14 @@ void PSR_PrintConfig(const lalrConfig_t *config, const psrGrammar_t *gmr, arStri
 		for(i; i < rule->body.count; ++i)
 		{
 				const psrSymb_t	*curr;
-				curr = PSR_IndexOfSymbList(&rule->body, i);
-				PSR_PrintSymbol(curr, str);
+				curr = Parser_IndexOfSymbList(&rule->body, i);
+				Parser_PrintSymbol(curr, str);
 		}
 
 		if(config->follow_set.count > 0)
 		{
 				AR_AppendString(str, L" : ");
-				PSR_PrintSymbolList(&config->follow_set, str);
+				Parser_PrintSymbolList(&config->follow_set, str);
 		}
 
 		AR_AppendString(str, L" ]");
@@ -496,7 +496,7 @@ void PSR_PrintConfig(const lalrConfig_t *config, const psrGrammar_t *gmr, arStri
 
 }
 
-void PSR_PrintConfigList(const lalrConfigList_t *lst, const psrGrammar_t *gmr, arString_t *str)
+void Parser_PrintConfigList(const lalrConfigList_t *lst, const psrGrammar_t *gmr, arString_t *str)
 {
 		lalrConfigNode_t *node;
 
@@ -504,7 +504,7 @@ void PSR_PrintConfigList(const lalrConfigList_t *lst, const psrGrammar_t *gmr, a
 
 		for(node = lst->head; node != NULL; node = node->next)
 		{
-				PSR_PrintConfig(node->config, gmr, str);
+				Parser_PrintConfig(node->config, gmr, str);
 				AR_AppendString(str, L"\r\n");
 		}
 		AR_AppendString(str, L"\r\n");
