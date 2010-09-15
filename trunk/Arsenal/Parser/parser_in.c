@@ -20,22 +20,22 @@ AR_NAMESPACE_BEGIN
 static arSpinLock_t		__tbl_lock;
 static arStringTable_t *__tbl = NULL;
 
-const psrSymb_t	*PSR_EOISymb = NULL;   /*表示输入结尾符号*/
-const psrSymb_t	*PSR_ErrorSymb= NULL;/*特殊的错误处理产生式标记终结符，*/
-const psrSymb_t	*PSR_DefPrecSymb = NULL;/*提供默认prec和assoc属性的终结符*/
+const psrSymb_t	*PARSER_EOISymb = NULL;   /*表示输入结尾符号*/
+const psrSymb_t	*PARSER_ErrorSymb= NULL;/*特殊的错误处理产生式标记终结符，*/
+const psrSymb_t	*PARSER_DefPrecSymb = NULL;/*提供默认prec和assoc属性的终结符*/
 
 /*以下都为非终结符*/
-const psrSymb_t	*PSR_StartSymb = NULL;
+const psrSymb_t	*PARSER_StartSymb = NULL;
 
 
-bool_t				PSR_IsBuildInSymbol(const psrSymb_t		*symb)
+bool_t				Parser_IsBuildInSymbol(const psrSymb_t		*symb)
 {
 		AR_ASSERT(symb != NULL);
 
-		if(PSR_CompSymb(symb,PSR_EOISymb) == 0)return true;
-		if(PSR_CompSymb(symb,PSR_ErrorSymb) == 0)return true;
-		if(PSR_CompSymb(symb,PSR_DefPrecSymb) == 0)return true;
-		if(PSR_CompSymb(symb,PSR_StartSymb) == 0)return true;
+		if(Parser_CompSymb(symb,PARSER_EOISymb) == 0)return true;
+		if(Parser_CompSymb(symb,PARSER_ErrorSymb) == 0)return true;
+		if(Parser_CompSymb(symb,PARSER_DefPrecSymb) == 0)return true;
+		if(Parser_CompSymb(symb,PARSER_StartSymb) == 0)return true;
 
 		
 
@@ -44,35 +44,35 @@ bool_t				PSR_IsBuildInSymbol(const psrSymb_t		*symb)
 
 /******************************************************************************************************************************************/
 
-void	PSR_Init()
+void	Parser_Init()
 {
 		AR_InitSpinLock(&__tbl_lock);
-		__tbl			=		AR_CreateStrTable(PSR_STRTBL_BUCKET);
+		__tbl			=		AR_CreateStrTable(PARSER_STRTBL_BUCKET);
 
-		PSR_EOISymb		=		PSR_CreateSymb(L"%EOI", PSR_TERM);
-		PSR_ErrorSymb	=		PSR_CreateSymb(L"error", PSR_TERM);
+		PARSER_EOISymb		=		Parser_CreateSymb(L"%EOI", PARSER_TERM);
+		PARSER_ErrorSymb	=		Parser_CreateSymb(L"error", PARSER_TERM);
 		
-		PSR_DefPrecSymb	=		PSR_CreateSymb(L"%PREC_ASSOC", PSR_TERM);
+		PARSER_DefPrecSymb	=		Parser_CreateSymb(L"%PREC_ASSOC", PARSER_TERM);
 
-		PSR_StartSymb	=		PSR_CreateSymb(L"%START", PSR_NONTERM);
+		PARSER_StartSymb	=		Parser_CreateSymb(L"%START", PARSER_NONTERM);
 
-		PSR_Init_LALR_Config();
+		Parser_Init_LALR_Config();
 		
 }
 
-void	PSR_UnInit()
+void	Parser_UnInit()
 {
-		PSR_UnInit_LALR_Config();
+		Parser_UnInit_LALR_Config();
 
-		AR_ASSERT(PSR_EOISymb->ref_count == 1);
-		AR_ASSERT(PSR_ErrorSymb->ref_count == 1);
-		AR_ASSERT(PSR_DefPrecSymb->ref_count == 1);
-		AR_ASSERT(PSR_StartSymb->ref_count == 1);
+		AR_ASSERT(PARSER_EOISymb->ref_count == 1);
+		AR_ASSERT(PARSER_ErrorSymb->ref_count == 1);
+		AR_ASSERT(PARSER_DefPrecSymb->ref_count == 1);
+		AR_ASSERT(PARSER_StartSymb->ref_count == 1);
 
-		PSR_DestroySymb((psrSymb_t*)PSR_EOISymb);
-		PSR_DestroySymb((psrSymb_t*)PSR_ErrorSymb);
-		PSR_DestroySymb((psrSymb_t*)PSR_DefPrecSymb);
-		PSR_DestroySymb((psrSymb_t*)PSR_StartSymb);
+		Parser_DestroySymb((psrSymb_t*)PARSER_EOISymb);
+		Parser_DestroySymb((psrSymb_t*)PARSER_ErrorSymb);
+		Parser_DestroySymb((psrSymb_t*)PARSER_DefPrecSymb);
+		Parser_DestroySymb((psrSymb_t*)PARSER_StartSymb);
 
 		AR_DestroyStrTable(__tbl);
 		AR_UnInitSpinLock(&__tbl_lock);
@@ -87,7 +87,7 @@ void	PSR_UnInit()
 
 
 
-const wchar_t*	PSR_AllocString(const wchar_t *str)
+const wchar_t*	Parser_AllocString(const wchar_t *str)
 {
 		const wchar_t *res;
 		AR_LockSpinLock(&__tbl_lock);
@@ -96,7 +96,7 @@ const wchar_t*	PSR_AllocString(const wchar_t *str)
 		return res;
 }
 
-const wchar_t*	PSR_AllocStringN(const wchar_t *str, size_t n)
+const wchar_t*	Parser_AllocStringN(const wchar_t *str, size_t n)
 {
 		const wchar_t *res;
 		AR_LockSpinLock(&__tbl_lock);
@@ -106,7 +106,7 @@ const wchar_t*	PSR_AllocStringN(const wchar_t *str, size_t n)
 }
 
 
-const wchar_t*  PSR_AllocStringInt(int_64_t num, size_t radix)
+const wchar_t*  Parser_AllocStringInt(int_64_t num, size_t radix)
 {
 		const wchar_t *res;
 		AR_LockSpinLock(&__tbl_lock);
@@ -115,7 +115,7 @@ const wchar_t*  PSR_AllocStringInt(int_64_t num, size_t radix)
 		return res;
 }
 
-const wchar_t*  PSR_AllocStringUInt(uint_64_t num, size_t radix)
+const wchar_t*  Parser_AllocStringUInt(uint_64_t num, size_t radix)
 {
 		const wchar_t *res;
 		AR_LockSpinLock(&__tbl_lock);

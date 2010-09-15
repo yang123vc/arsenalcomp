@@ -465,11 +465,11 @@ filed_list 			:	filed
 
 filed					:	expression
 					|	table_constructor
-/*
+
 					|	NAME				"="	expression
 					|	NAME				"="	table_constructor
 					|	"["	expression	"]"	"="  expression
-*/
+
 
 					;
 

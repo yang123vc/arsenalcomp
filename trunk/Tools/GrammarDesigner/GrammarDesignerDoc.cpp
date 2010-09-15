@@ -76,7 +76,7 @@ CGrammarDesignerDoc::CGrammarDesignerDoc()
 {
 	// TODO: add one-time construction code here
 		m_encoding		=		CTextFileBase::ASCII;
-		m_parser_mode	=		ARSpace::PSR_LALR;
+		m_parser_mode	=		ARSpace::PARSER_LALR;
 		m_lexer_mode	=		0;
 		m_lexer			=		NULL;
 		m_parser		=		NULL;
@@ -237,10 +237,10 @@ void CGrammarDesignerDoc::OnChangeParserMode(UINT nID)
 		switch(nID)
 		{
 		case ID_PARSER_MODE_SLR:
-				m_parser_mode = ARSpace::PSR_SLR;
+				m_parser_mode = ARSpace::PARSER_SLR;
 				break;
 		case ID_PARSER_MODE_LALR:
-				m_parser_mode = ARSpace::PSR_LALR;
+				m_parser_mode = ARSpace::PARSER_LALR;
 				break;
 		default:
 				VERIFY(false);
@@ -252,14 +252,14 @@ void CGrammarDesignerDoc::OnChangeParserMode(UINT nID)
 void CGrammarDesignerDoc::OnUpdateParserModeLalr(CCmdUI *pCmdUI)
 {
 		// TODO: Add your command update UI handler code here
-		pCmdUI->SetCheck(m_parser_mode == ARSpace::PSR_LALR);
+		pCmdUI->SetCheck(m_parser_mode == ARSpace::PARSER_LALR);
 }
 
 
 void CGrammarDesignerDoc::OnUpdateParserModeSlr(CCmdUI *pCmdUI)
 {
 		// TODO: Add your command update UI handler code here
-		pCmdUI->SetCheck(m_parser_mode == ARSpace::PSR_SLR);
+		pCmdUI->SetCheck(m_parser_mode == ARSpace::PARSER_SLR);
 }
 
 
@@ -469,8 +469,8 @@ static void	AR_STDCALL	__on_parse_error(const ARSpace::psrToken_t *tok, const si
 
 				for(size_t i = 0; i < count; ++i)
 				{
-						const ARSpace::psrGrammar_t *grammar = ARSpace::PSR_GetGrammar(context->m_parser);
-						const ARSpace::psrTermInfo_t	*term_info = ARSpace::PSR_GetTermSymbInfoByValue(grammar, expected[i]);
+						const ARSpace::psrGrammar_t *grammar = ARSpace::Parser_GetGrammar(context->m_parser);
+						const ARSpace::psrTermInfo_t	*term_info = ARSpace::Parser_GetTermSymbInfoByValue(grammar, expected[i]);
 						msg.AppendFormat(TEXT("\"%ls\" \t"), term_info->term->name);
 				}
 		}else
@@ -506,9 +506,9 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 		ClearParser();
 
 		
-		ARSpace::lex_t			*lexer = ARSpace::LEX_Create(&__g_silence);
+		ARSpace::lex_t			*lexer = ARSpace::Lex_Create(&__g_silence);
 		
-		ARSpace::psrGrammar_t	*grammar = ARSpace::PSR_CreateGrammar(&__def_handler, &__g_silence);
+		ARSpace::psrGrammar_t	*grammar = ARSpace::Parser_CreateGrammar(&__def_handler, &__g_silence);
 
 		
 		
@@ -519,7 +519,7 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 		{
 				const ARSpace::cfgName_t		*name = &cfg->name[i];
 
-				if(!ARSpace::LEX_InsertName(lexer, name->name, name->regex))
+				if(!ARSpace::Lex_InsertName(lexer, name->name, name->regex))
 				{
 						CString msg;
 						msg.Format(TEXT("Name Error : \"%ls : %ls\""), name->name, name->regex);
@@ -536,7 +536,7 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 				action.is_skip = tok->is_skip;
 				action.priority = tok->lex_prec;
 				action.value = tok->tokval;
-				if(!ARSpace::LEX_InsertRule(lexer, tok->regex, &action))
+				if(!ARSpace::Lex_InsertRule(lexer, tok->regex, &action))
 				{
 						CString msg;
 						msg.Format(TEXT("Token Error :  \"%ls : %ls\""), tok->name, tok->regex);
@@ -547,7 +547,7 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 
 				if(tok->is_skip || tok->tokval == 0)continue;
 
-				if(!ARSpace::PSR_InsertTerm(grammar, tok->name, tok->tokval, ARSpace::PSR_ASSOC_NONASSOC, 0, build_leaf))
+				if(!ARSpace::Parser_InsertTerm(grammar, tok->name, tok->tokval, ARSpace::PARSER_ASSOC_NONASSOC, 0, build_leaf))
 				{
 						CString msg;
 
@@ -563,11 +563,11 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 				
 				for(size_t k = 0; k < prec->count; ++k)
 				{
-						ARSpace::psrTermInfo_t *info = ARSpace::PSR_GetTermSymbInfoByName(grammar,prec->prec_tok_set[k]);
+						ARSpace::psrTermInfo_t *info = ARSpace::Parser_GetTermSymbInfoByName(grammar,prec->prec_tok_set[k]);
 
 						if(info == NULL)
 						{
-								if(!ARSpace::PSR_InsertTerm(grammar, prec->prec_tok_set[k], prec->prec_tok_val[k], prec->assoc, prec->prec_level, NULL))
+								if(!ARSpace::Parser_InsertTerm(grammar, prec->prec_tok_set[k], prec->prec_tok_val[k], prec->assoc, prec->prec_level, NULL))
 								{
 										CString msg;
 										msg.Format(TEXT("Prec Error : \"%ls\"!"), prec->prec_tok_set[k]);
@@ -589,7 +589,7 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 				const ARSpace::cfgRule_t		*rule = &cfg->rule[i];
 				CString str;
 				str.Format(TEXT("%ls : %ls"), rule->lhs, rule->rhs);
-				if(!ARSpace::PSR_InsertRuleByStr(grammar, str.GetString(), rule->prec_tok,  build_rule, 0))
+				if(!ARSpace::Parser_InsertRuleByStr(grammar, str.GetString(), rule->prec_tok,  build_rule, 0))
 				{
 						CString msg;
 						msg.Format(TEXT("Rule Error : \"%ls\"!"), str.GetString());
@@ -611,7 +611,7 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 				}
 
 				
-				if(has_error || !ARSpace::PSR_SetFirstRule(grammar, cfg->start.start_rule))
+				if(has_error || !ARSpace::Parser_SetFirstRule(grammar, cfg->start.start_rule))
 				{
 						CString msg;
 						msg.Format(TEXT("Start Rule Error : \"%ls\"!"), cfg->start.start_rule);
@@ -627,30 +627,30 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 				
 		};
 
-		ARSpace::PSR_ResetGrammarIOContext(grammar, &io_context);
+		ARSpace::Parser_ResetGrammarIOContext(grammar, &io_context);
 		
-		if(!ARSpace::PSR_CheckIsValidGrammar(grammar))
+		if(!ARSpace::Parser_CheckIsValidGrammar(grammar))
 		{
 				has_error = true;
 		}
 
-		ARSpace::PSR_ResetGrammarIOContext(grammar, &__g_silence);
+		ARSpace::Parser_ResetGrammarIOContext(grammar, &__g_silence);
 
 		if(has_error)
 		{
-				ARSpace::LEX_Destroy(lexer);
-				ARSpace::PSR_DestroyGrammar(grammar);
+				ARSpace::Lex_Destroy(lexer);
+				ARSpace::Parser_DestroyGrammar(grammar);
 				return false;
 		}else
 		{
 				DWORD beg, end;
 
 				m_lexer = lexer;
-				ARSpace::LEX_GenerateTransTable(m_lexer);
+				ARSpace::Lex_GenerateTransTable(m_lexer);
 				m_grammar	= grammar;
 				beg = GetTickCount();
 				
-				 m_parser = ARSpace::PSR_CreateParser(m_grammar, m_parser_mode);
+				 m_parser = ARSpace::Parser_CreateParser(m_grammar, m_parser_mode);
 				
 				end = GetTickCount();
 				
@@ -660,7 +660,7 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 
 				output.Append(str, COutputList::MSG_MESSAGE, 0, tar);
 
-				size_t conflict = ARSpace::PSR_CountParserConflict(m_parser);
+				size_t conflict = ARSpace::Parser_CountParserConflict(m_parser);
 
 				if(conflict > 0)
 				{
@@ -695,7 +695,7 @@ static void AR_STDCALL report_build_func(const ARSpace::cfgReportInfo_t *report,
 				str.Format(TEXT("%ls : %d"), report->error.err_msg, report->error.err_level);
 				output->Append(str, COutputList::MSG_ERROR, 0, tar); 
 				break;
-		case ARSpace::CFG_REPORT_ERR_LEX_T:
+		case ARSpace::CFG_REPORT_ERR_Lex_T:
 				str.Format(TEXT("Lex error : %ls"), report->lex_error.msg);
 				output->Append(str, COutputList::MSG_ERROR, report->lex_error.tok->line, tar);
 				break;
@@ -722,9 +722,9 @@ void	CGrammarDesignerDoc::ClearParser()
 		
 		if(m_lexer != NULL && m_parser != NULL)
 		{
-				ARSpace::LEX_Destroy(m_lexer);
-				ARSpace::PSR_DestroyParser(m_parser);
-				ARSpace::PSR_DestroyGrammar(m_grammar);
+				ARSpace::Lex_Destroy(m_lexer);
+				ARSpace::Parser_DestroyParser(m_parser);
+				ARSpace::Parser_DestroyGrammar(m_grammar);
 				m_lexer = NULL;
 				m_parser = NULL;
 				m_grammar = NULL;
@@ -795,7 +795,7 @@ void CGrammarDesignerDoc::OnParserShowactiontable()
 
 		ASSERT(m_parser != NULL);
 
-		const ARSpace::psrActionView_t		*view = ARSpace::PSR_CreateParserActionView(m_parser);
+		const ARSpace::psrActionView_t		*view = ARSpace::Parser_CreateParserActionView(m_parser);
 
 		ASSERT(view != NULL);
 
@@ -804,7 +804,7 @@ void CGrammarDesignerDoc::OnParserShowactiontable()
 
 		action.DrawActionView(view);
 		
-		ARSpace::PSR_DestroyParserActionView(view);
+		ARSpace::Parser_DestroyParserActionView(view);
 
 		main_frm->ShowPane(&action, TRUE, TRUE, TRUE);
 
@@ -824,7 +824,7 @@ void CGrammarDesignerDoc::OnParserShowconflict()
 		// TODO: Add your command handler code here
 		ASSERT(m_parser != NULL);
 
-		const ARSpace::psrConflictView_t		*view = ARSpace::PSR_CreateParserConflictView(m_parser);
+		const ARSpace::psrConflictView_t		*view = ARSpace::Parser_CreateParserConflictView(m_parser);
 		
 
 		ASSERT(view != NULL);
@@ -834,7 +834,7 @@ void CGrammarDesignerDoc::OnParserShowconflict()
 
 		action.DrawConflictView(view);
 		
-		ARSpace::PSR_DestroyParserConflictView(view);
+		ARSpace::Parser_DestroyParserConflictView(view);
 
 		main_frm->ShowPane(&action, TRUE, TRUE, TRUE);
 }
@@ -852,7 +852,7 @@ void CGrammarDesignerDoc::OnParserShowfirstfollow()
 
 		ASSERT(m_parser != NULL);
 
-		const ARSpace::psrStatusView_t		*view = ARSpace::PSR_CreateParserStatusView(m_parser);
+		const ARSpace::psrStatusView_t		*view = ARSpace::Parser_CreateParserStatusView(m_parser);
 
 		ASSERT(view != NULL);
 
@@ -861,7 +861,7 @@ void CGrammarDesignerDoc::OnParserShowfirstfollow()
 		
 		action.DrawFirstFollowView(view);
 
-		ARSpace::PSR_DestroyParserStatusView(view);
+		ARSpace::Parser_DestroyParserStatusView(view);
 		main_frm->ShowPane(&action, TRUE, TRUE, TRUE);
 
 }
@@ -880,7 +880,7 @@ void CGrammarDesignerDoc::OnShowLeftrecursion()
 
 		ASSERT(m_parser != NULL);
 
-		const ARSpace::psrStatusView_t		*view = ARSpace::PSR_CreateParserStatusView(m_parser);
+		const ARSpace::psrStatusView_t		*view = ARSpace::Parser_CreateParserStatusView(m_parser);
 		
 
 		ASSERT(view != NULL);
@@ -890,7 +890,7 @@ void CGrammarDesignerDoc::OnShowLeftrecursion()
 		
 		action.DrawLeftRecursionView(view);
 
-		ARSpace::PSR_DestroyParserStatusView(view);
+		ARSpace::Parser_DestroyParserStatusView(view);
 		main_frm->ShowPane(&action, TRUE, TRUE, TRUE);
 
 
@@ -906,7 +906,7 @@ void CGrammarDesignerDoc::OnShowLeftfactor()
 
 		ASSERT(m_parser != NULL);
 
-		const ARSpace::psrStatusView_t		*view = ARSpace::PSR_CreateParserStatusView(m_parser);
+		const ARSpace::psrStatusView_t		*view = ARSpace::Parser_CreateParserStatusView(m_parser);
 		
 
 		ASSERT(view != NULL);
@@ -914,7 +914,7 @@ void CGrammarDesignerDoc::OnShowLeftfactor()
 		CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
 		CActionView	&action = main_frm->GetActionView();
 		action.DrawLeftFactorView(view);
-		ARSpace::PSR_DestroyParserStatusView(view);
+		ARSpace::Parser_DestroyParserStatusView(view);
 		main_frm->ShowPane(&action, TRUE, TRUE, TRUE);
 
 }
@@ -980,7 +980,7 @@ void CGrammarDesignerDoc::OnParserParse()
 		output_context.m_parser = m_parser;
 		ASSERT(m_lexer != NULL && m_parser != NULL);
 
-		ARSpace::psrContext_t	*parser_context = ARSpace::PSR_CreateContext(m_parser, (void*)&output_context);
+		ARSpace::psrContext_t	*parser_context = ARSpace::Parser_CreateContext(m_parser, (void*)&output_context);
 		
 
 
@@ -998,14 +998,14 @@ void CGrammarDesignerDoc::OnParserParse()
 		};
 
 		ARSpace::lexMatch_t *match;
-		match = ARSpace::LEX_CreateMatch(this->m_lexer, &io_context);
+		match = ARSpace::Lex_CreateMatch(this->m_lexer, &io_context);
 		/*
-		ARSpace::LEX_InitMatch(&match, this->m_lexer, &io_context);
+		ARSpace::Lex_InitMatch(&match, this->m_lexer, &io_context);
 		*/
-		ARSpace::LEX_ResetInput(match, str.GetString());
+		ARSpace::Lex_ResetInput(match, str.GetString());
 		
-		ARSpace::LEX_MatchClearFlags(match);
-		ARSpace::LEX_MatchFlags(match, m_lexer_mode, true);
+		ARSpace::Lex_MatchClearFlags(match);
+		ARSpace::Lex_MatchFlags(match, m_lexer_mode, true);
 		
 		ARSpace::lexToken_t		token;
 
@@ -1019,29 +1019,29 @@ void CGrammarDesignerDoc::OnParserParse()
 		{
 				
 				//if(!m_lexer->GetToken(token))
-				if(!ARSpace::LEX_Match(match, &token))
+				if(!ARSpace::Lex_Match(match, &token))
 				{
-						size_t len = wcslen(ARSpace::LEX_GetNextInput(match));
+						size_t len = wcslen(ARSpace::Lex_GetNextInput(match));
 						if(len > 10) len = 10;
 
 						CString lex_err;
 						CString msg;
-						msg.Append(ARSpace::LEX_GetNextInput(match),  (int)len);
+						msg.Append(ARSpace::Lex_GetNextInput(match),  (int)len);
 					
 						lex_err.Format(TEXT("Lexer Error : %ls"), msg.GetString());
 						
 						size_t line;
-						ARSpace::LEX_MatchGetCoordinate(match, &line, NULL);
+						ARSpace::Lex_MatchGetCoordinate(match, &line, NULL);
 						output.Append(lex_err, COutputList::MSG_ERROR, line, &input);
 
-						ARSpace::LEX_Skip(match);
-						ARSpace::LEX_ClearError(match);
+						ARSpace::Lex_Skip(match);
+						ARSpace::Lex_ClearError(match);
 				}else
 				{
 						ARSpace::psrToken_t		psr_tok;
 
-						PSR_TOTERMTOK(&token, &psr_tok);
-						is_ok = ARSpace::PSR_AddToken(parser_context, &psr_tok);
+						PARSER_TOTERMTOK(&token, &psr_tok);
+						is_ok = ARSpace::Parser_AddToken(parser_context, &psr_tok);
 						if(token.value == 0)
 						{
 								break;
@@ -1059,7 +1059,7 @@ void CGrammarDesignerDoc::OnParserParse()
 
 		if(is_ok)
 		{
-				CPrintNode *node = (CPrintNode*)ARSpace::PSR_GetResult(parser_context);
+				CPrintNode *node = (CPrintNode*)ARSpace::Parser_GetResult(parser_context);
 				
 				ASSERT(node != NULL);
 
@@ -1079,8 +1079,8 @@ void CGrammarDesignerDoc::OnParserParse()
 
 		main_frm->ShowPane(&output, TRUE, TRUE, TRUE);
 
-		ARSpace::LEX_DestroyMatch(match);
-		ARSpace::PSR_DestroyContext(parser_context);
+		ARSpace::Lex_DestroyMatch(match);
+		ARSpace::Parser_DestroyContext(parser_context);
 }
 
 
@@ -1127,7 +1127,7 @@ static void AR_STDCALL report_tag_func(const ARSpace::cfgReportInfo_t *report, v
 				//::AfxMessageBox(report->message);
 				//AR_printf(L"%ls : %d\r\n", report->message, report->err_level);
 				break;
-		case ARSpace::CFG_REPORT_ERR_LEX_T:
+		case ARSpace::CFG_REPORT_ERR_Lex_T:
 				//::AfxMessageBox(report->message);
 				//AR_printf(L"lex error %ls\r\n", report->message);
 				break;

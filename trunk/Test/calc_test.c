@@ -136,41 +136,41 @@ static  void			AR_STDCALL on_error(const psrToken_t *tok, const wchar_t *expecte
 */
 
 /*
-{L"(", 354, 0, PSR_ASSOC_NONASSOC},
-		{L")", 355, 0, PSR_ASSOC_NONASSOC},
-		{L"+", 356, 0, PSR_ASSOC_NONASSOC},
-		{L"-", 357, 0, PSR_ASSOC_NONASSOC},
-		{L"*", 358, 0, PSR_ASSOC_NONASSOC},
-		{L"/", 359, 0, PSR_ASSOC_NONASSOC},
-		{L"%", 360, 0, PSR_ASSOC_NONASSOC},
-		{L"number", 361, 0, PSR_ASSOC_NONASSOC},
-		{L"UMINUS", 0xFFFF, 0, PSR_ASSOC_NONASSOC}
+{L"(", 354, 0, PARSER_ASSOC_NONASSOC},
+		{L")", 355, 0, PARSER_ASSOC_NONASSOC},
+		{L"+", 356, 0, PARSER_ASSOC_NONASSOC},
+		{L"-", 357, 0, PARSER_ASSOC_NONASSOC},
+		{L"*", 358, 0, PARSER_ASSOC_NONASSOC},
+		{L"/", 359, 0, PARSER_ASSOC_NONASSOC},
+		{L"%", 360, 0, PARSER_ASSOC_NONASSOC},
+		{L"number", 361, 0, PARSER_ASSOC_NONASSOC},
+		{L"UMINUS", 0xFFFF, 0, PARSER_ASSOC_NONASSOC}
 */
 
 static lex_t* __build_lex()
 {
 		lex_t *lex;
 
-		lex = LEX_Create(NULL);
+		lex = Lex_Create(NULL);
 
-		LEX_Insert(lex, L"delim 			= 	[ \\r\\n\\t]");
-		LEX_Insert(lex, L"digit 			= 	[0-9]");
-		LEX_Insert(lex, L"number 			= 	{digit}+");
-		LEX_Insert(lex, L"EOI 			= 	$");
+		Lex_Insert(lex, L"delim 			= 	[ \\r\\n\\t]");
+		Lex_Insert(lex, L"digit 			= 	[0-9]");
+		Lex_Insert(lex, L"number 			= 	{digit}+");
+		Lex_Insert(lex, L"EOI 			= 	$");
 
-		LEX_Insert(lex, L"0				{EOI}");
-		LEX_Insert(lex, L"%skip 1		{delim}");
-		LEX_Insert(lex, L"354,1			\"(\"");
-		LEX_Insert(lex, L"355,1			\")\"");
-		LEX_Insert(lex, L"356,1			\"+\"");
-		LEX_Insert(lex, L"357,1			\"-\"");
-		LEX_Insert(lex, L"358,1			\"*\"");
-		LEX_Insert(lex, L"359,1			\"/\"");
-		LEX_Insert(lex, L"360,1			\"%\"");
-		LEX_Insert(lex, L"361,1		　　{　 number}");
+		Lex_Insert(lex, L"0				{EOI}");
+		Lex_Insert(lex, L"%skip 1		{delim}");
+		Lex_Insert(lex, L"354,1			\"(\"");
+		Lex_Insert(lex, L"355,1			\")\"");
+		Lex_Insert(lex, L"356,1			\"+\"");
+		Lex_Insert(lex, L"357,1			\"-\"");
+		Lex_Insert(lex, L"358,1			\"*\"");
+		Lex_Insert(lex, L"359,1			\"/\"");
+		Lex_Insert(lex, L"360,1			\"%\"");
+		Lex_Insert(lex, L"361,1		　　{　 number}");
 		
 		
-		if(LEX_GenerateTransTable(lex))
+		if(Lex_GenerateTransTable(lex))
 		{
 				return lex;
 		}else
@@ -190,39 +190,39 @@ static  const parser_t* __build_parser()
 		psrGrammar_t	*gmr;
 		psrHandler_t ctx = {NULL, free_node,};
 
-		gmr = PSR_CreateGrammar(&ctx, NULL);
+		gmr = Parser_CreateGrammar(&ctx, NULL);
 
-		PSR_InsertTerm(gmr, L"(", CLP, PSR_ASSOC_NONASSOC, 0, create_leaf);
-		PSR_InsertTerm(gmr, L")", RP, PSR_ASSOC_NONASSOC, 0, create_leaf);
-		PSR_InsertTerm(gmr, L"+", ADD, PSR_ASSOC_LEFT, 1, create_leaf);
-		PSR_InsertTerm(gmr, L"-", MINUS, PSR_ASSOC_LEFT, 1, create_leaf);
-		PSR_InsertTerm(gmr, L"*", MUL, PSR_ASSOC_LEFT, 2, create_leaf);
-		PSR_InsertTerm(gmr, L"/", DIV, PSR_ASSOC_LEFT, 2, create_leaf);
-		PSR_InsertTerm(gmr, L"%", MOD, PSR_ASSOC_LEFT, 2, create_leaf);
-		PSR_InsertTerm(gmr, L"number", NUMBER, PSR_ASSOC_NONASSOC, 0, create_leaf);
-		PSR_InsertTerm(gmr, L"UMINUS", 0xFFFF, PSR_ASSOC_RIGHT, 3, create_leaf);
+		Parser_InsertTerm(gmr, L"(", CLP, PARSER_ASSOC_NONASSOC, 0, create_leaf);
+		Parser_InsertTerm(gmr, L")", RP, PARSER_ASSOC_NONASSOC, 0, create_leaf);
+		Parser_InsertTerm(gmr, L"+", ADD, PARSER_ASSOC_LEFT, 1, create_leaf);
+		Parser_InsertTerm(gmr, L"-", MINUS, PARSER_ASSOC_LEFT, 1, create_leaf);
+		Parser_InsertTerm(gmr, L"*", MUL, PARSER_ASSOC_LEFT, 2, create_leaf);
+		Parser_InsertTerm(gmr, L"/", DIV, PARSER_ASSOC_LEFT, 2, create_leaf);
+		Parser_InsertTerm(gmr, L"%", MOD, PARSER_ASSOC_LEFT, 2, create_leaf);
+		Parser_InsertTerm(gmr, L"number", NUMBER, PARSER_ASSOC_NONASSOC, 0, create_leaf);
+		Parser_InsertTerm(gmr, L"UMINUS", 0xFFFF, PARSER_ASSOC_RIGHT, 3, create_leaf);
 		
-		PSR_InsertRuleByStr(gmr, L"E : E + E", NULL, create_node, 0);
-		PSR_InsertRuleByStr(gmr, L"E : E - E", NULL, create_node, 0);
-		PSR_InsertRuleByStr(gmr, L"E : E * E", NULL, create_node, 0);
-		PSR_InsertRuleByStr(gmr, L"E : E / E", NULL, create_node, 0);
-		PSR_InsertRuleByStr(gmr, L"E : E % E", NULL, create_node, 0);
-		PSR_InsertRuleByStr(gmr, L"E : ( E )", NULL, create_node1, 0);
-		PSR_InsertRuleByStr(gmr, L"E : - E", L"UMINUS", create_node2, 0);
-		PSR_InsertRuleByStr(gmr, L"E : number", NULL, create_node1, 0);
+		Parser_InsertRuleByStr(gmr, L"E : E + E", NULL, create_node, 0);
+		Parser_InsertRuleByStr(gmr, L"E : E - E", NULL, create_node, 0);
+		Parser_InsertRuleByStr(gmr, L"E : E * E", NULL, create_node, 0);
+		Parser_InsertRuleByStr(gmr, L"E : E / E", NULL, create_node, 0);
+		Parser_InsertRuleByStr(gmr, L"E : E % E", NULL, create_node, 0);
+		Parser_InsertRuleByStr(gmr, L"E : ( E )", NULL, create_node1, 0);
+		Parser_InsertRuleByStr(gmr, L"E : - E", L"UMINUS", create_node2, 0);
+		Parser_InsertRuleByStr(gmr, L"E : number", NULL, create_node1, 0);
 
-		//PSR_InsertRuleByStr(gmr, L"E : X number", NULL, create_node1, 0);
-		//PSR_InsertRuleByStr(gmr, L"E : Y number", NULL, create_node1, 0);
+		//Parser_InsertRuleByStr(gmr, L"E : X number", NULL, create_node1, 0);
+		//Parser_InsertRuleByStr(gmr, L"E : Y number", NULL, create_node1, 0);
 		
 /*
-		PSR_InsertRuleByStr(gmr, L"X : ", NULL, NULL, 0);
-		PSR_InsertRuleByStr(gmr, L"Y : ", NULL, NULL, 0);
+		Parser_InsertRuleByStr(gmr, L"X : ", NULL, NULL, 0);
+		Parser_InsertRuleByStr(gmr, L"Y : ", NULL, NULL, 0);
 */
 		{
 				arString_t		*str;
 
 				str = AR_CreateString();
-				PSR_PrintGrammar(gmr, str);
+				Parser_PrintGrammar(gmr, str);
 				AR_printf(L"%ls\r\n", AR_GetStrString(str));
 				AR_DestroyString(str);
 
@@ -235,13 +235,13 @@ static  const parser_t* __build_parser()
 				const parser_t *psr;
 				
 				
-				psr =  PSR_CreateParser(gmr, PSR_SLR);
+				psr =  Parser_CreateParser(gmr, PARSER_SLR);
 				
-				//AR_printf(L"Conflict == %d\r\n", PSR_CountParserConflict(psr));
-				/*PSR_DestroyGrammar(gmr);*/
+				//AR_printf(L"Conflict == %d\r\n", Parser_CountParserConflict(psr));
+				/*Parser_DestroyGrammar(gmr);*/
 				arString_t *str = AR_CreateString();
 
-				if(PSR_ReportLeftFactor(gmr, str))
+				if(Parser_ReportLeftFactor(gmr, str))
 				{
 						AR_StrPrint(str);
 				}
@@ -308,20 +308,20 @@ void calc_test()
 		AR_ASSERT(lex);
 		psr = __build_parser();
 		
-		pc1 = PSR_CreateContext(psr, NULL);
-		pc2 = PSR_CreateContext(psr, NULL);
+		pc1 = Parser_CreateContext(psr, NULL);
+		pc2 = Parser_CreateContext(psr, NULL);
 
 		/*
 		str = AR_CreateString();
 
-		PSR_ActionTableToString(psr->tbl, str);
+		Parser_ActionTableToString(psr->tbl, str);
 
 
 		AR_printf(L"%ls\r\n", AR_GetStrString(str));
 		*/
 
 		/*
-		first_follow = PSR_CreateParserStatusView(psr);
+		first_follow = Parser_CreateParserStatusView(psr);
 		
 
 		AR_printf(L"------------------first------------------\r\n");
@@ -338,9 +338,9 @@ void calc_test()
 		}
 		*/
 #if(0)
-		view = PSR_CreateParserActionView(psr);
+		view = Parser_CreateParserActionView(psr);
 
-		conflict = PSR_CreateParserConflictView(psr);
+		conflict = Parser_CreateParserConflictView(psr);
 		
 		AR_printf(L"-----------------------------------------\r\n");
 
@@ -384,13 +384,13 @@ void calc_test()
 
 		getchar();
 
-		LEX_InitMatch(&match, L"10 + (5 + 4) / 3");
+		Lex_InitMatch(&match, L"10 + (5 + 4) / 3");
 #if(1)
 		is_ok = true;
 		while(is_ok)
 		{
 				psrToken_t term;
-				is_ok = LEX_Match(lex, &match, &tok);
+				is_ok = Lex_Match(lex, &match, &tok);
 				if(!is_ok)
 				{
 						continue;
@@ -398,9 +398,9 @@ void calc_test()
 
 				
 				AR_printf(L"token == %ls : val = %d\r\n", AR_wcsndup(tok.str, tok.count), tok.value);
-				PSR_TOTERMTOK(&tok, &term);
-				is_ok = PSR_AddToken(pc1, &term);
-				is_ok = PSR_AddToken(pc2, &term);
+				PARSER_TOTERMTOK(&tok, &term);
+				is_ok = Parser_AddToken(pc1, &term);
+				is_ok = Parser_AddToken(pc2, &term);
 
 				if(!is_ok)continue;
 				
@@ -416,7 +416,7 @@ void calc_test()
 		{
 				Node_t *res;
 				int v;
-				res = (Node_t*)PSR_GetResult(pc1);
+				res = (Node_t*)Parser_GetResult(pc1);
 				v = post_order(res);
 				printf("\r\n");
 				printf("num == %d\r\n", v);
@@ -426,7 +426,7 @@ void calc_test()
 		{
 				Node_t *res;
 				int v;
-				res = (Node_t*)PSR_GetResult(pc2);
+				res = (Node_t*)Parser_GetResult(pc2);
 				v = post_order(res);
 				printf("\r\n");
 				printf("num == %d\r\n", v);
@@ -434,12 +434,12 @@ void calc_test()
 		}
 
 #endif
-		PSR_DestroyContext(pc1);
-		PSR_DestroyContext(pc2);
-		PSR_DestroyParser(psr);
-		PSR_DestroyGrammar(__g_gmr);
-		LEX_Destroy(lex);
-		LEX_UnInitMatch(&match);
+		Parser_DestroyContext(pc1);
+		Parser_DestroyContext(pc2);
+		Parser_DestroyParser(psr);
+		Parser_DestroyGrammar(__g_gmr);
+		Lex_Destroy(lex);
+		Lex_UnInitMatch(&match);
 
 
 }
@@ -452,44 +452,44 @@ void calc_test3()
 		psrGrammar_t	*gmr, *gmr2;
 		psrHandler_t ctx = {NULL, free_node};
 
-		gmr = PSR_CreateGrammar(&ctx, NULL);
+		gmr = Parser_CreateGrammar(&ctx, NULL);
 		
 
-		PSR_InsertTerm(gmr, L"(", CLP, PSR_ASSOC_NONASSOC, 0, create_leaf);
-		PSR_InsertTerm(gmr, L")", RP, PSR_ASSOC_NONASSOC, 0, create_leaf);
-		PSR_InsertTerm(gmr, L"+", ADD, PSR_ASSOC_LEFT, 1, create_leaf);
-		PSR_InsertTerm(gmr, L"-", MINUS, PSR_ASSOC_LEFT, 1, create_leaf);
-		PSR_InsertTerm(gmr, L"*", MUL, PSR_ASSOC_LEFT, 2, create_leaf);
-		PSR_InsertTerm(gmr, L"/", DIV, PSR_ASSOC_LEFT, 2, create_leaf);
-		PSR_InsertTerm(gmr, L"%", MOD, PSR_ASSOC_LEFT, 2, create_leaf);
-		PSR_InsertTerm(gmr, L"number", NUMBER, PSR_ASSOC_NONASSOC, 0, create_leaf);
-		PSR_InsertTerm(gmr, L"UMINUS", 0xFFFF, PSR_ASSOC_RIGHT, 3, create_leaf);
+		Parser_InsertTerm(gmr, L"(", CLP, PARSER_ASSOC_NONASSOC, 0, create_leaf);
+		Parser_InsertTerm(gmr, L")", RP, PARSER_ASSOC_NONASSOC, 0, create_leaf);
+		Parser_InsertTerm(gmr, L"+", ADD, PARSER_ASSOC_LEFT, 1, create_leaf);
+		Parser_InsertTerm(gmr, L"-", MINUS, PARSER_ASSOC_LEFT, 1, create_leaf);
+		Parser_InsertTerm(gmr, L"*", MUL, PARSER_ASSOC_LEFT, 2, create_leaf);
+		Parser_InsertTerm(gmr, L"/", DIV, PARSER_ASSOC_LEFT, 2, create_leaf);
+		Parser_InsertTerm(gmr, L"%", MOD, PARSER_ASSOC_LEFT, 2, create_leaf);
+		Parser_InsertTerm(gmr, L"number", NUMBER, PARSER_ASSOC_NONASSOC, 0, create_leaf);
+		Parser_InsertTerm(gmr, L"UMINUS", 0xFFFF, PARSER_ASSOC_RIGHT, 3, create_leaf);
 		
-		PSR_InsertRuleByStr(gmr, L"E : E + E", NULL, create_node, 0);
-		PSR_InsertRuleByStr(gmr, L"E : E - E", NULL, create_node, 0);
-		PSR_InsertRuleByStr(gmr, L"E : E * E", NULL, create_node, 0);
-		PSR_InsertRuleByStr(gmr, L"E : E / E", NULL, create_node, 0);
-		PSR_InsertRuleByStr(gmr, L"E : E % E", NULL, create_node, 0);
+		Parser_InsertRuleByStr(gmr, L"E : E + E", NULL, create_node, 0);
+		Parser_InsertRuleByStr(gmr, L"E : E - E", NULL, create_node, 0);
+		Parser_InsertRuleByStr(gmr, L"E : E * E", NULL, create_node, 0);
+		Parser_InsertRuleByStr(gmr, L"E : E / E", NULL, create_node, 0);
+		Parser_InsertRuleByStr(gmr, L"E : E % E", NULL, create_node, 0);
 
-		PSR_InsertRuleByStr(gmr, L"E : number", NULL, create_node1, 0);
-		PSR_InsertRuleByStr(gmr, L"E : ( E )", NULL, create_node1, 0);
-		PSR_InsertRuleByStr(gmr, L"E : - E", L"UMINUS", create_node2, 0);
+		Parser_InsertRuleByStr(gmr, L"E : number", NULL, create_node1, 0);
+		Parser_InsertRuleByStr(gmr, L"E : ( E )", NULL, create_node1, 0);
+		Parser_InsertRuleByStr(gmr, L"E : - E", L"UMINUS", create_node2, 0);
 		
 		{
 				arString_t		*str;
 
 				str = AR_CreateString();
-				PSR_PrintGrammar(gmr, str);
+				Parser_PrintGrammar(gmr, str);
 				AR_printf(L"%ls\r\n", AR_GetStrString(str));
 		}
 
-		PSR_DestroyGrammar(gmr);
+		Parser_DestroyGrammar(gmr);
 
 		/*
-		gmr2 = PSR_CopyNewGrammar(gmr);
+		gmr2 = Parser_CopyNewGrammar(gmr);
 
-		PSR_DestroyGrammar(gmr);
-		PSR_DestroyGrammar(gmr2);
+		Parser_DestroyGrammar(gmr);
+		Parser_DestroyGrammar(gmr2);
 		*/
 
 }

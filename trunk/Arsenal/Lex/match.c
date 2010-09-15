@@ -29,7 +29,7 @@ struct __prog_set_tag
 		size_t							cap;
 };
 
-lexProgSet_t* LEX_CreateProgSet()
+lexProgSet_t* Lex_CreateProgSet()
 {
 		lexProgSet_t *res;
 		res = AR_NEW0(lexProgSet_t);
@@ -37,7 +37,7 @@ lexProgSet_t* LEX_CreateProgSet()
 }
 
 
-void LEX_ClearProgSet(lexProgSet_t *set)
+void Lex_ClearProgSet(lexProgSet_t *set)
 {
 		size_t i;
 		AR_ASSERT(set != NULL);
@@ -52,12 +52,12 @@ void LEX_ClearProgSet(lexProgSet_t *set)
 }
 
 
-void		LEX_DestroyProgSet(lexProgSet_t *set)
+void		Lex_DestroyProgSet(lexProgSet_t *set)
 {
 
 		if(set)
 		{
-				LEX_ClearProgSet(set);
+				Lex_ClearProgSet(set);
 
 				if(set->prog)AR_DEL(set->prog);
 				if(set->action)AR_DEL(set->action);
@@ -65,7 +65,7 @@ void		LEX_DestroyProgSet(lexProgSet_t *set)
 		}
 }
 
-void LEX_InserToProgSet(lexProgSet_t *set, rgxProg_t *prog, const lexAction_t *act)
+void Lex_InserToProgSet(lexProgSet_t *set, rgxProg_t *prog, const lexAction_t *act)
 {
 		AR_ASSERT(set != NULL && prog != NULL && act != NULL);
 
@@ -97,7 +97,7 @@ static void __exch_set(lexProgSet_t *set, int_t i,int_t j)
 		set->action[j] = act;
 }
 
-bool_t	LEX_RemoveFromProgSet(lexProgSet_t *set, size_t value)
+bool_t	Lex_RemoveFromProgSet(lexProgSet_t *set, size_t value)
 {
 		int_t l,r,cnt;
 		bool_t res = false;
@@ -134,7 +134,7 @@ bool_t	LEX_RemoveFromProgSet(lexProgSet_t *set, size_t value)
 
 
 
-void LEX_SortProgSet(lexProgSet_t *set)
+void Lex_SortProgSet(lexProgSet_t *set)
 {
 		int_t i,j;
 
@@ -166,7 +166,7 @@ void LEX_SortProgSet(lexProgSet_t *set)
 
 #define __ALL_FLAGS		(LEX_REPORT_SKIP|LEX_IGNORE_CASE|LEX_SINGLE_LINE)
 
-void			LEX_MatchFlags(lexMatch_t *pmatch, uint_t flags, bool_t is_on)
+void			Lex_MatchFlags(lexMatch_t *pmatch, uint_t flags, bool_t is_on)
 {
 		AR_ASSERT(pmatch != NULL);
 		flags &= __ALL_FLAGS;
@@ -179,7 +179,7 @@ void			LEX_MatchFlags(lexMatch_t *pmatch, uint_t flags, bool_t is_on)
 		}
 }
 
-void			LEX_MatchClearFlags(lexMatch_t *pmatch)
+void			Lex_MatchClearFlags(lexMatch_t *pmatch)
 {
 		AR_ASSERT(pmatch != NULL);
 		pmatch->flags = 0;
@@ -189,7 +189,7 @@ void			LEX_MatchClearFlags(lexMatch_t *pmatch)
 
 
 
-void LEX_ResetInput(lexMatch_t *pmatch, const wchar_t *input)
+void Lex_ResetInput(lexMatch_t *pmatch, const wchar_t *input)
 {
 		AR_ASSERT(pmatch != NULL && input != NULL);
 		pmatch->input = input;
@@ -199,13 +199,13 @@ void LEX_ResetInput(lexMatch_t *pmatch, const wchar_t *input)
 }
 
 
-void	LEX_ClearInput(lexMatch_t *pmatch)
+void	Lex_ClearInput(lexMatch_t *pmatch)
 {
-		LEX_ResetInput(pmatch, L"");
+		Lex_ResetInput(pmatch, L"");
 }
 
 
-void LEX_ResetMatchState(lexMatch_t *pmatch)
+void Lex_ResetMatchState(lexMatch_t *pmatch)
 {
 		AR_ASSERT(pmatch != NULL && pmatch->input != NULL);
 		pmatch->is_ok = true;
@@ -214,7 +214,7 @@ void LEX_ResetMatchState(lexMatch_t *pmatch)
 }
 
 
-void	LEX_ResetMatchIoContext(lexMatch_t *pmatch, const arIOCtx_t *io)
+void	Lex_ResetMatchIoContext(lexMatch_t *pmatch, const arIOCtx_t *io)
 {
 		AR_ASSERT(pmatch != NULL);
 		pmatch->io_ctx = io == NULL ? *AR_global_ioctx() : *io;
@@ -226,7 +226,7 @@ void	LEX_ResetMatchIoContext(lexMatch_t *pmatch, const arIOCtx_t *io)
 
 
 
-lexMatch_t*		LEX_CreateMatch(const lex_t *lex, const arIOCtx_t *io)
+lexMatch_t*		Lex_CreateMatch(const lex_t *lex, const arIOCtx_t *io)
 {
 		size_t i;
 		lexMatch_t		*pmatch;
@@ -242,7 +242,7 @@ lexMatch_t*		LEX_CreateMatch(const lex_t *lex, const arIOCtx_t *io)
 		pmatch->is_ok = true;
 		pmatch->flags = 0;
 		
-		pmatch->prog_set = LEX_CreateProgSet();
+		pmatch->prog_set = Lex_CreateProgSet();
 		
 		for(i = 0; i < lex->rule_set.count; ++i)
 		{
@@ -251,54 +251,54 @@ lexMatch_t*		LEX_CreateMatch(const lex_t *lex, const arIOCtx_t *io)
 				RGX_InitProg(prog);
 				RGX_Compile(prog, lex->rule_set.nodes[i]);
 				
-				LEX_InserToProgSet(pmatch->prog_set, prog, &lex->rule_set.action[i]);
+				Lex_InserToProgSet(pmatch->prog_set, prog, &lex->rule_set.action[i]);
 		}
 
-		LEX_SortProgSet(pmatch->prog_set);
+		Lex_SortProgSet(pmatch->prog_set);
 		
 		return pmatch;
 }
 
 
-void LEX_DestroyMatch(lexMatch_t *pmatch)
+void Lex_DestroyMatch(lexMatch_t *pmatch)
 {
 		if(pmatch != NULL)
 		{
 				/*if(pmatch->input)AR_DEL(pmatch->input);*/
-				LEX_DestroyProgSet(pmatch->prog_set);
+				Lex_DestroyProgSet(pmatch->prog_set);
 				/*AR_memset(pmatch, 0, sizeof(*pmatch));*/
 				AR_DEL(pmatch);
 		}
 }
 
 
-void			LEX_ResetMatchIOContext(lexMatch_t *pmatch, const arIOCtx_t *io)
+void			Lex_ResetMatchIOContext(lexMatch_t *pmatch, const arIOCtx_t *io)
 {
 		AR_ASSERT(pmatch != NULL && io != NULL);
 		pmatch->io_ctx = io == NULL ? *AR_global_ioctx() : *io;
 }
 
 
-const wchar_t* LEX_GetNextInput(const lexMatch_t *match)
+const wchar_t* Lex_GetNextInput(const lexMatch_t *match)
 {
 		AR_ASSERT(match != NULL);
 		return match->next;
 }
 
-bool_t	LEX_IsError(const lexMatch_t *match)
+bool_t	Lex_IsError(const lexMatch_t *match)
 {
 		AR_ASSERT(match != NULL);
 		return !match->is_ok;
 }
 
-void	LEX_ClearError(lexMatch_t *match)
+void	Lex_ClearError(lexMatch_t *match)
 {
 		AR_ASSERT(match != NULL);
 		match->is_ok = true;
 }
 
 
-void	LEX_Skip(lexMatch_t *pmatch)
+void	Lex_Skip(lexMatch_t *pmatch)
 {
 		AR_ASSERT(pmatch != NULL && pmatch->next != NULL);
 
@@ -324,7 +324,7 @@ void	LEX_Skip(lexMatch_t *pmatch)
 		}
 }
 
-void			LEX_SkipTo(lexMatch_t *pmatch, const wchar_t *tok)
+void			Lex_SkipTo(lexMatch_t *pmatch, const wchar_t *tok)
 {
 		const wchar_t *next;
 		AR_ASSERT(pmatch != NULL && pmatch->next != NULL);
@@ -363,7 +363,7 @@ void			LEX_SkipTo(lexMatch_t *pmatch, const wchar_t *tok)
 
 
 
-void			LEX_SkipN(lexMatch_t *pmatch, size_t nchar)
+void			Lex_SkipN(lexMatch_t *pmatch, size_t nchar)
 {
 		size_t i;
 		AR_ASSERT(pmatch != NULL && pmatch->next != NULL);
@@ -383,7 +383,7 @@ void			LEX_SkipN(lexMatch_t *pmatch, size_t nchar)
 }
 
 
-void			LEX_PutBack(lexMatch_t *pmatch, const lexToken_t *tok)
+void			Lex_PutBack(lexMatch_t *pmatch, const lexToken_t *tok)
 {
 		AR_ASSERT(pmatch !=  NULL && tok != NULL && tok->str != NULL);
 
@@ -402,7 +402,7 @@ void			LEX_PutBack(lexMatch_t *pmatch, const lexToken_t *tok)
 
 
 
-void			LEX_MatchGetCoordinate(const lexMatch_t *pmatch, size_t *line, size_t *col)
+void			Lex_MatchGetCoordinate(const lexMatch_t *pmatch, size_t *line, size_t *col)
 {
 		AR_ASSERT(pmatch != NULL);
 		if(line)*line = pmatch->line;
@@ -416,7 +416,7 @@ void			LEX_MatchGetCoordinate(const lexMatch_t *pmatch, size_t *line, size_t *co
 
 #define LEX_MAX_EMPTY_MATCH_CNT 1
 
-bool_t LEX_Match(lexMatch_t *match, lexToken_t *tok)
+bool_t Lex_Match(lexMatch_t *match, lexToken_t *tok)
 {
 		size_t i;
 

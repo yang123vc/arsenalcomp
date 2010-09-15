@@ -18,14 +18,14 @@
 AR_NAMESPACE_BEGIN
 
 
-lalrState_t*	PSR_CreateState()
+lalrState_t*	Parser_CreateState()
 {
 		lalrState_t		*state;
 		state = AR_NEW0(lalrState_t);
 		return state;
 }
 
-void			PSR_DestroyState(lalrState_t *state)
+void			Parser_DestroyState(lalrState_t *state)
 {
 		AR_ASSERT(state != NULL);
 
@@ -36,19 +36,19 @@ void			PSR_DestroyState(lalrState_t *state)
 
 		if(state->basis != NULL)
 		{
-				PSR_DestroyConfigList(state->basis, false);
+				Parser_DestroyConfigList(state->basis, false);
 		}
 
 		if(state->all_config != NULL)
 		{
 
-				PSR_DestroyConfigList(state->all_config, true);
+				Parser_DestroyConfigList(state->all_config, true);
 		}
 
 		AR_DEL(state);
 }
 
-lalrAction_t*	PSR_InsertAction(lalrState_t *state, lalrState_t *to, const psrSymb_t *symb, const lalrConfig_t *config)
+lalrAction_t*	Parser_InsertAction(lalrState_t *state, lalrState_t *to, const psrSymb_t *symb, const lalrConfig_t *config)
 {
 		lalrAction_t	*action;
 		AR_ASSERT(state != NULL  && symb != NULL && config != NULL);
@@ -70,32 +70,32 @@ lalrAction_t*	PSR_InsertAction(lalrState_t *state, lalrState_t *to, const psrSym
 }
 
 
-void			PSR_DestroyState_ALL(lalrState_t *state)
+void			Parser_DestroyState_ALL(lalrState_t *state)
 {
 		lalrStateSet_t	set;
 		size_t i;
 		AR_ASSERT(state != NULL);
 
-		PSR_InitStateSet(&set);
-		PSR_CollectState(&set, state);
+		Parser_InitStateSet(&set);
+		Parser_CollectState(&set, state);
 
 		for(i = 0; i < set.count; ++i)
 		{
-				PSR_DestroyState(set.set[i]);
+				Parser_DestroyState(set.set[i]);
 		}
 		
-		PSR_UnInitStateSet(&set);
+		Parser_UnInitStateSet(&set);
 }
 
 
 
-void			PSR_InitStateSet(lalrStateSet_t *set)
+void			Parser_InitStateSet(lalrStateSet_t *set)
 {
 		AR_ASSERT(set != NULL);
 		AR_memset(set, 0, sizeof(*set));
 }
 
-void			PSR_UnInitStateSet(lalrStateSet_t *set)
+void			Parser_UnInitStateSet(lalrStateSet_t *set)
 {
 		AR_ASSERT(set != NULL);
 
@@ -106,7 +106,7 @@ void			PSR_UnInitStateSet(lalrStateSet_t *set)
 		AR_memset(set, 0, sizeof(*set));
 }
 
-void			PSR_InsertToStateSet(lalrStateSet_t *set, lalrState_t *state)
+void			Parser_InsertToStateSet(lalrStateSet_t *set, lalrState_t *state)
 {
 		AR_ASSERT(set != NULL && state != NULL);
 		
@@ -119,7 +119,7 @@ void			PSR_InsertToStateSet(lalrStateSet_t *set, lalrState_t *state)
 		set->set[set->count++] = state;
 }
 
-int_t			PSR_IndexOfStateSet(const lalrStateSet_t *set, const lalrState_t *state)
+int_t			Parser_IndexOfStateSet(const lalrStateSet_t *set, const lalrState_t *state)
 {
 		int_t i;
 		AR_ASSERT(set != NULL && state != NULL);
@@ -131,14 +131,14 @@ int_t			PSR_IndexOfStateSet(const lalrStateSet_t *set, const lalrState_t *state)
 		return -1;
 }
 
-lalrState_t*	PSR_FindStateByBasis(lalrStateSet_t *set, lalrConfigList_t *basis)
+lalrState_t*	Parser_FindStateByBasis(lalrStateSet_t *set, lalrConfigList_t *basis)
 {
 		size_t i;
 		AR_ASSERT(set != NULL && basis != NULL);
 
 		for(i = 0; i < set->count; ++i)
 		{
-				if(PSR_CompConfigList(set->set[i]->basis, basis) == 0)
+				if(Parser_CompConfigList(set->set[i]->basis, basis) == 0)
 				{
 						return set->set[i];
 				}
@@ -147,13 +147,13 @@ lalrState_t*	PSR_FindStateByBasis(lalrStateSet_t *set, lalrConfigList_t *basis)
 		return NULL;
 }
 
-void			PSR_CollectState(lalrStateSet_t *set, lalrState_t *start)
+void			Parser_CollectState(lalrStateSet_t *set, lalrState_t *start)
 {
 		size_t i;
 		AR_ASSERT(set != NULL && start != NULL);
 		set->count = 0;
 
-		PSR_InsertToStateSet(set, start);
+		Parser_InsertToStateSet(set, start);
 
 		for(i = 0; i < set->count; ++i)
 		{
@@ -167,9 +167,9 @@ void			PSR_CollectState(lalrStateSet_t *set, lalrState_t *start)
 						if(state->actions[k].act_type == LALR_ACT_SHIFT)
 						{
 								AR_ASSERT(state->actions[k].to != NULL);
-								if(PSR_IndexOfStateSet(set, state->actions[k].to) == -1)
+								if(Parser_IndexOfStateSet(set, state->actions[k].to) == -1)
 								{
-										PSR_InsertToStateSet(set, state->actions[k].to);
+										Parser_InsertToStateSet(set, state->actions[k].to);
 								}
 						}
 				}
@@ -178,7 +178,7 @@ void			PSR_CollectState(lalrStateSet_t *set, lalrState_t *start)
 
 
 
-lalrState_t*   PSR_GetTransTo(lalrState_t *state, const psrSymb_t *symb)
+lalrState_t*   Parser_GetTransTo(lalrState_t *state, const psrSymb_t *symb)
 {
 		size_t i;
 
@@ -189,7 +189,7 @@ lalrState_t*   PSR_GetTransTo(lalrState_t *state, const psrSymb_t *symb)
 				/*if(state->actions[i].act_type == LALR_ACT_REDUCE)continue;*/
 				if(state->actions[i].act_type != LALR_ACT_SHIFT)continue;
 
-				if(PSR_CompSymb(state->actions[i].symb, symb) == 0)return state->actions[i].to;
+				if(Parser_CompSymb(state->actions[i].symb, symb) == 0)return state->actions[i].to;
 		}
 		return NULL;
 }

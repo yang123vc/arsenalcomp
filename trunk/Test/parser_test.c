@@ -91,11 +91,11 @@ void print_grammar(const psrGrammar_t *gmr)
 
 		str = AR_CreateString();
 
-		PSR_PrintGrammar(gmr, str);
+		Parser_PrintGrammar(gmr, str);
 
 		AR_printf(L"%ls\r\n", AR_GetStrString(str));
 
-		PSR_ReportLeftRecursion(gmr, str);
+		Parser_ReportLeftRecursion(gmr, str);
 
 		AR_printf(L"%ls\r\n", AR_GetStrString(str));
 		
@@ -109,26 +109,26 @@ void print_first_follow(const psrGrammar_t *gmr)
 		arString_t		*str;
 		AR_ASSERT(gmr != NULL);
 
-		PSR_InitSymbMap(&first);
-		PSR_InitSymbMap(&follow);
+		Parser_InitSymbMap(&first);
+		Parser_InitSymbMap(&follow);
 
 		str = AR_CreateString();
 				
 		
-		PSR_CalcFirstSet(gmr, &first);
-		PSR_CalcFollowSet(gmr, &follow, &first);
+		Parser_CalcFirstSet(gmr, &first);
+		Parser_CalcFollowSet(gmr, &follow, &first);
 		
 		AR_AppendString(str, L"First Set:\r\n");
-		PSR_PrintSymbolMap(&first, str);
+		Parser_PrintSymbolMap(&first, str);
 		AR_AppendString(str, L"----------------------------------------\r\n");
 
 		AR_AppendString(str, L"Follow Set:\r\n");
-		PSR_PrintSymbolMap(&follow, str);
+		Parser_PrintSymbolMap(&follow, str);
 		AR_AppendString(str, L"----------------------------------------\r\n");
 
 
-		PSR_UnInitSymbMap(&first);
-		PSR_UnInitSymbMap(&follow);
+		Parser_UnInitSymbMap(&first);
+		Parser_UnInitSymbMap(&follow);
 
 		AR_printf(L"%ls\r\n", AR_GetStrString(str));
 		AR_DestroyString(str);
@@ -144,7 +144,7 @@ void print_action_table(const parser_t *psr)
 
 		str = AR_CreateString();
 
-		PSR_PrintParserActionTable(psr, str, 20);
+		Parser_PrintParserActionTable(psr, str, 20);
 
 		AR_printf(L"%ls\r\n", AR_GetStrString(str));
 
@@ -159,7 +159,7 @@ void print_conflict(const parser_t *psr)
 
 		str = AR_CreateString();
 
-		PSR_PrintParserConflict(psr, str);
+		Parser_PrintParserConflict(psr, str);
 
 		AR_printf(L"%ls\r\n", AR_GetStrString(str));
 
@@ -192,11 +192,11 @@ void parse_code(const cfgConfig_t *cfg, const wchar_t *sources)
 		
 
 		
-		lex = LEX_Create(NULL);
+		lex = Lex_Create(NULL);
 
 		for(i = 0; i < cfg->name_cnt; ++i)
 		{
-				if(!LEX_InsertName(lex, cfg->name[i].name, cfg->name[i].regex))
+				if(!Lex_InsertName(lex, cfg->name[i].name, cfg->name[i].regex))
 				{
 						AR_ASSERT(false);
 						AR_abort();
@@ -209,16 +209,16 @@ void parse_code(const cfgConfig_t *cfg, const wchar_t *sources)
 				act.is_skip = cfg->tok[i].is_skip;
 				act.priority = cfg->tok[i].lex_prec;
 				act.value = cfg->tok[i].tokval;
-				if(!LEX_InsertRule(lex, cfg->tok[i].regex, &act))
+				if(!Lex_InsertRule(lex, cfg->tok[i].regex, &act))
 				{
 						AR_ASSERT(false);
 						AR_abort();
 				}
 		}
 
-		LEX_GenerateTransTable(lex);
+		Lex_GenerateTransTable(lex);
 
-		LEX_InitMatch(&match, sources);
+		Lex_InitMatch(&match, sources);
 
 		{
 				
@@ -231,7 +231,7 @@ void parse_code(const cfgConfig_t *cfg, const wchar_t *sources)
 
 
 				
-				while(LEX_Match(lex, &match, &tok))
+				while(Lex_Match(lex, &match, &tok))
 				{
 						/*
 						AR_wcsncpy(buf, tok.str, tok.count);
@@ -259,10 +259,10 @@ void parse_code(const cfgConfig_t *cfg, const wchar_t *sources)
 				AR_printf(L"elapsed == %I64d\r\n", end - beg);
 		}
 
-		LEX_UnInitMatch(&match);
+		Lex_UnInitMatch(&match);
 
 
-		LEX_Destroy(lex);
+		Lex_Destroy(lex);
 
 
 }
@@ -273,7 +273,7 @@ typedef enum
 {
 		CFG_REPORT_MESSAGE_T,
 		CFG_REPORT_ERROR_T,
-		CFG_REPORT_ERR_LEX_T,
+		CFG_REPORT_ERR_Lex_T,
 		CFG_REPORT_ERR_SYNTAX_T
 }cfgReportType_t;
 */
@@ -288,7 +288,7 @@ static void AR_STDCALL report_func(const cfgReportInfo_t *report, void *context)
 		case CFG_REPORT_ERROR_T:
 				AR_printf(L"%ls : %d\r\n", report->message, report->err_level);
 				break;
-		case CFG_REPORT_ERR_LEX_T:
+		case CFG_REPORT_ERR_Lex_T:
 				AR_printf(L"lex error %ls\r\n", report->message);
 				break;
 		case CFG_REPORT_ERR_SYNTAX_T:
@@ -345,7 +345,7 @@ void parser_test_test()
 				{
 						AR_printf(L"%ls : %ls : %d\r\n", cfg->name[i].name, cfg->name[i].regex, cfg->name[i].line);
 /*
-						if(!LEX_InsertName(tmp_lex, cfg->name[i].name, cfg->name[i].regex))
+						if(!Lex_InsertName(tmp_lex, cfg->name[i].name, cfg->name[i].regex))
 						{
 								AR_abort();
 						}
@@ -362,7 +362,7 @@ void parser_test_test()
 
 						AR_printf(L"%ls : %ls : %d : %d\r\n", cfg->tok[i].name, cfg->tok[i].regex, cfg->tok[i].lex_prec, cfg->tok[i].tokval);
 /*
-						if(!LEX_InsertRule(tmp_lex, cfg->tok[i].regex, &act))
+						if(!Lex_InsertRule(tmp_lex, cfg->tok[i].regex, &act))
 						{
 								AR_abort();
 						}

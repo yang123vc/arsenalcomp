@@ -37,7 +37,7 @@ typedef struct __parser_token_tag
 		size_t			col;
 }psrToken_t;
 
-#define PSR_TOTERMTOK(_ltok, _psr_tok)							\
+#define PARSER_TOTERMTOK(_ltok, _psr_tok)							\
 		do{														\
 				(_psr_tok)->str = (_ltok)->str;					\
 				(_psr_tok)->str_cnt = (_ltok)->count;			\
@@ -47,7 +47,7 @@ typedef struct __parser_token_tag
 		}while(0)
 
 
-#define PSR_TOLEXTOK(_psr_tok,_ltok)							\
+#define PARSER_TOLEXTOK(_psr_tok,_ltok)							\
 		do{														\
 				(_ltok)->str = (_psr_tok)->str;					\
 				(_ltok)->count = (_psr_tok)->str_cnt;			\
@@ -77,18 +77,18 @@ typedef struct __parser_handler_tag
 
 
 /**********************************必须在所有其它PSR族函数之前调用，否则行为未定义***************************/
-void	PSR_Init();
-void	PSR_UnInit();
+void	Parser_Init();
+void	Parser_UnInit();
 
 
 
-#define PSR_EOI_TOKVAL			0/*end of input符号的词法值*/
-#define PSR_EPSILON_TOKVAL		1
-#define PSR_LALR_TOKVAL			2
-#define PSR_ERROR_TOKVAL		3
-#define PSR_DEFPREC_TOKVAL		4
+#define PARSER_EOI_TOKVAL				0x0000/*end of input符号的词法值*/
+#define Parser_EPSILON_TOKVAL			0x0001
+#define PARSER_LALR_TOKVAL				0x0002
+#define PARSER_ERROR_TOKVAL				0x0003
+#define PARSER_DEFPREC_TOKVAL			0x0004
 
-#define PSR_MIN_TOKENVAL		256		/*最小终结符value*/
+#define PARSER_MIN_TOKENVAL				0x0100		/*最小终结符value*/
 
 
 /*
@@ -101,17 +101,17 @@ expr -> id | expr '-' expr;
 
 typedef enum 
 {
-		PSR_ASSOC_NONASSOC,
-		PSR_ASSOC_LEFT,
-		PSR_ASSOC_RIGHT
+		PARSER_ASSOC_NONASSOC,
+		PARSER_ASSOC_LEFT,
+		PARSER_ASSOC_RIGHT
 }psrAssocType_t;/*终结符结合性*/
 
 
 typedef enum
 {
-		PSR_LR0,
-		PSR_SLR = PSR_LR0,
-		PSR_LALR
+		PARSER_LR0,
+		PARSER_SLR = PARSER_LR0,
+		PARSER_LALR
 }psrLRItemType_t;
 
 typedef psrLRItemType_t psrModeType_t;
@@ -165,8 +165,8 @@ typedef struct __parser_context_tag			psrContext_t;
 
 typedef enum
 {
-		PSR_TERM,
-		PSR_NONTERM
+		PARSER_TERM,
+		PARSER_NONTERM
 }psrSymbType_t;
 
 
@@ -181,10 +181,10 @@ struct __parser_symbol_tag
 };
 
 
-const psrSymb_t*		PSR_CreateSymb(const wchar_t *name, psrSymbType_t t);
-const psrSymb_t*		PSR_CopyNewSymb(const psrSymb_t *sour);
-void					PSR_DestroySymb(const psrSymb_t *symb);
-int_t					PSR_CompSymb(const psrSymb_t *l, const psrSymb_t *r);
+const psrSymb_t*		Parser_CreateSymb(const wchar_t *name, psrSymbType_t t);
+const psrSymb_t*		Parser_CopyNewSymb(const psrSymb_t *sour);
+void					Parser_DestroySymb(const psrSymb_t *symb);
+int_t					Parser_CompSymb(const psrSymb_t *l, const psrSymb_t *r);
 
 
 /***************************************symbol_list***************************************************/
@@ -196,31 +196,31 @@ typedef struct __parser_symbol_list_tag
 		size_t			cap;	
 }psrSymbList_t;
 
-void				PSR_InitSymbList(psrSymbList_t *symb_lst);
-void				PSR_UnInitSymbList(psrSymbList_t *symb_lst);
-void				PSR_ClearSymbList(psrSymbList_t *symb_lst);
+void				Parser_InitSymbList(psrSymbList_t *symb_lst);
+void				Parser_UnInitSymbList(psrSymbList_t *symb_lst);
+void				Parser_ClearSymbList(psrSymbList_t *symb_lst);
 
-void				PSR_CopySymbList(psrSymbList_t *dest, const psrSymbList_t *sour);
+void				Parser_CopySymbList(psrSymbList_t *dest, const psrSymbList_t *sour);
 
-void				PSR_InsertToSymbList(psrSymbList_t *symb_lst, const psrSymb_t *symb);
+void				Parser_InsertToSymbList(psrSymbList_t *symb_lst, const psrSymb_t *symb);
 
-const psrSymb_t*	PSR_IndexOfSymbList(const psrSymbList_t *symb_lst, size_t idx);
-int_t				PSR_FindFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t* symb);
+const psrSymb_t*	Parser_IndexOfSymbList(const psrSymbList_t *symb_lst, size_t idx);
+int_t				Parser_FindFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t* symb);
 
-bool_t				PSR_RemoveFromSymbListByIndex(psrSymbList_t *symb_lst, size_t index);
+bool_t				Parser_RemoveFromSymbListByIndex(psrSymbList_t *symb_lst, size_t index);
 
-int_t				PSR_BSearchFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t* symb);
-void				PSR_SortSymbList(psrSymbList_t *symb_lst);
+int_t				Parser_BSearchFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t* symb);
+void				Parser_SortSymbList(psrSymbList_t *symb_lst);
 
 
 
-bool_t				PSR_InsertToSymbList_Unique(psrSymbList_t *symb_lst, const psrSymb_t *symb);
+bool_t				Parser_InsertToSymbList_Unique(psrSymbList_t *symb_lst, const psrSymb_t *symb);
 
 
 
 /********************************************************************************************************/
-void			PSR_PrintSymbol(const psrSymb_t *symb,	arString_t *str);
-void			PSR_PrintSymbolList(const psrSymbList_t *lst, arString_t *str);
+void			Parser_PrintSymbol(const psrSymb_t *symb,	arString_t *str);
+void			Parser_PrintSymbolList(const psrSymbList_t *lst, arString_t *str);
 
 
 
@@ -246,15 +246,15 @@ typedef struct __parser_symbmap_tag
 }psrSymbMap_t;
 
 
-void					PSR_InitSymbMap(psrSymbMap_t *map);
-void					PSR_UnInitSymbMap(psrSymbMap_t *map);
+void					Parser_InitSymbMap(psrSymbMap_t *map);
+void					Parser_UnInitSymbMap(psrSymbMap_t *map);
 
-bool_t					PSR_InsertToSymbMap(psrSymbMap_t *map, const psrSymb_t *key, const psrSymb_t *val);
-bool_t					PSR_SetSymbEpsilon(psrSymbMap_t *map, const psrSymb_t *key, bool_t is_epsilon);
+bool_t					Parser_InsertToSymbMap(psrSymbMap_t *map, const psrSymb_t *key, const psrSymb_t *val);
+bool_t					Parser_SetSymbEpsilon(psrSymbMap_t *map, const psrSymb_t *key, bool_t is_epsilon);
 
-psrMapRec_t*			PSR_GetSymbolFromSymbMap(const psrSymbMap_t *map, const psrSymb_t *key);
+psrMapRec_t*			Parser_GetSymbolFromSymbMap(const psrSymbMap_t *map, const psrSymb_t *key);
 
-void					PSR_PrintSymbolMap(const psrSymbMap_t *map, arString_t *str);
+void					Parser_PrintSymbolMap(const psrSymbMap_t *map, arString_t *str);
 
 
 
@@ -287,13 +287,13 @@ typedef struct __term_info_list_tag
 }psrTermInfoList_t;
 
 
-void			PSR_InitTermInfoList(psrTermInfoList_t	*lst);
-void			PSR_UnInitTermInfoList(psrTermInfoList_t	*lst);
-void			PSR_ClearTermInfoList(psrTermInfoList_t	*lst);
+void			Parser_InitTermInfoList(psrTermInfoList_t	*lst);
+void			Parser_UnInitTermInfoList(psrTermInfoList_t	*lst);
+void			Parser_ClearTermInfoList(psrTermInfoList_t	*lst);
 
-bool_t			PSR_InsertToTermInfoList(psrTermInfoList_t	*lst, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f);
-psrTermInfo_t*	PSR_FindTermByValue(psrTermInfoList_t	*lst, size_t val);
-psrTermInfo_t*	PSR_FindTermByName(psrTermInfoList_t	*lst, const wchar_t *name);
+bool_t			Parser_InsertToTermInfoList(psrTermInfoList_t	*lst, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f);
+psrTermInfo_t*	Parser_FindTermByValue(psrTermInfoList_t	*lst, size_t val);
+psrTermInfo_t*	Parser_FindTermByName(psrTermInfoList_t	*lst, const wchar_t *name);
 
 
 
@@ -313,9 +313,9 @@ typedef struct __parser_rule_tag
 
 }psrRule_t;
 
-psrRule_t*		PSR_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, size_t auto_ret, const psrTermInfoList_t *term_list, arIOCtx_t *ctx);
-psrRule_t*		PSR_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, size_t auto_ret, const psrTermInfoList_t *term_list, arIOCtx_t *ctx);
-void			PSR_DestroyRule(psrRule_t *rule);
+psrRule_t*		Parser_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, size_t auto_ret, const psrTermInfoList_t *term_list, arIOCtx_t *ctx);
+psrRule_t*		Parser_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, size_t auto_ret, const psrTermInfoList_t *term_list, arIOCtx_t *ctx);
+void			Parser_DestroyRule(psrRule_t *rule);
 
 /****************************************************************************************************************************************/
 
@@ -334,56 +334,56 @@ struct __parser_grammar_tag
 };
 
 
-psrGrammar_t*			PSR_CreateGrammar(const psrHandler_t *ctx, const arIOCtx_t *io_ctx);
-void					PSR_DestroyGrammar(psrGrammar_t *grammar);
-void					PSR_ClearGrammar(psrGrammar_t *grammar);
+psrGrammar_t*			Parser_CreateGrammar(const psrHandler_t *ctx, const arIOCtx_t *io_ctx);
+void					Parser_DestroyGrammar(psrGrammar_t *grammar);
+void					Parser_ClearGrammar(psrGrammar_t *grammar);
 
-void					PSR_ResetGrammarIOContext(psrGrammar_t *grammar, const arIOCtx_t *io_ctx);
-void					PSR_ResetGrammarParseHandler(psrGrammar_t *grammar, const psrHandler_t *io_ctx);
-
-
-const psrHandler_t*		PSR_GetGrammarHandler(const psrGrammar_t *grammar);
+void					Parser_ResetGrammarIOContext(psrGrammar_t *grammar, const arIOCtx_t *io_ctx);
+void					Parser_ResetGrammarParseHandler(psrGrammar_t *grammar, const psrHandler_t *io_ctx);
 
 
-
-int_t					PSR_IndexOfGrammar(const psrGrammar_t *grammar, const psrRule_t *rule);
-
-#define					PSR_GetRuleOfGrammar(_gmr, _idx) ((_gmr)->rules[(_idx)])
-
-const psrSymbList_t*	PSR_GetSymbList(const psrGrammar_t *grammar);
-
-
-bool_t					PSR_CheckIsValidGrammar(const psrGrammar_t *grammar);
+const psrHandler_t*		Parser_GetGrammarHandler(const psrGrammar_t *grammar);
 
 
 
+int_t					Parser_IndexOfGrammar(const psrGrammar_t *grammar, const psrRule_t *rule);
 
-const psrRule_t*		PSR_GetStartRule(const psrGrammar_t *grammar);
-bool_t					PSR_SetFirstRule(psrGrammar_t *grammar, const wchar_t *rule_name);
+#define					Parser_GetRuleOfGrammar(_gmr, _idx) ((_gmr)->rules[(_idx)])
 
-const psrTermInfo_t*	PSR_GetRulePrecAssocInfo(const psrGrammar_t *grammar, const psrRule_t *rule);
-
-psrTermInfo_t*			PSR_GetTermSymbInfo(const psrGrammar_t	*grammar, const psrSymb_t *term);
-psrTermInfo_t*			PSR_GetTermSymbInfoByName(const psrGrammar_t	*grammar, const wchar_t *name);
-psrTermInfo_t*			PSR_GetTermSymbInfoByValue(const psrGrammar_t	*grammar, size_t val);
+const psrSymbList_t*	Parser_GetSymbList(const psrGrammar_t *grammar);
 
 
-bool_t					PSR_InsertTerm(psrGrammar_t *grammar, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f);
-bool_t					PSR_InsertRule(psrGrammar_t *grammar, psrRule_t *rule);
-bool_t					PSR_InsertRuleByPartStr(psrGrammar_t *grammar, const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, size_t auto_ret);
-bool_t					PSR_InsertRuleByStr(psrGrammar_t *grammar, const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, size_t auto_ret);
+bool_t					Parser_CheckIsValidGrammar(const psrGrammar_t *grammar);
 
 
 
 
-void					PSR_CalcFirstSet(const psrGrammar_t *grammar, psrSymbMap_t *first_set);
-void					PSR_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *follow_set, const psrSymbMap_t *first_set);
+const psrRule_t*		Parser_GetStartRule(const psrGrammar_t *grammar);
+bool_t					Parser_SetFirstRule(psrGrammar_t *grammar, const wchar_t *rule_name);
+
+const psrTermInfo_t*	Parser_GetRulePrecAssocInfo(const psrGrammar_t *grammar, const psrRule_t *rule);
+
+psrTermInfo_t*			Parser_GetTermSymbInfo(const psrGrammar_t	*grammar, const psrSymb_t *term);
+psrTermInfo_t*			Parser_GetTermSymbInfoByName(const psrGrammar_t	*grammar, const wchar_t *name);
+psrTermInfo_t*			Parser_GetTermSymbInfoByValue(const psrGrammar_t	*grammar, size_t val);
+
+
+bool_t					Parser_InsertTerm(psrGrammar_t *grammar, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f);
+bool_t					Parser_InsertRule(psrGrammar_t *grammar, psrRule_t *rule);
+bool_t					Parser_InsertRuleByPartStr(psrGrammar_t *grammar, const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, size_t auto_ret);
+bool_t					Parser_InsertRuleByStr(psrGrammar_t *grammar, const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, size_t auto_ret);
+
+
+
+
+void					Parser_CalcFirstSet(const psrGrammar_t *grammar, psrSymbMap_t *first_set);
+void					Parser_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *follow_set, const psrSymbMap_t *first_set);
 
 
 #if(0)
-bool_t					PSR_ReportLeftFactor(const psrGrammar_t *grammar, arString_t *output);
-bool_t					PSR_ReportLeftRecursion(const psrGrammar_t *grammar, arString_t *output);
-void					PSR_PrintGrammar(const psrGrammar_t *grammar, arString_t *str);
+bool_t					Parser_ReportLeftFactor(const psrGrammar_t *grammar, arString_t *output);
+bool_t					Parser_ReportLeftRecursion(const psrGrammar_t *grammar, arString_t *output);
+void					Parser_PrintGrammar(const psrGrammar_t *grammar, arString_t *str);
 #endif
 
 
@@ -428,13 +428,13 @@ struct __parser_context_tag
 
 
 
-const parser_t* PSR_CreateParser(const psrGrammar_t *grammar, psrModeType_t type);
+const parser_t* Parser_CreateParser(const psrGrammar_t *grammar, psrModeType_t type);
 
-void			PSR_DestroyParser(const parser_t *parser);
+void			Parser_DestroyParser(const parser_t *parser);
 
-const	psrGrammar_t*	PSR_GetGrammar(const parser_t *parser);
+const	psrGrammar_t*	Parser_GetGrammar(const parser_t *parser);
 
-/*#define			PSR_GetGrammar(_psr)	((const psrGrammar_t*)((_psr)->grammar))*/
+/*#define			Parser_GetGrammar(_psr)	((const psrGrammar_t*)((_psr)->grammar))*/
 
 
 
@@ -442,27 +442,27 @@ const	psrGrammar_t*	PSR_GetGrammar(const parser_t *parser);
 
 /*****************************************Context*****************************************/
 
-psrContext_t*	PSR_CreateContext(const parser_t *parser, void *ctx);
-void			PSR_DestroyContext(psrContext_t	*ctx);
+psrContext_t*	Parser_CreateContext(const parser_t *parser, void *ctx);
+void			Parser_DestroyContext(psrContext_t	*ctx);
 
-void			PSR_Clear(psrContext_t *parser);
+void			Parser_Clear(psrContext_t *parser);
 
-psrNode_t*		PSR_GetResult(psrContext_t *parser);/*在状态为accepted之后才可以调用*/
+psrNode_t*		Parser_GetResult(psrContext_t *parser);/*在状态为accepted之后才可以调用*/
 
-bool_t			PSR_IsAccepted(const psrContext_t *parser);
+bool_t			Parser_IsAccepted(const psrContext_t *parser);
 
-bool_t			PSR_IsInError(const psrContext_t *parser);
+bool_t			Parser_IsInError(const psrContext_t *parser);
 
-void			PSR_ClearError(psrContext_t *parser);
+void			Parser_ClearError(psrContext_t *parser);
 
-size_t			PSR_GetNodeCount(const psrContext_t *parser);
+size_t			Parser_GetNodeCount(const psrContext_t *parser);
 
-psrNode_t*		PSR_IndexOfNodeStack(psrContext_t *parser, size_t index);
+psrNode_t*		Parser_IndexOfNodeStack(psrContext_t *parser, size_t index);
 
 /*
 		由于采用了一个增广的文法，所以当EOI被增加到stack中时，只可能出现错误或者成为接受状态，EOI永远不会被SHIFT到parser中
 */
-bool_t			PSR_AddToken(psrContext_t *parser_context, const psrToken_t *tok);
+bool_t			Parser_AddToken(psrContext_t *parser_context, const psrToken_t *tok);
 
 
 /***************************************************************Parser结束************************************************************************/
@@ -473,9 +473,9 @@ bool_t			PSR_AddToken(psrContext_t *parser_context, const psrToken_t *tok);
 
 /**************************************************************************报告*******************************************************************/
 
-void	PSR_PrintParserConflict(const parser_t *parser, arString_t *out);
-size_t	PSR_CountParserConflict(const parser_t *parser);
-void	PSR_PrintParserActionTable(const parser_t *parser, arString_t *out, size_t width);
+void	Parser_PrintParserConflict(const parser_t *parser, arString_t *out);
+size_t	Parser_CountParserConflict(const parser_t *parser);
+void	Parser_PrintParserActionTable(const parser_t *parser, arString_t *out, size_t width);
 
 /*action table view*/
 
@@ -489,11 +489,11 @@ typedef struct __parser_action_item_view_tag
 		size_t			col;
 }psrActionView_t;
 
-const psrActionView_t*	PSR_CreateParserActionView(const parser_t *parser);
-void					PSR_DestroyParserActionView(const psrActionView_t *view);
+const psrActionView_t*	Parser_CreateParserActionView(const parser_t *parser);
+void					Parser_DestroyParserActionView(const psrActionView_t *view);
 
-#define	PSR_IndexActionViewItem(_v, _n)			((_v)->item[(_n)])
-#define PSR_IndexActionViewAction(_v, _x,_y)	((_v)->action_tbl[AR_TBL_IDX_R((_x), (_y), (_v)->col)])
+#define	Parser_IndexActionViewItem(_v, _n)			((_v)->item[(_n)])
+#define Parser_IndexActionViewAction(_v, _x,_y)	((_v)->action_tbl[AR_TBL_IDX_R((_x), (_y), (_v)->col)])
 
 /*conflict*/
 typedef struct __parser_conflict_item_tag
@@ -512,8 +512,8 @@ typedef struct __parser_conflict_view_tag
 }psrConflictView_t;
 
 
-const	psrConflictView_t*		PSR_CreateParserConflictView(const parser_t *parser);
-void							PSR_DestroyParserConflictView(const psrConflictView_t *view);
+const	psrConflictView_t*		Parser_CreateParserConflictView(const parser_t *parser);
+void							Parser_DestroyParserConflictView(const psrConflictView_t *view);
 
 
 /*first follow view*/
@@ -537,8 +537,8 @@ typedef struct __view_info_tag
 		psrSymbolMapView_t		left_factor;
 }psrStatusView_t;
 
-const psrStatusView_t*			PSR_CreateParserStatusView(const parser_t *parser);
-void							PSR_DestroyParserStatusView(const psrStatusView_t *view);
+const psrStatusView_t*			Parser_CreateParserStatusView(const parser_t *parser);
+void							Parser_DestroyParserStatusView(const psrStatusView_t *view);
 
 
 

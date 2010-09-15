@@ -16,13 +16,13 @@
 
 AR_NAMESPACE_BEGIN
 
-void	LEX_Init()
+void	Lex_Init()
 {
 		RGX_InitNode();
 		RGX_InitMisc();
 }
 
-void	LEX_UnInit()
+void	Lex_UnInit()
 {
 		RGX_UnInitNode();
 		RGX_UnInitMisc();
@@ -112,7 +112,7 @@ static bool_t		__remove_from_rule_set(lexRuleSet_t *set, size_t value)
 
 /**********************************lex**************************************************/
 
-bool_t	LEX_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr)
+bool_t	Lex_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr)
 {
 		rgxResult_t res;
 		AR_ASSERT(name != NULL && AR_wcslen(name) > 0 && expr != NULL);
@@ -140,7 +140,7 @@ bool_t	LEX_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr)
 }
 
 
-bool_t	LEX_RemoveByName(lex_t *lex, const wchar_t *name)
+bool_t	Lex_RemoveByName(lex_t *lex, const wchar_t *name)
 {
 		AR_ASSERT(lex != NULL && name != NULL);
 
@@ -149,7 +149,7 @@ bool_t	LEX_RemoveByName(lex_t *lex, const wchar_t *name)
 
 
 
-bool_t	LEX_Insert(lex_t *lex, const wchar_t *input)
+bool_t	Lex_Insert(lex_t *lex, const wchar_t *input)
 {
 		const wchar_t *p;
 
@@ -186,7 +186,7 @@ bool_t	LEX_Insert(lex_t *lex, const wchar_t *input)
 				p = AR_wcstrim_space(p);
 
 				act.is_skip = is_skip;
-				return LEX_InsertRule(lex, p, &act);
+				return Lex_InsertRule(lex, p, &act);
 
 		}else if(AR_iswalpha(*p) || *p == L'_')
 		{
@@ -202,7 +202,7 @@ bool_t	LEX_Insert(lex_t *lex, const wchar_t *input)
 
 				if(*p != L'=')return false;
 				p = AR_wcstrim_space(++p);
-				return LEX_InsertName(lex, name, p);
+				return Lex_InsertName(lex, name, p);
 
 		}else
 		{
@@ -220,7 +220,7 @@ bool_t	LEX_Insert(lex_t *lex, const wchar_t *input)
 
 
 
-void	LEX_ResetIOContext(lex_t *lex, const arIOCtx_t *io)
+void	Lex_ResetIOContext(lex_t *lex, const arIOCtx_t *io)
 {
 		AR_ASSERT(lex != NULL && io != NULL);
 		lex->io_ctx = io == NULL ? *AR_global_ioctx() : *io;
@@ -232,7 +232,7 @@ void	LEX_ResetIOContext(lex_t *lex, const arIOCtx_t *io)
 
 
 
-bool_t	LEX_RemoveByValue(lex_t *lex, size_t value)
+bool_t	Lex_RemoveByValue(lex_t *lex, size_t value)
 {
 		AR_ASSERT(lex != NULL);
 		
@@ -243,7 +243,7 @@ bool_t	LEX_RemoveByValue(lex_t *lex, size_t value)
 
 
 
-bool_t	LEX_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action)
+bool_t	Lex_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action)
 {
 		rgxResult_t res;
 		rgxNode_t	*cat, *final;
@@ -277,7 +277,7 @@ bool_t	LEX_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action
 
 		RGX_Compile(prog, cat);
 
-		LEX_InserToProgSet(lex->prog_set, prog, action);
+		Lex_InserToProgSet(lex->prog_set, prog, action);
 		RGX_DestroyNode(cat);
 		*/
 
@@ -287,12 +287,12 @@ bool_t	LEX_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action
 
 
 
-bool_t	LEX_GenerateTransTable(lex_t *lex)
+bool_t	Lex_GenerateTransTable(lex_t *lex)
 {
 		AR_ASSERT(lex != NULL);
 		
 		/*
-		LEX_SortProgSet(lex->prog_set);
+		Lex_SortProgSet(lex->prog_set);
 		*/
 		return (bool_t)(lex->rule_set.count > 0);
 }
@@ -301,7 +301,7 @@ bool_t	LEX_GenerateTransTable(lex_t *lex)
 
 
 
-lex_t*	LEX_Create(const arIOCtx_t *io)
+lex_t*	Lex_Create(const arIOCtx_t *io)
 {
 		lex_t *res;
 
@@ -317,7 +317,7 @@ lex_t*	LEX_Create(const arIOCtx_t *io)
 
 
 
-void	LEX_Clear(lex_t *lex)
+void	Lex_Clear(lex_t *lex)
 {
 		AR_ASSERT(lex != NULL);
 		RGX_ClearNameSet(lex->name_tbl);
@@ -328,11 +328,11 @@ void	LEX_Clear(lex_t *lex)
 
 
 
-void	LEX_Destroy(lex_t *lex)
+void	Lex_Destroy(lex_t *lex)
 {
 		AR_ASSERT(lex != NULL);
 		
-		LEX_Clear(lex);
+		Lex_Clear(lex);
 		RGX_UnInitNameSet(lex->name_tbl);
 		__uninit_rule_set(&lex->rule_set);
 		AR_DEL(lex->name_tbl);

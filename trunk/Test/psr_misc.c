@@ -22,40 +22,40 @@ void str_tbl_test()
 		const wchar_t *l, *r;
 		const psrSymb_t	*tmp;
 
-		l = PSR_AllocString( L"abcdef");
-		r = PSR_AllocString( L"abcdef");
+		l = Parser_AllocString( L"abcdef");
+		r = Parser_AllocString( L"abcdef");
 		AR_ASSERT(l == r);
 
 
-		l = PSR_AllocString( L"abcdef");
-		r = PSR_AllocString( L"abcdef2");
+		l = Parser_AllocString( L"abcdef");
+		r = Parser_AllocString( L"abcdef2");
 
 		AR_ASSERT(l != r);
 
 
-		AR_ASSERT(PSR_CompSymb(PSR_EpsilonSymb, PSR_EpsilonSymb) == 0);
-		AR_ASSERT(PSR_CompSymb(PSR_EpsilonSymb, PSR_EOISymb) != 0);
-		AR_ASSERT(PSR_CompSymb(PSR_EpsilonSymb, PSR_StartSymb) != 0);
-		AR_ASSERT(PSR_CompSymb(PSR_StartSymb, PSR_StartSymb) == 0);
+		AR_ASSERT(Parser_CompSymb(Parser_EpsilonSymb, Parser_EpsilonSymb) == 0);
+		AR_ASSERT(Parser_CompSymb(Parser_EpsilonSymb, PARSER_EOISymb) != 0);
+		AR_ASSERT(Parser_CompSymb(Parser_EpsilonSymb, PARSER_StartSymb) != 0);
+		AR_ASSERT(Parser_CompSymb(PARSER_StartSymb, PARSER_StartSymb) == 0);
 
-		tmp = PSR_CreateSymb(L"%Start", PSR_NONTERM);
+		tmp = Parser_CreateSymb(L"%Start", PARSER_NONTERM);
 
-		AR_ASSERT(PSR_CompSymb(tmp, PSR_StartSymb) == 0);
+		AR_ASSERT(Parser_CompSymb(tmp, PARSER_StartSymb) == 0);
 
-		AR_printf(L"%ls\r\n", PSR_AllocStringInt(33, 10));
-		AR_printf(L"%ls\r\n", PSR_AllocStringInt(-33, 10));
+		AR_printf(L"%ls\r\n", Parser_AllocStringInt(33, 10));
+		AR_printf(L"%ls\r\n", Parser_AllocStringInt(-33, 10));
 
-		AR_printf(L"%ls\r\n", PSR_AllocStringInt(0x01AF, 16));
-		AR_printf(L"%ls\r\n", PSR_AllocStringInt(-0x02AF, 16));
+		AR_printf(L"%ls\r\n", Parser_AllocStringInt(0x01AF, 16));
+		AR_printf(L"%ls\r\n", Parser_AllocStringInt(-0x02AF, 16));
 /*
-		AR_printf(L"%ls\r\n", PSR_AllocStringUInt(33, 10));
-		AR_printf(L"%ls\r\n", PSR_AllocStringUInt(88, 10));
+		AR_printf(L"%ls\r\n", Parser_AllocStringUInt(33, 10));
+		AR_printf(L"%ls\r\n", Parser_AllocStringUInt(88, 10));
 
-		AR_printf(L"%ls\r\n", PSR_AllocStringUInt(33, 8));
-		AR_printf(L"%ls\r\n", PSR_AllocStringUInt(88, 8));
+		AR_printf(L"%ls\r\n", Parser_AllocStringUInt(33, 8));
+		AR_printf(L"%ls\r\n", Parser_AllocStringUInt(88, 8));
 
-		AR_printf(L"%ls\r\n", PSR_AllocStringUInt(33, 16));
-		AR_printf(L"%ls\r\n", PSR_AllocStringUInt(88, 16));
+		AR_printf(L"%ls\r\n", Parser_AllocStringUInt(33, 16));
+		AR_printf(L"%ls\r\n", Parser_AllocStringUInt(88, 16));
 		*/
 }
 
@@ -96,16 +96,16 @@ typedef struct __rule_tag
 
 token_test_t tokens[] = 
 {
-		{L"(", 354, 0, PSR_ASSOC_NONASSOC},
-		{L")", 355, 0, PSR_ASSOC_NONASSOC},
-		{L"+", 356, 0, PSR_ASSOC_NONASSOC},
-		{L"-", 357, 0, PSR_ASSOC_NONASSOC},
-		{L"*", 358, 0, PSR_ASSOC_NONASSOC},
-		{L"/", 359, 0, PSR_ASSOC_NONASSOC},
-		{L"%", 360, 0, PSR_ASSOC_NONASSOC},
-		{L"number", 361, 0, PSR_ASSOC_NONASSOC},
-		{L";",		362, 0, PSR_ASSOC_NONASSOC},
-		{L"UMINUS", 0xFFFF, 0, PSR_ASSOC_NONASSOC}
+		{L"(", 354, 0, PARSER_ASSOC_NONASSOC},
+		{L")", 355, 0, PARSER_ASSOC_NONASSOC},
+		{L"+", 356, 0, PARSER_ASSOC_NONASSOC},
+		{L"-", 357, 0, PARSER_ASSOC_NONASSOC},
+		{L"*", 358, 0, PARSER_ASSOC_NONASSOC},
+		{L"/", 359, 0, PARSER_ASSOC_NONASSOC},
+		{L"%", 360, 0, PARSER_ASSOC_NONASSOC},
+		{L"number", 361, 0, PARSER_ASSOC_NONASSOC},
+		{L";",		362, 0, PARSER_ASSOC_NONASSOC},
+		{L"UMINUS", 0xFFFF, 0, PARSER_ASSOC_NONASSOC}
 };
 
 
@@ -123,9 +123,9 @@ rule_test_t rules[] =
 
 token_test_t tokens1[] = 
 {
-		{L"id", 300, 0, PSR_ASSOC_NONASSOC},
-		{L"n",	400, 0, PSR_ASSOC_NONASSOC},
-		{L":=", 500, 0, PSR_ASSOC_NONASSOC}
+		{L"id", 300, 0, PARSER_ASSOC_NONASSOC},
+		{L"n",	400, 0, PARSER_ASSOC_NONASSOC},
+		{L":=", 500, 0, PARSER_ASSOC_NONASSOC}
 };
 
 
@@ -141,9 +141,9 @@ rule_test_t rules1[] =
 
 token_test_t tokens2[] = 
 {
-		{L"(", 300, 0, PSR_ASSOC_NONASSOC},
-		{L")",	301, 0, PSR_ASSOC_NONASSOC},
-		{L"++", 303, 0, PSR_ASSOC_NONASSOC}
+		{L"(", 300, 0, PARSER_ASSOC_NONASSOC},
+		{L")",	301, 0, PARSER_ASSOC_NONASSOC},
+		{L"++", 303, 0, PARSER_ASSOC_NONASSOC}
 };
 
 
@@ -158,10 +158,10 @@ rule_test_t rules2[] =
 
 token_test_t tokens3[] = 
 {
-		{L"n", 300, 0, PSR_ASSOC_NONASSOC},
-		{L"id",	301, 0, PSR_ASSOC_NONASSOC},
-		{L"=", 400, 0, PSR_ASSOC_NONASSOC},
-		{L"*", 401, 0, PSR_ASSOC_NONASSOC}
+		{L"n", 300, 0, PARSER_ASSOC_NONASSOC},
+		{L"id",	301, 0, PARSER_ASSOC_NONASSOC},
+		{L"=", 400, 0, PARSER_ASSOC_NONASSOC},
+		{L"*", 401, 0, PARSER_ASSOC_NONASSOC}
 };
 
 
@@ -204,27 +204,27 @@ void grammar_test2()
 {
 		psrGrammar_t *gmr;
 		size_t i;
-		gmr = PSR_CreateGrammar(NULL);
+		gmr = Parser_CreateGrammar(NULL);
 		
-		PSR_ClearGrammar(gmr);
+		Parser_ClearGrammar(gmr);
 
 		str = AR_CreateString();
 
 		
 		for(i = 0; i < sizeof(tokens) / sizeof(tokens[0]); ++i)
 		{
-				AR_ASSERT(PSR_InsertTerm(gmr,tokens[i].token, tokens[i].val, tokens[i].assoc, tokens[i].prec, NULL));
+				AR_ASSERT(Parser_InsertTerm(gmr,tokens[i].token, tokens[i].val, tokens[i].assoc, tokens[i].prec, NULL));
 		}
 		
 		for(i = 0; i < sizeof(rules)/sizeof(rules[0]); ++i)
 		{
-				AR_ASSERT(PSR_InsertRuleByStr(gmr, rules[i].rule, rules[i].prec, NULL));
+				AR_ASSERT(Parser_InsertRuleByStr(gmr, rules[i].rule, rules[i].prec, NULL));
 
 				
 		}
 
-		PSR_PrintGrammar(gmr, str);
-		AR_ASSERT(PSR_CheckIsValidGrammar(gmr));
+		Parser_PrintGrammar(gmr, str);
+		AR_ASSERT(Parser_CheckIsValidGrammar(gmr));
 
 		printf_str();
 
@@ -234,22 +234,22 @@ void grammar_test2()
 		{		
 				psrSymbMap_t first_map, follow_map;
 				
-				PSR_InitSymbMap(&first_map);
-				PSR_InitSymbMap(&follow_map);
+				Parser_InitSymbMap(&first_map);
+				Parser_InitSymbMap(&follow_map);
 				
-				PSR_CalcFirstSet(gmr, &first_map);
-				PSR_PrintSymbolMap(&first_map, str);
+				Parser_CalcFirstSet(gmr, &first_map);
+				Parser_PrintSymbolMap(&first_map, str);
 				printf_str();
 				printf("-----------------------------------\r\n");
 
-				PSR_CalcFollowSet(gmr, &follow_map, &first_map);
-				PSR_PrintSymbolMap(&follow_map, str);
+				Parser_CalcFollowSet(gmr, &follow_map, &first_map);
+				Parser_PrintSymbolMap(&follow_map, str);
 				printf_str();
 				printf("-----------------------------------\r\n");
 
 
-				PSR_UnInitSymbMap(&first_map);
-				PSR_UnInitSymbMap(&follow_map);
+				Parser_UnInitSymbMap(&first_map);
+				Parser_UnInitSymbMap(&follow_map);
 		}
 
 		getchar();
@@ -260,29 +260,29 @@ void grammar_test2()
 				size_t k;
 				psrDFA_t		*dfa;
 				psrDFASet_t		set;
-				PSR_InitDFASet(&set);
+				Parser_InitDFASet(&set);
 				
 				beg = GetTickCount();
-				//dfa = PSR_Build_LR0_DFA(&gmr);
-				//dfa = PSR_Build_LR1_DFA(&gmr);
-				dfa = PSR_Build_LALR_DFA(gmr);
+				//dfa = Parser_Build_LR0_DFA(&gmr);
+				//dfa = Parser_Build_LR1_DFA(&gmr);
+				dfa = Parser_Build_LALR_DFA(gmr);
 				end = GetTickCount();
 
 				printf("elipsed == %d\r\n", end - beg);
 
-				PSR_CollectDFA(&set, dfa);
+				Parser_CollectDFA(&set, dfa);
 
 				for(k = 0; k < set.count; ++k)
 				{
 						AR_AppendFormatString(str, L"I[%d] : \r\n",k);
-						PSR_PrintLRItemTable(&set.set[k]->tbl, gmr, str);
+						Parser_PrintLRItemTable(&set.set[k]->tbl, gmr, str);
 						AR_AppendFormatString(str, L"-----------------------------\r\n");
 
 				}
 				getchar();
 				printf_str();
-				PSR_DestroyDFA_ALL(dfa);
-				PSR_UnInitDFASet(&set);
+				Parser_DestroyDFA_ALL(dfa);
+				Parser_UnInitDFASet(&set);
 
 		}
 		getchar();
@@ -291,23 +291,23 @@ void grammar_test2()
 				psrActionTable_t *tbl;	
 				beg = GetTickCount();
 
-				//tbl = PSR_CreateActionTable_SLR(&gmr);
+				//tbl = Parser_CreateActionTable_SLR(&gmr);
 				
-				//tbl = PSR_CreateActionTable_LR1(&gmr);
-				tbl = PSR_CreateActionTable_LALR(gmr);
+				//tbl = Parser_CreateActionTable_LR1(&gmr);
+				tbl = Parser_CreateActionTable_LALR(gmr);
 				end = GetTickCount();
 				printf("elipsed == %d\r\n", end - beg);
 				getchar();
 
-				PSR_PrintActionTable(tbl, gmr,18,str);
+				Parser_PrintActionTable(tbl, gmr,18,str);
 				printf_str();
 				getchar();
 
-				PSR_ReportConflict(tbl, gmr, str);
+				Parser_ReportConflict(tbl, gmr, str);
 				printf_str();
 				getchar();
 				
-				PSR_DestroyActionTable(tbl);
+				Parser_DestroyActionTable(tbl);
 		}
 		
 		getchar();
@@ -316,10 +316,10 @@ void grammar_test2()
 				parser_t		*psr;
 				psrCtx_t		user = {on_free_test,  NULL};
 
-				psr = PSR_CreateParser(gmr, PSR_LALR, &user);
+				psr = Parser_CreateParser(gmr, PARSER_LALR, &user);
 
 
-				PSR_DestroyParser(psr);
+				Parser_DestroyParser(psr);
 				
 
 		}
@@ -387,26 +387,26 @@ void calc_test1()
 		parser_t	 *psr;
 		str = AR_CreateString();
 		
-		gmr = PSR_CreateGrammar(NULL);
+		gmr = Parser_CreateGrammar(NULL);
 		
-		PSR_InsertTerm(gmr, L"(", 300, PSR_ASSOC_NONASSOC, 0, create_leaf);
-		PSR_InsertTerm(gmr, L")", 301, PSR_ASSOC_NONASSOC, 0, create_leaf);
+		Parser_InsertTerm(gmr, L"(", 300, PARSER_ASSOC_NONASSOC, 0, create_leaf);
+		Parser_InsertTerm(gmr, L")", 301, PARSER_ASSOC_NONASSOC, 0, create_leaf);
 		
 
-		PSR_InsertRuleByStr(gmr, L"S : ( S ) S", NULL, create_node);
-		PSR_InsertRuleByStr(gmr, L"S : ", NULL, reduce_epsilon_node);
+		Parser_InsertRuleByStr(gmr, L"S : ( S ) S", NULL, create_node);
+		Parser_InsertRuleByStr(gmr, L"S : ", NULL, reduce_epsilon_node);
 
 
-		PSR_PrintGrammar(gmr, str);
+		Parser_PrintGrammar(gmr, str);
 		print_str();
 		
 		
 		{
 				psrCtx_t ctx = { free_node, NULL};
-				psr = PSR_CreateParser(gmr, PSR_LALR, &ctx);
+				psr = Parser_CreateParser(gmr, PARSER_LALR, &ctx);
 				AR_ASSERT(psr);
 
-				PSR_ReportConflict(psr->tbl, gmr, str);
+				Parser_ReportConflict(psr->tbl, gmr, str);
 				print_str();
 				getchar();
 				
@@ -427,7 +427,7 @@ void calc_test1()
 						tok.line = 0;
 						tok.col = i;
 						
-						if(!PSR_AddToken(psr, &tok))
+						if(!Parser_AddToken(psr, &tok))
 						{
 								printf("error\r\n");
 								assert(0);
@@ -440,18 +440,18 @@ void calc_test1()
 				tok.str = L"";
 
 
-				if(!PSR_AddToken(psr, &tok))
+				if(!Parser_AddToken(psr, &tok))
 				{
 						printf("error\r\n");
 						assert(0);
 				}
 				
-				if(PSR_IsAccepted(psr))
+				if(Parser_IsAccepted(psr))
 				{
 						printf("success\r\n");
 				}
 
-				node = PSR_GetResult(psr);
+				node = Parser_GetResult(psr);
 
 				}
 		}

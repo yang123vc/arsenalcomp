@@ -142,7 +142,7 @@ void	AR_AppendFormatString(arString_t *str, const wchar_t *fmt, ...)
 		va_start(args, fmt);
 		len = AR_vscwprintf(fmt, args);
 		va_end(args);
-		AR_ASSERT(len > 0);
+		AR_ASSERT(len >= 0);
 
 		buf = AR_NEWARR0(wchar_t, len + 1);
 		va_start(args, fmt);

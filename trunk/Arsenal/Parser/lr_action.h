@@ -25,10 +25,10 @@ AR_NAMESPACE_BEGIN
 
 typedef enum
 {
-		PSR_SHIFT,
-		PSR_REDUCE,
-		PSR_ACCEPT,
-		PSR_ERROR
+		PARSER_SHIFT,
+		PARSER_REDUCE,
+		PARSER_ACCEPT,
+		PARSER_ERROR
 }psrActionType_t;
 
 /*typedef struct __action_record_tag psrAction_t;*/
@@ -46,7 +46,7 @@ typedef struct __action_record_tag
 		struct __action_record_tag		*next;
 }psrAction_t;
 
-extern const psrAction_t	*	const PSR_ErrorAction;
+extern const psrAction_t	*	const PARSER_ErrorAction;
 
 
 
@@ -68,16 +68,16 @@ struct __parser_action_tag
 
 
 
-const psrAction_t*			PSR_GetAction(const psrActionTable_t *tbl, size_t state, const psrSymb_t *symb);
-int_t						PSR_GetState(const psrActionTable_t *tbl, size_t state, const psrSymb_t *symb);
+const psrAction_t*			Parser_GetAction(const psrActionTable_t *tbl, size_t state, const psrSymb_t *symb);
+int_t						Parser_GetState(const psrActionTable_t *tbl, size_t state, const psrSymb_t *symb);
 
-const psrSymbList_t*		PSR_GetExpectedSymb(const psrActionTable_t *tbl, size_t state);
+const psrSymbList_t*		Parser_GetExpectedSymb(const psrActionTable_t *tbl, size_t state);
 
 
-const psrActionTable_t*		PSR_CreateActionTable_SLR(const psrGrammar_t *grammar);
-const psrActionTable_t*		PSR_CreateActionTable_LALR(const psrGrammar_t *grammar);
+const psrActionTable_t*		Parser_CreateActionTable_SLR(const psrGrammar_t *grammar);
+const psrActionTable_t*		Parser_CreateActionTable_LALR(const psrGrammar_t *grammar);
 
-void						PSR_DestroyActionTable(const psrActionTable_t *tbl);
+void						Parser_DestroyActionTable(const psrActionTable_t *tbl);
 
 
 

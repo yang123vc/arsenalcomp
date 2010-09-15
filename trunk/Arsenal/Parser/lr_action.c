@@ -23,26 +23,26 @@ AR_NAMESPACE_BEGIN
 
 
 
-const psrAction_t*		PSR_GetAction(const psrActionTable_t *tbl, size_t state, const psrSymb_t *symb)
+const psrAction_t*		Parser_GetAction(const psrActionTable_t *tbl, size_t state, const psrSymb_t *symb)
 {
 		int_t idx;
-		AR_ASSERT(state < tbl->row && symb->type == PSR_TERM);
-		idx = PSR_BSearchFromSymbList(&tbl->term_set,symb);
+		AR_ASSERT(state < tbl->row && symb->type == PARSER_TERM);
+		idx = Parser_BSearchFromSymbList(&tbl->term_set,symb);
 		AR_ASSERT(idx != -1);
 		return tbl->actions[AR_TBL_IDX_R(state,idx, tbl->col)];
 
 
 }
 
-int_t					PSR_GetState(const psrActionTable_t *tbl, size_t state, const psrSymb_t *symb)
+int_t					Parser_GetState(const psrActionTable_t *tbl, size_t state, const psrSymb_t *symb)
 {
 		int_t idx;
-		AR_ASSERT(state < tbl->goto_row && symb->type == PSR_NONTERM);
-		idx = PSR_BSearchFromSymbList(&tbl->nonterm_set,symb);
+		AR_ASSERT(state < tbl->goto_row && symb->type == PARSER_NONTERM);
+		idx = Parser_BSearchFromSymbList(&tbl->nonterm_set,symb);
 		return tbl->goto_tbl[AR_TBL_IDX_R(state,idx, tbl->goto_col)];
 }
 
-const psrSymbList_t*	PSR_GetExpectedSymb(const psrActionTable_t *tbl, size_t state)
+const psrSymbList_t*	Parser_GetExpectedSymb(const psrActionTable_t *tbl, size_t state)
 {
 		AR_ASSERT(state < tbl->row);
 		return &tbl->expected_set[state];
@@ -58,27 +58,27 @@ static psrActionTable_t* __create_table(const psrGrammar_t *gmr)
 		AR_ASSERT(gmr != NULL && gmr->count > 1);
 
 		tbl = AR_NEW0(psrActionTable_t);
-		symb_lst = PSR_GetSymbList(gmr);
+		symb_lst = Parser_GetSymbList(gmr);
 		
-		PSR_InitSymbList(&tbl->term_set);
-		PSR_InitSymbList(&tbl->nonterm_set);
+		Parser_InitSymbList(&tbl->term_set);
+		Parser_InitSymbList(&tbl->nonterm_set);
 
 		for(i = 0; i < symb_lst->count; ++i)
 		{
 				const psrSymb_t *curr;
 				curr = symb_lst->lst[i];
 
-				if(curr->type == PSR_TERM)
+				if(curr->type == PARSER_TERM)
 				{
-						PSR_InsertToSymbList(&tbl->term_set, PSR_CopyNewSymb(curr));
+						Parser_InsertToSymbList(&tbl->term_set, Parser_CopyNewSymb(curr));
 				}else
 				{
-						PSR_InsertToSymbList(&tbl->nonterm_set, PSR_CopyNewSymb(curr));
+						Parser_InsertToSymbList(&tbl->nonterm_set, Parser_CopyNewSymb(curr));
 				}
 		}
 
-		PSR_SortSymbList(&tbl->term_set);
-		PSR_SortSymbList(&tbl->nonterm_set);
+		Parser_SortSymbList(&tbl->term_set);
+		Parser_SortSymbList(&tbl->nonterm_set);
 
 		return tbl;
 }
@@ -104,12 +104,12 @@ static void __build_goto_table(psrActionTable_t *tbl, const lalrStateSet_t *set)
 				
 				for(j = 0; j < state->count; ++j)
 				{
-						if(state->actions[j].symb->type == PSR_NONTERM && state->actions[j].act_type == PSR_SHIFT)
+						if(state->actions[j].symb->type == PARSER_NONTERM && state->actions[j].act_type == PARSER_SHIFT)
 						{
 								int_t idx;
-								idx = PSR_BSearchFromSymbList(&tbl->nonterm_set, state->actions[j].symb);
+								idx = Parser_BSearchFromSymbList(&tbl->nonterm_set, state->actions[j].symb);
 								AR_ASSERT(idx != -1);
-								tbl->goto_tbl[AR_TBL_IDX_R(i, idx, tbl->goto_col)] = PSR_IndexOfStateSet(set, state->actions[j].to);
+								tbl->goto_tbl[AR_TBL_IDX_R(i, idx, tbl->goto_col)] = Parser_IndexOfStateSet(set, state->actions[j].to);
 						}
 				}
 		}
@@ -125,7 +125,7 @@ static void __build_expected_list(psrActionTable_t *tbl)
 		
 		tbl->expected_set = AR_NEWARR0(psrSymbList_t, tbl->row);
 
-		for(i = 0; i < tbl->row; ++i)PSR_InitSymbList(&tbl->expected_set[i]);
+		for(i = 0; i < tbl->row; ++i)Parser_InitSymbList(&tbl->expected_set[i]);
 		
 		for(i = 0; i < tbl->row; ++i)
 		{
@@ -134,14 +134,14 @@ static void __build_expected_list(psrActionTable_t *tbl)
 						const psrAction_t	*act;
 						const psrSymb_t *symb = tbl->term_set.lst[j];
 						
-						if(PSR_CompSymb(symb, PSR_ErrorSymb) == 0 )continue;
+						if(Parser_CompSymb(symb, PARSER_ErrorSymb) == 0 )continue;
 
-						act = PSR_GetAction(tbl, i, symb);
+						act = Parser_GetAction(tbl, i, symb);
 						AR_ASSERT(act != NULL);
 						
-						if(act->type != PSR_ERROR)
+						if(act->type != PARSER_ERROR)
 						{
-								PSR_InsertToSymbList(&tbl->expected_set[i], symb);
+								Parser_InsertToSymbList(&tbl->expected_set[i], symb);
 						}
 				}
 		}
@@ -152,14 +152,14 @@ static void __destroy_expected_list(psrActionTable_t *tbl)
 		size_t i;
 		AR_ASSERT(tbl != NULL && tbl->row > 0);
 		
-		for(i = 0; i < tbl->row; ++i)PSR_UnInitSymbList(&tbl->expected_set[i]);
+		for(i = 0; i < tbl->row; ++i)Parser_UnInitSymbList(&tbl->expected_set[i]);
 		AR_DEL(tbl->expected_set);
 		tbl->expected_set = NULL;
 }
 
 
 
-void					PSR_DestroyActionTable(const psrActionTable_t *table)
+void					Parser_DestroyActionTable(const psrActionTable_t *table)
 {
 		size_t i;
 		psrActionTable_t *tbl;
@@ -170,16 +170,16 @@ void					PSR_DestroyActionTable(const psrActionTable_t *table)
 
 		for(i = 0; i < tbl->term_set.count; ++i)
 		{
-				PSR_DestroySymb(tbl->term_set.lst[i]);
+				Parser_DestroySymb(tbl->term_set.lst[i]);
 		}
 		
 		for(i = 0; i < tbl->nonterm_set.count; ++i)
 		{
-				PSR_DestroySymb(tbl->nonterm_set.lst[i]);
+				Parser_DestroySymb(tbl->nonterm_set.lst[i]);
 		}
 
-		PSR_UnInitSymbList(&tbl->nonterm_set);
-		PSR_UnInitSymbList(&tbl->term_set);
+		Parser_UnInitSymbList(&tbl->nonterm_set);
+		Parser_UnInitSymbList(&tbl->term_set);
 		AR_DEL(tbl->goto_tbl);
 
 		for(i = 0; i < tbl->row * tbl->col; ++i)
@@ -188,7 +188,7 @@ void					PSR_DestroyActionTable(const psrActionTable_t *table)
 
 				action = tbl->actions[i];
 
-				if(action->type != PSR_ERROR)
+				if(action->type != PARSER_ERROR)
 				{
 						while(action != NULL)
 						{
@@ -208,9 +208,9 @@ void					PSR_DestroyActionTable(const psrActionTable_t *table)
 
 
 
-static const psrAction_t error_action = {PSR_ERROR, 0, 0, 0, 0,0, NULL};
+static const psrAction_t error_action = {PARSER_ERROR, 0, 0, 0, 0,0, NULL};
 
-const psrAction_t	* const PSR_ErrorAction = &error_action;
+const psrAction_t	* const PARSER_ErrorAction = &error_action;
 
 
 
@@ -251,9 +251,9 @@ static void __insert_action_to_action_list(psrAction_t **dest, const psrAction_t
 		/*
 				可能存在shift，但这里不是冲突，因此直接返回，因为不可能在同一符号上的移入导致的状态转换不被前面的DFA建立检测出来
 		*/
-		if(curr->type == PSR_SHIFT && sour->type == PSR_SHIFT)return;
+		if(curr->type == PARSER_SHIFT && sour->type == PARSER_SHIFT)return;
 
-		if(curr->type == PSR_ACCEPT)
+		if(curr->type == PARSER_ACCEPT)
 		{
 				tmp = AR_NEW0(psrAction_t);
 				__copy_action(tmp, sour);
@@ -274,7 +274,7 @@ static void __insert_action_to_action_list(psrAction_t **dest, const psrAction_t
 		}else if(sour->prec < curr->prec)
 		{
 				/*
-						新加入的优先级低于原项，则不被认为是冲突，且不错任何修改，函数返回
+						新加入的优先级低于原项，则不被认为是冲突，且不做任何修改，函数返回
 				*/
 				return;
 		}else
@@ -282,13 +282,13 @@ static void __insert_action_to_action_list(psrAction_t **dest, const psrAction_t
 				/*
 						相同优先级的情况下：
 				*/
-				if(lookahead->assoc == PSR_ASSOC_NONASSOC)
+				if(lookahead->assoc == PARSER_ASSOC_NONASSOC)
 				{
 
 						tmp = AR_NEW0(psrAction_t);
 						__copy_action(tmp, sour);
 						
-						if(curr->type != PSR_SHIFT)
+						if(curr->type != PARSER_SHIFT)
 						{
 								/*如果不是shift，则将新的action放在前面*/
 								tmp->next = *dest;
@@ -300,40 +300,40 @@ static void __insert_action_to_action_list(psrAction_t **dest, const psrAction_t
 								curr->next = tmp;
 						}
 
-				}else if(lookahead->assoc == PSR_ASSOC_LEFT)
+				}else if(lookahead->assoc == PARSER_ASSOC_LEFT)
 				{
 						/*左结合，优先级相同，优先选规约*/
-						if(curr->type == PSR_SHIFT && sour->type == PSR_REDUCE)/*shift-reduce冲突，且左结合*/
+						if(curr->type == PARSER_SHIFT && sour->type == PARSER_REDUCE)/*shift-reduce冲突，且左结合*/
 						{
 								__copy_action(curr, sour);
 						
-						}else if(curr->type == PSR_REDUCE && sour->type != PSR_REDUCE)
+						}else if(curr->type == PARSER_REDUCE && sour->type != PARSER_REDUCE)
 						{
 								/*左结合，只要curr为规约，sour不是规约则不变动*/
 								return;
 						}else/*冲突*/
 						{
 								/*这地方一定是规约规约冲突*/
-								AR_ASSERT(curr->type == PSR_REDUCE && sour->type == PSR_REDUCE);
+								AR_ASSERT(curr->type == PARSER_REDUCE && sour->type == PARSER_REDUCE);
 								tmp = AR_NEW0(psrAction_t);
 								__copy_action(tmp, sour);
 								tmp->next = curr->next;
 								curr->next = tmp;
 						}
-				}else if(lookahead->assoc == PSR_ASSOC_RIGHT)
+				}else if(lookahead->assoc == PARSER_ASSOC_RIGHT)
 				{
 						/*右结合，优先级相同，优先选移入*/
-						if(curr->type == PSR_REDUCE && sour->type == PSR_SHIFT)
+						if(curr->type == PARSER_REDUCE && sour->type == PARSER_SHIFT)
 						{
 								__copy_action(curr, sour);
-						}else if(curr->type == PSR_SHIFT && sour->type != PSR_SHIFT)
+						}else if(curr->type == PARSER_SHIFT && sour->type != PARSER_SHIFT)
 						{
 								/*右结合，只要curr为移入，sour不是移入则不变东*/
 								return;
 						}else/*冲突*/
 						{
 								/*这地方一定是规约规约冲突*/
-								AR_ASSERT(curr->type == PSR_REDUCE && sour->type == PSR_REDUCE);
+								AR_ASSERT(curr->type == PARSER_REDUCE && sour->type == PARSER_REDUCE);
 								tmp = AR_NEW0(psrAction_t);
 								__copy_action(tmp, sour);
 								tmp->next = curr->next;
@@ -355,17 +355,17 @@ psrActionTable_t* __create_action_table(const psrGrammar_t *grammar, psrLRItemTy
 		size_t i;
 		tbl = __create_table(grammar);
 		
-		PSR_InitStateSet(&set);
+		Parser_InitStateSet(&set);
 
-		if(type == PSR_SLR)
+		if(type == PARSER_SLR)
 		{
-				start = PSR_Create_LR0_State(grammar);
+				start = Parser_Create_LR0_State(grammar);
 		}else
 		{
-				start = PSR_Create_LALR_State(grammar);
+				start = Parser_Create_LALR_State(grammar);
 		}
 
-		PSR_CollectState(&set, start);
+		Parser_CollectState(&set, start);
 		__build_goto_table(tbl, &set);
 
 		tbl->row = set.count;
@@ -393,8 +393,8 @@ psrActionTable_t* __create_action_table(const psrGrammar_t *grammar, psrLRItemTy
 
 						config = action->config;
 						rule = action->config->rule;
-						rule_num = PSR_IndexOfGrammar(grammar, rule);
-						body = PSR_IndexOfSymbList(&rule->body, config->delim);
+						rule_num = Parser_IndexOfGrammar(grammar, rule);
+						body = Parser_IndexOfSymbList(&rule->body, config->delim);
 
 						
 						
@@ -402,7 +402,7 @@ psrActionTable_t* __create_action_table(const psrGrammar_t *grammar, psrLRItemTy
 
 						record.rule_num = rule_num;
 						record.delim = config->delim;
-						record.prec = PSR_GetRulePrecAssocInfo(grammar, rule)->prec;
+						record.prec = Parser_GetRulePrecAssocInfo(grammar, rule)->prec;
 						record.reduce_count = 0;
 						record.shift_to = 0;
 						record.next = NULL;
@@ -415,30 +415,30 @@ psrActionTable_t* __create_action_table(const psrGrammar_t *grammar, psrLRItemTy
 								
 
 								record.reduce_count = rule->body.count;
-								record.type = action->act_type == LALR_ACT_REDUCE ? PSR_REDUCE : PSR_ACCEPT;
+								record.type = action->act_type == LALR_ACT_REDUCE ? PARSER_REDUCE : PARSER_ACCEPT;
 								
-								idx = PSR_FindFromSymbList(&tbl->term_set, action->symb);
+								idx = Parser_FindFromSymbList(&tbl->term_set, action->symb);
 								AR_ASSERT(idx != -1);
 
-								__insert_action_to_action_list(&tbl->actions[AR_TBL_IDX_R(i,idx, tbl->col)], &record, PSR_GetTermSymbInfo(grammar,action->symb));
+								__insert_action_to_action_list(&tbl->actions[AR_TBL_IDX_R(i,idx, tbl->col)], &record, Parser_GetTermSymbInfo(grammar,action->symb));
 
 
-						}else if(action->act_type == LALR_ACT_SHIFT && action->symb->type == PSR_TERM)
+						}else if(action->act_type == LALR_ACT_SHIFT && action->symb->type == PARSER_TERM)
 						{
 								int_t trans_to_idx,idx;
 								
 								AR_ASSERT(action->config != NULL && action->to != NULL && action->symb != NULL);
 								
-								AR_ASSERT(PSR_CompSymb(body, action->symb) == 0);
+								AR_ASSERT(Parser_CompSymb(body, action->symb) == 0);
 
-								record.type = PSR_SHIFT;
+								record.type = PARSER_SHIFT;
 
 
-								trans_to_idx = PSR_IndexOfStateSet(&set, action->to);
+								trans_to_idx = Parser_IndexOfStateSet(&set, action->to);
 								AR_ASSERT(trans_to_idx != -1);
 								record.shift_to = (size_t)trans_to_idx;
-								idx = PSR_FindFromSymbList(&tbl->term_set, action->symb);
-								__insert_action_to_action_list(&tbl->actions[AR_TBL_IDX_R(i,idx, tbl->col)], &record, PSR_GetTermSymbInfo(grammar,action->symb));
+								idx = Parser_FindFromSymbList(&tbl->term_set, action->symb);
+								__insert_action_to_action_list(&tbl->actions[AR_TBL_IDX_R(i,idx, tbl->col)], &record, Parser_GetTermSymbInfo(grammar,action->symb));
 								
 						}
 
@@ -446,14 +446,14 @@ psrActionTable_t* __create_action_table(const psrGrammar_t *grammar, psrLRItemTy
 		}
 
 		
-		PSR_DestroyState_ALL(start);
-		PSR_UnInitStateSet(&set);
+		Parser_DestroyState_ALL(start);
+		Parser_UnInitStateSet(&set);
 
 		for(i = 0; i < tbl->row * tbl->col; ++i)
 		{
 				if(tbl->actions[i] == NULL)
 				{
-						tbl->actions[i] = (psrAction_t*)PSR_ErrorAction;
+						tbl->actions[i] = (psrAction_t*)PARSER_ErrorAction;
 				}
 		}
 		__build_expected_list(tbl);
@@ -461,15 +461,15 @@ psrActionTable_t* __create_action_table(const psrGrammar_t *grammar, psrLRItemTy
 
 }
 
-const psrActionTable_t* PSR_CreateActionTable_SLR(const psrGrammar_t *grammar)
+const psrActionTable_t* Parser_CreateActionTable_SLR(const psrGrammar_t *grammar)
 {
-		return __create_action_table(grammar, PSR_SLR);
+		return __create_action_table(grammar, PARSER_SLR);
 }
 
 
-const psrActionTable_t* PSR_CreateActionTable_LALR(const psrGrammar_t *grammar)
+const psrActionTable_t* Parser_CreateActionTable_LALR(const psrGrammar_t *grammar)
 {
-		return __create_action_table(grammar, PSR_LALR);
+		return __create_action_table(grammar, PARSER_LALR);
 }
 
 

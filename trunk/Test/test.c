@@ -28,8 +28,8 @@ extern void psr_symb_htbl_test();
 
 extern void lr_item_tbl_test();
 
-extern void PSR_Init();
-extern void PSR_UnInit();
+extern void Parser_Init();
+extern void Parser_UnInit();
 
 extern void cache_test();
 extern void rule_test();

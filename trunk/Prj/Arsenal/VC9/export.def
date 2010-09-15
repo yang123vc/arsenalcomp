@@ -70,98 +70,98 @@ AR_str_to_escstr_buf
 
 ;Lex
 
-LEX_Create				
-LEX_Destroy				
-LEX_InsertName			
-LEX_InsertRule			
-LEX_RemoveByValue
-LEX_RemoveByName
+Lex_Create				
+Lex_Destroy				
+Lex_InsertName			
+Lex_InsertRule			
+Lex_RemoveByValue
+Lex_RemoveByName
 
-LEX_Insert				
-LEX_GenerateTransTable	
-LEX_Clear				
-LEX_CreateMatch			
-LEX_DestroyMatch	
-LEX_MatchFlags		
-LEX_MatchClearFlags
-LEX_ResetMatchState			
-LEX_GetNextInput		
-LEX_Match				
-LEX_IsError
-LEX_ClearError
-LEX_ResetInput			
+Lex_Insert				
+Lex_GenerateTransTable	
+Lex_Clear				
+Lex_CreateMatch			
+Lex_DestroyMatch	
+Lex_MatchFlags		
+Lex_MatchClearFlags
+Lex_ResetMatchState			
+Lex_GetNextInput		
+Lex_Match				
+Lex_IsError
+Lex_ClearError
+Lex_ResetInput			
 
-LEX_Skip
-LEX_SkipTo
-LEX_SkipN
-LEX_MatchGetCoordinate
-LEX_ResetIOContext
+Lex_Skip
+Lex_SkipTo
+Lex_SkipN
+Lex_MatchGetCoordinate
+Lex_ResetIOContext
 
 ;Grammar
 
 
 
-PSR_CreateGrammar			
-PSR_DestroyGrammar
-PSR_ClearGrammar		
-PSR_InsertTerm			
-PSR_FindTermByName		
-PSR_FindTermByValue		
+Parser_CreateGrammar			
+Parser_DestroyGrammar
+Parser_ClearGrammar		
+Parser_InsertTerm			
+Parser_FindTermByName		
+Parser_FindTermByValue		
 
-PSR_InsertRuleByStr	
-PSR_InsertRuleByPartStr
+Parser_InsertRuleByStr	
+Parser_InsertRuleByPartStr
 
-PSR_GetSymbList			
-PSR_CheckIsValidGrammar	
+Parser_GetSymbList			
+Parser_CheckIsValidGrammar	
 
 
-PSR_InitSymbMap			
-PSR_UnInitSymbMap		
-PSR_InsertToSymbMap		
-PSR_CalcFollowSet		
-PSR_CalcFirstSet		
-PSR_GetSymbolFromSymbMap 
-PSR_PrintSymbolMap
+Parser_InitSymbMap			
+Parser_UnInitSymbMap		
+Parser_InsertToSymbMap		
+Parser_CalcFollowSet		
+Parser_CalcFirstSet		
+Parser_GetSymbolFromSymbMap 
+Parser_PrintSymbolMap
 
-PSR_ResetGrammarIOContext
-PSR_ResetGrammarParseHandler
+Parser_ResetGrammarIOContext
+Parser_ResetGrammarParseHandler
 
-PSR_GetTermSymbInfoByValue
-PSR_GetTermSymbInfoByName
-PSR_SetFirstRule
+Parser_GetTermSymbInfoByValue
+Parser_GetTermSymbInfoByName
+Parser_SetFirstRule
 
 ;Parser
 
-PSR_GetGrammar
-PSR_CreateParser		
-PSR_DestroyParser
-PSR_CreateContext
-PSR_DestroyContext
-PSR_Clear				
-PSR_GetResult			
-PSR_AddToken			
-PSR_IsAccepted			
-PSR_IsInError			
-PSR_ClearError			
+Parser_GetGrammar
+Parser_CreateParser		
+Parser_DestroyParser
+Parser_CreateContext
+Parser_DestroyContext
+Parser_Clear				
+Parser_GetResult			
+Parser_AddToken			
+Parser_IsAccepted			
+Parser_IsInError			
+Parser_ClearError			
 
-PSR_GetNodeCount
-PSR_IndexOfNodeStack
+Parser_GetNodeCount
+Parser_IndexOfNodeStack
 
-PSR_PrintParserActionTable
-PSR_PrintParserConflict
-PSR_CountParserConflict
-
-
-PSR_CreateParserActionView
-PSR_DestroyParserActionView
+Parser_PrintParserActionTable
+Parser_PrintParserConflict
+Parser_CountParserConflict
 
 
-PSR_CreateParserConflictView
-PSR_DestroyParserConflictView
+Parser_CreateParserActionView
+Parser_DestroyParserActionView
 
 
-PSR_CreateParserStatusView
-PSR_DestroyParserStatusView
+Parser_CreateParserConflictView
+Parser_DestroyParserConflictView
+
+
+Parser_CreateParserStatusView
+Parser_DestroyParserStatusView
 
 ;Tools
 
