@@ -545,6 +545,21 @@ void	RGX_UnInitMisc()
 
 /*****************************************************************************************************************************/
 
+static rgxThreadList_t* __create_new_thread_list()
+{
+		rgxThreadList_t	*res = NULL;
+		res = AR_NEW0(rgxThreadList_t);
+		res->cap = RGX_THREAD_LIST_INIT_COUNT;
+		res->next = NULL;
+
+		if(res->cap > 0)
+		{
+				res->lst = AR_NEWARR(rgxThread_t, res->cap);
+		}
+		
+		return res;
+}
+
 rgxThreadList_t*	RGX_CreateThreadList()
 {
 
@@ -553,26 +568,26 @@ rgxThreadList_t*	RGX_CreateThreadList()
 
 		if(__g_free_list == NULL)
 		{
-				res = AR_NEW0(rgxThreadList_t);
-				res->cap = RGX_THREAD_LIST_INIT_COUNT;
+				res = __create_new_thread_list();
+		}else
+		{
+				AR_LockSpinLock(&__g_spin_lock);
 
-				if(res->cap > 0)
+				if(__g_free_list == NULL)
 				{
-						res->lst = AR_NEWARR(rgxThread_t, res->cap);
+						res = __create_new_thread_list();
+				}else
+				{
+						res = __g_free_list;
+						__g_free_list = __g_free_list->next;
+						res->next = NULL;
 				}
 
-				return res;
+				AR_UnLockSpinLock(&__g_spin_lock);
 		}
-
-		AR_LockSpinLock(&__g_spin_lock);
-
-		res = __g_free_list;
-		__g_free_list = __g_free_list->next;
-		AR_UnLockSpinLock(&__g_spin_lock);
-		res->next = NULL;
-
 		RGX_ClearThreadList(res);
 		return res;
+
 }
 
 void				RGX_DestroyThreadList(rgxThreadList_t *lst)

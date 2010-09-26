@@ -102,7 +102,6 @@ struct __tengu_function_tag
 
 typedef enum 
 {
-
 		OP_PUSH_NULL			,		
 		OP_PUSH_BOOL			,
 		OP_PUSH_NUMBER			,
@@ -119,8 +118,7 @@ typedef enum
 		OP_SET_LIST				,	
 		OP_NEW_TABLE			,
 
-		
-		
+
 		OP_EQ					,
 		OP_LT					,
 		OP_LE					,

@@ -64,9 +64,6 @@ static void				TGU_DestroyParserNode(parserNode_t	*node)	;
 
 
 
-
-
-
 %name	delim 		:	"[ \r\n\t]"			
 				;
 %name	comment		:	"/\*([^\*]|\*+[^\*/])*\*+/"	
@@ -465,12 +462,9 @@ filed_list 			:	filed
 
 filed					:	expression
 					|	table_constructor
-
 					|	NAME				"="	expression
 					|	NAME				"="	table_constructor
 					|	"["	expression	"]"	"="  expression
-
-
 					;
 
 

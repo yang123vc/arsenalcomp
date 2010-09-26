@@ -187,7 +187,7 @@ void	Parser_InitSymbList(psrSymbList_t *symb_lst)
 void	Parser_UnInitSymbList(psrSymbList_t *symb_lst)
 {
 		AR_ASSERT(symb_lst != NULL);
-		AR_DEL((psrSymb_t**)symb_lst->lst);
+		if(symb_lst->lst != NULL)AR_DEL((psrSymb_t**)symb_lst->lst);
 		AR_memset(symb_lst, 0, sizeof(*symb_lst));
 }
 
