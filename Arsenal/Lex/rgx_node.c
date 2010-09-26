@@ -52,11 +52,19 @@ static rgxNode_t* __alloc_node()
 		}else
 		{
 				AR_LockSpinLock(&__g_lock);
-				node = __g_node_list;
-				__g_node_list = __g_node_list->left;
+				
+				if(__g_node_list == NULL)
+				{
+						node = AR_NEW0(rgxNode_t);
+				}else
+				{
+						node = __g_node_list;
+						__g_node_list = __g_node_list->left;
+						AR_memset(node, 0, sizeof(*node));
+				}
 				AR_UnLockSpinLock(&__g_lock);
 		}
-		AR_memset(node, 0, sizeof(*node));
+		
 		return node;
 }
 
@@ -173,7 +181,6 @@ rgxNode_t*		RGX_CopyNode(const rgxNode_t *node)
 
 
 
-
 void			RGX_DestroyNode(rgxNode_t *node)
 {
 		AR_ASSERT(node != NULL);
@@ -232,6 +239,128 @@ void			RGX_DestroyNode(rgxNode_t *node)
 }
 
 
+#if(0)
+
+typedef struct __rgx_node_list_tag
+{
+		rgxNode_t **lst;
+		size_t	  cnt;
+		size_t	cap;
+}rgxNodeList_t;
+
+static void __init_node_list(rgxNodeList_t *lst)
+{
+		AR_ASSERT(lst != NULL);
+		AR_memset(lst, 0, sizeof(*lst));
+}
+
+static void __uninit_node_list(rgxNodeList_t *lst)
+{
+		AR_ASSERT(lst != NULL);
+		
+		if(lst && lst->lst)
+		{
+				AR_DEL(lst->lst);
+		}
+		AR_memset(lst, 0, sizeof(*lst));
+}
+
+
+static void __insert_to_node_list(rgxNodeList_t *lst, rgxNode_t *node)
+{
+		AR_ASSERT(lst != NULL && node != NULL);
+		if(lst->cnt == lst->cap)
+		{
+				lst->cap += 32;
+				lst->cap *= 2;
+				lst->lst = AR_REALLOC(rgxNode_t*, lst->lst, lst->cap);
+		}
+		lst->lst[lst->cnt++] = node;
+}
+
+void			RGX_DestroyNode(rgxNode_t *node)
+{
+		
+		rgxNodeList_t lst;
+		size_t i;
+		AR_ASSERT(node != NULL);
+		AR_ASSERT(node->ref_count >= 1);
+
+		__init_node_list(&lst);
+		
+		__insert_to_node_list(&lst, node);
+
+		for(i = 0; i < lst.cnt; ++i)
+		{
+				node = lst.lst[i];
+				AR_ASSERT(node && node->ref_count >= 1);
+				
+				switch(node->type)
+				{
+				case RGX_FINAL_T:
+				case RGX_BEGIN_T:
+				case RGX_LINE_BEGIN_T:
+				case RGX_LINE_END_T:
+				case RGX_END_T:
+				case RGX_ANY_CHAR_T:
+				case RGX_CSET_T:
+				{
+						if(AR_AtomicDec((volatile int_t*)&node->ref_count) == 0)
+						{
+								__free_node(node);
+						}
+				}
+						break;
+				case RGX_CAT_T:
+				case RGX_BRANCH_T:
+				{
+						if(AR_AtomicDec((volatile int_t*)&node->ref_count) == 0)
+						{
+								AR_ASSERT(node->left != node && node->right != node); 
+								if(node->left)
+								{
+										
+										__insert_to_node_list(&lst, node->left);
+								}
+
+								if(node->right)
+								{
+										__insert_to_node_list(&lst, node->right);
+								}
+								__free_node(node);
+						}
+				}
+						break;
+				case RGX_STAR_T:
+				case RGX_QUEST_T:
+				case RGX_PLUS_T:
+				case RGX_LOOKAHEAD_T:
+				{
+						AR_ASSERT(node->left != NULL && node->right == NULL);
+						if(AR_AtomicDec((volatile int_t*)&node->ref_count) == 0)
+						{
+								AR_ASSERT(node->left != node && node->right != node);
+								
+								if(node->left)
+								{
+										__insert_to_node_list(&lst, node->left);
+								}
+								__free_node(node);
+						}
+				}
+						break;
+				default:
+				{
+						AR_ASSERT(false);
+						AR_error(AR_ERR_FATAL, L"Arsenal : regex parser error %hs\r\n", AR_FUNC_NAME);
+						break;
+				}
+				}
+		}
+
+		__uninit_node_list(&lst);
+}
+#endif
 
 void			RGX_InsertToNode(rgxNode_t *root, rgxNode_t *node)
 {

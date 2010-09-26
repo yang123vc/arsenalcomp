@@ -598,21 +598,25 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 				}
 		}
 
+		
+		
 		if(cfg->start.start_rule != NULL)
 		{
-				has_error = true;
+				bool has_start_rule = true;
+				
 				for(size_t i = 0; i < cfg->rule_cnt; ++i)
 				{
 						if(AR_wcscmp(cfg->start.start_rule, cfg->rule[i].lhs) == 0)
 						{
-								has_error = false;
+								has_start_rule = false;
 								break;
 						}
 				}
 
 				
-				if(has_error || !ARSpace::Parser_SetFirstRule(grammar, cfg->start.start_rule))
+				if(has_start_rule || !ARSpace::Parser_SetFirstRule(grammar, cfg->start.start_rule))
 				{
+						has_error = true;
 						CString msg;
 						msg.Format(TEXT("Start Rule Error : \"%ls\"!"), cfg->start.start_rule);
 						output.Append(msg, COutputList::MSG_ERROR, cfg->start.line, tar);

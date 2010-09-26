@@ -492,9 +492,8 @@ void Parser_PrintConfig(const lalrConfig_t *config, const psrGrammar_t *gmr, arS
 		}
 
 		AR_AppendString(str, L" ]");
-
-
 }
+
 
 void Parser_PrintConfigList(const lalrConfigList_t *lst, const psrGrammar_t *gmr, arString_t *str)
 {

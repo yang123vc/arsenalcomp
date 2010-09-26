@@ -249,7 +249,7 @@ static void __insert_action_to_action_list(psrAction_t **dest, const psrAction_t
 		}
 
 		/*
-				可能存在shift，但这里不是冲突，因此直接返回，因为不可能在同一符号上的移入导致的状态转换不被前面的DFA建立检测出来
+				可能存在shift，但这里不是冲突，因此直接返回，因为不可能在同一符号上的移入导致不同的状态转换不被前面的DFA建立检测出来
 		*/
 		if(curr->type == PARSER_SHIFT && sour->type == PARSER_SHIFT)return;
 

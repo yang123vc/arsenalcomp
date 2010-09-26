@@ -22,7 +22,9 @@ AR_NAMESPACE_BEGIN
 
 
 /*NameSet*/
-#define	AR_RGX_MAXNAME			256
+#define	AR_RGX_MAXNAME					256
+
+#define AR_RGX_MAX_MINLOOPCOUNT			512
 
 struct __rgx_name_tag;
 typedef struct __rgx_name_tag			rgxName_t;

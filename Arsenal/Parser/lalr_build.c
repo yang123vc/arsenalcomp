@@ -365,7 +365,6 @@ static void __build_propagation_links(lalrStateSet_t *set)
 				}
 		}
 		
-
 		do{
 				changed = false;
 
@@ -399,9 +398,8 @@ static void __build_propagation_links(lalrStateSet_t *set)
 						}
 				}
 		}while(changed);
-
-
 }
+
 
 
 static void __build_actions(lalrStateSet_t *set)

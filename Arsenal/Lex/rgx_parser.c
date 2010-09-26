@@ -578,7 +578,24 @@ static rgxResult_t	__handle_postfix(rgxNode_t *expr, const wchar_t *input, const
 						{ g_res.err.pos = p; goto INVALID_POINT;}
 				}
 				
+				/*
 				if(min > max || max == 0){ g_res.err.pos = p; goto INVALID_POINT;}
+				*/
+
+				if(min > max || max == 0)
+				{ 
+						g_res.err.pos = p; goto INVALID_POINT;
+				}
+				
+				/*
+				禁用过大的循环次数，因为会导致过多的rgxNode_t*分配
+				*/
+				if((min > AR_RGX_MAX_MINLOOPCOUNT) || (max != AR_SIZE_MAX && max > AR_RGX_MAX_MINLOOPCOUNT))
+				{
+						g_res.err.pos = p; 
+						goto INVALID_POINT;
+				}
+				
 				
 				++beg;
 
