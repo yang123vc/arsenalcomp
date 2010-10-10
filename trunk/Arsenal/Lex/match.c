@@ -147,9 +147,7 @@ void Lex_SortProgSet(lexProgSet_t *set)
 						__exch_set(set, i, i - 1);
 				}
 		}
-
-
-
+		
 		for(i = 1; i < (int_t)set->count; ++i)
 		{
 				for(j = i; j > 0 && set->action[j].priority > set->action[j-1].priority; --j)
@@ -157,8 +155,6 @@ void Lex_SortProgSet(lexProgSet_t *set)
 						__exch_set(set, j, j - 1);
 				}
 		}
-
-
 }
 
 /*********************************lexMatch_t***************************/
@@ -235,7 +231,9 @@ lexMatch_t*		Lex_CreateMatch(const lex_t *lex, const arIOCtx_t *io)
 		pmatch = AR_NEW(lexMatch_t);
 		AR_memset(pmatch, 0, sizeof(*pmatch));
 
-		pmatch->io_ctx = io == NULL ? *AR_global_ioctx() : *io;
+		//pmatch->io_ctx = io == NULL ? *AR_global_ioctx() : *io;
+
+		pmatch->io_ctx = io == NULL ? lex->io_ctx : *io;
 
 		pmatch->input = L"";
 		pmatch->next = pmatch->input;

@@ -759,9 +759,12 @@ void CGrammarDesignerDoc::OnParserBuild()
 
 		CString str;
 		view->GetRichEditCtrl().GetWindowText(str);
-		
-		
-		
+#if(0)
+		if(!str.IsEmpty() && str.GetAt(str.GetLength()) != TEXT('\\'))
+		{
+				str.Append(TEXT("\r\n"));
+		}
+#endif
 		
 		
 		
@@ -989,8 +992,7 @@ void CGrammarDesignerDoc::OnParserParse()
 
 
 		CString str = input.GetInput();
-
-
+		
 		bool is_ok = true;
 		
 		const ARSpace::arIOCtx_t	io_context = 

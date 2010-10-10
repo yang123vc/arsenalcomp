@@ -38,8 +38,9 @@ typedef struct	__insctruction_tag		tguIns_t;
 
 
 
+typedef int_64_t						tguInteger_t;
 
-typedef	double							tguNumber_t;
+typedef	double							tguFloat_t;
 
 typedef	bool_t							tguBoolean_t;
 
@@ -60,7 +61,8 @@ typedef	struct __tengu_function_tag		tguFunc_t;
 
 typedef union __tengu_value_tag
 {
-		tguNumber_t		number;
+		tguInteger_t	integer_num;
+		tguFloat_t		float_num;
 		tguBoolean_t	boolean;
 		tguString_t		*str;
 		tguTable_t		*table;
@@ -71,13 +73,14 @@ typedef union __tengu_value_tag
 
 enum
 {
-		TGU_TYPE_NULL,
-		TGU_TYPE_BOOL,
-		TGU_TYPE_NUMBER,
-		TGU_TYPE_STR,
-		TGU_TYPE_TABLE,
-		TGU_TYPE_FUNC,
-		TGU_TYPE_USERDATA
+		TGU_VM_TYPE_NULL,
+		TGU_VM_TYPE_BOOL,
+		TGU_VM_TYPE_INTEGER,
+		TGU_VM_TYPE_FLOAT,
+		TGU_VM_TYPE_STR,
+		TGU_VM_TYPE_TABLE,
+		TGU_VM_TYPE_FUNC,
+		TGU_VM_TYPE_USERDATA
 };
 
 
@@ -102,43 +105,44 @@ struct __tengu_function_tag
 
 typedef enum 
 {
-		OP_PUSH_NULL			,		
-		OP_PUSH_BOOL			,
-		OP_PUSH_NUMBER			,
-		OP_PUSH_STRING			,
-		OP_PUSH_FUNCTION		,
+		TGU_VM_OP_PUSH_NULL			,		
+		TGU_VM_OP_PUSH_BOOL			,
+		TGU_VM_OP_PUSH_INTEGER		,
+		TGU_VM_OP_PUSH_FLOAT		,
+		TGU_VM_OP_PUSH_STRING		,
+		TGU_VM_OP_PUSH_FUNCTION		,
 		
-		OP_POP					,
+		TGU_VM_OP_POP				,
 		
-		OP_ADJUST				,
+		TGU_VM_OP_ADJUST			,
 		
-		OP_GET_TABLE			,
-		OP_SET_TABLE			,
+		TGU_VM_OP_GET_TABLE			,
+		TGU_VM_OP_SET_TABLE			,
 		
-		OP_SET_LIST				,	
-		OP_NEW_TABLE			,
+		TGU_VM_OP_SET_LIST			,	
+		TGU_VM_OP_NEW_TABLE			,
 
-
-		OP_EQ					,
-		OP_LT					,
-		OP_LE					,
-		OP_GT					,
-		OP_GE					,
-		OP_ADD					,
-		OP_SUB					,
-		OP_MUL					,
-		OP_DIV					,
-		OP_MOD					,
-		OP_MINUS				,
-		OP_NOT					,
+		TGU_VM_OP_EQ					,
+		TGU_VM_OP_LT					,
+		TGU_VM_OP_LE					,
+		TGU_VM_OP_GT					,
+		TGU_VM_OP_GE					,
+		TGU_VM_OP_ADD					,
+		TGU_VM_OP_SUB					,
+		TGU_VM_OP_MUL					,
+		TGU_VM_OP_DIV					,
+		TGU_VM_OP_MOD					,
 		
-		OP_JMP					,
-		OP_TEST					,
-		OP_TESTTEST				,
+		TGU_VM_OP_UMINUS				,
+		TGU_VM_OP_NOT					,
+		
+		TGU_VM_OP_JMP					,
+		TGU_VM_OP_TEST					,
+		TGU_VM_OP_TESTTEST				,
 
-		OP_CALL					,
-		OP_RETURN				
-}tguOpCode;
+		TGU_VM_OP_CALL					,
+		TGU_VM_OP_RETURN				
+}tguVMOpCode_t;
 
 
 

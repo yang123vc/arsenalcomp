@@ -1,7 +1,28 @@
 #pragma once
+#include "afxwin.h"
 
 
 // CStringConvDlg dialog
+
+class CStringEdit : public CEdit
+{
+private:
+		HACCEL	m_acctbl;
+		CFont	m_font;
+public:
+		CStringEdit();
+		virtual ~CStringEdit();
+		DECLARE_MESSAGE_MAP()
+		afx_msg void OnEditSelectAll();
+		virtual BOOL PreTranslateMessage(MSG* pMsg);
+		afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+		afx_msg void OnEditCopy();
+		afx_msg void OnEditCut();
+		afx_msg void OnEditPaste();
+		afx_msg void OnEditClear();
+		afx_msg void OnEditUndo();
+};
+
 
 class CStringConvDlg : public CDialog
 {
@@ -26,4 +47,7 @@ public:
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
 		virtual BOOL OnInitDialog();
 		afx_msg void OnEnChangeEditString();
+public:
+		CStringEdit m_input_string;
+		CStringEdit m_input_code;
 };

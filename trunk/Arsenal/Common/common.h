@@ -320,6 +320,8 @@ const wchar_t*		AR_wcsistr(const wchar_t *s, const wchar_t *p);
 
 
 wchar_t*		AR_wcsdup(const wchar_t *sour);
+
+/*len == 0Ê±·µ»Ø¿Õ´®L""*/
 wchar_t*		AR_wcsndup(const wchar_t *sour, size_t len);
 
 

@@ -66,17 +66,15 @@ CAboutDlg::CAboutDlg() : CDialog(CAboutDlg::IDD)
 
 void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
-		
-	
-	DDX_Text(pDX, IDC_APP_NAME, m_name);
-	DDX_Text(pDX, IDC_APP_VERSION, m_ver);
-	DDX_Text(pDX, IDC_APP_COPYRIGHT, m_copyright);
-	DDX_Text(pDX, IDC_APP_HOMEPAGE, m_homepage);
+		CDialog::DoDataExchange(pDX);
 
-	DDX_Control(pDX, IDC_APP_HOMEPAGE, m_hplink);
-	m_hplink.SetLinkUrl(m_homepage);
-		
+		DDX_Text(pDX, IDC_APP_NAME, m_name);
+		DDX_Text(pDX, IDC_APP_VERSION, m_ver);
+		DDX_Text(pDX, IDC_APP_COPYRIGHT, m_copyright);
+		DDX_Text(pDX, IDC_APP_HOMEPAGE, m_homepage);
+
+		DDX_Control(pDX, IDC_APP_HOMEPAGE, m_hplink);
+		m_hplink.SetLinkUrl(m_homepage);
 }
 
 

@@ -68,10 +68,11 @@ static void				TGU_DestroyParserNode(parserNode_t	*node)	;
 				;
 %name	comment		:	"/\*([^\*]|\*+[^\*/])*\*+/"	
 				;
-%name	comment_line	:	"//[^\n]*\n"			
+
+%name	comment_line	:	"(//[^\r\n]*\r?(\n|$))"
 				;
 
-%name skip_lexem	: 	"{delim}|{comment}|{comment_line}"
+%name skip_lexem	: 	"{comment_line}|{delim}|{comment}"
 				;
 
 
@@ -138,7 +139,7 @@ static void				TGU_DestroyParserNode(parserNode_t	*node)	;
 					;
 
 
-%token 	%skip			:	"{skip_lexem}+"				,1				%action	"TOK_DELIM_ID"	;//空白，需要过滤
+%token 	%skip			:	"{skip_lexem}"				,1				%action	"TOK_DELIM_ID"	;//空白，需要过滤
 
 
 
@@ -158,7 +159,7 @@ static void				TGU_DestroyParserNode(parserNode_t	*node)	;
 
 
 
-%token	"for"		:	'"for"(?!{keyword_lhd})'		,1					%action	"TOK_FOR"			;
+//%token	"for"		:	'"for"(?!{keyword_lhd})'		,1					%action	"TOK_FOR"			;
 %token	"do"		:	'"do"(?!{keyword_lhd})'		,1					%action	"TOK_DO"			;
 %token	"while"	:	'"while"(?!{keyword_lhd})'		,1					%action	"TOK_WHILE"		;
 %token	"if"		:	'"if"(?!{keyword_lhd})'		,1					%action	"TOK_IF"			;
@@ -174,9 +175,8 @@ static void				TGU_DestroyParserNode(parserNode_t	*node)	;
 %token	"var"		:	'"var"(?!{keyword_lhd})'		,1					%action	"TOK_VAR"			;
 
 
-/*
 %token	"..."		:	'"..."'		,2								%action 	"TOK_ELLIPSIS"		;	
-*/
+
 
 %token	"++"		:	'"++"'		,1								%action	"TOK_INC"	;
 %token	"--"		:	'"--"'		,1								%action	"TOK_DEC"		;
@@ -248,10 +248,7 @@ static void				TGU_DestroyParserNode(parserNode_t	*node)	;
 %start	program	;
 
 
-program			:	translation_unit	%action handle_translation_unit
-				{
-					return ns[0];
-				}
+program			:	translation_unit
 				|	.
 				;
 
@@ -260,9 +257,33 @@ translation_unit	:	element
 				;
 
 
+/*
+element			:	statement
+				|	function_defination
+				;
+*/
 
-element				:	statement
-					|	function_defination
+element			:	function_defination
+				|	declaration_statement
+				;
+
+
+/**************************************function_defination***********************************************/
+
+function_defination		:	"var"		NAME "(" params ")"	compound_statement
+					;
+
+
+params				:	namelist	","	"..."
+					|	namelist
+					|	"..."
+					|	.
+					;
+
+
+
+namelist				:	namelist	"," NAME
+					|	NAME
 					;
 
 
@@ -280,7 +301,6 @@ statement				:	compound_statement
 					|	selection_statement	
 					|	iteration_statement	
 					|	jump_statement		
-					|	assignment_statement	
 					|	declaration_statement	
 					;
 
@@ -298,157 +318,10 @@ init_declarator_list		:	init_declarator
 					;
 
 
-init_declarator			:	NAME
-					|	NAME	"=" initializer
+init_declarator			:	NAME	"=" 	expression
+					|	NAME "="	table_constructor
+					|	NAME
 					;
-
-
-
-
-initializer			:	expression
-					|	table_constructor
-					;
-
-
-
-/************************************赋值语句***************************************/
-
-assignment_statement		:	variable	"="	expression			semi
-					|	variable	"="	table_constructor	semi
-					;
-
-/**************************************compound_statement*****************************/
-
-compound_statement		:	start_block	statement_list	close_block
-					|	"{" "}"
-					;
-
-start_block			:	"{"
-					;
-
-close_block			:	"}"	%action "handle_close_block"
-{
-	AR_ASSERT(nodes != NULL && count > 0);
-	TGU_PopBlock();
-}
-					;
-
-
-
-
-statement_list			:	statement_list statement
-					|	statement
-					;
-
-
-/*****************************************************************************/
-
-
-expression_statement		:	semi
-					|	expression	 semi
-					;
-
-selection_statement		:	"if" "(" expression ")" statement				%prec IF_WITHOUT_ELSE
-					|	"if" "(" expression ")" statement "else" statement	
-					;
-
-
-iteration_statement		:	"while" "(" expression ")" statement
-					|	"do" statement "while" "(" expression ")" semi
-					|	"for" "(" for_expression")" statement
-					;
-
-
-
-for_expression			:	assignment_statement expression_statement	expression
-					|	assignment_statement expression_statement
-					|	expression_statement expression_statement	expression
-					|	expression_statement expression_statement
-					;
-
-
-
-jump_statement			:	"continue" semi
-					|	"break" 	semi
-					|	"return" 	semi
-					|	"return" expression semi
-					;
-
-
-semi					:	";"
-					|	error
-					;
-
-/*****************************************表达式*********************************************/
-
-
-expression			:	expression		"?"	expression	":"	expression
-				|	expression		"+"	expression
-				|	expression		"-"	expression
-				|	expression		"*"	expression
-				|	expression		"/"	expression
-				|	expression		"%"	expression
-				|	expression		"<"	expression
-				|	expression		"<="	expression
-				|	expression		">"	expression
-				|	expression		">="	expression
-				|	expression		"=="	expression
-				|	expression		"!="	expression
-				|	expression		"&&"	expression
-				|	expression		"||"	expression
-				|	"++" 	postfix_expression		%prec	PREC_UNARY
-				|	"--"	postfix_expression		%prec	PREC_UNARY
-				|	"+"	postfix_expression		%prec	PREC_UNARY
-				|	"-"	postfix_expression		%prec	PREC_UNARY
-				|	"!"	postfix_expression		%prec	PREC_UNARY
-				|	postfix_expression
-				|	FLOAT_NUMBER
-				|	INT_NUMBER
-				|	STRING
-				|	"true"
-				|	"false"
-				|	"null"
-				;
-
-
-
-
-postfix_expression	:	postfix_expression	"++"
-				|	postfix_expression	"--"
-				|	"(" expression")"
-				|	call_expression
-				|	variable
-				;
-
-
-call_expression		:	postfix_expression "(" expression_list")"	
-				|	postfix_expression "(" 	")"	
-				;
-
-expression_list		:	expression_list "," expression
-				|	expression
-				;
-
-
-
-variable			:	variable "["	expression  "]"
-				|	NAME
-/*
-				|	variable  "."	NAME
-*/
-				;
-
-
-
-
-
-
-
-
-
-
-
-/*******************************************************************************************/
 
 
 table_constructor		:	"{"	filed_list "}"
@@ -462,41 +335,118 @@ filed_list 			:	filed
 
 filed					:	expression
 					|	table_constructor
-					|	NAME				"="	expression
-					|	NAME				"="	table_constructor
-					|	"["	expression	"]"	"="  expression
+					;
+
+
+/**************************************compound_statement*****************************/
+
+compound_statement		:	start_block	statement_list	close_block
+					|	"{" "}"
+					;
+
+start_block			:	"{"
+					;
+
+close_block			:	"}"	%action "handle_close_block"
 					;
 
 
 
 
-/**********************************************************************************************/
-
-
-function_defination		:	"var"		NAME	"("	params	")"	compound_statement
+statement_list			:	statement_list statement
+					|	statement
 					;
 
 
-params				:	namelist
-					|	.
-/*
-					|	"..."
-					|	namelist	","	"..."
-*/
+/*****************************************************************************/
+
+
+expression_statement		:	expression	 semi
+					|	semi
+					;
+
+selection_statement		:	"if" "(" expression ")" statement				%prec IF_WITHOUT_ELSE
+					|	"if" "(" expression ")" statement "else" statement	
+					;
+
+
+iteration_statement		:	"while" "(" expression ")" statement
+					|	"do" statement "while" "(" expression ")" semi
 					;
 
 
 
-namelist				:	namelist	"," NAME
-					|	NAME
+jump_statement			:	"continue" semi
+					|	"break" 	semi
+					|	"return" 	semi
+					|	"return" 	expression semi
 					;
 
 
+semi					:	";"
+					|	error
+					;
+
+/*****************************************表达式*********************************************/
 
 
+expression				:	assignment_expression
+					;
+	
+assignment_expression		:	unary_expression	"="	assignment_expression			
+					|	unary_expression	"="	table_constructor	
+					|	constant_expression
+					;
 
 
+constant_expression		:	binary_expression	
+					|	binary_expression	"?"	expression	":"	constant_expression
+					;
+
+binary_expression		:	binary_expression	"+"	binary_expression
+					|	binary_expression	"-"	binary_expression
+					|	binary_expression	"*"	binary_expression
+					|	binary_expression	"/"	binary_expression
+					|	binary_expression	"%"	binary_expression
+					|	binary_expression	"<"	binary_expression
+					|	binary_expression	"<="	binary_expression
+					|	binary_expression	">"	binary_expression
+					|	binary_expression	">="	binary_expression
+					|	binary_expression	"=="	binary_expression
+					|	binary_expression	"!="	binary_expression
+					|	binary_expression	"&&"	binary_expression
+					|	binary_expression	"||"	binary_expression
+					|	unary_expression
+					;
+
+unary_expression	:	"++" 	unary_expression
+				|	"--"	unary_expression
+				|	"+"	unary_expression
+				|	"-"	unary_expression
+				|	"!"	unary_expression
+				|	postfix_expression
+				;
+
+postfix_expression	:	postfix_expression	"++"
+				|	postfix_expression	"--"
+				|	"(" expression")"
+				|	call_expression
+				|	postfix_expression "[" expression "]"
+				|	NAME
+				|	FLOAT_NUMBER
+				|	INT_NUMBER
+				|	STRING
+				|	"true"
+				|	"false"
+				|	"null"
+				;
 
 
+call_expression		:	postfix_expression "(" expression_list")"	
+				|	postfix_expression "(" 	")"	
+				;
 
+expression_list		:	expression_list "," expression
+				|	expression
+				;
 

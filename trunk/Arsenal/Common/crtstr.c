@@ -647,7 +647,7 @@ wchar_t* AR_wcsdup(const wchar_t *sour)
 }
 
 
-
+#if(0)
 wchar_t* AR_wcsndup(const wchar_t *sour, size_t len)
 {
 		wchar_t *result;
@@ -663,7 +663,19 @@ wchar_t* AR_wcsndup(const wchar_t *sour, size_t len)
 		result[len] = L'\0';
 		return result;
 }
+#endif
 
+wchar_t* AR_wcsndup(const wchar_t *sour, size_t len)
+{
+		wchar_t *result;
+		size_t i;
+		AR_ASSERT(sour != NULL);
+		
+		result = AR_NEWARR(wchar_t, len + 1);
+		for(i = 0; i < len; ++i)result[i] = sour[i];
+		result[len] = L'\0';
+		return result;
+}
 
 
 

@@ -1,8 +1,8 @@
 #include "test.h"
 #include "../Arsenal/Lex/lex.h"
-#include "../Arsenal/Lex/rgx.h"
 
-#if(0)
+
+
 #if defined(__LIB)
 
 
@@ -467,107 +467,35 @@ void trans_char_test()
 #endif
 
 
-void lex_test20()
-{
-		lex_t *lex;
-		lexToken_t tok;
-		lexMatch_t match;
-		size_t i;
-		bool_t  is_ok;
-		lex = Lex_Create(NULL);
-		Lex_InitMatch(&match,L"intadfasdfef\r\n" );
-		
-#if(0)
-		if(!Lex_Insert(lex, L"1,0 (/\\*([^\\*]|\\*+[^\\*/])*\\*+/)|(/\\*)"))
-		{
-				AR_abort();
-		}
-		
-		if(!Lex_InsertName(lex, L"keyword_lookahead", L"[A-Z_a-z0-9]"))
-		{
-				AR_abort();
-		}
-		
-		if(!Lex_Insert(lex, L"3,0 int(?!={keyword_lookahead})"))
-		{
-				AR_abort();
-		}
-#endif	
-		if(!Lex_Insert(lex, L"3,0 int"))
-		{
-				AR_abort();
-		}
-		
-
-		/*
-		
-		if(!Lex_Insert(lex, L"3,0 [\\0]"))
-		{
-				AR_abort();
-		}
-		
-		if(!Lex_Insert(lex, L"3,0 [\\0]"))
-		{
-				AR_abort();
-		}
-		*/
-
-		if(!Lex_Insert(lex, L"0,1 $"))
-		{
-				AR_abort();
-		}
-
-		//AR_printf(L"remove result == %d\r\n", Lex_RemoveByValue(lex, 0));
-
-		//AR_printf(L"remove result == %d\r\n", Lex_RemoveByValue(lex, 0));
-
-		Lex_GenerateTransTable(lex);
-
-		is_ok = true;
-
-		while(true)
-		{
-				if(!Lex_Match(lex, &match, &tok))
-				{
-						//Lex_Skip(&match);
-						//Lex_ClearError(&match);
-						printf("failed\r\n");
-						break;
-						continue;
-				}else
-				{
-		
-						wchar_t buf[1024];
-
-						AR_wcsncpy(buf, tok.str, tok.count);
-						buf[tok.count] = L'\0';
-
-						AR_printf(L"%ls : type == %d : count == %d\r\n", buf, tok.value, tok.count);
-						if(tok.value == 0)break;
-
-						Lex_PutBack(&match, &tok);
-						getchar();
-				}
-		}
-
-		getchar();
-
-		Lex_UnInitMatch(&match);
-}
-
 
 void lex_skip_test()
 {
-		lexMatch_t		match;
-		Lex_InitMatch(&match,L"struct {\r\n int x; int y;\r\n}test_t;" );
-		Lex_SkipTo(&match, L"}");
-		AR_printf(L"line = %d : col = %d : next = %ls\r\n", match.line, match.col, match.next);
+		lexMatch_t		*match;
+		lex_t			*lex;
 
-		Lex_SkipTo(&match, L"test_t");
-		AR_printf(L"line = %d : col = %d : next = %ls\r\n", match.line, match.col, match.next);
+		lex = Lex_Create(NULL);
+		
+		lexAction_t act;
+		act.is_skip = false;
+		act.priority = 0;
+		act.value = 200;
+		AR_ASSERT(Lex_InsertRule(lex, L"(//[^\\n\\r]*\\r?\\n)|(//[^\\n\\r]*$)", &act));
+		match = Lex_CreateMatch(lex, NULL);
 
-		Lex_SkipTo(&match, L"ccc");
-		AR_printf(L"line = %d : col = %d : next = %ls\r\n", match.line, match.col, match.next);
+		Lex_ResetInput(match, L"//abc\r\n\r\n\r\n\r\n//def\r\n");
+		
+
+		lexToken_t tok;
+		
+		while(Lex_Match(match, &tok))
+		{
+
+		}
+
+
+		Lex_DestroyMatch(match);
+		Lex_Destroy(lex);
+
 }
 
 
@@ -575,14 +503,12 @@ void lex_skip_test()
 
 void lex_test()
 {
-		//lex_skip_test();
-		lex_test20();
+		lex_skip_test();
+		//lex_test20();
 }
 
 AR_NAMESPACE_END
 
 
-
-#endif
 
 #endif

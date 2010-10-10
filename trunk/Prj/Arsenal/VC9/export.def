@@ -141,8 +141,8 @@ Parser_Clear
 Parser_GetResult			
 Parser_AddToken			
 Parser_IsAccepted			
-Parser_IsInError			
-Parser_ClearError			
+Parser_IsRecovering			
+Parser_RecoverDone			
 
 Parser_GetNodeCount
 Parser_IndexOfNodeStack

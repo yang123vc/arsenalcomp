@@ -347,7 +347,6 @@ const parser_t* Parser_CreateParser(const psrGrammar_t *grammar, psrModeType_t t
 				}
 		}
 		
-		
 		return parser;
 }
 
@@ -468,14 +467,14 @@ bool_t	   Parser_IsAccepted(const psrContext_t *parser_context)
 }
 
 
-bool_t	Parser_IsInError(const psrContext_t *parser_context)
+bool_t	Parser_IsRecovering(const psrContext_t *parser_context)
 {
 		AR_ASSERT(parser_context != NULL);
 		return parser_context->is_repair;
 
 }
 
-void	Parser_ClearError(psrContext_t *parser_context)
+void	Parser_RecoverDone(psrContext_t *parser_context)
 {
 		AR_ASSERT(parser_context != NULL);
 		parser_context->is_repair = false;
@@ -815,14 +814,14 @@ bool_t		Parser_AddToken(psrContext_t *parser_context, const psrToken_t *tok)
 								is_done = true;
 						}else /*ERR_RECOVERY_CONTINUE*/
 						{
-								
+
 						}
 				}
 						break;
 				default:
 				{
 						AR_ASSERT(false);
-						AR_error(AR_ERR_FATAL, L"%ls\r\n", L"parser internal error\r\n");
+						AR_error(AR_ERR_FATAL, L"%ls\r\n", L"Arsenal parser internal error");
 				}
 				}
 		}

@@ -428,13 +428,11 @@ struct __parser_context_tag
 
 
 
-const parser_t* Parser_CreateParser(const psrGrammar_t *grammar, psrModeType_t type);
+const parser_t*			Parser_CreateParser(const psrGrammar_t *grammar, psrModeType_t type);
 
-void			Parser_DestroyParser(const parser_t *parser);
+void					Parser_DestroyParser(const parser_t *parser);
 
 const	psrGrammar_t*	Parser_GetGrammar(const parser_t *parser);
-
-/*#define			Parser_GetGrammar(_psr)	((const psrGrammar_t*)((_psr)->grammar))*/
 
 
 
@@ -451,9 +449,9 @@ psrNode_t*		Parser_GetResult(psrContext_t *parser);/*ÔÚ×´Ì¬ÎªacceptedÖ®ºó²Å¿ÉÒÔµ
 
 bool_t			Parser_IsAccepted(const psrContext_t *parser);
 
-bool_t			Parser_IsInError(const psrContext_t *parser);
+bool_t			Parser_IsRecovering(const psrContext_t *parser);
 
-void			Parser_ClearError(psrContext_t *parser);
+void			Parser_RecoverDone(psrContext_t *parser);
 
 size_t			Parser_GetNodeCount(const psrContext_t *parser);
 
