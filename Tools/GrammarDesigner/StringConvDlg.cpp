@@ -6,6 +6,97 @@
 #include "StringConvDlg.h"
 
 
+CStringEdit::CStringEdit() : CEdit()
+{
+		VERIFY(m_font.CreatePointFont(120, TEXT("Consolas")));
+		m_acctbl = ::LoadAccelerators(AfxGetResourceHandle(), MAKEINTRESOURCE(IDR_INPUT_VIEW));
+		VERIFY(m_acctbl);
+}
+
+
+CStringEdit::~CStringEdit()
+{
+
+}
+
+
+BOOL CStringEdit::PreTranslateMessage(MSG* pMsg)
+{
+		// TODO: Add your specialized code here and/or call the base class
+		if(WM_KEYFIRST <= pMsg->message && pMsg->message <= WM_KEYLAST) 
+		{ 
+				if(::TranslateAccelerator(this->GetSafeHwnd(), m_acctbl, pMsg))
+				{
+					return true;
+				}
+		}
+
+		return CEdit::PreTranslateMessage(pMsg);
+}
+
+
+BEGIN_MESSAGE_MAP(CStringEdit, CEdit)
+		ON_COMMAND(ID_EDIT_SELECT_ALL, &CStringEdit::OnEditSelectAll)
+		ON_WM_CREATE()
+		ON_COMMAND(ID_EDIT_COPY, &CStringEdit::OnEditCopy)
+		ON_COMMAND(ID_EDIT_CUT, &CStringEdit::OnEditCut)
+		ON_COMMAND(ID_EDIT_PASTE, &CStringEdit::OnEditPaste)
+		ON_COMMAND(ID_EDIT_CLEAR, &CStringEdit::OnEditClear)
+		ON_COMMAND(ID_EDIT_UNDO, &CStringEdit::OnEditUndo)
+END_MESSAGE_MAP()
+
+
+
+int CStringEdit::OnCreate(LPCREATESTRUCT lpCreateStruct)
+{
+		if (CEdit::OnCreate(lpCreateStruct) == -1)
+				return -1;
+
+		// TODO:  Add your specialized creation code here
+		this->SetFont(&m_font);
+		return 0;
+}
+
+void CStringEdit::OnEditCopy()
+{
+		// TODO: Add your command handler code here
+		CEdit::Copy();
+}
+
+void CStringEdit::OnEditCut()
+{
+		// TODO: Add your command handler code here
+		CEdit::Cut();
+}
+
+void CStringEdit::OnEditPaste()
+{
+		// TODO: Add your command handler code here
+		CEdit::Paste();
+}
+
+void CStringEdit::OnEditClear()
+{
+		// TODO: Add your command handler code here
+		CEdit::Clear();
+}
+
+void CStringEdit::OnEditSelectAll()
+{
+		// TODO: Add your command handler code here
+		this->SetSel(0,-1);
+}
+
+
+
+void CStringEdit::OnEditUndo()
+{
+		// TODO: Add your command handler code here
+		CEdit::Undo();
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CStringConvDlg dialog
 
 IMPLEMENT_DYNAMIC(CStringConvDlg, CDialog)
@@ -22,7 +113,9 @@ CStringConvDlg::~CStringConvDlg()
 
 void CStringConvDlg::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
+		CDialog::DoDataExchange(pDX);
+		DDX_Control(pDX, IDC_EDIT_STRING, m_input_string);
+		DDX_Control(pDX, IDC_EDIT_CODE, m_input_code);
 }
 
 
@@ -150,3 +243,4 @@ BOOL CStringConvDlg::OnInitDialog()
 		return TRUE;  // return TRUE unless you set the focus to a control
 		// EXCEPTION: OCX Property Pages should return FALSE
 }
+

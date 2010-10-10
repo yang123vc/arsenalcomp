@@ -192,7 +192,7 @@ static const wchar_t *__cfg_lex_name[] =
 		L"	name		=	{letter}({letter}|{digit})*",
 		L"	lexeme		=	{name}|(\\\"([^\\\"\\n])+\\\")|('([^'\\n])+')",
 		L"	comment		= 	/\\*([^\\*]|\\*+[^\\*/])*\\*+/",
-		L"	comment_line	= 	//[^\\n]*\\n",
+		L"	comment_line	= //[^\\n\\r]*\\r?(\\n|$)",
 		L"  skip_lexem		= {delim}|{comment}|{comment_line}",
 		L"  key_lookahead   = {skip_lexem}+|\"{\""
 };
@@ -2277,11 +2277,11 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 
 		AR_AppendFormatString(code,  CFG_CNT_DEF, L"__NAME_COUNT__", cfg->name_cnt);
 
-		if(cfg->tok_cnt > 0)
+		if(cfg->tok_cnt > 0)/*为存在名字的词法值生成枚举*/
 		{
 				arString_t		*enum_str;
 				enum_str = AR_CreateString();
-				AR_AppendString(enum_str, L"\r\n\r\n/*\r\nenum{\r\n");
+				AR_AppendString(enum_str, L"\r\n\r\n\r\nenum{\r\n");
 				for(i = 0; i < cfg->tok_cnt; ++i)
 				{
 						/*if(cfg->tok[i].code_name == NULL)continue;*/
@@ -2292,7 +2292,7 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 								AR_AppendFormatString(enum_str, L"%s = %d,\r\n", cfg->tok[i].code_name, (uint_32_t)cfg->tok[i].tokval);
 						}
 				}
-				AR_AppendString(enum_str, L"};\r\n*/\r\n\r\n\r\n");
+				AR_AppendString(enum_str, L"};\r\n\r\n\r\n\r\n");
 				AR_AppendString(code, AR_GetStrString(enum_str));
 				AR_DestroyString(enum_str);
 		}
