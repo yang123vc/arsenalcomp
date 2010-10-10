@@ -257,14 +257,9 @@ translation_unit	:	element
 				;
 
 
-/*
-element			:	statement
-				|	function_defination
-				;
-*/
 
-element			:	function_defination
-				|	declaration_statement
+element			:	declaration_statement
+				|	function_defination
 				;
 
 
@@ -300,8 +295,8 @@ statement				:	compound_statement
 					|	expression_statement	
 					|	selection_statement	
 					|	iteration_statement	
-					|	jump_statement		
-					|	declaration_statement	
+					|	jump_statement
+					|	declaration_statement
 					;
 
 
