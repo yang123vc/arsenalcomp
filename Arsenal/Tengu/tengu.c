@@ -20,12 +20,12 @@ AR_NAMESPACE_BEGIN
 
 void	TGU_Init()
 {
-		TGU_InitParser();
+		//TGU_InitParser();
 }
 
 void	TGU_UnInit()
 {
-		TGU_UnInitParser();
+		//TGU_UnInitParser();
 
 }
 
