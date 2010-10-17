@@ -133,11 +133,12 @@ void CGrammarDesignerDoc::Serialize(CArchive& ar)
 		}
 		else
 		{	// loading code
-
+				
 				CTextFileRead fr(ar.GetFile());
 
 				CString txt;
 				
+				this->ClearParser();
 				if(!fr.Read(txt))
 				{
 						throw new CFileException(CFileException::genericException);
@@ -699,11 +700,11 @@ static void AR_STDCALL report_build_func(const ARSpace::cfgReportInfo_t *report,
 				str.Format(TEXT("%ls : %d"), report->error.err_msg, report->error.err_level);
 				output->Append(str, COutputList::MSG_ERROR, 0, tar); 
 				break;
-		case ARSpace::CFG_REPORT_ERR_Lex_T:
+		case ARSpace::CFG_REPORT_ERROR_LEX_T:
 				str.Format(TEXT("Lex error : %ls"), report->lex_error.msg);
 				output->Append(str, COutputList::MSG_ERROR, report->lex_error.tok->line, tar);
 				break;
-		case ARSpace::CFG_REPORT_ERR_SYNTAX_T:
+		case ARSpace::CFG_REPORT_ERROR_SYNTAX_T:
 				str.Format(TEXT("Syntax error : %ls"), report->syntax_error.msg);
 				output->Append(str, COutputList::MSG_ERROR, report->syntax_error.tok->line, tar);
 				break;
@@ -749,7 +750,11 @@ void CGrammarDesignerDoc::OnParserBuild()
 
 		main_frm->ClearShow();
 		ClearParser();
-		this->SaveModified();
+		
+		if(!this->SaveModified())
+		{
+				return;
+		}
 		/*
 		if(this->IsModified())
 		{
@@ -1133,11 +1138,11 @@ static void AR_STDCALL report_tag_func(const ARSpace::cfgReportInfo_t *report, v
 				//::AfxMessageBox(report->message);
 				//AR_printf(L"%ls : %d\r\n", report->message, report->err_level);
 				break;
-		case ARSpace::CFG_REPORT_ERR_Lex_T:
+		case ARSpace::CFG_REPORT_ERROR_LEX_T:
 				//::AfxMessageBox(report->message);
 				//AR_printf(L"lex error %ls\r\n", report->message);
 				break;
-		case ARSpace::CFG_REPORT_ERR_SYNTAX_T:
+		case ARSpace::CFG_REPORT_ERROR_SYNTAX_T:
 				//::AfxMessageBox(report->message);
 				//AR_printf(L"syntax error %ls\r\n", report->message);
 				break;

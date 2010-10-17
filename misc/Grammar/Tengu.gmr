@@ -331,50 +331,208 @@ close_block			:	"}"
 /*****************************************************************************/
 
 
-expression_statement		:	expression	 semi		%action auto_ret_0
+expression_statement		:	expression	 semi		%action auto_return_0
 					{
 						psrNode_t *ret = nodes[0];
+						tguParser_t	*parser = (tguParser_t*)ctx;
 						nodes[0] = NULL;
+						if(ret == NULL)
+						\{
+							parser->has_error = true;
+						\}
 						return ret;
 					}
 
-					|	semi				%action auto_ret_0
-					;
-
-selection_statement		:	"if" "(" expression ")" statement				%prec IF_WITHOUT_ELSE		
-					%action on_if_statement
-					{
-						return NULL;
-
-					}
-
-					|	"if" "(" expression ")" statement "else" statement	
-					%action on_if_else_statement
-					{
-						return NULL;
-
-					}
-					;
-
-
-iteration_statement		:	"while" enter_loop  "(" expression ")" statement leave_loop
-
-					%action	on_while_statement
-					{
-						return NULL;
-
-					}
-
-					|	"do" enter_loop statement "while" "(" expression ")" leave_loop semi
-
-					%action	on_do_while_statement
+					|	semi				%action auto_return_null
 					{
 						return NULL;
 					}
 					;
 
-enter_loop				:	.
-					%action on_enter_loop
+if_statement			:	"if" "(" expression ")" statement			%prec IF_WITHOUT_ELSE		%action on_if_statement
+					|	"if" "(" error ")" statement				%prec IF_WITHOUT_ELSE		%action on_if_statement
+					{
+						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+						tguParser_t	*parser = (tguParser_t*)ctx;
+						tguSynNode_t	*ret;
+						tguExpr_t		*expr;
+						tguStmt_t		*if_true;
+						AR_ASSERT(ns != NULL && count == 5);
+						if(ns[2] == NULL)
+						\{
+							expr = NULL;
+							parser->has_error = true;
+						\}else
+						\{
+							expr = ns[2]->expr;
+							ns[2]->expr = NULL;
+						\}
+							
+						if(ns[4] == NULL)
+						\{	
+							if_true = NULL;
+							parser->has_error = true;
+						\}else
+						\{
+							if_true = ns[4]->stmt;
+							ns[4]->stmt = NULL;
+						\}
+
+						ret = AR_NEW(tguSynNode_t);
+						ret->type = TGU_NODE_STMT_T;
+						ret->stmt = AR_NEW0(tguStmt_t);								
+						ret->stmt->stmt_type = TGU_STT_IF;
+						ret->stmt->lex_info = ns[0]->token->lex_info;
+						ret->stmt->expr = expr;
+						ret->stmt->if_stmt.true_part = if_true;
+						ret->stmt->if_stmt.false_part = NULL;
+						return ret;
+					}
+					;
+
+if_else_statement		:	"if" "(" expression ")" statement "else" statement	%action on_if_else_statement
+					|	"if" "(" error ")" statement "else" statement		%action on_if_else_statement
+					{
+						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+						tguParser_t	*parser = (tguParser_t*)ctx;
+						tguSynNode_t	*ret;
+						tguExpr_t		*expr;
+						tguStmt_t		*if_true;
+						tguStmt_t		*if_false;
+						AR_ASSERT(ns != NULL && count == 5);
+						if(ns[2] == NULL)
+						\{
+							expr = NULL;
+							parser->has_error = true;
+						\}else
+						\{
+							expr = ns[2]->expr;
+							ns[2]->expr = NULL;
+						\}
+							
+						if(ns[4] == NULL)
+						\{	
+							if_true = NULL;
+							parser->has_error = true;
+						\}else
+						\{
+							if_true = ns[4]->stmt;
+							ns[4]->stmt = NULL;
+						\}
+
+						if(ns[6] == NULL)
+						\{	
+							if_false = NULL;
+							parser->has_error = true;
+						\}else
+						\{
+							if_false = ns[6]->stmt;
+							ns[6]->stmt = NULL;
+						\}
+
+
+						ret = AR_NEW(tguSynNode_t);
+						ret->type = TGU_NODE_STMT_T;
+						ret->stmt = AR_NEW0(tguStmt_t);								
+						ret->stmt->stmt_type = TGU_STT_IF;
+						ret->stmt->lex_info = ns[0]->token->lex_info;
+						ret->stmt->expr = expr;
+						ret->stmt->if_stmt.true_part = if_true;
+						ret->stmt->if_stmt.false_part = if_false;
+						return ret;
+					}
+					;
+
+selection_statement		:	if_statement		%action auto_return_0
+					|	if_else_statement	%action auto_return_0
+					;
+
+while_statement			:	"while" enter_loop  "(" expression ")" statement leave_loop	%action	on_while_statement
+					|	"while" enter_loop  "(" error ")" statement leave_loop		%action	on_while_statement
+					{
+						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+						tguParser_t	*parser = (tguParser_t*)ctx;
+						tguSynNode_t	*ret;
+						tguExpr_t		*expr;
+						tguStmt_t		*stmt;
+						AR_ASSERT(ns != NULL && count == 5);
+						if(ns[3] == NULL)
+						\{
+							expr = NULL;
+							parser->has_error = true;
+						\}else
+						\{
+							expr = ns[3]->expr;
+							ns[3]->expr = NULL;
+						\}
+							
+						if(ns[5] == NULL)
+						\{	
+							stmt = NULL;
+							parser->has_error = true;
+						\}else
+						\{
+							stmt = ns[5]->stmt;
+							ns[5]->stmt = NULL;
+						\}
+
+						ret = AR_NEW(tguSynNode_t);
+						ret->type = TGU_NODE_STMT_T;
+						ret->stmt = AR_NEW0(tguStmt_t);								
+						ret->stmt->stmt_type = TGU_STT_WHILE;
+						ret->stmt->lex_info = ns[0]->token->lex_info;
+						ret->stmt->while_stmt.expr = expr;
+						ret->stmt->while_stmt.loop_part = stmt;
+						return ret;
+					}
+					;
+
+do_while_statement		:	"do" enter_loop statement "while" "(" expression ")" leave_loop semi			%action	on_do_while_statement
+					|	"do" enter_loop statement "while" "(" error ")" leave_loop semi				%action	on_do_while_statement
+					{
+						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+						tguParser_t	*parser = (tguParser_t*)ctx;
+						tguSynNode_t	*ret;
+						tguExpr_t		*expr;
+						tguStmt_t		*stmt;
+						AR_ASSERT(ns != NULL && count == 5);
+						if(ns[2] == NULL)
+						\{
+							stmt = NULL;
+							parser->has_error = true;
+						\}else
+						\{
+							stmt = ns[2]->stmt;
+							ns[2]->stmt = NULL;
+						\}
+							
+						if(ns[5] == NULL)
+						\{	
+							expr = NULL;
+							parser->has_error = true;
+						\}else
+						\{
+							expr = ns[5]->expr;
+							ns[5]->expr = NULL;
+						\}
+
+						ret = AR_NEW(tguSynNode_t);
+						ret->type = TGU_NODE_STMT_T;
+						ret->stmt = AR_NEW0(tguStmt_t);								
+						ret->stmt->stmt_type = TGU_STT_DO;
+						ret->stmt->lex_info = ns[0]->token->lex_info;
+						ret->stmt->while_stmt.expr = expr;
+						ret->stmt->while_stmt.loop_part = stmt;
+						return ret;
+					}
+
+					;
+
+iteration_statement		:	while_statement			%action	auto_return_0
+					|	do_while_statement		%action	auto_return_0
+					;
+
+enter_loop				:	.					%action on_enter_loop
 					{
 						tguParser_t	*parser = NULL;
 						AR_ASSERT(ctx != NULL);
@@ -385,8 +543,7 @@ enter_loop				:	.
 					;
 
 
-leave_loop				:	.
-					%action on_leave_loop
+leave_loop				:	.					%action on_leave_loop
 					{
 						tguParser_t	*parser = NULL;
 						AR_ASSERT(ctx != NULL);
@@ -473,7 +630,7 @@ jump_statement			:	"continue" semi				%action on_continue_statement
 						\{
 							AR_ASSERT(ns[1]->type == TGU_NODE_EXPR_T);
 							expr = ns[1]->expr;
-							ns[1]->expr = NULL:
+							ns[1]->expr = NULL;
 						\}
 						ret->stmt->return_stmt.expr = expr;
 						ret->stmt->lex_info = ns[0]->token->lex_info;
@@ -482,8 +639,8 @@ jump_statement			:	"continue" semi				%action on_continue_statement
 					;
 
 
-semi					:	";"		%action	on_semicolon
-					|	error		%action	on_semicolon
+semi					:	";"								%action	on_semicolon
+					|	error								%action	on_semicolon
 					{
 						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
 						tguParser_t	*parser = (tguParser_t*)ctx;
@@ -500,62 +657,178 @@ semi					:	";"		%action	on_semicolon
 /*****************************************±Ì¥Ô Ω*********************************************/
 
 
-expression				:	assignment_expression
+expression				:	assignment_expression		%action auto_return_0
 					;
 	
-assignment_expression		:	unary_expression	"="	assignment_expression			
-					|	unary_expression	"="	table_constructor	
-					|	constant_expression
+assignment_expression		:	constant_expression							%action 	auto_return_0
+					|	unary_expression	"="	table_constructor		%action	on_assignment_expression
+					|	unary_expression	"="	assignment_expression		%action	on_assignment_expression
+					{
+							return NULL;
+					}
 					;
 
 
-constant_expression		:	binary_expression	
-					|	binary_expression	"?"	expression	":"	constant_expression
+constant_expression		:	binary_expression										%action 	auto_return_0
+					|	binary_expression	"?"	expression	":"	constant_expression		%action	on_condition_expression
 					;
 
-binary_expression		:	binary_expression	"+"	binary_expression
-					|	binary_expression	"-"	binary_expression
-					|	binary_expression	"*"	binary_expression
-					|	binary_expression	"/"	binary_expression
-					|	binary_expression	"%"	binary_expression
-					|	binary_expression	"<"	binary_expression
-					|	binary_expression	"<="	binary_expression
-					|	binary_expression	">"	binary_expression
-					|	binary_expression	">="	binary_expression
-					|	binary_expression	"=="	binary_expression
-					|	binary_expression	"!="	binary_expression
-					|	binary_expression	"&&"	binary_expression
-					|	binary_expression	"||"	binary_expression
-					|	unary_expression
+binary_expression		:	unary_expression							%action 	auto_return_0
+					|	binary_expression	"-"	binary_expression		%action	on_binary_expression
+					|	binary_expression	"*"	binary_expression		%action	on_binary_expression
+					|	binary_expression	"/"	binary_expression		%action	on_binary_expression
+					|	binary_expression	"%"	binary_expression		%action	on_binary_expression
+					|	binary_expression	"<"	binary_expression		%action	on_binary_expression
+					|	binary_expression	"<="	binary_expression		%action	on_binary_expression
+					|	binary_expression	">"	binary_expression		%action	on_binary_expression
+					|	binary_expression	">="	binary_expression		%action	on_binary_expression
+					|	binary_expression	"=="	binary_expression		%action	on_binary_expression
+					|	binary_expression	"!="	binary_expression		%action	on_binary_expression
+					|	binary_expression	"&&"	binary_expression		%action	on_binary_expression
+					|	binary_expression	"||"	binary_expression		%action	on_binary_expression
+					|	binary_expression	"+"	binary_expression		%action	on_binary_expression
+					{
+						return NULL;
+					}
 					;
 
-unary_expression	:	"++" 	unary_expression
-				|	"--"	unary_expression
-				|	"+"	unary_expression
-				|	"-"	unary_expression
-				|	"!"	unary_expression
-				|	postfix_expression
+unary_expression	:	postfix_expression		%action 	auto_return_0
+				|	"++" 	unary_expression	%action	on_unary_expression
+				|	"--"	unary_expression	%action	on_unary_expression
+				|	"+"	unary_expression	%action	on_unary_expression
+				|	"-"	unary_expression	%action	on_unary_expression
+				|	"!"	unary_expression	%action	on_unary_expression
+				{
+					return NULL;
+				}
 				;
 
-postfix_expression	:	postfix_expression	"++"
-				|	postfix_expression	"--"
-				|	"(" expression")"
-				|	call_expression
-				|	postfix_expression "[" expression "]"
-				|	NAME
-				|	FLOAT_NUMBER
-				|	INT_NUMBER
-				|	STRING
-				|	"true"
-				|	"false"
-				|	"null"
+postfix_expression	:	postfix_expression	"++"		%action	on_post_add_minus_expression
+				|	postfix_expression	"--"		%action	on_post_add_minus_expression
+				{
+					return NULL;
+				}
+
+				|	postfix_expression "[" expression "]"		%action	on_index_expression
+				|	postfix_expression "[" error "]"		%action	on_index_expression
+				{
+					return NULL;
+				}
+
+				|	call_expression					%action auto_return_0
+				|	primary_expression				%action auto_return_0
+				;	
+				
+
+{
+	static tguExpr_t*		make_identifier_expression(tguParser_t	*parser, 	tguToken_t *token)
+	\{
+			return NULL;
+	\}
+
+	static tguExpr_t*		make_constant_expression(tguParser_t	*parser, 		tguToken_t *token)
+	\{
+			return NULL;
+	\}
+
+};
+
+primary_expression	:	"(" expression")"							%action	on_lp_rp_expression
+				{
+					tguParser_t	*parser = (tguParser_t*)ctx;
+					psrNode_t 	*ret;
+					if(nodes[1] == NULL)
+					\{
+						parser->has_error = true;
+						ret = NULL;
+					\}else
+					\{
+						ret = nodes[1];
+						nodes[1] = NULL;
+					\}
+					return ret;
+				}
+
+				|	"(" error ")"								%action	on_lp_rp_expression
+				|	NAME										%action	on_identifier_expression
+				{
+						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+						tguSynNode_t 	*ret;
+						tguParser_t	*parser = (tguParser_t*)ctx;
+						tguExpr_t		*expr;
+						AR_ASSERT(parser != NULL && ns != NULL && count == 1);
+						expr = make_identifier_expression(parser, ns[0]->token);
+						
+						ret = AR_NEW(tguSynNode_t);
+						ret->type = TGU_NODE_EXPR_T;
+						ret->expr = expr;
+						return ret;
+
+				}
+
+				|	FLOAT_NUMBER			%action	on_constant_expression
+				|	INT_NUMBER				%action	on_constant_expression
+				|	STRING				%action	on_constant_expression
+				|	"true"				%action	on_constant_expression
+				|	"false"				%action	on_constant_expression
+				|	"null"				%action	on_constant_expression
+				{
+						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+						tguSynNode_t 	*ret;
+						tguParser_t	*parser = (tguParser_t*)ctx;
+						tguExpr_t		*expr;
+						AR_ASSERT(parser != NULL && ns != NULL && count == 1);
+						expr = make_constant_expression(parser, ns[0]->token);
+						
+						ret = AR_NEW(tguSynNode_t);
+						ret->type = TGU_NODE_EXPR_T;
+						ret->expr = expr;
+						return ret;
+				}
 				;
 
+{
+	static tguExpr_t*		make_call_expression(tguParser_t	*parser, tguExpr_t *args)
+	\{
+			return NULL;
+	\}
+};
 
-call_expression		:	postfix_expression "(" expression_list")"	
-				|	postfix_expression "(" 	")"	
+call_expression		:	postfix_expression "(" expression_list ")"		%action	on_call_expression
+				|	postfix_expression "(" error ")"			%action	on_call_expression
+				|	postfix_expression "(" 	")"				%action	on_call_expression
+				{
+						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+						tguSynNode_t 	*ret;
+						tguParser_t	*parser = (tguParser_t*)ctx;
+						tguExpr_t		*expr, *args;
+						if(count == 4)
+						\{
+							if(ns[2] == NULL)
+							\{
+								args = NULL;
+								parser->has_error = true;
+							\}else
+							\{
+								args = ns[2]->expr;
+								ns[2]->expr = NULL;
+							\}
+						\}else
+						\{
+							args = NULL;
+						\}
+						AR_ASSERT(parser != NULL && ns != NULL && count == 1);
+						
+						expr = make_call_expression(parser, args);
+						
+						ret = AR_NEW(tguSynNode_t);
+						ret->type = TGU_NODE_EXPR_T;
+						ret->expr = expr;
+						return ret;
+				}
 				;
 
-expression_list		:	expression_list "," expression
+expression_list		:	expression_list "," expression				
 				|	expression
 				;
+

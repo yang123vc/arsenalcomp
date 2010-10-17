@@ -29,6 +29,55 @@ typedef	struct __tengu_lexinfo_tag
 }tguLexInfo_t;
 
 
+enum{
+		TOK_DELIM_ID = 257,
+		TOK_NAME = 258,
+		TOK_STRING = 259,
+		TOK_FLOAT_NUMBER = 260,
+		TOK_INT_NUMBER = 261,
+		TOK_DO = 262,
+		TOK_WHILE = 263,
+		TOK_IF = 264,
+		TOK_ELSE = 265,
+		TOK_CONTINUE = 266,
+		TOK_BREAK = 267,
+		TOK_RETURN = 268,
+		TOK_NULL = 269,
+		TOK_TRUE = 270,
+		TOK_FALSE = 271,
+		TOK_VAR = 272,
+		TOK_ELLIPSIS = 273,
+		TOK_INC = 274,
+		TOK_DEC = 275,
+		TOK_ANDAND = 276,
+		TOK_OROR = 277,
+		TOK_LE = 278,
+		TOK_GE = 279,
+		TOK_EQ = 280,
+		TOK_NE = 281,
+		TOK_LESS = 282,
+		TOK_GREATER = 283,
+		TOK_L_BRACES = 284,
+		TOK_R_BRACES = 285,
+		TOK_L_PAREN = 286,
+		TOK_R_PAREN = 287,
+		TOK_L_SQUARE = 288,
+		TOK_R_SQUARE = 289,
+		TOK_SEMICOLON = 290,
+		TOK_COMMA = 291,
+		TOK_ASSIGN = 292,
+		TOK_ADD = 293,
+		TOK_SUB = 294,
+		TOK_MUL = 295,
+		TOK_DIV = 296,
+		TOK_MOD = 297,
+		TOK_NOT = 298,
+		TOK_COLON = 299,
+		TOK_QUEST = 300,
+		TOK_DOT = 301
+};
+
+
 typedef struct __tengu_token_tag
 {
 		const	wchar_t	*token;
@@ -73,28 +122,26 @@ typedef enum
 		TGU_BOOLEAN_T,
 		TGU_TABLE_T,
 		TGU_FUNCTION_T,
-		TGU_USERDATA_T
 }tguType_t;
 
 
-struct __tengu_initializer_table_tag;
-typedef struct __tengu_initializer_table_tag	tguInitTable_t;
+struct __tengu_table_initializer_tag;
+typedef struct __tengu_table_initializer_tag	tguTableInit_t;
 
 typedef enum
 {
 		TGU_INIT_TABLE_EXPR,
 		TGU_INIT_TABLE_TABLE
-}tguInitTableType_t;
+}tguTableInitType_t;
 
-struct __tengu_initializer_table_tag
+struct __tengu_table_initializer_tag
 {
-		tguInitTableType_t		type;
-		tguInitTable_t			*next;
+		tguTableInitType_t		type;
+		tguTableInit_t			*next;
 		union{
 				tguExpr_t		*expr;
-				tguInitTable_t	*table;
+				tguTableInit_t	*table;
 		}filed;
-		
 };
 
 struct  __tengu_initializer_tag;
@@ -107,7 +154,7 @@ struct  __tengu_initializer_tag
 				int_64_t		int_number;
 				double			float_number;
 				const wchar_t	*string;
-				tguInitTable_t	*table;
+				tguTableInit_t	*table;
 				tguVar_t		*var;
 				tguExpr_t		*expr;
 		};
@@ -166,22 +213,6 @@ typedef enum
 }tguExprOp_t;
 
 
-typedef enum 
-{
-
-		TGU_ET_NULL_CONST,
-		TGU_ET_INT_CONST,
-		TGU_ET_FLOAT_CONST,
-		TGU_ET_STRING_CONST,
-		TGU_ET_NAME,
-		TGU_ET_VAR,
-		TGU_ET_FUNC_CALL,
-		TGU_ET_BINARY,
-		TGU_ET_UNARY,
-		TGU_ET_CONDITIONAL,
-}tguExprType_t;
-
-
 
 
 
@@ -235,6 +266,23 @@ struct __tengu_function_call_expression_tag
 };
 
 
+
+typedef enum 
+{
+
+		TGU_ET_NULL_CONST,
+		TGU_ET_INT_CONST,
+		TGU_ET_FLOAT_CONST,
+		TGU_ET_STRING_CONST,
+		TGU_ET_NAME,
+		TGU_ET_VAR,
+		TGU_ET_FUNC_CALL,
+		TGU_ET_BINARY,
+		TGU_ET_UNARY,
+		TGU_ET_CONDITIONAL,
+}tguExprType_t;
+
+
 struct __tengu_expression_tag 
 {
 		tguExprType_t			expr_type;
@@ -270,37 +318,33 @@ typedef enum
 
 
 
-struct __tengu_compound_statement_tag;
-typedef struct __tengu_compound_statement_tag	tguCompoundStmt_t;
-struct __tengu_compound_statement_tag
+typedef struct __tengu_compound_statement_tag
 {
 		tguBlock_t		*block;
 		tguStmt_t		*statement_list;
-};
+}tguCompoundStmt_t;
 
-struct __tengu_if_statement_tag;
-typedef struct __tengu_if_statement_tag		tguIFStmt_t;
-struct __tengu_if_statement_tag
+
+typedef struct __tengu_if_statement_tag		
 {
 		tguExpr_t		*expr;
 		tguStmt_t		*true_part;
 		tguStmt_t		*false_part;
-};
+}tguIFStmt_t;
 
-struct __tengu_while_statement_tag;
-typedef struct __tengu_while_statement_tag		tguWhileStmt_t;
-struct __tengu_while_statement_tag
+typedef struct __tengu_while_statement_tag	
 {
 		tguExpr_t		*expr;
 		tguStmt_t		*loop_part;
-};
+}tguWhileStmt_t;
 
-struct __tengu_return_statement_tag;
-typedef struct __tengu_return_statement_tag		tguRetrunStmt_t;
-struct __tengu_return_statement_tag
+
+typedef struct __tengu_return_statement_tag
 {
 		tguExpr_t		*expr;
-};
+}tguRetrunStmt_t;
+
+
 
 
 struct __tengu_statement_tag
@@ -322,11 +366,10 @@ struct __tengu_statement_tag
 
 
 /*********************************************函数**************************************************************/
-
-struct	__tengu_function_tag;
+struct __tengu_function_tag;
 typedef struct __tengu_function_tag		tguFunc_t;
 
-struct __tengu_function_tag
+typedef struct __tengu_function_tag
 {
 		tguLexInfo_t	lex_info;
 		const wchar_t	*name;
@@ -339,7 +382,7 @@ struct __tengu_function_tag
 		tguStmt_t		*statement;
 		
 		tguFunc_t		*next;
-};
+}tguFunc_t;
 
 
 
@@ -363,12 +406,74 @@ struct __tengu_block_tag
 		tguBlock_t		*parent;
 };
 
+
+
+/***************************************************************错误报告**************************************************************************/
+
+typedef enum
+{
+		TGU_REPORT_MESSAGE_T,
+		TGU_REPORT_ERROR_T,
+		TGU_REPORT_ERROR_LEX_T,
+		TGU_REPORT_ERROR_SYNTAX_T,
+		TGU_REPORT_WARNING_SYNTAX_T
+}tguReportType_t;
+
+
+typedef struct __tengu_report_info_tag
+{
+		tguReportType_t			type;
+		
+		union{
+
+		struct					{
+				const	wchar_t			*message;
+		
+		}								std_msg;
+
+		struct	{
+				int_t					err_level;
+				const	wchar_t			*err_msg;
+		
+		}								error;
+		
+		struct			{
+				const	wchar_t			*msg;
+				const	lexToken_t		*tok;
+		
+		}								lex_error;
+		
+		struct			{
+				const	wchar_t			*msg;
+				const	tguToken_t		*tok;
+		}								syntax_error;
+		
+		struct	{
+				size_t					line;
+				const wchar_t			*msg;
+		}								warning;
+		};
+}tguReportInfo_t;
+
+
+typedef void (AR_STDCALL *tguReportFunc_t)(const tguReportInfo_t *report, void *context);
+
+typedef struct __tengu_report_tag
+{
+		tguReportFunc_t	report_func;
+		void			*report_ctx;
+}tguReport_t;
+
+
+
 /***************************************************************分析器**************************************************************************/
 
 
 typedef enum
 {
 		TGU_NODE_TOKEN_T,
+		TGU_NODE_STMT_T,
+		TGU_NODE_EXPR_T,
 }tguSynNodeType_t;
 
 
@@ -378,17 +483,28 @@ typedef struct __tengu_syntax_node_tag
 		tguSynNodeType_t		type;
 		
 		union{
-				tguToken_t		token;
+				tguToken_t		*token;
+				tguStmt_t		*stmt;
+				tguExpr_t		*expr;
 		};
 }tguSynNode_t;
 
 typedef struct __tengu_parser_tag
 {
+		tguReport_t		report;
+		arStringTable_t	*str_tbl;
+
 		tguBlock_t		*global_block;
 		tguBlock_t		*top_block;
-		
 		tguFunc_t		*function_list;
 
+		
+
+
+		/***************************/
+		size_t			loop_level;
+		bool_t			has_error;
+		tguFunc_t		*current_function;
 }tguParser_t;
 
 
