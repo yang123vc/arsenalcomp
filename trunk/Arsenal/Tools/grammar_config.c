@@ -1870,7 +1870,7 @@ static void		AR_STDCALL cfg_error(const psrToken_t *tok, const size_t expected[]
 		/******************************************************************************************/
 		info.syntax_error.msg = AR_GetStrString(str);
 		info.syntax_error.tok = tok;
-		info.type = CFG_REPORT_ERR_SYNTAX_T;
+		info.type = CFG_REPORT_ERROR_SYNTAX_T;
 		report->report_func(&info, report->report_ctx);
 		AR_DestroyString(str);
 }
@@ -2032,7 +2032,7 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 
 						if(tok)AR_DEL(tok);
 
-						info.type = CFG_REPORT_ERR_Lex_T;
+						info.type = CFG_REPORT_ERROR_LEX_T;
 						info.lex_error.msg = AR_GetStrString(str);
 
 						tmp_tok.term_val = 0;
@@ -2217,6 +2217,87 @@ __RULE_COUNT__
 
 #define CFG_CNT_DEF		L"#define %ls ((size_t)%u)\r\n"
 
+typedef struct __handler_record_tag
+{
+		wchar_t			*name;
+		wchar_t			*handler_def;
+		bool_t			has_spec_def;
+}handlerRec_t;
+
+typedef struct __handler_table_tag
+{
+		handlerRec_t	*tbl;
+		size_t			count;
+		size_t			cap;
+}handlerTbl_t;
+
+static void		InitHandlerTable(handlerTbl_t *tbl)
+{
+		AR_ASSERT(tbl != NULL);
+		AR_memset(tbl, 0, sizeof(*tbl));
+}
+
+static void ClearHandlerTable(handlerTbl_t *tbl)
+{
+		size_t	i;
+		AR_ASSERT(tbl != NULL);
+		for(i = 0; i < tbl->count; ++i)
+		{
+				handlerRec_t	*rec = &tbl->tbl[i];
+				if(rec->name)AR_DEL(rec->name);
+				if(rec->handler_def)AR_DEL(rec->handler_def);
+		}
+		tbl->count = 0;
+}
+
+
+static void		UnInitHandlerTable(handlerTbl_t		*tbl)
+{
+		AR_ASSERT(tbl != NULL);
+		ClearHandlerTable(tbl);
+		if(tbl->tbl)AR_DEL(tbl->tbl);
+		AR_memset(tbl, 0, sizeof(*tbl));
+}
+
+static handlerRec_t*	FindFromHandlerTable(handlerTbl_t		*tbl, const wchar_t *name)
+{
+		size_t i;
+		AR_ASSERT(tbl != NULL && name != NULL);
+		for(i = 0; i < tbl->count; ++i)
+		{
+				handlerRec_t	*rec = &tbl->tbl[i];
+				if(AR_wcscmp(rec->name, name) == 0)return rec;
+		}
+		return NULL;
+}
+
+static void			InsertToHandlerTable(handlerTbl_t		*tbl, const wchar_t *name, const wchar_t *handler_def, bool_t has_spec_def)
+{
+		handlerRec_t *rec;
+		AR_ASSERT(tbl != NULL && name != NULL);
+		rec = FindFromHandlerTable(tbl,name);
+
+		if(rec == NULL)
+		{
+				if(tbl->count == tbl->cap)
+				{
+						tbl->cap = (tbl->cap + 4)*2;
+						tbl->tbl = AR_REALLOC(handlerRec_t, tbl->tbl, tbl->cap);
+				}
+				tbl->tbl[tbl->count].name = AR_wcsdup(name);
+				tbl->tbl[tbl->count].handler_def = handler_def == NULL ? NULL : AR_wcsdup(handler_def);
+				tbl->tbl[tbl->count].has_spec_def = has_spec_def;
+				tbl->count++;
+		}else
+		{
+				if(rec->handler_def)AR_DEL(rec->handler_def);
+				rec->handler_def = AR_wcsdup(handler_def);
+				rec->has_spec_def = has_spec_def;
+		}
+		
+}
+
+
 
 
 bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
@@ -2281,7 +2362,7 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 		{
 				arString_t		*enum_str;
 				enum_str = AR_CreateString();
-				AR_AppendString(enum_str, L"\r\n\r\n\r\nenum{\r\n");
+				AR_AppendString(enum_str, L"\r\n\r\n\r\n/*enum{\r\n");
 				for(i = 0; i < cfg->tok_cnt; ++i)
 				{
 						/*if(cfg->tok[i].code_name == NULL)continue;*/
@@ -2292,7 +2373,7 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 								AR_AppendFormatString(enum_str, L"%s = %d,\r\n", cfg->tok[i].code_name, (uint_32_t)cfg->tok[i].tokval);
 						}
 				}
-				AR_AppendString(enum_str, L"};\r\n\r\n\r\n\r\n");
+				AR_AppendString(enum_str, L"};*/\r\n\r\n\r\n\r\n");
 				AR_AppendString(code, AR_GetStrString(enum_str));
 				AR_DestroyString(enum_str);
 		}
@@ -2439,12 +2520,12 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 				AR_AppendFormatString(code,  CFG_CNT_DEF, L"__PREC_COUNT__", prec_cnt);
 		}
 
+/**********************************************************************************************************************************************************/
 		if(cfg->rule_cnt > 0)
 		{
-				arStringTable_t	*handler_mark;
+				handlerTbl_t	handler_tbl;
 				handler_define	= AR_CreateString();
-				handler_mark = 		AR_CreateStrTable(cfg->rule_cnt);
-
+				InitHandlerTable(&handler_tbl);
 
 				AR_AppendString(code, L"\n");
 
@@ -2452,7 +2533,8 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 				{
 						size_t tmp_len;
 						wchar_t *handler, *handler_def, *tmp;
-								
+						bool_t	has_spec_def = false;
+/***************************************************生成handler和handler_def*******************************************************/
 						if(cfg->rule[i].action_name)
 						{
 								if(AR_wcscmp(cfg->rule[i].action_name, L"NULL") == 0)
@@ -2475,10 +2557,12 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 
 								if(cfg->rule[i].action_ins == NULL)
 								{
+										has_spec_def = false;
 										AR_swprintf(tmp, tmp_len, CFG_RULE_HANDLER_DEFINE_2, cfg->rule[i].action_name);
 										handler_def = AR_wcsdup(tmp);
 								}else
 								{
+										has_spec_def = true;
 										AR_swprintf(tmp, tmp_len, CFG_RULE_HANDLER_DEFINE_3, cfg->rule[i].action_name, cfg->rule[i].action_ins);
 										handler_def = AR_wcsdup(tmp);
 								}
@@ -2503,15 +2587,18 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 										AR_DEL(tmp);
 										tmp = NULL;
 								}
+
+								has_spec_def = false;
 						}
-
-						/*if(AR_wcsstr(AR_GetStrString(code), handler) == NULL)*/
-
-						if(!AR_HasString(handler_mark, handler))
+/****************************************************************************************************************************/
+			
 						{
 								size_t k;
-								arString_t *comment = AR_CreateString();
+								handlerRec_t	*rec;
+								arString_t		*comment = AR_CreateString();
+								arString_t		*define  = AR_CreateString();
 
+/****************************************************生成handler对应的注释*****************************************************************/
 								for(k = 0; k < cfg->rule_cnt; ++k)
 								{
 										bool_t insert_comment = false;
@@ -2534,33 +2621,58 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 												AR_AppendString(comment, L"\r\n");
 										}
 								}
-
-								AR_AppendString(handler_define, AR_GetStrString(comment));
-								AR_AppendString(handler_define, handler_def);
-								AR_AppendString(handler_define, L"\r\n\n");
+/****************************************************************************************************************************/
 
 								AR_AppendString(code, AR_GetStrString(comment));
 								AR_AppendString(code, handler);
 								AR_AppendString(code, L"\r\n\n");
-								
+
+								AR_AppendString(define, AR_GetStrString(comment));
+								AR_AppendString(define, handler_def);
+								AR_AppendString(define, L"\r\n\n");
+
+								rec = FindFromHandlerTable(&handler_tbl, handler);
+								if(rec == NULL)
+								{
+										InsertToHandlerTable(&handler_tbl, handler, AR_GetStrString(define), has_spec_def);
+								}else
+								{
+										if(rec->has_spec_def)
+										{
+												if(has_spec_def)
+												{
+														InsertToHandlerTable(&handler_tbl, handler, AR_GetStrString(define), has_spec_def);
+												}else
+												{
+
+												}
+										}else
+										{
+												InsertToHandlerTable(&handler_tbl, handler, AR_GetStrString(define), has_spec_def);
+										}
+								}
+
+								AR_DestroyString(define);
 								AR_DestroyString(comment);
-
-								AR_GetString(handler_mark, handler);
 						}
-
-						//AR_AppendString(code, L"\r\n");
-
+						
 						if(handler)AR_DEL(handler);
 						if(handler_def)AR_DEL(handler_def);
 				}
 
-				AR_AppendString(code, L"\n");
-				AR_AppendString(code, L"\n");
+				for(i = 0; i < handler_tbl.count; ++i)
+				{
+						const handlerRec_t		*rec = &handler_tbl.tbl[i];
+						AR_AppendString(handler_define, rec->handler_def);
+						AR_AppendString(handler_define, TEXT("\r\n\r\n"));
+				}
+				AR_AppendString(code, L"\r\n");
+				AR_AppendString(code, L"\r\n");
 
-				AR_DestroyStrTable(handler_mark);
+				UnInitHandlerTable(&handler_tbl);
 		}
 
-
+/**********************************************************************************************************************************************************/
 
 
 		if(cfg->rule_cnt > 0)

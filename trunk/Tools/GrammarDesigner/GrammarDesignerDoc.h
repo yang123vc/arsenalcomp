@@ -57,7 +57,7 @@ protected:
 protected:
 	DECLARE_MESSAGE_MAP()
 public:
-		void OnEndcodingChange(UINT nID);
+		void	OnEndcodingChange(UINT nID);
 
 		bool	BuildParser(const ARSpace::cfgConfig_t *cfg);
 

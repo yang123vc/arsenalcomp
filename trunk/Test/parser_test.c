@@ -274,7 +274,7 @@ typedef enum
 		CFG_REPORT_MESSAGE_T,
 		CFG_REPORT_ERROR_T,
 		CFG_REPORT_ERR_Lex_T,
-		CFG_REPORT_ERR_SYNTAX_T
+		CFG_REPORT_ERROR_SYNTAX_T
 }cfgReportType_t;
 */
 
@@ -291,7 +291,7 @@ static void AR_STDCALL report_func(const cfgReportInfo_t *report, void *context)
 		case CFG_REPORT_ERR_Lex_T:
 				AR_printf(L"lex error %ls\r\n", report->message);
 				break;
-		case CFG_REPORT_ERR_SYNTAX_T:
+		case CFG_REPORT_ERROR_SYNTAX_T:
 				AR_printf(L"syntax error %ls\r\n", report->message);
 				break;
 		default:

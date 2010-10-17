@@ -61,7 +61,7 @@
 				AssemblerOutput="2"
 				WarningLevel="4"
 				DebugInformationFormat="4"
-				CompileAs="2"
+				CompileAs="1"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -401,7 +401,7 @@
 				AssemblerOutput="0"
 				WarningLevel="4"
 				DebugInformationFormat="3"
-				CompileAs="1"
+				CompileAs="2"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -746,7 +746,7 @@
 				WarningLevel="4"
 				WarnAsError="false"
 				DebugInformationFormat="4"
-				CompileAs="2"
+				CompileAs="1"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -1465,6 +1465,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\Arsenal\Tengu\tengu.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Tengu\tgu_parser_impl.h"
 				>
 			</File>
 			<File
