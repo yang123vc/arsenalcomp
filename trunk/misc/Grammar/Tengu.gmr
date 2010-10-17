@@ -16,33 +16,6 @@
  *
  */
 
-#include "tguparser.h"
-
-
-
-/*******************************************decl****************************************/
-
-struct __parser_node_tag;
-typedef struct __parser_node_tag		parserNode_t;
-
-
-/********************************************************************************************/
-
-typedef enum
-\{
-		TOKEN_T,
-\}parserNodeType_t;
-
-struct __parser_node_tag
-\{
-		parserNodeType_t		type;
-
-\};
-
-static parserNode_t*			TGU_CreateParserNode(parserNodeType_t	type)		;
-static void				TGU_DestroyParserNode(parserNode_t	*node)	;
-
-/**************************************************************************************************/
 
 };
 
@@ -159,7 +132,6 @@ static void				TGU_DestroyParserNode(parserNode_t	*node)	;
 
 
 
-//%token	"for"		:	'"for"(?!{keyword_lhd})'		,1					%action	"TOK_FOR"			;
 %token	"do"		:	'"do"(?!{keyword_lhd})'		,1					%action	"TOK_DO"			;
 %token	"while"	:	'"while"(?!{keyword_lhd})'		,1					%action	"TOK_WHILE"		;
 %token	"if"		:	'"if"(?!{keyword_lhd})'		,1					%action	"TOK_IF"			;
@@ -222,7 +194,9 @@ static void				TGU_DestroyParserNode(parserNode_t	*node)	;
 %token	":"		:	'":"'			,0								%action "TOK_COLON"				;
 %token	"?"		:	'"?"'			,0								%action "TOK_QUEST"				;
 
+/*
 %token	"."		:	'"."'			,0								%action "TOK_DOT"				;
+*/
 
 
 %right	"?"	":"							;
@@ -231,7 +205,7 @@ static void				TGU_DestroyParserNode(parserNode_t	*node)	;
 %left		"=="	"!="	"<"	"<="	">"	">="			;
 %left		"+"	"-"							;
 %left		"*"	"/"	"%"						;
-%right	PREC_UNARY 						;
+
 
 
 
@@ -258,7 +232,7 @@ translation_unit	:	element
 
 
 
-element			:	declaration_statement
+element			:	declaration
 				|	function_defination
 				;
 
@@ -296,14 +270,13 @@ statement				:	compound_statement
 					|	selection_statement	
 					|	iteration_statement	
 					|	jump_statement
-					|	declaration_statement
 					;
 
 
 
 /*************************************声明语句***************************************************/
 
-declaration_statement		:	"var"		init_declarator_list 	semi
+declaration			:	"var"		init_declarator_list 	semi
 					;
 
 
@@ -335,51 +308,193 @@ filed					:	expression
 
 /**************************************compound_statement*****************************/
 
-compound_statement		:	start_block	statement_list	close_block
+compound_statement		:	start_block	compound_element_list		close_block
 					|	"{" "}"
+					;
+
+compound_element_list		:	compound_element_list		compound_element
+					|	compound_element
+					;
+
+compound_element		:	statement
+					|	declaration
 					;
 
 start_block			:	"{"
 					;
 
-close_block			:	"}"	%action "handle_close_block"
+close_block			:	"}"	
 					;
 
-
-
-
-statement_list			:	statement_list statement
-					|	statement
-					;
 
 
 /*****************************************************************************/
 
 
-expression_statement		:	expression	 semi
-					|	semi
+expression_statement		:	expression	 semi		%action auto_ret_0
+					{
+						psrNode_t *ret = nodes[0];
+						nodes[0] = NULL;
+						return ret;
+					}
+
+					|	semi				%action auto_ret_0
 					;
 
-selection_statement		:	"if" "(" expression ")" statement				%prec IF_WITHOUT_ELSE
+selection_statement		:	"if" "(" expression ")" statement				%prec IF_WITHOUT_ELSE		
+					%action on_if_statement
+					{
+						return NULL;
+
+					}
+
 					|	"if" "(" expression ")" statement "else" statement	
+					%action on_if_else_statement
+					{
+						return NULL;
+
+					}
 					;
 
 
-iteration_statement		:	"while" "(" expression ")" statement
-					|	"do" statement "while" "(" expression ")" semi
+iteration_statement		:	"while" enter_loop  "(" expression ")" statement leave_loop
+
+					%action	on_while_statement
+					{
+						return NULL;
+
+					}
+
+					|	"do" enter_loop statement "while" "(" expression ")" leave_loop semi
+
+					%action	on_do_while_statement
+					{
+						return NULL;
+					}
+					;
+
+enter_loop				:	.
+					%action on_enter_loop
+					{
+						tguParser_t	*parser = NULL;
+						AR_ASSERT(ctx != NULL);
+						parser = (tguParser_t*)ctx;
+						parser->loop_level++;
+						return NULL;
+					}
+					;
+
+
+leave_loop				:	.
+					%action on_leave_loop
+					{
+						tguParser_t	*parser = NULL;
+						AR_ASSERT(ctx != NULL);
+						parser = (tguParser_t*)ctx;
+						AR_ASSERT(parser->loop_level > 0);
+						parser->loop_level--;
+						return NULL;
+					}
 					;
 
 
 
-jump_statement			:	"continue" semi
-					|	"break" 	semi
-					|	"return" 	semi
-					|	"return" 	expression semi
+jump_statement			:	"continue" semi				%action on_continue_statement
+					{
+						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+						tguSynNode_t 	*ret;
+						tguParser_t	*parser = (tguParser_t*)ctx;
+						AR_ASSERT(ns != NULL);
+						if(parser->loop_level == 0)
+						\{
+							tguReportInfo_t	info;
+							info.type = TGU_REPORT_ERROR_SYNTAX_T;
+							info.syntax_error.tok = ns[0]->token;
+							info.syntax_error.msg = L"illegal continue";
+							AR_ASSERT(parser->report.report_func != NULL);
+							parser->report.report_func(&info, parser->report.report_ctx);
+							parser->has_error = true;
+						\}
+						
+						ret = AR_NEW(tguSynNode_t);
+						ret->type = TGU_NODE_STMT_T;
+						ret->stmt = AR_NEW0(tguStmt_t);								
+						ret->stmt->stmt_type = TGU_STT_CONTINUE;
+						ret->stmt->lex_info = ns[0]->token->lex_info;
+						return ret;
+
+					}
+
+					|	"break" 	semi				%action on_break_statement
+					{
+						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+						tguSynNode_t 	*ret;
+						tguParser_t	*parser = (tguParser_t*)ctx;
+						AR_ASSERT(ns != NULL);
+						if(parser->loop_level == 0)
+						\{
+							tguReportInfo_t	info;
+							info.type = TGU_REPORT_ERROR_SYNTAX_T;
+							info.syntax_error.tok = ns[0]->token;
+							info.syntax_error.msg = L"illegal break";
+							AR_ASSERT(parser->report.report_func != NULL);
+							parser->report.report_func(&info, parser->report.report_ctx);
+							parser->has_error = true;
+						\}
+						
+						ret = AR_NEW(tguSynNode_t);
+						ret->type = TGU_NODE_STMT_T;
+						ret->stmt = AR_NEW0(tguStmt_t);								
+						ret->stmt->stmt_type = TGU_STT_BREAK;
+						ret->stmt->lex_info = ns[0]->token->lex_info;
+						return ret;
+						
+					}
+
+					|	"return" 	semi				%action on_return_statement
+					|	"return" 	expression semi		%action on_return_statement
+					{
+						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+						tguSynNode_t 	*ret;
+						tguParser_t	*parser = (tguParser_t*)ctx;
+						tguExpr_t		*expr;
+						AR_ASSERT(nodes != NULL && count == 2 || count == 3);
+						AR_ASSERT(parser->current_function != NULL);
+
+						ret = AR_NEW(tguSynNode_t);
+						ret->type = TGU_NODE_STMT_T;
+						ret->stmt = AR_NEW0(tguStmt_t);								
+						ret->stmt->stmt_type = TGU_STT_RETURN;
+						
+						if(ns[1] == NULL)
+						\{
+							expr = NULL;
+						\}else
+						\{
+							AR_ASSERT(ns[1]->type == TGU_NODE_EXPR_T);
+							expr = ns[1]->expr;
+							ns[1]->expr = NULL:
+						\}
+						ret->stmt->return_stmt.expr = expr;
+						ret->stmt->lex_info = ns[0]->token->lex_info;
+						return ret;
+					}
 					;
 
 
-semi					:	";"
-					|	error
+semi					:	";"		%action	on_semicolon
+					|	error		%action	on_semicolon
+					{
+						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+						tguParser_t	*parser = (tguParser_t*)ctx;
+						AR_ASSERT(count == 1 && parser != NULL);
+						if(ns[0] == NULL)
+						\{
+							parser->has_error = true;
+						\}
+
+						return NULL;
+					}	
 					;
 
 /*****************************************表达式*********************************************/
@@ -444,4 +559,3 @@ call_expression		:	postfix_expression "(" expression_list")"
 expression_list		:	expression_list "," expression
 				|	expression
 				;
-
