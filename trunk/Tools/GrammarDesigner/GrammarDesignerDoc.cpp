@@ -1258,7 +1258,7 @@ void CGrammarDesignerDoc::OnTestTest2()
 void CGrammarDesignerDoc::OnGenerateTemplate()
 {
 		// TODO: Add your command handler code here
-		static TCHAR BASED_CODE szFilter[] = TEXT("Output Files (*.c)|*.c|All Files (*.*)|*.*||");
+		static TCHAR BASED_CODE szFilter[] = TEXT("C/C++ Files (*.c;*.cpp;*.h;*.hpp)|*.c;*.cpp;*.h;*.hpp|All Files (*.*)|*.*||");
 		CFileDialog		file(FALSE, TEXT("c"), NULL, 4|2, szFilter);
 		
 		

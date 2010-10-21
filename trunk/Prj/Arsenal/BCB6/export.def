@@ -5,11 +5,34 @@ EXPORTS
 ;Arsenal
 
 Arsenal_Init			
-Arsenal_UnInit			
+Arsenal_UnInit
+
+
+;Common
+
+
+AR_global_ioctx
 
 AR_error				
-AR_printf				
-AR_fatal				
+AR_printf
+
+AR_error_ctx
+AR_printf_ctx
+
+
+
+AR_malloc
+AR_calloc
+AR_realloc
+AR_free
+AR_memswap
+
+
+AR_stricmp
+AR_strnicmp
+AR_wcsicmp
+AR_wcsnicmp
+
 
 AR_CreateString			
 AR_DestroyString		
@@ -19,81 +42,131 @@ AR_AppendString
 AR_FormatString			
 AR_AppendFormatString	
 AR_GetStrString			
-AR_GetLengthString		
+AR_GetLengthString
+
+
+
+AR_CreateBuffer
+AR_DestroyBuffer
+AR_ClearBuffer
+AR_AllocBuffer
+AR_InsertBuffer
+AR_EraseBuffer
+AR_GetBufferCapacity
+AR_ReserveBuffer
+AR_GetBufferData
+AR_GetBufferAvailable
+
+
+AR_qsort
+AR_escstr_to_str_buf
+AR_str_to_escstr_buf
+
+
+
+
 
 
 
 ;Lex
 
-LEX_Create				
-LEX_Destroy				
-LEX_InsertName			
-LEX_InsertRule			
-LEX_Insert				
-LEX_GenerateTransTable	
-LEX_Clear				
-LEX_InitMatch			
-LEX_UnInitMatch			
-LEX_ResetMatch			
-LEX_GetNextInput		
-LEX_Match				
+Lex_Create				
+Lex_Destroy				
+Lex_InsertName			
+Lex_InsertRule			
+Lex_RemoveByValue
+Lex_RemoveByName
 
-LEX_CreateConfig		
-LEX_DestroyConfig		
-LEX_Config				
+Lex_Insert				
+Lex_GenerateTransTable	
+Lex_Clear				
+Lex_CreateMatch			
+Lex_DestroyMatch	
+Lex_MatchFlags		
+Lex_MatchClearFlags
+Lex_ResetMatchState			
+Lex_GetNextInput		
+Lex_Match				
+Lex_IsError
+Lex_ClearError
+Lex_ResetInput			
 
-LEX_ResetInput			
-
+Lex_Skip
+Lex_SkipTo
+Lex_SkipN
+Lex_MatchGetCoordinate
+Lex_ResetIOContext
 
 ;Grammar
 
 
 
-PSR_CreateGrammar			
-PSR_DestroyGrammar		
-PSR_ClearGrammar		
-PSR_InsertTerm			
-PSR_FindTermByName		
-PSR_FindTermByValue		
+Parser_CreateGrammar			
+Parser_DestroyGrammar
+Parser_ClearGrammar		
+Parser_InsertTerm			
+Parser_FindTermByName		
+Parser_FindTermByValue		
 
-PSR_InsertRuleByStr	
-PSR_InsertRuleByPartStr
+Parser_InsertRuleByStr	
+Parser_InsertRuleByPartStr
 
-PSR_GetSymbList			
-PSR_CheckIsValidGrammar	
-PSR_ReportLeftRecursion
-PSR_PrintGrammar		
+Parser_GetSymbList			
+Parser_CheckIsValidGrammar	
 
-PSR_InitSymbMap			
-PSR_UnInitSymbMap		
-PSR_InsertToSymbMap		
-PSR_CalcFollowSet		
-PSR_CalcFirstSet		
-PSR_GetSymbolFromSymbMap 
-PSR_PrintSymbolMap
 
-PSR_ConfigGrammar
-PSR_CreatePrintNode
-PSR_DestroyPrintNode
-PSR_InsertPrintNode
-PSR_GetPrintNodeContext
+Parser_InitSymbMap			
+Parser_UnInitSymbMap		
+Parser_InsertToSymbMap		
+Parser_CalcFollowSet		
+Parser_CalcFirstSet		
+Parser_GetSymbolFromSymbMap 
+Parser_PrintSymbolMap
+
+Parser_ResetGrammarIOContext
+Parser_ResetGrammarParseHandler
+
+Parser_GetTermSymbInfoByValue
+Parser_GetTermSymbInfoByName
+Parser_SetFirstRule
 
 ;Parser
 
-PSR_CreateParser		
-PSR_DestroyParser		
-PSR_Clear				
-PSR_GetResult			
-PSR_AddToken			
-PSR_IsAccepted			
-PSR_IsInError			
-PSR_ClearError			
+Parser_GetGrammar
+Parser_CreateParser		
+Parser_DestroyParser
+Parser_CreateContext
+Parser_DestroyContext
+Parser_Clear				
+Parser_GetResult			
+Parser_AddToken			
+Parser_IsAccepted			
+Parser_IsRecovering			
+Parser_RecoverDone			
 
-PSR_PrintParserActionTable
-PSR_PrintParserConflict
-PSR_CountParserConflict
+Parser_GetNodeCount
+Parser_IndexOfNodeStack
+
+Parser_PrintParserActionTable
+Parser_PrintParserConflict
+Parser_CountParserConflict
 
 
-;Test
-;AR_Test				
+Parser_CreateParserActionView
+Parser_DestroyParserActionView
+
+
+Parser_CreateParserConflictView
+Parser_DestroyParserConflictView
+
+
+Parser_CreateParserStatusView
+Parser_DestroyParserStatusView
+
+;Tools
+
+
+CFG_CollectGrammarConfig
+CFG_DestroyGrammarConfig
+CFG_ConfigToCode
 

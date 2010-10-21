@@ -7,10 +7,10 @@
     <OBJFILES value="algo.obj common.obj crtstr.obj memory.obj random.obj strconv.obj 
       string.obj strtable.obj thread.obj lex.obj match.obj rgx_compile.obj 
       rgx_exec.obj rgx_misc.obj rgx_node.obj rgx_parser.obj grammar.obj 
-      lr_action.obj parser.obj parser_in.obj symbol.obj ray.obj 
-      grammar_config.obj Arsenal.obj tools.obj utilities.obj lalr_build.obj 
-      lalr_config.obj lalr_state.obj report.obj rayparser.obj rayparser_impl.obj 
-      raysymbol.obj raytype.obj"/>
+      lr_action.obj parser.obj parser_in.obj symbol.obj grammar_config.obj 
+      Arsenal.obj tools.obj utilities.obj lalr_build.obj lalr_config.obj 
+      lalr_state.obj report.obj serializer.obj tengu.obj tguparser.obj tguvm.obj 
+      buffer.obj"/>
     <RESFILES value=""/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
@@ -19,7 +19,7 @@
     <LIBFILES value=""/>
     <LIBRARIES value=""/>
     <PACKAGES value=""/>
-    <PATHCPP value=".;..\..\..\Arsenal\Common;..\..\..\Arsenal\Lex;..\..\..\Arsenal\Parser;..\..\..\Arsenal\Ray;..\..\..\Arsenal\Tools;..\..\..\Arsenal"/>
+    <PATHCPP value=".;..\..\..\Arsenal\Common;..\..\..\Arsenal\Lex;..\..\..\Arsenal\Parser;..\..\..\Arsenal\Tools;..\..\..\Arsenal;..\..\..\Arsenal\Tengu"/>
     <PATHPAS value=".;"/>
     <PATHRC value=".;"/>
     <PATHASM value=".;"/>
@@ -27,19 +27,19 @@
     <USERDEFINES value="WIN32,_DEBUG,_LIB"/>
     <SYSDEFINES value="_RTLDLL;NO_STRICT"/>
     <MAINSOURCE value="LibDebug.bpf"/>
-    <INCLUDEPATH value="..\..\..\Arsenal;..\..\..\Arsenal\Tools;..\..\..\Arsenal\Ray;..\..\..\Arsenal\Parser;..\..\..\Arsenal\Lex;..\..\..\Arsenal\Common;..\;..\..\Arsenal\Ray;..\..\Arsenal\Parser;..\..\Arsenal\Test;..\..\Arsenal;..\..\Arsenal\Lex;..\..\Arsenal\Common;$(BCB)\include;$(BCB)\include\vcl"/>
-    <LIBPATH value="..\..\..\Arsenal;..\..\..\Arsenal\Tools;..\..\..\Arsenal\Ray;..\..\..\Arsenal\Parser;..\..\..\Arsenal\Lex;..\..\..\Arsenal\Common;..\;..\..\Arsenal\Ray;..\..\Arsenal\Parser;..\..\Arsenal\Test;..\..\Arsenal;..\..\Arsenal\Lex;..\..\Arsenal\Common;$(BCB)\lib\obj;$(BCB)\lib"/>
+    <INCLUDEPATH value="..\..\..\Arsenal\Tengu;..\..\..\Arsenal;..\..\..\Arsenal\Tools;..\..\..\Arsenal\Ray;..\..\..\Arsenal\Parser;..\..\..\Arsenal\Lex;..\..\..\Arsenal\Common;..\;..\..\Arsenal\Ray;..\..\Arsenal\Parser;..\..\Arsenal\Test;..\..\Arsenal;..\..\Arsenal\Lex;..\..\Arsenal\Common;$(BCB)\include;$(BCB)\include\vcl"/>
+    <LIBPATH value="..\..\..\Arsenal\Tengu;..\..\..\Arsenal;..\..\..\Arsenal\Tools;..\..\..\Arsenal\Ray;..\..\..\Arsenal\Parser;..\..\..\Arsenal\Lex;..\..\..\Arsenal\Common;..\;..\..\Arsenal\Ray;..\..\Arsenal\Parser;..\..\Arsenal\Test;..\..\Arsenal;..\..\Arsenal\Lex;..\..\Arsenal\Common;$(BCB)\lib\obj;$(BCB)\lib"/>
     <WARNINGS value="-w-par"/>
     <LISTFILE value=""/>
     <OTHERFILES value=""/>
   </MACROS>
   <OPTIONS>
-    <IDLCFLAGS value="-I..\..\..\Arsenal -I..\..\..\Arsenal\Tools -I..\..\..\Arsenal\Ray 
-      -I..\..\..\Arsenal\Parser -I..\..\..\Arsenal\Lex -I..\..\..\Arsenal\Common 
-      -I..\. -I..\..\Arsenal\Ray -I..\..\Arsenal\Parser -I..\..\Arsenal\Test 
-      -I..\..\Arsenal -I..\..\Arsenal\Lex -I..\..\Arsenal\Common 
-      -I$(BCB)\include -I$(BCB)\include\vcl -src_suffix cpp -DWIN32,_DEBUG,_LIB 
-      -boa"/>
+    <IDLCFLAGS value="-I..\..\..\Arsenal\Tengu -I..\..\..\Arsenal -I..\..\..\Arsenal\Tools 
+      -I..\..\..\Arsenal\Ray -I..\..\..\Arsenal\Parser -I..\..\..\Arsenal\Lex 
+      -I..\..\..\Arsenal\Common -I..\. -I..\..\Arsenal\Ray 
+      -I..\..\Arsenal\Parser -I..\..\Arsenal\Test -I..\..\Arsenal 
+      -I..\..\Arsenal\Lex -I..\..\Arsenal\Common -I$(BCB)\include 
+      -I$(BCB)\include\vcl -src_suffix cpp -DWIN32,_DEBUG,_LIB -boa"/>
     <CFLAG1 value="-Od -H=$(BCB)\lib\vcl60.csm -Hc -Vx -Ve -x- -RT- -X- -r- -a8 -b- -k -y -v 
       -vi- -c -tW -tWM"/>
     <PFLAGS value="-N2. -N0. -$YD -$W -$O- -$A8 -v -JPHNE -M"/>
@@ -89,8 +89,6 @@
       <FILE FILENAME="..\..\..\Arsenal\Parser\parser_in.h" FORMNAME="" UNITNAME="parser_in.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\Arsenal\Parser\symbol.c" FORMNAME="" UNITNAME="symbol.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\Arsenal\Parser\symbol.h" FORMNAME="" UNITNAME="symbol.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\Arsenal\Ray\ray.c" FORMNAME="" UNITNAME="ray.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\Arsenal\Ray\ray.h" FORMNAME="" UNITNAME="ray.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\Arsenal\Tools\grammar_config.c" FORMNAME="" UNITNAME="grammar_config.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\Arsenal\Tools\grammar_config.h" FORMNAME="" UNITNAME="grammar_config.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\Arsenal\Tools\tools.h" FORMNAME="" UNITNAME="tools.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
@@ -104,14 +102,16 @@
       <FILE FILENAME="..\..\..\Arsenal\Parser\lalr_config_aux.h" FORMNAME="" UNITNAME="lalr_config_aux.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\Arsenal\Parser\lalr_state.c" FORMNAME="" UNITNAME="lalr_state.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\Arsenal\Parser\report.c" FORMNAME="" UNITNAME="report.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\Arsenal\Ray\rayparser.c" FORMNAME="" UNITNAME="rayparser.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\Arsenal\Ray\rayparser.h" FORMNAME="" UNITNAME="rayparser.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\Arsenal\Ray\rayparser_impl.c" FORMNAME="" UNITNAME="rayparser_impl.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\Arsenal\Ray\rayparser_impl.h" FORMNAME="" UNITNAME="rayparser_impl.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\Arsenal\Ray\raysymbol.c" FORMNAME="" UNITNAME="raysymbol.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\Arsenal\Ray\raysymbol.h" FORMNAME="" UNITNAME="raysymbol.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\Arsenal\Ray\raytype.c" FORMNAME="" UNITNAME="raytype.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\Arsenal\Ray\raytype.h" FORMNAME="" UNITNAME="raytype.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Tools\serializer.c" FORMNAME="" UNITNAME="serializer.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Tools\serializer.h" FORMNAME="" UNITNAME="serializer.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Tengu\tengu.c" FORMNAME="" UNITNAME="tengu.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Tengu\tengu.h" FORMNAME="" UNITNAME="tengu.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Tengu\tgu_parser_impl.h" FORMNAME="" UNITNAME="tgu_parser_impl.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Tengu\tguparser.c" FORMNAME="" UNITNAME="tguparser.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Tengu\tguparser.h" FORMNAME="" UNITNAME="tguparser.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Tengu\tguvm.c" FORMNAME="" UNITNAME="tguvm.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Tengu\tguvm.h" FORMNAME="" UNITNAME="tguvm.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Common\buffer.c" FORMNAME="" UNITNAME="buffer.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>

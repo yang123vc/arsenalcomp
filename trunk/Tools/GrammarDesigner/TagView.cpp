@@ -241,7 +241,13 @@ void	CTagTree::UpdateTag(const ARSpace::cfgConfig_t *cfg)
 		{
 				const ARSpace::cfgPreDef_t *def = &cfg->pre_def[i];
 				CString name;
-				name.Format(L"Code %d", i);
+				if(def->name == NULL || wcslen(def->name) == 0)
+				{
+						name.Format(L"Code %d", i);
+				}else
+				{
+						name = def->name;
+				}
 				update_table(m_predef_tbl, name.GetString(), def->line);
 		}
 
