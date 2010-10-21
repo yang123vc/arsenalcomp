@@ -17,6 +17,106 @@
 
 
 
+	
+	typedef enum
+	{
+		TGU_NODE_TOKEN_T,
+		TGU_NODE_STMT_T,
+		TGU_NODE_EXPR_T,
+	}tguSynNodeType_t;
+
+
+
+	typedef struct __tengu_syntax_node_tag
+	{
+		tguSynNodeType_t		type;
+		
+		union{
+				tguToken_t		*token;
+				tguStmt_t		*stmt;
+				tguExpr_t		*expr;
+		};
+	}tguSynNode_t;
+
+
+
+	static tguStmt_t*	make_if_statement(tguParser_t *parser, tguExpr_t *cond, tguStmt_t *if_true, tguStmt_t *if_false)
+	{
+		return NULL;
+	}
+
+
+
+
+	static tguStmt_t*	make_while_statement(tguParser_t *parser, tguExpr_t *cond, tguStmt_t *loop)
+	{
+		return NULL;
+	}
+
+	static tguStmt_t*	make_do_while_statement(tguParser_t *parser, tguExpr_t *cond, tguStmt_t *loop)
+	{
+		return NULL;
+	}
+
+
+
+
+
+	static tguStmt_t*	make_jump_statement(tguParser_t *parser, tguStmtType_t type, tguExpr_t *expr)
+	{
+		return NULL;
+	}
+
+
+
+	static bool_t check_is_lvalue(const tguExpr_t *expr, tguParser_t *parser)
+	{
+		return false;
+	}
+
+	static bool_t check_is_constant(const tguExpr_t *expr, tguParser_t *parser)
+	{
+		return false;
+	}
+
+
+
+	static tguExpr_t*		make_assignment_expression(tguParser_t	*parser, 	tguExpr_t *addr, tguExpr_t *value)
+	{
+			return NULL;
+	}
+
+
+
+
+	static tguExpr_t*		make_condition_expression(tguParser_t	*parser, 	tguExpr_t *cond, tguExpr_t *if_true, tguExpr_t *if_false)
+	{
+			return NULL;
+	}
+
+
+
+
+static tguExpr_t*		make_binary_expression(tguParser_t	*parser, 	tguExprOP_t op, tguExpr_t *left, tguExpr_t *right)
+	{
+			return NULL;
+	}
+
+
+
+	static tguExpr_t*		make_unary_expression(tguParser_t	*parser, 	tguExprOP_t op, tguExpr_t *expr, bool_t is_lvalue)
+	{
+			return NULL;
+	}
+	
+	static tguExpr_t*	make_index_expression(tguParser_t *parser, tguExpr_t *expr, tguExpr_t *index_expr)
+	{	
+		return NULL;
+	}
+
+
+
+
 	static tguExpr_t*		make_identifier_expression(tguParser_t	*parser, 	tguToken_t *token)
 	{
 			return NULL;
@@ -30,7 +130,7 @@
 
 
 
-	static tguExpr_t*		make_call_expression(tguParser_t	*parser, tguExpr_t *args)
+	static tguExpr_t*		make_call_expression(tguParser_t	*parser, tguExpr_t *call_expr, tguExpr_t *args)
 	{
 			return NULL;
 	}
@@ -210,8 +310,14 @@ static psrNode_t* AR_STDCALL handle_element(psrNode_t **nodes, size_t count, con
 /*element	:	function_defination */
 static psrNode_t* AR_STDCALL handle_element(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*function_defination	:	var NAME ( params ) compound_statement */
-static psrNode_t* AR_STDCALL handle_function_defination(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*function_defination	:	var NAME ( params ) start_function compound_statement close_function */
+static psrNode_t* AR_STDCALL on_function_defination(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*start_function	:	 */
+static psrNode_t* AR_STDCALL on_start_function(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*close_function	:	 */
+static psrNode_t* AR_STDCALL on_close_function(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*params	:	namelist , ... */
 /*params	:	namelist */
@@ -250,35 +356,110 @@ static psrNode_t* AR_STDCALL handle_namelist(psrNode_t **nodes, size_t count, co
 /*statement	:	selection_statement */
 /*statement	:	iteration_statement */
 /*statement	:	jump_statement */
-static psrNode_t* AR_STDCALL handle_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*compound_element	:	statement */
+/*compound_element	:	declaration */
+/*expression_statement	:	expression semi */
+/*selection_statement	:	if_statement */
+/*selection_statement	:	if_else_statement */
+/*iteration_statement	:	while_statement */
+/*iteration_statement	:	do_while_statement */
+/*expression	:	assignment_expression */
+/*assignment_expression	:	constant_expression */
+/*constant_expression	:	binary_expression */
+/*binary_expression	:	unary_expression */
+/*unary_expression	:	postfix_expression */
+/*postfix_expression	:	call_expression */
+/*postfix_expression	:	primary_expression */
+/*expression_list	:	expression */
+static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*statement	:	compound_statement */
 /*statement	:	expression_statement */
 /*statement	:	selection_statement */
 /*statement	:	iteration_statement */
 /*statement	:	jump_statement */
-static psrNode_t* AR_STDCALL handle_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*compound_element	:	statement */
+/*compound_element	:	declaration */
+/*expression_statement	:	expression semi */
+/*selection_statement	:	if_statement */
+/*selection_statement	:	if_else_statement */
+/*iteration_statement	:	while_statement */
+/*iteration_statement	:	do_while_statement */
+/*expression	:	assignment_expression */
+/*assignment_expression	:	constant_expression */
+/*constant_expression	:	binary_expression */
+/*binary_expression	:	unary_expression */
+/*unary_expression	:	postfix_expression */
+/*postfix_expression	:	call_expression */
+/*postfix_expression	:	primary_expression */
+/*expression_list	:	expression */
+static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*statement	:	compound_statement */
 /*statement	:	expression_statement */
 /*statement	:	selection_statement */
 /*statement	:	iteration_statement */
 /*statement	:	jump_statement */
-static psrNode_t* AR_STDCALL handle_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*compound_element	:	statement */
+/*compound_element	:	declaration */
+/*expression_statement	:	expression semi */
+/*selection_statement	:	if_statement */
+/*selection_statement	:	if_else_statement */
+/*iteration_statement	:	while_statement */
+/*iteration_statement	:	do_while_statement */
+/*expression	:	assignment_expression */
+/*assignment_expression	:	constant_expression */
+/*constant_expression	:	binary_expression */
+/*binary_expression	:	unary_expression */
+/*unary_expression	:	postfix_expression */
+/*postfix_expression	:	call_expression */
+/*postfix_expression	:	primary_expression */
+/*expression_list	:	expression */
+static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*statement	:	compound_statement */
 /*statement	:	expression_statement */
 /*statement	:	selection_statement */
 /*statement	:	iteration_statement */
 /*statement	:	jump_statement */
-static psrNode_t* AR_STDCALL handle_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*compound_element	:	statement */
+/*compound_element	:	declaration */
+/*expression_statement	:	expression semi */
+/*selection_statement	:	if_statement */
+/*selection_statement	:	if_else_statement */
+/*iteration_statement	:	while_statement */
+/*iteration_statement	:	do_while_statement */
+/*expression	:	assignment_expression */
+/*assignment_expression	:	constant_expression */
+/*constant_expression	:	binary_expression */
+/*binary_expression	:	unary_expression */
+/*unary_expression	:	postfix_expression */
+/*postfix_expression	:	call_expression */
+/*postfix_expression	:	primary_expression */
+/*expression_list	:	expression */
+static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*statement	:	compound_statement */
 /*statement	:	expression_statement */
 /*statement	:	selection_statement */
 /*statement	:	iteration_statement */
 /*statement	:	jump_statement */
-static psrNode_t* AR_STDCALL handle_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*compound_element	:	statement */
+/*compound_element	:	declaration */
+/*expression_statement	:	expression semi */
+/*selection_statement	:	if_statement */
+/*selection_statement	:	if_else_statement */
+/*iteration_statement	:	while_statement */
+/*iteration_statement	:	do_while_statement */
+/*expression	:	assignment_expression */
+/*assignment_expression	:	constant_expression */
+/*constant_expression	:	binary_expression */
+/*binary_expression	:	unary_expression */
+/*unary_expression	:	postfix_expression */
+/*postfix_expression	:	call_expression */
+/*postfix_expression	:	primary_expression */
+/*expression_list	:	expression */
+static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*declaration	:	var init_declarator_list semi */
 static psrNode_t* AR_STDCALL handle_declaration(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
@@ -332,34 +513,27 @@ static psrNode_t* AR_STDCALL handle_filed(psrNode_t **nodes, size_t count, const
 
 /*compound_statement	:	start_block compound_element_list close_block */
 /*compound_statement	:	{ } */
-static psrNode_t* AR_STDCALL handle_compound_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+static psrNode_t* AR_STDCALL on_compound_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*compound_statement	:	start_block compound_element_list close_block */
 /*compound_statement	:	{ } */
-static psrNode_t* AR_STDCALL handle_compound_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+static psrNode_t* AR_STDCALL on_compound_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*compound_element_list	:	compound_element_list compound_element */
 /*compound_element_list	:	compound_element */
-static psrNode_t* AR_STDCALL handle_compound_element_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+static psrNode_t* AR_STDCALL on_compound_element_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*compound_element_list	:	compound_element_list compound_element */
 /*compound_element_list	:	compound_element */
-static psrNode_t* AR_STDCALL handle_compound_element_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+static psrNode_t* AR_STDCALL on_compound_element_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*statement	:	compound_statement */
+/*statement	:	expression_statement */
+/*statement	:	selection_statement */
+/*statement	:	iteration_statement */
+/*statement	:	jump_statement */
 /*compound_element	:	statement */
 /*compound_element	:	declaration */
-static psrNode_t* AR_STDCALL handle_compound_element(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
-/*compound_element	:	statement */
-/*compound_element	:	declaration */
-static psrNode_t* AR_STDCALL handle_compound_element(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
-/*start_block	:	{ */
-static psrNode_t* AR_STDCALL handle_start_block(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
-/*close_block	:	} */
-static psrNode_t* AR_STDCALL handle_close_block(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
 /*expression_statement	:	expression semi */
 /*selection_statement	:	if_statement */
 /*selection_statement	:	if_else_statement */
@@ -372,27 +546,69 @@ static psrNode_t* AR_STDCALL handle_close_block(psrNode_t **nodes, size_t count,
 /*unary_expression	:	postfix_expression */
 /*postfix_expression	:	call_expression */
 /*postfix_expression	:	primary_expression */
+/*expression_list	:	expression */
+static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*statement	:	compound_statement */
+/*statement	:	expression_statement */
+/*statement	:	selection_statement */
+/*statement	:	iteration_statement */
+/*statement	:	jump_statement */
+/*compound_element	:	statement */
+/*compound_element	:	declaration */
+/*expression_statement	:	expression semi */
+/*selection_statement	:	if_statement */
+/*selection_statement	:	if_else_statement */
+/*iteration_statement	:	while_statement */
+/*iteration_statement	:	do_while_statement */
+/*expression	:	assignment_expression */
+/*assignment_expression	:	constant_expression */
+/*constant_expression	:	binary_expression */
+/*binary_expression	:	unary_expression */
+/*unary_expression	:	postfix_expression */
+/*postfix_expression	:	call_expression */
+/*postfix_expression	:	primary_expression */
+/*expression_list	:	expression */
+static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*start_block	:	{ */
+static psrNode_t* AR_STDCALL on_start_block(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*close_block	:	} */
+static psrNode_t* AR_STDCALL on_close_block(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*statement	:	compound_statement */
+/*statement	:	expression_statement */
+/*statement	:	selection_statement */
+/*statement	:	iteration_statement */
+/*statement	:	jump_statement */
+/*compound_element	:	statement */
+/*compound_element	:	declaration */
+/*expression_statement	:	expression semi */
+/*selection_statement	:	if_statement */
+/*selection_statement	:	if_else_statement */
+/*iteration_statement	:	while_statement */
+/*iteration_statement	:	do_while_statement */
+/*expression	:	assignment_expression */
+/*assignment_expression	:	constant_expression */
+/*constant_expression	:	binary_expression */
+/*binary_expression	:	unary_expression */
+/*unary_expression	:	postfix_expression */
+/*postfix_expression	:	call_expression */
+/*postfix_expression	:	primary_expression */
+/*expression_list	:	expression */
 static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*expression_statement	:	semi */
 static psrNode_t* AR_STDCALL auto_return_null(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*if_statement	:	if ( expression ) statement */
-/*if_statement	:	if ( error ) statement */
-static psrNode_t* AR_STDCALL on_if_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
-/*if_statement	:	if ( expression ) statement */
-/*if_statement	:	if ( error ) statement */
-static psrNode_t* AR_STDCALL on_if_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
-/*if_else_statement	:	if ( expression ) statement else statement */
-/*if_else_statement	:	if ( error ) statement else statement */
-static psrNode_t* AR_STDCALL on_if_else_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
-/*if_else_statement	:	if ( expression ) statement else statement */
-/*if_else_statement	:	if ( error ) statement else statement */
-static psrNode_t* AR_STDCALL on_if_else_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
+/*statement	:	compound_statement */
+/*statement	:	expression_statement */
+/*statement	:	selection_statement */
+/*statement	:	iteration_statement */
+/*statement	:	jump_statement */
+/*compound_element	:	statement */
+/*compound_element	:	declaration */
 /*expression_statement	:	expression semi */
 /*selection_statement	:	if_statement */
 /*selection_statement	:	if_else_statement */
@@ -405,8 +621,16 @@ static psrNode_t* AR_STDCALL on_if_else_statement(psrNode_t **nodes, size_t coun
 /*unary_expression	:	postfix_expression */
 /*postfix_expression	:	call_expression */
 /*postfix_expression	:	primary_expression */
+/*expression_list	:	expression */
 static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*statement	:	compound_statement */
+/*statement	:	expression_statement */
+/*statement	:	selection_statement */
+/*statement	:	iteration_statement */
+/*statement	:	jump_statement */
+/*compound_element	:	statement */
+/*compound_element	:	declaration */
 /*expression_statement	:	expression semi */
 /*selection_statement	:	if_statement */
 /*selection_statement	:	if_else_statement */
@@ -419,6 +643,67 @@ static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, cons
 /*unary_expression	:	postfix_expression */
 /*postfix_expression	:	call_expression */
 /*postfix_expression	:	primary_expression */
+/*expression_list	:	expression */
+static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*if_statement	:	if ( expression ) statement */
+/*if_statement	:	if ( error ) statement */
+static psrNode_t* AR_STDCALL on_if_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*if_statement	:	if ( expression ) statement */
+/*if_statement	:	if ( error ) statement */
+static psrNode_t* AR_STDCALL on_if_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*if_else_statement	:	if ( expression ) statement else statement */
+/*if_else_statement	:	if ( error ) statement else statement */
+static psrNode_t* AR_STDCALL on_if_else_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*if_else_statement	:	if ( expression ) statement else statement */
+/*if_else_statement	:	if ( error ) statement else statement */
+static psrNode_t* AR_STDCALL on_if_else_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*statement	:	compound_statement */
+/*statement	:	expression_statement */
+/*statement	:	selection_statement */
+/*statement	:	iteration_statement */
+/*statement	:	jump_statement */
+/*compound_element	:	statement */
+/*compound_element	:	declaration */
+/*expression_statement	:	expression semi */
+/*selection_statement	:	if_statement */
+/*selection_statement	:	if_else_statement */
+/*iteration_statement	:	while_statement */
+/*iteration_statement	:	do_while_statement */
+/*expression	:	assignment_expression */
+/*assignment_expression	:	constant_expression */
+/*constant_expression	:	binary_expression */
+/*binary_expression	:	unary_expression */
+/*unary_expression	:	postfix_expression */
+/*postfix_expression	:	call_expression */
+/*postfix_expression	:	primary_expression */
+/*expression_list	:	expression */
+static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*statement	:	compound_statement */
+/*statement	:	expression_statement */
+/*statement	:	selection_statement */
+/*statement	:	iteration_statement */
+/*statement	:	jump_statement */
+/*compound_element	:	statement */
+/*compound_element	:	declaration */
+/*expression_statement	:	expression semi */
+/*selection_statement	:	if_statement */
+/*selection_statement	:	if_else_statement */
+/*iteration_statement	:	while_statement */
+/*iteration_statement	:	do_while_statement */
+/*expression	:	assignment_expression */
+/*assignment_expression	:	constant_expression */
+/*constant_expression	:	binary_expression */
+/*binary_expression	:	unary_expression */
+/*unary_expression	:	postfix_expression */
+/*postfix_expression	:	call_expression */
+/*postfix_expression	:	primary_expression */
+/*expression_list	:	expression */
 static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*while_statement	:	while enter_loop ( expression ) statement leave_loop */
@@ -436,34 +721,6 @@ static psrNode_t* AR_STDCALL on_do_while_statement(psrNode_t **nodes, size_t cou
 /*do_while_statement	:	do enter_loop statement while ( expression ) leave_loop semi */
 /*do_while_statement	:	do enter_loop statement while ( error ) leave_loop semi */
 static psrNode_t* AR_STDCALL on_do_while_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
-/*expression_statement	:	expression semi */
-/*selection_statement	:	if_statement */
-/*selection_statement	:	if_else_statement */
-/*iteration_statement	:	while_statement */
-/*iteration_statement	:	do_while_statement */
-/*expression	:	assignment_expression */
-/*assignment_expression	:	constant_expression */
-/*constant_expression	:	binary_expression */
-/*binary_expression	:	unary_expression */
-/*unary_expression	:	postfix_expression */
-/*postfix_expression	:	call_expression */
-/*postfix_expression	:	primary_expression */
-static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
-/*expression_statement	:	expression semi */
-/*selection_statement	:	if_statement */
-/*selection_statement	:	if_else_statement */
-/*iteration_statement	:	while_statement */
-/*iteration_statement	:	do_while_statement */
-/*expression	:	assignment_expression */
-/*assignment_expression	:	constant_expression */
-/*constant_expression	:	binary_expression */
-/*binary_expression	:	unary_expression */
-/*unary_expression	:	postfix_expression */
-/*postfix_expression	:	call_expression */
-/*postfix_expression	:	primary_expression */
-static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*enter_loop	:	 */
 static psrNode_t* AR_STDCALL on_enter_loop(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
@@ -493,6 +750,13 @@ static psrNode_t* AR_STDCALL on_semicolon(psrNode_t **nodes, size_t count, const
 /*semi	:	error */
 static psrNode_t* AR_STDCALL on_semicolon(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*statement	:	compound_statement */
+/*statement	:	expression_statement */
+/*statement	:	selection_statement */
+/*statement	:	iteration_statement */
+/*statement	:	jump_statement */
+/*compound_element	:	statement */
+/*compound_element	:	declaration */
 /*expression_statement	:	expression semi */
 /*selection_statement	:	if_statement */
 /*selection_statement	:	if_else_statement */
@@ -505,8 +769,16 @@ static psrNode_t* AR_STDCALL on_semicolon(psrNode_t **nodes, size_t count, const
 /*unary_expression	:	postfix_expression */
 /*postfix_expression	:	call_expression */
 /*postfix_expression	:	primary_expression */
+/*expression_list	:	expression */
 static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*statement	:	compound_statement */
+/*statement	:	expression_statement */
+/*statement	:	selection_statement */
+/*statement	:	iteration_statement */
+/*statement	:	jump_statement */
+/*compound_element	:	statement */
+/*compound_element	:	declaration */
 /*expression_statement	:	expression semi */
 /*selection_statement	:	if_statement */
 /*selection_statement	:	if_else_statement */
@@ -519,6 +791,7 @@ static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, cons
 /*unary_expression	:	postfix_expression */
 /*postfix_expression	:	call_expression */
 /*postfix_expression	:	primary_expression */
+/*expression_list	:	expression */
 static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*assignment_expression	:	unary_expression = table_constructor */
@@ -529,6 +802,13 @@ static psrNode_t* AR_STDCALL on_assignment_expression(psrNode_t **nodes, size_t 
 /*assignment_expression	:	unary_expression = assignment_expression */
 static psrNode_t* AR_STDCALL on_assignment_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*statement	:	compound_statement */
+/*statement	:	expression_statement */
+/*statement	:	selection_statement */
+/*statement	:	iteration_statement */
+/*statement	:	jump_statement */
+/*compound_element	:	statement */
+/*compound_element	:	declaration */
 /*expression_statement	:	expression semi */
 /*selection_statement	:	if_statement */
 /*selection_statement	:	if_else_statement */
@@ -541,11 +821,19 @@ static psrNode_t* AR_STDCALL on_assignment_expression(psrNode_t **nodes, size_t 
 /*unary_expression	:	postfix_expression */
 /*postfix_expression	:	call_expression */
 /*postfix_expression	:	primary_expression */
+/*expression_list	:	expression */
 static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*constant_expression	:	binary_expression ? expression : constant_expression */
 static psrNode_t* AR_STDCALL on_condition_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*statement	:	compound_statement */
+/*statement	:	expression_statement */
+/*statement	:	selection_statement */
+/*statement	:	iteration_statement */
+/*statement	:	jump_statement */
+/*compound_element	:	statement */
+/*compound_element	:	declaration */
 /*expression_statement	:	expression semi */
 /*selection_statement	:	if_statement */
 /*selection_statement	:	if_else_statement */
@@ -558,8 +846,10 @@ static psrNode_t* AR_STDCALL on_condition_expression(psrNode_t **nodes, size_t c
 /*unary_expression	:	postfix_expression */
 /*postfix_expression	:	call_expression */
 /*postfix_expression	:	primary_expression */
+/*expression_list	:	expression */
 static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*binary_expression	:	binary_expression + binary_expression */
 /*binary_expression	:	binary_expression - binary_expression */
 /*binary_expression	:	binary_expression * binary_expression */
 /*binary_expression	:	binary_expression / binary_expression */
@@ -572,9 +862,9 @@ static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, cons
 /*binary_expression	:	binary_expression != binary_expression */
 /*binary_expression	:	binary_expression && binary_expression */
 /*binary_expression	:	binary_expression || binary_expression */
-/*binary_expression	:	binary_expression + binary_expression */
 static psrNode_t* AR_STDCALL on_binary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*binary_expression	:	binary_expression + binary_expression */
 /*binary_expression	:	binary_expression - binary_expression */
 /*binary_expression	:	binary_expression * binary_expression */
 /*binary_expression	:	binary_expression / binary_expression */
@@ -587,9 +877,9 @@ static psrNode_t* AR_STDCALL on_binary_expression(psrNode_t **nodes, size_t coun
 /*binary_expression	:	binary_expression != binary_expression */
 /*binary_expression	:	binary_expression && binary_expression */
 /*binary_expression	:	binary_expression || binary_expression */
-/*binary_expression	:	binary_expression + binary_expression */
 static psrNode_t* AR_STDCALL on_binary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*binary_expression	:	binary_expression + binary_expression */
 /*binary_expression	:	binary_expression - binary_expression */
 /*binary_expression	:	binary_expression * binary_expression */
 /*binary_expression	:	binary_expression / binary_expression */
@@ -602,9 +892,9 @@ static psrNode_t* AR_STDCALL on_binary_expression(psrNode_t **nodes, size_t coun
 /*binary_expression	:	binary_expression != binary_expression */
 /*binary_expression	:	binary_expression && binary_expression */
 /*binary_expression	:	binary_expression || binary_expression */
-/*binary_expression	:	binary_expression + binary_expression */
 static psrNode_t* AR_STDCALL on_binary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*binary_expression	:	binary_expression + binary_expression */
 /*binary_expression	:	binary_expression - binary_expression */
 /*binary_expression	:	binary_expression * binary_expression */
 /*binary_expression	:	binary_expression / binary_expression */
@@ -617,9 +907,9 @@ static psrNode_t* AR_STDCALL on_binary_expression(psrNode_t **nodes, size_t coun
 /*binary_expression	:	binary_expression != binary_expression */
 /*binary_expression	:	binary_expression && binary_expression */
 /*binary_expression	:	binary_expression || binary_expression */
-/*binary_expression	:	binary_expression + binary_expression */
 static psrNode_t* AR_STDCALL on_binary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*binary_expression	:	binary_expression + binary_expression */
 /*binary_expression	:	binary_expression - binary_expression */
 /*binary_expression	:	binary_expression * binary_expression */
 /*binary_expression	:	binary_expression / binary_expression */
@@ -632,9 +922,9 @@ static psrNode_t* AR_STDCALL on_binary_expression(psrNode_t **nodes, size_t coun
 /*binary_expression	:	binary_expression != binary_expression */
 /*binary_expression	:	binary_expression && binary_expression */
 /*binary_expression	:	binary_expression || binary_expression */
-/*binary_expression	:	binary_expression + binary_expression */
 static psrNode_t* AR_STDCALL on_binary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*binary_expression	:	binary_expression + binary_expression */
 /*binary_expression	:	binary_expression - binary_expression */
 /*binary_expression	:	binary_expression * binary_expression */
 /*binary_expression	:	binary_expression / binary_expression */
@@ -647,9 +937,9 @@ static psrNode_t* AR_STDCALL on_binary_expression(psrNode_t **nodes, size_t coun
 /*binary_expression	:	binary_expression != binary_expression */
 /*binary_expression	:	binary_expression && binary_expression */
 /*binary_expression	:	binary_expression || binary_expression */
-/*binary_expression	:	binary_expression + binary_expression */
 static psrNode_t* AR_STDCALL on_binary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*binary_expression	:	binary_expression + binary_expression */
 /*binary_expression	:	binary_expression - binary_expression */
 /*binary_expression	:	binary_expression * binary_expression */
 /*binary_expression	:	binary_expression / binary_expression */
@@ -662,9 +952,9 @@ static psrNode_t* AR_STDCALL on_binary_expression(psrNode_t **nodes, size_t coun
 /*binary_expression	:	binary_expression != binary_expression */
 /*binary_expression	:	binary_expression && binary_expression */
 /*binary_expression	:	binary_expression || binary_expression */
-/*binary_expression	:	binary_expression + binary_expression */
 static psrNode_t* AR_STDCALL on_binary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*binary_expression	:	binary_expression + binary_expression */
 /*binary_expression	:	binary_expression - binary_expression */
 /*binary_expression	:	binary_expression * binary_expression */
 /*binary_expression	:	binary_expression / binary_expression */
@@ -677,9 +967,9 @@ static psrNode_t* AR_STDCALL on_binary_expression(psrNode_t **nodes, size_t coun
 /*binary_expression	:	binary_expression != binary_expression */
 /*binary_expression	:	binary_expression && binary_expression */
 /*binary_expression	:	binary_expression || binary_expression */
-/*binary_expression	:	binary_expression + binary_expression */
 static psrNode_t* AR_STDCALL on_binary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*binary_expression	:	binary_expression + binary_expression */
 /*binary_expression	:	binary_expression - binary_expression */
 /*binary_expression	:	binary_expression * binary_expression */
 /*binary_expression	:	binary_expression / binary_expression */
@@ -692,9 +982,9 @@ static psrNode_t* AR_STDCALL on_binary_expression(psrNode_t **nodes, size_t coun
 /*binary_expression	:	binary_expression != binary_expression */
 /*binary_expression	:	binary_expression && binary_expression */
 /*binary_expression	:	binary_expression || binary_expression */
-/*binary_expression	:	binary_expression + binary_expression */
 static psrNode_t* AR_STDCALL on_binary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*binary_expression	:	binary_expression + binary_expression */
 /*binary_expression	:	binary_expression - binary_expression */
 /*binary_expression	:	binary_expression * binary_expression */
 /*binary_expression	:	binary_expression / binary_expression */
@@ -707,9 +997,9 @@ static psrNode_t* AR_STDCALL on_binary_expression(psrNode_t **nodes, size_t coun
 /*binary_expression	:	binary_expression != binary_expression */
 /*binary_expression	:	binary_expression && binary_expression */
 /*binary_expression	:	binary_expression || binary_expression */
-/*binary_expression	:	binary_expression + binary_expression */
 static psrNode_t* AR_STDCALL on_binary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*binary_expression	:	binary_expression + binary_expression */
 /*binary_expression	:	binary_expression - binary_expression */
 /*binary_expression	:	binary_expression * binary_expression */
 /*binary_expression	:	binary_expression / binary_expression */
@@ -722,9 +1012,9 @@ static psrNode_t* AR_STDCALL on_binary_expression(psrNode_t **nodes, size_t coun
 /*binary_expression	:	binary_expression != binary_expression */
 /*binary_expression	:	binary_expression && binary_expression */
 /*binary_expression	:	binary_expression || binary_expression */
-/*binary_expression	:	binary_expression + binary_expression */
 static psrNode_t* AR_STDCALL on_binary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*binary_expression	:	binary_expression + binary_expression */
 /*binary_expression	:	binary_expression - binary_expression */
 /*binary_expression	:	binary_expression * binary_expression */
 /*binary_expression	:	binary_expression / binary_expression */
@@ -737,9 +1027,9 @@ static psrNode_t* AR_STDCALL on_binary_expression(psrNode_t **nodes, size_t coun
 /*binary_expression	:	binary_expression != binary_expression */
 /*binary_expression	:	binary_expression && binary_expression */
 /*binary_expression	:	binary_expression || binary_expression */
-/*binary_expression	:	binary_expression + binary_expression */
 static psrNode_t* AR_STDCALL on_binary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*binary_expression	:	binary_expression + binary_expression */
 /*binary_expression	:	binary_expression - binary_expression */
 /*binary_expression	:	binary_expression * binary_expression */
 /*binary_expression	:	binary_expression / binary_expression */
@@ -752,9 +1042,50 @@ static psrNode_t* AR_STDCALL on_binary_expression(psrNode_t **nodes, size_t coun
 /*binary_expression	:	binary_expression != binary_expression */
 /*binary_expression	:	binary_expression && binary_expression */
 /*binary_expression	:	binary_expression || binary_expression */
-/*binary_expression	:	binary_expression + binary_expression */
 static psrNode_t* AR_STDCALL on_binary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*unary_expression	:	+ unary_expression */
+/*unary_expression	:	- unary_expression */
+/*unary_expression	:	! unary_expression */
+/*unary_expression	:	++ unary_expression */
+/*unary_expression	:	-- unary_expression */
+static psrNode_t* AR_STDCALL on_unary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*unary_expression	:	+ unary_expression */
+/*unary_expression	:	- unary_expression */
+/*unary_expression	:	! unary_expression */
+/*unary_expression	:	++ unary_expression */
+/*unary_expression	:	-- unary_expression */
+static psrNode_t* AR_STDCALL on_unary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*unary_expression	:	+ unary_expression */
+/*unary_expression	:	- unary_expression */
+/*unary_expression	:	! unary_expression */
+/*unary_expression	:	++ unary_expression */
+/*unary_expression	:	-- unary_expression */
+static psrNode_t* AR_STDCALL on_unary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*unary_expression	:	+ unary_expression */
+/*unary_expression	:	- unary_expression */
+/*unary_expression	:	! unary_expression */
+/*unary_expression	:	++ unary_expression */
+/*unary_expression	:	-- unary_expression */
+static psrNode_t* AR_STDCALL on_unary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*unary_expression	:	+ unary_expression */
+/*unary_expression	:	- unary_expression */
+/*unary_expression	:	! unary_expression */
+/*unary_expression	:	++ unary_expression */
+/*unary_expression	:	-- unary_expression */
+static psrNode_t* AR_STDCALL on_unary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*statement	:	compound_statement */
+/*statement	:	expression_statement */
+/*statement	:	selection_statement */
+/*statement	:	iteration_statement */
+/*statement	:	jump_statement */
+/*compound_element	:	statement */
+/*compound_element	:	declaration */
 /*expression_statement	:	expression semi */
 /*selection_statement	:	if_statement */
 /*selection_statement	:	if_else_statement */
@@ -767,42 +1098,8 @@ static psrNode_t* AR_STDCALL on_binary_expression(psrNode_t **nodes, size_t coun
 /*unary_expression	:	postfix_expression */
 /*postfix_expression	:	call_expression */
 /*postfix_expression	:	primary_expression */
+/*expression_list	:	expression */
 static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
-/*unary_expression	:	++ unary_expression */
-/*unary_expression	:	-- unary_expression */
-/*unary_expression	:	+ unary_expression */
-/*unary_expression	:	- unary_expression */
-/*unary_expression	:	! unary_expression */
-static psrNode_t* AR_STDCALL on_unary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
-/*unary_expression	:	++ unary_expression */
-/*unary_expression	:	-- unary_expression */
-/*unary_expression	:	+ unary_expression */
-/*unary_expression	:	- unary_expression */
-/*unary_expression	:	! unary_expression */
-static psrNode_t* AR_STDCALL on_unary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
-/*unary_expression	:	++ unary_expression */
-/*unary_expression	:	-- unary_expression */
-/*unary_expression	:	+ unary_expression */
-/*unary_expression	:	- unary_expression */
-/*unary_expression	:	! unary_expression */
-static psrNode_t* AR_STDCALL on_unary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
-/*unary_expression	:	++ unary_expression */
-/*unary_expression	:	-- unary_expression */
-/*unary_expression	:	+ unary_expression */
-/*unary_expression	:	- unary_expression */
-/*unary_expression	:	! unary_expression */
-static psrNode_t* AR_STDCALL on_unary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
-/*unary_expression	:	++ unary_expression */
-/*unary_expression	:	-- unary_expression */
-/*unary_expression	:	+ unary_expression */
-/*unary_expression	:	- unary_expression */
-/*unary_expression	:	! unary_expression */
-static psrNode_t* AR_STDCALL on_unary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*postfix_expression	:	postfix_expression ++ */
 /*postfix_expression	:	postfix_expression -- */
@@ -820,6 +1117,13 @@ static psrNode_t* AR_STDCALL on_index_expression(psrNode_t **nodes, size_t count
 /*postfix_expression	:	postfix_expression [ error ] */
 static psrNode_t* AR_STDCALL on_index_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*statement	:	compound_statement */
+/*statement	:	expression_statement */
+/*statement	:	selection_statement */
+/*statement	:	iteration_statement */
+/*statement	:	jump_statement */
+/*compound_element	:	statement */
+/*compound_element	:	declaration */
 /*expression_statement	:	expression semi */
 /*selection_statement	:	if_statement */
 /*selection_statement	:	if_else_statement */
@@ -832,8 +1136,16 @@ static psrNode_t* AR_STDCALL on_index_expression(psrNode_t **nodes, size_t count
 /*unary_expression	:	postfix_expression */
 /*postfix_expression	:	call_expression */
 /*postfix_expression	:	primary_expression */
+/*expression_list	:	expression */
 static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*statement	:	compound_statement */
+/*statement	:	expression_statement */
+/*statement	:	selection_statement */
+/*statement	:	iteration_statement */
+/*statement	:	jump_statement */
+/*compound_element	:	statement */
+/*compound_element	:	declaration */
 /*expression_statement	:	expression semi */
 /*selection_statement	:	if_statement */
 /*selection_statement	:	if_else_statement */
@@ -846,6 +1158,7 @@ static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, cons
 /*unary_expression	:	postfix_expression */
 /*postfix_expression	:	call_expression */
 /*postfix_expression	:	primary_expression */
+/*expression_list	:	expression */
 static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*primary_expression	:	( expression ) */
@@ -922,13 +1235,30 @@ static psrNode_t* AR_STDCALL on_call_expression(psrNode_t **nodes, size_t count,
 /*call_expression	:	postfix_expression ( ) */
 static psrNode_t* AR_STDCALL on_call_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*expression_list	:	expression_list , expression */
+/*statement	:	compound_statement */
+/*statement	:	expression_statement */
+/*statement	:	selection_statement */
+/*statement	:	iteration_statement */
+/*statement	:	jump_statement */
+/*compound_element	:	statement */
+/*compound_element	:	declaration */
+/*expression_statement	:	expression semi */
+/*selection_statement	:	if_statement */
+/*selection_statement	:	if_else_statement */
+/*iteration_statement	:	while_statement */
+/*iteration_statement	:	do_while_statement */
+/*expression	:	assignment_expression */
+/*assignment_expression	:	constant_expression */
+/*constant_expression	:	binary_expression */
+/*binary_expression	:	unary_expression */
+/*unary_expression	:	postfix_expression */
+/*postfix_expression	:	call_expression */
+/*postfix_expression	:	primary_expression */
 /*expression_list	:	expression */
-static psrNode_t* AR_STDCALL handle_expression_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*expression_list	:	expression_list , expression */
-/*expression_list	:	expression */
-static psrNode_t* AR_STDCALL handle_expression_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+static psrNode_t* AR_STDCALL on_expression_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 
 
@@ -940,18 +1270,20 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"translation_unit  :  translation_unit element ", NULL, handle_translation_unit, 0},
 {L"element  :  declaration ", NULL, handle_element, 0},
 {L"element  :  function_defination ", NULL, handle_element, 0},
-{L"function_defination  :  var NAME ( params ) compound_statement ", NULL, handle_function_defination, 0},
+{L"function_defination  :  var NAME ( params ) start_function compound_statement close_function ", NULL, on_function_defination, 0},
+{L"start_function  :   ", NULL, on_start_function, 0},
+{L"close_function  :   ", NULL, on_close_function, 0},
 {L"params  :  namelist , ... ", NULL, handle_params, 0},
 {L"params  :  namelist ", NULL, handle_params, 0},
 {L"params  :  ... ", NULL, handle_params, 0},
 {L"params  :   ", NULL, handle_params, 0},
 {L"namelist  :  namelist , NAME ", NULL, handle_namelist, 0},
 {L"namelist  :  NAME ", NULL, handle_namelist, 0},
-{L"statement  :  compound_statement ", NULL, handle_statement, 0},
-{L"statement  :  expression_statement ", NULL, handle_statement, 0},
-{L"statement  :  selection_statement ", NULL, handle_statement, 0},
-{L"statement  :  iteration_statement ", NULL, handle_statement, 0},
-{L"statement  :  jump_statement ", NULL, handle_statement, 0},
+{L"statement  :  compound_statement ", NULL, auto_return_0, 0},
+{L"statement  :  expression_statement ", NULL, auto_return_0, 0},
+{L"statement  :  selection_statement ", NULL, auto_return_0, 0},
+{L"statement  :  iteration_statement ", NULL, auto_return_0, 0},
+{L"statement  :  jump_statement ", NULL, auto_return_0, 0},
 {L"declaration  :  var init_declarator_list semi ", NULL, handle_declaration, 0},
 {L"init_declarator_list  :  init_declarator ", NULL, handle_init_declarator_list, 0},
 {L"init_declarator_list  :  init_declarator_list , init_declarator ", NULL, handle_init_declarator_list, 0},
@@ -964,28 +1296,28 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"filed_list  :  filed_list , filed ", NULL, handle_filed_list, 0},
 {L"filed  :  expression ", NULL, handle_filed, 0},
 {L"filed  :  table_constructor ", NULL, handle_filed, 0},
-{L"compound_statement  :  start_block compound_element_list close_block ", NULL, handle_compound_statement, 0},
-{L"compound_statement  :  { } ", NULL, handle_compound_statement, 0},
-{L"compound_element_list  :  compound_element_list compound_element ", NULL, handle_compound_element_list, 0},
-{L"compound_element_list  :  compound_element ", NULL, handle_compound_element_list, 0},
-{L"compound_element  :  statement ", NULL, handle_compound_element, 0},
-{L"compound_element  :  declaration ", NULL, handle_compound_element, 0},
-{L"start_block  :  { ", NULL, handle_start_block, 0},
-{L"close_block  :  } ", NULL, handle_close_block, 0},
+{L"compound_statement  :  start_block compound_element_list close_block ", NULL, on_compound_statement, 0},
+{L"compound_statement  :  { } ", NULL, on_compound_statement, 0},
+{L"compound_element_list  :  compound_element_list compound_element ", NULL, on_compound_element_list, 0},
+{L"compound_element_list  :  compound_element ", NULL, on_compound_element_list, 0},
+{L"compound_element  :  statement ", NULL, auto_return_0, 0},
+{L"compound_element  :  declaration ", NULL, auto_return_0, 0},
+{L"start_block  :  { ", NULL, on_start_block, 0},
+{L"close_block  :  } ", NULL, on_close_block, 0},
 {L"expression_statement  :  expression semi ", NULL, auto_return_0, 0},
 {L"expression_statement  :  semi ", NULL, auto_return_null, 0},
+{L"selection_statement  :  if_statement ", NULL, auto_return_0, 0},
+{L"selection_statement  :  if_else_statement ", NULL, auto_return_0, 0},
 {L"if_statement  :  if ( expression ) statement ", L"IF_WITHOUT_ELSE", on_if_statement, 0},
 {L"if_statement  :  if ( error ) statement ", L"IF_WITHOUT_ELSE", on_if_statement, 0},
 {L"if_else_statement  :  if ( expression ) statement else statement ", NULL, on_if_else_statement, 0},
 {L"if_else_statement  :  if ( error ) statement else statement ", NULL, on_if_else_statement, 0},
-{L"selection_statement  :  if_statement ", NULL, auto_return_0, 0},
-{L"selection_statement  :  if_else_statement ", NULL, auto_return_0, 0},
+{L"iteration_statement  :  while_statement ", NULL, auto_return_0, 0},
+{L"iteration_statement  :  do_while_statement ", NULL, auto_return_0, 0},
 {L"while_statement  :  while enter_loop ( expression ) statement leave_loop ", NULL, on_while_statement, 0},
 {L"while_statement  :  while enter_loop ( error ) statement leave_loop ", NULL, on_while_statement, 0},
 {L"do_while_statement  :  do enter_loop statement while ( expression ) leave_loop semi ", NULL, on_do_while_statement, 0},
 {L"do_while_statement  :  do enter_loop statement while ( error ) leave_loop semi ", NULL, on_do_while_statement, 0},
-{L"iteration_statement  :  while_statement ", NULL, auto_return_0, 0},
-{L"iteration_statement  :  do_while_statement ", NULL, auto_return_0, 0},
 {L"enter_loop  :   ", NULL, on_enter_loop, 0},
 {L"leave_loop  :   ", NULL, on_leave_loop, 0},
 {L"jump_statement  :  continue semi ", NULL, on_continue_statement, 0},
@@ -1001,6 +1333,7 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"constant_expression  :  binary_expression ", NULL, auto_return_0, 0},
 {L"constant_expression  :  binary_expression ? expression : constant_expression ", NULL, on_condition_expression, 0},
 {L"binary_expression  :  unary_expression ", NULL, auto_return_0, 0},
+{L"binary_expression  :  binary_expression + binary_expression ", NULL, on_binary_expression, 0},
 {L"binary_expression  :  binary_expression - binary_expression ", NULL, on_binary_expression, 0},
 {L"binary_expression  :  binary_expression * binary_expression ", NULL, on_binary_expression, 0},
 {L"binary_expression  :  binary_expression / binary_expression ", NULL, on_binary_expression, 0},
@@ -1013,13 +1346,12 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"binary_expression  :  binary_expression != binary_expression ", NULL, on_binary_expression, 0},
 {L"binary_expression  :  binary_expression && binary_expression ", NULL, on_binary_expression, 0},
 {L"binary_expression  :  binary_expression || binary_expression ", NULL, on_binary_expression, 0},
-{L"binary_expression  :  binary_expression + binary_expression ", NULL, on_binary_expression, 0},
-{L"unary_expression  :  postfix_expression ", NULL, auto_return_0, 0},
-{L"unary_expression  :  ++ unary_expression ", NULL, on_unary_expression, 0},
-{L"unary_expression  :  -- unary_expression ", NULL, on_unary_expression, 0},
 {L"unary_expression  :  + unary_expression ", NULL, on_unary_expression, 0},
 {L"unary_expression  :  - unary_expression ", NULL, on_unary_expression, 0},
 {L"unary_expression  :  ! unary_expression ", NULL, on_unary_expression, 0},
+{L"unary_expression  :  ++ unary_expression ", NULL, on_unary_expression, 0},
+{L"unary_expression  :  -- unary_expression ", NULL, on_unary_expression, 0},
+{L"unary_expression  :  postfix_expression ", NULL, auto_return_0, 0},
 {L"postfix_expression  :  postfix_expression ++ ", NULL, on_post_add_minus_expression, 0},
 {L"postfix_expression  :  postfix_expression -- ", NULL, on_post_add_minus_expression, 0},
 {L"postfix_expression  :  postfix_expression [ expression ] ", NULL, on_index_expression, 0},
@@ -1038,11 +1370,11 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"call_expression  :  postfix_expression ( expression_list ) ", NULL, on_call_expression, 0},
 {L"call_expression  :  postfix_expression ( error ) ", NULL, on_call_expression, 0},
 {L"call_expression  :  postfix_expression ( ) ", NULL, on_call_expression, 0},
-{L"expression_list  :  expression_list , expression ", NULL, handle_expression_list, 0},
-{L"expression_list  :  expression ", NULL, handle_expression_list, 0}
+{L"expression_list  :  expression ", NULL, auto_return_0, 0},
+{L"expression_list  :  expression_list , expression ", NULL, on_expression_list, 0}
 };
 
-#define __RULE_COUNT__ ((size_t)106)
+#define __RULE_COUNT__ ((size_t)108)
 #define START_RULE L"program"
 
 static lex_t*	__build_lex(const arIOCtx_t *io)								
@@ -1164,10 +1496,34 @@ static psrNode_t* AR_STDCALL handle_element(psrNode_t **nodes, size_t count, con
 
 
 
-/*function_defination	:	var NAME ( params ) compound_statement */
-static psrNode_t* AR_STDCALL handle_function_defination(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*function_defination	:	var NAME ( params ) start_function compound_statement close_function */
+static psrNode_t* AR_STDCALL on_function_defination(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
-	 return NULL;
+	 {
+						return NULL;
+					}
+}
+
+
+
+
+/*start_function	:	 */
+static psrNode_t* AR_STDCALL on_start_function(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 {
+						return NULL;
+					}
+}
+
+
+
+
+/*close_function	:	 */
+static psrNode_t* AR_STDCALL on_close_function(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 {
+						return NULL;
+					}
 }
 
 
@@ -1200,9 +1556,33 @@ static psrNode_t* AR_STDCALL handle_namelist(psrNode_t **nodes, size_t count, co
 /*statement	:	selection_statement */
 /*statement	:	iteration_statement */
 /*statement	:	jump_statement */
-static psrNode_t* AR_STDCALL handle_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*compound_element	:	statement */
+/*compound_element	:	declaration */
+/*expression_statement	:	expression semi */
+/*selection_statement	:	if_statement */
+/*selection_statement	:	if_else_statement */
+/*iteration_statement	:	while_statement */
+/*iteration_statement	:	do_while_statement */
+/*expression	:	assignment_expression */
+/*assignment_expression	:	constant_expression */
+/*constant_expression	:	binary_expression */
+/*binary_expression	:	unary_expression */
+/*unary_expression	:	postfix_expression */
+/*postfix_expression	:	call_expression */
+/*postfix_expression	:	primary_expression */
+/*expression_list	:	expression */
+static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
-	 return NULL;
+	 {
+						psrNode_t *ret = nodes[0];
+						tguParser_t	*parser = (tguParser_t*)ctx;
+						nodes[0] = NULL;
+						if(ret == NULL)
+						{
+							parser->has_error = true;
+						}
+						return ret;
+					}
 }
 
 
@@ -1270,9 +1650,12 @@ static psrNode_t* AR_STDCALL handle_filed(psrNode_t **nodes, size_t count, const
 
 /*compound_statement	:	start_block compound_element_list close_block */
 /*compound_statement	:	{ } */
-static psrNode_t* AR_STDCALL handle_compound_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+static psrNode_t* AR_STDCALL on_compound_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
-	 return NULL;
+	 {
+						
+						return NULL;
+					}
 }
 
 
@@ -1280,65 +1663,32 @@ static psrNode_t* AR_STDCALL handle_compound_statement(psrNode_t **nodes, size_t
 
 /*compound_element_list	:	compound_element_list compound_element */
 /*compound_element_list	:	compound_element */
-static psrNode_t* AR_STDCALL handle_compound_element_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+static psrNode_t* AR_STDCALL on_compound_element_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
-	 return NULL;
-}
-
-
-
-
-/*compound_element	:	statement */
-/*compound_element	:	declaration */
-static psrNode_t* AR_STDCALL handle_compound_element(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-	 return NULL;
+	 {
+						return NULL;
+					}
 }
 
 
 
 
 /*start_block	:	{ */
-static psrNode_t* AR_STDCALL handle_start_block(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+static psrNode_t* AR_STDCALL on_start_block(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
-	 return NULL;
+	 {
+							return NULL;
+					}
 }
 
 
 
 
 /*close_block	:	} */
-static psrNode_t* AR_STDCALL handle_close_block(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-	 return NULL;
-}
-
-
-
-
-/*expression_statement	:	expression semi */
-/*selection_statement	:	if_statement */
-/*selection_statement	:	if_else_statement */
-/*iteration_statement	:	while_statement */
-/*iteration_statement	:	do_while_statement */
-/*expression	:	assignment_expression */
-/*assignment_expression	:	constant_expression */
-/*constant_expression	:	binary_expression */
-/*binary_expression	:	unary_expression */
-/*unary_expression	:	postfix_expression */
-/*postfix_expression	:	call_expression */
-/*postfix_expression	:	primary_expression */
-static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+static psrNode_t* AR_STDCALL on_close_block(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 {
-						psrNode_t *ret = nodes[0];
-						tguParser_t	*parser = (tguParser_t*)ctx;
-						nodes[0] = NULL;
-						if(ret == NULL)
-						{
-							parser->has_error = true;
-						}
-						return ret;
+							return NULL;
 					}
 }
 
@@ -1389,12 +1739,7 @@ static psrNode_t* AR_STDCALL on_if_statement(psrNode_t **nodes, size_t count, co
 
 						ret = AR_NEW(tguSynNode_t);
 						ret->type = TGU_NODE_STMT_T;
-						ret->stmt = AR_NEW0(tguStmt_t);								
-						ret->stmt->stmt_type = TGU_STT_IF;
-						ret->stmt->lex_info = ns[0]->token->lex_info;
-						ret->stmt->expr = expr;
-						ret->stmt->if_stmt.true_part = if_true;
-						ret->stmt->if_stmt.false_part = NULL;
+						ret->stmt = make_if_statement(parser, expr, if_true, NULL);
 						return ret;
 					}
 }
@@ -1447,12 +1792,7 @@ static psrNode_t* AR_STDCALL on_if_else_statement(psrNode_t **nodes, size_t coun
 
 						ret = AR_NEW(tguSynNode_t);
 						ret->type = TGU_NODE_STMT_T;
-						ret->stmt = AR_NEW0(tguStmt_t);								
-						ret->stmt->stmt_type = TGU_STT_IF;
-						ret->stmt->lex_info = ns[0]->token->lex_info;
-						ret->stmt->expr = expr;
-						ret->stmt->if_stmt.true_part = if_true;
-						ret->stmt->if_stmt.false_part = if_false;
+						ret->stmt = make_if_statement(parser, expr, if_true, if_false);						
 						return ret;
 					}
 }
@@ -1493,11 +1833,7 @@ static psrNode_t* AR_STDCALL on_while_statement(psrNode_t **nodes, size_t count,
 
 						ret = AR_NEW(tguSynNode_t);
 						ret->type = TGU_NODE_STMT_T;
-						ret->stmt = AR_NEW0(tguStmt_t);								
-						ret->stmt->stmt_type = TGU_STT_WHILE;
-						ret->stmt->lex_info = ns[0]->token->lex_info;
-						ret->stmt->while_stmt.expr = expr;
-						ret->stmt->while_stmt.loop_part = stmt;
+						ret->stmt = make_while_statement(parser, expr, stmt);
 						return ret;
 					}
 }
@@ -1538,11 +1874,7 @@ static psrNode_t* AR_STDCALL on_do_while_statement(psrNode_t **nodes, size_t cou
 
 						ret = AR_NEW(tguSynNode_t);
 						ret->type = TGU_NODE_STMT_T;
-						ret->stmt = AR_NEW0(tguStmt_t);								
-						ret->stmt->stmt_type = TGU_STT_DO;
-						ret->stmt->lex_info = ns[0]->token->lex_info;
-						ret->stmt->while_stmt.expr = expr;
-						ret->stmt->while_stmt.loop_part = stmt;
+						ret->stmt =make_do_while_statement(parser, expr, stmt);						
 						return ret;
 					}
 }
@@ -1585,26 +1917,11 @@ static psrNode_t* AR_STDCALL on_leave_loop(psrNode_t **nodes, size_t count, cons
 static psrNode_t* AR_STDCALL on_continue_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 {
-						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
 						tguSynNode_t 	*ret;
 						tguParser_t	*parser = (tguParser_t*)ctx;
-						AR_ASSERT(ns != NULL);
-						if(parser->loop_level == 0)
-						{
-							tguReportInfo_t	info;
-							info.type = TGU_REPORT_ERROR_SYNTAX_T;
-							info.syntax_error.tok = ns[0]->token;
-							info.syntax_error.msg = L"illegal continue";
-							AR_ASSERT(parser->report.report_func != NULL);
-							parser->report.report_func(&info, parser->report.report_ctx);
-							parser->has_error = true;
-						}
-						
 						ret = AR_NEW(tguSynNode_t);
 						ret->type = TGU_NODE_STMT_T;
-						ret->stmt = AR_NEW0(tguStmt_t);								
-						ret->stmt->stmt_type = TGU_STT_CONTINUE;
-						ret->stmt->lex_info = ns[0]->token->lex_info;
+						ret->stmt = make_jump_statement(parser, TGU_STT_CONTINUE, 	NULL);
 						return ret;
 
 					}
@@ -1617,26 +1934,11 @@ static psrNode_t* AR_STDCALL on_continue_statement(psrNode_t **nodes, size_t cou
 static psrNode_t* AR_STDCALL on_break_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 {
-						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
 						tguSynNode_t 	*ret;
 						tguParser_t	*parser = (tguParser_t*)ctx;
-						AR_ASSERT(ns != NULL);
-						if(parser->loop_level == 0)
-						{
-							tguReportInfo_t	info;
-							info.type = TGU_REPORT_ERROR_SYNTAX_T;
-							info.syntax_error.tok = ns[0]->token;
-							info.syntax_error.msg = L"illegal break";
-							AR_ASSERT(parser->report.report_func != NULL);
-							parser->report.report_func(&info, parser->report.report_ctx);
-							parser->has_error = true;
-						}
-						
 						ret = AR_NEW(tguSynNode_t);
 						ret->type = TGU_NODE_STMT_T;
-						ret->stmt = AR_NEW0(tguStmt_t);								
-						ret->stmt->stmt_type = TGU_STT_BREAK;
-						ret->stmt->lex_info = ns[0]->token->lex_info;
+						ret->stmt = make_jump_statement(parser, TGU_STT_BREAK, 	NULL);
 						return ret;
 						
 					}
@@ -1652,16 +1954,11 @@ static psrNode_t* AR_STDCALL on_return_statement(psrNode_t **nodes, size_t count
 	 {
 						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
 						tguSynNode_t 	*ret;
-						tguParser_t	*parser = (tguParser_t*)ctx;
 						tguExpr_t		*expr;
+						tguParser_t	*parser = (tguParser_t*)ctx;
 						AR_ASSERT(nodes != NULL && count == 2 || count == 3);
 						AR_ASSERT(parser->current_function != NULL);
 
-						ret = AR_NEW(tguSynNode_t);
-						ret->type = TGU_NODE_STMT_T;
-						ret->stmt = AR_NEW0(tguStmt_t);								
-						ret->stmt->stmt_type = TGU_STT_RETURN;
-						
 						if(ns[1] == NULL)
 						{
 							expr = NULL;
@@ -1671,8 +1968,10 @@ static psrNode_t* AR_STDCALL on_return_statement(psrNode_t **nodes, size_t count
 							expr = ns[1]->expr;
 							ns[1]->expr = NULL;
 						}
-						ret->stmt->return_stmt.expr = expr;
-						ret->stmt->lex_info = ns[0]->token->lex_info;
+
+						ret = AR_NEW(tguSynNode_t);
+						ret->type = TGU_NODE_STMT_T;
+						ret->stmt = make_jump_statement(parser, TGU_STT_RETURN, 	expr);
 						return ret;
 					}
 }
@@ -1705,7 +2004,40 @@ static psrNode_t* AR_STDCALL on_semicolon(psrNode_t **nodes, size_t count, const
 static psrNode_t* AR_STDCALL on_assignment_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 {
-							return NULL;
+							tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+						tguSynNode_t 	*ret;
+						tguParser_t	*parser = (tguParser_t*)ctx;
+						tguExpr_t		*addr, *value;
+						AR_ASSERT(ns != NULL && count == 3 && parser != NULL);
+
+						if(ns[0] == NULL)
+						{
+							parser->has_error = true;
+							addr = NULL;	
+						}else
+						{
+							addr = ns[0]->expr;
+							ns[0]->expr = NULL;
+						}
+						
+
+						if(ns[2] == NULL)
+						{
+							parser->has_error = true;
+							value = NULL;	
+						}else
+						{
+							value = ns[2]->expr;
+							ns[2]->expr = NULL;
+						}
+
+
+						ret = AR_NEW(tguSynNode_t);
+						ret->type = TGU_NODE_EXPR_T;
+						ret->expr = make_assignment_expression(parser, addr, value);
+
+						return ret;
+
 					}
 }
 
@@ -1715,12 +2047,60 @@ static psrNode_t* AR_STDCALL on_assignment_expression(psrNode_t **nodes, size_t 
 /*constant_expression	:	binary_expression ? expression : constant_expression */
 static psrNode_t* AR_STDCALL on_condition_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
-	 return NULL;
+	 {
+						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+						tguSynNode_t 	*ret;
+						tguParser_t	*parser = (tguParser_t*)ctx;
+						tguExpr_t		*cond, *if_true, *if_false;
+						AR_ASSERT(ns != NULL && count == 3 && parser != NULL);
+
+						if(ns[0] == NULL)
+						{
+							parser->has_error = true;
+							cond= NULL;	
+						}else
+						{
+							cond = ns[0]->expr;
+							ns[0]->expr = NULL;
+						}
+
+						
+
+						if(ns[2] == NULL)
+						{
+							parser->has_error = true;
+							if_true = NULL;	
+						}else
+						{
+							if_true= ns[2]->expr;
+							ns[2]->expr = NULL;
+						}
+						
+						if(ns[4] == NULL)
+						{
+							parser->has_error = true;
+							if_false = NULL;	
+						}else
+						{
+							if_false= ns[4]->expr;
+							ns[4]->expr = NULL;
+						}
+
+
+						ret = AR_NEW(tguSynNode_t);
+						ret->type = TGU_NODE_EXPR_T;
+						ret->expr = make_condition_expression(parser, cond, if_true, if_false);
+
+						return ret;
+
+
+					}
 }
 
 
 
 
+/*binary_expression	:	binary_expression + binary_expression */
 /*binary_expression	:	binary_expression - binary_expression */
 /*binary_expression	:	binary_expression * binary_expression */
 /*binary_expression	:	binary_expression / binary_expression */
@@ -1733,26 +2113,158 @@ static psrNode_t* AR_STDCALL on_condition_expression(psrNode_t **nodes, size_t c
 /*binary_expression	:	binary_expression != binary_expression */
 /*binary_expression	:	binary_expression && binary_expression */
 /*binary_expression	:	binary_expression || binary_expression */
-/*binary_expression	:	binary_expression + binary_expression */
 static psrNode_t* AR_STDCALL on_binary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 {
-						return NULL;
+						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+						tguSynNode_t 	*ret;
+						tguParser_t	*parser = (tguParser_t*)ctx;
+						tguExpr_t		*left, *right;
+						tguToken_t		*tok;
+						tguExprOP_t	op;
+						AR_ASSERT(ns != NULL && count == 3 && parser != NULL);
+
+						if(ns[0] == NULL)
+						{
+							parser->has_error = true;
+							left = NULL;	
+						}else
+						{
+							left = ns[0]->expr;
+							ns[0]->expr = NULL;
+						}
+
+						AR_ASSERT(ns[1] != NULL);
+						tok = ns[1]->token;	
+
+						if(ns[2] == NULL)
+						{
+							parser->has_error = true;
+							right = NULL;	
+						}else
+						{
+							right = ns[2]->expr;
+							ns[2]->expr = NULL;
+						}
+
+						switch(tok->term_val)
+						{
+						case TOK_INC:
+							op = TGU_OP_PLUS;
+							break;
+						case TOK_SUB :
+							op = TGU_OP_MINUS;
+							break;
+						case TOK_MUL:
+							op = TGU_OP_MUL;
+							break;
+						case TOK_DIV:
+							op = TGU_OP_DIV;
+							break;
+						case TOK_MOD:
+							op = TGU_OP_MOD;
+							break;
+						case TOK_LESS:
+							op = TGU_OP_LESS;
+							break;
+						case TOK_LE:
+							op = TGU_OP_LESS_OR_EQUAL;
+							break;
+						case TOK_GREATER:
+							op = TGU_OP_GREATER;
+							break;
+						case TOK_GE:
+							op = TGU_OP_GREATER_OR_EQUAL;
+							break;
+						case TOK_EQ:
+							op = TGU_OP_IS_EQUAL;
+							break;
+						case TOK_NE:
+							op = TGU_OP_NOT_EQUAL;
+							break;
+						case TOK_ANDAND:
+							op = TGU_OP_LOGICAL_AND;
+							break;
+						case TOK_OROR:
+							op = TGU_OP_LOGICAL_OR;
+							break;
+						default:
+							op = TGU_OP_NONE;/*op如果在此不赋值会导致一个warning*/
+							AR_ASSERT(false);
+							break;
+						}
+
+						ret = AR_NEW(tguSynNode_t);
+						ret->type = TGU_NODE_EXPR_T;
+						ret->expr = make_binary_expression(parser, op, left, right);
+
+						return ret;
+
+
 					}
 }
 
 
 
 
-/*unary_expression	:	++ unary_expression */
-/*unary_expression	:	-- unary_expression */
 /*unary_expression	:	+ unary_expression */
 /*unary_expression	:	- unary_expression */
 /*unary_expression	:	! unary_expression */
+/*unary_expression	:	++ unary_expression */
+/*unary_expression	:	-- unary_expression */
 static psrNode_t* AR_STDCALL on_unary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 {
-					return NULL;
+						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+						tguSynNode_t 	*ret;
+						tguParser_t	*parser = (tguParser_t*)ctx;
+						tguExpr_t		*expr;
+						tguToken_t		*tok;
+						tguExprOP_t	op;
+						AR_ASSERT(ns != NULL && count == 2 && parser != NULL);
+
+						if(ns[0] == NULL)
+						{
+							parser->has_error = true;
+							expr = NULL;	
+						}else
+						{
+							expr = ns[0]->expr;
+							ns[0]->expr = NULL;
+						}
+
+						AR_ASSERT(ns[1] != NULL);
+						tok = ns[1]->token;	
+						
+						switch(tok->term_val)
+						{
+						case TOK_INC:
+							op = TGU_OP_PREINC;
+							break;
+						case TOK_DEC:
+							op = TGU_OP_PREDEC;
+							break;
+						case TOK_ADD:
+							op = TGU_OP_UNARY_PLUS;
+							break;
+						case TOK_SUB:
+							op = TGU_OP_UNARY_MINUS;
+							break;
+						case TOK_NOT:
+							op = TGU_OP_LOGICAL_NOT;
+							break;
+						default:
+							op = TGU_OP_NONE;
+							AR_ASSERT(false);
+							break;
+						}
+
+						ret = AR_NEW(tguSynNode_t);
+						ret->type = TGU_NODE_EXPR_T;
+						ret->expr = make_unary_expression(parser, op, expr, false);
+
+						return ret;
+
 				}
 }
 
@@ -1764,7 +2276,46 @@ static psrNode_t* AR_STDCALL on_unary_expression(psrNode_t **nodes, size_t count
 static psrNode_t* AR_STDCALL on_post_add_minus_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 {
-					return NULL;
+						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+						tguSynNode_t 	*ret;
+						tguParser_t	*parser = (tguParser_t*)ctx;
+						tguExpr_t		*expr;
+						tguToken_t		*tok;
+						tguExprOP_t	op;
+						AR_ASSERT(ns != NULL && count == 2 && parser != NULL);
+
+						if(ns[0] == NULL)
+						{
+							parser->has_error = true;
+							expr = NULL;	
+						}else
+						{
+							expr = ns[0]->expr;
+							ns[0]->expr = NULL;
+						}
+
+						AR_ASSERT(ns[1] != NULL);
+						tok = ns[1]->token;	
+							
+						switch(tok->term_val)	
+						{
+						case TOK_INC:
+							op = TGU_OP_POSTINC;
+							break;
+						case TOK_DEC:
+							op = TGU_OP_POSTDEC;
+							break;
+						default:
+							op = TGU_OP_NONE;
+							AR_ASSERT(false);
+							break;
+						}
+						
+						ret = AR_NEW(tguSynNode_t);
+						ret->type = TGU_NODE_EXPR_T;
+						ret->expr = make_unary_expression(parser, op, expr, false);
+
+						return ret;
 				}
 }
 
@@ -1776,7 +2327,38 @@ static psrNode_t* AR_STDCALL on_post_add_minus_expression(psrNode_t **nodes, siz
 static psrNode_t* AR_STDCALL on_index_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 {
-					return NULL;
+					
+						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+						tguSynNode_t 	*ret;
+						tguParser_t	*parser = (tguParser_t*)ctx;
+						tguExpr_t		*expr, *index_expr;
+						AR_ASSERT(ns != NULL && count == 4 && parser != NULL);
+						if(ns[0] == NULL)
+						{
+							parser->has_error = true;
+							expr = NULL;
+						}else
+						{
+							expr = ns[0]->expr;
+							ns[0]->expr = NULL;
+						}
+
+						
+						
+						if(ns[2] == NULL)
+						{
+							index_expr = NULL;
+							parser->has_error = true;
+						}else
+						{
+							index_expr = ns[2]->expr;
+							ns[2]->expr = NULL;
+						}
+						
+						ret = AR_NEW(tguSynNode_t);
+						ret->type = TGU_NODE_EXPR_T;
+						ret->expr = make_index_expression(parser, expr, index_expr);
+						return ret;
 				}
 }
 
@@ -1863,7 +2445,19 @@ static psrNode_t* AR_STDCALL on_call_expression(psrNode_t **nodes, size_t count,
 						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
 						tguSynNode_t 	*ret;
 						tguParser_t	*parser = (tguParser_t*)ctx;
-						tguExpr_t		*expr, *args;
+						tguExpr_t		*expr, *call_expr, *args;
+							
+						if(ns[0] == NULL)
+						{
+							parser->has_error = true;
+							call_expr = NULL;
+						}else
+						{
+							call_expr= ns[0]->expr;
+							ns[0]->expr = NULL;
+						}
+
+
 						if(count == 4)
 						{
 							if(ns[2] == NULL)
@@ -1879,9 +2473,10 @@ static psrNode_t* AR_STDCALL on_call_expression(psrNode_t **nodes, size_t count,
 						{
 							args = NULL;
 						}
+
 						AR_ASSERT(parser != NULL && ns != NULL && count == 1);
 						
-						expr = make_call_expression(parser, args);
+						expr = make_call_expression(parser, call_expr, args);
 						
 						ret = AR_NEW(tguSynNode_t);
 						ret->type = TGU_NODE_EXPR_T;
@@ -1894,10 +2489,26 @@ static psrNode_t* AR_STDCALL on_call_expression(psrNode_t **nodes, size_t count,
 
 
 /*expression_list	:	expression_list , expression */
-/*expression_list	:	expression */
-static psrNode_t* AR_STDCALL handle_expression_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+static psrNode_t* AR_STDCALL on_expression_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
-	 return NULL;
+	 {
+						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+						tguSynNode_t	*ret;
+						tguExpr_t		*lst;
+						AR_ASSERT(ns != NULL && count == 3);
+
+						if(ns[0] == NULL) return ns[2];
+						if(ns[2] == NULL)return ns[2];
+						AR_ASSERT(ns[0]->expr != NULL  && ns[2]->expr != NULL);
+
+						for(lst = ns[0]->expr; lst->next != NULL; lst = lst->next);
+						
+						lst->next = ns[2]->expr;
+						ns[2]->expr = NULL;
+						ret = ns[0];
+						ns[0] = NULL;
+						return ret;
+				}
 }
 
 

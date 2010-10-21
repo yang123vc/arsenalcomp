@@ -96,6 +96,10 @@ SOURCE=..\..\..\Arsenal\Common\algo.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\Arsenal\Common\buffer.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\Arsenal\Common\common.c
 # End Source File
 # Begin Source File
@@ -137,6 +141,10 @@ SOURCE=..\..\..\Arsenal\Common\strtable.c
 # Begin Source File
 
 SOURCE=..\..\..\Arsenal\Common\thread.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Common\thread_posix.h
 # End Source File
 # Begin Source File
 
@@ -283,48 +291,36 @@ SOURCE=..\..\..\Arsenal\Tools\tools.c
 SOURCE=..\..\..\Arsenal\Tools\tools.h
 # End Source File
 # End Group
-# Begin Group "Ray"
+# Begin Group "Tengu"
 
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\..\..\Arsenal\Ray\ray.c
+SOURCE=..\..\..\Arsenal\Tengu\tengu.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\Arsenal\Ray\ray.h
+SOURCE=..\..\..\Arsenal\Tengu\tengu.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\Arsenal\Ray\rayparser.c
+SOURCE=..\..\..\Arsenal\Tengu\tgu_parser_impl.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\Arsenal\Ray\rayparser.h
+SOURCE=..\..\..\Arsenal\Tengu\tguparser.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\Arsenal\Ray\rayparser_impl.c
+SOURCE=..\..\..\Arsenal\Tengu\tguparser.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\Arsenal\Ray\rayparser_impl.h
+SOURCE=..\..\..\Arsenal\Tengu\tguvm.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\Arsenal\Ray\raysymbol.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\Arsenal\Ray\raysymbol.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\Arsenal\Ray\raytype.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\Arsenal\Ray\raytype.h
+SOURCE=..\..\..\Arsenal\Tengu\tguvm.h
 # End Source File
 # End Group
 # Begin Source File

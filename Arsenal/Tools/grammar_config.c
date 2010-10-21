@@ -203,6 +203,7 @@ typedef enum
 		EOI	= 0,
 		DELIM ,
 		SKIP = 600,
+		CODE,
 		START,
 		NAME,
 		TOKEN,
@@ -237,6 +238,7 @@ static const cfgLexPattern_t	__cfg_pattern[] =
 		{DELIM, L"{skip_lexem}+", true, 1},
 		{ASSOC,	L"\"%\"(\"left\"|\"right\"|\"nonassoc\")(?={key_lookahead})", false,1},
 
+		{CODE,	L"\"%code\"(?={key_lookahead})", false,0},
 		{SKIP,	L"\"%skip\"(?={key_lookahead})", false,0},
 		{START,	L"\"%start\"(?={key_lookahead})", false,0},
 		{NAME,	L"\"%name\"(?={key_lookahead})", false,0},
@@ -279,6 +281,7 @@ typedef struct	__cfg_term_info_tag
 
 static const cfgTermInfo_t	__cfg_term[] =
 {
+		{CODE, L"%code"},
 		{SKIP, L"%skip"},
 		{START, L"%start"},
 		{NAME, L"%name"},
@@ -617,6 +620,7 @@ RE_CHECK_POINT:
 				for(i = 0; i < pre_def->count; ++i)
 				{
 						AR_ASSERT(pre_def->lst[i]->type == CFG_PREDEF_T);
+						cfg->pre_def[i].name = AR_wcsdup(pre_def->lst[i]->predef.name);
 						cfg->pre_def[i].code = AR_wcsdup(pre_def->lst[i]->predef.code);
 						cfg->pre_def[i].line = pre_def->lst[i]->predef.line;
 				}
@@ -679,6 +683,7 @@ static void CFG_UnInitConfig(cfgConfig_t *cfg)
 
 		for(i = 0; i < cfg->predef_cnt; ++i)
 		{
+				if(cfg->pre_def[i].name)AR_DEL(cfg->pre_def[i].name);
 				if(cfg->pre_def[i].code)AR_DEL(cfg->pre_def[i].code);
 		}
 
@@ -877,6 +882,7 @@ static void CFG_DestroyNode(cfgNode_t *node)
 				}
 				case CFG_PREDEF_T:
 				{
+						if(node->predef.name)AR_DEL(node->predef.name);
 						if(node->predef.code)AR_DEL(node->predef.code);
 						break;
 				}
@@ -1443,6 +1449,7 @@ static psrNode_t*		AR_STDCALL __handle_start_def(psrNode_t **nodes, size_t count
 
 }
 
+#if(0)
 /*
 { L"pre_code_decl		:		action_ins",				__handle_pre_def,0},
 */
@@ -1473,7 +1480,48 @@ static psrNode_t*		AR_STDCALL __handle_pre_def(psrNode_t **nodes, size_t count, 
 		return res;
 
 }
+#endif
 
+
+/*
+{ L"pre_code_decl		:		%code pre_code_name action_ins",		__handle_pre_def,0},
+*/
+static psrNode_t*		AR_STDCALL __handle_pre_def(psrNode_t **nodes, size_t count, const wchar_t * name_tmp, void *ctx)
+{
+		cfgNode_t		**ns = (cfgNode_t**)nodes;
+		cfgNode_t		*res;
+		size_t			len;
+		AR_ASSERT(count == 3);
+
+		AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T && ns[0]->lexeme.lex_val == CODE);
+		AR_ASSERT(ns[2] && ns[2]->type == CFG_LEXEME_T && ns[2]->lexeme.lex_val == ACTION_INS);
+
+
+		res = CFG_CreateNode(CFG_PREDEF_T);
+		res->predef.line = ns[0]->lexeme.line;
+		
+		len = AR_wcslen(ns[2]->lexeme.lexeme);
+		AR_ASSERT(len >= 2);
+		
+		if(len >= 2)
+		{
+				res->predef.code = AR_wcsndup(ns[2]->lexeme.lexeme+1, len - 2);
+		}else
+		{
+				res->predef.code = AR_wcsdup(L"");
+		}
+
+		if(ns[1] == NULL)
+		{
+				res->predef.name = AR_wcsdup(L"");
+		}else
+		{
+				res->predef.name = AR_wcsdup(ns[1]->lexeme.lexeme);
+		}
+
+		return res;
+
+}
 
 
 
@@ -1653,7 +1701,9 @@ static const cfgRuleDef_t	__cfg_rule[] =
 		{ L"start_def			:  		%start lexeme",							__handle_start_def,0},
 
 		
-		{ L"pre_code_decl		:		action_ins",				__handle_pre_def,0},
+		{ L"pre_code_decl		:		%code pre_code_name action_ins",		__handle_pre_def,0},
+		{ L"pre_code_name		:		lexeme",								NULL,0},
+		{ L"pre_code_name		:		",										NULL,0},
 
 
 		{ L"program				:		item_list #",			__handle_program, 0},
@@ -2314,6 +2364,16 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 				for(i = 0; i < cfg->predef_cnt; ++i)
 				{
 						AR_AppendString(code, L"\r\n");
+						
+
+						if(cfg->pre_def[i].name && AR_wcslen(cfg->pre_def[i].name) > 0)
+						{
+								AR_AppendFormatString(code, L"%ls", L"\r\n/*\r\n");
+								AR_AppendFormatString(code, L"%ls", cfg->pre_def[i].name);
+								AR_AppendFormatString(code, L"%ls", L"\r\n*/\r\n");
+						}
+
+
 						AR_AppendString(code,  cfg->pre_def[i].code);
 						AR_AppendString(code, L"\r\n");
 				}

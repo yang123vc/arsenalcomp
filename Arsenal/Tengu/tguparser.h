@@ -204,49 +204,41 @@ typedef enum
 		TGU_OP_POSTINC, 
 		TGU_OP_POSTDEC,
 		
-		/*
-		TGU_OP_CVT_TO_INTEGER, 
-		TGU_OP_CVT_TO_FLOAT,
-		TGU_OP_CVT_TO_BOOLEAN,
-		TGU_OP_CVT_TO_NULL,
-		*/
-}tguExprOp_t;
+		TGU_OP_NONE		= 0xFFFFFFFF,
+}tguExprOP_t;
 
 
 
-
-
-struct __tengu_binary_expression_tag;
-typedef struct __tengu_binary_expression_tag	tguBinaryExpr_t;
-struct __tengu_binary_expression_tag
+typedef struct __tengu_index_expression_tag
 {
-		tguExprOp_t		op;
+		tguExpr_t		*expr;
+		tguExpr_t		*index_expr;
+}tguIndexExpr_t;
+
+
+typedef struct __tengu_binary_expression_tag
+{
+		tguExprOP_t		op;
 		tguExpr_t		*left;
 		tguExpr_t		*right;
-};
+}tguBinaryExpr_t;
 
 
-struct __tengu_unary_expression_tag;
-typedef struct __tengu_unary_expression_tag		tguUnaryExpr_t;
-struct __tengu_unary_expression_tag
+typedef struct __tengu_unary_expression_tag	
 {
-		tguExprOp_t		op;
+		tguExprOP_t		op;
 		tguExpr_t		*expr;
-};
+}tguUnaryExpr_t;
 
-struct __tengu_condition_expression_tag;
-typedef struct __tengu_condition_expression_tag	tguCondExpr_t;
-struct __tengu_condition_expression_tag
+typedef struct __tengu_condition_expression_tag	
 {
 		tguExpr_t		*cond;
 		tguExpr_t		*if_true;
 		tguExpr_t		*if_false;
-};
+}tguCondExpr_t;
 
 
-struct __tengu_constant_tag;
-typedef struct __tengu_constant_tag		tguConstant_t;
-struct __tengu_constant_tag
+typedef struct __tengu_constant_tag
 {
 		tguLexInfo_t			lex_info;
 		union {
@@ -254,17 +246,16 @@ struct __tengu_constant_tag
 				double			float_number;
 				const wchar_t	*string;
 		};
-};
+}tguConstant_t;
 
 
-struct __tengu_function_call_expression_tag;
-typedef struct __tengu_function_call_expression_tag		tguFuncCallExpr_t;
-struct __tengu_function_call_expression_tag
+
+
+typedef struct __tengu_function_call_expression_tag
 {
 		tguExpr_t		*func_call;
 		tguExpr_t		*arg_list;
-};
-
+}tguFuncCallExpr_t;
 
 
 typedef enum 
@@ -294,6 +285,7 @@ struct __tengu_expression_tag
 				tguVar_t				*var;
 				const	wchar_t			*name;
 				tguConstant_t			constant;
+				tguIndexExpr_t			index_expr;
 				tguCondExpr_t			cond_expr;
 				tguUnaryExpr_t			unary_expr;
 				tguBinaryExpr_t			binary_expr;
@@ -369,7 +361,7 @@ struct __tengu_statement_tag
 struct __tengu_function_tag;
 typedef struct __tengu_function_tag		tguFunc_t;
 
-typedef struct __tengu_function_tag
+struct __tengu_function_tag
 {
 		tguLexInfo_t	lex_info;
 		const wchar_t	*name;
@@ -382,7 +374,7 @@ typedef struct __tengu_function_tag
 		tguStmt_t		*statement;
 		
 		tguFunc_t		*next;
-}tguFunc_t;
+};
 
 
 
@@ -469,26 +461,6 @@ typedef struct __tengu_report_tag
 /***************************************************************·ÖÎöÆ÷**************************************************************************/
 
 
-typedef enum
-{
-		TGU_NODE_TOKEN_T,
-		TGU_NODE_STMT_T,
-		TGU_NODE_EXPR_T,
-}tguSynNodeType_t;
-
-
-
-typedef struct __tengu_syntax_node_tag
-{
-		tguSynNodeType_t		type;
-		
-		union{
-				tguToken_t		*token;
-				tguStmt_t		*stmt;
-				tguExpr_t		*expr;
-		};
-}tguSynNode_t;
-
 typedef struct __tengu_parser_tag
 {
 		tguReport_t		report;
@@ -497,10 +469,7 @@ typedef struct __tengu_parser_tag
 		tguBlock_t		*global_block;
 		tguBlock_t		*top_block;
 		tguFunc_t		*function_list;
-
 		
-
-
 		/***************************/
 		size_t			loop_level;
 		bool_t			has_error;

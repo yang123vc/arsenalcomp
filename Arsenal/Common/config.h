@@ -453,6 +453,22 @@ typedef uint_8_t				byte_t;
 typedef void*					ptr_t;
 
 
+/**************************以下均为未定义时的默认值****************************/
+
+#if !defined(WCHAR_MAX)
+		#define WCHAR_MAX		0xffff
+#endif
+
+#if !defined(CHAR_MAX)
+		#define	CHAR_MAX		127
+#endif
+
+#if !defined(CHAR_BIT)
+		#define	CHAR_BIT		8		
+#endif
+
+/**********************************************************************************/
+
 #define AR_CHARMAX				CHAR_MAX
 #define AR_WCHARMAX				WCHAR_MAX
 #define AR_BYTE_BITS			CHAR_BIT

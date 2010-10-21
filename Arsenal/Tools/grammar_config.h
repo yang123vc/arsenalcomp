@@ -104,6 +104,7 @@ typedef struct __cfg_start_tag
 typedef struct __cfg_predef_tag
 {
 		size_t	line;
+		wchar_t	*name;
 		wchar_t	*code;
 }cfgPreDef_t;
 
