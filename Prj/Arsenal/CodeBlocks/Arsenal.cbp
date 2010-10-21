@@ -132,7 +132,6 @@
 		<Unit filename="../../../Arsenal/Lex/match.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Lex/match.h" />
 		<Unit filename="../../../Arsenal/Lex/rgx.h" />
 		<Unit filename="../../../Arsenal/Lex/rgx_compile.c">
 			<Option compilerVar="CC" />
@@ -152,7 +151,6 @@
 		<Unit filename="../../../Arsenal/Parser/grammar.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Parser/grammar.h" />
 		<Unit filename="../../../Arsenal/Parser/lalr.h" />
 		<Unit filename="../../../Arsenal/Parser/lalr_build.c">
 			<Option compilerVar="CC" />
@@ -172,7 +170,6 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../Arsenal/Parser/parser.h" />
-		<Unit filename="../../../Arsenal/Parser/parser_aux.h" />
 		<Unit filename="../../../Arsenal/Parser/parser_in.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -183,27 +180,19 @@
 		<Unit filename="../../../Arsenal/Parser/symbol.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Parser/symbol.h" />
-		<Unit filename="../../../Arsenal/Ray/ray.c">
+		<Unit filename="../../../Arsenal/Tengu/tengu.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Ray/ray.h" />
-		<Unit filename="../../../Arsenal/Ray/rayparser.c">
+		<Unit filename="../../../Arsenal/Tengu/tengu.h" />
+		<Unit filename="../../../Arsenal/Tengu/tgu_parser_impl.h" />
+		<Unit filename="../../../Arsenal/Tengu/tguparser.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Ray/rayparser.h" />
-		<Unit filename="../../../Arsenal/Ray/rayparser_impl.c">
+		<Unit filename="../../../Arsenal/Tengu/tguparser.h" />
+		<Unit filename="../../../Arsenal/Tengu/tguvm.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Ray/rayparser_impl.h" />
-		<Unit filename="../../../Arsenal/Ray/raysymbol.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../../../Arsenal/Ray/raysymbol.h" />
-		<Unit filename="../../../Arsenal/Ray/raytype.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../../../Arsenal/Ray/raytype.h" />
+		<Unit filename="../../../Arsenal/Tengu/tguvm.h" />
 		<Unit filename="../../../Arsenal/Tools/grammar_config.c">
 			<Option compilerVar="CC" />
 		</Unit>
