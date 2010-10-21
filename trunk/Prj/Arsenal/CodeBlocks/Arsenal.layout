@@ -1,49 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
-	<ActiveTarget name="DLLRelease" />
-	<File name="../../../Arsenal/Common/common.c" open="0" top="0" tabpos="2">
-		<Cursor position="859" topLine="15" />
+	<ActiveTarget name="DLLDebug" />
+	<File name="../../../Arsenal/Common/crtstr.c" open="0" top="0" tabpos="0">
+		<Cursor position="19637" topLine="980" />
 	</File>
-	<File name="../../../Arsenal/Common/common.h" open="1" top="0" tabpos="3">
-		<Cursor position="2723" topLine="109" />
+	<File name="../../../Arsenal/Tengu/tgu_parser_impl.h" open="0" top="0" tabpos="0">
+		<Cursor position="77583" topLine="1852" />
 	</File>
-	<File name="../../../Arsenal/Common/config.h" open="0" top="0" tabpos="4">
-		<Cursor position="4171" topLine="202" />
+	<File name="../../../Arsenal/Tengu/tguparser.c" open="0" top="0" tabpos="0">
+		<Cursor position="482" topLine="0" />
 	</File>
-	<File name="../../../Arsenal/Common/crtstr.c" open="0" top="0" tabpos="5">
-		<Cursor position="743" topLine="14" />
-	</File>
-	<File name="../../../Arsenal/Common/platform.h" open="0" top="0" tabpos="9">
-		<Cursor position="1165" topLine="30" />
-	</File>
-	<File name="../../../Arsenal/Common/thread.c" open="0" top="0" tabpos="12">
-		<Cursor position="595" topLine="0" />
-	</File>
-	<File name="../../../Arsenal/Common/thread_posix.h" open="0" top="0" tabpos="6">
-		<Cursor position="2314" topLine="73" />
-	</File>
-	<File name="../../../Arsenal/Common/thread_win.h" open="0" top="0" tabpos="8">
-		<Cursor position="480" topLine="0" />
-	</File>
-	<File name="../../../Arsenal/Lex/lex.c" open="0" top="0" tabpos="7">
-		<Cursor position="6168" topLine="285" />
-	</File>
-	<File name="../../../Arsenal/Lex/rgx_misc.c" open="0" top="0" tabpos="8">
-		<Cursor position="9999" topLine="490" />
-	</File>
-	<File name="../../../Arsenal/Lex/rgx_parser.c" open="0" top="0" tabpos="11">
-		<Cursor position="535" topLine="0" />
-	</File>
-	<File name="../../../Arsenal/Parser/lalr_config_aux.h" open="0" top="0" tabpos="0">
-		<Cursor position="793" topLine="8" />
-	</File>
-	<File name="../../../Arsenal/Parser/parser.h" open="0" top="0" tabpos="3">
-		<Cursor position="1311" topLine="43" />
-	</File>
-	<File name="../../../Arsenal/Tools/grammar_config.c" open="0" top="0" tabpos="9">
-		<Cursor position="11707" topLine="548" />
-	</File>
-	<File name="../../../Arsenal/Tools/serializer.c" open="0" top="0" tabpos="10">
-		<Cursor position="7765" topLine="394" />
+	<File name="../../../Arsenal/Tools/grammar_config.h" open="0" top="0" tabpos="0">
+		<Cursor position="4265" topLine="179" />
 	</File>
 </CodeBlocks_layout_file>
