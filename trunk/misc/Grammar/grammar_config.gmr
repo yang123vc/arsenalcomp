@@ -56,6 +56,9 @@
 %token	ACTION		:	"%action(?={skip_lexem}+)"
 					;
 
+%token	VALUE			:	"%value(?={skip_lexem}+)"
+					;
+
 %token	ASSOC			:	'"%"(left|right|nonassoc)(?={key_lookahead})'
 					;
 
@@ -123,9 +126,13 @@ item				:		code_decl		";"
 name_def 			:		NAME LEXEME ":" LEXEME 
 				;
 
-token_def			:  		TOKEN SKIP token_val_prec ":" LEXEME token_val_prec action_decl  	
-				|  		TOKEN LEXEME token_val_prec ":" LEXEME token_val_prec action_decl 	
+token_def			:  		TOKEN SKIP token_val_prec 	 ":" LEXEME token_val_prec  token_value	action_decl  	
+				|  		TOKEN LEXEME token_val_prec ":" LEXEME token_val_prec  token_value	action_decl 	
 				;
+
+token_value			:		VALUE		LEXEME
+				|		.
+				;	
 
 token_val_prec 		:		"," NUMBER			
 				|		. 				
@@ -167,7 +174,8 @@ start_def			:  		START LEXEME
 				;
 
 
-code_decl			:		CODE CODE_BLOCK
+code_decl			:		CODE LEXEME CODE_BLOCK
+				|		CODE CODE_BLOCK
 				;
 
 

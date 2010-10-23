@@ -125,29 +125,39 @@ typedef enum
 }tguType_t;
 
 
-struct __tengu_table_initializer_tag;
-typedef struct __tengu_table_initializer_tag	tguTableInit_t;
-
 typedef enum
 {
 		TGU_INIT_TABLE_EXPR,
-		TGU_INIT_TABLE_TABLE
-}tguTableInitType_t;
+		TGU_INIT_TABLE_FIELD
+}tguTableFieldType_t;
 
-struct __tengu_table_initializer_tag
+
+struct __tengu_table_field_tag;
+typedef struct __tengu_table_field_tag	tguTableField_t;
+
+struct __tengu_table_field_tag
 {
-		tguTableInitType_t		type;
-		tguTableInit_t			*next;
+		tguTableFieldType_t				type;
+		tguTableField_t					*next;
 		union{
-				tguExpr_t		*expr;
-				tguTableInit_t	*table;
+				tguExpr_t				*expr;
+				tguTableField_t			*table;
 		}filed;
 };
 
-struct  __tengu_initializer_tag;
-typedef struct __tengu_initializer_tag		tguInitializer_t;
+typedef struct __tengu_table_initializer_tag
+{
+		bool_t			is_empty_table;
+		tguTableField_t	*field_lst;
+}tguTableInit_t;
 
-struct  __tengu_initializer_tag
+
+
+
+
+
+
+typedef struct  __tengu_initializer_tag
 {
 		tguType_t				value_type;
 		union {
@@ -158,18 +168,18 @@ struct  __tengu_initializer_tag
 				tguVar_t		*var;
 				tguExpr_t		*expr;
 		};
-};
+}tguInitializer_t;
 
 
 struct __tengu_declaration_tag;
-typedef struct __tengu_declaration_tag	tguDeclration_t;
-struct __tengu_declration_tag
+typedef struct __tengu_declaration_tag	tguDeclaration_t;
+struct __tengu_declaration_tag
 {
 		tguLexInfo_t			lex_info;
 		tguType_t				decl_type;
 		const	wchar_t			*name;
 		tguInitializer_t		*initializer;
-		tguDeclration_t			*next;
+		tguDeclaration_t		*next;
 };
 
 
@@ -265,12 +275,12 @@ typedef enum
 		TGU_ET_INT_CONST,
 		TGU_ET_FLOAT_CONST,
 		TGU_ET_STRING_CONST,
-		TGU_ET_NAME,
 		TGU_ET_VAR,
 		TGU_ET_FUNC_CALL,
 		TGU_ET_BINARY,
 		TGU_ET_UNARY,
 		TGU_ET_CONDITIONAL,
+		TGU_ET_UNDEF_NAME,
 }tguExprType_t;
 
 
@@ -298,6 +308,7 @@ struct __tengu_expression_tag
 
 typedef enum 
 {
+		TGU_STT_EMPTY,
 		TGU_STT_EXPR,
 		TGU_STT_COMPOUND,
 		TGU_STT_IF,
@@ -400,7 +411,10 @@ struct __tengu_block_tag
 
 
 
+
+
 /***************************************************************´íÎó±¨¸æ**************************************************************************/
+
 
 typedef enum
 {

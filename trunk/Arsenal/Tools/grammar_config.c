@@ -204,6 +204,7 @@ typedef enum
 		DELIM ,
 		SKIP = 600,
 		CODE,
+		VALUE,
 		START,
 		NAME,
 		TOKEN,
@@ -239,6 +240,8 @@ static const cfgLexPattern_t	__cfg_pattern[] =
 		{ASSOC,	L"\"%\"(\"left\"|\"right\"|\"nonassoc\")(?={key_lookahead})", false,1},
 
 		{CODE,	L"\"%code\"(?={key_lookahead})", false,0},
+		{VALUE,	L"\"%value\"(?={key_lookahead})", false,0},
+		
 		{SKIP,	L"\"%skip\"(?={key_lookahead})", false,0},
 		{START,	L"\"%start\"(?={key_lookahead})", false,0},
 		{NAME,	L"\"%name\"(?={key_lookahead})", false,0},
@@ -282,6 +285,7 @@ typedef struct	__cfg_term_info_tag
 static const cfgTermInfo_t	__cfg_term[] =
 {
 		{CODE, L"%code"},
+		{VALUE, L"%value"},
 		{SKIP, L"%skip"},
 		{START, L"%start"},
 		{NAME, L"%name"},
@@ -454,6 +458,9 @@ static void CFG_InitConfig(cfgConfig_t *cfg, cfgNodeList_t *name, cfgNodeList_t 
 								cfg->tok[cfg->tok_cnt] = token->lst[i]->token;
 								cfg->tok[cfg->tok_cnt].name = token->lst[i]->token.name != NULL ? AR_wcsdup(token->lst[i]->token.name) : NULL;
 								cfg->tok[cfg->tok_cnt].regex = AR_wcsdup(token->lst[i]->token.regex);
+								cfg->tok[cfg->tok_cnt].action_line = token->lst[i]->token.action_line;
+								cfg->tok[cfg->tok_cnt].action_name = token->lst[i]->token.action_name != NULL ? AR_wcsdup(token->lst[i]->token.action_name) : NULL;
+								cfg->tok[cfg->tok_cnt].action_ins = token->lst[i]->token.action_ins != NULL ? AR_wcsdup(token->lst[i]->token.action_ins) : NULL;
 
 								if(token->lst[i]->token.code_name == NULL)
 								{
@@ -582,6 +589,8 @@ RE_CHECK_POINT:
 								{
 										cfg->rule[cfg->rule_cnt].prec_tok = AR_wcsdup(rule->lst[i]->rule.prec_tok);
 								}
+										
+								cfg->rule[cfg->rule_cnt].action_line = rule->lst[i]->rule.action_line;
 
 								if(rule->lst[i]->rule.action_name)
 								{
@@ -646,9 +655,11 @@ static void CFG_UnInitConfig(cfgConfig_t *cfg)
 
 		for(i = 0; i < cfg->tok_cnt; ++i)
 		{
-				AR_DEL(cfg->tok[i].code_name);
-				AR_DEL(cfg->tok[i].name);
-				AR_DEL(cfg->tok[i].regex);
+				if(cfg->tok[i].code_name)AR_DEL(cfg->tok[i].code_name);
+				if(cfg->tok[i].name)AR_DEL(cfg->tok[i].name);
+				if(cfg->tok[i].regex)AR_DEL(cfg->tok[i].regex);
+				if(cfg->tok[i].action_name)AR_DEL(cfg->tok[i].action_name);
+				if(cfg->tok[i].action_ins)AR_DEL(cfg->tok[i].action_ins);
 				
 		}
 
@@ -828,6 +839,10 @@ static void CFG_DestroyNode(cfgNode_t *node)
 						if(node->token.name)AR_DEL(node->token.name);
 						if(node->token.regex)AR_DEL(node->token.regex);
 						if(node->token.code_name)AR_DEL(node->token.code_name);
+
+						if(node->token.action_name)AR_DEL(node->token.action_name);
+						if(node->token.action_ins)AR_DEL(node->token.action_ins);
+
 						break;
 				}
 				case CFG_PREC_T:
@@ -1036,6 +1051,9 @@ static psrNode_t*		AR_STDCALL __handle_rhs(psrNode_t **nodes, size_t count, cons
 		res->rule.line = 0;
 		res->rule.prec_tok = NULL;
 		res->rule.rhs = AR_NEWARR0(wchar_t, 2048);
+		res->rule.action_line = 0;
+		res->rule.action_name = NULL;
+		res->rule.action_ins = NULL;
 
 		//AR_ASSERT(ns[0] && ns[0]->type == CFG_NODE_LIST_T && ns[0]->lst.count > 0);
 		AR_ASSERT(ns[0]);
@@ -1082,7 +1100,8 @@ static psrNode_t*		AR_STDCALL __handle_rhs(psrNode_t **nodes, size_t count, cons
 		if(ns[2])
 		{
 				AR_ASSERT(ns[2]->lst.count == 1 || ns[2]->lst.count == 2);
-
+				
+				res->rule.action_line = ns[2]->lst.lst[0]->lexeme.line;
 				res->rule.action_name = ns[2]->lst.lst[0]->lexeme.lexeme;
 				ns[2]->lst.lst[0]->lexeme.lexeme = NULL;
 				
@@ -1228,21 +1247,17 @@ static psrNode_t*		AR_STDCALL __handle_prec_def(psrNode_t **nodes, size_t count,
 
 
 
-
-
-
 /*
-{ L"token_def			:  		%token %skip token_val_prec : lexeme token_val_prec action_decl",	__handle_token_def},
-{ L"token_def			:  		%token lexeme token_val_prec : lexeme token_val_prec action_decl",	__handle_token_def},
+{ L"token_def			:  		%token %skip token_val_prec : lexeme token_val_prec token_value action_decl",	__handle_token_def,0},
+{L"token_def			:  		%token lexeme token_val_prec : lexeme token_val_prec token_value action_decl",	__handle_token_def,0},
 */
-
 
 static psrNode_t*		AR_STDCALL __handle_token_def(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res;
 
-		AR_ASSERT(count == 7);
+		AR_ASSERT(count == 8);
 
 		/*AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T && ns[1] && ns[1]->type == CFG_LEXEME_T && ns[2] && ns[2]->type == CFG_LEXEME_T && ns[4] && ns[4]->type == CFG_LEXEME_T);*/
 
@@ -1255,7 +1270,8 @@ static psrNode_t*		AR_STDCALL __handle_token_def(psrNode_t **nodes, size_t count
 		AR_ASSERT((ns[2] == NULL) || (ns[2]->type == CFG_LEXEME_T));
 		AR_ASSERT((ns[5] == NULL) || (ns[5]->type == CFG_LEXEME_T));
 
-		AR_ASSERT((ns[6] == NULL) || (ns[6]->type == CFG_NODE_LIST_T));
+		AR_ASSERT((ns[6] == NULL) || (ns[6]->type == CFG_LEXEME_T));
+		AR_ASSERT((ns[7] == NULL) || (ns[7]->type == CFG_NODE_LIST_T));
 
 
 
@@ -1294,7 +1310,29 @@ static psrNode_t*		AR_STDCALL __handle_token_def(psrNode_t **nodes, size_t count
 				AR_wtou(ns[5]->lexeme.lexeme, (uint_t*)&res->token.lex_prec, 10);
 		}
 
+		if(ns[6])
+		{
+				res->token.code_name = AR_wcsdup(ns[6]->lexeme.lexeme);
+				__check_name_from_parser_data((cfgParserData_t*)ctx, ns[6]->lexeme.lexeme, ns[6]->lexeme.line, CFG_STR_TOKEN_VALUE);
+		}
 
+
+		if(ns[7])
+		{
+				AR_ASSERT(ns[7]->lst.count == 1 || ns[7]->lst.count == 2);
+				
+				res->token.action_line = ns[7]->lst.lst[0]->lexeme.line;
+				res->token.action_name = ns[7]->lst.lst[0]->lexeme.lexeme;
+				ns[7]->lst.lst[0]->lexeme.lexeme = NULL;
+				
+				if(ns[7]->lst.count == 2)
+				{
+						res->token.action_ins = ns[7]->lst.lst[1]->lexeme.lexeme;
+						ns[7]->lst.lst[1]->lexeme.lexeme = NULL;
+				}
+		}
+
+#if(0)
 		if(ns[6])
 		{
 				AR_ASSERT(ns[6]->lst.count > 0);
@@ -1302,6 +1340,7 @@ static psrNode_t*		AR_STDCALL __handle_token_def(psrNode_t **nodes, size_t count
 
 				__check_name_from_parser_data((cfgParserData_t*)ctx, ns[6]->lst.lst[0]->lexeme.lexeme, ns[6]->lst.lst[0]->lexeme.line, CFG_STR_TOKEN_VALUE);
 		}
+#endif
 
 		
 
@@ -1666,11 +1705,14 @@ static const cfgRuleDef_t	__cfg_rule[] =
 
 		{ L"name_def 			:		%name lexeme : lexeme ",								__handle_name_def,0},
 
-		{ L"token_def			:  		%token %skip token_val_prec : lexeme token_val_prec action_decl",	__handle_token_def,0},
-		{ L"token_def			:  		%token lexeme token_val_prec : lexeme token_val_prec action_decl",	__handle_token_def,0},
+		{ L"token_def			:  		%token %skip token_val_prec : lexeme token_val_prec token_value action_decl",	__handle_token_def,0},
+		{ L"token_def			:  		%token lexeme token_val_prec : lexeme token_val_prec token_value action_decl",	__handle_token_def,0},
 
 		{ L"token_val_prec 		:		, number",												NULL,1},
 		{ L"token_val_prec 		:		",														NULL,0},
+
+		{ L"token_value			:  		%value lexeme",	NULL,1},
+		{ L"token_value			:  		",	NULL,0},
 
 
 		{ L"prec_def			:  		assoc term_list ",								__handle_prec_def,0},
@@ -2209,7 +2251,7 @@ L"		grammar = Parser_CreateGrammar(handler, io);																				\n"
 L"		for(i = 0; i < __TERM_COUNT__; ++i)																						\n"
 L"		{																														\n"
 L"				if(__g_term_pattern[i].skip || __g_term_pattern[i].tokval == 0)continue;										\n"
-L"				if(!Parser_InsertTerm(grammar, __g_term_pattern[i].name, __g_term_pattern[i].tokval, PARSER_ASSOC_NONASSOC,0, NULL))	\n"
+L"				if(!Parser_InsertTerm(grammar, __g_term_pattern[i].name, __g_term_pattern[i].tokval, PARSER_ASSOC_NONASSOC,0, __g_term_pattern[i].leaf))	\n"
 L"				{																												\n"
 L"						Parser_DestroyGrammar(grammar);																			\n"
 L"						grammar = NULL;																							\n"
@@ -2356,8 +2398,9 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 		arString_t		*handler_define = NULL;
 		AR_ASSERT(cfg != NULL && code != NULL);
 
-
 		if(cfg->has_error)return false;
+
+		handler_define	= AR_CreateString();
 
 		if(cfg->predef_cnt > 0)
 		{
@@ -2418,6 +2461,68 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 
 		AR_AppendFormatString(code,  CFG_CNT_DEF, L"__NAME_COUNT__", cfg->name_cnt);
 
+
+		
+/*********************************************************************************************************************/
+		
+		if(cfg->tok_cnt > 0)	/*声明终结符处理函数*/
+		{
+				handlerTbl_t	token_handler_tbl;
+
+				InitHandlerTable(&token_handler_tbl);
+				
+				for(i = 0; i < cfg->tok_cnt; ++i)
+				{
+						const cfgToken_t *tok = &cfg->tok[i];
+						if(tok->name && tok->action_name)
+						{
+								handlerRec_t	*rec;
+								rec = FindFromHandlerTable(&token_handler_tbl, tok->action_name);
+								
+								if(rec == NULL)
+								{
+										InsertToHandlerTable(&token_handler_tbl, tok->action_name, tok->action_ins, tok->action_ins == NULL ? false : true);
+								}else
+								{
+										if(rec->has_spec_def)
+										{
+												if(tok->action_ins)
+												{
+														InsertToHandlerTable(&token_handler_tbl, tok->action_name, tok->action_ins, true);
+												}else
+												{
+
+												}
+										}else
+										{
+												InsertToHandlerTable(&token_handler_tbl, tok->action_name, tok->action_ins, tok->action_ins == NULL ? false : true);
+										}
+								}
+						}
+				}
+
+				for(i = 0; i < token_handler_tbl.count; ++i)
+				{
+						const handlerRec_t *rec = &token_handler_tbl.tbl[i];
+						
+						AR_AppendString(code, L"\r\n");
+						AR_AppendFormatString(code, CFG_TOKEN_HANDLER_DECL, rec->name); 
+						AR_AppendString(code, L"\r\n");
+						
+						if(rec->has_spec_def)
+						{
+								AR_AppendFormatString(handler_define, CFG_TOKEN_HANDLER_DEFINE, rec->name, rec->handler_def);
+						}else
+						{
+								AR_AppendFormatString(handler_define, CFG_TOKEN_HANDLER_DEFINE_2, rec->name);
+						}
+				}
+
+				UnInitHandlerTable(&token_handler_tbl);
+		}		
+/*********************************************************************************************************************/
+
+
 		if(cfg->tok_cnt > 0)/*为存在名字的词法值生成枚举*/
 		{
 				arString_t		*enum_str;
@@ -2461,10 +2566,12 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 
 						if(name != NULL)
 						{
-								AR_AppendFormatString(code, CFG_TERM_DEF_ITEM_1, name, cfg->tok[i].code_name, cfg->tok[i].lex_prec, regex, cfg->tok[i].is_skip ? L"true" : L"false");
+								const wchar_t *leaf_name = cfg->tok[i].action_name == NULL ? L"NULL" : cfg->tok[i].action_name;
+								AR_AppendFormatString(code, CFG_TERM_DEF_ITEM_1, name, cfg->tok[i].code_name, cfg->tok[i].lex_prec, regex, cfg->tok[i].is_skip ? L"true" : L"false", leaf_name);
 						}else
 						{
-								AR_AppendFormatString(code, CFG_TERM_DEF_ITEM_2, L"NULL", cfg->tok[i].code_name, cfg->tok[i].lex_prec, regex, cfg->tok[i].is_skip ? L"true" : L"false");
+								const wchar_t *leaf_name = cfg->tok[i].action_name == NULL ? L"NULL" : cfg->tok[i].action_name;
+								AR_AppendFormatString(code, CFG_TERM_DEF_ITEM_2, L"NULL", cfg->tok[i].code_name, cfg->tok[i].lex_prec, regex, cfg->tok[i].is_skip ? L"true" : L"false", leaf_name);
 						}
 						if(i < cfg->tok_cnt - 1)AR_AppendString(code, L",");
 						AR_AppendString(code, L"\n");
@@ -2584,7 +2691,7 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 		if(cfg->rule_cnt > 0)
 		{
 				handlerTbl_t	handler_tbl;
-				handler_define	= AR_CreateString();
+				
 				InitHandlerTable(&handler_tbl);
 
 				AR_AppendString(code, L"\n");

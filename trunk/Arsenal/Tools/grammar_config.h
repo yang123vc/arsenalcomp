@@ -59,14 +59,18 @@ typedef struct __cfg_token_tag
 
 		const wchar_t	*code_name;
 		bool_t			is_assigned_code_name;
+
+		const	wchar_t	*action_name;
+		const	wchar_t	*action_ins;
+		size_t			action_line;
 }cfgToken_t;
 
 
-#define CFG_TERM_DEF_BEGIN	L"static struct {const wchar_t *name; size_t tokval; size_t lex_prec; const wchar_t *regex; bool_t skip; }__g_term_pattern[] =  {"
+#define CFG_TERM_DEF_BEGIN	L"static struct {const wchar_t *name;\r\nsize_t tokval;\r\nsize_t lex_prec;\r\nconst wchar_t *regex;\r\nbool_t skip;\r\npsrTermFunc_t leaf;\r\n}__g_term_pattern[] =  {"
 #define CFG_TERM_DEF_END	L"};"
 
-#define CFG_TERM_DEF_ITEM_1	L"{L\"%ls\", %ls, " L"%" AR_PLAT_INT_FMT L"d, L\"%ls\", %ls}"
-#define CFG_TERM_DEF_ITEM_2	L"{%ls, %ls," L"%" AR_PLAT_INT_FMT L"d, L\"%ls\", %ls}"
+#define CFG_TERM_DEF_ITEM_1	L"{L\"%ls\", %ls, " L"%" AR_PLAT_INT_FMT L"d, L\"%ls\", %ls, %ls}"
+#define CFG_TERM_DEF_ITEM_2	L"{%ls, %ls," L"%" AR_PLAT_INT_FMT L"d, L\"%ls\", %ls, %ls}"
 
 
 
@@ -115,9 +119,16 @@ typedef struct __rule_tag
 		const wchar_t			*lhs;
 		const wchar_t			*rhs;
 		const wchar_t			*prec_tok;
+		
+		size_t					action_line;
 		const wchar_t			*action_name;
 		const wchar_t			*action_ins;
 }cfgRule_t;
+
+
+#define	CFG_TOKEN_HANDLER_DECL			L"static psrNode_t* AR_STDCALL %ls(const psrToken_t *tok,void *ctx);"
+#define	CFG_TOKEN_HANDLER_DEFINE		L"static psrNode_t* AR_STDCALL %ls(const psrToken_t *tok,void *ctx)\n{\n\t %ls\n}\n"
+#define	CFG_TOKEN_HANDLER_DEFINE_2		L"static psrNode_t* AR_STDCALL %ls(const psrToken_t *tok,void *ctx)\n{\n\t return NULL;\n}\n"
 
 
 #define	CFG_RULE_HANDLER_DECL	L"static psrNode_t* AR_STDCALL handle_%ls(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);"

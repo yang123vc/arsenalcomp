@@ -59,6 +59,7 @@ private:
 		HTREEITEM		m_prec;
 		HTREEITEM		m_rule;
 		HTREEITEM		m_predef;
+		HTREEITEM		m_action;
 		CFont			m_font;
 
 
@@ -69,6 +70,7 @@ private:
 		CMapTable		m_prec_tbl;
 		CMapTable		m_rule_tbl;
 		CMapTable		m_predef_tbl;
+		CMapTable		m_action_tbl;
 
 protected:
 		void	CTagTree::update_table(CMapTable &src, LPCTSTR name, size_t line);
@@ -78,10 +80,10 @@ public:
 	CTagTree();
 	virtual ~CTagTree();
 public:
+		void	update_action_table(const ARSpace::cfgConfig_t *cfg);
 		void	UpdateTag(const ARSpace::cfgConfig_t *cfg);
 		
 		HTREEITEM InsertText(LPCTSTR lpszItem, LPARAM lParam, HTREEITEM hParent = TVI_ROOT, HTREEITEM hInsertAfter = TVI_LAST);
-		HTREEITEM InsertText_Unique(LPCTSTR lpszItem, LPARAM lParam, HTREEITEM hParent = TVI_ROOT, HTREEITEM hInsertAfter = TVI_LAST);
 		void	Clear();
 		
 		const CSrcInfo*	LookupByName(const CString &name);
