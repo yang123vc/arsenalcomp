@@ -54,7 +54,7 @@ void	CTagTree::Clear()
 		change_state(m_rule_tbl);
 
 		change_state(m_predef_tbl);
-		
+		change_state(m_action_tbl);
 
 		update_tree_node(m_name_tbl,	m_name);
 		update_tree_node(m_prec_tbl,	m_prec);
@@ -62,6 +62,8 @@ void	CTagTree::Clear()
 		update_tree_node(m_rule_tbl,	m_rule);
 
 		update_tree_node(m_predef_tbl,	m_predef);
+
+		update_tree_node(m_action_tbl,	m_action);
 		
 		__delete_items(this, m_name);
 		__delete_items(this, m_term);
@@ -69,7 +71,7 @@ void	CTagTree::Clear()
 		__delete_items(this, m_rule);
 
 		__delete_items(this, m_predef);
-
+		__delete_items(this, m_action);
 		
 		
 		m_name_tbl.RemoveAll();
@@ -77,6 +79,7 @@ void	CTagTree::Clear()
 		m_prec_tbl.RemoveAll();
 		m_rule_tbl.RemoveAll();
 		m_predef_tbl.RemoveAll();
+		m_action_tbl.RemoveAll();
 		
 }
 
@@ -155,6 +158,79 @@ void CTagTree::update_tree_node(CMapTable &src, HTREEITEM node)
 						delete val;
 				}
 		}
+}
+
+void	CTagTree::update_action_table(const ARSpace::cfgConfig_t *cfg)
+{
+		
+		change_state(m_action_tbl);
+/****************************************************************/
+		typedef struct __action_record_tag
+		{
+				size_t	line;
+				BOOL	has_definition;
+		}ActionRec_t;
+		CMap<CString, LPCTSTR, ActionRec_t*, ActionRec_t*>	action_map;
+
+		for(size_t i = 0; i < cfg->rule_cnt; ++i)
+		{
+				CString name;
+				size_t  line;
+				BOOL	has_definition = FALSE;
+				ActionRec_t *val;
+				if(cfg->rule[i].action_name != NULL)
+				{
+						name.SetString(cfg->rule[i].action_name);
+						line = cfg->rule[i].action_line;
+						has_definition = cfg->rule[i].action_ins == NULL ? FALSE : TRUE;
+
+						if(action_map.Lookup(name, val))
+						{
+								if(val->has_definition)
+								{
+
+								}else
+								{
+										if(has_definition)
+										{
+												val->line = line;
+												val->has_definition = TRUE;
+										}else
+										{
+
+										}
+								}
+						}else
+						{
+								val = new ActionRec_t;
+								val->has_definition = has_definition;
+								val->line = line;
+								action_map.SetAt(name, val);
+						}
+				}
+		}
+		
+		POSITION		pos = action_map.GetStartPosition();
+
+		CString key;
+		ActionRec_t *val = NULL;
+		
+		size_t cnt = 0;
+		while(pos != NULL)
+		{
+				action_map.GetNextAssoc(pos, key, val);
+				ASSERT(val != NULL);
+				action_map.RemoveKey(key);
+				this->update_table(m_action_tbl, key, val->line);
+				delete val;
+				cnt++;
+		}
+
+		update_tree_node(m_action_tbl, m_action);
+
+		CString str;
+		str.Format(TEXT("Actions (%d)"), cnt);
+		this->SetItemText(m_action, str);
 }
 
 void	CTagTree::UpdateTag(const ARSpace::cfgConfig_t *cfg)
@@ -236,14 +312,15 @@ void	CTagTree::UpdateTag(const ARSpace::cfgConfig_t *cfg)
 				
 				update_table(m_rule_tbl, rule->lhs, rule->line);
 		}
-
+		
+		size_t	code_i = 0;
 		for(size_t i = 0; i < cfg->predef_cnt; ++i)
 		{
 				const ARSpace::cfgPreDef_t *def = &cfg->pre_def[i];
 				CString name;
 				if(def->name == NULL || wcslen(def->name) == 0)
 				{
-						name.Format(L"Code %d", i);
+						name.Format(L"Code %d", code_i++);
 				}else
 				{
 						name = def->name;
@@ -251,13 +328,18 @@ void	CTagTree::UpdateTag(const ARSpace::cfgConfig_t *cfg)
 				update_table(m_predef_tbl, name.GetString(), def->line);
 		}
 
+		update_action_table(cfg);
+
 		update_tree_node(m_name_tbl, m_name);
 		update_tree_node(m_term_tbl, m_term);
 		update_tree_node(m_prec_tbl, m_prec);
 		update_tree_node(m_rule_tbl, m_rule);
 		update_tree_node(m_predef_tbl, m_predef);
 
-
+		
+		
+		
+		
 
 		str.Format(TEXT("Name (%d)"), cfg->name_cnt);
 		this->SetItemText(m_name, str);
@@ -277,6 +359,8 @@ void	CTagTree::UpdateTag(const ARSpace::cfgConfig_t *cfg)
 
 		str.Format(TEXT("PreDef (%d)"), cfg->predef_cnt);
 		this->SetItemText(m_predef, str);
+
+		
 }
 
 
@@ -310,7 +394,7 @@ int CTagTree::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		m_prec = this->InsertItem(TEXT("Prec"));
 		m_rule = this->InsertItem(TEXT("Rule"));
 		m_predef = this->InsertItem(TEXT("PreDef"));
-
+		m_action = this->InsertItem(TEXT("Actions"));
 		//Clear();
 		return 0;
 }

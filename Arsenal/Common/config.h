@@ -455,18 +455,19 @@ typedef void*					ptr_t;
 
 /**************************以下均为未定义时的默认值****************************/
 
-#if !defined(WCHAR_MAX)
-		#define WCHAR_MAX		0xffff
-#endif
-
-#if !defined(CHAR_MAX)
-		#define	CHAR_MAX		127
-#endif
-
 #if !defined(CHAR_BIT)
 		#define	CHAR_BIT		8		
 #endif
 
+
+#if !defined(CHAR_MAX)
+		#define	CHAR_MAX		((~(0xFFFFFFFFFFFFFFFFUL << (CHAR_BIT * sizeof(char))))/2)
+#endif
+
+
+#if !defined(WCHAR_MAX)
+		#define WCHAR_MAX		(~(0xFFFFFFFFFFFFFFFFUL << (CHAR_BIT * sizeof(wchar_t))))
+#endif
 /**********************************************************************************/
 
 #define AR_CHARMAX				CHAR_MAX
