@@ -2507,7 +2507,7 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 						
 						AR_AppendString(code, L"\r\n");
 						AR_AppendFormatString(code, CFG_TOKEN_HANDLER_DECL, rec->name); 
-						AR_AppendString(code, L"\r\n");
+						AR_AppendString(code, L"\r\n\r\n");
 						
 						if(rec->has_spec_def)
 						{
@@ -2516,6 +2516,8 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 						{
 								AR_AppendFormatString(handler_define, CFG_TOKEN_HANDLER_DEFINE_2, rec->name);
 						}
+
+						AR_AppendString(handler_define, L"\r\n\r\n");
 				}
 
 				UnInitHandlerTable(&token_handler_tbl);

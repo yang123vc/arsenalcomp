@@ -80,6 +80,15 @@ syntax_tree_handler
 
 
 	
+	tguSynNode_t*	on_lexer_node(tguParser_t *parser, const psrToken_t *tok)
+	{
+		return NULL;
+	}
+
+
+
+
+	
 	static tguDeclaration_t*	make_declaration_from_expression(tguParser_t 	*parser, const tguToken_t *tok, tguExpr_t *expr)
 	{
 		return NULL;
@@ -272,6 +281,7 @@ L"dec_constant = {dec_literal}(?!{keyword_lhd})"
 #define __NAME_COUNT__ ((size_t)21)
 
 static psrNode_t* AR_STDCALL build_default_leaf(const psrToken_t *tok,void *ctx);
+
 
 
 
@@ -1771,12 +1781,11 @@ static psrGrammar_t*	__build_grammar(const psrHandler_t	*handler, const arIOCtx_
 
 static psrNode_t* AR_STDCALL build_default_leaf(const psrToken_t *tok,void *ctx)
 {
-		{
+	 {
 
-				return NULL;
-		}
+	return NULL;
 }
-
+}
 
 
 /*program	:	translation_unit */
