@@ -166,6 +166,14 @@
 %token 	%skip			:	"{skip_lexem}"				,1				%value	"TOK_DELIM_ID"	 		;			//¿Õ°×£¬ÐèÒª¹ýÂË
 
 
+%code {
+	
+	tguSynNode_t*	on_lexer_node(tguParser_t *parser, const psrToken_t *tok)
+	\{
+		return NULL;
+	\}
+
+};
 
 
 %token	NAME			:	"{letter}({letter}|{digit})*"					%value	"TOK_NAME"				%action build_default_leaf
@@ -187,7 +195,7 @@
 
 
 
-%token	"do"		:	'"do"(?!{keyword_lhd})'		,1					%value	"TOK_DO"				%action build_default_leaf			;
+%token	"do"		:	'"do"(?!{keyword_lhd})'		,1					%value	"TOK_DO"			%action build_default_leaf			;
 %token	"while"	:	'"while"(?!{keyword_lhd})'		,1					%value	"TOK_WHILE"		%action build_default_leaf			;
 %token	"if"		:	'"if"(?!{keyword_lhd})'		,1					%value	"TOK_IF"			%action build_default_leaf			;
 %token	"else"	:	'"else"(?!{keyword_lhd})'		,1					%value	"TOK_ELSE"			%action build_default_leaf			;
@@ -206,20 +214,20 @@
 
 
 %token	"++"		:	'"++"'		,1								%value	"TOK_INC"			%action build_default_leaf			;
-%token	"--"		:	'"--"'		,1								%value	"TOK_DEC"		%action build_default_leaf			;
+%token	"--"		:	'"--"'		,1								%value	"TOK_DEC"			%action build_default_leaf			;
 
 
-%token	"&&"		:	'"&&"'		,1								%value	"TOK_ANDAND"	%action build_default_leaf			;
-%token	"||"		:	'"||"'		,1								%value	"TOK_OROR"		%action build_default_leaf			;
+%token	"&&"		:	'"&&"'		,1								%value	"TOK_ANDAND"		%action build_default_leaf			;
+%token	"||"		:	'"||"'		,1								%value	"TOK_OROR"			%action build_default_leaf			;
 
 
 
-%token	"<="		:	'"<="'		,1								%value	"TOK_LE"		%action build_default_leaf			;
-%token	">="		:	'">="'		,1								%value	"TOK_GE"		%action build_default_leaf			;
-%token	"=="		:	'"=="'		,1								%value	"TOK_EQ"		%action build_default_leaf			;
-%token	"!="		:	'"!="'		,1								%value	"TOK_NE"		%action build_default_leaf			;
-%token	"<"		:	'"<"'			,0								%value	"TOK_LESS"		%action build_default_leaf			;
-%token	">"		:	'">"'			,0								%value	"TOK_GREATER"	%action build_default_leaf			;
+%token	"<="		:	'"<="'		,1								%value	"TOK_LE"			%action build_default_leaf			;
+%token	">="		:	'">="'		,1								%value	"TOK_GE"			%action build_default_leaf			;
+%token	"=="		:	'"=="'		,1								%value	"TOK_EQ"			%action build_default_leaf			;
+%token	"!="		:	'"!="'		,1								%value	"TOK_NE"			%action build_default_leaf			;
+%token	"<"		:	'"<"'			,0								%value	"TOK_LESS"			%action build_default_leaf			;
+%token	">"		:	'">"'			,0								%value	"TOK_GREATER"		%action build_default_leaf			;
 
 
 
@@ -237,20 +245,20 @@
 
 
 
-%token	"+"		:	'"+"'			,0								%value	"TOK_ADD"				%action build_default_leaf			;
-%token	"-"		:	'"-"'			,0								%value	"TOK_SUB"				%action build_default_leaf			;
-%token	"*"		:	'"*"'			,0								%value	"TOK_MUL"				%action build_default_leaf			;
-%token	"/"		:	'"/"'			,0								%value	"TOK_DIV"				%action build_default_leaf			;
-%token	"%"		:	'"%"'			,0								%value	"TOK_MOD"				%action build_default_leaf			;
+%token	"+"		:	'"+"'			,0								%value	"TOK_ADD"			%action build_default_leaf			;
+%token	"-"		:	'"-"'			,0								%value	"TOK_SUB"			%action build_default_leaf			;
+%token	"*"		:	'"*"'			,0								%value	"TOK_MUL"			%action build_default_leaf			;
+%token	"/"		:	'"/"'			,0								%value	"TOK_DIV"			%action build_default_leaf			;
+%token	"%"		:	'"%"'			,0								%value	"TOK_MOD"			%action build_default_leaf			;
 
-%token	"!"		:	'"!"'			,0								%value	"TOK_NOT"				%action build_default_leaf			;
+%token	"!"		:	'"!"'			,0								%value	"TOK_NOT"			%action build_default_leaf			;
 
 
-%token	":"		:	'":"'			,0								%value	"TOK_COLON"				%action build_default_leaf			;
-%token	"?"		:	'"?"'			,0								%value	"TOK_QUEST"				%action build_default_leaf			;
+%token	":"		:	'":"'			,0								%value	"TOK_COLON"		%action build_default_leaf			;
+%token	"?"		:	'"?"'			,0								%value	"TOK_QUEST"		%action build_default_leaf			;
 
 /*
-%token	"."		:	'"."'			,0								%value	"TOK_DOT"				%action build_default_leaf			;
+%token	"."		:	'"."'			,0								%value	"TOK_DOT"			%action build_default_leaf			;
 */
 
 
@@ -699,6 +707,8 @@ close_block			:	"}"		%action	on_close_block
 	\}
 
 };
+
+
 empty_statement			:	";"		%action	on_empty_statement
 					{
 						tguSynNode_t	**ns = (tguSynNode_t**)nodes;

@@ -172,6 +172,41 @@ void	CTagTree::update_action_table(const ARSpace::cfgConfig_t *cfg)
 		}ActionRec_t;
 		CMap<CString, LPCTSTR, ActionRec_t*, ActionRec_t*>	action_map;
 
+		for(size_t i = 0; i < cfg->tok_cnt; ++i)
+		{
+				const ARSpace::cfgToken_t *tok = &cfg->tok[i];
+		
+				CString name;
+				size_t  line;
+				BOOL	has_definition = FALSE;
+				ActionRec_t *val;
+				if(tok->action_name != NULL)
+				{
+						name.SetString(tok->action_name);
+						line = tok->action_line;
+						has_definition = tok->action_ins == NULL ? FALSE : TRUE;
+						
+						if(action_map.Lookup(name, val))
+						{
+								if(has_definition)
+								{
+										val->line = line;
+										val->has_definition = TRUE;
+								}else
+								{
+
+								}
+						}else
+						{
+								val = new ActionRec_t;
+								val->has_definition = has_definition;
+								val->line = line;
+								action_map.SetAt(name, val);
+						}
+				}
+
+		}
+
 		for(size_t i = 0; i < cfg->rule_cnt; ++i)
 		{
 				CString name;
@@ -186,19 +221,13 @@ void	CTagTree::update_action_table(const ARSpace::cfgConfig_t *cfg)
 
 						if(action_map.Lookup(name, val))
 						{
-								if(val->has_definition)
+								if(has_definition)
 								{
-
+										val->line = line;
+										val->has_definition = TRUE;
 								}else
 								{
-										if(has_definition)
-										{
-												val->line = line;
-												val->has_definition = TRUE;
-										}else
-										{
 
-										}
 								}
 						}else
 						{

@@ -43,7 +43,7 @@
 %name string_literal	:	"{string_sq}|{string_dq}"
 				;
 
-%token %skip 		:	"{delim}+|{comment}+|{comment_line}+"				,1		%action	"TOK_DELIM_ID"		;
+%token %skip 		:	"{delim}+|{comment}+|{comment_line}+"				,1		%value	"TOK_DELIM_ID"		;
 
 
 
@@ -56,14 +56,14 @@
 */
 
 
-//%token	HEX_CONSTANT	:	"{hex_literal}(?!{keyword_lhd})"			,2	%action "TOK_HEX_CONSTANT"		;
-//%token	DEC_CONSTANT	:	"{dec_literal}(?!{keyword_lhd})"			,1	%action "TOK_DEC_CONSTANT"		;
+//%token	HEX_CONSTANT	:	"{hex_literal}(?!{keyword_lhd})"			,2	%value "TOK_HEX_CONSTANT"		;
+//%token	DEC_CONSTANT	:	"{dec_literal}(?!{keyword_lhd})"			,1	%value "TOK_DEC_CONSTANT"		;
 
-%token	NUMBER		:	"({hex_literal}|{dec_literal})(?!{keyword_lhd})"	,2	%action "TOK_NUMBER"	;
+%token	NUMBER		:	"({hex_literal}|{dec_literal})(?!{keyword_lhd})"	,2	%value "TOK_NUMBER"	;
 
 
-%token	STRING_LITERAL	:	"{string_literal}"							%action "TOK_STRING_LITERAL"	;	
-%token	IDENTIFIER		:	"{letter}({letter}|{digit})*"					%action "TOK_IDENTIFIER"		;
+%token	STRING_LITERAL	:	"{string_literal}"							%value "TOK_STRING_LITERAL"	;	
+%token	IDENTIFIER		:	"{letter}({letter}|{digit})*"					%value "TOK_IDENTIFIER"		;
 
 
 %name		keyword_lhd	:	"[A-Z_a-z0-9]"														;
@@ -71,119 +71,119 @@
 
 
 
-%token	"switch"	:	'"switch"(?!{keyword_lhd})'	,1					%action 	"TOK_SWITCH"		;//SWITCH
-%token	"for"		:	'"for"(?!{keyword_lhd})'		,1					%action	"TOK_FOR"			;//FOR
+%token	"switch"	:	'"switch"(?!{keyword_lhd})'	,1					%value 	"TOK_SWITCH"		;//SWITCH
+%token	"for"		:	'"for"(?!{keyword_lhd})'		,1					%value	"TOK_FOR"			;//FOR
 
-%token	"return"	:	'"return"(?!{keyword_lhd})'	,1					%action	"TOK_RETURN"		;//RETURN
-%token	"do"		:	'"do"(?!{keyword_lhd})'		,1					%action	"TOK_DO"			;//DO
-%token	"while"	:	'"while"(?!{keyword_lhd})'		,1					%action	"TOK_WHILE"		;//WHILE
-%token	"if"		:	'"if"(?!{keyword_lhd})'		,1					%action	"TOK_IF"			;//IF
-%token	"else"	:	'"else"(?!{keyword_lhd})'		,1					%action	"TOK_ELSE"			;//ELSE
-
-
-
-%token	"true"	:	'"true"(?!{keyword_lhd})'		,1					%action	"TOK_TRUE"			;
-%token	"false"	:	'"false"(?!{keyword_lhd})'		,1					%action	"TOK_FALSE"		;
-%token	"this"	:	'"this"(?!{keyword_lhd})'		,1					%action	"TOK_THIS"			;
-
-%token	"null"	:	'"null"(?!{keyword_lhd})'		,1					%action	"TOK_NULL"			;
-%token	"const"	:	'"const"(?!{keyword_lhd})'		,1					%action	"TOK_CONST"		;
-%token	"in"		:	'"in"(?!{keyword_lhd})'		,1					%action	"TOK_IN"			;
-%token	"new"		:	'"new"(?!{keyword_lhd})'		,1					%action	"TOK_NEW"			;
-%token	"delete"	:	'"delete"(?!{keyword_lhd})'		,1				%action	"TOK_DELETE"		;
-%token	"typeof"	:	'"typeof"(?!{keyword_lhd})'		,1				%action	"TOK_TYPEOF"		;
-%token	"function"	:	'"function"(?!{keyword_lhd})'		,1				%action	"TOK_FUNCTION"		;
-%token	"var"		:	'"var"(?!{keyword_lhd})'			,1				%action	"TOK_VAR"			;
-%token	"with"	:	'"with"(?!{keyword_lhd})'			,1				%action	"TOK_WITH"			;
-%token	"instanceof"	:	'"instanceof"(?!{keyword_lhd})'		,1			%action	"TOK_INSTANCEOF"	;
-%token	"debugger"	:	'"debugger"(?!{keyword_lhd})'		,1			%action	"TOK_DEBUGGER"	;
-%token	"try"		:	'"try"(?!{keyword_lhd})'		,1					%action	"TOK_TRY"			;
-%token	"catch"	:	'"catch"(?!{keyword_lhd})'		,1					%action	"TOK_CATCH"		;
-%token	"finally"	:	'"finally"(?!{keyword_lhd})'	,1					%action	"TOK_FINALLY"		;
-%token	"throw"	:	'"throw"(?!{keyword_lhd})'		,1					%action	"TOK_THROW"		;
-
-
-%token	"continue"	:	'"continue"(?!{keyword_lhd})'	,1					%action	"TOK_CONTINUE"		;//CONTINUE
-%token	"default"	:	'"default"(?!{keyword_lhd})'	,1					%action	"TOK_DEFAULT"		;//DEFAULT
-%token	"case"	:	'"case"(?!{keyword_lhd})'		,1					%action	"TOK_CASE"			;//CASE
-%token	"break"	:	'"break"(?!{keyword_lhd})'		,1					%action	"TOK_BREAK"		;//BREAK
+%token	"return"	:	'"return"(?!{keyword_lhd})'	,1					%value	"TOK_RETURN"		;//RETURN
+%token	"do"		:	'"do"(?!{keyword_lhd})'		,1					%value	"TOK_DO"			;//DO
+%token	"while"	:	'"while"(?!{keyword_lhd})'		,1					%value	"TOK_WHILE"		;//WHILE
+%token	"if"		:	'"if"(?!{keyword_lhd})'		,1					%value	"TOK_IF"			;//IF
+%token	"else"	:	'"else"(?!{keyword_lhd})'		,1					%value	"TOK_ELSE"			;//ELSE
 
 
 
+%token	"true"	:	'"true"(?!{keyword_lhd})'		,1					%value	"TOK_TRUE"			;
+%token	"false"	:	'"false"(?!{keyword_lhd})'		,1					%value	"TOK_FALSE"		;
+%token	"this"	:	'"this"(?!{keyword_lhd})'		,1					%value	"TOK_THIS"			;
+
+%token	"null"	:	'"null"(?!{keyword_lhd})'		,1					%value	"TOK_NULL"			;
+%token	"const"	:	'"const"(?!{keyword_lhd})'		,1					%value	"TOK_CONST"		;
+%token	"in"		:	'"in"(?!{keyword_lhd})'		,1					%value	"TOK_IN"			;
+%token	"new"		:	'"new"(?!{keyword_lhd})'		,1					%value	"TOK_NEW"			;
+%token	"delete"	:	'"delete"(?!{keyword_lhd})'		,1				%value	"TOK_DELETE"		;
+%token	"typeof"	:	'"typeof"(?!{keyword_lhd})'		,1				%value	"TOK_TYPEOF"		;
+%token	"function"	:	'"function"(?!{keyword_lhd})'		,1				%value	"TOK_FUNCTION"		;
+%token	"var"		:	'"var"(?!{keyword_lhd})'			,1				%value	"TOK_VAR"			;
+%token	"with"	:	'"with"(?!{keyword_lhd})'			,1				%value	"TOK_WITH"			;
+%token	"instanceof"	:	'"instanceof"(?!{keyword_lhd})'		,1			%value	"TOK_INSTANCEOF"	;
+%token	"debugger"	:	'"debugger"(?!{keyword_lhd})'		,1			%value	"TOK_DEBUGGER"	;
+%token	"try"		:	'"try"(?!{keyword_lhd})'		,1					%value	"TOK_TRY"			;
+%token	"catch"	:	'"catch"(?!{keyword_lhd})'		,1					%value	"TOK_CATCH"		;
+%token	"finally"	:	'"finally"(?!{keyword_lhd})'	,1					%value	"TOK_FINALLY"		;
+%token	"throw"	:	'"throw"(?!{keyword_lhd})'		,1					%value	"TOK_THROW"		;
 
 
-%token	"void"	:	'"void"(?!{keyword_lhd})'		,1					%action	"TOK_VOID"			;//VOID
-
-
-
-
-%token	">>="		:	'">>="'		,2								%action	"TOK_RIGHT_ASSIGN"	;//RIGHT_ASSIGN
-%token	"<<="		:	'"<<="'		,2								%action	"TOK_LEFT_ASSIGN"	;//LEFT_ASSIGN
-
-
-%token	">>>="	:	'">>>="'		,3								%action	"TOK_UNSIGNED_RIGHT_ASSIGN"	;
-
-%token	">>>"		:	'">>>"'		,2								%action	"TOK_UNSIGNED_RIGHT"			;
-
-%token	"==="		:	'"==="'		,2								%action	"TOK_STRICT_EQ_OP"			;
-%token	"!=="		:	'"!=="'		,2								%action	"TOK_STRICT_NE_OP"			;
+%token	"continue"	:	'"continue"(?!{keyword_lhd})'	,1					%value	"TOK_CONTINUE"		;//CONTINUE
+%token	"default"	:	'"default"(?!{keyword_lhd})'	,1					%value	"TOK_DEFAULT"		;//DEFAULT
+%token	"case"	:	'"case"(?!{keyword_lhd})'		,1					%value	"TOK_CASE"			;//CASE
+%token	"break"	:	'"break"(?!{keyword_lhd})'		,1					%value	"TOK_BREAK"		;//BREAK
 
 
 
 
 
-
-%token	"+="		:	'"+="'		,1								%action	"TOK_ADD_ASSIGN"	;//ADD_ASSIGN
-%token	"-="		:	'"-="'		,1								%action	"TOK_SUB_ASSIGN"	;//SUB_ASSIGN
-%token	"*="		:	'"*="'		,1								%action	"TOK_MUL_ASSIGN"	;//MUL_ASSIGN
-%token	"/="		:	'"/="'		,1								%action	"TOK_DIV_ASSIGN"	;//DIV_ASSIGN
-%token	"%="		:	'"%="'		,1								%action	"TOK_MOD_ASSIGN"	;//MOD_ASSIGN
-%token	"&="		:	'"&="'		,1								%action	"TOK_AND_ASSIGN"	;//AND_ASSIGN
-
-%token	"^="		:	'"^="'		,1								%action	"TOK_XOR_ASSIGN"	;//XOR_ASSIGN
-%token	"|="		:	'"|="'		,1								%action	"TOK_OR_ASSIGN"		;//OR_ASSIGN
-%token	">>"		:	'">>"'		,1								%action	"TOK_RIGHT_OP"		;//RIGHT_OP
-%token	"<<"		:	'"<<"'		,1								%action	"TOK_LEFT_OP"		;//LEFT_OP
-%token	"++"		:	'"++"'		,1								%action	"TOK_INC_OP"		;//INC_OP
-%token	"--"		:	'"--"'		,1								%action	"TOK_DEC_OP"		;//DEC_OP
+%token	"void"	:	'"void"(?!{keyword_lhd})'		,1					%value	"TOK_VOID"			;//VOID
 
 
 
-%token	"&&"		:	'"&&"'		,1								%action	"TOK_AND_OP"		;//AND_OP
-%token	"||"		:	'"||"'		,1								%action	"TOK_OR_OP"		;//OR_OP
 
-%token	"<="		:	'"<="'		,1								%action 	"TOK_LE_OP"		;//LE_OP
-%token	">="		:	'">="'		,1								%action 	"TOK_GE_OP"		;//GE_OP
-%token	"=="		:	'"=="'		,1								%action 	"TOK_EQ_OP"		;//EQ_OP
-%token	"!="		:	'"!="'		,1								%action	"TOK_NE_OP"		;//NE_OP
-%token	"<"		:	'"<"'			,0								%action	"TOK_LESS_OP"		;//<
-%token	">"		:	'">"'			,0								%action	"TOK_GREATER_OP"	;//>
+%token	">>="		:	'">>="'		,2								%value	"TOK_RIGHT_ASSIGN"	;//RIGHT_ASSIGN
+%token	"<<="		:	'"<<="'		,2								%value	"TOK_LEFT_ASSIGN"	;//LEFT_ASSIGN
 
 
+%token	">>>="	:	'">>>="'		,3								%value	"TOK_UNSIGNED_RIGHT_ASSIGN"	;
 
-%token	";"		:	'";"'			,0								%action "TOK_SEMICOLON"			;//;
-%token	"{"		:	'"{"'			,0								%action "TOK_L_BRACES"			;//{
-%token	"}"		:	'"}"'			,0								%action "TOK_R_BRACES"			;//}
-%token	","		:	'","'			,0								%action "TOK_COMMA"				;//,
-%token	":"		:	'":"'			,0								%action "TOK_COLON"				;//:
-%token	"="		:	'"="'			,0								%action "TOK_ASSIGN"				;//=
-%token	"("		:	'"("'			,0								%action "TOK_L_PAREN"				;//(
-%token	")"		:	'")"'			,0								%action "TOK_R_PAREN"				;//)
-%token	"["		:	'"["'			,0								%action "TOK_L_SQUARE"			;//[
-%token	"]"		:	'"]"'			,0								%action "TOK_R_SQUARE"			;//]
-%token	"."		:	'"."'			,0								%action "TOK_DOT"				;//.
-%token	"&"		:	'"&"'			,0								%action "TOK_AND"				;//&
-%token	"!"		:	'"!"'			,0								%action "TOK_NOT"				;//!
-%token	"~"		:	'"~"'			,0								%action "TOK_TILDE"				;//~
-%token	"+"		:	'"+"'			,0								%action "TOK_ADD"				;//+
-%token	"-"		:	'"-"'			,0								%action "TOK_SUB"				;//-
-%token	"*"		:	'"*"'			,0								%action "TOK_MUL"				;//*
-%token	"/"		:	'"/"'			,0								%action "TOK_DIV"				;///
-%token	"%"		:	'"%"'			,0								%action "TOK_MOD"				;//%
+%token	">>>"		:	'">>>"'		,2								%value	"TOK_UNSIGNED_RIGHT"			;
 
-%token	"^"		:	'"^"'			,0								%action "TOK_XOR"				;//^
-%token	"|"		:	'"|"'			,0								%action "TOK_OR"				;//|
-%token	"?"		:	'"?"'			,0								%action "TOK_QUEST"				;//?
+%token	"==="		:	'"==="'		,2								%value	"TOK_STRICT_EQ_OP"			;
+%token	"!=="		:	'"!=="'		,2								%value	"TOK_STRICT_NE_OP"			;
+
+
+
+
+
+
+%token	"+="		:	'"+="'		,1								%value	"TOK_ADD_ASSIGN"	;//ADD_ASSIGN
+%token	"-="		:	'"-="'		,1								%value	"TOK_SUB_ASSIGN"	;//SUB_ASSIGN
+%token	"*="		:	'"*="'		,1								%value	"TOK_MUL_ASSIGN"	;//MUL_ASSIGN
+%token	"/="		:	'"/="'		,1								%value	"TOK_DIV_ASSIGN"	;//DIV_ASSIGN
+%token	"%="		:	'"%="'		,1								%value	"TOK_MOD_ASSIGN"	;//MOD_ASSIGN
+%token	"&="		:	'"&="'		,1								%value	"TOK_AND_ASSIGN"	;//AND_ASSIGN
+
+%token	"^="		:	'"^="'		,1								%value	"TOK_XOR_ASSIGN"	;//XOR_ASSIGN
+%token	"|="		:	'"|="'		,1								%value	"TOK_OR_ASSIGN"		;//OR_ASSIGN
+%token	">>"		:	'">>"'		,1								%value	"TOK_RIGHT_OP"		;//RIGHT_OP
+%token	"<<"		:	'"<<"'		,1								%value	"TOK_LEFT_OP"		;//LEFT_OP
+%token	"++"		:	'"++"'		,1								%value	"TOK_INC_OP"		;//INC_OP
+%token	"--"		:	'"--"'		,1								%value	"TOK_DEC_OP"		;//DEC_OP
+
+
+
+%token	"&&"		:	'"&&"'		,1								%value	"TOK_AND_OP"		;//AND_OP
+%token	"||"		:	'"||"'		,1								%value	"TOK_OR_OP"		;//OR_OP
+
+%token	"<="		:	'"<="'		,1								%value 	"TOK_LE_OP"		;//LE_OP
+%token	">="		:	'">="'		,1								%value 	"TOK_GE_OP"		;//GE_OP
+%token	"=="		:	'"=="'		,1								%value 	"TOK_EQ_OP"		;//EQ_OP
+%token	"!="		:	'"!="'		,1								%value	"TOK_NE_OP"		;//NE_OP
+%token	"<"		:	'"<"'			,0								%value	"TOK_LESS_OP"		;//<
+%token	">"		:	'">"'			,0								%value	"TOK_GREATER_OP"	;//>
+
+
+
+%token	";"		:	'";"'			,0								%value "TOK_SEMICOLON"			;//;
+%token	"{"		:	'"{"'			,0								%value "TOK_L_BRACES"			;//{
+%token	"}"		:	'"}"'			,0								%value "TOK_R_BRACES"			;//}
+%token	","		:	'","'			,0								%value "TOK_COMMA"				;//,
+%token	":"		:	'":"'			,0								%value "TOK_COLON"				;//:
+%token	"="		:	'"="'			,0								%value "TOK_ASSIGN"				;//=
+%token	"("		:	'"("'			,0								%value "TOK_L_PAREN"				;//(
+%token	")"		:	'")"'			,0								%value "TOK_R_PAREN"				;//)
+%token	"["		:	'"["'			,0								%value "TOK_L_SQUARE"			;//[
+%token	"]"		:	'"]"'			,0								%value "TOK_R_SQUARE"			;//]
+%token	"."		:	'"."'			,0								%value "TOK_DOT"				;//.
+%token	"&"		:	'"&"'			,0								%value "TOK_AND"				;//&
+%token	"!"		:	'"!"'			,0								%value "TOK_NOT"				;//!
+%token	"~"		:	'"~"'			,0								%value "TOK_TILDE"				;//~
+%token	"+"		:	'"+"'			,0								%value "TOK_ADD"				;//+
+%token	"-"		:	'"-"'			,0								%value "TOK_SUB"				;//-
+%token	"*"		:	'"*"'			,0								%value "TOK_MUL"				;//*
+%token	"/"		:	'"/"'			,0								%value "TOK_DIV"				;///
+%token	"%"		:	'"%"'			,0								%value "TOK_MOD"				;//%
+
+%token	"^"		:	'"^"'			,0								%value "TOK_XOR"				;//^
+%token	"|"		:	'"|"'			,0								%value "TOK_OR"				;//|
+%token	"?"		:	'"?"'			,0								%value "TOK_QUEST"				;//?
 
 
 
