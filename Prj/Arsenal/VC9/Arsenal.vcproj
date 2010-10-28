@@ -1314,6 +1314,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\Arsenal\Common\thread_apple.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\Arsenal\Common\thread_posix.h"
 				>
 			</File>
@@ -1477,6 +1481,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\Arsenal\Tengu\tguparser.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Tengu\tguutility.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Tengu\tguutility.h"
 				>
 			</File>
 			<File

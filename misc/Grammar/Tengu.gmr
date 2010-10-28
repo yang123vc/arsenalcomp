@@ -25,8 +25,60 @@
 
 
 
-%code syntax_node {
+
+%code params{
+
+	typedef struct __tengu_params_tag
+	\{		
+		const wchar_t		**names;
+		size_t			count;
+		size_t			cap;
+		bool_t			is_variadic;
+	\}tguParams_t;
+
+	static void	init_params(tguParams_t *params)
+	\{	
+		AR_ASSERT(params != NULL);
+		AR_memset(params, 0, sizeof(*params));
+		params->is_variadic = false;
+	\}
 	
+	static void	clear_params(tguParams_t *params)
+	\{
+		AR_ASSERT(params != NULL);
+		params->count = 0;
+		params->is_variadic = false;
+	\}
+
+	static void	uninit_params(tguParams_t *params)
+	\{
+		AR_ASSERT(params != NULL);
+		clear_params(params);
+		if(params->names)AR_DEL(params);
+		AR_memset(params, 0, sizeof(*params));
+	\}
+
+	void	insert_to_params(tguParams_t *params, const wchar_t *name)
+	\{
+		AR_ASSERT(params != NULL && name != NULL);
+
+		if(params->count == params->cap)
+		\{
+			params->cap += 4;
+			params->names = AR_REALLOC(const wchar_t*, (void*)params->names, params->cap);
+		\}
+		params->names[params->count] = TGU_AllocString(name);
+		params->count++;
+	\}
+
+
+			
+};
+
+
+
+
+%code syntax_node {
 	typedef enum
 	\{
 		TGU_NODE_TOKEN_T,
@@ -34,7 +86,8 @@
 		TGU_NODE_EXPR_T,
 		TGU_NODE_DECL_T,
 		TGU_NODE_TABLE_FILED_T,
-		TGU_NODE_TABLE_INIT_T
+		TGU_NODE_TABLE_INIT_T,
+		TGU_NODE_PARAMS_T,
 	\}tguSynNodeType_t;
 
 	typedef struct __tengu_syntax_node_tag
@@ -48,6 +101,7 @@
 				tguDeclaration_t	*decl;
 				tguTableField_t		*field;
 				tguTableInit_t		*tbl_init;
+				tguParams_t		*params;
 		\};
 	\}tguSynNode_t;
 
@@ -285,6 +339,7 @@
 %start	program	;
 
 
+
 program			:	translation_unit
 				|	.
 				;
@@ -310,16 +365,64 @@ function_defination		:	"var"		NAME "(" params ")"	start_function compound_statem
 					;
 
 
-params				:	namelist	","	"..."
-					|	namelist
-					|	"..."
-					|	.
+params				:	namelist	","	"..."		%action on_namelist_ellipsis
+					{
+						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+						tguSynNode_t	*ret;
+						AR_ASSERT(nodes != NULL && count == 3);
+						ns[0]->params->is_variadic = true;
+						ret = ns[0];
+						ns[0] = NULL;
+						return ret;
+					}
+
+					|	namelist		%action	auto_return_0
+
+					|	"..."			%action	on_ellipsis
+					{
+						tguParams_t	*params;
+						tguSynNode_t	*ret;
+						AR_ASSERT(nodes != NULL && count == 1);
+
+						params = AR_NEW0(tguParams_t);
+						init_params(params);
+						params->is_variadic = true;
+						ret = __create_synnode(TGU_NODE_PARAMS_T, (void*)params);
+						return ret;
+					}
+
+					|	.			%action	NULL
 					;
 
 
+namelist				:	namelist	"," NAME		%action	on_name_list
+					{
+						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+						tguSynNode_t	*ret;
+						tguParams_t	*params;
+						tguToken_t		*tok;
+						AR_ASSERT(nodes != NULL && count == 2);
+						tok = ns[1]->token;
+						params = ns[0]->params;
+						insert_to_params(params, tok->token);
+						ret = ns[0];
+						ns[0] = NULL;
+						return ret;
+					}
 
-namelist				:	namelist	"," NAME
-					|	NAME
+					|	NAME					%action	on_name
+					{
+						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+						tguSynNode_t	*ret;
+						tguParams_t	*params;
+						AR_ASSERT(nodes != NULL && count == 1);
+
+						params = AR_NEW0(tguParams_t);
+						init_params(params);
+						insert_to_params(params, ns[0]->token->token);
+						ret = __create_synnode(TGU_NODE_PARAMS_T, (void*)params);
+						return ret;
+					}
 					;
 
 
@@ -589,7 +692,7 @@ filed					:	expression			%action	on_filed
 
 compound_statement		:	start_block	compound_element_list		close_block	%action	on_compound_statement
 					|	"{" "}"										%action	on_compound_statement
-					|	start_block  error  close_block									%action	on_compound_statement
+					|	start_block  error  close_block						%action	on_compound_statement
 					{
 						/*
 						tguParser_t 	*parser = (tguParser_t*)ctx;
@@ -740,7 +843,7 @@ selection_statement		:	if_statement		%action auto_return_0
 					|	if_else_statement	%action auto_return_0
 					;
 
-%code{
+%code	{
 	static tguStmt_t*	make_if_statement(tguParser_t *parser, tguExpr_t *cond, tguStmt_t *if_true, tguStmt_t *if_false, const tguLexInfo_t *lex_info)
 	\{
 		return NULL;

@@ -17,9 +17,10 @@
 
 
 
-//
-// Platform Identification
-//
+/*
+ Platform Identification
+*/
+
 #define OS_FREE_BSD      0x0001
 #define OS_AIX           0x0002
 #define OS_HPUX          0x0003
@@ -33,6 +34,7 @@
 #define OS_QNX           0x000b
 #define OS_VXWORKS       0x000c
 #define OS_CYGWIN        0x000d
+#define OS_IPHONE		 0x000e
 #define OS_UNKNOWN_UNIX  0x00ff
 #define OS_WINDOWS_NT    0x1001
 #define OS_WINDOWS_CE    0x1011
@@ -57,9 +59,16 @@
 	#define OS_FAMILY_UNIX								1
 	#define OS_TYPE										OS_LINUX
 #elif defined(__APPLE__) || defined(__TOS_MACOS__)
-	#define OS_FAMILY_UNIX								1
-	#define OS_FAMILY_BSD								1
-	#define OS_TYPE										OS_MAC_OS_X
+		#define OS_FAMILY_UNIX								1
+		#define OS_FAMILY_BSD								1
+		#include <TargetConditionals.h>
+
+		#if defined(TARGET_IPHONE) || defined(TARGET_IPHONE_SIMULATOR)
+				#define OS_TYPE										OS_IPHONE
+		#else
+				#define OS_TYPE										OS_MAC_OS_X
+		#endif
+
 #elif defined(__NetBSD__)
 	#define OS_FAMILY_UNIX								1
 	#define OS_FAMILY_BSD								1
@@ -96,9 +105,9 @@
 
 
 
-//
-// Hardware Architecture and Byte Order
-//
+/*
+ Hardware Architecture and Byte Order
+*/
 #define ARCH_ALPHA   0x01
 #define ARCH_IA32    0x02
 #define ARCH_IA64    0x03

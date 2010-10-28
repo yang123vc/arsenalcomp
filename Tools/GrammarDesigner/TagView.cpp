@@ -493,6 +493,18 @@ const CSrcInfo*	CTagTree::LookupByName(const CString &name)
 				return val;
 		}
 
+
+		if(m_action_tbl.Lookup(name, val))
+		{
+				return val;
+		}
+
+		if(m_predef_tbl.Lookup(name, val))
+		{
+				return val;
+		}
+
+
 		return NULL;
 
 }
