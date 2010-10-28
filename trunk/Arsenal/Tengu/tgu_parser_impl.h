@@ -18,10 +18,62 @@
 
 
 /*
+params
+*/
+
+
+	typedef struct __tengu_params_tag
+	{		
+		const wchar_t		**names;
+		size_t			count;
+		size_t			cap;
+		bool_t			is_variadic;
+	}tguParams_t;
+
+	static void	init_params(tguParams_t *params)
+	{	
+		AR_ASSERT(params != NULL);
+		AR_memset(params, 0, sizeof(*params));
+		params->is_variadic = false;
+	}
+	
+	static void	clear_params(tguParams_t *params)
+	{
+		AR_ASSERT(params != NULL);
+		params->count = 0;
+		params->is_variadic = false;
+	}
+
+	static void	uninit_params(tguParams_t *params)
+	{
+		AR_ASSERT(params != NULL);
+		clear_params(params);
+		if(params->names)AR_DEL(params);
+		AR_memset(params, 0, sizeof(*params));
+	}
+
+	void	insert_to_params(tguParams_t *params, const wchar_t *name)
+	{
+		AR_ASSERT(params != NULL && name != NULL);
+
+		if(params->count == params->cap)
+		{
+			params->cap += 4;
+			params->names = AR_REALLOC(const wchar_t*, (void*)params->names, params->cap);
+		}
+		params->names[params->count] = TGU_AllocString(name);
+		params->count++;
+	}
+
+
+			
+
+
+
+/*
 syntax_node
 */
 
-	
 	typedef enum
 	{
 		TGU_NODE_TOKEN_T,
@@ -29,7 +81,8 @@ syntax_node
 		TGU_NODE_EXPR_T,
 		TGU_NODE_DECL_T,
 		TGU_NODE_TABLE_FILED_T,
-		TGU_NODE_TABLE_INIT_T
+		TGU_NODE_TABLE_INIT_T,
+		TGU_NODE_PARAMS_T,
 	}tguSynNodeType_t;
 
 	typedef struct __tengu_syntax_node_tag
@@ -43,6 +96,7 @@ syntax_node
 				tguDeclaration_t	*decl;
 				tguTableField_t		*field;
 				tguTableInit_t		*tbl_init;
+				tguParams_t		*params;
 		};
 	}tguSynNode_t;
 
@@ -441,36 +495,43 @@ static psrNode_t* AR_STDCALL handle_element(psrNode_t **nodes, size_t count, con
 static psrNode_t* AR_STDCALL on_function_defination(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*params	:	namelist , ... */
-/*params	:	namelist */
-/*params	:	... */
-/*params	:	 */
-static psrNode_t* AR_STDCALL handle_params(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+static psrNode_t* AR_STDCALL on_namelist_ellipsis(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*params	:	namelist , ... */
 /*params	:	namelist */
-/*params	:	... */
-/*params	:	 */
-static psrNode_t* AR_STDCALL handle_params(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*statement	:	compound_statement */
+/*statement	:	expression_statement */
+/*statement	:	selection_statement */
+/*statement	:	iteration_statement */
+/*statement	:	jump_statement */
+/*statement	:	empty_statement */
+/*init_declarator_list	:	init_declarator */
+/*filed_list	:	filed */
+/*compound_element	:	statement */
+/*compound_element	:	declaration */
+/*expression_statement	:	expression semi */
+/*selection_statement	:	if_statement */
+/*selection_statement	:	if_else_statement */
+/*iteration_statement	:	while_statement */
+/*iteration_statement	:	do_while_statement */
+/*semi	:	; */
+/*expression	:	assignment_expression */
+/*assignment_expression	:	constant_expression */
+/*constant_expression	:	binary_expression */
+/*binary_expression	:	unary_expression */
+/*unary_expression	:	postfix_expression */
+/*postfix_expression	:	call_expression */
+/*postfix_expression	:	primary_expression */
+/*expression_list	:	expression */
+static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*params	:	namelist , ... */
-/*params	:	namelist */
 /*params	:	... */
-/*params	:	 */
-static psrNode_t* AR_STDCALL handle_params(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
-/*params	:	namelist , ... */
-/*params	:	namelist */
-/*params	:	... */
-/*params	:	 */
-static psrNode_t* AR_STDCALL handle_params(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+static psrNode_t* AR_STDCALL on_ellipsis(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*namelist	:	namelist , NAME */
-/*namelist	:	NAME */
-static psrNode_t* AR_STDCALL handle_namelist(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+static psrNode_t* AR_STDCALL on_name_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*namelist	:	namelist , NAME */
 /*namelist	:	NAME */
-static psrNode_t* AR_STDCALL handle_namelist(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+static psrNode_t* AR_STDCALL on_name(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*start_function	:	 */
 static psrNode_t* AR_STDCALL on_start_function(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
@@ -478,6 +539,7 @@ static psrNode_t* AR_STDCALL on_start_function(psrNode_t **nodes, size_t count, 
 /*close_function	:	 */
 static psrNode_t* AR_STDCALL on_close_function(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*params	:	namelist */
 /*statement	:	compound_statement */
 /*statement	:	expression_statement */
 /*statement	:	selection_statement */
@@ -504,6 +566,7 @@ static psrNode_t* AR_STDCALL on_close_function(psrNode_t **nodes, size_t count, 
 /*expression_list	:	expression */
 static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*params	:	namelist */
 /*statement	:	compound_statement */
 /*statement	:	expression_statement */
 /*statement	:	selection_statement */
@@ -530,6 +593,7 @@ static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, cons
 /*expression_list	:	expression */
 static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*params	:	namelist */
 /*statement	:	compound_statement */
 /*statement	:	expression_statement */
 /*statement	:	selection_statement */
@@ -556,6 +620,7 @@ static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, cons
 /*expression_list	:	expression */
 static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*params	:	namelist */
 /*statement	:	compound_statement */
 /*statement	:	expression_statement */
 /*statement	:	selection_statement */
@@ -582,6 +647,7 @@ static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, cons
 /*expression_list	:	expression */
 static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*params	:	namelist */
 /*statement	:	compound_statement */
 /*statement	:	expression_statement */
 /*statement	:	selection_statement */
@@ -608,6 +674,7 @@ static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, cons
 /*expression_list	:	expression */
 static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*params	:	namelist */
 /*statement	:	compound_statement */
 /*statement	:	expression_statement */
 /*statement	:	selection_statement */
@@ -637,6 +704,7 @@ static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, cons
 /*declaration	:	var init_declarator_list semi */
 static psrNode_t* AR_STDCALL auto_return_1(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*params	:	namelist */
 /*statement	:	compound_statement */
 /*statement	:	expression_statement */
 /*statement	:	selection_statement */
@@ -699,6 +767,7 @@ static psrNode_t* AR_STDCALL on_table_constructor(psrNode_t **nodes, size_t coun
 /*filed_list	:	filed_list , filed */
 static psrNode_t* AR_STDCALL on_filed_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*params	:	namelist */
 /*statement	:	compound_statement */
 /*statement	:	expression_statement */
 /*statement	:	selection_statement */
@@ -756,6 +825,7 @@ static psrNode_t* AR_STDCALL on_compound_element_list(psrNode_t **nodes, size_t 
 /*compound_element_list	:	compound_element */
 static psrNode_t* AR_STDCALL on_compound_element_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*params	:	namelist */
 /*statement	:	compound_statement */
 /*statement	:	expression_statement */
 /*statement	:	selection_statement */
@@ -782,6 +852,7 @@ static psrNode_t* AR_STDCALL on_compound_element_list(psrNode_t **nodes, size_t 
 /*expression_list	:	expression */
 static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*params	:	namelist */
 /*statement	:	compound_statement */
 /*statement	:	expression_statement */
 /*statement	:	selection_statement */
@@ -817,6 +888,7 @@ static psrNode_t* AR_STDCALL on_close_block(psrNode_t **nodes, size_t count, con
 /*empty_statement	:	; */
 static psrNode_t* AR_STDCALL on_empty_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*params	:	namelist */
 /*statement	:	compound_statement */
 /*statement	:	expression_statement */
 /*statement	:	selection_statement */
@@ -843,6 +915,7 @@ static psrNode_t* AR_STDCALL on_empty_statement(psrNode_t **nodes, size_t count,
 /*expression_list	:	expression */
 static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*params	:	namelist */
 /*statement	:	compound_statement */
 /*statement	:	expression_statement */
 /*statement	:	selection_statement */
@@ -869,6 +942,7 @@ static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, cons
 /*expression_list	:	expression */
 static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*params	:	namelist */
 /*statement	:	compound_statement */
 /*statement	:	expression_statement */
 /*statement	:	selection_statement */
@@ -911,6 +985,7 @@ static psrNode_t* AR_STDCALL on_if_else_statement(psrNode_t **nodes, size_t coun
 /*if_else_statement	:	if ( error ) statement else statement */
 static psrNode_t* AR_STDCALL on_if_else_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*params	:	namelist */
 /*statement	:	compound_statement */
 /*statement	:	expression_statement */
 /*statement	:	selection_statement */
@@ -937,6 +1012,7 @@ static psrNode_t* AR_STDCALL on_if_else_statement(psrNode_t **nodes, size_t coun
 /*expression_list	:	expression */
 static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*params	:	namelist */
 /*statement	:	compound_statement */
 /*statement	:	expression_statement */
 /*statement	:	selection_statement */
@@ -999,6 +1075,7 @@ static psrNode_t* AR_STDCALL on_return_statement(psrNode_t **nodes, size_t count
 /*jump_statement	:	return expression semi */
 static psrNode_t* AR_STDCALL on_return_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*params	:	namelist */
 /*statement	:	compound_statement */
 /*statement	:	expression_statement */
 /*statement	:	selection_statement */
@@ -1028,6 +1105,7 @@ static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, cons
 /*semi	:	error */
 static psrNode_t* AR_STDCALL auto_return_null(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*params	:	namelist */
 /*statement	:	compound_statement */
 /*statement	:	expression_statement */
 /*statement	:	selection_statement */
@@ -1054,6 +1132,7 @@ static psrNode_t* AR_STDCALL auto_return_null(psrNode_t **nodes, size_t count, c
 /*expression_list	:	expression */
 static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*params	:	namelist */
 /*statement	:	compound_statement */
 /*statement	:	expression_statement */
 /*statement	:	selection_statement */
@@ -1088,6 +1167,7 @@ static psrNode_t* AR_STDCALL on_assignment_expression(psrNode_t **nodes, size_t 
 /*assignment_expression	:	unary_expression = assignment_expression */
 static psrNode_t* AR_STDCALL on_assignment_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*params	:	namelist */
 /*statement	:	compound_statement */
 /*statement	:	expression_statement */
 /*statement	:	selection_statement */
@@ -1117,6 +1197,7 @@ static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, cons
 /*constant_expression	:	binary_expression ? expression : constant_expression */
 static psrNode_t* AR_STDCALL on_condition_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*params	:	namelist */
 /*statement	:	compound_statement */
 /*statement	:	expression_statement */
 /*statement	:	selection_statement */
@@ -1373,6 +1454,7 @@ static psrNode_t* AR_STDCALL on_unary_expression(psrNode_t **nodes, size_t count
 /*unary_expression	:	-- unary_expression */
 static psrNode_t* AR_STDCALL on_unary_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*params	:	namelist */
 /*statement	:	compound_statement */
 /*statement	:	expression_statement */
 /*statement	:	selection_statement */
@@ -1415,6 +1497,7 @@ static psrNode_t* AR_STDCALL on_index_expression(psrNode_t **nodes, size_t count
 /*postfix_expression	:	postfix_expression [ error ] */
 static psrNode_t* AR_STDCALL on_index_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*params	:	namelist */
 /*statement	:	compound_statement */
 /*statement	:	expression_statement */
 /*statement	:	selection_statement */
@@ -1441,6 +1524,7 @@ static psrNode_t* AR_STDCALL on_index_expression(psrNode_t **nodes, size_t count
 /*expression_list	:	expression */
 static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*params	:	namelist */
 /*statement	:	compound_statement */
 /*statement	:	expression_statement */
 /*statement	:	selection_statement */
@@ -1541,6 +1625,7 @@ static psrNode_t* AR_STDCALL on_call_expression(psrNode_t **nodes, size_t count,
 /*call_expression	:	postfix_expression ( ) */
 static psrNode_t* AR_STDCALL on_call_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*params	:	namelist */
 /*statement	:	compound_statement */
 /*statement	:	expression_statement */
 /*statement	:	selection_statement */
@@ -1581,12 +1666,12 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"element  :  declaration ", NULL, handle_element, 0},
 {L"element  :  function_defination ", NULL, handle_element, 0},
 {L"function_defination  :  var NAME ( params ) start_function compound_statement close_function ", NULL, on_function_defination, 0},
-{L"params  :  namelist , ... ", NULL, handle_params, 0},
-{L"params  :  namelist ", NULL, handle_params, 0},
-{L"params  :  ... ", NULL, handle_params, 0},
-{L"params  :   ", NULL, handle_params, 0},
-{L"namelist  :  namelist , NAME ", NULL, handle_namelist, 0},
-{L"namelist  :  NAME ", NULL, handle_namelist, 0},
+{L"params  :  namelist , ... ", NULL, on_namelist_ellipsis, 0},
+{L"params  :  namelist ", NULL, auto_return_0, 0},
+{L"params  :  ... ", NULL, on_ellipsis, 0},
+{L"params  :   ", NULL, NULL, 0},
+{L"namelist  :  namelist , NAME ", NULL, on_name_list, 0},
+{L"namelist  :  NAME ", NULL, on_name, 0},
 {L"start_function  :   ", NULL, on_start_function, 0},
 {L"close_function  :   ", NULL, on_close_function, 0},
 {L"statement  :  compound_statement ", NULL, auto_return_0, 0},
@@ -1830,49 +1915,23 @@ static psrNode_t* AR_STDCALL on_function_defination(psrNode_t **nodes, size_t co
 
 
 /*params	:	namelist , ... */
+static psrNode_t* AR_STDCALL on_namelist_ellipsis(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 {
+						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+						tguSynNode_t	*ret;
+						AR_ASSERT(nodes != NULL && count == 3);
+						ns[0]->params->is_variadic = true;
+						ret = ns[0];
+						ns[0] = NULL;
+						return ret;
+					}
+}
+
+
+
+
 /*params	:	namelist */
-/*params	:	... */
-/*params	:	 */
-static psrNode_t* AR_STDCALL handle_params(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-	 return NULL;
-}
-
-
-
-
-/*namelist	:	namelist , NAME */
-/*namelist	:	NAME */
-static psrNode_t* AR_STDCALL handle_namelist(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-	 return NULL;
-}
-
-
-
-
-/*start_function	:	 */
-static psrNode_t* AR_STDCALL on_start_function(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-	 {
-						return NULL;
-					}
-}
-
-
-
-
-/*close_function	:	 */
-static psrNode_t* AR_STDCALL on_close_function(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-	 {
-						return NULL;
-					}
-}
-
-
-
-
 /*statement	:	compound_statement */
 /*statement	:	expression_statement */
 /*statement	:	selection_statement */
@@ -1904,6 +1963,89 @@ static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, cons
 						ret  = nodes[0];
 						nodes[0] = NULL;
 						return ret;
+					}
+}
+
+
+
+
+/*params	:	... */
+static psrNode_t* AR_STDCALL on_ellipsis(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 {
+						tguParams_t	*params;
+						tguSynNode_t	*ret;
+						AR_ASSERT(nodes != NULL && count == 1);
+
+						params = AR_NEW0(tguParams_t);
+						init_params(params);
+						params->is_variadic = true;
+						ret = __create_synnode(TGU_NODE_PARAMS_T, (void*)params);
+						return ret;
+					}
+}
+
+
+
+
+/*namelist	:	namelist , NAME */
+static psrNode_t* AR_STDCALL on_name_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 {
+						tguParser_t 	*parser = (tguParser_t*)ctx;
+						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+						tguSynNode_t	*ret;
+						tguParams_t	*params;
+						tguToken_t		*tok;
+						AR_ASSERT(nodes != NULL && count == 2);
+						tok = ns[1]->token;
+						params = ns[0]->params;
+						insert_to_params(params, tok->token);
+						ret = ns[0];
+						ns[0] = NULL;
+						return ret;
+		}
+}
+
+
+
+
+/*namelist	:	NAME */
+static psrNode_t* AR_STDCALL on_name(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 {
+						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+						tguSynNode_t	*ret;
+						tguParams_t	*params;
+						AR_ASSERT(nodes != NULL && count == 1);
+
+						params = AR_NEW0(tguParams_t);
+						init_params(params);
+						insert_to_params(params, ns[0]->token->token);
+						ret = __create_synnode(TGU_NODE_PARAMS_T, (void*)params);
+						return ret;
+					}
+}
+
+
+
+
+/*start_function	:	 */
+static psrNode_t* AR_STDCALL on_start_function(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 {
+						return NULL;
+					}
+}
+
+
+
+
+/*close_function	:	 */
+static psrNode_t* AR_STDCALL on_close_function(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 {
+						return NULL;
 					}
 }
 

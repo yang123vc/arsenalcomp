@@ -114,8 +114,6 @@ void			AR_LockSpinLock(arSpinLock_t *lock)
 						count = 0;
 				}
 		}
-
-
 }
 
 

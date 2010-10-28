@@ -29,7 +29,7 @@
 #define ARCH_64			0x40u
 
 
-#if(ARCH == ARCH_IA32 || ARCH == ARCH_ARM)
+#if(ARCH == ARCH_IA32 || ARCH == ARCH_ARM || ARCH == ARCH_PPC)
 
 #define AR_ARCH_VER		ARCH_32
 
@@ -214,6 +214,10 @@
         #include <pthread.h>
         #include <sys/select.h>
         #include <sys/time.h>
+
+		#if(OS_TYPE == OS_MAC_OS_X || OS_TYPE == OS_IPHONE)
+			#include <libkern/OSAtomic.h>
+		#endif
 #else
 		#error "Unknown OS not supported!"
 #endif
@@ -278,7 +282,7 @@
 				#define AR_DEBUG
 		#endif
 
-
+		
 		#if(AR_ARCH_VER == ARCH_32)
 				#define AR_STDCALL		__attribute__((stdcall))
 				#define AR_CCALL		__attribute__((cdecl))
@@ -287,7 +291,16 @@
 				#define AR_CCALL
 		#endif
 
+		#if(OS_TYPE == OS_MAC_OS_X)				
+				#if(ARCH == ARCH_PPC)
+						#undef	AR_STDCALL
+						#define	AR_STDCALL								
+				#endif
 
+		#elif(OS_TYPE == OS_IPHONE)
+				#undef	AR_STDCALL
+				#define	AR_STDCALL
+		#endif
 
 		#define AR_INT8_T		signed char
 		#define AR_UINT8_T		unsigned char

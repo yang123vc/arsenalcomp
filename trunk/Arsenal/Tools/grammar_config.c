@@ -2833,7 +2833,7 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 				{
 						const handlerRec_t		*rec = &handler_tbl.tbl[i];
 						AR_AppendString(handler_define, rec->handler_def);
-						AR_AppendString(handler_define, TEXT("\r\n\r\n"));
+						AR_AppendString(handler_define, L"\r\n\r\n");
 				}
 				AR_AppendString(code, L"\r\n");
 				AR_AppendString(code, L"\r\n");

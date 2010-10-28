@@ -80,7 +80,9 @@ void	AR_error_ctx(arIOCtx_t *ctx, int_t level, const wchar_t *msg, ...);
 
 /***********************************************************************debug************************************************/
 
-static const wchar_t *AR_BUILD_TIME = AR_WSTR(__DATE__) AR_WSTR(" ") AR_WSTR(__TIME__);
+/*
+ static const wchar_t *AR_BUILD_TIME = AR_WSTR(__DATE__) AR_WSTR(" ") AR_WSTR(__TIME__);
+ */
 
 
 
@@ -521,8 +523,13 @@ int_t			AR_AtomicDec(volatile int_t *dest);
 #define			AR_MAXSPIN_COUNT		100000
 
 #if defined(OS_FAMILY_UNIX)
+	
+	#if(OS_TYPE == OS_IPHONE || OS_TYPE == OS_MAC_OS_X)
+		typedef			int_t						arSpinLock_t;	
+#else
+		typedef			pthread_spinlock_t	        arSpinLock_t;
 
-    typedef			pthread_spinlock_t	        arSpinLock_t;
+	#endif
 
 #elif defined(OS_FAMILY_WINDOWS)
 

@@ -12,11 +12,12 @@
  */
 
 #include "tguparser.h"
-
+#include "tguutility.h"
 
 AR_NAMESPACE_BEGIN
 
 #include "tgu_parser_impl.h"
+
 
 
 

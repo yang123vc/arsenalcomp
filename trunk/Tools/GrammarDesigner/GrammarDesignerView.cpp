@@ -706,7 +706,8 @@ void CGrammarDesignerView::OnEnChange()
 		// with the ENM_CHANGE flag ORed into the mask.
 
 		// TODO:  Add your control notification handler code here
-
+		
+		
 		this->GetDocument()->SetModifiedFlag(TRUE);
 
 }

@@ -18,7 +18,11 @@
 
 #elif defined(OS_FAMILY_UNIX)
 
-		#include "thread_posix.h"
+	#if (OS_TYPE == OS_MAC_OS_X || OS_TYPE == OS_IPHONE)
+			#include "thread_apple.h"
+	#else
+			#include "thread_posix.h"
+	#endif
 
 #else
 

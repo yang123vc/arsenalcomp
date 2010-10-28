@@ -369,6 +369,10 @@ struct __tengu_statement_tag
 
 
 /*********************************************º¯Êý**************************************************************/
+
+
+
+
 struct __tengu_function_tag;
 typedef struct __tengu_function_tag		tguFunc_t;
 

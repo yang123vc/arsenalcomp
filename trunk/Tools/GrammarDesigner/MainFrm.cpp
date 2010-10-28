@@ -660,7 +660,6 @@ void CMainFrame::OnTestTest()
 
 void CMainFrame::OnViewFullscreen()
 {
-		
 		if(!m_bFullScreen)
 		{
 				((CWinAppEx*)AfxGetApp())->SaveState(this, TEXT("FullScreen"));
@@ -678,10 +677,13 @@ void CMainFrame::OnViewFullscreen()
 				//将除控制条外的客户区全屏显示到从(0,0)到(nFullWidth, nFullHeight)区域, 
 				//将(0,0)和(nFullWidth, nFullHeight)两个点外扩充原窗口和除控制条之外的 客户区位置间的差值, 就得到全屏显示的窗口位置 
 
+				
 				m_FullScreenRect.left = WindowRect.left - ClientRect.left; 
 				m_FullScreenRect.top = WindowRect.top - ClientRect.top; 
 				m_FullScreenRect.right = WindowRect.right - ClientRect.right + nFullWidth; 
 				m_FullScreenRect.bottom = WindowRect.bottom - ClientRect.bottom + nFullHeight;
+
+				
 				m_bFullScreen = TRUE;  //设置全屏显示标志为 TRUE 
 				//进入全屏显示状态 
 
@@ -701,15 +703,7 @@ void CMainFrame::OnViewFullscreen()
 				((CWinAppEx*)AfxGetApp())->LoadState(this, TEXT("FullScreen"));
 				
 		}
-
-
-
-
-		
-		
-} 
-
-
+}
 
 
 void CMainFrame::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
@@ -727,10 +721,7 @@ void CMainFrame::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 				lpMMI->ptMaxTrackSize.y=m_FullScreenRect.Height(); 
 		}
 
-
 		CFrameWnd::OnGetMinMaxInfo(lpMMI) ; 
-
-
 }
 
 BOOL CMainFrame::PreTranslateMessage(MSG* pMsg)
