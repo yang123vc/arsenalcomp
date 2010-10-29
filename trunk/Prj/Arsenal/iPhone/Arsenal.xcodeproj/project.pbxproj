@@ -415,7 +415,7 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		1DEB921F08733DC00010E9CD /* Debug */ = {
+		1DEB921F08733DC00010E9CD /* LibDebug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -431,9 +431,9 @@
 				INSTALL_PATH = /usr/local/lib;
 				PRODUCT_NAME = Arsenal;
 			};
-			name = Debug;
+			name = LibDebug;
 		};
-		1DEB922008733DC00010E9CD /* Release */ = {
+		1DEB922008733DC00010E9CD /* LibRelease */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -445,9 +445,9 @@
 				INSTALL_PATH = /usr/local/lib;
 				PRODUCT_NAME = Arsenal;
 			};
-			name = Release;
+			name = LibRelease;
 		};
-		1DEB922308733DC00010E9CD /* Debug */ = {
+		1DEB922308733DC00010E9CD /* LibDebug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -460,9 +460,9 @@
 				PREBINDING = NO;
 				SDKROOT = iphoneos4.1;
 			};
-			name = Debug;
+			name = LibDebug;
 		};
-		1DEB922408733DC00010E9CD /* Release */ = {
+		1DEB922408733DC00010E9CD /* LibRelease */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -475,7 +475,7 @@
 				PREBINDING = NO;
 				SDKROOT = iphoneos4.1;
 			};
-			name = Release;
+			name = LibRelease;
 		};
 /* End XCBuildConfiguration section */
 
@@ -483,20 +483,20 @@
 		1DEB921E08733DC00010E9CD /* Build configuration list for PBXNativeTarget "Arsenal" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1DEB921F08733DC00010E9CD /* Debug */,
-				1DEB922008733DC00010E9CD /* Release */,
+				1DEB921F08733DC00010E9CD /* LibDebug */,
+				1DEB922008733DC00010E9CD /* LibRelease */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = LibRelease;
 		};
 		1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "Arsenal" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1DEB922308733DC00010E9CD /* Debug */,
-				1DEB922408733DC00010E9CD /* Release */,
+				1DEB922308733DC00010E9CD /* LibDebug */,
+				1DEB922408733DC00010E9CD /* LibRelease */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = LibRelease;
 		};
 /* End XCConfigurationList section */
 	};
