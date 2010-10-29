@@ -111,6 +111,10 @@
 
 
 
+
+
+
+
 /**********************************************************编译器相关的配置***********************************************************************/
 
 /*
@@ -122,23 +126,6 @@
 		#pragma warning(disable : 4127)
 		#pragma warning(disable : 4201)
 
-/*
-
-		#pragma warning(disable : 4204)
-		#pragma warning(disable : 4244)
-		#pragma warning(disable : 4505)
-		#pragma warning(disable : 4514)
-		#pragma warning(disable : 4710)
-		#pragma warning(disable : 4761)
-*/
-
-/*
-#if(OS_TYPE == OS_WINDOWS_CE)
-		#pragma warning(disable : 4214)
-		#pragma warning(disable : 4201)
-		#pragma warning(disable : 4090)
-#endif
-*/
 
 		#if !defined(_CRT_SECURE_NO_WARNINGS)
 				#define _CRT_SECURE_NO_WARNINGS
@@ -189,6 +176,8 @@
 #include <string.h>
 #include <float.h>
 
+
+
 #if defined(AR_HAS_C99_FEATURE)
     #include <stdint.h>
 	#include <stdbool.h>
@@ -202,6 +191,10 @@
 		#define AR_HAS_BOOL_TRUE_FALSE
 #endif
 
+
+
+
+/*include相关平台所需的头文件*/
 
 #if defined(OS_FAMILY_WINDOWS)
 		#if(AR_COMPILER == AR_VC_LEGACY || OS_TYPE == OS_WINDOWS_CE)
@@ -222,6 +215,9 @@
 		#error "Unknown OS not supported!"
 #endif
 
+
+
+/*设置平台相关类型*/
 
 
 #if (AR_COMPILER == AR_VC_LEGACY || AR_COMPILER == AR_VC || AR_COMPILER == AR_BCB6)
@@ -282,7 +278,7 @@
 				#define AR_DEBUG
 		#endif
 
-		
+		/**/
 		#if(AR_ARCH_VER == ARCH_32)
 				#define AR_STDCALL		__attribute__((stdcall))
 				#define AR_CCALL		__attribute__((cdecl))
@@ -296,11 +292,11 @@
 						#undef	AR_STDCALL
 						#define	AR_STDCALL								
 				#endif
-
 		#elif(OS_TYPE == OS_IPHONE)
 				#undef	AR_STDCALL
 				#define	AR_STDCALL
 		#endif
+
 
 		#define AR_INT8_T		signed char
 		#define AR_UINT8_T		unsigned char
@@ -321,8 +317,12 @@
 
 		#define AR_BIGNUM_I64(_num)	(_num##LL)
 		#define AR_BIGNUM_U64(_num)	(_num##ULL)
-
-		#define AR_INT_FMT64		L"ll"
+		
+		#if(OS_TYPE == OS_MAC_OS_X || OS_TYPE == OS_IPHONE)
+				#define AR_INT_FMT64		L"q"
+		#else
+				#define AR_INT_FMT64		L"ll"
+		#endif
 
 		#define AR_NOOP
 
@@ -381,8 +381,9 @@
 #if defined(AR_HAS_INLINE)
 		#define AR_INLINE				inline
 #else
-		#define AR_INLINE		/*C99标准之前的编译器定义无*/
+		#define AR_INLINE				/*C99标准之前的编译器定义无*/
 #endif
+
 
 
 
@@ -561,7 +562,7 @@ typedef void*					ptr_t;
 /*************************************************************************************************************/
 
 
-#if(OS_TYPE == OS_WINDOWS_CE)
+#if(OS_TYPE == OS_WINDOWS_CE || OS_TYPE == OS_IPHONE)
 		#define AR_LOW_MEM_POLICY		1
 #endif
 

@@ -692,7 +692,9 @@ void CMainFrame::OnViewFullscreen()
 				wndpl.flags=0; 
 				wndpl.showCmd=SW_SHOWNORMAL; 
 				wndpl.rcNormalPosition=m_FullScreenRect; 
-				SetWindowPlacement(&wndpl);
+				//SetWindowPlacement(&wndpl);
+				this->SetWindowPos(&wndTopMost, m_FullScreenRect.left, m_FullScreenRect.top, m_FullScreenRect.Width(), m_FullScreenRect.Height(),SWP_SHOWWINDOW   );
+
 		}else
 		{
 				//退出全屏显示, 恢复原窗口显示
