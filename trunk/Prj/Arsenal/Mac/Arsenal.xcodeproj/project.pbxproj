@@ -437,6 +437,7 @@
 				PREBINDING = NO;
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
 				SDKROOT = macosx10.6;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-8";
 			};
 			name = DLLDebug;
 		};
@@ -453,6 +454,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
 				SDKROOT = macosx10.6;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-8";
 			};
 			name = DLLRelease;
 		};
