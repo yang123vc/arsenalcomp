@@ -21,7 +21,7 @@ AR_NAMESPACE_BEGIN
 
 void	Arsenal_Init(const arInit_t *ctx)
 {
-		AR_ASSERT(ctx != NULL);
+		/*AR_ASSERT(ctx != NULL);*/
 		AR_Init(ctx);
 		Lex_Init();
 		Parser_Init();
