@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
 		D09BAE341279E9850046DE22 /* Arsenal.c in Sources */ = {isa = PBXBuildFile; fileRef = D09BADF61279E9850046DE22 /* Arsenal.c */; };
 		D09BAE351279E9850046DE22 /* Arsenal.h in Headers */ = {isa = PBXBuildFile; fileRef = D09BADF71279E9850046DE22 /* Arsenal.h */; };
 		D09BAE361279E9850046DE22 /* algo.c in Sources */ = {isa = PBXBuildFile; fileRef = D09BADF91279E9850046DE22 /* algo.c */; };
@@ -65,11 +64,10 @@
 		D09BAE6A1279E9850046DE22 /* serializer.h in Headers */ = {isa = PBXBuildFile; fileRef = D09BAE311279E9850046DE22 /* serializer.h */; };
 		D09BAE6B1279E9850046DE22 /* tools.c in Sources */ = {isa = PBXBuildFile; fileRef = D09BAE321279E9850046DE22 /* tools.c */; };
 		D09BAE6C1279E9850046DE22 /* tools.h in Headers */ = {isa = PBXBuildFile; fileRef = D09BAE331279E9850046DE22 /* tools.h */; };
-		D09BAEA31279EC500046DE22 /* Arsenal_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = D09BAEA21279EC500046DE22 /* Arsenal_Prefix.pch */; };
+		D0A070E4127B168300F315D2 /* Arsenal_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = D0A070E3127B168300F315D2 /* Arsenal_Prefix.pch */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D09BADF61279E9850046DE22 /* Arsenal.c */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.c; path = Arsenal.c; sourceTree = "<group>"; };
 		D09BADF71279E9850046DE22 /* Arsenal.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = Arsenal.h; sourceTree = "<group>"; };
 		D09BADF91279E9850046DE22 /* algo.c */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.c; path = algo.c; sourceTree = "<group>"; };
@@ -127,7 +125,7 @@
 		D09BAE311279E9850046DE22 /* serializer.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = serializer.h; sourceTree = "<group>"; };
 		D09BAE321279E9850046DE22 /* tools.c */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.c; path = tools.c; sourceTree = "<group>"; };
 		D09BAE331279E9850046DE22 /* tools.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = tools.h; sourceTree = "<group>"; };
-		D09BAEA21279EC500046DE22 /* Arsenal_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = Arsenal_Prefix.pch; sourceTree = "<group>"; };
+		D0A070E3127B168300F315D2 /* Arsenal_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Arsenal_Prefix.pch; sourceTree = "<group>"; };
 		D2AAC07E0554694100DB518D /* libArsenal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libArsenal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -136,7 +134,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -166,7 +163,6 @@
 		0867D69AFE84028FC02AAC07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				AACBBE490F95108600F1A2B1 /* Foundation.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -181,7 +177,7 @@
 		32C88DFF0371C24200C91783 /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
-				D09BAEA21279EC500046DE22 /* Arsenal_Prefix.pch */,
+				D0A070E3127B168300F315D2 /* Arsenal_Prefix.pch */,
 			);
 			name = "Other Sources";
 			sourceTree = "<group>";
@@ -320,7 +316,7 @@
 				D09BAE681279E9850046DE22 /* grammar_config.h in Headers */,
 				D09BAE6A1279E9850046DE22 /* serializer.h in Headers */,
 				D09BAE6C1279E9850046DE22 /* tools.h in Headers */,
-				D09BAEA31279EC500046DE22 /* Arsenal_Prefix.pch in Headers */,
+				D0A070E4127B168300F315D2 /* Arsenal_Prefix.pch in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -452,12 +448,16 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				OTHER_LDFLAGS = "-ObjC";
 				PREBINDING = NO;
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
 				SDKROOT = iphoneos4.1;
 			};
 			name = LibDebug;
@@ -467,7 +467,11 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_ENABLE_SYMBOL_SEPARATION = NO;
+				GCC_LINK_WITH_DYNAMIC_LIBRARIES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = NDEBUG;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
