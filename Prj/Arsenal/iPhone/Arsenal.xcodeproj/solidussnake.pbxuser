@@ -2,7 +2,7 @@
 {
 	0867D690FE84028FC02AAC07 /* Project object */ = {
 		activeBuildConfigurationName = LibDebug;
-		activeSDKPreference = iphoneos4.1;
+		activeSDKPreference = iphonesimulator4.1;
 		activeTarget = D2AAC07D0554694100DB518D /* Arsenal */;
 		addToTargets = (
 			D2AAC07D0554694100DB518D /* Arsenal */,
@@ -39,7 +39,7 @@
 					413,
 					60,
 					20,
-					48.16259765625,
+					48,
 					43,
 					43,
 				);
@@ -53,15 +53,14 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 310054369;
-			PBXWorkspaceStateSaveDate = 310054369;
+			PBXPerProjectTemplateStateSaveDate = 310098692;
+			PBXWorkspaceStateSaveDate = 310098692;
 		};
 		perUserProjectItems = {
-			D09BAF011279ECA00046DE22 /* PBXTextBookmark */ = D09BAF011279ECA00046DE22 /* PBXTextBookmark */;
 			D0A07044127B0E3500F315D2 /* PBXTextBookmark */ = D0A07044127B0E3500F315D2 /* PBXTextBookmark */;
 			D0A070A1127B0ED200F315D2 /* PBXTextBookmark */ = D0A070A1127B0ED200F315D2 /* PBXTextBookmark */;
-			D0A070A2127B0ED200F315D2 /* PBXBookmark */ = D0A070A2127B0ED200F315D2 /* PBXBookmark */;
-			D0A070A4127B0EE700F315D2 /* PBXTextBookmark */ = D0A070A4127B0EE700F315D2 /* PBXTextBookmark */;
+			D0A071E1127BB4AE00F315D2 /* PBXTextBookmark */ = D0A071E1127BB4AE00F315D2 /* PBXTextBookmark */;
+			D0A0724A127BBB6300F315D2 /* PBXTextBookmark */ = D0A0724A127BBB6300F315D2 /* PBXTextBookmark */;
 		};
 		sourceControlManager = D09BAD061279E5830046DE22 /* Source Control */;
 		userBuildSettings = {
@@ -93,10 +92,18 @@
 	};
 	D09BADF71279E9850046DE22 /* Arsenal.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {631, 416}}";
+			sepNavIntBoundsRect = "{{0, 0}, {631, 507}}";
 			sepNavSelRange = "{450, 0}";
-			sepNavVisRange = "{0, 671}";
+			sepNavVisRange = "{0, 669}";
 			sepNavWindowFrame = "{{38, 124}, {1267, 878}}";
+		};
+	};
+	D09BADFB1279E9850046DE22 /* common.c */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {915, 2275}}";
+			sepNavSelRange = "{1116, 0}";
+			sepNavVisRange = "{881, 555}";
+			sepNavWindowFrame = "{{107, 366}, {929, 573}}";
 		};
 	};
 	D09BADFD1279E9850046DE22 /* config.h */ = {
@@ -114,34 +121,12 @@
 			sepNavVisRange = "{18960, 600}";
 		};
 	};
-	D09BAEA21279EC500046DE22 /* Arsenal_Prefix.pch */ = {
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1331, 461}}";
-			sepNavSelRange = "{0, 0}";
-			sepNavVisRange = "{0, 188}";
-		};
-	};
-	D09BAF011279ECA00046DE22 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = D09BAEA21279EC500046DE22 /* Arsenal_Prefix.pch */;
-		name = "Arsenal_Prefix.pch: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 188;
-		vrLoc = 0;
-	};
 	D0A0701A127B0D6800F315D2 /* Foundation.h */ = {
 		isa = PBXFileReference;
 		lastKnownFileType = sourcecode.c.h;
 		name = Foundation.h;
 		path = /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.1.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h;
 		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {631, 2067}}";
-			sepNavSelRange = "{78, 0}";
-			sepNavVisRange = "{0, 748}";
-		};
 	};
 	D0A07044127B0E3500F315D2 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -163,18 +148,32 @@
 		vrLen = 580;
 		vrLoc = 19018;
 	};
-	D0A070A2127B0ED200F315D2 /* PBXBookmark */ = {
-		isa = PBXBookmark;
-		fRef = D09BADF71279E9850046DE22 /* Arsenal.h */;
+	D0A070E3127B168300F315D2 /* Arsenal_Prefix.pch */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1208, 750}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 188}";
+			sepNavWindowFrame = "{{128, -2}, {1267, 878}}";
+		};
 	};
-	D0A070A4127B0EE700F315D2 /* PBXTextBookmark */ = {
+	D0A071E1127BB4AE00F315D2 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = D09BADF71279E9850046DE22 /* Arsenal.h */;
 		name = "Arsenal.h: 11";
 		rLen = 0;
 		rLoc = 450;
 		rType = 0;
-		vrLen = 671;
+		vrLen = 669;
+		vrLoc = 0;
+	};
+	D0A0724A127BBB6300F315D2 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = D09BADF71279E9850046DE22 /* Arsenal.h */;
+		name = "Arsenal.h: 11";
+		rLen = 0;
+		rLoc = 450;
+		rType = 0;
+		vrLen = 669;
 		vrLoc = 0;
 	};
 	D2AAC07D0554694100DB518D /* Arsenal */ = {
