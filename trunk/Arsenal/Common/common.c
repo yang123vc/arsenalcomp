@@ -21,6 +21,7 @@ AR_NAMESPACE_BEGIN
 
 
 
+
 /***********************************************************Init****************************************************************/
 
 
@@ -42,7 +43,7 @@ static arInit_t	__g_ctx = {{AR_def_error, AR_def_print,  NULL}};
 
 void AR_Init(const arInit_t *info)
 {
-		__g_ctx = *info;
+		if(info)__g_ctx = *info;
 		AR_InitThread();
 }
 
