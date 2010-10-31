@@ -318,13 +318,9 @@
 
 		#define AR_BIGNUM_I64(_num)	(_num##LL)
 		#define AR_BIGNUM_U64(_num)	(_num##ULL)
-		
-		#if(OS_TYPE == OS_MAC_OS_X || OS_TYPE == OS_IPHONE)
-				#define AR_INT_FMT64		L"q"
-		#else
-				#define AR_INT_FMT64		L"ll"
-		#endif
 
+		#define AR_INT_FMT64		L"ll"
+		
 		#define AR_NOOP
 
 		#define AR_FUNC_NAME			__PRETTY_FUNCTION__
