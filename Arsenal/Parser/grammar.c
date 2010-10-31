@@ -732,6 +732,8 @@ bool_t					Parser_SetFirstRule(psrGrammar_t *grammar, const wchar_t *rule_name)
 
 		for(i = 0; i < grammar->count; ++i)
 		{
+				AR_ASSERT(rule_name != NULL && grammar->rules[i]->head->name);
+
 				if(AR_wcscmp(rule_name, grammar->rules[i]->head->name) == 0)
 				{
 						lhs = Parser_CopyNewSymb(grammar->rules[i]->head);

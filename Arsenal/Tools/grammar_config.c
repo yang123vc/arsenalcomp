@@ -689,7 +689,7 @@ static void CFG_UnInitConfig(cfgConfig_t *cfg)
 				if(cfg->rule[i].action_ins)AR_DEL(cfg->rule[i].action_ins);
 		}
 
-		AR_DEL(cfg->rule);
+		if(cfg->rule)AR_DEL(cfg->rule);
 
 
 		for(i = 0; i < cfg->predef_cnt; ++i)
