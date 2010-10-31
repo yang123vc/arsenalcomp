@@ -2798,11 +2798,7 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 										}
 								}
 /****************************************************************************************************************************/
-
-								AR_AppendString(code, AR_GetStrString(comment));
-								AR_AppendString(code, handler);
-								AR_AppendString(code, L"\r\n\n");
-
+								
 								AR_AppendString(define, AR_GetStrString(comment));
 								AR_AppendString(define, handler_def);
 								AR_AppendString(define, L"\r\n\n");
@@ -2810,6 +2806,10 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 								rec = FindFromHandlerTable(&handler_tbl, handler);
 								if(rec == NULL)
 								{
+										AR_AppendString(code, AR_GetStrString(comment));
+										AR_AppendString(code, handler);
+										AR_AppendString(code, L"\r\n\n");
+										
 										InsertToHandlerTable(&handler_tbl, handler, AR_GetStrString(define), has_spec_def);
 								}else
 								{
