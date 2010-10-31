@@ -13,21 +13,6 @@ using namespace ARSpace;
 
 
 
-const wchar_t *test =
-L"{"
-
-L"		int i; int j;  float[100] a; float v; float x;"
-L"	bool_t x; char[1024] carr;"
-
-L"	while(true)"
-L"	{"
-L"		do i = i + 1; while(a[i] < v);"
-L"		do j = j-1; while(a[j] > v);"
-L"		if(i >= j)break;"
-L"		x = a[i]; a[i] = a[j]; a[j] = x;"
-L"	}"
-L"}"
-;
 
 
 void AR_STDCALL tiny_error(int_t level, const wchar_t* msg, void *ctx)
