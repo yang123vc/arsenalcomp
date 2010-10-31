@@ -80,27 +80,206 @@ END_POINT:
 }
 
 
-int main (int argc, char * const argv[]) 
+#define LOAD_TXT_MAX_BUF  (1024*1024 * 5)
+
+static const wchar_t* __load_txt(const char *path)
+{
+		FILE *pf;
+		byte_t	*buf;
+		size_t rn;
+		const wchar_t *ret;
+		buf = AR_NEWARR(byte_t, LOAD_TXT_MAX_BUF);
+		
+		AR_ASSERT(path != NULL);
+		
+		pf = fopen(path, "rb");
+				
+		if(pf == NULL)
+		{
+				AR_DEL(buf);
+				return NULL;
+		}
+		
+		rn = fread((void*)buf, 1, LOAD_TXT_MAX_BUF, pf);
+		fclose(pf);
+		
+		if(rn <= 3)
+		{
+				AR_DEL(buf);
+				return NULL;
+		}
+		
+		buf[rn] = 0;
+		
+		if(buf[0] == 0xEF && buf[1] == 0xBB && buf[2] == 0xBF)
+		{
+				ret = AR_utf8_convto_wcs((const char*)(buf + 3));
+		}else
+		{
+				ret = AR_utf8_convto_wcs((const char*)(buf));
+		}
+		
+		AR_DEL(buf);
+		return ret;
+}
+
+bool __save_text(const char *path, const wchar_t *txt)
+{
+		AR_ASSERT(path != NULL && txt != NULL);
+		FILE *pf;
+		char *buf;
+		size_t wn;
+	
+		pf = fopen(path, "wb");
+		
+		if(pf == NULL)
+		{
+				return false;
+		}
+		
+		static const char head[] = {0xEF, 0xBB, 0xBF };
+
+		if(fwrite(head, 1, 3, pf) != 3)
+		{
+				fclose(pf);
+				return false;
+		}
+		
+		buf = AR_wcs_convto_utf8(txt);
+		
+		
+		
+		wn = fwrite((void*)buf, 1, strlen(buf), pf);
+
+		fclose(pf);
+		
+		if(wn != strlen(buf))
+		{
+				AR_DEL(buf);		
+				return false;
+		}
+		
+		return true;
+		
+}
+
+void test_generate_parser(const char *path)
+{
+		const wchar_t *tmp = __load_txt(path);
+		if(tmp == NULL)
+		{
+				AR_printf(L"load %hs failed\r\n", path);
+				return;
+		}
+		
+		std::wstring in = tmp, out;
+		AR_DEL(tmp);
+		tmp = NULL;
+		
+		if(generate_parser(in, out))
+		{
+				AR_printf(L"generate %hs success\r\n", path);
+				
+				AR_printf(L"%ls\r\n", out.c_str());
+				
+				
+				if(!__save_text("/Users/solidussnakeex/Desktop/tengu.c", out.c_str()))
+				{
+						AR_printf(L"%ls\r\n", L"save text failed\r\n");
+				}else
+				{
+						AR_printf(L"%ls\r\n", L"save text successed\r\n");
+				}
+				
+				
+		}else
+		{
+				AR_printf(L"generate %hs failed\r\n", path);
+		}
+		
+}
+
+void AR_Test()
+{
+		char buf[1024];
+		getcwd(buf, 1024);
+		printf("%hs\r\n", buf);
+		
+		while(true)
+		{
+				scanf("%s", buf);
+				if(AR_stricmp(buf, "quit") == 0)break;
+				
+
+				test_generate_parser(buf);
+				
+		}
+		
+}
+
+
+
+
+void AR_Test2()
+{
+
+		test_generate_parser("../../misc/Grammar/Tengu.gmr");
+				
+		
+		
+}
+
+
+
+
+
+
+void AR_STDCALL tiny_error(int_t level, const wchar_t* msg, void *ctx)
 {
 		
+        printf("%ls\r\n", msg);
+}
+
+void AR_STDCALL tiny_printf(const wchar_t *msg, void *ctx)
+{
 		
-		using namespace ARSpace;
-		Arsenal_Init(NULL);
+        printf("%ls\r\n", msg);
+}
+
+
+
+
+int  main()
+{
+        
+		printf("%s\r\n", AR_FUNC_NAME);
+        arInit_t ai = {{tiny_error, tiny_printf, NULL}};
 		
-		std::wstring in;
-		std::wstring out;
+        //printf("%s\r\n", setlocale(LC_ALL, NULL));
 		
-		in = L"xxxxxxxxxxxxxxxxxx\r\n";
+        Arsenal_Init(&ai);
 		
-	
-		generate_parser(in, out);
+        AR_Test2();
+		
 		
 		Arsenal_UnInit();
-
+		
 		
 		
 		printf("done\r\n");
+		
+		
 		getchar();
+		
 		return 0;
 		
 }
+
+
+
+
+
+
+
+
+
