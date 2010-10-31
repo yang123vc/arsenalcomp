@@ -1931,7 +1931,14 @@ static void		AR_STDCALL cfg_error(const psrToken_t *tok, const size_t expected[]
 		AR_memset(&info, 0, sizeof(info));
 
 		/******************************************************************************************/
-		buf = tok->str_cnt == 0 ? AR_wcsdup(L"%EOI") : AR_wcsndup(tok->str, tok->str_cnt);
+		if(tok->str_cnt == 0 || tok->term_val == FAKE_EOI)
+		{
+				buf = AR_wcsdup(L"%EOI");
+		}else
+		{
+				buf = AR_wcsndup(tok->str, tok->str_cnt);
+		}
+		
 		str = AR_CreateString();
 
 		AR_AppendFormatString(str
