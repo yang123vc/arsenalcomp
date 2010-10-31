@@ -18,16 +18,22 @@
 AR_NAMESPACE_BEGIN
 
 
+static bool_t	__g_is_initialized = false;
 
 void	Arsenal_Init(const arInit_t *ctx)
 {
 		/*AR_ASSERT(ctx != NULL);*/
-		AR_Init(ctx);
-		Lex_Init();
-		Parser_Init();
-		Tools_Init();
-
-		TGU_Init();
+		AR_ASSERT(!__g_is_initialized);
+		
+		if(!__g_is_initialized)
+		{
+				AR_Init(ctx);
+				Lex_Init();
+				Parser_Init();
+				Tools_Init();
+				TGU_Init();
+				__g_is_initialized = true;
+		}
 }
 
 
@@ -35,11 +41,15 @@ void	Arsenal_Init(const arInit_t *ctx)
 
 void	Arsenal_UnInit()
 {
-		TGU_UnInit();
-		Tools_UnInit();
-		Parser_UnInit();
-		Lex_UnInit();
-		AR_UnInit();
+		AR_ASSERT(__g_is_initialized);
+		if(__g_is_initialized)
+		{
+				TGU_UnInit();
+				Tools_UnInit();
+				Parser_UnInit();
+				Lex_UnInit();
+				AR_UnInit();
+		}
 }
 
 

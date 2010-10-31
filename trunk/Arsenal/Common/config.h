@@ -145,6 +145,7 @@
 
 		#endif
 
+
 #elif(AR_COMPILER == AR_BCB6)
 
                 #pragma warn -8004
