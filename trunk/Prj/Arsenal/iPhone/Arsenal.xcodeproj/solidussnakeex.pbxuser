@@ -1,0 +1,88 @@
+// !$*UTF8*$!
+{
+	0867D690FE84028FC02AAC07 /* Project object */ = {
+		activeBuildConfigurationName = LibRelease;
+		activeSDKPreference = iphonesimulator4.1;
+		activeTarget = D2AAC07D0554694100DB518D /* Arsenal */;
+		codeSenseManager = BE08CD55127D29BC00C91273 /* Code sense */;
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = 1;
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_ObjectSize_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					341,
+					20,
+					48.16259765625,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 310192570;
+			PBXWorkspaceStateSaveDate = 310192570;
+		};
+		perUserProjectItems = {
+			BE08CD64127D2A2300C91273 /* PBXTextBookmark */ = BE08CD64127D2A2300C91273 /* PBXTextBookmark */;
+			BE08CD6F127D2A6700C91273 /* PBXTextBookmark */ = BE08CD6F127D2A6700C91273 /* PBXTextBookmark */;
+		};
+		sourceControlManager = BE08CD54127D29BC00C91273 /* Source Control */;
+		userBuildSettings = {
+			OBJROOT = ../../../Temp;
+			SYMROOT = ../../../Binary;
+		};
+	};
+	BE08CD54127D29BC00C91273 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+				"" = "";
+			};
+		};
+	};
+	BE08CD55127D29BC00C91273 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	BE08CD64127D2A2300C91273 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = D09BADF71279E9850046DE22 /* Arsenal.h */;
+		name = "Arsenal.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 559;
+		vrLoc = 0;
+	};
+	BE08CD6F127D2A6700C91273 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = D09BADF71279E9850046DE22 /* Arsenal.h */;
+		name = "Arsenal.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 559;
+		vrLoc = 0;
+	};
+	D09BADF71279E9850046DE22 /* Arsenal.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {519, 390}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 559}";
+		};
+	};
+	D2AAC07D0554694100DB518D /* Arsenal */ = {
+		activeExec = 0;
+	};
+}
