@@ -44,26 +44,28 @@ void			AR_UnInitThread()
 
 int_t			AR_AtomicInc(volatile int_t *dest)
 {
-	int_t ret;
-	AR_ASSERT(dest != NULL);
-#if(ARCH == ARCH_32)
-		ret = (int_t)OSAtomicAdd32(1, (volatile int32_t*)dest);
-#elif(ARCH == ARCH64)
-		ret = (int_t)OSAtomicAdd64(1, (volatile int64_t*)dest);
+		AR_ASSERT(dest != NULL);
+#if(AR_ARCH_VER == ARCH_32)
+		return (int_t)OSAtomicIncrement32(dest);
+#elif(AR_ARCH_VER == ARCH_64)
+		return (int_t)OSAtomicIncrement64(dest);
+#else
+		#error	"Unknow Platform";
 #endif
-	return ret;
+		
 }
 
 int_t			AR_AtomicDec(volatile int_t *dest)
 {
-	int_t ret;
-	AR_ASSERT(dest != NULL);
-#if(ARCH == ARCH_32)
-	ret = (int_t)OSAtomicAdd32(-1, (volatile int32_t*)dest);
-#elif(ARCH == ARCH64)
-	ret = (int_t)OSAtomicAdd64(-1, (volatile int64_t*)dest);
+		AR_ASSERT(dest != NULL);
+
+#if(AR_ARCH_VER == ARCH_32)
+		return (int_t)OSAtomicDecrement32(dest);
+#elif(AR_ARCH_VER == ARCH_64)
+		return (int_t)OSAtomicDecrement64(dest);
+#else
+		#error	"Unknow Platform";
 #endif
-	return ret;
 }
 
 
