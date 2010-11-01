@@ -2152,7 +2152,6 @@ static psrNode_t* AR_STDCALL on_expression_list(psrNode_t **nodes, size_t count,
 
 						if(ns[0] == NULL) return ns[2];
 						if(ns[2] == NULL) return ns[2];
-						/*expression_list中有任何错误，不应该反映在此处*/
 						AR_ASSERT(ns[0]->expr != NULL  && ns[2]->expr != NULL);
 
 						for(lst = ns[0]->expr; lst->next != NULL; lst = lst->next);

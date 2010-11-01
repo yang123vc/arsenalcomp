@@ -535,7 +535,10 @@ void	RGX_UnInitMisc()
 
 		{
 				wchar_t buf[1024];
-				AR_swprintf(buf, 1024, L"Total consume rgxThreadList_t == %u : max cap == %u", count, max_lst_cap);
+				if(AR_swprintf(buf, 1024, L"Total consume rgxThreadList_t == %u : max cap == %u", count, max_lst_cap) < 0)
+				{
+						AR_ASSERT(false);
+				}
 				AR_printf(L"%ls\r\n", buf);
 		}
 

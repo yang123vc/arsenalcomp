@@ -118,16 +118,28 @@ static AR_INLINE		void	__check_name_from_parser_data(cfgParserData_t *psr_data, 
 				switch(t)
 				{
 				case CFG_STR_NAME:
-						AR_swprintf(buf, 1024, L"Duplicate name definition %ls\r\n", name);
+						if(AR_swprintf(buf, 1024, L"Duplicate name definition %ls\r\n", name) < 0)
+						{
+								AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
+						}
 						break;
 				case CFG_STR_TOKEN:
-						AR_swprintf(buf, 1024, L"Duplicate token definition %ls\r\n", name);
+						if(AR_swprintf(buf, 1024, L"Duplicate token definition %ls\r\n", name) < 0)
+						{
+								AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
+						}
 						break;
 				case CFG_STR_TOKEN_VALUE:
-						AR_swprintf(buf, 1024, L"Duplicate token value definition %ls\r\n", name);
+						if(AR_swprintf(buf, 1024, L"Duplicate token value definition %ls\r\n", name) < 0)
+						{
+								AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
+						}
 						break;
 				case CFG_STR_PREC:
-						AR_swprintf(buf, 1024, L"Duplicate prec definition %ls\r\n", name);
+						if(AR_swprintf(buf, 1024, L"Duplicate prec definition %ls\r\n", name) < 0)
+						{
+								AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
+						}
 						break;
 				default:
 						AR_ASSERT(false);
@@ -780,7 +792,11 @@ static void __uninit_cfg_node_list()
 
 		{
 				wchar_t buf[1024];
-				AR_swprintf(buf, 1024, L"Total consume cfgNode_t == %u", count);
+				if(AR_swprintf(buf, 1024, L"Total consume cfgNode_t == %u", count) < 0)
+				{
+						AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
+				}
+
 				AR_printf(L"%ls\r\n", buf);
 		}
 
@@ -903,8 +919,7 @@ static void CFG_DestroyNode(cfgNode_t *node)
 				}
 				default:
 				{
-						AR_ASSERT(false);
-						AR_error(AR_ERR_FATAL, L"%hs\r\n", AR_FUNC_NAME);
+						AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
 				}
 				}
 
@@ -1229,7 +1244,7 @@ static psrNode_t*		AR_STDCALL __handle_prec_def(psrNode_t **nodes, size_t count,
 		}else
 		{
 				AR_ASSERT(false);
-				AR_error(AR_ERR_FATAL, L"Arsenal Tools Internal Error In : %hs\r\n", AR_FUNC_NAME);
+				AR_CHECK(false, L"Arsenal Tools Internal Error In : %hs\r\n", AR_FUNC_NAME);
 		}
 
 		for(i = 0; i < ns[1]->lst.count; ++i)
@@ -1653,7 +1668,7 @@ static psrNode_t*		AR_STDCALL __handle_program(psrNode_t **nodes, size_t count, 
 				default:
 				{
 						AR_ASSERT(false);
-						AR_error(AR_ERR_FATAL, L"Arsenal Tools Internal Error In : %hs\r\n", AR_FUNC_NAME);
+						AR_CHECK(false, L"Arsenal Tools Internal Error In : %hs\r\n", AR_FUNC_NAME);
 				}
 				}
 		}
@@ -1769,8 +1784,7 @@ static lex_t* __build_lex(arIOCtx_t		*io)
 		{
 				if(!Lex_Insert(lex, __cfg_lex_name[i]))
 				{
-						AR_ASSERT(false);
-						AR_error(AR_ERR_FATAL, L"%hs\r\n", AR_FUNC_NAME);
+						AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
 
 				}
 		}
@@ -1784,8 +1798,7 @@ static lex_t* __build_lex(arIOCtx_t		*io)
 
 				if(!Lex_InsertRule(lex, __cfg_pattern[i].regex, &action))
 				{
-						AR_ASSERT(false);
-						AR_error(AR_ERR_FATAL, L"%hs\r\n", AR_FUNC_NAME);
+						AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
 
 				}
 		}
@@ -1793,8 +1806,7 @@ static lex_t* __build_lex(arIOCtx_t		*io)
 
 		if(!Lex_GenerateTransTable(lex))
 		{
-				AR_ASSERT(false);
-				AR_error(AR_ERR_FATAL, L"%hs\r\n", AR_FUNC_NAME);
+				AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
 		}
 
 		return lex;
@@ -1815,8 +1827,7 @@ static psrGrammar_t*	__build_grammar(psrHandler_t *handler, arIOCtx_t *io)
 		{
 				if(!Parser_InsertTerm(gmr, __cfg_term[i].name, (size_t)__cfg_term[i].val, PARSER_ASSOC_NONASSOC, 0, __build_leaf))
 				{
-						AR_ASSERT(false);
-						AR_error(AR_ERR_FATAL, L"%hs\r\n", AR_FUNC_NAME);
+						AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
 				}
 		}
 
@@ -1824,23 +1835,20 @@ static psrGrammar_t*	__build_grammar(psrHandler_t *handler, arIOCtx_t *io)
 		{
 				if(!Parser_InsertRuleByStr(gmr, __cfg_rule[i].rule, NULL, __cfg_rule[i].handler, __cfg_rule[i].auto_ret))
 				{
-						AR_ASSERT(false);
-						AR_error(AR_ERR_FATAL, L"%hs\r\n", AR_FUNC_NAME);
+						AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
 				}
 
 		}
 
 		if(!Parser_SetFirstRule(gmr, L"program"))
 		{
-				AR_ASSERT(false);
-				AR_error(AR_ERR_FATAL, L"%hs\r\n", AR_FUNC_NAME);
+				AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
 				return NULL;
 		}
 
 		if(!Parser_CheckIsValidGrammar(gmr))
 		{
-				AR_ASSERT(false);
-				AR_error(AR_ERR_FATAL, L"Arsenal Internal Error : %hs\r\n", AR_FUNC_NAME);
+				AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
 		}
 
 		return gmr;
@@ -2172,7 +2180,7 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 
 						if(!Parser_AddToken(parser_context, &end))
 						{
-								AR_error(AR_ERR_FATAL, L"%hs\r\n", AR_FUNC_NAME);
+								AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
 						}
 				}
 
@@ -2728,18 +2736,29 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 								tmp_len += 4096;
 
 								tmp = AR_NEWARR0(wchar_t, tmp_len + 1);
-								AR_swprintf(tmp, tmp_len, CFG_RULE_HANDLER_DECL_2, cfg->rule[i].action_name);
+								if(AR_swprintf(tmp, tmp_len, CFG_RULE_HANDLER_DECL_2, cfg->rule[i].action_name) < 0)
+								{
+										AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
+								}
 								handler = AR_wcsdup(tmp);
 
 								if(cfg->rule[i].action_ins == NULL)
 								{
 										has_spec_def = false;
-										AR_swprintf(tmp, tmp_len, CFG_RULE_HANDLER_DEFINE_2, cfg->rule[i].action_name);
+										if(AR_swprintf(tmp, tmp_len, CFG_RULE_HANDLER_DEFINE_2, cfg->rule[i].action_name) < 0)
+										{
+												AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
+										}
 										handler_def = AR_wcsdup(tmp);
 								}else
 								{
 										has_spec_def = true;
-										AR_swprintf(tmp, tmp_len, CFG_RULE_HANDLER_DEFINE_3, cfg->rule[i].action_name, cfg->rule[i].action_ins);
+										
+										if(AR_swprintf(tmp, tmp_len, CFG_RULE_HANDLER_DEFINE_3, cfg->rule[i].action_name, cfg->rule[i].action_ins) < 0)
+										{
+												AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
+										}
+
 										handler_def = AR_wcsdup(tmp);
 								}
 
@@ -2752,10 +2771,16 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 						{
 								tmp_len = 20480;
 								tmp = AR_NEWARR0(wchar_t, tmp_len + 1);
-								AR_swprintf(tmp, tmp_len, CFG_RULE_HANDLER_DECL, cfg->rule[i].lhs);
+								if(AR_swprintf(tmp, tmp_len, CFG_RULE_HANDLER_DECL, cfg->rule[i].lhs) < 0)
+								{
+										AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
+								}
 								handler = AR_wcsdup(tmp);
 
-								AR_swprintf(tmp, tmp_len, CFG_RULE_HANDLER_DEFINE, cfg->rule[i].lhs);
+								if(AR_swprintf(tmp, tmp_len, CFG_RULE_HANDLER_DEFINE, cfg->rule[i].lhs) < 0)
+								{
+										AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
+								}
 								handler_def = AR_wcsdup(tmp);
 
 								if(tmp)
@@ -2885,7 +2910,10 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 						}else
 						{
 								tmp = AR_NEWARR0(wchar_t, 2048 + 1);
-								AR_swprintf(tmp, 2048, L"handle_%ls", cfg->rule[i].lhs);
+								if(AR_swprintf(tmp, 2048, L"handle_%ls", cfg->rule[i].lhs) < 0)
+								{
+										AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
+								}
 								handler = AR_str_to_escstr(tmp);
 								if(tmp)
 								{

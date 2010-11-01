@@ -125,6 +125,9 @@ void	AR_FormatString(arString_t *str, const wchar_t *fmt, ...)
 		str->str[0] = L'\0';
 		len = AR_vswprintf(str->str, str->cap-1, fmt, args) + 1;
 		va_end(args);
+		
+		AR_CHECK(len >= 0, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
+		
 		str->str[len] = L'\0';
 		str->count = AR_wcslen(str->str);
 }
@@ -148,6 +151,10 @@ void	AR_AppendFormatString(arString_t *str, const wchar_t *fmt, ...)
 		va_start(args, fmt);
 		len = AR_vswprintf(buf, len + 1, fmt, args);
 		va_end(args);
+		
+		AR_CHECK(len >= 0, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
+		
+
 		buf[len] = L'\0';
 		AR_AppendString(str, buf);
 		AR_DEL(buf);
