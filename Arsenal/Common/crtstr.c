@@ -362,7 +362,10 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 								cclen = AR_MAX(width, 312 + prec + 6);/*取最大值*/
 
 								buf = AR_NEWARR0(wchar_t, cclen);
-								AR_swprintf(buf, cclen, L"%*.*f", width, prec + 6, f);
+								if(AR_swprintf(buf, cclen, L"%*.*f", width, prec + 6, f) < 0)
+								{
+										AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
+								}
 								len = AR_wcslen(buf);
 								AR_DEL(buf);
 								break;
@@ -430,7 +433,13 @@ wchar_t*		AR_vtow(const wchar_t *fmt, ...)
 		}
 
 		buf = AR_NEWARR(wchar_t, len + 1);
-		AR_vswprintf(buf, len + 1, fmt, args);
+		if(AR_vswprintf(buf, len + 1, fmt, args) < 0)
+		{
+				AR_DEL(buf);
+				buf = NULL;
+				AR_ASSERT(false);
+				return NULL;
+		}
 		va_end (args);
 		return buf;
 }

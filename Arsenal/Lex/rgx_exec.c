@@ -56,8 +56,7 @@ static void __add_thread(rgxThreadList_t *lst,  rgxThread_t thd, rgxProg_t *prog
 		}
 		default:
 		{
-				AR_ASSERT(false);
-				AR_error(AR_ERR_FATAL, L"Arsenal : regex exec error %hs\r\n", AR_FUNC_NAME);
+				AR_CHECK(false, L"Arsenal : regex exec error %hs\r\n", AR_FUNC_NAME);
 				break;
 		}
 		}
@@ -249,8 +248,7 @@ static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match
 						case RGX_MATCH_I:
 						default:
 						{
-								AR_ASSERT(false);
-								AR_error(AR_ERR_FATAL, L"Arsenal : regex exec error %hs\r\n", AR_FUNC_NAME);
+								AR_CHECK(false, L"Arsenal : regex exec error %hs\r\n", AR_FUNC_NAME);
 								break;
 						}
 						}
@@ -458,8 +456,7 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 						}
 						case RGX_LOOKAHEAD_END_I:
 						{
-								AR_ASSERT(false);
-								AR_error(AR_ERR_FATAL, L"Arsenal : regex exec error %hs\r\n", AR_FUNC_NAME);
+								AR_CHECK(false, L"Arsenal : regex exec error %hs\r\n", AR_FUNC_NAME);
 								break;
 						}
 						case RGX_MATCH_I:
@@ -481,8 +478,7 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 						case RGX_NOP_I:
 						default:
 						{
-								AR_ASSERT(false);
-								AR_error(AR_ERR_FATAL, L"Arsenal : regex exec error %hs\r\n", AR_FUNC_NAME);
+								AR_CHECK(false, L"Arsenal : regex exec error %hs\r\n", AR_FUNC_NAME);
 								break;
 						}
 						}

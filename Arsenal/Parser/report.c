@@ -318,7 +318,11 @@ void Parser_PrintActionTable(const psrActionTable_t *tbl, const psrGrammar_t *gr
 		AR_AppendFormatString(str, L"%*ls", __WIDTH__,L"NULL");
 		for(i = 0; i < tbl->nonterm_set.count; ++i)
 		{
-				AR_swprintf(buf, 1024, L"<%ls>", tbl->nonterm_set.lst[i]->name);
+				if(AR_swprintf(buf, 1024, L"<%ls>", tbl->nonterm_set.lst[i]->name) < 0)
+				{
+						AR_CHECK(false, L"Arsenal parser internal error : %hs\r\n", AR_FUNC_NAME);
+				}
+
 				AR_AppendFormatString(str, L"%*ls",__WIDTH__, buf);
 		}
 
@@ -326,7 +330,10 @@ void Parser_PrintActionTable(const psrActionTable_t *tbl, const psrGrammar_t *gr
 		AR_AppendString(str,L"\r\n");
 		for(i = 0; i < tbl->goto_row; i++)
 		{
-				AR_swprintf(buf, 1024, L"I[%" AR_PLAT_INT_FMT L"d]", (size_t)i);
+				if(AR_swprintf(buf, 1024, L"I[%" AR_PLAT_INT_FMT L"d]", (size_t)i) < 0)
+				{
+						AR_CHECK(false, L"Arsenal parser internal error : %hs\r\n", AR_FUNC_NAME);
+				}
 				AR_AppendFormatString(str, L"%*ls:", __WIDTH__,buf);
 				for(j = 0; j < tbl->goto_col; ++j)
 				{
@@ -358,7 +365,10 @@ void Parser_PrintActionTable(const psrActionTable_t *tbl, const psrGrammar_t *gr
 
 		for(i = 0; i < tbl->row; ++i)
 		{
-				AR_swprintf(buf, 1024, L"I[%d]", (uint_32_t)i);
+				if(AR_swprintf(buf, 1024, L"I[%d]", (uint_32_t)i) < 0)
+				{
+						AR_CHECK(false, L"Arsenal parser internal error : %hs\r\n", AR_FUNC_NAME);
+				}
 				AR_AppendFormatString(str,L"%*ls:", __WIDTH__,buf);
 				for(j = 0; j < tbl->col; ++j)
 				{
@@ -379,7 +389,9 @@ void Parser_PrintActionTable(const psrActionTable_t *tbl, const psrGrammar_t *gr
 								break;
 						case PARSER_REDUCE:
 						{
-								AR_swprintf(buf, 1024, L"[<%ls>:%" AR_PLAT_INT_FMT L"d]",rule->head->name, (size_t)pact->reduce_count);
+								int_t l = AR_swprintf(buf, 1024, L"[<%ls>:%" AR_PLAT_INT_FMT L"d]",rule->head->name, (size_t)pact->reduce_count);
+								AR_CHECK(l > 0, L"Arsenal parser internal error : %hs\r\n", AR_FUNC_NAME);
+
 								AR_AppendFormatString(str,L"%*ls", __WIDTH__,buf);
 								
 						}

@@ -697,7 +697,7 @@ static errRecovery_t __error_recovery(psrContext_t *parser_context, const psrTok
 						{
 								/*只有EOI符号才可能导致一个accept动作*/
 								AR_ASSERT(false);
-								AR_error(AR_ERR_FATAL, L"%ls\r\n", L"Parser : Internal Error");
+								AR_CHECK(false, L"Arsenal parser internal error : %hs\r\n", AR_FUNC_NAME);
 						}
 				}
 				
@@ -820,8 +820,7 @@ bool_t		Parser_AddToken(psrContext_t *parser_context, const psrToken_t *tok)
 						break;
 				default:
 				{
-						AR_ASSERT(false);
-						AR_error(AR_ERR_FATAL, L"%ls\r\n", L"Arsenal parser internal error");
+						AR_CHECK(false, L"Arsenal parser internal error : %hs\r\n", AR_FUNC_NAME);
 				}
 				}
 		}
