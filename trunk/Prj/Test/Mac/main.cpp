@@ -223,7 +223,16 @@ void AR_Test()
 void AR_Test2()
 {
 
-		test_generate_parser("../../misc/Grammar/Tengu.gmr");
+//		test_generate_parser("../../misc/Grammar/Tengu.gmr");
+		
+		test_generate_parser("/Users/solidussnakeex/Desktop/tengu.txt");
+		
+	//	wchar_t buf[1024];
+		
+	//	AR_ASSERT(AR_swprintf(buf, 1024, L"%ls\r\n", L"是否支持中文") > 0);
+		
+	//	wprintf(L"%ls\r\n", buf);
+					
 				
 		
 		
@@ -251,8 +260,10 @@ void AR_STDCALL tiny_printf(const wchar_t *msg, void *ctx)
 
 int  main()
 {
-        
-		printf("%s\r\n", AR_FUNC_NAME);
+      
+		setlocale(LC_ALL, "");
+		
+		//printf("%s\r\n", AR_FUNC_NAME);
         arInit_t ai = {{tiny_error, tiny_printf, NULL}};
 		
         //printf("%s\r\n", setlocale(LC_ALL, NULL));
@@ -263,7 +274,6 @@ int  main()
 		
 		
 		Arsenal_UnInit();
-		
 		
 		
 		printf("done\r\n");
