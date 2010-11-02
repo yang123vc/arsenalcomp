@@ -1666,7 +1666,6 @@ expression_list		:	expression					%action	auto_return_0
 						tguSynNode_t	*ret;
 						tguExpr_t		*lst;
 						AR_ASSERT(ns != NULL && count == 3);
-						/***×¢Òâ************/
 						if(ns[0] == NULL) return ns[2];
 						if(ns[2] == NULL) return ns[2];
 						AR_ASSERT(ns[0]->expr != NULL  && ns[2]->expr != NULL);
@@ -1678,6 +1677,15 @@ expression_list		:	expression					%action	auto_return_0
 						ret = ns[0];
 						ns[0] = NULL;
 						return ret;
+
+/*
+¡¤¦á¦â¦å¦åÚAÅQ¦æÅUÀV¦æÀTÀV¦æÁ`Àn¦æÁx¦æÀUÀk¦æÁe¦æÝŽÀV¦æÅa¦æÅCÀ^¦æÙ“¦æÀl¦æ¡­
+¡¤¦á¦â¦å¦å2010ÅdÅP¦æÀiÀeÀb¦æÁoÀV¦æÀ]ÝAÀn¦æÀbÀV¦æÝRÀ^¦æÝžÀUÀn¦æÁxÀl¦æ¡­
+¡¤¦á¦â¦å¦åÝ¦æÅXÀV¦æÃMÀk¦æÝ~ÅP¦æÀaÝ‘ÀbÀn¦æÜœÀV¦æÝTÀV¦æÁiÀn<<Ý¦æÅbÀU>¡­
+¡¤¦á¦â¦å¦åÀX¦æÀ_¦æÀaÅqÀ]¦æÀ^ÀbÀn¦æÜžÀl¦æÀb¦æÁE¦æÀUÅgÀUÀn¦æÀ_¦å
+¡¤¦á¦â¦å¦åÀkÀV¦æÂ`ÀVÀn¦æÙ•Àn<<ÝÀ]¦æÅXÀUÀn¦æÙ•¦æÅvÀl¦æÁzÀ^¦æÀlÀU¦æÅgÀn¡­
+¡¤¦á¦â¦å¦åÀUÅCÀn¦æÝ”ÅP¦æÀUÀ^Àb¦æÀ\ÀV¦æÝ]¦æÀUÀ^Àb¦æÁk¦æÀ]ÝAÀn¦æÅo¦æÀmÀk¦æ¡­
+*/
 				}
 				;
 
