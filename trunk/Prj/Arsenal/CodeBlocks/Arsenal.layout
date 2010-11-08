@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
-	<ActiveTarget name="DLLDebug" />
-	<File name="../../../Arsenal/Common/crtstr.c" open="0" top="0" tabpos="0">
-		<Cursor position="19637" topLine="980" />
+	<ActiveTarget name="LibDebug" />
+	<File name="../../../Arsenal/Arsenal.h" open="1" top="0" tabpos="9">
+		<Cursor position="553" topLine="0" />
+	</File>
+	<File name="../../../Arsenal/Common/common.h" open="1" top="0" tabpos="8">
+		<Cursor position="17220" topLine="542" />
+	</File>
+	<File name="../../../Arsenal/Common/crtstr.c" open="1" top="0" tabpos="4">
+		<Cursor position="743" topLine="12" />
+	</File>
+	<File name="../../../Arsenal/Lex/lex.c" open="1" top="0" tabpos="11">
+		<Cursor position="0" topLine="0" />
+	</File>
+	<File name="../../../Arsenal/Lex/lex.h" open="1" top="0" tabpos="10">
+		<Cursor position="3536" topLine="151" />
+	</File>
+	<File name="../../../Arsenal/Parser/parser.h" open="1" top="0" tabpos="14">
+		<Cursor position="11614" topLine="369" />
 	</File>
 	<File name="../../../Arsenal/Tengu/tgu_parser_impl.h" open="0" top="0" tabpos="0">
 		<Cursor position="77583" topLine="1852" />
@@ -10,7 +25,13 @@
 	<File name="../../../Arsenal/Tengu/tguparser.c" open="0" top="0" tabpos="0">
 		<Cursor position="482" topLine="0" />
 	</File>
-	<File name="../../../Arsenal/Tools/grammar_config.h" open="0" top="0" tabpos="0">
-		<Cursor position="4265" topLine="179" />
+	<File name="../../../Arsenal/Tools/grammar_config.c" open="1" top="0" tabpos="6">
+		<Cursor position="18011" topLine="741" />
+	</File>
+	<File name="../../../Arsenal/Tools/grammar_config.h" open="1" top="0" tabpos="7">
+		<Cursor position="5487" topLine="206" />
+	</File>
+	<File name="../../../Arsenal/Tools/serializer.c" open="1" top="0" tabpos="5">
+		<Cursor position="7765" topLine="392" />
 	</File>
 </CodeBlocks_layout_file>
