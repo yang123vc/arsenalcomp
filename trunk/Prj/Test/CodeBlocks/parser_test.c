@@ -1,4 +1,4 @@
-
+#if(1)
 #include <locale.h>
 #include "test.h"
 
@@ -45,7 +45,7 @@ static const wchar_t* __load_txt(const char *path)
 		return ret;
 }
 
-
+#if(0)
 void print_grammar(const psrGrammar_t *gmr)
 {
 		arString_t  *str;
@@ -53,11 +53,11 @@ void print_grammar(const psrGrammar_t *gmr)
 
 		str = AR_CreateString();
 
-		PSR_PrintGrammar(gmr, str);
+		Parser_PrintGrammar(gmr, str);
 
 		AR_printf(L"%ls\r\n", AR_GetStrString(str));
 
-		PSR_ReportLeftRecursion(gmr, str);
+		Parser_ReportLeftRecursion(gmr, str);
 
 		AR_printf(L"%ls\r\n", AR_GetStrString(str));
 
@@ -65,32 +65,34 @@ void print_grammar(const psrGrammar_t *gmr)
 		AR_DestroyString(str);
 }
 
+#endif
+
 void print_first_follow(const psrGrammar_t *gmr)
 {
 		psrSymbMap_t	first, follow;
 		arString_t		*str;
 		AR_ASSERT(gmr != NULL);
 
-		PSR_InitSymbMap(&first);
-		PSR_InitSymbMap(&follow);
+		Parser_InitSymbMap(&first);
+		Parser_InitSymbMap(&follow);
 
 		str = AR_CreateString();
 
 
-		PSR_CalcFirstSet(gmr, &first);
-		PSR_CalcFollowSet(gmr, &follow, &first);
+		Parser_CalcFirstSet(gmr, &first);
+		Parser_CalcFollowSet(gmr, &follow, &first);
 
 		AR_AppendString(str, L"First Set:\r\n");
-		PSR_PrintSymbolMap(&first, str);
+		Parser_PrintSymbolMap(&first, str);
 		AR_AppendString(str, L"----------------------------------------\r\n");
 
 		AR_AppendString(str, L"Follow Set:\r\n");
-		PSR_PrintSymbolMap(&follow, str);
+		Parser_PrintSymbolMap(&follow, str);
 		AR_AppendString(str, L"----------------------------------------\r\n");
 
 
-		PSR_UnInitSymbMap(&first);
-		PSR_UnInitSymbMap(&follow);
+		Parser_UnInitSymbMap(&first);
+		Parser_UnInitSymbMap(&follow);
 
 		AR_printf(L"%ls\r\n", AR_GetStrString(str));
 		AR_DestroyString(str);
@@ -106,7 +108,7 @@ void print_action_table(const parser_t *psr)
 
 		str = AR_CreateString();
 
-		PSR_PrintParserActionTable(psr, str, 20);
+		Parser_PrintParserActionTable(psr, str, 20);
 
 		AR_printf(L"%ls\r\n", AR_GetStrString(str));
 
@@ -121,17 +123,13 @@ void print_conflict(const parser_t *psr)
 
 		str = AR_CreateString();
 
-		PSR_PrintParserConflict(psr, str);
+		Parser_PrintParserConflict(psr, str);
 
 		AR_printf(L"%ls\r\n", AR_GetStrString(str));
 
 
 		AR_DestroyString(str);
 }
-
-
-
-
 
 
 
@@ -145,7 +143,7 @@ void print_conflict(const parser_t *psr)
 void parse_code(const cfgConfig_t *cfg, const wchar_t *sources)
 {
 		lex_t *lex;
-		lexMatch_t match;
+		lexMatch_t *match;
 		lexToken_t tok;
 		size_t	i;
 		wchar_t buf[1024];
@@ -153,12 +151,12 @@ void parse_code(const cfgConfig_t *cfg, const wchar_t *sources)
 		AR_ASSERT(cfg != NULL && sources != NULL);
 
 
+        lex = Lex_Create(NULL);
 
-		lex = LEX_Create(NULL);
 
 		for(i = 0; i < cfg->name_cnt; ++i)
 		{
-				if(!LEX_InsertName(lex, cfg->name[i].name, cfg->name[i].regex))
+				if(!Lex_InsertName(lex, cfg->name[i].name, cfg->name[i].regex))
 				{
 						AR_ASSERT(false);
 						AR_abort();
@@ -171,16 +169,15 @@ void parse_code(const cfgConfig_t *cfg, const wchar_t *sources)
 				act.is_skip = cfg->tok[i].is_skip;
 				act.priority = cfg->tok[i].lex_prec;
 				act.value = cfg->tok[i].tokval;
-				if(!LEX_InsertRule(lex, cfg->tok[i].regex, &act))
+				if(!Lex_InsertRule(lex, cfg->tok[i].regex, &act))
 				{
 						AR_ASSERT(false);
 						AR_abort();
 				}
 		}
 
-		LEX_GenerateTransTable(lex);
-
-		LEX_InitMatch(&match, sources);
+		Lex_GenerateTransTable(lex);
+        match = Lex_CreateMatch(lex, NULL);
 
 		{
 
@@ -193,7 +190,7 @@ void parse_code(const cfgConfig_t *cfg, const wchar_t *sources)
 
 
 
-				while(LEX_Match(lex, &match, &tok))
+				while(Lex_Match(match, &tok))
 				{
 						/*
 						AR_wcsncpy(buf, tok.str, tok.count);
@@ -205,13 +202,13 @@ void parse_code(const cfgConfig_t *cfg, const wchar_t *sources)
 						if(tok.value == 0)break;
 				}
 
-				if(match.is_ok)
+				if(match->is_ok)
 				{
 						AR_printf(L"lex parse done for %d token\r\n", tok_cnt);
 				}else
 				{
-						size_t n = AR_wcslen(match.next);
-						AR_printf(L"lex parse failed : %ls\r\n", AR_wcsndup(match.next, n > 10 ? 10 : n));
+						size_t n = AR_wcslen(match->next);
+						AR_printf(L"lex parse failed : %ls\r\n", AR_wcsndup(match->next, n > 10 ? 10 : n));
 				}
 
 				//end = GetTickCount();
@@ -221,10 +218,10 @@ void parse_code(const cfgConfig_t *cfg, const wchar_t *sources)
 				AR_printf(L"elapsed == %lld\r\n", end - beg);
 		}
 
-		LEX_UnInitMatch(&match);
+		Lex_DestroyMatch(match);
 
 
-		LEX_Destroy(lex);
+		Lex_Destroy(lex);
 
         AR_printf(L"\r\n\r\n");
 
@@ -232,13 +229,52 @@ void parse_code(const cfgConfig_t *cfg, const wchar_t *sources)
 
 /*
 
+
 typedef enum
 {
 		CFG_REPORT_MESSAGE_T,
 		CFG_REPORT_ERROR_T,
-		CFG_REPORT_ERR_LEX_T,
-		CFG_REPORT_ERR_SYNTAX_T
+		CFG_REPORT_ERROR_LEX_T,
+		CFG_REPORT_ERROR_SYNTAX_T,
+		CFG_REPORT_WARNING_SYNTAX_T
 }cfgReportType_t;
+
+
+typedef struct __cfg_report_info_tag
+{
+		cfgReportType_t			type;
+
+		union{
+
+		struct					{
+				const	wchar_t			*message;
+
+		}								std_msg;
+
+		struct			{
+				const	wchar_t			*msg;
+				const	psrToken_t		*tok;
+
+		}								lex_error;
+
+		struct			{
+				const	wchar_t			*msg;
+				const	psrToken_t		*tok;
+
+		}								syntax_error;
+
+		struct	{
+				int_t					err_level;
+				const	wchar_t			*err_msg;
+
+		}								error;
+
+		struct	{
+				size_t					line;
+				const wchar_t			*msg;
+		}								warning;
+		};
+}cfgReportInfo_t;
 */
 
 static void AR_STDCALL report_func(const cfgReportInfo_t *report, void *context)
@@ -246,16 +282,16 @@ static void AR_STDCALL report_func(const cfgReportInfo_t *report, void *context)
 		switch(report->type)
 		{
 		case CFG_REPORT_MESSAGE_T:
-				AR_printf(L"%ls\r\n", report->message);
+				AR_printf(L"%ls\r\n", report->std_msg.message);
 				break;
 		case CFG_REPORT_ERROR_T:
-				AR_printf(L"%ls : %d\r\n", report->message, report->err_level);
+				AR_printf(L"%ls : %d\r\n",  report->error.err_msg, report->error.err_level);
 				break;
-		case CFG_REPORT_ERR_LEX_T:
-				AR_printf(L"lex error %ls\r\n", report->message);
+		case CFG_REPORT_ERROR_LEX_T:
+				AR_printf(L"lex error %ls\r\n", report->lex_error.msg);
 				break;
-		case CFG_REPORT_ERR_SYNTAX_T:
-				AR_printf(L"syntax error %ls\r\n", report->message);
+		case CFG_REPORT_ERROR_SYNTAX_T:
+				AR_printf(L"syntax error %ls\r\n", report->syntax_error.msg);
 				break;
 		default:
 				AR_ASSERT(false);
@@ -443,3 +479,5 @@ AR_NAMESPACE_END
 
 
 
+
+#endif

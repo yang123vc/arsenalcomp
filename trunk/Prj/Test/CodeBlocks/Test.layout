@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
-	<ActiveTarget name="DLLRelease" />
-	<File name="com_test.c" open="0" top="0" tabpos="2">
-		<Cursor position="161" topLine="1" />
+	<ActiveTarget name="LibDebug" />
+	<File name="com_test.c" open="1" top="0" tabpos="4">
+		<Cursor position="239" topLine="1" />
 	</File>
 	<File name="main.c" open="1" top="1" tabpos="3">
-		<Cursor position="321" topLine="12" />
+		<Cursor position="141" topLine="0" />
 	</File>
 	<File name="parser_test.c" open="1" top="0" tabpos="1">
-		<Cursor position="2640" topLine="137" />
+		<Cursor position="4284" topLine="195" />
 	</File>
 	<File name="test.c" open="1" top="0" tabpos="2">
 		<Cursor position="169" topLine="0" />
+	</File>
+	<File name="test.h" open="1" top="0" tabpos="5">
+		<Cursor position="58" topLine="0" />
 	</File>
 </CodeBlocks_layout_file>
