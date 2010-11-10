@@ -36,14 +36,14 @@ typedef enum
 typedef struct __action_record_tag
 {
 		psrActionType_t					type;
-		
+		struct __action_record_tag		*next;
+
 		size_t							shift_to;
+		size_t							reduce_count;/*规约时用到，产生式如果为%Epsilon，则count为0*/
+
 		size_t							rule_num;
 		size_t							delim;
-		
 		size_t							prec;
-		size_t							reduce_count;/*规约时用到，产生式如果为%Epsilon，则count为0*/
-		struct __action_record_tag		*next;
 }psrAction_t;
 
 extern const psrAction_t	*	const PARSER_ErrorAction;

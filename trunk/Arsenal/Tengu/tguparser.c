@@ -21,8 +21,52 @@ AR_NAMESPACE_BEGIN
 
 
 
+
+static void	AR_STDCALL tgu_on_error(int_t level, const wchar_t *msg, void *ctx)
+{
+		AR_ASSERT(false);
+}
+
+
+void	AR_STDCALL tgu_on_print(const wchar_t *msg, void *ctx)
+{
+		AR_ASSERT(false);
+}
+
+
+static arIOCtx_t	__def_io_ctx = 
+{		
+		tgu_on_error,
+		tgu_on_print,
+		NULL
+};
+
+
+static void	AR_STDCALL tgu_free(psrNode_t *node, void *ctx)
+{
+		AR_ASSERT(false);
+}
+
+
+static void		AR_STDCALL tgu_error(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
+{
+		AR_ASSERT(false);
+}
+
+
+
+
+
+
+static psrHandler_t		__def_handler_ctx = 
+{
+		tgu_error,
+		tgu_free,
+};
+
+
 /************************************************************parser core***********************************/
-#if(0)
+
 static			arSpinLock_t	__g_lock;
 static	const	lex_t			*__g_lex	 = NULL;
 static	const	psrGrammar_t	*__g_grammar = NULL;
@@ -31,8 +75,8 @@ static	const	parser_t		*__g_parser = NULL;
 static	void	__parser_core_init()
 {
 		AR_InitSpinLock(&__g_lock);
-		__g_lex     = __build_lexer();
-		__g_grammar	= __build_grammar();
+		__g_lex     = __build_lex(&__def_io_ctx);
+		__g_grammar	= __build_grammar(&__def_handler_ctx, &__def_io_ctx);
 		__g_parser	= Parser_CreateParser(__g_grammar, PARSER_LALR);
 }
 
@@ -104,7 +148,8 @@ void	TGU_UnInitParser()
 {
 		__parser_core_uninit();
 }
-#endif
+
+
 
 AR_NAMESPACE_END
 

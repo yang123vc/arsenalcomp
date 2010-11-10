@@ -208,7 +208,7 @@ void					Parser_DestroyActionTable(const psrActionTable_t *table)
 
 
 
-static const psrAction_t error_action = {PARSER_ERROR, 0, 0, 0, 0,0, NULL};
+static const psrAction_t error_action = {PARSER_ERROR, NULL, 0, 0, 0, 0,0};
 
 const psrAction_t	* const PARSER_ErrorAction = &error_action;
 
