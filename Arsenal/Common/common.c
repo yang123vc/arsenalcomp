@@ -185,7 +185,7 @@ void AR_printf(const wchar_t *msg,...)
 		}
 }
 
-void	AR_CHECK(bool_t cond, const wchar_t *fmt, ...)
+void	AR_check(bool_t cond, const wchar_t *fmt, ...)
 {
 		wchar_t *buf;
 		int_t len;

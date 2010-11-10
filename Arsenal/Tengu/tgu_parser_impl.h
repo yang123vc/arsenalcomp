@@ -2149,7 +2149,6 @@ static psrNode_t* AR_STDCALL on_expression_list(psrNode_t **nodes, size_t count,
 						tguSynNode_t	*ret;
 						tguExpr_t		*lst;
 						AR_ASSERT(ns != NULL && count == 3);
-
 						if(ns[0] == NULL) return ns[2];
 						if(ns[2] == NULL) return ns[2];
 						AR_ASSERT(ns[0]->expr != NULL  && ns[2]->expr != NULL);

@@ -84,7 +84,7 @@ void AR_Test()
 		//com_test();
 		//trie_tree_test();
 		//expr_test();
-		lex_test();
+		//lex_test();
 		//lex_test2();
 		//lex_test3();
 		//lex_test4();
@@ -144,7 +144,7 @@ void AR_Test()
 		//calc2_test();
 
 		//ds_test();
-		
+		getchar();
 #else
 		AR_printf(L"dll version\r\n");
 #endif
