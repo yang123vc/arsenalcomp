@@ -47,7 +47,7 @@ bool_t				Parser_IsBuildInSymbol(const psrSymb_t		*symb)
 void	Parser_Init()
 {
 		AR_InitSpinLock(&__tbl_lock);
-		__tbl			=		AR_CreateStrTable(PARSER_STRTBL_BUCKET);
+		__tbl			=			AR_CreateStrTable(PARSER_STRTBL_BUCKET);
 
 		PARSER_EOISymb		=		Parser_CreateSymb(L"%EOI", PARSER_TERM);
 		PARSER_ErrorSymb	=		Parser_CreateSymb(L"error", PARSER_TERM);

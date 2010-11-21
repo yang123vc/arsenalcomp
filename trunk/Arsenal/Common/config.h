@@ -503,20 +503,19 @@ typedef void*					ptr_t;
 /******************************************Spec***************************************************************/
 
 
-
 #if (AR_COMPILER == AR_VC_LEGACY)
 
-		#define AR_swprintf						_snwprintf
-		#define AR_vsprintf						_vsnprintf
-		#define AR_vswprintf					_vsnwprintf
+		#define AR_SWPRINTF						_snwprintf
+		#define AR_VSPRINTF						_vsnprintf
+		#define AR_VSWPRINTF					_vsnwprintf
 		#define AR_abort						abort
 
 
 #elif (AR_COMPILER == AR_VC)
 
-		#define AR_swprintf						_snwprintf
-		#define AR_vsprintf						_vsnprintf
-		#define AR_vswprintf					_vsnwprintf
+		#define AR_SWPRINTF						_snwprintf
+		#define AR_VSPRINTF						_vsnprintf
+		#define AR_VSWPRINTF					_vsnwprintf
 
 		#if(OS_TYPE == OS_WINDOWS_CE)
 				#define AR_abort()				exit(3)
@@ -527,9 +526,9 @@ typedef void*					ptr_t;
 
 
 #elif(AR_COMPILER == AR_BCB6)
-                #define AR_swprintf				_snwprintf
-				#define AR_vsprintf				_vsnprintf
-				#define AR_vswprintf			_vsnwprintf
+                #define AR_SWPRINTF				_snwprintf
+				#define AR_VSPRINTF				_vsnprintf
+				#define AR_VSWPRINTF			_vsnwprintf
                 #define AR_abort	            abort
 
 
@@ -537,13 +536,13 @@ typedef void*					ptr_t;
 #elif(AR_COMPILER == AR_GCC3 || AR_COMPILER == AR_GCC4)
 
 		#if defined(OS_FAMILY_WINDOWS)
-				#define AR_swprintf				_snwprintf
-				#define AR_vsprintf				_vsnprintf
-				#define AR_vswprintf			_vsnwprintf
+				#define AR_SWPRINTF				_snwprintf
+				#define AR_VSPRINTF				_vsnprintf
+				#define AR_VSWPRINTF			_vsnwprintf
 		#else
-				#define AR_swprintf						swprintf
-				#define AR_vsprintf						vsprintf
-				#define AR_vswprintf					vswprintf
+				#define AR_SWPRINTF						swprintf
+				#define AR_VSPRINTF						vsprintf
+				#define AR_VSWPRINTF					vswprintf
 		#endif
 
 
@@ -556,11 +555,17 @@ typedef void*					ptr_t;
 #endif
 
 
+
+
+
+
+
 /*************************************************************************************************************/
 
-
+#if(0)
 #if(OS_TYPE == OS_WINDOWS_CE || OS_TYPE == OS_IPHONE)
 		#define AR_LOW_MEM_POLICY		1
+#endif
 #endif
 
 

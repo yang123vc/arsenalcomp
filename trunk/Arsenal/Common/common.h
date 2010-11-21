@@ -363,6 +363,7 @@ const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *num);
 
 /*此函数相当于修改字符串，因此不存在_s版，且trim之后的字符串结尾为\0*/
 wchar_t*		AR_wcstrim_right(wchar_t *in, const wchar_t *trim);
+wchar_t*		AR_wcstrim_right_space(wchar_t *in);
 
 /*返回的是需要元素数组的长度包含0*/
 int_t			AR_i64tow_buf(wchar_t *out, size_t nbuf, int_64_t num, size_t radix);
@@ -406,10 +407,15 @@ const wchar_t* AR_wcsstr_kmp_s(const wchar_t *beg, const wchar_t *end, const wch
 
 
 
-/*返回一个长度，足够容乃fmt + args*/
+/*返回一个长度，足够容纳fmt + args*/
 int_t			AR_vscwprintf(const wchar_t *fmt, va_list args);
 int_t			AR_scwprintf(const wchar_t *fmt, ...);
 wchar_t*		AR_vtow(const wchar_t *fmt, ...);
+
+int_t			AR_swprintf(wchar_t *dest, size_t count, const wchar_t *fmt, ...);
+int_t			AR_vsprintf(char *dest, size_t count, const char *fmt, va_list args);
+int_t			AR_vswprintf(wchar_t *dest, size_t count, const wchar_t *fmt, va_list args);
+
 
 
 int_t			AR_wchartodigit(wchar_t ch);
@@ -537,7 +543,7 @@ int_t			AR_AtomicDec(volatile int_t *dest);
 
 #elif defined(OS_FAMILY_WINDOWS)
 
-    typedef         volatile int_t               arSpinLock_t;
+    typedef         volatile int_t					arSpinLock_t;
 #else
 
 #endif

@@ -424,8 +424,13 @@ bool_t Lex_Match(lexMatch_t *match, lexToken_t *tok)
 REMATCH:
 		if(empty_match_cnt > LEX_MAX_EMPTY_MATCH_CNT)
 		{
+				/*
 				AR_printf_ctx(&match->io_ctx, L"%ls\r\n", L"Invalid empty pattern\r\n");
 				AR_ASSERT(false);
+				*/
+
+				AR_CHECK(false, L"%ls\r\n", L"Invalid empty pattern\r\n");
+				
 				return false;
 		}
 

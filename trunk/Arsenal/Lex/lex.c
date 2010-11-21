@@ -115,7 +115,20 @@ static bool_t		__remove_from_rule_set(lexRuleSet_t *set, size_t value)
 bool_t	Lex_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr)
 {
 		rgxResult_t res;
-		AR_ASSERT(name != NULL && AR_wcslen(name) > 0 && expr != NULL);
+		AR_ASSERT(name != NULL && AR_wcslen(name) > 0 && expr != NULL && AR_wcslen(expr) > 0);
+
+		if(AR_wcslen(name) == 0)
+		{
+				AR_printf_ctx(&lex->io_ctx, L"Lex Rule Error : empty name '%ls'\r\n", expr);
+				return false;
+		}
+
+		if(AR_wcslen(expr) == 0)
+		{
+				AR_printf_ctx(&lex->io_ctx, L"Lex Rule Error : empty expr '%ls'\r\n", name);
+				return false;
+		}
+
 
 		if(RGX_FindFromNameSet(lex->name_tbl, name) != NULL)
 		{
@@ -250,6 +263,12 @@ bool_t	Lex_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action
 		
 		AR_ASSERT(lex != NULL && rule != NULL && action != NULL);
 		AR_ASSERT(AR_wcslen(rule) > 0);
+
+		if(AR_wcslen(rule) == 0)
+		{
+				AR_printf_ctx(&lex->io_ctx, L"Lex Rule Error : empty rule %" AR_PLAT_INT_FMT L"d\r\n", action->value);
+				return false;
+		}
 
 		res = RGX_ParseExpr(rule, lex->name_tbl);
 

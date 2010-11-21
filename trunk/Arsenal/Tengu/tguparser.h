@@ -30,53 +30,52 @@ typedef	struct __tengu_lexinfo_tag
 
 
 enum{
-		TOK_DELIM_ID = 257,
-		TOK_NAME = 258,
-		TOK_STRING = 259,
-		TOK_FLOAT_NUMBER = 260,
-		TOK_INT_NUMBER = 261,
-		TOK_DO = 262,
-		TOK_WHILE = 263,
-		TOK_IF = 264,
-		TOK_ELSE = 265,
-		TOK_CONTINUE = 266,
-		TOK_BREAK = 267,
-		TOK_RETURN = 268,
-		TOK_NULL = 269,
-		TOK_TRUE = 270,
-		TOK_FALSE = 271,
-		TOK_VAR = 272,
-		TOK_ELLIPSIS = 273,
-		TOK_INC = 274,
-		TOK_DEC = 275,
-		TOK_ANDAND = 276,
-		TOK_OROR = 277,
-		TOK_LE = 278,
-		TOK_GE = 279,
-		TOK_EQ = 280,
-		TOK_NE = 281,
-		TOK_LESS = 282,
-		TOK_GREATER = 283,
-		TOK_L_BRACES = 284,
-		TOK_R_BRACES = 285,
-		TOK_L_PAREN = 286,
-		TOK_R_PAREN = 287,
-		TOK_L_SQUARE = 288,
-		TOK_R_SQUARE = 289,
-		TOK_SEMICOLON = 290,
-		TOK_COMMA = 291,
-		TOK_ASSIGN = 292,
-		TOK_ADD = 293,
-		TOK_SUB = 294,
-		TOK_MUL = 295,
-		TOK_DIV = 296,
-		TOK_MOD = 297,
-		TOK_NOT = 298,
-		TOK_COLON = 299,
-		TOK_QUEST = 300,
-		TOK_DOT = 301
+TOK_DELIM_ID = 257,
+TOK_NAME = 258,
+TOK_STRING = 259,
+TOK_FLOAT_NUMBER = 260,
+TOK_INT_NUMBER = 261,
+TOK_DO = 262,
+TOK_WHILE = 263,
+TOK_IF = 264,
+TOK_ELSE = 265,
+TOK_CONTINUE = 266,
+TOK_BREAK = 267,
+TOK_RETURN = 268,
+TOK_NULL = 269,
+TOK_TRUE = 270,
+TOK_FALSE = 271,
+TOK_VAR = 272,
+TOK_IMPORT = 273,
+TOK_ELLIPSIS = 274,
+TOK_INC = 275,
+TOK_DEC = 276,
+TOK_ANDAND = 277,
+TOK_OROR = 278,
+TOK_LE = 279,
+TOK_GE = 280,
+TOK_EQ = 281,
+TOK_NE = 282,
+TOK_LESS = 283,
+TOK_GREATER = 284,
+TOK_L_BRACES = 285,
+TOK_R_BRACES = 286,
+TOK_L_PAREN = 287,
+TOK_R_PAREN = 288,
+TOK_L_SQUARE = 289,
+TOK_R_SQUARE = 290,
+TOK_SEMICOLON = 291,
+TOK_COMMA = 292,
+TOK_ASSIGN = 293,
+TOK_ADD = 294,
+TOK_SUB = 295,
+TOK_MUL = 296,
+TOK_DIV = 297,
+TOK_MOD = 298,
+TOK_NOT = 299,
+TOK_COLON = 300,
+TOK_QUEST = 301,
 };
-
 
 typedef struct __tengu_token_tag
 {
@@ -324,7 +323,6 @@ typedef enum
 typedef struct __tengu_compound_statement_tag
 {
 		tguBlock_t		*block;
-		tguStmt_t		*statement_list;
 }tguCompoundStmt_t;
 
 
@@ -408,13 +406,21 @@ struct __tengu_var_tag
 struct __tengu_block_tag
 {
 		tguVar_t		*vars;
+		tguStmt_t		*statement_list;
+		
 		tguBlock_t		*next;/*同一级的下一个块*/
 		tguBlock_t		*sub_blocks;
 		tguBlock_t		*parent;
 };
 
 
+tguBlock_t*		TGU_CreateBlock(tguBlock_t	*parent);
+/*
+TGU_DestroyBlock会将block从block->parent中的sub_blocks中剔除，之后销毁此block及其所有变量声明
+*/
+void			TGU_DestroyBlock(tguBlock_t	*block);
 
+tguVar_t*		TGU_FindFromBlockByName(tguBlock_t	*block, const wchar_t *name);
 
 
 /***************************************************************错误报告**************************************************************************/

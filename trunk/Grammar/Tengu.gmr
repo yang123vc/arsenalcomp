@@ -230,9 +230,25 @@
 
 %token	NAME			:	"{letter}({letter}|{digit})*"					%value	"TOK_NAME"				%action build_default_leaf
 {
-
-	return NULL;
+	tguParser_t 	*parser;
+	tguSynNode_t		*ret;
+	AR_ASSERT(tok != NULL && ctx != NULL);
+	
+	parser = (tguParser_t*)ctx;
+	ret = NULL;
+	switch(tok->term_val)
+	\{
+	case TOK_NAME:
+		break;
+	default:
+		AR_ASSERT(false);
+		break;
+	\}
+	
+	return ret;
 };
+
+
 
 
 %token	STRING		:	"{string_dq}|{string_sq}"						%value	"TOK_STRING"			%action build_default_leaf			;
@@ -260,6 +276,8 @@
 %token	"true"	:	'"true"(?!{keyword_lhd})'		,1					%value	"TOK_TRUE"			%action build_default_leaf			;
 %token	"false"	:	'"false"(?!{keyword_lhd})'		,1					%value	"TOK_FALSE"		%action build_default_leaf			;
 %token	"var"		:	'"var"(?!{keyword_lhd})'		,1					%value	"TOK_VAR"			%action build_default_leaf			;
+
+%token	"import"	:	'"import"(?!{keyword_lhd})'		,1				%value	"TOK_IMPORT"		%action build_default_leaf			;
 
 
 %token	"..."		:	'"..."'		,2								%value	"TOK_ELLIPSIS"		%action build_default_leaf			;	
@@ -350,17 +368,41 @@ translation_unit	:	element
 
 element			:	declaration
 				|	function_defination
+				|	import_package
 				;
+
+
+
+/**************************************import***********************************************/
+
+import_package		:	"import"	STRING	";"		%action	ignore_syntax_element
+				{
+					return NULL;
+				}
+				|	"import"	error 	";"		%action	ignore_syntax_element
+				;
+
+
 
 
 /**************************************function_defination***********************************************/
 
 
-function_defination		:	"var"		NAME "(" params ")"	start_function compound_statement close_function	%action	on_function_defination
+function_defination		:	"var"		NAME "(" params ")"	start_function compound_statement	%action	on_function_defination
 					{
 						return NULL;
 					}
 					;
+
+
+
+start_function			:	.			%action	on_start_function
+					{
+						return NULL;
+					}
+					;
+
+
 
 
 params				:	namelist	","	"..."		%action on_namelist_ellipsis
@@ -427,31 +469,6 @@ namelist				:	namelist	"," NAME		%action	on_name_list
 
 
 
-start_function			:	.			%action	on_start_function
-					{
-						return NULL;
-					}
-					;
-
-close_function			:	.			%action	on_close_function	
-					{
-						return NULL;
-					}
-					;
-
-
-
-
-/*************************************语句***************************************************/
-
-
-statement				:	compound_statement			%action	auto_return_0
-					|	expression_statement			%action	auto_return_0
-					|	selection_statement			%action	auto_return_0
-					|	iteration_statement			%action	auto_return_0
-					|	jump_statement				%action	auto_return_0
-					|	empty_statement				%action	auto_return_0
-					;
 
 
 
@@ -497,6 +514,8 @@ init_declarator_list		:	init_declarator							%action	auto_return_0
 						 return ret;
 					}
 					;
+
+
 
 
 
@@ -607,9 +626,10 @@ table_constructor		:	"{"	filed_list "}"		%action	on_table_constructor
 					}
 					;
 
+
 filed_list 			:	filed_list "," filed			%action	on_filed_list
 					{
-						//tguParser_t 	*parser = (tguParser_t*)ctx;
+						tguParser_t 	*parser = (tguParser_t*)ctx;
 						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
 						tguSynNode_t	*ret;
 						tguTableField_t *lst, *field, *tmp;
@@ -620,6 +640,7 @@ filed_list 			:	filed_list "," filed			%action	on_filed_list
 							ns[2] = NULL;
 						\}else if(ns[2] == NULL)
 						\{
+							parser->has_error = true;
 							ret = ns[0];
 							ns[0] = NULL;
 						\}else
@@ -627,7 +648,7 @@ filed_list 			:	filed_list "," filed			%action	on_filed_list
 							lst = ns[0]->field; 
 							field= ns[2]->field;
 							ns[2]->field= NULL;
-
+							AR_ASSERT(lst != NULL);
 							for(tmp = lst; tmp->next != NULL; tmp = tmp->next);
 							tmp->next = field;
 							ret = ns[0];
@@ -648,6 +669,7 @@ filed_list 			:	filed_list "," filed			%action	on_filed_list
 	\}
 
 };
+
 
 filed					:	expression			%action	on_filed
 					|	table_constructor	%action	on_filed
@@ -675,7 +697,7 @@ filed					:	expression			%action	on_filed
 						\{
 							field = NULL;
 							AR_ASSERT(false);
-							return NULL;
+							return NULL;//不加这行会造成某些编译器的warning
 						\}
 
 						ret = __create_synnode(TGU_NODE_TABLE_FILED_T, field);
@@ -686,72 +708,164 @@ filed					:	expression			%action	on_filed
 
 
 
+/*************************************语句***************************************************/
+
+
+statement				:	compound_statement			%action	auto_return_0
+					|	expression_statement			%action	auto_return_0
+					|	selection_statement			%action	auto_return_0
+					|	iteration_statement			%action	auto_return_0
+					|	jump_statement				%action	auto_return_0
+					|	empty_statement				%action	auto_return_0
+					;
+
+
 /**************************************compound_statement*****************************/
 
-compound_statement		:	start_block	compound_element_list		close_block	%action	on_compound_statement
-					|	"{" "}"										%action	on_compound_statement
-					|	start_block  error  close_block						%action	on_compound_statement
+
+%code block_operation{
+	static void push_block(tguParser_t *parser)
+	\{
+	\}
+
+	static tguBlock_t* pop_block(tguParser_t *parser)
+	\{
+		return NULL;
+	\}	
+
+	tguStmt_t*		make_compound_stmt(tguParser_t 	*parser, tguBlock_t		*block, const tguLexInfo_t *start, const tguLexInfo_t *end)
+	\{
+		return NULL;
+	\}
+};
+
+
+
+compound_statement		:	start_block	compound_element_list		"}"		%action	on_compound_statement
 					{
-						/*
 						tguParser_t 	*parser = (tguParser_t*)ctx;
 						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
-						AR_ASSERT(nodes != NULL && (count == 2 || count == 3));
+						tguSynNode_t	*ret;
+						tguBlock_t		*cb = NULL;
+						tguStmt_t *stmt;
+						
+						AR_ASSERT(nodes != NULL && (count == 2));
+						cb = pop_block(parser);
+						
+						/*至少存在一个声明或者逻辑才有可能执行到此*/
+						AR_ASSERT(cb->vars != NULL || cb->statement_list != NULL);
+						
+						stmt = make_compound_stmt(parser, cb, &ns[0]->token->lex_info,&ns[1]->token->lex_info);
+						ret = __create_synnode(TGU_NODE_STMT_T, (void*)stmt);
+						return ret;
 
-						if(count == 3)return NULL;
-						AR_ASSERT(ns[1] == NULL);
-						*/
+						
+
+						return NULL;
+					}
+
+					|	start_block  	error  				"}"		%action	on_compound_error_statement
+					{
+						tguParser_t 	*parser = (tguParser_t*)ctx;
+						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+						tguBlock_t		*cb = NULL;
+						AR_ASSERT(nodes != NULL && (count == 2));
+
+						cb = pop_block(parser);
+
+						TGU_DestroyBlock(cb);
 						return NULL;
 					}
 					;
 
 
 
+start_block			:	"{"		%action	on_start_block
+					{
+							tguParser_t 	*parser = (tguParser_t*)ctx;
+							tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+							tguSynNode_t	*ret;
+							AR_ASSERT(ns != NULL && count == 1);
+							ret = ns[0]; 
+							ns[0] = NULL;
+							push_block(parser);
+							return ret;
+					}
+					;
+
+
+
+compound_statement		:	"{" 								"}"		%action	on_empty_compound_statement
+					{
+						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+						tguSynNode_t	*ret;
+						tguStmt_t *stmt;
+						tguParser_t	*parser = (tguParser_t*)ctx;
+						AR_ASSERT(ns != NULL && count == 1);
+						AR_ASSERT(parser != NULL);
+						stmt = make_compound_stmt(parser, NULL, &ns[0]->token->lex_info,&ns[1]->token->lex_info);
+						ret = __create_synnode(TGU_NODE_STMT_T, (void*)stmt);
+						return ret;
+						
+					}
+					;
+
+
+
+
+
+
+
+compound_element_list		:	compound_element_list		compound_element	%action	auto_return_null
+					|	compound_element						%action	auto_return_null
+					{
+						return NULL;
+					}
+					;
+
+
+
+
+
+
 %code {
-	static void insert_decl_to_block(tguBlock_t *block, tguDeclaration_t *decl)
+	static void record_decl(tguParser_t	*parser , tguDeclaration_t *decl)
 	\{
 		
 	\}
 
-	static void insert_stmt_to_block(tguBlock_t *block, tguStmt_t *stmt)
+	static void record_stmt(tguParser_t	*parser , tguStmt_t *stmt)
 	\{
+
 		
 	\}
 };
 
-compound_element_list		:	compound_element_list		compound_element	%action	on_compound_element_list
-					|	compound_element						%action	on_compound_element_list
+
+compound_element		:	statement		%action	on_compound_element
+					|	declaration	%action	on_compound_element
 					{
-						tguParser_t 	*parser = (tguParser_t*)ctx;
 						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
-						tguSynNodeType_t type;
-						tguDeclaration_t *decl;
-						tguStmt_t		*stmt;
-						AR_ASSERT(nodes != NULL && (count == 2 || count == 1));
-						if(count == 2) return NULL;
-						type = ns[0]->type;
+						tguParser_t	*parser = (tguParser_t*)ctx;
+						AR_ASSERT(ns != NULL && count == 1);
+						if(ns[0] == NULL)
+						\{
+								parser->has_error = true;
+								return NULL;
+						\}
+
 						if(ns[0]->type == TGU_NODE_DECL_T)
 						\{
-							decl = ns[0]->decl;
-							ns[0]->decl = NULL;
-							if(decl) 
-							\{
-								insert_decl_to_block(parser->top_block, decl);
-							\}else 
-							\{
-								parser->has_error = true;
-							\}
+								AR_ASSERT(ns[0]->decl);
+								record_decl(parser, ns[0]->decl);
+								ns[0]->decl = NULL;
 						\}else if(ns[0]->type == TGU_NODE_STMT_T)
 						\{
-							stmt = ns[0]->stmt;
-							ns[0]->stmt = NULL;
-							if(stmt)
-							\{
-								insert_stmt_to_block(parser->top_block, stmt);
-							\}else 
-							\{
-								parser->has_error = true;
-							\}
-						\}else \{
+								AR_ASSERT(ns[0]->stmt);
+								record_stmt(parser, ns[0]->stmt);
+								ns[0]->stmt = NULL;
+						\}else	
+						\{
 							AR_ASSERT(false);
 						\}
 						return NULL;
@@ -760,43 +874,6 @@ compound_element_list		:	compound_element_list		compound_element	%action	on_comp
 
 
 
-compound_element		:	statement		%action	auto_return_0
-					|	declaration	%action	auto_return_0
-					;
-
-
-
-
-%code{
-	static void start_block(tguParser_t *parser, const tguLexInfo_t *info)
-	\{
-	\}
-
-	static void close_block(tguParser_t *parser, const tguLexInfo_t *info)
-	\{
-
-	\}
-};
-
-
-start_block			:	"{"		%action	on_start_block
-					{
-							tguParser_t 	*parser = (tguParser_t*)ctx;
-							tguSynNode_t	**ns = (tguSynNode_t**)nodes;
-							start_block(parser, &ns[0]->token->lex_info);
-							return NULL;
-					}
-					;
-
-
-close_block			:	"}"		%action	on_close_block
-					{
-							tguParser_t 	*parser = (tguParser_t*)ctx;
-							tguSynNode_t	**ns = (tguSynNode_t**)nodes;
-							close_block(parser, &ns[0]->token->lex_info);
-							return NULL;
-					}
-					;
 
 
 /*****************************************************************************/
@@ -824,6 +901,7 @@ empty_statement			:	";"		%action	on_empty_statement
 					}
 					;
 
+
 expression_statement		:	expression	 semi		%action auto_return_0
 					{
 						psrNode_t *ret = nodes[0];
@@ -840,6 +918,7 @@ expression_statement		:	expression	 semi		%action auto_return_0
 selection_statement		:	if_statement		%action auto_return_0
 					|	if_else_statement	%action auto_return_0
 					;
+
 
 %code	{
 	static tguStmt_t*	make_if_statement(tguParser_t *parser, tguExpr_t *cond, tguStmt_t *if_true, tguStmt_t *if_false, const tguLexInfo_t *lex_info)
@@ -868,6 +947,7 @@ if_statement			:	"if" "(" expression ")" statement			%prec IF_WITHOUT_ELSE		%act
 						\{
 							expr = ns[2]->expr;
 							ns[2]->expr = NULL;
+							AR_ASSERT(expr != NULL);
 						\}
 							
 						if(ns[4] == NULL)
@@ -878,6 +958,7 @@ if_statement			:	"if" "(" expression ")" statement			%prec IF_WITHOUT_ELSE		%act
 						\{
 							if_true = ns[4]->stmt;
 							ns[4]->stmt = NULL;
+							AR_ASSERT(if_true != NULL);
 						\}
 
 						stmt = make_if_statement(parser, expr, if_true, NULL, &ns[0]->token->lex_info);
@@ -885,6 +966,7 @@ if_statement			:	"if" "(" expression ")" statement			%prec IF_WITHOUT_ELSE		%act
 						return ret;
 					}
 					;
+
 
 if_else_statement		:	"if" "(" expression ")" statement "else" statement	%action on_if_else_statement
 					|	"if" "(" error ")" statement "else" statement		%action on_if_else_statement
@@ -896,7 +978,7 @@ if_else_statement		:	"if" "(" expression ")" statement "else" statement	%action 
 						tguStmt_t		*if_true;
 						tguStmt_t		*if_false;
 						tguStmt_t		*stmt;
-						AR_ASSERT(ns != NULL && count == 5);
+						AR_ASSERT(ns != NULL && count == 7);
 						if(ns[2] == NULL)
 						\{
 							expr = NULL;
@@ -905,6 +987,7 @@ if_else_statement		:	"if" "(" expression ")" statement "else" statement	%action 
 						\{
 							expr = ns[2]->expr;
 							ns[2]->expr = NULL;
+							AR_ASSERT(expr != NULL);
 						\}
 							
 						if(ns[4] == NULL)
@@ -915,6 +998,7 @@ if_else_statement		:	"if" "(" expression ")" statement "else" statement	%action 
 						\{
 							if_true = ns[4]->stmt;
 							ns[4]->stmt = NULL;
+							AR_ASSERT(if_true != NULL);
 						\}
 
 						if(ns[6] == NULL)
@@ -925,6 +1009,7 @@ if_else_statement		:	"if" "(" expression ")" statement "else" statement	%action 
 						\{
 							if_false = ns[6]->stmt;
 							ns[6]->stmt = NULL;
+							AR_ASSERT(if_false != NULL);
 						\}
 
 
@@ -944,6 +1029,7 @@ iteration_statement		:	while_statement			%action	auto_return_0
 
 
 
+
 %code {
 	static tguStmt_t*	make_while_statement(tguParser_t *parser, tguExpr_t *cond, tguStmt_t *loop, const tguLexInfo_t *lex_info)
 	\{
@@ -955,8 +1041,9 @@ iteration_statement		:	while_statement			%action	auto_return_0
 		return NULL;
 	\}
 
-
 };
+
+
 
 
 
@@ -969,7 +1056,7 @@ while_statement			:	"while" enter_loop  "(" expression ")" statement leave_loop	
 						tguSynNode_t	*ret;
 						tguExpr_t		*expr;
 						tguStmt_t		*stmt;
-						AR_ASSERT(ns != NULL && count == 5);
+						AR_ASSERT(ns != NULL && count == 7);
 						if(ns[3] == NULL)
 						\{
 							expr = NULL;
@@ -978,6 +1065,7 @@ while_statement			:	"while" enter_loop  "(" expression ")" statement leave_loop	
 						\{
 							expr = ns[3]->expr;
 							ns[3]->expr = NULL;
+							AR_ASSERT(expr != NULL);
 						\}
 							
 						if(ns[5] == NULL)
@@ -988,6 +1076,7 @@ while_statement			:	"while" enter_loop  "(" expression ")" statement leave_loop	
 						\{
 							stmt = ns[5]->stmt;
 							ns[5]->stmt = NULL;
+							AR_ASSERT(stmt != NULL);
 						\}
 
 						stmt = make_while_statement(parser, expr, stmt, &ns[0]->token->lex_info);
@@ -996,15 +1085,17 @@ while_statement			:	"while" enter_loop  "(" expression ")" statement leave_loop	
 					}
 					;
 
+
+
 do_while_statement		:	"do" enter_loop statement "while" "(" expression ")" leave_loop semi			%action	on_do_while_statement
 					|	"do" enter_loop statement "while" "(" error ")" leave_loop semi				%action	on_do_while_statement
 					{
-						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
-						tguParser_t	*parser = (tguParser_t*)ctx;
+						tguSynNode_t	**ns = 	(tguSynNode_t**)nodes;
+						tguParser_t	*parser =	(tguParser_t*)ctx;
 						tguSynNode_t	*ret;
 						tguExpr_t		*expr;
 						tguStmt_t		*stmt;
-						AR_ASSERT(ns != NULL && count == 5);
+						AR_ASSERT(ns != NULL && count == 9);
 						if(ns[2] == NULL)
 						\{
 							stmt = NULL;
@@ -1013,6 +1104,7 @@ do_while_statement		:	"do" enter_loop statement "while" "(" expression ")" leave
 						\{
 							stmt = ns[2]->stmt;
 							ns[2]->stmt = NULL;
+							AR_ASSERT(stmt != NULL);
 						\}
 							
 						if(ns[5] == NULL)
@@ -1023,9 +1115,10 @@ do_while_statement		:	"do" enter_loop statement "while" "(" expression ")" leave
 						\{
 							expr = ns[5]->expr;
 							ns[5]->expr = NULL;
+							AR_ASSERT(expr != NULL);
 						\}
 
-						stmt =make_do_while_statement(parser, expr, stmt, &ns[0]->token->lex_info);
+						stmt = make_do_while_statement(parser, expr, stmt, &ns[0]->token->lex_info);
 						ret = __create_synnode(TGU_NODE_STMT_T, (void*)stmt);
 						return ret;
 					}
@@ -1103,17 +1196,25 @@ jump_statement			:	"continue" semi				%action on_continue_statement
 						tguExpr_t		*expr;
 						tguParser_t	*parser = (tguParser_t*)ctx;
 						tguStmt_t		*stmt;
-						AR_ASSERT(nodes != NULL && count == 2 || count == 3);
+						AR_ASSERT(nodes != NULL && (count == 2 || count == 3));
 						AR_ASSERT(parser->current_function != NULL);
-
-						if(ns[1] == NULL)
+						
+						if(count == 2)
 						\{
 							expr = NULL;
 						\}else
 						\{
-							AR_ASSERT(ns[1]->type == TGU_NODE_EXPR_T);
-							expr = ns[1]->expr;
-							ns[1]->expr = NULL;
+							if(ns[1] == NULL)
+							\{
+								expr = NULL;
+								parser->has_error = true;
+							\}else
+							\{
+								AR_ASSERT(ns[1]->type == TGU_NODE_EXPR_T);
+								expr = ns[1]->expr;
+								ns[1]->expr = NULL;
+								AR_ASSERT(expr != NULL);
+							\}
 						\}
 
 						stmt = make_jump_statement(parser, TGU_STT_RETURN, 	expr, &ns[0]->token->lex_info);
@@ -1126,7 +1227,13 @@ jump_statement			:	"continue" semi				%action on_continue_statement
 
 
 semi					:	";"								%action	auto_return_0
-					|	error								%action	auto_return_null
+					|	error								%action	on_semi_error
+					{
+						tguParser_t	*parser = (tguParser_t*)ctx;
+						AR_ASSERT(parser != NULL);
+						parser->has_error = true;
+						return NULL;
+					}
 					;
 
 
@@ -1148,7 +1255,8 @@ semi					:	";"								%action	auto_return_0
 
 expression				:	assignment_expression		%action auto_return_0
 					;
-	
+
+
 
 %code {
 	static tguExpr_t*		make_assignment_expression(tguParser_t	*parser, 	tguExpr_t *addr, tguExpr_t *value, const tguLexInfo_t *lex_info)
@@ -1157,6 +1265,7 @@ expression				:	assignment_expression		%action auto_return_0
 	\}
 
 };
+
 
 
 assignment_expression		:	constant_expression							%action 	auto_return_0
@@ -1178,6 +1287,7 @@ assignment_expression		:	constant_expression							%action 	auto_return_0
 						\{
 							addr = ns[0]->expr;
 							ns[0]->expr = NULL;
+							AR_ASSERT(addr != NULL);
 						\}
 						
 
@@ -1189,9 +1299,11 @@ assignment_expression		:	constant_expression							%action 	auto_return_0
 						\{
 							value = ns[2]->expr;
 							ns[2]->expr = NULL;
+							AR_ASSERT(value != NULL);
 						\}
 
 						lex_info = addr != NULL ? &addr->lex_info : &ns[1]->token->lex_info;
+						AR_ASSERT(lex_info != NULL);
 						expr = make_assignment_expression(parser, addr, value, lex_info);
 						ret = __create_synnode(TGU_NODE_EXPR_T, (void*)expr);
 
@@ -1211,6 +1323,7 @@ assignment_expression		:	constant_expression							%action 	auto_return_0
 
 };
 
+
 constant_expression		:	binary_expression										%action 	auto_return_0
 					|	binary_expression	"?"	expression	":"	constant_expression		%action	on_condition_expression
 					{
@@ -1229,6 +1342,7 @@ constant_expression		:	binary_expression										%action 	auto_return_0
 						\{
 							cond = ns[0]->expr;
 							ns[0]->expr = NULL;
+							AR_ASSERT(cond != NULL);
 						\}
 
 						
@@ -1241,6 +1355,7 @@ constant_expression		:	binary_expression										%action 	auto_return_0
 						\{
 							if_true= ns[2]->expr;
 							ns[2]->expr = NULL;
+							AR_ASSERT(if_true != NULL);
 						\}
 						
 						if(ns[4] == NULL)
@@ -1251,9 +1366,11 @@ constant_expression		:	binary_expression										%action 	auto_return_0
 						\{
 							if_false= ns[4]->expr;
 							ns[4]->expr = NULL;
+							AR_ASSERT(if_false != NULL);
 						\}
 
 						lex_info = cond != NULL ? &cond->lex_info : &ns[1]->token->lex_info;
+						AR_ASSERT(lex_info != NULL);
 						expr = make_condition_expression(parser, cond, if_true, if_false, lex_info);
 						ret = __create_synnode(TGU_NODE_EXPR_T, (void*)expr);
 						return ret;
@@ -1290,9 +1407,10 @@ binary_expression		:	unary_expression							%action 	auto_return_0
 						tguSynNode_t 	*ret;
 						tguParser_t	*parser = (tguParser_t*)ctx;
 						tguExpr_t		*left, *right, *expr;
-						tguToken_t		*tok;
+
 						tguExprOP_t	op;
 						const tguLexInfo_t *lex_info;
+						const tguToken_t	*tok;
 						AR_ASSERT(ns != NULL && count == 3 && parser != NULL);
 
 						if(ns[0] == NULL)
@@ -1303,10 +1421,13 @@ binary_expression		:	unary_expression							%action 	auto_return_0
 						\{
 							left = ns[0]->expr;
 							ns[0]->expr = NULL;
+							AR_ASSERT(left != NULL);
 						\}
 
 						AR_ASSERT(ns[1] != NULL);
-						tok = ns[1]->token;	
+						tok = ns[1]->token;
+						AR_ASSERT(tok != NULL);
+
 
 						if(ns[2] == NULL)
 						\{
@@ -1316,6 +1437,7 @@ binary_expression		:	unary_expression							%action 	auto_return_0
 						\{
 							right = ns[2]->expr;
 							ns[2]->expr = NULL;
+							AR_ASSERT(right != NULL);
 						\}
 
 						switch(tok->term_val)
@@ -1364,12 +1486,12 @@ binary_expression		:	unary_expression							%action 	auto_return_0
 							AR_ASSERT(false);
 							break;
 						\}
+
 						lex_info  = left != NULL ? &left->lex_info : &tok->lex_info;
+						AR_ASSERT(lex_info != NULL);
 						expr = make_binary_expression(parser, op, left, right, lex_info);
 						ret = __create_synnode(TGU_NODE_EXPR_T, (void*)expr);
 						return ret;
-
-
 					}
 					;
 
@@ -1396,10 +1518,10 @@ unary_expression	:	"+"	unary_expression	%action	on_unary_expression
 						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
 						tguSynNode_t 	*ret;
 						tguParser_t	*parser = (tguParser_t*)ctx;
-
 						tguExpr_t		*expr;
-						tguToken_t		*tok;
-						tguExprOP_t	op;
+
+						tguExprOP_t		op;
+						const tguToken_t	*tok;
 						const tguLexInfo_t	*lex_info;
 						AR_ASSERT(ns != NULL && count == 2 && parser != NULL);
 
@@ -1411,6 +1533,7 @@ unary_expression	:	"+"	unary_expression	%action	on_unary_expression
 						\{
 							expr = ns[1]->expr;
 							ns[1]->expr = NULL;
+							AR_ASSERT(expr != NULL);
 						\}
 
 						AR_ASSERT(ns[0] != NULL && ns[0]->token != NULL);
@@ -1438,7 +1561,7 @@ unary_expression	:	"+"	unary_expression	%action	on_unary_expression
 							AR_ASSERT(false);
 							break;
 						\}
-						lex_info = expr != NULL ? &expr->lex_info : &ns[0]->token->lex_info;
+						lex_info = expr != NULL ? &expr->lex_info : &tok->lex_info;
 						expr = make_unary_expression(parser, op, expr, false, lex_info);
 						ret = __create_synnode(TGU_NODE_EXPR_T, (void*)expr);
 						return ret;
@@ -1452,13 +1575,14 @@ unary_expression	:	"+"	unary_expression	%action	on_unary_expression
 postfix_expression	:	postfix_expression	"++"		%action	on_post_add_minus_expression
 				|	postfix_expression	"--"		%action	on_post_add_minus_expression
 				{
-						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
-						tguSynNode_t 	*ret;
-						tguParser_t	*parser = (tguParser_t*)ctx;
-						tguExpr_t		*expr;
-						tguToken_t		*tok;
+						tguSynNode_t		**ns = (tguSynNode_t**)nodes;
+						tguSynNode_t 		*ret;
+						tguParser_t		*parser = (tguParser_t*)ctx;
+						tguExpr_t			*expr;
+						const tguToken_t	*tok;
 						tguExprOP_t	op;
 						const tguLexInfo_t	*lex_info; 
+
 						AR_ASSERT(ns != NULL && count == 2 && parser != NULL);
 
 						if(ns[0] == NULL)
@@ -1469,6 +1593,7 @@ postfix_expression	:	postfix_expression	"++"		%action	on_post_add_minus_expressi
 						\{
 							expr = ns[0]->expr;
 							ns[0]->expr = NULL;
+							AR_ASSERT(expr != NULL);
 						\}
 
 						AR_ASSERT(ns[1] != NULL && ns[1]->token != NULL);
@@ -1513,10 +1638,9 @@ postfix_expression	:	postfix_expression	"++"		%action	on_post_add_minus_expressi
 						\{
 							expr = ns[0]->expr;
 							ns[0]->expr = NULL;
+							AR_ASSERT(expr != NULL);
 						\}
 
-						
-						
 						if(ns[2] == NULL)
 						\{
 							index_expr = NULL;
@@ -1525,8 +1649,10 @@ postfix_expression	:	postfix_expression	"++"		%action	on_post_add_minus_expressi
 						\{
 							index_expr = ns[2]->expr;
 							ns[2]->expr = NULL;
+							AR_ASSERT(index_expr != NULL);
 						\}
-						lex_info = expr == NULL ? &expr->lex_info : &ns[1]->token->lex_info;
+
+						lex_info = expr != NULL ? &expr->lex_info : &ns[1]->token->lex_info;
 						expr = make_index_expression(parser, expr, index_expr, lex_info);
 						ret = __create_synnode(TGU_NODE_EXPR_T, (void*)expr);
 						return ret;
@@ -1643,6 +1769,7 @@ call_expression		:	postfix_expression "(" expression_list ")"		%action	on_call_e
 							\{
 								args = ns[2]->expr;
 								ns[2]->expr = NULL;
+								AR_ASSERT(args != NULL);
 							\}
 						\}else
 						\{
@@ -1657,6 +1784,7 @@ call_expression		:	postfix_expression "(" expression_list ")"		%action	on_call_e
 				}
 				;
 
+
 expression_list		:	expression					%action	auto_return_0
 				|	expression_list "," expression	%action	on_expression_list
 				{
@@ -1665,7 +1793,7 @@ expression_list		:	expression					%action	auto_return_0
 						tguExpr_t		*lst;
 						AR_ASSERT(ns != NULL && count == 3);
 						if(ns[0] == NULL) return ns[2];
-						if(ns[2] == NULL) return ns[2];
+						if(ns[2] == NULL) return ns[0];
 						AR_ASSERT(ns[0]->expr != NULL  && ns[2]->expr != NULL);
 
 						for(lst = ns[0]->expr; lst->next != NULL; lst = lst->next);

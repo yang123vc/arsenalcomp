@@ -314,6 +314,14 @@ typedef struct __parser_rule_tag
 }psrRule_t;
 
 psrRule_t*		Parser_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, size_t auto_ret, const psrTermInfoList_t *term_list, arIOCtx_t *ctx);
+
+
+/*
+函数Parser_CreateRuleByStr所接受的字符格式为head : body_list
+head 格式为[a-z_][a-z_0-9]*
+符号 : 为分隔符，必须存在，并且被丢弃
+body_list中所有符号都被当做文本符号接收，由空格，制表符等AR_iswspace返回非0值的符号分隔
+*/
 psrRule_t*		Parser_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, size_t auto_ret, const psrTermInfoList_t *term_list, arIOCtx_t *ctx);
 void			Parser_DestroyRule(psrRule_t *rule);
 
@@ -371,6 +379,13 @@ psrTermInfo_t*			Parser_GetTermSymbInfoByValue(const psrGrammar_t	*grammar, size
 bool_t					Parser_InsertTerm(psrGrammar_t *grammar, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f);
 bool_t					Parser_InsertRule(psrGrammar_t *grammar, psrRule_t *rule);
 bool_t					Parser_InsertRuleByPartStr(psrGrammar_t *grammar, const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, size_t auto_ret);
+
+/*
+函数Parser_InsertRuleByStr所接受的字符格式为head : body_list
+head 格式为[a-z_][a-z_0-9]*
+符号 : 为分隔符，必须存在，并且被丢弃
+body_list中所有符号都被当做文本符号接收，由空格，制表符等AR_iswspace返回非0值的符号分隔
+*/
 bool_t					Parser_InsertRuleByStr(psrGrammar_t *grammar, const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, size_t auto_ret);
 
 

@@ -588,7 +588,7 @@ static rgxResult_t	__handle_postfix(rgxNode_t *expr, const wchar_t *input, const
 				}
 				
 				/*
-				禁用过大的循环次数，因为会导致过多的rgxNode_t*分配
+				禁用过大的循环次数，因为会导致过多的编译时过多递归,下一版会改进执行虚拟机
 				*/
 				if((min > AR_RGX_MAX_MINLOOPCOUNT) || (max != AR_SIZE_MAX && max > AR_RGX_MAX_MINLOOPCOUNT))
 				{
