@@ -34,7 +34,7 @@
 %name	escape_seq		:	"(\\(\x22|\x27))"	
 				;
 
-%name	string_dq		: 	"(\x22({escape_seq}|[^\x22])*\x22)"		//只能提取"..."或"\""此类串，其它词法规则要到语义例程中处理	
+%name	string_dq		: 	"(\x22({escape_seq}|[^\x22])*\x22)"		//只提取"..."或"\""此类串，其它词法规则要到语义例程中处理	
 				;
 
 %name	string_sq		:	"\x27({escape_seq}|[^\x27])*\x27"		//提取'...'或'\''此类串，其它词法规则要到语义例程中处理	
@@ -43,7 +43,7 @@
 %name string_literal	:	"{string_sq}|{string_dq}"
 				;
 
-%token %skip 		:	"{delim}+|{comment}+|{comment_line}+"				,1		%value	"TOK_DELIM_ID"		;
+%token %skip 		:	"{delim}+|{comment}+|{comment_line}+"		,1		%value	"TOK_DELIM_ID"		;
 
 
 
@@ -182,7 +182,7 @@
 %token	"%"		:	'"%"'			,0								%value "TOK_MOD"				;//%
 
 %token	"^"		:	'"^"'			,0								%value "TOK_XOR"				;//^
-%token	"|"		:	'"|"'			,0								%value "TOK_OR"				;//|
+%token	"|"		:	'"|"'			,0								%value "TOK_OR"					;//|
 %token	"?"		:	'"?"'			,0								%value "TOK_QUEST"				;//?
 
 

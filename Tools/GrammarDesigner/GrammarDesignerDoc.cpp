@@ -363,7 +363,7 @@ void CGrammarDesignerDoc::OnEditGotoDecl()
 				}else
 				{
 						CString str;
-						str.Format(TEXT("The symbol \"%ls\" not declared"), sel.GetString());
+						str.Format(TEXT("The symbol \"%ls\" is not declared"), sel.GetString());
 						view->MessageBox(str);
 				}
 		}
@@ -552,7 +552,7 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 				{
 						CString msg;
 
-						msg.Format(TEXT("Token Error : \"%ls : %ls\""), tok->name, tok->regex);
+						msg.Format(TEXT("Term Error : \"%ls : %ls\""), tok->name, tok->regex);
 						output.Append(msg, COutputList::MSG_ERROR, tok->line, tar);
 						has_error = true;
 				}

@@ -203,7 +203,6 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 						#elif(AR_ARCH_VER == AR_ARCH_32)
 
 						#endif
-
 				}else if(*fmt == L'l' && *(fmt + 1) == L'l')/*VC gcc一族编译器*/
 				{
 						/*例如%lld*/
@@ -362,10 +361,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 								cclen = AR_MAX(width, 312 + prec + 6);/*取最大值*/
 
 								buf = AR_NEWARR0(wchar_t, cclen);
-								if(AR_swprintf(buf, cclen, L"%*.*f", width, prec + 6, f) < 0)
-								{
-										AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
-								}
+								AR_swprintf(buf, cclen, L"%*.*f", width, prec + 6, f);
 								len = AR_wcslen(buf);
 								AR_DEL(buf);
 								break;
@@ -437,12 +433,66 @@ wchar_t*		AR_vtow(const wchar_t *fmt, ...)
 		{
 				AR_DEL(buf);
 				buf = NULL;
-				AR_ASSERT(false);
+				AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
 				return NULL;
 		}
 		va_end (args);
 		return buf;
 }
+
+
+
+int_t			AR_vswprintf(wchar_t *dest, size_t count, const wchar_t *fmt, va_list args)
+{
+		int_t res;
+		va_list save;
+		AR_ASSERT(dest != NULL && fmt != NULL && args != NULL);
+		res = 0;
+		AR_memcpy(&save, &args, sizeof(va_list));
+		
+		res = AR_VSWPRINTF(dest, count, fmt, args);
+		
+		va_end(save);
+
+		AR_CHECK(res >= 0, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
+
+		return res;
+}
+
+
+int_t			AR_swprintf(wchar_t *dest, size_t count, const wchar_t *fmt, ...)
+{
+		int_t len = -1;
+		va_list	arg_ptr;
+		AR_ASSERT(fmt != NULL);
+
+		va_start(arg_ptr, fmt);
+		len = AR_vswprintf(dest, count, fmt, arg_ptr);
+		va_end(arg_ptr);
+
+		AR_CHECK(len >= 0, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
+		return len;
+}
+
+
+int_t			AR_vsprintf(char *dest, size_t count, const char *fmt, va_list args)
+{
+		int_t res;
+		va_list save;
+		AR_ASSERT(dest != NULL && fmt != NULL && args != NULL);
+		res = 0;
+		AR_memcpy(&save, &args, sizeof(va_list));
+		
+		res = AR_VSPRINTF(dest, count, fmt, args);
+		va_end(save);
+
+		AR_CHECK(res >= 0, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
+
+		return res;
+
+}
+
+
 
 
 
@@ -462,8 +512,8 @@ int_t AR_wchartodigit(wchar_t ch)
 		}
 
 		
-		DIGIT_RANGE_TEST(0x0030)        // 0030;DIGIT ZERO
-		if (ch < 0xFF10)                // FF10;FULLWIDTH DIGIT ZERO
+		DIGIT_RANGE_TEST(0x0030)			// 0030;DIGIT ZERO
+		if (ch < 0xFF10)					// FF10;FULLWIDTH DIGIT ZERO
 		{
 				DIGIT_RANGE_TEST(0x0660)    // 0660;ARABIC-INDIC DIGIT ZERO
 				DIGIT_RANGE_TEST(0x06F0)    // 06F0;EXTENDED ARABIC-INDIC DIGIT ZERO
@@ -573,7 +623,27 @@ wchar_t*		AR_wcstrim_right(wchar_t *in, const wchar_t *trim)
 		return in;
 }
 
+wchar_t*	AR_wcstrim_right_space(wchar_t *in)
+{
+		wchar_t *p = NULL, *plast = NULL;
+		AR_ASSERT(in != NULL);
+		p = in;
+		while(*p != L'\0')
+		{
+				//if(AR_wcschr(trim, *p) == NULL)
+				if(AR_iswspace(*p) == 0)
+				{
+						plast = NULL;
+				}else if(plast == NULL)
+				{
+						plast = p;
+				}
+				++p;
+		}
 
+		if(plast)*plast = L'\0';
+		return in;
+}
 
 const wchar_t* AR_wcstrim(const wchar_t *in, const wchar_t *trim)
 {
@@ -1243,6 +1313,12 @@ const wchar_t* AR_wcsstr_kmp_s(const wchar_t *beg, const wchar_t *end, const wch
 		AR_DEL(next);
 		return ret;
 } 
+
+
+
+
+
+
 
 
 AR_NAMESPACE_END

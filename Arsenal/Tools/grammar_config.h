@@ -193,6 +193,7 @@ typedef enum
 }cfgReportType_t;
 
 
+
 typedef struct __cfg_report_info_tag
 {
 		cfgReportType_t			type;

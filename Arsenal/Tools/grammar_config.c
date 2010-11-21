@@ -31,6 +31,7 @@ typedef enum
 
 typedef struct __config_parser_data_tag
 {
+		bool_t					has_error;
 		cfgReport_t				*report;
 		arStringTable_t			*name;
 		arStringTable_t			*token;
@@ -43,7 +44,7 @@ static	AR_INLINE		void	__init_parser_data(cfgParserData_t		*psr_data, cfgReport_
 		AR_ASSERT(psr_data != NULL && report != NULL);
 
 		AR_memset(psr_data, 0, sizeof(*psr_data));
-
+		psr_data->has_error = false;
 		psr_data->report = report;
 		psr_data->name = AR_CreateStrTable(0);
 		psr_data->token = AR_CreateStrTable(0);
@@ -59,7 +60,7 @@ static AR_INLINE		void	__uninit_parser_data(cfgParserData_t	*psr_data)
 		AR_DestroyStrTable(psr_data->token);
 		AR_DestroyStrTable(psr_data->token_val);
 		AR_DestroyStrTable(psr_data->prec);
-		
+		psr_data->has_error = false;
 		AR_memset(psr_data, 0, sizeof(*psr_data));
 }
 
@@ -118,28 +119,16 @@ static AR_INLINE		void	__check_name_from_parser_data(cfgParserData_t *psr_data, 
 				switch(t)
 				{
 				case CFG_STR_NAME:
-						if(AR_swprintf(buf, 1024, L"Duplicate name definition %ls\r\n", name) < 0)
-						{
-								AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
-						}
+						AR_swprintf(buf, 1024, L"Duplicate name definition %ls\r\n", name);
 						break;
 				case CFG_STR_TOKEN:
-						if(AR_swprintf(buf, 1024, L"Duplicate token definition %ls\r\n", name) < 0)
-						{
-								AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
-						}
+						AR_swprintf(buf, 1024, L"Duplicate token definition %ls\r\n", name);
 						break;
 				case CFG_STR_TOKEN_VALUE:
-						if(AR_swprintf(buf, 1024, L"Duplicate token value definition %ls\r\n", name) < 0)
-						{
-								AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
-						}
+						AR_swprintf(buf, 1024, L"Duplicate token value definition %ls\r\n", name);
 						break;
 				case CFG_STR_PREC:
-						if(AR_swprintf(buf, 1024, L"Duplicate prec definition %ls\r\n", name) < 0)
-						{
-								AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
-						}
+						AR_swprintf(buf, 1024, L"Duplicate prec definition %ls\r\n", name);
 						break;
 				default:
 						AR_ASSERT(false);
@@ -792,12 +781,10 @@ static void __uninit_cfg_node_list()
 
 		{
 				wchar_t buf[1024];
-				if(AR_swprintf(buf, 1024, L"Total consume cfgNode_t == %u", count) < 0)
-				{
-						AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
-				}
-
-				AR_printf(L"%ls\r\n", buf);
+				AR_swprintf(buf, 1024, L"Total consume cfgNode_t == %u", count);
+				
+				
+				AR_DPRINT(L"%ls\r\n", buf);
 		}
 
 }
@@ -940,24 +927,52 @@ static void CFG_DestroyNode(cfgNode_t *node)
 static psrNode_t* AR_STDCALL __build_leaf(const psrToken_t *tok,  void *ctx)
 {
 		cfgNode_t *node;
-		AR_ASSERT(tok->str_cnt > 0);
+		cfgParserData_t	*parser_ctx;
+		AR_ASSERT(tok->str_cnt > 0 && ctx != NULL);
+		
+		parser_ctx = (cfgParserData_t*)ctx;
+
 		node = CFG_CreateNode(CFG_LEXEME_T);
 
 		node->lexeme.lex_val = (cfgLexValue_t)tok->term_val;
 
 		if(tok->term_val == LEXEME && (tok->str[0] == L'"' || tok->str[0] == L'\''))
 		{
+				wchar_t *tmp, *p;
 				AR_ASSERT(tok->str[tok->str_cnt-1] == L'"' || tok->str[tok->str_cnt-1] == L'\'');
 
-				node->lexeme.lexeme = AR_wcsndup(tok->str + 1, tok->str_cnt-2);
-				AR_ASSERT(node->lexeme.lexeme != NULL);
+				tmp = AR_wcsndup(tok->str + 1, tok->str_cnt-2);
+				
+				p = (wchar_t*)AR_wcstrim_space(tmp);
+				p = AR_wcstrim_right_space(p);
+				
+				node->lexeme.lexeme = AR_wcsdup(p);
+
+				if(AR_wcslen(node->lexeme.lexeme) == 0)
+				{
+						cfgReportInfo_t info;
+						wchar_t buf[128];
+						
+						AR_swprintf(buf, 128, L"Empty lexeme : line = %" AR_PLAT_INT_FMT L"d", tok->line);
+
+						info.type = CFG_REPORT_ERROR_LEX_T;
+						info.lex_error.msg = buf;
+						info.lex_error.tok = tok;
+						parser_ctx->report->report_func(&info, parser_ctx->report->report_ctx);
+						parser_ctx->has_error = true;
+				}
+				
+				AR_DEL(tmp);
+
 		}else if(tok->term_val == ACTION_INS)
 		{
 				wchar_t *buf, *d;
 				const wchar_t *s, *e;
 				AR_ASSERT(tok->str_cnt > 0);
 				buf = AR_NEWARR(wchar_t,tok->str_cnt + 1);
-				d = buf; s = tok->str; e = tok->str + tok->str_cnt;
+				d = buf; 
+				s = tok->str; 
+				e = tok->str + tok->str_cnt;
 
 				while(s < e)
 				{
@@ -1079,7 +1094,6 @@ static psrNode_t*		AR_STDCALL __handle_rhs(psrNode_t **nodes, size_t count, cons
 		if(ns[0]->type == CFG_LEXEME_T && ns[0]->lexeme.lex_val == DOT)
 		{
 				AR_wcscat((wchar_t*)res->rule.rhs, L" ");
-
 				res->rule.line = ns[0]->lexeme.line;
 
 		}else if(ns[0]->type == CFG_NODE_LIST_T)
@@ -1592,10 +1606,15 @@ static psrNode_t*		AR_STDCALL __handle_program(psrNode_t **nodes, size_t count, 
 		bool_t			has_err = false;
 		cfgNodeList_t name, token, prec, rule, error, empty, predef;
 		cfgStart_t		*start_rule = NULL;
+		cfgParserData_t	*parser_ctx;
 		
 
 		AR_ASSERT(count == 2 || count == 3);
 		AR_ASSERT((ns[0] == NULL) || (ns[0] && ns[0]->type == CFG_NODE_LIST_T));
+
+		parser_ctx = (cfgParserData_t*)ctx;
+
+		AR_ASSERT(parser_ctx != NULL);
 
 		if(count == 2)
 		{
@@ -1676,7 +1695,7 @@ static psrNode_t*		AR_STDCALL __handle_program(psrNode_t **nodes, size_t count, 
 		res = CFG_CreateNode(CFG_CONFIG_T);
 		CFG_InitConfig(&res->config, &name, &token, &prec, &rule, start_rule, &predef);
 
-		if(error.count > 0 || has_err)
+		if(parser_ctx->has_error || error.count > 0 || has_err)
 		{
 				res->config.has_error = true;
 		}
@@ -1906,10 +1925,14 @@ void	AR_STDCALL cfg_on_print(const wchar_t *msg, void *ctx)
 }
 
 
+
+
 static void	AR_STDCALL cfg_free(psrNode_t *node, void *ctx)
 {
 		CFG_DestroyNode((cfgNode_t*)node);
 }
+
+
 
 
 static void		AR_STDCALL cfg_error(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
@@ -2019,6 +2042,7 @@ static void __init_parser_tag()
 		
 		psr_handler.error_f = cfg_error;
 		psr_handler.free_f = cfg_free;
+
 		__g_lex		= __build_lex(NULL);
 		__g_grammar = __build_grammar(&psr_handler, NULL);
 		__g_parser	= __build_parser(__g_grammar);
@@ -2215,6 +2239,8 @@ void			CFG_DestroyGrammarConfig(cfgConfig_t *cfg)
 
 
 
+/****************************************************************生成模板代码部分***********************************************/
+
 
 
 
@@ -2319,6 +2345,8 @@ __RULE_COUNT__
 
 #define CFG_CNT_DEF		L"#define %ls ((size_t)%u)\r\n"
 
+
+
 typedef struct __handler_record_tag
 {
 		wchar_t			*name;
@@ -2398,6 +2426,7 @@ static void			InsertToHandlerTable(handlerTbl_t		*tbl, const wchar_t *name, cons
 		}
 		
 }
+
 
 
 
@@ -2600,6 +2629,8 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 
 		AR_AppendFormatString(code,  CFG_CNT_DEF, L"__TERM_COUNT__", cfg->tok_cnt);
 
+
+/************************************************生成优先级相关代码***************************************************************/
 		if(cfg->prec_cnt > 0)
 		{
 				AR_AppendString(code, L"\n");
@@ -2690,7 +2721,8 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 				AR_AppendString(code, L"\n");
 				AR_AppendString(code, L"\n");
 		}
-		
+
+
 		{
 				size_t	prec_cnt = 0;
 				size_t i;

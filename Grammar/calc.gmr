@@ -2,11 +2,11 @@
 %name	delim 		:	"[ \r\n\t]"			;
 %name	comment		:	"/\*([^\*]|\*+[^\*/])*\*+/"	;
 %name	comment_line	:	"//[^\n]*\n"			;
-%name	digit			:	"[0-9]"				;
+%name	digit		:	"[0-9]"				;
 %name	number		:	"{digit}+"			;
 
 
-%token	%skip 	:	"{delim}+|{comment}+|{comment_line}+",1;
+%token	%skip 		:	"{delim}+|{comment}+|{comment_line}+",1;
 
 %token	NUM		: 	"{number}"	;
 %token     "+"		:	'"+"';
@@ -34,8 +34,8 @@ E	:	E	"+" 	E	%action	"handle_calc"
 	|	E	"/"	E		%action		"handle_calc"
 	|	E	"%"	E		%action		"handle_calc"
 	|	"("	E	")"		%action		"handle_calc"
-	|	"-"	E 	%prec UMINUS	%action	"handle_calc"
-	|	NUM					%action	"handle_calc"
+	|	"-"	E 	%prec UMINUS	%action		"handle_calc"
+	|	NUM				%action		"handle_calc"
 	;
 
 

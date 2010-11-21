@@ -22,6 +22,7 @@ AR_NAMESPACE_BEGIN
 const psrSymb_t*		Parser_CreateSymb(const wchar_t *name, psrSymbType_t t)
 {
 		psrSymb_t		*res;
+		AR_ASSERT(name != NULL && AR_wcslen(name) > 0);
 		res = AR_NEW0(psrSymb_t);
 		
 		res->name = Parser_AllocString(name);

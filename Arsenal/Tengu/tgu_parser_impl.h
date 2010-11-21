@@ -15,8 +15,6 @@
 
 
 
-
-
 /*
 params
 */
@@ -181,25 +179,35 @@ syntax_tree_handler
 
 
 
-	static void insert_decl_to_block(tguBlock_t *block, tguDeclaration_t *decl)
+/*
+block_operation
+*/
+
+	static void push_block(tguParser_t *parser)
+	{
+	}
+
+	static tguBlock_t* pop_block(tguParser_t *parser)
+	{
+		return NULL;
+	}	
+
+	tguStmt_t*		make_compound_stmt(tguParser_t 	*parser, tguBlock_t		*block, const tguLexInfo_t *start, const tguLexInfo_t *end)
+	{
+		return NULL;
+	}
+
+
+
+	static void record_decl(tguParser_t	*parser , tguDeclaration_t *decl)
 	{
 		
 	}
 
-	static void insert_stmt_to_block(tguBlock_t *block, tguStmt_t *stmt)
+	static void record_stmt(tguParser_t	*parser , tguStmt_t *stmt)
 	{
+
 		
-	}
-
-
-
-	static void start_block(tguParser_t *parser, const tguLexInfo_t *info)
-	{
-	}
-
-	static void close_block(tguParser_t *parser, const tguLexInfo_t *info)
-	{
-
 	}
 
 
@@ -229,7 +237,6 @@ syntax_tree_handler
 	{
 		return NULL;
 	}
-
 
 
 
@@ -356,34 +363,35 @@ TOK_NULL = 269,
 TOK_TRUE = 270,
 TOK_FALSE = 271,
 TOK_VAR = 272,
-TOK_ELLIPSIS = 273,
-TOK_INC = 274,
-TOK_DEC = 275,
-TOK_ANDAND = 276,
-TOK_OROR = 277,
-TOK_LE = 278,
-TOK_GE = 279,
-TOK_EQ = 280,
-TOK_NE = 281,
-TOK_LESS = 282,
-TOK_GREATER = 283,
-TOK_L_BRACES = 284,
-TOK_R_BRACES = 285,
-TOK_L_PAREN = 286,
-TOK_R_PAREN = 287,
-TOK_L_SQUARE = 288,
-TOK_R_SQUARE = 289,
-TOK_SEMICOLON = 290,
-TOK_COMMA = 291,
-TOK_ASSIGN = 292,
-TOK_ADD = 293,
-TOK_SUB = 294,
-TOK_MUL = 295,
-TOK_DIV = 296,
-TOK_MOD = 297,
-TOK_NOT = 298,
-TOK_COLON = 299,
-TOK_QUEST = 300,
+TOK_IMPORT = 273,
+TOK_ELLIPSIS = 274,
+TOK_INC = 275,
+TOK_DEC = 276,
+TOK_ANDAND = 277,
+TOK_OROR = 278,
+TOK_LE = 279,
+TOK_GE = 280,
+TOK_EQ = 281,
+TOK_NE = 282,
+TOK_LESS = 283,
+TOK_GREATER = 284,
+TOK_L_BRACES = 285,
+TOK_R_BRACES = 286,
+TOK_L_PAREN = 287,
+TOK_R_PAREN = 288,
+TOK_L_SQUARE = 289,
+TOK_R_SQUARE = 290,
+TOK_SEMICOLON = 291,
+TOK_COMMA = 292,
+TOK_ASSIGN = 293,
+TOK_ADD = 294,
+TOK_SUB = 295,
+TOK_MUL = 296,
+TOK_DIV = 297,
+TOK_MOD = 298,
+TOK_NOT = 299,
+TOK_COLON = 300,
+TOK_QUEST = 301,
 };*/
 
 
@@ -412,6 +420,7 @@ psrTermFunc_t leaf;
 {L"true", TOK_TRUE, 1, L"\"true\"(?!{keyword_lhd})", false, build_default_leaf},
 {L"false", TOK_FALSE, 1, L"\"false\"(?!{keyword_lhd})", false, build_default_leaf},
 {L"var", TOK_VAR, 1, L"\"var\"(?!{keyword_lhd})", false, build_default_leaf},
+{L"import", TOK_IMPORT, 1, L"\"import\"(?!{keyword_lhd})", false, build_default_leaf},
 {L"...", TOK_ELLIPSIS, 2, L"\"...\"", false, build_default_leaf},
 {L"++", TOK_INC, 1, L"\"++\"", false, build_default_leaf},
 {L"--", TOK_DEC, 1, L"\"--\"", false, build_default_leaf},
@@ -443,7 +452,7 @@ psrTermFunc_t leaf;
 {L"EOI", 0, 2, L"$", false, NULL}
 };
 
-#define __TERM_COUNT__ ((size_t)45)
+#define __TERM_COUNT__ ((size_t)46)
 
 static struct {const wchar_t *name; size_t tokval; size_t prec_level; psrAssocType_t	assoc;}__g_prec_pattern[] =  {
 {L"?", TOK_QUEST,1, PARSER_ASSOC_RIGHT},
@@ -461,7 +470,7 @@ static struct {const wchar_t *name; size_t tokval; size_t prec_level; psrAssocTy
 {L"*", TOK_MUL,6, PARSER_ASSOC_LEFT},
 {L"/", TOK_DIV,6, PARSER_ASSOC_LEFT},
 {L"%", TOK_MOD,6, PARSER_ASSOC_LEFT},
-{L"IF_WITHOUT_ELSE", 301,7, PARSER_ASSOC_NONASSOC},
+{L"IF_WITHOUT_ELSE", 302,7, PARSER_ASSOC_NONASSOC},
 {L"else", TOK_ELSE,8, PARSER_ASSOC_NONASSOC}
 };
 
@@ -477,25 +486,31 @@ static psrNode_t* AR_STDCALL handle_translation_unit(psrNode_t **nodes, size_t c
 
 /*element	:	declaration */
 /*element	:	function_defination */
+/*element	:	import_package */
 static psrNode_t* AR_STDCALL handle_element(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*function_defination	:	var NAME ( params ) start_function compound_statement close_function */
+/*import_package	:	import STRING ; */
+/*import_package	:	import error ; */
+static psrNode_t* AR_STDCALL ignore_syntax_element(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*function_defination	:	var NAME ( params ) start_function compound_statement */
 static psrNode_t* AR_STDCALL on_function_defination(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*start_function	:	 */
+static psrNode_t* AR_STDCALL on_start_function(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*params	:	namelist , ... */
 static psrNode_t* AR_STDCALL on_namelist_ellipsis(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*params	:	namelist */
+/*init_declarator_list	:	init_declarator */
+/*filed_list	:	filed */
 /*statement	:	compound_statement */
 /*statement	:	expression_statement */
 /*statement	:	selection_statement */
 /*statement	:	iteration_statement */
 /*statement	:	jump_statement */
 /*statement	:	empty_statement */
-/*init_declarator_list	:	init_declarator */
-/*filed_list	:	filed */
-/*compound_element	:	statement */
-/*compound_element	:	declaration */
 /*expression_statement	:	expression semi */
 /*selection_statement	:	if_statement */
 /*selection_statement	:	if_else_statement */
@@ -521,12 +536,6 @@ static psrNode_t* AR_STDCALL on_name_list(psrNode_t **nodes, size_t count, const
 /*namelist	:	NAME */
 static psrNode_t* AR_STDCALL on_name(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*start_function	:	 */
-static psrNode_t* AR_STDCALL on_start_function(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
-/*close_function	:	 */
-static psrNode_t* AR_STDCALL on_close_function(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
 /*declaration	:	var init_declarator_list semi */
 static psrNode_t* AR_STDCALL auto_return_1(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
@@ -550,20 +559,25 @@ static psrNode_t* AR_STDCALL on_filed_list(psrNode_t **nodes, size_t count, cons
 /*filed	:	table_constructor */
 static psrNode_t* AR_STDCALL on_filed(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*compound_statement	:	start_block compound_element_list close_block */
-/*compound_statement	:	{ } */
-/*compound_statement	:	start_block error close_block */
+/*compound_statement	:	start_block compound_element_list } */
 static psrNode_t* AR_STDCALL on_compound_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*compound_element_list	:	compound_element_list compound_element */
-/*compound_element_list	:	compound_element */
-static psrNode_t* AR_STDCALL on_compound_element_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*compound_statement	:	start_block error } */
+static psrNode_t* AR_STDCALL on_compound_error_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*start_block	:	{ */
 static psrNode_t* AR_STDCALL on_start_block(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*close_block	:	} */
-static psrNode_t* AR_STDCALL on_close_block(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*compound_statement	:	{ } */
+static psrNode_t* AR_STDCALL on_empty_compound_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*compound_element_list	:	compound_element_list compound_element */
+/*compound_element_list	:	compound_element */
+static psrNode_t* AR_STDCALL auto_return_null(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*compound_element	:	statement */
+/*compound_element	:	declaration */
+static psrNode_t* AR_STDCALL on_compound_element(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*empty_statement	:	; */
 static psrNode_t* AR_STDCALL on_empty_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
@@ -601,7 +615,7 @@ static psrNode_t* AR_STDCALL on_break_statement(psrNode_t **nodes, size_t count,
 static psrNode_t* AR_STDCALL on_return_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*semi	:	error */
-static psrNode_t* AR_STDCALL auto_return_null(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+static psrNode_t* AR_STDCALL on_semi_error(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*assignment_expression	:	unary_expression = table_constructor */
 /*assignment_expression	:	unary_expression = assignment_expression */
@@ -673,21 +687,17 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"translation_unit  :  translation_unit element ", NULL, handle_translation_unit, 0},
 {L"element  :  declaration ", NULL, handle_element, 0},
 {L"element  :  function_defination ", NULL, handle_element, 0},
-{L"function_defination  :  var NAME ( params ) start_function compound_statement close_function ", NULL, on_function_defination, 0},
+{L"element  :  import_package ", NULL, handle_element, 0},
+{L"import_package  :  import STRING ; ", NULL, ignore_syntax_element, 0},
+{L"import_package  :  import error ; ", NULL, ignore_syntax_element, 0},
+{L"function_defination  :  var NAME ( params ) start_function compound_statement ", NULL, on_function_defination, 0},
+{L"start_function  :   ", NULL, on_start_function, 0},
 {L"params  :  namelist , ... ", NULL, on_namelist_ellipsis, 0},
 {L"params  :  namelist ", NULL, auto_return_0, 0},
 {L"params  :  ... ", NULL, on_ellipsis, 0},
 {L"params  :   ", NULL, NULL, 0},
 {L"namelist  :  namelist , NAME ", NULL, on_name_list, 0},
 {L"namelist  :  NAME ", NULL, on_name, 0},
-{L"start_function  :   ", NULL, on_start_function, 0},
-{L"close_function  :   ", NULL, on_close_function, 0},
-{L"statement  :  compound_statement ", NULL, auto_return_0, 0},
-{L"statement  :  expression_statement ", NULL, auto_return_0, 0},
-{L"statement  :  selection_statement ", NULL, auto_return_0, 0},
-{L"statement  :  iteration_statement ", NULL, auto_return_0, 0},
-{L"statement  :  jump_statement ", NULL, auto_return_0, 0},
-{L"statement  :  empty_statement ", NULL, auto_return_0, 0},
 {L"declaration  :  var init_declarator_list semi ", NULL, auto_return_1, 0},
 {L"init_declarator_list  :  init_declarator ", NULL, auto_return_0, 0},
 {L"init_declarator_list  :  init_declarator_list , init_declarator ", NULL, on_declarator_list, 0},
@@ -701,15 +711,20 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"filed_list  :  filed ", NULL, auto_return_0, 0},
 {L"filed  :  expression ", NULL, on_filed, 0},
 {L"filed  :  table_constructor ", NULL, on_filed, 0},
-{L"compound_statement  :  start_block compound_element_list close_block ", NULL, on_compound_statement, 0},
-{L"compound_statement  :  { } ", NULL, on_compound_statement, 0},
-{L"compound_statement  :  start_block error close_block ", NULL, on_compound_statement, 0},
-{L"compound_element_list  :  compound_element_list compound_element ", NULL, on_compound_element_list, 0},
-{L"compound_element_list  :  compound_element ", NULL, on_compound_element_list, 0},
-{L"compound_element  :  statement ", NULL, auto_return_0, 0},
-{L"compound_element  :  declaration ", NULL, auto_return_0, 0},
+{L"statement  :  compound_statement ", NULL, auto_return_0, 0},
+{L"statement  :  expression_statement ", NULL, auto_return_0, 0},
+{L"statement  :  selection_statement ", NULL, auto_return_0, 0},
+{L"statement  :  iteration_statement ", NULL, auto_return_0, 0},
+{L"statement  :  jump_statement ", NULL, auto_return_0, 0},
+{L"statement  :  empty_statement ", NULL, auto_return_0, 0},
+{L"compound_statement  :  start_block compound_element_list } ", NULL, on_compound_statement, 0},
+{L"compound_statement  :  start_block error } ", NULL, on_compound_error_statement, 0},
 {L"start_block  :  { ", NULL, on_start_block, 0},
-{L"close_block  :  } ", NULL, on_close_block, 0},
+{L"compound_statement  :  { } ", NULL, on_empty_compound_statement, 0},
+{L"compound_element_list  :  compound_element_list compound_element ", NULL, auto_return_null, 0},
+{L"compound_element_list  :  compound_element ", NULL, auto_return_null, 0},
+{L"compound_element  :  statement ", NULL, on_compound_element, 0},
+{L"compound_element  :  declaration ", NULL, on_compound_element, 0},
 {L"empty_statement  :  ; ", NULL, on_empty_statement, 0},
 {L"expression_statement  :  expression semi ", NULL, auto_return_0, 0},
 {L"selection_statement  :  if_statement ", NULL, auto_return_0, 0},
@@ -731,7 +746,7 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"jump_statement  :  return semi ", NULL, on_return_statement, 0},
 {L"jump_statement  :  return expression semi ", NULL, on_return_statement, 0},
 {L"semi  :  ; ", NULL, auto_return_0, 0},
-{L"semi  :  error ", NULL, auto_return_null, 0},
+{L"semi  :  error ", NULL, on_semi_error, 0},
 {L"expression  :  assignment_expression ", NULL, auto_return_0, 0},
 {L"assignment_expression  :  constant_expression ", NULL, auto_return_0, 0},
 {L"assignment_expression  :  unary_expression = table_constructor ", NULL, on_assignment_expression, 0},
@@ -780,7 +795,7 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"expression_list  :  expression_list , expression ", NULL, on_expression_list, 0}
 };
 
-#define __RULE_COUNT__ ((size_t)111)
+#define __RULE_COUNT__ ((size_t)112)
 #define START_RULE L"program"
 
 static lex_t*	__build_lex(const arIOCtx_t *io)								
@@ -875,8 +890,22 @@ static psrGrammar_t*	__build_grammar(const psrHandler_t	*handler, const arIOCtx_
 static psrNode_t* AR_STDCALL build_default_leaf(const psrToken_t *tok,void *ctx)
 {
 	 {
-
-	return NULL;
+	tguParser_t 	*parser;
+	tguSynNode_t		*ret;
+	AR_ASSERT(tok != NULL && ctx != NULL);
+	
+	parser = (tguParser_t*)ctx;
+	ret = NULL;
+	switch(tok->term_val)
+	{
+	case TOK_NAME:
+		break;
+	default:
+		AR_ASSERT(false);
+		break;
+	}
+	
+	return ret;
 }
 }
 
@@ -903,6 +932,7 @@ static psrNode_t* AR_STDCALL handle_translation_unit(psrNode_t **nodes, size_t c
 
 /*element	:	declaration */
 /*element	:	function_defination */
+/*element	:	import_package */
 static psrNode_t* AR_STDCALL handle_element(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 return NULL;
@@ -911,8 +941,31 @@ static psrNode_t* AR_STDCALL handle_element(psrNode_t **nodes, size_t count, con
 
 
 
-/*function_defination	:	var NAME ( params ) start_function compound_statement close_function */
+/*import_package	:	import STRING ; */
+/*import_package	:	import error ; */
+static psrNode_t* AR_STDCALL ignore_syntax_element(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 {
+					return NULL;
+				}
+}
+
+
+
+
+/*function_defination	:	var NAME ( params ) start_function compound_statement */
 static psrNode_t* AR_STDCALL on_function_defination(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 {
+						return NULL;
+					}
+}
+
+
+
+
+/*start_function	:	 */
+static psrNode_t* AR_STDCALL on_start_function(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 {
 						return NULL;
@@ -940,16 +993,14 @@ static psrNode_t* AR_STDCALL on_namelist_ellipsis(psrNode_t **nodes, size_t coun
 
 
 /*params	:	namelist */
+/*init_declarator_list	:	init_declarator */
+/*filed_list	:	filed */
 /*statement	:	compound_statement */
 /*statement	:	expression_statement */
 /*statement	:	selection_statement */
 /*statement	:	iteration_statement */
 /*statement	:	jump_statement */
 /*statement	:	empty_statement */
-/*init_declarator_list	:	init_declarator */
-/*filed_list	:	filed */
-/*compound_element	:	statement */
-/*compound_element	:	declaration */
 /*expression_statement	:	expression semi */
 /*selection_statement	:	if_statement */
 /*selection_statement	:	if_else_statement */
@@ -1031,28 +1082,6 @@ static psrNode_t* AR_STDCALL on_name(psrNode_t **nodes, size_t count, const wcha
 						insert_to_params(params, ns[0]->token->token);
 						ret = __create_synnode(TGU_NODE_PARAMS_T, (void*)params);
 						return ret;
-					}
-}
-
-
-
-
-/*start_function	:	 */
-static psrNode_t* AR_STDCALL on_start_function(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-	 {
-						return NULL;
-					}
-}
-
-
-
-
-/*close_function	:	 */
-static psrNode_t* AR_STDCALL on_close_function(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-	 {
-						return NULL;
 					}
 }
 
@@ -1263,20 +1292,28 @@ static psrNode_t* AR_STDCALL on_filed(psrNode_t **nodes, size_t count, const wch
 
 
 
-/*compound_statement	:	start_block compound_element_list close_block */
-/*compound_statement	:	{ } */
-/*compound_statement	:	start_block error close_block */
+/*compound_statement	:	start_block compound_element_list } */
 static psrNode_t* AR_STDCALL on_compound_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 {
-						/*
 						tguParser_t 	*parser = (tguParser_t*)ctx;
 						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
-						AR_ASSERT(nodes != NULL && (count == 2 || count == 3));
+						tguSynNode_t	*ret;
+						tguBlock_t		*cb = NULL;
+						tguStmt_t *stmt;
+						
+						AR_ASSERT(nodes != NULL && (count == 2));
+						cb = pop_block(parser);
+						
+						/*至少存在一个声明或者逻辑才有可能执行到此*/
+						AR_ASSERT(cb->vars != NULL || cb->statement_list != NULL);
+						
+						stmt = make_compound_stmt(parser, cb, &ns[0]->token->lex_info,&ns[1]->token->lex_info);
+						ret = __create_synnode(TGU_NODE_STMT_T, (void*)stmt);
+						return ret;
 
-						if(count == 3)return NULL;
-						AR_ASSERT(ns[1] == NULL);
-						*/
+						
+
 						return NULL;
 					}
 }
@@ -1284,44 +1321,18 @@ static psrNode_t* AR_STDCALL on_compound_statement(psrNode_t **nodes, size_t cou
 
 
 
-/*compound_element_list	:	compound_element_list compound_element */
-/*compound_element_list	:	compound_element */
-static psrNode_t* AR_STDCALL on_compound_element_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*compound_statement	:	start_block error } */
+static psrNode_t* AR_STDCALL on_compound_error_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 {
 						tguParser_t 	*parser = (tguParser_t*)ctx;
 						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
-						tguSynNodeType_t type;
-						tguDeclaration_t *decl;
-						tguStmt_t		*stmt;
-						AR_ASSERT(nodes != NULL && (count == 2 || count == 1));
-						if(count == 2) return NULL;
-						type = ns[0]->type;
-						if(ns[0]->type == TGU_NODE_DECL_T)
-						{
-							decl = ns[0]->decl;
-							ns[0]->decl = NULL;
-							if(decl) 
-							{
-								insert_decl_to_block(parser->top_block, decl);
-							}else 
-							{
-								parser->has_error = true;
-							}
-						}else if(ns[0]->type == TGU_NODE_STMT_T)
-						{
-							stmt = ns[0]->stmt;
-							ns[0]->stmt = NULL;
-							if(stmt)
-							{
-								insert_stmt_to_block(parser->top_block, stmt);
-							}else 
-							{
-								parser->has_error = true;
-							}
-						}else {
-							AR_ASSERT(false);
-						}
+						tguBlock_t		*cb = NULL;
+						AR_ASSERT(nodes != NULL && (count == 2));
+
+						cb = pop_block(parser);
+
+						TGU_DestroyBlock(cb);
 						return NULL;
 					}
 }
@@ -1335,22 +1346,79 @@ static psrNode_t* AR_STDCALL on_start_block(psrNode_t **nodes, size_t count, con
 	 {
 							tguParser_t 	*parser = (tguParser_t*)ctx;
 							tguSynNode_t	**ns = (tguSynNode_t**)nodes;
-							start_block(parser, &ns[0]->token->lex_info);
-							return NULL;
+							tguSynNode_t	*ret;
+							AR_ASSERT(ns != NULL && count == 1);
+							ret = ns[0]; 
+							ns[0] = NULL;
+							push_block(parser);
+							return ret;
 					}
 }
 
 
 
 
-/*close_block	:	} */
-static psrNode_t* AR_STDCALL on_close_block(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*compound_statement	:	{ } */
+static psrNode_t* AR_STDCALL on_empty_compound_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 {
-							tguParser_t 	*parser = (tguParser_t*)ctx;
-							tguSynNode_t	**ns = (tguSynNode_t**)nodes;
-							close_block(parser, &ns[0]->token->lex_info);
-							return NULL;
+						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+						tguSynNode_t	*ret;
+						tguStmt_t *stmt;
+						tguParser_t	*parser = (tguParser_t*)ctx;
+						AR_ASSERT(ns != NULL && count == 1);
+						AR_ASSERT(parser != NULL);
+						stmt = make_compound_stmt(parser, NULL, &ns[0]->token->lex_info,&ns[1]->token->lex_info);
+						ret = __create_synnode(TGU_NODE_STMT_T, (void*)stmt);
+						return ret;
+						
+					}
+}
+
+
+
+
+/*compound_element_list	:	compound_element_list compound_element */
+/*compound_element_list	:	compound_element */
+static psrNode_t* AR_STDCALL auto_return_null(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 {
+						return NULL;
+					}
+}
+
+
+
+
+/*compound_element	:	statement */
+/*compound_element	:	declaration */
+static psrNode_t* AR_STDCALL on_compound_element(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 {
+						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+						tguParser_t	*parser = (tguParser_t*)ctx;
+						AR_ASSERT(ns != NULL && count == 1);
+						if(ns[0] == NULL)
+						{
+								parser->has_error = true;
+								return NULL;
+						}
+
+						if(ns[0]->type == TGU_NODE_DECL_T)
+						{
+								AR_ASSERT(ns[0]->decl);
+								record_decl(parser, ns[0]->decl);
+								ns[0]->decl = NULL;
+						}else if(ns[0]->type == TGU_NODE_STMT_T)
+						{
+								AR_ASSERT(ns[0]->stmt);
+								record_stmt(parser, ns[0]->stmt);
+								ns[0]->stmt = NULL;
+						}else	
+						{
+							AR_ASSERT(false);
+						}
+						return NULL;
 					}
 }
 
@@ -1396,6 +1464,7 @@ static psrNode_t* AR_STDCALL on_if_statement(psrNode_t **nodes, size_t count, co
 						{
 							expr = ns[2]->expr;
 							ns[2]->expr = NULL;
+							AR_ASSERT(expr != NULL);
 						}
 							
 						if(ns[4] == NULL)
@@ -1406,6 +1475,7 @@ static psrNode_t* AR_STDCALL on_if_statement(psrNode_t **nodes, size_t count, co
 						{
 							if_true = ns[4]->stmt;
 							ns[4]->stmt = NULL;
+							AR_ASSERT(if_true != NULL);
 						}
 
 						stmt = make_if_statement(parser, expr, if_true, NULL, &ns[0]->token->lex_info);
@@ -1429,7 +1499,7 @@ static psrNode_t* AR_STDCALL on_if_else_statement(psrNode_t **nodes, size_t coun
 						tguStmt_t		*if_true;
 						tguStmt_t		*if_false;
 						tguStmt_t		*stmt;
-						AR_ASSERT(ns != NULL && count == 5);
+						AR_ASSERT(ns != NULL && count == 7);
 						if(ns[2] == NULL)
 						{
 							expr = NULL;
@@ -1438,6 +1508,7 @@ static psrNode_t* AR_STDCALL on_if_else_statement(psrNode_t **nodes, size_t coun
 						{
 							expr = ns[2]->expr;
 							ns[2]->expr = NULL;
+							AR_ASSERT(expr != NULL);
 						}
 							
 						if(ns[4] == NULL)
@@ -1448,6 +1519,7 @@ static psrNode_t* AR_STDCALL on_if_else_statement(psrNode_t **nodes, size_t coun
 						{
 							if_true = ns[4]->stmt;
 							ns[4]->stmt = NULL;
+							AR_ASSERT(if_true != NULL);
 						}
 
 						if(ns[6] == NULL)
@@ -1458,6 +1530,7 @@ static psrNode_t* AR_STDCALL on_if_else_statement(psrNode_t **nodes, size_t coun
 						{
 							if_false = ns[6]->stmt;
 							ns[6]->stmt = NULL;
+							AR_ASSERT(if_false != NULL);
 						}
 
 
@@ -1480,7 +1553,7 @@ static psrNode_t* AR_STDCALL on_while_statement(psrNode_t **nodes, size_t count,
 						tguSynNode_t	*ret;
 						tguExpr_t		*expr;
 						tguStmt_t		*stmt;
-						AR_ASSERT(ns != NULL && count == 5);
+						AR_ASSERT(ns != NULL && count == 7);
 						if(ns[3] == NULL)
 						{
 							expr = NULL;
@@ -1489,6 +1562,7 @@ static psrNode_t* AR_STDCALL on_while_statement(psrNode_t **nodes, size_t count,
 						{
 							expr = ns[3]->expr;
 							ns[3]->expr = NULL;
+							AR_ASSERT(expr != NULL);
 						}
 							
 						if(ns[5] == NULL)
@@ -1499,6 +1573,7 @@ static psrNode_t* AR_STDCALL on_while_statement(psrNode_t **nodes, size_t count,
 						{
 							stmt = ns[5]->stmt;
 							ns[5]->stmt = NULL;
+							AR_ASSERT(stmt != NULL);
 						}
 
 						stmt = make_while_statement(parser, expr, stmt, &ns[0]->token->lex_info);
@@ -1515,12 +1590,12 @@ static psrNode_t* AR_STDCALL on_while_statement(psrNode_t **nodes, size_t count,
 static psrNode_t* AR_STDCALL on_do_while_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 {
-						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
-						tguParser_t	*parser = (tguParser_t*)ctx;
+						tguSynNode_t	**ns = 	(tguSynNode_t**)nodes;
+						tguParser_t	*parser =	(tguParser_t*)ctx;
 						tguSynNode_t	*ret;
 						tguExpr_t		*expr;
 						tguStmt_t		*stmt;
-						AR_ASSERT(ns != NULL && count == 5);
+						AR_ASSERT(ns != NULL && count == 9);
 						if(ns[2] == NULL)
 						{
 							stmt = NULL;
@@ -1529,6 +1604,7 @@ static psrNode_t* AR_STDCALL on_do_while_statement(psrNode_t **nodes, size_t cou
 						{
 							stmt = ns[2]->stmt;
 							ns[2]->stmt = NULL;
+							AR_ASSERT(stmt != NULL);
 						}
 							
 						if(ns[5] == NULL)
@@ -1539,9 +1615,10 @@ static psrNode_t* AR_STDCALL on_do_while_statement(psrNode_t **nodes, size_t cou
 						{
 							expr = ns[5]->expr;
 							ns[5]->expr = NULL;
+							AR_ASSERT(expr != NULL);
 						}
 
-						stmt =make_do_while_statement(parser, expr, stmt, &ns[0]->token->lex_info);
+						stmt = make_do_while_statement(parser, expr, stmt, &ns[0]->token->lex_info);
 						ret = __create_synnode(TGU_NODE_STMT_T, (void*)stmt);
 						return ret;
 					}
@@ -1629,17 +1706,25 @@ static psrNode_t* AR_STDCALL on_return_statement(psrNode_t **nodes, size_t count
 						tguExpr_t		*expr;
 						tguParser_t	*parser = (tguParser_t*)ctx;
 						tguStmt_t		*stmt;
-						AR_ASSERT(nodes != NULL && count == 2 || count == 3);
+						AR_ASSERT(nodes != NULL && (count == 2 || count == 3));
 						AR_ASSERT(parser->current_function != NULL);
-
-						if(ns[1] == NULL)
+						
+						if(count == 2)
 						{
 							expr = NULL;
 						}else
 						{
-							AR_ASSERT(ns[1]->type == TGU_NODE_EXPR_T);
-							expr = ns[1]->expr;
-							ns[1]->expr = NULL;
+							if(ns[1] == NULL)
+							{
+								expr = NULL;
+								parser->has_error = true;
+							}else
+							{
+								AR_ASSERT(ns[1]->type == TGU_NODE_EXPR_T);
+								expr = ns[1]->expr;
+								ns[1]->expr = NULL;
+								AR_ASSERT(expr != NULL);
+							}
 						}
 
 						stmt = make_jump_statement(parser, TGU_STT_RETURN, 	expr, &ns[0]->token->lex_info);
@@ -1652,9 +1737,14 @@ static psrNode_t* AR_STDCALL on_return_statement(psrNode_t **nodes, size_t count
 
 
 /*semi	:	error */
-static psrNode_t* AR_STDCALL auto_return_null(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+static psrNode_t* AR_STDCALL on_semi_error(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
-	 return NULL;
+	 {
+						tguParser_t	*parser = (tguParser_t*)ctx;
+						AR_ASSERT(parser != NULL);
+						parser->has_error = true;
+						return NULL;
+					}
 }
 
 
@@ -1680,6 +1770,7 @@ static psrNode_t* AR_STDCALL on_assignment_expression(psrNode_t **nodes, size_t 
 						{
 							addr = ns[0]->expr;
 							ns[0]->expr = NULL;
+							AR_ASSERT(addr != NULL);
 						}
 						
 
@@ -1691,9 +1782,11 @@ static psrNode_t* AR_STDCALL on_assignment_expression(psrNode_t **nodes, size_t 
 						{
 							value = ns[2]->expr;
 							ns[2]->expr = NULL;
+							AR_ASSERT(value != NULL);
 						}
 
 						lex_info = addr != NULL ? &addr->lex_info : &ns[1]->token->lex_info;
+						AR_ASSERT(lex_info != NULL);
 						expr = make_assignment_expression(parser, addr, value, lex_info);
 						ret = __create_synnode(TGU_NODE_EXPR_T, (void*)expr);
 
@@ -1724,6 +1817,7 @@ static psrNode_t* AR_STDCALL on_condition_expression(psrNode_t **nodes, size_t c
 						{
 							cond = ns[0]->expr;
 							ns[0]->expr = NULL;
+							AR_ASSERT(cond != NULL);
 						}
 
 						
@@ -1736,6 +1830,7 @@ static psrNode_t* AR_STDCALL on_condition_expression(psrNode_t **nodes, size_t c
 						{
 							if_true= ns[2]->expr;
 							ns[2]->expr = NULL;
+							AR_ASSERT(if_true != NULL);
 						}
 						
 						if(ns[4] == NULL)
@@ -1746,9 +1841,11 @@ static psrNode_t* AR_STDCALL on_condition_expression(psrNode_t **nodes, size_t c
 						{
 							if_false= ns[4]->expr;
 							ns[4]->expr = NULL;
+							AR_ASSERT(if_false != NULL);
 						}
 
 						lex_info = cond != NULL ? &cond->lex_info : &ns[1]->token->lex_info;
+						AR_ASSERT(lex_info != NULL);
 						expr = make_condition_expression(parser, cond, if_true, if_false, lex_info);
 						ret = __create_synnode(TGU_NODE_EXPR_T, (void*)expr);
 						return ret;
@@ -1780,9 +1877,10 @@ static psrNode_t* AR_STDCALL on_binary_expression(psrNode_t **nodes, size_t coun
 						tguSynNode_t 	*ret;
 						tguParser_t	*parser = (tguParser_t*)ctx;
 						tguExpr_t		*left, *right, *expr;
-						tguToken_t		*tok;
+
 						tguExprOP_t	op;
 						const tguLexInfo_t *lex_info;
+						const tguToken_t	*tok;
 						AR_ASSERT(ns != NULL && count == 3 && parser != NULL);
 
 						if(ns[0] == NULL)
@@ -1793,10 +1891,13 @@ static psrNode_t* AR_STDCALL on_binary_expression(psrNode_t **nodes, size_t coun
 						{
 							left = ns[0]->expr;
 							ns[0]->expr = NULL;
+							AR_ASSERT(left != NULL);
 						}
 
 						AR_ASSERT(ns[1] != NULL);
-						tok = ns[1]->token;	
+						tok = ns[1]->token;
+						AR_ASSERT(tok != NULL);
+
 
 						if(ns[2] == NULL)
 						{
@@ -1806,6 +1907,7 @@ static psrNode_t* AR_STDCALL on_binary_expression(psrNode_t **nodes, size_t coun
 						{
 							right = ns[2]->expr;
 							ns[2]->expr = NULL;
+							AR_ASSERT(right != NULL);
 						}
 
 						switch(tok->term_val)
@@ -1854,12 +1956,12 @@ static psrNode_t* AR_STDCALL on_binary_expression(psrNode_t **nodes, size_t coun
 							AR_ASSERT(false);
 							break;
 						}
+
 						lex_info  = left != NULL ? &left->lex_info : &tok->lex_info;
+						AR_ASSERT(lex_info != NULL);
 						expr = make_binary_expression(parser, op, left, right, lex_info);
 						ret = __create_synnode(TGU_NODE_EXPR_T, (void*)expr);
 						return ret;
-
-
 					}
 }
 
@@ -1877,10 +1979,10 @@ static psrNode_t* AR_STDCALL on_unary_expression(psrNode_t **nodes, size_t count
 						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
 						tguSynNode_t 	*ret;
 						tguParser_t	*parser = (tguParser_t*)ctx;
-
 						tguExpr_t		*expr;
-						tguToken_t		*tok;
-						tguExprOP_t	op;
+
+						tguExprOP_t		op;
+						const tguToken_t	*tok;
 						const tguLexInfo_t	*lex_info;
 						AR_ASSERT(ns != NULL && count == 2 && parser != NULL);
 
@@ -1892,6 +1994,7 @@ static psrNode_t* AR_STDCALL on_unary_expression(psrNode_t **nodes, size_t count
 						{
 							expr = ns[1]->expr;
 							ns[1]->expr = NULL;
+							AR_ASSERT(expr != NULL);
 						}
 
 						AR_ASSERT(ns[0] != NULL && ns[0]->token != NULL);
@@ -1919,7 +2022,7 @@ static psrNode_t* AR_STDCALL on_unary_expression(psrNode_t **nodes, size_t count
 							AR_ASSERT(false);
 							break;
 						}
-						lex_info = expr != NULL ? &expr->lex_info : &ns[0]->token->lex_info;
+						lex_info = expr != NULL ? &expr->lex_info : &tok->lex_info;
 						expr = make_unary_expression(parser, op, expr, false, lex_info);
 						ret = __create_synnode(TGU_NODE_EXPR_T, (void*)expr);
 						return ret;
@@ -1935,13 +2038,14 @@ static psrNode_t* AR_STDCALL on_unary_expression(psrNode_t **nodes, size_t count
 static psrNode_t* AR_STDCALL on_post_add_minus_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 {
-						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
-						tguSynNode_t 	*ret;
-						tguParser_t	*parser = (tguParser_t*)ctx;
-						tguExpr_t		*expr;
-						tguToken_t		*tok;
+						tguSynNode_t		**ns = (tguSynNode_t**)nodes;
+						tguSynNode_t 		*ret;
+						tguParser_t		*parser = (tguParser_t*)ctx;
+						tguExpr_t			*expr;
+						const tguToken_t	*tok;
 						tguExprOP_t	op;
 						const tguLexInfo_t	*lex_info; 
+
 						AR_ASSERT(ns != NULL && count == 2 && parser != NULL);
 
 						if(ns[0] == NULL)
@@ -1952,6 +2056,7 @@ static psrNode_t* AR_STDCALL on_post_add_minus_expression(psrNode_t **nodes, siz
 						{
 							expr = ns[0]->expr;
 							ns[0]->expr = NULL;
+							AR_ASSERT(expr != NULL);
 						}
 
 						AR_ASSERT(ns[1] != NULL && ns[1]->token != NULL);
@@ -2002,10 +2107,9 @@ static psrNode_t* AR_STDCALL on_index_expression(psrNode_t **nodes, size_t count
 						{
 							expr = ns[0]->expr;
 							ns[0]->expr = NULL;
+							AR_ASSERT(expr != NULL);
 						}
 
-						
-						
 						if(ns[2] == NULL)
 						{
 							index_expr = NULL;
@@ -2014,8 +2118,10 @@ static psrNode_t* AR_STDCALL on_index_expression(psrNode_t **nodes, size_t count
 						{
 							index_expr = ns[2]->expr;
 							ns[2]->expr = NULL;
+							AR_ASSERT(index_expr != NULL);
 						}
-						lex_info = expr == NULL ? &expr->lex_info : &ns[1]->token->lex_info;
+
+						lex_info = expr != NULL ? &expr->lex_info : &ns[1]->token->lex_info;
 						expr = make_index_expression(parser, expr, index_expr, lex_info);
 						ret = __create_synnode(TGU_NODE_EXPR_T, (void*)expr);
 						return ret;
@@ -2124,6 +2230,7 @@ static psrNode_t* AR_STDCALL on_call_expression(psrNode_t **nodes, size_t count,
 							{
 								args = ns[2]->expr;
 								ns[2]->expr = NULL;
+								AR_ASSERT(args != NULL);
 							}
 						}else
 						{
@@ -2150,7 +2257,7 @@ static psrNode_t* AR_STDCALL on_expression_list(psrNode_t **nodes, size_t count,
 						tguExpr_t		*lst;
 						AR_ASSERT(ns != NULL && count == 3);
 						if(ns[0] == NULL) return ns[2];
-						if(ns[2] == NULL) return ns[2];
+						if(ns[2] == NULL) return ns[0];
 						AR_ASSERT(ns[0]->expr != NULL  && ns[2]->expr != NULL);
 
 						for(lst = ns[0]->expr; lst->next != NULL; lst = lst->next);

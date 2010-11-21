@@ -530,7 +530,7 @@ static void __handle_shift(psrContext_t *parser_context, size_t shift_to, const 
 		第一条将在移入";"时候清除error状态，
 		第二条将在error规约为A后的下一次正确输入时清除，例如
 		B -> A ";";
-		这里假如A有任何错误，将在移入':'后清除错误状态；
+		这里假如A有任何错误，将在移入';'后清除错误状态；
 */
 		if(parser_context->is_repair)
 		{
@@ -544,7 +544,7 @@ static void __handle_reduce(psrContext_t *parser_context, const psrAction_t *act
 {
 		psrNode_t		**nodes;
 		psrNode_t		*new_node;
-		size_t			next_state;
+		int_t			next_state;
 		const	psrRule_t *rule;
 		
 		AR_ASSERT(parser_context != NULL && action != NULL && action->type == PARSER_REDUCE);
@@ -570,7 +570,7 @@ static void __handle_reduce(psrContext_t *parser_context, const psrAction_t *act
 		}else
 		{
 
-/****************************************Experiment****************************************************/
+/****************************************Experimental****************************************************/
 				if(rule->auto_ret < action->reduce_count)
 				{
 						new_node = nodes[rule->auto_ret];
@@ -605,7 +605,8 @@ static void __handle_reduce(psrContext_t *parser_context, const psrAction_t *act
 		}
 		
 		next_state = Parser_GetState(parser_context->parser->tbl, Parser_TopStack(parser_context->state_stack), rule->head);
-		Parser_PushStack(parser_context->state_stack, next_state);
+		AR_ASSERT(next_state != -1);
+		Parser_PushStack(parser_context->state_stack, (size_t)next_state);
 		Parser_PushNodeStack(parser_context->node_stack, new_node);
 }
 
@@ -686,7 +687,6 @@ static errRecovery_t __error_recovery(psrContext_t *parser_context, const psrTok
 								if(top_node != NULL)handler->free_f(top_node, parser_context->ctx);
 								Parser_PopNodeStack(parser_context->node_stack, 1);
 								Parser_PopStack(parser_context->state_stack, 1);
-								
 						
 						}else if(action->type == PARSER_SHIFT)
 						{

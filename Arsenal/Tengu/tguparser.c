@@ -149,6 +149,18 @@ void	TGU_UnInitParser()
 		__parser_core_uninit();
 }
 
+/*********************************************Block******************************************************/
+
+tguBlock_t*		TGU_CreateBlock(tguBlock_t	*parent)
+{
+		return NULL;
+}
+
+
+void			TGU_DestroyBlock(tguBlock_t	*block)
+{
+		AR_ASSERT(block != NULL);
+}
 
 
 AR_NAMESPACE_END

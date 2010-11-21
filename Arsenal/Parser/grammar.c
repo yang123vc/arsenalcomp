@@ -98,7 +98,7 @@ psrTermInfo_t*	Parser_FindTermByValue(psrTermInfoList_t	*lst, size_t val)
 bool_t			Parser_InsertToTermInfoList(psrTermInfoList_t	*lst, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f)
 {
 		psrTermInfo_t *info;
-		AR_ASSERT(lst != NULL && name != NULL);
+		AR_ASSERT(lst != NULL && name != NULL && AR_wcslen(name) > 0);
 
 		if(lst->count == lst->cap)
 		{
@@ -193,8 +193,10 @@ psrRule_t* Parser_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, c
 				
 		}
 
+		/*rule->prec_tok = prec_tok != NULL ? AR_wcsdup(prec_tok) : AR_wcsdup(right_term);*/
+		
+		rule->prec_tok = prec_tok != NULL ? Parser_AllocString(prec_tok) : Parser_AllocString(right_term);
 
-		rule->prec_tok = prec_tok != NULL ? AR_wcsdup(prec_tok) : AR_wcsdup(right_term);
 		rule->rule_f = rule_f;
 		rule->auto_ret = auto_ret;
 		return rule;
@@ -308,7 +310,8 @@ void			Parser_DestroyRule(psrRule_t *rule)
 		}
 
 		Parser_UnInitSymbList(&rule->body);
-		if(rule->prec_tok) AR_DEL(rule->prec_tok);
+		/*if(rule->prec_tok) AR_DEL(rule->prec_tok);*/
+		if(rule->prec_tok) rule->prec_tok = NULL;
 		AR_DEL(rule);
 }
 
@@ -467,18 +470,22 @@ const arIOCtx_t*		Parser_GetGrammarIOContext(const psrGrammar_t *grammar)
 
 bool_t					Parser_InsertTerm(psrGrammar_t *grammar, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f)
 {
-		AR_ASSERT(grammar != NULL && name != NULL);
+		AR_ASSERT(grammar != NULL && name != NULL && AR_wcslen(name) > 0);
 		
 		if(val < PARSER_MIN_TOKENVAL)
 		{
 				/*AR_error(AR_GRAMMAR, L"Grammar Error : invalid token value %d\r\n", val);*/
 				/*AR_error(L"Grammar Error : invalid token value %" AR_PLAT_INT_FMT L"d\r\n", (size_t)val);*/
 				AR_printf_ctx(&grammar->io_ctx, L"Grammar Error : invalid token value %" AR_PLAT_INT_FMT L"d\r\n", (size_t)val);
-				
-
 				return false;
 		}
 		
+		if(AR_wcslen(name) == 0)
+		{
+				AR_printf_ctx(&grammar->io_ctx, L"Grammar Error : invalid token name '%ls'\r\n", name);
+				return false;
+		}
+
 
 		if(Parser_FindTermByName(&grammar->term_list, name) != NULL)
 		{

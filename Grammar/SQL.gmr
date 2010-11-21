@@ -144,7 +144,7 @@
 			;
 %token	VALUE  	:	'"none"'
 			;
-%token	PARAMETER  	:	'"none"'
+%token	PARAMETER  :	'"none"'
 			;
 %token	VARIABLE  	:	'"none"'
 			;
@@ -152,7 +152,7 @@
 			;
 %token	ROLE_L  	:	'"none"'
 			;
-%token	TEMPORARY  	:	'"none"'
+%token	TEMPORARY  :	'"none"'
 			;
 %token	CLR :	'"none"'
 			;

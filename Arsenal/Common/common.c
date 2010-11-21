@@ -74,10 +74,7 @@ void	AR_printf_ctx(arIOCtx_t *ctx, const wchar_t *msg,...)
 				buf = AR_NEWARR0(wchar_t, len + 1);
 				
 				va_start(arg_ptr, msg);
-				if(AR_vswprintf(buf, len + 1, msg, arg_ptr) < 0)
-				{
-						AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
-				}
+				AR_vswprintf(buf, len + 1, msg, arg_ptr);
 				va_end(arg_ptr);
 				ctx->on_print(buf, ctx->ctx);
 				AR_DEL(buf);
@@ -102,10 +99,7 @@ void	AR_error_ctx(arIOCtx_t *ctx, int_t level, const wchar_t *msg, ...)
 				buf = AR_NEWARR0(wchar_t, len + 1);
 
 				va_start(arg_ptr, msg);
-				if(AR_vswprintf(buf, len + 1, msg, arg_ptr) < 0)
-				{
-						AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
-				}
+				AR_vswprintf(buf, len + 1, msg, arg_ptr);
 				va_end(arg_ptr);
 				ctx->on_error(level, buf, ctx->ctx);
 				AR_DEL(buf);
@@ -133,10 +127,7 @@ void AR_error(int_t level, const wchar_t *msg, ...)
 				buf = AR_NEWARR0(wchar_t, len + 1);
 				
 				va_start(arg_ptr, msg);
-				if(AR_vswprintf(buf, len + 1, msg, arg_ptr) < 0)
-				{
-						AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
-				}
+				AR_vswprintf(buf, len + 1, msg, arg_ptr);
 				va_end(arg_ptr);
 		
 				__g_ctx.global_io_ctx.on_error(level, buf, __g_ctx.global_io_ctx.ctx);
@@ -173,10 +164,7 @@ void AR_printf(const wchar_t *msg,...)
 				buf = AR_NEWARR0(wchar_t, len + 1);
 
 				va_start(arg_ptr, msg);
-				if(AR_vswprintf(buf, len + 1, msg, arg_ptr) < 0)
-				{
-						AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
-				}
+				AR_vswprintf(buf, len + 1, msg, arg_ptr);
 				va_end(arg_ptr);
 		
 				__g_ctx.global_io_ctx.on_print(buf, __g_ctx.global_io_ctx.ctx);
@@ -201,7 +189,7 @@ void	AR_check(bool_t cond, const wchar_t *fmt, ...)
 				if(len < 0)
 				{
 						AR_error(AR_ERR_FATAL, L"%ls : %ls\r\n", L"Arsenal internal error", AR_FUNC_NAME);
-						return;
+						return;//±ÜÃâwarning
 				}
 
 				buf = AR_NEWARR0(wchar_t, len + 1);
@@ -213,7 +201,7 @@ void	AR_check(bool_t cond, const wchar_t *fmt, ...)
 				if(len < 0)
 				{
 						AR_error(AR_ERR_FATAL, L"%ls : %ls\r\n", L"Arsenal internal error", AR_FUNC_NAME);
-						return;
+						return;//±ÜÃâwarning
 				}
 				
 				AR_error(AR_ERR_FATAL, buf);
@@ -222,6 +210,9 @@ void	AR_check(bool_t cond, const wchar_t *fmt, ...)
 }
 
 /***************************************************ctx**********************************/
+
+
+
 
 
 
