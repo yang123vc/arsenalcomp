@@ -43,6 +43,7 @@ static AR_INLINE bool_t	__buffer_is_valid(const arBuffer_t *pbuf)
 
 #else
 
+#define __buffer_is_valid(_pbuf)		AR_NOOP
 
 
 #endif

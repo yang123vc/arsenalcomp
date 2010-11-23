@@ -84,3 +84,4 @@ ARSpace::psrNode_t*	 AR_STDCALL build_rule(ARSpace::psrNode_t **nodes, size_t co
 
 		return (ARSpace::psrNode_t*)node;
 }
+

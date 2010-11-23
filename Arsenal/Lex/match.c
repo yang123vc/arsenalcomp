@@ -231,8 +231,6 @@ lexMatch_t*		Lex_CreateMatch(const lex_t *lex, const arIOCtx_t *io)
 		pmatch = AR_NEW(lexMatch_t);
 		AR_memset(pmatch, 0, sizeof(*pmatch));
 
-		//pmatch->io_ctx = io == NULL ? *AR_global_ioctx() : *io;
-
 		pmatch->io_ctx = io == NULL ? lex->io_ctx : *io;
 
 		pmatch->input = L"";

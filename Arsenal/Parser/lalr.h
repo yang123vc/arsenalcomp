@@ -98,12 +98,17 @@ typedef enum
 }lalrActionType_t;
 
 
+/*
+如果act_type == LALR_ACT_SHIFT，则lalrAction_t描述了config通过符号symb到达了状态to,
+如果act_type == (LALR_ACT_REDUCE || LALR_ACT_ACCEPT)则描述了config在symb上执行规约操作
+
+*/
 struct __lalr_action_tag
 {
 		lalrActionType_t				act_type;
 		const psrSymb_t					*symb;
 		lalrState_t						*to;
-		const lalrConfig_t				*config;
+		const lalrConfig_t				*config; 
 };
 
 

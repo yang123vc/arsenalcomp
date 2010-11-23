@@ -84,7 +84,7 @@ void	Parser_UnInit();
 
 #define PARSER_EOI_TOKVAL				0x0000/*end of input·ûºÅµÄ´Ê·¨Öµ*/
 #define Parser_EPSILON_TOKVAL			0x0001
-#define PARSER_LALR_TOKVAL				0x0002
+/*#define PARSER_LALR_TOKVAL			0x0002*/
 #define PARSER_ERROR_TOKVAL				0x0003
 #define PARSER_DEFPREC_TOKVAL			0x0004
 
@@ -109,8 +109,7 @@ typedef enum
 
 typedef enum
 {
-		PARSER_LR0,
-		PARSER_SLR = PARSER_LR0,
+		PARSER_SLR,
 		PARSER_LALR
 }psrLRItemType_t;
 

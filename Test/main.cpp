@@ -47,6 +47,8 @@ int main()
 
 #if(OS_TYPE != OS_WINDOWS_CE)		
 		printf("current locale == %ls\r\n", setlocale(LC_ALL,NULL));
+#else
+		setlocale(LC_ALL,NULL);
 #endif
 
 		Arsenal_Init(&ai);

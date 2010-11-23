@@ -1,4 +1,4 @@
-%name	delim 		:	"[ \r\n\t]"			
+%name	delim 			:	"[ \r\n\t]"			
 				;
 %name	comment		:	"/\*([^\*]|\*+[^\*/])*\*+/"	
 				;
@@ -6,9 +6,9 @@
 				;
 %name	digit			:	"[0-9]"				
 				;
-%name	number		:	"{digit}+"				
+%name	number			:	"{digit}+"				
 				;
-%name	letter		:	"[A-Z_a-z]"
+%name	letter			:	"[A-Z_a-z]"
 				;
 
 
@@ -72,21 +72,21 @@
 
 
 %token	"switch"	:	'"switch"(?!{keyword_lhd})'	,1					%value 	"TOK_SWITCH"		;//SWITCH
-%token	"for"		:	'"for"(?!{keyword_lhd})'		,1					%value	"TOK_FOR"			;//FOR
+%token	"for"		:	'"for"(?!{keyword_lhd})'		,1				%value		"TOK_FOR"			;//FOR
 
 %token	"return"	:	'"return"(?!{keyword_lhd})'	,1					%value	"TOK_RETURN"		;//RETURN
 %token	"do"		:	'"do"(?!{keyword_lhd})'		,1					%value	"TOK_DO"			;//DO
 %token	"while"	:	'"while"(?!{keyword_lhd})'		,1					%value	"TOK_WHILE"		;//WHILE
 %token	"if"		:	'"if"(?!{keyword_lhd})'		,1					%value	"TOK_IF"			;//IF
-%token	"else"	:	'"else"(?!{keyword_lhd})'		,1					%value	"TOK_ELSE"			;//ELSE
+%token	"else"		:	'"else"(?!{keyword_lhd})'		,1					%value	"TOK_ELSE"			;//ELSE
 
 
 
-%token	"true"	:	'"true"(?!{keyword_lhd})'		,1					%value	"TOK_TRUE"			;
+%token	"true"		:	'"true"(?!{keyword_lhd})'		,1					%value	"TOK_TRUE"			;
 %token	"false"	:	'"false"(?!{keyword_lhd})'		,1					%value	"TOK_FALSE"		;
-%token	"this"	:	'"this"(?!{keyword_lhd})'		,1					%value	"TOK_THIS"			;
+%token	"this"		:	'"this"(?!{keyword_lhd})'		,1					%value	"TOK_THIS"			;
 
-%token	"null"	:	'"null"(?!{keyword_lhd})'		,1					%value	"TOK_NULL"			;
+%token	"null"		:	'"null"(?!{keyword_lhd})'		,1					%value	"TOK_NULL"			;
 %token	"const"	:	'"const"(?!{keyword_lhd})'		,1					%value	"TOK_CONST"		;
 %token	"in"		:	'"in"(?!{keyword_lhd})'		,1					%value	"TOK_IN"			;
 %token	"new"		:	'"new"(?!{keyword_lhd})'		,1					%value	"TOK_NEW"			;
@@ -156,34 +156,34 @@
 %token	">="		:	'">="'		,1								%value 	"TOK_GE_OP"		;//GE_OP
 %token	"=="		:	'"=="'		,1								%value 	"TOK_EQ_OP"		;//EQ_OP
 %token	"!="		:	'"!="'		,1								%value	"TOK_NE_OP"		;//NE_OP
-%token	"<"		:	'"<"'			,0								%value	"TOK_LESS_OP"		;//<
-%token	">"		:	'">"'			,0								%value	"TOK_GREATER_OP"	;//>
+%token	"<"		:	'"<"'		,0								%value	"TOK_LESS_OP"		;//<
+%token	">"		:	'">"'		,0								%value	"TOK_GREATER_OP"	;//>
 
 
 
-%token	";"		:	'";"'			,0								%value "TOK_SEMICOLON"			;//;
-%token	"{"		:	'"{"'			,0								%value "TOK_L_BRACES"			;//{
-%token	"}"		:	'"}"'			,0								%value "TOK_R_BRACES"			;//}
-%token	","		:	'","'			,0								%value "TOK_COMMA"				;//,
-%token	":"		:	'":"'			,0								%value "TOK_COLON"				;//:
-%token	"="		:	'"="'			,0								%value "TOK_ASSIGN"				;//=
-%token	"("		:	'"("'			,0								%value "TOK_L_PAREN"				;//(
-%token	")"		:	'")"'			,0								%value "TOK_R_PAREN"				;//)
-%token	"["		:	'"["'			,0								%value "TOK_L_SQUARE"			;//[
-%token	"]"		:	'"]"'			,0								%value "TOK_R_SQUARE"			;//]
-%token	"."		:	'"."'			,0								%value "TOK_DOT"				;//.
-%token	"&"		:	'"&"'			,0								%value "TOK_AND"				;//&
-%token	"!"		:	'"!"'			,0								%value "TOK_NOT"				;//!
-%token	"~"		:	'"~"'			,0								%value "TOK_TILDE"				;//~
-%token	"+"		:	'"+"'			,0								%value "TOK_ADD"				;//+
-%token	"-"		:	'"-"'			,0								%value "TOK_SUB"				;//-
-%token	"*"		:	'"*"'			,0								%value "TOK_MUL"				;//*
-%token	"/"		:	'"/"'			,0								%value "TOK_DIV"				;///
-%token	"%"		:	'"%"'			,0								%value "TOK_MOD"				;//%
+%token	";"		:	'";"'		,0								%value "TOK_SEMICOLON"			;//;
+%token	"{"		:	'"{"'		,0								%value "TOK_L_BRACES"			;//{
+%token	"}"		:	'"}"'		,0								%value "TOK_R_BRACES"			;//}
+%token	","		:	'","'		,0								%value "TOK_COMMA"				;//,
+%token	":"		:	'":"'		,0								%value "TOK_COLON"				;//:
+%token	"="		:	'"="'		,0								%value "TOK_ASSIGN"				;//=
+%token	"("		:	'"("'		,0								%value "TOK_L_PAREN"				;//(
+%token	")"		:	'")"'		,0								%value "TOK_R_PAREN"				;//)
+%token	"["		:	'"["'		,0								%value "TOK_L_SQUARE"			;//[
+%token	"]"		:	'"]"'		,0								%value "TOK_R_SQUARE"			;//]
+%token	"."		:	'"."'		,0								%value "TOK_DOT"				;//.
+%token	"&"		:	'"&"'		,0								%value "TOK_AND"				;//&
+%token	"!"		:	'"!"'		,0								%value "TOK_NOT"				;//!
+%token	"~"		:	'"~"'		,0								%value "TOK_TILDE"				;//~
+%token	"+"		:	'"+"'		,0								%value "TOK_ADD"				;//+
+%token	"-"		:	'"-"'		,0								%value "TOK_SUB"				;//-
+%token	"*"		:	'"*"'		,0								%value "TOK_MUL"				;//*
+%token	"/"		:	'"/"'		,0								%value "TOK_DIV"				;///
+%token	"%"		:	'"%"'		,0								%value "TOK_MOD"				;//%
 
-%token	"^"		:	'"^"'			,0								%value "TOK_XOR"				;//^
-%token	"|"		:	'"|"'			,0								%value "TOK_OR"					;//|
-%token	"?"		:	'"?"'			,0								%value "TOK_QUEST"				;//?
+%token	"^"		:	'"^"'		,0								%value "TOK_XOR"				;//^
+%token	"|"		:	'"|"'		,0								%value "TOK_OR"					;//|
+%token	"?"		:	'"?"'		,0								%value "TOK_QUEST"				;//?
 
 
 
@@ -282,11 +282,11 @@ Arguments		:	"(" ")"
   			|	"(" ArgumentList ")"      
 			;
 
-ArgumentList	:	AssignmentExpr            
+ArgumentList		:	AssignmentExpr            
   			|	ArgumentList "," AssignmentExpr 
 			;
 
-LeftHandSideExpr:	NewExpr
+LeftHandSideExpr	:	NewExpr
   			|	CallExpr
 			;
 
@@ -1322,12 +1322,11 @@ FunctionDeclaration_NoNode:
   | "function" IDENTIFIER "(" FormalParameterList_NoNode ")" "{" FunctionBody_NoNode "}"
 ;
 
-FunctionExpr_NoNode:
-    "function" "(" ")" "{" FunctionBody_NoNode "}"
-  | "function" "(" FormalParameterList_NoNode ")" "{" FunctionBody_NoNode "}"
-  | "function" IDENTIFIER "(" ")" "{" FunctionBody_NoNode "}"
-  | "function" IDENTIFIER "(" FormalParameterList_NoNode ")" "{" FunctionBody_NoNode "}"
-;
+FunctionExpr_NoNode	:    "function" "(" ")" "{" FunctionBody_NoNode "}"
+  			|	"function" "(" FormalParameterList_NoNode ")" "{" FunctionBody_NoNode "}"
+			|	"function" IDENTIFIER "(" ")" "{" FunctionBody_NoNode "}"
+			|	"function" IDENTIFIER "(" FormalParameterList_NoNode ")" "{" FunctionBody_NoNode "}"
+			;
 
 FormalParameterList_NoNode:
     IDENTIFIER 
@@ -1339,10 +1338,10 @@ FunctionBody_NoNode	:	.
 				;
 
 
-SourceElements_NoNode:
-    Statement_NoNode
-  | SourceElements_NoNode Statement_NoNode
-;
+
+SourceElements_NoNode	:    	Statement_NoNode
+				|	SourceElements_NoNode Statement_NoNode
+				;
 
 
 

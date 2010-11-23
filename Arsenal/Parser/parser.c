@@ -761,7 +761,8 @@ bool_t		Parser_AddToken(psrContext_t *parser_context, const psrToken_t *tok)
 		if(term == NULL)
 		{
 				AR_ASSERT(false);
-				return false;
+				__on_error(parser_context, tok);
+				return true;
 		}
 		
 		is_done = false;
@@ -814,7 +815,7 @@ bool_t		Parser_AddToken(psrContext_t *parser_context, const psrToken_t *tok)
 								is_done = true;
 						}else /*ERR_RECOVERY_CONTINUE*/
 						{
-
+								continue;
 						}
 				}
 						break;
