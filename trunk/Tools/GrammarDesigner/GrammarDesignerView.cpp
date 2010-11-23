@@ -69,7 +69,7 @@ END_MESSAGE_MAP()
 CGrammarDesignerView::CGrammarDesignerView()
 {
 	// TODO: add construction code here
-		VERIFY(m_font.CreatePointFont(120, TEXT("Consolas")));
+		VERIFY(m_font.CreatePointFont(100, TEXT("Consolas")));
 
 		m_acctbl = ::LoadAccelerators(AfxGetResourceHandle(), MAKEINTRESOURCE(IDR_MAIN_VIEW));
 

@@ -35,6 +35,7 @@ static	void	__build_goto(lalrState_t *start, const psrGrammar_t *grammar, lalrSt
 		}
 
 
+		/*遍历状态(项集)start的每一个项*/
 		for(node = start->all_config->head; node != NULL; node = node->next)
 		{
 				lalrState_t				*new_state;
@@ -42,12 +43,15 @@ static	void	__build_goto(lalrState_t *start, const psrGrammar_t *grammar, lalrSt
 				const psrSymb_t			*symb;
 				const psrRule_t			*rule;
 				lalrConfigNode_t		*inner_node;
-
+				
 				rule = node->config->rule;
 
 				if(node->config->is_completed)continue;
 				if(node->config->delim >= rule->body.count)continue;
 
+				/*A -> a. B c ;
+				则此时 delim == 1,则body[delim] == B;则symb== B为下一个转移
+				*/
 				symb = rule->body.lst[node->config->delim]; 
 
 				new_state = NULL;
@@ -59,7 +63,8 @@ static	void	__build_goto(lalrState_t *start, const psrGrammar_t *grammar, lalrSt
 						lalrConfig_t			*new_config;
 
 						if(inner_node->config->is_completed)continue;/*被计算过则不再计算*/
-						if(inner_node->config->delim >= inner_node->config->rule->body.count)continue;
+						AR_ASSERT(inner_node->config->delim <=inner_node->config->rule->body.count);
+						if(inner_node->config->delim == inner_node->config->rule->body.count)continue;
 
 						bsp = inner_node->config->rule->body.lst[inner_node->config->delim];
 						
@@ -83,15 +88,13 @@ static	void	__build_goto(lalrState_t *start, const psrGrammar_t *grammar, lalrSt
 												[A		: . ( A ), $]			
 												[A		: . a, $]
 										
-										s1 :    [A'		: A . $ ] //config 1
+										s1 :    [A'		: A . $ ]				//config 1
 
-										
-
-										s2 :	[A		:	( . A )		, $]
+										s2 :	[A		:	( . A )		, $]	//config 2
 												[A		: . ( A )		, )]
 												[A		: . a			, )]
 
-
+										s3 :	[A		:	a .			, $]	//config 3
 										
 										config0的$需要传递到config1
 										
@@ -133,22 +136,30 @@ static	void	__calc_lr0_closure(lalrConfigList_t *all_config, const psrGrammar_t 
 
 				if(delim >= rule->body.count)continue;
 
+				/*
+				A -> a . B C;
+				则 body[delim] == B则将所有 B -> . a b c;装入本项
+				*/
 				symb = rule->body.lst[delim];
 
 				if(symb->type == PARSER_NONTERM)
 				{
 						size_t i;
-
+						
 						for(i = 0; i < grammar->count; ++i)
 						{
 								const psrRule_t *inner_rule;
 								inner_rule = grammar->rules[i];
 
+								/*检索每一条语法*/
+
 								if(Parser_CompSymb(symb, inner_rule->head) == 0)
 								{
+										/*
+										如果当前lhs与symb相同，则将当前语法例如 B -> . a b c加入项集all_config
+										*/
 										size_t k;
 										lalrConfig_t *new_config;
-
 										new_config = Parser_FindFromConfigList(all_config, inner_rule, 0);
 										if(new_config == NULL)
 										{
@@ -173,10 +184,18 @@ static	void	__calc_lr0_closure(lalrConfigList_t *all_config, const psrGrammar_t 
 
 												if(sp->type == PARSER_TERM)
 												{
+														/*
+														如果sp为终结符，则将其加入新项new_config的follow_set中，之后循环中止，因为在
+														本条语法规则中不会有sp之后的终结符加入到new_config中
+														*/
 														Parser_InsertToSymbList_Unique(&new_config->follow_set, sp);
 														break;
 												}else
 												{
+														/*
+														如果sp为非终结符，则将其first_set加入到new_config中，如果此终结符可导出空串，
+														则循环继续，否则循环中止
+														*/
 														const psrMapRec_t *rec;
 														size_t x;
 														rec = Parser_GetSymbolFromSymbMap(first_set, sp);
@@ -192,7 +211,11 @@ static	void	__calc_lr0_closure(lalrConfigList_t *all_config, const psrGrammar_t 
 														}
 												}
 										}
-
+												
+										/*
+										形如node->config为A -> a . B C D;
+										若C D均可导出空串， 则则A的follow_set将会传播至新项中
+										*/
 										if(k == rule->body.count)
 										{
 												Parser_InsertToConfigList(node->config->forward, new_config);
@@ -414,6 +437,9 @@ static void __build_actions(lalrStateSet_t *set)
 
 				for(node = state->all_config->head; node != NULL; node = node->next)
 				{
+						/*
+						node->config->delim == node->config->rule->body.count表明了此项为规约状态
+						*/
 						if(node->config->delim == node->config->rule->body.count)
 						{
 								size_t x;

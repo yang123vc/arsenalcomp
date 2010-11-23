@@ -38,7 +38,7 @@ void			AR_InitThread()
 
 void			AR_UnInitThread()
 {
-	
+
 	
 }
 

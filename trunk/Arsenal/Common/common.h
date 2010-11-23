@@ -378,21 +378,21 @@ const wchar_t* AR_wcsstr_kmp_s(const wchar_t *beg, const wchar_t *end, const wch
 
 #if(AR_ARCH_VER	== ARCH_32)
 
-		#define AR_wtoi AR_wtoi32
-		#define AR_wtou AR_wtou32
+		#define AR_wtoi			AR_wtoi32
+		#define AR_wtou			AR_wtou32
 
-		#define AR_wtou_s	AR_wtou32_s
-		#define AR_wtoi_s	AR_wtoi32_s
+		#define AR_wtou_s		AR_wtou32_s
+		#define AR_wtoi_s		AR_wtoi32_s
 
 
 #elif(AR_ARCH_VER == ARCH_64)
 
 
-		#define AR_wtoi AR_wtoi64
-		#define AR_wtou AR_wtou64
+		#define AR_wtoi			AR_wtoi64
+		#define AR_wtou			AR_wtou64
 
-		#define AR_wtou_s	AR_wtou64_s
-		#define AR_wtoi_s	AR_wtoi64_s
+		#define AR_wtou_s		AR_wtou64_s
+		#define AR_wtoi_s		AR_wtoi64_s
 
 #else
 		

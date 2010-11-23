@@ -128,6 +128,7 @@ void			AR_UnLockSpinLock(arSpinLock_t *lock)
 
 static AR_INLINE uint_64_t __get_time_microseconds()
 {
+		/*我不知道这函数做了什么，也不想知道*/
 		FILETIME ft;
 		ULARGE_INTEGER epoch; // UNIX epoch (1970-01-01 00:00:00) expressed in Windows NT FILETIME
 		ULARGE_INTEGER ts;

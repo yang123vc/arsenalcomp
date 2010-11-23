@@ -1484,6 +1484,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\Arsenal\Tengu\tgusyntree.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Tengu\tgusyntree.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\Arsenal\Tengu\tguutility.c"
 				>
 			</File>

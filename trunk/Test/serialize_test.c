@@ -172,9 +172,6 @@ void sn_test_path()
 
 		snObject_t *announce_list = SN_FindPathByWcs(obj, L"announce-list/5");
 		
-		
-
-		
 		SN_DestroyObject(obj);
 }
 
