@@ -117,6 +117,7 @@ struct __serialize_object_tag
 		};
 };
 
+
 snObject_t*		SN_CreateObject(snType_t		type);
 void			SN_DestroyObject(snObject_t		*obj);
 

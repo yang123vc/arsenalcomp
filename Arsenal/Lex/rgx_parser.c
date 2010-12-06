@@ -418,8 +418,8 @@ RECHECK:
 								rgxNode_t *quest = RGX_CreateNode(RGX_QUEST_T);
 								quest->left = RGX_CopyNode(expr);
 								quest->non_greedy = non_greedy;
-								//branch = RGX_CreateNode(RGX_BRANCH_T);
-								//RGX_InsertToNode(branch, RGX_CopyNode(expr));
+								/*branch = RGX_CreateNode(RGX_BRANCH_T);*/
+								/*RGX_InsertToNode(branch, RGX_CopyNode(expr));*/
 								cat = RGX_CreateNode(RGX_CAT_T);
 								for(i = 0; i < max; ++i)RGX_InsertToNode(cat, RGX_CopyNode(quest));
 								
@@ -489,7 +489,7 @@ static rgxResult_t	__handle_postfix(rgxNode_t *expr, const wchar_t *input, const
 		{
 		case '*':
 		{
-				//g_res.node = __handle_loopcount(expr, 0, AR_SIZE_MAX);
+				/*g_res.node = __handle_loopcount(expr, 0, AR_SIZE_MAX);*/
 				g_res.node = RGX_CreateNode(RGX_STAR_T);
 				g_res.node->left = expr;
 				++p;
@@ -517,7 +517,7 @@ static rgxResult_t	__handle_postfix(rgxNode_t *expr, const wchar_t *input, const
 				break;
 		case '?':
 		{
-				//g_res.node = __handle_loopcount(expr, 0,1);
+				/*g_res.node = __handle_loopcount(expr, 0,1);*/
 				g_res.node = RGX_CreateNode(RGX_QUEST_T);
 				g_res.node->left = expr;
 				
@@ -616,7 +616,7 @@ static rgxResult_t	__handle_postfix(rgxNode_t *expr, const wchar_t *input, const
 				return g_res;
 		}
 
-		//return __handle_postfix(g_res.node, g_res.next, name_set);
+		/*return __handle_postfix(g_res.node, g_res.next, name_set);*/
 		return g_res;
 INVALID_POINT:
 		RGX_DestroyNode(expr);
@@ -713,7 +713,7 @@ static rgxResult_t __handle_factor(const wchar_t *input, const rgxNameSet_t *nam
 
 						if(*p != L'}' || count >= AR_RGX_MAXNAME)
 						{
-							//	AR_ASSERT(0);
+							/*	AR_ASSERT(0);*/
 								g_res.err.pos = p;
 								g_res.next = NULL;
 								g_res.node = NULL;

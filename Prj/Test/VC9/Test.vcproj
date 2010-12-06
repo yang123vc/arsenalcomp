@@ -1350,6 +1350,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\Test\gen_code_impl.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\Test\gen_code_test.c"
 				>
 			</File>
@@ -1420,6 +1424,10 @@
 						CompileAs="2"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\Test\tengu_test.c"
+				>
 			</File>
 			<File
 				RelativePath="..\..\..\Test\test.c"

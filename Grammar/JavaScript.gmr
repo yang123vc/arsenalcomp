@@ -227,14 +227,14 @@ PrimaryExprNoBrace	:   "this"
   				|	"("	Expr	")"
 				;
 
-ArrayLiteral		:    "[" ElisionOpt "]"
-  				|	"[" ElementList "]" 
-  				|	"[" ElementList "," ElisionOpt "]"
-				;
+ArrayLiteral		:    	"[" ElisionOpt "]"
+  			|	"[" ElementList "]" 
+  			|	"[" ElementList "," ElisionOpt "]"
+			;
 
 ElementList		:	ElisionOpt AssignmentExpr
-  				|	ElementList "," ElisionOpt AssignmentExpr
-				;
+  			|	ElementList "," ElisionOpt AssignmentExpr
+			;
 
 ElisionOpt		:	.
   			|	Elision

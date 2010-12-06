@@ -157,7 +157,8 @@ static psrGrammar_t*	__build_grammar(const psrHandler_t	*handler, const arIOCtx_
 						info->assoc = __g_prec_pattern[i].assoc;																											
 						info->prec = __g_prec_pattern[i].prec_level;																										
 				}																																							
-		}																																									
+		}		
+
 		for(i = 0; i < __RULE_COUNT__; ++i)																													
 		{																																									
 				if(!Parser_InsertRuleByStr(grammar, __g_rule_pattern[i].rule, __g_rule_pattern[i].prec_token, __g_rule_pattern[i].handler, __g_rule_pattern[i].auto_ret))		
@@ -167,8 +168,24 @@ static psrGrammar_t*	__build_grammar(const psrHandler_t	*handler, const arIOCtx_
 						AR_ASSERT(false);																																	
 						return NULL;																																		
 				}																																							
-		}																																									
-		if(!Parser_SetFirstRule(grammar,START_RULE) || !Parser_CheckIsValidGrammar(grammar))																						
+		}		
+
+
+#if(0)
+		psrRule_t	*new_rule = Parser_CreateRuleByStr(L"E : ", NULL, NULL, 0, &grammar->term_list, &grammar->io_ctx);
+		const psrSymb_t *symb = Parser_CreateSymb(L"NUM",  PARSER_NONTERM);
+		Parser_InsertToSymbList(&new_rule->body, symb);
+		if(!Parser_InsertRule(grammar, new_rule))
+		{																												
+				Parser_DestroyGrammar(grammar);																			
+				grammar = NULL;																							
+				AR_ASSERT(false);																						
+				return NULL;																							
+		}
+#endif
+
+		
+		if(!Parser_SetStartRule(grammar,START_RULE) || !Parser_CheckIsValidGrammar(grammar))																						
 		{																																									
 				Parser_DestroyGrammar(grammar);																																
 				grammar = NULL;																																				

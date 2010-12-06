@@ -25,26 +25,30 @@ AR_NAMESPACE_BEGIN
 
 typedef enum
 {
-		PARSER_SHIFT,
+		PARSER_SHIFT = 0,
 		PARSER_REDUCE,
 		PARSER_ACCEPT,
 		PARSER_ERROR
 }psrActionType_t;
 
-/*typedef struct __action_record_tag psrAction_t;*/
-
 typedef struct __action_record_tag
 {
-		psrActionType_t					type;
+		size_t							type			:	2		;
+		size_t							rule_num		:	14		;	
+		size_t							prec			:	8		;	
+		size_t							delim			:	8  		;	
+
+		size_t							shift_to		:	24		;
+		size_t							reduce_count 	:	8 		;		/*规约时用到，产生式如果为%Epsilon，则count为0*/
+
+		
+		
 		struct __action_record_tag		*next;
-
-		size_t							shift_to;
-		size_t							reduce_count;/*规约时用到，产生式如果为%Epsilon，则count为0*/
-
-		size_t							rule_num;
-		size_t							delim;
-		size_t							prec;
 }psrAction_t;
+
+
+
+
 
 extern const psrAction_t	*	const PARSER_ErrorAction;
 

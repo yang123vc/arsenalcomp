@@ -1,28 +1,46 @@
-﻿var test2()
+﻿
+var test()
 {
-	var test = func_test;
+	var tbl = {};
+	var i = 0;
+	while(i < 1000)tbl[i] = rand();
+
+	do{
+		print(tbl[i++]);
+	}while(i < 1000);
 	
-	test(test2(),a,b,c)()()()();
 }
 
 
-
-var t = 
+var blub_sort(arr)
 {
-	{1,2,3},
-	{"a","b","c"},
-	{x,y,z}
-};
-
-/*
-测试注释1
-*/
-
-var func_test(a,b,c)
-{
-//测试注释2
-	print(a,b,c);
+	var n = count(arr);
+	var i = 1;
+	
+	while(i < n)
+	{
+		var k = i;
+		while(k > 0)
+		{
+			if(arr[k] < arr[k-1])
+			{
+				var tmp = arr[k];
+				arr[k] = arr[k-1];
+				arr[k-1] = tmp;
+				k--;
+			}else
+			{
+				break;
+			}
+			
+		}
+		i++;
+	}
 }
 
 
+var g_tbl = { a = b = "abc" };
+
+var str = "abc
+";
 

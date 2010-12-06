@@ -46,9 +46,6 @@ static psrHandler_t		__def_handler_ctx =
 
 
 
-
-
-
 /*
 params
 */
@@ -936,7 +933,7 @@ static psrGrammar_t*	__build_grammar(const psrHandler_t	*handler, const arIOCtx_
 						return NULL;																																		
 				}																																							
 		}																																									
-		if(!Parser_SetFirstRule(grammar,START_RULE) || !Parser_CheckIsValidGrammar(grammar))																						
+		if(!Parser_SetStartRule(grammar,START_RULE) || !Parser_CheckIsValidGrammar(grammar))																						
 		{																																									
 				Parser_DestroyGrammar(grammar);																																
 				grammar = NULL;																																				
@@ -986,7 +983,7 @@ static psrNode_t* AR_STDCALL on_translation_unit(psrNode_t **nodes, size_t count
 					parser->current_function = NULL;
 					AR_ASSERT(result != NULL);
 
-					result->error_sources = parser->has_error;
+					result->has_error= parser->has_error;
 					
 					return (psrNode_t*)result;
 
@@ -1451,8 +1448,6 @@ static psrNode_t* AR_STDCALL on_compound_statement(psrNode_t **nodes, size_t cou
 					AR_ASSERT(nodes != NULL && (count == 2));
 					cb = pop_block(parser);
 						
-					/*至少存在一个声明或者逻辑才有可能执行到此*/
-					AR_ASSERT(cb->vars != NULL || cb->statement_list != NULL);
 						
 					stmt = make_compound_stmt(parser, cb, &ns[0]->token->lex_info,&ns[1]->token->lex_info);
 					ret = __create_synnode(TGU_NODE_STMT_T, (void*)stmt);
@@ -1477,7 +1472,7 @@ static psrNode_t* AR_STDCALL on_compound_error_statement(psrNode_t **nodes, size
 
 						TGU_DestroyBlock(cb);
 						return NULL;
-					}
+				}
 }
 
 

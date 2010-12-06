@@ -380,7 +380,6 @@ void			RGX_InsertToNode(rgxNode_t *root, rgxNode_t *node)
 				root->left = tmp;
 				root->right = node;
 		}
-
 }
 
 

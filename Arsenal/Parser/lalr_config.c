@@ -70,15 +70,15 @@ void					Parser_DestroyConfigList(lalrConfigList_t *lst, bool_t destroy_config)
 		__destroy_config_list(lst);
 }
 
-lalrConfig_t*			Parser_InsertToConfigListByValue(lalrConfigList_t *lst, const psrRule_t *rule, size_t delim)
+lalrConfig_t*			Parser_InsertToConfigListByValue(lalrConfigList_t *lst, size_t rule_num, size_t delim)
 {
 		lalrConfig_t *cfg;
-		AR_ASSERT(lst != NULL && rule != NULL);
+		AR_ASSERT(lst != NULL );
 
 
 		cfg = __create_config();
 
-		Parser_InitConfig(cfg, rule, delim);
+		Parser_InitConfig(cfg, rule_num, delim);
 
 		Parser_InsertToConfigList(lst, cfg);
 		
@@ -203,7 +203,7 @@ int_t					Parser_CompConfigList(const lalrConfigList_t *l, const lalrConfigList_
 }
 
 
-lalrConfig_t*			Parser_FindFromConfigList(lalrConfigList_t *lst, const psrRule_t *rule, size_t delim)
+lalrConfig_t*			Parser_FindFromConfigList(lalrConfigList_t *lst, size_t rule_num, size_t delim)
 {
 		lalrConfigNode_t		*node;
 		
@@ -213,7 +213,7 @@ lalrConfig_t*			Parser_FindFromConfigList(lalrConfigList_t *lst, const psrRule_t
 
 		while(node)
 		{
-				if(node->config->rule == rule && node->config->delim == delim)
+				if(node->config->rule_num == rule_num && node->config->delim == delim)
 				{
 						return node->config;
 				}else
@@ -393,12 +393,12 @@ void					Parser_SortConfigList(lalrConfigList_t *l)
 /***************************************lalr config******************************************************/
 
 
-void	Parser_InitConfig(lalrConfig_t *config, const psrRule_t *rule, size_t delim)
+void	Parser_InitConfig(lalrConfig_t *config, size_t rule_num, size_t delim)
 {
-		AR_ASSERT(config != NULL && rule != NULL);
+		AR_ASSERT(config != NULL );
 
 		AR_memset(config, 0, sizeof(*config));
-		config->rule = rule;
+		config->rule_num = rule_num;
 		config->delim = delim;
 		
 		config->forward = Parser_CreateConfigList();
@@ -446,7 +446,7 @@ int_t	Parser_CompConfig(const lalrConfig_t *l, const lalrConfig_t *r)
 
 		if(l == r)return 0;
 		
-		cmp = (int_t)l->rule - (int_t)r->rule;
+		cmp = (int_t)l->rule_num - (int_t)r->rule_num;
 		if(cmp != 0)return cmp;
 		
 		
@@ -461,7 +461,7 @@ void Parser_PrintConfig(const lalrConfig_t *config, const psrGrammar_t *gmr, arS
 		const psrRule_t *rule;
 		AR_ASSERT(config != NULL && gmr != NULL && str != NULL);
 
-		rule = config->rule;
+		rule = Parser_GetRuleFromGrammar(gmr, config->rule_num);
 
 		AR_AppendString(str, L"[ ");
 		

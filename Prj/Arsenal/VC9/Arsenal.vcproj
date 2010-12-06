@@ -389,6 +389,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
+				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;"
@@ -478,6 +479,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
+				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				PreprocessorDefinitions="WIN64;NDEBUG;_WINDOWS;_USRDLL;"
@@ -565,6 +567,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
+				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				PreprocessorDefinitions="WIN64;NDEBUG;_WINDOWS;_USRDLL;"
@@ -1011,6 +1014,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
+				InlineFunctionExpansion="2"
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
 				PreprocessorDefinitions="WIN32;_WINDOWS; NDEBUG;_LIB;"
@@ -1076,6 +1080,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
+				InlineFunctionExpansion="2"
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
 				PreprocessorDefinitions="WIN64;_WINDOWS; NDEBUG;_LIB;"
@@ -1140,6 +1145,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
+				InlineFunctionExpansion="2"
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
 				PreprocessorDefinitions="WIN64;_WINDOWS; NDEBUG;_LIB;"

@@ -189,7 +189,7 @@ void	AR_check(bool_t cond, const wchar_t *fmt, ...)
 				if(len < 0)
 				{
 						AR_error(AR_ERR_FATAL, L"%ls : %ls\r\n", L"Arsenal internal error", AR_FUNC_NAME);
-						return;//±ÜÃâwarning
+						return;/*±ÜÃâwarning*/
 				}
 
 				buf = AR_NEWARR0(wchar_t, len + 1);
@@ -201,7 +201,7 @@ void	AR_check(bool_t cond, const wchar_t *fmt, ...)
 				if(len < 0)
 				{
 						AR_error(AR_ERR_FATAL, L"%ls : %ls\r\n", L"Arsenal internal error", AR_FUNC_NAME);
-						return;//±ÜÃâwarning
+						return;/*±ÜÃâwarning*/
 				}
 				
 				AR_error(AR_ERR_FATAL, buf);

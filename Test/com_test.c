@@ -24,6 +24,8 @@ void			AR_AppendFormatString(arString_t *str, const wchar_t *fmt, ...);
 const wchar_t*	AR_GetStrString(const arString_t *str);
 size_t			AR_GetLengthString(const arString_t *str);
 
+
+
 void str_test()
 {
 		arString_t *str;
@@ -60,6 +62,7 @@ void str_test2()
 
 		AR_printf(L"%ls\r\n", AR_wcsncat(dest, L"", 20));
 }
+
 
 void com_test2()
 {
@@ -1108,6 +1111,66 @@ void float_test()
 
 }
 
+
+
+
+char*			AR_strupr(char *s);
+char*			AR_strlwr(char *s);
+char*			AR_strnlwr(char *s, size_t count);
+char*			AR_strnupr(char *s, size_t count);
+wchar_t*			AR_wcsupr(wchar_t *s);
+wchar_t*			AR_wcslwr(wchar_t *s);
+wchar_t*			AR_wcsnlwr(wchar_t *s, size_t count);
+wchar_t*			AR_wcsnupr(wchar_t *s, size_t count);
+
+void str_test7()
+{
+		{
+		char s[] = "abcdefg";
+		AR_printf(L"%hs\r\n", AR_strupr(s));
+		}
+
+
+		{
+		char s[] = "ABCDEFG";
+		AR_printf(L"%hs\r\n", AR_strlwr(s));
+		}
+
+
+		{
+		wchar_t s[] = L"abcdefg";
+		AR_printf(L"%ls\r\n", AR_wcsupr(s));
+		}
+
+
+		{
+		wchar_t s[] = L"ABCDEFG";
+		AR_printf(L"%ls\r\n", AR_wcslwr(s));
+		}
+
+
+		{
+		char s[] = "abcdefg";
+		AR_printf(L"%hs\r\n", AR_strnupr(s, 3));
+		}
+
+		{
+		char s[] = "ABCDEFG";
+		AR_printf(L"%hs\r\n", AR_strnlwr(s, 3));
+		}
+
+		{
+		wchar_t s[] = L"abcdefg";
+		AR_printf(L"%ls\r\n", AR_wcsnupr(s, 3));
+		}
+
+		{
+		wchar_t s[] = L"ABCDEFG";
+		AR_printf(L"%ls\r\n", AR_wcsnlwr(s, 3));
+		}
+
+}
+
 void com_test()
 {
 		//bsearch_test();
@@ -1117,8 +1180,8 @@ void com_test()
 		//str_test3();
 		//str_test4();
 		//str_test5();
-
 		//str_test6();
+		//str_test7();
 		
 		//com_test3();
 		//com_conv();
@@ -1158,7 +1221,7 @@ void com_test()
 
 		//byte_filp_test();
 
-		float_test();
+		//float_test();
 }
 
 

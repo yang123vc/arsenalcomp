@@ -97,8 +97,8 @@ static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match
 		curr = RGX_CreateThreadList();
 		next = RGX_CreateThreadList();
 
+		prog->mark = 0;
 		__clear_for_lookahead(prog);
-		
 		prog->mark++;
 		__add_thread(curr, RGX_BuildThread(prog->start, sp,0,0), prog);
 
@@ -236,7 +236,7 @@ static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match
 						case RGX_LOOKAHEAD_END_I:
 						{
 								/*
-										这里的意义是，不论你前向预搜索什么，只要有一个走通了就OK
+										不论你前向预搜索什么，只要有一个走通了就OK
 										例如a(?=(a|b|c|d))走通了哪个都算OK
 								*/
 								RGX_DestroyThreadList(curr);
@@ -270,19 +270,19 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 		rgxThreadList_t	*curr, *next;
 		bool_t			matched;
 		rgxIns_t		*pc;
-		const wchar_t	*sp, *fianl_next;
+		const wchar_t	*sp, *final_next;
 		size_t i,x,y, final_row, final_col;
 		
 
 		AR_ASSERT(prog != NULL && match->next != NULL && match->input != NULL);
 		
-
 		AR_memset(tok, 0, sizeof(*tok));
 
 		for(i = 0; i < prog->count; ++i)
 		{
 				prog->start[i].mark = 0;
 		}
+
 		prog->mark = 0;
 		
 		if(prog->curr == NULL) prog->curr = RGX_CreateThreadList();
@@ -300,7 +300,7 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 		x = match->line;
 		y = match->col;
 
-		final_row = 0; final_col = 0; fianl_next = NULL;
+		final_row = 0; final_col = 0; final_next = NULL;
 
 		prog->mark++;
 		__add_thread(curr, RGX_BuildThread(prog->start, sp, x,y), prog);
@@ -469,7 +469,7 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 
 								final_row = x;
 								final_col = y;
-								fianl_next = sp;
+								final_next = sp;
 
 								matched = true;
 								goto BREAK_POINT;/*这一步决定了优先级为left most*/
@@ -494,7 +494,7 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 		{
 				match->col = final_col;
 				match->line = final_row;
-				match->next = fianl_next;
+				match->next = final_next;
 		}
 		return matched;
 }

@@ -137,7 +137,7 @@ static void __emit_code(rgxProg_t *prog, const rgxNode_t *node)
 		}
 		case RGX_CAT_T:
 		{
-				//AR_ASSERT(node->left != NULL && node->right != NULL);
+				/*AR_ASSERT(node->left != NULL && node->right != NULL);*/
 				if(node->left)__emit_code(prog, node->left);
 				if(node->right)__emit_code(prog, node->right);
 				break;
@@ -170,7 +170,7 @@ static void __emit_code(rgxProg_t *prog, const rgxNode_t *node)
 		}
 		case RGX_STAR_T:
 		{
-				rgxIns_t *p1;
+				rgxIns_t *p1; 
 				prog->pc->opcode = RGX_BRANCH_I;/*这条指令导致一个分支, count + 1*/
 				p1 = prog->pc++; /*p1为当前指令*/
 				p1->left = prog->pc;/*一是从下一条开始继续匹配node->left*/

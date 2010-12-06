@@ -22,6 +22,14 @@ AR_NAMESPACE_BEGIN
 
 
 
+/**********************************必须在所有其它Parser_族函数之前调用，否则行为未定义***************************/
+void	Parser_Init();
+
+/**********************************必须在所有其它Parser_族函数之后调用，否则行为未定义***************************/
+void	Parser_UnInit();
+
+
+
 /*******************************************辅助模块********************************************/
 
 
@@ -60,8 +68,8 @@ typedef struct __parser_token_tag
 typedef psrNode_t*		(AR_STDCALL *psrTermFunc_t)(const psrToken_t *tok,void *ctx);
 typedef psrNode_t*		(AR_STDCALL *psrRuleFunc_t)(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-typedef void			(AR_STDCALL *psrFreeFunc_t)(psrNode_t *node, void *ctx);
 
+typedef void			(AR_STDCALL *psrFreeFunc_t)(psrNode_t *node, void *ctx);
 typedef void			(AR_STDCALL *psrErrorFunc_t)(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx);
 
 
@@ -75,10 +83,6 @@ typedef struct __parser_handler_tag
 
 
 
-
-/**********************************必须在所有其它PSR族函数之前调用，否则行为未定义***************************/
-void	Parser_Init();
-void	Parser_UnInit();
 
 
 
@@ -191,8 +195,8 @@ int_t					Parser_CompSymb(const psrSymb_t *l, const psrSymb_t *r);
 typedef struct __parser_symbol_list_tag
 {
 		const psrSymb_t **lst;
-		size_t			count;
-		size_t			cap;	
+		size_t			count	:		16;
+		size_t			cap		:		16;	
 }psrSymbList_t;
 
 void				Parser_InitSymbList(psrSymbList_t *symb_lst);
@@ -229,9 +233,9 @@ void			Parser_PrintSymbolList(const psrSymbList_t *lst, arString_t *str);
 
 typedef struct __parser_symbmap_record_tag
 {
-		const psrSymb_t			*key;
-		psrSymbList_t			lst;
-		bool_t					can_empty;
+		const psrSymb_t							*key;
+		psrSymbList_t							lst;
+		bool_t									can_empty;
 		struct __parser_symbmap_record_tag		*next;
 }psrMapRec_t;
 
@@ -294,6 +298,8 @@ bool_t			Parser_InsertToTermInfoList(psrTermInfoList_t	*lst, const wchar_t *name
 psrTermInfo_t*	Parser_FindTermByValue(psrTermInfoList_t	*lst, size_t val);
 psrTermInfo_t*	Parser_FindTermByName(psrTermInfoList_t	*lst, const wchar_t *name);
 
+psrTermInfo_t*	Parser_GetTermByIndex(psrTermInfoList_t	*lst, size_t index);
+
 
 
 
@@ -355,10 +361,12 @@ const psrHandler_t*		Parser_GetGrammarHandler(const psrGrammar_t *grammar);
 
 int_t					Parser_IndexOfGrammar(const psrGrammar_t *grammar, const psrRule_t *rule);
 
-#define					Parser_GetRuleOfGrammar(_gmr, _idx) ((_gmr)->rules[(_idx)])
+#define					Parser_GetRuleFromGrammar(_gmr, _idx) ((_gmr)->rules[(_idx)])
 
-const psrSymbList_t*	Parser_GetSymbList(const psrGrammar_t *grammar);
+const psrSymbList_t*			Parser_GetSymbList(const psrGrammar_t *grammar);
+const psrTermInfoList_t*		Parser_GetTermList(const psrGrammar_t *grammar);
 
+const psrSymb_t*		Parser_GetSymbFromGrammarByName(const psrGrammar_t *grammar, const wchar_t *name);
 
 bool_t					Parser_CheckIsValidGrammar(const psrGrammar_t *grammar);
 
@@ -366,7 +374,7 @@ bool_t					Parser_CheckIsValidGrammar(const psrGrammar_t *grammar);
 
 
 const psrRule_t*		Parser_GetStartRule(const psrGrammar_t *grammar);
-bool_t					Parser_SetFirstRule(psrGrammar_t *grammar, const wchar_t *rule_name);
+bool_t					Parser_SetStartRule(psrGrammar_t *grammar, const wchar_t *rule_name);
 
 const psrTermInfo_t*	Parser_GetRulePrecAssocInfo(const psrGrammar_t *grammar, const psrRule_t *rule);
 
@@ -478,6 +486,8 @@ bool_t			Parser_AddToken(psrContext_t *parser_context, const psrToken_t *tok);
 
 
 /***************************************************************Parser结束************************************************************************/
+
+
 
 
 

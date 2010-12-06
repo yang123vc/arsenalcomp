@@ -85,9 +85,10 @@ typedef struct __tengu_report_tag
 
 typedef struct __tengu_parser_tag
 {
-		tguReport_t		report;
-		lexMatch_t		*match;
-		psrContext_t	*parser_context;
+		tguReport_t				report;
+		lexMatch_t				*match;
+		psrContext_t			*parser_context;
+		const tguBlock_t		*build_in;
 
 		tguSyntaxTree_t	*result;
 
@@ -102,7 +103,7 @@ typedef struct __tengu_parser_tag
 }tguParser_t;
 
 
-tguParser_t*			TGU_CreateParser(tguReport_t	*report);
+tguParser_t*			TGU_CreateParser(tguReport_t	*report, const tguBlock_t		*build_in_block);
 void					TGU_DestroyParser(tguParser_t	*parser);
 tguSyntaxTree_t*		TGU_ParseCode(tguParser_t	*parser, const wchar_t *sources_name, const wchar_t *code);
 

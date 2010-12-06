@@ -58,7 +58,7 @@ const	psrConflictView_t*		Parser_CreateConflictView(const psrActionTable_t *tbl,
 						
 						const psrAction_t		*act = tbl->actions[AR_TBL_IDX_R(i,k,tbl->col)];
 						/*
-						const psrRule_t			*rule = Parser_GetRuleOfGrammar(grammar, act->rule_num);
+						const psrRule_t			*rule = Parser_GetRuleFromGrammar(grammar, act->rule_num);
 						*/
 						
 						if(act->next == NULL)continue;
@@ -89,10 +89,10 @@ const	psrConflictView_t*		Parser_CreateConflictView(const psrActionTable_t *tbl,
 								psrLRItem_t tmp;
 								*/
 								lalrConfig_t	tmp;
-								const psrRule_t			*rule = Parser_GetRuleOfGrammar(grammar, act->rule_num);
+								/*const psrRule_t			*rule = Parser_GetRuleFromGrammar(grammar, act->rule_num);*/
 								AR_ASSERT(act != NULL);
 								
-								Parser_InitConfig(&tmp, rule, act->delim);
+								Parser_InitConfig(&tmp, act->rule_num, act->delim);
 								/*
 								Parser_InitLRItem(&tmp, rule, act->delim);
 								*/
@@ -208,7 +208,7 @@ const psrActionView_t*	Parser_CreateActionView(const psrActionTable_t *tbl, cons
 				{
 						
 						const psrAction_t *action = tbl->actions[AR_TBL_IDX_R(r, k, tbl->col)];
-						const psrRule_t	 *rule = Parser_GetRuleOfGrammar(grammar, action->rule_num);
+						const psrRule_t	 *rule = Parser_GetRuleFromGrammar(grammar, action->rule_num);
 						
 
 						switch(action->type)
@@ -367,7 +367,7 @@ void Parser_PrintActionTable(const psrActionTable_t *tbl, const psrGrammar_t *gr
 						const psrAction_t *pact;
 						const psrRule_t	 *rule;
 						pact = tbl->actions[AR_TBL_IDX_R(i,j, tbl->col)];
-						rule = Parser_GetRuleOfGrammar(grammar, pact->rule_num);
+						rule = Parser_GetRuleFromGrammar(grammar, pact->rule_num);
 
 						switch(pact->type)
 						{
@@ -408,7 +408,7 @@ void Parser_ReportConflict(const psrActionTable_t *tbl, const psrGrammar_t *gram
 				for(j = 0; j < tbl->col; ++j)
 				{
 						action = tbl->actions[AR_TBL_IDX_R(i,j,tbl->col)];
-						rule = Parser_GetRuleOfGrammar(grammar, action->rule_num);
+						rule = Parser_GetRuleFromGrammar(grammar, action->rule_num);
 						AR_ASSERT(action != NULL);
 						if(action->next == NULL)continue;
 
@@ -425,7 +425,7 @@ void Parser_ReportConflict(const psrActionTable_t *tbl, const psrGrammar_t *gram
 								
 								Parser_InitLRItem(&tmp, rule, action->delim);
 								*/
-								Parser_InitConfig(&tmp, rule, action->delim);
+								Parser_InitConfig(&tmp, action->rule_num, action->delim);
 								
 								switch(action->type)
 								{
@@ -442,7 +442,7 @@ void Parser_ReportConflict(const psrActionTable_t *tbl, const psrGrammar_t *gram
 										break;
 								case PARSER_ACCEPT:
 										AR_AppendFormatString(str,L"Accept ");
-										//Parser_PrintLRItemName(&action->item,grammar);
+										/*Parser_PrintLRItemName(&action->item,grammar);*/
 										break;
 								default:
 										AR_ASSERT(false);
@@ -848,6 +848,7 @@ const psrStatusView_t*		Parser_CreateParserStatusView(const parser_t *parser)
 		psrSymbMap_t	first, follow;
 		arString_t		*str;
 		psrSymbolMapView_t		first_view, follow_view, left_recu, left_factor;
+		const psrSymbList_t		*symb_list;
 		psrStatusView_t	*ret;
 		size_t i;
 		
@@ -859,6 +860,8 @@ const psrStatusView_t*		Parser_CreateParserStatusView(const parser_t *parser)
 		AR_memset(&left_recu, 0, sizeof(left_recu));
 		AR_memset(&left_factor, 0, sizeof(left_factor));
 
+		symb_list = Parser_GetSymbList(parser->grammar);
+
 		ret = NULL;
 
 		Parser_InitSymbMap(&first);
@@ -869,10 +872,10 @@ const psrStatusView_t*		Parser_CreateParserStatusView(const parser_t *parser)
 
 		str = AR_CreateString();
 
-		for(i = 0; i < parser->grammar->symb_list.count; ++i)
+		for(i = 0; i < symb_list->count; ++i)
 		{
 				const psrMapRec_t		*rec;
-				const psrSymb_t	*symb = parser->grammar->symb_list.lst[i];
+				const psrSymb_t	*symb = symb_list->lst[i];
 				
 				rec = Parser_GetSymbolFromSymbMap(&first, symb);
 				
@@ -887,10 +890,10 @@ const psrStatusView_t*		Parser_CreateParserStatusView(const parser_t *parser)
 		}
 
 
-		for(i = 0; i < parser->grammar->symb_list.count; ++i)
+		for(i = 0; i < symb_list->count; ++i)
 		{
 				const psrMapRec_t		*rec;
-				const psrSymb_t	*symb = parser->grammar->symb_list.lst[i];
+				const psrSymb_t	*symb = symb_list->lst[i];
 				
 				if(symb->type == PARSER_NONTERM)
 				{
