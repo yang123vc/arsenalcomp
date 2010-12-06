@@ -20,6 +20,119 @@ AR_NAMESPACE_BEGIN
 /*****************************************************cmp********************************************************************/
 
 
+char*			AR_strupr(char *s)
+{
+		char *r = s;
+		AR_ASSERT(s != NULL);
+		while(*s)
+		{
+				*s = (char)AR_toupper(*s);
+				++s;
+		}
+		return r;
+
+}
+
+char*			AR_strlwr(char *s)
+{
+		char *r = s;
+		AR_ASSERT(s != NULL);
+		while(*s)
+		{
+				*s = (char)AR_tolower(*s);
+				++s;
+		}
+		return r;
+}
+
+char*	AR_strnlwr(char *s, size_t count)
+{
+		size_t i;
+		AR_ASSERT(s != NULL);
+
+		for(i = 0; i < count && s[i] != '\0'; ++i)
+		{
+				s[i] = (char)AR_tolower(s[i]);
+		}
+
+		return s;
+}
+
+
+
+
+char*	AR_strnupr(char *s, size_t count)
+{
+		size_t i;
+		AR_ASSERT(s != NULL);
+
+		for(i = 0; i < count && s[i] != '\0'; ++i)
+		{
+				s[i] = (char)AR_toupper(s[i]);
+		}
+
+		return s;
+}
+
+
+wchar_t*			AR_wcsupr(wchar_t *s)
+{
+		wchar_t *r = s;
+		AR_ASSERT(s != NULL);
+		while(*s)
+		{
+				*s = AR_towupper(*s);
+				++s;
+		}
+		return r;
+}
+
+wchar_t*			AR_wcslwr(wchar_t *s)
+{
+		wchar_t *r = s;
+		AR_ASSERT(s != NULL);
+		while(*s)
+		{
+				*s = AR_towlower(*s);
+				s++;
+		}
+		return r;
+}
+
+
+wchar_t* AR_wcsnlwr(wchar_t *s, size_t count)
+{
+		size_t i;
+		AR_ASSERT(s != NULL);
+
+		for(i = 0; i < count && s[i] != L'\0'; ++i)
+		{
+				s[i] = AR_towlower(s[i]);
+		}
+
+		return s;
+}
+
+
+
+
+wchar_t* AR_wcsnupr(wchar_t *s, size_t count)
+{
+		size_t i;
+		AR_ASSERT(s != NULL);
+
+		for(i = 0; i < count && s[i] != L'\0'; ++i)
+		{
+				s[i] = AR_towupper(s[i]);
+		}
+
+		return s;
+}
+
+
+
+
+
 int_t	AR_stricmp(const char *l, const char *r)
 {
 		int_t ret;
@@ -212,7 +325,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 				{
 						switch (*fmt)
 						{
-								//强制ANSI
+								/*强制ANSI*/
 						case L'h':
 								modifier |= __MODIFIER_ANSI;
 								fmt++;
@@ -221,7 +334,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 								modifier |= __MODIFIER_UNICODE;
 								fmt++;
 								break;
-								//无用
+								/*无用*/
 						case L'F':
 						case L'N':
 						case L'L':
@@ -512,30 +625,30 @@ int_t AR_wchartodigit(wchar_t ch)
 		}
 
 		
-		DIGIT_RANGE_TEST(0x0030)			// 0030;DIGIT ZERO
-		if (ch < 0xFF10)					// FF10;FULLWIDTH DIGIT ZERO
+		DIGIT_RANGE_TEST(0x0030)			/* 0030;DIGIT ZERO*/
+		if (ch < 0xFF10)					/* FF10;FULLWIDTH DIGIT ZERO*/
 		{
-				DIGIT_RANGE_TEST(0x0660)    // 0660;ARABIC-INDIC DIGIT ZERO
-				DIGIT_RANGE_TEST(0x06F0)    // 06F0;EXTENDED ARABIC-INDIC DIGIT ZERO
-				DIGIT_RANGE_TEST(0x0966)    // 0966;DEVANAGARI DIGIT ZERO
-				DIGIT_RANGE_TEST(0x09E6)    // 09E6;BENGALI DIGIT ZERO
-				DIGIT_RANGE_TEST(0x0A66)    // 0A66;GURMUKHI DIGIT ZERO
-				DIGIT_RANGE_TEST(0x0AE6)    // 0AE6;GUJARATI DIGIT ZERO
-				DIGIT_RANGE_TEST(0x0B66)    // 0B66;ORIYA DIGIT ZERO
-				DIGIT_RANGE_TEST(0x0C66)    // 0C66;TELUGU DIGIT ZERO
-				DIGIT_RANGE_TEST(0x0CE6)    // 0CE6;KANNADA DIGIT ZERO
-				DIGIT_RANGE_TEST(0x0D66)    // 0D66;MALAYALAM DIGIT ZERO
-				DIGIT_RANGE_TEST(0x0E50)    // 0E50;THAI DIGIT ZERO
-				DIGIT_RANGE_TEST(0x0ED0)    // 0ED0;LAO DIGIT ZERO
-				DIGIT_RANGE_TEST(0x0F20)    // 0F20;TIBETAN DIGIT ZERO
-				DIGIT_RANGE_TEST(0x1040)    // 1040;MYANMAR DIGIT ZERO
-				DIGIT_RANGE_TEST(0x17E0)    // 17E0;KHMER DIGIT ZERO
-				DIGIT_RANGE_TEST(0x1810)    // 1810;MONGOLIAN DIGIT ZERO
+				DIGIT_RANGE_TEST(0x0660)    /* 0660;ARABIC-INDIC DIGIT ZERO*/
+				DIGIT_RANGE_TEST(0x06F0)    /* 06F0;EXTENDED ARABIC-INDIC DIGIT ZERO*/
+				DIGIT_RANGE_TEST(0x0966)    /* 0966;DEVANAGARI DIGIT ZERO*/
+				DIGIT_RANGE_TEST(0x09E6)    /* 09E6;BENGALI DIGIT ZERO*/
+				DIGIT_RANGE_TEST(0x0A66)    /* 0A66;GURMUKHI DIGIT ZERO*/
+				DIGIT_RANGE_TEST(0x0AE6)    /* 0AE6;GUJARATI DIGIT ZERO*/
+				DIGIT_RANGE_TEST(0x0B66)    /* 0B66;ORIYA DIGIT ZERO*/
+				DIGIT_RANGE_TEST(0x0C66)    /* 0C66;TELUGU DIGIT ZERO*/
+				DIGIT_RANGE_TEST(0x0CE6)    /* 0CE6;KANNADA DIGIT ZERO*/
+				DIGIT_RANGE_TEST(0x0D66)    /* 0D66;MALAYALAM DIGIT ZERO*/
+				DIGIT_RANGE_TEST(0x0E50)    /* 0E50;THAI DIGIT ZERO*/
+				DIGIT_RANGE_TEST(0x0ED0)    /* 0ED0;LAO DIGIT ZERO*/
+				DIGIT_RANGE_TEST(0x0F20)    /* 0F20;TIBETAN DIGIT ZERO*/
+				DIGIT_RANGE_TEST(0x1040)    /* 1040;MYANMAR DIGIT ZERO*/
+				DIGIT_RANGE_TEST(0x17E0)    /* 17E0;KHMER DIGIT ZERO*/
+				DIGIT_RANGE_TEST(0x1810)    /* 1810;MONGOLIAN DIGIT ZERO*/
 				
 				return -1;
 		}
 		
-		if (ch < 0xFF10 + 10)// FF10;FULLWIDTH DIGIT ZERO
+		if (ch < 0xFF10 + 10)/* FF10;FULLWIDTH DIGIT ZERO*/
 		{
 				return ch - 0xFF10;
 		}
@@ -630,7 +743,7 @@ wchar_t*	AR_wcstrim_right_space(wchar_t *in)
 		p = in;
 		while(*p != L'\0')
 		{
-				//if(AR_wcschr(trim, *p) == NULL)
+				/*if(AR_wcschr(trim, *p) == NULL)*/
 				if(AR_iswspace(*p) == 0)
 				{
 						plast = NULL;
@@ -796,7 +909,7 @@ int_t			AR_i64tow_buf(wchar_t *out, size_t nbuf, int_64_t num, size_t radix)
 		wchar_t buf[__BUFFER_LEN];
 		wchar_t *p;
 		int_t len;
-		//static const wchar_t* __tbl = L"0123456789ABCDEF";
+		/*static const wchar_t* __tbl = L"0123456789ABCDEF";*/
 		static const wchar_t* __tbl = L"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		AR_ASSERT(radix >= 2 && radix <= 36);
 		is_neg = false;
@@ -1029,7 +1142,7 @@ static const wchar_t* __wtou64_s(const wchar_t *in, const wchar_t *end, uint_64_
 				int_t tmp;
 				if((tmp = AR_wchartodigit(*p)) != -1)
 				{
-						//tmp = (*p - L'0');
+						/*tmp = (*p - L'0');*/
 				}else if(*p >= L'A' && *p <= L'Z')
 				{
 						tmp = ((*p - L'A') + 10);
@@ -1143,7 +1256,7 @@ static const wchar_t* __wtou32_s(const wchar_t *in, const wchar_t *end, uint_32_
 				int_t tmp;
 				if((tmp = AR_wchartodigit(*p)) != -1)
 				{
-						//tmp = (*p - L'0');
+						/*tmp = (*p - L'0');*/
 				}else if(*p >= L'A' && *p <= L'Z')
 				{
 						tmp = ((*p - L'A') + 10);

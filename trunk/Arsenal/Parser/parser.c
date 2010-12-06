@@ -549,7 +549,7 @@ static void __handle_reduce(psrContext_t *parser_context, const psrAction_t *act
 		
 		AR_ASSERT(parser_context != NULL && action != NULL && action->type == PARSER_REDUCE);
 
-		rule = Parser_GetRuleOfGrammar(Parser_GetGrammar(parser_context->parser), action->rule_num);
+		rule = Parser_GetRuleFromGrammar(Parser_GetGrammar(parser_context->parser), action->rule_num);
 		
 
 		if(action->reduce_count > 0)

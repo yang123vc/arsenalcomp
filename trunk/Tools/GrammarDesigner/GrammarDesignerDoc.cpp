@@ -615,7 +615,7 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 				}
 
 				
-				if(has_start_rule || !ARSpace::Parser_SetFirstRule(grammar, cfg->start.start_rule))
+				if(has_start_rule || !ARSpace::Parser_SetStartRule(grammar, cfg->start.start_rule))
 				{
 						has_error = true;
 						CString msg;

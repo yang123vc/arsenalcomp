@@ -43,7 +43,7 @@ const psrSymb_t*		Parser_CreateSymb(const wchar_t *name, psrSymbType_t t)
 #if defined(AR_DEBUG)
 static void __trace_symb_refcount(const psrSymb_t *symb)
 {
-		if(symb == PARSER_StartSymb)//Parser_CompSymb(PARSER_EOISymb, symb) == 0)
+		if(symb == PARSER_StartSymb)/*Parser_CompSymb(PARSER_EOISymb, symb) == 0)*/
 		{
 
 				int x;
@@ -216,7 +216,7 @@ void	Parser_InsertToSymbList(psrSymbList_t *symb_lst, const psrSymb_t *symb)
 		
 		if(symb_lst->count == symb_lst->cap)
 		{
-				symb_lst->cap = (symb_lst->cap + 4)*2;
+				symb_lst->cap = symb_lst->cap + 2;
 				symb_lst->lst = (const psrSymb_t**)AR_REALLOC(const psrSymb_t*, (psrSymb_t**)symb_lst->lst, symb_lst->cap);
 		}
 		symb_lst->lst[symb_lst->count++] = symb;
@@ -340,7 +340,6 @@ bool_t				Parser_InsertToSymbList_Unique(psrSymbList_t *symb_lst, const psrSymb_
 
 		Parser_InsertToSymbList(symb_lst, symb);
 		return true;
-
 
 }
 

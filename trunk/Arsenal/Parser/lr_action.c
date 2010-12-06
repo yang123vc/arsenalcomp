@@ -208,7 +208,17 @@ void					Parser_DestroyActionTable(const psrActionTable_t *table)
 
 
 
-static const psrAction_t error_action = {PARSER_ERROR, NULL, 0, 0, 0, 0,0};
+static const psrAction_t error_action = 
+{
+		PARSER_ERROR,	/*type*/
+		0,				/*rule_num*/
+		0,				/*prec*/
+		0,				/*delim*/
+
+		0,				/*shift_to*/
+		0,				/*reduce_count*/
+		NULL			/*next*/		
+};
 
 const psrAction_t	* const PARSER_ErrorAction = &error_action;
 
@@ -392,8 +402,13 @@ psrActionTable_t* __create_action_table(const psrGrammar_t *grammar, psrLRItemTy
 						action = &state->actions[k];
 
 						config = action->config;
-						rule = action->config->rule;
+						
+						/*rule = action->config->rule;
 						rule_num = Parser_IndexOfGrammar(grammar, rule);
+						*/
+						rule_num = action->config->rule_num;
+						rule = Parser_GetRuleFromGrammar(grammar, action->config->rule_num);
+
 						body = Parser_IndexOfSymbList(&rule->body, config->delim);
 
 						

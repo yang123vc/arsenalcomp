@@ -52,8 +52,8 @@ void					Parser_CopyConfigList(lalrConfigList_t *l, const lalrConfigList_t *r);
 void					Parser_SortConfigList(lalrConfigList_t *l);
 int_t					Parser_CompConfigList(const lalrConfigList_t *l, const lalrConfigList_t *r);
 
-lalrConfig_t*			Parser_FindFromConfigList(lalrConfigList_t *lst, const psrRule_t *rule, size_t delim);
-lalrConfig_t*			Parser_InsertToConfigListByValue(lalrConfigList_t *lst, const psrRule_t *rule, size_t delim);
+lalrConfig_t*			Parser_FindFromConfigList(lalrConfigList_t *lst, size_t rule_num, size_t delim);
+lalrConfig_t*			Parser_InsertToConfigListByValue(lalrConfigList_t *lst, size_t rule_num, size_t delim);
 
 /******************************************************************************************************/
 
@@ -62,18 +62,21 @@ lalrConfig_t*			Parser_InsertToConfigListByValue(lalrConfigList_t *lst, const ps
 
 struct __lalr_config_tag
 {
-		const psrRule_t			*rule;
-		size_t					delim;
+		size_t					delim			:		8;
+		size_t					rule_num		:		14;
+
+		bool_t					is_completed	;
 
 /******************************************/
 		psrSymbList_t			follow_set;
 		lalrConfigList_t		*forward;
 		lalrConfigList_t		*backward;
 /******************************************/
-		bool_t					is_completed;
 };
 
-void	Parser_InitConfig(lalrConfig_t *config, const psrRule_t *rule, size_t delim);
+
+
+void	Parser_InitConfig(lalrConfig_t *config, size_t rule_num, size_t delim);
 void	Parser_UnInitConfig(lalrConfig_t *config);
 int_t	Parser_CompConfig(const lalrConfig_t *l, const lalrConfig_t *r);
 
@@ -114,8 +117,8 @@ struct __lalr_action_tag
 
 struct __lalr_state_tag
 {
-		lalrConfigList_t		*basis;
-		lalrConfigList_t		*all_config;
+		lalrConfigList_t		*basis;			/*核心项集*/
+		lalrConfigList_t		*all_config;	/*closure项集*/
 
 		lalrAction_t			*actions;
 		size_t					count;

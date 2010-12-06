@@ -141,14 +141,14 @@ void	TGU_UnInitParser()
 
 
 
-tguParser_t*	TGU_CreateParser(tguReport_t	*report)
+tguParser_t*			TGU_CreateParser(tguReport_t	*report, const tguBlock_t		*build_in_block)
 {
 		tguParser_t		*ret;
-		AR_ASSERT(report != NULL && report->report_func);
+		AR_ASSERT(report != NULL && report->report_func /*&& build_in_block*/);
 
 		ret = AR_NEW0(tguParser_t);
 		ret->report = *report;
-		
+		ret->build_in = build_in_block;
 		ret->match = __build_match();
 		ret->parser_context = __build_parser_context((void*)ret);
 
@@ -161,7 +161,7 @@ void			TGU_DestroyParser(tguParser_t	*parser)
 		
 		__release_match(parser->match);
 		__release_parser_context(parser->parser_context);
-
+		
 		AR_DEL(parser);
 }
 
@@ -224,7 +224,7 @@ tguSyntaxTree_t*	TGU_ParseCode(tguParser_t	*parser, const wchar_t *sources_name,
 		Lex_ResetInput(parser->match, code);
 		Parser_Clear(parser->parser_context);
 
-		result = TGU_CreateSyntaxTree(sources_name);
+		result = TGU_CreateSyntaxTree(sources_name, parser->build_in);
 		parser->result = result;
 		parser->top_block = result->global_block;
 		parser->current_function = NULL;
@@ -247,7 +247,9 @@ tguSyntaxTree_t*	TGU_ParseCode(tguParser_t	*parser, const wchar_t *sources_name,
 				}else
 				{
 						PARSER_TOTERMTOK(&token, &psrtok);
+
 						is_ok = Parser_AddToken(parser->parser_context, &psrtok);
+
 						if(is_ok && token.value == PARSER_EOI_TOKVAL)break;
 				}
 
@@ -258,6 +260,9 @@ tguSyntaxTree_t*	TGU_ParseCode(tguParser_t	*parser, const wchar_t *sources_name,
 		{
 				TGU_DestroySyntaxTree(result);
 				result = NULL;
+		}else
+		{
+
 		}
 
 		return result;

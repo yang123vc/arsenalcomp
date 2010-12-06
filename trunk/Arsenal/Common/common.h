@@ -308,6 +308,12 @@ int_t			AR_wcsnicmp(const wchar_t *l, const wchar_t *r, size_t n);
 #define AR_isgraph(_c)			isgraph((_c))
 #define AR_isprint(_c)			isprint((_c))
 
+char*			AR_strupr(char *s);
+char*			AR_strlwr(char *s);
+char*			AR_strnlwr(char *s, size_t count);
+char*			AR_strnupr(char *s, size_t count);
+
+
 const char*		AR_stristr(const char *s, const char *p);
 
 
@@ -326,6 +332,12 @@ const char*		AR_stristr(const char *s, const char *p);
 #define AR_iswspace(_c)			iswspace((_c))
 #define AR_iswgraph(_c)			iswgraph((_c))
 #define AR_iswprint(_c)			iswprint((_c))
+
+
+wchar_t*			AR_wcsupr(wchar_t *s);
+wchar_t*			AR_wcslwr(wchar_t *s);
+wchar_t*			AR_wcsnlwr(wchar_t *s, size_t count);
+wchar_t*			AR_wcsnupr(wchar_t *s, size_t count);
 
 const wchar_t*		AR_wcsistr(const wchar_t *s, const wchar_t *p);
 

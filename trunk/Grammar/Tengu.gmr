@@ -42,10 +42,9 @@ static psrHandler_t		__def_handler_ctx =
 		tgu_free,
 \};
 
-
-
-
 };
+
+
 
 %code params{
 
@@ -400,7 +399,7 @@ program			:	translation_unit			%action	on_translation_unit
 					parser->current_function = NULL;
 					AR_ASSERT(result != NULL);
 
-					result->error_sources = parser->has_error;
+					result->has_error= parser->has_error;
 					
 					return (psrNode_t*)result;
 
@@ -894,8 +893,6 @@ compound_statement		:	start_block	compound_element_list		"}"		%action	on_compoun
 					AR_ASSERT(nodes != NULL && (count == 2));
 					cb = pop_block(parser);
 						
-					/*至少存在一个声明或者逻辑才有可能执行到此*/
-					AR_ASSERT(cb->vars != NULL || cb->statement_list != NULL);
 						
 					stmt = make_compound_stmt(parser, cb, &ns[0]->token->lex_info,&ns[1]->token->lex_info);
 					ret = __create_synnode(TGU_NODE_STMT_T, (void*)stmt);
@@ -903,7 +900,7 @@ compound_statement		:	start_block	compound_element_list		"}"		%action	on_compoun
 				}
 
 				|	start_block  	error  				"}"		%action	on_compound_error_statement
-					{
+				{
 						tguParser_t 	*parser = (tguParser_t*)ctx;
 						/*tguSynNode_t	**ns = (tguSynNode_t**)nodes;*/
 						tguBlock_t		*cb = NULL;
@@ -914,7 +911,7 @@ compound_statement		:	start_block	compound_element_list		"}"		%action	on_compoun
 
 						TGU_DestroyBlock(cb);
 						return NULL;
-					}
+				}
 
 				|	"{" 								"}"		%action	on_empty_compound_statement
 				{
@@ -981,7 +978,7 @@ compound_element_list		:	compound_element_list		compound_element	%action	auto_re
 
 
 compound_element		:	statement		%action	on_compound_element
-				|	declaration	%action	on_compound_element
+				|	declaration		%action	on_compound_element
 				{
 						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
 						tguParser_t	*parser = (tguParser_t*)ctx;
@@ -1849,10 +1846,10 @@ primary_expression	:	"(" expression")"							%action	on_lp_rp_expression
 				}
 
 				|	FLOAT_NUMBER			%action	on_constant_expression
-				|	INT_NUMBER				%action	on_constant_expression
+				|	INT_NUMBER			%action	on_constant_expression
 				|	STRING				%action	on_constant_expression
 				|	"true"				%action	on_constant_expression
-				|	"false"				%action	on_constant_expression
+				|	"false"			%action	on_constant_expression
 				|	"null"				%action	on_constant_expression
 				{
 						tguSynNode_t	**ns = (tguSynNode_t**)nodes;

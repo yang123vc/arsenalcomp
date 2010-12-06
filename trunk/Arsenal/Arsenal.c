@@ -49,6 +49,7 @@ void	Arsenal_UnInit()
 				Parser_UnInit();
 				Lex_UnInit();
 				AR_UnInit();
+				__g_is_initialized = false;
 		}
 }
 

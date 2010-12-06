@@ -419,7 +419,7 @@ static void CFG_InitConfig(cfgConfig_t *cfg, cfgNodeList_t *name, cfgNodeList_t 
 
 		if(name)
 		{
-				//cfg->name_cnt = name->count;
+				/*cfg->name_cnt = name->count;*/
 				cfg->name = name->count > 0 ? AR_NEWARR0(cfgName_t, name->count) : NULL;
 
 				for(i = 0; i < name->count; ++i)
@@ -1085,7 +1085,7 @@ static psrNode_t*		AR_STDCALL __handle_rhs(psrNode_t **nodes, size_t count, cons
 		res->rule.action_name = NULL;
 		res->rule.action_ins = NULL;
 
-		//AR_ASSERT(ns[0] && ns[0]->type == CFG_NODE_LIST_T && ns[0]->lst.count > 0);
+		/*AR_ASSERT(ns[0] && ns[0]->type == CFG_NODE_LIST_T && ns[0]->lst.count > 0);*/
 		AR_ASSERT(ns[0]);
 		AR_ASSERT(ns[1] ? ns[1]->type == CFG_LEXEME_T : true);
 		AR_ASSERT(ns[2] ? ns[2]->type == CFG_NODE_LIST_T : true);
@@ -1859,7 +1859,7 @@ static psrGrammar_t*	__build_grammar(psrHandler_t *handler, arIOCtx_t *io)
 
 		}
 
-		if(!Parser_SetFirstRule(gmr, L"program"))
+		if(!Parser_SetStartRule(gmr, L"program"))
 		{
 				AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
 				return NULL;
@@ -2324,7 +2324,7 @@ L"						AR_ASSERT(false);																																	\n"
 L"						return NULL;																																		\n"
 L"				}																																							\n"
 L"		}																																									\n"
-L"		if(!Parser_SetFirstRule(grammar,START_RULE) || !Parser_CheckIsValidGrammar(grammar))																						\n"
+L"		if(!Parser_SetStartRule(grammar,START_RULE) || !Parser_CheckIsValidGrammar(grammar))																						\n"
 L"		{																																									\n"
 L"				Parser_DestroyGrammar(grammar);																																\n"
 L"				grammar = NULL;																																				\n"
@@ -2590,7 +2590,7 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 				AR_AppendString(code, CFG_TERM_DEF_BEGIN);
 				AR_AppendString(code, L"\n");
 
-				//#define CFG_TERM_DEF_ITEM	L"{/*name*/L\"%ls\", /*token value*/%d, /*lex_prec*/%d, /*regex*/L\"%ls\", /*is_skip*/L\"%ls\"}"
+				
 
 				for(i = 0; i < cfg->tok_cnt; ++i)
 				{
@@ -2637,7 +2637,7 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 				AR_AppendString(code, CFG_PREC_DEF_BEGIN);
 				AR_AppendString(code, L"\n");
 
-				//#define CFG_TERM_DEF_ITEM	L"{/*name*/L\"%ls\", /*token value*/%d, /*lex_prec*/%d, /*regex*/L\"%ls\", /*is_skip*/L\"%ls\"}"
+				
 
 				for(i = 0; i < cfg->prec_cnt; ++i)
 				{

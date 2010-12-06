@@ -70,7 +70,9 @@ void gen_code_test();
 
 extern void calc2_test();
 
-void ds_test();
+extern void ds_test();
+
+extern void	Tengu_Test();
 
 #endif
 
@@ -135,7 +137,7 @@ void AR_Test()
 
 		//sn_test();
 
-		//gen_code_test();
+		gen_code_test();
 
 		//perf_test();
 
@@ -144,6 +146,8 @@ void AR_Test()
 		//calc2_test();
 
 		//ds_test();
+
+		//Tengu_Test();
 		getchar();
 #else
 		AR_printf(L"dll version\r\n");

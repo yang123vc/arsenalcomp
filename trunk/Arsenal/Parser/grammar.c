@@ -95,6 +95,12 @@ psrTermInfo_t*	Parser_FindTermByValue(psrTermInfoList_t	*lst, size_t val)
 }
 
 
+psrTermInfo_t*	Parser_GetTermByIndex(psrTermInfoList_t	*lst, size_t index)
+{
+		AR_ASSERT(lst != NULL && index < lst->count);
+		return &lst->lst[index];
+}
+
 bool_t			Parser_InsertToTermInfoList(psrTermInfoList_t	*lst, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f)
 {
 		psrTermInfo_t *info;
@@ -486,10 +492,9 @@ bool_t					Parser_InsertTerm(psrGrammar_t *grammar, const wchar_t *name, size_t 
 				return false;
 		}
 
-
+		
 		if(Parser_FindTermByName(&grammar->term_list, name) != NULL)
 		{
-				/*AR_error( L"Grammar Error : duplicate name : %ls definition\r\n", name);*/
 				AR_printf_ctx(&grammar->io_ctx, L"Grammar Error : duplicate name : \"%ls\" definition\r\n", name);
 				return false;
 		}
@@ -499,6 +504,13 @@ bool_t					Parser_InsertTerm(psrGrammar_t *grammar, const wchar_t *name, size_t 
 				/*AR_error(AR_GRAMMAR, L"Grammar Error : duplicate token value : %d definition\r\n", val);*/
 				/*AR_error(L"Grammar Error : duplicate token value : %" AR_PLAT_INT_FMT L"d definition\r\n", (size_t)val);*/
 				AR_printf_ctx(&grammar->io_ctx, L"Grammar Error : duplicate token value : %" AR_PLAT_INT_FMT L"d definition\r\n", (size_t)val);
+				return false;
+		}
+
+
+		if(Parser_GetSymbFromGrammarByName(grammar, name) != NULL)
+		{
+				AR_printf_ctx(&grammar->io_ctx, L"Grammar Error : duplicate symbol name : \"%ls\" definition\r\n", name);
 				return false;
 		}
 		
@@ -521,6 +533,25 @@ bool_t					Parser_InsertRule(psrGrammar_t *grammar, psrRule_t *rule)
 				AR_printf_ctx(&grammar->io_ctx, L"Grammar Error : Non-term token %ls was reserved\r\n", rule->head->name);
 				return false;
 		}
+
+
+		for(i = 0; i < rule->body.count; ++i)
+		{
+				const psrSymb_t *l = rule->body.lst[i];
+				const psrSymb_t *r = Parser_GetSymbFromGrammarByName(grammar, l->name);
+
+				if(r != NULL && Parser_CompSymb(l, r) != 0)
+				{
+						AR_printf_ctx(&grammar->io_ctx, L"Grammar Error : duplicate symbol name : \"%ls\" definition\r\n", l->name);
+						return false;
+				}
+		}
+
+		
+
+		
+		
+
 		
 		if(grammar->count == 1)
 		{
@@ -576,6 +607,13 @@ int_t					Parser_IndexOfGrammar(const psrGrammar_t *grammar, const psrRule_t *ru
 		return -1;
 }
 
+
+const psrTermInfoList_t*		Parser_GetTermList(const psrGrammar_t *grammar)
+{
+		AR_ASSERT(grammar != NULL);
+		return &grammar->term_list;
+}
+
 const psrSymbList_t* Parser_GetSymbList(const psrGrammar_t *grammar)
 {
 		psrSymbList_t *lst;
@@ -615,7 +653,44 @@ const psrSymbList_t* Parser_GetSymbList(const psrGrammar_t *grammar)
 		return lst;
 }
 
+const psrSymb_t*		Parser_GetSymbFromGrammarByName(const psrGrammar_t *grammar, const wchar_t *name)
+{
+		
+		size_t i,k;
+		AR_ASSERT(grammar != NULL && name != NULL);
+		
+		
+		for(i = 0; i < grammar->term_list.count; ++i)
+		{
+				const psrSymb_t *term = grammar->term_list.lst[i].term;
+				if(AR_wcscmp(term->name, name) == 0)
+				{
+						return term;
+				}
+		}
 
+		for(i = 0; i < grammar->count; ++i)
+		{
+				
+				const psrRule_t	*rule = grammar->rules[i];
+				const psrSymb_t *symb = rule->head;
+
+				if(AR_wcscmp(symb->name, name) == 0)
+				{
+						return symb;
+				}
+
+				for(k = 0; k < rule->body.count; ++k)
+				{
+						symb = rule->body.lst[k];
+						if(AR_wcscmp(symb->name, name) == 0)
+						{
+								return symb;
+						}
+				}
+		}
+		return NULL;
+}
 
 
 
@@ -718,11 +793,12 @@ bool_t			Parser_CheckIsValidGrammar(const psrGrammar_t *grammar)
 
 const psrRule_t*		Parser_GetStartRule(const psrGrammar_t *grammar)
 {
+		AR_ASSERT(grammar != NULL && grammar->count > 0);
 		return grammar->rules[0];
 }
 
 
-bool_t					Parser_SetFirstRule(psrGrammar_t *grammar, const wchar_t *rule_name)
+bool_t					Parser_SetStartRule(psrGrammar_t *grammar, const wchar_t *rule_name)
 {
 		psrRule_t *start = grammar->rules[0];
 		const psrSymb_t *lhs = NULL;
@@ -971,7 +1047,7 @@ void					Parser_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *follow_
 								const psrSymb_t *key;
 								size_t next_idx;
 								key = rule->body.lst[k];
-								/*非终结符无follow-set*/
+								/*终结符无follow-set*/
 								if(key->type == PARSER_TERM)continue;
 
 								next_idx = k + 1;
