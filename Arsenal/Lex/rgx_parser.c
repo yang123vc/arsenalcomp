@@ -526,7 +526,7 @@ RECHECK:
 								new_expr->non_greedy = non_greedy;
 
 								max_node = RGX_CreateNode(RGX_FIXCOUNT_T);
-								max_node->fix_count = max - min;
+								max_node->fix_count = max - min;/*a{3,5}则此处为5-3 == 2*/
 								max_node->left = new_expr;
 						}
 						
