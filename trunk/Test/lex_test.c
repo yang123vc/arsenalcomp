@@ -1,5 +1,6 @@
 #include "test.h"
 #include "../Arsenal/Lex/lex.h"
+#include "../Arsenal/Lex/rgx.h"
 
 
 
@@ -467,8 +468,84 @@ void trans_char_test()
 #endif
 
 
+void rgx_compile_test(rgxNode_t *node)
+{
+		rgxProg_t		prog;
+		arString_t		*out;
+		AR_ASSERT(node != NULL);
+		
+		out = AR_CreateString();
+		RGX_InitProg(&prog);
 
-void lex_skip_test()
+		RGX_Compile(&prog, node);
+		
+		RGX_ProgToString(&prog, out);
+
+		AR_printf(L"%ls\r\n", AR_GetStrString(out));
+
+
+		AR_DestroyString(out);
+		RGX_UnInitProg(&prog);
+}
+
+
+
+void rgx_test_loop()
+{
+		rgxNameSet_t	set;
+		rgxResult_t		result;
+		arString_t		*out;
+
+		RGX_InitNameSet(&set);
+		out = AR_CreateString();
+		
+		while(true)
+		{
+				wchar_t buf[1024];
+				_getws(buf);
+
+				if(AR_wcscmp(buf, L"quit") == 0)break;
+
+				result = RGX_ParseExpr(buf, &set);
+
+				if(result.node)
+				{
+						rgxNode_t *cat, *final;
+						
+						final = RGX_CreateNode(RGX_FINAL_T);
+						final->final_val = 21;
+						cat = RGX_CreateNode(RGX_CAT_T);
+						
+						RGX_InsertToNode(cat, result.node);
+						RGX_InsertToNode(cat, final);
+						result.node = NULL;
+
+						AR_ClearString(out);
+						RGX_ToString(cat, out);
+						AR_printf(L"%ls\r\n", AR_GetStrString(out));
+
+						rgx_compile_test(cat);
+
+						RGX_DestroyNode(cat);
+				}else
+				{
+						AR_printf(L"error position == %ls\r\n", result.err.pos);
+				}
+		}
+
+		
+
+		AR_DestroyString(out);
+		RGX_UnInitNameSet(&set);
+
+}
+
+
+
+
+
+
+void lex_test_loop()
 {
 		lexMatch_t		*match;
 		lex_t			*lex;
@@ -479,17 +556,93 @@ void lex_skip_test()
 		act.is_skip = false;
 		act.priority = 0;
 		act.value = 200;
-		AR_ASSERT(Lex_InsertRule(lex, L"(//[^\\n\\r]*\\r?\\n)|(//[^\\n\\r]*$)", &act));
+		AR_ASSERT(Lex_InsertRule(lex, L"(a){3,5}", &act));
+
+		act.value = 1;
+		AR_ASSERT(Lex_InsertRule(lex, L"[ \\r\\n\\t]", &act));
+		
+		act.value = 0;
+		AR_ASSERT(Lex_InsertRule(lex, L"$", &act));
+
 		match = Lex_CreateMatch(lex, NULL);
 
-		Lex_ResetInput(match, L"//abc\r\n\r\n\r\n\r\n//def\r\n");
+		Lex_ResetInput(match, L"aaa\r\naaa\r\naaaaa\r\n");
 		
 
 		lexToken_t tok;
-		
+		bool_t is_ok = false;
 		while(Lex_Match(match, &tok))
 		{
+				if(tok.value == 0)
+				{
+						is_ok = true;
+						break;
+				}
+				wchar_t *s = AR_wcsndup(tok.str, tok.count);
+				AR_printf(L"%ls : row == %d : col == %d\r\n", s, tok.line, tok.col);
+				AR_DEL(s);
+		}
 
+		if(!is_ok)
+		{
+				AR_printf(L"%ls\r\n", L"failed\r\n");
+		}else
+		{
+				AR_printf(L"%ls\r\n", L"success\r\n");
+		}
+
+
+		Lex_DestroyMatch(match);
+		Lex_Destroy(lex);
+
+}
+
+
+
+void lex_test_loop2()
+{
+		lexMatch_t		*match;
+		lex_t			*lex;
+
+		lex = Lex_Create(NULL);
+		
+		lexAction_t act;
+		act.is_skip = false;
+		act.priority = 0;
+		act.value = 200;
+		AR_ASSERT(Lex_InsertRule(lex, L"a{3,5}?(?=(a){3,5})", &act));
+
+		act.value = 1;
+		AR_ASSERT(Lex_InsertRule(lex, L"[ \\r\\n\\t]", &act));
+		
+		act.value = 0;
+		AR_ASSERT(Lex_InsertRule(lex, L"$", &act));
+
+		match = Lex_CreateMatch(lex, NULL);
+
+		Lex_ResetInput(match, L"aaaaaa");
+		
+
+		lexToken_t tok;
+		bool_t is_ok = false;
+		while(Lex_Match(match, &tok))
+		{
+				if(tok.value == 0)
+				{
+						is_ok = true;
+						break;
+				}
+				wchar_t *s = AR_wcsndup(tok.str, tok.count);
+				AR_printf(L"%ls : row == %d : col == %d\r\n", s, tok.line, tok.col);
+				AR_DEL(s);
+		}
+
+		if(!is_ok)
+		{
+				AR_printf(L"%ls\r\n", L"failed\r\n");
+		}else
+		{
+				AR_printf(L"%ls\r\n", L"success\r\n");
 		}
 
 
@@ -503,7 +656,12 @@ void lex_skip_test()
 
 void lex_test()
 {
-		lex_skip_test();
+		
+		//lex_test_loop();
+		lex_test_loop2();
+
+		//rgx_test_loop();
+		
 		//lex_test20();
 }
 

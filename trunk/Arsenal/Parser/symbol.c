@@ -216,7 +216,7 @@ void	Parser_InsertToSymbList(psrSymbList_t *symb_lst, const psrSymb_t *symb)
 		
 		if(symb_lst->count == symb_lst->cap)
 		{
-				symb_lst->cap = symb_lst->cap + 2;
+				symb_lst->cap = symb_lst->cap + 8;
 				symb_lst->lst = (const psrSymb_t**)AR_REALLOC(const psrSymb_t*, (psrSymb_t**)symb_lst->lst, symb_lst->cap);
 		}
 		symb_lst->lst[symb_lst->count++] = symb;

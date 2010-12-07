@@ -150,6 +150,10 @@ rgxNode_t*		RGX_CreateNode(rgxNodeType_t type)
 		{
 				break;
 		}
+		case RGX_FIXCOUNT_T:
+		{
+				break;
+		}
 		default:
 		{
 				AR_CHECK(false, L"Arsenal : regex parser error %hs\r\n", AR_FUNC_NAME);
@@ -220,6 +224,7 @@ void			RGX_DestroyNode(rgxNode_t *node)
 		case RGX_STAR_T:
 		case RGX_QUEST_T:
 		case RGX_PLUS_T:
+		case RGX_FIXCOUNT_T:
 		case RGX_LOOKAHEAD_T:
 		{
 				AR_ASSERT(node->left != NULL && node->right == NULL);
@@ -505,6 +510,21 @@ void			RGX_ToString(const rgxNode_t *node, arString_t *str)
 				
 				break;
 		}
+		case RGX_FIXCOUNT_T:
+		{
+				wchar_t buf[128];
+				AR_ASSERT(node->left != NULL && node->right == NULL);
+
+				AR_AppendString(str, L"(");
+				RGX_ToString(node->left, str);
+				AR_AppendString(str, L")");
+				AR_AppendString(str, L"{");
+				AR_u64tow_buf(buf, 128, (uint_64_t)node->fix_count, 10);
+				AR_AppendString(str, buf);		
+				AR_AppendString(str, L"}");
+				break;
+		}
+				break;
 		case RGX_LOOKAHEAD_T:
 		{
 				AR_ASSERT(node->left != NULL && node->right == NULL);

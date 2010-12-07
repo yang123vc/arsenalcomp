@@ -24,7 +24,9 @@ AR_NAMESPACE_BEGIN
 /*NameSet*/
 #define	AR_RGX_MAXNAME					256
 
+/*
 #define AR_RGX_MAX_MINLOOPCOUNT			512
+*/
 
 struct __rgx_name_tag;
 typedef struct __rgx_name_tag			rgxName_t;
@@ -109,9 +111,8 @@ typedef enum
 		RGX_STAR_T,
 		RGX_QUEST_T,
 		RGX_PLUS_T,
-		
+		RGX_FIXCOUNT_T,
 		RGX_LOOKAHEAD_T,
-		
 		RGX_FINAL_T
 }rgxNodeType_t;
 
@@ -125,13 +126,14 @@ struct __rgx_node_tag
 		size_t				ref_count;
 
 		union{
-				struct {
-						wchar_t	beg;
-						wchar_t end;
-				}range;
-				bool_t					negative_lookahead;
-				bool_t					non_greedy;
-				size_t					final_val;
+		struct {
+				wchar_t	beg;
+				wchar_t end;
+		}range;
+		size_t					fix_count;
+		bool_t					negative_lookahead;
+		bool_t					non_greedy;
+		size_t					final_val;
 		};
 };
 
@@ -195,6 +197,8 @@ typedef enum
 		RGX_LINE_BEGIN_I,
 		RGX_LINE_END_I,
 		RGX_ANY_CHAR_I,
+		RGX_LOOP_BEG_I,
+		RGX_LOOP_END_I,
 		RGX_LOOKAHEAD_BEG_I,
 		RGX_LOOKAHEAD_END_I,
 		RGX_JMP_I,
@@ -211,6 +215,8 @@ static const wchar_t *RGX_INS_NAME[] =
 		L"match_line_begin",
 		L"match_line_end",
 		L"match_any_char",
+		L"loop_begin",
+		L"loop_end",
 		L"lookahead_begin",
 		L"lookahead_end",
 		L"jmp",
@@ -231,6 +237,9 @@ struct __regex_instruction_tag
 
 		union{
 				int_t			final;
+
+				size_t	fix_count;
+
 				struct {
 						wchar_t	beg;
 						wchar_t end;
@@ -239,8 +248,14 @@ struct __regex_instruction_tag
 				struct {
 						bool_t			negative;
 				}lookahead;
+				
+				
 		};
 };
+
+
+
+
 
 
 

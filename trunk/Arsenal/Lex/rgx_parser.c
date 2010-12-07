@@ -395,7 +395,7 @@ static rgxResult_t	__handle_charset(const wchar_t *input)
 		}
 }
 
-
+#if(0)
 static rgxNode_t*	__handle_loopcount(rgxNode_t *expr, size_t min, size_t max, bool_t non_greedy)
 {
 		bool_t is_infinite;
@@ -469,6 +469,92 @@ RECHECK:
 						return cat;
 				}
 
+		}
+}
+#endif
+
+
+static rgxNode_t*	__handle_loopcount(rgxNode_t *expr, size_t min, size_t max, bool_t non_greedy)
+{
+		bool_t is_infinite;
+		rgxNode_t *cat, *loop;
+		AR_ASSERT(expr != NULL && min <= max && max > 0);
+
+		is_infinite = (max == AR_SIZE_MAX ? true : false);
+RECHECK:
+		if(min < max)
+		{
+				if(min == 0)
+				{
+						if(is_infinite)
+						{
+								min = max; 
+								goto RECHECK;
+						}else
+						{
+								rgxNode_t *new_expr, *max_node;
+
+								new_expr = RGX_CreateNode(RGX_QUEST_T);
+								new_expr->left = expr;
+								new_expr->non_greedy = non_greedy;
+								
+
+								max_node = RGX_CreateNode(RGX_FIXCOUNT_T);
+								max_node->fix_count = max;
+								max_node->left = new_expr;
+								return max_node;
+						}
+				}else
+				{
+						rgxNode_t *min_node, *max_node;
+
+						min_node = RGX_CreateNode(RGX_FIXCOUNT_T);
+						min_node->fix_count = min;
+						min_node->left = RGX_CopyNode(expr);
+
+						if(is_infinite)
+						{
+								max_node = RGX_CreateNode(RGX_STAR_T);
+								max_node->left = RGX_CopyNode(expr);
+								max_node->non_greedy = non_greedy;
+
+						}else
+						{
+								rgxNode_t *new_expr;
+								new_expr = RGX_CreateNode(RGX_QUEST_T);
+								new_expr->left = RGX_CopyNode(expr);
+								new_expr->non_greedy = non_greedy;
+
+								max_node = RGX_CreateNode(RGX_FIXCOUNT_T);
+								max_node->fix_count = max - min;
+								max_node->left = new_expr;
+						}
+						
+						cat = RGX_CreateNode(RGX_CAT_T);
+						RGX_InsertToNode(cat, min_node);
+						RGX_InsertToNode(cat, max_node);
+						
+						RGX_DestroyNode(expr);
+				}
+
+				return cat;
+
+		}else/* if(min == max)*/
+		{
+
+				if(is_infinite)
+				{
+						loop = RGX_CreateNode(RGX_STAR_T);
+						loop->left = expr;
+						loop->non_greedy = non_greedy;
+						return loop;
+				}else /*if(max > 0)*/
+				{
+						loop = RGX_CreateNode(RGX_FIXCOUNT_T);
+						loop->left = expr;
+						loop->fix_count = min;
+						return loop;
+				}
 		}
 }
 
@@ -587,14 +673,7 @@ static rgxResult_t	__handle_postfix(rgxNode_t *expr, const wchar_t *input, const
 						g_res.err.pos = p; goto INVALID_POINT;
 				}
 				
-				/*
-				禁用过大的循环次数，因为会导致过多的编译时过多递归,下一版会改进执行虚拟机
-				*/
-				if((min > AR_RGX_MAX_MINLOOPCOUNT) || (max != AR_SIZE_MAX && max > AR_RGX_MAX_MINLOOPCOUNT))
-				{
-						g_res.err.pos = p; 
-						goto INVALID_POINT;
-				}
+
 				
 				
 				++beg;
