@@ -139,7 +139,7 @@ int_t	AR_stricmp(const char *l, const char *r)
 		AR_ASSERT(l != NULL && r != NULL);
 
 		for(ret = 0; (ret = (AR_tolower(*l) - AR_tolower(*r))) == 0 && *l && *r; ++l, ++r);
-		
+
 		return ret;
 }
 
@@ -150,7 +150,7 @@ int_t	AR_strnicmp(const char *l, const char *r, size_t n)
 		AR_ASSERT(l != NULL && r != NULL);
 
 		for(ret = 0, i = 0; i < n && (ret = (AR_tolower(l[i]) - AR_tolower(r[i]))) == 0 && l[i] && r[i]; ++i);
-		
+
 		return ret;
 
 }
@@ -161,7 +161,7 @@ int_t	AR_wcsicmp(const wchar_t *l, const wchar_t *r)
 		AR_ASSERT(l != NULL && r != NULL);
 
 		for(ret = 0; (ret = (AR_towlower(*l) - AR_towlower(*r))) == 0 && *l && *r; ++l, ++r);
-		
+
 		return ret;
 
 }
@@ -173,7 +173,7 @@ int_t	AR_wcsnicmp(const wchar_t *l, const wchar_t *r, size_t n)
 		AR_ASSERT(l != NULL && r != NULL);
 
 		for(ret = 0, i = 0; i < n && (ret = (AR_towlower(l[i]) - AR_towlower(r[i]))) == 0 && l[i] && r[i]; ++i);
-		
+
 		return ret;
 
 }
@@ -259,7 +259,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 				{
 						const wchar_t *s; int_t w;
 						s = AR_wtoi(fmt, &w, 10);
-						
+
 						if(s != NULL)
 						{
 								fmt = s;
@@ -282,13 +282,13 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 						{
 								const wchar_t *s; int_t p;
 								s = AR_wtoi(fmt, &p, 10);
-								
+
 								if(s != NULL)
 								{
 										fmt = s;
 										prec = p;
 								}
-								
+
 								AR_ASSERT(fmt != NULL && prec >= 0);
 								if(fmt == NULL || prec < 0)return -1;
 						}
@@ -535,7 +535,7 @@ wchar_t*		AR_vtow(const wchar_t *fmt, ...)
 
 		va_start (args, fmt);
 		len = AR_vscwprintf(fmt, args);
-		
+
 		if(len < 0)
 		{
 				return NULL;
@@ -562,9 +562,9 @@ int_t			AR_vswprintf(wchar_t *dest, size_t count, const wchar_t *fmt, va_list ar
 		AR_ASSERT(dest != NULL && fmt != NULL && args != NULL);
 		res = 0;
 		AR_memcpy(&save, &args, sizeof(va_list));
-		
+
 		res = AR_VSWPRINTF(dest, count, fmt, args);
-		
+
 		va_end(save);
 
 		AR_CHECK(res >= 0, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
@@ -595,7 +595,7 @@ int_t			AR_vsprintf(char *dest, size_t count, const char *fmt, va_list args)
 		AR_ASSERT(dest != NULL && fmt != NULL && args != NULL);
 		res = 0;
 		AR_memcpy(&save, &args, sizeof(va_list));
-		
+
 		res = AR_VSPRINTF(dest, count, fmt, args);
 		va_end(save);
 
@@ -624,7 +624,7 @@ int_t AR_wchartodigit(wchar_t ch)
 				return ch - zero;       \
 		}
 
-		
+
 		DIGIT_RANGE_TEST(0x0030)			/* 0030;DIGIT ZERO*/
 		if (ch < 0xFF10)					/* FF10;FULLWIDTH DIGIT ZERO*/
 		{
@@ -644,10 +644,10 @@ int_t AR_wchartodigit(wchar_t ch)
 				DIGIT_RANGE_TEST(0x1040)    /* 1040;MYANMAR DIGIT ZERO*/
 				DIGIT_RANGE_TEST(0x17E0)    /* 17E0;KHMER DIGIT ZERO*/
 				DIGIT_RANGE_TEST(0x1810)    /* 1810;MONGOLIAN DIGIT ZERO*/
-				
+
 				return -1;
 		}
-		
+
 		if (ch < 0xFF10 + 10)/* FF10;FULLWIDTH DIGIT ZERO*/
 		{
 				return ch - 0xFF10;
@@ -862,7 +862,7 @@ wchar_t* AR_wcsndup(const wchar_t *sour, size_t len)
 		wchar_t *result;
 		size_t i;
 		AR_ASSERT(sour != NULL);
-		
+
 		result = AR_NEWARR(wchar_t, len + 1);
 		for(i = 0; i < len; ++i)result[i] = sour[i];
 		result[len] = L'\0';
@@ -1382,13 +1382,13 @@ const wchar_t* AR_wcsstr_kmp(const wchar_t *s, const wchar_t *p)
 {
 		AR_ASSERT(s != NULL && p != NULL);
 		return AR_wcsstr_kmp_s(s, s + AR_wcslen(s), p);
-		
-} 
+
+}
 
 
 const wchar_t* AR_wcsstr_kmp_s(const wchar_t *beg, const wchar_t *end, const wchar_t *p)
 {
-		
+
 		size_t i,k,m,n;
 		size_t *next;
 		const wchar_t *ret, *s;
@@ -1396,36 +1396,36 @@ const wchar_t* AR_wcsstr_kmp_s(const wchar_t *beg, const wchar_t *end, const wch
 		n = end - beg;
 		m = AR_wcslen(p);
 		if(n == 0 || m == 0)return NULL;
-		
+
 		next = AR_NEWARR0(size_t, m);
 		next[0] = 0;
-		
+
 		for(i = 1,k = 0; i < m; ++i)
 		{
 				/*
 				如果p[k]处不相等， 则证明有k个前缀相等，则所对应的真后缀为next[k-1];
-				因为改变k长度的只有下面k++一行，且只有k > 0时才有读取next数组的操作， 
-				所以k读取的永远时已经被计算好的 
+				因为改变k长度的只有下面k++一行，且只有k > 0时才有读取next数组的操作，
+				所以k读取的永远时已经被计算好的
 				*/
 				while(k > 0 && p[k] != p[i])k = next[k-1];
 				if(p[k] == p[i])k++;
 				next[i] = k;
 		}
-		
+
 		ret = NULL;
 		s = beg;
-		
+
 		for(k = 0; k < m && s != end; ++s)
 		{
 				while(k > 0 && p[k] != *s) k = next[k-1];
 				if(p[k] == *s)k++;
 		}
-		
+
 		ret = k == m ? s - m : NULL;
-		
+
 		AR_DEL(next);
 		return ret;
-} 
+}
 
 
 
