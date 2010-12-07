@@ -288,10 +288,10 @@
 				#define AR_CCALL
 		#endif
 
-		#if(OS_TYPE == OS_MAC_OS_X)				
+		#if(OS_TYPE == OS_MAC_OS_X)
 				#if(ARCH == ARCH_PPC)
 						#undef	AR_STDCALL
-						#define	AR_STDCALL								
+						#define	AR_STDCALL
 				#endif
 		#elif(OS_TYPE == OS_IPHONE)
 				#undef	AR_STDCALL
@@ -320,7 +320,7 @@
 		#define AR_BIGNUM_U64(_num)	(_num##ULL)
 
 		#define AR_INT_FMT64		L"ll"
-		
+
 		#define AR_NOOP
 
 		#define AR_FUNC_NAME			__PRETTY_FUNCTION__
@@ -467,7 +467,7 @@ typedef void*					ptr_t;
 /**************************以下均为未定义时的默认值****************************/
 
 #if !defined(CHAR_BIT)
-		#define	CHAR_BIT		8		
+		#define	CHAR_BIT		8
 #endif
 
 
@@ -505,17 +505,17 @@ typedef void*					ptr_t;
 
 #if (AR_COMPILER == AR_VC_LEGACY)
 
-		#define AR_SWPRINTF						_snwprintf
+		#define AR_SWPRINTF					_snwprintf
 		#define AR_VSPRINTF						_vsnprintf
 		#define AR_VSWPRINTF					_vsnwprintf
-		#define AR_abort						abort
+		#define AR_abort						        abort
 
 
 #elif (AR_COMPILER == AR_VC)
 
 		#define AR_SWPRINTF						_snwprintf
-		#define AR_VSPRINTF						_vsnprintf
-		#define AR_VSWPRINTF					_vsnwprintf
+		#define AR_VSPRINTF						    _vsnprintf
+		#define AR_VSWPRINTF					    _vsnwprintf
 
 		#if(OS_TYPE == OS_WINDOWS_CE)
 				#define AR_abort()				exit(3)
@@ -527,22 +527,25 @@ typedef void*					ptr_t;
 
 #elif(AR_COMPILER == AR_BCB6)
                 #define AR_SWPRINTF				_snwprintf
-				#define AR_VSPRINTF				_vsnprintf
-				#define AR_VSWPRINTF			_vsnwprintf
-                #define AR_abort	            abort
+				#define AR_VSPRINTF				    _vsnprintf
+				#define AR_VSWPRINTF			    _vsnwprintf
+                #define AR_abort	                        abort
 
 
 
 #elif(AR_COMPILER == AR_GCC3 || AR_COMPILER == AR_GCC4)
 
+
 		#if defined(OS_FAMILY_WINDOWS)
 				#define AR_SWPRINTF				_snwprintf
-				#define AR_VSPRINTF				_vsnprintf
-				#define AR_VSWPRINTF			_vsnwprintf
+				#define AR_VSWPRINTF			    _vsnwprintf
+				#define AR_VSPRINTF				    _vsnprintf
+
 		#else
-				#define AR_SWPRINTF						swprintf
-				#define AR_VSPRINTF						vsprintf
-				#define AR_VSWPRINTF					vswprintf
+				#define AR_SWPRINTF			                                        swprintf
+				#define AR_VSWPRINTF			                                        vswprintf
+				#define AR_VSPRINTF(_dest, _cnt, _fmt, _args) 				vsprintf((_dest), (_cnt), (_args))
+
 		#endif
 
 

@@ -189,6 +189,14 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../Arsenal/Tengu/tguparser.h" />
+		<Unit filename="../../../Arsenal/Tengu/tgusyntree.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Arsenal/Tengu/tgusyntree.h" />
+		<Unit filename="../../../Arsenal/Tengu/tguutility.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Arsenal/Tengu/tguutility.h" />
 		<Unit filename="../../../Arsenal/Tengu/tguvm.c">
 			<Option compilerVar="CC" />
 		</Unit>

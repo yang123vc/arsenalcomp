@@ -94,3 +94,83 @@
 	"../Lex/lex.h"
 	"../Parser/parser.h"
 
+1272883844 source:/root/Desktop/Arsenal/Prj/Test/CodeBlocks/com_test.c
+	"test.h"
+
+1264893324 /root/Desktop/Arsenal/Prj/Test/CodeBlocks/test.h
+	"../../../Arsenal/Arsenal.h"
+
+1274018938 /root/Desktop/Arsenal/Arsenal/Arsenal.h
+	"./Common/common.h"
+	"./Lex/lex.h"
+	"./Parser/parser.h"
+	"./Tengu/tengu.h"
+	"./Tools/tools.h"
+
+1291605660 /root/Desktop/Arsenal/Arsenal/Common/common.h
+	"config.h"
+
+1291725833 /root/Desktop/Arsenal/Arsenal/Common/config.h
+	"platform.h"
+	<stdlib.h>
+	<crtdbg.h>
+	<stdlib.h>
+	<stdio.h>
+	<wchar.h>
+	<stddef.h>
+	<stdarg.h>
+	<limits.h>
+	<assert.h>
+	<memory.h>
+	<string.h>
+	<math.h>
+	<wctype.h>
+	<string.h>
+	<float.h>
+	<stdint.h>
+	<stdbool.h>
+	<windows.h>
+	<unistd.h>
+	<pthread.h>
+	<sys/select.h>
+	<sys/time.h>
+	<libkern/OSAtomic.h>
+
+1288287879 /root/Desktop/Arsenal/Arsenal/Common/platform.h
+	<TargetConditionals.h>
+
+1283620289 /root/Desktop/Arsenal/Arsenal/Lex/lex.h
+	"../Common/common.h"
+
+1291625166 /root/Desktop/Arsenal/Arsenal/Parser/parser.h
+	"../Common/common.h"
+
+1283619861 /root/Desktop/Arsenal/Arsenal/Tengu/tengu.h
+	"../Common/common.h"
+	"../Lex/lex.h"
+	"../Parser/parser.h"
+
+1272590359 /root/Desktop/Arsenal/Arsenal/Tools/tools.h
+	"grammar_config.h"
+	"serializer.h"
+
+1290502149 /root/Desktop/Arsenal/Arsenal/Tools/grammar_config.h
+	"../Parser/parser.h"
+	"../Lex/lex.h"
+
+1290831007 /root/Desktop/Arsenal/Arsenal/Tools/serializer.h
+	"../Common/common.h"
+
+1289234277 source:/root/Desktop/Arsenal/Prj/Test/CodeBlocks/main.c
+	"test.h"
+	<iostream>
+	<locale.h>
+	<wchar.h>
+
+1289234277 source:/root/Desktop/Arsenal/Prj/Test/CodeBlocks/parser_test.c
+	<locale.h>
+	"test.h"
+
+1268538132 source:/root/Desktop/Arsenal/Prj/Test/CodeBlocks/test.c
+	"test.h"
+

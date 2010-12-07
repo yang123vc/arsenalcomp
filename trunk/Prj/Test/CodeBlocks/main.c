@@ -35,13 +35,12 @@ int  main()
         arInit_t ai = {{tiny_error, tiny_printf, NULL}};
 
         //printf("%s\r\n", setlocale(LC_ALL, NULL));
-        lex_t *Lex_Create(NULL);
         Arsenal_Init(&ai);
 
         AR_Test();
 
 
-	Arsenal_UnInit();
+        Arsenal_UnInit();
 
 
 
