@@ -556,7 +556,7 @@ void lex_test_loop()
 		act.is_skip = false;
 		act.priority = 0;
 		act.value = 200;
-		AR_ASSERT(Lex_InsertRule(lex, L"(a){3,5}", &act));
+		AR_ASSERT(Lex_InsertRule(lex, L"(a{3,5}?){3,5}?", &act));
 
 		act.value = 1;
 		AR_ASSERT(Lex_InsertRule(lex, L"[ \\r\\n\\t]", &act));
@@ -566,7 +566,8 @@ void lex_test_loop()
 
 		match = Lex_CreateMatch(lex, NULL);
 
-		Lex_ResetInput(match, L"aaa\r\naaa\r\naaaaa\r\n");
+		//Lex_ResetInput(match, L"aaa\r\naaa\r\naaaaa\r\n");
+		Lex_ResetInput(match, L"aaaaaaaaaaaaaaaaaaaaaaaaaaaa\r\n");
 		
 
 		lexToken_t tok;
@@ -657,8 +658,8 @@ void lex_test_loop2()
 void lex_test()
 {
 		
-		//lex_test_loop();
-		lex_test_loop2();
+		lex_test_loop();
+		//lex_test_loop2();
 
 		//rgx_test_loop();
 		

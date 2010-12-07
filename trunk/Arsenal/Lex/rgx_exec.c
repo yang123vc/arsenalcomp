@@ -66,7 +66,7 @@ static void __add_thread(rgxThreadList_t *lst,  rgxThread_t thd, rgxProg_t *prog
 
 
 
-static const wchar_t*  __loop(rgxProg_t *prog, const wchar_t *start_pos, size_t *px, size_t *py, lexMatch_t *match);
+static bool_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, size_t *py, lexMatch_t *match);
 static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match);
 static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok);
 
@@ -214,10 +214,7 @@ static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match
 								size_t loop_cnt;
 								size_t i;
 								bool_t is_ok = true;
-								const wchar_t *sp_tmp;
-								
 								loop_cnt = pc->fix_count;
-								sp_tmp = sp;
 								
 								for(i = 0; i < loop_cnt && is_ok; ++i)
 								{
@@ -226,17 +223,13 @@ static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match
 										loop.start = pc + 1;
 										loop.pc = loop.start;
 										loop.mark = 0;
-										sp_tmp = __loop(&loop, sp_tmp, &x, &y, match);
-										if(sp_tmp == NULL)
-										{
-												is_ok = false;
-										}
+										
+										is_ok = __loop(&loop, &sp, &x, &y, match);
+
 								}
 
 								if(is_ok)
 								{
-										AR_ASSERT(sp_tmp != NULL);
-										sp = sp_tmp;
 										__add_thread(next, RGX_BuildThread(pc->left, sp, 0, 0), prog);
 								}
 								
@@ -343,7 +336,7 @@ static void __clear_for_loop(rgxProg_t *prog)
 
 
 
-static const wchar_t*  __loop(rgxProg_t *prog, const wchar_t *start_pos, size_t *px, size_t *py, lexMatch_t *match)
+static bool_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, size_t *py, lexMatch_t *match)
 {
 		
 		rgxThreadList_t *curr, *next;
@@ -352,7 +345,7 @@ static const wchar_t*  __loop(rgxProg_t *prog, const wchar_t *start_pos, size_t 
 		const wchar_t	*sp, *final_next;
 		size_t i,x,y, final_row, final_col;
 		
-		AR_ASSERT(prog != NULL && start_pos != NULL && px != NULL && py != NULL && match != NULL);
+		AR_ASSERT(prog != NULL && start_pos != NULL && *start_pos != NULL && px != NULL && py != NULL && match != NULL);
 		
 		__clear_for_loop(prog);
 		
@@ -365,7 +358,7 @@ static const wchar_t*  __loop(rgxProg_t *prog, const wchar_t *start_pos, size_t 
 
 		matched = false;
 
-		sp = start_pos;
+		sp = *start_pos;
 		x = *px;
 		y = *py;
 
@@ -496,10 +489,9 @@ static const wchar_t*  __loop(rgxProg_t *prog, const wchar_t *start_pos, size_t 
 								size_t loop_cnt;
 								size_t i;
 								bool_t is_ok = true;
-								const wchar_t *sp_tmp;
 								
 								loop_cnt = pc->fix_count;
-								sp_tmp = sp;
+								
 
 								
 								for(i = 0; i < loop_cnt && is_ok; ++i)
@@ -508,17 +500,11 @@ static const wchar_t*  __loop(rgxProg_t *prog, const wchar_t *start_pos, size_t 
 										loop.start = pc + 1;
 										loop.pc = loop.start;
 										loop.mark = 0;
-										sp_tmp = __loop(&loop, sp_tmp, &x, &y, match);
-										if(sp_tmp == NULL)
-										{
-												is_ok = false;
-										}
+										is_ok = __loop(&loop, &sp, &x, &y, match);
 								}
 
 								if(is_ok)
 								{
-										AR_ASSERT(sp_tmp != NULL);
-										sp = sp_tmp;
 										__add_thread(next, RGX_BuildThread(pc->left, sp, x,y), prog);
 								}
 								
@@ -595,10 +581,11 @@ static const wchar_t*  __loop(rgxProg_t *prog, const wchar_t *start_pos, size_t 
 				*py = final_col;
 				*px = final_row;
 				AR_ASSERT(final_next != NULL);
-				return final_next;
+				*start_pos = final_next;
+				return true;
 		}else
 		{
-				return NULL;
+				return false;
 		}
 }
 
@@ -768,10 +755,8 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 								size_t loop_cnt;
 								size_t i;
 								bool_t is_ok = true;
-								const wchar_t *sp_tmp;
-								
 								loop_cnt = pc->fix_count;
-								sp_tmp = sp;
+								
 
 								
 								for(i = 0; i < loop_cnt && is_ok; ++i)
@@ -780,17 +765,11 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 										loop.start = pc + 1;
 										loop.pc = loop.start;
 										loop.mark = 0;
-										sp_tmp = __loop(&loop, sp_tmp, &x, &y, match);
-										if(sp_tmp == NULL)
-										{
-												is_ok = false;
-										}
+										is_ok =  __loop(&loop, &sp, &x, &y, match);
 								}
 
 								if(is_ok)
 								{
-										AR_ASSERT(sp_tmp != NULL);
-										sp = sp_tmp;
 										__add_thread(next, RGX_BuildThread(pc->left, sp, x,y), prog);
 								}
 								
