@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BE9ECC2612AE70E800A1F23A /* tgusyntree.h in Headers */ = {isa = PBXBuildFile; fileRef = BE9ECC2512AE70E800A1F23A /* tgusyntree.h */; };
+		BEF3DB3412AE73BD004CF543 /* tgusyntree.c in Sources */ = {isa = PBXBuildFile; fileRef = BEF3DB3312AE73BD004CF543 /* tgusyntree.c */; };
 		D0A0728E127BBB9100F315D2 /* Arsenal.c in Sources */ = {isa = PBXBuildFile; fileRef = D0A07250127BBB9100F315D2 /* Arsenal.c */; };
 		D0A0728F127BBB9100F315D2 /* Arsenal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0A07251127BBB9100F315D2 /* Arsenal.h */; };
 		D0A07290127BBB9100F315D2 /* algo.c in Sources */ = {isa = PBXBuildFile; fileRef = D0A07253127BBB9100F315D2 /* algo.c */; };
@@ -67,6 +69,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BE9ECC2512AE70E800A1F23A /* tgusyntree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tgusyntree.h; sourceTree = "<group>"; };
+		BEF3DB3312AE73BD004CF543 /* tgusyntree.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tgusyntree.c; sourceTree = "<group>"; };
 		D0A07250127BBB9100F315D2 /* Arsenal.c */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.c; path = Arsenal.c; sourceTree = "<group>"; };
 		D0A07251127BBB9100F315D2 /* Arsenal.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = Arsenal.h; sourceTree = "<group>"; };
 		D0A07253127BBB9100F315D2 /* algo.c */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.c; path = algo.c; sourceTree = "<group>"; };
@@ -234,6 +238,8 @@
 		D0A0727D127BBB9100F315D2 /* Tengu */ = {
 			isa = PBXGroup;
 			children = (
+				BEF3DB3312AE73BD004CF543 /* tgusyntree.c */,
+				BE9ECC2512AE70E800A1F23A /* tgusyntree.h */,
 				D0A0727E127BBB9100F315D2 /* tengu.c */,
 				D0A0727F127BBB9100F315D2 /* tengu.h */,
 				D0A07280127BBB9100F315D2 /* tgu_parser_impl.h */,
@@ -289,6 +295,7 @@
 				D0A072C2127BBB9100F315D2 /* grammar_config.h in Headers */,
 				D0A072C4127BBB9100F315D2 /* serializer.h in Headers */,
 				D0A072C6127BBB9100F315D2 /* tools.h in Headers */,
+				BE9ECC2612AE70E800A1F23A /* tgusyntree.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -379,6 +386,7 @@
 				D0A072C1127BBB9100F315D2 /* grammar_config.c in Sources */,
 				D0A072C3127BBB9100F315D2 /* serializer.c in Sources */,
 				D0A072C5127BBB9100F315D2 /* tools.c in Sources */,
+				BEF3DB3412AE73BD004CF543 /* tgusyntree.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
