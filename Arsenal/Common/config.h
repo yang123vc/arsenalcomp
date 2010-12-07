@@ -505,31 +505,31 @@ typedef void*					ptr_t;
 
 #if (AR_COMPILER == AR_VC_LEGACY)
 
-		#define AR_SWPRINTF					_snwprintf
-		#define AR_VSPRINTF						_vsnprintf
-		#define AR_VSWPRINTF					_vsnwprintf
-		#define AR_abort						        abort
+		#define AR_SWPRINTF										_snwprintf
+		#define AR_VSPRINTF										_vsnprintf
+		#define AR_VSWPRINTF									_vsnwprintf
+		#define AR_abort										abort
 
 
 #elif (AR_COMPILER == AR_VC)
 
-		#define AR_SWPRINTF						_snwprintf
-		#define AR_VSPRINTF						    _vsnprintf
-		#define AR_VSWPRINTF					    _vsnwprintf
+		#define AR_SWPRINTF										_snwprintf
+		#define AR_VSPRINTF										_vsnprintf
+		#define AR_VSWPRINTF									_vsnwprintf
 
 		#if(OS_TYPE == OS_WINDOWS_CE)
-				#define AR_abort()				exit(3)
+				#define AR_abort()								exit(3)
 		#else
-				#define AR_abort				abort
+				#define AR_abort								abort
 		#endif
 
 
 
 #elif(AR_COMPILER == AR_BCB6)
-                #define AR_SWPRINTF				_snwprintf
-				#define AR_VSPRINTF				    _vsnprintf
-				#define AR_VSWPRINTF			    _vsnwprintf
-                #define AR_abort	                        abort
+                #define AR_SWPRINTF								_snwprintf
+				#define AR_VSPRINTF								_vsnprintf
+				#define AR_VSWPRINTF							_vsnwprintf
+                #define AR_abort								abort
 
 
 
@@ -537,19 +537,19 @@ typedef void*					ptr_t;
 
 
 		#if defined(OS_FAMILY_WINDOWS)
-				#define AR_SWPRINTF				_snwprintf
-				#define AR_VSWPRINTF			    _vsnwprintf
-				#define AR_VSPRINTF				    _vsnprintf
+				#define AR_SWPRINTF								_snwprintf
+				#define AR_VSWPRINTF							_vsnwprintf
+				#define AR_VSPRINTF								_vsnprintf
 
 		#else
-				#define AR_SWPRINTF			                                        swprintf
-				#define AR_VSWPRINTF			                                        vswprintf
-				#define AR_VSPRINTF(_dest, _cnt, _fmt, _args) 				vsprintf((_dest), (_cnt), (_args))
+				#define AR_SWPRINTF			                    swprintf
+				#define AR_VSWPRINTF			                vswprintf
+				#define AR_VSPRINTF(_dest, _cnt, _fmt, _args) 	vsprintf((_dest), (_cnt), (_args))
 
 		#endif
 
 
-		#define AR_abort	            abort
+		#define AR_abort										abort
 
 #else
 

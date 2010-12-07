@@ -4,6 +4,9 @@
 		activeArchitecturePreference = x86_64;
 		activeBuildConfigurationName = Debug;
 		activeTarget = D2AAC045055464E500DB518D /* Arsenal */;
+		addToTargets = (
+			D2AAC045055464E500DB518D /* Arsenal */,
+		);
 		breakpoints = (
 		);
 		codeSenseManager = BE4B6963127D27FF00F46F5C /* Code sense */;
@@ -37,7 +40,7 @@
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
 				PBXFileTableDataSourceColumnWidthsKey = (
 					20,
-					894,
+					512,
 					20,
 					48,
 					43,
@@ -54,15 +57,13 @@
 					PBXFileDataSource_Target_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 310315751;
-			PBXWorkspaceStateSaveDate = 310315751;
+			PBXPerProjectTemplateStateSaveDate = 313422759;
+			PBXWorkspaceStateSaveDate = 313422759;
 		};
 		perUserProjectItems = {
 			BE0A04C1127F0B2E00487B1F /* PBXTextBookmark */ = BE0A04C1127F0B2E00487B1F /* PBXTextBookmark */;
 			BE0A04E3127F0C1000487B1F /* PBXTextBookmark */ = BE0A04E3127F0C1000487B1F /* PBXTextBookmark */;
 			BE0A04E4127F0C1000487B1F /* PBXTextBookmark */ = BE0A04E4127F0C1000487B1F /* PBXTextBookmark */;
-			BE0A04E5127F0C1000487B1F /* PBXTextBookmark */ = BE0A04E5127F0C1000487B1F /* PBXTextBookmark */;
-			BE0A04E7127F0C1000487B1F /* PBXTextBookmark */ = BE0A04E7127F0C1000487B1F /* PBXTextBookmark */;
 			BE194519127D34A300610026 /* PBXTextBookmark */ = BE194519127D34A300610026 /* PBXTextBookmark */;
 			BE1945DA127D38F700610026 /* PBXTextBookmark */ = BE1945DA127D38F700610026 /* PBXTextBookmark */;
 			BE582C95127D4D2C0018B891 /* PBXTextBookmark */ = BE582C95127D4D2C0018B891 /* PBXTextBookmark */;
@@ -115,44 +116,6 @@
 		rType = 0;
 		vrLen = 561;
 		vrLoc = 350;
-	};
-	BE0A04E5127F0C1000487B1F /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = BE0A04E6127F0C1000487B1F /* tengu.c */;
-		name = "tengu.c: 15";
-		rLen = 0;
-		rLoc = 464;
-		rType = 0;
-		vrLen = 680;
-		vrLoc = 66368;
-	};
-	BE0A04E6127F0C1000487B1F /* tengu.c */ = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.c;
-		name = tengu.c;
-		path = /Users/solidussnakeex/Desktop/tengu.c;
-		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1072, 28548}}";
-			sepNavSelRange = "{66790, 0}";
-			sepNavVisRange = "{66202, 866}";
-		};
-	};
-	BE0A04E7127F0C1000487B1F /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = BE0A04E8127F0C1000487B1F /* tengu.c */;
-		name = "tengu.c: 2154";
-		rLen = 0;
-		rLoc = 66790;
-		rType = 0;
-		vrLen = 866;
-		vrLoc = 66202;
-	};
-	BE0A04E8127F0C1000487B1F /* tengu.c */ = {
-		isa = PBXFileReference;
-		name = tengu.c;
-		path = /Users/solidussnakeex/Desktop/tengu.c;
-		sourceTree = "<absolute>";
 	};
 	BE194519127D34A300610026 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -448,9 +411,10 @@
 	};
 	D0A07280127BBB9100F315D2 /* tgu_parser_impl.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1267, 26082}}";
+			sepNavIntBoundsRect = "{{0, 0}, {965, 29549}}";
 			sepNavSelRange = "{485, 0}";
-			sepNavVisRange = "{22099, 2637}";
+			sepNavVisRange = "{22075, 2411}";
+			sepNavWindowFrame = "{{0, 91}, {1024, 655}}";
 		};
 	};
 	D0A07288127BBB9100F315D2 /* grammar_config.c */ = {
