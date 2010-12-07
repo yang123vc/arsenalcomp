@@ -31,8 +31,8 @@ static size_t __count(const rgxNode_t *node)
 		case RGX_ANY_CHAR_T:
 		{
 				return 1;
-				break;
 		}
+				break;
 		case RGX_CAT_T:
 		{
 				size_t l = 0,r = 0;
@@ -40,8 +40,8 @@ static size_t __count(const rgxNode_t *node)
 				if(node->left != NULL) l = __count(node->left);
 				if(node->right != NULL)r = __count(node->right);
 				return l + r;
-				break;
 		}
+				break;
 		case RGX_BRANCH_T:
 		{
 				size_t l = 0,r = 0,curr = 0;
@@ -49,13 +49,13 @@ static size_t __count(const rgxNode_t *node)
 				if(node->right) r = __count(node->right);
 				if(l > 0 && r > 0) curr = 2;
 				return l + r + curr;
-				break;
 		}
+				break;
 		case RGX_STAR_T:
 		{
 				return 2 + __count(node->left) ;
-				break;
 		}
+				break;
 		case RGX_QUEST_T:
 		{
 				return 1 + __count(node->left);
@@ -64,18 +64,23 @@ static size_t __count(const rgxNode_t *node)
 		case RGX_PLUS_T:
 		{
 				return 1 + __count(node->left);
-				break;
 		}
+				break;
+		case RGX_FIXCOUNT_T:
+		{
+				return 2 + __count(node->left);
+		}
+				break;
 		case RGX_LOOKAHEAD_T:
 		{
 				return 2 + __count(node->left);
-				break;
 		}
+				break;
 		default:
 		{
 				AR_CHECK(false, L"Arsenal : regex compile error %hs\r\n", AR_FUNC_NAME);
-				break;
 		}
+				break;
 		}
 		
 		return 0;
@@ -96,52 +101,52 @@ static void __emit_code(rgxProg_t *prog, const rgxNode_t *node)
 				prog->pc->range.beg = node->range.beg;
 				prog->pc->range.end = node->range.end;
 				prog->pc++; /*count = 1*/
-				break;
 		}
+				break;
 		case RGX_FINAL_T:
 		{
 				prog->pc->opcode = RGX_MATCH_I;
 				prog->pc->final = (int_t)node->final_val;
 				prog->pc++;/*count = 1*/
-				break;
 		}
+				break;
 		case RGX_BEGIN_T:
 		{
 				prog->pc->opcode = RGX_BEGIN_I;
 				prog->pc++;/*count = 1*/
-				break;
 		}
+				break;
 		case RGX_END_T:
 		{
 				prog->pc->opcode = RGX_END_I;
 				prog->pc++;/*count = 1*/
-				break;
 		}
+				break;
 		case RGX_LINE_BEGIN_T:
 		{
 				prog->pc->opcode = RGX_LINE_BEGIN_I;
 				prog->pc++;/*count = 1*/
-				break;
 		}
+				break;
 		case RGX_LINE_END_T:
 		{
 				prog->pc->opcode = RGX_LINE_END_I;
 				prog->pc++;/*count = 1*/
-				break;
 		}
+				break;
 		case RGX_ANY_CHAR_T:
 		{
 				prog->pc->opcode = RGX_ANY_CHAR_I;
 				prog->pc++;/*count = 1*/
-				break;
 		}
+				break;
 		case RGX_CAT_T:
 		{
 				/*AR_ASSERT(node->left != NULL && node->right != NULL);*/
 				if(node->left)__emit_code(prog, node->left);
 				if(node->right)__emit_code(prog, node->right);
-				break;
 		}
+				break;
 		case RGX_BRANCH_T:
 		{
 				if(node->left == NULL || node->right == NULL)
@@ -166,8 +171,8 @@ static void __emit_code(rgxProg_t *prog, const rgxNode_t *node)
 
 						/*count == 2*/
 				}
-				break;
 		}
+				break;
 		case RGX_STAR_T:
 		{
 				rgxIns_t *p1; 
@@ -192,8 +197,8 @@ static void __emit_code(rgxProg_t *prog, const rgxNode_t *node)
 				}
 
 				/*count == 2*/
-				break;
 		}
+				break;
 		case RGX_QUEST_T:
 		{
 				rgxIns_t *p1;
@@ -211,8 +216,8 @@ static void __emit_code(rgxProg_t *prog, const rgxNode_t *node)
 						p1->right = tmp;
 				}
 				/*count == 1*/
-				break;
 		}
+				break;
 		case RGX_PLUS_T:
 		{
 				rgxIns_t *p1, *p2;
@@ -233,8 +238,28 @@ static void __emit_code(rgxProg_t *prog, const rgxNode_t *node)
 						p2->right = tmp;
 				}
 				/*count + 1*/
-				break;
 		}
+				break;
+		case RGX_FIXCOUNT_T:
+		{
+				rgxIns_t *p1;
+				
+				AR_ASSERT(node->left != NULL);
+
+				prog->pc->opcode = RGX_LOOP_BEG_I;/*count + 1*/
+				prog->pc->fix_count = node->fix_count;
+				p1 = prog->pc;
+				
+				prog->pc++;
+				__emit_code(prog, node->left);
+
+				prog->pc->opcode = RGX_LOOP_END_I;
+				prog->pc++;
+				p1->left = prog->pc;
+
+				/*count == 2*/
+		}
+				break;
 		case RGX_LOOKAHEAD_T:
 		{
 				rgxIns_t *p1;
@@ -258,13 +283,13 @@ static void __emit_code(rgxProg_t *prog, const rgxNode_t *node)
 				p1->left = prog->pc;
 
 				/*count == 2*/
-				break;
 		}
+				break;
 		default:
 		{
 				AR_CHECK(false, L"Arsenal : regex compile error %hs\r\n", AR_FUNC_NAME);
-				break;
 		}
+				break;
 		}
 }
 
@@ -377,11 +402,17 @@ void			RGX_ProgToString(const rgxProg_t *prog, arString_t *str)
 						break;
 				}
 				
+				case RGX_LOOP_BEG_I:
+				{
+						AR_AppendFormatString(str, L"%2d. %ls %" AR_PLAT_INT_FMT L"d LoopCount == %" AR_PLAT_INT_FMT L"d\r\n", i, RGX_INS_NAME[pc->opcode], (size_t)(pc->left - prog->start), pc->fix_count);
+						break;
+				}
 				case RGX_LOOKAHEAD_BEG_I:
 				{
 						AR_AppendFormatString(str, L"%2d. %ls %" AR_PLAT_INT_FMT L"d\r\n", i, RGX_INS_NAME[pc->opcode], (size_t)(pc->left - prog->start));
 						break;
 				}
+				case RGX_LOOP_END_I:
 				case RGX_LOOKAHEAD_END_I:
 				case RGX_BEGIN_I:
 				case RGX_END_I:

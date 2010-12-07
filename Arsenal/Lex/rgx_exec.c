@@ -40,6 +40,8 @@ static void __add_thread(rgxThreadList_t *lst,  rgxThread_t thd, rgxProg_t *prog
 				__add_thread(lst, RGX_BuildThread(thd.pc->right, thd.sp, thd.line, thd.col), prog);
 				break;
 		}
+		case RGX_LOOP_BEG_I:
+		case RGX_LOOP_END_I:
 		case RGX_LOOKAHEAD_BEG_I:
 		case RGX_LOOKAHEAD_END_I:
 		case RGX_NOP_I:
@@ -64,6 +66,13 @@ static void __add_thread(rgxThreadList_t *lst,  rgxThread_t thd, rgxProg_t *prog
 
 
 
+static const wchar_t*  __loop(rgxProg_t *prog, const wchar_t *start_pos, size_t *px, size_t *py, lexMatch_t *match);
+static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match);
+static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok);
+
+
+/*处理预搜索部分*/
+
 static void __clear_for_lookahead(rgxProg_t *prog)
 {		
 		size_t k,l;
@@ -84,6 +93,7 @@ static void __clear_for_lookahead(rgxProg_t *prog)
 
 		prog->mark = 0;
 }
+
 
 
 static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match)
@@ -198,6 +208,47 @@ static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match
 								}
 								break;
 						}
+						case RGX_LOOP_BEG_I:
+						{
+								
+								size_t loop_cnt;
+								size_t i;
+								bool_t is_ok = true;
+								const wchar_t *sp_tmp;
+								
+								loop_cnt = pc->fix_count;
+								sp_tmp = sp;
+								
+								for(i = 0; i < loop_cnt && is_ok; ++i)
+								{
+										size_t	x = 0,y = 0;
+										rgxProg_t loop;
+										loop.start = pc + 1;
+										loop.pc = loop.start;
+										loop.mark = 0;
+										sp_tmp = __loop(&loop, sp_tmp, &x, &y, match);
+										if(sp_tmp == NULL)
+										{
+												is_ok = false;
+										}
+								}
+
+								if(is_ok)
+								{
+										AR_ASSERT(sp_tmp != NULL);
+										sp = sp_tmp;
+										__add_thread(next, RGX_BuildThread(pc->left, sp, 0, 0), prog);
+								}
+								
+
+								break;
+						}
+						case RGX_LOOP_END_I:
+						{
+
+								AR_CHECK(false, L"Arsenal : regex exec error %hs\r\n", AR_FUNC_NAME);
+						}
+								break;
 						case RGX_LOOKAHEAD_BEG_I:
 						{
 								
@@ -260,7 +311,298 @@ static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match
 		RGX_DestroyThreadList(curr);
 		RGX_DestroyThreadList(next);
 		return false;
+
 }
+
+
+
+
+/*处理定数循环部分*/
+
+static void __clear_for_loop(rgxProg_t *prog)
+{		
+		size_t k,l;
+		AR_ASSERT(prog && prog->start != NULL);
+		prog->mark = 0;
+
+		for(k = 0, l = 1; l > 0; ++k)
+		{
+				if(prog->start[k].opcode == RGX_LOOP_BEG_I)
+				{
+						l++;
+				}else if(prog->start[k].opcode == RGX_LOOP_END_I)
+				{
+						l--;
+				}
+				prog->start[k].mark = 0;
+		}
+
+		prog->mark = 0;
+}
+
+
+
+
+static const wchar_t*  __loop(rgxProg_t *prog, const wchar_t *start_pos, size_t *px, size_t *py, lexMatch_t *match)
+{
+		
+		rgxThreadList_t *curr, *next;
+		rgxIns_t				*pc;
+		bool_t					matched;
+		const wchar_t	*sp, *final_next;
+		size_t i,x,y, final_row, final_col;
+		
+		AR_ASSERT(prog != NULL && start_pos != NULL && px != NULL && py != NULL && match != NULL);
+		
+		__clear_for_loop(prog);
+		
+		curr = RGX_CreateThreadList();
+		next = RGX_CreateThreadList();
+		prog->mark = 0;
+
+		RGX_ClearThreadList(curr);
+		RGX_ClearThreadList(next);
+
+		matched = false;
+
+		sp = start_pos;
+		x = *px;
+		y = *py;
+
+		final_row = x; final_col = y; final_next = NULL;
+
+		prog->mark++;
+		__add_thread(curr, RGX_BuildThread(prog->start, sp, x,y), prog);
+
+		
+		for(;;)
+		{
+				if(curr->count == 0)break;
+				prog->mark++;
+				
+				for(i = 0; i < curr->count; ++i)
+				{
+						pc = curr->lst[i].pc;
+						sp = curr->lst[i].sp;
+						x = curr->lst[i].line;
+						y = curr->lst[i].col;
+
+						switch(pc->opcode)
+						{
+						case RGX_CHAR_I:
+						{
+								bool_t is_ok = false;
+								if(*sp != L'\0')
+								{
+										if(match->flags & LEX_IGNORE_CASE)
+										{
+												wchar_t lower = (wchar_t)AR_tolower(*sp), upper = (wchar_t)AR_towupper(*sp);
+												
+												if(lower >=  pc->range.beg && lower <= pc->range.end)
+												{
+														is_ok = true;
+												}else if(upper >=  pc->range.beg && upper <= pc->range.end)
+												{
+														is_ok = true;
+												}
+										}else
+										{
+												is_ok = (*sp >= pc->range.beg && *sp <= pc->range.end);
+										}
+								}
+
+								if(is_ok)
+								{
+										if(*sp == L'\n')
+										{
+												y = 0;
+												x++;
+										}else
+										{
+												y++;
+										}
+
+										sp++;
+										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y), prog);
+								}
+								break;
+						}
+						case RGX_ANY_CHAR_I:
+						{
+								bool_t is_ok = false;
+
+								if(*sp != L'\0')
+								{
+										if(match->flags & LEX_SINGLE_LINE)/*single line 可以匹配包含\n在内的所有字符*/
+										{
+												is_ok = true;
+										}else
+										{
+												is_ok = *sp != L'\n';/*否则*sp不可以为'\n'*/
+										}
+								}
+
+								if(is_ok)
+								{
+										if(*sp == L'\n')
+										{
+												y = 0;
+												x++;
+										}else
+										{
+												y++;
+										}
+										sp++;
+										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y), prog);
+								}
+
+								break;
+						}
+						case RGX_BEGIN_I:
+						{
+								if(sp == match->input)
+								{
+										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y), prog);
+								}
+								break;
+						}
+						case RGX_END_I:
+						{
+								if(*sp == L'\0')
+								{
+										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y), prog);
+								}
+								break;
+						}
+						case RGX_LINE_BEGIN_I:
+						{
+								if(sp == match->input || *(sp-1) == L'\n')
+								{
+										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y), prog);
+								}
+								break;
+						}
+						case RGX_LINE_END_I:
+						{
+								if(*sp == L'\0' || *sp == L'\n') 
+								{
+										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y), prog);
+								}
+								break;
+						}
+						case RGX_LOOP_BEG_I:
+						{
+								
+								size_t loop_cnt;
+								size_t i;
+								bool_t is_ok = true;
+								const wchar_t *sp_tmp;
+								
+								loop_cnt = pc->fix_count;
+								sp_tmp = sp;
+
+								
+								for(i = 0; i < loop_cnt && is_ok; ++i)
+								{
+										rgxProg_t loop;
+										loop.start = pc + 1;
+										loop.pc = loop.start;
+										loop.mark = 0;
+										sp_tmp = __loop(&loop, sp_tmp, &x, &y, match);
+										if(sp_tmp == NULL)
+										{
+												is_ok = false;
+										}
+								}
+
+								if(is_ok)
+								{
+										AR_ASSERT(sp_tmp != NULL);
+										sp = sp_tmp;
+										__add_thread(next, RGX_BuildThread(pc->left, sp, x,y), prog);
+								}
+								
+
+								break;
+						}
+						case RGX_LOOP_END_I:
+						{
+								final_row = x;
+								final_col = y;
+								final_next = sp;
+
+								matched = true;
+								goto BREAK_POINT;/*这一步决定了优先级为left most*/
+						}
+								break;
+						case RGX_LOOKAHEAD_BEG_I:
+						{
+								
+								rgxProg_t lhd;
+								
+								lhd.start = pc + 1;
+								lhd.pc = lhd.start;
+								lhd.mark = 0;
+
+								if(__lookahead(&lhd, sp, match))
+								{
+										if(pc->lookahead.negative)
+										{
+
+										}else
+										{
+												__add_thread(next, RGX_BuildThread(pc->left, sp, x,y), prog);
+										}
+
+								}else
+								{
+										if(pc->lookahead.negative)
+										{
+												__add_thread(next, RGX_BuildThread(pc->left, sp, x,y), prog);
+										}else
+										{
+
+										}
+								}
+								break;
+						}
+						case RGX_LOOKAHEAD_END_I:
+						{
+								AR_ASSERT(false);
+								AR_CHECK(false, L"Arsenal : regex exec error %hs\r\n", AR_FUNC_NAME);
+								break;
+						}
+						case RGX_MATCH_I:
+						case RGX_NOP_I:
+						default:
+						{
+								AR_CHECK(false, L"Arsenal : regex exec error %hs\r\n", AR_FUNC_NAME);
+								break;
+						}
+						}
+				}
+		BREAK_POINT:
+				RGX_SwapThreadList(curr, next);
+				RGX_ClearThreadList(next);
+		}
+		
+
+		RGX_DestroyThreadList(curr);
+		RGX_DestroyThreadList(next);
+
+		if(matched)
+		{
+				*py = final_col;
+				*px = final_row;
+				AR_ASSERT(final_next != NULL);
+				return final_next;
+		}else
+		{
+				return NULL;
+		}
+}
+
+
 
 
 
@@ -420,6 +762,47 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 								}
 								break;
 						}
+						case RGX_LOOP_BEG_I:
+						{
+								
+								size_t loop_cnt;
+								size_t i;
+								bool_t is_ok = true;
+								const wchar_t *sp_tmp;
+								
+								loop_cnt = pc->fix_count;
+								sp_tmp = sp;
+
+								
+								for(i = 0; i < loop_cnt && is_ok; ++i)
+								{
+										rgxProg_t loop;
+										loop.start = pc + 1;
+										loop.pc = loop.start;
+										loop.mark = 0;
+										sp_tmp = __loop(&loop, sp_tmp, &x, &y, match);
+										if(sp_tmp == NULL)
+										{
+												is_ok = false;
+										}
+								}
+
+								if(is_ok)
+								{
+										AR_ASSERT(sp_tmp != NULL);
+										sp = sp_tmp;
+										__add_thread(next, RGX_BuildThread(pc->left, sp, x,y), prog);
+								}
+								
+
+								break;
+						}
+						case RGX_LOOP_END_I:
+						{
+
+								AR_CHECK(false, L"Arsenal : regex exec error %hs\r\n", AR_FUNC_NAME);
+						}
+								break;
 						case RGX_LOOKAHEAD_BEG_I:
 						{
 								
@@ -428,9 +811,6 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 								lhd.start = pc + 1;
 								lhd.pc = lhd.start;
 								lhd.mark = 0;
-
-								/*__clear_ins_set(lhd.start);*/
-
 
 								if(__lookahead(&lhd, sp, match))
 								{
@@ -456,6 +836,7 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 						}
 						case RGX_LOOKAHEAD_END_I:
 						{
+								AR_ASSERT(false);
 								AR_CHECK(false, L"Arsenal : regex exec error %hs\r\n", AR_FUNC_NAME);
 								break;
 						}
@@ -487,9 +868,7 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 				RGX_SwapThreadList(curr, next);
 				RGX_ClearThreadList(next);
 		}
-		
-		/*RGX_DestroyThreadList(curr);*/
-		/*RGX_DestroyThreadList(next);*/
+
 		if(matched)
 		{
 				match->col = final_col;
