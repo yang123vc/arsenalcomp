@@ -19,7 +19,7 @@ AR_printf
 AR_error_ctx
 AR_printf_ctx
 
-
+AR_check
 
 AR_malloc
 AR_calloc
@@ -128,7 +128,7 @@ Parser_ResetGrammarParseHandler
 
 Parser_GetTermSymbInfoByValue
 Parser_GetTermSymbInfoByName
-Parser_SetFirstRule
+Parser_SetStartRule
 
 ;Parser
 

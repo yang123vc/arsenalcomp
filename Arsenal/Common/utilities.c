@@ -246,7 +246,7 @@ wchar_t*		AR_str_to_escstr(const wchar_t *src)
 						}else
 						{
 								int_t l = 0;
-								wchar_t buf[128];
+								wchar_t buf[64];
 								l = AR_u64tow_buf(buf, AR_NELEMS(buf), (uint_64_t)(*s), 16);
 								AR_ASSERT(l > 0);
 								*d++ = L'\\';

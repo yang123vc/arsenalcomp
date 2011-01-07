@@ -30,6 +30,7 @@ void AR_STDCALL tiny_printf(const wchar_t *msg, void *ctx)
 #if(OS_TYPE == OS_WINDOWS_CE)
 		::MessageBoxW(NULL, msg, L"MessageBox", 0);
 #else
+		//::MessageBoxW(NULL, msg, L"MessageBox", 0);
 		printf("%ls", msg);
 #endif
 }

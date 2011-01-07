@@ -317,6 +317,14 @@ SOURCE=..\..\..\Arsenal\Tengu\tguparser.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\Arsenal\Tengu\tgusyntree.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Tengu\tguutility.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\Arsenal\Tengu\tguvm.c
 # End Source File
 # Begin Source File

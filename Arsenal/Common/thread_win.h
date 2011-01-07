@@ -13,24 +13,28 @@
 #include "common.h"
 
 
-
-
-#if(OS_TYPE == OS_WINDOWS_CE)
+#if(WINVER < 0x0400)
 		#define __VOLATILE__
 #else
-		#define __VOLATILE__	volatile
+		#if(OS_TYPE == OS_WINDOWS_CE)
+				#define __VOLATILE__	
+		#else
+				#define __VOLATILE__	volatile
+		#endif
 #endif
+
+
 
 #if(AR_ARCH_VER == ARCH_32)
 		
 		#define ATOMIC_INC(_dest) (int_t)InterlockedIncrement((__VOLATILE__ LONG*)(_dest))
-		#define  ATOMIC_DEC(_dest) (int_t)InterlockedDecrement((__VOLATILE__ LONG*)(_dest))
+		#define ATOMIC_DEC(_dest) (int_t)InterlockedDecrement((__VOLATILE__ LONG*)(_dest))
 		#define COMP_EXCH(_dest, _exch, _comp_val)	InterlockedCompareExchange((__VOLATILE__ LONG*)(_dest), (LONG )(_exch), (LONG)(_comp_val))
 
 #elif(AR_ARCH_VER == ARCH_64)
 		
-		#define  ATOMIC_INC(_dest) (int_t)InterlockedIncrement64((__VOLATILE__ LONGLONG*)(_dest))
-		#define  ATOMIC_DEC(_dest) (int_t)InterlockedDecrement64((__VOLATILE__ LONGLONG*)(_dest))
+		#define ATOMIC_INC(_dest) (int_t)InterlockedIncrement64((__VOLATILE__ LONGLONG*)(_dest))
+		#define ATOMIC_DEC(_dest) (int_t)InterlockedDecrement64((__VOLATILE__ LONGLONG*)(_dest))
 		#define COMP_EXCH(_dest, _exch, _comp_val)	InterlockedCompareExchange64((__VOLATILE__ LONGLONG*)(_dest), (LONGLONG )(_exch), (LONGLONG)(_comp_val))
 #else
 		#error "Target ARCH  not supported"
@@ -128,7 +132,6 @@ void			AR_UnLockSpinLock(arSpinLock_t *lock)
 
 static AR_INLINE uint_64_t __get_time_microseconds()
 {
-		/*我不知道这函数做了什么，也不想知道*/
 		FILETIME ft;
 		ULARGE_INTEGER epoch; /* UNIX epoch (1970-01-01 00:00:00) expressed in Windows NT FILETIME*/
 		ULARGE_INTEGER ts;
@@ -143,6 +146,7 @@ static AR_INLINE uint_64_t __get_time_microseconds()
 		GetSystemTimeAsFileTime(&ft);
 #endif
 
+		/*我不知道这做了什么，也不想知道*/
 		epoch.LowPart  = 0xD53E8000;
 		epoch.HighPart = 0x019DB1DE;
 		ts.LowPart  = ft.dwLowDateTime;

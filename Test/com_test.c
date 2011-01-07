@@ -1171,8 +1171,29 @@ void str_test7()
 
 }
 
+
+void com_str_test_vcprintf()
+{
+		//const char *s = "abc";
+		int_t n;
+		n = AR_scwprintf(L"%33s", L"abc");
+		n = AR_scwprintf(L"%.10s", L"abc");
+
+}
+
+
+void com_test_srpintf()
+{
+		printf("%llu\r\n", 0xffffffffffffffffui64);
+
+
+}
+
+
+
 void com_test()
 {
+
 		//bsearch_test();
 		//algo_test1();
 		//str_test1();
@@ -1222,6 +1243,9 @@ void com_test()
 		//byte_filp_test();
 
 		//float_test();
+
+		//com_str_test_vcprintf();
+		com_test_srpintf();
 }
 
 

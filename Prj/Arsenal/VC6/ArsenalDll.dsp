@@ -144,6 +144,10 @@ SOURCE=..\..\..\Arsenal\Common\thread.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\Arsenal\Common\thread_apple.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\Arsenal\Common\thread_posix.h
 # End Source File
 # Begin Source File
@@ -284,6 +288,10 @@ SOURCE=..\..\..\Arsenal\Tools\grammar_config.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\Arsenal\Tools\serializer.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\Arsenal\Tools\tools.c
 # End Source File
 # Begin Source File
@@ -313,6 +321,22 @@ SOURCE=..\..\..\Arsenal\Tengu\tguparser.c
 # Begin Source File
 
 SOURCE=..\..\..\Arsenal\Tengu\tguparser.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Tengu\tgusyntree.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Tengu\tgusyntree.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Tengu\tguutility.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Tengu\tguutility.h
 # End Source File
 # Begin Source File
 

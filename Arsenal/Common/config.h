@@ -370,8 +370,8 @@
 		typedef bool					bool_t;
 #else
 		typedef	AR_INT8_T				bool_t;
-		#define	true					1
-		#define false					0
+		#define	true					((AR_INT8_T)1)
+		#define false					((AR_INT8_T)0)
 #endif
 
 
@@ -503,19 +503,12 @@ typedef void*					ptr_t;
 /******************************************Spec***************************************************************/
 
 
-#if (AR_COMPILER == AR_VC_LEGACY)
+#if (AR_COMPILER == AR_VC_LEGACY || AR_COMPILER == AR_VC)
 
 		#define AR_SWPRINTF										_snwprintf
 		#define AR_VSPRINTF										_vsnprintf
 		#define AR_VSWPRINTF									_vsnwprintf
-		#define AR_abort										abort
-
-
-#elif (AR_COMPILER == AR_VC)
-
-		#define AR_SWPRINTF										_snwprintf
-		#define AR_VSPRINTF										_vsnprintf
-		#define AR_VSWPRINTF									_vsnwprintf
+	
 
 		#if(OS_TYPE == OS_WINDOWS_CE)
 				#define AR_abort()								exit(3)

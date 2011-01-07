@@ -12,6 +12,7 @@
 
 AR_NAMESPACE_BEGIN
 
+#if(0)
 snObject_t*		__get_int(arBuffer_t	*buffer);
 snObject_t*		__get_str(arBuffer_t	*buffer);
 snObject_t*		__get_list(arBuffer_t	*buffer);
@@ -106,7 +107,7 @@ void sn_put_str_test()
 		AR_DestroyBuffer(buffer);
 }
 
-
+#endif
 
 
 void sn_test_torrent()
@@ -168,17 +169,302 @@ void sn_test_path()
 		AR_ASSERT(obj != NULL);
 		AR_DestroyBuffer(buffer);
 		
-		snObject_t *announce = SN_FindPathByWcs(obj, L"announce");
+		int_t l;
+		wchar_t wcs[1024];
 
-		snObject_t *announce_list = SN_FindPathByWcs(obj, L"announce-list/5");
+		snObject_t *announce = SN_FindObjectByWcsPath(obj, L"announce");
+
+		l = SN_GetWcsFromStringObject(announce, wcs, 1024);
+
+		AR_ASSERT(l > 0);
+
+		::MessageBoxW(NULL, wcs, 0, 0);
+
+		snObject_t *announce_list = SN_FindObjectByWcsPath(obj, L"announce-list");
+
+		if(announce_list != NULL)
+		{
+				for(size_t i = 0; i < SN_GetListObjectCount(announce_list); ++i)
+				{
+						snObject_t *obj = SN_GetFromListObject(announce_list, i);
+						AR_ASSERT(obj != NULL && SN_GetObjectType(obj) == SN_LIST_T);
+
+						for(size_t k = 0; k < SN_GetListObjectCount(obj); ++k)
+						{
+								const snObject_t *str = SN_GetFromListObject(obj, k);
+								AR_ASSERT(str != NULL && SN_GetObjectType(str) == SN_STRING_T);
+
+								l = SN_GetWcsFromStringObject(str, wcs, 1024);
+
+								AR_ASSERT(l > 0);
+
+								::MessageBoxW(NULL, wcs, 0, 0);
+						}
+
+				}
+		}
+
+
+
 		
 		SN_DestroyObject(obj);
 }
 
 
+
+void sn_test_str()
+{
+		snObject_t *obj;
+		
+		int_t	ret;
+		byte_t	data[512];
+		char	str[512];
+		wchar_t wcs[512];
+
+		obj = SN_CreateObject(SN_STRING_T);
+
+		byte_t buf[] = 
+		{
+				'a',
+				'b',
+				'c',
+				'd'
+		};
+
+		SN_SetStringObjectByData(obj, buf, sizeof(buf));
+
+		
+		ret = SN_GetDataFromStringObject(obj, NULL, 0);
+
+		AR_printf(L"SN_GetDataFromStringObject : len == %d\r\n", ret);
+
+		ret = SN_GetStrFromStringObject(obj, NULL, 0);
+		AR_printf(L"SN_GetStrFromStringObject : len == %d\r\n", ret);
+
+
+		ret = SN_GetWcsFromStringObject(obj, NULL, 0);
+		AR_printf(L"SN_GetWcsFromStringObject : len == %d\r\n", ret);
+
+
+
+
+		ret = SN_GetDataFromStringObject(obj, NULL, 0);
+		ret = SN_GetDataFromStringObject(obj, data, sizeof(data));
+		AR_printf(L"SN_GetDataFromStringObject : len == %d\r\n", ret);
+
+		
+		ret = SN_GetStrFromStringObject(obj, NULL, 0);
+		ret = SN_GetStrFromStringObject(obj, str, sizeof(str));
+		AR_printf(L"SN_GetStrFromStringObject : str == %hs, len == %d\r\n", str, ret);
+
+
+		ret = SN_GetWcsFromStringObject(obj, NULL, 0);
+		ret = SN_GetWcsFromStringObject(obj, wcs, sizeof(wcs)/2);
+		AR_printf(L"SN_GetWcsFromStringObject : wcs == %s, len == %d\r\n", wcs, ret);
+		
+		/*
+		ret = SN_GetWcsFromStringObject(obj, NULL, 0);
+		AR_printf(L"SN_GetWcsFromStringObject : len == %d\r\n", ret);
+		*/
+
+
+		SN_DestroyObject(obj);
+}
+
+
+
+
+void sn_test_str2()
+{
+		snObject_t *obj;
+		
+		int_t	ret;
+		byte_t	data[512];
+		char	str[512];
+		wchar_t wcs[512];
+
+		obj = SN_CreateObject(SN_STRING_T);
+
+		byte_t buf[] = 
+		{
+				'a',
+				'b',
+				0,
+				'c',
+				'd'
+		};
+
+		SN_SetStringObjectByData(obj, buf, sizeof(buf));
+
+		
+		ret = SN_GetDataFromStringObject(obj, NULL, 0);
+
+		AR_printf(L"SN_GetDataFromStringObject : len == %d\r\n", ret);
+
+		ret = SN_GetStrFromStringObject(obj, NULL, 0);
+		AR_printf(L"SN_GetStrFromStringObject : len == %d\r\n", ret);
+
+
+		ret = SN_GetWcsFromStringObject(obj, NULL, 0);
+		AR_printf(L"SN_GetWcsFromStringObject : len == %d\r\n", ret);
+
+
+
+
+		ret = SN_GetDataFromStringObject(obj, NULL, 0);
+		ret = SN_GetDataFromStringObject(obj, data, sizeof(data));
+		AR_printf(L"SN_GetDataFromStringObject : len == %d\r\n", ret);
+
+		
+		ret = SN_GetStrFromStringObject(obj, NULL, 0);
+		ret = SN_GetStrFromStringObject(obj, str, sizeof(str));
+		AR_printf(L"SN_GetStrFromStringObject : str == %hs, len == %d\r\n", str, ret);
+
+
+		ret = SN_GetWcsFromStringObject(obj, NULL, 0);
+		ret = SN_GetWcsFromStringObject(obj, wcs, sizeof(wcs)/2);
+		AR_printf(L"SN_GetWcsFromStringObject : wcs == %s, len == %d\r\n", wcs, ret);
+
+		
+		SN_DestroyObject(obj);
+}
+
+
+
+
+
+void sn_test_str3()
+{
+		snObject_t *obj;
+		
+		int_t	ret;
+		byte_t	data[512];
+		char	str[512];
+		wchar_t wcs[512];
+
+		obj = SN_CreateObject(SN_STRING_T);
+
+		//byte_t buf[] = "字符集问题太麻烦了，操！！！abcdefg";
+
+		const wchar_t *txt = L"字符集问题太麻烦了，操！！！abcdefg";
+
+
+		//SN_SetStringObjectByData(obj, buf, sizeof(buf));
+
+		SN_SetStringObjectByWcs(obj, txt);
+		
+		ret = SN_GetDataFromStringObject(obj, NULL, 0);
+
+		AR_printf(L"SN_GetDataFromStringObject : len == %d\r\n", ret);
+
+		ret = SN_GetStrFromStringObject(obj, NULL, 0);
+		AR_printf(L"SN_GetStrFromStringObject : len == %d\r\n", ret);
+
+
+		ret = SN_GetWcsFromStringObject(obj, NULL, 0);
+		AR_printf(L"SN_GetWcsFromStringObject : len == %d\r\n", ret);
+
+
+
+
+		ret = SN_GetDataFromStringObject(obj, NULL, 0);
+		ret = SN_GetDataFromStringObject(obj, data, sizeof(data));
+		AR_printf(L"SN_GetDataFromStringObject : len == %d\r\n", ret);
+
+		
+		ret = SN_GetStrFromStringObject(obj, NULL, 0);
+		ret = SN_GetStrFromStringObject(obj, str, sizeof(str));
+		AR_printf(L"SN_GetStrFromStringObject : str == %hs, len == %d\r\n", str, ret);
+
+
+		ret = SN_GetWcsFromStringObject(obj, NULL, 0);
+		ret = SN_GetWcsFromStringObject(obj, wcs, sizeof(wcs)/2);
+		AR_printf(L"SN_GetWcsFromStringObject : wcs == %ls, len == %d\r\n", wcs, ret);
+
+		
+		SN_DestroyObject(obj);
+}
+
+
+
+
+
+
+void sn_test_find()
+{
+		arBuffer_t		*buffer;
+		buffer = AR_CreateBuffer(0);
+
+		FILE *f = fopen("d:\\user\\temp\\1.torrent", "rb");
+		assert(f != NULL);
+
+		byte_t buf[4096];
+		
+		while(!ferror(f) && !feof(f))
+		{
+				size_t rn = fread(buf, sizeof(byte_t), sizeof(buf), f);
+				if(rn == 0)break;
+				AR_InsertBuffer(buffer, buf, rn);
+		}
+		fclose(f);
+		
+		snObject_t *root = SN_GetObject(buffer);
+		AR_ASSERT(root != NULL);
+		AR_DestroyBuffer(buffer);
+		
+		int_t l;
+		wchar_t wcs[1024];
+
+		snObject_t *announce = SN_FindObjectByWcsPath(root, L"////announce");
+
+		l = SN_GetWcsFromStringObject(announce, wcs, 1024);
+
+		AR_ASSERT(l > 0);
+
+		::MessageBoxW(NULL, wcs, 0, 0);
+
+		snObject_t *announce_list = SN_FindObjectByWcsPath(root, L"announce-list");
+
+		if(announce_list != NULL)
+		{
+				for(size_t i = 0; i < SN_GetListObjectCount(announce_list); ++i)
+				{
+						wchar_t buf[200];
+						AR_swprintf(buf, 200, L"/announce-list/%d", i);
+						snObject_t *obj = SN_FindObjectByWcsPath(root, buf);
+						AR_ASSERT(obj != NULL && SN_GetObjectType(obj) == SN_LIST_T);
+
+						for(size_t k = 0; k < SN_GetListObjectCount(obj); ++k)
+						{
+								const snObject_t *str = SN_GetFromListObject(obj, k);
+								AR_ASSERT(str != NULL && SN_GetObjectType(str) == SN_STRING_T);
+
+								l = SN_GetWcsFromStringObject(str, wcs, 1024);
+
+								AR_ASSERT(l > 0);
+
+								::MessageBoxW(NULL, wcs, 0, 0);
+						}
+
+				}
+		}
+
+
+
+		
+		SN_DestroyObject(root);
+}
+
+
 void sn_test()
 {
-		sn_test_path();
+		//sn_test_torrent();
+		//sn_test_path();
+		//sn_test_str();
+		//sn_test_str2();
+		//sn_test_str3();
+
+		sn_test_find();
 }
 
 AR_NAMESPACE_END
