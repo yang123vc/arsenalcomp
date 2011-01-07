@@ -86,7 +86,7 @@ void AR_Test()
 		//com_test();
 		//trie_tree_test();
 		//expr_test();
-		lex_test();
+		//lex_test();
 		//lex_test2();
 		//lex_test3();
 		//lex_test4();
@@ -135,7 +135,7 @@ void AR_Test()
 
 		//ray_test();
 
-		//sn_test();
+		sn_test();
 
 		//gen_code_test();
 

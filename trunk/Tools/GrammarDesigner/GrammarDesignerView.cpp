@@ -218,6 +218,11 @@ BOOL CGrammarDesignerView::PreTranslateMessage(MSG* pMsg)
 						}
 						break;
 				}
+				case VK_F5:
+				{
+						((CGrammarDesignerDoc*)this->GetDocument())->OnParserParse();
+				}
+						break;
 				}
 		}
 		}

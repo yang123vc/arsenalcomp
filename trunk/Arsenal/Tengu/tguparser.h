@@ -105,7 +105,7 @@ typedef struct __tengu_parser_tag
 
 tguParser_t*			TGU_CreateParser(tguReport_t	*report, const tguBlock_t		*build_in_block);
 void					TGU_DestroyParser(tguParser_t	*parser);
-tguSyntaxTree_t*		TGU_ParseCode(tguParser_t	*parser, const wchar_t *sources_name, const wchar_t *code);
+tguSyntaxTree_t*		TGU_ParseCode(tguParser_t	*parser, const wchar_t *code);
 
 
 

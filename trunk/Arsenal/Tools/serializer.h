@@ -18,84 +18,6 @@
 
 AR_NAMESPACE_BEGIN
 
-struct __serialize_object_tag;
-typedef	struct __serialize_object_tag	snObject_t;
-
-
-typedef struct __sn_int_tag
-{
-		bool_t	is_signed;
-		union{
-				uint_64_t		u;
-				int_64_t		s;
-		};
-}snInteger_t;
-
-
-void	SN_InitInteger(snInteger_t *dest);
-void	SN_UnInitInteger(snInteger_t *dest);
-
-
-
-typedef struct __sn_string_tag
-{
-		byte_t	*data;
-		size_t	len;
-}snString_t;
-
-void	SN_InitString(snString_t	*str);
-void	SN_UnInitString(snString_t	*dest);
-
-void	SN_SetStringByData(snString_t	*dest, const byte_t *data, size_t len);
-void	SN_SetStringByStr(snString_t	*dest, const char *str);
-void	SN_SetStringByWcs(snString_t	*dest, const wchar_t *str);
-
-
-int_t	SN_CompStringByString(const snString_t	*l,  const snString_t	*r);
-int_t	SN_CompStringByData(const snString_t	*l,  const byte_t *data, size_t len);
-int_t	SN_CompStringByStr(const snString_t		*l,	 const char *str);
-int_t	SN_CompStringByWcs(const snString_t		*l,	 const wchar_t *str);
-
-
-
-typedef struct __sn_list_tag
-{
-		snObject_t		**lst;
-		size_t			count;
-		size_t			cap;
-}snList_t;
-
-void	SN_InitList(snList_t	*lst);
-void	SN_UnInitList(snList_t	*lst);
-
-void	SN_InsertToList(snList_t	*lst, snObject_t *obj);
-bool_t	SN_RemoveFromList(snList_t	*lst, size_t idx);
-int_t	SN_IndexOfList(const snList_t *lst, const snObject_t *obj);
-snObject_t*		SN_GetObjectFromList(snList_t *lst, size_t idx);
-
-typedef struct __sn_dict_pair_tag
-{
-		snObject_t		*key;
-		snObject_t		*val;
-}snPair_t;
-
-typedef struct __sn_dict_tag
-{
-		snPair_t		*pairs;		
-		size_t			count;
-		size_t			cap;
-}snDict_t;
-
-void	SN_InitDict(snDict_t *dict);
-void	SN_UnInitDict(snDict_t *dict);
-bool_t	SN_InsertToDict(snDict_t *dict, snObject_t *key, snObject_t *value);
-bool_t	SN_RemoveFromDict(snDict_t *dict, const snObject_t *key);
-snObject_t* SN_FindFromDict(snDict_t *dict, const snObject_t *key);
-
-
-
-
-
 
 typedef enum
 {
@@ -106,30 +28,76 @@ typedef enum
 }snType_t;
 
 
-struct __serialize_object_tag
-{
-		snType_t		type;
-		union{
-				snInteger_t		integer;
-				snString_t		string;
-				snList_t		list;
-				snDict_t		dict;
-		};
-};
+struct __serialize_object_tag;
+typedef	struct __serialize_object_tag	snObject_t;
+
+
+
+
+
 
 
 snObject_t*		SN_CreateObject(snType_t		type);
 void			SN_DestroyObject(snObject_t		*obj);
+snType_t		SN_GetObjectType(const snObject_t *obj);
+
+
+/*******************************Dict***********************************************************/
+
+typedef struct __sn_dict_pair_tag
+{
+		snObject_t		*key;
+		snObject_t		*val;
+}snPair_t;
+
+
+bool_t			SN_InsertToDictObject(snObject_t *obj, snObject_t *key, snObject_t *value);
+bool_t			SN_RemoveFromDictObject(snObject_t *obj, const snObject_t *key);
+snObject_t*		SN_FindFromDictObject(snObject_t *obj, const snObject_t *key);
+size_t			SN_GetDictObjectCount(const snObject_t *obj);
+snPair_t*		SN_GetFromDictObject(snObject_t *obj, size_t idx);
+
+
+/*******************************List***********************************************************/
+void			SN_InsertToListObject(snObject_t	*lst, snObject_t *obj);
+bool_t			SN_RemoveFromListObject(snObject_t	*lst, size_t idx);
+int_t			SN_IndexOfListObject(const snObject_t *lst, const snObject_t *obj);
+snObject_t*		SN_GetFromListObject(snObject_t *lst, size_t idx);
+size_t			SN_GetListObjectCount(const snObject_t *lst);
+
+/*******************************String***********************************************************/
+void			SN_SetStringObjectByData(snObject_t	*dest, const byte_t *data, size_t len);
+void			SN_SetStringObjectByStr(snObject_t	*dest, const char *str);
+void			SN_SetStringObjectByWcs(snObject_t	*dest, const wchar_t *str);
+
+int_t			SN_GetWcsFromStringObject(const snObject_t	*obj, wchar_t *buf, size_t len);
+int_t			SN_GetStrFromStringObject(const snObject_t	*obj, char *buf, size_t len);
+int_t			SN_GetDataFromStringObject(const snObject_t	*obj, byte_t *buf, size_t len);
+
+
+
+int_t			SN_CompStringObjectByStringObject(const snObject_t		*l,		const snObject_t		*r);
+int_t			SN_CompStringObjectByData(const snObject_t				*l,		const byte_t *data,		size_t len);
+int_t			SN_CompStringObjectByStr(const snObject_t				*l,		const char *str);
+int_t			SN_CompStringObjectByWcs(const snObject_t				*l,		const wchar_t *str);
+
+
+/*******************************Int***********************************************************/
+
+int_64_t		SN_GetIntObject(const snObject_t	*obj);
+uint_64_t		SN_GetUIntObject(const snObject_t	*obj);
+void			SN_SetUIntObject(snObject_t	*obj,	uint_64_t num);
+void			SN_SetIntObject(snObject_t	*obj,	int_64_t num);
+
+
+
+/************************************Util****************************************************/
 
 snObject_t*		SN_GetObject(arBuffer_t	*buffer);
 void			SN_PutObject(arBuffer_t	*buffer, const snObject_t *obj);
 
-
-
-snObject_t*		SN_FindPathByWcs(snObject_t *pobj, const wchar_t *path);
-snObject_t*		SN_FindPathByStr(snObject_t *pobj, const char *path);
-
-
+snObject_t*		SN_FindObjectByWcsPath(snObject_t *obj, const wchar_t *path);
+snObject_t*		SN_FindObjectByStrPath(snObject_t *obj, const char *path);
 
 
 AR_NAMESPACE_END

@@ -257,17 +257,12 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 
 				if(width == 0)
 				{
-						const wchar_t *s; int_t w;
-						s = AR_wtoi(fmt, &w, 10);
-
-						if(s != NULL)
+						while(*fmt && AR_iswdigit(*fmt))
 						{
-								fmt = s;
-								width = w;
+								width *= 10;
+								width += AR_wchartodigit(*fmt);
+								fmt++;
 						}
-
-						AR_ASSERT(fmt != NULL && width >= 0);
-						if(fmt == NULL || width < 0)return (int_t)-1;
 				}
 
 				if(*fmt == L'.')
@@ -280,17 +275,13 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 								fmt++;
 						}else
 						{
-								const wchar_t *s; int_t p;
-								s = AR_wtoi(fmt, &p, 10);
-
-								if(s != NULL)
+								prec = 0;
+								while(*fmt && AR_iswdigit(*fmt))
 								{
-										fmt = s;
-										prec = p;
+										prec *= 10;
+										prec += AR_wchartodigit(*fmt);
+										fmt++;
 								}
-
-								AR_ASSERT(fmt != NULL && prec >= 0);
-								if(fmt == NULL || prec < 0)return -1;
 						}
 
 				}
@@ -871,7 +862,7 @@ wchar_t* AR_wcsndup(const wchar_t *sour, size_t len)
 
 
 
-#define	__BUFFER_LEN	256
+#define	__BUFFER_LEN	128
 
 
 int_t			AR_u64tow_buf(wchar_t *out, size_t nbuf, uint_64_t num, size_t radix)

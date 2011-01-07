@@ -130,12 +130,14 @@ static void				__release_parser_context(psrContext_t		*parser_context)
 
 void	TGU_InitParser()
 {
+		TGU_InitUtility();
 		__parser_core_init();
 }
 
 void	TGU_UnInitParser()
 {
 		__parser_core_uninit();
+		TGU_UnInitUtility();
 }
 
 
@@ -212,7 +214,7 @@ static void __on_lex_error(tguParser_t	*parser)
 		parser->has_error = true;
 }
 
-tguSyntaxTree_t*	TGU_ParseCode(tguParser_t	*parser, const wchar_t *sources_name, const wchar_t *code)
+tguSyntaxTree_t*	TGU_ParseCode(tguParser_t	*parser, const wchar_t *code)
 {
 		tguSyntaxTree_t	*result = NULL;
 		lexToken_t		token;
@@ -224,7 +226,7 @@ tguSyntaxTree_t*	TGU_ParseCode(tguParser_t	*parser, const wchar_t *sources_name,
 		Lex_ResetInput(parser->match, code);
 		Parser_Clear(parser->parser_context);
 
-		result = TGU_CreateSyntaxTree(sources_name, parser->build_in);
+		result = TGU_CreateSyntaxTree(parser->build_in);
 		parser->result = result;
 		parser->top_block = result->global_block;
 		parser->current_function = NULL;

@@ -17,17 +17,107 @@
 
 AR_NAMESPACE_BEGIN
 
+/***************************************Declaration*************************************************/
+
+typedef struct __sn_int_tag
+{
+		bool_t	is_signed;
+		union{
+				uint_64_t		u;
+				int_64_t		s;
+		};
+}snInteger_t;
+
+
+static void	SN_InitInteger(snInteger_t *dest);
+static void	SN_UnInitInteger(snInteger_t *dest);
+
+
+
+typedef struct __sn_string_tag
+{
+		byte_t	*data;
+		size_t	len;
+}snString_t;
+
+static void	SN_InitString(snString_t	*str);
+static void	SN_UnInitString(snString_t	*dest);
+
+static void	SN_SetStringByData(snString_t	*dest, const byte_t *data, size_t len);
+static void	SN_SetStringByStr(snString_t	*dest, const char *str);
+static void	SN_SetStringByWcs(snString_t	*dest, const wchar_t *str);
+
+
+static int_t	SN_CompStringByString(const snString_t	*l,  const snString_t	*r);
+static int_t	SN_CompStringByData(const snString_t	*l,  const byte_t *data, size_t len);
+static int_t	SN_CompStringByStr(const snString_t		*l,	 const char *str);
+static int_t	SN_CompStringByWcs(const snString_t		*l,	 const wchar_t *str);
+
+
+
+typedef struct __sn_list_tag
+{
+		snObject_t		**lst;
+		size_t			count;
+		size_t			cap;
+}snList_t;
+
+static void			SN_InitList(snList_t	*lst);
+static void			SN_UnInitList(snList_t	*lst);
+
+static void			SN_InsertToList(snList_t	*lst, snObject_t *obj);
+static bool_t			SN_RemoveFromList(snList_t	*lst, size_t idx);
+static int_t			SN_IndexOfList(const snList_t *lst, const snObject_t *obj);
+static snObject_t*		SN_GetFromList(snList_t *lst, size_t idx);
+
+
+
+typedef struct __sn_dict_tag
+{
+		snPair_t		*pairs;		
+		size_t			count;
+		size_t			cap;
+}snDict_t;
+
+static void	SN_InitDict(snDict_t *dict);
+static void	SN_UnInitDict(snDict_t *dict);
+static bool_t	SN_InsertToDict(snDict_t *dict, snObject_t *key, snObject_t *value);
+static bool_t	SN_RemoveFromDict(snDict_t *dict, const snObject_t *key);
+static snObject_t* SN_FindFromDict(snDict_t *dict, const snObject_t *key);
+
+
+
+
+
+
+
+
+struct __serialize_object_tag
+{
+		snType_t		type;
+		union{
+				snInteger_t		integer;
+				snString_t		string;
+				snList_t		list;
+				snDict_t		dict;
+		};
+};
+
+
+
+
+
 /*int*/
 
 
 
-void	SN_InitInteger(snInteger_t *dest)
+static void	SN_InitInteger(snInteger_t *dest)
 {
 		AR_ASSERT(dest != NULL);
 		AR_memset(dest, 0, sizeof(*dest));
 }
 
-void	SN_UnInitInteger(snInteger_t *dest)
+static void	SN_UnInitInteger(snInteger_t *dest)
 {
 		AR_ASSERT(dest != NULL);
 		AR_memset(dest, 0, sizeof(*dest));
@@ -37,13 +127,13 @@ void	SN_UnInitInteger(snInteger_t *dest)
 
 
 /*string*/
-void	SN_InitString(snString_t	*str)
+static void	SN_InitString(snString_t	*str)
 {
 		AR_ASSERT(str != NULL);
 		AR_memset(str, 0, sizeof(*str));
 }
 
-void	SN_UnInitString(snString_t	*str)
+static void	SN_UnInitString(snString_t	*str)
 {
 		if(str->data != NULL)
 		{
@@ -52,20 +142,22 @@ void	SN_UnInitString(snString_t	*str)
 		AR_memset(str, 0, sizeof(*str));
 }
 
-void	SN_SetStringByData(snString_t	*dest, const byte_t *data, size_t len)
+static void	SN_SetStringByData(snString_t	*dest, const byte_t *data, size_t len)
 {
 		AR_ASSERT(dest != NULL && data != NULL && len > 0);
 
 		if(dest->data != NULL)
 		{
 				AR_DEL(dest->data);
+				dest->data = NULL;
 		}
+		
 		dest->data = AR_NEWARR(byte_t, len);
 		AR_memcpy(dest->data, data, len);
 		dest->len = len;
 }
 
-void	SN_SetStringByStr(snString_t	*dest, const char *str)
+static void	SN_SetStringByStr(snString_t	*dest, const char *str)
 {
 		size_t	l;
 		AR_ASSERT(dest != NULL && str != NULL);
@@ -74,7 +166,7 @@ void	SN_SetStringByStr(snString_t	*dest, const char *str)
 		SN_SetStringByData(dest, (const byte_t*)str, l);
 }
 
-void	SN_SetStringByWcs(snString_t	*dest, const wchar_t *str)
+static void	SN_SetStringByWcs(snString_t	*dest, const wchar_t *str)
 {
 		const char *utf8;
 		AR_ASSERT(dest != NULL && str != NULL);
@@ -85,7 +177,7 @@ void	SN_SetStringByWcs(snString_t	*dest, const wchar_t *str)
 }
 
 
-int_t	SN_CompStringByString(const snString_t	*l,  const snString_t	*r)
+static int_t	SN_CompStringByString(const snString_t	*l,  const snString_t	*r)
 {
 		AR_ASSERT(l != NULL && r != NULL && l->len > 0 && r->len > 0 && l->data != NULL && r->data != NULL);
 		
@@ -103,7 +195,7 @@ int_t	SN_CompStringByString(const snString_t	*l,  const snString_t	*r)
 
 
 
-int_t	SN_CompStringByData(const snString_t	*l,  const byte_t *data, size_t len)
+static int_t	SN_CompStringByData(const snString_t	*l,  const byte_t *data, size_t len)
 {
 		snString_t		other;
 		int_t cmp;
@@ -117,7 +209,7 @@ int_t	SN_CompStringByData(const snString_t	*l,  const byte_t *data, size_t len)
 		return cmp;
 }
 
-int_t	SN_CompStringByStr(const snString_t		*l,	 const char *str)
+static int_t	SN_CompStringByStr(const snString_t		*l,	 const char *str)
 {
 		snString_t		other;
 		int_t cmp;
@@ -130,7 +222,7 @@ int_t	SN_CompStringByStr(const snString_t		*l,	 const char *str)
 		return cmp;
 }
 
-int_t	SN_CompStringByWcs(const snString_t		*l,	 const wchar_t *str)
+static int_t	SN_CompStringByWcs(const snString_t		*l,	 const wchar_t *str)
 {
 		snString_t		other;
 		int_t cmp;
@@ -146,13 +238,13 @@ int_t	SN_CompStringByWcs(const snString_t		*l,	 const wchar_t *str)
 
 /*list*/
 
-void	SN_InitList(snList_t	*lst)
+static void	SN_InitList(snList_t	*lst)
 {
 		AR_ASSERT(lst != NULL);
 		AR_memset(lst, 0, sizeof(*lst));
 }
 
-void	SN_UnInitList(snList_t	*lst)
+static void	SN_UnInitList(snList_t	*lst)
 {
 		size_t i;
 		AR_ASSERT(lst != NULL);
@@ -167,7 +259,7 @@ void	SN_UnInitList(snList_t	*lst)
 }
 
 
-void	SN_InsertToList(snList_t	*lst, snObject_t *obj)
+static void	SN_InsertToList(snList_t	*lst, snObject_t *obj)
 {
 		AR_ASSERT(lst != NULL && obj != NULL);
 
@@ -182,7 +274,7 @@ void	SN_InsertToList(snList_t	*lst, snObject_t *obj)
 
 
 
-bool_t	SN_RemoveFromList(snList_t	*lst, size_t idx)
+static bool_t	SN_RemoveFromList(snList_t	*lst, size_t idx)
 {
 		
 		AR_ASSERT(lst != NULL);
@@ -195,7 +287,7 @@ bool_t	SN_RemoveFromList(snList_t	*lst, size_t idx)
 }
 
 
-int_t	SN_IndexOfList(const snList_t *lst, const snObject_t *obj)
+static int_t	SN_IndexOfList(const snList_t *lst, const snObject_t *obj)
 {
 		int_t i;
 		AR_ASSERT(lst != NULL && obj != NULL);
@@ -208,7 +300,7 @@ int_t	SN_IndexOfList(const snList_t *lst, const snObject_t *obj)
 }
 
 
-snObject_t*		SN_GetObjectFromList(snList_t *lst, size_t idx)
+static snObject_t*		SN_GetFromList(snList_t *lst, size_t idx)
 {
 		AR_ASSERT(lst != NULL);
 		if(idx >= lst->count)return NULL;
@@ -221,13 +313,13 @@ snObject_t*		SN_GetObjectFromList(snList_t *lst, size_t idx)
 
 
 /*dict*/
-void	SN_InitDict(snDict_t *dict)
+static void	SN_InitDict(snDict_t *dict)
 {
 		AR_ASSERT(dict != NULL);
 		AR_memset(dict, 0, sizeof(*dict));
 }
 
-void	SN_UnInitDict(snDict_t *dict)
+static void	SN_UnInitDict(snDict_t *dict)
 {
 		size_t i;
 		AR_ASSERT(dict != NULL);
@@ -242,25 +334,44 @@ void	SN_UnInitDict(snDict_t *dict)
 }
 
 
-bool_t	SN_InsertToDict(snDict_t *dict, snObject_t *key, snObject_t *value)
+static bool_t	SN_InsertToDict(snDict_t *dict, snObject_t *key, snObject_t *value)
 {
+		size_t i;
 		AR_ASSERT(dict != NULL && key != NULL && key->type == SN_STRING_T && value != NULL);
 
-		if(SN_FindFromDict(dict, key) != NULL)return false;
-		
-		if(dict->count == dict->cap)
+		for(i = 0; i < dict->count; ++i)
 		{
-				dict->cap = (dict->cap + 4) * 2;
-				dict->pairs = AR_REALLOC(snPair_t, dict->pairs, dict->cap);
-		}		
-		
-		dict->pairs[dict->count].key = key;
-		dict->pairs[dict->count].val = value;
-		dict->count++;
-		return true;
+				if(SN_CompStringByString(&key->string, &(dict->pairs[i].key->string)) == 0)
+				{
+						break;
+				}
+		}
+
+		if(i < dict->count)
+		{
+				if(dict->pairs[i].val)
+				{
+						SN_DestroyObject(dict->pairs[i].val);
+				}
+
+				dict->pairs[i].val = value;
+				return true;
+		}else
+		{
+				if(dict->count == dict->cap)
+				{
+						dict->cap = (dict->cap + 4) * 2;
+						dict->pairs = AR_REALLOC(snPair_t, dict->pairs, dict->cap);
+				}		
+
+				dict->pairs[dict->count].key = key;
+				dict->pairs[dict->count].val = value;
+				dict->count++;
+				return true;
+		}
 }
 
-bool_t	SN_RemoveFromDict(snDict_t *dict, const snObject_t *key)
+static bool_t	SN_RemoveFromDict(snDict_t *dict, const snObject_t *key)
 {
 		size_t i;
 		AR_ASSERT(dict != NULL && key != NULL && key->type == SN_STRING_T);
@@ -284,7 +395,7 @@ bool_t	SN_RemoveFromDict(snDict_t *dict, const snObject_t *key)
 		
 }
 
-snObject_t* SN_FindFromDict(snDict_t *dict, const snObject_t *key)
+static snObject_t* SN_FindFromDict(snDict_t *dict, const snObject_t *key)
 {
 		size_t i;
 		AR_ASSERT(dict != NULL && key != NULL && key->type == SN_STRING_T);
@@ -298,6 +409,10 @@ snObject_t* SN_FindFromDict(snDict_t *dict, const snObject_t *key)
 		}
 		return NULL;
 }
+
+
+
+
 
 
 
@@ -380,11 +495,15 @@ void			SN_DestroyObject(snObject_t		*obj)
 		AR_DEL(obj);
 }
 
+snType_t		SN_GetObjectType(const snObject_t *obj)
+{
+		AR_ASSERT(obj != NULL);
+		return obj->type;
+}
 
 
 
-
-snObject_t*	__get_int(arBuffer_t	*buffer)
+static snObject_t*	__get_int(arBuffer_t	*buffer)
 {
 		snObject_t		*ret = NULL;
 		size_t	buf_len, idx;
@@ -428,7 +547,7 @@ snObject_t*	__get_int(arBuffer_t	*buffer)
 		return ret;
 }
 
-snObject_t*		__get_str(arBuffer_t	*buffer)
+static snObject_t*		__get_str(arBuffer_t	*buffer)
 {
 		snObject_t		*ret = NULL;
 		size_t	buf_len, idx;
@@ -460,15 +579,18 @@ snObject_t*		__get_str(arBuffer_t	*buffer)
 		return ret;
 }
 
-snObject_t*		__get_list(arBuffer_t	*buffer);
-snObject_t*		__get_dict(arBuffer_t	*buffer);
+static snObject_t*		__get_list(arBuffer_t	*buffer);
+static snObject_t*		__get_dict(arBuffer_t	*buffer);
 
-snObject_t*		__get_obj(arBuffer_t	*buffer)
+static snObject_t*		__get_obj(arBuffer_t	*buffer)
 {
 		byte_t b;
+		const byte_t *data;
 		AR_ASSERT(buffer != NULL && AR_GetBufferAvailable(buffer) > 0);
 
-		b = *(AR_GetBufferData(buffer));
+		data = AR_GetBufferData(buffer);
+		if(data == NULL)return NULL;
+		b = data[0];
 		
 		switch(b)
 		{
@@ -495,7 +617,7 @@ snObject_t*		__get_obj(arBuffer_t	*buffer)
 }
 
 
-snObject_t*		__get_list(arBuffer_t	*buffer)
+static snObject_t*		__get_list(arBuffer_t	*buffer)
 {
 		const byte_t	*pb;
 		snObject_t		*ret;
@@ -521,7 +643,7 @@ FAILED_POINT:
 }
 
 
-snObject_t*		__get_dict(arBuffer_t	*buffer)
+static snObject_t*		__get_dict(arBuffer_t	*buffer)
 {
 		const byte_t	*pb;
 		snObject_t		*ret;
@@ -544,11 +666,10 @@ snObject_t*		__get_dict(arBuffer_t	*buffer)
 						SN_DestroyObject(key);
 						goto FAILED_POINT;
 				}
-RE_INSERT:
+				
 				if(!SN_InsertToDict(&ret->dict, key, val))
 				{
-						SN_RemoveFromDict(&ret->dict, key);
-						goto RE_INSERT;
+						goto FAILED_POINT;
 				}
 		}
 		AR_EraseBuffer(buffer, 1);
@@ -569,7 +690,7 @@ snObject_t*		SN_GetObject(arBuffer_t	*buffer)
 
 
 
-void		__put_int(arBuffer_t	*buffer, const snInteger_t *integer)
+static void		__put_int(arBuffer_t	*buffer, const snInteger_t *integer)
 {
 		char buf[256];
 		char *p;
@@ -604,7 +725,7 @@ void		__put_int(arBuffer_t	*buffer, const snInteger_t *integer)
 		AR_InsertBuffer(buffer, (const byte_t*)p, AR_strlen(p));
 }
 
-void __put_string(arBuffer_t	*buffer, const snString_t *string)
+static void __put_string(arBuffer_t	*buffer, const snString_t *string)
 {
 		char buf[256];
 		char *p;
@@ -626,10 +747,10 @@ void __put_string(arBuffer_t	*buffer, const snString_t *string)
 }
 
 
-void __put_list(arBuffer_t	*buffer, const snList_t *lst);
-void __put_dict(arBuffer_t	*buffer, const snDict_t *dict);
+static void __put_list(arBuffer_t	*buffer, const snList_t *lst);
+static void __put_dict(arBuffer_t	*buffer, const snDict_t *dict);
 
-void __put_obj(arBuffer_t	*buffer, const snObject_t *obj)
+static void __put_obj(arBuffer_t	*buffer, const snObject_t *obj)
 {
 		switch(obj->type)
 		{
@@ -661,7 +782,7 @@ void __put_obj(arBuffer_t	*buffer, const snObject_t *obj)
 		}
 }
 
-void __put_list(arBuffer_t	*buffer, const snList_t *lst)
+static void __put_list(arBuffer_t	*buffer, const snList_t *lst)
 {
 		static const char *h = "l";
 		static const char *e = "e";
@@ -678,7 +799,7 @@ void __put_list(arBuffer_t	*buffer, const snList_t *lst)
 		AR_InsertBuffer(buffer, (const byte_t*)e, 1);
 }
 
-void __put_dict(arBuffer_t	*buffer, const snDict_t *dict)
+static void __put_dict(arBuffer_t	*buffer, const snDict_t *dict)
 {
 		static const char *h = "d";
 		static const char *e = "e";
@@ -725,100 +846,510 @@ void			SN_PutObject(arBuffer_t	*buffer, const snObject_t *obj)
 /*****************************************************************************************************/
 
 
-snObject_t*		SN_FindPathByWcs(snObject_t *pobj, const wchar_t *path)
+snObject_t*		SN_FindObjectByWcsPath(snObject_t *obj, const wchar_t *path)
 {
-		const wchar_t *p, *beg;
+		
+		wchar_t *beg, *p;
 		size_t len = 0;
 		wchar_t *pbuf = NULL;
-		
-		AR_ASSERT(pobj != NULL && path != NULL);
+		wchar_t	save;
+		AR_ASSERT(obj != NULL && path != NULL );
 
-		beg = path;
+		pbuf = AR_wcsdup(path);
+		save = L'\0';
+
+		beg = pbuf;
 		p = beg;
 
-		while(pobj != NULL)
+		
+
+		while(obj != NULL && *p != L'\0')
 		{
-				while(*p != L'/' && *p != L'\0') ++p;
+				while(*p != L'\0' && *p != L'/') ++p;
 				len = p - beg;
-				pbuf = AR_NEWARR0(wchar_t, len + 1);
-				AR_wcsncpy(pbuf, beg, len);
-				pbuf[len] = L'\0';
+
+				/*
+						a/b/c
+						/b/c
+				*/
 				
-				if(pobj->type == SN_LIST_T)
-				{
-						
-						size_t idx;
-						AR_wtou(pbuf, (uint_t*)&idx, 10);
-						pobj = SN_GetObjectFromList(&pobj->list, idx);
 
-				}else if(pobj->type == SN_DICT_T)
+				if(len == 0)
 				{
-						snObject_t		*key = SN_CreateObject(SN_STRING_T);
-						SN_SetStringByWcs(&key->string, pbuf);
+						if(*p == L'\0')
+						{
+								obj = NULL;
+								goto END_POINT;
+						}
 
-						pobj = SN_FindFromDict(&pobj->dict, key);
-						SN_DestroyObject(key);
+						AR_ASSERT(*p == L'/');
 				}else
 				{
-						AR_DEL(pbuf);
-						return NULL;
+						save  = *p;
+						*p = 0;
+
+						if(obj->type == SN_LIST_T)
+						{
+								size_t idx;
+								AR_wtou(beg, (uint_t*)&idx, 10);
+								obj = SN_GetFromList(&obj->list, idx);
+
+						}else if(obj->type == SN_DICT_T)
+						{
+								snObject_t		*key = SN_CreateObject(SN_STRING_T);
+								SN_SetStringByWcs(&key->string, beg);
+
+								obj = SN_FindFromDict(&obj->dict, key);
+								SN_DestroyObject(key);
+						}else
+						{
+
+								obj = NULL;
+								goto END_POINT;
+						}
+						*p = save;
 				}
-				
+
+				if(*p != L'\0')
+				{
+						beg = ++p;
+				}else
+				{
+						beg = p;
+				}
+		}
+
+END_POINT:
+		if(pbuf != NULL)
+		{
 				AR_DEL(pbuf);
 				pbuf = NULL;
-				if(*p == L'\0')break;
-				beg = ++p;
 		}
-		return pobj;
 
+		return obj;
 }
 
 
 
-snObject_t*		SN_FindPathByStr(snObject_t *pobj, const char *path)
+snObject_t*		SN_FindObjectByStrPath(snObject_t *obj, const char *path)
 {
-		const char *p, *beg;
-		size_t len = 0;
-		char *pbuf = NULL;
-		
-		AR_ASSERT(pobj != NULL && path != NULL);
+		wchar_t *wcs = NULL;
+		AR_ASSERT(obj != NULL && path != NULL);
 
-		beg = path;
-		p = beg;
+		wcs = AR_utf8_convto_wcs(path);
 
-		while(pobj != NULL)
+		if(wcs == NULL)
 		{
-				while(*p != '/' && *p != '\0') ++p;
-				len = p - beg;
-				pbuf = AR_NEWARR0(char, len + 1);
-				AR_memcpy(pbuf, beg, len);
-				pbuf[len] = '\0';
-				
-				if(pobj->type == SN_LIST_T)
-				{
-						size_t idx = (size_t)atoi(pbuf);
-						pobj = SN_GetObjectFromList(&pobj->list, idx);
-
-				}else if(pobj->type == SN_DICT_T)
-				{
-						snObject_t		*key = SN_CreateObject(SN_STRING_T);
-						SN_SetStringByStr(&key->string, pbuf);
-
-						pobj = SN_FindFromDict(&pobj->dict, key);
-						SN_DestroyObject(key);
-				}else
-				{
-						AR_DEL(pbuf);
-						return NULL;
-				}
-				
-				AR_DEL(pbuf);
-				pbuf = NULL;
-				if(*p == '\0')break;
-				beg = ++p;
+				return NULL;
 		}
-		return pobj;
+
+		obj = SN_FindObjectByWcsPath(obj, wcs);
+
+		AR_DEL(wcs);
+		return obj;
 }
+
+
+
+/***************************************************************************************************************************/
+
+
+bool_t			SN_InsertToDictObject(snObject_t *obj, snObject_t *key, snObject_t *value)
+{
+		AR_ASSERT(obj != NULL && obj->type == SN_DICT_T);
+		AR_ASSERT(key != NULL && value != NULL);
+		
+		if(obj->type != SN_DICT_T)
+		{
+				return false;
+		}
+
+		return SN_InsertToDict(&obj->dict, key, value);
+}
+
+
+bool_t			SN_RemoveFromDictObject(snObject_t *obj, const snObject_t *key)
+{
+		AR_ASSERT(obj != NULL && obj->type == SN_DICT_T);
+		AR_ASSERT(key != NULL);
+		
+		if(obj->type != SN_DICT_T)
+		{
+				return false;
+		}
+
+		return SN_RemoveFromDict(&obj->dict,key);
+}
+
+
+snObject_t*		SN_FindFromDictObject(snObject_t *obj, const snObject_t *key)
+{
+		AR_ASSERT(obj != NULL && obj->type == SN_DICT_T);
+		AR_ASSERT(key != NULL);
+		
+		if(obj->type != SN_DICT_T)
+		{
+				return false;
+		}
+
+		return SN_FindFromDict(&obj->dict,key);
+}
+
+
+
+
+snPair_t*		SN_GetFromDictObject(snObject_t *obj, size_t idx)
+{
+		AR_ASSERT(obj != NULL && obj->type == SN_DICT_T);
+		AR_ASSERT(idx < obj->dict.count);
+		return &obj->dict.pairs[idx];
+
+}
+
+size_t			SN_GetDictObjectCount(const snObject_t *obj)
+{
+		AR_ASSERT(obj != NULL && obj->type == SN_DICT_T);
+		return obj->dict.count;
+}
+
+
+
+
+
+void			SN_InsertToListObject(snObject_t	*lst, snObject_t *obj)
+{
+		AR_ASSERT(lst != NULL && lst->type == SN_LIST_T);
+		AR_ASSERT(obj != NULL);
+		if(lst->type != SN_LIST_T)
+		{
+				return;
+		}
+
+		SN_InsertToList(&lst->list, obj);
+}
+
+bool_t			SN_RemoveFromListObject(snObject_t	*lst, size_t idx)
+{
+		AR_ASSERT(lst != NULL && lst->type == SN_LIST_T);
+		if(lst->type != SN_LIST_T)
+		{
+				return false;
+		}
+		
+		return SN_RemoveFromList(&lst->list, idx);
+}
+
+int_t			SN_IndexOfListObject(const snObject_t *lst, const snObject_t *obj)
+{
+		AR_ASSERT(lst != NULL && lst->type == SN_LIST_T);
+		AR_ASSERT(obj != NULL);
+		
+		if(lst->type != SN_LIST_T)
+		{
+				return -1;
+		}
+		
+		return SN_IndexOfList(&lst->list, obj);
+}
+
+
+snObject_t*		SN_GetFromListObject(snObject_t *lst, size_t idx)
+{
+		AR_ASSERT(lst != NULL && lst->type == SN_LIST_T);
+		if(lst->type != SN_LIST_T)
+		{
+				return NULL;
+		}
+		
+		return SN_GetFromList(&lst->list, idx);
+}
+
+
+size_t			SN_GetListObjectCount(const snObject_t *lst)
+{
+		AR_ASSERT(lst != NULL && lst->type == SN_LIST_T);
+		
+		if(lst->type != SN_LIST_T)
+		{
+				return 0;
+		}
+
+		return lst->list.count;
+}
+
+void			SN_SetStringObjectByData(snObject_t	*dest, const byte_t *data, size_t len)
+{
+		AR_ASSERT(dest != NULL && dest->type == SN_STRING_T);
+		AR_ASSERT(data != NULL && len > 0);
+		
+		if(dest->type != SN_STRING_T)
+		{
+				return;
+		}
+
+		SN_SetStringByData(&dest->string, data, len);
+}
+
+void			SN_SetStringObjectByStr(snObject_t	*dest, const char *str)
+{
+		AR_ASSERT(dest != NULL && dest->type == SN_STRING_T);
+		AR_ASSERT(str != NULL);
+
+		if(dest->type != SN_STRING_T)
+		{
+				return;
+		}
+
+		SN_SetStringByStr(&dest->string, str);
+}
+
+void			SN_SetStringObjectByWcs(snObject_t	*dest, const wchar_t *str)
+{
+
+		AR_ASSERT(dest != NULL && dest->type == SN_STRING_T);
+		AR_ASSERT(str != NULL);
+
+		if(dest->type != SN_STRING_T)
+		{
+				return;
+		}
+
+		SN_SetStringByWcs(&dest->string, str);
+}
+
+
+
+
+int_t			SN_GetDataFromStringObject(const snObject_t	*obj, byte_t *buf, size_t len)
+{
+		AR_ASSERT(obj != NULL && obj->type == SN_STRING_T);
+		if(obj->type != SN_STRING_T)
+		{
+				return -1;
+		}
+
+		if(buf != NULL)
+		{
+				if(len < obj->string.len)
+				{
+						return -1;
+				}
+
+				AR_memcpy(buf, obj->string.data, obj->string.len);
+		}
+		
+		return (int_t)obj->string.len;
+}		
+
+
+int_t			SN_GetStrFromStringObject(const snObject_t	*obj, char *buf, size_t len)
+{
+		int_t l;
+		
+		AR_ASSERT(obj != NULL && obj->type == SN_STRING_T);
+
+		if(obj->type != SN_STRING_T)
+		{
+				return -1;
+		}
+
+		l = SN_GetDataFromStringObject(obj, NULL, 0);
+		
+		if(l < 0)return l;
+		
+		if(buf == NULL)
+		{
+				return l + 1;
+		}else
+		{
+				if((int_t)len < (l + 1))return -1;
+
+				l = SN_GetDataFromStringObject(obj, (byte_t*)buf, l);
+
+				if(l < 0)return l;
+				buf[l] = 0;
+				return l + 1;
+		}
+}
+
+
+int_t			SN_GetWcsFromStringObject(const snObject_t	*obj, wchar_t *buf, size_t len)
+{
+		int_t l;
+		char *tmp;
+		wchar_t *wtmp;
+		AR_ASSERT(obj != NULL && obj->type == SN_STRING_T);
+
+		if(obj->type != SN_STRING_T)
+		{
+				return -1;
+		}
+
+		l = SN_GetStrFromStringObject(obj, NULL, 0);
+		if(l < 0)return l;
+
+		tmp = AR_NEWARR(char, l);
+		
+		l = SN_GetStrFromStringObject(obj, tmp, l);
+
+		if(l < 0)
+		{
+				AR_DEL(tmp);
+				return -1;
+		}
+
+		wtmp = AR_utf8_convto_wcs(tmp);
+
+		if(tmp == NULL)
+		{
+				AR_DEL(tmp);
+				return -1;
+		}
+		
+		if(buf == NULL)
+		{
+				int_t ret = (int_t)(AR_wcslen(wtmp) + 1);
+				AR_DEL(tmp);
+				AR_DEL(wtmp);
+				return ret;
+		}else
+		{
+				int_t ret = (int_t)(AR_wcslen(wtmp) + 1);
+
+				if((int_t)len < ret)
+				{
+						AR_DEL(tmp);
+						AR_DEL(wtmp);
+						return -1;
+				}
+				AR_wcscpy(buf, wtmp);
+				AR_DEL(tmp);
+				AR_DEL(wtmp);
+				return ret;
+		}
+}
+
+
+
+
+int_t			SN_CompStringObjectByStringObject(const snObject_t	*l, const snObject_t	*r)
+{
+		AR_ASSERT(l != NULL && l->type == SN_STRING_T);
+		AR_ASSERT(r != NULL && r->type == SN_STRING_T);
+		
+		if(l->type != SN_STRING_T)
+		{
+				return -1;
+		}
+
+		if(r->type != SN_STRING_T)
+		{
+				return 1;
+		}
+		return SN_CompStringByString(&l->string, &r->string);
+}
+
+
+int_t			SN_CompStringObjectByData(const snObject_t	*l,			const byte_t *data, size_t len)
+{
+		AR_ASSERT(l != NULL && l->type == SN_STRING_T);
+		AR_ASSERT(data != NULL && len > 0);
+		
+		if(l->type != SN_STRING_T)
+		{
+				return -1;
+		}
+
+		return SN_CompStringByData(&l->string, data, len);
+}
+
+
+int_t			SN_CompStringObjectByStr(const snObject_t		*l,		const char *str)
+{
+		AR_ASSERT(l != NULL && l->type == SN_STRING_T);
+		AR_ASSERT(str != NULL);
+		
+		if(l->type != SN_STRING_T)
+		{
+				return -1;
+		}
+		
+		return SN_CompStringByStr(&l->string, str);
+}
+
+
+int_t			SN_CompStringObjectByWcs(const snObject_t		*l,		const wchar_t *str)
+{
+		AR_ASSERT(l != NULL && l->type == SN_STRING_T);
+		AR_ASSERT(str != NULL);
+		
+		if(l->type != SN_STRING_T)
+		{
+				return -1;
+		}
+		
+		return SN_CompStringByWcs(&l->string, str);
+
+}
+
+
+
+
+void			SN_SetIntObject( snObject_t	*obj,	int_64_t num)
+{
+		AR_ASSERT(obj != NULL && obj->type == SN_INT_T);
+
+		if(obj->type != SN_INT_T)
+		{
+				return;
+		}
+
+		obj->integer.is_signed = true;
+		obj->integer.s = num;
+}
+
+
+void			SN_SetUIntObject(snObject_t	*obj,	uint_64_t num)
+{
+		AR_ASSERT(obj != NULL && obj->type == SN_INT_T);
+
+		if(obj->type != SN_INT_T)
+		{
+				return;
+		}
+
+		obj->integer.is_signed = false;
+		obj->integer.u = num;
+}
+
+
+
+uint_64_t		SN_GetUIntObject(const snObject_t	*obj)
+{
+		AR_ASSERT(obj != NULL && obj->type == SN_INT_T);
+
+		if(obj->type != SN_INT_T)
+		{
+				return 0;
+		}
+
+		return obj->integer.u;
+}
+
+
+int_64_t		SN_GetIntObject(const snObject_t	*obj)
+{
+		AR_ASSERT(obj != NULL && obj->type == SN_INT_T);
+
+		if(obj->type != SN_INT_T)
+		{
+				return 0;
+		}
+
+		return obj->integer.s;
+}
+
+
 
 
 

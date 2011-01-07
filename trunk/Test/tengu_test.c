@@ -33,7 +33,7 @@ void	Tengu_Test()
 
 		AR_printf(L"%ls\r\n", code);
 
-		TGU_ParseCode(parser, NULL, code);
+		TGU_ParseCode(parser, code);
 
 		AR_DEL(code);
 		
