@@ -869,6 +869,7 @@ snObject_t*		SN_FindObjectByWcsPath(snObject_t *obj, const wchar_t *path)
 				len = p - beg;
 
 				/*
+						///a///b///c///d...
 						a/b/c
 						/b/c
 				*/

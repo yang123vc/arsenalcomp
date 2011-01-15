@@ -506,7 +506,7 @@ typedef struct __parser_action_item_view_tag
 		wchar_t			**item;
 		size_t			item_cnt;
 
-		wchar_t	**action_tbl;
+		wchar_t			**action_tbl;
 		size_t			row;
 		size_t			col;
 }psrActionView_t;
@@ -541,10 +541,10 @@ void							Parser_DestroyParserConflictView(const psrConflictView_t *view);
 /*first follow view*/
 typedef struct __sym_tbl_view_tag
 {
-		wchar_t	**name;
-		wchar_t	**name_set;
-		size_t	count;
-		size_t	cap;
+		wchar_t			**name;
+		wchar_t			**name_set;
+		size_t			count;
+		size_t			cap;
 }psrSymbolMapView_t;
 
 

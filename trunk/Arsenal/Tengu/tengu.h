@@ -25,6 +25,7 @@
 AR_NAMESPACE_BEGIN
 
 
+/*************************************************************全局资源****************************************************************************/
 
 void	TGU_Init();
 void	TGU_UnInit();
@@ -32,9 +33,98 @@ void	TGU_UnInit();
 
 
 
+/***************************************************************错误报告**************************************************************************/
+
+
+typedef enum
+{
+		TGU_REPORT_MESSAGE_T,
+		TGU_REPORT_WARNING_T,
+		TGU_REPORT_ERROR_T,
+
+		TGU_REPORT_ERROR_LEX_T,
+		TGU_REPORT_ERROR_SYNTAX_T
+}tguReportType_t;
+
+
+
+typedef struct __tengu_report_info_tag
+{
+		tguReportType_t			type;
+		
+		union{
+
+				struct{
+						const	wchar_t			*message;
+				}std_msg;
+
+				struct{
+						size_t					line;
+						const	wchar_t			*err_msg;
+				}								error;
+
+				struct	{
+						size_t					line;
+						const wchar_t			*msg;
+				}								warning;
+		
+				struct{
+						const	wchar_t			*msg;
+						const	lexToken_t		*tok;
+				
+				}								lex_error;
+		
+				struct{
+						const	wchar_t			*msg;
+						size_t					line;
+				}syntax_error;
+		};
+}tguReportInfo_t;
+
+
+typedef void (AR_STDCALL *tguReportFunc_t)(const tguReportInfo_t *report, void *context);
+
+
+typedef struct __tengu_report_tag
+{
+		tguReportFunc_t	report_func;
+		void			*report_ctx;
+}tguReport_t;
+
+
+
+#define TGU_ReportError(_report, _msg, _line)	\
+		do{												\
+				tguReportInfo_t	info;					\
+				info.type = TGU_REPORT_ERROR_T;			\
+				info.error.line = (_line);				\
+				info.error.err_msg = (_msg);			\
+				(_report)->report_func(&info, (_report)->report_ctx);	\
+		}while(0)
+
+
+
+#define TGU_ReportWarning(_report, _msg, _line)			\
+		do{												\
+				tguReportInfo_t	info;					\
+				info.type = TGU_REPORT_WARNING_T;		\
+				info.warning.line = (_line);			\
+				info.warning.msg = (_msg);				\
+				(_report)->report_func(&info, (_report)->report_ctx);	\
+		}while(0)
+
+
+
+
+
+
 
 struct	__tengu_machine_tag;
 typedef struct	__tengu_machine_tag		tguMachine_t;
+
+
+
+typedef int_t	(AR_STDCALL *tguCFunction_t)(tguMachine_t *vm);
 
 
 AR_NAMESPACE_END

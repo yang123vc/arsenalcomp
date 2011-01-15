@@ -30,7 +30,7 @@ void	TGU_InitUtility();
 void	TGU_UnInitUtility();
 
 
-#if(0)/*在未来会重新启用*/
+
 
 /*所有parser配置相关的符号都由以下函数分配，此功能为符号对比提供了O(1)的性能(只需对比指针)*/
 
@@ -40,8 +40,9 @@ const wchar_t*	TGU_AllocStringN(const wchar_t *str, size_t n);
 
 const wchar_t*  TGU_AllocStringInt(int_64_t num, size_t radix);
 const wchar_t*  TGU_AllocStringUInt(uint_64_t num, size_t radix);
+const wchar_t*  TGU_AllocStringFloat(double num);
 
-#endif
+
 
 
 AR_NAMESPACE_END

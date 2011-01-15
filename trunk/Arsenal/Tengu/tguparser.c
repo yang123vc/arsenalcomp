@@ -64,7 +64,7 @@ static	void	__parser_core_init()
 {
 		AR_InitSpinLock(&__g_lock);
 		__g_lex     = __build_lex(&__def_io_ctx);
-		__g_grammar	= __build_grammar(&__def_handler_ctx, &__def_io_ctx);
+		__g_grammar	= __build_grammar(&__g_handler , &__def_io_ctx);
 		__g_parser	= Parser_CreateParser(__g_grammar, PARSER_LALR);
 }
 
@@ -214,9 +214,11 @@ static void __on_lex_error(tguParser_t	*parser)
 		parser->has_error = true;
 }
 
-tguSyntaxTree_t*	TGU_ParseCode(tguParser_t	*parser, const wchar_t *code)
+
+
+tguBlock_t*	TGU_ParseCode(tguParser_t	*parser, const wchar_t *code)
 {
-		tguSyntaxTree_t	*result = NULL;
+		tguBlock_t		*result = NULL;
 		lexToken_t		token;
 		psrToken_t		psrtok;
 		
@@ -226,13 +228,13 @@ tguSyntaxTree_t*	TGU_ParseCode(tguParser_t	*parser, const wchar_t *code)
 		Lex_ResetInput(parser->match, code);
 		Parser_Clear(parser->parser_context);
 
-		result = TGU_CreateSyntaxTree(parser->build_in);
-		parser->result = result;
-		parser->top_block = result->global_block;
+		result = TGU_CreateBlock(parser->build_in);
+		parser->abs_tree = result;
+		parser->top_block = parser->abs_tree;
+		
 		parser->current_function = NULL;
 		parser->has_error = false;
 		parser->loop_level = 0;
-
 		
 
 		is_ok = true;
@@ -252,15 +254,17 @@ tguSyntaxTree_t*	TGU_ParseCode(tguParser_t	*parser, const wchar_t *code)
 
 						is_ok = Parser_AddToken(parser->parser_context, &psrtok);
 
-						if(is_ok && token.value == PARSER_EOI_TOKVAL)break;
+						if(is_ok && token.value == PARSER_EOI_TOKVAL)
+						{
+								break;
+						}
 				}
 
 		};
 
-
-		if(!is_ok)
+		if(!is_ok || parser->has_error)
 		{
-				TGU_DestroySyntaxTree(result);
+				TGU_DestroyBlock(result);
 				result = NULL;
 		}else
 		{

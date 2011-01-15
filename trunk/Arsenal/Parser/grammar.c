@@ -230,13 +230,18 @@ psrRule_t* Parser_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRu
 
 		beg = p;
 
-		if(!AR_iswalpha(*beg) && *beg != L'_')goto END_POINT;
+		if(!AR_iswalpha(*beg) && *beg != L'_')
+		{
+				goto END_POINT;
+		}
 		
 
 		while(*p != L'\0' && (AR_iswalnum(*p) || *p == L'_'))p++;
 
-		if(*p == L'\0' || p - beg == 0)goto END_POINT;
-		
+		if(*p == L'\0' || p - beg == 0)
+		{
+				goto END_POINT;
+		}else
 		{
 				
 				wchar_t *name;
@@ -245,10 +250,15 @@ psrRule_t* Parser_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRu
 				head = Parser_CreateSymb(name, PARSER_NONTERM);
 				AR_DEL(name);
 		}
+
 		
 		p = AR_wcstrim_space(p);
 
-		if(*p != L':')goto END_POINT;
+		if(*p != L':')
+		{
+				goto END_POINT;
+		}
+
 		++p;
 
 		while(*p != L'\0')
@@ -264,7 +274,7 @@ psrRule_t* Parser_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRu
 								++p; 
 						}
 						
-
+						if(*beg != L'\0')
 						{
 								wchar_t *name;
 								const psrSymb_t *tmp;
@@ -302,6 +312,8 @@ END_POINT:
 		
 		return res;
 }
+
+
 
 
 void			Parser_DestroyRule(psrRule_t *rule)

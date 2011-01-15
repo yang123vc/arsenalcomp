@@ -23,7 +23,8 @@ static tguReport_t		__g_report =
 		NULL
 };
 
-void	Tengu_Test()
+
+void test1()
 {
 		tguParser_t		*parser;
 		const wchar_t	*code = NULL;
@@ -38,6 +39,46 @@ void	Tengu_Test()
 		AR_DEL(code);
 		
 		TGU_DestroyParser(parser);
+}
+
+
+/*
+
+typedef enum 
+{
+		TGU_SYMB_NULL_T,
+		TGU_SYMB_INT_T,
+		TGU_SYMB_FLOAT_T,
+		TGU_SYMB_BOOL_T,
+		TGU_SYMB_STRING_T,
+
+		TGU_SYMB_VAR_T,
+		TGU_SYMB_FUNC_T,
+		TGU_SYMB_CFUNC_T,
+		TGU_SYMB_BLOCK_T
+}tguSymbType_t;
+*/
+void test2()
+{
+		tguConstant_t const_val;
+		wchar_t *name;
+		tguSymb_t *symb_boolean, *symb_null, *symb_float, *symb_int, *symb_string;
+
+		const_val.boolean = true;
+		
+		name = TGU_ConstantToName(TGU_SYMB_BOOL_T, &const_val);
+		symb_boolean = TGU_CreateSymb(TGU_SYMB_BOOL_T, name);
+
+		AR_DEL(name);
+		name = NULL;
+		
+}
+
+void	Tengu_Test()
+{
+		//test1();
+
+
 }
 
 AR_NAMESPACE_END

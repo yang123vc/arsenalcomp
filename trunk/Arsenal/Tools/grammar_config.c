@@ -2420,8 +2420,13 @@ static void			InsertToHandlerTable(handlerTbl_t		*tbl, const wchar_t *name, cons
 				tbl->count++;
 		}else
 		{
-				if(rec->handler_def)AR_DEL(rec->handler_def);
-				rec->handler_def = AR_wcsdup(handler_def);
+				if(rec->handler_def)
+				{
+						AR_DEL(rec->handler_def);
+						rec->handler_def = NULL;
+				}
+				
+				rec->handler_def = handler_def == NULL ? NULL : AR_wcsdup(handler_def);
 				rec->has_spec_def = has_spec_def;
 		}
 		
