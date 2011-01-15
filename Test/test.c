@@ -135,7 +135,7 @@ void AR_Test()
 
 		//ray_test();
 
-		sn_test();
+		//sn_test();
 
 		//gen_code_test();
 
@@ -147,7 +147,7 @@ void AR_Test()
 
 		//ds_test();
 
-		//Tengu_Test();
+		Tengu_Test();
 		getchar();
 #else
 		AR_printf(L"dll version\r\n");

@@ -999,6 +999,7 @@ const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *out)
 				is_neg = true;
 		}else if(*p == L'+')
 		{
+				is_neg = false;
 				++p;
 		}
 

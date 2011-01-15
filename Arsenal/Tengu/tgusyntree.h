@@ -21,9 +21,8 @@
 AR_NAMESPACE_BEGIN
 
 
+
 /***************************************************´Ê·¨ÐÅÏ¢****************************************************************/
-
-
 
 enum{
 		TOK_DELIM_ID = 257,
@@ -95,8 +94,8 @@ typedef struct __tengu_token_tag
 
 
 
-struct __tengu_var_tag;
-typedef struct __tengu_var_tag tguVar_t;
+struct __tengu_symb_tag;
+typedef struct __tengu_symb_tag tguSymb_t;
 
 
 struct __tengu_block_tag;
@@ -114,78 +113,6 @@ typedef struct __tengu_statement_tag	tguStmt_t;
 
 
 
-
-
-/*********************************************ÉùÃ÷**************************************************************/
-
-typedef enum 
-{
-		TGU_NULL_T,
-		TGU_INTEGER_T,
-		TGU_FLOAT_T,
-		TGU_STRING_T,
-		TGU_BOOLEAN_T,
-		TGU_TABLE_T,
-		TGU_FUNCTION_T
-}tguType_t;
-
-
-typedef enum
-{
-		TGU_INIT_TABLE_EXPR,
-		TGU_INIT_TABLE_FIELD
-}tguTableFieldType_t;
-
-
-struct __tengu_table_field_tag;
-typedef struct __tengu_table_field_tag	tguTableField_t;
-
-struct __tengu_table_field_tag
-{
-		tguTableFieldType_t				type;
-		tguTableField_t					*next;
-		union{
-				tguExpr_t				*expr;
-				tguTableField_t			*table;
-		}filed;
-};
-
-tguTableField_t*		TGU_CreateTableField(tguTableFieldType_t t);
-void					TGU_DestroyTableField(tguTableField_t *field);
-
-
-
-
-
-typedef struct __tengu_table_initializer_tag
-{
-		bool_t			is_empty_table;
-		tguTableField_t	*field_lst;
-}tguTableInit_t;
-
-tguTableInit_t*	TGU_CreateTableInitializer(bool_t empty);
-void			TGU_DestroyTableInitializer(tguTableInit_t *initializer);
-
-
-typedef enum
-{
-		TGU_INIT_EXPR_T,
-		TGU_INIT_TABLE_T,
-}tguInitializerType_t;
-
-
-typedef struct  __tengu_initializer_tag
-{
-		tguInitializerType_t	type;
-		union {
-				tguTableInit_t	*table;
-				tguExpr_t		*expr;
-		};
-}tguInitializer_t;
-
-
-tguInitializer_t*		TGU_CreateInitializer(tguInitializerType_t type);
-void					TGU_DestroyInitializer(tguInitializer_t *initializer);
 
 
 
@@ -256,18 +183,6 @@ typedef struct __tengu_condition_expression_tag
 }tguCondExpr_t;
 
 
-typedef struct __tengu_constant_tag
-{
-		tguLexInfo_t			lex_info;
-		union {
-				int_64_t		int_number;
-				double			float_number;
-				const wchar_t	*string;
-		};
-}tguConstant_t;
-
-
-
 
 typedef struct __tengu_function_call_expression_tag
 {
@@ -277,19 +192,51 @@ typedef struct __tengu_function_call_expression_tag
 
 
 
+
+typedef enum
+{
+		TGU_INIT_TABLE_EXPR,
+		TGU_INIT_TABLE_FIELD
+}tguTableFieldType_t;
+
+struct __tengu_table_field_tag;
+typedef struct __tengu_table_field_tag	tguTableField_t;
+
+struct __tengu_table_field_tag
+{
+		tguTableFieldType_t				type;
+		tguTableField_t					*next;
+
+		union{
+				tguExpr_t				*expr;
+				tguTableField_t			*table;
+		}field;
+};
+
+
+tguTableField_t*		TGU_CreateTableField(tguTableFieldType_t t);
+void					TGU_DestroyTableField(tguTableField_t *field);
+
+
+
+
+
+typedef struct __tengu_table_initializer_tag
+{
+		tguTableField_t			*field_lst;
+}tguTableInit_t;
+
+
+
 typedef enum 
 {
-		TGU_ET_NULL_CONST,
-		TGU_ET_INT_CONST,
-		TGU_ET_FLOAT_CONST,
-		TGU_ET_STRING_CONST,
-		TGU_ET_VAR,
+		TGU_ET_TABLE_INIT,
 		TGU_ET_INDEX,
 		TGU_ET_FUNC_CALL,
 		TGU_ET_BINARY,
 		TGU_ET_UNARY,
 		TGU_ET_CONDITIONAL,
-		
+		TGU_ET_SYMBOL,
 		TGU_ET_UNDEF_NAME
 }tguExprType_t;
 
@@ -303,15 +250,16 @@ struct __tengu_expression_tag
 		tguLexInfo_t			lex_info;
 		tguExpr_t				*next;
 		union{
-				const	wchar_t			*name;			/*TGU_ET_UNDEF_NAME*/
-				tguVar_t				*var;			/*TGU_ET_VAR*/
-				tguConstant_t			constant;		/*TGU_ET_NULL_CONST, TGU_ET_INT_CONST,	TGU_ET_FLOAT_CONST,	TGU_ET_STRING_CONST*/
-				
+				tguTableInit_t			table_init;		/*TGU_ET_TABLE_INIT*/
 				tguIndexExpr_t			index_expr;		/*TGU_ET_INDEX*/
 				tguCondExpr_t			cond_expr;		/*TGU_ET_CONDITIONAL*/
 				tguUnaryExpr_t			unary_expr;		/*TGU_ET_UNARY*/
 				tguBinaryExpr_t			binary_expr;	/*TGU_ET_BINARY*/
 				tguFuncCallExpr_t		func_call_expr;	/*TGU_ET_FUNC_CALL*/
+				
+				tguSymb_t				*symb;			/*TGU_ET_SYMBOL*/
+				const	wchar_t			*name;			/*TGU_ET_UNDEF_NAME*/
+				
 		};
 };
 
@@ -377,7 +325,7 @@ typedef struct __tengu_return_statement_tag
 
 struct __tengu_statement_tag
 {
-		tguStmtType_t			stmt_type;		/*TGU_STT_EMPTY, TGU_STT_CONTINUE,	TGU_STT_BREAK ÕâÈýÖÖÀàÐÍµÄÓï¾äÎÞ¸½¼Ó²ÎÊý*/
+		tguStmtType_t			stmt_type;				/*TGU_STT_EMPTY, TGU_STT_CONTINUE,	TGU_STT_BREAK ÕâÈýÖÖÀàÐÍµÄÓï¾äÎÞ¸½¼Ó²ÎÊý*/
 		
 		tguLexInfo_t			lex_info;
 		
@@ -399,84 +347,107 @@ void		TGU_DestroyStmt(tguStmt_t *stmt);
 
 
 
+
+
+
 /*********************************************º¯Êý**************************************************************/
 
+typedef struct __tengu_params_tag
+{		
+		const wchar_t		**names;
+		tguLexInfo_t		*lex_info;
+		size_t					count;
+		size_t					cap;
+		bool_t					is_variadic;
+}tguParams_t;
+
+tguParams_t*	TGU_CreateParams();
+void			TGU_DestroyParams(tguParams_t *params);
+void			TGU_InsertToParams(tguParams_t *params, const tguToken_t	*tok);
+void			TGU_ClearParams(tguParams_t *params);
 
 
 
-struct __tengu_function_tag;
-typedef struct __tengu_function_tag		tguFunc_t;
 
-struct __tengu_function_tag
+typedef struct __tengu_function_tag
 {
-		const wchar_t	*name;
-		tguLexInfo_t	lex_info;
-
-		wchar_t			**params;
 		size_t			param_cnt;
 		bool_t			is_variadic_param;
-		
 		tguBlock_t		*block;
-};
+}tguFunc_t;
 
-tguFunc_t*		TGU_CreateFunction(const wchar_t *name, const tguBlock_t *parent_block);
+
+tguFunc_t*		TGU_CreateFunction(const tguBlock_t *parent_block);
 void			TGU_DestroyFunction(tguFunc_t *func);
-/*·µ»Ø´Ë²ÎÊýÎ»ÖÃË÷Òý*/
-size_t			TGU_InsertParam(tguFunc_t *func, const wchar_t *param_name);
 
 
 
-/****************************************************±äÁ¿***************************************************/
-
-struct __tengu_var_tag
-{
-		const wchar_t			*name;
-		tguLexInfo_t			lex_info;
-		size_t					ref_cnt;
-		tguInitializer_t		*initializer;
-
-		tguVar_t				*next;
-};
 
 
 
-tguVar_t*		TGU_CreateVar(const wchar_t *name, tguInitializer_t	*initializer);
-void			TGU_DestroyVar(tguVar_t	*var);
-tguVar_t*		TGU_CopyVar(tguVar_t	*var);
+
+
+
+
+
 
 
 
 /************************************************·ûºÅ¹ÜÀí************************************************************************/
 
+
 typedef enum 
 {
+		TGU_SYMB_NULL_T,
+		TGU_SYMB_INT_T,
+		TGU_SYMB_FLOAT_T,
+		TGU_SYMB_BOOL_T,
+		TGU_SYMB_STRING_T,
+
 		TGU_SYMB_VAR_T,
-		TGU_SYMB_FUNC_T
+		TGU_SYMB_FUNC_T,
+		TGU_SYMB_CFUNC_T,
+		TGU_SYMB_BLOCK_T
 }tguSymbType_t;
 
 
-struct __tengu_symb_table_tag;
-typedef struct __tengu_symb_table_tag	tguSymb_t;
-
-struct __tengu_symb_table_tag
+typedef union
 {
-		tguSymbType_t			type;
-		const	wchar_t*		name;
-		tguSymb_t				*next;
+		int_64_t		int_num;
+		double			float_num;
+		bool_t			boolean;
+		const wchar_t	*string;
+}tguConstant_t;
+
+
+
+struct __tengu_symb_tag
+{
+		tguSymbType_t	type;
+		const wchar_t	*name;
+		tguLexInfo_t	lex_info;
+		
+		tguSymb_t		*next;
 
 		union{
-				tguVar_t		*var;
-				tguFunc_t		*func;
+				tguConstant_t			constant;
+				tguFunc_t				*function;
+				tguBlock_t				*block;
+				tguCFunction_t			c_func;
 		};
 };
 
 
-tguSymb_t*		TGU_CreateSymb(tguSymbType_t	type, const wchar_t *name);
+tguSymb_t*		TGU_CreateSymb(tguSymbType_t t, const wchar_t *name);
 void			TGU_DestroySymb(tguSymb_t *symb);
 
 
 
-#define	TENGU_SYMB_BUCKET_SIZE	33
+
+
+
+
+#define	TENGU_SYMB_BUCKET_SIZE	128
 
 typedef struct __tengu_symbol_table_tag
 {
@@ -484,38 +455,26 @@ typedef struct __tengu_symbol_table_tag
 		size_t			item_cnt;
 }tguSymbTbl_t;
 
+
 tguSymbTbl_t*	TGU_CreateSymbTable();
 void			TGU_DestroySymbTable(tguSymbTbl_t *tbl);
-tguSymb_t*		TGU_FindSymb(tguSymbTbl_t *tbl, const wchar_t *name);
-
-tguSymb_t*		TGU_InsertVarToSymbTable(tguSymbTbl_t *tbl, const wchar_t *name, tguVar_t		*var);
-tguSymb_t*		TGU_InsertFuncToSymbTable(tguSymbTbl_t *tbl, const wchar_t *name, tguFunc_t		*func);
+tguSymb_t*		TGU_FindSymb(tguSymbTbl_t *tbl, const wchar_t *name, tguSymbType_t expected_type);
 
 
-
+bool_t			TGU_InsertToSymbTable(tguSymbTbl_t *tbl, tguSymb_t *symb);
+bool_t			TGU_RemoveFromSymbTable(tguSymbTbl_t *tbl, const wchar_t *name, tguSymbType_t expected_type);
 
 
 
-/*************************************************************»ù±¾¿é****************************************************************************/
+tguSymb_t*		TGU_InstallInt(tguSymbTbl_t *tbl, int_64_t num);
+tguSymb_t*		TGU_InstallNull(tguSymbTbl_t *tbl);
+tguSymb_t*		TGU_InstallBoolean(tguSymbTbl_t *tbl, bool_t boolean);
+tguSymb_t*		TGU_InstallFloat(tguSymbTbl_t *tbl, double float_num);
+tguSymb_t*		TGU_InstallString(tguSymbTbl_t *tbl, const wchar_t *str);
 
+/******************************¿é*******************************************************/
 
-
-
-struct __tengu_block_tag
-{
-		tguLexInfo_t	begin;
-		tguLexInfo_t	end;
-
-		tguSymbTbl_t	*symb_tbl;
-		
-		tguStmt_t		**stmts;
-		size_t			stmt_cnt;
-		size_t			stmt_cap;
-		
-		tguBlock_t		*next;/*Í¬Ò»¼¶µÄÏÂÒ»¸ö¿é*/
-		tguBlock_t		*parent;
-		
-		/*
+/*
 		A:
 		{
 				B:
@@ -537,9 +496,27 @@ struct __tengu_block_tag
 
 
 		}
-		*/
+*/
+
+
+
+struct __tengu_block_tag
+{
+		tguLexInfo_t	begin;
+		tguLexInfo_t	end;
+
+		tguSymbTbl_t	*symb_table;
+
+		tguStmt_t		**stmts;
+		size_t			stmt_cnt;
+		size_t			stmt_cap;
+		
+		tguBlock_t		*next;/*Í¬Ò»¼¶µÄÏÂÒ»¸ö¿é*/
+		tguBlock_t		*parent;
+		
 		tguBlock_t		*sub_blocks; 
 };
+
 
 
 tguBlock_t*		TGU_CreateBlock(const tguBlock_t	*parent);
@@ -549,31 +526,17 @@ TGU_DestroyBlock»á½«block´Óblock->parentÖÐµÄsub_blocksÖÐÌÞ³ý£¬Ö®ºóÏú»Ù´Ëblock¼°Æ
 
 void			TGU_DestroyBlock(tguBlock_t	*block);
 
-tguSymb_t*		TGU_FindFromBlockByName(tguBlock_t	*block, const wchar_t *name, bool_t current_block);
-
-void			TGU_InsertVarToBlock(tguBlock_t	*block, tguVar_t*	var);
-void			TGU_InsertStmtToBlock(tguBlock_t	*block, tguStmt_t	*stmt);
 
 void			TGU_InsertSubBlockToBlock(tguBlock_t	*block, tguBlock_t	*sub);
 bool_t			TGU_RemoveSubBlockFromBlock(tguBlock_t	*block, tguBlock_t	*sub);
 
+void			TGU_InsertStmtToBlock(tguBlock_t	*block, tguStmt_t	*stmt);
+
+bool_t			TGU_InsertSymbToBlock(tguBlock_t	*block, tguSymb_t *symb);
 
 
 
-
-/****************************************************ABS***************************************/
-
-typedef struct __tengu_abstract_syntax_tree_tag
-{
-		tguBlock_t		*global_block;
-		bool_t			has_error;
-}tguSyntaxTree_t;
-
-
-tguSyntaxTree_t*		TGU_CreateSyntaxTree(const tguBlock_t *build_in_block);
-void					TGU_DestroySyntaxTree(tguSyntaxTree_t	*tree);
-
-
+tguSymb_t*		TGU_FindSymbFromBlock(tguBlock_t	*block, const wchar_t *name, tguSymbType_t t, bool_t current_block);
 
 
 

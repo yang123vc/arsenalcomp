@@ -150,7 +150,19 @@ const wchar_t*			AR_GetStringUInt(arStringTable_t *tbl, uint_64_t num, size_t ra
 		AR_u64tow_buf(buf, 1024, num, radix);
 		
 		return AR_GetString(tbl, buf);
+}
 
+
+const wchar_t*			AR_GetStringFloat(arStringTable_t *tbl, double num)
+{
+
+		wchar_t buf[1024];
+		
+		AR_ASSERT(tbl != NULL );
+		
+		AR_swprintf(buf, 1024, L"%g", num);
+		
+		return AR_GetString(tbl, buf);
 }
 
 

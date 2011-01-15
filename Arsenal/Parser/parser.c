@@ -323,11 +323,14 @@ const parser_t* Parser_CreateParser(const psrGrammar_t *grammar, psrModeType_t t
 		case PARSER_SLR:
 				parser->tbl = Parser_CreateActionTable_SLR(parser->grammar);
 				break;
-		default:
+		case PARSER_LALR:
 				parser->tbl = Parser_CreateActionTable_LALR(parser->grammar);
 				break;
+		default:
+				AR_ASSERT(false);
+				break;
 		}
-
+		
 		parser->msg_count = parser->tbl->row;
 		parser->msg_set = AR_NEWARR0(psrExpectedMsg_t, parser->msg_count);
 

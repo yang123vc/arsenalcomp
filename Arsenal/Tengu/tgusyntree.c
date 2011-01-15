@@ -18,55 +18,53 @@
 AR_NAMESPACE_BEGIN
 
 
-tguTableInit_t*	TGU_CreateTableInitializer(bool_t empty)
+
+
+
+
+
+
+
+/****************************************Expr***************************************************************/
+
+tguTableField_t*		TGU_CreateTableField(tguTableFieldType_t t)
 {
-		return NULL;
-}
-
-void			TGU_DestroyTableInitializer(tguTableInit_t *initializer)
-{
-
-}
-
-
-tguInitializer_t*		TGU_CreateInitializer(tguInitializerType_t type)
-{
-		tguInitializer_t		*initializer;
+		tguTableField_t *field;
 		
-		initializer = AR_NEW0(tguInitializer_t);
-		initializer->type = type;
-
-		return initializer;
+		field = AR_NEW0(tguTableField_t);
+		field->type = t;
+		return field;
 }
 
-void					TGU_DestroyInitializer(tguInitializer_t *initializer)
+void					TGU_DestroyTableField(tguTableField_t *field)
 {
-		AR_ASSERT(initializer != NULL);
+		AR_ASSERT(field != NULL);
 
-		switch(initializer->type)
+		switch(field->type)
 		{
 		default:
 				AR_ASSERT(false);
 				break;
-		case TGU_INIT_EXPR_T:
-				if(initializer->expr)
+		case TGU_INIT_TABLE_EXPR:
+				if(field->field.expr)
 				{
-						TGU_DestroyExpr(initializer->expr);
-						initializer->expr = NULL;
+						TGU_DestroyExpr(field->field.expr);
+						field->field.expr = NULL;
 				}
 				break;
-		case TGU_INIT_TABLE_T:
-				if(initializer->table)
+		case TGU_INIT_TABLE_FIELD:
+				if(field->field.table)
 				{
-						TGU_DestroyTableInitializer(initializer->table);
-						initializer->table = NULL;
+						TGU_DestroyTableField(field->field.table);
+						field->field.table = NULL;
 				}
 				break;
 		}
+
 }
 
 
-/****************************************Expr***************************************************************/
+
 
 
 tguExpr_t*		TGU_CreateExpr(tguExprType_t type)
@@ -88,21 +86,17 @@ void			TGU_DestroyExpr(tguExpr_t *expr)
 		default:
 				AR_ASSERT(false);
 				break;
-		case TGU_ET_NULL_CONST:
-		case TGU_ET_INT_CONST:
-		case TGU_ET_FLOAT_CONST:
-				break;
-		case TGU_ET_STRING_CONST:
-				if(expr->constant.string)
+		case TGU_ET_TABLE_INIT:
+		{
+				tguTableField_t *field = expr->table_init.field_lst;
+				while(field)
 				{
-						AR_DEL(expr->constant.string);
-						expr->constant.string = NULL;
+						tguTableField_t *tmp = field->next;
+						TGU_DestroyTableField(field);
+						field = tmp;
 				}
 				break;
-		case TGU_ET_VAR:
-				TGU_DestroyVar(expr->var);
-				expr->var = NULL;
-				break;
+		}
 		case TGU_ET_INDEX:
 				if(expr->index_expr.expr)
 				{
@@ -175,6 +169,13 @@ void			TGU_DestroyExpr(tguExpr_t *expr)
 						expr->cond_expr.if_false = NULL;
 				}
 
+				break;
+		case TGU_ET_SYMBOL:
+				if(expr->symb)
+				{
+						/*TGU_DestroySymb(expr->symb);*/
+						expr->symb = NULL;
+				}
 				break;
 		case TGU_ET_UNDEF_NAME:
 				if(expr->name)
@@ -309,15 +310,62 @@ void		TGU_DestroyStmt(tguStmt_t *stmt)
 /*********************************************Function**************************************************************/
 
 
-tguFunc_t*		TGU_CreateFunction(const wchar_t *name, const tguBlock_t *parent_block)
+tguParams_t*	TGU_CreateParams()
+{	
+		tguParams_t *ret;
+		ret = AR_NEW0(tguParams_t);
+		ret->is_variadic = false;
+		return ret;
+}
+
+
+void	TGU_ClearParams(tguParams_t *params)
+{
+		size_t i;
+		AR_ASSERT(params != NULL);
+		for(i = 0; i < params->count; ++i)
+		{
+			params->names[i] = NULL;
+		}
+		params->count = 0;
+		params->is_variadic = false;
+}
+
+
+void	TGU_DestroyParams(tguParams_t *params)
+{
+		AR_ASSERT(params != NULL);
+		TGU_ClearParams(params);
+		if(params->names)AR_DEL(params->names);
+		params->names = NULL;
+		if(params->lex_info)AR_DEL(params->lex_info);
+		params->lex_info = NULL;
+		AR_DEL(params);
+}
+
+void	 TGU_InsertToParams(tguParams_t *params, const tguToken_t	*tok)
+{
+		AR_ASSERT(params != NULL && tok != NULL && tok->token != NULL);
+
+		if(params->count == params->cap)
+		{
+			params->cap += 2;
+			params->names 	= AR_REALLOC(const wchar_t*, (void*)params->names, params->cap);
+			params->lex_info	= AR_REALLOC(tguLexInfo_t, (void*)params->lex_info, params->cap);
+		}
+		params->names[params->count] = TGU_AllocString(tok->token);
+		params->lex_info[params->count] = tok->lex_info;
+		params->count++;
+}
+
+
+
+
+tguFunc_t*		TGU_CreateFunction(const tguBlock_t *parent_block)
 {
 		tguFunc_t *func;
-		AR_ASSERT(name != NULL && AR_wcslen(name) > 0);
 		AR_ASSERT(parent_block != NULL);
-		
 		func = AR_NEW0(tguFunc_t);
-		
-		func->name = AR_wcsdup(name);
 		func->block = TGU_CreateBlock(parent_block);
 		return func;
 }
@@ -325,77 +373,20 @@ tguFunc_t*		TGU_CreateFunction(const wchar_t *name, const tguBlock_t *parent_blo
 
 void			TGU_DestroyFunction(tguFunc_t *func)
 {
-		size_t i;
-		AR_ASSERT(func != NULL);
 
-		for(i = 0; i < func->param_cnt; ++i)
-		{
-				AR_ASSERT(func->params[i] != NULL);
-				AR_DEL(func->params[i]);
-				func->params[i] = NULL;
-		}
-		
-		if(func->params)
-		{
-				AR_DEL(func->params);
-				func->params = NULL;
-		}
+		AR_ASSERT(func != NULL);
 		
 		TGU_DestroyBlock(func->block);
 		func->block = NULL;
-
-		AR_DEL(func->name);
-		func->name = NULL;
 		AR_DEL(func);
 }
 
-size_t			TGU_InsertParam(tguFunc_t *func, const wchar_t *param_name)
-{
-		AR_ASSERT(func != NULL && param_name != NULL && AR_wcslen(param_name) > 0);
-		func->params = AR_REALLOC(wchar_t*, func->params, func->param_cnt + 1);
-		func->params[func->param_cnt] = AR_wcsdup(param_name);
-		return func->param_cnt++;
-}
 
 
-/**********************************************Var*********************************************************/
-
-tguVar_t*		TGU_CreateVar(const wchar_t *name, tguInitializer_t	*initializer)
-{
-		tguVar_t		*var;
-		AR_ASSERT(name != NULL && AR_wcslen(name) > 0);
-
-		var = AR_NEW0(tguVar_t);
-		var->name = AR_wcsdup(name);
-		var->initializer = initializer;
-		var->ref_cnt = 1;
-		return var;
-}
 
 
-void			TGU_DestroyVar(tguVar_t	*var)
-{
-		AR_ASSERT(var != NULL && var->ref_cnt > 0);
-
-		if(--var->ref_cnt != 0)
-		{
-				return;
-		}
-		TGU_DestroyInitializer(var->initializer);
-		var->initializer = NULL;
-
-		AR_DEL(var->name);
-		AR_DEL(var);
-}
 
 
-tguVar_t*		TGU_CopyVar(tguVar_t	*var)
-{
-		AR_ASSERT(var != NULL);
-		AR_ASSERT(var->ref_cnt > 0);
-		var->ref_cnt++;
-		return var;
-}
 
 
 
@@ -404,39 +395,50 @@ tguVar_t*		TGU_CopyVar(tguVar_t	*var)
 
 
 
+
+
+
 /*******************************************SymbolTable***********************************************************/
-
-
-tguSymb_t*		TGU_CreateSymb(tguSymbType_t	type, const wchar_t *name)
+tguSymb_t*		TGU_CreateSymb(tguSymbType_t t, const wchar_t *name)
 {
 		tguSymb_t *symb;
 		AR_ASSERT(name != NULL && AR_wcslen(name) > 0);
 		symb = AR_NEW0(tguSymb_t);
-		symb->type = type;
-		symb->name = AR_wcsdup(name);
+		symb->type = t;
+		symb->name = TGU_AllocString(name);
 		return symb;
 }
+
 
 void			TGU_DestroySymb(tguSymb_t *symb)
 {
 		AR_ASSERT(symb != NULL);
-
-		if(symb->type == TGU_SYMB_VAR_T)
+		
+		switch(symb->type)
 		{
-				AR_ASSERT(symb->var != NULL);
-				TGU_DestroyVar(symb->var);
-				symb->var = NULL;
-		}else if(symb->type == TGU_SYMB_FUNC_T)
+		default:
+				break;
+		case TGU_SYMB_NULL_T:
+		case TGU_SYMB_INT_T:
+		case TGU_SYMB_FLOAT_T:
+		case TGU_SYMB_BOOL_T:
+		case TGU_SYMB_STRING_T:
+				break;
+		case TGU_SYMB_VAR_T:
+				break;
+		case TGU_SYMB_FUNC_T:
 		{
-				AR_ASSERT(symb->func != NULL);
-				TGU_DestroyFunction(symb->func);
-				symb->func = NULL;
-		}else
-		{
-				AR_ASSERT(false);
+				if(symb->function)
+				{
+						TGU_DestroyFunction(symb->function);
+						symb->function = NULL;
+				}
 		}
-
-		AR_DEL(symb->name);
+				break;
+		case TGU_SYMB_CFUNC_T:
+				symb->c_func = NULL;
+				break;
+		}
 		AR_DEL(symb);
 }
 
@@ -469,7 +471,7 @@ void			TGU_DestroySymbTable(tguSymbTbl_t *tbl)
 
 #define __hash_name(_name)		(((size_t)(_name)) % TENGU_SYMB_BUCKET_SIZE)
 
-tguSymb_t*		TGU_FindSymb(tguSymbTbl_t *tbl, const wchar_t *name)
+tguSymb_t*		TGU_FindSymb(tguSymbTbl_t *tbl, const wchar_t *name, tguSymbType_t expected_type)
 {
 		size_t index;
 		tguSymb_t *symb;
@@ -479,90 +481,181 @@ tguSymb_t*		TGU_FindSymb(tguSymbTbl_t *tbl, const wchar_t *name)
 		
 		symb = tbl->tbl[index];
 
-		while(symb && AR_wcscmp(symb->name, name) != 0)
+		while(symb)
 		{
-				symb = symb->next;
+				if(AR_wcscmp(symb->name, name) == 0 && symb->type == expected_type)
+				{
+						return symb;
+				}else
+				{
+						symb = symb->next;
+				}
 		}
 
 		return symb;
 }
 
 
-tguSymb_t*		TGU_InsertVarToSymbTable(tguSymbTbl_t *tbl, const wchar_t *name, tguVar_t		*var)
+bool_t		TGU_InsertToSymbTable(tguSymbTbl_t *tbl, tguSymb_t *symb)
+{
+		size_t			index;
+		AR_ASSERT(tbl != NULL && symb != NULL);
+		
+		index = __hash_name(symb->name);
+		
+		symb->next = tbl->tbl[index];
+		tbl->tbl[index] = symb;
+		tbl->item_cnt += 1;
+
+		return true;
+}
+
+
+bool_t			TGU_RemoveFromSymbTable(tguSymbTbl_t *tbl, const wchar_t *name, tguSymbType_t expected_type)
 {
 		size_t index;
-		tguSymb_t *new_symb;
-		AR_ASSERT(tbl != NULL && name != NULL && var != NULL);
-
-#if defined(AR_DEBUG)
-		AR_ASSERT(TGU_FindSymb(tbl, name) == NULL);
-#endif
-		
-		new_symb = TGU_CreateSymb(TGU_SYMB_VAR_T, name);
-		new_symb->var = var;
-		
+		tguSymb_t *symb, *prev;
+		AR_ASSERT(tbl != NULL && name != NULL);
 		index = __hash_name(name);
+
+		symb = tbl->tbl[index];
 		
-		new_symb->next = tbl->tbl[index];
-		tbl->tbl[index] = new_symb;
-		tbl->item_cnt++;
-		return new_symb;
-}
-
-
-tguSymb_t*		TGU_InsertFuncToSymbTable(tguSymbTbl_t *tbl, const wchar_t *name, tguFunc_t		*func)
-{
-		
-		size_t index;
-		tguSymb_t *new_symb;
-		AR_ASSERT(tbl != NULL && name != NULL && func != NULL);
-
-#if defined(AR_DEBUG)
-		AR_ASSERT(TGU_FindSymb(tbl, name) == NULL);
-#endif
-		
-		new_symb = TGU_CreateSymb(TGU_SYMB_FUNC_T, name);
-		new_symb->func = func;
-		
-		index = __hash_name(name);
-		
-		new_symb->next = tbl->tbl[index];
-		tbl->tbl[index] = new_symb;
-		tbl->item_cnt++;
-		return new_symb;
-}
-
-
-
-/*********************************************Block******************************************************/
-
-void			TGU_InsertVarToBlock(tguBlock_t	*block, tguVar_t*	var)
-{
-		tguSymb_t		*symb;
-		AR_ASSERT(block != NULL && var != NULL);
-		AR_ASSERT(var->name != NULL);
-
-#if defined(AR_DEBUG)
-		AR_ASSERT(TGU_FindFromBlockByName(block, var->name, true) == NULL);
-#endif
-		symb = TGU_InsertVarToSymbTable(block->symb_tbl, var->name, var);
-}
-
-
-void			TGU_InsertStmtToBlock(tguBlock_t	*block, tguStmt_t	*stmt)
-{
-		AR_ASSERT(block != NULL && stmt != NULL);
-		
-		if(block->stmt_cnt == block->stmt_cap)
+		prev = NULL;
+		while(symb)
 		{
-				block->stmt_cap += 2;
-				block->stmt_cap *= 2;
-				block->stmts = AR_REALLOC(tguStmt_t*, block->stmts, block->stmt_cap);
+				if(AR_wcscmp(symb->name, name) == 0 && symb->type == expected_type)
+				{
+						break;
+				}else
+				{
+						prev = symb;
+						symb = symb->next;
+				}
 		}
 
-		block->stmts[block->stmt_cnt] = stmt;
-		block->stmt_cnt++;
+		if(symb == NULL)
+		{
+				return false;
+		}
+
+		if(prev == NULL)
+		{
+				tbl->tbl[index] = symb->next;
+				symb->next = NULL;
+		}else
+		{
+				prev->next = symb->next;
+				symb->next = NULL;
+		}
+		TGU_DestroySymb(symb);
+		tbl->item_cnt--;
+		return true;
 }
+
+
+
+tguSymb_t*		TGU_InstallInt(tguSymbTbl_t *tbl, int_64_t num)
+{
+		tguSymb_t		*symb;
+		const wchar_t	*name;
+		tguConstant_t const_val;
+		AR_ASSERT(tbl != NULL);
+		const_val.int_num = num;
+		
+		name = TGU_AllocStringInt(num, 10);
+		symb = TGU_FindSymb(tbl, name, TGU_SYMB_INT_T);
+		
+		if(symb == NULL)
+		{
+				symb = TGU_CreateSymb(TGU_SYMB_INT_T, name);
+				symb->constant.int_num = num;
+				TGU_InsertToSymbTable(tbl, symb);
+		}
+		return symb;
+}
+
+
+tguSymb_t*		TGU_InstallNull(tguSymbTbl_t *tbl)
+{
+		tguSymb_t		*symb;
+		const wchar_t	*name;
+		AR_ASSERT(tbl != NULL);
+		
+		name = TGU_AllocString(L"null");
+		symb = TGU_FindSymb(tbl, name, TGU_SYMB_NULL_T);
+		
+		if(symb == NULL)
+		{
+				symb = TGU_CreateSymb(TGU_SYMB_NULL_T, name);
+				TGU_InsertToSymbTable(tbl, symb);
+		}
+		return symb;
+}
+
+
+
+tguSymb_t*		TGU_InstallBoolean(tguSymbTbl_t *tbl, bool_t boolean)
+{
+		tguSymb_t		*symb;
+		const wchar_t	*name;
+
+		AR_ASSERT(tbl != NULL);
+		
+		name = TGU_AllocString(boolean ? L"true" : L"false");
+		symb = TGU_FindSymb(tbl, name, TGU_SYMB_BOOL_T);
+		
+		if(symb == NULL)
+		{
+				symb = TGU_CreateSymb(TGU_SYMB_BOOL_T, name);
+				symb->constant.boolean = boolean;
+				TGU_InsertToSymbTable(tbl, symb);
+		}
+		return symb;
+}
+
+
+tguSymb_t*		TGU_InstallFloat(tguSymbTbl_t *tbl, double float_num)
+{
+		tguSymb_t		*symb;
+		const wchar_t	*name;
+		
+		AR_ASSERT(tbl != NULL);
+		name = TGU_AllocStringFloat(float_num);
+		
+		symb = TGU_FindSymb(tbl, name, TGU_SYMB_FLOAT_T);
+		
+		if(symb == NULL)
+		{
+				symb = TGU_CreateSymb(TGU_SYMB_FLOAT_T, name);
+				symb->constant.float_num = float_num;
+				TGU_InsertToSymbTable(tbl, symb);
+		}
+		return symb;
+}
+
+
+tguSymb_t*		TGU_InstallString(tguSymbTbl_t *tbl, const wchar_t *str)
+{
+		tguSymb_t		*symb;
+		const wchar_t	*name;
+		
+		AR_ASSERT(tbl != NULL && str != NULL);
+		name = TGU_AllocString(str);
+		
+		
+		symb = TGU_FindSymb(tbl, name, TGU_SYMB_FLOAT_T);
+		
+		if(symb == NULL)
+		{
+				symb = TGU_CreateSymb(TGU_SYMB_FLOAT_T, name);
+				symb->constant.string = name;
+				TGU_InsertToSymbTable(tbl, symb);
+		}
+		return symb;
+
+}
+
+/*********************************************Block******************************************************/
 
 
 void			TGU_InsertSubBlockToBlock(tguBlock_t	*block, tguBlock_t	*sub)
@@ -626,31 +719,6 @@ bool_t			TGU_RemoveSubBlockFromBlock(tguBlock_t	*block, tguBlock_t	*sub)
 }
 
 
-tguSymb_t*		TGU_FindFromBlockByName(tguBlock_t	*block, const wchar_t *name, bool_t current_block)
-{
-		tguSymb_t*		ret;
-		tguBlock_t		*curr;
-		AR_ASSERT(block != NULL && name != NULL);
-
-		ret = NULL;
-		curr = block;
-
-		do{
-				ret = TGU_FindSymb(curr->symb_tbl, name);
-				
-				if(ret != NULL)
-				{
-						return ret;
-				}
-				
-				curr = block->parent;
-
-		}while(!current_block && curr);
-
-		return ret;
-}
-
-
 
 
 tguBlock_t*		TGU_CreateBlock(const tguBlock_t	*parent)
@@ -665,8 +733,8 @@ tguBlock_t*		TGU_CreateBlock(const tguBlock_t	*parent)
 		block->end.col = 0;
 		block->end.linenum = 0;
 
-		block->symb_tbl = TGU_CreateSymbTable();
-
+		block->symb_table = NULL;
+		
 		block->stmts = NULL;
 		block->stmt_cnt = 0;
 		block->stmt_cap = 0;
@@ -713,45 +781,57 @@ void			TGU_DestroyBlock(tguBlock_t	*block)
 		
 		if(block->stmts)AR_DEL(block->stmts);
 		
-		TGU_DestroySymbTable(block->symb_tbl);
-		block->symb_tbl = NULL;
-		
+		if(block->symb_table != NULL)
+		{
+				TGU_DestroySymbTable(block->symb_table);
+				block->symb_table = NULL;
+		}
+
 		AR_DEL(block);
 
 }
 
 
 
-/*********************************************************************/
-
-tguSyntaxTree_t*		TGU_CreateSyntaxTree(const tguBlock_t *build_in_block)
+void			TGU_InsertStmtToBlock(tguBlock_t	*block, tguStmt_t	*stmt)
 {
-		tguSyntaxTree_t	*tree;
+		AR_ASSERT(block != NULL && stmt != NULL);
 		
-		AR_ASSERT(build_in_block != NULL);
-
-		tree = AR_NEW0(tguSyntaxTree_t);
-		tree->has_error = false;
-		tree->global_block = TGU_CreateBlock(build_in_block);
-		return tree;
-}
-
-
-void					TGU_DestroySyntaxTree(tguSyntaxTree_t	*tree)
-{
-		AR_ASSERT(tree != NULL);
-		
-		if(tree->global_block)
+		if(block->stmt_cnt == block->stmt_cap)
 		{
-				TGU_DestroyBlock(tree->global_block);
+				block->stmt_cap += 2;
+				block->stmt_cap *= 2;
+				block->stmts = AR_REALLOC(tguStmt_t*, block->stmts, block->stmt_cap);
 		}
 
-		AR_DEL(tree);
+		block->stmts[block->stmt_cnt] = stmt;
+		block->stmt_cnt++;
+}
 
+
+bool_t			TGU_InsertSymbToBlock(tguBlock_t	*block, tguSymb_t *symb)
+{
+		AR_ASSERT(block != NULL && symb != NULL);
+		return TGU_InsertToSymbTable(block->symb_table, symb);
 }
 
 
 
+
+tguSymb_t*		TGU_FindSymbFromBlock(tguBlock_t	*block, const wchar_t *name, tguSymbType_t t, bool_t current_block)
+{
+		tguSymb_t *symb;
+		AR_ASSERT(block != NULL && name != NULL);
+
+		symb = NULL;
+		do{
+				symb = TGU_FindSymb(block->symb_table, name, t);
+
+				block = block->parent;
+		}while(!current_block && block != NULL && symb== NULL);
+
+		return symb;
+}
 
 
 AR_NAMESPACE_END

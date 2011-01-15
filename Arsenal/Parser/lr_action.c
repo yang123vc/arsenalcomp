@@ -399,6 +399,7 @@ psrActionTable_t* __create_action_table(const psrGrammar_t *grammar, psrLRItemTy
 						psrAction_t		  record;
 						const lalrAction_t	  *action;
 						
+						const psrTermInfo_t		*term_info;
 						action = &state->actions[k];
 
 						config = action->config;
@@ -411,13 +412,14 @@ psrActionTable_t* __create_action_table(const psrGrammar_t *grammar, psrLRItemTy
 
 						body = Parser_IndexOfSymbList(&rule->body, config->delim);
 
+						term_info = Parser_GetRulePrecAssocInfo(grammar, rule);
 						
 						
 						AR_memset(&record, 0, sizeof(record));
 
 						record.rule_num = rule_num;
 						record.delim = config->delim;
-						record.prec = Parser_GetRulePrecAssocInfo(grammar, rule)->prec;
+						record.prec = term_info->prec;
 						record.reduce_count = 0;
 						record.shift_to = 0;
 						record.next = NULL;
