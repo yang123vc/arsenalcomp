@@ -21,12 +21,6 @@ AR_printf_ctx
 
 AR_check
 
-AR_malloc
-AR_calloc
-AR_realloc
-AR_free
-AR_memswap
-
 
 AR_stricmp
 AR_strnicmp

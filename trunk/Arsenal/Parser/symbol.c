@@ -24,7 +24,7 @@ const psrSymb_t*		Parser_CreateSymb(const wchar_t *name, psrSymbType_t t)
 		psrSymb_t		*res;
 		AR_ASSERT(name != NULL && AR_wcslen(name) > 0);
 		res = AR_NEW0(psrSymb_t);
-		
+
 		res->name = Parser_AllocString(name);
 		res->type = t;
 		res->hash_code = AR_wcshash(res->name);
@@ -430,6 +430,7 @@ bool_t					Parser_InsertToSymbMap(psrSymbMap_t *map, const psrSymb_t *key, const
 		}else
 		{
 				rec = AR_NEW0(psrMapRec_t);
+
 				rec->key = key;
 				rec->can_empty = false;
 				Parser_InitSymbList(&rec->lst);

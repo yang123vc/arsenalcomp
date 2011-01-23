@@ -33,6 +33,8 @@ lexProgSet_t* Lex_CreateProgSet()
 {
 		lexProgSet_t *res;
 		res = AR_NEW0(lexProgSet_t);
+		
+
 		return res;
 }
 
@@ -229,6 +231,9 @@ lexMatch_t*		Lex_CreateMatch(const lex_t *lex, const arIOCtx_t *io)
 		AR_ASSERT(lex != NULL);
 		
 		pmatch = AR_NEW(lexMatch_t);
+		
+
+
 		AR_memset(pmatch, 0, sizeof(*pmatch));
 
 		pmatch->io_ctx = io == NULL ? lex->io_ctx : *io;
@@ -244,6 +249,9 @@ lexMatch_t*		Lex_CreateMatch(const lex_t *lex, const arIOCtx_t *io)
 		{
 				rgxProg_t *prog;
 				prog = AR_NEW(rgxProg_t);
+				
+		
+
 				RGX_InitProg(prog);
 				RGX_Compile(prog, lex->rule_set.nodes[i]);
 				

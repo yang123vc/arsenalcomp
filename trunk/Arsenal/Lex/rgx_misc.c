@@ -168,6 +168,7 @@ static rgxCharRange_t* __new_range(wchar_t beg, wchar_t end, rgxCharRange_t *nex
 		rgxCharRange_t *res;
 		AR_ASSERT(beg <= end);
 		res = AR_NEW0(rgxCharRange_t);
+		
 
 		res->beg = beg; res->end = end; res->next = next;
 		return res;
@@ -549,6 +550,8 @@ static rgxThreadList_t* __create_new_thread_list()
 {
 		rgxThreadList_t	*res = NULL;
 		res = AR_NEW0(rgxThreadList_t);
+		
+
 		res->cap = RGX_THREAD_LIST_INIT_COUNT;
 		res->next = NULL;
 

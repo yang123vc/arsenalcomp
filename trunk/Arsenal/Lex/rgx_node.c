@@ -49,6 +49,7 @@ static rgxNode_t* __alloc_node()
 		if(__g_node_list == NULL)
 		{
 				node = AR_NEW0(rgxNode_t);
+				
 		}else
 		{
 				AR_LockSpinLock(&__g_lock);
@@ -56,6 +57,7 @@ static rgxNode_t* __alloc_node()
 				if(__g_node_list == NULL)
 				{
 						node = AR_NEW0(rgxNode_t);
+						
 				}else
 				{
 						node = __g_node_list;

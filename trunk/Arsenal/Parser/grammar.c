@@ -189,6 +189,7 @@ psrRule_t* Parser_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, c
 		if(right_term == NULL)right_term = PARSER_DefPrecSymb->name;
 		
 		rule = AR_NEW0(psrRule_t);
+
 		Parser_InitSymbList(&rule->body);
 		
 		rule->head = Parser_CopyNewSymb(head);
@@ -418,6 +419,8 @@ psrGrammar_t*			Parser_CreateGrammar(const psrHandler_t *handler, const arIOCtx_
 
 		AR_ASSERT(handler != NULL && handler->free_f != NULL);
 		gmr = AR_NEW0(psrGrammar_t);
+	
+
 		gmr->psr_handler = *handler;
 		gmr->io_ctx = io_ctx != NULL ? *io_ctx : *AR_global_ioctx();
 

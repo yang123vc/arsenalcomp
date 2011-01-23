@@ -60,17 +60,7 @@ typedef enum
 */
 void test2()
 {
-		tguConstant_t const_val;
-		wchar_t *name;
-		tguSymb_t *symb_boolean, *symb_null, *symb_float, *symb_int, *symb_string;
-
-		const_val.boolean = true;
 		
-		name = TGU_ConstantToName(TGU_SYMB_BOOL_T, &const_val);
-		symb_boolean = TGU_CreateSymb(TGU_SYMB_BOOL_T, name);
-
-		AR_DEL(name);
-		name = NULL;
 		
 }
 

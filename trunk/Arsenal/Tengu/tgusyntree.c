@@ -24,7 +24,6 @@ AR_NAMESPACE_BEGIN
 
 
 
-
 /****************************************Expr***************************************************************/
 
 tguTableField_t*		TGU_CreateTableField(tguTableFieldType_t t)
@@ -32,6 +31,7 @@ tguTableField_t*		TGU_CreateTableField(tguTableFieldType_t t)
 		tguTableField_t *field;
 		
 		field = AR_NEW0(tguTableField_t);
+		;
 		field->type = t;
 		return field;
 }
@@ -72,6 +72,7 @@ tguExpr_t*		TGU_CreateExpr(tguExprType_t type)
 		tguExpr_t		*expr;
 		
 		expr = AR_NEW0(tguExpr_t);
+
 		expr->expr_type = type;
 		return expr;
 }
@@ -200,6 +201,7 @@ tguStmt_t*	TGU_CreateStmt(tguStmtType_t			stmt_type)
 		tguStmt_t		*stmt;
 		
 		stmt = AR_NEW0(tguStmt_t);
+
 		stmt->stmt_type = stmt_type;
 		return stmt;
 }
@@ -314,6 +316,7 @@ tguParams_t*	TGU_CreateParams()
 {	
 		tguParams_t *ret;
 		ret = AR_NEW0(tguParams_t);
+
 		ret->is_variadic = false;
 		return ret;
 }
@@ -366,6 +369,7 @@ tguFunc_t*		TGU_CreateFunction(const tguBlock_t *parent_block)
 		tguFunc_t *func;
 		AR_ASSERT(parent_block != NULL);
 		func = AR_NEW0(tguFunc_t);
+
 		func->block = TGU_CreateBlock(parent_block);
 		return func;
 }
@@ -404,6 +408,7 @@ tguSymb_t*		TGU_CreateSymb(tguSymbType_t t, const wchar_t *name)
 		tguSymb_t *symb;
 		AR_ASSERT(name != NULL && AR_wcslen(name) > 0);
 		symb = AR_NEW0(tguSymb_t);
+		
 		symb->type = t;
 		symb->name = TGU_AllocString(name);
 		return symb;
@@ -447,6 +452,7 @@ tguSymbTbl_t*	TGU_CreateSymbTable()
 {
 		tguSymbTbl_t *tbl;
 		tbl = AR_NEW0(tguSymbTbl_t);
+		
 		return tbl;
 }
 
@@ -832,6 +838,7 @@ tguSymb_t*		TGU_FindSymbFromBlock(tguBlock_t	*block, const wchar_t *name, tguSym
 
 		return symb;
 }
+
 
 
 AR_NAMESPACE_END

@@ -58,6 +58,7 @@ static psrActionTable_t* __create_table(const psrGrammar_t *gmr)
 		AR_ASSERT(gmr != NULL && gmr->count > 1);
 
 		tbl = AR_NEW0(psrActionTable_t);
+
 		symb_lst = Parser_GetSymbList(gmr);
 		
 		Parser_InitSymbList(&tbl->term_set);
@@ -254,6 +255,7 @@ static void __insert_action_to_action_list(psrAction_t **dest, const psrAction_t
 		if(curr == NULL)
 		{
 				*dest = AR_NEW0(psrAction_t);
+
 				__copy_action(*dest, sour);
 				return;
 		}
@@ -296,6 +298,7 @@ static void __insert_action_to_action_list(psrAction_t **dest, const psrAction_t
 				{
 
 						tmp = AR_NEW0(psrAction_t);
+						
 						__copy_action(tmp, sour);
 						
 						if(curr->type != PARSER_SHIFT)
@@ -326,6 +329,7 @@ static void __insert_action_to_action_list(psrAction_t **dest, const psrAction_t
 								/*这地方一定是规约规约冲突*/
 								AR_ASSERT(curr->type == PARSER_REDUCE && sour->type == PARSER_REDUCE);
 								tmp = AR_NEW0(psrAction_t);
+
 								__copy_action(tmp, sour);
 								tmp->next = curr->next;
 								curr->next = tmp;
@@ -345,6 +349,7 @@ static void __insert_action_to_action_list(psrAction_t **dest, const psrAction_t
 								/*这地方一定是规约规约冲突*/
 								AR_ASSERT(curr->type == PARSER_REDUCE && sour->type == PARSER_REDUCE);
 								tmp = AR_NEW0(psrAction_t);
+
 								__copy_action(tmp, sour);
 								tmp->next = curr->next;
 								curr->next = tmp;
