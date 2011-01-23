@@ -1,9 +1,6 @@
 // textfile.h: interface for the textfile class.
 //
 //////////////////////////////////////////////////////////////////////
-#if !defined(_CRT_SECURE_NO_WARNINGS)
-#define _CRT_SECURE_NO_WARNINGS
-#endif
 
 #ifndef PEKSPRODUCTIONS_TEXTFILE
 #define PEKSPRODUCTIONS_TEXTFILE

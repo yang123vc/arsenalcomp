@@ -1,3 +1,13 @@
+// This MFC Samples source code demonstrates using MFC Microsoft Office Fluent User Interface 
+// (the "Fluent UI") and is provided only as referential material to supplement the 
+// Microsoft Foundation Classes Reference and related electronic documentation 
+// included with the MFC C++ library software.  
+// License terms to copy, use or distribute the Fluent UI are available separately.  
+// To learn more about our Fluent UI licensing program, please visit 
+// http://msdn.microsoft.com/officeui.
+//
+// Copyright (C) Microsoft Corporation
+// All rights reserved.
 
 // stdafx.h : include file for standard system include files,
 // or project specific include files that are used frequently,
@@ -15,11 +25,6 @@
 
 #include "targetver.h"
 
-#ifndef _CRT_SECURE_NO_WARNINGS
-#define _CRT_SECURE_NO_WARNINGS			1
-#endif
-
-
 #define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS      // some CString constructors will be explicit
 
 // turns off MFC's hiding of some common and often safely ignored warning messages
@@ -28,10 +33,13 @@
 #include <afxwin.h>         // MFC core and standard components
 #include <afxext.h>         // MFC extensions
 
+#include <afxole.h>         // MFC OLE classes
+#include <afxodlgs.h>       // MFC OLE dialog classes
 
 #include <afxdisp.h>        // MFC Automation classes
 
 
+ // Here, minimal DB support is requested.  No view is chosen.
 
 #ifndef _AFX_NO_OLE_SUPPORT
 #include <afxdtctl.h>           // MFC support for Internet Explorer 4 Common Controls
@@ -42,11 +50,14 @@
 
 #include <afxcontrolbars.h>     // MFC support for ribbons and control bars
 
-#include <afxrich.h>
 
-#include "resource.h"
-#include "resource_id.h"
+#include <afxsock.h>            // MFC socket extensions
 
+#include <afxrich.h>            // MFC rich edit classes
+
+
+
+#include <afxdb.h>        // ODBC
 
 
 
@@ -64,12 +75,5 @@
 
 
 
-
-//#include "textfile.h"
-
-
 #include "Arsenal.h"
 #pragma comment(lib, "Arsenal.lib")
-
-
-void test_func();
