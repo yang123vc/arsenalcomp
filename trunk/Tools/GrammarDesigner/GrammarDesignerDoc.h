@@ -4,6 +4,7 @@
 
 
 #pragma once
+#include "textfile.h"
 #include "BackEndThread.h"
 
 class CGrammarDesignerDoc : public CRichEditDoc 
