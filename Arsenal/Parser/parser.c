@@ -150,7 +150,10 @@ typedef struct __term_info_rec_tag
 
 static AR_INLINE psrTermInfoRec_t* Parser_CreateTermInfoRec()
 {
-		return AR_NEW0(psrTermInfoRec_t);
+		psrTermInfoRec_t *res;
+		res = AR_NEW0(psrTermInfoRec_t);
+		
+		return res;
 }
 
 static AR_INLINE void			Parser_DestroyTermInfoRec(psrTermInfoRec_t *rec)
@@ -202,7 +205,10 @@ struct __term_table_tag
 
 static AR_INLINE psrTermInfoTbl_t* Parser_CreateTermInfoTable()
 {
-		return AR_NEW0(psrTermInfoTbl_t);
+		psrTermInfoTbl_t *res;
+		res = AR_NEW0(psrTermInfoTbl_t);
+		
+		return res;
 }
 
 static AR_INLINE void Parser_DestroyTermInfoTable(psrTermInfoTbl_t *tbl)
@@ -314,6 +320,8 @@ const parser_t* Parser_CreateParser(const psrGrammar_t *grammar, psrModeType_t t
 		AR_ASSERT(grammar != NULL);
 
 		parser = AR_NEW0(parser_t);
+		
+
 		parser->ref_cnt = 1;
 
 		parser->grammar = grammar;
@@ -399,13 +407,17 @@ psrContext_t*	Parser_CreateContext(const parser_t *parser, void *ctx)
 		AR_ASSERT(parser->ref_cnt > 0);
 
 		psr_ctx = AR_NEW0(psrContext_t);
+		
+
 		psr_ctx->ctx = ctx;
 		psr_ctx->parser = parser;
 		psr_ctx->is_repair = false;
 		psr_ctx->is_accepted = false;
 		psr_ctx->state_stack = AR_NEW0(psrStack_t);
+
 		Parser_InitStack(psr_ctx->state_stack);
 		psr_ctx->node_stack = AR_NEW0(psrNodeStack_t);
+
 		Parser_InitNodeStack(psr_ctx->node_stack);
 
 		AR_AtomicInc((int_t*)&(((parser_t*)parser)->ref_cnt));

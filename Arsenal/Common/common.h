@@ -222,12 +222,50 @@ static AR_INLINE const void* AR_GET_ELEM(const void *base, size_t width, size_t 
 #define AR_DBL_MOD(_x,_y)		((double)(_x) - floor((double)(_x) / (double)(_y)) * (double)(_y))
 #define AR_DBL_POW(_x,_y)		(double)pow((double)(_x), (double)(_y))
 
+
+/**********************************************************Heap***************************************************************/
+
+#define AR_HEAP_ALIGN			8
+#define AR_ALIGN_SIZE(_bytes)	( ((_bytes) + AR_HEAP_ALIGN - 1 ) & ~(AR_HEAP_ALIGN - 1) )
+
+
+
+
+
+
+
+
+typedef struct __arsenal_heap_tag		arHeap_t;
+arHeap_t*		AR_CreateHeap();
+void			AR_DestroyHeap(arHeap_t *heap);
+void*			AR_AllocFromHeap(arHeap_t *heap, size_t bytes);
+void			AR_FreeToHeap(arHeap_t *heap, void *ptr);
+void*			AR_ReallocFromHeap(arHeap_t *heap, void *ptr, size_t bytes);
+
 /**********************************************************memory***************************************************************/
+
+
+#define AR_MEM_MAX_ALLOC_RETRY_COUNT	100000
+
+void	AR_InitMemory();
+void	AR_UnInitMemory();
+
+#if !defined(AR_USE_CRT_ALLOCFUNC)
 
 void*	AR_malloc(size_t nbytes);
 void*	AR_calloc(size_t num, size_t size);
 void*	AR_realloc(void *block, size_t nbytes);
 void	AR_free(void *ptr);
+
+#else
+
+
+#define	AR_malloc		malloc
+#define	AR_calloc		calloc
+#define	AR_realloc		realloc
+#define AR_free			free
+
+#endif
 
 
 #define AR_memset				memset
@@ -239,7 +277,7 @@ void	AR_memswap(void *a, void *b, size_t n);
 
 
 
-#if defined(AR_USE_CRT_ALLOCFUNC)
+/*
 
 #define AR_NEW(_type) ((_type*)malloc(sizeof(_type)))
 #define AR_NEW0(_type) ((_type*)calloc(1, sizeof(_type)))
@@ -248,7 +286,8 @@ void	AR_memswap(void *a, void *b, size_t n);
 #define AR_REALLOC(_type, _ptr, _new_count) ((_type*)realloc((_ptr), sizeof(_type) * (_new_count)))
 #define AR_DEL(_ptr) free((void*)(_ptr))
 
-#else
+*/
+
 
 #define AR_NEW(_type) ((_type*)AR_malloc(sizeof(_type)))
 #define AR_NEW0(_type) ((_type*)AR_calloc(1, sizeof(_type)))
@@ -258,7 +297,7 @@ void	AR_memswap(void *a, void *b, size_t n);
 #define AR_DEL(_ptr) AR_free((void*)(_ptr))
 
 
-#endif
+
 
 
 /**********************************************************algo*************************************************************/
@@ -494,7 +533,6 @@ size_t			AR_GetLengthString(const arString_t *str);
 
 
 
-typedef struct __arsenal_str_rec		arStringRec_t;
 typedef struct __string_table_			arStringTable_t;
 
 
@@ -542,7 +580,7 @@ int_t			AR_AtomicInc(volatile int_t *dest);
 int_t			AR_AtomicDec(volatile int_t *dest);
 
 
-#define			AR_MAXSPIN_COUNT		100000
+#define			AR_MAXSPIN_COUNT		5000
 
 #if defined(OS_FAMILY_UNIX)
 	

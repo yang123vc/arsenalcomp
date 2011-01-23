@@ -48,6 +48,7 @@ void			Parser_DestroyState(lalrState_t *state)
 		AR_DEL(state);
 }
 
+
 lalrAction_t*	Parser_InsertAction(lalrState_t *state, lalrState_t *to, const psrSymb_t *symb, const lalrConfig_t *config)
 {
 		lalrAction_t	*action;

@@ -74,6 +74,8 @@ extern void ds_test();
 
 extern void	Tengu_Test();
 
+extern void mem_test();
+
 #endif
 
 
@@ -147,7 +149,10 @@ void AR_Test()
 
 		//ds_test();
 
-		Tengu_Test();
+		//Tengu_Test();
+
+		mem_test();
+
 		getchar();
 #else
 		AR_printf(L"dll version\r\n");

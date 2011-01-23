@@ -1,4 +1,5 @@
-﻿
+﻿#include "..\Common\common.h"
+
 
 /*
  * The Arsenal Library
@@ -50,6 +51,7 @@ syntax_node
 			tguSynNode_t *node;
 
 			node = AR_NEW0(tguSynNode_t);
+
 			node->type = type;
 
 			switch(node->type)

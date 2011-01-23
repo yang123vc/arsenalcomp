@@ -325,8 +325,9 @@ lex_t*	Lex_Create(const arIOCtx_t *io)
 		lex_t *res;
 
 		res = AR_NEW0(lex_t);
-
 		res->name_tbl = AR_NEW(rgxNameSet_t);
+		
+
 		RGX_InitNameSet(res->name_tbl);
 		__init_rule_set(&res->rule_set);
 		res->io_ctx = io == NULL ? *AR_global_ioctx() : *io;

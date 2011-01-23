@@ -115,6 +115,8 @@ arBuffer_t*		AR_CreateBuffer(size_t nbytes)
 		arBuffer_t		*buf;
 		
 		buf = AR_NEW0(arBuffer_t);
+		
+
 		if(nbytes > 0)
 		{
 				nbytes = AR_MAX(nbytes, INIT_BUF_LEN);

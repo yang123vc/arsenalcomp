@@ -400,7 +400,9 @@ static void CFG_InsertToNodeList(cfgNodeList_t *lst, cfgNode_t *node)
 		if(lst->count == lst->cap)
 		{
 				lst->cap = (lst->cap + 4)*2;
-				lst->lst = (cfgNode_t**)AR_realloc(lst->lst, sizeof(cfgNode_t*) * lst->cap);
+				lst->lst = AR_REALLOC(cfgNode_t*, lst->lst, lst->cap);
+				
+				/*lst->lst = (cfgNode_t**)AR_realloc(lst->lst, sizeof(cfgNode_t*) * lst->cap);*/
 		}
 		lst->lst[lst->count++] = node;
 }
@@ -720,6 +722,7 @@ static cfgNode_t*		__get_cfg_node()
 		if(__g_node_list == NULL)
 		{
 				res = AR_NEW(cfgNode_t);
+
 		}else
 		{
 				AR_LockSpinLock(&__g_list_lock);
@@ -761,7 +764,8 @@ static void __init_cfg_node_list()
 
 		for(i = 0; i < CFG_INIT_CFG_NODE_COUNT; ++i)
 		{
-				__put_cfg_node(AR_NEW0(cfgNode_t));
+				cfgNode_t *n = AR_NEW0(cfgNode_t);
+				__put_cfg_node(n);
 		}
 }
 
@@ -1815,6 +1819,7 @@ static lex_t* __build_lex(arIOCtx_t		*io)
 				action.priority = __cfg_pattern[i].prec;
 				action.value = (size_t)__cfg_pattern[i].val;
 
+				
 				if(!Lex_InsertRule(lex, __cfg_pattern[i].regex, &action))
 				{
 						AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);

@@ -18,6 +18,74 @@ AR_NAMESPACE_BEGIN
 
 
 
+static arSpinLock_t		__g_lock;
+static arHeap_t			*__g_heap = NULL;
+
+void	AR_InitMemory()
+{
+		AR_InitSpinLock(&__g_lock);
+		__g_heap = AR_CreateHeap();
+
+}
+
+void	AR_UnInitMemory()
+{
+		
+		AR_DestroyHeap(__g_heap);
+		__g_heap = NULL;
+		AR_UnInitSpinLock(&__g_lock);
+}
+
+
+#if !defined(AR_USE_CRT_ALLOCFUNC)
+
+static AR_INLINE void*	malloc_mem(size_t bytes)
+{
+		void *ret;
+		AR_ASSERT(bytes > 0);
+		if(bytes == 0)
+		{
+				return NULL;
+		}
+
+		AR_LockSpinLock(&__g_lock);
+		ret = AR_AllocFromHeap(__g_heap, bytes);
+		AR_UnLockSpinLock(&__g_lock);
+		return ret;
+}
+
+static AR_INLINE void	free_mem(void *ptr)
+{
+		AR_ASSERT(ptr != NULL);
+		AR_LockSpinLock(&__g_lock);
+		AR_FreeToHeap(__g_heap, ptr);
+		AR_UnLockSpinLock(&__g_lock);
+}
+
+static AR_INLINE void*	calloc_mem(size_t num, size_t size)
+{
+		void *ret = malloc_mem(num *size);
+		if(!ret)
+		{
+				return NULL;
+		}
+
+		AR_memset(ret, 0, num *size);
+		return ret;
+}
+
+static AR_INLINE void*	realloc_mem(void *ptr, size_t size)
+{
+		void *ret;
+		AR_LockSpinLock(&__g_lock);
+		ret = AR_ReallocFromHeap(__g_heap, ptr, size);
+		AR_UnLockSpinLock(&__g_lock);
+		if(!ret)
+		{
+				return NULL;
+		}
+		return ret;
+}
 
 
 
@@ -25,49 +93,87 @@ AR_NAMESPACE_BEGIN
 
 
 
+
 void*	AR_malloc(size_t nbytes)
 {
 		void *ptr;
+		size_t i;
 		AR_ASSERT(nbytes > 0);
-		while((ptr = malloc(nbytes)) == NULL)AR_YieldThread();
+		
+		i = 0;
+		ptr = NULL;
+		
+		while(i < AR_MEM_MAX_ALLOC_RETRY_COUNT && (ptr = malloc_mem(nbytes)) == NULL)
+		{
+				AR_YieldThread();
+				++i;
+		}
 
+		if(!ptr)
+		{
+				AR_error(AR_ERR_FATAL, L"malloc failure for %" AR_PLAT_INT_FMT L"d\r\n", nbytes);
+		}
+		
 		return ptr;
 }
 
 void*	AR_calloc(size_t num, size_t size)
 {
+		size_t i;
 		void *ptr;
-		/*
-		do{
-			ptr = calloc(num , size);
-		}while(ptr == NULL);
-		*/
 		AR_ASSERT(num > 0 && size > 0);
-		while((ptr = calloc(num,size)) == NULL)AR_YieldThread();
+		
+		ptr = NULL;
+		i = 0; 
+
+		while(i < AR_MEM_MAX_ALLOC_RETRY_COUNT && (ptr = calloc_mem(num,size)) == NULL)
+		{
+				AR_YieldThread();
+				++i;
+		}
+
+		if(!ptr)
+		{
+				AR_error(AR_ERR_FATAL, L"calloc failure for %" AR_PLAT_INT_FMT L"d\r\n", num * size);
+		}
+
 		return ptr;
 }		
 
 void*	AR_realloc(void *block, size_t nbytes)
 {
 		void *ptr;
-
+		size_t i;
 		AR_ASSERT(nbytes > 0);
+		
+		i = 0;
+		ptr = NULL;
 
-		/*
-		do{
-				ptr = realloc(block, nbytes);		
-		}while(ptr == NULL);
-		*/
-		while((ptr = realloc(block, nbytes)) == NULL)AR_YieldThread();
+		while(i < AR_MEM_MAX_ALLOC_RETRY_COUNT && (ptr = realloc_mem(block, nbytes)) == NULL)
+		{
+				AR_YieldThread();
+				++i;
+		}
+
+
+		if(!ptr)
+		{
+				AR_error(AR_ERR_FATAL, L"realloc failure for %" AR_PLAT_INT_FMT L"d\r\n", nbytes);
+		}
+		
 		return ptr;
 }
 
+
 void	AR_free(void *ptr)
 {
-		AR_ASSERT(ptr != NULL);
-		if(ptr)free(ptr);
+		if(ptr)
+		{
+				free_mem(ptr);
+		}
 }
 
+#endif
 
 
 

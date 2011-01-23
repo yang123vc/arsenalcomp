@@ -426,6 +426,7 @@ snObject_t*		SN_CreateObject(snType_t		type)
 {
 		snObject_t		*obj;
 		obj = AR_NEW0(snObject_t);
+
 		obj->type = type;
 		switch(type)
 		{

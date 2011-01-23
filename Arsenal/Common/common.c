@@ -45,10 +45,13 @@ void AR_Init(const arInit_t *info)
 {
 		if(info)__g_ctx = *info;
 		AR_InitThread();
+
+		AR_InitMemory();
 }
 
 void AR_UnInit()
 {
+		AR_UnInitMemory();
 		AR_UnInitThread();
 }
 
@@ -84,22 +87,14 @@ void	AR_printf_ctx(arIOCtx_t *ctx, const wchar_t *msg,...)
 
 void	AR_error_ctx(arIOCtx_t *ctx, int_t level, const wchar_t *msg, ...)
 {		
-		wchar_t *buf;
-		int_t len;
+		wchar_t buf[1024];
 		va_list arg_ptr;
 		
 		if(ctx && ctx->on_error)
 		{
 				
 				va_start(arg_ptr, msg);
-				len = AR_vscwprintf(msg, arg_ptr);
-				va_end(arg_ptr);
-				if(len <= 0)return;
-				
-				buf = AR_NEWARR0(wchar_t, len + 1);
-
-				va_start(arg_ptr, msg);
-				AR_vswprintf(buf, len + 1, msg, arg_ptr);
+				AR_VSWPRINTF(buf, 1024, msg, arg_ptr);
 				va_end(arg_ptr);
 				ctx->on_error(level, buf, ctx->ctx);
 				AR_DEL(buf);
@@ -111,28 +106,18 @@ void	AR_error_ctx(arIOCtx_t *ctx, int_t level, const wchar_t *msg, ...)
 
 void AR_error(int_t level, const wchar_t *msg, ...)
 {
-		wchar_t *buf;
-		int_t len;
+		wchar_t buf[1024];/*因为可能会存在因为内存不足调用此函数报告异常，所以这里假定错误信息小于1K*/
 		va_list arg_ptr;
 		
 		if(__g_ctx.global_io_ctx.on_error != NULL)
 		{
-				
 				va_start(arg_ptr, msg);
-				len = AR_vscwprintf(msg, arg_ptr);
-				va_end(arg_ptr);
-
-				if(len <= 0)return;
-				
-				buf = AR_NEWARR0(wchar_t, len + 1);
-				
-				va_start(arg_ptr, msg);
-				AR_vswprintf(buf, len + 1, msg, arg_ptr);
+				AR_VSWPRINTF(buf, 1024, msg, arg_ptr);
 				va_end(arg_ptr);
 		
 				__g_ctx.global_io_ctx.on_error(level, buf, __g_ctx.global_io_ctx.ctx);
 				
-				AR_DEL(buf);
+				
 		}
 
 

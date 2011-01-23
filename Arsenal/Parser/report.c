@@ -48,6 +48,7 @@ const	psrConflictView_t*		Parser_CreateConflictView(const psrActionTable_t *tbl,
 		view = AR_NEW0(psrConflictView_t);
 		
 		
+		
 		for(i = 0; i < tbl->row; ++i)
 		{
 				size_t					l = 0;
@@ -65,6 +66,9 @@ const	psrConflictView_t*		Parser_CreateConflictView(const psrActionTable_t *tbl,
 						
 						AR_ClearString(str);
 						item = AR_NEW0(psrConflictItem_t);
+
+						
+
 						/*
 						AR_AppendFormatString(str,L"state[%" AR_PLAT_INT_FMT L"d] : %ls",(size_t)i, tbl->term_set.lst[k]->name);
 						*/
@@ -170,6 +174,8 @@ const psrActionView_t*	Parser_CreateActionView(const psrActionTable_t *tbl, cons
 
 		view = AR_NEW0(psrActionView_t);
 		
+
+
 		view->item_cnt = tbl->term_set.count + tbl->nonterm_set.count;
 
 		view->item = AR_NEWARR0(wchar_t*, view->item_cnt);
@@ -914,6 +920,9 @@ const psrStatusView_t*		Parser_CreateParserStatusView(const parser_t *parser)
 		__report_left_factor(parser->grammar, &left_factor);
 
 		ret = AR_NEW0(psrStatusView_t);
+		
+		
+
 		ret->first_set = first_view;
 		ret->follow_set = follow_view;
 		ret->left_recursion = left_recu;

@@ -135,6 +135,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/Zi"
 				Optimization="0"
 				PreprocessorDefinitions="WIN64;_DEBUG;_WINDOWS;_USRDLL;"
 				MinimalRebuild="true"
@@ -804,6 +805,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/Zi"
 				Optimization="0"
 				PreprocessorDefinitions="WIN64;_WINDOWS;_DEBUG; _LIB;"
 				StringPooling="false"
@@ -1289,6 +1291,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\Arsenal\Common\crtstr.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\heap.c"
 				>
 			</File>
 			<File

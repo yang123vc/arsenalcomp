@@ -17,6 +17,7 @@
 AR_NAMESPACE_BEGIN
 
 
+typedef struct __arsenal_str_rec		arStringRec_t;
 struct __arsenal_str_rec
 {
 		wchar_t					 *str;
@@ -37,6 +38,7 @@ arStringTable_t*		AR_CreateStrTable(size_t count)
 		arStringTable_t		*res;
 
 		res = AR_NEW0(arStringTable_t);
+		
 		if(count < MIN_BUCKET_SIZE)count = MIN_BUCKET_SIZE;
 		res->count = count;
 		res->bucket = AR_NEWARR0(arStringRec_t*, res->count);
@@ -123,6 +125,7 @@ const wchar_t*			AR_GetStringN(arStringTable_t *tbl, const wchar_t *str, size_t 
 
 		
 		record = AR_NEW0(arStringRec_t);
+		
 		record->str = AR_wcsndup(str, n);
 		record->len = n;
 		record->next = tbl->bucket[idx];

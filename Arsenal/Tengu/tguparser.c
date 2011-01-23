@@ -142,13 +142,13 @@ void	TGU_UnInitParser()
 
 
 
-
 tguParser_t*			TGU_CreateParser(tguReport_t	*report, const tguBlock_t		*build_in_block)
 {
 		tguParser_t		*ret;
 		AR_ASSERT(report != NULL && report->report_func /*&& build_in_block*/);
 
 		ret = AR_NEW0(tguParser_t);
+
 		ret->report = *report;
 		ret->build_in = build_in_block;
 		ret->match = __build_match();
@@ -215,7 +215,6 @@ static void __on_lex_error(tguParser_t	*parser)
 }
 
 
-
 tguBlock_t*	TGU_ParseCode(tguParser_t	*parser, const wchar_t *code)
 {
 		tguBlock_t		*result = NULL;
@@ -273,6 +272,7 @@ tguBlock_t*	TGU_ParseCode(tguParser_t	*parser, const wchar_t *code)
 
 		return result;
 }
+
 
 
 AR_NAMESPACE_END
