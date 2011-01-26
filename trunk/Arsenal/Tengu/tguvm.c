@@ -34,8 +34,7 @@ void	TGU_UnInitVM()
 
 void	TGU_Execute(tguMachine_t *vm)
 {
-
-				
+		
 }
 
 AR_NAMESPACE_END

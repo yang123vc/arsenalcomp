@@ -477,7 +477,7 @@
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="..\..\Arsenal;..\..\ArsenalCPP;"
-				PreprocessorDefinitions="WIN64;_WINDOWS;NDEBUG"
+				PreprocessorDefinitions="WIN64;_WINDOWS;NDEBUG;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
 				WarningLevel="4"
@@ -1127,7 +1127,7 @@
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="..\..\Arsenal;..\..\ArsenalCPP;"
-				PreprocessorDefinitions="WIN64;_WINDOWS;NDEBUG; __LIB"
+				PreprocessorDefinitions="WIN64;_WINDOWS;NDEBUG; __LIB;_CRT_SECURE_NO_WARNINGS"
 				UsePrecompiledHeader="2"
 				WarningLevel="4"
 				DebugInformationFormat="3"
@@ -1419,10 +1419,6 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath=".\res\buttons.bmp"
-				>
-			</File>
-			<File
 				RelativePath=".\res\class_view.ico"
 				>
 			</File>
@@ -1455,23 +1451,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\res\filelarge.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\res\filesmall.bmp"
-				>
-			</File>
-			<File
 				RelativePath=".\res\fileview.bmp"
 				>
 			</File>
 			<File
 				RelativePath=".\res\fileview_hc.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\res\main.bmp"
 				>
 			</File>
 			<File
@@ -1536,14 +1520,6 @@
 			</File>
 			<File
 				RelativePath=".\res\Toolbar256.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\res\writelarge.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\res\writesmall.bmp"
 				>
 			</File>
 		</Filter>

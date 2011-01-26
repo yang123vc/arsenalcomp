@@ -445,11 +445,6 @@ struct __parser_context_tag
 
 
 
-
-
-
-
-
 const parser_t*			Parser_CreateParser(const psrGrammar_t *grammar, psrModeType_t type);
 
 void					Parser_DestroyParser(const parser_t *parser);

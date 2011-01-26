@@ -89,12 +89,6 @@ IDI_PROPERTIES_WND_HC   ICON         "res\\properties_wnd_hc.ico"
 
 IDR_MAINFRAME           BITMAP      "res\\Toolbar.bmp"
 IDR_MAINFRAME_256       BITMAP      "res\\Toolbar256.bmp"
-IDB_MAIN                BITMAP  DISCARDABLE     "res\\main.bmp"
-IDB_FILELARGE           BITMAP  DISCARDABLE     "res\\filelarge.bmp"
-IDB_FILESMALL           BITMAP  DISCARDABLE     "res\\filesmall.bmp"
-IDB_WRITELARGE          BITMAP  DISCARDABLE     "res\\writelarge.bmp"
-IDB_WRITESMALL          BITMAP  DISCARDABLE     "res\\writesmall.bmp"
-IDB_BUTTONS             BITMAP  DISCARDABLE     "res\\buttons.bmp"
 IDR_SORT                BITMAP                  "res\\sort.bmp"
 IDB_SORT_24             BITMAP                  "res\\sort_hc.bmp"
 IDB_FILE_VIEW           BITMAP                  "res\\fileview.bmp"
@@ -198,6 +192,10 @@ BEGIN
 	END
 	POPUP "&View"
 	BEGIN
+		POPUP "&Toolbars and Docking Windows"
+		BEGIN
+			MENUITEM "<placeholder>",           ID_VIEW_TOOLBAR
+		END
 		MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
 		POPUP "&Application Look"
 		BEGIN
@@ -260,6 +258,10 @@ BEGIN
 	END
 	POPUP "&View"
 	BEGIN
+		POPUP "&Toolbars and Docking Windows"
+		BEGIN
+			MENUITEM "<placeholder>",           ID_VIEW_TOOLBAR
+		END
 		MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
 		POPUP "&Application Look"
 		BEGIN
@@ -328,18 +330,6 @@ BEGIN
 		MENUITEM SEPARATOR
 		MENUITEM "Select A&ll\tCtrl+A",     ID_EDIT_SELECT_ALL
 	END
-END
-
-IDR_PASTE_MENU MENU
-BEGIN
-    MENUITEM "&Paste",                      ID_EDIT_PASTE
-    MENUITEM "Paste &Special...",           ID_EDIT_PASTE_SPECIAL
-    MENUITEM "Paste as &Hyperlink",         ID_WRITE_PASTEASHYPERLINK
-END
-
-IDR_WINDOWS_MENU MENU
-BEGIN
-    MENUITEM "&New Window",                 ID_WINDOW_NEW
 END
 
 IDR_POPUP_SORT MENU
@@ -586,7 +576,6 @@ BEGIN
 	ID_EDIT_SELECT_ALL      "Select the entire document\nSelect All"
 	ID_EDIT_UNDO            "Undo the last action\nUndo"
 	ID_EDIT_REDO            "Redo the previously undone action\nRedo"
-	ID_VIEW_TOOLBAR         "Show or hide the toolbar\nToggle ToolBar"
 	ID_VIEW_STATUS_BAR      "Show or hide the status bar\nToggle Status Bar"
 	ID_EDIT_PASTE_LINK      "Insert Clipboard contents and a link to its source\nPaste Link"
 	ID_EDIT_PASTE_SPECIAL	"Insert Clipboard contents with options\nPaste Special"
@@ -619,6 +608,8 @@ STRINGTABLE
 BEGIN
 	IDS_STATUS_PANE1        "Pane 1"
 	IDS_STATUS_PANE2        "Pane 2"
+	IDS_TOOLBAR_STANDARD    "Standard"
+	IDS_TOOLBAR_CUSTOMIZE   "Customize..."
 	IDS_WINDOWS_MANAGER     "&Windows..."
 	IDS_FILE_VIEW           "File View"
 	IDS_CLASS_VIEW          "Class View"
@@ -628,37 +619,6 @@ BEGIN
 	IDS_DEBUG_TAB           "Debug"
 	IDS_FIND_TAB            "Find"
 	IDS_PROPERTIES_WND      "Properties"
-	IDS_RIBBON_FILE         "File"
-	IDS_RIBBON_NEW          "&New"
-	IDS_RIBBON_OPEN         "&Open..."
-	IDS_RIBBON_SAVE         "&Save"
-	IDS_RIBBON_SAVEAS       "Save &As..."
-	IDS_RIBBON_PRINT        "Print"
-	IDS_RIBBON_PRINT_LABEL  "Preview and print the document"
-	IDS_RIBBON_PRINT_QUICK  "&Quick Print"
-	IDS_RIBBON_PRINT_PREVIEW "Print Pre&view"
-	IDS_RIBBON_PRINT_SETUP  "Print Set&up"
-	IDS_RIBBON_CLOSE        "&Close"
-	IDS_RIBBON_RECENT_DOCS  "Recent Documents"
-	IDS_RIBBON_EXIT         "E&xit"
-	IDS_RIBBON_HOME         "&Home"
-	IDS_RIBBON_CLIPBOARD    "Clipboard\nd"
-	IDS_RIBBON_PASTE        "Paste\nv"
-	IDS_RIBBON_CUT          "Cut\nx"
-	IDS_RIBBON_COPY         "Copy\nc"
-	IDS_RIBBON_SELECTALL    "Select All\na"
-	IDS_RIBBON_INSERT_OBJECT "Insert Object...\no"
-	IDS_RIBBON_FINDREPLACE  "Find/Replace\nf"
-	IDS_RIBBON_FIND         "Find...\nf"
-	IDS_RIBBON_FINDNEXT     "Find Next\nn"
-	IDS_RIBBON_REPLACE      "Replace\nr"
-	IDS_RIBBON_WINDOW       "Window\nw"
-	IDS_RIBBON_WINDOWS      "Windows\ni"
-	IDS_RIBBON_STYLE        "Style"
-	IDS_RIBBON_STYLE_TIP    "Modify Visual Style"
-	IDS_RIBBON_STYLE_DESC   "Choose one of the Office 2007 themes"
-	IDS_RIBBON_VIEW         "View"
-	IDS_RIBBON_STATUSBAR    "Status Bar"
 	IDS_EDIT_MENU           "Edit"
 END
 #endif

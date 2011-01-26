@@ -20,6 +20,7 @@
 #endif
 
 
+
 #define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS      // some CString constructors will be explicit
 
 // turns off MFC's hiding of some common and often safely ignored warning messages
@@ -67,6 +68,7 @@
 
 //#include "textfile.h"
 
+#pragma warning(disable : 4100)
 
 #include "Arsenal.h"
 #pragma comment(lib, "Arsenal.lib")

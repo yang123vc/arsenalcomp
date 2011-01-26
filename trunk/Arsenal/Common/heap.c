@@ -865,6 +865,19 @@ void*	AR_AllocFromHeap(arHeap_t *heap, size_t bytes)
 		}
 }
 
+void*			AR_ClearedAllocFromHeap(arHeap_t *heap, size_t num, size_t elem_size)
+{
+		void *ptr;
+		AR_ASSERT(heap != NULL && num > 0 && elem_size > 0);
+		ptr = AR_AllocFromHeap(heap, num * elem_size);
+
+		if(ptr)
+		{
+				AR_memset(ptr, 0, num * elem_size);
+		}
+		return ptr;
+}
+
 
 void	AR_FreeToHeap(arHeap_t *heap, void *ptr)
 {
@@ -921,6 +934,8 @@ void*	AR_ReallocFromHeap(arHeap_t *heap, void *ptr, size_t bytes)
 				break;
 		}
 }
+
+
 
 
 
