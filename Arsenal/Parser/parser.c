@@ -21,9 +21,6 @@
 AR_NAMESPACE_BEGIN
 
 
-
-
-
 /***************************************************辅助数据结构**********************************************/
 
 
@@ -39,13 +36,17 @@ static AR_INLINE void Parser_InitNodeStack(psrNodeStack_t *stack)
 {
 		AR_memset(stack, 0, sizeof(*stack));
 
-		stack->cap = 1024;
-		stack->nodes = AR_REALLOC(psrNode_t*, stack->nodes, stack->cap);
+		stack->cap = 128;
+		/*stack->nodes = AR_REALLOC(psrNode_t*, stack->nodes, stack->cap);*/
+		stack->nodes = AR_NEWARR(psrNode_t*, stack->cap);
 }
 
 static AR_INLINE void Parser_UnInitNodeStack(psrNodeStack_t *stack)
 {
-		AR_DEL(stack->nodes);
+		if(stack->nodes)
+		{
+				AR_DEL(stack->nodes);
+		}
 		AR_memset(stack, 0, sizeof(*stack));
 }
 
@@ -118,15 +119,18 @@ static AR_INLINE void Parser_InitStack(psrStack_t *stack)
 {
 		AR_memset(stack, 0,sizeof(*stack));
 
-		stack->cap = 1024;
-		stack->states = AR_REALLOC(size_t, stack->states, stack->cap);
-
+		stack->cap = 128;
+		/*stack->states = AR_REALLOC(size_t, stack->states, stack->cap);*/
+		stack->states = AR_NEWARR(size_t, stack->cap);
 
 }
 
 static AR_INLINE void Parser_UnInitStack(psrStack_t *stack)
 {
-		AR_DEL(stack->states);
+		if(stack->states)
+		{
+				AR_DEL(stack->states);
+		}
 		AR_memset(stack, 0,sizeof(*stack));
 }
 
@@ -308,6 +312,12 @@ static AR_INLINE void Parser_UnInitExpectedMsg(psrExpectedMsg_t *msg)
 		AR_ASSERT(msg != NULL);
 		if(msg->msg)AR_DEL((void*)msg->msg);
 }
+
+
+
+
+
+
 
 
 /****************************************************Parser*****************************************************/

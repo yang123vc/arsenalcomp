@@ -22,6 +22,7 @@
 
 
 
+
 /**********************************************************确定编译器和平台***********************************************************************/
 
 
@@ -121,10 +122,14 @@
     配置编译器相关的选项
 */
 
-/*#define	AR_USE_CRT_ALLOCFUNC	1*/
-#if(AR_COMPILER == AR_VC_LEGACY || AR_COMPILER == AR_VC)
+/*
+#define	AR_USE_CRT_ALLOCFUNC	1
+*/
 
+#if(AR_COMPILER == AR_VC_LEGACY || AR_COMPILER == AR_VC)
+/*
 		#pragma warning(disable : 4100)
+*/
 		#pragma warning(disable : 4127)
 		#pragma warning(disable : 4201)
 		#pragma warning(disable : 4214)

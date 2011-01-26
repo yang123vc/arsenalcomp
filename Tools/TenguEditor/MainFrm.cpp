@@ -1,13 +1,3 @@
-// This MFC Samples source code demonstrates using MFC Microsoft Office Fluent User Interface 
-// (the "Fluent UI") and is provided only as referential material to supplement the 
-// Microsoft Foundation Classes Reference and related electronic documentation 
-// included with the MFC C++ library software.  
-// License terms to copy, use or distribute the Fluent UI are available separately.  
-// To learn more about our Fluent UI licensing program, please visit 
-// http://msdn.microsoft.com/officeui.
-//
-// Copyright (C) Microsoft Corporation
-// All rights reserved.
 
 // MainFrm.cpp : implementation of the CMainFrame class
 //
@@ -25,12 +15,26 @@
 
 IMPLEMENT_DYNAMIC(CMainFrame, CMDIFrameWndEx)
 
+const int  iMaxUserToolbars = 10;
+const UINT uiFirstUserToolBarId = AFX_IDW_CONTROLBAR_FIRST + 40;
+const UINT uiLastUserToolBarId = uiFirstUserToolBarId + iMaxUserToolbars - 1;
+
 BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_WM_CREATE()
 	ON_COMMAND(ID_WINDOW_MANAGER, &CMainFrame::OnWindowManager)
+	ON_COMMAND(ID_VIEW_CUSTOMIZE, &CMainFrame::OnViewCustomize)
+	ON_REGISTERED_MESSAGE(AFX_WM_CREATETOOLBAR, &CMainFrame::OnToolbarCreateNew)
 	ON_COMMAND_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_OFF_2007_AQUA, &CMainFrame::OnApplicationLook)
 	ON_UPDATE_COMMAND_UI_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_OFF_2007_AQUA, &CMainFrame::OnUpdateApplicationLook)
 END_MESSAGE_MAP()
+
+static UINT indicators[] =
+{
+	ID_SEPARATOR,           // status line indicator
+	ID_INDICATOR_CAPS,
+	ID_INDICATOR_NUM,
+	ID_INDICATOR_SCRL,
+};
 
 // CMainFrame construction/destruction
 
@@ -61,23 +65,51 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	mdiTabParams.m_bDocumentMenu = TRUE; // enable the document menu at the right edge of the tab area
 	EnableMDITabbedGroups(TRUE, mdiTabParams);
 
-	m_wndRibbonBar.Create(this);
-	InitializeRibbon();
+	if (!m_wndMenuBar.Create(this))
+	{
+		TRACE0("Failed to create menubar\n");
+		return -1;      // fail to create
+	}
+
+	m_wndMenuBar.SetPaneStyle(m_wndMenuBar.GetPaneStyle() | CBRS_SIZE_DYNAMIC | CBRS_TOOLTIPS | CBRS_FLYBY);
+
+	// prevent the menu bar from taking the focus on activation
+	CMFCPopupMenu::SetForceMenuFocus(FALSE);
+
+	if (!m_wndToolBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP | CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC) ||
+		!m_wndToolBar.LoadToolBar(theApp.m_bHiColorIcons ? IDR_MAINFRAME_256 : IDR_MAINFRAME))
+	{
+		TRACE0("Failed to create toolbar\n");
+		return -1;      // fail to create
+	}
+
+	CString strToolBarName;
+	bNameValid = strToolBarName.LoadString(IDS_TOOLBAR_STANDARD);
+	ASSERT(bNameValid);
+	m_wndToolBar.SetWindowText(strToolBarName);
+
+	CString strCustomize;
+	bNameValid = strCustomize.LoadString(IDS_TOOLBAR_CUSTOMIZE);
+	ASSERT(bNameValid);
+	m_wndToolBar.EnableCustomizeButton(TRUE, ID_VIEW_CUSTOMIZE, strCustomize);
+
+	// Allow user-defined toolbars operations:
+	InitUserToolbars(NULL, uiFirstUserToolBarId, uiLastUserToolBarId);
 
 	if (!m_wndStatusBar.Create(this))
 	{
 		TRACE0("Failed to create status bar\n");
 		return -1;      // fail to create
 	}
+	m_wndStatusBar.SetIndicators(indicators, sizeof(indicators)/sizeof(UINT));
 
-	CString strTitlePane1;
-	CString strTitlePane2;
-	bNameValid = strTitlePane1.LoadString(IDS_STATUS_PANE1);
-	ASSERT(bNameValid);
-	bNameValid = strTitlePane2.LoadString(IDS_STATUS_PANE2);
-	ASSERT(bNameValid);
-	m_wndStatusBar.AddElement(new CMFCRibbonStatusBarPane(ID_STATUSBAR_PANE1, strTitlePane1, TRUE), strTitlePane1);
-	m_wndStatusBar.AddExtendedElement(new CMFCRibbonStatusBarPane(ID_STATUSBAR_PANE2, strTitlePane2, TRUE), strTitlePane2);
+	// TODO: Delete these five lines if you don't want the toolbar and menubar to be dockable
+	m_wndMenuBar.EnableDocking(CBRS_ALIGN_ANY);
+	m_wndToolBar.EnableDocking(CBRS_ALIGN_ANY);
+	EnableDocking(CBRS_ALIGN_ANY);
+	DockPane(&m_wndMenuBar);
+	DockPane(&m_wndToolBar);
+
 
 	// enable Visual Studio 2005 style docking window behavior
 	CDockingManager::SetDockingMode(DT_SMART);
@@ -108,6 +140,54 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// Enable enhanced windows management dialog
 	EnableWindowsDialog(ID_WINDOW_MANAGER, IDS_WINDOWS_MANAGER, TRUE);
 
+	// Enable toolbar and docking window menu replacement
+	EnablePaneMenu(TRUE, ID_VIEW_CUSTOMIZE, strCustomize, ID_VIEW_TOOLBAR);
+
+	// enable quick (Alt+drag) toolbar customization
+	CMFCToolBar::EnableQuickCustomization();
+
+	if (CMFCToolBar::GetUserImages() == NULL)
+	{
+		// load user-defined toolbar images
+		if (m_UserImages.Load(_T(".\\UserImages.bmp")))
+		{
+			m_UserImages.SetImageSize(CSize(16, 16), FALSE);
+			CMFCToolBar::SetUserImages(&m_UserImages);
+		}
+	}
+
+	// enable menu personalization (most-recently used commands)
+	// TODO: define your own basic commands, ensuring that each pulldown menu has at least one basic command.
+	CList<UINT, UINT> lstBasicCommands;
+
+	lstBasicCommands.AddTail(ID_FILE_NEW);
+	lstBasicCommands.AddTail(ID_FILE_OPEN);
+	lstBasicCommands.AddTail(ID_FILE_SAVE);
+	lstBasicCommands.AddTail(ID_FILE_PRINT);
+	lstBasicCommands.AddTail(ID_APP_EXIT);
+	lstBasicCommands.AddTail(ID_EDIT_CUT);
+	lstBasicCommands.AddTail(ID_EDIT_PASTE);
+	lstBasicCommands.AddTail(ID_EDIT_UNDO);
+	lstBasicCommands.AddTail(ID_APP_ABOUT);
+	lstBasicCommands.AddTail(ID_VIEW_STATUS_BAR);
+	lstBasicCommands.AddTail(ID_VIEW_TOOLBAR);
+	lstBasicCommands.AddTail(ID_EDIT_SELECT_ALL);
+	lstBasicCommands.AddTail(ID_EDIT_FIND);
+	lstBasicCommands.AddTail(ID_EDIT_REPEAT);
+	lstBasicCommands.AddTail(ID_EDIT_REPLACE);
+	lstBasicCommands.AddTail(ID_VIEW_APPLOOK_OFF_2003);
+	lstBasicCommands.AddTail(ID_VIEW_APPLOOK_VS_2005);
+	lstBasicCommands.AddTail(ID_VIEW_APPLOOK_OFF_2007_BLUE);
+	lstBasicCommands.AddTail(ID_VIEW_APPLOOK_OFF_2007_SILVER);
+	lstBasicCommands.AddTail(ID_VIEW_APPLOOK_OFF_2007_BLACK);
+	lstBasicCommands.AddTail(ID_VIEW_APPLOOK_OFF_2007_AQUA);
+	lstBasicCommands.AddTail(ID_SORTING_SORTALPHABETIC);
+	lstBasicCommands.AddTail(ID_SORTING_SORTBYTYPE);
+	lstBasicCommands.AddTail(ID_SORTING_SORTBYACCESS);
+	lstBasicCommands.AddTail(ID_SORTING_GROUPBYTYPE);
+
+	CMFCToolBar::SetBasicCommands(lstBasicCommands);
+
 	return 0;
 }
 
@@ -119,164 +199,6 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 	//  the CREATESTRUCT cs
 
 	return TRUE;
-}
-
-void CMainFrame::InitializeRibbon()
-{
-	BOOL bNameValid;
-
-	CString strTemp;
-	bNameValid = strTemp.LoadString(IDS_RIBBON_FILE);
-	ASSERT(bNameValid);
-
-	// Load panel images:
-	m_PanelImages.SetImageSize(CSize(16, 16));
-	m_PanelImages.Load(IDB_BUTTONS);
-
-	// Init main button:
-	m_MainButton.SetImage(IDB_MAIN);
-	m_MainButton.SetText(_T("\nf"));
-	m_MainButton.SetToolTipText(strTemp);
-
-	m_wndRibbonBar.SetApplicationButton(&m_MainButton, CSize (45, 45));
-	CMFCRibbonMainPanel* pMainPanel = m_wndRibbonBar.AddMainCategory(strTemp, IDB_FILESMALL, IDB_FILELARGE);
-
-	bNameValid = strTemp.LoadString(IDS_RIBBON_NEW);
-	ASSERT(bNameValid);
-	pMainPanel->Add(new CMFCRibbonButton(ID_FILE_NEW, strTemp, 0, 0));
-	bNameValid = strTemp.LoadString(IDS_RIBBON_OPEN);
-	ASSERT(bNameValid);
-	pMainPanel->Add(new CMFCRibbonButton(ID_FILE_OPEN, strTemp, 1, 1));
-	bNameValid = strTemp.LoadString(IDS_RIBBON_SAVE);
-	ASSERT(bNameValid);
-	pMainPanel->Add(new CMFCRibbonButton(ID_FILE_SAVE, strTemp, 2, 2));
-	bNameValid = strTemp.LoadString(IDS_RIBBON_SAVEAS);
-	ASSERT(bNameValid);
-	pMainPanel->Add(new CMFCRibbonButton(ID_FILE_SAVE_AS, strTemp, 3, 3));
-
-	bNameValid = strTemp.LoadString(IDS_RIBBON_PRINT);
-	ASSERT(bNameValid);
-	CMFCRibbonButton* pBtnPrint = new CMFCRibbonButton(ID_FILE_PRINT, strTemp, 6, 6);
-	pBtnPrint->SetKeys(_T("p"), _T("w"));
-	bNameValid = strTemp.LoadString(IDS_RIBBON_PRINT_LABEL);
-	ASSERT(bNameValid);
-	pBtnPrint->AddSubItem(new CMFCRibbonLabel(strTemp));
-	bNameValid = strTemp.LoadString(IDS_RIBBON_PRINT_QUICK);
-	ASSERT(bNameValid);
-	pBtnPrint->AddSubItem(new CMFCRibbonButton(ID_FILE_PRINT_DIRECT, strTemp, 7, 7, TRUE));
-	bNameValid = strTemp.LoadString(IDS_RIBBON_PRINT_PREVIEW);
-	ASSERT(bNameValid);
-	pBtnPrint->AddSubItem(new CMFCRibbonButton(ID_FILE_PRINT_PREVIEW, strTemp, 8, 8, TRUE));
-	bNameValid = strTemp.LoadString(IDS_RIBBON_PRINT_SETUP);
-	ASSERT(bNameValid);
-	pBtnPrint->AddSubItem(new CMFCRibbonButton(ID_FILE_PRINT_SETUP, strTemp, 11, 11, TRUE));
-	pMainPanel->Add(pBtnPrint);
-	pMainPanel->Add(new CMFCRibbonSeparator(TRUE));
-
-	bNameValid = strTemp.LoadString(IDS_RIBBON_CLOSE);
-	ASSERT(bNameValid);
-	pMainPanel->Add(new CMFCRibbonButton(ID_FILE_CLOSE, strTemp, 9, 9));
-
-	bNameValid = strTemp.LoadString(IDS_RIBBON_RECENT_DOCS);
-	ASSERT(bNameValid);
-	pMainPanel->AddRecentFilesList(strTemp);
-
-	bNameValid = strTemp.LoadString(IDS_RIBBON_EXIT);
-	ASSERT(bNameValid);
-	pMainPanel->AddToBottom(new CMFCRibbonMainPanelButton(ID_APP_EXIT, strTemp, 15));
-
-	// Add "Home" category with "Clipboard" panel:
-	bNameValid = strTemp.LoadString(IDS_RIBBON_HOME);
-	ASSERT(bNameValid);
-	CMFCRibbonCategory* pCategoryHome = m_wndRibbonBar.AddCategory(strTemp, IDB_WRITESMALL, IDB_WRITELARGE);
-
-	// Create "Clipboard" panel:
-	bNameValid = strTemp.LoadString(IDS_RIBBON_CLIPBOARD);
-	ASSERT(bNameValid);
-	CMFCRibbonPanel* pPanelClipboard = pCategoryHome->AddPanel(strTemp, m_PanelImages.ExtractIcon(27));
-
-	bNameValid = strTemp.LoadString(IDS_RIBBON_PASTE);
-	ASSERT(bNameValid);
-	CMFCRibbonButton* pBtnPaste = new CMFCRibbonButton(ID_EDIT_PASTE, strTemp, 0, 0);
-	pBtnPaste->SetMenu(IDR_PASTE_MENU, TRUE);
-	pPanelClipboard->Add(pBtnPaste);
-
-	bNameValid = strTemp.LoadString(IDS_RIBBON_CUT);
-	ASSERT(bNameValid);
-	pPanelClipboard->Add(new CMFCRibbonButton(ID_EDIT_CUT, strTemp, 1));
-	bNameValid = strTemp.LoadString(IDS_RIBBON_COPY);
-	ASSERT(bNameValid);
-	pPanelClipboard->Add(new CMFCRibbonButton(ID_EDIT_COPY, strTemp, 2));
-	bNameValid = strTemp.LoadString(IDS_RIBBON_SELECTALL);
-	ASSERT(bNameValid);
-	pPanelClipboard->Add(new CMFCRibbonButton(ID_EDIT_SELECT_ALL, strTemp, -1));
-
-	bNameValid = strTemp.LoadString(IDS_RIBBON_INSERT_OBJECT);
-	ASSERT(bNameValid);
-	pPanelClipboard->Add(new CMFCRibbonButton(ID_OLE_INSERT_NEW, strTemp, -1));
-
-	// Create and add a "Find/Replace" panel:
-	bNameValid = strTemp.LoadString(IDS_RIBBON_FINDREPLACE);
-	ASSERT(bNameValid);
-	CMFCRibbonPanel* pPanelFindReplace = pCategoryHome->AddPanel(strTemp, m_PanelImages.ExtractIcon(27));
-
-	bNameValid = strTemp.LoadString(IDS_RIBBON_FIND);
-	ASSERT(bNameValid);
-	pPanelFindReplace->Add(new CMFCRibbonButton(ID_EDIT_FIND, strTemp, -1));
-	bNameValid = strTemp.LoadString(IDS_RIBBON_FINDNEXT);
-	ASSERT(bNameValid);
-	pPanelFindReplace->Add(new CMFCRibbonButton(ID_EDIT_REPEAT, strTemp, -1));
-	bNameValid = strTemp.LoadString(IDS_RIBBON_REPLACE);
-	ASSERT(bNameValid);
-	pPanelFindReplace->Add(new CMFCRibbonButton(ID_EDIT_REPLACE, strTemp, -1));
-
-	// Create and add a "View" panel:
-	bNameValid = strTemp.LoadString(IDS_RIBBON_VIEW);
-	ASSERT(bNameValid);
-	CMFCRibbonPanel* pPanelView = pCategoryHome->AddPanel(strTemp, m_PanelImages.ExtractIcon (7));
-
-	bNameValid = strTemp.LoadString(IDS_RIBBON_STATUSBAR);
-	ASSERT(bNameValid);
-	CMFCRibbonButton* pBtnStatusBar = new CMFCRibbonCheckBox(ID_VIEW_STATUS_BAR, strTemp);
-	pPanelView->Add(pBtnStatusBar);
-
-	// Create and add a "Windows" panel:
-	bNameValid = strTemp.LoadString(IDS_RIBBON_WINDOW);
-	ASSERT(bNameValid);
-	CMFCRibbonPanel* pPanelWindow = pCategoryHome->AddPanel(strTemp, m_PanelImages.ExtractIcon (7));
-
-	bNameValid = strTemp.LoadString(IDS_RIBBON_WINDOWS);
-	ASSERT(bNameValid);
-	CMFCRibbonButton* pBtnWindows = new CMFCRibbonButton(ID_WINDOW_MANAGER, strTemp, -1, 1);
-	pBtnWindows->SetMenu(IDR_WINDOWS_MENU, TRUE);
-	pPanelWindow->Add(pBtnWindows);
-
-	// Add elements to the right side of tabs:
-	bNameValid = strTemp.LoadString(IDS_RIBBON_STYLE);
-	ASSERT(bNameValid);
-	CMFCRibbonButton* pVisualStyleButton = new CMFCRibbonButton(-1, strTemp, -1, -1);
-
-	pVisualStyleButton->SetMenu(IDR_THEME_MENU, FALSE /* No default command */, TRUE /* Right align */);
-
-	bNameValid = strTemp.LoadString(IDS_RIBBON_STYLE_TIP);
-	ASSERT(bNameValid);
-	pVisualStyleButton->SetToolTipText(strTemp);
-	bNameValid = strTemp.LoadString(IDS_RIBBON_STYLE_DESC);
-	ASSERT(bNameValid);
-	pVisualStyleButton->SetDescription(strTemp);
-	m_wndRibbonBar.AddToTabs(pVisualStyleButton);
-
-	// Add quick access toolbar commands:
-	CList<UINT, UINT> lstQATCmds;
-
-	lstQATCmds.AddTail(ID_FILE_NEW);
-	lstQATCmds.AddTail(ID_FILE_OPEN);
-	lstQATCmds.AddTail(ID_FILE_SAVE);
-	lstQATCmds.AddTail(ID_FILE_PRINT_DIRECT);
-
-	m_wndRibbonBar.SetQuickAccessCommands(lstQATCmds);
-
-	m_wndRibbonBar.AddToTabs(new CMFCRibbonButton(ID_APP_ABOUT, _T("\na"), m_PanelImages.ExtractIcon (0)));
 }
 
 BOOL CMainFrame::CreateDockingWindows()
@@ -366,6 +288,33 @@ void CMainFrame::OnWindowManager()
 	ShowWindowsDialog();
 }
 
+void CMainFrame::OnViewCustomize()
+{
+	CMFCToolBarsCustomizeDialog* pDlgCust = new CMFCToolBarsCustomizeDialog(this, TRUE /* scan menus */);
+	pDlgCust->EnableUserDefinedToolbars();
+	pDlgCust->Create();
+}
+
+LRESULT CMainFrame::OnToolbarCreateNew(WPARAM wp,LPARAM lp)
+{
+	LRESULT lres = CMDIFrameWndEx::OnToolbarCreateNew(wp,lp);
+	if (lres == 0)
+	{
+		return 0;
+	}
+
+	CMFCToolBar* pUserToolbar = (CMFCToolBar*)lres;
+	ASSERT_VALID(pUserToolbar);
+
+	BOOL bNameValid;
+	CString strCustomize;
+	bNameValid = strCustomize.LoadString(IDS_TOOLBAR_CUSTOMIZE);
+	ASSERT(bNameValid);
+
+	pUserToolbar->EnableCustomizeButton(TRUE, ID_VIEW_CUSTOMIZE, strCustomize);
+	return lres;
+}
+
 void CMainFrame::OnApplicationLook(UINT id)
 {
 	CWaitCursor wait;
@@ -430,3 +379,32 @@ void CMainFrame::OnUpdateApplicationLook(CCmdUI* pCmdUI)
 {
 	pCmdUI->SetRadio(theApp.m_nAppLook == pCmdUI->m_nID);
 }
+
+BOOL CMainFrame::LoadFrame(UINT nIDResource, DWORD dwDefaultStyle, CWnd* pParentWnd, CCreateContext* pContext) 
+{
+	// base class does the real work
+
+	if (!CMDIFrameWndEx::LoadFrame(nIDResource, dwDefaultStyle, pParentWnd, pContext))
+	{
+		return FALSE;
+	}
+
+
+	// enable customization button for all user toolbars
+	BOOL bNameValid;
+	CString strCustomize;
+	bNameValid = strCustomize.LoadString(IDS_TOOLBAR_CUSTOMIZE);
+	ASSERT(bNameValid);
+
+	for (int i = 0; i < iMaxUserToolbars; i ++)
+	{
+		CMFCToolBar* pUserToolbar = GetUserToolBarByIndex(i);
+		if (pUserToolbar != NULL)
+		{
+			pUserToolbar->EnableCustomizeButton(TRUE, ID_VIEW_CUSTOMIZE, strCustomize);
+		}
+	}
+
+	return TRUE;
+}
+

@@ -1,13 +1,3 @@
-// This MFC Samples source code demonstrates using MFC Microsoft Office Fluent User Interface 
-// (the "Fluent UI") and is provided only as referential material to supplement the 
-// Microsoft Foundation Classes Reference and related electronic documentation 
-// included with the MFC C++ library software.  
-// License terms to copy, use or distribute the Fluent UI are available separately.  
-// To learn more about our Fluent UI licensing program, please visit 
-// http://msdn.microsoft.com/officeui.
-//
-// Copyright (C) Microsoft Corporation
-// All rights reserved.
 
 // TenguEditor.cpp : Defines the class behaviors for the application.
 //
@@ -91,7 +81,7 @@ BOOL CTenguEditorApp::InitInstance()
 	// TODO: You should modify this string to be something appropriate
 	// such as the name of your company or organization
 	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
-	LoadStdProfileSettings(0);  // Load standard INI file options
+	LoadStdProfileSettings(6);  // Load standard INI file options (including MRU)
 
 	InitContextMenuManager();
 

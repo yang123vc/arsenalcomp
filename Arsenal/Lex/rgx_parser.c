@@ -559,14 +559,13 @@ RECHECK:
 }
 
 
-/*static rgxResult_t	__handle_factor(const wchar_t *input, const rgxNameSet_t *name_set);*/
 static rgxResult_t	__handle_expr(const wchar_t *input, wchar_t tc, const rgxNameSet_t *name_set);
-
-static rgxResult_t	__handle_postfix(rgxNode_t *expr, const wchar_t *input, const rgxNameSet_t *name_set)
+static rgxResult_t	__handle_postfix(rgxNode_t *expr, const wchar_t *input)
 {
 		const wchar_t *p; 
 		rgxResult_t		g_res; 
 		AR_ASSERT(input != NULL && expr != NULL);
+
 		p = input;
 
 		AR_memset(&g_res, 0, sizeof(g_res));
@@ -837,7 +836,8 @@ static rgxResult_t __handle_factor(const wchar_t *input, const rgxNameSet_t *nam
 
 		if(g_res.next != NULL)
 		{
-				return __handle_postfix(g_res.node, g_res.next,name_set);
+				/*return __handle_postfix(g_res.node, g_res.next,name_set);*/
+				return __handle_postfix(g_res.node, g_res.next);
 		}else
 		{
 				return g_res;

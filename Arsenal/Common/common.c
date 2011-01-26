@@ -27,12 +27,19 @@ AR_NAMESPACE_BEGIN
 
 void AR_STDCALL AR_def_error(int_t level, const wchar_t* msg, void *ctx)
 {
+		AR_UNUSED(level);
+		AR_UNUSED(msg);
+		AR_UNUSED(ctx);
+
 		printf("%ls", msg);
 }
 
 
 void AR_STDCALL AR_def_print(const wchar_t *msg, void *ctx)
 {
+		AR_UNUSED(msg);
+		AR_UNUSED(ctx);
+
 		/*wprintf(L"%ls", msg);*/
 		printf("%ls", msg);
 }

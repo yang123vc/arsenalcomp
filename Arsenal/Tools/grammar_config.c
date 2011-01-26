@@ -1001,6 +1001,7 @@ static psrNode_t* AR_STDCALL __build_leaf(const psrToken_t *tok,  void *ctx)
 
 
 
+
 /*
 { L"action_decl			:		%action lexeme action_ins",				__handle_action_decl,0},
 { L"action_decl			:		%action lexeme",						__handle_action_decl},
@@ -1013,6 +1014,9 @@ static psrNode_t*		AR_STDCALL __handle_action_decl(psrNode_t **nodes, size_t cou
 		
 		AR_ASSERT(count == 2 || count == 3);
 		AR_ASSERT(ns[0]->type == CFG_LEXEME_T && ns[1]->type == CFG_LEXEME_T);
+
+		AR_UNUSED(name);
+		AR_UNUSED(ctx);
 		
 		res = CFG_CreateNode(CFG_NODE_LIST_T);
 		
@@ -1041,7 +1045,8 @@ static psrNode_t*		AR_STDCALL __handle_term_list(psrNode_t **nodes, size_t count
 		cfgNode_t		*res;
 
 		AR_ASSERT((count == 1 || count == 2) && nodes != NULL);
-
+		AR_UNUSED(name);
+		AR_UNUSED(ctx);
 		if(count == 1)
 		{
 				res = CFG_CreateNode(CFG_NODE_LIST_T);
@@ -1079,6 +1084,8 @@ static psrNode_t*		AR_STDCALL __handle_rhs(psrNode_t **nodes, size_t count, cons
 		cfgNode_t		*res;
 		size_t i;
 		AR_ASSERT(count == 3 && nodes != NULL);
+		AR_UNUSED(name);
+		AR_UNUSED(ctx);
 
 		res = CFG_CreateNode(CFG_RULE_T);
 		res->rule.lhs = NULL;
@@ -1169,7 +1176,8 @@ static psrNode_t*		AR_STDCALL __handle_rhs_list(psrNode_t **nodes, size_t count,
 		cfgNode_t		*res;
 
 		AR_ASSERT((count == 1 || count == 3) && nodes != NULL);
-
+		AR_UNUSED(name);
+		AR_UNUSED(ctx);
 		if(count == 3)
 		{
 				AR_ASSERT(ns[0] && ns[0]->type == CFG_NODE_LIST_T && ns[1]->type == CFG_LEXEME_T && ns[1]->lexeme.lex_val == (size_t)OR && ns[2] && ns[2]->type == CFG_RULE_T);
@@ -1208,9 +1216,11 @@ static psrNode_t*		AR_STDCALL __handle_rule_def(psrNode_t **nodes, size_t count,
 		AR_ASSERT(count == 3);
 
 		AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T && ns[1] && ns[1]->type == CFG_LEXEME_T && ns[2] && ns[2]->type == CFG_NODE_LIST_T);
-
-
 		AR_ASSERT(ns[0]->lexeme.lexeme != NULL);
+
+		AR_UNUSED(ctx);
+		AR_UNUSED(name);
+
 
 		for(i = 0; i < ns[2]->lst.count; ++i)
 		{
@@ -1241,7 +1251,7 @@ static psrNode_t*		AR_STDCALL __handle_prec_def(psrNode_t **nodes, size_t count,
 		AR_ASSERT(count == 2);
 
 		AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T &&  ns[0]->lexeme.lex_val == ASSOC && ns[1] && ns[1]->type == CFG_NODE_LIST_T);
-
+		AR_UNUSED(name);
 
 		res = CFG_CreateNode(CFG_PREC_T);
 		res->prec.line = ns[0]->lexeme.line;
@@ -1306,6 +1316,7 @@ static psrNode_t*		AR_STDCALL __handle_token_def(psrNode_t **nodes, size_t count
 		AR_ASSERT((ns[6] == NULL) || (ns[6]->type == CFG_LEXEME_T));
 		AR_ASSERT((ns[7] == NULL) || (ns[7]->type == CFG_NODE_LIST_T));
 
+		AR_UNUSED(name);
 
 
 		res = CFG_CreateNode(CFG_TOKEN_T);
@@ -1403,7 +1414,10 @@ static psrNode_t*		AR_STDCALL __handle_name_def(psrNode_t **nodes, size_t count,
 				&& ns[3] && ns[3]->type == CFG_LEXEME_T
 				);
 
+		AR_UNUSED(name);
+
 		res = CFG_CreateNode(CFG_NAME_T);
+
 
 
 
@@ -1439,6 +1453,8 @@ static psrNode_t*		AR_STDCALL __handle_item(psrNode_t **nodes, size_t count, con
 		cfgNode_t		*res = NULL;
 
 		AR_ASSERT(count == 1 || count == 2);
+		AR_UNUSED(ctx);
+		AR_UNUSED(name);
 
 		if(count == 2)
 		{
@@ -1472,6 +1488,8 @@ static psrNode_t*		AR_STDCALL __handle_item_list(psrNode_t **nodes, size_t count
 
 		AR_ASSERT((ns[0] == NULL) || (ns[0] && ns[0]->type == CFG_NODE_LIST_T));
 		AR_ASSERT(ns[1]);
+		AR_UNUSED(ctx);
+		AR_UNUSED(name);
 
 		res = ns[0];
 		if(res == NULL)
@@ -1512,7 +1530,10 @@ static psrNode_t*		AR_STDCALL __handle_start_def(psrNode_t **nodes, size_t count
 
 		AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T && ns[0]->lexeme.lex_val == START);
 		AR_ASSERT(ns[1] && ns[1]->type == CFG_LEXEME_T);
-
+		
+		AR_UNUSED(ctx);
+		AR_UNUSED(name_tmp);
+		
 
 		res = CFG_CreateNode(CFG_START_T);
 		res->start.line = ns[1]->lexeme.line;
@@ -1568,7 +1589,9 @@ static psrNode_t*		AR_STDCALL __handle_pre_def(psrNode_t **nodes, size_t count, 
 		AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T && ns[0]->lexeme.lex_val == CODE);
 		AR_ASSERT(ns[2] && ns[2]->type == CFG_LEXEME_T && ns[2]->lexeme.lex_val == ACTION_INS);
 
-
+		AR_UNUSED(ctx);
+		AR_UNUSED(name_tmp);
+		
 		res = CFG_CreateNode(CFG_PREDEF_T);
 		res->predef.line = ns[0]->lexeme.line;
 		
@@ -1619,6 +1642,9 @@ static psrNode_t*		AR_STDCALL __handle_program(psrNode_t **nodes, size_t count, 
 		parser_ctx = (cfgParserData_t*)ctx;
 
 		AR_ASSERT(parser_ctx != NULL);
+
+
+		AR_UNUSED(name_tmp);
 
 		if(count == 2)
 		{
@@ -1934,6 +1960,7 @@ void	AR_STDCALL cfg_on_print(const wchar_t *msg, void *ctx)
 
 static void	AR_STDCALL cfg_free(psrNode_t *node, void *ctx)
 {
+		AR_UNUSED(ctx);
 		CFG_DestroyNode((cfgNode_t*)node);
 }
 
@@ -2009,7 +2036,8 @@ static void		AR_STDCALL cfg_error(const psrToken_t *tok, const size_t expected[]
 
 static void AR_STDCALL __default_report_func(const cfgReportInfo_t *report, void *context)
 {
-				
+		AR_UNUSED(report);
+		AR_UNUSED(context);
 }
 
 

@@ -145,10 +145,9 @@ void	TGU_UnInitParser()
 tguParser_t*			TGU_CreateParser(tguReport_t	*report, const tguBlock_t		*build_in_block)
 {
 		tguParser_t		*ret;
-		AR_ASSERT(report != NULL && report->report_func /*&& build_in_block*/);
+		AR_ASSERT(report != NULL && report->report_func);
 
 		ret = AR_NEW0(tguParser_t);
-
 		ret->report = *report;
 		ret->build_in = build_in_block;
 		ret->match = __build_match();
