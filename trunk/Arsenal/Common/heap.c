@@ -263,7 +263,11 @@ static AR_INLINE void*			MediumAllocDataFromPage(arHeap_t *heap, page_t *page, s
 {
 		byte_t *ret;
 		mediumEntry_t		*best, *nw;
+		
 		AR_ASSERT(heap != NULL && page != NULL);
+		AR_UNUSED(heap);
+
+
 		best = (mediumEntry_t*)page->first_free;
 		nw = NULL;
 		ret = NULL;

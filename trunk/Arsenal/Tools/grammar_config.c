@@ -1087,6 +1087,8 @@ static psrNode_t*		AR_STDCALL __handle_rhs(psrNode_t **nodes, size_t count, cons
 		AR_UNUSED(name);
 		AR_UNUSED(ctx);
 
+		AR_UNUSED(count);
+
 		res = CFG_CreateNode(CFG_RULE_T);
 		res->rule.lhs = NULL;
 		res->rule.line = 0;
@@ -1220,6 +1222,7 @@ static psrNode_t*		AR_STDCALL __handle_rule_def(psrNode_t **nodes, size_t count,
 
 		AR_UNUSED(ctx);
 		AR_UNUSED(name);
+		AR_UNUSED(count);
 
 
 		for(i = 0; i < ns[2]->lst.count; ++i)
@@ -1252,6 +1255,7 @@ static psrNode_t*		AR_STDCALL __handle_prec_def(psrNode_t **nodes, size_t count,
 
 		AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T &&  ns[0]->lexeme.lex_val == ASSOC && ns[1] && ns[1]->type == CFG_NODE_LIST_T);
 		AR_UNUSED(name);
+		AR_UNUSED(count);
 
 		res = CFG_CreateNode(CFG_PREC_T);
 		res->prec.line = ns[0]->lexeme.line;
@@ -1317,7 +1321,7 @@ static psrNode_t*		AR_STDCALL __handle_token_def(psrNode_t **nodes, size_t count
 		AR_ASSERT((ns[7] == NULL) || (ns[7]->type == CFG_NODE_LIST_T));
 
 		AR_UNUSED(name);
-
+		AR_UNUSED(count);
 
 		res = CFG_CreateNode(CFG_TOKEN_T);
 
@@ -1415,6 +1419,7 @@ static psrNode_t*		AR_STDCALL __handle_name_def(psrNode_t **nodes, size_t count,
 				);
 
 		AR_UNUSED(name);
+		AR_UNUSED(count);
 
 		res = CFG_CreateNode(CFG_NAME_T);
 
@@ -1490,6 +1495,7 @@ static psrNode_t*		AR_STDCALL __handle_item_list(psrNode_t **nodes, size_t count
 		AR_ASSERT(ns[1]);
 		AR_UNUSED(ctx);
 		AR_UNUSED(name);
+		AR_UNUSED(count);
 
 		res = ns[0];
 		if(res == NULL)
@@ -1533,7 +1539,7 @@ static psrNode_t*		AR_STDCALL __handle_start_def(psrNode_t **nodes, size_t count
 		
 		AR_UNUSED(ctx);
 		AR_UNUSED(name_tmp);
-		
+		AR_UNUSED(count);
 
 		res = CFG_CreateNode(CFG_START_T);
 		res->start.line = ns[1]->lexeme.line;
@@ -1591,7 +1597,8 @@ static psrNode_t*		AR_STDCALL __handle_pre_def(psrNode_t **nodes, size_t count, 
 
 		AR_UNUSED(ctx);
 		AR_UNUSED(name_tmp);
-		
+		AR_UNUSED(count);
+
 		res = CFG_CreateNode(CFG_PREDEF_T);
 		res->predef.line = ns[0]->lexeme.line;
 		
@@ -1930,7 +1937,7 @@ static void	AR_STDCALL cfg_on_error(int_t level, const wchar_t *msg, void *ctx)
 		AR_ASSERT(msg != NULL && ctx != NULL);
 
 		report = ((cfgParserData_t*)ctx)->report;
-
+		
 		AR_memset(&info, 0, sizeof(info));
 
 		info.type = CFG_REPORT_ERROR_T;
@@ -2129,6 +2136,7 @@ static void				__destroy_parser_context(psrContext_t *parser_context)
 
 
 
+
 cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *report)
 {
 
@@ -2211,8 +2219,8 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 						AR_ASSERT(*Lex_GetNextInput(match) != L'\0');
 						Lex_Skip(match);
 						Lex_ClearError(match);
-						is_ok = true;
 						has_error = true;
+						is_ok = true;
 						continue;
 				}
 
@@ -2237,10 +2245,9 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 				}
 
 				is_ok = Parser_AddToken(parser_context, &term);
-
-
+				
 				if(tok.value == EOI)break;
-		}
+		}		
 
 		if(is_ok)
 		{

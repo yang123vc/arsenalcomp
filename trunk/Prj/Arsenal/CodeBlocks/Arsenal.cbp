@@ -7,9 +7,9 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="LibDebug">
-				<Option output="../../../binary/lib/debug/libArsenal" prefix_auto="1" extension_auto="1" />
+				<Option output="..\..\..\binary\lib\debug\libArsenal" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="../../../temp/lib/debug" />
+				<Option object_output="..\..\..\temp\lib\debug" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -20,9 +20,9 @@
 				</Compiler>
 			</Target>
 			<Target title="LibRelease">
-				<Option output="../../../binary/lib/release/libArsenal" prefix_auto="1" extension_auto="1" />
+				<Option output="..\..\..\binary\lib\release\libArsenal" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="../../../temp/lib/release" />
+				<Option object_output="..\..\..\temp\lib\release" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -40,8 +40,8 @@
 				</Linker>
 			</Target>
 			<Target title="DLLDebug">
-				<Option output="../../../binary/dll/debug/Arsenal" prefix_auto="1" extension_auto="1" />
-				<Option object_output="../../../temp/dll/debug" />
+				<Option output="..\..\..\binary\dll\debug\Arsenal" prefix_auto="1" extension_auto="1" />
+				<Option object_output="..\..\..\temp\dll\debug" />
 				<Option type="3" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -53,8 +53,8 @@
 				</Compiler>
 			</Target>
 			<Target title="DLLRelease">
-				<Option output="../../../binary/dll/release/Arsenal" prefix_auto="1" extension_auto="1" />
-				<Option object_output="../../../temp/dll/release" />
+				<Option output="..\..\..\binary\dll\release\Arsenal" prefix_auto="1" extension_auto="1" />
+				<Option object_output="..\..\..\temp\dll\release" />
 				<Option type="3" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -83,136 +83,140 @@
 		<Linker>
 			<Add library="pthread" />
 		</Linker>
-		<Unit filename="../../../Arsenal/Arsenal.c">
+		<Unit filename="..\..\..\Arsenal\Arsenal.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Arsenal.h" />
-		<Unit filename="../../../Arsenal/Common/algo.c">
+		<Unit filename="..\..\..\Arsenal\Arsenal.h" />
+		<Unit filename="..\..\..\Arsenal\Common\algo.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Common/buffer.c">
+		<Unit filename="..\..\..\Arsenal\Common\buffer.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Common/common.c">
+		<Unit filename="..\..\..\Arsenal\Common\common.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Common/common.h" />
-		<Unit filename="../../../Arsenal/Common/config.h" />
-		<Unit filename="../../../Arsenal/Common/crtstr.c">
+		<Unit filename="..\..\..\Arsenal\Common\common.h" />
+		<Unit filename="..\..\..\Arsenal\Common\config.h" />
+		<Unit filename="..\..\..\Arsenal\Common\crtstr.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Common/memory.c">
+		<Unit filename="..\..\..\Arsenal\Common\heap.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Common/platform.h" />
-		<Unit filename="../../../Arsenal/Common/random.c">
+		<Unit filename="..\..\..\Arsenal\Common\memory.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Common/strconv.c">
+		<Unit filename="..\..\..\Arsenal\Common\platform.h" />
+		<Unit filename="..\..\..\Arsenal\Common\random.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Common/string.c">
+		<Unit filename="..\..\..\Arsenal\Common\strconv.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Common/strtable.c">
+		<Unit filename="..\..\..\Arsenal\Common\string.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Common/thread.c">
+		<Unit filename="..\..\..\Arsenal\Common\strtable.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Common/thread_posix.h" />
-		<Unit filename="../../../Arsenal/Common/thread_win.h" />
-		<Unit filename="../../../Arsenal/Common/utilities.c">
+		<Unit filename="..\..\..\Arsenal\Common\thread.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Lex/lex.c">
+		<Unit filename="..\..\..\Arsenal\Common\thread_apple.h" />
+		<Unit filename="..\..\..\Arsenal\Common\thread_posix.h" />
+		<Unit filename="..\..\..\Arsenal\Common\thread_win.h" />
+		<Unit filename="..\..\..\Arsenal\Common\utilities.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Lex/lex.h" />
-		<Unit filename="../../../Arsenal/Lex/match.c">
+		<Unit filename="..\..\..\Arsenal\Lex\lex.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Lex/rgx.h" />
-		<Unit filename="../../../Arsenal/Lex/rgx_compile.c">
+		<Unit filename="..\..\..\Arsenal\Lex\lex.h" />
+		<Unit filename="..\..\..\Arsenal\Lex\match.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Lex/rgx_exec.c">
+		<Unit filename="..\..\..\Arsenal\Lex\rgx.h" />
+		<Unit filename="..\..\..\Arsenal\Lex\rgx_compile.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Lex/rgx_misc.c">
+		<Unit filename="..\..\..\Arsenal\Lex\rgx_exec.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Lex/rgx_node.c">
+		<Unit filename="..\..\..\Arsenal\Lex\rgx_misc.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Lex/rgx_parser.c">
+		<Unit filename="..\..\..\Arsenal\Lex\rgx_node.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Parser/grammar.c">
+		<Unit filename="..\..\..\Arsenal\Lex\rgx_parser.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Parser/lalr.h" />
-		<Unit filename="../../../Arsenal/Parser/lalr_build.c">
+		<Unit filename="..\..\..\Arsenal\Parser\grammar.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Parser/lalr_config.c">
+		<Unit filename="..\..\..\Arsenal\Parser\lalr.h" />
+		<Unit filename="..\..\..\Arsenal\Parser\lalr_build.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Parser/lalr_config_aux.h" />
-		<Unit filename="../../../Arsenal/Parser/lalr_state.c">
+		<Unit filename="..\..\..\Arsenal\Parser\lalr_config.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Parser/lr_action.c">
+		<Unit filename="..\..\..\Arsenal\Parser\lalr_config_aux.h" />
+		<Unit filename="..\..\..\Arsenal\Parser\lalr_state.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Parser/lr_action.h" />
-		<Unit filename="../../../Arsenal/Parser/parser.c">
+		<Unit filename="..\..\..\Arsenal\Parser\lr_action.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Parser/parser.h" />
-		<Unit filename="../../../Arsenal/Parser/parser_in.c">
+		<Unit filename="..\..\..\Arsenal\Parser\lr_action.h" />
+		<Unit filename="..\..\..\Arsenal\Parser\parser.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Parser/parser_in.h" />
-		<Unit filename="../../../Arsenal/Parser/report.c">
+		<Unit filename="..\..\..\Arsenal\Parser\parser.h" />
+		<Unit filename="..\..\..\Arsenal\Parser\parser_in.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Parser/symbol.c">
+		<Unit filename="..\..\..\Arsenal\Parser\parser_in.h" />
+		<Unit filename="..\..\..\Arsenal\Parser\report.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Tengu/tengu.c">
+		<Unit filename="..\..\..\Arsenal\Parser\symbol.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Tengu/tengu.h" />
-		<Unit filename="../../../Arsenal/Tengu/tgu_parser_impl.h" />
-		<Unit filename="../../../Arsenal/Tengu/tguparser.c">
+		<Unit filename="..\..\..\Arsenal\Tengu\tengu.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Tengu/tguparser.h" />
-		<Unit filename="../../../Arsenal/Tengu/tgusyntree.c">
+		<Unit filename="..\..\..\Arsenal\Tengu\tengu.h" />
+		<Unit filename="..\..\..\Arsenal\Tengu\tgu_parser_impl.h" />
+		<Unit filename="..\..\..\Arsenal\Tengu\tguparser.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Tengu/tgusyntree.h" />
-		<Unit filename="../../../Arsenal/Tengu/tguutility.c">
+		<Unit filename="..\..\..\Arsenal\Tengu\tguparser.h" />
+		<Unit filename="..\..\..\Arsenal\Tengu\tgusyntree.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Tengu/tguutility.h" />
-		<Unit filename="../../../Arsenal/Tengu/tguvm.c">
+		<Unit filename="..\..\..\Arsenal\Tengu\tgusyntree.h" />
+		<Unit filename="..\..\..\Arsenal\Tengu\tguutility.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Tengu/tguvm.h" />
-		<Unit filename="../../../Arsenal/Tools/grammar_config.c">
+		<Unit filename="..\..\..\Arsenal\Tengu\tguutility.h" />
+		<Unit filename="..\..\..\Arsenal\Tengu\tguvm.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Tools/grammar_config.h" />
-		<Unit filename="../../../Arsenal/Tools/serializer.c">
+		<Unit filename="..\..\..\Arsenal\Tengu\tguvm.h" />
+		<Unit filename="..\..\..\Arsenal\Tools\grammar_config.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Tools/serializer.h" />
-		<Unit filename="../../../Arsenal/Tools/tools.c">
+		<Unit filename="..\..\..\Arsenal\Tools\grammar_config.h" />
+		<Unit filename="..\..\..\Arsenal\Tools\serializer.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../../Arsenal/Tools/tools.h" />
+		<Unit filename="..\..\..\Arsenal\Tools\serializer.h" />
+		<Unit filename="..\..\..\Arsenal\Tools\tools.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\..\Arsenal\Tools\tools.h" />
 		<Extensions>
 			<envvars />
 			<code_completion />

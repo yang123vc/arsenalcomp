@@ -422,9 +422,10 @@ psrContext_t*	Parser_CreateContext(const parser_t *parser, void *ctx)
 		psr_ctx->ctx = ctx;
 		psr_ctx->parser = parser;
 		psr_ctx->is_repair = false;
+		psr_ctx->repair_valid_shift = 0;
 		psr_ctx->is_accepted = false;
 		psr_ctx->state_stack = AR_NEW0(psrStack_t);
-
+		
 		Parser_InitStack(psr_ctx->state_stack);
 		psr_ctx->node_stack = AR_NEW0(psrNodeStack_t);
 
@@ -442,8 +443,10 @@ void	  Parser_Clear(psrContext_t *parser_context)
 
 		handler = Parser_GetGrammarHandler(Parser_GetGrammar(parser_context->parser));
 		AR_ASSERT(handler != NULL);
-		parser_context->is_repair = false;
 		parser_context->is_accepted = false;
+
+		parser_context->is_repair = false;
+		parser_context->repair_valid_shift = 0;
 		
 		for(i = 0; i < parser_context->node_stack->count; ++i)
 		{
@@ -503,6 +506,7 @@ void	Parser_RecoverDone(psrContext_t *parser_context)
 {
 		AR_ASSERT(parser_context != NULL);
 		parser_context->is_repair = false;
+		parser_context->repair_valid_shift = 0;
 }
 
 size_t			Parser_GetNodeCount(const psrContext_t *parser_context)
@@ -559,7 +563,11 @@ static void __handle_shift(psrContext_t *parser_context, size_t shift_to, const 
 */
 		if(parser_context->is_repair)
 		{
-				parser_context->is_repair = false;
+				parser_context->repair_valid_shift++;
+				if(parser_context->repair_valid_shift >= PSR_REPAIR_MAX_VALID_SHIFT)
+				{
+						Parser_RecoverDone(parser_context);
+				}
 		}
 		
 }
@@ -729,6 +737,7 @@ static errRecovery_t __error_recovery(psrContext_t *parser_context, const psrTok
 				if(found)
 				{
 						parser_context->is_repair = true;
+						parser_context->repair_valid_shift = 0;
 						return ERR_RECOVERY_CONTINUE;
 				}else
 				{
@@ -823,7 +832,7 @@ bool_t		Parser_AddToken(psrContext_t *parser_context, const psrToken_t *tok)
 						AR_ASSERT(action->reduce_count == 1);
 						AR_ASSERT(parser_context->state_stack->count == 2);
 						
-						if(parser_context->is_repair)parser_context->is_repair = false;/*这里相当于shift了EOI*/
+						Parser_RecoverDone(parser_context);/*这里相当于shift了EOI*/
 						
 						is_done = true;
 						parser_context->is_accepted = true;

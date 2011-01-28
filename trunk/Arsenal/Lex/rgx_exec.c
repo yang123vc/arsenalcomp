@@ -68,7 +68,7 @@ static void __add_thread(rgxThreadList_t *lst,  rgxThread_t thd, rgxProg_t *prog
 
 static bool_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, size_t *py, lexMatch_t *match);
 static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match);
-static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok);
+
 
 
 /*处理预搜索部分*/

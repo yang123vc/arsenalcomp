@@ -12,8 +12,11 @@
  */
 
 
+
 #include "tguparser.h"
 #include "tguutility.h"
+
+#pragma warning(disable : 4100)
 
 AR_NAMESPACE_BEGIN
 

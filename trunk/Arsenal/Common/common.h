@@ -303,12 +303,12 @@ void	AR_memswap(void *a, void *b, size_t n);
 
 
 
-#define AR_HEAP_NEW(_heap, _type) ((_type*)AR_AllocFromHeap((_heap), sizeof(_type)))
-#define AR_HEAP_NEW0(_heap, _type) ((_type*)AR_ClearedAllocFromHeap((_heap),1, sizeof(_type)))
-#define AR_HEAP_NEWARR(_heap, _type, _n) ((_type*)AR_AllocFromHeap((_heap), sizeof(_type) * (_n)))
-#define AR_HEAP_NEWARR0(_heap, _type, _n) ((_type*)AR_ClearedAllocFromHeap((_heap),(_n), sizeof(_type)))
+#define AR_HEAP_NEW(_heap, _type)						((_type*)AR_AllocFromHeap((_heap), sizeof(_type)))
+#define AR_HEAP_NEW0(_heap, _type)						((_type*)AR_ClearedAllocFromHeap((_heap),1, sizeof(_type)))
+#define AR_HEAP_NEWARR(_heap, _type, _n)				((_type*)AR_AllocFromHeap((_heap), sizeof(_type) * (_n)))
+#define AR_HEAP_NEWARR0(_heap, _type, _n)				((_type*)AR_ClearedAllocFromHeap((_heap),(_n), sizeof(_type)))
 #define AR_HEAP_REALLOC(_heap, _type, _ptr, _new_count) ((_type*)AR_ReallocFromHeap((_heap), (_ptr), sizeof(_type) * (_new_count)))
-#define AR_HEAP_DEL(_heap, _ptr)		AR_FreeToHeap((_heap),(void*)(_ptr))
+#define AR_HEAP_DEL(_heap, _ptr)						AR_FreeToHeap((_heap),(void*)(_ptr))
 
 
 

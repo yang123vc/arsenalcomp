@@ -1,4 +1,3 @@
-ï»¿#include "..\Common\common.h"
 
 
 /*
@@ -51,7 +50,6 @@ syntax_node
 			tguSynNode_t *node;
 
 			node = AR_NEW0(tguSynNode_t);
-
 			node->type = type;
 
 			switch(node->type)
@@ -571,7 +569,7 @@ static psrNode_t* AR_STDCALL on_namelist_ellipsis(psrNode_t **nodes, size_t coun
 /*iteration_statement	:	while_statement */
 /*iteration_statement	:	do_while_statement */
 /*iteration_statement	:	for_statement */
-/*for_expression	:	expression */
+/*for_expression	:	expression_list */
 /*for_expression	:	 */
 /*semi	:	; */
 /*expression	:	assignment_expression */
@@ -648,6 +646,7 @@ static psrNode_t* AR_STDCALL on_while_statement(psrNode_t **nodes, size_t count,
 static psrNode_t* AR_STDCALL on_do_while_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*for_statement	:	for ( for_expression ; for_expression ; for_expression ) enter_loop statement leave_loop */
+/*for_statement	:	for ( error ) enter_loop statement leave_loop */
 static psrNode_t* AR_STDCALL on_for_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*enter_loop	:	 */
@@ -797,7 +796,8 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"do_while_statement  :  do enter_loop statement while ( expression ) leave_loop semi ", NULL, on_do_while_statement, 0},
 {L"do_while_statement  :  do enter_loop statement while ( error ) leave_loop semi ", NULL, on_do_while_statement, 0},
 {L"for_statement  :  for ( for_expression ; for_expression ; for_expression ) enter_loop statement leave_loop ", NULL, on_for_statement, 0},
-{L"for_expression  :  expression ", NULL, auto_return_0, 0},
+{L"for_statement  :  for ( error ) enter_loop statement leave_loop ", NULL, on_for_statement, 0},
+{L"for_expression  :  expression_list ", NULL, auto_return_0, 0},
 {L"for_expression  :   ", NULL, auto_return_0, 0},
 {L"enter_loop  :   ", NULL, on_enter_loop, 0},
 {L"leave_loop  :   ", NULL, on_leave_loop, 0},
@@ -856,7 +856,7 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"expression_list  :  expression_list , expression ", NULL, on_expression_list, 0}
 };
 
-#define __RULE_COUNT__ ((size_t)118)
+#define __RULE_COUNT__ ((size_t)119)
 #define START_RULE L"program"
 
 static lex_t*	__build_lex(const arIOCtx_t *io)								
@@ -1073,7 +1073,7 @@ static psrNode_t* AR_STDCALL on_namelist_ellipsis(psrNode_t **nodes, size_t coun
 /*iteration_statement	:	while_statement */
 /*iteration_statement	:	do_while_statement */
 /*iteration_statement	:	for_statement */
-/*for_expression	:	expression */
+/*for_expression	:	expression_list */
 /*for_expression	:	 */
 /*semi	:	; */
 /*expression	:	assignment_expression */
@@ -1169,13 +1169,13 @@ static psrNode_t* AR_STDCALL on_declarator(psrNode_t **nodes, size_t count, cons
 
 						if(count == 1)
 						{
-							/*å£°æ˜Žäº†ä¸€ä¸ªnullç±»åž‹çš„å˜é‡*/
+							/*ÉùÃ÷ÁËÒ»¸önullÀàÐÍµÄ±äÁ¿*/
 							handle_symb_from_expression(parser, &ns[0]->token, NULL);
 						}else
 						{
 							if(ns[2] == NULL)
 							{
-								/*expression æˆ–è€… table_constructorå‡ºçŽ°é”™è¯¯*/
+								/*expression »òÕß table_constructor³öÏÖ´íÎó*/
 								parser->has_error = true;
 								handle_symb_from_expression(parser, &ns[0]->token, NULL);
 							}else 
@@ -1211,7 +1211,7 @@ static psrNode_t* AR_STDCALL on_table_constructor(psrNode_t **nodes, size_t coun
 
 						if(count == 2)
 						{
-							/*åˆ›å»ºäº†ä¸ªç©ºçš„è¡¨ç»“æž„*/
+							/*´´½¨ÁË¸ö¿ÕµÄ±í½á¹¹*/
 							expr->table_init.field_lst = NULL;
 						}else
 						{
@@ -1595,6 +1595,7 @@ static psrNode_t* AR_STDCALL on_do_while_statement(psrNode_t **nodes, size_t cou
 
 
 /*for_statement	:	for ( for_expression ; for_expression ; for_expression ) enter_loop statement leave_loop */
+/*for_statement	:	for ( error ) enter_loop statement leave_loop */
 static psrNode_t* AR_STDCALL on_for_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 {
@@ -1983,7 +1984,7 @@ static psrNode_t* AR_STDCALL on_binary_expression(psrNode_t **nodes, size_t coun
 							op = TGU_OP_LOGICAL_OR;
 							break;
 						default:
-							op = TGU_OP_NONE;/*opå¦‚æžœåœ¨æ­¤ä¸èµ‹å€¼ä¼šå¯¼è‡´ä¸€ä¸ªwarning*/
+							op = TGU_OP_NONE;/*opÈç¹ûÔÚ´Ë²»¸³Öµ»áµ¼ÖÂÒ»¸öwarning*/
 							AR_ASSERT(false);
 							break;
 						}
@@ -2289,7 +2290,7 @@ static psrNode_t* AR_STDCALL on_call_expression(psrNode_t **nodes, size_t count,
 						tguExpr_t		*expr, *call_expr, *args;
 						const tguLexInfo_t	*lex_info;
 
-						/*å¦‚æžœpostfix_expression ä¸ºç©ºï¼Œåˆ™è¡¨æ˜Žæ­¤callè¡¨è¾¾å¼é”™è¯¯*/
+						/*Èç¹ûpostfix_expression Îª¿Õ£¬Ôò±íÃ÷´Ëcall±í´ïÊ½´íÎó*/
 						if(ns[0] == NULL)				
 						{
 							parser->has_error = true;
@@ -2303,7 +2304,7 @@ static psrNode_t* AR_STDCALL on_call_expression(psrNode_t **nodes, size_t count,
 
 						if(count == 4)
 						{
-							if(ns[2] == NULL)/*å¯¹åº”"(" error ")"*/
+							if(ns[2] == NULL)/*¶ÔÓ¦"(" error ")"*/
 							{
 								args = NULL;
 								parser->has_error = true;
