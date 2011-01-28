@@ -681,7 +681,9 @@ statement				:	compound_statement			%action	auto_return_0
 
 /**************************************import_statement***********************************************/
 
-
+/*
+import会在语义分析中检测是否存在于顶层目录中，以所在文件文件名当做符号插入到顶层块中
+*/
 import_statement		:	"import"	STRING	";"		%action	on_import_statement
 				|	"import"	error 	";"		%action	on_import_statement
 				{
@@ -1078,6 +1080,7 @@ do_while_statement			:	"do" enter_loop statement "while" "(" expression ")" leav
 
 
 for_statement			:	"for"	"("	for_expression	";"	for_expression	";"	for_expression	")"	enter_loop  statement leave_loop	%action	on_for_statement
+				|	"for"	"("	error	")"	enter_loop  statement leave_loop	%action	on_for_statement
 				{
 						tguSynNode_t		**ns = (tguSynNode_t**)nodes;
 						tguParser_t		*parser = (tguParser_t*)ctx;
@@ -1137,8 +1140,8 @@ for_statement			:	"for"	"("	for_expression	";"	for_expression	";"	for_expression
 				}
 				;
 
-for_expression		:	expression	%action	auto_return_0
-				|	.		%action	auto_return_0
+for_expression		:	expression_list	%action	auto_return_0
+				|	.			%action	auto_return_0
 				;
 
 
@@ -1627,6 +1630,7 @@ unary_expression		:	"+"	unary_expression	%action	on_unary_expression
 
 				|	postfix_expression		%action 	auto_return_0
 				;
+
 
 
 postfix_expression		:	postfix_expression	"++"		%action	on_post_add_minus_expression

@@ -425,7 +425,7 @@ void CInputEdit::OnPopupSave()
 {
 		// TODO: Add your command handler code here
 
-static TCHAR BASED_CODE szFilter[] = TEXT("Input Files (*.txt)|*.txt|All Files (*.*)|*.*||");
+static const TCHAR BASED_CODE szFilter[] = TEXT("Input Files (*.txt)|*.txt|All Files (*.*)|*.*||");
 		CFileDialog		file(FALSE, TEXT("txt"), NULL, 4|2, szFilter);
 
 		
@@ -433,12 +433,16 @@ static TCHAR BASED_CODE szFilter[] = TEXT("Input Files (*.txt)|*.txt|All Files (
 		{
 				return;
 		}
+		 
+		CMainFrame *main_frm = ( CMainFrame*)::AfxGetMainWnd();
+		CGrammarDesignerDoc *pdoc = (CGrammarDesignerDoc*)main_frm->GetActiveDocument();
+		ASSERT(pdoc != NULL);
 
-		CTextFileWrite fw(file.GetPathName(), CTextFileBase::UTF_8);
+		CTextFileWrite fw(file.GetPathName(), pdoc->GetEncoding());
 
 		CString txt ;
 		this->GetWindowText(txt);
-		
+
 		fw.Write(txt);
 }
 

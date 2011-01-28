@@ -39,11 +39,10 @@ typedef struct __tengu_parser_tag
 		psrContext_t			*parser_context;
 		const tguBlock_t		*build_in;
 		
+		tguBlock_t				*abs_tree;					/*分析结果*/
+
 		
 		bool_t					has_error;
-		
-		tguBlock_t				*abs_tree;					/*分析结果*/
-		
 		tguBlock_t				*top_block;				/*当前块*/
 		tguFunc_t				*current_function;		/*当前函数*/
 		

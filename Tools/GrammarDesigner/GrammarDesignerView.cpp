@@ -692,7 +692,6 @@ void CGrammarDesignerView::OnUpdateSetrebuildtimeDisable(CCmdUI *pCmdUI)
 void CGrammarDesignerView::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 		// TODO: Add your message handler code here and/or call default
-
 		CRichEditView::OnChar(nChar, nRepCnt, nFlags);
 }
 

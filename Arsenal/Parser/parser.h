@@ -385,7 +385,8 @@ psrTermInfo_t*			Parser_GetTermSymbInfoByValue(const psrGrammar_t	*grammar, size
 
 bool_t					Parser_InsertTerm(psrGrammar_t *grammar, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f);
 bool_t					Parser_InsertRule(psrGrammar_t *grammar, psrRule_t *rule);
-bool_t					Parser_InsertRuleByPartStr(psrGrammar_t *grammar, const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, size_t auto_ret);
+
+bool_t					Parser_InsertRuleBySymbList(psrGrammar_t *grammar, const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, size_t auto_ret);
 
 /*
 函数Parser_InsertRuleByStr所接受的字符格式为head : body_list
@@ -432,15 +433,18 @@ struct __parser_tag
 };
 
 
+#define PSR_REPAIR_MAX_VALID_SHIFT	3
 
 struct __parser_context_tag
 {
 		const parser_t				*parser;
-		bool_t						is_repair;
 		bool_t						is_accepted;
 		psrStack_t					*state_stack;
 		psrNodeStack_t				*node_stack;
 		void						*ctx;
+
+		bool_t						is_repair;
+		size_t						repair_valid_shift;
 };
 
 

@@ -527,8 +527,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,1,333,0
- PRODUCTVERSION 0,1,333,0
+ FILEVERSION 0,1,333,2
+ PRODUCTVERSION 0,1,333,2
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -545,12 +545,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "None"
             VALUE "FileDescription", "Grammar Designer"
-            VALUE "FileVersion", "0, 1, 333, 0"
+            VALUE "FileVersion", "0, 1, 333, 2"
             VALUE "InternalName", "GrammarDesigner.exe"
             VALUE "LegalCopyright", "Solidus.  All rights reserved."
             VALUE "OriginalFilename", "GrammarDesigner.exe"
             VALUE "ProductName", "Grammar Designer"
-            VALUE "ProductVersion", "0, 1, 333, 0"
+            VALUE "ProductVersion", "0, 1, 333, 2"
         END
     END
     BLOCK "VarFileInfo"

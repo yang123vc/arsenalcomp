@@ -582,7 +582,7 @@ bool_t					Parser_InsertRule(psrGrammar_t *grammar, psrRule_t *rule)
 		return true;
 }
 
-bool_t					Parser_InsertRuleByPartStr(psrGrammar_t *grammar, const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, size_t auto_ret)
+bool_t					Parser_InsertRuleBySymbList(psrGrammar_t *grammar, const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, size_t auto_ret)
 {
 		psrRule_t		*rule;
 		AR_ASSERT(grammar != NULL && head != NULL && body != NULL);

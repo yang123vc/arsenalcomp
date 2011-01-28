@@ -19,13 +19,7 @@ AR_printf
 AR_error_ctx
 AR_printf_ctx
 
-
-
-AR_malloc
-AR_calloc
-AR_realloc
-AR_free
-AR_memswap
+AR_check
 
 
 AR_stricmp
@@ -109,7 +103,7 @@ Parser_FindTermByName
 Parser_FindTermByValue		
 
 Parser_InsertRuleByStr	
-Parser_InsertRuleByPartStr
+Parser_InsertRuleBySymbList
 
 Parser_GetSymbList			
 Parser_CheckIsValidGrammar	
@@ -128,7 +122,7 @@ Parser_ResetGrammarParseHandler
 
 Parser_GetTermSymbInfoByValue
 Parser_GetTermSymbInfoByName
-Parser_SetFirstRule
+Parser_SetStartRule
 
 ;Parser
 

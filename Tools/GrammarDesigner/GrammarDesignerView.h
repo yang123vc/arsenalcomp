@@ -56,7 +56,6 @@ private:
 public:
 		
 		afx_msg void OnTestTest();
-
 		afx_msg LRESULT OnBuildTagCompleted(WPARAM wp, LPARAM lp);
 
 		

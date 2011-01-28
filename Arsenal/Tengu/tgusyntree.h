@@ -472,6 +472,10 @@ tguSymb_t*		TGU_InstallBoolean(tguSymbTbl_t *tbl, bool_t boolean);
 tguSymb_t*		TGU_InstallFloat(tguSymbTbl_t *tbl, double float_num);
 tguSymb_t*		TGU_InstallString(tguSymbTbl_t *tbl, const wchar_t *str);
 
+
+
+
+
 /******************************¿é*******************************************************/
 
 /*
@@ -530,10 +534,8 @@ void			TGU_DestroyBlock(tguBlock_t	*block);
 void			TGU_InsertSubBlockToBlock(tguBlock_t	*block, tguBlock_t	*sub);
 bool_t			TGU_RemoveSubBlockFromBlock(tguBlock_t	*block, tguBlock_t	*sub);
 
+
 void			TGU_InsertStmtToBlock(tguBlock_t	*block, tguStmt_t	*stmt);
-
-bool_t			TGU_InsertSymbToBlock(tguBlock_t	*block, tguSymb_t *symb);
-
 
 
 tguSymb_t*		TGU_FindSymbFromBlock(tguBlock_t	*block, const wchar_t *name, tguSymbType_t t, bool_t current_block);

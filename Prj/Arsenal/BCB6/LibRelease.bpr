@@ -9,7 +9,8 @@
       random.obj strconv.obj string.obj strtable.obj thread.obj rgx_parser.obj 
       lex.obj match.obj rgx_compile.obj rgx_exec.obj rgx_misc.obj rgx_node.obj 
       symbol.obj grammar.obj lr_action.obj parser.obj parser_in.obj tengu.obj 
-      tguparser.obj tguvm.obj grammar_config.obj serializer.obj Arsenal.obj"/>
+      tguparser.obj tguvm.obj grammar_config.obj serializer.obj Arsenal.obj 
+      heap.obj tgusyntree.obj tguutility.obj"/>
     <RESFILES value=""/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
@@ -26,8 +27,8 @@
     <USERDEFINES value="WIN32,NDEBUG,_LIB"/>
     <SYSDEFINES value="_RTLDLL;NO_STRICT"/>
     <MAINSOURCE value="LibRelease.bpf"/>
-    <INCLUDEPATH value="..\..\..\Arsenal\Tengu;..\..\..\Arsenal;..\..\..\Arsenal\Tools;..\..\..\Arsenal\Ray;..\..\..\Arsenal\Parser;..\..\..\Arsenal\Lex;..\..\..\Arsenal\Common;..\;..\..\Arsenal\Ray;..\..\Arsenal\Test\DragonBook;..\..\Arsenal\Parser;..\..\Arsenal;..\..\Arsenal\Test;..\..\Arsenal\Lex;..\..\Arsenal\Common;$(BCB)\include;$(BCB)\include\vcl"/>
-    <LIBPATH value="..\..\..\Arsenal\Tengu;..\..\..\Arsenal;..\..\..\Arsenal\Tools;..\..\..\Arsenal\Ray;..\..\..\Arsenal\Parser;..\..\..\Arsenal\Lex;..\..\..\Arsenal\Common;..\;..\..\Arsenal\Ray;..\..\Arsenal\Test\DragonBook;..\..\Arsenal\Parser;..\..\Arsenal;..\..\Arsenal\Test;..\..\Arsenal\Lex;..\..\Arsenal\Common;$(BCB)\lib\obj;$(BCB)\lib"/>
+    <INCLUDEPATH value="..\..\..\Arsenal\Tengu;..\..\..\Arsenal;..\..\..\Arsenal\Tools;..\..\..\Arsenal\Ray;..\..\..\Arsenal\Parser;..\..\..\Arsenal\Lex;..\..\..\Arsenal\Common;..;..\..\Arsenal\Ray;..\..\Arsenal\Test\DragonBook;..\..\Arsenal\Parser;..\..\Arsenal\Test;..\..\Arsenal\Lex;..\..\Arsenal\Common;$(BCB)\include;$(BCB)\include\vcl"/>
+    <LIBPATH value="..\..\..\Arsenal\Tengu;..\..\..\Arsenal;..\..\..\Arsenal\Tools;..\..\..\Arsenal\Ray;..\..\..\Arsenal\Parser;..\..\..\Arsenal\Lex;..\..\..\Arsenal\Common;..;..\..\Arsenal\Ray;..\..\Arsenal\Test\DragonBook;..\..\Arsenal\Parser;..\..\Arsenal\Test;..\..\Arsenal\Lex;..\..\Arsenal\Common;$(BCB)\lib\obj;$(BCB)\lib"/>
     <WARNINGS value="-w-par"/>
     <LISTFILE value=""/>
     <OTHERFILES value=""/>
@@ -35,8 +36,8 @@
   <OPTIONS>
     <IDLCFLAGS value="-I..\..\..\Arsenal\Tengu -I..\..\..\Arsenal -I..\..\..\Arsenal\Tools 
       -I..\..\..\Arsenal\Ray -I..\..\..\Arsenal\Parser -I..\..\..\Arsenal\Lex 
-      -I..\..\..\Arsenal\Common -I..\. -I..\..\Arsenal\Ray 
-      -I..\..\Arsenal\Test\DragonBook -I..\..\Arsenal\Parser -I..\..\Arsenal 
+      -I..\..\..\Arsenal\Common -I.. -I..\..\Arsenal\Ray 
+      -I..\..\Arsenal\Test\DragonBook -I..\..\Arsenal\Parser 
       -I..\..\Arsenal\Test -I..\..\Arsenal\Lex -I..\..\Arsenal\Common 
       -I$(BCB)\include -I$(BCB)\include\vcl -src_suffix cpp -DWIN32,NDEBUG,_LIB 
       -boa"/>
@@ -44,7 +45,7 @@
       -tW -tWM"/>
     <PFLAGS value="-N2. -N0. -$Y- -$L- -$D- -$A8 -v -JPHNE -M"/>
     <AFLAGS value="/mx /w2 /zn"/>
-    <LFLAGS value="-l.\lib\release"/>
+    <LFLAGS value="-l.\lib\release "/>
     <OTHERFILES value=""/>
   </OPTIONS>
   <LINKER>
@@ -108,6 +109,12 @@
       <FILE FILENAME="..\..\..\Arsenal\Tools\serializer.h" FORMNAME="" UNITNAME="serializer.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\Arsenal\Arsenal.c" FORMNAME="" UNITNAME="Arsenal.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\Arsenal\Arsenal.h" FORMNAME="" UNITNAME="Arsenal.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Common\heap.c" FORMNAME="" UNITNAME="heap.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Common\thread_apple.h" FORMNAME="" UNITNAME="thread_apple.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Tengu\tgusyntree.c" FORMNAME="" UNITNAME="tgusyntree.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Tengu\tgusyntree.h" FORMNAME="" UNITNAME="tgusyntree.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Tengu\tguutility.c" FORMNAME="" UNITNAME="tguutility.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Tengu\tguutility.h" FORMNAME="" UNITNAME="tguutility.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>
@@ -141,14 +148,16 @@ ProductVersion=1.0.0.0
 Comments=
 
 [HistoryLists\hlIncludePath]
-Count=2
-Item0=..\..\Arsenal\Ray;..\..\Arsenal\Test\DragonBook;..\..\Arsenal\Parser;..\..\Arsenal;..\..\Arsenal\Test;..\..\Arsenal\Lex;..\..\Arsenal\Common;$(BCB)\include;$(BCB)\include\vcl
-Item1=$(BCB)\include;$(BCB)\include\vcl
+Count=3
+Item0=..\..\..\Arsenal\Tengu;..\..\..\Arsenal;..\..\..\Arsenal\Tools;..\..\..\Arsenal\Ray;..\..\..\Arsenal\Parser;..\..\..\Arsenal\Lex;..\..\..\Arsenal\Common;..\;..\..\Arsenal\Ray;..\..\Arsenal\Test\DragonBook;..\..\Arsenal\Parser;..\..\Arsenal;..\..\Arsenal\Test;..\..\Arsenal\Lex;..\..\Arsenal\Common;$(BCB)\include;$(BCB)\include\vcl
+Item1=..\..\Arsenal\Ray;..\..\Arsenal\Test\DragonBook;..\..\Arsenal\Parser;..\..\Arsenal;..\..\Arsenal\Test;..\..\Arsenal\Lex;..\..\Arsenal\Common;$(BCB)\include;$(BCB)\include\vcl
+Item2=$(BCB)\include;$(BCB)\include\vcl
 
 [HistoryLists\hlLibraryPath]
-Count=2
-Item0=..\..\Arsenal\Ray;..\..\Arsenal\Test\DragonBook;..\..\Arsenal\Parser;..\..\Arsenal;..\..\Arsenal\Test;..\..\Arsenal\Lex;..\..\Arsenal\Common;$(BCB)\lib\obj;$(BCB)\lib
-Item1=$(BCB)\lib\obj;$(BCB)\lib
+Count=3
+Item0=..\..\..\Arsenal\Tengu;..\..\..\Arsenal;..\..\..\Arsenal\Tools;..\..\..\Arsenal\Ray;..\..\..\Arsenal\Parser;..\..\..\Arsenal\Lex;..\..\..\Arsenal\Common;..\;..\..\Arsenal\Ray;..\..\Arsenal\Test\DragonBook;..\..\Arsenal\Parser;..\..\Arsenal;..\..\Arsenal\Test;..\..\Arsenal\Lex;..\..\Arsenal\Common;$(BCB)\lib\obj;$(BCB)\lib
+Item1=..\..\Arsenal\Ray;..\..\Arsenal\Test\DragonBook;..\..\Arsenal\Parser;..\..\Arsenal;..\..\Arsenal\Test;..\..\Arsenal\Lex;..\..\Arsenal\Common;$(BCB)\lib\obj;$(BCB)\lib
+Item2=$(BCB)\lib\obj;$(BCB)\lib
 
 [HistoryLists\hlDebugSourcePath]
 Count=1

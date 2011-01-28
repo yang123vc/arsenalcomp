@@ -103,7 +103,7 @@ Parser_FindTermByName
 Parser_FindTermByValue		
 
 Parser_InsertRuleByStr	
-Parser_InsertRuleByPartStr
+Parser_InsertRuleBySymbList
 
 Parser_GetSymbList			
 Parser_CheckIsValidGrammar	

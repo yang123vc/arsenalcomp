@@ -10,7 +10,7 @@
       lr_action.obj parser.obj parser_in.obj symbol.obj grammar_config.obj 
       Arsenal.obj tools.obj utilities.obj lalr_build.obj lalr_config.obj 
       lalr_state.obj report.obj buffer.obj tengu.obj tguparser.obj tguvm.obj 
-      serializer.obj"/>
+      serializer.obj heap.obj tgusyntree.obj tguutility.obj"/>
     <RESFILES value=""/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
@@ -124,6 +124,12 @@
       <FILE FILENAME="..\..\..\Arsenal\Tengu\tguvm.h" FORMNAME="" UNITNAME="tguvm.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\Arsenal\Tools\serializer.c" FORMNAME="" UNITNAME="serializer.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\Arsenal\Tools\serializer.h" FORMNAME="" UNITNAME="serializer.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Common\heap.c" FORMNAME="" UNITNAME="heap.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Common\thread_apple.h" FORMNAME="" UNITNAME="thread_apple.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Tengu\tgusyntree.c" FORMNAME="" UNITNAME="tgusyntree.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Tengu\tgusyntree.h" FORMNAME="" UNITNAME="tgusyntree.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Tengu\tguutility.c" FORMNAME="" UNITNAME="tguutility.c" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\Arsenal\Tengu\tguutility.h" FORMNAME="" UNITNAME="tguutility.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>

@@ -427,12 +427,22 @@ static const ARSpace::arIOCtx_t	__g_silence =
 };
 
 
+
+
 struct OutputContext
 {
 		COutputWnd					*m_output;
 		CInputPane					*m_target;
 		const ARSpace::parser_t		*m_parser;
+		size_t						error_count;
 
+		OutputContext()	:		m_output(NULL)
+						,		m_target(NULL)
+						,		m_parser(NULL)
+						,		error_count(0)
+		{
+
+		}
 };
 
 static void	AR_STDCALL	__free_node(ARSpace::psrNode_t *node, void *ctx)
@@ -481,7 +491,8 @@ static void	AR_STDCALL	__on_parse_error(const ARSpace::psrToken_t *tok, const si
 		msg.Append(TEXT("."));
 		
 		context->m_output->Append(msg, COutputList::MSG_ERROR, tok->line, context->m_target);
-				
+
+		context->error_count++;
 
 }
 
@@ -875,7 +886,6 @@ void CGrammarDesignerDoc::OnParserShowfirstfollow()
 
 		ARSpace::Parser_DestroyParserStatusView(view);
 		main_frm->ShowPane(&action, TRUE, TRUE, TRUE);
-
 }
 
 
@@ -1047,6 +1057,8 @@ void CGrammarDesignerDoc::OnParserParse()
 
 						ARSpace::Lex_Skip(match);
 						ARSpace::Lex_ClearError(match);
+
+						output_context.error_count++;
 				}else
 				{
 						ARSpace::psrToken_t		psr_tok;
@@ -1057,6 +1069,18 @@ void CGrammarDesignerDoc::OnParserParse()
 						{
 								break;
 						}
+				}
+
+				if(output_context.error_count >= MAX_ERROR_COUNT)
+				{
+						CString msg;
+						msg.Format(TEXT("error count exceeds %d; stopping parse\r\n"), MAX_ERROR_COUNT);
+						
+						ARSpace::cfgReportInfo_t	info;
+						info.type = ARSpace::CFG_REPORT_MESSAGE_T;
+						info.std_msg.message = (const TCHAR*)msg;
+						report_build_func(&info, (void*)output_context.m_output);
+						is_ok = false;
 				}
 		}
 
@@ -1308,7 +1332,7 @@ void CGrammarDesignerDoc::OnGenerateTemplate()
 				
 		}else
 		{
-				CTextFileWrite fw(file.GetPathName(), CTextFileBase::UTF_8);
+				CTextFileWrite fw(file.GetPathName(), m_encoding);
 				fw.Write(AR_GetStrString(code));
 				main_frm->MessageBox(TEXT("Generate Template successful"));
 		}

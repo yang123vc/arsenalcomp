@@ -805,7 +805,7 @@ void			TGU_InsertStmtToBlock(tguBlock_t	*block, tguStmt_t	*stmt)
 		
 		if(block->stmt_cnt == block->stmt_cap)
 		{
-				block->stmt_cap += 2;
+				block->stmt_cap += 4;
 				block->stmt_cap *= 2;
 				block->stmts = AR_REALLOC(tguStmt_t*, block->stmts, block->stmt_cap);
 		}
@@ -814,12 +814,6 @@ void			TGU_InsertStmtToBlock(tguBlock_t	*block, tguStmt_t	*stmt)
 		block->stmt_cnt++;
 }
 
-
-bool_t			TGU_InsertSymbToBlock(tguBlock_t	*block, tguSymb_t *symb)
-{
-		AR_ASSERT(block != NULL && symb != NULL);
-		return TGU_InsertToSymbTable(block->symb_table, symb);
-}
 
 
 

@@ -7,6 +7,10 @@
 #include "textfile.h"
 #include "BackEndThread.h"
 
+
+
+#define MAX_ERROR_COUNT			10
+
 class CGrammarDesignerDoc : public CRichEditDoc 
 {
 private:
@@ -15,11 +19,12 @@ protected: // create from serialization only
 	CGrammarDesignerDoc();
 	DECLARE_DYNCREATE(CGrammarDesignerDoc)
 
-// Attributes
-private:
+public:
 		/*enum TEXTENCODING { ASCII, UNI16_BE, UNI16_LE, UTF_8 };*/
 		typedef CTextFileBase::TEXTENCODING		EncodingType;
-		
+
+// Attributes
+private:
 		EncodingType	m_encoding;
 
 		ARSpace::psrModeType_t	m_parser_mode;
@@ -37,6 +42,10 @@ private:
 
 // Operations
 public:
+		EncodingType	GetEncoding()const
+		{
+				return m_encoding;
+		}
 
 // Overrides
 public:
@@ -80,7 +89,7 @@ public:
 
 		afx_msg void OnChangeParserMode(UINT nID);
 		afx_msg void OnUpdateParserModeLalr(CCmdUI *pCmdUI);
-		afx_msg void OnUpdateParserModeLr(CCmdUI *pCmdUI);
+		//afx_msg void OnUpdateParserModeLr(CCmdUI *pCmdUI);
 		afx_msg void OnUpdateParserModeSlr(CCmdUI *pCmdUI);
 		afx_msg void OnEditGotoDecl();
 		afx_msg void OnUpdateEditGotoDecl(CCmdUI *pCmdUI);
