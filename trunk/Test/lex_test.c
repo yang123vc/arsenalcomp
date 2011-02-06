@@ -655,10 +655,66 @@ void lex_test_loop2()
 
 
 
+
+void lex_chinese_char()
+{
+		lexMatch_t		*match;
+		lex_t			*lex;
+
+		lex = Lex_Create(NULL);
+		
+		lexAction_t act;
+		act.is_skip = false;
+		act.priority = 0;
+		act.value = 200;
+		AR_ASSERT(Lex_InsertRule(lex, L"[a-z_A-Z\\u{	19968   }-\\u{   40869	}]+", &act));
+		
+		act.value = 1;
+		AR_ASSERT(Lex_InsertRule(lex, L"[ \\r\\n\\t]", &act));
+		
+		act.value = 0;
+		AR_ASSERT(Lex_InsertRule(lex, L"$", &act));
+
+		match = Lex_CreateMatch(lex, NULL);
+
+		//Lex_ResetInput(match, L"aaa\r\naaa\r\naaaaa\r\n");
+		Lex_ResetInput(match, L"ÖÐ¹ú×ÖabcÕæÂé·³\r\n");
+		
+
+		lexToken_t tok;
+		bool_t is_ok = false;
+		while(Lex_Match(match, &tok))
+		{
+				if(tok.value == 0)
+				{
+						is_ok = true;
+						break;
+				}
+				wchar_t *s = AR_wcsndup(tok.str, tok.count);
+				AR_printf(L"%ls : row == %d : col == %d\r\n", s, tok.line, tok.col);
+				AR_DEL(s);
+		}
+
+		if(!is_ok)
+		{
+				AR_printf(L"%ls\r\n", L"failed\r\n");
+		}else
+		{
+				AR_printf(L"%ls\r\n", L"success\r\n");
+		}
+
+
+		Lex_DestroyMatch(match);
+		Lex_Destroy(lex);
+
+}
+
+
+
 void lex_test()
 {
 		
-		lex_test_loop();
+		lex_chinese_char();
 		//lex_test_loop2();
 
 		//rgx_test_loop();

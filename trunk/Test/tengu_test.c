@@ -1,4 +1,4 @@
-
+#if(0)
 #include "test.h"
 
 #include "../Arsenal/Tengu/tengu.h"
@@ -73,4 +73,5 @@ void	Tengu_Test()
 
 AR_NAMESPACE_END
 
+#endif
 #endif
