@@ -95,7 +95,13 @@
 		case TGU_NODE_EXPR_T:
 			if(node->expr)
 			\{
-				TGU_DestroyExpr(node->expr);
+				tguExpr_t	*expr = node->expr;
+				while(expr)
+				\{
+					tguExpr_t	*tmp = expr->next;
+					TGU_DestroyExpr(node->expr);
+					expr = tmp;
+				\}
 				node->expr = NULL;
 			\}
 			break;
@@ -169,7 +175,18 @@
 				;
 %name	number			:	"{digit}+"				
 				;
-%name	letter			:	"[A-Z_a-z]"
+
+
+/*
+\x{4E00}-\x{9FA5} 	(中文)
+\x{3130}-\x{318F} 	(韩文)
+\x{AC00}-\x{D7A3}	(韩文)
+\x{0800}-\x{4E00}	(日文)
+*/
+
+//ASCII + 中日韩
+
+%name	letter			:	"[A-Z_a-z\x{0800}-\x{4E00}\x{4E00}-\x{9FA5}\x{3130}-\x{318F}\x{AC00}-\x{D7AF}]"
 				;
 
 
@@ -242,10 +259,10 @@
 };
 
 
-%token	NAME		:	"{letter}({letter}|{digit})*"					%value	"TOK_NAME"			%action default_leaf_handler			;
-%token	STRING		:	"{string_dq}|{string_sq}"						%value	"TOK_STRING"			%action default_leaf_handler			;
-%token	FLOAT_NUMBER	:	"{float_constant}"						,2	%value	"TOK_FLOAT_NUMBER"		%action default_leaf_handler			;
-%token	INT_NUMBER	:	"{hex_constant}|{oct_constant}|{dec_constant}"		,2	%value	"TOK_INT_NUMBER"		%action default_leaf_handler			;
+%token		NAME		:	"{letter}({letter}|{digit})*"					%value	"TOK_NAME"			%action default_leaf_handler			;
+%token		STRING		:	"{string_dq}|{string_sq}"						%value	"TOK_STRING"			%action default_leaf_handler			;
+%token		FLOAT_NUMBER	:	"{float_constant}"						,2	%value	"TOK_FLOAT_NUMBER"		%action default_leaf_handler			;
+%token		INT_NUMBER	:	"{hex_constant}|{oct_constant}|{dec_constant}"		,2	%value	"TOK_INT_NUMBER"		%action default_leaf_handler			;
 
 
 
@@ -376,9 +393,28 @@ translation_unit		:	element				%action	auto_return_null
 				;
 
 
-element			:	declaration				%action	auto_return_null
-				|	function_defination			%action	auto_return_null
-				|	statement				%action	auto_return_null
+element			:	declaration			%action	auto_return_null
+				|	function_defination		%action	auto_return_null
+				|	statement			%action	on_global_stmtement
+				{
+					
+						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+						tguParser_t	*parser = (tguParser_t*)ctx;
+						AR_ASSERT(ns != NULL && count == 1);
+						if(ns[0] == NULL)
+						\{
+								parser->has_error = true;
+								return NULL;
+						\}
+						
+						AR_ASSERT(ns[0]->type == TGU_NODE_STMT_T && ns[0]->stmt != NULL);
+						
+						AR_ASSERT(parser->top_block == parser->abs_tree);
+						TGU_InsertStmtToBlock(parser->top_block, ns[0]->stmt);
+						ns[0]->stmt = NULL;
+						return NULL;
+
+				}
 				;
 
 
@@ -390,14 +426,85 @@ element			:	declaration				%action	auto_return_null
 
 %code{
 	
-	void	start_function(tguParser_t *parser, const wchar_t *func_name, const tguParams_t	*params, const tguLexInfo_t *lex_info)
+	static void	start_function(tguParser_t *parser, const wchar_t *func_name, const tguParams_t	*params, const tguLexInfo_t *lex_info)
 	\{
+		size_t	i;
+		AR_ASSERT(parser != NULL && func_name != NULL && lex_info != NULL);
+
+		AR_ASSERT(parser->top_block == parser->abs_tree && parser->current_function == NULL);
+		AR_ASSERT(!parser->is_on_function_compound);
+		
+		parser->is_on_function_compound = true;
+		if(	TGU_FindSymbFromBlock(parser->abs_tree, func_name, TGU_SYMB_FUNC_T, true) != NULL 
+		|| 	TGU_FindSymbFromBlock(parser->abs_tree, func_name, TGU_SYMB_CFUNC_T, true) != NULL
+		||	TGU_FindSymb((tguSymbTbl_t*)parser->build_in, func_name, TGU_SYMB_FUNC_T) != NULL
+		||	TGU_FindSymb((tguSymbTbl_t*)parser->build_in, func_name, TGU_SYMB_CFUNC_T) != NULL
+		)
+		\{
+			wchar_t	msg[1024];
+			parser->has_error = true;
+			AR_swprintf(msg, 1024, L"error : function '%ls' : redefinition\r\n",  func_name);
+			TGU_ReportError(&parser->report, msg, lex_info->linenum);
+
+		\}
+
+		parser->current_function = TGU_CreateFunction(func_name, parser->top_block);
+		parser->top_block = parser->current_function->block;
+		parser->current_function->is_variadic_param = params ? params->is_variadic : false;
+
+		for(i = 0; i < params->count; ++i)
+		\{
+			tguSymb_t	*symb;
+			tguBlock_t	*block = parser->current_function->block;
+			const wchar_t	*name = params->names[i];
+			const tguLexInfo_t	lex_info = params->lex_info[i];
+			AR_ASSERT(name != NULL);
+
+			symb = TGU_FindSymbFromBlock(block, name, TGU_SYMB_VAR_T, true);
+
+			if(symb)
+			\{
+				wchar_t	msg[1024];
+				parser->has_error = true;
+				AR_swprintf(msg, 1024, L"error : '%ls' : redefinition\r\n",  name);
+				TGU_ReportError(&parser->report, msg, lex_info.linenum);
+			\}else
+			\{
+				symb = TGU_CreateSymb(TGU_SYMB_VAR_T, name);
+				TGU_InsertSymbToBlock(block, symb);
+			\}
+		\}
+		
+		AR_ASSERT(parser->top_block != NULL);
 		
 	\}
 	
-	tguFunc_t*	close_function(tguParser_t *parser)
+
+	static void	close_function(tguParser_t *parser, tguStmt_t	*stmt)
 	\{
-		return NULL;
+		tguSymb_t	*symb;
+		tguFunc_t	*func;
+		AR_ASSERT(parser != NULL);
+		AR_ASSERT(parser->top_block == parser->abs_tree && parser->current_function != NULL);
+		AR_ASSERT(stmt->stmt_type == TGU_STT_COMPOUND && stmt->compound_stmt.block == parser->current_function->block);
+		func = parser->current_function;
+		parser->current_function = NULL;
+		symb = TGU_CreateSymb(TGU_SYMB_FUNC_T, func->name);
+		symb->function = func;
+		
+		
+		parser->is_on_function_compound = false;
+		if(	TGU_FindSymbFromBlock(parser->abs_tree, func->name, TGU_SYMB_FUNC_T, true) != NULL 
+		|| 	TGU_FindSymbFromBlock(parser->abs_tree, func->name, TGU_SYMB_CFUNC_T, true) != NULL
+		||	TGU_FindSymb((tguSymbTbl_t*)parser->build_in, func->name, TGU_SYMB_FUNC_T) != NULL
+		||	TGU_FindSymb((tguSymbTbl_t*)parser->build_in, func->name, TGU_SYMB_CFUNC_T) != NULL
+		)
+		\{
+				TGU_DestroySymb(symb);
+		\}else
+		\{
+				TGU_InsertSymbToBlock(parser->top_block, symb);
+		\}
 	\}
 };
 
@@ -432,7 +539,18 @@ function_signature		:	"var"		NAME "(" params ")"						%action	on_function_signat
 function_defination		:	function_signature	compound_statement	%action	on_function_defination
 				{
 						tguParser_t 	*parser = (tguParser_t*)ctx;
-						close_function(parser);
+						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+						tguStmt_t	*stmt;
+						if(ns[1] != NULL)
+						\{
+							stmt = ns[1]->stmt;
+							ns[1]->stmt = NULL;
+						\}else
+						\{
+							stmt = NULL;
+						\}
+
+						close_function(parser, stmt);
 						return NULL;
 				}
 				;
@@ -521,8 +639,9 @@ declaration				:	"var"		init_declarator_list 	semi			%action	auto_return_null
 					;
 
 
-init_declarator_list			:	init_declarator							%action	auto_return_null
-					|	init_declarator_list "," init_declarator				%action	auto_return_null
+
+init_declarator_list			:	init_declarator						%action	auto_return_null
+					|	init_declarator_list "," init_declarator			%action	auto_return_null
 					;
 
 
@@ -531,7 +650,23 @@ init_declarator_list			:	init_declarator							%action	auto_return_null
 	
 	static void	handle_symb_from_expression(tguParser_t 	*parser, const tguToken_t *tok, tguExpr_t *expr)
 	\{
-
+			tguSymb_t	*symb;
+			AR_ASSERT(parser != NULL && tok != NULL);
+			symb = TGU_FindSymbFromBlock(parser->top_block, tok->token, TGU_SYMB_VAR_T, true);
+			
+			if(symb)
+			\{
+				wchar_t	msg[1024];
+				parser->has_error = true;
+				AR_swprintf(msg, 1024, L"error : '%ls' : redefinition\r\n",  tok->token);
+				TGU_ReportError(&parser->report, msg, tok->lex_info.linenum);
+			\}else
+			\{
+				symb = TGU_CreateSymb(TGU_SYMB_VAR_T, tok->token);
+				symb->init_expr = expr;
+				TGU_InsertSymbToBlock(parser->top_block, symb);
+				TGU_InsertDeclToBlock(parser->top_block, symb);
+			\}
 	\}
 };
 
@@ -572,14 +707,6 @@ init_declarator			:	NAME	"=" 	expression				%action	on_declarator
 					;
 
 
-
-%code {
-	static tguTableInit_t*	make_table_init(tguParser_t 	*parser, bool_t is_empty, tguTableField_t	*field_lst)
-	\{
-		return NULL;
-	\}
-
-};
 
 
 
@@ -648,15 +775,6 @@ filed_list 				:	filed_list "," filed			%action	on_filed_list
 
 
 
-%code {
-	static tguTableField_t*	make_table_field(tguParser_t *parser, tguTableFieldType_t type, void *expr_or_field)
-	\{
-		return NULL;
-	\}
-
-};
-
-
 filed					:	expression			%action	auto_return_0
 					|	table_constructor		%action	auto_return_0
 					;
@@ -681,38 +799,88 @@ statement				:	compound_statement			%action	auto_return_0
 
 /**************************************import_statement***********************************************/
 
-/*
-import会在语义分析中检测是否存在于顶层目录中，以所在文件文件名当做符号插入到顶层块中
-*/
+
+
 import_statement		:	"import"	STRING	";"		%action	on_import_statement
 				|	"import"	error 	";"		%action	on_import_statement
 				{
 					tguParser_t 	*parser = (tguParser_t*)ctx;
 					tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+					bool_t		has_error = false;
+					const 		wchar_t	*path;
+					tguLexInfo_t	*lex_info;
 					AR_ASSERT(parser != NULL);
-					TGU_ReportWarning(&parser->report, L"", ns[0]->token.lex_info.linenum);
+					lex_info = &ns[0]->token.lex_info;
+					if(ns[1] == NULL)
+					\{
+						has_error = true;
+						path = NULL;
+					\}else
+					\{
+						tguSrc_t	*src;
+						path = ns[1]->token.token;
+						src = TGU_LoadSources(path);
+						
+						if(src)
+						\{
+							tguBlock_t	*import_block;
+							tguParser_t	*psr;
+							psr = TGU_CreateParser(&parser->report, parser->build_in, parser->import_models);
+							import_block = TGU_ParseCode(psr, src->model_name, src->code);
+							
+							if(!import_block)
+							\{
+								has_error = true;
+							\}
+						\}else
+						\{
+							has_error = true;
+						\}
+
+						if(src)
+						\{
+							TGU_ReleaseSources(src);	
+							src = NULL;
+						\}
+					\}
+					
+					if(has_error)
+					\{
+						wchar_t msg[1024];
+						parser->has_error = true;
+						AR_swprintf(msg, 1024, L"import '%ls' failed\r\n", path == NULL ? L"" : path);
+						TGU_ReportError(&parser->report, msg, lex_info->linenum);
+
+					\}
+
 					return NULL;
 				}
 				;
 
 
 
+
+
 /**************************************compound_statement*****************************/
 
 
-%code block_operation{
-	static void push_block(tguParser_t *parser)
-	\{
-	\}
-
-	static tguBlock_t* pop_block(tguParser_t *parser)
-	\{
-		return NULL;
-	\}	
-
+%code {
 	tguStmt_t*		make_compound_stmt(tguParser_t 	*parser, tguBlock_t		*block, const tguLexInfo_t *start, const tguLexInfo_t *end)
 	\{
-		return NULL;
+			tguStmt_t	*ret;
+			AR_ASSERT(parser != NULL);
+			ret = TGU_CreateStmt(TGU_STT_COMPOUND);
+			ret->lex_info = *start;
+			
+
+			if(block)
+			\{
+				block->begin = *start;
+				block->end = *end;
+			\}
+			ret->compound_stmt.block = block;
+			return ret;
+
 	\}
 };
 
@@ -727,7 +895,7 @@ compound_statement		:	start_block	compound_element_list		"}"		%action	on_compoun
 					tguStmt_t *stmt;
 						
 					AR_ASSERT(nodes != NULL && (count == 2));
-					cb = pop_block(parser);
+					cb = TGU_ParserPopBlock(parser);
 						
 					stmt = make_compound_stmt(parser, cb, &ns[0]->token.lex_info,&ns[1]->token.lex_info);
 					ret = __create_synnode(TGU_NODE_STMT_T, (void*)stmt);
@@ -742,7 +910,7 @@ compound_statement		:	start_block	compound_element_list		"}"		%action	on_compoun
 						AR_ASSERT(nodes != NULL && (count == 2));
 						AR_ASSERT(parser != NULL);
 						parser->has_error = true;
-						cb = pop_block(parser);
+						cb = TGU_ParserPopBlock(parser);
 						TGU_DestroyBlock(cb);
 						return NULL;
 				}
@@ -773,7 +941,13 @@ start_block			:	"{"		%action	on_start_block
 							AR_ASSERT(ns != NULL && count == 1);
 							ret = ns[0]; 
 							ns[0] = NULL;
-							push_block(parser);
+							if(!parser->is_on_function_compound)
+							\{
+								TGU_ParserPushBlock(parser);
+							\}else
+							\{
+								parser->is_on_function_compound = false;
+							\}
 							return ret;
 				}
 				;
@@ -801,15 +975,14 @@ compound_element		:	statement		%action	on_compound_element
 				{
 						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
 						tguParser_t	*parser = (tguParser_t*)ctx;
-						AR_ASSERT(ns != NULL && count == 1 && ns[0]->type == TGU_NODE_STMT_T);
+						AR_ASSERT(ns != NULL && count == 1);
 						if(ns[0] == NULL)
 						\{
 								parser->has_error = true;
 								return NULL;
 						\}
 						
-
-						AR_ASSERT(ns[0]->stmt);
+						AR_ASSERT(ns[0]->type == TGU_NODE_STMT_T && ns[0]->stmt != NULL);
 						TGU_InsertStmtToBlock(parser->top_block, ns[0]->stmt);
 						ns[0]->stmt = NULL;
 						return NULL;
@@ -822,13 +995,43 @@ compound_element		:	statement		%action	on_compound_element
 
 
 
+
+
+
+
+
 /*****************************************************************************/
 
 %code {
 	static tguStmt_t*	make_empty_statement(tguParser_t *parser, const tguLexInfo_t *lex_info)
 	\{
-		return NULL;
+			tguStmt_t	*ret;
+			AR_ASSERT(parser != NULL && lex_info != NULL);
+			ret = TGU_CreateStmt(TGU_STT_EMPTY);
+			ret->lex_info = *lex_info;
+			return ret;
+
 	\}
+
+
+
+	static tguStmt_t*	make_expression_statement(tguParser_t *parser, tguExpr_t *expr, const tguLexInfo_t *lex_info)
+	\{
+			tguStmt_t	*ret;
+			AR_ASSERT(parser != NULL);
+			ret = TGU_CreateStmt(TGU_STT_EXPR);
+
+			if(lex_info)
+			\{
+				ret->lex_info = *lex_info;
+			\}
+			ret->expr = expr;
+			return ret;
+
+	\}
+
+
+		
 
 };
 
@@ -850,7 +1053,28 @@ empty_statement			:	";"		%action	on_empty_statement
 
 expression_statement			:	expression	 semi		%action on_expression_statement
 					{
-						return NULL;
+						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+						tguParser_t	*parser = (tguParser_t*)ctx;
+						tguSynNode_t	*ret;
+						tguStmt_t	*stmt;
+						tguExpr_t	*expr;
+						AR_ASSERT(ns != NULL && count == 2);
+						
+						if(ns[0] == NULL)
+						\{
+							expr = NULL;
+							parser->has_error = true;
+						\}else
+						\{
+							expr = ns[0]->expr;
+							ns[0]->expr = NULL;
+							AR_ASSERT(expr != NULL);
+						\}
+							
+						stmt = make_expression_statement(parser, expr, expr ? &expr->lex_info : NULL);
+						ret = __create_synnode(TGU_NODE_STMT_T, (void*)stmt);
+						return ret;
+
 					}
 					;
 
@@ -863,17 +1087,28 @@ selection_statement			:	if_statement		%action auto_return_0
 					;
 
 
+
+
+
 %code	{
 	static tguStmt_t*	make_if_statement(tguParser_t *parser, tguExpr_t *cond, tguStmt_t *if_true, tguStmt_t *if_false, const tguLexInfo_t *lex_info)
 	\{
-		return NULL;
+			tguStmt_t	*ret;
+			AR_ASSERT(parser != NULL && lex_info != NULL);
+			ret = TGU_CreateStmt(TGU_STT_IF);
+			ret->lex_info = *lex_info;
+			ret->if_stmt.expr = cond;
+			ret->if_stmt.true_part = if_true;
+			ret->if_stmt.false_part = if_false;
+			return ret;
+
 	\}
 
 };
 
 
 if_statement			:	"if" "(" expression ")" statement			%prec IF_WITHOUT_ELSE		%action on_if_statement
-				|	"if" "(" error ")" statement				%prec IF_WITHOUT_ELSE		%action on_if_statement
+				|	"if" "(" error ")" statement			%prec IF_WITHOUT_ELSE		%action on_if_statement
 				{
 						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
 						tguParser_t	*parser = (tguParser_t*)ctx;
@@ -963,6 +1198,7 @@ if_else_statement		:	"if" "(" expression ")" statement "else" statement	%action 
 				;
 
 
+
 iteration_statement		:	while_statement			%action	auto_return_0
 				|	do_while_statement			%action	auto_return_0
 				|	for_statement				%action	auto_return_0
@@ -974,16 +1210,17 @@ iteration_statement		:	while_statement			%action	auto_return_0
 
 
 %code {
-	static tguStmt_t*	make_while_statement(tguParser_t *parser, tguExpr_t *cond, tguStmt_t *loop, const tguLexInfo_t *lex_info)
+	static tguStmt_t*	make_while_statement(tguParser_t *parser, tguStmtType_t type, tguExpr_t *cond, tguStmt_t *loop, const tguLexInfo_t *lex_info)
 	\{
-		return NULL;
-	\}
+			tguStmt_t	*ret;
+			AR_ASSERT(parser != NULL && lex_info != NULL);
+			ret = TGU_CreateStmt(type);
+			ret->lex_info = *lex_info;
+			ret->while_stmt.expr = cond;
+			ret->while_stmt.loop_part = loop;
+			return ret;
 
-	static tguStmt_t*	make_do_while_statement(tguParser_t *parser, tguExpr_t *cond, tguStmt_t *loop, const tguLexInfo_t *lex_info)
-	\{
-		return NULL;
 	\}
-
 };
 
 
@@ -1022,7 +1259,7 @@ while_statement			:	"while" enter_loop  "(" expression ")" statement leave_loop	
 							AR_ASSERT(stmt != NULL);
 						\}
 
-						stmt = make_while_statement(parser, expr, stmt, &ns[0]->token.lex_info);
+						stmt = make_while_statement(parser, TGU_STT_WHILE, expr, stmt, &ns[0]->token.lex_info);
 						ret = __create_synnode(TGU_NODE_STMT_T, (void*)stmt);
 						return ret;
 					}
@@ -1061,26 +1298,33 @@ do_while_statement			:	"do" enter_loop statement "while" "(" expression ")" leav
 							AR_ASSERT(expr != NULL);
 						\}
 
-						stmt = make_do_while_statement(parser, expr, stmt, &ns[0]->token.lex_info);
+						stmt = make_while_statement(parser, TGU_STT_DO, expr, stmt, &ns[0]->token.lex_info);
 						ret = __create_synnode(TGU_NODE_STMT_T, (void*)stmt);
 						return ret;
 					}
 					;
 
 
+
 %code {
 	
 	static tguStmt_t*	make_for_statement(tguParser_t *parser, tguExpr_t *init, tguExpr_t *cond, tguExpr_t *step, tguStmt_t *loop, const tguLexInfo_t *lex_info)
 	\{
-		return NULL;
+			tguStmt_t	*ret;
+			AR_ASSERT(parser != NULL && lex_info != NULL);
+			ret = TGU_CreateStmt(TGU_STT_FOR);
+			ret->lex_info = *lex_info;
+			ret->for_stmt.init_expr = init;
+			ret->for_stmt.cond_expr = cond;
+			ret->for_stmt.step_expr = step;
+			ret->for_stmt.loop_part = loop;
+			return ret;
 	\}
-	
 
 };
 
 
 for_statement			:	"for"	"("	for_expression	";"	for_expression	";"	for_expression	")"	enter_loop  statement leave_loop	%action	on_for_statement
-				|	"for"	"("	error	")"	enter_loop  statement leave_loop	%action	on_for_statement
 				{
 						tguSynNode_t		**ns = (tguSynNode_t**)nodes;
 						tguParser_t		*parser = (tguParser_t*)ctx;
@@ -1138,7 +1382,19 @@ for_statement			:	"for"	"("	for_expression	";"	for_expression	";"	for_expression
 						ret = __create_synnode(TGU_NODE_STMT_T, (void*)stmt);
 						return ret;
 				}
+				|	"for"	"("	error	")"	enter_loop  statement leave_loop	%action	on_error_for_statement
+				{
+						tguSynNode_t		**ns = (tguSynNode_t**)nodes;
+						tguParser_t		*parser = (tguParser_t*)ctx;
+						tguSynNode_t		*ret;
+						tguStmt_t		*stmt;
+
+						stmt = make_for_statement(parser, NULL, NULL, NULL, NULL, &ns[0]->token.lex_info);
+						ret = __create_synnode(TGU_NODE_STMT_T, (void*)stmt);
+						return ret;
+				}
 				;
+
 
 for_expression		:	expression_list	%action	auto_return_0
 				|	.			%action	auto_return_0
@@ -1178,7 +1434,42 @@ leave_loop				:	.					%action on_leave_loop
 %code{
 	static tguStmt_t*	make_jump_statement(tguParser_t *parser, tguStmtType_t type, tguExpr_t *expr, const tguLexInfo_t *lex_info)
 	\{
-		return NULL;
+		tguStmt_t	*ret;
+		wchar_t	msg[512];
+		AR_ASSERT(parser != NULL && lex_info != NULL);
+		
+		ret = TGU_CreateStmt(type);
+		ret->lex_info = *lex_info;
+
+		if(type == TGU_STT_RETURN)
+		\{
+			ret->return_stmt.expr = expr;
+			
+		\}else
+		\{
+
+			if(parser->loop_level == 0)
+			\{
+				const wchar_t *err_msg = NULL;
+				if(type == TGU_STT_CONTINUE)
+				\{
+					err_msg = L"error : illegal continue";
+				\}else if(type == TGU_STT_BREAK)
+				\{
+					err_msg =  L"error : illegal break";
+				\}
+			
+				if(err_msg)
+				\{
+					parser->has_error = true;
+					AR_swprintf(msg, 512, L"%ls\r\n", err_msg);
+					TGU_ReportError(&parser->report, msg, ret->lex_info.linenum);
+				\}
+			\}
+		\}
+
+
+		return ret;
 	\}
 };
 
@@ -1261,19 +1552,6 @@ semi					:	";"								%action	auto_return_0
 /*****************************************表达式*********************************************/
 
 
-%code{
-	static bool_t check_is_lvalue(const tguExpr_t *expr, tguParser_t *parser)
-	\{
-		return false;
-	\}
-
-	static bool_t check_is_constant(const tguExpr_t *expr, tguParser_t *parser)
-	\{
-		return false;
-	\}
-};
-
-
 expression				:	assignment_expression		%action auto_return_0
 					;
 
@@ -1282,16 +1560,41 @@ expression				:	assignment_expression		%action auto_return_0
 %code {
 	static tguExpr_t*		make_assignment_expression(tguParser_t	*parser, 	tguExpr_t *addr, tguExpr_t *value, const tguLexInfo_t *lex_info)
 	\{
-			return NULL;
+			tguExpr_t	*ret;
+			wchar_t	msg[512];
+			AR_ASSERT(parser != NULL && lex_info != NULL);
+			ret = TGU_CreateExpr(TGU_ET_ASSIGN);
+
+			if(addr)
+			\{
+				if(!addr->is_lvalue)
+				\{
+					parser->has_error = true;
+					AR_swprintf(msg, 512, L"%ls\r\n", L"error  : left operand must be l-value");
+					TGU_ReportError(&parser->report, msg, addr->lex_info.linenum);
+				\}else
+				\{
+					AR_ASSERT(!addr->is_constant);
+				\}
+			\}
+
+			ret->is_lvalue = true;
+			ret->is_constant = true;
+			ret->lex_info = *lex_info;
+
+			ret->assign_expr.addr = addr;
+			ret->assign_expr.value = value;
+
+			return ret;
 	\}
 
 };
 
 
 
-assignment_expression		:	constant_expression							%action 	auto_return_0
+assignment_expression		:	constant_expression						%action 	auto_return_0
 					|	unary_expression	"="	table_constructor		%action	on_assignment_expression
-					|	unary_expression	"="	assignment_expression		%action	on_assignment_expression
+					|	unary_expression	"="	assignment_expression	%action	on_assignment_expression
 					{
 						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
 						tguSynNode_t 	*ret;
@@ -1339,14 +1642,52 @@ assignment_expression		:	constant_expression							%action 	auto_return_0
 %code {
 	static tguExpr_t*		make_condition_expression(tguParser_t	*parser, 	tguExpr_t *cond, tguExpr_t *if_true, tguExpr_t *if_false, const tguLexInfo_t *lex_info)
 	\{
-			return NULL;
+			tguExpr_t	*ret;
+			AR_ASSERT(parser != NULL && lex_info != NULL);
+			ret = TGU_CreateExpr(TGU_ET_CONDITIONAL);
+
+			ret->is_lvalue = true;
+			ret->is_constant = false;
+			if(if_true)
+			\{
+				if(!if_true->is_lvalue)
+				\{
+					ret->is_lvalue = false;
+				\}
+
+				if(if_true->is_constant)
+				\{
+					ret->is_constant = true;
+				\}
+			\}
+
+			if(if_false)
+			\{
+				if(!if_false->is_lvalue)
+				\{
+					ret->is_lvalue = false;
+				\}
+				
+				if(if_false->is_constant)
+				\{
+					ret->is_constant = true;
+				\}
+			\}
+
+			ret->lex_info = *lex_info;
+
+			ret->cond_expr.cond = cond;
+			ret->cond_expr.if_true  = if_true;
+			ret->cond_expr.if_false = if_false;
+			return ret;
+
 	\}
 
 };
 
 
 constant_expression			:	binary_expression									%action 	auto_return_0
-					|	binary_expression	"?"	expression	":"	constant_expression		%action	on_condition_expression
+					|	binary_expression	"?"	expression	":"		expression		%action	on_condition_expression
 					{
 						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
 						tguSynNode_t 	*ret;
@@ -1402,14 +1743,26 @@ constant_expression			:	binary_expression									%action 	auto_return_0
 
 
 
+
+
 %code {
 	static tguExpr_t*		make_binary_expression(tguParser_t	*parser, 	tguExprOP_t op, tguExpr_t *left, tguExpr_t *right, const tguLexInfo_t *lex_info)
 	\{
-			return NULL;
+			tguExpr_t	*ret;	
+			AR_ASSERT(parser != NULL && lex_info != NULL);
+			ret = TGU_CreateExpr(TGU_ET_BINARY);
+			ret->is_lvalue = false;
+			ret->is_constant = false;
+			ret->lex_info = *lex_info;
+			ret->binary_expr.op = op;
+			ret->binary_expr.left  = left;
+			ret->binary_expr.right = right;
+			return ret;
 	\}
+
 };
 
-binary_expression			:	unary_expression							%action 	auto_return_0
+binary_expression			:	unary_expression						%action 	auto_return_0
 					|	binary_expression	"+"	binary_expression		%action	on_binary_expression
 					|	binary_expression	"-"	binary_expression		%action	on_binary_expression
 					|	binary_expression	"*"	binary_expression		%action	on_binary_expression
@@ -1519,29 +1872,121 @@ binary_expression			:	unary_expression							%action 	auto_return_0
 %code {
 	static tguExpr_t*		make_unary_expression(tguParser_t	*parser, 	tguExprOP_t op, tguExpr_t *expr, bool_t is_lvalue, const tguLexInfo_t *lex_info)
 	\{
-			return NULL;
+			tguExpr_t	*ret;
+			wchar_t 	msg[512];
+			const 		wchar_t *op_str;
+			AR_ASSERT(parser != NULL && lex_info != NULL);
+			
+			ret = TGU_CreateExpr(TGU_ET_UNARY);
+			ret->is_lvalue = is_lvalue;
+			ret->lex_info = *lex_info;
+			ret->unary_expr.op = op;
+			ret->unary_expr.expr = expr;
+			ret->is_constant = expr == NULL ? false : expr->is_constant;
+			
+			switch(op)
+			\{
+			case TGU_OP_PREINC:
+			case TGU_OP_POSTINC:
+				op_str = L"++";
+				break;
+			case TGU_OP_PREDEC:
+			case TGU_OP_POSTDEC:
+				op_str = L"--";
+				break;
+			default:
+				op_str = NULL;
+				break;
+			\}
+
+			if(op_str != NULL && !ret->is_lvalue)
+			\{
+				parser->has_error = true;
+				AR_swprintf(msg, 512, L"error : '%ls' needs l-value\r\n", op_str);
+				TGU_ReportError(&parser->report, msg, lex_info->linenum);
+
+			\}
+			
+			return ret;
 	\}
-	
+
+
+
 	static tguExpr_t*	make_index_expression(tguParser_t *parser, tguExpr_t *expr, tguExpr_t *index_expr, const tguLexInfo_t *lex_info)
-	\{	
-		return NULL;
+	\{
+		tguExpr_t	*ret;
+		wchar_t msg[512];
+
+		AR_ASSERT(parser != NULL && lex_info != NULL);
+
+		if(expr != NULL)
+		\{
+			if(expr->is_constant)
+			\{
+				parser->has_error = true;
+				AR_swprintf(msg, 512, L"%ls\r\n", L"error : invalid table action");
+				TGU_ReportError(&parser->report, msg, lex_info->linenum);
+			\}
+		\}
+		
+		ret = TGU_CreateExpr(TGU_ET_INDEX);
+		ret->index_expr.expr = expr;
+		ret->index_expr.index_expr = index_expr;
+		ret->is_lvalue = expr == NULL ? true : expr->is_lvalue;
+		ret->is_constant = false;
+		ret->lex_info = *lex_info;
+
+		return ret;
 	\}
 
 
-	static tguExpr_t*		make_identifier_expression(tguParser_t	*parser, 	tguToken_t *token)
+	static tguExpr_t*		make_identifier_expression(tguParser_t	*parser, tguToken_t *token)
 	\{
-		return NULL;
-	\}
-
-
-	static tguExpr_t*		make_constant_expression(tguParser_t	*parser, 		tguToken_t *token)
-	\{
-			tguExpr_t 	*ret;
+			tguExpr_t	*expr;
 			tguSymb_t	*symb;
+			tguSymbType_t	t;
+			AR_ASSERT(parser != NULL && token != NULL);
+			AR_ASSERT(parser->top_block != NULL);
+			
+			
+			for(t = TGU_SYMB_VAR_T, symb = NULL; t <= TGU_SYMB_BLOCK_T && symb == NULL; ++t)
+			\{
+				symb = TGU_FindSymbFromBlock(parser->top_block, token->token, t, false);
+			\}
+				
+			if(symb == NULL)
+			\{
+				wchar_t msg[512];
+				expr = TGU_CreateExpr(TGU_ET_UNDEF_NAME);
+				expr->name = token->token;
+				parser->has_error = true;
+				AR_swprintf(msg, 512, L"error : '%ls' : undeclared identifier", token->token);
+				TGU_ReportError(&parser->report, msg, token->lex_info.linenum);
+				
+			\}else
+			\{
+				expr = TGU_CreateExpr(TGU_ET_SYMBOL);
+				expr->symb = symb;
+			\}
+			
+			expr->is_lvalue = true;
+			expr->is_constant = false;
+			expr->lex_info = token->lex_info;
+			return expr;
+	\}
+
+
+	static tguExpr_t*		make_constant_expression(tguParser_t	*parser, tguToken_t *token)
+	\{
+			tguSymb_t		*symb;
+			tguSymbTbl_t		*symb_tbl;
+			tguExpr_t		*expr;
 			AR_ASSERT(parser != NULL && token != NULL); 
 			
-			ret = NULL;
+			expr = NULL;
 			symb = NULL;
+			symb_tbl = TGU_GetBlockSymbolTable(parser->abs_tree);
+			AR_ASSERT(symb_tbl != NULL);
 
 			switch(token->term_val)
 			\{
@@ -1549,20 +1994,39 @@ binary_expression			:	unary_expression							%action 	auto_return_0
 				AR_ASSERT(false);
 				break;
 			case TOK_NULL:
+				symb = TGU_InstallNull(symb_tbl);
 				break;
 			case TOK_TRUE:
+				symb = TGU_InstallBoolean(symb_tbl, true);
 				break;
 			case TOK_FALSE:
-				break;
-			case TOK_STRING:
+				symb = TGU_InstallBoolean(symb_tbl, false);
 				break;
 			case TOK_FLOAT_NUMBER:
+			\{
+				double df;
+				AR_wtod(token->token, &df);
+				symb = TGU_InstallFloat(symb_tbl, df); 
+			\}
 				break;
 			case TOK_INT_NUMBER:
+			\{
+				int_64_t	num;
+				AR_wtoi64(token->token, &num, 0);/*0表示AR_wtoi64自动识别*/
+				symb = TGU_InstallInt(symb_tbl, num); 
+			\}
+				break;
+			case TOK_STRING:
+				TGU_InstallString(symb_tbl, token->token);
 				break;
 			\}
-
-			return ret;
+			
+			expr = TGU_CreateExpr(TGU_ET_SYMBOL);
+			expr->is_lvalue = false;
+			expr->is_constant = true;
+			expr->lex_info = token->lex_info;
+			expr->symb = symb;
+			return expr;
 	\}
 };
 
@@ -1583,8 +2047,9 @@ unary_expression		:	"+"	unary_expression	%action	on_unary_expression
 						tguExprOP_t		op;
 						tguToken_t		tok;
 						const tguLexInfo_t	*lex_info;
+						bool_t			is_lvalue;
 						AR_ASSERT(ns != NULL && count == 2 && parser != NULL);
-
+			
 						if(ns[1] == NULL)
 						\{
 							parser->has_error = true;
@@ -1603,26 +2068,32 @@ unary_expression		:	"+"	unary_expression	%action	on_unary_expression
 						\{
 						case TOK_INC:
 							op = TGU_OP_PREINC;
+							is_lvalue = true;
 							break;
 						case TOK_DEC:
 							op = TGU_OP_PREDEC;
+							is_lvalue = true;
 							break;
 						case TOK_ADD:
 							op = TGU_OP_UNARY_PLUS;
+							is_lvalue = false;
 							break;
 						case TOK_SUB:
 							op = TGU_OP_UNARY_MINUS;
+							is_lvalue = false;
 							break;
 						case TOK_NOT:
 							op = TGU_OP_LOGICAL_NOT;
+							is_lvalue = false;
 							break;
 						default:
 							op = TGU_OP_NONE;
+							is_lvalue = false;
 							AR_ASSERT(false);
 							break;
 						\}
 						lex_info = expr != NULL ? &expr->lex_info : &tok.lex_info;
-						expr = make_unary_expression(parser, op, expr, false, lex_info);
+						expr = make_unary_expression(parser, op, expr, is_lvalue, lex_info);
 						ret = __create_synnode(TGU_NODE_EXPR_T, (void*)expr);
 						return ret;
 
@@ -1725,7 +2196,6 @@ postfix_expression		:	postfix_expression	"++"		%action	on_post_add_minus_express
 						tguParser_t		*parser = (tguParser_t*)ctx;
 						tguExpr_t		*expr, *index_expr;
 						tguToken_t		tmp;
-						wchar_t		*buf;
 						const tguLexInfo_t	*lex_info;
 						AR_ASSERT(ns != NULL && count == 4 && parser != NULL);
 
@@ -1742,17 +2212,10 @@ postfix_expression		:	postfix_expression	"++"		%action	on_post_add_minus_express
 
 						tmp = ns[2]->token;
 						tmp.term_val = TOK_STRING;
-						buf = AR_NEWARR(wchar_t, AR_wcslen(ns[2]->token.token) + 2 + 1);
-						buf[0] = L'\0';
-						AR_wcscat(buf, L"\"");
-						AR_wcscat(buf, ns[2]->token.token);
-						AR_wcscat(buf, L"\"");
-						tmp.token = buf;
+						tmp.token = ns[2]->token.token;
 						index_expr = make_constant_expression(parser, &tmp);
 						AR_ASSERT(index_expr != NULL);
 						tmp.token = NULL;
-						AR_DEL(buf);
-						buf = NULL;
 
 						lex_info = expr != NULL ? &expr->lex_info : &index_expr->lex_info;
 						expr = make_index_expression(parser, expr, index_expr, lex_info);
@@ -1836,6 +2299,7 @@ primary_expression		:	"(" expression")"							%action	on_lp_rp_expression
 			
 			expr->func_call_expr.func_call = call_expr;
 			expr->func_call_expr.arg_list = args;
+
 			return expr;
 	\}
 };
