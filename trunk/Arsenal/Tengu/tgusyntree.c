@@ -96,8 +96,16 @@ void			TGU_DestroyExpr(tguExpr_t *expr)
 						TGU_DestroyTableField(field);
 						field = tmp;
 				}
-				break;
 		}
+				break;
+		case TGU_ET_ASSIGN:
+		{
+				TGU_DestroyExpr(expr->assign_expr.addr);
+				TGU_DestroyExpr(expr->assign_expr.value);
+				expr->assign_expr.addr = NULL;
+				expr->assign_expr.value = NULL;
+		}
+				break;
 		case TGU_ET_INDEX:
 				if(expr->index_expr.expr)
 				{
@@ -364,12 +372,12 @@ void	 TGU_InsertToParams(tguParams_t *params, const tguToken_t	*tok)
 
 
 
-tguFunc_t*		TGU_CreateFunction(const tguBlock_t *parent_block)
+tguFunc_t*		TGU_CreateFunction(const wchar_t *name, const tguBlock_t *parent_block)
 {
 		tguFunc_t *func;
-		AR_ASSERT(parent_block != NULL);
+		AR_ASSERT(name != NULL && parent_block != NULL);
 		func = AR_NEW0(tguFunc_t);
-
+		func->name = TGU_AllocString(name);
 		func->block = TGU_CreateBlock(parent_block);
 		return func;
 }
@@ -407,6 +415,7 @@ tguSymb_t*		TGU_CreateSymb(tguSymbType_t t, const wchar_t *name)
 {
 		tguSymb_t *symb;
 		AR_ASSERT(name != NULL && AR_wcslen(name) > 0);
+
 		symb = AR_NEW0(tguSymb_t);
 		
 		symb->type = t;
@@ -430,6 +439,11 @@ void			TGU_DestroySymb(tguSymb_t *symb)
 		case TGU_SYMB_STRING_T:
 				break;
 		case TGU_SYMB_VAR_T:
+				if(symb->init_expr)
+				{
+						TGU_DestroyExpr(symb->init_expr);
+						symb->init_expr = NULL;
+				}
 				break;
 		case TGU_SYMB_FUNC_T:
 		{
@@ -442,6 +456,13 @@ void			TGU_DestroySymb(tguSymb_t *symb)
 				break;
 		case TGU_SYMB_CFUNC_T:
 				symb->c_func = NULL;
+				break;
+		case TGU_SYMB_BLOCK_T:
+				if(symb->block)
+				{
+						TGU_DestroyBlock(symb->block);
+						symb->block = NULL;
+				}
 				break;
 		}
 		AR_DEL(symb);
@@ -483,13 +504,19 @@ tguSymb_t*		TGU_FindSymb(tguSymbTbl_t *tbl, const wchar_t *name, tguSymbType_t e
 		tguSymb_t *symb;
 		AR_ASSERT(tbl != NULL && name != NULL);
 		
+		/*
+		因为所有符号都需要统一分配，因此，此名称一定被TGU_AllocString一族的函数分配
+		*/
+		
+		AR_ASSERT(TGU_HasString(name));
+
 		index = __hash_name(name);
 		
 		symb = tbl->tbl[index];
 
 		while(symb)
 		{
-				if(AR_wcscmp(symb->name, name) == 0 && symb->type == expected_type)
+				if(symb->name == name && (symb->type == expected_type))
 				{
 						return symb;
 				}else
@@ -786,6 +813,12 @@ void			TGU_DestroyBlock(tguBlock_t	*block)
 		}
 		
 		if(block->stmts)AR_DEL(block->stmts);
+
+
+		if(block->decls)
+		{
+				AR_DEL(block->decls);
+		}
 		
 		if(block->symb_table != NULL)
 		{
@@ -815,7 +848,26 @@ void			TGU_InsertStmtToBlock(tguBlock_t	*block, tguStmt_t	*stmt)
 }
 
 
+void			TGU_InsertDeclToBlock(tguBlock_t	*block, tguSymb_t	*decl)
+{
+		AR_ASSERT(block != NULL && decl != NULL && decl->type == TGU_SYMB_VAR_T);
+		
+		if(block->decl_cnt == block->decl_cap)
+		{
+				block->decl_cap += 4;
+				block->decl_cap *= 2;
+				block->decls = AR_REALLOC(tguSymb_t*, block->decls, block->decl_cap);
+		}
 
+		block->decls[block->decl_cnt] = decl;
+		block->decl_cnt++;
+}
+
+void			TGU_InsertSymbToBlock(tguBlock_t	*block, tguSymb_t	*symb)
+{
+		AR_ASSERT(block != NULL && symb != NULL);
+		TGU_InsertToSymbTable(block->symb_table, symb);
+}
 
 
 tguSymb_t*		TGU_FindSymbFromBlock(tguBlock_t	*block, const wchar_t *name, tguSymbType_t t, bool_t current_block)

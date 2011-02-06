@@ -17,6 +17,34 @@
 AR_NAMESPACE_BEGIN
 
 
+/************************************************************Buildin****************************************************/
+
+
+
+void	TGU_InitVMBuildinData(tguVMBuildinData_t *data)
+{
+		AR_ASSERT(data != NULL);
+		data->build_in = TGU_CreateSymbTable();
+
+}
+
+void	TGU_UnInitVMBuildinData(tguVMBuildinData_t *data)
+{
+		AR_ASSERT(data != NULL);
+
+		if(data->build_in)
+		{
+				TGU_DestroySymbTable(data->build_in);
+				data->build_in = NULL;
+		}
+}
+
+
+
+
+
+
+
 void	TGU_InitVM()
 {
 		

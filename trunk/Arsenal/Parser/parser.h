@@ -45,7 +45,7 @@ typedef struct __parser_token_tag
 		size_t			col;
 }psrToken_t;
 
-#define PARSER_TOTERMTOK(_ltok, _psr_tok)							\
+#define PARSER_TOTERMTOK(_ltok, _psr_tok)						\
 		do{														\
 				(_psr_tok)->str = (_ltok)->str;					\
 				(_psr_tok)->str_cnt = (_ltok)->count;			\

@@ -78,8 +78,9 @@ enum{
 
 typedef	struct __tengu_lexinfo_tag
 {
-		size_t	linenum;
-		size_t	col;
+		const wchar_t	*model_name;
+		size_t			linenum;
+		size_t			col;
 }tguLexInfo_t;
 
 typedef struct __tengu_token_tag
@@ -190,7 +191,11 @@ typedef struct __tengu_function_call_expression_tag
 		tguExpr_t		*arg_list;
 }tguFuncCallExpr_t;
 
-
+typedef struct __tengu_assignment_expression_tag
+{
+		tguExpr_t		*addr;
+		tguExpr_t		*value;
+}tguAssignExpr_t;
 
 
 typedef enum
@@ -228,9 +233,14 @@ typedef struct __tengu_table_initializer_tag
 
 
 
+
+
+
+
 typedef enum 
 {
 		TGU_ET_TABLE_INIT,
+		TGU_ET_ASSIGN,
 		TGU_ET_INDEX,
 		TGU_ET_FUNC_CALL,
 		TGU_ET_BINARY,
@@ -251,6 +261,7 @@ struct __tengu_expression_tag
 		tguExpr_t				*next;
 		union{
 				tguTableInit_t			table_init;		/*TGU_ET_TABLE_INIT*/
+				tguAssignExpr_t			assign_expr;	/*TGU_ET_ASSIGN*/
 				tguIndexExpr_t			index_expr;		/*TGU_ET_INDEX*/
 				tguCondExpr_t			cond_expr;		/*TGU_ET_CONDITIONAL*/
 				tguUnaryExpr_t			unary_expr;		/*TGU_ET_UNARY*/
@@ -326,7 +337,6 @@ typedef struct __tengu_return_statement_tag
 struct __tengu_statement_tag
 {
 		tguStmtType_t			stmt_type;				/*TGU_STT_EMPTY, TGU_STT_CONTINUE,	TGU_STT_BREAK 这三种类型的语句无附加参数*/
-		
 		tguLexInfo_t			lex_info;
 		
 		union{
@@ -371,13 +381,14 @@ void			TGU_ClearParams(tguParams_t *params);
 
 typedef struct __tengu_function_tag
 {
+		const wchar_t	*name;
 		size_t			param_cnt;
 		bool_t			is_variadic_param;
 		tguBlock_t		*block;
 }tguFunc_t;
 
 
-tguFunc_t*		TGU_CreateFunction(const tguBlock_t *parent_block);
+tguFunc_t*		TGU_CreateFunction(const wchar_t *name, const tguBlock_t *parent_block);
 void			TGU_DestroyFunction(tguFunc_t *func);
 
 
@@ -434,6 +445,7 @@ struct __tengu_symb_tag
 				tguFunc_t				*function;
 				tguBlock_t				*block;
 				tguCFunction_t			c_func;
+				tguExpr_t				*init_expr;
 		};
 };
 
@@ -458,12 +470,14 @@ typedef struct __tengu_symbol_table_tag
 
 tguSymbTbl_t*	TGU_CreateSymbTable();
 void			TGU_DestroySymbTable(tguSymbTbl_t *tbl);
-tguSymb_t*		TGU_FindSymb(tguSymbTbl_t *tbl, const wchar_t *name, tguSymbType_t expected_type);
+
 
 
 bool_t			TGU_InsertToSymbTable(tguSymbTbl_t *tbl, tguSymb_t *symb);
 bool_t			TGU_RemoveFromSymbTable(tguSymbTbl_t *tbl, const wchar_t *name, tguSymbType_t expected_type);
 
+
+tguSymb_t*		TGU_FindSymb(tguSymbTbl_t *tbl, const wchar_t *name, tguSymbType_t expected_type);
 
 
 tguSymb_t*		TGU_InstallInt(tguSymbTbl_t *tbl, int_64_t num);
@@ -473,6 +487,17 @@ tguSymb_t*		TGU_InstallFloat(tguSymbTbl_t *tbl, double float_num);
 tguSymb_t*		TGU_InstallString(tguSymbTbl_t *tbl, const wchar_t *str);
 
 
+/*
+typedef struct __tengu_symbol_table_iterator_tag
+{
+		tguSymbTbl_t	*tbl;
+		size_t			idx;
+		tguSymb_t		*curr;
+}tguSymbTblIter_t;
+
+void	TGU_InitSymbTableIterator(tguSymbTblIter_t *iter, tguSymbTbl_t *tbl);
+void	TGU_UnInitSymbTableIterator(tguSymbTblIter_t *iter);
+*/
 
 
 
@@ -511,6 +536,11 @@ struct __tengu_block_tag
 
 		tguSymbTbl_t	*symb_table;
 
+
+		tguSymb_t		**decls;
+		size_t			decl_cnt;
+		size_t			decl_cap;
+
 		tguStmt_t		**stmts;
 		size_t			stmt_cnt;
 		size_t			stmt_cap;
@@ -536,10 +566,11 @@ bool_t			TGU_RemoveSubBlockFromBlock(tguBlock_t	*block, tguBlock_t	*sub);
 
 
 void			TGU_InsertStmtToBlock(tguBlock_t	*block, tguStmt_t	*stmt);
-
+void			TGU_InsertDeclToBlock(tguBlock_t	*block, tguSymb_t	*decl);
+void			TGU_InsertSymbToBlock(tguBlock_t	*block, tguSymb_t	*symb);
 
 tguSymb_t*		TGU_FindSymbFromBlock(tguBlock_t	*block, const wchar_t *name, tguSymbType_t t, bool_t current_block);
-
+#define			TGU_GetBlockSymbolTable(_b)		((_b)->symb_table)
 
 
 AR_NAMESPACE_END

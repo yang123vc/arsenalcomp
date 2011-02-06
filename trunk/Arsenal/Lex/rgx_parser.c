@@ -76,16 +76,54 @@ static const wchar_t*	__transform_char(const wchar_t *input, wchar_t *c, rgxErro
 		{
 				const wchar_t *ret; uint_32_t val;
 				p += 1;
-				ret = AR_wtou32_s(p,p+4, &val, 10);
-				if(ret == NULL)
+
+				if(*p != L'{')
 				{
-						err->pos = p;
-						return NULL;
+						ret = AR_wtou32_s(p,p+4, &val, 10);
+						
+						if(ret == NULL)
+						{
+								err->pos = p;
+								return NULL;
+						}else
+						{
+								*c = (wchar_t)val;
+								p = ret;
+						}
 				}else
 				{
-						*c = (wchar_t)val;
-						p = ret;
+						const wchar_t *end;
+						p+=1;
+						end = p;
+						
+						while(*end != L'\0' && *end != L'}')end++;
+						
+						ret = AR_wtou32_s(p, end, &val, 10);
+
+						if(ret)
+						{
+								ret = AR_wcstrim_space(ret);
+								
+								if(*ret != L'}')
+								{
+										ret = NULL;
+								}
+						}
+
+						if(ret == NULL)
+						{
+								err->pos = p;
+								return NULL;
+						}else
+						{
+								*c = (wchar_t)val;
+								p = ret;
+						}
+
+						AR_ASSERT(*p == L'}');
+						p++;		
 				}
+
 				return p;
 		}
 				break;
