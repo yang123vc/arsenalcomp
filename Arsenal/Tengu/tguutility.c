@@ -91,6 +91,56 @@ const wchar_t*  TGU_AllocStringFloat(double num)
 		return res;
 }
 
+
+bool_t			TGU_HasString(const wchar_t *name)
+{
+		bool_t	res;
+		AR_ASSERT(name != NULL);
+
+		AR_LockSpinLock(&__g_tbl_lock);
+		res = AR_HasString(__g_tbl, name);
+		AR_UnLockSpinLock(&__g_tbl_lock);
+		return res;
+}
+
+
+
+/***************************************************************Sources**************************************************************/
+
+tguSrc_t*		TGU_LoadSources(const wchar_t *path)
+{
+		AR_ASSERT(path != NULL);
+		return NULL;
+}
+
+
+void			TGU_ReleaseSources(tguSrc_t		*src)
+{
+		AR_ASSERT(src != NULL);
+		
+		if(src->path)
+		{
+				AR_DEL(src->path);
+				src->path = NULL;
+		}
+
+		if(src->model_name)
+		{
+				AR_DEL(src->model_name);
+				src->model_name = NULL;
+		}
+
+		if(src->code)
+		{
+				AR_DEL(src->code);
+				src->code = NULL;
+		}
+
+		AR_DEL(src);
+}
+
+
+
 /*************************************************************************************************************************************/
 
 void	TGU_InitUtility()
@@ -102,6 +152,14 @@ void	TGU_UnInitUtility()
 {
 		__uninit_string_table();
 }
+
+
+
+
+
+
+
+
 
 
 AR_NAMESPACE_END

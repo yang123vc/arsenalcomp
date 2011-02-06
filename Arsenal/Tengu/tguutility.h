@@ -34,15 +34,25 @@ void	TGU_UnInitUtility();
 
 /*所有parser配置相关的符号都由以下函数分配，此功能为符号对比提供了O(1)的性能(只需对比指针)*/
 
-
 const wchar_t*	TGU_AllocString(const wchar_t *str);
 const wchar_t*	TGU_AllocStringN(const wchar_t *str, size_t n);
-
 const wchar_t*  TGU_AllocStringInt(int_64_t num, size_t radix);
 const wchar_t*  TGU_AllocStringUInt(uint_64_t num, size_t radix);
 const wchar_t*  TGU_AllocStringFloat(double num);
+bool_t			TGU_HasString(const wchar_t *name);
 
 
+
+/******************************************************加载文本文件，并将其**************************************/
+typedef struct __tengu_sources_tag
+{
+		const	wchar_t			*path;
+		const	wchar_t			*model_name;
+		const	wchar_t			*code;
+}tguSrc_t;
+
+tguSrc_t*		TGU_LoadSources(const wchar_t *path);
+void			TGU_ReleaseSources(tguSrc_t		*src);
 
 
 AR_NAMESPACE_END

@@ -16,7 +16,7 @@
 #define __ARSENAL_TGUVM_H__
 
 #include "tengu.h"
-
+#include "tgusyntree.h"
 
 
 
@@ -53,8 +53,8 @@ typedef struct __tengu_table_tag		tguTable_t;
 struct __tengu_userdata_tag;
 typedef struct __tengu_userdata_tag		tguUserData_t;
 
-struct __tengu_function_tag;
-typedef	struct __tengu_function_tag		tguFunc_t;
+struct __tengu_vmware_function_tag;
+typedef	struct __tengu_vmware_function_tag		tguVMFunc_t;
 
 
 
@@ -92,7 +92,7 @@ typedef struct __tgu_object_tag
 
 
 /***********************************************************************************************************************************/
-struct __tengu_function_tag
+struct __tengu_vmware_function_tag
 {
 		tguIns_t		*code;
 		size_t			code_size;
@@ -178,6 +178,15 @@ typedef struct __tengu_call_stack_tag
 #define	TGU_MAX_STACK_SIZE		4096
 
 
+
+typedef struct __tengu_vm_buildin_data_tag
+{
+		tguSymbTbl_t	*build_in;
+}tguVMBuildinData_t;
+
+
+void	TGU_InitVMBuildinData(tguVMBuildinData_t *data);
+void	TGU_UnInitVMBuildinData(tguVMBuildinData_t *data);
 
 struct	__tengu_machine_tag
 {
