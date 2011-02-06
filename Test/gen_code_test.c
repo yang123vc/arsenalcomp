@@ -1,4 +1,5 @@
-﻿#if defined(__LIB)
+﻿#if(0)
+#if defined(__LIB)
 
 #include <vector>
 
@@ -126,4 +127,5 @@ void gen_code_test()
 
 AR_NAMESPACE_END
 
+#endif
 #endif
