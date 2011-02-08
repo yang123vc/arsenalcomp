@@ -1448,7 +1448,11 @@
 			Name="Tools"
 			>
 			<File
-				RelativePath="..\..\..\Arsenal\Tools\grammar_config.c"
+				RelativePath="..\..\..\Arsenal\Tools\grammar_codegen.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Tools\grammar_collector.c"
 				>
 			</File>
 			<File

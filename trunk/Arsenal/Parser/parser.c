@@ -642,6 +642,16 @@ static void __handle_reduce(psrContext_t *parser_context, const psrAction_t *act
 		AR_ASSERT(next_state != -1);
 		Parser_PushStack(parser_context->state_stack, (size_t)next_state);
 		Parser_PushNodeStack(parser_context->node_stack, new_node);
+
+
+		if(parser_context->is_repair)
+		{
+				parser_context->repair_valid_shift++;
+				if(parser_context->repair_valid_shift >= PSR_REPAIR_MAX_VALID_SHIFT)
+				{
+						Parser_RecoverDone(parser_context);
+				}
+		}
 }
 
 
