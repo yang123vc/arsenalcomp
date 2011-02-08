@@ -122,9 +122,9 @@
     配置编译器相关的选项
 */
 
-/*
-#define	AR_USE_CRT_ALLOCFUNC	1
-*/
+
+//#define	AR_USE_CRT_ALLOCFUNC	1
+
 
 #if(AR_COMPILER == AR_VC_LEGACY || AR_COMPILER == AR_VC)
 /*

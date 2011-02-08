@@ -198,37 +198,11 @@ typedef struct __tengu_assignment_expression_tag
 }tguAssignExpr_t;
 
 
-typedef enum
-{
-		TGU_INIT_TABLE_EXPR,
-		TGU_INIT_TABLE_FIELD
-}tguTableFieldType_t;
-
-struct __tengu_table_field_tag;
-typedef struct __tengu_table_field_tag	tguTableField_t;
-
-struct __tengu_table_field_tag
-{
-		tguTableFieldType_t				type;
-		tguTableField_t					*next;
-
-		union{
-				tguExpr_t				*expr;
-				tguTableField_t			*table;
-		}field;
-};
-
-
-tguTableField_t*		TGU_CreateTableField(tguTableFieldType_t t);
-void					TGU_DestroyTableField(tguTableField_t *field);
-
-
-
 
 
 typedef struct __tengu_table_initializer_tag
 {
-		tguTableField_t			*field_lst;
+		tguExpr_t		*expr_list;
 }tguTableInit_t;
 
 

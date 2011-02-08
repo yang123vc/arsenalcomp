@@ -48,6 +48,8 @@ static void __uninit_string_table()
 const wchar_t*	TGU_AllocString(const wchar_t *str)
 {
 		const wchar_t *res;
+
+		
 		AR_LockSpinLock(&__g_tbl_lock);
 		res = AR_GetString(__g_tbl, str);
 		AR_UnLockSpinLock(&__g_tbl_lock);
@@ -57,9 +59,11 @@ const wchar_t*	TGU_AllocString(const wchar_t *str)
 const wchar_t*	TGU_AllocStringN(const wchar_t *str, size_t n)
 {
 		const wchar_t *res;
+
 		AR_LockSpinLock(&__g_tbl_lock);
 		res = AR_GetStringN(__g_tbl, str,n);
 		AR_UnLockSpinLock(&__g_tbl_lock);
+
 		return res;
 }
 

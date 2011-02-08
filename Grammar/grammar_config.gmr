@@ -160,7 +160,7 @@ prec_decl			:		PREC LEXEME
 				|		.					
 				;
 
-action_decl		:		ACTION LEXEME CODE_BLOCK
+action_decl			:		ACTION LEXEME CODE_BLOCK
 				|		ACTION LEXEME 			
 				|		.	
 				;
@@ -171,7 +171,7 @@ start_def			:  		START LEXEME
 
 
 code_decl			:		CODE LEXEME CODE_BLOCK
-				|		CODE CODE_BLOCK
+				|		CODE CODE_BLOCK	
 				;
 
 

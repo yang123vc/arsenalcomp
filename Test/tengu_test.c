@@ -1,4 +1,4 @@
-#if(0)
+
 #include "test.h"
 
 #include "../Arsenal/Tengu/tengu.h"
@@ -12,7 +12,17 @@ AR_NAMESPACE_BEGIN
 
 void AR_STDCALL tengu_test_report(const tguReportInfo_t *report, void *context)
 {
-
+		switch(report->type)
+		{
+		default:
+				AR_ASSERT(false);
+				break;
+		case TGU_REPORT_MESSAGE_T:
+		case TGU_REPORT_WARNING_T:
+		case TGU_REPORT_ERROR_T:
+				printf("%ls : %d\r\n", report->message, report->line);
+				break;
+		}
 }
 
 
@@ -28,13 +38,21 @@ void test1()
 {
 		tguParser_t		*parser;
 		const wchar_t	*code = NULL;
-		parser = TGU_CreateParser(&__g_report, NULL); 
+		tguSymbTbl_t	*build_in	= TGU_CreateSymbTable();
+
+		parser = TGU_CreateParser(&__g_report, build_in, NULL); 
 		
-		code = __load_txt(L"..\\..\\..\\misc\\tengu_input.txt");
+		code = __load_txt(L"..\\..\\..\\misc\\tengu_stmt.txt");
 
 		AR_printf(L"%ls\r\n", code);
 
-		TGU_ParseCode(parser, code);
+		tguBlock_t		*block = TGU_ParseCode(parser, L"tengu_input", code);
+
+
+		getchar();
+
+
+		
 
 		AR_DEL(code);
 		
@@ -42,31 +60,11 @@ void test1()
 }
 
 
-/*
 
-typedef enum 
-{
-		TGU_SYMB_NULL_T,
-		TGU_SYMB_INT_T,
-		TGU_SYMB_FLOAT_T,
-		TGU_SYMB_BOOL_T,
-		TGU_SYMB_STRING_T,
-
-		TGU_SYMB_VAR_T,
-		TGU_SYMB_FUNC_T,
-		TGU_SYMB_CFUNC_T,
-		TGU_SYMB_BLOCK_T
-}tguSymbType_t;
-*/
-void test2()
-{
-		
-		
-}
 
 void	Tengu_Test()
 {
-		//test1();
+		test1();
 
 
 }
@@ -74,4 +72,4 @@ void	Tengu_Test()
 AR_NAMESPACE_END
 
 #endif
-#endif
+

@@ -214,8 +214,8 @@ static void __on_lex_error(tguParser_t	*parser)
 
 		AR_swprintf(buf, 512, L"Invalid Token %ls...(%"AR_PLAT_INT_FMT L"d : %"AR_PLAT_INT_FMT L"d)\r\n", tok_buf, line, col);
 
-		info.type = TGU_REPORT_ERROR_LEX_T;
-		info.lex_error.msg = buf;
+		info.type = TGU_REPORT_ERROR_T;
+		info.message = buf;
 
 		token.value = 0;
 		token.count =	n;	
@@ -223,7 +223,7 @@ static void __on_lex_error(tguParser_t	*parser)
 
 		Lex_MatchGetCoordinate(parser->match, &token.line, &token.col);
 
-		info.lex_error.tok = &token;
+		info.token = &token;
 		parser->report.report_func(&info, parser->report.report_ctx);
 
 		AR_ASSERT(*Lex_GetNextInput(parser->match) != L'\0');
@@ -244,10 +244,11 @@ tguBlock_t*				TGU_ParseCode(tguParser_t	*parser, const	wchar_t			*model_name, c
 		psrToken_t		psrtok;
 		
 		bool_t			is_ok;
-		AR_ASSERT(parser != NULL  && model_name && code != NULL);
+		AR_ASSERT(parser != NULL  && model_name &&  AR_wcslen(model_name) > 0 && code != NULL);
 
 		AR_ASSERT(parser->import_models != NULL);
-
+		
+		model_name = TGU_AllocString(model_name);
 		{
 				tguSymb_t		*block;
 				block	= TGU_FindSymb(parser->import_models, model_name, TGU_SYMB_BLOCK_T);
@@ -311,10 +312,9 @@ tguBlock_t*				TGU_ParseCode(tguParser_t	*parser, const	wchar_t			*model_name, c
 		{
 				if(!TGU_RemoveFromSymbTable(parser->import_models, model_name, TGU_SYMB_BLOCK_T))
 				{
-						AR_CHECK(false, L"%ls : %ls\r\n", L"Arsenal internal error", AR_FUNC_NAME);
+						AR_CHECK(false, L"%ls : %hs\r\n", L"Arsenal internal error", AR_FUNC_NAME);
 				}
 
-				TGU_DestroyBlock(result);
 				result = NULL;
 		}else
 		{

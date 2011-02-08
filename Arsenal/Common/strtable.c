@@ -30,6 +30,7 @@ struct __string_table_
 {
 		arStringRec_t	**bucket;
 		size_t			count;
+		size_t			item_count;
 };
 
 
@@ -42,6 +43,7 @@ arStringTable_t*		AR_CreateStrTable(size_t count)
 		if(count < MIN_BUCKET_SIZE)count = MIN_BUCKET_SIZE;
 		res->count = count;
 		res->bucket = AR_NEWARR0(arStringRec_t*, res->count);
+		res->item_count = 0;
 		return res;
 }
 
@@ -110,7 +112,7 @@ const wchar_t*			AR_GetStringN(arStringTable_t *tbl, const wchar_t *str, size_t 
 		size_t idx;
 		arStringRec_t		*record;
 		AR_ASSERT(tbl != NULL && str != NULL);
-		
+
 		idx =  AR_wcshash_n(str, n) % tbl->count;
 		record = tbl->bucket[idx];
 		
@@ -130,6 +132,7 @@ const wchar_t*			AR_GetStringN(arStringTable_t *tbl, const wchar_t *str, size_t 
 		record->len = n;
 		record->next = tbl->bucket[idx];
 		tbl->bucket[idx] = record;
+		tbl->item_count++;
 		return record->str;
 }
 

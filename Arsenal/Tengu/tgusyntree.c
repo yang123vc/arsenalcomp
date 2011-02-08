@@ -26,45 +26,6 @@ AR_NAMESPACE_BEGIN
 
 /****************************************Expr***************************************************************/
 
-tguTableField_t*		TGU_CreateTableField(tguTableFieldType_t t)
-{
-		tguTableField_t *field;
-		
-		field = AR_NEW0(tguTableField_t);
-		;
-		field->type = t;
-		return field;
-}
-
-void					TGU_DestroyTableField(tguTableField_t *field)
-{
-		AR_ASSERT(field != NULL);
-
-		switch(field->type)
-		{
-		default:
-				AR_ASSERT(false);
-				break;
-		case TGU_INIT_TABLE_EXPR:
-				if(field->field.expr)
-				{
-						TGU_DestroyExpr(field->field.expr);
-						field->field.expr = NULL;
-				}
-				break;
-		case TGU_INIT_TABLE_FIELD:
-				if(field->field.table)
-				{
-						TGU_DestroyTableField(field->field.table);
-						field->field.table = NULL;
-				}
-				break;
-		}
-
-}
-
-
-
 
 
 tguExpr_t*		TGU_CreateExpr(tguExprType_t type)
@@ -80,122 +41,121 @@ tguExpr_t*		TGU_CreateExpr(tguExprType_t type)
 
 void			TGU_DestroyExpr(tguExpr_t *expr)
 {
+
 		AR_ASSERT(expr != NULL);
-
-		switch(expr->expr_type)
+		while(expr)
 		{
-		default:
-				AR_ASSERT(false);
-				break;
-		case TGU_ET_TABLE_INIT:
-		{
-				tguTableField_t *field = expr->table_init.field_lst;
-				while(field)
-				{
-						tguTableField_t *tmp = field->next;
-						TGU_DestroyTableField(field);
-						field = tmp;
-				}
-		}
-				break;
-		case TGU_ET_ASSIGN:
-		{
-				TGU_DestroyExpr(expr->assign_expr.addr);
-				TGU_DestroyExpr(expr->assign_expr.value);
-				expr->assign_expr.addr = NULL;
-				expr->assign_expr.value = NULL;
-		}
-				break;
-		case TGU_ET_INDEX:
-				if(expr->index_expr.expr)
-				{
-						TGU_DestroyExpr(expr->index_expr.expr);
-						expr->index_expr.expr = NULL;
-				}
+				tguExpr_t		*tmp = expr->next;
 
-				if(expr->index_expr.index_expr)
+				switch(expr->expr_type)
 				{
-						TGU_DestroyExpr(expr->index_expr.index_expr);
-						expr->index_expr.index_expr = NULL;
-				}
-
-				break;
-		case TGU_ET_FUNC_CALL:
-				if(expr->func_call_expr.arg_list)
-				{
-						tguExpr_t *arg = expr->func_call_expr.arg_list;
-
-						while(arg)
+				default:
+						AR_ASSERT(false);
+						break;
+				case TGU_ET_TABLE_INIT:
 						{
-								tguExpr_t *tmp = arg->next;
-								TGU_DestroyExpr(arg);
-								arg = tmp;
+								tguExpr_t	*init_expr = expr->table_init.expr_list;
+								TGU_DestroyExpr(init_expr);
+								expr->table_init.expr_list = NULL;
 						}
-				}
+						break;
+				case TGU_ET_ASSIGN:
+						{
+								TGU_DestroyExpr(expr->assign_expr.addr);
+								TGU_DestroyExpr(expr->assign_expr.value);
+								expr->assign_expr.addr = NULL;
+								expr->assign_expr.value = NULL;
+						}
+						break;
+				case TGU_ET_INDEX:
+						if(expr->index_expr.expr)
+						{
+								TGU_DestroyExpr(expr->index_expr.expr);
+								expr->index_expr.expr = NULL;
+						}
 
-				if(expr->func_call_expr.func_call)
-				{
-						TGU_DestroyExpr(expr->func_call_expr.func_call);
-						expr->func_call_expr.func_call = NULL;
-				}
-				break;
-		case TGU_ET_BINARY:
-				if(expr->binary_expr.left != NULL)
-				{
-						TGU_DestroyExpr(expr->binary_expr.left);
-						expr->binary_expr.left = NULL;
-				}
+						if(expr->index_expr.index_expr)
+						{
+								TGU_DestroyExpr(expr->index_expr.index_expr);
+								expr->index_expr.index_expr = NULL;
+						}
 
-				if(expr->binary_expr.right != NULL)
-				{
-						TGU_DestroyExpr(expr->binary_expr.right);
-						expr->binary_expr.right = NULL;
-				}
-				break;
-		case TGU_ET_UNARY:
-				if(expr->unary_expr.expr)
-				{
-						TGU_DestroyExpr(expr->unary_expr.expr);
-						expr->unary_expr.expr = NULL;
-				}
-				break;
-		case TGU_ET_CONDITIONAL:
-				if(expr->cond_expr.cond)
-				{
-						TGU_DestroyExpr(expr->cond_expr.cond);
-						expr->cond_expr.cond = NULL;
-				}
+						break;
+				case TGU_ET_FUNC_CALL:
+						if(expr->func_call_expr.arg_list)
+						{
+								tguExpr_t *arg = expr->func_call_expr.arg_list;
 
-				if(expr->cond_expr.if_true)
-				{
-						TGU_DestroyExpr(expr->cond_expr.if_true);
-						expr->cond_expr.if_true = NULL;
-				}
+								while(arg)
+								{
+										tguExpr_t *tmp = arg->next;
+										TGU_DestroyExpr(arg);
+										arg = tmp;
+								}
+						}
 
-				if(expr->cond_expr.if_false)
-				{
-						TGU_DestroyExpr(expr->cond_expr.if_false);
-						expr->cond_expr.if_false = NULL;
-				}
+						if(expr->func_call_expr.func_call)
+						{
+								TGU_DestroyExpr(expr->func_call_expr.func_call);
+								expr->func_call_expr.func_call = NULL;
+						}
+						break;
+				case TGU_ET_BINARY:
+						if(expr->binary_expr.left != NULL)
+						{
+								TGU_DestroyExpr(expr->binary_expr.left);
+								expr->binary_expr.left = NULL;
+						}
 
-				break;
-		case TGU_ET_SYMBOL:
-				if(expr->symb)
-				{
-						/*TGU_DestroySymb(expr->symb);*/
-						expr->symb = NULL;
-				}
-				break;
-		case TGU_ET_UNDEF_NAME:
-				if(expr->name)
-				{
-						AR_DEL(expr->name);
+						if(expr->binary_expr.right != NULL)
+						{
+								TGU_DestroyExpr(expr->binary_expr.right);
+								expr->binary_expr.right = NULL;
+						}
+						break;
+				case TGU_ET_UNARY:
+						if(expr->unary_expr.expr)
+						{
+								TGU_DestroyExpr(expr->unary_expr.expr);
+								expr->unary_expr.expr = NULL;
+						}
+						break;
+				case TGU_ET_CONDITIONAL:
+						if(expr->cond_expr.cond)
+						{
+								TGU_DestroyExpr(expr->cond_expr.cond);
+								expr->cond_expr.cond = NULL;
+						}
+
+						if(expr->cond_expr.if_true)
+						{
+								TGU_DestroyExpr(expr->cond_expr.if_true);
+								expr->cond_expr.if_true = NULL;
+						}
+
+						if(expr->cond_expr.if_false)
+						{
+								TGU_DestroyExpr(expr->cond_expr.if_false);
+								expr->cond_expr.if_false = NULL;
+						}
+
+						break;
+				case TGU_ET_SYMBOL:
+						if(expr->symb)
+						{
+								/*TGU_DestroySymb(expr->symb);*/
+								expr->symb = NULL;
+						}
+						break;
+				case TGU_ET_UNDEF_NAME:
 						expr->name = NULL;
+						break;
 				}
-				break;
-		}
 
-		AR_DEL(expr);
+				AR_DEL(expr);
+				
+				expr = tmp;
+		}
 }
 
 
@@ -758,7 +718,7 @@ tguBlock_t*		TGU_CreateBlock(const tguBlock_t	*parent)
 {
 		tguBlock_t		*block;
 		
-		block = AR_NEW(tguBlock_t);
+		block = AR_NEW0(tguBlock_t);
 
 		block->begin.col = 0;
 		block->begin.linenum = 0;
@@ -766,7 +726,7 @@ tguBlock_t*		TGU_CreateBlock(const tguBlock_t	*parent)
 		block->end.col = 0;
 		block->end.linenum = 0;
 
-		block->symb_table = NULL;
+		block->symb_table = TGU_CreateSymbTable();
 		
 		block->stmts = NULL;
 		block->stmt_cnt = 0;
@@ -790,22 +750,26 @@ void			TGU_DestroyBlock(tguBlock_t	*block)
 {
 		size_t i;
 		tguBlock_t *parent;
-		bool_t		find;
+		
 		AR_ASSERT(block != NULL);
 		
 		parent = block->parent;
 		block->parent = NULL;
 
-		find = TGU_RemoveSubBlockFromBlock(parent, block);
-		
-		AR_ASSERT(find);
+		if(parent)
+		{
+				bool_t		find;
+				find = TGU_RemoveSubBlockFromBlock(parent, block);
+				AR_ASSERT(find);
+		}
 
-		
+		/*
 		while(block->sub_blocks)
 		{
 				AR_ASSERT(block->sub_blocks->parent == block);
 				TGU_DestroyBlock(block->sub_blocks);
 		}
+		*/
 
 		for(i = 0; i < block->stmt_cnt; ++i)
 		{

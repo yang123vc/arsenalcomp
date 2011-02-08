@@ -1,5 +1,11 @@
-import "system.tgu";
+﻿
+//import "system.tgu";
 
+
+var print(a)
+{
+	
+}
 
 var test, i;
 
@@ -7,5 +13,10 @@ for(test = {"a", "b", "c"}, i = 0; i < table.count(test); ++i)
 {
 	print(test[i]);
 }
+
+
+
+
+
 
 

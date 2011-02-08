@@ -507,9 +507,16 @@ typedef struct __escape_string_error_tag
 wchar_t*		AR_escstr_to_str(const wchar_t *src, arEscStrErr_t *error);
 wchar_t*		AR_str_to_escstr(const wchar_t *src);
 
+wchar_t*		AR_escstr_to_str_n(const wchar_t *src, size_t n, arEscStrErr_t *error);
+wchar_t*		AR_str_to_escstr_n(const wchar_t *src, size_t n);
 
-int_t 		AR_escstr_to_str_buf(wchar_t *dest, size_t len, const wchar_t *src, arEscStrErr_t *error);
-int_t 		AR_str_to_escstr_buf(wchar_t *dest, size_t len, const wchar_t *src);
+
+int_t 			AR_escstr_to_str_buf(wchar_t *dest, size_t len, const wchar_t *src, arEscStrErr_t *error);
+int_t 			AR_str_to_escstr_buf(wchar_t *dest, size_t len, const wchar_t *src);
+
+
+int_t 			AR_escstr_to_str_buf_n(wchar_t *dest, size_t len, const wchar_t *src, size_t n,arEscStrErr_t *error);
+int_t 			AR_str_to_escstr_buf_n(wchar_t *dest, size_t len, const wchar_t *src, size_t n);
 
 /********************************************************String*****************************************************************/
 
