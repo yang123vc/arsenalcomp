@@ -36,17 +36,32 @@ static tguReport_t		__g_report =
 
 void test1()
 {
-		tguParser_t		*parser;
-		const wchar_t	*code = NULL;
-		tguSymbTbl_t	*build_in	= TGU_CreateSymbTable();
+		tguParseResult_t		parse_result;
+		tguParser_t				*parser;
+		const wchar_t			*code = NULL;
+		tguSymbTbl_t			*build_in	= TGU_CreateSymbTable();
+		tguSymbTbl_t			*import_models = TGU_CreateSymbTable();
 
-		parser = TGU_CreateParser(&__g_report, build_in, NULL); 
+
+		parser = TGU_CreateParser(&__g_report, build_in, import_models); 
 		
 		code = __load_txt(L"..\\..\\..\\misc\\tengu_stmt.txt");
 
 		AR_printf(L"%ls\r\n", code);
 
-		tguBlock_t		*block = TGU_ParseCode(parser, L"tengu_input", code);
+		tguSymb_t		*model_symb = TGU_CreateSymb(TGU_SYMB_BLOCK_T, L"tengu_input");
+		TGU_InsertToSymbTable(import_models, model_symb);
+
+		parse_result = TGU_ParseCode(parser, L"tengu_input", code);
+		model_symb->block = parse_result.block;
+
+		if(parse_result.has_error)
+		{
+				TGU_RemoveFromSymbTable(import_models, model_symb->name, model_symb->type);
+		}else
+		{
+				AR_ASSERT(parse_result.block != NULL);
+		}
 
 
 		getchar();
@@ -57,6 +72,9 @@ void test1()
 		AR_DEL(code);
 		
 		TGU_DestroyParser(parser);
+
+		TGU_DestroySymbTable(build_in);
+		TGU_DestroySymbTable(import_models);
 }
 
 

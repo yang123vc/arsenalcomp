@@ -786,6 +786,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/Zi"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\Arsenal;..\..\ArsenalCPP;"
 				PreprocessorDefinitions="WIN64;_WINDOWS;_DEBUG; __LIB"
@@ -807,6 +808,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalOptions="/Zi"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(OutDir)\"
 				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"

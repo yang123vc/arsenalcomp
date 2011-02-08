@@ -113,8 +113,14 @@ bool_t			TGU_HasString(const wchar_t *name)
 
 tguSrc_t*		TGU_LoadSources(const wchar_t *path)
 {
+		tguSrc_t		*src;
 		AR_ASSERT(path != NULL);
-		return NULL;
+
+		src = AR_NEW0(tguSrc_t);
+		src->path = AR_wcsdup(path);
+		src->model_name = AR_wcsdup(L"tengu_test_model");
+		src->code = AR_wcsdup(L"");
+		return src;
 }
 
 

@@ -27,6 +27,7 @@ Arsenal_UnInit
 ;AR_wcsicmp
 ;AR_wcsnicmp
 
+AR_Version
 
 AR_CreateString			
 AR_DestroyString		

@@ -123,7 +123,7 @@
 */
 
 
-//#define	AR_USE_CRT_ALLOCFUNC	1
+
 
 
 #if(AR_COMPILER == AR_VC_LEGACY || AR_COMPILER == AR_VC)
@@ -144,6 +144,8 @@
 						#define _CRTDBG_MAP_ALLOC
 						#include<stdlib.h>
 						#include<crtdbg.h>
+
+						#define	AR_USE_CRT_ALLOCFUNC	1
 				#else
 
 				#endif

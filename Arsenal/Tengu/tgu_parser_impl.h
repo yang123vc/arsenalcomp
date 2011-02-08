@@ -114,9 +114,9 @@ syntax_node
 				node->params = NULL;
 			}
 			break;
-
-
 		}
+
+		AR_DEL(node);
 	}
  
 
@@ -188,8 +188,9 @@ token_operation
 		parser->current_function = TGU_CreateFunction(func_name, parser->top_block);
 		parser->top_block = parser->current_function->block;
 		parser->current_function->is_variadic_param = params ? params->is_variadic : false;
-
-		for(i = 0; i < params->count; ++i)
+		
+		
+		for(i = 0; params != NULL && i < params->count; ++i)
 		{
 			tguSymb_t	*symb;
 			tguBlock_t	*block = parser->current_function->block;
@@ -242,6 +243,8 @@ token_operation
 		{
 				TGU_InsertSymbToBlock(parser->top_block, symb);
 		}
+		stmt->compound_stmt.block = NULL;
+		TGU_DestroyStmt(stmt);
 	}
  
 
@@ -1318,6 +1321,13 @@ static psrNode_t* AR_STDCALL on_string_leaf_handler(const psrToken_t *tok,void *
 						TGU_ReportError(&parser->report, msg, tok->line);
 					}
 					term_str = TGU_AllocString(str == NULL ? L"" : str);
+					
+					if(str)
+					{
+						AR_DEL(str);
+						str = NULL;
+					}
+
 					return on_lex_node(parser, term_str, tok->term_val, tok->line, tok->col);
 				 }
 }
@@ -1331,12 +1341,7 @@ static psrNode_t* AR_STDCALL on_translation_unit(psrNode_t **nodes, size_t count
 					tguParser_t 	*parser = (tguParser_t*)ctx;
 					tguBlock_t	*result;
 					AR_ASSERT(count == 0 || count == 1);
-					result = parser->abs_tree;
-					parser->abs_tree = NULL;
-					parser->top_block = NULL;
-					parser->current_function = NULL;
-					AR_ASSERT(result != NULL);
-					return (psrNode_t*)result;
+					return NULL;
 
 				 }
 }
@@ -1374,8 +1379,7 @@ static psrNode_t* AR_STDCALL on_global_stmtement(psrNode_t **nodes, size_t count
 						AR_ASSERT(ns != NULL && count == 1);
 						if(ns[0] == NULL)
 						{
-								parser->has_error = true;
-								return NULL;
+							return NULL;
 						}
 						
 						AR_ASSERT(ns[0]->type == TGU_NODE_STMT_T && ns[0]->stmt != NULL);
@@ -1692,14 +1696,28 @@ static psrNode_t* AR_STDCALL on_import_statement(psrNode_t **nodes, size_t count
 						
 						if(src)
 						{
-							tguBlock_t	*import_block;
-							tguParser_t	*psr;
-							psr = TGU_CreateParser(&parser->report, parser->build_in, parser->import_models);
-							import_block = TGU_ParseCode(psr, src->model_name, src->code);
-							
-							if(!import_block)
+							if(TGU_FindSymb(parser->import_models, TGU_AllocString(src->model_name), TGU_SYMB_BLOCK_T) == NULL)
 							{
-								has_error = true;
+								tguSymb_t		*model_symb;
+								tguParseResult_t	parse_result;
+								tguParser_t	*psr;
+
+								model_symb = TGU_CreateSymb(TGU_SYMB_BLOCK_T, src->model_name);
+								TGU_InsertToSymbTable(parser->import_models, model_symb);
+
+								psr = TGU_CreateParser(&parser->report, parser->build_in, parser->import_models);
+								parse_result = TGU_ParseCode(psr, src->model_name, src->code);
+							
+								if(parse_result.has_error)
+								{
+									has_error = true;
+									TGU_RemoveFromSymbTable(parser->import_models, model_symb->name, model_symb->type);
+								}else
+								{
+									AR_ASSERT(parse_result.block);
+									model_symb->block = parse_result.block;
+								}
+								TGU_DestroyParser(psr);
 							}
 						}else
 						{
@@ -1827,8 +1845,7 @@ static psrNode_t* AR_STDCALL on_compound_element(psrNode_t **nodes, size_t count
 						AR_ASSERT(ns != NULL && count == 1);
 						if(ns[0] == NULL)
 						{
-								parser->has_error = true;
-								return NULL;
+							return NULL;
 						}
 						
 						AR_ASSERT(ns[0]->type == TGU_NODE_STMT_T && ns[0]->stmt != NULL);

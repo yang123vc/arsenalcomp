@@ -7,12 +7,54 @@ var print(a)
 	
 }
 
+
+
+var function()
+{
+var print;
+
 var test, i;
+
+
+test = 
+{
+		print(33), 
+		3 * 4, 
+		5 * 8, 
+		
+		{
+			"a",
+			"b",
+			"c"
+		},
+		
+		test.a,
+		test.b
+};
+
+}
+
+
+
 
 for(test = {"a", "b", "c"}, i = 0; i < table.count(test); ++i)
 {
 	print(test[i]);
 }
+
+while(i < 100)
+{
+	var x = 1*2*3*4;
+	if(x >= 8 && x <= 40)
+	{
+		print(abc);
+	}else
+	{
+		shutdown();
+	}
+}
+
+
 
 
 

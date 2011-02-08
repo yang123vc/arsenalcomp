@@ -39,12 +39,10 @@ typedef struct __tengu_parser_tag
 		psrContext_t			*parser_context;
 		
 		const tguSymbTbl_t		*build_in;
-
-		bool_t					is_import_models_owner;
 		tguSymbTbl_t			*import_models;
 
+		/******************************************************************/
 		tguBlock_t				*abs_tree;					/*分析结果*/
-
 		
 		bool_t					has_error;
 		tguBlock_t				*top_block;				/*当前块*/
@@ -61,16 +59,21 @@ typedef struct __tengu_parser_tag
 
 tguParser_t*			TGU_CreateParser(const tguReport_t	*report, const tguSymbTbl_t *build_in, tguSymbTbl_t		*import_models);
 void					TGU_DestroyParser(tguParser_t	*parser);
-
+void					TGU_ResetParser(tguParser_t	*parser);
 
 
 void					TGU_ParserPushBlock(tguParser_t	*parser);
 tguBlock_t*				TGU_ParserPopBlock(tguParser_t	*parser);
 
 
+typedef struct __tengu_parse_result_tag
+{
+		bool_t			has_error;
+		tguBlock_t		*block;
+}tguParseResult_t;
 
 
-tguBlock_t*				TGU_ParseCode(tguParser_t	*parser, const	wchar_t	*model_name, const wchar_t *code);
+tguParseResult_t				TGU_ParseCode(tguParser_t	*parser, const	wchar_t	*model_name, const wchar_t *code);
 
 
 AR_NAMESPACE_END

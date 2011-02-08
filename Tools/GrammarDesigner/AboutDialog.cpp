@@ -53,13 +53,14 @@ static CString __get_version_info()
 		}
 		
 FAILED_POINT:
-		return CString(TEXT("Version : 0.0.0.0"));
+		return CString(TEXT("Version : Unknow"));
 }
 
 CAboutDlg::CAboutDlg() : CDialog(CAboutDlg::IDD)
 {
 		m_name = TEXT("Grammar Designer");
 		m_ver = __get_version_info();
+		m_arsenal_ver = CString(_T("Arsenal Version : ")) + ARSpace::AR_Version();
 		m_copyright = TEXT("Copyright (C) 2009-2010 Solidus");
 		m_homepage = TEXT("http://code.google.com/p/arsenalcomp/");
 }
@@ -69,7 +70,9 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 		CDialog::DoDataExchange(pDX);
 
 		DDX_Text(pDX, IDC_APP_NAME, m_name);
-		DDX_Text(pDX, IDC_APP_VERSION, m_ver);
+		DDX_Text(pDX, IDC_APP_GMR_DESIGNER_VERSION, m_ver);
+		DDX_Text(pDX, IDC_APP_ARSENAL_VERSION, m_arsenal_ver);
+
 		DDX_Text(pDX, IDC_APP_COPYRIGHT, m_copyright);
 		DDX_Text(pDX, IDC_APP_HOMEPAGE, m_homepage);
 

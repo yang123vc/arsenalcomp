@@ -53,9 +53,12 @@
 #define IDC_BUTTON_TO_CODE              1005
 #define IDC_BUTTON_TO_STRING            1006
 #define IDC_APP_VERSION                 1007
+#define IDC_APP_ARSENAL_VERSION         1007
 #define IDC_APP_COPYRIGHT               1008
 #define IDC_APP_NAME                    1009
 #define IDC_APP_HOMEPAGE                1010
+#define IDC_APP_VERSION2                1011
+#define IDC_APP_GMR_DESIGNER_VERSION    1011
 #define ID_EDIT_UNDO32771               32771
 #define ID_EDIT_SELECTALL               32772
 #define ID_EDIT_SELECTALL32773          32773
