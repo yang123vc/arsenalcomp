@@ -144,42 +144,41 @@ void	TGU_UnInitParser()
 }
 
 
+void					TGU_ResetParser(tguParser_t	*parser)
+{
+		AR_ASSERT(parser != NULL);
+
+		parser->abs_tree	= NULL;
+		parser->has_error	= false;
+		parser->top_block = NULL;
+		parser->current_function = NULL;
+		parser->loop_level = 0;
+		parser->is_on_function_compound = false;
+		parser->model_name = NULL;
+		Parser_Clear(parser->parser_context);
+}
+
 tguParser_t*			TGU_CreateParser(const tguReport_t	*report, const tguSymbTbl_t *build_in, tguSymbTbl_t		*import_models)
 {
 		tguParser_t		*ret;
-		AR_ASSERT(report != NULL && build_in != NULL);
+		AR_ASSERT(report != NULL && build_in != NULL && import_models != NULL);
 
 		ret = AR_NEW0(tguParser_t);
 		
 		ret->report = *report;
 		ret->build_in = build_in;
 
-		if(import_models)
-		{
-				ret->is_import_models_owner = false;
-				ret->import_models = import_models;
-		}else
-		{
-				ret->import_models = TGU_CreateSymbTable();
-				ret->is_import_models_owner = true;
-		}
+		ret->import_models = import_models;
 
 		ret->match = __build_match();
 		ret->parser_context = __build_parser_context((void*)ret);
-
+		TGU_ResetParser(ret);
 		return ret;
 }
 
 void			TGU_DestroyParser(tguParser_t	*parser)
 {
 		AR_ASSERT(parser != NULL);
-		
-
-		if(parser->is_import_models_owner)
-		{
-				TGU_DestroySymbTable(parser->import_models);
-				parser->import_models = NULL;
-		}
 
 		__release_match(parser->match);
 		__release_parser_context(parser->parser_context);
@@ -209,6 +208,7 @@ static void __on_lex_error(tguParser_t	*parser)
 				n = 10;
 		}
 		AR_wcsncpy(tok_buf, Lex_GetNextInput(parser->match), n);
+		tok_buf[n] = L'\0';
 
 		Lex_MatchGetCoordinate(parser->match, &line, &col);
 
@@ -237,8 +237,9 @@ static void __on_lex_error(tguParser_t	*parser)
 
 
 
-tguBlock_t*				TGU_ParseCode(tguParser_t	*parser, const	wchar_t			*model_name, const wchar_t *code)
+tguParseResult_t				TGU_ParseCode(tguParser_t	*parser, const	wchar_t			*model_name, const wchar_t *code)
 {
+		tguParseResult_t		ret;
 		tguBlock_t		*result = NULL;
 		lexToken_t		token;
 		psrToken_t		psrtok;
@@ -249,17 +250,6 @@ tguBlock_t*				TGU_ParseCode(tguParser_t	*parser, const	wchar_t			*model_name, c
 		AR_ASSERT(parser->import_models != NULL);
 		
 		model_name = TGU_AllocString(model_name);
-		{
-				tguSymb_t		*block;
-				block	= TGU_FindSymb(parser->import_models, model_name, TGU_SYMB_BLOCK_T);
-
-				if(block)
-				{
-						AR_ASSERT(block->type == TGU_SYMB_BLOCK_T);
-						return block->block;
-				}
-		}
-
 
 		parser->model_name = model_name;
 
@@ -274,15 +264,8 @@ tguBlock_t*				TGU_ParseCode(tguParser_t	*parser, const	wchar_t			*model_name, c
 		parser->has_error = false;
 		parser->loop_level = 0;
 
-		{
-				tguSymb_t *symb = TGU_CreateSymb(TGU_SYMB_BLOCK_T, model_name);
-				symb->block = parser->abs_tree;
+		AR_ASSERT(TGU_FindSymb(parser->import_models,parser->model_name,  TGU_SYMB_BLOCK_T) != NULL);
 
-				if(!TGU_InsertToSymbTable(parser->import_models, symb))
-				{
-						AR_CHECK(false, L"%ls : %ls\r\n", L"Arsenal internal error", AR_FUNC_NAME);
-				}
-		}
 		
 
 		is_ok = true;
@@ -308,20 +291,18 @@ tguBlock_t*				TGU_ParseCode(tguParser_t	*parser, const	wchar_t			*model_name, c
 
 		};
 
+		ret.has_error = false;
+
 		if(!is_ok || parser->has_error)
 		{
-				if(!TGU_RemoveFromSymbTable(parser->import_models, model_name, TGU_SYMB_BLOCK_T))
-				{
-						AR_CHECK(false, L"%ls : %hs\r\n", L"Arsenal internal error", AR_FUNC_NAME);
-				}
-
-				result = NULL;
-		}else
-		{
-
+				ret.has_error = true;
 		}
 
-		return result;
+		ret.block = result;
+
+		TGU_ResetParser(parser);
+		
+		return ret;
 }
 
 

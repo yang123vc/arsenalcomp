@@ -117,9 +117,9 @@
 				node->params = NULL;
 			}
 			break;
-
-
 		}
+
+		AR_DEL(node);
 	}
 :}
 ;
@@ -293,6 +293,13 @@
 						TGU_ReportError(&parser->report, msg, tok->line);
 					}
 					term_str = TGU_AllocString(str == NULL ? L"" : str);
+					
+					if(str)
+					{
+						AR_DEL(str);
+						str = NULL;
+					}
+
 					return on_lex_node(parser, term_str, tok->term_val, tok->line, tok->col);
 				:}
 				;
@@ -415,12 +422,7 @@ program			:	translation_unit			%action	on_translation_unit
 					tguParser_t 	*parser = (tguParser_t*)ctx;
 					tguBlock_t	*result;
 					AR_ASSERT(count == 0 || count == 1);
-					result = parser->abs_tree;
-					parser->abs_tree = NULL;
-					parser->top_block = NULL;
-					parser->current_function = NULL;
-					AR_ASSERT(result != NULL);
-					return (psrNode_t*)result;
+					return NULL;
 
 				:}
 				;
@@ -440,8 +442,7 @@ element			:	declaration			%action	auto_return_null
 						AR_ASSERT(ns != NULL && count == 1);
 						if(ns[0] == NULL)
 						{
-								parser->has_error = true;
-								return NULL;
+							return NULL;
 						}
 						
 						AR_ASSERT(ns[0]->type == TGU_NODE_STMT_T && ns[0]->stmt != NULL);
@@ -488,8 +489,9 @@ element			:	declaration			%action	auto_return_null
 		parser->current_function = TGU_CreateFunction(func_name, parser->top_block);
 		parser->top_block = parser->current_function->block;
 		parser->current_function->is_variadic_param = params ? params->is_variadic : false;
-
-		for(i = 0; i < params->count; ++i)
+		
+		
+		for(i = 0; params != NULL && i < params->count; ++i)
 		{
 			tguSymb_t	*symb;
 			tguBlock_t	*block = parser->current_function->block;
@@ -542,6 +544,8 @@ element			:	declaration			%action	auto_return_null
 		{
 				TGU_InsertSymbToBlock(parser->top_block, symb);
 		}
+		stmt->compound_stmt.block = NULL;
+		TGU_DestroyStmt(stmt);
 	}
 :}
 ;
@@ -860,14 +864,28 @@ import_statement		:	"import"	STRING	";"		%action	on_import_statement
 						
 						if(src)
 						{
-							tguBlock_t	*import_block;
-							tguParser_t	*psr;
-							psr = TGU_CreateParser(&parser->report, parser->build_in, parser->import_models);
-							import_block = TGU_ParseCode(psr, src->model_name, src->code);
-							
-							if(!import_block)
+							if(TGU_FindSymb(parser->import_models, TGU_AllocString(src->model_name), TGU_SYMB_BLOCK_T) == NULL)
 							{
-								has_error = true;
+								tguSymb_t		*model_symb;
+								tguParseResult_t	parse_result;
+								tguParser_t	*psr;
+
+								model_symb = TGU_CreateSymb(TGU_SYMB_BLOCK_T, src->model_name);
+								TGU_InsertToSymbTable(parser->import_models, model_symb);
+
+								psr = TGU_CreateParser(&parser->report, parser->build_in, parser->import_models);
+								parse_result = TGU_ParseCode(psr, src->model_name, src->code);
+							
+								if(parse_result.has_error)
+								{
+									has_error = true;
+									TGU_RemoveFromSymbTable(parser->import_models, model_symb->name, model_symb->type);
+								}else
+								{
+									AR_ASSERT(parse_result.block);
+									model_symb->block = parse_result.block;
+								}
+								TGU_DestroyParser(psr);
 							}
 						}else
 						{
@@ -1019,8 +1037,7 @@ compound_element		:	statement		%action	on_compound_element
 						AR_ASSERT(ns != NULL && count == 1);
 						if(ns[0] == NULL)
 						{
-								parser->has_error = true;
-								return NULL;
+							return NULL;
 						}
 						
 						AR_ASSERT(ns[0]->type == TGU_NODE_STMT_T && ns[0]->stmt != NULL);

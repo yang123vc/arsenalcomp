@@ -9,6 +9,7 @@ class CAboutDlg : public CDialog
 private:
 		CString			m_name;
 		CString			m_ver;
+		CString			m_arsenal_ver;
 		CString			m_copyright;
 		CString			m_homepage;
 private:

@@ -374,7 +374,7 @@ void			TGU_DestroyFunction(tguFunc_t *func)
 tguSymb_t*		TGU_CreateSymb(tguSymbType_t t, const wchar_t *name)
 {
 		tguSymb_t *symb;
-		AR_ASSERT(name != NULL && AR_wcslen(name) > 0);
+		AR_ASSERT(name != NULL);
 
 		symb = AR_NEW0(tguSymb_t);
 		
@@ -453,6 +453,8 @@ void			TGU_DestroySymbTable(tguSymbTbl_t *tbl)
 						symb = next;
 				}
 		}
+
+		AR_DEL(tbl);
 }
 
 
