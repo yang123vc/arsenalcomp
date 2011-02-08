@@ -11,21 +11,21 @@ Arsenal_UnInit
 ;Common
 
 
-AR_global_ioctx
+;AR_global_ioctx
 
-AR_error				
-AR_printf
+;AR_error
+;AR_printf
 
-AR_error_ctx
-AR_printf_ctx
+;AR_error_ctx
+;AR_printf_ctx
 
-AR_check
+;AR_check
 
 
-AR_stricmp
-AR_strnicmp
-AR_wcsicmp
-AR_wcsnicmp
+;AR_stricmp
+;AR_strnicmp
+;AR_wcsicmp
+;AR_wcsnicmp
 
 
 AR_CreateString			
@@ -57,6 +57,12 @@ AR_escstr_to_str_buf
 AR_str_to_escstr_buf
 
 
+AR_CreateHeap
+AR_DestroyHeap
+AR_AllocFromHeap
+AR_ClearedAllocFromHeap
+AR_ReallocFromHeap
+AR_FreeToHeap
 
 
 
