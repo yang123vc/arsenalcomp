@@ -250,7 +250,7 @@ static const cfgLexPattern_t	__cfg_pattern[] =
 		{PREC,	L"\"%prec\"(?={key_lookahead})", false,0},
 
 		{ACTION, L"\"%action\"(?={skip_lexem}+)", false, 0},
-		{ACTION_INS, L"\\{((\\\\\\{|\\\\\\})|[^\\{\\}])*?\\}", false, 0},
+		{ACTION_INS, L"\\{:[^\\u0]*?:\\}", false, 0},
 
 		{LEXEME,	L"{lexeme}", false,0},
 		{NUMBER,	L"{number}", false,0},
@@ -970,24 +970,19 @@ static psrNode_t* AR_STDCALL __build_leaf(const psrToken_t *tok,  void *ctx)
 
 		}else if(tok->term_val == ACTION_INS)
 		{
-				wchar_t *buf, *d;
-				const wchar_t *s, *e;
-				AR_ASSERT(tok->str_cnt > 0);
-				buf = AR_NEWARR(wchar_t,tok->str_cnt + 1);
-				d = buf; 
-				s = tok->str; 
-				e = tok->str + tok->str_cnt;
-
-				while(s < e)
-				{
-						if(*s == L'\\' && (*(s+1) == L'{' || *(s+1) == L'}'))
-						{
-								++s;
-						}
-						*d++ = *s++;
-				}
+				wchar_t *buf;
 				
-				*d = L'\0';
+				AR_ASSERT(tok->str_cnt >= 4);
+				buf = AR_wcsndup(tok->str, tok->str_cnt);
+				
+				AR_ASSERT(buf[0] == L'{' && buf[1] == L':');
+				AR_ASSERT(buf[tok->str_cnt-1] == L'}' && buf[tok->str_cnt-2] == L':');
+
+				buf[1] = L' ';
+				buf[tok->str_cnt-2] = L' ';
+				
+				
+
 				node->lexeme.lexeme = buf;
 		}else if(tok->str_cnt > 0)
 		{
@@ -1607,6 +1602,7 @@ static psrNode_t*		AR_STDCALL __handle_pre_def(psrNode_t **nodes, size_t count, 
 		
 		if(len >= 2)
 		{
+				AR_ASSERT(ns[2]->lexeme.lexeme[0] == L'{' && ns[2]->lexeme.lexeme[len-1] == L'}');
 				res->predef.code = AR_wcsndup(ns[2]->lexeme.lexeme+1, len - 2);
 		}else
 		{

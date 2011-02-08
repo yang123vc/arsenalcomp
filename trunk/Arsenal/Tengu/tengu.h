@@ -40,10 +40,7 @@ typedef enum
 {
 		TGU_REPORT_MESSAGE_T,
 		TGU_REPORT_WARNING_T,
-		TGU_REPORT_ERROR_T,
-
-		TGU_REPORT_ERROR_LEX_T,
-		TGU_REPORT_ERROR_SYNTAX_T
+		TGU_REPORT_ERROR_T
 }tguReportType_t;
 
 
@@ -52,34 +49,11 @@ typedef struct __tengu_report_info_tag
 {
 		tguReportType_t			type;
 		
-		union{
-
-				struct{
-						const	wchar_t			*message;
-				}std_msg;
-
-				struct{
-						size_t					line;
-						const	wchar_t			*err_msg;
-				}								error;
-
-				struct	{
-						size_t					line;
-						const wchar_t			*msg;
-				}								warning;
-		
-				struct{
-						const	wchar_t			*msg;
-						const	lexToken_t		*tok;
-				
-				}								lex_error;
-		
-				struct{
-						const	wchar_t			*msg;
-						size_t					line;
-				}syntax_error;
-		};
+		const wchar_t			*message;
+		size_t					line;
+		lexToken_t				*token;	/*TGU_REPORT_ERROR_LEX_T*/
 }tguReportInfo_t;
+
 
 
 typedef void (AR_STDCALL *tguReportFunc_t)(const tguReportInfo_t *report, void *context);
@@ -97,8 +71,8 @@ typedef struct __tengu_report_tag
 		do{												\
 				tguReportInfo_t	info;					\
 				info.type = TGU_REPORT_ERROR_T;			\
-				info.error.line = (_line);				\
-				info.error.err_msg = (_msg);			\
+				info.line = (_line);				\
+				info.message = (_msg);			\
 				(_report)->report_func(&info, (_report)->report_ctx);	\
 		}while(0)
 
@@ -108,8 +82,8 @@ typedef struct __tengu_report_tag
 		do{												\
 				tguReportInfo_t	info;					\
 				info.type = TGU_REPORT_WARNING_T;		\
-				info.warning.line = (_line);			\
-				info.warning.msg = (_msg);				\
+				info.line = (_line);			\
+				info.message = (_msg);				\
 				(_report)->report_func(&info, (_report)->report_ctx);	\
 		}while(0)
 

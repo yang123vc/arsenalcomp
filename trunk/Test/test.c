@@ -88,7 +88,7 @@ void AR_Test()
 		//com_test();
 		//trie_tree_test();
 		//expr_test();
-		lex_test();
+		//lex_test();
 		//lex_test2();
 		//lex_test3();
 		//lex_test4();
@@ -149,7 +149,7 @@ void AR_Test()
 
 		//ds_test();
 
-		//Tengu_Test();
+		Tengu_Test();
 
 		//mem_test();
 

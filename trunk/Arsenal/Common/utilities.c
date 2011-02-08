@@ -266,6 +266,135 @@ wchar_t*		AR_str_to_escstr(const wchar_t *src)
 
 
 
+wchar_t*		AR_escstr_to_str_n(const wchar_t *src, size_t n, arEscStrErr_t *error)
+{
+		wchar_t	*res;
+		wchar_t *d;
+		size_t	i;
+		const wchar_t *s;
+		
+		AR_ASSERT(src != NULL);
+
+		res = AR_NEWARR0(wchar_t, n + 1);
+
+		d = res; s = src;
+		
+		i = 0; 
+		while(i < n && s[i] != L'\0')
+		{
+				if(s[i] == L'\\')
+				{
+						const wchar_t *next;
+						next = __transform_char(s + i + 1, d, error);
+						if(next == NULL) goto INVALID_POINT;
+						
+						i = next - s;
+						d++;
+				}else
+				{
+						*d++ = s[i++];
+				}
+		}
+
+		*d = L'\0';
+
+		if(error)
+		{
+				error->pos = NULL;
+				error->type = AR_ESCSTR_ERR_OK;
+				error->value = 0;
+		}
+
+		return res;
+
+INVALID_POINT:
+		AR_DEL(res);
+		return NULL;		
+}
+
+
+
+wchar_t*		AR_str_to_escstr_n(const wchar_t *src, size_t n)
+{
+		wchar_t	*res;
+		wchar_t *d;
+		const wchar_t *s;
+		size_t i;
+		
+		if(src == NULL)return NULL;
+
+		res = AR_NEWARR0(wchar_t, (n + 5) * 5 + 1);
+
+		d = res; s = src;
+		i = 0;
+		while(i < n && s[i] != L'\0')
+		{
+				switch(s[i])
+				{
+				case L'\b': 
+						*d++ = L'\\';
+						*d++ = L'b';
+						break;
+				case L'\f':
+						*d++ = L'\\';
+						*d++ = L'f';
+						break;
+				case L'\n':
+						*d++ = L'\\';
+						*d++ = L'n';
+						break;
+				case L'\r':
+						*d++ = L'\\';
+						*d++ = L'r';
+						break;
+				case L'\t':
+						*d++ = L'\\';
+						*d++ = L't';
+						break;
+				case L'\v':
+						*d++ = L'\\';
+						*d++ = L'v';
+						break;
+				case L'\a':
+						*d++ = L'\\';
+						*d++ = L'a';
+						break;
+				case L'\\': 
+				case L'\"':
+						*d++ = L'\\';
+						*d++ = s[i];
+						break;
+				default:
+				{
+						if(AR_iswprint(s[i]))
+						{
+								*d++ = s[i];
+						}else
+						{
+								int_t l = 0;
+								wchar_t buf[64];
+								l = AR_u64tow_buf(buf, AR_NELEMS(buf), (uint_64_t)(s[i]), 16);
+								AR_ASSERT(l > 0);
+								*d++ = L'\\';
+								*d++ = L'x';
+								for(l = 0; buf[l]; ++l) *d++ = buf[l];
+						}
+				}
+				}
+
+				i++;
+		}
+
+		*d = L'\0';
+
+		return res;
+}
+
+
+
+
+
+
 
 int_t 		AR_escstr_to_str_buf(wchar_t *dest, size_t len, const wchar_t *src, arEscStrErr_t *error)
 {
@@ -330,7 +459,70 @@ int_t 		AR_str_to_escstr_buf(wchar_t *dest, size_t len, const wchar_t *src)
 }
 
 
+int_t 			AR_escstr_to_str_buf_n(wchar_t *dest, size_t len, const wchar_t *src, size_t n,arEscStrErr_t *error)
+{
+		size_t ret;
+		wchar_t *str;
+		AR_ASSERT(src != NULL);
 
+		str = AR_escstr_to_str_n(src, n, error);
+		
+		if(str == NULL)return -1;
+
+		ret = AR_wcslen(str);
+
+		if(dest == NULL)
+		{
+				AR_DEL(str);
+				return (int_t)ret + 1;
+		}else
+		{
+				if(len <= ret) 
+				{ 
+						AR_DEL(str); 
+						error->type = AR_ESCSTR_ERR_BUFFER; 
+						return -1;
+				}else
+				{
+						AR_wcsncpy(dest, str, ret);
+						dest[ret] = L'\0';
+						AR_DEL(str);
+						return (int_t)ret + 1;
+				}
+		}
+}
+
+int_t 			AR_str_to_escstr_buf_n(wchar_t *dest, size_t len, const wchar_t *src, size_t n)
+{
+		size_t ret;
+		wchar_t *str;
+		AR_ASSERT(src != NULL);
+
+		str = AR_str_to_escstr_n(src, n);
+		
+		if(str == NULL)return -1;
+
+		ret = AR_wcslen(str);
+
+		if(dest == NULL)
+		{
+				AR_DEL(str);
+				return (int_t)ret + 1;
+		}else
+		{
+				if(len <= ret) 
+				{ 
+						AR_DEL(str); 
+						return -1;
+				}
+
+				AR_wcsncpy(dest, str, ret);
+				dest[ret] = L'\0';
+
+				AR_DEL(str);
+				return (int_t)ret + 1;
+		}
+}
 
 
 AR_NAMESPACE_END

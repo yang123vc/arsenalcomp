@@ -541,6 +541,7 @@ static void __handle_shift(psrContext_t *parser_context, size_t shift_to, const 
 
 		Parser_PushStack(parser_context->state_stack, shift_to);
 
+		/*如果用户指定了参数tok的对应操作函数，则调用，将词法符号转换为节点，否则此符号对应节点为NULL*/
 		if(term->leaf_f)
 		{
 				new_node = term->leaf_f(tok, parser_context->ctx);

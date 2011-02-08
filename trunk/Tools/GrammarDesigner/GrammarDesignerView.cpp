@@ -793,8 +793,7 @@ HRESULT CGrammarDesignerView::QueryAcceptData(LPDATAOBJECT lpdataobj, CLIPFORMAT
 
 LRESULT CGrammarDesignerView::OnBuildTagCompleted(WPARAM wp, LPARAM lp)
 {
-		ASSERT(wp != NULL);
-
+		
 		ARSpace::cfgConfig_t *cfg = (ARSpace::cfgConfig_t*)wp;
 
 		this->GetDocument()->OnTagBuildCompleted(cfg);
