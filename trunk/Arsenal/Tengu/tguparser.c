@@ -155,14 +155,14 @@ void					TGU_ResetParser(tguParser_t	*parser)
 		parser->loop_level = 0;
 		parser->is_on_function_compound = false;
 		parser->on_redef_function = false;
-		parser->model_name = NULL;
+		parser->module_name = NULL;
 		Parser_Clear(parser->parser_context);
 }
 
 tguParser_t*			TGU_CreateParser(const tguReport_t	*report, tguParserExtern_t *ext)
 {
 		tguParser_t		*ret;
-		AR_ASSERT(report != NULL && ext && ext->build_in != NULL && ext->import_models != NULL && ext->global_constant);
+		AR_ASSERT(report != NULL && ext && ext->build_in != NULL && ext->import_modules != NULL && ext->global_constant);
 
 		ret = AR_NEW0(tguParser_t);
 		
@@ -236,7 +236,7 @@ static void __on_lex_error(tguParser_t	*parser)
 
 
 
-tguParseResult_t				TGU_ParseCode(tguParser_t	*parser, const	wchar_t			*model_name, const wchar_t *code)
+tguParseResult_t				TGU_ParseCode(tguParser_t	*parser, const	wchar_t			*module_name, const wchar_t *code)
 {
 		tguParseResult_t		ret;
 		tguBlock_t		*result = NULL;
@@ -244,13 +244,13 @@ tguParseResult_t				TGU_ParseCode(tguParser_t	*parser, const	wchar_t			*model_na
 		psrToken_t		psrtok;
 		
 		bool_t			is_ok;
-		AR_ASSERT(parser != NULL  && model_name &&  AR_wcslen(model_name) > 0 && code != NULL);
+		AR_ASSERT(parser != NULL  && module_name &&  AR_wcslen(module_name) > 0 && code != NULL);
 
-		AR_ASSERT(parser->ext->import_models != NULL);
+		AR_ASSERT(parser->ext->import_modules != NULL);
 		
-		model_name = TGU_AllocString(model_name);
+		module_name = TGU_AllocString(module_name);
 
-		parser->model_name = model_name;
+		parser->module_name = module_name;
 
 		Lex_ResetInput(parser->match, code);
 		Parser_Clear(parser->parser_context);
@@ -263,7 +263,7 @@ tguParseResult_t				TGU_ParseCode(tguParser_t	*parser, const	wchar_t			*model_na
 		parser->has_error = false;
 		parser->loop_level = 0;
 
-		AR_ASSERT(TGU_FindSymb(parser->ext->import_models,parser->model_name,  TGU_SYMB_BLOCK_T) != NULL);
+		AR_ASSERT(TGU_FindSymb(parser->ext->import_modules,parser->module_name,  TGU_SYMB_BLOCK_T) != NULL);
 
 		
 

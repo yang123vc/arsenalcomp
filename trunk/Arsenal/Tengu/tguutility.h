@@ -47,7 +47,7 @@ bool_t			TGU_HasString(const wchar_t *name);
 typedef struct __tengu_sources_tag
 {
 		const	wchar_t			*path;
-		const	wchar_t			*model_name;
+		const	wchar_t			*module_name;
 		const	wchar_t			*code;
 }tguSrc_t;
 

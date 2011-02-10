@@ -29,15 +29,23 @@ void	TGU_UnInitParser();
 
 
 
-/***************************************************************分析器**************************************************************************/
 
+/**********************************************************分析器用到的结构*****************************************************************************************/
 
 typedef struct __tengu_parser_external_tag
 {
 		tguSymbTbl_t			*build_in;
-		tguSymbTbl_t			*import_models;
+		tguSymbTbl_t			*import_modules;
 		tguSymbTbl_t			*global_constant;
 }tguParserExtern_t;
+
+
+
+
+
+/***************************************************************分析器**************************************************************************/
+
+
 
 typedef struct __tengu_parser_tag
 {
@@ -59,7 +67,7 @@ typedef struct __tengu_parser_tag
 		bool_t					is_on_function_compound;
 		bool_t					on_redef_function;
 		/*******************************************/
-		const	wchar_t			*model_name;
+		const	wchar_t			*module_name;
 }tguParser_t;
 
 
@@ -80,7 +88,7 @@ typedef struct __tengu_parse_result_tag
 }tguParseResult_t;
 
 
-tguParseResult_t				TGU_ParseCode(tguParser_t	*parser, const	wchar_t	*model_name, const wchar_t *code);
+tguParseResult_t				TGU_ParseCode(tguParser_t	*parser, const	wchar_t	*module_name, const wchar_t *code);
 
 
 AR_NAMESPACE_END

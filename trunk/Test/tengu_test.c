@@ -34,6 +34,12 @@ static tguReport_t		__g_report =
 };
 
 
+static int_t	AR_STDCALL tgu_print (tguMachine_t *vm)
+{
+		AR_ASSERT(vm != NULL);
+		return 0;
+}
+
 void test1()
 {
 		tguParseResult_t		parse_result;
@@ -44,8 +50,9 @@ void test1()
 
 		ext.global_constant		= TGU_CreateSymbTable();
 		ext.build_in			= TGU_CreateSymbTable();
-		ext.import_models		= TGU_CreateSymbTable();
+		ext.import_modules		= TGU_CreateSymbTable();
 
+		TGU_InstallCFunction(ext.build_in, L"print", tgu_print);
 
 		parser = TGU_CreateParser(&__g_report, &ext); 
 		
@@ -53,15 +60,15 @@ void test1()
 
 		AR_printf(L"%ls\r\n", code);
 
-		tguSymb_t		*model_symb = TGU_CreateSymb(TGU_SYMB_BLOCK_T, L"tengu_input");
-		TGU_InsertToSymbTable(ext.import_models, model_symb);
+		tguSymb_t		*import_modules_symb = TGU_CreateSymb(TGU_SYMB_BLOCK_T, L"tengu_input");
+		TGU_InsertToSymbTable(ext.import_modules, import_modules_symb);
 
 		parse_result = TGU_ParseCode(parser, L"tengu_input", code);
-		model_symb->block = parse_result.block;
+		import_modules_symb->block = parse_result.block;
 
 		if(parse_result.has_error)
 		{
-				TGU_RemoveFromSymbTable(ext.import_models, model_symb->name, model_symb->type);
+				TGU_RemoveFromSymbTable(ext.import_modules, import_modules_symb->name, import_modules_symb->type);
 				AR_printf(L"%ls\r\n", L"parse failed\r\n");
 		}else
 		{
@@ -80,7 +87,7 @@ void test1()
 		
 		TGU_DestroyParser(parser);
 
-		TGU_DestroySymbTable(ext.import_models);
+		TGU_DestroySymbTable(ext.import_modules);
 		TGU_DestroySymbTable(ext.build_in);
 		TGU_DestroySymbTable(ext.global_constant);
 }

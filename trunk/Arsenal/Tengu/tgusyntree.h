@@ -78,7 +78,7 @@ enum{
 
 typedef	struct __tengu_lexinfo_tag
 {
-		const wchar_t	*model_name;
+		const wchar_t	*module_name;
 		size_t			linenum;
 		size_t			col;
 }tguLexInfo_t;
@@ -266,7 +266,9 @@ typedef enum
 		TGU_STT_WHILE,
 		TGU_STT_DO,
 		TGU_STT_FOR,
-		TGU_STT_RETURN
+		TGU_STT_RETURN,
+
+		TGU_STT_IMPORT,
 }tguStmtType_t;
 
 
@@ -305,7 +307,10 @@ typedef struct __tengu_return_statement_tag
 		tguExpr_t		*expr;
 }tguRetrunStmt_t;
 
-
+typedef struct __tengu_import_statement_tag
+{
+		const wchar_t	*module_name;
+}tguImportStmt_t;
 
 
 struct __tengu_statement_tag
@@ -320,6 +325,7 @@ struct __tengu_statement_tag
 				tguWhileStmt_t			while_stmt;		/*TGU_STT_WHILE, TGU_STT_DO*/
 				tguForStmt_t			for_stmt;		/*TGU_STT_FOR*/
 				tguRetrunStmt_t			return_stmt;	/*TGU_STT_RETURN*/
+				tguImportStmt_t			import_stmt;
 
 		};
 };
@@ -459,6 +465,11 @@ tguSymb_t*		TGU_InstallNull(tguSymbTbl_t *tbl);
 tguSymb_t*		TGU_InstallBoolean(tguSymbTbl_t *tbl, bool_t boolean);
 tguSymb_t*		TGU_InstallFloat(tguSymbTbl_t *tbl, double float_num);
 tguSymb_t*		TGU_InstallString(tguSymbTbl_t *tbl, const wchar_t *str);
+
+tguSymb_t*		TGU_InstallFunction(tguSymbTbl_t *tbl,	const wchar_t *name,		tguFunc_t			*func);
+tguSymb_t*		TGU_InstallCFunction(tguSymbTbl_t *tbl, const wchar_t *name,		tguCFunction_t		c_func);
+tguSymb_t*		TGU_InstallBlock(tguSymbTbl_t	*tbl,	const wchar_t *name,		tguBlock_t			*block);
+
 
 
 /*
