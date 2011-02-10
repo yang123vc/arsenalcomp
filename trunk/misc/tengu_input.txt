@@ -1,4 +1,77 @@
 ﻿
+
+
+var func_redef_test()
+{
+		
+}
+
+var func_redef_test()
+{
+		
+}
+
+
+
+
+
+import ;
+
+
+tengu_test_model = 33;
+
+
+/*
+var test()
+{
+
+}
+
+var test;
+
+test = 3;
+*/
+
+/*
+var print()
+{
+		var print = 3;
+}
+
+
+var print2()
+{
+		print2 = 3;
+}
+*/
+
+
+//var x = 3.14159265;
+
+//++x = 3;
+
+//x++ = 3;
+
+//3++;
+
+//3["abc"]= 33;
+
+//x.abc = 4;
+
+
+//x = (3 + 4 ) * 5;
+
+/*
+
+
+
+
+*/
+
+
+
+/*
+
 var test()
 {
 	var tbl = {};
@@ -10,6 +83,7 @@ var test()
 	}while(i < 1000);
 	
 }
+
 
 
 var insertion_sort(arr)
@@ -78,4 +152,7 @@ var g_tbl = { a = b = "abc" };
 
 var str = "abc
 ";
+
+
+*/
 

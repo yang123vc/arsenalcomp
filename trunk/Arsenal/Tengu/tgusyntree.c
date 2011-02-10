@@ -638,11 +638,11 @@ tguSymb_t*		TGU_InstallString(tguSymbTbl_t *tbl, const wchar_t *str)
 		name = TGU_AllocString(str);
 		
 		
-		symb = TGU_FindSymb(tbl, name, TGU_SYMB_FLOAT_T);
+		symb = TGU_FindSymb(tbl, name, TGU_SYMB_STRING_T);
 		
 		if(symb == NULL)
 		{
-				symb = TGU_CreateSymb(TGU_SYMB_FLOAT_T, name);
+				symb = TGU_CreateSymb(TGU_SYMB_STRING_T, name);
 				symb->constant.string = name;
 				TGU_InsertToSymbTable(tbl, symb);
 		}

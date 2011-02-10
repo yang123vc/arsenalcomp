@@ -90,7 +90,7 @@ const wchar_t*  TGU_AllocStringFloat(double num)
 {
 		const wchar_t *res;
 		AR_LockSpinLock(&__g_tbl_lock);
-		res = AR_GetStringFloat(__g_tbl, num);
+		res = AR_GetStringFloat(__g_tbl, num, 500);
 		AR_UnLockSpinLock(&__g_tbl_lock);
 		return res;
 }

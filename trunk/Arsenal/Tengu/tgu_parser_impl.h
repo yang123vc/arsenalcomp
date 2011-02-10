@@ -161,6 +161,10 @@ token_operation
 
  
 
+
+/*
+handle_function
+*/
  
 	
 	static void	start_function(tguParser_t *parser, const wchar_t *func_name, const tguParams_t	*params, const tguLexInfo_t *lex_info)
@@ -174,18 +178,23 @@ token_operation
 		parser->is_on_function_compound = true;
 		if(	TGU_FindSymbFromBlock(parser->abs_tree, func_name, TGU_SYMB_FUNC_T, true) != NULL 
 		|| 	TGU_FindSymbFromBlock(parser->abs_tree, func_name, TGU_SYMB_CFUNC_T, true) != NULL
-		||	TGU_FindSymb((tguSymbTbl_t*)parser->build_in, func_name, TGU_SYMB_FUNC_T) != NULL
-		||	TGU_FindSymb((tguSymbTbl_t*)parser->build_in, func_name, TGU_SYMB_CFUNC_T) != NULL
+		||	TGU_FindSymb((tguSymbTbl_t*)parser->ext->build_in, func_name, TGU_SYMB_FUNC_T) != NULL
+		||	TGU_FindSymb((tguSymbTbl_t*)parser->ext->build_in, func_name, TGU_SYMB_CFUNC_T) != NULL
 		)
 		{
 			wchar_t	msg[1024];
 			parser->has_error = true;
-			AR_swprintf(msg, 1024, L"error : function '%ls' : redefinition\r\n",  func_name);
+			parser->on_redef_function = true;
+			AR_swprintf(msg, 1024, L"error : function '%ls' : redefinition",  func_name);
 			TGU_ReportError(&parser->report, msg, lex_info->linenum);
-
+		}else
+		{
+			tguSymb_t	*symb = TGU_CreateSymb(TGU_SYMB_FUNC_T, func_name);
+			symb->function = NULL;
+			TGU_InsertSymbToBlock(parser->abs_tree, symb);
 		}
 
-		parser->current_function = TGU_CreateFunction(func_name, parser->top_block);
+		parser->current_function = TGU_CreateFunction(func_name, parser->abs_tree);
 		parser->top_block = parser->current_function->block;
 		parser->current_function->is_variadic_param = params ? params->is_variadic : false;
 		
@@ -204,7 +213,7 @@ token_operation
 			{
 				wchar_t	msg[1024];
 				parser->has_error = true;
-				AR_swprintf(msg, 1024, L"error : '%ls' : redefinition\r\n",  name);
+				AR_swprintf(msg, 1024, L"error : '%ls' : redefinition",  name);
 				TGU_ReportError(&parser->report, msg, lex_info.linenum);
 			}else
 			{
@@ -220,47 +229,58 @@ token_operation
 
 	static void	close_function(tguParser_t *parser, tguStmt_t	*stmt)
 	{
-		tguSymb_t	*symb;
 		tguFunc_t	*func;
+		bool_t		is_redef_func = false;
 		AR_ASSERT(parser != NULL);
 		AR_ASSERT(parser->top_block== parser->abs_tree && parser->current_function != NULL);
 		AR_ASSERT(stmt->stmt_type == TGU_STT_COMPOUND && stmt->compound_stmt.block == parser->current_function->block);
 		func = parser->current_function;
 		parser->current_function = NULL;
-		symb = TGU_CreateSymb(TGU_SYMB_FUNC_T, func->name);
-		symb->function = func;
-		
-		
 		parser->is_on_function_compound = false;
-		if(	TGU_FindSymbFromBlock(parser->abs_tree, func->name, TGU_SYMB_FUNC_T, true) != NULL 
-		|| 	TGU_FindSymbFromBlock(parser->abs_tree, func->name, TGU_SYMB_CFUNC_T, true) != NULL
-		||	TGU_FindSymb((tguSymbTbl_t*)parser->build_in, func->name, TGU_SYMB_FUNC_T) != NULL
-		||	TGU_FindSymb((tguSymbTbl_t*)parser->build_in, func->name, TGU_SYMB_CFUNC_T) != NULL
-		)
-		{
-				TGU_DestroySymb(symb);
-		}else
-		{
-				TGU_InsertSymbToBlock(parser->top_block, symb);
-		}
+		is_redef_func = parser->on_redef_function;
+		parser->on_redef_function = false;
 		stmt->compound_stmt.block = NULL;
 		TGU_DestroyStmt(stmt);
+		if(is_redef_func)
+		{
+			TGU_DestroyFunction(func);
+			func = NULL;
+		}else
+		{
+			tguSymb_t	*symb = NULL;
+			symb = TGU_FindSymbFromBlock(parser->abs_tree, func->name, TGU_SYMB_FUNC_T, true);
+			AR_ASSERT(symb != NULL && symb->function == NULL);
+			symb->function = func;
+		}
+		
+			
 	}
  
 
+
+/*
+handle_init_declarator
+*/
  
 	
 	static void	handle_symb_from_expression(tguParser_t 	*parser, const tguToken_t *tok, tguExpr_t *expr)
 	{
 			tguSymb_t	*symb;
+			tguSymbType_t	t;
 			AR_ASSERT(parser != NULL && tok != NULL);
-			symb = TGU_FindSymbFromBlock(parser->top_block, tok->token, TGU_SYMB_VAR_T, true);
+			
+			for(t = TGU_SYMB_VAR_T, symb = NULL; t <= TGU_SYMB_BLOCK_T && symb == NULL; ++t)
+			{
+				symb = TGU_FindSymbFromBlock(parser->top_block, tok->token, t, true);
+			}
+
+
 			
 			if(symb)
 			{
 				wchar_t	msg[1024];
 				parser->has_error = true;
-				AR_swprintf(msg, 1024, L"error : '%ls' : redefinition\r\n",  tok->token);
+				AR_swprintf(msg, 1024, L"error : '%ls' : redefinition",  tok->token);
 				TGU_ReportError(&parser->report, msg, tok->lex_info.linenum);
 			}else
 			{
@@ -404,7 +424,7 @@ token_operation
 				if(err_msg)
 				{
 					parser->has_error = true;
-					AR_swprintf(msg, 512, L"%ls\r\n", err_msg);
+					AR_swprintf(msg, 512, L"%ls", err_msg);
 					TGU_ReportError(&parser->report, msg, ret->lex_info.linenum);
 				}
 			}
@@ -429,7 +449,7 @@ token_operation
 				if(!addr->is_lvalue)
 				{
 					parser->has_error = true;
-					AR_swprintf(msg, 512, L"%ls\r\n", L"error  : left operand must be l-value");
+					AR_swprintf(msg, 512, L"%ls", L"error  : left operand must be l-value");
 					TGU_ReportError(&parser->report, msg, addr->lex_info.linenum);
 				}else
 				{
@@ -548,7 +568,7 @@ token_operation
 			if(op_str != NULL && !ret->is_lvalue)
 			{
 				parser->has_error = true;
-				AR_swprintf(msg, 512, L"error : '%ls' needs l-value\r\n", op_str);
+				AR_swprintf(msg, 512, L"error : '%ls' needs l-value", op_str);
 				TGU_ReportError(&parser->report, msg, lex_info->linenum);
 
 			}
@@ -570,7 +590,7 @@ token_operation
 			if(expr->is_constant)
 			{
 				parser->has_error = true;
-				AR_swprintf(msg, 512, L"%ls\r\n", L"error : invalid table action");
+				AR_swprintf(msg, 512, L"%ls", L"error : invalid table action");
 				TGU_ReportError(&parser->report, msg, lex_info->linenum);
 			}
 		}
@@ -585,43 +605,14 @@ token_operation
 		return ret;
 	}
 
-
-	static tguExpr_t*		make_identifier_expression(tguParser_t	*parser, tguToken_t *token)
-	{
-			tguExpr_t	*expr;
-			tguSymb_t	*symb;
-			tguSymbType_t	t;
-			AR_ASSERT(parser != NULL && token != NULL);
-			AR_ASSERT(parser->top_block != NULL);
-			
-			
-			for(t = TGU_SYMB_VAR_T, symb = NULL; t <= TGU_SYMB_BLOCK_T && symb == NULL; ++t)
-			{
-				symb = TGU_FindSymbFromBlock(parser->top_block, token->token, t, false);
-			}
-				
-			if(symb == NULL)
-			{
-				wchar_t msg[512];
-				expr = TGU_CreateExpr(TGU_ET_UNDEF_NAME);
-				expr->name = token->token;
-				parser->has_error = true;
-				AR_swprintf(msg, 512, L"error : '%ls' : undeclared identifier", token->token);
-				TGU_ReportError(&parser->report, msg, token->lex_info.linenum);
-				
-			}else
-			{
-				expr = TGU_CreateExpr(TGU_ET_SYMBOL);
-				expr->symb = symb;
-			}
-			
-			expr->is_lvalue = true;
-			expr->is_constant = false;
-			expr->lex_info = token->lex_info;
-			return expr;
-	}
+	
+ 
 
 
+/*
+handle_constant
+*/
+ 
 	static tguExpr_t*		make_constant_expression(tguParser_t	*parser, tguToken_t *token)
 	{
 			tguSymb_t		*symb;
@@ -631,7 +622,7 @@ token_operation
 			
 			expr = NULL;
 			symb = NULL;
-			symb_tbl = TGU_GetBlockSymbolTable(parser->abs_tree);
+			symb_tbl = parser->ext->global_constant;
 			AR_ASSERT(symb_tbl != NULL);
 
 			switch(token->term_val)
@@ -663,7 +654,7 @@ token_operation
 			}
 				break;
 			case TOK_STRING:
-				TGU_InstallString(symb_tbl, token->token);
+				symb = TGU_InstallString(symb_tbl, token->token);
 				break;
 			}
 			
@@ -674,6 +665,74 @@ token_operation
 			expr->symb = symb;
 			return expr;
 	}
+
+ 
+
+
+/*
+handle_identifier
+*/
+ 
+	
+	static tguExpr_t*		make_identifier_expression(tguParser_t	*parser, tguToken_t *token)
+	{
+			tguExpr_t	*expr;
+			tguSymb_t	*symb;
+			tguSymbType_t	t;
+			AR_ASSERT(parser != NULL && token != NULL);
+			AR_ASSERT(parser->top_block != NULL);
+			
+			
+			for(t = TGU_SYMB_VAR_T, symb = NULL; t <= TGU_SYMB_BLOCK_T && symb == NULL; ++t)
+			{
+				symb = TGU_FindSymbFromBlock(parser->top_block, token->token, t, false);
+			}
+
+			if(symb == NULL)
+			{
+					symb = TGU_FindSymb(parser->ext->import_models, token->token, TGU_SYMB_BLOCK_T);
+			}
+
+
+			if(symb == NULL)
+			{
+				for(t = TGU_SYMB_VAR_T, symb = NULL; t <= TGU_SYMB_BLOCK_T && symb == NULL; ++t)
+				{
+						symb = TGU_FindSymb((tguSymbTbl_t*)parser->ext->build_in, token->token, t);
+				}
+			}
+				
+			if(symb == NULL)
+			{
+				wchar_t msg[512];
+				expr = TGU_CreateExpr(TGU_ET_UNDEF_NAME);
+				expr->name = token->token;
+				parser->has_error = true;
+				AR_swprintf(msg, 512, L"error : '%ls' : undeclared identifier", token->token);
+				TGU_ReportError(&parser->report, msg, token->lex_info.linenum);
+				
+			}else
+			{
+				expr = TGU_CreateExpr(TGU_ET_SYMBOL);
+				expr->symb = symb;
+			}
+			
+			if(symb && symb->type == TGU_SYMB_VAR_T)
+			{
+				expr->is_lvalue = true;
+			}else
+			{
+					expr->is_lvalue  = false;
+			}
+
+			expr->is_constant = false;
+			expr->lex_info = token->lex_info;
+			return expr;
+	}
+
+
+
+
  
 
  
@@ -1317,7 +1376,7 @@ static psrNode_t* AR_STDCALL on_string_leaf_handler(const psrToken_t *tok,void *
 					{
 						wchar_t	msg[1024];
 						parser->has_error = true;
-						AR_swprintf(msg, 1024, L"error : character escape sequence\r\n");
+						AR_swprintf(msg, 1024, L"error : character escape sequence");
 						TGU_ReportError(&parser->report, msg, tok->line);
 					}
 					term_str = TGU_AllocString(str == NULL ? L"" : str);
@@ -1341,6 +1400,9 @@ static psrNode_t* AR_STDCALL on_translation_unit(psrNode_t **nodes, size_t count
 					tguParser_t 	*parser = (tguParser_t*)ctx;
 					tguBlock_t	*result;
 					AR_ASSERT(count == 0 || count == 1);
+
+					AR_UNUSED(parser);
+					AR_UNUSED(result);
 					return NULL;
 
 				 }
@@ -1411,7 +1473,6 @@ static psrNode_t* AR_STDCALL on_function_signature(psrNode_t **nodes, size_t cou
 						if(ns[3] == NULL)
 						{
 							params = NULL;
-							parser->has_error = true;
 						}else
 						{
 							params = ns[3]->params;
@@ -1696,26 +1757,25 @@ static psrNode_t* AR_STDCALL on_import_statement(psrNode_t **nodes, size_t count
 						
 						if(src)
 						{
-							if(TGU_FindSymb(parser->import_models, TGU_AllocString(src->model_name), TGU_SYMB_BLOCK_T) == NULL)
+							if(TGU_FindSymb(parser->ext->import_models, TGU_AllocString(src->model_name), TGU_SYMB_BLOCK_T) == NULL)
 							{
 								tguSymb_t		*model_symb;
 								tguParseResult_t	parse_result;
 								tguParser_t	*psr;
 
 								model_symb = TGU_CreateSymb(TGU_SYMB_BLOCK_T, src->model_name);
-								TGU_InsertToSymbTable(parser->import_models, model_symb);
+								TGU_InsertToSymbTable(parser->ext->import_models, model_symb);
 
-								psr = TGU_CreateParser(&parser->report, parser->build_in, parser->import_models);
+								psr = TGU_CreateParser(&parser->report, parser->ext);
 								parse_result = TGU_ParseCode(psr, src->model_name, src->code);
-							
+								model_symb->block = parse_result.block;
 								if(parse_result.has_error)
 								{
 									has_error = true;
-									TGU_RemoveFromSymbTable(parser->import_models, model_symb->name, model_symb->type);
+									TGU_RemoveFromSymbTable(parser->ext->import_models, model_symb->name, model_symb->type);
 								}else
 								{
 									AR_ASSERT(parse_result.block);
-									model_symb->block = parse_result.block;
 								}
 								TGU_DestroyParser(psr);
 							}
@@ -1735,7 +1795,7 @@ static psrNode_t* AR_STDCALL on_import_statement(psrNode_t **nodes, size_t count
 					{
 						wchar_t msg[1024];
 						parser->has_error = true;
-						AR_swprintf(msg, 1024, L"import '%ls' failed\r\n", path == NULL ? L"" : path);
+						AR_swprintf(msg, 1024, L"import '%ls' failed", path == NULL ? L"" : path);
 						TGU_ReportError(&parser->report, msg, lex_info->linenum);
 
 					}

@@ -154,21 +154,20 @@ void					TGU_ResetParser(tguParser_t	*parser)
 		parser->current_function = NULL;
 		parser->loop_level = 0;
 		parser->is_on_function_compound = false;
+		parser->on_redef_function = false;
 		parser->model_name = NULL;
 		Parser_Clear(parser->parser_context);
 }
 
-tguParser_t*			TGU_CreateParser(const tguReport_t	*report, const tguSymbTbl_t *build_in, tguSymbTbl_t		*import_models)
+tguParser_t*			TGU_CreateParser(const tguReport_t	*report, tguParserExtern_t *ext)
 {
 		tguParser_t		*ret;
-		AR_ASSERT(report != NULL && build_in != NULL && import_models != NULL);
+		AR_ASSERT(report != NULL && ext && ext->build_in != NULL && ext->import_models != NULL && ext->global_constant);
 
 		ret = AR_NEW0(tguParser_t);
 		
 		ret->report = *report;
-		ret->build_in = build_in;
-
-		ret->import_models = import_models;
+		ret->ext = ext;
 
 		ret->match = __build_match();
 		ret->parser_context = __build_parser_context((void*)ret);
@@ -247,7 +246,7 @@ tguParseResult_t				TGU_ParseCode(tguParser_t	*parser, const	wchar_t			*model_na
 		bool_t			is_ok;
 		AR_ASSERT(parser != NULL  && model_name &&  AR_wcslen(model_name) > 0 && code != NULL);
 
-		AR_ASSERT(parser->import_models != NULL);
+		AR_ASSERT(parser->ext->import_models != NULL);
 		
 		model_name = TGU_AllocString(model_name);
 
@@ -264,7 +263,7 @@ tguParseResult_t				TGU_ParseCode(tguParser_t	*parser, const	wchar_t			*model_na
 		parser->has_error = false;
 		parser->loop_level = 0;
 
-		AR_ASSERT(TGU_FindSymb(parser->import_models,parser->model_name,  TGU_SYMB_BLOCK_T) != NULL);
+		AR_ASSERT(TGU_FindSymb(parser->ext->import_models,parser->model_name,  TGU_SYMB_BLOCK_T) != NULL);
 
 		
 
@@ -325,7 +324,6 @@ tguBlock_t*			TGU_ParserPopBlock(tguParser_t	*parser)
 		parser->top_block = block->parent;
 		return block;
 }
-
 
 
 AR_NAMESPACE_END

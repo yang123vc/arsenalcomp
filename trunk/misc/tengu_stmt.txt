@@ -1,5 +1,6 @@
 ﻿
-//import "system.tgu";
+import "system.tgu";
+
 
 
 var print(a)
@@ -11,29 +12,29 @@ var print(a)
 
 var function()
 {
-var print;
-
-var test, i;
+		var test, i, print;
 
 
-test = 
-{
-		print(33), 
-		3 * 4, 
-		5 * 8, 
-		
+		test = 
 		{
-			"a",
-			"b",
-			"c"
-		},
+			print(33), 
+			3 * 4, 
+			5 * 8, 
 		
-		test.a,
-		test.b
-};
+			{
+				"a",
+				"b",	
+				"c"
+			},
+		
+			test.a,
+			test.b
+		};
 
 }
 
+
+var test,i,table;
 
 
 
@@ -42,17 +43,27 @@ for(test = {"a", "b", "c"}, i = 0; i < table.count(test); ++i)
 	print(test[i]);
 }
 
+
+
+var shutdown()
+{
+	return null;
+}
+
 while(i < 100)
 {
 	var x = 1*2*3*4;
 	if(x >= 8 && x <= 40)
 	{
-		print(abc);
+		print("abc");
 	}else
 	{
 		shutdown();
 	}
 }
+
+
+
 
 
 

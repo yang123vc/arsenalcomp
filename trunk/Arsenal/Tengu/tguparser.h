@@ -32,15 +32,21 @@ void	TGU_UnInitParser();
 /***************************************************************分析器**************************************************************************/
 
 
+typedef struct __tengu_parser_external_tag
+{
+		tguSymbTbl_t			*build_in;
+		tguSymbTbl_t			*import_models;
+		tguSymbTbl_t			*global_constant;
+}tguParserExtern_t;
+
 typedef struct __tengu_parser_tag
 {
 		tguReport_t				report;
 		lexMatch_t				*match;
 		psrContext_t			*parser_context;
 		
-		const tguSymbTbl_t		*build_in;
-		tguSymbTbl_t			*import_models;
-
+		tguParserExtern_t		*ext;
+		
 		/******************************************************************/
 		tguBlock_t				*abs_tree;					/*分析结果*/
 		
@@ -51,13 +57,14 @@ typedef struct __tengu_parser_tag
 		/***************************/
 		size_t					loop_level;
 		bool_t					is_on_function_compound;
+		bool_t					on_redef_function;
 		/*******************************************/
 		const	wchar_t			*model_name;
 }tguParser_t;
 
 
 
-tguParser_t*			TGU_CreateParser(const tguReport_t	*report, const tguSymbTbl_t *build_in, tguSymbTbl_t		*import_models);
+tguParser_t*			TGU_CreateParser(const tguReport_t	*report, tguParserExtern_t *ext);
 void					TGU_DestroyParser(tguParser_t	*parser);
 void					TGU_ResetParser(tguParser_t	*parser);
 
