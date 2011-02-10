@@ -93,6 +93,7 @@ typedef struct __tengu_report_tag
 
 
 
+
 struct	__tengu_machine_tag;
 typedef struct	__tengu_machine_tag		tguMachine_t;
 

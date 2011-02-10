@@ -150,12 +150,12 @@ token_operation
 	static tguSynNode_t*	on_lex_node(tguParser_t *parser, const wchar_t *str, size_t term_val, size_t line, size_t col)
 	{
 		tguToken_t token;
-		AR_ASSERT(parser != NULL && parser->model_name);
+		AR_ASSERT(parser != NULL && parser->module_name);
 		token.token = str;
 		token.term_val = term_val;
 		token.lex_info.linenum = line;
 		token.lex_info.col = col;
-		token.lex_info.model_name = parser->model_name;
+		token.lex_info.module_name = parser->module_name;
 		return __create_synnode(TGU_NODE_TOKEN_T, (void*)&token);
 	}
 
@@ -190,6 +190,7 @@ handle_function
 		}else
 		{
 			tguSymb_t	*symb = TGU_CreateSymb(TGU_SYMB_FUNC_T, func_name);
+			symb->lex_info = *lex_info;
 			symb->function = NULL;
 			TGU_InsertSymbToBlock(parser->abs_tree, symb);
 		}
@@ -218,6 +219,7 @@ handle_function
 			}else
 			{
 				symb = TGU_CreateSymb(TGU_SYMB_VAR_T, name);
+				symb->lex_info = lex_info;
 				TGU_InsertSymbToBlock(block, symb);
 			}
 		}
@@ -285,6 +287,7 @@ handle_init_declarator
 			}else
 			{
 				symb = TGU_CreateSymb(TGU_SYMB_VAR_T, tok->token);
+				symb->lex_info = tok->lex_info;
 				symb->init_expr = expr;
 				TGU_InsertSymbToBlock(parser->top_block, symb);
 				TGU_InsertDeclToBlock(parser->top_block, symb);
@@ -686,11 +689,6 @@ handle_identifier
 			for(t = TGU_SYMB_VAR_T, symb = NULL; t <= TGU_SYMB_BLOCK_T && symb == NULL; ++t)
 			{
 				symb = TGU_FindSymbFromBlock(parser->top_block, token->token, t, false);
-			}
-
-			if(symb == NULL)
-			{
-					symb = TGU_FindSymb(parser->ext->import_models, token->token, TGU_SYMB_BLOCK_T);
 			}
 
 
@@ -1121,6 +1119,12 @@ static psrNode_t* AR_STDCALL on_identifier_expression(psrNode_t **nodes, size_t 
 /*primary_expression	:	null */
 static psrNode_t* AR_STDCALL on_constant_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*primary_expression	:	module_access */
+static psrNode_t* AR_STDCALL auto_resutn_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*module_access	:	NAME : NAME */
+static psrNode_t* AR_STDCALL on_module_access(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
 /*call_expression	:	postfix_expression ( expression_list ) */
 /*call_expression	:	postfix_expression ( error ) */
 /*call_expression	:	postfix_expression ( ) */
@@ -1247,6 +1251,8 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"primary_expression  :  true ", NULL, on_constant_expression, 0},
 {L"primary_expression  :  false ", NULL, on_constant_expression, 0},
 {L"primary_expression  :  null ", NULL, on_constant_expression, 0},
+{L"primary_expression  :  module_access ", NULL, auto_resutn_0, 0},
+{L"module_access  :  NAME : NAME ", NULL, on_module_access, 0},
 {L"call_expression  :  postfix_expression ( expression_list ) ", NULL, on_call_expression, 0},
 {L"call_expression  :  postfix_expression ( error ) ", NULL, on_call_expression, 0},
 {L"call_expression  :  postfix_expression ( ) ", NULL, on_call_expression, 0},
@@ -1254,7 +1260,7 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"expression_list  :  expression_list , expression ", NULL, on_expression_list, 0}
 };
 
-#define __RULE_COUNT__ ((size_t)119)
+#define __RULE_COUNT__ ((size_t)121)
 #define START_RULE L"program"
 
 static lex_t*	__build_lex(const arIOCtx_t *io)								
@@ -1743,8 +1749,25 @@ static psrNode_t* AR_STDCALL on_import_statement(psrNode_t **nodes, size_t count
 					bool_t		has_error = false;
 					const 		wchar_t	*path;
 					tguLexInfo_t	*lex_info;
+
+					tguStmt_t	*stmt = NULL;
 					AR_ASSERT(parser != NULL);
+
 					lex_info = &ns[0]->token.lex_info;
+
+					if(parser->abs_tree != parser->top_block)
+					{
+						wchar_t msg[1024];
+						parser->has_error = true;
+						AR_swprintf(msg, 1024, L"%ls", L"illegal	import statement in current scope");
+						TGU_ReportError(&parser->report, msg, lex_info->linenum);
+						return NULL;
+
+					}
+
+
+
+					
 					if(ns[1] == NULL)
 					{
 						has_error = true;
@@ -1757,27 +1780,35 @@ static psrNode_t* AR_STDCALL on_import_statement(psrNode_t **nodes, size_t count
 						
 						if(src)
 						{
-							if(TGU_FindSymb(parser->ext->import_models, TGU_AllocString(src->model_name), TGU_SYMB_BLOCK_T) == NULL)
+							if(TGU_FindSymb(parser->ext->import_modules, TGU_AllocString(src->module_name), TGU_SYMB_BLOCK_T) == NULL)
 							{
-								tguSymb_t		*model_symb;
+								tguSymb_t		*module_symb;
 								tguParseResult_t	parse_result;
 								tguParser_t	*psr;
 
-								model_symb = TGU_CreateSymb(TGU_SYMB_BLOCK_T, src->model_name);
-								TGU_InsertToSymbTable(parser->ext->import_models, model_symb);
+								module_symb = TGU_CreateSymb(TGU_SYMB_BLOCK_T, src->module_name);
+								module_symb->lex_info = ns[0]->token.lex_info;
+								TGU_InsertToSymbTable(parser->ext->import_modules, module_symb);
 
 								psr = TGU_CreateParser(&parser->report, parser->ext);
-								parse_result = TGU_ParseCode(psr, src->model_name, src->code);
-								model_symb->block = parse_result.block;
+								parse_result = TGU_ParseCode(psr, src->module_name, src->code);
+								module_symb->block = parse_result.block;
 								if(parse_result.has_error)
 								{
 									has_error = true;
-									TGU_RemoveFromSymbTable(parser->ext->import_models, model_symb->name, model_symb->type);
+									TGU_RemoveFromSymbTable(parser->ext->import_modules, module_symb->name, module_symb->type);
 								}else
 								{
 									AR_ASSERT(parse_result.block);
 								}
 								TGU_DestroyParser(psr);
+
+								if(!has_error)
+								{
+									stmt = TGU_CreateStmt(TGU_STT_IMPORT);
+									stmt->import_stmt.module_name = module_symb->name;
+									stmt->lex_info = ns[0]->token.lex_info;
+								}
 							}
 						}else
 						{
@@ -1797,10 +1828,18 @@ static psrNode_t* AR_STDCALL on_import_statement(psrNode_t **nodes, size_t count
 						parser->has_error = true;
 						AR_swprintf(msg, 1024, L"import '%ls' failed", path == NULL ? L"" : path);
 						TGU_ReportError(&parser->report, msg, lex_info->linenum);
-
+						return NULL;
+					}else
+					{
+						if(stmt != NULL)
+						{
+							AR_ASSERT(stmt != NULL);
+							return __create_synnode(TGU_NODE_STMT_T, (void*)stmt);
+						}else
+						{
+							return NULL;
+						}
 					}
-
-					return NULL;
 				 }
 }
 
@@ -2316,7 +2355,6 @@ static psrNode_t* AR_STDCALL on_return_statement(psrNode_t **nodes, size_t count
 						tguParser_t	*parser = (tguParser_t*)ctx;
 						tguStmt_t		*stmt;
 						AR_ASSERT(nodes != NULL && (count == 2 || count == 3));
-						AR_ASSERT(parser->current_function != NULL);
 						
 						if(count == 2)
 						{
@@ -2844,6 +2882,101 @@ static psrNode_t* AR_STDCALL on_constant_expression(psrNode_t **nodes, size_t co
 						AR_ASSERT(parser != NULL && ns != NULL && count == 1);
 						expr = make_constant_expression(parser, &ns[0]->token);
 						
+						ret = __create_synnode(TGU_NODE_EXPR_T, (void*)expr);
+						return ret;
+				 }
+}
+
+
+
+
+/*primary_expression	:	module_access */
+static psrNode_t* AR_STDCALL auto_resutn_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+
+
+/*module_access	:	NAME : NAME */
+static psrNode_t* AR_STDCALL on_module_access(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 { 
+						wchar_t msg[1024];
+						tguSynNode_t		**ns = (tguSynNode_t**)nodes;
+						tguSynNode_t 		*ret;
+						tguParser_t		*parser = (tguParser_t*)ctx;
+						tguExpr_t		*expr;
+						tguToken_t		*module_name, *symb_name;
+						tguSymb_t		*module, *symb;
+						bool_t			is_ok = true;
+						AR_ASSERT(parser != NULL && ns != NULL && count == 3);
+
+						AR_ASSERT(ns[0] != NULL && ns[2] != NULL);
+						
+						module_name 	= 	&ns[0]->token;
+						symb_name	= 	&ns[2]->token;
+
+						module = NULL;
+						symb  = NULL;
+
+						module = TGU_FindSymb(parser->ext->import_modules, module_name->token, TGU_SYMB_BLOCK_T);
+				
+						if(module ==  NULL)
+						{
+							is_ok = false;
+							AR_swprintf(msg, 1024, L"error : '%ls' : undeclared module", module_name->token);
+						}
+
+						if(is_ok)
+						{
+
+							tguSymbType_t	t;
+							AR_ASSERT(module->type == TGU_SYMB_BLOCK_T && module->block != NULL);
+
+							for(t = TGU_SYMB_VAR_T, symb = NULL; t <= TGU_SYMB_FUNC_T && symb == NULL; ++t)
+							{
+								symb = TGU_FindSymbFromBlock(module->block, symb_name->token, t, true);
+							}
+
+							if(symb == NULL)
+							{
+								is_ok = false;
+								AR_swprintf(msg, 1024, L"error : can't import name '%ls' from module '%ls'", symb_name->token, module_name->token);
+							}
+						}
+						
+
+						if(!is_ok)
+						{
+							parser->has_error = true;
+							TGU_ReportError(&parser->report, msg, module_name->lex_info.linenum);
+							
+							AR_swprintf(msg, 1024, L"%ls:%ls", module_name->token, symb_name->token);
+							expr = TGU_CreateExpr(TGU_ET_UNDEF_NAME);
+							expr->name = TGU_AllocString(msg);
+						}else
+						{
+							AR_ASSERT(symb != NULL);
+							expr = TGU_CreateExpr(TGU_ET_SYMBOL);
+							expr->symb = symb;
+						}
+
+						AR_ASSERT(expr != NULL);
+
+
+						if(symb && symb->type == TGU_SYMB_VAR_T)
+						{
+							expr->is_lvalue = true;
+						}else
+						{
+							expr->is_lvalue  = false;
+						}
+
+						expr->is_constant = false;
+						expr->lex_info = module_name->lex_info;
+
 						ret = __create_synnode(TGU_NODE_EXPR_T, (void*)expr);
 						return ret;
 				 }

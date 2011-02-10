@@ -118,8 +118,8 @@ tguSrc_t*		TGU_LoadSources(const wchar_t *path)
 
 		src = AR_NEW0(tguSrc_t);
 		src->path = AR_wcsdup(path);
-		src->model_name = AR_wcsdup(L"tengu_test_model");
-		src->code = AR_wcsdup(L"");
+		src->module_name = AR_wcsdup(L"tengu_test_import_modules");
+		src->code = AR_wcsdup(L" var test = 33; return null;");
 		return src;
 }
 
@@ -134,10 +134,10 @@ void			TGU_ReleaseSources(tguSrc_t		*src)
 				src->path = NULL;
 		}
 
-		if(src->model_name)
+		if(src->module_name)
 		{
-				AR_DEL(src->model_name);
-				src->model_name = NULL;
+				AR_DEL(src->module_name);
+				src->module_name = NULL;
 		}
 
 		if(src->code)

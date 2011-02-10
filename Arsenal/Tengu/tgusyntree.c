@@ -269,7 +269,8 @@ void		TGU_DestroyStmt(tguStmt_t *stmt)
 						stmt->return_stmt.expr = NULL;
 				}
 				break;
-
+		case TGU_STT_IMPORT:
+				break;
 		}
 
 		AR_DEL(stmt);
@@ -647,7 +648,62 @@ tguSymb_t*		TGU_InstallString(tguSymbTbl_t *tbl, const wchar_t *str)
 				TGU_InsertToSymbTable(tbl, symb);
 		}
 		return symb;
+}
 
+
+
+tguSymb_t*		TGU_InstallFunction(tguSymbTbl_t *tbl,	const wchar_t *name,		tguFunc_t			*func)
+{
+		tguSymb_t		*symb;
+		
+		AR_ASSERT(tbl != NULL && name != NULL);
+		AR_ASSERT(func == NULL || AR_wcscmp(name, func->name) == 0);
+		
+		symb = TGU_FindSymb(tbl, name, TGU_SYMB_FUNC_T);
+
+		if(!symb)
+		{
+				symb = TGU_CreateSymb(TGU_SYMB_FUNC_T, name);
+				symb->function = func;
+				TGU_InsertToSymbTable(tbl, symb);
+		}
+		return symb;
+}
+
+
+tguSymb_t*		TGU_InstallCFunction(tguSymbTbl_t *tbl, const wchar_t *name,		tguCFunction_t		c_func)
+{
+		tguSymb_t		*symb;
+		
+		AR_ASSERT(tbl != NULL && name != NULL);
+		
+		symb = TGU_FindSymb(tbl, TGU_AllocString(name), TGU_SYMB_CFUNC_T);
+
+		if(!symb)
+		{
+				symb = TGU_CreateSymb(TGU_SYMB_CFUNC_T, name);
+				symb->c_func = c_func;
+				TGU_InsertToSymbTable(tbl, symb);
+		}
+		return symb;
+}
+
+
+tguSymb_t*		TGU_InstallBlock(tguSymbTbl_t	*tbl,	const wchar_t *name,		tguBlock_t			*block)
+{
+		tguSymb_t		*symb;
+		
+		AR_ASSERT(tbl != NULL && name != NULL);
+		
+		symb = TGU_FindSymb(tbl, name, TGU_SYMB_BLOCK_T);
+
+		if(!symb)
+		{
+				symb = TGU_CreateSymb(TGU_SYMB_BLOCK_T, name);
+				symb->block = block;
+				TGU_InsertToSymbTable(tbl, symb);
+		}
+		return symb;
 }
 
 /*********************************************Block******************************************************/

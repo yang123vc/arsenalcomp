@@ -1,25 +1,24 @@
 ﻿
 
+import "tengu_test_model";
 
-var func_redef_test()
+var test()
 {
-		
+	import "tengu_test_model";
+	tengu_test_model = 33;
+
+	sys:output;
+	tengu_test_model:test;
 }
 
-var func_redef_test()
-{
-		
-}
 
 
-
-
-
+/*
 import ;
 
 
 tengu_test_model = 33;
-
+*/
 
 /*
 var test()
