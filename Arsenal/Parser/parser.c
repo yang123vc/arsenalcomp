@@ -295,7 +295,13 @@ static AR_INLINE void Parser_InitExpectedMsg(psrExpectedMsg_t *msg, const psrSym
 		
 		msg->count = lst->count;
 		
-		msg->msg = AR_NEWARR(size_t,	msg->count);
+		if(msg->count > 0)
+		{
+				msg->msg = AR_NEWARR(size_t,	msg->count);
+		}else
+		{
+				msg->msg = NULL;
+		}
 		
 		for(i = 0; i < msg->count; ++i)
 		{
@@ -310,7 +316,10 @@ static AR_INLINE void Parser_InitExpectedMsg(psrExpectedMsg_t *msg, const psrSym
 static AR_INLINE void Parser_UnInitExpectedMsg(psrExpectedMsg_t *msg)
 {
 		AR_ASSERT(msg != NULL);
-		if(msg->msg)AR_DEL((void*)msg->msg);
+		if(msg->msg)
+		{
+				AR_DEL((void*)msg->msg);
+		}
 }
 
 
@@ -639,7 +648,12 @@ static void __handle_reduce(psrContext_t *parser_context, const psrAction_t *act
 		}
 		
 		next_state = Parser_GetState(parser_context->parser->tbl, Parser_TopStack(parser_context->state_stack), rule->head);
+
+		/*
+				top_state在一个非终结符上的转移如果出现-1，则证明goto表异常
+		*/
 		AR_ASSERT(next_state != -1);
+
 		Parser_PushStack(parser_context->state_stack, (size_t)next_state);
 		Parser_PushNodeStack(parser_context->node_stack, new_node);
 

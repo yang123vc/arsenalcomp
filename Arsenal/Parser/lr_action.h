@@ -40,8 +40,6 @@ typedef struct __action_record_tag
 
 		size_t							shift_to		:	24		;
 		size_t							reduce_count 	:	8 		;		/*规约时用到，产生式如果为%Epsilon，则count为0*/
-
-		
 		
 		struct __action_record_tag		*next;
 }psrAction_t;
@@ -74,7 +72,6 @@ struct __parser_action_tag
 
 const psrAction_t*			Parser_GetAction(const psrActionTable_t *tbl, size_t state, const psrSymb_t *symb);
 int_t						Parser_GetState(const psrActionTable_t *tbl, size_t state, const psrSymb_t *symb);
-
 const psrSymbList_t*		Parser_GetExpectedSymb(const psrActionTable_t *tbl, size_t state);
 
 

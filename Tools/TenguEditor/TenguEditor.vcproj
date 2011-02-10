@@ -816,6 +816,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalOptions="/Zi"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(OutDir)\"
 				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"

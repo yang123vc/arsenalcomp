@@ -572,7 +572,7 @@ bool_t					AR_HasStringN(const arStringTable_t *tbl, const wchar_t *str, size_t 
 
 const wchar_t*			AR_GetStringUInt(arStringTable_t *tbl, uint_64_t num, size_t radix);
 const wchar_t*			AR_GetStringInt(arStringTable_t *tbl, int_64_t num, size_t radix);
-const wchar_t*			AR_GetStringFloat(arStringTable_t *tbl, double num);
+const wchar_t*			AR_GetStringFloat(arStringTable_t *tbl, double num, size_t prec);
 
 
 /*********************************************************String Convert****************************************************/
