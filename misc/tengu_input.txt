@@ -1,16 +1,11 @@
 ﻿
 
-import "tengu_test_model";
+import "test.tgu";
 
-var test()
-{
-	import "tengu_test_model";
-	tengu_test_model = 33;
+import "test";
 
-	sys:output;
-	tengu_test_model:test;
-}
 
+var x = print(test:test);
 
 
 /*

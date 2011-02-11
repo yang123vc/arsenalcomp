@@ -269,6 +269,17 @@ void		TGU_DestroyStmt(tguStmt_t *stmt)
 						stmt->return_stmt.expr = NULL;
 				}
 				break;
+		case TGU_STT_DECL:
+				if(stmt->decl_stmt.id)
+				{
+						stmt->decl_stmt.id = NULL;
+				}
+
+				if(stmt->decl_stmt.init_expr)
+				{
+						TGU_DestroyExpr(stmt->decl_stmt.init_expr);
+						stmt->decl_stmt.init_expr = NULL;
+				}
 		case TGU_STT_IMPORT:
 				break;
 		}
@@ -400,11 +411,6 @@ void			TGU_DestroySymb(tguSymb_t *symb)
 		case TGU_SYMB_STRING_T:
 				break;
 		case TGU_SYMB_VAR_T:
-				if(symb->init_expr)
-				{
-						TGU_DestroyExpr(symb->init_expr);
-						symb->init_expr = NULL;
-				}
 				break;
 		case TGU_SYMB_FUNC_T:
 		{
@@ -837,11 +843,6 @@ void			TGU_DestroyBlock(tguBlock_t	*block)
 		if(block->stmts)AR_DEL(block->stmts);
 
 
-		if(block->decls)
-		{
-				AR_DEL(block->decls);
-		}
-		
 		if(block->symb_table != NULL)
 		{
 				TGU_DestroySymbTable(block->symb_table);
@@ -870,20 +871,6 @@ void			TGU_InsertStmtToBlock(tguBlock_t	*block, tguStmt_t	*stmt)
 }
 
 
-void			TGU_InsertDeclToBlock(tguBlock_t	*block, tguSymb_t	*decl)
-{
-		AR_ASSERT(block != NULL && decl != NULL && decl->type == TGU_SYMB_VAR_T);
-		
-		if(block->decl_cnt == block->decl_cap)
-		{
-				block->decl_cap += 4;
-				block->decl_cap *= 2;
-				block->decls = AR_REALLOC(tguSymb_t*, block->decls, block->decl_cap);
-		}
-
-		block->decls[block->decl_cnt] = decl;
-		block->decl_cnt++;
-}
 
 void			TGU_InsertSymbToBlock(tguBlock_t	*block, tguSymb_t	*symb)
 {

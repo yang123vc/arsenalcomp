@@ -268,6 +268,7 @@ typedef enum
 		TGU_STT_FOR,
 		TGU_STT_RETURN,
 
+		TGU_STT_DECL,
 		TGU_STT_IMPORT,
 }tguStmtType_t;
 
@@ -307,6 +308,13 @@ typedef struct __tengu_return_statement_tag
 		tguExpr_t		*expr;
 }tguRetrunStmt_t;
 
+
+typedef struct __tengu_declaration_statement_tag
+{
+		tguSymb_t		*id;
+		tguExpr_t		*init_expr;
+}tguDeclStmt_t;
+
 typedef struct __tengu_import_statement_tag
 {
 		const wchar_t	*module_name;
@@ -325,8 +333,8 @@ struct __tengu_statement_tag
 				tguWhileStmt_t			while_stmt;		/*TGU_STT_WHILE, TGU_STT_DO*/
 				tguForStmt_t			for_stmt;		/*TGU_STT_FOR*/
 				tguRetrunStmt_t			return_stmt;	/*TGU_STT_RETURN*/
-				tguImportStmt_t			import_stmt;
-
+				tguDeclStmt_t			decl_stmt;		/*TGU_STT_DECL*/
+				tguImportStmt_t			import_stmt;	/*TGU_STT_IMPORT*/
 		};
 };
 
@@ -425,7 +433,6 @@ struct __tengu_symb_tag
 				tguFunc_t				*function;
 				tguBlock_t				*block;
 				tguCFunction_t			c_func;
-				tguExpr_t				*init_expr;
 		};
 };
 
@@ -522,10 +529,6 @@ struct __tengu_block_tag
 		tguSymbTbl_t	*symb_table;
 
 
-		tguSymb_t		**decls;
-		size_t			decl_cnt;
-		size_t			decl_cap;
-
 		tguStmt_t		**stmts;
 		size_t			stmt_cnt;
 		size_t			stmt_cap;
@@ -551,7 +554,6 @@ bool_t			TGU_RemoveSubBlockFromBlock(tguBlock_t	*block, tguBlock_t	*sub);
 
 
 void			TGU_InsertStmtToBlock(tguBlock_t	*block, tguStmt_t	*stmt);
-void			TGU_InsertDeclToBlock(tguBlock_t	*block, tguSymb_t	*decl);
 void			TGU_InsertSymbToBlock(tguBlock_t	*block, tguSymb_t	*symb);
 
 tguSymb_t*		TGU_FindSymbFromBlock(tguBlock_t	*block, const wchar_t *name, tguSymbType_t t, bool_t current_block);

@@ -719,11 +719,17 @@ init_declarator_list			:	init_declarator						%action	auto_return_null
 				TGU_ReportError(&parser->report, msg, tok->lex_info.linenum);
 			}else
 			{
+				tguStmt_t	*decl_stmt;
 				symb = TGU_CreateSymb(TGU_SYMB_VAR_T, tok->token);
 				symb->lex_info = tok->lex_info;
-				symb->init_expr = expr;
 				TGU_InsertSymbToBlock(parser->top_block, symb);
-				TGU_InsertDeclToBlock(parser->top_block, symb);
+				
+				decl_stmt = TGU_CreateStmt(TGU_STT_DECL);
+				decl_stmt->decl_stmt.id = symb;
+				decl_stmt->decl_stmt.init_expr = expr;
+				
+				TGU_InsertStmtToBlock(parser->top_block, decl_stmt);
+				
 			}
 	}
 :};
@@ -865,7 +871,7 @@ import_statement		:	"import"	STRING	";"		%action	on_import_statement
 					tguParser_t 	*parser = (tguParser_t*)ctx;
 					tguSynNode_t	**ns = (tguSynNode_t**)nodes;
 					bool_t		has_error = false;
-					const 		wchar_t	*path;
+					const 		wchar_t	*file_name;
 					tguLexInfo_t	*lex_info;
 
 					tguStmt_t	*stmt = NULL;
@@ -889,12 +895,12 @@ import_statement		:	"import"	STRING	";"		%action	on_import_statement
 					if(ns[1] == NULL)
 					{
 						has_error = true;
-						path = NULL;
+						file_name = NULL;
 					}else
 					{
 						tguSrc_t	*src;
-						path = ns[1]->token.token;
-						src = TGU_LoadSources(path);
+						file_name = ns[1]->token.token;
+						src = TGU_LoadSources(parser->ext->work_dir, file_name);
 						
 						if(src)
 						{
@@ -944,7 +950,7 @@ import_statement		:	"import"	STRING	";"		%action	on_import_statement
 					{
 						wchar_t msg[1024];
 						parser->has_error = true;
-						AR_swprintf(msg, 1024, L"import '%ls' failed", path == NULL ? L"" : path);
+						AR_swprintf(msg, 1024, L"import '%ls' failed", file_name == NULL ? L"" : file_name);
 						TGU_ReportError(&parser->report, msg, lex_info->linenum);
 						return NULL;
 					}else
@@ -2425,7 +2431,7 @@ primary_expression		:	"(" expression")"							%action	on_lp_rp_expression
 						return ret;
 				:}
 
-				|	module_access	%action	auto_resutn_0
+				|	module_access	%action	auto_return_0
 				;
 
 

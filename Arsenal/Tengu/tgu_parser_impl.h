@@ -286,11 +286,17 @@ handle_init_declarator
 				TGU_ReportError(&parser->report, msg, tok->lex_info.linenum);
 			}else
 			{
+				tguStmt_t	*decl_stmt;
 				symb = TGU_CreateSymb(TGU_SYMB_VAR_T, tok->token);
 				symb->lex_info = tok->lex_info;
-				symb->init_expr = expr;
 				TGU_InsertSymbToBlock(parser->top_block, symb);
-				TGU_InsertDeclToBlock(parser->top_block, symb);
+				
+				decl_stmt = TGU_CreateStmt(TGU_STT_DECL);
+				decl_stmt->decl_stmt.id = symb;
+				decl_stmt->decl_stmt.init_expr = expr;
+				
+				TGU_InsertStmtToBlock(parser->top_block, decl_stmt);
+				
 			}
 	}
  
@@ -973,6 +979,7 @@ static psrNode_t* AR_STDCALL on_namelist_ellipsis(psrNode_t **nodes, size_t coun
 /*unary_expression	:	postfix_expression */
 /*postfix_expression	:	call_expression */
 /*postfix_expression	:	primary_expression */
+/*primary_expression	:	module_access */
 /*expression_list	:	expression */
 static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
@@ -1119,9 +1126,6 @@ static psrNode_t* AR_STDCALL on_identifier_expression(psrNode_t **nodes, size_t 
 /*primary_expression	:	null */
 static psrNode_t* AR_STDCALL on_constant_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*primary_expression	:	module_access */
-static psrNode_t* AR_STDCALL auto_resutn_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
 /*module_access	:	NAME : NAME */
 static psrNode_t* AR_STDCALL on_module_access(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
@@ -1251,7 +1255,7 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"primary_expression  :  true ", NULL, on_constant_expression, 0},
 {L"primary_expression  :  false ", NULL, on_constant_expression, 0},
 {L"primary_expression  :  null ", NULL, on_constant_expression, 0},
-{L"primary_expression  :  module_access ", NULL, auto_resutn_0, 0},
+{L"primary_expression  :  module_access ", NULL, auto_return_0, 0},
 {L"module_access  :  NAME : NAME ", NULL, on_module_access, 0},
 {L"call_expression  :  postfix_expression ( expression_list ) ", NULL, on_call_expression, 0},
 {L"call_expression  :  postfix_expression ( error ) ", NULL, on_call_expression, 0},
@@ -1560,6 +1564,7 @@ static psrNode_t* AR_STDCALL on_namelist_ellipsis(psrNode_t **nodes, size_t coun
 /*unary_expression	:	postfix_expression */
 /*postfix_expression	:	call_expression */
 /*postfix_expression	:	primary_expression */
+/*primary_expression	:	module_access */
 /*expression_list	:	expression */
 static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
@@ -1747,7 +1752,7 @@ static psrNode_t* AR_STDCALL on_import_statement(psrNode_t **nodes, size_t count
 					tguParser_t 	*parser = (tguParser_t*)ctx;
 					tguSynNode_t	**ns = (tguSynNode_t**)nodes;
 					bool_t		has_error = false;
-					const 		wchar_t	*path;
+					const 		wchar_t	*file_name;
 					tguLexInfo_t	*lex_info;
 
 					tguStmt_t	*stmt = NULL;
@@ -1771,12 +1776,12 @@ static psrNode_t* AR_STDCALL on_import_statement(psrNode_t **nodes, size_t count
 					if(ns[1] == NULL)
 					{
 						has_error = true;
-						path = NULL;
+						file_name = NULL;
 					}else
 					{
 						tguSrc_t	*src;
-						path = ns[1]->token.token;
-						src = TGU_LoadSources(path);
+						file_name = ns[1]->token.token;
+						src = TGU_LoadSources(parser->ext->work_dir, file_name);
 						
 						if(src)
 						{
@@ -1826,7 +1831,7 @@ static psrNode_t* AR_STDCALL on_import_statement(psrNode_t **nodes, size_t count
 					{
 						wchar_t msg[1024];
 						parser->has_error = true;
-						AR_swprintf(msg, 1024, L"import '%ls' failed", path == NULL ? L"" : path);
+						AR_swprintf(msg, 1024, L"import '%ls' failed", file_name == NULL ? L"" : file_name);
 						TGU_ReportError(&parser->report, msg, lex_info->linenum);
 						return NULL;
 					}else
@@ -2885,15 +2890,6 @@ static psrNode_t* AR_STDCALL on_constant_expression(psrNode_t **nodes, size_t co
 						ret = __create_synnode(TGU_NODE_EXPR_T, (void*)expr);
 						return ret;
 				 }
-}
-
-
-
-
-/*primary_expression	:	module_access */
-static psrNode_t* AR_STDCALL auto_resutn_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-	 return NULL;
 }
 
 
