@@ -34,6 +34,7 @@ void	TGU_UnInitParser();
 
 typedef struct __tengu_parser_external_tag
 {
+		const	wchar_t			*work_dir;
 		tguSymbTbl_t			*build_in;
 		tguSymbTbl_t			*import_modules;
 		tguSymbTbl_t			*global_constant;

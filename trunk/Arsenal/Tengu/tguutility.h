@@ -51,7 +51,7 @@ typedef struct __tengu_sources_tag
 		const	wchar_t			*code;
 }tguSrc_t;
 
-tguSrc_t*		TGU_LoadSources(const wchar_t *path);
+tguSrc_t*		TGU_LoadSources(const wchar_t *work_dir, const wchar_t *file_name);
 void			TGU_ReleaseSources(tguSrc_t		*src);
 
 

@@ -47,7 +47,7 @@ void test1()
 		const wchar_t			*code = NULL;
 
 		tguParserExtern_t		ext;
-
+		ext.work_dir			= L"c:\\temp\\";
 		ext.global_constant		= TGU_CreateSymbTable();
 		ext.build_in			= TGU_CreateSymbTable();
 		ext.import_modules		= TGU_CreateSymbTable();

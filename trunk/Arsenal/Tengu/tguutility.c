@@ -111,14 +111,55 @@ bool_t			TGU_HasString(const wchar_t *name)
 
 /***************************************************************Sources**************************************************************/
 
-tguSrc_t*		TGU_LoadSources(const wchar_t *path)
+
+#if defined(OS_FAMILY_WINDOWS)
+
+		#define TGU_PATH_SP		L"\\"
+		
+#elif defined(OS_FAMILY_UNIX)
+		#define TGU_PATH_SP		L"//"
+#else
+		#error "Unknown platform not supported!"
+#endif
+
+
+tguSrc_t*		TGU_LoadSources(const wchar_t *work_dir, const wchar_t *file_name)
 {
 		tguSrc_t		*src;
-		AR_ASSERT(path != NULL);
+		wchar_t			path[1024];
+		size_t			len_of_name;
+		const wchar_t	*end_of_name;
+		AR_ASSERT(work_dir != NULL && file_name != NULL);
+
+		if(AR_wcslen(file_name) == 0 || AR_wcslen(work_dir) == 0)
+		{
+				return NULL;
+		}
+
+		AR_wcscpy(path, work_dir);
+		
+		if(work_dir[AR_wcslen(work_dir)-1] != TGU_PATH_SP[0])
+		{
+				AR_wcscat(path, TGU_PATH_SP);
+		}
+		AR_wcscat(path, file_name);
 
 		src = AR_NEW0(tguSrc_t);
 		src->path = AR_wcsdup(path);
-		src->module_name = AR_wcsdup(L"tengu_test_import_modules");
+		
+		end_of_name = AR_wcsstr(file_name, L".");
+
+		if(end_of_name == NULL)
+		{
+				len_of_name = AR_wcslen(file_name);
+		}else
+		{
+				len_of_name = end_of_name - file_name;
+		}
+
+		src->module_name = AR_wcsndup(file_name, len_of_name);
+
+
 		src->code = AR_wcsdup(L" var test = 33; return null;");
 		return src;
 }

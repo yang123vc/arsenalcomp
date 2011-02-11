@@ -181,6 +181,8 @@ struct __parser_symbol_tag
 		const wchar_t	*name;
 		uint_t			hash_code;
 		size_t			ref_count;
+		
+		int_t			spec_mark;
 };
 
 
@@ -188,7 +190,6 @@ const psrSymb_t*		Parser_CreateSymb(const wchar_t *name, psrSymbType_t t);
 const psrSymb_t*		Parser_CopyNewSymb(const psrSymb_t *sour);
 void					Parser_DestroySymb(const psrSymb_t *symb);
 int_t					Parser_CompSymb(const psrSymb_t *l, const psrSymb_t *r);
-
 
 /***************************************symbol_list***************************************************/
 

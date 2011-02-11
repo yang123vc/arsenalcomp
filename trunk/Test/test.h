@@ -17,7 +17,8 @@ static  AR_INLINE const wchar_t* __load_txt(const wchar_t *path)
 		byte_t	*buf;
 		size_t rn;
 		const wchar_t *ret;
-		buf = AR_NEWARR(byte_t, LOAD_TXT_MAX_BUF);
+		size_t l = LOAD_TXT_MAX_BUF;
+		buf = AR_NEWARR(byte_t, l);
 
 		AR_ASSERT(path != NULL);
 		

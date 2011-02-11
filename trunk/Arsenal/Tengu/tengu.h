@@ -67,23 +67,23 @@ typedef struct __tengu_report_tag
 
 
 
-#define TGU_ReportError(_report, _msg, _line)	\
-		do{												\
-				tguReportInfo_t	info;					\
-				info.type = TGU_REPORT_ERROR_T;			\
-				info.line = (_line);				\
-				info.message = (_msg);			\
+#define TGU_ReportError(_report, _msg, _line)							\
+		do{																\
+				tguReportInfo_t	info;									\
+				info.type = TGU_REPORT_ERROR_T;							\
+				info.line = (_line);									\
+				info.message = (_msg);									\
 				(_report)->report_func(&info, (_report)->report_ctx);	\
 		}while(0)
 
 
 
-#define TGU_ReportWarning(_report, _msg, _line)			\
-		do{												\
-				tguReportInfo_t	info;					\
-				info.type = TGU_REPORT_WARNING_T;		\
-				info.line = (_line);			\
-				info.message = (_msg);				\
+#define TGU_ReportWarning(_report, _msg, _line)							\
+		do{																\
+				tguReportInfo_t	info;									\
+				info.type = TGU_REPORT_WARNING_T;						\
+				info.line = (_line);									\
+				info.message = (_msg);									\
 				(_report)->report_func(&info, (_report)->report_ctx);	\
 		}while(0)
 
