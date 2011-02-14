@@ -38,7 +38,7 @@ void alloc_test()
 		{
 				
 				size_t n = 0;
-				
+				/*
 				while(n == 0)
 				{
 						n = AR_rand64() % 102767;
@@ -46,6 +46,7 @@ void alloc_test()
 						if(n < 102767)n = 102767 + AR_rand64() % 32768;
 				}
 				mem_size_set.push_back(n);
+				*/
 				
 				
 				while(n == 0)
@@ -125,8 +126,13 @@ void realloc_test()
 
 		std::vector<size_t>		mem_size_set;
 		std::vector<void*>		mem_ptr_set;
-
+		
+#if(OS_TYPE != OS_WINDOWS_CE)		
 		srand(time(NULL));
+#else
+		srand(_time64 (NULL));
+#endif
+		
 
 
 		for(size_t i = 0; i < 10000; ++i)
@@ -200,12 +206,14 @@ void measure_realloc_test()
 
 void mem_test()
 {
-		
-		/*alloc_test();
-		measure_alloc_test();
-		*/
+		//alloc_test();
 
-		measure_realloc_test();
+		
+		measure_alloc_test();
+		
+
+		//measure_realloc_test();
+
 
 }
 

@@ -1,12 +1,22 @@
 ﻿
 
+var t = 
+{
+	"abc" =	"d"
+};
+
+
+
+
+/*
+
 import "test.tgu";
 
 import "test";
 
 
 var x = print(test:test);
-
+*/
 
 /*
 import ;
