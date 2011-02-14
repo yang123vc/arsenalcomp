@@ -953,7 +953,7 @@
 				PreprocessorDefinitions="__LIB;_DEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES);WINCE;DEBUG;_WINDOWS;$(ARCHFAM);$(_ARCHFAM_);_UNICODE;UNICODE;POCKETPC2003_UI_MODEL"
 				MinimalRebuild="false"
 				RuntimeLibrary="1"
-				WarningLevel="3"
+				WarningLevel="4"
 				DebugInformationFormat="3"
 				CompileAs="2"
 			/>

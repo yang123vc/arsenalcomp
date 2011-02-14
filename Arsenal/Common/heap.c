@@ -318,7 +318,9 @@ static AR_INLINE void*			MediumAllocDataFromPage(arHeap_t *heap, page_t *page, s
 				page->largest_free = 0;
 		}
 
-		ret = ((byte_t*)(nw)) + MEDIUM_HEADER_SIZE;
+		/*ret = ((byte_t*)(nw)) + MEDIUM_HEADER_SIZE;*/
+		
+		ret = ((byte_t*)(nw)) + AR_ALIGN_SIZE(MEDIUM_HEADER_SIZE);
 		ret[-1] = HEAP_MEDIUM_ALLOC;
 		return (void*)ret;
 }
@@ -463,7 +465,7 @@ static AR_INLINE void	MediumFree(arHeap_t *heap, void *ptr)
 
 		((byte_t*)ptr)[-1] = HEAP_INVALID_ALLOC;
 		
-		e = (mediumEntry_t*)((byte_t*)ptr - MEDIUM_HEADER_SIZE);
+		e = (mediumEntry_t*)((byte_t*)ptr - AR_ALIGN_SIZE(MEDIUM_HEADER_SIZE));
 		AR_ASSERT(e->size > 0);
 		AR_ASSERT(e->free_block == 0);
 		
@@ -651,7 +653,8 @@ static AR_INLINE void* MediumRealloc(arHeap_t *heap, void *ptr, size_t bytes)
 		mediumEntry_t		*e;
 		size_t new_bytes;
 		AR_ASSERT(heap != NULL && ptr != NULL);
-		e = (mediumEntry_t*)((byte_t*)ptr - MEDIUM_HEADER_SIZE);
+		/*e = (mediumEntry_t*)((byte_t*)ptr - MEDIUM_HEADER_SIZE);*/
+		e = (mediumEntry_t*)((byte_t*)ptr - AR_ALIGN_SIZE(MEDIUM_HEADER_SIZE));
 		
 		AR_ASSERT(e->size > AR_ALIGN_SIZE(MEDIUM_HEADER_SIZE));
 		AR_ASSERT(e->free_block == 0);
