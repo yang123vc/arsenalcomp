@@ -268,12 +268,12 @@ handle_init_declarator
 	static void	handle_symb_from_expression(tguParser_t 	*parser, const tguToken_t *tok, tguExpr_t *expr)
 	{
 			tguSymb_t	*symb;
-			tguSymbType_t	t;
+			size_t		t;
 			AR_ASSERT(parser != NULL && tok != NULL);
 			
 			for(t = TGU_SYMB_VAR_T, symb = NULL; t <= TGU_SYMB_BLOCK_T && symb == NULL; ++t)
 			{
-				symb = TGU_FindSymbFromBlock(parser->top_block, tok->token, t, true);
+				symb = TGU_FindSymbFromBlock(parser->top_block, tok->token, (tguSymbType_t)t, true);
 			}
 
 
@@ -687,14 +687,14 @@ handle_identifier
 	{
 			tguExpr_t	*expr;
 			tguSymb_t	*symb;
-			tguSymbType_t	t;
+			size_t		t;
 			AR_ASSERT(parser != NULL && token != NULL);
 			AR_ASSERT(parser->top_block != NULL);
 			
 			
 			for(t = TGU_SYMB_VAR_T, symb = NULL; t <= TGU_SYMB_BLOCK_T && symb == NULL; ++t)
 			{
-				symb = TGU_FindSymbFromBlock(parser->top_block, token->token, t, false);
+				symb = TGU_FindSymbFromBlock(parser->top_block, token->token, (tguSymbType_t)t, false);
 			}
 
 
@@ -702,7 +702,7 @@ handle_identifier
 			{
 				for(t = TGU_SYMB_VAR_T, symb = NULL; t <= TGU_SYMB_BLOCK_T && symb == NULL; ++t)
 				{
-						symb = TGU_FindSymb((tguSymbTbl_t*)parser->ext->build_in, token->token, t);
+						symb = TGU_FindSymb((tguSymbTbl_t*)parser->ext->build_in, token->token, (tguSymbType_t)t);
 				}
 			}
 				
@@ -1267,11 +1267,11 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 #define __RULE_COUNT__ ((size_t)121)
 #define START_RULE L"program"
 
-static lex_t*	__build_lex(const arIOCtx_t *io)								
+static lex_t*	__build_lex()													
 {																				
 		lex_t	*lex;															
 		size_t i;																
-		lex = Lex_Create(io);													
+		lex = Lex_Create();														
 		for(i = 0; i < __NAME_COUNT__; ++i)										
 		{																		
 				if(!Lex_Insert(lex, __g_lex_name[i]))							
@@ -1297,12 +1297,12 @@ static lex_t*	__build_lex(const arIOCtx_t *io)
 		return lex;																
 }
 
-static psrGrammar_t*	__build_grammar(const psrHandler_t	*handler, const arIOCtx_t *io)										
+static psrGrammar_t*	__build_grammar(const psrHandler_t	*handler)															
 {																																
 		psrGrammar_t	*grammar;																								
 		size_t i;																												
 		AR_ASSERT(handler != NULL);																								
-		grammar = Parser_CreateGrammar(handler, io);																				
+		grammar = Parser_CreateGrammar(handler);																				
 		for(i = 0; i < __TERM_COUNT__; ++i)																						
 		{																														
 				if(__g_term_pattern[i].skip || __g_term_pattern[i].tokval == 0)continue;										
@@ -1343,7 +1343,7 @@ static psrGrammar_t*	__build_grammar(const psrHandler_t	*handler, const arIOCtx_
 						return NULL;																																		
 				}																																							
 		}																																									
-		if(!Parser_SetStartRule(grammar,START_RULE) || !Parser_CheckIsValidGrammar(grammar))																						
+		if(!Parser_SetStartRule(grammar,START_RULE) || !Parser_CheckIsValidGrammar(grammar, NULL))																			
 		{																																									
 				Parser_DestroyGrammar(grammar);																																
 				grammar = NULL;																																				
@@ -2928,12 +2928,12 @@ static psrNode_t* AR_STDCALL on_module_access(psrNode_t **nodes, size_t count, c
 						if(is_ok)
 						{
 
-							tguSymbType_t	t;
+							size_t		t;
 							AR_ASSERT(module->type == TGU_SYMB_BLOCK_T && module->block != NULL);
 
 							for(t = TGU_SYMB_VAR_T, symb = NULL; t <= TGU_SYMB_FUNC_T && symb == NULL; ++t)
 							{
-								symb = TGU_FindSymbFromBlock(module->block, symb_name->token, t, true);
+								symb = TGU_FindSymbFromBlock(module->block, symb_name->token, (tguSymbType_t)t, true);
 							}
 
 							if(symb == NULL)

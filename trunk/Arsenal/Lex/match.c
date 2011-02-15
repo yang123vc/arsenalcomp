@@ -162,7 +162,7 @@ void Lex_SortProgSet(lexProgSet_t *set)
 /*********************************lexMatch_t***************************/
 
 
-#define __ALL_FLAGS		(LEX_REPORT_SKIP|LEX_IGNORE_CASE|LEX_SINGLE_LINE)
+#define __ALL_FLAGS		(LEX_IGNORE_CASE|LEX_SINGLE_LINE)
 
 void			Lex_MatchFlags(lexMatch_t *pmatch, uint_t flags, bool_t is_on)
 {
@@ -212,19 +212,13 @@ void Lex_ResetMatchState(lexMatch_t *pmatch)
 }
 
 
-void	Lex_ResetMatchIoContext(lexMatch_t *pmatch, const arIOCtx_t *io)
-{
-		AR_ASSERT(pmatch != NULL);
-		pmatch->io_ctx = io == NULL ? *AR_global_ioctx() : *io;
-}
 
 
 
 
 
 
-
-lexMatch_t*		Lex_CreateMatch(const lex_t *lex, const arIOCtx_t *io)
+lexMatch_t*		Lex_CreateMatch(const lex_t *lex)
 {
 		size_t i;
 		lexMatch_t		*pmatch;
@@ -236,7 +230,6 @@ lexMatch_t*		Lex_CreateMatch(const lex_t *lex, const arIOCtx_t *io)
 
 		AR_memset(pmatch, 0, sizeof(*pmatch));
 
-		pmatch->io_ctx = io == NULL ? lex->io_ctx : *io;
 
 		pmatch->input = L"";
 		pmatch->next = pmatch->input;
@@ -275,12 +268,6 @@ void Lex_DestroyMatch(lexMatch_t *pmatch)
 		}
 }
 
-
-void			Lex_ResetMatchIOContext(lexMatch_t *pmatch, const arIOCtx_t *io)
-{
-		AR_ASSERT(pmatch != NULL && io != NULL);
-		pmatch->io_ctx = io == NULL ? *AR_global_ioctx() : *io;
-}
 
 
 const wchar_t* Lex_GetNextInput(const lexMatch_t *match)
@@ -460,12 +447,6 @@ REMATCH:
 										empty_match_cnt++;
 								}
 
-								if(match->flags & LEX_REPORT_SKIP && tok->count > 0)
-								{
-										wchar_t *tmp = AR_wcsndup(tok->str, tok->count);
-										AR_printf_ctx(&match->io_ctx, L"Skip token \"%ls\"\r\n", tmp);
-										AR_DEL(tmp);
-								}
 								goto REMATCH;
 						}else
 						{
