@@ -119,13 +119,13 @@ bool_t	Lex_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr)
 
 		if(AR_wcslen(name) == 0)
 		{
-				AR_swprintf(lex->last_error_msg, LEX_LAST_ERROR_LENGTH, L"Lex Rule Error : empty name '%ls'\r\n", expr);
+				AR_FormatString(lex->last_err_msg, L"Lex Rule Error : empty name '%ls'\r\n", expr);
 				return false;
 		}
 
 		if(AR_wcslen(expr) == 0)
 		{
-				AR_swprintf(lex->last_error_msg, LEX_LAST_ERROR_LENGTH, L"Lex Rule Error : empty expr '%ls'\r\n", name);
+				AR_FormatString(lex->last_err_msg, L"Lex Rule Error : empty expr '%ls'\r\n", name);
 				return false;
 		}
 
@@ -133,7 +133,7 @@ bool_t	Lex_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr)
 		if(RGX_FindFromNameSet(lex->name_tbl, name) != NULL)
 		{
 				/*AR_error( L"Lex Rule Error : Duplicate name defination %ls: %ls\r\n", name, expr);*/
-				AR_swprintf(lex->last_error_msg, LEX_LAST_ERROR_LENGTH, L"Lex Name Error : Duplicate name defination %ls: %ls\r\n", name, expr);
+				AR_FormatString(lex->last_err_msg, L"Lex Name Error : Duplicate name defination %ls: %ls\r\n", name, expr);
 				return false;
 		}
 
@@ -142,7 +142,7 @@ bool_t	Lex_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr)
 		if(res.node == NULL)
 		{
 				/*AR_error(L"Lex Rule Error : %ls: %ls\r\n", name, res.err.pos);*/
-				AR_swprintf(lex->last_error_msg, LEX_LAST_ERROR_LENGTH, L"Lex Name Error : %ls: %ls\r\n", name, res.err.pos);
+				AR_FormatString(lex->last_err_msg, L"Lex Name Error : %ls: %ls\r\n", name, res.err.pos);
 				return false;
 		}
 
@@ -221,7 +221,7 @@ bool_t	Lex_Insert(lex_t *lex, const wchar_t *input)
 		{
 				/*AR_error(L"Lex Rule Error : Invalid Input %ls\r\n", p);*/
 				
-				AR_swprintf(lex->last_error_msg, LEX_LAST_ERROR_LENGTH, L"Lex Rule Error : Invalid Input %ls\r\n", p);
+				AR_FormatString(lex->last_err_msg, L"Lex Rule Error : Invalid Input %ls\r\n", p);
 				return false;
 		}
 
@@ -256,7 +256,7 @@ bool_t	Lex_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action
 
 		if(AR_wcslen(rule) == 0)
 		{
-				AR_swprintf(lex->last_error_msg, LEX_LAST_ERROR_LENGTH, L"Lex Rule Error : empty rule %" AR_PLAT_INT_FMT L"d\r\n", action->value);
+				AR_FormatString(lex->last_err_msg, L"Lex Rule Error : empty rule %" AR_PLAT_INT_FMT L"d\r\n", action->value);
 				return false;
 		}
 
@@ -267,7 +267,7 @@ bool_t	Lex_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action
 				/*AR_error(AR_LEX, L"Lex Rule Error : %d : %ls\n", action->type, res.err.pos);*/
 				/*AR_error(L"Lex Rule Error : %" AR_PLAT_INT_FMT L"d : %ls\n", (size_t)action->type, (size_t)res.err.pos);*/
 
-				AR_swprintf(lex->last_error_msg, LEX_LAST_ERROR_LENGTH, L"Lex Rule Error : %" AR_PLAT_INT_FMT L"d : %ls\n", (size_t)action->value, res.err.pos);
+				AR_FormatString(lex->last_err_msg, L"Lex Rule Error : %" AR_PLAT_INT_FMT L"d : %ls\n", (size_t)action->value, res.err.pos);
 				return false;
 		}
 
@@ -316,7 +316,7 @@ lex_t*	Lex_Create()
 
 		res = AR_NEW0(lex_t);
 		res->name_tbl = AR_NEW(rgxNameSet_t);
-		
+		res->last_err_msg = AR_CreateString();
 
 		RGX_InitNameSet(res->name_tbl);
 		__init_rule_set(&res->rule_set);
@@ -331,6 +331,7 @@ void	Lex_Clear(lex_t *lex)
 		AR_ASSERT(lex != NULL);
 		RGX_ClearNameSet(lex->name_tbl);
 		__clear_rule_set(&lex->rule_set);
+		AR_DestroyString(lex->last_err_msg);
 }
 
 
@@ -352,9 +353,14 @@ void	Lex_Destroy(lex_t *lex)
 const wchar_t*	Lex_GetLastError(const lex_t *lex)
 {
 		AR_ASSERT(lex != NULL);
-		return lex->last_error_msg;
+		return AR_GetStrString(lex->last_err_msg);
 }
 
+void			Lex_ClearLastError(lex_t *lex)
+{
+		AR_ASSERT(lex != NULL);
+		return AR_ClearString(lex->last_err_msg);
+}
 
 
 AR_NAMESPACE_END

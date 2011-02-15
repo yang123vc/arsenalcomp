@@ -149,13 +149,13 @@ void AR_Test()
 
 		//ds_test();
 
-		//Tengu_Test();
+		Tengu_Test();
 
-		mem_test();
+		//mem_test();
 
 		getchar();
 #else
-		AR_printf(L"dll version\r\n");
+		ARSpace::AR_printf(L"dll version\r\n");
 #endif
 }
 

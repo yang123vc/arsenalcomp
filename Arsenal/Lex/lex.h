@@ -50,21 +50,22 @@ typedef struct __lex_rule_set
 
 
 
-#define	LEX_LAST_ERROR_LENGTH	1024
 
 typedef struct __lex_tag 
 {
 		struct __rgx_name_set_tag		*name_tbl;
 		
 		lexRuleSet_t					rule_set;
-		
-		wchar_t							last_error_msg[LEX_LAST_ERROR_LENGTH];
+
+		arString_t						*last_err_msg;
 }lex_t;
 
 
 lex_t*	Lex_Create();
 void	Lex_Destroy(lex_t *lex);
+
 const wchar_t*	Lex_GetLastError(const lex_t *lex);
+void			Lex_ClearLastError(lex_t *lex);
 
 bool_t	Lex_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr);
 bool_t	Lex_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action);

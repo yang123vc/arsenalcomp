@@ -96,7 +96,7 @@ static lex_t*	__build_lex(const arIOCtx_t *io)
 {																				
 		lex_t	*lex;															
 		size_t i;																
-		lex = Lex_Create(io);													
+		lex = Lex_Create();													
 		for(i = 0; i < __NAME_COUNT__; ++i)										
 		{																		
 				if(!Lex_Insert(lex, __g_lex_name[i]))							
@@ -127,7 +127,7 @@ static psrGrammar_t*	__build_grammar(const psrHandler_t	*handler, const arIOCtx_
 		psrGrammar_t	*grammar;																								
 		size_t i;																												
 		AR_ASSERT(handler != NULL);																								
-		grammar = Parser_CreateGrammar(handler, io);																				
+		grammar = Parser_CreateGrammar(handler);																				
 		for(i = 0; i < __TERM_COUNT__; ++i)																						
 		{																														
 				if(__g_term_pattern[i].skip || __g_term_pattern[i].tokval == 0)continue;										
@@ -185,7 +185,7 @@ static psrGrammar_t*	__build_grammar(const psrHandler_t	*handler, const arIOCtx_
 #endif
 
 		
-		if(!Parser_SetStartRule(grammar,START_RULE) || !Parser_CheckIsValidGrammar(grammar))																						
+		if(!Parser_SetStartRule(grammar,START_RULE) || !Parser_CheckIsValidGrammar(grammar,NULL))																						
 		{																																									
 				Parser_DestroyGrammar(grammar);																																
 				grammar = NULL;																																				
@@ -397,7 +397,7 @@ static int calc(const wchar_t *input)
 		ctx = Parser_CreateContext(parser, NULL);
 
 
-		match = Lex_CreateMatch(lex, NULL);
+		match = Lex_CreateMatch(lex);
 
 		Lex_ResetInput(match, input);
 		
