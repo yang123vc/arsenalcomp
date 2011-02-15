@@ -319,7 +319,7 @@ typedef struct __parser_rule_tag
 
 }psrRule_t;
 
-psrRule_t*		Parser_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, size_t auto_ret, const psrTermInfoList_t *term_list, wchar_t *err_msg);
+psrRule_t*		Parser_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, size_t auto_ret, const psrTermInfoList_t *term_list, arString_t *err_msg);
 
 
 /*
@@ -328,13 +328,11 @@ head 格式为[a-z_][a-z_0-9]*
 符号 : 为分隔符，必须存在，并且被丢弃
 body_list中所有符号都被当做文本符号接收，由空格，制表符等AR_iswspace返回非0值的符号分隔
 */
-psrRule_t*		Parser_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, size_t auto_ret, const psrTermInfoList_t *term_list, wchar_t *err_msg);
+psrRule_t*		Parser_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, size_t auto_ret, const psrTermInfoList_t *term_list, arString_t *err_msg);
 void			Parser_DestroyRule(psrRule_t *rule);
 
 /****************************************************************************************************************************************/
 
-
-#define			PARSER_GRAMMAR_ERROR_LENGTH		1024
 
 struct __parser_grammar_tag
 {
@@ -347,7 +345,7 @@ struct __parser_grammar_tag
 
 		psrHandler_t			psr_handler;
 
-		wchar_t					last_err_msg[PARSER_GRAMMAR_ERROR_LENGTH];
+		arString_t				*last_err_msg;
 
 };
 
@@ -356,9 +354,10 @@ psrGrammar_t*			Parser_CreateGrammar(const psrHandler_t *ctx);
 void					Parser_DestroyGrammar(psrGrammar_t *grammar);
 void					Parser_ClearGrammar(psrGrammar_t *grammar);
 
+const wchar_t*			Parser_GetGrammarLastError(const psrGrammar_t *grammar);
+void					Parser_ClearGrammarLastError(psrGrammar_t *grammar);
+
 void					Parser_ResetGrammarParseHandler(psrGrammar_t *grammar, const psrHandler_t *io_ctx);
-
-
 const psrHandler_t*		Parser_GetGrammarHandler(const psrGrammar_t *grammar);
 
 

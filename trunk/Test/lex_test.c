@@ -550,7 +550,7 @@ void lex_test_loop()
 		lexMatch_t		*match;
 		lex_t			*lex;
 
-		lex = Lex_Create(NULL);
+		lex = Lex_Create();
 		
 		lexAction_t act;
 		act.is_skip = false;
@@ -564,7 +564,7 @@ void lex_test_loop()
 		act.value = 0;
 		AR_ASSERT(Lex_InsertRule(lex, L"$", &act));
 
-		match = Lex_CreateMatch(lex, NULL);
+		match = Lex_CreateMatch(lex);
 
 		//Lex_ResetInput(match, L"aaa\r\naaa\r\naaaaa\r\n");
 		Lex_ResetInput(match, L"aaaaaaaaaaaaaaaaaaaaaaaaaaaa\r\n");
@@ -605,7 +605,7 @@ void lex_test_loop2()
 		lexMatch_t		*match;
 		lex_t			*lex;
 
-		lex = Lex_Create(NULL);
+		lex = Lex_Create();
 		
 		lexAction_t act;
 		act.is_skip = false;
@@ -619,7 +619,7 @@ void lex_test_loop2()
 		act.value = 0;
 		AR_ASSERT(Lex_InsertRule(lex, L"$", &act));
 
-		match = Lex_CreateMatch(lex, NULL);
+		match = Lex_CreateMatch(lex);
 
 		Lex_ResetInput(match, L"aaaaaa");
 		
@@ -661,7 +661,7 @@ void lex_chinese_char()
 		lexMatch_t		*match;
 		lex_t			*lex;
 
-		lex = Lex_Create(NULL);
+		lex = Lex_Create();
 		
 		lexAction_t act;
 		act.is_skip = false;
@@ -675,7 +675,7 @@ void lex_chinese_char()
 		act.value = 0;
 		AR_ASSERT(Lex_InsertRule(lex, L"$", &act));
 
-		match = Lex_CreateMatch(lex, NULL);
+		match = Lex_CreateMatch(lex);
 
 		//Lex_ResetInput(match, L"aaa\r\naaa\r\naaaaa\r\n");
 		Lex_ResetInput(match, L"ÖÐ¹ú×ÖabcÕæÂé·³\r\n");

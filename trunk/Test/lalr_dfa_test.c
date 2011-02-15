@@ -148,7 +148,7 @@ static lex_t* __build_lex()
 {
 		lex_t *lex;
 
-		lex = Lex_Create(NULL);
+		lex = Lex_Create();
 
 		Lex_Insert(lex, L"delim 			= 	[ \\r\\n\\t]");
 		Lex_Insert(lex, L"digit 			= 	[0-9]");
@@ -183,7 +183,7 @@ static  psrGrammar_t* __build_grammar()
 		psrGrammar_t	*gmr;
 		psrHandler_t ctx = {NULL, free_node};
 
-		gmr = Parser_CreateGrammar(&ctx, NULL);
+		gmr = Parser_CreateGrammar(&ctx);
 
 		Parser_InsertTerm(gmr, L"(", CLP, PARSER_ASSOC_NONASSOC, 0, create_leaf);
 		Parser_InsertTerm(gmr, L")", RP, PARSER_ASSOC_NONASSOC, 0, create_leaf);
@@ -242,7 +242,7 @@ static  psrGrammar_t* __build_grammar1()
 		psrGrammar_t	*gmr;
 		psrHandler_t ctx = {NULL, free_node};
 
-		gmr = Parser_CreateGrammar(&ctx, NULL);
+		gmr = Parser_CreateGrammar(&ctx);
 
 		Parser_InsertTerm(gmr, L"(", CLP, PARSER_ASSOC_NONASSOC, 0, create_leaf);
 		Parser_InsertTerm(gmr, L")", RP, PARSER_ASSOC_NONASSOC, 0, create_leaf);
@@ -292,7 +292,7 @@ void lalr_test1()
 		Parser_PrintSymbolMap(&follow, str);
 		AR_printf(L"Follow Set:\r\n%ls\r\n", AR_GetStrString(str));
 		
-		Parser_CheckIsValidGrammar(gmr);
+		Parser_CheckIsValidGrammar(gmr, NULL);
 /*
 		AR_ClearString(str);
 		Parser_ReportLeftRecursion(gmr, str);

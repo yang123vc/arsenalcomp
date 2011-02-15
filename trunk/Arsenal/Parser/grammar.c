@@ -130,7 +130,7 @@ bool_t			Parser_InsertToTermInfoList(psrTermInfoList_t	*lst, const wchar_t *name
 
 
 
-psrRule_t* Parser_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, size_t auto_ret, const psrTermInfoList_t *term_list, wchar_t *err_msg)
+psrRule_t* Parser_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, size_t auto_ret, const psrTermInfoList_t *term_list, arString_t *err_msg)
 {
 		psrRule_t		*rule;
 		size_t i;
@@ -145,7 +145,7 @@ psrRule_t* Parser_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, c
 		{
 				if(err_msg)
 				{
-						AR_swprintf(err_msg, PARSER_GRAMMAR_ERROR_LENGTH, L"Grammar Error: Duplicate Rule name <%ls>!\r\n", head->name);
+						AR_FormatString(err_msg,L"Grammar Error: Duplicate Rule name <%ls>!\r\n", head->name);
 				}
 				return NULL;
 		}
@@ -155,7 +155,7 @@ psrRule_t* Parser_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, c
 				/*AR_error(L"Grammar Error: Invalid prec token in <%ls>!\r\n", head->name);*/
 				if(err_msg)
 				{
-						AR_swprintf(err_msg, PARSER_GRAMMAR_ERROR_LENGTH, L"Grammar Error: Invalid prec \"%ls\" token <%ls>\r\n", prec_tok, head->name);
+						AR_FormatString(err_msg, L"Grammar Error: Invalid prec \"%ls\" token <%ls>\r\n", prec_tok, head->name);
 				}
 				return NULL;
 		}
@@ -179,7 +179,7 @@ psrRule_t* Parser_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, c
 								{
 										if(err_msg)
 										{
-												AR_swprintf(err_msg, PARSER_GRAMMAR_ERROR_LENGTH, L"Grammar Error: Duplicate error definition in <%ls>!\r\n", head->name);
+												AR_FormatString(err_msg, L"Grammar Error: Duplicate error definition in <%ls>!\r\n", head->name);
 										}
 										return NULL;
 								}else
@@ -221,7 +221,8 @@ psrRule_t* Parser_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, c
 
 /*****************************************************************************************************************************************/
 
-psrRule_t* Parser_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, size_t auto_ret, const psrTermInfoList_t *term_list, wchar_t *err_msg)
+
+psrRule_t* Parser_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, size_t auto_ret, const psrTermInfoList_t *term_list, arString_t *err_msg)
 {
 		const psrSymb_t *head;
 		psrSymbList_t	body;
@@ -428,6 +429,8 @@ psrGrammar_t*			Parser_CreateGrammar(const psrHandler_t *handler)
 		Parser_InitSymbList(&gmr->symb_list);
 		
 		__init_grammar_component_unit(gmr);
+
+		gmr->last_err_msg = AR_CreateString();
 		
 		return gmr;
 }
@@ -458,11 +461,26 @@ void	Parser_ClearGrammar(psrGrammar_t *grammar)
 }
 
 
+const wchar_t*			Parser_GetGrammarLastError(const psrGrammar_t *grammar)
+{
+		AR_ASSERT(grammar != NULL);
+		return AR_GetStrString(grammar->last_err_msg);
+}
+
+void					Parser_ClearGrammarLastError(psrGrammar_t *grammar)
+{
+		AR_ASSERT(grammar != NULL);
+		AR_ClearString(grammar->last_err_msg);
+}
+
 
 void					Parser_DestroyGrammar(psrGrammar_t *grammar)
 {
 
 		AR_ASSERT(grammar != NULL);
+
+		AR_DestroyString(grammar->last_err_msg);
+
 		/*Parser_ClearGrammar(grammar);*/
 		__clear_grammar(grammar);
 		
@@ -497,20 +515,20 @@ bool_t					Parser_InsertTerm(psrGrammar_t *grammar, const wchar_t *name, size_t 
 		{
 				/*AR_error(AR_GRAMMAR, L"Grammar Error : invalid token value %d\r\n", val);*/
 				/*AR_error(L"Grammar Error : invalid token value %" AR_PLAT_INT_FMT L"d\r\n", (size_t)val);*/
-				AR_swprintf(grammar->last_err_msg, PARSER_GRAMMAR_ERROR_LENGTH, L"Grammar Error : invalid token value %" AR_PLAT_INT_FMT L"d\r\n", (size_t)val);
+				AR_FormatString(grammar->last_err_msg, L"Grammar Error : invalid token value %" AR_PLAT_INT_FMT L"d\r\n", (size_t)val);
 				return false;
 		}
 		
 		if(AR_wcslen(name) == 0)
 		{
-				AR_swprintf(grammar->last_err_msg, PARSER_GRAMMAR_ERROR_LENGTH, L"Grammar Error : invalid token name '%ls'\r\n", name);
+				AR_FormatString(grammar->last_err_msg, L"Grammar Error : invalid token name '%ls'\r\n", name);
 				return false;
 		}
 
 		
 		if(Parser_FindTermByName(&grammar->term_list, name) != NULL)
 		{
-				AR_swprintf(grammar->last_err_msg, PARSER_GRAMMAR_ERROR_LENGTH, L"Grammar Error : duplicate name : \"%ls\" definition\r\n", name);
+				AR_FormatString(grammar->last_err_msg, L"Grammar Error : duplicate name : \"%ls\" definition\r\n", name);
 				return false;
 		}
 
@@ -518,14 +536,14 @@ bool_t					Parser_InsertTerm(psrGrammar_t *grammar, const wchar_t *name, size_t 
 		{
 				/*AR_error(AR_GRAMMAR, L"Grammar Error : duplicate token value : %d definition\r\n", val);*/
 				/*AR_error(L"Grammar Error : duplicate token value : %" AR_PLAT_INT_FMT L"d definition\r\n", (size_t)val);*/
-				AR_swprintf(grammar->last_err_msg, PARSER_GRAMMAR_ERROR_LENGTH, L"Grammar Error : duplicate token value : %" AR_PLAT_INT_FMT L"d definition\r\n", (size_t)val);
+				AR_FormatString(grammar->last_err_msg, L"Grammar Error : duplicate token value : %" AR_PLAT_INT_FMT L"d definition\r\n", (size_t)val);
 				return false;
 		}
 
 
 		if(Parser_GetSymbFromGrammarByName(grammar, name) != NULL)
 		{
-				AR_swprintf(grammar->last_err_msg, PARSER_GRAMMAR_ERROR_LENGTH, L"Grammar Error : duplicate symbol name : \"%ls\" definition\r\n", name);
+				AR_FormatString(grammar->last_err_msg, L"Grammar Error : duplicate symbol name : \"%ls\" definition\r\n", name);
 				return false;
 		}
 		
@@ -545,7 +563,7 @@ bool_t					Parser_InsertRule(psrGrammar_t *grammar, psrRule_t *rule)
 		if(Parser_CompSymb(rule->head, PARSER_StartSymb) == 0)/*rule-head不可为%Start保留符号*/
 		{
 				/*AR_error(L"Grammar Error : Non-term token %ls was reserved\r\n", rule->head->name);*/
-				AR_swprintf(grammar->last_err_msg, PARSER_GRAMMAR_ERROR_LENGTH, L"Grammar Error : Non-term token %ls was reserved\r\n", rule->head->name);
+				AR_FormatString(grammar->last_err_msg, L"Grammar Error : Non-term token %ls was reserved\r\n", rule->head->name);
 				return false;
 		}
 
@@ -557,7 +575,7 @@ bool_t					Parser_InsertRule(psrGrammar_t *grammar, psrRule_t *rule)
 
 				if(r != NULL && Parser_CompSymb(l, r) != 0)
 				{
-						AR_swprintf(grammar->last_err_msg, PARSER_GRAMMAR_ERROR_LENGTH, L"Grammar Error : duplicate symbol name : \"%ls\" definition\r\n", l->name);
+						AR_FormatString(grammar->last_err_msg, L"Grammar Error : duplicate symbol name : \"%ls\" definition\r\n", l->name);
 						return false;
 				}
 		}
