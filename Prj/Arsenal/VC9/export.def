@@ -73,6 +73,7 @@ AR_FreeToHeap
 
 Lex_Create				
 Lex_Destroy				
+Lex_GetLastError
 Lex_InsertName			
 Lex_InsertRule			
 Lex_RemoveByValue
@@ -96,7 +97,7 @@ Lex_Skip
 Lex_SkipTo
 Lex_SkipN
 Lex_MatchGetCoordinate
-Lex_ResetIOContext
+
 
 ;Grammar
 
@@ -124,7 +125,7 @@ Parser_CalcFirstSet
 Parser_GetSymbolFromSymbMap 
 Parser_PrintSymbolMap
 
-Parser_ResetGrammarIOContext
+
 Parser_ResetGrammarParseHandler
 
 Parser_GetTermSymbInfoByValue

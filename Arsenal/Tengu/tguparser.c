@@ -25,31 +25,6 @@ AR_NAMESPACE_BEGIN
 
 
 
-/*
-此arIOCtx_t定义只会被lex_t,psrGrammar_t,以及parser_t内部使用，如果建构parser,lex,以及grammar时如果没有出现错误则不可能调用到此函数，
-因此，此函数永不会被调用。
-*/
-
-static void	AR_STDCALL tgu_on_error(int_t level, const wchar_t *msg, void *ctx)
-{
-		AR_ASSERT(false);
-
-}
-
-
-void	AR_STDCALL tgu_on_print(const wchar_t *msg, void *ctx)
-{
-		AR_ASSERT(false);
-}
-
-
-
-static arIOCtx_t	__def_io_ctx = 
-{		
-		tgu_on_error,
-		tgu_on_print,
-		NULL
-};
 
 /***********************************************************************************************************/
 
@@ -66,8 +41,8 @@ static	const	parser_t		*__g_parser = NULL;
 static	void	__parser_core_init()
 {
 		AR_InitSpinLock(&__g_lock);
-		__g_lex     = __build_lex(&__def_io_ctx);
-		__g_grammar	= __build_grammar(&__g_handler , &__def_io_ctx);
+		__g_lex     = __build_lex();
+		__g_grammar	= __build_grammar(&__g_handler );
 		__g_parser	= Parser_CreateParser(__g_grammar, PARSER_LALR);
 }
 
@@ -93,7 +68,7 @@ static lexMatch_t*		__build_match()
 		AR_ASSERT(__g_lex != NULL);
 		
 		AR_LockSpinLock(&__g_lock);
-		match = Lex_CreateMatch(__g_lex, &__def_io_ctx);
+		match = Lex_CreateMatch(__g_lex);
 		AR_UnLockSpinLock(&__g_lock);
 		return match;
 }

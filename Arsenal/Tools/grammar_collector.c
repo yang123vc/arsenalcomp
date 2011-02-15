@@ -1820,12 +1820,12 @@ static const cfgRuleDef_t	__cfg_rule[] =
 
 
 
-static lex_t* __build_lex(arIOCtx_t		*io)
+static lex_t* __build_lex()
 {
 		lex_t *lex;
 		size_t	i;
 
-		lex = Lex_Create(io);
+		lex = Lex_Create();
 
 		AR_ASSERT(lex != NULL);
 
@@ -1863,13 +1863,13 @@ static lex_t* __build_lex(arIOCtx_t		*io)
 }
 
 
-static psrGrammar_t*	__build_grammar(psrHandler_t *handler, arIOCtx_t *io)
+static psrGrammar_t*	__build_grammar(psrHandler_t *handler)
 {
 		psrGrammar_t	*gmr;
 		size_t i;
 		AR_ASSERT(handler != NULL);
 
-		gmr = Parser_CreateGrammar(handler, io);
+		gmr = Parser_CreateGrammar(handler);
 
 		if(gmr == NULL)return NULL;
 
@@ -1896,7 +1896,7 @@ static psrGrammar_t*	__build_grammar(psrHandler_t *handler, arIOCtx_t *io)
 				return NULL;
 		}
 
-		if(!Parser_CheckIsValidGrammar(gmr))
+		if(!Parser_CheckIsValidGrammar(gmr, NULL))
 		{
 				AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
 		}
@@ -1909,7 +1909,7 @@ static psrGrammar_t*	__build_grammar(psrHandler_t *handler, arIOCtx_t *io)
 static const parser_t*		__build_parser(const psrGrammar_t *gmr)
 {
 		const parser_t *parser;
-		AR_ASSERT(gmr && Parser_CheckIsValidGrammar(gmr));
+		AR_ASSERT(gmr && Parser_CheckIsValidGrammar(gmr, NULL));
 
 		parser = Parser_CreateParser(gmr, PARSER_SLR);
 		AR_ASSERT(parser && Parser_CountParserConflict(parser) == 0);
@@ -2076,8 +2076,8 @@ static void __init_parser_tag()
 		psr_handler.error_f = cfg_error;
 		psr_handler.free_f = cfg_free;
 
-		__g_lex		= __build_lex(NULL);
-		__g_grammar = __build_grammar(&psr_handler, NULL);
+		__g_lex		= __build_lex();
+		__g_grammar = __build_grammar(&psr_handler);
 		__g_parser	= __build_parser(__g_grammar);
 }
 
@@ -2094,12 +2094,12 @@ static void __uninit_parser_tag()
 		
 }
 
-static lexMatch_t*		__create_lex_match(const arIOCtx_t		*io_ctx)
+static lexMatch_t*		__create_lex_match()
 {
 		lexMatch_t		*match;
 
 		AR_LockSpinLock(&__g_lock);
-		match = Lex_CreateMatch(__g_lex, io_ctx);
+		match = Lex_CreateMatch(__g_lex);
 		AR_UnLockSpinLock(&__g_lock);
 
 		return match;
@@ -2157,7 +2157,7 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 
 		
 		
-		match		   = __create_lex_match(&io_ctx);
+		match		   = __create_lex_match();
 
 		__init_parser_data(&psr_data, report);
 		parser_context = __create_parser_context((void*)&psr_data);

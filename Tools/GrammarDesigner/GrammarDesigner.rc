@@ -260,7 +260,6 @@ BEGIN
     BEGIN
         POPUP "&Flags"
         BEGIN
-            MENUITEM "&Report Skip",                ID_FLAGS_REPORTSKIP, CHECKED
             MENUITEM "&SingleLine",                 ID_FLAGS_SINGLELINE, CHECKED
             MENUITEM "&IgnoreCase",                 ID_FLAGS_IGNORECASE, CHECKED
         END

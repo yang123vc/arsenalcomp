@@ -268,23 +268,26 @@ void CGrammarDesignerDoc::OnUpdateParserModeSlr(CCmdUI *pCmdUI)
 void CGrammarDesignerDoc::OnFlagsReportskip()
 {
 		// TODO: Add your command handler code here
-		if(m_lexer_mode & ARSpace::LEX_REPORT_SKIP)
+/*		if(m_lexer_mode & ARSpace::LEX_REPORT_SKIP)
 		{
 				m_lexer_mode &= ~ARSpace::LEX_REPORT_SKIP;
 		}else
 		{
 				m_lexer_mode |= ARSpace::LEX_REPORT_SKIP;
 		}
+*/
+
 }
 
 
 void CGrammarDesignerDoc::OnUpdateFlagsReportskip(CCmdUI *pCmdUI)
 {
 		// TODO: Add your command update UI handler code here
-		if(m_lexer_mode & ARSpace::LEX_REPORT_SKIP)
+/*		if(m_lexer_mode & ARSpace::LEX_REPORT_SKIP)
 		{
 				pCmdUI->SetCheck(1);
 		}
+*/
 }
 
 
@@ -386,9 +389,6 @@ void CGrammarDesignerDoc::OnUpdateEditGotoDecl(CCmdUI *pCmdUI)
 
 
 
-
-
-
 static void	AR_STDCALL	__report_io_error_func(int_t level, const wchar_t *msg, void *ctx)
 {
 		COutputWnd		*output;
@@ -404,29 +404,6 @@ static void	AR_STDCALL	__report_io_print_func(const wchar_t *msg, void *ctx)
 		output = (COutputWnd*)ctx;
 		output->Append(msg, COutputList::MSG_MESSAGE, 0, NULL);
 } 
-
-
-
-
-
-static void	AR_STDCALL	__silence_io_error_func(int_t level, const wchar_t *msg, void *ctx)
-{
-		
-}
-
-static void	AR_STDCALL	__silence_io_print_func(const wchar_t *msg, void *ctx)
-{
-		
-} 
-
-static const ARSpace::arIOCtx_t	__g_silence = 
-{
-		__silence_io_error_func,
-		__silence_io_print_func,
-		NULL
-};
-
-
 
 
 struct OutputContext
@@ -518,9 +495,9 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 		ClearParser();
 
 		
-		ARSpace::lex_t			*lexer = ARSpace::Lex_Create(&__g_silence);
+		ARSpace::lex_t			*lexer = ARSpace::Lex_Create();
 		
-		ARSpace::psrGrammar_t	*grammar = ARSpace::Parser_CreateGrammar(&__def_handler, &__g_silence);
+		ARSpace::psrGrammar_t	*grammar = ARSpace::Parser_CreateGrammar(&__def_handler);
 
 		
 		
@@ -635,22 +612,24 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 				}
 		}
 
-		const ARSpace::arIOCtx_t	io_context = 
-		{
-				__report_io_error_func,
-				__report_io_print_func,
-				(void*)&output
-				
-		};
 
-		ARSpace::Parser_ResetGrammarIOContext(grammar, &io_context);
+		/*********************************************检查并报告语法错误*******************************************************/
+		{
 		
-		if(!ARSpace::Parser_CheckIsValidGrammar(grammar))
-		{
-				has_error = true;
+				ARSpace::arIOCtx_t	io_context = 
+				{
+						__report_io_error_func,
+						__report_io_print_func,
+						(void*)&output
+				
+				};
+		
+				if(!ARSpace::Parser_CheckIsValidGrammar(grammar, &io_context))
+				{
+						has_error = true;
+				}
 		}
-
-		ARSpace::Parser_ResetGrammarIOContext(grammar, &__g_silence);
+		/******************************************************************************************************/
 
 		if(has_error)
 		{
@@ -789,11 +768,15 @@ void CGrammarDesignerDoc::OnParserBuild()
 		ARSpace::cfgReport_t	report = {report_build_func, (void*)&output};
 		ARSpace::cfgConfig_t *cfg = ARSpace::CFG_CollectGrammarConfig(str.GetString(), &report);
 		
-		if(cfg == NULL || cfg->has_error || !BuildParser(cfg))
+		if(cfg == NULL || cfg->has_error)
 		{
 				goto FAILED_POINT;		
 		}
 
+		if(!BuildParser(cfg))
+		{
+				goto FAILED_POINT;	
+		}
 
 		if(cfg)ARSpace::CFG_DestroyGrammarConfig(cfg);
 		
@@ -1009,17 +992,10 @@ void CGrammarDesignerDoc::OnParserParse()
 		CString str = input.GetInput();
 		
 		bool is_ok = true;
-		
-		const ARSpace::arIOCtx_t	io_context = 
-		{
-				__report_io_error_func,
-				__report_io_print_func,
-				(void*)&output
-				
-		};
+
 
 		ARSpace::lexMatch_t *match;
-		match = ARSpace::Lex_CreateMatch(this->m_lexer, &io_context);
+		match = ARSpace::Lex_CreateMatch(this->m_lexer);
 		/*
 		ARSpace::Lex_InitMatch(&match, this->m_lexer, &io_context);
 		*/

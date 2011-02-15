@@ -50,7 +50,7 @@ typedef struct __lex_rule_set
 
 
 
-
+#define	LEX_LAST_ERROR_LENGTH	1024
 
 typedef struct __lex_tag 
 {
@@ -58,13 +58,13 @@ typedef struct __lex_tag
 		
 		lexRuleSet_t					rule_set;
 		
-		arIOCtx_t						io_ctx;
+		wchar_t							last_error_msg[LEX_LAST_ERROR_LENGTH];
 }lex_t;
 
 
-lex_t*	Lex_Create(const arIOCtx_t *io);
+lex_t*	Lex_Create();
 void	Lex_Destroy(lex_t *lex);
-void	Lex_ResetIOContext(lex_t *lex, const arIOCtx_t *io);
+const wchar_t*	Lex_GetLastError(const lex_t *lex);
 
 bool_t	Lex_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr);
 bool_t	Lex_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action);
@@ -95,7 +95,6 @@ typedef struct __lex_token_tag
 
 enum
 {
-		LEX_REPORT_SKIP		=		0x0001,
 		LEX_SINGLE_LINE		=		0x0002,
 		LEX_IGNORE_CASE		=		0x0004
 };
@@ -120,16 +119,13 @@ struct __lex_match_result_tag
 
 		uint_t							flags;
 		lexProgSet_t					*prog_set;
-		arIOCtx_t						io_ctx;
 };
 
 
 
-lexMatch_t*		Lex_CreateMatch(const lex_t *lex, const arIOCtx_t *io);
+lexMatch_t*		Lex_CreateMatch(const lex_t *lex);
 
 void			Lex_DestroyMatch(lexMatch_t *pmatch);
-
-void			Lex_ResetMatchIOContext(lexMatch_t *pmatch, const arIOCtx_t *io);
 
 void			Lex_ResetInput(lexMatch_t *pmatch, const wchar_t *input);
 

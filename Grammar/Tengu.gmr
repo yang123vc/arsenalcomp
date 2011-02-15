@@ -701,12 +701,12 @@ init_declarator_list			:	init_declarator						%action	auto_return_null
 	static void	handle_symb_from_expression(tguParser_t 	*parser, const tguToken_t *tok, tguExpr_t *expr)
 	{
 			tguSymb_t	*symb;
-			tguSymbType_t	t;
+			size_t		t;
 			AR_ASSERT(parser != NULL && tok != NULL);
 			
 			for(t = TGU_SYMB_VAR_T, symb = NULL; t <= TGU_SYMB_BLOCK_T && symb == NULL; ++t)
 			{
-				symb = TGU_FindSymbFromBlock(parser->top_block, tok->token, t, true);
+				symb = TGU_FindSymbFromBlock(parser->top_block, tok->token, (tguSymbType_t)t, true);
 			}
 
 
@@ -2129,14 +2129,14 @@ binary_expression			:	unary_expression						%action 	auto_return_0
 	{
 			tguExpr_t	*expr;
 			tguSymb_t	*symb;
-			tguSymbType_t	t;
+			size_t		t;
 			AR_ASSERT(parser != NULL && token != NULL);
 			AR_ASSERT(parser->top_block != NULL);
 			
 			
 			for(t = TGU_SYMB_VAR_T, symb = NULL; t <= TGU_SYMB_BLOCK_T && symb == NULL; ++t)
 			{
-				symb = TGU_FindSymbFromBlock(parser->top_block, token->token, t, false);
+				symb = TGU_FindSymbFromBlock(parser->top_block, token->token, (tguSymbType_t)t, false);
 			}
 
 
@@ -2144,7 +2144,7 @@ binary_expression			:	unary_expression						%action 	auto_return_0
 			{
 				for(t = TGU_SYMB_VAR_T, symb = NULL; t <= TGU_SYMB_BLOCK_T && symb == NULL; ++t)
 				{
-						symb = TGU_FindSymb((tguSymbTbl_t*)parser->ext->build_in, token->token, t);
+						symb = TGU_FindSymb((tguSymbTbl_t*)parser->ext->build_in, token->token, (tguSymbType_t)t);
 				}
 			}
 				
@@ -2466,12 +2466,12 @@ module_access			:	NAME	":"	NAME		%action	on_module_access
 						if(is_ok)
 						{
 
-							tguSymbType_t	t;
+							size_t		t;
 							AR_ASSERT(module->type == TGU_SYMB_BLOCK_T && module->block != NULL);
 
 							for(t = TGU_SYMB_VAR_T, symb = NULL; t <= TGU_SYMB_FUNC_T && symb == NULL; ++t)
 							{
-								symb = TGU_FindSymbFromBlock(module->block, symb_name->token, t, true);
+								symb = TGU_FindSymbFromBlock(module->block, symb_name->token, (tguSymbType_t)t, true);
 							}
 
 							if(symb == NULL)

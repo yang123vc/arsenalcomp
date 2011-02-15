@@ -16,6 +16,7 @@
 
 
 
+
 AR_NAMESPACE_BEGIN
 
 
@@ -32,11 +33,11 @@ AR_NAMESPACE_BEGIN
 
 
 static const wchar_t CFG_DEF_BUILD_LEX[] =
-L"static lex_t*	__build_lex(const arIOCtx_t *io)								\n"
+L"static lex_t*	__build_lex()													\n"
 L"{																				\n"
 L"		lex_t	*lex;															\n"
 L"		size_t i;																\n"
-L"		lex = Lex_Create(io);													\n"
+L"		lex = Lex_Create();														\n"
 L"		for(i = 0; i < __NAME_COUNT__; ++i)										\n"
 L"		{																		\n"
 L"				if(!Lex_Insert(lex, __g_lex_name[i]))							\n"
@@ -64,12 +65,12 @@ L"}"
 ;
 
 static const wchar_t CFG_DEF_BUILD_GRAMMAR[] =
-L"static psrGrammar_t*	__build_grammar(const psrHandler_t	*handler, const arIOCtx_t *io)										\n"
+L"static psrGrammar_t*	__build_grammar(const psrHandler_t	*handler)															\n"
 L"{																																\n"
 L"		psrGrammar_t	*grammar;																								\n"
 L"		size_t i;																												\n"
 L"		AR_ASSERT(handler != NULL);																								\n"
-L"		grammar = Parser_CreateGrammar(handler, io);																				\n"
+L"		grammar = Parser_CreateGrammar(handler);																				\n"
 L"		for(i = 0; i < __TERM_COUNT__; ++i)																						\n"
 L"		{																														\n"
 L"				if(__g_term_pattern[i].skip || __g_term_pattern[i].tokval == 0)continue;										\n"
@@ -110,7 +111,7 @@ L"						AR_ASSERT(false);																																	\n"
 L"						return NULL;																																		\n"
 L"				}																																							\n"
 L"		}																																									\n"
-L"		if(!Parser_SetStartRule(grammar,START_RULE) || !Parser_CheckIsValidGrammar(grammar))																						\n"
+L"		if(!Parser_SetStartRule(grammar,START_RULE) || !Parser_CheckIsValidGrammar(grammar, NULL))																			\n"
 L"		{																																									\n"
 L"				Parser_DestroyGrammar(grammar);																																\n"
 L"				grammar = NULL;																																				\n"

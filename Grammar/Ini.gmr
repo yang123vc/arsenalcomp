@@ -92,9 +92,18 @@ info					:	string comment LINE_END
 combine_string			:	combine_list	string
 					;
 
-combine_list			:	combine_str comment LINE_END combine_list
+combine_list				:	combine_str comment LINE_END combine_list
 					|	combine_str comment LINE_END
 					;
+
+
+
+%name		name_x			:	"test"
+					;
+
+%token		comment_line2		:	"{name33}\B \t\r]*;[^\r\n]*(\r)*\n"	,	3
+					;
+
 
 
 
