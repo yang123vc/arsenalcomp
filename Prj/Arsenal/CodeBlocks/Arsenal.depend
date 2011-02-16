@@ -2,6 +2,8 @@
 1291721003 source:d:\code\solidus\compiler\arsenal\arsenal\arsenal.c
 	"Arsenal.h"
 
+1291721003 "
+
 1274018938 d:\code\solidus\compiler\arsenal\arsenal\arsenal.h
 	"./Common/common.h"
 	"./Lex/lex.h"
@@ -9,8 +11,12 @@
 	"./Tengu/tengu.h"
 	"./Tools/tools.h"
 
+1274018938 ools.h"
+
 1296041070 d:\code\solidus\compiler\arsenal\arsenal\common\common.h
 	"config.h"
+
+1272589900 
 
 1296030523 d:\code\solidus\compiler\arsenal\arsenal\common\config.h
 	"platform.h"
@@ -38,11 +44,17 @@
 	<sys/time.h>
 	<libkern/OSAtomic.h>
 
+1296030523 SAtomic.h>
+
 1288287879 d:\code\solidus\compiler\arsenal\arsenal\common\platform.h
 	<TargetConditionals.h>
 
+1288287879 ditionals.h>
+
 1283620289 d:\code\solidus\compiler\arsenal\arsenal\lex\lex.h
 	"../Common/common.h"
+
+1291712759 /common.h"
 
 1296106388 d:\code\solidus\compiler\arsenal\arsenal\parser\parser.h
 	"../Common/common.h"
@@ -52,13 +64,19 @@
 	"../Lex/lex.h"
 	"../Parser/parser.h"
 
+1294861381 /parser.h"
+
 1272590359 d:\code\solidus\compiler\arsenal\arsenal\tools\tools.h
 	"grammar_config.h"
 	"serializer.h"
 
+1295312793 r.h"
+
 1290502149 d:\code\solidus\compiler\arsenal\arsenal\tools\grammar_config.h
 	"../Parser/parser.h"
 	"../Lex/lex.h"
+
+1290502149 x.h"
 
 1294392301 d:\code\solidus\compiler\arsenal\arsenal\tools\serializer.h
 	"../Common/common.h"
@@ -98,6 +116,8 @@
 	"thread_win.h"
 	"thread_apple.h"
 	"thread_posix.h"
+
+1288279902 six.h"
 
 1292685883 d:\code\solidus\compiler\arsenal\arsenal\common\thread_win.h
 	"common.h"
@@ -143,6 +163,8 @@
 	"parser.h"
 	"parser_in.h"
 
+1294293316 .h"
+
 1296033509 d:\code\solidus\compiler\arsenal\arsenal\parser\parser_in.h
 	"parser.h"
 
@@ -156,6 +178,8 @@
 1291624803 source:d:\code\solidus\compiler\arsenal\arsenal\parser\lalr_config.c
 	"lalr.h"
 	"lalr_config_aux.h"
+
+1291624803 ig_aux.h"
 
 1295312563 d:\code\solidus\compiler\arsenal\arsenal\parser\lalr_config_aux.h
 	"lalr.h"
@@ -198,6 +222,8 @@
 	"tengu.h"
 	"tgusyntree.h"
 
+1296097142 e.h"
+
 1296097142 d:\code\solidus\compiler\arsenal\arsenal\tengu\tgusyntree.h
 	"tengu.h"
 
@@ -205,6 +231,8 @@
 	"tguparser.h"
 	"tguutility.h"
 	"tgu_parser_impl.h"
+
+1296088457 r_impl.h"
 
 1295088012 d:\code\solidus\compiler\arsenal\arsenal\tengu\tguutility.h
 	"tengu.h"
@@ -214,6 +242,8 @@
 1296088752 source:d:\code\solidus\compiler\arsenal\arsenal\tengu\tgusyntree.c
 	"tgusyntree.h"
 	"tguutility.h"
+
+1295088012 y.h"
 
 1295088012 source:d:\code\solidus\compiler\arsenal\arsenal\tengu\tguutility.c
 	"tguutility.h"
@@ -227,9 +257,249 @@
 1296108248 source:d:\code\solidus\compiler\arsenal\arsenal\tools\grammar_config.c
 	"grammar_config.h"
 
+1296108248 onfig.h"
+
 1295312793 source:d:\code\solidus\compiler\arsenal\arsenal\tools\serializer.c
 	"serializer.h"
 
 1272589900 source:d:\code\solidus\compiler\arsenal\arsenal\tools\tools.c
 	"tools.h"
+
+1297891462 source:/root/Desktop/Programming/Arsenal/Arsenal/Arsenal.c
+	"Arsenal.h"
+
+1297891462 /root/Desktop/Programming/Arsenal/Arsenal/Arsenal.h
+	"./Common/common.h"
+	"./Lex/lex.h"
+	"./Parser/parser.h"
+	"./Tengu/tengu.h"
+	"./Tools/tools.h"
+
+1297891461 /root/Desktop/Programming/Arsenal/Arsenal/Common/common.h
+	"config.h"
+
+1297891461 /root/Desktop/Programming/Arsenal/Arsenal/Common/config.h
+	"platform.h"
+	<stdlib.h>
+	<crtdbg.h>
+	<stdlib.h>
+	<stdio.h>
+	<wchar.h>
+	<stddef.h>
+	<stdarg.h>
+	<limits.h>
+	<assert.h>
+	<memory.h>
+	<string.h>
+	<math.h>
+	<wctype.h>
+	<string.h>
+	<float.h>
+	<stdint.h>
+	<stdbool.h>
+	<windows.h>
+	<unistd.h>
+	<pthread.h>
+	<sys/select.h>
+	<sys/time.h>
+	<libkern/OSAtomic.h>
+
+1297891461 /root/Desktop/Programming/Arsenal/Arsenal/Common/platform.h
+	<TargetConditionals.h>
+
+1297891461 /root/Desktop/Programming/Arsenal/Arsenal/Lex/lex.h
+	"../Common/common.h"
+
+1297891462 /root/Desktop/Programming/Arsenal/Arsenal/Parser/parser.h
+	"../Common/common.h"
+
+1297891460 /root/Desktop/Programming/Arsenal/Arsenal/Tengu/tengu.h
+	"../Common/common.h"
+	"../Lex/lex.h"
+	"../Parser/parser.h"
+
+1297891459 /root/Desktop/Programming/Arsenal/Arsenal/Tools/tools.h
+	"grammar_config.h"
+	"serializer.h"
+
+1297891459 /root/Desktop/Programming/Arsenal/Arsenal/Tools/grammar_config.h
+	"../Parser/parser.h"
+	"../Lex/lex.h"
+
+1297891459 /root/Desktop/Programming/Arsenal/Arsenal/Tools/serializer.h
+	"../Common/common.h"
+
+1297891461 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/algo.c
+	"common.h"
+
+1297891461 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/buffer.c
+	"common.h"
+
+1297891461 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/common.c
+	"common.h"
+
+1297891461 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/crtstr.c
+	"common.h"
+
+1297891461 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/heap.c
+	"common.h"
+
+1297891461 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/memory.c
+	"common.h"
+
+1297891461 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/random.c
+	"common.h"
+
+1297891461 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/strconv.c
+	"common.h"
+
+1297891461 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/string.c
+	"common.h"
+
+1297891461 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/strtable.c
+	"common.h"
+
+1297891461 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/thread.c
+	"common.h"
+	"thread_win.h"
+	"thread_apple.h"
+	"thread_posix.h"
+
+1297891461 /root/Desktop/Programming/Arsenal/Arsenal/Common/thread_win.h
+	"common.h"
+
+1297891461 /root/Desktop/Programming/Arsenal/Arsenal/Common/thread_apple.h
+	"common.h"
+
+1297891461 /root/Desktop/Programming/Arsenal/Arsenal/Common/thread_posix.h
+	"common.h"
+
+1297891461 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/utilities.c
+	"common.h"
+
+1297891461 source:/root/Desktop/Programming/Arsenal/Arsenal/Lex/lex.c
+	"rgx.h"
+	"lex.h"
+
+1297891461 /root/Desktop/Programming/Arsenal/Arsenal/Lex/rgx.h
+	"../Common/common.h"
+	"lex.h"
+
+1297891461 source:/root/Desktop/Programming/Arsenal/Arsenal/Lex/match.c
+	"lex.h"
+	"rgx.h"
+
+1297891461 source:/root/Desktop/Programming/Arsenal/Arsenal/Lex/rgx_compile.c
+	"rgx.h"
+
+1297891461 source:/root/Desktop/Programming/Arsenal/Arsenal/Lex/rgx_exec.c
+	"lex.h"
+	"rgx.h"
+
+1297891461 source:/root/Desktop/Programming/Arsenal/Arsenal/Lex/rgx_misc.c
+	"rgx.h"
+
+1297891461 source:/root/Desktop/Programming/Arsenal/Arsenal/Lex/rgx_node.c
+	"rgx.h"
+
+1297891461 source:/root/Desktop/Programming/Arsenal/Arsenal/Lex/rgx_parser.c
+	"rgx.h"
+
+1297891462 source:/root/Desktop/Programming/Arsenal/Arsenal/Parser/grammar.c
+	"parser.h"
+	"parser_in.h"
+
+1297891462 /root/Desktop/Programming/Arsenal/Arsenal/Parser/parser_in.h
+	"parser.h"
+
+1297891462 source:/root/Desktop/Programming/Arsenal/Arsenal/Parser/lalr_build.c
+	"parser_in.h"
+	"lalr.h"
+
+1297891462 /root/Desktop/Programming/Arsenal/Arsenal/Parser/lalr.h
+	"parser.h"
+
+1297891462 source:/root/Desktop/Programming/Arsenal/Arsenal/Parser/lalr_config.c
+	"lalr.h"
+	"lalr_config_aux.h"
+
+1297891462 /root/Desktop/Programming/Arsenal/Arsenal/Parser/lalr_config_aux.h
+	"lalr.h"
+
+1297891462 source:/root/Desktop/Programming/Arsenal/Arsenal/Parser/lalr_state.c
+	"lalr.h"
+
+1297891462 source:/root/Desktop/Programming/Arsenal/Arsenal/Parser/lr_action.c
+	"lalr.h"
+	"lr_action.h"
+
+1297891462 /root/Desktop/Programming/Arsenal/Arsenal/Parser/lr_action.h
+	"parser.h"
+	"parser_in.h"
+
+1297891462 source:/root/Desktop/Programming/Arsenal/Arsenal/Parser/parser.c
+	"parser.h"
+	"parser_in.h"
+	"lr_action.h"
+
+1297891462 source:/root/Desktop/Programming/Arsenal/Arsenal/Parser/parser_in.c
+	"lalr.h"
+	"parser_in.h"
+
+1297891462 source:/root/Desktop/Programming/Arsenal/Arsenal/Parser/report.c
+	"lalr.h"
+	"lr_action.h"
+	"parser.h"
+	"parser_in.h"
+
+1297891462 source:/root/Desktop/Programming/Arsenal/Arsenal/Parser/symbol.c
+	"parser.h"
+	"parser_in.h"
+
+1297891460 source:/root/Desktop/Programming/Arsenal/Arsenal/Tengu/tengu.c
+	"tengu.h"
+	"tguparser.h"
+
+1297891460 /root/Desktop/Programming/Arsenal/Arsenal/Tengu/tguparser.h
+	"tengu.h"
+	"tgusyntree.h"
+
+1297891460 /root/Desktop/Programming/Arsenal/Arsenal/Tengu/tgusyntree.h
+	"tengu.h"
+
+1297891460 source:/root/Desktop/Programming/Arsenal/Arsenal/Tengu/tguparser.c
+	"tguparser.h"
+	"tguutility.h"
+	"tgu_parser_impl.h"
+
+1297891460 /root/Desktop/Programming/Arsenal/Arsenal/Tengu/tguutility.h
+	"tengu.h"
+
+1297891460 /root/Desktop/Programming/Arsenal/Arsenal/Tengu/tgu_parser_impl.h
+
+1297891460 source:/root/Desktop/Programming/Arsenal/Arsenal/Tengu/tgusyntree.c
+	"tgusyntree.h"
+	"tguutility.h"
+
+1297891460 source:/root/Desktop/Programming/Arsenal/Arsenal/Tengu/tguutility.c
+	"tguutility.h"
+
+1297891460 source:/root/Desktop/Programming/Arsenal/Arsenal/Tengu/tguvm.c
+	"tguvm.h"
+
+1297891460 /root/Desktop/Programming/Arsenal/Arsenal/Tengu/tguvm.h
+	"tengu.h"
+	"tgusyntree.h"
+
+1297891459 source:/root/Desktop/Programming/Arsenal/Arsenal/Tools/serializer.c
+	"serializer.h"
+
+1297891459 source:/root/Desktop/Programming/Arsenal/Arsenal/Tools/tools.c
+	"tools.h"
+
+1297891459 source:/root/Desktop/Programming/Arsenal/Arsenal/Tools/grammar_codegen.c
+	"grammar_config.h"
+
+1297891459 source:/root/Desktop/Programming/Arsenal/Arsenal/Tools/grammar_collector.c
+	"grammar_config.h"
 
