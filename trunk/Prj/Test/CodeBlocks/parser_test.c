@@ -177,7 +177,7 @@ void parse_code(const cfgConfig_t *cfg, const wchar_t *sources)
 		}
 
 		Lex_GenerateTransTable(lex);
-        match = Lex_CreateMatch(lex, NULL);
+        match = Lex_CreateMatch(lex);
 
 		{
 
