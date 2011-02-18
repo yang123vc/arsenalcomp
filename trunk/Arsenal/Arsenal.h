@@ -18,8 +18,9 @@
 #include "./Common/common.h"
 #include "./Lex/lex.h"
 #include "./Parser/parser.h"
-#include "./Tengu/tengu.h"
 #include "./Tools/tools.h"
+#include "./Tengu/tengu.h"
+
 
 
 AR_NAMESPACE_BEGIN

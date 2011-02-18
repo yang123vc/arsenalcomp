@@ -446,7 +446,7 @@ void RGX_ReverseNegativeCharSet(rgxCharSet_t *cset)
 /***********************************************************/
 
 
-rgxThread_t RGX_BuildThread(rgxIns_t *pc, const wchar_t *sp, size_t x, size_t y)
+rgxThread_t		RGX_BuildThread(rgxIns_t *pc, const wchar_t *sp, size_t x, size_t y, int_t act)
 {
 		rgxThread_t tmp;
 		AR_ASSERT(pc != NULL && sp != NULL);
@@ -454,6 +454,7 @@ rgxThread_t RGX_BuildThread(rgxIns_t *pc, const wchar_t *sp, size_t x, size_t y)
 		tmp.sp = sp;
 		tmp.line = x;
 		tmp.col = y;
+		tmp.act = act;
 		return tmp;
 }
 

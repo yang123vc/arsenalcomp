@@ -139,7 +139,36 @@
 
 	static void		AR_STDCALL on_error(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
 	{
+			tguParser_t	*parser;
+			size_t		i;
+			arString_t	*str;
+			wchar_t		*tok_str;
+			AR_ASSERT(tok != NULL && ctx != NULL);
+
+			parser = (tguParser_t*)ctx;
+			str = AR_CreateString();
+
+			if(tok->term_val == 0)
+			{
+					tok_str = AR_wcsdup(L"EOI");
+			}else
+			{
+					tok_str = AR_wcsndup(tok->str, tok->str_cnt);
+			}
 		
+			AR_AppendFormatString(str, L"Invalid token : '%ls', expected ", tok_str);
+			
+			for(i = 0; i < count; ++i)
+			{
+					AR_AppendFormatString(str, L"'%ls'", TGU_TokenValToString(expected[i]));
+			}
+			
+			TGU_ReportError(&parser->report, AR_GetStrString(str), tok->line);
+		
+			AR_DestroyString(str);
+			str = NULL;
+			AR_DEL(tok_str);
+			tok_str = NULL;
 	}
 	
 	static const psrHandler_t	__g_handler = {on_error, on_free_node};

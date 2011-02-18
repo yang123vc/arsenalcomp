@@ -75,6 +75,9 @@ enum{
 };
 
 
+const wchar_t* TGU_TokenValToString(size_t tok_val);
+
+
 
 typedef	struct __tengu_lexinfo_tag
 {

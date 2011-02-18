@@ -444,7 +444,7 @@ static void	AR_STDCALL	__on_parse_error(const ARSpace::psrToken_t *tok, const si
 		CString token;
 		if(tok->term_val != 0)
 		{
-				AR_ASSERT(tok->str_cnt > 0);
+				//AR_ASSERT(tok->str_cnt > 0);
 				token.Append(tok->str, (int)tok->str_cnt);
 		}else
 		{
@@ -534,7 +534,10 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 						//continue;
 				}
 
-				if(tok->is_skip || tok->tokval == 0)continue;
+				if(tok->is_skip || tok->tokval == 0)
+				{
+						continue;
+				}
 
 				if(!ARSpace::Parser_InsertTerm(grammar, tok->name, tok->tokval, ARSpace::PARSER_ASSOC_NONASSOC, 0, build_leaf))
 				{

@@ -9,8 +9,16 @@
 */
 
 
-%token	comment_line	:	"\B[ \t\r]*;[^\r\n]*(\r)*\n"	,	3
-					;
+%name	line_end	:	"(\r\n|\n\r|\r|\n)"
+			;
+
+
+%token	LINE			:	"\B.+\E"					;
+
+%token	LINE_END		:	"{line_end}"							;
+
+
+//%token	comment_line	:	"\B[ \t\r]*;[^\r\n]*\E"	,	3		;
 
 
 
@@ -21,42 +29,35 @@
 
 */
 
-%token	comment_post	:	";[^\r\n]*"				,	1
-					;
+//%token	comment_post	:	";[^\r\n]*"				,	1			;
 
 
 /*
 ¿Õ°×
 */
-%token	%skip			:	"[ \t\r]+"					,	1	
-					;
+//%token	%skip			:	"[ \t]+"					,	1	;
 
 
 /*
 ¿ÕÐÐ
 */
-%token	%skip			:	"\B[ \t\r]*\n"				,	2	
-					;
+//%token	%skip			:	"\B[ \t]*\E"				,	2	;
 
 
 
 
 
 
-%token	LINE_END		:	"(\r)*\n"					,	2
-					;
 
 
-%token	section		:	"\[.+\]"
-					;
+//%token	section		:	"\[.+\]"				;
 
-%token	string   		:	"[^ ;\r\n][^;\r\n]*"
-					;
+
+//%token	string   		:	"[^ ;\r\n][^;\r\n]*"			;
 
 
 
-%token	combine_str	:	"([^ ;\r\n][^;\r\n]*\\[ \t\r]*)(?=((\r)*\n))" , 2
-					;
+//%token	combine_str	:	"([^ ;\r\n][^;\r\n]*\\[ \t]*)\E" , 2		;
 
 
 
@@ -65,8 +66,24 @@
 %start	ini_file		;
 
 
+ini_file				:	line_list
+					;
+	
+line_list				:	line_list	line	
+					|	line
+					;
+
+					
+line					:	LINE	LINE_END
+					|	LINE_END
+					;
+
+
+
+/*
 ini_file				:	item_list
 					;
+
 
 
 item_list				:	item_list	item
@@ -101,6 +118,6 @@ combine_list				:	combine_str comment LINE_END combine_list
 					;
 
 
-
+*/
 
 

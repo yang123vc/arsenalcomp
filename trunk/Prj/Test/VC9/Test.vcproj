@@ -694,7 +694,7 @@
 			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="0"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -771,6 +771,7 @@
 			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -849,7 +850,7 @@
 			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="0"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"

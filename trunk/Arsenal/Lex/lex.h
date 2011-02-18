@@ -117,6 +117,7 @@ struct __lex_match_result_tag
 		const wchar_t					*next;
 		size_t							line;
 		size_t							col;
+		int_t							next_action;
 
 		uint_t							flags;
 		lexProgSet_t					*prog_set;

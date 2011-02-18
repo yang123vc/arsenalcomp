@@ -258,17 +258,23 @@ struct __regex_instruction_tag
 
 
 
+typedef enum 
+{
+		RGX_ACT_NOACTION		=		0x0000,
+		RGX_ACT_INCLINE			=		0x0001
+}rgxThreadAction_t;
 
 
 typedef struct __thread_tag
 {
-		rgxIns_t		*pc;
-		const wchar_t	*sp;
-		size_t			line;
-		size_t			col;
+		rgxIns_t				*pc;
+		const wchar_t			*sp;
+		size_t					line;
+		size_t					col;
+		int_t					act;
 }rgxThread_t;
 
-rgxThread_t		RGX_BuildThread(rgxIns_t *pc, const wchar_t *sp, size_t x, size_t y);
+rgxThread_t		RGX_BuildThread(rgxIns_t *pc, const wchar_t *sp, size_t x, size_t y, int_t act);
 
 
 typedef struct __thd_list_tag

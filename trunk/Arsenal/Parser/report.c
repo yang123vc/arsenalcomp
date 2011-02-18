@@ -325,7 +325,6 @@ void Parser_PrintActionTable(const psrActionTable_t *tbl, const psrGrammar_t *gr
 		for(i = 0; i < tbl->nonterm_set.count; ++i)
 		{
 				AR_swprintf(buf, 1024, L"<%ls>", tbl->nonterm_set.lst[i]->name);
-
 				AR_AppendFormatString(str, L"%*ls",__WIDTH__, buf);
 		}
 

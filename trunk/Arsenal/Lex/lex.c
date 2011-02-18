@@ -359,7 +359,7 @@ const wchar_t*	Lex_GetLastError(const lex_t *lex)
 void			Lex_ClearLastError(lex_t *lex)
 {
 		AR_ASSERT(lex != NULL);
-		return AR_ClearString(lex->last_err_msg);
+		AR_ClearString(lex->last_err_msg);
 }
 
 

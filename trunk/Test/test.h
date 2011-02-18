@@ -5,12 +5,13 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #include "../Arsenal/Common/common.h"
 #include <time.h>
+#include <locale.h>
 
 AR_NAMESPACE_BEGIN
 
 
 
-#define LOAD_TXT_MAX_BUF  (1024*1024 * 1024)
+#define LOAD_TXT_MAX_BUF  (1024*1024 * 5)
 static  AR_INLINE const wchar_t* __load_txt(const wchar_t *path)
 {
 		FILE *pf;
@@ -21,6 +22,8 @@ static  AR_INLINE const wchar_t* __load_txt(const wchar_t *path)
 		buf = AR_NEWARR(byte_t, l);
 
 		AR_ASSERT(path != NULL);
+
+
 		
 		//pf = fopen("..\\..\\..\\misc\\book1.gmr", "r");
 

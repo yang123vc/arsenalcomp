@@ -19,6 +19,48 @@
 AR_NAMESPACE_BEGIN
 
 
+
+#define IS_NEW_LINE(_c)	((_c) == L'\n' || (_c) == L'\r')
+
+
+
+#define IS_LINE_BEGIN(_sp, _input)		((_sp) == (_input) || (IS_NEW_LINE((_sp)[-1])))
+#define IS_LINE_END(_sp)				(*(_sp) == L'\0' || (IS_NEW_LINE(*(_sp))))
+
+
+
+static AR_INLINE void __check_is_newline(const wchar_t *sp, int_t *pact, size_t *px, size_t *py)
+{
+		AR_ASSERT(sp != NULL && pact != NULL && px != NULL && py != NULL);
+
+		if(IS_NEW_LINE(*sp))
+		{																				
+				if(*pact & RGX_ACT_INCLINE)
+				{																		
+						*py = 0;															
+						*px += 1;
+						*pact &= ~RGX_ACT_INCLINE;
+				}else
+				{
+						wchar_t next_c = *(sp + 1);
+						if(IS_NEW_LINE(next_c) && *sp != next_c)
+						{
+								*py += 1;
+								*pact |= RGX_ACT_INCLINE;
+						}else
+						{
+								*py = 0;
+								*px += 1;
+						}
+				}
+		}else																			
+		{
+				*py += 1;
+		}
+
+}
+
+
 static void __add_thread(rgxThreadList_t *lst,  rgxThread_t thd, rgxProg_t *prog)
 {
 		AR_ASSERT(lst != NULL);
@@ -31,13 +73,13 @@ static void __add_thread(rgxThreadList_t *lst,  rgxThread_t thd, rgxProg_t *prog
 		case RGX_JMP_I:
 		{
 				AR_ASSERT(thd.pc->right == NULL);
-				__add_thread(lst, RGX_BuildThread(thd.pc->left, thd.sp, thd.line, thd.col), prog);
+				__add_thread(lst, RGX_BuildThread(thd.pc->left, thd.sp, thd.line, thd.col, thd.act), prog);
 				break;
 		}
 		case RGX_BRANCH_I:
 		{
-				__add_thread(lst, RGX_BuildThread(thd.pc->left, thd.sp, thd.line, thd.col), prog);
-				__add_thread(lst, RGX_BuildThread(thd.pc->right, thd.sp, thd.line, thd.col), prog);
+				__add_thread(lst, RGX_BuildThread(thd.pc->left, thd.sp, thd.line, thd.col, thd.act), prog);
+				__add_thread(lst, RGX_BuildThread(thd.pc->right, thd.sp, thd.line, thd.col, thd.act), prog);
 				break;
 		}
 		case RGX_LOOP_BEG_I:
@@ -65,8 +107,7 @@ static void __add_thread(rgxThreadList_t *lst,  rgxThread_t thd, rgxProg_t *prog
 }
 
 
-
-static bool_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, size_t *py, lexMatch_t *match);
+static bool_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, size_t *py, int_t *pact, lexMatch_t *match);
 static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match);
 
 
@@ -110,7 +151,7 @@ static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match
 		prog->mark = 0;
 		__clear_for_lookahead(prog);
 		prog->mark++;
-		__add_thread(curr, RGX_BuildThread(prog->start, sp,0,0), prog);
+		__add_thread(curr, RGX_BuildThread(prog->start, sp,0,0, RGX_ACT_NOACTION), prog);
 
 		for(;;)
 		{
@@ -148,7 +189,7 @@ static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match
 
 								if(is_ok)
 								{
-										__add_thread(next, RGX_BuildThread(pc + 1, sp + 1, 0, 0), prog);
+										__add_thread(next, RGX_BuildThread(pc + 1, sp + 1, 0, 0, RGX_ACT_NOACTION), prog);
 								}
 
 								break;
@@ -164,13 +205,13 @@ static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match
 												is_ok = true;
 										}else
 										{
-												is_ok = *sp != L'\n';/*否则*sp不可以为'\n'*/
+												is_ok = !IS_NEW_LINE(*sp); /*sp 不可为'\r' '\n'*/
 										}
 								}
 
 								if(is_ok)
 								{
-										__add_thread(next, RGX_BuildThread(pc + 1, sp + 1, 0, 0), prog);
+										__add_thread(next, RGX_BuildThread(pc + 1, sp + 1, 0, 0, RGX_ACT_NOACTION), prog);
 								}
 								break;
 						}
@@ -178,33 +219,33 @@ static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match
 						{
 								if(sp == input_beg)
 								{
-										__add_thread(next, RGX_BuildThread(pc + 1, sp, 0, 0), prog);
+										__add_thread(next, RGX_BuildThread(pc + 1, sp, 0, 0, RGX_ACT_NOACTION), prog);
 								}
-								--sp;
+								/*--sp;*/
 								break;
 						}
 						case RGX_END_I:
 						{
 								if(*sp == L'\0')
 								{
-										__add_thread(next, RGX_BuildThread(pc + 1, sp, 0, 0), prog);
+										__add_thread(next, RGX_BuildThread(pc + 1, sp, 0, 0, RGX_ACT_NOACTION), prog);
 								}
 								break;
 						}
 						case RGX_LINE_BEGIN_I:
 						{
-								if(sp == input_beg || *(sp-1) == L'\n')
+								if(IS_LINE_BEGIN(sp, match->input))
 								{
-										__add_thread(next, RGX_BuildThread(pc + 1, sp, 0, 0), prog);
+										__add_thread(next, RGX_BuildThread(pc + 1, sp, 0, 0, RGX_ACT_NOACTION), prog);
 								}
-								--sp;
+								/*--sp;*/
 								break;
 						}
 						case RGX_LINE_END_I:
 						{
-								if(*sp == L'\0' || *sp == L'\n')
+								if(IS_LINE_END(sp))
 								{
-										__add_thread(next, RGX_BuildThread(pc + 1, sp, 0, 0), prog);
+										__add_thread(next, RGX_BuildThread(pc + 1, sp, 0, 0, RGX_ACT_NOACTION), prog);
 								}
 								break;
 						}
@@ -219,18 +260,19 @@ static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match
 								for(i = 0; i < loop_cnt && is_ok; ++i)
 								{
 										size_t	x = 0,y = 0;
+										int_t act = RGX_ACT_NOACTION;
 										rgxProg_t loop;
 										loop.start = pc + 1;
 										loop.pc = loop.start;
 										loop.mark = 0;
 										
-										is_ok = __loop(&loop, &sp, &x, &y, match);
+										is_ok = __loop(&loop, &sp, &x, &y, &act,  match);
 
 								}
 
 								if(is_ok)
 								{
-										__add_thread(next, RGX_BuildThread(pc->left, sp, 0, 0), prog);
+										__add_thread(next, RGX_BuildThread(pc->left, sp, 0, 0, RGX_ACT_NOACTION), prog);
 								}
 								
 
@@ -261,14 +303,14 @@ static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match
 
 										}else
 										{
-												__add_thread(next, RGX_BuildThread(pc->left, sp, 0,0), prog);
+												__add_thread(next, RGX_BuildThread(pc->left, sp, 0,0, RGX_ACT_NOACTION), prog);
 										}
 
 								}else
 								{
 										if(pc->lookahead.negative)
 										{
-												__add_thread(next, RGX_BuildThread(pc->left, sp, 0,0), prog);
+												__add_thread(next, RGX_BuildThread(pc->left, sp, 0,0, RGX_ACT_NOACTION), prog);
 										}else
 										{
 
@@ -336,16 +378,18 @@ static void __clear_for_loop(rgxProg_t *prog)
 
 
 
-static bool_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, size_t *py, lexMatch_t *match)
+static bool_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, size_t *py, int_t *pact, lexMatch_t *match)
 {
 		
 		rgxThreadList_t *curr, *next;
 		rgxIns_t				*pc;
 		bool_t					matched;
 		const wchar_t	*sp, *final_next;
+		int_t		act, final_act;
 		size_t i,x,y, final_row, final_col;
 		
-		AR_ASSERT(prog != NULL && start_pos != NULL && *start_pos != NULL && px != NULL && py != NULL && match != NULL);
+		
+		AR_ASSERT(prog != NULL && start_pos != NULL && *start_pos != NULL && px != NULL && py != NULL && pact != NULL && match != NULL);
 		
 		__clear_for_loop(prog);
 		
@@ -361,11 +405,11 @@ static bool_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, si
 		sp = *start_pos;
 		x = *px;
 		y = *py;
-
-		final_row = x; final_col = y; final_next = NULL;
+		act = *pact;
+		final_row = x; final_col = y; final_next = NULL; final_act = RGX_ACT_NOACTION;
 
 		prog->mark++;
-		__add_thread(curr, RGX_BuildThread(prog->start, sp, x,y), prog);
+		__add_thread(curr, RGX_BuildThread(prog->start, sp, x,y, act), prog);
 
 		
 		for(;;)
@@ -379,6 +423,7 @@ static bool_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, si
 						sp = curr->lst[i].sp;
 						x = curr->lst[i].line;
 						y = curr->lst[i].col;
+						act = curr->lst[i].act;
 
 						switch(pc->opcode)
 						{
@@ -406,17 +451,9 @@ static bool_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, si
 
 								if(is_ok)
 								{
-										if(*sp == L'\n')
-										{
-												y = 0;
-												x++;
-										}else
-										{
-												y++;
-										}
-
+										__check_is_newline(sp, &act, &x, &y);
 										sp++;
-										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y), prog);
+										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y, act), prog);
 								}
 								break;
 						}
@@ -431,22 +468,15 @@ static bool_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, si
 												is_ok = true;
 										}else
 										{
-												is_ok = *sp != L'\n';/*否则*sp不可以为'\n'*/
+												is_ok = !IS_NEW_LINE(*sp); /*sp 不可为'\r' '\n'*/
 										}
 								}
 
 								if(is_ok)
 								{
-										if(*sp == L'\n')
-										{
-												y = 0;
-												x++;
-										}else
-										{
-												y++;
-										}
+										__check_is_newline(sp, &act, &x, &y);
 										sp++;
-										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y), prog);
+										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y, act), prog);
 								}
 
 								break;
@@ -455,7 +485,7 @@ static bool_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, si
 						{
 								if(sp == match->input)
 								{
-										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y), prog);
+										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y, act), prog);
 								}
 								break;
 						}
@@ -463,23 +493,23 @@ static bool_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, si
 						{
 								if(*sp == L'\0')
 								{
-										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y), prog);
+										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y, act), prog);
 								}
 								break;
 						}
 						case RGX_LINE_BEGIN_I:
 						{
-								if(sp == match->input || *(sp-1) == L'\n')
+								if(IS_LINE_BEGIN(sp, match->input))
 								{
-										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y), prog);
+										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y, act), prog);
 								}
 								break;
 						}
 						case RGX_LINE_END_I:
 						{
-								if(*sp == L'\0' || *sp == L'\n') 
+								if(IS_LINE_END(sp))
 								{
-										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y), prog);
+										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y, act), prog);
 								}
 								break;
 						}
@@ -500,12 +530,12 @@ static bool_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, si
 										loop.start = pc + 1;
 										loop.pc = loop.start;
 										loop.mark = 0;
-										is_ok = __loop(&loop, &sp, &x, &y, match);
+										is_ok = __loop(&loop, &sp, &x, &y, &act, match);
 								}
 
 								if(is_ok)
 								{
-										__add_thread(next, RGX_BuildThread(pc->left, sp, x,y), prog);
+										__add_thread(next, RGX_BuildThread(pc->left, sp, x,y, act), prog);
 								}
 								
 
@@ -516,7 +546,7 @@ static bool_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, si
 								final_row = x;
 								final_col = y;
 								final_next = sp;
-
+								final_act = act;
 								matched = true;
 								goto BREAK_POINT;/*这一步决定了优先级为left most*/
 						}
@@ -537,14 +567,14 @@ static bool_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, si
 
 										}else
 										{
-												__add_thread(next, RGX_BuildThread(pc->left, sp, x,y), prog);
+												__add_thread(next, RGX_BuildThread(pc->left, sp, x,y, act), prog);
 										}
 
 								}else
 								{
 										if(pc->lookahead.negative)
 										{
-												__add_thread(next, RGX_BuildThread(pc->left, sp, x,y), prog);
+												__add_thread(next, RGX_BuildThread(pc->left, sp, x,y, act), prog);
 										}else
 										{
 
@@ -580,6 +610,7 @@ static bool_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, si
 		{
 				*py = final_col;
 				*px = final_row;
+				*pact = final_act;
 				AR_ASSERT(final_next != NULL);
 				*start_pos = final_next;
 				return true;
@@ -592,15 +623,15 @@ static bool_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, si
 
 
 
-
-
 static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 {
 		rgxThreadList_t	*curr, *next;
 		bool_t			matched;
 		rgxIns_t		*pc;
 		const wchar_t	*sp, *final_next;
+
 		size_t i,x,y, final_row, final_col;
+		int_t		act, final_act;
 		
 
 		AR_ASSERT(prog != NULL && match->next != NULL && match->input != NULL);
@@ -628,11 +659,12 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 		sp = match->next;
 		x = match->line;
 		y = match->col;
+		act = match->next_action;
 
-		final_row = 0; final_col = 0; final_next = NULL;
+		final_row = 0; final_col = 0; final_next = NULL; final_act = RGX_ACT_NOACTION;
 
 		prog->mark++;
-		__add_thread(curr, RGX_BuildThread(prog->start, sp, x,y), prog);
+		__add_thread(curr, RGX_BuildThread(prog->start, sp, x,y, act), prog);
 
 		for(;;)
 		{
@@ -645,6 +677,7 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 						sp = curr->lst[i].sp;
 						x = curr->lst[i].line;
 						y = curr->lst[i].col;
+						act = curr->lst[i].act;
 
 						switch(pc->opcode)
 						{
@@ -672,17 +705,10 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 
 								if(is_ok)
 								{
-										if(*sp == L'\n')
-										{
-												y = 0;
-												x++;
-										}else
-										{
-												y++;
-										}
+										__check_is_newline(sp, &act, &x, &y);
 
 										sp++;
-										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y), prog);
+										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y, act), prog);
 								}
 								break;
 						}
@@ -697,22 +723,15 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 												is_ok = true;
 										}else
 										{
-												is_ok = *sp != L'\n';/*否则*sp不可以为'\n'*/
+												is_ok = !IS_NEW_LINE(*sp); /*sp 不可为'\r' || '\n'*/
 										}
 								}
 
 								if(is_ok)
 								{
-										if(*sp == L'\n')
-										{
-												y = 0;
-												x++;
-										}else
-										{
-												y++;
-										}
+										__check_is_newline(sp, &act, &x, &y);
 										sp++;
-										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y), prog);
+										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y, act), prog);
 								}
 
 								break;
@@ -721,7 +740,7 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 						{
 								if(sp == match->input)
 								{
-										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y), prog);
+										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y, act), prog);
 								}
 								break;
 						}
@@ -729,23 +748,23 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 						{
 								if(*sp == L'\0')
 								{
-										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y), prog);
+										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y, act), prog);
 								}
 								break;
 						}
 						case RGX_LINE_BEGIN_I:
 						{
-								if(sp == match->input || *(sp-1) == L'\n')
+								if(IS_LINE_BEGIN(sp, match->input))
 								{
-										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y), prog);
+										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y, act), prog);
 								}
 								break;
 						}
 						case RGX_LINE_END_I:
 						{
-								if(*sp == L'\0' || *sp == L'\n') 
+								if(IS_LINE_END(sp))
 								{
-										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y), prog);
+										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y, act), prog);
 								}
 								break;
 						}
@@ -765,12 +784,12 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 										loop.start = pc + 1;
 										loop.pc = loop.start;
 										loop.mark = 0;
-										is_ok =  __loop(&loop, &sp, &x, &y, match);
+										is_ok =  __loop(&loop, &sp, &x, &y, &act, match);
 								}
 
 								if(is_ok)
 								{
-										__add_thread(next, RGX_BuildThread(pc->left, sp, x,y), prog);
+										__add_thread(next, RGX_BuildThread(pc->left, sp, x,y, act), prog);
 								}
 								
 
@@ -778,13 +797,11 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 						}
 						case RGX_LOOP_END_I:
 						{
-
 								AR_CHECK(false, L"Arsenal : regex exec error %hs\r\n", AR_FUNC_NAME);
 						}
 								break;
 						case RGX_LOOKAHEAD_BEG_I:
 						{
-								
 								rgxProg_t lhd;
 								
 								lhd.start = pc + 1;
@@ -798,14 +815,14 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 
 										}else
 										{
-												__add_thread(next, RGX_BuildThread(pc->left, sp, x,y), prog);
+												__add_thread(next, RGX_BuildThread(pc->left, sp, x,y, act), prog);
 										}
 
 								}else
 								{
 										if(pc->lookahead.negative)
 										{
-												__add_thread(next, RGX_BuildThread(pc->left, sp, x,y), prog);
+												__add_thread(next, RGX_BuildThread(pc->left, sp, x,y, act), prog);
 										}else
 										{
 
@@ -830,7 +847,7 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 								final_row = x;
 								final_col = y;
 								final_next = sp;
-
+								final_act = act;
 								matched = true;
 								goto BREAK_POINT;/*这一步决定了优先级为left most*/
 								break;
@@ -853,6 +870,7 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 				match->col = final_col;
 				match->line = final_row;
 				match->next = final_next;
+				match->next_action = final_act;
 		}
 		return matched;
 }
