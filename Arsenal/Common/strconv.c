@@ -132,6 +132,7 @@ static size_t __unicode_to_utf8_char(wchar_t uch, byte_t *utf8)
 }
 
 
+
 size_t AR_wcs_to_utf8(const wchar_t *unicode, size_t n, char *out, size_t out_len)
 {
 		char *p;

@@ -783,7 +783,7 @@ void CTextFileRead::ReadByte(unsigned char& ch)
 			ch = 0;
 			return;
 		}
-
+		
 		m_buffpos=0;
 	}
 	else

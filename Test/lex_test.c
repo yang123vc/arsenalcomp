@@ -711,10 +711,257 @@ void lex_chinese_char()
 
 
 
+
+void lex_line_test()
+{
+		lexMatch_t		*match;
+		lex_t			*lex;
+
+		lex = Lex_Create();
+		
+		lexAction_t act;
+		act.is_skip = false;
+		act.priority = 0;
+		act.value = 200;
+		AR_ASSERT(Lex_InsertRule(lex, L"\\B[ \\t]*;[^\\r\\n]*\\E", &act));
+
+		act.value = 201;
+		AR_ASSERT(Lex_InsertRule(lex, L"[\\r\\n]", &act));
+		
+
+		
+		act.value = 0;
+		AR_ASSERT(Lex_InsertRule(lex, L"$", &act));
+
+		match = Lex_CreateMatch(lex);
+		
+		//Lex_ResetInput(match, L";中国\r;字abc\n;真麻烦\r\n;太烦了\r\n");
+		Lex_ResetInput(match, L";中国\n\r;字abc\r\n");
+		
+
+		lexToken_t tok;
+		bool_t is_ok = false;
+		while(Lex_Match(match, &tok))
+		{
+				if(tok.value == 0)
+				{
+						is_ok = true;
+						break;
+				}
+				wchar_t *s = AR_wcsndup(tok.str, tok.count);
+				AR_printf(L"%ls : row == %d : col == %d\r\n", s, tok.line, tok.col);
+				AR_DEL(s);
+		}
+
+		if(!is_ok)
+		{
+				AR_printf(L"%ls\r\n", L"failed\r\n");
+		}else
+		{
+				AR_printf(L"%ls\r\n", L"success\r\n");
+		}
+
+
+		Lex_DestroyMatch(match);
+		Lex_Destroy(lex);
+}
+
+
+void lex_line_test2()
+{
+		lexMatch_t		*match;
+		lex_t			*lex;
+
+		lex = Lex_Create();
+		
+		lexAction_t act;
+		act.is_skip = false;
+		act.priority = 0;
+		act.value = 200;
+		AR_ASSERT(Lex_InsertRule(lex, L"(\\r\\n)|\\r|\\n", &act));
+		
+		act.value = 0;
+		AR_ASSERT(Lex_InsertRule(lex, L"$", &act));
+
+		match = Lex_CreateMatch(lex);
+		
+		Lex_ResetInput(match, L"\r\n\n\r");
+		
+
+		lexToken_t tok;
+		bool_t is_ok = false;
+		
+		printf("\r\n");
+
+		while(Lex_Match(match, &tok))
+		{
+				if(tok.value == 0)
+				{
+						is_ok = true;
+						break;
+				}
+				wchar_t *s = AR_wcsndup(tok.str, tok.count);
+				AR_printf(L"%ls : row == %d : col == %d\r\n", s, tok.line, tok.col);
+				AR_DEL(s);
+		}
+
+		if(!is_ok)
+		{
+				AR_printf(L"%ls\r\n", L"failed\r\n");
+		}else
+		{
+				AR_printf(L"%ls\r\n", L"success\r\n");
+		}
+
+
+		Lex_DestroyMatch(match);
+		Lex_Destroy(lex);
+
+}
+
+
+
+
+void lex_line_test3()
+{
+		lexMatch_t		*match;
+		lex_t			*lex;
+
+		lex = Lex_Create();
+		
+		lexAction_t act;
+		act.is_skip = false;
+		act.priority = 1;
+		act.value = 200;
+		AR_ASSERT(Lex_InsertRule(lex, L"\\r\\n", &act));
+
+
+		act.priority = 1;
+		act.value = 201;
+		AR_ASSERT(Lex_InsertRule(lex, L"\\n\\r", &act));
+
+
+		act.priority = 0;
+		act.value = 301;
+		AR_ASSERT(Lex_InsertRule(lex, L"\\r", &act));
+
+
+		act.priority = 0;
+		act.value = 302;
+		AR_ASSERT(Lex_InsertRule(lex, L"\\n", &act));
+		
+		act.value = 0;
+		AR_ASSERT(Lex_InsertRule(lex, L"$", &act));
+
+		match = Lex_CreateMatch(lex);
+		
+		Lex_ResetInput(match, L"\n\r\r\n");
+		
+
+		lexToken_t tok;
+		bool_t is_ok = false;
+		
+		printf("\r\n");
+
+		while(Lex_Match(match, &tok))
+		{
+				wchar_t *s = AR_wcsndup(tok.str, tok.count);
+				AR_printf(L"%ls : row == %d : col == %d : count == %d\r\n", s, tok.line, tok.col, tok.count);
+				AR_DEL(s);
+				
+				if(tok.value == 0)
+				{
+						is_ok = true;
+						break;
+				}
+		}
+
+		if(!is_ok)
+		{
+				AR_printf(L"%ls\r\n", L"failed\r\n");
+		}else
+		{
+				AR_printf(L"%ls\r\n", L"success\r\n");
+		}
+
+
+		Lex_DestroyMatch(match);
+		Lex_Destroy(lex);
+
+}
+
+
+
+
+
+
+
+
+void lex_line_test4()
+{
+		lexMatch_t		*match;
+		lex_t			*lex;
+
+		lex = Lex_Create();
+		
+		lexAction_t act;
+		act.is_skip = false;
+		act.priority = 1;
+		act.value = 200;
+		AR_ASSERT(Lex_InsertRule(lex, L"[\\r\\n]", &act));
+
+
+		
+		
+		act.value = 0;
+		AR_ASSERT(Lex_InsertRule(lex, L"$", &act));
+
+		match = Lex_CreateMatch(lex);
+		
+		Lex_ResetInput(match, L"\n\r\r\n\r\n");
+		
+
+		lexToken_t tok;
+		bool_t is_ok = false;
+		
+		printf("\r\n");
+
+		while(Lex_Match(match, &tok))
+		{
+				wchar_t *s = AR_wcsndup(tok.str, tok.count);
+				AR_printf(L"%ls : row == %d : col == %d : count == %d\r\n", s, tok.line, tok.col, tok.count);
+				AR_DEL(s);
+				
+				if(tok.value == 0)
+				{
+						is_ok = true;
+						break;
+				}
+		}
+
+		if(!is_ok)
+		{
+				AR_printf(L"%ls\r\n", L"failed\r\n");
+		}else
+		{
+				AR_printf(L"%ls\r\n", L"success\r\n");
+		}
+
+
+		Lex_DestroyMatch(match);
+		Lex_Destroy(lex);
+
+}
+
+
 void lex_test()
 {
 		
-		lex_chinese_char();
+		//lex_line_test();
+		//lex_line_test2();
+		//lex_line_test3();
+		lex_line_test4();
+		//lex_chinese_char();
 		//lex_test_loop2();
 
 		//rgx_test_loop();

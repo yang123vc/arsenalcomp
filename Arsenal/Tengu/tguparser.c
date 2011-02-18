@@ -38,10 +38,13 @@ static	const	lex_t			*__g_lex	 = NULL;
 static	const	psrGrammar_t	*__g_grammar = NULL;
 static	const	parser_t		*__g_parser = NULL;
 
+
+
 static	void	__parser_core_init()
 {
 		AR_InitSpinLock(&__g_lock);
 		__g_lex     = __build_lex();
+		
 		__g_grammar	= __build_grammar(&__g_handler );
 		__g_parser	= Parser_CreateParser(__g_grammar, PARSER_LALR);
 }

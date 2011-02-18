@@ -3,6 +3,7 @@
 
 #include "../Arsenal/Tengu/tengu.h"
 #include "../Arsenal/Tengu/tguparser.h"
+#include "../Arsenal/Tengu/tguutility.h"
 
 
 #if defined(__LIB)
@@ -40,6 +41,13 @@ static int_t	AR_STDCALL tgu_print (tguMachine_t *vm)
 		return 0;
 }
 
+
+#if(OS_TYPE == OS_WINDOWS_CE)
+		#define TGU_TEST_PATH	L"\\Program Files\\Test\\tengu_input.txt"
+#else
+		#define TGU_TEST_PATH	L"..\\..\\..\\misc\\tengu_input.txt"
+#endif
+
 void test1()
 {
 		tguParseResult_t		parse_result;
@@ -56,7 +64,10 @@ void test1()
 
 		parser = TGU_CreateParser(&__g_report, &ext); 
 		
-		code = __load_txt(L"..\\..\\..\\misc\\tengu_input.txt");
+
+		code = __load_txt(TGU_TEST_PATH);
+
+		
 
 		AR_printf(L"%ls\r\n", code);
 
@@ -92,12 +103,27 @@ void test1()
 		TGU_DestroySymbTable(ext.global_constant);
 }
 
+void load_source_test()
+{
+		ARSpace::tguSrc_t		*src;
+		
+		//setlocale(LC_ALL, "china");
 
+		src = 		TGU_LoadSources(L"..\\..\\..\\misc\\txt_enc_test\\", L"utf8_read_test.txt");
+
+
+		if(src)
+		{
+				MessageBox(NULL, src->code, 0,0);
+				TGU_ReleaseSources(src);
+		}
+}
 
 
 void	Tengu_Test()
 {
-		test1();
+		//test1();
+		load_source_test();
 
 
 }

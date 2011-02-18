@@ -48,7 +48,7 @@ ARSpace::psrNode_t*		AR_STDCALL build_leaf(const ARSpace::psrToken_t *tok, void 
 				str = TEXT("EOI");
 		}else
 		{
-				ASSERT(tok->str_cnt > 0);
+				//ASSERT(tok->str_cnt > 0);
 				str.Append(tok->str, (int)tok->str_cnt);
 		}
 		

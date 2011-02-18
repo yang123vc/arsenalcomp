@@ -109,18 +109,15 @@ bool_t			TGU_HasString(const wchar_t *name)
 
 
 
+
+
+
+
+
+
+
 /***************************************************************Sources**************************************************************/
 
-
-#if defined(OS_FAMILY_WINDOWS)
-
-		#define TGU_PATH_SP		L"\\"
-		
-#elif defined(OS_FAMILY_UNIX)
-		#define TGU_PATH_SP		L"//"
-#else
-		#error "Unknown platform not supported!"
-#endif
 
 
 tguSrc_t*		TGU_LoadSources(const wchar_t *work_dir, const wchar_t *file_name)
@@ -138,9 +135,9 @@ tguSrc_t*		TGU_LoadSources(const wchar_t *work_dir, const wchar_t *file_name)
 
 		AR_wcscpy(path, work_dir);
 		
-		if(work_dir[AR_wcslen(work_dir)-1] != TGU_PATH_SP[0])
+		if(work_dir[AR_wcslen(work_dir)-1] != AR_PATH_SP_CHAR)
 		{
-				AR_wcscat(path, TGU_PATH_SP);
+				AR_wcscat(path, AR_PATH_SP);
 		}
 		AR_wcscat(path, file_name);
 
@@ -160,7 +157,26 @@ tguSrc_t*		TGU_LoadSources(const wchar_t *work_dir, const wchar_t *file_name)
 		src->module_name = AR_wcsndup(file_name, len_of_name);
 
 
-		src->code = AR_wcsdup(L" var test = 33; return null;");
+		{
+				arString_t *str;
+
+				str = AR_CreateString();
+				if(AR_LoadBomTextFile(path, NULL, AR_LINE_SP, str))
+				{
+						src->code = AR_wcsdup(AR_GetStrString(str));
+				}else
+				{
+						src->code = NULL;
+				}
+				AR_DestroyString(str);
+		}
+
+		if(!src->code)
+		{
+				TGU_ReleaseSources(src);
+				src = NULL;
+		}
+
 		return src;
 }
 
@@ -189,6 +205,7 @@ void			TGU_ReleaseSources(tguSrc_t		*src)
 
 		AR_DEL(src);
 }
+
 
 
 

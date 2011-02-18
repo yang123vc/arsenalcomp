@@ -492,7 +492,7 @@
 				AssemblerOutput="0"
 				WarningLevel="4"
 				DebugInformationFormat="3"
-				CompileAs="1"
+				CompileAs="2"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -1319,6 +1319,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\Arsenal\Common\strtable.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\textfile.c"
 				>
 			</File>
 			<File

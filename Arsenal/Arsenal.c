@@ -22,8 +22,12 @@ static bool_t	__g_is_initialized = false;
 
 void	Arsenal_Init(const arInit_t *ctx)
 {
+		uint_64_t		total_beg, total_end;
+
 		/*AR_ASSERT(ctx != NULL);*/
 		AR_ASSERT(!__g_is_initialized);
+
+		total_beg = AR_GetTime_Milliseconds();
 		
 		if(!__g_is_initialized)
 		{
@@ -33,6 +37,14 @@ void	Arsenal_Init(const arInit_t *ctx)
 				Tools_Init();
 				TGU_Init();
 				__g_is_initialized = true;
+		}
+
+		total_end = AR_GetTime_Milliseconds();
+		
+		{
+				wchar_t msg[1024];
+				AR_swprintf(msg, AR_NELEMS(msg), L"Arsenal initialized consume time == %"  AR_PLAT_INT_FMT L"d\r\n", total_end - total_beg);
+				AR_printf(msg);
 		}
 }
 

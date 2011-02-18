@@ -1255,6 +1255,17 @@ void escstr_n_test0()
 		}
 }
 
+void align_test()
+{
+		byte_t *p1 = (byte_t*)AR_malloc(37);
+		byte_t *p2 = (byte_t*)AR_malloc(37);
+
+		AR_memset(p1, 0, 37);
+		AR_memset(p2, 0xdd, 37);
+
+		AR_memswap(p1,p2, 37);
+
+}
 
 void com_test()
 {
@@ -1312,8 +1323,9 @@ void com_test()
 		//com_str_test_vcprintf();
 		//com_test_srpintf();
 
-		escstr_n_test1();
-		escstr_n_test0();
+		//escstr_n_test1();
+		//escstr_n_test0();
+		align_test();
 }
 
 

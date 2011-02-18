@@ -210,6 +210,14 @@
 		#endif
 
 		#include <windows.h>
+		
+
+		#define			AR_PATH_SP				L"\\"
+		#define			AR_PATH_SP_CHAR			L'\\'
+		
+		#define			AR_LINE_SP				L"\r\n"
+				
+
 #elif defined(OS_FAMILY_UNIX)
         #include <unistd.h>
         #include <pthread.h>
@@ -219,6 +227,16 @@
 		#if(OS_TYPE == OS_MAC_OS_X || OS_TYPE == OS_IPHONE)
 			#include <libkern/OSAtomic.h>
 		#endif
+
+		#define AR_PATH_SP				L"//"
+		#define AR_PATH_SP_CHAR			L'//'
+		
+		#if(OS_TYPE == OS_MAC_OS_X || OS_TYPE == OS_IPHONE)
+			#define			AR_LINE_SP				L"\r"
+		#else
+			#define			AR_LINE_SP				L"\n"
+		#endif
+
 #else
 		#error "Unknown OS not supported!"
 #endif
@@ -565,11 +583,6 @@ typedef void*					ptr_t;
 
 /*************************************************************************************************************/
 
-#if(0)
-#if(OS_TYPE == OS_WINDOWS_CE || OS_TYPE == OS_IPHONE)
-		#define AR_LOW_MEM_POLICY		1
-#endif
-#endif
 
 
 #endif

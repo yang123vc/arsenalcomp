@@ -194,6 +194,7 @@ void Lex_ResetInput(lexMatch_t *pmatch, const wchar_t *input)
 		pmatch->next = pmatch->input;
 		pmatch->is_ok = true;
 		pmatch->col = pmatch->line = 0;
+		pmatch->next_action = RGX_ACT_NOACTION;
 }
 
 
@@ -208,7 +209,9 @@ void Lex_ResetMatchState(lexMatch_t *pmatch)
 		AR_ASSERT(pmatch != NULL && pmatch->input != NULL);
 		pmatch->is_ok = true;
 		pmatch->col = pmatch->line = 0;
+		pmatch->next_action = RGX_ACT_NOACTION;
 		pmatch->next = pmatch->input;
+
 }
 
 
@@ -225,7 +228,6 @@ lexMatch_t*		Lex_CreateMatch(const lex_t *lex)
 		AR_ASSERT(lex != NULL);
 		
 		pmatch = AR_NEW(lexMatch_t);
-		
 
 
 		AR_memset(pmatch, 0, sizeof(*pmatch));
@@ -422,7 +424,7 @@ REMATCH:
 				AR_ASSERT(false);
 				*/
 
-				AR_CHECK(false, L"%ls\r\n", L"Invalid empty pattern\r\n");
+				//AR_CHECK(false, L"%ls\r\n", L"Invalid empty pattern\r\n");
 				
 				return false;
 		}

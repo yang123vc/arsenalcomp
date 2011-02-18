@@ -21,6 +21,110 @@ AR_NAMESPACE_BEGIN
 
 
 
+const wchar_t* TGU_TokenValToString(size_t tok_val)
+{
+		switch(tok_val)
+		{
+		default:
+				AR_ASSERT(false);
+				return L"";
+		case TOK_DELIM_ID:
+				return L" ";
+		case TOK_NAME:
+				return L"Identifier";
+		case TOK_STRING:
+				return L"String";
+		case TOK_FLOAT_NUMBER:
+				return L"Float Number";
+		case TOK_INT_NUMBER:
+				return L"Int Number";
+		case TOK_FOR:
+				return L"for";
+		case TOK_DO:
+				return L"do";
+		case TOK_WHILE:
+				return L"while";
+		case TOK_IF:
+				return L"if";
+		case TOK_ELSE:
+				return L"else";
+		case TOK_CONTINUE:
+				return L"continue";
+		case TOK_BREAK:
+				return L"break";
+		case TOK_RETURN:
+				return L"return";
+		case TOK_NULL:
+				return L"null";
+		case TOK_TRUE:
+				return L"true";
+		case TOK_FALSE:
+				return L"false";
+		case TOK_VAR:
+				return L"var";
+		case TOK_IMPORT:
+				return L"import";
+		case TOK_ELLIPSIS:
+				return L"...";
+		case TOK_INC:
+				return L"++";
+		case TOK_DEC:
+				return L"--";
+		case TOK_ANDAND:
+				return L"++";
+		case TOK_OROR:
+				return L"||";
+		case TOK_LE:
+				return L"<=";
+		case TOK_GE:
+				return L">=";
+		case TOK_EQ:
+				return L"==";
+		case TOK_NE:
+				return L"!=";
+		case TOK_LESS:
+				return L"<";
+		case TOK_GREATER:
+				return L">";
+		case TOK_L_BRACES:
+				return L"{";
+		case TOK_R_BRACES:
+				return L"}";
+		case TOK_L_PAREN:
+				return L"(";
+		case TOK_R_PAREN:
+				return L")";
+		case TOK_L_SQUARE:
+				return L"[";
+		case TOK_R_SQUARE:
+				return L"]";
+		case TOK_SEMICOLON:
+				return L";";
+		case TOK_COMMA:
+				return L",";
+		case TOK_ASSIGN:
+				return L"=";
+		case TOK_ADD:
+				return L"+";
+		case TOK_SUB:
+				return L"-";
+		case TOK_MUL:
+				return L"*";
+		case TOK_DIV:
+				return L"/";
+		case TOK_MOD:
+				return L"%";
+		case TOK_NOT:
+				return L"!";
+		case TOK_COLON:
+				return L":";
+		case TOK_QUEST:
+				return L"?";
+		case TOK_DOT:
+				return L".";
+		}
+}
+
 
 
 

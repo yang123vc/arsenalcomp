@@ -490,33 +490,6 @@ uint_t			AR_wcshash_n(const wchar_t *str, size_t n);
 
 
 
-/***************************************************************Misc**********************************************************/
-#define	AR_ESCSTR_ERR_OK				0x00
-#define	AR_ESCSTR_ERR_VALUE				0x01
-#define	AR_ESCSTR_ERR_CHAR				0x02
-#define AR_ESCSTR_ERR_BUFFER			0x03
-
-typedef struct __escape_string_error_tag
-{
-		int_t			type;
-		const wchar_t	*pos;
-		uint_64_t		value;
-}arEscStrErr_t;
-
-
-wchar_t*		AR_escstr_to_str(const wchar_t *src, arEscStrErr_t *error);
-wchar_t*		AR_str_to_escstr(const wchar_t *src);
-
-wchar_t*		AR_escstr_to_str_n(const wchar_t *src, size_t n, arEscStrErr_t *error);
-wchar_t*		AR_str_to_escstr_n(const wchar_t *src, size_t n);
-
-
-int_t 			AR_escstr_to_str_buf(wchar_t *dest, size_t len, const wchar_t *src, arEscStrErr_t *error);
-int_t 			AR_str_to_escstr_buf(wchar_t *dest, size_t len, const wchar_t *src);
-
-
-int_t 			AR_escstr_to_str_buf_n(wchar_t *dest, size_t len, const wchar_t *src, size_t n,arEscStrErr_t *error);
-int_t 			AR_str_to_escstr_buf_n(wchar_t *dest, size_t len, const wchar_t *src, size_t n);
 
 /********************************************************String*****************************************************************/
 
@@ -681,6 +654,56 @@ const byte_t*	AR_GetBufferData(const arBuffer_t *buffer);
 /*可读内存块长度*/
 size_t			AR_GetBufferAvailable(const arBuffer_t *buffer);
 
+
+
+
+
+
+
+/***************************************************************Misc**********************************************************/
+#define	AR_ESCSTR_ERR_OK				0x00
+#define	AR_ESCSTR_ERR_VALUE				0x01
+#define	AR_ESCSTR_ERR_CHAR				0x02
+#define AR_ESCSTR_ERR_BUFFER			0x03
+
+typedef struct __escape_string_error_tag
+{
+		int_t			type;
+		const wchar_t	*pos;
+		uint_64_t		value;
+}arEscStrErr_t;
+
+
+wchar_t*		AR_escstr_to_str(const wchar_t *src, arEscStrErr_t *error);
+wchar_t*		AR_str_to_escstr(const wchar_t *src);
+
+wchar_t*		AR_escstr_to_str_n(const wchar_t *src, size_t n, arEscStrErr_t *error);
+wchar_t*		AR_str_to_escstr_n(const wchar_t *src, size_t n);
+
+
+int_t 			AR_escstr_to_str_buf(wchar_t *dest, size_t len, const wchar_t *src, arEscStrErr_t *error);
+int_t 			AR_str_to_escstr_buf(wchar_t *dest, size_t len, const wchar_t *src);
+
+
+int_t 			AR_escstr_to_str_buf_n(wchar_t *dest, size_t len, const wchar_t *src, size_t n,arEscStrErr_t *error);
+int_t 			AR_str_to_escstr_buf_n(wchar_t *dest, size_t len, const wchar_t *src, size_t n);
+
+
+
+/***************************************************************Text**********************************************************/
+
+
+typedef enum
+{
+		AR_TXT_BOM_ASCII		=		0x01,
+		AR_TXT_BOM_UTF16_BE		=		0x02,
+		AR_TXT_BOM_UTF16_LE		=		0x04,
+		AR_TXT_BOM_UTF_8		=		0x08,
+		AR_TXT_BOM_UTF32_LE		=		0x10,
+		AR_TXT_BOM_UTF32_BE		=		0x20
+}arTxtBom_t;
+
+bool_t	AR_LoadBomTextFile(const wchar_t *path, arTxtBom_t *bom, const wchar_t *line_sp, arString_t *out);
 
 
 
