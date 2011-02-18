@@ -918,7 +918,7 @@ void lex_line_test4()
 
 		match = Lex_CreateMatch(lex);
 		
-		Lex_ResetInput(match, L"\n\r\r\n\r\n");
+		Lex_ResetInput(match, L"\n\r\r\r\n\n");
 		
 
 		lexToken_t tok;

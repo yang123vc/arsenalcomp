@@ -29,7 +29,7 @@ AR_NAMESPACE_BEGIN
 
 
 
-static AR_INLINE void __check_is_newline(const wchar_t *sp, int_t *pact, size_t *px, size_t *py)
+static AR_INLINE void __check_is_newline(const wchar_t *sp, uint_32_t *pact, size_t *px, size_t *py)
 {
 		AR_ASSERT(sp != NULL && pact != NULL && px != NULL && py != NULL);
 
@@ -107,7 +107,7 @@ static void __add_thread(rgxThreadList_t *lst,  rgxThread_t thd, rgxProg_t *prog
 }
 
 
-static bool_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, size_t *py, int_t *pact, lexMatch_t *match);
+static bool_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, size_t *py, uint_32_t *pact, lexMatch_t *match);
 static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match);
 
 
@@ -260,7 +260,7 @@ static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match
 								for(i = 0; i < loop_cnt && is_ok; ++i)
 								{
 										size_t	x = 0,y = 0;
-										int_t act = RGX_ACT_NOACTION;
+										uint_32_t act = RGX_ACT_NOACTION;
 										rgxProg_t loop;
 										loop.start = pc + 1;
 										loop.pc = loop.start;
@@ -378,14 +378,14 @@ static void __clear_for_loop(rgxProg_t *prog)
 
 
 
-static bool_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, size_t *py, int_t *pact, lexMatch_t *match)
+static bool_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, size_t *py, uint_32_t *pact, lexMatch_t *match)
 {
 		
 		rgxThreadList_t *curr, *next;
 		rgxIns_t				*pc;
 		bool_t					matched;
 		const wchar_t	*sp, *final_next;
-		int_t		act, final_act;
+		uint_32_t		act, final_act;
 		size_t i,x,y, final_row, final_col;
 		
 		
@@ -631,7 +631,7 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 		const wchar_t	*sp, *final_next;
 
 		size_t i,x,y, final_row, final_col;
-		int_t		act, final_act;
+		uint_32_t		act, final_act;
 		
 
 		AR_ASSERT(prog != NULL && match->next != NULL && match->input != NULL);

@@ -271,10 +271,10 @@ typedef struct __thread_tag
 		const wchar_t			*sp;
 		size_t					line;
 		size_t					col;
-		int_t					act;
+		uint_32_t				act;
 }rgxThread_t;
 
-rgxThread_t		RGX_BuildThread(rgxIns_t *pc, const wchar_t *sp, size_t x, size_t y, int_t act);
+rgxThread_t		RGX_BuildThread(rgxIns_t *pc, const wchar_t *sp, size_t x, size_t y, uint_32_t act);
 
 
 typedef struct __thd_list_tag
