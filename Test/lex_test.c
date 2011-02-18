@@ -908,7 +908,7 @@ void lex_line_test4()
 		act.is_skip = false;
 		act.priority = 1;
 		act.value = 200;
-		AR_ASSERT(Lex_InsertRule(lex, L"[\\r\\n]", &act));
+		AR_ASSERT(Lex_InsertRule(lex, L"[\\r\\n]{1,2}", &act));
 
 
 		

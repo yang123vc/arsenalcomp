@@ -346,8 +346,8 @@ static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match
 		RGX_DestroyThreadList(curr);
 		RGX_DestroyThreadList(next);
 		return false;
-
 }
+
 
 
 
