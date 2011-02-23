@@ -399,6 +399,10 @@ wchar_t*		AR_wcsdup(const wchar_t *sour);
 wchar_t*		AR_wcsndup(const wchar_t *sour, size_t len);
 
 
+char*			AR_strdup(const char *sour);
+char*			AR_strndup(const char *sour, size_t len);
+
+
 const wchar_t*	AR_wcstrim(const wchar_t *in, const wchar_t *trim);
 const wchar_t*	AR_wcstrim_space(const wchar_t *in);
 
@@ -703,8 +707,8 @@ typedef enum
 		AR_TXT_BOM_UTF32_BE		=		0x20
 }arTxtBom_t;
 
-bool_t	AR_LoadBomTextFile(const wchar_t *path, arTxtBom_t *bom, const wchar_t *line_sp, arString_t *out);
-
+bool_t	AR_LoadBomTextFile(const wchar_t *path, arTxtBom_t *bom, arString_t *out);
+bool_t	AR_SaveBomTextFile(const wchar_t *path, arTxtBom_t bom, const wchar_t *input);
 
 
 
