@@ -217,22 +217,43 @@ void AR_Test()
 		
 }
 
+void text_test_save()
+{
+#define OUTPUT_FILE		L"/Users/solidussnakeex/Desktop/test.txt"
+#define OUTPUT_TYPE		AR_TXT_BOM_ASCII
+		
+		arString_t *str = AR_CreateString();
+		
+		if(!AR_LoadBomTextFile(L"/Users/solidussnakeex/Desktop/Arsenal/misc/txt_enc_test/utf16_be_read_test.txt",NULL, str))
+		{
+				AR_ASSERT(false);
+		}
+		
+		
+		if(!AR_SaveBomTextFile(OUTPUT_FILE, OUTPUT_TYPE, AR_GetStrString(str)))
+		{
+				AR_ASSERT(false);
+		}
+		
+		
+		arTxtBom_t bom;
+		if(!AR_LoadBomTextFile(OUTPUT_FILE, &bom, str))
+		{
+				AR_ASSERT(false);
+		}
+		
+		AR_ASSERT(bom == OUTPUT_TYPE);
+		
+		
+		AR_DestroyString(str);
+}
 
 
 
 void AR_Test2()
 {
 
-//		test_generate_parser("../../misc/Grammar/Tengu.gmr");
-		
-		test_generate_parser("/Users/solidussnakeex/Desktop/tengu.txt");
-		
-	//	wchar_t buf[1024];
-		
-	//	AR_ASSERT(AR_swprintf(buf, 1024, L"%ls\r\n", L"是否支持中文") > 0);
-		
-	//	wprintf(L"%ls\r\n", buf);
-					
+		text_test_save();
 				
 		
 		
