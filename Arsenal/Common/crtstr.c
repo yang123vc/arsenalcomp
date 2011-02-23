@@ -861,6 +861,25 @@ wchar_t* AR_wcsndup(const wchar_t *sour, size_t len)
 }
 
 
+char*			AR_strdup(const char *sour)
+{
+		AR_ASSERT(sour != NULL);
+		return AR_strndup(sour, AR_strlen(sour));
+}
+
+char*			AR_strndup(const char *sour, size_t len)
+{
+		char *result;
+		size_t i;
+		AR_ASSERT(sour != NULL);
+
+		result = AR_NEWARR(char, len + 1);
+		for(i = 0; i < len; ++i)result[i] = sour[i];
+		result[len] = '\0';
+		return result;
+}
+
+
 
 #define	__BUFFER_LEN	128
 

@@ -216,7 +216,7 @@
 		#define			AR_PATH_SP_CHAR			L'\\'
 		
 		#define			AR_LINE_SP				L"\r\n"
-				
+
 
 #elif defined(OS_FAMILY_UNIX)
         #include <unistd.h>
@@ -228,8 +228,8 @@
 			#include <libkern/OSAtomic.h>
 		#endif
 
-		#define AR_PATH_SP				L"//"
-		#define AR_PATH_SP_CHAR			L'//'
+		#define AR_PATH_SP				L"/"
+		#define AR_PATH_SP_CHAR			L'/'
 		
 		#if(OS_TYPE == OS_MAC_OS_X || OS_TYPE == OS_IPHONE)
 			#define			AR_LINE_SP				L"\r"
