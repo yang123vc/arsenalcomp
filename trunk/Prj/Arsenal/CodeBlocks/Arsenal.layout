@@ -4,7 +4,7 @@
 	<File name="../../../Arsenal/Arsenal.h" open="0" top="0" tabpos="6">
 		<Cursor position="553" topLine="0" />
 	</File>
-	<File name="../../../Arsenal/Common/algo.c" open="1" top="0" tabpos="12">
+	<File name="../../../Arsenal/Common/algo.c" open="1" top="0" tabpos="7">
 		<Cursor position="0" topLine="0" />
 	</File>
 	<File name="../../../Arsenal/Common/common.h" open="1" top="0" tabpos="4">
@@ -17,7 +17,7 @@
 		<Cursor position="865" topLine="34" />
 	</File>
 	<File name="../../../Arsenal/Common/textfile.c" open="1" top="0" tabpos="6">
-		<Cursor position="2281" topLine="103" />
+		<Cursor position="17810" topLine="917" />
 	</File>
 	<File name="../../../Arsenal/Common/thread_posix.h" open="0" top="0" tabpos="17">
 		<Cursor position="1212" topLine="42" />
