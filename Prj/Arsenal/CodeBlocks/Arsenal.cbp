@@ -121,6 +121,9 @@
 		<Unit filename="../../../Arsenal/Common/strtable.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../../../Arsenal/Common/textfile.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="../../../Arsenal/Common/thread.c">
 			<Option compilerVar="CC" />
 		</Unit>

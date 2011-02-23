@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="DLLDebug" />
-	<File name="com_test.c" open="1" top="0" tabpos="4">
-		<Cursor position="239" topLine="1" />
+	<File name="com_test.c" open="1" top="1" tabpos="4">
+		<Cursor position="283" topLine="17" />
 	</File>
 	<File name="main.c" open="1" top="0" tabpos="3">
-		<Cursor position="536" topLine="29" />
+		<Cursor position="482" topLine="19" />
 	</File>
 	<File name="parser_test.c" open="1" top="0" tabpos="1">
 		<Cursor position="3347" topLine="172" />
 	</File>
-	<File name="test.c" open="1" top="1" tabpos="2">
-		<Cursor position="150" topLine="1" />
+	<File name="test.c" open="1" top="0" tabpos="2">
+		<Cursor position="150" topLine="0" />
 	</File>
 	<File name="test.h" open="1" top="0" tabpos="5">
 		<Cursor position="139" topLine="0" />
