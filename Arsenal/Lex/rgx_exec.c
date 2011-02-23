@@ -521,9 +521,8 @@ static bool_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, si
 								bool_t is_ok = true;
 								
 								loop_cnt = pc->fix_count;
-								
 
-								
+
 								for(i = 0; i < loop_cnt && is_ok; ++i)
 								{
 										rgxProg_t loop;
@@ -532,6 +531,7 @@ static bool_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, si
 										loop.mark = 0;
 										is_ok = __loop(&loop, &sp, &x, &y, &act, match);
 								}
+
 
 								if(is_ok)
 								{
@@ -553,7 +553,6 @@ static bool_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, si
 								break;
 						case RGX_LOOKAHEAD_BEG_I:
 						{
-								
 								rgxProg_t lhd;
 								
 								lhd.start = pc + 1;

@@ -1267,6 +1267,39 @@ void align_test()
 
 }
 
+
+void text_test_save()
+{
+#define OUTPUT_FILE		L"D:\\User\\Temp\\test.txt"
+#define OUTPUT_TYPE		AR_TXT_BOM_ASCII
+
+		arString_t *str = AR_CreateString();
+
+		if(!AR_LoadBomTextFile(L"..\\..\\..\\misc\\txt_enc_test\\ascii.txt",NULL, str))
+		{
+				AR_ASSERT(false);
+		}
+
+
+		if(!AR_SaveBomTextFile(OUTPUT_FILE, OUTPUT_TYPE, AR_GetStrString(str)))
+		{
+				AR_ASSERT(false);
+		}
+
+
+		arTxtBom_t bom;
+		if(!AR_LoadBomTextFile(OUTPUT_FILE, &bom, str))
+		{
+				AR_ASSERT(false);
+		}
+
+		AR_ASSERT(bom == OUTPUT_TYPE);
+
+
+		AR_DestroyString(str);
+}
+
+
 void com_test()
 {
 
@@ -1325,7 +1358,8 @@ void com_test()
 
 		//escstr_n_test1();
 		//escstr_n_test0();
-		align_test();
+		//align_test();
+		text_test_save();
 }
 
 

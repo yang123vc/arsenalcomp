@@ -1381,6 +1381,7 @@ while_statement			:	"while" enter_loop  "(" expression ")" statement leave_loop	
 						tguExpr_t		*expr;
 						tguStmt_t		*stmt;
 						AR_ASSERT(ns != NULL && count == 7);
+
 						if(ns[3] == NULL)
 						{
 							expr = NULL;

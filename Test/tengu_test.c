@@ -107,9 +107,7 @@ void load_source_test()
 {
 		ARSpace::tguSrc_t		*src;
 		
-		//setlocale(LC_ALL, "china");
-
-		src = 		TGU_LoadSources(L"..\\..\\..\\misc\\txt_enc_test\\", L"utf8_read_test.txt");
+		src = 		TGU_LoadSources(L"..\\..\\..\\misc\\txt_enc_test\\", L"bad_ascii.txt");
 
 
 		if(src)
@@ -118,6 +116,7 @@ void load_source_test()
 				TGU_ReleaseSources(src);
 		}
 }
+
 
 
 void	Tengu_Test()
