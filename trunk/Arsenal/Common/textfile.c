@@ -148,6 +148,12 @@ const char *__get_current_locale_char_for_iconv()
 		return "";
 }
 
+#if(OS_TYPE ==  OS_IPHONE) || (OS_TYPE == OS_MAC_OS_X)
+		#define UNICODE_ENCODING_NAME	"UCS-4LE"
+#else
+		#define UNICODE_ENCODING_NAME	"wchar_t"
+#endif
+
 
 
 static wchar_t*	__translate_from_acp_str(const char *input, size_t in_n)
@@ -173,7 +179,7 @@ static wchar_t*	__translate_from_acp_str(const char *input, size_t in_n)
         out_len = sizeof(wchar_t) * (in_n + 1);
         out = AR_NEWARR0(wchar_t , in_n + 1);
 
-		cd = iconv_open("wchar_t", __get_current_locale_char_for_iconv());
+		cd = iconv_open(UNICODE_ENCODING_NAME, __get_current_locale_char_for_iconv());
 
         if(cd == (iconv_t)-1)
         {
@@ -242,7 +248,7 @@ static char* __translate_from_unicode_str(const wchar_t *input)
         out_len = (len + 1) * 6;
 		out = AR_NEWARR0(char, out_len);
 
-        cd = iconv_open(__get_current_locale_char_for_iconv(), "wchar_t");
+        cd = iconv_open(__get_current_locale_char_for_iconv(),  UNICODE_ENCODING_NAME);
 
         if(cd == (iconv_t)-1)
         {
@@ -274,7 +280,7 @@ CLEAN_POINT:
 
         if(!is_ok && out)
         {
-            free(out);
+            AR_DEL(out);
             out = NULL;
         }
 
