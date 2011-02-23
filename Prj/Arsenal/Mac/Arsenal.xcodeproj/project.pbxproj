@@ -7,7 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BE83B7A51315891E0089007E /* grammar_codegen.c in Sources */ = {isa = PBXBuildFile; fileRef = BE83B7A41315891E0089007E /* grammar_codegen.c */; };
+		BE83B7B6131589440089007E /* grammar_collector.c in Sources */ = {isa = PBXBuildFile; fileRef = BE83B7B5131589440089007E /* grammar_collector.c */; };
 		BE9ECC2612AE70E800A1F23A /* tgusyntree.h in Headers */ = {isa = PBXBuildFile; fileRef = BE9ECC2512AE70E800A1F23A /* tgusyntree.h */; };
+		BEB41B85130F309B0099DFB3 /* heap.c in Sources */ = {isa = PBXBuildFile; fileRef = BEB41B84130F309B0099DFB3 /* heap.c */; };
+		BEB41B87130F30A30099DFB3 /* textfile.c in Sources */ = {isa = PBXBuildFile; fileRef = BEB41B86130F30A30099DFB3 /* textfile.c */; };
 		BEF3DB3412AE73BD004CF543 /* tgusyntree.c in Sources */ = {isa = PBXBuildFile; fileRef = BEF3DB3312AE73BD004CF543 /* tgusyntree.c */; };
 		D0A0728E127BBB9100F315D2 /* Arsenal.c in Sources */ = {isa = PBXBuildFile; fileRef = D0A07250127BBB9100F315D2 /* Arsenal.c */; };
 		D0A0728F127BBB9100F315D2 /* Arsenal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0A07251127BBB9100F315D2 /* Arsenal.h */; };
@@ -60,7 +64,6 @@
 		D0A072BE127BBB9100F315D2 /* tguutility.h in Headers */ = {isa = PBXBuildFile; fileRef = D0A07284127BBB9100F315D2 /* tguutility.h */; };
 		D0A072BF127BBB9100F315D2 /* tguvm.c in Sources */ = {isa = PBXBuildFile; fileRef = D0A07285127BBB9100F315D2 /* tguvm.c */; };
 		D0A072C0127BBB9100F315D2 /* tguvm.h in Headers */ = {isa = PBXBuildFile; fileRef = D0A07286127BBB9100F315D2 /* tguvm.h */; };
-		D0A072C1127BBB9100F315D2 /* grammar_config.c in Sources */ = {isa = PBXBuildFile; fileRef = D0A07288127BBB9100F315D2 /* grammar_config.c */; };
 		D0A072C2127BBB9100F315D2 /* grammar_config.h in Headers */ = {isa = PBXBuildFile; fileRef = D0A07289127BBB9100F315D2 /* grammar_config.h */; };
 		D0A072C3127BBB9100F315D2 /* serializer.c in Sources */ = {isa = PBXBuildFile; fileRef = D0A0728A127BBB9100F315D2 /* serializer.c */; };
 		D0A072C4127BBB9100F315D2 /* serializer.h in Headers */ = {isa = PBXBuildFile; fileRef = D0A0728B127BBB9100F315D2 /* serializer.h */; };
@@ -69,7 +72,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BE83B7A41315891E0089007E /* grammar_codegen.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = grammar_codegen.c; sourceTree = "<group>"; };
+		BE83B7B5131589440089007E /* grammar_collector.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = grammar_collector.c; sourceTree = "<group>"; };
 		BE9ECC2512AE70E800A1F23A /* tgusyntree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tgusyntree.h; sourceTree = "<group>"; };
+		BEB41B84130F309B0099DFB3 /* heap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = heap.c; sourceTree = "<group>"; };
+		BEB41B86130F30A30099DFB3 /* textfile.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = textfile.c; sourceTree = "<group>"; };
 		BEF3DB3312AE73BD004CF543 /* tgusyntree.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tgusyntree.c; sourceTree = "<group>"; };
 		D0A07250127BBB9100F315D2 /* Arsenal.c */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.c; path = Arsenal.c; sourceTree = "<group>"; };
 		D0A07251127BBB9100F315D2 /* Arsenal.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = Arsenal.h; sourceTree = "<group>"; };
@@ -122,7 +129,6 @@
 		D0A07284127BBB9100F315D2 /* tguutility.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = tguutility.h; sourceTree = "<group>"; };
 		D0A07285127BBB9100F315D2 /* tguvm.c */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.c; path = tguvm.c; sourceTree = "<group>"; };
 		D0A07286127BBB9100F315D2 /* tguvm.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = tguvm.h; sourceTree = "<group>"; };
-		D0A07288127BBB9100F315D2 /* grammar_config.c */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.c; path = grammar_config.c; sourceTree = "<group>"; };
 		D0A07289127BBB9100F315D2 /* grammar_config.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = grammar_config.h; sourceTree = "<group>"; };
 		D0A0728A127BBB9100F315D2 /* serializer.c */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.c; path = serializer.c; sourceTree = "<group>"; };
 		D0A0728B127BBB9100F315D2 /* serializer.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = serializer.h; sourceTree = "<group>"; };
@@ -177,6 +183,8 @@
 		D0A07252127BBB9100F315D2 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				BEB41B86130F30A30099DFB3 /* textfile.c */,
+				BEB41B84130F309B0099DFB3 /* heap.c */,
 				D0A07253127BBB9100F315D2 /* algo.c */,
 				D0A07254127BBB9100F315D2 /* buffer.c */,
 				D0A07255127BBB9100F315D2 /* common.c */,
@@ -256,7 +264,8 @@
 		D0A07287127BBB9100F315D2 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
-				D0A07288127BBB9100F315D2 /* grammar_config.c */,
+				BE83B7B5131589440089007E /* grammar_collector.c */,
+				BE83B7A41315891E0089007E /* grammar_codegen.c */,
 				D0A07289127BBB9100F315D2 /* grammar_config.h */,
 				D0A0728A127BBB9100F315D2 /* serializer.c */,
 				D0A0728B127BBB9100F315D2 /* serializer.h */,
@@ -383,10 +392,13 @@
 				D0A072BB127BBB9100F315D2 /* tguparser.c in Sources */,
 				D0A072BD127BBB9100F315D2 /* tguutility.c in Sources */,
 				D0A072BF127BBB9100F315D2 /* tguvm.c in Sources */,
-				D0A072C1127BBB9100F315D2 /* grammar_config.c in Sources */,
 				D0A072C3127BBB9100F315D2 /* serializer.c in Sources */,
 				D0A072C5127BBB9100F315D2 /* tools.c in Sources */,
 				BEF3DB3412AE73BD004CF543 /* tgusyntree.c in Sources */,
+				BEB41B85130F309B0099DFB3 /* heap.c in Sources */,
+				BEB41B87130F30A30099DFB3 /* textfile.c in Sources */,
+				BE83B7A51315891E0089007E /* grammar_codegen.c in Sources */,
+				BE83B7B6131589440089007E /* grammar_collector.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
