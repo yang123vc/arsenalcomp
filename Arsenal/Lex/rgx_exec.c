@@ -200,7 +200,7 @@ static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match
 
 								if(*sp != L'\0')
 								{
-										if(match->flags & LEX_SINGLE_LINE)/*single line 可以匹配包含\n在内的所有字符*/
+										if(match->flags & LEX_SINGLE_LINE)/*single line 可以匹配包含\r\n在内的所有字符*/
 										{
 												is_ok = true;
 										}else
