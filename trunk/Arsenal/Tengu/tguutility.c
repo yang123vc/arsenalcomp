@@ -161,7 +161,7 @@ tguSrc_t*		TGU_LoadSources(const wchar_t *work_dir, const wchar_t *file_name)
 				arString_t *str;
 
 				str = AR_CreateString();
-				if(AR_LoadBomTextFile(path, NULL, AR_LINE_SP, str))
+				if(AR_LoadBomTextFile(path, NULL, str))
 				{
 						src->code = AR_wcsdup(AR_GetStrString(str));
 				}else

@@ -241,11 +241,15 @@ tguParseResult_t				TGU_ParseCode(tguParser_t	*parser, const	wchar_t			*module_n
 		parser->has_error = false;
 		parser->loop_level = 0;
 
-		AR_ASSERT(TGU_FindSymb(parser->ext->import_modules,parser->module_name,  TGU_SYMB_BLOCK_T) != NULL);
 
-		
-
+#if defined(AR_DEBUG)
+		if(TGU_FindSymb(parser->ext->import_modules,parser->module_name,  TGU_SYMB_BLOCK_T) == NULL)
+		{
+				AR_ASSERT(false);
+		}
+#endif
 		is_ok = true;
+
 		while(is_ok)
 		{
 				is_ok = Lex_Match(parser->match, &token);
