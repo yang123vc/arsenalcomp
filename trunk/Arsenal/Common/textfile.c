@@ -145,7 +145,7 @@ FILE*	__AR_open_file(const wchar_t *path, const wchar_t *mode)
 
 const char *__get_current_locale_char_for_iconv()
 {
-		return "UTF-8";
+		return "";
 }
 
 
