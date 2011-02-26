@@ -428,9 +428,9 @@ size_t		AR_wcs_to_acp(const wchar_t *input, size_t n, char *out, size_t out_len)
 {
 		size_t len;
 		size_t ret;
-		wchar_t *str;
+		char *str;
 		AR_ASSERT(input != NULL);
-		str = AR_wcs_convto_acp(input, n);
+		str = AR_wcs_convto_acp(input);
 		
 		if(str == NULL)
 		{
@@ -486,11 +486,11 @@ wchar_t*	AR_acp_convto_wcs(const char *input, size_t in_n)
 
 		if(in_n == 0)
         {
-            return AR_wcsdup("");
+            return AR_wcsdup(L"");
         }
 
         out_len = sizeof(wchar_t) * (in_n + 1);
-        out = AR_NEWARR0(wchar_t , in_n + 1);
+        out = (char*)AR_NEWARR0(wchar_t , in_n + 1);
 
 		cd = iconv_open(UNICODE_ENCODING_NAME, __get_current_locale_char_for_iconv());
 
@@ -501,7 +501,7 @@ wchar_t*	AR_acp_convto_wcs(const char *input, size_t in_n)
 				goto CLEAN_POINT;
         }
 
-        inbuf = input;
+        inbuf = (char*)input;
         outbuf = out;
         inleft = in_n;
         outleft = out_len;
