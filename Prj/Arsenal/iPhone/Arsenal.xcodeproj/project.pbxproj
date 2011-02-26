@@ -7,36 +7,40 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BE9ECC6812AE72E300A1F23A /* tengu.c in Sources */ = {isa = PBXBuildFile; fileRef = BE9ECC5D12AE72E300A1F23A /* tengu.c */; };
-		BE9ECC6912AE72E300A1F23A /* tengu.h in Headers */ = {isa = PBXBuildFile; fileRef = BE9ECC5E12AE72E300A1F23A /* tengu.h */; };
-		BE9ECC6A12AE72E300A1F23A /* tgu_parser_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = BE9ECC5F12AE72E300A1F23A /* tgu_parser_impl.h */; };
-		BE9ECC6B12AE72E300A1F23A /* tguparser.c in Sources */ = {isa = PBXBuildFile; fileRef = BE9ECC6012AE72E300A1F23A /* tguparser.c */; };
-		BE9ECC6C12AE72E300A1F23A /* tguparser.h in Headers */ = {isa = PBXBuildFile; fileRef = BE9ECC6112AE72E300A1F23A /* tguparser.h */; };
-		BE9ECC6D12AE72E300A1F23A /* tgusyntree.c in Sources */ = {isa = PBXBuildFile; fileRef = BE9ECC6212AE72E300A1F23A /* tgusyntree.c */; };
-		BE9ECC6E12AE72E300A1F23A /* tgusyntree.h in Headers */ = {isa = PBXBuildFile; fileRef = BE9ECC6312AE72E300A1F23A /* tgusyntree.h */; };
-		BE9ECC6F12AE72E300A1F23A /* tguutility.c in Sources */ = {isa = PBXBuildFile; fileRef = BE9ECC6412AE72E300A1F23A /* tguutility.c */; };
-		BE9ECC7012AE72E300A1F23A /* tguutility.h in Headers */ = {isa = PBXBuildFile; fileRef = BE9ECC6512AE72E300A1F23A /* tguutility.h */; };
-		BE9ECC7112AE72E300A1F23A /* tguvm.c in Sources */ = {isa = PBXBuildFile; fileRef = BE9ECC6612AE72E300A1F23A /* tguvm.c */; };
-		BE9ECC7212AE72E300A1F23A /* tguvm.h in Headers */ = {isa = PBXBuildFile; fileRef = BE9ECC6712AE72E300A1F23A /* tguvm.h */; };
+		BE0164FA131985CC003A7BDB /* algo.c in Sources */ = {isa = PBXBuildFile; fileRef = BE0164E7131985CC003A7BDB /* algo.c */; };
+		BE0164FB131985CC003A7BDB /* buffer.c in Sources */ = {isa = PBXBuildFile; fileRef = BE0164E8131985CC003A7BDB /* buffer.c */; };
+		BE0164FC131985CC003A7BDB /* common.c in Sources */ = {isa = PBXBuildFile; fileRef = BE0164E9131985CC003A7BDB /* common.c */; };
+		BE0164FD131985CC003A7BDB /* common.h in Headers */ = {isa = PBXBuildFile; fileRef = BE0164EA131985CC003A7BDB /* common.h */; };
+		BE0164FE131985CC003A7BDB /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = BE0164EB131985CC003A7BDB /* config.h */; };
+		BE0164FF131985CC003A7BDB /* crtstr.c in Sources */ = {isa = PBXBuildFile; fileRef = BE0164EC131985CC003A7BDB /* crtstr.c */; };
+		BE016500131985CC003A7BDB /* heap.c in Sources */ = {isa = PBXBuildFile; fileRef = BE0164ED131985CC003A7BDB /* heap.c */; };
+		BE016501131985CC003A7BDB /* memory.c in Sources */ = {isa = PBXBuildFile; fileRef = BE0164EE131985CC003A7BDB /* memory.c */; };
+		BE016502131985CC003A7BDB /* platform.h in Headers */ = {isa = PBXBuildFile; fileRef = BE0164EF131985CC003A7BDB /* platform.h */; };
+		BE016503131985CC003A7BDB /* random.c in Sources */ = {isa = PBXBuildFile; fileRef = BE0164F0131985CC003A7BDB /* random.c */; };
+		BE016504131985CC003A7BDB /* strconv.c in Sources */ = {isa = PBXBuildFile; fileRef = BE0164F1131985CC003A7BDB /* strconv.c */; };
+		BE016505131985CC003A7BDB /* string.c in Sources */ = {isa = PBXBuildFile; fileRef = BE0164F2131985CC003A7BDB /* string.c */; };
+		BE016506131985CC003A7BDB /* strtable.c in Sources */ = {isa = PBXBuildFile; fileRef = BE0164F3131985CC003A7BDB /* strtable.c */; };
+		BE016507131985CC003A7BDB /* textfile.c in Sources */ = {isa = PBXBuildFile; fileRef = BE0164F4131985CC003A7BDB /* textfile.c */; };
+		BE016508131985CC003A7BDB /* thread.c in Sources */ = {isa = PBXBuildFile; fileRef = BE0164F5131985CC003A7BDB /* thread.c */; };
+		BE016509131985CC003A7BDB /* thread_apple.h in Headers */ = {isa = PBXBuildFile; fileRef = BE0164F6131985CC003A7BDB /* thread_apple.h */; };
+		BE01650A131985CC003A7BDB /* thread_posix.h in Headers */ = {isa = PBXBuildFile; fileRef = BE0164F7131985CC003A7BDB /* thread_posix.h */; };
+		BE01650B131985CC003A7BDB /* thread_win.h in Headers */ = {isa = PBXBuildFile; fileRef = BE0164F8131985CC003A7BDB /* thread_win.h */; };
+		BE01650C131985CC003A7BDB /* utilities.c in Sources */ = {isa = PBXBuildFile; fileRef = BE0164F9131985CC003A7BDB /* utilities.c */; };
+		BE01651913198693003A7BDB /* grammar_codegen.c in Sources */ = {isa = PBXBuildFile; fileRef = BE01651813198693003A7BDB /* grammar_codegen.c */; };
+		BE01651B13198699003A7BDB /* grammar_collector.c in Sources */ = {isa = PBXBuildFile; fileRef = BE01651A13198699003A7BDB /* grammar_collector.c */; };
+		BEB3FB8D131982E90013B92E /* tengu.c in Sources */ = {isa = PBXBuildFile; fileRef = BEB3FB82131982E90013B92E /* tengu.c */; };
+		BEB3FB8E131982E90013B92E /* tengu.h in Headers */ = {isa = PBXBuildFile; fileRef = BEB3FB83131982E90013B92E /* tengu.h */; };
+		BEB3FB8F131982E90013B92E /* tgu_parser_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = BEB3FB84131982E90013B92E /* tgu_parser_impl.h */; };
+		BEB3FB90131982E90013B92E /* tguparser.c in Sources */ = {isa = PBXBuildFile; fileRef = BEB3FB85131982E90013B92E /* tguparser.c */; };
+		BEB3FB91131982E90013B92E /* tguparser.h in Headers */ = {isa = PBXBuildFile; fileRef = BEB3FB86131982E90013B92E /* tguparser.h */; };
+		BEB3FB92131982E90013B92E /* tgusyntree.c in Sources */ = {isa = PBXBuildFile; fileRef = BEB3FB87131982E90013B92E /* tgusyntree.c */; };
+		BEB3FB93131982E90013B92E /* tgusyntree.h in Headers */ = {isa = PBXBuildFile; fileRef = BEB3FB88131982E90013B92E /* tgusyntree.h */; };
+		BEB3FB94131982E90013B92E /* tguutility.c in Sources */ = {isa = PBXBuildFile; fileRef = BEB3FB89131982E90013B92E /* tguutility.c */; };
+		BEB3FB95131982E90013B92E /* tguutility.h in Headers */ = {isa = PBXBuildFile; fileRef = BEB3FB8A131982E90013B92E /* tguutility.h */; };
+		BEB3FB96131982E90013B92E /* tguvm.c in Sources */ = {isa = PBXBuildFile; fileRef = BEB3FB8B131982E90013B92E /* tguvm.c */; };
+		BEB3FB97131982E90013B92E /* tguvm.h in Headers */ = {isa = PBXBuildFile; fileRef = BEB3FB8C131982E90013B92E /* tguvm.h */; };
 		D09BAE341279E9850046DE22 /* Arsenal.c in Sources */ = {isa = PBXBuildFile; fileRef = D09BADF61279E9850046DE22 /* Arsenal.c */; };
 		D09BAE351279E9850046DE22 /* Arsenal.h in Headers */ = {isa = PBXBuildFile; fileRef = D09BADF71279E9850046DE22 /* Arsenal.h */; };
-		D09BAE361279E9850046DE22 /* algo.c in Sources */ = {isa = PBXBuildFile; fileRef = D09BADF91279E9850046DE22 /* algo.c */; };
-		D09BAE371279E9850046DE22 /* buffer.c in Sources */ = {isa = PBXBuildFile; fileRef = D09BADFA1279E9850046DE22 /* buffer.c */; };
-		D09BAE381279E9850046DE22 /* common.c in Sources */ = {isa = PBXBuildFile; fileRef = D09BADFB1279E9850046DE22 /* common.c */; };
-		D09BAE391279E9850046DE22 /* common.h in Headers */ = {isa = PBXBuildFile; fileRef = D09BADFC1279E9850046DE22 /* common.h */; };
-		D09BAE3A1279E9850046DE22 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = D09BADFD1279E9850046DE22 /* config.h */; };
-		D09BAE3B1279E9850046DE22 /* crtstr.c in Sources */ = {isa = PBXBuildFile; fileRef = D09BADFE1279E9850046DE22 /* crtstr.c */; };
-		D09BAE3C1279E9850046DE22 /* memory.c in Sources */ = {isa = PBXBuildFile; fileRef = D09BADFF1279E9850046DE22 /* memory.c */; };
-		D09BAE3D1279E9850046DE22 /* platform.h in Headers */ = {isa = PBXBuildFile; fileRef = D09BAE001279E9850046DE22 /* platform.h */; };
-		D09BAE3E1279E9850046DE22 /* random.c in Sources */ = {isa = PBXBuildFile; fileRef = D09BAE011279E9850046DE22 /* random.c */; };
-		D09BAE3F1279E9850046DE22 /* strconv.c in Sources */ = {isa = PBXBuildFile; fileRef = D09BAE021279E9850046DE22 /* strconv.c */; };
-		D09BAE401279E9850046DE22 /* string.c in Sources */ = {isa = PBXBuildFile; fileRef = D09BAE031279E9850046DE22 /* string.c */; };
-		D09BAE411279E9850046DE22 /* strtable.c in Sources */ = {isa = PBXBuildFile; fileRef = D09BAE041279E9850046DE22 /* strtable.c */; };
-		D09BAE421279E9850046DE22 /* thread.c in Sources */ = {isa = PBXBuildFile; fileRef = D09BAE051279E9850046DE22 /* thread.c */; };
-		D09BAE431279E9850046DE22 /* thread_apple.h in Headers */ = {isa = PBXBuildFile; fileRef = D09BAE061279E9850046DE22 /* thread_apple.h */; };
-		D09BAE441279E9850046DE22 /* thread_posix.h in Headers */ = {isa = PBXBuildFile; fileRef = D09BAE071279E9850046DE22 /* thread_posix.h */; };
-		D09BAE451279E9850046DE22 /* thread_win.h in Headers */ = {isa = PBXBuildFile; fileRef = D09BAE081279E9850046DE22 /* thread_win.h */; };
-		D09BAE461279E9850046DE22 /* utilities.c in Sources */ = {isa = PBXBuildFile; fileRef = D09BAE091279E9850046DE22 /* utilities.c */; };
 		D09BAE471279E9850046DE22 /* lex.c in Sources */ = {isa = PBXBuildFile; fileRef = D09BAE0B1279E9850046DE22 /* lex.c */; };
 		D09BAE481279E9850046DE22 /* lex.h in Headers */ = {isa = PBXBuildFile; fileRef = D09BAE0C1279E9850046DE22 /* lex.h */; };
 		D09BAE491279E9850046DE22 /* match.c in Sources */ = {isa = PBXBuildFile; fileRef = D09BAE0D1279E9850046DE22 /* match.c */; };
@@ -60,16 +64,6 @@
 		D09BAE5B1279E9850046DE22 /* parser_in.h in Headers */ = {isa = PBXBuildFile; fileRef = D09BAE201279E9850046DE22 /* parser_in.h */; };
 		D09BAE5C1279E9850046DE22 /* report.c in Sources */ = {isa = PBXBuildFile; fileRef = D09BAE211279E9850046DE22 /* report.c */; };
 		D09BAE5D1279E9850046DE22 /* symbol.c in Sources */ = {isa = PBXBuildFile; fileRef = D09BAE221279E9850046DE22 /* symbol.c */; };
-		D09BAE5E1279E9850046DE22 /* tengu.c in Sources */ = {isa = PBXBuildFile; fileRef = D09BAE241279E9850046DE22 /* tengu.c */; };
-		D09BAE5F1279E9850046DE22 /* tengu.h in Headers */ = {isa = PBXBuildFile; fileRef = D09BAE251279E9850046DE22 /* tengu.h */; };
-		D09BAE601279E9850046DE22 /* tgu_parser_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = D09BAE261279E9850046DE22 /* tgu_parser_impl.h */; };
-		D09BAE611279E9850046DE22 /* tguparser.c in Sources */ = {isa = PBXBuildFile; fileRef = D09BAE271279E9850046DE22 /* tguparser.c */; };
-		D09BAE621279E9850046DE22 /* tguparser.h in Headers */ = {isa = PBXBuildFile; fileRef = D09BAE281279E9850046DE22 /* tguparser.h */; };
-		D09BAE631279E9850046DE22 /* tguutility.c in Sources */ = {isa = PBXBuildFile; fileRef = D09BAE291279E9850046DE22 /* tguutility.c */; };
-		D09BAE641279E9850046DE22 /* tguutility.h in Headers */ = {isa = PBXBuildFile; fileRef = D09BAE2A1279E9850046DE22 /* tguutility.h */; };
-		D09BAE651279E9850046DE22 /* tguvm.c in Sources */ = {isa = PBXBuildFile; fileRef = D09BAE2B1279E9850046DE22 /* tguvm.c */; };
-		D09BAE661279E9850046DE22 /* tguvm.h in Headers */ = {isa = PBXBuildFile; fileRef = D09BAE2C1279E9850046DE22 /* tguvm.h */; };
-		D09BAE671279E9850046DE22 /* grammar_config.c in Sources */ = {isa = PBXBuildFile; fileRef = D09BAE2E1279E9850046DE22 /* grammar_config.c */; };
 		D09BAE681279E9850046DE22 /* grammar_config.h in Headers */ = {isa = PBXBuildFile; fileRef = D09BAE2F1279E9850046DE22 /* grammar_config.h */; };
 		D09BAE691279E9850046DE22 /* serializer.c in Sources */ = {isa = PBXBuildFile; fileRef = D09BAE301279E9850046DE22 /* serializer.c */; };
 		D09BAE6A1279E9850046DE22 /* serializer.h in Headers */ = {isa = PBXBuildFile; fileRef = D09BAE311279E9850046DE22 /* serializer.h */; };
@@ -79,36 +73,40 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		BE9ECC5D12AE72E300A1F23A /* tengu.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tengu.c; sourceTree = "<group>"; };
-		BE9ECC5E12AE72E300A1F23A /* tengu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tengu.h; sourceTree = "<group>"; };
-		BE9ECC5F12AE72E300A1F23A /* tgu_parser_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tgu_parser_impl.h; sourceTree = "<group>"; };
-		BE9ECC6012AE72E300A1F23A /* tguparser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tguparser.c; sourceTree = "<group>"; };
-		BE9ECC6112AE72E300A1F23A /* tguparser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tguparser.h; sourceTree = "<group>"; };
-		BE9ECC6212AE72E300A1F23A /* tgusyntree.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tgusyntree.c; sourceTree = "<group>"; };
-		BE9ECC6312AE72E300A1F23A /* tgusyntree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tgusyntree.h; sourceTree = "<group>"; };
-		BE9ECC6412AE72E300A1F23A /* tguutility.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tguutility.c; sourceTree = "<group>"; };
-		BE9ECC6512AE72E300A1F23A /* tguutility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tguutility.h; sourceTree = "<group>"; };
-		BE9ECC6612AE72E300A1F23A /* tguvm.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tguvm.c; sourceTree = "<group>"; };
-		BE9ECC6712AE72E300A1F23A /* tguvm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tguvm.h; sourceTree = "<group>"; };
+		BE0164E7131985CC003A7BDB /* algo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = algo.c; sourceTree = "<group>"; };
+		BE0164E8131985CC003A7BDB /* buffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = buffer.c; sourceTree = "<group>"; };
+		BE0164E9131985CC003A7BDB /* common.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = common.c; sourceTree = "<group>"; };
+		BE0164EA131985CC003A7BDB /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
+		BE0164EB131985CC003A7BDB /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
+		BE0164EC131985CC003A7BDB /* crtstr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = crtstr.c; sourceTree = "<group>"; };
+		BE0164ED131985CC003A7BDB /* heap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = heap.c; sourceTree = "<group>"; };
+		BE0164EE131985CC003A7BDB /* memory.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = memory.c; sourceTree = "<group>"; };
+		BE0164EF131985CC003A7BDB /* platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = platform.h; sourceTree = "<group>"; };
+		BE0164F0131985CC003A7BDB /* random.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = random.c; sourceTree = "<group>"; };
+		BE0164F1131985CC003A7BDB /* strconv.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = strconv.c; sourceTree = "<group>"; };
+		BE0164F2131985CC003A7BDB /* string.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = string.c; sourceTree = "<group>"; };
+		BE0164F3131985CC003A7BDB /* strtable.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = strtable.c; sourceTree = "<group>"; };
+		BE0164F4131985CC003A7BDB /* textfile.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = textfile.c; sourceTree = "<group>"; };
+		BE0164F5131985CC003A7BDB /* thread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = thread.c; sourceTree = "<group>"; };
+		BE0164F6131985CC003A7BDB /* thread_apple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thread_apple.h; sourceTree = "<group>"; };
+		BE0164F7131985CC003A7BDB /* thread_posix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thread_posix.h; sourceTree = "<group>"; };
+		BE0164F8131985CC003A7BDB /* thread_win.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thread_win.h; sourceTree = "<group>"; };
+		BE0164F9131985CC003A7BDB /* utilities.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = utilities.c; sourceTree = "<group>"; };
+		BE01651813198693003A7BDB /* grammar_codegen.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = grammar_codegen.c; sourceTree = "<group>"; };
+		BE01651A13198699003A7BDB /* grammar_collector.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = grammar_collector.c; sourceTree = "<group>"; };
+		BEB3FB82131982E90013B92E /* tengu.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tengu.c; sourceTree = "<group>"; };
+		BEB3FB83131982E90013B92E /* tengu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tengu.h; sourceTree = "<group>"; };
+		BEB3FB84131982E90013B92E /* tgu_parser_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tgu_parser_impl.h; sourceTree = "<group>"; };
+		BEB3FB85131982E90013B92E /* tguparser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tguparser.c; sourceTree = "<group>"; };
+		BEB3FB86131982E90013B92E /* tguparser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tguparser.h; sourceTree = "<group>"; };
+		BEB3FB87131982E90013B92E /* tgusyntree.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tgusyntree.c; sourceTree = "<group>"; };
+		BEB3FB88131982E90013B92E /* tgusyntree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tgusyntree.h; sourceTree = "<group>"; };
+		BEB3FB89131982E90013B92E /* tguutility.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tguutility.c; sourceTree = "<group>"; };
+		BEB3FB8A131982E90013B92E /* tguutility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tguutility.h; sourceTree = "<group>"; };
+		BEB3FB8B131982E90013B92E /* tguvm.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tguvm.c; sourceTree = "<group>"; };
+		BEB3FB8C131982E90013B92E /* tguvm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tguvm.h; sourceTree = "<group>"; };
 		D09BADF61279E9850046DE22 /* Arsenal.c */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.c; path = Arsenal.c; sourceTree = "<group>"; };
 		D09BADF71279E9850046DE22 /* Arsenal.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = Arsenal.h; sourceTree = "<group>"; };
-		D09BADF91279E9850046DE22 /* algo.c */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.c; path = algo.c; sourceTree = "<group>"; };
-		D09BADFA1279E9850046DE22 /* buffer.c */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.c; path = buffer.c; sourceTree = "<group>"; };
-		D09BADFB1279E9850046DE22 /* common.c */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.c; path = common.c; sourceTree = "<group>"; };
-		D09BADFC1279E9850046DE22 /* common.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
-		D09BADFD1279E9850046DE22 /* config.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
-		D09BADFE1279E9850046DE22 /* crtstr.c */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.c; path = crtstr.c; sourceTree = "<group>"; };
-		D09BADFF1279E9850046DE22 /* memory.c */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.c; path = memory.c; sourceTree = "<group>"; };
-		D09BAE001279E9850046DE22 /* platform.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = platform.h; sourceTree = "<group>"; };
-		D09BAE011279E9850046DE22 /* random.c */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.c; path = random.c; sourceTree = "<group>"; };
-		D09BAE021279E9850046DE22 /* strconv.c */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.c; path = strconv.c; sourceTree = "<group>"; };
-		D09BAE031279E9850046DE22 /* string.c */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.c; path = string.c; sourceTree = "<group>"; };
-		D09BAE041279E9850046DE22 /* strtable.c */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.c; path = strtable.c; sourceTree = "<group>"; };
-		D09BAE051279E9850046DE22 /* thread.c */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.c; path = thread.c; sourceTree = "<group>"; };
-		D09BAE061279E9850046DE22 /* thread_apple.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = thread_apple.h; sourceTree = "<group>"; };
-		D09BAE071279E9850046DE22 /* thread_posix.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = thread_posix.h; sourceTree = "<group>"; };
-		D09BAE081279E9850046DE22 /* thread_win.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = thread_win.h; sourceTree = "<group>"; };
-		D09BAE091279E9850046DE22 /* utilities.c */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.c; path = utilities.c; sourceTree = "<group>"; };
 		D09BAE0B1279E9850046DE22 /* lex.c */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.c; path = lex.c; sourceTree = "<group>"; };
 		D09BAE0C1279E9850046DE22 /* lex.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = lex.h; sourceTree = "<group>"; };
 		D09BAE0D1279E9850046DE22 /* match.c */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.c; path = match.c; sourceTree = "<group>"; };
@@ -132,16 +130,6 @@
 		D09BAE201279E9850046DE22 /* parser_in.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = parser_in.h; sourceTree = "<group>"; };
 		D09BAE211279E9850046DE22 /* report.c */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.c; path = report.c; sourceTree = "<group>"; };
 		D09BAE221279E9850046DE22 /* symbol.c */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.c; path = symbol.c; sourceTree = "<group>"; };
-		D09BAE241279E9850046DE22 /* tengu.c */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.c; path = tengu.c; sourceTree = "<group>"; };
-		D09BAE251279E9850046DE22 /* tengu.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = tengu.h; sourceTree = "<group>"; };
-		D09BAE261279E9850046DE22 /* tgu_parser_impl.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = tgu_parser_impl.h; sourceTree = "<group>"; };
-		D09BAE271279E9850046DE22 /* tguparser.c */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.c; path = tguparser.c; sourceTree = "<group>"; };
-		D09BAE281279E9850046DE22 /* tguparser.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = tguparser.h; sourceTree = "<group>"; };
-		D09BAE291279E9850046DE22 /* tguutility.c */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.c; path = tguutility.c; sourceTree = "<group>"; };
-		D09BAE2A1279E9850046DE22 /* tguutility.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = tguutility.h; sourceTree = "<group>"; };
-		D09BAE2B1279E9850046DE22 /* tguvm.c */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.c; path = tguvm.c; sourceTree = "<group>"; };
-		D09BAE2C1279E9850046DE22 /* tguvm.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = tguvm.h; sourceTree = "<group>"; };
-		D09BAE2E1279E9850046DE22 /* grammar_config.c */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.c; path = grammar_config.c; sourceTree = "<group>"; };
 		D09BAE2F1279E9850046DE22 /* grammar_config.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = grammar_config.h; sourceTree = "<group>"; };
 		D09BAE301279E9850046DE22 /* serializer.c */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.c; path = serializer.c; sourceTree = "<group>"; };
 		D09BAE311279E9850046DE22 /* serializer.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = serializer.h; sourceTree = "<group>"; };
@@ -204,30 +192,38 @@
 			name = "Other Sources";
 			sourceTree = "<group>";
 		};
-		BE9ECC5C12AE72E300A1F23A /* Tengu */ = {
+		BE0164E6131985CC003A7BDB /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				BE9ECC5D12AE72E300A1F23A /* tengu.c */,
-				BE9ECC5E12AE72E300A1F23A /* tengu.h */,
-				BE9ECC5F12AE72E300A1F23A /* tgu_parser_impl.h */,
-				BE9ECC6012AE72E300A1F23A /* tguparser.c */,
-				BE9ECC6112AE72E300A1F23A /* tguparser.h */,
-				BE9ECC6212AE72E300A1F23A /* tgusyntree.c */,
-				BE9ECC6312AE72E300A1F23A /* tgusyntree.h */,
-				BE9ECC6412AE72E300A1F23A /* tguutility.c */,
-				BE9ECC6512AE72E300A1F23A /* tguutility.h */,
-				BE9ECC6612AE72E300A1F23A /* tguvm.c */,
-				BE9ECC6712AE72E300A1F23A /* tguvm.h */,
+				BE0164E7131985CC003A7BDB /* algo.c */,
+				BE0164E8131985CC003A7BDB /* buffer.c */,
+				BE0164E9131985CC003A7BDB /* common.c */,
+				BE0164EA131985CC003A7BDB /* common.h */,
+				BE0164EB131985CC003A7BDB /* config.h */,
+				BE0164EC131985CC003A7BDB /* crtstr.c */,
+				BE0164ED131985CC003A7BDB /* heap.c */,
+				BE0164EE131985CC003A7BDB /* memory.c */,
+				BE0164EF131985CC003A7BDB /* platform.h */,
+				BE0164F0131985CC003A7BDB /* random.c */,
+				BE0164F1131985CC003A7BDB /* strconv.c */,
+				BE0164F2131985CC003A7BDB /* string.c */,
+				BE0164F3131985CC003A7BDB /* strtable.c */,
+				BE0164F4131985CC003A7BDB /* textfile.c */,
+				BE0164F5131985CC003A7BDB /* thread.c */,
+				BE0164F6131985CC003A7BDB /* thread_apple.h */,
+				BE0164F7131985CC003A7BDB /* thread_posix.h */,
+				BE0164F8131985CC003A7BDB /* thread_win.h */,
+				BE0164F9131985CC003A7BDB /* utilities.c */,
 			);
-			name = Tengu;
+			path = Common;
 			sourceTree = "<group>";
 		};
 		D09BADF51279E9850046DE22 /* Arsenal */ = {
 			isa = PBXGroup;
 			children = (
+				BE0164E6131985CC003A7BDB /* Common */,
 				D09BADF61279E9850046DE22 /* Arsenal.c */,
 				D09BADF71279E9850046DE22 /* Arsenal.h */,
-				D09BADF81279E9850046DE22 /* Common */,
 				D09BAE0A1279E9850046DE22 /* Lex */,
 				D09BAE141279E9850046DE22 /* Parser */,
 				D09BAE231279E9850046DE22 /* Tengu */,
@@ -236,30 +232,6 @@
 			name = Arsenal;
 			path = ../../../Arsenal;
 			sourceTree = SOURCE_ROOT;
-		};
-		D09BADF81279E9850046DE22 /* Common */ = {
-			isa = PBXGroup;
-			children = (
-				D09BADF91279E9850046DE22 /* algo.c */,
-				D09BADFA1279E9850046DE22 /* buffer.c */,
-				D09BADFB1279E9850046DE22 /* common.c */,
-				D09BADFC1279E9850046DE22 /* common.h */,
-				D09BADFD1279E9850046DE22 /* config.h */,
-				D09BADFE1279E9850046DE22 /* crtstr.c */,
-				D09BADFF1279E9850046DE22 /* memory.c */,
-				D09BAE001279E9850046DE22 /* platform.h */,
-				D09BAE011279E9850046DE22 /* random.c */,
-				D09BAE021279E9850046DE22 /* strconv.c */,
-				D09BAE031279E9850046DE22 /* string.c */,
-				D09BAE041279E9850046DE22 /* strtable.c */,
-				D09BAE051279E9850046DE22 /* thread.c */,
-				D09BAE061279E9850046DE22 /* thread_apple.h */,
-				D09BAE071279E9850046DE22 /* thread_posix.h */,
-				D09BAE081279E9850046DE22 /* thread_win.h */,
-				D09BAE091279E9850046DE22 /* utilities.c */,
-			);
-			path = Common;
-			sourceTree = "<group>";
 		};
 		D09BAE0A1279E9850046DE22 /* Lex */ = {
 			isa = PBXGroup;
@@ -301,16 +273,17 @@
 		D09BAE231279E9850046DE22 /* Tengu */ = {
 			isa = PBXGroup;
 			children = (
-				BE9ECC5C12AE72E300A1F23A /* Tengu */,
-				D09BAE241279E9850046DE22 /* tengu.c */,
-				D09BAE251279E9850046DE22 /* tengu.h */,
-				D09BAE261279E9850046DE22 /* tgu_parser_impl.h */,
-				D09BAE271279E9850046DE22 /* tguparser.c */,
-				D09BAE281279E9850046DE22 /* tguparser.h */,
-				D09BAE291279E9850046DE22 /* tguutility.c */,
-				D09BAE2A1279E9850046DE22 /* tguutility.h */,
-				D09BAE2B1279E9850046DE22 /* tguvm.c */,
-				D09BAE2C1279E9850046DE22 /* tguvm.h */,
+				BEB3FB82131982E90013B92E /* tengu.c */,
+				BEB3FB83131982E90013B92E /* tengu.h */,
+				BEB3FB84131982E90013B92E /* tgu_parser_impl.h */,
+				BEB3FB85131982E90013B92E /* tguparser.c */,
+				BEB3FB86131982E90013B92E /* tguparser.h */,
+				BEB3FB87131982E90013B92E /* tgusyntree.c */,
+				BEB3FB88131982E90013B92E /* tgusyntree.h */,
+				BEB3FB89131982E90013B92E /* tguutility.c */,
+				BEB3FB8A131982E90013B92E /* tguutility.h */,
+				BEB3FB8B131982E90013B92E /* tguvm.c */,
+				BEB3FB8C131982E90013B92E /* tguvm.h */,
 			);
 			path = Tengu;
 			sourceTree = "<group>";
@@ -318,7 +291,8 @@
 		D09BAE2D1279E9850046DE22 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
-				D09BAE2E1279E9850046DE22 /* grammar_config.c */,
+				BE01651A13198699003A7BDB /* grammar_collector.c */,
+				BE01651813198693003A7BDB /* grammar_codegen.c */,
 				D09BAE2F1279E9850046DE22 /* grammar_config.h */,
 				D09BAE301279E9850046DE22 /* serializer.c */,
 				D09BAE311279E9850046DE22 /* serializer.h */,
@@ -336,12 +310,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D09BAE351279E9850046DE22 /* Arsenal.h in Headers */,
-				D09BAE391279E9850046DE22 /* common.h in Headers */,
-				D09BAE3A1279E9850046DE22 /* config.h in Headers */,
-				D09BAE3D1279E9850046DE22 /* platform.h in Headers */,
-				D09BAE431279E9850046DE22 /* thread_apple.h in Headers */,
-				D09BAE441279E9850046DE22 /* thread_posix.h in Headers */,
-				D09BAE451279E9850046DE22 /* thread_win.h in Headers */,
 				D09BAE481279E9850046DE22 /* lex.h in Headers */,
 				D09BAE4A1279E9850046DE22 /* rgx.h in Headers */,
 				D09BAE511279E9850046DE22 /* lalr.h in Headers */,
@@ -349,21 +317,22 @@
 				D09BAE571279E9850046DE22 /* lr_action.h in Headers */,
 				D09BAE591279E9850046DE22 /* parser.h in Headers */,
 				D09BAE5B1279E9850046DE22 /* parser_in.h in Headers */,
-				D09BAE5F1279E9850046DE22 /* tengu.h in Headers */,
-				D09BAE601279E9850046DE22 /* tgu_parser_impl.h in Headers */,
-				D09BAE621279E9850046DE22 /* tguparser.h in Headers */,
-				D09BAE641279E9850046DE22 /* tguutility.h in Headers */,
-				D09BAE661279E9850046DE22 /* tguvm.h in Headers */,
 				D09BAE681279E9850046DE22 /* grammar_config.h in Headers */,
 				D09BAE6A1279E9850046DE22 /* serializer.h in Headers */,
 				D09BAE6C1279E9850046DE22 /* tools.h in Headers */,
 				D0A070E4127B168300F315D2 /* Arsenal_Prefix.pch in Headers */,
-				BE9ECC6912AE72E300A1F23A /* tengu.h in Headers */,
-				BE9ECC6A12AE72E300A1F23A /* tgu_parser_impl.h in Headers */,
-				BE9ECC6C12AE72E300A1F23A /* tguparser.h in Headers */,
-				BE9ECC6E12AE72E300A1F23A /* tgusyntree.h in Headers */,
-				BE9ECC7012AE72E300A1F23A /* tguutility.h in Headers */,
-				BE9ECC7212AE72E300A1F23A /* tguvm.h in Headers */,
+				BEB3FB8E131982E90013B92E /* tengu.h in Headers */,
+				BEB3FB8F131982E90013B92E /* tgu_parser_impl.h in Headers */,
+				BEB3FB91131982E90013B92E /* tguparser.h in Headers */,
+				BEB3FB93131982E90013B92E /* tgusyntree.h in Headers */,
+				BEB3FB95131982E90013B92E /* tguutility.h in Headers */,
+				BEB3FB97131982E90013B92E /* tguvm.h in Headers */,
+				BE0164FD131985CC003A7BDB /* common.h in Headers */,
+				BE0164FE131985CC003A7BDB /* config.h in Headers */,
+				BE016502131985CC003A7BDB /* platform.h in Headers */,
+				BE016509131985CC003A7BDB /* thread_apple.h in Headers */,
+				BE01650A131985CC003A7BDB /* thread_posix.h in Headers */,
+				BE01650B131985CC003A7BDB /* thread_win.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -418,17 +387,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D09BAE341279E9850046DE22 /* Arsenal.c in Sources */,
-				D09BAE361279E9850046DE22 /* algo.c in Sources */,
-				D09BAE371279E9850046DE22 /* buffer.c in Sources */,
-				D09BAE381279E9850046DE22 /* common.c in Sources */,
-				D09BAE3B1279E9850046DE22 /* crtstr.c in Sources */,
-				D09BAE3C1279E9850046DE22 /* memory.c in Sources */,
-				D09BAE3E1279E9850046DE22 /* random.c in Sources */,
-				D09BAE3F1279E9850046DE22 /* strconv.c in Sources */,
-				D09BAE401279E9850046DE22 /* string.c in Sources */,
-				D09BAE411279E9850046DE22 /* strtable.c in Sources */,
-				D09BAE421279E9850046DE22 /* thread.c in Sources */,
-				D09BAE461279E9850046DE22 /* utilities.c in Sources */,
 				D09BAE471279E9850046DE22 /* lex.c in Sources */,
 				D09BAE491279E9850046DE22 /* match.c in Sources */,
 				D09BAE4B1279E9850046DE22 /* rgx_compile.c in Sources */,
@@ -445,18 +403,28 @@
 				D09BAE5A1279E9850046DE22 /* parser_in.c in Sources */,
 				D09BAE5C1279E9850046DE22 /* report.c in Sources */,
 				D09BAE5D1279E9850046DE22 /* symbol.c in Sources */,
-				D09BAE5E1279E9850046DE22 /* tengu.c in Sources */,
-				D09BAE611279E9850046DE22 /* tguparser.c in Sources */,
-				D09BAE631279E9850046DE22 /* tguutility.c in Sources */,
-				D09BAE651279E9850046DE22 /* tguvm.c in Sources */,
-				D09BAE671279E9850046DE22 /* grammar_config.c in Sources */,
 				D09BAE691279E9850046DE22 /* serializer.c in Sources */,
 				D09BAE6B1279E9850046DE22 /* tools.c in Sources */,
-				BE9ECC6812AE72E300A1F23A /* tengu.c in Sources */,
-				BE9ECC6B12AE72E300A1F23A /* tguparser.c in Sources */,
-				BE9ECC6D12AE72E300A1F23A /* tgusyntree.c in Sources */,
-				BE9ECC6F12AE72E300A1F23A /* tguutility.c in Sources */,
-				BE9ECC7112AE72E300A1F23A /* tguvm.c in Sources */,
+				BEB3FB8D131982E90013B92E /* tengu.c in Sources */,
+				BEB3FB90131982E90013B92E /* tguparser.c in Sources */,
+				BEB3FB92131982E90013B92E /* tgusyntree.c in Sources */,
+				BEB3FB94131982E90013B92E /* tguutility.c in Sources */,
+				BEB3FB96131982E90013B92E /* tguvm.c in Sources */,
+				BE0164FA131985CC003A7BDB /* algo.c in Sources */,
+				BE0164FB131985CC003A7BDB /* buffer.c in Sources */,
+				BE0164FC131985CC003A7BDB /* common.c in Sources */,
+				BE0164FF131985CC003A7BDB /* crtstr.c in Sources */,
+				BE016500131985CC003A7BDB /* heap.c in Sources */,
+				BE016501131985CC003A7BDB /* memory.c in Sources */,
+				BE016503131985CC003A7BDB /* random.c in Sources */,
+				BE016504131985CC003A7BDB /* strconv.c in Sources */,
+				BE016505131985CC003A7BDB /* string.c in Sources */,
+				BE016506131985CC003A7BDB /* strtable.c in Sources */,
+				BE016507131985CC003A7BDB /* textfile.c in Sources */,
+				BE016508131985CC003A7BDB /* thread.c in Sources */,
+				BE01650C131985CC003A7BDB /* utilities.c in Sources */,
+				BE01651913198693003A7BDB /* grammar_codegen.c in Sources */,
+				BE01651B13198699003A7BDB /* grammar_collector.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
