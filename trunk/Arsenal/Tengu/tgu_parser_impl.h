@@ -151,7 +151,7 @@ syntax_tree_handler
 			{
 					tok_str = AR_wcsndup(tok->str, tok->str_cnt);
 			}
-			
+		
 			AR_AppendFormatString(str, L"Invalid token : '%ls', expected ", tok_str);
 			
 			for(i = 0; i < count; ++i)
@@ -897,7 +897,7 @@ psrTermFunc_t leaf;
 {L"true", TOK_TRUE, 1, L"\"true\"(?!{keyword_lhd})", false, default_leaf_handler},
 {L"false", TOK_FALSE, 1, L"\"false\"(?!{keyword_lhd})", false, default_leaf_handler},
 {L"var", TOK_VAR, 1, L"\"var\"(?!{keyword_lhd})", false, default_leaf_handler},
-{L"import", TOK_IMPORT, 1, L"\"import\"(?!{keyword_lhd})", false, default_leaf_handler},
+{L"#import", TOK_IMPORT, 2, L"\"#import\"(?!{keyword_lhd})", false, default_leaf_handler},
 {L"...", TOK_ELLIPSIS, 2, L"\"...\"", false, default_leaf_handler},
 {L"++", TOK_INC, 1, L"\"++\"", false, default_leaf_handler},
 {L"--", TOK_DEC, 1, L"\"--\"", false, default_leaf_handler},
@@ -1034,8 +1034,8 @@ static psrNode_t* AR_STDCALL on_table_constructor(psrNode_t **nodes, size_t coun
 /*filed_list	:	filed_list , filed */
 static psrNode_t* AR_STDCALL on_filed_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*import_statement	:	import STRING ; */
-/*import_statement	:	import error ; */
+/*import_statement	:	#import STRING ; */
+/*import_statement	:	#import error ; */
 static psrNode_t* AR_STDCALL on_import_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*compound_statement	:	start_block compound_element_list } */
@@ -1205,8 +1205,8 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"statement  :  jump_statement ", NULL, auto_return_0, 0},
 {L"statement  :  empty_statement ", NULL, auto_return_0, 0},
 {L"statement  :  import_statement ", NULL, auto_return_0, 0},
-{L"import_statement  :  import STRING ; ", NULL, on_import_statement, 0},
-{L"import_statement  :  import error ; ", NULL, on_import_statement, 0},
+{L"import_statement  :  #import STRING ; ", NULL, on_import_statement, 0},
+{L"import_statement  :  #import error ; ", NULL, on_import_statement, 0},
 {L"compound_statement  :  start_block compound_element_list } ", NULL, on_compound_statement, 0},
 {L"compound_statement  :  start_block error } ", NULL, on_compound_error_statement, 0},
 {L"compound_statement  :  start_block } ", NULL, on_empty_compound_statement, 0},
@@ -1773,8 +1773,8 @@ static psrNode_t* AR_STDCALL on_filed_list(psrNode_t **nodes, size_t count, cons
 
 
 
-/*import_statement	:	import STRING ; */
-/*import_statement	:	import error ; */
+/*import_statement	:	#import STRING ; */
+/*import_statement	:	#import error ; */
 static psrNode_t* AR_STDCALL on_import_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 { 
@@ -2152,6 +2152,7 @@ static psrNode_t* AR_STDCALL on_while_statement(psrNode_t **nodes, size_t count,
 						tguExpr_t		*expr;
 						tguStmt_t		*stmt;
 						AR_ASSERT(ns != NULL && count == 7);
+
 						if(ns[3] == NULL)
 						{
 							expr = NULL;

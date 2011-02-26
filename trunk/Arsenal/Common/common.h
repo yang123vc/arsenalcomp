@@ -555,14 +555,17 @@ const wchar_t*			AR_GetStringFloat(arStringTable_t *tbl, double num, size_t prec
 /*********************************************************String Convert****************************************************/
 
 size_t AR_wcs_to_utf8(const wchar_t *unicode, size_t n, char *out, size_t out_len);
-
 size_t AR_utf8_to_wcs(const char *utf8, size_t n, wchar_t *out, size_t out_len);
 
 char*  AR_wcs_convto_utf8(const wchar_t *wcs);
-
 wchar_t* AR_utf8_convto_wcs(const char *utf8);
 
 
+size_t		AR_acp_to_wcs(const char *acp, size_t n, wchar_t *out, size_t out_len);
+size_t		AR_wcs_to_acp(const wchar_t *input, size_t n, char *out, size_t out_len);
+
+char*		AR_wcs_convto_acp(const wchar_t *input);
+wchar_t*	AR_acp_convto_wcs(const char *input, size_t in_n);
 
 /**********************************************************Threading*************************************************************/
 

@@ -34,7 +34,11 @@ int  main()
         printf("%s\r\n", AR_FUNC_NAME);
         arInit_t ai = {{tiny_error, tiny_printf, NULL}};
 
-        //printf("%s\r\n", setlocale(LC_ALL, NULL));
+        char *old_cs = setlocale(LC_ALL, NULL);
+        char *cs = setlocale(LC_ALL, "");
+        printf("old_charset == %s -> new charset == %s\r\n", old_cs, cs);
+
+
         Arsenal_Init(&ai);
 
         AR_Test();
