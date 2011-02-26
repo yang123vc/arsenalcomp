@@ -1,7 +1,4 @@
 ﻿
-
-#import "tengu_input2.txt";
-
 var abc;
 
 var t = 
@@ -13,7 +10,7 @@ var tgu_print = null;
 
 tgu_print("abcdefg");
 
-tengu_input2:test("a");
+
 
 /*
 

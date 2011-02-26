@@ -221,9 +221,10 @@
 #elif defined(OS_FAMILY_UNIX)
         #include <unistd.h>
         #include <pthread.h>
+		#include <iconv.h>
         #include <sys/select.h>
         #include <sys/time.h>
-
+		
 		#if(OS_TYPE == OS_MAC_OS_X || OS_TYPE == OS_IPHONE)
 			#include <libkern/OSAtomic.h>
 		#endif

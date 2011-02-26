@@ -275,10 +275,10 @@
 	"./Tools/tools.h"
 	"./Tengu/tengu.h"
 
-1298442754 /root/Desktop/Programming/Arsenal/Arsenal/Common/common.h
+1298536519 /root/Desktop/Programming/Arsenal/Arsenal/Common/common.h
 	"config.h"
 
-1298289374 /root/Desktop/Programming/Arsenal/Arsenal/Common/config.h
+1298491076 /root/Desktop/Programming/Arsenal/Arsenal/Common/config.h
 	"platform.h"
 	<stdlib.h>
 	<crtdbg.h>
@@ -300,11 +300,12 @@
 	<windows.h>
 	<unistd.h>
 	<pthread.h>
+	<iconv.h>
 	<sys/select.h>
 	<sys/time.h>
 	<libkern/OSAtomic.h>
 
-1297711863 /root/Desktop/Programming/Arsenal/Arsenal/Common/platform.h
+1298475803 /root/Desktop/Programming/Arsenal/Arsenal/Common/platform.h
 	<TargetConditionals.h>
 
 1298046115 /root/Desktop/Programming/Arsenal/Arsenal/Lex/lex.h
@@ -329,52 +330,52 @@
 1294392301 /root/Desktop/Programming/Arsenal/Arsenal/Tools/serializer.h
 	"../Common/common.h"
 
-1290387872 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/algo.c
+1298475803 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/algo.c
 	"common.h"
 
-1295312563 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/buffer.c
+1298475803 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/buffer.c
 	"common.h"
 
-1298092686 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/common.c
+1298475803 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/common.c
 	"common.h"
 
-1298442754 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/crtstr.c
+1298475803 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/crtstr.c
 	"common.h"
 
-1298056879 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/heap.c
+1298475803 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/heap.c
 	"common.h"
 
-1296027263 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/memory.c
+1298475803 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/memory.c
 	"common.h"
 
-1268609644 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/random.c
+1298475803 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/random.c
 	"common.h"
 
-1297885039 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/strconv.c
+1298549323 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/strconv.c
 	"common.h"
 
-1295312793 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/string.c
+1298475803 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/string.c
 	"common.h"
 
-1297325371 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/strtable.c
+1298475803 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/strtable.c
 	"common.h"
 
-1288279902 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/thread.c
+1298475803 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/thread.c
 	"common.h"
 	"thread_win.h"
 	"thread_apple.h"
 	"thread_posix.h"
 
-1292685883 /root/Desktop/Programming/Arsenal/Arsenal/Common/thread_win.h
+1298475803 /root/Desktop/Programming/Arsenal/Arsenal/Common/thread_win.h
 	"common.h"
 
-1290394139 /root/Desktop/Programming/Arsenal/Arsenal/Common/thread_apple.h
+1298475803 /root/Desktop/Programming/Arsenal/Arsenal/Common/thread_apple.h
 	"common.h"
 
-1272789198 /root/Desktop/Programming/Arsenal/Arsenal/Common/thread_posix.h
+1298475803 /root/Desktop/Programming/Arsenal/Arsenal/Common/thread_posix.h
 	"common.h"
 
-1298019397 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/utilities.c
+1298475803 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/utilities.c
 	"common.h"
 
 1297821272 source:/root/Desktop/Programming/Arsenal/Arsenal/Lex/lex.c
@@ -392,7 +393,7 @@
 1291710462 source:/root/Desktop/Programming/Arsenal/Arsenal/Lex/rgx_compile.c
 	"rgx.h"
 
-1298287456 source:/root/Desktop/Programming/Arsenal/Arsenal/Lex/rgx_exec.c
+1298475938 source:/root/Desktop/Programming/Arsenal/Arsenal/Lex/rgx_exec.c
 	"lex.h"
 	"rgx.h"
 
@@ -503,8 +504,7 @@
 1297823166 source:/root/Desktop/Programming/Arsenal/Arsenal/Tools/grammar_collector.c
 	"grammar_config.h"
 
-1298474473 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/textfile.c
+1298536753 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/textfile.c
 	<iconv.h>
 	"common.h"
-	<iconv.h>
 

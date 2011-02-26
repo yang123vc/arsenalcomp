@@ -48,14 +48,16 @@ static int_t	AR_STDCALL tgu_print (tguMachine_t *vm)
 		#define TGU_TEST_PATH	L"..\\..\\..\\misc\\tengu_input.txt"
 #endif
 
+
+
 void test1()
 {
 		tguParseResult_t		parse_result;
 		tguParser_t				*parser;
-		const wchar_t			*code = NULL;
-
+		tguSrc_t				*src;
+		
 		tguParserExtern_t		ext;
-		ext.work_dir			= L"c:\\temp\\";
+		ext.work_dir			= L"D:\\Code\\Solidus\\Compiler\\Arsenal\\misc";
 		ext.global_constant		= TGU_CreateSymbTable();
 		ext.build_in			= TGU_CreateSymbTable();
 		ext.import_modules		= TGU_CreateSymbTable();
@@ -64,17 +66,17 @@ void test1()
 
 		parser = TGU_CreateParser(&__g_report, &ext); 
 		
-
-		code = __load_txt(TGU_TEST_PATH);
-
+				
+		//code = __load_txt(TGU_TEST_PATH);
+		src = TGU_LoadSources(L"..\\..\\..\\misc\\", L"tengu_input.txt");
 		
+		AR_ASSERT(src != NULL);
+		AR_printf(L"%ls\r\n", src->code);
 
-		AR_printf(L"%ls\r\n", code);
-
-		tguSymb_t		*import_modules_symb = TGU_CreateSymb(TGU_SYMB_BLOCK_T, L"tengu_input");
+		tguSymb_t		*import_modules_symb = TGU_CreateSymb(TGU_SYMB_BLOCK_T, src->module_name);
 		TGU_InsertToSymbTable(ext.import_modules, import_modules_symb);
-
-		parse_result = TGU_ParseCode(parser, L"tengu_input", code);
+		
+		parse_result = TGU_ParseCode(parser, src->module_name, src->code);
 		import_modules_symb->block = parse_result.block;
 
 		if(parse_result.has_error)
@@ -94,14 +96,22 @@ void test1()
 
 		
 
-		AR_DEL(code);
 		
 		TGU_DestroyParser(parser);
 
 		TGU_DestroySymbTable(ext.import_modules);
 		TGU_DestroySymbTable(ext.build_in);
 		TGU_DestroySymbTable(ext.global_constant);
+
+		TGU_ReleaseSources(src);
+		src = NULL;
 }
+
+
+
+
+
+
 
 void load_source_test()
 {
@@ -121,8 +131,8 @@ void load_source_test()
 
 void	Tengu_Test()
 {
-		//test1();
-		load_source_test();
+		test1();
+		//load_source_test();
 
 
 }

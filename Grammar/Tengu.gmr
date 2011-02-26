@@ -358,7 +358,7 @@
 %token	"false"	:	'"false"(?!{keyword_lhd})'		,1			%value	"TOK_FALSE"			%action default_leaf_handler			;
 %token	"var"		:	'"var"(?!{keyword_lhd})'		,1			%value	"TOK_VAR"			%action default_leaf_handler			;
 
-%token	"import"	:	'"import"(?!{keyword_lhd})'		,1			%value	"TOK_IMPORT"			%action default_leaf_handler			;
+%token	"#import"	:	'"#import"(?!{keyword_lhd})'	,2			%value	"TOK_IMPORT"		%action default_leaf_handler			;
 
 
 %token	"..."		:	'"..."'		,2					%value	"TOK_ELLIPSIS"		%action default_leaf_handler			;	
@@ -455,9 +455,9 @@ program			:	translation_unit			%action	on_translation_unit
 					AR_UNUSED(parser);
 					AR_UNUSED(result);
 					return NULL;
-
 				:}
 				;
+
 
 translation_unit		:	element				%action	auto_return_null
 				|	translation_unit	element	%action	auto_return_null
@@ -894,8 +894,8 @@ statement				:	compound_statement			%action	auto_return_0
 
 
 
-import_statement		:	"import"	STRING	";"		%action	on_import_statement
-				|	"import"	error 	";"		%action	on_import_statement
+import_statement		:	"#import"	STRING	";"		%action	on_import_statement
+				|	"#import"	error 	";"		%action	on_import_statement
 				{:
 					tguParser_t 	*parser = (tguParser_t*)ctx;
 					tguSynNode_t	**ns = (tguSynNode_t**)nodes;
@@ -912,7 +912,7 @@ import_statement		:	"import"	STRING	";"		%action	on_import_statement
 					{
 						wchar_t msg[1024];
 						parser->has_error = true;
-						AR_swprintf(msg, 1024, L"%ls", L"illegal	import statement in current scope");
+						AR_swprintf(msg, 1024, L"%ls", L"illegal	#import statement in current scope");
 						TGU_ReportError(&parser->report, msg, lex_info->linenum);
 						return NULL;
 
@@ -958,6 +958,9 @@ import_statement		:	"import"	STRING	";"		%action	on_import_statement
 
 								if(!has_error)
 								{
+									/*
+									在#import点，需要初始化此被引入的模块的所有全局变量
+									*/
 									stmt = TGU_CreateStmt(TGU_STT_IMPORT);
 									stmt->import_stmt.module_name = module_symb->name;
 									stmt->lex_info = ns[0]->token.lex_info;
@@ -979,7 +982,7 @@ import_statement		:	"import"	STRING	";"		%action	on_import_statement
 					{
 						wchar_t msg[1024];
 						parser->has_error = true;
-						AR_swprintf(msg, 1024, L"import '%ls' failed", file_name == NULL ? L"" : file_name);
+						AR_swprintf(msg, 1024, L"#import '%ls' failed", file_name == NULL ? L"" : file_name);
 						TGU_ReportError(&parser->report, msg, lex_info->linenum);
 						return NULL;
 					}else

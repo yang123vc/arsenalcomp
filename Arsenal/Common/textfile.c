@@ -33,80 +33,9 @@ static FILE*	__AR_open_file(const wchar_t *path, const wchar_t *mode)
 }
 
 
-static wchar_t*	__translate_from_acp_str(const char *input, size_t in_n)
-{
-		wchar_t *ret;
-		AR_ASSERT(input != NULL);
-		if(in_n == 0)
-		{
-				return AR_wcsdup(L"");
-		}else
-		{
-				int len = MultiByteToWideChar(CP_ACP, 0, input, in_n, 0, 0);
-				if(len == 0)
-				{
-						return NULL;
-
-				}
-
-				ret = AR_NEWARR(wchar_t, len + 1);
-
-				if(MultiByteToWideChar(CP_ACP, 0, input, in_n, ret, len) == 0)
-				{
-						AR_DEL(ret);
-						ret = NULL;
-				}else
-				{
-						ret[len] = 0;
-				}
-
-				return ret;
-
-		}
-
-}
-
-static char*	__translate_from_unicode_str(const wchar_t *input)
-{
-		char *ret;
-		int n;
-		AR_ASSERT(input != NULL);
-		n = AR_wcslen(input);
-
-		if(n == 0)
-		{
-				return AR_strdup("");
-		}else
-		{
-				int len = WideCharToMultiByte(CP_ACP, 0, input, n, 0, 0, NULL, NULL);
-				if(len == 0)
-				{
-						return NULL;
-				}
-
-				ret = AR_NEWARR(char, len + 1);
-
-				if(WideCharToMultiByte(CP_ACP, 0, input, n, ret, len, NULL, NULL) == 0)
-				{
-						AR_DEL(ret);
-						ret = NULL;
-				}else
-				{
-						ret[len] = 0;
-				}
-
-				return ret;
-		}
-}
-
-
-
 #elif defined(OS_FAMILY_UNIX)
 
 
-#include <iconv.h>
-
-static char* __translate_from_unicode_str(const wchar_t *input);
 
 
 FILE*	__AR_open_file(const wchar_t *path, const wchar_t *mode)
@@ -116,8 +45,8 @@ FILE*	__AR_open_file(const wchar_t *path, const wchar_t *mode)
         char     *str_mode;
 		AR_ASSERT(path != NULL && mode != NULL);
 
-		str_path = __translate_from_unicode_str(path);
-		str_mode = __translate_from_unicode_str(mode);
+		str_path = AR_wcs_convto_acp(path);
+		str_mode = AR_wcs_convto_acp(mode);
 
 		file = NULL;
 
@@ -141,163 +70,12 @@ FILE*	__AR_open_file(const wchar_t *path, const wchar_t *mode)
         return file;
 }
 
-
-
-const char *__get_current_locale_char_for_iconv()
-{
-		return "";
-}
-
-#if(OS_TYPE ==  OS_IPHONE) || (OS_TYPE == OS_MAC_OS_X)
-		#define UNICODE_ENCODING_NAME	"UCS-4LE"
-#else
-		#define UNICODE_ENCODING_NAME	"wchar_t"
-#endif
-
-
-
-static wchar_t*	__translate_from_acp_str(const char *input, size_t in_n)
-{
-
-        char   *out    = NULL;
-        size_t out_len = 0;
-
-        char   *inbuf  = NULL;
-        char   *outbuf = NULL;
-        size_t inleft;
-        size_t outleft;
-        iconv_t cd;
-		bool_t	is_ok = true;
-
-		AR_ASSERT(input != NULL);
-
-		if(in_n == 0)
-        {
-            return AR_wcsdup("");
-        }
-
-        out_len = sizeof(wchar_t) * (in_n + 1);
-        out = AR_NEWARR0(wchar_t , in_n + 1);
-
-		cd = iconv_open(UNICODE_ENCODING_NAME, __get_current_locale_char_for_iconv());
-
-        if(cd == (iconv_t)-1)
-        {
-				is_ok = false;
-				cd = NULL;
-				goto CLEAN_POINT;
-        }
-
-        inbuf = input;
-        outbuf = out;
-        inleft = in_n;
-        outleft = out_len;
-
-        if(iconv(cd, &inbuf, &inleft, &outbuf, &outleft) == (size_t)-1)
-        {
-            is_ok = false;
-            goto CLEAN_POINT;
-        }
-
-CLEAN_POINT:
-		if(cd)
-		{
-				iconv_close(cd);
-				cd = NULL;
-		}
-
-		if(!is_ok)
-		{
-				if(out)
-				{
-						AR_DEL(out);
-						out = NULL;
-				}
-		}
-
-        return (wchar_t*)out;
-}
-
-
-
-
-
-static char* __translate_from_unicode_str(const wchar_t *input)
-{
-        char   *in     = NULL;
-        size_t in_len;
-        size_t len ;
-        char   *out    = NULL;
-        size_t out_len = 0;
-
-        iconv_t cd  = NULL;
-        bool_t is_ok;
-        AR_ASSERT(input != NULL);
-
-        in = (char*)input;
-        len = AR_wcslen(input);
-
-        if(len == 0)
-        {
-            return  AR_strdup("");
-        }
-
-        is_ok = true;
-        in_len = len * sizeof(wchar_t);
-
-        out_len = (len + 1) * 6;
-		out = AR_NEWARR0(char, out_len);
-
-        cd = iconv_open(__get_current_locale_char_for_iconv(),  UNICODE_ENCODING_NAME);
-
-        if(cd == (iconv_t)-1)
-        {
-            is_ok = false;
-            cd = NULL;
-            goto CLEAN_POINT;
-        }
-
-        {
-            char   *inbuf  = in;
-            char   *outbuf = out;
-            size_t inleft  = in_len;
-            size_t outleft = out_len;
-
-            if(iconv(cd, &inbuf, &inleft, &outbuf, &outleft) != 0)
-            {
-                is_ok = false;
-                goto CLEAN_POINT;
-            }
-        }
-
-CLEAN_POINT:
-
-        if(cd)
-        {
-            iconv_close(cd);
-            cd = NULL;
-        }
-
-        if(!is_ok && out)
-        {
-            AR_DEL(out);
-            out = NULL;
-        }
-
-        return out;
-
-}
-
-
-
-
-
-
 #else
 
 #error Unknow platform
 
 #endif
+
 
 
 /***************************************Read File**********************************************************/
@@ -386,7 +164,7 @@ static txtReadStatus_t		__read_wchar(FILE *file, arTxtBom_t enc, wchar_t *out)
 		AR_ASSERT(file != NULL);
 
 		e = 0;
-
+		
 		switch(enc)
 		{
 		case AR_TXT_BOM_UTF_8:
@@ -591,7 +369,7 @@ bool_t	AR_LoadBomTextFile(const wchar_t *path, arTxtBom_t *bom, arString_t *out)
 				{
 						wchar_t *str;
 
-						str = __translate_from_acp_str((const char*)AR_GetBufferData(ascii_buf), AR_GetBufferAvailable(ascii_buf));
+						str = AR_acp_convto_wcs((const char*)AR_GetBufferData(ascii_buf), AR_GetBufferAvailable(ascii_buf));
 
 						if(!str)
 						{
@@ -830,9 +608,6 @@ static bool_t __write_wchar(FILE *file, arTxtBom_t bom, wchar_t c)
 						buf[1] = (byte_t)(uc >> 16);
 						buf[2] = (byte_t)(uc >> 8);
 						buf[3] = (byte_t)(uc & 0x000000FF);
-
-
-
 				}else
 				{
 						buf[3] = (byte_t)(uc >> 24);
@@ -896,7 +671,7 @@ bool_t	AR_SaveBomTextFile(const wchar_t *path, arTxtBom_t bom, const wchar_t *in
 		if(bom == AR_TXT_BOM_ASCII)
 		{
 				size_t n;
-				char *s = __translate_from_unicode_str(input);
+				char *s = AR_wcs_convto_acp(input);
 				n = strlen(s);
 
 				if(!s)

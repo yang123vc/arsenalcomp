@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1291726080 source:/root/Desktop/Programming/Arsenal/Prj/Test/CodeBlocks/main.c
+1298550183 source:/root/Desktop/Programming/Arsenal/Prj/Test/CodeBlocks/main.c
 	"test.h"
 	<iostream>
 	<locale.h>
@@ -15,10 +15,10 @@
 	"./Tools/tools.h"
 	"./Tengu/tengu.h"
 
-1298442754 /root/Desktop/Programming/Arsenal/Arsenal/Common/common.h
+1298536519 /root/Desktop/Programming/Arsenal/Arsenal/Common/common.h
 	"config.h"
 
-1298289374 /root/Desktop/Programming/Arsenal/Arsenal/Common/config.h
+1298491076 /root/Desktop/Programming/Arsenal/Arsenal/Common/config.h
 	"platform.h"
 	<stdlib.h>
 	<crtdbg.h>
@@ -40,11 +40,12 @@
 	<windows.h>
 	<unistd.h>
 	<pthread.h>
+	<iconv.h>
 	<sys/select.h>
 	<sys/time.h>
 	<libkern/OSAtomic.h>
 
-1297711863 /root/Desktop/Programming/Arsenal/Arsenal/Common/platform.h
+1298475803 /root/Desktop/Programming/Arsenal/Arsenal/Common/platform.h
 	<TargetConditionals.h>
 
 1298046115 /root/Desktop/Programming/Arsenal/Arsenal/Lex/lex.h
@@ -80,7 +81,7 @@
 1294392301 /root/Desktop/Programming/Arsenal/Arsenal/Tools/serializer.h
 	"../Common/common.h"
 
-1298482286 source:/root/Desktop/Programming/Arsenal/Prj/Test/CodeBlocks/com_test.c
+1298550420 source:/root/Desktop/Programming/Arsenal/Prj/Test/CodeBlocks/com_test.c
 	"test.h"
 	<locale.h>
 

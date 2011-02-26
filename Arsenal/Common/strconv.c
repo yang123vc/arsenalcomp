@@ -223,5 +223,398 @@ char*  AR_wcs_convto_utf8(const wchar_t *wcs)
 
 
 
+
+
+#if defined(OS_FAMILY_WINDOWS)
+
+wchar_t*	AR_acp_convto_wcs(const char *input, size_t in_n)
+{
+		wchar_t *ret;
+		AR_ASSERT(input != NULL);
+		if(in_n == 0)
+		{
+				return AR_wcsdup(L"");
+		}else
+		{
+				int len = MultiByteToWideChar(CP_ACP, 0, input, in_n, 0, 0);
+				if(len == 0)
+				{
+						return NULL;
+
+				}
+
+				ret = AR_NEWARR(wchar_t, len + 1);
+
+				if(MultiByteToWideChar(CP_ACP, 0, input, in_n, ret, len) == 0)
+				{
+						AR_DEL(ret);
+						ret = NULL;
+				}else
+				{
+						ret[len] = 0;
+				}
+
+				return ret;
+		}
+}
+
+
+
+char*	AR_wcs_convto_acp(const wchar_t *input)
+{
+		char *ret;
+		int n;
+		AR_ASSERT(input != NULL);
+		n = AR_wcslen(input);
+
+		if(n == 0)
+		{
+				return AR_strdup("");
+		}else
+		{
+				int len = WideCharToMultiByte(CP_ACP, 0, input, n, 0, 0, NULL, NULL);
+				if(len == 0)
+				{
+						return NULL;
+				}
+
+				ret = AR_NEWARR(char, len + 1);
+
+				if(WideCharToMultiByte(CP_ACP, 0, input, n, ret, len, NULL, NULL) == 0)
+				{
+						AR_DEL(ret);
+						ret = NULL;
+				}else
+				{
+						ret[len] = 0;
+				}
+
+				return ret;
+		}
+}
+
+
+
+
+
+size_t		AR_wcs_to_acp(const wchar_t *input, size_t n, char *out, size_t out_len)
+{
+		int len;
+		AR_ASSERT(input != NULL);
+
+		len = WideCharToMultiByte(CP_ACP, 0, input, n, 0, 0, NULL, NULL);
+
+		if(len == 0 && n > 0)
+		{
+				return 0;
+		}
+		
+		if(len == 0 || out == NULL && out_len == 0)
+		{
+				return len + 1;
+		}
+		
+		if((int)out_len < len + 1)
+		{
+				return 0;
+		}
+
+		if(WideCharToMultiByte(CP_ACP, 0, input, n, out, (int)out_len, NULL, NULL) == 0)
+		{
+				return 0;
+		}else
+		{
+				out[len] = 0;
+				return len + 1;
+		}
+}
+
+
+size_t		AR_acp_to_wcs(const char *acp, size_t n, wchar_t *out, size_t out_len)
+{
+		int len;
+		AR_ASSERT(acp != NULL);
+		
+		len = MultiByteToWideChar(CP_ACP, 0, acp, n, 0, 0);
+		
+		if(len == 0 && n > 0)
+		{
+				return 0;
+		}
+
+		if(len == 0 || out_len == 0 || out == NULL)
+		{
+				return len + 1;
+		}
+		
+		if((int)out_len < len + 1)
+		{
+				return 0;
+		}
+		
+		if(MultiByteToWideChar(CP_ACP, 0, acp, n, out, (int)out_len) == 0)
+		{
+				return 0;
+		}else
+		{
+				out[len] = 0;
+				return len + 1;
+		}
+}
+
+
+
+
+#elif defined(OS_FAMILY_UNIX)
+
+
+
+
+
+const char *__get_current_locale_char_for_iconv()
+{
+		return "";
+}
+
+#if(OS_TYPE ==  OS_IPHONE) || (OS_TYPE == OS_MAC_OS_X)
+		#define UNICODE_ENCODING_NAME	"UCS-4LE"
+#else
+		#define UNICODE_ENCODING_NAME	"wchar_t"
+#endif
+
+
+size_t		AR_acp_to_wcs(const char *acp, size_t n, wchar_t *out, size_t out_len)
+{
+		size_t len;
+		size_t ret;
+		wchar_t *wstr;
+		AR_ASSERT(acp != NULL);
+		wstr = AR_acp_convto_wcs(acp, n);
+		if(wstr == NULL)
+		{
+				ret = 0;
+				goto CLEAN_POINT;
+		}
+
+		len = AR_wcslen(wstr);
+
+		if(len == 0 || out == NULL || out_len == 0)
+		{
+				ret = len + 1;
+				goto CLEAN_POINT;
+		}
+
+		if(out_len < len + 1)
+		{
+				ret = 0;
+				goto CLEAN_POINT;
+		}
+		
+		AR_wcsncpy(out, wstr, len);
+		out[len] = 0;
+		ret = len + 1;
+
+CLEAN_POINT:
+		if(wstr)
+		{
+				AR_DEL(wstr);
+				wstr = NULL;
+		}
+		return ret;
+}
+
+
+size_t		AR_wcs_to_acp(const wchar_t *input, size_t n, char *out, size_t out_len)
+{
+		size_t len;
+		size_t ret;
+		wchar_t *str;
+		AR_ASSERT(input != NULL);
+		str = AR_wcs_convto_acp(input, n);
+		
+		if(str == NULL)
+		{
+				ret = 0;
+				goto CLEAN_POINT;
+		}
+
+		len = AR_strlen(str);
+
+		if(len == 0 || out == NULL || out_len == 0)
+		{
+				ret = len + 1;
+				goto CLEAN_POINT;
+		}
+
+		if(out_len < len + 1)
+		{
+				ret = 0;
+				goto CLEAN_POINT;
+		}
+		
+		AR_strncpy(out, str, len);
+		out[len] = 0;
+		ret = len + 1;
+
+CLEAN_POINT:
+		if(str)
+		{
+				AR_DEL(str);
+				str = NULL;
+		}
+		return ret;
+
+}
+
+
+
+
+wchar_t*	AR_acp_convto_wcs(const char *input, size_t in_n)
+{
+
+        char   *out    = NULL;
+        size_t out_len = 0;
+
+        char   *inbuf  = NULL;
+        char   *outbuf = NULL;
+        size_t inleft;
+        size_t outleft;
+        iconv_t cd;
+		bool_t	is_ok = true;
+
+		AR_ASSERT(input != NULL);
+
+		if(in_n == 0)
+        {
+            return AR_wcsdup("");
+        }
+
+        out_len = sizeof(wchar_t) * (in_n + 1);
+        out = AR_NEWARR0(wchar_t , in_n + 1);
+
+		cd = iconv_open(UNICODE_ENCODING_NAME, __get_current_locale_char_for_iconv());
+
+        if(cd == (iconv_t)-1)
+        {
+				is_ok = false;
+				cd = NULL;
+				goto CLEAN_POINT;
+        }
+
+        inbuf = input;
+        outbuf = out;
+        inleft = in_n;
+        outleft = out_len;
+
+        if(iconv(cd, &inbuf, &inleft, &outbuf, &outleft) == (size_t)-1)
+        {
+            is_ok = false;
+            goto CLEAN_POINT;
+        }
+
+CLEAN_POINT:
+		if(cd)
+		{
+				iconv_close(cd);
+				cd = NULL;
+		}
+
+		if(!is_ok)
+		{
+				if(out)
+				{
+						AR_DEL(out);
+						out = NULL;
+				}
+		}
+
+        return (wchar_t*)out;
+}
+
+
+
+
+
+char* AR_wcs_convto_acp(const wchar_t *input)
+{
+        char   *in     = NULL;
+        size_t in_len;
+        size_t len ;
+        char   *out    = NULL;
+        size_t out_len = 0;
+
+        iconv_t cd  = NULL;
+        bool_t is_ok;
+        AR_ASSERT(input != NULL);
+
+        in = (char*)input;
+        len = AR_wcslen(input);
+
+        if(len == 0)
+        {
+            return  AR_strdup("");
+        }
+
+        is_ok = true;
+        in_len = len * sizeof(wchar_t);
+
+        out_len = (len + 1) * 6;
+		out = AR_NEWARR0(char, out_len);
+
+        cd = iconv_open(__get_current_locale_char_for_iconv(),  UNICODE_ENCODING_NAME);
+
+        if(cd == (iconv_t)-1)
+        {
+            is_ok = false;
+            cd = NULL;
+            goto CLEAN_POINT;
+        }
+
+        {
+            char   *inbuf  = in;
+            char   *outbuf = out;
+            size_t inleft  = in_len;
+            size_t outleft = out_len;
+
+            if(iconv(cd, &inbuf, &inleft, &outbuf, &outleft) != 0)
+            {
+                is_ok = false;
+                goto CLEAN_POINT;
+            }
+        }
+
+CLEAN_POINT:
+
+        if(cd)
+        {
+            iconv_close(cd);
+            cd = NULL;
+        }
+
+        if(!is_ok && out)
+        {
+            AR_DEL(out);
+            out = NULL;
+        }
+
+        return out;
+
+}
+
+
+
+
+
+
+#else
+
+#error Unknow platform
+
+#endif
+
+
+
+
+
 AR_NAMESPACE_END
 
