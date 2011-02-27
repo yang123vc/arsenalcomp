@@ -1496,6 +1496,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\Arsenal\Tengu\tgucompiler.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Tengu\tgucompiler.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\Arsenal\Tengu\tguparser.c"
 				>
 			</File>

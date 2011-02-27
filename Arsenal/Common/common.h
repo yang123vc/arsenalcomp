@@ -27,8 +27,6 @@ common.h -- misc founctions used in Arsenal
 
 */
 
-
-
 const wchar_t*	AR_Version();
 
 
