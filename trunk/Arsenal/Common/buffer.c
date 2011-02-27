@@ -63,7 +63,6 @@ static AR_INLINE void		__increase_capability(arBuffer_t *pbuf, size_t inc_len)
 
 		new_buf = AR_NEWARR(byte_t, inc_len + cur_len);
 
-		AR_ASSERT(new_buf != NULL);
 
 		if(data_len > 0)
 		{

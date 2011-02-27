@@ -20,46 +20,6 @@ AR_NAMESPACE_BEGIN
 
 
 
-#define IS_NEW_LINE(_c)	((_c) == L'\n' || (_c) == L'\r')
-
-
-
-#define IS_LINE_BEGIN(_sp, _input)		((_sp) == (_input) || (IS_NEW_LINE((_sp)[-1])))
-#define IS_LINE_END(_sp)				(*(_sp) == L'\0' || (IS_NEW_LINE(*(_sp))))
-
-
-
-static AR_INLINE void __check_is_newline(const wchar_t *sp, uint_32_t *pact, size_t *px, size_t *py)
-{
-		AR_ASSERT(sp != NULL && pact != NULL && px != NULL && py != NULL);
-
-		if(IS_NEW_LINE(*sp))
-		{																				
-				if(*pact & RGX_ACT_INCLINE)
-				{																		
-						*py = 0;															
-						*px += 1;
-						*pact &= ~RGX_ACT_INCLINE;
-				}else
-				{
-						wchar_t next_c = *(sp + 1);
-						if(IS_NEW_LINE(next_c) && *sp != next_c)
-						{
-								*py += 1;
-								*pact |= RGX_ACT_INCLINE;
-						}else
-						{
-								*py = 0;
-								*px += 1;
-						}
-				}
-		}else																			
-		{
-				*py += 1;
-		}
-
-}
-
 
 static void __add_thread(rgxThreadList_t *lst,  rgxThread_t thd, rgxProg_t *prog)
 {
@@ -105,6 +65,51 @@ static void __add_thread(rgxThreadList_t *lst,  rgxThread_t thd, rgxProg_t *prog
 		}
 		}
 }
+
+
+
+
+
+
+#define IS_NEW_LINE(_c)	((_c) == L'\n' || (_c) == L'\r')
+
+
+#define IS_LINE_BEGIN(_sp, _input)		((_sp) == (_input) || (IS_NEW_LINE((_sp)[-1])))
+#define IS_LINE_END(_sp)				(*(_sp) == L'\0' || (IS_NEW_LINE(*(_sp))))
+
+
+
+static AR_INLINE void __check_is_newline(const wchar_t *sp, uint_32_t *pact, size_t *px, size_t *py)
+{
+		AR_ASSERT(sp != NULL && pact != NULL && px != NULL && py != NULL);
+
+		if(IS_NEW_LINE(*sp))
+		{																				
+				if(*pact & RGX_ACT_INCLINE)
+				{																		
+						*py = 0;															
+						*px += 1;
+						*pact &= ~RGX_ACT_INCLINE;
+				}else
+				{
+						wchar_t next_c = *(sp + 1);
+						if(IS_NEW_LINE(next_c) && *sp != next_c)
+						{
+								*py += 1;
+								*pact |= RGX_ACT_INCLINE;
+						}else
+						{
+								*py = 0;
+								*px += 1;
+						}
+				}
+		}else																			
+		{
+				*py += 1;
+		}
+
+}
+
 
 
 static bool_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, size_t *py, uint_32_t *pact, lexMatch_t *match);
