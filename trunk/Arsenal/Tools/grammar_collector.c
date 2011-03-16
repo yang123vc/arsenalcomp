@@ -183,14 +183,14 @@ struct __cfg_node_tag
 
 static const wchar_t *__cfg_lex_name[] =
 {
-		L"	delim		= 	[\\t\\r\\n ]+",
+		L"	delim		= 	[\\f\\v\\t\\r\\n ]+",
 		L"	letter		= 	[A-Z_a-z]",
 		L"	digit		=	[0-9]",
 		L"	number		=	0|[1-9]{digit}*",
 		L"	name		=	{letter}({letter}|{digit})*",
-		L"	lexeme		=	{name}|(\\\"([^\\\"\\n])+\\\")|('([^'\\n])+')",
+		L"	lexeme		=	{name}|(\\\"([^\\\"\\n\\r])+\\\")|('([^'\\n\\r])+')",
 		L"	comment		= 	/\\*([^\\*]|\\*+[^\\*/])*\\*+/",
-		L"	comment_line	= //[^\\n\\r]*\\r?(\\n|$)",
+		L"	comment_line	= //[^\\n\\r]*(\\n|$|\\r)",
 		L"  skip_lexem		= {delim}|{comment}|{comment_line}",
 		L"  key_lookahead   = {skip_lexem}+|\"{\""
 };

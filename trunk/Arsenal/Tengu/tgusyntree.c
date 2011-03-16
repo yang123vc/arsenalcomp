@@ -130,6 +130,39 @@ const wchar_t* TGU_TokenValToString(size_t tok_val)
 
 /****************************************Expr***************************************************************/
 
+tguTableField_t*		TGU_CreateTableField(tguExpr_t		*name, tguExpr_t		*value)
+{
+		tguTableField_t	*field;
+		field = AR_NEW(tguTableField_t);
+		field->name = name;
+		field->value = value;
+		field->next = NULL;
+		return field;
+}
+
+void					TGU_DestroyTableField(tguTableField_t *field)
+{
+		tguTableField_t *next;
+
+		while(field)
+		{
+				next = field->next;
+
+				if(field->name)
+				{
+						TGU_DestroyExpr(field->name);
+						field->name = NULL;
+				}
+
+				if(field->value)
+				{
+						TGU_DestroyExpr(field->value);
+						field->value = NULL;
+				}
+				AR_DEL(field);
+				field = next;
+		}
+}
 
 
 tguExpr_t*		TGU_CreateExpr(tguExprType_t type)
@@ -156,11 +189,19 @@ void			TGU_DestroyExpr(tguExpr_t *expr)
 				default:
 						AR_ASSERT(false);
 						break;
-				case TGU_ET_TABLE_INIT:
+				case TGU_ET_AGGRE_INIT:
 						{
-								tguExpr_t	*init_expr = expr->table_init.expr_list;
-								TGU_DestroyExpr(init_expr);
-								expr->table_init.expr_list = NULL;
+								if(expr->aggre_init.type == TGU_AGGREGATE_LIST_T)
+								{
+										tguExpr_t	*lst = expr->aggre_init.list;
+										expr->aggre_init.list = NULL;
+										TGU_DestroyExpr(lst);
+								}else
+								{
+										tguTableField_t *fields = expr->aggre_init.tbl_field_list;
+										expr->aggre_init.tbl_field_list = NULL;
+										TGU_DestroyTableField(fields);
+								}
 						}
 						break;
 				case TGU_ET_ASSIGN:
@@ -896,11 +937,15 @@ tguBlock_t*		TGU_CreateBlock(const tguBlock_t	*parent)
 
 		block->symb_table = TGU_CreateSymbTable();
 		
+		block->decls = NULL;
+		block->decl_cnt = 0;
+		block->decl_cap = 0;
+
 		block->stmts = NULL;
 		block->stmt_cnt = 0;
 		block->stmt_cap = 0;
-
 		
+
 		block->next = NULL;
 		block->parent = NULL;
 		block->sub_blocks = NULL;
@@ -946,6 +991,11 @@ void			TGU_DestroyBlock(tguBlock_t	*block)
 		
 		if(block->stmts)AR_DEL(block->stmts);
 
+		if(block->decls)
+		{
+				AR_DEL(block->decls);
+		}
+
 
 		if(block->symb_table != NULL)
 		{
@@ -979,7 +1029,18 @@ void			TGU_InsertStmtToBlock(tguBlock_t	*block, tguStmt_t	*stmt)
 void			TGU_InsertSymbToBlock(tguBlock_t	*block, tguSymb_t	*symb)
 {
 		AR_ASSERT(block != NULL && symb != NULL);
+		
 		TGU_InsertToSymbTable(block->symb_table, symb);
+
+		if(block->decl_cnt == block->decl_cap)
+		{
+				block->decl_cap += 4;
+				block->decl_cap *= 2;
+				block->decls = AR_REALLOC(tguSymb_t*, block->decls, block->decl_cap);
+		}
+
+		block->decls[block->decl_cnt] = symb;
+		block->decl_cnt++;
 }
 
 

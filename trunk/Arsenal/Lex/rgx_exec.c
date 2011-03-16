@@ -73,7 +73,6 @@ static void __add_thread(rgxThreadList_t *lst,  rgxThread_t thd, rgxProg_t *prog
 
 #define IS_NEW_LINE(_c)	((_c) == L'\n' || (_c) == L'\r')
 
-
 #define IS_LINE_BEGIN(_sp, _input)		((_sp) == (_input) || (IS_NEW_LINE((_sp)[-1])))
 #define IS_LINE_END(_sp)				(*(_sp) == L'\0' || (IS_NEW_LINE(*(_sp))))
 
@@ -256,7 +255,6 @@ static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match
 						}
 						case RGX_LOOP_BEG_I:
 						{
-								
 								size_t loop_cnt;
 								size_t i;
 								bool_t is_ok = true;

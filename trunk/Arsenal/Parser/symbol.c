@@ -43,15 +43,17 @@ const psrSymb_t*		Parser_CreateSymb(const wchar_t *name, psrSymbType_t t)
 #if defined(AR_DEBUG)
 static void __trace_symb_refcount(const psrSymb_t *symb)
 {
-		if(symb == PARSER_StartSymb)/*Parser_CompSymb(PARSER_EOISymb, symb) == 0)*/
+		AR_UNUSED(symb);
+
+		/*
+		if(symb == PARSER_StartSymb)
 		{
 
 				int x;
-
 				x = 0;
 				++x;
-				
 		}
+		*/
 }
 
 #else

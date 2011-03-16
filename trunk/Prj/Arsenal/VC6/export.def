@@ -11,9 +11,9 @@ Arsenal_UnInit
 ;Common
 
 
-AR_global_ioctx
+;AR_global_ioctx
 
-AR_error				
+AR_error
 AR_printf
 
 AR_error_ctx
@@ -21,18 +21,13 @@ AR_printf_ctx
 
 AR_check
 
-AR_malloc
-AR_calloc
-AR_realloc
-AR_free
-AR_memswap
 
+;AR_stricmp
+;AR_strnicmp
+;AR_wcsicmp
+;AR_wcsnicmp
 
-AR_stricmp
-AR_strnicmp
-AR_wcsicmp
-AR_wcsnicmp
-
+AR_Version
 
 AR_CreateString			
 AR_DestroyString		
@@ -63,6 +58,12 @@ AR_escstr_to_str_buf
 AR_str_to_escstr_buf
 
 
+AR_CreateHeap
+AR_DestroyHeap
+AR_AllocFromHeap
+AR_ClearedAllocFromHeap
+AR_ReallocFromHeap
+AR_FreeToHeap
 
 
 
@@ -72,6 +73,8 @@ AR_str_to_escstr_buf
 
 Lex_Create				
 Lex_Destroy				
+Lex_GetLastError
+Lex_ClearLastError
 Lex_InsertName			
 Lex_InsertRule			
 Lex_RemoveByValue
@@ -95,7 +98,7 @@ Lex_Skip
 Lex_SkipTo
 Lex_SkipN
 Lex_MatchGetCoordinate
-Lex_ResetIOContext
+
 
 ;Grammar
 
@@ -103,13 +106,17 @@ Lex_ResetIOContext
 
 Parser_CreateGrammar			
 Parser_DestroyGrammar
-Parser_ClearGrammar		
+Parser_ClearGrammar	
+
+Parser_GetGrammarLastError
+Parser_ClearGrammarLastError
+	
 Parser_InsertTerm			
 Parser_FindTermByName		
 Parser_FindTermByValue		
 
 Parser_InsertRuleByStr	
-Parser_InsertRuleByPartStr
+Parser_InsertRuleBySymbList
 
 Parser_GetSymbList			
 Parser_CheckIsValidGrammar	
@@ -123,7 +130,7 @@ Parser_CalcFirstSet
 Parser_GetSymbolFromSymbMap 
 Parser_PrintSymbolMap
 
-Parser_ResetGrammarIOContext
+
 Parser_ResetGrammarParseHandler
 
 Parser_GetTermSymbInfoByValue

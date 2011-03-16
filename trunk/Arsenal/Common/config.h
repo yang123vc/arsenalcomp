@@ -446,6 +446,10 @@
 #define AR_INT64_MIN	LLONG_MIN
 
 
+#define AR_UINT16_MAX	USHRT_MAX
+
+#define AR_INT16_MIN	SHRT_MIN
+#define AR_INT16_MAX	SHRT_MAX
 
 
 
@@ -575,8 +579,6 @@ typedef void*					ptr_t;
 		#error "Unknow Compiler!"
 
 #endif
-
-
 
 
 

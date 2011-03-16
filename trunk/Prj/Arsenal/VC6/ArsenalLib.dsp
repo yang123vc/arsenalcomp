@@ -64,7 +64,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "..\..\..\Temp\x86\LIBDebug\"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
-# ADD CPP /nologo /W4 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_UNICODE" /D "_LIB" /YX /FD /GZ /c
+# ADD CPP /nologo /W4 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_UNICODE" /D "_LIB" /FR /YX /FD /GZ /c
 # ADD BASE RSC /l 0x804 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -109,6 +109,10 @@ SOURCE=..\..\..\Arsenal\Common\crtstr.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\Arsenal\Common\heap.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\Arsenal\Common\memory.c
 # End Source File
 # Begin Source File
@@ -133,7 +137,15 @@ SOURCE=..\..\..\Arsenal\Common\strtable.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\Arsenal\Common\textfile.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\Arsenal\Common\thread.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Common\thread_apple.h
 # End Source File
 # Begin Source File
 
@@ -269,7 +281,11 @@ SOURCE=..\..\..\Arsenal\Parser\symbol.h
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\..\..\Arsenal\Tools\grammar_config.c
+SOURCE=..\..\..\Arsenal\Tools\grammar_codegen.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Tools\grammar_collector.c
 # End Source File
 # Begin Source File
 

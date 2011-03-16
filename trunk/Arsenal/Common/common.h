@@ -604,7 +604,7 @@ void			AR_YieldThread();
 void			AR_Sleep(size_t millisecond);
 
 uint_64_t		AR_GetTime_Microseconds();
-#define			AR_GetTime_Milliseconds()		(AR_GetTime_Microseconds() / 1000LL)
+#define			AR_GetTime_Milliseconds()		(AR_GetTime_Microseconds() / AR_BIGNUM_U64(1000))
 
 
 /*******************************************************BitMark****************************************************************/
@@ -710,7 +710,6 @@ typedef enum
 
 bool_t	AR_LoadBomTextFile(const wchar_t *path, arTxtBom_t *bom, arString_t *out);
 bool_t	AR_SaveBomTextFile(const wchar_t *path, arTxtBom_t bom, const wchar_t *input);
-
 
 
 AR_NAMESPACE_END

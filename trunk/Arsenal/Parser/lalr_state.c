@@ -177,7 +177,7 @@ void			Parser_CollectState(lalrStateSet_t *set, lalrState_t *start)
 		}
 }
 
-
+#if(0)
 
 lalrState_t*   Parser_GetTransTo(lalrState_t *state, const psrSymb_t *symb)
 {
@@ -195,7 +195,7 @@ lalrState_t*   Parser_GetTransTo(lalrState_t *state, const psrSymb_t *symb)
 		return NULL;
 }
 
-
+#endif
 
 AR_NAMESPACE_END
 

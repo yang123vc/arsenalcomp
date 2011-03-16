@@ -379,6 +379,7 @@ static AR_INLINE void __sort_list(lalrConfigList_t *sour_list)
 		*sour_list = tmp_list[fill-1];
 }
 
+#undef __SORT_BUCKET__
 
 /***************************************************************************************************************************/
 
