@@ -24,9 +24,7 @@ AR_NAMESPACE_BEGIN
 
 
 
-
-
-bool_t	TGU_Compile(tguBlock_t		*block);
+bool_t	TGU_Compile(const tguReport_t	*report, tguBlock_t	 *block, arString_t *out);
 
 
 

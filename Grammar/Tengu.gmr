@@ -182,12 +182,12 @@
 
 
 
-%name	delim 			:	"[ \r\n\t]"			
+%name	delim 			:	 "[\x000B\x0020\x00A0\x2028\x2029 \f\n\r\t\v]"//"[ \r\n\t\f\v]"			
 				;
 %name	comment		:	"/\*([^\*]|\*+[^\*/])*\*+/"	
 				;
 
-%name	comment_line		:	"(//[^\r\n]*\r?(\n|$))"
+%name	comment_line		:	"(//[^\r\n]*(\n|\r|$))"
 				;
 
 %name skip_lexem		: 	"{comment_line}|{delim}|{comment}"
@@ -361,15 +361,17 @@
 %token	"#import"	:	'"#import"(?!{keyword_lhd})'	,2			%value	"TOK_IMPORT"		%action default_leaf_handler			;
 
 
-%token	"..."		:	'"..."'		,2					%value	"TOK_ELLIPSIS"		%action default_leaf_handler			;	
+%token	"..."		:	'"..."'	,2						%value	"TOK_ELLIPSIS"		%action default_leaf_handler			;	
 
 
 %token	"++"		:	'"++"'		,1						%value	"TOK_INC"			%action default_leaf_handler			;
 %token	"--"		:	'"--"'		,1						%value	"TOK_DEC"			%action default_leaf_handler			;
 
 
-%token	"&&"		:	'"&&"'		,1						%value	"TOK_ANDAND"			%action default_leaf_handler				;
+%token	"&&"		:	'"&&"'		,1						%value	"TOK_ANDAND"			%action default_leaf_handler			;
 %token	"||"		:	'"||"'		,1						%value	"TOK_OROR"			%action default_leaf_handler			;
+%token	"::"		:	'"::"'		,1						%value	"TOK_MODUAL_ACCESS"		%action default_leaf_handler			;
+
 
 
 
@@ -767,7 +769,7 @@ init_declarator_list			:	init_declarator						%action	auto_return_null
 
 
 init_declarator			:	NAME	"=" 	expression				%action	on_declarator
-					|	NAME 	"="	table_constructor			%action	on_declarator
+					|	NAME 	"="	aggregate_constructor		%action	on_declarator
 					|	NAME							%action	on_declarator
 					{:
 						tguParser_t 		*parser = (tguParser_t*)ctx;
@@ -800,10 +802,48 @@ init_declarator			:	NAME	"=" 	expression				%action	on_declarator
 					;
 
 
+aggregate_constructor		:	table_constructor
+					|	list_constructor
+					;
 
 
 
-table_constructor			:	"{"	filed_list "}"		%action	on_table_constructor
+list_constructor			:	"["	list_field_list 	"]"
+					|	"["	"]"
+					|	"["	error "]"
+					;
+
+
+
+
+list_field_list 			:	list_field_list  "," field			%action	on_list_field_list
+					{:
+						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+						tguSynNode_t	*ret;
+						tguExpr_t		*lst;
+						AR_ASSERT(ns != NULL && count == 3);
+						if(ns[0] == NULL) return ns[2];
+						if(ns[2] == NULL) return ns[0];
+						AR_ASSERT(ns[0]->expr != NULL  && ns[2]->expr != NULL);
+
+						for(lst = ns[0]->expr; lst->next != NULL; lst = lst->next);
+						
+						lst->next = ns[2]->expr;
+						ns[2]->expr = NULL;
+						ret = ns[0];
+						ns[0] = NULL;
+						return ret;
+
+					:}
+					|	field						%action	auto_return_0
+					;
+
+
+
+
+
+
+table_constructor			:	"{"	table_field_list "}"		%action	on_table_constructor
 					|	"{"	"}"				%action	on_table_constructor
 					|	"{" error "}"				%action	on_table_constructor
 					{:
@@ -841,37 +881,23 @@ table_constructor			:	"{"	filed_list "}"		%action	on_table_constructor
 					;
 
 
-
-
-filed_list 				:	filed_list "," filed			%action	on_filed_list
-					{:
-						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
-						tguSynNode_t	*ret;
-						tguExpr_t		*lst;
-						AR_ASSERT(ns != NULL && count == 3);
-						if(ns[0] == NULL) return ns[2];
-						if(ns[2] == NULL) return ns[0];
-						AR_ASSERT(ns[0]->expr != NULL  && ns[2]->expr != NULL);
-
-						for(lst = ns[0]->expr; lst->next != NULL; lst = lst->next);
-						
-						lst->next = ns[2]->expr;
-						ns[2]->expr = NULL;
-						ret = ns[0];
-						ns[0] = NULL;
-						return ret;
-
-					:}
-
-					|	filed						%action	auto_return_0
+table_field_list 			:	table_field_list ","		table_field
+					|	table_field
 					;
 
 
 
-filed					:	expression			%action	auto_return_0
-					|	table_constructor		%action	auto_return_0
+table_field				:	expression 	":"	field 
 					;
 
+
+
+
+
+
+field 					:	expression			%action	auto_return_0
+					|	aggregate_constructor	%action	auto_return_0
+					;
 
 
 
@@ -1744,7 +1770,7 @@ expression				:	assignment_expression		%action auto_return_0
 
 
 assignment_expression		:	constant_expression						%action 	auto_return_0
-					|	unary_expression	"="	table_constructor		%action	on_assignment_expression
+					|	unary_expression	"="	aggregate_constructor	%action	on_assignment_expression
 					|	unary_expression	"="	assignment_expression	%action	on_assignment_expression
 					{:
 						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
@@ -2406,7 +2432,6 @@ postfix_expression		:	postfix_expression	"++"		%action	on_post_add_minus_express
 						ret = __create_synnode(TGU_NODE_EXPR_T, (void*)expr);
 						return ret;
 				:}
-
 				|	call_expression				%action auto_return_0
 				|	primary_expression				%action auto_return_0
 				;	
@@ -2468,7 +2493,8 @@ primary_expression		:	"(" expression")"							%action	on_lp_rp_expression
 				;
 
 
-module_access			:	NAME	":"	NAME		%action	on_module_access
+
+module_access			:	NAME	"::"	NAME		%action	on_module_access
 				{:
 						wchar_t msg[1024];
 						tguSynNode_t		**ns = (tguSynNode_t**)nodes;

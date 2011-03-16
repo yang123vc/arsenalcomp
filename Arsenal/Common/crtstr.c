@@ -1409,6 +1409,12 @@ const wchar_t* AR_wcsstr_kmp_s(const wchar_t *beg, const wchar_t *end, const wch
 		if(n == 0 || m == 0)return NULL;
 
 		next = AR_NEWARR0(size_t, m);
+		
+		if(!next)
+		{
+				return NULL;
+		}
+
 		next[0] = 0;
 
 		for(i = 1,k = 0; i < m; ++i)

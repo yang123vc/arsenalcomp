@@ -21,7 +21,7 @@ AR_NAMESPACE_BEGIN
 
 const wchar_t*	AR_Version()
 {
-		return L"0.2.11.401";
+		return L"0.2.11.402";
 }
 
 
@@ -54,10 +54,14 @@ static arInit_t	__g_ctx = {{AR_def_error, AR_def_print,  NULL}};
 
 void AR_Init(const arInit_t *info)
 {
-		if(info)__g_ctx = *info;
-		AR_InitThread();
+		if(info)
+		{
+				__g_ctx = *info;
+		}
 
+		AR_InitThread();
 		AR_InitMemory();
+		
 }
 
 void AR_UnInit()

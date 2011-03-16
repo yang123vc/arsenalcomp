@@ -21,24 +21,6 @@ AR_NAMESPACE_BEGIN
 
 
 
-void	TGU_InitVMBuildinData(tguVMBuildinData_t *data)
-{
-		AR_ASSERT(data != NULL);
-		data->build_in = TGU_CreateSymbTable();
-
-}
-
-void	TGU_UnInitVMBuildinData(tguVMBuildinData_t *data)
-{
-		AR_ASSERT(data != NULL);
-
-		if(data->build_in)
-		{
-				TGU_DestroySymbTable(data->build_in);
-				data->build_in = NULL;
-		}
-}
-
 
 
 
@@ -58,11 +40,23 @@ void	TGU_UnInitVM()
 
 
 
+#define __FORMAT_ERRMSG(_vm, _msg)		do{		AR_FormatString((_vm)->last_error, L"%ls", (_msg)); }while(0)
 
-
-void	TGU_Execute(tguMachine_t *vm)
+bool_t	TGU_Execute(tguMachine_t *vm)
 {
-		AR_UNUSED(vm);
+		bool_t is_ok = false;
+		AR_ASSERT(vm != NULL);
+
+		if(vm->pc == NULL)
+		{
+				is_ok = false;
+				__FORMAT_ERRMSG(vm, "Invlaid Tengu VM!\r\n");
+				goto RET_POINT;
+		}
+
+
+RET_POINT:
+		return is_ok;
 }
 
 AR_NAMESPACE_END

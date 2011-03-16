@@ -124,6 +124,8 @@ typedef struct __tengu_statement_tag	tguStmt_t;
 
 /*********************************************±í´ïÊ½**************************************************************/
 
+
+
 typedef enum
 {
 		TGU_OP_ASSIGN, 
@@ -203,10 +205,39 @@ typedef struct __tengu_assignment_expression_tag
 
 
 
-typedef struct __tengu_table_initializer_tag
+
+
+/*******************************************************************************************/
+typedef struct __tengu_table_field_tag
 {
-		tguExpr_t		*expr_list;
-}tguTableInit_t;
+		tguExpr_t		*name;
+		tguExpr_t		*value;
+		struct __tengu_table_field_tag	*next;
+}tguTableField_t;
+
+
+tguTableField_t*		TGU_CreateTableField(tguExpr_t		*name, tguExpr_t		*value);
+void					TGU_DestroyTableField(tguTableField_t *field);
+
+
+
+
+typedef enum
+{
+		TGU_AGGREGATE_TABLE_T,
+		TGU_AGGREGATE_LIST_T
+}tguAggregateType_t;
+
+typedef struct __tengu_aggregate_constructor_expression_tag
+{
+		tguAggregateType_t		type;
+		
+		union{
+				tguTableField_t	*tbl_field_list;
+				tguExpr_t		*list;
+		};
+}tguAggreExpr_t;
+
 
 
 
@@ -216,7 +247,7 @@ typedef struct __tengu_table_initializer_tag
 
 typedef enum 
 {
-		TGU_ET_TABLE_INIT,
+		TGU_ET_AGGRE_INIT,
 		TGU_ET_ASSIGN,
 		TGU_ET_INDEX,
 		TGU_ET_FUNC_CALL,
@@ -237,7 +268,7 @@ struct __tengu_expression_tag
 		tguLexInfo_t			lex_info;
 		tguExpr_t				*next;
 		union{
-				tguTableInit_t			table_init;		/*TGU_ET_TABLE_INIT*/
+				tguAggreExpr_t			aggre_init;		/*TGU_ET_TABLE_INIT*/
 				tguAssignExpr_t			assign_expr;	/*TGU_ET_ASSIGN*/
 				tguIndexExpr_t			index_expr;		/*TGU_ET_INDEX*/
 				tguCondExpr_t			cond_expr;		/*TGU_ET_CONDITIONAL*/
@@ -531,6 +562,9 @@ struct __tengu_block_tag
 
 		tguSymbTbl_t	*symb_table;
 
+		tguSymb_t		**decls;
+		size_t			decl_cnt;
+		size_t			decl_cap;
 
 		tguStmt_t		**stmts;
 		size_t			stmt_cnt;
@@ -559,8 +593,15 @@ bool_t			TGU_RemoveSubBlockFromBlock(tguBlock_t	*block, tguBlock_t	*sub);
 void			TGU_InsertStmtToBlock(tguBlock_t	*block, tguStmt_t	*stmt);
 void			TGU_InsertSymbToBlock(tguBlock_t	*block, tguSymb_t	*symb);
 
+
 tguSymb_t*		TGU_FindSymbFromBlock(tguBlock_t	*block, const wchar_t *name, tguSymbType_t t, bool_t current_block);
 #define			TGU_GetBlockSymbolTable(_b)		((_b)->symb_table)
+
+
+
+
+
+
 
 
 AR_NAMESPACE_END

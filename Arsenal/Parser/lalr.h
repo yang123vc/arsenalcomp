@@ -136,6 +136,8 @@ void			Parser_DestroyState_ALL(lalrState_t *state);
 
 
 
+/*******************************************************************************************************************************/
+
 
 typedef struct __lalr_state_set_tag
 {
@@ -146,16 +148,19 @@ typedef struct __lalr_state_set_tag
 
 void			Parser_InitStateSet(lalrStateSet_t *set);
 void			Parser_UnInitStateSet(lalrStateSet_t *set);
-void			Parser_InsertToStateSet(lalrStateSet_t *set, lalrState_t *state);
 
-void			Parser_CollectState(lalrStateSet_t *empty_set, lalrState_t *start);
+void			Parser_InsertToStateSet(lalrStateSet_t *set, lalrState_t *state);
 lalrState_t*	Parser_FindStateByBasis(lalrStateSet_t *set, lalrConfigList_t *basis);
 int_t			Parser_IndexOfStateSet(const lalrStateSet_t *set, const lalrState_t *state);
 
 
+void			Parser_CollectState(lalrStateSet_t *empty_set, lalrState_t *start);
 
+
+
+/*
 lalrState_t*   Parser_GetTransTo(lalrState_t *state, const psrSymb_t *symb);
-
+*/
 
 /*******************************************************************************************************/
 

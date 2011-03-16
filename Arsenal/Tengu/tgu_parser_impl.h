@@ -1798,9 +1798,6 @@ static psrNode_t* AR_STDCALL on_import_statement(psrNode_t **nodes, size_t count
 						return NULL;
 
 					}
-
-
-
 					
 					if(ns[1] == NULL)
 					{

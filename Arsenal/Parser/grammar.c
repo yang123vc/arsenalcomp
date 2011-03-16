@@ -825,9 +825,6 @@ bool_t			Parser_CheckIsValidGrammar(const psrGrammar_t *grammar, arIOCtx_t *io_c
 				}
 		}
 
-
-
-
 		return result;
 }
 

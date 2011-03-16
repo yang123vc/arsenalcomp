@@ -1,5 +1,5 @@
-﻿
-import "system.tgu";
+
+#import "system.tgu";
 
 
 
@@ -16,20 +16,21 @@ var function()
 
 
 		test = 
-		{
+		[
 			print(33), 
 			3 * 4, 
 			5 * 8, 
 		
 			{
-				"a",
-				"b",	
-				"c"
+				0 : "@",
+				1 : "a",
+				2 : "b",	
+				3 : "c"
 			},
 		
 			test.a,
 			test.b
-		};
+		];
 
 }
 
@@ -38,7 +39,7 @@ var test,i,table;
 
 
 
-for(test = {"a", "b", "c"}, i = 0; i < table.count(test); ++i)
+for(test = ["a", "b", "c"], i = 0; i < list.count(test); ++i)
 {
 	print(test[i]);
 }

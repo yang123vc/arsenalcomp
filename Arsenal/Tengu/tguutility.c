@@ -56,6 +56,7 @@ const wchar_t*	TGU_AllocString(const wchar_t *str)
 		return res;
 }
 
+
 const wchar_t*	TGU_AllocStringN(const wchar_t *str, size_t n)
 {
 		const wchar_t *res;

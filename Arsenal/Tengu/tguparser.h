@@ -32,6 +32,8 @@ void	TGU_UnInitParser();
 
 /**********************************************************分析器用到的结构*****************************************************************************************/
 
+
+
 typedef struct __tengu_parser_external_tag
 {
 		const	wchar_t			*work_dir;
@@ -39,8 +41,6 @@ typedef struct __tengu_parser_external_tag
 		tguSymbTbl_t			*import_modules;
 		tguSymbTbl_t			*global_constant;
 }tguParserExtern_t;
-
-
 
 
 

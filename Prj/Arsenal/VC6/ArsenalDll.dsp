@@ -116,6 +116,10 @@ SOURCE=..\..\..\Arsenal\Common\crtstr.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\Arsenal\Common\heap.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\Arsenal\Common\memory.c
 # End Source File
 # Begin Source File
@@ -137,6 +141,10 @@ SOURCE=..\..\..\Arsenal\Common\string.c
 # Begin Source File
 
 SOURCE=..\..\..\Arsenal\Common\strtable.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Common\textfile.c
 # End Source File
 # Begin Source File
 
@@ -280,7 +288,11 @@ SOURCE=..\..\..\Arsenal\Parser\symbol.h
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\..\..\Arsenal\Tools\grammar_config.c
+SOURCE=..\..\..\Arsenal\Tools\grammar_codegen.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Tools\grammar_collector.c
 # End Source File
 # Begin Source File
 
