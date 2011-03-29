@@ -227,16 +227,18 @@ char*  AR_wcs_convto_utf8(const wchar_t *wcs)
 
 #if defined(OS_FAMILY_WINDOWS)
 
+
 wchar_t*	AR_acp_convto_wcs(const char *input, size_t in_n)
 {
 		wchar_t *ret;
+
 		AR_ASSERT(input != NULL);
 		if(in_n == 0)
 		{
 				return AR_wcsdup(L"");
 		}else
 		{
-				int len = MultiByteToWideChar(CP_ACP, 0, input, in_n, 0, 0);
+				int len = MultiByteToWideChar(CP_ACP, 0, input, (int)in_n, 0, 0);
 				if(len == 0)
 				{
 						return NULL;
@@ -245,7 +247,7 @@ wchar_t*	AR_acp_convto_wcs(const char *input, size_t in_n)
 
 				ret = AR_NEWARR(wchar_t, len + 1);
 
-				if(MultiByteToWideChar(CP_ACP, 0, input, in_n, ret, len) == 0)
+				if(MultiByteToWideChar(CP_ACP, 0, input, (int)in_n, ret, len) == 0)
 				{
 						AR_DEL(ret);
 						ret = NULL;
@@ -260,12 +262,12 @@ wchar_t*	AR_acp_convto_wcs(const char *input, size_t in_n)
 
 
 
-char*	AR_wcs_convto_acp(const wchar_t *input)
+char*	AR_wcs_convto_acp(const wchar_t *input, size_t in_n)
 {
 		char *ret;
 		int n;
 		AR_ASSERT(input != NULL);
-		n = AR_wcslen(input);
+		n = (int)in_n;
 
 		if(n == 0)
 		{
@@ -302,7 +304,7 @@ size_t		AR_wcs_to_acp(const wchar_t *input, size_t n, char *out, size_t out_len)
 		int len;
 		AR_ASSERT(input != NULL);
 
-		len = WideCharToMultiByte(CP_ACP, 0, input, n, 0, 0, NULL, NULL);
+		len = WideCharToMultiByte(CP_ACP, 0, input, (int)n, 0, 0, NULL, NULL);
 
 		if(len == 0 && n > 0)
 		{
@@ -319,7 +321,7 @@ size_t		AR_wcs_to_acp(const wchar_t *input, size_t n, char *out, size_t out_len)
 				return 0;
 		}
 
-		if(WideCharToMultiByte(CP_ACP, 0, input, n, out, (int)out_len, NULL, NULL) == 0)
+		if(WideCharToMultiByte(CP_ACP, 0, input, (int)n, out, (int)out_len, NULL, NULL) == 0)
 		{
 				return 0;
 		}else
@@ -335,7 +337,7 @@ size_t		AR_acp_to_wcs(const char *acp, size_t n, wchar_t *out, size_t out_len)
 		int len;
 		AR_ASSERT(acp != NULL);
 		
-		len = MultiByteToWideChar(CP_ACP, 0, acp, n, 0, 0);
+		len = MultiByteToWideChar(CP_ACP, 0, acp, (int)n, 0, 0);
 		
 		if(len == 0 && n > 0)
 		{
@@ -352,7 +354,7 @@ size_t		AR_acp_to_wcs(const char *acp, size_t n, wchar_t *out, size_t out_len)
 				return 0;
 		}
 		
-		if(MultiByteToWideChar(CP_ACP, 0, acp, n, out, (int)out_len) == 0)
+		if(MultiByteToWideChar(CP_ACP, 0, acp, (int)n, out, (int)out_len) == 0)
 		{
 				return 0;
 		}else
@@ -483,7 +485,7 @@ wchar_t*	AR_acp_convto_wcs(const char *input, size_t in_n)
 		bool_t	is_ok = true;
 
 		AR_ASSERT(input != NULL);
-
+		
 		if(in_n == 0)
         {
             return AR_wcsdup(L"");
@@ -534,8 +536,7 @@ CLEAN_POINT:
 
 
 
-
-char* AR_wcs_convto_acp(const wchar_t *input)
+char*		AR_wcs_convto_acp(const wchar_t *input, size_t in_n)
 {
         char   *in     = NULL;
         size_t in_len;
@@ -548,7 +549,7 @@ char* AR_wcs_convto_acp(const wchar_t *input)
         AR_ASSERT(input != NULL);
 
         in = (char*)input;
-        len = AR_wcslen(input);
+        len = in_n;
 
         if(len == 0)
         {

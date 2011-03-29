@@ -182,7 +182,7 @@
 
 
 
-%name	delim 			:	 "[\x000B\x0020\x00A0\x2028\x2029 \f\n\r\t\v]"//"[ \r\n\t\f\v]"			
+%name	delim 			:	 "[\x{000B}\x{0020}\x{00A0}\x{2028}\x{2029} \f\n\r\t\v]"
 				;
 %name	comment		:	"/\*([^\*]|\*+[^\*/])*\*+/"	
 				;
@@ -358,7 +358,7 @@
 %token	"false"	:	'"false"(?!{keyword_lhd})'		,1			%value	"TOK_FALSE"			%action default_leaf_handler			;
 %token	"var"		:	'"var"(?!{keyword_lhd})'		,1			%value	"TOK_VAR"			%action default_leaf_handler			;
 
-%token	"#import"	:	'"#import"(?!{keyword_lhd})'	,2			%value	"TOK_IMPORT"		%action default_leaf_handler			;
+%token	"#import"	:	'"#import"(?!{keyword_lhd})'	,2			%value	"TOK_IMPORT"			%action default_leaf_handler			;
 
 
 %token	"..."		:	'"..."'	,2						%value	"TOK_ELLIPSIS"		%action default_leaf_handler			;	

@@ -1300,11 +1300,64 @@ void text_test_save()
 }
 
 
+static void str_vfmt_test(arString_t *str, const wchar_t *fmt, ...)
+{
+		va_list args;
+
+		va_start(args, fmt);
+		AR_AppendVFormatString(str, fmt, args);
+
+		
+		//printf("%ls\r\n", AR_GetStrString(str));
+
+		va_end(args);
+
+
+		
+}
+
+
+void str_test8()
+{
+		arString_t *str	 = AR_CreateString();
+
+		str_vfmt_test(str, L"%ls:%d:%f\r\n", L"aaa", 33, 3.14159265f);
+
+
+
+		AR_DestroyString(str);
+		str = NULL;
+		
+}
+
+
+
+void str_test9()
+{
+		arString_t *str	 = AR_CreateString();
+
+		for(int i = 0; i < 10; ++i)
+		{
+
+				str_vfmt_test(str, L"%ls:%d:%f\r\n", L"aaa", 33, 3.14159265f);
+				str_vfmt_test(str, L"%ls", L"\r\n");
+		}
+
+		printf("%ls\r\n", AR_GetStrString(str));
+
+		AR_DestroyString(str);
+		str = NULL;
+		
+}
+
+
 void com_test()
 {
 
 		//bsearch_test();
 		//algo_test1();
+		
+		str_test();
 		//str_test1();
 		//str_test2();
 		//str_test3();
@@ -1312,7 +1365,9 @@ void com_test()
 		//str_test5();
 		//str_test6();
 		//str_test7();
-		
+		//str_test8();
+		//str_test9();
+
 		//com_test3();
 		//com_conv();
 		//com_hash_test();
@@ -1359,7 +1414,9 @@ void com_test()
 		//escstr_n_test1();
 		//escstr_n_test0();
 		//align_test();
-		text_test_save();
+		//text_test_save();
+
+		
 }
 
 

@@ -671,7 +671,7 @@ bool_t	AR_SaveBomTextFile(const wchar_t *path, arTxtBom_t bom, const wchar_t *in
 		if(bom == AR_TXT_BOM_ASCII)
 		{
 				size_t n;
-				char *s = AR_wcs_convto_acp(input);
+				char *s = AR_wcs_convto_acp(input, AR_wcslen(input));
 				n = strlen(s);
 
 				if(!s)

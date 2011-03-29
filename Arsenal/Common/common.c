@@ -21,7 +21,7 @@ AR_NAMESPACE_BEGIN
 
 const wchar_t*	AR_Version()
 {
-		return L"0.2.11.402";
+		return L"0.2.11.403";
 }
 
 
@@ -107,9 +107,13 @@ void	AR_error_ctx(arIOCtx_t *ctx, int_t level, const wchar_t *msg, ...)
 		
 		if(ctx && ctx->on_error)
 		{
-				
 				va_start(arg_ptr, msg);
-				AR_VSWPRINTF(buf, 1024, msg, arg_ptr);
+				
+				if(AR_VSWPRINTF(buf, 1024, msg, arg_ptr) <= 0)
+				{
+						buf[0] = L'\0';
+				}
+
 				va_end(arg_ptr);
 				ctx->on_error(level, buf, ctx->ctx);
 				AR_DEL(buf);
@@ -127,9 +131,12 @@ void AR_error(int_t level, const wchar_t *msg, ...)
 		if(__g_ctx.global_io_ctx.on_error != NULL)
 		{
 				va_start(arg_ptr, msg);
-				AR_VSWPRINTF(buf, 1024, msg, arg_ptr);
+				if(AR_VSWPRINTF(buf, 1024, msg, arg_ptr) <= 0)
+				{
+						buf[0] = L'\0';
+				}
 				va_end(arg_ptr);
-		
+				
 				__g_ctx.global_io_ctx.on_error(level, buf, __g_ctx.global_io_ctx.ctx);
 				
 				
