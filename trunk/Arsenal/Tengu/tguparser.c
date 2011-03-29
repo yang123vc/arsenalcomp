@@ -20,8 +20,9 @@
 
 AR_NAMESPACE_BEGIN
 
+#if(0)
 #include "tgu_parser_impl.h"
-
+#endif
 
 
 
@@ -43,23 +44,37 @@ static	const	parser_t		*__g_parser = NULL;
 static	void	__parser_core_init()
 {
 		AR_InitSpinLock(&__g_lock);
-		__g_lex     = __build_lex();
+
+/*		__g_lex     = __build_lex();
 		
 		__g_grammar	= __build_grammar(&__g_handler );
 		__g_parser	= Parser_CreateParser(__g_grammar, PARSER_LALR);
+		*/
 }
 
 
 
 static	void	__parser_core_uninit()
 {
-		Parser_DestroyParser(__g_parser);
-		Parser_DestroyGrammar((psrGrammar_t*)__g_grammar);
-		Lex_Destroy((lex_t*)__g_lex);
+		if(__g_parser)
+		{
+				Parser_DestroyParser(__g_parser);
+				__g_parser = NULL;
+		}
 
-		__g_lex	= NULL;
-		__g_grammar = NULL;
-		__g_parser = NULL;
+		if(__g_grammar)
+		{
+				Parser_DestroyGrammar((psrGrammar_t*)__g_grammar);
+				__g_grammar = NULL;
+		}
+
+		if(__g_lex)
+		{
+				Lex_Destroy((lex_t*)__g_lex);
+				__g_lex = NULL;
+		}
+
+
 		AR_UnInitSpinLock(&__g_lock);
 }
 

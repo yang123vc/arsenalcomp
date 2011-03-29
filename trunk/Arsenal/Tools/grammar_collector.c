@@ -183,7 +183,8 @@ struct __cfg_node_tag
 
 static const wchar_t *__cfg_lex_name[] =
 {
-		L"	delim		= 	[\\f\\v\\t\\r\\n ]+",
+		//L"	delim		= 	[\\f\\v\\t\\r\\n ]+",
+		L"	delim		= 	[\\x{000B}\\x{0020}\\x{00A0}\\x{2028}\\x{2029} \\f\\v\\t\\r\\n]+",
 		L"	letter		= 	[A-Z_a-z]",
 		L"	digit		=	[0-9]",
 		L"	number		=	0|[1-9]{digit}*",

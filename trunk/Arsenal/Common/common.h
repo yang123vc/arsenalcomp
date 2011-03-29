@@ -260,6 +260,8 @@ void*	AR_calloc(size_t num, size_t size);
 void*	AR_realloc(void *block, size_t nbytes);
 void	AR_free(void *ptr);
 
+
+
 #else
 
 
@@ -267,6 +269,7 @@ void	AR_free(void *ptr);
 #define	AR_calloc		calloc
 #define	AR_realloc		realloc
 #define AR_free			free
+
 
 #endif
 
@@ -511,6 +514,10 @@ size_t			AR_AppendString(arString_t *str, const wchar_t *sour);
 void			AR_FormatString(arString_t *str, const wchar_t *fmt, ...);
 void			AR_AppendFormatString(arString_t *str, const wchar_t *fmt, ...);
 
+void			AR_VFormatString(arString_t *str, const wchar_t *fmt, va_list args);
+void			AR_AppendVFormatString(arString_t *str, const wchar_t *fmt, va_list args);
+
+
 void			AR_AppendCharToString(arString_t *str, wchar_t chr);
 
 const wchar_t*	AR_GetStrString(const arString_t *str);
@@ -562,7 +569,7 @@ wchar_t* AR_utf8_convto_wcs(const char *utf8);
 size_t		AR_acp_to_wcs(const char *acp, size_t n, wchar_t *out, size_t out_len);
 size_t		AR_wcs_to_acp(const wchar_t *input, size_t n, char *out, size_t out_len);
 
-char*		AR_wcs_convto_acp(const wchar_t *input);
+char*		AR_wcs_convto_acp(const wchar_t *input, size_t in_n);
 wchar_t*	AR_acp_convto_wcs(const char *input, size_t in_n);
 
 /**********************************************************Threading*************************************************************/

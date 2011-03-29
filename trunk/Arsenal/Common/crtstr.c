@@ -557,8 +557,12 @@ int_t			AR_vswprintf(wchar_t *dest, size_t count, const wchar_t *fmt, va_list ar
 		res = AR_VSWPRINTF(dest, count, fmt, args);
 
 		va_end(save);
-
-		AR_CHECK(res >= 0, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
+		
+		if(res <= 0)						/*ºöÂÔµô´ËÖÖ´íÎó*/
+		{
+				dest[0] = L'\0';
+				res = 0;
+		}
 
 		return res;
 }
@@ -574,7 +578,12 @@ int_t			AR_swprintf(wchar_t *dest, size_t count, const wchar_t *fmt, ...)
 		len = AR_vswprintf(dest, count, fmt, arg_ptr);
 		va_end(arg_ptr);
 
-		AR_CHECK(len >= 0, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
+		if(len <= 0)
+		{
+				dest[0] = L'\0';
+				len = 0;
+		}
+
 		return len;
 }
 
@@ -590,11 +599,14 @@ int_t			AR_vsprintf(char *dest, size_t count, const char *fmt, va_list args)
 		res = AR_VSPRINTF(dest, count, fmt, args);
 		va_end(save);
 
-		AR_CHECK(res >= 0, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
-
+		if(res <= 0)
+		{
+				dest[0] = L'\0';
+				res = 0;
+		}
 		return res;
-
 }
+
 
 
 

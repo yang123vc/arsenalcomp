@@ -67,7 +67,6 @@ lalrAction_t*	Parser_InsertAction(lalrState_t *state, lalrState_t *to, const psr
 		action->to = to;
 		action->config = config;
 		return action;
-
 }
 
 
