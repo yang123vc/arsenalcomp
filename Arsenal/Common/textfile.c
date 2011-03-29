@@ -45,8 +45,8 @@ FILE*	__AR_open_file(const wchar_t *path, const wchar_t *mode)
         char     *str_mode;
 		AR_ASSERT(path != NULL && mode != NULL);
 
-		str_path = AR_wcs_convto_acp(path);
-		str_mode = AR_wcs_convto_acp(mode);
+		str_path = AR_wcs_convto_acp(path, AR_wcslen(path));
+		str_mode = AR_wcs_convto_acp(mode, AR_wcslen(mode));
 
 		file = NULL;
 
@@ -164,7 +164,7 @@ static txtReadStatus_t		__read_wchar(FILE *file, arTxtBom_t enc, wchar_t *out)
 		AR_ASSERT(file != NULL);
 
 		e = 0;
-		
+
 		switch(enc)
 		{
 		case AR_TXT_BOM_UTF_8:

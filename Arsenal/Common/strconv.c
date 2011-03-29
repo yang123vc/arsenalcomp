@@ -1,12 +1,12 @@
 /*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
- * 
+ *
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.It is provided "as is" without express 
+ * in supporting documentation.It is provided "as is" without express
  * or implied warranty.
  *
  */
@@ -22,11 +22,11 @@ static size_t __utf8_to_unicode_char(const byte_t *utf8, size_t len, wchar_t *uc
 {
 		size_t v,n,e;
 		const byte_t *p;
-		
+
 		AR_ASSERT(utf8 != NULL && len > 0);
-		
+
 		v = (size_t)(*utf8); n = 0; e= 0; p = utf8;
-		
+
 		if(v >= 0xfc)
 		{
 				n = 6;/*6:<11111100>*/
@@ -46,7 +46,7 @@ static size_t __utf8_to_unicode_char(const byte_t *utf8, size_t len, wchar_t *uc
 				e |= (p[2] & 0x3f) << 12;
 				e |= (p[3] & 0x3f) << 6;
 				e |= (p[4] & 0x3f);
-		
+
 		}else if(v >= 0xf0)
 		{
 				n = 4; /*4:<11110000>*/
@@ -85,9 +85,9 @@ static size_t __unicode_to_utf8_char(wchar_t uch, byte_t *utf8)
 		byte_t buf[10];
 		byte_t *e;
 		uint_32_t	uc = (uint_32_t)uch;
-		
+
 		e = (utf8 ? utf8 : buf);
-    
+
 		if(uc < 0x80)
 		{
 				*e++ = (byte_t)uc;
@@ -95,7 +95,7 @@ static size_t __unicode_to_utf8_char(wchar_t uch, byte_t *utf8)
 		{
 				/*<11011111> < 000 0000 0000>*/
 				*e++ = (byte_t)((uc >> 6) & 0x1f)|0xc0;
-				*e++ = (byte_t)(uc & 0x3f)|0x80; 
+				*e++ = (byte_t)(uc & 0x3f)|0x80;
 		}else if(uc < 0x10000)
 		{
 				/*<11101111> <0000 0000 0000 0000>*/
@@ -155,7 +155,7 @@ size_t AR_utf8_to_wcs(const char *utf8, size_t n, wchar_t *out, size_t out_len)
 		size_t need; int_t l;
 		AR_ASSERT(utf8 != NULL && n > 0);
 		p = utf8; need = 0; l = (int_t)n;
-		
+
 		while(l > 0)
 		{
 				size_t nc = __utf8_to_unicode_char((const byte_t*)p, (size_t)l, NULL);
@@ -164,11 +164,11 @@ size_t AR_utf8_to_wcs(const char *utf8, size_t n, wchar_t *out, size_t out_len)
 				p += nc;
 				l -= nc;
 		}
-		
+
 		if(out != NULL)
 		{
 				if(out_len < need)return 0;
-				
+
 				l = n; p = utf8; need = 0;
 				while(l > 0)
 				{
@@ -188,17 +188,17 @@ wchar_t* AR_utf8_convto_wcs(const char *utf8)
 		wchar_t *buf;
 		size_t need;
 		size_t in_len;
-		
+
 		AR_ASSERT(utf8 != NULL);
 
 		in_len = AR_strlen(utf8);
-		
+
 		if(in_len == 0)return NULL;
 
 		need = AR_utf8_to_wcs(utf8, in_len, NULL, 0);
 
 		if(need == 0)return NULL;/*输入有问题*/
-		
+
 		buf = AR_NEWARR(wchar_t, need + 1); buf[need] = L'\0';
 		AR_utf8_to_wcs(utf8, in_len, buf, need);
 		return buf;
@@ -310,12 +310,12 @@ size_t		AR_wcs_to_acp(const wchar_t *input, size_t n, char *out, size_t out_len)
 		{
 				return 0;
 		}
-		
+
 		if(len == 0 || out == NULL && out_len == 0)
 		{
 				return len + 1;
 		}
-		
+
 		if((int)out_len < len + 1)
 		{
 				return 0;
@@ -336,9 +336,9 @@ size_t		AR_acp_to_wcs(const char *acp, size_t n, wchar_t *out, size_t out_len)
 {
 		int len;
 		AR_ASSERT(acp != NULL);
-		
+
 		len = MultiByteToWideChar(CP_ACP, 0, acp, (int)n, 0, 0);
-		
+
 		if(len == 0 && n > 0)
 		{
 				return 0;
@@ -348,12 +348,12 @@ size_t		AR_acp_to_wcs(const char *acp, size_t n, wchar_t *out, size_t out_len)
 		{
 				return len + 1;
 		}
-		
+
 		if((int)out_len < len + 1)
 		{
 				return 0;
 		}
-		
+
 		if(MultiByteToWideChar(CP_ACP, 0, acp, (int)n, out, (int)out_len) == 0)
 		{
 				return 0;
@@ -411,7 +411,7 @@ size_t		AR_acp_to_wcs(const char *acp, size_t n, wchar_t *out, size_t out_len)
 				ret = 0;
 				goto CLEAN_POINT;
 		}
-		
+
 		AR_wcsncpy(out, wstr, len);
 		out[len] = 0;
 		ret = len + 1;
@@ -432,8 +432,8 @@ size_t		AR_wcs_to_acp(const wchar_t *input, size_t n, char *out, size_t out_len)
 		size_t ret;
 		char *str;
 		AR_ASSERT(input != NULL);
-		str = AR_wcs_convto_acp(input);
-		
+		str = AR_wcs_convto_acp(input, n);
+
 		if(str == NULL)
 		{
 				ret = 0;
@@ -453,7 +453,7 @@ size_t		AR_wcs_to_acp(const wchar_t *input, size_t n, char *out, size_t out_len)
 				ret = 0;
 				goto CLEAN_POINT;
 		}
-		
+
 		AR_strncpy(out, str, len);
 		out[len] = 0;
 		ret = len + 1;
@@ -485,7 +485,7 @@ wchar_t*	AR_acp_convto_wcs(const char *input, size_t in_n)
 		bool_t	is_ok = true;
 
 		AR_ASSERT(input != NULL);
-		
+
 		if(in_n == 0)
         {
             return AR_wcsdup(L"");
