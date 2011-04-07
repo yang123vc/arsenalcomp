@@ -18,14 +18,16 @@
 AR_NAMESPACE_BEGIN
 
 
-void	TGU_Init()
+bool_t	TGU_Init()
 {
 		TGU_InitParser();
+		return true;
 }
 
-void	TGU_UnInit()
+bool_t	TGU_UnInit()
 {
 		TGU_UnInitParser();
+		return true;
 
 }
 

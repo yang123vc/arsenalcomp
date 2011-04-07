@@ -18,14 +18,16 @@
 
 AR_NAMESPACE_BEGIN
 
-void	Tools_Init()
+bool_t	Tools_Init()
 {
 		CFG_Init();
+		return true;
 }
 
-void	Tools_UnInit()
+bool_t	Tools_UnInit()
 {
 		CFG_UnInit();
+		return true;
 }
 
 

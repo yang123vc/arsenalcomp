@@ -41,7 +41,7 @@ static  AR_INLINE const wchar_t* __load_txt(const wchar_t *path)
 		//printf("%s\r\n", buf + 3);
 		
 
-		ret = AR_utf8_convto_wcs((const char*)(buf + 3));
+		ret = AR_str_convto_wcs(AR_CP_UTF8, (const char*)(buf + 3), AR_strlen((const char*)(buf + 3)));
 
 		AR_DEL(buf);
 		return ret;

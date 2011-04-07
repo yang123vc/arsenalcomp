@@ -57,15 +57,17 @@ void charset_test_1()
     const char *s = "/root/Desktop/中文测试目录/x.txt";
     printf("len(s) == %d\r\n", strlen(s));
 
-    size_t need_l = AR_acp_to_wcs(s, strlen(s), NULL, 0);
+    size_t need_l = AR_str_to_wcs(AR_CP_ACP, s, strlen(s), NULL, 0);
 
-    wchar_t *buf = (wchar_t *)malloc(sizeof(wchar_t) * need_l);
+    wchar_t *buf = AR_NEWARR(wchar_t, need_l + 1);
 
-    AR_acp_to_wcs(s, strlen(s), buf, need_l);
+    size_t l = AR_str_to_wcs(AR_CP_ACP, s, strlen(s), buf, need_l);
 
-    wprintf("%ls\r\n", buf);
+    buf[l] = 0;
 
-    free(buf);
+    wprintf(L"%ls\r\n", buf);
+
+    AR_DEL(buf);
 }
 
 
@@ -75,15 +77,18 @@ void charset_test_2()
 
     const wchar_t *s = L"/root/Desktop/中文测试目录/x.txt";
 
-    size_t need_l = AR_wcs_to_acp(s, AR_wcslen(s), NULL, 0);
+    size_t need_l = AR_wcs_to_str(AR_CP_ACP, s, AR_wcslen(s), NULL, 0);
 
-    char *buf = (char *)malloc(sizeof(char) * need_l);
+    char *buf = AR_NEWARR(char, need_l + 1);
 
-    AR_wcs_to_acp(s, AR_wcslen(s), buf, need_l);
+    size_t l = AR_wcs_to_str(AR_CP_ACP, s, AR_wcslen(s), buf, need_l);
+
+    buf[l] = 0;
+
 
     printf("%s\r\n", buf);
 
-    free(buf);
+    AR_DEL(buf);
 
 }
 
@@ -96,7 +101,7 @@ void com_test()
 
         charset_test_1();
 
-        charset_test_2();
+        //charset_test_2();
 
 
 

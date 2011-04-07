@@ -189,19 +189,25 @@ void com_conv()
 {
 		char *tmp;
 		wchar_t *wtmp;
-		const wchar_t *s = L"我爱武藤兰!aaaaaaaaaaaaaaaaaaaaa我爱武藤兰";
+		const wchar_t *s = L"中文中文中文中文";
+
+
+		//const wchar_t *s = L"";
 		
-		tmp = AR_wcs_convto_utf8(s);
+		tmp = AR_wcs_convto_str(AR_CP_UTF8, s, AR_wcslen(s));
 
-		wtmp = AR_utf8_convto_wcs(tmp);
+		wtmp = AR_str_convto_wcs(AR_CP_UTF8,tmp, AR_strlen(tmp));
 		
-
-//		MessageBoxW(0, wtmp, 0, 0);
-
 		AR_DEL(tmp); AR_DEL(wtmp);
+}
 
 
-
+void com_conv2()
+{
+		char buf[1024];
+		size_t l;
+		l = AR_wcs_to_str(AR_CP_UTF8, L"", 0, buf, 1024);
+		buf[l] = 0;
 }
 
 
@@ -1357,7 +1363,7 @@ void com_test()
 		//bsearch_test();
 		//algo_test1();
 		
-		str_test();
+		//str_test();
 		//str_test1();
 		//str_test2();
 		//str_test3();
@@ -1369,7 +1375,8 @@ void com_test()
 		//str_test9();
 
 		//com_test3();
-		//com_conv();
+		com_conv();
+		com_conv2();
 		//com_hash_test();
 
 		//com_vscwprintf_test();

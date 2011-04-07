@@ -54,8 +54,8 @@ typedef struct __ar_init_tag
 }arInit_t;
 
 
-void AR_Init(const arInit_t *info);
-void AR_UnInit();
+bool_t AR_Init(const arInit_t *info);
+bool_t AR_UnInit();
 
 arIOCtx_t*	AR_global_ioctx();
 
@@ -559,18 +559,28 @@ const wchar_t*			AR_GetStringFloat(arStringTable_t *tbl, double num, size_t prec
 
 /*********************************************************String Convert****************************************************/
 
-size_t AR_wcs_to_utf8(const wchar_t *unicode, size_t n, char *out, size_t out_len);
-size_t AR_utf8_to_wcs(const char *utf8, size_t n, wchar_t *out, size_t out_len);
-
-char*  AR_wcs_convto_utf8(const wchar_t *wcs);
-wchar_t* AR_utf8_convto_wcs(const char *utf8);
+/*
+在windows下，需要修改__get_codepage_for_winapi，
+在支持iconv的平台下，需要修改__get_locale_str_for_iconv
 
 
-size_t		AR_acp_to_wcs(const char *acp, size_t n, wchar_t *out, size_t out_len);
-size_t		AR_wcs_to_acp(const wchar_t *input, size_t n, char *out, size_t out_len);
+*/
 
-char*		AR_wcs_convto_acp(const wchar_t *input, size_t in_n);
-wchar_t*	AR_acp_convto_wcs(const char *input, size_t in_n);
+typedef enum
+{
+		AR_CP_ACP,
+		AR_CP_UTF8,
+		AR_CP_BIG5,
+		AR_CP_GB2312,
+		AR_CP_GB18030,
+}arCodePage_t;
+
+size_t					AR_str_to_wcs(arCodePage_t cp, const char *acp, size_t n, wchar_t *out, size_t out_len);
+size_t					AR_wcs_to_str(arCodePage_t cp, const wchar_t *input, size_t n, char *out, size_t out_len);
+
+
+char*					AR_wcs_convto_str(arCodePage_t cp, const wchar_t *input, size_t in_n);
+wchar_t*				AR_str_convto_wcs(arCodePage_t cp, const char *input, size_t in_n);
 
 /**********************************************************Threading*************************************************************/
 
@@ -578,7 +588,7 @@ wchar_t*	AR_acp_convto_wcs(const char *input, size_t in_n);
 void			AR_InitThread();
 void			AR_UnInitThread();
 
-/*uint_t			AR_CompExchange(volatile uint_t *dest, uint_t exch, uint_t compval);*/
+/*uint_t		AR_CompExchange(volatile uint_t *dest, uint_t exch, uint_t compval);*/
 
 int_t			AR_AtomicInc(volatile int_t *dest);
 int_t			AR_AtomicDec(volatile int_t *dest);
