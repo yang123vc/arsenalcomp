@@ -17,7 +17,7 @@
 
 AR_NAMESPACE_BEGIN
 
-
+#if(0)
 static size_t __utf8_to_unicode_char(const byte_t *utf8, size_t len, wchar_t *uch)
 {
 		size_t v,n,e;
@@ -133,11 +133,13 @@ static size_t __unicode_to_utf8_char(wchar_t uch, byte_t *utf8)
 
 
 
+
 size_t AR_wcs_to_utf8(const wchar_t *unicode, size_t n, char *out, size_t out_len)
 {
 		char *p;
 		size_t i, need;
-		AR_ASSERT(unicode != NULL && n > 0);
+		AR_ASSERT(unicode != NULL);
+
 		for(i = 0,need = 0; i < n; ++i)need += __unicode_to_utf8_char(unicode[i], NULL);
 
 		if(out != NULL)
@@ -146,6 +148,7 @@ size_t AR_wcs_to_utf8(const wchar_t *unicode, size_t n, char *out, size_t out_le
 				if(out_len < need)return 0;
 				for(i = 0; i < n; ++i)p += __unicode_to_utf8_char(unicode[i], (byte_t*)p);
 		}
+
 		return need;
 }
 
@@ -183,6 +186,7 @@ size_t AR_utf8_to_wcs(const char *utf8, size_t n, wchar_t *out, size_t out_len)
 }
 
 
+
 wchar_t* AR_utf8_convto_wcs(const char *utf8)
 {
 		wchar_t *buf;
@@ -193,13 +197,17 @@ wchar_t* AR_utf8_convto_wcs(const char *utf8)
 
 		in_len = AR_strlen(utf8);
 
-		if(in_len == 0)return NULL;
+		if(in_len == 0)
+		{
+				return AR_wcsdup(L"");
+		}
 
 		need = AR_utf8_to_wcs(utf8, in_len, NULL, 0);
 
 		if(need == 0)return NULL;/*输入有问题*/
 
-		buf = AR_NEWARR(wchar_t, need + 1); buf[need] = L'\0';
+		buf = AR_NEWARR(wchar_t, need + 1);
+		buf[need] = L'\0';
 		AR_utf8_to_wcs(utf8, in_len, buf, need);
 		return buf;
 }
@@ -208,7 +216,14 @@ char*  AR_wcs_convto_utf8(const wchar_t *wcs)
 {
 		char *buf; size_t need; size_t in_len;
 
-		in_len = AR_wcslen(wcs); if(in_len == 0)return NULL;
+		AR_ASSERT(wcs);
+
+		in_len = AR_wcslen(wcs);
+
+		if(in_len == 0)
+		{
+				return AR_strdup("");
+		}
 
 		need = AR_wcs_to_utf8(wcs,in_len, NULL, 0);
 
@@ -220,6 +235,7 @@ char*  AR_wcs_convto_utf8(const wchar_t *wcs)
 		return buf;
 }
 
+#endif
 
 
 
@@ -228,92 +244,65 @@ char*  AR_wcs_convto_utf8(const wchar_t *wcs)
 #if defined(OS_FAMILY_WINDOWS)
 
 
-wchar_t*	AR_acp_convto_wcs(const char *input, size_t in_n)
+static UINT __get_codepage_for_winapi(arCodePage_t cp)
 {
-		wchar_t *ret;
-
-		AR_ASSERT(input != NULL);
-		if(in_n == 0)
+		switch(cp)
 		{
-				return AR_wcsdup(L"");
-		}else
-		{
-				int len = MultiByteToWideChar(CP_ACP, 0, input, (int)in_n, 0, 0);
-				if(len == 0)
-				{
-						return NULL;
-
-				}
-
-				ret = AR_NEWARR(wchar_t, len + 1);
-
-				if(MultiByteToWideChar(CP_ACP, 0, input, (int)in_n, ret, len) == 0)
-				{
-						AR_DEL(ret);
-						ret = NULL;
-				}else
-				{
-						ret[len] = 0;
-				}
-
-				return ret;
+		default: /*CP_ACP*/
+				return CP_ACP;
+		case AR_CP_UTF8:
+				return CP_UTF8;
+		case AR_CP_GB2312:
+				return 936;
+		case AR_CP_GB18030:
+				return 54936;
+		case AR_CP_BIG5:
+				return 950;
 		}
 }
 
 
 
-char*	AR_wcs_convto_acp(const wchar_t *input, size_t in_n)
-{
-		char *ret;
-		int n;
-		AR_ASSERT(input != NULL);
-		n = (int)in_n;
-
-		if(n == 0)
-		{
-				return AR_strdup("");
-		}else
-		{
-				int len = WideCharToMultiByte(CP_ACP, 0, input, n, 0, 0, NULL, NULL);
-				if(len == 0)
-				{
-						return NULL;
-				}
-
-				ret = AR_NEWARR(char, len + 1);
-
-				if(WideCharToMultiByte(CP_ACP, 0, input, n, ret, len, NULL, NULL) == 0)
-				{
-						AR_DEL(ret);
-						ret = NULL;
-				}else
-				{
-						ret[len] = 0;
-				}
-
-				return ret;
-		}
-}
-
-
-
-
-
-size_t		AR_wcs_to_acp(const wchar_t *input, size_t n, char *out, size_t out_len)
+size_t					AR_str_to_wcs(arCodePage_t cp, const char *acp, size_t n, wchar_t *out, size_t out_len)
 {
 		int len;
-		AR_ASSERT(input != NULL);
+		const UINT win_cp = __get_codepage_for_winapi(cp);
+		AR_ASSERT(acp != NULL);
 
-		len = WideCharToMultiByte(CP_ACP, 0, input, (int)n, 0, 0, NULL, NULL);
+		len = MultiByteToWideChar(win_cp, 0, acp, (int)n, 0, 0);
 
-		if(len == 0 && n > 0)
+
+		if(len == 0 || out_len == 0 || out == NULL)
+		{
+				return len;
+		}
+
+		if((int)out_len < len)
 		{
 				return 0;
 		}
 
-		if(len == 0 || out == NULL && out_len == 0)
+		if(MultiByteToWideChar(CP_ACP, 0, acp, (int)n, out, (int)out_len) == 0)
 		{
-				return len + 1;
+				return 0;
+		}else
+		{
+				return len;
+		}
+}
+
+
+size_t					AR_wcs_to_str(arCodePage_t cp, const wchar_t *input, size_t n, char *out, size_t out_len)
+{
+		int len;
+		const UINT win_cp = __get_codepage_for_winapi(cp);
+		AR_ASSERT(input != NULL);
+
+		len = WideCharToMultiByte(win_cp, 0, input, (int)n, 0, 0, NULL, NULL);
+
+		if(len == 0 || out == NULL || out_len == 0)
+		{
+				return len;
 		}
 
 		if((int)out_len < len + 1)
@@ -326,41 +315,76 @@ size_t		AR_wcs_to_acp(const wchar_t *input, size_t n, char *out, size_t out_len)
 				return 0;
 		}else
 		{
-				out[len] = 0;
-				return len + 1;
+				return len;
 		}
 }
 
 
-size_t		AR_acp_to_wcs(const char *acp, size_t n, wchar_t *out, size_t out_len)
+char*					AR_wcs_convto_str(arCodePage_t cp, const wchar_t *input, size_t in_n)
 {
-		int len;
-		AR_ASSERT(acp != NULL);
+		char *ret;
+		int n;
+		const UINT win_cp = __get_codepage_for_winapi(cp);
+		AR_ASSERT(input != NULL);
+		n = (int)in_n;
 
-		len = MultiByteToWideChar(CP_ACP, 0, acp, (int)n, 0, 0);
-
-		if(len == 0 && n > 0)
+		if(n == 0)
 		{
-				return 0;
-		}
-
-		if(len == 0 || out_len == 0 || out == NULL)
-		{
-				return len + 1;
-		}
-
-		if((int)out_len < len + 1)
-		{
-				return 0;
-		}
-
-		if(MultiByteToWideChar(CP_ACP, 0, acp, (int)n, out, (int)out_len) == 0)
-		{
-				return 0;
+				return AR_strdup("");
 		}else
 		{
-				out[len] = 0;
-				return len + 1;
+				int len = WideCharToMultiByte(win_cp, 0, input, n, 0, 0, NULL, NULL);
+				if(len == 0)
+				{
+						return NULL;
+				}
+
+				ret = AR_NEWARR(char, len + 1);
+
+				len = WideCharToMultiByte(CP_ACP, 0, input, n, ret, len, NULL, NULL);
+				if(len == 0)
+				{
+						AR_DEL(ret);
+						ret = NULL;
+				}else
+				{
+						ret[len] = 0;
+				}
+
+				return ret;
+		}
+}
+
+wchar_t*				AR_str_convto_wcs(arCodePage_t cp, const char *input, size_t in_n)
+{
+		wchar_t *ret;
+		const UINT win_cp = __get_codepage_for_winapi(cp);
+		AR_ASSERT(input != NULL);
+		if(in_n == 0)
+		{
+				return AR_wcsdup(L"");
+		}else
+		{
+				int len = MultiByteToWideChar(win_cp, 0, input, (int)in_n, 0, 0);
+				if(len == 0)
+				{
+						return NULL;
+
+				}
+
+				ret = AR_NEWARR(wchar_t, len + 1);
+
+				len = MultiByteToWideChar(CP_ACP, 0, input, (int)in_n, ret, len);
+				if(len == 0)
+				{
+						AR_DEL(ret);
+						ret = NULL;
+				}else
+				{
+						ret[len] = 0;
+				}
+
+				return ret;
 		}
 }
 
@@ -373,9 +397,21 @@ size_t		AR_acp_to_wcs(const char *acp, size_t n, wchar_t *out, size_t out_len)
 
 
 
-const char *__get_current_locale_char_for_iconv()
+const char *__get_locale_str_for_iconv(arCodePage_t cp)
 {
-		return "";
+		switch(cp)
+		{
+		default: /*CP_ACP*/
+				return "";
+		case AR_CP_UTF8:
+				return "UTF-8";
+		case AR_CP_GB2312:
+				return "GB2312";
+		case AR_CP_GB18030:
+				return "GB18030";
+		case AR_CP_BIG5:
+				return "BIG5";
+		}
 }
 
 #if(OS_TYPE ==  OS_IPHONE) || (OS_TYPE == OS_MAC_OS_X)
@@ -385,13 +421,15 @@ const char *__get_current_locale_char_for_iconv()
 #endif
 
 
-size_t		AR_acp_to_wcs(const char *acp, size_t n, wchar_t *out, size_t out_len)
+
+
+size_t					AR_str_to_wcs(arCodePage_t cp, const char *acp, size_t n, wchar_t *out, size_t out_len)
 {
 		size_t len;
 		size_t ret;
 		wchar_t *wstr;
 		AR_ASSERT(acp != NULL);
-		wstr = AR_acp_convto_wcs(acp, n);
+		wstr = AR_str_convto_wcs(cp, acp, n);
 		if(wstr == NULL)
 		{
 				ret = 0;
@@ -402,19 +440,18 @@ size_t		AR_acp_to_wcs(const char *acp, size_t n, wchar_t *out, size_t out_len)
 
 		if(len == 0 || out == NULL || out_len == 0)
 		{
-				ret = len + 1;
+				ret = len;
 				goto CLEAN_POINT;
 		}
 
-		if(out_len < len + 1)
+		if(out_len < len)
 		{
 				ret = 0;
 				goto CLEAN_POINT;
 		}
 
 		AR_wcsncpy(out, wstr, len);
-		out[len] = 0;
-		ret = len + 1;
+		ret = len;
 
 CLEAN_POINT:
 		if(wstr)
@@ -425,14 +462,13 @@ CLEAN_POINT:
 		return ret;
 }
 
-
-size_t		AR_wcs_to_acp(const wchar_t *input, size_t n, char *out, size_t out_len)
+size_t					AR_wcs_to_str(arCodePage_t cp, const wchar_t *input, size_t n, char *out, size_t out_len)
 {
 		size_t len;
 		size_t ret;
 		char *str;
 		AR_ASSERT(input != NULL);
-		str = AR_wcs_convto_acp(input, n);
+		str = AR_wcs_convto_str(cp, input, n);
 
 		if(str == NULL)
 		{
@@ -444,19 +480,18 @@ size_t		AR_wcs_to_acp(const wchar_t *input, size_t n, char *out, size_t out_len)
 
 		if(len == 0 || out == NULL || out_len == 0)
 		{
-				ret = len + 1;
+				ret = len;
 				goto CLEAN_POINT;
 		}
 
-		if(out_len < len + 1)
+		if(out_len < len)
 		{
 				ret = 0;
 				goto CLEAN_POINT;
 		}
 
 		AR_strncpy(out, str, len);
-		out[len] = 0;
-		ret = len + 1;
+		ret = len;
 
 CLEAN_POINT:
 		if(str)
@@ -471,7 +506,7 @@ CLEAN_POINT:
 
 
 
-wchar_t*	AR_acp_convto_wcs(const char *input, size_t in_n)
+wchar_t*				AR_str_convto_wcs(arCodePage_t cp, const char *input, size_t in_n)
 {
 
         char   *out    = NULL;
@@ -482,6 +517,7 @@ wchar_t*	AR_acp_convto_wcs(const char *input, size_t in_n)
         size_t inleft;
         size_t outleft;
         iconv_t cd;
+		const char *cp_iconv = __get_locale_str_for_iconv(cp);
 		bool_t	is_ok = true;
 
 		AR_ASSERT(input != NULL);
@@ -494,7 +530,7 @@ wchar_t*	AR_acp_convto_wcs(const char *input, size_t in_n)
         out_len = sizeof(wchar_t) * (in_n + 1);
         out = (char*)AR_NEWARR0(wchar_t , in_n + 1);
 
-		cd = iconv_open(UNICODE_ENCODING_NAME, __get_current_locale_char_for_iconv());
+		cd = iconv_open(UNICODE_ENCODING_NAME, cp_iconv);
 
         if(cd == (iconv_t)-1)
         {
@@ -535,8 +571,7 @@ CLEAN_POINT:
 
 
 
-
-char*		AR_wcs_convto_acp(const wchar_t *input, size_t in_n)
+char*					AR_wcs_convto_str(arCodePage_t cp, const wchar_t *input, size_t in_n)
 {
         char   *in     = NULL;
         size_t in_len;
@@ -546,6 +581,7 @@ char*		AR_wcs_convto_acp(const wchar_t *input, size_t in_n)
 
         iconv_t cd  = NULL;
         bool_t is_ok;
+		const char *cp_iconv = __get_locale_str_for_iconv(cp);
         AR_ASSERT(input != NULL);
 
         in = (char*)input;
@@ -562,7 +598,7 @@ char*		AR_wcs_convto_acp(const wchar_t *input, size_t in_n)
         out_len = (len + 1) * 6;
 		out = AR_NEWARR0(char, out_len);
 
-        cd = iconv_open(__get_current_locale_char_for_iconv(),  UNICODE_ENCODING_NAME);
+        cd = iconv_open(cp_iconv,  UNICODE_ENCODING_NAME);
 
         if(cd == (iconv_t)-1)
         {

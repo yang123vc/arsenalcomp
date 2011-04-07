@@ -96,23 +96,24 @@
 	"../Lex/lex.h"
 	"../Parser/parser.h"
 
-1272883844 source:/root/Desktop/Arsenal/Prj/Test/CodeBlocks/com_test.c
+1302151507 source:/root/Desktop/Arsenal/Prj/Test/CodeBlocks/com_test.c
 	"test.h"
+	<locale.h>
 
 1264893324 /root/Desktop/Arsenal/Prj/Test/CodeBlocks/test.h
 	"../../../Arsenal/Arsenal.h"
 
-1274018938 /root/Desktop/Arsenal/Arsenal/Arsenal.h
+1301634939 /root/Desktop/Arsenal/Arsenal/Arsenal.h
 	"./Common/common.h"
 	"./Lex/lex.h"
 	"./Parser/parser.h"
-	"./Tengu/tengu.h"
 	"./Tools/tools.h"
+	"./Tengu/tengu.h"
 
-1291605660 /root/Desktop/Arsenal/Arsenal/Common/common.h
+1302146339 /root/Desktop/Arsenal/Arsenal/Common/common.h
 	"config.h"
 
-1291725833 /root/Desktop/Arsenal/Arsenal/Common/config.h
+1300664324 /root/Desktop/Arsenal/Arsenal/Common/config.h
 	"platform.h"
 	<stdlib.h>
 	<crtdbg.h>
@@ -134,25 +135,26 @@
 	<windows.h>
 	<unistd.h>
 	<pthread.h>
+	<iconv.h>
 	<sys/select.h>
 	<sys/time.h>
 	<libkern/OSAtomic.h>
 
-1288287879 /root/Desktop/Arsenal/Arsenal/Common/platform.h
+1298475803 /root/Desktop/Arsenal/Arsenal/Common/platform.h
 	<TargetConditionals.h>
 
-1283620289 /root/Desktop/Arsenal/Arsenal/Lex/lex.h
+1301634831 /root/Desktop/Arsenal/Arsenal/Lex/lex.h
 	"../Common/common.h"
 
-1291625166 /root/Desktop/Arsenal/Arsenal/Parser/parser.h
+1301634831 /root/Desktop/Arsenal/Arsenal/Parser/parser.h
 	"../Common/common.h"
 
-1283619861 /root/Desktop/Arsenal/Arsenal/Tengu/tengu.h
+1301634855 /root/Desktop/Arsenal/Arsenal/Tengu/tengu.h
 	"../Common/common.h"
 	"../Lex/lex.h"
 	"../Parser/parser.h"
 
-1272590359 /root/Desktop/Arsenal/Arsenal/Tools/tools.h
+1301634831 /root/Desktop/Arsenal/Arsenal/Tools/tools.h
 	"grammar_config.h"
 	"serializer.h"
 
@@ -160,19 +162,19 @@
 	"../Parser/parser.h"
 	"../Lex/lex.h"
 
-1290831007 /root/Desktop/Arsenal/Arsenal/Tools/serializer.h
+1294392301 /root/Desktop/Arsenal/Arsenal/Tools/serializer.h
 	"../Common/common.h"
 
-1289234277 source:/root/Desktop/Arsenal/Prj/Test/CodeBlocks/main.c
+1298550183 source:/root/Desktop/Arsenal/Prj/Test/CodeBlocks/main.c
 	"test.h"
 	<iostream>
 	<locale.h>
 	<wchar.h>
 
-1289234277 source:/root/Desktop/Arsenal/Prj/Test/CodeBlocks/parser_test.c
+1297893146 source:/root/Desktop/Arsenal/Prj/Test/CodeBlocks/parser_test.c
 	<locale.h>
 	"test.h"
 
-1268538132 source:/root/Desktop/Arsenal/Prj/Test/CodeBlocks/test.c
+1297893146 source:/root/Desktop/Arsenal/Prj/Test/CodeBlocks/test.c
 	"test.h"
 

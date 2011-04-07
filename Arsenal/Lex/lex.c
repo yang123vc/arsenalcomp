@@ -16,16 +16,18 @@
 
 AR_NAMESPACE_BEGIN
 
-void	Lex_Init()
+bool_t	Lex_Init()
 {
 		RGX_InitNode();
 		RGX_InitMisc();
+		return true;
 }
 
-void	Lex_UnInit()
+bool_t	Lex_UnInit()
 {
 		RGX_UnInitNode();
 		RGX_UnInitMisc();
+		return true;
 }
 
 /*

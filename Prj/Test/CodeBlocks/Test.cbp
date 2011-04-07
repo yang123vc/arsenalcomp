@@ -66,9 +66,6 @@
 		<Unit filename="main.c">
 			<Option compilerVar="CPP" />
 		</Unit>
-		<Unit filename="parser_test.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="test.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -1,12 +1,12 @@
 /*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
- * 
+ *
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.It is provided "as is" without express 
+ * in supporting documentation.It is provided "as is" without express
  * or implied warranty.
  *
  */
@@ -32,12 +32,12 @@ const tguVMObject_t	__g_null_object = { TGU_VM_TYPE_NULL, {false }};
 
 void	TGU_InitVM()
 {
-		
+
 }
 
 void	TGU_UnInitVM()
 {
-		
+
 
 }
 
@@ -73,7 +73,7 @@ static bool_t	__run_vm(tguMachine_t *vm)
 
 
 
-
+#if(0)
 
 
 bool_t			TGU_ExecuteVM(tguMachine_t *vm, const wchar_t *main_module)
@@ -81,10 +81,10 @@ bool_t			TGU_ExecuteVM(tguMachine_t *vm, const wchar_t *main_module)
 		bool_t is_ok	= true;
 		const wchar_t	*module_name;
 		const tguVMObject_t	*val;
-		
+
 		tguVMModule_t	*module;
 		tguVMFunc_t		*function;
-		
+
 		AR_ASSERT(vm != NULL);
 		module_name = main_module == NULL ? TGU_DEFAULT_MODULE_NAME  : main_module;
 
@@ -99,7 +99,7 @@ bool_t			TGU_ExecuteVM(tguMachine_t *vm, const wchar_t *main_module)
 		{
 				module = val->val.module;
 		}
-		
+
 		val = TGU_GetVMTableByCStr(vm, module->table, TGU_DEFAULT_FUNCTION_NAME);
 
 		if(val->type != TGU_VM_TYPE_FUNC)
@@ -108,13 +108,13 @@ bool_t			TGU_ExecuteVM(tguMachine_t *vm, const wchar_t *main_module)
 				is_ok = false;
 				goto RET_POINT;
 		}
-		
+
 		function = val->val.function;
 
 		__set_run_env(vm, function);
-		
+
 		is_ok = __run_vm(vm);
-		
+
 RET_POINT:
 		return is_ok;
 }
@@ -124,12 +124,12 @@ RET_POINT:
 bool_t			TGU_RegisterCFuncVM(tguMachine_t *vm, const wchar_t *module_name,	 const wchar_t *func_name,  tguCFunction_t func)
 {
 		bool_t			is_ok = true;
-		
+
 		const tguVMObject_t	*val;
 		tguVMObject_t	*obj;
 		tguVMModule_t	*module;
 		AR_ASSERT(vm != NULL && module_name != NULL && func_name && func != NULL);
-		
+
 		val = TGU_GetVMTableByCStr(vm, vm->global_table, module_name);
 
 		if(val->type != TGU_VM_TYPE_MODULE)
@@ -137,7 +137,7 @@ bool_t			TGU_RegisterCFuncVM(tguMachine_t *vm, const wchar_t *module_name,	 cons
 				is_ok = false;
 				goto END_POINT;
 		}
-		
+
 		module = val->val.module;
 		val = TGU_GetVMTableByCStr(vm, TGU_GetVMModuleTable(module), func_name);
 
@@ -169,11 +169,11 @@ END_POINT:
 bool_t			TGU_UnRegisterCFuncVM(tguMachine_t *vm, const wchar_t *module_name,	 const wchar_t *func_name)
 {
 		bool_t					is_ok = true;
-		
+
 		const tguVMObject_t		*val;
 		tguVMModule_t			*module;
 		AR_ASSERT(vm != NULL && module_name != NULL && func_name);
-		
+
 		val = TGU_GetVMTableByCStr(vm, vm->global_table, module_name);
 
 		if(val->type != TGU_VM_TYPE_MODULE)
@@ -181,7 +181,7 @@ bool_t			TGU_UnRegisterCFuncVM(tguMachine_t *vm, const wchar_t *module_name,	 co
 				is_ok = false;
 				goto END_POINT;
 		}
-		
+
 		module = val->val.module;
 		val = TGU_GetVMTableByCStr(vm, TGU_GetVMModuleTable(module), func_name);
 
@@ -191,7 +191,7 @@ bool_t			TGU_UnRegisterCFuncVM(tguMachine_t *vm, const wchar_t *module_name,	 co
 				is_ok = false;
 				goto END_POINT;
 		}
-		
+
 		is_ok = TGU_RemoveVMTableByCStr(vm, TGU_GetVMModuleTable(module), func_name);
 
 END_POINT:
@@ -200,7 +200,7 @@ END_POINT:
 }
 
 
-
+#endif
 
 
 

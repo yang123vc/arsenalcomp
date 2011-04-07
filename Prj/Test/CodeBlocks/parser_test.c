@@ -7,7 +7,7 @@
 
 AR_NAMESPACE_BEGIN
 
-
+#if(0)
 #define LOAD_TXT_MAX_BUF  (1024*1024 * 5)
 static const wchar_t* __load_txt(const char *path)
 {
@@ -35,7 +35,7 @@ static const wchar_t* __load_txt(const char *path)
 
 		if(buf[0] == 0xEF && buf[1] == 0xBB && buf[2] == 0xBF)
 		{
-		    ret = AR_utf8_convto_wcs((const char*)(buf + 3));
+		    ret = AR_str_convto_wcs((const char*)(buf + 3));
 		}else
 		{
 		    ret = AR_utf8_convto_wcs((const char*)(buf));
@@ -44,7 +44,7 @@ static const wchar_t* __load_txt(const char *path)
 		AR_DEL(buf);
 		return ret;
 }
-
+#endif
 #if(0)
 void print_grammar(const psrGrammar_t *gmr)
 {
@@ -308,6 +308,7 @@ typedef struct __cfg_report_tag
 
 static cfgReport_t __g_report = { report_func, NULL};
 
+#if(0)
 void parser_test()
 {
 
@@ -423,6 +424,7 @@ void parser_test()
 
 		AR_DEL(gmr_txt);
 }
+#endif
 
 #if(0)
 

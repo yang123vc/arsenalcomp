@@ -45,8 +45,8 @@ FILE*	__AR_open_file(const wchar_t *path, const wchar_t *mode)
         char     *str_mode;
 		AR_ASSERT(path != NULL && mode != NULL);
 
-		str_path = AR_wcs_convto_acp(path, AR_wcslen(path));
-		str_mode = AR_wcs_convto_acp(mode, AR_wcslen(mode));
+		str_path = AR_wcs_convto_str(AR_CP_UTF8, path, AR_wcslen(path));
+		str_mode = AR_wcs_convto_str(AR_CP_UTF8, mode, AR_wcslen(mode));
 
 		file = NULL;
 
@@ -369,7 +369,7 @@ bool_t	AR_LoadBomTextFile(const wchar_t *path, arTxtBom_t *bom, arString_t *out)
 				{
 						wchar_t *str;
 
-						str = AR_acp_convto_wcs((const char*)AR_GetBufferData(ascii_buf), AR_GetBufferAvailable(ascii_buf));
+						str = AR_str_convto_wcs(AR_CP_ACP, (const char*)AR_GetBufferData(ascii_buf), AR_GetBufferAvailable(ascii_buf));
 
 						if(!str)
 						{
@@ -671,7 +671,7 @@ bool_t	AR_SaveBomTextFile(const wchar_t *path, arTxtBom_t bom, const wchar_t *in
 		if(bom == AR_TXT_BOM_ASCII)
 		{
 				size_t n;
-				char *s = AR_wcs_convto_acp(input, AR_wcslen(input));
+				char *s = AR_wcs_convto_str(AR_CP_ACP, input, AR_wcslen(input));
 				n = strlen(s);
 
 				if(!s)

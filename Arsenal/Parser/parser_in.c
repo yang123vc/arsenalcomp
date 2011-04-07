@@ -44,7 +44,7 @@ bool_t				Parser_IsBuildInSymbol(const psrSymb_t		*symb)
 
 /******************************************************************************************************************************************/
 
-void	Parser_Init()
+bool_t	Parser_Init()
 {
 		AR_InitSpinLock(&__tbl_lock);
 		__tbl			=			AR_CreateStrTable(PARSER_STRTBL_BUCKET);
@@ -57,10 +57,11 @@ void	Parser_Init()
 		PARSER_StartSymb	=		Parser_CreateSymb(L"%START", PARSER_NONTERM);
 
 		Parser_Init_LALR_Config();
+		return true;
 		
 }
 
-void	Parser_UnInit()
+bool_t	Parser_UnInit()
 {
 		Parser_UnInit_LALR_Config();
 
@@ -77,6 +78,7 @@ void	Parser_UnInit()
 		AR_DestroyStrTable(__tbl);
 		AR_UnInitSpinLock(&__tbl_lock);
 		__tbl = NULL;
+		return true;
 }
 
 

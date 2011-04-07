@@ -24,8 +24,8 @@ AR_NAMESPACE_BEGIN
 
 
 
-void	Lex_Init();
-void	Lex_UnInit();
+bool_t	Lex_Init();
+bool_t	Lex_UnInit();
 
 
 

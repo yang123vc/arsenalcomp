@@ -65,7 +65,7 @@ typedef struct __sn_list_tag
 static void			SN_InitList(snList_t	*lst);
 static void			SN_UnInitList(snList_t	*lst);
 
-static void			SN_InsertToList(snList_t	*lst, snObject_t *obj);
+static void				SN_InsertToList(snList_t	*lst, snObject_t *obj);
 static bool_t			SN_RemoveFromList(snList_t	*lst, size_t idx);
 static int_t			SN_IndexOfList(const snList_t *lst, const snObject_t *obj);
 static snObject_t*		SN_GetFromList(snList_t *lst, size_t idx);
@@ -170,7 +170,10 @@ static void	SN_SetStringByWcs(snString_t	*dest, const wchar_t *str)
 {
 		const char *utf8;
 		AR_ASSERT(dest != NULL && str != NULL);
+		/*
 		utf8 = AR_wcs_convto_utf8(str);
+		*/
+		utf8 = AR_wcs_convto_str(AR_CP_UTF8, str, AR_wcslen(str));
 		AR_ASSERT(utf8 != NULL);
 		SN_SetStringByStr(dest, utf8);
 		AR_DEL(utf8);
@@ -938,7 +941,8 @@ snObject_t*		SN_FindObjectByStrPath(snObject_t *obj, const char *path)
 		wchar_t *wcs = NULL;
 		AR_ASSERT(obj != NULL && path != NULL);
 
-		wcs = AR_utf8_convto_wcs(path);
+		/*wcs = AR_utf8_convto_wcs(path);*/
+		wcs = AR_str_convto_wcs(AR_CP_UTF8, path, AR_strlen(path));
 
 		if(wcs == NULL)
 		{
@@ -1200,7 +1204,8 @@ int_t			SN_GetWcsFromStringObject(const snObject_t	*obj, wchar_t *buf, size_t le
 				return -1;
 		}
 
-		wtmp = AR_utf8_convto_wcs(tmp);
+/*		wtmp = AR_utf8_convto_wcs(tmp);*/
+		wtmp = AR_str_convto_wcs(AR_CP_UTF8, tmp, AR_strlen(tmp));
 
 		if(tmp == NULL)
 		{
