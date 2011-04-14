@@ -8,17 +8,17 @@
 1298754742 /root/Desktop/Programming/Arsenal/Prj/Test/CodeBlocks/test.h
 	"../../../Arsenal/Arsenal.h"
 
-1298754691 /root/Desktop/Programming/Arsenal/Arsenal/Arsenal.h
+1302790699 /root/Desktop/Programming/Arsenal/Arsenal/Arsenal.h
 	"./Common/common.h"
 	"./Lex/lex.h"
 	"./Parser/parser.h"
 	"./Tools/tools.h"
 	"./Tengu/tengu.h"
 
-1298754691 /root/Desktop/Programming/Arsenal/Arsenal/Common/common.h
+1302790698 /root/Desktop/Programming/Arsenal/Arsenal/Common/common.h
 	"config.h"
 
-1298754691 /root/Desktop/Programming/Arsenal/Arsenal/Common/config.h
+1301423842 /root/Desktop/Programming/Arsenal/Arsenal/Common/config.h
 	"platform.h"
 	<stdlib.h>
 	<crtdbg.h>
@@ -48,7 +48,7 @@
 1298754691 /root/Desktop/Programming/Arsenal/Arsenal/Common/platform.h
 	<TargetConditionals.h>
 
-1298754691 /root/Desktop/Programming/Arsenal/Arsenal/Lex/lex.h
+1302790698 /root/Desktop/Programming/Arsenal/Arsenal/Lex/lex.h
 	"../Common/common.h"
 
 1272882841 /root/Desktop/Programming/Arsenal/Arsenal/Lex/match.h
@@ -60,10 +60,10 @@
 1272882846 /root/Desktop/Programming/Arsenal/Arsenal/Parser/symbol.h
 	"parser.h"
 
-1298754691 /root/Desktop/Programming/Arsenal/Arsenal/Parser/parser.h
+1302790699 /root/Desktop/Programming/Arsenal/Arsenal/Parser/parser.h
 	"../Common/common.h"
 
-1298754690 /root/Desktop/Programming/Arsenal/Arsenal/Tools/tools.h
+1302790698 /root/Desktop/Programming/Arsenal/Arsenal/Tools/tools.h
 	"grammar_config.h"
 	"serializer.h"
 
@@ -81,7 +81,7 @@
 1298754690 /root/Desktop/Programming/Arsenal/Arsenal/Tools/serializer.h
 	"../Common/common.h"
 
-1298754742 source:/root/Desktop/Programming/Arsenal/Prj/Test/CodeBlocks/com_test.c
+1302791011 source:/root/Desktop/Programming/Arsenal/Prj/Test/CodeBlocks/com_test.c
 	"test.h"
 	<locale.h>
 
@@ -91,7 +91,7 @@
 	"../Parser/grammar.h"
 	"../Parser/parser.h"
 
-1298754690 /root/Desktop/Programming/Arsenal/Arsenal/Tengu/tengu.h
+1302790698 /root/Desktop/Programming/Arsenal/Arsenal/Tengu/tengu.h
 	"../Common/common.h"
 	"../Lex/lex.h"
 	"../Parser/parser.h"
