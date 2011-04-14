@@ -499,10 +499,12 @@ struct	__tengu_machine_tag
 		
 		tguVMGCPool_t			gc_pool;
 		tguVMConstPool_t		const_pool;
+
 /************************Value***********************/
 		tguVMTable_t		*global_table;
 
 		arString_t			*last_error;
+
 };
 
 tguMachine_t*	TGU_CreateVM(const tguReportInfo_t *report);
