@@ -73,8 +73,6 @@ static bool_t	__run_vm(tguMachine_t *vm)
 
 
 
-#if(0)
-
 
 bool_t			TGU_ExecuteVM(tguMachine_t *vm, const wchar_t *main_module)
 {
@@ -199,8 +197,6 @@ END_POINT:
 
 }
 
-
-#endif
 
 
 
