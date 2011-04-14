@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="DLLDebug" />
-	<File name="com_test.c" open="1" top="0" tabpos="3">
-		<Cursor position="1776" topLine="85" />
+	<File name="com_test.c" open="1" top="1" tabpos="3">
+		<Cursor position="559" topLine="37" />
 	</File>
-	<File name="main.c" open="1" top="1" tabpos="2">
-		<Cursor position="755" topLine="35" />
+	<File name="main.c" open="1" top="0" tabpos="2">
+		<Cursor position="482" topLine="27" />
 	</File>
 	<File name="test.c" open="1" top="0" tabpos="1">
 		<Cursor position="168" topLine="0" />

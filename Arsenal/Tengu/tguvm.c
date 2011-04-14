@@ -42,7 +42,7 @@ void	TGU_UnInitVM()
 }
 
 
-
+#if(0)
 
 void TGU_FormatVMError(tguMachine_t *vm, const wchar_t *fmt,...)
 {
@@ -196,6 +196,8 @@ END_POINT:
 		return is_ok;
 
 }
+
+#endif
 
 
 
