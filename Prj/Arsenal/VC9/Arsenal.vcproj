@@ -1545,6 +1545,10 @@
 			>
 		</File>
 		<File
+			RelativePath=".\ClassDiagram1.cd"
+			>
+		</File>
+		<File
 			RelativePath=".\export.def"
 			>
 		</File>

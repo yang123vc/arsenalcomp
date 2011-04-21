@@ -507,7 +507,13 @@ struct	__tengu_machine_tag
 
 };
 
-tguMachine_t*	TGU_CreateVM(const tguReportInfo_t *report);
+
+typedef struct __tengu_vm_init_tag
+{
+		const tguReportInfo_t *report;
+}tguVMInit_t;
+
+tguMachine_t*	TGU_CreateVM(const tguVMInit_t *init);
 void			TGU_DestroyVM(tguMachine_t	*vm);
 void			TGU_FormatVMError(tguMachine_t *vm, const wchar_t *fmt,...);
 
