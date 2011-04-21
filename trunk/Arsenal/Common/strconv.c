@@ -305,7 +305,7 @@ size_t					AR_wcs_to_str(arCodePage_t cp, const wchar_t *input, size_t n, char *
 				return len;
 		}
 
-		if((int)out_len < len + 1)
+		if((int)out_len < len)
 		{
 				return 0;
 		}

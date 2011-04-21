@@ -101,6 +101,9 @@
 #elif defined(__VMS)
 	#define OS_FAMILY_VMS								1
 	#define OS_TYPE										OS_VMS
+#elif defined(ANDROID)
+	#define OS_FAMILY_UNIX								1
+	#define OS_TYPE										OS_ANDROID
 #endif
 
 
