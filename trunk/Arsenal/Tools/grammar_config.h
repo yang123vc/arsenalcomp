@@ -170,7 +170,7 @@ typedef struct __cfg_config_tag
 
 		cfgPrec_t		*prec;
 		size_t			prec_cnt;
-
+		
 		cfgRule_t		*rule;
 		size_t			rule_cnt;
 

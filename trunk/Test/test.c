@@ -80,11 +80,9 @@ extern void mem_test();
 
 
 
-
 void AR_Test()
 {
 #if defined(__LIB)
-		
 		com_test();
 		//trie_tree_test();
 		//expr_test();
