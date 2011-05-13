@@ -41,7 +41,7 @@ END_MESSAGE_MAP()
 
 CGrammarDesignerApp::CGrammarDesignerApp()
 {
-
+		
 	m_bHiColorIcons = TRUE;
 
 	// TODO: add construction code here,

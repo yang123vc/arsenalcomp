@@ -47,6 +47,7 @@ int main()
 		arInit_t ai = {{tiny_error, tiny_printf, NULL}};
 
 #if(OS_TYPE != OS_WINDOWS_CE)		
+	//	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 		printf("current locale == %ls\r\n", setlocale(LC_ALL,NULL));
 #else
 		

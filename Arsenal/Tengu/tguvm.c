@@ -42,6 +42,9 @@ void	TGU_UnInitVM()
 }
 
 
+
+#if(0)
+
 void TGU_FormatVMError(tguMachine_t *vm, const wchar_t *fmt,...)
 {
 		va_list arg_ptr;
@@ -113,6 +116,7 @@ bool_t			TGU_ExecuteVM(tguMachine_t *vm, const wchar_t *main_module)
 
 RET_POINT:
 		return is_ok;
+
 }
 
 
@@ -197,6 +201,7 @@ END_POINT:
 
 
 
+#endif
 
 
 

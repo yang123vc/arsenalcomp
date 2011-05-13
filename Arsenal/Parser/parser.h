@@ -371,7 +371,7 @@ const psrTermInfoList_t*		Parser_GetTermList(const psrGrammar_t *grammar);
 
 const psrSymb_t*		Parser_GetSymbFromGrammarByName(const psrGrammar_t *grammar, const wchar_t *name);
 
-bool_t			Parser_CheckIsValidGrammar(const psrGrammar_t *grammar, arIOCtx_t *io_ctx);
+bool_t					Parser_CheckIsValidGrammar(const psrGrammar_t *grammar, arIOCtx_t *io_ctx);
 
 
 
