@@ -212,13 +212,19 @@ static rgxResult_t	__handle_quote(const wchar_t *input)
 						{
 								g_res.err.pos = p;
 								goto INVALID_POINT;
-						}else if(c == L'"')
+						}
+						
+						
+						switch(c)
 						{
+						case L'"':
+						case L'\\':
 								p++;
-						}else
-						{
-
-
+								break;
+						default:
+								g_res.err.pos = p;
+								goto INVALID_POINT;
+								break;
 						}
 				}else
 				{
