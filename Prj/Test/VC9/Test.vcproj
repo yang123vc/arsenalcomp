@@ -1451,6 +1451,10 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath="..\..\..\Test\tokenizer_test.c"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="DSTest"

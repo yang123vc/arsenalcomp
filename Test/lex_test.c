@@ -1013,6 +1013,63 @@ void lex_line_test5()
 
 
 
+
+void lex_line_test6()
+{
+		lexMatch_t		*match;
+		lex_t			*lex;
+
+		lex = Lex_Create();
+		
+		lexAction_t act;
+		act.is_skip = false;
+		act.priority = 1;
+		act.value = 200;
+		AR_ASSERT(Lex_InsertRule(lex, L"\"\\\\\"", &act));
+
+		act.value = 0;
+		AR_ASSERT(Lex_InsertRule(lex, L"$", &act));
+		
+		match = Lex_CreateMatch(lex);
+		
+		Lex_ResetInput(match, L"\\\\\\\\");
+		
+
+		lexToken_t tok;
+		bool_t is_ok = false;
+		
+		printf("\r\n");
+
+		while(Lex_Match(match, &tok))
+		{
+				wchar_t *s = AR_wcsndup(tok.str, tok.count);
+				AR_printf(L"%ls : row == %d : col == %d : count == %d\r\n", s, tok.line, tok.col, tok.count);
+				AR_DEL(s);
+				
+				if(tok.value == 0)
+				{
+						is_ok = true;
+						break;
+				}
+		}
+
+		if(!is_ok)
+		{
+				AR_printf(L"%ls\r\n", L"failed\r\n");
+		}else
+		{
+				AR_printf(L"%ls\r\n", L"success\r\n");
+		}
+
+
+		Lex_DestroyMatch(match);
+		Lex_Destroy(lex);
+
+}
+
+
+
+
 void lex_test()
 {
 		
@@ -1020,13 +1077,15 @@ void lex_test()
 		//lex_line_test2();
 		//lex_line_test3();
 		//lex_line_test4();
-		lex_line_test5();
+		//lex_line_test5();
 		//lex_chinese_char();
 		//lex_test_loop2();
 
 		//rgx_test_loop();
 		
 		//lex_test20();
+
+		lex_line_test6();
 }
 
 AR_NAMESPACE_END
