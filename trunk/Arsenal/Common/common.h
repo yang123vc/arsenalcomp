@@ -119,11 +119,11 @@ void	AR_check(bool_t cond, const wchar_t *fmt, ...);
 /***********************************************************macro_oper*********************************************************/
 
 
-
+#if(0)
 #define __AR_CNT_BIT__(_n)		((_n) * AR_BYTE_BITS)
 
-#define AR_BYTEFLIP_16(_v)		( (((uint_16_t)(_v) >> __AR_CNT_BIT__(1)) & 0x00FF)								\
-								| (((uint_16_t)(_v) << __AR_CNT_BIT__(1)) & 0xFF00)								\
+#define AR_BYTEFLIP_16(_v)		( ((((uint_16_t)(_v)) >> __AR_CNT_BIT__(1)) & 0x00FF)								\
+								| ((((uint_16_t)(_v)) << __AR_CNT_BIT__(1)) & 0xFF00)								\
 								)
 
 #define AR_BYTEFLIP_32(_v)		( (((uint_32_t)(_v) >> __AR_CNT_BIT__(3)) & 0x000000FF)							\
@@ -143,7 +143,19 @@ void	AR_check(bool_t cond, const wchar_t *fmt, ...);
 								| (((uint_64_t)(_v) << __AR_CNT_BIT__(7)) & AR_BIGNUM_U64(0xFF00000000000000))		\
 								)
 
+#endif
 
+
+int_16_t		AR_BYTEFLIP_16(int_16_t val);
+uint_16_t		AR_BYTEFLIP_U16(uint_16_t val);
+
+
+int_32_t		AR_BYTEFLIP_32(int_32_t val);
+uint_32_t		AR_BYTEFLIP_U32(uint_32_t val);
+
+
+int_64_t		AR_BYTEFLIP_64(int_64_t val);
+uint_64_t		AR_BYTEFLIP_U64(uint_64_t val);
 
 
 
@@ -152,10 +164,16 @@ void	AR_check(bool_t cond, const wchar_t *fmt, ...);
 		#define AR_LTON_16(_n)			AR_BYTEFLIP_16((_n))
 		#define AR_LTON_32(_n)			AR_BYTEFLIP_32((_n))
 		#define AR_LTON_64(_n)			AR_BYTEFLIP_64((_n))
+		#define AR_LTON_U16(_n)			AR_BYTEFLIP_U16((_n))
+		#define AR_LTON_U32(_n)			AR_BYTEFLIP_U32((_n))
+		#define AR_LTON_U64(_n)			AR_BYTEFLIP_U64((_n))
 
 		#define AR_NTOL_16(_n)			AR_BYTEFLIP_16((_n))
 		#define AR_NTOL_32(_n)			AR_BYTEFLIP_32((_n))
 		#define AR_NTOL_64(_n)			AR_BYTEFLIP_64((_n))
+		#define AR_NTOL_U16(_n)			AR_BYTEFLIP_U16((_n))
+		#define AR_NTOL_U32(_n)			AR_BYTEFLIP_U32((_n))
+		#define AR_NTOL_U64(_n)			AR_BYTEFLIP_U64((_n))
 
 #else
 
@@ -492,6 +510,10 @@ int_t			AR_wchartodigit(wchar_t ch);
 
 uint_t			AR_wcshash(const wchar_t *str);
 uint_t			AR_wcshash_n(const wchar_t *str, size_t n);
+
+
+
+
 
 
 

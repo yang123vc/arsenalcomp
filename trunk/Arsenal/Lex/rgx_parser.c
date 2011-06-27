@@ -183,6 +183,123 @@ static const wchar_t*	__transform_char(const wchar_t *input, wchar_t *c, rgxErro
 		}
 }
 
+#if(0)
+
+static AR_INLINE const wchar_t* __transform_char(const wchar_t *input, wchar_t *out, arEscStrErr_t *error)
+{
+		const wchar_t *p;
+		int_t			err = AR_ESCSTR_ERR_OK;
+		uint_64_t		num = 0;
+		AR_ASSERT(input != NULL && out != NULL);
+
+		p = input;
+
+		switch(*p)
+		{
+		case L'b':
+				*out = L'\b';
+				++p;
+				break;
+		case L'f':
+				*out = L'\f';
+				++p;
+				break;
+		case L'n':
+				*out = L'\n';
+				++p;
+				break;
+		case L'r':
+				*out = L'\r';
+				++p;
+				break;
+		case L't':
+				*out = L'\t';
+				++p;
+				break;
+		case L'v':
+				*out = L'\v';
+				++p;
+				break;
+		case L'a':
+				*out = L'\a';
+				++p;
+				break;
+		case L'\\':
+				*out = L'\\';
+				++p;
+				break;
+		case L'\"':
+				*out = L'\"';
+				++p;
+				break;
+		case L'\'':
+				*out = L'\'';
+				++p;
+				break;
+		case L'x':
+		{
+				if(*(p + 1) == 0)
+				{
+						p = NULL;
+						err = AR_ESCSTR_ERR_CHAR;
+						goto END_POINT;
+				}else
+				{
+						p = AR_wtou64(p + 1, &num, 16);
+
+						if(p == NULL || num > (uint_64_t)AR_WCHARMAX)
+						{
+								p = NULL;
+								err = AR_ESCSTR_ERR_VALUE;
+								goto END_POINT;
+						}
+
+						*out = (wchar_t)num;
+				}
+				break;
+		}
+		default:
+		{
+				if(*p >= L'0' && *p <= L'7')
+				{
+						if(*p == L'0' && *(p + 1) == 0)
+						{
+								*out = 0;
+								++p;
+						}else
+						{
+								size_t i;
+								wchar_t c = 0;
+
+								for(i = 0; i < 3 && p[i] && p[i] >= L'0' && p[i] <= L'7'; ++i)
+								{
+										c *= 8;
+										c += p[i] - L'0';
+								}
+
+								*out = c;
+								p += i;
+						}
+				}else
+				{
+						p = NULL;
+						err = AR_ESCSTR_ERR_CHAR;
+						goto END_POINT;
+				}
+				break;
+		}
+		}
+
+END_POINT:
+		if(error && err != AR_ESCSTR_ERR_OK)
+		{
+				error->type = err;
+				error->pos = input;
+				error->value = num;
+		}
+		return p;
+}
+#endif
 
 
 static rgxResult_t	__handle_quote(const wchar_t *input)
@@ -206,36 +323,117 @@ static rgxResult_t	__handle_quote(const wchar_t *input)
 						goto INVALID_POINT;
 				}else if(*p == L'\\')
 				{
-						c = *(p + 1);
-
-						if(c == L'\0')
+						
+						if(*(p+1) == L'\0')
 						{
 								g_res.err.pos = p;
 								goto INVALID_POINT;
 						}
 						
+						++p;
 						
-						switch(c)
+						switch(*p)
 						{
-						case L'"':
+						case L'b':
+								c = L'\b';
+								++p;
+								break;
+						case L'f':
+								c = L'\f';
+								++p;
+								break;
+						case L'n':
+								c = L'\n';
+								++p;
+								break;
+						case L'r':
+								c = L'\r';
+								++p;
+								break;
+						case L't':
+								c = L'\t';
+								++p;
+								break;
+						case L'v':
+								c = L'\v';
+								++p;
+								break;
+						case L'a':
+								c = L'\a';
+								++p;
+								break;
 						case L'\\':
-								p++;
+								c = L'\\';
+								++p;
 								break;
+						case L'\"':
+								c = L'\"';
+								++p;
+								break;
+						case L'\'':
+								c = L'\'';
+								++p;
+								break;
+						case L'x':
+						{
+								uint_64_t num;
+								if(*(p + 1) == 0)
+								{
+										g_res.err.pos = p;
+										goto INVALID_POINT;
+								}else
+								{
+										p = AR_wtou64(p + 1, &num, 16);
+
+										if(p == NULL || num > (uint_64_t)AR_WCHARMAX)
+										{
+												g_res.err.pos = p;
+												goto INVALID_POINT;
+										}
+										c = (wchar_t)num;
+								}
+								break;
+						}
 						default:
-								g_res.err.pos = p;
-								goto INVALID_POINT;
+						{
+								if(*p >= L'0' && *p <= L'7')
+								{
+										if(*p == L'0' && *(p + 1) == 0)
+										{
+												c = 0;
+												++p;
+										}else
+										{
+												size_t i;
+												wchar_t t = 0;
+
+												for(i = 0; i < 3 && p[i] && p[i] >= L'0' && p[i] <= L'7'; ++i)
+												{
+														t *= 8;
+														t += p[i] - L'0';
+												}
+
+												c = t;
+												p += i;
+										}
+								}else
+								{
+										g_res.err.pos = p;
+										goto INVALID_POINT;
+								}
 								break;
+						}
 						}
 				}else
 				{
 						c = *p;
+						++p;
 				}
 
 				range.beg = range.end = c;
 				tmp = RGX_CreateNode(RGX_CSET_T);
 				tmp->range.beg = tmp->range.end = c;
 				RGX_InsertToNode(g_res.node, tmp);
-				++p;
 		}
 		AR_ASSERT(*p == L'"');
 		
@@ -439,83 +637,6 @@ static rgxResult_t	__handle_charset(const wchar_t *input)
 		}
 }
 
-#if(0)
-static rgxNode_t*	__handle_loopcount(rgxNode_t *expr, size_t min, size_t max, bool_t non_greedy)
-{
-		bool_t is_infinite;
-		rgxNode_t *cat, *loop;
-		size_t i;
-		AR_ASSERT(expr != NULL && min <= max && max > 0);
-
-		is_infinite = (max == AR_SIZE_MAX ? true : false);
-RECHECK:
-		if(min < max)
-		{
-				if(min == 0)
-				{
-						if(is_infinite)
-						{
-								min = max; 
-								goto RECHECK;
-						}else
-						{
-								rgxNode_t *quest = RGX_CreateNode(RGX_QUEST_T);
-								quest->left = RGX_CopyNode(expr);
-								quest->non_greedy = non_greedy;
-								/*branch = RGX_CreateNode(RGX_BRANCH_T);*/
-								/*RGX_InsertToNode(branch, RGX_CopyNode(expr));*/
-								cat = RGX_CreateNode(RGX_CAT_T);
-								for(i = 0; i < max; ++i)RGX_InsertToNode(cat, RGX_CopyNode(quest));
-								
-								RGX_DestroyNode(quest);
-								RGX_DestroyNode(expr);
-
-						}
-				}else
-				{
-						cat = RGX_CreateNode(RGX_CAT_T);
-						for(i = 0; i < min; ++i)RGX_InsertToNode(cat, RGX_CopyNode(expr));
-
-						if(is_infinite)
-						{
-								loop = RGX_CreateNode(RGX_STAR_T);
-								loop->left = RGX_CopyNode(expr);
-								loop->non_greedy = non_greedy;
-								RGX_InsertToNode(cat, loop);
-						}else
-						{
-								rgxNode_t *quest = RGX_CreateNode(RGX_QUEST_T);
-								quest->left = RGX_CopyNode(expr);
-								quest->non_greedy = non_greedy;
-								for(; i < max; i++)RGX_InsertToNode(cat, RGX_CopyNode(quest));
-								RGX_DestroyNode(quest);
-								RGX_DestroyNode(expr);
-						}
-						
-						
-				}
-
-				return cat;
-
-		}else/* if(min == max)*/
-		{
-
-				if(is_infinite)
-				{
-						loop = RGX_CreateNode(RGX_STAR_T);
-						loop->left = expr;
-						return loop;
-				}else /*if(max > 0)*/
-				{
-						cat = RGX_CreateNode(RGX_CAT_T);
-						for(i = 0; i < min; ++i) RGX_InsertToNode(cat, RGX_CopyNode(expr));
-						RGX_DestroyNode(expr);
-						return cat;
-				}
-
-		}
-}
-#endif
 
 
 static rgxNode_t*	__handle_loopcount(rgxNode_t *expr, size_t min, size_t max, bool_t non_greedy)
@@ -812,7 +933,6 @@ static rgxResult_t __handle_factor(const wchar_t *input, const rgxNameSet_t *nam
 				{
 						g_res = __handle_expr(p, L')', name_set);
 				}
-
 		}
 				break;
 		case L'{':

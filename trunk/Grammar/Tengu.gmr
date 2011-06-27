@@ -232,10 +232,14 @@
 %name	exponet			:	"(e|E)(\+|\-)?[0-9]+"
 					;
 
-
+/*
 %name float_literal			:	"(((([0-9]\.[0-9]*)|(\.[0-9]+)){exponet}?)|([0-9]+{exponet}))"
 					;
+*/
 
+
+%name float_literal			:	"(((([0-9]\.[0-9]*)){exponet}?)|([0-9]+{exponet}))"
+					;
 
 
 
@@ -2491,6 +2495,7 @@ primary_expression		:	"(" expression")"							%action	on_lp_rp_expression
 
 				|	module_access	%action	auto_return_0
 				;
+
 
 
 

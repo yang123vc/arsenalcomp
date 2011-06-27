@@ -6,7 +6,7 @@
 #include "StringConvDlg.h"
 
 
-CStringEdit::CStringEdit() : CEdit()
+CStringEdit::CStringEdit() : CRichEditCtrl ()
 {
 		VERIFY(m_font.CreatePointFont(120, TEXT("Consolas")));
 		m_acctbl = ::LoadAccelerators(AfxGetResourceHandle(), MAKEINTRESOURCE(IDR_INPUT_VIEW));
@@ -29,13 +29,61 @@ BOOL CStringEdit::PreTranslateMessage(MSG* pMsg)
 				{
 					return true;
 				}
-		}
+		}		
 
-		return CEdit::PreTranslateMessage(pMsg);
+		/*
+		switch(pMsg->message)
+		{
+		case WM_RBUTTONDOWN:
+		{
+				this->SetFocus();
+				CPoint point;
+				GetCursorPos(&point);
+				this->OnContextMenu(this, point);
+				return TRUE;
+		}
+		case WM_KEYDOWN:
+		{
+				switch(pMsg->wParam)
+				{
+				case VK_APPS:
+				{
+						this->SetFocus();
+						CPoint pt = this->GetCaretPos();
+						this->ClientToScreen(&pt);
+						this->OnContextMenu(this, pt);
+						return TRUE;
+				}
+				}
+		}
+		}
+		*/
+		return CRichEditCtrl::PreTranslateMessage(pMsg);
 }
 
 
-BEGIN_MESSAGE_MAP(CStringEdit, CEdit)
+
+void CStringEdit::OnContextMenu(CWnd* pWnd, CPoint point)
+{
+		// TODO: Add your message handler code here
+		//::AfxMessageBox(_T("aaaaaaaaaaa"));
+		
+	CMenu menu;
+	menu.LoadMenu(IDR_MENU_STRCONV);
+
+	CMenu* pSumMenu = menu.GetSubMenu(0);
+		
+	pSumMenu->TrackPopupMenu(TPM_LEFTALIGN |TPM_RIGHTBUTTON, point.x, point.y, this);
+	
+	//((CWinAppEx*)AfxGetApp())->GetContextMenuManager()->ShowPopupMenu(pSumMenu->GetSafeHmenu(),point.x, point.y, this, TRUE);
+
+	this->SetFocus();
+}
+
+
+
+
+BEGIN_MESSAGE_MAP(CStringEdit, CRichEditCtrl)
 		ON_COMMAND(ID_EDIT_SELECT_ALL, &CStringEdit::OnEditSelectAll)
 		ON_WM_CREATE()
 		ON_COMMAND(ID_EDIT_COPY, &CStringEdit::OnEditCopy)
@@ -43,13 +91,14 @@ BEGIN_MESSAGE_MAP(CStringEdit, CEdit)
 		ON_COMMAND(ID_EDIT_PASTE, &CStringEdit::OnEditPaste)
 		ON_COMMAND(ID_EDIT_CLEAR, &CStringEdit::OnEditClear)
 		ON_COMMAND(ID_EDIT_UNDO, &CStringEdit::OnEditUndo)
+		ON_WM_CONTEXTMENU()
 END_MESSAGE_MAP()
 
 
 
 int CStringEdit::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
-		if (CEdit::OnCreate(lpCreateStruct) == -1)
+		if (CRichEditCtrl::OnCreate(lpCreateStruct) == -1)
 				return -1;
 
 		// TODO:  Add your specialized creation code here
@@ -60,25 +109,25 @@ int CStringEdit::OnCreate(LPCREATESTRUCT lpCreateStruct)
 void CStringEdit::OnEditCopy()
 {
 		// TODO: Add your command handler code here
-		CEdit::Copy();
+		CRichEditCtrl::Copy();
 }
 
 void CStringEdit::OnEditCut()
 {
 		// TODO: Add your command handler code here
-		CEdit::Cut();
+		CRichEditCtrl::Cut();
 }
 
 void CStringEdit::OnEditPaste()
 {
 		// TODO: Add your command handler code here
-		CEdit::Paste();
+		CRichEditCtrl::Paste();
 }
 
 void CStringEdit::OnEditClear()
 {
 		// TODO: Add your command handler code here
-		CEdit::Clear();
+		CRichEditCtrl::Clear();
 }
 
 void CStringEdit::OnEditSelectAll()
@@ -92,7 +141,7 @@ void CStringEdit::OnEditSelectAll()
 void CStringEdit::OnEditUndo()
 {
 		// TODO: Add your command handler code here
-		CEdit::Undo();
+		CRichEditCtrl::Undo();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -231,13 +280,15 @@ BOOL CStringConvDlg::OnInitDialog()
 
 		// TODO:  Add extra initialization here
 
-		CEdit *pedit = (CEdit*)this->GetDlgItem(IDC_EDIT_STRING);
+		CRichEditCtrl *pedit = (CRichEditCtrl*)this->GetDlgItem(IDC_EDIT_STRING);
 		pedit->SetFont(&m_font);
-
+		pedit->LimitText(0xffffffff);
 		
-		pedit = (CEdit*)this->GetDlgItem(IDC_EDIT_CODE);
+		
+		pedit = (CRichEditCtrl*)this->GetDlgItem(IDC_EDIT_CODE);
 		pedit->SetFont(&m_font);
-
+		pedit->LimitText(0xffffffff);
+		
 		
 
 		return TRUE;  // return TRUE unless you set the focus to a control

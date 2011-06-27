@@ -1025,7 +1025,10 @@ void lex_line_test6()
 		act.is_skip = false;
 		act.priority = 1;
 		act.value = 200;
-		AR_ASSERT(Lex_InsertRule(lex, L"\"\\\\\"", &act));
+
+		
+
+		AR_ASSERT(Lex_InsertRule(lex, L"\"\\\"\\b\\f\\n\\r\\t\\v\\a\\\\\\\"\\'\\x67\\012\\\"\"", &act));
 
 		act.value = 0;
 		AR_ASSERT(Lex_InsertRule(lex, L"$", &act));
@@ -1069,6 +1072,63 @@ void lex_line_test6()
 
 
 
+void lex_quote_test7()
+{
+		lexMatch_t		*match;
+		lex_t			*lex;
+
+		lex = Lex_Create();
+		
+		lexAction_t act;
+		act.is_skip = false;
+		act.priority = 1;
+		act.value = 200;
+
+		
+
+		AR_ASSERT(Lex_InsertRule(lex, L"\"abc\"", &act));
+
+		act.value = 0;
+		AR_ASSERT(Lex_InsertRule(lex, L"$", &act));
+		
+		match = Lex_CreateMatch(lex);
+		
+		Lex_ResetInput(match, L"abcabcabcabc");
+		
+
+		lexToken_t tok;
+		bool_t is_ok = false;
+		
+		printf("\r\n");
+
+		while(Lex_Match(match, &tok))
+		{
+				wchar_t *s = AR_wcsndup(tok.str, tok.count);
+				AR_printf(L"%ls : row == %d : col == %d : count == %d\r\n", s, tok.line, tok.col, tok.count);
+				AR_DEL(s);
+				
+				if(tok.value == 0)
+				{
+						is_ok = true;
+						break;
+				}
+		}
+
+		if(!is_ok)
+		{
+				AR_printf(L"%ls\r\n", L"failed\r\n");
+		}else
+		{
+				AR_printf(L"%ls\r\n", L"success\r\n");
+		}
+
+
+		Lex_DestroyMatch(match);
+		Lex_Destroy(lex);
+
+}
+
+
 
 void lex_test()
 {
@@ -1085,7 +1145,9 @@ void lex_test()
 		
 		//lex_test20();
 
-		lex_line_test6();
+		//lex_line_test6();
+
+		lex_quote_test7();
 }
 
 AR_NAMESPACE_END

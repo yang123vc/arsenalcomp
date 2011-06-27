@@ -1031,23 +1031,70 @@ t_uint64 ByteOrder::FlipBytes(t_uint64 val)
 
 
 
+
+
 void byte_filp_test()
 {
-		uint_16_t		val16 = 0x1234;
+		int_16_t		val16 = -0x1234;
 
-		uint_32_t		val32 = 0x12345678;
+		int_32_t		val32 = -0x12345678;
 		
-		uint_64_t		val64 = 0xAA12345678ABCDEF;
+		int_64_t		val64 = -0xAA12345678ABCDEF;
+
+
+		AR_printf(L"%d\r\n", val16);
+		AR_printf(L"%d\r\n", val32);
+		AR_printf(L"%I64d\r\n", val64);
 
 		
-		AR_printf(L"0x%X\r\n", AR_BYTEFLIP_16(val16));
-		AR_printf(L"0x%X\r\n", AR_BYTEFLIP_32(val32));
-		AR_printf(L"0x%I64X\r\n", AR_BYTEFLIP_64(val64));
+		AR_printf(L"%d\r\n", AR_BYTEFLIP_16(val16));
+		AR_printf(L"%d\r\n", AR_BYTEFLIP_32(val32));
+		AR_printf(L"%I64d\r\n", AR_BYTEFLIP_64(val64));
+
+		AR_printf(L"%d\r\n", AR_BYTEFLIP_16(AR_BYTEFLIP_16(val16)));
+		AR_printf(L"%d\r\n", AR_BYTEFLIP_32(AR_BYTEFLIP_32(val32)));
+		AR_printf(L"%I64d\r\n", AR_BYTEFLIP_64(AR_BYTEFLIP_64(val64)));
+
+		printf("------------------------------\r\n");
+
+		uint_16_t		uval16 = 0x1234;
+
+		uint_32_t		uval32 = 0x12345678;
+		
+		uint_64_t		uval64 = 0xAA12345678ABCDEF;
 
 
+		AR_printf(L"0x%X\r\n", uval16);
+		AR_printf(L"0x%X\r\n", uval32);
+		AR_printf(L"0x%I64X\r\n", uval64);
+		printf("------------------------------\r\n");
+		
+		AR_printf(L"0x%X\r\n", AR_BYTEFLIP_U16(uval16));
+		AR_printf(L"0x%X\r\n", AR_BYTEFLIP_U32(uval32));
+		AR_printf(L"0x%I64X\r\n", AR_BYTEFLIP_U64(uval64));
+		printf("------------------------------\r\n");
+
+		AR_printf(L"0x%X\r\n", AR_BYTEFLIP_U16(AR_BYTEFLIP_U16(uval16)));
+		AR_printf(L"0x%X\r\n", AR_BYTEFLIP_U32(AR_BYTEFLIP_U32(uval32)));
+		AR_printf(L"0x%I64X\r\n", AR_BYTEFLIP_U64(AR_BYTEFLIP_U64(uval64)));
+		printf("------------------------------\r\n");
+
+
+		
+
+
+		
+		//AR_printf(L"0x%X\r\n", AR_BYTEFLIP_32(val32));
+		//AR_printf(L"0x%I64X\r\n", AR_BYTEFLIP_64(val64));
+
+
+
+/*
 		AR_printf(L"0x%X\r\n", AR_LTON_16(val16));
 		AR_printf(L"0x%X\r\n", AR_LTON_32(val32));
 		AR_printf(L"0x%I64X\r\n", AR_LTON_64(val64));
+*/
+
 }
 
 
@@ -1375,8 +1422,8 @@ void com_test()
 		//str_test9();
 
 		//com_test3();
-		com_conv();
-		com_conv2();
+		//com_conv();
+		//com_conv2();
 		//com_hash_test();
 
 		//com_vscwprintf_test();
@@ -1411,7 +1458,7 @@ void com_test()
 
 		//test_align3();
 
-		//byte_filp_test();
+		byte_filp_test();
 
 		//float_test();
 
