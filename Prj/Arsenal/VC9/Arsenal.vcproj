@@ -1278,6 +1278,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\Arsenal\Common\byteorder.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\Arsenal\Common\common.c"
 				>
 			</File>
@@ -1421,6 +1425,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\Arsenal\Lex\match.c"
+				>
+			</File>
+			<File
+				RelativePath=".\resource.h"
 				>
 			</File>
 			<File

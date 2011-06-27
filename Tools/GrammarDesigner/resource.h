@@ -45,6 +45,8 @@
 #define IDI_OCT                         322
 #define IDI_OCTOPUS                     322
 #define IDD_DIALOG_STR_CODE_CONV        323
+#define IDR_MENU1                       324
+#define IDR_MENU_STRCONV                324
 #define IDC_EDIT1                       1001
 #define IDC_EDIT_LINE                   1001
 #define IDC_EDIT_STRING                 1001
@@ -57,7 +59,6 @@
 #define IDC_APP_COPYRIGHT               1008
 #define IDC_APP_NAME                    1009
 #define IDC_APP_HOMEPAGE                1010
-#define IDC_APP_VERSION2                1011
 #define IDC_APP_GMR_DESIGNER_VERSION    1011
 #define ID_EDIT_UNDO32771               32771
 #define ID_EDIT_SELECTALL               32772
@@ -172,9 +173,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        324
+#define _APS_NEXT_RESOURCE_VALUE        325
 #define _APS_NEXT_COMMAND_VALUE         32900
-#define _APS_NEXT_CONTROL_VALUE         1011
+#define _APS_NEXT_CONTROL_VALUE         1013
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

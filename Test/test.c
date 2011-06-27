@@ -81,13 +81,15 @@ extern void tokenizer_test();
 
 
 
+
+
 void AR_Test()
 {
 #if defined(__LIB)
-		//com_test();
+		com_test();
 		//trie_tree_test();
 		//expr_test();
-		lex_test();
+		//lex_test();
 		//lex_test2();
 		//lex_test3();
 		//lex_test4();
@@ -151,6 +153,8 @@ void AR_Test()
 		//Tengu_Test();
 
 		//mem_test();
+		
+		//tokenizer_test();
 
 		getchar();
 #else

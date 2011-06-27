@@ -34,8 +34,8 @@ typedef enum
 typedef struct __action_record_tag
 {
 		size_t							type			:	2		;
-		size_t							rule_num		:	14		;	
-		size_t							prec			:	8		;	
+		size_t							rule_num		:	13		;	
+		size_t							prec			:	9		;	
 		size_t							delim			:	8  		;	
 
 		size_t							shift_to		:	24		;

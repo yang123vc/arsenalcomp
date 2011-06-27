@@ -1418,7 +1418,7 @@ const wchar_t* AR_wcsstr_kmp_s(const wchar_t *beg, const wchar_t *end, const wch
 		AR_ASSERT(beg != NULL && p != NULL && end != NULL);
 		n = end - beg;
 		m = AR_wcslen(p);
-		if(n == 0 || m == 0)return NULL;
+		if(n == 0 || m == 0 || m > n)return NULL;
 
 		next = AR_NEWARR0(size_t, m);
 		

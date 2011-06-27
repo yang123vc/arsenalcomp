@@ -8,9 +8,9 @@
 
 %token	%skip 		:	"{delim}+|{comment}+|{comment_line}+",1;
 
-%token	NUM		: 	"{number}"	;
+%token	NUM			: 	"{number}"	;
 %token     "+"		:	'"+"';
-%token	"-"		:	'"-"';
+%token	"-"			:	'"-"';
 %token 	"*"		:	'"*"';
 %token 	"/"		:	'"/"';
 %token	"("		:	'"("';
@@ -18,7 +18,8 @@
 %token	"%"		:	'"%"';
 
 
-
+%token	"TEST_TOKEN"		:	'"\b\f\n\r\t\v\a\\\x3\33\""'
+				;
 
 /**********************LR***************************/
 

@@ -113,6 +113,19 @@ BEGIN
     END
 END
 
+IDR_MENU_STRCONV MENU 
+BEGIN
+    POPUP "Popup"
+    BEGIN
+        MENUITEM "Cut",                         ID_EDIT_CUT
+        MENUITEM "Copy",                        ID_EDIT_COPY
+        MENUITEM "Clear",                       ID_EDIT_CLEAR
+        MENUITEM "Paste",                       ID_EDIT_PASTE
+        MENUITEM "Font",                        ID_INPUT_FONT
+        MENUITEM "&Undo",                       ID_EDIT_UNDO
+    END
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -136,12 +149,12 @@ CAPTION "String Converter"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,306,234,50,14
-    EDITTEXT        IDC_EDIT_STRING,7,23,354,84,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_WANTRETURN | WS_VSCROLL | WS_HSCROLL
-    EDITTEXT        IDC_EDIT_CODE,7,143,354,84,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_WANTRETURN | WS_VSCROLL | WS_HSCROLL
     PUSHBUTTON      "To Code",IDC_BUTTON_TO_CODE,76,118,54,18
     PUSHBUTTON      "To String",IDC_BUTTON_TO_STRING,232,118,54,18
     LTEXT           "String:",IDC_STATIC,12,6,42,12
     LTEXT           "Code:",IDC_STATIC,12,120,42,12
+    CONTROL         "",IDC_EDIT_STRING,"RichEdit20W",ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,7,19,354,92
+    CONTROL         "",IDC_EDIT_CODE,"RichEdit20W",ES_MULTILINE | ES_AUTOHSCROLL | WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,7,138,354,92
 END
 
 
@@ -527,8 +540,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,1,3,401
- PRODUCTVERSION 0,1,3,401
+ FILEVERSION 0,1,3,402
+ PRODUCTVERSION 0,1,3,402
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -545,12 +558,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "None"
             VALUE "FileDescription", "Grammar Designer"
-            VALUE "FileVersion", "0, 1, 3, 401"
+            VALUE "FileVersion", "0, 1, 3, 402"
             VALUE "InternalName", "GrammarDesigner.exe"
             VALUE "LegalCopyright", "Solidus.  All rights reserved."
             VALUE "OriginalFilename", "GrammarDesigner.exe"
             VALUE "ProductName", "Grammar Designer"
-            VALUE "ProductVersion", "0, 1, 3, 401"
+            VALUE "ProductVersion", "0, 1, 3, 402"
         END
     END
     BLOCK "VarFileInfo"

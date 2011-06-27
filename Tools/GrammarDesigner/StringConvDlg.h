@@ -4,7 +4,7 @@
 
 // CStringConvDlg dialog
 
-class CStringEdit : public CEdit
+class CStringEdit : public CRichEditCtrl  //CEdit
 {
 private:
 		HACCEL	m_acctbl;
@@ -21,6 +21,7 @@ public:
 		afx_msg void OnEditPaste();
 		afx_msg void OnEditClear();
 		afx_msg void OnEditUndo();
+		afx_msg void OnContextMenu(CWnd* /*pWnd*/, CPoint /*point*/);
 };
 
 
