@@ -180,10 +180,17 @@ uint_64_t		AR_BYTEFLIP_U64(uint_64_t val);
 		#define AR_LTON_16(_n)			(_n)
 		#define AR_LTON_32(_n)			(_n)
 		#define AR_LTON_64(_n)			(_n)
+		#define AR_LTON_U16(_n)			(_n)
+		#define AR_LTON_U32(_n)			(_n)
+		#define AR_LTON_U64(_n)			(_n)
 
 		#define AR_NTOL_16(_n)			(_n)
 		#define AR_NTOL_32(_n)			(_n)
 		#define AR_NTOL_64(_n)			(_n)
+		#define AR_NTOL_U16(_n)			(_n)
+		#define AR_NTOL_U32(_n)			(_n)
+		#define AR_NTOL_U64(_n)			(_n)
+
 
 #endif
 

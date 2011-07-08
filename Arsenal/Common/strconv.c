@@ -282,7 +282,7 @@ size_t					AR_str_to_wcs(arCodePage_t cp, const char *acp, size_t n, wchar_t *ou
 				return 0;
 		}
 
-		if(MultiByteToWideChar(CP_ACP, 0, acp, (int)n, out, (int)out_len) == 0)
+		if(MultiByteToWideChar(win_cp, 0, acp, (int)n, out, (int)out_len) == 0)
 		{
 				return 0;
 		}else
@@ -310,7 +310,7 @@ size_t					AR_wcs_to_str(arCodePage_t cp, const wchar_t *input, size_t n, char *
 				return 0;
 		}
 
-		if(WideCharToMultiByte(CP_ACP, 0, input, (int)n, out, (int)out_len, NULL, NULL) == 0)
+		if(WideCharToMultiByte(win_cp, 0, input, (int)n, out, (int)out_len, NULL, NULL) == 0)
 		{
 				return 0;
 		}else
@@ -341,7 +341,7 @@ char*					AR_wcs_convto_str(arCodePage_t cp, const wchar_t *input, size_t in_n)
 
 				ret = AR_NEWARR(char, len + 1);
 
-				len = WideCharToMultiByte(CP_ACP, 0, input, n, ret, len, NULL, NULL);
+				len = WideCharToMultiByte(win_cp, 0, input, n, ret, len, NULL, NULL);
 				if(len == 0)
 				{
 						AR_DEL(ret);
@@ -374,7 +374,7 @@ wchar_t*				AR_str_convto_wcs(arCodePage_t cp, const char *input, size_t in_n)
 
 				ret = AR_NEWARR(wchar_t, len + 1);
 
-				len = MultiByteToWideChar(CP_ACP, 0, input, (int)in_n, ret, len);
+				len = MultiByteToWideChar(win_cp, 0, input, (int)in_n, ret, len);
 				if(len == 0)
 				{
 						AR_DEL(ret);
@@ -401,7 +401,7 @@ const char *__get_locale_str_for_iconv(arCodePage_t cp)
 {
 		switch(cp)
 		{
-		default: /*CP_ACP*/
+		default: 
 				return "";
 		case AR_CP_UTF8:
 				return "UTF-8";
