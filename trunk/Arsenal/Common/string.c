@@ -235,6 +235,7 @@ void			AR_AppendCharToString(arString_t *str, wchar_t chr)
 {
 		AR_ReserveString(str, 1);
 		str->str[str->count++] = chr;
+		str->str[str->count] = L'\0';
 }
 
 

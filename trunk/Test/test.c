@@ -77,6 +77,10 @@ extern void	Tengu_Test();
 extern void mem_test();
 
 extern void tokenizer_test();
+
+extern void Ini_Test();
+
+
 #endif
 
 
@@ -86,7 +90,7 @@ extern void tokenizer_test();
 void AR_Test()
 {
 #if defined(__LIB)
-		com_test();
+		//com_test();
 		//trie_tree_test();
 		//expr_test();
 		//lex_test();
@@ -155,6 +159,8 @@ void AR_Test()
 		//mem_test();
 		
 		//tokenizer_test();
+
+		Ini_Test();
 
 		getchar();
 #else

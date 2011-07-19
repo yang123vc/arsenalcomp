@@ -16,6 +16,7 @@
 
 #include "grammar_config.h"
 #include "serializer.h"
+#include "iniobj.h"
 
 AR_NAMESPACE_BEGIN
 
