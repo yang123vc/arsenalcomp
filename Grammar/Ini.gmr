@@ -9,7 +9,7 @@
 */
 
 
-%token	comment_line	:	"\B[ \t\r]*;[^\r\n]*(\r)*\n"	,	3
+%token	comment_line	:	"\B[ \t\r]*(;|#)[^\r\n]*(\r)*\n"	,	3
 					;
 
 
@@ -21,7 +21,7 @@
 
 */
 
-%token	comment_post	:	";[^\r\n]*"				,	1
+%token	comment_post	:	"(;|#)[^\r\n]*"				,	1
 					;
 
 
@@ -43,20 +43,20 @@
 
 
 
-%token	LINE_END		:	"(\r)*\n"					,	2
-					;
-
+%token	LINE_END		:	"(\r|\n|\r*\n|\n\r)+"					,	2
+				;
 
 %token	section		:	"\[.+\]"
 					;
 
-%token	string   		:	"[^ ;\r\n][^;\r\n]*"
-					;
+%token	string   		:	"[^ ;#\r\n][^#;\r\n]*"
+				;
 
 
 
-%token	combine_str	:	"([^ ;\r\n][^;\r\n]*\\[ \t\r]*)(?=((\r)*\n))" , 2
-					;
+%token	combine_str		:	"([^ ;#\r\n][^;#\r\n]*\\[ \t]*)(?=(\r|\n|\r*\n|\n\r))" , 2
+				;
+
 
 
 
@@ -88,18 +88,17 @@ comment				:	comment_post
 section_header			:	section 	comment LINE_END
 					;
 
-info					:	string comment LINE_END
-					|	combine_string comment LINE_END
+info					:	combine_string comment LINE_END
+					|	string comment LINE_END
 					|	error comment LINE_END
 					;
 
 combine_string			:	combine_list	string
 					;
 
-combine_list				:	combine_str comment LINE_END combine_list
-					|	combine_str comment LINE_END
+combine_list				:	combine_list combine_str LINE_END
+					|	combine_str LINE_END
 					;
-
 
 
 

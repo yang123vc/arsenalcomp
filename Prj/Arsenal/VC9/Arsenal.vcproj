@@ -1472,6 +1472,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\Arsenal\Tools\iniobj.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Tools\iniobj.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\Arsenal\Tools\serializer.c"
 				>
 			</File>
