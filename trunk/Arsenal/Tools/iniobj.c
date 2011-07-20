@@ -1,3 +1,16 @@
+/*
+ * The Arsenal Library
+ * Copyright (c) 2009 by Solidus
+ * 
+ * Permission to use, copy, modify, distribute and sell this software
+ * and its documentation for any purpose is hereby granted without fee,
+ * provided that the above copyright notice appear in all copies and
+ * that both that copyright notice and this permission notice appear
+ * in supporting documentation.It is provided "as is" without express 
+ * or implied warranty.
+ *
+ */
+
 #include "iniobj.h"
 
 
@@ -518,6 +531,8 @@ static bool_t	__ini_remove_kvpair_from_section(iniSection_t *sec, const wchar_t 
 		iniKeyVal_t *kv;
 		size_t i;
 		AR_ASSERT(sec != NULL && key != NULL);
+		
+		kv = NULL;
 
 		for(i = 0; i < sec->cnt; ++i)
 		{
@@ -528,7 +543,7 @@ static bool_t	__ini_remove_kvpair_from_section(iniSection_t *sec, const wchar_t 
 				}
 		}
 
-		if(i == sec->cnt)
+		if(i >= sec->cnt)
 		{
 				return false;
 		}
@@ -696,10 +711,46 @@ bool_t			Ini_RemoveSection(iniObject_t *obj, const wchar_t *sect)
 		}
 		
 		__ini_destroy_section(section);
+		obj->cnt--;
 		return true;
 }
 
 
+bool_t			Ini_RemoveKey(iniObject_t *obj, const wchar_t *sect, const wchar_t *key)
+{
+		int_t idx;
+		iniSection_t	*section;
+		AR_ASSERT(obj != NULL && sect != NULL && key != NULL);
+		
+		idx = __find_section(obj, sect);
+		if(idx == -1)
+		{
+				return false;
+		}
+
+		section = obj->sect[idx];
+		
+		return __ini_remove_kvpair_from_section(section, key);
+
+}
+
+
+bool_t			Ini_SetComment(iniObject_t *obj, const wchar_t *sect, const wchar_t *key, const wchar_t *comment)
+{
+		iniKeyVal_t		*kv;
+		AR_ASSERT(obj != NULL && sect != NULL);
+		
+		kv = __find_keyval((iniObject_t*)obj, sect, key);
+		
+		if(kv == NULL)
+		{
+				return false;
+		}
+
+		__ini_reset_kvpair_comment(kv, comment);
+		
+		return true;
+}
 
 const wchar_t*	Ini_GetComment(const iniObject_t *obj, const wchar_t *sect, const wchar_t *key)
 {
@@ -745,10 +796,63 @@ RECHECK_POINT:
 		{
 				__ini_insert_kvpair_to_section(obj->sect[idx], key, val, comment);
 		}
-
 }
 
 
+static bool_t	__handle_line(iniObject_t *obj, const wchar_t *line, int_t *last_sect_idx)
+{
+		bool_t	is_ok;
+		arIniLineType_t ret;
+		wchar_t key[AR_MAX_LINE_LENGTH], val[AR_MAX_LINE_LENGTH], comment[AR_MAX_LINE_LENGTH];
+		AR_ASSERT(obj != NULL && line != NULL);
+
+		is_ok = true;
+		ret = __parse_line(line, key,val, comment);
+
+		switch(ret)
+		{
+		case INI_INVALID:
+				{
+						is_ok = false;
+				}
+				break;
+		case INI_EMPTY:
+				{
+
+				}
+				break;
+		case INI_SECT:
+				{
+						Ini_InsertSection(obj, key, AR_wcslen(comment) > 0 ? comment : NULL);
+						*last_sect_idx = (int_t)obj->cnt - 1;
+				}
+				break;
+		case INI_KEY_VAL:
+				{
+						if(*last_sect_idx == -1)
+						{
+								Ini_InsertSection(obj, INI_EMPTY_SECTION_NAME, NULL);
+								*last_sect_idx = (int_t)obj->cnt - 1;
+						}
+						__ini_insert_kvpair_to_section(obj->sect[*last_sect_idx], key, AR_wcslen(val) > 0 ? val : NULL, AR_wcslen(comment) > 0 ? comment : NULL);
+				}
+				break;
+		case INI_COMMENT:
+				{
+						if(*last_sect_idx == -1)
+						{
+								Ini_InsertSection(obj, INI_EMPTY_SECTION_NAME, NULL);
+								*last_sect_idx = (int_t)obj->cnt - 1;
+						}
+						__ini_insert_comment_to_section(obj->sect[*last_sect_idx], comment);
+				}
+				break;
+		default:
+				break;
+		}
+		
+		return is_ok;
+}
 
 bool_t			Ini_LoadObjectFromString(iniObject_t *obj, const wchar_t *ini_data)
 {
@@ -756,6 +860,7 @@ bool_t			Ini_LoadObjectFromString(iniObject_t *obj, const wchar_t *ini_data)
 		arString_t		*line;
 		bool_t is_ok;
 		int_t	last_sect_idx;
+		
 		AR_ASSERT(obj != NULL && ini_data != NULL);
 		
 		Ini_ClearObject(obj);
@@ -771,44 +876,21 @@ bool_t			Ini_LoadObjectFromString(iniObject_t *obj, const wchar_t *ini_data)
 						AR_AppendCharToString(line, *s);
 				}else
 				{
-						arIniLineType_t ret;
-						wchar_t key[AR_MAX_LINE_LENGTH], val[AR_MAX_LINE_LENGTH], comment[AR_MAX_LINE_LENGTH];
-
-						ret = __parse_line(AR_GetStrString(line), key,val, comment);
-						
-						switch(ret)
+						if(!__handle_line(obj, AR_GetStrString(line), &last_sect_idx))
 						{
-						case INI_INVALID:
 								is_ok = false;
-								break;
-						case INI_EMPTY:
-								break;
-						case INI_SECT:
-								Ini_InsertSection(obj, key, AR_wcslen(comment) > 0 ? comment : NULL);
-								last_sect_idx = (int_t)obj->cnt - 1;
-								break;
-						case INI_KEY_VAL:
-								if(last_sect_idx == -1)
-								{
-										Ini_InsertSection(obj, INI_EMPTY_SECTION_NAME, NULL);
-										last_sect_idx = (int_t)obj->cnt - 1;
-								}
-								__ini_insert_kvpair_to_section(obj->sect[last_sect_idx], key, AR_wcslen(val) > 0 ? val : NULL, AR_wcslen(comment) > 0 ? comment : NULL);
-								break;
-						case INI_COMMENT:
-								if(last_sect_idx == -1)
-								{
-										Ini_InsertSection(obj, INI_EMPTY_SECTION_NAME, NULL);
-										last_sect_idx = (int_t)obj->cnt - 1;
-								}
-								__ini_insert_comment_to_section(obj->sect[last_sect_idx], comment);
-								break;
-						default:
-								break;
 						}
 						AR_ClearString(line);
 				}
 				++s;
+		}
+
+		if(is_ok && AR_GetLengthString(line) > 0)
+		{
+				if(!__handle_line(obj, AR_GetStrString(line),  &last_sect_idx))
+				{
+						is_ok = false;
+				}
 		}
 		
 		AR_DestroyString(line);
@@ -849,7 +931,6 @@ void			Ini_SaveObjectToString(const iniObject_t *obj, arString_t *out)
 								AR_AppendFormatString(out, L"%ls\r\n", comment);
 						}else
 						{
-
 								if(AR_wcslen(val) == 0)
 								{
 										AR_AppendFormatString(out, L"%ls %ls\r\n", key, comment);
@@ -859,23 +940,107 @@ void			Ini_SaveObjectToString(const iniObject_t *obj, arString_t *out)
 								}
 						}
 				}
-
 				AR_AppendString(out, L"\r\n");
 		}
 
 }
 
 
-#if(0)
+int_64_t		Ini_GetInt(const iniObject_t *obj, const wchar_t *sect, const wchar_t *key, int_64_t default_data)
+{
+		const wchar_t *s;
+		int_64_t num;
+		AR_ASSERT(obj != NULL && sect != NULL && key != NULL);
 
-void			Ini_SetString(const iniObject_t *obj, const wchar_t *sect, const wchar_t *key, const wchar_t *val, const wchar_t *comment);
-void			Ini_SetInt(const iniObject_t *obj, const wchar_t *sect, const wchar_t *key, int_64_t val, const wchar_t *comment);
-void			Ini_SetUInt(const iniObject_t *obj, const wchar_t *sect, const wchar_t *key, uint_64_t val, const wchar_t *comment);
-void			Ini_SetUFloat(const iniObject_t *obj, const wchar_t *sect, const wchar_t *key, double val, const wchar_t *comment);
-#endif
+		s = Ini_GetString(obj, sect, key);
+
+		if(s == NULL)
+		{
+				return default_data;
+		}
+
+		if(AR_wtoi64(s, &num, 10) != NULL)
+		{
+				return num;
+		}else
+		{
+				return default_data;
+		}
+}
+
+uint_64_t		Ini_GetUInt(const iniObject_t *obj, const wchar_t *sect, const wchar_t *key, uint_64_t default_data)
+{
+		const wchar_t *s;
+		uint_64_t num;
+		AR_ASSERT(obj != NULL && sect != NULL && key != NULL);
+
+		s = Ini_GetString(obj, sect, key);
+
+		if(s == NULL)
+		{
+				return default_data;
+		}
+
+		if(AR_wtou64(s, &num, 10) != NULL)
+		{
+				return num;
+		}else
+		{
+				return default_data;
+		}
+}
+
+double			Ini_GetFloat(const iniObject_t *obj, const wchar_t *sect, const wchar_t *key, double default_data)
+{
+		const wchar_t *s;
+		double num;
+		AR_ASSERT(obj != NULL && sect != NULL && key != NULL);
+
+		s = Ini_GetString(obj, sect, key);
+
+		if(s == NULL)
+		{
+				return default_data;
+		}
+
+		if(AR_wtod(s, &num) != NULL)
+		{
+				return num;
+		}else
+		{
+				return default_data;
+		}
+}
 
 
+void			Ini_SetInt(iniObject_t *obj, const wchar_t *sect, const wchar_t *key, int_64_t val, const wchar_t *comment)
+{
+		wchar_t buf[128];
+		AR_ASSERT(obj != NULL && sect != NULL && key != NULL);
 
+		AR_i64tow_buf(buf, 128, val, 10);
+		
+		Ini_SetString(obj, sect, key, buf, comment);
+}
+
+void			Ini_SetUInt(iniObject_t *obj, const wchar_t *sect, const wchar_t *key, uint_64_t val, const wchar_t *comment)
+{
+		wchar_t buf[128];
+		AR_ASSERT(obj != NULL && sect != NULL && key != NULL);
+
+		AR_u64tow_buf(buf, 128, val, 10);
+		
+		Ini_SetString(obj, sect, key, buf, comment);
+}
+
+
+void			Ini_SetFloat(iniObject_t *obj, const wchar_t *sect, const wchar_t *key, double val, const wchar_t *comment)
+{
+		wchar_t buf[128];
+		AR_ASSERT(obj != NULL && sect != NULL && key != NULL);
+		AR_swprintf(buf, 128, L"%g", val);
+		Ini_SetString(obj, sect, key, buf, comment);
+}
 
 
 
