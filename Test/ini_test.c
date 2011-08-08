@@ -30,7 +30,7 @@ void Ini_Test()
 		{
 				AR_abort();
 		}
-
+		
 
 		
 		printf("Ini_GetInt == %d\r\n", Ini_GetInt(obj,  INI_EMPTY_SECTION_NAME, L"a", 0));
@@ -50,12 +50,19 @@ void Ini_Test()
 		Ini_RemoveSection(obj, L"OPTIMIZATION1");
 		
 		Ini_InsertSection(obj, L"Test", L";test");
-		Ini_SetString(obj, L"Test", L"a", L"3", L"comment1");
-		Ini_SetString(obj, L"Test", L"b", NULL, L"comment2");
+		Ini_SetString(obj, L"Test", L"	a		", L"3", L"comment1");
+		Ini_SetString(obj, L"Test", L"	b		", NULL, L"comment2");
 		
 		Ini_SetInt(obj, L"Test", L"c", -33, NULL);
 		Ini_SetUInt(obj, L"Test", L"d", 44, L"comment4");
 		Ini_SetFloat(obj, L"Test", L"e", 0.123456789, L"comment5");
+
+
+		/*bad section name*/
+		Ini_InsertSection(obj, L"[ ]", L"");
+		Ini_InsertSection(obj, L"   ", L"");
+
+		Ini_InsertSection(obj, L"		p		", L"");
 
 		Ini_SaveObjectToString(obj, str);
 

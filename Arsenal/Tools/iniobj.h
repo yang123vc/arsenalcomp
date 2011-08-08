@@ -37,7 +37,7 @@ bool_t			Ini_InsertSection(iniObject_t *obj, const wchar_t *sect, const wchar_t 
 bool_t			Ini_RemoveSection(iniObject_t *obj, const wchar_t *sect);
 
 const wchar_t*	Ini_GetString(const iniObject_t *obj, const wchar_t *sect, const wchar_t *key);
-void			Ini_SetString(iniObject_t *obj, const wchar_t *sect, const wchar_t *key, const wchar_t *val, const wchar_t *comment);
+bool_t			Ini_SetString(iniObject_t *obj, const wchar_t *sect, const wchar_t *key, const wchar_t *val, const wchar_t *comment);
 
 bool_t			Ini_RemoveKey(iniObject_t *obj, const wchar_t *sect, const wchar_t *key);
 bool_t			Ini_SetComment(iniObject_t *obj, const wchar_t *sect, const wchar_t *key, const wchar_t *comment);
