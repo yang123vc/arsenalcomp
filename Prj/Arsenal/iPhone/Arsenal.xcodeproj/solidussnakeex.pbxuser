@@ -1,0 +1,152 @@
+// !$*UTF8*$!
+{
+	0867D690FE84028FC02AAC07 /* Project object */ = {
+		activeBuildConfigurationName = LibRelease;
+		activeSDKPreference = iphoneos4.1;
+		activeTarget = D2AAC07D0554694100DB518D /* Arsenal */;
+		addToTargets = (
+			D2AAC07D0554694100DB518D /* Arsenal */,
+		);
+		codeSenseManager = BE08CD55127D29BC00C91273 /* Code sense */;
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = 1;
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_ObjectSize_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					577,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 313422624;
+			PBXWorkspaceStateSaveDate = 313422624;
+		};
+		perUserProjectItems = {
+			BE9ECCA212AE736F00A1F23A /* XCBuildMessageTextBookmark */ = BE9ECCA212AE736F00A1F23A /* XCBuildMessageTextBookmark */;
+			BE9ECCA312AE736F00A1F23A /* PBXTextBookmark */ = BE9ECCA312AE736F00A1F23A /* PBXTextBookmark */;
+		};
+		sourceControlManager = BE08CD54127D29BC00C91273 /* Source Control */;
+		userBuildSettings = {
+			OBJROOT = ../../../Temp;
+			SYMROOT = ../../../Binary;
+		};
+	};
+	BE08CD54127D29BC00C91273 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+				"" = "";
+			};
+		};
+	};
+	BE08CD55127D29BC00C91273 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	BE9ECCA212AE736F00A1F23A /* XCBuildMessageTextBookmark */ = {
+		isa = PBXTextBookmark;
+		comments = "Passing argument 4 of '__builtin___vsprintf_chk' makes pointer from integer without a cast";
+		fRef = D09BADFE1279E9850046DE22 /* crtstr.c */;
+		fallbackIsa = XCBuildMessageTextBookmark;
+		rLen = 1;
+		rLoc = 598;
+		rType = 1;
+	};
+	BE9ECCA312AE736F00A1F23A /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = D09BADFE1279E9850046DE22 /* crtstr.c */;
+		name = "crtstr.c: 599";
+		rLen = 0;
+		rLoc = 11283;
+		rType = 0;
+		vrLen = 0;
+		vrLoc = 0;
+	};
+	D09BADF71279E9850046DE22 /* Arsenal.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {755, 507}}";
+			sepNavSelRange = "{744, 0}";
+			sepNavVisRange = "{0, 671}";
+		};
+	};
+	D09BADFE1279E9850046DE22 /* crtstr.c */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {755, 18811}}";
+			sepNavSelRange = "{11283, 0}";
+			sepNavVisRange = "{0, 0}";
+			sepNavWindowFrame = "{{0, 91}, {1024, 655}}";
+		};
+	};
+	D09BAE021279E9850046DE22 /* strconv.c */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {965, 2951}}";
+			sepNavSelRange = "{704, 0}";
+			sepNavVisRange = "{0, 1130}";
+			sepNavWindowFrame = "{{0, 91}, {1024, 655}}";
+		};
+	};
+	D09BAE0E1279E9850046DE22 /* rgx.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {963, 4199}}";
+			sepNavSelRange = "{3863, 0}";
+			sepNavVisRange = "{3775, 174}";
+			sepNavWindowFrame = "{{0, 91}, {1024, 655}}";
+		};
+	};
+	D09BAE101279E9850046DE22 /* rgx_exec.c */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {963, 11583}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 452}";
+		};
+	};
+	D09BAE111279E9850046DE22 /* rgx_misc.c */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {963, 8229}}";
+			sepNavSelRange = "{6247, 0}";
+			sepNavVisRange = "{6027, 452}";
+			sepNavWindowFrame = "{{0, 91}, {1024, 655}}";
+		};
+	};
+	D09BAE131279E9850046DE22 /* rgx_parser.c */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {963, 12181}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 452}";
+		};
+	};
+	D09BAE211279E9850046DE22 /* report.c */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {963, 12805}}";
+			sepNavSelRange = "{10643, 0}";
+			sepNavVisRange = "{10386, 647}";
+			sepNavWindowFrame = "{{0, 91}, {1024, 655}}";
+		};
+	};
+	D09BAE2E1279E9850046DE22 /* grammar_config.c */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1153, 39663}}";
+			sepNavSelRange = "{11647, 0}";
+			sepNavVisRange = "{11148, 554}";
+			sepNavWindowFrame = "{{0, 91}, {1024, 655}}";
+		};
+	};
+	D2AAC07D0554694100DB518D /* Arsenal */ = {
+		activeExec = 0;
+	};
+}
