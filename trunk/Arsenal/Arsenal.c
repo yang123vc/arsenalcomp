@@ -22,9 +22,9 @@ static bool_t	__g_is_initialized = false;
 
 bool_t	Arsenal_Init(const arInit_t *ctx)
 {
-		bool_t	result;
-		uint_64_t		total_beg, total_end;
 
+        bool_t	result;
+		uint_64_t		total_beg, total_end;
 		/*AR_ASSERT(ctx != NULL);*/
 		AR_ASSERT(!__g_is_initialized);
 		result = true;
@@ -60,6 +60,7 @@ bool_t	Arsenal_Init(const arInit_t *ctx)
 
 		return result;
 }
+
 
 
 
