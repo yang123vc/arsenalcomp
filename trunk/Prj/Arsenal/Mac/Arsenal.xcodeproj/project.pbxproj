@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		BE83B7A51315891E0089007E /* grammar_codegen.c in Sources */ = {isa = PBXBuildFile; fileRef = BE83B7A41315891E0089007E /* grammar_codegen.c */; };
 		BE83B7B6131589440089007E /* grammar_collector.c in Sources */ = {isa = PBXBuildFile; fileRef = BE83B7B5131589440089007E /* grammar_collector.c */; };
+		BE8E767B13EFB87800D2F1C4 /* iniobj.c in Sources */ = {isa = PBXBuildFile; fileRef = BE8E767913EFB87800D2F1C4 /* iniobj.c */; };
+		BE8E767C13EFB87800D2F1C4 /* iniobj.h in Headers */ = {isa = PBXBuildFile; fileRef = BE8E767A13EFB87800D2F1C4 /* iniobj.h */; };
 		BE9ECC2612AE70E800A1F23A /* tgusyntree.h in Headers */ = {isa = PBXBuildFile; fileRef = BE9ECC2512AE70E800A1F23A /* tgusyntree.h */; };
 		BEB41B85130F309B0099DFB3 /* heap.c in Sources */ = {isa = PBXBuildFile; fileRef = BEB41B84130F309B0099DFB3 /* heap.c */; };
 		BEB41B87130F30A30099DFB3 /* textfile.c in Sources */ = {isa = PBXBuildFile; fileRef = BEB41B86130F30A30099DFB3 /* textfile.c */; };
@@ -74,6 +76,8 @@
 /* Begin PBXFileReference section */
 		BE83B7A41315891E0089007E /* grammar_codegen.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = grammar_codegen.c; sourceTree = "<group>"; };
 		BE83B7B5131589440089007E /* grammar_collector.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = grammar_collector.c; sourceTree = "<group>"; };
+		BE8E767913EFB87800D2F1C4 /* iniobj.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = iniobj.c; sourceTree = "<group>"; };
+		BE8E767A13EFB87800D2F1C4 /* iniobj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iniobj.h; sourceTree = "<group>"; };
 		BE9ECC2512AE70E800A1F23A /* tgusyntree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tgusyntree.h; sourceTree = "<group>"; };
 		BEB41B84130F309B0099DFB3 /* heap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = heap.c; sourceTree = "<group>"; };
 		BEB41B86130F30A30099DFB3 /* textfile.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = textfile.c; sourceTree = "<group>"; };
@@ -264,6 +268,8 @@
 		D0A07287127BBB9100F315D2 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				BE8E767913EFB87800D2F1C4 /* iniobj.c */,
+				BE8E767A13EFB87800D2F1C4 /* iniobj.h */,
 				BE83B7B5131589440089007E /* grammar_collector.c */,
 				BE83B7A41315891E0089007E /* grammar_codegen.c */,
 				D0A07289127BBB9100F315D2 /* grammar_config.h */,
@@ -305,6 +311,7 @@
 				D0A072C4127BBB9100F315D2 /* serializer.h in Headers */,
 				D0A072C6127BBB9100F315D2 /* tools.h in Headers */,
 				BE9ECC2612AE70E800A1F23A /* tgusyntree.h in Headers */,
+				BE8E767C13EFB87800D2F1C4 /* iniobj.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -399,6 +406,7 @@
 				BEB41B87130F30A30099DFB3 /* textfile.c in Sources */,
 				BE83B7A51315891E0089007E /* grammar_codegen.c in Sources */,
 				BE83B7B6131589440089007E /* grammar_collector.c in Sources */,
+				BE8E767B13EFB87800D2F1C4 /* iniobj.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
