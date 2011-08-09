@@ -37,9 +37,6 @@ typedef struct __lex_action_tag
 }lexAction_t;
 
 
-
-
-
 typedef struct __lex_rule_set
 {
 		lexAction_t				*action;
