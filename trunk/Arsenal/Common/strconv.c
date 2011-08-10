@@ -414,7 +414,7 @@ const char *__get_locale_str_for_iconv(arCodePage_t cp)
 		}
 }
 
-#if(OS_TYPE ==  OS_IPHONE) || (OS_TYPE == OS_MAC_OS_X)
+#if(OS_TYPE ==  OS_IOS) || (OS_TYPE == OS_MAC_OS_X)
 		#define UNICODE_ENCODING_NAME	"UCS-4LE"
 #else
 		#define UNICODE_ENCODING_NAME	"wchar_t"
