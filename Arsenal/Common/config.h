@@ -225,14 +225,14 @@
         #include <sys/select.h>
         #include <sys/time.h>
 		
-		#if(OS_TYPE == OS_MAC_OS_X || OS_TYPE == OS_IPHONE)
+		#if(OS_TYPE == OS_MAC_OS_X || OS_TYPE == OS_IOS)
 			#include <libkern/OSAtomic.h>
 		#endif
 
 		#define AR_PATH_SP				L"/"
 		#define AR_PATH_SP_CHAR			L'/'
 		
-		#if(OS_TYPE == OS_MAC_OS_X || OS_TYPE == OS_IPHONE)
+		#if(OS_TYPE == OS_MAC_OS_X || OS_TYPE == OS_IOS)
 			#define			AR_LINE_SP				L"\r"
 		#else
 			#define			AR_LINE_SP				L"\n"
@@ -319,7 +319,7 @@
 						#undef	AR_STDCALL
 						#define	AR_STDCALL
 				#endif
-		#elif(OS_TYPE == OS_IPHONE)
+		#elif(OS_TYPE == OS_IOS)
 				#undef	AR_STDCALL
 				#define	AR_STDCALL
 		#endif

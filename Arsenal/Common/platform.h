@@ -34,7 +34,7 @@
 #define OS_QNX           0x000b
 #define OS_VXWORKS       0x000c
 #define OS_CYGWIN        0x000d
-#define OS_IPHONE		 0x000e
+#define OS_IOS			 0x000e
 #define OS_UNKNOWN_UNIX  0x00ff
 #define OS_WINDOWS_NT    0x1001
 #define OS_WINDOWS_CE    0x1011
@@ -63,8 +63,8 @@
 		#define OS_FAMILY_BSD								1
 		#include <TargetConditionals.h>
 
-		#if defined(TARGET_IPHONE) || defined(TARGET_IPHONE_SIMULATOR)
-				#define OS_TYPE										OS_IPHONE
+		#if defined(TARGET_OS_IPHONE) || defined(TARGET_IPHONE_SIMULATOR)
+				#define OS_TYPE										OS_IOS
 		#else
 				#define OS_TYPE										OS_MAC_OS_X
 		#endif
