@@ -110,16 +110,16 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 334634515;
-			PBXWorkspaceStateSaveDate = 334634515;
+			PBXPerProjectTemplateStateSaveDate = 334638838;
+			PBXWorkspaceStateSaveDate = 334638838;
 		};
 		perUserProjectItems = {
-			BE01B82A13F21EA30031FB4C /* PBXTextBookmark */ = BE01B82A13F21EA30031FB4C /* PBXTextBookmark */;
-			BE01B82B13F21EA30031FB4C /* PBXTextBookmark */ = BE01B82B13F21EA30031FB4C /* PBXTextBookmark */;
-			BE01B82C13F21EA30031FB4C /* PBXTextBookmark */ = BE01B82C13F21EA30031FB4C /* PBXTextBookmark */;
-			BE01B82D13F21EA30031FB4C /* PBXTextBookmark */ = BE01B82D13F21EA30031FB4C /* PBXTextBookmark */;
-			BE01B82E13F21EA30031FB4C /* PBXTextBookmark */ = BE01B82E13F21EA30031FB4C /* PBXTextBookmark */;
-			BE01B83013F21EA30031FB4C /* PBXTextBookmark */ = BE01B83013F21EA30031FB4C /* PBXTextBookmark */;
+			BE01B82A13F21EA30031FB4C = BE01B82A13F21EA30031FB4C /* PBXTextBookmark */;
+			BE01B82B13F21EA30031FB4C = BE01B82B13F21EA30031FB4C /* PBXTextBookmark */;
+			BE01B82C13F21EA30031FB4C = BE01B82C13F21EA30031FB4C /* PBXTextBookmark */;
+			BE01B82D13F21EA30031FB4C = BE01B82D13F21EA30031FB4C /* PBXTextBookmark */;
+			BE01B82E13F21EA30031FB4C = BE01B82E13F21EA30031FB4C /* PBXTextBookmark */;
+			BE01B83013F21EA30031FB4C = BE01B83013F21EA30031FB4C /* PBXTextBookmark */;
 		};
 		sourceControlManager = BE4B6962127D27FF00F46F5C /* Source Control */;
 		userBuildSettings = {
@@ -180,11 +180,6 @@
 		name = TargetConditionals.h;
 		path = /Developer/SDKs/MacOSX10.6.sdk/usr/include/TargetConditionals.h;
 		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1332, 3978}}";
-			sepNavSelRange = "{2305, 0}";
-			sepNavVisRange = "{944, 2129}";
-		};
 	};
 	BE01B83013F21EA30031FB4C /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -198,9 +193,15 @@
 	};
 	BE01B83113F21EA30031FB4C /* TargetConditionals.h */ = {
 		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
 		name = TargetConditionals.h;
 		path = /Developer/SDKs/MacOSX10.6.sdk/usr/include/TargetConditionals.h;
 		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1412, 3965}}";
+			sepNavSelRange = "{2305, 0}";
+			sepNavVisRange = "{944, 2320}";
+		};
 	};
 	BE4B6962127D27FF00F46F5C /* Source Control */ = {
 		isa = PBXSourceControlManager;
@@ -215,6 +216,13 @@
 	BE4B6963127D27FF00F46F5C /* Code sense */ = {
 		isa = PBXCodeSenseManager;
 		indexTemplatePath = "";
+	};
+	BE86A01013F13B8B0028846E /* Arsenal.c */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1412, 1053}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 1057}";
+		};
 	};
 	BE86A01313F13B8B0028846E /* algo.c */ = {
 		uiCtxt = {
@@ -256,6 +264,13 @@
 			sepNavIntBoundsRect = "{{0, 0}, {1332, 7579}}";
 			sepNavSelRange = "{0, 0}";
 			sepNavVisRange = "{0, 481}";
+		};
+	};
+	BE86A05413F13B8B0028846E /* serializer.c */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1412, 17576}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 1246}";
 		};
 	};
 	BE86A0A113F13DBC0028846E /* ArsenalDylib */ = {

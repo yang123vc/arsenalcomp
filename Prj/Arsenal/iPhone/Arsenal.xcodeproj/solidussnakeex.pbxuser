@@ -102,10 +102,17 @@
 			sepNavVisRange = "{457, 930}";
 		};
 	};
+	BE01B85813F220120031FB4C /* strconv.c */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1332, 8216}}";
+			sepNavSelRange = "{8534, 0}";
+			sepNavVisRange = "{8058, 627}";
+		};
+	};
 	BE01B85C13F220120031FB4C /* thread.c */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {1332, 464}}";
-			sepNavSelRange = "{623, 0}";
+			sepNavSelRange = "{529, 0}";
 			sepNavVisRange = "{0, 769}";
 		};
 	};
