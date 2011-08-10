@@ -627,7 +627,7 @@ int_t			AR_AtomicDec(volatile int_t *dest);
 
 #if defined(OS_FAMILY_UNIX)
 	
-	#if(OS_TYPE == OS_IPHONE || OS_TYPE == OS_MAC_OS_X)
+	#if(OS_TYPE == OS_IOS || OS_TYPE == OS_MAC_OS_X)
 		typedef			int_t						arSpinLock_t;	
 #else
 		typedef			pthread_spinlock_t	        arSpinLock_t;
