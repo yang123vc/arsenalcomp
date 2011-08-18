@@ -15,10 +15,15 @@
 
 #include "Arsenal.h"
 
+
+
 AR_NAMESPACE_BEGIN
 
 
 static bool_t	__g_is_initialized = false;
+
+
+
 
 bool_t	Arsenal_Init(const arInit_t *ctx)
 {

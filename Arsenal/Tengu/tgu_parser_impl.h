@@ -1710,38 +1710,7 @@ static psrNode_t* AR_STDCALL on_declarator(psrNode_t **nodes, size_t count, cons
 /*table_constructor	:	{ error } */
 static psrNode_t* AR_STDCALL on_table_constructor(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
-	 { 
-						tguParser_t 	*parser = (tguParser_t*)ctx;
-						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
-						tguSynNode_t	*ret;
-						tguExpr_t	*expr;
-						AR_ASSERT(parser != NULL && ns != NULL);
-						AR_ASSERT(count == 2 || count == 3);
-						
-						expr = TGU_CreateExpr(TGU_ET_TABLE_INIT);
-
-						if(count == 2)
-						{
-							/*创建了个空的表结构*/
-							expr->table_init.expr_list = NULL;
-						}else
-						{
-							if(ns[1] == NULL)
-							{
-								parser->has_error = true;
-								expr->table_init.expr_list = NULL;
-							}else
-							{
-								expr->table_init.expr_list = ns[1]->expr;
-								ns[1]->expr = NULL;
-								AR_ASSERT(expr->table_init.expr_list != NULL);
-							}
-						}
-						
-						ret = __create_synnode(TGU_NODE_EXPR_T, (void*)expr);
-						return ret;
-
-					 }
+		return NULL;
 }
 
 
