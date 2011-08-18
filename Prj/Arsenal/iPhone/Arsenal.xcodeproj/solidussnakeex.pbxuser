@@ -65,18 +65,12 @@
 			BE0CC70113FDB50A00658C0F /* PBXTextBookmark */ = BE0CC70113FDB50A00658C0F /* PBXTextBookmark */;
 			BE0CC70213FDB50A00658C0F /* PBXTextBookmark */ = BE0CC70213FDB50A00658C0F /* PBXTextBookmark */;
 			BE0CC70313FDB50A00658C0F /* PBXTextBookmark */ = BE0CC70313FDB50A00658C0F /* PBXTextBookmark */;
-			BE0CC70413FDB50A00658C0F /* PBXTextBookmark */ = BE0CC70413FDB50A00658C0F /* PBXTextBookmark */;
-			BE255AC513FDB10700879039 = BE255AC513FDB10700879039 /* PBXTextBookmark */;
-			BE255AC613FDB10700879039 = BE255AC613FDB10700879039 /* PBXTextBookmark */;
-			BE255AC713FDB10700879039 = BE255AC713FDB10700879039 /* PBXTextBookmark */;
-			BE255AC813FDB10700879039 = BE255AC813FDB10700879039 /* PBXTextBookmark */;
-			BE255AC913FDB10700879039 = BE255AC913FDB10700879039 /* PBXTextBookmark */;
-			BE255ACA13FDB10700879039 = BE255ACA13FDB10700879039 /* PBXTextBookmark */;
-			BE255ACB13FDB10700879039 = BE255ACB13FDB10700879039 /* PBXTextBookmark */;
-			BE255ACC13FDB10700879039 = BE255ACC13FDB10700879039 /* PBXTextBookmark */;
-			BE255ACD13FDB10700879039 = BE255ACD13FDB10700879039 /* PBXTextBookmark */;
-			BE255ACE13FDB10700879039 = BE255ACE13FDB10700879039 /* PBXTextBookmark */;
-			BE255B0713FDB3F000879039 = BE255B0713FDB3F000879039 /* PBXTextBookmark */;
+			BE0CC70813FDB56700658C0F /* PBXTextBookmark */ = BE0CC70813FDB56700658C0F /* PBXTextBookmark */;
+			BE255AC513FDB10700879039 /* PBXTextBookmark */ = BE255AC513FDB10700879039 /* PBXTextBookmark */;
+			BE255AC713FDB10700879039 /* PBXTextBookmark */ = BE255AC713FDB10700879039 /* PBXTextBookmark */;
+			BE255AC813FDB10700879039 /* PBXTextBookmark */ = BE255AC813FDB10700879039 /* PBXTextBookmark */;
+			BE255ACA13FDB10700879039 /* PBXTextBookmark */ = BE255ACA13FDB10700879039 /* PBXTextBookmark */;
+			BE255ACB13FDB10700879039 /* PBXTextBookmark */ = BE255ACB13FDB10700879039 /* PBXTextBookmark */;
 		};
 		sourceControlManager = BE08CD54127D29BC00C91273 /* Source Control */;
 		userBuildSettings = {
@@ -189,7 +183,7 @@
 	BE01B88013F220130031FB4C /* tguparser.c */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {1412, 4785}}";
-			sepNavSelRange = "{579, 0}";
+			sepNavSelRange = "{695, 0}";
 			sepNavVisRange = "{471, 600}";
 		};
 	};
@@ -278,12 +272,12 @@
 		vrLen = 712;
 		vrLoc = 0;
 	};
-	BE0CC70413FDB50A00658C0F /* PBXTextBookmark */ = {
+	BE0CC70813FDB56700658C0F /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = BE01B88013F220130031FB4C /* tguparser.c */;
-		name = "tguparser.c: 25";
+		name = "tguparser.c: 32";
 		rLen = 0;
-		rLoc = 579;
+		rLoc = 695;
 		rType = 0;
 		vrLen = 600;
 		vrLoc = 471;
@@ -316,16 +310,6 @@
 		vrLen = 715;
 		vrLoc = 0;
 	};
-	BE255AC613FDB10700879039 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = BE01B87E13F220130031FB4C /* tgucompiler.c */;
-		name = "tgucompiler.c: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 712;
-		vrLoc = 0;
-	};
 	BE255AC713FDB10700879039 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = BE01B88413F220130031FB4C /* tguutility.c */;
@@ -346,16 +330,6 @@
 		vrLen = 1119;
 		vrLoc = 0;
 	};
-	BE255AC913FDB10700879039 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = BE01B87D13F220130031FB4C /* tgu_parser_impl.h */;
-		name = "tgu_parser_impl.h: 1713";
-		rLen = 0;
-		rLoc = 57878;
-		rType = 0;
-		vrLen = 773;
-		vrLoc = 57452;
-	};
 	BE255ACA13FDB10700879039 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = BE01B88013F220130031FB4C /* tguparser.c */;
@@ -375,45 +349,5 @@
 		rType = 0;
 		vrLen = 734;
 		vrLoc = 423;
-	};
-	BE255ACC13FDB10700879039 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = BE01B87C13F220130031FB4C /* tengu.h */;
-		name = "tengu.h: 31";
-		rLen = 0;
-		rLoc = 809;
-		rType = 0;
-		vrLen = 728;
-		vrLoc = 280;
-	};
-	BE255ACD13FDB10700879039 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = BE01B87B13F220130031FB4C /* tengu.c */;
-		name = "tengu.c: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 553;
-		vrLoc = 138;
-	};
-	BE255ACE13FDB10700879039 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = BE01B84A13F220120031FB4C /* Arsenal.c */;
-		name = "Arsenal.c: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 738;
-		vrLoc = 0;
-	};
-	BE255B0713FDB3F000879039 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = BE01B84A13F220120031FB4C /* Arsenal.c */;
-		name = "Arsenal.c: 18";
-		rLen = 0;
-		rLoc = 487;
-		rType = 0;
-		vrLen = 704;
-		vrLoc = 0;
 	};
 }
