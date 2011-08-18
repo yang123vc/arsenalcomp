@@ -426,6 +426,8 @@ wchar_t*		AR_wcsndup(const wchar_t *sour, size_t len);
 
 
 char*			AR_strdup(const char *sour);
+
+/*len == 0Ê±·µ»Ø¿Õ´®L""*/
 char*			AR_strndup(const char *sour, size_t len);
 
 

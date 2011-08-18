@@ -179,9 +179,6 @@ void	AR_free(void *ptr)
 
 
 
-/*
-某些平台下会产生对齐问题
-*/
 void	AR_memswap(void *a, void *b, size_t n)
 {
 		int_t cnt;
