@@ -144,7 +144,7 @@ void AR_error(int_t level, const wchar_t *msg, ...)
 		}
 
 
-		if(level == AR_ERR_FATAL)
+		if(level < AR_ERR_WARNING)
 		{
 				AR_abort();
 		}
