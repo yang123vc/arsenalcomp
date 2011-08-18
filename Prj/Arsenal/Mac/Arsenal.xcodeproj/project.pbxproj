@@ -146,73 +146,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		BE86A01013F13B8B0028846E /* Arsenal.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Arsenal.c; sourceTree = "<group>"; };
-		BE86A01113F13B8B0028846E /* Arsenal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Arsenal.h; sourceTree = "<group>"; };
-		BE86A01313F13B8B0028846E /* algo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = algo.c; sourceTree = "<group>"; };
-		BE86A01413F13B8B0028846E /* buffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = buffer.c; sourceTree = "<group>"; };
-		BE86A01513F13B8B0028846E /* byteorder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = byteorder.c; sourceTree = "<group>"; };
-		BE86A01613F13B8B0028846E /* common.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = common.c; sourceTree = "<group>"; };
-		BE86A01713F13B8B0028846E /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
-		BE86A01813F13B8B0028846E /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
-		BE86A01913F13B8B0028846E /* crtstr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = crtstr.c; sourceTree = "<group>"; };
-		BE86A01A13F13B8B0028846E /* heap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = heap.c; sourceTree = "<group>"; };
-		BE86A01B13F13B8B0028846E /* memory.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = memory.c; sourceTree = "<group>"; };
-		BE86A01C13F13B8B0028846E /* platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = platform.h; sourceTree = "<group>"; };
-		BE86A01D13F13B8B0028846E /* random.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = random.c; sourceTree = "<group>"; };
-		BE86A01E13F13B8B0028846E /* strconv.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = strconv.c; sourceTree = "<group>"; };
-		BE86A01F13F13B8B0028846E /* string.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = string.c; sourceTree = "<group>"; };
-		BE86A02013F13B8B0028846E /* strtable.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = strtable.c; sourceTree = "<group>"; };
-		BE86A02113F13B8B0028846E /* textfile.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = textfile.c; sourceTree = "<group>"; };
-		BE86A02213F13B8B0028846E /* thread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = thread.c; sourceTree = "<group>"; };
-		BE86A02313F13B8B0028846E /* thread_apple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thread_apple.h; sourceTree = "<group>"; };
-		BE86A02413F13B8B0028846E /* thread_posix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thread_posix.h; sourceTree = "<group>"; };
-		BE86A02513F13B8B0028846E /* thread_win.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thread_win.h; sourceTree = "<group>"; };
-		BE86A02613F13B8B0028846E /* utilities.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = utilities.c; sourceTree = "<group>"; };
-		BE86A02813F13B8B0028846E /* lex.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lex.c; sourceTree = "<group>"; };
-		BE86A02913F13B8B0028846E /* lex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lex.h; sourceTree = "<group>"; };
-		BE86A02A13F13B8B0028846E /* match.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = match.c; sourceTree = "<group>"; };
-		BE86A02B13F13B8B0028846E /* rgx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rgx.h; sourceTree = "<group>"; };
-		BE86A02C13F13B8B0028846E /* rgx_compile.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rgx_compile.c; sourceTree = "<group>"; };
-		BE86A02D13F13B8B0028846E /* rgx_exec.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rgx_exec.c; sourceTree = "<group>"; };
-		BE86A02E13F13B8B0028846E /* rgx_misc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rgx_misc.c; sourceTree = "<group>"; };
-		BE86A02F13F13B8B0028846E /* rgx_node.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rgx_node.c; sourceTree = "<group>"; };
-		BE86A03013F13B8B0028846E /* rgx_parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rgx_parser.c; sourceTree = "<group>"; };
-		BE86A03213F13B8B0028846E /* grammar.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = grammar.c; sourceTree = "<group>"; };
-		BE86A03313F13B8B0028846E /* lalr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lalr.h; sourceTree = "<group>"; };
-		BE86A03413F13B8B0028846E /* lalr_build.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lalr_build.c; sourceTree = "<group>"; };
-		BE86A03513F13B8B0028846E /* lalr_config.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lalr_config.c; sourceTree = "<group>"; };
-		BE86A03613F13B8B0028846E /* lalr_config_aux.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lalr_config_aux.h; sourceTree = "<group>"; };
-		BE86A03713F13B8B0028846E /* lalr_state.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lalr_state.c; sourceTree = "<group>"; };
-		BE86A03813F13B8B0028846E /* lr_action.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lr_action.c; sourceTree = "<group>"; };
-		BE86A03913F13B8B0028846E /* lr_action.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lr_action.h; sourceTree = "<group>"; };
-		BE86A03A13F13B8B0028846E /* parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
-		BE86A03B13F13B8B0028846E /* parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
-		BE86A03C13F13B8B0028846E /* parser_in.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = parser_in.c; sourceTree = "<group>"; };
-		BE86A03D13F13B8B0028846E /* parser_in.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = parser_in.h; sourceTree = "<group>"; };
-		BE86A03E13F13B8B0028846E /* report.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = report.c; sourceTree = "<group>"; };
-		BE86A03F13F13B8B0028846E /* symbol.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = symbol.c; sourceTree = "<group>"; };
-		BE86A04113F13B8B0028846E /* tengu.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tengu.c; sourceTree = "<group>"; };
-		BE86A04213F13B8B0028846E /* tengu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tengu.h; sourceTree = "<group>"; };
-		BE86A04313F13B8B0028846E /* tgu_parser_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tgu_parser_impl.h; sourceTree = "<group>"; };
-		BE86A04413F13B8B0028846E /* tgucompiler.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tgucompiler.c; sourceTree = "<group>"; };
-		BE86A04513F13B8B0028846E /* tgucompiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tgucompiler.h; sourceTree = "<group>"; };
-		BE86A04613F13B8B0028846E /* tguparser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tguparser.c; sourceTree = "<group>"; };
-		BE86A04713F13B8B0028846E /* tguparser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tguparser.h; sourceTree = "<group>"; };
-		BE86A04813F13B8B0028846E /* tgusyntree.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tgusyntree.c; sourceTree = "<group>"; };
-		BE86A04913F13B8B0028846E /* tgusyntree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tgusyntree.h; sourceTree = "<group>"; };
-		BE86A04A13F13B8B0028846E /* tguutility.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tguutility.c; sourceTree = "<group>"; };
-		BE86A04B13F13B8B0028846E /* tguutility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tguutility.h; sourceTree = "<group>"; };
-		BE86A04C13F13B8B0028846E /* tguvm.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tguvm.c; sourceTree = "<group>"; };
-		BE86A04D13F13B8B0028846E /* tguvm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tguvm.h; sourceTree = "<group>"; };
-		BE86A04F13F13B8B0028846E /* grammar_codegen.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = grammar_codegen.c; sourceTree = "<group>"; };
-		BE86A05013F13B8B0028846E /* grammar_collector.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = grammar_collector.c; sourceTree = "<group>"; };
-		BE86A05113F13B8B0028846E /* grammar_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = grammar_config.h; sourceTree = "<group>"; };
-		BE86A05213F13B8B0028846E /* iniobj.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = iniobj.c; sourceTree = "<group>"; };
-		BE86A05313F13B8B0028846E /* iniobj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iniobj.h; sourceTree = "<group>"; };
-		BE86A05413F13B8B0028846E /* serializer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = serializer.c; sourceTree = "<group>"; };
-		BE86A05513F13B8B0028846E /* serializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = serializer.h; sourceTree = "<group>"; };
-		BE86A05613F13B8B0028846E /* tools.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tools.c; sourceTree = "<group>"; };
-		BE86A05713F13B8B0028846E /* tools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tools.h; sourceTree = "<group>"; };
+		BE10243813F2615000A73802 /* export.def */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = export.def; sourceTree = "<group>"; };
 		BE86A0A213F13DBC0028846E /* Arsenal.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = Arsenal.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE86A0A613F13DF70028846E /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
 		BE86A0A813F13E000028846E /* libpthread.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpthread.dylib; path = usr/lib/libpthread.dylib; sourceTree = SDKROOT; };
@@ -309,8 +243,8 @@
 		08FB7794FE84155DC02AAC07 /* Arsenal */ = {
 			isa = PBXGroup;
 			children = (
+				BE10243813F2615000A73802 /* export.def */,
 				BE88D04113F172B300871F83 /* Arsenal */,
-				BE86A00F13F13B8B0028846E /* Arsenal */,
 				1AB674ADFE9D54B511CA2CBB /* Products */,
 				BE86A0A613F13DF70028846E /* libiconv.dylib */,
 				BE86A0A813F13E000028846E /* libpthread.dylib */,
@@ -325,121 +259,6 @@
 				BE86A18B13F141A30028846E /* Arsenal.a */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		BE86A00F13F13B8B0028846E /* Arsenal */ = {
-			isa = PBXGroup;
-			children = (
-				BE86A01013F13B8B0028846E /* Arsenal.c */,
-				BE86A01113F13B8B0028846E /* Arsenal.h */,
-				BE86A01213F13B8B0028846E /* Common */,
-				BE86A02713F13B8B0028846E /* Lex */,
-				BE86A03113F13B8B0028846E /* Parser */,
-				BE86A04013F13B8B0028846E /* Tengu */,
-				BE86A04E13F13B8B0028846E /* Tools */,
-			);
-			name = Arsenal;
-			path = ../../../Arsenal;
-			sourceTree = SOURCE_ROOT;
-		};
-		BE86A01213F13B8B0028846E /* Common */ = {
-			isa = PBXGroup;
-			children = (
-				BE86A01313F13B8B0028846E /* algo.c */,
-				BE86A01413F13B8B0028846E /* buffer.c */,
-				BE86A01513F13B8B0028846E /* byteorder.c */,
-				BE86A01613F13B8B0028846E /* common.c */,
-				BE86A01713F13B8B0028846E /* common.h */,
-				BE86A01813F13B8B0028846E /* config.h */,
-				BE86A01913F13B8B0028846E /* crtstr.c */,
-				BE86A01A13F13B8B0028846E /* heap.c */,
-				BE86A01B13F13B8B0028846E /* memory.c */,
-				BE86A01C13F13B8B0028846E /* platform.h */,
-				BE86A01D13F13B8B0028846E /* random.c */,
-				BE86A01E13F13B8B0028846E /* strconv.c */,
-				BE86A01F13F13B8B0028846E /* string.c */,
-				BE86A02013F13B8B0028846E /* strtable.c */,
-				BE86A02113F13B8B0028846E /* textfile.c */,
-				BE86A02213F13B8B0028846E /* thread.c */,
-				BE86A02313F13B8B0028846E /* thread_apple.h */,
-				BE86A02413F13B8B0028846E /* thread_posix.h */,
-				BE86A02513F13B8B0028846E /* thread_win.h */,
-				BE86A02613F13B8B0028846E /* utilities.c */,
-			);
-			path = Common;
-			sourceTree = "<group>";
-		};
-		BE86A02713F13B8B0028846E /* Lex */ = {
-			isa = PBXGroup;
-			children = (
-				BE86A02813F13B8B0028846E /* lex.c */,
-				BE86A02913F13B8B0028846E /* lex.h */,
-				BE86A02A13F13B8B0028846E /* match.c */,
-				BE86A02B13F13B8B0028846E /* rgx.h */,
-				BE86A02C13F13B8B0028846E /* rgx_compile.c */,
-				BE86A02D13F13B8B0028846E /* rgx_exec.c */,
-				BE86A02E13F13B8B0028846E /* rgx_misc.c */,
-				BE86A02F13F13B8B0028846E /* rgx_node.c */,
-				BE86A03013F13B8B0028846E /* rgx_parser.c */,
-			);
-			path = Lex;
-			sourceTree = "<group>";
-		};
-		BE86A03113F13B8B0028846E /* Parser */ = {
-			isa = PBXGroup;
-			children = (
-				BE86A03213F13B8B0028846E /* grammar.c */,
-				BE86A03313F13B8B0028846E /* lalr.h */,
-				BE86A03413F13B8B0028846E /* lalr_build.c */,
-				BE86A03513F13B8B0028846E /* lalr_config.c */,
-				BE86A03613F13B8B0028846E /* lalr_config_aux.h */,
-				BE86A03713F13B8B0028846E /* lalr_state.c */,
-				BE86A03813F13B8B0028846E /* lr_action.c */,
-				BE86A03913F13B8B0028846E /* lr_action.h */,
-				BE86A03A13F13B8B0028846E /* parser.c */,
-				BE86A03B13F13B8B0028846E /* parser.h */,
-				BE86A03C13F13B8B0028846E /* parser_in.c */,
-				BE86A03D13F13B8B0028846E /* parser_in.h */,
-				BE86A03E13F13B8B0028846E /* report.c */,
-				BE86A03F13F13B8B0028846E /* symbol.c */,
-			);
-			path = Parser;
-			sourceTree = "<group>";
-		};
-		BE86A04013F13B8B0028846E /* Tengu */ = {
-			isa = PBXGroup;
-			children = (
-				BE86A04113F13B8B0028846E /* tengu.c */,
-				BE86A04213F13B8B0028846E /* tengu.h */,
-				BE86A04313F13B8B0028846E /* tgu_parser_impl.h */,
-				BE86A04413F13B8B0028846E /* tgucompiler.c */,
-				BE86A04513F13B8B0028846E /* tgucompiler.h */,
-				BE86A04613F13B8B0028846E /* tguparser.c */,
-				BE86A04713F13B8B0028846E /* tguparser.h */,
-				BE86A04813F13B8B0028846E /* tgusyntree.c */,
-				BE86A04913F13B8B0028846E /* tgusyntree.h */,
-				BE86A04A13F13B8B0028846E /* tguutility.c */,
-				BE86A04B13F13B8B0028846E /* tguutility.h */,
-				BE86A04C13F13B8B0028846E /* tguvm.c */,
-				BE86A04D13F13B8B0028846E /* tguvm.h */,
-			);
-			path = Tengu;
-			sourceTree = "<group>";
-		};
-		BE86A04E13F13B8B0028846E /* Tools */ = {
-			isa = PBXGroup;
-			children = (
-				BE86A04F13F13B8B0028846E /* grammar_codegen.c */,
-				BE86A05013F13B8B0028846E /* grammar_collector.c */,
-				BE86A05113F13B8B0028846E /* grammar_config.h */,
-				BE86A05213F13B8B0028846E /* iniobj.c */,
-				BE86A05313F13B8B0028846E /* iniobj.h */,
-				BE86A05413F13B8B0028846E /* serializer.c */,
-				BE86A05513F13B8B0028846E /* serializer.h */,
-				BE86A05613F13B8B0028846E /* tools.c */,
-				BE86A05713F13B8B0028846E /* tools.h */,
-			);
-			path = Tools;
 			sourceTree = "<group>";
 		};
 		BE88D04113F172B300871F83 /* Arsenal */ = {
@@ -836,12 +655,14 @@
 				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/DylibDebug";
 				COPY_PHASE_STRIP = NO;
 				EXECUTABLE_PREFIX = "";
+				EXPORTED_SYMBOLS_FILE = export.def;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_FAST_OBJC_DISPATCH = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_OBJC_CALL_CXX_CDTORS = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				INSTALL_PATH = /usr/local/lib;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
@@ -859,6 +680,7 @@
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EXECUTABLE_PREFIX = "";
+				EXPORTED_SYMBOLS_FILE = export.def;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_FAST_OBJC_DISPATCH = NO;
 				GCC_MODEL_TUNING = G5;
