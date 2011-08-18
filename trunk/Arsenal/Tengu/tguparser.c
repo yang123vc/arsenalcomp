@@ -20,9 +20,8 @@
 
 AR_NAMESPACE_BEGIN
 
-#if(0)
 #include "tgu_parser_impl.h"
-#endif
+
 
 
 
@@ -45,11 +44,11 @@ static	void	__parser_core_init()
 {
 		AR_InitSpinLock(&__g_lock);
 
-/*		__g_lex     = __build_lex();
+		__g_lex     = __build_lex();
 		
 		__g_grammar	= __build_grammar(&__g_handler );
 		__g_parser	= Parser_CreateParser(__g_grammar, PARSER_LALR);
-		*/
+
 }
 
 
