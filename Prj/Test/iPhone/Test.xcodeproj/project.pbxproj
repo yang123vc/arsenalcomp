@@ -15,6 +15,8 @@
 		28AD73600D9D9599002E5188 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28AD735F0D9D9599002E5188 /* MainWindow.xib */; };
 		28C286E10D94DF7D0034E888 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28C286E00D94DF7D0034E888 /* RootViewController.m */; };
 		28F335F11007B36200424DE2 /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28F335F01007B36200424DE2 /* RootViewController.xib */; };
+		BE255B0813FDB40400879039 /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BE255AAD13FDB0A100879039 /* Arsenal.a */; };
+		BEB2E76D13FD714200D71C25 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BEB2E76C13FD714200D71C25 /* libiconv.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +33,9 @@
 		28F335F01007B36200424DE2 /* RootViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RootViewController.xib; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Test-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Test-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+		BE255AAD13FDB0A100879039 /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = Arsenal.a; path = /Users/solidussnakeex/Desktop/Programming/Arsenal/Binary/LibDebug/Arsenal.a; sourceTree = "<absolute>"; };
+		BE255AF313FDB25900879039 /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = Arsenal.a; path = /Users/solidussnakeex/Desktop/Programming/Arsenal/Binary/LibRelease/Arsenal.a; sourceTree = "<absolute>"; };
+		BEB2E76C13FD714200D71C25 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +46,8 @@
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
 				2892E4100DC94CBA00A64D0F /* CoreGraphics.framework in Frameworks */,
+				BEB2E76D13FD714200D71C25 /* libiconv.dylib in Frameworks */,
+				BE255B0813FDB40400879039 /* Arsenal.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,6 +81,9 @@
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
+				BEB2E76C13FD714200D71C25 /* libiconv.dylib */,
+				BE255AAD13FDB0A100879039 /* Arsenal.a */,
+				BE255AF313FDB25900879039 /* Arsenal.a */,
 			);
 			name = CustomTemplate;
 			sourceTree = "<group>";
@@ -191,6 +201,11 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Test_Prefix.pch;
 				INFOPLIST_FILE = "Test-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../Binary/LibDebug\"",
+					"\"$(SRCROOT)/../../../Binary/LibRelease\"",
+				);
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = Test;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -209,6 +224,12 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Test_Prefix.pch;
 				INFOPLIST_FILE = "Test-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../Binary/LibDebug\"",
+					"\"$(SRCROOT)/../../../Binary/LibRelease\"",
+				);
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = Test;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
@@ -229,6 +250,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = ../../../Arsenal;
 				OBJROOT = ../../../Temp;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CODE_SIGN_FLAGS = "-gta";
 				PREBINDING = NO;
 				SDKROOT = iphoneos;
 				SYMROOT = ../../../Binary;
@@ -249,6 +272,7 @@
 				HEADER_SEARCH_PATHS = ../../../Arsenal;
 				OBJROOT = ../../../Temp;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				OTHER_CODE_SIGN_FLAGS = "-gta";
 				PREBINDING = NO;
 				SDKROOT = iphoneos;
 				SYMROOT = ../../../Binary;
