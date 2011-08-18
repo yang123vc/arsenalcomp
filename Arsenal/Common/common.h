@@ -61,9 +61,12 @@ arIOCtx_t*	AR_global_ioctx();
 
 void	AR_printf(const wchar_t *msg,...);
 
+
 /*库内部错误为负数*/
-#define AR_ERR_FATAL		((int_t)-0x0001)
-#define AR_ERR_WARNING		((int_t)-0x0002)
+#define AR_ERR_WARNING		((int_t)-0x0100)
+#define AR_ERR_FATAL		((int_t)-0x0101)
+#define AR_ERR_MEMORY		((int_t)-0x0102)
+
 
 void	AR_error(int_t level, const wchar_t *msg, ...);
 
