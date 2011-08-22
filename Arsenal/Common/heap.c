@@ -90,6 +90,8 @@ struct __arsenal_heap_tag
 		page_t			*large_first_used_page;
 
 		size_t			page_allocated;
+		size_t			actual_mem_used;
+		size_t			peak_mem_used;
 };
 
 static AR_INLINE page_t*		AllocatePage(arHeap_t *heap, size_t page_bytes)
@@ -111,14 +113,6 @@ static AR_INLINE page_t*		AllocatePage(arHeap_t *heap, size_t page_bytes)
 				return NULL;
 		}
 
-		/*
-		if(!ptr)
-		{
-				AR_error(AR_ERR_FATAL, L"malloc failure for %" AR_PLAT_INT_FMT L"d\r\n", size);
-				return NULL;
-		}
-		*/
-
 		
 		
 		page = (page_t*)ptr;
@@ -135,6 +129,13 @@ static AR_INLINE page_t*		AllocatePage(arHeap_t *heap, size_t page_bytes)
 		page->first_free = NULL;
 
 		heap->page_allocated++;
+		heap->actual_mem_used += size;
+
+		if(heap->actual_mem_used > heap->peak_mem_used)
+		{
+				heap->peak_mem_used = heap->actual_mem_used;
+		}
+
 		return page;
 }
 
@@ -144,9 +145,13 @@ static AR_INLINE void	FreePage(arHeap_t *heap, page_t *page)
 		AR_ASSERT(heap != NULL && page != NULL);
 		
 		
+		heap->page_allocated--;
+		heap->actual_mem_used -= (page->data_size + (size_t)((byte_t*)page->data - (byte_t*)page));
+
 		free(page);
 		page = NULL;
-		heap->page_allocated--;
+
+		
 }
 
 
@@ -172,6 +177,7 @@ static AR_INLINE void*	SmallAllocate(arHeap_t *heap, size_t bytes)
 		bytes = SMALL_ALIGN(bytes);
 
 		block = heap->small_first_free[bytes/AR_HEAP_ALIGN];
+
 		if(block)
 		{
 				size_t next = *(size_t*)(block + SMALL_HEADER_SIZE);
@@ -224,7 +230,7 @@ static AR_INLINE void SmallFree(arHeap_t *heap, void *ptr)
 		
 		if(idx > ((SMALL_SIZE + 1) / AR_HEAP_ALIGN))
 		{
-				AR_error(AR_ERR_FATAL, L"SmallFree: invalid memory block\r\n");
+				AR_error(AR_ERR_MEMORY, L"SmallFree: invalid memory block\r\n");
 		}
 		
 		*dt = (size_t)heap->small_first_free[idx];
@@ -244,7 +250,7 @@ static AR_INLINE void* SmallRealloc(arHeap_t *heap, void *ptr, size_t nbytes)
 
 		if(idx > ((SMALL_SIZE + 1) / AR_HEAP_ALIGN))
 		{
-				AR_error(AR_ERR_FATAL, L"SmallRealloc : invalid memory block\r\n");
+				AR_error(AR_ERR_MEMORY, L"SmallRealloc : invalid memory block\r\n");
 		}
 
 		if(org_bytes < AR_ALIGN_SIZE(nbytes))
@@ -779,7 +785,10 @@ arHeap_t*		AR_CreateHeap()
 {
 		arHeap_t		*heap;
 		heap = (arHeap_t*)malloc(sizeof(arHeap_t));
+		
 		heap->page_allocated = 0;
+		heap->actual_mem_used = 0;
+		heap->peak_mem_used = 0;
 		
 
 		
@@ -855,6 +864,7 @@ void			AR_DestroyHeap(arHeap_t *heap)
 		
 
 		AR_ASSERT(heap->page_allocated == 0);
+		AR_ASSERT(heap->actual_mem_used == 0);
 
 		free(heap);
 }
@@ -947,7 +957,14 @@ void*	AR_ReallocFromHeap(arHeap_t *heap, void *ptr, size_t bytes)
 }
 
 
-
+arHeapUsage_t	AR_GetHeapMemUsage(const arHeap_t *heap)
+{
+		arHeapUsage_t	ret;
+		AR_ASSERT(heap != NULL);
+		ret.acutal_mem_used = (uint_64_t)heap->actual_mem_used;
+		ret.peak_mem_used = (uint_64_t)heap->peak_mem_used;
+		return ret;
+}
 
 
 AR_NAMESPACE_END
