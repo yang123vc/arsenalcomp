@@ -37,7 +37,7 @@ static void __insert_to_conflict_set(psrConflictView_t *view, psrConflictItem_t 
 }
 
 
-const	psrConflictView_t*		Parser_CreateConflictView(const psrActionTable_t *tbl, const psrGrammar_t *grammar)
+static const	psrConflictView_t*		Parser_CreateConflictView(const psrActionTable_t *tbl, const psrGrammar_t *grammar)
 {
 		psrConflictView_t		*view;
 		arString_t				*str = NULL;
@@ -135,7 +135,7 @@ const	psrConflictView_t*		Parser_CreateConflictView(const psrActionTable_t *tbl,
 		return view;
 }
 
-void							Parser_DestroyConflictView(const psrConflictView_t *view)
+static void							Parser_DestroyConflictView(const psrConflictView_t *view)
 {
 		
 		psrConflictView_t		*v = (psrConflictView_t*)view;
@@ -165,7 +165,7 @@ void							Parser_DestroyConflictView(const psrConflictView_t *view)
 
 
 
-const psrActionView_t*	Parser_CreateActionView(const psrActionTable_t *tbl, const psrGrammar_t *grammar)
+static const psrActionView_t*	Parser_CreateActionView(const psrActionTable_t *tbl, const psrGrammar_t *grammar)
 {
 		psrActionView_t		*view;
 		size_t r, c, k;
@@ -259,7 +259,7 @@ const psrActionView_t*	Parser_CreateActionView(const psrActionTable_t *tbl, cons
 }
 
 
-void Parser_DestroyActionView(const psrActionView_t *action_view)
+static void Parser_DestroyActionView(const psrActionView_t *action_view)
 {
 		size_t i;
 		psrActionView_t *view;
@@ -291,7 +291,7 @@ void Parser_DestroyActionView(const psrActionView_t *action_view)
 
 
 
-void Parser_PrintActionTable(const psrActionTable_t *tbl, const psrGrammar_t *grammar, size_t width, arString_t *str)
+static void Parser_PrintActionTable(const psrActionTable_t *tbl, const psrGrammar_t *grammar, size_t width, arString_t *str)
 {
 		/*这里必须用int，因为printf一族函数的对于%*d这类width的定义就是int*/
 		int __WIDTH__;
@@ -402,7 +402,7 @@ void Parser_PrintActionTable(const psrActionTable_t *tbl, const psrGrammar_t *gr
 }
 
 
-void Parser_ReportConflict(const psrActionTable_t *tbl, const psrGrammar_t *grammar, arString_t *str)
+static void Parser_ReportConflict(const psrActionTable_t *tbl, const psrGrammar_t *grammar, arString_t *str)
 {
 		size_t i,j;
 		const psrAction_t *action;
@@ -468,7 +468,7 @@ void Parser_ReportConflict(const psrActionTable_t *tbl, const psrGrammar_t *gram
 }
 
 
-size_t Parser_CountConflict(const psrActionTable_t *tbl)
+static size_t Parser_CountConflict(const psrActionTable_t *tbl)
 {
 		
 		size_t i, j, count;
