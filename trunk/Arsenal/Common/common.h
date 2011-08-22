@@ -269,6 +269,13 @@ void*			AR_ClearedAllocFromHeap(arHeap_t *heap, size_t num, size_t elem_size);
 void*			AR_ReallocFromHeap(arHeap_t *heap, void *ptr, size_t bytes);
 void			AR_FreeToHeap(arHeap_t *heap, void *ptr);
 
+typedef struct __arsenal_heap_usage_tag
+{
+		uint_64_t	acutal_mem_used;
+		uint_64_t	peak_mem_used;
+}arHeapUsage_t;
+
+arHeapUsage_t	AR_GetHeapMemUsage(const arHeap_t *heap);
 
 
 
