@@ -40,7 +40,7 @@ void	AR_UnInitMemory()
 		{
 				wchar_t buf[1024];
 				AR_swprintf(buf, 1024, L"Peak memroy used : %" AR_INT_FMT64 L"uKB" L"\r\n", usage.peak_mem_used / 1024);
-				::MessageBox(NULL, buf, 0,0);
+				MessageBox(NULL, buf, 0,0);
 		}
 #endif
 		AR_DPRINT(L"Peak memroy used : %" AR_INT_FMT64 L"uKB" L"\r\n", usage.peak_mem_used/1024);
@@ -74,6 +74,7 @@ static AR_INLINE void	free_mem(void *ptr)
 		AR_ASSERT(ptr != NULL);
 		AR_LockSpinLock(&__g_lock);
 		AR_FreeToHeap(__g_heap, ptr);
+		
 		AR_UnLockSpinLock(&__g_lock);
 }
 
@@ -94,6 +95,7 @@ static AR_INLINE void*	realloc_mem(void *ptr, size_t size)
 		void *ret;
 		AR_LockSpinLock(&__g_lock);
 		ret = AR_ReallocFromHeap(__g_heap, ptr, size);
+		
 		AR_UnLockSpinLock(&__g_lock);
 		if(!ret)
 		{

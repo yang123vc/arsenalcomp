@@ -38,7 +38,7 @@ typedef struct __lalr_config_list_tag
 {
 		lalrConfigNode_t		*head;
 		lalrConfigNode_t		*tail;
-		size_t					count;
+		uint_32_t				count;
 }lalrConfigList_t;
 
 
@@ -75,23 +75,17 @@ bool_t	Parser_UnionBitSet(lalrBitSet_t *dest, const lalrBitSet_t *src);
 
 
 
-
 struct __lalr_config_tag
 {
-		size_t					delim			:		8;
-		size_t					rule_num		:		14;
-
-		bool_t					is_completed	;
-
-/******************************************/
-		lalrBitSet_t			follow_set;
-/******************************************/
+		bool_t					is_completed;
+		uint_8_t				delim;
+		uint_16_t				rule_num;
 		
 		lalrConfigList_t		*forward;
 		lalrConfigList_t		*backward;
-/******************************************/
-};
 
+		lalrBitSet_t			follow_set;
+};
 
 
 void	Parser_InitConfig(lalrConfig_t *config, size_t rule_num, size_t delim, const psrGrammar_t *grammar);
