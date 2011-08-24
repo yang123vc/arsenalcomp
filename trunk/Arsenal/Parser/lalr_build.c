@@ -441,22 +441,6 @@ static void __build_propagation_links(lalrStateSet_t *set)
 												next_config->is_completed = false;
 
 										}
-
-#if(0)
-
-										size_t x;
-										lalrConfig_t *next_config = fp->config;
-										
-										for(x = 0; x < node->config->follow_set.bit_cnt; ++x)
-										{
-												if(Parser_IsSetInBitSet(&node->config->follow_set, x) && !Parser_IsSetInBitSet(&next_config->follow_set, x))
-												{
-														Parser_SetBitInBitSet(&next_config->follow_set, x);
-														changed = true;
-														next_config->is_completed = false;
-												}
-										}
-#endif
 								}
 
 								node->config->is_completed = true;
