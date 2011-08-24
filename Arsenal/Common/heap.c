@@ -154,8 +154,6 @@ static AR_INLINE void	FreePage(arHeap_t *heap, page_t *page)
 		
 }
 
-
-
 static AR_INLINE void*	SmallAllocate(arHeap_t *heap, size_t bytes)
 {
 		byte_t *block;
@@ -195,7 +193,6 @@ static AR_INLINE void*	SmallAllocate(arHeap_t *heap, size_t bytes)
 		if(bytes + 2 > byte_left)
 		{
 				page_t *new_page = AllocatePage(heap, PAGE_SIZE);
-				
 				if(!new_page)
 				{
 						return NULL;
@@ -868,6 +865,9 @@ void			AR_DestroyHeap(arHeap_t *heap)
 
 		free(heap);
 }
+
+
+/*********************************************************************************************************************************************/
 
 
 void*	AR_AllocFromHeap(arHeap_t *heap, size_t bytes)

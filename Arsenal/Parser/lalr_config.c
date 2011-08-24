@@ -413,7 +413,7 @@ static AR_INLINE void __merge_list(lalrConfigList_t *dest, lalrConfigList_t *a, 
 		AR_memset(b, 0, sizeof(*b));
 		AR_memset(dest, 0, sizeof(*dest));
 		dest->head = head;
-		dest->count = cnt;
+		dest->count = (uint_32_t)cnt;
 }
 
 static AR_INLINE lalrConfigNode_t* __pop_head(lalrConfigList_t *lst)
@@ -528,8 +528,8 @@ void	Parser_InitConfig(lalrConfig_t *config, size_t rule_num, size_t delim, cons
 		AR_ASSERT(config != NULL );
 
 		AR_memset(config, 0, sizeof(*config));
-		config->rule_num = rule_num;
-		config->delim = delim;
+		config->rule_num = (uint_16_t)rule_num;
+		config->delim = (uint_8_t)delim;
 		
 		config->forward = Parser_CreateConfigList();
 		config->backward = Parser_CreateConfigList();
