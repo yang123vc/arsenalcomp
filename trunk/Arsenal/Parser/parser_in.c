@@ -28,6 +28,7 @@ const psrSymb_t	*PARSER_DefPrecSymb = NULL;/*提供默认prec和assoc属性的终结符*/
 const psrSymb_t	*PARSER_StartSymb = NULL;
 
 
+
 bool_t				Parser_IsBuildInSymbol(const psrSymb_t		*symb)
 {
 		AR_ASSERT(symb != NULL);
@@ -37,10 +38,10 @@ bool_t				Parser_IsBuildInSymbol(const psrSymb_t		*symb)
 		if(Parser_CompSymb(symb,PARSER_DefPrecSymb) == 0)return true;
 		if(Parser_CompSymb(symb,PARSER_StartSymb) == 0)return true;
 
-		
-
 		return false;
 }
+
+
 
 /******************************************************************************************************************************************/
 
@@ -51,11 +52,9 @@ bool_t	Parser_Init()
 
 		PARSER_EOISymb		=		Parser_CreateSymb(L"%EOI", PARSER_TERM);
 		PARSER_ErrorSymb	=		Parser_CreateSymb(L"error", PARSER_TERM);
-		
 		PARSER_DefPrecSymb	=		Parser_CreateSymb(L"%PREC_ASSOC", PARSER_TERM);
-
 		PARSER_StartSymb	=		Parser_CreateSymb(L"%START", PARSER_NONTERM);
-
+		
 		Parser_Init_LALR_Config();
 		return true;
 		

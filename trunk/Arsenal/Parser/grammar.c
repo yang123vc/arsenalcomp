@@ -81,7 +81,6 @@ psrTermInfo_t*	Parser_FindTermByName(psrTermInfoList_t	*lst, const wchar_t *name
 }
 
 
-
 psrTermInfo_t*	Parser_FindTermByValue(psrTermInfoList_t	*lst, size_t val)
 {
 		size_t i;
@@ -92,6 +91,42 @@ psrTermInfo_t*	Parser_FindTermByValue(psrTermInfoList_t	*lst, size_t val)
 				if(info->val == val)return info;
 		}
 		return NULL;
+}
+
+
+
+
+int_t			Parser_IndexOfTermInfoListByName(const psrTermInfoList_t	*lst, const wchar_t *name)
+{
+
+		size_t i;
+		AR_ASSERT(lst != NULL && name != NULL);
+		for(i = 0; i < lst->count; ++i)
+		{
+				psrTermInfo_t	*info = &lst->lst[i];
+				/*注意，这里的参数name可能是任何非Parser_StringTable分配的内存，
+				 *因此，这里必须用AR_wcscmp比较字符串而非类似Parser_CompSymb内部的比较str指针
+				*/
+				if(AR_wcscmp(info->term->name, name) == 0)return (int_t)i;
+		}
+
+		return -1;
+}
+
+
+
+int_t			Parser_IndexOfTermInfoListByValue(const psrTermInfoList_t	*lst, size_t val)
+{
+
+		size_t i;
+		AR_ASSERT(lst != NULL);
+		for(i = 0; i < lst->count; ++i)
+		{
+				psrTermInfo_t	*info = &lst->lst[i];
+				if(info->val == val)return (int_t)i;
+		}
+		
+		return -1;
 }
 
 
@@ -645,6 +680,64 @@ const psrTermInfoList_t*		Parser_GetTermList(const psrGrammar_t *grammar)
 {
 		AR_ASSERT(grammar != NULL);
 		return &grammar->term_list;
+}
+
+
+void							Parser_ResetTermSpecID(const psrGrammar_t *grammar)
+{
+		size_t i,k;
+		const psrTermInfoList_t *term_lst;
+		AR_ASSERT(grammar != NULL);
+
+		term_lst = Parser_GetTermList(grammar);
+
+		for(i = 0; i < term_lst->count; ++i)
+		{
+				psrTermInfo_t *term;
+
+				term = &term_lst->lst[i];
+				((psrSymb_t*)term->term)->spec_id = i;
+		}
+
+
+
+		for(i = 0; i < grammar->count; ++i)
+		{
+				const psrRule_t *rule = grammar->rules[i];
+				
+				for(k = 0; k < rule->body.count; ++k)
+				{
+						const psrSymb_t *symb = rule->body.lst[k];
+
+						if(symb->type == PARSER_TERM && !Parser_IsBuildInSymbol(symb))
+						{
+								((psrSymb_t*)symb)->spec_id = Parser_IndexOfTermInfoListByName(term_lst, symb->name);
+								AR_ASSERT(symb->spec_id != -1);
+						}
+				}
+		}
+}
+
+
+int_t							Parser_GetTermSpecID(const psrGrammar_t *grammar, const psrSymb_t *symb)
+{
+		int_t idx;
+		const psrTermInfoList_t *term_lst;
+		AR_ASSERT(grammar != NULL && symb != NULL);
+
+		term_lst = Parser_GetTermList(grammar);
+
+
+		if(Parser_IsBuildInSymbol(symb))
+		{
+				idx = Parser_IndexOfTermInfoListByName(term_lst, symb->name);
+		}else
+		{
+				idx = (int_t)symb->spec_id;
+		}
+		AR_ASSERT(idx != -1);
+		return idx;
+
 }
 
 const psrSymbList_t* Parser_GetSymbList(const psrGrammar_t *grammar)

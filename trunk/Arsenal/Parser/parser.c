@@ -345,6 +345,7 @@ const parser_t* Parser_CreateParser(const psrGrammar_t *grammar, psrModeType_t t
 
 		parser->grammar = grammar;
 		
+		Parser_ResetTermSpecID(grammar);
 		switch(type)
 		{
 		case PARSER_SLR:
