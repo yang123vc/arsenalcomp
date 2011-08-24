@@ -68,12 +68,15 @@ static	void	__calc_lr0_closure(lalrConfigList_t *all_config, const psrGrammar_t 
 										new_config = Parser_FindFromConfigList(all_config, inner_rule_num, 0);
 										if(new_config == NULL)
 										{
-												new_config = Parser_InsertToConfigListByValue(all_config, inner_rule_num, 0);
+												new_config = Parser_InsertToConfigListByValue(all_config, inner_rule_num, 0, grammar);
 										}
 										AR_ASSERT(new_config != NULL);
 
 										/*lr0模式，不计算传播链以及follow set*/
-										if(lr0)continue;
+										if(lr0)
+										{
+												continue;
+										}
 										
 										/*
 												S : A . B C D
@@ -93,7 +96,9 @@ static	void	__calc_lr0_closure(lalrConfigList_t *all_config, const psrGrammar_t 
 														如果sp为终结符，则将其加入新项new_config的follow_set中，之后循环中止，因为在
 														本条语法规则中不会有sp之后的终结符加入到new_config中
 														*/
-														Parser_InsertToSymbList_Unique(&new_config->follow_set, sp);
+														int_t idx = Parser_GetTermSpecID(grammar, sp);
+														AR_ASSERT(idx >= 0);
+														Parser_SetBitInBitSet(&new_config->follow_set, (size_t)idx);
 														break;
 												}else
 												{
@@ -107,7 +112,12 @@ static	void	__calc_lr0_closure(lalrConfigList_t *all_config, const psrGrammar_t 
 
 														for(x = 0; x < rec->lst.count; ++x)
 														{
-																Parser_InsertToSymbList_Unique(&new_config->follow_set, rec->lst.lst[x]);
+																int_t idx;
+																AR_ASSERT(rec->lst.lst[x]->type == PARSER_TERM);
+																
+																idx = Parser_GetTermSpecID(grammar, rec->lst.lst[x]);
+																AR_ASSERT(idx >= 0);
+																Parser_SetBitInBitSet(&new_config->follow_set, (size_t)idx);
 														}
 
 														if(!rec->can_empty)
@@ -238,7 +248,7 @@ static	void	__build_goto(lalrState_t *start, const psrGrammar_t *grammar, lalrSt
 
 						if(new_config == NULL)
 						{
-								new_config = Parser_InsertToConfigListByValue(goto_list, inner_node->config->rule_num, inner_node->config->delim + 1);
+								new_config = Parser_InsertToConfigListByValue(goto_list, inner_node->config->rule_num, inner_node->config->delim + 1, grammar);
 						}
 						
 						if(!lr0)
@@ -342,9 +352,14 @@ lalrState_t*	Parser_Create_LR0_State(const psrGrammar_t *grammar)
 
 		basis = Parser_CreateConfigList();
 
-		first_cfg = Parser_InsertToConfigListByValue(basis, 0, 0);
+		first_cfg = Parser_InsertToConfigListByValue(basis, 0, 0, grammar);
 		
-		Parser_InsertToSymbList(&first_cfg->follow_set, PARSER_EOISymb);
+		{
+				int_t idx;
+				idx = Parser_GetTermSpecID(grammar,PARSER_EOISymb);
+				AR_ASSERT(idx >= 0);
+				Parser_SetBitInBitSet(&first_cfg->follow_set, (size_t)idx);
+		}
 
 		start = __build_state(basis, grammar, &set, &first_set, true);
 
@@ -400,11 +415,7 @@ static void __build_propagation_links(lalrStateSet_t *set)
 				}
 		}
 		
-		/*有时间我会采用如下方式优化此函数：
-		
-		此函数基本优化方法，每个symbol都应被赋予一个ID，从0->N，之后每个config不在存储follow_set字段，而存储一个bit数组，
-		此时，最内圈循环的Parser_InsertToSymbList_Unique从O(N)降至O(1)，且存储也会明显降低
-		*/
+
 		do{
 				changed = false;
 
@@ -421,14 +432,26 @@ static void __build_propagation_links(lalrStateSet_t *set)
 
 								for(fp = node->config->forward->head; fp != NULL; fp = fp->next)
 								{
+#if(0)
+										lalrConfig_t *next_config = fp->config;
+										
+										if(Parser_UnionBitSet(&next_config->follow_set, &node->config->follow_set))
+										{
+												changed = true;
+												next_config->is_completed = false;
+
+										}
+#endif
+
+
 										size_t x;
 										lalrConfig_t *next_config = fp->config;
 										
-										for(x = 0; x < node->config->follow_set.count; ++x)
+										for(x = 0; x < node->config->follow_set.bit_cnt; ++x)
 										{
-												const psrSymb_t *symb = node->config->follow_set.lst[x];
-												if(Parser_InsertToSymbList_Unique(&next_config->follow_set, symb))
+												if(Parser_IsSetInBitSet(&node->config->follow_set, x) && !Parser_IsSetInBitSet(&next_config->follow_set, x))
 												{
+														Parser_SetBitInBitSet(&next_config->follow_set, x);
 														changed = true;
 														next_config->is_completed = false;
 												}
@@ -446,7 +469,10 @@ static void __build_propagation_links(lalrStateSet_t *set)
 static void __build_actions(lalrStateSet_t *set, const psrGrammar_t *grammar)
 {
 		size_t i;
+		const psrTermInfoList_t *term_lst;
 		AR_ASSERT(set != NULL && set->count > 0);
+		
+		term_lst = Parser_GetTermList(grammar);
 
 		for(i = 0; i < set->count; ++i)
 		{
@@ -463,13 +489,16 @@ static void __build_actions(lalrStateSet_t *set, const psrGrammar_t *grammar)
 						if(node->config->delim == rule->body.count)
 						{
 								size_t x;
-								for(x = 0; x < node->config->follow_set.count; ++x)
+								for(x = 0; x < node->config->follow_set.bit_cnt; ++x)
 								{
-										lalrAction_t *action = Parser_InsertAction(state, NULL, node->config->follow_set.lst[x], node->config);
-
-										if(Parser_CompSymb(rule->head, PARSER_StartSymb) == 0)
+										if(Parser_IsSetInBitSet(&node->config->follow_set, x))
 										{
-												action->act_type = LALR_ACT_ACCEPT;
+												lalrAction_t *action = Parser_InsertAction(state, NULL, term_lst->lst[x].term, node->config);
+
+												if(Parser_CompSymb(rule->head, PARSER_StartSymb) == 0)
+												{
+															action->act_type = LALR_ACT_ACCEPT;
+												}		
 										}
 								}
 						}
@@ -495,9 +524,16 @@ lalrState_t*	Parser_Create_LALR_State(const psrGrammar_t *grammar)
 
 		basis = Parser_CreateConfigList();
 
-		first_cfg = Parser_InsertToConfigListByValue(basis, 0,  0);
+		first_cfg = Parser_InsertToConfigListByValue(basis, 0,  0, grammar);
 		
-		Parser_InsertToSymbList(&first_cfg->follow_set, PARSER_EOISymb);
+		{
+				int_t idx;
+				idx = Parser_GetTermSpecID(grammar,PARSER_EOISymb);
+				AR_ASSERT(idx >= 0);
+				Parser_SetBitInBitSet(&first_cfg->follow_set, (size_t)idx);
+		}
+
+		
 
 		start = __build_state(basis, grammar, &set, &first_set, false);
 

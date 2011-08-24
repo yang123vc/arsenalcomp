@@ -53,12 +53,28 @@ void					Parser_SortConfigList(lalrConfigList_t *l);
 int_t					Parser_CompConfigList(const lalrConfigList_t *l, const lalrConfigList_t *r);
 
 lalrConfig_t*			Parser_FindFromConfigList(lalrConfigList_t *lst, size_t rule_num, size_t delim);
-lalrConfig_t*			Parser_InsertToConfigListByValue(lalrConfigList_t *lst, size_t rule_num, size_t delim);
+lalrConfig_t*			Parser_InsertToConfigListByValue(lalrConfigList_t *lst, size_t rule_num, size_t delim, const psrGrammar_t *grammar);
 
 /******************************************************************************************************/
 
 
 /**************************************************LALR config***************************************/
+
+typedef struct __lalr_config_follow_set_tag
+{
+		uint_8_t		*bit_set;
+		uint_16_t		bit_cnt;
+}lalrBitSet_t;
+
+void	Parser_InitBitSet(lalrBitSet_t *bs, size_t nbits);
+void	Parser_UnInitBitSet(lalrBitSet_t *bs);
+void	Parser_SetBitInBitSet(lalrBitSet_t *bs, size_t bit_idx);
+void	Parser_ClearBitInBitSet(lalrBitSet_t *bs, size_t bit_idx);
+bool_t	Parser_IsSetInBitSet(const lalrBitSet_t *bs, size_t bit_idx);
+bool_t	Parser_UnionBitSet(lalrBitSet_t *dest, const lalrBitSet_t *src);
+
+
+
 
 struct __lalr_config_tag
 {
@@ -68,7 +84,9 @@ struct __lalr_config_tag
 		bool_t					is_completed	;
 
 /******************************************/
-		psrSymbList_t			follow_set;
+		lalrBitSet_t			follow_set;
+/******************************************/
+		
 		lalrConfigList_t		*forward;
 		lalrConfigList_t		*backward;
 /******************************************/
@@ -76,7 +94,7 @@ struct __lalr_config_tag
 
 
 
-void	Parser_InitConfig(lalrConfig_t *config, size_t rule_num, size_t delim);
+void	Parser_InitConfig(lalrConfig_t *config, size_t rule_num, size_t delim, const psrGrammar_t *grammar);
 void	Parser_UnInitConfig(lalrConfig_t *config);
 int_t	Parser_CompConfig(const lalrConfig_t *l, const lalrConfig_t *r);
 

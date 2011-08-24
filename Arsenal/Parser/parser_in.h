@@ -29,8 +29,10 @@ extern const psrSymb_t	*PARSER_DefPrecSymb;/*所有无终结符的产生式且未指定prec_to
 /*以下都为非终结符*/
 extern const psrSymb_t	*PARSER_StartSymb;/*第一个符号，被转换为 %Start -> gmr->head[0]*/
 
-bool_t				Parser_IsBuildInSymbol(const psrSymb_t	*symb);
 
+#define			PARSER_MAX_TERM_SYMB_SPEC_ID	2
+
+bool_t			Parser_IsBuildInSymbol(const psrSymb_t	*symb);
 
 
 /*所有parser配置相关的符号都由以下函数分配，此功能为符号对比提供了O(1)的性能(只需对比指针)*/

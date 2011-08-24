@@ -182,7 +182,7 @@ struct __parser_symbol_tag
 		uint_t			hash_code;
 		size_t			ref_count;
 		
-		int_t			spec_mark;
+		int_t			spec_id;
 };
 
 
@@ -241,7 +241,7 @@ typedef struct __parser_symbmap_record_tag
 }psrMapRec_t;
 
 
-#define MAP_BUCKET_SIZE (153)
+#define MAP_BUCKET_SIZE (63)
 
 typedef struct __parser_symbmap_tag
 {
@@ -299,6 +299,8 @@ bool_t			Parser_InsertToTermInfoList(psrTermInfoList_t	*lst, const wchar_t *name
 psrTermInfo_t*	Parser_FindTermByValue(psrTermInfoList_t	*lst, size_t val);
 psrTermInfo_t*	Parser_FindTermByName(psrTermInfoList_t	*lst, const wchar_t *name);
 
+int_t			Parser_IndexOfTermInfoListByValue(const psrTermInfoList_t	*lst, size_t val);
+int_t			Parser_IndexOfTermInfoListByName(const psrTermInfoList_t	*lst, const wchar_t *name);
 psrTermInfo_t*	Parser_GetTermByIndex(psrTermInfoList_t	*lst, size_t index);
 
 
@@ -368,6 +370,10 @@ int_t					Parser_IndexOfGrammar(const psrGrammar_t *grammar, const psrRule_t *ru
 
 const psrSymbList_t*			Parser_GetSymbList(const psrGrammar_t *grammar);
 const psrTermInfoList_t*		Parser_GetTermList(const psrGrammar_t *grammar);
+
+void							Parser_ResetTermSpecID(const psrGrammar_t *grammar);
+int_t							Parser_GetTermSpecID(const psrGrammar_t *grammar, const psrSymb_t *symb);
+
 
 const psrSymb_t*		Parser_GetSymbFromGrammarByName(const psrGrammar_t *grammar, const wchar_t *name);
 

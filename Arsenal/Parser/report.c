@@ -96,7 +96,7 @@ static const	psrConflictView_t*		Parser_CreateConflictView(const psrActionTable_
 								/*const psrRule_t			*rule = Parser_GetRuleFromGrammar(grammar, act->rule_num);*/
 								AR_ASSERT(act != NULL);
 								
-								Parser_InitConfig(&tmp, act->rule_num, act->delim);
+								Parser_InitConfig(&tmp, act->rule_num, act->delim, grammar);
 								/*
 								Parser_InitLRItem(&tmp, rule, act->delim);
 								*/
@@ -430,7 +430,7 @@ static void Parser_ReportConflict(const psrActionTable_t *tbl, const psrGrammar_
 								
 								Parser_InitLRItem(&tmp, rule, action->delim);
 								*/
-								Parser_InitConfig(&tmp, action->rule_num, action->delim);
+								Parser_InitConfig(&tmp, action->rule_num, action->delim, grammar);
 								
 								switch(action->type)
 								{
