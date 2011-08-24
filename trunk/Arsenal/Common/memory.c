@@ -36,13 +36,13 @@ void	AR_UnInitMemory()
 		usage = AR_GetHeapMemUsage(__g_heap);
 
 
-//#if(0)
+#if(0)
 		{
 				wchar_t buf[1024];
 				AR_swprintf(buf, 1024, L"Peak memroy used : %" AR_INT_FMT64 L"uKB" L"\r\n", usage.peak_mem_used / 1024);
 				::MessageBox(NULL, buf, 0,0);
 		}
-//#endif
+#endif
 		AR_DPRINT(L"Peak memroy used : %" AR_INT_FMT64 L"uKB" L"\r\n", usage.peak_mem_used/1024);
 
 

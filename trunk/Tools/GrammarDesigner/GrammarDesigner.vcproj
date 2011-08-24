@@ -85,6 +85,7 @@
 				GenerateMapFile="true"
 				SubSystem="2"
 				TargetMachine="1"
+				Profile="true"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -163,6 +164,7 @@
 				GenerateMapFile="true"
 				SubSystem="2"
 				TargetMachine="17"
+				Profile="true"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -240,6 +242,7 @@
 				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
 				GenerateMapFile="true"
 				TargetMachine="5"
+				Profile="true"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -323,6 +326,7 @@
 				EntryPointSymbol="WinMainCRTStartup"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
+				Profile="true"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -418,6 +422,7 @@
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"
+				Profile="true"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -497,6 +502,7 @@
 				GenerateMapFile="true"
 				SubSystem="2"
 				TargetMachine="17"
+				Profile="true"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -576,6 +582,7 @@
 				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
 				GenerateMapFile="true"
 				TargetMachine="5"
+				Profile="true"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -656,6 +663,7 @@
 				StackCommitSize="4096"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				Profile="true"
 			/>
 			<Tool
 				Name="VCALinkTool"
