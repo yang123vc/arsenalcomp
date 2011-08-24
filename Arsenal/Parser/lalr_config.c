@@ -137,6 +137,7 @@ bool_t	Parser_UnionBitSet(lalrBitSet_t *dest, const lalrBitSet_t *src)
 		bool_t has_changed;
 		AR_ASSERT(dest && src);
 		AR_ASSERT(dest->bit_cnt == src->bit_cnt);
+		AR_ASSERT(dest->bit_cnt > 0);
 		
 		has_changed = false;
 		if(src->bit_set == NULL)

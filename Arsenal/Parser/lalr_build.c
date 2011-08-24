@@ -432,7 +432,7 @@ static void __build_propagation_links(lalrStateSet_t *set)
 
 								for(fp = node->config->forward->head; fp != NULL; fp = fp->next)
 								{
-#if(0)
+
 										lalrConfig_t *next_config = fp->config;
 										
 										if(Parser_UnionBitSet(&next_config->follow_set, &node->config->follow_set))
@@ -441,8 +441,8 @@ static void __build_propagation_links(lalrStateSet_t *set)
 												next_config->is_completed = false;
 
 										}
-#endif
 
+#if(0)
 
 										size_t x;
 										lalrConfig_t *next_config = fp->config;
@@ -456,6 +456,7 @@ static void __build_propagation_links(lalrStateSet_t *set)
 														next_config->is_completed = false;
 												}
 										}
+#endif
 								}
 
 								node->config->is_completed = true;
