@@ -787,9 +787,9 @@ handle_identifier
  
 
 static const wchar_t *__g_lex_name[] = {
-L"delim = [ \\r\\n\\t]",
+L"delim = [\\x{000B}\\x{0020}\\x{00A0}\\x{2028}\\x{2029} \\f\\n\\r\\t\\v]",
 L"comment = /\\*([^\\*]|\\*+[^\\*/])*\\*+/",
-L"comment_line = (//[^\\r\\n]*\\r?(\\n|$))",
+L"comment_line = (//[^\\r\\n]*(\\n|\\r|$))",
 L"skip_lexem = {comment_line}|{delim}|{comment}",
 L"digit = [0-9]",
 L"number = {digit}+",
@@ -799,7 +799,7 @@ L"hex_literal = 0(x|X){hex_digit}+",
 L"oct_literal = 0[0-7]+",
 L"dec_literal = (0|[1-9][0-9]*)",
 L"exponet = (e|E)(\\+|\\-)?[0-9]+",
-L"float_literal = (((([0-9]\\.[0-9]*)|(\\.[0-9]+)){exponet}?)|([0-9]+{exponet}))",
+L"float_literal = (((([0-9]\\.[0-9]*)){exponet}?)|([0-9]+{exponet}))",
 L"escape_seq = (\\\\(\\x22|\\x27))",
 L"string_dq = (\\x22({escape_seq}|[^\\x22])*\\x22)",
 L"string_sq = \\x27({escape_seq}|[^\\x27])*\\x27",
@@ -838,36 +838,38 @@ TOK_NULL = 270,
 TOK_TRUE = 271,
 TOK_FALSE = 272,
 TOK_VAR = 273,
-TOK_IMPORT = 274,
-TOK_ELLIPSIS = 275,
-TOK_INC = 276,
-TOK_DEC = 277,
-TOK_ANDAND = 278,
-TOK_OROR = 279,
-TOK_LE = 280,
-TOK_GE = 281,
-TOK_EQ = 282,
-TOK_NE = 283,
-TOK_LESS = 284,
-TOK_GREATER = 285,
-TOK_L_BRACES = 286,
-TOK_R_BRACES = 287,
-TOK_L_PAREN = 288,
-TOK_R_PAREN = 289,
-TOK_L_SQUARE = 290,
-TOK_R_SQUARE = 291,
-TOK_SEMICOLON = 292,
-TOK_COMMA = 293,
-TOK_ASSIGN = 294,
-TOK_ADD = 295,
-TOK_SUB = 296,
-TOK_MUL = 297,
-TOK_DIV = 298,
-TOK_MOD = 299,
-TOK_NOT = 300,
-TOK_COLON = 301,
-TOK_QUEST = 302,
-TOK_DOT = 303,
+TOK_IN = 274,
+TOK_IMPORT = 275,
+TOK_ELLIPSIS = 276,
+TOK_INC = 277,
+TOK_DEC = 278,
+TOK_ANDAND = 279,
+TOK_OROR = 280,
+TOK_MODUAL_ACCESS = 281,
+TOK_LE = 282,
+TOK_GE = 283,
+TOK_EQ = 284,
+TOK_NE = 285,
+TOK_LESS = 286,
+TOK_GREATER = 287,
+TOK_L_BRACES = 288,
+TOK_R_BRACES = 289,
+TOK_L_PAREN = 290,
+TOK_R_PAREN = 291,
+TOK_L_SQUARE = 292,
+TOK_R_SQUARE = 293,
+TOK_SEMICOLON = 294,
+TOK_COMMA = 295,
+TOK_ASSIGN = 296,
+TOK_ADD = 297,
+TOK_SUB = 298,
+TOK_MUL = 299,
+TOK_DIV = 300,
+TOK_MOD = 301,
+TOK_NOT = 302,
+TOK_COLON = 303,
+TOK_QUEST = 304,
+TOK_DOT = 305,
 };*/
 
 
@@ -897,12 +899,14 @@ psrTermFunc_t leaf;
 {L"true", TOK_TRUE, 1, L"\"true\"(?!{keyword_lhd})", false, default_leaf_handler},
 {L"false", TOK_FALSE, 1, L"\"false\"(?!{keyword_lhd})", false, default_leaf_handler},
 {L"var", TOK_VAR, 1, L"\"var\"(?!{keyword_lhd})", false, default_leaf_handler},
+{L"in", TOK_IN, 1, L"\"in\"(?!{keyword_lhd})", false, default_leaf_handler},
 {L"#import", TOK_IMPORT, 2, L"\"#import\"(?!{keyword_lhd})", false, default_leaf_handler},
 {L"...", TOK_ELLIPSIS, 2, L"\"...\"", false, default_leaf_handler},
 {L"++", TOK_INC, 1, L"\"++\"", false, default_leaf_handler},
 {L"--", TOK_DEC, 1, L"\"--\"", false, default_leaf_handler},
 {L"&&", TOK_ANDAND, 1, L"\"&&\"", false, default_leaf_handler},
 {L"||", TOK_OROR, 1, L"\"||\"", false, default_leaf_handler},
+{L"::", TOK_MODUAL_ACCESS, 1, L"\"::\"", false, default_leaf_handler},
 {L"<=", TOK_LE, 1, L"\"<=\"", false, default_leaf_handler},
 {L">=", TOK_GE, 1, L"\">=\"", false, default_leaf_handler},
 {L"==", TOK_EQ, 1, L"\"==\"", false, default_leaf_handler},
@@ -930,7 +934,7 @@ psrTermFunc_t leaf;
 {L"EOI", 0, 2, L"$", false, NULL}
 };
 
-#define __TERM_COUNT__ ((size_t)48)
+#define __TERM_COUNT__ ((size_t)50)
 
 static struct {const wchar_t *name; size_t tokval; size_t prec_level; psrAssocType_t	assoc;}__g_prec_pattern[] =  {
 {L"?", TOK_QUEST,1, PARSER_ASSOC_RIGHT},
@@ -948,7 +952,7 @@ static struct {const wchar_t *name; size_t tokval; size_t prec_level; psrAssocTy
 {L"*", TOK_MUL,6, PARSER_ASSOC_LEFT},
 {L"/", TOK_DIV,6, PARSER_ASSOC_LEFT},
 {L"%", TOK_MOD,6, PARSER_ASSOC_LEFT},
-{L"IF_WITHOUT_ELSE", 304,7, PARSER_ASSOC_NONASSOC},
+{L"IF_WITHOUT_ELSE", 306,7, PARSER_ASSOC_NONASSOC},
 {L"else", TOK_ELSE,8, PARSER_ASSOC_NONASSOC}
 };
 
@@ -963,11 +967,13 @@ static psrNode_t* AR_STDCALL on_translation_unit(psrNode_t **nodes, size_t count
 /*element	:	declaration */
 /*element	:	function_defination */
 /*declaration	:	var init_declarator_list semi */
+/*declaration	:	var error ; */
 /*init_declarator_list	:	init_declarator */
 /*init_declarator_list	:	init_declarator_list , init_declarator */
 /*compound_element_list	:	compound_element_list compound_element */
 /*compound_element_list	:	compound_element */
 /*compound_element	:	declaration */
+/*expression_statement	:	error ; */
 static psrNode_t* AR_STDCALL auto_return_null(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*element	:	statement */
@@ -983,9 +989,9 @@ static psrNode_t* AR_STDCALL on_function_defination(psrNode_t **nodes, size_t co
 static psrNode_t* AR_STDCALL on_namelist_ellipsis(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*params	:	namelist */
-/*filed_list	:	filed */
-/*filed	:	expression */
-/*filed	:	table_constructor */
+/*list_field_list	:	field */
+/*field	:	expression */
+/*field	:	aggregate_constructor */
 /*statement	:	compound_statement */
 /*statement	:	expression_statement */
 /*statement	:	selection_statement */
@@ -998,8 +1004,6 @@ static psrNode_t* AR_STDCALL on_namelist_ellipsis(psrNode_t **nodes, size_t coun
 /*iteration_statement	:	while_statement */
 /*iteration_statement	:	do_while_statement */
 /*iteration_statement	:	for_statement */
-/*for_expression	:	expression_list */
-/*for_expression	:	 */
 /*semi	:	; */
 /*expression	:	assignment_expression */
 /*assignment_expression	:	constant_expression */
@@ -1022,19 +1026,35 @@ static psrNode_t* AR_STDCALL on_name_list(psrNode_t **nodes, size_t count, const
 static psrNode_t* AR_STDCALL on_name(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*init_declarator	:	NAME = expression */
-/*init_declarator	:	NAME = table_constructor */
+/*init_declarator	:	NAME = aggregate_constructor */
 /*init_declarator	:	NAME */
 static psrNode_t* AR_STDCALL on_declarator(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*table_constructor	:	{ filed_list } */
+/*aggregate_constructor	:	table_constructor */
+/*aggregate_constructor	:	list_constructor */
+static psrNode_t* AR_STDCALL handle_aggregate_constructor(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*list_constructor	:	[ list_field_list ] */
+/*list_constructor	:	[ ] */
+/*list_constructor	:	[ error ] */
+static psrNode_t* AR_STDCALL handle_list_constructor(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*list_field_list	:	list_field_list , field */
+static psrNode_t* AR_STDCALL on_list_field_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*table_constructor	:	{ table_field_list } */
 /*table_constructor	:	{ } */
 /*table_constructor	:	{ error } */
 static psrNode_t* AR_STDCALL on_table_constructor(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*filed_list	:	filed_list , filed */
-static psrNode_t* AR_STDCALL on_filed_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*table_field_list	:	table_field_list , table_field */
+/*table_field_list	:	table_field */
+static psrNode_t* AR_STDCALL handle_table_field_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*import_statement	:	#import STRING ; */
+/*table_field	:	expression : field */
+static psrNode_t* AR_STDCALL handle_table_field(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*import_statement	:	#import STRING semi */
 /*import_statement	:	#import error ; */
 static psrNode_t* AR_STDCALL on_import_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
@@ -1075,7 +1095,7 @@ static psrNode_t* AR_STDCALL on_while_statement(psrNode_t **nodes, size_t count,
 /*do_while_statement	:	do enter_loop statement while ( error ) leave_loop semi */
 static psrNode_t* AR_STDCALL on_do_while_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*for_statement	:	for ( for_expression ; for_expression ; for_expression ) enter_loop statement leave_loop */
+/*for_statement	:	for ( NAME in expression ) enter_loop statement leave_loop */
 static psrNode_t* AR_STDCALL on_for_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*for_statement	:	for ( error ) enter_loop statement leave_loop */
@@ -1100,7 +1120,7 @@ static psrNode_t* AR_STDCALL on_return_statement(psrNode_t **nodes, size_t count
 /*semi	:	error */
 static psrNode_t* AR_STDCALL on_semi_error(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*assignment_expression	:	unary_expression = table_constructor */
+/*assignment_expression	:	unary_expression = aggregate_constructor */
 /*assignment_expression	:	unary_expression = assignment_expression */
 static psrNode_t* AR_STDCALL on_assignment_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
@@ -1155,7 +1175,7 @@ static psrNode_t* AR_STDCALL on_identifier_expression(psrNode_t **nodes, size_t 
 /*primary_expression	:	null */
 static psrNode_t* AR_STDCALL on_constant_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*module_access	:	NAME : NAME */
+/*module_access	:	NAME :: NAME */
 static psrNode_t* AR_STDCALL on_module_access(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*call_expression	:	postfix_expression ( expression_list ) */
@@ -1186,18 +1206,27 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"namelist  :  namelist , NAME ", NULL, on_name_list, 0},
 {L"namelist  :  NAME ", NULL, on_name, 0},
 {L"declaration  :  var init_declarator_list semi ", NULL, auto_return_null, 0},
+{L"declaration  :  var error ; ", NULL, auto_return_null, 0},
 {L"init_declarator_list  :  init_declarator ", NULL, auto_return_null, 0},
 {L"init_declarator_list  :  init_declarator_list , init_declarator ", NULL, auto_return_null, 0},
 {L"init_declarator  :  NAME = expression ", NULL, on_declarator, 0},
-{L"init_declarator  :  NAME = table_constructor ", NULL, on_declarator, 0},
+{L"init_declarator  :  NAME = aggregate_constructor ", NULL, on_declarator, 0},
 {L"init_declarator  :  NAME ", NULL, on_declarator, 0},
-{L"table_constructor  :  { filed_list } ", NULL, on_table_constructor, 0},
+{L"aggregate_constructor  :  table_constructor ", NULL, handle_aggregate_constructor, 0},
+{L"aggregate_constructor  :  list_constructor ", NULL, handle_aggregate_constructor, 0},
+{L"list_constructor  :  [ list_field_list ] ", NULL, handle_list_constructor, 0},
+{L"list_constructor  :  [ ] ", NULL, handle_list_constructor, 0},
+{L"list_constructor  :  [ error ] ", NULL, handle_list_constructor, 0},
+{L"list_field_list  :  list_field_list , field ", NULL, on_list_field_list, 0},
+{L"list_field_list  :  field ", NULL, auto_return_0, 0},
+{L"table_constructor  :  { table_field_list } ", NULL, on_table_constructor, 0},
 {L"table_constructor  :  { } ", NULL, on_table_constructor, 0},
 {L"table_constructor  :  { error } ", NULL, on_table_constructor, 0},
-{L"filed_list  :  filed_list , filed ", NULL, on_filed_list, 0},
-{L"filed_list  :  filed ", NULL, auto_return_0, 0},
-{L"filed  :  expression ", NULL, auto_return_0, 0},
-{L"filed  :  table_constructor ", NULL, auto_return_0, 0},
+{L"table_field_list  :  table_field_list , table_field ", NULL, handle_table_field_list, 0},
+{L"table_field_list  :  table_field ", NULL, handle_table_field_list, 0},
+{L"table_field  :  expression : field ", NULL, handle_table_field, 0},
+{L"field  :  expression ", NULL, auto_return_0, 0},
+{L"field  :  aggregate_constructor ", NULL, auto_return_0, 0},
 {L"statement  :  compound_statement ", NULL, auto_return_0, 0},
 {L"statement  :  expression_statement ", NULL, auto_return_0, 0},
 {L"statement  :  selection_statement ", NULL, auto_return_0, 0},
@@ -1205,7 +1234,7 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"statement  :  jump_statement ", NULL, auto_return_0, 0},
 {L"statement  :  empty_statement ", NULL, auto_return_0, 0},
 {L"statement  :  import_statement ", NULL, auto_return_0, 0},
-{L"import_statement  :  #import STRING ; ", NULL, on_import_statement, 0},
+{L"import_statement  :  #import STRING semi ", NULL, on_import_statement, 0},
 {L"import_statement  :  #import error ; ", NULL, on_import_statement, 0},
 {L"compound_statement  :  start_block compound_element_list } ", NULL, on_compound_statement, 0},
 {L"compound_statement  :  start_block error } ", NULL, on_compound_error_statement, 0},
@@ -1217,6 +1246,7 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"compound_element  :  declaration ", NULL, auto_return_null, 0},
 {L"empty_statement  :  ; ", NULL, on_empty_statement, 0},
 {L"expression_statement  :  expression semi ", NULL, on_expression_statement, 0},
+{L"expression_statement  :  error ; ", NULL, auto_return_null, 0},
 {L"selection_statement  :  if_statement ", NULL, auto_return_0, 0},
 {L"selection_statement  :  if_else_statement ", NULL, auto_return_0, 0},
 {L"if_statement  :  if ( expression ) statement ", L"IF_WITHOUT_ELSE", on_if_statement, 0},
@@ -1230,10 +1260,8 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"while_statement  :  while enter_loop ( error ) statement leave_loop ", NULL, on_while_statement, 0},
 {L"do_while_statement  :  do enter_loop statement while ( expression ) leave_loop semi ", NULL, on_do_while_statement, 0},
 {L"do_while_statement  :  do enter_loop statement while ( error ) leave_loop semi ", NULL, on_do_while_statement, 0},
-{L"for_statement  :  for ( for_expression ; for_expression ; for_expression ) enter_loop statement leave_loop ", NULL, on_for_statement, 0},
+{L"for_statement  :  for ( NAME in expression ) enter_loop statement leave_loop ", NULL, on_for_statement, 0},
 {L"for_statement  :  for ( error ) enter_loop statement leave_loop ", NULL, on_error_for_statement, 0},
-{L"for_expression  :  expression_list ", NULL, auto_return_0, 0},
-{L"for_expression  :   ", NULL, auto_return_0, 0},
 {L"enter_loop  :   ", NULL, on_enter_loop, 0},
 {L"leave_loop  :   ", NULL, on_leave_loop, 0},
 {L"jump_statement  :  continue semi ", NULL, on_continue_statement, 0},
@@ -1244,7 +1272,7 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"semi  :  error ", NULL, on_semi_error, 0},
 {L"expression  :  assignment_expression ", NULL, auto_return_0, 0},
 {L"assignment_expression  :  constant_expression ", NULL, auto_return_0, 0},
-{L"assignment_expression  :  unary_expression = table_constructor ", NULL, on_assignment_expression, 0},
+{L"assignment_expression  :  unary_expression = aggregate_constructor ", NULL, on_assignment_expression, 0},
 {L"assignment_expression  :  unary_expression = assignment_expression ", NULL, on_assignment_expression, 0},
 {L"constant_expression  :  binary_expression ", NULL, auto_return_0, 0},
 {L"constant_expression  :  binary_expression ? expression : expression ", NULL, on_condition_expression, 0},
@@ -1285,7 +1313,7 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"primary_expression  :  false ", NULL, on_constant_expression, 0},
 {L"primary_expression  :  null ", NULL, on_constant_expression, 0},
 {L"primary_expression  :  module_access ", NULL, auto_return_0, 0},
-{L"module_access  :  NAME : NAME ", NULL, on_module_access, 0},
+{L"module_access  :  NAME :: NAME ", NULL, on_module_access, 0},
 {L"call_expression  :  postfix_expression ( expression_list ) ", NULL, on_call_expression, 0},
 {L"call_expression  :  postfix_expression ( error ) ", NULL, on_call_expression, 0},
 {L"call_expression  :  postfix_expression ( ) ", NULL, on_call_expression, 0},
@@ -1293,7 +1321,7 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"expression_list  :  expression_list , expression ", NULL, on_expression_list, 0}
 };
 
-#define __RULE_COUNT__ ((size_t)121)
+#define __RULE_COUNT__ ((size_t)129)
 #define START_RULE L"program"
 
 static lex_t*	__build_lex()													
@@ -1443,7 +1471,6 @@ static psrNode_t* AR_STDCALL on_translation_unit(psrNode_t **nodes, size_t count
 					AR_UNUSED(parser);
 					AR_UNUSED(result);
 					return NULL;
-
 				 }
 }
 
@@ -1455,11 +1482,13 @@ static psrNode_t* AR_STDCALL on_translation_unit(psrNode_t **nodes, size_t count
 /*element	:	declaration */
 /*element	:	function_defination */
 /*declaration	:	var init_declarator_list semi */
+/*declaration	:	var error ; */
 /*init_declarator_list	:	init_declarator */
 /*init_declarator_list	:	init_declarator_list , init_declarator */
 /*compound_element_list	:	compound_element_list compound_element */
 /*compound_element_list	:	compound_element */
 /*compound_element	:	declaration */
+/*expression_statement	:	error ; */
 static psrNode_t* AR_STDCALL auto_return_null(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 { 
@@ -1568,9 +1597,9 @@ static psrNode_t* AR_STDCALL on_namelist_ellipsis(psrNode_t **nodes, size_t coun
 
 
 /*params	:	namelist */
-/*filed_list	:	filed */
-/*filed	:	expression */
-/*filed	:	table_constructor */
+/*list_field_list	:	field */
+/*field	:	expression */
+/*field	:	aggregate_constructor */
 /*statement	:	compound_statement */
 /*statement	:	expression_statement */
 /*statement	:	selection_statement */
@@ -1583,8 +1612,6 @@ static psrNode_t* AR_STDCALL on_namelist_ellipsis(psrNode_t **nodes, size_t coun
 /*iteration_statement	:	while_statement */
 /*iteration_statement	:	do_while_statement */
 /*iteration_statement	:	for_statement */
-/*for_expression	:	expression_list */
-/*for_expression	:	 */
 /*semi	:	; */
 /*expression	:	assignment_expression */
 /*assignment_expression	:	constant_expression */
@@ -1668,7 +1695,7 @@ static psrNode_t* AR_STDCALL on_name(psrNode_t **nodes, size_t count, const wcha
 
 
 /*init_declarator	:	NAME = expression */
-/*init_declarator	:	NAME = table_constructor */
+/*init_declarator	:	NAME = aggregate_constructor */
 /*init_declarator	:	NAME */
 static psrNode_t* AR_STDCALL on_declarator(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
@@ -1705,19 +1732,29 @@ static psrNode_t* AR_STDCALL on_declarator(psrNode_t **nodes, size_t count, cons
 
 
 
-/*table_constructor	:	{ filed_list } */
-/*table_constructor	:	{ } */
-/*table_constructor	:	{ error } */
-static psrNode_t* AR_STDCALL on_table_constructor(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*aggregate_constructor	:	table_constructor */
+/*aggregate_constructor	:	list_constructor */
+static psrNode_t* AR_STDCALL handle_aggregate_constructor(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
-		return NULL;
+	 return NULL;
 }
 
 
 
 
-/*filed_list	:	filed_list , filed */
-static psrNode_t* AR_STDCALL on_filed_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*list_constructor	:	[ list_field_list ] */
+/*list_constructor	:	[ ] */
+/*list_constructor	:	[ error ] */
+static psrNode_t* AR_STDCALL handle_list_constructor(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+
+
+/*list_field_list	:	list_field_list , field */
+static psrNode_t* AR_STDCALL on_list_field_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 { 
 						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
@@ -1742,7 +1779,47 @@ static psrNode_t* AR_STDCALL on_filed_list(psrNode_t **nodes, size_t count, cons
 
 
 
-/*import_statement	:	#import STRING ; */
+/*table_constructor	:	{ table_field_list } */
+/*table_constructor	:	{ } */
+/*table_constructor	:	{ error } */
+static psrNode_t* AR_STDCALL on_table_constructor(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 { 
+						tguParser_t 	*parser = (tguParser_t*)ctx;
+						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
+						tguSynNode_t	*ret;
+						AR_ASSERT(parser != NULL && ns != NULL);
+						AR_ASSERT(count == 2 || count == 3);
+
+						ret = NULL;
+						return ret;	
+						
+					 }
+}
+
+
+
+
+/*table_field_list	:	table_field_list , table_field */
+/*table_field_list	:	table_field */
+static psrNode_t* AR_STDCALL handle_table_field_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+
+
+/*table_field	:	expression : field */
+static psrNode_t* AR_STDCALL handle_table_field(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
+}
+
+
+
+
+/*import_statement	:	#import STRING semi */
 /*import_statement	:	#import error ; */
 static psrNode_t* AR_STDCALL on_import_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
@@ -1762,11 +1839,14 @@ static psrNode_t* AR_STDCALL on_import_statement(psrNode_t **nodes, size_t count
 					{
 						wchar_t msg[1024];
 						parser->has_error = true;
-						AR_swprintf(msg, 1024, L"%ls", L"illegal	import statement in current scope");
+						AR_swprintf(msg, 1024, L"%ls", L"illegal	#import statement in current scope");
 						TGU_ReportError(&parser->report, msg, lex_info->linenum);
 						return NULL;
 
 					}
+
+
+
 					
 					if(ns[1] == NULL)
 					{
@@ -1805,6 +1885,9 @@ static psrNode_t* AR_STDCALL on_import_statement(psrNode_t **nodes, size_t count
 
 								if(!has_error)
 								{
+									/*
+									在#import点，需要初始化此被引入的模块的所有全局变量
+									*/
 									stmt = TGU_CreateStmt(TGU_STT_IMPORT);
 									stmt->import_stmt.module_name = module_symb->name;
 									stmt->lex_info = ns[0]->token.lex_info;
@@ -1826,7 +1909,7 @@ static psrNode_t* AR_STDCALL on_import_statement(psrNode_t **nodes, size_t count
 					{
 						wchar_t msg[1024];
 						parser->has_error = true;
-						AR_swprintf(msg, 1024, L"import '%ls' failed", file_name == NULL ? L"" : file_name);
+						AR_swprintf(msg, 1024, L"#import '%ls' failed", file_name == NULL ? L"" : file_name);
 						TGU_ReportError(&parser->report, msg, lex_info->linenum);
 						return NULL;
 					}else
@@ -2192,64 +2275,18 @@ static psrNode_t* AR_STDCALL on_do_while_statement(psrNode_t **nodes, size_t cou
 
 
 
-/*for_statement	:	for ( for_expression ; for_expression ; for_expression ) enter_loop statement leave_loop */
+/*for_statement	:	for ( NAME in expression ) enter_loop statement leave_loop */
 static psrNode_t* AR_STDCALL on_for_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 { 
 						tguSynNode_t		**ns = (tguSynNode_t**)nodes;
 						tguParser_t		*parser = (tguParser_t*)ctx;
 						tguSynNode_t		*ret;
-						tguExpr_t		*init, *cond, *step;
-						tguStmt_t		*loop;
-						tguStmt_t		*stmt;
-
+						
 						AR_ASSERT(ns != NULL && count == 11);
-
-						if(ns[2] == NULL)
-						{
-							init = NULL;
-						}else
-						{
-							init = ns[2]->expr;
-							ns[2]->expr = NULL;
-							AR_ASSERT(init != NULL);
-						}
-
-						if(ns[4] == NULL)
-						{
-							cond = NULL;
-						}else
-						{
-							cond = ns[4]->expr;
-							ns[4]->expr = NULL;
-							AR_ASSERT(cond != NULL);
-						}
 						
+						ret = NULL;
 
-						if(ns[6] == NULL)
-						{
-							step = NULL;
-						}else
-						{
-							step = ns[6]->expr;
-							ns[6]->expr = NULL;
-							AR_ASSERT(step != NULL);
-						}
-
-						if(ns[9] == NULL)
-						{
-							loop = NULL;
-							parser->has_error = true;
-						}else
-						{
-							loop = ns[9]->stmt;
-							ns[9]->stmt = NULL;
-							AR_ASSERT(loop != NULL);
-						}
-
-						stmt = make_for_statement(parser, init, cond, step, loop, &ns[0]->token.lex_info);
-						
-						ret = __create_synnode(TGU_NODE_STMT_T, (void*)stmt);
 						return ret;
 				 }
 }
@@ -2264,11 +2301,9 @@ static psrNode_t* AR_STDCALL on_error_for_statement(psrNode_t **nodes, size_t co
 						tguSynNode_t		**ns = (tguSynNode_t**)nodes;
 						tguParser_t		*parser = (tguParser_t*)ctx;
 						tguSynNode_t		*ret;
-						tguStmt_t		*stmt;
-						
 
-						stmt = make_for_statement(parser, NULL, NULL, NULL, NULL, &ns[0]->token.lex_info);
-						ret = __create_synnode(TGU_NODE_STMT_T, (void*)stmt);
+						ret = NULL;
+
 						return ret;
 				 }
 }
@@ -2398,7 +2433,7 @@ static psrNode_t* AR_STDCALL on_semi_error(psrNode_t **nodes, size_t count, cons
 
 
 
-/*assignment_expression	:	unary_expression = table_constructor */
+/*assignment_expression	:	unary_expression = aggregate_constructor */
 /*assignment_expression	:	unary_expression = assignment_expression */
 static psrNode_t* AR_STDCALL on_assignment_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
@@ -2891,7 +2926,7 @@ static psrNode_t* AR_STDCALL on_constant_expression(psrNode_t **nodes, size_t co
 
 
 
-/*module_access	:	NAME : NAME */
+/*module_access	:	NAME :: NAME */
 static psrNode_t* AR_STDCALL on_module_access(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 { 
