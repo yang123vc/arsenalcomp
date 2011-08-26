@@ -109,14 +109,17 @@ item_list			:		item_list item
 				|		.
 				;
 		
-item				:		code_decl		";"
-				|		start_def		";"		
-				|		name_def		";"		
-				|		token_def		";"	
-				|		prec_def		";"
-				|		rule_def		";"
+item				:		code_decl		semi
+				|		start_def		semi		
+				|		name_def		semi		
+				|		token_def		semi	
+				|		prec_def		semi
+				|		rule_def		semi
 				|		error			";"
-				|		";" 		
+				;
+
+semi				:		";"
+				|		error
 				;
 
 name_def 			:		NAME LEXEME ":" LEXEME 

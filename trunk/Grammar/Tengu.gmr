@@ -1,4 +1,3 @@
-
 %code {:
 /*
  * The Arsenal Library
@@ -362,6 +361,9 @@
 %token	"false"	:	'"false"(?!{keyword_lhd})'		,1			%value	"TOK_FALSE"			%action default_leaf_handler			;
 %token	"var"		:	'"var"(?!{keyword_lhd})'		,1			%value	"TOK_VAR"			%action default_leaf_handler			;
 
+%token	"in"		:	'"in"(?!{keyword_lhd})'		,1			%value	"TOK_IN"			%action default_leaf_handler			;
+
+
 %token	"#import"	:	'"#import"(?!{keyword_lhd})'	,2			%value	"TOK_IMPORT"			%action default_leaf_handler			;
 
 
@@ -721,6 +723,7 @@ namelist			:	namelist	"," NAME		%action	on_name_list
 
 
 declaration				:	"var"		init_declarator_list 	semi			%action	auto_return_null
+					|	"var"		error				";"			%action	auto_return_null
 					;
 
 
@@ -854,33 +857,12 @@ table_constructor			:	"{"	table_field_list "}"		%action	on_table_constructor
 						tguParser_t 	*parser = (tguParser_t*)ctx;
 						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
 						tguSynNode_t	*ret;
-						tguExpr_t	*expr;
 						AR_ASSERT(parser != NULL && ns != NULL);
 						AR_ASSERT(count == 2 || count == 3);
-						
-						expr = TGU_CreateExpr(TGU_ET_TABLE_INIT);
 
-						if(count == 2)
-						{
-							/*创建了个空的表结构*/
-							expr->table_init.expr_list = NULL;
-						}else
-						{
-							if(ns[1] == NULL)
-							{
-								parser->has_error = true;
-								expr->table_init.expr_list = NULL;
-							}else
-							{
-								expr->table_init.expr_list = ns[1]->expr;
-								ns[1]->expr = NULL;
-								AR_ASSERT(expr->table_init.expr_list != NULL);
-							}
-						}
+						ret = NULL;
+						return ret;	
 						
-						ret = __create_synnode(TGU_NODE_EXPR_T, (void*)expr);
-						return ret;
-
 					:}
 					;
 
@@ -924,7 +906,7 @@ statement				:	compound_statement			%action	auto_return_0
 
 
 
-import_statement		:	"#import"	STRING	";"		%action	on_import_statement
+import_statement		:	"#import"	STRING	 semi		%action	on_import_statement
 				|	"#import"	error 	";"		%action	on_import_statement
 				{:
 					tguParser_t 	*parser = (tguParser_t*)ctx;
@@ -1251,6 +1233,7 @@ expression_statement			:	expression	 semi		%action on_expression_statement
 						return ret;
 
 					:}
+					|	error	";"			%action auto_return_null
 					;
 
 
@@ -1445,8 +1428,10 @@ while_statement			:	"while" enter_loop  "(" expression ")" statement leave_loop	
 
 
 
-do_while_statement			:	"do" enter_loop statement "while" "(" expression ")" leave_loop semi			%action	on_do_while_statement
-					|	"do" enter_loop statement "while" "(" error ")" leave_loop semi				%action	on_do_while_statement
+
+
+do_while_statement			:	"do" enter_loop statement "while" "(" expression ")" leave_loop 	semi			%action	on_do_while_statement
+					|	"do" enter_loop statement "while" "(" error ")" leave_loop 		semi			%action	on_do_while_statement
 					{:
 						tguSynNode_t	**ns = 	(tguSynNode_t**)nodes;
 						tguParser_t	*parser =	(tguParser_t*)ctx;
@@ -1484,6 +1469,7 @@ do_while_statement			:	"do" enter_loop statement "while" "(" expression ")" leav
 
 
 
+
 %code {:
 	
 	static tguStmt_t*	make_for_statement(tguParser_t *parser, tguExpr_t *init, tguExpr_t *cond, tguExpr_t *step, tguStmt_t *loop, const tguLexInfo_t *lex_info)
@@ -1502,62 +1488,16 @@ do_while_statement			:	"do" enter_loop statement "while" "(" expression ")" leav
 :};
 
 
-for_statement			:	"for"	"("	for_expression	";"	for_expression	";"	for_expression	")"	enter_loop  statement leave_loop	%action	on_for_statement
+for_statement			:	"for"	"("	NAME	"in"	expression	")" 	enter_loop  statement leave_loop	%action	on_for_statement
 				{:
 						tguSynNode_t		**ns = (tguSynNode_t**)nodes;
 						tguParser_t		*parser = (tguParser_t*)ctx;
 						tguSynNode_t		*ret;
-						tguExpr_t		*init, *cond, *step;
-						tguStmt_t		*loop;
-						tguStmt_t		*stmt;
-
+						
 						AR_ASSERT(ns != NULL && count == 11);
-
-						if(ns[2] == NULL)
-						{
-							init = NULL;
-						}else
-						{
-							init = ns[2]->expr;
-							ns[2]->expr = NULL;
-							AR_ASSERT(init != NULL);
-						}
-
-						if(ns[4] == NULL)
-						{
-							cond = NULL;
-						}else
-						{
-							cond = ns[4]->expr;
-							ns[4]->expr = NULL;
-							AR_ASSERT(cond != NULL);
-						}
 						
+						ret = NULL;
 
-						if(ns[6] == NULL)
-						{
-							step = NULL;
-						}else
-						{
-							step = ns[6]->expr;
-							ns[6]->expr = NULL;
-							AR_ASSERT(step != NULL);
-						}
-
-						if(ns[9] == NULL)
-						{
-							loop = NULL;
-							parser->has_error = true;
-						}else
-						{
-							loop = ns[9]->stmt;
-							ns[9]->stmt = NULL;
-							AR_ASSERT(loop != NULL);
-						}
-
-						stmt = make_for_statement(parser, init, cond, step, loop, &ns[0]->token.lex_info);
-						
-						ret = __create_synnode(TGU_NODE_STMT_T, (void*)stmt);
 						return ret;
 				:}
 				|	"for"	"("	error	")"	enter_loop  statement leave_loop	%action	on_error_for_statement
@@ -1565,21 +1505,12 @@ for_statement			:	"for"	"("	for_expression	";"	for_expression	";"	for_expression
 						tguSynNode_t		**ns = (tguSynNode_t**)nodes;
 						tguParser_t		*parser = (tguParser_t*)ctx;
 						tguSynNode_t		*ret;
-						tguStmt_t		*stmt;
-						
 
-						stmt = make_for_statement(parser, NULL, NULL, NULL, NULL, &ns[0]->token.lex_info);
-						ret = __create_synnode(TGU_NODE_STMT_T, (void*)stmt);
+						ret = NULL;
+
 						return ret;
 				:}
 				;
-
-
-for_expression		:	expression_list	%action	auto_return_0
-				|	.			%action	auto_return_0
-				;
-
-
 
 
 
@@ -1654,7 +1585,7 @@ leave_loop				:	.					%action on_leave_loop
 ;
 
 
-jump_statement			:	"continue" semi				%action on_continue_statement
+jump_statement			:	"continue" 	semi				%action on_continue_statement
 					{:
 						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
 						tguSynNode_t 	*ret;
