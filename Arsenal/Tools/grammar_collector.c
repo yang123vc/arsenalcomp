@@ -198,31 +198,6 @@ static const wchar_t *__cfg_lex_name[] =
 };
 
 
-typedef enum
-{
-		EOI	= 0,
-		DELIM ,
-		SKIP = 600,
-		CODE,
-		VALUE,
-		START,
-		NAME,
-		TOKEN,
-		PREC,
-		ASSOC,
-		LEXEME,
-		NUMBER,
-		DOT,
-		COMMA,
-		COLON,
-		SEMI,
-		OR,
-		FAKE_EOI,
-		ACTION,
-		ACTION_INS,
-		COMMENT
-}cfgLexValue_t;
-
 
 
 typedef struct  __cfg_lex_pattern_tag
@@ -236,35 +211,35 @@ typedef struct  __cfg_lex_pattern_tag
 
 static const cfgLexPattern_t	__cfg_pattern[] =
 {
-		{EOI,	L"$", false,2},
-		{DELIM, L"{skip_lexem}+", true, 1},
+		{CFG_LEXVAL_EOI,	L"$", false,2},
+		{CFG_LEXVAL_DELIM, L"{skip_lexem}+", true, 1},
 		
-		{COMMENT, L"{comment_lexem}", false, 1},
+		{CFG_LEXVAL_COMMENT, L"{comment_lexem}", false, 1},
 
-		{ASSOC,	L"\"%\"(\"left\"|\"right\"|\"nonassoc\")(?={key_lookahead})", false,1},
+		{CFG_LEXVAL_ASSOC,	L"\"%\"(\"left\"|\"right\"|\"nonassoc\")(?={key_lookahead})", false,1},
 
-		{CODE,	L"\"%code\"(?={key_lookahead})", false,0},
-		{VALUE,	L"\"%value\"(?={key_lookahead})", false,0},
+		{CFG_LEXVAL_CODE,	L"\"%code\"(?={key_lookahead})", false,0},
+		{CFG_LEXVAL_VALUE,	L"\"%value\"(?={key_lookahead})", false,0},
 		
-		{SKIP,	L"\"%skip\"(?={key_lookahead})", false,0},
-		{START,	L"\"%start\"(?={key_lookahead})", false,0},
-		{NAME,	L"\"%name\"(?={key_lookahead})", false,0},
-		{TOKEN,	L"\"%token\"(?={key_lookahead})", false,0},
-		{PREC,	L"\"%prec\"(?={key_lookahead})", false,0},
+		{CFG_LEXVAL_SKIP,	L"\"%skip\"(?={key_lookahead})", false,0},
+		{CFG_LEXVAL_START,	L"\"%start\"(?={key_lookahead})", false,0},
+		{CFG_LEXVAL_NAME,	L"\"%name\"(?={key_lookahead})", false,0},
+		{CFG_LEXVAL_TOKEN,	L"\"%token\"(?={key_lookahead})", false,0},
+		{CFG_LEXVAL_PREC,	L"\"%prec\"(?={key_lookahead})", false,0},
 
-		{ACTION, L"\"%action\"(?={skip_lexem}+)", false, 0},
-		{ACTION_INS, L"\\{:[^\\u0]*?:\\}", false, 0},
+		{CFG_LEXVAL_ACTION, L"\"%action\"(?={skip_lexem}+)", false, 0},
+		{CFG_LEXVAL_ACTION_INS, L"\\{:[^\\u0]*?:\\}", false, 0},
 
-		{LEXEME,	L"{lexeme}", false,0},
-		{NUMBER,	L"{number}", false,0},
+		{CFG_LEXVAL_LEXEME,	L"{lexeme}", false,0},
+		{CFG_LEXVAL_NUMBER,	L"{number}", false,0},
 
-		{DOT,		L"\".\"",	false,1},
-		{COMMA,		L"\",\"",	false,1},
+		{CFG_LEXVAL_DOT,		L"\".\"",	false,1},
+		{CFG_LEXVAL_COMMA,		L"\",\"",	false,1},
 
-		{COLON,		L"\":\"",	false,1},
-		{SEMI,		L"\";\"",	false,1},
+		{CFG_LEXVAL_COLON,		L"\":\"",	false,1},
+		{CFG_LEXVAL_SEMI,		L"\";\"",	false,1},
 
-		{OR,		L"\"|\"",	false,1}
+		{CFG_LEXVAL_OR,		L"\"|\"",	false,1}
 };
 
 
@@ -288,25 +263,25 @@ typedef struct	__cfg_term_info_tag
 
 static const cfgTermInfo_t	__cfg_term[] =
 {
-		{CODE, L"%code"},
-		{VALUE, L"%value"},
-		{SKIP, L"%skip"},
-		{START, L"%start"},
-		{NAME, L"%name"},
-		{TOKEN, L"%token"},
-		{PREC, L"%prec"},
-		{ACTION, L"%action"},
-		{ACTION_INS, L"action_ins"},
-		{ASSOC, L"assoc"},
-		{LEXEME, L"lexeme"},
-		{NUMBER, L"number"},
+		{CFG_LEXVAL_CODE, L"%code"},
+		{CFG_LEXVAL_VALUE, L"%value"},
+		{CFG_LEXVAL_SKIP, L"%skip"},
+		{CFG_LEXVAL_START, L"%start"},
+		{CFG_LEXVAL_NAME, L"%name"},
+		{CFG_LEXVAL_TOKEN, L"%token"},
+		{CFG_LEXVAL_PREC, L"%prec"},
+		{CFG_LEXVAL_ACTION, L"%action"},
+		{CFG_LEXVAL_ACTION_INS, L"action_ins"},
+		{CFG_LEXVAL_ASSOC, L"assoc"},
+		{CFG_LEXVAL_LEXEME, L"lexeme"},
+		{CFG_LEXVAL_NUMBER, L"number"},
 
-		{DOT, L"."},
-		{COMMA, L","},
-		{COLON, L":"},
-		{SEMI, L";"},
-		{OR,   L"|"},
-		{FAKE_EOI, L"#"}
+		{CFG_LEXVAL_DOT, L"."},
+		{CFG_LEXVAL_COMMA, L","},
+		{CFG_LEXVAL_COLON, L":"},
+		{CFG_LEXVAL_SEMI, L";"},
+		{CFG_LEXVAL_OR,   L"|"},
+		{CFG_LEXVAL_FAKE_EOI, L"#"}
 };
 
 /*
@@ -500,12 +475,12 @@ RE_CHECK_POINT:
 				}
 
 
-				/*EOI*/
+				/*CFG_LEXVAL_EOI*/
 				cfg->tok[cfg->tok_cnt ].is_skip = false;
 				cfg->tok[cfg->tok_cnt ].lex_prec = 2;
 				cfg->tok[cfg->tok_cnt ].line = 0;
 				cfg->tok[cfg->tok_cnt ].tokval = 0;
-				cfg->tok[cfg->tok_cnt ].name = AR_wcsdup(L"EOI");
+				cfg->tok[cfg->tok_cnt ].name = AR_wcsdup(L"CFG_LEXVAL_EOI");
 				cfg->tok[cfg->tok_cnt ].regex = AR_wcsdup(L"$");
 
 				cfg->tok_cnt++;
@@ -941,7 +916,7 @@ static psrNode_t* AR_STDCALL __build_leaf(const psrToken_t *tok,  void *ctx)
 
 		node->lexeme.lex_val = (cfgLexValue_t)tok->term_val;
 
-		if(tok->term_val == LEXEME && (tok->str[0] == L'"' || tok->str[0] == L'\''))
+		if(tok->term_val == CFG_LEXVAL_LEXEME && (tok->str[0] == L'"' || tok->str[0] == L'\''))
 		{
 				wchar_t *tmp, *p;
 				AR_ASSERT(tok->str[tok->str_cnt-1] == L'"' || tok->str[tok->str_cnt-1] == L'\'');
@@ -969,7 +944,7 @@ static psrNode_t* AR_STDCALL __build_leaf(const psrToken_t *tok,  void *ctx)
 				
 				AR_DEL(tmp);
 
-		}else if(tok->term_val == ACTION_INS)
+		}else if(tok->term_val == CFG_LEXVAL_ACTION_INS)
 		{
 				wchar_t *buf;
 				
@@ -1100,7 +1075,7 @@ static psrNode_t*		AR_STDCALL __handle_rhs(psrNode_t **nodes, size_t count, cons
 		AR_ASSERT(ns[2] ? ns[2]->type == CFG_NODE_LIST_T : true);
 
 
-		if(ns[0]->type == CFG_LEXEME_T && ns[0]->lexeme.lex_val == DOT)
+		if(ns[0]->type == CFG_LEXEME_T && ns[0]->lexeme.lex_val == CFG_LEXVAL_DOT)
 		{
 				AR_wcscat((wchar_t*)res->rule.rhs, L" ");
 				res->rule.line = ns[0]->lexeme.line;
@@ -1111,7 +1086,7 @@ static psrNode_t*		AR_STDCALL __handle_rhs(psrNode_t **nodes, size_t count, cons
 				{
 						cfgNode_t *tmp = ns[0]->lst.lst[i];
 
-						AR_ASSERT(tmp->type == CFG_LEXEME_T && tmp->lexeme.lex_val == (size_t)LEXEME);
+						AR_ASSERT(tmp->type == CFG_LEXEME_T && tmp->lexeme.lex_val == (size_t)CFG_LEXVAL_LEXEME);
 
 						AR_wcscat((wchar_t*)res->rule.rhs, tmp->lexeme.lexeme);
 						AR_wcscat((wchar_t*)res->rule.rhs, L" ");
@@ -1178,7 +1153,7 @@ static psrNode_t*		AR_STDCALL __handle_rhs_list(psrNode_t **nodes, size_t count,
 		AR_UNUSED(ctx);
 		if(count == 3)
 		{
-				AR_ASSERT(ns[0] && ns[0]->type == CFG_NODE_LIST_T && ns[1]->type == CFG_LEXEME_T && ns[1]->lexeme.lex_val == (size_t)OR && ns[2] && ns[2]->type == CFG_RULE_T);
+				AR_ASSERT(ns[0] && ns[0]->type == CFG_NODE_LIST_T && ns[1]->type == CFG_LEXEME_T && ns[1]->lexeme.lex_val == (size_t)CFG_LEXVAL_OR && ns[2] && ns[2]->type == CFG_RULE_T);
 
 				res = ns[0];
 
@@ -1249,7 +1224,7 @@ static psrNode_t*		AR_STDCALL __handle_prec_def(psrNode_t **nodes, size_t count,
 		size_t			i;
 		AR_ASSERT(count == 2);
 
-		AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T &&  ns[0]->lexeme.lex_val == ASSOC && ns[1] && ns[1]->type == CFG_NODE_LIST_T);
+		AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T &&  ns[0]->lexeme.lex_val == CFG_LEXVAL_ASSOC && ns[1] && ns[1]->type == CFG_NODE_LIST_T);
 		AR_UNUSED(name);
 		AR_UNUSED(count);
 
@@ -1323,7 +1298,7 @@ static psrNode_t*		AR_STDCALL __handle_token_def(psrNode_t **nodes, size_t count
 
 		res->token.line = ns[1]->lexeme.line;
 
-		if(ns[1]->lexeme.lex_val == SKIP)
+		if(ns[1]->lexeme.lex_val == CFG_LEXVAL_SKIP)
 		{
 				res->token.is_skip = true;
 				res->token.name = NULL;
@@ -1530,7 +1505,7 @@ static psrNode_t*		AR_STDCALL __handle_start_def(psrNode_t **nodes, size_t count
 
 		AR_ASSERT(count == 2);
 
-		AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T && ns[0]->lexeme.lex_val == START);
+		AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T && ns[0]->lexeme.lex_val == CFG_LEXVAL_START);
 		AR_ASSERT(ns[1] && ns[1]->type == CFG_LEXEME_T);
 		
 		AR_UNUSED(ctx);
@@ -1555,7 +1530,7 @@ static psrNode_t*		AR_STDCALL __handle_pre_def(psrNode_t **nodes, size_t count, 
 		size_t			len;
 		AR_ASSERT(count == 1);
 
-		AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T && ns[0]->lexeme.lex_val == ACTION_INS);
+		AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T && ns[0]->lexeme.lex_val == CFG_LEXVAL_ACTION_INS);
 
 
 		res = CFG_CreateNode(CFG_PREDEF_T);
@@ -1588,8 +1563,8 @@ static psrNode_t*		AR_STDCALL __handle_pre_def(psrNode_t **nodes, size_t count, 
 		size_t			len;
 		AR_ASSERT(count == 3);
 
-		AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T && ns[0]->lexeme.lex_val == CODE);
-		AR_ASSERT(ns[2] && ns[2]->type == CFG_LEXEME_T && ns[2]->lexeme.lex_val == ACTION_INS);
+		AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T && ns[0]->lexeme.lex_val == CFG_LEXVAL_CODE);
+		AR_ASSERT(ns[2] && ns[2]->type == CFG_LEXEME_T && ns[2]->lexeme.lex_val == CFG_LEXVAL_ACTION_INS);
 
 		AR_UNUSED(ctx);
 		AR_UNUSED(name_tmp);
@@ -1652,10 +1627,10 @@ static psrNode_t*		AR_STDCALL __handle_program(psrNode_t **nodes, size_t count, 
 
 		if(count == 2)
 		{
-				AR_ASSERT(ns[1]->type == CFG_LEXEME_T && ns[1]->lexeme.lex_val == FAKE_EOI);
+				AR_ASSERT(ns[1]->type == CFG_LEXEME_T && ns[1]->lexeme.lex_val == CFG_LEXVAL_FAKE_EOI);
 		}else
 		{
-				AR_ASSERT(ns[1] == NULL && ns[2]->type == CFG_LEXEME_T && ns[2]->lexeme.lex_val == FAKE_EOI);
+				AR_ASSERT(ns[1] == NULL && ns[2]->type == CFG_LEXEME_T && ns[2]->lexeme.lex_val == CFG_LEXVAL_FAKE_EOI);
 				has_err = true;
 		}
 
@@ -1981,7 +1956,7 @@ static void		AR_STDCALL cfg_error(const psrToken_t *tok, const size_t expected[]
 		size_t			i;
 
 /*
-		if(tok->term_val == FAKE_EOI)
+		if(tok->term_val == CFG_LEXVAL_FAKE_EOI)
 		{
 				return;
 		}
@@ -1993,9 +1968,9 @@ static void		AR_STDCALL cfg_error(const psrToken_t *tok, const size_t expected[]
 		AR_memset(&info, 0, sizeof(info));
 
 		/******************************************************************************************/
-		if(tok->str_cnt == 0 || tok->term_val == FAKE_EOI)
+		if(tok->str_cnt == 0 || tok->term_val == CFG_LEXVAL_FAKE_EOI)
 		{
-				buf = AR_wcsdup(L"%EOI");
+				buf = AR_wcsdup(L"%CFG_LEXVAL_EOI");
 		}else
 		{
 				buf = AR_wcsndup(tok->str, tok->str_cnt);
@@ -2221,7 +2196,7 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 						continue;
 				}
 
-				if(tok.value == COMMENT)
+				if(tok.value == CFG_LEXVAL_COMMENT)
 				{
 						continue;
 				}
@@ -2229,16 +2204,16 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 				PARSER_TOTERMTOK(&tok, &term);
 
 				/*
-						构造一个简单空语句，以便不会在 abc EOI这种情况下，无法分析出子树
+						构造一个简单空语句，以便不会在 abc CFG_LEXVAL_EOI这种情况下，无法分析出子树
 				*/
-				if(term.term_val == EOI)
+				if(term.term_val == CFG_LEXVAL_EOI)
 				{
 						psrToken_t end;
 						end.col = term.col;
 						end.line = term.line;
 						end.str = L"#";
 						end.str_cnt = 1;
-						end.term_val = FAKE_EOI;
+						end.term_val = CFG_LEXVAL_FAKE_EOI;
 
 						if(!Parser_AddToken(parser_context, &end))
 						{
@@ -2248,7 +2223,7 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 
 				is_ok = Parser_AddToken(parser_context, &term);
 				
-				if(tok.value == EOI)break;
+				if(tok.value == CFG_LEXVAL_EOI)break;
 		}		
 
 		if(is_ok)
@@ -2346,7 +2321,7 @@ const cfgLexicalSet_t*		CFG_CollectLexicalSet(const wchar_t *gmr_txt)
 				
 				__insert_to_lexical_set(lx_set, &tok);
 
-				if(tok.value == EOI)break;
+				if(tok.value == CFG_LEXVAL_EOI)break;
 		}		
 		__destroy_lex_match(match);
 
