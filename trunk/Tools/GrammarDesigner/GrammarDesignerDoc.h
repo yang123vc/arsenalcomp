@@ -125,6 +125,8 @@ public:
 		afx_msg void OnUpdateFlagsIgnorecase(CCmdUI *pCmdUI);
 		afx_msg void OnShowLeftfactor();
 		afx_msg void OnUpdateShowLeftfactor(CCmdUI *pCmdUI);
+		afx_msg void OnEditFindallreferences();
+		afx_msg void OnUpdateEditFindallreferences(CCmdUI *pCmdUI);
 };
 
 

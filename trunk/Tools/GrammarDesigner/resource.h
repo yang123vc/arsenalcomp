@@ -45,8 +45,10 @@
 #define IDI_OCT                         322
 #define IDI_OCTOPUS                     322
 #define IDD_DIALOG_STR_CODE_CONV        323
-#define IDR_MENU1                       324
 #define IDR_MENU_STRCONV                324
+#define IDS_FIND_OUTPUT_WND             325
+#define IDR_MENU1                       326
+#define IDR_FIND_OUTPUT_POPUP           326
 #define IDC_EDIT1                       1001
 #define IDC_EDIT_LINE                   1001
 #define IDC_EDIT_STRING                 1001
@@ -161,6 +163,9 @@
 #define ID_VIEW_FULLSCREEN              32889
 #define ID_SYNTAX_MENU_EXPAND           32898
 #define ID_POPUP_COLLAPSE               32899
+#define ID_EDIT_FINDALLREFERENCES       32900
+#define ID_VIEW_FIND_OUTPUT_WND         32901
+#define ID_FIND_OUTPUTWND_FONT          32903
 #define ID_INDICATOR_LINE               59142
 #define ID_INDICATOR_COL                59143
 #define IDS_ACTVIEW_WND                 61204
@@ -173,8 +178,8 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        325
-#define _APS_NEXT_COMMAND_VALUE         32900
+#define _APS_NEXT_RESOURCE_VALUE        327
+#define _APS_NEXT_COMMAND_VALUE         32904
 #define _APS_NEXT_CONTROL_VALUE         1013
 #define _APS_NEXT_SYMED_VALUE           310
 #endif

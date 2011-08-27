@@ -126,81 +126,16 @@ BEGIN
     END
 END
 
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Dialog
-//
-
-IDD_DIALOG_GOTO DIALOGEX 0, 0, 205, 76
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Goto"
-FONT 8, "MS Shell Dlg", 400, 0, 0x1
+IDR_FIND_OUTPUT_POPUP MENU 
 BEGIN
-    EDITTEXT        IDC_EDIT_LINE,11,28,183,14,ES_AUTOHSCROLL | ES_NUMBER
-    DEFPUSHBUTTON   "OK",IDOK,44,55,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,112,55,50,14
-    LTEXT           "Static",IDC_STATIC_LINE,11,7,183,14
-END
-
-IDD_DIALOG_STR_CODE_CONV DIALOGEX 0, 0, 370, 255
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "String Converter"
-FONT 8, "MS Shell Dlg", 400, 0, 0x1
-BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,306,234,50,14
-    PUSHBUTTON      "To Code",IDC_BUTTON_TO_CODE,76,118,54,18
-    PUSHBUTTON      "To String",IDC_BUTTON_TO_STRING,232,118,54,18
-    LTEXT           "String:",IDC_STATIC,12,6,42,12
-    LTEXT           "Code:",IDC_STATIC,12,120,42,12
-    CONTROL         "",IDC_EDIT_STRING,"RichEdit20W",ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,7,19,354,92
-    CONTROL         "",IDC_EDIT_CODE,"RichEdit20W",ES_MULTILINE | ES_AUTOHSCROLL | WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,7,138,354,92
-END
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// DESIGNINFO
-//
-
-#ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO 
-BEGIN
-    IDD_DIALOG_GOTO, DIALOG
+    POPUP "Popup"
     BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 198
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 69
-    END
-
-    IDD_DIALOG_STR_CODE_CONV, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 363
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 248
+        MENUITEM "&Copy",                       ID_EDIT_COPY
+        MENUITEM "&Clear",                      ID_EDIT_CLEAR
+        MENUITEM SEPARATOR
+        MENUITEM "&Font",                       ID_FIND_OUTPUTWND_FONT
     END
 END
-#endif    // APSTUDIO_INVOKED
-
-#endif    // Chinese (P.R.C.) resources
-/////////////////////////////////////////////////////////////////////////////
-
-
-/////////////////////////////////////////////////////////////////////////////
-// English (U.S.) resources
-
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-#ifdef _WIN32
-LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
-#pragma code_page(1252)
-#endif //_WIN32
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Menu
-//
 
 IDR_MAINFRAME MENU 
 BEGIN
@@ -326,6 +261,7 @@ BEGIN
     POPUP "Edit"
     BEGIN
         MENUITEM "&Goto Decl",                  ID_EDIT_GOTO_DECL
+        MENUITEM "Find All References",         ID_EDIT_FINDALLREFERENCES
         MENUITEM "&Build",                      ID_PARSER_BUILD
         POPUP "Show"
         BEGIN
@@ -355,8 +291,6 @@ BEGIN
         MENUITEM "&Copy",                       ID_EDIT_COPY
         MENUITEM "&Clear",                      ID_EDIT_CLEAR
         MENUITEM SEPARATOR
-        MENUITEM "&Hide",                       ID_VIEW_OUTPUTWND
-        MENUITEM SEPARATOR
         MENUITEM "&Font",                       ID_OUTPUTWND_FONT
     END
 END
@@ -369,6 +303,76 @@ BEGIN
     MENUITEM "Office 2007 (&Aqua Style)",   ID_VIEW_APPLOOK_OFF_2007_AQUA
 END
 
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DIALOG_GOTO DIALOGEX 0, 0, 205, 76
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Goto"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    EDITTEXT        IDC_EDIT_LINE,11,28,183,14,ES_AUTOHSCROLL | ES_NUMBER
+    DEFPUSHBUTTON   "OK",IDOK,44,55,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,112,55,50,14
+    LTEXT           "Static",IDC_STATIC_LINE,11,7,183,14
+END
+
+IDD_DIALOG_STR_CODE_CONV DIALOGEX 0, 0, 370, 255
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "String Converter"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,306,234,50,14
+    PUSHBUTTON      "To Code",IDC_BUTTON_TO_CODE,76,118,54,18
+    PUSHBUTTON      "To String",IDC_BUTTON_TO_STRING,232,118,54,18
+    LTEXT           "String:",IDC_STATIC,12,6,42,12
+    LTEXT           "Code:",IDC_STATIC,12,120,42,12
+    CONTROL         "",IDC_EDIT_STRING,"RichEdit20W",WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP | 0xc4,7,19,354,92
+    CONTROL         "",IDC_EDIT_CODE,"RichEdit20W",WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP | 0x84,7,138,354,92
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_DIALOG_GOTO, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 198
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 69
+    END
+
+    IDD_DIALOG_STR_CODE_CONV, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 363
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 248
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // Chinese (P.R.C.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -716,6 +720,11 @@ END
 STRINGTABLE 
 BEGIN
     IDS_EDIT_MENU           "Edit"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_FIND_OUTPUT_WND     "Find Symbol Results"
 END
 
 #endif    // English (U.S.) resources

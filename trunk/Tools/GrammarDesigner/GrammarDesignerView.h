@@ -5,7 +5,6 @@
 
 #pragma once
 
-
 class CGrammarDesignerView : public CRichEditView 
 {
 protected: // create from serialization only
