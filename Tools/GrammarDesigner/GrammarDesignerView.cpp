@@ -554,6 +554,21 @@ LRESULT CGrammarDesignerView::OnLocatePos(WPARAM wp, LPARAM lp)
 				this->SetCaretPos(pt);
 				int cnt = this->GetRichEditCtrl().LineLength(index);
 				if(cnt >= 0)this->GetRichEditCtrl().SetSel(index, index + cnt);
+
+
+				int first_visible_line = this->GetRichEditCtrl().GetFirstVisibleLine();
+
+				if(first_visible_line > 0 && (int)wp > first_visible_line)
+				{
+						this->GetRichEditCtrl().LineScroll(((int)wp - first_visible_line));
+
+						first_visible_line = this->GetRichEditCtrl().GetFirstVisibleLine();
+
+						if(first_visible_line == (int)wp)
+						{
+								this->GetRichEditCtrl().LineScroll(-10, 0);
+						}
+				}
 				
 		}
 		
@@ -840,8 +855,6 @@ public:
 				str.Format(TEXT("%d"), m_goto_line);
 
 				this->SetDlgItemText(IDC_EDIT_LINE, str);
-
-				
 
 				return TRUE;  // return TRUE unless you set the focus to a control
 				// EXCEPTION: OCX Property Pages should return FALSE

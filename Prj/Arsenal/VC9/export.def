@@ -172,6 +172,8 @@ Parser_DestroyParserStatusView
 
 ;Tools
 
+CFG_CollectLexicalSet
+CFG_DestroyLexicalSet
 
 CFG_CollectGrammarConfig
 CFG_DestroyGrammarConfig

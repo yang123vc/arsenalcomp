@@ -50,6 +50,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 	ON_COMMAND(ID_APP_EXIT, &CMainFrame::OnAppExit)
 	ON_COMMAND(ID_VIEW_FULLSCREEN, &CMainFrame::OnViewFullscreen)
 	ON_WM_GETMINMAXINFO()
+	ON_COMMAND(ID_SHOW_FINDRESULTS, &CMainFrame::OnShowFindresults)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -671,6 +672,11 @@ void CMainFrame::OnShowInput()
 		this->ShowPane(&m_inputPane, TRUE, TRUE, TRUE);
 }
 
+void CMainFrame::OnShowFindresults()
+{
+		// TODO: Add your command handler code here
+		this->ShowPane(&m_wndFindOutput, TRUE, TRUE, TRUE);
+}
 
 
 void CMainFrame::OnTestTest()
@@ -762,3 +768,4 @@ BOOL CMainFrame::PreTranslateMessage(MSG* pMsg)
 
 		return CFrameWndEx::PreTranslateMessage(pMsg);
 }
+

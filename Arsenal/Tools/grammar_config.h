@@ -250,7 +250,15 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code);
 
 
 
+typedef struct __config_lexical_set_tag
+{
+		lexToken_t		*token_set;
+		size_t			cnt;
+		size_t			cap;
+}cfgLexicalSet_t;
 
+const cfgLexicalSet_t*		CFG_CollectLexicalSet(const wchar_t *gmr_txt);
+void						CFG_DestroyLexicalSet(const cfgLexicalSet_t *lexical_set);
 
 
 
