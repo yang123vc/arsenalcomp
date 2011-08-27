@@ -1368,6 +1368,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\FindOutputWnd.h"
+				>
+			</File>
+			<File
 				RelativePath=".\GrammarDesigner.h"
 				>
 			</File>
@@ -1507,6 +1511,10 @@
 			</File>
 			<File
 				RelativePath=".\DocManagerEx.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\FindOutputWnd.cpp"
 				>
 			</File>
 			<File

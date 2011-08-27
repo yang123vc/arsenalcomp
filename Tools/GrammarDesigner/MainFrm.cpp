@@ -258,6 +258,10 @@ BOOL CMainFrame::CreateDockingWindows()
 		return FALSE; // failed to create
 	}
 
+
+
+
+
 	CString strActView;
 
 	bNameValid = strActView.LoadString(IDS_ACTVIEW_WND);
@@ -302,6 +306,16 @@ BOOL CMainFrame::CreateDockingWindows()
 				return FALSE; // failed to create
 		}
 		
+
+		
+	CString strFindOutputWnd;
+	bNameValid = strFindOutputWnd.LoadString(IDS_FIND_OUTPUT_WND);
+	
+	if (!m_wndFindOutput.Create(strFindOutputWnd, this, CRect(0, 0, 100, 100), TRUE, ID_FIND_OUTPPUT_WND, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_BOTTOM | CBRS_FLOAT_MULTI))
+	{
+		TRACE0("Failed to create FindOutput window\n");
+		return FALSE; // failed to create
+	}
 		
 		
 	SetDockingWindowIcons(theApp.m_bHiColorIcons);
@@ -325,7 +339,10 @@ BOOL CMainFrame::CreateDockingWindows()
 
 	m_syntaxPane.EnableDocking(CBRS_ALIGN_ANY);
 	DockPane(&m_syntaxPane);
-		
+
+	m_wndFindOutput.EnableDocking(CBRS_ALIGN_ANY);
+	DockPane(&m_wndFindOutput);
+	
 
 	return TRUE;
 }
@@ -515,6 +532,11 @@ CTagView&	CMainFrame::GetTagView()
 COutputWnd&		CMainFrame::GetOutputView()
 {
 		return this->m_wndOutput;
+}
+
+CFindOutputWnd&	CMainFrame::GetFindOutputView()
+{
+		return this->m_wndFindOutput;
 }
 
 CActionView&	CMainFrame::GetActionView()

@@ -5,6 +5,7 @@
 #pragma once
 
 #include "OutputWnd.h"
+#include "FindOutputWnd.h"
 #include "ActionView.h"
 #include "TagView.h"
 #include "InputPane.h"
@@ -48,6 +49,7 @@ protected:  // control bar embedded members
 	
 /**/	
 	COutputWnd			m_wndOutput;
+	CFindOutputWnd		m_wndFindOutput;		
 	CActionView			m_wndActView;
 	CTagView			m_wndTag;
 
@@ -81,6 +83,7 @@ public:
 		CActionView&	GetActionView();
 		CInputPane&		GetInputPane();
 		CSyntaxPane&	GetSyntaxPnae();
+		CFindOutputWnd&	GetFindOutputView();
 		void			ClearShow();
 		
 public:

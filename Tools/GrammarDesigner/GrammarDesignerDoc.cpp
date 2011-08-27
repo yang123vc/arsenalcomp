@@ -3,7 +3,7 @@
 //
 
 #include "stdafx.h"
-
+#include <memory>
 
 #include "PrintNode.h"
 #include "MainFrm.h"
@@ -63,6 +63,8 @@ BEGIN_MESSAGE_MAP(CGrammarDesignerDoc, CRichEditDoc)
 		ON_UPDATE_COMMAND_UI(ID_FLAGS_IGNORECASE, &CGrammarDesignerDoc::OnUpdateFlagsIgnorecase)
 		ON_COMMAND(ID_SHOW_LEFTFACTOR, &CGrammarDesignerDoc::OnShowLeftfactor)
 		ON_UPDATE_COMMAND_UI(ID_SHOW_LEFTFACTOR, &CGrammarDesignerDoc::OnUpdateShowLeftfactor)
+		ON_COMMAND(ID_EDIT_FINDALLREFERENCES, &CGrammarDesignerDoc::OnEditFindallreferences)
+		ON_UPDATE_COMMAND_UI(ID_EDIT_FINDALLREFERENCES, &CGrammarDesignerDoc::OnUpdateEditFindallreferences)
 END_MESSAGE_MAP()
 
 
@@ -386,6 +388,106 @@ void CGrammarDesignerDoc::OnUpdateEditGotoDecl(CCmdUI *pCmdUI)
 }
 
 
+
+void CGrammarDesignerDoc::OnEditFindallreferences()
+{
+		// TODO: Add your command handler code here
+		CGrammarDesignerView *view = (CGrammarDesignerView*)reinterpret_cast<CGrammarDesignerView*>(m_viewList.GetHead());
+
+
+		CString sel = view->GetRichEditCtrl().GetSelText();
+
+		sel.TrimLeft();
+		sel.TrimRight();
+
+		if(!sel.IsEmpty())
+		{
+		
+				CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
+
+				CFindOutputWnd &find_output = main_frm->GetFindOutputView();
+				find_output.Clear();
+
+				{
+						int find_cnt = 0;
+						const int line_cnt = view->GetRichEditCtrl().GetLineCount();
+						
+						for(int i = 0; i < line_cnt; ++i)
+						{
+								int line_idx = view->GetRichEditCtrl().LineIndex(i);
+								int line_len = view->GetRichEditCtrl().LineLength((int)line_idx);
+								
+								if(line_len < sel.GetLength())
+								{
+										continue;
+								}
+
+								CString buf;
+								view->GetRichEditCtrl().GetLine(i, buf.GetBufferSetLength(line_len + 1), line_len);
+
+								buf.SetAt(line_len, _T('\0')); // null terminate
+								buf.ReleaseBuffer(line_len + 1);
+
+
+								
+								CString tmp = buf;
+								
+								tmp.TrimLeft();
+								tmp.TrimRight();
+
+								if(tmp.GetLength() == 0)
+								{
+										continue;
+										
+								}
+
+								int start = 0;
+								while(buf.GetLength() - start > sel.GetLength())
+								{
+										start = buf.Find(sel, start);
+
+										if(start == -1)
+										{
+												break;
+										}else
+										{
+												CString msg;
+												msg.Format(TEXT("(Line : %d, Col : %d) : %s"), i, start, buf);
+
+												find_output.Append(msg, i, start, sel.GetLength(), view);
+												find_cnt++;
+												start += sel.GetLength();
+										}
+								}
+						
+								
+						}
+
+						if(find_cnt == 0)
+						{
+								find_output.Append(TEXT("Not found!"), 0,0,0, NULL);
+						}		
+						
+				}
+				main_frm->ShowPane(&find_output, TRUE, TRUE, TRUE);
+		}
+
+}
+
+
+
+void CGrammarDesignerDoc::OnUpdateEditFindallreferences(CCmdUI *pCmdUI)
+{
+		// TODO: Add your command update UI handler code here
+
+		CGrammarDesignerView *view = (CGrammarDesignerView*)reinterpret_cast<CGrammarDesignerView*>(m_viewList.GetHead());
+
+		CString sel = view->GetRichEditCtrl().GetSelText();
+		sel.TrimLeft();
+		sel.TrimRight();
+		pCmdUI->Enable(!sel.IsEmpty());
+
+}
 
 
 
@@ -1345,8 +1447,3 @@ void CGrammarDesignerDoc::OnStringsStringconverter()
 
 		
 }
-
-#if(0)
-#endif
-
-

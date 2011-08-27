@@ -87,9 +87,9 @@ protected:
 public:
 
 		
-		void	Append(const CString &msg, COutputList::MsgType type = COutputList::MSG_MESSAGE, size_t line = 0, CWnd *target = NULL);
-		void	Clear();	
-
+	void	Append(const CString &msg, COutputList::MsgType type = COutputList::MSG_MESSAGE, size_t line = 0, CWnd *target = NULL);
+	void	Clear();	
+	
 	DECLARE_MESSAGE_MAP()
 	afx_msg void OnDestroy();
 };
