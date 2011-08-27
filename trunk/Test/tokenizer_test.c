@@ -409,7 +409,7 @@ static void gmatch_aux (const char *sources, const char *pattern)
 				{
 						char *tmp = ARSpace::AR_strndup(src, e - src);
 						printf("matched str == %s\r\n", tmp);
-						AR_free(tmp);
+						//AR_free(tmp);
 
 						size_t	newstart = e-src;
 						if (e == src) newstart++;  /* empty match? go at least one position */

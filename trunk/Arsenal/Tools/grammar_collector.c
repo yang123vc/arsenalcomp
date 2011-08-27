@@ -192,7 +192,8 @@ static const wchar_t *__cfg_lex_name[] =
 		L"	lexeme		=	{name}|(\\\"([^\\\"\\n\\r])+\\\")|('([^'\\n\\r])+')",
 		L"	comment		= 	/\\*([^\\*]|\\*+[^\\*/])*\\*+/",
 		L"	comment_line	= //[^\\n\\r]*(\\n|$|\\r)",
-		L"  skip_lexem		= {delim}|{comment}|{comment_line}",
+		L"  skip_lexem		= {delim}",
+		L"	comment_lexem	= {comment}|{comment_line}",
 		L"  key_lookahead   = {skip_lexem}+|\"{\""
 };
 
@@ -218,7 +219,8 @@ typedef enum
 		OR,
 		FAKE_EOI,
 		ACTION,
-		ACTION_INS
+		ACTION_INS,
+		COMMENT
 }cfgLexValue_t;
 
 
@@ -236,6 +238,9 @@ static const cfgLexPattern_t	__cfg_pattern[] =
 {
 		{EOI,	L"$", false,2},
 		{DELIM, L"{skip_lexem}+", true, 1},
+		
+		{COMMENT, L"{comment_lexem}", false, 1},
+
 		{ASSOC,	L"\"%\"(\"left\"|\"right\"|\"nonassoc\")(?={key_lookahead})", false,1},
 
 		{CODE,	L"\"%code\"(?={key_lookahead})", false,0},
@@ -2216,6 +2221,11 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 						continue;
 				}
 
+				if(tok.value == COMMENT)
+				{
+						continue;
+				}
+
 				PARSER_TOTERMTOK(&tok, &term);
 
 				/*
@@ -2333,7 +2343,6 @@ const cfgLexicalSet_t*		CFG_CollectLexicalSet(const wchar_t *gmr_txt)
 						is_ok = true;
 						continue;
 				}
-				
 				
 				__insert_to_lexical_set(lx_set, &tok);
 

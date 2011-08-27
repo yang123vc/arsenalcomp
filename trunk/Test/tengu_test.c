@@ -122,7 +122,7 @@ void load_source_test()
 
 		if(src)
 		{
-				MessageBox(NULL, src->code, 0,0);
+				MessageBoxW(NULL, src->code, 0,0);
 				TGU_ReleaseSources(src);
 		}
 }
