@@ -568,6 +568,8 @@ LRESULT CGrammarDesignerView::OnLocatePos(WPARAM wp, LPARAM lp)
 						{
 								this->GetRichEditCtrl().LineScroll(-10, 0);
 						}
+
+						this->GetRichEditCtrl().LineScroll(0, -102400);
 				}
 				
 		}
