@@ -100,7 +100,7 @@ void AR_Test()
 		
 		//lr_dfa_test();
 		//action_tbl_test();
-		//parser_test();
+		parser_test();
 		//str_test();
 		//str_tbl_test();
 		//rule_test();
@@ -160,7 +160,7 @@ void AR_Test()
 		
 		//tokenizer_test();
 
-		Ini_Test();
+		//Ini_Test();
 
 		getchar();
 #else
