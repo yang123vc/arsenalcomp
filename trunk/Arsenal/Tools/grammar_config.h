@@ -250,6 +250,34 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code);
 
 
 
+
+
+typedef enum
+{
+		CFG_LEXVAL_EOI	= 0,
+		CFG_LEXVAL_DELIM ,
+		CFG_LEXVAL_SKIP = 600,
+		CFG_LEXVAL_CODE,
+		CFG_LEXVAL_VALUE,
+		CFG_LEXVAL_START,
+		CFG_LEXVAL_NAME,
+		CFG_LEXVAL_TOKEN,
+		CFG_LEXVAL_PREC,
+		CFG_LEXVAL_ASSOC,
+		CFG_LEXVAL_LEXEME,
+		CFG_LEXVAL_NUMBER,
+		CFG_LEXVAL_DOT,
+		CFG_LEXVAL_COMMA,
+		CFG_LEXVAL_COLON,
+		CFG_LEXVAL_SEMI,
+		CFG_LEXVAL_OR,
+		CFG_LEXVAL_FAKE_EOI,
+		CFG_LEXVAL_ACTION,
+		CFG_LEXVAL_ACTION_INS,
+		CFG_LEXVAL_COMMENT
+}cfgLexValue_t;
+
+
 typedef struct __config_lexical_set_tag
 {
 		lexToken_t		*token_set;

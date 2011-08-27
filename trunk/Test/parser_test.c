@@ -26,7 +26,7 @@ void parser_test()
 		arTxtBom_t bom;
 		arString_t *str = AR_CreateString();
 
-		if(!AR_LoadBomTextFile(L"..\\..\\..\\Grammar\\Tengu.gmr", &bom, str))
+		if(!AR_LoadBomTextFile(L"..\\..\\..\\Grammar\\SQL.gmr", &bom, str))
 		{
 				AR_abort();
 		}
