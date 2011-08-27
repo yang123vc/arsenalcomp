@@ -389,6 +389,10 @@ void CGrammarDesignerDoc::OnUpdateEditGotoDecl(CCmdUI *pCmdUI)
 
 
 
+
+
+
+
 void CGrammarDesignerDoc::OnEditFindallreferences()
 {
 		// TODO: Add your command handler code here
@@ -408,15 +412,74 @@ void CGrammarDesignerDoc::OnEditFindallreferences()
 				CFindOutputWnd &find_output = main_frm->GetFindOutputView();
 				find_output.Clear();
 
+
+				/*********************************************************CFG_CollectLexicalSet***************************/
+
+				int find_cnt = 0;
+				CString src;
+				view->GetWindowText(src);
+
+				
+				const ARSpace::cfgLexicalSet_t *lx_set = ARSpace::CFG_CollectLexicalSet(src.GetString());
+
+				if(lx_set != NULL)
 				{
-						int find_cnt = 0;
-						const int line_cnt = view->GetRichEditCtrl().GetLineCount();
 						
+						for(size_t i = 0; i < lx_set->cnt; ++i)
+						{
+								const ARSpace::lexToken_t *tok = &lx_set->token_set[i];
+
+								if(tok->count != sel.GetLength())
+								{
+										continue;
+								}
+								AR_ASSERT(tok->str != NULL);
+
+								if(wcsncmp(tok->str, sel.GetString(), tok->count) == 0)
+								{
+
+										int line_idx = view->GetRichEditCtrl().LineIndex((int)tok->line);
+										if(line_idx == -1)
+										{
+												continue;
+										}
+
+										int line_len = view->GetRichEditCtrl().LineLength(line_idx);
+										if(line_len == -1)
+										{
+												continue;
+										}
+										
+										CString buf;
+										view->GetRichEditCtrl().GetLine((int)tok->line, buf.GetBufferSetLength(line_len + 1), line_len);
+
+										buf.SetAt(line_len, _T('\0')); // null terminate
+										buf.ReleaseBuffer(line_len + 1);
+
+										CString msg;
+										msg.Format(TEXT("(Line : %d, Col : %d) : %s"), tok->line, tok->col, buf);
+										find_output.Append(msg, tok->line, tok->col, tok->count, view);
+										find_cnt++;
+								}
+						}
+
+						ARSpace::CFG_DestroyLexicalSet(lx_set);
+						lx_set = NULL;
+				}
+
+		
+
+				if(find_cnt <= 1)/*如果只找到一个词法值,则此词法值为当前词法值，启动全局搜索*/
+				{
+
+						find_output.Clear();
+						const int line_cnt = view->GetRichEditCtrl().GetLineCount();
+
 						for(int i = 0; i < line_cnt; ++i)
 						{
 								int line_idx = view->GetRichEditCtrl().LineIndex(i);
 								int line_len = view->GetRichEditCtrl().LineLength((int)line_idx);
-								
+
 								if(line_len < sel.GetLength())
 								{
 										continue;
@@ -429,16 +492,16 @@ void CGrammarDesignerDoc::OnEditFindallreferences()
 								buf.ReleaseBuffer(line_len + 1);
 
 
-								
+
 								CString tmp = buf;
-								
+
 								tmp.TrimLeft();
 								tmp.TrimRight();
 
 								if(tmp.GetLength() == 0)
 								{
 										continue;
-										
+
 								}
 
 								int start = 0;
@@ -459,16 +522,16 @@ void CGrammarDesignerDoc::OnEditFindallreferences()
 												start += sel.GetLength();
 										}
 								}
-						
-								
-						}
 
-						if(find_cnt == 0)
-						{
-								find_output.Append(TEXT("Not found!"), 0,0,0, NULL);
-						}		
-						
+
+						}
 				}
+
+				if(find_cnt == 0)
+				{
+						find_output.Append(TEXT("Not found!"), 0,0,0, NULL);
+				}		
+
 				main_frm->ShowPane(&find_output, TRUE, TRUE, TRUE);
 		}
 

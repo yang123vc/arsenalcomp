@@ -2268,6 +2268,96 @@ void			CFG_DestroyGrammarConfig(cfgConfig_t *cfg)
 }
 
 
+/***************************************************************************/
+
+cfgLexicalSet_t*		__create_lexical_set()
+{
+		return AR_NEW0(cfgLexicalSet_t);
+}
+
+void					__destroy_lexical_set(cfgLexicalSet_t *lx_set)
+{
+		AR_ASSERT(lx_set != NULL);
+
+		if(lx_set->token_set)
+		{
+				AR_DEL(lx_set->token_set);
+		}
+
+		if(lx_set)
+		{
+				AR_DEL(lx_set);
+		}
+}
+
+static void __insert_to_lexical_set(cfgLexicalSet_t *lx_set, const lexToken_t *tok)
+{
+		AR_ASSERT(lx_set != NULL && tok != NULL);
+
+		if(lx_set->cnt == lx_set->cap)
+		{
+				lx_set->cap = (lx_set->cap + 4)*2;
+				lx_set->token_set = AR_REALLOC(lexToken_t, lx_set->token_set, lx_set->cap);
+		}
+
+		lx_set->token_set[lx_set->cnt] = *tok;
+		lx_set->cnt++;
+}
+
+const cfgLexicalSet_t*		CFG_CollectLexicalSet(const wchar_t *gmr_txt)
+{
+		lexMatch_t		*match;
+		cfgLexicalSet_t	*lx_set;
+		bool_t is_ok;
+		lexToken_t		tok;
+		AR_ASSERT(gmr_txt != NULL);
+
+		match = __create_lex_match();
+		lx_set = __create_lexical_set();
+		
+		Lex_ResetInput(match, gmr_txt);
+
+
+		is_ok = true;
+
+
+		while(is_ok)
+		{
+				is_ok = Lex_Match(match, &tok);
+
+				if(!is_ok)
+				{
+						AR_ASSERT(*Lex_GetNextInput(match) != L'\0');
+						Lex_Skip(match);
+						Lex_ClearError(match);
+						is_ok = true;
+						continue;
+				}
+				
+				
+				__insert_to_lexical_set(lx_set, &tok);
+
+				if(tok.value == EOI)break;
+		}		
+		__destroy_lex_match(match);
+
+		if(lx_set->cnt == 0)
+		{
+				__destroy_lexical_set(lx_set);
+				lx_set = NULL;
+		}
+
+		return lx_set;
+}
+
+void						CFG_DestroyLexicalSet(const cfgLexicalSet_t *lexical_set)
+{
+		if(lexical_set)
+		{
+				__destroy_lexical_set((cfgLexicalSet_t*)lexical_set);
+				lexical_set = NULL;
+		}
+}
 
 
 void			CFG_Init()

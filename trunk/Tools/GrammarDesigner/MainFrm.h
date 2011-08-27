@@ -96,6 +96,7 @@ public:
 		afx_msg void OnShowActionview();
 		afx_msg void OnShowTagview();
 		afx_msg void OnShowInput();
+		afx_msg void OnShowFindresults();
 		afx_msg void OnClose();
 		afx_msg void OnAppExit();
 
@@ -113,6 +114,7 @@ public:
 		afx_msg void OnViewFullscreen();
 		afx_msg void OnGetMinMaxInfo(MINMAXINFO* lpMMI);
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
+		
 };
 
 

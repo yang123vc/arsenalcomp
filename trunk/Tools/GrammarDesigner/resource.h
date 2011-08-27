@@ -166,6 +166,7 @@
 #define ID_EDIT_FINDALLREFERENCES       32900
 #define ID_VIEW_FIND_OUTPUT_WND         32901
 #define ID_FIND_OUTPUTWND_FONT          32903
+#define ID_SHOW_FINDRESULTS             32904
 #define ID_INDICATOR_LINE               59142
 #define ID_INDICATOR_COL                59143
 #define IDS_ACTVIEW_WND                 61204
@@ -179,7 +180,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        327
-#define _APS_NEXT_COMMAND_VALUE         32904
+#define _APS_NEXT_COMMAND_VALUE         32905
 #define _APS_NEXT_CONTROL_VALUE         1013
 #define _APS_NEXT_SYMED_VALUE           310
 #endif

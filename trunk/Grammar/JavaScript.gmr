@@ -105,7 +105,7 @@
 
 %token	"continue"	:	'"continue"(?!{keyword_lhd})'	,1					%value	"TOK_CONTINUE"		;//CONTINUE
 %token	"default"	:	'"default"(?!{keyword_lhd})'	,1					%value	"TOK_DEFAULT"		;//DEFAULT
-%token	"case"	:	'"case"(?!{keyword_lhd})'		,1					%value	"TOK_CASE"			;//CASE
+%token	"case"		:	'"case"(?!{keyword_lhd})'		,1					%value	"TOK_CASE"			;//CASE
 %token	"break"	:	'"break"(?!{keyword_lhd})'		,1					%value	"TOK_BREAK"		;//BREAK
 
 
