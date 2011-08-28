@@ -662,7 +662,8 @@ void			AR_YieldThread();
 void			AR_Sleep(size_t millisecond);
 
 uint_64_t		AR_GetTime_Microseconds();
-#define			AR_GetTime_Milliseconds()		(AR_GetTime_Microseconds() / AR_BIGNUM_U64(1000))
+uint_64_t		AR_GetTime_Milliseconds();
+
 
 
 /*******************************************************BitMark****************************************************************/

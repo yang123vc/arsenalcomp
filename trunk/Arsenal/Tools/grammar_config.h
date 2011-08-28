@@ -242,9 +242,9 @@ typedef struct __cfg_report_tag
 
 
 
-cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t	*report);
+const cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t	*report);
 
-void			CFG_DestroyGrammarConfig(cfgConfig_t *cfg);
+void			CFG_DestroyGrammarConfig(const cfgConfig_t *cfg);
 
 bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code);
 
@@ -280,6 +280,7 @@ typedef enum
 
 typedef struct __config_lexical_set_tag
 {
+		bool_t			has_error;
 		lexToken_t		*token_set;
 		size_t			cnt;
 		size_t			cap;

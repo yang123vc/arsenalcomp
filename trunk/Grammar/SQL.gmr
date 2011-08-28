@@ -5,22 +5,27 @@
 %token 	')' 	:	'"none"'
 			;
 
+
 %token	'*' 	:	'"none"'
 			;
 %token	'+' 	:	'"none"'
 			;
 
-
 %token	',' 	:	'"none"'
 			;
 
- 
+
 %token	'-'  	:	'"none"'
-			;
+		;
+
+
+
 
 %token	'.'  	:	'"none"'
 			;
  
+
+
 %token	'/'   	:	'"none"'
 			;
 %token	';'  	:	'"none"'
@@ -2244,6 +2249,7 @@ empty3: .
 
  xmlview_param: NAME COMPARISON xmlview_param_value
 			;
+
 
  xmlview_params: xmlview_param
                | xmlview_params xmlview_param

@@ -1,11 +1,11 @@
 
 
-
 %name delim	:	"[\t\r\n ]+"
 			;
 
 %name letter	: 	"[A-Z_a-z]"
 			;
+
 
 %name digit	:	"[0-9]"
 			;
