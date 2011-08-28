@@ -66,8 +66,8 @@ AR_ReallocFromHeap
 AR_FreeToHeap
 
 
-
-
+AR_GetTime_Microseconds
+AR_GetTime_Milliseconds
 
 ;Lex
 

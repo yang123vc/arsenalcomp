@@ -25,7 +25,6 @@
 
 
 
-
 %name skip_lexem	: 	"{delim}|{comment}|{comment_line}"
 				;
 
@@ -1316,6 +1315,8 @@ DebuggerStatement_NoNode:
     "debugger" ";"
   | "debugger" error 
 ;
+
+
 
 FunctionDeclaration_NoNode:
     "function" IDENTIFIER "(" ")" "{" FunctionBody_NoNode "}"

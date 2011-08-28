@@ -49,10 +49,6 @@ BEGIN_MESSAGE_MAP(CGrammarDesignerDoc, CRichEditDoc)
 		ON_UPDATE_COMMAND_UI(ID_SHOW_LEFTRECURSION, &CGrammarDesignerDoc::OnUpdateShowLeftrecursion)
 
 
-		
-
-		ON_COMMAND(ID_TEST_TEST, &CGrammarDesignerDoc::OnTestTest)
-		ON_COMMAND(ID_TEST_TEST2, &CGrammarDesignerDoc::OnTestTest2)
 		ON_COMMAND(ID_GENERATE_TEMPLATE, &CGrammarDesignerDoc::OnGenerateTemplate)
 		ON_COMMAND(ID_STRINGS_STRINGCONVERTER, &CGrammarDesignerDoc::OnStringsStringconverter)
 		ON_COMMAND(ID_FLAGS_REPORTSKIP, &CGrammarDesignerDoc::OnFlagsReportskip)
@@ -65,6 +61,12 @@ BEGIN_MESSAGE_MAP(CGrammarDesignerDoc, CRichEditDoc)
 		ON_UPDATE_COMMAND_UI(ID_SHOW_LEFTFACTOR, &CGrammarDesignerDoc::OnUpdateShowLeftfactor)
 		ON_COMMAND(ID_EDIT_FINDALLREFERENCES, &CGrammarDesignerDoc::OnEditFindallreferences)
 		ON_UPDATE_COMMAND_UI(ID_EDIT_FINDALLREFERENCES, &CGrammarDesignerDoc::OnUpdateEditFindallreferences)
+
+		
+		ON_COMMAND(ID_BUILD_LEXSET_COMPLETED, &CGrammarDesignerDoc::OnLexSetBuildCompleted)
+		ON_COMMAND(ID_BUILD_CFG_COMPLETED, &CGrammarDesignerDoc::OnTagBuildCompleted)
+		
+
 END_MESSAGE_MAP()
 
 
@@ -83,16 +85,45 @@ CGrammarDesignerDoc::CGrammarDesignerDoc()
 		m_lexer			=		NULL;
 		m_parser		=		NULL;
 		m_grammar		=		NULL;
-		VERIFY(m_thread.CreateThread());
+		
+		m_is_on_lexical_check = FALSE;
+		m_is_on_syntax_check = FALSE;
+
+		m_config = NULL;
+		m_lexical_set = NULL;
+
+		VERIFY(m_syntax_check_thread.CreateThread());
+		VERIFY(m_lexical_check_thread.CreateThread());
+
 }
 
 CGrammarDesignerDoc::~CGrammarDesignerDoc()
 {
-		m_thread.EndThread();
+		m_syntax_check_thread.EndThread();
+		m_lexical_check_thread.EndThread();
+		
+		if(m_config != NULL)
+		{
+				ARSpace::CFG_DestroyGrammarConfig(m_config);
+				m_config = NULL;
+		}
+
+		if(m_lexical_set != NULL)
+		{
+				ARSpace::CFG_DestroyLexicalSet(m_lexical_set);
+				m_lexical_set = NULL;
+		}
+
 		ClearParser();
 }
 
 
+void CGrammarDesignerDoc::DeleteContents()
+{
+		// TODO: Add your specialized code here and/or call the base class
+
+		CRichEditDoc::DeleteContents();
+}
 
 
 BOOL CGrammarDesignerDoc::OnNewDocument()
@@ -121,7 +152,6 @@ void CGrammarDesignerDoc::Serialize(CArchive& ar)
 		if (ar.IsStoring())
 		{	// storing code
 				
-
 				CRichEditView *view = (CRichEditView*)m_viewList.GetHead();
 
 				CTextFileWrite fw(ar.GetFile(), m_encoding);
@@ -155,8 +185,12 @@ void CGrammarDesignerDoc::Serialize(CArchive& ar)
 						view->GetRichEditCtrl().SetWindowText(txt);
 						
 						((CGrammarDesignerView*)view)->ClearLineRecord();
-
+						
+						m_is_on_syntax_check = FALSE;
+						m_is_on_lexical_check = FALSE;
+						this->OnToolsRebuildLexicalSets();
 						this->OnToolsRebuildtags();
+						
 				}
 
 		}
@@ -934,7 +968,7 @@ void CGrammarDesignerDoc::OnParserBuild()
 		main_frm->ClearShow();
 
 		ARSpace::cfgReport_t	report = {report_build_func, (void*)&output};
-		ARSpace::cfgConfig_t *cfg = ARSpace::CFG_CollectGrammarConfig(str.GetString(), &report);
+		const ARSpace::cfgConfig_t *cfg = ARSpace::CFG_CollectGrammarConfig(str.GetString(), &report);
 		
 		if(cfg == NULL || cfg->has_error)
 		{
@@ -1322,13 +1356,15 @@ static void AR_STDCALL report_tag_func(const ARSpace::cfgReportInfo_t *report, v
 }
 
 
+
 class ReBuildTagWorker : public CBackEndThread::CWorkerUnit
 {
 private:
 		CString					m_src;
 		CWnd					&m_target;
+		CGrammarDesignerDoc		&m_doc;
 public:
-		ReBuildTagWorker(const CString &source, CWnd &target) : m_src(source), m_target(target)
+		ReBuildTagWorker(const CString &source, CWnd &target, CGrammarDesignerDoc	&doc) : m_src(source), m_target(target), m_doc(doc)
 		{
 
 		}
@@ -1342,16 +1378,26 @@ public:
 		virtual void Run()
 		{
 				ARSpace::cfgReport_t	report = {report_tag_func, NULL};
-				ARSpace::cfgConfig_t *cfg = ARSpace::CFG_CollectGrammarConfig(m_src.GetString(), &report);
-				//::AfxGetApp()->PostThreadMessage(ID_THREAD_MESSAGE, ID_BUILD_CFG_COMPLETED, (WPARAM)cfg);
-				m_target.PostMessage(ID_BUILD_CFG_COMPLETED, (WPARAM)cfg, NULL);
+				const ARSpace::cfgConfig_t *cfg = ARSpace::CFG_CollectGrammarConfig(m_src.GetString(), &report);
+				m_doc.SetGrammarConfig(cfg);
+				m_target.PostMessage(WM_COMMAND, MAKEWPARAM(ID_BUILD_CFG_COMPLETED, 0), NULL);
+				Sleep(SYNTAX_TAG_BUILD_INTERVAL);
 		}
 };
+
 
 
 void CGrammarDesignerDoc::OnToolsRebuildtags()
 {
 		// TODO: Add your command handler code here
+
+		if(m_is_on_syntax_check)
+		{
+				return;
+		}else
+		{
+				m_is_on_syntax_check = TRUE;
+		}
 		
 		CGrammarDesignerView *view = (CGrammarDesignerView*)reinterpret_cast<CGrammarDesignerView*>(m_viewList.GetHead());
 		
@@ -1359,8 +1405,9 @@ void CGrammarDesignerDoc::OnToolsRebuildtags()
 		ASSERT(view != NULL);
 		CString str;
 
+		
 		view->GetWindowText(str);
-
+		/*
 		if(str != m_src_cache)
 		{
 				m_src_cache = str;
@@ -1368,22 +1415,213 @@ void CGrammarDesignerDoc::OnToolsRebuildtags()
 		{
 				return;
 		}
+		*/
+		m_syntax_check_thread.PostWorker(new ReBuildTagWorker(str, *::AfxGetMainWnd(), *this));
+}
 
-		m_thread.PostWorker(new ReBuildTagWorker(m_src_cache, *this->GetView()));
+
+void	CGrammarDesignerDoc::SetGrammarConfig(const ARSpace::cfgConfig_t			*config)
+{
+		m_syntax_cs.Lock();
+		
+		if(m_config != NULL)
+		{
+				ARSpace::CFG_DestroyGrammarConfig(m_config);
+				m_config = NULL;
+		}
+
+		m_config = config;
+
+		m_syntax_cs.Unlock();
 
 }
 
-void	CGrammarDesignerDoc::OnTagBuildCompleted(ARSpace::cfgConfig_t *cfg)
+void	CGrammarDesignerDoc::OnTagBuildCompleted()
 {
+		const ARSpace::cfgConfig_t *cfg;
+		
+		m_syntax_cs.Lock();
+		cfg = m_config;
+		m_config = NULL;
+		m_syntax_cs.Unlock();
+
+
+
+
 		CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
 		
 		CTagView &tag = main_frm->GetTagView();
 
 		tag.UpdateTag(cfg);
 
-		if(cfg)ARSpace::CFG_DestroyGrammarConfig(cfg);
+		if(cfg)
+		{
+				ARSpace::CFG_DestroyGrammarConfig(cfg);
+		}
 		
+		if(m_is_on_syntax_check)
+		{
+				m_is_on_syntax_check = FALSE;
+		}
 		
+}
+
+
+
+
+
+
+
+
+class ReLexicalHilightWorker : public CBackEndThread::CWorkerUnit
+{
+private:
+		CString					m_src;
+		CWnd					&m_target;
+		CGrammarDesignerDoc		&m_target_doc;
+
+public:
+		ReLexicalHilightWorker(const CString &source, CWnd		&target, CGrammarDesignerDoc	&doc) : m_src(source), m_target(target), m_target_doc(doc)
+		{
+
+		}
+
+		virtual ~ReLexicalHilightWorker()
+		{
+
+
+		}
+public:
+		virtual void Run()
+		{
+
+
+				const ARSpace::cfgLexicalSet_t *set = ARSpace::CFG_CollectLexicalSet(m_src.GetString());
+				//m_target.PostMessage(WM_COMMAND, (WPARAM)ID_BUILD_LEXSET_COMPLETED, (LPARAM)set);
+				m_target_doc.SetLexicalSet(set);
+				m_target.PostMessage(WM_COMMAND, MAKEWPARAM(ID_BUILD_LEXSET_COMPLETED, 0), NULL);
+				Sleep(LEXICAL_HIGHLIGHT_BUILD_INTERVAL);
+		}
+};
+
+
+void CGrammarDesignerDoc::OnToolsRebuildLexicalSets()
+{
+		if(m_is_on_lexical_check)
+		{
+				return;
+		}else
+		{
+				m_is_on_lexical_check = TRUE;
+		}
+		
+		CGrammarDesignerView *view = (CGrammarDesignerView*)reinterpret_cast<CGrammarDesignerView*>(m_viewList.GetHead());
+		
+
+		ASSERT(view != NULL);
+		CString str;		
+		view->GetWindowText(str);
+
+		
+		m_lexical_check_thread.PostWorker(new ReLexicalHilightWorker(str, *AfxGetApp()->m_pMainWnd, *this));
+}
+
+
+void	CGrammarDesignerDoc::SetLexicalSet(const ARSpace::cfgLexicalSet_t		*lexical_set)
+{
+		
+		m_lexical_cs.Lock();
+		
+		if(m_lexical_set != NULL)
+		{
+				ARSpace::CFG_DestroyLexicalSet(m_lexical_set);
+				m_lexical_set = NULL;
+		}
+
+		m_lexical_set = lexical_set;
+
+		m_lexical_cs.Unlock();
+}
+
+void	CGrammarDesignerDoc::OnLexSetBuildCompleted()
+{
+		using namespace ARSpace;
+		const cfgLexicalSet_t *lx_set;
+		CGrammarDesignerView *view = (CGrammarDesignerView*)reinterpret_cast<CGrammarDesignerView*>(m_viewList.GetHead());
+
+		m_lexical_cs.Lock();
+		lx_set = m_lexical_set;
+		m_lexical_set = NULL;
+		m_lexical_cs.Unlock();
+
+
+
+		if(lx_set != NULL)
+		{
+#if(0)
+				CHARFORMAT cf;
+				ZeroMemory(&cf, sizeof(CHARFORMAT));
+				view->GetRichEditCtrl().GetDefaultCharFormat(cf);
+				view->Highlight(0, -1, cf.crTextColor);
+
+
+				for(size_t i = 0; i < lx_set->cnt; ++i)
+				{
+						const ARSpace::lexToken_t *tok = &lx_set->token_set[i];
+
+						switch(tok->value)
+						{
+						case CFG_LEXVAL_EOI:
+						case CFG_LEXVAL_FAKE_EOI:
+						case CFG_LEXVAL_DELIM:
+								break;
+						case CFG_LEXVAL_DOT:
+						case CFG_LEXVAL_COMMA:
+						case CFG_LEXVAL_COLON:
+						case CFG_LEXVAL_SEMI:
+						case CFG_LEXVAL_OR:
+								break;
+
+						case CFG_LEXVAL_SKIP:
+						case CFG_LEXVAL_CODE:
+						case CFG_LEXVAL_START:
+						case CFG_LEXVAL_VALUE:
+						case CFG_LEXVAL_NAME:
+						case CFG_LEXVAL_TOKEN:
+						case CFG_LEXVAL_PREC:
+						case CFG_LEXVAL_ASSOC:
+						case CFG_LEXVAL_ACTION:
+								break;
+						case CFG_LEXVAL_LEXEME:
+						case CFG_LEXVAL_NUMBER:
+								break;
+						case CFG_LEXVAL_ACTION_INS:
+								break;
+						case CFG_LEXVAL_COMMENT:
+								//view->Highlight(0,-1, COLORREF);
+								break;
+						}
+				}
+#endif
+
+				ARSpace::CFG_DestroyLexicalSet(lx_set);
+				lx_set = NULL;
+		}else
+		{
+
+		}
+		
+		m_is_on_lexical_check = FALSE;
+}
+
+
+
+void	CGrammarDesignerDoc::OnContentChanged()
+{
+
+		OnToolsRebuildLexicalSets();
+		OnToolsRebuildtags();
+
 }
 
 
@@ -1452,7 +1690,7 @@ void CGrammarDesignerDoc::OnGenerateTemplate()
 		main_frm->ClearShow();
 
 		ARSpace::cfgReport_t	report = {report_build_func, (void*)&output};
-		ARSpace::cfgConfig_t *cfg = ARSpace::CFG_CollectGrammarConfig(str.GetString(), &report);
+		const ARSpace::cfgConfig_t *cfg = ARSpace::CFG_CollectGrammarConfig(str.GetString(), &report);
 		ARSpace::arString_t *code		= NULL;
 		if(cfg == NULL || cfg->has_error)
 		{

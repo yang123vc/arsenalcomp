@@ -17,10 +17,8 @@
 
 
 /******************************************PreDefined code********************************************/
-
-
-
 %code syntax_node {:
+
 	typedef enum
 	{
 		TGU_NODE_TOKEN_T,
@@ -467,6 +465,18 @@ program			:	translation_unit			%action	on_translation_unit
 				;
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 translation_unit		:	element				%action	auto_return_null
 				|	translation_unit	element	%action	auto_return_null
 				;
@@ -494,6 +504,7 @@ element			:	declaration			%action	auto_return_null
 
 				:}
 				;
+
 
 
 
@@ -809,6 +820,10 @@ init_declarator			:	NAME	"=" 	expression				%action	on_declarator
 					;
 
 
+
+
+
+
 aggregate_constructor		:	table_constructor
 					|	list_constructor
 					;
@@ -903,6 +918,7 @@ statement				:	compound_statement			%action	auto_return_0
 
 
 /**************************************import_statement***********************************************/
+
 
 
 
@@ -1123,6 +1139,16 @@ compound_element_list		:	compound_element_list		compound_element	%action	auto_re
 						return NULL;
 					:}
 					;
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1358,6 +1384,7 @@ if_else_statement		:	"if" "(" expression ")" statement "else" statement	%action 
 
 
 
+
 iteration_statement		:	while_statement			%action	auto_return_0
 				|	do_while_statement			%action	auto_return_0
 				|	for_statement				%action	auto_return_0
@@ -1523,6 +1550,10 @@ enter_loop				:	.					%action on_enter_loop
 						return NULL;
 					:}
 					;
+
+
+
+
 
 
 leave_loop				:	.					%action on_leave_loop
@@ -1798,6 +1829,11 @@ assignment_expression		:	constant_expression						%action 	auto_return_0
 
 :}
 ;
+
+
+
+
+
 
 
 constant_expression			:	binary_expression									%action 	auto_return_0
@@ -2534,6 +2570,7 @@ module_access			:	NAME	"::"	NAME		%action	on_module_access
 ;
 
 
+
 call_expression		:	postfix_expression "(" expression_list ")"		%action	on_call_expression
 				|	postfix_expression "(" error ")"				%action	on_call_expression
 				|	postfix_expression "(" 	")"				%action	on_call_expression
@@ -2586,6 +2623,9 @@ call_expression		:	postfix_expression "(" expression_list ")"		%action	on_call_e
 
 
 
+
+
+
 expression_list		:	expression					%action	auto_return_0
 				|	expression_list "," expression		%action	on_expression_list
 				{:
@@ -2606,6 +2646,17 @@ expression_list		:	expression					%action	auto_return_0
 						return ret;
 				:}
 				;
+
+
+
+
+
+
+
+
+
+
+
 
 
 

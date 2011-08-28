@@ -2109,7 +2109,7 @@ static void				__destroy_parser_context(psrContext_t *parser_context)
 
 
 
-cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *report)
+const cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *report)
 {
 
 		bool_t is_ok, has_error;
@@ -2246,7 +2246,7 @@ cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *repor
 
 }
 
-void			CFG_DestroyGrammarConfig(cfgConfig_t *cfg)
+void			CFG_DestroyGrammarConfig(const cfgConfig_t *cfg)
 {
 		CFG_DestroyNode((cfgNode_t*)cfg);
 
@@ -2312,6 +2312,7 @@ const cfgLexicalSet_t*		CFG_CollectLexicalSet(const wchar_t *gmr_txt)
 
 				if(!is_ok)
 				{
+						lx_set->has_error = true;
 						AR_ASSERT(*Lex_GetNextInput(match) != L'\0');
 						Lex_Skip(match);
 						Lex_ClearError(match);

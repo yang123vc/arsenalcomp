@@ -30,3 +30,19 @@
 
 #endif
 
+AR_NAMESPACE_BEGIN
+
+uint_64_t		AR_GetTime_Milliseconds()
+{
+		return AR_GetTime_Microseconds() / AR_BIGNUM_U64(1000);
+}
+
+
+
+
+
+
+
+
+
+AR_NAMESPACE_END
