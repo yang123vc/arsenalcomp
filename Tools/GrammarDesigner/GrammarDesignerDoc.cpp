@@ -934,7 +934,7 @@ void CGrammarDesignerDoc::OnParserBuild()
 		main_frm->ClearShow();
 
 		ARSpace::cfgReport_t	report = {report_build_func, (void*)&output};
-		ARSpace::cfgConfig_t *cfg = ARSpace::CFG_CollectGrammarConfig(str.GetString(), &report);
+		const ARSpace::cfgConfig_t *cfg = ARSpace::CFG_CollectGrammarConfig(str.GetString(), &report);
 		
 		if(cfg == NULL || cfg->has_error)
 		{
@@ -1342,7 +1342,7 @@ public:
 		virtual void Run()
 		{
 				ARSpace::cfgReport_t	report = {report_tag_func, NULL};
-				ARSpace::cfgConfig_t *cfg = ARSpace::CFG_CollectGrammarConfig(m_src.GetString(), &report);
+				const ARSpace::cfgConfig_t *cfg = ARSpace::CFG_CollectGrammarConfig(m_src.GetString(), &report);
 				//::AfxGetApp()->PostThreadMessage(ID_THREAD_MESSAGE, ID_BUILD_CFG_COMPLETED, (WPARAM)cfg);
 				m_target.PostMessage(ID_BUILD_CFG_COMPLETED, (WPARAM)cfg, NULL);
 		}
@@ -1373,7 +1373,7 @@ void CGrammarDesignerDoc::OnToolsRebuildtags()
 
 }
 
-void	CGrammarDesignerDoc::OnTagBuildCompleted(ARSpace::cfgConfig_t *cfg)
+void	CGrammarDesignerDoc::OnTagBuildCompleted(const ARSpace::cfgConfig_t *cfg)
 {
 		CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
 		
@@ -1452,7 +1452,7 @@ void CGrammarDesignerDoc::OnGenerateTemplate()
 		main_frm->ClearShow();
 
 		ARSpace::cfgReport_t	report = {report_build_func, (void*)&output};
-		ARSpace::cfgConfig_t *cfg = ARSpace::CFG_CollectGrammarConfig(str.GetString(), &report);
+		const ARSpace::cfgConfig_t *cfg = ARSpace::CFG_CollectGrammarConfig(str.GetString(), &report);
 		ARSpace::arString_t *code		= NULL;
 		if(cfg == NULL || cfg->has_error)
 		{
