@@ -1784,6 +1784,7 @@ static psrNode_t* AR_STDCALL on_list_field_list(psrNode_t **nodes, size_t count,
 /*table_constructor	:	{ error } */
 static psrNode_t* AR_STDCALL on_table_constructor(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
+		/*
 	 { 
 						tguParser_t 	*parser = (tguParser_t*)ctx;
 						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
@@ -1795,6 +1796,13 @@ static psrNode_t* AR_STDCALL on_table_constructor(psrNode_t **nodes, size_t coun
 						return ret;	
 						
 					 }
+					 */
+		AR_UNUSED(nodes);
+		AR_UNUSED(count);
+		AR_UNUSED(name);
+		AR_UNUSED(ctx);
+
+		return NULL;
 }
 
 

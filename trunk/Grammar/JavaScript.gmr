@@ -62,8 +62,8 @@
 %token	NUMBER		:	"({hex_literal}|{dec_literal})(?!{keyword_lhd})"	,2	%value "TOK_NUMBER"	;
 
 
-%token	STRING_LITERAL	:	"{string_literal}"							%value "TOK_STRING_LITERAL"	;	
-%token	IDENTIFIER		:	"{letter}({letter}|{digit})*"					%value "TOK_IDENTIFIER"		;
+%token	STRING_LITERAL	:	"{string_literal}"					%value "TOK_STRING_LITERAL"	;	
+%token	IDENTIFIER		:	"{letter}({letter}|{digit})*"			%value "TOK_IDENTIFIER"		;
 
 
 %name		keyword_lhd	:	"[A-Z_a-z0-9]"														;
