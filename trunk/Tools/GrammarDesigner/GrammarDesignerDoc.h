@@ -75,7 +75,7 @@ public:
 
 		void	ClearParser();
 
-		void	OnTagBuildCompleted(ARSpace::cfgConfig_t *cfg);
+		void	OnTagBuildCompleted(const ARSpace::cfgConfig_t *cfg);
 
 public:
 //		virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
