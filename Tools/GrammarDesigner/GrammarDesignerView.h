@@ -50,15 +50,13 @@ public:
 		UINT	m_timer_interval;
 
 		CArray<int, int>		m_line_record;
-public:
+private:
 		void Highlight(long start, long end, COLORREF color);
 public:
 		
 		afx_msg void OnTestTest();
-		/*
 		afx_msg LRESULT OnBuildTagCompleted(WPARAM wp, LPARAM lp);
-		afx_msg LRESULT OnBuildLexSetCompleted(WPARAM wp, LPARAM lp);
-		*/
+
 		
 		afx_msg void OnEditPaste();
 		afx_msg LRESULT OnLocatePos(WPARAM wp, LPARAM lp);
@@ -69,6 +67,13 @@ public:
 
 public:
 		
+		afx_msg void OnResetTimer(UINT nID);
+		afx_msg void OnUpdateSetrebuildtime100ms(CCmdUI *pCmdUI);
+		afx_msg void OnUpdateSetrebuildtime500ms(CCmdUI *pCmdUI);
+		afx_msg void OnUpdateSetrebuildtime1000ms(CCmdUI *pCmdUI);
+		afx_msg void OnUpdateSetrebuildtime3000ms(CCmdUI *pCmdUI);
+		afx_msg void OnUpdateSetrebuildtime5000ms(CCmdUI *pCmdUI);
+		afx_msg void OnUpdateSetrebuildtimeDisable(CCmdUI *pCmdUI);
 		afx_msg void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags);
 		afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
 		afx_msg void OnEnChange();
