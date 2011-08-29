@@ -9,9 +9,7 @@
 
 
 
-#define MAX_ERROR_COUNT							10
-#define SYNTAX_TAG_BUILD_INTERVAL				500		//毫秒，每秒最多执行两次，
-#define LEXICAL_HIGHLIGHT_BUILD_INTERVAL		250			//毫秒，每秒最多执行4次
+#define MAX_ERROR_COUNT			10
 
 class CGrammarDesignerDoc : public CRichEditDoc 
 {
@@ -31,6 +29,8 @@ private:
 
 		ARSpace::psrModeType_t	m_parser_mode;
 		uint_t					m_lexer_mode;
+private:
+		CString			m_src_cache;
 
 private:
 		ARSpace::lex_t			*m_lexer;
@@ -38,28 +38,7 @@ private:
 		const ARSpace::parser_t	*m_parser;
 
 private:
-		BOOL			m_is_on_syntax_check;
-		BOOL			m_is_on_lexical_check;
-
-		CBackEndThread			m_syntax_check_thread;
-		CBackEndThread			m_lexical_check_thread;
-
-		CCriticalSection			m_syntax_cs;
-		CCriticalSection			m_lexical_cs;
-
-		const ARSpace::cfgConfig_t			*m_config;
-		const ARSpace::cfgLexicalSet_t		*m_lexical_set;
-public:
-		void	SetGrammarConfig(const ARSpace::cfgConfig_t			*m_config);
-		void	OnToolsRebuildtags();
-		void	OnTagBuildCompleted();
-
-
-		void	SetLexicalSet(const ARSpace::cfgLexicalSet_t		*m_lexical_set);
-		void	OnToolsRebuildLexicalSets();
-		void	OnLexSetBuildCompleted();
-
-		void	OnContentChanged();
+		CBackEndThread			m_thread;
 
 // Operations
 public:
@@ -96,8 +75,7 @@ public:
 
 		void	ClearParser();
 
-		
-		
+		void	OnTagBuildCompleted(ARSpace::cfgConfig_t *cfg);
 
 public:
 //		virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
@@ -107,7 +85,7 @@ public:
 		
 		afx_msg void OnEndcodingChangeUI(CCmdUI *pCmdUI);
 		
-		
+		afx_msg void OnToolsRebuildtags();
 
 		afx_msg void OnChangeParserMode(UINT nID);
 		afx_msg void OnUpdateParserModeLalr(CCmdUI *pCmdUI);
@@ -149,8 +127,6 @@ public:
 		afx_msg void OnUpdateShowLeftfactor(CCmdUI *pCmdUI);
 		afx_msg void OnEditFindallreferences();
 		afx_msg void OnUpdateEditFindallreferences(CCmdUI *pCmdUI);
-		virtual void DeleteContents();
-		
 };
 
 

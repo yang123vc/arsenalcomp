@@ -34,12 +34,19 @@ BEGIN_MESSAGE_MAP(CGrammarDesignerView, CRichEditView)
 		ON_WM_TIMER()
 		ON_WM_CLOSE()
 		
+		ON_COMMAND_RANGE(ID_SETREBUILDTIME_500MS, ID_SETREBUILDTIME_DISABLE, &CGrammarDesignerView::OnResetTimer)
+
 		//ON_COMMAND(ID_TEST_TEST, &CGrammarDesignerView::OnTestTest)
 		//ON_MESSAGE(ID_MSG_TEST, &CGrammarDesignerView::OnTestMessage)
 
-		//ON_MESSAGE(ID_BUILD_CFG_COMPLETED, &CGrammarDesignerView::OnBuildTagCompleted)
-		//ON_MESSAGE(ID_BUILD_LEXSET_COMPLETED, &CGrammarDesignerView::OnBuildLexSetCompleted)
-		
+		ON_MESSAGE(ID_BUILD_CFG_COMPLETED, &CGrammarDesignerView::OnBuildTagCompleted)
+
+		ON_UPDATE_COMMAND_UI(ID_SETREBUILDTIME_100MS, &CGrammarDesignerView::OnUpdateSetrebuildtime100ms)
+		ON_UPDATE_COMMAND_UI(ID_SETREBUILDTIME_500MS, &CGrammarDesignerView::OnUpdateSetrebuildtime500ms)
+		ON_UPDATE_COMMAND_UI(ID_SETREBUILDTIME_1000MS, &CGrammarDesignerView::OnUpdateSetrebuildtime1000ms)
+		ON_UPDATE_COMMAND_UI(ID_SETREBUILDTIME_3000MS, &CGrammarDesignerView::OnUpdateSetrebuildtime3000ms)
+		ON_UPDATE_COMMAND_UI(ID_SETREBUILDTIME_5000MS, &CGrammarDesignerView::OnUpdateSetrebuildtime5000ms)
+		ON_UPDATE_COMMAND_UI(ID_SETREBUILDTIME_DISABLE, &CGrammarDesignerView::OnUpdateSetrebuildtimeDisable)
 		ON_WM_CHAR()
 		ON_WM_KEYDOWN()
 		ON_CONTROL_REFLECT(EN_CHANGE, &CGrammarDesignerView::OnEnChange)
@@ -70,7 +77,7 @@ CGrammarDesignerView::CGrammarDesignerView()
 
 
 
-		m_timer_interval = 5000;
+		m_timer_interval = 1000;
 }
 
 CGrammarDesignerView::~CGrammarDesignerView()
@@ -428,8 +435,6 @@ void CGrammarDesignerView::Highlight(long start, long end, COLORREF color)
 		
 }
 
-
-
 void CGrammarDesignerView::OnLButtonDown(UINT nFlags, CPoint point)
 {
 		// TODO: Add your message handler code here and/or call default
@@ -591,21 +596,57 @@ int CGrammarDesignerView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 void CGrammarDesignerView::OnTimer(UINT_PTR nIDEvent)
 {
 		// TODO: Add your message handler code here and/or call default
+
 		if(nIDEvent == ID_DOC_PARSETAG_TIMER)
 		{
-				this->GetDocument()->OnContentChanged();
-		}
+				this->SendMessage(WM_COMMAND, (WPARAM)ID_TOOLS_REBUILDTAGS); 
+		}else
+		{
 
-		CRichEditView::OnTimer(nIDEvent);
+				CRichEditView::OnTimer(nIDEvent);
+		}
 }
 
 void CGrammarDesignerView::OnClose()
 {
 		// TODO: Add your message handler code here and/or call default
+
 		this->KillTimer(ID_DOC_PARSETAG_TIMER);
 		CRichEditView::OnClose();
 }
 
+
+
+void CGrammarDesignerView::OnResetTimer(UINT nID)
+{
+		this->KillTimer(ID_DOC_PARSETAG_TIMER);
+		switch(nID)
+		{
+		case ID_SETREBUILDTIME_100MS:
+				m_timer_interval = 100;
+				break;
+		case ID_SETREBUILDTIME_500MS:
+				m_timer_interval = 500;
+				break;
+		case ID_SETREBUILDTIME_1000MS:
+				m_timer_interval = 1000;
+				break;
+		case ID_SETREBUILDTIME_3000MS:
+				m_timer_interval = 3000;
+				break;
+		case ID_SETREBUILDTIME_5000MS:
+				m_timer_interval = 5000;
+				break;
+		case ID_SETREBUILDTIME_DISABLE:
+				m_timer_interval = INFINITE;
+				break;
+		default:
+				VERIFY(false);
+		}
+
+
+		this->SetTimer(ID_DOC_PARSETAG_TIMER, m_timer_interval, NULL);
+}
 
 
 
@@ -629,11 +670,46 @@ void CGrammarDesignerView::OnTestTest()
 		
 }
 
+void CGrammarDesignerView::OnUpdateSetrebuildtime100ms(CCmdUI *pCmdUI)
+{
+		// TODO: Add your command update UI handler code here
+		pCmdUI->SetCheck(m_timer_interval == 100);
+}
+
+void CGrammarDesignerView::OnUpdateSetrebuildtime500ms(CCmdUI *pCmdUI)
+{
+		// TODO: Add your command update UI handler code here
+		pCmdUI->SetCheck(m_timer_interval == 500);
+}
+
+void CGrammarDesignerView::OnUpdateSetrebuildtime1000ms(CCmdUI *pCmdUI)
+{
+		// TODO: Add your command update UI handler code here
+		pCmdUI->SetCheck(m_timer_interval == 1000);
+}
+
+void CGrammarDesignerView::OnUpdateSetrebuildtime3000ms(CCmdUI *pCmdUI)
+{
+		// TODO: Add your command update UI handler code here
+		pCmdUI->SetCheck(m_timer_interval == 3000);
+}
+
+void CGrammarDesignerView::OnUpdateSetrebuildtime5000ms(CCmdUI *pCmdUI)
+{
+		// TODO: Add your command update UI handler code here
+		pCmdUI->SetCheck(m_timer_interval == 5000);
+}
+
+void CGrammarDesignerView::OnUpdateSetrebuildtimeDisable(CCmdUI *pCmdUI)
+{
+		// TODO: Add your command update UI handler code here
+		pCmdUI->SetCheck(m_timer_interval == INFINITE);
+}
+
 void CGrammarDesignerView::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 		// TODO: Add your message handler code here and/or call default
 		CRichEditView::OnChar(nChar, nRepCnt, nFlags);
-
 }
 
 void CGrammarDesignerView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -652,8 +728,8 @@ void CGrammarDesignerView::OnEnChange()
 
 		// TODO:  Add your control notification handler code here
 		
+		
 		this->GetDocument()->SetModifiedFlag(TRUE);
-		((CGrammarDesignerDoc*)this->GetDocument())->OnContentChanged();
 
 }
 
@@ -732,12 +808,11 @@ HRESULT CGrammarDesignerView::QueryAcceptData(LPDATAOBJECT lpdataobj, CLIPFORMAT
 }
 
 
-/*
 LRESULT CGrammarDesignerView::OnBuildTagCompleted(WPARAM wp, LPARAM lp)
 {
 		
-		const ARSpace::cfgConfig_t *cfg = (const ARSpace::cfgConfig_t*)wp;
-		
+		ARSpace::cfgConfig_t *cfg = (ARSpace::cfgConfig_t*)wp;
+
 		this->GetDocument()->OnTagBuildCompleted(cfg);
 
 		return 0L;
@@ -745,15 +820,6 @@ LRESULT CGrammarDesignerView::OnBuildTagCompleted(WPARAM wp, LPARAM lp)
 
 
 
-LRESULT CGrammarDesignerView::OnBuildLexSetCompleted(WPARAM wp, LPARAM lp)
-{
-		const ARSpace::cfgLexicalSet_t *set = (const ARSpace::cfgLexicalSet_t*)wp;
-		
-		this->GetDocument()->OnLexSetBuildCompleted(set);
-
-		return 0L;
-}
-*/
 
 
 

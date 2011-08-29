@@ -226,6 +226,15 @@ BEGIN
     POPUP "&Tools"
     BEGIN
         MENUITEM "ReBuild &Tags",               ID_TOOLS_REBUILDTAGS
+        POPUP "Set ReBuild Time"
+        BEGIN
+            MENUITEM "100ms",                       ID_SETREBUILDTIME_100MS, CHECKED
+            MENUITEM "500ms",                       ID_SETREBUILDTIME_500MS, CHECKED
+            MENUITEM "1000ms",                      ID_SETREBUILDTIME_1000MS, CHECKED
+            MENUITEM "3000ms",                      ID_SETREBUILDTIME_3000MS, CHECKED
+            MENUITEM "5000ms",                      ID_SETREBUILDTIME_5000MS, CHECKED
+            MENUITEM "Disable",                     ID_SETREBUILDTIME_DISABLE, CHECKED
+        END
         POPUP "Show"
         BEGIN
             MENUITEM "&ActionTable",                ID_PARSER_SHOWACTIONTABLE
@@ -536,8 +545,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,1,3,411
- PRODUCTVERSION 0,1,3,411
+ FILEVERSION 0,1,3,409
+ PRODUCTVERSION 0,1,3,409
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -554,12 +563,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "None"
             VALUE "FileDescription", "Grammar Designer"
-            VALUE "FileVersion", "0, 1, 3, 411"
+            VALUE "FileVersion", "0, 1, 3, 409"
             VALUE "InternalName", "GrammarDesigner.exe"
             VALUE "LegalCopyright", "Solidus.  All rights reserved."
             VALUE "OriginalFilename", "GrammarDesigner.exe"
             VALUE "ProductName", "Grammar Designer"
-            VALUE "ProductVersion", "0, 1, 3, 411"
+            VALUE "ProductVersion", "0, 1, 3, 409"
         END
     END
     BLOCK "VarFileInfo"
