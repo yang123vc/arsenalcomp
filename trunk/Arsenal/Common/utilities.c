@@ -157,7 +157,10 @@ wchar_t*		AR_escstr_to_str(const wchar_t *src, arEscStrErr_t *error)
 				{
 						const wchar_t *next;
 						next = __transform_char(s + 1, d, error);
-						if(next == NULL) goto INVALID_POINT;
+						if(next == NULL) 
+						{
+								goto INVALID_POINT;
+						}
 						
 						s = next;
 						d++;
