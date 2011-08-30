@@ -1125,9 +1125,28 @@ void lex_quote_test7()
 
 		Lex_DestroyMatch(match);
 		Lex_Destroy(lex);
-
 }
 
+
+void lex_test_skip_line_test()
+{
+		const TCHAR *s = TEXT("a\r\nb\n\rc\rd\ne\r\rf");
+
+		lexMatch_t match;
+
+		AR_memset(&match, 0, sizeof(match));
+
+
+		match.next = s;
+		match.input = s;
+
+		while(*match.next != L'\0')
+		{
+				printf("line : %I64d col : %I64d\r\n", match.line, match.col);
+				Lex_SkipN(&match, 1);
+		}
+
+}
 
 
 void lex_test()
@@ -1147,7 +1166,9 @@ void lex_test()
 
 		//lex_line_test6();
 
-		lex_quote_test7();
+		//lex_quote_test7();
+
+		lex_test_skip_line_test();
 }
 
 AR_NAMESPACE_END

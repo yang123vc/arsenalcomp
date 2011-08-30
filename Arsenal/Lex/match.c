@@ -291,6 +291,8 @@ void	Lex_ClearError(lexMatch_t *match)
 }
 
 
+#define IS_NEW_LINE(_c)	((_c) == L'\n' || (_c) == L'\r')
+
 void	Lex_Skip(lexMatch_t *pmatch)
 {
 		AR_ASSERT(pmatch != NULL && pmatch->next != NULL);
@@ -307,8 +309,16 @@ void	Lex_Skip(lexMatch_t *pmatch)
 		{
 				if(*pmatch->next == L'\n')
 				{
+						wchar_t next_c;
 						pmatch->line++;
 						pmatch->col = 0;
+						
+						next_c = *(pmatch->next + 1);
+						if(IS_NEW_LINE(next_c) && next_c != *pmatch->next)
+						{
+								pmatch->next++;
+						}
+
 				}else
 				{
 						pmatch->col++;
@@ -316,6 +326,9 @@ void	Lex_Skip(lexMatch_t *pmatch)
 				pmatch->next++;
 		}
 }
+
+
+
 
 void			Lex_SkipTo(lexMatch_t *pmatch, const wchar_t *tok)
 {
@@ -327,10 +340,17 @@ void			Lex_SkipTo(lexMatch_t *pmatch, const wchar_t *tok)
 		{
 				while(*pmatch->next != L'\0')
 				{
-						if(*pmatch->next == L'\n')
+						if(IS_NEW_LINE(*pmatch->next))
 						{
+								wchar_t next_c;
 								pmatch->line++;
 								pmatch->col = 0;
+								
+								next_c = *(pmatch->next + 1);
+								if(IS_NEW_LINE(next_c) && next_c != *pmatch->next)
+								{
+										pmatch->next++;
+								}
 						}else
 						{
 								pmatch->col++;
@@ -341,10 +361,17 @@ void			Lex_SkipTo(lexMatch_t *pmatch, const wchar_t *tok)
 		{
 				while(pmatch->next != next)
 				{
-						if(*pmatch->next == L'\n')
+						if(IS_NEW_LINE(*pmatch->next))
 						{
+								wchar_t next_c;
 								pmatch->line++;
 								pmatch->col = 0;
+								
+								next_c = *(pmatch->next + 1);
+								if(IS_NEW_LINE(next_c) && next_c != *pmatch->next)
+								{
+										pmatch->next++;
+								}
 						}else
 						{
 								pmatch->col++;
@@ -354,6 +381,41 @@ void			Lex_SkipTo(lexMatch_t *pmatch, const wchar_t *tok)
 		}
 }
 
+bool_t			Lex_TrySkipTo(lexMatch_t *pmatch, const wchar_t *tok)
+{
+		const wchar_t *next;
+		AR_ASSERT(pmatch != NULL && pmatch->next != NULL);
+		next = AR_wcsstr(pmatch->next, tok);
+		
+		if(next == NULL)
+		{
+				return false;
+		}else
+		{
+				while(pmatch->next != next)
+				{
+						if(IS_NEW_LINE(*pmatch->next))
+						{
+								wchar_t next_c;
+								pmatch->line++;
+								pmatch->col = 0;
+								
+								next_c = *(pmatch->next + 1);
+
+								if(IS_NEW_LINE(next_c) && next_c != *pmatch->next)
+								{
+										pmatch->next++;
+								}
+						}else
+						{
+								pmatch->col++;
+						}
+						pmatch->next++;
+				}
+				return true;
+		}
+
+}
 
 
 void			Lex_SkipN(lexMatch_t *pmatch, size_t nchar)
@@ -363,10 +425,19 @@ void			Lex_SkipN(lexMatch_t *pmatch, size_t nchar)
 		
 		for(i = 0; *pmatch->next != L'\0' && i < nchar; ++i)
 		{
-				if(*pmatch->next == L'\n')
+				if(IS_NEW_LINE(*pmatch->next))
 				{
+						wchar_t next_c;
 						pmatch->line++;
 						pmatch->col = 0;
+
+						next_c = *(pmatch->next + 1);
+
+						if(IS_NEW_LINE(next_c) && next_c != *pmatch->next)
+						{
+								pmatch->next++;
+								i++;
+						}
 				}else
 				{
 						pmatch->col++;
@@ -374,6 +445,8 @@ void			Lex_SkipN(lexMatch_t *pmatch, size_t nchar)
 				pmatch->next++;
 		}
 }
+
+#undef IS_NEW_LINE
 
 
 void			Lex_PutBack(lexMatch_t *pmatch, const lexToken_t *tok)

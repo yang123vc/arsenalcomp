@@ -1072,19 +1072,6 @@ compound_statement		:	start_block	compound_element_list		"}"		%action	on_compoun
 					return ret;
 				:}
 
-				|	start_block  	error  				"}"		%action	on_compound_error_statement
-				{:
-						tguParser_t 	*parser = (tguParser_t*)ctx;
-						/*tguSynNode_t	**ns = (tguSynNode_t**)nodes;*/
-						tguBlock_t		*cb = NULL;
-						AR_ASSERT(nodes != NULL && (count == 2));
-						AR_ASSERT(parser != NULL);
-						parser->has_error = true;
-						cb = TGU_ParserPopBlock(parser);
-						TGU_DestroyBlock(cb);
-						return NULL;
-				:}
-
 				|	start_block						"}"		%action	on_empty_compound_statement
 				{:
 						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
@@ -1102,8 +1089,20 @@ compound_statement		:	start_block	compound_element_list		"}"		%action	on_compoun
 						return ret;
 						
 				:}
-				;
 
+				|	start_block  	error  				"}"		%action	on_compound_error_statement
+				{:
+						tguParser_t 	*parser = (tguParser_t*)ctx;
+						/*tguSynNode_t	**ns = (tguSynNode_t**)nodes;*/
+						tguBlock_t		*cb = NULL;
+						AR_ASSERT(nodes != NULL && (count == 2));
+						AR_ASSERT(parser != NULL);
+						parser->has_error = true;
+						cb = TGU_ParserPopBlock(parser);
+						TGU_DestroyBlock(cb);
+						return NULL;
+				:}
+				;
 
 
 

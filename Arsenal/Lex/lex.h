@@ -145,6 +145,9 @@ void			Lex_Skip(lexMatch_t *pmatch);
 /*跳到与tok相同的符号，如果未找到,pmatch直接跳到符号结尾*/
 void			Lex_SkipTo(lexMatch_t *pmatch, const wchar_t *tok);
 
+
+bool_t			Lex_TrySkipTo(lexMatch_t *pmatch, const wchar_t *tok);
+
 /*丢弃N个字符*/
 void			Lex_SkipN(lexMatch_t *pmatch, size_t nchar);
 
