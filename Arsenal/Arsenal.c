@@ -56,7 +56,7 @@ bool_t	Arsenal_Init(const arInit_t *ctx)
 		if(result)
 		{
 				wchar_t msg[1024];
-				AR_swprintf(msg, AR_NELEMS(msg), L"Arsenal initialized consume time == %"  AR_PLAT_INT_FMT L"d\r\n", total_end - total_beg);
+				AR_swprintf(msg, AR_NELEMS(msg), L"Arsenal initialized consume time == %Id\r\n", total_end - total_beg);
 				AR_printf(msg);
 		}else
 		{

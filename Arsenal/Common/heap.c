@@ -118,10 +118,8 @@ static AR_INLINE page_t*		AllocatePage(arHeap_t *heap, size_t page_bytes)
 		page = (page_t*)ptr;
 
 		page->data = (byte_t*)AR_ALIGN_SIZE((size_t)(ptr + sizeof(page_t)));
-		/*page->data_size = size - sizeof(page_t);*/
+		
 		page->data_size = size - (size_t)((byte_t*)page->data - (byte_t*)page);
-
-		/*printf("size == %I64d data_size == %I64d\r\n", size, page->data_size);*/
 
 		page->next = NULL;
 		page->prev = NULL;

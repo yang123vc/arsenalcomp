@@ -70,8 +70,8 @@ typedef struct __cfg_token_tag
 #define CFG_TERM_DEF_BEGIN	L"static struct {const wchar_t *name;\r\nsize_t tokval;\r\nsize_t lex_prec;\r\nconst wchar_t *regex;\r\nbool_t skip;\r\npsrTermFunc_t leaf;\r\n}__g_term_pattern[] =  {"
 #define CFG_TERM_DEF_END	L"};"
 
-#define CFG_TERM_DEF_ITEM_1	L"{L\"%ls\", %ls, " L"%" AR_PLAT_INT_FMT L"d, L\"%ls\", %ls, %ls}"
-#define CFG_TERM_DEF_ITEM_2	L"{%ls, %ls," L"%" AR_PLAT_INT_FMT L"d, L\"%ls\", %ls, %ls}"
+#define CFG_TERM_DEF_ITEM_1	L"{L\"%ls\", %ls, " L"%Id, L\"%ls\", %ls, %ls}"
+#define CFG_TERM_DEF_ITEM_2	L"{%ls, %ls," L"%Id, L\"%ls\", %ls, %ls}"
 
 
 
@@ -93,7 +93,7 @@ typedef struct __cfg_prec_tag
 #define CFG_PREC_DEF_BEGIN	L"static struct {const wchar_t *name; size_t tokval; size_t prec_level; psrAssocType_t	assoc;}__g_prec_pattern[] =  {"
 #define CFG_PREC_DEF_END	L"};"
 
-#define CFG_PREC_DEF_ITEM 	L"{L\"%ls\", %ls," L"%" AR_PLAT_INT_FMT L"d, %ls}"
+#define CFG_PREC_DEF_ITEM 	L"{L\"%ls\", %ls," L"%Id, %ls}"
 
 
 
@@ -141,8 +141,8 @@ typedef struct __rule_tag
 
 
 
-#define CFG_RULE_DEF_ITEM_1 	L"{L\"%ls\", L\"%ls\", %ls, %" AR_PLAT_INT_FMT L"d}"
-#define CFG_RULE_DEF_ITEM_2		L"{L\"%ls\", %ls, %ls, %" AR_PLAT_INT_FMT L"d}"
+#define CFG_RULE_DEF_ITEM_1 	L"{L\"%ls\", L\"%ls\", %ls, %Id}"
+#define CFG_RULE_DEF_ITEM_2		L"{L\"%ls\", %ls, %ls, %Id}"
 
 #define CFG_RULE_DEF_BEGIN	L"static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	handler; size_t	auto_ret; } __g_rule_pattern[] = {"
 #define CFG_RULE_DEF_END	L"};"

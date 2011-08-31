@@ -368,7 +368,7 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 
 						if(cfg->tok[i].is_assigned_code_name)
 						{
-								AR_AppendFormatString(enum_str, L"%s = %d,\r\n", cfg->tok[i].code_name, (uint_32_t)cfg->tok[i].tokval);
+								AR_AppendFormatString(enum_str, L"%s = %Id,\r\n", cfg->tok[i].code_name, cfg->tok[i].tokval);
 						}
 				}
 				AR_AppendString(enum_str, L"};*/\r\n\r\n\r\n\r\n");
@@ -473,7 +473,7 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 								if(code_name == NULL)
 								{
 										/*一些后期定义的prec token不会在cfg->tok中，因此也没有code_name*/
-										code_name = AR_vtow(L"%d", (uint_32_t)tok_val);
+										code_name = AR_vtow(L"%Id", tok_val);
 								}
 
 

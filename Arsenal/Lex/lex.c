@@ -258,7 +258,7 @@ bool_t	Lex_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action
 
 		if(AR_wcslen(rule) == 0)
 		{
-				AR_FormatString(lex->last_err_msg, L"Lex Rule Error : empty rule %" AR_PLAT_INT_FMT L"d\r\n", action->value);
+				AR_FormatString(lex->last_err_msg, L"Lex Rule Error : empty rule %Id\r\n", action->value);
 				return false;
 		}
 
@@ -269,7 +269,7 @@ bool_t	Lex_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action
 				/*AR_error(AR_LEX, L"Lex Rule Error : %d : %ls\n", action->type, res.err.pos);*/
 				/*AR_error(L"Lex Rule Error : %" AR_PLAT_INT_FMT L"d : %ls\n", (size_t)action->type, (size_t)res.err.pos);*/
 
-				AR_FormatString(lex->last_err_msg, L"Lex Rule Error : %" AR_PLAT_INT_FMT L"d : %ls\n", (size_t)action->value, res.err.pos);
+				AR_FormatString(lex->last_err_msg, L"Lex Rule Error : %Id : %ls\n", (size_t)action->value, res.err.pos);
 				return false;
 		}
 

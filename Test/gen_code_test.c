@@ -1,4 +1,4 @@
-﻿#if(0)
+﻿
 #if defined(__LIB)
 
 #include <vector>
@@ -73,7 +73,6 @@ static const psrHandler_t		__g_handler =
 };
 
 
-
 void gen_code_test()
 {
 		uint_64_t sum = 0;
@@ -86,13 +85,13 @@ void gen_code_test()
 				psrGrammar_t	*gmr;
 				uint_64_t		beg, end;
 				beg = AR_GetTime_Milliseconds();
-				lex_t *lex = __build_lex(NULL);
-				gmr = __build_grammar(&__g_handler, NULL);
+				lex_t *lex = __build_lex();
+				gmr = __build_grammar(&__g_handler);
 
 				const parser_t		*parser = Parser_CreateParser(gmr, PARSER_LALR);
 				end = AR_GetTime_Milliseconds();
 				sum += (end - beg);
-				AR_printf(L"%ls : tickcount == %I64d\r\n", L"parser build successful", end - beg);
+				AR_printf(L"%ls : tickcount == %qd\r\n", L"parser build successful", end - beg);
 				//getchar();
 
 				vl.push_back(lex);
@@ -110,7 +109,7 @@ void gen_code_test()
 				
 		}
 		
-		AR_printf(L"average time == %I64d\r\n", sum / 10);
+		AR_printf(L"average time == %qd\r\n", sum / 10);
 		AR_printf(L"-------------------------------\r\n");
 
 
@@ -127,5 +126,5 @@ void gen_code_test()
 
 AR_NAMESPACE_END
 
-#endif
+
 #endif

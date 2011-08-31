@@ -412,7 +412,7 @@ void			RGX_ToString(const rgxNode_t *node, arString_t *str)
 								AR_AppendFormatString(str, L"%c", node->range.beg);
 						}else
 						{
-								AR_AppendFormatString(str, L"\\u%" AR_PLAT_INT_FMT L"d", node->range.beg);
+								AR_AppendFormatString(str, L"\\u%Id", node->range.beg);
 						}
 				}else
 				{
@@ -422,7 +422,7 @@ void			RGX_ToString(const rgxNode_t *node, arString_t *str)
 								AR_AppendFormatString(str, L"%c", node->range.beg);
 						}else
 						{
-								AR_AppendFormatString(str, L"\\u%" AR_PLAT_INT_FMT L"d", node->range.beg);
+								AR_AppendFormatString(str, L"\\u%Id", node->range.beg);
 						}
 
 						AR_AppendString(str, L"-");
@@ -432,7 +432,7 @@ void			RGX_ToString(const rgxNode_t *node, arString_t *str)
 								AR_AppendFormatString(str, L"%c", node->range.end);
 						}else
 						{
-								AR_AppendFormatString(str, L"\\u%" AR_PLAT_INT_FMT L"d", node->range.end);
+								AR_AppendFormatString(str, L"\\u%Id", node->range.end);
 						}
 
 						AR_AppendString(str, L"]");
@@ -570,7 +570,7 @@ void			RGX_ToString(const rgxNode_t *node, arString_t *str)
 		}
 		case RGX_FINAL_T:
 		{
-				AR_AppendFormatString(str, L"[final : %" AR_PLAT_INT_FMT L"d]", node->final_val);
+				AR_AppendFormatString(str, L"[final : %Id]", node->final_val);
 		}
 				break;
 		default:

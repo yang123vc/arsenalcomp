@@ -1,3 +1,4 @@
+
 #include "test.h"
 
 
@@ -295,24 +296,26 @@ void com_vscwprintf_test()
 
 		__format_v(L"%33.54f", 3.14);
 
-		__format_v(L"%d:%u:%I64d:%ls:%f\r\n", 33,44,(uint_64_t)198401010, L"aaaaaaaaa",3.1415);
+		__format_v(L"%d:%u:%qd:%ls:%f\r\n", 33,44,(uint_64_t)198401010, L"aaaaaaaaa",3.1415);
 
 		__format_v(L"abcdefg");
 		
 		
 		
 		
-		__format_v(L"%lld", x);
-		__format_v(L"%I64d", x);
-		__format_v(L"%I64ld", x);
+		__format_v(L"%qd", x);
+		__format_v(L"%I64d", x); //±¿¿£
+		__format_v(L"%I64ld", x); //±¿¿£
 
 }
 
 
 void com_vscwprintf_test2()
 {
-		__format_v(L"%Id : %I32d : %I64d : %lld : %d : %ld\r\n", (int)111, (int_32_t)222, (int_64_t)333, (int_64_t)444, (int)555, (int)666);
-		__format_v(L"%Id : %Id\r\n", (size_t)1024, (size_t)2048);
+		__format_v(L"%*333.333Id : %Id\r\n", 0,(size_t)1024, (size_t)2048);
+
+		__format_v(L"%*Id : %d : %qd : %qd : %d : %ld\r\n", 3,(size_t)111, (int_32_t)222, (int_64_t)333, (int_64_t)444, (int)555, (int)666);
+		__format_v(L"%*Id : %Id\r\n", 5,(size_t)1024, (size_t)2048);
 
 }
 
@@ -647,7 +650,7 @@ void escstr_test1()
 				wchar_t buf[1024];
 				if(err.type == AR_ESCSTR_ERR_VALUE)
 				{
-						AR_swprintf(buf, 1024, L"invalid value %I64d\r\n", err.value);
+						AR_swprintf(buf, 1024, L"invalid value %qd\r\n", err.value);
 				}else if(err.type == AR_ESCSTR_ERR_CHAR)
 				{
 						AR_swprintf(buf, 1024, L"invalid input %ls\r\n", err.pos);
@@ -710,7 +713,7 @@ void escstr_test_buf1()
 						
 				}else if(err.type == AR_ESCSTR_ERR_VALUE)
 				{
-						AR_swprintf(buf, 1024, L"invalid value %I64d\r\n", err.value);
+						AR_swprintf(buf, 1024, L"invalid value %qd\r\n", err.value);
 				}else if(err.type == AR_ESCSTR_ERR_CHAR)
 				{
 						AR_swprintf(buf, 1024, L"invalid input %ls\r\n", err.pos);
@@ -782,7 +785,7 @@ void com_timer_test()
 		AR_Sleep(1000);
 		uint_64_t		end = AR_GetTime_Milliseconds();
 
-		printf("elapsed == %I64d\r\n", end - beg);
+		AR_printf(L"elapsed == %qd\r\n", end - beg);
 
 }
 
@@ -865,7 +868,7 @@ void kmp_test2()
 						cnt ++;
 				}
 				uint_64_t end = AR_GetTime_Milliseconds();
-				AR_printf(L"elapsed == %I64d match == %d\r\n", end - beg, cnt);
+				AR_printf(L"elapsed == %qd match == %Id\r\n", end - beg, cnt);
 		}
 		
 		getchar();
@@ -883,7 +886,7 @@ void kmp_test2()
 						cnt ++;
 				}
 				uint_64_t end = AR_GetTime_Milliseconds();
-				AR_printf(L"elapsed == %I64d match == %d\r\n", end - beg, cnt);
+				AR_printf(L"elapsed == %qd match == %d\r\n", end - beg, cnt);
 		}
 
 
@@ -1044,16 +1047,16 @@ void byte_filp_test()
 
 		AR_printf(L"%d\r\n", val16);
 		AR_printf(L"%d\r\n", val32);
-		AR_printf(L"%I64d\r\n", val64);
+		AR_printf(L"%qd\r\n", val64);
 
 		
 		AR_printf(L"%d\r\n", AR_BYTEFLIP_16(val16));
 		AR_printf(L"%d\r\n", AR_BYTEFLIP_32(val32));
-		AR_printf(L"%I64d\r\n", AR_BYTEFLIP_64(val64));
+		AR_printf(L"%qd\r\n", AR_BYTEFLIP_64(val64));
 
 		AR_printf(L"%d\r\n", AR_BYTEFLIP_16(AR_BYTEFLIP_16(val16)));
 		AR_printf(L"%d\r\n", AR_BYTEFLIP_32(AR_BYTEFLIP_32(val32)));
-		AR_printf(L"%I64d\r\n", AR_BYTEFLIP_64(AR_BYTEFLIP_64(val64)));
+		AR_printf(L"%qd\r\n", AR_BYTEFLIP_64(AR_BYTEFLIP_64(val64)));
 
 		printf("------------------------------\r\n");
 
@@ -1066,17 +1069,17 @@ void byte_filp_test()
 
 		AR_printf(L"0x%X\r\n", uval16);
 		AR_printf(L"0x%X\r\n", uval32);
-		AR_printf(L"0x%I64X\r\n", uval64);
+		AR_printf(L"0x%qX\r\n", uval64);
 		printf("------------------------------\r\n");
 		
 		AR_printf(L"0x%X\r\n", AR_BYTEFLIP_U16(uval16));
 		AR_printf(L"0x%X\r\n", AR_BYTEFLIP_U32(uval32));
-		AR_printf(L"0x%I64X\r\n", AR_BYTEFLIP_U64(uval64));
+		AR_printf(L"0x%qX\r\n", AR_BYTEFLIP_U64(uval64));
 		printf("------------------------------\r\n");
 
 		AR_printf(L"0x%X\r\n", AR_BYTEFLIP_U16(AR_BYTEFLIP_U16(uval16)));
 		AR_printf(L"0x%X\r\n", AR_BYTEFLIP_U32(AR_BYTEFLIP_U32(uval32)));
-		AR_printf(L"0x%I64X\r\n", AR_BYTEFLIP_U64(AR_BYTEFLIP_U64(uval64)));
+		AR_printf(L"0x%qX\r\n", AR_BYTEFLIP_U64(AR_BYTEFLIP_U64(uval64)));
 		printf("------------------------------\r\n");
 
 
@@ -1085,14 +1088,14 @@ void byte_filp_test()
 
 		
 		//AR_printf(L"0x%X\r\n", AR_BYTEFLIP_32(val32));
-		//AR_printf(L"0x%I64X\r\n", AR_BYTEFLIP_64(val64));
+		//AR_printf(L"0x%qX\r\n", AR_BYTEFLIP_64(val64));
 
 
 
 /*
 		AR_printf(L"0x%X\r\n", AR_LTON_16(val16));
 		AR_printf(L"0x%X\r\n", AR_LTON_32(val32));
-		AR_printf(L"0x%I64X\r\n", AR_LTON_64(val64));
+		AR_printf(L"0x%qX\r\n", AR_LTON_64(val64));
 */
 
 }
@@ -1270,7 +1273,7 @@ void escstr_n_test1()
 				wchar_t buf[1024];
 				if(err.type == AR_ESCSTR_ERR_VALUE)
 				{
-						AR_swprintf(buf, 1024, L"invalid value %I64d\r\n", err.value);
+						AR_swprintf(buf, 1024, L"invalid value %qd\r\n", err.value);
 				}else if(err.type == AR_ESCSTR_ERR_CHAR)
 				{
 						AR_swprintf(buf, 1024, L"invalid input %ls\r\n", err.pos);
@@ -1427,7 +1430,7 @@ void com_test()
 		//com_hash_test();
 
 		//com_vscwprintf_test();
-		//com_vscwprintf_test2();
+		com_vscwprintf_test2();
 		//str_test();
 		//itow_test();
 
@@ -1458,7 +1461,7 @@ void com_test()
 
 		//test_align3();
 
-		byte_filp_test();
+		//byte_filp_test();
 
 		//float_test();
 
@@ -1469,6 +1472,8 @@ void com_test()
 		//escstr_n_test0();
 		//align_test();
 		//text_test_save();
+
+		
 
 		
 }

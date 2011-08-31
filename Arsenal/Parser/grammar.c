@@ -550,7 +550,7 @@ bool_t					Parser_InsertTerm(psrGrammar_t *grammar, const wchar_t *name, size_t 
 		{
 				/*AR_error(AR_GRAMMAR, L"Grammar Error : invalid token value %d\r\n", val);*/
 				/*AR_error(L"Grammar Error : invalid token value %" AR_PLAT_INT_FMT L"d\r\n", (size_t)val);*/
-				AR_FormatString(grammar->last_err_msg, L"Grammar Error : invalid token value %" AR_PLAT_INT_FMT L"d\r\n", (size_t)val);
+				AR_FormatString(grammar->last_err_msg, L"Grammar Error : invalid token value %Id\r\n", (size_t)val);
 				return false;
 		}
 		
@@ -571,7 +571,7 @@ bool_t					Parser_InsertTerm(psrGrammar_t *grammar, const wchar_t *name, size_t 
 		{
 				/*AR_error(AR_GRAMMAR, L"Grammar Error : duplicate token value : %d definition\r\n", val);*/
 				/*AR_error(L"Grammar Error : duplicate token value : %" AR_PLAT_INT_FMT L"d definition\r\n", (size_t)val);*/
-				AR_FormatString(grammar->last_err_msg, L"Grammar Error : duplicate token value : %" AR_PLAT_INT_FMT L"d definition\r\n", (size_t)val);
+				AR_FormatString(grammar->last_err_msg, L"Grammar Error : duplicate token value : %Id definition\r\n", (size_t)val);
 				return false;
 		}
 
