@@ -128,7 +128,7 @@ void*	AR_malloc(size_t nbytes)
 
 		if(!ptr)
 		{
-				AR_error(AR_ERR_MEMORY, L"malloc failure for %" AR_PLAT_INT_FMT L"d\r\n", nbytes);
+				AR_error(AR_ERR_MEMORY, L"malloc failure for %Id\r\n", nbytes);
 		}
 		
 		return ptr;
@@ -151,7 +151,7 @@ void*	AR_calloc(size_t num, size_t size)
 
 		if(!ptr)
 		{
-				AR_error(AR_ERR_MEMORY, L"calloc failure for %" AR_PLAT_INT_FMT L"d\r\n", num * size);
+				AR_error(AR_ERR_MEMORY, L"calloc failure for %Id\r\n", num * size);
 		}
 
 		return ptr;
@@ -175,7 +175,7 @@ void*	AR_realloc(void *block, size_t nbytes)
 
 		if(!ptr)
 		{
-				AR_error(AR_ERR_MEMORY, L"realloc failure for %" AR_PLAT_INT_FMT L"d\r\n", nbytes);
+				AR_error(AR_ERR_MEMORY, L"realloc failure for %Id\r\n", nbytes);
 		}
 		
 		return ptr;
