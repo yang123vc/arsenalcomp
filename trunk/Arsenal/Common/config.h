@@ -278,7 +278,8 @@
 		#define AR_BIGNUM_I64(_num)	(_num##i64)
 		#define AR_BIGNUM_U64(_num)	(_num##ui64)
 
-		#define AR_INT_FMT64		L"I64"
+		#define	AR_INT_FMT64		L"I64"
+		#define	AR_FMT64			L"I64"
 
 		#if(AR_COMPILER == AR_VC_LEGACY)
 				#define AR_NOOP					((void)0)
@@ -347,6 +348,7 @@
 		#define AR_BIGNUM_U64(_num)	(_num##ULL)
 
 		#define AR_INT_FMT64		L"ll"
+		#define	AR_FMT64			L"I64"
 
 		#define AR_NOOP
 
@@ -371,6 +373,7 @@
 		#define AR_PLAT_UINT_T	        AR_UINT32_T
 
 		#define AR_PLAT_INT_FMT			L""
+		#define AR_PLAT_FMT				L""
 
 #elif(AR_ARCH_VER == ARCH_64)
 
@@ -379,7 +382,7 @@
 		#define AR_PLAT_UINT_T	        AR_UINT64_T
 
 		#define AR_PLAT_INT_FMT			AR_INT_FMT64
-
+		#define AR_PLAT_FMT				AR_INT_FMT64
 #else
 
 		#error "Not Support Platform!"
