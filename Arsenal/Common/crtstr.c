@@ -211,7 +211,6 @@ const wchar_t*		AR_wcsistr(const wchar_t *s, const wchar_t *p)
 
 /**********************************************************string*************************************************************/
 
-
 #define __MODIFIER_ANSI			0x10000
 #define __MODIFIER_UNICODE		0x20000
 #define	__MODIFIER_INT64		0x40000
