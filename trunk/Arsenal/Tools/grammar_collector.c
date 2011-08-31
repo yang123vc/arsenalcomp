@@ -490,7 +490,7 @@ RE_CHECK_POINT:
 				{
 						if(cfg->tok[i].code_name == NULL)
 						{
-								cfg->tok[i].code_name = AR_vtow(L"%d", (uint_32_t)cfg->tok[i].tokval);
+								cfg->tok[i].code_name = AR_vtow(L"%Id", cfg->tok[i].tokval);
 						}
 				}
 
@@ -763,7 +763,7 @@ static void __uninit_cfg_node_list()
 
 		{
 				wchar_t buf[1024];
-				AR_swprintf(buf, 1024, L"Total consume cfgNode_t == %u", count);
+				AR_swprintf(buf, 1024, L"Total consume cfgNode_t == %Iu", count);
 				AR_DPRINT(L"%ls\r\n", buf);
 		}
 
@@ -933,7 +933,7 @@ static psrNode_t* AR_STDCALL __build_leaf(const psrToken_t *tok,  void *ctx)
 						cfgReportInfo_t info;
 						wchar_t buf[128];
 						
-						AR_swprintf(buf, 128, L"Empty lexeme : line = %" AR_PLAT_INT_FMT L"d", tok->line);
+						AR_swprintf(buf, 128, L"Empty lexeme : line = %Id", tok->line);
 
 						info.type = CFG_REPORT_ERROR_LEX_T;
 						info.lex_error.msg = buf;
@@ -1979,7 +1979,7 @@ static void		AR_STDCALL cfg_error(const psrToken_t *tok, const size_t expected[]
 		str = AR_CreateString();
 
 		AR_AppendFormatString(str
-						, L"Invalid Token \"%ls\" in (%" AR_PLAT_INT_FMT L"d : %" AR_PLAT_INT_FMT L"d)\r\n\r\n"
+						, L"Invalid Token \"%ls\" in (%Id : %Id)\r\n\r\n"
 						, buf
 						, tok->line
 						, tok->col
@@ -2167,7 +2167,7 @@ const cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t 
 						str = AR_CreateString();
 						
 						Lex_MatchGetCoordinate(match, &line, &col);
-						AR_AppendFormatString(str, L"Invalid Token %ls...(%"AR_PLAT_INT_FMT L"d : %"AR_PLAT_INT_FMT L"d)\r\n", tok, line, col);
+						AR_AppendFormatString(str, L"Invalid Token %ls...(%Id : %Id)\r\n", tok, line, col);
 
 						if(tok)AR_DEL(tok);
 

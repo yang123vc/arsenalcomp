@@ -518,8 +518,11 @@ int_t			AR_scwprintf(const wchar_t *fmt, ...);
 wchar_t*		AR_vtow(const wchar_t *fmt, ...);
 
 int_t			AR_swprintf(wchar_t *dest, size_t count, const wchar_t *fmt, ...);
-int_t			AR_vsprintf(char *dest, size_t count, const char *fmt, va_list args);
 int_t			AR_vswprintf(wchar_t *dest, size_t count, const wchar_t *fmt, va_list args);
+
+//int_t			AR_vsprintf(char *dest, size_t count, const char *fmt, va_list args);
+
+
 
 
 

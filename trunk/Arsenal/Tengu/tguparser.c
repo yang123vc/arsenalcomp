@@ -203,7 +203,7 @@ static void __on_lex_error(tguParser_t	*parser)
 
 		Lex_MatchGetCoordinate(parser->match, &line, &col);
 
-		AR_swprintf(buf, 512, L"Invalid Token %ls...(%"AR_PLAT_INT_FMT L"d : %"AR_PLAT_INT_FMT L"d)\r\n", tok_buf, line, col);
+		AR_swprintf(buf, 512, L"Invalid Token %ls...(%Id : %Id)\r\n", tok_buf, line, col);
 
 		info.type = TGU_REPORT_ERROR_T;
 		info.message = buf;

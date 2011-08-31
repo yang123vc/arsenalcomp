@@ -376,7 +376,7 @@ void			RGX_ProgToString(const rgxProg_t *prog, arString_t *str)
 										AR_AppendFormatString(str, L"%c", pc->range.beg);
 								}else
 								{
-										AR_AppendFormatString(str, L"\\u%" AR_PLAT_INT_FMT L"d", pc->range.beg);
+										AR_AppendFormatString(str, L"\\u%Id", pc->range.beg);
 								}
 						}else
 						{
@@ -385,7 +385,7 @@ void			RGX_ProgToString(const rgxProg_t *prog, arString_t *str)
 										AR_AppendFormatString(str, L"%c", pc->range.beg);
 								}else
 								{
-										AR_AppendFormatString(str, L"\\u%" AR_PLAT_INT_FMT L"d", pc->range.beg);
+										AR_AppendFormatString(str, L"\\u%Id", pc->range.beg);
 								}
 
 								AR_AppendString(str, L"-");
@@ -395,7 +395,7 @@ void			RGX_ProgToString(const rgxProg_t *prog, arString_t *str)
 										AR_AppendFormatString(str, L"%c", pc->range.end);
 								}else
 								{
-										AR_AppendFormatString(str, L"\\u%" AR_PLAT_INT_FMT L"d", pc->range.end);
+										AR_AppendFormatString(str, L"\\u%Id", pc->range.end);
 								}
 						}
 						AR_AppendFormatString(str, L"]\r\n");
@@ -404,12 +404,12 @@ void			RGX_ProgToString(const rgxProg_t *prog, arString_t *str)
 				
 				case RGX_LOOP_BEG_I:
 				{
-						AR_AppendFormatString(str, L"%2d. %ls %" AR_PLAT_INT_FMT L"d LoopCount == %" AR_PLAT_INT_FMT L"d\r\n", i, RGX_INS_NAME[pc->opcode], (size_t)(pc->left - prog->start), pc->fix_count);
+						AR_AppendFormatString(str, L"%2d. %ls %Id LoopCount == %Id\r\n", i, RGX_INS_NAME[pc->opcode], (size_t)(pc->left - prog->start), pc->fix_count);
 						break;
 				}
 				case RGX_LOOKAHEAD_BEG_I:
 				{
-						AR_AppendFormatString(str, L"%2d. %ls %" AR_PLAT_INT_FMT L"d\r\n", i, RGX_INS_NAME[pc->opcode], (size_t)(pc->left - prog->start));
+						AR_AppendFormatString(str, L"%2d. %ls %Id\r\n", i, RGX_INS_NAME[pc->opcode], (size_t)(pc->left - prog->start));
 						break;
 				}
 				case RGX_LOOP_END_I:
@@ -426,12 +426,12 @@ void			RGX_ProgToString(const rgxProg_t *prog, arString_t *str)
 				}
 				case RGX_JMP_I:
 				{
-						AR_AppendFormatString(str, L"%2d. %ls %" AR_PLAT_INT_FMT L"d\r\n", i, RGX_INS_NAME[pc->opcode], (size_t)(pc->left - prog->start));
+						AR_AppendFormatString(str, L"%2d. %ls %Id\r\n", i, RGX_INS_NAME[pc->opcode], (size_t)(pc->left - prog->start));
 						break;
 				}
 				case RGX_BRANCH_I:
 				{
-						AR_AppendFormatString(str, L"%2d. %ls %" AR_PLAT_INT_FMT L"d %" AR_PLAT_INT_FMT L"d\r\n", i, RGX_INS_NAME[pc->opcode], (size_t)(pc->left - prog->start), (size_t)(pc->right - prog->start));
+						AR_AppendFormatString(str, L"%2d. %ls %Id %Id\r\n", i, RGX_INS_NAME[pc->opcode], (size_t)(pc->left - prog->start), (size_t)(pc->right - prog->start));
 
 						break;
 				}

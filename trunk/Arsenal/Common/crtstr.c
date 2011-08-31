@@ -211,6 +211,239 @@ const wchar_t*		AR_wcsistr(const wchar_t *s, const wchar_t *p)
 
 /**********************************************************string*************************************************************/
 
+static int_t __wcs_format_preprocess(const wchar_t *fmt, wchar_t *out)
+{
+		wchar_t *p;
+		int_t	need_l;
+		AR_ASSERT(fmt != NULL);
+
+		if(AR_wcslen(fmt) == 0)
+		{
+				return 1;
+		}
+		
+		p = out;
+		need_l = 0;
+		
+		while(*fmt)
+		{
+				if(*fmt != L'%')
+				{
+						if(p)
+						{
+								*p++ = *fmt;
+						}
+						fmt++;
+						need_l++;
+
+						continue;
+				}else if(*fmt == L'%' && *(fmt + 1) == L'%')
+				{
+						if(p)
+						{
+								*p++ = *fmt;
+								*p++ = *fmt;
+						}
+						need_l += 2;
+						fmt += 2;
+						continue;
+				}else
+				{
+						if(p)
+						{
+								*p++ = *fmt;
+						}
+						need_l++;
+						fmt++;
+				}
+
+				/*处理%后面的*/
+
+
+				while(*fmt)
+				{
+						if(*fmt == L'#')
+						{
+								if(p)
+								{
+										*p++ = *fmt;/*0x*/
+								}
+
+								need_l++;
+								fmt++;
+						}else if(*fmt == L'*')
+						{
+								if(p)
+								{
+										*p++ = *fmt;
+								}
+
+								need_l++;
+								fmt++;
+						}else if(*fmt == L'-' || *fmt == L'+' || *fmt == L'0' || *fmt == L' ')
+						{
+								if(p)
+								{
+										*p++ = *fmt;
+								}
+
+								need_l++;
+								fmt++;
+						}else
+						{
+								break;
+						}
+				}
+
+				while(*fmt && AR_iswdigit(*fmt))
+				{
+						if(p)
+						{
+								*p++ = *fmt;
+						}
+						need_l++;
+						fmt++;
+				}
+
+
+				if(*fmt == L'.')
+				{
+						/*width.prec*/
+						if(p)
+						{
+								*p++ = *fmt;
+						}
+						need_l++;
+						fmt++;
+
+						if(*fmt == L'*')
+						{
+								if(p)
+								{
+										*p++ = *fmt;
+								}
+								need_l++;
+								fmt++;
+						}else
+						{
+								while(*fmt && AR_iswdigit(*fmt))
+								{
+										if(p)
+										{
+												*p++ = *fmt;
+										}
+										need_l++;
+										fmt++;
+								}
+						}
+
+				}
+
+
+
+
+				switch (*fmt)
+				{
+				case L'I':
+				{
+						#if(AR_ARCH_VER == ARCH_64)
+						{
+								const wchar_t *pfmt64 = AR_FMT64;
+								while(*pfmt64 != L'\0')
+								{
+										if(p)
+										{
+												*p++ = *pfmt64;
+										}
+										pfmt64++;
+										need_l++;
+								}
+						}
+						#elif(AR_ARCH_VER == AR_ARCH_32)
+
+						#endif
+
+						fmt++;
+				}
+						break;
+				case L'q': /*64bit*/
+				{
+						const wchar_t *pfmt64 = AR_FMT64;
+						while(*pfmt64 != L'\0')
+						{
+								if(p)
+								{
+										*p++ = *pfmt64;
+								}
+								pfmt64++;
+								need_l++;
+						}
+
+						fmt++;
+				}
+						break;
+						/*强制ANSI*/
+				case L'h':
+				case L'l':
+				case L'F':
+				case L'N':
+				case L'L':
+
+						if(p)
+						{
+								*p++ = *fmt;
+						}
+
+						need_l++;
+						fmt++;
+						break;
+				}
+
+				switch (*fmt)
+				{
+				case L'd':
+				case L'i':
+				case L'u':
+				case L'x':
+				case L'X':
+				case L'o':
+				case L'e':
+				case L'E':
+				case L'g':
+				case L'G':
+				case L'f':
+				case L'p':
+				case L'n':
+				case L'c':
+				case L'C':
+				case L's':
+				case L'S':
+						if(p)
+						{
+								*p++ = *fmt;
+						}
+						
+						fmt++;
+						need_l++;
+						break;
+				default:
+						AR_ASSERT(false);
+						return -1;
+						break;
+				}
+		}
+
+		if(p)
+		{
+				*p = L'\0';
+		}
+		
+		need_l++;
+		return need_l;
+}
+
+
+
 #define __MODIFIER_ANSI			0x10000
 #define __MODIFIER_UNICODE		0x20000
 #define	__MODIFIER_INT64		0x40000
@@ -287,29 +520,20 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 
 				modifier = 0;
 
-				if(*fmt == L'I' && *(fmt + 1) == L'6' && *(fmt + 2) == L'4')/*VC,BCB等*/
-				{
-						/*例如%I64d*/
-						fmt += 3;
-						modifier |= __MODIFIER_INT64;
-				}else if(*fmt == L'I' && *(fmt + 1) == L'3' && *(fmt + 2) == L'2')/*VC,BCB等*/
-				{
-						/*例如%I32d*/
-						fmt += 3;
-				}else if(*fmt == L'I')
+				if(*fmt == L'I')
 				{
 						/*例如%Id*/
 						fmt += 1;
 
-						#if(AR_ARCH_VER == AR_ARCH_64)
-								modifier |= __MODIFIER_INT64
-						#elif(AR_ARCH_VER == AR_ARCH_32)
+						#if(AR_ARCH_VER == ARCH_64)
+								modifier |= __MODIFIER_INT64;
+						#elif(AR_ARCH_VER == ARCH_32)
 
 						#endif
-				}else if(*fmt == L'l' && *(fmt + 1) == L'l')/*VC gcc一族编译器*/
+				}else if(*fmt == L'q')
 				{
 						/*例如%lld*/
-						fmt += 2;
+						fmt += 1;
 						modifier |= __MODIFIER_INT64;
 				}else
 				{
@@ -464,7 +688,10 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 								cclen = AR_MAX(width, 312 + prec + 6);/*取最大值*/
 
 								buf = AR_NEWARR0(wchar_t, cclen);
+								/*
 								AR_swprintf(buf, cclen, L"%*.*f", width, prec + 6, f);
+								*/
+								AR_SWPRINTF(buf, cclen, L"%*.*f", width, prec + 6, f);
 								len = AR_wcslen(buf);
 								AR_DEL(buf);
 								break;
@@ -504,6 +731,7 @@ int_t			AR_scwprintf(const wchar_t *fmt, ...)
 {
 		int_t len = -1;
 		va_list	arg_ptr;
+		
 		AR_ASSERT(fmt != NULL);
 
 		va_start(arg_ptr, fmt);
@@ -549,14 +777,41 @@ int_t			AR_vswprintf(wchar_t *dest, size_t count, const wchar_t *fmt, va_list ar
 {
 		int_t res;
 		va_list save;
+		
+		wchar_t *src_fmt;
+		int_t need_l;
+
 		AR_ASSERT(dest != NULL && fmt != NULL && args != NULL);
+		
 		res = 0;
+		need_l = 0;
+		src_fmt = NULL;
 		AR_memcpy(&save, &args, sizeof(va_list));
 
-		res = AR_VSWPRINTF(dest, count, fmt, args);
 
+		/********************将Arsenal形式的printf格式，转换为目标CRT的格式***************/
+		need_l = __wcs_format_preprocess(fmt, NULL);
+		if(need_l <= 0)
+		{
+				goto END_POINT;
+		}
+
+		src_fmt = AR_NEWARR(wchar_t, need_l);
+		__wcs_format_preprocess(fmt, src_fmt);
+
+		res = AR_VSWPRINTF(dest, count, src_fmt, args);
+		/*****************************************************************************/
+
+
+END_POINT:
 		va_end(save);
-		
+
+		if(src_fmt)
+		{
+				AR_DEL(src_fmt);
+				src_fmt = NULL;
+		}
+
 		if(res <= 0)						/*忽略掉此种错误*/
 		{
 				dest[0] = L'\0';
@@ -586,7 +841,7 @@ int_t			AR_swprintf(wchar_t *dest, size_t count, const wchar_t *fmt, ...)
 		return len;
 }
 
-
+#if(0)
 int_t			AR_vsprintf(char *dest, size_t count, const char *fmt, va_list args)
 {
 		int_t res;
@@ -606,7 +861,7 @@ int_t			AR_vsprintf(char *dest, size_t count, const char *fmt, va_list args)
 		return res;
 }
 
-
+#endif
 
 
 

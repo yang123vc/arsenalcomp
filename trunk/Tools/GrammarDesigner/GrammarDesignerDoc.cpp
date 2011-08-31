@@ -429,7 +429,7 @@ void CGrammarDesignerDoc::OnEditFindallreferences()
 						{
 								const ARSpace::lexToken_t *tok = &lx_set->token_set[i];
 
-								if(tok->count != sel.GetLength())
+								if(tok->count != (size_t)sel.GetLength())
 								{
 										continue;
 								}

@@ -72,7 +72,7 @@ static const	psrConflictView_t*		Parser_CreateConflictView(const psrActionTable_
 						/*
 						AR_AppendFormatString(str,L"state[%" AR_PLAT_INT_FMT L"d] : %ls",(size_t)i, tbl->term_set.lst[k]->name);
 						*/
-						AR_AppendFormatString(str,L"state[%" AR_PLAT_INT_FMT L"d]",(size_t)i);
+						AR_AppendFormatString(str,L"state[%Id]",(size_t)i);
 						item->name = AR_wcsdup(AR_GetStrString(str));
 						AR_ClearString(str);
 						item->lookahead = AR_wcsdup(tbl->term_set.lst[k]->name);
@@ -224,12 +224,12 @@ static const psrActionView_t*	Parser_CreateActionView(const psrActionTable_t *tb
 								break;
 						case PARSER_SHIFT:
 								{
-										msg = AR_vtow(L"%" AR_PLAT_INT_FMT L"d", (size_t)action->shift_to);
+										msg = AR_vtow(L"%Id", (size_t)action->shift_to);
 								}
 								break;
 						case PARSER_REDUCE:
 								{
-										msg = AR_vtow(L"[<%ls>:%" AR_PLAT_INT_FMT L"d]", rule->head->name, (size_t)action->reduce_count);
+										msg = AR_vtow(L"[<%ls>:%Id]", rule->head->name, (size_t)action->reduce_count);
 								}
 								break;
 						default:
@@ -245,7 +245,7 @@ static const psrActionView_t*	Parser_CreateActionView(const psrActionTable_t *tb
 				for(k = 0; k < tbl->goto_col; ++k)
 				{
 						int_t state =  tbl->goto_tbl[AR_TBL_IDX_R(r, k, tbl->goto_col)];
-						msg = AR_vtow(L"%" AR_PLAT_INT_FMT L"d", state);
+						msg = AR_vtow(L"%Id", state);
 
 						view->action_tbl[AR_TBL_IDX_R(r, c, view->col)] = msg;
 						c++;
@@ -332,11 +332,11 @@ static void Parser_PrintActionTable(const psrActionTable_t *tbl, const psrGramma
 		AR_AppendString(str,L"\r\n");
 		for(i = 0; i < tbl->goto_row; i++)
 		{
-				AR_swprintf(buf, 1024, L"I[%" AR_PLAT_INT_FMT L"d]", (size_t)i);
+				AR_swprintf(buf, 1024, L"I[%Id]", (size_t)i);
 				AR_AppendFormatString(str, L"%*ls:", __WIDTH__,buf);
 				for(j = 0; j < tbl->goto_col; ++j)
 				{
-						AR_AppendFormatString(str, L"%*" AR_PLAT_INT_FMT L"d", __WIDTH__, tbl->goto_tbl[AR_TBL_IDX_R(i,j,tbl->goto_col)]);
+						AR_AppendFormatString(str, L"%*Id", __WIDTH__, tbl->goto_tbl[AR_TBL_IDX_R(i,j,tbl->goto_col)]);
 						/*
 						int_t xxx,xxx_idx;
 						
@@ -364,7 +364,7 @@ static void Parser_PrintActionTable(const psrActionTable_t *tbl, const psrGramma
 
 		for(i = 0; i < tbl->row; ++i)
 		{
-				AR_swprintf(buf, 1024, L"I[%d]", (uint_32_t)i);
+				AR_swprintf(buf, 1024, L"I[%Id]", i);
 
 				AR_AppendFormatString(str,L"%*ls:", __WIDTH__,buf);
 				for(j = 0; j < tbl->col; ++j)
@@ -381,12 +381,12 @@ static void Parser_PrintActionTable(const psrActionTable_t *tbl, const psrGramma
 								break;
 						case PARSER_SHIFT:
 						{
-								AR_AppendFormatString(str,L"%*" AR_PLAT_INT_FMT L"d", __WIDTH__, (size_t)pact->shift_to);
+								AR_AppendFormatString(str,L"%*Id", __WIDTH__, (size_t)pact->shift_to);
 						}
 								break;
 						case PARSER_REDUCE:
 						{
-								AR_swprintf(buf, 1024, L"[<%ls>:%" AR_PLAT_INT_FMT L"d]",rule->head->name, (size_t)pact->reduce_count);
+								AR_swprintf(buf, 1024, L"[<%ls>:%Id]",rule->head->name, (size_t)pact->reduce_count);
 								AR_AppendFormatString(str,L"%*ls", __WIDTH__,buf);
 								
 						}
@@ -418,7 +418,7 @@ static void Parser_ReportConflict(const psrActionTable_t *tbl, const psrGrammar_
 						if(action->next == NULL)continue;
 
 
-						AR_AppendFormatString(str,L"state[%" AR_PLAT_INT_FMT L"d] : %ls\r\n",(size_t)i, tbl->term_set.lst[j]->name);
+						AR_AppendFormatString(str,L"state[%Id] : %ls\r\n",(size_t)i, tbl->term_set.lst[j]->name);
 						
 						while(action != NULL)
 						{
@@ -782,7 +782,7 @@ RECHECK_POINT:
 						AR_AppendString(tmp, lhs->name);
 						AR_AppendString(tmp, L"\t:\t");
 						Parser_PrintSymbolList(&rules[bk[i]]->body, tmp);
-						AR_AppendFormatString(tmp, L"\t:\t%d", max);
+						AR_AppendFormatString(tmp, L"\t:\t%Id", max);
 						__insert_to_symtbl_view(output, lhs->name, AR_GetStrString(tmp));
 				}
 				rules[bk[i]] = NULL;
