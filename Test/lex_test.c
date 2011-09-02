@@ -1130,7 +1130,7 @@ void lex_quote_test7()
 
 void lex_test_skip_line_test()
 {
-		const TCHAR *s = TEXT("a\r\nb\n\rc\rd\ne\r\rf");
+		const wchar_t *s = L"a\r\nb\n\rc\rd\ne\r\rf";
 
 		lexMatch_t match;
 

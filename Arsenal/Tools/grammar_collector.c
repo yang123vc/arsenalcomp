@@ -764,7 +764,7 @@ static void __uninit_cfg_node_list()
 		{
 				wchar_t buf[1024];
 				AR_swprintf(buf, 1024, L"Total consume cfgNode_t == %Iu", count);
-				AR_DPRINT(L"%ls\r\n", buf);
+				AR_LOG(L"%ls\r\n", buf);
 		}
 
 }

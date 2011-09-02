@@ -850,7 +850,7 @@ const wchar_t *AR_wcsstr_ex(const wchar_t *s, const wchar_t *p)
 
 void kmp_test2()
 {
-		const wchar_t *src = __load_txt(L"z:\\1.txt");
+		const wchar_t *src = NULL;//__load_txt(L"z:\\1.txt");
 
 		//AR_printf(L"%ls\r\n",src);
 

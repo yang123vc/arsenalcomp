@@ -1401,6 +1401,18 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\Test\parser_gen_perf_javascript_code_impl.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Test\parser_gen_perf_sql_code_impl.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Test\parser_gen_perf_test.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\Test\parser_test.c"
 				>
 				<FileConfiguration

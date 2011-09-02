@@ -30,9 +30,8 @@ const psrAction_t*		Parser_GetAction(const psrActionTable_t *tbl, size_t state, 
 		idx = Parser_BSearchFromSymbList(&tbl->term_set,symb);
 		AR_ASSERT(idx != -1);
 		return tbl->actions[AR_TBL_IDX_R(state,idx, tbl->col)];
-
-
 }
+
 
 int_t					Parser_GetState(const psrActionTable_t *tbl, size_t state, const psrSymb_t *symb)
 {

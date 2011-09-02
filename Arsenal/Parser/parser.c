@@ -659,6 +659,7 @@ static void __handle_reduce(psrContext_t *parser_context, const psrAction_t *act
 		Parser_PushNodeStack(parser_context->node_stack, new_node);
 
 
+		/*这里被当做移入了一个非终结符*/
 		if(parser_context->is_repair)
 		{
 				parser_context->repair_valid_shift++;
