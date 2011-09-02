@@ -63,6 +63,7 @@ void	AR_printf(const wchar_t *msg,...);
 
 
 /*库内部错误为负数*/
+#define AR_ERR_MESSAGE		((int_t)-0x0099)
 #define AR_ERR_WARNING		((int_t)-0x0100)
 #define AR_ERR_FATAL		((int_t)-0x0101)
 #define AR_ERR_MEMORY		((int_t)-0x0102)
@@ -118,6 +119,16 @@ void	AR_check(bool_t cond, const wchar_t *fmt, ...);
 
 #define AR_UNUSED(_e)			((void)(_e))
 
+
+
+#if !defined(AR_DISABLE_LOG)
+
+		#define AR_LOG					AR_printf
+
+#else
+		#define AR_LOG
+	
+#endif
 
 /***********************************************************macro_oper*********************************************************/
 

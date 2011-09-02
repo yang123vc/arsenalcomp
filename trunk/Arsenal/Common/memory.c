@@ -43,7 +43,7 @@ void	AR_UnInitMemory()
 				MessageBox(NULL, buf, 0,0);
 		}
 #endif
-		AR_DPRINT(L"Peak memroy used : %quKB" L"\r\n", usage.peak_mem_used/1024);
+		AR_LOG(L"Peak memroy used : %quKB" L"\r\n", usage.peak_mem_used/1024);
 
 
 		AR_DestroyHeap(__g_heap);

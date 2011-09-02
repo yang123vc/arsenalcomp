@@ -80,7 +80,7 @@ extern void tokenizer_test();
 
 extern void Ini_Test();
 
-
+void parser_gen_perf_test();
 #endif
 
 
@@ -90,7 +90,7 @@ extern void Ini_Test();
 void AR_Test()
 {
 #if defined(__LIB)
-		com_test();
+		//com_test();
 		//trie_tree_test();
 		//expr_test();
 		//lex_test();
@@ -161,7 +161,8 @@ void AR_Test()
 		//tokenizer_test();
 
 		//Ini_Test();
-
+		
+		parser_gen_perf_test();
 		getchar();
 #else
 		ARSpace::AR_printf(L"dll version\r\n");
