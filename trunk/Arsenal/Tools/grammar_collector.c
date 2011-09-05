@@ -2189,7 +2189,13 @@ const cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t 
 						AR_DestroyString(str);
 
 						AR_ASSERT(*Lex_GetNextInput(match) != L'\0');
-						Lex_Skip(match);
+
+						
+						if(!Lex_TrySkipTo(match, L";"))/*r尝试跳到';'如果未成功，则跳到头一个非空白符*/
+						{
+								Lex_Skip(match);
+						}
+
 						Lex_ClearError(match);
 						has_error = true;
 						is_ok = true;
