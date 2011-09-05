@@ -19,6 +19,7 @@
 syntax_node
 */
  
+
 	typedef enum
 	{
 		TGU_NODE_TOKEN_T,
@@ -133,7 +134,7 @@ syntax_tree_handler
 		
 	}
 
-	static void		AR_STDCALL on_error(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
+	static bool_t		AR_STDCALL on_error(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
 	{
 			tguParser_t	*parser;
 			size_t		i;
@@ -165,6 +166,7 @@ syntax_tree_handler
 			str = NULL;
 			AR_DEL(tok_str);
 			tok_str = NULL;
+			return true;
 	}
 	
 	static const psrHandler_t	__g_handler = {on_error, on_free_node};
@@ -787,7 +789,7 @@ handle_identifier
  
 
 static const wchar_t *__g_lex_name[] = {
-L"delim = [\\x{000B}\\x{0020}\\x{00A0}\\x{2028}\\x{2029} \\f\\n\\r\\t\\v]",
+L"delim = [\\x{000C}\\x{000B}\\x{0020}\\x{00A0}\\x{2028}\\x{2029} \\f\\n\\r\\t\\v]",
 L"comment = /\\*([^\\*]|\\*+[^\\*/])*\\*+/",
 L"comment_line = (//[^\\r\\n]*(\\n|\\r|$))",
 L"skip_lexem = {comment_line}|{delim}|{comment}",
@@ -931,7 +933,7 @@ psrTermFunc_t leaf;
 {L":", TOK_COLON, 0, L"\":\"", false, default_leaf_handler},
 {L"?", TOK_QUEST, 0, L"\"?\"", false, default_leaf_handler},
 {L".", TOK_DOT, 0, L"\".\"", false, default_leaf_handler},
-{L"EOI", 0, 2, L"$", false, NULL}
+{L"CFG_LEXVAL_EOI", 0, 2, L"$", false, NULL}
 };
 
 #define __TERM_COUNT__ ((size_t)50)
@@ -1061,11 +1063,11 @@ static psrNode_t* AR_STDCALL on_import_statement(psrNode_t **nodes, size_t count
 /*compound_statement	:	start_block compound_element_list } */
 static psrNode_t* AR_STDCALL on_compound_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*compound_statement	:	start_block error } */
-static psrNode_t* AR_STDCALL on_compound_error_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
 /*compound_statement	:	start_block } */
 static psrNode_t* AR_STDCALL on_empty_compound_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*compound_statement	:	start_block error } */
+static psrNode_t* AR_STDCALL on_compound_error_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*start_block	:	{ */
 static psrNode_t* AR_STDCALL on_start_block(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
@@ -1237,8 +1239,8 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"import_statement  :  #import STRING semi ", NULL, on_import_statement, 0},
 {L"import_statement  :  #import error ; ", NULL, on_import_statement, 0},
 {L"compound_statement  :  start_block compound_element_list } ", NULL, on_compound_statement, 0},
-{L"compound_statement  :  start_block error } ", NULL, on_compound_error_statement, 0},
 {L"compound_statement  :  start_block } ", NULL, on_empty_compound_statement, 0},
+{L"compound_statement  :  start_block error } ", NULL, on_compound_error_statement, 0},
 {L"start_block  :  { ", NULL, on_start_block, 0},
 {L"compound_element_list  :  compound_element_list compound_element ", NULL, auto_return_null, 0},
 {L"compound_element_list  :  compound_element ", NULL, auto_return_null, 0},
@@ -1784,7 +1786,6 @@ static psrNode_t* AR_STDCALL on_list_field_list(psrNode_t **nodes, size_t count,
 /*table_constructor	:	{ error } */
 static psrNode_t* AR_STDCALL on_table_constructor(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
-		/*
 	 { 
 						tguParser_t 	*parser = (tguParser_t*)ctx;
 						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
@@ -1796,13 +1797,6 @@ static psrNode_t* AR_STDCALL on_table_constructor(psrNode_t **nodes, size_t coun
 						return ret;	
 						
 					 }
-					 */
-		AR_UNUSED(nodes);
-		AR_UNUSED(count);
-		AR_UNUSED(name);
-		AR_UNUSED(ctx);
-
-		return NULL;
 }
 
 
@@ -1959,25 +1953,6 @@ static psrNode_t* AR_STDCALL on_compound_statement(psrNode_t **nodes, size_t cou
 
 
 
-/*compound_statement	:	start_block error } */
-static psrNode_t* AR_STDCALL on_compound_error_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-	 { 
-						tguParser_t 	*parser = (tguParser_t*)ctx;
-						/*tguSynNode_t	**ns = (tguSynNode_t**)nodes;*/
-						tguBlock_t		*cb = NULL;
-						AR_ASSERT(nodes != NULL && (count == 2));
-						AR_ASSERT(parser != NULL);
-						parser->has_error = true;
-						cb = TGU_ParserPopBlock(parser);
-						TGU_DestroyBlock(cb);
-						return NULL;
-				 }
-}
-
-
-
-
 /*compound_statement	:	start_block } */
 static psrNode_t* AR_STDCALL on_empty_compound_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
@@ -1996,6 +1971,25 @@ static psrNode_t* AR_STDCALL on_empty_compound_statement(psrNode_t **nodes, size
 						ret = __create_synnode(TGU_NODE_STMT_T, (void*)stmt);
 						return ret;
 						
+				 }
+}
+
+
+
+
+/*compound_statement	:	start_block error } */
+static psrNode_t* AR_STDCALL on_compound_error_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 { 
+						tguParser_t 	*parser = (tguParser_t*)ctx;
+						/*tguSynNode_t	**ns = (tguSynNode_t**)nodes;*/
+						tguBlock_t		*cb = NULL;
+						AR_ASSERT(nodes != NULL && (count == 2));
+						AR_ASSERT(parser != NULL);
+						parser->has_error = true;
+						cb = TGU_ParserPopBlock(parser);
+						TGU_DestroyBlock(cb);
+						return NULL;
 				 }
 }
 

@@ -1946,7 +1946,7 @@ static void	AR_STDCALL cfg_free(psrNode_t *node, void *ctx)
 
 
 
-static void		AR_STDCALL cfg_error(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
+static bool_t		AR_STDCALL cfg_error(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
 {
 		cfgReport_t				*report = NULL;
 		cfgReportInfo_t			info;
@@ -2009,6 +2009,8 @@ static void		AR_STDCALL cfg_error(const psrToken_t *tok, const size_t expected[]
 		info.type = CFG_REPORT_ERROR_SYNTAX_T;
 		report->report_func(&info, report->report_ctx);
 		AR_DestroyString(str);
+
+		return true;
 }
 
 

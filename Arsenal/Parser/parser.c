@@ -673,7 +673,7 @@ static void __handle_reduce(psrContext_t *parser_context, const psrAction_t *act
 
 
 
-static void __on_error(psrContext_t *parser_context, const psrToken_t		*tok)
+static bool_t __on_error(psrContext_t *parser_context, const psrToken_t		*tok)
 {
 		size_t			top_state;
 		const psrHandler_t		*handler;
@@ -689,10 +689,10 @@ static void __on_error(psrContext_t *parser_context, const psrToken_t		*tok)
 		
 		if(handler->error_f == NULL)
 		{
-				
+				return true;
 		}else
 		{
-				handler->error_f(tok, parser_context->parser->msg_set[top_state].msg, parser_context->parser->msg_set[top_state].count, parser_context->ctx);
+				return handler->error_f(tok, parser_context->parser->msg_set[top_state].msg, parser_context->parser->msg_set[top_state].count, parser_context->ctx);
 		}
 }
 
@@ -710,17 +710,25 @@ typedef enum
 static errRecovery_t __error_recovery(psrContext_t *parser_context, const psrToken_t *tok)
 {		
 		const psrHandler_t	*handler;
-		
+		bool_t	on_error_is_handled;
 		AR_ASSERT(parser_context != NULL && parser_context->parser != NULL);
 		
 		handler = Parser_GetGrammarHandler(Parser_GetGrammar(parser_context->parser));
 		AR_ASSERT(handler != NULL);
 
+		on_error_is_handled = false;
+
+RECHECK_POINT:
 		if(!parser_context->is_repair)
 		{
 				bool_t found = false;
 				
-				__on_error(parser_context, tok);
+				if(!__on_error(parser_context, tok)) /*如果返回假，则证明不需要处理此错误符号，则不会在stack上寻找能匹配的error token*/
+				{
+						parser_context->is_repair = true;
+						on_error_is_handled = true;
+						goto RECHECK_POINT;
+				}
 
 				while(parser_context->state_stack->count > 0 && !found)
 				{
@@ -780,9 +788,13 @@ static errRecovery_t __error_recovery(psrContext_t *parser_context, const psrTok
 				const psrSymb_t *symb;
 				symb = Parser_FindTermFromInfoTable(parser_context->parser->term_tbl, tok->term_val)->term;
 				AR_ASSERT(symb != NULL);
+
 				if(Parser_CompSymb(PARSER_EOISymb, symb) == 0)
 				{
-						__on_error(parser_context, tok);
+						if(!on_error_is_handled)
+						{
+								__on_error(parser_context, tok);
+						}
 
 						return ERR_RECOVERY_FAILED;
 				}else
