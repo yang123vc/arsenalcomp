@@ -134,7 +134,7 @@
 		
 	}
 
-	static void		AR_STDCALL on_error(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
+	static bool_t		AR_STDCALL on_error(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
 	{
 			tguParser_t	*parser;
 			size_t		i;
@@ -166,6 +166,7 @@
 			str = NULL;
 			AR_DEL(tok_str);
 			tok_str = NULL;
+			return true;
 	}
 	
 	static const psrHandler_t	__g_handler = {on_error, on_free_node};
@@ -179,7 +180,7 @@
 
 
 
-%name	delim 			:	 "[\x{000B}\x{0020}\x{00A0}\x{2028}\x{2029} \f\n\r\t\v]"
+%name	delim 			:	 "[\x{000C}\x{000B}\x{0020}\x{00A0}\x{2028}\x{2029} \f\n\r\t\v]"
 				;
 %name	comment		:	"/\*([^\*]|\*+[^\*/])*\*+/"	
 				;

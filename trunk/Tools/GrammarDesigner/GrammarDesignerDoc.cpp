@@ -595,7 +595,7 @@ static void	AR_STDCALL	__free_node(ARSpace::psrNode_t *node, void *ctx)
 }
 
 
-static void	AR_STDCALL	__on_parse_error(const ARSpace::psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
+static bool_t	AR_STDCALL	__on_parse_error(const ARSpace::psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
 {
 
 		OutputContext	*context;
@@ -635,6 +635,8 @@ static void	AR_STDCALL	__on_parse_error(const ARSpace::psrToken_t *tok, const si
 		context->m_output->Append(msg, COutputList::MSG_ERROR, tok->line, context->m_target);
 
 		context->error_count++;
+
+		return true;
 
 }
 
