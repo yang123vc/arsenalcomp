@@ -180,15 +180,15 @@
 
 
 
-%name	delim 			:	 "[\x{000C}\x{000B}\x{0020}\x{00A0}\x{2028}\x{2029} \f\n\r\t\v]"
+%name	delim 			:	 "[\x{000A}\x{000B}\x{000C}\x{000D}\x{0085}\x{2028}\x{2029}\x{0020}\f\n\r\t\v]"
 				;
 %name	comment		:	"/\*([^\*]|\*+[^\*/])*\*+/"	
 				;
 
-%name	comment_line		:	"(//[^\r\n]*(\n|\r|$))"
+%name	comment_line		:	"(//[^\x{000A}\x{000B}\x{000C}\x{000D}\x{0085}\x{2028}\x{2029}]*(\x{000A}|\x{000B}|\x{000C}|\x{000D}|\x{0085}|\x{2028}|\x{2029}|$))"
 				;
 
-%name skip_lexem		: 	"{comment_line}|{delim}|{comment}"
+%name skip_lexem		: 	"{delim}|{comment_line}|{comment}"
 				;
 
 

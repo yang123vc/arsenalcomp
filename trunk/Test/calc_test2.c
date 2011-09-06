@@ -315,7 +315,7 @@ enum
 };
 */
 
-static void		AR_STDCALL handle_on_error(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
+static bool_t		AR_STDCALL handle_on_error(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
 {
 		AR_ASSERT(tok != NULL);
 		
@@ -371,6 +371,8 @@ static void		AR_STDCALL handle_on_error(const psrToken_t *tok, const size_t expe
 		}
 
 		AR_printf(L"\r\n");
+
+		return true;
 	
 }
 

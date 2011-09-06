@@ -124,7 +124,7 @@ void AR_Test()
 
 		//trans_char_test();
 		
-		//lex_test();
+		lex_test();
 		
 
 		//parser_perf_test();
@@ -162,7 +162,7 @@ void AR_Test()
 
 		//Ini_Test();
 		
-		parser_gen_perf_test();
+		//parser_gen_perf_test();
 		getchar();
 #else
 		ARSpace::AR_printf(L"dll version\r\n");
