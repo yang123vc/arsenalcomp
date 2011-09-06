@@ -291,7 +291,37 @@ void	Lex_ClearError(lexMatch_t *match)
 }
 
 
-#define IS_NEW_LINE(_c)	((_c) == L'\n' || (_c) == L'\r')
+
+
+
+#define LF		L'\x000A'		//Line Feed
+#define VT		L'\x000B'		//Vertical Tab
+#define FF		L'\x000C'		//Form Feed
+#define CR		L'\x000D'		//Carriage Return
+#define NEL		L'\x0085'		//Next Line
+#define LS		L'\x2028'		//Line Separator
+#define PS		L'\x2029'		//Paragraph Separator
+//CR+LF:		CR followed by LF
+
+static bool_t  IS_NEW_LINE(wchar_t c)
+{
+		switch(c)
+		{
+		case LF:
+		case VT:
+		case FF:
+		case CR:
+		case NEL:
+		case LS:
+		case PS:
+				return true;
+		default:
+				return false;
+		}
+}
+
+
+
 
 void	Lex_Skip(lexMatch_t *pmatch)
 {
@@ -307,18 +337,20 @@ void	Lex_Skip(lexMatch_t *pmatch)
 
 		while(*pmatch->next && AR_iswspace(*pmatch->next))
 		{
-				if(*pmatch->next == L'\n')
+				if(IS_NEW_LINE(*pmatch->next))
 				{
 						wchar_t next_c;
+						
 						pmatch->line++;
 						pmatch->col = 0;
 						
 						next_c = *(pmatch->next + 1);
-						if(IS_NEW_LINE(next_c) && next_c != *pmatch->next)
+						if(*pmatch->next == CR && next_c == LF)
 						{
 								pmatch->next++;
 						}
 
+						pmatch->next_action &= ~RGX_ACT_INCLINE;
 				}else
 				{
 						pmatch->col++;
@@ -347,10 +379,12 @@ void			Lex_SkipTo(lexMatch_t *pmatch, const wchar_t *tok)
 								pmatch->col = 0;
 								
 								next_c = *(pmatch->next + 1);
-								if(IS_NEW_LINE(next_c) && next_c != *pmatch->next)
+								if(*pmatch->next == CR && next_c == LF)
 								{
 										pmatch->next++;
 								}
+
+								pmatch->next_action &= ~RGX_ACT_INCLINE;
 						}else
 						{
 								pmatch->col++;
@@ -366,19 +400,24 @@ void			Lex_SkipTo(lexMatch_t *pmatch, const wchar_t *tok)
 								wchar_t next_c;
 								pmatch->line++;
 								pmatch->col = 0;
-								
+							
 								next_c = *(pmatch->next + 1);
-								if(IS_NEW_LINE(next_c) && next_c != *pmatch->next)
+								if(*pmatch->next == CR && next_c == LF)
 								{
 										pmatch->next++;
 								}
+
+								pmatch->next_action &= ~RGX_ACT_INCLINE;
 						}else
 						{
 								pmatch->col++;
 						}
+
 						pmatch->next++;
 				}
 		}
+
+		
 }
 
 bool_t			Lex_TrySkipTo(lexMatch_t *pmatch, const wchar_t *tok)
@@ -392,26 +431,7 @@ bool_t			Lex_TrySkipTo(lexMatch_t *pmatch, const wchar_t *tok)
 				return false;
 		}else
 		{
-				while(pmatch->next != next)
-				{
-						if(IS_NEW_LINE(*pmatch->next))
-						{
-								wchar_t next_c;
-								pmatch->line++;
-								pmatch->col = 0;
-								
-								next_c = *(pmatch->next + 1);
-
-								if(IS_NEW_LINE(next_c) && next_c != *pmatch->next)
-								{
-										pmatch->next++;
-								}
-						}else
-						{
-								pmatch->col++;
-						}
-						pmatch->next++;
-				}
+				Lex_SkipTo(pmatch, tok);
 				return true;
 		}
 
@@ -433,11 +453,12 @@ void			Lex_SkipN(lexMatch_t *pmatch, size_t nchar)
 
 						next_c = *(pmatch->next + 1);
 
-						if(IS_NEW_LINE(next_c) && next_c != *pmatch->next)
+						if(*pmatch->next == CR && next_c == LF)
 						{
 								pmatch->next++;
-								i++;
 						}
+
+						pmatch->next_action &= ~RGX_ACT_INCLINE;
 				}else
 				{
 						pmatch->col++;
@@ -447,6 +468,16 @@ void			Lex_SkipN(lexMatch_t *pmatch, size_t nchar)
 }
 
 #undef IS_NEW_LINE
+#undef LF
+#undef VT
+#undef FF
+#undef CR
+#undef NEL
+#undef LS
+#undef PS
+
+/***********************************************************************************************************************************/
+
 
 
 void			Lex_PutBack(lexMatch_t *pmatch, const lexToken_t *tok)
@@ -462,6 +493,7 @@ void			Lex_PutBack(lexMatch_t *pmatch, const lexToken_t *tok)
 		pmatch->next = tok->str;
 		pmatch->line = tok->line;
 		pmatch->col = tok->col;
+		pmatch->next_action = 0;
 }
 
 

@@ -69,9 +69,31 @@ static void __add_thread(rgxThreadList_t *lst,  rgxThread_t thd, rgxProg_t *prog
 
 
 
+#define LF		L'\x000A'		//Line Feed
+#define VT		L'\x000B'		//Vertical Tab
+#define FF		L'\x000C'		//Form Feed
+#define CR		L'\x000D'		//Carriage Return
+#define NEL		L'\x0085'		//Next Line
+#define LS		L'\x2028'		//Line Separator
+#define PS		L'\x2029'		//Paragraph Separator
+//CR+LF:		CR followed by LF
 
-
-#define IS_NEW_LINE(_c)	((_c) == L'\n' || (_c) == L'\r')
+static bool_t  IS_NEW_LINE(wchar_t c)
+{
+		switch(c)
+		{
+		case LF:
+		case VT:
+		case FF:
+		case CR:
+		case NEL:
+		case LS:
+		case PS:
+				return true;
+		default:
+				return false;
+		}
+}
 
 #define IS_LINE_BEGIN(_sp, _input)		((_sp) == (_input) || (IS_NEW_LINE((_sp)[-1])))
 #define IS_LINE_END(_sp)				(*(_sp) == L'\0' || (IS_NEW_LINE(*(_sp))))
@@ -92,7 +114,7 @@ static AR_INLINE void __check_is_newline(const wchar_t *sp, uint_32_t *pact, siz
 				}else
 				{
 						wchar_t next_c = *(sp + 1);
-						if(IS_NEW_LINE(next_c) && *sp != next_c)
+						if(*sp == CR && next_c == LF) /*CR followed by LF*/
 						{
 								*py += 1;
 								*pact |= RGX_ACT_INCLINE;
@@ -109,6 +131,15 @@ static AR_INLINE void __check_is_newline(const wchar_t *sp, uint_32_t *pact, siz
 
 }
 
+
+#undef IS_NEW_LINE
+#undef LF
+#undef VT
+#undef FF
+#undef CR
+#undef NEL
+#undef LS
+#undef PS
 
 
 static bool_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, size_t *py, uint_32_t *pact, lexMatch_t *match);
@@ -204,12 +235,12 @@ static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match
 
 								if(*sp != L'\0')
 								{
-										if(match->flags & LEX_SINGLE_LINE)/*single line 可以匹配包含\r\n在内的所有字符*/
+										if(match->flags & LEX_SINGLE_LINE)/*single line 可以匹配包含换行符号在内的所有字符*/
 										{
 												is_ok = true;
 										}else
 										{
-												is_ok = !IS_NEW_LINE(*sp); /*sp 不可为'\r' '\n'*/
+												is_ok = !IS_NEW_LINE(*sp);
 										}
 								}
 
@@ -466,12 +497,12 @@ static bool_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, si
 
 								if(*sp != L'\0')
 								{
-										if(match->flags & LEX_SINGLE_LINE)/*single line 可以匹配包含\n在内的所有字符*/
+										if(match->flags & LEX_SINGLE_LINE)/*single line 可以匹配包含换行符号在内的所有字符*/
 										{
 												is_ok = true;
 										}else
 										{
-												is_ok = !IS_NEW_LINE(*sp); /*sp 不可为'\r' '\n'*/
+												is_ok = !IS_NEW_LINE(*sp); 
 										}
 								}
 
@@ -720,12 +751,12 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 
 								if(*sp != L'\0')
 								{
-										if(match->flags & LEX_SINGLE_LINE)/*single line 可以匹配包含\n在内的所有字符*/
+										if(match->flags & LEX_SINGLE_LINE)/*single line 可以匹配包含换行符号在内的所有字符*/
 										{
 												is_ok = true;
 										}else
 										{
-												is_ok = !IS_NEW_LINE(*sp); /*sp 不可为'\r' || '\n'*/
+												is_ok = !IS_NEW_LINE(*sp); 
 										}
 								}
 
