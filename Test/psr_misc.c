@@ -195,7 +195,7 @@ static arString_t		*str;
 
 static void printf_str()
 {
-		AR_printf(L"%ls\r\n", AR_GetStrString(str));
+		AR_printf(L"%ls\r\n", AR_GetStringCString(str));
 		AR_ClearString(str);
 }
 
@@ -375,7 +375,7 @@ void			AR_STDCALL on_error(const psrToken_t *tok, const wchar_t *expected[], siz
 
 static void print_str()
 {
-		AR_printf(L"%ls\r\n", AR_GetStrString(str));
+		AR_printf(L"%ls\r\n", AR_GetStringCString(str));
 		AR_ClearString(str);
 }
 

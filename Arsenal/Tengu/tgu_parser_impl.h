@@ -160,7 +160,7 @@ syntax_tree_handler
 					AR_AppendFormatString(str, L"'%ls'", TGU_TokenValToString(expected[i]));
 			}
 			
-			TGU_ReportError(&parser->report, AR_GetStrString(str), tok->line);
+			TGU_ReportError(&parser->report, AR_GetStringCString(str), tok->line);
 		
 			AR_DestroyString(str);
 			str = NULL;

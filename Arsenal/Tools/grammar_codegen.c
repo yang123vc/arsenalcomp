@@ -372,7 +372,7 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 						}
 				}
 				AR_AppendString(enum_str, L"};*/\r\n\r\n\r\n\r\n");
-				AR_AppendString(code, AR_GetStrString(enum_str));
+				AR_AppendString(code, AR_GetStringCString(enum_str));
 				AR_DestroyString(enum_str);
 		}
 
@@ -643,32 +643,32 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 								}
 /****************************************************************************************************************************/
 								
-								AR_AppendString(define, AR_GetStrString(comment));
+								AR_AppendString(define, AR_GetStringCString(comment));
 								AR_AppendString(define, handler_def);
 								AR_AppendString(define, L"\r\n\n");
 
 								rec = FindFromHandlerTable(&handler_tbl, handler);
 								if(rec == NULL)
 								{
-										AR_AppendString(code, AR_GetStrString(comment));
+										AR_AppendString(code, AR_GetStringCString(comment));
 										AR_AppendString(code, handler);
 										AR_AppendString(code, L"\r\n\n");
 										
-										InsertToHandlerTable(&handler_tbl, handler, AR_GetStrString(define), has_spec_def);
+										InsertToHandlerTable(&handler_tbl, handler, AR_GetStringCString(define), has_spec_def);
 								}else
 								{
 										if(rec->has_spec_def)
 										{
 												if(has_spec_def)
 												{
-														InsertToHandlerTable(&handler_tbl, handler, AR_GetStrString(define), has_spec_def);
+														InsertToHandlerTable(&handler_tbl, handler, AR_GetStringCString(define), has_spec_def);
 												}else
 												{
 
 												}
 										}else
 										{
-												InsertToHandlerTable(&handler_tbl, handler, AR_GetStrString(define), has_spec_def);
+												InsertToHandlerTable(&handler_tbl, handler, AR_GetStringCString(define), has_spec_def);
 										}
 								}
 
@@ -799,7 +799,7 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 		if(handler_define)
 		{
 				AR_AppendString(code, L"\n\n\n\n");
-				AR_AppendString(code, AR_GetStrString(handler_define));
+				AR_AppendString(code, AR_GetStringCString(handler_define));
 				AR_DestroyString(handler_define);
 		}
 

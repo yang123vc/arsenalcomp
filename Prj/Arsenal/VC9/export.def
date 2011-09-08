@@ -36,8 +36,8 @@ AR_ClearString
 AR_AppendString			
 AR_FormatString			
 AR_AppendFormatString	
-AR_GetStrString			
-AR_GetLengthString
+AR_GetStringCString			
+AR_GetStringLength
 
 
 

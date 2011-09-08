@@ -2004,7 +2004,7 @@ static bool_t		AR_STDCALL cfg_error(const psrToken_t *tok, const size_t expected
 		}
 		AR_AppendFormatString(str, L"\r\n\r\n");
 		/******************************************************************************************/
-		info.syntax_error.msg = AR_GetStrString(str);
+		info.syntax_error.msg = AR_GetStringCString(str);
 		info.syntax_error.tok = tok;
 		info.type = CFG_REPORT_ERROR_SYNTAX_T;
 		report->report_func(&info, report->report_ctx);
@@ -2174,7 +2174,7 @@ const cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t 
 						if(tok)AR_DEL(tok);
 
 						info.type = CFG_REPORT_ERROR_LEX_T;
-						info.lex_error.msg = AR_GetStrString(str);
+						info.lex_error.msg = AR_GetStringCString(str);
 
 						tmp_tok.term_val = 0;
 						tmp_tok.str_cnt = 0;

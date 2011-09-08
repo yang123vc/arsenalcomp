@@ -22,8 +22,8 @@ void			AR_FormatString(arString_t *str, const wchar_t *fmt, ...);
 void			AR_AppendFormatString(arString_t *str, const wchar_t *fmt, ...);
 
 
-const wchar_t*	AR_GetStrString(const arString_t *str);
-size_t			AR_GetLengthString(const arString_t *str);
+const wchar_t*	AR_GetStringCString(const arString_t *str);
+size_t			AR_GetStringLength(const arString_t *str);
 
 
 
@@ -40,9 +40,9 @@ void str_test()
 		}
 
 		
-		printf("len  == %d\r\n", AR_GetLengthString(str));
+		printf("len  == %d\r\n", AR_GetStringLength(str));
 		getchar();
-		AR_printf(L"%ls\r\n", AR_GetStrString(str));
+		AR_printf(L"%ls\r\n", AR_GetStringCString(str));
 
 		AR_DestroyString(str);
 		
@@ -1337,7 +1337,7 @@ void text_test_save()
 		}
 
 
-		if(!AR_SaveBomTextFile(OUTPUT_FILE, OUTPUT_TYPE, AR_GetStrString(str)))
+		if(!AR_SaveBomTextFile(OUTPUT_FILE, OUTPUT_TYPE, AR_GetStringCString(str)))
 		{
 				AR_ASSERT(false);
 		}
@@ -1364,7 +1364,7 @@ static void str_vfmt_test(arString_t *str, const wchar_t *fmt, ...)
 		AR_AppendVFormatString(str, fmt, args);
 
 		
-		//printf("%ls\r\n", AR_GetStrString(str));
+		//printf("%ls\r\n", AR_GetStringCString(str));
 
 		va_end(args);
 
@@ -1399,7 +1399,7 @@ void str_test9()
 				str_vfmt_test(str, L"%ls", L"\r\n");
 		}
 
-		printf("%ls\r\n", AR_GetStrString(str));
+		printf("%ls\r\n", AR_GetStringCString(str));
 
 		AR_DestroyString(str);
 		str = NULL;

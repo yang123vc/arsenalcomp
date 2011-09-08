@@ -412,8 +412,6 @@ char*			AR_strnlwr(char *s, size_t count);
 char*			AR_strnupr(char *s, size_t count);
 
 
-const char*		AR_stristr(const char *s, const char *p);
-
 
 #define AR_wcscmp(_l, _r)		wcscmp((_l), (_r))
 #define AR_wcsncmp(_l, _r,_n)	wcsncmp((_l), (_r), (_n))
@@ -437,7 +435,6 @@ wchar_t*			AR_wcslwr(wchar_t *s);
 wchar_t*			AR_wcsnlwr(wchar_t *s, size_t count);
 wchar_t*			AR_wcsnupr(wchar_t *s, size_t count);
 
-const wchar_t*		AR_wcsistr(const wchar_t *s, const wchar_t *p);
 
 
 wchar_t*		AR_wcsdup(const wchar_t *sour);
@@ -491,6 +488,17 @@ const wchar_t* AR_wcsstr_kmp(const wchar_t *s, const wchar_t *p);
 const wchar_t* AR_wcsstr_kmp_s(const wchar_t *beg, const wchar_t *end, const wchar_t *p);
 
 
+
+
+const char*		AR_stristr(const char *s, const char *p);
+const wchar_t*	AR_wcsistr(const wchar_t *s, const wchar_t *p);
+
+
+const wchar_t* AR_reverse_wcschr(const wchar_t* str, size_t l, wchar_t c);
+const wchar_t* AR_reverse_wcsstr(const wchar_t *str, size_t l,  const wchar_t *match, size_t ml);
+
+const wchar_t* AR_reverse_wcsichr(const wchar_t* str, size_t l, wchar_t c);
+const wchar_t* AR_reverse_wcsistr(const wchar_t *str, size_t l,  const wchar_t *match, size_t ml);
 
 #if(AR_ARCH_VER	== ARCH_32)
 
@@ -575,12 +583,12 @@ void			AR_AppendVFormatString(arString_t *str, const wchar_t *fmt, va_list args)
 
 void			AR_AppendCharToString(arString_t *str, wchar_t chr);
 
-const wchar_t*	AR_GetStrString(const arString_t *str);
-size_t			AR_GetLengthString(const arString_t *str);
+const wchar_t*	AR_GetStringCString(const arString_t *str);
+size_t			AR_GetStringLength(const arString_t *str);
 
 
-#define			AR_StrPrint(_s) do{ AR_printf(L"%ls\r\n", AR_GetStrString((_s))); }while(0)
-#define			AR_StrPrintCtx(_ctx, _s)do{ AR_printf_ctx((_ctx), L"%ls\r\n", AR_GetStrString((_s))); }while(0)
+#define			AR_StrPrint(_s) do{ AR_printf(L"%ls\r\n", AR_GetStringCString((_s))); }while(0)
+#define			AR_StrPrintCtx(_ctx, _s)do{ AR_printf_ctx((_ctx), L"%ls\r\n", AR_GetStringCString((_s))); }while(0)
 
 
 

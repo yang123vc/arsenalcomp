@@ -975,7 +975,7 @@ bool_t			Ini_LoadObjectFromString(iniObject_t *obj, const wchar_t *ini_data)
 						AR_AppendCharToString(line, *s);
 				}else
 				{
-						if(!__handle_line(obj, AR_GetStrString(line), &last_sect_idx))
+						if(!__handle_line(obj, AR_GetStringCString(line), &last_sect_idx))
 						{
 								is_ok = false;
 						}
@@ -984,9 +984,9 @@ bool_t			Ini_LoadObjectFromString(iniObject_t *obj, const wchar_t *ini_data)
 				++s;
 		}
 
-		if(is_ok && AR_GetLengthString(line) > 0)
+		if(is_ok && AR_GetStringLength(line) > 0)
 		{
-				if(!__handle_line(obj, AR_GetStrString(line),  &last_sect_idx))
+				if(!__handle_line(obj, AR_GetStringCString(line),  &last_sect_idx))
 				{
 						is_ok = false;
 				}
