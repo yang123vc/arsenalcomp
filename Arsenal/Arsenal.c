@@ -37,7 +37,7 @@ bool_t	Arsenal_Init(const arInit_t *ctx)
 		
 		if(!__g_is_initialized)
 		{
-				AR_Init(ctx);
+				AR_CommonInit(ctx);
 				Lex_Init();
 				Parser_Init();
 				Tools_Init();
@@ -79,7 +79,7 @@ bool_t	Arsenal_UnInit()
 				Tools_UnInit();
 				Parser_UnInit();
 				Lex_UnInit();
-				AR_UnInit();
+				AR_CommonUnInit();
 				__g_is_initialized = false;
 				return true;
 		}else
