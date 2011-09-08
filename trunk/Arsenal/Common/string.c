@@ -46,13 +46,13 @@ void	AR_DestroyString(arString_t *str)
 
 
 
-const wchar_t*	AR_GetStrString(const arString_t *str)
+const wchar_t*	AR_GetStringCString(const arString_t *str)
 {
 		AR_ASSERT(str != NULL && str->str != NULL);
 		return str->str;
 }
 
-size_t	AR_GetLengthString(const arString_t *str)
+size_t	AR_GetStringLength(const arString_t *str)
 {
 		AR_ASSERT(str != NULL && str->str != NULL);
 		return str->count;

@@ -159,7 +159,7 @@ int_t	AR_wcsicmp(const wchar_t *l, const wchar_t *r)
 {
 		int_t ret;
 		AR_ASSERT(l != NULL && r != NULL);
-
+		
 		for(ret = 0; (ret = (AR_towlower(*l) - AR_towlower(*r))) == 0 && *l && *r; ++l, ++r);
 
 		return ret;
@@ -171,12 +171,13 @@ int_t	AR_wcsnicmp(const wchar_t *l, const wchar_t *r, size_t n)
 		int_t ret;
 		size_t i;
 		AR_ASSERT(l != NULL && r != NULL);
-
+		
 		for(ret = 0, i = 0; i < n && (ret = (AR_towlower(l[i]) - AR_towlower(r[i]))) == 0 && l[i] && r[i]; ++i);
 
 		return ret;
 
 }
+
 
 
 
@@ -206,6 +207,9 @@ const wchar_t*		AR_wcsistr(const wchar_t *s, const wchar_t *p)
 		}
 		return NULL;
 }
+
+
+
 
 
 
@@ -1712,6 +1716,169 @@ const wchar_t* AR_wcsstr_kmp_s(const wchar_t *beg, const wchar_t *end, const wch
 
 
 
+
+
+const wchar_t* AR_reverse_wcschr(const wchar_t* str, size_t l, wchar_t c)
+{
+		size_t idx;
+		
+		AR_ASSERT(str != NULL);
+
+		if(l == 0)
+		{
+				return str + l;
+		}
+		
+		idx = l - 1;
+		while(str[idx] != c)
+		{
+				if(idx == 0)
+				{
+						break;
+				}
+
+				idx--;
+		}
+		
+		return str + idx;
+}
+
+
+
+
+
+
+const wchar_t* AR_reverse_wcsstr(const wchar_t *str, size_t l,  const wchar_t *match, size_t ml)
+{
+		size_t delta;
+		uint_t	search_hash, match_hash;
+		size_t i;
+		AR_ASSERT(str != NULL && match != NULL);
+		
+		if (ml > l)
+		{
+				return NULL;
+		}
+
+		if(ml == 0)
+		{
+				return str + l;
+		}
+
+		if(ml == 1)
+		{
+				return AR_reverse_wcschr(str, l, match[0]);
+		}
+		
+
+		delta = l - ml;
+
+    
+		search_hash = 0;
+		match_hash = 0;
+
+		for(i = 0; i < ml; ++i)
+		{
+				search_hash += (uint_t)str[delta + i];
+				match_hash += (uint_t)match[i];
+		}
+
+		
+		while(search_hash != match_hash || AR_wcsncmp(str + delta, match, ml) != 0)
+		{
+				if(delta == 0)
+				{
+						return NULL;
+				}
+				
+				delta--;
+				search_hash -= str[delta + ml];
+				search_hash += str[delta];
+		}
+
+		return str + delta;
+}
+
+
+
+const wchar_t* AR_reverse_wcsichr(const wchar_t* str, size_t l, wchar_t c)
+{
+		size_t idx;
+		wchar_t low_c;
+		AR_ASSERT(str != NULL);
+
+		if(l == 0)
+		{
+				return str + l;
+		}
+		
+		low_c = AR_towlower(c);
+		idx = l - 1;
+
+		while(AR_towlower(str[idx]) != low_c)
+		{
+				if(idx == 0)
+				{
+						break;
+				}
+
+				idx--;
+		}
+		
+		return str + idx;
+}
+
+
+const wchar_t* AR_reverse_wcsistr(const wchar_t *str, size_t l,  const wchar_t *match, size_t ml)
+{
+		size_t delta;
+		uint_t	search_hash, match_hash;
+		size_t i;
+		AR_ASSERT(str != NULL && match != NULL);
+		
+		if (ml > l)
+		{
+				return NULL;
+		}
+
+		if(ml == 0)
+		{
+				return str + l;
+		}
+
+		if(ml == 1)
+		{
+				return AR_reverse_wcsichr(str, l, match[0]);
+		}
+		
+
+		delta = l - ml;
+
+    
+		search_hash = 0;
+		match_hash = 0;
+
+		for(i = 0; i < ml; ++i)
+		{
+				search_hash += (uint_t)AR_towlower(str[delta + i]);
+				match_hash += (uint_t)AR_towlower(match[i]);
+		}
+
+		
+		while(search_hash != match_hash || AR_wcsnicmp(str + delta, match, ml) != 0)
+		{
+				if(delta == 0)
+				{
+						return NULL;
+				}
+				
+				delta--;
+				search_hash -= (uint_t)AR_towlower(str[delta + ml]);
+				search_hash += (uint_t)AR_towlower(str[delta]);
+		}
+
+		return str + delta;
+}
 
 
 

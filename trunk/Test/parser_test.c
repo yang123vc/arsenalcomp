@@ -35,7 +35,7 @@ void parser_test()
 		
 		beg = AR_GetTime_Milliseconds();
 
-		const cfgLexicalSet_t *set = CFG_CollectLexicalSet(AR_GetStrString(str));
+		const cfgLexicalSet_t *set = CFG_CollectLexicalSet(AR_GetStringCString(str));
 
 		if(set == NULL)
 		{

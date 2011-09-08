@@ -542,7 +542,7 @@ REMATCH:
 						{
 								arString_t *str = AR_CreateString();
 								RGX_ProgToString(lex->prog_set->prog[i],str);
-								AR_printf_ctx(&lex->io_ctx, L"Matched : %ls\r\n", AR_GetStrString(str));
+								AR_printf_ctx(&lex->io_ctx, L"Matched : %ls\r\n", AR_GetStringCString(str));
 								AR_DestroyString(str);
 						}
 						*/

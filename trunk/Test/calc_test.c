@@ -223,7 +223,7 @@ static  const parser_t* __build_parser()
 
 				str = AR_CreateString();
 				Parser_PrintGrammar(gmr, str);
-				AR_printf(L"%ls\r\n", AR_GetStrString(str));
+				AR_printf(L"%ls\r\n", AR_GetStringCString(str));
 				AR_DestroyString(str);
 
 				__g_gmr = gmr;
@@ -317,7 +317,7 @@ void calc_test()
 		Parser_ActionTableToString(psr->tbl, str);
 
 
-		AR_printf(L"%ls\r\n", AR_GetStrString(str));
+		AR_printf(L"%ls\r\n", AR_GetStringCString(str));
 		*/
 
 		/*
@@ -480,7 +480,7 @@ void calc_test3()
 
 				str = AR_CreateString();
 				Parser_PrintGrammar(gmr, str);
-				AR_printf(L"%ls\r\n", AR_GetStrString(str));
+				AR_printf(L"%ls\r\n", AR_GetStringCString(str));
 		}
 
 		Parser_DestroyGrammar(gmr);

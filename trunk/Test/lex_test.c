@@ -481,7 +481,7 @@ void rgx_compile_test(rgxNode_t *node)
 		
 		RGX_ProgToString(&prog, out);
 
-		AR_printf(L"%ls\r\n", AR_GetStrString(out));
+		AR_printf(L"%ls\r\n", AR_GetStringCString(out));
 
 
 		AR_DestroyString(out);
@@ -522,7 +522,7 @@ void rgx_test_loop()
 
 						AR_ClearString(out);
 						RGX_ToString(cat, out);
-						AR_printf(L"%ls\r\n", AR_GetStrString(out));
+						AR_printf(L"%ls\r\n", AR_GetStringCString(out));
 
 						rgx_compile_test(cat);
 

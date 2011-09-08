@@ -168,7 +168,7 @@ void pcg_test2()
 		if(Parser_ConfigGrammar(gmr, rule_pattern3))
 		{
 				Parser_PrintGrammar(gmr, str);
-				AR_printf(L"%ls\r\n", AR_GetStrString(str));
+				AR_printf(L"%ls\r\n", AR_GetStringCString(str));
 				AR_ClearString(str);
 		}
 		AR_printf(L"\r\n");
@@ -176,7 +176,7 @@ void pcg_test2()
 		//if(Parser_ReportLeftRecursion(gmr,str))
 		if(Parser_ReportLeftRecursion(gmr,NULL))
 		{
-				AR_printf(L"Recursion:\r\n%ls\r\n", AR_GetStrString(str));
+				AR_printf(L"Recursion:\r\n%ls\r\n", AR_GetStringCString(str));
 		}
 }
 
@@ -199,7 +199,7 @@ void pcg_test()
 		if(Parser_ConfigGrammar(gmr, rule_pattern))
 		{
 				Parser_PrintGrammar(gmr, str);
-				AR_printf(L"%ls\r\n", AR_GetStrString(str));
+				AR_printf(L"%ls\r\n", AR_GetStringCString(str));
 				AR_ClearString(str);
 		}
 

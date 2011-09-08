@@ -355,7 +355,7 @@ void	Lex_Destroy(lex_t *lex)
 const wchar_t*	Lex_GetLastError(const lex_t *lex)
 {
 		AR_ASSERT(lex != NULL);
-		return AR_GetStrString(lex->last_err_msg);
+		return AR_GetStringCString(lex->last_err_msg);
 }
 
 void			Lex_ClearLastError(lex_t *lex)

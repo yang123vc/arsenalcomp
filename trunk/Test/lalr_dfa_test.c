@@ -225,7 +225,7 @@ static  psrGrammar_t* __build_grammar()
 
 				str = AR_CreateString();
 //				Parser_PrintGrammar(gmr, str);
-//				AR_printf(L"%ls\r\n", AR_GetStrString(str));
+//				AR_printf(L"%ls\r\n", AR_GetStringCString(str));
 
 				AR_DestroyString(str);
 				getchar();
@@ -286,17 +286,17 @@ void lalr_test1()
 		Parser_CalcFollowSet(gmr, &follow, &first);
 
 		Parser_PrintSymbolMap(&first, str);
-		AR_printf(L"First Set:\r\n%ls\r\n", AR_GetStrString(str));
+		AR_printf(L"First Set:\r\n%ls\r\n", AR_GetStringCString(str));
 
 		AR_ClearString(str);
 		Parser_PrintSymbolMap(&follow, str);
-		AR_printf(L"Follow Set:\r\n%ls\r\n", AR_GetStrString(str));
+		AR_printf(L"Follow Set:\r\n%ls\r\n", AR_GetStringCString(str));
 		
 		Parser_CheckIsValidGrammar(gmr, NULL);
 /*
 		AR_ClearString(str);
 		Parser_ReportLeftRecursion(gmr, str);
-		AR_printf(L"Left Recursion:\r\n%ls\r\n", AR_GetStrString(str));
+		AR_printf(L"Left Recursion:\r\n%ls\r\n", AR_GetStringCString(str));
 */
 
 		
@@ -313,7 +313,7 @@ void lalr_test1()
 		{
 				AR_ClearString(str);
 				Parser_PrintConfigList(set.set[i]->all_config, gmr, str);
-				AR_printf(L"[%d]:\r\n%ls\r\n", i,AR_GetStrString(str));
+				AR_printf(L"[%d]:\r\n%ls\r\n", i,AR_GetStringCString(str));
 		}
 		
 		Parser_DestroyState_ALL(start);

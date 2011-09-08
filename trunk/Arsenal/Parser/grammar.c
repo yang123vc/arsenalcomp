@@ -499,7 +499,7 @@ void	Parser_ClearGrammar(psrGrammar_t *grammar)
 const wchar_t*			Parser_GetGrammarLastError(const psrGrammar_t *grammar)
 {
 		AR_ASSERT(grammar != NULL);
-		return AR_GetStrString(grammar->last_err_msg);
+		return AR_GetStringCString(grammar->last_err_msg);
 }
 
 void					Parser_ClearGrammarLastError(psrGrammar_t *grammar)
@@ -1455,7 +1455,7 @@ RETURN_POINT:
 		if(has_left_factor)
 		{
 				AR_AppendFormatString(output, L"%ls:\r\n",lhs->name);
-				AR_AppendString(output, AR_GetStrString(tmp));
+				AR_AppendString(output, AR_GetStringCString(tmp));
 		}
 		AR_DestroyString(tmp);
 		return has_left_factor;

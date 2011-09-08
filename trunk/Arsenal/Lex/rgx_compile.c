@@ -341,7 +341,7 @@ void			RGX_Compile(rgxProg_t *prog, const rgxNode_t *tree)
 
 				RGX_ProgToString(prog, str);
 
-				AR_printf(L"%ls\r\n", AR_GetStrString(str));
+				AR_printf(L"%ls\r\n", AR_GetStringCString(str));
 
 				AR_DestroyString(str);
 		}

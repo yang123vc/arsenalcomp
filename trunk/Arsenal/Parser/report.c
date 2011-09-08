@@ -73,7 +73,7 @@ static const	psrConflictView_t*		Parser_CreateConflictView(const psrActionTable_
 						AR_AppendFormatString(str,L"state[%" AR_PLAT_INT_FMT L"d] : %ls",(size_t)i, tbl->term_set.lst[k]->name);
 						*/
 						AR_AppendFormatString(str,L"state[%Id]",(size_t)i);
-						item->name = AR_wcsdup(AR_GetStrString(str));
+						item->name = AR_wcsdup(AR_GetStringCString(str));
 						AR_ClearString(str);
 						item->lookahead = AR_wcsdup(tbl->term_set.lst[k]->name);
 
@@ -122,7 +122,7 @@ static const	psrConflictView_t*		Parser_CreateConflictView(const psrActionTable_
 
 								/*Parser_UnInitLRItem(&tmp);*/
 								Parser_UnInitConfig(&tmp);
-								item->items[l] = AR_wcsdup(AR_GetStrString(str));
+								item->items[l] = AR_wcsdup(AR_GetStringCString(str));
 
 						}
 						
@@ -632,7 +632,7 @@ static bool_t __detect_left_recursion(const psrGrammar_t *grammar, const psrSymb
 												}
 												AR_AppendFormatString(str, L"<%ls> ", lst->lst[0]->name);
 												
-												__insert_to_symtbl_view(output, L"Path:", AR_GetStrString(str));
+												__insert_to_symtbl_view(output, L"Path:", AR_GetStringCString(str));
 
 												AR_DestroyString(str);
 
@@ -783,7 +783,7 @@ RECHECK_POINT:
 						AR_AppendString(tmp, L"\t:\t");
 						Parser_PrintSymbolList(&rules[bk[i]]->body, tmp);
 						AR_AppendFormatString(tmp, L"\t:\t%Id", max);
-						__insert_to_symtbl_view(output, lhs->name, AR_GetStrString(tmp));
+						__insert_to_symtbl_view(output, lhs->name, AR_GetStringCString(tmp));
 				}
 				rules[bk[i]] = NULL;
 		}
@@ -891,7 +891,7 @@ const psrStatusView_t*		Parser_CreateParserStatusView(const parser_t *parser)
 						Parser_PrintSymbolList(&rec->lst, str);
 						
 				}
-				__insert_to_symtbl_view(&first_view, rec->key->name, AR_GetStrString(str));
+				__insert_to_symtbl_view(&first_view, rec->key->name, AR_GetStringCString(str));
 		}
 
 
@@ -911,7 +911,7 @@ const psrStatusView_t*		Parser_CreateParserStatusView(const parser_t *parser)
 								Parser_PrintSymbolList(&rec->lst, str);
 								
 						}
-						__insert_to_symtbl_view(&follow_view, rec->key->name, AR_GetStrString(str));
+						__insert_to_symtbl_view(&follow_view, rec->key->name, AR_GetStringCString(str));
 				}
 		}
 

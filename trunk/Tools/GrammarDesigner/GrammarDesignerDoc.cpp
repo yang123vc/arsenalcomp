@@ -1479,7 +1479,7 @@ void CGrammarDesignerDoc::OnGenerateTemplate()
 		}else
 		{
 				CTextFileWrite fw(file.GetPathName(), m_encoding);
-				fw.Write(AR_GetStrString(code));
+				fw.Write(AR_GetStringCString(code));
 				main_frm->MessageBox(TEXT("Generate Template successful"));
 		}
 		

@@ -26,7 +26,7 @@ void Ini_Test()
 
 		obj = Ini_CreateObject();
 
-		if(!Ini_LoadObjectFromString(obj, AR_GetStrString(str)))
+		if(!Ini_LoadObjectFromString(obj, AR_GetStringCString(str)))
 		{
 				AR_abort();
 		}
@@ -66,7 +66,7 @@ void Ini_Test()
 
 		Ini_SaveObjectToString(obj, str);
 
-		::MessageBoxW(NULL, AR_GetStrString(str), 0,0);
+		::MessageBoxW(NULL, AR_GetStringCString(str), 0,0);
 
 		
 		Ini_DestroyObject(obj);
