@@ -21,7 +21,7 @@ AR_NAMESPACE_BEGIN
 
 const wchar_t*	AR_Version()
 {
-		return L"0.2.12.428";
+		return L"0.2.12.429";
 }
 
 
@@ -29,7 +29,7 @@ const wchar_t*	AR_Version()
 /***********************************************************Init****************************************************************/
 
 
-void AR_STDCALL AR_def_error(int_t level, const wchar_t* msg, void *ctx)
+static void AR_STDCALL __def_error(int_t level, const wchar_t* msg, void *ctx)
 {
 		AR_UNUSED(level);
 		AR_UNUSED(msg);
@@ -39,7 +39,7 @@ void AR_STDCALL AR_def_error(int_t level, const wchar_t* msg, void *ctx)
 }
 
 
-void AR_STDCALL AR_def_print(const wchar_t *msg, void *ctx)
+static void AR_STDCALL __def_print(const wchar_t *msg, void *ctx)
 {
 		AR_UNUSED(msg);
 		AR_UNUSED(ctx);
@@ -50,9 +50,9 @@ void AR_STDCALL AR_def_print(const wchar_t *msg, void *ctx)
 
 
 
-static arInit_t	__g_ctx = {{AR_def_error, AR_def_print,  NULL}};
+static arInit_t	__g_ctx = {{__def_error, __def_print,  NULL}};
 
-bool_t AR_Init(const arInit_t *info)
+bool_t AR_CommonInit(const arInit_t *info)
 {
 		if(info)
 		{
@@ -64,7 +64,7 @@ bool_t AR_Init(const arInit_t *info)
 		return true;
 }
 
-bool_t AR_UnInit()
+bool_t AR_CommonUnInit()
 {
 		AR_UnInitMemory();
 		AR_UnInitThread();

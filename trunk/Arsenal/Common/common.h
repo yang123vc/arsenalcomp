@@ -54,8 +54,8 @@ typedef struct __ar_init_tag
 }arInit_t;
 
 
-bool_t AR_Init(const arInit_t *info);
-bool_t AR_UnInit();
+bool_t AR_CommonInit(const arInit_t *info);
+bool_t AR_CommonUnInit();
 
 arIOCtx_t*	AR_global_ioctx();
 
