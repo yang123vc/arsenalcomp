@@ -587,6 +587,8 @@ const wchar_t*	AR_GetStringCString(const arString_t *str);
 size_t			AR_GetStringLength(const arString_t *str);
 
 
+
+
 #define			AR_StrPrint(_s) do{ AR_printf(L"%ls\r\n", AR_GetStringCString((_s))); }while(0)
 #define			AR_StrPrintCtx(_ctx, _s)do{ AR_printf_ctx((_ctx), L"%ls\r\n", AR_GetStringCString((_s))); }while(0)
 
