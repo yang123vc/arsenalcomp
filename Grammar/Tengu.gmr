@@ -160,7 +160,7 @@
 					AR_AppendFormatString(str, L"'%ls'", TGU_TokenValToString(expected[i]));
 			}
 			
-			TGU_ReportError(&parser->report, AR_GetStrString(str), tok->line);
+			TGU_ReportError(&parser->report, AR_GetStringCString(str), tok->line);
 		
 			AR_DestroyString(str);
 			str = NULL;
@@ -876,6 +876,9 @@ table_constructor			:	"{"	table_field_list "}"		%action	on_table_constructor
 						AR_ASSERT(parser != NULL && ns != NULL);
 						AR_ASSERT(count == 2 || count == 3);
 
+						AR_UNUSED(parser);
+						AR_UNUSED(ns);
+						
 						ret = NULL;
 						return ret;	
 						
@@ -1496,25 +1499,6 @@ do_while_statement			:	"do" enter_loop statement "while" "(" expression ")" leav
 
 
 
-
-%code {:
-	
-	static tguStmt_t*	make_for_statement(tguParser_t *parser, tguExpr_t *init, tguExpr_t *cond, tguExpr_t *step, tguStmt_t *loop, const tguLexInfo_t *lex_info)
-	{
-			tguStmt_t	*ret;
-			AR_ASSERT(parser != NULL && lex_info != NULL);
-			ret = TGU_CreateStmt(TGU_STT_FOR);
-			ret->lex_info = *lex_info;
-			ret->for_stmt.init_expr = init;
-			ret->for_stmt.cond_expr = cond;
-			ret->for_stmt.step_expr = step;
-			ret->for_stmt.loop_part = loop;
-			return ret;
-	}
-
-:};
-
-
 for_statement			:	"for"	"("	NAME	"in"	expression	")" 	enter_loop  statement leave_loop	%action	on_for_statement
 				{:
 						tguSynNode_t		**ns = (tguSynNode_t**)nodes;
@@ -1523,6 +1507,9 @@ for_statement			:	"for"	"("	NAME	"in"	expression	")" 	enter_loop  statement leav
 						
 						AR_ASSERT(ns != NULL && count == 11);
 						
+						AR_UNUSED(parser);
+						AR_UNUSED(ns);
+
 						ret = NULL;
 
 						return ret;
@@ -1533,7 +1520,13 @@ for_statement			:	"for"	"("	NAME	"in"	expression	")" 	enter_loop  statement leav
 						tguParser_t		*parser = (tguParser_t*)ctx;
 						tguSynNode_t		*ret;
 
+
+						AR_UNUSED(parser);
+						AR_UNUSED(ns);
+
 						ret = NULL;
+
+
 
 						return ret;
 				:}

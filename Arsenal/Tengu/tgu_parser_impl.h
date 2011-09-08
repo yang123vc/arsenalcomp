@@ -417,23 +417,6 @@ handle_init_declarator
  
 
  
-	
-	static tguStmt_t*	make_for_statement(tguParser_t *parser, tguExpr_t *init, tguExpr_t *cond, tguExpr_t *step, tguStmt_t *loop, const tguLexInfo_t *lex_info)
-	{
-			tguStmt_t	*ret;
-			AR_ASSERT(parser != NULL && lex_info != NULL);
-			ret = TGU_CreateStmt(TGU_STT_FOR);
-			ret->lex_info = *lex_info;
-			ret->for_stmt.init_expr = init;
-			ret->for_stmt.cond_expr = cond;
-			ret->for_stmt.step_expr = step;
-			ret->for_stmt.loop_part = loop;
-			return ret;
-	}
-
- 
-
- 
 	static tguStmt_t*	make_jump_statement(tguParser_t *parser, tguStmtType_t type, tguExpr_t *expr, const tguLexInfo_t *lex_info)
 	{
 		tguStmt_t	*ret;
@@ -789,10 +772,10 @@ handle_identifier
  
 
 static const wchar_t *__g_lex_name[] = {
-L"delim = [\\x{000C}\\x{000B}\\x{0020}\\x{00A0}\\x{2028}\\x{2029} \\f\\n\\r\\t\\v]",
+L"delim = [\\x{000A}\\x{000B}\\x{000C}\\x{000D}\\x{0085}\\x{2028}\\x{2029}\\x{0020}\\f\\n\\r\\t\\v]",
 L"comment = /\\*([^\\*]|\\*+[^\\*/])*\\*+/",
-L"comment_line = (//[^\\r\\n]*(\\n|\\r|$))",
-L"skip_lexem = {comment_line}|{delim}|{comment}",
+L"comment_line = (//[^\\x{000A}\\x{000B}\\x{000C}\\x{000D}\\x{0085}\\x{2028}\\x{2029}]*(\\x{000A}|\\x{000B}|\\x{000C}|\\x{000D}|\\x{0085}|\\x{2028}|\\x{2029}|$))",
+L"skip_lexem = {delim}|{comment_line}|{comment}",
 L"digit = [0-9]",
 L"number = {digit}+",
 L"letter = [A-Z_a-z\\x{0800}-\\x{4E00}\\x{4E00}-\\x{9FA5}\\x{3130}-\\x{318F}\\x{AC00}-\\x{D7AF}]",
@@ -1793,6 +1776,9 @@ static psrNode_t* AR_STDCALL on_table_constructor(psrNode_t **nodes, size_t coun
 						AR_ASSERT(parser != NULL && ns != NULL);
 						AR_ASSERT(count == 2 || count == 3);
 
+						AR_UNUSED(parser);
+						AR_UNUSED(ns);
+						
 						ret = NULL;
 						return ret;	
 						
@@ -2287,6 +2273,9 @@ static psrNode_t* AR_STDCALL on_for_statement(psrNode_t **nodes, size_t count, c
 						
 						AR_ASSERT(ns != NULL && count == 11);
 						
+						AR_UNUSED(parser);
+						AR_UNUSED(ns);
+
 						ret = NULL;
 
 						return ret;
@@ -2304,7 +2293,13 @@ static psrNode_t* AR_STDCALL on_error_for_statement(psrNode_t **nodes, size_t co
 						tguParser_t		*parser = (tguParser_t*)ctx;
 						tguSynNode_t		*ret;
 
+
+						AR_UNUSED(parser);
+						AR_UNUSED(ns);
+
 						ret = NULL;
+
+
 
 						return ret;
 				 }
