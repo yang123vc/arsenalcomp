@@ -32,10 +32,9 @@ const wchar_t*	AR_Version()
 static void AR_STDCALL __def_error(int_t level, const wchar_t* msg, void *ctx)
 {
 		AR_UNUSED(level);
-		AR_UNUSED(msg);
 		AR_UNUSED(ctx);
 
-		printf("%ls", msg);
+		wprintf(L"%ls", msg);
 }
 
 
@@ -44,8 +43,7 @@ static void AR_STDCALL __def_print(const wchar_t *msg, void *ctx)
 		AR_UNUSED(msg);
 		AR_UNUSED(ctx);
 
-		/*wprintf(L"%ls", msg);*/
-		printf("%ls", msg);
+		wprintf(L"%ls", msg);
 }
 
 
