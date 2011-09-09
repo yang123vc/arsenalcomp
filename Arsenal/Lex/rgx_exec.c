@@ -69,34 +69,8 @@ static void __add_thread(rgxThreadList_t *lst,  rgxThread_t thd, rgxProg_t *prog
 
 
 
-#define LF		L'\x000A'		//Line Feed
-#define VT		L'\x000B'		//Vertical Tab
-#define FF		L'\x000C'		//Form Feed
-#define CR		L'\x000D'		//Carriage Return
-#define NEL		L'\x0085'		//Next Line
-#define LS		L'\x2028'		//Line Separator
-#define PS		L'\x2029'		//Paragraph Separator
-//CR+LF:		CR followed by LF
-
-static bool_t  IS_NEW_LINE(wchar_t c)
-{
-		switch(c)
-		{
-		case LF:
-		case VT:
-		case FF:
-		case CR:
-		case NEL:
-		case LS:
-		case PS:
-				return true;
-		default:
-				return false;
-		}
-}
-
-#define IS_LINE_BEGIN(_sp, _input)		((_sp) == (_input) || (IS_NEW_LINE((_sp)[-1])))
-#define IS_LINE_END(_sp)				(*(_sp) == L'\0' || (IS_NEW_LINE(*(_sp))))
+#define IS_LINE_BEGIN(_sp, _input)		((_sp) == (_input) || (Lex_IsLineTerminator((_sp)[-1])))
+#define IS_LINE_END(_sp)				(*(_sp) == L'\0' || (Lex_IsLineTerminator(*(_sp))))
 
 
 
@@ -104,7 +78,7 @@ static AR_INLINE void __check_is_newline(const wchar_t *sp, uint_32_t *pact, siz
 {
 		AR_ASSERT(sp != NULL && pact != NULL && px != NULL && py != NULL);
 
-		if(IS_NEW_LINE(*sp))
+		if(Lex_IsLineTerminator(*sp))
 		{																				
 				if(*pact & RGX_ACT_INCLINE)
 				{																		
@@ -114,7 +88,7 @@ static AR_INLINE void __check_is_newline(const wchar_t *sp, uint_32_t *pact, siz
 				}else
 				{
 						wchar_t next_c = *(sp + 1);
-						if(*sp == CR && next_c == LF) /*CR followed by LF*/
+						if(*sp == AR_LEX_CR && next_c == AR_LEX_LF) /*CR followed by LF*/
 						{
 								*py += 1;
 								*pact |= RGX_ACT_INCLINE;
@@ -240,7 +214,7 @@ static bool_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match
 												is_ok = true;
 										}else
 										{
-												is_ok = !IS_NEW_LINE(*sp);
+												is_ok = !Lex_IsLineTerminator(*sp);
 										}
 								}
 
@@ -502,7 +476,7 @@ static bool_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, si
 												is_ok = true;
 										}else
 										{
-												is_ok = !IS_NEW_LINE(*sp); 
+												is_ok = !Lex_IsLineTerminator(*sp); 
 										}
 								}
 
@@ -756,7 +730,7 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 												is_ok = true;
 										}else
 										{
-												is_ok = !IS_NEW_LINE(*sp); 
+												is_ok = !Lex_IsLineTerminator(*sp); 
 										}
 								}
 

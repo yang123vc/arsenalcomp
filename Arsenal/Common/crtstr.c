@@ -1658,7 +1658,7 @@ const wchar_t* AR_wtou32_s(const wchar_t *in, const wchar_t *end, uint_32_t  *nu
 
 
 
-
+#if(0)
 const wchar_t* AR_wcsstr_kmp(const wchar_t *s, const wchar_t *p)
 {
 		AR_ASSERT(s != NULL && p != NULL);
@@ -1714,7 +1714,7 @@ const wchar_t* AR_wcsstr_kmp_s(const wchar_t *beg, const wchar_t *end, const wch
 		return ret;
 }
 
-
+#endif
 
 
 

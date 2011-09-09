@@ -484,12 +484,6 @@ int_t			AR_u64tow_buf(wchar_t *out, size_t nbuf, uint_64_t num, size_t radix);
 
 
 
-const wchar_t* AR_wcsstr_kmp(const wchar_t *s, const wchar_t *p);
-const wchar_t* AR_wcsstr_kmp_s(const wchar_t *beg, const wchar_t *end, const wchar_t *p);
-
-
-
-
 const char*		AR_stristr(const char *s, const char *p);
 const wchar_t*	AR_wcsistr(const wchar_t *s, const wchar_t *p);
 

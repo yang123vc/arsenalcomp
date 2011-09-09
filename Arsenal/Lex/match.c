@@ -294,34 +294,6 @@ void	Lex_ClearError(lexMatch_t *match)
 
 
 
-#define LF		L'\x000A'		//Line Feed
-#define VT		L'\x000B'		//Vertical Tab
-#define FF		L'\x000C'		//Form Feed
-#define CR		L'\x000D'		//Carriage Return
-#define NEL		L'\x0085'		//Next Line
-#define LS		L'\x2028'		//Line Separator
-#define PS		L'\x2029'		//Paragraph Separator
-//CR+LF:		CR followed by LF
-
-static bool_t  IS_NEW_LINE(wchar_t c)
-{
-		switch(c)
-		{
-		case LF:
-		case VT:
-		case FF:
-		case CR:
-		case NEL:
-		case LS:
-		case PS:
-				return true;
-		default:
-				return false;
-		}
-}
-
-
-
 
 void	Lex_Skip(lexMatch_t *pmatch)
 {
@@ -337,7 +309,7 @@ void	Lex_Skip(lexMatch_t *pmatch)
 
 		while(*pmatch->next && AR_iswspace(*pmatch->next))
 		{
-				if(IS_NEW_LINE(*pmatch->next))
+				if(Lex_IsLineTerminator(*pmatch->next))
 				{
 						wchar_t next_c;
 						
@@ -345,7 +317,7 @@ void	Lex_Skip(lexMatch_t *pmatch)
 						pmatch->col = 0;
 						
 						next_c = *(pmatch->next + 1);
-						if(*pmatch->next == CR && next_c == LF)
+						if(*pmatch->next == AR_LEX_CR && next_c == AR_LEX_LF)
 						{
 								pmatch->next++;
 						}
@@ -372,14 +344,14 @@ void			Lex_SkipTo(lexMatch_t *pmatch, const wchar_t *tok)
 		{
 				while(*pmatch->next != L'\0')
 				{
-						if(IS_NEW_LINE(*pmatch->next))
+						if(Lex_IsLineTerminator(*pmatch->next))
 						{
 								wchar_t next_c;
 								pmatch->line++;
 								pmatch->col = 0;
 								
 								next_c = *(pmatch->next + 1);
-								if(*pmatch->next == CR && next_c == LF)
+								if(*pmatch->next == AR_LEX_CR && next_c == AR_LEX_LF)
 								{
 										pmatch->next++;
 								}
@@ -395,14 +367,14 @@ void			Lex_SkipTo(lexMatch_t *pmatch, const wchar_t *tok)
 		{
 				while(pmatch->next != next)
 				{
-						if(IS_NEW_LINE(*pmatch->next))
+						if(Lex_IsLineTerminator(*pmatch->next))
 						{
 								wchar_t next_c;
 								pmatch->line++;
 								pmatch->col = 0;
 							
 								next_c = *(pmatch->next + 1);
-								if(*pmatch->next == CR && next_c == LF)
+								if(*pmatch->next == AR_LEX_CR && next_c == AR_LEX_LF)
 								{
 										pmatch->next++;
 								}
@@ -445,7 +417,7 @@ void			Lex_SkipN(lexMatch_t *pmatch, size_t nchar)
 		
 		for(i = 0; *pmatch->next != L'\0' && i < nchar; ++i)
 		{
-				if(IS_NEW_LINE(*pmatch->next))
+				if(Lex_IsLineTerminator(*pmatch->next))
 				{
 						wchar_t next_c;
 						pmatch->line++;
@@ -453,7 +425,7 @@ void			Lex_SkipN(lexMatch_t *pmatch, size_t nchar)
 
 						next_c = *(pmatch->next + 1);
 
-						if(*pmatch->next == CR && next_c == LF)
+						if(*pmatch->next == AR_LEX_CR && next_c == AR_LEX_LF)
 						{
 								pmatch->next++;
 						}
@@ -467,14 +439,6 @@ void			Lex_SkipN(lexMatch_t *pmatch, size_t nchar)
 		}
 }
 
-#undef IS_NEW_LINE
-#undef LF
-#undef VT
-#undef FF
-#undef CR
-#undef NEL
-#undef LS
-#undef PS
 
 /***********************************************************************************************************************************/
 

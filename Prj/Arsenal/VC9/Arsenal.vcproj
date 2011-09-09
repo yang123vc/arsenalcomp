@@ -1424,11 +1424,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\Arsenal\Lex\match.c"
+				RelativePath="..\..\..\Arsenal\Lex\lex_misc.c"
 				>
 			</File>
 			<File
-				RelativePath=".\resource.h"
+				RelativePath="..\..\..\Arsenal\Lex\match.c"
 				>
 			</File>
 			<File
