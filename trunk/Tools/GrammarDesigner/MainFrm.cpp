@@ -174,6 +174,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// Enable toolbar and docking window menu replacement
 	EnablePaneMenu(TRUE, ID_VIEW_CUSTOMIZE, strCustomize, ID_VIEW_TOOLBAR);
 
+#if(0)
 	// enable quick (Alt+drag) toolbar customization
 	CMFCToolBar::EnableQuickCustomization();
 
@@ -186,6 +187,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 			CMFCToolBar::SetUserImages(&m_UserImages);
 		}
 	}
+#endif
 
 	// enable menu personalization (most-recently used commands)
 	// TODO: define your own basic commands, ensuring that each pulldown menu has at least one basic command.
@@ -347,41 +349,52 @@ BOOL CMainFrame::CreateDockingWindows()
 
 
 
-
+		
 		/***************************************设置某些Pane大小*********************************/
+		
+		CRect mainfrm_rect;
+		this->GetWindowRect(&mainfrm_rect);
+
 		CRect rect;
 
+
 		m_wndTag.GetWindowRect(rect);
-		rect.right += 150;
+		//rect.right += 150;
+		rect.right = (LONG)(mainfrm_rect.right * 0.3);
 		m_wndTag.MoveWindow(rect);
 
 		m_syntaxPane.GetWindowRect(rect);
-		rect.left -= 150;
+		rect.left = (LONG)(mainfrm_rect.right * 0.65);
 		m_syntaxPane.MoveWindow(rect);
 
 
 
 		m_wndActView.GetWindowRect(rect);
-		rect.bottom += 100;
+		rect.bottom = (LONG)(mainfrm_rect.bottom * 0.6);
 		m_wndActView.MoveWindow(rect);
 
 
 		m_wndOutput.GetWindowRect(rect);
-		rect.top -= 100;
+		rect.top = (LONG)(mainfrm_rect.bottom * 0.7);
 		m_wndOutput.MoveWindow(rect);
-
-
-		m_wndFindOutput.GetWindowRect(rect);
-		rect.top -= 100;
 		m_wndFindOutput.MoveWindow(rect);
+
+
+
 
 
 		/***************************************设置某些Pane自动隐藏*********************************/
 		m_inputPane.DockToWindow(&m_syntaxPane, CBRS_ALIGN_TOP);
+		m_wndFindOutput.DockToWindow(&m_wndOutput, CBRS_ALIGN_RIGHT);
+
 		m_wndActView.SetAutoHideMode(TRUE, CBRS_ALIGN_TOP);
 		m_wndOutput.SetAutoHideMode(TRUE, CBRS_ALIGN_BOTTOM);
 		m_wndFindOutput.SetAutoHideMode(TRUE, CBRS_ALIGN_BOTTOM);
 
+
+
+
+		
 
 
 
