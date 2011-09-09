@@ -248,43 +248,43 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 
 BOOL CMainFrame::CreateDockingWindows()
 {
-	BOOL bNameValid;
-	// Create output window
-	CString strOutputWnd;
-	bNameValid = strOutputWnd.LoadString(IDS_OUTPUT_WND);
-	ASSERT(bNameValid);
-	if (!m_wndOutput.Create(strOutputWnd, this, CRect(0, 0, 100, 100), TRUE, ID_VIEW_OUTPUTWND, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_BOTTOM | CBRS_FLOAT_MULTI))
-	{
-		TRACE0("Failed to create Output window\n");
-		return FALSE; // failed to create
-	}
+		BOOL bNameValid;
+		// Create output window
+		CString strOutputWnd;
+		bNameValid = strOutputWnd.LoadString(IDS_OUTPUT_WND);
+		ASSERT(bNameValid);
+		if (!m_wndOutput.Create(strOutputWnd, this, CRect(0, 0, 100, 100), TRUE, ID_VIEW_OUTPUTWND, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_BOTTOM | CBRS_FLOAT_MULTI))
+		{
+				TRACE0("Failed to create Output window\n");
+				return FALSE; // failed to create
+		}
 
 
 
 
 
-	CString strActView;
+		CString strActView;
 
-	bNameValid = strActView.LoadString(IDS_ACTVIEW_WND);
+		bNameValid = strActView.LoadString(IDS_ACTVIEW_WND);
 
-	ASSERT(bNameValid);
+		ASSERT(bNameValid);
 
-	if (!m_wndActView.Create(strActView, this, CRect(0, 0, 100, 100), TRUE, ID_VIEW_ACTIONWND, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_TOP | CBRS_FLOAT_MULTI))
-	{
-		TRACE0("Failed to create Action window\n");
-		return FALSE; // failed to create
-	}
+		if (!m_wndActView.Create(strActView, this, CRect(0, 0, 100, 100), TRUE, ID_VIEW_ACTIONWND, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_TOP | CBRS_FLOAT_MULTI))
+		{
+				TRACE0("Failed to create Action window\n");
+				return FALSE; // failed to create
+		}
 
-	CString strTagView;
+		CString strTagView;
 
 
-	bNameValid = strTagView.LoadString(IDS_TAGVIEW_WND);
-		
-	if(!m_wndTag.Create(strTagView, this, CRect(0,0,100,100), TRUE, ID_VIEW_TAGWND, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
-	{
+		bNameValid = strTagView.LoadString(IDS_TAGVIEW_WND);
+
+		if(!m_wndTag.Create(strTagView, this, CRect(0,0,100,100), TRUE, ID_VIEW_TAGWND, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
+		{
 				TRACE0("Failed to create TagView window\n");
 				return FALSE; // failed to create
-	}
+		}
 
 		CString strInputView;
 		bNameValid = strInputView.LoadString(IDS_INPUTVIEW_WND);
@@ -294,8 +294,8 @@ BOOL CMainFrame::CreateDockingWindows()
 				TRACE0("Failed to create input  window\n");
 				return FALSE; // failed to create
 		}
-		
-		
+
+
 
 		CString strSyntaxPane;
 
@@ -306,46 +306,86 @@ BOOL CMainFrame::CreateDockingWindows()
 				TRACE0("Failed to create syntax tree  window\n");
 				return FALSE; // failed to create
 		}
-		
-
-		
-	CString strFindOutputWnd;
-	bNameValid = strFindOutputWnd.LoadString(IDS_FIND_OUTPUT_WND);
-	
-	if (!m_wndFindOutput.Create(strFindOutputWnd, this, CRect(0, 0, 100, 100), TRUE, ID_FIND_OUTPPUT_WND, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_BOTTOM | CBRS_FLOAT_MULTI))
-	{
-		TRACE0("Failed to create FindOutput window\n");
-		return FALSE; // failed to create
-	}
-		
-		
-	SetDockingWindowIcons(theApp.m_bHiColorIcons);
-
-		
-	
-	m_wndOutput.EnableDocking(CBRS_ALIGN_ANY);
-	DockPane(&m_wndOutput);
-
-	m_wndActView.EnableDocking(CBRS_ALIGN_ANY);
-	DockPane(&m_wndActView);
 
 
-	m_wndTag.EnableDocking(CBRS_ALIGN_ANY);
-	DockPane(&m_wndTag);
+
+		CString strFindOutputWnd;
+		bNameValid = strFindOutputWnd.LoadString(IDS_FIND_OUTPUT_WND);
+
+		if (!m_wndFindOutput.Create(strFindOutputWnd, this, CRect(0, 0, 100, 100), TRUE, ID_FIND_OUTPPUT_WND, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_BOTTOM | CBRS_FLOAT_MULTI))
+		{
+				TRACE0("Failed to create FindOutput window\n");
+				return FALSE; // failed to create
+		}
 
 
-	m_inputPane.EnableDocking(CBRS_ALIGN_ANY);
-	DockPane(&m_inputPane);
+		SetDockingWindowIcons(theApp.m_bHiColorIcons);
 
 
-	m_syntaxPane.EnableDocking(CBRS_ALIGN_ANY);
-	DockPane(&m_syntaxPane);
 
-	m_wndFindOutput.EnableDocking(CBRS_ALIGN_ANY);
-	DockPane(&m_wndFindOutput);
-	
+		m_wndOutput.EnableDocking(CBRS_ALIGN_ANY);
+		DockPane(&m_wndOutput, AFX_IDW_DOCKBAR_BOTTOM);
 
-	return TRUE;
+		m_wndActView.EnableDocking(CBRS_ALIGN_ANY);
+		DockPane(&m_wndActView, AFX_IDW_DOCKBAR_TOP);
+
+
+		m_wndTag.EnableDocking(CBRS_ALIGN_ANY);
+		DockPane(&m_wndTag, AFX_IDW_DOCKBAR_LEFT);
+
+
+		m_inputPane.EnableDocking(CBRS_ALIGN_ANY);
+		DockPane(&m_inputPane, AFX_IDW_DOCKBAR_RIGHT);
+
+
+		m_syntaxPane.EnableDocking(CBRS_ALIGN_ANY);
+		DockPane(&m_syntaxPane, AFX_IDW_DOCKBAR_RIGHT);
+
+
+		m_wndFindOutput.EnableDocking(CBRS_ALIGN_ANY);
+		DockPane(&m_wndFindOutput, AFX_IDW_DOCKBAR_BOTTOM);
+
+
+
+
+		/***************************************设置某些Pane大小*********************************/
+		CRect rect;
+
+		m_wndTag.GetWindowRect(rect);
+		rect.right += 150;
+		m_wndTag.MoveWindow(rect);
+
+		m_syntaxPane.GetWindowRect(rect);
+		rect.left -= 150;
+		m_syntaxPane.MoveWindow(rect);
+
+
+
+		m_wndActView.GetWindowRect(rect);
+		rect.bottom += 100;
+		m_wndActView.MoveWindow(rect);
+
+
+		m_wndOutput.GetWindowRect(rect);
+		rect.top -= 100;
+		m_wndOutput.MoveWindow(rect);
+
+
+		m_wndFindOutput.GetWindowRect(rect);
+		rect.top -= 100;
+		m_wndFindOutput.MoveWindow(rect);
+
+
+		/***************************************设置某些Pane自动隐藏*********************************/
+		m_inputPane.DockToWindow(&m_syntaxPane, CBRS_ALIGN_TOP);
+		m_wndActView.SetAutoHideMode(TRUE, CBRS_ALIGN_TOP);
+		m_wndOutput.SetAutoHideMode(TRUE, CBRS_ALIGN_BOTTOM);
+		m_wndFindOutput.SetAutoHideMode(TRUE, CBRS_ALIGN_BOTTOM);
+
+
+
+
+		return TRUE;
 }
 
 void CMainFrame::SetDockingWindowIcons(BOOL bHiColorIcons)

@@ -135,7 +135,6 @@ void			Lex_ClearInput(lexMatch_t *pmatch);
 
 void			Lex_ResetMatchState(lexMatch_t *pmatch);
 
-void			Lex_ResetMatchIoContext(lexMatch_t *pmatch, const arIOCtx_t *io);
 
 const wchar_t*	Lex_GetNextInput(const lexMatch_t *match);
 
