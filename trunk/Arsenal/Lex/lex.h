@@ -28,6 +28,9 @@ bool_t	Lex_Init();
 bool_t	Lex_UnInit();
 
 
+/******************************************************************************************************/
+
+
 
 typedef struct __lex_action_tag
 {
@@ -163,6 +166,26 @@ void			Lex_MatchGetCoordinate(const lexMatch_t *pmatch, size_t *line, size_t *co
 
 
 bool_t			Lex_Match(lexMatch_t *match, lexToken_t *tok);
+
+
+
+
+
+/***************************************Misc*********************************/
+
+#define AR_LEX_LF		L'\x000A'		//Line Feed
+#define AR_LEX_VT		L'\x000B'		//Vertical Tab
+#define AR_LEX_FF		L'\x000C'		//Form Feed
+#define AR_LEX_CR		L'\x000D'		//Carriage Return
+#define AR_LEX_NEL		L'\x0085'		//Next Line
+#define AR_LEX_LS		L'\x2028'		//Line Separator
+#define AR_LEX_PS		L'\x2029'		//Paragraph Separator
+//AR_LEX_CR+LF:		AR_LEX_CR followed by AR_LEX_LF
+
+
+bool_t Lex_IsLineTerminator(wchar_t c);
+
+/*****************************************************************************************************/
 
 
 AR_NAMESPACE_END
