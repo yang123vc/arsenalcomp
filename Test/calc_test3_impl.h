@@ -1,10 +1,4 @@
 
- 
-
-static bool_t	__g_has_error = false;
-
- 
-
 
 /*
 pre_defined
@@ -263,25 +257,15 @@ static psrNode_t* AR_STDCALL on_calc(psrNode_t **nodes, size_t count, const wcha
 		case TOK_MUL:
 			return (psrNode_t*)(l * r);
 		case TOK_DIV:
-		{
-			if(r == 0)
-			{
-				__g_has_error = true;
-				return (psrNode_t*)0;
-			}else
-			{
-				return (psrNode_t*)(l / r);
-			}
-		}
 		case TOK_MOD:
 		{
 			if(r == 0)
 			{
-				__g_has_error = true;
+				*(bool_t*)ctx = false;
 				return (psrNode_t*)0;
 			}else
 			{
-				return (psrNode_t*)(l % r);
+				return (psrNode_t*) (op == TOK_MOD ? (l % r) : (l / r));
 			}
 		}
 		default:
@@ -341,14 +325,13 @@ static int calc(const wchar_t *input)
 		lex = __build_lex();
 		grammar = __build_grammar(&__g_handler);
 		parser = Parser_CreateParser(grammar, PARSER_LALR);
-		ctx = Parser_CreateContext(parser, NULL);
+		ctx = Parser_CreateContext(parser, (void*)&is_ok);
 
 
 		match = Lex_CreateMatch(lex);
 
 		Lex_ResetInput(match, input);
 		
-		__g_has_error = false;
 		is_ok = true;
 		while(is_ok)
 		{
@@ -364,7 +347,11 @@ static int calc(const wchar_t *input)
 
 						PARSER_TOTERMTOK(&tok, &psr_tok);
 						
-						is_ok = Parser_AddToken(ctx, &psr_tok);
+						if(!Parser_AddToken(ctx, &psr_tok))
+						{
+								is_ok = false;
+						}
+
 						
 						if(is_ok)
 						{
@@ -376,17 +363,10 @@ static int calc(const wchar_t *input)
 						}
 
 						
-						if(__g_has_error)
-						{
-							is_ok = false;
-						}
 				}
 		}
 		
-		if(__g_has_error)
-		{
-				is_ok = false;
-		}
+		
 		
 		if(is_ok)
 		{
