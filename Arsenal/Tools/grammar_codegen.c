@@ -237,8 +237,12 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 		{
 				for(i = 0; i < cfg->predef_cnt; ++i)
 				{
+						if(cfg->pre_def[i].flags & CFG_CODE_ON_BOTTOM_F)
+						{
+								continue;
+						}
 						AR_AppendString(code, L"\r\n");
-						
+
 
 						if(cfg->pre_def[i].name && AR_wcslen(cfg->pre_def[i].name) > 0)
 						{
@@ -798,10 +802,40 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 
 		if(handler_define)
 		{
-				AR_AppendString(code, L"\n\n\n\n");
+				AR_AppendString(code, L"\r\n\r\n\r\n");
 				AR_AppendString(code, AR_GetStringCString(handler_define));
 				AR_DestroyString(handler_define);
 		}
+
+
+
+
+		if(cfg->predef_cnt > 0)
+		{
+				for(i = 0; i < cfg->predef_cnt; ++i)
+				{
+						if(cfg->pre_def[i].flags & CFG_CODE_ON_BOTTOM_F)
+						{
+								
+								AR_AppendString(code, L"\r\n");
+
+
+								if(cfg->pre_def[i].name && AR_wcslen(cfg->pre_def[i].name) > 0)
+								{
+										AR_AppendFormatString(code, L"%ls", L"\r\n/*\r\n");
+										AR_AppendFormatString(code, L"%ls", cfg->pre_def[i].name);
+										AR_AppendFormatString(code, L"%ls", L"\r\n*/\r\n");
+								}
+
+
+								AR_AppendString(code,  cfg->pre_def[i].code);
+								AR_AppendString(code, L"\r\n");
+						}
+				}
+		}
+
+		AR_AppendString(code, L"\r\n\r\n\r\n");
+
 
 		return true;
 }

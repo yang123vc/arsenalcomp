@@ -822,7 +822,7 @@ void str_tbl_test()
 
 }
 
-
+#if(0)
 void kmp_test()
 {
 		const wchar_t *s = L"abcdef";
@@ -832,7 +832,7 @@ void kmp_test()
 
 		AR_printf(L"%ls\r\n", AR_wcsstr_kmp_s(s,s + n,p));
 }
-
+#endif
 
 const wchar_t *AR_wcsstr_ex(const wchar_t *s, const wchar_t *p)
 {
@@ -848,6 +848,7 @@ const wchar_t *AR_wcsstr_ex(const wchar_t *s, const wchar_t *p)
 		
 }
 
+#if(0)
 void kmp_test2()
 {
 		const wchar_t *src = NULL;//__load_txt(L"z:\\1.txt");
@@ -894,7 +895,7 @@ void kmp_test2()
 		getchar();
 }
 
-
+#endif
 
 #if(AR_COMPILER == AR_VC_LEGACY || AR_COMPILER == AR_VC)
 

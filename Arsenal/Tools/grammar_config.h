@@ -22,6 +22,9 @@
 AR_NAMESPACE_BEGIN
 
 
+#define CFG_BOTTOM_CODE_ATTR_NAME		L"BTM"
+
+
 
 void			CFG_Init();
 void			CFG_UnInit();
@@ -47,6 +50,8 @@ typedef struct __cfg_lex_name_tag
 #define CFG_NAME_DEF_BEGIN		L"static const wchar_t *__g_lex_name[] = {"
 #define CFG_NAME_DEF_END		L"};"
 #define CFG_NAME_DEF_ITEM		L"L\"%ls = %ls\""
+
+
 
 
 typedef struct __cfg_token_tag
@@ -106,11 +111,17 @@ typedef struct __cfg_start_tag
 #define CFG_START_ITEM L"#define START_RULE L\"%ls\""
 
 
+typedef enum
+{
+		CFG_CODE_ON_BOTTOM_F = 0x01,
+}cfgPreDefFlags_t;
+
 typedef struct __cfg_predef_tag
 {
-		size_t	line;
-		wchar_t	*name;
-		wchar_t	*code;
+		size_t			line;
+		wchar_t			*name;
+		wchar_t			*code;
+		uint_32_t		flags;
 }cfgPreDef_t;
 
 
@@ -239,6 +250,12 @@ typedef struct __cfg_report_tag
 		cfgReportFunc_t	report_func;
 		void			*report_ctx;
 }cfgReport_t;
+
+
+
+
+
+
 
 
 
