@@ -75,9 +75,10 @@ typedef struct __tengu_vm_module_tag			tguVMModule_t;
 
 typedef union __tengu_value_tag
 {
+		tguVMBoolean_t		boolean;
+
 		tguVMInteger_t		integer_num;
 		tguVMFloat_t		float_num;
-		tguVMBoolean_t		boolean;
 
 		/*GC Object*/
 		tguVMString_t		*str;
@@ -318,6 +319,8 @@ struct  __tengu_vm_module_tag
 		tguVMModule_t	*next;
 		
 		tguVMTable_t	*table;
+
+		size_t			ref_cnt;
 };
 
 
@@ -505,6 +508,7 @@ struct	__tengu_machine_tag
 
 		arString_t			*last_error;
 
+
 };
 
 
@@ -528,9 +532,8 @@ void			TGU_CollectGarbageVM(tguMachine_t	*vm);
 
 bool_t			TGU_ExecuteVM(tguMachine_t *vm, const wchar_t *main_module);
 
-bool_t			TGU_RegisterCFuncVM(tguMachine_t *vm, const wchar_t *module_name,	 const wchar_t *func_name,  tguCFunction_t func);
-bool_t			TGU_UnRegisterCFuncVM(tguMachine_t *vm, const wchar_t *module_name,	 const wchar_t *func_name);
 
+tguVMModule_t*	TGU_GetModuleVM(tguMachine_t *vm, const wchar_t *module_name);
 
 
 bool_t			TGU_RegisterModuleVM(tguMachine_t *vm, const wchar_t *module_name, const wchar_t *sources);

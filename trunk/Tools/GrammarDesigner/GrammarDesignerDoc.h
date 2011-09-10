@@ -127,6 +127,7 @@ public:
 		afx_msg void OnUpdateShowLeftfactor(CCmdUI *pCmdUI);
 		afx_msg void OnEditFindallreferences();
 		afx_msg void OnUpdateEditFindallreferences(CCmdUI *pCmdUI);
+		afx_msg void OnUpdateParserBuild(CCmdUI *pCmdUI);
 };
 
 

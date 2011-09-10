@@ -74,60 +74,60 @@
 
 %left		"+"	"-"		;
 %left		"*"	"/"	"%"	;
-%right 	UMINUS		;
+%right 	UMINUS			;
 
-E	:	E	"+" 	E		%action	"on_calc"
-	|	E	"-"	E		%action	"on_calc"
-	|	E	"*"	E		%action	"on_calc"
-	|	E	"/"	E		%action	"on_calc"
-	|	E	"%"	E		%action	"on_calc"
-	{:
-		int_t l, r;
-		size_t op;
-		AR_ASSERT(nodes != NULL && count == 3);
-		l = (int_t)nodes[0];
-		op = (size_t)nodes[1];
-		r = (int_t)nodes[2];
-		switch(op)
-		{
-		case TOK_ADD:
-			return (psrNode_t*)(l + r);
-		case TOK_MINUS:
-			return (psrNode_t*)(l - r);
-		case TOK_MUL:
-			return (psrNode_t*)(l * r);
-		case TOK_DIV:
-		case TOK_MOD:
-		{
-			if(r == 0)
+E		:	E	"+" 	E		%action	"on_calc"
+		|	E	"-"	E		%action	"on_calc"
+		|	E	"*"	E		%action	"on_calc"
+		|	E	"/"	E		%action	"on_calc"
+		|	E	"%"	E		%action	"on_calc"
+		{:
+			int_t l, r;
+			size_t op;
+			AR_ASSERT(nodes != NULL && count == 3);
+			l = (int_t)nodes[0];
+			op = (size_t)nodes[1];
+			r = (int_t)nodes[2];
+			switch(op)
 			{
-				*(bool_t*)ctx = false;
-				return (psrNode_t*)0;
-			}else
+			case TOK_ADD:
+				return (psrNode_t*)(l + r);
+			case TOK_MINUS:
+				return (psrNode_t*)(l - r);
+			case TOK_MUL:
+				return (psrNode_t*)(l * r);
+			case TOK_DIV:
+			case TOK_MOD:
 			{
-				return (psrNode_t*) (op == TOK_MOD ? (l % r) : (l / r));
+				if(r == 0)
+				{
+					*(bool_t*)ctx = false;
+					return (psrNode_t*)0;
+				}else
+				{
+					return (psrNode_t*) (op == TOK_MOD ? (l % r) : (l / r));
+				}
 			}
-		}
-		default:
-			AR_ASSERT(false);
-			return (psrNode_t*)0;
-		}
-	:}
+			default:
+				AR_ASSERT(false);
+				return (psrNode_t*)0;
+			}
+		:}
 
-	|	"("	E	")"		%action		"auto_return_1"
-	{:
-		return nodes[1];
+		|	"("	E	")"		%action		"auto_return_1"
+		{:
+				return nodes[1];
 
-	:}
-	|	"-"	E 	%prec UMINUS	%action		"on_negative_num"
-	{:
-		int_t n;
-		AR_ASSERT(nodes != NULL && count == 2);
-		n = (int_t)nodes[1];
-		return (psrNode_t*)-n;
-	:}
-	|	NUM		%action	NULL
-	;
+		:}
+		|	"-"	E 	%prec UMINUS	%action		"on_negative_num"
+		{:
+			int_t n;
+			AR_ASSERT(nodes != NULL && count == 2);
+			n = (int_t)nodes[1];
+			return (psrNode_t*)-n;
+		:}
+		|	NUM		%action	NULL
+		;
 
 
 

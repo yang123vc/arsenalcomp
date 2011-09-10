@@ -363,7 +363,7 @@
 %token	"in"		:	'"in"(?!{keyword_lhd})'		,1			%value	"TOK_IN"			%action default_leaf_handler			;
 
 
-%token	"#import"	:	'"#import"(?!{keyword_lhd})'	,2			%value	"TOK_IMPORT"			%action default_leaf_handler			;
+%token	"import"	:	'"import"(?!{keyword_lhd})'		,2			%value	"TOK_IMPORT"			%action default_leaf_handler			;
 
 
 %token	"..."		:	'"..."'	,2						%value	"TOK_ELLIPSIS"		%action default_leaf_handler			;	
@@ -375,7 +375,6 @@
 
 %token	"&&"		:	'"&&"'		,1						%value	"TOK_ANDAND"			%action default_leaf_handler			;
 %token	"||"		:	'"||"'		,1						%value	"TOK_OROR"			%action default_leaf_handler			;
-%token	"::"		:	'"::"'		,1						%value	"TOK_MODUAL_ACCESS"		%action default_leaf_handler			;
 
 
 
@@ -915,121 +914,11 @@ statement				:	compound_statement			%action	auto_return_0
 					|	iteration_statement			%action	auto_return_0
 					|	jump_statement			%action	auto_return_0
 					|	empty_statement			%action	auto_return_0
-					|	import_statement			%action	auto_return_0
 					;
 
 
 
 
-/**************************************import_statement***********************************************/
-
-
-
-
-import_statement		:	"#import"	STRING	 semi		%action	on_import_statement
-				|	"#import"	error 	";"		%action	on_import_statement
-				{:
-					tguParser_t 	*parser = (tguParser_t*)ctx;
-					tguSynNode_t	**ns = (tguSynNode_t**)nodes;
-					bool_t		has_error = false;
-					const 		wchar_t	*file_name;
-					tguLexInfo_t	*lex_info;
-
-					tguStmt_t	*stmt = NULL;
-					AR_ASSERT(parser != NULL);
-
-					lex_info = &ns[0]->token.lex_info;
-
-					if(parser->abs_tree != parser->top_block)
-					{
-						wchar_t msg[1024];
-						parser->has_error = true;
-						AR_swprintf(msg, 1024, L"%ls", L"illegal	#import statement in current scope");
-						TGU_ReportError(&parser->report, msg, lex_info->linenum);
-						return NULL;
-
-					}
-
-
-
-					
-					if(ns[1] == NULL)
-					{
-						has_error = true;
-						file_name = NULL;
-					}else
-					{
-						tguSrc_t	*src;
-						file_name = ns[1]->token.token;
-						src = TGU_LoadSources(parser->ext->work_dir, file_name);
-						
-						if(src)
-						{
-							if(TGU_FindSymb(parser->ext->import_modules, TGU_AllocString(src->module_name), TGU_SYMB_BLOCK_T) == NULL)
-							{
-								tguSymb_t		*module_symb;
-								tguParseResult_t	parse_result;
-								tguParser_t	*psr;
-
-								module_symb = TGU_CreateSymb(TGU_SYMB_BLOCK_T, src->module_name);
-								module_symb->lex_info = ns[0]->token.lex_info;
-								TGU_InsertToSymbTable(parser->ext->import_modules, module_symb);
-
-								psr = TGU_CreateParser(&parser->report, parser->ext);
-								parse_result = TGU_ParseCode(psr, src->module_name, src->code);
-								module_symb->block = parse_result.block;
-								if(parse_result.has_error)
-								{
-									has_error = true;
-									TGU_RemoveFromSymbTable(parser->ext->import_modules, module_symb->name, module_symb->type);
-								}else
-								{
-									AR_ASSERT(parse_result.block);
-								}
-								TGU_DestroyParser(psr);
-
-								if(!has_error)
-								{
-									/*
-									在#import点，需要初始化此被引入的模块的所有全局变量
-									*/
-									stmt = TGU_CreateStmt(TGU_STT_IMPORT);
-									stmt->import_stmt.module_name = module_symb->name;
-									stmt->lex_info = ns[0]->token.lex_info;
-								}
-							}
-						}else
-						{
-							has_error = true;
-						}
-
-						if(src)
-						{
-							TGU_ReleaseSources(src);	
-							src = NULL;
-						}
-					}
-					
-					if(has_error)
-					{
-						wchar_t msg[1024];
-						parser->has_error = true;
-						AR_swprintf(msg, 1024, L"#import '%ls' failed", file_name == NULL ? L"" : file_name);
-						TGU_ReportError(&parser->report, msg, lex_info->linenum);
-						return NULL;
-					}else
-					{
-						if(stmt != NULL)
-						{
-							AR_ASSERT(stmt != NULL);
-							return __create_synnode(TGU_NODE_STMT_T, (void*)stmt);
-						}else
-						{
-							return NULL;
-						}
-					}
-				:}
-				;
 
 
 
@@ -2452,94 +2341,21 @@ primary_expression		:	"(" expression")"							%action	on_lp_rp_expression
 						ret = __create_synnode(TGU_NODE_EXPR_T, (void*)expr);
 						return ret;
 				:}
-
-				|	module_access	%action	auto_return_0
+				|	import_expression	%action	auto_return_0
 				;
 
 
 
+/**************************************import_expression***********************************************/
 
-module_access			:	NAME	"::"	NAME		%action	on_module_access
+
+
+
+import_expression		:	"import"	"(" STRING	")" 		%action	on_import_statement
 				{:
-						wchar_t msg[1024];
-						tguSynNode_t		**ns = (tguSynNode_t**)nodes;
-						tguSynNode_t 		*ret;
-						tguParser_t		*parser = (tguParser_t*)ctx;
-						tguExpr_t		*expr;
-						tguToken_t		*module_name, *symb_name;
-						tguSymb_t		*module, *symb;
-						bool_t			is_ok = true;
-						AR_ASSERT(parser != NULL && ns != NULL && count == 3);
-
-						AR_ASSERT(ns[0] != NULL && ns[2] != NULL);
-						
-						module_name 	= 	&ns[0]->token;
-						symb_name	= 	&ns[2]->token;
-
-						module = NULL;
-						symb  = NULL;
-
-						module = TGU_FindSymb(parser->ext->import_modules, module_name->token, TGU_SYMB_BLOCK_T);
-				
-						if(module ==  NULL)
-						{
-							is_ok = false;
-							AR_swprintf(msg, 1024, L"error : '%ls' : undeclared module", module_name->token);
-						}
-
-						if(is_ok)
-						{
-
-							size_t		t;
-							AR_ASSERT(module->type == TGU_SYMB_BLOCK_T && module->block != NULL);
-
-							for(t = TGU_SYMB_VAR_T, symb = NULL; t <= TGU_SYMB_FUNC_T && symb == NULL; ++t)
-							{
-								symb = TGU_FindSymbFromBlock(module->block, symb_name->token, (tguSymbType_t)t, true);
-							}
-
-							if(symb == NULL)
-							{
-								is_ok = false;
-								AR_swprintf(msg, 1024, L"error : can't import name '%ls' from module '%ls'", symb_name->token, module_name->token);
-							}
-						}
-						
-
-						if(!is_ok)
-						{
-							parser->has_error = true;
-							TGU_ReportError(&parser->report, msg, module_name->lex_info.linenum);
-							
-							AR_swprintf(msg, 1024, L"%ls:%ls", module_name->token, symb_name->token);
-							expr = TGU_CreateExpr(TGU_ET_UNDEF_NAME);
-							expr->name = TGU_AllocString(msg);
-						}else
-						{
-							AR_ASSERT(symb != NULL);
-							expr = TGU_CreateExpr(TGU_ET_SYMBOL);
-							expr->symb = symb;
-						}
-
-						AR_ASSERT(expr != NULL);
-
-
-						if(symb && symb->type == TGU_SYMB_VAR_T)
-						{
-							expr->is_lvalue = true;
-						}else
-						{
-							expr->is_lvalue  = false;
-						}
-
-						expr->is_constant = false;
-						expr->lex_info = module_name->lex_info;
-
-						ret = __create_synnode(TGU_NODE_EXPR_T, (void*)expr);
-						return ret;
+					return NULL;
 				:}
 				;
-
 
 
 /*辅助函数*/

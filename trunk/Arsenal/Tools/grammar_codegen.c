@@ -364,7 +364,7 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 		{
 				arString_t		*enum_str;
 				enum_str = AR_CreateString();
-				AR_AppendString(enum_str, L"\r\n\r\n\r\n/*enum{\r\n");
+				AR_AppendString(enum_str, L"\r\n\r\n\r\nenum{\r\n");
 				for(i = 0; i < cfg->tok_cnt; ++i)
 				{
 						/*if(cfg->tok[i].code_name == NULL)continue;*/
@@ -375,7 +375,7 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 								AR_AppendFormatString(enum_str, L"%s = %Id,\r\n", cfg->tok[i].code_name, cfg->tok[i].tokval);
 						}
 				}
-				AR_AppendString(enum_str, L"};*/\r\n\r\n\r\n\r\n");
+				AR_AppendString(enum_str, L"};\r\n\r\n\r\n\r\n");
 				AR_AppendString(code, AR_GetStringCString(enum_str));
 				AR_DestroyString(enum_str);
 		}

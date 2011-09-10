@@ -65,6 +65,7 @@ BEGIN_MESSAGE_MAP(CGrammarDesignerDoc, CRichEditDoc)
 		ON_UPDATE_COMMAND_UI(ID_SHOW_LEFTFACTOR, &CGrammarDesignerDoc::OnUpdateShowLeftfactor)
 		ON_COMMAND(ID_EDIT_FINDALLREFERENCES, &CGrammarDesignerDoc::OnEditFindallreferences)
 		ON_UPDATE_COMMAND_UI(ID_EDIT_FINDALLREFERENCES, &CGrammarDesignerDoc::OnUpdateEditFindallreferences)
+		ON_UPDATE_COMMAND_UI(ID_PARSER_BUILD, &CGrammarDesignerDoc::OnUpdateParserBuild)
 END_MESSAGE_MAP()
 
 
@@ -896,6 +897,17 @@ void	CGrammarDesignerDoc::ClearParser()
 		}
 }
 
+
+void CGrammarDesignerDoc::OnUpdateParserBuild(CCmdUI *pCmdUI)
+{
+		// TODO: Add your command update UI handler code here
+		CGrammarDesignerView *view = (CGrammarDesignerView*)reinterpret_cast<CGrammarDesignerView*>(m_viewList.GetHead());
+		CString str;
+		view->GetRichEditCtrl().GetWindowText(str);
+
+		pCmdUI->Enable(!str.IsEmpty());
+
+}
 
 
 
