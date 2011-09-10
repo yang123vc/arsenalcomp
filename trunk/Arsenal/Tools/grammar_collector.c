@@ -613,6 +613,7 @@ RE_CHECK_POINT:
 						cfg->pre_def[i].name = AR_wcsdup(pre_def->lst[i]->predef.name);
 						cfg->pre_def[i].code = AR_wcsdup(pre_def->lst[i]->predef.code);
 						cfg->pre_def[i].line = pre_def->lst[i]->predef.line;
+						cfg->pre_def[i].flags = pre_def->lst[i]->predef.flags;
 				}
 		}
 
@@ -1554,14 +1555,14 @@ static psrNode_t*		AR_STDCALL __handle_pre_def(psrNode_t **nodes, size_t count, 
 
 
 /*
-{ L"pre_code_decl		:		%code pre_code_name action_ins",		__handle_pre_def,0},
+{ L"pre_code_decl		:		%code pre_code_name action_ins	code_decl_attr",		__handle_pre_def,0},
 */
 static psrNode_t*		AR_STDCALL __handle_pre_def(psrNode_t **nodes, size_t count, const wchar_t * name_tmp, void *ctx)
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res;
 		size_t			len;
-		AR_ASSERT(count == 3);
+		AR_ASSERT(count == 4);
 
 		AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T && ns[0]->lexeme.lex_val == CFG_LEXVAL_CODE);
 		AR_ASSERT(ns[2] && ns[2]->type == CFG_LEXEME_T && ns[2]->lexeme.lex_val == CFG_LEXVAL_ACTION_INS);
@@ -1591,6 +1592,35 @@ static psrNode_t*		AR_STDCALL __handle_pre_def(psrNode_t **nodes, size_t count, 
 		}else
 		{
 				res->predef.name = AR_wcsdup(ns[1]->lexeme.lexeme);
+		}
+
+		res->predef.flags = 0;
+
+		if(ns[3] != NULL)
+		{
+				size_t i;
+				AR_ASSERT(ns[3]->type == CFG_NODE_LIST_T);
+
+				for(i = 0; i < ns[3]->lst.count; ++i)
+				{
+						cfgNode_t *attr = ns[3]->lst.lst[i];
+
+						if(attr != NULL)
+						{
+								AR_ASSERT(attr->type == CFG_LEXEME_T);
+
+								if(attr->lexeme.lexeme)
+								{
+										if(AR_wcscmp(attr->lexeme.lexeme, CFG_BOTTOM_CODE_ATTR_NAME) == 0)/*此段代码是否在文本末尾*/
+										{
+												res->predef.flags |= CFG_CODE_ON_BOTTOM_F;
+										}
+
+										/*********************************************************************/
+								}
+						}
+				}
+				
 		}
 
 		return res;
@@ -1786,11 +1816,14 @@ static const cfgRuleDef_t	__cfg_rule[] =
 		{ L"start_def			:  		%start lexeme",							__handle_start_def,0},
 
 		
-		{ L"pre_code_decl		:		%code pre_code_name action_ins",		__handle_pre_def,0},
+		{ L"pre_code_decl		:		%code pre_code_name action_ins	code_decl_attr",		__handle_pre_def,0},
 		{ L"pre_code_name		:		lexeme",								NULL,0},
 		{ L"pre_code_name		:		",										NULL,0},
 
+		{ L"code_decl_attr		:		term_list",								NULL,0},
+		{ L"code_decl_attr		:		",										NULL,0},
 
+		
 		{ L"program				:		item_list #",			__handle_program, 0},
 		{ L"program				:		item_list error #",		__handle_program, 0}
 

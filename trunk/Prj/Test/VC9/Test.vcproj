@@ -1349,6 +1349,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\Test\calc_test3.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Test\calc_test3_impl.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\Test\com_test.c"
 				>
 			</File>

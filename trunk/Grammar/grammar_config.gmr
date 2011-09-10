@@ -78,9 +78,6 @@
 					;
 
 
-
-
-
 %token	"."		:	'"."'
 				;
 
@@ -173,6 +170,12 @@ start_def			:  		START LEXEME
 				;
 
 
-code_decl			:		CODE LEXEME CODE_BLOCK
-				|		CODE CODE_BLOCK	
+code_decl			:		CODE LEXEME CODE_BLOCK	code_decl_attr
+				|		CODE CODE_BLOCK		code_decl_attr
 				;
+
+code_decl_attr		:		term_list
+				|		.
+				;
+
+

@@ -39,7 +39,7 @@ extern void rule_test();
 extern void grammar_test2();
 extern void calc_test();
 extern void calc_test1();
-
+extern void calc3_test();
 extern void db_test();
 
 extern void pcg_test();
@@ -124,7 +124,7 @@ void AR_Test()
 
 		//trans_char_test();
 		
-		lex_test();
+		//lex_test();
 		
 
 		//parser_perf_test();
@@ -163,6 +163,9 @@ void AR_Test()
 		//Ini_Test();
 		
 		//parser_gen_perf_test();
+
+		calc3_test();
+
 		getchar();
 #else
 		ARSpace::AR_printf(L"dll version\r\n");
