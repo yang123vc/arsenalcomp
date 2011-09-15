@@ -76,7 +76,6 @@ TOK_DOT = 304,
 };
 
 
-
 const wchar_t* TGU_TokenValToString(size_t tok_val);
 
 
