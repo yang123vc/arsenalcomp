@@ -353,7 +353,7 @@
 
 %token	"continue"	:	'"continue"(?!{keyword_lhd})'	,1			%value	"TOK_CONTINUE"		%action default_leaf_handler			;
 %token	"break"	:	'"break"(?!{keyword_lhd})'		,1			%value	"TOK_BREAK"			%action default_leaf_handler			;
-%token	"return"	:	'"return"(?!{keyword_lhd})'	,1				%value	"TOK_RETURN"			%action default_leaf_handler			;
+%token	"return"	:	'"return"(?!{keyword_lhd})'		,1			%value	"TOK_RETURN"			%action default_leaf_handler			;
 
 %token	"null"		:	'"null"(?!{keyword_lhd})'		,1			%value	"TOK_NULL"			%action default_leaf_handler			;
 %token	"true"		:	'"true"(?!{keyword_lhd})'		,1			%value	"TOK_TRUE"			%action default_leaf_handler			;
@@ -363,7 +363,12 @@
 %token	"in"		:	'"in"(?!{keyword_lhd})'		,1			%value	"TOK_IN"			%action default_leaf_handler			;
 
 
-%token	"import"	:	'"import"(?!{keyword_lhd})'		,2			%value	"TOK_IMPORT"			%action default_leaf_handler			;
+%token	"import"	:	'"import"(?!{keyword_lhd})'		,1			%value	"TOK_IMPORT"			%action default_leaf_handler			;
+
+%token	"D"		:	'"D"(?!{keyword_lhd})'		,1			%value	"TOK_DICT"			%action default_leaf_handler			;
+
+%token	"L"		:	'"L"(?!{keyword_lhd})'		,1			%value	"TOK_LIST"			%action default_leaf_handler			;
+
 
 
 %token	"..."		:	'"..."'	,2						%value	"TOK_ELLIPSIS"		%action default_leaf_handler			;	
@@ -787,36 +792,7 @@ init_declarator_list			:	init_declarator						%action	auto_return_null
 
 
 init_declarator			:	NAME	"=" 	expression				%action	on_declarator
-					|	NAME 	"="	aggregate_constructor		%action	on_declarator
 					|	NAME							%action	on_declarator
-					{:
-						tguParser_t 		*parser = (tguParser_t*)ctx;
-						tguSynNode_t		**ns = (tguSynNode_t**)nodes;
-						tguExpr_t		*expr;
-						AR_ASSERT(nodes != NULL && parser != NULL && (count == 1 || count == 3));
-
-						if(count == 1)
-						{
-							/*声明了一个null类型的变量*/
-							handle_symb_from_expression(parser, &ns[0]->token, NULL);
-						}else
-						{
-							if(ns[2] == NULL)
-							{
-								/*expression 或者 table_constructor出现错误*/
-								parser->has_error = true;
-								handle_symb_from_expression(parser, &ns[0]->token, NULL);
-							}else 
-							{
-								expr = ns[2]->expr;
-								ns[2]->expr = NULL;
-								AR_ASSERT(expr != NULL);
-								handle_symb_from_expression(parser, &ns[0]->token, expr);
-							}
-						}
-
-						return NULL;
-					:}
 					;
 
 
@@ -830,34 +806,16 @@ aggregate_constructor		:	table_constructor
 
 
 
-list_constructor			:	"["	list_field_list 	"]"
-					|	"["	"]"
-					|	"["	error "]"
+list_constructor			:	"L"		"{"	list_field_list 	optional_dot	"}"
+					|	"L"		"{"	"}"
+					|	"L"		"{"	error "}"
 					;
 
 
 
 
-list_field_list 			:	list_field_list  "," field			%action	on_list_field_list
-					{:
-						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
-						tguSynNode_t	*ret;
-						tguExpr_t		*lst;
-						AR_ASSERT(ns != NULL && count == 3);
-						if(ns[0] == NULL) return ns[2];
-						if(ns[2] == NULL) return ns[0];
-						AR_ASSERT(ns[0]->expr != NULL  && ns[2]->expr != NULL);
-
-						for(lst = ns[0]->expr; lst->next != NULL; lst = lst->next);
-						
-						lst->next = ns[2]->expr;
-						ns[2]->expr = NULL;
-						ret = ns[0];
-						ns[0] = NULL;
-						return ret;
-
-					:}
-					|	field						%action	auto_return_0
+list_field_list 			:	list_field_list  "," expression 		
+					|	expression 						
 					;
 
 
@@ -865,23 +823,9 @@ list_field_list 			:	list_field_list  "," field			%action	on_list_field_list
 
 
 
-table_constructor			:	"{"	table_field_list "}"		%action	on_table_constructor
-					|	"{"	"}"				%action	on_table_constructor
-					|	"{" error "}"				%action	on_table_constructor
-					{:
-						tguParser_t 	*parser = (tguParser_t*)ctx;
-						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
-						tguSynNode_t	*ret;
-						AR_ASSERT(parser != NULL && ns != NULL);
-						AR_ASSERT(count == 2 || count == 3);
-
-						AR_UNUSED(parser);
-						AR_UNUSED(ns);
-						
-						ret = NULL;
-						return ret;	
-						
-					:}
+table_constructor			:	"D"		"{"	table_field_list optional_dot	"}"		%action	on_table_constructor
+					|	"D"		"{"	"}"				%action	on_table_constructor
+					|	"D"		"{" error "}"				%action	on_table_constructor
 					;
 
 
@@ -890,20 +834,13 @@ table_field_list 			:	table_field_list ","		table_field
 					;
 
 
-
-table_field				:	expression 	":"	field 
+table_field				:	expression	":"	expression
 					;
 
 
-
-
-
-
-field 					:	expression			%action	auto_return_0
-					|	aggregate_constructor	%action	auto_return_0
+optional_dot				:	","
+					|	.
 					;
-
-
 
 /*************************************语句***************************************************/
 
@@ -1388,7 +1325,7 @@ do_while_statement			:	"do" enter_loop statement "while" "(" expression ")" leav
 
 
 
-for_statement			:	"for"	"("	NAME	"in"	expression	")" 	enter_loop  statement leave_loop	%action	on_for_statement
+for_statement			:	"for"	"("	for_in_expression	")" 	enter_loop  statement leave_loop	%action	on_for_statement
 				{:
 						tguSynNode_t		**ns = (tguSynNode_t**)nodes;
 						tguParser_t		*parser = (tguParser_t*)ctx;
@@ -1421,6 +1358,8 @@ for_statement			:	"for"	"("	NAME	"in"	expression	")" 	enter_loop  statement leav
 				:}
 				;
 
+for_in_expression		:	NAME "in" expression	
+				;
 
 
 enter_loop				:	.					%action on_enter_loop
@@ -1618,7 +1557,6 @@ expression				:	assignment_expression		%action auto_return_0
 
 
 assignment_expression		:	constant_expression						%action 	auto_return_0
-					|	unary_expression	"="	aggregate_constructor	%action	on_assignment_expression
 					|	unary_expression	"="	assignment_expression	%action	on_assignment_expression
 					{:
 						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
@@ -2323,39 +2261,32 @@ primary_expression		:	"(" expression")"							%action	on_lp_rp_expression
 						return ret;
 
 				:}
-
-				|	FLOAT_NUMBER			%action	on_constant_expression
-				|	INT_NUMBER			%action	on_constant_expression
-				|	STRING				%action	on_constant_expression
-				|	"true"				%action	on_constant_expression
-				|	"false"			%action	on_constant_expression
-				|	"null"				%action	on_constant_expression
-				{:
-						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
-						tguSynNode_t 	*ret;
-						tguParser_t	*parser = (tguParser_t*)ctx;
-						tguExpr_t		*expr;
-						AR_ASSERT(parser != NULL && ns != NULL && count == 1);
-						expr = make_constant_expression(parser, &ns[0]->token);
-						
-						ret = __create_synnode(TGU_NODE_EXPR_T, (void*)expr);
-						return ret;
-				:}
-				|	import_expression	%action	auto_return_0
+				|	constant			%action	auto_return_0
+				|	aggregate_constructor	%action	auto_return_0
+				|	import_expression		%action	auto_return_0
 				;
 
 
 
 /**************************************import_expression***********************************************/
 
+constant			:	FLOAT_NUMBER			%action	on_constant
+				|	INT_NUMBER			%action	on_constant
+				|	STRING				%action	on_constant
+				|	"true"				%action	on_constant
+				|	"false"			%action	on_constant
+				|	"null"				%action	on_constant
+				;
 
 
 
-import_expression		:	"import"	"(" STRING	")" 		%action	on_import_statement
+import_expression		:	"import"	"(" STRING 			")"			%action	on_import_statement
+				|	"import"	"(" STRING "," STRING	")"			%action	on_import_statement
 				{:
 					return NULL;
 				:}
 				;
+
 
 
 /*辅助函数*/

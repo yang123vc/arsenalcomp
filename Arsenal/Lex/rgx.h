@@ -126,14 +126,15 @@ struct __rgx_node_tag
 		size_t				ref_count;
 
 		union{
-		struct {
-				wchar_t	beg;
-				wchar_t end;
-		}range;
-		size_t					fix_count;
-		bool_t					negative_lookahead;
-		bool_t					non_greedy;
-		size_t					final_val;
+				struct {
+						wchar_t	beg;
+						wchar_t end;
+				}range;
+				
+				size_t					fix_count;
+				bool_t					negative_lookahead;
+				bool_t					non_greedy;
+				size_t					final_val;
 		};
 };
 

@@ -807,6 +807,7 @@ static psrNode_t* AR_STDCALL on_string_leaf_handler(const psrToken_t *tok,void *
 
 
 
+
 static struct {const wchar_t *name;
 size_t tokval;
 size_t lex_prec;
@@ -942,7 +943,9 @@ static psrNode_t* AR_STDCALL on_namelist_ellipsis(psrNode_t **nodes, size_t coun
 /*unary_expression	:	postfix_expression */
 /*postfix_expression	:	call_expression */
 /*postfix_expression	:	primary_expression */
+/*primary_expression	:	constant */
 /*primary_expression	:	import_expression */
+/*primary_expression	:	value_expression */
 /*expression_list	:	expression */
 static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
@@ -1093,13 +1096,17 @@ static psrNode_t* AR_STDCALL on_lp_rp_expression(psrNode_t **nodes, size_t count
 /*primary_expression	:	NAME */
 static psrNode_t* AR_STDCALL on_identifier_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*primary_expression	:	FLOAT_NUMBER */
-/*primary_expression	:	INT_NUMBER */
-/*primary_expression	:	STRING */
-/*primary_expression	:	true */
-/*primary_expression	:	false */
-/*primary_expression	:	null */
-static psrNode_t* AR_STDCALL on_constant_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*constant	:	FLOAT_NUMBER */
+/*constant	:	INT_NUMBER */
+/*constant	:	STRING */
+/*constant	:	true */
+/*constant	:	false */
+/*constant	:	null */
+static psrNode_t* AR_STDCALL on_constant(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*value_expression	:	var aggregate_constructor */
+/*value_expression	:	var constant */
+static psrNode_t* AR_STDCALL handle_value_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*import_expression	:	import ( STRING ) */
 static psrNode_t* AR_STDCALL on_import_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
@@ -1229,13 +1236,17 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"primary_expression  :  ( expression ) ", NULL, on_lp_rp_expression, 0},
 {L"primary_expression  :  ( error ) ", NULL, on_lp_rp_expression, 0},
 {L"primary_expression  :  NAME ", NULL, on_identifier_expression, 0},
-{L"primary_expression  :  FLOAT_NUMBER ", NULL, on_constant_expression, 0},
-{L"primary_expression  :  INT_NUMBER ", NULL, on_constant_expression, 0},
-{L"primary_expression  :  STRING ", NULL, on_constant_expression, 0},
-{L"primary_expression  :  true ", NULL, on_constant_expression, 0},
-{L"primary_expression  :  false ", NULL, on_constant_expression, 0},
-{L"primary_expression  :  null ", NULL, on_constant_expression, 0},
+{L"primary_expression  :  constant ", NULL, auto_return_0, 0},
 {L"primary_expression  :  import_expression ", NULL, auto_return_0, 0},
+{L"primary_expression  :  value_expression ", NULL, auto_return_0, 0},
+{L"constant  :  FLOAT_NUMBER ", NULL, on_constant, 0},
+{L"constant  :  INT_NUMBER ", NULL, on_constant, 0},
+{L"constant  :  STRING ", NULL, on_constant, 0},
+{L"constant  :  true ", NULL, on_constant, 0},
+{L"constant  :  false ", NULL, on_constant, 0},
+{L"constant  :  null ", NULL, on_constant, 0},
+{L"value_expression  :  var aggregate_constructor ", NULL, handle_value_expression, 0},
+{L"value_expression  :  var constant ", NULL, handle_value_expression, 0},
 {L"import_expression  :  import ( STRING ) ", NULL, on_import_statement, 0},
 {L"call_expression  :  postfix_expression ( expression_list ) ", NULL, on_call_expression, 0},
 {L"call_expression  :  postfix_expression ( error ) ", NULL, on_call_expression, 0},
@@ -1244,7 +1255,7 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"expression_list  :  expression_list , expression ", NULL, on_expression_list, 0}
 };
 
-#define __RULE_COUNT__ ((size_t)126)
+#define __RULE_COUNT__ ((size_t)130)
 #define START_RULE L"program"
 
 static lex_t*	__build_lex()													
@@ -1541,7 +1552,9 @@ static psrNode_t* AR_STDCALL on_namelist_ellipsis(psrNode_t **nodes, size_t coun
 /*unary_expression	:	postfix_expression */
 /*postfix_expression	:	call_expression */
 /*postfix_expression	:	primary_expression */
+/*primary_expression	:	constant */
 /*primary_expression	:	import_expression */
+/*primary_expression	:	value_expression */
 /*expression_list	:	expression */
 static psrNode_t* AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
@@ -2725,25 +2738,25 @@ static psrNode_t* AR_STDCALL on_identifier_expression(psrNode_t **nodes, size_t 
 
 
 
-/*primary_expression	:	FLOAT_NUMBER */
-/*primary_expression	:	INT_NUMBER */
-/*primary_expression	:	STRING */
-/*primary_expression	:	true */
-/*primary_expression	:	false */
-/*primary_expression	:	null */
-static psrNode_t* AR_STDCALL on_constant_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*constant	:	FLOAT_NUMBER */
+/*constant	:	INT_NUMBER */
+/*constant	:	STRING */
+/*constant	:	true */
+/*constant	:	false */
+/*constant	:	null */
+static psrNode_t* AR_STDCALL on_constant(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
-	 { 
-						tguSynNode_t	**ns = (tguSynNode_t**)nodes;
-						tguSynNode_t 	*ret;
-						tguParser_t	*parser = (tguParser_t*)ctx;
-						tguExpr_t		*expr;
-						AR_ASSERT(parser != NULL && ns != NULL && count == 1);
-						expr = make_constant_expression(parser, &ns[0]->token);
-						
-						ret = __create_synnode(TGU_NODE_EXPR_T, (void*)expr);
-						return ret;
-				 }
+	 return NULL;
+}
+
+
+
+
+/*value_expression	:	var aggregate_constructor */
+/*value_expression	:	var constant */
+static psrNode_t* AR_STDCALL handle_value_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+	 return NULL;
 }
 
 

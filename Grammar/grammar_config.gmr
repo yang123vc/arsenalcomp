@@ -79,20 +79,30 @@
 
 
 %token	"."		:	'"."'
-				;
+			;
 
 %token	","		:	'","'
-				;
+			;
 
 %token	":"		:	'":"'
-				;
+			;
 
 %token	";"		:	'";"'
-				;
+			;
 
 %token	"|"		:	'"|"'
-				;
+			;
 
+
+%token	ATTR		:	'"%attribute"'
+			;
+
+
+%token	"("		:	'"("'
+			;
+
+%token	")"		:	'")"'
+			;
 
 
 %start			program	;
@@ -170,12 +180,17 @@ start_def			:  		START LEXEME
 				;
 
 
-code_decl			:		CODE LEXEME CODE_BLOCK	code_decl_attr
-				|		CODE CODE_BLOCK		code_decl_attr
+code_decl			:		CODE decl_attr	LEXEME CODE_BLOCK
+				|		CODE decl_attr	CODE_BLOCK
 				;
 
-code_decl_attr		:		term_list
+
+decl_attr			:		ATTR "("	attr_list	")"
 				|		.
+				;
+
+attr_list			:		attr_list "," LEXEME 
+				|		LEXEME 
 				;
 
 
