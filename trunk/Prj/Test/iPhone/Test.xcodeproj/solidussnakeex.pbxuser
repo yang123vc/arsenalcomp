@@ -36,7 +36,7 @@
 		};
 	};
 	29B97313FDCFA39411CA2CEA /* Project object */ = {
-		activeBuildConfigurationName = Debug;
+		activeBuildConfigurationName = Release;
 		activeExecutable = BE4BD41913FD4295005AEAF5 /* Test */;
 		activeSDKPreference = iphonesimulator4.3;
 		activeTarget = 1D6058900D05DD3D006BFB54 /* Test */;
@@ -51,6 +51,20 @@
 			BE4BD41913FD4295005AEAF5 /* Test */,
 		);
 		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXBookmarksDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXBookmarksDataSource_NameID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					200,
+					200,
+					907,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXBookmarksDataSource_LocationID,
+					PBXBookmarksDataSource_NameID,
+					PBXBookmarksDataSource_CommentsID,
+				);
+			};
 			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
 				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
@@ -95,15 +109,15 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 335391334;
-			PBXWorkspaceStateSaveDate = 335391334;
+			PBXPerProjectTemplateStateSaveDate = 337822964;
+			PBXWorkspaceStateSaveDate = 337822964;
 		};
 		perUserProjectItems = {
 			BE255A4413FDAADC00879039 /* PBXTextBookmark */ = BE255A4413FDAADC00879039 /* PBXTextBookmark */;
 			BE255AA513FDAF5000879039 /* PBXTextBookmark */ = BE255AA513FDAF5000879039 /* PBXTextBookmark */;
 			BE255AA613FDAF5000879039 /* PBXTextBookmark */ = BE255AA613FDAF5000879039 /* PBXTextBookmark */;
-			BE255B0013FDB3AF00879039 /* PBXTextBookmark */ = BE255B0013FDB3AF00879039 /* PBXTextBookmark */;
-			BE255B1713FDB4AC00879039 /* PBXTextBookmark */ = BE255B1713FDB4AC00879039 /* PBXTextBookmark */;
+			BE3E43941422C4F90082D3D5 /* PBXTextBookmark */ = BE3E43941422C4F90082D3D5 /* PBXTextBookmark */;
+			BE3E43C21422C5E60082D3D5 /* PBXTextBookmark */ = BE3E43C21422C5E60082D3D5 /* PBXTextBookmark */;
 			BEB2E77A13FD718200D71C25 /* PBXTextBookmark */ = BEB2E77A13FD718200D71C25 /* PBXTextBookmark */;
 			BEB2E91113FD808C00D71C25 /* PBXTextBookmark */ = BEB2E91113FD808C00D71C25 /* PBXTextBookmark */;
 			BEB2E91313FD808C00D71C25 /* PBXTextBookmark */ = BEB2E91313FD808C00D71C25 /* PBXTextBookmark */;
@@ -115,8 +129,8 @@
 	29B97316FDCFA39411CA2CEA /* main.m */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {1619, 1005}}";
-			sepNavSelRange = "{432, 0}";
-			sepNavVisRange = "{164, 236}";
+			sepNavSelRange = "{290, 0}";
+			sepNavVisRange = "{585, 223}";
 		};
 	};
 	BE255A4413FDAADC00879039 /* PBXTextBookmark */ = {
@@ -149,25 +163,25 @@
 		vrLen = 876;
 		vrLoc = 639;
 	};
-	BE255B0013FDB3AF00879039 /* PBXTextBookmark */ = {
+	BE3E43941422C4F90082D3D5 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = 29B97316FDCFA39411CA2CEA /* main.m */;
-		name = "main.m: 59";
+		name = "main.m: 26";
 		rLen = 0;
-		rLoc = 663;
+		rLoc = 290;
 		rType = 0;
-		vrLen = 78;
-		vrLoc = 360;
+		vrLen = 223;
+		vrLoc = 585;
 	};
-	BE255B1713FDB4AC00879039 /* PBXTextBookmark */ = {
+	BE3E43C21422C5E60082D3D5 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = 29B97316FDCFA39411CA2CEA /* main.m */;
-		name = "main.m: 59";
+		name = "main.m: 40";
 		rLen = 0;
-		rLoc = 663;
+		rLoc = 430;
 		rType = 0;
-		vrLen = 425;
-		vrLoc = 162;
+		vrLen = 445;
+		vrLoc = 363;
 	};
 	BE4BD41913FD4295005AEAF5 /* Test */ = {
 		isa = PBXExecutable;
@@ -273,7 +287,7 @@
 		ignoreCount = 0;
 		lineNumber = 538;
 		location = Test;
-		modificationTime = 335392198.096322;
+		modificationTime = 335392198.0963219;
 		originalNumberOfMultipleMatches = 1;
 		state = 1;
 	};
@@ -283,10 +297,5 @@
 		name = rgx_misc.c;
 		path = /Users/solidussnakeex/Desktop/Programming/Arsenal/Arsenal/Lex/rgx_misc.c;
 		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1619, 9420}}";
-			sepNavSelRange = "{10686, 0}";
-			sepNavVisRange = "{10662, 400}";
-		};
 	};
 }
