@@ -120,13 +120,14 @@
 					PBXFileDataSource_FiletypeID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 337826379;
-			PBXWorkspaceStateSaveDate = 337826379;
+			PBXPerProjectTemplateStateSaveDate = 337827367;
+			PBXWorkspaceStateSaveDate = 337827367;
 		};
 		perUserProjectItems = {
 			BEBAE28113F2943900E64F88 /* PBXTextBookmark */ = BEBAE28113F2943900E64F88 /* PBXTextBookmark */;
-			BEE65A211422D399009ED19E /* PBXTextBookmark */ = BEE65A211422D399009ED19E /* PBXTextBookmark */;
-			BEE65A341422D519009ED19E /* PBXTextBookmark */ = BEE65A341422D519009ED19E /* PBXTextBookmark */;
+			BEE65A7E1422D658009ED19E /* PBXTextBookmark */ = BEE65A7E1422D658009ED19E /* PBXTextBookmark */;
+			BEE65A811422D658009ED19E /* PBXTextBookmark */ = BEE65A811422D658009ED19E /* PBXTextBookmark */;
+			BEE65A821422D713009ED19E /* PBXTextBookmark */ = BEE65A821422D713009ED19E /* PBXTextBookmark */;
 		};
 		sourceControlManager = BE582BCE127D408C0018B891 /* Source Control */;
 		userBuildSettings = {
@@ -136,9 +137,9 @@
 	};
 	08FB7796FE84155DC02AAC07 /* main.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1441, 1995}}";
-			sepNavSelRange = "{807, 0}";
-			sepNavVisRange = "{747, 482}";
+			sepNavIntBoundsRect = "{{0, 0}, {1441, 1890}}";
+			sepNavSelRange = "{887, 0}";
+			sepNavVisRange = "{747, 480}";
 			sepNavWindowFrame = "{{294, 91}, {750, 787}}";
 		};
 	};
@@ -211,24 +212,40 @@
 		path = "/Developer/SDKs/MacOSX10.6.sdk/usr/include/c++/4.2.1/iostream";
 		sourceTree = "<absolute>";
 	};
-	BEE65A211422D399009ED19E /* PBXTextBookmark */ = {
+	BEE65A7E1422D658009ED19E /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
-		fRef = 08FB7796FE84155DC02AAC07 /* main.cpp */;
-		name = "main.cpp: 119";
+		fRef = BEE65A7F1422D658009ED19E /* thread_apple.h */;
+		name = "thread_apple.h: 127";
 		rLen = 0;
-		rLoc = 1609;
+		rLoc = 2460;
 		rType = 0;
-		vrLen = 210;
-		vrLoc = 1266;
+		vrLen = 432;
+		vrLoc = 2232;
 	};
-	BEE65A341422D519009ED19E /* PBXTextBookmark */ = {
+	BEE65A7F1422D658009ED19E /* thread_apple.h */ = {
+		isa = PBXFileReference;
+		name = thread_apple.h;
+		path = /Users/solidussnakeex/Desktop/Programming/Arsenal/Arsenal/Common/thread_apple.h;
+		sourceTree = "<absolute>";
+	};
+	BEE65A811422D658009ED19E /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = 08FB7796FE84155DC02AAC07 /* main.cpp */;
-		name = "main.cpp: 59";
+		name = "main.cpp: 71";
 		rLen = 0;
-		rLoc = 807;
+		rLoc = 930;
 		rType = 0;
-		vrLen = 482;
+		vrLen = 243;
+		vrLoc = 810;
+	};
+	BEE65A821422D713009ED19E /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 08FB7796FE84155DC02AAC07 /* main.cpp */;
+		name = "main.cpp: 68";
+		rLen = 0;
+		rLoc = 887;
+		rType = 0;
+		vrLen = 480;
 		vrLoc = 747;
 	};
 }

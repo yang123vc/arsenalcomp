@@ -126,6 +126,8 @@ void			AR_Sleep(size_t millisecond)
 {
 		long m = (long)millisecond;
 		
+		usleep(m * 1000);
+#if(0)
 		struct timeval tv;
 		tv.tv_sec = m / 1000;
 		tv.tv_usec = (m % 1000) * 1000;
@@ -135,6 +137,7 @@ void			AR_Sleep(size_t millisecond)
 		{
 				AR_error(AR_ERR_WARNING, L"AR_Sleep failed\r\n");
 		}
+#endif
 }
 
 
