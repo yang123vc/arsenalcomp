@@ -110,15 +110,14 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 337827321;
-			PBXWorkspaceStateSaveDate = 337827321;
+			PBXPerProjectTemplateStateSaveDate = 337829038;
+			PBXWorkspaceStateSaveDate = 337829038;
 		};
 		perUserProjectItems = {
 			BE01B82B13F21EA30031FB4C /* PBXTextBookmark */ = BE01B82B13F21EA30031FB4C /* PBXTextBookmark */;
 			BE01B82C13F21EA30031FB4C /* PBXTextBookmark */ = BE01B82C13F21EA30031FB4C /* PBXTextBookmark */;
 			BEA22E25140ACC63000502E2 /* PBXTextBookmark */ = BEA22E25140ACC63000502E2 /* PBXTextBookmark */;
 			BEAE1C6313F248B90088C3A4 /* PBXTextBookmark */ = BEAE1C6313F248B90088C3A4 /* PBXTextBookmark */;
-			BEAE1C6413F248B90088C3A4 /* PBXTextBookmark */ = BEAE1C6413F248B90088C3A4 /* PBXTextBookmark */;
 			BEAE1C6513F248B90088C3A4 /* PBXTextBookmark */ = BEAE1C6513F248B90088C3A4 /* PBXTextBookmark */;
 			BEAE1C6913F248B90088C3A4 /* PBXTextBookmark */ = BEAE1C6913F248B90088C3A4 /* PBXTextBookmark */;
 			BEAE1C6A13F248B90088C3A4 /* PBXTextBookmark */ = BEAE1C6A13F248B90088C3A4 /* PBXTextBookmark */;
@@ -141,8 +140,9 @@
 			BEE65A3F1422D51E009ED19E /* PBXTextBookmark */ = BEE65A3F1422D51E009ED19E /* PBXTextBookmark */;
 			BEE65A401422D51E009ED19E /* PBXTextBookmark */ = BEE65A401422D51E009ED19E /* PBXTextBookmark */;
 			BEE65A8D1422D718009ED19E /* PBXTextBookmark */ = BEE65A8D1422D718009ED19E /* PBXTextBookmark */;
-			BEE65A8E1422D718009ED19E /* PBXTextBookmark */ = BEE65A8E1422D718009ED19E /* PBXTextBookmark */;
-			BEE65A8F1422D718009ED19E /* PBXTextBookmark */ = BEE65A8F1422D718009ED19E /* PBXTextBookmark */;
+			BEE65ABA1422DD16009ED19E /* PBXTextBookmark */ = BEE65ABA1422DD16009ED19E /* PBXTextBookmark */;
+			BEE65ABB1422DD16009ED19E /* PBXTextBookmark */ = BEE65ABB1422DD16009ED19E /* PBXTextBookmark */;
+			BEE65ABC1422DD16009ED19E /* PBXTextBookmark */ = BEE65ABC1422DD16009ED19E /* PBXTextBookmark */;
 		};
 		sourceControlManager = BE4B6962127D27FF00F46F5C /* Source Control */;
 		userBuildSettings = {
@@ -205,6 +205,11 @@
 		name = Arsenal.c;
 		path = /Users/solidussnakeex/Desktop/Programming/Arsenal/Arsenal/Arsenal.c;
 		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1372, 1350}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 803}";
+		};
 	};
 	BE86A01813F13B8B0028846E /* config.h */ = {
 		isa = PBXFileReference;
@@ -286,9 +291,9 @@
 	};
 	BE88D04313F172B300871F83 /* Arsenal.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1360, 600}}";
-			sepNavSelRange = "{0, 0}";
-			sepNavVisRange = "{0, 750}";
+			sepNavIntBoundsRect = "{{0, 0}, {1372, 600}}";
+			sepNavSelRange = "{499, 0}";
+			sepNavVisRange = "{0, 774}";
 		};
 	};
 	BE88D04713F172B300871F83 /* byteorder.c */ = {
@@ -350,9 +355,9 @@
 	};
 	BE88D05513F172B300871F83 /* thread_apple.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1372, 2535}}";
-			sepNavSelRange = "{2512, 0}";
-			sepNavVisRange = "{2182, 761}";
+			sepNavIntBoundsRect = "{{0, 0}, {1372, 2520}}";
+			sepNavSelRange = "{2663, 0}";
+			sepNavVisRange = "{2182, 759}";
 		};
 	};
 	BE88D05613F172B300871F83 /* thread_posix.h */ = {
@@ -424,16 +429,6 @@
 		rType = 0;
 		vrLen = 2320;
 		vrLoc = 944;
-	};
-	BEAE1C6413F248B90088C3A4 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = BE86A01013F13B8B0028846E /* Arsenal.c */;
-		name = "Arsenal.c: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 1057;
-		vrLoc = 0;
 	};
 	BEAE1C6513F248B90088C3A4 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -662,24 +657,34 @@
 		vrLen = 639;
 		vrLoc = 692;
 	};
-	BEE65A8E1422D718009ED19E /* PBXTextBookmark */ = {
+	BEE65ABA1422DD16009ED19E /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = BE88D05513F172B300871F83 /* thread_apple.h */;
-		name = "thread_apple.h: 147";
-		rLen = 23;
-		rLoc = 2915;
-		rType = 0;
-		vrLen = 684;
-		vrLoc = 2371;
-	};
-	BEE65A8F1422D718009ED19E /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = BE88D05513F172B300871F83 /* thread_apple.h */;
-		name = "thread_apple.h: 129";
+		name = "thread_apple.h: 137";
 		rLen = 0;
-		rLoc = 2512;
+		rLoc = 2663;
 		rType = 0;
-		vrLen = 761;
+		vrLen = 759;
 		vrLoc = 2182;
+	};
+	BEE65ABB1422DD16009ED19E /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = BE86A01013F13B8B0028846E /* Arsenal.c */;
+		name = "Arsenal.c: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 803;
+		vrLoc = 0;
+	};
+	BEE65ABC1422DD16009ED19E /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = BE88D04313F172B300871F83 /* Arsenal.h */;
+		name = "Arsenal.h: 15";
+		rLen = 0;
+		rLoc = 499;
+		rType = 0;
+		vrLen = 774;
+		vrLoc = 0;
 	};
 }
