@@ -60,10 +60,18 @@ void			AR_YieldThread()
 
 void			AR_Sleep(size_t millisecond)
 {
-		struct  timeval tv;
-		tv.tv_sec = 0LL;
-		tv.tv_usec = (int_64_t)millisecond * 1000LL;
-		select(0,NULL,NULL,NULL,&tv);
+		long m = (long)millisecond;
+		
+		struct timeval tv;
+		tv.tv_sec = m / 1000;
+		tv.tv_usec = (m % 1000) * 1000;
+		
+		int ret = select(0,NULL,NULL,NULL,&tv);
+		if(ret == -1)
+		{
+				AR_error(AR_ERR_WARNING, L"AR_Sleep failed\r\n");
+		}
+
 }
 
 void			AR_InitSpinLock(arSpinLock_t *lock)

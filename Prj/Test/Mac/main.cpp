@@ -26,7 +26,7 @@ void text_test_save()
 		}
 		
 		
-		if(!AR_SaveBomTextFile(OUTPUT_FILE, OUTPUT_TYPE, AR_GetStrString(str)))
+		if(!AR_SaveBomTextFile(OUTPUT_FILE, OUTPUT_TYPE, AR_GetStringCString(str)))
 		{
 				AR_ASSERT(false);
 		}
@@ -39,7 +39,7 @@ void text_test_save()
 		
 		AR_ASSERT(bom == OUTPUT_TYPE);
 		
-		wprintf(L"%ls\r\n", AR_GetStrString(str));
+		wprintf(L"%ls\r\n", AR_GetStringCString(str));
 				
 		AR_DestroyString(str);
 		
@@ -61,6 +61,22 @@ void AR_Test2()
 
 
 
+void AR_Test3()
+{
+		uint_64_t beg,end;
+		for(size_t i = 0; i < 10; ++i)
+		{
+				
+				beg = AR_GetTime_Milliseconds();
+				AR_Sleep(999);
+				end = AR_GetTime_Milliseconds();
+				
+				AR_printf(L"elapsed == %qu\r\n", end - beg);
+				
+		}
+}
+
+
 
 
 void AR_STDCALL tiny_error(int_t level, const wchar_t* msg, void *ctx)
@@ -74,8 +90,6 @@ void AR_STDCALL tiny_printf(const wchar_t *msg, void *ctx)
 		
         wprintf(L"%ls\r\n", msg);
 }
-
-
 
 
 int  main()
@@ -92,7 +106,8 @@ int  main()
 		
         Arsenal_Init(&ai);
 		
-        AR_Test2();
+        //AR_Test2();
+		AR_Test3();
 		
 		
 		Arsenal_UnInit();
@@ -101,7 +116,7 @@ int  main()
 		printf("done\r\n");
 		
 		
-		getchar();
+		//getchar();
 		
 		return 0;
 		

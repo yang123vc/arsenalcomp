@@ -76,6 +76,7 @@
 		BE01B8D213F220130031FB4C /* serializer.h in Headers */ = {isa = PBXBuildFile; fileRef = BE01B88F13F220130031FB4C /* serializer.h */; };
 		BE01B8D313F220130031FB4C /* tools.c in Sources */ = {isa = PBXBuildFile; fileRef = BE01B89013F220130031FB4C /* tools.c */; };
 		BE01B8D413F220130031FB4C /* tools.h in Headers */ = {isa = PBXBuildFile; fileRef = BE01B89113F220130031FB4C /* tools.h */; };
+		BE3E439A1422C51B0082D3D5 /* lex_misc.c in Sources */ = {isa = PBXBuildFile; fileRef = BE3E43991422C51B0082D3D5 /* lex_misc.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -149,6 +150,7 @@
 		BE01B88F13F220130031FB4C /* serializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = serializer.h; sourceTree = "<group>"; };
 		BE01B89013F220130031FB4C /* tools.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tools.c; sourceTree = "<group>"; };
 		BE01B89113F220130031FB4C /* tools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tools.h; sourceTree = "<group>"; };
+		BE3E43991422C51B0082D3D5 /* lex_misc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lex_misc.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -228,6 +230,7 @@
 		BE01B86113F220120031FB4C /* Lex */ = {
 			isa = PBXGroup;
 			children = (
+				BE3E43991422C51B0082D3D5 /* lex_misc.c */,
 				BE01B86213F220120031FB4C /* lex.c */,
 				BE01B86313F220120031FB4C /* lex.h */,
 				BE01B86413F220120031FB4C /* match.c */,
@@ -425,6 +428,7 @@
 				BE01B8CF13F220130031FB4C /* iniobj.c in Sources */,
 				BE01B8D113F220130031FB4C /* serializer.c in Sources */,
 				BE01B8D313F220130031FB4C /* tools.c in Sources */,
+				BE3E439A1422C51B0082D3D5 /* lex_misc.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

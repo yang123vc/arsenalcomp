@@ -143,6 +143,8 @@
 		BE88D10D13F172B300871F83 /* serializer.h in Headers */ = {isa = PBXBuildFile; fileRef = BE88D08713F172B300871F83 /* serializer.h */; };
 		BE88D10E13F172B300871F83 /* tools.c in Sources */ = {isa = PBXBuildFile; fileRef = BE88D08813F172B300871F83 /* tools.c */; };
 		BE88D10F13F172B300871F83 /* tools.h in Headers */ = {isa = PBXBuildFile; fileRef = BE88D08913F172B300871F83 /* tools.h */; };
+		BEC0D04C1422C40900D35745 /* lex_misc.c in Sources */ = {isa = PBXBuildFile; fileRef = BEC0D04B1422C40900D35745 /* lex_misc.c */; };
+		BEC0D04D1422C40900D35745 /* lex_misc.c in Sources */ = {isa = PBXBuildFile; fileRef = BEC0D04B1422C40900D35745 /* lex_misc.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -218,6 +220,7 @@
 		BE88D08713F172B300871F83 /* serializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = serializer.h; sourceTree = "<group>"; };
 		BE88D08813F172B300871F83 /* tools.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tools.c; sourceTree = "<group>"; };
 		BE88D08913F172B300871F83 /* tools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tools.h; sourceTree = "<group>"; };
+		BEC0D04B1422C40900D35745 /* lex_misc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lex_misc.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -306,6 +309,7 @@
 		BE88D05913F172B300871F83 /* Lex */ = {
 			isa = PBXGroup;
 			children = (
+				BEC0D04B1422C40900D35745 /* lex_misc.c */,
 				BE88D05A13F172B300871F83 /* lex.c */,
 				BE88D05B13F172B300871F83 /* lex.h */,
 				BE88D05C13F172B300871F83 /* match.c */,
@@ -555,6 +559,7 @@
 				BE88D0C713F172B300871F83 /* iniobj.c in Sources */,
 				BE88D0C913F172B300871F83 /* serializer.c in Sources */,
 				BE88D0CB13F172B300871F83 /* tools.c in Sources */,
+				BEC0D04C1422C40900D35745 /* lex_misc.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -604,6 +609,7 @@
 				BE88D10A13F172B300871F83 /* iniobj.c in Sources */,
 				BE88D10C13F172B300871F83 /* serializer.c in Sources */,
 				BE88D10E13F172B300871F83 /* tools.c in Sources */,
+				BEC0D04D1422C40900D35745 /* lex_misc.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -620,6 +626,7 @@
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -639,6 +646,7 @@
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
 				GCC_ENABLE_CPP_RTTI = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = NDEBUG;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
@@ -662,7 +670,7 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_OBJC_CALL_CXX_CDTORS = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INSTALL_PATH = /usr/local/lib;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
@@ -686,7 +694,7 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_OBJC_CALL_CXX_CDTORS = NO;
 				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INSTALL_PATH = /usr/local/lib;
 				ONLY_ACTIVE_ARCH = NO;
 				PREBINDING = NO;
