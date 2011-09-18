@@ -142,7 +142,11 @@ static lex_t*	__build_lex()
 						return NULL;											
 				}																
 		}																		
-		return lex;																
+		if(!Lex_GenerateTransTable(lex))													
+		{																					
+				AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);		
+		}																					
+		return lex;																			
 }
 
 static psrGrammar_t*	__build_grammar(const psrHandler_t	*handler)															
@@ -242,37 +246,37 @@ static psrNode_t* AR_STDCALL default_leaf_handler(const psrToken_t *tok,void *ct
 static psrNode_t* AR_STDCALL on_calc(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 { 
-		int_t l, r;
-		size_t op;
-		AR_ASSERT(nodes != NULL && count == 3);
-		l = (int_t)nodes[0];
-		op = (size_t)nodes[1];
-		r = (int_t)nodes[2];
-		switch(op)
-		{
-		case TOK_ADD:
-			return (psrNode_t*)(l + r);
-		case TOK_MINUS:
-			return (psrNode_t*)(l - r);
-		case TOK_MUL:
-			return (psrNode_t*)(l * r);
-		case TOK_DIV:
-		case TOK_MOD:
-		{
-			if(r == 0)
+			int_t l, r;
+			size_t op;
+			AR_ASSERT(nodes != NULL && count == 3);
+			l = (int_t)nodes[0];
+			op = (size_t)nodes[1];
+			r = (int_t)nodes[2];
+			switch(op)
 			{
-				*(bool_t*)ctx = false;
-				return (psrNode_t*)0;
-			}else
+			case TOK_ADD:
+				return (psrNode_t*)(l + r);
+			case TOK_MINUS:
+				return (psrNode_t*)(l - r);
+			case TOK_MUL:
+				return (psrNode_t*)(l * r);
+			case TOK_DIV:
+			case TOK_MOD:
 			{
-				return (psrNode_t*) (op == TOK_MOD ? (l % r) : (l / r));
+				if(r == 0)
+				{
+					*(bool_t*)ctx = false;
+					return (psrNode_t*)0;
+				}else
+				{
+					return (psrNode_t*) (op == TOK_MOD ? (l % r) : (l / r));
+				}
 			}
-		}
-		default:
-			AR_ASSERT(false);
-			return (psrNode_t*)0;
-		}
-	 }
+			default:
+				AR_ASSERT(false);
+				return (psrNode_t*)0;
+			}
+		 }
 }
 
 
@@ -282,9 +286,9 @@ static psrNode_t* AR_STDCALL on_calc(psrNode_t **nodes, size_t count, const wcha
 static psrNode_t* AR_STDCALL auto_return_1(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 { 
-		return nodes[1];
+				return nodes[1];
 
-	 }
+		 }
 }
 
 
@@ -294,11 +298,11 @@ static psrNode_t* AR_STDCALL auto_return_1(psrNode_t **nodes, size_t count, cons
 static psrNode_t* AR_STDCALL on_negative_num(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 	 { 
-		int_t n;
-		AR_ASSERT(nodes != NULL && count == 2);
-		n = (int_t)nodes[1];
-		return (psrNode_t*)-n;
-	 }
+			int_t n;
+			AR_ASSERT(nodes != NULL && count == 2);
+			n = (int_t)nodes[1];
+			return (psrNode_t*)-n;
+		 }
 }
 
 
