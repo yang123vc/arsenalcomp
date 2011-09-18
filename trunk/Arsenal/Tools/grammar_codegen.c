@@ -60,7 +60,11 @@ L"						AR_ASSERT(false);										\n"
 L"						return NULL;											\n"
 L"				}																\n"
 L"		}																		\n"
-L"		return lex;																\n"
+L"		if(!Lex_GenerateTransTable(lex))													\n"
+L"		{																					\n"
+L"				AR_CHECK(false, L\"Arsenal internal error : %hs\\r\\n\", AR_FUNC_NAME);		\n"
+L"		}																					\n"
+L"		return lex;																			\n"
 L"}"
 ;
 
