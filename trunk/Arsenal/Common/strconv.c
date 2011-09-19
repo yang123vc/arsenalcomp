@@ -414,7 +414,20 @@ const char *__get_locale_str_for_iconv(arCodePage_t cp)
 		}
 }
 
-#define UNICODE_ENCODING_NAME	"wchar_t"
+
+#if(OS_TYPE ==  OS_IOS) || (OS_TYPE == OS_MAC_OS_X)
+
+
+		#if defined(ARCH_LITTLE_ENDIAN)
+				#define UNICODE_ENCODING_NAME	"UCS-4LE"
+		#else
+				#define UNICODE_ENCODING_NAME	"UCS-4"
+		#endif
+
+#else
+		#define UNICODE_ENCODING_NAME	"wchar_t"
+#endif
+
 
 
 

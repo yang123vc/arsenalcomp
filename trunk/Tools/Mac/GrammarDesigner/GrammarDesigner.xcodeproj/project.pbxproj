@@ -14,6 +14,15 @@
 		8D15AC310486D014006FF6A4 /* GrammarDesignerDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4ACFDCFA73011CA2CEA /* GrammarDesignerDocument.m */; settings = {ATTRIBUTES = (); }; };
 		8D15AC320486D014006FF6A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4B0FDCFA73011CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
+		BE47DD1314269558006FE4E8 /* ARAsyncQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = BE47DD0914269558006FE4E8 /* ARAsyncQueue.m */; };
+		BE47DD1414269558006FE4E8 /* ARException.m in Sources */ = {isa = PBXBuildFile; fileRef = BE47DD0B14269558006FE4E8 /* ARException.m */; };
+		BE47DD1514269558006FE4E8 /* ARNet.m in Sources */ = {isa = PBXBuildFile; fileRef = BE47DD0D14269558006FE4E8 /* ARNet.m */; };
+		BE47DD1614269558006FE4E8 /* ARSynthesizer.m in Sources */ = {isa = PBXBuildFile; fileRef = BE47DD0E14269558006FE4E8 /* ARSynthesizer.m */; };
+		BE47DD1714269558006FE4E8 /* ARThread.m in Sources */ = {isa = PBXBuildFile; fileRef = BE47DD1014269558006FE4E8 /* ARThread.m */; };
+		BE47DD1814269558006FE4E8 /* Common.m in Sources */ = {isa = PBXBuildFile; fileRef = BE47DD1214269558006FE4E8 /* Common.m */; };
+		BE47DD1B1426956D006FE4E8 /* ArsenalOC.m in Sources */ = {isa = PBXBuildFile; fileRef = BE47DD1A1426956D006FE4E8 /* ArsenalOC.m */; };
+		BE47DE081426B2E8006FE4E8 /* ARUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = BE47DE071426B2E8006FE4E8 /* ARUtility.m */; };
+		BE47DE391426B84A006FE4E8 /* ApplicationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BE47DE381426B84A006FE4E8 /* ApplicationDelegate.m */; };
 		BEC0D01F1422C35000D35745 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BEC0D01E1422C35000D35745 /* libiconv.dylib */; };
 		BEC0D0211422C35900D35745 /* libpthread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BEC0D0201422C35900D35745 /* libpthread.dylib */; };
 		BEC0D0251422C37A00D35745 /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BEC0D0241422C37A00D35745 /* Arsenal.a */; };
@@ -34,6 +43,24 @@
 		2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		8D15AC360486D014006FF6A4 /* GrammarDesigner-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GrammarDesigner-Info.plist"; sourceTree = "<group>"; };
 		8D15AC370486D014006FF6A4 /* GrammarDesigner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GrammarDesigner.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BE47DD0914269558006FE4E8 /* ARAsyncQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ARAsyncQueue.m; path = Helper/ARAsyncQueue.m; sourceTree = "<group>"; };
+		BE47DD0A14269558006FE4E8 /* ARException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ARException.h; path = Helper/ARException.h; sourceTree = "<group>"; };
+		BE47DD0B14269558006FE4E8 /* ARException.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ARException.m; path = Helper/ARException.m; sourceTree = "<group>"; };
+		BE47DD0C14269558006FE4E8 /* ARNet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ARNet.h; path = Helper/ARNet.h; sourceTree = "<group>"; };
+		BE47DD0D14269558006FE4E8 /* ARNet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ARNet.m; path = Helper/ARNet.m; sourceTree = "<group>"; };
+		BE47DD0E14269558006FE4E8 /* ARSynthesizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ARSynthesizer.m; path = Helper/ARSynthesizer.m; sourceTree = "<group>"; };
+		BE47DD0F14269558006FE4E8 /* ARThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ARThread.h; path = Helper/ARThread.h; sourceTree = "<group>"; };
+		BE47DD1014269558006FE4E8 /* ARThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ARThread.m; path = Helper/ARThread.m; sourceTree = "<group>"; };
+		BE47DD1114269558006FE4E8 /* Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Common.h; path = Helper/Common.h; sourceTree = "<group>"; };
+		BE47DD1214269558006FE4E8 /* Common.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Common.m; path = Helper/Common.m; sourceTree = "<group>"; };
+		BE47DD191426956D006FE4E8 /* ArsenalOC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ArsenalOC.h; path = Helper/ArsenalOC.h; sourceTree = "<group>"; };
+		BE47DD1A1426956D006FE4E8 /* ArsenalOC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ArsenalOC.m; path = Helper/ArsenalOC.m; sourceTree = "<group>"; };
+		BE47DD20142695A1006FE4E8 /* stdheader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stdheader.h; sourceTree = "<group>"; };
+		BE47DD21142695E1006FE4E8 /* ARHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ARHelper.h; path = Helper/ARHelper.h; sourceTree = "<group>"; };
+		BE47DE061426B2E8006FE4E8 /* ARUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ARUtility.h; path = Helper/ARUtility.h; sourceTree = "<group>"; };
+		BE47DE071426B2E8006FE4E8 /* ARUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ARUtility.m; path = Helper/ARUtility.m; sourceTree = "<group>"; };
+		BE47DE371426B84A006FE4E8 /* ApplicationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplicationDelegate.h; sourceTree = "<group>"; };
+		BE47DE381426B84A006FE4E8 /* ApplicationDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplicationDelegate.m; sourceTree = "<group>"; };
 		BEC0D01E1422C35000D35745 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
 		BEC0D0201422C35900D35745 /* libpthread.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpthread.dylib; path = usr/lib/libpthread.dylib; sourceTree = SDKROOT; };
 		BEC0D0241422C37A00D35745 /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = Arsenal.a; path = /Users/solidussnakeex/Desktop/Programming/Arsenal/Binary/LibDebug/Arsenal.a; sourceTree = "<absolute>"; };
@@ -83,6 +110,7 @@
 		2A37F4AAFDCFA73011CA2CEA /* GrammarDesigner */ = {
 			isa = PBXGroup;
 			children = (
+				BE47DD0814269546006FE4E8 /* Tools */,
 				2A37F4ABFDCFA73011CA2CEA /* Classes */,
 				2A37F4AFFDCFA73011CA2CEA /* Other Sources */,
 				2A37F4B8FDCFA73011CA2CEA /* Resources */,
@@ -100,6 +128,8 @@
 			children = (
 				2A37F4AEFDCFA73011CA2CEA /* GrammarDesignerDocument.h */,
 				2A37F4ACFDCFA73011CA2CEA /* GrammarDesignerDocument.m */,
+				BE47DE371426B84A006FE4E8 /* ApplicationDelegate.h */,
+				BE47DE381426B84A006FE4E8 /* ApplicationDelegate.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -107,6 +137,7 @@
 		2A37F4AFFDCFA73011CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
+				BE47DD20142695A1006FE4E8 /* stdheader.h */,
 				2564AD2C0F5327BB00F57823 /* GrammarDesigner_Prefix.pch */,
 				2A37F4B0FDCFA73011CA2CEA /* main.m */,
 			);
@@ -132,6 +163,28 @@
 				1058C7A8FEA54F5311CA2CBB /* Other Frameworks */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		BE47DD0814269546006FE4E8 /* Tools */ = {
+			isa = PBXGroup;
+			children = (
+				BE47DD0914269558006FE4E8 /* ARAsyncQueue.m */,
+				BE47DD0A14269558006FE4E8 /* ARException.h */,
+				BE47DD0B14269558006FE4E8 /* ARException.m */,
+				BE47DD0C14269558006FE4E8 /* ARNet.h */,
+				BE47DD0D14269558006FE4E8 /* ARNet.m */,
+				BE47DD0E14269558006FE4E8 /* ARSynthesizer.m */,
+				BE47DD0F14269558006FE4E8 /* ARThread.h */,
+				BE47DD1014269558006FE4E8 /* ARThread.m */,
+				BE47DD1114269558006FE4E8 /* Common.h */,
+				BE47DD1214269558006FE4E8 /* Common.m */,
+				BE47DD191426956D006FE4E8 /* ArsenalOC.h */,
+				BE47DD1A1426956D006FE4E8 /* ArsenalOC.m */,
+				BE47DD21142695E1006FE4E8 /* ARHelper.h */,
+				BE47DE061426B2E8006FE4E8 /* ARUtility.h */,
+				BE47DE071426B2E8006FE4E8 /* ARUtility.m */,
+			);
+			name = Tools;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -200,6 +253,15 @@
 			files = (
 				8D15AC310486D014006FF6A4 /* GrammarDesignerDocument.m in Sources */,
 				8D15AC320486D014006FF6A4 /* main.m in Sources */,
+				BE47DD1314269558006FE4E8 /* ARAsyncQueue.m in Sources */,
+				BE47DD1414269558006FE4E8 /* ARException.m in Sources */,
+				BE47DD1514269558006FE4E8 /* ARNet.m in Sources */,
+				BE47DD1614269558006FE4E8 /* ARSynthesizer.m in Sources */,
+				BE47DD1714269558006FE4E8 /* ARThread.m in Sources */,
+				BE47DD1814269558006FE4E8 /* Common.m in Sources */,
+				BE47DD1B1426956D006FE4E8 /* ArsenalOC.m in Sources */,
+				BE47DE081426B2E8006FE4E8 /* ARUtility.m in Sources */,
+				BE47DE391426B84A006FE4E8 /* ApplicationDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
