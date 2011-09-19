@@ -63,11 +63,20 @@
 		#define OS_FAMILY_BSD								1
 		#include <TargetConditionals.h>
 
-		#if defined(TARGET_OS_IPHONE) || defined(TARGET_IPHONE_SIMULATOR)
-				#define OS_TYPE										OS_IOS
-		#else
+
+		#if(TARGET_OS_MAC == 1)
 				#define OS_TYPE										OS_MAC_OS_X
 		#endif
+
+
+		#if(TARGET_OS_IPHONE == 1 || TARGET_IPHONE_SIMULATOR == 1)
+				#if defined(OS_TYPE)
+						#undef OS_TYPE
+				#endif
+
+				#define OS_TYPE										OS_IOS
+		#endif
+
 
 #elif defined(__NetBSD__)
 	#define OS_FAMILY_UNIX								1
