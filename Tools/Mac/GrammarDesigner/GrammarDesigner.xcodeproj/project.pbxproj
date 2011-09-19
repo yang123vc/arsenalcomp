@@ -110,7 +110,7 @@
 		2A37F4AAFDCFA73011CA2CEA /* GrammarDesigner */ = {
 			isa = PBXGroup;
 			children = (
-				BE47DD0814269546006FE4E8 /* Tools */,
+				BE47DD0814269546006FE4E8 /* Helper */,
 				2A37F4ABFDCFA73011CA2CEA /* Classes */,
 				2A37F4AFFDCFA73011CA2CEA /* Other Sources */,
 				2A37F4B8FDCFA73011CA2CEA /* Resources */,
@@ -165,7 +165,7 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		BE47DD0814269546006FE4E8 /* Tools */ = {
+		BE47DD0814269546006FE4E8 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
 				BE47DD0914269558006FE4E8 /* ARAsyncQueue.m */,
@@ -184,7 +184,7 @@
 				BE47DE061426B2E8006FE4E8 /* ARUtility.h */,
 				BE47DE071426B2E8006FE4E8 /* ARUtility.m */,
 			);
-			name = Tools;
+			name = Helper;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
