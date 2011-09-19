@@ -1,0 +1,1 @@
+////  ARUtility.h//  GrammarDesigner////  Created by liu peng on 9/19/11.//  Copyright 2011 none. All rights reserved.//#import "Common.h"#import "ARException.h"@interface ARUtility : NSObject {		}+(NSString*)convertUTF32ToNSString		:		(const wchar_t*)input;+(wchar_t*) convertNSStringToUTF32		:		(NSString*)input;@end

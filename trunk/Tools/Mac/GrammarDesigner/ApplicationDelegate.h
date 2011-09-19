@@ -1,0 +1,1 @@
+////  ApplicationDelegate.h//  GrammarDesigner////  Created by liu peng on 9/19/11.//  Copyright 2011 none. All rights reserved.//#import <Cocoa/Cocoa.h>#import "stdheader.h"@interface ApplicationDelegate : NSObject<NSApplicationDelegate> {}-(IBAction)onTest : (id)sender;@end
