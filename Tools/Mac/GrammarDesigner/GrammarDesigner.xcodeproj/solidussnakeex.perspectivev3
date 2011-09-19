@@ -232,6 +232,8 @@
 			<key>Layout</key>
 			<array>
 				<dict>
+					<key>BecomeActive</key>
+					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -268,6 +270,7 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateExpansionKey</key>
 							<array>
 								<string>2A37F4AAFDCFA73011CA2CEA</string>
+								<string>BE47DD0814269546006FE4E8</string>
 								<string>2A37F4ABFDCFA73011CA2CEA</string>
 								<string>2A37F4AFFDCFA73011CA2CEA</string>
 								<string>2A37F4B8FDCFA73011CA2CEA</string>
@@ -277,8 +280,8 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>5</integer>
-									<integer>2</integer>
+									<integer>25</integer>
+									<integer>22</integer>
 									<integer>0</integer>
 								</array>
 							</array>
@@ -311,14 +314,12 @@
 					<key>Dock</key>
 					<array>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
 								<string>BE1803AC1422C25400259547</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>ApplicationDelegate.h</string>
+								<string>main.m</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -326,36 +327,41 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>BE1803AD1422C25400259547</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>ApplicationDelegate.h</string>
+										<string>main.m</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>BEAE576B1426E636004C25AA</string>
+										<string>BEAE57CB1426F274004C25AA</string>
 										<key>history</key>
 										<array>
 											<string>BEE65ACD1422DE58009ED19E</string>
 											<string>BEE65BB31422EBC2009ED19E</string>
 											<string>BEE65BC01422EBEC009ED19E</string>
 											<string>BEE65BC11422EBEC009ED19E</string>
-											<string>BE47DD7314269E71006FE4E8</string>
-											<string>BE47DD7414269E71006FE4E8</string>
-											<string>BE47DE441426B8BE006FE4E8</string>
-											<string>BE47DE4C1426B8BE006FE4E8</string>
-											<string>BE47DE4D1426B8BE006FE4E8</string>
-											<string>BE47DE781426BD0D006FE4E8</string>
 											<string>BEAE568C1426C645004C25AA</string>
-											<string>BEAE56B91426CF5C004C25AA</string>
-											<string>BEAE56C91426CF72004C25AA</string>
-											<string>BEAE56F01426D0CE004C25AA</string>
-											<string>BEAE57121426D1CB004C25AA</string>
-											<string>BEAE57131426D1CB004C25AA</string>
-											<string>BEAE57271426D9CC004C25AA</string>
-											<string>BEAE57281426D9CC004C25AA</string>
-											<string>BEAE57291426D9CC004C25AA</string>
-											<string>BEAE57321426DA6C004C25AA</string>
-											<string>BEAE574B1426E564004C25AA</string>
-											<string>BEAE57691426E636004C25AA</string>
-											<string>BEAE576A1426E636004C25AA</string>
+											<string>BEAE578D1426E83F004C25AA</string>
+											<string>BEAE57B41426F274004C25AA</string>
+											<string>BEAE57B61426F274004C25AA</string>
+											<string>BEAE57B71426F274004C25AA</string>
+											<string>BEAE57B81426F274004C25AA</string>
+											<string>BEAE57B91426F274004C25AA</string>
+											<string>BEAE57BA1426F274004C25AA</string>
+											<string>BEAE57BB1426F274004C25AA</string>
+											<string>BEAE57BC1426F274004C25AA</string>
+											<string>BEAE57BD1426F274004C25AA</string>
+											<string>BEAE57BE1426F274004C25AA</string>
+											<string>BEAE57BF1426F274004C25AA</string>
+											<string>BEAE57C01426F274004C25AA</string>
+											<string>BEAE57C11426F274004C25AA</string>
+											<string>BEAE57C21426F274004C25AA</string>
+											<string>BEAE57C31426F274004C25AA</string>
+											<string>BEAE57C41426F274004C25AA</string>
+											<string>BEAE57C51426F274004C25AA</string>
+											<string>BEAE57C61426F274004C25AA</string>
+											<string>BEAE57C71426F274004C25AA</string>
+											<string>BEAE57C81426F274004C25AA</string>
+											<string>BEAE57C91426F274004C25AA</string>
+											<string>BEAE57CA1426F274004C25AA</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
