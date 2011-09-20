@@ -23,6 +23,9 @@
 		BE47DD1B1426956D006FE4E8 /* ArsenalOC.m in Sources */ = {isa = PBXBuildFile; fileRef = BE47DD1A1426956D006FE4E8 /* ArsenalOC.m */; };
 		BE47DE081426B2E8006FE4E8 /* ARUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = BE47DE071426B2E8006FE4E8 /* ARUtility.m */; };
 		BE47DE391426B84A006FE4E8 /* ApplicationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BE47DE381426B84A006FE4E8 /* ApplicationDelegate.m */; };
+		BEAE57FD1426F8F3004C25AA /* Preferences.m in Sources */ = {isa = PBXBuildFile; fileRef = BEAE57FC1426F8F3004C25AA /* Preferences.m */; };
+		BEAE58021426F9BC004C25AA /* ARTest.m in Sources */ = {isa = PBXBuildFile; fileRef = BEAE58011426F9BC004C25AA /* ARTest.m */; };
+		BEAE587E1426FCDA004C25AA /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEAE587D1426FCDA004C25AA /* Preferences.xib */; };
 		BEC0D01F1422C35000D35745 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BEC0D01E1422C35000D35745 /* libiconv.dylib */; };
 		BEC0D0211422C35900D35745 /* libpthread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BEC0D0201422C35900D35745 /* libpthread.dylib */; };
 		BEC0D0251422C37A00D35745 /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BEC0D0241422C37A00D35745 /* Arsenal.a */; };
@@ -61,6 +64,10 @@
 		BE47DE071426B2E8006FE4E8 /* ARUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ARUtility.m; path = Helper/ARUtility.m; sourceTree = "<group>"; };
 		BE47DE371426B84A006FE4E8 /* ApplicationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplicationDelegate.h; sourceTree = "<group>"; };
 		BE47DE381426B84A006FE4E8 /* ApplicationDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplicationDelegate.m; sourceTree = "<group>"; };
+		BEAE57FB1426F8F3004C25AA /* Preferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Preferences.h; sourceTree = "<group>"; };
+		BEAE57FC1426F8F3004C25AA /* Preferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Preferences.m; sourceTree = "<group>"; };
+		BEAE58011426F9BC004C25AA /* ARTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ARTest.m; path = Helper/ARTest.m; sourceTree = "<group>"; };
+		BEAE587D1426FCDA004C25AA /* Preferences.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Preferences.xib; sourceTree = "<group>"; };
 		BEC0D01E1422C35000D35745 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
 		BEC0D0201422C35900D35745 /* libpthread.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpthread.dylib; path = usr/lib/libpthread.dylib; sourceTree = SDKROOT; };
 		BEC0D0241422C37A00D35745 /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = Arsenal.a; path = /Users/solidussnakeex/Desktop/Programming/Arsenal/Binary/LibDebug/Arsenal.a; sourceTree = "<absolute>"; };
@@ -130,6 +137,8 @@
 				2A37F4ACFDCFA73011CA2CEA /* GrammarDesignerDocument.m */,
 				BE47DE371426B84A006FE4E8 /* ApplicationDelegate.h */,
 				BE47DE381426B84A006FE4E8 /* ApplicationDelegate.m */,
+				BEAE57FB1426F8F3004C25AA /* Preferences.h */,
+				BEAE57FC1426F8F3004C25AA /* Preferences.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -152,6 +161,7 @@
 				089C165FFE840EACC02AAC07 /* InfoPlist.strings */,
 				1DDD58280DA1D0D100B32029 /* GrammarDesignerDocument.xib */,
 				1DDD582A0DA1D0D100B32029 /* MainMenu.xib */,
+				BEAE587D1426FCDA004C25AA /* Preferences.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -183,6 +193,7 @@
 				BE47DD21142695E1006FE4E8 /* ARHelper.h */,
 				BE47DE061426B2E8006FE4E8 /* ARUtility.h */,
 				BE47DE071426B2E8006FE4E8 /* ARUtility.m */,
+				BEAE58011426F9BC004C25AA /* ARTest.m */,
 			);
 			name = Helper;
 			sourceTree = "<group>";
@@ -241,6 +252,7 @@
 				8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */,
 				1DDD582C0DA1D0D100B32029 /* GrammarDesignerDocument.xib in Resources */,
 				1DDD582D0DA1D0D100B32029 /* MainMenu.xib in Resources */,
+				BEAE587E1426FCDA004C25AA /* Preferences.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,6 +274,8 @@
 				BE47DD1B1426956D006FE4E8 /* ArsenalOC.m in Sources */,
 				BE47DE081426B2E8006FE4E8 /* ARUtility.m in Sources */,
 				BE47DE391426B84A006FE4E8 /* ApplicationDelegate.m in Sources */,
+				BEAE57FD1426F8F3004C25AA /* Preferences.m in Sources */,
+				BEAE58021426F9BC004C25AA /* ARTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -348,6 +362,7 @@
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = ../../../Arsenal;
@@ -362,6 +377,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PREPROCESSOR_DEFINITIONS = NDEBUG;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = ../../../Arsenal;
