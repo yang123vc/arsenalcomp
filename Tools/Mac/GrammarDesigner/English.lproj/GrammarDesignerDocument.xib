@@ -12,6 +12,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
+			<integer value="6"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -47,9 +48,8 @@
 						<object class="NSTextField" id="433022199">
 							<reference key="NSNextResponder" ref="568628114"/>
 							<int key="NSvFlags">256</int>
-							<string key="NSFrame">{{119, 195}, {269, 22}}</string>
+							<string key="NSFrame">{{266, 294}, {269, 22}}</string>
 							<reference key="NSSuperview" ref="568628114"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="566561048">
 								<int key="NSCellFlags">67239424</int>
@@ -84,7 +84,6 @@
 					</object>
 					<string key="NSFrameSize">{800, 600}</string>
 					<reference key="NSSuperview"/>
-					<reference key="NSWindow"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1680, 1028}}</string>
 				<string key="NSMinSize">{94, 108}</string>
@@ -185,6 +184,7 @@
 					<string>-3.IBPluginDependency</string>
 					<string>100020.IBPluginDependency</string>
 					<string>20.IBPluginDependency</string>
+					<string>20.IBViewBoundsToFrameTransform</string>
 					<string>20.ImportedFromIB2</string>
 					<string>5.IBEditorWindowLastContentRect</string>
 					<string>5.IBPluginDependency</string>
@@ -201,6 +201,9 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSAffineTransform">
+						<bytes key="NSTransformStruct">P4AAAL+AAABBiAAAw6kAAA</bytes>
+					</object>
 					<integer value="1"/>
 					<string>{{194, 288}, {800, 600}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
