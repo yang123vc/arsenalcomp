@@ -340,7 +340,7 @@ const parser_t* Parser_CreateParser(const psrGrammar_t *grammar, psrModeType_t t
 
 		parser = AR_NEW0(parser_t);
 		
-
+		parser->psr_type = type;
 		parser->ref_cnt = 1;
 
 		parser->grammar = grammar;

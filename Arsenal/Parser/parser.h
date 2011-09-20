@@ -439,6 +439,7 @@ void					Parser_PrintGrammar(const psrGrammar_t *grammar, arString_t *str);
 
 struct __parser_tag
 {
+		psrModeType_t				psr_type;
 		const psrGrammar_t			*grammar;
 		const psrActionTable_t		*tbl;
 		psrTermInfoTbl_t			*term_tbl;
