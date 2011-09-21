@@ -256,7 +256,7 @@
 						<dict>
 							<key>PBXSmartGroupTreeModuleColumnWidthsKey</key>
 							<array>
-								<real>225</real>
+								<real>213</real>
 							</array>
 							<key>PBXSmartGroupTreeModuleColumnsKey_v4</key>
 							<array>
@@ -277,14 +277,14 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>37</integer>
+									<integer>28</integer>
 									<integer>27</integer>
 									<integer>2</integer>
 									<integer>0</integer>
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
-							<string>{{0, 0}, {225, 828}}</string>
+							<string>{{0, 85}, {213, 828}}</string>
 						</dict>
 						<key>PBXTopSmartGroupGIDs</key>
 						<array/>
@@ -294,11 +294,11 @@
 					<key>GeometryConfiguration</key>
 					<dict>
 						<key>Frame</key>
-						<string>{{0, 0}, {242, 846}}</string>
+						<string>{{0, 0}, {230, 846}}</string>
 						<key>GroupTreeTableConfiguration</key>
 						<array>
 							<string>MainColumn</string>
-							<real>225</real>
+							<real>213</real>
 						</array>
 						<key>RubberWindowFrame</key>
 						<string>0 141 1680 887 0 0 1680 1028 </string>
@@ -306,7 +306,7 @@
 					<key>Module</key>
 					<string>PBXSmartGroupTreeModule</string>
 					<key>Proportion</key>
-					<string>242pt</string>
+					<string>230pt</string>
 				</dict>
 				<dict>
 					<key>Dock</key>
@@ -319,7 +319,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>BE5AE25B13F1724E00D92048</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>parser.h</string>
+								<string>grammar.c</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -327,11 +327,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>BE5AE25C13F1724E00D92048</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>parser.h</string>
+										<string>grammar.c</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>BE165B5214286A1C00ADFC00</string>
+										<string>BEDCDCE81429B98A00D041D4</string>
 										<key>history</key>
 										<array>
 											<string>BEAE1C6513F248B90088C3A4</string>
@@ -349,7 +349,6 @@
 											<string>BEE65A8D1422D718009ED19E</string>
 											<string>BEE65ABA1422DD16009ED19E</string>
 											<string>BE47DD6714269E6F006FE4E8</string>
-											<string>BE47DD6814269E6F006FE4E8</string>
 											<string>BE47DD6B14269E6F006FE4E8</string>
 											<string>BE47DD6C14269E6F006FE4E8</string>
 											<string>BE47DF181426C46C006FE4E8</string>
@@ -370,8 +369,10 @@
 											<string>BEAE5EC814283D36004C25AA</string>
 											<string>BEAE5EC914283D36004C25AA</string>
 											<string>BEAE5ECA14283D36004C25AA</string>
-											<string>BEAE5ECB14283D36004C25AA</string>
-											<string>BEAE5ECD14283D36004C25AA</string>
+											<string>BEDCDCE41429B98A00D041D4</string>
+											<string>BEDCDCE51429B98A00D041D4</string>
+											<string>BEDCDCE61429B98A00D041D4</string>
+											<string>BEDCDCE71429B98A00D041D4</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -385,7 +386,7 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 0}, {1433, 841}}</string>
+								<string>{{0, 0}, {1445, 841}}</string>
 								<key>RubberWindowFrame</key>
 								<string>0 141 1680 887 0 0 1680 1028 </string>
 							</dict>
@@ -410,7 +411,7 @@
 									<key>GeometryConfiguration</key>
 									<dict>
 										<key>Frame</key>
-										<string>{{10, 27}, {1433, -27}}</string>
+										<string>{{10, 27}, {1445, -27}}</string>
 										<key>RubberWindowFrame</key>
 										<string>0 141 1680 887 0 0 1680 1028 </string>
 									</dict>
@@ -475,7 +476,7 @@
 						</dict>
 					</array>
 					<key>Proportion</key>
-					<string>1433pt</string>
+					<string>1445pt</string>
 				</dict>
 			</array>
 			<key>Name</key>
@@ -494,11 +495,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>BE165B5314286A1C00ADFC00</string>
+				<string>BEDCDC9B1429A2FD00D041D4</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>BE165B5414286A1C00ADFC00</string>
+				<string>BEDCDC9C1429A2FD00D041D4</string>
 				<string>BE5AE25B13F1724E00D92048</string>
-				<string>BE165B5514286A1C00ADFC00</string>
+				<string>BEDCDC9D1429A2FD00D041D4</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>

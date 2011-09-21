@@ -1469,20 +1469,24 @@ bool_t					Parser_ReportLeftFactor(const psrGrammar_t *grammar, arString_t *outp
 		bool_t has_left_factor;
 		size_t	cnt;
 		size_t	i,k;
+		const psrSymbList_t *symb_list;
 		AR_ASSERT(grammar != NULL);
 		
 		cnt = 0;
 		has_left_factor = false;
-		rules = AR_NEWARR0(const psrRule_t*, grammar->symb_list.count);
+		
+		symb_list = Parser_GetSymbList(grammar);
+		
+		rules = AR_NEWARR0(const psrRule_t*, symb_list->count);
 		
 		if(output)AR_ClearString(output);
 
-		for(i = 0; i < grammar->symb_list.count; ++i)
+		for(i = 0; i < symb_list->count; ++i)
 		{
-				const psrSymb_t *lhs = grammar->symb_list.lst[i];
+				const psrSymb_t *lhs = symb_list->lst[i];
 				if(lhs->type == PARSER_TERM)continue;
 				
-				AR_memset((void*)rules, 0, sizeof(const psrRule_t*) * grammar->symb_list.count);
+				AR_memset((void*)rules, 0, sizeof(const psrRule_t*) * symb_list->count);
 				
 				cnt = 0;
 				
