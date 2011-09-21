@@ -661,15 +661,18 @@ bool_t					__report_left_recursion(const psrGrammar_t *grammar, psrSymbolMapView
 		size_t i;
 		psrSymbList_t	lst;
 		bool_t			ret = false;
+		const psrSymbList_t		*symblist;
 		AR_ASSERT(grammar != NULL);
 		
 		Parser_InitSymbList(&lst);
+
+		symblist = Parser_GetSymbList(grammar);
 		
-		for(i = 0; i < grammar->symb_list.count; ++i)
+		for(i = 0; i < symblist->count; ++i)
 		{
 				const psrSymb_t *symb;
 				
-				symb = grammar->symb_list.lst[i];
+				symb = symblist->lst[i];
 
 				Parser_ClearSymbList(&lst);
 				
@@ -810,18 +813,20 @@ static bool_t					__report_left_factor(const psrGrammar_t *grammar, psrSymbolMap
 		bool_t has_left_factor;
 		size_t	cnt;
 		size_t	i,k;
+		const psrSymbList_t *symblist;
 		AR_ASSERT(grammar != NULL);
 		
 		cnt = 0;
 		has_left_factor = false;
-		rules = AR_NEWARR0(const psrRule_t*, grammar->symb_list.count);
+		symblist = Parser_GetSymbList(grammar);
+		rules = AR_NEWARR0(const psrRule_t*, symblist->count);
 		
-		for(i = 0; i < grammar->symb_list.count; ++i)
+		for(i = 0; i < symblist->count; ++i)
 		{
-				const psrSymb_t *lhs = grammar->symb_list.lst[i];
+				const psrSymb_t *lhs = symblist->lst[i];
 				if(lhs->type == PARSER_TERM)continue;
 				
-				AR_memset((void*)rules, 0, sizeof(const psrRule_t*) * grammar->symb_list.count);
+				AR_memset((void*)rules, 0, sizeof(const psrRule_t*) * symblist->count);
 				
 				cnt = 0;
 				
