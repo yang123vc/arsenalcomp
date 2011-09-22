@@ -311,12 +311,14 @@
 					<key>Dock</key>
 					<array>
 						<dict>
+							<key>BecomeActive</key>
+							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
 								<string>BE5AE25B13F1724E00D92048</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>textfile.c</string>
+								<string>strconv.c</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -324,11 +326,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>BE5AE25C13F1724E00D92048</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>textfile.c</string>
+										<string>strconv.c</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>BE435CA5142B0D7000DBA97C</string>
+										<string>BE435CC3142B0F0400DBA97C</string>
 										<key>history</key>
 										<array>
 											<string>BEAE1C6513F248B90088C3A4</string>
@@ -368,8 +370,7 @@
 											<string>BE435BBD142B07FE00DBA97C</string>
 											<string>BE435C0A142B0A6400DBA97C</string>
 											<string>BE435CA2142B0D7000DBA97C</string>
-											<string>BE435CA3142B0D7000DBA97C</string>
-											<string>BE435CA4142B0D7000DBA97C</string>
+											<string>BE435CC2142B0F0400DBA97C</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>

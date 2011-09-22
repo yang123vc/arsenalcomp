@@ -164,6 +164,8 @@
 			BE435CA3142B0D7000DBA97C /* PBXTextBookmark */ = BE435CA3142B0D7000DBA97C /* PBXTextBookmark */;
 			BE435CA4142B0D7000DBA97C /* PBXTextBookmark */ = BE435CA4142B0D7000DBA97C /* PBXTextBookmark */;
 			BE435CA5142B0D7000DBA97C /* PBXTextBookmark */ = BE435CA5142B0D7000DBA97C /* PBXTextBookmark */;
+			BE435CC2142B0F0400DBA97C /* PBXTextBookmark */ = BE435CC2142B0F0400DBA97C /* PBXTextBookmark */;
+			BE435CC3142B0F0400DBA97C /* PBXTextBookmark */ = BE435CC3142B0F0400DBA97C /* PBXTextBookmark */;
 			BE47DD6714269E6F006FE4E8 = BE47DD6714269E6F006FE4E8 /* PBXTextBookmark */;
 			BE47DD6B14269E6F006FE4E8 = BE47DD6B14269E6F006FE4E8 /* PBXTextBookmark */;
 			BE47DD6C14269E6F006FE4E8 = BE47DD6C14269E6F006FE4E8 /* PBXTextBookmark */;
@@ -393,8 +395,8 @@
 		isa = PBXTextBookmark;
 		fRef = BE435C5B142B0C0A00DBA97C /* GrammarDesignerDocument.m */;
 		name = "GrammarDesignerDocument.m: 82";
-		rLen = 14;
-		rLoc = 2219;
+		rLen = 0;
+		rLoc = 1836;
 		rType = 0;
 		vrLen = 764;
 		vrLoc = 1647;
@@ -485,6 +487,26 @@
 		rType = 0;
 		vrLen = 701;
 		vrLoc = 7416;
+	};
+	BE435CC2142B0F0400DBA97C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = BE88D05013F172B300871F83 /* strconv.c */;
+		name = "strconv.c: 402";
+		rLen = 0;
+		rLoc = 8173;
+		rType = 0;
+		vrLen = 550;
+		vrLoc = 9602;
+	};
+	BE435CC3142B0F0400DBA97C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = BE88D05013F172B300871F83 /* strconv.c */;
+		name = "strconv.c: 402";
+		rLen = 0;
+		rLoc = 8173;
+		rType = 0;
+		vrLen = 550;
+		vrLoc = 9602;
 	};
 	BE47DD6714269E6F006FE4E8 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -733,7 +755,7 @@
 	};
 	BE88D05013F172B300871F83 /* strconv.c */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1384, 10290}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1384, 10320}}";
 			sepNavSelRange = "{8173, 0}";
 			sepNavVisRange = "{9602, 550}";
 		};
@@ -747,9 +769,9 @@
 	};
 	BE88D05313F172B300871F83 /* textfile.c */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1384, 11475}}";
-			sepNavSelRange = "{7664, 0}";
-			sepNavVisRange = "{7416, 701}";
+			sepNavIntBoundsRect = "{{0, 0}, {1619, 11520}}";
+			sepNavSelRange = "{7870, 0}";
+			sepNavVisRange = "{7562, 342}";
 		};
 	};
 	BE88D05413F172B300871F83 /* thread.c */ = {

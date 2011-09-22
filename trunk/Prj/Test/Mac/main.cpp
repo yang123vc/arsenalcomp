@@ -7,7 +7,7 @@ using namespace ARSpace;
 
 
 
-#define INPUT_FILE		L"/Users/solidussnakeex/Desktop/Tengu.gmr"
+#define INPUT_FILE		L"/Users/solidussnakeex/Desktop/Tengu2.gmr"
 #define OUTPUT_FILE		L"/Users/solidussnakeex/Desktop/output.txt"
 
 #define OUTPUT_TYPE		AR_TXT_BOM_UTF_8
