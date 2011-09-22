@@ -1327,8 +1327,8 @@ void align_test()
 
 void text_test_save()
 {
-#define OUTPUT_FILE		L"D:\\User\\Temp\\test.txt"
-#define OUTPUT_TYPE		AR_TXT_BOM_ASCII
+#define OUTPUT_FILE		L"D:\\test.txt"
+#define OUTPUT_TYPE		AR_TXT_BOM_UTF32_BE
 
 		arString_t *str = AR_CreateString();
 
@@ -1431,7 +1431,7 @@ void com_test()
 		//com_hash_test();
 
 		//com_vscwprintf_test();
-		com_vscwprintf_test2();
+		//com_vscwprintf_test2();
 		//str_test();
 		//itow_test();
 
@@ -1472,7 +1472,7 @@ void com_test()
 		//escstr_n_test1();
 		//escstr_n_test0();
 		//align_test();
-		//text_test_save();
+		text_test_save();
 
 		
 

@@ -786,7 +786,10 @@ typedef enum
 }arTxtBom_t;
 
 bool_t	AR_LoadBomTextFile(const wchar_t *path, arTxtBom_t *bom, arString_t *out);
+
 bool_t	AR_SaveBomTextFile(const wchar_t *path, arTxtBom_t bom, const wchar_t *input);
+
+bool_t	AR_SaveBomTextToBinary(arBuffer_t *output, arTxtBom_t bom, const wchar_t *input);
 
 
 AR_NAMESPACE_END
