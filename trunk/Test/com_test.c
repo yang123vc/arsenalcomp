@@ -1328,7 +1328,7 @@ void align_test()
 void text_test_save()
 {
 
-#define INPUT_FILE		L"..\\..\\..\\misc\\txt_enc_test\\ascii.txt"
+#define INPUT_FILE		L"..\\..\\..\\misc\\txt_enc_test\\empty_ascii.txt"
 //#define INPUT_FILE		L"D:\\User\\Temp\\Temp\\output2.txt"
 #define OUTPUT_FILE		L"D:\\test.txt"
 #define OUTPUT_TYPE		AR_TXT_BOM_UTF_8

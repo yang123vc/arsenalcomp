@@ -458,11 +458,7 @@ static bool_t	__dectect_encoding(arBuffer_t *input, arTxtBom_t *bom)
 		AR_ASSERT(input != NULL && bom != NULL);
 		input_len = AR_GetBufferAvailable(input);
 
-		if(input_len < 2)
-		{
-				return false;
-		}
-
+		
 		read_n = 0;
 		AR_memcpy(tmp, AR_GetBufferData(input), AR_MIN(input_len, 4));
 
