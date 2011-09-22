@@ -1325,6 +1325,23 @@ void align_test()
 }
 
 
+
+void text_test_load()
+{
+
+		arBuffer_t *buf = AR_CreateBuffer(0);
+		arString_t *str = AR_CreateString();
+		if(!AR_LoadBomTextFromBinary(buf, NULL, str))
+		{
+				AR_ASSERT(false);
+		}
+
+		AR_DestroyString(str);
+		AR_DestroyBuffer(buf);
+		buf = NULL;
+
+}
+
 void text_test_save()
 {
 
@@ -1477,7 +1494,8 @@ void com_test()
 		//escstr_n_test1();
 		//escstr_n_test0();
 		//align_test();
-		text_test_save();
+		//text_test_save();
+		text_test_load();
 
 		
 

@@ -701,7 +701,15 @@ bool_t	AR_LoadBomTextFromBinary(arBuffer_t *input, arTxtBom_t *bom, arString_t *
 
 		status = TXT_READ_OK;
 		AR_ClearString(out);
-
+		
+		if(AR_GetBufferAvailable(input) == 0)
+		{
+				if(bom)
+				{
+						*bom = AR_TXT_BOM_ASCII;
+				}
+				return true;
+		}
 
 		if(!__dectect_encoding(input, &enc))
 		{
