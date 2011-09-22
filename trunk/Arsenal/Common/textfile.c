@@ -368,9 +368,19 @@ bool_t	AR_LoadBomTextFile(const wchar_t *path, arTxtBom_t *bom, arString_t *out)
 				if(status != TXT_READ_INVALID)
 				{
 						wchar_t *str;
+						
+						size_t cp;
+						for(cp = AR_CP_ACP; cp <= AR_CP_GB18030; ++cp)
+						{
 
-						str = AR_str_convto_wcs(AR_CP_ACP, (const char*)AR_GetBufferData(ascii_buf), AR_GetBufferAvailable(ascii_buf));
+								str = AR_str_convto_wcs((arCodePage_t)cp, (const char*)AR_GetBufferData(ascii_buf), AR_GetBufferAvailable(ascii_buf));
+								if(str != NULL)
+								{
+										break;
+								}
 
+						}
+						
 						if(!str)
 						{
 								status = TXT_READ_INVALID;
@@ -430,297 +440,6 @@ FAILED_POINT:
 
 
 /***************************************Write File**********************************************************/
-
-#if(0)
-static bool_t __write_bom(FILE *file, arTxtBom_t bom)
-{
-		byte_t buf[4];
-		size_t wn;
-		bool_t is_ok;
-		AR_ASSERT(file != NULL);
-		is_ok = true;
-
-		switch(bom)
-		{
-		case AR_TXT_BOM_UTF_8:
-		{
-				wn = 3;
-				buf[0] = 0xEF;
-				buf[1] = 0xBB;
-				buf[2] = 0xBF;
-		}
-				break;
-		case AR_TXT_BOM_UTF16_BE:
-		{
-				wn = 2;
-				buf[0] = 0xFE;
-				buf[1] = 0xFF;
-		}
-				break;
-		case AR_TXT_BOM_UTF16_LE:
-		{
-				wn = 2;
-				buf[0] = 0xFF;
-				buf[1] = 0xFE;
-		}
-				break;
-		case AR_TXT_BOM_UTF32_BE:
-		{
-				wn = 4;
-				buf[0] = 0x00;
-				buf[1] = 0x00;
-				buf[2] = 0xFE;
-				buf[3] = 0xFF;
-		}
-				break;
-		case AR_TXT_BOM_UTF32_LE:
-		{
-				wn = 4;
-				buf[0] = 0xFF;
-				buf[1] = 0xFE;
-				buf[2] = 0x00;
-				buf[3] = 0x00;
-		}
-				break;
-		case AR_TXT_BOM_ASCII:
-		default:
-				wn = 0;
-				is_ok = false;
-				break;
-		}
-
-		if(wn > 0)
-		{
-				if(fwrite((void*)buf, 1, wn, file) != wn)
-				{
-						is_ok = false;
-				}
-		}
-
-		return is_ok;
-}
-
-
-
-
-
-
-static bool_t __write_wchar(FILE *file, arTxtBom_t bom, wchar_t c)
-{
-		bool_t is_ok;
-		AR_ASSERT(file != NULL);
-
-		is_ok = true;
-
-		switch(bom)
-		{
-		case AR_TXT_BOM_UTF_8:
-		{
-				byte_t utf8[10];
-				size_t n;
-				byte_t *e;
-				uint_32_t	uc = (uint_32_t)c;
-
-				e = utf8;
-
-				if(uc < 0x80)
-				{
-						*e++ = (byte_t)uc;
-				}else if(uc < 0x800)
-				{
-						/*<11011111> < 000 0000 0000>*/
-						*e++ = (byte_t)((uc >> 6) & 0x1f)|0xc0;
-						*e++ = (byte_t)(uc & 0x3f)|0x80;
-				}else if(uc < 0x10000)
-				{
-						/*<11101111> <0000 0000 0000 0000>*/
-						*e++ = (byte_t)(((uc >> 12) & 0x0f)|0xe0);
-						*e++ = (byte_t)(((uc >> 6) & 0x3f)|0x80);
-						*e++ = (byte_t)((uc & 0x3f)|0x80);
-				}else if(uc < 0x200000)
-				{
-						/*<11110111> <0 0000 0000 0000 0000 0000>*/
-						*e++ = (byte_t)(((uc >> 18) & 0x07)|0xf0);
-						*e++ = (byte_t)(((uc >> 12) & 0x3f)|0x80);
-						*e++ = (byte_t)(((uc >> 6) & 0x3f)|0x80);
-						*e++ = (byte_t)((uc & 0x3f)|0x80);
-				}else if(uc < 0x4000000)
-				{
-						/*<11111011> <00 0000 0000 0000 0000 0000 0000>*/
-						*e++ = (byte_t)(((uc >> 24) & 0x03)|0xf8);
-						*e++ = (byte_t)(((uc >> 18) & 0x3f)|0x80);
-						*e++ = (byte_t)(((uc >> 12) & 0x3f)|0x80);
-						*e++ = (byte_t)(((uc >> 6) & 0x3f)|0x80);
-						*e++ = (byte_t)((uc & 0x3f)|0x80);
-				}else
-				{
-						/*<11111101> <0000 0000 0000 0000 0000 0000 0000 0000>*/
-						*e++ = (byte_t)(((uc >> 30) & 0x01)|0xfc);
-						*e++ = (byte_t)(((uc >> 24) & 0x3f)|0x80);
-						*e++ = (byte_t)(((uc >> 18) & 0x3f)|0x80);
-						*e++ = (byte_t)(((uc >> 12) & 0x3f)|0x80);
-						*e++ = (byte_t)(((uc >> 6) & 0x3f)|0x80);
-						*e++ = (byte_t)((uc & 0x3f)|0x80);
-				}
-
-				n =  e - utf8;
-
-				if(fwrite((void*)utf8, 1, n, file) != n)
-				{
-						is_ok = false;
-				}
-		}
-				break;
-		case AR_TXT_BOM_UTF16_BE:
-		case AR_TXT_BOM_UTF16_LE:
-		{
-				byte_t buf[2];
-				uint_16_t	uc = (uint_16_t)c;
-
-
-				if(bom == AR_TXT_BOM_UTF16_BE)
-				{
-						buf[0] = (byte_t)(uc >> 8);
-						buf[1] = (byte_t)(uc & 0x00FF);
-
-				}else
-				{
-						buf[1] = (byte_t)(uc >> 8);
-						buf[0] = (byte_t)(uc & 0x00FF);
-				}
-
-				if(fwrite((void*)&buf, 1,2,file) != 2)
-				{
-						is_ok = false;
-				}
-		}
-				break;
-		case AR_TXT_BOM_UTF32_BE:
-		case AR_TXT_BOM_UTF32_LE:
-		{
-				byte_t buf[4];
-				uint_32_t	uc = (uint_32_t)c;
-
-
-				if(bom == AR_TXT_BOM_UTF32_BE)
-				{
-						buf[0] = (byte_t)(uc >> 24);
-						buf[1] = (byte_t)(uc >> 16);
-						buf[2] = (byte_t)(uc >> 8);
-						buf[3] = (byte_t)(uc & 0x000000FF);
-				}else
-				{
-						buf[3] = (byte_t)(uc >> 24);
-						buf[2] = (byte_t)(uc >> 16);
-						buf[1] = (byte_t)(uc >> 8);
-						buf[0] = (byte_t)(uc & 0x000000FF);
-				}
-
-				if(fwrite((void*)&buf, 1,4,file) != 4)
-				{
-						is_ok = false;
-				}
-
-		}
-				break;
-		case AR_TXT_BOM_ASCII:
-		default:
-				return TXT_READ_INVALID;
-				break;
-		}
-
-		return is_ok;
-}
-
-
-
-bool_t	AR_SaveBomTextFile(const wchar_t *path, arTxtBom_t bom, const wchar_t *input)
-{
-		FILE	*file;
-		bool_t	is_ok;
-		const wchar_t  *p;
-
-		AR_ASSERT(path != NULL && input != NULL);
-
-
-
-		is_ok = true;
-		file = NULL;
-
-		file = __AR_open_file(path, L"wb");
-
-		if(!file)
-		{
-				is_ok = false;
-				goto FAILED_POINT;
-		}
-
-		if(bom == AR_TXT_BOM_ASCII)
-		{
-				size_t n;
-				char *s = AR_wcs_convto_str(AR_CP_ACP, input, AR_wcslen(input));
-				n = strlen(s);
-
-				if(!s)
-				{
-						is_ok = false;
-						goto CLEAR_LOCAL;
-				}
-
-				if(n == 0)
-				{
-						goto CLEAR_LOCAL;
-				}else
-				{
-						if(fwrite((void*)s, 1, n, file) != n)
-						{
-								is_ok = false;
-								goto CLEAR_LOCAL;
-						}
-				}
-CLEAR_LOCAL:
-				if(s)
-				{
-						AR_DEL(s);
-						s = NULL;
-				}
-		}else
-		{
-
-				if(!__write_bom(file, bom))
-				{
-						is_ok = false;
-						goto FAILED_POINT;
-				}
-				p = input;
-
-				while(*p)
-				{
-
-						if(!__write_wchar(file, bom, *p))
-						{
-								is_ok = false;
-								goto FAILED_POINT;
-						}
-						++p;
-				}
-		}
-
-
-FAILED_POINT:
-		if(file)
-		{
-				fclose(file);
-				file = NULL;
-		}
-		return is_ok;
-}
-#endif
-/***************************************************************************************************************************************/
-
-
-
-
 
 static bool_t __write_bom(arBuffer_t *out, arTxtBom_t bom)
 {
@@ -906,6 +625,7 @@ static bool_t __write_wchar(arBuffer_t *out, arTxtBom_t bom, wchar_t c)
 
 		return is_ok;
 }
+
 
 
 bool_t	AR_SaveBomTextToBinary(arBuffer_t *output, arTxtBom_t bom, const wchar_t *input)

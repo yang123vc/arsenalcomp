@@ -541,6 +541,8 @@ wchar_t*				AR_str_convto_wcs(arCodePage_t cp, const char *input, size_t in_n)
         out = (char*)AR_NEWARR0(wchar_t , in_n + 1);
 
 		cd = iconv_open(UNICODE_ENCODING_NAME, cp_iconv);
+		//cd = iconv_open("wchar_t", cp_iconv);
+
 
         if(cd == (iconv_t)-1)
         {
