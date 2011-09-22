@@ -320,7 +320,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>BE1803AC1422C25400259547</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>GrammarDesignerDocument.m</string>
+								<string>NSString.h</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -328,16 +328,16 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>BE1803AD1422C25400259547</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>GrammarDesignerDocument.m</string>
+										<string>NSString.h</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>BE435CF9142B103D00DBA97C</string>
+										<string>BE435CFC142B118B00DBA97C</string>
 										<key>history</key>
 										<array>
 											<string>BE435CBD142B0EFF00DBA97C</string>
-											<string>BE435CBE142B0EFF00DBA97C</string>
-											<string>BE435CF8142B103A00DBA97C</string>
+											<string>BE435CFA142B118B00DBA97C</string>
+											<string>BE435CFB142B118B00DBA97C</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
