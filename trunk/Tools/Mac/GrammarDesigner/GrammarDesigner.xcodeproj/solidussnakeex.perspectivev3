@@ -326,7 +326,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>BEDCE0AE142AE75B00D041D4</string>
+										<string>BEDCE0AF142AF2C900D041D4</string>
 										<key>history</key>
 										<array>
 											<string>BEE65ACD1422DE58009ED19E</string>
@@ -681,7 +681,6 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>BEDCE0AA142AE73A00D041D4</string>
 		<string>BEDCDDB9142A1CFE00D041D4</string>
 		<string>BEDCDDBA142A1CFE00D041D4</string>
 		<string>/Users/solidussnakeex/Desktop/Programming/Arsenal/Tools/Mac/GrammarDesigner/GrammarDesigner.xcodeproj</string>
