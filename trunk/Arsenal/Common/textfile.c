@@ -370,7 +370,7 @@ bool_t	AR_LoadBomTextFile(const wchar_t *path, arTxtBom_t *bom, arString_t *out)
 						wchar_t *str;
 						
 						size_t cp;
-						for(cp = AR_CP_ACP; cp <= AR_CP_GB18030; ++cp)
+						for(cp = AR_CP_ACP; cp < AR_CP_MAX; ++cp)
 						{
 
 								str = AR_str_convto_wcs((arCodePage_t)cp, (const char*)AR_GetBufferData(ascii_buf), AR_GetBufferAvailable(ascii_buf));
