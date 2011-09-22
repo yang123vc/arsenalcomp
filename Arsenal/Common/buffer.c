@@ -233,7 +233,28 @@ size_t			AR_GetBufferAvailable(const arBuffer_t *buffer)
 }
 
 
+size_t			AR_ReadBufferData(arBuffer_t *buffer, byte_t *dest, size_t len)
+{
+		size_t read_n;
+		const byte_t *data;
+		AR_ASSERT(buffer != NULL);
+		
+		data  = AR_GetBufferData(buffer);
+		read_n = AR_MIN(AR_GetBufferAvailable(buffer), len);
 
+
+		if(read_n > 0)
+		{
+				if(dest)
+				{
+						AR_memcpy(dest, data, read_n);
+				}
+				AR_EraseBuffer(buffer, read_n);
+		}
+
+		return read_n;
+
+}
 
 
 
