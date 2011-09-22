@@ -30,6 +30,7 @@
 		BEC0D0211422C35900D35745 /* libpthread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BEC0D0201422C35900D35745 /* libpthread.dylib */; };
 		BEC0D0251422C37A00D35745 /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BEC0D0241422C37A00D35745 /* Arsenal.a */; };
 		BEDCDCB81429A48B00D041D4 /* ARDuplexTask.m in Sources */ = {isa = PBXBuildFile; fileRef = BEDCDCB71429A48B00D041D4 /* ARDuplexTask.m */; };
+		BEDCE03A142ADA7E00D041D4 /* GmrIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = BEDCE039142ADA7E00D041D4 /* GmrIcon.icns */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -73,6 +74,7 @@
 		BEC0D0201422C35900D35745 /* libpthread.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpthread.dylib; path = usr/lib/libpthread.dylib; sourceTree = SDKROOT; };
 		BEC0D0241422C37A00D35745 /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = Arsenal.a; path = /Users/solidussnakeex/Desktop/Programming/Arsenal/Binary/LibDebug/Arsenal.a; sourceTree = "<absolute>"; };
 		BEDCDCB71429A48B00D041D4 /* ARDuplexTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ARDuplexTask.m; path = Helper/ARDuplexTask.m; sourceTree = "<group>"; };
+		BEDCE039142ADA7E00D041D4 /* GmrIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = GmrIcon.icns; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -158,6 +160,7 @@
 		2A37F4B8FDCFA73011CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				BEDCE039142ADA7E00D041D4 /* GmrIcon.icns */,
 				2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */,
 				8D15AC360486D014006FF6A4 /* GrammarDesigner-Info.plist */,
 				089C165FFE840EACC02AAC07 /* InfoPlist.strings */,
@@ -256,6 +259,7 @@
 				1DDD582C0DA1D0D100B32029 /* GrammarDesignerDocument.xib in Resources */,
 				1DDD582D0DA1D0D100B32029 /* MainMenu.xib in Resources */,
 				BEAE587E1426FCDA004C25AA /* Preferences.xib in Resources */,
+				BEDCE03A142ADA7E00D041D4 /* GmrIcon.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -364,6 +368,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/LibDebug";
+				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/LibDebug";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
@@ -380,6 +386,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/LibRelease";
+				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/LibRelease";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PREPROCESSOR_DEFINITIONS = NDEBUG;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
