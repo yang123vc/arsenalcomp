@@ -7,7 +7,7 @@ using namespace ARSpace;
 
 
 
-#define INPUT_FILE		L"/Users/solidussnakeex/Desktop/input.txt"
+#define INPUT_FILE		L"/Users/solidussnakeex/Desktop/Tengu.gmr"
 #define OUTPUT_FILE		L"/Users/solidussnakeex/Desktop/output.txt"
 
 #define OUTPUT_TYPE		AR_TXT_BOM_UTF_8
@@ -106,8 +106,8 @@ int  main()
 		
         Arsenal_Init(&ai);
 		
-        //AR_Test2();
-		AR_Test3();
+        AR_Test2();
+		//AR_Test3();
 		
 		
 		Arsenal_UnInit();
