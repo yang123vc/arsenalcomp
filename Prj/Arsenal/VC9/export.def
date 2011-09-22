@@ -69,6 +69,14 @@ AR_FreeToHeap
 AR_GetTime_Microseconds
 AR_GetTime_Milliseconds
 
+
+
+AR_LoadBomTextFile
+AR_SaveBomTextFile
+AR_SaveBomTextToBinary
+
+
+
 ;Lex
 
 Lex_Create				
