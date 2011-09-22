@@ -276,7 +276,10 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>43</integer>
+									<integer>20</integer>
+									<integer>5</integer>
+									<integer>2</integer>
+									<integer>0</integer>
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
@@ -308,8 +311,6 @@
 					<key>Dock</key>
 					<array>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -327,7 +328,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>BE435C9D142B0D0000DBA97C</string>
+										<string>BE435CA5142B0D7000DBA97C</string>
 										<key>history</key>
 										<array>
 											<string>BEAE1C6513F248B90088C3A4</string>
@@ -363,12 +364,12 @@
 											<string>BEDCE0B2142AF2D200D041D4</string>
 											<string>BEDCE0B3142AF2D200D041D4</string>
 											<string>BEDCE180142AFA9F00D041D4</string>
-											<string>BE435BA4142B060F00DBA97C</string>
 											<string>BE435BA5142B060F00DBA97C</string>
 											<string>BE435BBD142B07FE00DBA97C</string>
 											<string>BE435C0A142B0A6400DBA97C</string>
-											<string>BE435C23142B0B9A00DBA97C</string>
-											<string>BE435B34142B01F000DBA97C</string>
+											<string>BE435CA2142B0D7000DBA97C</string>
+											<string>BE435CA3142B0D7000DBA97C</string>
+											<string>BE435CA4142B0D7000DBA97C</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -408,8 +409,6 @@
 									<dict>
 										<key>Frame</key>
 										<string>{{10, 27}, {1445, 225}}</string>
-										<key>RubberWindowFrame</key>
-										<string>0 141 1680 887 0 0 1680 1028 </string>
 									</dict>
 									<key>Module</key>
 									<string>XCDetailModule</string>
@@ -463,7 +462,9 @@
 									<key>GeometryConfiguration</key>
 									<dict>
 										<key>Frame</key>
-										<string>{{0, 0}, {568, 405}}</string>
+										<string>{{10, 27}, {1445, 225}}</string>
+										<key>RubberWindowFrame</key>
+										<string>0 141 1680 887 0 0 1680 1028 </string>
 									</dict>
 									<key>Module</key>
 									<string>PBXBuildResultsModule</string>

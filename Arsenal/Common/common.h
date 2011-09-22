@@ -632,6 +632,7 @@ typedef enum
 		AR_CP_BIG5,
 		AR_CP_GB2312,
 		AR_CP_GB18030,
+		AR_CP_MAX
 }arCodePage_t;
 
 size_t					AR_str_to_wcs(arCodePage_t cp, const char *acp, size_t n, wchar_t *out, size_t out_len);
