@@ -9,12 +9,12 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>????</string>
+				<string>gmr</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string></string>
+			<string>GmrIcon</string>
 			<key>CFBundleTypeName</key>
-			<string>DocumentType</string>
+			<string>GrammarDesigner Doc</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
 				<string>????</string>
@@ -23,12 +23,14 @@
 			<string>Editor</string>
 			<key>NSDocumentClass</key>
 			<string>GrammarDesignerDocument</string>
+			<key>NSPersistentStoreTypeKey</key>
+			<string>Binary</string>
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFile</key>
-	<string></string>
+	<string>GmrIcon</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.solidusstudio.${PRODUCT_NAME:rfc1034identifier}</string>
 	<key>CFBundleInfoDictionaryVersion</key>

@@ -1418,14 +1418,6 @@
 									<reference key="NSOnImage" ref="1033313550"/>
 									<reference key="NSMixedImage" ref="310636482"/>
 								</object>
-								<object class="NSMenuItem" id="607831329">
-									<reference key="NSMenu" ref="597592227"/>
-									<string key="NSTitle">GrammarCheckerTest</string>
-									<string key="NSKeyEquiv"/>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="1033313550"/>
-									<reference key="NSMixedImage" ref="310636482"/>
-								</object>
 							</object>
 						</object>
 					</object>
@@ -2153,14 +2145,6 @@
 						<reference key="destination" ref="435565761"/>
 					</object>
 					<int key="connectionID">639</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">onGrammarCheckerTest:</string>
-						<reference key="source" ref="871561808"/>
-						<reference key="destination" ref="607831329"/>
-					</object>
-					<int key="connectionID">641</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -3155,7 +3139,6 @@
 						<reference key="object" ref="597592227"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="607831329"/>
 							<reference ref="352509155"/>
 						</object>
 						<reference key="parent" ref="962782107"/>
@@ -3323,11 +3306,6 @@
 						<int key="objectID">638</int>
 						<reference key="object" ref="435565761"/>
 						<reference key="parent" ref="246946529"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">640</int>
-						<reference key="object" ref="607831329"/>
-						<reference key="parent" ref="597592227"/>
 					</object>
 				</object>
 			</object>
@@ -3568,7 +3546,6 @@
 					<string>637.IBEditorWindowLastContentRect</string>
 					<string>637.IBPluginDependency</string>
 					<string>638.IBPluginDependency</string>
-					<string>640.IBPluginDependency</string>
 					<string>72.IBPluginDependency</string>
 					<string>72.ImportedFromIB2</string>
 					<string>73.IBPluginDependency</string>
@@ -3801,7 +3778,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{755, 923}, {200, 43}}</string>
+					<string>{{755, 943}, {100, 23}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3829,7 +3806,6 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{730, 863}, {155, 23}}</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3888,13 +3864,11 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>onGrammarCheckerTest:</string>
 							<string>onTest:</string>
 							<string>showPreferencePanel:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 						</object>
@@ -3903,16 +3877,11 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>onGrammarCheckerTest:</string>
 							<string>onTest:</string>
 							<string>showPreferencePanel:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBActionInfo">
-								<string key="name">onGrammarCheckerTest:</string>
-								<string key="candidateClassName">id</string>
-							</object>
 							<object class="IBActionInfo">
 								<string key="name">onTest:</string>
 								<string key="candidateClassName">id</string>
