@@ -787,6 +787,8 @@ typedef enum
 		AR_TXT_BOM_UTF32_BE		=		0x20
 }arTxtBom_t;
 
+bool_t	AR_LoadBomTextFromBinary(arBuffer_t *input, arTxtBom_t *bom, arString_t *out);
+
 bool_t	AR_LoadBomTextFile(const wchar_t *path, arTxtBom_t *bom, arString_t *out);
 
 bool_t	AR_SaveBomTextFile(const wchar_t *path, arTxtBom_t bom, const wchar_t *input);
