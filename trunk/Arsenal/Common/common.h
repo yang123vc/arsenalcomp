@@ -738,6 +738,7 @@ const byte_t*	AR_GetBufferData(const arBuffer_t *buffer);
 size_t			AR_GetBufferAvailable(const arBuffer_t *buffer);
 
 
+size_t			AR_ReadBufferData(arBuffer_t *buffer, byte_t *dest, size_t len);
 
 
 

@@ -79,7 +79,7 @@ FILE*	__AR_open_file(const wchar_t *path, const wchar_t *mode)
 
 
 /***************************************Read File**********************************************************/
-
+#if(0)
 static bool_t	__dectect_encoding(FILE *file, arTxtBom_t *bom)
 {
 		byte_t b[2];
@@ -436,6 +436,414 @@ FAILED_POINT:
 
 		return is_ok;
 }
+
+#endif
+
+
+
+
+
+
+
+
+
+
+/*返回消耗掉的数据长度，<0则错误*/
+
+static bool_t	__dectect_encoding(arBuffer_t *input, arTxtBom_t *bom)
+{
+		byte_t tmp[4] = {0xcc, 0xcc,0xcc,0xcc};
+		size_t input_len;
+		size_t read_n;
+		AR_ASSERT(input != NULL && bom != NULL);
+		input_len = AR_GetBufferAvailable(input);
+
+		if(input_len < 2)
+		{
+				return false;
+		}
+
+		read_n = 0;
+		AR_memcpy(tmp, AR_GetBufferData(input), AR_MIN(input_len, 4));
+
+
+		if(tmp[0] == 0xFF && tmp[1] == 0xFE)
+		{
+				if(tmp[2] == 0x00 && tmp[3] == 0x00)
+				{
+						read_n = 4;
+						*bom = AR_TXT_BOM_UTF32_LE;
+				}else
+				{
+						*bom = AR_TXT_BOM_UTF16_LE;
+						read_n = 2;
+				}
+		}else if(tmp[0] == 0xFE && tmp[1] == 0xFF)
+		{
+				*bom = AR_TXT_BOM_UTF16_BE;
+				read_n = 2;
+		}else if(tmp[0] == 0x00 && tmp[1] == 0x00)
+		{
+				if(tmp[2] == 0xFE && tmp[3] == 0xFF)
+				{
+						*bom = AR_TXT_BOM_UTF32_BE;
+						read_n = 4;
+				}else
+				{
+						*bom = AR_TXT_BOM_ASCII;
+						read_n = 0;
+				}
+		}else if(tmp[0] == 0xEF && tmp[1] == 0xBB)
+		{
+				if( tmp[2] == 0xBF)
+				{
+						*bom = AR_TXT_BOM_UTF_8;
+						read_n = 3;
+				}else
+				{
+						*bom = AR_TXT_BOM_ASCII;
+						read_n = 0;
+				}
+		}
+		else
+		{
+				*bom = AR_TXT_BOM_ASCII;
+				read_n = 0;
+		}
+
+		if(input_len < read_n)
+		{
+				return false;
+		}else
+		{
+				AR_ReadBufferData(input, NULL, read_n);
+		}
+
+		return true;
+}
+
+
+
+
+typedef enum
+{
+		TXT_READ_OK = 0x00,
+		TXT_READ_INVALID,
+		TXT_READ_EOF
+}txtReadStatus_t;
+
+static txtReadStatus_t		__read_wchar(arBuffer_t *input, arTxtBom_t enc, wchar_t *out)
+{
+
+		uint_32_t e;
+
+		AR_ASSERT(input != NULL);
+
+		e = 0;
+
+		switch(enc)
+		{
+		case AR_TXT_BOM_UTF_8:
+		{
+				byte_t		b;
+				byte_t		buf[5];
+				size_t		rn;
+				uint_32_t	v;
+
+				b = 0;
+				rn = 0;
+				v = 0;
+				
+				rn = AR_ReadBufferData(input, &b, 1);
+				
+				if(rn != 1)
+				{
+						return TXT_READ_EOF;
+				}
+
+				v = (uint_32_t)b;
+
+				if(v >= 0xfc)
+				{
+						/*6:<11111100>*/
+						/*读剩下的字节*/
+						rn = AR_ReadBufferData(input, buf, 5);
+						if(rn != 5)
+						{
+								return TXT_READ_INVALID;
+						}
+
+						e = (v & 0x01) << 30;
+						e |= (buf[0] & 0x3f) << 24;
+						e |= (buf[1] & 0x3f) << 18;
+						e |= (buf[2] & 0x3f) << 12;
+						e |= (buf[3] & 0x3f) << 6;
+						e |= (buf[4] & 0x3f);
+				}else if(v >= 0xf8)
+				{
+						/*5:<11111000>*/
+						rn = AR_ReadBufferData(input, buf, 4);
+						if(rn != 4)
+						{
+								return TXT_READ_INVALID;
+						}
+
+						e = (v & 0x03) << 24;
+						e |= (buf[0] & 0x3f) << 18;
+						e |= (buf[1] & 0x3f) << 12;
+						e |= (buf[2] & 0x3f) << 6;
+						e |= (buf[3] & 0x3f);
+
+				}else if(v >= 0xf0)
+				{
+						/*4:<11110000>*/
+						rn = AR_ReadBufferData(input, buf, 3);
+						if(rn != 3)
+						{
+								return TXT_READ_INVALID;
+						}
+						e = (v & 0x07) << 18;
+						e |= (buf[0] & 0x3f) << 12;
+						e |= (buf[1] & 0x3f) << 6;
+						e |= (buf[2] & 0x3f);
+
+				}else if(v >= 0xe0)
+				{
+						/*3:<11100000>*/
+						rn = AR_ReadBufferData(input, buf, 2);
+						if(rn != 2)
+						{
+								return TXT_READ_INVALID;
+						}
+
+						e = (v & 0x0f) << 12;
+						e |= (buf[0] & 0x3f) << 6;
+						e |= (buf[1] & 0x3f);
+
+				}else if(v >= 0xc0)
+				{
+						/*3:<11000000>*/
+						rn = AR_ReadBufferData(input, buf, 1);
+						if(rn != 1)
+						{
+								return TXT_READ_INVALID;
+						}
+						e = (v & 0x1f) << 6;
+						e |= (buf[0] & 0x3f);
+				}else
+				{
+						e = (wchar_t)v;
+				}
+		}
+				break;
+		case AR_TXT_BOM_UTF16_BE:
+		case AR_TXT_BOM_UTF16_LE:
+		{
+				byte_t buf[2];
+				size_t	rn;
+				rn = AR_ReadBufferData(input, buf, 2);
+				if(rn != 2)
+				{
+						return TXT_READ_EOF;
+				}
+
+				if(enc == AR_TXT_BOM_UTF16_BE)
+				{
+						e = ((uint_32_t)buf[0]) << 8 | (uint_32_t)buf[1];
+				}else
+				{
+						e = ((uint_32_t)buf[1]) << 8 | (uint_32_t)buf[0];
+				}
+		}
+				break;
+		case AR_TXT_BOM_UTF32_BE:
+		case AR_TXT_BOM_UTF32_LE:
+		{
+				byte_t buf[4];
+				size_t	rn;
+				rn = AR_ReadBufferData(input, buf, 4);
+				if(rn != 4)
+				{
+						return TXT_READ_EOF;
+				}
+
+				if(enc == AR_TXT_BOM_UTF32_BE)
+				{
+						e = ((uint_32_t)buf[0]) << 24 | (uint_32_t)buf[1] << 16 | (uint_32_t)buf[2] << 8 | (uint_32_t)buf[3];
+				}else
+				{
+						e = (uint_32_t)buf[0] | (uint_32_t)buf[1] << 8 | (uint_32_t)buf[2] << 16 | ((uint_32_t)buf[3]) << 24;
+				}
+		}
+				break;
+		case AR_TXT_BOM_ASCII:
+		default:
+				return TXT_READ_INVALID;
+				break;
+		}
+
+		if(out)*out = (wchar_t)e;
+		return TXT_READ_OK;
+}
+
+
+
+
+
+
+
+
+bool_t	AR_LoadBomTextFromBinary(arBuffer_t *input, arTxtBom_t *bom, arString_t *out)
+{
+
+
+		arTxtBom_t	enc;
+		wchar_t c;
+		
+		txtReadStatus_t	status;
+		AR_ASSERT(input != NULL && out != NULL);
+
+		status = TXT_READ_OK;
+		AR_ClearString(out);
+
+
+		if(!__dectect_encoding(input, &enc))
+		{
+				status = TXT_READ_INVALID;
+				goto FAILED_POINT;
+		}
+
+		if(enc == AR_TXT_BOM_ASCII)
+		{
+				
+				wchar_t *str = NULL;
+
+				size_t cp;
+				for(cp = AR_CP_ACP; cp < AR_CP_MAX; ++cp)
+				{
+
+						str = AR_str_convto_wcs((arCodePage_t)cp, (const char*)AR_GetBufferData(input), AR_GetBufferAvailable(input));
+						if(str != NULL)
+						{
+								break;
+						}
+
+				}
+
+				if(!str)
+				{
+						status = TXT_READ_INVALID;
+						goto FAILED_POINT;
+				}
+
+				if(out && str)
+				{
+						AR_AppendString(out, str);
+				}
+
+				if(str)
+				{
+						AR_DEL(str);
+						str = NULL;
+				}
+
+		}else
+		{
+				do{
+
+						status = __read_wchar(input, enc, &c);
+
+						if(status == TXT_READ_OK && out)
+						{
+								AR_AppendCharToString(out, c);
+						}
+				}while(status == TXT_READ_OK);
+		}
+
+		if(bom)
+		{
+				*bom = enc;
+		}
+
+FAILED_POINT:
+		
+		return status != TXT_READ_INVALID;
+}
+
+
+
+
+
+
+bool_t	AR_LoadBomTextFile(const wchar_t *path, arTxtBom_t *bom, arString_t *out)
+{
+
+		FILE	*file = NULL;
+		arBuffer_t *buf;
+		bool_t	is_ok;
+		
+		AR_ASSERT(path != NULL && out != NULL);
+
+		is_ok = true;
+		buf = NULL;
+		file = NULL;
+		
+
+		file = __AR_open_file(path, L"rb");
+		if(!file)
+		{
+				is_ok = false;
+				goto FAILED_POINT;
+		}
+
+
+		buf = AR_CreateBuffer(1024);
+
+
+		{
+				size_t	rn;
+				byte_t	tmp[256];
+				
+				do{
+						rn = fread((void*)tmp, 1, sizeof(tmp), file);
+						if(rn > 0)
+						{
+								AR_InsertBuffer(buf, tmp, rn);
+						}
+				}while(!feof(file) && !ferror(file));
+
+				if(ferror(file))
+				{
+						is_ok = false;
+						goto FAILED_POINT;
+				}else
+				{
+						tmp[0] = '\0';
+						AR_InsertBuffer(buf, tmp, 1);
+				}
+		}
+
+		is_ok = AR_LoadBomTextFromBinary(buf, bom, out);
+
+FAILED_POINT:
+		if(file)
+		{
+				fclose(file);
+				file = NULL;
+		}
+
+		if(buf)
+		{
+				AR_DestroyBuffer(buf);
+				buf = NULL;
+		}
+
+		return is_ok;
+}
+
+
+
+
 
 
 

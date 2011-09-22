@@ -1327,12 +1327,17 @@ void align_test()
 
 void text_test_save()
 {
+
+#define INPUT_FILE		L"..\\..\\..\\misc\\txt_enc_test\\ascii.txt"
+//#define INPUT_FILE		L"D:\\User\\Temp\\Temp\\output2.txt"
 #define OUTPUT_FILE		L"D:\\test.txt"
-#define OUTPUT_TYPE		AR_TXT_BOM_UTF32_BE
+#define OUTPUT_TYPE		AR_TXT_BOM_UTF_8
 
 		arString_t *str = AR_CreateString();
+		
+		arTxtBom_t bom;
 
-		if(!AR_LoadBomTextFile(L"..\\..\\..\\misc\\txt_enc_test\\ascii.txt",NULL, str))
+		if(!AR_LoadBomTextFile(INPUT_FILE,&bom, str))
 		{
 				AR_ASSERT(false);
 		}
@@ -1344,7 +1349,7 @@ void text_test_save()
 		}
 
 
-		arTxtBom_t bom;
+		
 		if(!AR_LoadBomTextFile(OUTPUT_FILE, &bom, str))
 		{
 				AR_ASSERT(false);
