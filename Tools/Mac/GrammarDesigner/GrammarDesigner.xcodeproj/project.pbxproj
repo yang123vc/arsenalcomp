@@ -23,6 +23,7 @@
 		BE47DD1B1426956D006FE4E8 /* ArsenalOC.m in Sources */ = {isa = PBXBuildFile; fileRef = BE47DD1A1426956D006FE4E8 /* ArsenalOC.m */; };
 		BE47DE081426B2E8006FE4E8 /* ARUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = BE47DE071426B2E8006FE4E8 /* ARUtility.m */; };
 		BE47DE391426B84A006FE4E8 /* ApplicationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BE47DE381426B84A006FE4E8 /* ApplicationDelegate.m */; };
+		BE8DB506142D7A160031D571 /* GrammarCheckerTask.m in Sources */ = {isa = PBXBuildFile; fileRef = BE8DB505142D7A160031D571 /* GrammarCheckerTask.m */; };
 		BEAE57FD1426F8F3004C25AA /* Preferences.m in Sources */ = {isa = PBXBuildFile; fileRef = BEAE57FC1426F8F3004C25AA /* Preferences.m */; };
 		BEAE58021426F9BC004C25AA /* ARTest.m in Sources */ = {isa = PBXBuildFile; fileRef = BEAE58011426F9BC004C25AA /* ARTest.m */; };
 		BEAE587E1426FCDA004C25AA /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEAE587D1426FCDA004C25AA /* Preferences.xib */; };
@@ -66,6 +67,8 @@
 		BE47DE071426B2E8006FE4E8 /* ARUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ARUtility.m; path = Helper/ARUtility.m; sourceTree = "<group>"; };
 		BE47DE371426B84A006FE4E8 /* ApplicationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplicationDelegate.h; sourceTree = "<group>"; };
 		BE47DE381426B84A006FE4E8 /* ApplicationDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplicationDelegate.m; sourceTree = "<group>"; };
+		BE8DB504142D7A160031D571 /* GrammarCheckerTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrammarCheckerTask.h; sourceTree = "<group>"; };
+		BE8DB505142D7A160031D571 /* GrammarCheckerTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrammarCheckerTask.m; sourceTree = "<group>"; };
 		BEAE57FB1426F8F3004C25AA /* Preferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Preferences.h; sourceTree = "<group>"; };
 		BEAE57FC1426F8F3004C25AA /* Preferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Preferences.m; sourceTree = "<group>"; };
 		BEAE58011426F9BC004C25AA /* ARTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ARTest.m; path = Helper/ARTest.m; sourceTree = "<group>"; };
@@ -143,6 +146,8 @@
 				BE47DE381426B84A006FE4E8 /* ApplicationDelegate.m */,
 				BEAE57FB1426F8F3004C25AA /* Preferences.h */,
 				BEAE57FC1426F8F3004C25AA /* Preferences.m */,
+				BE8DB504142D7A160031D571 /* GrammarCheckerTask.h */,
+				BE8DB505142D7A160031D571 /* GrammarCheckerTask.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -284,6 +289,7 @@
 				BEAE57FD1426F8F3004C25AA /* Preferences.m in Sources */,
 				BEAE58021426F9BC004C25AA /* ARTest.m in Sources */,
 				BEDCDCB81429A48B00D041D4 /* ARDuplexTask.m in Sources */,
+				BE8DB506142D7A160031D571 /* GrammarCheckerTask.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
