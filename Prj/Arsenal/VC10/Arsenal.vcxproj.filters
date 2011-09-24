@@ -221,4 +221,7 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Arsenal\Arsenal.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="export.def" />
+  </ItemGroup>
 </Project>
