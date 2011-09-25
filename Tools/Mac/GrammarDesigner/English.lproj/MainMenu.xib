@@ -12,7 +12,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="589"/>
+			<integer value="612"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1308,17 +1308,17 @@
 									<reference key="NSOnImage" ref="1033313550"/>
 									<reference key="NSMixedImage" ref="310636482"/>
 								</object>
-								<object class="NSMenuItem" id="88444958">
+								<object class="NSMenuItem" id="935336805">
 									<reference key="NSMenu" ref="112172202"/>
-									<string key="NSTitle">ReBuild Tags</string>
+									<string key="NSTitle">Parse Input</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="1033313550"/>
 									<reference key="NSMixedImage" ref="310636482"/>
 								</object>
-								<object class="NSMenuItem" id="935336805">
+								<object class="NSMenuItem" id="88444958">
 									<reference key="NSMenu" ref="112172202"/>
-									<string key="NSTitle">Parse Input</string>
+									<string key="NSTitle">ReBuild Tags</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="1033313550"/>
@@ -2124,14 +2124,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
-						<string key="label">parseDocumentInput:</string>
-						<reference key="source" ref="1014"/>
-						<reference key="destination" ref="935336805"/>
-					</object>
-					<int key="connectionID">634</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
 						<string key="label">rebuildDocumentTags:</string>
 						<reference key="source" ref="1014"/>
 						<reference key="destination" ref="88444958"/>
@@ -2145,6 +2137,14 @@
 						<reference key="destination" ref="435565761"/>
 					</object>
 					<int key="connectionID">639</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">parseDocumentInput:</string>
+						<reference key="source" ref="1014"/>
+						<reference key="destination" ref="935336805"/>
+					</object>
+					<int key="connectionID">643</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -3223,11 +3223,6 @@
 						<reference key="parent" ref="112172202"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">615</int>
-						<reference key="object" ref="935336805"/>
-						<reference key="parent" ref="112172202"/>
-					</object>
-					<object class="IBObjectRecord">
 						<int key="objectID">616</int>
 						<reference key="object" ref="148612636"/>
 						<object class="NSMutableArray" key="children">
@@ -3306,6 +3301,11 @@
 						<int key="objectID">638</int>
 						<reference key="object" ref="435565761"/>
 						<reference key="parent" ref="246946529"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">642</int>
+						<reference key="object" ref="935336805"/>
+						<reference key="parent" ref="112172202"/>
 					</object>
 				</object>
 			</object>
@@ -3531,7 +3531,6 @@
 					<string>612.IBEditorWindowLastContentRect</string>
 					<string>612.IBPluginDependency</string>
 					<string>614.IBPluginDependency</string>
-					<string>615.IBPluginDependency</string>
 					<string>616.IBPluginDependency</string>
 					<string>617.IBEditorWindowLastContentRect</string>
 					<string>617.IBPluginDependency</string>
@@ -3546,6 +3545,7 @@
 					<string>637.IBEditorWindowLastContentRect</string>
 					<string>637.IBPluginDependency</string>
 					<string>638.IBPluginDependency</string>
+					<string>642.IBPluginDependency</string>
 					<string>72.IBPluginDependency</string>
 					<string>72.ImportedFromIB2</string>
 					<string>73.IBPluginDependency</string>
@@ -3668,7 +3668,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>{{525, 802}, {197, 73}}</string>
-					<string>{{99, 966}, {716, 20}}</string>
+					<string>{{94, 972}, {716, 20}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>{74, 862}</string>
@@ -3778,7 +3778,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{755, 943}, {100, 23}}</string>
+					<string>{{750, 949}, {100, 23}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3790,8 +3790,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{590, 863}, {140, 103}}</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>{{585, 869}, {140, 103}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3801,11 +3800,12 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{650, 943}, {163, 23}}</string>
+					<string>{{645, 949}, {163, 23}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{730, 863}, {155, 23}}</string>
+					<string>{{725, 889}, {155, 23}}</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3852,7 +3852,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">641</int>
+			<int key="maxID">643</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3904,7 +3904,9 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>buildDocumentParser:</string>
 							<string>generateDocumentGrammarTemplateCode:</string>
+							<string>parseDocumentInput:</string>
 							<string>rebuildDocumentTags:</string>
 							<string>setDocumentLexerIgnoreCase:</string>
 							<string>setDocumentLexerSingleLine:</string>
@@ -3913,6 +3915,8 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -3925,7 +3929,9 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>buildDocumentParser:</string>
 							<string>generateDocumentGrammarTemplateCode:</string>
+							<string>parseDocumentInput:</string>
 							<string>rebuildDocumentTags:</string>
 							<string>setDocumentLexerIgnoreCase:</string>
 							<string>setDocumentLexerSingleLine:</string>
@@ -3935,7 +3941,15 @@
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<object class="IBActionInfo">
+								<string key="name">buildDocumentParser:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
 								<string key="name">generateDocumentGrammarTemplateCode:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">parseDocumentInput:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
