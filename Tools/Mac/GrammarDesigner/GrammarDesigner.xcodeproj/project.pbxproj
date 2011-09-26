@@ -30,6 +30,10 @@
 		BEC0D01F1422C35000D35745 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BEC0D01E1422C35000D35745 /* libiconv.dylib */; };
 		BEC0D0211422C35900D35745 /* libpthread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BEC0D0201422C35900D35745 /* libpthread.dylib */; };
 		BEC0D0251422C37A00D35745 /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BEC0D0241422C37A00D35745 /* Arsenal.a */; };
+		BEC33310142F65DD00553ED3 /* InputChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = BEC3330F142F65DD00553ED3 /* InputChecker.m */; };
+		BEC333D4142F6F3A00553ED3 /* InputChecker.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEC333D3142F6F3A00553ED3 /* InputChecker.xib */; };
+		BEC334A2142F7F4500553ED3 /* StringConverter.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEC334A1142F7F4500553ED3 /* StringConverter.xib */; };
+		BEC334A5142F7F6B00553ED3 /* StringConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = BEC334A4142F7F6B00553ED3 /* StringConverter.m */; };
 		BEDCDCB81429A48B00D041D4 /* ARDuplexTask.m in Sources */ = {isa = PBXBuildFile; fileRef = BEDCDCB71429A48B00D041D4 /* ARDuplexTask.m */; };
 		BEDCE03A142ADA7E00D041D4 /* GmrIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = BEDCE039142ADA7E00D041D4 /* GmrIcon.icns */; };
 /* End PBXBuildFile section */
@@ -76,6 +80,12 @@
 		BEC0D01E1422C35000D35745 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
 		BEC0D0201422C35900D35745 /* libpthread.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpthread.dylib; path = usr/lib/libpthread.dylib; sourceTree = SDKROOT; };
 		BEC0D0241422C37A00D35745 /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = Arsenal.a; path = /Users/solidussnakeex/Desktop/Programming/Arsenal/Binary/LibDebug/Arsenal.a; sourceTree = "<absolute>"; };
+		BEC3330E142F65DD00553ED3 /* InputChecker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InputChecker.h; sourceTree = "<group>"; };
+		BEC3330F142F65DD00553ED3 /* InputChecker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InputChecker.m; sourceTree = "<group>"; };
+		BEC333D3142F6F3A00553ED3 /* InputChecker.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InputChecker.xib; sourceTree = "<group>"; };
+		BEC334A1142F7F4500553ED3 /* StringConverter.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StringConverter.xib; sourceTree = "<group>"; };
+		BEC334A3142F7F6B00553ED3 /* StringConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringConverter.h; sourceTree = "<group>"; };
+		BEC334A4142F7F6B00553ED3 /* StringConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringConverter.m; sourceTree = "<group>"; };
 		BEDCDCB71429A48B00D041D4 /* ARDuplexTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ARDuplexTask.m; path = Helper/ARDuplexTask.m; sourceTree = "<group>"; };
 		BEDCE039142ADA7E00D041D4 /* GmrIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = GmrIcon.icns; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -148,6 +158,10 @@
 				BEAE57FC1426F8F3004C25AA /* Preferences.m */,
 				BE8DB504142D7A160031D571 /* GrammarCheckerTask.h */,
 				BE8DB505142D7A160031D571 /* GrammarCheckerTask.m */,
+				BEC3330E142F65DD00553ED3 /* InputChecker.h */,
+				BEC3330F142F65DD00553ED3 /* InputChecker.m */,
+				BEC334A3142F7F6B00553ED3 /* StringConverter.h */,
+				BEC334A4142F7F6B00553ED3 /* StringConverter.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -165,6 +179,7 @@
 		2A37F4B8FDCFA73011CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				BEC334A1142F7F4500553ED3 /* StringConverter.xib */,
 				BEDCE039142ADA7E00D041D4 /* GmrIcon.icns */,
 				2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */,
 				8D15AC360486D014006FF6A4 /* GrammarDesigner-Info.plist */,
@@ -172,6 +187,7 @@
 				1DDD58280DA1D0D100B32029 /* GrammarDesignerDocument.xib */,
 				1DDD582A0DA1D0D100B32029 /* MainMenu.xib */,
 				BEAE587D1426FCDA004C25AA /* Preferences.xib */,
+				BEC333D3142F6F3A00553ED3 /* InputChecker.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -265,6 +281,8 @@
 				1DDD582D0DA1D0D100B32029 /* MainMenu.xib in Resources */,
 				BEAE587E1426FCDA004C25AA /* Preferences.xib in Resources */,
 				BEDCE03A142ADA7E00D041D4 /* GmrIcon.icns in Resources */,
+				BEC333D4142F6F3A00553ED3 /* InputChecker.xib in Resources */,
+				BEC334A2142F7F4500553ED3 /* StringConverter.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -290,6 +308,8 @@
 				BEAE58021426F9BC004C25AA /* ARTest.m in Sources */,
 				BEDCDCB81429A48B00D041D4 /* ARDuplexTask.m in Sources */,
 				BE8DB506142D7A160031D571 /* GrammarCheckerTask.m in Sources */,
+				BEC33310142F65DD00553ED3 /* InputChecker.m in Sources */,
+				BEC334A5142F7F6B00553ED3 /* StringConverter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
