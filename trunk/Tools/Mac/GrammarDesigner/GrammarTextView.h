@@ -1,0 +1,1 @@
+////  GrammarTextView.h//  GrammarDesigner////  Created by liu peng on 9/26/11.//  Copyright 2011 none. All rights reserved.//#import "stdheader.h"@interface GrammarTextView : NSTextView{}@end

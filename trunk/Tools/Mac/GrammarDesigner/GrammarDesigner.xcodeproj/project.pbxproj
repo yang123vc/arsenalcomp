@@ -14,6 +14,13 @@
 		8D15AC310486D014006FF6A4 /* GrammarDesignerDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4ACFDCFA73011CA2CEA /* GrammarDesignerDocument.m */; settings = {ATTRIBUTES = (); }; };
 		8D15AC320486D014006FF6A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4B0FDCFA73011CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
+		BE1D121E1430781500789216 /* InputTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1D121D1430781500789216 /* InputTextView.m */; };
+		BE1D12201430782700789216 /* InputSyntaxTreeView.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1D121F1430782700789216 /* InputSyntaxTreeView.m */; };
+		BE3578D31430C3CC001D5D04 /* GrammarTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = BE3578D21430C3CC001D5D04 /* GrammarTextView.m */; };
+		BE3578D71430C40A001D5D04 /* TagsView.m in Sources */ = {isa = PBXBuildFile; fileRef = BE3578D61430C40A001D5D04 /* TagsView.m */; };
+		BE3578EB1430C657001D5D04 /* ConsoleView.m in Sources */ = {isa = PBXBuildFile; fileRef = BE3578EA1430C657001D5D04 /* ConsoleView.m */; };
+		BE3578F91430C6AD001D5D04 /* SplitViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BE3578F81430C6AD001D5D04 /* SplitViewDelegate.m */; };
+		BE357A421430CFCE001D5D04 /* ActionView.m in Sources */ = {isa = PBXBuildFile; fileRef = BE357A411430CFCE001D5D04 /* ActionView.m */; };
 		BE47DD1314269558006FE4E8 /* ARAsyncQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = BE47DD0914269558006FE4E8 /* ARAsyncQueue.m */; };
 		BE47DD1414269558006FE4E8 /* ARException.m in Sources */ = {isa = PBXBuildFile; fileRef = BE47DD0B14269558006FE4E8 /* ARException.m */; };
 		BE47DD1514269558006FE4E8 /* ARNet.m in Sources */ = {isa = PBXBuildFile; fileRef = BE47DD0D14269558006FE4E8 /* ARNet.m */; };
@@ -53,6 +60,18 @@
 		2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		8D15AC360486D014006FF6A4 /* GrammarDesigner-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GrammarDesigner-Info.plist"; sourceTree = "<group>"; };
 		8D15AC370486D014006FF6A4 /* GrammarDesigner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GrammarDesigner.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BE1D121D1430781500789216 /* InputTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InputTextView.m; sourceTree = "<group>"; };
+		BE1D121F1430782700789216 /* InputSyntaxTreeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InputSyntaxTreeView.m; sourceTree = "<group>"; };
+		BE3578D11430C3CC001D5D04 /* GrammarTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrammarTextView.h; sourceTree = "<group>"; };
+		BE3578D21430C3CC001D5D04 /* GrammarTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrammarTextView.m; sourceTree = "<group>"; };
+		BE3578D51430C40A001D5D04 /* TagsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagsView.h; sourceTree = "<group>"; };
+		BE3578D61430C40A001D5D04 /* TagsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagsView.m; sourceTree = "<group>"; };
+		BE3578E91430C657001D5D04 /* ConsoleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConsoleView.h; sourceTree = "<group>"; };
+		BE3578EA1430C657001D5D04 /* ConsoleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConsoleView.m; sourceTree = "<group>"; };
+		BE3578F71430C6AD001D5D04 /* SplitViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplitViewDelegate.h; sourceTree = "<group>"; };
+		BE3578F81430C6AD001D5D04 /* SplitViewDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SplitViewDelegate.m; sourceTree = "<group>"; };
+		BE357A401430CFCE001D5D04 /* ActionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionView.h; sourceTree = "<group>"; };
+		BE357A411430CFCE001D5D04 /* ActionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionView.m; sourceTree = "<group>"; };
 		BE47DD0914269558006FE4E8 /* ARAsyncQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ARAsyncQueue.m; path = Helper/ARAsyncQueue.m; sourceTree = "<group>"; };
 		BE47DD0A14269558006FE4E8 /* ARException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ARException.h; path = Helper/ARException.h; sourceTree = "<group>"; };
 		BE47DD0B14269558006FE4E8 /* ARException.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ARException.m; path = Helper/ARException.m; sourceTree = "<group>"; };
@@ -162,6 +181,18 @@
 				BEC3330F142F65DD00553ED3 /* InputChecker.m */,
 				BEC334A3142F7F6B00553ED3 /* StringConverter.h */,
 				BEC334A4142F7F6B00553ED3 /* StringConverter.m */,
+				BE1D121D1430781500789216 /* InputTextView.m */,
+				BE1D121F1430782700789216 /* InputSyntaxTreeView.m */,
+				BE3578D11430C3CC001D5D04 /* GrammarTextView.h */,
+				BE3578D21430C3CC001D5D04 /* GrammarTextView.m */,
+				BE3578D51430C40A001D5D04 /* TagsView.h */,
+				BE3578D61430C40A001D5D04 /* TagsView.m */,
+				BE3578E91430C657001D5D04 /* ConsoleView.h */,
+				BE3578EA1430C657001D5D04 /* ConsoleView.m */,
+				BE3578F71430C6AD001D5D04 /* SplitViewDelegate.h */,
+				BE3578F81430C6AD001D5D04 /* SplitViewDelegate.m */,
+				BE357A401430CFCE001D5D04 /* ActionView.h */,
+				BE357A411430CFCE001D5D04 /* ActionView.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -310,6 +341,13 @@
 				BE8DB506142D7A160031D571 /* GrammarCheckerTask.m in Sources */,
 				BEC33310142F65DD00553ED3 /* InputChecker.m in Sources */,
 				BEC334A5142F7F6B00553ED3 /* StringConverter.m in Sources */,
+				BE1D121E1430781500789216 /* InputTextView.m in Sources */,
+				BE1D12201430782700789216 /* InputSyntaxTreeView.m in Sources */,
+				BE3578D31430C3CC001D5D04 /* GrammarTextView.m in Sources */,
+				BE3578D71430C40A001D5D04 /* TagsView.m in Sources */,
+				BE3578EB1430C657001D5D04 /* ConsoleView.m in Sources */,
+				BE3578F91430C6AD001D5D04 /* SplitViewDelegate.m in Sources */,
+				BE357A421430CFCE001D5D04 /* ActionView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
