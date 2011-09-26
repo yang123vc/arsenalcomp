@@ -282,7 +282,7 @@
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
-							<string>{{0, 0}, {213, 567}}</string>
+							<string>{{0, 0}, {213, 828}}</string>
 						</dict>
 						<key>PBXTopSmartGroupGIDs</key>
 						<array/>
@@ -292,14 +292,14 @@
 					<key>GeometryConfiguration</key>
 					<dict>
 						<key>Frame</key>
-						<string>{{0, 0}, {230, 585}}</string>
+						<string>{{0, 0}, {230, 846}}</string>
 						<key>GroupTreeTableConfiguration</key>
 						<array>
 							<string>MainColumn</string>
 							<real>213</real>
 						</array>
 						<key>RubberWindowFrame</key>
-						<string>0 120 1024 626 0 0 1024 746 </string>
+						<string>0 141 1680 887 0 0 1680 1028 </string>
 					</dict>
 					<key>Module</key>
 					<string>PBXSmartGroupTreeModule</string>
@@ -327,7 +327,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>BECD56F8142E242700756018</string>
+										<string>BEC3330D142F61FD00553ED3</string>
 										<key>history</key>
 										<array>
 											<string>BEAE1C6513F248B90088C3A4</string>
@@ -369,7 +369,7 @@
 											<string>BECD56F5142E242700756018</string>
 											<string>BECD56F6142E242700756018</string>
 											<string>BECD56F7142E242700756018</string>
-											<string>BEDCE0B3142AF2D200D041D4</string>
+											<string>BECD56F8142E242700756018</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -383,14 +383,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 0}, {789, 580}}</string>
+								<string>{{0, 0}, {1445, 841}}</string>
 								<key>RubberWindowFrame</key>
-								<string>0 120 1024 626 0 0 1024 746 </string>
+								<string>0 141 1680 887 0 0 1680 1028 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
 							<key>Proportion</key>
-							<string>580pt</string>
+							<string>841pt</string>
 						</dict>
 						<dict>
 							<key>Proportion</key>
@@ -408,9 +408,9 @@
 									<key>GeometryConfiguration</key>
 									<dict>
 										<key>Frame</key>
-										<string>{{10, 27}, {789, -27}}</string>
+										<string>{{10, 27}, {1445, -27}}</string>
 										<key>RubberWindowFrame</key>
-										<string>0 120 1024 626 0 0 1024 746 </string>
+										<string>0 141 1680 887 0 0 1680 1028 </string>
 									</dict>
 									<key>Module</key>
 									<string>XCDetailModule</string>
@@ -473,7 +473,7 @@
 						</dict>
 					</array>
 					<key>Proportion</key>
-					<string>789pt</string>
+					<string>1445pt</string>
 				</dict>
 			</array>
 			<key>Name</key>
@@ -492,11 +492,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>BECD545C142DE54100756018</string>
+				<string>BEC332B1142F5E0A00553ED3</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>BECD545D142DE54100756018</string>
+				<string>BEC332B2142F5E0A00553ED3</string>
 				<string>BE5AE25B13F1724E00D92048</string>
-				<string>BECD545E142DE54100756018</string>
+				<string>BEC332B3142F5E0A00553ED3</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -689,7 +689,7 @@
 		<string>/Users/solidussnakeex/Desktop/Programming/Arsenal/Prj/Arsenal/Mac/Arsenal.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
-	<string>0 120 1024 626 0 0 1024 746 </string>
+	<string>0 141 1680 887 0 0 1680 1028 </string>
 	<key>WindowToolsV3</key>
 	<array>
 		<dict>

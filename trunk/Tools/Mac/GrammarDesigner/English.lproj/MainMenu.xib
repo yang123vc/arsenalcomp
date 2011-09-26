@@ -12,7 +12,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="612"/>
+			<integer value="622"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1324,6 +1324,14 @@
 									<reference key="NSOnImage" ref="1033313550"/>
 									<reference key="NSMixedImage" ref="310636482"/>
 								</object>
+								<object class="NSMenuItem" id="672102711">
+									<reference key="NSMenu" ref="112172202"/>
+									<string key="NSTitle">Input Checker</string>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="1033313550"/>
+									<reference key="NSMixedImage" ref="310636482"/>
+								</object>
 								<object class="NSMenuItem" id="614675776">
 									<reference key="NSMenu" ref="112172202"/>
 									<string key="NSTitle">Generate</string>
@@ -2145,6 +2153,22 @@
 						<reference key="destination" ref="935336805"/>
 					</object>
 					<int key="connectionID">643</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">showInputChecker:</string>
+						<reference key="source" ref="1014"/>
+						<reference key="destination" ref="672102711"/>
+					</object>
+					<int key="connectionID">645</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">showStringConverter:</string>
+						<reference key="source" ref="871561808"/>
+						<reference key="destination" ref="949106687"/>
+					</object>
+					<int key="connectionID">646</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -3214,6 +3238,7 @@
 							<reference ref="614675776"/>
 							<reference ref="88444958"/>
 							<reference ref="935336805"/>
+							<reference ref="672102711"/>
 						</object>
 						<reference key="parent" ref="255471406"/>
 					</object>
@@ -3305,6 +3330,11 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">642</int>
 						<reference key="object" ref="935336805"/>
+						<reference key="parent" ref="112172202"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">644</int>
+						<reference key="object" ref="672102711"/>
 						<reference key="parent" ref="112172202"/>
 					</object>
 				</object>
@@ -3412,6 +3442,7 @@
 					<string>29.WindowOrigin</string>
 					<string>29.editorWindowContentRectSynchronizationRect</string>
 					<string>295.IBPluginDependency</string>
+					<string>296.IBEditorWindowLastContentRect</string>
 					<string>296.IBPluginDependency</string>
 					<string>296.editorWindowContentRectSynchronizationRect</string>
 					<string>297.IBPluginDependency</string>
@@ -3546,6 +3577,7 @@
 					<string>637.IBPluginDependency</string>
 					<string>638.IBPluginDependency</string>
 					<string>642.IBPluginDependency</string>
+					<string>644.IBPluginDependency</string>
 					<string>72.IBPluginDependency</string>
 					<string>72.ImportedFromIB2</string>
 					<string>73.IBPluginDependency</string>
@@ -3668,12 +3700,13 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>{{525, 802}, {197, 73}}</string>
-					<string>{{94, 972}, {716, 20}}</string>
+					<string>{{39, 836}, {716, 20}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>{74, 862}</string>
 					<string>{{11, 977}, {478, 20}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>{{408, 929}, {231, 43}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{475, 832}, {234, 43}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3790,7 +3823,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{585, 869}, {140, 103}}</string>
+					<string>{{1375, 713}, {147, 123}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3800,11 +3833,12 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{645, 949}, {163, 23}}</string>
+					<string>{{590, 813}, {163, 23}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{725, 889}, {155, 23}}</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3852,7 +3886,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">643</int>
+			<int key="maxID">646</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3866,9 +3900,11 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>onTest:</string>
 							<string>showPreferencePanel:</string>
+							<string>showStringConverter:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 						</object>
@@ -3879,6 +3915,7 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>onTest:</string>
 							<string>showPreferencePanel:</string>
+							<string>showStringConverter:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -3888,6 +3925,10 @@
 							</object>
 							<object class="IBActionInfo">
 								<string key="name">showPreferencePanel:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">showStringConverter:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 						</object>
@@ -3912,9 +3953,11 @@
 							<string>setDocumentLexerSingleLine:</string>
 							<string>setDocumentParserModeLALR:</string>
 							<string>setDocumentParserModeSLR:</string>
+							<string>showInputChecker:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -3937,6 +3980,7 @@
 							<string>setDocumentLexerSingleLine:</string>
 							<string>setDocumentParserModeLALR:</string>
 							<string>setDocumentParserModeSLR:</string>
+							<string>showInputChecker:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -3970,6 +4014,10 @@
 							</object>
 							<object class="IBActionInfo">
 								<string key="name">setDocumentParserModeSLR:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">showInputChecker:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 						</object>
@@ -3994,9 +4042,11 @@
 							<string>setDocumentLexerSingleLine:</string>
 							<string>setDocumentParserModeLALR:</string>
 							<string>setDocumentParserModeSLR:</string>
+							<string>showInputChecker:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -4019,6 +4069,7 @@
 							<string>setDocumentLexerSingleLine:</string>
 							<string>setDocumentParserModeLALR:</string>
 							<string>setDocumentParserModeSLR:</string>
+							<string>showInputChecker:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -4052,6 +4103,10 @@
 							</object>
 							<object class="IBActionInfo">
 								<string key="name">setDocumentParserModeSLR:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">showInputChecker:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 						</object>
