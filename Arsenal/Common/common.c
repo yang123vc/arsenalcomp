@@ -84,16 +84,16 @@ void	AR_printf_ctx(arIOCtx_t *ctx, const wchar_t *msg,...)
 		
 		if(ctx && ctx->on_print)
 		{
-				va_start(arg_ptr, msg);
+				AR_va_start(arg_ptr, msg);
 				len = AR_vscwprintf(msg, arg_ptr);
 				if(len <= 0)return;
-				va_end(arg_ptr);
+				AR_va_end(arg_ptr);
 
 				buf = AR_NEWARR0(wchar_t, len + 1);
 				
-				va_start(arg_ptr, msg);
+				AR_va_start(arg_ptr, msg);
 				AR_vswprintf(buf, len + 1, msg, arg_ptr);
-				va_end(arg_ptr);
+				AR_va_end(arg_ptr);
 
 				ctx->on_print(buf, ctx->ctx);
 				AR_DEL(buf);
@@ -108,13 +108,13 @@ void	AR_error_ctx(arIOCtx_t *ctx, int_t level, const wchar_t *msg, ...)
 		
 		if(ctx && ctx->on_error)
 		{
-				va_start(arg_ptr, msg);
+				AR_va_start(arg_ptr, msg);
 				
 				if(AR_VSWPRINTF(buf, 1024, msg, arg_ptr) <= 0)
 				{
 						buf[0] = L'\0';
 				}
-				va_end(arg_ptr);
+				AR_va_end(arg_ptr);
 
 				ctx->on_error(level, buf, ctx->ctx);
 				AR_DEL(buf);
@@ -131,12 +131,12 @@ void AR_error(int_t level, const wchar_t *msg, ...)
 		
 		if(__g_ctx.global_io_ctx.on_error != NULL)
 		{
-				va_start(arg_ptr, msg);
+				AR_va_start(arg_ptr, msg);
 				if(AR_VSWPRINTF(buf, 1024, msg, arg_ptr) <= 0)
 				{
 						buf[0] = L'\0';
 				}
-				va_end(arg_ptr);
+				AR_va_end(arg_ptr);
 				
 				__g_ctx.global_io_ctx.on_error(level, buf, __g_ctx.global_io_ctx.ctx);
 				
@@ -164,16 +164,16 @@ void AR_printf(const wchar_t *msg,...)
 		{
 		
 				
-				va_start(arg_ptr, msg);
+				AR_va_start(arg_ptr, msg);
 				len = AR_vscwprintf(msg, arg_ptr);
-				va_end(arg_ptr);
+				AR_va_end(arg_ptr);
 
 				if(len <= 0)return;
 				buf = AR_NEWARR0(wchar_t, len + 1);
 
-				va_start(arg_ptr, msg);
+				AR_va_start(arg_ptr, msg);
 				AR_vswprintf(buf, len + 1, msg, arg_ptr);
-				va_end(arg_ptr);
+				AR_va_end(arg_ptr);
 		
 				__g_ctx.global_io_ctx.on_print(buf, __g_ctx.global_io_ctx.ctx);
 				
@@ -190,9 +190,9 @@ void	AR_check(bool_t cond, const wchar_t *fmt, ...)
 		
 		if(!cond)
 		{
-				va_start(arg_ptr, fmt);
+				AR_va_start(arg_ptr, fmt);
 				len = AR_vscwprintf(fmt, arg_ptr);
-				va_end(arg_ptr);
+				AR_va_end(arg_ptr);
 				
 				if(len < 0)
 				{
@@ -202,9 +202,9 @@ void	AR_check(bool_t cond, const wchar_t *fmt, ...)
 
 				buf = AR_NEWARR0(wchar_t, len + 1);
 
-				va_start(arg_ptr, fmt);
+				AR_va_start(arg_ptr, fmt);
 				len = AR_vswprintf(buf, len + 1, fmt, arg_ptr);
-				va_end(arg_ptr);
+				AR_va_end(arg_ptr);
 
 				if(len < 0)
 				{

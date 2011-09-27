@@ -279,13 +279,13 @@ void __format_v(const wchar_t *fmt, ...)
 {
 		int_t len;
 		va_list	arg_ptr;
-		va_start(arg_ptr, fmt);
+		AR_va_start(arg_ptr, fmt);
 		len = AR_vscwprintf(fmt, arg_ptr);
 		printf("--------------------------\r\n");
 		printf("AR_vscwprintf == %d\r\n", len);
 		//printf("_vscwprintf == %d\r\n", _vscwprintf(fmt, arg_ptr));
 		
-		va_end(arg_ptr);
+		AR_va_end(arg_ptr);
 }
 
 void com_vscwprintf_test()
@@ -1383,13 +1383,13 @@ static void str_vfmt_test(arString_t *str, const wchar_t *fmt, ...)
 {
 		va_list args;
 
-		va_start(args, fmt);
+		AR_va_start(args, fmt);
 		AR_AppendVFormatString(str, fmt, args);
 
 		
 		//printf("%ls\r\n", AR_GetStringCString(str));
 
-		va_end(args);
+		AR_va_end(args);
 
 
 		

@@ -49,9 +49,9 @@ void TGU_FormatVMError(tguMachine_t *vm, const wchar_t *fmt,...)
 {
 		va_list arg_ptr;
 
-		va_start(arg_ptr, fmt);
+		AR_va_start(arg_ptr, fmt);
 		AR_VFormatString(vm->last_error, fmt, arg_ptr);
-		va_end(arg_ptr);
+		AR_va_end(arg_ptr);
 }
 
 

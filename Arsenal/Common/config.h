@@ -574,6 +574,10 @@ typedef void*					ptr_t;
 #endif
 
 
+#define AR_va_start		va_start
+#define AR_va_arg		va_arg
+#define AR_va_end		va_end
+
 
 #if (OS_TYPE == OS_MAC_OS_X || OS_TYPE == OS_IOS)
 

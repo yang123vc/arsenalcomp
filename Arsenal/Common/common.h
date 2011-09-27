@@ -571,8 +571,8 @@ size_t			AR_AppendString(arString_t *str, const wchar_t *sour);
 void			AR_FormatString(arString_t *str, const wchar_t *fmt, ...);
 void			AR_AppendFormatString(arString_t *str, const wchar_t *fmt, ...);
 
-void			AR_VFormatString(arString_t *str, const wchar_t *fmt, va_list args);
-void			AR_AppendVFormatString(arString_t *str, const wchar_t *fmt, va_list args);
+void			AR_VFormatString(arString_t *str, const wchar_t *fmt, va_list va_args);
+void			AR_AppendVFormatString(arString_t *str, const wchar_t *fmt, va_list va_args);
 
 
 void			AR_AppendCharToString(arString_t *str, wchar_t chr);

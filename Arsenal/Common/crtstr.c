@@ -452,13 +452,14 @@ static int_t __wcs_format_preprocess(const wchar_t *fmt, wchar_t *out)
 #define __MODIFIER_UNICODE		0x20000
 #define	__MODIFIER_INT64		0x40000
 
-int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
+int_t AR_vscwprintf(const wchar_t *fmt, va_list va_args)
 {
 		int_t res;
-		va_list save;
-		AR_ASSERT(fmt != NULL && args != NULL);
+		va_list args;
+		AR_ASSERT(fmt != NULL && va_args != NULL);
 		res = 0;
-		AR_va_copy(save, args);
+
+		AR_va_copy(args, va_args);
 
 		while(*fmt)
 		{
@@ -480,7 +481,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 								res += 2; /*0x*/
 						}else if(*fmt == L'*')
 						{
-								width = va_arg(args, int);
+								width = AR_va_arg(args, int);
 						}else if(*fmt == L'-' || *fmt == L'+' || *fmt == L'0' || *fmt == L' ')
 						{
 
@@ -507,7 +508,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 						fmt++;
 						if(*fmt == L'*')
 						{
-								prec = va_arg(args, int_32_t);
+								prec = AR_va_arg(args, int_32_t);
 								fmt++;
 						}else
 						{
@@ -566,7 +567,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 				case L'c':
 				case L'C':
 						len = 2;
-						va_arg(args, wint_t);
+						AR_va_arg(args, wint_t);
 						break;
 				case L'c' | __MODIFIER_ANSI:
 				case L'C' | __MODIFIER_ANSI:
@@ -574,20 +575,20 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 						len = 2;
 
 #if(AR_COMPILER == AR_GCC3 || AR_COMPILER == AR_GCC4)
-						va_arg(args, int);
+						AR_va_arg(args, int);
 #else
-						va_arg(args, char);
+						AR_va_arg(args, char);
 #endif
 
 						break;
 				case L'c' | __MODIFIER_UNICODE:
 				case L'C' | __MODIFIER_UNICODE:
 						len = 2;
-						va_arg(args, wchar_t);
+						AR_va_arg(args, wchar_t);
 						break;
 				case L's':
 				{
-						const wchar_t *str = va_arg(args, const wchar_t*);
+						const wchar_t *str = AR_va_arg(args, const wchar_t*);
 						if(str == NULL)
 						{
 								len = 6;/*(null)*/
@@ -600,7 +601,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 				}
 				case L'S':
 				{
-						const char *str = va_arg(args, const char*);
+						const char *str = AR_va_arg(args, const char*);
 						if(str == NULL)
 						{
 								len = 6;/*(null)*/
@@ -614,7 +615,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 				case L's' | __MODIFIER_ANSI:
 				case L'S' | __MODIFIER_ANSI:
 				{
-						const char *str = va_arg(args, const char*);
+						const char *str = AR_va_arg(args, const char*);
 						if(str == NULL)
 						{
 								len = 6;/*(null)*/
@@ -628,7 +629,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 				case L's' | __MODIFIER_UNICODE:
 				case L'S' | __MODIFIER_UNICODE:
 				{
-						const wchar_t *str = va_arg(args, const wchar_t*);
+						const wchar_t *str = AR_va_arg(args, const wchar_t*);
 						if(str == NULL)
 						{
 								len = 6;/*(null)*/
@@ -659,10 +660,10 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 						{
 								if(modifier & __MODIFIER_INT64)
 								{
-										va_arg(args, int_64_t);
+										AR_va_arg(args, int_64_t);
 								}else
 								{
-										va_arg(args, int_32_t);
+										AR_va_arg(args, int_32_t);
 								}
 								len = 32;
 								len = AR_MAX(len, width + prec);
@@ -673,7 +674,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 						case L'g':
 						case L'G':
 						{
-								va_arg(args, double);
+								AR_va_arg(args, double);
 								len = 128;
 								len = AR_MAX(len, width + prec);
 								break;
@@ -682,7 +683,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 						{
 								int_t cclen;
 								wchar_t *buf;
-								double f= va_arg(args, double);
+								double f= AR_va_arg(args, double);
 
 								/*
 										312 == wcslen(L"-1+(0{309})")
@@ -702,13 +703,13 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 						}
 						case L'p':
 						{
-								va_arg(args, void*);
+								AR_va_arg(args, void*);
 								len = AR_MAX(32, width + prec);
 								break;
 						}
 						case L'n':
 						{
-								va_arg(args, int*);
+								AR_va_arg(args, int*);
 								break;
 						}
 						default:
@@ -722,8 +723,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 				fmt++;
 				res += len;
 		}
-		
-		AR_va_copy(args,save);
+		AR_va_end(args);
 		return res;
 }
 #undef	__MODIFIER_ANSI
@@ -739,9 +739,9 @@ int_t			AR_scwprintf(const wchar_t *fmt, ...)
 		
 		AR_ASSERT(fmt != NULL);
 
-		va_start(arg_ptr, fmt);
+		AR_va_start(arg_ptr, fmt);
 		len = AR_vscwprintf(fmt, arg_ptr);
-		va_end(arg_ptr);
+		AR_va_end(arg_ptr);
 		return len;
 }
 
@@ -756,25 +756,25 @@ wchar_t*		AR_vtow(const wchar_t *fmt, ...)
 
 		AR_ASSERT(fmt != NULL);
 
-		va_start (args, fmt);
+		AR_va_start (args, fmt);
 		len = AR_vscwprintf(fmt, args);
-		va_end (args);
+		AR_va_end (args);
 		if(len < 0)
 		{
 				return NULL;
 		}
 
 		buf = AR_NEWARR(wchar_t, len + 1);
-		va_start (args, fmt);
+		AR_va_start (args, fmt);
 		if(AR_vswprintf(buf, len + 1, fmt, args) < 0)
 		{
-				va_end (args);
+				AR_va_end (args);
 				AR_DEL(buf);
 				buf = NULL;
 				AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
 				return NULL;
 		}
-		va_end (args);
+		AR_va_end (args);
 		return buf;
 }
 
@@ -807,8 +807,8 @@ int_t			AR_vswprintf(wchar_t *dest, size_t count, const wchar_t *fmt, va_list ar
 		__wcs_format_preprocess(fmt, src_fmt);
 
 		AR_va_copy(save, args);
-		res = AR_VSWPRINTF(dest, count, src_fmt, args);
-		AR_va_copy(args,save);
+		res = AR_VSWPRINTF(dest, count, src_fmt, save);
+		AR_va_end(save);
 	   /*****************************************************************************/
 
 
@@ -837,9 +837,9 @@ int_t			AR_swprintf(wchar_t *dest, size_t count, const wchar_t *fmt, ...)
 		va_list	arg_ptr;
 		AR_ASSERT(fmt != NULL);
 
-		va_start(arg_ptr, fmt);
+		AR_va_start(arg_ptr, fmt);
 		len = AR_vswprintf(dest, count, fmt, arg_ptr);
-		va_end(arg_ptr);
+		AR_va_end(arg_ptr);
 
 		if(len <= 0)
 		{
