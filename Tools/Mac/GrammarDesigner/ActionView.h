@@ -1,1 +1,1 @@
-////  ActionView.h//  GrammarDesigner////  Created by liu peng on 9/26/11.//  Copyright 2011 none. All rights reserved.//#import "stdheader.h"@interface ActionView : NSTableView{}-(void)clear;@end
+////  ActionView.h//  GrammarDesigner////  Created by liu peng on 9/26/11.//  Copyright 2011 none. All rights reserved.//#import "stdheader.h"@interface ActionView : NSTableView{		NSFont	*font;}-(void)clear;@end
