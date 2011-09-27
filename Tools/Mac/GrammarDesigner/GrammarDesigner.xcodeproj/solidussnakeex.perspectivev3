@@ -279,7 +279,7 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>27</integer>
+									<integer>36</integer>
 									<integer>19</integer>
 									<integer>0</integer>
 								</array>
@@ -320,7 +320,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>BE1803AC1422C25400259547</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>GrammarCheckerTask.m</string>
+								<string>TagsView.h</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -328,11 +328,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>BE1803AD1422C25400259547</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>GrammarCheckerTask.m</string>
+										<string>TagsView.h</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>BEC6019C143189360061848F</string>
+										<string>BEC603631431AD560061848F</string>
 										<key>history</key>
 										<array>
 											<string>BEEF2C16142B252700F07444</string>
@@ -354,37 +354,40 @@
 											<string>BEC332E8142F5ECC00553ED3</string>
 											<string>BEC332E9142F5ECC00553ED3</string>
 											<string>BEC332FA142F5F4200553ED3</string>
-											<string>BEC3350C142F855100553ED3</string>
 											<string>BEC33579143008BB00553ED3</string>
 											<string>BE1D115114306FC100789216</string>
-											<string>BE1D136114308BF500789216</string>
 											<string>BE1D136614308BF500789216</string>
-											<string>BE3579A41430CC45001D5D04</string>
 											<string>BE357A961430D3D1001D5D04</string>
-											<string>BE357C0F1430DEEB001D5D04</string>
-											<string>BE88A5871431604100CF34D5</string>
-											<string>BE88A5881431604100CF34D5</string>
-											<string>BE88A58C1431604100CF34D5</string>
-											<string>BE88A58D1431604100CF34D5</string>
-											<string>BE88A5A81431646B00CF34D5</string>
-											<string>BE88A5AC1431646B00CF34D5</string>
-											<string>BE88A5AD1431646B00CF34D5</string>
-											<string>BE88A5AE1431646B00CF34D5</string>
-											<string>BE88A64C1431724900CF34D5</string>
-											<string>BE88A64D1431724900CF34D5</string>
-											<string>BE88A64F1431724900CF34D5</string>
-											<string>BE88A6501431724900CF34D5</string>
-											<string>BE88A6521431724900CF34D5</string>
-											<string>BE88A6551431724900CF34D5</string>
-											<string>BE88A6681431738F00CF34D5</string>
-											<string>BE88A6691431738F00CF34D5</string>
-											<string>BE88A66A1431738F00CF34D5</string>
-											<string>BE88A66B1431738F00CF34D5</string>
-											<string>BEC60133143186A80061848F</string>
 											<string>BEC60157143187440061848F</string>
-											<string>BEC6017F143188780061848F</string>
 											<string>BEC60180143188780061848F</string>
-											<string>BEC6018A1431890E0061848F</string>
+											<string>BEC6020B14319E4B0061848F</string>
+											<string>BEC6026D1431A4520061848F</string>
+											<string>BEC603471431AD360061848F</string>
+											<string>BEC603481431AD360061848F</string>
+											<string>BEC603491431AD360061848F</string>
+											<string>BEC6034A1431AD360061848F</string>
+											<string>BEC6034B1431AD360061848F</string>
+											<string>BEC6034C1431AD360061848F</string>
+											<string>BEC6034D1431AD360061848F</string>
+											<string>BEC6034E1431AD360061848F</string>
+											<string>BEC6034F1431AD360061848F</string>
+											<string>BEC603501431AD360061848F</string>
+											<string>BEC603511431AD360061848F</string>
+											<string>BEC603521431AD360061848F</string>
+											<string>BEC603531431AD360061848F</string>
+											<string>BEC603541431AD360061848F</string>
+											<string>BEC603551431AD360061848F</string>
+											<string>BEC603561431AD360061848F</string>
+											<string>BEC603571431AD360061848F</string>
+											<string>BEC603581431AD360061848F</string>
+											<string>BEC603591431AD360061848F</string>
+											<string>BEC6035A1431AD360061848F</string>
+											<string>BEC6035B1431AD360061848F</string>
+											<string>BEC6035C1431AD360061848F</string>
+											<string>BEC6035D1431AD360061848F</string>
+											<string>BEC6035E1431AD360061848F</string>
+											<string>BEC6035F1431AD360061848F</string>
+											<string>BEC603601431AD360061848F</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -423,9 +426,7 @@
 									<key>GeometryConfiguration</key>
 									<dict>
 										<key>Frame</key>
-										<string>{{10, 27}, {1286, -27}}</string>
-										<key>RubberWindowFrame</key>
-										<string>0 141 1680 887 0 0 1680 1028 </string>
+										<string>{{10, 27}, {1286, 225}}</string>
 									</dict>
 									<key>Module</key>
 									<string>XCDetailModule</string>
@@ -479,7 +480,9 @@
 									<key>GeometryConfiguration</key>
 									<dict>
 										<key>Frame</key>
-										<string>{{0, 0}, {568, 405}}</string>
+										<string>{{10, 27}, {1286, -27}}</string>
+										<key>RubberWindowFrame</key>
+										<string>0 141 1680 887 0 0 1680 1028 </string>
 									</dict>
 									<key>Module</key>
 									<string>PBXBuildResultsModule</string>
@@ -507,11 +510,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>BEC60120143186370061848F</string>
+				<string>BEC601C4143191750061848F</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>BEC60121143186370061848F</string>
+				<string>BEC601C5143191750061848F</string>
 				<string>BE1803AC1422C25400259547</string>
-				<string>BEC60122143186370061848F</string>
+				<string>BEC601C6143191750061848F</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -660,13 +663,13 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>BEC60123143186370061848F</string>
+				<string>BEC601C7143191750061848F</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>BEC60124143186370061848F</string>
-				<string>BEC60125143186370061848F</string>
-				<string>BEC60126143186370061848F</string>
-				<string>BEC60127143186370061848F</string>
+				<string>BEC601C8143191750061848F</string>
+				<string>BEC601C9143191750061848F</string>
+				<string>BEC601CA143191750061848F</string>
+				<string>BEC601CB143191750061848F</string>
 				<string>BE1803AC1422C25400259547</string>
 			</array>
 			<key>ToolbarConfigUserDefaultsMinorVersion</key>
@@ -701,8 +704,8 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>BEC60129143186370061848F</string>
-		<string>BEC6012A143186370061848F</string>
+		<string>BEC601CD143191750061848F</string>
+		<string>BEC601CE143191750061848F</string>
 		<string>/Users/solidussnakeex/Desktop/Programming/Arsenal/Tools/Mac/GrammarDesigner/GrammarDesigner.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
