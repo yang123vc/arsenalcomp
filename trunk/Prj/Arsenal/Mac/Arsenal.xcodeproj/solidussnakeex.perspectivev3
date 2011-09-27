@@ -330,7 +330,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>BEC60195143189340061848F</string>
+										<string>BEC603621431AD520061848F</string>
 										<key>history</key>
 										<array>
 											<string>BEAE1C6513F248B90088C3A4</string>
@@ -373,7 +373,7 @@
 											<string>BEC601061431860E0061848F</string>
 											<string>BEC601071431860E0061848F</string>
 											<string>BEC6012E1431868C0061848F</string>
-											<string>BEC6012F1431868C0061848F</string>
+											<string>BEC60195143189340061848F</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -412,7 +412,9 @@
 									<key>GeometryConfiguration</key>
 									<dict>
 										<key>Frame</key>
-										<string>{{10, 27}, {1456, 225}}</string>
+										<string>{{10, 27}, {1456, -27}}</string>
+										<key>RubberWindowFrame</key>
+										<string>0 141 1680 887 0 0 1680 1028 </string>
 									</dict>
 									<key>Module</key>
 									<string>XCDetailModule</string>
@@ -466,9 +468,7 @@
 									<key>GeometryConfiguration</key>
 									<dict>
 										<key>Frame</key>
-										<string>{{10, 27}, {1456, -27}}</string>
-										<key>RubberWindowFrame</key>
-										<string>0 141 1680 887 0 0 1680 1028 </string>
+										<string>{{0, 0}, {568, 405}}</string>
 									</dict>
 									<key>Module</key>
 									<string>PBXBuildResultsModule</string>
@@ -496,11 +496,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>BEC6010A1431860E0061848F</string>
+				<string>BEC601AA143190FD0061848F</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>BEC6010B1431860E0061848F</string>
+				<string>BEC601AB143190FD0061848F</string>
 				<string>BE5AE25B13F1724E00D92048</string>
-				<string>BEC6010C1431860E0061848F</string>
+				<string>BEC601AC143190FD0061848F</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>

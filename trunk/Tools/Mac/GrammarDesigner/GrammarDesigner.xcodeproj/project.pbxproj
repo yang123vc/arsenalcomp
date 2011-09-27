@@ -18,7 +18,7 @@
 		BE1D12201430782700789216 /* InputSyntaxTreeView.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1D121F1430782700789216 /* InputSyntaxTreeView.m */; };
 		BE3578D31430C3CC001D5D04 /* GrammarTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = BE3578D21430C3CC001D5D04 /* GrammarTextView.m */; };
 		BE3578D71430C40A001D5D04 /* TagsView.m in Sources */ = {isa = PBXBuildFile; fileRef = BE3578D61430C40A001D5D04 /* TagsView.m */; };
-		BE3578EB1430C657001D5D04 /* ConsoleView.m in Sources */ = {isa = PBXBuildFile; fileRef = BE3578EA1430C657001D5D04 /* ConsoleView.m */; };
+		BE3578EB1430C657001D5D04 /* OutputView.m in Sources */ = {isa = PBXBuildFile; fileRef = BE3578EA1430C657001D5D04 /* OutputView.m */; };
 		BE3578F91430C6AD001D5D04 /* SplitViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BE3578F81430C6AD001D5D04 /* SplitViewDelegate.m */; };
 		BE357A421430CFCE001D5D04 /* ActionView.m in Sources */ = {isa = PBXBuildFile; fileRef = BE357A411430CFCE001D5D04 /* ActionView.m */; };
 		BE47DD1314269558006FE4E8 /* ARAsyncQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = BE47DD0914269558006FE4E8 /* ARAsyncQueue.m */; };
@@ -41,6 +41,7 @@
 		BEC333D4142F6F3A00553ED3 /* InputChecker.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEC333D3142F6F3A00553ED3 /* InputChecker.xib */; };
 		BEC334A2142F7F4500553ED3 /* StringConverter.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEC334A1142F7F4500553ED3 /* StringConverter.xib */; };
 		BEC334A5142F7F6B00553ED3 /* StringConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = BEC334A4142F7F6B00553ED3 /* StringConverter.m */; };
+		BEC6031C1431AB090061848F /* FindResultsView.m in Sources */ = {isa = PBXBuildFile; fileRef = BEC6031B1431AB090061848F /* FindResultsView.m */; };
 		BEDCDCB81429A48B00D041D4 /* ARDuplexTask.m in Sources */ = {isa = PBXBuildFile; fileRef = BEDCDCB71429A48B00D041D4 /* ARDuplexTask.m */; };
 		BEDCE03A142ADA7E00D041D4 /* GmrIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = BEDCE039142ADA7E00D041D4 /* GmrIcon.icns */; };
 /* End PBXBuildFile section */
@@ -66,8 +67,8 @@
 		BE3578D21430C3CC001D5D04 /* GrammarTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrammarTextView.m; sourceTree = "<group>"; };
 		BE3578D51430C40A001D5D04 /* TagsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagsView.h; sourceTree = "<group>"; };
 		BE3578D61430C40A001D5D04 /* TagsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagsView.m; sourceTree = "<group>"; };
-		BE3578E91430C657001D5D04 /* ConsoleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConsoleView.h; sourceTree = "<group>"; };
-		BE3578EA1430C657001D5D04 /* ConsoleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConsoleView.m; sourceTree = "<group>"; };
+		BE3578E91430C657001D5D04 /* OutputView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OutputView.h; sourceTree = "<group>"; };
+		BE3578EA1430C657001D5D04 /* OutputView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OutputView.m; sourceTree = "<group>"; };
 		BE3578F71430C6AD001D5D04 /* SplitViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplitViewDelegate.h; sourceTree = "<group>"; };
 		BE3578F81430C6AD001D5D04 /* SplitViewDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SplitViewDelegate.m; sourceTree = "<group>"; };
 		BE357A401430CFCE001D5D04 /* ActionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionView.h; sourceTree = "<group>"; };
@@ -105,6 +106,8 @@
 		BEC334A1142F7F4500553ED3 /* StringConverter.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StringConverter.xib; sourceTree = "<group>"; };
 		BEC334A3142F7F6B00553ED3 /* StringConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringConverter.h; sourceTree = "<group>"; };
 		BEC334A4142F7F6B00553ED3 /* StringConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringConverter.m; sourceTree = "<group>"; };
+		BEC6031A1431AB090061848F /* FindResultsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FindResultsView.h; sourceTree = "<group>"; };
+		BEC6031B1431AB090061848F /* FindResultsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FindResultsView.m; sourceTree = "<group>"; };
 		BEDCDCB71429A48B00D041D4 /* ARDuplexTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ARDuplexTask.m; path = Helper/ARDuplexTask.m; sourceTree = "<group>"; };
 		BEDCE039142ADA7E00D041D4 /* GmrIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = GmrIcon.icns; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -187,12 +190,14 @@
 				BE3578D21430C3CC001D5D04 /* GrammarTextView.m */,
 				BE3578D51430C40A001D5D04 /* TagsView.h */,
 				BE3578D61430C40A001D5D04 /* TagsView.m */,
-				BE3578E91430C657001D5D04 /* ConsoleView.h */,
-				BE3578EA1430C657001D5D04 /* ConsoleView.m */,
+				BE3578E91430C657001D5D04 /* OutputView.h */,
+				BE3578EA1430C657001D5D04 /* OutputView.m */,
 				BE3578F71430C6AD001D5D04 /* SplitViewDelegate.h */,
 				BE3578F81430C6AD001D5D04 /* SplitViewDelegate.m */,
 				BE357A401430CFCE001D5D04 /* ActionView.h */,
 				BE357A411430CFCE001D5D04 /* ActionView.m */,
+				BEC6031A1431AB090061848F /* FindResultsView.h */,
+				BEC6031B1431AB090061848F /* FindResultsView.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -345,9 +350,10 @@
 				BE1D12201430782700789216 /* InputSyntaxTreeView.m in Sources */,
 				BE3578D31430C3CC001D5D04 /* GrammarTextView.m in Sources */,
 				BE3578D71430C40A001D5D04 /* TagsView.m in Sources */,
-				BE3578EB1430C657001D5D04 /* ConsoleView.m in Sources */,
+				BE3578EB1430C657001D5D04 /* OutputView.m in Sources */,
 				BE3578F91430C6AD001D5D04 /* SplitViewDelegate.m in Sources */,
 				BE357A421430CFCE001D5D04 /* ActionView.m in Sources */,
+				BEC6031C1431AB090061848F /* FindResultsView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
