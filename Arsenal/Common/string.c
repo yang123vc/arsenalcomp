@@ -106,63 +106,6 @@ size_t	AR_AppendString(arString_t *str, const wchar_t *sour)
 
 
 
-#if(0)
-void	AR_FormatString(arString_t *str, const wchar_t *fmt, ...)
-{
-		int_t len;
-		va_list args;
-		AR_ASSERT(str != NULL && fmt != NULL);
-		AR_ClearString(str);
-		va_start(args, fmt);
-		len = AR_vscwprintf(fmt, args);
-		AR_ASSERT(len >= 0);
-		va_end(args);
-		AR_ASSERT(len > 0);
-		
-		AR_ReserveString(str, (size_t)len);
-		
-		va_start(args, fmt);
-		str->str[0] = L'\0';
-		len = AR_vswprintf(str->str, str->cap-1, fmt, args) + 1;
-		va_end(args);
-		
-		AR_CHECK(len >= 0, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
-		
-		str->str[len] = L'\0';
-		str->count = AR_wcslen(str->str);
-}
-
-
-
-
-void	AR_AppendFormatString(arString_t *str, const wchar_t *fmt, ...)
-{
-		int_t len;
-		wchar_t *buf;
-		va_list args;
-		AR_ASSERT(str != NULL && fmt != NULL);
-		
-		va_start(args, fmt);
-		len = AR_vscwprintf(fmt, args);
-		va_end(args);
-		AR_ASSERT(len >= 0);
-
-		buf = AR_NEWARR0(wchar_t, len + 1);
-		va_start(args, fmt);
-		len = AR_vswprintf(buf, len + 1, fmt, args);
-		va_end(args);
-		
-		AR_CHECK(len >= 0, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
-		
-
-		buf[len] = L'\0';
-		AR_AppendString(str, buf);
-		AR_DEL(buf);
-}
-
-#endif
-
-
 
 
 void	AR_FormatString(arString_t *str, const wchar_t *fmt, ...)
@@ -193,15 +136,22 @@ void	AR_AppendFormatString(arString_t *str, const wchar_t *fmt, ...)
 void			AR_VFormatString(arString_t *str, const wchar_t *fmt, va_list args)
 {
 		int_t len;
+		va_list save;
 		AR_ASSERT(str != NULL && fmt != NULL && args != NULL);
 		AR_ClearString(str);
 		
+		AR_memcpy(&save, args, sizeof(va_list));
 		len = AR_vscwprintf(fmt, args);
+		AR_memcpy(&args, save, sizeof(va_list));
+
 		AR_ASSERT(len >= 0);
 		AR_ReserveString(str, (size_t)len + 1);
 		
 		str->str[0] = L'\0';
+		
+		AR_memcpy(&save, args, sizeof(va_list));
 		len = AR_vswprintf(str->str, str->cap-1, fmt, args) + 1;
+		AR_memcpy(&args, save, sizeof(va_list));
 		
 		AR_ASSERT(len >= 0);
 
@@ -214,16 +164,23 @@ void			AR_AppendVFormatString(arString_t *str, const wchar_t *fmt, va_list args)
 {
 		int_t len;
 		wchar_t *buf;
-		
+		va_list save;
 		AR_ASSERT(str != NULL && fmt != NULL && args != NULL);
 		
+		AR_memcpy(&save, &args, sizeof(va_list));
 		len = AR_vscwprintf(fmt, args);
 		AR_ASSERT(len >= 0);
 
-		buf = AR_NEWARR0(wchar_t, len + 1);
-		len = AR_vswprintf(buf, len + 1, fmt, args);
+		AR_memcpy(&args, &save, sizeof(va_list));
+
 		
+		
+
+		buf = AR_NEWARR0(wchar_t, len + 1);
+		AR_memcpy(&save, &args, sizeof(va_list));
+		len = AR_vswprintf(buf, len + 1, fmt, args);
 		AR_ASSERT(len >= 0);
+		AR_memcpy(&args, &save, sizeof(va_list));
 
 		buf[len] = L'\0';
 		AR_AppendString(str, buf);

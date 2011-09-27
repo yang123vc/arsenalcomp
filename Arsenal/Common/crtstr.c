@@ -722,7 +722,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 				fmt++;
 				res += len;
 		}
-		va_end(save);
+		AR_memcpy(&args, &save, sizeof(va_list));
 		return res;
 }
 #undef	__MODIFIER_ANSI
@@ -757,15 +757,17 @@ wchar_t*		AR_vtow(const wchar_t *fmt, ...)
 
 		va_start (args, fmt);
 		len = AR_vscwprintf(fmt, args);
-
+		va_end (args);
 		if(len < 0)
 		{
 				return NULL;
 		}
 
 		buf = AR_NEWARR(wchar_t, len + 1);
+		va_start (args, fmt);
 		if(AR_vswprintf(buf, len + 1, fmt, args) < 0)
 		{
+				va_end (args);
 				AR_DEL(buf);
 				buf = NULL;
 				AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
@@ -804,13 +806,13 @@ int_t			AR_vswprintf(wchar_t *dest, size_t count, const wchar_t *fmt, va_list ar
 		__wcs_format_preprocess(fmt, src_fmt);
 
 		AR_memcpy(&save, &args, sizeof(va_list));
-		
 		res = AR_VSWPRINTF(dest, count, src_fmt, args);
+		AR_memcpy(&args, &save, sizeof(va_list));
 		/*****************************************************************************/
 
 
 END_POINT:
-		va_end(save);
+		
 
 		if(src_fmt)
 		{
