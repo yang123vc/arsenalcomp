@@ -113,9 +113,9 @@ void	AR_FormatString(arString_t *str, const wchar_t *fmt, ...)
 		va_list args;
 		AR_ASSERT(str != NULL && fmt != NULL);
 
-		va_start(args, fmt);
+		AR_va_start(args, fmt);
 		AR_VFormatString(str, fmt, args);
-		va_end(args);
+		AR_va_end(args);
 }
 
 
@@ -126,32 +126,32 @@ void	AR_AppendFormatString(arString_t *str, const wchar_t *fmt, ...)
 		va_list args;
 		AR_ASSERT(str != NULL && fmt != NULL);
 		
-		va_start(args, fmt);
+		AR_va_start(args, fmt);
 		AR_AppendVFormatString(str, fmt, args);
-		va_end(args);
+		AR_va_end(args);
 }
 
 
 
-void			AR_VFormatString(arString_t *str, const wchar_t *fmt, va_list args)
+void			AR_VFormatString(arString_t *str, const wchar_t *fmt, va_list va_args)
 {
 		int_t len;
 		va_list save;
-		AR_ASSERT(str != NULL && fmt != NULL && args != NULL);
+		AR_ASSERT(str != NULL && fmt != NULL && va_args != NULL);
 		AR_ClearString(str);
 		
-		AR_va_copy(save, args);
-		len = AR_vscwprintf(fmt, args);
-		AR_va_copy(args,save);
+		AR_va_copy(save, va_args);
+		len = AR_vscwprintf(fmt, save);
+		AR_va_end(save);
 
 		AR_ASSERT(len >= 0);
 		AR_ReserveString(str, (size_t)len + 1);
 		
 		str->str[0] = L'\0';
 		
-		AR_va_copy(save, args);
-		len = AR_vswprintf(str->str, str->cap-1, fmt, args) + 1;
-		AR_va_copy(args,save);
+		AR_va_copy(save, va_args);
+		len = AR_vswprintf(str->str, str->cap-1, fmt, save) + 1;
+		AR_va_end(save);
 		
 		AR_ASSERT(len >= 0);
 
@@ -160,28 +160,31 @@ void			AR_VFormatString(arString_t *str, const wchar_t *fmt, va_list args)
 		str->count = AR_wcslen(str->str);
 }
 
-void			AR_AppendVFormatString(arString_t *str, const wchar_t *fmt, va_list args)
+void			AR_AppendVFormatString(arString_t *str, const wchar_t *fmt, va_list va_args)
 {
 		int_t len;
 		wchar_t *buf;
 		va_list save;
-		AR_ASSERT(str != NULL && fmt != NULL && args != NULL);
+		AR_ASSERT(str != NULL && fmt != NULL && va_args != NULL);
 		
-		AR_va_copy(save, args);
-		len = AR_vscwprintf(fmt, args);
-		AR_ASSERT(len >= 0);
+		AR_va_copy(save, va_args);
+		len = AR_vscwprintf(fmt, save);
+		AR_va_end(save);
 
-		AR_va_copy(args,save);
+		AR_ASSERT(len >= 0);
+		
 
 		
 		
 
 		buf = AR_NEWARR0(wchar_t, len + 1);
 		
-		AR_va_copy(save, args);
-		len = AR_vswprintf(buf, len + 1, fmt, args);
+		AR_va_copy(save, va_args);
+		len = AR_vswprintf(buf, len + 1, fmt, save);
+		AR_va_end(save);
+
 		AR_ASSERT(len >= 0);
-		AR_va_copy(args,save);
+		
 		
 		buf[len] = L'\0';
 		AR_AppendString(str, buf);
