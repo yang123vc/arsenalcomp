@@ -790,7 +790,7 @@ int_t			AR_vswprintf(wchar_t *dest, size_t count, const wchar_t *fmt, va_list ar
 		res = 0;
 		need_l = 0;
 		src_fmt = NULL;
-		AR_memcpy(&save, &args, sizeof(va_list));
+
 
 
 		/********************将Arsenal形式的printf格式，转换为目标CRT的格式***************/
@@ -803,6 +803,8 @@ int_t			AR_vswprintf(wchar_t *dest, size_t count, const wchar_t *fmt, va_list ar
 		src_fmt = AR_NEWARR(wchar_t, need_l);
 		__wcs_format_preprocess(fmt, src_fmt);
 
+		AR_memcpy(&save, &args, sizeof(va_list));
+		
 		res = AR_VSWPRINTF(dest, count, src_fmt, args);
 		/*****************************************************************************/
 

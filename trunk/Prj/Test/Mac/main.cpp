@@ -7,6 +7,45 @@ using namespace ARSpace;
 
 
 
+void AR_Test1()
+{
+		//wprintf(L"Invalid Token \"%ls\" in (%lld : %lld)\r\n\r\n", L"d", (size_t)1,(size_t)2);
+		/*
+		wchar_t buf[1024];
+
+		wchar_t *d = AR_wcsndup(L"d", 1);
+		
+		AR_swprintf(buf, 1024, L"Invalid Token %ls in (%Id : %Id)\r\n\r\n", d, (size_t)1,  (size_t)2);
+		
+		AR_DEL(d);
+		
+		wprintf(L"%ls", buf);
+		 */
+		
+		
+		{
+		arString_t *s = AR_CreateString();
+
+		wchar_t *buf = AR_wcsndup(L"d", 1);
+		
+		AR_AppendFormatString(s
+							  , L"Invalid Token %ls in (%Id : %Id)\r\n\r\n"
+							  , buf
+							  , (size_t)0
+							  , (size_t)0
+							  );
+		
+		AR_printf(L"%ls\r\n", AR_GetStringCString(s));
+		
+		AR_DEL(buf);
+		buf = NULL;
+		AR_DestroyString(s);
+		s = NULL;
+		}
+					 
+}
+
+
 #define INPUT_FILE		L"/Users/solidussnakeex/Desktop/Tengu2.gmr"
 #define OUTPUT_FILE		L"/Users/solidussnakeex/Desktop/output.txt"
 
@@ -106,7 +145,8 @@ int  main()
 		
         Arsenal_Init(&ai);
 		
-        AR_Test2();
+		AR_Test1();
+        //AR_Test2();
 		//AR_Test3();
 		
 		
