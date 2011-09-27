@@ -535,7 +535,7 @@ typedef void*					ptr_t;
 		#define AR_SWPRINTF										_snwprintf
 		#define AR_VSPRINTF										_vsnprintf
 		#define AR_VSWPRINTF									_vsnwprintf
-	
+		
 
 		#if(OS_TYPE == OS_WINDOWS_CE)
 				#define AR_abort()								exit(3)
@@ -543,15 +543,11 @@ typedef void*					ptr_t;
 				#define AR_abort								abort
 		#endif
 
-
-
 #elif(AR_COMPILER == AR_BCB6)
                 #define AR_SWPRINTF								_snwprintf
 				#define AR_VSPRINTF								_vsnprintf
 				#define AR_VSWPRINTF							_vsnwprintf
                 #define AR_abort								abort
-
-
 
 #elif(AR_COMPILER == AR_GCC3 || AR_COMPILER == AR_GCC4)
 
@@ -578,6 +574,15 @@ typedef void*					ptr_t;
 #endif
 
 
+
+#if (OS_TYPE == OS_MAC_OS_X || OS_TYPE == OS_IOS)
+
+		#define AR_va_copy(_d,_s)	va_copy((_d),(_s))
+
+#else
+		#define AR_va_copy(_d,_s)	memcpy((void*)&(_d), (void*)&(_s), sizeof(va_list))
+	
+#endif
 
 
 
