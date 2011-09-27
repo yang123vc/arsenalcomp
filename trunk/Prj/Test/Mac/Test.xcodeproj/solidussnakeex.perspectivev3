@@ -278,8 +278,6 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>2</integer>
-									<integer>1</integer>
 									<integer>0</integer>
 								</array>
 							</array>
@@ -319,7 +317,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>BE10240E13F25E6A00A73802</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>main.cpp</string>
+								<string>crtstr.c</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -327,11 +325,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>BE10240F13F25E6A00A73802</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>main.cpp</string>
+										<string>crtstr.c</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>BE88A7AF14317DE600CF34D5</string>
+										<string>BEC600F3143186010061848F</string>
 										<key>history</key>
 										<array>
 											<string>BEBAE28113F2943900E64F88</string>
@@ -341,7 +339,12 @@
 											<string>BE435CE8142B0FD400DBA97C</string>
 											<string>BE88A79C14317D3000CF34D5</string>
 											<string>BE88A79E14317D3000CF34D5</string>
-											<string>BE88A7AE14317DE600CF34D5</string>
+											<string>BEC600AA143183400061848F</string>
+											<string>BEC600BE143185580061848F</string>
+											<string>BEC600E9143185F70061848F</string>
+											<string>BEC600EB143185F70061848F</string>
+											<string>BEC600F2143186010061848F</string>
+											<string>BEC600EF143185F70061848F</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -355,18 +358,18 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 0}, {1502, 841}}</string>
+								<string>{{0, 0}, {1502, 589}}</string>
 								<key>RubberWindowFrame</key>
 								<string>0 141 1680 887 0 0 1680 1028 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
 							<key>Proportion</key>
-							<string>841pt</string>
+							<string>589pt</string>
 						</dict>
 						<dict>
 							<key>Proportion</key>
-							<string>0pt</string>
+							<string>252pt</string>
 							<key>Tabs</key>
 							<array>
 								<dict>
@@ -434,7 +437,7 @@
 									<key>GeometryConfiguration</key>
 									<dict>
 										<key>Frame</key>
-										<string>{{10, 27}, {1502, -27}}</string>
+										<string>{{10, 27}, {1502, 225}}</string>
 										<key>RubberWindowFrame</key>
 										<string>0 141 1680 887 0 0 1680 1028 </string>
 									</dict>
@@ -464,11 +467,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>BE88A7B014317DE600CF34D5</string>
+				<string>BEC600F5143186010061848F</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>BE88A7B114317DE600CF34D5</string>
+				<string>BEC600F6143186010061848F</string>
 				<string>BE10240E13F25E6A00A73802</string>
-				<string>BE88A7B214317DE600CF34D5</string>
+				<string>BEC600F7143186010061848F</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -619,13 +622,13 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>BE88A7B314317DE600CF34D5</string>
+				<string>BEC600F8143186010061848F</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>BE88A7B414317DE600CF34D5</string>
-				<string>BE88A7B514317DE600CF34D5</string>
-				<string>BE88A7B614317DE600CF34D5</string>
-				<string>BE88A7B714317DE600CF34D5</string>
+				<string>BEC600F9143186010061848F</string>
+				<string>BEC600FA143186010061848F</string>
+				<string>BEC600FB143186010061848F</string>
+				<string>BEC600FC143186010061848F</string>
 				<string>BE10240E13F25E6A00A73802</string>
 			</array>
 			<key>ToolbarConfigUserDefaultsMinorVersion</key>
@@ -660,8 +663,8 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>BE88A7B814317DE600CF34D5</string>
-		<string>BE88A7B914317DE600CF34D5</string>
+		<string>BEC600FD143186010061848F</string>
+		<string>BEC600FE143186010061848F</string>
 		<string>/Users/solidussnakeex/Desktop/Programming/Arsenal/Prj/Test/Mac/Test.xcodeproj</string>
 	</array>
 	<key>WindowString</key>

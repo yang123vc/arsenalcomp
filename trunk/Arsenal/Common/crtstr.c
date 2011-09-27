@@ -458,7 +458,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 		va_list save;
 		AR_ASSERT(fmt != NULL && args != NULL);
 		res = 0;
-		AR_memcpy(&save, &args, sizeof(va_list));
+		AR_va_copy(save, args);
 
 		while(*fmt)
 		{
@@ -722,7 +722,8 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list args)
 				fmt++;
 				res += len;
 		}
-		AR_memcpy(&args, &save, sizeof(va_list));
+		
+		AR_va_copy(args,save);
 		return res;
 }
 #undef	__MODIFIER_ANSI
@@ -805,10 +806,10 @@ int_t			AR_vswprintf(wchar_t *dest, size_t count, const wchar_t *fmt, va_list ar
 		src_fmt = AR_NEWARR(wchar_t, need_l);
 		__wcs_format_preprocess(fmt, src_fmt);
 
-		AR_memcpy(&save, &args, sizeof(va_list));
+		AR_va_copy(save, args);
 		res = AR_VSWPRINTF(dest, count, src_fmt, args);
-		AR_memcpy(&args, &save, sizeof(va_list));
-		/*****************************************************************************/
+		AR_va_copy(args,save);
+	   /*****************************************************************************/
 
 
 END_POINT:
@@ -849,27 +850,6 @@ int_t			AR_swprintf(wchar_t *dest, size_t count, const wchar_t *fmt, ...)
 		return len;
 }
 
-#if(0)
-int_t			AR_vsprintf(char *dest, size_t count, const char *fmt, va_list args)
-{
-		int_t res;
-		va_list save;
-		AR_ASSERT(dest != NULL && fmt != NULL && args != NULL);
-		res = 0;
-		AR_memcpy(&save, &args, sizeof(va_list));
-
-		res = AR_VSPRINTF(dest, count, fmt, args);
-		va_end(save);
-
-		if(res <= 0)
-		{
-				dest[0] = L'\0';
-				res = 0;
-		}
-		return res;
-}
-
-#endif
 
 
 
