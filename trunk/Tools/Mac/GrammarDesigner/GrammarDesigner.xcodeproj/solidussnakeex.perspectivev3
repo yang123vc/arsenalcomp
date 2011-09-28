@@ -279,7 +279,7 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>47</integer>
+									<integer>37</integer>
 									<integer>19</integer>
 									<integer>0</integer>
 								</array>
@@ -320,7 +320,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>BE1803AC1422C25400259547</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>ConsoleMessage.m</string>
+								<string>TagsView.m</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -328,11 +328,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>BE1803AD1422C25400259547</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>ConsoleMessage.m</string>
+										<string>TagsView.m</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>BE96855014336A1F003C8716</string>
+										<string>BE9685C71433AEAF003C8716</string>
 										<key>history</key>
 										<array>
 											<string>BEEF2C16142B252700F07444</string>
@@ -365,31 +365,31 @@
 											<string>BEC603531431AD360061848F</string>
 											<string>BEC603571431AD360061848F</string>
 											<string>BEC6035C1431AD360061848F</string>
-											<string>BEC6035F1431AD360061848F</string>
 											<string>BE96810414331399003C8716</string>
 											<string>BE96810514331399003C8716</string>
 											<string>BE96810714331399003C8716</string>
 											<string>BE96810E14331399003C8716</string>
 											<string>BE96810F14331399003C8716</string>
 											<string>BE96811014331399003C8716</string>
-											<string>BE968171143318AB003C8716</string>
 											<string>BE968172143318AB003C8716</string>
 											<string>BE96823114332338003C8716</string>
-											<string>BE9683DC14335636003C8716</string>
-											<string>BE9683DE14335636003C8716</string>
 											<string>BE9683E114335636003C8716</string>
-											<string>BE9683E314335636003C8716</string>
 											<string>BE96845A143359CC003C8716</string>
 											<string>BE96845B143359CC003C8716</string>
 											<string>BE96845C143359CC003C8716</string>
-											<string>BE96846E14335D36003C8716</string>
 											<string>BE9684EF14336609003C8716</string>
-											<string>BE96854A14336A1F003C8716</string>
 											<string>BE96854B14336A1F003C8716</string>
-											<string>BE96854C14336A1F003C8716</string>
 											<string>BE96854D14336A1F003C8716</string>
 											<string>BE96854E14336A1F003C8716</string>
-											<string>BE96854F14336A1F003C8716</string>
+											<string>BE9685911433AA13003C8716</string>
+											<string>BE9685921433AA13003C8716</string>
+											<string>BE9685931433AA13003C8716</string>
+											<string>BE9685941433AA13003C8716</string>
+											<string>BE9685951433AA13003C8716</string>
+											<string>BE9685961433AA13003C8716</string>
+											<string>BE9685971433AA13003C8716</string>
+											<string>BE9685C51433AEAF003C8716</string>
+											<string>BE9685C61433AEAF003C8716</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
