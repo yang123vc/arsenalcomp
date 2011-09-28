@@ -1151,6 +1151,61 @@ void lex_test_skip_line_test()
 }
 
 
+void lex_line_test7()
+{
+		lexMatch_t		*match;
+		lex_t			*lex;
+
+		lex = Lex_Create();
+		
+		lexAction_t act;
+		act.is_skip = false;
+		act.priority = 0;
+		act.value = 200;
+		
+		AR_ASSERT(Lex_InsertRule(lex, L".*(\\r\\n|\\n\\r|\\r|\\n)?", &act));
+		
+		act.priority = 1;
+		act.value = 0;
+		AR_ASSERT(Lex_InsertRule(lex, L"$", &act));
+		
+		match = Lex_CreateMatch(lex);
+		
+		Lex_ResetInput(match, L"\r\n\r\n\r\n%token\tline\t:\t\".*(\\r\\n|\\n\\r|\\r|\\n)?\"\r\n\t\t;\r\n\r\n\r\n%start\tprogram;\r\n\r\n\r\nprogram\t:\tline_list\r\n\t\t|\t.\r\n\t\t;\r\n\r\n\r\nline_list\t:\tline_list\tline \r\n\t\t|\tline\r\n\t\t;\r\n\r\n\r\n");
+		
+
+		lexToken_t tok;
+		bool_t is_ok = false;
+		
+		
+
+		while(Lex_Match(match, &tok))
+		{
+				wchar_t *s = AR_wcsndup(tok.str, tok.count);
+				AR_printf(L"%ls : row == %d : col == %d : count == %d\r\n", s, tok.line, tok.col, tok.count);
+				AR_DEL(s);
+				
+				if(tok.value == 0)
+				{
+						is_ok = true;
+						break;
+				}
+		}
+
+		if(!is_ok)
+		{
+				AR_printf(L"%ls\r\n", L"failed\r\n");
+		}else
+		{
+				AR_printf(L"%ls\r\n", L"success\r\n");
+		}
+
+
+		Lex_DestroyMatch(match);
+		Lex_Destroy(lex);
+}
+
+
 void lex_test()
 {
 		
@@ -1159,6 +1214,8 @@ void lex_test()
 		//lex_line_test3();
 		//lex_line_test4();
 		//lex_line_test5();
+		//lex_line_test6();
+		lex_line_test7();
 		//lex_chinese_char();
 		//lex_test_loop2();
 
@@ -1166,11 +1223,10 @@ void lex_test()
 		
 		//lex_test20();
 
-		//lex_line_test6();
 
 		//lex_quote_test7();
 
-		lex_test_skip_line_test();
+		//lex_test_skip_line_test();
 }
 
 AR_NAMESPACE_END
