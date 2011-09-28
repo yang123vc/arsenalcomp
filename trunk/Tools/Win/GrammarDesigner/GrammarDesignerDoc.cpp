@@ -1223,7 +1223,7 @@ void CGrammarDesignerDoc::OnParserParse()
 						lex_err.Format(TEXT("Lexer Error : %ls"), msg.GetString());
 						
 						size_t line;
-						ARSpace::Lex_MatchGetCoordinate(match, &line, NULL);
+						ARSpace::Lex_MatchGetCoordinate(match, NULL, &line, NULL);
 						output.Append(lex_err, COutputList::MSG_ERROR, line, &input);
 
 						ARSpace::Lex_Skip(match);

@@ -201,7 +201,7 @@ static void __on_lex_error(tguParser_t	*parser)
 		AR_wcsncpy(tok_buf, Lex_GetNextInput(parser->match), n);
 		tok_buf[n] = L'\0';
 
-		Lex_MatchGetCoordinate(parser->match, &line, &col);
+		Lex_MatchGetCoordinate(parser->match, NULL, &line, &col);
 
 		AR_swprintf(buf, 512, L"Invalid Token %ls...(%Id : %Id)\r\n", tok_buf, line, col);
 
@@ -211,8 +211,8 @@ static void __on_lex_error(tguParser_t	*parser)
 		token.value = 0;
 		token.count =	n;	
 		token.str =  tok_buf;
-
-		Lex_MatchGetCoordinate(parser->match, &token.line, &token.col);
+		
+		Lex_MatchGetCoordinate(parser->match, &token.index, &token.line, &token.col);
 
 		info.token = &token;
 		parser->report.report_func(&info, parser->report.report_ctx);

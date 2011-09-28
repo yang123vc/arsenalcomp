@@ -87,6 +87,7 @@ void	Lex_Clear(lex_t *lex);
 typedef struct __lex_token_tag
 {
 		const wchar_t	*str;
+		size_t			index;
 		size_t			count;
 		size_t			value;
 		size_t			line;
@@ -160,7 +161,7 @@ void			Lex_PutBack(lexMatch_t *pmatch, const lexToken_t *tok);
 void			Lex_MatchFlags(lexMatch_t *pmatch, uint_t flags, bool_t is_on);
 void			Lex_MatchClearFlags(lexMatch_t *pmatch);
 
-void			Lex_MatchGetCoordinate(const lexMatch_t *pmatch, size_t *line, size_t *col);
+void			Lex_MatchGetCoordinate(const lexMatch_t *pmatch, size_t *index, size_t *line, size_t *col);
 
 
 

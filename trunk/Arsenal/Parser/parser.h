@@ -40,6 +40,7 @@ typedef struct __parser_token_tag
 {
 		size_t			term_val;
 		const wchar_t	*str;
+		size_t			index;
 		size_t			str_cnt;
 		size_t			line;
 		size_t			col;
@@ -48,6 +49,7 @@ typedef struct __parser_token_tag
 #define PARSER_TOTERMTOK(_ltok, _psr_tok)						\
 		do{														\
 				(_psr_tok)->str = (_ltok)->str;					\
+				(_psr_tok)->index = (_ltok)->index;				\
 				(_psr_tok)->str_cnt = (_ltok)->count;			\
 				(_psr_tok)->term_val = (_ltok)->value;			\
 				(_psr_tok)->line = (_ltok)->line;				\
@@ -58,6 +60,7 @@ typedef struct __parser_token_tag
 #define PARSER_TOLEXTOK(_psr_tok,_ltok)							\
 		do{														\
 				(_ltok)->str = (_psr_tok)->str;					\
+				(_ltok)->index = (_psr_tok)->index;				\
 				(_ltok)->count = (_psr_tok)->str_cnt;			\
 				(_ltok)->value = (_psr_tok)->term_val;			\
 				(_ltok)->line = (_psr_tok)->line;				\
