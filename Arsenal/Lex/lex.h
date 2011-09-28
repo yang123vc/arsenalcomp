@@ -87,11 +87,14 @@ void	Lex_Clear(lex_t *lex);
 typedef struct __lex_token_tag
 {
 		const wchar_t	*str;
+		
 		size_t			index;
 		size_t			count;
-		size_t			value;
+		
 		size_t			line;
 		size_t			col;
+		
+		size_t			value;
 }lexToken_t;
 
 

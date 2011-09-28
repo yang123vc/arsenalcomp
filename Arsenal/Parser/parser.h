@@ -39,9 +39,12 @@ typedef void			psrNode_t;
 typedef struct __parser_token_tag
 {
 		size_t			term_val;
+
 		const wchar_t	*str;
+		
 		size_t			index;
 		size_t			str_cnt;
+		
 		size_t			line;
 		size_t			col;
 }psrToken_t;
