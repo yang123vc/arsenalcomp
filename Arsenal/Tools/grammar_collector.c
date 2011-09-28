@@ -2201,7 +2201,7 @@ const cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t 
 
 						str = AR_CreateString();
 						
-						Lex_MatchGetCoordinate(match, &line, &col);
+						Lex_MatchGetCoordinate(match, NULL, &line, &col);
 						AR_AppendFormatString(str, L"Invalid Token %ls...(%Id : %Id)\r\n", tok, line, col);
 
 						if(tok)AR_DEL(tok);
@@ -2213,7 +2213,7 @@ const cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t 
 						tmp_tok.str_cnt = 0;
 						tmp_tok.str =  Lex_GetNextInput(match);
 
-						Lex_MatchGetCoordinate(match, &line, &col);
+						Lex_MatchGetCoordinate(match, NULL, &line, &col);
 						tmp_tok.line = line;
 						tmp_tok.col = col;
 

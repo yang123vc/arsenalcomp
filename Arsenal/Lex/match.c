@@ -463,10 +463,10 @@ void			Lex_PutBack(lexMatch_t *pmatch, const lexToken_t *tok)
 
 
 
-
-void			Lex_MatchGetCoordinate(const lexMatch_t *pmatch, size_t *line, size_t *col)
+void			Lex_MatchGetCoordinate(const lexMatch_t *pmatch, size_t *index, size_t *line, size_t *col)
 {
 		AR_ASSERT(pmatch != NULL);
+		if(index)*index = pmatch->next - pmatch->input;
 		if(line)*line = pmatch->line;
 		if(col) *col = pmatch->col;
 }

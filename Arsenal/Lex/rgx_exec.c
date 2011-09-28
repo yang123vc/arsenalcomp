@@ -846,6 +846,7 @@ static bool_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 						case RGX_MATCH_I:
 						{
 								tok->str = match->next;
+								tok->index = match->next - match->input;
 								tok->count = sp - match->next;
 								tok->line = match->line;
 								tok->col = match->col;
