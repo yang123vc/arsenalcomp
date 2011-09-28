@@ -8,7 +8,7 @@
 			8DD76F620486A84900D96B5E /* Test */,
 		);
 		breakpoints = (
-			BEDCE18C142AFABF00D041D4 /* main.cpp:62 */,
+			BEDCE18C142AFABF00D041D4 /* main.cpp:64 */,
 			BE88A6C81431773700CF34D5 /* main.cpp:27 */,
 			BE88A6DE143177C200CF34D5 /* main.cpp:31 */,
 			BE88A7251431793000CF34D5 /* main.cpp:18 */,
@@ -71,7 +71,7 @@
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
 				PBXFileTableDataSourceColumnWidthsKey = (
 					20,
-					1263,
+					10,
 					20,
 					48,
 					43,
@@ -124,22 +124,22 @@
 					PBXFileDataSource_FiletypeID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 338788810;
-			PBXWorkspaceStateSaveDate = 338788810;
+			PBXPerProjectTemplateStateSaveDate = 338821153;
+			PBXWorkspaceStateSaveDate = 338821153;
 		};
 		perUserProjectItems = {
 			BE435BB1142B06F500DBA97C /* PBXTextBookmark */ = BE435BB1142B06F500DBA97C /* PBXTextBookmark */;
 			BE435CE8142B0FD400DBA97C /* PBXTextBookmark */ = BE435CE8142B0FD400DBA97C /* PBXTextBookmark */;
 			BE88A79C14317D3000CF34D5 /* PBXTextBookmark */ = BE88A79C14317D3000CF34D5 /* PBXTextBookmark */;
 			BE88A79E14317D3000CF34D5 /* PBXTextBookmark */ = BE88A79E14317D3000CF34D5 /* PBXTextBookmark */;
+			BEA1CBFF1432004A00A4D3A0 /* PBXTextBookmark */ = BEA1CBFF1432004A00A4D3A0 /* PBXTextBookmark */;
+			BEA1CC001432004A00A4D3A0 /* PBXTextBookmark */ = BEA1CC001432004A00A4D3A0 /* PBXTextBookmark */;
+			BEA1CC0B143200A900A4D3A0 /* PBXTextBookmark */ = BEA1CC0B143200A900A4D3A0 /* PBXTextBookmark */;
 			BEBAE28113F2943900E64F88 /* PBXTextBookmark */ = BEBAE28113F2943900E64F88 /* PBXTextBookmark */;
 			BEC600AA143183400061848F /* PBXTextBookmark */ = BEC600AA143183400061848F /* PBXTextBookmark */;
-			BEC600BE143185580061848F /* PBXTextBookmark */ = BEC600BE143185580061848F /* PBXTextBookmark */;
 			BEC600E9143185F70061848F /* PBXTextBookmark */ = BEC600E9143185F70061848F /* PBXTextBookmark */;
 			BEC600EB143185F70061848F /* PBXTextBookmark */ = BEC600EB143185F70061848F /* PBXTextBookmark */;
-			BEC600EF143185F70061848F /* PBXTextBookmark */ = BEC600EF143185F70061848F /* PBXTextBookmark */;
 			BEC600F2143186010061848F /* PBXTextBookmark */ = BEC600F2143186010061848F /* PBXTextBookmark */;
-			BEC600F3143186010061848F /* PBXTextBookmark */ = BEC600F3143186010061848F /* PBXTextBookmark */;
 			BEDCE20A142AFD3B00D041D4 /* PBXTextBookmark */ = BEDCE20A142AFD3B00D041D4 /* PBXTextBookmark */;
 			BEE65A7E1422D658009ED19E /* PBXTextBookmark */ = BEE65A7E1422D658009ED19E /* PBXTextBookmark */;
 		};
@@ -151,9 +151,9 @@
 	};
 	08FB7796FE84155DC02AAC07 /* main.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {780, 2655}}";
-			sepNavSelRange = "{704, 0}";
-			sepNavVisRange = "{2017, 293}";
+			sepNavIntBoundsRect = "{{0, 0}, {1441, 2370}}";
+			sepNavSelRange = "{787, 0}";
+			sepNavVisRange = "{61, 933}";
 			sepNavWindowFrame = "{{294, 91}, {750, 787}}";
 		};
 	};
@@ -250,7 +250,7 @@
 		ignoreCount = 0;
 		lineNumber = 27;
 		location = Test;
-		modificationTime = 338789832.886689;
+		modificationTime = 338789832.8866889;
 		originalNumberOfMultipleMatches = 1;
 		state = 1;
 	};
@@ -324,6 +324,33 @@
 		path = /Developer/SDKs/MacOSX10.6.sdk/usr/include/_wctype.h;
 		sourceTree = "<absolute>";
 	};
+	BEA1CBFF1432004A00A4D3A0 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = BEC600F4143186010061848F /* crtstr.c */;
+		name = "crtstr.c: 806";
+		rLen = 0;
+		rLoc = 13859;
+		rType = 0;
+		vrLen = 700;
+		vrLoc = 23813;
+	};
+	BEA1CC001432004A00A4D3A0 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 08FB7796FE84155DC02AAC07 /* main.cpp */;
+		rLen = 1;
+		rLoc = 9;
+		rType = 1;
+	};
+	BEA1CC0B143200A900A4D3A0 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 08FB7796FE84155DC02AAC07 /* main.cpp */;
+		name = "main.cpp: 46";
+		rLen = 0;
+		rLoc = 787;
+		rType = 0;
+		vrLen = 933;
+		vrLoc = 61;
+	};
 	BEBAE28113F2943900E64F88 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = BEBAE28213F2943900E64F88 /* iostream */;
@@ -341,18 +368,6 @@
 		path = "/Developer/SDKs/MacOSX10.6.sdk/usr/include/c++/4.2.1/iostream";
 		sourceTree = "<absolute>";
 	};
-	BEC6006A143181F30061848F /* crtstr.c */ = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.c;
-		name = crtstr.c;
-		path = /Users/solidussnakeex/Desktop/Programming/Arsenal/Arsenal/Common/crtstr.c;
-		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1619, 27780}}";
-			sepNavSelRange = "{13835, 0}";
-			sepNavVisRange = "{13698, 348}";
-		};
-	};
 	BEC600AA143183400061848F /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = BEC600AB143183400061848F /* Arsenal.c */;
@@ -365,19 +380,10 @@
 	};
 	BEC600AB143183400061848F /* Arsenal.c */ = {
 		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.c;
 		name = Arsenal.c;
 		path = /Users/solidussnakeex/Desktop/Programming/Arsenal/Arsenal/Arsenal.c;
 		sourceTree = "<absolute>";
-	};
-	BEC600BE143185580061848F /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 08FB7796FE84155DC02AAC07 /* main.cpp */;
-		name = "main.cpp: 29";
-		rLen = 0;
-		rLoc = 495;
-		rType = 0;
-		vrLen = 976;
-		vrLoc = 0;
 	};
 	BEC600DB143185AD0061848F /* config.h */ = {
 		isa = PBXFileReference;
@@ -385,11 +391,6 @@
 		name = config.h;
 		path = /Users/solidussnakeex/Desktop/Programming/Arsenal/Arsenal/Common/config.h;
 		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1441, 8895}}";
-			sepNavSelRange = "{11122, 0}";
-			sepNavVisRange = "{10645, 806}";
-		};
 	};
 	BEC600E9143185F70061848F /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -403,6 +404,7 @@
 	};
 	BEC600EA143185F70061848F /* string.c */ = {
 		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.c;
 		name = string.c;
 		path = /Users/solidussnakeex/Desktop/Programming/Arsenal/Arsenal/Common/string.c;
 		sourceTree = "<absolute>";
@@ -419,19 +421,10 @@
 	};
 	BEC600EC143185F70061848F /* common.c */ = {
 		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.c;
 		name = common.c;
 		path = /Users/solidussnakeex/Desktop/Programming/Arsenal/Arsenal/Common/common.c;
 		sourceTree = "<absolute>";
-	};
-	BEC600EF143185F70061848F /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = BEC6006A143181F30061848F /* crtstr.c */;
-		name = "crtstr.c: 809";
-		rLen = 0;
-		rLoc = 13835;
-		rType = 0;
-		vrLen = 348;
-		vrLoc = 13698;
 	};
 	BEC600F2143186010061848F /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -443,28 +436,19 @@
 		vrLen = 806;
 		vrLoc = 10645;
 	};
-	BEC600F3143186010061848F /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = BEC600F4143186010061848F /* crtstr.c */;
-		name = "crtstr.c: 819";
-		rLen = 0;
-		rLoc = 14064;
-		rType = 0;
-		vrLen = 712;
-		vrLoc = 13507;
-	};
 	BEC600F4143186010061848F /* crtstr.c */ = {
 		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.c;
 		name = crtstr.c;
 		path = /Users/solidussnakeex/Desktop/Programming/Arsenal/Arsenal/Common/crtstr.c;
 		sourceTree = "<absolute>";
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1441, 28125}}";
-			sepNavSelRange = "{14064, 0}";
-			sepNavVisRange = "{13507, 712}";
+			sepNavIntBoundsRect = "{{0, 0}, {1441, 27345}}";
+			sepNavSelRange = "{13859, 0}";
+			sepNavVisRange = "{23813, 700}";
 		};
 	};
-	BEDCE18C142AFABF00D041D4 /* main.cpp:62 */ = {
+	BEDCE18C142AFABF00D041D4 /* main.cpp:64 */ = {
 		isa = PBXFileBreakpoint;
 		actions = (
 		);
@@ -476,7 +460,7 @@
 		functionName = "text_test_save()";
 		hitCount = 0;
 		ignoreCount = 0;
-		lineNumber = 62;
+		lineNumber = 64;
 		location = Test;
 		modificationTime = 338789806.921979;
 		originalNumberOfMultipleMatches = 1;

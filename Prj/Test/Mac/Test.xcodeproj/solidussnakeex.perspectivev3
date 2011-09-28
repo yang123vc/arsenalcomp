@@ -278,6 +278,8 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
+									<integer>2</integer>
+									<integer>1</integer>
 									<integer>0</integer>
 								</array>
 							</array>
@@ -317,7 +319,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>BE10240E13F25E6A00A73802</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>crtstr.c</string>
+								<string>main.cpp</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -325,11 +327,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>BE10240F13F25E6A00A73802</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>crtstr.c</string>
+										<string>main.cpp</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>BEC600F3143186010061848F</string>
+										<string>BEA1CC0B143200A900A4D3A0</string>
 										<key>history</key>
 										<array>
 											<string>BEBAE28113F2943900E64F88</string>
@@ -340,11 +342,11 @@
 											<string>BE88A79C14317D3000CF34D5</string>
 											<string>BE88A79E14317D3000CF34D5</string>
 											<string>BEC600AA143183400061848F</string>
-											<string>BEC600BE143185580061848F</string>
 											<string>BEC600E9143185F70061848F</string>
 											<string>BEC600EB143185F70061848F</string>
 											<string>BEC600F2143186010061848F</string>
-											<string>BEC600EF143185F70061848F</string>
+											<string>BEA1CBFF1432004A00A4D3A0</string>
+											<string>BEA1CC001432004A00A4D3A0</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -358,18 +360,18 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 0}, {1502, 589}}</string>
+								<string>{{0, 0}, {1502, 841}}</string>
 								<key>RubberWindowFrame</key>
 								<string>0 141 1680 887 0 0 1680 1028 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
 							<key>Proportion</key>
-							<string>589pt</string>
+							<string>841pt</string>
 						</dict>
 						<dict>
 							<key>Proportion</key>
-							<string>252pt</string>
+							<string>0pt</string>
 							<key>Tabs</key>
 							<array>
 								<dict>
@@ -383,7 +385,9 @@
 									<key>GeometryConfiguration</key>
 									<dict>
 										<key>Frame</key>
-										<string>{{10, 27}, {1502, 225}}</string>
+										<string>{{10, 27}, {1502, -27}}</string>
+										<key>RubberWindowFrame</key>
+										<string>0 141 1680 887 0 0 1680 1028 </string>
 									</dict>
 									<key>Module</key>
 									<string>XCDetailModule</string>
@@ -438,8 +442,6 @@
 									<dict>
 										<key>Frame</key>
 										<string>{{10, 27}, {1502, 225}}</string>
-										<key>RubberWindowFrame</key>
-										<string>0 141 1680 887 0 0 1680 1028 </string>
 									</dict>
 									<key>Module</key>
 									<string>PBXBuildResultsModule</string>
@@ -467,11 +469,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>BEC600F5143186010061848F</string>
+				<string>BEA1CC021432004A00A4D3A0</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>BEC600F6143186010061848F</string>
+				<string>BEA1CC031432004A00A4D3A0</string>
 				<string>BE10240E13F25E6A00A73802</string>
-				<string>BEC600F7143186010061848F</string>
+				<string>BEA1CC041432004A00A4D3A0</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -622,14 +624,14 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>BEC600F8143186010061848F</string>
+				<string>BEA1CC051432004A00A4D3A0</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>BEC600F9143186010061848F</string>
-				<string>BEC600FA143186010061848F</string>
-				<string>BEC600FB143186010061848F</string>
-				<string>BEC600FC143186010061848F</string>
-				<string>BE10240E13F25E6A00A73802</string>
+				<string>BEA1CC061432004A00A4D3A0</string>
+				<string>BEA1CC071432004A00A4D3A0</string>
+				<string>BEA1CC081432004A00A4D3A0</string>
+				<string>BEA1CC091432004A00A4D3A0</string>
+				<string>BEA1CC0A1432004A00A4D3A0</string>
 			</array>
 			<key>ToolbarConfigUserDefaultsMinorVersion</key>
 			<string>2</string>
@@ -663,8 +665,6 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>BEC600FD143186010061848F</string>
-		<string>BEC600FE143186010061848F</string>
 		<string>/Users/solidussnakeex/Desktop/Programming/Arsenal/Prj/Test/Mac/Test.xcodeproj</string>
 	</array>
 	<key>WindowString</key>

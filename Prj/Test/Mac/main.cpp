@@ -42,6 +42,8 @@ void AR_Test1()
 		AR_DestroyString(s);
 		s = NULL;
 		}
+		
+		getchar();
 					 
 }
 

@@ -31,6 +31,7 @@
 		BE47DE081426B2E8006FE4E8 /* ARUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = BE47DE071426B2E8006FE4E8 /* ARUtility.m */; };
 		BE47DE391426B84A006FE4E8 /* ApplicationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BE47DE381426B84A006FE4E8 /* ApplicationDelegate.m */; };
 		BE8DB506142D7A160031D571 /* GrammarCheckerTask.m in Sources */ = {isa = PBXBuildFile; fileRef = BE8DB505142D7A160031D571 /* GrammarCheckerTask.m */; };
+		BE9680F014330656003C8716 /* ConsoleMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = BE9680EF14330656003C8716 /* ConsoleMessage.m */; };
 		BEAE57FD1426F8F3004C25AA /* Preferences.m in Sources */ = {isa = PBXBuildFile; fileRef = BEAE57FC1426F8F3004C25AA /* Preferences.m */; };
 		BEAE58021426F9BC004C25AA /* ARTest.m in Sources */ = {isa = PBXBuildFile; fileRef = BEAE58011426F9BC004C25AA /* ARTest.m */; };
 		BEAE587E1426FCDA004C25AA /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEAE587D1426FCDA004C25AA /* Preferences.xib */; };
@@ -93,6 +94,8 @@
 		BE47DE381426B84A006FE4E8 /* ApplicationDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplicationDelegate.m; sourceTree = "<group>"; };
 		BE8DB504142D7A160031D571 /* GrammarCheckerTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrammarCheckerTask.h; sourceTree = "<group>"; };
 		BE8DB505142D7A160031D571 /* GrammarCheckerTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrammarCheckerTask.m; sourceTree = "<group>"; };
+		BE9680EE14330656003C8716 /* ConsoleMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConsoleMessage.h; sourceTree = "<group>"; };
+		BE9680EF14330656003C8716 /* ConsoleMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConsoleMessage.m; sourceTree = "<group>"; };
 		BEAE57FB1426F8F3004C25AA /* Preferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Preferences.h; sourceTree = "<group>"; };
 		BEAE57FC1426F8F3004C25AA /* Preferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Preferences.m; sourceTree = "<group>"; };
 		BEAE58011426F9BC004C25AA /* ARTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ARTest.m; path = Helper/ARTest.m; sourceTree = "<group>"; };
@@ -198,6 +201,8 @@
 				BE357A411430CFCE001D5D04 /* ActionView.m */,
 				BEC6031A1431AB090061848F /* FindResultsView.h */,
 				BEC6031B1431AB090061848F /* FindResultsView.m */,
+				BE9680EE14330656003C8716 /* ConsoleMessage.h */,
+				BE9680EF14330656003C8716 /* ConsoleMessage.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -354,6 +359,7 @@
 				BE3578F91430C6AD001D5D04 /* SplitViewDelegate.m in Sources */,
 				BE357A421430CFCE001D5D04 /* ActionView.m in Sources */,
 				BEC6031C1431AB090061848F /* FindResultsView.m in Sources */,
+				BE9680F014330656003C8716 /* ConsoleMessage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -443,7 +449,10 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_MULTIPLE_DEFINITION_TYPES_FOR_SELECTOR = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = ../../../Arsenal;
 				ONLY_ACTIVE_ARCH = YES;
@@ -460,10 +469,16 @@
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/LibRelease";
 				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/LibRelease";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = NDEBUG;
+				GCC_UNROLL_LOOPS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_MULTIPLE_DEFINITION_TYPES_FOR_SELECTOR = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = ../../../Arsenal;
+				LLVM_LTO = YES;
 				PREBINDING = NO;
 				SDKROOT = macosx10.6;
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = static;
