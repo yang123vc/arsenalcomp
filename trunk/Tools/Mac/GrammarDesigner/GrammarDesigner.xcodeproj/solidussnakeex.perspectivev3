@@ -279,13 +279,13 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>36</integer>
+									<integer>39</integer>
 									<integer>19</integer>
 									<integer>0</integer>
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
-							<string>{{0, 0}, {372, 828}}</string>
+							<string>{{0, 141}, {372, 828}}</string>
 						</dict>
 						<key>PBXTopSmartGroupGIDs</key>
 						<array/>
@@ -320,7 +320,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>BE1803AC1422C25400259547</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>TagsView.h</string>
+								<string>OutputView.m</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -328,11 +328,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>BE1803AD1422C25400259547</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>TagsView.h</string>
+										<string>OutputView.m</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>BEC603631431AD560061848F</string>
+										<string>BE9682AF1433291E003C8716</string>
 										<key>history</key>
 										<array>
 											<string>BEEF2C16142B252700F07444</string>
@@ -358,36 +358,38 @@
 											<string>BE1D115114306FC100789216</string>
 											<string>BE1D136614308BF500789216</string>
 											<string>BE357A961430D3D1001D5D04</string>
-											<string>BEC60157143187440061848F</string>
 											<string>BEC60180143188780061848F</string>
 											<string>BEC6020B14319E4B0061848F</string>
-											<string>BEC6026D1431A4520061848F</string>
 											<string>BEC603471431AD360061848F</string>
 											<string>BEC603481431AD360061848F</string>
-											<string>BEC603491431AD360061848F</string>
 											<string>BEC6034A1431AD360061848F</string>
 											<string>BEC6034B1431AD360061848F</string>
 											<string>BEC6034C1431AD360061848F</string>
-											<string>BEC6034D1431AD360061848F</string>
-											<string>BEC6034E1431AD360061848F</string>
-											<string>BEC6034F1431AD360061848F</string>
-											<string>BEC603501431AD360061848F</string>
 											<string>BEC603511431AD360061848F</string>
-											<string>BEC603521431AD360061848F</string>
 											<string>BEC603531431AD360061848F</string>
-											<string>BEC603541431AD360061848F</string>
-											<string>BEC603551431AD360061848F</string>
-											<string>BEC603561431AD360061848F</string>
 											<string>BEC603571431AD360061848F</string>
-											<string>BEC603581431AD360061848F</string>
-											<string>BEC603591431AD360061848F</string>
-											<string>BEC6035A1431AD360061848F</string>
-											<string>BEC6035B1431AD360061848F</string>
 											<string>BEC6035C1431AD360061848F</string>
-											<string>BEC6035D1431AD360061848F</string>
-											<string>BEC6035E1431AD360061848F</string>
 											<string>BEC6035F1431AD360061848F</string>
-											<string>BEC603601431AD360061848F</string>
+											<string>BE96810414331399003C8716</string>
+											<string>BE96810514331399003C8716</string>
+											<string>BE96810614331399003C8716</string>
+											<string>BE96810714331399003C8716</string>
+											<string>BE96810E14331399003C8716</string>
+											<string>BE96810F14331399003C8716</string>
+											<string>BE96811014331399003C8716</string>
+											<string>BE96813514331561003C8716</string>
+											<string>BE96813614331561003C8716</string>
+											<string>BE968171143318AB003C8716</string>
+											<string>BE968172143318AB003C8716</string>
+											<string>BE9681A014331E53003C8716</string>
+											<string>BE9681A114331E53003C8716</string>
+											<string>BE96821E14332267003C8716</string>
+											<string>BE96821F14332267003C8716</string>
+											<string>BE96823114332338003C8716</string>
+											<string>BE9682AB1433291E003C8716</string>
+											<string>BE9682AC1433291E003C8716</string>
+											<string>BE9682AD1433291E003C8716</string>
+											<string>BE9682AE1433291E003C8716</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -426,7 +428,7 @@
 									<key>GeometryConfiguration</key>
 									<dict>
 										<key>Frame</key>
-										<string>{{10, 27}, {1286, 225}}</string>
+										<string>{{10, 27}, {1206, -27}}</string>
 									</dict>
 									<key>Module</key>
 									<string>XCDetailModule</string>
@@ -510,11 +512,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>BEC601C4143191750061848F</string>
+				<string>BE9681151433139F003C8716</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>BEC601C5143191750061848F</string>
+				<string>BE9681161433139F003C8716</string>
 				<string>BE1803AC1422C25400259547</string>
-				<string>BEC601C6143191750061848F</string>
+				<string>BE9681171433139F003C8716</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -663,13 +665,13 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>BEC601C7143191750061848F</string>
+				<string>BE9681181433139F003C8716</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>BEC601C8143191750061848F</string>
-				<string>BEC601C9143191750061848F</string>
-				<string>BEC601CA143191750061848F</string>
-				<string>BEC601CB143191750061848F</string>
+				<string>BE9681191433139F003C8716</string>
+				<string>BE96811A1433139F003C8716</string>
+				<string>BE96811B1433139F003C8716</string>
+				<string>BE96811C1433139F003C8716</string>
 				<string>BE1803AC1422C25400259547</string>
 			</array>
 			<key>ToolbarConfigUserDefaultsMinorVersion</key>
@@ -704,8 +706,8 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>BEC601CD143191750061848F</string>
-		<string>BEC601CE143191750061848F</string>
+		<string>BE96811E1433139F003C8716</string>
+		<string>BE96811F1433139F003C8716</string>
 		<string>/Users/solidussnakeex/Desktop/Programming/Arsenal/Tools/Mac/GrammarDesigner/GrammarDesigner.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
@@ -1001,22 +1003,40 @@
 			<integer>0</integer>
 		</dict>
 		<dict>
+			<key>FirstTimeWindowDisplayed</key>
+			<false/>
 			<key>Identifier</key>
 			<string>windowTool.snapshots</string>
+			<key>IsVertical</key>
+			<true/>
 			<key>Layout</key>
 			<array>
 				<dict>
 					<key>Dock</key>
 					<array>
 						<dict>
+							<key>ContentConfiguration</key>
+							<dict>
+								<key>PBXProjectModuleGUID</key>
+								<string>BEA1CBB01431ED2600A4D3A0</string>
+								<key>PBXProjectModuleLabel</key>
+								<string>Snapshots</string>
+							</dict>
+							<key>GeometryConfiguration</key>
+							<dict>
+								<key>Frame</key>
+								<string>{{0, 0}, {300, 509}}</string>
+								<key>RubberWindowFrame</key>
+								<string>21 455 300 550 0 0 1600 878 </string>
+							</dict>
 							<key>Module</key>
 							<string>XCSnapshotModule</string>
 							<key>Proportion</key>
-							<string>100%</string>
+							<string>509pt</string>
 						</dict>
 					</array>
 					<key>Proportion</key>
-					<string>100%</string>
+					<string>509pt</string>
 				</dict>
 			</array>
 			<key>Name</key>
@@ -1026,13 +1046,21 @@
 				<string>XCSnapshotModule</string>
 			</array>
 			<key>StatusbarIsVisible</key>
-			<string>Yes</string>
+			<true/>
+			<key>TableOfContents</key>
+			<array>
+				<string>BEA1CBB11431ED2600A4D3A0</string>
+				<string>BEA1CBB21431ED2600A4D3A0</string>
+				<string>BEA1CBB01431ED2600A4D3A0</string>
+			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.snapshots</string>
 			<key>WindowString</key>
-			<string>315 824 300 550 0 0 1440 878 </string>
+			<string>21 455 300 550 0 0 1600 878 </string>
+			<key>WindowToolGUID</key>
+			<string>BEA1CBB11431ED2600A4D3A0</string>
 			<key>WindowToolIsVisible</key>
-			<string>Yes</string>
+			<false/>
 		</dict>
 		<dict>
 			<key>Identifier</key>

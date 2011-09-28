@@ -22,9 +22,8 @@ _AR_ClearString
 _AR_AppendString			
 _AR_FormatString			
 _AR_AppendFormatString	
-_AR_GetStrString			
-_AR_GetLengthString
-
+_AR_GetStringCString			
+_AR_GetStringLength
 
 
 _AR_CreateBuffer
