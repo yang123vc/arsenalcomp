@@ -21,11 +21,12 @@ AR_NAMESPACE_BEGIN
 
 #if(AR_ARCH_VER == ARCH_32)
 
-	#define COMP_EXCH(_old, _new, _val)	OSAtomicCompareAndSwap32((int32_t)(_old), (int32_t)(_new), (volatile  int32_t*)(_val))
-
+		#define COMP_EXCH(_val, _new, _old)	OSAtomicCompareAndSwap32Barrier((int32_t)(_old), (int32_t)(_new), (volatile  int32_t*)(_val))
+		
 #elif(AR_ARCH_VER == ARCH_64)
 
-	#define COMP_EXCH(_old, _new, _val)	OSAtomicCompareAndSwap64((int64_t)(_old), (int64_t)(_new), (volatile  int64_t*)(_val))
+		#define COMP_EXCH(_val, _new, _old)	OSAtomicCompareAndSwap64Barrier((int64_t)(_old), (int64_t)(_new), (volatile  int64_t*)(_val))
+
 #else
 	#error "Target ARCH  not supported"
 #endif
@@ -91,28 +92,30 @@ void			AR_UnInitSpinLock(arSpinLock_t *lock)
 void			AR_LockSpinLock(arSpinLock_t *lock)
 {
 	
-	size_t count;
-	AR_ASSERT(lock != NULL);
-	count = 0;
-	
-	while(COMP_EXCH(UNLOCK_STATE, LOCK_STATE, lock))
-	{
-		if(++count > AR_MAXSPIN_COUNT)
+		size_t count;
+		AR_ASSERT(lock != NULL);
+		count = 0;
+
+		while(!COMP_EXCH(lock, LOCK_STATE, UNLOCK_STATE))
 		{
-			AR_YieldThread();
-			count = 0;
+				if(++count > AR_MAXSPIN_COUNT)
+				{
+						AR_YieldThread();
+						count = 0;
+				}
 		}
-	}
 }
 
 
 
 void			AR_UnLockSpinLock(arSpinLock_t *lock)
 {
-	AR_ASSERT(lock != NULL && *lock == LOCK_STATE);
-	
-	COMP_EXCH(LOCK_STATE, UNLOCK_STATE, lock);
-	
+		AR_ASSERT(lock != NULL && *lock == LOCK_STATE);
+		
+		while(!COMP_EXCH(lock, UNLOCK_STATE, LOCK_STATE))
+		{
+				AR_ASSERT(false);
+		}
 }
 
 
