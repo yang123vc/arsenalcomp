@@ -118,6 +118,20 @@ void AR_Test3()
 }
 
 
+void AR_Test4()
+{
+		arSpinLock_t lock;
+		
+		AR_InitSpinLock(&lock);
+		
+		AR_LockSpinLock(&lock);
+		AR_LockSpinLock(&lock);
+		
+		AR_UnLockSpinLock(&lock);
+		
+		AR_UnInitSpinLock(&lock);
+}
+
 
 
 void AR_STDCALL tiny_error(int_t level, const wchar_t* msg, void *ctx)
@@ -147,9 +161,10 @@ int  main()
 		
         Arsenal_Init(&ai);
 		
-		AR_Test1();
+		//AR_Test1();
         //AR_Test2();
 		//AR_Test3();
+		AR_Test4();
 		
 		
 		Arsenal_UnInit();

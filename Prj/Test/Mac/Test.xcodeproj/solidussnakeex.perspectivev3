@@ -232,6 +232,8 @@
 			<key>Layout</key>
 			<array>
 				<dict>
+					<key>BecomeActive</key>
+					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -312,8 +314,6 @@
 					<key>Dock</key>
 					<array>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -331,11 +331,10 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>BEA1CC0B143200A900A4D3A0</string>
+										<string>BEB536C614342695005A59C9</string>
 										<key>history</key>
 										<array>
 											<string>BEBAE28113F2943900E64F88</string>
-											<string>BEE65A7E1422D658009ED19E</string>
 											<string>BEDCE20A142AFD3B00D041D4</string>
 											<string>BE435BB1142B06F500DBA97C</string>
 											<string>BE435CE8142B0FD400DBA97C</string>
@@ -346,7 +345,8 @@
 											<string>BEC600EB143185F70061848F</string>
 											<string>BEC600F2143186010061848F</string>
 											<string>BEA1CBFF1432004A00A4D3A0</string>
-											<string>BEA1CC001432004A00A4D3A0</string>
+											<string>BEB536C414342695005A59C9</string>
+											<string>BEB536C514342695005A59C9</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -469,11 +469,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>BEA1CC021432004A00A4D3A0</string>
+				<string>BEB536C714342695005A59C9</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>BEA1CC031432004A00A4D3A0</string>
+				<string>BEB536C814342695005A59C9</string>
 				<string>BE10240E13F25E6A00A73802</string>
-				<string>BEA1CC041432004A00A4D3A0</string>
+				<string>BEB536C914342695005A59C9</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -624,14 +624,14 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>BEA1CC051432004A00A4D3A0</string>
+				<string>BEB536CA14342695005A59C9</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>BEA1CC061432004A00A4D3A0</string>
-				<string>BEA1CC071432004A00A4D3A0</string>
-				<string>BEA1CC081432004A00A4D3A0</string>
-				<string>BEA1CC091432004A00A4D3A0</string>
-				<string>BEA1CC0A1432004A00A4D3A0</string>
+				<string>BEB536CB14342695005A59C9</string>
+				<string>BEB536CC14342695005A59C9</string>
+				<string>BEB536CD14342695005A59C9</string>
+				<string>BEB536CE14342695005A59C9</string>
+				<string>BE10240E13F25E6A00A73802</string>
 			</array>
 			<key>ToolbarConfigUserDefaultsMinorVersion</key>
 			<string>2</string>
@@ -665,6 +665,8 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
+		<string>BEB536CF14342695005A59C9</string>
+		<string>BEB536D014342695005A59C9</string>
 		<string>/Users/solidussnakeex/Desktop/Programming/Arsenal/Prj/Test/Mac/Test.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
