@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		8DD76F650486A84900D96B5E /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 08FB7796FE84155DC02AAC07 /* main.cpp */; settings = {ATTRIBUTES = (); }; };
+		BE8E2F9B1436238000648C85 /* TestBuildParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BE8E2F9A1436238000648C85 /* TestBuildParser.cpp */; };
 		BEBAE20713F2908E00E64F88 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BEBAE20613F2908E00E64F88 /* libiconv.dylib */; };
 		BEBAE20913F2909F00E64F88 /* libpthread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BEBAE20813F2909F00E64F88 /* libpthread.dylib */; };
 		BEC600831431822F0061848F /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BEC600821431822F0061848F /* Arsenal.a */; };
@@ -28,6 +29,8 @@
 /* Begin PBXFileReference section */
 		08FB7796FE84155DC02AAC07 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		8DD76F6C0486A84900D96B5E /* Test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Test; sourceTree = BUILT_PRODUCTS_DIR; };
+		BE8E2F991436238000648C85 /* TestBuildParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestBuildParser.h; sourceTree = "<group>"; };
+		BE8E2F9A1436238000648C85 /* TestBuildParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestBuildParser.cpp; sourceTree = "<group>"; };
 		BEBAE20613F2908E00E64F88 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
 		BEBAE20813F2909F00E64F88 /* libpthread.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpthread.dylib; path = usr/lib/libpthread.dylib; sourceTree = SDKROOT; };
 		BEC600821431822F0061848F /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = Arsenal.a; path = /Users/solidussnakeex/Desktop/Programming/Arsenal/Binary/LibDebug/Arsenal.a; sourceTree = "<absolute>"; };
@@ -64,6 +67,8 @@
 			isa = PBXGroup;
 			children = (
 				08FB7796FE84155DC02AAC07 /* main.cpp */,
+				BE8E2F991436238000648C85 /* TestBuildParser.h */,
+				BE8E2F9A1436238000648C85 /* TestBuildParser.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -134,6 +139,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8DD76F650486A84900D96B5E /* main.cpp in Sources */,
+				BE8E2F9B1436238000648C85 /* TestBuildParser.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
