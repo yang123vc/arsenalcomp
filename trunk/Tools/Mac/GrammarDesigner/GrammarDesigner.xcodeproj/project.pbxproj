@@ -16,6 +16,7 @@
 		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
 		BE1D121E1430781500789216 /* InputTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1D121D1430781500789216 /* InputTextView.m */; };
 		BE1D12201430782700789216 /* InputSyntaxTreeView.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1D121F1430782700789216 /* InputSyntaxTreeView.m */; };
+		BE2A160A14346486006BEC87 /* ARPrintParser.m in Sources */ = {isa = PBXBuildFile; fileRef = BE2A160914346486006BEC87 /* ARPrintParser.m */; };
 		BE3578D31430C3CC001D5D04 /* GrammarTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = BE3578D21430C3CC001D5D04 /* GrammarTextView.m */; };
 		BE3578D71430C40A001D5D04 /* TagsView.m in Sources */ = {isa = PBXBuildFile; fileRef = BE3578D61430C40A001D5D04 /* TagsView.m */; };
 		BE3578EB1430C657001D5D04 /* OutputView.m in Sources */ = {isa = PBXBuildFile; fileRef = BE3578EA1430C657001D5D04 /* OutputView.m */; };
@@ -64,6 +65,8 @@
 		8D15AC370486D014006FF6A4 /* GrammarDesigner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GrammarDesigner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE1D121D1430781500789216 /* InputTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InputTextView.m; sourceTree = "<group>"; };
 		BE1D121F1430782700789216 /* InputSyntaxTreeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InputSyntaxTreeView.m; sourceTree = "<group>"; };
+		BE2A160814346486006BEC87 /* ARPrintParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ARPrintParser.h; path = Helper/ARPrintParser.h; sourceTree = "<group>"; };
+		BE2A160914346486006BEC87 /* ARPrintParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ARPrintParser.m; path = Helper/ARPrintParser.m; sourceTree = "<group>"; };
 		BE3578D11430C3CC001D5D04 /* GrammarTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrammarTextView.h; sourceTree = "<group>"; };
 		BE3578D21430C3CC001D5D04 /* GrammarTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrammarTextView.m; sourceTree = "<group>"; };
 		BE3578D51430C40A001D5D04 /* TagsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagsView.h; sourceTree = "<group>"; };
@@ -262,6 +265,8 @@
 				BE47DE071426B2E8006FE4E8 /* ARUtility.m */,
 				BEAE58011426F9BC004C25AA /* ARTest.m */,
 				BEDCDCB71429A48B00D041D4 /* ARDuplexTask.m */,
+				BE2A160814346486006BEC87 /* ARPrintParser.h */,
+				BE2A160914346486006BEC87 /* ARPrintParser.m */,
 			);
 			name = Helper;
 			sourceTree = "<group>";
@@ -360,6 +365,7 @@
 				BE357A421430CFCE001D5D04 /* ActionView.m in Sources */,
 				BEC6031C1431AB090061848F /* FindResultsView.m in Sources */,
 				BE9680F014330656003C8716 /* ConsoleMessage.m in Sources */,
+				BE2A160A14346486006BEC87 /* ARPrintParser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
