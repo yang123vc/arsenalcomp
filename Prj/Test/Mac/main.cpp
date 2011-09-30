@@ -2,6 +2,8 @@
 #include <iostream>
 #include <string>
 #include "Arsenal.h"
+#include "TestBuildParser.h"
+
 
 using namespace ARSpace;
 
@@ -134,6 +136,269 @@ void AR_Test4()
 
 
 
+
+
+
+#if(0)
+ 
+ -(BOOL)generateFromGrammar : (NSString *)grammarInput;
+ {
+ [self clear];
+ 
+ if([grammarInput length] == 0)
+ {
+ return NO;
+ }
+ 
+  
+ }
+ 
+ 
+ 
+ -(BOOL)generate : (const cfgConfig_t *)cfg
+ {
+ 
+ BOOL has_error = NO;
+ 
+ 
+ lex_t	*lexer = Lex_Create();
+ psrGrammar_t	*gmr = Parser_CreateGrammar(&__def_handler);
+ 
+ for(size_t i = 0; i < cfg->name_cnt; ++i)
+ {
+ const cfgName_t		*name = &cfg->name[i];
+ 
+ if(!Lex_InsertName(lexer, name->name, name->regex))
+ {
+ NSString *msg = [NSString stringWithFormat : @"Name Error : \"%@ : %@\"",
+ [ARUtility convertUTF32ToNSString : name->name],
+ [ARUtility convertUTF32ToNSString : name->regex]
+ ];
+ 
+ [ self.delegate onBuildParserMsg : PRINT_NODE_ERROR_T
+ Msg : msg
+ Line : name->line
+ ];
+ has_error = YES;
+ }
+ }
+ 
+ 
+ for(size_t i = 0; i < cfg->tok_cnt; ++i)
+ {
+ const cfgToken_t		*tok = &cfg->tok[i];
+ 
+ lexAction_t	action;
+ action.is_skip = tok->is_skip;
+ action.priority = tok->lex_prec;
+ action.value = tok->tokval;
+ if(!Lex_InsertRule(lexer, tok->regex, &action))
+ {
+ NSString *msg = [NSString stringWithFormat : @"Token Error : \"%@ : %@\"",
+ [ARUtility convertUTF32ToNSString : tok->name],
+ [ARUtility convertUTF32ToNSString : tok->regex]
+ ];
+ 
+ [ delegate onBuildParserMsg : PRINT_NODE_ERROR_T
+ Msg : msg
+ Line : tok->line
+ ];
+ has_error = YES;
+ }
+ 
+ if(tok->is_skip || tok->tokval == 0)
+ {
+ continue;
+ }
+ 
+ if(!Parser_InsertTerm(gmr, tok->name, tok->tokval, PARSER_ASSOC_NONASSOC, 0, build_leaf))
+ {
+ 
+ NSString *msg = [NSString stringWithFormat : @"Term Error : \"%@ : %@\"",
+ [ARUtility convertUTF32ToNSString : tok->name],
+ [ARUtility convertUTF32ToNSString : tok->regex]
+ ];
+ 
+ [ delegate onBuildParserMsg : PRINT_NODE_ERROR_T
+ Msg : msg
+ Line : tok->line
+ ];
+ has_error = YES;
+ }
+ }
+ 
+ 
+ for(size_t i = 0; i < cfg->prec_cnt; ++i)
+ {
+ const cfgPrec_t		*prec = &cfg->prec[i];
+ 
+ for(size_t k = 0; k < prec->count; ++k)
+ {
+ psrTermInfo_t *info = Parser_GetTermSymbInfoByName(gmr,prec->prec_tok_set[k]);
+ 
+ if(info == NULL)
+ {
+ if(!Parser_InsertTerm(gmr, prec->prec_tok_set[k], prec->prec_tok_val[k], prec->assoc, prec->prec_level, NULL))
+ {
+ NSString *msg = [NSString stringWithFormat : @"Prec Error : \"%@\"",
+ [ARUtility convertUTF32ToNSString : prec->prec_tok_set[k]]
+ ];
+ 
+ [ delegate onBuildParserMsg : PRINT_NODE_ERROR_T
+ Msg : msg
+ Line : prec->line
+ ];
+ 
+ has_error = YES;
+ }
+ }else
+ {
+ info->assoc = prec->assoc;
+ info->prec = prec->prec_level;
+ }
+ }
+ 
+ }
+ 
+ 
+ 
+ for(size_t i = 0; i < cfg->rule_cnt; ++i)
+ {
+ const cfgRule_t		*rule = &cfg->rule[i];
+ 
+ NSString *str = [NSString stringWithFormat : @"%@ : %@",
+ [ARUtility convertUTF32ToNSString : rule->lhs],
+ [ARUtility convertUTF32ToNSString : rule->rhs]
+ ];
+ 
+ if(!Parser_InsertRuleByStr(gmr, [ARUtility convertNSStringToUTF32 : str], rule->prec_tok,  build_rule, 0))
+ {
+ NSString *msg = [NSString stringWithFormat : @"Rule Error : \"%@\"", str ];
+ [ delegate onBuildParserMsg : PRINT_NODE_ERROR_T
+ Msg : msg
+ Line : rule->line
+ ];
+ 
+ has_error = YES;
+ }
+ }
+ 
+ 
+ 
+ 
+ if(cfg->start.start_rule != NULL)
+ {
+ BOOL has_start_rule = NO;
+ 
+ for(size_t i = 0; i < cfg->rule_cnt; ++i)
+ {
+ if(AR_wcscmp(cfg->start.start_rule, cfg->rule[i].lhs) == 0)
+ {
+ has_start_rule = YES;
+ break;
+ }
+ }
+ 
+ 
+ if(!has_start_rule || !Parser_SetStartRule(gmr, cfg->start.start_rule))
+ {
+ 
+ NSString *msg = [NSString stringWithFormat : @"Start Rule Error : \"%@\"", 
+ [ARUtility convertUTF32ToNSString : cfg->start.start_rule]
+ 
+ ];
+ [ delegate onBuildParserMsg : PRINT_NODE_ERROR_T
+ Msg : msg
+ Line : cfg->start.line
+ ];
+ has_error = YES;
+ }
+ }
+ 
+ 
+ /*********************************************检查并报告语法错误*******************************************************/
+{
+		
+		arIOCtx_t	io_context = 
+		{
+				__report_io_error_func,
+				__report_io_print_func,
+				(void*)delegate
+				
+		};
+		
+		if(!Parser_CheckIsValidGrammar(gmr, &io_context))
+		{
+				has_error = YES;
+		}
+}
+/******************************************************************************************************/
+
+
+if(has_error)
+{
+		Lex_Destroy(lexer);
+		lexer = NULL;
+		Parser_DestroyGrammar(gmr);
+		gmr = NULL;
+		return NO;
+}else
+{
+		
+		uint_64_t beg, end;
+		
+		beg = AR_GetTime_Milliseconds();
+		
+		lex = lexer;
+		Lex_GenerateTransTable(lex);
+		grammar	= gmr;
+		
+		parser = Parser_CreateParser(grammar, parserMode);
+		
+		
+		end = AR_GetTime_Milliseconds();
+		
+		
+		NSString *str = [NSString stringWithFormat : @"Build Parser Tick count %qu",
+						 end - beg
+						 ];
+		
+		[ delegate onBuildParserMsg : PRINT_NODE_MSG_T
+								Msg : str
+							   Line : -1
+		 ];
+		
+		
+		size_t conflict = Parser_CountParserConflict(parser);
+		
+		if(conflict > 0)
+		{
+				str = [NSString stringWithFormat : @"The grammar has %u conflicts",
+					   (uint_32_t)conflict
+					   ];
+				
+				[ delegate onBuildParserMsg : PRINT_NODE_MSG_T
+										Msg : str
+									   Line : -1
+				 ];
+		}
+		
+		
+		return YES;
+}
+}
+
+#endif
+
+
+
+
+
+
+
+
+
+
 void AR_STDCALL tiny_error(int_t level, const wchar_t* msg, void *ctx)
 {
 		
@@ -145,6 +410,11 @@ void AR_STDCALL tiny_printf(const wchar_t *msg, void *ctx)
 		
         wprintf(L"%ls\r\n", msg);
 }
+
+
+
+
+
 
 
 int  main()
@@ -164,7 +434,8 @@ int  main()
 		//AR_Test1();
         //AR_Test2();
 		//AR_Test3();
-		AR_Test4();
+		//AR_Test4();
+		AR_GenerateParsertest();
 		
 		
 		Arsenal_UnInit();

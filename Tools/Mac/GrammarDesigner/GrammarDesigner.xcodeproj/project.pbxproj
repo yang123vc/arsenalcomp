@@ -32,13 +32,13 @@
 		BE47DE081426B2E8006FE4E8 /* ARUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = BE47DE071426B2E8006FE4E8 /* ARUtility.m */; };
 		BE47DE391426B84A006FE4E8 /* ApplicationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BE47DE381426B84A006FE4E8 /* ApplicationDelegate.m */; };
 		BE8DB506142D7A160031D571 /* GrammarCheckerTask.m in Sources */ = {isa = PBXBuildFile; fileRef = BE8DB505142D7A160031D571 /* GrammarCheckerTask.m */; };
+		BE8E2D1514360FA700648C85 /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BE8E2D1414360FA700648C85 /* Arsenal.a */; };
 		BE9680F014330656003C8716 /* ConsoleMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = BE9680EF14330656003C8716 /* ConsoleMessage.m */; };
 		BEAE57FD1426F8F3004C25AA /* Preferences.m in Sources */ = {isa = PBXBuildFile; fileRef = BEAE57FC1426F8F3004C25AA /* Preferences.m */; };
 		BEAE58021426F9BC004C25AA /* ARTest.m in Sources */ = {isa = PBXBuildFile; fileRef = BEAE58011426F9BC004C25AA /* ARTest.m */; };
 		BEAE587E1426FCDA004C25AA /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEAE587D1426FCDA004C25AA /* Preferences.xib */; };
 		BEC0D01F1422C35000D35745 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BEC0D01E1422C35000D35745 /* libiconv.dylib */; };
 		BEC0D0211422C35900D35745 /* libpthread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BEC0D0201422C35900D35745 /* libpthread.dylib */; };
-		BEC0D0251422C37A00D35745 /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BEC0D0241422C37A00D35745 /* Arsenal.a */; };
 		BEC33310142F65DD00553ED3 /* InputChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = BEC3330F142F65DD00553ED3 /* InputChecker.m */; };
 		BEC333D4142F6F3A00553ED3 /* InputChecker.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEC333D3142F6F3A00553ED3 /* InputChecker.xib */; };
 		BEC334A2142F7F4500553ED3 /* StringConverter.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEC334A1142F7F4500553ED3 /* StringConverter.xib */; };
@@ -97,6 +97,7 @@
 		BE47DE381426B84A006FE4E8 /* ApplicationDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplicationDelegate.m; sourceTree = "<group>"; };
 		BE8DB504142D7A160031D571 /* GrammarCheckerTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrammarCheckerTask.h; sourceTree = "<group>"; };
 		BE8DB505142D7A160031D571 /* GrammarCheckerTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrammarCheckerTask.m; sourceTree = "<group>"; };
+		BE8E2D1414360FA700648C85 /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = Arsenal.a; path = /Users/solidussnakeex/Desktop/Programming/Arsenal/Binary/LibDebug/Arsenal.a; sourceTree = "<absolute>"; };
 		BE9680EE14330656003C8716 /* ConsoleMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConsoleMessage.h; sourceTree = "<group>"; };
 		BE9680EF14330656003C8716 /* ConsoleMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConsoleMessage.m; sourceTree = "<group>"; };
 		BEAE57FB1426F8F3004C25AA /* Preferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Preferences.h; sourceTree = "<group>"; };
@@ -105,7 +106,6 @@
 		BEAE587D1426FCDA004C25AA /* Preferences.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Preferences.xib; sourceTree = "<group>"; };
 		BEC0D01E1422C35000D35745 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
 		BEC0D0201422C35900D35745 /* libpthread.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpthread.dylib; path = usr/lib/libpthread.dylib; sourceTree = SDKROOT; };
-		BEC0D0241422C37A00D35745 /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = Arsenal.a; path = /Users/solidussnakeex/Desktop/Programming/Arsenal/Binary/LibDebug/Arsenal.a; sourceTree = "<absolute>"; };
 		BEC3330E142F65DD00553ED3 /* InputChecker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InputChecker.h; sourceTree = "<group>"; };
 		BEC3330F142F65DD00553ED3 /* InputChecker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InputChecker.m; sourceTree = "<group>"; };
 		BEC333D3142F6F3A00553ED3 /* InputChecker.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InputChecker.xib; sourceTree = "<group>"; };
@@ -126,7 +126,7 @@
 				8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */,
 				BEC0D01F1422C35000D35745 /* libiconv.dylib in Frameworks */,
 				BEC0D0211422C35900D35745 /* libpthread.dylib in Frameworks */,
-				BEC0D0251422C37A00D35745 /* Arsenal.a in Frameworks */,
+				BE8E2D1514360FA700648C85 /* Arsenal.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -170,7 +170,7 @@
 				19C28FB0FE9D524F11CA2CBB /* Products */,
 				BEC0D01E1422C35000D35745 /* libiconv.dylib */,
 				BEC0D0201422C35900D35745 /* libpthread.dylib */,
-				BEC0D0241422C37A00D35745 /* Arsenal.a */,
+				BE8E2D1414360FA700648C85 /* Arsenal.a */,
 			);
 			name = GrammarDesigner;
 			sourceTree = "<group>";
@@ -423,6 +423,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../../Binary/LibDebug\"",
+					"\"$(SRCROOT)/../../../Binary/LibRelease\"",
 				);
 				PRODUCT_NAME = GrammarDesigner;
 			};
@@ -441,6 +442,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../../Binary/LibDebug\"",
+					"\"$(SRCROOT)/../../../Binary/LibRelease\"",
 				);
 				PRODUCT_NAME = GrammarDesigner;
 			};
