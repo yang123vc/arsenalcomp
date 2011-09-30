@@ -47,9 +47,9 @@ int_t			AR_AtomicInc(volatile int_t *dest)
 {
 		AR_ASSERT(dest != NULL);
 #if(AR_ARCH_VER == ARCH_32)
-		return (int_t)OSAtomicIncrement32(dest);
+		return (int_t)OSAtomicIncrement32Barrier(dest);
 #elif(AR_ARCH_VER == ARCH_64)
-		return (int_t)OSAtomicIncrement64(dest);
+		return (int_t)OSAtomicIncrement64Barrier(dest);
 #else
 		#error	"Unknow Platform";
 #endif
@@ -61,9 +61,9 @@ int_t			AR_AtomicDec(volatile int_t *dest)
 		AR_ASSERT(dest != NULL);
 
 #if(AR_ARCH_VER == ARCH_32)
-		return (int_t)OSAtomicDecrement32(dest);
+		return (int_t)OSAtomicDecrement32Barrier(dest);
 #elif(AR_ARCH_VER == ARCH_64)
-		return (int_t)OSAtomicDecrement64(dest);
+		return (int_t)OSAtomicDecrement64Barrier(dest);
 #else
 		#error	"Unknow Platform";
 #endif

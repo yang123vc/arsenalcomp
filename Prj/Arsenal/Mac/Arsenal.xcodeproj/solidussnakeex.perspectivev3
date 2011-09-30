@@ -269,16 +269,13 @@
 							<array>
 								<string>08FB7794FE84155DC02AAC07</string>
 								<string>BE88D04113F172B300871F83</string>
-								<string>BE88D04413F172B300871F83</string>
-								<string>BE88D05913F172B300871F83</string>
 								<string>1C37FBAC04509CD000000102</string>
 								<string>1C77FABC04509CD000000102</string>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>22</integer>
-									<integer>5</integer>
+									<integer>7</integer>
 									<integer>2</integer>
 									<integer>0</integer>
 								</array>
@@ -331,7 +328,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>BEB536FE14343155005A59C9</string>
+										<string>BE2A1B3D1435FD19006BEC87</string>
 										<key>history</key>
 										<array>
 											<string>BEAE1C6513F248B90088C3A4</string>
@@ -350,7 +347,6 @@
 											<string>BEAE5EC614283D36004C25AA</string>
 											<string>BEDCDCE41429B98A00D041D4</string>
 											<string>BEDCDCE61429B98A00D041D4</string>
-											<string>BEDCE0B0142AF2D200D041D4</string>
 											<string>BEDCE0B2142AF2D200D041D4</string>
 											<string>BEEF2C2A142B26A800F07444</string>
 											<string>BEEF2C6D142B290100F07444</string>
@@ -372,9 +368,11 @@
 											<string>BEB536F814343155005A59C9</string>
 											<string>BEB536F914343155005A59C9</string>
 											<string>BEB536FA14343155005A59C9</string>
-											<string>BEB536FB14343155005A59C9</string>
 											<string>BEB536FC14343155005A59C9</string>
-											<string>BEB536FD14343155005A59C9</string>
+											<string>BE2A18851435DC58006BEC87</string>
+											<string>BE2A18861435DC58006BEC87</string>
+											<string>BE2A18871435DC58006BEC87</string>
+											<string>BE2A18881435DC58006BEC87</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -497,11 +495,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>BEB5357214341639005A59C9</string>
+				<string>BE2A158914344F21006BEC87</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>BEB5357314341639005A59C9</string>
+				<string>BE2A158A14344F21006BEC87</string>
 				<string>BE5AE25B13F1724E00D92048</string>
-				<string>BEB5357414341639005A59C9</string>
+				<string>BE2A158B14344F21006BEC87</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -690,7 +688,9 @@
 	<key>WindowJustification</key>
 	<integer>5</integer>
 	<key>WindowOrderList</key>
-	<array/>
+	<array>
+		<string>/Users/solidussnakeex/Desktop/Programming/Arsenal/Prj/Arsenal/Mac/Arsenal.xcodeproj</string>
+	</array>
 	<key>WindowString</key>
 	<string>0 141 1680 887 0 0 1680 1028 </string>
 	<key>WindowToolsV3</key>
