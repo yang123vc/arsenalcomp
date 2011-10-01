@@ -277,12 +277,14 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>1</integer>
+									<integer>37</integer>
+									<integer>27</integer>
+									<integer>2</integer>
 									<integer>0</integer>
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
-							<string>{{0, 0}, {248, 678}}</string>
+							<string>{{0, 19}, {248, 678}}</string>
 						</dict>
 						<key>PBXTopSmartGroupGIDs</key>
 						<array/>
@@ -317,7 +319,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>BE5AE25B13F1724E00D92048</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>export.def</string>
+								<string>parser.h</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -325,11 +327,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>BE5AE25C13F1724E00D92048</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>export.def</string>
+										<string>parser.h</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>BE9A16701437701B00F3761F</string>
+										<string>BE9782941437B1EE00225A7C</string>
 										<key>history</key>
 										<array>
 											<string>BEAE1C6513F248B90088C3A4</string>
@@ -373,9 +375,9 @@
 											<string>BE8E335414363B2000648C85</string>
 											<string>BE952090143642B4003038C7</string>
 											<string>BE952091143642B4003038C7</string>
-											<string>BE952092143642B4003038C7</string>
 											<string>BE37ED6814364CD700EB70D2</string>
-											<string>BEA426DE143657F400F5B0F2</string>
+											<string>BE9781621437A5AC00225A7C</string>
+											<string>BE9781631437A5AC00225A7C</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -498,11 +500,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>BE9A16491436E9A900F3761F</string>
+				<string>BE978070143781BE00225A7C</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>BE9A164A1436E9A900F3761F</string>
+				<string>BE978071143781BE00225A7C</string>
 				<string>BE5AE25B13F1724E00D92048</string>
-				<string>BE9A164B1436E9A900F3761F</string>
+				<string>BE978072143781BE00225A7C</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -691,9 +693,7 @@
 	<key>WindowJustification</key>
 	<integer>5</integer>
 	<key>WindowOrderList</key>
-	<array>
-		<string>/Users/solidussnakeex/Desktop/Programming/Arsenal/Prj/Arsenal/Mac/Arsenal.xcodeproj</string>
-	</array>
+	<array/>
 	<key>WindowString</key>
 	<string>0 141 1600 737 0 0 1600 878 </string>
 	<key>WindowToolsV3</key>
