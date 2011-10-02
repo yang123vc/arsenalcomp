@@ -301,7 +301,7 @@
 							<real>235</real>
 						</array>
 						<key>RubberWindowFrame</key>
-						<string>0 141 1600 737 0 0 1600 878 </string>
+						<string>80 291 1600 737 0 0 1680 1028 </string>
 					</dict>
 					<key>Module</key>
 					<string>PBXSmartGroupTreeModule</string>
@@ -329,7 +329,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>BEAED6FE1438A720003441BE</string>
+										<string>BEAED7A61438AED3003441BE</string>
 										<key>history</key>
 										<array>
 											<string>BEAE1C6513F248B90088C3A4</string>
@@ -391,7 +391,7 @@
 								<key>Frame</key>
 								<string>{{0, 0}, {1343, 691}}</string>
 								<key>RubberWindowFrame</key>
-								<string>0 141 1600 737 0 0 1600 878 </string>
+								<string>80 291 1600 737 0 0 1680 1028 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
@@ -416,7 +416,7 @@
 										<key>Frame</key>
 										<string>{{10, 27}, {1343, -27}}</string>
 										<key>RubberWindowFrame</key>
-										<string>0 141 1600 737 0 0 1600 878 </string>
+										<string>80 291 1600 737 0 0 1680 1028 </string>
 									</dict>
 									<key>Module</key>
 									<string>XCDetailModule</string>
@@ -691,9 +691,11 @@
 	<key>WindowJustification</key>
 	<integer>5</integer>
 	<key>WindowOrderList</key>
-	<array/>
+	<array>
+		<string>/Users/solidussnakeex/Desktop/Programming/Arsenal/Prj/Arsenal/Mac/Arsenal.xcodeproj</string>
+	</array>
 	<key>WindowString</key>
-	<string>0 141 1600 737 0 0 1600 878 </string>
+	<string>80 291 1600 737 0 0 1680 1028 </string>
 	<key>WindowToolsV3</key>
 	<array>
 		<dict>
