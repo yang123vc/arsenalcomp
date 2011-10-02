@@ -232,6 +232,8 @@
 			<key>Layout</key>
 			<array>
 				<dict>
+					<key>BecomeActive</key>
+					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -268,23 +270,21 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateExpansionKey</key>
 							<array>
 								<string>2A37F4AAFDCFA73011CA2CEA</string>
-								<string>BE47DD0814269546006FE4E8</string>
-								<string>2A37F4ABFDCFA73011CA2CEA</string>
 								<string>2A37F4B8FDCFA73011CA2CEA</string>
 								<string>1C37FBAC04509CD000000102</string>
+								<string>BE2A5D4C1438B6C700020C08</string>
 								<string>1C77FABC04509CD000000102</string>
 								<string>1C3E0DCA080725EA00A55177</string>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>22</integer>
-									<integer>21</integer>
+									<integer>18</integer>
 									<integer>0</integer>
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
-							<string>{{0, 91}, {335, 828}}</string>
+							<string>{{0, 0}, {335, 828}}</string>
 						</dict>
 						<key>PBXTopSmartGroupGIDs</key>
 						<array/>
@@ -312,14 +312,12 @@
 					<key>Dock</key>
 					<array>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
 								<string>BE1803AC1422C25400259547</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>GrammarDesignerDocument.h</string>
+								<string>ArsenalOC.m</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -327,11 +325,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>BE1803AD1422C25400259547</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>GrammarDesignerDocument.h</string>
+										<string>ArsenalOC.m</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>BEAED7A51438AECF003441BE</string>
+										<string>BE2A5D511438B7CB00020C08</string>
 										<key>history</key>
 										<array>
 											<string>BEC332E1142F5ECC00553ED3</string>
@@ -339,7 +337,6 @@
 											<string>BE1D115114306FC100789216</string>
 											<string>BEC60180143188780061848F</string>
 											<string>BEC6020B14319E4B0061848F</string>
-											<string>BE2A16D51435D133006BEC87</string>
 											<string>BE2A16D61435D133006BEC87</string>
 											<string>BE2A16D71435D133006BEC87</string>
 											<string>BE2A16DB1435D133006BEC87</string>
@@ -370,12 +367,10 @@
 											<string>BEAED3C914384B74003441BE</string>
 											<string>BEAED3CA14384B74003441BE</string>
 											<string>BEAED3CB14384B74003441BE</string>
-											<string>BEAED3CC14384B74003441BE</string>
 											<string>BEAED3CF14384B74003441BE</string>
 											<string>BEAED3D014384B74003441BE</string>
 											<string>BEAED3D514384B74003441BE</string>
 											<string>BEAED3D614384B74003441BE</string>
-											<string>BEAED41A14384E06003441BE</string>
 											<string>BEAED51414387E7B003441BE</string>
 											<string>BEAED53814387F44003441BE</string>
 											<string>BEAED554143880FE003441BE</string>
@@ -390,19 +385,22 @@
 											<string>BEAED6421438A371003441BE</string>
 											<string>BEAED6741438A5A0003441BE</string>
 											<string>BEAED6751438A5A0003441BE</string>
-											<string>BEAED69B1438A62C003441BE</string>
-											<string>BEAED69C1438A62C003441BE</string>
 											<string>BEAED6DB1438A6D5003441BE</string>
-											<string>BEAED7421438ABF4003441BE</string>
 											<string>BEAED7441438ABF4003441BE</string>
 											<string>BEAED7461438ABF4003441BE</string>
 											<string>BEAED75D1438ACBA003441BE</string>
-											<string>BEAED75E1438ACBA003441BE</string>
-											<string>BEAED7881438ADEC003441BE</string>
 											<string>BEAED7931438AE5B003441BE</string>
 											<string>BEAED7A21438AECF003441BE</string>
-											<string>BEAED7A31438AECF003441BE</string>
-											<string>BEAED7A41438AECF003441BE</string>
+											<string>BE2A5CB51438B22500020C08</string>
+											<string>BE2A5D091438B51700020C08</string>
+											<string>BE2A5D0A1438B51700020C08</string>
+											<string>BE2A5D161438B56800020C08</string>
+											<string>BE2A5D171438B56800020C08</string>
+											<string>BE2A5D181438B56800020C08</string>
+											<string>BE2A5D201438B5CD00020C08</string>
+											<string>BE2A5D4D1438B6C700020C08</string>
+											<string>BE2A5D4E1438B6C700020C08</string>
+											<string>BE2A5D4F1438B6C700020C08</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -416,18 +414,18 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 0}, {1323, 841}}</string>
+								<string>{{0, 0}, {1323, 589}}</string>
 								<key>RubberWindowFrame</key>
 								<string>0 141 1680 887 0 0 1680 1028 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
 							<key>Proportion</key>
-							<string>841pt</string>
+							<string>589pt</string>
 						</dict>
 						<dict>
 							<key>Proportion</key>
-							<string>0pt</string>
+							<string>252pt</string>
 							<key>Tabs</key>
 							<array>
 								<dict>
@@ -441,7 +439,7 @@
 									<key>GeometryConfiguration</key>
 									<dict>
 										<key>Frame</key>
-										<string>{{10, 27}, {1323, -27}}</string>
+										<string>{{10, 27}, {1323, 225}}</string>
 										<key>RubberWindowFrame</key>
 										<string>0 141 1680 887 0 0 1680 1028 </string>
 									</dict>
@@ -497,7 +495,7 @@
 									<key>GeometryConfiguration</key>
 									<dict>
 										<key>Frame</key>
-										<string>{{0, 0}, {568, 405}}</string>
+										<string>{{10, 27}, {1323, 225}}</string>
 									</dict>
 									<key>Module</key>
 									<string>PBXBuildResultsModule</string>
@@ -525,11 +523,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>BEAED74A1438ABF9003441BE</string>
+				<string>BE2A5CB91438B22900020C08</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>BEAED74B1438ABF9003441BE</string>
+				<string>BE2A5CBA1438B22900020C08</string>
 				<string>BE1803AC1422C25400259547</string>
-				<string>BEAED74C1438ABF9003441BE</string>
+				<string>BE2A5CBB1438B22900020C08</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -678,13 +676,13 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>BEAED74D1438ABF9003441BE</string>
+				<string>BE2A5CBC1438B22900020C08</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>BEAED74E1438ABF9003441BE</string>
-				<string>BEAED74F1438ABF9003441BE</string>
-				<string>BEAED7501438ABF9003441BE</string>
-				<string>BEAED7511438ABF9003441BE</string>
+				<string>BE2A5CBD1438B22900020C08</string>
+				<string>BE2A5CBE1438B22900020C08</string>
+				<string>BE2A5CBF1438B22900020C08</string>
+				<string>BE2A5CC01438B22900020C08</string>
 				<string>BE1803AC1422C25400259547</string>
 			</array>
 			<key>ToolbarConfigUserDefaultsMinorVersion</key>
@@ -719,8 +717,8 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>BEAED7531438ABF9003441BE</string>
-		<string>BEAED7541438ABF9003441BE</string>
+		<string>BE2A5CC21438B22900020C08</string>
+		<string>BE2A5CC31438B22900020C08</string>
 		<string>/Users/solidussnakeex/Desktop/Programming/Arsenal/Tools/Mac/GrammarDesigner/GrammarDesigner.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
