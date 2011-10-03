@@ -279,8 +279,7 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>3</integer>
-									<integer>2</integer>
+									<integer>1</integer>
 									<integer>0</integer>
 								</array>
 							</array>
@@ -318,7 +317,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>BE5AE25B13F1724E00D92048</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>Arsenal.c</string>
+								<string>export.def</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -326,15 +325,18 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>BE5AE25C13F1724E00D92048</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>Arsenal.c</string>
+										<string>export.def</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>BE9CEB921439D77100E46CEA</string>
+										<string>BE9CEC031439DD7800E46CEA</string>
 										<key>history</key>
 										<array>
 											<string>BE9CEB901439D77100E46CEA</string>
-											<string>BE9CEB911439D77100E46CEA</string>
+											<string>BE9CEBFF1439DD7800E46CEA</string>
+											<string>BE9CEC001439DD7800E46CEA</string>
+											<string>BE9CEC011439DD7800E46CEA</string>
+											<string>BE9CEC021439DD7800E46CEA</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -650,7 +652,9 @@
 	<key>WindowJustification</key>
 	<integer>5</integer>
 	<key>WindowOrderList</key>
-	<array/>
+	<array>
+		<string>/Users/solidussnakeex/Desktop/Programming/Arsenal/Prj/Arsenal/Mac/Arsenal.xcodeproj</string>
+	</array>
 	<key>WindowString</key>
 	<string>0 141 1680 887 0 0 1680 1028 </string>
 	<key>WindowToolsV3</key>

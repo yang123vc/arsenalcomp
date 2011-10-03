@@ -268,8 +268,6 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateExpansionKey</key>
 							<array>
 								<string>2A37F4AAFDCFA73011CA2CEA</string>
-								<string>BE47DD0814269546006FE4E8</string>
-								<string>2A37F4ABFDCFA73011CA2CEA</string>
 								<string>2A37F4B8FDCFA73011CA2CEA</string>
 								<string>1C37FBAC04509CD000000102</string>
 								<string>1C77FABC04509CD000000102</string>
@@ -278,13 +276,11 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>34</integer>
-									<integer>21</integer>
 									<integer>0</integer>
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
-							<string>{{0, 144}, {335, 836}}</string>
+							<string>{{0, 0}, {335, 836}}</string>
 						</dict>
 						<key>PBXTopSmartGroupGIDs</key>
 						<array/>
@@ -331,17 +327,16 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>BE9CEBC81439DC9000E46CEA</string>
+										<string>BE9CEBF51439DD7500E46CEA</string>
 										<key>history</key>
 										<array>
 											<string>BE923B771439D588007DC1DF</string>
 											<string>BE9CEBBF1439DC9000E46CEA</string>
 											<string>BE9CEBC01439DC9000E46CEA</string>
-											<string>BE9CEBC11439DC9000E46CEA</string>
 											<string>BE9CEBC31439DC9000E46CEA</string>
 											<string>BE9CEBC51439DC9000E46CEA</string>
 											<string>BE9CEBC61439DC9000E46CEA</string>
-											<string>BE9CEBC71439DC9000E46CEA</string>
+											<string>BE9CEBC81439DC9000E46CEA</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -464,11 +459,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>BE9CEBC91439DC9000E46CEA</string>
+				<string>BE9CEBF61439DD7500E46CEA</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>BE9CEBCA1439DC9000E46CEA</string>
+				<string>BE9CEBF71439DD7500E46CEA</string>
 				<string>BE1803AC1422C25400259547</string>
-				<string>BE9CEBCB1439DC9000E46CEA</string>
+				<string>BE9CEBF81439DD7500E46CEA</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -617,14 +612,14 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>BE9CEBCC1439DC9000E46CEA</string>
+				<string>BE9CEBF91439DD7500E46CEA</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>BE9CEBCD1439DC9000E46CEA</string>
-				<string>BE9CEBCE1439DC9000E46CEA</string>
-				<string>BE9CEBCF1439DC9000E46CEA</string>
-				<string>BE9CEBD01439DC9000E46CEA</string>
-				<string>BE9CEBD11439DC9000E46CEA</string>
+				<string>BE9CEBFA1439DD7500E46CEA</string>
+				<string>BE9CEBFB1439DD7500E46CEA</string>
+				<string>BE9CEBFC1439DD7500E46CEA</string>
+				<string>BE9CEBFD1439DD7500E46CEA</string>
+				<string>BE9CEBFE1439DD7500E46CEA</string>
 			</array>
 			<key>ToolbarConfigUserDefaultsMinorVersion</key>
 			<string>2</string>
@@ -658,8 +653,6 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>BE9CEBD21439DC9000E46CEA</string>
-		<string>BE9CEBD31439DC9000E46CEA</string>
 		<string>/Users/solidussnakeex/Desktop/Programming/Arsenal/Tools/Mac/GrammarDesigner/GrammarDesigner.xcodeproj</string>
 	</array>
 	<key>WindowString</key>

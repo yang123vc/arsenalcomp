@@ -33,7 +33,7 @@
 		BE47DE391426B84A006FE4E8 /* ApplicationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BE47DE381426B84A006FE4E8 /* ApplicationDelegate.m */; };
 		BE8DB506142D7A160031D571 /* GrammarCheckerTask.m in Sources */ = {isa = PBXBuildFile; fileRef = BE8DB505142D7A160031D571 /* GrammarCheckerTask.m */; };
 		BE9680F014330656003C8716 /* ConsoleMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = BE9680EF14330656003C8716 /* ConsoleMessage.m */; };
-		BEA336971439CFD4009AEAA4 /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BEA336961439CFD4009AEAA4 /* Arsenal.a */; };
+		BE9CEBEE1439DCF500E46CEA /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BE9CEBED1439DCF500E46CEA /* Arsenal.a */; };
 		BEAE57FD1426F8F3004C25AA /* Preferences.m in Sources */ = {isa = PBXBuildFile; fileRef = BEAE57FC1426F8F3004C25AA /* Preferences.m */; };
 		BEAE58021426F9BC004C25AA /* ARTest.m in Sources */ = {isa = PBXBuildFile; fileRef = BEAE58011426F9BC004C25AA /* ARTest.m */; };
 		BEAE587E1426FCDA004C25AA /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEAE587D1426FCDA004C25AA /* Preferences.xib */; };
@@ -99,7 +99,7 @@
 		BE8DB505142D7A160031D571 /* GrammarCheckerTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrammarCheckerTask.m; sourceTree = "<group>"; };
 		BE9680EE14330656003C8716 /* ConsoleMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConsoleMessage.h; sourceTree = "<group>"; };
 		BE9680EF14330656003C8716 /* ConsoleMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConsoleMessage.m; sourceTree = "<group>"; };
-		BEA336961439CFD4009AEAA4 /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = Arsenal.a; path = /Users/solidussnakeex/Desktop/Programming/Arsenal/Binary/LibDebug/Arsenal.a; sourceTree = "<absolute>"; };
+		BE9CEBED1439DCF500E46CEA /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = Arsenal.a; path = /Users/solidussnakeex/Desktop/Programming/Arsenal/Binary/LibRelease/Arsenal.a; sourceTree = "<absolute>"; };
 		BEAE57FB1426F8F3004C25AA /* Preferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Preferences.h; sourceTree = "<group>"; };
 		BEAE57FC1426F8F3004C25AA /* Preferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Preferences.m; sourceTree = "<group>"; };
 		BEAE58011426F9BC004C25AA /* ARTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ARTest.m; path = Helper/ARTest.m; sourceTree = "<group>"; };
@@ -126,7 +126,7 @@
 				8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */,
 				BEC0D01F1422C35000D35745 /* libiconv.dylib in Frameworks */,
 				BEC0D0211422C35900D35745 /* libpthread.dylib in Frameworks */,
-				BEA336971439CFD4009AEAA4 /* Arsenal.a in Frameworks */,
+				BE9CEBEE1439DCF500E46CEA /* Arsenal.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -170,7 +170,7 @@
 				19C28FB0FE9D524F11CA2CBB /* Products */,
 				BEC0D01E1422C35000D35745 /* libiconv.dylib */,
 				BEC0D0201422C35900D35745 /* libpthread.dylib */,
-				BEA336961439CFD4009AEAA4 /* Arsenal.a */,
+				BE9CEBED1439DCF500E46CEA /* Arsenal.a */,
 			);
 			name = GrammarDesigner;
 			sourceTree = "<group>";
