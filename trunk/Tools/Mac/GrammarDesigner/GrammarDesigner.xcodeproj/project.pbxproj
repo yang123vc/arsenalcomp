@@ -17,7 +17,6 @@
 		BE1D121E1430781500789216 /* InputTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1D121D1430781500789216 /* InputTextView.m */; };
 		BE1D12201430782700789216 /* InputSyntaxTreeView.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1D121F1430782700789216 /* InputSyntaxTreeView.m */; };
 		BE2A160A14346486006BEC87 /* ARPrintParser.m in Sources */ = {isa = PBXBuildFile; fileRef = BE2A160914346486006BEC87 /* ARPrintParser.m */; };
-		BE2A5D431438B67500020C08 /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BE2A5D421438B67500020C08 /* Arsenal.a */; };
 		BE3578D31430C3CC001D5D04 /* GrammarTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = BE3578D21430C3CC001D5D04 /* GrammarTextView.m */; };
 		BE3578D71430C40A001D5D04 /* TagsView.m in Sources */ = {isa = PBXBuildFile; fileRef = BE3578D61430C40A001D5D04 /* TagsView.m */; };
 		BE3578EB1430C657001D5D04 /* OutputView.m in Sources */ = {isa = PBXBuildFile; fileRef = BE3578EA1430C657001D5D04 /* OutputView.m */; };
@@ -34,6 +33,7 @@
 		BE47DE391426B84A006FE4E8 /* ApplicationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BE47DE381426B84A006FE4E8 /* ApplicationDelegate.m */; };
 		BE8DB506142D7A160031D571 /* GrammarCheckerTask.m in Sources */ = {isa = PBXBuildFile; fileRef = BE8DB505142D7A160031D571 /* GrammarCheckerTask.m */; };
 		BE9680F014330656003C8716 /* ConsoleMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = BE9680EF14330656003C8716 /* ConsoleMessage.m */; };
+		BEA336971439CFD4009AEAA4 /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BEA336961439CFD4009AEAA4 /* Arsenal.a */; };
 		BEAE57FD1426F8F3004C25AA /* Preferences.m in Sources */ = {isa = PBXBuildFile; fileRef = BEAE57FC1426F8F3004C25AA /* Preferences.m */; };
 		BEAE58021426F9BC004C25AA /* ARTest.m in Sources */ = {isa = PBXBuildFile; fileRef = BEAE58011426F9BC004C25AA /* ARTest.m */; };
 		BEAE587E1426FCDA004C25AA /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEAE587D1426FCDA004C25AA /* Preferences.xib */; };
@@ -67,7 +67,6 @@
 		BE1D121F1430782700789216 /* InputSyntaxTreeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InputSyntaxTreeView.m; sourceTree = "<group>"; };
 		BE2A160814346486006BEC87 /* ARPrintParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ARPrintParser.h; path = Helper/ARPrintParser.h; sourceTree = "<group>"; };
 		BE2A160914346486006BEC87 /* ARPrintParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ARPrintParser.m; path = Helper/ARPrintParser.m; sourceTree = "<group>"; };
-		BE2A5D421438B67500020C08 /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = Arsenal.a; path = /Users/solidussnakeex/Desktop/Programming/Arsenal/Binary/LibRelease/Arsenal.a; sourceTree = "<absolute>"; };
 		BE3578D11430C3CC001D5D04 /* GrammarTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrammarTextView.h; sourceTree = "<group>"; };
 		BE3578D21430C3CC001D5D04 /* GrammarTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrammarTextView.m; sourceTree = "<group>"; };
 		BE3578D51430C40A001D5D04 /* TagsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagsView.h; sourceTree = "<group>"; };
@@ -100,6 +99,7 @@
 		BE8DB505142D7A160031D571 /* GrammarCheckerTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrammarCheckerTask.m; sourceTree = "<group>"; };
 		BE9680EE14330656003C8716 /* ConsoleMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConsoleMessage.h; sourceTree = "<group>"; };
 		BE9680EF14330656003C8716 /* ConsoleMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConsoleMessage.m; sourceTree = "<group>"; };
+		BEA336961439CFD4009AEAA4 /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = Arsenal.a; path = /Users/solidussnakeex/Desktop/Programming/Arsenal/Binary/LibDebug/Arsenal.a; sourceTree = "<absolute>"; };
 		BEAE57FB1426F8F3004C25AA /* Preferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Preferences.h; sourceTree = "<group>"; };
 		BEAE57FC1426F8F3004C25AA /* Preferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Preferences.m; sourceTree = "<group>"; };
 		BEAE58011426F9BC004C25AA /* ARTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ARTest.m; path = Helper/ARTest.m; sourceTree = "<group>"; };
@@ -126,7 +126,7 @@
 				8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */,
 				BEC0D01F1422C35000D35745 /* libiconv.dylib in Frameworks */,
 				BEC0D0211422C35900D35745 /* libpthread.dylib in Frameworks */,
-				BE2A5D431438B67500020C08 /* Arsenal.a in Frameworks */,
+				BEA336971439CFD4009AEAA4 /* Arsenal.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -170,7 +170,7 @@
 				19C28FB0FE9D524F11CA2CBB /* Products */,
 				BEC0D01E1422C35000D35745 /* libiconv.dylib */,
 				BEC0D0201422C35900D35745 /* libpthread.dylib */,
-				BE2A5D421438B67500020C08 /* Arsenal.a */,
+				BEA336961439CFD4009AEAA4 /* Arsenal.a */,
 			);
 			name = GrammarDesigner;
 			sourceTree = "<group>";
