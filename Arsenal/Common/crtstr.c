@@ -159,7 +159,7 @@ int_t	AR_wcsicmp(const wchar_t *l, const wchar_t *r)
 {
 		int_t ret;
 		AR_ASSERT(l != NULL && r != NULL);
-		
+
 		for(ret = 0; (ret = (AR_towlower(*l) - AR_towlower(*r))) == 0 && *l && *r; ++l, ++r);
 
 		return ret;
@@ -171,7 +171,7 @@ int_t	AR_wcsnicmp(const wchar_t *l, const wchar_t *r, size_t n)
 		int_t ret;
 		size_t i;
 		AR_ASSERT(l != NULL && r != NULL);
-		
+
 		for(ret = 0, i = 0; i < n && (ret = (AR_towlower(l[i]) - AR_towlower(r[i]))) == 0 && l[i] && r[i]; ++i);
 
 		return ret;
@@ -225,10 +225,10 @@ static int_t __wcs_format_preprocess(const wchar_t *fmt, wchar_t *out)
 		{
 				return 1;
 		}
-		
+
 		p = out;
 		need_l = 0;
-		
+
 		while(*fmt)
 		{
 				if(*fmt != L'%')
@@ -426,7 +426,7 @@ static int_t __wcs_format_preprocess(const wchar_t *fmt, wchar_t *out)
 						{
 								*p++ = *fmt;
 						}
-						
+
 						fmt++;
 						need_l++;
 						break;
@@ -441,7 +441,7 @@ static int_t __wcs_format_preprocess(const wchar_t *fmt, wchar_t *out)
 		{
 				*p = L'\0';
 		}
-		
+
 		need_l++;
 		return need_l;
 }
@@ -567,7 +567,11 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list va_args)
 				case L'c':
 				case L'C':
 						len = 2;
+#if(AR_COMPILER == AR_GCC3 || AR_COMPILER == AR_GCC4)
+						AR_va_arg(args, int);
+#else
 						AR_va_arg(args, wint_t);
+#endif
 						break;
 				case L'c' | __MODIFIER_ANSI:
 				case L'C' | __MODIFIER_ANSI:
@@ -584,7 +588,11 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list va_args)
 				case L'c' | __MODIFIER_UNICODE:
 				case L'C' | __MODIFIER_UNICODE:
 						len = 2;
+#if(AR_COMPILER == AR_GCC3 || AR_COMPILER == AR_GCC4)
+						AR_va_arg(args, int);
+#else
 						AR_va_arg(args, wchar_t);
+#endif
 						break;
 				case L's':
 				{
@@ -736,7 +744,7 @@ int_t			AR_scwprintf(const wchar_t *fmt, ...)
 {
 		int_t len = -1;
 		va_list	arg_ptr;
-		
+
 		AR_ASSERT(fmt != NULL);
 
 		AR_va_start(arg_ptr, fmt);
@@ -784,12 +792,12 @@ int_t			AR_vswprintf(wchar_t *dest, size_t count, const wchar_t *fmt, va_list ar
 {
 		int_t res;
 		va_list save;
-		
+
 		wchar_t *src_fmt;
 		int_t need_l;
 
 		AR_ASSERT(dest != NULL && fmt != NULL && args != NULL);
-		
+
 		res = 0;
 		need_l = 0;
 		src_fmt = NULL;
@@ -813,7 +821,7 @@ int_t			AR_vswprintf(wchar_t *dest, size_t count, const wchar_t *fmt, va_list ar
 
 
 END_POINT:
-		
+
 
 		if(src_fmt)
 		{
@@ -1663,7 +1671,7 @@ const wchar_t* AR_wcsstr_kmp_s(const wchar_t *beg, const wchar_t *end, const wch
 		if(n == 0 || m == 0 || m > n)return NULL;
 
 		next = AR_NEWARR0(size_t, m);
-		
+
 		if(!next)
 		{
 				return NULL;
@@ -1705,14 +1713,14 @@ const wchar_t* AR_wcsstr_kmp_s(const wchar_t *beg, const wchar_t *end, const wch
 const wchar_t* AR_reverse_wcschr(const wchar_t* str, size_t l, wchar_t c)
 {
 		size_t idx;
-		
+
 		AR_ASSERT(str != NULL);
 
 		if(l == 0)
 		{
 				return str + l;
 		}
-		
+
 		idx = l - 1;
 		while(str[idx] != c)
 		{
@@ -1723,7 +1731,7 @@ const wchar_t* AR_reverse_wcschr(const wchar_t* str, size_t l, wchar_t c)
 
 				idx--;
 		}
-		
+
 		return str + idx;
 }
 
@@ -1738,7 +1746,7 @@ const wchar_t* AR_reverse_wcsstr(const wchar_t *str, size_t l,  const wchar_t *m
 		uint_t	search_hash, match_hash;
 		size_t i;
 		AR_ASSERT(str != NULL && match != NULL);
-		
+
 		if (ml > l)
 		{
 				return NULL;
@@ -1753,11 +1761,11 @@ const wchar_t* AR_reverse_wcsstr(const wchar_t *str, size_t l,  const wchar_t *m
 		{
 				return AR_reverse_wcschr(str, l, match[0]);
 		}
-		
+
 
 		delta = l - ml;
 
-    
+
 		search_hash = 0;
 		match_hash = 0;
 
@@ -1767,14 +1775,14 @@ const wchar_t* AR_reverse_wcsstr(const wchar_t *str, size_t l,  const wchar_t *m
 				match_hash += (uint_t)match[i];
 		}
 
-		
+
 		while(search_hash != match_hash || AR_wcsncmp(str + delta, match, ml) != 0)
 		{
 				if(delta == 0)
 				{
 						return NULL;
 				}
-				
+
 				delta--;
 				search_hash -= str[delta + ml];
 				search_hash += str[delta];
@@ -1795,7 +1803,7 @@ const wchar_t* AR_reverse_wcsichr(const wchar_t* str, size_t l, wchar_t c)
 		{
 				return str + l;
 		}
-		
+
 		low_c = AR_towlower(c);
 		idx = l - 1;
 
@@ -1808,7 +1816,7 @@ const wchar_t* AR_reverse_wcsichr(const wchar_t* str, size_t l, wchar_t c)
 
 				idx--;
 		}
-		
+
 		return str + idx;
 }
 
@@ -1819,7 +1827,7 @@ const wchar_t* AR_reverse_wcsistr(const wchar_t *str, size_t l,  const wchar_t *
 		uint_t	search_hash, match_hash;
 		size_t i;
 		AR_ASSERT(str != NULL && match != NULL);
-		
+
 		if (ml > l)
 		{
 				return NULL;
@@ -1834,11 +1842,11 @@ const wchar_t* AR_reverse_wcsistr(const wchar_t *str, size_t l,  const wchar_t *
 		{
 				return AR_reverse_wcsichr(str, l, match[0]);
 		}
-		
+
 
 		delta = l - ml;
 
-    
+
 		search_hash = 0;
 		match_hash = 0;
 
@@ -1848,14 +1856,14 @@ const wchar_t* AR_reverse_wcsistr(const wchar_t *str, size_t l,  const wchar_t *
 				match_hash += (uint_t)AR_towlower(match[i]);
 		}
 
-		
+
 		while(search_hash != match_hash || AR_wcsnicmp(str + delta, match, ml) != 0)
 		{
 				if(delta == 0)
 				{
 						return NULL;
 				}
-				
+
 				delta--;
 				search_hash -= (uint_t)AR_towlower(str[delta + ml]);
 				search_hash += (uint_t)AR_towlower(str[delta]);
