@@ -232,8 +232,6 @@
 			<key>Layout</key>
 			<array>
 				<dict>
-					<key>BecomeActive</key>
-					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -286,7 +284,7 @@
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
-							<string>{{0, 382}, {318, 686}}</string>
+							<string>{{0, 385}, {318, 686}}</string>
 						</dict>
 						<key>PBXTopSmartGroupGIDs</key>
 						<array/>
@@ -314,12 +312,14 @@
 					<key>Dock</key>
 					<array>
 						<dict>
+							<key>BecomeActive</key>
+							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
 								<string>BE1803AC1422C25400259547</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>Preferences.m</string>
+								<string>Credits.rtf</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -327,11 +327,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>BE1803AD1422C25400259547</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>Preferences.m</string>
+										<string>Credits.rtf</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>BEDB0697143ADE71002A716E</string>
+										<string>BE1402FB143B62EA00FEE3B4</string>
 										<key>history</key>
 										<array>
 											<string>BE923B771439D588007DC1DF</string>
@@ -341,7 +341,6 @@
 											<string>BEDB064E143AD443002A716E</string>
 											<string>BEDB0686143ADE71002A716E</string>
 											<string>BEDB0687143ADE71002A716E</string>
-											<string>BEDB0688143ADE71002A716E</string>
 											<string>BEDB0689143ADE71002A716E</string>
 											<string>BEDB068A143ADE71002A716E</string>
 											<string>BEDB068B143ADE71002A716E</string>
@@ -354,7 +353,9 @@
 											<string>BEDB0693143ADE71002A716E</string>
 											<string>BEDB0694143ADE71002A716E</string>
 											<string>BEDB0695143ADE71002A716E</string>
-											<string>BEDB0696143ADE71002A716E</string>
+											<string>BE1402D1143B620700FEE3B4</string>
+											<string>BE1402EA143B62B900FEE3B4</string>
+											<string>BE1402EB143B62B900FEE3B4</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -477,11 +478,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>BEDB0651143AD443002A716E</string>
+				<string>BE1402D4143B620700FEE3B4</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>BEDB0652143AD443002A716E</string>
+				<string>BE1402D5143B620700FEE3B4</string>
 				<string>BE1803AC1422C25400259547</string>
-				<string>BEDB0653143AD443002A716E</string>
+				<string>BE1402D6143B620700FEE3B4</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -630,14 +631,14 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>BEDB0654143AD443002A716E</string>
+				<string>BE1402D7143B620700FEE3B4</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>BEDB0655143AD443002A716E</string>
-				<string>BEDB0656143AD443002A716E</string>
-				<string>BEDB0657143AD443002A716E</string>
-				<string>BEDB0658143AD443002A716E</string>
-				<string>BEDB0659143AD443002A716E</string>
+				<string>BE1402D8143B620700FEE3B4</string>
+				<string>BE1402D9143B620700FEE3B4</string>
+				<string>BE1402DA143B620700FEE3B4</string>
+				<string>BE1402DB143B620700FEE3B4</string>
+				<string>BE1402DC143B620700FEE3B4</string>
 			</array>
 			<key>ToolbarConfigUserDefaultsMinorVersion</key>
 			<string>2</string>
@@ -671,8 +672,8 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>BEDB0698143ADE71002A716E</string>
-		<string>BEDB0699143ADE71002A716E</string>
+		<string>BE1402DE143B620700FEE3B4</string>
+		<string>BE1402DF143B620700FEE3B4</string>
 		<string>/Users/solidussnakeex/Desktop/Programming/Arsenal/Tools/Mac/GrammarDesigner/GrammarDesigner.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
