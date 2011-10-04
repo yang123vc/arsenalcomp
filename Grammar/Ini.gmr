@@ -1,105 +1,112 @@
 
-/*´ËgmrÊÇÎªÁË²âÊÔlex£¬ÓÃLR½âÎöini¸ñÊ½´¿ÊôÏĞµÄµ°ÌÛ*/
+/*æ­¤gmræ˜¯ä¸ºäº†æµ‹è¯•lexï¼Œç”¨LRè§£æiniæ ¼å¼çº¯å±é—²çš„è›‹ç–¼*/
 
 /*
-µ¥ĞĞ×¢ÊÍ,ÀıÈç
+å•è¡Œæ³¨é‡Š,ä¾‹å¦‚
 
-;×¢ÊÍ:xxxxxxxx
+;æ³¨é‡Š:xxxxxxxx
 
 */
 
 
-%token	comment_line	:	"\B[ \t\r]*(;|#)[^\r\n]*(\r)*\n"	,	3
-					;
+%name		line_terminator	:	"(\r\n|\n\r|\n|\r)"
+								;
+
+%token    comment_line    :    "\B[ \t]*(;|#)[^\r\n]*{line_terminator}\E"    ,    4
+                    ;
 
 
 
 /*
-×·¼Ó×¢ÊÍ£¬ÀıÈç£º
+è¿½åŠ æ³¨é‡Šï¼Œä¾‹å¦‚ï¼š
 
-[section1] ;×¢ÊÍ:xxxxxxx
-
+[section1] ;æ³¨é‡Š:xxxxxxx
+[section1] #æ³¨é‡Š:xxxxxxx
+x = y		#æ³¨é‡Š:xxxxxxx
 */
 
-%token	comment_post	:	"(;|#)[^\r\n]*"				,	1
-					;
+%token    comment_post   	:    "(;|#)[^\r\n]*{line_terminator}\E"             ,    1
+                    			;
 
 
 /*
-¿Õ°×
+ç©ºç™½
 */
-%token	%skip			:	"[ \t\r]+"					,	1	
-					;
+%token    %skip            :    "[ \t\r]+"                                    ,    1    
+                    		   ;
 
 
 /*
-¿ÕĞĞ
+ç©ºè¡Œ
 */
-%token	%skip			:	"\B[ \t\r]*\n"				,	2	
-					;
+%token    %skip            :    "\B[ \t\r]*{line_terminator}\E"                ,    3    
+                   		   ;
 
 
 
 
 
 
-%token	LINE_END		:	"(\r|\n|\r*\n|\n\r)+"					,	2
-				;
-
-%token	section		:	"\[.+\]"
-					;
-
-%token	string   		:	"[^ ;#\r\n][^#;\r\n]*"
-				;
+%token    LINE_END        :    "{line_terminator}"                    ,    2
+                			 ;
 
 
+%token    section        :    "\[.+\]"
+                         ;
 
-%token	combine_str		:	"([^ ;#\r\n][^;#\r\n]*\\[ \t]*)(?=(\r|\n|\r*\n|\n\r))" , 2
-				;
+%token    string           :    "[^ ;#\r\n][^#;\r\n]*"
+                           ;
 
 
 
+%token    combine_str        :    "([^ ;#\r\n][^;#\r\n]*\\[ \t]*)(?=({line_terminator}))" , 2
+                             ;
 
 
 
-%start	ini_file		;
-
-
-ini_file				:	item_list
-					;
-
-
-item_list				:	item_list	item
-					|	item
-					;
-
-
-item					:	section_header
-					|	comment_line
-					|	info
-					;
-
-
-comment				:	comment_post
-					|	.
-					;
-
-
-section_header			:	section 	comment LINE_END
-					;
-
-info					:	combine_string comment LINE_END
-					|	string comment LINE_END
-					|	error comment LINE_END
-					;
-
-combine_string			:	combine_list	string
-					;
-
-combine_list				:	combine_list combine_str LINE_END
-					|	combine_str LINE_END
-					;
 
 
 
+%start    ini_file  ;
+
+
+ini_file            :    item_list
+                    ;
+
+
+item_list           :    item_list    item
+                    |    item
+                    ;
+
+
+item                :    section_header
+                    |    comment_line
+                    |    info
+                    ;
+
+
+comment             :    comment_post
+                    |    .
+                    ;
+
+
+section_header      :    section     comment lien_end
+                    ;
+
+info                :    combine_string comment lien_end
+                    |    string comment lien_end
+                    |    error comment lien_end
+                    ;
+
+combine_string            :    combine_list    string
+                    ;
+
+combine_list                :    combine_list combine_str lien_end
+                    |    combine_str lien_end
+                    ;
+
+
+lien_end				:	LINE_END
+						|	.
+						;
 
