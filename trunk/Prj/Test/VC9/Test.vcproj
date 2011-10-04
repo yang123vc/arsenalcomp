@@ -1512,6 +1512,26 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Lexer"
+			>
+			<File
+				RelativePath="..\..\..\Test\Lexer\lexer.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Test\Lexer\lexer.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Test\Lexer\regexp.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Test\Lexer\regexp.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
