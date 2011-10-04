@@ -1,112 +1,84 @@
+﻿%name line_terminator : "(\r\n|\n\r|\n|\r)"
+			 ;
 
-/*此gmr是为了测试lex，用LR解析ini格式纯属闲的蛋疼*/
+%name white_space	:  "( |\t)"
+			;
 
-/*
-单行注释,例如
-
-;注释:xxxxxxxx
-
-*/
+%name comment_start	:	"(;|#)"
+			;
 
 
-%name		line_terminator	:	"(\r\n|\n\r|\n|\r)"
-								;
+//空行
 
-%token    comment_line    :    "\B[ \t]*(;|#)[^\r\n]*{line_terminator}\E"    ,    4
-                    ;
+%token	%skip			:	"\B[ \t\r]+\E"					,	1	
+				;
 
 
 
-/*
-追加注释，例如：
-
-[section1] ;注释:xxxxxxx
-[section1] #注释:xxxxxxx
-x = y		#注释:xxxxxxx
-*/
-
-%token    comment_post   	:    "(;|#)[^\r\n]*{line_terminator}\E"             ,    1
-                    			;
-
-
-/*
-空白
-*/
-%token    %skip            :    "[ \t\r]+"                                    ,    1    
-                    		   ;
-
-
-/*
-空行
-*/
-%token    %skip            :    "\B[ \t\r]*{line_terminator}\E"                ,    3    
-                   		   ;
+%token	%skip			:	"{line_terminator}"					,	1
+				;
 
 
 
 
+%token	comment_line 		: "\B{white_space}*{comment_start}[^\r\n]*\E"		,	2
+				;
 
 
-%token    LINE_END        :    "{line_terminator}"                    ,    2
-                			 ;
-
-
-%token    section        :    "\[.+\]"
-                         ;
-
-%token    string           :    "[^ ;#\r\n][^#;\r\n]*"
-                           ;
+%token	comment_post		:	"{comment_start}[^\r\n]*\E"				,	2
+				;
 
 
 
-%token    combine_str        :    "([^ ;#\r\n][^;#\r\n]*\\[ \t]*)(?=({line_terminator}))" , 2
-                             ;
+%token	section		:	"\[.+\]"
+				;
+
+%token	string   		:	"[^ ;#\r\n][^#;\r\n]*"
+				;
+
+
+
+%token	combine_str		:	"([^ ;#\r\n][^;#\r\n]*\\[ \t]*)\E" , 2
+				;
 
 
 
 
+%start	ini_file		;
 
 
-%start    ini_file  ;
+ini_file				:	item_list
+					;
 
 
-ini_file            :    item_list
-                    ;
+item_list				:	item_list	item
+					|	item
+					;
 
 
-item_list           :    item_list    item
-                    |    item
-                    ;
+item					:	section_header
+					|	comment_line
+					|	info
+					;
 
 
-item                :    section_header
-                    |    comment_line
-                    |    info
-                    ;
+comment				:	comment_post
+					|	.
+					;
 
 
-comment             :    comment_post
-                    |    .
-                    ;
+section_header			:	section 	comment 
+					;
 
+info					:	combine_string comment
+					|	string comment
+					|	error comment 
+					;
 
-section_header      :    section     comment lien_end
-                    ;
+combine_string			:	combine_list	string
+					;
 
-info                :    combine_string comment lien_end
-                    |    string comment lien_end
-                    |    error comment lien_end
-                    ;
-
-combine_string            :    combine_list    string
-                    ;
-
-combine_list                :    combine_list combine_str lien_end
-                    |    combine_str lien_end
-                    ;
-
-
-lien_end				:	LINE_END
-						|	.
-						;
+combine_list				:	combine_list combine_str 
+					|	combine_str 
+					;
 
