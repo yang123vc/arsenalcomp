@@ -1,133 +1,133 @@
+﻿
 
 
+%name    delim         :    "[ \r\n\t]"            ;
+%name    comment    :    "/\*([^\*]|\*+[^\*/])*\*+/"    ;
+%name    comment_line    :    "//[^\n]*\n"            ;
+%name    digit        :    "[0-9]"            ;
+%name    number        :    "{digit}+"            ;
+%token    %skip         :    "{delim}+|{comment}+|{comment_line}+",1;
 
-%name	delim 		:	"[ \r\n\t]"			;
-%name	comment	:	"/\*([^\*]|\*+[^\*/])*\*+/"	;
-%name	comment_line	:	"//[^\n]*\n"			;
-%name	digit		:	"[0-9]"			;
-%name	number		:	"{digit}+"			;
-%token	%skip 		:	"{delim}+|{comment}+|{comment_line}+",1;
 
+%code    pre_defined{:
 
-%code	pre_defined{:
+    static void        AR_STDCALL on_free_node(psrNode_t *node, void *ctx)
+    {
+            
+    }
 
-	static void		AR_STDCALL on_free_node(psrNode_t *node, void *ctx)
-	{
-			
-	}
-
-	static bool_t		AR_STDCALL on_error(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
-	{
-			wchar_t buf[256], tmp[128];
-			AR_wcsncpy(tmp, tok->str, AR_MIN(tok->str_cnt, 128-1));
-			tmp[AR_MIN(tok->str_cnt, 128-1)] = L'\0';
-			AR_swprintf(buf, 512, L"Error token '%ls'", tmp);
-			wprintf(L"%ls\r\n", buf);
-			return true;
-	}
-	
-	static const psrHandler_t	__g_handler = {on_error, on_free_node};
+    static bool_t        AR_STDCALL on_error(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
+    {
+            wchar_t buf[256], tmp[128];
+            AR_wcsncpy(tmp, tok->str, AR_MIN(tok->str_cnt, 128-1));
+            tmp[AR_MIN(tok->str_cnt, 128-1)] = L'\0';
+            AR_swprintf(buf, 512, L"Error token '%ls'", tmp);
+            wprintf(L"%ls\r\n", buf);
+            return true;
+    }
+    
+    static const psrHandler_t    __g_handler = {on_error, on_free_node};
 
 :};
 
 
 
-%token	NUM		: 	"{number}"	%value	"TOK_NUMBER"		%action default_leaf_handler		
-			{:
-				AR_ASSERT(tok != NULL && tok->str_cnt > 0);
+%token    NUM        :     "{number}"    %value    "TOK_NUMBER"        %action default_leaf_handler        
+            {:
+                AR_ASSERT(tok != NULL && tok->str_cnt > 0);
 
-				switch(tok->term_val)
-				{
-				case TOK_NUMBER:
-				{
-					int_t num;
-					AR_wtoi_s(tok->str, tok->str + tok->str_cnt, &num, 10);
-					return (psrNode_t*)num;
-				}
-					break;
-				case TOK_ADD:
-				case TOK_MINUS:
-				case TOK_MUL:
-				case TOK_DIV:
-				case TOK_MOD:
-				case TOK_LP:
-				case TOK_RP:
-					return (psrNode_t*)tok->term_val;
-					break;
-				default:
-					AR_ASSERT(false);
-					return NULL;
-				}
-			:}
-			;
+                switch(tok->term_val)
+                {
+                case TOK_NUMBER:
+                {
+                    int_t num;
+                    AR_wtoi_s(tok->str, tok->str + tok->str_cnt, &num, 10);
+                    return (psrNode_t*)num;
+                }
+                    break;
+                case TOK_ADD:
+                case TOK_MINUS:
+                case TOK_MUL:
+                case TOK_DIV:
+                case TOK_MOD:
+                case TOK_LP:
+                case TOK_RP:
+                    return (psrNode_t*)tok->term_val;
+                    break;
+                default:
+                    AR_ASSERT(false);
+                    return NULL;
+                }
+            :}
+            ;
 
-%token "+"		:	'"+"'		%value	"TOK_ADD"		%action default_leaf_handler		;
-%token	"-"		:	'"-"'		%value	"TOK_MINUS"		%action default_leaf_handler		;
-%token "*"		:	'"*"'		%value	"TOK_MUL"		%action default_leaf_handler		;
-%token "/"		:	'"/"'		%value	"TOK_DIV"		%action default_leaf_handler		;
-%token	"("		:	'"("'		%value	"TOK_LP"		%action default_leaf_handler		;
-%token	")"		:	'")"'		%value	"TOK_RP"		%action default_leaf_handler		;
-%token	"%"		:	'"%"'		%value	"TOK_MOD"		%action default_leaf_handler		;
-
-
+%token 	"+"        :    '"+"'        %value    "TOK_ADD"        %action default_leaf_handler        ;
+%token		"-"        :    '"-"'        %value    "TOK_MINUS"        %action default_leaf_handler      ;
+%token 	"*"        :    '"*"'        %value    "TOK_MUL"        %action default_leaf_handler        ;
+%token 	"/"        :    '"/"'        %value    "TOK_DIV"        %action default_leaf_handler        ;
+%token    "("        :    '"("'        %value    "TOK_LP"        %action default_leaf_handler          ;
+%token    ")"        :    '")"'        %value    "TOK_RP"        %action default_leaf_handler          ;
+%token    "%"        :    '"%"'        %value    "TOK_MOD"        %action default_leaf_handler         ;
 
 
-%left		"+"	"-"		;
-%left		"*"	"/"	"%"	;
-%right 	UMINUS			;
 
-E		:	E	"+" 	E		%action	"on_calc"
-		|	E	"-"	E		%action	"on_calc"
-		|	E	"*"	E		%action	"on_calc"
-		|	E	"/"	E		%action	"on_calc"
-		|	E	"%"	E		%action	"on_calc"
-		{:
-			int_t l, r;
-			size_t op;
-			AR_ASSERT(nodes != NULL && count == 3);
-			l = (int_t)nodes[0];
-			op = (size_t)nodes[1];
-			r = (int_t)nodes[2];
-			switch(op)
-			{
-			case TOK_ADD:
-				return (psrNode_t*)(l + r);
-			case TOK_MINUS:
-				return (psrNode_t*)(l - r);
-			case TOK_MUL:
-				return (psrNode_t*)(l * r);
-			case TOK_DIV:
-			case TOK_MOD:
-			{
-				if(r == 0)
-				{
-					*(bool_t*)ctx = false;
-					return (psrNode_t*)0;
-				}else
-				{
-					return (psrNode_t*) (op == TOK_MOD ? (l % r) : (l / r));
-				}
-			}
-			default:
-				AR_ASSERT(false);
-				return (psrNode_t*)0;
-			}
-		:}
 
-		|	"("	E	")"		%action		"auto_return_1"
-		{:
-				return nodes[1];
+%left        "+"    "-"        ;
+%left        "*"    "/"    "%"    ;
+%right     UMINUS            ;
 
-		:}
-		|	"-"	E 	%prec UMINUS	%action		"on_negative_num"
-		{:
-			int_t n;
-			AR_ASSERT(nodes != NULL && count == 2);
-			n = (int_t)nodes[1];
-			return (psrNode_t*)-n;
-		:}
-		|	NUM		%action	NULL
-		;
+E        :    E    "+"     E        %action    "on_calc"
+        |    E    "-"    E        %action    "on_calc"
+        |    E    "*"    E        %action    "on_calc"
+        |    E    "/"    E        %action    "on_calc"
+        |    E    "%"    E        %action    "on_calc"
+        {:
+            int_t l, r;
+            size_t op;
+            AR_ASSERT(nodes != NULL && count == 3);
+            l = (int_t)nodes[0];
+            op = (size_t)nodes[1];
+            r = (int_t)nodes[2];
+            switch(op)
+            {
+            case TOK_ADD:
+                return (psrNode_t*)(l + r);
+            case TOK_MINUS:
+                return (psrNode_t*)(l - r);
+            case TOK_MUL:
+                return (psrNode_t*)(l * r);
+            case TOK_DIV:
+            case TOK_MOD:
+            {
+                if(r == 0)
+                {
+                    *(bool_t*)ctx = false;
+                    return (psrNode_t*)0;
+                }else
+                {
+                    return (psrNode_t*) (op == TOK_MOD ? (l % r) : (l / r));
+                }
+            }
+            default:
+                AR_ASSERT(false);
+                return (psrNode_t*)0;
+            }
+        :}
+
+        |    "("    E    ")"        %action        "auto_return_1"
+        {:
+                return nodes[1];
+
+        :}
+        |    "-"    E     %prec UMINUS    %action        "on_negative_num"
+        {:
+            int_t n;
+            AR_ASSERT(nodes != NULL && count == 2);
+            n = (int_t)nodes[1];
+            return (psrNode_t*)-n;
+        :}
+        |    NUM        %action    NULL
+        ;
 
 
 
@@ -141,78 +141,78 @@ E		:	E	"+" 	E		%action	"on_calc"
 
 static int calc(const wchar_t *input)
 {
-		lex_t *lex;
-		lexMatch_t *match;
-		lexToken_t		tok;
-		psrGrammar_t	*grammar;
-		const parser_t		*parser;
-		psrContext_t *ctx;
-		bool_t is_ok;
-		int_t v = 0;
-		lex = __build_lex();
-		grammar = __build_grammar(&__g_handler);
-		parser = Parser_CreateParser(grammar, PARSER_LALR);
-		ctx = Parser_CreateContext(parser, (void*)&is_ok);
+        lex_t *lex;
+        lexMatch_t *match;
+        lexToken_t        tok;
+        psrGrammar_t    *grammar;
+        const parser_t        *parser;
+        psrContext_t *ctx;
+        bool_t is_ok;
+        int_t v = 0;
+        lex = __build_lex();
+        grammar = __build_grammar(&__g_handler);
+        parser = Parser_CreateParser(grammar, PARSER_LALR);
+        ctx = Parser_CreateContext(parser, (void*)&is_ok);
 
 
-		match = Lex_CreateMatch(lex);
+        match = Lex_CreateMatch(lex);
 
-		Lex_ResetInput(match, input);
-		
-		is_ok = true;
-		while(is_ok)
-		{
-				is_ok = Lex_Match(match, &tok);
+        Lex_ResetInput(match, input);
+        
+        is_ok = true;
+        while(is_ok)
+        {
+                is_ok = Lex_Match(match, &tok);
 
-				if(!is_ok)
-				{
-						AR_printf(L"Invalid Token == %ls\r\n", Lex_GetNextInput(match));
-						continue;
-				}else
-				{
-						psrToken_t psr_tok;
+                if(!is_ok)
+                {
+                        AR_printf(L"Invalid Token == %ls\r\n", Lex_GetNextInput(match));
+                        continue;
+                }else
+                {
+                        psrToken_t psr_tok;
 
-						PARSER_TOTERMTOK(&tok, &psr_tok);
-						
-						if(!Parser_AddToken(ctx, &psr_tok))
-						{
-								is_ok = false;
-						}
+                        PARSER_TOTERMTOK(&tok, &psr_tok);
+                        
+                        if(!Parser_AddToken(ctx, &psr_tok))
+                        {
+                                is_ok = false;
+                        }
 
-						
-						if(is_ok)
-						{
-								if(psr_tok.term_val == 0)break;		
+                        
+                        if(is_ok)
+                        {
+                                if(psr_tok.term_val == 0)break;        
 
-						}else
-						{
-								continue;
-						}
+                        }else
+                        {
+                                continue;
+                        }
 
-						
-				}
-		}
-		
-		
-		
-		if(is_ok)
-		{
-				v = (int)Parser_GetResult(ctx);
-		}else
-		{
-				printf("error expr\r\n");
-		}
+                        
+                }
+        }
+        
+        
+        
+        if(is_ok)
+        {
+                v = (int)Parser_GetResult(ctx);
+        }else
+        {
+                printf("error expr\r\n");
+        }
 
-		Lex_DestroyMatch(match);
-		Lex_Destroy(lex);
-		Parser_DestroyContext(ctx);
-		Parser_DestroyParser(parser);
-		Parser_DestroyGrammar(grammar);
-		
-		return v;
+        Lex_DestroyMatch(match);
+        Lex_Destroy(lex);
+        Parser_DestroyContext(ctx);
+        Parser_DestroyParser(parser);
+        Parser_DestroyGrammar(grammar);
+        
+        return v;
 }
 
-:}	BTM
+:}    BTM
 
 ;
 
