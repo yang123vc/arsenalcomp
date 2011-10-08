@@ -46,12 +46,12 @@
 
 
 
-%token    comment_line         : "\B{white_space}*{comment_start}[^\n\r\x{000B}\x{000c}\x{0085}\x{2028}\x{2029}]*\E"        ,    2
-                ;
+%token    comment_line        : 	"\B{white_space}*{comment_start}[^\n\r\x{000B}\x{000c}\x{0085}\x{2028}\x{2029}]*\E"        ,    2 
+                		   ;
 
 
-%token    comment_post        :    "{comment_start}[^\n\r\x{000B}\x{000c}\x{0085}\x{2028}\x{2029}]*\E"                ,    2
-                ;
+%token    comment_post      :    "{comment_start}[^\n\r\x{000B}\x{000c}\x{0085}\x{2028}\x{2029}]*\E"                ,    2
+               		;
 
 
 
