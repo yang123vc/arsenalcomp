@@ -306,6 +306,9 @@ void*	AR_calloc(size_t num, size_t size);
 void*	AR_realloc(void *block, size_t nbytes);
 void	AR_free(void *ptr);
 
+void*	AR_try_malloc(size_t nbytes);
+void*	AR_try_calloc(size_t num, size_t size);
+void*	AR_try_realloc(void *block, size_t nbytes);
 
 
 #else
@@ -315,6 +318,10 @@ void	AR_free(void *ptr);
 #define	AR_calloc		calloc
 #define	AR_realloc		realloc
 #define AR_free			free
+
+#define AR_try_malloc	malloc
+#define AR_try_calloc	calloc
+#define AR_try_realloc	realloc
 
 
 #endif
@@ -347,6 +354,13 @@ void	AR_memswap(void *a, void *b, size_t n);
 #define AR_NEWARR0(_type, _n) ((_type*)AR_calloc((_n), sizeof(_type)))
 #define AR_REALLOC(_type, _ptr, _new_count) ((_type*)AR_realloc((_ptr), sizeof(_type) * (_new_count)))
 #define AR_DEL(_ptr) AR_free((void*)(_ptr))
+
+
+#define AR_TRY_NEW(_type) ((_type*)AR_try_malloc(sizeof(_type)))
+#define AR_TRY_NEW0(_type) ((_type*)AR_try_calloc(1, sizeof(_type)))
+#define AR_TRY_NEWARR(_type, _n) ((_type*)AR_try_malloc(sizeof(_type) * (_n)))
+#define AR_TRY_NEWARR0(_type, _n) ((_type*)AR_try_calloc((_n), sizeof(_type)))
+#define AR_TRY_REALLOC(_type, _ptr, _new_count) ((_type*)AR_try_realloc((_ptr), sizeof(_type) * (_new_count)))
 
 
 
