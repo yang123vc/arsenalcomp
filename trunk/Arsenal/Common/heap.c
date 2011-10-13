@@ -780,6 +780,11 @@ arHeap_t*		AR_CreateHeap()
 {
 		arHeap_t		*heap;
 		heap = (arHeap_t*)malloc(sizeof(arHeap_t));
+
+		if(heap == NULL)
+		{
+				return NULL;
+		}
 		
 		heap->page_allocated = 0;
 		heap->actual_mem_used = 0;
@@ -788,6 +793,13 @@ arHeap_t*		AR_CreateHeap()
 
 		
 		heap->small_cur_page = AllocatePage(heap, PAGE_SIZE); 
+
+		if(heap->small_cur_page == NULL)
+		{
+				free(heap);
+				return NULL;
+		}
+
 		heap->small_cur_page_offset = SMALL_ALIGN(0);
 		AR_memset(heap->small_first_free, 0, sizeof(heap->small_first_free));
 		heap->small_first_used_page = NULL;
