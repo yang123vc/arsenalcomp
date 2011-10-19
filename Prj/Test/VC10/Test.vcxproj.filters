@@ -10,6 +10,9 @@
     <Filter Include="Test">
       <UniqueIdentifier>{d88172c1-9a67-4bfd-a684-357f196bfac2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Lexer">
+      <UniqueIdentifier>{b1293d32-2f38-4192-9b7e-64e9e93982fa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\Test\avltree.c">
@@ -84,6 +87,12 @@
     <ClCompile Include="..\..\..\Test\tengu_test.c">
       <Filter>Test</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Test\Lexer\lexer.c">
+      <Filter>Lexer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\Lexer\regexp.c">
+      <Filter>Lexer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Test\avltree.h">
@@ -109,6 +118,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Test\parser_gen_perf_sql_code_impl.h">
       <Filter>Test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Test\Lexer\lexer.h">
+      <Filter>Lexer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Test\Lexer\regexp.h">
+      <Filter>Lexer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
