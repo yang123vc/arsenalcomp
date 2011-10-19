@@ -61,6 +61,8 @@
     <ClCompile Include="..\..\..\Test\grammar_test.c" />
     <ClCompile Include="..\..\..\Test\ini_test.c" />
     <ClCompile Include="..\..\..\Test\lalr_dfa_test.c" />
+    <ClCompile Include="..\..\..\Test\Lexer\lexer.c" />
+    <ClCompile Include="..\..\..\Test\Lexer\regexp.c" />
     <ClCompile Include="..\..\..\Test\lex_test.c" />
     <ClCompile Include="..\..\..\Test\main.cpp" />
     <ClCompile Include="..\..\..\Test\mem_test.c" />
@@ -80,6 +82,8 @@
     <ClInclude Include="..\..\..\Test\avltree.h" />
     <ClInclude Include="..\..\..\Test\calc_test3_impl.h" />
     <ClInclude Include="..\..\..\Test\gen_code_impl.h" />
+    <ClInclude Include="..\..\..\Test\Lexer\lexer.h" />
+    <ClInclude Include="..\..\..\Test\Lexer\regexp.h" />
     <ClInclude Include="..\..\..\Test\parser_gen_perf_javascript_code_impl.h" />
     <ClInclude Include="..\..\..\Test\parser_gen_perf_sql_code_impl.h" />
     <ClInclude Include="..\..\..\Test\rbtree.h" />
