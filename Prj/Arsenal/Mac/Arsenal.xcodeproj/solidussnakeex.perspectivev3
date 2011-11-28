@@ -301,7 +301,7 @@
 							<real>223</real>
 						</array>
 						<key>RubberWindowFrame</key>
-						<string>0 133 1600 745 0 0 1600 878 </string>
+						<string>80 283 1600 745 0 0 1680 1028 </string>
 					</dict>
 					<key>Module</key>
 					<string>PBXSmartGroupTreeModule</string>
@@ -329,7 +329,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>BE1402F7143B62E900FEE3B4</string>
+										<string>BE2452FC14581BE6003306D6</string>
 										<key>history</key>
 										<array>
 											<string>BE9CEB901439D77100E46CEA</string>
@@ -338,7 +338,7 @@
 											<string>BEA1AD9C143AFF2400F8CD82</string>
 											<string>BE1402F4143B62E900FEE3B4</string>
 											<string>BE1402F5143B62E900FEE3B4</string>
-											<string>BE1402F6143B62E900FEE3B4</string>
+											<string>BE1402F7143B62E900FEE3B4</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -354,7 +354,7 @@
 								<key>Frame</key>
 								<string>{{0, 0}, {1355, 699}}</string>
 								<key>RubberWindowFrame</key>
-								<string>0 133 1600 745 0 0 1600 878 </string>
+								<string>80 283 1600 745 0 0 1680 1028 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
@@ -379,7 +379,7 @@
 										<key>Frame</key>
 										<string>{{10, 27}, {1355, -27}}</string>
 										<key>RubberWindowFrame</key>
-										<string>0 133 1600 745 0 0 1600 878 </string>
+										<string>80 283 1600 745 0 0 1680 1028 </string>
 									</dict>
 									<key>Module</key>
 									<string>XCDetailModule</string>
@@ -461,11 +461,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>BE1402F8143B62E900FEE3B4</string>
+				<string>BE2452FD14581BE6003306D6</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>BE1402F9143B62E900FEE3B4</string>
+				<string>BE2452FE14581BE6003306D6</string>
 				<string>BE5AE25B13F1724E00D92048</string>
-				<string>BE1402FA143B62E900FEE3B4</string>
+				<string>BE2452FF14581BE6003306D6</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -658,7 +658,7 @@
 		<string>/Users/solidussnakeex/Desktop/Programming/Arsenal/Prj/Arsenal/Mac/Arsenal.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
-	<string>0 133 1600 745 0 0 1600 878 </string>
+	<string>80 283 1600 745 0 0 1680 1028 </string>
 	<key>WindowToolsV3</key>
 	<array>
 		<dict>
