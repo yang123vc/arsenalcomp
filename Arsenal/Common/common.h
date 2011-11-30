@@ -821,10 +821,9 @@ bool_t	AR_SaveBomTextToBinary(arBuffer_t *output, arTxtBom_t bom, const wchar_t 
 
 
 
+/************************************************************************************************************************************************************************/
 
-
-
-/***************************************************************Math**********************************************************/
+/*******************************************************************Math*************************************************************************************************/
 
 double			AR_logbase(double a, double base);
 int_32_t		AR_abs_32(int_32_t x);
@@ -867,18 +866,17 @@ void			AR_NegateVector(arVector_t *vec);
 void			AR_ClampVector(arVector_t *vec, double minval, double maxval);
 
 
-double			AR_CaclVectorLength(const arVector_t *vec);
-double			AR_CaclVectorLengthSqr(const arVector_t *vec);
-
-void			AR_VectorToString(const arVector_t *vec, arString_t *str);
-
-
+double			AR_CalcVectorLength(const arVector_t *vec);
+double			AR_CalcVectorLengthSqr(const arVector_t *vec);
+void			AR_NormalizeVector(arVector_t *vec);
+double			AR_CalcVectorDistanceByVector(const arVector_t *vec, const arVector_t *other);
 
 const double*	AR_GetVectorData(const arVector_t *vec);
 void			AR_SwapElements(arVector_t *vec, size_t l, size_t r);
 
 
 int_t			AR_CompareVector(const arVector_t *l, const arVector_t *r);
+int_t			AR_CompareVectorWithEpsilon(const arVector_t *l, const arVector_t *r, double epsilon);
 
 double			AR_GetVectorValue(const arVector_t *vec, size_t idx);
 void			AR_SetVectorValue(arVector_t *vec, size_t idx, double val);
@@ -891,10 +889,17 @@ void			AR_DivVectorByVal(arVector_t *vec, double val);
 
 double			AR_MulVectorByVector(arVector_t *vec, const arVector_t *other);
 
+
+
+
+void			AR_VectorToString(const arVector_t *vec, arString_t *str);
+
 /***************************************************************Matrix**********************************************************/
 
 struct __arsenal_matrix_tag;
 typedef struct __arsenal_matrix_tag		arMatrix_t;
+
+
 
 
 

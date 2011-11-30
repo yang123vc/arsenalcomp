@@ -144,17 +144,17 @@ void			AR_ClampVector(arVector_t *vec, double minval, double maxval)
 
 
 
-double			AR_CaclVectorLength(const arVector_t *vec)
+double			AR_CalcVectorLength(const arVector_t *vec)
 {
 		double ret;
 		AR_ASSERT(vec != NULL);
 
-		ret = AR_CaclVectorLengthSqr(vec);
+		ret = AR_CalcVectorLengthSqr(vec);
 
 		return AR_sqrt(ret);
 }
 
-double			AR_CaclVectorLengthSqr(const arVector_t *vec)
+double			AR_CalcVectorLengthSqr(const arVector_t *vec)
 {
 		size_t i;
 		double ret;
@@ -171,7 +171,36 @@ double			AR_CaclVectorLengthSqr(const arVector_t *vec)
 		
 }
 
+void			AR_NormalizeVector(arVector_t *vec)
+{
+		double len = 0.0;
+		AR_ASSERT(vec != NULL);
 
+		len = AR_CalcVectorLength(vec);
+
+		if(!AR_DBL_EQ(len, 0.0))
+		{
+				AR_DivVectorByVal(vec, len);
+		}
+}
+
+
+double			AR_CalcVectorDistanceByVector(const arVector_t *vec, const arVector_t *other)
+{
+		arVector_t *tmp;
+		double ret;
+		AR_ASSERT(vec != NULL && other != NULL);
+		AR_ASSERT(vec->count == other->count);
+		
+		tmp = NULL;
+		ret = 0.0;
+
+		tmp = AR_CopyNewVector(vec);
+		AR_SubVectorByVector(tmp, other);
+		ret = AR_CalcVectorLength(tmp);
+		AR_DestroyVector(tmp);
+		return ret;
+}
 
 
 const double*	AR_GetVectorData(const arVector_t *vec)
@@ -207,6 +236,27 @@ int_t			AR_CompareVector(const arVector_t *l, const arVector_t *r)
 
 		return 0;
 }
+
+
+int_t			AR_CompareVectorWithEpsilon(const arVector_t *l, const arVector_t *r, double epsilon)
+{
+		size_t i;
+		AR_ASSERT(l != NULL && r != NULL);
+		AR_ASSERT(l->count == r->count);
+
+		for(i = 0; i < l->count; ++i)
+		{
+				double e = AR_abs_dbl(l->v[i] - r->v[i]);
+				if(AR_DBL_GE(e, epsilon))
+				{
+						return AR_DBL_LE(l->v[i], r->v[i]) ? -1 : 1;
+				}
+		}
+
+		return 0;
+
+}
+
 
 double			AR_GetVectorValue(const arVector_t *vec, size_t idx)
 {
