@@ -58,6 +58,8 @@
     <ClCompile Include="..\..\..\Arsenal\Common\common.c" />
     <ClCompile Include="..\..\..\Arsenal\Common\crtstr.c" />
     <ClCompile Include="..\..\..\Arsenal\Common\heap.c" />
+    <ClCompile Include="..\..\..\Arsenal\Common\math.c" />
+    <ClCompile Include="..\..\..\Arsenal\Common\matrix.c" />
     <ClCompile Include="..\..\..\Arsenal\Common\memory.c" />
     <ClCompile Include="..\..\..\Arsenal\Common\random.c" />
     <ClCompile Include="..\..\..\Arsenal\Common\strconv.c" />
@@ -275,63 +277,63 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\..\..\binary\$(PlatformName)\$(Configuration)</OutDir>
-    <IntDir>..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(Configuration)</IntDir>
+    <OutDir>..\..\..\binary\$(PlatformName)\$(Configuration)\</OutDir>
+    <IntDir>..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\..\..\binary\$(PlatformName)\$(Configuration)</OutDir>
-    <IntDir>..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(Configuration)</IntDir>
+    <OutDir>..\..\..\binary\$(PlatformName)\$(Configuration)\</OutDir>
+    <IntDir>..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\..\..\binary\$(PlatformName)\$(Configuration)</OutDir>
-    <IntDir>..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(Configuration)</IntDir>
+    <OutDir>..\..\..\binary\$(PlatformName)\$(Configuration)\</OutDir>
+    <IntDir>..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\..\..\binary\$(PlatformName)\$(Configuration)</OutDir>
-    <IntDir>..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(Configuration)</IntDir>
+    <OutDir>..\..\..\binary\$(PlatformName)\$(Configuration)\</OutDir>
+    <IntDir>..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\..\..\binary\$(PlatformName)\$(Configuration)</OutDir>
-    <IntDir>..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(Configuration)</IntDir>
+    <OutDir>..\..\..\binary\$(PlatformName)\$(Configuration)\</OutDir>
+    <IntDir>..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\..\..\binary\$(PlatformName)\$(Configuration)</OutDir>
-    <IntDir>..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(Configuration)</IntDir>
+    <OutDir>..\..\..\binary\$(PlatformName)\$(Configuration)\</OutDir>
+    <IntDir>..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\..\..\binary\$(PlatformName)\$(Configuration)</OutDir>
-    <IntDir>..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(Configuration)</IntDir>
+    <OutDir>..\..\..\binary\$(PlatformName)\$(Configuration)\</OutDir>
+    <IntDir>..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\..\..\binary\$(PlatformName)\$(Configuration)</OutDir>
-    <IntDir>..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(Configuration)</IntDir>
+    <OutDir>..\..\..\binary\$(PlatformName)\$(Configuration)\</OutDir>
+    <IntDir>..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\..\..\binary\$(PlatformName)\$(Configuration)</OutDir>
-    <IntDir>..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(Configuration)</IntDir>
+    <OutDir>..\..\..\binary\$(PlatformName)\$(Configuration)\</OutDir>
+    <IntDir>..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\..\..\binary\$(PlatformName)\$(Configuration)</OutDir>
-    <IntDir>..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(Configuration)</IntDir>
+    <OutDir>..\..\..\binary\$(PlatformName)\$(Configuration)\</OutDir>
+    <IntDir>..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\..\..\binary\$(PlatformName)\$(Configuration)</OutDir>
-    <IntDir>..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(Configuration)</IntDir>
+    <OutDir>..\..\..\binary\$(PlatformName)\$(Configuration)\</OutDir>
+    <IntDir>..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\..\..\binary\$(PlatformName)\$(Configuration)</OutDir>
-    <IntDir>..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(Configuration)</IntDir>
+    <OutDir>..\..\..\binary\$(PlatformName)\$(Configuration)\</OutDir>
+    <IntDir>..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>..\..\..\binary\$(PlatformName)\$(ConfigurationName)</OutDir>

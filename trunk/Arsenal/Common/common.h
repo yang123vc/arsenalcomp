@@ -240,8 +240,9 @@ static AR_INLINE const void* AR_GET_ELEM(const void *base, size_t width, size_t 
 
 
 #define AR_FLT_EQ(_x, _y)		(bool_t)(fabsf( (((float)(_x)) - ((float)(_y)))) < FLT_EPSILON)
-#define AR_FLT_LE(_x, _y)		(bool_t)( ((float)(_x)) < ((float)(_y)) )
-#define AR_FLT_GE(_x, _y)		(bool_t)( ((float)(_x)) > ((float)(_y)) )
+#define AR_FLT_LE(_x, _y)		(bool_t)(!AR_FLT_EQ((_x), (_y)) && ( ((float)(_x)) < ((float)(_y)) ))
+#define AR_FLT_GE(_x, _y)		(bool_t)(!AR_FLT_EQ((_x), (_y)) && ( ((float)(_x)) > ((float)(_y)) ))
+
 #define AR_FLT_LEEQ(_x, _y)		(bool_t)( AR_FLT_EQ((_x), (_y)) || AR_FLT_LE((_x), (_y)) )
 #define AR_FLT_GEEQ(_x, _y)		(bool_t)( AR_FLT_EQ((_x), (_y)) || AR_FLT_GE((_x), (_y)) )
 
@@ -251,8 +252,8 @@ static AR_INLINE const void* AR_GET_ELEM(const void *base, size_t width, size_t 
 
 
 #define AR_DBL_EQ(_x, _y)		(bool_t)(fabs( (((double)(_x)) - ((double)(_y)))) < DBL_EPSILON)
-#define AR_DBL_LE(_x, _y)		(bool_t)(((double)(_x)) < ((double)(_y)))
-#define AR_DBL_GE(_x, _y)		(bool_t)(((double)(_x)) > ((double)(_y)))
+#define AR_DBL_LE(_x, _y)		(bool_t) (!AR_DBL_EQ((_x), (_y)) && (((double)(_x)) < ((double)(_y))))
+#define AR_DBL_GE(_x, _y)		(bool_t) (!AR_DBL_EQ((_x), (_y)) && (((double)(_x)) > ((double)(_y))))
 #define AR_DBL_LEEQ(_x, _y)		(bool_t)( AR_DBL_EQ((_x), (_y)) || AR_DBL_LE((_x), (_y)))
 #define AR_DBL_GEEQ(_x, _y)		(bool_t)( AR_DBL_EQ((_x), (_y)) || AR_DBL_GE((_x), (_y)))
 
@@ -388,9 +389,11 @@ int_t	AR_bsearch(const void *key, const void *base, size_t num, size_t width, in
 
 /**********************************************************rand*************************************************************/
 void			AR_srand(uint_64_t seed);
-uint_64_t		AR_rand64();
-uint_32_t		AR_rand32();
 
+uint_32_t		AR_rand32();
+uint_64_t		AR_rand64();
+float			AR_rand_flt();
+double			AR_rand_dbl();
 
 /********************************************************CRT String*****************************************************************/
 
@@ -808,6 +811,91 @@ bool_t	AR_LoadBomTextFile(const wchar_t *path, arTxtBom_t *bom, arString_t *out)
 bool_t	AR_SaveBomTextFile(const wchar_t *path, arTxtBom_t bom, const wchar_t *input);
 
 bool_t	AR_SaveBomTextToBinary(arBuffer_t *output, arTxtBom_t bom, const wchar_t *input);
+
+
+
+
+
+
+
+
+
+
+
+
+
+/***************************************************************Math**********************************************************/
+
+double			AR_logbase(double a, double base);
+int_32_t		AR_abs_32(int_32_t x);
+int_64_t		AR_abs_64(int_64_t x);
+double			AR_abs_dbl(double x);
+
+double			AR_ceil(double f);
+double			AR_floor(double f);
+double			AR_sqrt(double f);
+double			AR_exp(double f);
+double			AR_pow(double x, double y);
+
+double			AR_sin(double f);
+double			AR_cos(double f);
+double			AR_tan(double f);
+double			AR_asin(double f);
+double			AR_acos(double f);
+double			AR_atan(double f);
+double			AR_atan2(double y, double x);
+
+
+
+/***************************************************************Vector**********************************************************/
+
+struct __arsenal_vector_tag;
+typedef struct __arsenal_vector_tag arVector_t;
+
+
+arVector_t*		AR_CreateVector(size_t size);
+void			AR_DestroyVector(arVector_t *vec);
+arVector_t*		AR_CopyNewVector(const arVector_t *vec);
+void			AR_CopyVector(arVector_t *dest, const arVector_t *src);
+
+void			AR_ChangeVectorSize(arVector_t *vec, size_t size);
+size_t			AR_GetVectorSize(const arVector_t *vec);
+
+
+void			AR_ZeroVector(arVector_t *vec);
+void			AR_NegateVector(arVector_t *vec);
+void			AR_ClampVector(arVector_t *vec, double minval, double maxval);
+
+
+double			AR_CaclVectorLength(const arVector_t *vec);
+double			AR_CaclVectorLengthSqr(const arVector_t *vec);
+
+void			AR_VectorToString(const arVector_t *vec, arString_t *str);
+
+
+
+const double*	AR_GetVectorData(const arVector_t *vec);
+void			AR_SwapElements(arVector_t *vec, size_t l, size_t r);
+
+
+int_t			AR_CompareVector(const arVector_t *l, const arVector_t *r);
+
+double			AR_GetVectorValue(const arVector_t *vec, size_t idx);
+void			AR_SetVectorValue(arVector_t *vec, size_t idx, double val);
+
+void			AR_AddVectorByVector(arVector_t *vec, const arVector_t *other);
+void			AR_SubVectorByVector(arVector_t *vec, const arVector_t *other);
+
+void			AR_MulVectorByVal(arVector_t *vec, double val);
+void			AR_DivVectorByVal(arVector_t *vec, double val);
+
+double			AR_MulVectorByVector(arVector_t *vec, const arVector_t *other);
+
+/***************************************************************Matrix**********************************************************/
+
+struct __arsenal_matrix_tag;
+typedef struct __arsenal_matrix_tag		arMatrix_t;
+
 
 
 AR_NAMESPACE_END

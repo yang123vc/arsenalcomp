@@ -40,8 +40,15 @@ uint_32_t AR_rand32()
 		return res;
 }
 
+float AR_rand_flt()
+{
+		return (float)AR_rand_dbl();
+}
 
-
+double AR_rand_dbl()
+{
+		return (double)AR_rand64() / (double)ULLONG_MAX;
+}
 
 
 

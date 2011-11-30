@@ -65,6 +65,7 @@
     <ClCompile Include="..\..\..\Test\Lexer\regexp.c" />
     <ClCompile Include="..\..\..\Test\lex_test.c" />
     <ClCompile Include="..\..\..\Test\main.cpp" />
+    <ClCompile Include="..\..\..\Test\math_test.c" />
     <ClCompile Include="..\..\..\Test\mem_test.c" />
     <ClCompile Include="..\..\..\Test\parser_gen_perf_test.c" />
     <ClCompile Include="..\..\..\Test\parser_test.c" />
