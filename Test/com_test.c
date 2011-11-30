@@ -1161,8 +1161,25 @@ void bsearch_test()
 		//assertEquals(-1, Util.binarySearch(arrayWith42, 43));
 }
 
+
+
+
+void math_test()
+{
+		AR_printf(L"%d\r\n", AR_abs_32(-1));
+		AR_printf(L"%d\r\n", AR_abs_32(1));
+
+		AR_printf(L"%qd\r\n", AR_abs_64(-1));
+		AR_printf(L"%qd\r\n", AR_abs_64(1));
+
+		AR_printf(L"%f\r\n", AR_abs_dbl(-0.111f));
+		AR_printf(L"%f\r\n", AR_abs_dbl(0.111f));
+		
+}
+
 void float_test()
 {
+		
 		AR_printf(L"%f\r\n", AR_FLT_MOD(5,0.8));
 		AR_printf(L"%f\r\n", AR_FLT_MOD(5,0.8));
 
@@ -1172,9 +1189,20 @@ void float_test()
 		AR_ASSERT(AR_DBL_EQ(AR_DBL_MOD(5,4), 1));
 		AR_ASSERT(AR_DBL_EQ(AR_DBL_MOD(5,3), 2));
 		AR_ASSERT(AR_DBL_EQ(AR_DBL_MOD(4,5), 4));
-		
+
+
+		double x = 0.11111111111111111111111111111;
+		double y = 0.1111111111111111111111;
+
+		AR_printf(L"x == y ? %ls\r\n", AR_DBL_LEEQ(x , y) ? L"true" : L"false");
+
+		AR_printf(L"%.30f\r\n", DBL_EPSILON);
+		AR_printf(L"%.30f\r\n", exp(3.0f));
+
 
 }
+
+
 
 
 
@@ -1429,6 +1457,15 @@ void str_test9()
 		
 }
 
+void rand_test()
+{
+		AR_srand(time(NULL));
+		for(size_t i = 0; i <10; ++i)
+		{
+				AR_printf(L"%f\r\n", AR_rand_dbl());
+				AR_Sleep(1500);
+		}
+}
 
 void com_test()
 {
@@ -1487,6 +1524,7 @@ void com_test()
 		//byte_filp_test();
 
 		//float_test();
+		math_test();
 
 		//com_str_test_vcprintf();
 		//com_test_srpintf();
@@ -1495,8 +1533,9 @@ void com_test()
 		//escstr_n_test0();
 		//align_test();
 		//text_test_save();
-		text_test_load();
+		//text_test_load();
 
+		//rand_test();
 		
 
 		

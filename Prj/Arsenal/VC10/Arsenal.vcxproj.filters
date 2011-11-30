@@ -150,6 +150,12 @@
     <ClCompile Include="..\..\..\Arsenal\Arsenal.c">
       <Filter>Arsenal</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Arsenal\Common\math.c">
+      <Filter>Arsenal\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Arsenal\Common\matrix.c">
+      <Filter>Arsenal\Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Arsenal\Common\common.h">

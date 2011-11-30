@@ -81,6 +81,9 @@ extern void tokenizer_test();
 extern void Ini_Test();
 
 void parser_gen_perf_test();
+
+extern void math_test();
+
 #endif
 
 
@@ -91,9 +94,10 @@ void AR_Test()
 {
 #if defined(__LIB)
 		//com_test();
+		math_test();
 		//trie_tree_test();
 		//expr_test();
-		lex_test();
+		//lex_test();
 		//lex_test2();
 		//lex_test3();
 		//lex_test4();
