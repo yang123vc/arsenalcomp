@@ -68,6 +68,7 @@
     <ClCompile Include="..\..\..\Arsenal\Common\textfile.c" />
     <ClCompile Include="..\..\..\Arsenal\Common\thread.c" />
     <ClCompile Include="..\..\..\Arsenal\Common\utilities.c" />
+    <ClCompile Include="..\..\..\Arsenal\Common\vector.c" />
     <ClCompile Include="..\..\..\Arsenal\Lex\lex.c" />
     <ClCompile Include="..\..\..\Arsenal\Lex\lex_misc.c" />
     <ClCompile Include="..\..\..\Arsenal\Lex\match.c" />
