@@ -25,7 +25,6 @@ AR_NAMESPACE_BEGIN
 #define CFG_BOTTOM_CODE_ATTR_NAME		L"BTM"
 
 
-
 void			CFG_Init();
 void			CFG_UnInit();
 

@@ -32,9 +32,12 @@
 
 #if(ARCH == ARCH_IA32 || ARCH == ARCH_ARM || ARCH == ARCH_PPC)
 
+
 #define AR_ARCH_VER		ARCH_32
 
 #elif(ARCH == ARCH_X64 || ARCH == ARCH_IA64)
+
+
 
 #define AR_ARCH_VER		ARCH_64
 
@@ -206,6 +209,11 @@
 /*include相关平台所需的头文件*/
 
 #if defined(OS_FAMILY_WINDOWS)
+
+		#ifndef WIN32_LEAN_AND_MEAN
+				#define WIN32_LEAN_AND_MEAN		1		
+		#endif
+
 		#if(AR_COMPILER == AR_VC_LEGACY || OS_TYPE == OS_WINDOWS_CE)
 				struct _RPC_ASYNC_STATE;
 		#endif
