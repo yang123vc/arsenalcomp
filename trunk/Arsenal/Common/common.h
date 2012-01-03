@@ -1009,8 +1009,8 @@ void			AR_TransposeMatrixSelf(arMatrix_t *mat);
 
 /****************************************矩阵分解******************************************/
 
+/*取逆矩阵*/
 bool_t			AR_InverseMatrixSelf(arMatrix_t *mat);
-
 
 bool_t			AR_InverseLowerTriangularMatrixSelf(arMatrix_t *mat);
 bool_t			AR_InverseUpperTriangularMatrixSelf(arMatrix_t *mat);
@@ -1021,13 +1021,13 @@ void			AR_InverseSolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVecto
 
 
 
-
+/*LU分解*/
 
 bool_t			AR_LUFactorMatrixSelf(arMatrix_t *mat, size_t *index, double *det);
-void			AR_LUInverseMatrixSelf(const arMatrix_t *mat, const size_t *index, arMatrix_t *inv);
+void			AR_LUInverseMatrix(const arMatrix_t *mat, const size_t *index, arMatrix_t *inv);
 void			AR_LUSolveMatrix(const arMatrix_t *mat, const size_t *index, arVector_t *x,const arVector_t *b);
 void			AR_UnpackMatrixLUFactors(const arMatrix_t *mat, arMatrix_t *L, arMatrix_t *U);
-void			AR_MultiplyMatrixLUFactors(const arMatrix_t *mat, const size_t *index, arMatrix_t *m);
+
 
 
 
