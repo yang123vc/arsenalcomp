@@ -1164,19 +1164,6 @@ void bsearch_test()
 
 
 
-void math_test()
-{
-		AR_printf(L"%d\r\n", AR_abs_32(-1));
-		AR_printf(L"%d\r\n", AR_abs_32(1));
-
-		AR_printf(L"%qd\r\n", AR_abs_64(-1));
-		AR_printf(L"%qd\r\n", AR_abs_64(1));
-
-		AR_printf(L"%f\r\n", AR_abs_dbl(-0.111f));
-		AR_printf(L"%f\r\n", AR_abs_dbl(0.111f));
-		
-}
-
 void float_test()
 {
 		
@@ -1524,7 +1511,7 @@ void com_test()
 		//byte_filp_test();
 
 		//float_test();
-		math_test();
+		
 
 		//com_str_test_vcprintf();
 		//com_test_srpintf();

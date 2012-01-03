@@ -85,6 +85,11 @@ void			AR_ChangeVectorSize(arVector_t *vec, size_t size)
 		AR_ASSERT(vec != NULL);
 		AR_ASSERT(size > 0);
 
+		if(vec->count == size)
+		{
+				return;
+		}
+
 		if(vec->v)
 		{
 				AR_DEL(vec->v);
@@ -150,7 +155,7 @@ double			AR_CalcVectorLength(const arVector_t *vec)
 
 		ret = AR_CalcVectorLengthSqr(vec);
 
-		return AR_sqrt(ret);
+		return AR_sqrt_dbl(ret);
 }
 
 double			AR_CalcVectorLengthSqr(const arVector_t *vec)
@@ -317,7 +322,9 @@ void			AR_DivVectorByVal(arVector_t *vec, double val)
 
 }
 
-double			AR_MulVectorByVector(arVector_t *vec, const arVector_t *other)
+
+
+double			AR_CalcInnerProduct(arVector_t *vec, const arVector_t *other)
 {
 		size_t i;
 		double ret = 0.0;
@@ -332,15 +339,30 @@ double			AR_MulVectorByVector(arVector_t *vec, const arVector_t *other)
 		return ret;
 }
 
-
-void			AR_VectorToString(const arVector_t *vec, arString_t *str)
+void			AR_VectorToString(const arVector_t *vec, arString_t *str, size_t precision, const wchar_t *sp_str)
 {
 		size_t i;
+		
+		wchar_t fmt[80];
+
 		AR_ASSERT(vec != NULL && str != NULL);
 
-		i = 0;
+		if(sp_str == NULL)
+		{
+				sp_str = L" ";
+		}
+		
+		
+		AR_swprintf(fmt, 64, L"%%.%Iuf",  precision);
 
-		return;
+		for(i = 0; i < vec->count; ++i)
+		{
+				AR_AppendFormatString(str, fmt, vec->v[i]);
+				if(i < vec->count - 1)
+				{
+						AR_AppendString(str, sp_str);
+				}
+		}
 }
 
 

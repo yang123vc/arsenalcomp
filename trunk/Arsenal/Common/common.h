@@ -236,30 +236,6 @@ static AR_INLINE const void* AR_GET_ELEM(const void *base, size_t width, size_t 
 #define AR_OFFSETOF(_ty, _filed)		((byte_t*)&((_ty*)0)->_filed) - ((byte_t*)(_ty*)0)
 
 
-/*float macro_oper*/
-
-
-#define AR_FLT_EQ(_x, _y)		(bool_t)(fabsf( (((float)(_x)) - ((float)(_y)))) < FLT_EPSILON)
-#define AR_FLT_LE(_x, _y)		(bool_t)(!AR_FLT_EQ((_x), (_y)) && ( ((float)(_x)) < ((float)(_y)) ))
-#define AR_FLT_GE(_x, _y)		(bool_t)(!AR_FLT_EQ((_x), (_y)) && ( ((float)(_x)) > ((float)(_y)) ))
-
-#define AR_FLT_LEEQ(_x, _y)		(bool_t)( AR_FLT_EQ((_x), (_y)) || AR_FLT_LE((_x), (_y)) )
-#define AR_FLT_GEEQ(_x, _y)		(bool_t)( AR_FLT_EQ((_x), (_y)) || AR_FLT_GE((_x), (_y)) )
-
-#define AR_FLT_MOD(_x,_y)		((float)(_x) - floor((float)(_x) / (float)(_y)) * (float)(_y))
-#define AR_FLT_POW(_x,_y)		(float)pow((float)(_x), (float)(_y))
-
-
-
-#define AR_DBL_EQ(_x, _y)		(bool_t)(fabs( (((double)(_x)) - ((double)(_y)))) < DBL_EPSILON)
-#define AR_DBL_LE(_x, _y)		(bool_t) (!AR_DBL_EQ((_x), (_y)) && (((double)(_x)) < ((double)(_y))))
-#define AR_DBL_GE(_x, _y)		(bool_t) (!AR_DBL_EQ((_x), (_y)) && (((double)(_x)) > ((double)(_y))))
-#define AR_DBL_LEEQ(_x, _y)		(bool_t)( AR_DBL_EQ((_x), (_y)) || AR_DBL_LE((_x), (_y)))
-#define AR_DBL_GEEQ(_x, _y)		(bool_t)( AR_DBL_EQ((_x), (_y)) || AR_DBL_GE((_x), (_y)))
-
-#define AR_DBL_MOD(_x,_y)		((double)(_x) - floor((double)(_x) / (double)(_y)) * (double)(_y))
-#define AR_DBL_POW(_x,_y)		(double)pow((double)(_x), (double)(_y))
-
 
 /**********************************************************Heap***************************************************************/
 
@@ -820,33 +796,85 @@ bool_t	AR_SaveBomTextToBinary(arBuffer_t *output, arTxtBom_t bom, const wchar_t 
 
 
 
-
 /************************************************************************************************************************************************************************/
+
+
 
 /*******************************************************************Math*************************************************************************************************/
 
-double			AR_logbase(double a, double base);
+
+#define AR_FLOAT_PRINT_PRECISION		3
+
+
+
 int_32_t		AR_abs_32(int_32_t x);
 int_64_t		AR_abs_64(int_64_t x);
+
+
+double			AR_logbase_dbl(double a, double base);
 double			AR_abs_dbl(double x);
+double			AR_ceil_dbl(double f);
+double			AR_floor_dbl(double f);
+double			AR_sqrt_dbl(double f);
+double			AR_exp_dbl(double f);
+double			AR_pow_dbl(double x, double y);
 
-double			AR_ceil(double f);
-double			AR_floor(double f);
-double			AR_sqrt(double f);
-double			AR_exp(double f);
-double			AR_pow(double x, double y);
+double			AR_sin_dbl(double f);
+double			AR_cos_dbl(double f);
+double			AR_tan_dbl(double f);
+double			AR_asin_dbl(double f);
+double			AR_acos_dbl(double f);
+double			AR_atan_dbl(double f);
+double			AR_atan2_dbl(double y, double x);
 
-double			AR_sin(double f);
-double			AR_cos(double f);
-double			AR_tan(double f);
-double			AR_asin(double f);
-double			AR_acos(double f);
-double			AR_atan(double f);
-double			AR_atan2(double y, double x);
+
+float			AR_logbase_flt(float a, float base);
+float			AR_abs_flt(float x);
+float			AR_ceil_flt(float f);
+float			AR_floor_flt(float f);
+float			AR_sqrt_flt(float f);
+float			AR_exp_flt(float f);
+float			AR_pow_flt(float x, float y);
+
+float			AR_sin_flt(float f);
+float			AR_cos_flt(float f);
+float			AR_tan_flt(float f);
+float			AR_asin_flt(float f);
+float			AR_acos_flt(float f);
+float			AR_atan_flt(float f);
+float			AR_atan2_flt(float y, float x);
+
+
+/*float macro_oper*/
+
+
+#define AR_FLT_EQ(_x, _y)		(bool_t)(AR_abs_flt( (((float)(_x)) - ((float)(_y)))) < FLT_EPSILON)
+#define AR_FLT_LE(_x, _y)		(bool_t)(!AR_FLT_EQ((_x), (_y)) && ( ((float)(_x)) < ((float)(_y)) ))
+#define AR_FLT_GE(_x, _y)		(bool_t)(!AR_FLT_EQ((_x), (_y)) && ( ((float)(_x)) > ((float)(_y)) ))
+
+#define AR_FLT_LEEQ(_x, _y)		(bool_t)( AR_FLT_EQ((_x), (_y)) || AR_FLT_LE((_x), (_y)) )
+#define AR_FLT_GEEQ(_x, _y)		(bool_t)( AR_FLT_EQ((_x), (_y)) || AR_FLT_GE((_x), (_y)) )
+
+#define AR_FLT_MOD(_x,_y)		((float)(_x) - AR_floor_flt((float)(_x) / (float)(_y)) * (float)(_y))
+#define AR_FLT_POW(_x,_y)		(float)AR_pow_flt((float)(_x), (float)(_y))
+
+
+
+#define AR_DBL_EQ(_x, _y)		(bool_t)(AR_abs_dbl( (((double)(_x)) - ((double)(_y)))) < DBL_EPSILON)
+#define AR_DBL_LE(_x, _y)		(bool_t) (!AR_DBL_EQ((_x), (_y)) && (((double)(_x)) < ((double)(_y))))
+#define AR_DBL_GE(_x, _y)		(bool_t) (!AR_DBL_EQ((_x), (_y)) && (((double)(_x)) > ((double)(_y))))
+#define AR_DBL_LEEQ(_x, _y)		(bool_t)( AR_DBL_EQ((_x), (_y)) || AR_DBL_LE((_x), (_y)))
+#define AR_DBL_GEEQ(_x, _y)		(bool_t)( AR_DBL_EQ((_x), (_y)) || AR_DBL_GE((_x), (_y)))
+
+#define AR_DBL_MOD(_x,_y)		((double)(_x) - AR_floor_dbl((double)(_x) / (double)(_y)) * (double)(_y))
+#define AR_DBL_POW(_x,_y)		(double)AR_pow_dbl((double)(_x), (double)(_y))
+
 
 
 
 /***************************************************************Vector**********************************************************/
+
+
 
 struct __arsenal_vector_tag;
 typedef struct __arsenal_vector_tag arVector_t;
@@ -887,12 +915,12 @@ void			AR_SubVectorByVector(arVector_t *vec, const arVector_t *other);
 void			AR_MulVectorByVal(arVector_t *vec, double val);
 void			AR_DivVectorByVal(arVector_t *vec, double val);
 
-double			AR_MulVectorByVector(arVector_t *vec, const arVector_t *other);
+double			AR_CalcInnerProduct(arVector_t *vec, const arVector_t *other);
 
 
 
 
-void			AR_VectorToString(const arVector_t *vec, arString_t *str);
+void			AR_VectorToString(const arVector_t *vec, arString_t *str, size_t precision, const wchar_t *sp_str);
 
 /***************************************************************Matrix**********************************************************/
 
@@ -901,6 +929,110 @@ typedef struct __arsenal_matrix_tag		arMatrix_t;
 
 
 
+arMatrix_t*		AR_CreateMatrix(size_t rows, size_t cols);
+void			AR_DestroyMatrix(arMatrix_t *mat);
+
+arMatrix_t*		AR_CopyNewMatrix(const arMatrix_t *mat);
+void			AR_CopyMatrix(arMatrix_t *dest, const arMatrix_t *src);
+
+void			AR_SetMatrixSize(arMatrix_t *mat, size_t rows, size_t cols);
+void			AR_ZeroMatrix(arMatrix_t *mat);
+
+int_t			AR_CompareMatrix(const arMatrix_t *l, const arMatrix_t *r, double epsilon);
+
+size_t			AR_GetMatrixNumRows(const arMatrix_t *mat);
+size_t			AR_GetMatrixNumColumns(const arMatrix_t *mat);
+
+void			AR_SetMatrixValue(arMatrix_t *mat, size_t row, size_t col, double val);
+double			AR_GetMatrixValue(const arMatrix_t *mat, size_t row, size_t col);
+void			AR_GetMatrixRow(const arMatrix_t *mat, size_t row,  arVector_t *out);
+void			AR_GetMatrixColumn(const arMatrix_t *mat, size_t col,  arVector_t *out);
+const double*	AR_GetMatrixRawData(const arMatrix_t *mat);
+
+
+/****************************************生成标准矩阵类型******************************************/
+
+void			AR_IdentityMatrix(arMatrix_t *mat);
+void			AR_DiagonalMatrix(arMatrix_t *mat, const arVector_t *vec);
+void			AR_RandomMatrix(arMatrix_t *mat);
+void			AR_NegateMatrix(arMatrix_t *mat);
+void			AR_ClampMatrix(arMatrix_t *mat, double min_val, double max_val);
+void			AR_SwapMatrixRows(arMatrix_t *mat, size_t l, size_t r);
+void			AR_SwapMatrixColumns(arMatrix_t *mat, size_t l, size_t r);
+void			AR_RemoveMatrixRow(arMatrix_t *mat, size_t r);
+void			AR_RemoveMatrixColumn(arMatrix_t *mat, size_t c);
+void			AR_ClearMatrixUpperTriangle(arMatrix_t *mat);
+void			AR_ClearMatrixLowerTriangle(arMatrix_t *mat);
+
+/****************************************判断矩阵类型******************************************/
+
+bool_t			AR_IsSquareMatrix(const arMatrix_t *mat);
+bool_t			AR_IsZeroMatrix(const arMatrix_t *mat, double epsilon);
+bool_t			AR_IsIdentityMatrix(const arMatrix_t *mat, double epsilon);
+bool_t			AR_IsDiagonalMatrix(const arMatrix_t *mat, double epsilon);
+bool_t			AR_IsTriDiagonalMatrix(const arMatrix_t *mat, double epsilon);
+bool_t			AR_IsSymmetricMatrix(const arMatrix_t *mat, double epsilon);
+bool_t			AR_IsOrthogonalMatrix(const arMatrix_t *mat, double epsilon);
+bool_t			AR_IsOrthonormalMatrix(const arMatrix_t *mat, double epsilon);
+
+bool_t			AR_IsPositiveDefiniteMatrix(const arMatrix_t *mat, double epsilon);
+bool_t			AR_IsSymmetricPositiveDefinite(const arMatrix_t *mat, double epsilon);
+bool_t			AR_IsPositiveSemiDefinite(const arMatrix_t *mat, double epsilon);
+bool_t			AR_IsSymmetricPositiveSemiDefinite(const arMatrix_t *mat, double epsilon);
+
+
+/****************************************基本矩阵计算******************************************/
+
+void			AR_MultiplyMatrixByScalar(const arMatrix_t *mat, double value, arMatrix_t *dest);
+void			AR_MultiplyMatrixByScalarSelf(arMatrix_t *mat, double value);
+
+void			AR_MultiplyMatrixByVector(const arMatrix_t *mat, const arVector_t *other, arVector_t *dest);
+void			AR_MultiplyTransposeMatrixByVector(const arMatrix_t *mat, const arVector_t *other, arVector_t *dest);
+
+void			AR_MultiplyMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest);
+void			AR_MultiplyTransposeMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest);
+void			AR_MultiplyMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other);
+void			AR_MultiplyTransposeMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other);
+
+void			AR_AddMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest);
+void			AR_SubMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest);
+void			AR_SubMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other);
+void			AR_AddMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other);
+
+
+
+double			AR_CalcMatrixTrace(const arMatrix_t *mat);
+double			AR_CalcMatrixDeterminant(const arMatrix_t *mat);
+void			AR_TransposeMatrix(const arMatrix_t *mat, arMatrix_t *dest);
+void			AR_TransposeMatrixSelf(arMatrix_t *mat);
+
+
+/****************************************矩阵分解******************************************/
+
+bool_t			AR_InverseMatrixSelf(arMatrix_t *mat);
+
+
+bool_t			AR_InverseLowerTriangularMatrixSelf(arMatrix_t *mat);
+bool_t			AR_InverseUpperTriangularMatrixSelf(arMatrix_t *mat);
+
+bool_t			AR_InverseMatrixByGaussJordanSelf(arMatrix_t *mat);
+void			AR_InverseSolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t *b);
+
+
+
+
+
+
+bool_t			AR_LUFactorMatrixSelf(arMatrix_t *mat, size_t *index, double *det);
+void			AR_LUInverseMatrixSelf(const arMatrix_t *mat, const size_t *index, arMatrix_t *inv);
+void			AR_LUSolveMatrix(const arMatrix_t *mat, const size_t *index, arVector_t *x,const arVector_t *b);
+void			AR_UnpackMatrixLUFactors(const arMatrix_t *mat, arMatrix_t *L, arMatrix_t *U);
+void			AR_MultiplyMatrixLUFactors(const arMatrix_t *mat, const size_t *index, arMatrix_t *m);
+
+
+
+/*************************************************************打印矩阵*************************************************************/
+void			AR_MatrixToString(const arMatrix_t *mat, arString_t *str, size_t precision, const wchar_t *sp_str);
 
 
 AR_NAMESPACE_END

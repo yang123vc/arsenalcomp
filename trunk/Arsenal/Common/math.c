@@ -18,7 +18,7 @@
 AR_NAMESPACE_BEGIN
 
 
-double AR_logbase(double a, double base)
+double AR_logbase_dbl(double a, double base)
 {
 		return log(a) / log(base);
 }
@@ -41,29 +41,30 @@ int_64_t		AR_abs_64(int_64_t x)
 }
 
 
+
 double			AR_abs_dbl(double x)
 {
 		return (double)fabs(x);
 }
 
 
-double AR_floor(double f)
+double AR_floor_dbl(double f)
 {
 		return (double)floor(f);
 }
 
-double AR_ceil(double f)
+double AR_ceil_dbl(double f)
 {
 		return (double)ceil(f);
 }
 
-double			AR_sqrt(double f)
+double			AR_sqrt_dbl(double f)
 {
 		return (double)sqrt(f);
 }
 
 
-double AR_pow(double x, double y)
+double AR_pow_dbl(double x, double y)
 {
 		return (double)pow(x,y);
 }
@@ -74,42 +75,117 @@ double AR_exp(double f)
 }
 
 
-double AR_sin(double f)
+double AR_sin_dbl(double f)
 {
 		return (double)sin(f);
 }
 
 
-double AR_cos(double f)
+double AR_cos_dbl(double f)
 {
 		return (double)cos(f);
 }
 
 
-double AR_tan(double f)
+double AR_tan_dbl(double f)
 {
 		return (double)tan(f);
 }
 
-double AR_asin(double f)
+double AR_asin_dbl(double f)
 {
 		return (double)asin(f);
 }
 
-double AR_acos(double f)
+double AR_acos_dbl(double f)
 {
 		return (double)acos(f);
 }
 
-double AR_atan(double f)
+double AR_atan_dbl(double f)
 {
 		return (double)atan(f);
 }
 
-double AR_atan2(double y, double x)
+double AR_atan2_dbl(double y, double x)
 {
 		return (double)atan2(y,x);
 }
+
+
+
+float AR_logbase_flt(float a, float base)
+{
+		return logf(a) / logf(base);
+}
+
+
+float			AR_abs_flt(float x)
+{
+		return (float)fabsf(x);
+}
+
+float			AR_ceil_flt(float f)
+{
+		return ceilf(f);
+}
+
+float			AR_floor_flt(float f)
+{
+		return floorf(f);
+}
+
+float			AR_sqrt_flt(float f)
+{
+		return sqrtf(f);
+}
+
+float			AR_exp_flt(float f)
+{
+		return expf(f);
+}
+
+float			AR_pow_flt(float x, float y)
+{
+		return powf(x,y);
+}
+
+
+float			AR_sin_flt(float f)
+{
+		return sinf(f);
+}
+
+float			AR_cos_flt(float f)
+{
+		return cosf(f);
+}
+
+float			AR_tan_flt(float f)
+{
+		return tanf(f);
+}
+
+float			AR_asin_flt(float f)
+{
+		return asinf(f);
+}
+
+float			AR_acos_flt(float f)
+{
+		return acosf(f);
+}
+
+float			AR_atan_flt(float f)
+{
+		return atanf(f);
+}
+
+float			AR_atan2_flt(float y, float x)
+{
+		return atan2f(y,x);
+}
+
 
 
 
