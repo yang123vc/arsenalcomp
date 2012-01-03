@@ -1343,18 +1343,18 @@ LU分解
 非方阵
 
 L =  [	1	,	0
-	l10	,	1
-	l20	,	l21
+		l10	,	1
+		l20	,	l21
      ];
 
 U = [ 	u00	,	u01
-	0	,	u11
+		0	,	u11
     ];
 
 
 则L = [	u00		,		u01
-	l10 * u00	,		l10 * u01 + u11
-	l20 * u00	,		l20 * u01 + l21 * u11
+		l10 * u00	,		l10 * u01 + u11
+		l20 * u00	,		l20 * u01 + l21 * u11
       ];
 
 	  
@@ -1531,14 +1531,131 @@ bool_t			AR_LUFactorMatrixSelf(arMatrix_t *mat, size_t *index, double *det)
 
 void			AR_LUSolveMatrix(const arMatrix_t *mat, const size_t *index, arVector_t *x,const arVector_t *b)
 {
+		int_t i,j;
+		double s;
+		AR_ASSERT(mat != NULL && b != NULL && x != NULL);
 
+		AR_ASSERT(AR_GetVectorSize(b) == AR_GetMatrixNumRows(mat));
+		AR_ChangeVectorSize(x, AR_GetMatrixNumColumns(mat));
+
+		for(i = 0; i < (int_t)mat->nrows; ++i)
+		{
+				if(index)
+				{
+						s = AR_GetVectorValue(b, index[i]);
+				}else
+				{
+						s = AR_GetVectorValue(b, i);
+				}
+
+				for(j = 0; j < i; ++j)
+				{
+						s -= AR_GetMatrixValue(mat, (size_t)i,(size_t)j) * AR_GetVectorValue(x, (size_t)j);
+				}
+
+				AR_SetVectorValue(x, (size_t)i,s);
+		}
+
+
+		for(i = (int_t)(AR_GetMatrixNumRows(mat) - 1); i >= 0; --i)
+		{
+				s = AR_GetVectorValue(x, i);
+				for(j = i + 1; j < (int_t)mat->nrows; ++j)
+				{
+						s -= AR_GetMatrixValue(mat, i,j) * AR_GetVectorValue(x, j);
+				}
+
+				AR_SetVectorValue(x, i, s / AR_GetMatrixValue(mat, i,i));
+		}
 
 }
 
-void			AR_LUInverseMatrixSelf(const arMatrix_t *mat, const size_t *index, arMatrix_t *inv);
+void			AR_LUInverseMatrix(const arMatrix_t *mat, const size_t *index, arMatrix_t *inv)
+{
+		size_t i,j;
+		arVector_t *x,*b;
+		AR_ASSERT(mat != NULL && inv != NULL);
 
-void			AR_UnpackMatrixLUFactors(const arMatrix_t *mat, arMatrix_t *L, arMatrix_t *U);
-void			AR_MultiplyMatrixLUFactors(const arMatrix_t *mat, const size_t *index, arMatrix_t *m);
+		AR_ASSERT(mat->nrows == mat->ncols);
+
+		x = AR_CreateVector(mat->ncols);
+		b = AR_CreateVector(mat->nrows);
+		AR_ZeroVector(b);
+		AR_ZeroVector(x);
+		AR_SetMatrixSize(inv, mat->nrows, mat->ncols);
+
+		for(i = 0; i < mat->nrows; ++i)
+		{
+				AR_SetVectorValue(b, i, 1.0);
+				AR_LUSolveMatrix(mat, index, x, b);
+				for(j = 0; j < mat->nrows; ++j)
+				{
+						AR_SetMatrixValue(inv, j,i, AR_GetVectorValue(x,j));
+				}
+
+				AR_SetVectorValue(b, i, 0.0);
+		}
+
+		AR_DestroyVector(x);
+		x = NULL;
+		AR_DestroyVector(b);
+		b = NULL;
+}
+
+
+void			AR_UnpackMatrixLUFactors(const arMatrix_t *mat, arMatrix_t *L, arMatrix_t *U)
+{
+		size_t i,j;
+		size_t lm,ln,um,un;
+		AR_ASSERT(mat != NULL && L != NULL && U != NULL);
+
+		if(mat->nrows == mat->ncols)
+		{
+				lm = ln = um = un = mat->nrows;
+		}else if(mat->nrows > mat->ncols)
+		{
+				lm = mat->nrows;
+				ln = mat->ncols;
+
+				um = un = mat->ncols;
+		}else
+		{
+				lm = ln = mat->nrows;
+				um = mat->nrows;
+				un = mat->ncols;
+		}
+
+		AR_SetMatrixSize(L, lm,ln);
+		AR_ZeroMatrix(L);
+		AR_SetMatrixSize(U, um,un);
+		AR_ZeroMatrix(U);
+
+		for ( i = 0; i < mat->nrows; i++ )
+		{
+				for (j = 0; j < i; j++ ) 
+				{
+						if(i < lm && j < ln)
+						{
+								AR_SetMatrixValue(L, i,j, AR_GetMatrixValue(mat, i,j));
+						}
+				}
+
+				if(i < lm && i < ln)
+				{
+						AR_SetMatrixValue(L, i,i, 1.0);
+				}
+
+				for(j = i; j < mat->ncols; ++j)
+				{
+						if(i < um && j < un)
+						{
+								AR_SetMatrixValue(U, i,j, AR_GetMatrixValue(mat, i,j));
+						}
+				}
+		}
+
+}
+
 
 
 
