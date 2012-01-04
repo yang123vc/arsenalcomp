@@ -975,6 +975,7 @@ bool_t			AR_IsSymmetricMatrix(const arMatrix_t *mat, double epsilon);
 bool_t			AR_IsOrthogonalMatrix(const arMatrix_t *mat, double epsilon);
 bool_t			AR_IsOrthonormalMatrix(const arMatrix_t *mat, double epsilon);
 
+/*Œ¥ µœ÷*/
 bool_t			AR_IsPositiveDefiniteMatrix(const arMatrix_t *mat, double epsilon);
 bool_t			AR_IsSymmetricPositiveDefinite(const arMatrix_t *mat, double epsilon);
 bool_t			AR_IsPositiveSemiDefinite(const arMatrix_t *mat, double epsilon);
@@ -995,9 +996,12 @@ void			AR_MultiplyMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other);
 void			AR_MultiplyTransposeMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other);
 
 void			AR_AddMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest);
+void			AR_AddMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other);
+
 void			AR_SubMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest);
 void			AR_SubMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other);
-void			AR_AddMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other);
+
+
 
 
 

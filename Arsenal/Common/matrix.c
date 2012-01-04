@@ -363,9 +363,6 @@ void			AR_RemoveMatrixColumn(arMatrix_t *mat, size_t c)
 		{
 				AR_memmove(&mat->m[i * mat->ncols + c], &mat->m[i * (mat->ncols + 1) + c + 1], sizeof(double) * (mat->ncols - c));
 		}
-
-
-		
 }
 
 
@@ -539,37 +536,24 @@ bool_t			AR_IsSymmetricMatrix(const arMatrix_t *mat, double epsilon)
 bool_t			AR_IsOrthogonalMatrix(const arMatrix_t *mat, double epsilon)
 {
 		size_t i,j,k;
-		double *pr, *pc;
+		
 		double s;
 		AR_ASSERT(mat != NULL);
 
-		/*
-		if(!AR_IsSquareMatrix(mat))
+
+		for(i = 0; i < mat->ncols; ++i)
 		{
-				return false;
-		}
-		*/
-
-		pr = pc = NULL;
-
-		for(i = 0; i < mat->nrows; ++i)
-		{
-				pr = mat->m + i * mat->ncols;
-
-				for(j = 0; j < mat->ncols; ++j)
+				for(j = i + 1; j < mat->ncols; ++j)
 				{
-						if(i == j)
-						{
-								continue;
-						}
-
-						pc = mat->m + j;
-
-						s = 0.0;
 						
+						s = 0.0;
+
 						for(k = 0; k < mat->nrows; ++k)
 						{
-								s += pr[k] * pc[k * mat->ncols];
+								double l,r;
+								l = AR_GetMatrixValue(mat,k,i);
+								r = AR_GetMatrixValue(mat,k,j);
+								s += (l * r);
 						}
 
 						if(AR_abs_dbl(s) > epsilon)
@@ -586,32 +570,23 @@ bool_t			AR_IsOrthogonalMatrix(const arMatrix_t *mat, double epsilon)
 bool_t			AR_IsOrthonormalMatrix(const arMatrix_t *mat, double epsilon)
 {
 		size_t i,j,k;
-		double *pr, *pc;
+		
 		double s;
 		AR_ASSERT(mat != NULL);
 
-		/*
-		if(!AR_IsSquareMatrix(mat))
+
+		for(i = 0; i < mat->ncols; ++i)
 		{
-				return false;
-		}
-		*/
-
-		pr = pc = NULL;
-
-		for(i = 0; i < mat->nrows; ++i)
-		{
-				pr = mat->m + i * mat->ncols;
-
-				for(j = 0; j < mat->ncols; ++j)
+				for(j = i; j < mat->ncols; ++j)
 				{
-						pc = mat->m + j;
-
 						s = i == j ? -1.0 : 0.0;
 						
 						for(k = 0; k < mat->nrows; ++k)
 						{
-								s += pr[k] * pc[k * mat->ncols];
+								double l,r;
+								l = AR_GetMatrixValue(mat,k,i);
+								r = AR_GetMatrixValue(mat,k,j);
+								s += (l * r);
 						}
 
 						if(AR_abs_dbl(s) > epsilon)
@@ -622,6 +597,8 @@ bool_t			AR_IsOrthonormalMatrix(const arMatrix_t *mat, double epsilon)
 		}
 
 		return true;
+
+
 }
 
 /*********************************Œ¥ µœ÷**************************************/
@@ -694,7 +671,7 @@ void			AR_MultiplyTransposeMatrixByVector(const arMatrix_t *mat, const arVector_
 
 		AR_ASSERT(m == AR_GetVectorSize(other));
 
-		AR_ChangeVectorSize(dest, m);
+		AR_ChangeVectorSize(dest, n);
 
 		for(i = 0; i < n; ++i)
 		{
@@ -768,7 +745,7 @@ void			AR_MultiplyTransposeMatrixByMatrix(const arMatrix_t *mat, const arMatrix_
 						sum = 0.0;
 						for(k = 0; k < lrows; ++k)
 						{
-								sum += AR_GetMatrixValue(mat, i,k) * AR_GetMatrixValue(other, k,j);
+								sum += AR_GetMatrixValue(mat, k,i) * AR_GetMatrixValue(other, k,j);
 						}
 
 						AR_SetMatrixValue(dest, i,j,sum);
