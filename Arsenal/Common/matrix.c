@@ -95,6 +95,19 @@ void			AR_SetMatrixSize(arMatrix_t *mat, size_t rows, size_t cols)
 		}
 }
 
+
+void			AR_SetMatrixData(arMatrix_t *mat, size_t row, size_t col, const double *data)
+{
+		AR_ASSERT(mat != NULL);
+		AR_ASSERT(data != NULL);
+		AR_ASSERT(row > 0 && col > 0);
+
+		AR_SetMatrixSize(mat, row, col);
+
+		AR_memcpy(mat->m, data, row * col * sizeof(double));
+}
+
+
 void			AR_ZeroMatrix(arMatrix_t *mat)
 {
 		AR_ASSERT(mat != NULL);
@@ -1207,13 +1220,18 @@ bool_t			AR_InverseMatrixByGaussJordanSelf(arMatrix_t *mat)
 
 				for(j = 0; j < mat->nrows; ++j)
 				{
-						if(pivot_mark[i])
+						if(pivot_mark[j])
 						{
 								continue;
 						}
 						
 						for(k = 0; k < mat->ncols; ++k)
 						{
+								if(pivot_mark[k])
+								{
+										continue;
+								}
+
 								d = AR_abs_dbl(AR_GetMatrixValue(mat,j,k));
 
 								if(AR_DBL_GE(d, max_val))

@@ -887,7 +887,7 @@ void			AR_CopyVector(arVector_t *dest, const arVector_t *src);
 
 void			AR_ChangeVectorSize(arVector_t *vec, size_t size);
 size_t			AR_GetVectorSize(const arVector_t *vec);
-
+void			AR_SetVectorData(arVector_t *vec, size_t size, const double *data);
 
 void			AR_ZeroVector(arVector_t *vec);
 void			AR_NegateVector(arVector_t *vec);
@@ -936,7 +936,7 @@ arMatrix_t*		AR_CopyNewMatrix(const arMatrix_t *mat);
 void			AR_CopyMatrix(arMatrix_t *dest, const arMatrix_t *src);
 
 void			AR_SetMatrixSize(arMatrix_t *mat, size_t rows, size_t cols);
-
+void			AR_SetMatrixData(arMatrix_t *mat, size_t row, size_t col, const double *data);
 
 int_t			AR_CompareMatrix(const arMatrix_t *l, const arMatrix_t *r, double epsilon);
 
