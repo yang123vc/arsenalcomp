@@ -140,10 +140,10 @@ void			AR_ClearMatrixUpperTriangle(arMatrix_t *mat);
 void			AR_ClearMatrixLowerTriangle(arMatrix_t *mat);
 */
 
-void __print_matrix(const arMatrix_t *mat)
+void __print_matrix(const arMatrix_t *mat, size_t precision = 2)
 {
 		arString_t *str = AR_CreateString();
-		AR_MatrixToString(mat, str, 2, NULL, NULL);
+		AR_MatrixToString(mat, str, precision, NULL, NULL);
 		AR_printf(L"%ls\r\n", AR_GetStringCString(str));
 		AR_DestroyString(str);
 		str = NULL;
@@ -696,6 +696,193 @@ END_POINT:
 
 
 
+
+/*
+
+bool_t			AR_InverseMatrixSelf(arMatrix_t *mat);
+
+bool_t			AR_InverseLowerTriangularMatrixSelf(arMatrix_t *mat);
+bool_t			AR_InverseUpperTriangularMatrixSelf(arMatrix_t *mat);
+
+bool_t			AR_InverseMatrixByGaussJordanSelf(arMatrix_t *mat);
+void			AR_InverseSolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t *b);
+
+*/
+void matrix_test4()
+{
+
+		arMatrix_t *mat = NULL, *mat2 = NULL, *mat3 = NULL;
+		arString_t *str = NULL;
+		arVector_t *vtmp = NULL, *vtmp1 = NULL;
+
+
+		str = AR_CreateString();
+		vtmp = AR_CreateVector(5);
+		vtmp1 = AR_CreateVector(5);
+
+		mat = AR_CreateMatrix(2,2);
+		mat2 = AR_CreateMatrix(2,2);
+		mat3 = AR_CreateMatrix(2,2);
+
+
+		AR_RandomMatrix(mat);
+
+		AR_SetMatrixValue(mat, 0,0,1);
+		AR_SetMatrixValue(mat, 0,1,2);
+		AR_SetMatrixValue(mat, 1,0,3);
+		AR_SetMatrixValue(mat, 1,1,4);
+
+		__print_matrix(mat);
+
+
+		AR_InverseMatrixSelf(mat);
+
+		__print_matrix(mat);
+
+
+		double tmp[] = 
+		{
+						0.9649,    0.9572,    0.1419,
+						0.1576,    0.4854,    0.4218,
+						0.9706,    0.8003,    0.9157,
+		};
+
+		AR_SetMatrixData(mat, 3,3, tmp);
+
+		__print_matrix(mat);
+		
+		AR_InverseMatrixSelf(mat);
+		__print_matrix(mat, 4);
+
+
+		AR_SetMatrixData(mat, 3,3, tmp);
+		AR_ClearMatrixUpperTriangle(mat);
+		__print_matrix(mat, 4);
+
+		AR_ASSERT(AR_InverseLowerTriangularMatrixSelf(mat));
+		__print_matrix(mat, 4);
+
+
+		AR_SetMatrixData(mat, 3,3, tmp);
+		AR_ClearMatrixUpperTriangle(mat);
+		__print_matrix(mat, 4);
+
+		AR_ASSERT(AR_InverseMatrixSelf(mat));
+		__print_matrix(mat, 4);
+
+
+
+		AR_SetMatrixData(mat, 3,3, tmp);
+		AR_ClearMatrixLowerTriangle(mat);
+		__print_matrix(mat, 4);
+
+		AR_ASSERT(AR_InverseUpperTriangularMatrixSelf(mat));
+		__print_matrix(mat, 4);
+
+
+		AR_SetMatrixData(mat, 3,3, tmp);
+		AR_ClearMatrixLowerTriangle(mat);
+		__print_matrix(mat, 4);
+
+		AR_ASSERT(AR_InverseMatrixSelf(mat));
+		__print_matrix(mat, 4);
+
+
+		double a_tmp1[] = 
+		{
+				1,2,
+				3,4
+		};
+		
+		AR_SetMatrixData(mat, 2,2,a_tmp1);
+		__print_matrix(mat);
+
+		/*
+		AR_InverseMatrixSelf(mat);
+		__print_matrix(mat);
+		*/
+
+		AR_InverseMatrixByGaussJordanSelf(mat);
+		__print_matrix(mat);
+
+
+
+
+		double a_tmp[] = 
+		{
+				1,2,
+				5,12
+		};
+
+		AR_SetMatrixData(mat, 2,2,a_tmp);
+		__print_matrix(mat);
+
+		AR_InverseMatrixByGaussJordanSelf(mat);
+		__print_matrix(mat);
+
+
+
+		
+#if(0)
+		
+		double b_tmp[] = 
+		{
+				-1,
+				3,
+		};
+
+		AR_SetVectorData(vtmp, 2, b_tmp);
+
+		__print_vector(vtmp);
+
+		
+
+		AR_InverseSolveMatrix(mat, vtmp1, vtmp);
+
+		__print_vector(vtmp1);
+#endif
+
+
+END_POINT:
+		if(mat)
+		{
+				AR_DestroyMatrix(mat);
+				mat = NULL;
+		}
+
+		if(mat2)
+		{
+				AR_DestroyMatrix(mat2);
+				mat2 = NULL;
+		}
+
+		if(mat3)
+		{
+				AR_DestroyMatrix(mat3);
+				mat3 = NULL;
+		}
+
+		if(vtmp)
+		{
+				AR_DestroyVector(vtmp);
+				vtmp = NULL;
+		}
+
+		if(vtmp1)
+		{
+				AR_DestroyVector(vtmp1);
+				vtmp1 = NULL;
+		}
+
+		if(str)
+		{
+				AR_DestroyString(str);
+				str = NULL;
+		}
+}
+
+
+
 void math_test()
 {
 		AR_srand(time(NULL));
@@ -704,7 +891,9 @@ void math_test()
 
 		//matrix_test();
 		//matrix_test2();
-		matrix_test3();
+		//matrix_test3();
+
+		matrix_test4();
 
 
 }

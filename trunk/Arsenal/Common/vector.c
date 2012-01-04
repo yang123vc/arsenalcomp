@@ -101,6 +101,14 @@ void			AR_ChangeVectorSize(arVector_t *vec, size_t size)
 }
 
 
+void	AR_SetVectorData(arVector_t *vec, size_t size, const double *data)
+{
+		AR_ASSERT(vec != NULL && data != NULL);
+		AR_ASSERT(size > 0);
+		AR_ChangeVectorSize(vec, size);
+		AR_memcpy(vec->v, data, vec->count * sizeof(double));
+}
+
 
 size_t			AR_GetVectorSize(const arVector_t *vec)
 {
