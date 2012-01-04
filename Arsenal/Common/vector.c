@@ -146,6 +146,18 @@ void			AR_ClampVector(arVector_t *vec, double minval, double maxval)
 		}
 }
 
+void			AR_RandomVector(arVector_t *vec)
+{
+		size_t i;
+		AR_ASSERT(vec != NULL);
+
+		for(i = 0; i < vec->count; ++i)
+		{
+				vec->v[i] = AR_rand_dbl();
+
+		}
+
+}
 
 
 double			AR_CalcVectorLength(const arVector_t *vec)
@@ -251,9 +263,15 @@ int_t			AR_CompareVectorWithEpsilon(const arVector_t *l, const arVector_t *r, do
 		for(i = 0; i < l->count; ++i)
 		{
 				double e = AR_abs_dbl(l->v[i] - r->v[i]);
-				if(AR_DBL_GE(e, epsilon))
+				if(e > epsilon)
 				{
-						return AR_DBL_LE(l->v[i], r->v[i]) ? -1 : 1;
+						if(e < 0.0)
+						{
+								return -1;
+						}else
+						{
+								return 1;
+						}
 				}
 		}
 
