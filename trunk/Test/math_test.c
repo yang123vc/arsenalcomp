@@ -820,8 +820,20 @@ void matrix_test4()
 		AR_InverseMatrixByGaussJordanSelf(mat);
 		__print_matrix(mat);
 
+		double b[] = 
+		{
+				-1,
+				3
+		};
 
+		arVector_t *vx = vtmp, *vb = vtmp1;
 
+		AR_SetVectorData(vb, 2, b);
+		__print_vector(vb);
+
+		AR_InverseSolveMatrix(mat, vx, vb);
+
+		__print_vector(vx);
 		
 #if(0)
 		
