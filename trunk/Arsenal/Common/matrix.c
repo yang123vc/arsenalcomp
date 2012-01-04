@@ -125,9 +125,9 @@ int_t			AR_CompareMatrix(const arMatrix_t *l, const arMatrix_t *r, double epsilo
 		{
 				double e = l->m[i] - r->m[i];
 
-				if(AR_DBL_GE(AR_abs_dbl(e), epsilon))
+				if(AR_abs_dbl(e) > epsilon)
 				{
-						if(AR_DBL_LE(e, 0.0))
+						if(e < 0.0)
 						{
 								return -1;
 						}else
@@ -373,7 +373,7 @@ void			AR_ClearMatrixUpperTriangle(arMatrix_t *mat)
 {
 		size_t i,j;
 		AR_ASSERT(mat != NULL);
-
+		AR_ASSERT(mat->nrows == mat->ncols);
 		for(i = 0; i < mat->nrows - 1; ++i)
 		{
 				for(j = i + 1; j < mat->ncols; ++j)
@@ -1657,14 +1657,88 @@ void			AR_UnpackMatrixLUFactors(const arMatrix_t *mat, arMatrix_t *L, arMatrix_t
 }
 
 
+/*
+ÊäÈë£º
+		A=	[	u00,		u01,			u02
+				l10,		u11			u12
+				l20,		l21,			u22
+			];
+
+Êä³ö£º
+		A=	[		u00,		u01,					u02
+					l10 * u00,	l10 * u01 + u11			l10 * u02 + u12
+					l20 * u00,	l20 * u01 + l21 * u11,	l20 * u02 + l21 * u12 + u22
+		];
 
 
 
 
+*/
 
-void			AR_MatrixToString(const arMatrix_t *mat, arString_t *str, size_t precision, const wchar_t *sp_str)
+void			AR_MultiplyMatrixLUFactors(const arMatrix_t *mat, const size_t *index, arMatrix_t *original_mat)
 {
-		AR_ASSERT(false);
+		size_t r, original_r, c, k;
+		double sum;
+
+		AR_ASSERT(mat != NULL && original_mat != NULL);
+		AR_SetMatrixSize(original_mat, mat->nrows, mat->ncols);
+		AR_ZeroMatrix(original_mat);
+
+		for ( r = 0; r < mat->nrows; r++ ) 
+		{
+
+				if ( index != NULL ) 
+				{
+						original_r = index[r];
+				} else 
+				{
+						original_r = r;
+				}
+
+				for ( c = 0; c < mat->ncols; c++ ) 
+				{
+						if ( c >= r ) 
+						{
+								sum = AR_GetMatrixValue(mat, r,c);
+						} else 
+						{
+								sum = 0.0f;
+						}
+
+						for ( k = 0; k <= c && k < r; k++) 
+						{
+								sum += AR_GetMatrixValue(mat, r,k) * AR_GetMatrixValue(mat, k,c);
+						}
+
+						AR_SetMatrixValue(original_mat, original_r, c, sum);
+				}
+		}
+}
+
+
+
+void			AR_MatrixToString(const arMatrix_t *mat, arString_t *str, size_t precision, const wchar_t *sp_str, const wchar_t *row_sp)
+{
+		size_t i;
+		arVector_t *tmp;
+		AR_ASSERT(mat != NULL && str != NULL);
+
+		if(row_sp == NULL)
+		{
+				row_sp = AR_LINE_SP;
+		}
+
+		tmp = AR_CreateVector(mat->ncols);
+
+		for(i = 0; i < mat->nrows; ++i)
+		{
+				AR_GetMatrixRow(mat, i, tmp);
+				AR_VectorToString(tmp, str, precision, sp_str);
+				AR_AppendString(str, row_sp);
+		}
+
+		AR_DestroyVector(tmp);
+		tmp = NULL;
 }
 
 

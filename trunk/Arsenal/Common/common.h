@@ -892,7 +892,7 @@ size_t			AR_GetVectorSize(const arVector_t *vec);
 void			AR_ZeroVector(arVector_t *vec);
 void			AR_NegateVector(arVector_t *vec);
 void			AR_ClampVector(arVector_t *vec, double minval, double maxval);
-
+void			AR_RandomVector(arVector_t *vec);
 
 double			AR_CalcVectorLength(const arVector_t *vec);
 double			AR_CalcVectorLengthSqr(const arVector_t *vec);
@@ -936,7 +936,7 @@ arMatrix_t*		AR_CopyNewMatrix(const arMatrix_t *mat);
 void			AR_CopyMatrix(arMatrix_t *dest, const arMatrix_t *src);
 
 void			AR_SetMatrixSize(arMatrix_t *mat, size_t rows, size_t cols);
-void			AR_ZeroMatrix(arMatrix_t *mat);
+
 
 int_t			AR_CompareMatrix(const arMatrix_t *l, const arMatrix_t *r, double epsilon);
 
@@ -951,7 +951,7 @@ const double*	AR_GetMatrixRawData(const arMatrix_t *mat);
 
 
 /****************************************生成标准矩阵类型******************************************/
-
+void			AR_ZeroMatrix(arMatrix_t *mat);
 void			AR_IdentityMatrix(arMatrix_t *mat);
 void			AR_DiagonalMatrix(arMatrix_t *mat, const arVector_t *vec);
 void			AR_RandomMatrix(arMatrix_t *mat);
@@ -1007,6 +1007,8 @@ void			AR_TransposeMatrix(const arMatrix_t *mat, arMatrix_t *dest);
 void			AR_TransposeMatrixSelf(arMatrix_t *mat);
 
 
+
+
 /****************************************矩阵分解******************************************/
 
 /*取逆矩阵*/
@@ -1027,12 +1029,12 @@ bool_t			AR_LUFactorMatrixSelf(arMatrix_t *mat, size_t *index, double *det);
 void			AR_LUInverseMatrix(const arMatrix_t *mat, const size_t *index, arMatrix_t *inv);
 void			AR_LUSolveMatrix(const arMatrix_t *mat, const size_t *index, arVector_t *x,const arVector_t *b);
 void			AR_UnpackMatrixLUFactors(const arMatrix_t *mat, arMatrix_t *L, arMatrix_t *U);
+void			AR_MultiplyMatrixLUFactors(const arMatrix_t *mat, const size_t *index, arMatrix_t *original_mat);
 
 
 
-
-/*************************************************************打印矩阵*************************************************************/
-void			AR_MatrixToString(const arMatrix_t *mat, arString_t *str, size_t precision, const wchar_t *sp_str);
+/*************************************************************其他功能*************************************************************/
+void			AR_MatrixToString(const arMatrix_t *mat, arString_t *str, size_t precision, const wchar_t *sp_str, const wchar_t *row_sp);
 
 
 AR_NAMESPACE_END
