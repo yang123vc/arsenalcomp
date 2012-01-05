@@ -811,22 +811,7 @@ int_32_t		AR_abs_32(int_32_t x);
 int_64_t		AR_abs_64(int_64_t x);
 
 
-double			AR_logbase_dbl(double a, double base);
-double			AR_abs_dbl(double x);
-double			AR_ceil_dbl(double f);
-double			AR_floor_dbl(double f);
-double			AR_sqrt_dbl(double f);
-double			AR_exp_dbl(double f);
-double			AR_pow_dbl(double x, double y);
-
-double			AR_sin_dbl(double f);
-double			AR_cos_dbl(double f);
-double			AR_tan_dbl(double f);
-double			AR_asin_dbl(double f);
-double			AR_acos_dbl(double f);
-double			AR_atan_dbl(double f);
-double			AR_atan2_dbl(double y, double x);
-
+bool_t			AR_is_equal_flt(float x, float y, float epsilon);
 
 float			AR_logbase_flt(float a, float base);
 float			AR_abs_flt(float x);
@@ -844,8 +829,25 @@ float			AR_acos_flt(float f);
 float			AR_atan_flt(float f);
 float			AR_atan2_flt(float y, float x);
 
-bool_t			AR_is_equal_flt(float x, float y, float epsilon);
+
 bool_t			AR_is_equal_dbl(double x, double y, double epsilon);
+
+double			AR_logbase_dbl(double a, double base);
+double			AR_abs_dbl(double x);
+double			AR_ceil_dbl(double f);
+double			AR_floor_dbl(double f);
+double			AR_sqrt_dbl(double f);
+double			AR_exp_dbl(double f);
+double			AR_pow_dbl(double x, double y);
+
+double			AR_sin_dbl(double f);
+double			AR_cos_dbl(double f);
+double			AR_tan_dbl(double f);
+double			AR_asin_dbl(double f);
+double			AR_acos_dbl(double f);
+double			AR_atan_dbl(double f);
+double			AR_atan2_dbl(double y, double x);
+
 
 
 /*float macro_oper*/
@@ -1015,6 +1017,9 @@ void			AR_TransposeMatrixSelf(arMatrix_t *mat);
 
 /****************************************¾ØÕó·Ö½â******************************************/
 
+
+
+
 /*È¡Äæ¾ØÕó*/
 bool_t			AR_InverseMatrixSelf(arMatrix_t *mat);
 
@@ -1024,6 +1029,8 @@ bool_t			AR_InverseUpperTriangularMatrixSelf(arMatrix_t *mat);
 bool_t			AR_InverseMatrixByGaussJordanSelf(arMatrix_t *mat);
 void			AR_InverseSolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t *b);
 
+/*matlab rref(A)*/
+void			AR_ReduceMatrixToEchelonFormSelf(arMatrix_t *mat, size_t *index);
 
 
 

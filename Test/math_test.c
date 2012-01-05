@@ -972,6 +972,91 @@ printf("------------------------------------------------\r\n");
 
 
 
+		double data_rref[] = 
+		{
+				0,     0,     0,     0,     2,     8,     4,
+				0,     0,     0,     1,     3,    11,     9,
+				0,     3,   -12,    -3,    -9,   -24,   -33,
+				0,    -2,     8,     1,     6,    17,    21
+		};
+
+		AR_SetMatrixData(mat, 4,7,data_rref);
+		__print_matrix(mat);
+
+
+		AR_ReduceMatrixToEchelonFormSelf(mat, index);
+		__print_matrix(mat);
+
+
+		double data_rref2[] = 
+		{
+				1,     2,
+				3,     4,
+				5,     6,
+				7,     8,
+		};
+
+		AR_SetMatrixData(mat, 4,2,data_rref2);
+		__print_matrix(mat);
+
+
+		AR_ReduceMatrixToEchelonFormSelf(mat, index);
+		__print_matrix(mat);
+		for(size_t i = 0; i < 4; ++i)
+		{
+				printf("%d ", index[i]);
+		}
+		printf("\r\n");
+		
+
+
+
+		double data_rref3[] = 
+		{
+				9,     8,		9,10,
+				3,     4,		5,6,
+				1,     2,		3,4,
+				5,     6,		7,8,
+				
+		};
+
+		AR_SetMatrixData(mat, 4,4,data_rref3);
+		__print_matrix(mat);
+
+
+		AR_ReduceMatrixToEchelonFormSelf(mat, index);
+		__print_matrix(mat);
+		for(size_t i = 0; i < 4; ++i)
+		{
+				printf("%d ", index[i]);
+		}
+		printf("\r\n");
+
+
+
+		double data_rref4[] = 
+		{
+				2,0,2,1,
+				0,5,2,-2,
+				0,0,3,2,
+				0,0,0,0
+		};
+		
+		AR_SetMatrixData(mat, 4,4,data_rref4);
+		__print_matrix(mat);
+
+
+		AR_ReduceMatrixToEchelonFormSelf(mat, index);
+		__print_matrix(mat);
+		for(size_t i = 0; i < 4; ++i)
+		{
+				printf("%d ", index[i]);
+		}
+		printf("\r\n");
+
+
+
+
 END_POINT:
 
 		if(L)
