@@ -202,7 +202,8 @@ void			AR_NormalizeVector(arVector_t *vec)
 
 		len = AR_CalcVectorLength(vec);
 
-		if(!AR_DBL_EQ(len, 0.0))
+		
+		if(!AR_DBL_EQ(len,0.0))
 		{
 				AR_DivVectorByVal(vec, len);
 		}
@@ -342,7 +343,7 @@ void			AR_MulVectorByVal(arVector_t *vec, double val)
 void			AR_DivVectorByVal(arVector_t *vec, double val)
 {
 		AR_ASSERT(vec != NULL);
-		AR_ASSERT(val != 0.0);
+		AR_ASSERT(!AR_DBL_EQ(val,0.0));
 
 		AR_MulVectorByVal(vec, 1.0 / val);
 

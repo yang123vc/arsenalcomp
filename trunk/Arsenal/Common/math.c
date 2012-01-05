@@ -18,6 +18,31 @@
 AR_NAMESPACE_BEGIN
 
 
+bool_t	AR_is_equal_flt(float x, float y, float epsilon)
+{
+		if(x == y || AR_abs_flt(x - y) < epsilon)
+		{
+				return true;
+		}else
+		{
+				return false;
+		}
+}
+
+bool_t	AR_is_equal_dbl(double x, double y, double epsilon)
+{
+		if(x == y || AR_abs_dbl(x - y) < epsilon)
+		{
+				return true;
+		}else
+		{
+				return false;
+		}
+}
+
+
+
+
 double AR_logbase_dbl(double a, double base)
 {
 		return log(a) / log(base);

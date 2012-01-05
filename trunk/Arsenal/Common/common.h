@@ -844,25 +844,25 @@ float			AR_acos_flt(float f);
 float			AR_atan_flt(float f);
 float			AR_atan2_flt(float y, float x);
 
+bool_t			AR_is_equal_flt(float x, float y, float epsilon);
+bool_t			AR_is_equal_dbl(double x, double y, double epsilon);
+
 
 /*float macro_oper*/
 
-
-#define AR_FLT_EQ(_x, _y)		(bool_t)(AR_abs_flt( (((float)(_x)) - ((float)(_y)))) < FLT_EPSILON)
-#define AR_FLT_LE(_x, _y)		(bool_t)(!AR_FLT_EQ((_x), (_y)) && ( ((float)(_x)) < ((float)(_y)) ))
-#define AR_FLT_GE(_x, _y)		(bool_t)(!AR_FLT_EQ((_x), (_y)) && ( ((float)(_x)) > ((float)(_y)) ))
-
-#define AR_FLT_LEEQ(_x, _y)		(bool_t)( AR_FLT_EQ((_x), (_y)) || AR_FLT_LE((_x), (_y)) )
-#define AR_FLT_GEEQ(_x, _y)		(bool_t)( AR_FLT_EQ((_x), (_y)) || AR_FLT_GE((_x), (_y)) )
+#define AR_FLT_EQ(_x, _y)		AR_is_equal_flt((float)(_x), (float)(_y), FLT_EPSILON)
+#define AR_FLT_LE(_x, _y)		(bool_t) ((((float)(_x)) < ((float)(_y))))
+#define AR_FLT_GE(_x, _y)		(bool_t) ((((float)(_x)) > ((float)(_y))))
+#define AR_FLT_LEEQ(_x, _y)		(bool_t)( AR_FLT_EQ((_x), (_y)) || AR_FLT_LE((_x), (_y)))
+#define AR_FLT_GEEQ(_x, _y)		(bool_t)( AR_FLT_EQ((_x), (_y)) || AR_FLT_GE((_x), (_y)))
 
 #define AR_FLT_MOD(_x,_y)		((float)(_x) - AR_floor_flt((float)(_x) / (float)(_y)) * (float)(_y))
 #define AR_FLT_POW(_x,_y)		(float)AR_pow_flt((float)(_x), (float)(_y))
 
 
-
-#define AR_DBL_EQ(_x, _y)		(bool_t)(AR_abs_dbl( (((double)(_x)) - ((double)(_y)))) < DBL_EPSILON)
-#define AR_DBL_LE(_x, _y)		(bool_t) (!AR_DBL_EQ((_x), (_y)) && (((double)(_x)) < ((double)(_y))))
-#define AR_DBL_GE(_x, _y)		(bool_t) (!AR_DBL_EQ((_x), (_y)) && (((double)(_x)) > ((double)(_y))))
+#define AR_DBL_EQ(_x, _y)		AR_is_equal_dbl((double)(_x), (double)(_y), DBL_EPSILON)
+#define AR_DBL_LE(_x, _y)		(bool_t) ((((double)(_x)) < ((double)(_y))))
+#define AR_DBL_GE(_x, _y)		(bool_t) ((((double)(_x)) > ((double)(_y))))
 #define AR_DBL_LEEQ(_x, _y)		(bool_t)( AR_DBL_EQ((_x), (_y)) || AR_DBL_LE((_x), (_y)))
 #define AR_DBL_GEEQ(_x, _y)		(bool_t)( AR_DBL_EQ((_x), (_y)) || AR_DBL_GE((_x), (_y)))
 
@@ -1034,6 +1034,16 @@ void			AR_LUInverseMatrix(const arMatrix_t *mat, const size_t *index, arMatrix_t
 void			AR_LUSolveMatrix(const arMatrix_t *mat, const size_t *index, arVector_t *x,const arVector_t *b);
 void			AR_UnpackMatrixLUFactors(const arMatrix_t *mat, arMatrix_t *L, arMatrix_t *U);
 void			AR_MultiplyMatrixLUFactors(const arMatrix_t *mat, const size_t *index, arMatrix_t *original_mat);
+
+
+
+/*LDLT·Ö½â*/
+
+bool_t			AR_LDLTFactorMatrixSelf(arMatrix_t *mat);
+void			AR_LDLTSolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t *b);
+void			AR_LDLTInverseMatrix(const arMatrix_t *mat, arMatrix_t *inv);
+void			AR_UnpackMatrixLDLTFactors(const arMatrix_t *mat, arMatrix_t *L, arMatrix_t *D);
+void			AR_MultiplyMatrixLDLTFactors(const arMatrix_t *mat, arMatrix_t *original_mat);
 
 
 
