@@ -933,6 +933,105 @@ void			AR_TransposeMatrixSelf(arMatrix_t *mat)
 }
 
 
+/*************************************将矩阵化简为简化阶梯型矩阵************************************************/
+
+
+
+void			AR_ReduceMatrixToEchelonFormSelf(arMatrix_t *mat, size_t *index)
+{
+
+		size_t i,j,k,r,c;
+		int_t reduced_r;
+		double d,max_val,t;
+
+		AR_ASSERT(mat != NULL);
+
+		if(index)
+		{
+				for(i = 0; i < mat->nrows; ++i)
+				{
+						index[i] = i;
+				}
+		}
+
+		reduced_r = -1;
+
+		for(j = 0; j < mat->ncols; ++j)
+		{
+				max_val = 0.0;
+				r = 0;c = 0;
+				
+				
+				for(i = (size_t)(reduced_r + 1); i < mat->nrows; ++i)
+				{
+						t = AR_abs_dbl(AR_GetMatrixValue(mat,i,j));
+						
+						if(AR_DBL_GE(t,max_val))
+						{
+								max_val = t;
+								r = i;
+								c = j;
+						}
+				}
+
+				if(AR_DBL_EQ(max_val,0.0))/*此列全为0，则精简下一列*/
+				{
+						continue;
+				}
+
+				if(r != (size_t)(reduced_r + 1))
+				{
+						if(index)
+						{
+								size_t rt = index[r];
+								index[r] = index[(size_t)(reduced_r + 1)];
+								index[(size_t)(reduced_r + 1)] = rt;
+						}
+
+						AR_SwapMatrixRows(mat, r, (size_t)(reduced_r + 1));
+						
+						r = (size_t)(reduced_r + 1);
+				}
+
+				reduced_r += 1;
+
+				d = 1 / AR_GetMatrixValue(mat, r,c);
+				AR_SetMatrixValue(mat, r,c, 1.0);
+
+				for(k = c + 1; k < mat->ncols; ++k)
+				{
+						t = AR_GetMatrixValue(mat, r,k);
+						AR_SetMatrixValue(mat, r,k, t * d);
+				}
+
+
+				for(k = 0; k < mat->nrows; ++k)
+				{
+						if(k == r)
+						{
+								continue;
+						}
+
+						d = AR_GetMatrixValue(mat, k,c);
+						AR_SetMatrixValue(mat, k,c, 0.0);
+
+						if(AR_DBL_EQ(d,0.0))
+						{
+								continue;
+						}
+
+						for(i = c + 1; i < mat->ncols; ++i)
+						{
+								t = AR_GetMatrixValue(mat, k,i);
+								t -= AR_GetMatrixValue(mat, r,i) * d;
+								AR_SetMatrixValue(mat, k,i,t);
+						}
+				}
+
+		}
+}
+
+
 
 /**************************通过LU取逆*************************************************
 
@@ -1474,9 +1573,12 @@ bool_t			AR_LUFactorMatrixSelf(arMatrix_t *mat, size_t *index, double *det)
 				{
 						w = -w; /*换行后，行列式符号改变*/
 
-						k = index[i];
-						index[i] = index[new_i];
-						index[new_i] = k;
+						if(index)
+						{
+								k = index[i];
+								index[i] = index[new_i];
+								index[new_i] = k;
+						}
 
 						for(k = 0; k < mat->ncols; ++k)
 						{
