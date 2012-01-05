@@ -895,8 +895,139 @@ END_POINT:
 
 
 
+void matrix_test_factorization()
+{
+
+		arMatrix_t *mat = NULL, *mat2 = NULL, *mat3 = NULL, *L = NULL, *U = NULL;
+		arString_t *str = NULL;
+		arVector_t *vtmp = NULL, *vtmp1 = NULL;
+
+
+		str = AR_CreateString();
+		vtmp = AR_CreateVector(5);
+		vtmp1 = AR_CreateVector(5);
+
+		mat = AR_CreateMatrix(2,2);
+		mat2 = AR_CreateMatrix(2,2);
+		mat3 = AR_CreateMatrix(2,2);
+		L = AR_CreateMatrix(2,2);
+		U = AR_CreateMatrix(2,2);
+
+		double data[] = 
+		{
+				8,		9,		10,
+				21,		5,		47,
+				3,		7,		11
+		};
+		size_t index[20];
+		double det = 0.0;
+		AR_SetMatrixData(mat, 3,3,data);
+		__print_matrix(mat);
+
+		if(!AR_LUFactorMatrixSelf(mat, index, &det))
+		{
+				AR_ASSERT(false);
+		}
+
+		__print_matrix(mat);
+
+		AR_printf(L"det == %g\r\n", det);
+
+
+		AR_UnpackMatrixLUFactors(mat, L,U);
+
+		__print_matrix(L);
+		__print_matrix(U);
+
+
+		AR_MultiplyMatrixLUFactors(mat, NULL, mat2);
+		__print_matrix(mat2);
+
+printf("------------------------------------------------\r\n");
+
+		double data_ldlt[] = 
+		{
+				10,		20,		30,
+				20,		45,		80,
+				30,		80,		171
+		};
+
+		AR_SetMatrixData(mat, 3,3,data_ldlt);
+		__print_matrix(mat);
+		if(!AR_LDLTFactorMatrixSelf(mat))
+		{
+				AR_ASSERT(false);
+		}
+
+		__print_matrix(mat);
+
+
+		AR_UnpackMatrixLDLTFactors(mat, L,U);
+
+		__print_matrix(L);
+		__print_matrix(U);
+
+		AR_MultiplyMatrixLDLTFactors(mat, mat2);
+		__print_matrix(mat2);
+
+
+
+END_POINT:
+
+		if(L)
+		{
+				AR_DestroyMatrix(L);
+				L = NULL;
+		}
+
+		if(U)
+		{
+				AR_DestroyMatrix(U);
+				U = NULL;
+		}
+
+		if(mat)
+		{
+				AR_DestroyMatrix(mat);
+				mat = NULL;
+		}
+
+		if(mat2)
+		{
+				AR_DestroyMatrix(mat2);
+				mat2 = NULL;
+		}
+
+		if(mat3)
+		{
+				AR_DestroyMatrix(mat3);
+				mat3 = NULL;
+		}
+
+		if(vtmp)
+		{
+				AR_DestroyVector(vtmp);
+				vtmp = NULL;
+		}
+
+		if(vtmp1)
+		{
+				AR_DestroyVector(vtmp1);
+				vtmp1 = NULL;
+		}
+
+		if(str)
+		{
+				AR_DestroyString(str);
+				str = NULL;
+		}
+}
+
+
+
 void math_test()
 {
+
 		AR_srand(time(NULL));
 		//misc_test();
 		//vector_test();
@@ -904,9 +1035,8 @@ void math_test()
 		//matrix_test();
 		//matrix_test2();
 		//matrix_test3();
-
-		matrix_test4();
-
+		//matrix_test4();
+		matrix_test_factorization();
 
 }
 

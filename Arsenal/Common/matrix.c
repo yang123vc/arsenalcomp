@@ -1041,7 +1041,7 @@ bool_t			AR_InverseLowerTriangularMatrixSelf(arMatrix_t *mat)
 		{
 				d = AR_GetMatrixValue(mat, i,i);
 
-				if(AR_DBL_EQ(d, 0.0))
+				if(AR_DBL_EQ(d,0.0))
 				{
 						return false;
 				}
@@ -1078,7 +1078,7 @@ bool_t			AR_InverseUpperTriangularMatrixSelf(arMatrix_t *mat)
 		{
 				d = AR_GetMatrixValue(mat, (size_t)i, (size_t)i);
 
-				if(AR_DBL_EQ(d, 0.0))
+				if(AR_DBL_EQ(d,0.0))
 				{
 						return false;
 				}
@@ -1243,7 +1243,7 @@ bool_t			AR_InverseMatrixByGaussJordanSelf(arMatrix_t *mat)
 						}
 				}
 
-				if(AR_DBL_EQ(max_val, 0.0))
+				if(AR_DBL_EQ(max_val,0.0))
 				{
 						ret = false;
 						goto END_POINT;
@@ -1465,7 +1465,7 @@ bool_t			AR_LUFactorMatrixSelf(arMatrix_t *mat, size_t *index, double *det)
 						}
 				}
 
-				if(AR_DBL_EQ(s, 0.0))
+				if(AR_DBL_EQ(s,0.0))
 				{
 						return false;
 				}
@@ -1552,7 +1552,7 @@ void			AR_LUSolveMatrix(const arMatrix_t *mat, const size_t *index, arVector_t *
 		}
 
 
-		for(i = (int_t)(AR_GetMatrixNumRows(mat) - 1); i >= 0; --i)
+		for(i = (int_t)AR_GetMatrixNumRows(mat) - 1; i >= 0; --i)
 		{
 				s = AR_GetVectorValue(x, i);
 				for(j = i + 1; j < (int_t)mat->nrows; ++j)
@@ -1679,28 +1679,28 @@ void			AR_MultiplyMatrixLUFactors(const arMatrix_t *mat, const size_t *index, ar
 		AR_SetMatrixSize(original_mat, mat->nrows, mat->ncols);
 		AR_ZeroMatrix(original_mat);
 
-		for ( r = 0; r < mat->nrows; r++ ) 
+		for(r = 0; r < mat->nrows; r++)
 		{
 
-				if ( index != NULL ) 
+				if(index != NULL)
 				{
 						original_r = index[r];
-				} else 
+				}else 
 				{
 						original_r = r;
 				}
 
-				for ( c = 0; c < mat->ncols; c++ ) 
+				for(c = 0; c < mat->ncols; c++)
 				{
-						if ( c >= r ) 
+						if(c >= r)
 						{
 								sum = AR_GetMatrixValue(mat, r,c);
-						} else 
+						}else
 						{
 								sum = 0.0f;
 						}
 
-						for ( k = 0; k <= c && k < r; k++) 
+						for(k = 0; k <= c && k < r; k++)
 						{
 								sum += AR_GetMatrixValue(mat, r,k) * AR_GetMatrixValue(mat, k,c);
 						}
@@ -1709,6 +1709,318 @@ void			AR_MultiplyMatrixLUFactors(const arMatrix_t *mat, const size_t *index, ar
 				}
 		}
 }
+
+
+
+/*
+
+LDL^T分解
+
+  
+方阵：
+	L= 	[	1,		0,		0
+			l10,	1,		0
+			l20,	l21,	1
+		];
+	
+	D=	[	d00,	0,		0
+			0,		d11,	0
+			0,		0,		d22
+		];
+
+	L^t = [	1,		l10,	l20
+			0,	    1,		l21
+			0,	    0,	    1
+		];
+
+		
+   A = L * D * L^t
+
+
+	A=	[	d00,				d00 * l10,						d00 * l20
+			l10 * d00,			l10 * l10 * d00 + d11,			l10 * l20 * d00 + l21 * d11
+			l20 * d00,			l10 * l20 * d00 + l21 * d11,	l20 * l20 * d00 + l21 * l21 * d11 + d22
+		];
+
+*/
+
+bool_t			AR_LDLTFactorMatrixSelf(arMatrix_t *mat)
+{
+		size_t i,j,k;
+		double sum, d;
+		double *v;
+		bool_t	ret;
+		AR_ASSERT(mat != NULL);
+		AR_ASSERT(AR_IsSquareMatrix(mat));
+		AR_ASSERT(AR_IsSymmetricMatrix(mat, DBL_EPSILON));
+
+		ret = true;
+		v = AR_NEWARR0(double, mat->nrows);
+
+		for(i = 0; i < mat->nrows; ++i)
+		{
+				sum = AR_GetMatrixValue(mat, i,i);
+
+				for(j = 0; j < i; ++j)
+				{
+						d = AR_GetMatrixValue(mat, i,j);
+						v[j] = AR_GetMatrixValue(mat, j,j) * d;
+						sum -= v[j] * d;
+				}
+
+				if(AR_DBL_EQ(sum, 0.0))
+				{
+						ret = false;
+						goto END_POINT;
+				}
+
+				AR_SetMatrixValue(mat, i,i, sum);
+				d = 1 / sum;
+
+				for(j = i + 1; j < mat->nrows; ++j)
+				{
+						sum = AR_GetMatrixValue(mat, j,i);
+						
+						for ( k = 0; k < i; k++ ) 
+						{
+								sum -= AR_GetMatrixValue(mat,j,k) * v[k];
+						}
+
+						AR_SetMatrixValue(mat, j, i, sum * d);
+				}
+
+		}
+
+END_POINT:
+		if(v)
+		{
+				AR_DEL(v);
+				v = NULL;
+		}
+		return ret;
+}
+
+
+void			AR_LDLTSolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t *b)
+{
+		int_t i, j;
+		double sum;
+
+		AR_ASSERT(mat->nrows == mat->ncols);
+		AR_ASSERT(AR_GetVectorSize(x) == mat->nrows);
+		AR_ASSERT(AR_GetVectorSize(b) == mat->nrows);
+		
+		AR_ZeroVector(x);
+
+		
+		for (i = 0; i < (int_t)mat->nrows; i++) 
+		{
+				sum = AR_GetVectorValue(b,(size_t)i);
+				
+				for(j = 0; j < i; j++)
+				{
+						sum = sum - AR_GetMatrixValue(mat, (size_t)i,(size_t)j) * AR_GetVectorValue(x, (size_t)j);
+				}
+
+				AR_SetVectorValue(x,(size_t)i,sum);
+		}
+
+		
+		for (i = 0; i < (int_t)mat->nrows; i++)
+		{ 
+				sum = AR_GetVectorValue(x,(size_t)i);
+				AR_SetVectorValue(x,i,sum / AR_GetMatrixValue(mat, (size_t)i,(size_t)i));
+		}
+
+
+		for(i = (int_t)mat->nrows - 1; i >= 0; i--)
+		{
+				sum = AR_GetVectorValue(x,i);
+
+				for (j = i + 1; j < (int_t)mat->nrows; j++)
+				{
+						sum = sum - AR_GetMatrixValue(mat, j,i) * AR_GetVectorValue(x, j);
+				}
+
+				AR_SetVectorValue(x,i, sum);
+		}
+}
+
+void			AR_LDLTInverseMatrix(const arMatrix_t *mat, arMatrix_t *inv)
+{
+		size_t i,j;
+		arVector_t *x,*b;
+		AR_ASSERT(mat != NULL && inv != NULL);
+		AR_ASSERT(mat->nrows == mat->ncols);
+
+		x = AR_CreateVector(mat->ncols);
+		b = AR_CreateVector(mat->nrows);
+		AR_ZeroVector(b);
+		AR_ZeroVector(x);
+
+		AR_SetMatrixSize(inv, mat->nrows, mat->ncols);
+
+		for(i = 0; i < mat->nrows; ++i)
+		{
+				AR_SetVectorValue(b, i, 1.0);
+				AR_LDLTSolveMatrix(mat, x,b);
+
+				for(j = 0; j < mat->nrows; ++j)
+				{
+						AR_SetMatrixValue(inv, j,i, AR_GetVectorValue(x,j));
+				}
+
+				AR_SetVectorValue(b, i, 0.0);
+		}
+
+		AR_DestroyVector(x);
+		x = NULL;
+		AR_DestroyVector(b);
+		b = NULL;
+}
+
+void			AR_UnpackMatrixLDLTFactors(const arMatrix_t *mat, arMatrix_t *L, arMatrix_t *D)
+{
+		size_t i,j;
+		
+		AR_ASSERT(mat != NULL && L != NULL && D != NULL);
+
+		AR_SetMatrixSize(L, mat->nrows, mat->ncols);
+		AR_SetMatrixSize(D, mat->nrows, mat->ncols);
+		
+		AR_ZeroMatrix(L);
+		AR_ZeroMatrix(D);
+
+		for (i = 0; i < mat->nrows; i++)
+		{
+				for(j = 0; j < i; j++) 
+				{
+						AR_SetMatrixValue(L, i,j, AR_GetMatrixValue(mat, i,j));
+				}
+				AR_SetMatrixValue(L,i,i,1.0);
+				AR_SetMatrixValue(D,i,i, AR_GetMatrixValue(mat,i,i));
+		}
+}
+
+
+/*
+从
+LDT=	[	d00,			l10,			l20
+			l10,			d11,			l21
+			l20,			l21,			d22
+		];
+
+还原到A
+
+	A=	[	d00,				d00 * l10,						d00 * l20
+			l10 * d00,			l10 * l10 * d00 + d11,			l10 * l20 * d00 + l21 * d11
+			l20 * d00,			l10 * l20 * d00 + l21 * d11,	l20 * l20 * d00 + l21 * l21 * d11 + d22
+		];
+
+算法：
+
+O = [
+			0,			0,			0,
+			0,			0,			0,
+			0,			0,			0
+	];
+
+	r = 0;
+
+	O = [
+			d00,		l10*d00,			l20*d00,
+			0,			0,			0,
+			0,			0,			0
+	];
+
+	r = 1;
+	v[0] = A(1,0) * A(0,0) = l10 * d00;
+
+	O = [
+			d00,		l10*d00,						l20*d00,
+			l00*d00,	l10 * l10 * d00 + d11,			l10 * l20 * d00 + l21 * d11,
+			0,			0,								0
+	];
+
+	以此类推，得到原来的A
+
+*/
+void			AR_MultiplyMatrixLDLTFactors(const arMatrix_t *mat, arMatrix_t *original_mat)
+{
+		size_t i,j,r;
+		double *v, sum;
+		AR_ASSERT(mat != NULL && original_mat != NULL);
+
+
+		AR_SetMatrixSize(original_mat, mat->nrows, mat->ncols);
+		AR_ZeroMatrix(original_mat);
+		v = AR_NEWARR0(double, mat->nrows);
+
+		for(r = 0; r < mat->nrows; r++)
+		{
+				for(i = 0; i < r; i++)
+				{
+						v[i] = AR_GetMatrixValue(mat, r,i) * AR_GetMatrixValue(mat, i,i);
+				}
+
+				for(i = 0; i < mat->ncols; i++) 
+				{
+						if(i < r)
+						{
+								sum = AR_GetMatrixValue(mat, i,i) * AR_GetMatrixValue(mat, r,i);
+						}else if(i == r)
+						{
+								sum = AR_GetMatrixValue(mat, i,i);
+						}else
+						{
+								sum = AR_GetMatrixValue(mat, r,r) * AR_GetMatrixValue(mat, i,r);
+						}
+
+						for(j = 0; j < i && j < r; j++)
+						{
+								sum = sum + AR_GetMatrixValue(mat, i,j) * v[j];
+						}
+
+						AR_SetMatrixValue(original_mat, r,i, sum);
+				}
+		}
+
+		if(v)
+		{
+				AR_DEL(v);
+				v = NULL;
+		}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
