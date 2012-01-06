@@ -1118,7 +1118,7 @@ printf("------------------------------------------------\r\n");
 
 		double data_ldlt2[] = 
 		{
-				0,		20,		30,
+				10,		20,		30,
 				20,		45,		80,
 				30,		80,		171
 		};
@@ -1132,7 +1132,7 @@ printf("------------------------------------------------\r\n");
 		__print_matrix(mat2);
 		
 		
-		getchar();
+		
 
 		if(!AR_LDLTFactorMatrixSelf(mat))
 		{
@@ -1150,6 +1150,26 @@ printf("------------------------------------------------\r\n");
 		AR_MultiplyMatrixLDLTFactors(mat, mat2);
 		__print_matrix(mat2);
 
+
+
+		double data_cho2[] = 
+		{
+				1,     -2,  
+				-2,		1
+		};
+
+
+		AR_SetMatrixData(mat, 2,2,data_cho2);
+		__print_matrix(mat);
+
+		AR_ASSERT(!AR_CholeskyFactorMatrixSelf(mat));
+		
+		AR_SetMatrixData(mat, 2,2,data_cho2);
+		__print_matrix(mat);
+
+		AR_ASSERT(AR_IsPositiveDefiniteMatrix(mat, DBL_EPSILON));
+
+		
 
 
 
@@ -1211,13 +1231,13 @@ void math_test()
 
 		AR_srand(time(NULL));
 		//misc_test();
-		vector_test();
+		//vector_test();
 
 		//matrix_test();
 		//matrix_test2();
 		//matrix_test3();
 		//matrix_test4();
-		//matrix_test_factorization();
+		matrix_test_factorization();
 
 }
 

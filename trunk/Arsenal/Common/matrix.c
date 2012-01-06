@@ -18,6 +18,21 @@
 AR_NAMESPACE_BEGIN
 
 
+/*****************************************************Debug****************************************************************/
+
+
+static void __print_matrix(const arMatrix_t *mat, size_t precision)
+{
+		arString_t *str = AR_CreateString();
+		AR_MatrixToString(mat, str, precision, NULL, NULL);
+		AR_printf(L"%ls\r\n", AR_GetStringCString(str));
+		AR_DestroyString(str);
+		str = NULL;
+}
+
+
+
+
 /******************************************************Matrix**************************************************************/
 
 struct __arsenal_matrix_tag
@@ -659,12 +674,224 @@ bool_t			AR_IsOrthonormalMatrix(const arMatrix_t *mat, double epsilon)
 
 }
 
-/*********************************未实现**************************************/
 
-bool_t			AR_IsPositiveDefiniteMatrix(const arMatrix_t *mat, double epsilon);
-bool_t			AR_IsSymmetricPositiveDefinite(const arMatrix_t *mat, double epsilon);
-bool_t			AR_IsPositiveSemiDefinite(const arMatrix_t *mat, double epsilon);
-bool_t			AR_IsSymmetricPositiveSemiDefinite(const arMatrix_t *mat, double epsilon);
+
+
+
+
+bool_t			AR_IsPositiveDefiniteMatrix(const arMatrix_t *mat, double epsilon)
+{
+		size_t i, j, k;
+		double d, s,t;
+		arMatrix_t *tmp;
+		bool_t ret;
+		AR_ASSERT(mat != NULL);
+
+		ret = true;
+		tmp = NULL;
+
+		if(!AR_IsSquareMatrix(mat))
+		{
+				ret = false;
+				goto END_POINT;
+		}
+
+		tmp = AR_CopyNewMatrix(mat);
+
+		for ( i = 0; i < mat->nrows; i++ ) 
+		{
+				for ( j = 0; j < mat->ncols; j++ ) 
+				{
+						t = AR_GetMatrixValue(tmp, i,j);
+						s = AR_GetMatrixValue(mat, j,i);
+						AR_SetMatrixValue(tmp, i,j,s + t);
+				}
+		}
+
+		
+
+		for(i = 0; i < tmp->nrows; i++)
+		{
+
+				for(j = i; j < tmp->ncols; j++) /*检查从第i行开始的对角线元素是否小于等于0*/
+				{
+						t = AR_GetMatrixValue(tmp, j,j);
+						if(AR_DBL_LEEQ(t, epsilon))
+						{
+								ret = false;
+								goto END_POINT;
+						}
+				}
+
+				d = 1.0 / AR_GetMatrixValue(tmp,i,i); /*消元， 求U*/
+
+				for ( j = i + 1; j < tmp->nrows; j++ ) 
+				{
+						s = d * AR_GetMatrixValue(tmp, j,i);
+						AR_SetMatrixValue(tmp, j,i, 0.0);
+						
+						for(k = i + 1; k < tmp->ncols; k++ ) 
+						{
+								t = AR_GetMatrixValue(tmp,j,k);
+								t -= AR_GetMatrixValue(tmp, i,k) * s;
+								AR_SetMatrixValue(tmp,j,k, t);
+						}
+				}
+		}
+
+
+
+END_POINT:
+		if(tmp)
+		{
+				AR_DestroyMatrix(tmp);
+				tmp = NULL;
+		}
+
+		return ret;
+
+}
+
+bool_t			AR_IsSymmetricPositiveDefinite(const arMatrix_t *mat, double epsilon)
+{
+		bool_t ret;
+		arMatrix_t *tmp;
+		AR_ASSERT(mat != NULL);
+		
+		ret = true;
+		tmp = NULL;
+		if(!AR_IsSymmetricMatrix(mat, epsilon))
+		{
+				ret = false;
+				goto END_POINT;
+		}
+
+		tmp = AR_CopyNewMatrix(mat);
+		
+		ret = AR_CholeskyFactorMatrixSelf(tmp);
+
+END_POINT:
+		if(tmp)
+		{
+				AR_DestroyMatrix(tmp);
+				tmp = NULL;
+		}
+
+		return ret;
+}
+
+
+
+bool_t			AR_IsPositiveSemiDefinite(const arMatrix_t *mat, double epsilon)
+{
+		size_t i, j, k;
+		double d, s,t;
+		arMatrix_t *tmp;
+		bool_t ret;
+		AR_ASSERT(mat != NULL);
+
+		ret = true;
+		tmp = NULL;
+
+		if(!AR_IsSquareMatrix(mat))
+		{
+				ret = false;
+				goto END_POINT;
+		}
+
+		tmp = AR_CopyNewMatrix(mat);
+
+		for ( i = 0; i < mat->nrows; i++ ) 
+		{
+				for ( j = 0; j < mat->ncols; j++ ) 
+				{
+						t = AR_GetMatrixValue(tmp, i,j);
+						s = AR_GetMatrixValue(mat, j,i);
+						AR_SetMatrixValue(tmp, i,j,s + t);
+				}
+		}
+
+
+		for(i = 0; i < tmp->nrows; i++)
+		{
+
+				for ( j = i; j < tmp->nrows; j++ )
+				{
+						t = AR_GetMatrixValue(tmp, j,j);
+						if(AR_DBL_LE(t, -epsilon))
+						{
+								ret = false;
+								goto END_POINT;
+						}
+
+						if(AR_DBL_GE(t, epsilon))
+						{
+								continue;
+						}
+
+						for ( k = 0; k < tmp->nrows; k++ ) 
+						{
+								t = AR_GetMatrixValue(tmp,k,j);
+								if(AR_DBL_GE(AR_abs_dbl(t), epsilon))
+								{
+										ret = false;
+										goto END_POINT;
+								}
+
+								t = AR_GetMatrixValue(tmp,j,k);
+								if(AR_DBL_GE(AR_abs_dbl(t), epsilon))
+								{
+										ret = false;
+										goto END_POINT;
+								}
+						}
+				}
+
+
+				t = AR_GetMatrixValue(tmp, i,i);
+				if(AR_DBL_LEEQ(t, epsilon))
+				{
+						continue;
+				}
+
+				d = 1.0 / t;
+
+				for ( j = i + 1; j < tmp->nrows; j++ ) 
+				{
+						s = d * AR_GetMatrixValue(tmp, j,i);
+						AR_SetMatrixValue(tmp, j,i, 0.0);
+						
+						for(k = i + 1; k < tmp->ncols; k++ ) 
+						{
+								t = AR_GetMatrixValue(tmp,j,k);
+								t -= AR_GetMatrixValue(tmp, i,k) * s;
+								AR_SetMatrixValue(tmp,j,k, t);
+						}
+				}
+		}
+
+END_POINT:
+		if(tmp)
+		{
+				AR_DestroyMatrix(tmp);
+				tmp = NULL;
+		}
+
+		return ret;
+}
+
+
+bool_t			AR_IsSymmetricPositiveSemiDefinite(const arMatrix_t *mat, double epsilon)
+{
+		AR_ASSERT(mat != NULL);
+
+		if(!AR_IsSymmetricMatrix(mat, epsilon))
+		{
+				return false;
+		}
+		return AR_IsPositiveSemiDefinite(mat, epsilon);
+
+}
 
 
 
@@ -2245,6 +2472,10 @@ A = [	g00 * g00,		g00 * g10,						g00 * g20;
 	];
 
 */
+
+
+
+
 
 bool_t			AR_CholeskyFactorMatrixSelf(arMatrix_t *mat)
 {

@@ -1015,9 +1015,11 @@ bool_t			AR_IsSymmetricMatrix(const arMatrix_t *mat, double epsilon);
 bool_t			AR_IsOrthogonalMatrix(const arMatrix_t *mat, double epsilon);
 bool_t			AR_IsOrthonormalMatrix(const arMatrix_t *mat, double epsilon);
 
-/*未实现*/
+/*是否正定矩阵*/
 bool_t			AR_IsPositiveDefiniteMatrix(const arMatrix_t *mat, double epsilon);
 bool_t			AR_IsSymmetricPositiveDefinite(const arMatrix_t *mat, double epsilon);
+
+/*是否半正定矩阵*/
 bool_t			AR_IsPositiveSemiDefinite(const arMatrix_t *mat, double epsilon);
 bool_t			AR_IsSymmetricPositiveSemiDefinite(const arMatrix_t *mat, double epsilon);
 
