@@ -53,6 +53,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\Arsenal\Arsenal.c" />
     <ClCompile Include="..\..\..\Arsenal\Common\algo.c" />
+    <ClCompile Include="..\..\..\Arsenal\Common\base64.c" />
     <ClCompile Include="..\..\..\Arsenal\Common\buffer.c" />
     <ClCompile Include="..\..\..\Arsenal\Common\byteorder.c" />
     <ClCompile Include="..\..\..\Arsenal\Common\common.c" />
