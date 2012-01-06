@@ -1075,9 +1075,31 @@ printf("------------------------------------------------\r\n");
 		printf("det == %g\r\n", det);
 
 
-		
+		double data_chol[] = 
+		{
+				1,     1     ,1     ,1     ,1     ,1,
+				1     ,2     ,3     ,4     ,5     ,6,
+				1     ,3     ,6    ,10    ,15    ,21,
+				1     ,4    ,10    ,20    ,35    ,56,
+				1     ,5    ,15    ,35    ,70   ,126,
+				1     ,6    ,21    ,56   ,126   ,252
+		};
 
 
+		AR_SetMatrixData(mat, 6,6,data_chol);
+		__print_matrix(mat);
+
+		AR_ASSERT(AR_IsSymmetricMatrix(mat, DBL_EPSILON));
+
+		AR_CholeskyFactorMatrixSelf(mat);
+		AR_ClearMatrixUpperTriangle(mat);
+		__print_matrix(mat);
+
+		AR_MultiplyMatrixCholeskyFactors(mat, mat2);
+		__print_matrix(mat2);
+
+		AR_CholeskyInverseMatrix(mat, mat2);
+		__print_matrix(mat2);
 
 END_POINT:
 
