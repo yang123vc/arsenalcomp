@@ -986,6 +986,8 @@ printf("------------------------------------------------\r\n");
 
 		AR_ReduceMatrixToEchelonFormSelf(mat, index);
 		__print_matrix(mat);
+		printf("rank == %u\r\n", AR_CalcMatrixRank(mat));
+		printf("------------------------\r\n");
 
 
 		double data_rref2[] = 
@@ -1007,7 +1009,8 @@ printf("------------------------------------------------\r\n");
 				printf("%d ", index[i]);
 		}
 		printf("\r\n");
-		
+		printf("rank == %u\r\n", AR_CalcMatrixRank(mat));
+		printf("------------------------\r\n");
 
 
 
@@ -1031,6 +1034,7 @@ printf("------------------------------------------------\r\n");
 				printf("%d ", index[i]);
 		}
 		printf("\r\n");
+		printf("rank == %u\r\n", AR_CalcMatrixRank(mat));
 
 
 
@@ -1054,6 +1058,24 @@ printf("------------------------------------------------\r\n");
 		}
 		printf("\r\n");
 
+		printf("rank == %u\r\n", AR_CalcMatrixRank(mat));
+
+
+		double data_adj[] = 
+		{
+				1, 2, 3,
+				2, 3, 4,
+				3, 4, 5
+		};
+		
+		AR_SetMatrixData(mat, 3,3,data_adj);
+		__print_matrix(mat);
+
+		det = AR_CalcMatrixDeterminant(mat);
+		printf("det == %g\r\n", det);
+
+
+		
 
 
 
