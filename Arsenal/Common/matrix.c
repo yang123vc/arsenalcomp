@@ -224,7 +224,7 @@ void			AR_GetMatrixRow(const arMatrix_t *mat, size_t row,  arVector_t *out)
 		AR_ASSERT(mat != NULL);
 		AR_ASSERT(row < mat->nrows);
 		AR_ASSERT(out != NULL);
-		AR_ChangeVectorSize(out, mat->ncols);
+		AR_SetVectorSize(out, mat->ncols);
 
 		for(i = 0; i < mat->ncols; ++i)
 		{
@@ -242,7 +242,7 @@ void			AR_GetMatrixColumn(const arMatrix_t *mat, size_t col,  arVector_t *out)
 		AR_ASSERT(col < mat->ncols);
 		AR_ASSERT(out != NULL);
 
-		AR_ChangeVectorSize(out, mat->ncols);
+		AR_SetVectorSize(out, mat->ncols);
 
 		for(i = 0; i < mat->nrows; ++i)
 		{
@@ -708,7 +708,7 @@ void			AR_MultiplyMatrixByVector(const arMatrix_t *mat, const arVector_t *other,
 		n = AR_GetMatrixNumColumns(mat);
 		AR_ASSERT(n == AR_GetVectorSize(other));
 
-		AR_ChangeVectorSize(dest, m);
+		AR_SetVectorSize(dest, m);
 		AR_ZeroVector(dest);
 
 		for(i = 0; i < m; ++i)
@@ -736,7 +736,7 @@ void			AR_MultiplyTransposeMatrixByVector(const arMatrix_t *mat, const arVector_
 
 		AR_ASSERT(m == AR_GetVectorSize(other));
 
-		AR_ChangeVectorSize(dest, n);
+		AR_SetVectorSize(dest, n);
 
 		for(i = 0; i < n; ++i)
 		{
@@ -1146,6 +1146,14 @@ void			AR_ReduceMatrixToEchelonFormSelf(arMatrix_t *mat, size_t *index)
 		}
 }
 
+
+void			AR_ReduceMatrixToEchelonForm(const arMatrix_t *mat, size_t *index, arMatrix_t *rm)
+{
+		AR_ASSERT(mat != NULL && rm != NULL);
+		AR_CopyMatrix(rm, mat);
+		AR_ReduceMatrixToEchelonFormSelf(rm, index);
+
+}
 
 
 /**************************通过LU取逆*************************************************
@@ -1748,7 +1756,7 @@ void			AR_LUSolveMatrix(const arMatrix_t *mat, const size_t *index, arVector_t *
 		AR_ASSERT(mat != NULL && b != NULL && x != NULL);
 
 		AR_ASSERT(AR_GetVectorSize(b) == AR_GetMatrixNumRows(mat));
-		AR_ChangeVectorSize(x, AR_GetMatrixNumColumns(mat));
+		AR_SetVectorSize(x, AR_GetMatrixNumColumns(mat));
 
 		for(i = 0; i < (int_t)mat->nrows; ++i)
 		{
@@ -2270,7 +2278,10 @@ bool_t			AR_CholeskyFactorMatrixSelf(arMatrix_t *mat)
 						sum -= AR_GetMatrixValue(mat, i,k) * AR_GetMatrixValue(mat, i,k);
 				}
 
-				if(AR_DBL_LEEQ(sum,0.0)) /*如果是正定矩阵，则sum必定为两个相同实数的平方，因此此病大于0*/
+				/*
+				如果是正定矩阵，则sum必定为两个相同实数的平方，因此值必大于0
+				*/
+				if(AR_DBL_LEEQ(sum,0.0)) 
 				{
 						ret = false;
 						goto END_POINT;
@@ -2328,7 +2339,7 @@ void			AR_CholeskySolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVect
 		AR_ASSERT(mat->nrows == mat->ncols);
 		AR_ASSERT(AR_GetVectorSize(b) >= mat->nrows);
 
-		AR_ChangeVectorSize(x, mat->ncols);
+		AR_SetVectorSize(x, mat->ncols);
 
 		for(i = 0; i < (int_t)mat->nrows; ++i)
 		{
