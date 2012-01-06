@@ -173,6 +173,51 @@ double			AR_GetMatrixValue(const arMatrix_t *mat, size_t row, size_t col)
 		return mat->m[row * mat->ncols + col];
 }
 
+
+void			AR_SetMatrixRowByRawData(arMatrix_t *mat, size_t row,  const double *data)
+{
+		size_t c;
+		AR_ASSERT(mat != NULL && row < mat->nrows);
+		AR_ASSERT(data != NULL);
+
+		for(c = 0; c < mat->ncols; ++c)
+		{
+				AR_SetMatrixValue(mat, row, c, data[c]);
+		}
+}
+
+
+void			AR_SetMatrixColumnByRawData(arMatrix_t *mat, size_t col, const double *data)
+{
+		size_t r;
+		AR_ASSERT(mat != NULL && col < mat->ncols);
+		AR_ASSERT(data != NULL);
+
+		for(r = 0; r < mat->nrows; ++r)
+		{
+				AR_SetMatrixValue(mat, r, col, data[r]);
+		}
+}
+
+
+void			AR_SetMatrixRow(arMatrix_t *mat, size_t row,  const arVector_t *vec)
+{
+		
+		AR_ASSERT(mat != NULL && row < mat->nrows);
+		AR_ASSERT(vec != NULL && AR_GetVectorSize(vec) >= mat->ncols);
+		AR_SetMatrixRowByRawData(mat, row, AR_GetVectorData(vec));
+}
+
+
+void			AR_SetMatrixColumn(arMatrix_t *mat, size_t col,  const arVector_t *vec)
+{
+		AR_ASSERT(mat != NULL && col < mat->ncols);
+		AR_ASSERT(vec != NULL && AR_GetVectorSize(vec) >= mat->nrows);
+
+		AR_SetMatrixColumnByRawData(mat, col, AR_GetVectorData(vec));
+}
+
+
 void			AR_GetMatrixRow(const arMatrix_t *mat, size_t row,  arVector_t *out)
 {
 		size_t i;
@@ -932,6 +977,65 @@ void			AR_TransposeMatrixSelf(arMatrix_t *mat)
 		tmp = NULL;
 }
 
+/*
+
+A = [
+
+     0     0     0     0     2     8     4
+     0     0     0     1     3    11     9
+     0     3   -12    -3    -9   -24   -33
+     0    -2     8     1     6    17    21
+];
+
+
+简化后:
+
+A = [
+     0     1    -4     0     0     3     0
+     0     0     0     1     0    -1     0
+     0     0     0     0     1     4     0
+     0     0     0     0     0     0     1
+];
+
+*/
+
+size_t			AR_CalcMatrixRank(const arMatrix_t *mat)
+{
+		size_t r,c;
+		arMatrix_t *tmp;
+		double t;
+		size_t rank ;
+		AR_ASSERT(mat != NULL);
+
+		rank = 0;
+		tmp = AR_CopyNewMatrix(mat);
+		
+		AR_ReduceMatrixToEchelonFormSelf(tmp, NULL);
+
+		for(r = 0; r < tmp->nrows; ++r)
+		{
+				for(c = 0; c < tmp->ncols; ++c)
+				{
+						t = AR_GetMatrixValue(tmp,r,c);
+
+						if(AR_DBL_GE(t, 0.0))
+						{
+								rank++;
+								break;
+						}
+				}
+		}
+
+		if(tmp)
+		{
+				AR_DestroyMatrix(tmp);
+				tmp = NULL;
+		}
+
+		return rank;
+
+}
+
 
 /*************************************将矩阵化简为简化阶梯型矩阵************************************************/
 
@@ -960,7 +1064,6 @@ void			AR_ReduceMatrixToEchelonFormSelf(arMatrix_t *mat, size_t *index)
 		{
 				max_val = 0.0;
 				r = 0;c = 0;
-				
 				
 				for(i = (size_t)(reduced_r + 1); i < mat->nrows; ++i)
 				{
@@ -1024,10 +1127,15 @@ void			AR_ReduceMatrixToEchelonFormSelf(arMatrix_t *mat, size_t *index)
 						{
 								t = AR_GetMatrixValue(mat, k,i);
 								t -= AR_GetMatrixValue(mat, r,i) * d;
+
+								if(AR_DBL_EQ(t,0.0)) /*有些误差会显示为-0.00000000x*/
+								{
+										t = 0.0;
+								}
+
 								AR_SetMatrixValue(mat, k,i,t);
 						}
 				}
-
 		}
 }
 
@@ -2100,6 +2208,223 @@ void			AR_MultiplyMatrixLDLTFactors(const arMatrix_t *mat, arMatrix_t *original_
 
 
 
+/**************************************************************************************************************************************/
+
+/*
+A = G*G^t;
+
+G =		[		g00,	0,		0;
+				g10,	g11,	0;
+				g20,	g21,	g22
+		];
+
+G^t =	[
+				g00,	g10,	g20;
+				0,		g11,	g21;
+				0,		0,		g22;
+		];
+
+A = [	g00 * g00,		g00 * g10,						g00 * g20;
+		g10 * g00,		g10 * g10 + g11 * g11,			g10 * g20 + g11 * g21;
+		g20 * g00,		g20 * g10 + g21 * g11,			g20 * g20 + g21 * g21 + g22 * g22
+	];
+
+*/
+
+bool_t			AR_CholeskyFactorMatrixSelf(arMatrix_t *mat)
+{
+		size_t i,j,k;
+		double *diag, sum;
+		bool_t ret;
+		AR_ASSERT(mat != NULL);
+		AR_ASSERT(mat->nrows == mat->ncols);
+
+		ret = true;
+		diag = AR_NEWARR0(double, mat->nrows);
+
+		for(i = 0; i < mat->nrows; ++i)
+		{
+				for(j = 0; j < i; ++j)
+				{
+						sum = AR_GetMatrixValue(mat, i,j);
+
+						for(k = 0; k < j; ++k)
+						{
+								sum -= AR_GetMatrixValue(mat, i,k) * AR_GetMatrixValue(mat, j,k);
+						}
+
+						AR_SetMatrixValue(mat, i,j, sum * diag[j]);
+				}
+
+				sum = AR_GetMatrixValue(mat, i,i);
+
+				for(k = 0; k < i; ++k)
+				{
+						sum -= AR_GetMatrixValue(mat, i,k) * AR_GetMatrixValue(mat, i,k);
+				}
+
+				if(AR_DBL_LEEQ(sum,0.0))
+				{
+						ret = false;
+						goto END_POINT;
+				}
+
+				diag[i] = 1 / AR_sqrt_dbl(sum);
+				AR_SetMatrixValue(mat, i,i, diag[i] * sum);
+		}
+
+END_POINT:
+		if(diag)
+		{
+				AR_DEL(diag);
+				diag = NULL;
+		}
+
+		return ret;
+}
+
+
+/*
+G =		[		g00,	0,		0;
+				g10,	g11,	0;
+				g20,	g21,	g22
+		];
+
+G' =	[		g00,	g10,	g20;
+				0,		g11,	g21;
+				0,		0,		g22
+		];
+
+A = GG';
+
+GG' * x = b;
+
+Gz = b;
+
+
+
+		g00 * x0 = b0;
+		g10 * x0 + g11 * x1 = b1;
+		g20 * x0 + g21 * x1 + g22 * x2 = b2;
+
+G'x = z;
+		g00 * x0 + g10 * x1 + g20 * x2 = z0;
+		g11 * x1 + g21 * x2 = z1;
+		g22 * x2 = z2;
+
+*/
+void			AR_CholeskySolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t *b)
+{
+		int_t i,j;
+		double sum;
+
+		AR_ASSERT(mat->nrows == mat->ncols);
+		AR_ASSERT(AR_GetVectorSize(b) >= mat->nrows);
+
+		AR_ChangeVectorSize(x, mat->ncols);
+
+		for(i = 0; i < (int_t)mat->nrows; ++i)
+		{
+				sum = AR_GetVectorValue(b, (size_t)i);
+
+				for(j = 0; j < i; ++j)
+				{
+						sum -= AR_GetMatrixValue(mat, (size_t)i, (size_t)j) * AR_GetVectorValue(x, (size_t)j);
+				}
+				
+				AR_ASSERT(!AR_DBL_EQ(AR_GetMatrixValue(mat, (size_t)i,(size_t)i), 0.0));
+
+				AR_SetVectorValue(x, (size_t)i, sum / AR_GetMatrixValue(mat, (size_t)i,(size_t)i));
+		}
+
+		for(i = (int_t)mat->nrows - 1; i >= 0; --i)
+		{
+				sum = AR_GetVectorValue(x, (size_t)i);
+
+				for(j = i + 1; j < (int_t)mat->nrows; ++j)
+				{
+						sum -= AR_GetMatrixValue(mat,(size_t)j,(size_t)i) * AR_GetVectorValue(x, j);
+				}
+
+				AR_ASSERT(!AR_DBL_EQ(AR_GetMatrixValue(mat, (size_t)i,(size_t)i), 0.0));
+				AR_SetVectorValue(x, (size_t)i, sum / AR_GetMatrixValue(mat, (size_t)i,(size_t)i));
+		}
+}
+
+
+void			AR_CholeskyInverseMatrix(const arMatrix_t *mat, arMatrix_t *inv)
+{
+		size_t i,j;
+		arVector_t *x,*b;
+		AR_ASSERT(mat != NULL && inv != NULL);
+		AR_ASSERT(mat->nrows == mat->ncols);
+
+		x = AR_CreateVector(mat->ncols);
+		b = AR_CreateVector(mat->nrows);
+		AR_ZeroVector(b);
+		AR_ZeroVector(x);
+
+		AR_SetMatrixSize(inv, mat->nrows, mat->ncols);
+
+		for(i = 0; i < mat->nrows; ++i)
+		{
+				AR_SetVectorValue(b, i, 1.0);
+				AR_CholeskySolveMatrix(mat, x,b);
+
+				for(j = 0; j < mat->nrows; ++j)
+				{
+						AR_SetMatrixValue(inv, j,i, AR_GetVectorValue(x,j));
+				}
+
+				AR_SetVectorValue(b, i, 0.0);
+		}
+
+		AR_DestroyVector(x);
+		x = NULL;
+		AR_DestroyVector(b);
+		b = NULL;
+}
+
+/*
+G =		[		g00,	0,		0;
+				g10,	g11,	0;
+				g20,	g21,	g22
+		];
+
+A = G * G';
+
+
+A = [	g00 * g00,		g00 * g10,						g00 * g20;
+		g10 * g00,		g10 * g10 + g11 * g11,			g10 * g20 + g11 * g21;
+		g20 * g00,		g20 * g10 + g21 * g11,			g20 * g20 + g21 * g21 + g22 * g22
+	];
+
+*/
+
+void			AR_MultiplyMatrixCholeskyFactors(const arMatrix_t *mat, arMatrix_t *original_mat)
+{
+		size_t i,j,r;
+		double sum;
+		AR_ASSERT(mat != NULL && original_mat != NULL);
+		AR_SetMatrixSize(original_mat, mat->nrows, mat->ncols);
+		AR_ZeroMatrix(original_mat);
+		
+
+		for(r = 0; r < mat->nrows; r++)
+		{
+				for(i = 0; i < mat->nrows; i++) 
+				{
+						sum = 0.0f;
+						
+						for(j = 0; j <= i && j <= r; j++) 
+						{
+								sum += AR_GetMatrixValue(mat, r,j) * AR_GetMatrixValue(mat, i,j);
+						}
+						AR_SetMatrixValue(original_mat, r,i,sum);
+				}
+		}
+
+}
 
 
 
@@ -2120,10 +2445,7 @@ void			AR_MultiplyMatrixLDLTFactors(const arMatrix_t *mat, arMatrix_t *original_
 
 
 
-
-
-
-
+/************************************************************打印矩阵信息**************************************************************************/
 
 
 void			AR_MatrixToString(const arMatrix_t *mat, arString_t *str, size_t precision, const wchar_t *sp_str, const wchar_t *row_sp)

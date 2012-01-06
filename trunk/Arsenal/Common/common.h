@@ -874,6 +874,8 @@ double			AR_atan2_dbl(double y, double x);
 
 
 
+
+
 /***************************************************************Vector**********************************************************/
 
 
@@ -947,8 +949,17 @@ size_t			AR_GetMatrixNumColumns(const arMatrix_t *mat);
 
 void			AR_SetMatrixValue(arMatrix_t *mat, size_t row, size_t col, double val);
 double			AR_GetMatrixValue(const arMatrix_t *mat, size_t row, size_t col);
+
+
+void			AR_SetMatrixRowByRawData(arMatrix_t *mat, size_t row,  const double *data);
+void			AR_SetMatrixColumnByRawData(arMatrix_t *mat, size_t col, const double *data);
+
+
+void			AR_SetMatrixRow(arMatrix_t *mat, size_t row,  const arVector_t *vec);
+void			AR_SetMatrixColumn(arMatrix_t *mat, size_t col,  const arVector_t *vec);
 void			AR_GetMatrixRow(const arMatrix_t *mat, size_t row,  arVector_t *out);
 void			AR_GetMatrixColumn(const arMatrix_t *mat, size_t col,  arVector_t *out);
+
 const double*	AR_GetMatrixRawData(const arMatrix_t *mat);
 
 
@@ -1009,15 +1020,9 @@ void			AR_SubMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other);
 
 double			AR_CalcMatrixTrace(const arMatrix_t *mat);
 double			AR_CalcMatrixDeterminant(const arMatrix_t *mat);
+size_t			AR_CalcMatrixRank(const arMatrix_t *mat);
 void			AR_TransposeMatrix(const arMatrix_t *mat, arMatrix_t *dest);
 void			AR_TransposeMatrixSelf(arMatrix_t *mat);
-
-
-
-
-/****************************************矩阵分解******************************************/
-
-
 
 
 /*取逆矩阵*/
@@ -1034,6 +1039,10 @@ void			AR_ReduceMatrixToEchelonFormSelf(arMatrix_t *mat, size_t *index);
 
 
 
+/****************************************矩阵分解******************************************/
+
+
+
 /*LU分解*/
 
 bool_t			AR_LUFactorMatrixSelf(arMatrix_t *mat, size_t *index, double *det);
@@ -1044,13 +1053,23 @@ void			AR_MultiplyMatrixLUFactors(const arMatrix_t *mat, const size_t *index, ar
 
 
 
-/*LDLT分解*/
+/*
+LDLT分解 A = L*D*L^t,矩阵为对称方阵
+*/
 
 bool_t			AR_LDLTFactorMatrixSelf(arMatrix_t *mat);
 void			AR_LDLTSolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t *b);
 void			AR_LDLTInverseMatrix(const arMatrix_t *mat, arMatrix_t *inv);
 void			AR_UnpackMatrixLDLTFactors(const arMatrix_t *mat, arMatrix_t *L, arMatrix_t *D);
 void			AR_MultiplyMatrixLDLTFactors(const arMatrix_t *mat, arMatrix_t *original_mat);
+
+
+
+/*Cholesky分解*/
+bool_t			AR_CholeskyFactorMatrixSelf(arMatrix_t *mat);
+void			AR_CholeskySolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t *b);
+void			AR_CholeskyInverseMatrix(const arMatrix_t *mat, arMatrix_t *inv);
+void			AR_MultiplyMatrixCholeskyFactors(const arMatrix_t *mat, arMatrix_t *original_mat);
 
 
 
