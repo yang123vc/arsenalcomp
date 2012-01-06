@@ -2244,7 +2244,7 @@ bool_t			AR_CholeskyFactorMatrixSelf(arMatrix_t *mat)
 		double *diag, sum;
 		bool_t ret;
 		AR_ASSERT(mat != NULL);
-		AR_ASSERT(mat->nrows == mat->ncols);
+		AR_ASSERT(AR_IsSquareMatrix(mat));
 
 		ret = true;
 		diag = AR_NEWARR0(double, mat->nrows);
@@ -2270,7 +2270,7 @@ bool_t			AR_CholeskyFactorMatrixSelf(arMatrix_t *mat)
 						sum -= AR_GetMatrixValue(mat, i,k) * AR_GetMatrixValue(mat, i,k);
 				}
 
-				if(AR_DBL_LEEQ(sum,0.0))
+				if(AR_DBL_LEEQ(sum,0.0)) /*如果是正定矩阵，则sum必定为两个相同实数的平方，因此此病大于0*/
 				{
 						ret = false;
 						goto END_POINT;
