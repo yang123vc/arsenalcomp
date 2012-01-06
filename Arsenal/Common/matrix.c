@@ -666,6 +666,13 @@ bool_t			AR_IsSymmetricPositiveDefinite(const arMatrix_t *mat, double epsilon);
 bool_t			AR_IsPositiveSemiDefinite(const arMatrix_t *mat, double epsilon);
 bool_t			AR_IsSymmetricPositiveSemiDefinite(const arMatrix_t *mat, double epsilon);
 
+
+
+
+
+
+
+
 /*********************************************************************************/
 void			AR_MultiplyMatrixByScalar(const arMatrix_t *mat, double value, arMatrix_t *dest)
 {
