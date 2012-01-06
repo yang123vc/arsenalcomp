@@ -1,3 +1,5 @@
+#if(0)
+
 /*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
@@ -43,3 +45,5 @@ AR_NAMESPACE_END
 
 
 
+
+#endif
