@@ -35,6 +35,7 @@
 
 #define AR_ARCH_VER		ARCH_32
 
+
 #elif(ARCH == ARCH_X64 || ARCH == ARCH_IA64)
 
 

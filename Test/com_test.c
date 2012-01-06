@@ -1454,6 +1454,43 @@ void rand_test()
 		}
 }
 
+
+/*
+size_t AR_base64_encode(byte_t  *out, size_t olen, const byte_t *input, size_t ilen);
+size_t AR_base64_decode(byte_t  *out, size_t olen, const byte_t *input, size_t ilen);
+*/
+static void base64_test()
+{
+		static const wchar_t *src = L"中国字！！~~中国字~~~！！！中文网中文！";
+
+		size_t n = AR_base64_encode(NULL, 0, (byte_t*)src, AR_wcslen(src) * sizeof(wchar_t));
+
+		AR_printf(L"src == %d, n = %d\r\n", AR_wcslen(src), n);
+
+		char *o = new char[n + 1];
+
+		n = AR_base64_encode((byte_t*)o, n + 1, (byte_t*)src, AR_wcslen(src) * sizeof(wchar_t));
+		AR_printf(L"n = %d\r\n", n);
+		o[n] = 0;
+
+		AR_printf(L"%hs\r\n", o);
+
+		
+
+		n = AR_base64_decode(NULL, 0, (const byte_t*)o, AR_strlen(o));
+		AR_printf(L"decode n = %d\r\n", n);
+		
+		byte_t *buf = new byte_t[n + 2];
+		memset(buf, 0, n + 1);
+		
+		n = AR_base64_decode(buf, n + 2, (const byte_t*)o, AR_strlen(o));
+		AR_printf(L"decode n = %d\r\n", n);
+		AR_printf(L"%ls\r\n", buf);
+		
+		AR_ASSERT(AR_wcscmp((const wchar_t*)buf, src) == 0);
+
+}
+
 void com_test()
 {
 
@@ -1524,7 +1561,7 @@ void com_test()
 
 		//rand_test();
 		
-
+		base64_test();
 		
 }
 

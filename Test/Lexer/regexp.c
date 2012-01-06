@@ -1,3 +1,6 @@
+
+#if(0)
+
 /*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
@@ -127,3 +130,4 @@ const rgxNode_t*		Regex_FindFromNameSet(const rgxNameSet_t	*set, const wchar_t *
 
 AR_NAMESPACE_END
 
+#endif
