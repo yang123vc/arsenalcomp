@@ -66,7 +66,7 @@ void vector_test()
 		out = NULL;
 		}
 
-		double res = AR_CalcInnerProduct(vec, vec);
+		double res = AR_CalcVectorInnerProduct(vec, vec);
 
 		AR_printf(L"%f\r\n", res);
 
@@ -94,6 +94,17 @@ void vector_test()
 		AR_DestroyString(out);
 		out = NULL;
 		}
+
+		AR_SetVectorSize(vec, 3);
+
+		AR_SetVectorValue(vec, 0, 1);
+		AR_SetVectorValue(vec, 1, -2);
+		AR_SetVectorValue(vec, 2, 3);
+
+		AR_printf(L"AR_VEC_NORM_1 == %g\r\n", AR_CalcVectorNormNumber(vec, AR_VEC_NORM_1));
+		AR_printf(L"AR_VEC_NORM_2 == %g\r\n", AR_CalcVectorNormNumber(vec, AR_VEC_NORM_2));
+		AR_printf(L"AR_VEC_NORM_MAX == %g\r\n", AR_CalcVectorNormNumber(vec, AR_VEC_NORM_MAX));
+		AR_printf(L"AR_VEC_NORM_NEGAMAX == %g\r\n", AR_CalcVectorNormNumber(vec, AR_VEC_NORM_NEGAMAX));
 
 
 
@@ -430,7 +441,7 @@ void matrix_test2()
 		AR_ZeroMatrix(mat);
 		AR_ASSERT(AR_IsZeroMatrix(mat, DBL_EPSILON));
 
-		AR_ChangeVectorSize(vtmp, AR_GetMatrixNumRows(mat));
+		AR_SetVectorSize(vtmp, AR_GetMatrixNumRows(mat));
 		AR_RandomVector(vtmp);
 
 		AR_DiagonalMatrix(mat, vtmp);
@@ -613,7 +624,7 @@ void matrix_test3()
 
 		AR_ASSERT(AR_IsDiagonalMatrix(mat3, DBL_EPSILON));
 
-		AR_ChangeVectorSize(vtmp, 4);
+		AR_SetVectorSize(vtmp, 4);
 		for(size_t i = 0; i < 4; ++i)
 		{
 				AR_SetVectorValue(vtmp,i, i + 1);
@@ -1101,6 +1112,47 @@ printf("------------------------------------------------\r\n");
 		AR_CholeskyInverseMatrix(mat, mat2);
 		__print_matrix(mat2);
 
+
+
+
+
+		double data_ldlt2[] = 
+		{
+				0,		20,		30,
+				20,		45,		80,
+				30,		80,		171
+		};
+
+		AR_SetMatrixData(mat, 3,3,data_ldlt2);
+		__print_matrix(mat);
+
+		AR_CopyMatrix(mat2, mat);
+		
+		AR_ASSERT(AR_LUFactorMatrixSelf(mat2, index, NULL));
+		__print_matrix(mat2);
+		
+		
+		getchar();
+
+		if(!AR_LDLTFactorMatrixSelf(mat))
+		{
+				AR_ASSERT(false);
+		}
+
+		__print_matrix(mat);
+
+
+		AR_UnpackMatrixLDLTFactors(mat, L,U);
+
+		__print_matrix(L);
+		__print_matrix(U);
+
+		AR_MultiplyMatrixLDLTFactors(mat, mat2);
+		__print_matrix(mat2);
+
+
+
+
 END_POINT:
 
 		if(L)
@@ -1159,13 +1211,13 @@ void math_test()
 
 		AR_srand(time(NULL));
 		//misc_test();
-		//vector_test();
+		vector_test();
 
 		//matrix_test();
 		//matrix_test2();
 		//matrix_test3();
 		//matrix_test4();
-		matrix_test_factorization();
+		//matrix_test_factorization();
 
 }
 

@@ -889,38 +889,59 @@ void			AR_DestroyVector(arVector_t *vec);
 arVector_t*		AR_CopyNewVector(const arVector_t *vec);
 void			AR_CopyVector(arVector_t *dest, const arVector_t *src);
 
-void			AR_ChangeVectorSize(arVector_t *vec, size_t size);
+void			AR_SetVectorSize(arVector_t *vec, size_t size);
 size_t			AR_GetVectorSize(const arVector_t *vec);
+
 void			AR_SetVectorData(arVector_t *vec, size_t size, const double *data);
+const double*	AR_GetVectorData(const arVector_t *vec);
+
+void			AR_SwapElements(arVector_t *vec, size_t l, size_t r);
+
+double			AR_GetVectorValue(const arVector_t *vec, size_t idx);
+void			AR_SetVectorValue(arVector_t *vec, size_t idx, double val);
+
+int_t			AR_CompareVector(const arVector_t *l, const arVector_t *r, double epsilon);
+
 
 void			AR_ZeroVector(arVector_t *vec);
 void			AR_NegateVector(arVector_t *vec);
 void			AR_ClampVector(arVector_t *vec, double minval, double maxval);
 void			AR_RandomVector(arVector_t *vec);
+void			AR_NormalizeVector(arVector_t *vec);
+
 
 double			AR_CalcVectorLength(const arVector_t *vec);
 double			AR_CalcVectorLengthSqr(const arVector_t *vec);
-void			AR_NormalizeVector(arVector_t *vec);
 double			AR_CalcVectorDistanceByVector(const arVector_t *vec, const arVector_t *other);
-
-const double*	AR_GetVectorData(const arVector_t *vec);
-void			AR_SwapElements(arVector_t *vec, size_t l, size_t r);
+double			AR_CalcVectorInnerProduct(const arVector_t *vec, const arVector_t *other);
 
 
-int_t			AR_CompareVector(const arVector_t *l, const arVector_t *r);
-int_t			AR_CompareVectorWithEpsilon(const arVector_t *l, const arVector_t *r, double epsilon);
 
-double			AR_GetVectorValue(const arVector_t *vec, size_t idx);
-void			AR_SetVectorValue(arVector_t *vec, size_t idx, double val);
 
-void			AR_AddVectorByVector(arVector_t *vec, const arVector_t *other);
-void			AR_SubVectorByVector(arVector_t *vec, const arVector_t *other);
+void			AR_AddVectorByVectorSelf(arVector_t *vec, const arVector_t *other);
+void			AR_SubVectorByVectorSelf(arVector_t *vec, const arVector_t *other);
+void			AR_MulVectorByValSelf(arVector_t *vec, double val);
+void			AR_DivVectorByValSelf(arVector_t *vec, double val);
 
-void			AR_MulVectorByVal(arVector_t *vec, double val);
-void			AR_DivVectorByVal(arVector_t *vec, double val);
 
-double			AR_CalcInnerProduct(arVector_t *vec, const arVector_t *other);
 
+void			AR_AddVectorByVector(const arVector_t *vec, const arVector_t *other, arVector_t *dest);
+void			AR_SubVectorByVector(const arVector_t *vec, const arVector_t *other, arVector_t *dest);
+void			AR_MulVectorByVal(const arVector_t *vec, double val, arVector_t *dest);
+void			AR_DivVectorByVal(const arVector_t *vec, double val, arVector_t *dest);
+
+
+
+
+typedef enum
+{
+		AR_VEC_NORM_1,
+		AR_VEC_NORM_2,
+		AR_VEC_NORM_MAX,
+		AR_VEC_NORM_NEGAMAX
+}arVectorNormType_t;
+
+double			AR_CalcVectorNormNumber(const arVector_t *vec, arVectorNormType_t t);
 
 
 
@@ -1036,6 +1057,7 @@ void			AR_InverseSolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVecto
 
 /*matlab rref(A)*/
 void			AR_ReduceMatrixToEchelonFormSelf(arMatrix_t *mat, size_t *index);
+void			AR_ReduceMatrixToEchelonForm(const arMatrix_t *mat, size_t *index, arMatrix_t *rm);
 
 
 
