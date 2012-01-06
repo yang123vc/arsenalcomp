@@ -767,6 +767,12 @@ int_t 			AR_str_to_escstr_buf_n(wchar_t *dest, size_t len, const wchar_t *src, s
 
 
 
+/**************************************************************base64*********************************************************/
+size_t AR_base64_encode(byte_t  *out, size_t olen, const byte_t *input, size_t ilen);
+size_t AR_base64_decode(byte_t  *out, size_t olen, const byte_t *input, size_t ilen);
+
+
+
 /***************************************************************Text**********************************************************/
 
 

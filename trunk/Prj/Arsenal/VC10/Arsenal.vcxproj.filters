@@ -159,6 +159,9 @@
     <ClCompile Include="..\..\..\Arsenal\Common\vector.c">
       <Filter>Arsenal\Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Arsenal\Common\base64.c">
+      <Filter>Arsenal\Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Arsenal\Common\common.h">
