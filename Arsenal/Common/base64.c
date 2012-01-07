@@ -17,6 +17,81 @@
 AR_NAMESPACE_BEGIN
 
 
+
+
+
+static void __six_for_uint32_little(byte_t *out, uint_32_t w)
+{
+		const byte_t *b;
+		AR_ASSERT(out != NULL);
+		
+		b = (const byte_t*)&w;
+		
+		out[0] = ( b[0] & 0xfc ) >> 2;
+		out[1] = ( ( b[0] & 0x3 ) << 4 ) + ( ( b[1] & 0xf0 ) >> 4 );
+		out[2] = ( ( b[1] & 0xf ) << 2 ) + ( ( b[2] & 0xc0 ) >> 6 );
+		out[3] = b[2] & 0x3f;
+}
+
+static void __six_for_uint32_big(byte_t *out, uint_32_t w)
+{
+		size_t i;
+		AR_ASSERT(out != NULL);
+
+		for(i = 0; i < 4 ; i++)
+		{
+				out[i] = w & 0x3f;
+				w >>= 6;
+		}
+}
+
+
+static uint_32_t __uint32_for_six_little(const byte_t *input)
+{
+		uint_32_t ret;
+		byte_t *b;
+		AR_ASSERT(input != NULL);
+		
+		ret = 0;
+		b = (byte_t*)&ret;
+		b[0] |= input[0] << 2;
+		b[0] |= (input[1] & 0x30 ) >> 4;
+		b[1] |= (input[1] & 0xf ) << 4;
+		b[1] |= (input[2] & 0x3c ) >> 2;
+		b[2] |= (input[2] & 0x3 ) << 6;
+		b[2] |= input[3];
+		return ret;
+}
+
+static uint_32_t __uint32_for_six_big(const byte_t *input)
+{
+		uint_32_t ret;
+		AR_ASSERT(input != NULL);
+		ret = 0;
+
+		ret |= input[0];
+		ret |= input[1] << 6;
+		ret |= input[2] << 2*6;
+		ret |= input[3] << 3*6;
+		return ret;
+}
+
+
+#if defined(ARCH_BIG_ENDIAN)
+						
+#define __six_for_uint32		__six_for_uint32_big
+#define __uint32_for_six		__uint32_for_six_big
+						
+#else
+
+#define __six_for_uint32	__six_for_uint32_little
+#define __uint32_for_six	__uint32_for_six_little
+
+#endif
+
+
+
+
 /***********************************************************base64*********************************************************/
 
 static const char ___g_base64_digits[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
@@ -28,7 +103,7 @@ static size_t __base64_need_len(const byte_t *input, size_t ilen)
 		need_n = 0;
 		need_n = ilen / 3 * 4;
 
-		if(need_n % 3)
+		if(ilen % 3)
 		{
 				need_n += 4;
 		}
@@ -38,10 +113,14 @@ static size_t __base64_need_len(const byte_t *input, size_t ilen)
 
 
 
+
+
+
+
 size_t AR_base64_encode(byte_t  *out, size_t olen, const byte_t *input, size_t ilen)
 {
-		size_t r, need_n;
-
+		size_t r, need_n,i,j;
+		uint_32_t w;
 		AR_ASSERT(input != NULL && ilen > 0);
 
 		need_n = __base64_need_len(input, ilen);
@@ -58,30 +137,34 @@ size_t AR_base64_encode(byte_t  *out, size_t olen, const byte_t *input, size_t i
 		
 		r = ilen;
 		
-		while(r >= 3)
+		w = 0;
+		i = 0;
+		while(r > 0)
 		{
-				*out++ = ___g_base64_digits[input[0] >> 2];
-				*out++ = ___g_base64_digits[((input[0] << 4) & 0x30)|(input[1] >> 4)];
-				*out++ = ___g_base64_digits[((input[1] << 2) & 0x3c)|(input[2] >> 6)];
-				*out++ = ___g_base64_digits[input[2] & 0x3f];
-				input += 3;
-				r -= 3;
-		}
-
-		if(r > 0)
-		{
-				byte_t fragment;
-				*out++ = ___g_base64_digits[input[0] >> 2];
-				fragment = (input[0] << 4) & 0x30;
-
-				if(r > 1)
+				w |= *input << i*8;
+				++input;
+				--r;
+				++i;
+				if(r == 0 || i == 3)
 				{
-						fragment |= input[1] >> 4;
-				}
+						byte_t tmp[4];
+						__six_for_uint32(tmp, w);
+						for(j = 0; j * 6 < i * 8; ++j)
+						{
+								*out++ = ___g_base64_digits[tmp[j]];
+						}
 
-				*out++ = ___g_base64_digits[fragment];
-				*out++ = (r < 2) ? '=' : ___g_base64_digits[(input[1] << 2) & 0x3c];
-				*out++ = '=';
+						if(r == 0)
+						{
+								for(j = i; j < 3; ++j)
+								{
+										*out++ = '=';
+								}
+						}
+
+						w = 0;
+						i = 0;
+				}
 		}
 
 		return need_n;
@@ -146,32 +229,7 @@ size_t AR_base64_decode(byte_t  *out, size_t olen, const byte_t *input, size_t i
 				{
 						
 						uint_32_t w = 0;
-
-#if defined(ARCH_BIG_ENDIAN)
-						
-						{
-						w |= tmp[0];
-						w |= tmp[1] << 6;
-						w |= tmp[2] << 2*6;
-						w |= tmp[3] << 3*6;
-						}
-						
-						
-#else
-						{
-						byte_t *t;
-						t = (byte_t*)&w;
-
-						t[0] |= tmp[0] << 2;
-						t[0] |= (tmp[1] & 0x30 ) >> 4;
-						t[1] |= (tmp[1] & 0xf ) << 4;
-						t[1] |= (tmp[2] & 0x3c ) >> 2;
-						t[2] |= (tmp[2] & 0x3 ) << 6;
-						t[2] |= tmp[3];
-						}
-
-#endif
-
+						w = __uint32_for_six(tmp);
 						
 						for(j = 0; j * 8 < k * 6; ++j)
 						{

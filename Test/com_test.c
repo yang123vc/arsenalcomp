@@ -1488,6 +1488,40 @@ static void base64_test()
 		AR_printf(L"%ls\r\n", buf);
 		
 		AR_ASSERT(AR_wcscmp((const wchar_t*)buf, src) == 0);
+}
+
+static void base64_test2()
+{
+		const char *src = "Man is distinguished, not only by his reason, but by this singular passion from other animals, which is a lust of the mind, that by a perseverance of delight in the continued and indefatigable generation of knowledge, exceeds the short vehemence of any carnal pleasure.";
+
+
+		size_t n = AR_base64_encode(NULL, 0, (byte_t*)src, AR_strlen(src) * sizeof(char));
+
+		AR_printf(L"src == %d, n = %d\r\n", AR_strlen(src), n);
+
+		char *o = new char[n + 1];
+
+		n = AR_base64_encode((byte_t*)o, n + 1, (byte_t*)src, AR_strlen(src) * sizeof(char));
+		AR_printf(L"n = %d\r\n", n);
+		o[n] = 0;
+
+		AR_printf(L"%hs\r\n", o);
+
+		
+
+		n = AR_base64_decode(NULL, 0, (const byte_t*)o, AR_strlen(o));
+		AR_printf(L"decode n = %d\r\n", n);
+		
+		byte_t *buf = new byte_t[n + 2];
+		memset(buf, 0, n + 1);
+		
+		n = AR_base64_decode(buf, n + 2, (const byte_t*)o, AR_strlen(o));
+		AR_printf(L"decode n = %d\r\n", n);
+		AR_printf(L"%ls\r\n", buf);
+		
+		AR_ASSERT(AR_strcmp((const char*)buf, src) == 0);
+
+
 
 }
 
@@ -1561,7 +1595,8 @@ void com_test()
 
 		//rand_test();
 		
-		base64_test();
+		//base64_test();
+		base64_test2();
 		
 }
 

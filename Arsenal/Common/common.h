@@ -635,48 +635,6 @@ size_t					AR_wcs_to_str(arCodePage_t cp, const wchar_t *input, size_t n, char *
 char*					AR_wcs_convto_str(arCodePage_t cp, const wchar_t *input, size_t in_n);
 wchar_t*				AR_str_convto_wcs(arCodePage_t cp, const char *input, size_t in_n);
 
-/**********************************************************Threading*************************************************************/
-
-/*thread模块初始化函数，只能由AR_Init调用*/
-void			AR_InitThread();
-void			AR_UnInitThread();
-
-/*uint_t		AR_CompExchange(volatile uint_t *dest, uint_t exch, uint_t compval);*/
-
-int_t			AR_AtomicInc(volatile int_t *dest);
-int_t			AR_AtomicDec(volatile int_t *dest);
-
-
-#define			AR_MAXSPIN_COUNT		5000
-
-#if defined(OS_FAMILY_UNIX)
-	
-	#if(OS_TYPE == OS_IOS || OS_TYPE == OS_MAC_OS_X)
-		typedef			volatile int_t				arSpinLock_t;	
-#else
-		typedef			pthread_spinlock_t	        arSpinLock_t;
-
-	#endif
-
-#elif defined(OS_FAMILY_WINDOWS)
-
-    typedef         volatile int_t					arSpinLock_t;
-#else
-
-#endif
-
-void			AR_InitSpinLock(arSpinLock_t *lock);
-void			AR_UnInitSpinLock(arSpinLock_t *lock);
-void			AR_LockSpinLock(arSpinLock_t *lock);
-void			AR_UnLockSpinLock(arSpinLock_t *lock);
-
-void			AR_YieldThread();
-void			AR_Sleep(size_t millisecond);
-
-uint_64_t		AR_GetTime_Microseconds();
-uint_64_t		AR_GetTime_Milliseconds();
-
-
 
 /*******************************************************BitMark****************************************************************/
 
@@ -805,6 +763,52 @@ bool_t	AR_SaveBomTextToBinary(arBuffer_t *output, arTxtBom_t bom, const wchar_t 
 /************************************************************************************************************************************************************************/
 
 
+
+/**********************************************************Threading*************************************************************/
+
+/*thread模块初始化函数，只能由AR_Init调用*/
+void			AR_InitThread();
+void			AR_UnInitThread();
+
+/*uint_t		AR_CompExchange(volatile uint_t *dest, uint_t exch, uint_t compval);*/
+
+int_t			AR_AtomicInc(volatile int_t *dest);
+int_t			AR_AtomicDec(volatile int_t *dest);
+
+
+#define			AR_MAXSPIN_COUNT		5000
+
+#if defined(OS_FAMILY_UNIX)
+	
+	#if(OS_TYPE == OS_IOS || OS_TYPE == OS_MAC_OS_X)
+		typedef			volatile int_t				arSpinLock_t;	
+#else
+		typedef			pthread_spinlock_t	        arSpinLock_t;
+
+	#endif
+
+#elif defined(OS_FAMILY_WINDOWS)
+
+    typedef         volatile int_t					arSpinLock_t;
+#else
+
+#endif
+
+void			AR_InitSpinLock(arSpinLock_t *lock);
+void			AR_UnInitSpinLock(arSpinLock_t *lock);
+void			AR_LockSpinLock(arSpinLock_t *lock);
+void			AR_UnLockSpinLock(arSpinLock_t *lock);
+
+void			AR_YieldThread();
+void			AR_Sleep(size_t millisecond);
+
+uint_64_t		AR_GetTime_Microseconds();
+uint_64_t		AR_GetTime_Milliseconds();
+
+
+
+
+/***************************************************************************************************************************************/
 
 /*******************************************************************Math*************************************************************************************************/
 
