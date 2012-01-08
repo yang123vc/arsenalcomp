@@ -1780,6 +1780,142 @@ void			AR_InverseSolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVecto
 
 
 
+/****************************************************************矩阵分解****************************************/
+
+void			AR_TriDiagonalClearMatrixSelf(arMatrix_t *mat)
+{
+		size_t i,j;
+		AR_ASSERT(mat != NULL);
+		AR_ASSERT(AR_IsSquareMatrix(mat));
+
+		if(mat->nrows < 2)
+		{
+				return;
+		}
+
+		for(i = 0; i < mat->nrows - 2;  i++)
+		{
+				for(j = i+2; j < mat->ncols; j++)
+				{
+						AR_SetMatrixValue(mat, i,j,0.0);
+						AR_SetMatrixValue(mat, j,i,0.0);
+				}
+		}
+
+}
+
+bool_t			AR_TriDiagonalSolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t *b)
+{
+		size_t i;
+		int_t k;
+		bool_t ret;
+		double *tmp, d,t;
+		AR_ASSERT(mat != NULL && x != NULL && b != NULL);
+		
+		AR_ASSERT(AR_IsSquareMatrix(mat));
+		AR_ASSERT(AR_GetVectorSize(b) >= mat->nrows);
+		
+		AR_SetVectorSize(x, mat->ncols);
+
+		ret = true;
+		tmp = NULL;
+
+		tmp = AR_NEWARR0(double, mat->nrows);
+
+
+		d = AR_GetMatrixValue(mat, 0,0);
+		if(AR_DBL_EQ(d,0.0))
+		{
+				ret = false;
+				goto END_POINT;
+		}
+		
+		d = 1.0 / d;
+		AR_SetVectorValue(x, 0, AR_GetVectorValue(b,0) * d);
+		
+		for(i = 1; i < mat->nrows; ++i)
+		{
+				tmp[i] = AR_GetMatrixValue(mat, i - 1, i) * d;
+				d = AR_GetMatrixValue(mat, i,i) - AR_GetMatrixValue(mat, i, i -1) * tmp[i];
+				
+				if(AR_DBL_EQ(d,0.0))
+				{
+						ret = false;
+						goto END_POINT;
+				}
+
+				d = 1.0 / d;
+
+				t = (AR_GetVectorValue(b, i) - AR_GetMatrixValue(mat, i, i - 1) * AR_GetVectorValue(x, i - 1)) * d;
+				AR_SetVectorValue(x, i, t);
+		}
+
+
+		
+		for(k = (int_t)mat->nrows - 2; k >= 0; k--)
+		{
+				t = AR_GetVectorValue(x,k);
+				t = t - tmp[k + 1] * AR_GetVectorValue(x, k + 1);
+				AR_SetVectorValue(x, k, t);
+		}
+		
+
+END_POINT:
+		if(tmp)
+		{
+				AR_DEL(tmp);
+				tmp = NULL;
+		}
+
+		return ret;
+
+
+}
+
+bool_t			AR_TriDiagonalInverseMatrix(const arMatrix_t *mat, arMatrix_t *inv)
+{
+		bool_t ret;
+		size_t i,j;
+		arVector_t *x,*b;
+		AR_ASSERT(mat != NULL && inv != NULL);
+		AR_ASSERT(AR_IsSquareMatrix(mat));
+
+		ret = true;
+
+		x = AR_CreateVector(mat->ncols);
+		b = AR_CreateVector(mat->nrows);
+		AR_ZeroVector(b);
+		AR_ZeroVector(x);
+		AR_SetMatrixSize(inv, mat->nrows, mat->ncols);
+
+		for(i = 0; i < mat->nrows; ++i)
+		{
+				AR_SetVectorValue(b, i, 1.0);
+				
+				if(!AR_TriDiagonalSolveMatrix(mat, x, b))
+				{
+						ret = false;
+						goto END_POINT;
+				}
+
+				for(j = 0; j < mat->nrows; ++j)
+				{
+						AR_SetMatrixValue(inv, j,i, AR_GetVectorValue(x,j));
+				}
+
+				AR_SetVectorValue(b, i, 0.0);
+		}
+
+END_POINT:
+		AR_DestroyVector(x);
+		x = NULL;
+		AR_DestroyVector(b);
+		b = NULL;
+
+		return ret;
+}
+
+
 
 /*
 LU分解

@@ -1190,7 +1190,89 @@ void float_test()
 }
 
 
+static void float_test_2()
+{
+		const wchar_t *s = L"0123";
+		
+		AR_ASSERT(!AR_wcs_is_float(s, s + AR_wcslen(s)));
 
+
+		s = L"0.123e";
+		
+		AR_ASSERT(!AR_wcs_is_float(s, s + AR_wcslen(s)));
+
+		s = L"0.123e20";
+		AR_ASSERT(AR_wcs_is_float(s, s + AR_wcslen(s)));
+
+		s = L"0.123e+20";
+		AR_ASSERT(AR_wcs_is_float(s, s + AR_wcslen(s)));
+
+		s = L"0.123e-20";
+		AR_ASSERT(AR_wcs_is_float(s, s + AR_wcslen(s)));
+
+
+		s = L"0.123e20";
+		double n = 0.0;
+
+		s = AR_wtod_s(s, s + wcslen(s), &n);
+
+
+		s = L"0.123e+20";
+		n = 0.0;
+
+		s = AR_wtod_s(s, s + wcslen(s), &n);
+
+
+		s = L"0.123e-20";
+		n = 0.0;
+
+		s = AR_wtod_s(s, s + wcslen(s), &n);
+
+
+		s = L"0.123e";
+		n = 0.0;
+
+		s = AR_wtod_s(s, s + wcslen(s), &n);
+
+		{
+				s = L"0.123e1";
+				AR_ASSERT(!AR_wcs_is_int(s, s + wcslen(s)));
+
+				s = L"0.123e";
+				AR_ASSERT(AR_wcs_is_int(s, s + wcslen(s)));
+
+
+				s = L"0x468321xyz";
+				AR_ASSERT(AR_wcs_is_int(s, s + wcslen(s)));
+
+				s = L"0464321xyz";
+				AR_ASSERT(AR_wcs_is_int(s, s + wcslen(s)));
+
+				s = L"0464321xyz";
+				AR_ASSERT(AR_wcs_is_int(s, s + wcslen(s)));
+
+				s = L"11111111111111111111111111111111";
+				AR_ASSERT(!AR_wcs_is_int(s, s + wcslen(s)));
+
+				s = L"-11111111111111111111111111111111";
+				AR_ASSERT(!AR_wcs_is_int(s, s + wcslen(s)));
+
+				s = L"11111111111111111111111111111111";
+				AR_ASSERT(!AR_wcs_is_int(s, s + wcslen(s)));
+
+				s = L"-0x468321xyz";
+				AR_ASSERT(AR_wcs_is_int(s, s + wcslen(s)));
+
+
+
+		}
+
+		
+
+		int x=33;
+
+		
+}
 
 
 
@@ -1596,7 +1678,9 @@ void com_test()
 		//rand_test();
 		
 		//base64_test();
-		base64_test2();
+		//base64_test2();
+
+		float_test_2();
 		
 }
 
