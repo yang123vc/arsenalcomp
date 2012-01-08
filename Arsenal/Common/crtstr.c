@@ -1218,31 +1218,8 @@ const wchar_t*	AR_wtod(const wchar_t *in, double *num)
 }
 
 
-/*
-const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *num)
-{
-		const wchar_t *stop;
-		wchar_t *buf;
-		AR_ASSERT(in != NULL && end != NULL && num != NULL);
 
-		if(in >= end)return NULL;
-		buf  = AR_wcsndup(in, end - in);
 
-		stop = AR_wtod(buf, num);
-
-		if(stop == NULL)
-		{
-				AR_DEL(buf);
-				return NULL;
-		}else
-		{
-				const wchar_t *res;
-				res = &in[stop - buf];
-				AR_DEL(buf);
-				return res;
-		}
-}
-*/
 
 
 /*此函数貌似不太完整，对溢出检测也没做到位*/
@@ -1301,14 +1278,16 @@ const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *out)
 				if(*p == L'+')
 				{
 						factor = true;
+						++p;
 				}else if(*p == L'-')
 				{
 						factor = false;
+						++p;
 				}else
 				{
-						return NULL;
+						factor = true;
 				}
-				++p;
+				
 				e = 0;
 				is_ok = false;
 				while(p < end && *p >= L'0' && *p <= L'9')
@@ -1334,6 +1313,7 @@ const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *out)
 		*out = result;
 		return is_ok ? p : NULL;
 }
+
 
 
 
@@ -1856,6 +1836,87 @@ const wchar_t* AR_reverse_wcsistr(const wchar_t *str, size_t l,  const wchar_t *
 		return str + delta;
 }
 
+
+
+
+bool_t	AR_wcs_is_float(const wchar_t *in, const wchar_t *end)
+{
+		const wchar_t *p;
+		
+		bool_t is_float;
+
+		AR_ASSERT(in != NULL && end != NULL && in <= end);
+
+		is_float = false;
+
+		p = AR_wcstrim_space_s(in, end);
+
+		if(*p == L'-' || *p == L'+')
+		{
+				++p;
+		}
+
+
+		while(p < end && *p >= L'0' && *p <= L'9')/*可能是个整数*/
+		{
+				++p;
+		}
+
+		if(p < end && *p == L'.')/*也许是浮点，但可能有错误*/
+		{
+				is_float = true;
+				++p;
+
+				while(p < end && *p >= L'0' && *p <= L'9')
+				{
+						++p;
+				}
+		}
+
+		if(p < end && (*p == L'e' || *p == L'E'))/*可能是浮点，但是会有错误*/
+		{
+				++p;
+
+				if(*p == L'+' || *p == L'-')
+				{
+						++p;
+				}
+				
+				is_float = false;
+
+				while(p < end && *p >= L'0' && *p <= L'9')/*e后必须跟随指数*/
+				{
+						++p;
+						is_float = true;
+				}
+		}
+		return is_float;
+}
+
+bool_t	AR_wcs_is_int(const wchar_t *in, const wchar_t *end)
+{
+		int_64_t un;
+
+		AR_ASSERT(in != NULL && end != NULL && in <= end);
+
+		if(AR_wcs_is_float(in, end))
+		{
+				return false;
+		}
+
+		
+		if(AR_wtoi64_s(in, end, &un, 0) != NULL)
+		{
+				return true;
+		}
+
+		if(AR_wtou64_s(in, end, (uint_64_t*)&un, 0) != NULL)
+		{
+				return true;
+		}
+
+		return false;
+}
 
 
 

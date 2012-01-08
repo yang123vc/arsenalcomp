@@ -448,7 +448,7 @@ FAILED_POINT:
 
 
 
-/*返回消耗掉的数据长度，<0则错误*/
+
 
 static bool_t	__dectect_encoding(arBuffer_t *input, arTxtBom_t *bom)
 {

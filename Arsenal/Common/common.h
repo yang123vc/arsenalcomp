@@ -512,8 +512,9 @@ const wchar_t* AR_reverse_wcsistr(const wchar_t *str, size_t l,  const wchar_t *
 #endif
 
 
-
-
+/***************************************************************************************************/
+bool_t	AR_wcs_is_float(const wchar_t *in, const wchar_t *end);
+bool_t	AR_wcs_is_int(const wchar_t *in, const wchar_t *end);
 
 
 
@@ -1075,6 +1076,10 @@ void			AR_ReduceMatrixToEchelonForm(const arMatrix_t *mat, size_t *index, arMatr
 
 /****************************************矩阵分解******************************************/
 
+/*三对角矩阵*/
+void			AR_TriDiagonalClearMatrixSelf(arMatrix_t *mat);
+bool_t			AR_TriDiagonalSolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t *b);
+bool_t			AR_TriDiagonalInverseMatrix(const arMatrix_t *mat, arMatrix_t *inv);
 
 
 /*LU分解*/
