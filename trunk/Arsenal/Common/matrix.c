@@ -677,6 +677,33 @@ bool_t			AR_IsOrthonormalMatrix(const arMatrix_t *mat, double epsilon)
 
 
 
+/*
+如果A为正定矩阵， 则二次型 x' * A * x > 0; 则
+
+A =		[	a00,	a01;
+			a10,	a11
+		]
+		;
+
+		x = [x0, x1]';
+
+		x' * A * x = a00 * x0 ^ 2 + a11 * x1 ^ 2 + (a01 + a10) * x0 * x1;
+
+		如果此不等式a00 * x0 ^ 2 + a11 * x1 ^ 2 + (a01 + a10) * x0 * x1 > 0 成立
+
+		设x = [1,0]' 则： a00 > 0
+		设x = [0,1]' 则： a11 > 0
+		设x = [1,1]' 则 : a00 + a11 + (a01 + a10) > 0
+		设x = [1,-1]' 则 : a00 + a11 - (a01 + a10) > 0
+
+		由后两个方程推知，|a01| <= (a00 + a11) / 2;
+		则A的最大元素在对角线上且为正
+
+		主元为正
+		行列式为正
+
+*/
+
 
 
 bool_t			AR_IsPositiveDefiniteMatrix(const arMatrix_t *mat, double epsilon)
@@ -815,7 +842,7 @@ bool_t			AR_IsPositiveSemiDefinite(const arMatrix_t *mat, double epsilon)
 		for(i = 0; i < tmp->nrows; i++)
 		{
 
-				for ( j = i; j < tmp->nrows; j++ )
+				for(j = i; j < tmp->nrows; j++)
 				{
 						t = AR_GetMatrixValue(tmp, j,j);
 						if(AR_DBL_LE(t, -epsilon))
@@ -829,7 +856,8 @@ bool_t			AR_IsPositiveSemiDefinite(const arMatrix_t *mat, double epsilon)
 								continue;
 						}
 
-						for ( k = 0; k < tmp->nrows; k++ ) 
+						
+						for(k = 0; k < tmp->nrows; k++)
 						{
 								t = AR_GetMatrixValue(tmp,k,j);
 								if(AR_DBL_GE(AR_abs_dbl(t), epsilon))
@@ -856,7 +884,7 @@ bool_t			AR_IsPositiveSemiDefinite(const arMatrix_t *mat, double epsilon)
 
 				d = 1.0 / t;
 
-				for ( j = i + 1; j < tmp->nrows; j++ ) 
+				for(j = i + 1; j < tmp->nrows; j++)/*lu分解*/
 				{
 						s = d * AR_GetMatrixValue(tmp, j,i);
 						AR_SetMatrixValue(tmp, j,i, 0.0);
@@ -2813,6 +2841,38 @@ void			AR_MultiplyMatrixCholeskyFactors(const arMatrix_t *mat, arMatrix_t *origi
 
 
 
+
+
+
+
+/*QR分解*/
+bool_t			AR_QRFactorMatrixSelf(arMatrix_t *mat, arVector_t *c, arVector_t *d, bool_t *is_singular)
+{
+		AR_ASSERT(false);
+
+		return false;
+}
+
+void			AR_QRSloveMatrix(const arMatrix_t *mat, const arVector_t *c, const arVector_t *d, arVector_t *x, const arVector_t *b)
+{
+
+}
+
+
+void			AR_QRInverseMatrix(const arMatrix_t *mat, const arVector_t *c, const arVector_t *d, arMatrix_t *inv)
+{
+
+}
+
+void			AR_UnpackMatrixQRFactors(const arMatrix_t *mat, const arVector_t *c, const arVector_t *d, arMatrix_t *Q, arMatrix_t *R)
+{
+		
+}
+
+void			AR_MultiplyMatrixQRFactors(const arMatrix_t *mat, const arVector_t *c, const arVector_t *d, arMatrix_t *original_matrix)
+{
+
+}
 
 
 

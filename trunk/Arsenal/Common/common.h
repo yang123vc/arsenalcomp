@@ -359,7 +359,6 @@ void	AR_memswap(void *a, void *b, size_t n);
 void	AR_qsort(void *base, size_t num, size_t width, int_t (*cmp_f)(const void*, const void*));
 int_t	AR_bsearch(const void *key, const void *base, size_t num, size_t width, int_t (*cmp_f)(const void*, const void*));
 
-/*void	AR_qsort(void *base, size_t num, size_t width, int_t (__cdecl *cmp_f)(void*,void*));*/
 
 
 
@@ -487,6 +486,8 @@ const wchar_t* AR_reverse_wcsstr(const wchar_t *str, size_t l,  const wchar_t *m
 const wchar_t* AR_reverse_wcsichr(const wchar_t* str, size_t l, wchar_t c);
 const wchar_t* AR_reverse_wcsistr(const wchar_t *str, size_t l,  const wchar_t *match, size_t ml);
 
+
+
 #if(AR_ARCH_VER	== ARCH_32)
 
 		#define AR_wtoi			AR_wtoi32
@@ -513,8 +514,8 @@ const wchar_t* AR_reverse_wcsistr(const wchar_t *str, size_t l,  const wchar_t *
 
 
 /***************************************************************************************************/
-bool_t	AR_wcs_is_float(const wchar_t *in, const wchar_t *end);
-bool_t	AR_wcs_is_int(const wchar_t *in, const wchar_t *end);
+bool_t			AR_wcs_is_float(const wchar_t *in, const wchar_t *end);
+bool_t			AR_wcs_is_int(const wchar_t *in, const wchar_t *end);
 
 
 
@@ -1109,6 +1110,14 @@ bool_t			AR_CholeskyFactorMatrixSelf(arMatrix_t *mat);
 void			AR_CholeskySolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t *b);
 void			AR_CholeskyInverseMatrix(const arMatrix_t *mat, arMatrix_t *inv);
 void			AR_MultiplyMatrixCholeskyFactors(const arMatrix_t *mat, arMatrix_t *original_mat);
+
+
+/*QR·Ö½â*/
+bool_t			AR_QRFactorMatrixSelf(arMatrix_t *mat, arVector_t *c, arVector_t *d);
+void			AR_QRSloveMatrix(const arMatrix_t *mat, const arVector_t *c, const arVector_t *d, arVector_t *x, const arVector_t *b);
+void			AR_QRInverseMatrix(const arMatrix_t *mat, const arVector_t *c, const arVector_t *d, arMatrix_t *inv);
+void			AR_UnpackMatrixQRFactors(const arMatrix_t *mat, const arVector_t *c, const arVector_t *d, arMatrix_t *Q, arMatrix_t *R);
+void			AR_MultiplyMatrixQRFactors(const arMatrix_t *mat, const arVector_t *c, const arVector_t *d, arMatrix_t *original_matrix);
 
 
 

@@ -204,6 +204,13 @@
 		#define AR_HAS_BOOL_TRUE_FALSE
 #endif
 
+#if defined(OS_FAMILY_WINDOWS)
+
+#elif defined(OS_FAMILY_UNIX)
+		#define AR_WCHAR_IS_UTF32_SUPPORT		1
+#else
+		#error "Unknown OS not supported!"
+#endif
 
 
 
@@ -423,11 +430,48 @@
 
 
 
-/*
-#undef ULLONG_MAX
-#undef LLONG_MAX
-#undef LLONG_MIN
-*/
+
+/**************************以下均为未定义时的默认值****************************/
+
+#ifndef CHAR_BIT
+		#define	CHAR_BIT		8
+#endif
+
+#ifndef CHAR_MIN
+		#define	CHAR_MIN		(-128)
+#endif
+
+#ifndef CHAR_MAX
+		#define	CHAR_MAX		(127)
+#endif
+
+
+#ifndef UCHAR_MAX
+		#define UCHAR_MAX 0xff
+#endif
+
+
+#ifndef WCHAR_MIN
+		#if defined(AR_WCHAR_IS_UTF32_SUPPORT)
+				#define WCHAR_MIN		 0x00000000
+		#else
+				#define WCHAR_MIN		 0x0000
+		#endif
+
+		
+#endif
+
+#ifndef WCHAR_MAX
+		#if defined(AR_WCHAR_IS_UTF32_SUPPORT)
+				#define WCHAR_MAX		 0x7FFFFFFF
+		#else
+				#define WCHAR_MAX		 0xffff
+		#endif
+#endif
+
+/*************************************************************************************************/
+
+
 
 #ifndef ULLONG_MAX
 		#define ULLONG_MAX		AR_BIGNUM_U64(0xffffffffffffffff)
@@ -442,11 +486,13 @@
 #endif
 
 
+
+
 #define	AR_UINT32_MAX	UINT_MAX
 #define AR_UINT64_MAX	ULLONG_MAX
 
-#define AR_INT32_MAX	LONG_MAX
-#define AR_INT32_MIN	LONG_MIN
+#define AR_INT32_MAX	INT_MAX
+#define AR_INT32_MIN	INT_MIN
 
 #define AR_INT64_MAX	LLONG_MAX
 #define AR_INT64_MIN	LLONG_MIN
@@ -456,6 +502,23 @@
 
 #define AR_INT16_MIN	SHRT_MIN
 #define AR_INT16_MAX	SHRT_MAX
+
+
+		
+
+#define AR_CHARMIN				CHAR_MIN
+#define AR_CHARMAX				CHAR_MAX
+
+#define AR_UCHARMAX				UCHAR_MAX
+
+#define AR_WCHARMIN				WCHAR_MAX
+#define AR_WCHARMAX				WCHAR_MAX
+
+#define AR_BYTE_BITS			CHAR_BIT
+#define AR_SIZE_MIN				((size_t)0)
+#define AR_SIZE_MAX				((size_t)(~((size_t)0)))
+
+
 
 
 
@@ -498,32 +561,6 @@ typedef AR_PLAT_UINT_T			uint_t;/*跟所在处理器等长的无符号整数,理论上总是等于siz
 typedef uint_8_t				byte_t;
 
 typedef void*					ptr_t;
-
-
-/**************************以下均为未定义时的默认值****************************/
-
-#if !defined(CHAR_BIT)
-		#define	CHAR_BIT		8
-#endif
-
-
-#if !defined(CHAR_MAX)
-		#define	CHAR_MAX		((~(0xFFFFFFFFFFFFFFFFUL << (CHAR_BIT * sizeof(char))))/2)
-#endif
-
-
-#if !defined(WCHAR_MAX)
-		#define WCHAR_MAX		(~(0xFFFFFFFFFFFFFFFFUL << (CHAR_BIT * sizeof(wchar_t))))
-#endif
-/**********************************************************************************/
-
-#define AR_CHARMAX				CHAR_MAX
-#define AR_WCHARMAX				WCHAR_MAX
-#define AR_BYTE_BITS			CHAR_BIT
-#define AR_SIZE_MAX				((size_t)(~((size_t)0)))
-
-
-
 
 
 
