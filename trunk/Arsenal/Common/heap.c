@@ -18,10 +18,6 @@ AR_NAMESPACE_BEGIN
 
 
 
-/*
-此模块改自DOOM3 SDK
-*/
-
 #define PAGE_SIZE				((size_t)(65536 - sizeof(page_t)))
 #define SMALL_SIZE				255
 #define MEDIUM_SIZE				32767

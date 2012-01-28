@@ -135,88 +135,10 @@ void	AR_check(bool_t cond, const wchar_t *fmt, ...);
 	
 #endif
 
-/***********************************************************macro_oper*********************************************************/
-
-
-#if(0)
-#define __AR_CNT_BIT__(_n)		((_n) * AR_BYTE_BITS)
-
-#define AR_BYTEFLIP_16(_v)		( ((((uint_16_t)(_v)) >> __AR_CNT_BIT__(1)) & 0x00FF)								\
-								| ((((uint_16_t)(_v)) << __AR_CNT_BIT__(1)) & 0xFF00)								\
-								)
-
-#define AR_BYTEFLIP_32(_v)		( (((uint_32_t)(_v) >> __AR_CNT_BIT__(3)) & 0x000000FF)							\
-								| (((uint_32_t)(_v) >> __AR_CNT_BIT__(1)) & 0x0000FF00)							\
-								| (((uint_32_t)(_v) << __AR_CNT_BIT__(1)) & 0x00FF0000)							\
-								| (((uint_32_t)(_v) << __AR_CNT_BIT__(3)) & 0xFF000000)							\
-								)
-
-
-#define AR_BYTEFLIP_64(_v)		( (((uint_64_t)(_v) >> __AR_CNT_BIT__(7)) & AR_BIGNUM_U64(0x00000000000000FF))		\
-								| (((uint_64_t)(_v) >> __AR_CNT_BIT__(5)) & AR_BIGNUM_U64(0x000000000000FF00))		\
-								| (((uint_64_t)(_v) >> __AR_CNT_BIT__(3)) & AR_BIGNUM_U64(0x0000000000FF0000))		\
-								| (((uint_64_t)(_v) >> __AR_CNT_BIT__(1)) & AR_BIGNUM_U64(0x00000000FF000000))		\
-								| (((uint_64_t)(_v) << __AR_CNT_BIT__(1)) & AR_BIGNUM_U64(0x000000FF00000000))		\
-								| (((uint_64_t)(_v) << __AR_CNT_BIT__(3)) & AR_BIGNUM_U64(0x0000FF0000000000))		\
-								| (((uint_64_t)(_v) << __AR_CNT_BIT__(5)) & AR_BIGNUM_U64(0x00FF000000000000))		\
-								| (((uint_64_t)(_v) << __AR_CNT_BIT__(7)) & AR_BIGNUM_U64(0xFF00000000000000))		\
-								)
-
-#endif
-
-
-int_16_t		AR_BYTEFLIP_16(int_16_t val);
-uint_16_t		AR_BYTEFLIP_U16(uint_16_t val);
-
-
-int_32_t		AR_BYTEFLIP_32(int_32_t val);
-uint_32_t		AR_BYTEFLIP_U32(uint_32_t val);
-
-
-int_64_t		AR_BYTEFLIP_64(int_64_t val);
-uint_64_t		AR_BYTEFLIP_U64(uint_64_t val);
 
 
 
-#if defined(ARCH_LITTLE_ENDIAN)
-
-		#define AR_LTON_16(_n)			AR_BYTEFLIP_16((_n))
-		#define AR_LTON_32(_n)			AR_BYTEFLIP_32((_n))
-		#define AR_LTON_64(_n)			AR_BYTEFLIP_64((_n))
-		#define AR_LTON_U16(_n)			AR_BYTEFLIP_U16((_n))
-		#define AR_LTON_U32(_n)			AR_BYTEFLIP_U32((_n))
-		#define AR_LTON_U64(_n)			AR_BYTEFLIP_U64((_n))
-
-		#define AR_NTOL_16(_n)			AR_BYTEFLIP_16((_n))
-		#define AR_NTOL_32(_n)			AR_BYTEFLIP_32((_n))
-		#define AR_NTOL_64(_n)			AR_BYTEFLIP_64((_n))
-		#define AR_NTOL_U16(_n)			AR_BYTEFLIP_U16((_n))
-		#define AR_NTOL_U32(_n)			AR_BYTEFLIP_U32((_n))
-		#define AR_NTOL_U64(_n)			AR_BYTEFLIP_U64((_n))
-
-#else
-
-		#define AR_LTON_16(_n)			(_n)
-		#define AR_LTON_32(_n)			(_n)
-		#define AR_LTON_64(_n)			(_n)
-		#define AR_LTON_U16(_n)			(_n)
-		#define AR_LTON_U32(_n)			(_n)
-		#define AR_LTON_U64(_n)			(_n)
-
-		#define AR_NTOL_16(_n)			(_n)
-		#define AR_NTOL_32(_n)			(_n)
-		#define AR_NTOL_64(_n)			(_n)
-		#define AR_NTOL_U16(_n)			(_n)
-		#define AR_NTOL_U32(_n)			(_n)
-		#define AR_NTOL_U64(_n)			(_n)
-
-
-#endif
-
-
-
-
-
+/***********************************************************一些宏*********************************************************/
 
 
 #define AR_MAX(_a,_b) ((_a) > (_b) ? (_a) : (_b))
@@ -246,8 +168,21 @@ static AR_INLINE const void* AR_GET_ELEM(const void *base, size_t width, size_t 
 
 
 
-/**********************************************************memory***************************************************************/
 
+
+
+
+
+
+
+
+
+
+/**********************************************************内存管理***************************************************************/
+
+/*内存管理部分暂时只使用标准CRT，并不支持重定位标准存储分配函数，对管理可以依赖AR_USE_CRT_ALLOCFUNC宏控制，定义此宏，则使用当前CRT管理内存，否则
+使用arHeap_t来管理堆
+*/
 
 #define AR_MEM_MAX_ALLOC_RETRY_COUNT	100000
 
@@ -308,6 +243,79 @@ void	AR_memswap(void *a, void *b, size_t n);
 #define AR_TRY_NEWARR(_type, _n) ((_type*)AR_try_malloc(sizeof(_type) * (_n)))
 #define AR_TRY_NEWARR0(_type, _n) ((_type*)AR_try_calloc((_n), sizeof(_type)))
 #define AR_TRY_REALLOC(_type, _ptr, _new_count) ((_type*)AR_try_realloc((_ptr), sizeof(_type) * (_new_count)))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/***********************************************************字节序操作*********************************************************/
+
+
+
+
+int_16_t		AR_BYTEFLIP_16(int_16_t val);
+uint_16_t		AR_BYTEFLIP_U16(uint_16_t val);
+
+
+int_32_t		AR_BYTEFLIP_32(int_32_t val);
+uint_32_t		AR_BYTEFLIP_U32(uint_32_t val);
+
+
+int_64_t		AR_BYTEFLIP_64(int_64_t val);
+uint_64_t		AR_BYTEFLIP_U64(uint_64_t val);
+
+
+
+#if defined(ARCH_LITTLE_ENDIAN)
+
+		#define AR_LTON_16(_n)			AR_BYTEFLIP_16((_n))
+		#define AR_LTON_32(_n)			AR_BYTEFLIP_32((_n))
+		#define AR_LTON_64(_n)			AR_BYTEFLIP_64((_n))
+		#define AR_LTON_U16(_n)			AR_BYTEFLIP_U16((_n))
+		#define AR_LTON_U32(_n)			AR_BYTEFLIP_U32((_n))
+		#define AR_LTON_U64(_n)			AR_BYTEFLIP_U64((_n))
+
+		#define AR_NTOL_16(_n)			AR_BYTEFLIP_16((_n))
+		#define AR_NTOL_32(_n)			AR_BYTEFLIP_32((_n))
+		#define AR_NTOL_64(_n)			AR_BYTEFLIP_64((_n))
+		#define AR_NTOL_U16(_n)			AR_BYTEFLIP_U16((_n))
+		#define AR_NTOL_U32(_n)			AR_BYTEFLIP_U32((_n))
+		#define AR_NTOL_U64(_n)			AR_BYTEFLIP_U64((_n))
+
+#else
+
+		#define AR_LTON_16(_n)			(_n)
+		#define AR_LTON_32(_n)			(_n)
+		#define AR_LTON_64(_n)			(_n)
+		#define AR_LTON_U16(_n)			(_n)
+		#define AR_LTON_U32(_n)			(_n)
+		#define AR_LTON_U64(_n)			(_n)
+
+		#define AR_NTOL_16(_n)			(_n)
+		#define AR_NTOL_32(_n)			(_n)
+		#define AR_NTOL_64(_n)			(_n)
+		#define AR_NTOL_U16(_n)			(_n)
+		#define AR_NTOL_U32(_n)			(_n)
+		#define AR_NTOL_U64(_n)			(_n)
+
+
+#endif
+
+
+
+
+
+
+
 
 
 
