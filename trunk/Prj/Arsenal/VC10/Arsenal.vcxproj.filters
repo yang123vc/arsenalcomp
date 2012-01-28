@@ -239,6 +239,9 @@
     <ClInclude Include="..\..\..\Arsenal\Arsenal.h">
       <Filter>Arsenal</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\Arsenal\Common\heap.h">
+      <Filter>Arsenal\Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="export.def">

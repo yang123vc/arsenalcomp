@@ -13,6 +13,7 @@
 
 
 #include "common.h"
+#include "heap.h"
 
 AR_NAMESPACE_BEGIN
 
@@ -29,8 +30,8 @@ void	AR_InitMemory()
 		{
 				AR_error(AR_ERR_MEMORY, L"AR_InitMemory failure\r\n");
 		}
-
 }
+
 
 void	AR_UnInitMemory()
 {

@@ -106,7 +106,7 @@
 
 
 #if defined(__cplusplus)
-		#define AR_NAMESPACE_BEGIN		extern "C" { namespace ARSpace {
+		#define AR_NAMESPACE_BEGIN		namespace ARSpace { extern "C" {
 		#define AR_NAMESPACE_END		} }
 #else
 		#define AR_NAMESPACE_BEGIN
@@ -149,7 +149,7 @@
 						#include<stdlib.h>
 						#include<crtdbg.h>
 
-						#define	AR_USE_CRT_ALLOCFUNC	1
+						//#define	AR_USE_CRT_ALLOCFUNC	1
 				#else
 
 				#endif
@@ -579,10 +579,11 @@ typedef void*					ptr_t;
 #if (AR_COMPILER == AR_VC_LEGACY || AR_COMPILER == AR_VC)
 
 		#define AR_SWPRINTF										_snwprintf
-		#define AR_VSPRINTF										_vsnprintf
 		#define AR_VSWPRINTF									_vsnwprintf
-		
 
+		#define AR_VSPRINTF										_vsnprintf
+		
+		
 		#if(OS_TYPE == OS_WINDOWS_CE)
 				#define AR_abort()								exit(3)
 		#else
@@ -591,22 +592,26 @@ typedef void*					ptr_t;
 
 #elif(AR_COMPILER == AR_BCB6)
                 #define AR_SWPRINTF								_snwprintf
-				#define AR_VSPRINTF								_vsnprintf
 				#define AR_VSWPRINTF							_vsnwprintf
+
+				#define AR_VSPRINTF								_vsnprintf
+
                 #define AR_abort								abort
 
 #elif(AR_COMPILER == AR_GCC3 || AR_COMPILER == AR_GCC4)
 
-
+		
 		#if defined(OS_FAMILY_WINDOWS)
 				#define AR_SWPRINTF								_snwprintf
 				#define AR_VSWPRINTF							_vsnwprintf
+
 				#define AR_VSPRINTF								_vsnprintf
 
 		#else
 				#define AR_SWPRINTF			                    swprintf
 				#define AR_VSWPRINTF			                vswprintf
-				#define AR_VSPRINTF(_dest, _cnt, _fmt, _args) 	vsprintf((_dest), (_cnt), (_args))
+
+				#define AR_VSPRINTF(_dest, _cnt, _fmt, _args) 	vsprintf((_dest), (_fmt), (_args))
 
 		#endif
 
@@ -620,20 +625,28 @@ typedef void*					ptr_t;
 #endif
 
 
+
+/****************************************可变参数*******************************************/
+
+#if defined(OS_FAMILY_UNIX)
+		
+		#if (OS_TYPE == OS_MAC_OS_X || OS_TYPE == OS_IOS)
+				#define AR_HAS_VA_COPY_FUNCTION	1
+		#endif
+
+#endif
+
+
 #define AR_va_start		va_start
 #define AR_va_arg		va_arg
 #define AR_va_end		va_end
 
 
-#if (OS_TYPE == OS_MAC_OS_X || OS_TYPE == OS_IOS)
-
+#if defined(AR_HAS_VA_COPY_FUNCTION)
 		#define AR_va_copy(_d,_s)	va_copy((_d),(_s))
-
 #else
 		#define AR_va_copy(_d,_s)	memcpy((void*)&(_d), (void*)&(_s), sizeof(va_list))
-	
 #endif
-
 
 
 /*************************************************************************************************************/
