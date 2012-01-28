@@ -58,12 +58,6 @@ AR_escstr_to_str_buf
 AR_str_to_escstr_buf
 
 
-AR_CreateHeap
-AR_DestroyHeap
-AR_AllocFromHeap
-AR_ClearedAllocFromHeap
-AR_ReallocFromHeap
-AR_FreeToHeap
 
 
 AR_GetTime_Microseconds

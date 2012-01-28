@@ -1,4 +1,5 @@
 #include "test.h"
+#include "../Arsenal/Common/heap.h"
 
 #include <vector>
 #include <math.h>
@@ -24,6 +25,7 @@ AR_NAMESPACE_BEGIN
 void alloc_test()
 {
 		arHeap_t *heap = NULL;
+
 #if !defined(USE_C_MALLOC)
 		heap = AR_CreateHeap();
 #endif

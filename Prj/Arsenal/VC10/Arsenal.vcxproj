@@ -103,6 +103,7 @@
     <ClInclude Include="..\..\..\Arsenal\Arsenal.h" />
     <ClInclude Include="..\..\..\Arsenal\Common\common.h" />
     <ClInclude Include="..\..\..\Arsenal\Common\config.h" />
+    <ClInclude Include="..\..\..\Arsenal\Common\heap.h" />
     <ClInclude Include="..\..\..\Arsenal\Common\platform.h" />
     <ClInclude Include="..\..\..\Arsenal\Common\thread_apple.h" />
     <ClInclude Include="..\..\..\Arsenal\Common\thread_posix.h" />
