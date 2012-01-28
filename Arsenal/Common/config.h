@@ -149,12 +149,11 @@
 						#include<stdlib.h>
 						#include<crtdbg.h>
 
-						//#define	AR_USE_CRT_ALLOCFUNC	1
+						#define	AR_USE_CRT_ALLOCFUNC	1
 				#else
 
 				#endif
 				
-				//#define	AR_USE_CRT_ALLOCFUNC	1
 		#endif
 
 
