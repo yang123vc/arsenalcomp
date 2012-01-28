@@ -48,10 +48,15 @@ typedef struct __arsenal_io_context_tag
 }arIOCtx_t;
 
 
+
 typedef struct __ar_init_tag
 {
 		arIOCtx_t		global_io_ctx;
 }arInit_t;
+
+
+
+
 
 
 bool_t AR_CommonInit(const arInit_t *info);
@@ -248,6 +253,9 @@ static AR_INLINE const void* AR_GET_ELEM(const void *base, size_t width, size_t 
 
 void	AR_InitMemory();
 void	AR_UnInitMemory();
+
+
+
 
 #if !defined(AR_USE_CRT_ALLOCFUNC)
 
