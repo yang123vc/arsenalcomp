@@ -78,7 +78,7 @@
 		#else
 				#define	AR_COMPILER		AR_GCC3
 		#endif
-
+		
 #else
 
 		#error "Unknow Compiler!"
@@ -103,11 +103,21 @@
 #endif
 
 
+/*
+__CHAR_UNSIGNED__		应该是gcc特性
+_CHAR_UNSIGNED			是vs特性，/J
+*/
+#if defined(__CHAR_UNSIGNED__) || defined(_CHAR_UNSIGNED)			
+		#define AR_CHAR_IS_UNSIGNED		1		
+#endif
+
+
 
 
 #if defined(__cplusplus)
 		#define AR_NAMESPACE_BEGIN		namespace ARSpace { extern "C" {
 		#define AR_NAMESPACE_END		} }
+	
 #else
 		#define AR_NAMESPACE_BEGIN
 		#define AR_NAMESPACE_END
@@ -436,12 +446,23 @@
 		#define	CHAR_BIT		8
 #endif
 
+
 #ifndef CHAR_MIN
-		#define	CHAR_MIN		(-128)
+		#ifndef(AR_CHAR_IS_UNSIGNED)
+				#define	CHAR_MIN		(-128)
+		#else
+				#define	CHAR_MIN		(0)
+		#endif
+				
 #endif
 
+
 #ifndef CHAR_MAX
-		#define	CHAR_MAX		(127)
+		#ifndef(AR_CHAR_IS_UNSIGNED)
+				#define	CHAR_MAX		(127)
+		#else
+				#define	CHAR_MAX		(255)
+		#endif
 #endif
 
 

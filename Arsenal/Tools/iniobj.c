@@ -347,15 +347,51 @@ typedef struct __ini_keyval_tag
 		bool_t			is_comment;
 }iniKeyVal_t;
 
+static void		__ini_destroy_kvpair(iniKeyVal_t *kv);
+
 static iniKeyVal_t*		__ini_create_kvpair(const wchar_t *key, const wchar_t *val, const wchar_t *comment)
 {
 		iniKeyVal_t		*kv;
 		
 		kv = AR_NEW0(iniKeyVal_t);
+
+		if(kv == NULL)
+		{
+				return NULL;
+		}
 		
-		kv->comment = comment != NULL ? AR_wcsdup(comment) : NULL;
-		kv->key = key != NULL ? AR_wcsdup(key) : NULL;
-		kv->val = val != NULL ? AR_wcsdup(val) : NULL;
+		if(comment)
+		{
+				kv->comment = AR_wcsdup(comment);
+				if(kv->comment == NULL)
+				{
+						__ini_destroy_kvpair(kv);
+						return NULL;
+				}
+		}
+
+		if(key)
+		{
+				kv->key = AR_wcsdup(key);
+
+				if(kv->key == NULL)
+				{
+						__ini_destroy_kvpair(kv);
+						return NULL;
+				}
+		}
+
+
+		if(val)
+		{
+				kv->val = AR_wcsdup(val);
+				if(kv->val == NULL)
+				{
+						__ini_destroy_kvpair(kv);
+						return NULL;
+				}
+		}
+		
 		return kv;
 }
 
@@ -385,30 +421,60 @@ static void		__ini_destroy_kvpair(iniKeyVal_t *kv)
 		kv = NULL;
 }
 
-static void	__ini_reset_kvpair_value(iniKeyVal_t *kv, const wchar_t *val)
+static arStatus_t	__ini_reset_kvpair_value(iniKeyVal_t *kv, const wchar_t *val)
 {
+		wchar_t *tmp;
 		AR_ASSERT(kv != NULL);
+
+		if(val)
+		{
+				tmp = AR_wcsdup(val);
+				if(tmp == NULL)
+				{
+						return AR_E_NOMEM;
+				}
+		}else
+		{
+				tmp = NULL;
+		}
 
 		if(kv->val)
 		{
 				AR_DEL(kv->val);
 				kv->val = NULL;
 		}
-		
-		kv->val = val != NULL ? AR_wcsdup(val) : NULL;
+
+		kv->val = tmp;
+		return AR_S_YES;
 }
 
-static void __ini_reset_kvpair_comment(iniKeyVal_t *kv, const wchar_t *comment)
+
+static arStatus_t __ini_reset_kvpair_comment(iniKeyVal_t *kv, const wchar_t *comment)
 {
+		wchar_t *tmp;
 		AR_ASSERT(kv != NULL);
+
+		if(comment)
+		{
+				tmp = AR_wcsdup(comment);
+				if(tmp == NULL)
+				{
+						return AR_E_NOMEM;
+				}
+		}else
+		{
+				tmp = NULL;
+		}
 
 		if(kv->comment)
 		{
 				AR_DEL(kv->comment);
 				kv->comment = NULL;
 		}
+
+		kv->comment = tmp;
 		
-		kv->comment = comment != NULL ? AR_wcsdup(comment) : NULL;
+		return AR_S_YES;
 }
 
 
@@ -429,10 +495,31 @@ static iniSection_t*	__ini_create_section(const wchar_t *name, const wchar_t *co
 		iniSection_t	*sec;
 		AR_ASSERT(name != NULL);
 		sec = AR_NEW0(iniSection_t);
+
+		if(sec == NULL)
+		{
+				return NULL;
+		}
+
 		sec->section_name = AR_wcsdup(name);
+
+		if(sec->section_name == NULL)
+		{
+				AR_DEL(sec);
+				return NULL;
+		}
+
 		if(comment)
 		{
 				sec->comment = AR_wcsdup(comment);
+
+				if(sec->comment == NULL)
+				{
+						AR_DEL(sec->section_name);
+						AR_DEL(sec);
+						return NULL;
+				}
+
 		}
 		return sec;
 }
@@ -515,10 +602,34 @@ static iniKeyVal_t* __ini_insert_kvpair_to_section(iniSection_t *sec, const wcha
 		}else
 		{
 				kv = __ini_create_kvpair(key, val, comment);
+
+				if(kv == NULL)
+				{
+						return NULL;
+				}
+
 				if(sec->cnt == sec->cap)
 				{
-						sec->cap = (sec->cap + 4)*2;
-						sec->kv_pairs = AR_REALLOC(iniKeyVal_t*, sec->kv_pairs, sec->cap);
+						size_t new_cap;
+						iniKeyVal_t **new_kv_pairs;
+
+						new_cap = (sec->cap + 4)*2;
+						new_kv_pairs = AR_NEWARR(iniKeyVal_t*, new_cap);
+
+						if(new_kv_pairs == NULL)
+						{
+								return NULL;
+						}
+
+						if(sec->kv_pairs != NULL)
+						{
+								AR_memcpy(new_kv_pairs, sec->kv_pairs, sec->cnt * sizeof(iniKeyVal_t*));
+								AR_DEL(sec->kv_pairs);
+								sec->kv_pairs = NULL;
+						}
+
+						sec->cap = new_cap;
+						sec->kv_pairs = new_kv_pairs;
 				}
 
 				sec->kv_pairs[sec->cnt] = kv;
@@ -527,7 +638,7 @@ static iniKeyVal_t* __ini_insert_kvpair_to_section(iniSection_t *sec, const wcha
 		return kv;
 }
 
-static bool_t	__ini_remove_kvpair_from_section(iniSection_t *sec, const wchar_t *key)
+static arStatus_t	__ini_remove_kvpair_from_section(iniSection_t *sec, const wchar_t *key)
 {
 		iniKeyVal_t *kv;
 		size_t i;
@@ -546,7 +657,7 @@ static bool_t	__ini_remove_kvpair_from_section(iniSection_t *sec, const wchar_t 
 
 		if(i >= sec->cnt)
 		{
-				return false;
+				return AR_S_NO;
 		}
 
 		__ini_destroy_kvpair(kv);
@@ -558,24 +669,49 @@ static bool_t	__ini_remove_kvpair_from_section(iniSection_t *sec, const wchar_t 
 				i++;
 		}
 		sec->cnt--;
-		return true;
+		return AR_S_YES;
 }
 
-static void	__ini_insert_comment_to_section(iniSection_t *sec, const wchar_t *comment)
+static arStatus_t	__ini_insert_comment_to_section(iniSection_t *sec, const wchar_t *comment)
 {
 		iniKeyVal_t		*kv;
 		AR_ASSERT(sec != NULL);
 		
 		kv = __ini_create_kvpair(NULL, NULL, comment);
 		kv->is_comment = true;
+
 		if(sec->cnt == sec->cap)
 		{
-				sec->cap = (sec->cap + 4)*2;
-				sec->kv_pairs = AR_REALLOC(iniKeyVal_t*, sec->kv_pairs, sec->cap);
+				size_t	new_cap;
+				iniKeyVal_t **new_kv_pairs;
+
+				new_cap =  (sec->cap + 4)*2;
+				new_kv_pairs = AR_NEWARR(iniKeyVal_t*, new_cap);
+
+				if(new_kv_pairs == NULL)
+				{
+						return AR_E_NOMEM;
+				}
+
+				if(sec->cnt > 0)
+				{
+						AR_memcpy(new_kv_pairs, sec->kv_pairs, sec->cnt * sizeof(iniKeyVal_t*));
+				}
+
+				if(sec->kv_pairs)
+				{
+						AR_DEL(sec->kv_pairs);
+						sec->kv_pairs = NULL;
+				}
+
+				sec->cap = new_cap;
+				sec->kv_pairs = new_kv_pairs;
 		}
 
 		sec->kv_pairs[sec->cnt] = kv;
 		sec->cnt++;
+
+		return AR_S_YES;
 }
 
 
@@ -718,17 +854,17 @@ static bool_t	__is_valid_key_name(const wchar_t *name)
 
 
 
-bool_t			Ini_SectionIsExisted(const iniObject_t *obj, const wchar_t *sect)
+arStatus_t			Ini_SectionIsExisted(const iniObject_t *obj, const wchar_t *sect)
 {
 		AR_ASSERT(obj != NULL && sect != NULL);
 
-		return __find_section(obj, sect) != -1 ? true : false;
+		return __find_section(obj, sect) != -1 ? AR_S_NO : AR_S_YES;
 
 }
 
 
 
-bool_t			Ini_InsertSection(iniObject_t *obj, const wchar_t *sect, const wchar_t *comment)
+arStatus_t			Ini_InsertSection(iniObject_t *obj, const wchar_t *sect, const wchar_t *comment)
 {
 
 		
@@ -736,26 +872,63 @@ bool_t			Ini_InsertSection(iniObject_t *obj, const wchar_t *sect, const wchar_t 
 
 		if(!__is_valid_section_name(sect))
 		{
-				return false;
+				return AR_S_NO;
 		}
 
-		if(Ini_SectionIsExisted(obj, sect))
+		if(Ini_SectionIsExisted(obj, sect) != AR_S_YES)
 		{
-				return false;
+				return AR_S_NO;
 		}
 
 		if(obj->cnt == obj->cap)
 		{
-				obj->cap = (obj->cap + 4) * 2;
-				obj->sect = AR_REALLOC(iniSection_t*, obj->sect, obj->cap);
+				size_t new_cap;
+				iniSection_t **new_sect;
+
+				new_cap = (obj->cap + 4) * 2;
+				new_sect = AR_NEWARR(iniSection_t*, new_cap);
+
+				if(new_sect == NULL)
+				{
+						return AR_E_NOMEM;
+				}
+
+				if(obj->cnt > 0)
+				{
+						AR_memcpy(new_sect, obj->sect, obj->cnt * sizeof(iniSection_t*));
+				}
+
+				if(obj->sect)
+				{
+						AR_DEL(obj->sect);
+						obj->sect = NULL;
+				}
+
+				obj->cap = new_cap;
+				obj->sect = new_sect;
 		}
+
 
 		{
 				wchar_t *tmp;
 				tmp = AR_wcsdup(AR_wcstrim_space(sect));
+
+				if(tmp == NULL)
+				{
+						return AR_E_NOMEM;
+				}
+
 				AR_wcstrim_right_space(tmp);
 		
 				obj->sect[obj->cnt] = __ini_create_section(tmp, comment);
+
+				if(obj->sect[obj->cnt] == NULL)
+				{
+						AR_DEL(tmp);
+						tmp = NULL;
+						return AR_E_NOMEM;
+				}
+
 				obj->cnt++;
 
 				if(tmp)
@@ -765,11 +938,11 @@ bool_t			Ini_InsertSection(iniObject_t *obj, const wchar_t *sect, const wchar_t 
 				}
 		}
 
-		return true;
+		return AR_S_YES;
 
 }
 
-bool_t			Ini_RemoveSection(iniObject_t *obj, const wchar_t *sect)
+arStatus_t			Ini_RemoveSection(iniObject_t *obj, const wchar_t *sect)
 {
 		int_t idx;
 		iniSection_t *section;
@@ -778,7 +951,7 @@ bool_t			Ini_RemoveSection(iniObject_t *obj, const wchar_t *sect)
 
 		if(idx == -1)
 		{
-				return false;
+				return AR_S_NO;
 		}
 
 		section = obj->sect[idx];
@@ -792,11 +965,11 @@ bool_t			Ini_RemoveSection(iniObject_t *obj, const wchar_t *sect)
 		
 		__ini_destroy_section(section);
 		obj->cnt--;
-		return true;
+		return AR_S_YES;
 }
 
 
-bool_t			Ini_RemoveKey(iniObject_t *obj, const wchar_t *sect, const wchar_t *key)
+arStatus_t			Ini_RemoveKey(iniObject_t *obj, const wchar_t *sect, const wchar_t *key)
 {
 		int_t idx;
 		iniSection_t	*section;
@@ -805,7 +978,7 @@ bool_t			Ini_RemoveKey(iniObject_t *obj, const wchar_t *sect, const wchar_t *key
 		idx = __find_section(obj, sect);
 		if(idx == -1)
 		{
-				return false;
+				return AR_S_NO;
 		}
 
 		section = obj->sect[idx];
@@ -815,7 +988,7 @@ bool_t			Ini_RemoveKey(iniObject_t *obj, const wchar_t *sect, const wchar_t *key
 }
 
 
-bool_t			Ini_SetComment(iniObject_t *obj, const wchar_t *sect, const wchar_t *key, const wchar_t *comment)
+arStatus_t			Ini_SetComment(iniObject_t *obj, const wchar_t *sect, const wchar_t *key, const wchar_t *comment)
 {
 		iniKeyVal_t		*kv;
 		AR_ASSERT(obj != NULL && sect != NULL);
@@ -824,12 +997,10 @@ bool_t			Ini_SetComment(iniObject_t *obj, const wchar_t *sect, const wchar_t *ke
 		
 		if(kv == NULL)
 		{
-				return false;
+				return AR_S_NO;
 		}
 
-		__ini_reset_kvpair_comment(kv, comment);
-		
-		return true;
+		return __ini_reset_kvpair_comment(kv, comment);
 }
 
 const wchar_t*	Ini_GetComment(const iniObject_t *obj, const wchar_t *sect, const wchar_t *key)
@@ -860,14 +1031,15 @@ const wchar_t*	Ini_GetString(const iniObject_t *obj, const wchar_t *sect, const 
 
 
 
-bool_t			Ini_SetString(iniObject_t *obj, const wchar_t *sect, const wchar_t *key, const wchar_t *val, const wchar_t *comment)
+arStatus_t			Ini_SetString(iniObject_t *obj, const wchar_t *sect, const wchar_t *key, const wchar_t *val, const wchar_t *comment)
 {
 		int_t idx;
+		arStatus_t status;
 		AR_ASSERT(obj != NULL && sect != NULL && key != NULL);
 
 		if(!__is_valid_section_name(sect) || !__is_valid_key_name(key))
 		{
-				return false;
+				return AR_S_NO;
 		}
 
 RECHECK_POINT:
@@ -875,129 +1047,214 @@ RECHECK_POINT:
 		
 		if(idx == -1)
 		{
-				Ini_InsertSection(obj, sect, NULL);
+				status = Ini_InsertSection(obj, sect, NULL);
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
+				
 				goto RECHECK_POINT;
 		}else
 		{
+				wchar_t *tmp;
+				tmp = AR_wcsdup(AR_wcstrim_space(key));
+
+				if(tmp == NULL)
 				{
-						wchar_t *tmp;
-						tmp = AR_wcsdup(AR_wcstrim_space(key));
-						AR_wcstrim_right_space(tmp);
-
-						__ini_insert_kvpair_to_section(obj->sect[idx], tmp, val, comment);
-
-						if(tmp)
-						{
-								AR_DEL(tmp);
-								tmp = NULL;
-						}
+						return AR_E_NOMEM;
 				}
-		}
 
-		return true;
+				AR_wcstrim_right_space(tmp);
+
+				if(__ini_insert_kvpair_to_section(obj->sect[idx], tmp, val, comment) == NULL)
+				{
+						status = AR_E_NOMEM;
+				}else
+				{
+						status = AR_S_YES;
+				}
+
+				if(tmp)
+				{
+						AR_DEL(tmp);
+						tmp = NULL;
+				}
+
+				return status;
+
+		}
 }
 
 
-static bool_t	__handle_line(iniObject_t *obj, const wchar_t *line, int_t *last_sect_idx)
+static arStatus_t	__handle_line(iniObject_t *obj, const wchar_t *line, int_t *last_sect_idx)
 {
-		bool_t	is_ok;
+		arStatus_t	is_ok;
 		arIniLineType_t ret;
 		wchar_t key[AR_MAX_LINE_LENGTH], val[AR_MAX_LINE_LENGTH], comment[AR_MAX_LINE_LENGTH];
 		AR_ASSERT(obj != NULL && line != NULL);
 
-		is_ok = true;
+		is_ok = AR_S_YES;
 		ret = __parse_line(line, key,val, comment);
 
 		switch(ret)
 		{
 		case INI_INVALID:
-				{
-						is_ok = false;
-				}
+		{
+				is_ok = AR_S_NO;
+		}
 				break;
 		case INI_EMPTY:
-				{
+		{
 
-				}
+		}
 				break;
 		case INI_SECT:
+		{
+				is_ok = Ini_InsertSection(obj, key, AR_wcslen(comment) > 0 ? comment : NULL);
+				if(is_ok == AR_S_YES)
 				{
-						Ini_InsertSection(obj, key, AR_wcslen(comment) > 0 ? comment : NULL);
 						*last_sect_idx = (int_t)obj->cnt - 1;
 				}
+		}
 				break;
 		case INI_KEY_VAL:
+		{
+				if(*last_sect_idx == -1)
 				{
-						if(*last_sect_idx == -1)
+						is_ok = Ini_InsertSection(obj, INI_EMPTY_SECTION_NAME, NULL);
+						if(is_ok == AR_S_YES)
 						{
-								Ini_InsertSection(obj, INI_EMPTY_SECTION_NAME, NULL);
 								*last_sect_idx = (int_t)obj->cnt - 1;
+						}else
+						{
+								goto END_POINT;
 						}
-						__ini_insert_kvpair_to_section(obj->sect[*last_sect_idx], key, AR_wcslen(val) > 0 ? val : NULL, AR_wcslen(comment) > 0 ? comment : NULL);
 				}
+
+				is_ok = __ini_insert_kvpair_to_section(obj->sect[*last_sect_idx], key, AR_wcslen(val) > 0 ? val : NULL, AR_wcslen(comment) > 0 ? comment : NULL) == NULL ? AR_E_NOMEM : AR_S_YES;
+
+		}
 				break;
 		case INI_COMMENT:
+		{
+				if(*last_sect_idx == -1)
 				{
-						if(*last_sect_idx == -1)
+						is_ok = Ini_InsertSection(obj, INI_EMPTY_SECTION_NAME, NULL);
+						
+						if(is_ok == AR_S_YES)
 						{
-								Ini_InsertSection(obj, INI_EMPTY_SECTION_NAME, NULL);
 								*last_sect_idx = (int_t)obj->cnt - 1;
+						}else
+						{
+								goto END_POINT;
 						}
-						__ini_insert_comment_to_section(obj->sect[*last_sect_idx], comment);
 				}
+
+				is_ok = __ini_insert_comment_to_section(obj->sect[*last_sect_idx], comment);
+		}
 				break;
 		default:
 				break;
 		}
-		
+
+END_POINT:
 		return is_ok;
 }
 
-bool_t			Ini_LoadObjectFromString(iniObject_t *obj, const wchar_t *ini_data)
+arStatus_t			Ini_LoadObjectFromString(iniObject_t *obj, const wchar_t *ini_data)
 {
+		arStatus_t status;
 		const wchar_t	*s;
 		arString_t		*line;
-		bool_t is_ok;
+		
 		int_t	last_sect_idx;
 		
 		AR_ASSERT(obj != NULL && ini_data != NULL);
-		
+		status = AR_S_YES;
+
 		Ini_ClearObject(obj);
 		line = AR_CreateString();
+
+		if(line == NULL)
+		{
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+
 		s = ini_data;
-		is_ok = true;
+		
 		last_sect_idx = -1;
 
-		while(*s && is_ok)
+		while(*s && status == AR_S_YES)
 		{
 				if(*s != L'\r' && *s != L'\n')
 				{
-						AR_AppendCharToString(line, *s);
+						if(AR_AppendCharToString(line, *s) != AR_S_YES)
+						{
+								status = AR_E_NOMEM;
+								goto END_POINT;
+						}
 				}else
 				{
-						if(!__handle_line(obj, AR_GetStringCString(line), &last_sect_idx))
+						arStatus_t tmp = __handle_line(obj, AR_GetStringCString(line), &last_sect_idx);
+						if(tmp == AR_S_YES)
 						{
-								is_ok = false;
+
+						}else if(tmp == AR_S_NO)
+						{
+								status = tmp;
+								goto END_POINT;
+						}else
+						{
+								status = tmp;
+								goto END_POINT;
 						}
+
 						AR_ClearString(line);
 				}
 				++s;
 		}
 
-		if(is_ok && AR_GetStringLength(line) > 0)
+		if(status == AR_S_YES && AR_GetStringLength(line) > 0)
 		{
-				if(!__handle_line(obj, AR_GetStringCString(line),  &last_sect_idx))
+				arStatus_t tmp = __handle_line(obj, AR_GetStringCString(line),  &last_sect_idx);
+
+				if(tmp == AR_S_YES)
 				{
-						is_ok = false;
+				}else if(tmp == AR_S_NO)
+				{
+						status = tmp;
+						goto END_POINT;
+				}else
+				{
+						status = tmp;
+						goto END_POINT;
+
 				}
 		}
-		
-		AR_DestroyString(line);
-		line = NULL;
-		return is_ok;
+
+END_POINT:
+		if(line)
+		{
+				AR_DestroyString(line);
+				line = NULL;
+		}
+
+		return status;
 }
 
-void			Ini_SaveObjectToString(const iniObject_t *obj, arString_t *out)
+
+
+#define __CHECK_RET_VAL(_call_stmt)						\
+		do{												\
+				arStatus_t status = _call_stmt;			\
+				if(status != AR_S_YES)					\
+				{										\
+						return status;					\
+				}										\
+		}while(0)
+
+arStatus_t			Ini_SaveObjectToString(const iniObject_t *obj, arString_t *out)
 {
 		size_t i,k;
 		AR_ASSERT(obj != NULL && out != NULL);
@@ -1011,10 +1268,10 @@ void			Ini_SaveObjectToString(const iniObject_t *obj, arString_t *out)
 				{
 						if(sect->comment)
 						{
-								AR_AppendFormatString(out, L"[%ls] %ls\r\n", sect->section_name, sect->comment);
+								__CHECK_RET_VAL(AR_AppendFormatString(out, L"[%ls] %ls\r\n", sect->section_name, sect->comment));
 						}else
 						{
-								AR_AppendFormatString(out, L"[%ls]\r\n", sect->section_name);
+								__CHECK_RET_VAL(AR_AppendFormatString(out, L"[%ls]\r\n", sect->section_name));
 						}
 				}
 
@@ -1027,20 +1284,22 @@ void			Ini_SaveObjectToString(const iniObject_t *obj, arString_t *out)
 						
 						if(kv->is_comment)
 						{
-								AR_AppendFormatString(out, L"%ls\r\n", comment);
+								__CHECK_RET_VAL(AR_AppendFormatString(out, L"%ls\r\n", comment));
 						}else
 						{
 								if(AR_wcslen(val) == 0)
 								{
-										AR_AppendFormatString(out, L"%ls %ls\r\n", key, comment);
+										__CHECK_RET_VAL(AR_AppendFormatString(out, L"%ls %ls\r\n", key, comment));
 								}else
 								{
-										AR_AppendFormatString(out, L"%ls=%ls %ls\r\n", key, val, comment);
+										__CHECK_RET_VAL(AR_AppendFormatString(out, L"%ls=%ls %ls\r\n", key, val, comment));
 								}
 						}
 				}
-				AR_AppendString(out, L"\r\n");
+				__CHECK_RET_VAL(AR_AppendString(out, L"\r\n"));
 		}
+
+		return AR_S_YES;
 
 }
 
@@ -1112,33 +1371,33 @@ double			Ini_GetFloat(const iniObject_t *obj, const wchar_t *sect, const wchar_t
 }
 
 
-void			Ini_SetInt(iniObject_t *obj, const wchar_t *sect, const wchar_t *key, int_64_t val, const wchar_t *comment)
+arStatus_t			Ini_SetInt(iniObject_t *obj, const wchar_t *sect, const wchar_t *key, int_64_t val, const wchar_t *comment)
 {
 		wchar_t buf[128];
 		AR_ASSERT(obj != NULL && sect != NULL && key != NULL);
 
 		AR_i64tow_buf(buf, 128, val, 10);
 		
-		Ini_SetString(obj, sect, key, buf, comment);
+		return Ini_SetString(obj, sect, key, buf, comment);
 }
 
-void			Ini_SetUInt(iniObject_t *obj, const wchar_t *sect, const wchar_t *key, uint_64_t val, const wchar_t *comment)
+arStatus_t			Ini_SetUInt(iniObject_t *obj, const wchar_t *sect, const wchar_t *key, uint_64_t val, const wchar_t *comment)
 {
 		wchar_t buf[128];
 		AR_ASSERT(obj != NULL && sect != NULL && key != NULL);
 
 		AR_u64tow_buf(buf, 128, val, 10);
 		
-		Ini_SetString(obj, sect, key, buf, comment);
+		return Ini_SetString(obj, sect, key, buf, comment);
 }
 
 
-void			Ini_SetFloat(iniObject_t *obj, const wchar_t *sect, const wchar_t *key, double val, const wchar_t *comment)
+arStatus_t			Ini_SetFloat(iniObject_t *obj, const wchar_t *sect, const wchar_t *key, double val, const wchar_t *comment)
 {
 		wchar_t buf[128];
 		AR_ASSERT(obj != NULL && sect != NULL && key != NULL);
 		AR_swprintf(buf, 128, L"%g", val);
-		Ini_SetString(obj, sect, key, buf, comment);
+		return Ini_SetString(obj, sect, key, buf, comment);
 }
 
 

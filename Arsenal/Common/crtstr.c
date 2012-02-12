@@ -701,6 +701,12 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list va_args)
 								cclen = AR_MAX(width, 312 + prec + 6);/*取最大值*/
 
 								buf = AR_NEWARR0(wchar_t, cclen);
+
+								if(buf == NULL)
+								{
+										return -1;
+								}
+
 								/*
 								AR_swprintf(buf, cclen, L"%*.*f", width, prec + 6, f);
 								*/
@@ -773,14 +779,18 @@ wchar_t*		AR_vtow(const wchar_t *fmt, ...)
 		}
 
 		buf = AR_NEWARR(wchar_t, len + 1);
+
+		if(buf == NULL)
+		{
+				return NULL;
+		}
+
 		AR_va_start (args, fmt);
+		
 		if(AR_vswprintf(buf, len + 1, fmt, args) < 0)
 		{
-				AR_va_end (args);
 				AR_DEL(buf);
 				buf = NULL;
-				AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
-				return NULL;
 		}
 		AR_va_end (args);
 		return buf;
@@ -808,15 +818,24 @@ int_t			AR_vswprintf(wchar_t *dest, size_t count, const wchar_t *fmt, va_list ar
 		need_l = __wcs_format_preprocess(fmt, NULL);
 		if(need_l <= 0)
 		{
+				res = -1;
 				goto END_POINT;
 		}
 
 		src_fmt = AR_NEWARR(wchar_t, need_l);
+
+		if(src_fmt == NULL)
+		{
+				res = -1;
+				goto END_POINT;
+		}
+
 		__wcs_format_preprocess(fmt, src_fmt);
 
 		AR_va_copy(save, args);
 		res = AR_VSWPRINTF(dest, count, src_fmt, save);
 		AR_va_end(save);
+
 	   /*****************************************************************************/
 
 
@@ -848,13 +867,7 @@ int_t			AR_swprintf(wchar_t *dest, size_t count, const wchar_t *fmt, ...)
 		AR_va_start(arg_ptr, fmt);
 		len = AR_vswprintf(dest, count, fmt, arg_ptr);
 		AR_va_end(arg_ptr);
-
-		if(len <= 0)
-		{
-				dest[0] = L'\0';
-				len = 0;
-		}
-
+		
 		return len;
 }
 
@@ -1101,6 +1114,12 @@ wchar_t* AR_wcsndup(const wchar_t *sour, size_t len)
 		AR_ASSERT(sour != NULL);
 
 		result = AR_NEWARR(wchar_t, len + 1);
+		
+		if(result == NULL)
+		{
+				return NULL;
+		}
+
 		for(i = 0; i < len; ++i)result[i] = sour[i];
 		result[len] = L'\0';
 		return result;
@@ -1120,6 +1139,12 @@ char*			AR_strndup(const char *sour, size_t len)
 		AR_ASSERT(sour != NULL);
 
 		result = AR_NEWARR(char, len + 1);
+
+		if(result == NULL)
+		{
+				return NULL;
+		}
+
 		for(i = 0; i < len; ++i)result[i] = sour[i];
 		result[len] = '\0';
 		return result;
@@ -1415,7 +1440,8 @@ static const wchar_t* __wtou64_s(const wchar_t *in, const wchar_t *end, uint_64_
 		{
 				p = NULL;
 				/*errno = ERANGE;*/
-				if ( flag & __UNSIGNED )
+				
+				if(flag & __UNSIGNED)
 				{
 						val = AR_UINT64_MAX;
 				} else if (flag & __NEG )

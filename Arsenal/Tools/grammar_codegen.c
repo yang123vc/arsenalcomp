@@ -28,103 +28,15 @@ AR_NAMESPACE_BEGIN
 
 /****************************************************************生成模板代码部分***********************************************/
 
-
-
-
-
 static const wchar_t CFG_DEF_BUILD_LEX[] =
-L"static lex_t*	__build_lex()													\n"
-L"{																				\n"
-L"		lex_t	*lex;															\n"
-L"		size_t i;																\n"
-L"		lex = Lex_Create();														\n"
-L"		for(i = 0; i < __NAME_COUNT__; ++i)										\n"
-L"		{																		\n"
-L"				if(!Lex_Insert(lex, __g_lex_name[i]))							\n"
-L"				{																\n"
-L"						Lex_Destroy(lex);										\n"
-L"						AR_ASSERT(false);										\n"
-L"						return NULL;											\n"
-L"				}																\n"
-L"		}																		\n"
-L"		for(i = 0; i < __TERM_COUNT__; ++i)										\n"
-L"		{																		\n"
-L"				lexAction_t		act;											\n"
-L"				act.is_skip		=		__g_term_pattern[i].skip;				\n"
-L"				act.priority	=		__g_term_pattern[i].lex_prec;			\n"
-L"				act.value		=		__g_term_pattern[i].tokval;				\n"
-L"				if(!Lex_InsertRule(lex, __g_term_pattern[i].regex, &act))		\n"
-L"				{																\n"
-L"						Lex_Destroy(lex);										\n"
-L"						AR_ASSERT(false);										\n"
-L"						return NULL;											\n"
-L"				}																\n"
-L"		}																		\n"
-L"		if(!Lex_GenerateTransTable(lex))													\n"
-L"		{																					\n"
-L"				AR_CHECK(false, L\"Arsenal internal error : %hs\\r\\n\", AR_FUNC_NAME);		\n"
-L"		}																					\n"
-L"		return lex;																			\n"
-L"}"
+L"\r\nstatic lex_t*\t__build_lex()\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n{\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\tlex_t\t*lex;\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\tsize_t i;\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\tlex = Lex_Create();\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\tif(lex == NULL)\r\n\t\t{\r\n\t\t\t\treturn NULL;\r\n\t\t}\r\n\r\n\t\tfor(i = 0; i < __NAME_COUNT__; ++i)\t\t\t\t\t\t\t\t\t\t\r\n\t\t{\r\n\t\t\t\tarStatus_t status;\r\n\t\t\t\tstatus = Lex_Insert(lex, __g_lex_name[i]);\r\n\t\t\t\tif(status == AR_S_YES)\t\t\t\t\t\t\t\r\n\t\t\t\t{\r\n\t\t\t\t}else if(status == AR_S_NO)\r\n\t\t\t\t{\r\n\t\t\t\t\t\tAR_error(AR_ERR_WARNING, L\"failed to build lexer : name '%ls'!\\r\\n\", __g_lex_name);\r\n\t\t\t\t\t\tLex_Destroy(lex);\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t\t\tAR_ASSERT(false);\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t\t\treturn NULL;\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t}else/*错误*/\r\n\t\t\t\t{\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t\t\tAR_error(AR_ERR_FATAL, L\"failed to build lexer : name '%ls'!\\r\\n\", __g_lex_name);\r\n\t\t\t\t\t\treturn NULL;\r\n\t\t\t\t}\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t}\r\n\r\n\t\tfor(i = 0; i < __TERM_COUNT__; ++i)\t\t\t\t\t\t\t\t\t\t\r\n\t\t{\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\tlexAction_t\t\tact;\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\tact.is_skip\t\t=\t\t__g_term_pattern[i].skip;\t\t\t\t\r\n\t\t\t\tact.priority\t=\t\t__g_term_pattern[i].lex_prec;\t\t\t\r\n\t\t\t\tact.value\t\t=\t\t__g_term_pattern[i].tokval;\t\t\r\n\r\n\t\t\t\tarStatus_t status;\r\n\t\t\t\tstatus = Lex_InsertRule(lex, __g_term_pattern[i].regex, &act);\r\n\t\t\t\tif(status == AR_S_YES)\t\t\t\t\t\t\t\r\n\t\t\t\t{\r\n\t\t\t\t}else if(status == AR_S_NO)\r\n\t\t\t\t{\r\n\t\t\t\t\t\tAR_error(AR_ERR_WARNING, L\"failed to build lexer : regex '%ls'!\\r\\n\", __g_term_pattern[i].regex);\r\n\t\t\t\t\t\tLex_Destroy(lex);\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t\t\tAR_ASSERT(false);\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t\t\treturn NULL;\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t}else/*错误*/\r\n\t\t\t\t{\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t\t\tAR_error(AR_ERR_FATAL, L\"failed to build lexer : regex '%ls'!\\r\\n\", __g_term_pattern[i].regex);\r\n\t\t\t\t\t\treturn NULL;\r\n\t\t\t\t}\t\t\t\t\t\t\t\r\n\t\t}\r\n\r\n\r\n\t\tif(Lex_GenerateTransTable(lex) != AR_S_YES)\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t{\r\n\t\t\t\tAR_CHECK(false, L\"Arsenal internal error : %hs\\r\\n\", AR_FUNC_NAME);\t\t\r\n\t\t}\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\treturn lex;\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n}\r\n\r\n"
 ;
+
 
 static const wchar_t CFG_DEF_BUILD_GRAMMAR[] =
-L"static psrGrammar_t*	__build_grammar(const psrHandler_t	*handler)															\n"
-L"{																																\n"
-L"		psrGrammar_t	*grammar;																								\n"
-L"		size_t i;																												\n"
-L"		AR_ASSERT(handler != NULL);																								\n"
-L"		grammar = Parser_CreateGrammar(handler);																				\n"
-L"		for(i = 0; i < __TERM_COUNT__; ++i)																						\n"
-L"		{																														\n"
-L"				if(__g_term_pattern[i].skip || __g_term_pattern[i].tokval == 0)continue;										\n"
-L"				if(!Parser_InsertTerm(grammar, __g_term_pattern[i].name, __g_term_pattern[i].tokval, PARSER_ASSOC_NONASSOC,0, __g_term_pattern[i].leaf))	\n"
-L"				{																												\n"
-L"						Parser_DestroyGrammar(grammar);																			\n"
-L"						grammar = NULL;																							\n"
-L"						AR_ASSERT(false);																						\n"
-L"						return NULL;																							\n"
-L"				}																												\n"
-L"		}																														\n"
-L"		for(i = 0; i < __PREC_COUNT__; ++i)																						\n"
-L"		{																														\n"
-L"				psrTermInfo_t	*info;																							\n"
-L"				info = Parser_GetTermSymbInfoByName(grammar, __g_prec_pattern[i].name);											\n"
-L"				if(info == NULL)																								\n"
-L"				{																												\n"
-L"						if(!Parser_InsertTerm(grammar, __g_prec_pattern[i].name, __g_prec_pattern[i].tokval, __g_prec_pattern[i].assoc, __g_prec_pattern[i].prec_level, NULL))\n"
-L"						{																																					\n"
-L"								Parser_DestroyGrammar(grammar);																												\n"
-L"								grammar = NULL;																																\n"
-L"								AR_ASSERT(false);																															\n"
-L"								return NULL;																																\n"
-L"						}																																					\n"
-L"				}else																																						\n"
-L"				{																																							\n"
-L"						info->assoc = __g_prec_pattern[i].assoc;																											\n"
-L"						info->prec = __g_prec_pattern[i].prec_level;																										\n"
-L"				}																																							\n"
-L"		}																																									\n"
-L"		for(i = 0; i < __RULE_COUNT__; ++i)																													\n"
-L"		{																																									\n"
-L"				if(!Parser_InsertRuleByStr(grammar, __g_rule_pattern[i].rule, __g_rule_pattern[i].prec_token, __g_rule_pattern[i].handler, __g_rule_pattern[i].auto_ret))		\n"
-L"				{																																							\n"
-L"						Parser_DestroyGrammar(grammar);																														\n"
-L"						grammar = NULL;																																		\n"
-L"						AR_ASSERT(false);																																	\n"
-L"						return NULL;																																		\n"
-L"				}																																							\n"
-L"		}																																									\n"
-L"		if(!Parser_SetStartRule(grammar,START_RULE) || !Parser_CheckIsValidGrammar(grammar, NULL))																			\n"
-L"		{																																									\n"
-L"				Parser_DestroyGrammar(grammar);																																\n"
-L"				grammar = NULL;																																				\n"
-L"				AR_ASSERT(false);																																			\n"
-L"				return NULL;																																				\n"
-L"		}																																									\n"
-L"		return grammar;																																						\n"
-L"}"
+L"\r\nstatic psrGrammar_t*\t__build_grammar(const psrHandler_t\t*handler)\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n{\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\tpsrGrammar_t\t*grammar;\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\tsize_t i;\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\tAR_ASSERT(handler != NULL);\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\tgrammar = Parser_CreateGrammar(handler);\t\r\n\t\tif(grammar == NULL)\r\n\t\t{\r\n\t\t\t\treturn NULL;\r\n\t\t}\r\n\r\n\t\tfor(i = 0; i < __TERM_COUNT__; ++i)\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t{\t\t\r\n\t\t\t\tarStatus_t status;\r\n\t\t\t\tif(__g_term_pattern[i].skip || __g_term_pattern[i].tokval == 0)\r\n\t\t\t\t{\r\n\t\t\t\t\t\tcontinue;\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t}\r\n\r\n\t\t\t\tstatus = Parser_InsertTerm(grammar, __g_term_pattern[i].name, __g_term_pattern[i].tokval, PARSER_ASSOC_NONASSOC,0, __g_term_pattern[i].leaf);\r\n\r\n\t\t\t\tif(status == AR_S_YES)\r\n\t\t\t\t{\r\n\t\t\t\t}else if(status == AR_S_NO)\t\r\n\t\t\t\t{\r\n\t\t\t\t\t\tAR_error(AR_ERR_WARNING, L\"failed to build grammar : term '%ls'!\\r\\n\", __g_term_pattern[i].name);\r\n\t\t\t\t\t\tParser_DestroyGrammar(grammar);\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t\t\tgrammar = NULL;\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t\t\tAR_ASSERT(false);\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t\t\treturn NULL;\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t}else\r\n\t\t\t\t{\r\n\t\t\t\t\t\tAR_error(AR_ERR_FATAL, L\"failed to build grammar : term '%ls'!\\r\\n\", __g_term_pattern[i].name);\r\n\t\t\t\t\t\treturn NULL;\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t}\r\n\t\t}\t\t\t\t\t\r\n\r\n\t\tfor(i = 0; i < __PREC_COUNT__; ++i)\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t{\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\tpsrTermInfo_t\t*info;\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\tinfo = Parser_GetTermSymbInfoByName(grammar, __g_prec_pattern[i].name);\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\tif(info == NULL)\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t{\t\t\t\t\t\t\r\n\t\t\t\t\t\tarStatus_t status;\r\n\t\t\t\t\t\tstatus = Parser_InsertTerm(grammar, __g_prec_pattern[i].name, __g_prec_pattern[i].tokval, __g_prec_pattern[i].assoc, __g_prec_pattern[i].prec_level, NULL);\r\n\r\n\t\t\t\t\t\tif(status == AR_S_YES)\r\n\t\t\t\t\t\t{\r\n\r\n\t\t\t\t\t\t}else if(status == AR_S_NO)\r\n\t\t\t\t\t\t{\r\n\t\t\t\t\t\t\t\tAR_error(AR_ERR_WARNING, L\"failed to build grammar : prec '%ls'!\\r\\n\", __g_term_pattern[i].name);\r\n\t\t\t\t\t\t\t\tParser_DestroyGrammar(grammar);\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t\t\t\t\tgrammar = NULL;\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t\t\t\t\tAR_ASSERT(false);\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t\t\t\t\treturn NULL;\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t\t\t}else\r\n\t\t\t\t\t\t{\r\n\t\t\t\t\t\t\t\tAR_error(AR_ERR_WARNING, L\"failed to build grammar : prec '%ls'!\\r\\n\", __g_term_pattern[i].name);\r\n\t\t\t\t\t\t}\r\n\t\t\t\t}else\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t{\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t\t\tinfo->assoc = __g_prec_pattern[i].assoc;\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t\t\tinfo->prec = __g_prec_pattern[i].prec_level;\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t}\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t}\t\t\r\n\r\n\t\tfor(i = 0; i < __RULE_COUNT__; ++i)\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t{\t\t\t\t\r\n\t\t\t\tarStatus_t status;\r\n\t\t\t\tstatus = Parser_InsertRuleByStr(grammar, __g_rule_pattern[i].rule, __g_rule_pattern[i].prec_token, __g_rule_pattern[i].handler, __g_rule_pattern[i].auto_ret);\r\n\t\t\t\t\r\n\t\t\t\tif(status == AR_S_YES)\t\t\r\n\t\t\t\t{\r\n\t\t\t\t}else if(status == AR_S_NO)\r\n\t\t\t\t{\t\t\r\n\t\t\t\t\t\tAR_error(AR_ERR_WARNING, L\"failed to build grammar : rule '%ls'!\\r\\n\", __g_rule_pattern[i].rule);\r\n\t\t\t\t\t\tParser_DestroyGrammar(grammar);\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t\t\tgrammar = NULL;\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t\t\tAR_ASSERT(false);\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t\t\treturn NULL;\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t}else\r\n\t\t\t\t{\r\n\t\t\t\t\t\tAR_error(AR_ERR_FATAL, L\"failed to build grammar : rule '%ls'!\\r\\n\", __g_rule_pattern[i].rule);\r\n\t\t\t\t}\r\n\t\t}\t\t\t\t\r\n\r\n\r\n\t\tif(Parser_SetStartRule(grammar,START_RULE) != AR_S_YES || Parser_CheckIsValidGrammar(grammar, NULL) != AR_S_YES)\r\n\t\t{\r\n\t\t\t\tAR_error(AR_ERR_WARNING, L\"failed to build grammar!\\r\\n\");\r\n\t\t\t\tParser_DestroyGrammar(grammar);\r\n\t\t\t\tgrammar = NULL;\r\n\t\t\t\tAR_ASSERT(false);\r\n\t\t\t\treturn NULL;\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t}\r\n\r\n\t\treturn grammar;\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n}\r\n\r\n"
 ;
+
 
 /*
 __NAME_COUNT__
@@ -192,7 +104,7 @@ static handlerRec_t*	FindFromHandlerTable(handlerTbl_t		*tbl, const wchar_t *nam
 		return NULL;
 }
 
-static void			InsertToHandlerTable(handlerTbl_t		*tbl, const wchar_t *name, const wchar_t *handler_def, bool_t has_spec_def)
+static arStatus_t			InsertToHandlerTable(handlerTbl_t		*tbl, const wchar_t *name, const wchar_t *handler_def, bool_t has_spec_def)
 {
 		handlerRec_t *rec;
 		AR_ASSERT(tbl != NULL && name != NULL);
@@ -202,8 +114,30 @@ static void			InsertToHandlerTable(handlerTbl_t		*tbl, const wchar_t *name, cons
 		{
 				if(tbl->count == tbl->cap)
 				{
-						tbl->cap = (tbl->cap + 4)*2;
-						tbl->tbl = AR_REALLOC(handlerRec_t, tbl->tbl, tbl->cap);
+						size_t new_cap;
+						handlerRec_t	*new_tbl;
+						
+						new_cap = (tbl->cap + 4)*2;
+						new_tbl = AR_NEWARR(handlerRec_t, new_cap);
+
+						if(new_tbl == NULL)
+						{
+								return AR_E_NOMEM;
+						}
+
+						if(tbl->count > 0)
+						{
+								AR_memcpy(new_tbl, tbl->tbl, tbl->count * sizeof(handlerRec_t));
+						}
+
+						if(tbl->tbl)
+						{
+								AR_DEL(tbl->tbl);
+								tbl->tbl = NULL;
+						}
+
+						tbl->cap = new_cap;
+						tbl->tbl = new_tbl;
 				}
 				tbl->tbl[tbl->count].name = AR_wcsdup(name);
 				tbl->tbl[tbl->count].handler_def = handler_def == NULL ? NULL : AR_wcsdup(handler_def);
@@ -220,7 +154,8 @@ static void			InsertToHandlerTable(handlerTbl_t		*tbl, const wchar_t *name, cons
 				rec->handler_def = handler_def == NULL ? NULL : AR_wcsdup(handler_def);
 				rec->has_spec_def = has_spec_def;
 		}
-		
+
+		return AR_S_YES;
 }
 
 
@@ -608,6 +543,7 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 								{
 										AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
 								}
+								
 								handler_def = AR_wcsdup(tmp);
 
 								if(tmp)

@@ -93,6 +93,11 @@ rgxNode_t*		RGX_CreateNode(rgxNodeType_t type)
 		
 		node = __alloc_node();
 
+		if(node == NULL)
+		{
+				return NULL;
+		}
+
 		node->type = type;
 
 		node->ref_count = 1;
@@ -169,7 +174,7 @@ rgxNode_t*		RGX_CreateNode(rgxNodeType_t type)
 
 }
 
-rgxNode_t*		RGX_CopyNode(const rgxNode_t *node)
+rgxNode_t*		RGX_CopyNewNode(const rgxNode_t *node)
 {
 		rgxNode_t *res;
 
@@ -218,8 +223,17 @@ void			RGX_DestroyNode(rgxNode_t *node)
 		case RGX_CAT_T:
 		case RGX_BRANCH_T:
 		{
-				if(node->left)RGX_DestroyNode(node->left);
-				if(node->right)RGX_DestroyNode(node->right);
+				if(node->left)
+				{
+						RGX_DestroyNode(node->left);
+						node->left = NULL;
+				}
+
+				if(node->right)
+				{
+						RGX_DestroyNode(node->right);
+						node->right = NULL;
+				}
 				
 				break;
 		}
@@ -229,8 +243,19 @@ void			RGX_DestroyNode(rgxNode_t *node)
 		case RGX_FIXCOUNT_T:
 		case RGX_LOOKAHEAD_T:
 		{
-				AR_ASSERT(node->left != NULL && node->right == NULL);
-				RGX_DestroyNode(node->left);
+				/*AR_ASSERT(node->left != NULL && node->right == NULL);*/
+				if(node->left)
+				{
+						RGX_DestroyNode(node->left);
+						node->left = NULL;
+				}
+
+				if(node->right)
+				{
+						RGX_DestroyNode(node->right);
+						node->right = NULL;
+				}
+
 				break;
 		}
 		default:
@@ -244,129 +269,8 @@ void			RGX_DestroyNode(rgxNode_t *node)
 }
 
 
-#if(0)
 
-typedef struct __rgx_node_list_tag
-{
-		rgxNode_t **lst;
-		size_t	  cnt;
-		size_t	cap;
-}rgxNodeList_t;
-
-static void __init_node_list(rgxNodeList_t *lst)
-{
-		AR_ASSERT(lst != NULL);
-		AR_memset(lst, 0, sizeof(*lst));
-}
-
-static void __uninit_node_list(rgxNodeList_t *lst)
-{
-		AR_ASSERT(lst != NULL);
-		
-		if(lst && lst->lst)
-		{
-				AR_DEL(lst->lst);
-		}
-		AR_memset(lst, 0, sizeof(*lst));
-}
-
-
-static void __insert_to_node_list(rgxNodeList_t *lst, rgxNode_t *node)
-{
-		AR_ASSERT(lst != NULL && node != NULL);
-		if(lst->cnt == lst->cap)
-		{
-				lst->cap += 32;
-				lst->cap *= 2;
-				lst->lst = AR_REALLOC(rgxNode_t*, lst->lst, lst->cap);
-		}
-		lst->lst[lst->cnt++] = node;
-}
-
-void			RGX_DestroyNode(rgxNode_t *node)
-{
-		
-		rgxNodeList_t lst;
-		size_t i;
-		AR_ASSERT(node != NULL);
-		AR_ASSERT(node->ref_count >= 1);
-
-		__init_node_list(&lst);
-		
-		__insert_to_node_list(&lst, node);
-
-		for(i = 0; i < lst.cnt; ++i)
-		{
-				node = lst.lst[i];
-				AR_ASSERT(node && node->ref_count >= 1);
-				
-				switch(node->type)
-				{
-				case RGX_FINAL_T:
-				case RGX_BEGIN_T:
-				case RGX_LINE_BEGIN_T:
-				case RGX_LINE_END_T:
-				case RGX_END_T:
-				case RGX_ANY_CHAR_T:
-				case RGX_CSET_T:
-				{
-						if(AR_AtomicDec((volatile int_t*)&node->ref_count) == 0)
-						{
-								__free_node(node);
-						}
-				}
-						break;
-				case RGX_CAT_T:
-				case RGX_BRANCH_T:
-				{
-						if(AR_AtomicDec((volatile int_t*)&node->ref_count) == 0)
-						{
-								AR_ASSERT(node->left != node && node->right != node); 
-								if(node->left)
-								{
-										
-										__insert_to_node_list(&lst, node->left);
-								}
-
-								if(node->right)
-								{
-										__insert_to_node_list(&lst, node->right);
-								}
-								__free_node(node);
-						}
-				}
-						break;
-				case RGX_STAR_T:
-				case RGX_QUEST_T:
-				case RGX_PLUS_T:
-				case RGX_LOOKAHEAD_T:
-				{
-						AR_ASSERT(node->left != NULL && node->right == NULL);
-						if(AR_AtomicDec((volatile int_t*)&node->ref_count) == 0)
-						{
-								AR_ASSERT(node->left != node && node->right != node);
-								
-								if(node->left)
-								{
-										__insert_to_node_list(&lst, node->left);
-								}
-								__free_node(node);
-						}
-				}
-						break;
-				default:
-				{
-						AR_CHECK(false, L"Arsenal : regex parser error %hs\r\n", AR_FUNC_NAME);
-						break;
-				}
-				}
-		}
-
-		__uninit_node_list(&lst);
-}
-#endif
-
-void			RGX_InsertToNode(rgxNode_t *root, rgxNode_t *node)
+arStatus_t			RGX_InsertToNode(rgxNode_t *root, rgxNode_t *node)
 {
 		AR_ASSERT(root != NULL && node != NULL);
 
@@ -376,16 +280,27 @@ void			RGX_InsertToNode(rgxNode_t *root, rgxNode_t *node)
 		{
 				AR_ASSERT(root->right == NULL);
 				root->left = node;
+				return AR_S_YES;
+
 		}else if(root->right == NULL)
 		{
 				root->right = node;
+				return AR_S_YES;
 		}else
 		{
 				rgxNode_t *tmp = RGX_CreateNode(root->type);
+
+				if(tmp == NULL)
+				{
+						return AR_E_NOMEM;
+				}
+
 				tmp->left = root->left;
 				tmp->right = root->right;
 				root->left = tmp;
 				root->right = node;
+
+				return AR_S_YES;
 		}
 }
 
@@ -394,12 +309,16 @@ void			RGX_InsertToNode(rgxNode_t *root, rgxNode_t *node)
 
 
 
-void			RGX_ToString(const rgxNode_t *node, arString_t *str)
+
+
+arStatus_t		RGX_ToString(const rgxNode_t *node, arString_t *str)
 {
 		
-
+		arStatus_t status;
 		AR_ASSERT(node != NULL && str != NULL);
 		
+		status = AR_S_YES;
+
 		switch(node->type)
 		{
 		case RGX_CSET_T:
@@ -409,33 +328,80 @@ void			RGX_ToString(const rgxNode_t *node, arString_t *str)
 				{
 						if(AR_iswgraph(node->range.beg) && node->range.beg < (wchar_t)128)
 						{
-								AR_AppendFormatString(str, L"%c", node->range.beg);
+								status = AR_AppendFormatString(str, L"%c", node->range.beg);
+
+								if(status != AR_S_YES)
+								{
+										return status;
+								}
 						}else
 						{
-								AR_AppendFormatString(str, L"\\u%Id", node->range.beg);
+								status = AR_AppendFormatString(str, L"\\u%Id", node->range.beg);
+
+								if(status != AR_S_YES)
+								{
+										return status;
+								}
 						}
 				}else
 				{
-						AR_AppendString(str, L"[");
-						if(AR_iswgraph(node->range.beg) && node->range.beg < (wchar_t)128)
+						status = AR_AppendString(str, L"[");
+						
+						if(status != AR_S_YES)
 						{
-								AR_AppendFormatString(str, L"%c", node->range.beg);
-						}else
-						{
-								AR_AppendFormatString(str, L"\\u%Id", node->range.beg);
+								return status;
 						}
 
-						AR_AppendString(str, L"-");
+						if(AR_iswgraph(node->range.beg) && node->range.beg < (wchar_t)128)
+						{
+								status = AR_AppendFormatString(str, L"%c", node->range.beg);
+
+								if(status != AR_S_YES)
+								{
+										return status;
+								}
+						}else
+						{
+								status = AR_AppendFormatString(str, L"\\u%Id", node->range.beg);
+
+								if(status != AR_S_YES)
+								{
+										return status;
+								}
+						}
+
+						status = AR_AppendString(str, L"-");
+
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
 
 						if(AR_iswgraph(node->range.end) && node->range.end < (wchar_t)128)
 						{
-								AR_AppendFormatString(str, L"%c", node->range.end);
+								status = AR_AppendFormatString(str, L"%c", node->range.end);
+
+								if(status != AR_S_YES)
+								{
+										return status;
+								}
+
 						}else
 						{
-								AR_AppendFormatString(str, L"\\u%Id", node->range.end);
+								status = AR_AppendFormatString(str, L"\\u%Id", node->range.end);
+
+								if(status != AR_S_YES)
+								{
+										return status;
+								}
 						}
 
-						AR_AppendString(str, L"]");
+						status = AR_AppendString(str, L"]");
+
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
 				}
 		}
 				break;
@@ -443,8 +409,25 @@ void			RGX_ToString(const rgxNode_t *node, arString_t *str)
 		{
 				/*AR_AppendString(str, L"(");*/
 
-				if(node->left)RGX_ToString(node->left,str);
-				if(node->right)RGX_ToString(node->right,str);
+				if(node->left)
+				{
+						status = RGX_ToString(node->left,str);
+
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
+				}
+
+				if(node->right)
+				{
+						status = RGX_ToString(node->right,str);
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
+				}
+
 				/*AR_AppendString(str, L")");*/
 		}
 				break;
@@ -452,30 +435,79 @@ void			RGX_ToString(const rgxNode_t *node, arString_t *str)
 		case RGX_BRANCH_T:
 		{
 				
-				AR_AppendString(str, L"(");
-				if(node->left)RGX_ToString(node->left,str);
+				status = AR_AppendString(str, L"(");
+
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
+
+				if(node->left)
+				{
+						status = RGX_ToString(node->left,str);
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
+				}
 
 				if(node->right)
 				{
-						AR_AppendString(str, L"|");
-						RGX_ToString(node->right,str);
+						status = AR_AppendString(str, L"|");
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
+
+						status = RGX_ToString(node->right,str);
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
 				}
 
-				AR_AppendString(str, L")");
+				status = AR_AppendString(str, L")");
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
 		}
 				break;
 		case RGX_STAR_T:
 		{
 				AR_ASSERT(node->left != NULL && node->right == NULL);
 
-				AR_AppendString(str, L"(");
-				RGX_ToString(node->left, str);
-				AR_AppendString(str, L")");
-				AR_AppendString(str, L"*");
+				status = AR_AppendString(str, L"(");
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
+
+				status = RGX_ToString(node->left, str);
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
+
+				status = AR_AppendString(str, L")");
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
+
+				status = AR_AppendString(str, L"*");
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
 
 				if(node->non_greedy)
 				{
-						AR_AppendString(str, L"?");
+						status = AR_AppendString(str, L"?");
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
 				}
 				
 				break;
@@ -484,14 +516,34 @@ void			RGX_ToString(const rgxNode_t *node, arString_t *str)
 		{
 				AR_ASSERT(node->left != NULL && node->right == NULL);
 
-				AR_AppendString(str, L"(");
-				RGX_ToString(node->left, str);
-				AR_AppendString(str, L")");
-				AR_AppendString(str, L"?");
+				status = AR_AppendString(str, L"(");
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
+
+				status = RGX_ToString(node->left, str);
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
+
+				status = AR_AppendString(str, L")");
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
+
+				status = AR_AppendString(str, L"?");
 
 				if(node->non_greedy)
 				{
-						AR_AppendString(str, L"?");
+						status = AR_AppendString(str, L"?");
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
+
 				}
 
 				break;
@@ -500,14 +552,39 @@ void			RGX_ToString(const rgxNode_t *node, arString_t *str)
 		{
 				AR_ASSERT(node->left != NULL && node->right == NULL);
 
-				AR_AppendString(str, L"(");
-				RGX_ToString(node->left, str);
-				AR_AppendString(str, L")");
-				AR_AppendString(str, L"+");
+				status = AR_AppendString(str, L"(");
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
+
+				status = RGX_ToString(node->left, str);
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
+
+				status = AR_AppendString(str, L")");
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
+
+				status = AR_AppendString(str, L"+");
+
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
 				
 				if(node->non_greedy)
 				{
-						AR_AppendString(str, L"?");
+						status = AR_AppendString(str, L"?");
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
+
 				}
 				
 				break;
@@ -517,13 +594,45 @@ void			RGX_ToString(const rgxNode_t *node, arString_t *str)
 				wchar_t buf[128];
 				AR_ASSERT(node->left != NULL && node->right == NULL);
 
-				AR_AppendString(str, L"(");
-				RGX_ToString(node->left, str);
-				AR_AppendString(str, L")");
-				AR_AppendString(str, L"{");
+				status = AR_AppendString(str, L"(");
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
+
+				status = RGX_ToString(node->left, str);
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
+
+				status = AR_AppendString(str, L")");
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
+
+				status = AR_AppendString(str, L"{");
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
+
 				AR_u64tow_buf(buf, 128, (uint_64_t)node->fix_count, 10);
-				AR_AppendString(str, buf);		
-				AR_AppendString(str, L"}");
+
+
+				status = AR_AppendString(str, buf);		
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
+
+				status = AR_AppendString(str, L"}");
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
+
 				break;
 		}
 				break;
@@ -532,50 +641,96 @@ void			RGX_ToString(const rgxNode_t *node, arString_t *str)
 				AR_ASSERT(node->left != NULL && node->right == NULL);
 				if(node->negative_lookahead)
 				{
-						AR_AppendString(str, L"(?!");
+						status = AR_AppendString(str, L"(?!");
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
+
 				}else
 				{
-						AR_AppendString(str, L"(?=");
+						status = AR_AppendString(str, L"(?=");
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
+
 				}
 				
-				RGX_ToString(node->left, str);
-				AR_AppendString(str, L")");
+				status = RGX_ToString(node->left, str);
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
+
+				status = AR_AppendString(str, L")");
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
 		}
 				break;
 		case RGX_BEGIN_T:
 		{
-				AR_AppendString(str, L"^");
+				status = AR_AppendString(str, L"^");
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
 		}
 				break;
 		case RGX_END_T:
 		{
-				AR_AppendString(str, L"$");
+				status = AR_AppendString(str, L"$");
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
 		}
 				break;
 		case RGX_LINE_BEGIN_T:
 		{
-				AR_AppendString(str, L"\\B");
+				status = AR_AppendString(str, L"\\B");
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
+
 		}
 				break;
 		
 		case RGX_LINE_END_T:
 		{
-				AR_AppendString(str, L"\\E");
+				status = AR_AppendString(str, L"\\E");
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
 		}
 				break;
 		case RGX_ANY_CHAR_T:
 		{
-				AR_AppendString(str, L".");
+				status = AR_AppendString(str, L".");
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
 				break;
 		}
 		case RGX_FINAL_T:
 		{
-				AR_AppendFormatString(str, L"[final : %Id]", node->final_val);
+				status = AR_AppendFormatString(str, L"[final : %Id]", node->final_val);
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
 		}
 				break;
 		default:
 				AR_CHECK(false, L"Arsenal : regex parser error %hs\r\n", AR_FUNC_NAME);
 		}
+
+		return status;
 }
 
 

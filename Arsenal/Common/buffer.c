@@ -48,7 +48,7 @@ static AR_INLINE bool_t	__buffer_is_valid(const arBuffer_t *pbuf)
 
 #endif
 
-static AR_INLINE void		__increase_capability(arBuffer_t *pbuf, size_t inc_len)
+static AR_INLINE arStatus_t		__increase_capability(arBuffer_t *pbuf, size_t inc_len)
 {
 		size_t cur_len = 0;
 		size_t data_len = 0;
@@ -56,13 +56,20 @@ static AR_INLINE void		__increase_capability(arBuffer_t *pbuf, size_t inc_len)
 		byte_t *old_buf = NULL;
 		AR_ASSERT(__buffer_is_valid(pbuf));
 		
-		if(inc_len == 0)return;
+		if(inc_len == 0)
+		{
+				return AR_S_YES;
+		}
 
 		cur_len = pbuf->last - pbuf->first;
 		data_len = pbuf->write_cur - pbuf->read_cur;
 
 		new_buf = AR_NEWARR(byte_t, inc_len + cur_len);
 
+		if(new_buf == NULL)
+		{
+				return AR_E_NOMEM;
+		}
 
 		if(data_len > 0)
 		{
@@ -75,6 +82,8 @@ static AR_INLINE void		__increase_capability(arBuffer_t *pbuf, size_t inc_len)
 		pbuf->read_cur = pbuf->first;
 		pbuf->write_cur = pbuf->read_cur + data_len;
 		AR_DEL(old_buf);
+
+		return AR_S_YES;
 }
 
 
@@ -115,11 +124,20 @@ arBuffer_t*		AR_CreateBuffer(size_t nbytes)
 		
 		buf = AR_NEW0(arBuffer_t);
 		
+		if(buf == NULL)
+		{
+				return NULL;
+		}
 
 		if(nbytes > 0)
 		{
 				nbytes = AR_MAX(nbytes, INIT_BUF_LEN);
-				__increase_capability(buf, nbytes);
+				
+				if(__increase_capability(buf, nbytes) != AR_S_YES)
+				{
+						AR_DEL(buf);
+						buf = NULL;
+				}
 		}
 
 		return buf;
@@ -143,7 +161,7 @@ void			AR_ClearBuffer(arBuffer_t		*buffer)
 		AR_memset(buffer, 0, sizeof(*buffer));
 }
 
-void			AR_ReserveBuffer(arBuffer_t *pbuf, size_t nbytes)
+arStatus_t			AR_ReserveBuffer(arBuffer_t *pbuf, size_t nbytes)
 {
 		size_t inc_len = 0;
 		size_t capa_len = 0;
@@ -155,8 +173,13 @@ void			AR_ReserveBuffer(arBuffer_t *pbuf, size_t nbytes)
 		if(capa_len < nbytes)
 		{
 				inc_len = (size_t)AR_MAX((nbytes - capa_len),  cur_buf_len * 2 - cur_buf_len);
-				__increase_capability(pbuf, inc_len);
+				if(__increase_capability(pbuf, inc_len) != AR_S_YES)
+				{
+						return AR_E_NOMEM;
+				}
 		}
+
+		return AR_S_YES;
 }
 
 byte_t*			AR_AllocBuffer(arBuffer_t *buffer, size_t	nbytes)
@@ -170,7 +193,10 @@ byte_t*			AR_AllocBuffer(arBuffer_t *buffer, size_t	nbytes)
 		write_able = buffer->last - buffer->write_cur;
 		if(write_able < nbytes && !__move_internal(buffer, nbytes))
 		{
-				AR_ReserveBuffer(buffer, nbytes);
+				if(AR_ReserveBuffer(buffer, nbytes) != AR_S_YES)
+				{
+						return NULL;
+				}
 		}
 		
 		AR_ASSERT((size_t)(buffer->last- buffer->write_cur) >= nbytes);
@@ -181,15 +207,25 @@ byte_t*			AR_AllocBuffer(arBuffer_t *buffer, size_t	nbytes)
 }
 
 
-void			AR_InsertBuffer(arBuffer_t *buffer, const byte_t *data, size_t len)
+arStatus_t			AR_InsertBuffer(arBuffer_t *buffer, const byte_t *data, size_t len)
 {
 		byte_t *ptr = NULL;
 		AR_ASSERT(__buffer_is_valid(buffer));
-		if(len == 0)return;
+		if(len == 0)
+		{
+				return AR_S_YES;
+		}
+
 		ptr = AR_AllocBuffer(buffer, len);
 
-		AR_ASSERT(ptr != NULL);
-		memcpy(ptr, data, len);
+		if(ptr)
+		{
+				memcpy(ptr, data, len);
+				return AR_S_YES;
+		}else
+		{
+				return AR_E_NOMEM;
+		}
 }
 
 size_t			AR_EraseBuffer(arBuffer_t *pbuf, size_t nbytes)

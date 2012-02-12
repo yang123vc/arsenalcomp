@@ -87,7 +87,7 @@ typedef struct __cfg_prec_tag
 		psrAssocType_t	assoc;
 		size_t			prec_level;
 		
-		wchar_t			**prec_tok_set;
+		const wchar_t	**prec_tok_set;
 		size_t			*prec_tok_val;
 		
 		size_t			count;
@@ -104,7 +104,7 @@ typedef struct __cfg_prec_tag
 typedef struct __cfg_start_tag
 {
 		size_t	line;
-		wchar_t	*start_rule;
+		const wchar_t	*start_rule;
 }cfgStart_t;
 
 #define CFG_START_ITEM L"#define START_RULE L\"%ls\""
@@ -117,10 +117,10 @@ typedef enum
 
 typedef struct __cfg_predef_tag
 {
-		size_t			line;
-		wchar_t			*name;
-		wchar_t			*code;
-		uint_32_t		flags;
+		size_t					line;
+		const wchar_t			*name;
+		const wchar_t			*code;
+		uint_32_t				flags;
 }cfgPreDef_t;
 
 
@@ -137,17 +137,17 @@ typedef struct __rule_tag
 }cfgRule_t;
 
 
-#define	CFG_TOKEN_HANDLER_DECL			L"static psrNode_t* AR_STDCALL %ls(const psrToken_t *tok,void *ctx);"
-#define	CFG_TOKEN_HANDLER_DEFINE		L"static psrNode_t* AR_STDCALL %ls(const psrToken_t *tok,void *ctx)\n{\n\t %ls\n}\n"
-#define	CFG_TOKEN_HANDLER_DEFINE_2		L"static psrNode_t* AR_STDCALL %ls(const psrToken_t *tok,void *ctx)\n{\n\t return NULL;\n}\n"
+#define	CFG_TOKEN_HANDLER_DECL			L"static psrRetVal_t AR_STDCALL %ls(const psrToken_t *tok,void *ctx);"
+#define	CFG_TOKEN_HANDLER_DEFINE		L"static psrRetVal_t AR_STDCALL %ls(const psrToken_t *tok,void *ctx)\n{\n\t %ls\n}\n"
+#define	CFG_TOKEN_HANDLER_DEFINE_2		L"static psrRetVal_t AR_STDCALL %ls(const psrToken_t *tok,void *ctx)\n{\n\t psrRetVal_t ret = {AR_S_YES, NULL}; return ret;\n}\n"
 
 
-#define	CFG_RULE_HANDLER_DECL	L"static psrNode_t* AR_STDCALL handle_%ls(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);"
-#define	CFG_RULE_HANDLER_DECL_2	L"static psrNode_t* AR_STDCALL %ls(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);"
+#define	CFG_RULE_HANDLER_DECL			L"static psrRetVal_t AR_STDCALL handle_%ls(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);"
+#define	CFG_RULE_HANDLER_DECL_2			L"static psrRetVal_t AR_STDCALL %ls(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);"
 
-#define	CFG_RULE_HANDLER_DEFINE	L"static psrNode_t* AR_STDCALL handle_%ls(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)\n{\n\t return NULL;\n}\n"
-#define	CFG_RULE_HANDLER_DEFINE_2	L"static psrNode_t* AR_STDCALL %ls(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)\n{\n\t return NULL;\n}\n"
-#define	CFG_RULE_HANDLER_DEFINE_3	L"static psrNode_t* AR_STDCALL %ls(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)\n{\n\t %ls\n}\n"
+#define	CFG_RULE_HANDLER_DEFINE			L"static psrRetVal_t AR_STDCALL handle_%ls(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)\n{\n\t \n}\n"
+#define	CFG_RULE_HANDLER_DEFINE_2		L"static psrRetVal_t AR_STDCALL %ls(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)\n{\n\t psrRetVal_t ret = {AR_S_YES, NULL}; return ret;\n}\n"
+#define	CFG_RULE_HANDLER_DEFINE_3		L"static psrRetVal_t AR_STDCALL %ls(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)\n{\n\t %ls\n}\n"
 
 
 
@@ -190,6 +190,8 @@ typedef struct __cfg_config_tag
 		cfgStart_t		start;
 
 		bool_t			has_error;
+
+		void			*remain_data;
 }cfgConfig_t;
 
 

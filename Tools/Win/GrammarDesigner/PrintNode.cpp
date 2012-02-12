@@ -51,7 +51,7 @@ void CPrintNode::Clear()
 
 }
 
-ARSpace::psrNode_t*		AR_STDCALL build_leaf(const ARSpace::psrToken_t *tok, void *ctx)
+ARSpace::psrRetVal_t		AR_STDCALL build_leaf(const ARSpace::psrToken_t *tok, void *ctx)
 {
 		ASSERT(tok != NULL && ctx != NULL);
 		CString str;
@@ -66,11 +66,15 @@ ARSpace::psrNode_t*		AR_STDCALL build_leaf(const ARSpace::psrToken_t *tok, void 
 		}
 		
 		CPrintNode *node = new CPrintNode(str, tok->line, tok->col, tok->str_cnt, true);
-		return (ARSpace::psrNode_t*)node;
+
+		ARSpace::psrRetVal_t	ret;
+		ret.status = ARSpace::AR_S_YES;
+		ret.node = (ARSpace::psrNode_t*)node;
+		return ret;
 }
 
 
-ARSpace::psrNode_t*	 AR_STDCALL build_rule(ARSpace::psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+ARSpace::psrRetVal_t	 AR_STDCALL build_rule(ARSpace::psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		
 		ASSERT(name != NULL && ctx != NULL);
@@ -94,7 +98,9 @@ ARSpace::psrNode_t*	 AR_STDCALL build_rule(ARSpace::psrNode_t **nodes, size_t co
 						}
 				}
 		}
-
-		return (ARSpace::psrNode_t*)node;
+		ARSpace::psrRetVal_t ret;
+		ret.status = ARSpace::AR_S_YES;
+		ret.node = (ARSpace::psrNode_t*)node;
+		return ret;
 }
 

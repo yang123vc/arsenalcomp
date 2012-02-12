@@ -29,14 +29,29 @@ const psrSymb_t	*PARSER_StartSymb = NULL;
 
 
 
-bool_t				Parser_IsBuildInSymbol(const psrSymb_t		*symb)
+bool_t			Parser_IsBuildInSymbol(const psrSymb_t		*symb)
 {
 		AR_ASSERT(symb != NULL);
 
-		if(Parser_CompSymb(symb,PARSER_EOISymb) == 0)return true;
-		if(Parser_CompSymb(symb,PARSER_ErrorSymb) == 0)return true;
-		if(Parser_CompSymb(symb,PARSER_DefPrecSymb) == 0)return true;
-		if(Parser_CompSymb(symb,PARSER_StartSymb) == 0)return true;
+		if(Parser_CompSymb(symb,PARSER_EOISymb) == 0)
+		{
+				return true;
+		}
+
+		if(Parser_CompSymb(symb,PARSER_ErrorSymb) == 0)
+		{
+				return true;
+		}
+
+		if(Parser_CompSymb(symb,PARSER_DefPrecSymb) == 0)
+		{
+				return true;
+		}
+
+		if(Parser_CompSymb(symb,PARSER_StartSymb) == 0)
+		{
+				return true;
+		}
 
 		return false;
 }
@@ -45,22 +60,36 @@ bool_t				Parser_IsBuildInSymbol(const psrSymb_t		*symb)
 
 /******************************************************************************************************************************************/
 
-bool_t	Parser_Init()
+arStatus_t	Parser_Init()
 {
 		AR_InitSpinLock(&__tbl_lock);
 		__tbl			=			AR_CreateStrTable(PARSER_STRTBL_BUCKET);
+
+		if(__tbl == NULL)
+		{
+				AR_error(AR_ERR_FATAL, L"parser initialize failed\r\n");
+				return AR_S_NO;/*±‹√‚warning*/
+		}
 
 		PARSER_EOISymb		=		Parser_CreateSymb(L"%EOI", PARSER_TERM);
 		PARSER_ErrorSymb	=		Parser_CreateSymb(L"error", PARSER_TERM);
 		PARSER_DefPrecSymb	=		Parser_CreateSymb(L"%PREC_ASSOC", PARSER_TERM);
 		PARSER_StartSymb	=		Parser_CreateSymb(L"%START", PARSER_NONTERM);
-		
+
+
+		if(PARSER_EOISymb == NULL || PARSER_ErrorSymb == NULL || PARSER_DefPrecSymb == NULL || PARSER_StartSymb == NULL)
+		{
+				AR_error(AR_ERR_FATAL, L"parser initialize failed\r\n");
+				return AR_S_NO;/*±‹√‚warning*/
+		}
+
+
 		Parser_Init_LALR_Config();
-		return true;
-		
+		return AR_S_YES;
 }
 
-bool_t	Parser_UnInit()
+
+arStatus_t	Parser_UnInit()
 {
 		Parser_UnInit_LALR_Config();
 
@@ -77,7 +106,7 @@ bool_t	Parser_UnInit()
 		AR_DestroyStrTable(__tbl);
 		AR_UnInitSpinLock(&__tbl_lock);
 		__tbl = NULL;
-		return true;
+		return AR_S_YES;
 }
 
 

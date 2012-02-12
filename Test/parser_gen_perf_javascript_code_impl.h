@@ -1,4 +1,5 @@
 
+#if(0)
 static const wchar_t *__g_lex_name[] = {
 L"delim = [ \\r\\n\\t]",
 L"comment = /\\*([^\\*]|\\*+[^\\*/])*\\*+/",
@@ -4002,3 +4003,4 @@ static psrNode_t* AR_STDCALL handle_SourceElements_NoNode(psrNode_t **nodes, siz
 
 
 
+#endif

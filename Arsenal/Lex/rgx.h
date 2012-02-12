@@ -54,8 +54,8 @@ struct __rgx_name_set_tag
 
 void					RGX_InitNameSet(rgxNameSet_t	*set);
 void					RGX_UnInitNameSet(rgxNameSet_t	*set);
-bool_t					RGX_InsertToNameSet(rgxNameSet_t	*set, const wchar_t	*name, rgxNode_t *node);
-bool_t					RGX_RemoveFromNameSet(rgxNameSet_t	*set, const wchar_t	*name);
+arStatus_t				RGX_InsertToNameSet(rgxNameSet_t	*set, const wchar_t	*name, rgxNode_t *node);
+arStatus_t				RGX_RemoveFromNameSet(rgxNameSet_t	*set, const wchar_t	*name);
 const rgxNode_t*		RGX_FindFromNameSet(const rgxNameSet_t	*set, const wchar_t *name);
 void					RGX_ClearNameSet(rgxNameSet_t *set);
 
@@ -84,11 +84,12 @@ struct __rgx_charset_tag
 };
 
 
-void RGX_InitCharSet(rgxCharSet_t *cset);
-void RGX_UnInitCharSet(rgxCharSet_t *cset);
-void RGX_InsertRangeToCharSet(rgxCharSet_t *cset, const rgxCharRange_t *new_range);
-void RGX_ReverseNegativeCharSet(rgxCharSet_t *cset);
-void RGX_CopyCharSet(rgxCharSet_t *dest, const rgxCharSet_t *sour);
+void			RGX_InitCharSet(rgxCharSet_t *cset);
+void			RGX_UnInitCharSet(rgxCharSet_t *cset);
+arStatus_t		RGX_InsertRangeToCharSet(rgxCharSet_t *cset, const rgxCharRange_t *new_range);
+arStatus_t		RGX_ReverseNegativeCharSet(rgxCharSet_t *cset);
+arStatus_t		RGX_CopyCharSet(rgxCharSet_t *dest, const rgxCharSet_t *sour);
+
 /*CharSetEnd*/
 
 
@@ -142,14 +143,14 @@ struct __rgx_node_tag
 
 rgxNode_t*		RGX_CreateNode(rgxNodeType_t type);
 
-rgxNode_t*		RGX_CopyNode(const rgxNode_t *node);
+rgxNode_t*		RGX_CopyNewNode(const rgxNode_t *node);
 
 void			RGX_DestroyNode(rgxNode_t *node);
 
-void			RGX_InsertToNode(rgxNode_t *root, rgxNode_t *node);
+arStatus_t		RGX_InsertToNode(rgxNode_t *root, rgxNode_t *node);
 
 
-void			RGX_ToString(const rgxNode_t *node, arString_t *str);
+arStatus_t		RGX_ToString(const rgxNode_t *node, arString_t *str);
 
 
 
@@ -167,6 +168,7 @@ typedef struct __rgx_error_tag	rgxError_t;
 
 struct __rgx_error_tag
 {
+		arStatus_t		status;
 		const wchar_t	*pos;
 };
 
@@ -277,13 +279,12 @@ typedef struct __thread_tag
 
 rgxThread_t		RGX_BuildThread(rgxIns_t *pc, const wchar_t *sp, size_t x, size_t y, uint_32_t act);
 
+#define AR_RGX_MAX_THREAD_CNT	512
 
 typedef struct __thd_list_tag
 {
 		rgxThread_t		*lst;
 		size_t			count;
-		size_t			cap;
-
 		struct __thd_list_tag	*next;
 }rgxThreadList_t;
 
@@ -315,9 +316,9 @@ struct __regex_program_tag
 
 void			RGX_InitProg(rgxProg_t *prog);
 void			RGX_UnInitProg(rgxProg_t *prog);
-void			RGX_Compile(rgxProg_t *prog, const rgxNode_t *tree);
+arStatus_t		RGX_Compile(rgxProg_t *prog, const rgxNode_t *tree);
 
-void			RGX_ProgToString(const rgxProg_t *prog, arString_t *str);
+arStatus_t		RGX_ProgToString(const rgxProg_t *prog, arString_t *str);
 
 
 
@@ -326,7 +327,7 @@ void			RGX_ProgToString(const rgxProg_t *prog, arString_t *str);
 
 
 
-bool_t			RGX_Match(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok);
+arStatus_t			RGX_Match(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok);
 
 
 

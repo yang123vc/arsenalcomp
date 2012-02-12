@@ -1,3 +1,4 @@
+
 #include "test.h"
 #include <vector>
 #include "../Arsenal/Lex/lex.h"
@@ -6,6 +7,9 @@
 
 
 AR_NAMESPACE_BEGIN
+
+#if(0)
+
 #pragma warning(disable : 4100)
 #include "parser_gen_perf_javascript_code_impl.h"
 #include "parser_gen_perf_sql_code_impl.h"
@@ -133,6 +137,6 @@ void parser_gen_perf_test()
 }
 
 
-
+#endif
 
 AR_NAMESPACE_END

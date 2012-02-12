@@ -39,11 +39,28 @@ arStringTable_t*		AR_CreateStrTable(size_t count)
 		arStringTable_t		*res;
 
 		res = AR_NEW0(arStringTable_t);
+
+		if(res == NULL)
+		{
+				return NULL;
+		}
+
 		
-		if(count < MIN_BUCKET_SIZE)count = MIN_BUCKET_SIZE;
+		if(count < MIN_BUCKET_SIZE)
+		{
+				count = MIN_BUCKET_SIZE;
+		}
+
 		res->count = count;
-		res->bucket = AR_NEWARR0(arStringRec_t*, res->count);
 		res->item_count = 0;
+
+		res->bucket = AR_NEWARR0(arStringRec_t*, res->count);
+		
+		if(res->bucket == NULL)
+		{
+				AR_DEL(res);
+				res = NULL;
+		}
 		return res;
 }
 
@@ -81,7 +98,7 @@ const wchar_t*			AR_GetString(arStringTable_t *tbl, const wchar_t *str)
 }
 
 
-bool_t					AR_HasString(const arStringTable_t *tbl, const wchar_t *str)
+arStatus_t				AR_HasString(const arStringTable_t *tbl, const wchar_t *str)
 {
 		AR_ASSERT(tbl != NULL && str != NULL);
 		return AR_HasStringN(tbl, str, AR_wcslen(str));
@@ -89,7 +106,7 @@ bool_t					AR_HasString(const arStringTable_t *tbl, const wchar_t *str)
 
 
 
-bool_t					AR_HasStringN(const arStringTable_t *tbl, const wchar_t *str, size_t n)
+arStatus_t					AR_HasStringN(const arStringTable_t *tbl, const wchar_t *str, size_t n)
 {
 		const arStringRec_t		*record;
 		AR_ASSERT(tbl != NULL && str != NULL);
@@ -99,11 +116,11 @@ bool_t					AR_HasStringN(const arStringTable_t *tbl, const wchar_t *str, size_t 
 		{
 				if(record->len == n && AR_wcsncmp(record->str, str, n) == 0)
 				{
-						return true;
+						return AR_S_YES;
 				}
 				record=record->next;
 		}
-		return false;
+		return AR_S_NO;
 }
 
 const wchar_t*			AR_GetStringN(arStringTable_t *tbl, const wchar_t *str, size_t n)
@@ -126,11 +143,27 @@ const wchar_t*			AR_GetStringN(arStringTable_t *tbl, const wchar_t *str, size_t 
 		}
 
 		
+
+		/***************************´´½¨ÐÂrecord*************************/
 		record = AR_NEW0(arStringRec_t);
+
+		if(record == NULL)
+		{
+				return NULL;
+		}
 		
 		record->str = AR_wcsndup(str, n);
+
+		if(record->str == NULL)
+		{
+				AR_DEL(record);
+				record = NULL;
+				return NULL;
+		}
+
 		record->len = n;
 		record->next = tbl->bucket[idx];
+
 		tbl->bucket[idx] = record;
 		tbl->item_count++;
 		return record->str;

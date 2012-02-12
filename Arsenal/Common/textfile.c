@@ -53,6 +53,9 @@ FILE*	__AR_open_file(const wchar_t *path, const wchar_t *mode)
 		if(str_path && str_mode)
 		{
             file = fopen(str_path, str_mode);
+		}else
+		{
+				AR_error(AR_ERR_WARNING, L"Convert path('%ls') and mode('%ls') failed\r\n", path, mode);
 		}
 
         if(str_path)
@@ -689,16 +692,17 @@ static txtReadStatus_t		__read_wchar(arBuffer_t *input, arTxtBom_t enc, wchar_t 
 
 
 
-bool_t	AR_LoadBomTextFromBinary(arBuffer_t *input, arTxtBom_t *bom, arString_t *out)
+arStatus_t	AR_LoadBomTextFromBinary(arBuffer_t *input, arTxtBom_t *bom, arString_t *out)
 {
 
-
+		arStatus_t ret;
 		arTxtBom_t	enc;
 		wchar_t c;
 		
 		txtReadStatus_t	status;
 		AR_ASSERT(input != NULL && out != NULL);
 
+		ret = AR_S_YES;
 		status = TXT_READ_OK;
 		AR_ClearString(out);
 		
@@ -708,9 +712,10 @@ bool_t	AR_LoadBomTextFromBinary(arBuffer_t *input, arTxtBom_t *bom, arString_t *
 				{
 						*bom = AR_TXT_BOM_ASCII;
 				}
-				return true;
+				return AR_S_YES;
 		}
 
+		
 		if(!__dectect_encoding(input, &enc))
 		{
 				status = TXT_READ_INVALID;
@@ -736,13 +741,19 @@ bool_t	AR_LoadBomTextFromBinary(arBuffer_t *input, arTxtBom_t *bom, arString_t *
 
 				if(!str)
 				{
+						ret = AR_E_BADENCCONV;
 						status = TXT_READ_INVALID;
 						goto FAILED_POINT;
 				}
 
 				if(out && str)
 				{
-						AR_AppendString(out, str);
+						ret = AR_AppendString(out, str);
+						if(ret != AR_S_YES)
+						{
+								status = TXT_READ_INVALID;
+								goto FAILED_POINT;
+						}
 				}
 
 				if(str)
@@ -759,7 +770,12 @@ bool_t	AR_LoadBomTextFromBinary(arBuffer_t *input, arTxtBom_t *bom, arString_t *
 
 						if(status == TXT_READ_OK && out)
 						{
-								AR_AppendCharToString(out, c);
+								ret = AR_AppendCharToString(out, c);
+								if(ret != AR_S_YES)
+								{
+										status = TXT_READ_INVALID;
+										goto FAILED_POINT;
+								}
 						}
 				}while(status == TXT_READ_OK);
 		}
@@ -771,7 +787,14 @@ bool_t	AR_LoadBomTextFromBinary(arBuffer_t *input, arTxtBom_t *bom, arString_t *
 
 FAILED_POINT:
 		
-		return status != TXT_READ_INVALID;
+		if(status != TXT_READ_INVALID)
+		{
+				return AR_S_YES;
+		}else
+		{
+				return ret;
+		}
+
 }
 
 
@@ -779,16 +802,16 @@ FAILED_POINT:
 
 
 
-bool_t	AR_LoadBomTextFile(const wchar_t *path, arTxtBom_t *bom, arString_t *out)
+arStatus_t	AR_LoadBomTextFile(const wchar_t *path, arTxtBom_t *bom, arString_t *out)
 {
 
+		arStatus_t ret;
 		FILE	*file = NULL;
 		arBuffer_t *buf;
-		bool_t	is_ok;
 		
 		AR_ASSERT(path != NULL && out != NULL);
 
-		is_ok = true;
+		ret = AR_S_YES;
 		buf = NULL;
 		file = NULL;
 		
@@ -796,13 +819,19 @@ bool_t	AR_LoadBomTextFile(const wchar_t *path, arTxtBom_t *bom, arString_t *out)
 		file = __AR_open_file(path, L"rb");
 		if(!file)
 		{
-				is_ok = false;
+				ret = AR_E_FILE;
+				AR_error(AR_ERR_WARNING, L"__AR_open_file failed for %ls in function '%hs'\r\n", path, AR_FUNC_NAME);
 				goto FAILED_POINT;
 		}
 
 
 		buf = AR_CreateBuffer(1024);
 
+		if(buf == NULL)
+		{
+				ret = AR_E_NOMEM;
+				goto FAILED_POINT;
+		}
 
 		{
 				size_t	rn;
@@ -812,22 +841,32 @@ bool_t	AR_LoadBomTextFile(const wchar_t *path, arTxtBom_t *bom, arString_t *out)
 						rn = fread((void*)tmp, 1, sizeof(tmp), file);
 						if(rn > 0)
 						{
-								AR_InsertBuffer(buf, tmp, rn);
+								ret = AR_InsertBuffer(buf, tmp, rn);
+								if(ret == AR_E_NOMEM)
+								{
+										goto FAILED_POINT;
+								}
 						}
 				}while(!feof(file) && !ferror(file));
 
 				if(ferror(file))
 				{
-						is_ok = false;
+						ret = AR_E_FILE;
+						AR_error(AR_ERR_WARNING, L"fread failed for %ls in function '%hs'\r\n", path, AR_FUNC_NAME);
 						goto FAILED_POINT;
 				}else
 				{
 						tmp[0] = '\0';
-						AR_InsertBuffer(buf, tmp, 1);
+						
+						ret = AR_InsertBuffer(buf, tmp, 1);
+						if(ret != AR_S_YES)
+						{
+								goto FAILED_POINT;
+						}
 				}
 		}
 
-		is_ok = AR_LoadBomTextFromBinary(buf, bom, out);
+		ret = AR_LoadBomTextFromBinary(buf, bom, out);
 
 FAILED_POINT:
 		if(file)
@@ -842,7 +881,7 @@ FAILED_POINT:
 				buf = NULL;
 		}
 
-		return is_ok;
+		return ret;
 }
 
 
@@ -853,13 +892,13 @@ FAILED_POINT:
 
 /***************************************Write File**********************************************************/
 
-static bool_t __write_bom(arBuffer_t *out, arTxtBom_t bom)
+static arStatus_t __write_bom(arBuffer_t *out, arTxtBom_t bom)
 {
 		byte_t buf[4];
 		size_t wn;
-		bool_t is_ok;
+		arStatus_t ret;
 		AR_ASSERT(out != NULL);
-		is_ok = true;
+		ret = AR_S_YES;
 
 		switch(bom)
 		{
@@ -906,15 +945,16 @@ static bool_t __write_bom(arBuffer_t *out, arTxtBom_t bom)
 		case AR_TXT_BOM_ASCII:
 		default:
 				wn = 0;
-				is_ok = false;
+				ret = AR_E_INVAL;
 				break;
 		}
 
 		if(wn > 0)
 		{
-				AR_InsertBuffer(out, (byte_t*)buf, wn);
+				ret = AR_InsertBuffer(out, (byte_t*)buf, wn);
+				
 		}
-		return is_ok;
+		return ret;
 }
 
 
@@ -922,12 +962,12 @@ static bool_t __write_bom(arBuffer_t *out, arTxtBom_t bom)
 
 
 
-static bool_t __write_wchar(arBuffer_t *out, arTxtBom_t bom, wchar_t c)
+static arStatus_t __write_wchar(arBuffer_t *out, arTxtBom_t bom, wchar_t c)
 {
-		bool_t is_ok;
+		arStatus_t ret;
 		AR_ASSERT(out != NULL);
 
-		is_ok = true;
+		ret = AR_S_YES;
 
 		switch(bom)
 		{
@@ -982,7 +1022,8 @@ static bool_t __write_wchar(arBuffer_t *out, arTxtBom_t bom, wchar_t c)
 
 				n =  e - utf8;
 
-				AR_InsertBuffer(out, (byte_t*)utf8, n);
+				ret = AR_InsertBuffer(out, (byte_t*)utf8, n);
+				
 		}
 				break;
 		case AR_TXT_BOM_UTF16_BE:
@@ -1003,7 +1044,8 @@ static bool_t __write_wchar(arBuffer_t *out, arTxtBom_t bom, wchar_t c)
 						buf[0] = (byte_t)(uc & 0x00FF);
 				}
 
-				AR_InsertBuffer(out, (byte_t*)buf, 2);
+				ret = AR_InsertBuffer(out, (byte_t*)buf, 2);
+				
 		}
 				break;
 		case AR_TXT_BOM_UTF32_BE:
@@ -1027,7 +1069,7 @@ static bool_t __write_wchar(arBuffer_t *out, arTxtBom_t bom, wchar_t c)
 						buf[0] = (byte_t)(uc & 0x000000FF);
 				}
 
-				AR_InsertBuffer(out, (byte_t*)buf, 4);
+				ret = AR_InsertBuffer(out, (byte_t*)buf, 4);
 		}
 				break;
 		case AR_TXT_BOM_ASCII:
@@ -1035,41 +1077,45 @@ static bool_t __write_wchar(arBuffer_t *out, arTxtBom_t bom, wchar_t c)
 				break;
 		}
 
-		return is_ok;
+		return ret;
 }
 
 
 
-bool_t	AR_SaveBomTextToBinary(arBuffer_t *output, arTxtBom_t bom, const wchar_t *input)
+arStatus_t	AR_SaveBomTextToBinary(arBuffer_t *output, arTxtBom_t bom, const wchar_t *input)
 {
-		bool_t	is_ok;
+		arStatus_t	ret;
 		const wchar_t  *p;
 
 		AR_ASSERT(output != NULL && input != NULL);
 
 
-
-		is_ok = true;
+		ret = AR_S_YES;
 
 
 		if(bom == AR_TXT_BOM_ASCII)
 		{
 				size_t n;
 				char *s = AR_wcs_convto_str(AR_CP_ACP, input, AR_wcslen(input));
-				n = strlen(s);
-
+				
 				if(!s)
 				{
-						is_ok = false;
+						ret = AR_E_BADENCCONV;
 						goto CLEAR_LOCAL;
 				}
+
+				n = strlen(s);
 
 				if(n == 0)
 				{
 						goto CLEAR_LOCAL;
 				}else
 				{
-						AR_InsertBuffer(output, (byte_t*)s, n);
+						ret = AR_InsertBuffer(output, (byte_t*)s, n);
+						if(ret != AR_S_YES)
+						{
+								goto CLEAR_LOCAL;
+						}
 				}
 CLEAR_LOCAL:
 				if(s)
@@ -1079,20 +1125,18 @@ CLEAR_LOCAL:
 				}
 		}else
 		{
-
-				if(!__write_bom(output, bom))
+				ret = __write_bom(output, bom);
+				if(ret != AR_S_YES)
 				{
-						is_ok = false;
 						goto FAILED_POINT;
 				}
 				p = input;
 
 				while(*p)
 				{
-
-						if(!__write_wchar(output, bom, *p))
+						ret = __write_wchar(output, bom, *p);
+						if(ret != AR_S_YES)
 						{
-								is_ok = false;
 								goto FAILED_POINT;
 						}
 						++p;
@@ -1102,7 +1146,7 @@ CLEAR_LOCAL:
 
 FAILED_POINT:
 		
-		return is_ok;
+		return ret;
 }
 
 
@@ -1113,24 +1157,30 @@ FAILED_POINT:
 
 
 
-bool_t	AR_SaveBomTextFile(const wchar_t *path, arTxtBom_t bom, const wchar_t *input)
+arStatus_t	AR_SaveBomTextFile(const wchar_t *path, arTxtBom_t bom, const wchar_t *input)
 {
-		FILE	*file;
-		bool_t	is_ok;
-		arBuffer_t *buf;
+		FILE			*file;
+		arStatus_t		ret;
+		arBuffer_t		*buf;
 		AR_ASSERT(path != NULL && input != NULL);
 
 
 
-		is_ok = true;
+		ret = AR_S_YES;
 		file = NULL;
 		buf = NULL;
 
 		buf = AR_CreateBuffer(1024);
 
-		if(!AR_SaveBomTextToBinary(buf, bom, input))
+		if(buf == NULL)
 		{
-				is_ok = false;
+				ret = AR_E_NOMEM;
+				goto FAILED_POINT;
+		}
+
+		ret = AR_SaveBomTextToBinary(buf, bom, input);
+		if(ret != AR_S_YES)
+		{
 				goto FAILED_POINT;
 		}
 
@@ -1139,14 +1189,16 @@ bool_t	AR_SaveBomTextFile(const wchar_t *path, arTxtBom_t bom, const wchar_t *in
 
 		if(!file)
 		{
-				is_ok = false;
+				ret = AR_E_FILE;
+				AR_error(AR_ERR_WARNING, L"__AR_open_file failed for %ls in function '%hs'\r\n", path, AR_FUNC_NAME);
 				goto FAILED_POINT;
 		}
 
 		
 		if(fwrite((const byte_t*)AR_GetBufferData(buf), 1, AR_GetBufferAvailable(buf), file) != AR_GetBufferAvailable(buf))
 		{
-				is_ok = false;
+				ret = AR_E_FILE;
+				AR_error(AR_ERR_WARNING, L"fwrite failed for %ls in function '%hs'\r\n", path, AR_FUNC_NAME);
 				goto FAILED_POINT;
 		}
 
@@ -1163,7 +1215,7 @@ FAILED_POINT:
 				buf = NULL;
 		}
 
-		return is_ok;
+		return ret;
 }
 AR_NAMESPACE_END
 

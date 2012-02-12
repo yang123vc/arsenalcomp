@@ -31,8 +31,6 @@ struct __rgx_node_tag;
 typedef struct __rgx_node_tag			rgxNode_t;
 
 
-struct __rgx_node_set_tag;
-typedef struct __rgx_node_set_tag		rgxNodeSet_t;
 
 /************************************************NameSet***************************************************/
 #define	AR_RGX_MAXNAME					256
@@ -61,19 +59,6 @@ const rgxNode_t*		Regex_FindFromNameSet(const rgxNameSet_t	*set, const wchar_t *
 void					Regex_ClearNameSet(rgxNameSet_t *set);
 
 
-
-/************************************************NodeSet***************************************************/
-struct __rgx_node_set_tag
-{
-		rgxNode_t		**nodes;
-		size_t			count;
-		size_t			cap;
-};
-
-void			Regex_InitNodeSet(rgxNodeSet_t *nset);
-void			Regex_UnInitNodeSet(rgxNodeSet_t *nset);
-void			Regex_InsertToNodeSet(rgxNodeSet_t *nset, rgxNode_t *node);
-bool_t			Regex_RemoveFromNodeSet(rgxNodeSet_t *nset, size_t idx);
 
 
 /************************************************Regex Node***************************************************/
@@ -125,11 +110,11 @@ struct __rgx_node_tag
 
 rgxNode_t*		RGX_CreateNode(rgxNodeType_t type);
 
-rgxNode_t*		RGX_CopyNode(const rgxNode_t *node);
+rgxNode_t*		RGX_CopyNewNode(const rgxNode_t *node);
 
 void			RGX_DestroyNode(rgxNode_t *node);
 
-void			RGX_InsertToNode(rgxNode_t *root, rgxNode_t *node);
+bool_t			RGX_InsertToNode(rgxNode_t *root, rgxNode_t *node);
 
 
 void			RGX_ToString(const rgxNode_t *node, arString_t *str);

@@ -23,17 +23,296 @@
 AR_NAMESPACE_BEGIN
 
 
+		
 
-static void __insert_to_conflict_set(psrConflictView_t *view, psrConflictItem_t *item)
+
+#define __CHECK_RET_VAL(_call_stmt)						\
+		do{												\
+				arStatus_t status = _call_stmt;			\
+				if(status != AR_S_YES)					\
+				{										\
+						return status;					\
+				}										\
+		}while(0)
+
+static arStatus_t Parser_PrintActionTable(const psrActionTable_t *tbl, const psrGrammar_t *grammar, size_t width, arString_t *str)
+{
+		/*这里必须用int，因为printf一族函数的对于%*d这类width的定义就是int*/
+		int __WIDTH__;
+		size_t i,j;
+		wchar_t buf[1024];
+
+		__WIDTH__ = (int)width;
+		
+		__CHECK_RET_VAL(AR_AppendString(str,L"TermSet:\r\n"));
+
+		for(i = 0; i < tbl->term_set.count; ++i)
+		{
+				__CHECK_RET_VAL(Parser_PrintSymbol(tbl->term_set.lst[i],str));
+				__CHECK_RET_VAL(AR_AppendString(str,L"  "));
+		}
+
+		__CHECK_RET_VAL(AR_AppendString(str,L"\r\n"));
+		__CHECK_RET_VAL(AR_AppendString(str, L"-----------------------------------------\r\n"));
+		__CHECK_RET_VAL(AR_AppendString(str,L"NonTermSet:\r\n"));
+
+		for(i = 0; i < tbl->nonterm_set.count; ++i)
+		{
+				__CHECK_RET_VAL(Parser_PrintSymbol(tbl->nonterm_set.lst[i],str));
+				__CHECK_RET_VAL(AR_AppendString(str,L"  "));
+		}
+
+		__CHECK_RET_VAL(AR_AppendString(str,L"\r\n"));
+		__CHECK_RET_VAL(AR_AppendString(str,L"-----------------------------------------\r\n"));
+
+		
+		__CHECK_RET_VAL(AR_AppendString(str,L"Goto Table:\r\n"));
+		
+		__CHECK_RET_VAL(AR_AppendFormatString(str, L"%*ls", __WIDTH__,L"NULL"));
+
+		for(i = 0; i < tbl->nonterm_set.count; ++i)
+		{
+				AR_swprintf(buf, 1024, L"<%ls>", tbl->nonterm_set.lst[i]->name);
+				__CHECK_RET_VAL(AR_AppendFormatString(str, L"%*ls",__WIDTH__, buf));
+		}
+
+
+		__CHECK_RET_VAL(AR_AppendString(str,L"\r\n"));
+		__CHECK_RET_VAL(AR_AppendString(str,L"\r\n"));
+
+		for(i = 0; i < tbl->goto_row; i++)
+		{
+				AR_swprintf(buf, 1024, L"I[%Id]", (size_t)i);
+
+				__CHECK_RET_VAL(AR_AppendFormatString(str, L"%*ls:", __WIDTH__,buf));
+
+				for(j = 0; j < tbl->goto_col; ++j)
+				{
+						__CHECK_RET_VAL(AR_AppendFormatString(str, L"%*Id", __WIDTH__, tbl->goto_tbl[AR_TBL_IDX_R(i,j,tbl->goto_col)]));
+				}
+
+				__CHECK_RET_VAL(AR_AppendString(str,L"\r\n"));
+		}
+
+		__CHECK_RET_VAL(AR_AppendString(str,L"-----------------------------------------\r\n"));
+
+		__CHECK_RET_VAL(AR_AppendString(str,L"Action Table:\r\n"));
+		
+		__CHECK_RET_VAL(AR_AppendFormatString(str,L"%*ls", __WIDTH__,L"NULL"));
+
+		for(i = 0; i < tbl->term_set.count; ++i)
+		{
+				__CHECK_RET_VAL(AR_AppendFormatString(str,L"%*ls",__WIDTH__, tbl->term_set.lst[i]->name));
+		}
+		
+		__CHECK_RET_VAL(AR_AppendFormatString(str,L"\r\n"));
+		__CHECK_RET_VAL(AR_AppendFormatString(str,L"\r\n"));
+
+
+		for(i = 0; i < tbl->row; ++i)
+		{
+				AR_swprintf(buf, 1024, L"I[%Id]", i);
+
+				__CHECK_RET_VAL(AR_AppendFormatString(str,L"%*ls:", __WIDTH__,buf));
+
+				for(j = 0; j < tbl->col; ++j)
+				{
+						const psrAction_t *pact;
+						const psrRule_t	 *rule;
+						pact = tbl->actions[AR_TBL_IDX_R(i,j, tbl->col)];
+						rule = Parser_GetRuleFromGrammar(grammar, pact->rule_num);
+
+						switch(pact->type)
+						{
+						case PARSER_ACCEPT:
+								__CHECK_RET_VAL(AR_AppendFormatString(str,L"%*ls", __WIDTH__,L"accept"));
+								break;
+						case PARSER_SHIFT:
+						{
+								__CHECK_RET_VAL(AR_AppendFormatString(str,L"%*Id", __WIDTH__, (size_t)pact->shift_to));
+						}
+								break;
+						case PARSER_REDUCE:
+						{
+								AR_swprintf(buf, 1024, L"[<%ls>:%Id]",rule->head->name, (size_t)pact->reduce_count);
+								__CHECK_RET_VAL(AR_AppendFormatString(str,L"%*ls", __WIDTH__,buf));
+								
+						}
+								break;
+						default:
+								__CHECK_RET_VAL(AR_AppendFormatString(str,L"%*ls", __WIDTH__,L"error"));
+								break;
+						}
+				}
+				__CHECK_RET_VAL(AR_AppendFormatString(str,L"\r\n"));
+		}
+		__CHECK_RET_VAL(AR_AppendFormatString(str,L"-----------------------------------------\r\n"));
+
+		return AR_S_YES;
+}
+
+
+
+static arStatus_t Parser_ReportConflict(const psrActionTable_t *tbl, const psrGrammar_t *grammar, arString_t *str)
+{
+		size_t i,j;
+		const psrAction_t *action;
+		const psrRule_t	 *rule;
+
+		__CHECK_RET_VAL(AR_AppendFormatString(str,L"%ls\r\n", L"Conflict:"));
+
+		for(i = 0; i < tbl->row; ++i)
+		{
+				for(j = 0; j < tbl->col; ++j)
+				{
+						action = tbl->actions[AR_TBL_IDX_R(i,j,tbl->col)];
+						rule = Parser_GetRuleFromGrammar(grammar, action->rule_num);
+						AR_ASSERT(action != NULL);
+						if(action->next == NULL)
+						{
+								continue;
+						}
+
+
+						__CHECK_RET_VAL(AR_AppendFormatString(str,L"state[%Id] : %ls\r\n",(size_t)i, tbl->term_set.lst[j]->name));
+						
+						while(action != NULL)
+						{
+								
+								lalrConfig_t	tmp;
+
+								__CHECK_RET_VAL(Parser_InitConfig(&tmp, action->rule_num, action->delim, grammar));
+								
+								switch(action->type)
+								{
+								case PARSER_REDUCE:
+										if(AR_AppendFormatString(str,L"Reduce: ") != AR_S_YES)
+										{
+												Parser_UnInitConfig(&tmp);
+												return AR_E_NOMEM;
+										}
+										if(Parser_PrintConfig(&tmp, grammar, str) != AR_S_YES)
+										{
+												Parser_UnInitConfig(&tmp);
+												return AR_E_NOMEM;
+										}
+										break;
+								case PARSER_SHIFT:
+										if(AR_AppendFormatString(str,L"Shift: ") != AR_S_YES)
+										{
+												Parser_UnInitConfig(&tmp);
+												return AR_E_NOMEM;
+										}
+
+										if(Parser_PrintConfig(&tmp, grammar,str) != AR_S_YES)
+										{
+												Parser_UnInitConfig(&tmp);
+												return AR_E_NOMEM;
+										}
+										break;
+								case PARSER_ACCEPT:
+										if(AR_AppendFormatString(str,L"Accept ") != AR_S_YES)
+										{
+												Parser_UnInitConfig(&tmp);
+												return AR_E_NOMEM;
+										}
+										break;
+								default:
+										AR_ASSERT(false);
+								}
+								
+								Parser_UnInitConfig(&tmp);
+
+								__CHECK_RET_VAL(AR_AppendFormatString(str,L"\r\n"));
+								action = action->next;
+								
+						}
+
+						__CHECK_RET_VAL(AR_AppendFormatString(str,L"\r\n"));
+						__CHECK_RET_VAL(AR_AppendFormatString(str,L"-----------------------------------------------\r\n"));
+				}
+		}
+
+		return AR_S_YES;
+}
+
+
+
+static arStatus_t __insert_to_conflict_set(psrConflictView_t *view, psrConflictItem_t *item)
 {
 		AR_ASSERT(view != NULL && item != NULL);
 
 		if(view->count == view->cap)
 		{
-				view->cap = (view->cap + 4)*2;
-				view->conflict = AR_REALLOC(psrConflictItem_t*, view->conflict, view->cap);
+				size_t					new_cap;
+				psrConflictItem_t		**new_conflict;
+
+				new_cap = (view->cap + 4)*2;
+				new_conflict = AR_NEWARR(psrConflictItem_t*, new_cap);
+
+				if(new_conflict == NULL)
+				{
+						return AR_E_NOMEM;
+				}
+
+				if(view->count > 0)
+				{
+						AR_memcpy(new_conflict, view->conflict, view->count * sizeof(psrConflictItem_t*));
+				}
+
+				if(view->conflict)
+				{
+						
+						AR_DEL(view->conflict);
+						view->conflict = NULL;
+				}
+
+				view->conflict = new_conflict;
+				view->cap = new_cap;
 		}
+
 		view->conflict[view->count++] = item;
+
+		return AR_S_YES;
+}
+
+
+static void							Parser_DestroyConflictView(const psrConflictView_t *view);
+
+static void __destroy_psrConflictItem_t(psrConflictItem_t *item)
+{
+		size_t i;
+
+		if(item)
+		{
+				if(item->name)
+				{
+						AR_DEL(item->name);
+						item->name = NULL;
+				}
+
+				if(item->lookahead)
+				{
+						AR_DEL(item->lookahead);
+						item->lookahead = NULL;
+				}
+
+				for(i = 0; i < item->count; ++i)
+				{
+						if(item->items[i])
+						{
+								AR_DEL(item->items[i]);
+						}
+				}
+
+				if(item->items)
+				{
+						AR_DEL(item->items);
+						item->items = NULL;
+				}
+
+				AR_DEL(item);
+		}
 }
 
 
@@ -43,10 +322,23 @@ static const	psrConflictView_t*		Parser_CreateConflictView(const psrActionTable_
 		arString_t				*str = NULL;
 		size_t i,k;
 		AR_ASSERT(tbl != NULL && grammar != NULL);
+
+		str = NULL;
+		view = NULL;
 	
 		str = AR_CreateString();
+
+		if(str == NULL)
+		{
+				goto INVALID_POINT;
+		}
+
 		view = AR_NEW0(psrConflictView_t);
 		
+		if(view == NULL)
+		{
+				goto INVALID_POINT;
+		}
 		
 		
 		for(i = 0; i < tbl->row; ++i)
@@ -57,83 +349,172 @@ static const	psrConflictView_t*		Parser_CreateConflictView(const psrActionTable_
 				for(k = 0; k < tbl->col; ++k)
 				{
 						
+						size_t cnt;
 						const psrAction_t		*act = tbl->actions[AR_TBL_IDX_R(i,k,tbl->col)];
 						/*
 						const psrRule_t			*rule = Parser_GetRuleFromGrammar(grammar, act->rule_num);
 						*/
 						
-						if(act->next == NULL)continue;
+						if(act->next == NULL)
+						{
+								continue;
+						}
 						
 						AR_ClearString(str);
 						item = AR_NEW0(psrConflictItem_t);
-
+						
+						if(item == NULL)
+						{
+								goto INVALID_POINT;
+						}
 						
 
 						/*
 						AR_AppendFormatString(str,L"state[%" AR_PLAT_INT_FMT L"d] : %ls",(size_t)i, tbl->term_set.lst[k]->name);
 						*/
-						AR_AppendFormatString(str,L"state[%Id]",(size_t)i);
+
+						if(AR_AppendFormatString(str,L"state[%Id]",(size_t)i) != AR_S_YES)
+						{
+								__destroy_psrConflictItem_t(item);
+								goto INVALID_POINT;
+						}
+
 						item->name = AR_wcsdup(AR_GetStringCString(str));
+
+						if(item->name == NULL)
+						{
+								__destroy_psrConflictItem_t(item);
+								goto INVALID_POINT;
+						}
+
 						AR_ClearString(str);
+
 						item->lookahead = AR_wcsdup(tbl->term_set.lst[k]->name);
 
+						if(item->lookahead == NULL)
+						{
+								__destroy_psrConflictItem_t(item);
+								goto INVALID_POINT;
+						}
+
+						cnt = 0;
 						while(act != NULL)
 						{
-								item->count++;
+								cnt++;
 								act = act->next;
 						}
 
-						item->items = AR_NEWARR0(wchar_t*, item->count);
 
-						
-						
-						for(l = 0, act = tbl->actions[AR_TBL_IDX_R(i,k,tbl->col)]; l < item->count; ++l, act = act->next)
+						item->items = AR_NEWARR0(wchar_t*, cnt);
+						if(item->items == NULL)
 						{
-								/*
-								psrLRItem_t tmp;
-								*/
+								__destroy_psrConflictItem_t(item);
+								goto INVALID_POINT;
+						}
+						
+						
+						for(l = 0, act = tbl->actions[AR_TBL_IDX_R(i,k,tbl->col)]; l < cnt; ++l, act = act->next)
+						{
 								lalrConfig_t	tmp;
-								/*const psrRule_t			*rule = Parser_GetRuleFromGrammar(grammar, act->rule_num);*/
+								
 								AR_ASSERT(act != NULL);
 								
-								Parser_InitConfig(&tmp, act->rule_num, act->delim, grammar);
-								/*
-								Parser_InitLRItem(&tmp, rule, act->delim);
-								*/
+								if(Parser_InitConfig(&tmp, act->rule_num, act->delim, grammar) != AR_S_YES)
+								{
+										__destroy_psrConflictItem_t(item);
+										goto INVALID_POINT;
+								}
+								
 
 								AR_ClearString(str);
+
 								switch(act->type)
 								{
 								case PARSER_REDUCE:
-										AR_AppendFormatString(str,L"Reduce: ");
-										Parser_PrintConfig(&tmp,grammar,str);
+										if(AR_AppendFormatString(str,L"Reduce: ") != AR_S_YES)
+										{
+												Parser_UnInitConfig(&tmp);
+												__destroy_psrConflictItem_t(item);
+												goto INVALID_POINT;
+										}
+
+										if(Parser_PrintConfig(&tmp,grammar,str) != AR_S_YES)
+										{
+												Parser_UnInitConfig(&tmp);
+												__destroy_psrConflictItem_t(item);
+												goto INVALID_POINT;
+										}
+
 										break;
 								case PARSER_SHIFT:
-										AR_AppendFormatString(str,L"Shift: ");
-										Parser_PrintConfig(&tmp, grammar,str);
+										if(AR_AppendFormatString(str,L"Shift: ") != AR_S_YES)
+										{
+												Parser_UnInitConfig(&tmp);
+												__destroy_psrConflictItem_t(item);
+												goto INVALID_POINT;
+										}
+
+										if(Parser_PrintConfig(&tmp, grammar,str) != AR_S_YES)
+										{
+												Parser_UnInitConfig(&tmp);
+												__destroy_psrConflictItem_t(item);
+												goto INVALID_POINT;
+										}
+
 										break;
 								case PARSER_ACCEPT:
-										AR_AppendFormatString(str,L"Accept ");
+										if(	AR_AppendFormatString(str,L"Accept ") != AR_S_YES)
+										{
+												Parser_UnInitConfig(&tmp);
+												__destroy_psrConflictItem_t(item);
+												goto INVALID_POINT;
+										}
 										break;
 								default:
 										AR_ASSERT(false);
 								}
-								/*AR_AppendFormatString(str,L"\r\n");*/
-
-								/*Parser_UnInitLRItem(&tmp);*/
+								
 								Parser_UnInitConfig(&tmp);
+								
 								item->items[l] = AR_wcsdup(AR_GetStringCString(str));
+
+								if(item->items[l] == NULL)
+								{
+										__destroy_psrConflictItem_t(item);
+										goto INVALID_POINT;
+								}
+								item->count++;
 
 						}
 						
-						__insert_to_conflict_set(view, item);
+						if(__insert_to_conflict_set(view, item) != AR_S_YES)
+						{
+								__destroy_psrConflictItem_t(item);
+								goto INVALID_POINT;
+						}
 				}
 		}
 
 		AR_DestroyString(str);
-		
 		return view;
+
+INVALID_POINT:
+		if(str)
+		{
+				AR_DestroyString(str);
+				str = NULL;
+		}
+
+		if(view)
+		{
+				Parser_DestroyConflictView(view);
+				view = NULL;
+		}
+
+		return NULL;
+
 }
+
 
 static void							Parser_DestroyConflictView(const psrConflictView_t *view)
 {
@@ -142,27 +523,40 @@ static void							Parser_DestroyConflictView(const psrConflictView_t *view)
 
 		if(v != NULL)
 		{
-				size_t i,k;
+				size_t i;
 				for(i = 0; i < view->count; ++i)
 				{
 						psrConflictItem_t		*item = view->conflict[i];
 						
-						AR_DEL(item->name);
-						AR_DEL(item->lookahead);
-						for(k = 0; k < item->count; ++k)
+						if(item != NULL)
 						{
-								AR_DEL(item->items[k]);
+								__destroy_psrConflictItem_t(item);
+								item = NULL;
 						}
-						AR_DEL(item->items);
-						AR_DEL(item);
 				}
 
-				AR_DEL(v->conflict);
-				AR_DEL(v);
+				if(v->conflict)
+				{
+						AR_DEL(v->conflict);
+						v->conflict = NULL;
+				}
+
+				if(v)
+				{
+						AR_DEL(v);
+						v = NULL;
+				}
 		}
 
 }
 
+
+
+
+
+
+
+static void Parser_DestroyActionView(const psrActionView_t *action_view);
 
 
 static const psrActionView_t*	Parser_CreateActionView(const psrActionTable_t *tbl, const psrGrammar_t *grammar)
@@ -174,23 +568,42 @@ static const psrActionView_t*	Parser_CreateActionView(const psrActionTable_t *tb
 
 		view = AR_NEW0(psrActionView_t);
 		
-
+		if(view == NULL)
+		{
+				goto INVALID_POINT;
+		}
+		
 
 		view->item_cnt = tbl->term_set.count + tbl->nonterm_set.count;
 
 		view->item = AR_NEWARR0(wchar_t*, view->item_cnt);
 
+		if(view->item == NULL)
+		{
+				goto INVALID_POINT;
+		}
 		
 		c = 0;
 		for(k = 0; k < tbl->term_set.count; ++k)
 		{
 				view->item[c] = AR_vtow(L"%ls", tbl->term_set.lst[k]->name);
+
+				if(view->item[c] == NULL)
+				{
+						goto INVALID_POINT;
+				}
 				c++;
 		}
 
 		for(k = 0; k < tbl->nonterm_set.count; ++k)
 		{
 				view->item[c] = AR_vtow(L"<%ls>", tbl->nonterm_set.lst[k]->name);
+
+				if(view->item[c] == NULL)
+				{
+						goto INVALID_POINT;
+				}
+
 				c++;
 		}
 
@@ -203,6 +616,11 @@ static const psrActionView_t*	Parser_CreateActionView(const psrActionTable_t *tb
 		AR_ASSERT(view->col == view->item_cnt);
 
 		view->action_tbl = AR_NEWARR0(wchar_t*, view->row * view->col);
+
+		if(view->action_tbl == NULL)
+		{
+				goto INVALID_POINT;
+		}
 		
 		/*construct action view*/
 
@@ -236,6 +654,11 @@ static const psrActionView_t*	Parser_CreateActionView(const psrActionTable_t *tb
 								msg = AR_vtow(L"error");
 								break;
 						}
+
+						if(msg == NULL)
+						{
+								goto INVALID_POINT;
+						}
 						
 						view->action_tbl[AR_TBL_IDX_R(r, c, view->col)] = msg;
 						c++;
@@ -247,6 +670,11 @@ static const psrActionView_t*	Parser_CreateActionView(const psrActionTable_t *tb
 						int_t state =  tbl->goto_tbl[AR_TBL_IDX_R(r, k, tbl->goto_col)];
 						msg = AR_vtow(L"%Id", state);
 
+						if(msg == NULL)
+						{
+								goto INVALID_POINT;
+						}
+
 						view->action_tbl[AR_TBL_IDX_R(r, c, view->col)] = msg;
 						c++;
 						msg = NULL;
@@ -256,6 +684,15 @@ static const psrActionView_t*	Parser_CreateActionView(const psrActionTable_t *tb
 
 		AR_ASSERT(r == view->row);
 		return view;
+
+INVALID_POINT:
+		if(view)
+		{
+				Parser_DestroyActionView(view);
+				view = NULL;
+		}
+
+		return NULL;
 }
 
 
@@ -269,203 +706,38 @@ static void Parser_DestroyActionView(const psrActionView_t *action_view)
 
 		for(i = 0; i < view->item_cnt; ++i)
 		{
-				AR_DEL(view->item[i]);
+				if(view->item[i])
+				{
+						AR_DEL(view->item[i]);
+						view->item[i] = NULL;
+				}
 		}
 
 		for(i = 0; i < view->row * view->col; ++i)
 		{
-				AR_DEL(view->action_tbl[i]);
+				if(view->action_tbl[i])
+				{
+						AR_DEL(view->action_tbl[i]);
+						view->action_tbl[i] = NULL;
+				}
 		}
 		
 		if(view->action_tbl)
 		{
 				AR_DEL(view->action_tbl);
+				view->action_tbl = NULL;
 		}
 
 		if(view->item)
 		{
 				AR_DEL(view->item);
+				view->item = NULL;
 		}
 		AR_DEL(view);
 }
 
 
 
-static void Parser_PrintActionTable(const psrActionTable_t *tbl, const psrGrammar_t *grammar, size_t width, arString_t *str)
-{
-		/*这里必须用int，因为printf一族函数的对于%*d这类width的定义就是int*/
-		int __WIDTH__;
-		size_t i,j;
-		wchar_t buf[1024];
-
-		__WIDTH__ = (int)width;
-		
-		AR_AppendString(str,L"TermSet:\r\n");
-		for(i = 0; i < tbl->term_set.count; ++i)
-		{
-				Parser_PrintSymbol(tbl->term_set.lst[i],str);
-				AR_AppendString(str,L"  ");
-		}
-		AR_AppendString(str,L"\r\n");
-		AR_AppendString(str, L"-----------------------------------------\r\n");
-		AR_AppendString(str,L"NonTermSet:\r\n");
-		for(i = 0; i < tbl->nonterm_set.count; ++i)
-		{
-				Parser_PrintSymbol(tbl->nonterm_set.lst[i],str);
-				AR_AppendString(str,L"  ");
-		}
-
-		AR_AppendString(str,L"\r\n");
-		AR_AppendString(str,L"-----------------------------------------\r\n");
-
-		
-		AR_AppendString(str,L"Goto Table:\r\n");
-		
-		AR_AppendFormatString(str, L"%*ls", __WIDTH__,L"NULL");
-		for(i = 0; i < tbl->nonterm_set.count; ++i)
-		{
-				AR_swprintf(buf, 1024, L"<%ls>", tbl->nonterm_set.lst[i]->name);
-				AR_AppendFormatString(str, L"%*ls",__WIDTH__, buf);
-		}
-
-		AR_AppendString(str,L"\r\n");
-		AR_AppendString(str,L"\r\n");
-		for(i = 0; i < tbl->goto_row; i++)
-		{
-				AR_swprintf(buf, 1024, L"I[%Id]", (size_t)i);
-				AR_AppendFormatString(str, L"%*ls:", __WIDTH__,buf);
-				for(j = 0; j < tbl->goto_col; ++j)
-				{
-						AR_AppendFormatString(str, L"%*Id", __WIDTH__, tbl->goto_tbl[AR_TBL_IDX_R(i,j,tbl->goto_col)]);
-						/*
-						int_t xxx,xxx_idx;
-						
-						xxx_idx = AR_TBL_IDX_R(i,j,tbl->goto_col);
-						xxx = tbl->goto_tbl[xxx_idx];
-						printf("xxx_idx == %I64d, xxx == %I64d\r\n", xxx_idx, xxx);
-						AR_AppendFormatString(str, L"%*I64d", __WIDTH__, (int_64_t)tbl->goto_tbl[AR_TBL_IDX_R(i,j,tbl->goto_col)]);
-						*/
-				}
-				AR_AppendString(str,L"\r\n");
-		}
-
-		AR_AppendString(str,L"-----------------------------------------\r\n");
-
-		AR_AppendString(str,L"Action Table:\r\n");
-		
-		AR_AppendFormatString(str,L"%*ls", __WIDTH__,L"NULL");
-		for(i = 0; i < tbl->term_set.count; ++i)
-		{
-				AR_AppendFormatString(str,L"%*ls",__WIDTH__, tbl->term_set.lst[i]->name);
-		}
-		AR_AppendFormatString(str,L"\r\n");
-		AR_AppendFormatString(str,L"\r\n");
-
-
-		for(i = 0; i < tbl->row; ++i)
-		{
-				AR_swprintf(buf, 1024, L"I[%Id]", i);
-
-				AR_AppendFormatString(str,L"%*ls:", __WIDTH__,buf);
-				for(j = 0; j < tbl->col; ++j)
-				{
-						const psrAction_t *pact;
-						const psrRule_t	 *rule;
-						pact = tbl->actions[AR_TBL_IDX_R(i,j, tbl->col)];
-						rule = Parser_GetRuleFromGrammar(grammar, pact->rule_num);
-
-						switch(pact->type)
-						{
-						case PARSER_ACCEPT:
-								AR_AppendFormatString(str,L"%*ls", __WIDTH__,L"accept");
-								break;
-						case PARSER_SHIFT:
-						{
-								AR_AppendFormatString(str,L"%*Id", __WIDTH__, (size_t)pact->shift_to);
-						}
-								break;
-						case PARSER_REDUCE:
-						{
-								AR_swprintf(buf, 1024, L"[<%ls>:%Id]",rule->head->name, (size_t)pact->reduce_count);
-								AR_AppendFormatString(str,L"%*ls", __WIDTH__,buf);
-								
-						}
-								break;
-						default:
-								AR_AppendFormatString(str,L"%*ls", __WIDTH__,L"error");
-								break;
-						}
-				}
-				AR_AppendFormatString(str,L"\r\n");
-		}
-		AR_AppendFormatString(str,L"-----------------------------------------\r\n");
-}
-
-
-static void Parser_ReportConflict(const psrActionTable_t *tbl, const psrGrammar_t *grammar, arString_t *str)
-{
-		size_t i,j;
-		const psrAction_t *action;
-		const psrRule_t	 *rule;
-		AR_AppendFormatString(str,L"%ls\r\n", L"Conflict:");
-		for(i = 0; i < tbl->row; ++i)
-		{
-				for(j = 0; j < tbl->col; ++j)
-				{
-						action = tbl->actions[AR_TBL_IDX_R(i,j,tbl->col)];
-						rule = Parser_GetRuleFromGrammar(grammar, action->rule_num);
-						AR_ASSERT(action != NULL);
-						if(action->next == NULL)continue;
-
-
-						AR_AppendFormatString(str,L"state[%Id] : %ls\r\n",(size_t)i, tbl->term_set.lst[j]->name);
-						
-						while(action != NULL)
-						{
-								
-								lalrConfig_t	tmp;
-
-								/*
-								psrLRItem_t tmp;
-								
-								Parser_InitLRItem(&tmp, rule, action->delim);
-								*/
-								Parser_InitConfig(&tmp, action->rule_num, action->delim, grammar);
-								
-								switch(action->type)
-								{
-								case PARSER_REDUCE:
-										AR_AppendFormatString(str,L"Reduce: ");
-										Parser_PrintConfig(&tmp, grammar, str);
-										
-										/*Parser_PrintLRItem(&tmp,grammar,str);*/
-
-										break;
-								case PARSER_SHIFT:
-										AR_AppendFormatString(str,L"Shift: ");
-										Parser_PrintConfig(&tmp, grammar,str);
-										break;
-								case PARSER_ACCEPT:
-										AR_AppendFormatString(str,L"Accept ");
-										/*Parser_PrintLRItemName(&action->item,grammar);*/
-										break;
-								default:
-										AR_ASSERT(false);
-								}
-								AR_AppendFormatString(str,L"\r\n");
-								action = action->next;
-								
-								Parser_UnInitConfig(&tmp);
-								/*
-								Parser_UnInitLRItem(&tmp);
-								*/
-						}
-
-						AR_AppendFormatString(str,L"\r\n");
-						AR_AppendFormatString(str,L"-----------------------------------------------\r\n");
-				}
-		}
-}
 
 
 static size_t Parser_CountConflict(const psrActionTable_t *tbl)
@@ -482,7 +754,10 @@ static size_t Parser_CountConflict(const psrActionTable_t *tbl)
 				{
 						action = tbl->actions[AR_TBL_IDX_R(i,j,tbl->col)];
 						AR_ASSERT(action != NULL);
-						if(action->next != NULL)count++;
+						if(action->next != NULL)
+						{
+								count++;
+						}
 				}
 		}
 		return  count;
@@ -503,20 +778,20 @@ size_t	Parser_CountParserConflict(const parser_t *parser)
 		return Parser_CountConflict(parser->tbl);
 }
 
-void	Parser_PrintParserConflict(const parser_t *parser, arString_t *out)
+arStatus_t	Parser_PrintParserConflict(const parser_t *parser, arString_t *out)
 {
 		AR_ASSERT(parser != NULL && out != NULL);
 		AR_ASSERT(parser->tbl != NULL && parser->grammar != NULL);
 		
-		Parser_ReportConflict(parser->tbl, parser->grammar, out);
+		return Parser_ReportConflict(parser->tbl, parser->grammar, out);
 }
 
-void	Parser_PrintParserActionTable(const parser_t *parser, arString_t *out, size_t width)
+arStatus_t	Parser_PrintParserActionTable(const parser_t *parser, arString_t *out, size_t width)
 {
 		AR_ASSERT(parser != NULL && out != NULL);
 		AR_ASSERT(parser->tbl != NULL && parser->grammar != NULL);
 
-		Parser_PrintActionTable(parser->tbl, parser->grammar, width, out);
+		return Parser_PrintActionTable(parser->tbl, parser->grammar, width, out);
 }
 
 
@@ -552,6 +827,10 @@ void							Parser_DestroyParserConflictView(const psrConflictView_t *view)
 		Parser_DestroyConflictView(view);
 }
 
+
+
+
+
 /*
 typedef struct __sym_tbl_view_tag
 {
@@ -568,36 +847,78 @@ typedef struct __first_follow_view_tag
 }psrStatusView_t;
 */
 
-void __insert_to_symtbl_view(psrSymbolMapView_t *map_view, const wchar_t *name, const wchar_t *set)
+arStatus_t __insert_to_symtbl_view(psrSymbolMapView_t *map_view, const wchar_t *name, const wchar_t *set)
 {
 		AR_ASSERT(map_view != NULL && name != NULL && set != NULL);
 
 		if(map_view->count == map_view->cap)
 		{
-				map_view->cap = (map_view->cap + 4) * 2;
-				map_view->name = AR_REALLOC(wchar_t*, map_view->name, map_view->cap);
-				map_view->name_set = AR_REALLOC(wchar_t*, map_view->name_set, map_view->cap);
+				size_t new_cap;
+				wchar_t **new_name;
+				wchar_t **new_name_set;
+
+				new_cap = (map_view->cap + 4) * 2;
+
+				new_name = AR_NEWARR0(wchar_t*, new_cap);
+				new_name_set = AR_NEWARR0(wchar_t*, new_cap);
+
+				if(new_name == NULL || new_name_set == NULL)
+				{
+						if(new_name)
+						{
+								AR_DEL(new_name);
+								new_name = NULL;
+						}
+
+						if(new_name_set)
+						{
+								AR_DEL(new_name_set);
+								new_name_set = NULL;
+						}
+
+						return AR_E_NOMEM;
+				}
+
+				if(map_view->count > 0)
+				{
+						AR_memcpy(new_name, map_view->name, map_view->count * sizeof(wchar_t*));
+						AR_memcpy(new_name_set, map_view->name_set, map_view->count * sizeof(wchar_t*));
+
+				}
+
+				AR_DEL(map_view->name);
+				map_view->name = NULL;
+				AR_DEL(map_view->name_set);
+				map_view->name_set = NULL;
+
+				map_view->cap = new_cap;
+				map_view->name = new_name;
+				map_view->name_set = new_name_set;
 		}
 
 		map_view->name[map_view->count]		= AR_wcsdup(name);
 		map_view->name_set[map_view->count] = AR_wcsdup(set);
 		map_view->count++;
+		return AR_S_YES;
 }
 
 
 
 
-static bool_t __detect_left_recursion(const psrGrammar_t *grammar, const psrSymb_t *head, psrSymbList_t *lst, psrSymbolMapView_t *output)
+static arStatus_t __detect_left_recursion(const psrGrammar_t *grammar, const psrSymb_t *head, psrSymbList_t *lst, psrSymbolMapView_t *output)
 {
 		size_t i;
-		bool_t is_recu = false;
+		arStatus_t is_recu = AR_S_NO;
 		AR_ASSERT(grammar != NULL && head != NULL && lst != NULL);
 
 		/*AR_ASSERT(lst->count > 0);*/
 
 		AR_ASSERT(Parser_FindFromSymbList(lst, head) == -1);
 		
-		Parser_InsertToSymbList(lst, head);
+		if(Parser_InsertToSymbList(lst, head) != AR_S_YES)
+		{
+				return AR_E_NOMEM;
+		}
 		
 		
 		
@@ -619,7 +940,7 @@ static bool_t __detect_left_recursion(const psrGrammar_t *grammar, const psrSymb
 
 								if(Parser_CompSymb(lst->lst[0], symb) == 0)
 								{
-										is_recu = true;
+										is_recu = AR_S_YES;
 										if(output)
 										{
 												size_t cnt;
@@ -628,14 +949,24 @@ static bool_t __detect_left_recursion(const psrGrammar_t *grammar, const psrSymb
 
 												for(cnt = 0; cnt < lst->count; ++cnt)
 												{
-														AR_AppendFormatString(str, L"<%ls> -> ", lst->lst[cnt]->name);
+														if(AR_AppendFormatString(str, L"<%ls> -> ", lst->lst[cnt]->name) != AR_S_YES)
+														{
+																return AR_E_NOMEM;
+														}
 												}
-												AR_AppendFormatString(str, L"<%ls> ", lst->lst[0]->name);
+
+												if(AR_AppendFormatString(str, L"<%ls> ", lst->lst[0]->name) != AR_S_YES)
+												{
+														return AR_E_NOMEM;
+												}
 												
-												__insert_to_symtbl_view(output, L"Path:", AR_GetStringCString(str));
+												if(__insert_to_symtbl_view(output, L"Path:", AR_GetStringCString(str)) != AR_S_YES)
+												{
+														return AR_E_NOMEM;
+												}
 
 												AR_DestroyString(str);
-
+												str = NULL;
 										}
 
 								}else if(Parser_FindFromSymbList(lst, symb) != -1)
@@ -643,7 +974,13 @@ static bool_t __detect_left_recursion(const psrGrammar_t *grammar, const psrSymb
 										continue;
 								}else
 								{
-										__detect_left_recursion(grammar, symb, lst,output);
+										arStatus_t tmp;
+										tmp = __detect_left_recursion(grammar, symb, lst,output);
+
+										if(tmp == AR_E_NOMEM)
+										{
+												return AR_E_NOMEM;
+										}
 								}
 						}
 				}
@@ -656,12 +993,12 @@ static bool_t __detect_left_recursion(const psrGrammar_t *grammar, const psrSymb
 
 
 
-bool_t					__report_left_recursion(const psrGrammar_t *grammar, psrSymbolMapView_t *output)
+arStatus_t					__report_left_recursion(const psrGrammar_t *grammar, psrSymbolMapView_t *output)
 {
 		size_t i;
 		psrSymbList_t	lst;
-		bool_t			ret = false;
 		const psrSymbList_t		*symblist;
+		arStatus_t			ret = AR_S_NO;
 		AR_ASSERT(grammar != NULL);
 		
 		Parser_InitSymbList(&lst);
@@ -678,13 +1015,21 @@ bool_t					__report_left_recursion(const psrGrammar_t *grammar, psrSymbolMapView
 				
 				if(symb->type == PARSER_NONTERM)
 				{
-						if(__detect_left_recursion(grammar, symb, &lst,output))
+						arStatus_t tmp = __detect_left_recursion(grammar, symb, &lst,output);
+						if(tmp == AR_S_YES)
 						{
-								ret = true;
+								ret = AR_S_YES;
+						}else if(tmp == AR_S_NO)
+						{
+						}else
+						{
+								ret = tmp;
+								goto END_POINT;
 						}
 				}
 		}
 
+END_POINT:
 		Parser_UnInitSymbList(&lst);
 		return ret;
 }
@@ -712,18 +1057,30 @@ static size_t __calc_leftfactor(const psrRule_t *l, const psrRule_t *r)
 
 
 
-static bool_t	__report_rule_left_factor(const psrSymb_t *lhs, const psrRule_t **rules, size_t n, psrSymbolMapView_t *output)
+static arStatus_t	__report_rule_left_factor(const psrSymb_t *lhs, const psrRule_t **rules, size_t n, psrSymbolMapView_t *output)
 {
 		size_t i,k;
 		size_t	*bk;
 		size_t			max,cnt;
-		bool_t			has_left_factor = false;
+		arStatus_t		has_left_factor;
 		arString_t		*tmp;
 		AR_ASSERT(lhs != NULL && rules != NULL);
 
-		if(n < 2)return false;
+		if(n < 2)
+		{
+				return AR_S_NO;
+		}
+
+		has_left_factor = AR_S_NO;
+
 		tmp = AR_CreateString();
 		bk = AR_NEWARR0(size_t, n);
+
+		if(tmp == NULL || bk == NULL)
+		{
+				has_left_factor = AR_E_NOMEM;
+				goto RETURN_POINT;
+		}
 
 RECHECK_POINT:
 		
@@ -732,8 +1089,13 @@ RECHECK_POINT:
 
 		for(i = 0; i < n; ++i)
 		{
-				if(rules[i] == NULL)continue;
+				if(rules[i] == NULL)
+				{
+						continue;
+				}
+
 				AR_ASSERT(Parser_CompSymb(lhs, rules[i]->head) == 0);
+
 				for(k = 0; k < n; ++k)
 				{
 						if(rules[k] == NULL)continue;
@@ -773,7 +1135,7 @@ RECHECK_POINT:
 				goto RETURN_POINT;
 		}else
 		{
-				has_left_factor = true;
+				has_left_factor = AR_S_YES;
 		}
 		
 		
@@ -782,11 +1144,36 @@ RECHECK_POINT:
 				if(output)
 				{
 						AR_ClearString(tmp);
-						AR_AppendString(tmp, lhs->name);
-						AR_AppendString(tmp, L"\t:\t");
-						Parser_PrintSymbolList(&rules[bk[i]]->body, tmp);
-						AR_AppendFormatString(tmp, L"\t:\t%Id", max);
-						__insert_to_symtbl_view(output, lhs->name, AR_GetStringCString(tmp));
+
+						if(AR_AppendString(tmp, lhs->name) != AR_S_YES)
+						{
+								has_left_factor = AR_E_NOMEM;
+								goto RETURN_POINT;
+						}
+
+						if(AR_AppendString(tmp, L"\t:\t") != AR_S_YES)
+						{
+								has_left_factor = AR_E_NOMEM;
+								goto RETURN_POINT;
+						}
+
+						if(Parser_PrintSymbolList(&rules[bk[i]]->body, tmp) != AR_S_YES)
+						{
+								has_left_factor = AR_E_NOMEM;
+								goto RETURN_POINT;
+						}
+
+						if(AR_AppendFormatString(tmp, L"\t:\t%Id", max) != AR_S_YES)
+						{
+								has_left_factor = AR_E_NOMEM;
+								goto RETURN_POINT;
+						}
+
+						if(__insert_to_symtbl_view(output, lhs->name, AR_GetStringCString(tmp)) != AR_S_YES)
+						{
+								has_left_factor = AR_E_NOMEM;
+								goto RETURN_POINT;
+						}
 				}
 				rules[bk[i]] = NULL;
 		}
@@ -795,36 +1182,61 @@ RECHECK_POINT:
 		{
 				if(output)
 				{
-						__insert_to_symtbl_view(output, lhs->name, L"");
+						if(__insert_to_symtbl_view(output, lhs->name, L"") != AR_S_YES)
+						{
+								has_left_factor = AR_E_NOMEM;
+								goto RETURN_POINT;
+						}
 				}
 				goto RECHECK_POINT;
 		}
 
+
 RETURN_POINT:
-		AR_DEL(bk);
-		AR_DestroyString(tmp);
+		if(bk)
+		{
+				AR_DEL(bk);
+				bk = NULL;
+		}
+
+		if(tmp)
+		{
+				AR_DestroyString(tmp);
+				tmp = NULL;
+		}
+
 		return has_left_factor;
 }
 
 
-static bool_t					__report_left_factor(const psrGrammar_t *grammar, psrSymbolMapView_t *output)
+static arStatus_t					__report_left_factor(const psrGrammar_t *grammar, psrSymbolMapView_t *output)
 {
 		const psrRule_t	**rules;
-		bool_t has_left_factor;
+		arStatus_t has_left_factor;
 		size_t	cnt;
 		size_t	i,k;
 		const psrSymbList_t *symblist;
 		AR_ASSERT(grammar != NULL);
 		
 		cnt = 0;
-		has_left_factor = false;
+		has_left_factor = AR_S_NO;
 		symblist = Parser_GetSymbList(grammar);
 		rules = AR_NEWARR0(const psrRule_t*, symblist->count);
+
+		if(rules == NULL)
+		{
+				has_left_factor = AR_E_NOMEM;
+				goto END_POINT;
+		}
 		
 		for(i = 0; i < symblist->count; ++i)
 		{
+				arStatus_t tmp;
 				const psrSymb_t *lhs = symblist->lst[i];
-				if(lhs->type == PARSER_TERM)continue;
+				if(lhs->type == PARSER_TERM)
+				{
+						continue;
+				}
 				
 				AR_memset((void*)rules, 0, sizeof(const psrRule_t*) * symblist->count);
 				
@@ -837,14 +1249,28 @@ static bool_t					__report_left_factor(const psrGrammar_t *grammar, psrSymbolMap
 								rules[cnt++] = grammar->rules[k];
 						}
 				}
-		
-				if(__report_rule_left_factor(lhs, rules, cnt,output))
+				
+				tmp = __report_rule_left_factor(lhs, rules, cnt,output);
+
+				if(tmp == AR_S_YES)
 				{
-						has_left_factor = true;
+						has_left_factor = AR_S_YES;
+				}else if(tmp == AR_S_NO)
+				{
+
+				}else
+				{
+						has_left_factor = tmp;
+						goto END_POINT;
 				}
 		}
 
-		AR_DEL(rules);
+END_POINT:
+		if(rules)
+		{
+				AR_DEL(rules);
+				rules = NULL;
+		}
 		return has_left_factor;
 }
 
@@ -857,30 +1283,49 @@ const psrStatusView_t*		Parser_CreateParserStatusView(const parser_t *parser)
 {
 		psrSymbMap_t	first, follow;
 		arString_t		*str;
-		psrSymbolMapView_t		first_view, follow_view, left_recu, left_factor;
 		const psrSymbList_t		*symb_list;
 		psrStatusView_t	*ret;
 		size_t i;
-		
+		bool_t is_ok;
 		AR_ASSERT(parser != NULL && parser->grammar != NULL);
 
-		AR_memset(&first_view, 0, sizeof(first_view));
-		AR_memset(&follow_view, 0, sizeof(follow_view));
 		
-		AR_memset(&left_recu, 0, sizeof(left_recu));
-		AR_memset(&left_factor, 0, sizeof(left_factor));
-
+		is_ok = true;
+		str = NULL;
+		ret = NULL;
+		
 		symb_list = Parser_GetSymbList(parser->grammar);
 
-		ret = NULL;
+
 
 		Parser_InitSymbMap(&first);
 		Parser_InitSymbMap(&follow);
 
-		Parser_CalcFirstSet(parser->grammar, &first);
-		Parser_CalcFollowSet(parser->grammar, &follow, &first);
+		if(Parser_CalcFirstSet(parser->grammar, &first) != AR_S_YES || Parser_CalcFollowSet(parser->grammar, &follow, &first) != AR_S_YES)
+		{
+				is_ok = false;
+				goto END_POINT;
+		}
+
 
 		str = AR_CreateString();
+
+		if(str == NULL)
+		{
+				is_ok = false;
+				goto END_POINT;
+		}
+
+
+		ret = AR_NEW0(psrStatusView_t);
+
+		if(ret == NULL)
+		{
+				is_ok = false;
+				goto END_POINT;
+		}
+
+
 
 		for(i = 0; i < symb_list->count; ++i)
 		{
@@ -893,10 +1338,21 @@ const psrStatusView_t*		Parser_CreateParserStatusView(const parser_t *parser)
 				if(rec)
 				{
 						
-						Parser_PrintSymbolList(&rec->lst, str);
+						if(Parser_PrintSymbolList(&rec->lst, str) != AR_S_YES)
+						{
+								is_ok = false;
+								goto END_POINT;
+						}
 						
 				}
-				__insert_to_symtbl_view(&first_view, rec->key->name, AR_GetStringCString(str));
+
+
+				if(__insert_to_symtbl_view(&ret->first_set, rec->key->name, AR_GetStringCString(str)) != AR_S_YES)
+				{
+						is_ok = false;
+						goto END_POINT;
+				}
+						
 		}
 
 
@@ -910,82 +1366,183 @@ const psrStatusView_t*		Parser_CreateParserStatusView(const parser_t *parser)
 						rec = Parser_GetSymbolFromSymbMap(&follow, symb);
 						
 						AR_ClearString(str);
+
 						if(rec)
 						{
-								
-								Parser_PrintSymbolList(&rec->lst, str);
+								if(Parser_PrintSymbolList(&rec->lst, str) != AR_S_YES)
+								{
+										is_ok = false;
+										goto END_POINT;
+								}
 								
 						}
-						__insert_to_symtbl_view(&follow_view, rec->key->name, AR_GetStringCString(str));
+
+						if(__insert_to_symtbl_view(&ret->follow_set, rec->key->name, AR_GetStringCString(str)) != AR_S_YES)
+						{
+								is_ok = false;
+								goto END_POINT;
+						}
 				}
 		}
 
-		__report_left_recursion(parser->grammar, &left_recu);
-		__report_left_factor(parser->grammar, &left_factor);
+		if(__report_left_recursion(parser->grammar, &ret->left_recursion) == AR_E_NOMEM)
+		{
+				is_ok = false;
+				goto END_POINT;
+		}
 
-		ret = AR_NEW0(psrStatusView_t);
-		
+		if(__report_left_factor(parser->grammar, &ret->left_factor) == AR_E_NOMEM)
+		{
+				is_ok = false;
+				goto END_POINT;
+		}
+
 		
 
-		ret->first_set = first_view;
-		ret->follow_set = follow_view;
-		ret->left_recursion = left_recu;
-		ret->left_factor = left_factor;
-		
+END_POINT:
 		Parser_UnInitSymbMap(&first);
 		Parser_UnInitSymbMap(&follow);
-		if(str)AR_DestroyString(str);
+		if(str)
+		{
+				AR_DestroyString(str);
+				str = NULL;
+		}
+
+		if(ret != NULL && !is_ok) /*有错误发生，需要清理*/
+		{
+				Parser_DestroyParserStatusView(ret);
+				ret = NULL;
+		}
+
 		return ret;
 }
 
 
-void							Parser_DestroyParserStatusView(const psrStatusView_t *follow_view)
+void							Parser_DestroyParserStatusView(const psrStatusView_t *status_view)
 {
 		size_t i;
 
-		if(follow_view != NULL)
+		if(status_view != NULL)
 		{
-				psrStatusView_t *view = (psrStatusView_t*)follow_view;
+				psrStatusView_t *view = (psrStatusView_t*)status_view;
 
+				
 				for(i = 0; i < view->first_set.count; ++i)
 				{
-						AR_DEL(view->first_set.name[i]);
-						AR_DEL(view->first_set.name_set[i]);
+						if(view->first_set.name[i])
+						{
+								AR_DEL(view->first_set.name[i]);
+								view->first_set.name[i] = NULL;
+						}
+
+						if(view->first_set.name_set[i])
+						{
+								AR_DEL(view->first_set.name_set[i]);
+								view->first_set.name_set[i] = NULL;
+						}
 				}
 
-				AR_DEL(view->first_set.name);
-				AR_DEL(view->first_set.name_set);
+				if(view->first_set.name)
+				{
+						AR_DEL(view->first_set.name);
+						view->first_set.name = NULL;
+				}
+
+				if(view->first_set.name_set)
+				{
+						AR_DEL(view->first_set.name_set);
+						view->first_set.name_set = NULL;
+				}
+
 
 
 				for(i = 0; i < view->follow_set.count; ++i)
 				{
-						AR_DEL(view->follow_set.name[i]);
-						AR_DEL(view->follow_set.name_set[i]);
+						if(view->follow_set.name[i])
+						{
+								AR_DEL(view->follow_set.name[i]);
+								view->follow_set.name[i] = NULL;
+						}
+
+						if(view->follow_set.name_set[i])
+						{
+								AR_DEL(view->follow_set.name_set[i]);
+								view->follow_set.name_set[i] = NULL;
+						}
+				}
+				
+				if(view->follow_set.name)
+				{
+						AR_DEL(view->follow_set.name);
+						view->follow_set.name = NULL;
+				}
+				
+				if(view->follow_set.name_set)
+				{
+						AR_DEL(view->follow_set.name_set);
+						view->follow_set.name_set = NULL;
 				}
 
-				AR_DEL(view->follow_set.name);
-				AR_DEL(view->follow_set.name_set);
+
 
 
 				for(i = 0; i < view->left_recursion.count; ++i)
 				{
-						AR_DEL(view->left_recursion.name[i]);
-						AR_DEL(view->left_recursion.name_set[i]);
+						if(view->left_recursion.name[i])
+						{
+								AR_DEL(view->left_recursion.name[i]);
+								view->left_recursion.name[i] = NULL;
+						}
+
+						if(view->left_recursion.name_set[i])
+						{
+								AR_DEL(view->left_recursion.name_set[i]);
+								view->left_recursion.name_set[i] = NULL;
+						}
 				}
 
-				AR_DEL(view->left_recursion.name);
-				AR_DEL(view->left_recursion.name_set);
+				if(view->left_recursion.name)
+				{
+						AR_DEL(view->left_recursion.name);
+						view->left_recursion.name = NULL;
+				}
+
+				if(view->left_recursion.name_set)
+				{
+						AR_DEL(view->left_recursion.name_set);
+						view->left_recursion.name_set = NULL;
+				}
+
 
 				for(i = 0; i < view->left_factor.count; ++i)
 				{
-						AR_DEL(view->left_factor.name[i]);
-						AR_DEL(view->left_factor.name_set[i]);
+						if(view->left_factor.name[i])
+						{
+								AR_DEL(view->left_factor.name[i]);
+								view->left_factor.name[i] = NULL;
+						}
+
+						if(view->left_factor.name_set[i])
+						{
+								AR_DEL(view->left_factor.name_set[i]);
+								view->left_factor.name_set[i] = NULL;
+						}
 				}
 
-				AR_DEL(view->left_factor.name);
-				AR_DEL(view->left_factor.name_set);
+				if(view->left_factor.name)
+				{
+						AR_DEL(view->left_factor.name);
+						view->left_factor.name = NULL;
+				}
+
+				if(view->left_factor.name_set)
+				{
+						AR_DEL(view->left_factor.name_set);
+						view->left_factor.name_set = NULL;
+				}
 
 				AR_DEL(view);
+				
 		}
 }
 

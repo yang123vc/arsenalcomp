@@ -15,12 +15,13 @@
 
 
 
+
 AR_NAMESPACE_BEGIN
 
 
 /*****************************************************Debug****************************************************************/
 
-
+/*
 static void __print_matrix(const arMatrix_t *mat, size_t precision)
 {
 		arString_t *str = AR_CreateString();
@@ -29,7 +30,7 @@ static void __print_matrix(const arMatrix_t *mat, size_t precision)
 		AR_DestroyString(str);
 		str = NULL;
 }
-
+*/
 
 
 
@@ -47,9 +48,23 @@ arMatrix_t*		AR_CreateMatrix(size_t rows, size_t cols)
 		arMatrix_t *mat;
 		AR_ASSERT(rows > 0 && cols > 0);
 		mat = AR_NEW(arMatrix_t);
+
+		if(mat == NULL)
+		{
+				return NULL;
+		}
+
 		mat->nrows = rows;
 		mat->ncols = cols;
+
 		mat->m = AR_NEWARR0(double, rows * cols);
+
+		if(mat->m == NULL)
+		{
+				AR_DEL(mat);
+				return NULL;
+		}
+
 		return mat;
 
 }
@@ -76,58 +91,91 @@ arMatrix_t*		AR_CopyNewMatrix(const arMatrix_t *mat)
 		arMatrix_t *ret;
 		AR_ASSERT(mat != NULL);
 		ret = AR_CreateMatrix(mat->nrows, mat->ncols);
+
+		if(ret == NULL)
+		{
+				return NULL;
+		}
+
 		AR_memcpy(ret->m, mat->m, mat->nrows * mat->ncols * sizeof(double));
 		return ret;
 }
 
-void			AR_CopyMatrix(arMatrix_t *dest, const arMatrix_t *src)
+arStatus_t		AR_CopyMatrix(arMatrix_t *dest, const arMatrix_t *src)
 {
+		arStatus_t status;
 		AR_ASSERT(dest != NULL && src != NULL);
+
+		status = AR_S_YES;
 
 		if(dest == src)
 		{
-				return;
+				return status;
 		}
 
-		AR_SetMatrixSize(dest, src->nrows, src->ncols);
+		if((status = AR_SetMatrixSize(dest, src->nrows, src->ncols)) != AR_S_YES)
+		{
+				return status;
+		}
 
 		AR_memcpy(dest->m, src->m, src->nrows * src->ncols * sizeof(double));
 		
-		
+		return status;
 }
 
 
-void			AR_SetMatrixSize(arMatrix_t *mat, size_t rows, size_t cols)
+arStatus_t			AR_SetMatrixSize(arMatrix_t *mat, size_t rows, size_t cols)
 {
+		arStatus_t status;
 		AR_ASSERT(mat != NULL);
 		AR_ASSERT(rows > 0 && cols > 0);
 		
+		status = AR_S_YES;
+
 		if(mat->nrows != rows || mat->ncols != cols)
 		{
+				double *new_tmp;
+				size_t	new_size;
+				
+				new_size = rows * cols;
+				new_tmp = AR_NEWARR(double, new_size);
+
+				if(new_tmp == NULL)
+				{
+						status = AR_E_NOMEM;
+						return status;
+				}
+				
+				AR_memcpy(new_tmp, mat->m, AR_MIN(new_size, mat->nrows * mat->ncols));
+				AR_DEL(mat->m);
+				
 				mat->nrows = rows;
 				mat->ncols = cols;
-				mat->m = AR_REALLOC(double, mat->m, rows * cols);
+				mat->m = new_tmp;
 		}
+
+		return status;
 }
 
 
-void			AR_SetMatrixData(arMatrix_t *mat, size_t row, size_t col, const double *data)
+arStatus_t			AR_SetMatrixData(arMatrix_t *mat, size_t row, size_t col, const double *data)
 {
+		arStatus_t status;
 		AR_ASSERT(mat != NULL);
 		AR_ASSERT(data != NULL);
 		AR_ASSERT(row > 0 && col > 0);
 
-		AR_SetMatrixSize(mat, row, col);
+		if((status = AR_SetMatrixSize(mat, row, col)) != AR_S_YES)
+		{
+				return status;
+		}
 
 		AR_memcpy(mat->m, data, row * col * sizeof(double));
+
+		return status;
 }
 
 
-void			AR_ZeroMatrix(arMatrix_t *mat)
-{
-		AR_ASSERT(mat != NULL);
-		AR_memset(mat->m, 0, sizeof(double) * mat->nrows * mat->ncols);
-}
 
 
 size_t			AR_GetMatrixNumRows(const arMatrix_t *mat)
@@ -233,13 +281,20 @@ void			AR_SetMatrixColumn(arMatrix_t *mat, size_t col,  const arVector_t *vec)
 }
 
 
-void			AR_GetMatrixRow(const arMatrix_t *mat, size_t row,  arVector_t *out)
+arStatus_t			AR_GetMatrixRow(const arMatrix_t *mat, size_t row,  arVector_t *out)
 {
 		size_t i;
+		arStatus_t status;
 		AR_ASSERT(mat != NULL);
 		AR_ASSERT(row < mat->nrows);
 		AR_ASSERT(out != NULL);
-		AR_SetVectorSize(out, mat->ncols);
+
+		status = AR_S_YES;
+
+		if((status = AR_SetVectorSize(out, mat->ncols)) != AR_S_YES)
+		{
+				return status;
+		}
 
 		for(i = 0; i < mat->ncols; ++i)
 		{
@@ -247,23 +302,29 @@ void			AR_GetMatrixRow(const arMatrix_t *mat, size_t row,  arVector_t *out)
 				AR_SetVectorValue(out, i, v);
 		}
 
+		return status;
 }
 
-void			AR_GetMatrixColumn(const arMatrix_t *mat, size_t col,  arVector_t *out)
+arStatus_t		AR_GetMatrixColumn(const arMatrix_t *mat, size_t col,  arVector_t *out)
 {
 		size_t i;
-
+		arStatus_t status;
 		AR_ASSERT(mat != NULL);
 		AR_ASSERT(col < mat->ncols);
 		AR_ASSERT(out != NULL);
 
-		AR_SetVectorSize(out, mat->ncols);
+		if((status = AR_SetVectorSize(out, mat->ncols)) != AR_S_YES)
+		{
+				return status;
+		}
 
 		for(i = 0; i < mat->nrows; ++i)
 		{
 				double v = mat->m[i * mat->ncols + col];
 				AR_SetVectorValue(out, i, v);
 		}
+
+		return status;
 }
 
 const double*	AR_GetMatrixRawData(const arMatrix_t *mat)
@@ -272,6 +333,13 @@ const double*	AR_GetMatrixRawData(const arMatrix_t *mat)
 		return mat->m;
 }
 
+
+
+void			AR_ZeroMatrix(arMatrix_t *mat)
+{
+		AR_ASSERT(mat != NULL);
+		AR_memset(mat->m, 0, sizeof(double) * mat->nrows * mat->ncols);
+}
 
 
 void			AR_IdentityMatrix(arMatrix_t *mat)
@@ -289,13 +357,19 @@ void			AR_IdentityMatrix(arMatrix_t *mat)
 
 }
 
-void			AR_DiagonalMatrix(arMatrix_t *mat, const arVector_t *vec)
+
+arStatus_t		AR_DiagonalMatrix(arMatrix_t *mat, const arVector_t *vec)
 {
 		size_t i;
+		arStatus_t status;
 		AR_ASSERT(mat != NULL);
 		AR_ASSERT(vec != NULL);
 		AR_ASSERT(AR_GetVectorSize(vec) > 0);
-		AR_SetMatrixSize(mat, AR_GetVectorSize(vec), AR_GetVectorSize(vec));
+
+		if((status = AR_SetMatrixSize(mat, AR_GetVectorSize(vec), AR_GetVectorSize(vec))) != AR_S_YES)
+		{
+				return status;
+		}
 
 		for(i = 0; i < AR_GetVectorSize(vec); ++i)
 		{
@@ -303,7 +377,9 @@ void			AR_DiagonalMatrix(arMatrix_t *mat, const arVector_t *vec)
 				AR_SetMatrixValue(mat, i,i,v);
 		}
 
+		return status;
 }
+
 
 void			AR_RandomMatrix(arMatrix_t *mat)
 {
@@ -346,7 +422,7 @@ void			AR_ClampMatrix(arMatrix_t *mat, double min_val, double max_val)
 
 }
 
-void			AR_SwapMatrixRows(arMatrix_t *mat, size_t l, size_t r)
+arStatus_t	AR_SwapMatrixRows(arMatrix_t *mat, size_t l, size_t r)
 {
 		double *tmp, *lptr, *rptr;
 		
@@ -354,14 +430,20 @@ void			AR_SwapMatrixRows(arMatrix_t *mat, size_t l, size_t r)
 		AR_ASSERT(l < mat->nrows);
 		AR_ASSERT(r < mat->nrows);
 
+		
 		tmp = NULL; lptr = NULL; rptr = NULL;
 
 		if(l == r)
 		{
-				return;
+				return AR_S_YES;
 		}
 		
 		tmp = AR_NEWARR(double, mat->ncols);
+
+		if(tmp == NULL)
+		{
+				return AR_E_NOMEM;
+		}
 
 		lptr = &mat->m[l * mat->ncols];
 		rptr = &mat->m[r * mat->ncols];
@@ -373,10 +455,12 @@ void			AR_SwapMatrixRows(arMatrix_t *mat, size_t l, size_t r)
 
 		AR_DEL(tmp);
 		tmp = NULL;
+
+		return AR_S_YES;
 }
 
 
-void			AR_SwapMatrixColumns(arMatrix_t *mat, size_t l, size_t r)
+arStatus_t		AR_SwapMatrixColumns(arMatrix_t *mat, size_t l, size_t r)
 {
 		
 		size_t i;
@@ -393,6 +477,8 @@ void			AR_SwapMatrixColumns(arMatrix_t *mat, size_t l, size_t r)
 				AR_SetMatrixValue(mat, i, l, rv);
 				AR_SetMatrixValue(mat, i, r, lv);
 		}
+
+		return AR_S_YES;
 }
 
 
@@ -470,14 +556,14 @@ void			AR_ClearMatrixLowerTriangle(arMatrix_t *mat)
 
 
 
-bool_t			AR_IsSquareMatrix(const arMatrix_t *mat)
+arStatus_t			AR_IsSquareMatrix(const arMatrix_t *mat)
 {
 		AR_ASSERT(mat != NULL);
-		return mat->nrows == mat->ncols ? true : false;
+		return mat->nrows == mat->ncols ? AR_S_YES : AR_S_NO;
 }
 
 
-bool_t			AR_IsZeroMatrix(const arMatrix_t *mat, double epsilon)
+arStatus_t			AR_IsZeroMatrix(const arMatrix_t *mat, double epsilon)
 {
 		size_t i;
 		AR_ASSERT(mat != NULL);
@@ -485,21 +571,24 @@ bool_t			AR_IsZeroMatrix(const arMatrix_t *mat, double epsilon)
 		{
 				if(AR_abs_dbl(mat->m[i]) > epsilon)
 				{
-						return false;
+						return AR_S_NO;
 				}
 		}
 
-		return true;
+		return AR_S_YES;
 }
 
-bool_t			AR_IsIdentityMatrix(const arMatrix_t *mat, double epsilon)
+
+arStatus_t			AR_IsIdentityMatrix(const arMatrix_t *mat, double epsilon)
 {
 		size_t i,j;
+		arStatus_t status;
 		AR_ASSERT(mat != NULL);
 
-		if(!AR_IsSquareMatrix(mat))
+		status = AR_IsSquareMatrix(mat);
+		if(status != AR_S_YES)
 		{
-				return false;
+				return status;
 		}
 
 		for(i = 0; i < mat->nrows; ++i)
@@ -510,22 +599,24 @@ bool_t			AR_IsIdentityMatrix(const arMatrix_t *mat, double epsilon)
 
 						if(AR_abs_dbl(mat->m[i * mat->ncols + j] - v) > epsilon)
 						{
-								return false;
+								return AR_S_NO;
 						}
 				}
 
 		}
-		return true;
+		return AR_S_YES;
 }
 
-bool_t			AR_IsDiagonalMatrix(const arMatrix_t *mat, double epsilon)
+arStatus_t			AR_IsDiagonalMatrix(const arMatrix_t *mat, double epsilon)
 {
 		size_t i,j;
+		arStatus_t status;
 		AR_ASSERT(mat != NULL);
 
-		if(!AR_IsSquareMatrix(mat))
+		status = AR_IsSquareMatrix(mat);
+		if(status != AR_S_YES)
 		{
-				return false;
+				return status;
 		}
 
 		for(i = 0; i < mat->nrows; ++i)
@@ -534,23 +625,25 @@ bool_t			AR_IsDiagonalMatrix(const arMatrix_t *mat, double epsilon)
 				{
 						if(i != j && AR_abs_dbl(mat->m[i * mat->ncols + j]) > epsilon)
 						{
-								return false;
+								return AR_S_NO;
 						}
 				}
 		}
-
-		return true;
+		return AR_S_YES;
 }
 
-bool_t			AR_IsTriDiagonalMatrix(const arMatrix_t *mat, double epsilon)
+
+arStatus_t			AR_IsTriDiagonalMatrix(const arMatrix_t *mat, double epsilon)
 {
 		size_t i,j;
 		double v;
+		arStatus_t status;
 		AR_ASSERT(mat != NULL);
 
-		if(!AR_IsSquareMatrix(mat))
+		status = AR_IsSquareMatrix(mat);
+		if(status != AR_S_YES)
 		{
-				return false;
+				return status;
 		}
 
 		for(i = 0; i < mat->nrows - 2; ++i)
@@ -561,32 +654,33 @@ bool_t			AR_IsTriDiagonalMatrix(const arMatrix_t *mat, double epsilon)
 
 						if(AR_abs_dbl(v) > epsilon)
 						{
-								return false;
+								return AR_S_NO;
 						}
 
 						v = AR_GetMatrixValue(mat, j,i);
 						
 						if(AR_abs_dbl(v) > epsilon)
 						{
-								return false;
+								return AR_S_NO;
 						}
 
 				}
 		}
-
-		return true;
-
+		return AR_S_YES;
 }
 
-bool_t			AR_IsSymmetricMatrix(const arMatrix_t *mat, double epsilon)
+
+arStatus_t			AR_IsSymmetricMatrix(const arMatrix_t *mat, double epsilon)
 {
 		size_t i,j;
 		double l,r;
+		arStatus_t status;
 		AR_ASSERT(mat != NULL);
 
-		if(!AR_IsSquareMatrix(mat))
+		status = AR_IsSquareMatrix(mat);
+		if(status != AR_S_YES)
 		{
-				return false;
+				return status;
 		}
 
 		for(i = 0; i < mat->nrows; ++i)
@@ -598,15 +692,15 @@ bool_t			AR_IsSymmetricMatrix(const arMatrix_t *mat, double epsilon)
 
 						if(AR_abs_dbl(l - r) > epsilon)
 						{
-								return false;
+								return AR_S_NO;
 						}
 				}
 		}
-
-		return true;
+		return AR_S_YES;
 }
 
-bool_t			AR_IsOrthogonalMatrix(const arMatrix_t *mat, double epsilon)
+
+arStatus_t			AR_IsOrthogonalMatrix(const arMatrix_t *mat, double epsilon)
 {
 		size_t i,j,k;
 		
@@ -631,16 +725,17 @@ bool_t			AR_IsOrthogonalMatrix(const arMatrix_t *mat, double epsilon)
 
 						if(AR_abs_dbl(s) > epsilon)
 						{
-								return false;
+								return AR_S_NO;
 						}
 				}
 		}
-
-		return true;
+		return AR_S_YES;
 }
 
 
-bool_t			AR_IsOrthonormalMatrix(const arMatrix_t *mat, double epsilon)
+
+
+arStatus_t			AR_IsOrthonormalMatrix(const arMatrix_t *mat, double epsilon)
 {
 		size_t i,j,k;
 		
@@ -664,14 +759,12 @@ bool_t			AR_IsOrthonormalMatrix(const arMatrix_t *mat, double epsilon)
 
 						if(AR_abs_dbl(s) > epsilon)
 						{
-								return false;
+								return AR_S_NO;
 						}
 				}
 		}
 
-		return true;
-
-
+		return AR_S_YES;
 }
 
 
@@ -706,24 +799,34 @@ A =		[	a00,	a01;
 
 
 
-bool_t			AR_IsPositiveDefiniteMatrix(const arMatrix_t *mat, double epsilon)
+arStatus_t		AR_IsPositiveDefiniteMatrix(const arMatrix_t *mat, double epsilon)
 {
+		arStatus_t status;
 		size_t i, j, k;
 		double d, s,t;
 		arMatrix_t *tmp;
-		bool_t ret;
+		
 		AR_ASSERT(mat != NULL);
 
-		ret = true;
+		status = AR_S_YES;
+		
 		tmp = NULL;
 
-		if(!AR_IsSquareMatrix(mat))
+		status = AR_IsSquareMatrix(mat);
+		if(status != AR_S_YES)
 		{
-				ret = false;
 				goto END_POINT;
 		}
 
 		tmp = AR_CopyNewMatrix(mat);
+
+		if(tmp == NULL)
+		{
+
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+
 
 		for ( i = 0; i < mat->nrows; i++ ) 
 		{
@@ -745,7 +848,7 @@ bool_t			AR_IsPositiveDefiniteMatrix(const arMatrix_t *mat, double epsilon)
 						t = AR_GetMatrixValue(tmp, j,j);
 						if(AR_DBL_LEEQ(t, epsilon))
 						{
-								ret = false;
+								status = AR_S_NO;
 								goto END_POINT;
 						}
 				}
@@ -775,27 +878,34 @@ END_POINT:
 				tmp = NULL;
 		}
 
-		return ret;
-
+		
+		return status;
 }
 
-bool_t			AR_IsSymmetricPositiveDefinite(const arMatrix_t *mat, double epsilon)
+
+arStatus_t		AR_IsSymmetricPositiveDefinite(const arMatrix_t *mat, double epsilon)
 {
-		bool_t ret;
+		arStatus_t status;
 		arMatrix_t *tmp;
-		AR_ASSERT(mat != NULL);
+		AR_ASSERT(mat != NULL );
 		
-		ret = true;
+		status = AR_S_YES;
+		
 		tmp = NULL;
-		if(!AR_IsSymmetricMatrix(mat, epsilon))
+		if((status = AR_IsSymmetricMatrix(mat, epsilon)) != AR_S_YES)
 		{
-				ret = false;
 				goto END_POINT;
 		}
 
 		tmp = AR_CopyNewMatrix(mat);
+
+		if(tmp == NULL)
+		{
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
 		
-		ret = AR_CholeskyFactorMatrixSelf(tmp);
+		status = AR_CholeskyFactorMatrixSelf(tmp);
 
 END_POINT:
 		if(tmp)
@@ -803,30 +913,41 @@ END_POINT:
 				AR_DestroyMatrix(tmp);
 				tmp = NULL;
 		}
-
-		return ret;
+		
+		return status;
 }
 
 
 
-bool_t			AR_IsPositiveSemiDefinite(const arMatrix_t *mat, double epsilon)
+/*
+如果A为半正定矩阵， 则二次型 x' * A * x >= 0; 则
+*/
+
+arStatus_t			AR_IsPositiveSemiDefinite(const arMatrix_t *mat, double epsilon)
 {
+		arStatus_t status;
 		size_t i, j, k;
 		double d, s,t;
 		arMatrix_t *tmp;
-		bool_t ret;
-		AR_ASSERT(mat != NULL);
+		
+		AR_ASSERT(mat != NULL );
 
-		ret = true;
+		status = AR_S_YES;
+		
 		tmp = NULL;
 
-		if(!AR_IsSquareMatrix(mat))
+		if((status = AR_IsSquareMatrix(mat)) != AR_S_YES)
 		{
-				ret = false;
 				goto END_POINT;
 		}
 
 		tmp = AR_CopyNewMatrix(mat);
+
+		if(tmp == NULL)
+		{
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
 
 		for ( i = 0; i < mat->nrows; i++ ) 
 		{
@@ -847,7 +968,7 @@ bool_t			AR_IsPositiveSemiDefinite(const arMatrix_t *mat, double epsilon)
 						t = AR_GetMatrixValue(tmp, j,j);
 						if(AR_DBL_LE(t, -epsilon))
 						{
-								ret = false;
+								status = AR_S_NO;
 								goto END_POINT;
 						}
 
@@ -862,14 +983,14 @@ bool_t			AR_IsPositiveSemiDefinite(const arMatrix_t *mat, double epsilon)
 								t = AR_GetMatrixValue(tmp,k,j);
 								if(AR_DBL_GE(AR_abs_dbl(t), epsilon))
 								{
-										ret = false;
+										status = AR_S_NO;
 										goto END_POINT;
 								}
 
 								t = AR_GetMatrixValue(tmp,j,k);
 								if(AR_DBL_GE(AR_abs_dbl(t), epsilon))
 								{
-										ret = false;
+										status = AR_S_NO;
 										goto END_POINT;
 								}
 						}
@@ -904,19 +1025,24 @@ END_POINT:
 				AR_DestroyMatrix(tmp);
 				tmp = NULL;
 		}
-
-		return ret;
+	
+		return status;
 }
 
 
-bool_t			AR_IsSymmetricPositiveSemiDefinite(const arMatrix_t *mat, double epsilon)
+
+arStatus_t			AR_IsSymmetricPositiveSemiDefinite(const arMatrix_t *mat, double epsilon)
 {
+		arStatus_t status;
 		AR_ASSERT(mat != NULL);
 
-		if(!AR_IsSymmetricMatrix(mat, epsilon))
+		status = AR_IsSymmetricMatrix(mat, epsilon);
+
+		if(status != AR_S_YES)
 		{
-				return false;
+				return status;
 		}
+
 		return AR_IsPositiveSemiDefinite(mat, epsilon);
 
 }
@@ -927,22 +1053,32 @@ bool_t			AR_IsSymmetricPositiveSemiDefinite(const arMatrix_t *mat, double epsilo
 
 
 
-
 /*********************************************************************************/
-void			AR_MultiplyMatrixByScalar(const arMatrix_t *mat, double value, arMatrix_t *dest)
+arStatus_t			AR_MultiplyMatrixByScalar(const arMatrix_t *mat, double value, arMatrix_t *dest)
 {
+		arStatus_t status;
 		size_t i;
+
 		AR_ASSERT(mat != NULL && dest != NULL);
 
-		AR_SetMatrixSize(dest, mat->nrows, mat->ncols);
+		status = AR_S_YES;
+
+		status = AR_SetMatrixSize(dest, mat->nrows, mat->ncols);
+		
+		if(status != AR_S_YES)
+		{
+				return status;
+		}
 
 		for(i = 0; i < mat->nrows * mat->ncols; ++i)
 		{
 				dest->m[i] = mat->m[i] * value;
 		}
+
+		return status;
 }
 
-void			AR_MultiplyMatrixByScalarSelf(arMatrix_t *mat, double value)
+arStatus_t		AR_MultiplyMatrixByScalarSelf(arMatrix_t *mat, double value)
 {
 		size_t i;
 		AR_ASSERT(mat != NULL);
@@ -950,20 +1086,28 @@ void			AR_MultiplyMatrixByScalarSelf(arMatrix_t *mat, double value)
 		{
 				mat->m[i] *= value;
 		}
+
+		return AR_S_YES;
 }
 
-void			AR_MultiplyMatrixByVector(const arMatrix_t *mat, const arVector_t *other, arVector_t *dest)
+arStatus_t			AR_MultiplyMatrixByVector(const arMatrix_t *mat, const arVector_t *other, arVector_t *dest)
 {
+		arStatus_t status;
 		size_t m,n,i,j;
 		double sum;
-		
 		AR_ASSERT(mat != NULL);
 		AR_ASSERT(other != NULL && dest != NULL);
 		m = AR_GetMatrixNumRows(mat);
 		n = AR_GetMatrixNumColumns(mat);
 		AR_ASSERT(n == AR_GetVectorSize(other));
 
-		AR_SetVectorSize(dest, m);
+		status = AR_S_YES;
+
+		if((status = AR_SetVectorSize(dest, m)) != AR_S_YES)
+		{
+				return status;
+		}
+
 		AR_ZeroVector(dest);
 
 		for(i = 0; i < m; ++i)
@@ -976,22 +1120,28 @@ void			AR_MultiplyMatrixByVector(const arMatrix_t *mat, const arVector_t *other,
 
 				AR_SetVectorValue(dest, i, sum);
 		}
-
+		return status;
 }
 
-void			AR_MultiplyTransposeMatrixByVector(const arMatrix_t *mat, const arVector_t *other, arVector_t *dest)
+
+arStatus_t		AR_MultiplyTransposeMatrixByVector(const arMatrix_t *mat, const arVector_t *other, arVector_t *dest)
 {
 		size_t i,j,m,n;
 		double sum;
-		
+		arStatus_t status;
 		AR_ASSERT(mat != NULL && other != NULL && dest != NULL);
 
+		
+		status = AR_S_YES;
 		m = AR_GetMatrixNumRows(mat);
 		n = AR_GetMatrixNumColumns(mat);
 
 		AR_ASSERT(m == AR_GetVectorSize(other));
 
-		AR_SetVectorSize(dest, n);
+		if((status = AR_SetVectorSize(dest, n)) != AR_S_YES)
+		{
+				return status;
+		}
 
 		for(i = 0; i < n; ++i)
 		{
@@ -1003,15 +1153,18 @@ void			AR_MultiplyTransposeMatrixByVector(const arMatrix_t *mat, const arVector_
 				AR_SetVectorValue(dest, i,sum);
 		}
 
+		return status;
 }
 
 
-void			AR_MultiplyMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest)
+arStatus_t		AR_MultiplyMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest)
 {
 		size_t i,j,k,lm,ln,rm,rn;
 		double sum;
-
+		arStatus_t status;
 		AR_ASSERT(mat != NULL && other != NULL && dest != NULL);
+
+		status = AR_S_YES;
 
 		lm = AR_GetMatrixNumRows(mat);
 		ln = AR_GetMatrixNumColumns(mat);
@@ -1021,7 +1174,11 @@ void			AR_MultiplyMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other,
 
 		AR_ASSERT(ln == rm);
 
-		AR_SetMatrixSize(dest, lm, rn);
+		if((status = AR_SetMatrixSize(dest, lm, rn)) != AR_S_YES)
+		{
+				return status;
+		}
+
 		AR_ZeroMatrix(dest);
 
 		for(i = 0; i < lm; ++i)
@@ -1038,10 +1195,13 @@ void			AR_MultiplyMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other,
 				}
 		}
 
+		return status;
 }
 
-void			AR_MultiplyTransposeMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest)
+
+arStatus_t		AR_MultiplyTransposeMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest)
 {
+		arStatus_t status;
 		size_t i,j,k,lrows,lcols,rrows,rcols;
 		double sum;
 
@@ -1055,7 +1215,13 @@ void			AR_MultiplyTransposeMatrixByMatrix(const arMatrix_t *mat, const arMatrix_
 
 		AR_ASSERT(lrows == rrows);
 
-		AR_SetMatrixSize(dest, lcols, rcols);
+		status = AR_S_YES;
+
+		if((status = AR_SetMatrixSize(dest, lcols, rcols)) != AR_S_YES)
+		{
+				return status;
+		}
+
 		AR_ZeroMatrix(dest);
 
 		for(i = 0; i < lcols; ++i)
@@ -1071,71 +1237,133 @@ void			AR_MultiplyTransposeMatrixByMatrix(const arMatrix_t *mat, const arMatrix_
 						AR_SetMatrixValue(dest, i,j,sum);
 				}
 		}
+
+		return status;
 }
 
 
-void			AR_MultiplyMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other)
+arStatus_t			AR_MultiplyMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other)
 {
+		arStatus_t status;
 		arMatrix_t *tmp;
 		AR_ASSERT(mat != NULL && other != NULL);
 
+		status = AR_S_YES;
+
 		tmp = AR_CreateMatrix(mat->nrows, mat->ncols);
+
+		if(tmp == NULL)
+		{
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+
 		
-		AR_MultiplyMatrixByMatrix(mat, other, tmp);
+		if((status = AR_MultiplyMatrixByMatrix(mat, other, tmp)) != AR_S_YES)
+		{
+				goto END_POINT;
+		}
 
-		AR_CopyMatrix(mat, tmp);
 
-		AR_DestroyMatrix(tmp);
-		tmp = NULL;
+		if((status = AR_CopyMatrix(mat, tmp)) != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+
+END_POINT:
+		if(tmp)
+		{
+				AR_DestroyMatrix(tmp);
+				tmp = NULL;
+		}
+
+		return status;
 }
 
-void			AR_MultiplyTransposeMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other)
+
+
+arStatus_t		AR_MultiplyTransposeMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other)
 {
+		arStatus_t status;
 		arMatrix_t *tmp;
 		AR_ASSERT(mat != NULL && other != NULL);
 
+		status = AR_S_YES;
+
 		tmp = AR_CreateMatrix(mat->nrows, mat->ncols);
+
+		if(tmp == NULL)
+		{
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
 		
-		AR_MultiplyTransposeMatrixByMatrix(mat, other, tmp);
+		
+		if((status = AR_MultiplyTransposeMatrixByMatrix(mat, other, tmp)) != AR_S_YES)
+		{
+				goto END_POINT;
+		}
 
-		AR_CopyMatrix(mat, tmp);
 
-		AR_DestroyMatrix(tmp);
-		tmp = NULL;
+		if((status = AR_CopyMatrix(mat, tmp)) != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+
+END_POINT:
+		if(tmp)
+		{
+				AR_DestroyMatrix(tmp);
+				tmp = NULL;
+		}
+		return status;
 }
 
 
-void			AR_AddMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest)
+arStatus_t		AR_AddMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest)
 {
+		arStatus_t status;
 		size_t i;
 		AR_ASSERT(mat != NULL && other != NULL);
 		AR_ASSERT(mat->nrows == other->nrows && mat->ncols == other->ncols);
 
-		AR_SetMatrixSize(dest, mat->nrows, mat->ncols);
+		if((status = AR_SetMatrixSize(dest, mat->nrows, mat->ncols)) != AR_S_YES)
+		{
+				return status;
+		}
+
+		
 
 		for(i = 0; i < mat->nrows * mat->ncols; ++i)
 		{
 				dest->m[i] = mat->m[i] + other->m[i];
 		}
 
+		return status;
 }
 
-void			AR_SubMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest)
+arStatus_t			AR_SubMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest)
 {
+		arStatus_t status;
 		size_t i;
 		AR_ASSERT(mat != NULL && other != NULL);
 		AR_ASSERT(mat->nrows == other->nrows && mat->ncols == other->ncols);
 
-		AR_SetMatrixSize(dest, mat->nrows, mat->ncols);
+		if((status = AR_SetMatrixSize(dest, mat->nrows, mat->ncols)) != AR_S_YES)
+		{
+				return status;
+		}
 
 		for(i = 0; i < mat->nrows * mat->ncols; ++i)
 		{
 				dest->m[i] = mat->m[i] - other->m[i];
 		}
+
+		return status;
 }
 
 
-void			AR_AddMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other)
+arStatus_t			AR_AddMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other)
 {
 		size_t i;
 		AR_ASSERT(mat != NULL && other != NULL);
@@ -1145,10 +1373,12 @@ void			AR_AddMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other)
 		{
 				mat->m[i] += other->m[i];
 		}
+
+		return AR_S_YES;
 }
 
 
-void			AR_SubMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other)
+arStatus_t		AR_SubMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other)
 {
 		size_t i;
 		AR_ASSERT(mat != NULL && other != NULL);
@@ -1158,17 +1388,20 @@ void			AR_SubMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other)
 		{
 				mat->m[i] -= other->m[i];
 		}
+
+		return AR_S_YES;
 }
 
 
 
 
 
-double			AR_CalcMatrixTrace(const arMatrix_t *mat)
+
+arStatus_t			AR_CalcMatrixTrace(const arMatrix_t *mat, double *ret)
 {
 		double val;
 		size_t i;
-		AR_ASSERT(mat != NULL);
+		AR_ASSERT(mat != NULL && ret != NULL);
 		AR_ASSERT(mat->nrows == mat->ncols);
 
 		val = 0.0;
@@ -1177,40 +1410,78 @@ double			AR_CalcMatrixTrace(const arMatrix_t *mat)
 				val += AR_GetMatrixValue(mat, i,i);
 		}
 
-		return val;
+		*ret = val;
+		return AR_S_YES;
 }
 
-double			AR_CalcMatrixDeterminant(const arMatrix_t *mat)
+
+arStatus_t			AR_CalcMatrixDeterminant(const arMatrix_t *mat, double *ret)
 {
+		arStatus_t status;
 		arMatrix_t *tmp;
 		size_t *index;
 		double det;
+		
 		AR_ASSERT(mat != NULL);
 
+		status = AR_S_YES;
 		det = 0.0;
+		index = NULL;
+		tmp = NULL;
+		
+
 		tmp = AR_CopyNewMatrix(mat);
+
+		if(tmp == NULL)
+		{
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+
 		index = AR_NEWARR0(size_t, tmp->nrows);
 
-		if(!AR_LUFactorMatrixSelf(tmp, index, &det))
+		if(index == NULL)
+		{
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+
+		
+		
+		status = AR_LUFactorMatrixSelf(tmp, index, &det);
+		if(status != AR_S_YES)
 		{
 				det = 0.0;
 		}
 
-		AR_DestroyMatrix(tmp);
-		tmp = NULL;
+END_POINT:
+		if(tmp)
+		{
+				AR_DestroyMatrix(tmp);
+				tmp = NULL;
+		}
 
-		AR_DEL(index);
-		index = NULL;
-		return det;
+		if(index)
+		{
+				AR_DEL(index);
+				index = NULL;
+		}
+		*ret = det;
+		return status;
 }
 
 
-void			AR_TransposeMatrix(const arMatrix_t *mat, arMatrix_t *dest)
+
+arStatus_t			AR_TransposeMatrix(const arMatrix_t *mat, arMatrix_t *dest)
 {
+		arStatus_t status;
 		size_t i,j;
 		AR_ASSERT(mat != NULL && dest != NULL);
 
-		AR_SetMatrixSize(dest, mat->ncols, mat->nrows);
+		if((status = AR_SetMatrixSize(dest, mat->ncols, mat->nrows)) != AR_S_YES)
+		{
+				return status;
+		}
 		
 		for(i = 0; i < mat->nrows; ++i)
 		{
@@ -1221,23 +1492,50 @@ void			AR_TransposeMatrix(const arMatrix_t *mat, arMatrix_t *dest)
 				}
 		}
 
+		return status;
 }
 
 
-void			AR_TransposeMatrixSelf(arMatrix_t *mat)
+arStatus_t			AR_TransposeMatrixSelf(arMatrix_t *mat)
 {
+		arStatus_t status;
 		arMatrix_t *tmp;
 		AR_ASSERT(mat != NULL);
+		
+		status = AR_S_YES;
 
 		tmp = AR_CreateMatrix(mat->ncols, mat->nrows);
 
-		AR_TransposeMatrix(mat, tmp);
+		if(tmp == NULL)
+		{
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+		
 
-		AR_CopyMatrix(mat, tmp);
+		if((status = AR_TransposeMatrix(mat, tmp)) != AR_S_YES)
+		{
+				goto END_POINT;
+		}
 
-		AR_DestroyMatrix(tmp);
-		tmp = NULL;
+		if((status = AR_CopyMatrix(mat, tmp)) != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+
+END_POINT:
+		if(tmp)
+		{
+				AR_DestroyMatrix(tmp);
+				tmp = NULL;
+		}
+		return status;
 }
+
+
+
+
+
 
 /*
 
@@ -1261,16 +1559,25 @@ A = [
 
 */
 
-size_t			AR_CalcMatrixRank(const arMatrix_t *mat)
+arStatus_t			AR_CalcMatrixRank(const arMatrix_t *mat, size_t *ret)
 {
 		size_t r,c;
 		arMatrix_t *tmp;
 		double t;
 		size_t rank ;
-		AR_ASSERT(mat != NULL);
+		arStatus_t status;
+		AR_ASSERT(mat != NULL && ret != NULL);
 
+		status = AR_S_YES;
 		rank = 0;
+		
 		tmp = AR_CopyNewMatrix(mat);
+
+		if(tmp == NULL)
+		{
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
 		
 		AR_ReduceMatrixToEchelonFormSelf(tmp, NULL);
 
@@ -1288,13 +1595,14 @@ size_t			AR_CalcMatrixRank(const arMatrix_t *mat)
 				}
 		}
 
+END_POINT:
 		if(tmp)
 		{
 				AR_DestroyMatrix(tmp);
 				tmp = NULL;
 		}
-
-		return rank;
+		*ret = rank;
+		return status;
 
 }
 
@@ -1305,6 +1613,7 @@ size_t			AR_CalcMatrixRank(const arMatrix_t *mat)
 
 void			AR_ReduceMatrixToEchelonFormSelf(arMatrix_t *mat, size_t *index)
 {
+
 
 		size_t i,j,k,r,c;
 		int_t reduced_r;
@@ -1402,12 +1711,19 @@ void			AR_ReduceMatrixToEchelonFormSelf(arMatrix_t *mat, size_t *index)
 }
 
 
-void			AR_ReduceMatrixToEchelonForm(const arMatrix_t *mat, size_t *index, arMatrix_t *rm)
+arStatus_t			AR_ReduceMatrixToEchelonForm(const arMatrix_t *mat, size_t *index, arMatrix_t *rm)
 {
+		arStatus_t status;
 		AR_ASSERT(mat != NULL && rm != NULL);
-		AR_CopyMatrix(rm, mat);
+
+		if((status = AR_CopyMatrix(rm, mat)) != AR_S_YES)
+		{
+				return status;
+		}
+		
 		AR_ReduceMatrixToEchelonFormSelf(rm, index);
 
+		return status;
 }
 
 
@@ -1449,29 +1765,56 @@ A * col2(inv(A) = [ 0;
 
 ***************************************************************************/
 
-bool_t			AR_InverseMatrixSelf(arMatrix_t *mat)
+arStatus_t			AR_InverseMatrixSelf(arMatrix_t *mat)
 {
-		bool_t ret;
+		
 		size_t i,j;
 		size_t *index;
-
+		arStatus_t status;
 		arMatrix_t *m_tmp;
 		arVector_t *b_v_tmp, *x_v_tmp;
 
 		AR_ASSERT(mat != NULL);
 		AR_ASSERT(mat->nrows == mat->ncols);
+		
+		status = AR_S_YES;
+		
+		m_tmp = NULL;
+		b_v_tmp = x_v_tmp = NULL;
 
-		ret = true;
 		index = AR_NEWARR0(size_t, mat->nrows);
+
+		if(index == NULL)
+		{
+				
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+
 		m_tmp = AR_CopyNewMatrix(mat);
+
+		if(m_tmp == NULL)
+		{
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+
 		b_v_tmp = AR_CreateVector(mat->nrows);
 		x_v_tmp = AR_CreateVector(mat->nrows);
 
-		if(!AR_LUFactorMatrixSelf(m_tmp, index, NULL))
+		if(b_v_tmp == NULL || x_v_tmp == NULL)
 		{
-				ret = false;
+				status = AR_E_NOMEM;
 				goto END_POINT;
 		}
+
+		status = AR_LUFactorMatrixSelf(m_tmp, index, NULL);
+
+		if(status != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+
 
 		AR_ZeroVector(b_v_tmp);
 		AR_ZeroVector(x_v_tmp);
@@ -1480,7 +1823,11 @@ bool_t			AR_InverseMatrixSelf(arMatrix_t *mat)
 		{
 				AR_SetVectorValue(b_v_tmp, i, 1.0);
 
-				AR_LUSolveMatrix(m_tmp, index, x_v_tmp, b_v_tmp);
+				if((status = AR_LUSolveMatrix(m_tmp, index, x_v_tmp, b_v_tmp)) != AR_S_YES)
+				{
+						status = AR_S_NO;
+						goto END_POINT;
+				}
 
 				for(j = 0; j < mat->nrows; ++j)
 				{
@@ -1491,23 +1838,35 @@ bool_t			AR_InverseMatrixSelf(arMatrix_t *mat)
 		}
 
 END_POINT:
-		AR_DestroyVector(b_v_tmp);
-		b_v_tmp = NULL;
+		if(b_v_tmp)
+		{
+				AR_DestroyVector(b_v_tmp);
+				b_v_tmp = NULL;
+		}
 
-		AR_DestroyVector(x_v_tmp);
-		x_v_tmp = NULL;
+		if(x_v_tmp)
+		{
+				AR_DestroyVector(x_v_tmp);
+				x_v_tmp = NULL;
+		}
 
-		AR_DestroyMatrix(m_tmp);
-		m_tmp = NULL;
+		if(m_tmp)
+		{
+				AR_DestroyMatrix(m_tmp);
+				m_tmp = NULL;
+		}
 
-		AR_DEL(index);
-		index = NULL;
-
-		return ret;
+		if(index)
+		{
+				AR_DEL(index);
+				index = NULL;
+		}
+		return status;
 }
 
 
-bool_t			AR_InverseLowerTriangularMatrixSelf(arMatrix_t *mat)
+
+arStatus_t			AR_InverseLowerTriangularMatrixSelf(arMatrix_t *mat)
 {
 		size_t i,j,k;
 		double d,sum,l,r;
@@ -1520,7 +1879,7 @@ bool_t			AR_InverseLowerTriangularMatrixSelf(arMatrix_t *mat)
 
 				if(AR_DBL_EQ(d,0.0))
 				{
-						return false;
+						return AR_S_NO;
 				}
 
 				d = 1.0 / d;
@@ -1540,11 +1899,13 @@ bool_t			AR_InverseLowerTriangularMatrixSelf(arMatrix_t *mat)
 				}
 
 		}
-
-		return true;
+		
+		return AR_S_YES;
 }
 
-bool_t			AR_InverseUpperTriangularMatrixSelf(arMatrix_t *mat)
+
+
+arStatus_t			AR_InverseUpperTriangularMatrixSelf(arMatrix_t *mat)
 {
 		int_t i,j,k;
 		double d,sum,l,r;
@@ -1557,7 +1918,7 @@ bool_t			AR_InverseUpperTriangularMatrixSelf(arMatrix_t *mat)
 
 				if(AR_DBL_EQ(d,0.0))
 				{
-						return false;
+						return AR_S_NO;
 				}
 
 				d = 1.0 / d;
@@ -1577,8 +1938,7 @@ bool_t			AR_InverseUpperTriangularMatrixSelf(arMatrix_t *mat)
 				}
 
 		}
-
-		return true;
+		return AR_S_YES;
 }
 
 
@@ -1616,7 +1976,7 @@ A =  [	1,		2,		1,		0;
 	[	1,		0,		-2,		1;
 		3/4,	1,		0,		1/4
      ];
-->这里需要消去A(1,0),则将第一行乘以3/2，则
+->这里需要消去A(1,0),则将第一行乘以3/4，则
 
 	[	3/4,	0,		-3/2,	3/4;
 		3/4,	1,		0,		1/4
@@ -1638,7 +1998,7 @@ A =  [	1,		2；
 		3,		4；	
      ];
 
-->	[	1,		2;
+->	[	1,		2;					
 		3/4,	1/4
 	];
 
@@ -1671,9 +2031,10 @@ A =  [	1,		2；
 
 */
 
-bool_t			AR_InverseMatrixByGaussJordanSelf(arMatrix_t *mat)
+arStatus_t			AR_InverseMatrixByGaussJordanSelf(arMatrix_t *mat)
 {
-		bool_t ret;
+		arStatus_t status;
+		
 		size_t i, j, k, r, c;
 		double d, max_val, t;
 		int_t x;
@@ -1682,12 +2043,18 @@ bool_t			AR_InverseMatrixByGaussJordanSelf(arMatrix_t *mat)
 
 		AR_ASSERT(mat != NULL);
 		AR_ASSERT(mat->nrows == mat->ncols);
-
-		ret = true;
+		
+		status = AR_S_YES;
+		
 		col_index = AR_NEWARR0(size_t, mat->nrows);
 		row_index = AR_NEWARR0(size_t, mat->nrows);
 		pivot_mark = AR_NEWARR0(bool_t, mat->nrows);
 		
+		if(col_index == NULL || row_index == NULL || pivot_mark == NULL)
+		{
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
 
 		for(i = 0; i < mat->nrows; ++i)
 		{
@@ -1722,7 +2089,7 @@ bool_t			AR_InverseMatrixByGaussJordanSelf(arMatrix_t *mat)
 
 				if(AR_DBL_EQ(max_val,0.0))
 				{
-						ret = false;
+						status = AR_S_NO;
 						goto END_POINT;
 				}
 
@@ -1788,23 +2155,33 @@ bool_t			AR_InverseMatrixByGaussJordanSelf(arMatrix_t *mat)
 		}
 
 END_POINT:
-		AR_DEL(col_index);
-		col_index = NULL;
+		if(col_index)
+		{
+				AR_DEL(col_index);
+				col_index = NULL;
+		}
 
-		AR_DEL(row_index);
-		row_index = NULL;
+		if(row_index)
+		{
+				AR_DEL(row_index);
+				row_index = NULL;
+		}
 
-		AR_DEL(pivot_mark);
-		pivot_mark = NULL;
-
-		return ret;
+		if(pivot_mark)
+		{
+				AR_DEL(pivot_mark);
+				pivot_mark = NULL;
+		}
+		
+		return status;
 }
 
 
-void			AR_InverseSolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t *b)
+arStatus_t		AR_InverseSolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t *b)
 {
-		AR_MultiplyMatrixByVector(mat, b, x);
+		return AR_MultiplyMatrixByVector(mat, b, x);
 }
+
 
 
 
@@ -1814,7 +2191,7 @@ void			AR_TriDiagonalClearMatrixSelf(arMatrix_t *mat)
 {
 		size_t i,j;
 		AR_ASSERT(mat != NULL);
-		AR_ASSERT(AR_IsSquareMatrix(mat));
+		AR_ASSERT(AR_IsSquareMatrix(mat) == AR_S_YES);
 
 		if(mat->nrows < 2)
 		{
@@ -1832,29 +2209,41 @@ void			AR_TriDiagonalClearMatrixSelf(arMatrix_t *mat)
 
 }
 
-bool_t			AR_TriDiagonalSolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t *b)
+arStatus_t			AR_TriDiagonalSolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t *b)
 {
 		size_t i;
 		int_t k;
-		bool_t ret;
+		
 		double *tmp, d,t;
+		arStatus_t status;
 		AR_ASSERT(mat != NULL && x != NULL && b != NULL);
 		
-		AR_ASSERT(AR_IsSquareMatrix(mat));
+		AR_ASSERT(AR_IsSquareMatrix(mat) == AR_S_YES);
 		AR_ASSERT(AR_GetVectorSize(b) >= mat->nrows);
 		
-		AR_SetVectorSize(x, mat->ncols);
-
-		ret = true;
+		status = AR_S_YES;
+		
 		tmp = NULL;
-
 		tmp = AR_NEWARR0(double, mat->nrows);
+
+		if(tmp == NULL)
+		{
+				status = AR_E_NOMEM;
+				
+				goto END_POINT;
+		}
+
+		if((status = AR_SetVectorSize(x, mat->ncols)) != AR_S_YES)
+		{
+				
+				goto END_POINT;
+		}
 
 
 		d = AR_GetMatrixValue(mat, 0,0);
 		if(AR_DBL_EQ(d,0.0))
 		{
-				ret = false;
+				status = AR_S_NO;
 				goto END_POINT;
 		}
 		
@@ -1868,7 +2257,7 @@ bool_t			AR_TriDiagonalSolveMatrix(const arMatrix_t *mat, arVector_t *x, const a
 				
 				if(AR_DBL_EQ(d,0.0))
 				{
-						ret = false;
+						status = AR_S_NO;
 						goto END_POINT;
 				}
 
@@ -1894,35 +2283,48 @@ END_POINT:
 				AR_DEL(tmp);
 				tmp = NULL;
 		}
-
-		return ret;
-
-
+		
+		return status;
 }
 
-bool_t			AR_TriDiagonalInverseMatrix(const arMatrix_t *mat, arMatrix_t *inv)
+
+
+arStatus_t			AR_TriDiagonalInverseMatrix(const arMatrix_t *mat, arMatrix_t *inv)
 {
-		bool_t ret;
 		size_t i,j;
 		arVector_t *x,*b;
+		arStatus_t status;
 		AR_ASSERT(mat != NULL && inv != NULL);
-		AR_ASSERT(AR_IsSquareMatrix(mat));
+		AR_ASSERT(AR_IsSquareMatrix(mat) == AR_S_YES);
 
-		ret = true;
+		status = AR_S_YES;
 
 		x = AR_CreateVector(mat->ncols);
 		b = AR_CreateVector(mat->nrows);
+
+		if(x == NULL || b == NULL)
+		{
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+
 		AR_ZeroVector(b);
 		AR_ZeroVector(x);
-		AR_SetMatrixSize(inv, mat->nrows, mat->ncols);
+
+		if((status = AR_SetMatrixSize(inv, mat->nrows, mat->ncols)) != AR_S_YES)
+		{
+				status = AR_S_NO;
+				goto END_POINT;
+		}
+
 
 		for(i = 0; i < mat->nrows; ++i)
 		{
 				AR_SetVectorValue(b, i, 1.0);
 				
-				if(!AR_TriDiagonalSolveMatrix(mat, x, b))
+				status = AR_TriDiagonalSolveMatrix(mat, x, b);
+				if(status != AR_S_YES)
 				{
-						ret = false;
 						goto END_POINT;
 				}
 
@@ -1935,12 +2337,20 @@ bool_t			AR_TriDiagonalInverseMatrix(const arMatrix_t *mat, arMatrix_t *inv)
 		}
 
 END_POINT:
-		AR_DestroyVector(x);
-		x = NULL;
-		AR_DestroyVector(b);
-		b = NULL;
+		if(x)
+		{
+				AR_DestroyVector(x);
+				x = NULL;
+		}
 
-		return ret;
+		if(b)
+		{
+				AR_DestroyVector(b);
+				b = NULL;
+		}
+
+		
+		return status;
 }
 
 
@@ -2039,10 +2449,11 @@ A22 = A22 - l21 * pivot[2] = l21 * u12 + u22 - l21 * u12 = u22;
 则LU分解完成
 */
 
-bool_t			AR_LUFactorMatrixSelf(arMatrix_t *mat, size_t *index, double *det)
+arStatus_t		AR_LUFactorMatrixSelf(arMatrix_t *mat, size_t *index, double *det)
 {
 		size_t i,j,k,new_i,min_rc;
 		double d, w, s,t;
+		
 		AR_ASSERT(mat != NULL);
 
 
@@ -2080,7 +2491,7 @@ bool_t			AR_LUFactorMatrixSelf(arMatrix_t *mat, size_t *index, double *det)
 
 				if(AR_DBL_EQ(s,0.0))
 				{
-						return false;
+						return AR_S_NO;
 				}
 
 				if(new_i != i )
@@ -2135,19 +2546,26 @@ bool_t			AR_LUFactorMatrixSelf(arMatrix_t *mat, size_t *index, double *det)
 				*det = w;
 		}
 
-		return true;
+		return AR_S_YES;
 }
 
 
-
-void			AR_LUSolveMatrix(const arMatrix_t *mat, const size_t *index, arVector_t *x,const arVector_t *b)
+arStatus_t			AR_LUSolveMatrix(const arMatrix_t *mat, const size_t *index, arVector_t *x,const arVector_t *b)
 {
 		int_t i,j;
 		double s;
+		arStatus_t status;
 		AR_ASSERT(mat != NULL && b != NULL && x != NULL);
 
 		AR_ASSERT(AR_GetVectorSize(b) == AR_GetMatrixNumRows(mat));
-		AR_SetVectorSize(x, AR_GetMatrixNumColumns(mat));
+
+		status = AR_S_YES;
+		status = AR_SetVectorSize(x, AR_GetMatrixNumColumns(mat));
+
+		if(status != AR_S_YES)
+		{
+				return status;
+		}
 
 		for(i = 0; i < (int_t)mat->nrows; ++i)
 		{
@@ -2179,26 +2597,47 @@ void			AR_LUSolveMatrix(const arMatrix_t *mat, const size_t *index, arVector_t *
 				AR_SetVectorValue(x, i, s / AR_GetMatrixValue(mat, i,i));
 		}
 
+		return status;
 }
 
-void			AR_LUInverseMatrix(const arMatrix_t *mat, const size_t *index, arMatrix_t *inv)
+
+
+arStatus_t			AR_LUInverseMatrix(const arMatrix_t *mat, const size_t *index, arMatrix_t *inv)
 {
+		arStatus_t status;
 		size_t i,j;
 		arVector_t *x,*b;
 		AR_ASSERT(mat != NULL && inv != NULL);
 
 		AR_ASSERT(mat->nrows == mat->ncols);
 
+		status = AR_S_YES;
+
 		x = AR_CreateVector(mat->ncols);
 		b = AR_CreateVector(mat->nrows);
+
+		if(x == NULL || b == NULL)
+		{
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+
 		AR_ZeroVector(b);
 		AR_ZeroVector(x);
-		AR_SetMatrixSize(inv, mat->nrows, mat->ncols);
+		if((status = AR_SetMatrixSize(inv, mat->nrows, mat->ncols)) != AR_S_YES)
+		{
+				goto END_POINT;
+		}
 
 		for(i = 0; i < mat->nrows; ++i)
 		{
 				AR_SetVectorValue(b, i, 1.0);
-				AR_LUSolveMatrix(mat, index, x, b);
+
+				if((status = AR_LUSolveMatrix(mat, index, x, b)) != AR_S_YES)
+				{
+						goto END_POINT;
+				}
+
 				for(j = 0; j < mat->nrows; ++j)
 				{
 						AR_SetMatrixValue(inv, j,i, AR_GetVectorValue(x,j));
@@ -2207,19 +2646,32 @@ void			AR_LUInverseMatrix(const arMatrix_t *mat, const size_t *index, arMatrix_t
 				AR_SetVectorValue(b, i, 0.0);
 		}
 
-		AR_DestroyVector(x);
-		x = NULL;
-		AR_DestroyVector(b);
-		b = NULL;
+END_POINT:
+		if(x)
+		{
+				AR_DestroyVector(x);
+				x = NULL;
+		}
+
+		if(b)
+		{
+				AR_DestroyVector(b);
+				b = NULL;
+		}
+
+		return status;
 }
 
 
-void			AR_UnpackMatrixLUFactors(const arMatrix_t *mat, arMatrix_t *L, arMatrix_t *U)
+
+arStatus_t			AR_UnpackMatrixLUFactors(const arMatrix_t *mat, arMatrix_t *L, arMatrix_t *U)
 {
 		size_t i,j;
 		size_t lm,ln,um,un;
+		arStatus_t status;
 		AR_ASSERT(mat != NULL && L != NULL && U != NULL);
 
+		status = AR_S_YES;
 		if(mat->nrows == mat->ncols)
 		{
 				lm = ln = um = un = mat->nrows;
@@ -2236,9 +2688,17 @@ void			AR_UnpackMatrixLUFactors(const arMatrix_t *mat, arMatrix_t *L, arMatrix_t
 				un = mat->ncols;
 		}
 
-		AR_SetMatrixSize(L, lm,ln);
+		if((status = AR_SetMatrixSize(L, lm,ln)) != AR_S_YES)
+		{
+				return status;
+		}
 		AR_ZeroMatrix(L);
-		AR_SetMatrixSize(U, um,un);
+
+		if((status= AR_SetMatrixSize(U, um,un)) != AR_S_YES)
+		{
+				return status;
+		}
+
 		AR_ZeroMatrix(U);
 
 		for ( i = 0; i < mat->nrows; i++ )
@@ -2265,7 +2725,9 @@ void			AR_UnpackMatrixLUFactors(const arMatrix_t *mat, arMatrix_t *L, arMatrix_t
 				}
 		}
 
+		return status;
 }
+
 
 
 /*
@@ -2286,13 +2748,20 @@ void			AR_UnpackMatrixLUFactors(const arMatrix_t *mat, arMatrix_t *L, arMatrix_t
 
 */
 
-void			AR_MultiplyMatrixLUFactors(const arMatrix_t *mat, const size_t *index, arMatrix_t *original_mat)
+arStatus_t			AR_MultiplyMatrixLUFactors(const arMatrix_t *mat, const size_t *index, arMatrix_t *original_mat)
 {
+		arStatus_t status;
 		size_t r, original_r, c, k;
 		double sum;
 
 		AR_ASSERT(mat != NULL && original_mat != NULL);
-		AR_SetMatrixSize(original_mat, mat->nrows, mat->ncols);
+		status = AR_S_YES;
+
+		if((status = AR_SetMatrixSize(original_mat, mat->nrows, mat->ncols)) != AR_S_YES)
+		{
+				return status;
+		}
+
 		AR_ZeroMatrix(original_mat);
 
 		for(r = 0; r < mat->nrows; r++)
@@ -2324,6 +2793,8 @@ void			AR_MultiplyMatrixLUFactors(const arMatrix_t *mat, const size_t *index, ar
 						AR_SetMatrixValue(original_mat, original_r, c, sum);
 				}
 		}
+
+		return status;
 }
 
 
@@ -2360,18 +2831,31 @@ LDL^T分解
 
 */
 
-bool_t			AR_LDLTFactorMatrixSelf(arMatrix_t *mat)
+arStatus_t			AR_LDLTFactorMatrixSelf(arMatrix_t *mat)
 {
+		arStatus_t status;
 		size_t i,j,k;
 		double sum, d;
 		double *v;
-		bool_t	ret;
 		AR_ASSERT(mat != NULL);
-		AR_ASSERT(AR_IsSquareMatrix(mat));
-		AR_ASSERT(AR_IsSymmetricMatrix(mat, DBL_EPSILON));
+		AR_ASSERT(AR_IsSquareMatrix(mat) == AR_S_YES);
 
-		ret = true;
+		status = AR_S_YES;
+		v = NULL;
+
+		if((status = AR_IsSymmetricMatrix(mat, DBL_EPSILON)) != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+
+
 		v = AR_NEWARR0(double, mat->nrows);
+
+		if(v == NULL)
+		{
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
 
 		for(i = 0; i < mat->nrows; ++i)
 		{
@@ -2386,7 +2870,7 @@ bool_t			AR_LDLTFactorMatrixSelf(arMatrix_t *mat)
 
 				if(AR_DBL_EQ(sum, 0.0))
 				{
-						ret = false;
+						status = AR_S_NO;
 						goto END_POINT;
 				}
 
@@ -2413,8 +2897,10 @@ END_POINT:
 				AR_DEL(v);
 				v = NULL;
 		}
-		return ret;
+		
+		return status;
 }
+
 
 
 void			AR_LDLTSolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t *b)
@@ -2462,19 +2948,34 @@ void			AR_LDLTSolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t
 		}
 }
 
-void			AR_LDLTInverseMatrix(const arMatrix_t *mat, arMatrix_t *inv)
+
+arStatus_t		AR_LDLTInverseMatrix(const arMatrix_t *mat, arMatrix_t *inv)
 {
+		arStatus_t status;
 		size_t i,j;
 		arVector_t *x,*b;
 		AR_ASSERT(mat != NULL && inv != NULL);
 		AR_ASSERT(mat->nrows == mat->ncols);
+		status = AR_S_YES;
+		x = NULL;
+		b = NULL;
 
 		x = AR_CreateVector(mat->ncols);
 		b = AR_CreateVector(mat->nrows);
+
+		if(x == NULL || b == NULL)
+		{
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+
 		AR_ZeroVector(b);
 		AR_ZeroVector(x);
 
-		AR_SetMatrixSize(inv, mat->nrows, mat->ncols);
+		if((status = AR_SetMatrixSize(inv, mat->nrows, mat->ncols)) != AR_S_YES)
+		{
+				goto END_POINT;
+		}
 
 		for(i = 0; i < mat->nrows; ++i)
 		{
@@ -2489,20 +2990,42 @@ void			AR_LDLTInverseMatrix(const arMatrix_t *mat, arMatrix_t *inv)
 				AR_SetVectorValue(b, i, 0.0);
 		}
 
-		AR_DestroyVector(x);
-		x = NULL;
-		AR_DestroyVector(b);
-		b = NULL;
+END_POINT:
+		if(x)
+		{
+				AR_DestroyVector(x);
+				x = NULL;
+		}
+
+		if(b)
+		{
+				AR_DestroyVector(b);
+				b = NULL;
+		}
+
+		return status;
 }
 
-void			AR_UnpackMatrixLDLTFactors(const arMatrix_t *mat, arMatrix_t *L, arMatrix_t *D)
+
+
+arStatus_t			AR_UnpackMatrixLDLTFactors(const arMatrix_t *mat, arMatrix_t *L, arMatrix_t *D)
 {
 		size_t i,j;
-		
+		arStatus_t status;
+
 		AR_ASSERT(mat != NULL && L != NULL && D != NULL);
 
-		AR_SetMatrixSize(L, mat->nrows, mat->ncols);
-		AR_SetMatrixSize(D, mat->nrows, mat->ncols);
+		status = AR_S_YES;
+
+		if((status = AR_SetMatrixSize(L, mat->nrows, mat->ncols)) != AR_S_YES)
+		{
+				return status;
+		}
+
+		if((status = AR_SetMatrixSize(D, mat->nrows, mat->ncols)) != AR_S_YES)
+		{
+				return status;
+		}
 		
 		AR_ZeroMatrix(L);
 		AR_ZeroMatrix(D);
@@ -2516,7 +3039,10 @@ void			AR_UnpackMatrixLDLTFactors(const arMatrix_t *mat, arMatrix_t *L, arMatrix
 				AR_SetMatrixValue(L,i,i,1.0);
 				AR_SetMatrixValue(D,i,i, AR_GetMatrixValue(mat,i,i));
 		}
+
+		return status;
 }
+
 
 
 /*
@@ -2561,16 +3087,29 @@ O = [
 	以此类推，得到原来的A
 
 */
-void			AR_MultiplyMatrixLDLTFactors(const arMatrix_t *mat, arMatrix_t *original_mat)
+arStatus_t		AR_MultiplyMatrixLDLTFactors(const arMatrix_t *mat, arMatrix_t *original_mat)
 {
 		size_t i,j,r;
 		double *v, sum;
+		arStatus_t status;
 		AR_ASSERT(mat != NULL && original_mat != NULL);
+		status = AR_S_YES;
+		v = NULL;
 
+		if((status = AR_SetMatrixSize(original_mat, mat->nrows, mat->ncols)) != AR_S_YES)
+		{
+				goto END_POINT;
+		}
 
-		AR_SetMatrixSize(original_mat, mat->nrows, mat->ncols);
 		AR_ZeroMatrix(original_mat);
+
 		v = AR_NEWARR0(double, mat->nrows);
+
+		if(v == NULL)
+		{
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
 
 		for(r = 0; r < mat->nrows; r++)
 		{
@@ -2601,12 +3140,14 @@ void			AR_MultiplyMatrixLDLTFactors(const arMatrix_t *mat, arMatrix_t *original_
 				}
 		}
 
+END_POINT:
 		if(v)
 		{
 				AR_DEL(v);
 				v = NULL;
 		}
 
+		return status;
 }
 
 
@@ -2641,16 +3182,25 @@ A = [	g00 * g00,		g00 * g10,						g00 * g20;
 
 
 
-bool_t			AR_CholeskyFactorMatrixSelf(arMatrix_t *mat)
+arStatus_t			AR_CholeskyFactorMatrixSelf(arMatrix_t *mat)
 {
+		arStatus_t status;
 		size_t i,j,k;
 		double *diag, sum;
-		bool_t ret;
+		
 		AR_ASSERT(mat != NULL);
-		AR_ASSERT(AR_IsSquareMatrix(mat));
+		AR_ASSERT(AR_IsSquareMatrix(mat) == AR_S_YES);
 
-		ret = true;
+		status = AR_S_YES;
+		diag = NULL;
+
 		diag = AR_NEWARR0(double, mat->nrows);
+
+		if(diag == NULL)
+		{
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
 
 		for(i = 0; i < mat->nrows; ++i)
 		{
@@ -2678,7 +3228,7 @@ bool_t			AR_CholeskyFactorMatrixSelf(arMatrix_t *mat)
 				*/
 				if(AR_DBL_LEEQ(sum,0.0)) 
 				{
-						ret = false;
+						status = AR_S_NO;
 						goto END_POINT;
 				}
 
@@ -2692,9 +3242,10 @@ END_POINT:
 				AR_DEL(diag);
 				diag = NULL;
 		}
-
-		return ret;
+		
+		return status;
 }
+
 
 
 /*
@@ -2726,15 +3277,21 @@ G'x = z;
 		g22 * x2 = z2;
 
 */
-void			AR_CholeskySolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t *b)
+arStatus_t			AR_CholeskySolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t *b)
 {
+		arStatus_t status;
 		int_t i,j;
 		double sum;
 
 		AR_ASSERT(mat->nrows == mat->ncols);
 		AR_ASSERT(AR_GetVectorSize(b) >= mat->nrows);
 
-		AR_SetVectorSize(x, mat->ncols);
+		status = AR_S_YES;
+
+		if((status = AR_SetVectorSize(x, mat->ncols)) != AR_S_YES)
+		{
+				return status;
+		}
 
 		for(i = 0; i < (int_t)mat->nrows; ++i)
 		{
@@ -2762,22 +3319,40 @@ void			AR_CholeskySolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVect
 				AR_ASSERT(!AR_DBL_EQ(AR_GetMatrixValue(mat, (size_t)i,(size_t)i), 0.0));
 				AR_SetVectorValue(x, (size_t)i, sum / AR_GetMatrixValue(mat, (size_t)i,(size_t)i));
 		}
+
+		return status;
 }
 
 
-void			AR_CholeskyInverseMatrix(const arMatrix_t *mat, arMatrix_t *inv)
+arStatus_t		AR_CholeskyInverseMatrix(const arMatrix_t *mat, arMatrix_t *inv)
 {
+		arStatus_t status;
 		size_t i,j;
 		arVector_t *x,*b;
 		AR_ASSERT(mat != NULL && inv != NULL);
 		AR_ASSERT(mat->nrows == mat->ncols);
 
+		status = AR_S_YES;
+		x = NULL;
+		b = NULL;
+
+
 		x = AR_CreateVector(mat->ncols);
 		b = AR_CreateVector(mat->nrows);
+
+		if(x == NULL || b == NULL)
+		{
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+
 		AR_ZeroVector(b);
 		AR_ZeroVector(x);
 
-		AR_SetMatrixSize(inv, mat->nrows, mat->ncols);
+		if( (status = AR_SetMatrixSize(inv, mat->nrows, mat->ncols)) != AR_S_YES)
+		{
+				goto END_POINT;
+		}
 
 		for(i = 0; i < mat->nrows; ++i)
 		{
@@ -2792,11 +3367,23 @@ void			AR_CholeskyInverseMatrix(const arMatrix_t *mat, arMatrix_t *inv)
 				AR_SetVectorValue(b, i, 0.0);
 		}
 
-		AR_DestroyVector(x);
-		x = NULL;
-		AR_DestroyVector(b);
-		b = NULL;
+END_POINT:
+		if(x)
+		{
+				AR_DestroyVector(x);
+				x = NULL;
+		}
+
+		if(b)
+		{
+				AR_DestroyVector(b);
+				b = NULL;
+		}
+
+		return status;
 }
+
+
 
 /*
 G =		[		g00,	0,		0;
@@ -2814,12 +3401,20 @@ A = [	g00 * g00,		g00 * g10,						g00 * g20;
 
 */
 
-void			AR_MultiplyMatrixCholeskyFactors(const arMatrix_t *mat, arMatrix_t *original_mat)
+arStatus_t			AR_MultiplyMatrixCholeskyFactors(const arMatrix_t *mat, arMatrix_t *original_mat)
 {
+		arStatus_t status;
 		size_t i,j,r;
 		double sum;
+
 		AR_ASSERT(mat != NULL && original_mat != NULL);
-		AR_SetMatrixSize(original_mat, mat->nrows, mat->ncols);
+
+		status = AR_S_YES;
+		if((status = AR_SetMatrixSize(original_mat, mat->nrows, mat->ncols)) != AR_S_YES)
+		{
+				return status;
+		}
+		
 		AR_ZeroMatrix(original_mat);
 		
 
@@ -2837,12 +3432,15 @@ void			AR_MultiplyMatrixCholeskyFactors(const arMatrix_t *mat, arMatrix_t *origi
 				}
 		}
 
+		return status;
 }
 
 
 
 
 
+#if(0)
+#if(0)
 
 
 /*QR分解*/
@@ -2877,10 +3475,10 @@ void			AR_MultiplyMatrixQRFactors(const arMatrix_t *mat, const arVector_t *c, co
 
 
 
+#endif
 
 
-
-
+#endif
 
 
 
@@ -2893,10 +3491,11 @@ void			AR_MultiplyMatrixQRFactors(const arMatrix_t *mat, const arVector_t *c, co
 /************************************************************打印矩阵信息**************************************************************************/
 
 
-void			AR_MatrixToString(const arMatrix_t *mat, arString_t *str, size_t precision, const wchar_t *sp_str, const wchar_t *row_sp)
+arStatus_t			AR_MatrixToString(const arMatrix_t *mat, arString_t *str, size_t precision, const wchar_t *sp_str, const wchar_t *row_sp)
 {
 		size_t i;
 		arVector_t *tmp;
+		arStatus_t status;
 		AR_ASSERT(mat != NULL && str != NULL);
 
 		if(row_sp == NULL)
@@ -2904,18 +3503,44 @@ void			AR_MatrixToString(const arMatrix_t *mat, arString_t *str, size_t precisio
 				row_sp = AR_LINE_SP;
 		}
 
+		status = AR_S_YES;
+
 		tmp = AR_CreateVector(mat->ncols);
+
+		if(tmp == NULL)
+		{
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+
 
 		for(i = 0; i < mat->nrows; ++i)
 		{
 				AR_GetMatrixRow(mat, i, tmp);
-				AR_VectorToString(tmp, str, precision, sp_str);
-				AR_AppendString(str, row_sp);
+				status = AR_VectorToString(tmp, str, precision, sp_str);
+				
+				if(status != AR_S_YES)
+				{
+						goto END_POINT;
+				}
+
+				status = AR_AppendString(str, row_sp);
+
+				if(status != AR_S_YES)
+				{
+						goto END_POINT;
+				}
 		}
 
-		AR_DestroyVector(tmp);
-		tmp = NULL;
+END_POINT:
+		if(tmp)
+		{
+				AR_DestroyVector(tmp);
+				tmp = NULL;
+		}
+		return status;
 }
+
 
 
 

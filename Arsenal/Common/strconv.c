@@ -274,11 +274,17 @@ size_t					AR_str_to_wcs(arCodePage_t cp, const char *acp, size_t n, wchar_t *ou
 
 		if(len == 0 || out_len == 0 || out == NULL)
 		{
+				if(len == 0)
+				{
+						
+				}
+
 				return len;
 		}
 
 		if((int)out_len < len)
 		{
+				
 				return 0;
 		}
 
@@ -302,6 +308,10 @@ size_t					AR_wcs_to_str(arCodePage_t cp, const wchar_t *input, size_t n, char *
 
 		if(len == 0 || out == NULL || out_len == 0)
 		{
+				if(len == 0)
+				{
+						
+				}
 				return len;
 		}
 
@@ -309,6 +319,7 @@ size_t					AR_wcs_to_str(arCodePage_t cp, const wchar_t *input, size_t n, char *
 		{
 				return 0;
 		}
+
 
 		if(WideCharToMultiByte(win_cp, 0, input, (int)n, out, (int)out_len, NULL, NULL) == 0)
 		{
@@ -336,14 +347,23 @@ char*					AR_wcs_convto_str(arCodePage_t cp, const wchar_t *input, size_t in_n)
 				int len = WideCharToMultiByte(win_cp, 0, input, n, 0, 0, NULL, NULL);
 				if(len == 0)
 				{
+					
 						return NULL;
 				}
 
 				ret = AR_NEWARR(char, len + 1);
 
+				if(ret == NULL)
+				{
+					
+						return NULL;
+				}
+
 				len = WideCharToMultiByte(win_cp, 0, input, n, ret, len, NULL, NULL);
+				
 				if(len == 0)
 				{
+					
 						AR_DEL(ret);
 						ret = NULL;
 				}else
@@ -374,9 +394,17 @@ wchar_t*				AR_str_convto_wcs(arCodePage_t cp, const char *input, size_t in_n)
 
 				ret = AR_NEWARR(wchar_t, len + 1);
 
+				if(ret == NULL)
+				{
+					
+						return NULL;
+				}
+
+
 				len = MultiByteToWideChar(win_cp, 0, input, (int)in_n, ret, len);
 				if(len == 0)
 				{
+					
 						AR_DEL(ret);
 						ret = NULL;
 				}else
@@ -456,6 +484,7 @@ size_t					AR_str_to_wcs(arCodePage_t cp, const char *acp, size_t n, wchar_t *ou
 
 		if(out_len < len)
 		{
+				AR_SetLastError(AR_ECODE_SMALLBUF);
 				ret = 0;
 				goto CLEAN_POINT;
 		}
@@ -496,6 +525,7 @@ size_t					AR_wcs_to_str(arCodePage_t cp, const wchar_t *input, size_t n, char *
 
 		if(out_len < len)
 		{
+				AR_SetLastError(AR_ECODE_SMALLBUF);
 				ret = 0;
 				goto CLEAN_POINT;
 		}
@@ -534,11 +564,19 @@ wchar_t*				AR_str_convto_wcs(arCodePage_t cp, const char *input, size_t in_n)
 
 		if(in_n == 0)
         {
-            return AR_wcsdup(L"");
+				return AR_wcsdup(L"");
         }
 
         out_len = sizeof(wchar_t) * (in_n + 1);
         out = (char*)AR_NEWARR0(wchar_t , in_n + 1);
+
+		if(out == NULL)
+		{
+				AR_SetLastError(AR_ECODE_NOMEM);
+				is_ok = false;
+				cd = NULL;
+				goto CLEAN_POINT;
+		}
 
 		cd = iconv_open(UNICODE_ENCODING_NAME, cp_iconv);
 		//cd = iconv_open("wchar_t", cp_iconv);
@@ -546,6 +584,7 @@ wchar_t*				AR_str_convto_wcs(arCodePage_t cp, const char *input, size_t in_n)
 
         if(cd == (iconv_t)-1)
         {
+				AR_SetLastError(AR_ECODE_SYS);
 				is_ok = false;
 				cd = NULL;
 				goto CLEAN_POINT;
@@ -558,8 +597,9 @@ wchar_t*				AR_str_convto_wcs(arCodePage_t cp, const char *input, size_t in_n)
 
         if(iconv(cd, &inbuf, &inleft, &outbuf, &outleft) == (size_t)-1)
         {
-            is_ok = false;
-            goto CLEAN_POINT;
+				AR_SetLastError(AR_ECODE_INVAL);
+				is_ok = false;
+				goto CLEAN_POINT;
         }
 
 CLEAN_POINT:
@@ -601,7 +641,7 @@ char*					AR_wcs_convto_str(arCodePage_t cp, const wchar_t *input, size_t in_n)
 
         if(len == 0)
         {
-            return  AR_strdup("");
+				return  AR_strdup("");
         }
 
         is_ok = true;
@@ -610,13 +650,23 @@ char*					AR_wcs_convto_str(arCodePage_t cp, const wchar_t *input, size_t in_n)
         out_len = (len + 1) * 6;
 		out = AR_NEWARR0(char, out_len);
 
+		if(out == NULL)
+		{
+				AR_SetLastError(AR_ECODE_NOMEM);
+				is_ok = false;
+				cd = NULL;
+				goto CLEAN_POINT;
+		}
+
+
         cd = iconv_open(cp_iconv,  UNICODE_ENCODING_NAME);
 
         if(cd == (iconv_t)-1)
         {
-            is_ok = false;
-            cd = NULL;
-            goto CLEAN_POINT;
+				AR_SetLastError(AR_ECODE_SYS);
+				is_ok = false;
+				cd = NULL;
+				goto CLEAN_POINT;
         }
 
         {
@@ -627,8 +677,9 @@ char*					AR_wcs_convto_str(arCodePage_t cp, const wchar_t *input, size_t in_n)
 
             if(iconv(cd, &inbuf, &inleft, &outbuf, &outleft) != 0)
             {
-                is_ok = false;
-                goto CLEAN_POINT;
+					AR_SetLastError(AR_ECODE_INVAL);
+					is_ok = false;
+					goto CLEAN_POINT;
             }
         }
 
@@ -642,8 +693,8 @@ CLEAN_POINT:
 
         if(!is_ok && out)
         {
-            AR_DEL(out);
-            out = NULL;
+				AR_DEL(out);
+				out = NULL;
         }
 
         return out;

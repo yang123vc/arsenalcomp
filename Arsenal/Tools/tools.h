@@ -20,8 +20,8 @@
 
 AR_NAMESPACE_BEGIN
 
-bool_t	Tools_Init();
-bool_t	Tools_UnInit();
+arStatus_t	Tools_Init();
+arStatus_t	Tools_UnInit();
 
 
 

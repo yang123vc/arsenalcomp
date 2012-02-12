@@ -88,11 +88,6 @@
     <ClCompile Include="..\..\..\Arsenal\Parser\report.c" />
     <ClCompile Include="..\..\..\Arsenal\Parser\symbol.c" />
     <ClCompile Include="..\..\..\Arsenal\Tengu\tengu.c" />
-    <ClCompile Include="..\..\..\Arsenal\Tengu\tgucompiler.c" />
-    <ClCompile Include="..\..\..\Arsenal\Tengu\tguparser.c" />
-    <ClCompile Include="..\..\..\Arsenal\Tengu\tgusyntree.c" />
-    <ClCompile Include="..\..\..\Arsenal\Tengu\tguutility.c" />
-    <ClCompile Include="..\..\..\Arsenal\Tengu\tguvm.c" />
     <ClCompile Include="..\..\..\Arsenal\Tools\grammar_codegen.c" />
     <ClCompile Include="..\..\..\Arsenal\Tools\grammar_collector.c" />
     <ClCompile Include="..\..\..\Arsenal\Tools\iniobj.c" />
@@ -105,6 +100,7 @@
     <ClInclude Include="..\..\..\Arsenal\Common\config.h" />
     <ClInclude Include="..\..\..\Arsenal\Common\heap.h" />
     <ClInclude Include="..\..\..\Arsenal\Common\platform.h" />
+    <ClInclude Include="..\..\..\Arsenal\Common\status.h" />
     <ClInclude Include="..\..\..\Arsenal\Common\thread_apple.h" />
     <ClInclude Include="..\..\..\Arsenal\Common\thread_posix.h" />
     <ClInclude Include="..\..\..\Arsenal\Common\thread_win.h" />
@@ -116,12 +112,6 @@
     <ClInclude Include="..\..\..\Arsenal\Parser\parser.h" />
     <ClInclude Include="..\..\..\Arsenal\Parser\parser_in.h" />
     <ClInclude Include="..\..\..\Arsenal\Tengu\tengu.h" />
-    <ClInclude Include="..\..\..\Arsenal\Tengu\tgucompiler.h" />
-    <ClInclude Include="..\..\..\Arsenal\Tengu\tguparser.h" />
-    <ClInclude Include="..\..\..\Arsenal\Tengu\tgusyntree.h" />
-    <ClInclude Include="..\..\..\Arsenal\Tengu\tguutility.h" />
-    <ClInclude Include="..\..\..\Arsenal\Tengu\tguvm.h" />
-    <ClInclude Include="..\..\..\Arsenal\Tengu\tgu_parser_impl.h" />
     <ClInclude Include="..\..\..\Arsenal\Tools\grammar_config.h" />
     <ClInclude Include="..\..\..\Arsenal\Tools\iniobj.h" />
     <ClInclude Include="..\..\..\Arsenal\Tools\serializer.h" />
@@ -438,7 +428,7 @@
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <OpenMPSupport>false</OpenMPSupport>
       <AssemblerOutput>All</AssemblerOutput>
-      <CompileAs>CompileAsC</CompileAs>
+      <CompileAs>CompileAsCpp</CompileAs>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <FloatingPointExceptions>false</FloatingPointExceptions>
@@ -488,7 +478,7 @@
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <OpenMPSupport>false</OpenMPSupport>
       <AssemblerOutput>All</AssemblerOutput>
-      <CompileAs>CompileAsC</CompileAs>
+      <CompileAs>CompileAsCpp</CompileAs>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <FloatingPointExceptions>false</FloatingPointExceptions>

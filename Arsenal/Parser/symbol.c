@@ -17,15 +17,66 @@
 
 AR_NAMESPACE_BEGIN
 
+const psrSymb_t*		Parser_CreateSymbN(const wchar_t *name, size_t n, psrSymbType_t t)
+{
+		psrSymb_t *res;
+		AR_ASSERT(name != NULL && n > 0);
+
+		res = AR_NEW0(psrSymb_t);
+
+		if(res == NULL)
+		{
+				return res;
+		}
+
+		res->name = Parser_AllocStringN(name, n);
+
+		if(res->name == NULL)
+		{
+				AR_DEL(res);
+				res = NULL;
+				return NULL;
+		}
+
+		res->type = t;
+		res->hash_code = AR_wcshash(res->name);
+		res->ref_count = 1;
+		
+		return res;
+}
+
+const psrSymb_t*		Parser_CreateSymb(const wchar_t *name, psrSymbType_t t)
+{
+		size_t n;
+		AR_ASSERT(name != NULL);
+		n = AR_wcslen(name);
+		AR_ASSERT(n > 0);
+		return Parser_CreateSymbN(name, n, t);
+}
 
 
+
+#if(0)
 const psrSymb_t*		Parser_CreateSymb(const wchar_t *name, psrSymbType_t t)
 {
 		psrSymb_t		*res;
 		AR_ASSERT(name != NULL && AR_wcslen(name) > 0);
 		res = AR_NEW0(psrSymb_t);
 
+		if(res == NULL)
+		{
+				return res;
+		}
+
 		res->name = Parser_AllocString(name);
+
+		if(res->name == NULL)
+		{
+				AR_DEL(res);
+				res = NULL;
+				return NULL;
+		}
+
 		res->type = t;
 		res->hash_code = AR_wcshash(res->name);
 		res->ref_count = 1;
@@ -36,7 +87,7 @@ const psrSymb_t*		Parser_CreateSymb(const wchar_t *name, psrSymbType_t t)
 		return res;
 
 }
-
+#endif
 
 
 
@@ -192,9 +243,14 @@ void	Parser_InitSymbList(psrSymbList_t *symb_lst)
 void	Parser_UnInitSymbList(psrSymbList_t *symb_lst)
 {
 		AR_ASSERT(symb_lst != NULL);
-		if(symb_lst->lst != NULL)AR_DEL((psrSymb_t**)symb_lst->lst);
+		if(symb_lst->lst != NULL)
+		{
+				AR_DEL((psrSymb_t**)symb_lst->lst);
+		}
+
 		AR_memset(symb_lst, 0, sizeof(*symb_lst));
 }
+
 
 void	Parser_ClearSymbList(psrSymbList_t *symb_lst)
 {
@@ -203,37 +259,86 @@ void	Parser_ClearSymbList(psrSymbList_t *symb_lst)
 }
 
 
-void				Parser_CopySymbList(psrSymbList_t *dest, const psrSymbList_t *sour)
+
+arStatus_t				Parser_CopySymbList(psrSymbList_t *dest, const psrSymbList_t *sour)
 {
 		size_t i;
+		arStatus_t status;
 		AR_ASSERT(dest != NULL && sour != NULL);
+
+		status = AR_S_YES;
+
 		for(i = 0; i < sour->count; ++i)
 		{
-				Parser_InsertToSymbList(dest, sour->lst[i]);
+				status = Parser_InsertToSymbList(dest, sour->lst[i]);
+
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
 		}
+
+		return status;
 }
 
 
-void	Parser_InsertToSymbList(psrSymbList_t *symb_lst, const psrSymb_t *symb)
+arStatus_t	Parser_InsertToSymbList(psrSymbList_t *symb_lst, const psrSymb_t *symb)
 {
+		arStatus_t status;
 		AR_ASSERT(symb_lst != NULL && symb != NULL);
 		
-		if(symb_lst->count == symb_lst->cap)
+		status = Parser_ReserveSymbListCapacity(symb_lst, symb_lst->count + 1);
+
+		if(status != AR_S_YES)
 		{
-				symb_lst->cap = symb_lst->cap + 8;
-				symb_lst->lst = (const psrSymb_t**)AR_REALLOC(const psrSymb_t*, (psrSymb_t**)symb_lst->lst, symb_lst->cap);
+				return status;
 		}
+
 		symb_lst->lst[symb_lst->count++] = symb;
+
+		return status;
 }
 
 
 
-bool_t				Parser_RemoveFromSymbListByIndex(psrSymbList_t *symb_lst, size_t index)
+
+arStatus_t			Parser_ReserveSymbListCapacity(psrSymbList_t *symb_lst, size_t cap)
+{
+
+		AR_ASSERT(symb_lst != NULL);
+
+		if(cap > symb_lst->cap)
+		{
+				const psrSymb_t **new_lst;
+				new_lst = AR_NEWARR(const psrSymb_t*, cap);
+
+				if(new_lst == NULL)
+				{
+						return AR_E_NOMEM;
+				}
+
+				AR_memcpy((psrSymb_t **)new_lst, symb_lst->lst, symb_lst->count * sizeof(const psrSymb_t*));
+
+				AR_DEL(symb_lst->lst);
+
+				symb_lst->cap = cap;
+				symb_lst->lst = new_lst;
+		}
+
+		return AR_S_YES;
+}
+
+
+
+arStatus_t			Parser_RemoveFromSymbListByIndex(psrSymbList_t *symb_lst, size_t index)
 {
 		size_t i;
 		AR_ASSERT(symb_lst != NULL && index < symb_lst->count);
 		
-		if(index >= symb_lst->count)return false;
+		if(index >= symb_lst->count)
+		{
+				return AR_S_NO;
+		}
 
 		i = index;
 		while(i < symb_lst->count - 1)
@@ -243,7 +348,7 @@ bool_t				Parser_RemoveFromSymbListByIndex(psrSymbList_t *symb_lst, size_t index
 		}
 		
 		symb_lst->count--;
-		return true;
+		return AR_S_YES;
 		
 }
 
@@ -337,40 +442,56 @@ void			Parser_SortSymbList(psrSymbList_t *symb_lst)
 }
 
 
-bool_t				Parser_InsertToSymbList_Unique(psrSymbList_t *symb_lst, const psrSymb_t *symb)
+arStatus_t				Parser_InsertToSymbList_Unique(psrSymbList_t *symb_lst, const psrSymb_t *symb)
 {
 		AR_ASSERT(symb_lst != NULL && symb != NULL);
-		if(Parser_FindFromSymbList(symb_lst, symb) != -1)return false;
+		if(Parser_FindFromSymbList(symb_lst, symb) != -1)
+		{
+				return AR_S_NO;
+		}
 
-		Parser_InsertToSymbList(symb_lst, symb);
-		return true;
-
+		return Parser_InsertToSymbList(symb_lst, symb);
 }
 
 
 /********************************************************************************************************/
-void			Parser_PrintSymbol(const psrSymb_t *symb, arString_t *str)
+arStatus_t			Parser_PrintSymbol(const psrSymb_t *symb, arString_t *str)
 {
 		if(symb->type == PARSER_TERM)
 		{
-				AR_AppendFormatString(str, L"%ls ", symb->name);
+				return AR_AppendFormatString(str, L"%ls ", symb->name);
 				
 		}else
 		{
-				AR_AppendFormatString(str, L"<%ls> ", symb->name);
+				return AR_AppendFormatString(str, L"<%ls> ", symb->name);
 		}
 }
 
 
-void			Parser_PrintSymbolList(const psrSymbList_t *lst, arString_t *str)
+arStatus_t			Parser_PrintSymbolList(const psrSymbList_t *lst, arString_t *str)
 {
 		size_t i;
-
+		
 		for(i = 0; i < lst->count; ++i)
 		{
-				Parser_PrintSymbol(lst->lst[i], str);
-				AR_AppendFormatString(str, L" ");
+				arStatus_t status;
+
+				status = Parser_PrintSymbol(lst->lst[i], str);
+
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
+
+				status = AR_AppendFormatString(str, L" ");
+
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
 		}
+
+		return AR_S_YES;
 }
 
 
@@ -404,7 +525,7 @@ void					Parser_UnInitSymbMap(psrSymbMap_t *map)
 }
 
 
-bool_t					Parser_InsertToSymbMap(psrSymbMap_t *map, const psrSymb_t *key, const psrSymb_t *val)
+arStatus_t					Parser_InsertToSymbMap(psrSymbMap_t *map, const psrSymb_t *key, const psrSymb_t *val)
 {
 		psrMapRec_t *rec, *tmp;
 		AR_ASSERT(map != NULL && key != NULL);
@@ -425,31 +546,44 @@ bool_t					Parser_InsertToSymbMap(psrSymbMap_t *map, const psrSymb_t *key, const
 				if(tmp == NULL)
 				{
 						tmp = AR_NEW0(psrMapRec_t);
-						tmp->key = key;
-						Parser_InitSymbList(&tmp->lst);
-						tmp->next = map->bucket[key->hash_code % MAP_BUCKET_SIZE];
-						map->bucket[key->hash_code % MAP_BUCKET_SIZE] = tmp;
-						map->item_count++;
+
+						if(tmp != NULL)
+						{
+								tmp->key = key;
+								Parser_InitSymbList(&tmp->lst);
+								tmp->next = map->bucket[key->hash_code % MAP_BUCKET_SIZE];
+								map->bucket[key->hash_code % MAP_BUCKET_SIZE] = tmp;
+								map->item_count++;
+						}
 				}
 				rec = tmp;
 		}else
 		{
 				rec = AR_NEW0(psrMapRec_t);
 
-				rec->key = key;
-				rec->can_empty = false;
-				Parser_InitSymbList(&rec->lst);
-				rec->next = map->bucket[key->hash_code % MAP_BUCKET_SIZE];
-				map->bucket[key->hash_code % MAP_BUCKET_SIZE] = rec;
-				map->item_count++;
+				if(rec != NULL)
+				{
+						rec->key = key;
+						rec->can_empty = false;
+						Parser_InitSymbList(&rec->lst);
+						rec->next = map->bucket[key->hash_code % MAP_BUCKET_SIZE];
+						map->bucket[key->hash_code % MAP_BUCKET_SIZE] = rec;
+						map->item_count++;
+				}
 		}
 		
-		if(val)
+		if(rec)
 		{
-				return Parser_InsertToSymbList_Unique(&rec->lst, val);
+				if(val)
+				{
+						return Parser_InsertToSymbList_Unique(&rec->lst, val);
+				}else
+				{
+						return AR_S_NO;
+				}
 		}else
 		{
-				return false;
+				return AR_E_NOMEM;
 		}
 }
 
@@ -469,7 +603,7 @@ psrMapRec_t*		Parser_GetSymbolFromSymbMap(const psrSymbMap_t *map, const psrSymb
 }
 
 
-bool_t					Parser_SetSymbEpsilon(psrSymbMap_t *map, const psrSymb_t *key, bool_t is_epsilon)
+arStatus_t				Parser_SetSymbEpsilon(psrSymbMap_t *map, const psrSymb_t *key, bool_t is_epsilon)
 {
 		psrMapRec_t *rec;
 		AR_ASSERT(map != NULL && key != NULL);
@@ -478,16 +612,26 @@ bool_t					Parser_SetSymbEpsilon(psrSymbMap_t *map, const psrSymb_t *key, bool_t
 		if(rec)
 		{
 				rec->can_empty = is_epsilon;
-				return true;
+				return AR_S_YES;
 		}else
 		{
-				return false;
+				return AR_S_NO;
 		}
 }
 
 
 
-void			Parser_PrintSymbolMap(const psrSymbMap_t *map, arString_t *str)
+#define __CHECK_RET_VAL(_call_stmt)						\
+		do{												\
+				arStatus_t status = _call_stmt;			\
+				if(status != AR_S_YES)					\
+				{										\
+						return status;					\
+				}										\
+		}while(0)
+
+
+arStatus_t		Parser_PrintSymbolMap(const psrSymbMap_t *map, arString_t *str)
 {
 		size_t i;
 
@@ -499,10 +643,11 @@ void			Parser_PrintSymbolMap(const psrSymbMap_t *map, arString_t *str)
 				{
 						if(rec->key->type == PARSER_NONTERM)
 						{
-								Parser_PrintSymbol(rec->key, str);
-								AR_AppendString(str, L" : ");
-								Parser_PrintSymbolList(&rec->lst, str);
-								AR_AppendFormatString(str, L"\r\n");
+								__CHECK_RET_VAL(Parser_PrintSymbol(rec->key, str));
+
+								__CHECK_RET_VAL(AR_AppendString(str, L" : "));
+								__CHECK_RET_VAL(Parser_PrintSymbolList(&rec->lst, str));
+								__CHECK_RET_VAL(AR_AppendFormatString(str, L"\r\n"));
 						}
 						rec = rec->next;
 				}
@@ -516,15 +661,16 @@ void			Parser_PrintSymbolMap(const psrSymbMap_t *map, arString_t *str)
 				{
 						if(rec->key->type == PARSER_TERM)
 						{
-								Parser_PrintSymbol(rec->key, str);
-								AR_AppendString(str, L" : ");
-								Parser_PrintSymbolList(&rec->lst, str);
-								AR_AppendFormatString(str, L"\r\n");
+								__CHECK_RET_VAL(Parser_PrintSymbol(rec->key, str));
+								__CHECK_RET_VAL(AR_AppendString(str, L" : "));
+								__CHECK_RET_VAL(Parser_PrintSymbolList(&rec->lst, str));
+								__CHECK_RET_VAL(AR_AppendFormatString(str, L"\r\n"));
 						}
 						rec = rec->next;
 				}
 		}
 
+		return AR_S_YES;
 }
 
 
@@ -533,4 +679,3 @@ void			Parser_PrintSymbolMap(const psrSymbMap_t *map, arString_t *str)
 
 
 AR_NAMESPACE_END
-

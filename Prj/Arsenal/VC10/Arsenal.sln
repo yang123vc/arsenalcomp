@@ -11,8 +11,14 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{0F447D59-B93E-400C-8790-32FEC17DB48C}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GrammarDesigner", "..\..\..\Tools\Win\GrammarDesigner\GrammarDesigner.vcxproj", "{9352D2FE-1361-41BB-92E9-E3EF40FE0312}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DE280C05-5EDC-446A-9695-30D3D22889DA} = {DE280C05-5EDC-446A-9695-30D3D22889DA}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TenguEditor", "..\..\..\Tools\Win\TenguEditor\TenguEditor.vcxproj", "{A027F852-58EF-47C5-A3A6-AB68B1C61623}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DE280C05-5EDC-446A-9695-30D3D22889DA} = {DE280C05-5EDC-446A-9695-30D3D22889DA}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

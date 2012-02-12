@@ -18,6 +18,8 @@
 
 AR_NAMESPACE_BEGIN
 
+
+
 typedef enum
 {
 		CFG_STR_NAME,
@@ -34,31 +36,76 @@ typedef struct __config_parser_data_tag
 		arStringTable_t			*token;
 		arStringTable_t			*token_val;
 		arStringTable_t			*prec;
+
+		arStringTable_t			*normal_str_pool;
 }cfgParserData_t;
 
-static	AR_INLINE		void	__init_parser_data(cfgParserData_t		*psr_data, cfgReport_t	*report)
+
+
+
+static void	ParserData_UnInit(cfgParserData_t	*psr_data)
+{
+		AR_ASSERT(psr_data != NULL);
+
+		if(psr_data->name != NULL)
+		{
+				AR_DestroyStrTable(psr_data->name);
+				psr_data->name = NULL;
+		}
+
+		if(psr_data->token != NULL)
+		{
+				AR_DestroyStrTable(psr_data->token);
+				psr_data->token = NULL;
+		}
+
+		if(psr_data->token_val != NULL)
+		{
+				AR_DestroyStrTable(psr_data->token_val);
+				psr_data->token_val = NULL;
+		}
+
+		if(psr_data->prec != NULL)
+		{
+				AR_DestroyStrTable(psr_data->prec);
+				psr_data->prec = NULL;
+		}
+
+		if(psr_data->normal_str_pool != NULL)
+		{
+				AR_DestroyStrTable(psr_data->normal_str_pool);
+				psr_data->normal_str_pool = NULL;
+		}
+
+		psr_data->has_error = false;
+		AR_memset(psr_data, 0, sizeof(*psr_data));
+}
+
+
+
+static	arStatus_t	ParserData_Init(cfgParserData_t		*psr_data, cfgReport_t	*report)
 {
 		AR_ASSERT(psr_data != NULL && report != NULL);
 
 		AR_memset(psr_data, 0, sizeof(*psr_data));
+
 		psr_data->has_error = false;
 		psr_data->report = report;
 		psr_data->name = AR_CreateStrTable(0);
 		psr_data->token = AR_CreateStrTable(0);
 		psr_data->token_val = AR_CreateStrTable(0);
 		psr_data->prec  = AR_CreateStrTable(0);
-}
+		psr_data->normal_str_pool = AR_CreateStrTable(0);
 
-static AR_INLINE		void	__uninit_parser_data(cfgParserData_t	*psr_data)
-{
-		AR_ASSERT(psr_data != NULL);
+		if(psr_data->name == NULL || psr_data->token == NULL || psr_data->token_val == NULL || psr_data->prec == NULL || psr_data->normal_str_pool == NULL)
+		{
+				ParserData_UnInit(psr_data);
+				return AR_E_NOMEM;
+		}else
+		{
+				return AR_S_YES;
+		}
 
-		AR_DestroyStrTable(psr_data->name);
-		AR_DestroyStrTable(psr_data->token);
-		AR_DestroyStrTable(psr_data->token_val);
-		AR_DestroyStrTable(psr_data->prec);
-		psr_data->has_error = false;
-		AR_memset(psr_data, 0, sizeof(*psr_data));
 }
 
 
@@ -84,16 +131,17 @@ static AR_INLINE		arStringTable_t*		__get_parser_data_tbl(cfgParserData_t	*psr_d
 }
 
 
-static AR_INLINE		void	__insert_str_to_parser_data(cfgParserData_t	*psr_data, const wchar_t *str, cfgStrType_t t)
+static arStatus_t	ParserData_InsertString(cfgParserData_t	*psr_data, const wchar_t *str, cfgStrType_t t)
 {
 		arStringTable_t	*tbl;
 		AR_ASSERT(psr_data != NULL && str != NULL);
 		tbl = __get_parser_data_tbl(psr_data, t);
-		AR_GetString(tbl, str);
+		
+		return AR_GetString(tbl, str) != NULL ? AR_S_YES : AR_E_NOMEM;
 }
 
 
-static AR_INLINE		bool_t	__has_str_in_parser_data(cfgParserData_t	*psr_data, const wchar_t *str, cfgStrType_t t)
+static arStatus_t	ParserData_HasString(cfgParserData_t	*psr_data, const wchar_t *str, cfgStrType_t t)
 {
 		arStringTable_t	*tbl;
 		AR_ASSERT(psr_data != NULL && str != NULL);
@@ -102,12 +150,12 @@ static AR_INLINE		bool_t	__has_str_in_parser_data(cfgParserData_t	*psr_data, con
 }
 
 
-static AR_INLINE		void	__check_name_from_parser_data(cfgParserData_t *psr_data, const wchar_t *name, size_t line, cfgStrType_t t)
+static arStatus_t	ParserData_CheckAndInsertName(cfgParserData_t *psr_data, const wchar_t *name, size_t line, cfgStrType_t t)
 {
 
 		AR_ASSERT(psr_data != NULL && name != NULL);
 
-		if(__has_str_in_parser_data(psr_data, name, t))
+		if(ParserData_HasString(psr_data, name, t) == AR_S_YES)
 		{
 				cfgReportInfo_t	msg;
 				wchar_t	buf[1024];
@@ -134,12 +182,29 @@ static AR_INLINE		void	__check_name_from_parser_data(cfgParserData_t *psr_data, 
 				msg.warning.msg = buf;
 				msg.type = CFG_REPORT_WARNING_SYNTAX_T;
 				psr_data->report->report_func(&msg, psr_data->report->report_ctx);
+				return AR_S_YES;
 		}else
 		{
-				__insert_str_to_parser_data(psr_data, name, t);
+				return ParserData_InsertString(psr_data, name, t);
 		}
 
 }
+
+
+static const wchar_t* ParserData_AllocString(cfgParserData_t *psr_data, const wchar_t *str)
+{
+		AR_ASSERT(psr_data != NULL && str != NULL);
+		return AR_GetString(psr_data->normal_str_pool, str);
+}
+
+
+static const wchar_t* ParserData_AllocStringN(cfgParserData_t *psr_data, const wchar_t *str, size_t n)
+{
+
+		AR_ASSERT(psr_data != NULL && str != NULL);
+		return AR_GetStringN(psr_data->normal_str_pool, str, n);
+}
+
 
 
 /*********************************************************************************************************************************************/
@@ -162,16 +227,17 @@ typedef enum
 		CFG_ERROR_T
 }cfgNodeType_t;
 
+
 struct __cfg_node_tag
 {
 		union{
+				cfgConfig_t		config;
 				cfgLexeme_t		lexeme;
 				cfgName_t		name;
 				cfgNodeList_t	lst;
 				cfgPrec_t		prec;
 				cfgToken_t		token;
 				cfgRule_t		rule;
-				cfgConfig_t		config;
 				cfgStart_t		start;
 				cfgPreDef_t		predef;
 		};
@@ -183,7 +249,6 @@ struct __cfg_node_tag
 
 static const wchar_t *__cfg_lex_name[] =
 {
-		//L"	delim		= 	[\\f\\v\\t\\r\\n ]+",
 		L"	delim		= 	[\\x{000B}\\x{0020}\\x{00A0}\\x{2028}\\x{2029} \\f\\v\\t\\r\\n]+",
 		L"	letter		= 	[A-Z_a-z]",
 		L"	digit		=	[0-9]",
@@ -284,20 +349,7 @@ static const cfgTermInfo_t	__cfg_term[] =
 		{CFG_LEXVAL_FAKE_EOI, L"#"}
 };
 
-/*
-typedef struct __cfg_prec_tag
-{
-		size_t	line;
 
-		psrAssocType_t	assoc;
-		size_t			prec_level;
-
-		size_t			*prec_tok_val;
-		wchar_t			**prec_tok_set;
-		size_t			count;
-		size_t			cap;
-}cfgPrec_t;
-*/
 
 static void CFG_InitPrec(cfgPrec_t *prec)
 {
@@ -308,40 +360,97 @@ static void CFG_InitPrec(cfgPrec_t *prec)
 
 static void CFG_UnInitPrec(cfgPrec_t *prec)
 {
-		size_t i;
+		
 		AR_ASSERT(prec != NULL);
 
-		for(i = 0; i < prec->count; ++i)
+		if(prec->prec_tok_set)
 		{
-				AR_ASSERT(prec->prec_tok_set[i] != NULL);
-				AR_DEL(prec->prec_tok_set[i]);
+				AR_DEL(prec->prec_tok_set);
 		}
 
-		if(prec->prec_tok_set) AR_DEL(prec->prec_tok_set);
-		if(prec->prec_tok_val) AR_DEL(prec->prec_tok_val);
+		if(prec->prec_tok_val)
+		{
+				AR_DEL(prec->prec_tok_val);
+		}
+
 		AR_memset(prec, 0, sizeof(*prec));
 }
 
-static void CFG_InsertTokenToPrec(cfgPrec_t *prec, const wchar_t *prec_tok, size_t prec_tok_val)
+static arStatus_t CFG_InsertTokenToPrec(cfgPrec_t *prec, const wchar_t *prec_tok, size_t prec_tok_val, cfgParserData_t *psr_data)
 {
-		AR_ASSERT(prec != NULL && prec_tok != NULL);
+		AR_ASSERT(prec != NULL && prec_tok != NULL &&  psr_data != NULL);
 
 		if(prec->count == prec->cap)
 		{
-				prec->cap = (prec->cap + 4)*2;
-				prec->prec_tok_set = AR_REALLOC(wchar_t*, prec->prec_tok_set, prec->cap);
-				prec->prec_tok_val = AR_REALLOC(size_t, prec->prec_tok_val, prec->cap);
+				size_t new_cap;
+				const wchar_t	**new_tok_set;
+				size_t	*new_tok_val;
+				new_cap = (prec->cap + 4)*2;
+				
+				new_tok_set = AR_NEWARR(const wchar_t*, new_cap);
+				new_tok_val = AR_NEWARR(size_t, new_cap);
+
+				if(new_tok_set == NULL || new_tok_val == NULL)
+				{
+						if(new_tok_set)
+						{
+								AR_DEL(new_tok_set);
+								new_tok_set = NULL;
+						}
+
+						if(new_tok_val)
+						{
+								AR_DEL(new_tok_val);
+								new_tok_val = NULL;
+						}
+
+						return AR_E_NOMEM;
+				}
+
+				if(prec->count > 0)
+				{
+						AR_memcpy((wchar_t**)new_tok_set, prec->prec_tok_set, prec->count * sizeof(wchar_t*));
+						AR_memcpy(new_tok_val, prec->prec_tok_val, prec->count * sizeof(size_t));
+				}
+
+				if(prec->prec_tok_set)
+				{
+						AR_DEL(prec->prec_tok_set);
+						prec->prec_tok_set = NULL;
+				}
+
+				if(prec->prec_tok_val)
+				{
+						AR_DEL(prec->prec_tok_val);
+						prec->prec_tok_val = NULL;
+				}
+
+
+				prec->cap = new_cap;
+				prec->prec_tok_set = new_tok_set;
+				prec->prec_tok_val = new_tok_val;
 		}
 
-		prec->prec_tok_set[prec->count] = AR_wcsdup(prec_tok);
+		prec->prec_tok_set[prec->count] = ParserData_AllocString(psr_data, prec_tok);
 		prec->prec_tok_val[prec->count] = prec_tok_val;
-		prec->count++;
+
+		if(prec->prec_tok_set[prec->count] == NULL)
+		{
+				return AR_E_NOMEM;
+		}else
+		{
+				prec->count++;
+				return AR_S_YES;
+		}
 }
 
 
-static void CFG_CopyPrec(cfgPrec_t *dest, const cfgPrec_t *sour)
+
+
+static arStatus_t CFG_CopyPrec(cfgPrec_t *dest, const cfgPrec_t *sour, cfgParserData_t *psr_data)
 {
 		size_t i;
+		AR_ASSERT(dest != NULL && sour != NULL && psr_data != NULL);
 		CFG_UnInitPrec(dest);
 
 		dest->assoc = sour->assoc;
@@ -349,9 +458,18 @@ static void CFG_CopyPrec(cfgPrec_t *dest, const cfgPrec_t *sour)
 		dest->line = sour->line;
 		for(i = 0; i < sour->count; ++i)
 		{
-				CFG_InsertTokenToPrec(dest, sour->prec_tok_set[i], sour->prec_tok_val[i]);
+				arStatus_t tmp_status;
+				tmp_status = CFG_InsertTokenToPrec(dest, sour->prec_tok_set[i], sour->prec_tok_val[i], psr_data);
+
+				if(tmp_status != AR_S_YES)
+				{
+						return tmp_status;
+				}
 		}
+
+		return AR_S_YES;
 }
+
 
 /*******************************************************************/
 static void CFG_InitNodeList(cfgNodeList_t *lst)
@@ -370,38 +488,125 @@ static void CFG_UnInitNodeList(cfgNodeList_t *lst)
 		}
 }
 
-static void CFG_InsertToNodeList(cfgNodeList_t *lst, cfgNode_t *node)
+
+static arStatus_t CFG_InsertToNodeList(cfgNodeList_t *lst, cfgNode_t *node)
 {
 		AR_ASSERT(lst != NULL && node != NULL);
 
 
 		if(lst->count == lst->cap)
 		{
-				lst->cap = (lst->cap + 4)*2;
-				lst->lst = AR_REALLOC(cfgNode_t*, lst->lst, lst->cap);
+				size_t new_cap;
+				cfgNode_t **new_lst;
+
+				new_cap = (lst->cap + 4)*2;
+				new_lst = AR_NEWARR(cfgNode_t*, new_cap);
+
+				if(new_lst == NULL)
+				{
+						return AR_E_NOMEM;
+				}
+
+				if(lst->count > 0)
+				{
+						AR_memcpy(new_lst, lst->lst, lst->count * sizeof(cfgNode_t*));
+				}
+
+				if(lst->lst)
+				{
+						AR_DEL(lst->lst);
+						lst->lst = NULL;
+				}
+
+				lst->cap = new_cap;
+				lst->lst = new_lst;
 				
 				/*lst->lst = (cfgNode_t**)AR_realloc(lst->lst, sizeof(cfgNode_t*) * lst->cap);*/
 		}
 		lst->lst[lst->count++] = node;
+		return AR_S_YES;
 }
 
 
 
 
-static void CFG_InitConfig(cfgConfig_t *cfg, cfgNodeList_t *name, cfgNodeList_t *token, cfgNodeList_t *prec, cfgNodeList_t *rule, cfgStart_t *start_rule, cfgNodeList_t *pre_def)
+static void CFG_UnInitConfig(cfgConfig_t *cfg)
 {
 		size_t i;
+		AR_ASSERT(cfg != NULL);
+
+		if(cfg->name)
+		{
+				AR_DEL(cfg->name);
+				cfg->name = NULL;
+		}
+
+
+		if(cfg->tok)
+		{
+				AR_DEL(cfg->tok);
+		}
+
+
+		for(i = 0; i < cfg->prec_cnt; ++i)
+		{
+				CFG_UnInitPrec(&cfg->prec[i]);
+		}
+
+		if(cfg->prec)
+		{
+				AR_DEL(cfg->prec);
+				cfg->prec = NULL;
+		}
+
+		
+
+		if(cfg->rule)
+		{
+				AR_DEL(cfg->rule);
+		}
+
+
+		if(cfg->pre_def)
+		{
+				AR_DEL(cfg->pre_def);
+		}
+
+}
+
+
+
+
+static arStatus_t CFG_InitConfig(cfgConfig_t *cfg, cfgNodeList_t *name, cfgNodeList_t *token, cfgNodeList_t *prec, cfgNodeList_t *rule, cfgStart_t *start_rule, cfgNodeList_t *pre_def, cfgParserData_t *psr_data)
+{
+		size_t i;
+		arStatus_t		status;
 		size_t tmp_tok_val = PARSER_MIN_TOKENVAL + 1;
 
 		AR_ASSERT(cfg != NULL);
+		AR_ASSERT(psr_data != NULL);
 		
+		status = AR_S_YES;
 		AR_memset(cfg, 0, sizeof(*cfg));
 
 		if(name)
 		{
 				/*cfg->name_cnt = name->count;*/
-				cfg->name = name->count > 0 ? AR_NEWARR0(cfgName_t, name->count) : NULL;
+				if(name->count > 0)
+				{
+						cfg->name = AR_NEWARR0(cfgName_t, name->count);
 
+						if(cfg->name == NULL)
+						{
+								status = AR_E_NOMEM;
+								goto INVALID_POINT;
+						}
+
+				}else
+				{
+						cfg->name = NULL;
+				}
+				
 				for(i = 0; i < name->count; ++i)
 				{
 						if(name->lst[i]->type == CFG_ERROR_T)
@@ -410,8 +615,15 @@ static void CFG_InitConfig(cfgConfig_t *cfg, cfgNodeList_t *name, cfgNodeList_t 
 						}else
 						{
 								cfg->name[cfg->name_cnt].line = name->lst[i]->name.line;
-								cfg->name[cfg->name_cnt].name = AR_wcsdup(name->lst[i]->name.name);
-								cfg->name[cfg->name_cnt].regex = AR_wcsdup(name->lst[i]->name.regex);
+								cfg->name[cfg->name_cnt].name = ParserData_AllocString(psr_data,name->lst[i]->name.name);
+								cfg->name[cfg->name_cnt].regex = ParserData_AllocString(psr_data,name->lst[i]->name.regex);
+
+								if(cfg->name[cfg->name_cnt].name == NULL || cfg->name[cfg->name_cnt].regex == NULL)
+								{
+										status = AR_E_NOMEM;
+										goto INVALID_POINT;
+								}
+
 								cfg->name_cnt++;
 						}
 				}
@@ -429,6 +641,13 @@ static void CFG_InitConfig(cfgConfig_t *cfg, cfgNodeList_t *name, cfgNodeList_t 
 
 				cfg->tok = AR_NEWARR0(cfgToken_t, token->count + 1);
 
+				if(cfg->tok == NULL)
+				{
+						status = AR_E_NOMEM;
+						goto INVALID_POINT;
+				}
+
+
 				for(i = 0; i < token->count; ++i)
 				{
 						if(token->lst[i]->type == CFG_ERROR_T)
@@ -437,19 +656,74 @@ static void CFG_InitConfig(cfgConfig_t *cfg, cfgNodeList_t *name, cfgNodeList_t 
 						}else
 						{
 								cfg->tok[cfg->tok_cnt] = token->lst[i]->token;
-								cfg->tok[cfg->tok_cnt].name = token->lst[i]->token.name != NULL ? AR_wcsdup(token->lst[i]->token.name) : NULL;
-								cfg->tok[cfg->tok_cnt].regex = AR_wcsdup(token->lst[i]->token.regex);
-								cfg->tok[cfg->tok_cnt].action_line = token->lst[i]->token.action_line;
-								cfg->tok[cfg->tok_cnt].action_name = token->lst[i]->token.action_name != NULL ? AR_wcsdup(token->lst[i]->token.action_name) : NULL;
-								cfg->tok[cfg->tok_cnt].action_ins = token->lst[i]->token.action_ins != NULL ? AR_wcsdup(token->lst[i]->token.action_ins) : NULL;
 
-								if(token->lst[i]->token.code_name == NULL)
+								if(token->lst[i]->token.name != NULL)/*不是每个token都有名字*/
 								{
-										cfg->tok[cfg->tok_cnt].code_name = NULL;
+										cfg->tok[cfg->tok_cnt].name = ParserData_AllocString(psr_data,token->lst[i]->token.name);
+
+										if(cfg->tok[cfg->tok_cnt].name == NULL)
+										{
+												status = AR_E_NOMEM;
+												goto INVALID_POINT;
+										}
 								}else
 								{
-										cfg->tok[cfg->tok_cnt].code_name = AR_wcsdup(token->lst[i]->token.code_name);
+										cfg->tok[cfg->tok_cnt].name = NULL;
+								}
+
+								cfg->tok[cfg->tok_cnt].regex = ParserData_AllocString(psr_data,token->lst[i]->token.regex);
+
+								if(cfg->tok[cfg->tok_cnt].regex == NULL)
+								{
+										status = AR_E_NOMEM;
+										goto INVALID_POINT;
+								}
+
+								cfg->tok[cfg->tok_cnt].action_line = token->lst[i]->token.action_line;
+
+								if(token->lst[i]->token.action_name)
+								{
+										cfg->tok[cfg->tok_cnt].action_name = ParserData_AllocString(psr_data,token->lst[i]->token.action_name);
+
+										if(cfg->tok[cfg->tok_cnt].action_name == NULL)
+										{
+												status = AR_E_NOMEM;
+												goto INVALID_POINT;
+										}
+
+								}else
+								{
+										cfg->tok[cfg->tok_cnt].action_name = NULL;
+								}
+
+								if(token->lst[i]->token.action_ins != NULL)
+								{
+										cfg->tok[cfg->tok_cnt].action_ins = ParserData_AllocString(psr_data, token->lst[i]->token.action_ins);
+
+										if(cfg->tok[cfg->tok_cnt].action_ins == NULL)
+										{
+												status = AR_E_NOMEM;
+												goto INVALID_POINT;
+										}
+								}else
+								{
+										cfg->tok[cfg->tok_cnt].action_ins = NULL;
+								}
+								
+
+								if(token->lst[i]->token.code_name != NULL)
+								{
+										cfg->tok[cfg->tok_cnt].code_name = ParserData_AllocString(psr_data, token->lst[i]->token.code_name);
 										cfg->tok[cfg->tok_cnt].is_assigned_code_name = true;
+
+										if(cfg->tok[cfg->tok_cnt].code_name == NULL)
+										{
+												status = AR_E_NOMEM;
+												goto INVALID_POINT;
+										}
+								}else
+								{
+										cfg->tok[cfg->tok_cnt].code_name = NULL;
 								}
 
 								cfg->tok_cnt++;
@@ -480,8 +754,14 @@ RE_CHECK_POINT:
 				cfg->tok[cfg->tok_cnt ].lex_prec = 2;
 				cfg->tok[cfg->tok_cnt ].line = 0;
 				cfg->tok[cfg->tok_cnt ].tokval = 0;
-				cfg->tok[cfg->tok_cnt ].name = AR_wcsdup(L"CFG_LEXVAL_EOI");
-				cfg->tok[cfg->tok_cnt ].regex = AR_wcsdup(L"$");
+				cfg->tok[cfg->tok_cnt ].name = ParserData_AllocString(psr_data, L"CFG_LEXVAL_EOI");
+				cfg->tok[cfg->tok_cnt ].regex = ParserData_AllocString(psr_data, L"$");
+
+				if(cfg->tok[cfg->tok_cnt ].name == NULL || cfg->tok[cfg->tok_cnt ].regex == NULL)
+				{
+						status = AR_E_NOMEM;
+						goto INVALID_POINT;
+				}
 
 				cfg->tok_cnt++;
 
@@ -490,7 +770,9 @@ RE_CHECK_POINT:
 				{
 						if(cfg->tok[i].code_name == NULL)
 						{
-								cfg->tok[i].code_name = AR_vtow(L"%Id", cfg->tok[i].tokval);
+								wchar_t buf[128];
+								AR_swprintf(buf, 128, L"%Id", cfg->tok[i].tokval);
+								cfg->tok[i].code_name = ParserData_AllocString(psr_data, buf);
 						}
 				}
 
@@ -498,10 +780,24 @@ RE_CHECK_POINT:
 		}
 
 
+
+
 		if(prec)
 		{
 				/*cfg->prec_cnt = prec->count;*/
-				cfg->prec = prec->count > 0 ? AR_NEWARR0(cfgPrec_t, prec->count) : NULL;
+
+				if(prec->count > 0)
+				{
+						cfg->prec = AR_NEWARR0(cfgPrec_t, prec->count);
+						if(cfg->prec == NULL)
+						{
+								status = AR_E_NOMEM;
+								goto INVALID_POINT;
+						}
+				}else
+				{
+						cfg->prec = NULL;
+				}
 
 				for(i = 0; i < prec->count; ++i)
 				{
@@ -512,18 +808,29 @@ RE_CHECK_POINT:
 
 						}else
 						{
+								arStatus_t tmp_status;
 								size_t k;
 								cfgPrec_t *dest = &cfg->prec[cfg->prec_cnt];
 								CFG_InitPrec(dest);
 
-								CFG_CopyPrec(dest, &prec->lst[i]->prec);
+								tmp_status = CFG_CopyPrec(dest, &prec->lst[i]->prec, psr_data);
 
+								if(tmp_status != AR_S_YES)
+								{
+										status = tmp_status;
+										goto INVALID_POINT;
+								}
+
+								
 								for(k = 0; k < dest->count; ++k)
 								{
 										size_t x;
 										for(x = 0; x < cfg->tok_cnt; ++x)
 										{
-												if(cfg->tok[x].is_skip)continue;
+												if(cfg->tok[x].is_skip)
+												{
+														continue;
+												}
 
 												AR_ASSERT(cfg->tok[x].name != NULL);
 												if(AR_wcscmp(dest->prec_tok_set[k], cfg->tok[x].name) == 0)
@@ -551,8 +858,19 @@ RE_CHECK_POINT:
 		{
 				/*cfg->rule_cnt = rule->count;*/
 
-				cfg->rule = rule->count > 0 ? AR_NEWARR0(cfgRule_t, rule->count) : NULL;
+				if(rule->count > 0)
+				{
+						cfg->rule = AR_NEWARR0(cfgRule_t, rule->count);
 
+						if(cfg->rule == NULL)
+						{
+								status = AR_E_NOMEM;
+								goto INVALID_POINT;
+						}
+				}else
+				{
+						cfg->rule = NULL;
+				}
 
 				for(i = 0; i < rule->count; ++i)
 				{
@@ -563,24 +881,49 @@ RE_CHECK_POINT:
 						{
 								cfg->rule[cfg->rule_cnt].line = rule->lst[i]->rule.line;
 
-								cfg->rule[cfg->rule_cnt].lhs = AR_wcsdup(rule->lst[i]->rule.lhs);
-								cfg->rule[cfg->rule_cnt].rhs = AR_wcsdup(rule->lst[i]->rule.rhs);
+								cfg->rule[cfg->rule_cnt].lhs = ParserData_AllocString(psr_data, rule->lst[i]->rule.lhs);
+								cfg->rule[cfg->rule_cnt].rhs = ParserData_AllocString(psr_data, rule->lst[i]->rule.rhs);
+
+								if(cfg->rule[cfg->rule_cnt].lhs == NULL || cfg->rule[cfg->rule_cnt].rhs == NULL)
+								{
+										status = AR_E_NOMEM;
+										goto INVALID_POINT;
+								}
 
 								if(rule->lst[i]->rule.prec_tok)
 								{
-										cfg->rule[cfg->rule_cnt].prec_tok = AR_wcsdup(rule->lst[i]->rule.prec_tok);
+										cfg->rule[cfg->rule_cnt].prec_tok = ParserData_AllocString(psr_data,rule->lst[i]->rule.prec_tok);
+
+										if(cfg->rule[cfg->rule_cnt].prec_tok == NULL)
+										{
+												status = AR_E_NOMEM;
+												goto INVALID_POINT;
+										}
 								}
 										
 								cfg->rule[cfg->rule_cnt].action_line = rule->lst[i]->rule.action_line;
 
 								if(rule->lst[i]->rule.action_name)
 								{
-										cfg->rule[cfg->rule_cnt].action_name = AR_wcsdup(rule->lst[i]->rule.action_name);
+										cfg->rule[cfg->rule_cnt].action_name = ParserData_AllocString(psr_data, rule->lst[i]->rule.action_name);
+
+										if(cfg->rule[cfg->rule_cnt].action_name == NULL)
+										{
+												status = AR_E_NOMEM;
+												goto INVALID_POINT;
+										}
 								}
 
 								if(rule->lst[i]->rule.action_ins)
 								{
-										cfg->rule[cfg->rule_cnt].action_ins = AR_wcsdup(rule->lst[i]->rule.action_ins);
+										cfg->rule[cfg->rule_cnt].action_ins = ParserData_AllocString(psr_data, rule->lst[i]->rule.action_ins);
+
+										if(cfg->rule[cfg->rule_cnt].action_ins == NULL)
+										{
+												status = AR_E_NOMEM;
+												goto INVALID_POINT;
+										}
+
 								}
 
 								cfg->rule_cnt++;
@@ -593,7 +936,13 @@ RE_CHECK_POINT:
 		if(start_rule != NULL)
 		{
 				cfg->start.line = start_rule->line;
-				cfg->start.start_rule = AR_wcsdup(start_rule->start_rule);
+				cfg->start.start_rule = ParserData_AllocString(psr_data, start_rule->start_rule);
+
+				if(cfg->start.start_rule == NULL)
+				{
+						status = AR_E_NOMEM;
+						goto INVALID_POINT;
+				}
 
 		}else
 		{
@@ -604,171 +953,83 @@ RE_CHECK_POINT:
 
 		if(pre_def)
 		{
-				cfg->pre_def = pre_def->count > 0 ? AR_NEWARR0(cfgPreDef_t, pre_def->count) : NULL;
+				if(pre_def->count > 0)
+				{
+						cfg->pre_def = AR_NEWARR0(cfgPreDef_t, pre_def->count);
+						if(cfg->pre_def == NULL)
+						{
+								status = AR_E_NOMEM;
+								goto INVALID_POINT;
+						}
+				}else
+				{
+						cfg->pre_def = NULL;
+				}
+				
 				cfg->predef_cnt = pre_def->count;
 
 				for(i = 0; i < pre_def->count; ++i)
 				{
 						AR_ASSERT(pre_def->lst[i]->type == CFG_PREDEF_T);
-						cfg->pre_def[i].name = AR_wcsdup(pre_def->lst[i]->predef.name);
-						cfg->pre_def[i].code = AR_wcsdup(pre_def->lst[i]->predef.code);
+						cfg->pre_def[i].name = ParserData_AllocString(psr_data, pre_def->lst[i]->predef.name);
+						cfg->pre_def[i].code = ParserData_AllocString(psr_data, pre_def->lst[i]->predef.code);
+
 						cfg->pre_def[i].line = pre_def->lst[i]->predef.line;
 						cfg->pre_def[i].flags = pre_def->lst[i]->predef.flags;
+
+						if(cfg->pre_def[i].name == NULL || cfg->pre_def[i].code == NULL)
+						{
+								status = AR_E_NOMEM;
+								goto INVALID_POINT;
+						}
 				}
 		}
 
+		return AR_S_YES;
+
+INVALID_POINT:
+		CFG_UnInitConfig(cfg);
+		return status;
 }
 
 
-static void CFG_UnInitConfig(cfgConfig_t *cfg)
-{
-		size_t i;
-		AR_ASSERT(cfg != NULL);
-
-		for(i = 0; i < cfg->name_cnt; ++i)
-		{
-				AR_DEL(cfg->name[i].name);
-				AR_DEL(cfg->name[i].regex);
-
-		}
-
-		if(cfg->name)AR_DEL(cfg->name);
 
 
-		for(i = 0; i < cfg->tok_cnt; ++i)
-		{
-				if(cfg->tok[i].code_name)AR_DEL(cfg->tok[i].code_name);
-				if(cfg->tok[i].name)AR_DEL(cfg->tok[i].name);
-				if(cfg->tok[i].regex)AR_DEL(cfg->tok[i].regex);
-				if(cfg->tok[i].action_name)AR_DEL(cfg->tok[i].action_name);
-				if(cfg->tok[i].action_ins)AR_DEL(cfg->tok[i].action_ins);
-				
-		}
-
-		if(cfg->tok)AR_DEL(cfg->tok);
 
 
-		for(i = 0; i < cfg->prec_cnt; ++i)
-		{
-				CFG_UnInitPrec(&cfg->prec[i]);
-				/*if(cfg->prec[i].prec_tok)AR_DEL(cfg->prec[i].prec_tok);*/
-		}
-
-		if(cfg->prec)AR_DEL(cfg->prec);
-
-		if(cfg->start.start_rule)
-		{
-				AR_DEL(cfg->start.start_rule);
-		}
-
-		for(i = 0; i < cfg->rule_cnt; ++i)
-		{
-				AR_DEL(cfg->rule[i].lhs);
-				AR_DEL(cfg->rule[i].rhs);
-
-				if(cfg->rule[i].prec_tok)AR_DEL(cfg->rule[i].prec_tok);
-				if(cfg->rule[i].action_name)AR_DEL(cfg->rule[i].action_name);
-				if(cfg->rule[i].action_ins)AR_DEL(cfg->rule[i].action_ins);
-		}
-
-		if(cfg->rule)AR_DEL(cfg->rule);
 
 
-		for(i = 0; i < cfg->predef_cnt; ++i)
-		{
-				if(cfg->pre_def[i].name)AR_DEL(cfg->pre_def[i].name);
-				if(cfg->pre_def[i].code)AR_DEL(cfg->pre_def[i].code);
-		}
 
-		if(cfg->pre_def)AR_DEL(cfg->pre_def);
 
-}
+/********************************************************Parser Node****************************************************/
 
-#if defined(AR_DEBUG)
 
-		#define CFG_INIT_CFG_NODE_COUNT			0
-#else
-		#define CFG_INIT_CFG_NODE_COUNT			1000
-#endif
 
-static cfgNode_t		*__g_node_list = NULL;
-static arSpinLock_t		__g_list_lock;
+
+
+
+
+
+
+
+
+
 
 static cfgNode_t*		__get_cfg_node()
 {
-		cfgNode_t *res = NULL;
-
-		if(__g_node_list == NULL)
-		{
-				res = AR_NEW(cfgNode_t);
-
-		}else
-		{
-				AR_LockSpinLock(&__g_list_lock);
-
-				if(__g_node_list == NULL)
-				{
-						res = AR_NEW(cfgNode_t);
-				}else
-				{
-						res = __g_node_list;
-						__g_node_list = __g_node_list->next;
-				}
-
-				AR_UnLockSpinLock(&__g_list_lock);
-		}
-
-		AR_memset(res, 0, sizeof(*res));
-		return res;
+		return AR_NEW(cfgNode_t);
 }
 
 static void		__put_cfg_node(cfgNode_t *node)
 {
-		AR_ASSERT(node != NULL);
-
-		AR_LockSpinLock(&__g_list_lock);
-		node->next = __g_node_list;
-		__g_node_list = node;
-
-		AR_UnLockSpinLock(&__g_list_lock);
-
-}
-
-
-static void __init_cfg_node_list()
-{
-		size_t i;
-		AR_InitSpinLock(&__g_list_lock);
-		__g_node_list	= NULL;
-
-		for(i = 0; i < CFG_INIT_CFG_NODE_COUNT; ++i)
+		if(node)
 		{
-				cfgNode_t *n = AR_NEW0(cfgNode_t);
-				__put_cfg_node(n);
-		}
-}
-
-static void __uninit_cfg_node_list()
-{
-		size_t count = 0;
-		AR_UnInitSpinLock(&__g_list_lock);
-
-		while(__g_node_list)
-		{
-				cfgNode_t		*tmp = __g_node_list->next;
-				AR_DEL(__g_node_list);
-				__g_node_list = tmp;
-				count++;
-		}
-
-
-		{
-				wchar_t buf[1024];
-				AR_swprintf(buf, 1024, L"Total consume cfgNode_t == %Iu", count);
-				AR_LOG(L"%ls\r\n", buf);
+				AR_DEL(node);
 		}
 
 }
+
+
 
 
 
@@ -778,6 +1039,11 @@ static cfgNode_t* CFG_CreateNode(cfgNodeType_t type)
 		cfgNode_t		*node;
 
 		node = __get_cfg_node();
+		if(node == NULL)
+		{
+				return NULL;
+		}
+		AR_memset(node, 0, sizeof(*node));
 
 		node->type = type;
 		node->next = NULL;
@@ -806,27 +1072,14 @@ static void CFG_DestroyNode(cfgNode_t *node)
 				}
 				case CFG_LEXEME_T:
 				{
-						if(node->lexeme.lexeme)
-						{
-								AR_DEL(node->lexeme.lexeme);
-						}
 						break;
 				}
 				case CFG_NAME_T:
 				{
-						if(node->name.name)AR_DEL(node->name.name);
-						if(node->name.regex)AR_DEL(node->name.regex);
 						break;
 				}
 				case CFG_TOKEN_T:
 				{
-						if(node->token.name)AR_DEL(node->token.name);
-						if(node->token.regex)AR_DEL(node->token.regex);
-						if(node->token.code_name)AR_DEL(node->token.code_name);
-
-						if(node->token.action_name)AR_DEL(node->token.action_name);
-						if(node->token.action_ins)AR_DEL(node->token.action_ins);
-
 						break;
 				}
 				case CFG_PREC_T:
@@ -836,27 +1089,10 @@ static void CFG_DestroyNode(cfgNode_t *node)
 				}
 				case CFG_START_T:
 				{
-						if(node->start.start_rule)
-						{
-								AR_DEL(node->start.start_rule);
-						}
 						break;
 				}
 				case CFG_RULE_T:
 				{
-						if(node->rule.action_name)
-						{
-								AR_DEL(node->rule.action_name);
-						}
-
-						if(node->rule.action_ins)
-						{
-								AR_DEL(node->rule.action_ins);
-						}
-
-						if(node->rule.lhs)AR_DEL(node->rule.lhs);
-						if(node->rule.rhs)AR_DEL(node->rule.rhs);
-						if(node->rule.prec_tok)AR_DEL(node->rule.prec_tok);
 
 						break;
 				}
@@ -881,8 +1117,6 @@ static void CFG_DestroyNode(cfgNode_t *node)
 				}
 				case CFG_PREDEF_T:
 				{
-						if(node->predef.name)AR_DEL(node->predef.name);
-						if(node->predef.code)AR_DEL(node->predef.code);
 						break;
 				}
 				default:
@@ -890,10 +1124,7 @@ static void CFG_DestroyNode(cfgNode_t *node)
 						AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
 				}
 				}
-
-				/*
-				AR_DEL(node);
-				*/
+				
 				__put_cfg_node(node);
 
 		}
@@ -904,16 +1135,25 @@ static void CFG_DestroyNode(cfgNode_t *node)
 
 
 
-
-static psrNode_t* AR_STDCALL __build_leaf(const psrToken_t *tok,  void *ctx)
+/**************************************************************************************************************************************************/
+static psrRetVal_t AR_STDCALL __build_leaf(const psrToken_t *tok,  void *ctx)
 {
-		cfgNode_t *node;
+		psrRetVal_t ret = {AR_S_YES, NULL};
 		cfgParserData_t	*parser_ctx;
+		cfgNode_t *node;
 		AR_ASSERT(tok->str_cnt > 0 && ctx != NULL);
 		
 		parser_ctx = (cfgParserData_t*)ctx;
 
 		node = CFG_CreateNode(CFG_LEXEME_T);
+
+		if(node == NULL)
+		{
+				ret.status = AR_E_NOMEM;
+				goto INVALID_POINT;
+		}
+
+
 
 		node->lexeme.lex_val = (cfgLexValue_t)tok->term_val;
 
@@ -922,12 +1162,29 @@ static psrNode_t* AR_STDCALL __build_leaf(const psrToken_t *tok,  void *ctx)
 				wchar_t *tmp, *p;
 				AR_ASSERT(tok->str[tok->str_cnt-1] == L'"' || tok->str[tok->str_cnt-1] == L'\'');
 
-				tmp = AR_wcsndup(tok->str + 1, tok->str_cnt-2);
+				tmp = AR_NEWARR0(wchar_t, tok->str_cnt + 1);
+				if(tmp == NULL)
+				{
+						ret.status = AR_E_NOMEM;
+						goto INVALID_POINT;
+				}
+
+				AR_wcsncpy(tmp,tok->str + 1, tok->str_cnt-2);
+				tmp[tok->str_cnt-2] = L'\0';
+
 				
 				p = (wchar_t*)AR_wcstrim_space(tmp);
 				p = AR_wcstrim_right_space(p);
 				
-				node->lexeme.lexeme = AR_wcsdup(p);
+				node->lexeme.lexeme = ParserData_AllocString(parser_ctx, p);
+
+				if(node->lexeme.lexeme == NULL)
+				{
+						AR_DEL(tmp);
+						tmp = NULL;
+						ret.status = AR_E_NOMEM;
+						goto INVALID_POINT;
+				}
 
 				if(AR_wcslen(node->lexeme.lexeme) == 0)
 				{
@@ -943,14 +1200,28 @@ static psrNode_t* AR_STDCALL __build_leaf(const psrToken_t *tok,  void *ctx)
 						parser_ctx->has_error = true;
 				}
 				
-				AR_DEL(tmp);
+				if(tmp)
+				{
+						AR_DEL(tmp);
+						tmp = NULL;
+				}
 
 		}else if(tok->term_val == CFG_LEXVAL_ACTION_INS)
 		{
 				wchar_t *buf;
 				
 				AR_ASSERT(tok->str_cnt >= 4);
-				buf = AR_wcsndup(tok->str, tok->str_cnt);
+
+				buf = AR_NEWARR(wchar_t, tok->str_cnt + 1);
+				if(buf == NULL)
+				{
+						ret.status = AR_E_NOMEM;
+						goto INVALID_POINT;
+				}
+				
+				AR_wcsncpy(buf, tok->str, tok->str_cnt);
+				buf[tok->str_cnt] = L'\0';
+
 				
 				AR_ASSERT(buf[0] == L'{' && buf[1] == L':');
 				AR_ASSERT(buf[tok->str_cnt-1] == L'}' && buf[tok->str_cnt-2] == L':');
@@ -958,50 +1229,110 @@ static psrNode_t* AR_STDCALL __build_leaf(const psrToken_t *tok,  void *ctx)
 				buf[1] = L' ';
 				buf[tok->str_cnt-2] = L' ';
 				
-				
+				node->lexeme.lexeme = ParserData_AllocString(parser_ctx, buf);
 
-				node->lexeme.lexeme = buf;
+				if(node->lexeme.lexeme == NULL)
+				{
+						ret.status = AR_E_NOMEM;
+						AR_DEL(buf);
+						buf = NULL;
+						goto INVALID_POINT;
+				}
+
+				if(buf)
+				{
+						AR_DEL(buf);
+						buf = NULL;
+				}
+
 		}else if(tok->str_cnt > 0)
 		{
-				node->lexeme.lexeme = AR_wcsndup(tok->str, tok->str_cnt);
+				node->lexeme.lexeme = ParserData_AllocStringN(parser_ctx, tok->str, tok->str_cnt);
+
+				if(node->lexeme.lexeme == NULL)
+				{
+						ret.status = AR_E_NOMEM;
+						goto INVALID_POINT;
+				}
 		}
 
+		
 		node->lexeme.line = tok->line;
-		return (psrNode_t*)node;
+
+		ret.status = AR_S_YES;
+		ret.node = (psrNode_t*)node;
+
+		return ret;
+
+
+INVALID_POINT:
+		if(node == NULL)
+		{
+				CFG_DestroyNode(node);
+		}
+		ret.node = NULL;
+		return ret;
 }
 
 
 
-
+#define AR_PRINT_FUNCTION()	AR_LOG(L"enter function : %hs\r\n", AR_FUNC_NAME)
 
 /*
 { L"action_decl			:		%action lexeme action_ins",				__handle_action_decl,0},
 { L"action_decl			:		%action lexeme",						__handle_action_decl},
 { L"action_decl			:				",										NULL},
 */
-static psrNode_t*		AR_STDCALL __handle_action_decl(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+static psrRetVal_t		AR_STDCALL __handle_action_decl(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res;		
-		
+		psrRetVal_t		ret = {AR_S_YES, NULL};
+
 		AR_ASSERT(count == 2 || count == 3);
 		AR_ASSERT(ns[0]->type == CFG_LEXEME_T && ns[1]->type == CFG_LEXEME_T);
 
 		AR_UNUSED(name);
 		AR_UNUSED(ctx);
 		
+		AR_PRINT_FUNCTION();
+
 		res = CFG_CreateNode(CFG_NODE_LIST_T);
+
+		if(res == NULL)
+		{
+				ret.status = AR_E_NOMEM;
+				return ret;
+		}
 		
-		CFG_InsertToNodeList(&res->lst, ns[1]);
+		ret.status = CFG_InsertToNodeList(&res->lst, ns[1]);
+
+		if(ret.status != AR_S_YES)
+		{
+				CFG_DestroyNode(res);
+				res = NULL;
+				return ret;
+		}
+
 		ns[1] = NULL;
 		
 		if(count == 3)
 		{
 				AR_ASSERT(ns[2] && ns[2]->type == CFG_LEXEME_T);
-				CFG_InsertToNodeList(&res->lst, ns[2]);
+
+				ret.status = CFG_InsertToNodeList(&res->lst, ns[2]);
+
+				if(ret.status != AR_S_YES)
+				{
+						CFG_DestroyNode(res);
+						res = NULL;
+						return ret;
+				}
 				ns[2] = NULL;
 		}
-		return res;
+		ret.status = AR_S_YES;
+		ret.node = (psrNode_t*)res;
+		return ret;
 }
 
 
@@ -1011,21 +1342,37 @@ static psrNode_t*		AR_STDCALL __handle_action_decl(psrNode_t **nodes, size_t cou
 { L"term_list			:		term",											NULL},
 */
 
-static psrNode_t*		AR_STDCALL __handle_term_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+static psrRetVal_t		AR_STDCALL __handle_term_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res;
-
+		psrRetVal_t		ret = {AR_S_YES, NULL};
 		AR_ASSERT((count == 1 || count == 2) && nodes != NULL);
 		AR_UNUSED(name);
 		AR_UNUSED(ctx);
+		AR_PRINT_FUNCTION();
+
 		if(count == 1)
 		{
 				res = CFG_CreateNode(CFG_NODE_LIST_T);
 
+				if(res == NULL)
+				{
+						ret.status = AR_E_NOMEM;
+						ret.node = NULL;
+						return ret;
+				}
+
 				AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T);
 
-				CFG_InsertToNodeList(&res->lst, ns[0]);
+				ret.status = CFG_InsertToNodeList(&res->lst, ns[0]);
+				if(ret.status != AR_S_YES)
+				{
+						CFG_DestroyNode(res);
+						res = NULL;
+						ret.node = NULL;
+						return ret;
+				}
 				ns[0] = NULL;
 		}else
 		{
@@ -1033,12 +1380,19 @@ static psrNode_t*		AR_STDCALL __handle_term_list(psrNode_t **nodes, size_t count
 
 				res = ns[0];
 
-				CFG_InsertToNodeList(&res->lst, ns[1]);
+				ret.status = CFG_InsertToNodeList(&res->lst, ns[1]);
+
+				if(ret.status != AR_S_YES)
+				{
+						return ret;
+				}
 
 				ns[0] = ns[1] = NULL;
 		}
 
-		return res;
+		ret.status = AR_S_YES;
+		ret.node = (psrNode_t*)res;
+		return ret;
 }
 
 
@@ -1050,22 +1404,38 @@ static psrNode_t*		AR_STDCALL __handle_term_list(psrNode_t **nodes, size_t count
 */
 
 
-static psrNode_t*		AR_STDCALL __handle_rhs(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+static psrRetVal_t		AR_STDCALL __handle_rhs(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res;
 		size_t i;
+		psrRetVal_t		ret = {AR_S_YES, NULL};
+		cfgParserData_t	*psr_data;
+
 		AR_ASSERT(count == 3 && nodes != NULL);
 		AR_UNUSED(name);
-		AR_UNUSED(ctx);
-
 		AR_UNUSED(count);
+		
+		AR_PRINT_FUNCTION();
+
+
+		psr_data = (cfgParserData_t*)ctx;
+		AR_ASSERT(psr_data != NULL);
+
+		
 
 		res = CFG_CreateNode(CFG_RULE_T);
+
+		if(res == NULL)
+		{
+				ret.status = AR_E_NOMEM;
+				return ret;
+		}
+
 		res->rule.lhs = NULL;
 		res->rule.line = 0;
 		res->rule.prec_tok = NULL;
-		res->rule.rhs = AR_NEWARR0(wchar_t, 2048);
+		res->rule.rhs = NULL;
 		res->rule.action_line = 0;
 		res->rule.action_name = NULL;
 		res->rule.action_ins = NULL;
@@ -1078,24 +1448,83 @@ static psrNode_t*		AR_STDCALL __handle_rhs(psrNode_t **nodes, size_t count, cons
 
 		if(ns[0]->type == CFG_LEXEME_T && ns[0]->lexeme.lex_val == CFG_LEXVAL_DOT)
 		{
-				AR_wcscat((wchar_t*)res->rule.rhs, L" ");
+				res->rule.rhs = ParserData_AllocString(psr_data, L" ");
 				res->rule.line = ns[0]->lexeme.line;
+
+				if(res->rule.rhs == NULL)
+				{
+						CFG_DestroyNode(res);
+						res = NULL;
+						ret.status = AR_E_NOMEM;
+						return ret;
+				}
 
 		}else if(ns[0]->type == CFG_NODE_LIST_T)
 		{
+				arString_t *right_tmp;
+
+				right_tmp = AR_CreateString();
+
+				if(right_tmp == NULL)
+				{
+						CFG_DestroyNode(res);
+						res = NULL;
+						ret.status = AR_E_NOMEM;
+						ret.node = NULL;
+						return ret;
+				}
+
+
 				for(i = 0; i < ns[0]->lst.count; ++i)
 				{
 						cfgNode_t *tmp = ns[0]->lst.lst[i];
 
 						AR_ASSERT(tmp->type == CFG_LEXEME_T && tmp->lexeme.lex_val == (size_t)CFG_LEXVAL_LEXEME);
 
-						AR_wcscat((wchar_t*)res->rule.rhs, tmp->lexeme.lexeme);
-						AR_wcscat((wchar_t*)res->rule.rhs, L" ");
+						ret.status = AR_AppendString(right_tmp, tmp->lexeme.lexeme);
+						
+						if(ret.status != AR_S_YES)
+						{
+								AR_DestroyString(right_tmp);
+								right_tmp = NULL;
+								CFG_DestroyNode(res);
+								res = NULL;
+								ret.status = AR_E_NOMEM;
+								ret.node = NULL;
+								return ret;
+						}
 
+						ret.status = AR_AppendString(right_tmp, L" ");
+
+						if(ret.status != AR_S_YES)
+						{
+								AR_DestroyString(right_tmp);
+								right_tmp = NULL;
+								CFG_DestroyNode(res);
+								res = NULL;
+								ret.status = AR_E_NOMEM;
+								ret.node = NULL;
+								return ret;
+						}
+						
 						if(i == 0)
 						{
 								res->rule.line = tmp->lexeme.line;
 						}
+				}
+
+
+				res->rule.rhs = ParserData_AllocString(psr_data, AR_GetStringCString(right_tmp));
+				AR_DestroyString(right_tmp);
+				right_tmp = NULL;
+
+				if(res->rule.rhs == NULL)
+				{
+						CFG_DestroyNode(res);
+						res = NULL;
+						ret.status = AR_E_NOMEM;
+						ret.node = NULL;
+						return ret;
 				}
 
 				
@@ -1105,10 +1534,18 @@ static psrNode_t*		AR_STDCALL __handle_rhs(psrNode_t **nodes, size_t count, cons
 		}
 
 
-		if(ns[1])
+		if(ns[1] && ns[1]->lexeme.lexeme)
 		{
-				res->rule.prec_tok = ns[1]->lexeme.lexeme;
-				ns[1]->lexeme.lexeme = NULL;
+				res->rule.prec_tok = ParserData_AllocString(psr_data, ns[1]->lexeme.lexeme);
+
+				if(res->rule.prec_tok == NULL)
+				{
+						CFG_DestroyNode(res);
+						res = NULL;
+						ret.status = AR_E_NOMEM;
+						ret.node = NULL;
+						return ret;
+				}
 		}
 
 		if(ns[2])
@@ -1116,23 +1553,40 @@ static psrNode_t*		AR_STDCALL __handle_rhs(psrNode_t **nodes, size_t count, cons
 				AR_ASSERT(ns[2]->lst.count == 1 || ns[2]->lst.count == 2);
 				
 				res->rule.action_line = ns[2]->lst.lst[0]->lexeme.line;
-				res->rule.action_name = ns[2]->lst.lst[0]->lexeme.lexeme;
-				ns[2]->lst.lst[0]->lexeme.lexeme = NULL;
-				
-				if(ns[2]->lst.count == 2)
+
+				if(ns[2]->lst.lst[0]->lexeme.lexeme)
 				{
-						res->rule.action_ins = ns[2]->lst.lst[1]->lexeme.lexeme;
-						ns[2]->lst.lst[1]->lexeme.lexeme = NULL;
+						res->rule.action_name = ParserData_AllocString(psr_data, ns[2]->lst.lst[0]->lexeme.lexeme);
+						
+						if(res->rule.action_name == NULL)
+						{
+								CFG_DestroyNode(res);
+								res = NULL;
+								ret.status = AR_E_NOMEM;
+								ret.node = NULL;
+								return ret;
+						}
+				}
+				
+				if(ns[2]->lst.count == 2 && ns[2]->lst.lst[1]->lexeme.lexeme)
+				{
+						
+						res->rule.action_ins = ParserData_AllocString(psr_data, ns[2]->lst.lst[1]->lexeme.lexeme);
+
+						if(res->rule.action_ins == NULL)
+						{
+								CFG_DestroyNode(res);
+								res = NULL;
+								ret.status = AR_E_NOMEM;
+								ret.node = NULL;
+								return ret;
+						}
 				}
 		}
 
-/*
-		CFG_DestroyNode(ns[0]);
-		CFG_DestroyNode(ns[1]);
-		CFG_DestroyNode(ns[2]);
-		ns[0] = ns[1] = ns[2] = NULL;
-*/
-		return res;
+		ret.status = AR_S_YES;
+		ret.node = (psrNode_t*)res;
+		return ret;
 
 }
 
@@ -1144,34 +1598,59 @@ static psrNode_t*		AR_STDCALL __handle_rhs(psrNode_t **nodes, size_t count, cons
 { L"rhs_list			: 		rhs ",											NULL},
 */
 
-static psrNode_t*		AR_STDCALL __handle_rhs_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+static psrRetVal_t		AR_STDCALL __handle_rhs_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res;
+		psrRetVal_t		ret;
 
 		AR_ASSERT((count == 1 || count == 3) && nodes != NULL);
 		AR_UNUSED(name);
 		AR_UNUSED(ctx);
+		AR_PRINT_FUNCTION();
+
+
+		ret.node = NULL;
+		ret.status = AR_S_YES;
+
 		if(count == 3)
 		{
 				AR_ASSERT(ns[0] && ns[0]->type == CFG_NODE_LIST_T && ns[1]->type == CFG_LEXEME_T && ns[1]->lexeme.lex_val == (size_t)CFG_LEXVAL_OR && ns[2] && ns[2]->type == CFG_RULE_T);
 
 				res = ns[0];
 
-				CFG_InsertToNodeList(&res->lst, ns[2]);
+				ret.status = CFG_InsertToNodeList(&res->lst, ns[2]);
+				
+				if(ret.status != AR_S_YES)
+				{
+						return ret;
+				}
 
-				CFG_DestroyNode(ns[1]);
-
-				ns[0] = ns[1] = ns[2] = NULL;
+				ns[0] = ns[2] = NULL;
 		}else
 		{
 				AR_ASSERT(ns[0]->type == CFG_RULE_T);
 				res = CFG_CreateNode(CFG_NODE_LIST_T);
-				CFG_InsertToNodeList(&res->lst, ns[0]);
+				if(res == NULL)
+				{
+						ret.status = AR_E_NOMEM;
+						ret.node = NULL;
+						return ret;
+				}
+
+				ret.status = CFG_InsertToNodeList(&res->lst, ns[0]);
+
+				if(ret.status != AR_S_YES)
+				{
+						return ret;
+				}
+
 				ns[0] = NULL;
 		}
 
-		return res;
+		ret.status = AR_S_YES;
+		ret.node = (psrNode_t*)res;
+		return ret;
 
 
 }
@@ -1182,19 +1661,26 @@ static psrNode_t*		AR_STDCALL __handle_rhs_list(psrNode_t **nodes, size_t count,
 { L"rule_def			: 		lexeme : rhs_list ",							__handle_rule_def},
 */
 
-static psrNode_t*		AR_STDCALL __handle_rule_def(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+static psrRetVal_t		AR_STDCALL __handle_rule_def(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res;
 		size_t i;
+		cfgParserData_t	*psr_data;
+		psrRetVal_t  ret = {AR_S_YES, NULL};
 		AR_ASSERT(count == 3);
 
 		AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T && ns[1] && ns[1]->type == CFG_LEXEME_T && ns[2] && ns[2]->type == CFG_NODE_LIST_T);
 		AR_ASSERT(ns[0]->lexeme.lexeme != NULL);
 
-		AR_UNUSED(ctx);
 		AR_UNUSED(name);
 		AR_UNUSED(count);
+		AR_PRINT_FUNCTION();
+
+
+		psr_data = (cfgParserData_t*)ctx;
+
+		AR_ASSERT(psr_data != NULL);
 
 
 		for(i = 0; i < ns[2]->lst.count; ++i)
@@ -1202,14 +1688,21 @@ static psrNode_t*		AR_STDCALL __handle_rule_def(psrNode_t **nodes, size_t count,
 				cfgNode_t *tmp = ns[2]->lst.lst[i];
 
 				AR_ASSERT(tmp->type == CFG_RULE_T);
-				tmp->rule.lhs = AR_wcsdup(ns[0]->lexeme.lexeme);
+				tmp->rule.lhs = ParserData_AllocString(psr_data, ns[0]->lexeme.lexeme);
 				tmp->rule.line = ns[0]->lexeme.line;
+
+				if(tmp->rule.lhs == NULL)
+				{
+						ret.status = AR_E_NOMEM;
+						ret.node = NULL;
+						return ret;
+				}
 		}
 
 		res = ns[2];
 		ns[2] = NULL;
-
-		return res;
+		ret.node = (psrNode_t*)res;
+		return ret;
 }
 
 
@@ -1217,19 +1710,38 @@ static psrNode_t*		AR_STDCALL __handle_rule_def(psrNode_t **nodes, size_t count,
 
 
 /*{ L"prec_def			:  		assoc lexeme ",								__handle_prec_def},*/
-static psrNode_t*		AR_STDCALL __handle_prec_def(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+static psrRetVal_t		AR_STDCALL __handle_prec_def(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res;
+		psrRetVal_t		ret;
 		wchar_t			c;
 		size_t			i;
+		cfgParserData_t	*psr_data;
 		AR_ASSERT(count == 2);
+
 
 		AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T &&  ns[0]->lexeme.lex_val == CFG_LEXVAL_ASSOC && ns[1] && ns[1]->type == CFG_NODE_LIST_T);
 		AR_UNUSED(name);
 		AR_UNUSED(count);
+		AR_PRINT_FUNCTION();
+
+
+		psr_data = (cfgParserData_t*)ctx;
+		AR_ASSERT(psr_data != NULL);
+
+
+		ret.status = AR_S_YES;
+		ret.node = NULL;
 
 		res = CFG_CreateNode(CFG_PREC_T);
+
+		if(res == NULL)
+		{
+				ret.status = AR_E_NOMEM;
+				return ret;
+		}
+
 		res->prec.line = ns[0]->lexeme.line;
 
 		c = ns[0]->lexeme.lexeme[1];
@@ -1255,12 +1767,32 @@ static psrNode_t*		AR_STDCALL __handle_prec_def(psrNode_t **nodes, size_t count,
 		{
 				const cfgNode_t *node = ns[1]->lst.lst[i];
 				AR_ASSERT(node->type == CFG_LEXEME_T);
-				CFG_InsertTokenToPrec(&res->prec, node->lexeme.lexeme, 0);
+
+				ret.status = CFG_InsertTokenToPrec(&res->prec, node->lexeme.lexeme, 0, psr_data);
+
+				if(ret.status != AR_S_YES)
+				{
+						CFG_DestroyNode(res);
+						res = NULL;
+						ret.node = NULL;
+						return ret;
+				}
 				
-				__check_name_from_parser_data((cfgParserData_t*)ctx, node->lexeme.lexeme, node->lexeme.line, CFG_STR_PREC);
+				ret.status = ParserData_CheckAndInsertName(psr_data, node->lexeme.lexeme, node->lexeme.line, CFG_STR_PREC);
+				
+				if(ret.status != AR_S_YES)
+				{
+						CFG_DestroyNode(res);
+						res = NULL;
+						ret.node = NULL;
+						return ret;
+				}
 
 		}
-		return res;
+
+		ret.status = AR_S_YES;
+		ret.node = (psrNode_t*)res;
+		return ret;
 
 }
 
@@ -1271,11 +1803,12 @@ static psrNode_t*		AR_STDCALL __handle_prec_def(psrNode_t **nodes, size_t count,
 {L"token_def			:  		%token lexeme token_val_prec : lexeme token_val_prec token_value action_decl",	__handle_token_def,0},
 */
 
-static psrNode_t*		AR_STDCALL __handle_token_def(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+static psrRetVal_t		AR_STDCALL __handle_token_def(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res;
-
+		psrRetVal_t		ret;
+		cfgParserData_t	*psr_data;
 		AR_ASSERT(count == 8);
 
 		/*AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T && ns[1] && ns[1]->type == CFG_LEXEME_T && ns[2] && ns[2]->type == CFG_LEXEME_T && ns[4] && ns[4]->type == CFG_LEXEME_T);*/
@@ -1294,8 +1827,23 @@ static psrNode_t*		AR_STDCALL __handle_token_def(psrNode_t **nodes, size_t count
 
 		AR_UNUSED(name);
 		AR_UNUSED(count);
+		AR_PRINT_FUNCTION();
+
+
+		psr_data = (cfgParserData_t*)ctx;
+		AR_ASSERT(psr_data != NULL);
+
+		ret.status = AR_S_YES;
+		ret.node = NULL;
 
 		res = CFG_CreateNode(CFG_TOKEN_T);
+
+		if(res == NULL)
+		{
+				ret.status = AR_E_NOMEM;
+				ret.node = NULL;
+				return ret;
+		}
 
 		res->token.line = ns[1]->lexeme.line;
 
@@ -1305,14 +1853,38 @@ static psrNode_t*		AR_STDCALL __handle_token_def(psrNode_t **nodes, size_t count
 				res->token.name = NULL;
 		}else
 		{
-				__check_name_from_parser_data((cfgParserData_t*)ctx, ns[1]->lexeme.lexeme, ns[1]->lexeme.line, CFG_STR_TOKEN);
+				ret.status = ParserData_CheckAndInsertName((cfgParserData_t*)ctx, ns[1]->lexeme.lexeme, ns[1]->lexeme.line, CFG_STR_TOKEN);
+
+				if(ret.status != AR_S_YES)
+				{
+						CFG_DestroyNode(res);
+						res = NULL;
+						return ret;
+				}
 
 				res->token.is_skip = false;
-				res->token.name = ns[1]->lexeme.lexeme;
+				res->token.name = ParserData_AllocString(psr_data, ns[1]->lexeme.lexeme);
+				
+				if(res->token.name == NULL)
+				{
+						CFG_DestroyNode(res);
+						res = NULL;
+						ret.status = AR_E_NOMEM;
+						return ret;
+				}
+
 				ns[1]->lexeme.lexeme = NULL;
 		}
 
-		res->token.regex = ns[4]->lexeme.lexeme;
+		res->token.regex = ParserData_AllocString(psr_data, ns[4]->lexeme.lexeme);
+		if(res->token.regex == NULL)
+		{
+				CFG_DestroyNode(res);
+				res = NULL;
+				ret.status = AR_E_NOMEM;
+				return ret;
+		}
+
 		ns[4]->lexeme.lexeme = NULL;
 
 		res->token.lex_prec = 0;
@@ -1332,8 +1904,25 @@ static psrNode_t*		AR_STDCALL __handle_token_def(psrNode_t **nodes, size_t count
 
 		if(ns[6])
 		{
-				res->token.code_name = AR_wcsdup(ns[6]->lexeme.lexeme);
-				__check_name_from_parser_data((cfgParserData_t*)ctx, ns[6]->lexeme.lexeme, ns[6]->lexeme.line, CFG_STR_TOKEN_VALUE);
+				res->token.code_name = ParserData_AllocString(psr_data, ns[6]->lexeme.lexeme);
+				
+				if(res->token.code_name == NULL)
+				{
+						CFG_DestroyNode(res);
+						res = NULL;
+						ret.status = AR_E_NOMEM;
+						return ret;
+				}
+
+				ret.status = ParserData_CheckAndInsertName(psr_data, ns[6]->lexeme.lexeme, ns[6]->lexeme.line, CFG_STR_TOKEN_VALUE);
+				if(ret.status != AR_S_YES)
+				{
+						CFG_DestroyNode(res);
+						res = NULL;
+						ret.status = AR_E_NOMEM;
+						return ret;
+				}
+
 		}
 
 
@@ -1342,29 +1931,38 @@ static psrNode_t*		AR_STDCALL __handle_token_def(psrNode_t **nodes, size_t count
 				AR_ASSERT(ns[7]->lst.count == 1 || ns[7]->lst.count == 2);
 				
 				res->token.action_line = ns[7]->lst.lst[0]->lexeme.line;
-				res->token.action_name = ns[7]->lst.lst[0]->lexeme.lexeme;
-				ns[7]->lst.lst[0]->lexeme.lexeme = NULL;
+
+				if(ns[7]->lst.lst[0]->lexeme.lexeme)
+				{
+						res->token.action_name = ParserData_AllocString(psr_data, ns[7]->lst.lst[0]->lexeme.lexeme);
+						
+						if(res->token.action_name == NULL)
+						{
+								CFG_DestroyNode(res);
+								res = NULL;
+								ret.status = AR_E_NOMEM;
+								return ret;
+						}
+				}
 				
 				if(ns[7]->lst.count == 2)
 				{
-						res->token.action_ins = ns[7]->lst.lst[1]->lexeme.lexeme;
-						ns[7]->lst.lst[1]->lexeme.lexeme = NULL;
+						res->token.action_ins = ParserData_AllocString(psr_data, ns[7]->lst.lst[1]->lexeme.lexeme);
+						if(res->token.action_ins == NULL)
+						{
+								CFG_DestroyNode(res);
+								res = NULL;
+								ret.status = AR_E_NOMEM;
+								return ret;
+						}
 				}
 		}
+	
 
-#if(0)
-		if(ns[6])
-		{
-				AR_ASSERT(ns[6]->lst.count > 0);
-				res->token.code_name = AR_wcsdup(ns[6]->lst.lst[0]->lexeme.lexeme);
+		ret.status = AR_S_YES;
+		ret.node = (psrNode_t*)res;
 
-				__check_name_from_parser_data((cfgParserData_t*)ctx, ns[6]->lst.lst[0]->lexeme.lexeme, ns[6]->lst.lst[0]->lexeme.line, CFG_STR_TOKEN_VALUE);
-		}
-#endif
-
-		
-
-		return res;
+		return ret;
 
 }
 
@@ -1376,12 +1974,12 @@ static psrNode_t*		AR_STDCALL __handle_token_def(psrNode_t **nodes, size_t count
 { L"name_def 			:		%name lexeme : lexeme  ",								__handle_name_def},
 */
 
-static psrNode_t*		AR_STDCALL __handle_name_def(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+static psrRetVal_t		AR_STDCALL __handle_name_def(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		cfgParserData_t			*psr_data;
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res;
-
+		psrRetVal_t				ret = {AR_S_YES, NULL};
 		AR_ASSERT(count == 4);
 
 		AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T
@@ -1392,24 +1990,38 @@ static psrNode_t*		AR_STDCALL __handle_name_def(psrNode_t **nodes, size_t count,
 
 		AR_UNUSED(name);
 		AR_UNUSED(count);
+		AR_PRINT_FUNCTION();
+
 
 		res = CFG_CreateNode(CFG_NAME_T);
 
-
+		if(res == NULL)
+		{
+				ret.status = AR_E_NOMEM;
+				return ret;
+		}
 
 
 		res->name.line = ns[1]->lexeme.line;
 		res->name.name = ns[1]->lexeme.lexeme;
-		ns[1]->lexeme.lexeme = NULL;
-
 		res->name.regex = ns[3]->lexeme.lexeme;
-		ns[3]->lexeme.lexeme = NULL;
 
 		psr_data = (cfgParserData_t*)ctx;
 
-		__check_name_from_parser_data(psr_data, res->name.name, res->name.line, CFG_STR_NAME);
+		ret.status = ParserData_CheckAndInsertName(psr_data, res->name.name, res->name.line, CFG_STR_NAME);
+
+		if(ret.status != AR_S_YES)
+		{
+				CFG_DestroyNode(res);
+				res = NULL;
+				ret.status = AR_E_NOMEM;
+				ret.node = NULL;
+				return ret;
+		}
 		
-		return res;
+		ret.status = AR_S_YES;
+		ret.node = (psrNode_t*)res;
+		return ret;
 }
 
 
@@ -1424,20 +2036,28 @@ static psrNode_t*		AR_STDCALL __handle_name_def(psrNode_t **nodes, size_t count,
 
 */
 
-static psrNode_t*		AR_STDCALL __handle_item(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+static psrRetVal_t		AR_STDCALL __handle_item(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res = NULL;
-
+		psrRetVal_t				ret = {AR_S_YES, NULL};
 		AR_ASSERT(count == 1 || count == 2);
 		AR_UNUSED(ctx);
 		AR_UNUSED(name);
+		AR_PRINT_FUNCTION();
+
 
 		if(count == 2)
 		{
 				if(ns[0] == NULL)
 				{
 						res = CFG_CreateNode(CFG_ERROR_T);
+						if(res == NULL)
+						{
+								ret.status = AR_E_NOMEM;
+								ret.node = NULL;
+								return ret;
+						}
 				}else
 				{
 						res = ns[0];
@@ -1447,20 +2067,31 @@ static psrNode_t*		AR_STDCALL __handle_item(psrNode_t **nodes, size_t count, con
 		}else
 		{
 				res = CFG_CreateNode(CFG_EMPTY_T);
+				if(res == NULL)
+				{
+						ret.status = AR_E_NOMEM;
+						ret.node = NULL;
+						return ret;
+				}
 		}
-		return (psrNode_t*)res;
+
+		ret.status = AR_S_YES;
+		ret.node = (psrNode_t*)res;
+		AR_ASSERT(res != NULL);
+		return ret;
 }
+
 
 /*
 { L"item_list			:		item_list item",	__handle_item_list},
 { L"item_list			:		",	NULL},
 */
 
-static psrNode_t*		AR_STDCALL __handle_item_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+static psrRetVal_t		AR_STDCALL __handle_item_list(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res;
-
+		psrRetVal_t		ret = {AR_S_YES, NULL};
 		AR_ASSERT(count == 2);
 
 		AR_ASSERT((ns[0] == NULL) || (ns[0] && ns[0]->type == CFG_NODE_LIST_T));
@@ -1468,12 +2099,21 @@ static psrNode_t*		AR_STDCALL __handle_item_list(psrNode_t **nodes, size_t count
 		AR_UNUSED(ctx);
 		AR_UNUSED(name);
 		AR_UNUSED(count);
+		AR_PRINT_FUNCTION();
+
 
 		res = ns[0];
 		if(res == NULL)
 		{
 				res = CFG_CreateNode(CFG_NODE_LIST_T);
+				if(res == NULL)
+				{
+						ret.status = AR_E_NOMEM;
+						return ret;
+				}
+
 		}
+
 		ns[0] = NULL;
 
 		if(ns[1]->type == CFG_NODE_LIST_T)
@@ -1481,28 +2121,49 @@ static psrNode_t*		AR_STDCALL __handle_item_list(psrNode_t **nodes, size_t count
 				size_t i;
 				for(i = 0; i < ns[1]->lst.count; ++i)
 				{
-						CFG_InsertToNodeList(&res->lst, ns[1]->lst.lst[i]);
+						ret.status = CFG_InsertToNodeList(&res->lst, ns[1]->lst.lst[i]);
+
+						if(ret.status != AR_S_YES)
+						{
+								CFG_DestroyNode(res);
+								res = NULL;
+								ret.node = NULL;
+								return ret;
+						}
+
 						ns[1]->lst.lst[i] = NULL;
 				}
 
 		}else
 		{
-				CFG_InsertToNodeList(&res->lst, ns[1]);
+				ret.status = CFG_InsertToNodeList(&res->lst, ns[1]);
+				if(ret.status != AR_S_YES)
+				{
+						CFG_DestroyNode(res);
+						res = NULL;
+						ret.node = NULL;
+					return ret;
+				}
 				ns[1] = NULL;
 		}
 
-
-		return (psrNode_t*)res;
+		ret.status = AR_S_YES;
+		ret.node = (psrNode_t*)res;
+		return ret;
 }
 
 /*
 { L"start_def			:  		%start lexeme",							__handle_start_def,0},
 */
 
-static psrNode_t*		AR_STDCALL __handle_start_def(psrNode_t **nodes, size_t count, const wchar_t * name_tmp, void *ctx)
+static psrRetVal_t		AR_STDCALL __handle_start_def(psrNode_t **nodes, size_t count, const wchar_t * name_tmp, void *ctx)
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res;
+		psrRetVal_t		ret = {AR_S_YES, NULL};
+
+		AR_PRINT_FUNCTION();
+
 
 		AR_ASSERT(count == 2);
 
@@ -1514,64 +2175,54 @@ static psrNode_t*		AR_STDCALL __handle_start_def(psrNode_t **nodes, size_t count
 		AR_UNUSED(count);
 
 		res = CFG_CreateNode(CFG_START_T);
-		res->start.line = ns[1]->lexeme.line;
-		res->start.start_rule = AR_wcsdup(ns[1]->lexeme.lexeme);
-		return res;
-
-}
-
-#if(0)
-/*
-{ L"pre_code_decl		:		action_ins",				__handle_pre_def,0},
-*/
-static psrNode_t*		AR_STDCALL __handle_pre_def(psrNode_t **nodes, size_t count, const wchar_t * name_tmp, void *ctx)
-{
-		cfgNode_t		**ns = (cfgNode_t**)nodes;
-		cfgNode_t		*res;
-		size_t			len;
-		AR_ASSERT(count == 1);
-
-		AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T && ns[0]->lexeme.lex_val == CFG_LEXVAL_ACTION_INS);
-
-
-		res = CFG_CreateNode(CFG_PREDEF_T);
-		res->predef.line = ns[0]->lexeme.line;
-		
-		len = AR_wcslen(ns[0]->lexeme.lexeme);
-		AR_ASSERT(len >= 2);
-		
-		if(len >= 2)
+		if(res == NULL)
 		{
-				res->predef.code = AR_wcsndup(ns[0]->lexeme.lexeme+1, len - 2);
-		}else
-		{
-				res->predef.code = AR_wcsdup(L"");
+				ret.status = AR_E_NOMEM;
+				ret.node = NULL;
+				return ret;
 		}
 
-		return res;
+		res->start.line = ns[1]->lexeme.line;
+		res->start.start_rule = ns[1]->lexeme.lexeme;
 
+		ret.status = AR_S_YES;
+		ret.node  = (psrNode_t*)res;
+		return ret;
 }
-#endif
+
 
 
 /*
 { L"pre_code_decl		:		%code pre_code_name action_ins	code_decl_attr",		__handle_pre_def,0},
 */
-static psrNode_t*		AR_STDCALL __handle_pre_def(psrNode_t **nodes, size_t count, const wchar_t * name_tmp, void *ctx)
+static psrRetVal_t		AR_STDCALL __handle_pre_def(psrNode_t **nodes, size_t count, const wchar_t * name_tmp, void *ctx)
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res;
 		size_t			len;
+		psrRetVal_t		ret = {AR_S_YES, NULL};
+		cfgParserData_t	*psr_data;
+
 		AR_ASSERT(count == 4);
 
 		AR_ASSERT(ns[0] && ns[0]->type == CFG_LEXEME_T && ns[0]->lexeme.lex_val == CFG_LEXVAL_CODE);
 		AR_ASSERT(ns[2] && ns[2]->type == CFG_LEXEME_T && ns[2]->lexeme.lex_val == CFG_LEXVAL_ACTION_INS);
 
-		AR_UNUSED(ctx);
 		AR_UNUSED(name_tmp);
 		AR_UNUSED(count);
+		AR_PRINT_FUNCTION();
+
+
+		psr_data = (cfgParserData_t*)ctx;
+		AR_ASSERT(psr_data != NULL);
 
 		res = CFG_CreateNode(CFG_PREDEF_T);
+		if(res == NULL)
+		{
+				ret.status = AR_E_NOMEM;
+				return ret;
+		}
+
 		res->predef.line = ns[0]->lexeme.line;
 		
 		len = AR_wcslen(ns[2]->lexeme.lexeme);
@@ -1580,18 +2231,34 @@ static psrNode_t*		AR_STDCALL __handle_pre_def(psrNode_t **nodes, size_t count, 
 		if(len >= 2)
 		{
 				AR_ASSERT(ns[2]->lexeme.lexeme[0] == L'{' && ns[2]->lexeme.lexeme[len-1] == L'}');
-				res->predef.code = AR_wcsndup(ns[2]->lexeme.lexeme+1, len - 2);
+				res->predef.code = ParserData_AllocStringN(psr_data, ns[2]->lexeme.lexeme+1, len - 2);
+
+				if(res->predef.code == NULL)
+				{
+						CFG_DestroyNode(res);
+						res = NULL;
+						ret.status = AR_E_NOMEM;
+						return ret;
+				}
 		}else
 		{
-				res->predef.code = AR_wcsdup(L"");
+				res->predef.code = L"";
 		}
 
 		if(ns[1] == NULL)
 		{
-				res->predef.name = AR_wcsdup(L"");
+				res->predef.name = L"";
 		}else
 		{
-				res->predef.name = AR_wcsdup(ns[1]->lexeme.lexeme);
+				res->predef.name = ParserData_AllocString(psr_data, ns[1]->lexeme.lexeme);
+
+				if(res->predef.name == NULL)
+				{
+						CFG_DestroyNode(res);
+						res = NULL;
+						ret.status = AR_E_NOMEM;
+						return ret;
+				}
 		}
 
 		res->predef.flags = 0;
@@ -1623,8 +2290,10 @@ static psrNode_t*		AR_STDCALL __handle_pre_def(psrNode_t **nodes, size_t count, 
 				
 		}
 
-		return res;
 
+		ret.status = AR_S_YES;
+		ret.node = (psrNode_t*)res;
+		return ret;
 }
 
 
@@ -1634,19 +2303,22 @@ static psrNode_t*		AR_STDCALL __handle_pre_def(psrNode_t **nodes, size_t count, 
 { L"program				:		item_list #",			__handle_program, 0},
 { L"program				:		item_list error #",		__handle_program, 0},
 */
-static psrNode_t*		AR_STDCALL __handle_program(psrNode_t **nodes, size_t count, const wchar_t * name_tmp, void *ctx)
+static psrRetVal_t		AR_STDCALL __handle_program(psrNode_t **nodes, size_t count, const wchar_t * name_tmp, void *ctx)
 {
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res = NULL;
 		size_t	i;
 		bool_t			has_err = false;
-		cfgNodeList_t name, token, prec, rule, error, empty, predef;
+		cfgNodeList_t	name, token, prec, rule, error, empty, predef;
 		cfgStart_t		*start_rule = NULL;
 		cfgParserData_t	*parser_ctx;
-		
+		psrRetVal_t		ret = {AR_S_YES, NULL};
 
 		AR_ASSERT(count == 2 || count == 3);
 		AR_ASSERT((ns[0] == NULL) || (ns[0] && ns[0]->type == CFG_NODE_LIST_T));
+		
+		AR_PRINT_FUNCTION();
+
 
 		parser_ctx = (cfgParserData_t*)ctx;
 
@@ -1663,6 +2335,7 @@ static psrNode_t*		AR_STDCALL __handle_program(psrNode_t **nodes, size_t count, 
 				AR_ASSERT(ns[1] == NULL && ns[2]->type == CFG_LEXEME_T && ns[2]->lexeme.lex_val == CFG_LEXVAL_FAKE_EOI);
 				has_err = true;
 		}
+
 
 		CFG_InitNodeList(&name);
 		CFG_InitNodeList(&token);
@@ -1682,22 +2355,41 @@ static psrNode_t*		AR_STDCALL __handle_program(psrNode_t **nodes, size_t count, 
 				{
 				case CFG_EMPTY_T:
 				{
-						CFG_InsertToNodeList(&empty, node);
+						ret.status = CFG_InsertToNodeList(&empty, node);
+
+						if(ret.status != AR_S_YES)
+						{
+								goto END_POINT;
+						}
+
 						break;
 				}
 				case CFG_NAME_T:
 				{
-						CFG_InsertToNodeList(&name, node);
+						ret.status = CFG_InsertToNodeList(&name, node);
+						if(ret.status != AR_S_YES)
+						{
+								goto END_POINT;
+						}
 						break;
 				}
 				case CFG_TOKEN_T:
 				{
-						CFG_InsertToNodeList(&token, node);
+						ret.status = CFG_InsertToNodeList(&token, node);
+						if(ret.status != AR_S_YES)
+						{
+								goto END_POINT;
+						}
+
 						break;
 				}
 				case CFG_PREC_T:
 				{
-						CFG_InsertToNodeList(&prec, node);
+						ret.status = CFG_InsertToNodeList(&prec, node);
+						if(ret.status != AR_S_YES)
+						{
+								goto END_POINT;
+						}
 						break;
 				}
 				case CFG_START_T:
@@ -1707,17 +2399,32 @@ static psrNode_t*		AR_STDCALL __handle_program(psrNode_t **nodes, size_t count, 
 				}
 				case CFG_RULE_T:
 				{
-						CFG_InsertToNodeList(&rule, node);
+						ret.status = CFG_InsertToNodeList(&rule, node);
+						if(ret.status != AR_S_YES)
+						{
+								goto END_POINT;
+						}
+
 						break;
 				}
 				case CFG_ERROR_T:
 				{
-						CFG_InsertToNodeList(&error, node);
+						ret.status = CFG_InsertToNodeList(&error, node);
+						if(ret.status != AR_S_YES)
+						{
+								goto END_POINT;
+						}
+
 						break;
 				}
 				case CFG_PREDEF_T:
 				{
-						CFG_InsertToNodeList(&predef, node);
+						ret.status = CFG_InsertToNodeList(&predef, node);
+						if(ret.status != AR_S_YES)
+						{
+								goto END_POINT;
+						}
+
 						break;
 				}
 				case CFG_NODE_LIST_T:
@@ -1731,14 +2438,30 @@ static psrNode_t*		AR_STDCALL __handle_program(psrNode_t **nodes, size_t count, 
 				}
 		}
 
+
 		res = CFG_CreateNode(CFG_CONFIG_T);
-		CFG_InitConfig(&res->config, &name, &token, &prec, &rule, start_rule, &predef);
+
+		if(res == NULL)
+		{
+				ret.status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+
+		ret.status = CFG_InitConfig(&res->config, &name, &token, &prec, &rule, start_rule, &predef, parser_ctx);
+		
+		if(ret.status != AR_S_YES)
+		{
+				CFG_DestroyNode(res);
+				res = NULL;
+				goto END_POINT;
+		}
 
 		if(parser_ctx->has_error || error.count > 0 || has_err)
 		{
 				res->config.has_error = true;
 		}
 
+END_POINT:
 		CFG_UnInitNodeList(&name);
 		CFG_UnInitNodeList(&token);
 		CFG_UnInitNodeList(&prec);
@@ -1746,10 +2469,14 @@ static psrNode_t*		AR_STDCALL __handle_program(psrNode_t **nodes, size_t count, 
 		CFG_UnInitNodeList(&error);
 		CFG_UnInitNodeList(&empty);
 		CFG_UnInitNodeList(&predef);
-		return (psrNode_t*)res;
+
+		ret.node = (psrNode_t*)res;
+		return ret;
 }
 
 
+
+/**************************************************************************************************************************************************/
 
 typedef struct __cfg_rule_tag
 {
@@ -1836,17 +2563,28 @@ static lex_t* __build_lex()
 {
 		lex_t *lex;
 		size_t	i;
-
+		arStatus_t status;
 		lex = Lex_Create();
 
-		AR_ASSERT(lex != NULL);
+		if(lex == NULL)
+		{
+				return NULL;
+		}
+
+		
 
 		for(i = 0; i < AR_NELEMS(__cfg_lex_name); ++i)
 		{
-				if(!Lex_Insert(lex, __cfg_lex_name[i]))
+			
+				status = Lex_Insert(lex, __cfg_lex_name[i]);
+				if(status == AR_S_YES)
+				{
+				}else if(status == AR_S_NO)
 				{
 						AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
-
+				}else
+				{
+						goto INVALID_POINT;
 				}
 		}
 
@@ -1858,20 +2596,39 @@ static lex_t* __build_lex()
 				action.value = (size_t)__cfg_pattern[i].val;
 
 				
-				if(!Lex_InsertRule(lex, __cfg_pattern[i].regex, &action))
+				status = Lex_InsertRule(lex, __cfg_pattern[i].regex, &action);
+
+				if(status == AR_S_YES)
+				{
+				}else if(status == AR_S_NO)
 				{
 						AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
-
+				}else
+				{
+						goto INVALID_POINT;
 				}
 		}
 
-
-		if(!Lex_GenerateTransTable(lex))
+		status = Lex_GenerateTransTable(lex);
+		if(status == AR_S_YES)
+		{
+		}else if(status == AR_S_NO)
 		{
 				AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
+		}else
+		{
+				goto INVALID_POINT;
 		}
 
 		return lex;
+
+INVALID_POINT:
+		if(lex)
+		{
+				Lex_Destroy(lex);
+				lex = NULL;
+		}
+		return NULL;
 }
 
 
@@ -1879,49 +2636,94 @@ static psrGrammar_t*	__build_grammar(psrHandler_t *handler)
 {
 		psrGrammar_t	*gmr;
 		size_t i;
+		arStatus_t		status;
 		AR_ASSERT(handler != NULL);
 
+		status  = AR_S_YES;
 		gmr = Parser_CreateGrammar(handler);
 
-		if(gmr == NULL)return NULL;
+		if(gmr == NULL)
+		{
+				return NULL;
+		}
 
 		for(i = 0; i < AR_NELEMS(__cfg_term); ++i)
 		{
-				if(!Parser_InsertTerm(gmr, __cfg_term[i].name, (size_t)__cfg_term[i].val, PARSER_ASSOC_NONASSOC, 0, __build_leaf))
+				status = Parser_InsertTerm(gmr, __cfg_term[i].name, (size_t)__cfg_term[i].val, PARSER_ASSOC_NONASSOC, 0, __build_leaf);
+				if(status == AR_S_YES)
+				{
+						
+				}else if(status == AR_S_NO)
 				{
 						AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
+				}else
+				{
+						goto INVALID_POINT;
 				}
 		}
 
 		for(i = 0; i < AR_NELEMS(__cfg_rule); ++i)
 		{
-				if(!Parser_InsertRuleByStr(gmr, __cfg_rule[i].rule, NULL, __cfg_rule[i].handler, __cfg_rule[i].auto_ret))
+				status = Parser_InsertRuleByStr(gmr, __cfg_rule[i].rule, NULL, __cfg_rule[i].handler, __cfg_rule[i].auto_ret);
+
+				if(status == AR_S_YES)
+				{
+						
+				}else if(status == AR_S_NO)
 				{
 						AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
+				}else
+				{
+						goto INVALID_POINT;
 				}
 
 		}
 
-		if(!Parser_SetStartRule(gmr, L"program"))
+		status = Parser_SetStartRule(gmr, L"program");
+		if(status == AR_S_YES)
+		{
+
+		}else if(status == AR_S_NO)
 		{
 				AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
-				return NULL;
+		}else
+		{
+				goto INVALID_POINT;
 		}
 
-		if(!Parser_CheckIsValidGrammar(gmr, NULL))
+		status = Parser_CheckIsValidGrammar(gmr, NULL);
+		if(status == AR_S_YES)
+		{
+
+		}else if(status == AR_S_NO)
 		{
 				AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
+		}else
+		{
+				goto INVALID_POINT;
 		}
+
 
 		return gmr;
+
+
+INVALID_POINT:
+		if(gmr)
+		{
+				Parser_DestroyGrammar(gmr);
+				gmr = NULL;
+		}
+
+		return NULL;
 }
+
 
 
 
 static const parser_t*		__build_parser(const psrGrammar_t *gmr)
 {
 		const parser_t *parser;
-		AR_ASSERT(gmr && Parser_CheckIsValidGrammar(gmr, NULL));
+		AR_ASSERT(gmr && Parser_CheckIsValidGrammar(gmr, NULL) == AR_S_YES);
 
 		parser = Parser_CreateParser(gmr, PARSER_SLR);
 		AR_ASSERT(parser && Parser_CountParserConflict(parser) == 0);
@@ -1930,6 +2732,8 @@ static const parser_t*		__build_parser(const psrGrammar_t *gmr)
 
 
 
+
+/**************************************************************************************************************************************************/
 
 
 
@@ -1979,7 +2783,7 @@ static void	AR_STDCALL cfg_free(psrNode_t *node, void *ctx)
 
 
 
-static bool_t		AR_STDCALL cfg_error(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
+static arStatus_t		AR_STDCALL cfg_error(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
 {
 		cfgReport_t				*report = NULL;
 		cfgReportInfo_t			info;
@@ -2000,25 +2804,53 @@ static bool_t		AR_STDCALL cfg_error(const psrToken_t *tok, const size_t expected
 		report = ((cfgParserData_t*)ctx)->report;
 		AR_memset(&info, 0, sizeof(info));
 
+		buf = NULL;
+		str = NULL;
+
 		/******************************************************************************************/
 		if(tok->str_cnt == 0 || tok->term_val == CFG_LEXVAL_FAKE_EOI)
 		{
-				buf = AR_wcsdup(L"%CFG_LEXVAL_EOI");
+				buf = AR_NEWARR(wchar_t, 128);
+				if(buf)
+				{
+						AR_wcscpy(buf, L"%CFG_LEXVAL_EOI");
+				}
 		}else
 		{
-				buf = AR_wcsndup(tok->str, tok->str_cnt);
+				buf = AR_NEWARR(wchar_t, tok->str_cnt + 1);
+				if(buf)
+				{
+						AR_wcsncpy(buf, tok->str, tok->str_cnt);
+						buf[tok->str_cnt] = L'\0';
+				}
 		}
 		
+		if(buf == NULL)
+		{
+				goto INVALID_POINT;
+		}
+
+
 		str = AR_CreateString();
 
-		AR_AppendFormatString(str
-						, L"Invalid Token \"%ls\" in (%Id : %Id)\r\n\r\n"
-						, buf
-						, tok->line
-						, tok->col
-						);
+		if(str == NULL)
+		{
+				goto INVALID_POINT;
+		}
+
+		if(AR_AppendFormatString(str, L"Invalid Token \"%ls\" in (%Id : %Id)\r\n\r\n", buf, tok->line, tok->col) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
 		AR_DEL(buf);
-		AR_AppendFormatString(str, L"Expected Term :\r\n");
+		buf = NULL;
+
+
+		if(AR_AppendFormatString(str, L"Expected Term :\r\n") != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
 
 		for(i = 0; i < count; ++i)
 		{
@@ -2033,9 +2865,16 @@ static bool_t		AR_STDCALL cfg_error(const psrToken_t *tok, const size_t expected
 				}
 
 				AR_ASSERT(term != NULL);
-				AR_AppendFormatString(str, L"\"%ls\" ", term);
+
+				if(AR_AppendFormatString(str, L"\"%ls\" ", term) != AR_S_YES)
+				{
+						goto INVALID_POINT;
+				}
 		}
-		AR_AppendFormatString(str, L"\r\n\r\n");
+		if(AR_AppendFormatString(str, L"\r\n\r\n") != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
 		/******************************************************************************************/
 		info.syntax_error.msg = AR_GetStringCString(str);
 		info.syntax_error.tok = tok;
@@ -2043,7 +2882,22 @@ static bool_t		AR_STDCALL cfg_error(const psrToken_t *tok, const size_t expected
 		report->report_func(&info, report->report_ctx);
 		AR_DestroyString(str);
 
-		return true;
+		return AR_S_YES;
+
+INVALID_POINT:
+		if(buf)
+		{
+				AR_DEL(buf);
+				buf = NULL;
+		}
+
+		if(str)
+		{
+				AR_DestroyString(str);
+				str = NULL;
+		}
+
+		return AR_E_NOMEM;
 }
 
 
@@ -2093,17 +2947,33 @@ static void __init_parser_tag()
 		__g_lex		= __build_lex();
 		__g_grammar = __build_grammar(&psr_handler);
 		__g_parser	= __build_parser(__g_grammar);
+
+		if(__g_lex == NULL || __g_grammar == NULL || __g_parser == NULL)
+		{
+				AR_error(AR_ERR_FATAL, L"grammar config : failed to initialize\r\n");
+		}
 }
 
 
 static void __uninit_parser_tag()
 {
-		Parser_DestroyParser(__g_parser);
-		Parser_DestroyGrammar(__g_grammar);
-		Lex_Destroy(__g_lex);
-		__g_lex = NULL;
-		__g_parser = NULL;
-		__g_grammar = NULL;
+		if(__g_parser)
+		{
+				Parser_DestroyParser(__g_parser);
+				__g_parser = NULL;
+		}
+
+		if(__g_grammar)
+		{
+				Parser_DestroyGrammar(__g_grammar);
+				__g_grammar = NULL;
+		}
+
+		if(__g_lex)
+		{
+				Lex_Destroy(__g_lex);
+				__g_lex = NULL;
+		}
 		AR_UnInitSpinLock(&__g_lock);
 		
 }
@@ -2147,7 +3017,7 @@ static void				__destroy_parser_context(psrContext_t *parser_context)
 const cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t *report)
 {
 
-		bool_t is_ok, has_error;
+		arStatus_t is_ok, has_error;
 		
 		psrContext_t	*parser_context;
 		cfgParserData_t	psr_data;
@@ -2162,6 +3032,7 @@ const cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t 
 		
 
 		AR_ASSERT(gmr_txt != NULL);
+		result = NULL;
 
 		if(report == NULL)report = &__g_def_report;
 
@@ -2169,42 +3040,135 @@ const cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t 
 		io_ctx.on_print = cfg_on_print;
 		io_ctx.ctx		= (void*)report;
 
+
+		match = NULL;
+		parser_context = NULL;
+
+		if(ParserData_Init(&psr_data, report) != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+
+
 		
 		
 		match		   = __create_lex_match();
+		if(match == NULL)
+		{
+				goto END_POINT;
+		}
 
-		__init_parser_data(&psr_data, report);
+		
+		
 		parser_context = __create_parser_context((void*)&psr_data);
+
+		if(parser_context == NULL)
+		{
+				goto END_POINT;
+		}
 		
 		Lex_ResetInput(match, gmr_txt);
 
-		is_ok = true;
-		has_error = false;
+		is_ok = AR_S_YES;
+		has_error = AR_S_YES;
 
 
-		while(is_ok)
+		while(is_ok == AR_S_YES)
 		{
 				is_ok = Lex_Match(match, &tok);
 
-				if(!is_ok)
+				if(is_ok == AR_S_YES)
+				{
+						
+						if(tok.value == CFG_LEXVAL_COMMENT)
+						{
+								continue;
+						}
+
+						PARSER_TOTERMTOK(&tok, &term);
+
+						/*
+						构造一个简单空语句，以便不会在 abc CFG_LEXVAL_EOI这种情况下，无法分析出子树
+						*/
+						if(term.term_val == CFG_LEXVAL_EOI)
+						{
+								arStatus_t psr_ret;
+								psrToken_t end;
+								end.col = term.col;
+								end.line = term.line;
+								end.str = L"#";
+								end.str_cnt = 1;
+								end.term_val = CFG_LEXVAL_FAKE_EOI;
+
+								psr_ret = Parser_AddToken(parser_context, &end);
+								
+								if(psr_ret == AR_S_YES)
+								{
+										
+								}else if(psr_ret == AR_S_NO)
+								{
+										AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
+								}else/*存储分配失败等*/
+								{
+										goto END_POINT;
+								}
+						}
+
+						is_ok = Parser_AddToken(parser_context, &term);
+
+						if(tok.value == CFG_LEXVAL_EOI)
+						{
+								break;
+						}
+
+						
+				}else if(is_ok == AR_S_NO)
 				{
 						cfgReportInfo_t	info;
 						psrToken_t		tmp_tok;
-						arString_t		*str;
+						
 						size_t n;
 						size_t	line, col;
-						const wchar_t *tok = NULL;
+
+						arString_t		*str;
+						wchar_t			*tok = NULL;
+
+						str = NULL;
+						tok = NULL;
 
 						AR_memset(&info, 0, sizeof(info));
 						n = AR_wcslen(Lex_GetNextInput(match));
-						tok = AR_wcsndup(Lex_GetNextInput(match), n > 5 ? 5 : n);
 
+						if(n > 5)
+						{
+								n = 5;
+						}
+
+						tok = AR_NEWARR(wchar_t, n + 1);
+						if(tok)
+						{
+								AR_wcsncpy(tok, Lex_GetNextInput(match), n);
+								tok[n] = L'\0';
+						}
 						str = AR_CreateString();
+
+						if(tok == NULL || str == NULL)
+						{
+								goto INNER_INV_POINT;
+						}
 						
 						Lex_MatchGetCoordinate(match, NULL, &line, &col);
-						AR_AppendFormatString(str, L"Invalid Token %ls...(%Id : %Id)\r\n", tok, line, col);
 
-						if(tok)AR_DEL(tok);
+						if(AR_AppendFormatString(str, L"Invalid Token %ls...(%Id : %Id)\r\n", tok, line, col) != AR_S_YES)
+						{
+								goto INNER_INV_POINT;
+						}
+
+						if(tok)
+						{
+								AR_DEL(tok);
+								tok = NULL;
+						}
 
 						info.type = CFG_REPORT_ERROR_LEX_T;
 						info.lex_error.msg = AR_GetStringCString(str);
@@ -2222,66 +3186,74 @@ const cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t 
 						report->report_func(&info, report->report_ctx);
 						
 						AR_DestroyString(str);
+						str = NULL;
 
 						AR_ASSERT(*Lex_GetNextInput(match) != L'\0');
 
 						
-						if(!Lex_TrySkipTo(match, L";"))/*r尝试跳到';'如果未成功，则跳到头一个非空白符*/
+						if(Lex_TrySkipTo(match, L";") != AR_S_YES)/*r尝试跳到';'如果未成功，则跳到头一个非空白符*/
 						{
 								Lex_Skip(match);
 						}
 
 						Lex_ClearError(match);
-						has_error = true;
-						is_ok = true;
+						has_error = AR_S_YES;
+						is_ok = AR_S_YES;
 						continue;
-				}
 
-				if(tok.value == CFG_LEXVAL_COMMENT)
-				{
-						continue;
-				}
-
-				PARSER_TOTERMTOK(&tok, &term);
-
-				/*
-						构造一个简单空语句，以便不会在 abc CFG_LEXVAL_EOI这种情况下，无法分析出子树
-				*/
-				if(term.term_val == CFG_LEXVAL_EOI)
-				{
-						psrToken_t end;
-						end.col = term.col;
-						end.line = term.line;
-						end.str = L"#";
-						end.str_cnt = 1;
-						end.term_val = CFG_LEXVAL_FAKE_EOI;
-
-						if(!Parser_AddToken(parser_context, &end))
+INNER_INV_POINT:
+						if(tok)
 						{
-								AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
+								AR_DEL(tok);
+								tok = NULL;
 						}
+						if(str)
+						{
+								AR_DestroyString(str);
+								str = NULL;
+						}
+
+						goto END_POINT;
+				}else /*各种错误，例如AR_E_NOMEM*/
+				{
+						goto END_POINT;
 				}
 
-				is_ok = Parser_AddToken(parser_context, &term);
 				
-				if(tok.value == CFG_LEXVAL_EOI)break;
 		}		
 
-		if(is_ok)
+		if(is_ok == AR_S_YES)
 		{
 				result = (cfgNode_t*)Parser_GetResult(parser_context);
 				AR_ASSERT(result->type == CFG_CONFIG_T);
 
 				if(result && !result->config.has_error)
 				{
-						result->config.has_error = has_error;
+						result->config.has_error = has_error == AR_S_YES ? false : true;
 				}
 		}
 
-		
-		__destroy_parser_context(parser_context);
-		__destroy_lex_match(match);
-		__uninit_parser_data(&psr_data);
+END_POINT:
+
+		if(result != NULL)
+		{
+				result->config.remain_data = (void*)psr_data.normal_str_pool;
+				psr_data.normal_str_pool = NULL;
+		}
+
+		if(parser_context)
+		{
+				__destroy_parser_context(parser_context);
+				parser_context = NULL;
+		}
+
+		if(match)
+		{
+				__destroy_lex_match(match);
+				match = NULL;
+		}
+
+		ParserData_UnInit(&psr_data);
 		
 		return (cfgConfig_t*)result;
 
@@ -2289,6 +3261,12 @@ const cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t 
 
 void			CFG_DestroyGrammarConfig(const cfgConfig_t *cfg)
 {
+		if(cfg->remain_data != NULL)
+		{
+				AR_DestroyStrTable((arStringTable_t*)cfg->remain_data);
+				((cfgConfig_t*)cfg)->remain_data = NULL;
+		}
+
 		CFG_DestroyNode((cfgNode_t*)cfg);
 
 }
@@ -2308,6 +3286,7 @@ void					__destroy_lexical_set(cfgLexicalSet_t *lx_set)
 		if(lx_set->token_set)
 		{
 				AR_DEL(lx_set->token_set);
+				lx_set->token_set = NULL;
 		}
 
 		if(lx_set)
@@ -2316,61 +3295,118 @@ void					__destroy_lexical_set(cfgLexicalSet_t *lx_set)
 		}
 }
 
-static void __insert_to_lexical_set(cfgLexicalSet_t *lx_set, const lexToken_t *tok)
+static arStatus_t __insert_to_lexical_set(cfgLexicalSet_t *lx_set, const lexToken_t *tok)
 {
 		AR_ASSERT(lx_set != NULL && tok != NULL);
 
 		if(lx_set->cnt == lx_set->cap)
 		{
-				lx_set->cap = (lx_set->cap + 4)*2;
-				lx_set->token_set = AR_REALLOC(lexToken_t, lx_set->token_set, lx_set->cap);
+				size_t new_cap;
+				lexToken_t	*new_token_set;
+
+				new_cap = (lx_set->cap + 4)*2;
+				new_token_set = AR_NEWARR(lexToken_t, new_cap);
+
+				if(new_token_set == NULL)
+				{
+						return AR_E_NOMEM;
+				}
+
+				if(lx_set->cnt > 0)
+				{
+						AR_memcpy(new_token_set, lx_set->token_set, lx_set->cnt * sizeof(lexToken_t));
+				}
+
+				if(lx_set->token_set)
+				{
+						AR_DEL(lx_set->token_set);
+						lx_set->token_set = NULL;
+				}
+
+				lx_set->cap = new_cap;
+				lx_set->token_set = new_token_set;
 		}
 
 		lx_set->token_set[lx_set->cnt] = *tok;
 		lx_set->cnt++;
+		return AR_S_YES;
 }
+
+
 
 const cfgLexicalSet_t*		CFG_CollectLexicalSet(const wchar_t *gmr_txt)
 {
 		lexMatch_t		*match;
 		cfgLexicalSet_t	*lx_set;
-		bool_t is_ok;
+		arStatus_t		is_ok;
 		lexToken_t		tok;
+
 		AR_ASSERT(gmr_txt != NULL);
+
+		is_ok = AR_S_YES;
+		match = NULL;
+		lx_set = NULL;
+
 
 		match = __create_lex_match();
 		lx_set = __create_lexical_set();
-		
+
+		if(match == NULL || lx_set == NULL)
+		{
+				goto END_POINT;
+		}
+
 		Lex_ResetInput(match, gmr_txt);
 
+		
 
-		is_ok = true;
 
-
-		while(is_ok)
+		while(is_ok == AR_S_YES)
 		{
 				is_ok = Lex_Match(match, &tok);
 
-				if(!is_ok)
+				if(is_ok == AR_S_YES)
+				{
+						is_ok = __insert_to_lexical_set(lx_set, &tok);
+
+						if(is_ok != AR_S_YES)
+						{
+								goto END_POINT;
+						}
+
+						if(tok.value == CFG_LEXVAL_EOI)
+						{
+								break;
+						}
+
+				}else if(is_ok == AR_S_NO)
 				{
 						lx_set->has_error = true;
 						AR_ASSERT(*Lex_GetNextInput(match) != L'\0');
 						Lex_Skip(match);
 						Lex_ClearError(match);
-						is_ok = true;
+						is_ok = AR_S_YES;
 						continue;
+				}else /*有错误发生,比如存储分配失败*/
+				{
+						goto END_POINT;
 				}
-				
-				__insert_to_lexical_set(lx_set, &tok);
-
-				if(tok.value == CFG_LEXVAL_EOI)break;
 		}		
-		__destroy_lex_match(match);
 
-		if(lx_set->cnt == 0)
+END_POINT:
+		if(match)
 		{
-				__destroy_lexical_set(lx_set);
-				lx_set = NULL;
+				__destroy_lex_match(match);
+				match = NULL;
+		}
+
+		if(lx_set)
+		{
+				if(is_ok != AR_S_YES || lx_set->cnt == 0)
+				{
+						__destroy_lexical_set(lx_set);
+						lx_set = NULL;
+				}
 		}
 
 		return lx_set;
@@ -2388,14 +3424,12 @@ void						CFG_DestroyLexicalSet(const cfgLexicalSet_t *lexical_set)
 
 void			CFG_Init()
 {
-		__init_cfg_node_list();
 		__init_parser_tag();
 }
 
 void			CFG_UnInit()
 {
 		__uninit_parser_tag();
-		__uninit_cfg_node_list();
 }
 
 

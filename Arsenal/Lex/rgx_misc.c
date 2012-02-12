@@ -51,16 +51,42 @@ void					RGX_UnInitNameSet(rgxNameSet_t	*set)
 		AR_memset(set,0,sizeof(*set));
 }
 
-bool_t					RGX_InsertToNameSet(rgxNameSet_t	*set, const wchar_t	*name, rgxNode_t *node)
+arStatus_t				RGX_InsertToNameSet(rgxNameSet_t	*set, const wchar_t	*name, rgxNode_t *node)
 {
 
 		AR_ASSERT(set != NULL && name != NULL && node != NULL);
-		if(RGX_FindFromNameSet(set, name) != NULL)return false;
+		
+		if(RGX_FindFromNameSet(set, name) != NULL)
+		{
+				return AR_S_NO;
+		}
 
 		if(set->count == set->cap)
 		{
-				set->cap = (set->cap + 4)*2;
-				set->name = AR_REALLOC(rgxName_t, set->name, set->cap);
+				size_t new_cap;
+				rgxName_t *new_rgx;
+
+				new_cap = (set->cap + 4)*2;
+				new_rgx = AR_NEWARR(rgxName_t, new_cap);
+
+				if(new_rgx == NULL)
+				{
+						return AR_E_NOMEM;
+				}
+
+				if(set->count > 0)
+				{
+						AR_memcpy(new_rgx, set->name, set->count * sizeof(rgxName_t));
+				}
+				
+				if(set->name)
+				{
+						AR_DEL(set->name);
+						set->name = NULL;
+				}
+
+				set->cap = new_cap;
+				set->name = new_rgx;
 				/*
 				set->name = (rgxName_t*)AR_realloc(set->name, sizeof(rgxName_t) * set->cap);
 				*/
@@ -69,11 +95,11 @@ bool_t					RGX_InsertToNameSet(rgxNameSet_t	*set, const wchar_t	*name, rgxNode_t
 		AR_wcscpy(set->name[set->count].name, name);
 		set->name[set->count].node = node;
 		set->count++;
-		return true;
+		return AR_S_YES;
 }
 
 
-bool_t					RGX_RemoveFromNameSet(rgxNameSet_t	*set, const wchar_t	*name)
+arStatus_t				RGX_RemoveFromNameSet(rgxNameSet_t	*set, const wchar_t	*name)
 {
 		size_t i;
 		AR_ASSERT(set != NULL && name != NULL);
@@ -87,7 +113,10 @@ bool_t					RGX_RemoveFromNameSet(rgxNameSet_t	*set, const wchar_t	*name)
 				}
 		}
 
-		if(i == set->count)return false;
+		if(i == set->count)
+		{
+				return AR_S_NO;
+		}
 
 		while(i < set->count - 1)
 		{
@@ -96,7 +125,7 @@ bool_t					RGX_RemoveFromNameSet(rgxNameSet_t	*set, const wchar_t	*name)
 		}
 		set->count--;
 
-		return true;
+		return AR_S_YES;
 }
 
 
@@ -146,7 +175,7 @@ void RGX_UnInitCharSet(rgxCharSet_t *cset)
 		}
 }
 
-void RGX_CopyCharSet(rgxCharSet_t *dest, const rgxCharSet_t *sour)
+arStatus_t RGX_CopyCharSet(rgxCharSet_t *dest, const rgxCharSet_t *sour)
 {
 		rgxCharRange_t *curr;
 		AR_ASSERT(dest != NULL && sour != NULL);
@@ -157,8 +186,17 @@ void RGX_CopyCharSet(rgxCharSet_t *dest, const rgxCharSet_t *sour)
 
 		for(curr = sour->range; curr; curr = curr->next)
 		{
-				RGX_InsertRangeToCharSet(dest, curr);
+				arStatus_t status;
+
+				status = RGX_InsertRangeToCharSet(dest, curr);
+
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
 		}
+
+		return AR_S_YES;
 }
 
 
@@ -169,14 +207,17 @@ static rgxCharRange_t* __new_range(wchar_t beg, wchar_t end, rgxCharRange_t *nex
 		AR_ASSERT(beg <= end);
 		res = AR_NEW0(rgxCharRange_t);
 		
-
-		res->beg = beg; res->end = end; res->next = next;
+		if(res != NULL)
+		{
+				res->beg = beg; res->end = end; res->next = next;
+		}
+	
 		return res;
 }
 
 
 
-void RGX_InsertRangeToCharSet(rgxCharSet_t *cset, const rgxCharRange_t *new_range)
+arStatus_t RGX_InsertRangeToCharSet(rgxCharSet_t *cset, const rgxCharRange_t *new_range)
 {
 		rgxCharRange_t		*curr, *prev;
 		rgxCharRange_t		range;
@@ -206,6 +247,11 @@ void RGX_InsertRangeToCharSet(rgxCharSet_t *cset, const rgxCharRange_t *new_rang
 
 								rgxCharRange_t		*tmp = __new_range(curr->beg, range.beg - 1, curr);
 
+								if(tmp == NULL)
+								{
+										return AR_E_NOMEM;
+								}
+
 								if(prev == NULL)
 								{
 										cset->range = tmp;
@@ -226,6 +272,13 @@ void RGX_InsertRangeToCharSet(rgxCharSet_t *cset, const rgxCharRange_t *new_rang
 								*/
 
 								rgxCharRange_t		*tmp = __new_range(curr->beg, range.beg - 1, curr);
+
+								if(tmp == NULL)
+								{
+										return AR_E_NOMEM;
+								}
+
+
 								if(prev == NULL)
 								{
 										cset->range = tmp;
@@ -236,7 +289,7 @@ void RGX_InsertRangeToCharSet(rgxCharSet_t *cset, const rgxCharRange_t *new_rang
 								}
 
 								curr->beg = range.beg;
-								return;
+								return AR_S_YES;
 						}else if(curr->end > range.end)
 						{
 
@@ -246,6 +299,25 @@ void RGX_InsertRangeToCharSet(rgxCharSet_t *cset, const rgxCharRange_t *new_rang
 								*/
 								rgxCharRange_t		*tmp1, *tmp2;
 								tmp1 = __new_range(curr->beg, range.beg - 1, NULL);
+								tmp2 = __new_range(range.beg, range.end, curr);
+
+								if(tmp1 == NULL || tmp2 == NULL)
+								{
+										if(tmp1)
+										{
+												AR_DEL(tmp1);
+												tmp1 = NULL;
+										}
+
+										if(tmp2)
+										{
+												AR_DEL(tmp2);
+												tmp2 = NULL;
+										}
+
+										return AR_E_NOMEM;
+								}
+
 								if(prev == NULL)
 								{
 										cset->range = tmp1;
@@ -255,10 +327,10 @@ void RGX_InsertRangeToCharSet(rgxCharSet_t *cset, const rgxCharRange_t *new_rang
 										prev->next = tmp1;
 								}
 
-								tmp2 = __new_range(range.beg, range.end, curr);
+								
 								tmp1->next = tmp2;
 								curr->beg = range.end + 1;
-								return;
+								return AR_S_YES;
 						}
 
 				}else if(curr->beg == range.beg)
@@ -278,7 +350,7 @@ void RGX_InsertRangeToCharSet(rgxCharSet_t *cset, const rgxCharRange_t *new_rang
 								[range]
 								*/
 
-								return;
+								return AR_S_YES;
 						}else if(curr->end > range.end)
 						{
 								/*
@@ -289,6 +361,12 @@ void RGX_InsertRangeToCharSet(rgxCharSet_t *cset, const rgxCharRange_t *new_rang
 
 								rgxCharRange_t		*tmp;
 								tmp = __new_range(range.beg, range.end, curr);
+
+								if(tmp == NULL)
+								{
+										return AR_E_NOMEM;
+								}
+
 								if(prev == NULL)
 								{
 										cset->range = tmp;
@@ -298,7 +376,7 @@ void RGX_InsertRangeToCharSet(rgxCharSet_t *cset, const rgxCharRange_t *new_rang
 										prev->next = tmp;
 								}
 								curr->beg = range.end + 1;
-								return;
+								return AR_S_YES;
 						}
 
 				}else /*if(curr->beg > range->beg)*/
@@ -312,6 +390,13 @@ void RGX_InsertRangeToCharSet(rgxCharSet_t *cset, const rgxCharRange_t *new_rang
 
 								rgxCharRange_t		*tmp;
 								tmp = __new_range(range.beg, curr->beg - 1, curr);
+
+								if(tmp == NULL)
+								{
+										return AR_E_NOMEM;
+								}
+
+
 								if(prev == NULL)
 								{
 										cset->range = tmp;
@@ -332,6 +417,12 @@ void RGX_InsertRangeToCharSet(rgxCharSet_t *cset, const rgxCharRange_t *new_rang
 
 								rgxCharRange_t		*tmp;
 								tmp = __new_range(range.beg, curr->beg - 1, curr);
+
+								if(tmp == NULL)
+								{
+										return AR_E_NOMEM;
+								}
+
 								if(prev == NULL)
 								{
 										cset->range = tmp;
@@ -340,7 +431,7 @@ void RGX_InsertRangeToCharSet(rgxCharSet_t *cset, const rgxCharRange_t *new_rang
 								{
 										prev->next = tmp;
 								}
-								return;
+								return AR_S_YES;
 						}else/*curr->end > range->end*/
 						{
 								if(curr->beg <=range.end)
@@ -354,6 +445,25 @@ void RGX_InsertRangeToCharSet(rgxCharSet_t *cset, const rgxCharRange_t *new_rang
 										rgxCharRange_t		*tmp1,*tmp2;
 
 										tmp1 = __new_range(range.beg, curr->beg - 1, NULL);
+										tmp2 = __new_range(curr->beg, range.end, curr);
+
+										if(tmp1 == NULL || tmp2 == NULL)
+										{
+												if(tmp1)
+												{
+														AR_DEL(tmp1);
+														tmp1 = NULL;
+												}
+
+												if(tmp2)
+												{
+														AR_DEL(tmp2);
+														tmp2 = NULL;
+												}
+
+												return AR_E_NOMEM;
+										}
+
 										if(prev == NULL)
 										{
 												cset->range = tmp1;
@@ -363,10 +473,10 @@ void RGX_InsertRangeToCharSet(rgxCharSet_t *cset, const rgxCharRange_t *new_rang
 												prev->next = tmp1;
 										}
 
-										tmp2 = __new_range(curr->beg, range.end, curr);
+										
 										tmp1->next = tmp2;
 										curr->beg = range.end + 1;
-										return;
+										return AR_S_YES;
 								}else
 								{
 										/*
@@ -377,6 +487,11 @@ void RGX_InsertRangeToCharSet(rgxCharSet_t *cset, const rgxCharRange_t *new_rang
 										rgxCharRange_t		*tmp;
 										tmp = __new_range(range.beg, range.end, curr);
 
+										if(tmp == NULL)
+										{
+												return AR_E_NOMEM;
+										}
+
 										if(prev == NULL)
 										{
 												cset->range = tmp;
@@ -385,7 +500,7 @@ void RGX_InsertRangeToCharSet(rgxCharSet_t *cset, const rgxCharRange_t *new_rang
 										{
 												prev->next = tmp;
 										}
-										return;
+										return AR_S_YES;
 								}
 						}
 				}
@@ -402,30 +517,47 @@ void RGX_InsertRangeToCharSet(rgxCharSet_t *cset, const rgxCharRange_t *new_rang
 				prev->next = __new_range(range.beg, range.end, NULL);
 		}
 
+		return AR_S_YES;
 
 }
 
-void RGX_ReverseNegativeCharSet(rgxCharSet_t *cset)
+arStatus_t RGX_ReverseNegativeCharSet(rgxCharSet_t *cset)
 {
+		arStatus_t status;
 		rgxCharRange_t			*curr, *prev, old;
 		rgxCharSet_t			new_set;
-
+		
 		AR_ASSERT(cset != NULL);
-		if(!cset->is_neg)return;
+
+		status = AR_S_YES;
+
+		if(!cset->is_neg)
+		{
+				return AR_S_YES;
+		}
+
 
 		cset->is_neg = false;
 
 		RGX_InitCharSet(&new_set);
 
-		old.beg =  L'\0'; old.end = AR_WCHARMAX;
+		old.beg =  L'\0'; 
+		old.end = AR_WCHARMAX;
 
 		prev = NULL;
+
 		for(curr = cset->range; curr != NULL; curr = curr->next)
 		{
 				if(curr->beg > old.beg)
 				{
 						old.end = curr->beg - 1;
-						RGX_InsertRangeToCharSet(&new_set, &old);
+						
+						status = RGX_InsertRangeToCharSet(&new_set, &old);
+
+						if(status != AR_S_YES)
+						{
+								goto END_POINT;
+						}
 				}
 
 				old.beg = curr->end < AR_WCHARMAX ? curr->end + 1 : curr->end;
@@ -433,12 +565,23 @@ void RGX_ReverseNegativeCharSet(rgxCharSet_t *cset)
 				prev = curr;
 		}
 
-		if(old.beg < AR_WCHARMAX) RGX_InsertRangeToCharSet(&new_set, &old);
+		if(old.beg < AR_WCHARMAX)
+		{
+				status = RGX_InsertRangeToCharSet(&new_set, &old);
+
+				if(status != AR_S_YES)
+				{
+						goto END_POINT;
+				}
+		}
 
 		curr = cset->range;
 		cset->range = new_set.range;
 		new_set.range = curr;
+
+END_POINT:
 		RGX_UnInitCharSet(&new_set);
+		return status;
 }
 
 /*CharSet end*/
@@ -481,7 +624,7 @@ void RGX_UnInitThreadList(rgxThreadList_t *lst)
 
 static rgxThreadList_t	*__g_free_list = NULL;
 static arSpinLock_t		__g_spin_lock;
-
+static size_t			__g_max_thread_count = 0;
 
 #if defined(AR_DEBUG)
 		#define RGX_THREAD_LIST_INIT_COUNT		0
@@ -496,16 +639,34 @@ void	RGX_InitMisc()
 {
 		size_t i;
 		rgxThreadList_t	**tmp;
+		
 		AR_InitSpinLock(&__g_spin_lock);
 		__g_free_list = NULL;
+
+/*************************************************/
+		__g_max_thread_count = 0;
+/*************************************************/
 
 		if(RGX_THREAD_LIST_POOL_NUM == 0)return;
 
 		tmp = AR_NEWARR0(rgxThreadList_t*, RGX_THREAD_LIST_POOL_NUM);
 
+		if(tmp == NULL)
+		{
+				AR_error(AR_ERR_FATAL, L"initialize regex pool failed\r\n");
+				return;
+		}
+
+
 		for(i = 0; i < RGX_THREAD_LIST_POOL_NUM; ++i)
 		{
 				tmp[i] = RGX_CreateThreadList();
+
+				if(tmp[i] == NULL)
+				{
+						AR_error(AR_ERR_FATAL, L"initialize regex pool failed\r\n");
+						return;
+				}
 		}
 
 		for(i = 0; i < RGX_THREAD_LIST_POOL_NUM; ++i)
@@ -520,16 +681,13 @@ void	RGX_InitMisc()
 void	RGX_UnInitMisc()
 {
 		size_t count = 0;
-		size_t max_lst_cap = 0;
+		
 		while(__g_free_list != NULL)
 		{
 				rgxThreadList_t *lst = __g_free_list;
 				__g_free_list = __g_free_list->next;
-
-				if(lst->lst)AR_DEL(lst->lst);
-
-				max_lst_cap = AR_MAX(max_lst_cap, lst->cap);
-
+				
+				AR_DEL(lst->lst);
 				AR_DEL(lst);
 
 				count++;
@@ -537,11 +695,14 @@ void	RGX_UnInitMisc()
 
 		{
 				wchar_t buf[1024];
-				AR_swprintf(buf, 1024, L"Total consume rgxThreadList_t == %Iu : max cap == %Iu", count, max_lst_cap);
+				AR_swprintf(buf, 1024, L"Total consume rgxThreadList_t == %Iu", count);
+				AR_LOG(L"%ls\r\n", buf);
+
+				AR_swprintf(buf, 1024, L"Max consume rgxThread_t == %Iu",  __g_max_thread_count);
 				AR_LOG(L"%ls\r\n", buf);
 		}
 
-
+	
 		AR_UnInitSpinLock(&__g_spin_lock);
 }
 
@@ -550,19 +711,29 @@ void	RGX_UnInitMisc()
 static rgxThreadList_t* __create_new_thread_list()
 {
 		rgxThreadList_t	*res = NULL;
-		res = AR_NEW0(rgxThreadList_t);
-		
+		res = AR_NEW(rgxThreadList_t);
 
-		res->cap = RGX_THREAD_LIST_INIT_COUNT;
-		res->next = NULL;
-
-		if(res->cap > 0)
+		if(res == NULL)
 		{
-				res->lst = AR_NEWARR(rgxThread_t, res->cap);
+				return res;
 		}
+
+		res->lst = AR_NEWARR(rgxThread_t, AR_RGX_MAX_THREAD_CNT);
+
+		if(res->lst == NULL)
+		{
+				AR_DEL(res);
+				res = NULL;
+				return NULL;
+		}
+		
+		res->count = 0;
+		res->next = NULL;
 		
 		return res;
 }
+
+
 
 rgxThreadList_t*	RGX_CreateThreadList()
 {
@@ -589,7 +760,12 @@ rgxThreadList_t*	RGX_CreateThreadList()
 
 				AR_UnLockSpinLock(&__g_spin_lock);
 		}
-		RGX_ClearThreadList(res);
+
+		if(res)
+		{
+				RGX_ClearThreadList(res);
+		}
+
 		return res;
 
 }
@@ -615,13 +791,20 @@ void RGX_InsertToThreadList(rgxThreadList_t *lst, rgxThread_t thd)
 		AR_ASSERT(lst != NULL);
 		AR_ASSERT(thd.pc != NULL && thd.sp != NULL);
 
-		if(lst->count == lst->cap)
+		if(lst->count >= AR_RGX_MAX_THREAD_CNT)
 		{
-				lst->cap = (lst->cap + 1)*2;
-				lst->lst = AR_REALLOC(rgxThread_t, lst->lst, lst->cap);
+				AR_error(AR_ERR_FATAL, L"regex thread list overflow\r\n");
+		}else
+		{
+				lst->lst[lst->count++] = thd;
+
 		}
 
-		lst->lst[lst->count++] = thd;
+		if(lst->count > __g_max_thread_count)
+		{
+				__g_max_thread_count = lst->count;
+		}
+
 }
 
 

@@ -31,6 +31,7 @@
 #define new DEBUG_NEW
 #endif
 
+using namespace ARSpace;
 
 // CGrammarDesignerDoc
 
@@ -609,7 +610,7 @@ static void	AR_STDCALL	__free_node(ARSpace::psrNode_t *node, void *ctx)
 }
 
 
-static bool_t	AR_STDCALL	__on_parse_error(const ARSpace::psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
+static arStatus_t	AR_STDCALL	__on_parse_error(const ARSpace::psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
 {
 
 		OutputContext	*context;
@@ -650,7 +651,7 @@ static bool_t	AR_STDCALL	__on_parse_error(const ARSpace::psrToken_t *tok, const 
 
 		context->error_count++;
 
-		return true;
+		return AR_S_YES;
 
 }
 
@@ -689,12 +690,19 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 		{
 				const ARSpace::cfgName_t		*name = &cfg->name[i];
 
-				if(!ARSpace::Lex_InsertName(lexer, name->name, name->regex))
+				arStatus_t		status = ARSpace::Lex_InsertName(lexer, name->name, name->regex);
+
+				if(status == AR_S_YES)
+				{
+				}else if(status == AR_S_NO)
 				{
 						CString msg;
 						msg.Format(TEXT("Name Error : \"%ls : %ls\""), name->name, name->regex);
 						output.Append(msg, COutputList::MSG_ERROR, name->line, tar);
 						has_error = true;
+				}else
+				{
+						
 				}
 		}
 
@@ -706,13 +714,22 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 				action.is_skip = tok->is_skip;
 				action.priority = tok->lex_prec;
 				action.value = tok->tokval;
-				if(!ARSpace::Lex_InsertRule(lexer, tok->regex, &action))
+
+				arStatus_t		status = ARSpace::Lex_InsertRule(lexer, tok->regex, &action);
+
+				if(status == AR_S_YES)
+				{
+
+				}else if(status == AR_S_NO)
 				{
 						CString msg;
 						msg.Format(TEXT("Token Error :  \"%ls : %ls\""), tok->name, tok->regex);
 						output.Append(msg, COutputList::MSG_ERROR, tok->line, tar);
 						has_error = true;
 						//continue;
+				}else
+				{
+						abort();
 				}
 
 				if(tok->is_skip || tok->tokval == 0)
@@ -720,13 +737,20 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 						continue;
 				}
 
-				if(!ARSpace::Parser_InsertTerm(grammar, tok->name, tok->tokval, ARSpace::PARSER_ASSOC_NONASSOC, 0, build_leaf))
+				status = ARSpace::Parser_InsertTerm(grammar, tok->name, tok->tokval, ARSpace::PARSER_ASSOC_NONASSOC, 0, build_leaf);
+
+				if(status == AR_S_YES)
+				{
+				}else if(status == AR_S_NO)
 				{
 						CString msg;
 
 						msg.Format(TEXT("Term Error : \"%ls : %ls\""), tok->name, tok->regex);
 						output.Append(msg, COutputList::MSG_ERROR, tok->line, tar);
 						has_error = true;
+				}else
+				{
+						abort();
 				}
 		}
 
@@ -740,12 +764,19 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 
 						if(info == NULL)
 						{
-								if(!ARSpace::Parser_InsertTerm(grammar, prec->prec_tok_set[k], prec->prec_tok_val[k], prec->assoc, prec->prec_level, NULL))
+								arStatus_t		status = ARSpace::Parser_InsertTerm(grammar, prec->prec_tok_set[k], prec->prec_tok_val[k], prec->assoc, prec->prec_level, NULL);
+
+								if(status == AR_S_YES)
+								{
+								}else if(status == AR_S_NO)
 								{
 										CString msg;
 										msg.Format(TEXT("Prec Error : \"%ls\"!"), prec->prec_tok_set[k]);
 										output.Append(msg, COutputList::MSG_ERROR, prec->line, tar);
 										has_error = true;
+								}else
+								{
+										abort();
 								}
 						}else
 						{
@@ -762,12 +793,19 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 				const ARSpace::cfgRule_t		*rule = &cfg->rule[i];
 				CString str;
 				str.Format(TEXT("%ls : %ls"), rule->lhs, rule->rhs);
-				if(!ARSpace::Parser_InsertRuleByStr(grammar, str.GetString(), rule->prec_tok,  build_rule, 0))
+				arStatus_t status = ARSpace::Parser_InsertRuleByStr(grammar, str.GetString(), rule->prec_tok,  build_rule, 0);
+
+				if(status == AR_S_YES)
+				{
+				}else if(status == AR_S_NO)
 				{
 						CString msg;
 						msg.Format(TEXT("Rule Error : \"%ls\"!"), str.GetString());
 						output.Append(msg, COutputList::MSG_ERROR, rule->line, tar);
 						has_error = true;
+				}else
+				{
+						abort();
 				}
 		}
 
@@ -786,8 +824,9 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 						}
 				}
 
-				
-				if(has_start_rule || !ARSpace::Parser_SetStartRule(grammar, cfg->start.start_rule))
+				ARSpace::arStatus_t		status = ARSpace::Parser_SetStartRule(grammar, cfg->start.start_rule);
+
+				if(has_start_rule || status == ARSpace::AR_S_NO)
 				{
 						has_error = true;
 						CString msg;
@@ -808,7 +847,8 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 				
 				};
 		
-				if(!ARSpace::Parser_CheckIsValidGrammar(grammar, &io_context))
+				ARSpace::arStatus_t status = ARSpace::Parser_CheckIsValidGrammar(grammar, &io_context);
+				if(status != ARSpace::AR_S_YES)
 				{
 						has_error = true;
 				}
@@ -829,7 +869,7 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 				m_grammar	= grammar;
 				beg = GetTickCount();
 				
-				 m_parser = ARSpace::Parser_CreateParser(m_grammar, m_parser_mode);
+				m_parser = ARSpace::Parser_CreateParser(m_grammar, m_parser_mode);
 				
 				end = GetTickCount();
 				
@@ -1027,8 +1067,10 @@ void CGrammarDesignerDoc::OnParserShowconflict()
 
 		const ARSpace::psrConflictView_t		*view = ARSpace::Parser_CreateParserConflictView(m_parser);
 		
-
-		ASSERT(view != NULL);
+		if(view == NULL)
+		{
+				return;
+		}
 
 		CMainFrame *main_frm = (CMainFrame*)::AfxGetMainWnd();
 		CActionView	&action = main_frm->GetActionView();
@@ -1186,7 +1228,7 @@ void CGrammarDesignerDoc::OnParserParse()
 
 		CString str = input.GetInput();
 		
-		bool is_ok = true;
+		ARSpace::arStatus_t is_ok = ARSpace::AR_S_YES;
 
 
 		ARSpace::lexMatch_t *match;
@@ -1207,11 +1249,24 @@ void CGrammarDesignerDoc::OnParserParse()
 
 		beg = ::GetTickCount();
 
-		while(is_ok)
+		while(is_ok == ARSpace::AR_S_YES)
 		{
 				
 				//if(!m_lexer->GetToken(token))
-				if(!ARSpace::Lex_Match(match, &token))
+				is_ok = ARSpace::Lex_Match(match, &token);
+				if(is_ok == AR_S_YES)
+				{
+						ARSpace::psrToken_t		psr_tok;
+
+						PARSER_TOTERMTOK(&token, &psr_tok);
+						is_ok = ARSpace::Parser_AddToken(parser_context, &psr_tok);
+						
+						if(token.value == 0)
+						{
+								break;
+						}
+
+				}else if(is_ok == AR_S_NO)
 				{
 						size_t len = wcslen(ARSpace::Lex_GetNextInput(match));
 						if(len > 10) len = 10;
@@ -1232,14 +1287,7 @@ void CGrammarDesignerDoc::OnParserParse()
 						output_context.error_count++;
 				}else
 				{
-						ARSpace::psrToken_t		psr_tok;
-
-						PARSER_TOTERMTOK(&token, &psr_tok);
-						is_ok = ARSpace::Parser_AddToken(parser_context, &psr_tok);
-						if(token.value == 0)
-						{
-								break;
-						}
+						abort();
 				}
 
 				if(output_context.error_count >= MAX_ERROR_COUNT)
@@ -1251,7 +1299,7 @@ void CGrammarDesignerDoc::OnParserParse()
 						info.type = ARSpace::CFG_REPORT_MESSAGE_T;
 						info.std_msg.message = (const TCHAR*)msg;
 						report_build_func(&info, (void*)output_context.m_output);
-						is_ok = false;
+						is_ok = ARSpace::AR_S_NO;
 				}
 		}
 
@@ -1263,7 +1311,7 @@ void CGrammarDesignerDoc::OnParserParse()
 		output.Append(str.GetString());
 		}
 
-		if(is_ok)
+		if(is_ok == ARSpace::AR_S_YES)
 		{
 				CPrintNode *node = (CPrintNode*)ARSpace::Parser_GetResult(parser_context);
 				

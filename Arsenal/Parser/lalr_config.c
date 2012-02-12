@@ -39,14 +39,25 @@ void Parser_UnInit_LALR_Config()
 
 /*****************************************************************************************************/
 
-static void __init_bs_data(lalrBitSet_t *bs)
+static arStatus_t __init_bs_data(lalrBitSet_t *bs)
 {
 		size_t nbytes;
 		AR_ASSERT(bs != NULL && bs->bit_cnt > 0);
 
 		nbytes = (bs->bit_cnt / AR_BYTE_BITS) + 1;
+
 		bs->bit_set = AR_NEWARR0(uint_8_t, nbytes);
+
+		if(bs->bit_set == NULL)
+		{
+				return AR_E_NOMEM;
+		}else
+		{
+				return AR_S_YES;
+		}
+
 }
+
 
 void	Parser_InitBitSet(lalrBitSet_t *bs, size_t nbits)
 {
@@ -64,30 +75,11 @@ void	Parser_UnInitBitSet(lalrBitSet_t *bs)
 		if(bs->bit_set)
 		{
 				AR_DEL(bs->bit_set);
+				bs->bit_set = NULL;
 		}
-
 		AR_memset(bs, 0, sizeof(*bs));
 }
 
-
-void	Parser_SetBitInBitSet(lalrBitSet_t *bs, size_t bit_idx)
-{
-		size_t byte_idx, byte_bit_idx;
-		
-		AR_ASSERT(bs != NULL);
-		AR_ASSERT(bit_idx < bs->bit_cnt);
-
-		if(bs->bit_set == NULL)
-		{
-				__init_bs_data(bs);
-		}
-		
-		byte_idx = bit_idx / AR_BYTE_BITS;
-		byte_bit_idx =  bit_idx % AR_BYTE_BITS;
-
-		bs->bit_set[byte_idx] |= ((uint_8_t)0x01 << (AR_BYTE_BITS - byte_bit_idx -1));
-
-}
 
 void	Parser_ClearBitInBitSet(lalrBitSet_t *bs, size_t bit_idx)
 {
@@ -109,8 +101,36 @@ void	Parser_ClearBitInBitSet(lalrBitSet_t *bs, size_t bit_idx)
 }
 
 
+arStatus_t	Parser_SetBitInBitSet(lalrBitSet_t *bs, size_t bit_idx)
+{
+		arStatus_t status;
+		size_t byte_idx, byte_bit_idx;
+		
+		AR_ASSERT(bs != NULL);
+		AR_ASSERT(bit_idx < bs->bit_cnt);
 
-bool_t	Parser_IsSetInBitSet(const lalrBitSet_t *bs, size_t bit_idx)
+		status = AR_S_YES;
+
+		if(bs->bit_set == NULL)
+		{
+				status = __init_bs_data(bs);
+
+				if(status != AR_S_YES)/*ÄÚ´æ·ÖÅäÊ§°Ü*/
+				{
+						return status;
+				}
+		}
+		
+		byte_idx = bit_idx / AR_BYTE_BITS;
+		byte_bit_idx =  bit_idx % AR_BYTE_BITS;
+
+		bs->bit_set[byte_idx] |= ((uint_8_t)0x01 << (AR_BYTE_BITS - byte_bit_idx -1));
+
+		return status;
+
+}
+
+arStatus_t	Parser_IsSetInBitSet(const lalrBitSet_t *bs, size_t bit_idx)
 {
 		size_t byte_idx, byte_bit_idx;
 		
@@ -119,18 +139,18 @@ bool_t	Parser_IsSetInBitSet(const lalrBitSet_t *bs, size_t bit_idx)
 
 		if(bs->bit_set == NULL)
 		{
-				return false;
+				return AR_S_NO;
 		}
 
 		byte_idx = bit_idx / AR_BYTE_BITS;
 		byte_bit_idx =  bit_idx % AR_BYTE_BITS;
 
-		return bs->bit_set[byte_idx] & (((uint_8_t)0x01 << (AR_BYTE_BITS - byte_bit_idx -1))) ? true : false;
+		return bs->bit_set[byte_idx] & (((uint_8_t)0x01 << (AR_BYTE_BITS - byte_bit_idx -1))) ? AR_S_YES : AR_S_NO;
 
 }
 
 
-bool_t	Parser_UnionBitSet(lalrBitSet_t *dest, const lalrBitSet_t *src)
+arStatus_t	Parser_UnionBitSet(lalrBitSet_t *dest, const lalrBitSet_t *src)
 {
 		size_t i;
 		size_t nbyte;
@@ -138,21 +158,24 @@ bool_t	Parser_UnionBitSet(lalrBitSet_t *dest, const lalrBitSet_t *src)
 		AR_ASSERT(dest && src);
 		AR_ASSERT(dest->bit_cnt == src->bit_cnt);
 		AR_ASSERT(dest->bit_cnt > 0);
-		
+
 		has_changed = false;
 		if(src->bit_set == NULL)
 		{
-				return has_changed;
+				return AR_S_NO;
 		}
-		
+
 
 		if(dest->bit_set == NULL)
 		{
-				__init_bs_data(dest);
+				if(__init_bs_data(dest) != AR_S_YES)
+				{
+						return AR_E_NOMEM;
+				}
 		}
-		
+
 		nbyte = dest->bit_cnt / AR_BYTE_BITS + 1;
-		
+
 		for(i = 0; i < nbyte; ++i)
 		{
 				if(dest->bit_set[i] ^ src->bit_set[i])
@@ -162,9 +185,11 @@ bool_t	Parser_UnionBitSet(lalrBitSet_t *dest, const lalrBitSet_t *src)
 
 				dest->bit_set[i] |= src->bit_set[i];
 		}
-		
-		return has_changed;
+
+		return has_changed ? AR_S_YES : AR_S_NO;
 }
+
+
 
 
 /**************************************lalr config list*********************************************/
@@ -173,7 +198,11 @@ bool_t	Parser_UnionBitSet(lalrBitSet_t *dest, const lalrBitSet_t *src)
 lalrConfigList_t*		Parser_CreateConfigList()
 {
 		lalrConfigList_t *res = __create_config_list();
-		AR_memset(res, 0, sizeof(lalrConfigList_t));
+
+		if(res != NULL)
+		{
+				AR_memset(res, 0, sizeof(lalrConfigList_t));
+		}
 		return res;
 }
 
@@ -188,7 +217,7 @@ void					Parser_DestroyConfigList(lalrConfigList_t *lst, bool_t destroy_config)
 				node = lst->head;
 				lst->head = lst->head->next;
 
-				if(destroy_config)
+				if(destroy_config && node->config)
 				{
 						Parser_UnInitConfig(node->config);
 						__destroy_config(node->config);
@@ -199,30 +228,54 @@ void					Parser_DestroyConfigList(lalrConfigList_t *lst, bool_t destroy_config)
 		__destroy_config_list(lst);
 }
 
+
 lalrConfig_t*			Parser_InsertToConfigListByValue(lalrConfigList_t *lst, size_t rule_num, size_t delim, const psrGrammar_t *grammar)
 {
 		lalrConfig_t *cfg;
+		
 		AR_ASSERT(lst != NULL );
 
 
 		cfg = __create_config();
 
-		Parser_InitConfig(cfg, rule_num, delim, grammar);
+		if(cfg == NULL)
+		{
+				return NULL;
+		}
 
-		Parser_InsertToConfigList(lst, cfg);
+		if(Parser_InitConfig(cfg, rule_num, delim, grammar) != AR_S_YES)
+		{
+				__destroy_config(cfg);
+				cfg = NULL;
+				return NULL;
+		}
+
+		if(Parser_InsertToConfigList(lst, cfg) != AR_S_YES)
+		{
+				Parser_UnInitConfig(cfg);
+				__destroy_config(cfg);
+				cfg = NULL;
+				return NULL;
+		}
 		
 		return cfg;
 }
 
 
-void					Parser_InsertToConfigList(lalrConfigList_t *lst, lalrConfig_t *cfg)
+arStatus_t			Parser_InsertToConfigList(lalrConfigList_t *lst, lalrConfig_t *cfg)
 {
 		lalrConfigNode_t		*node;
 		AR_ASSERT(lst != NULL && cfg != NULL);
 		
 		/*node = AR_NEW0(lalrConfigNode_t);*/
 		node = __create_node();
-		
+
+		if(node == NULL)
+		{
+				return AR_E_NOMEM;
+		}
+
+
 		node->config = cfg;
 		node->next = NULL;
 
@@ -238,6 +291,28 @@ void					Parser_InsertToConfigList(lalrConfigList_t *lst, lalrConfig_t *cfg)
 		}
 		
 		lst->count++;
+
+		return AR_S_YES;
+}
+
+
+arStatus_t				Parser_CopyConfigList(lalrConfigList_t *l, const lalrConfigList_t *r)
+{
+		
+		const lalrConfigNode_t		*node;
+		AR_ASSERT(l != NULL && r != NULL);
+		
+		for(node = r->head; node != NULL; node = node->next)
+		{
+				arStatus_t status =	Parser_InsertToConfigList(l, node->config);
+
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
+		}
+
+		return AR_S_YES;
 }
 
 
@@ -270,16 +345,6 @@ void					Parser_UnionConfigList(lalrConfigList_t *l, lalrConfigList_t *r)
 }
 
 
-void					Parser_CopyConfigList(lalrConfigList_t *l, const lalrConfigList_t *r)
-{
-		const lalrConfigNode_t		*node;
-		AR_ASSERT(l != NULL && r != NULL);
-		
-		for(node = r->head; node != NULL; node = node->next)
-		{
-				Parser_InsertToConfigList(l, node->config);
-		}
-}
 
 
 #if(0)
@@ -421,7 +486,10 @@ static AR_INLINE lalrConfigNode_t* __pop_head(lalrConfigList_t *lst)
 		lalrConfigNode_t *res;
 		AR_ASSERT(lst != NULL);
 
-		if(lst->count == 0)return NULL;
+		if(lst->count == 0)
+		{
+				return NULL;
+		}
 
 		res = lst->head;
 		
@@ -468,7 +536,10 @@ static AR_INLINE void __sort_list(lalrConfigList_t *sour_list)
 		AR_STATIC_CHECK(__SORT_BUCKET__);
 		AR_ASSERT(sour_list != NULL);
 
-		if(sour_list->count < 2)return;
+		if(sour_list->count < 2)
+		{
+				return;
+		}
 
 		AR_memset(&lst, 0, sizeof(lst));
 		AR_memset(&carry, 0, sizeof(carry));
@@ -523,20 +594,44 @@ void					Parser_SortConfigList(lalrConfigList_t *l)
 /***************************************lalr config******************************************************/
 
 
-void	Parser_InitConfig(lalrConfig_t *config, size_t rule_num, size_t delim, const psrGrammar_t *grammar)
+arStatus_t	Parser_InitConfig(lalrConfig_t *config, size_t rule_num, size_t delim, const psrGrammar_t *grammar)
 {
+		
 		AR_ASSERT(config != NULL );
 
 		AR_memset(config, 0, sizeof(*config));
+
 		config->rule_num = (uint_16_t)rule_num;
 		config->delim = (uint_8_t)delim;
 		
-		config->forward = Parser_CreateConfigList();
-		config->backward = Parser_CreateConfigList();
-
 		Parser_InitBitSet(&config->follow_set, Parser_GetTermList(grammar)->count);
 		
 		config->is_completed = false;
+
+		config->forward = Parser_CreateConfigList();
+		config->backward = Parser_CreateConfigList();
+
+		if(config->forward == NULL || config->backward == NULL)
+		{
+				if(config->forward)
+				{
+						Parser_DestroyConfigList(config->forward, true);
+						config->forward = NULL;
+				}
+
+				if(config->backward)
+				{
+						Parser_DestroyConfigList(config->backward, true);
+						config->backward = NULL;
+				}
+
+				return AR_E_NOMEM;
+		}else
+		{
+				return AR_S_YES;
+		}
+
+		
 }
 
 
@@ -587,7 +682,20 @@ int_t	Parser_CompConfig(const lalrConfig_t *l, const lalrConfig_t *r)
 }
 
 
-void Parser_PrintConfig(const lalrConfig_t *config, const psrGrammar_t *gmr, arString_t *str)
+
+
+#define __CHECK_RET_VAL(_call_stmt)						\
+		do{												\
+				arStatus_t status = _call_stmt;			\
+				if(status != AR_S_YES)					\
+				{										\
+						return status;					\
+				}										\
+		}while(0)
+
+
+
+arStatus_t Parser_PrintConfig(const lalrConfig_t *config, const psrGrammar_t *gmr, arString_t *str)
 {
 		size_t i;
 		const psrRule_t *rule;
@@ -595,9 +703,9 @@ void Parser_PrintConfig(const lalrConfig_t *config, const psrGrammar_t *gmr, arS
 
 		rule = Parser_GetRuleFromGrammar(gmr, config->rule_num);
 
-		AR_AppendString(str, L"[ ");
+		__CHECK_RET_VAL(AR_AppendString(str, L"[ "));
 		
-		AR_AppendFormatString(str, L"<%ls> -> ", rule->head->name);
+		__CHECK_RET_VAL(AR_AppendFormatString(str, L"<%ls> -> ", rule->head->name));
 		
 		i = 0;
 		
@@ -605,16 +713,17 @@ void Parser_PrintConfig(const lalrConfig_t *config, const psrGrammar_t *gmr, arS
 		{
 				const psrSymb_t	*curr;
 				curr = Parser_IndexOfSymbList(&rule->body, i);
-				Parser_PrintSymbol(curr, str);
+				
+				__CHECK_RET_VAL(Parser_PrintSymbol(curr, str));
 		}
 		
-		AR_AppendString(str, L". ");
+		__CHECK_RET_VAL(AR_AppendString(str, L". "));
 
 		for(i; i < rule->body.count; ++i)
 		{
 				const psrSymb_t	*curr;
 				curr = Parser_IndexOfSymbList(&rule->body, i);
-				Parser_PrintSymbol(curr, str);
+				__CHECK_RET_VAL(Parser_PrintSymbol(curr, str));
 		}
 
 		
@@ -622,29 +731,33 @@ void Parser_PrintConfig(const lalrConfig_t *config, const psrGrammar_t *gmr, arS
 				size_t k;
 				const psrTermInfoList_t *term_lst;
 				
-				AR_AppendString(str, L" : ");
+				__CHECK_RET_VAL(AR_AppendString(str, L" : "));
+
 				term_lst = Parser_GetTermList(gmr);
-				
+				AR_ASSERT(term_lst != NULL);
+
 				for(k = 0; k < config->follow_set.bit_cnt; ++k)
 				{
-						if(Parser_IsSetInBitSet(&config->follow_set, k))
+						if(Parser_IsSetInBitSet(&config->follow_set, k) == AR_S_YES)
 						{
 								const psrSymb_t *curr;
 								curr = Parser_GetTermByIndex((psrTermInfoList_t*)term_lst, k)->term;
 								AR_ASSERT(curr != NULL);
 
-								Parser_PrintSymbol(curr, str);
-								AR_AppendFormatString(str, L" ");
+								__CHECK_RET_VAL(Parser_PrintSymbol(curr, str));
+								__CHECK_RET_VAL(AR_AppendFormatString(str, L" "));
 						}
 				}
 				
 		}
 
-		AR_AppendString(str, L" ]");
+		__CHECK_RET_VAL(AR_AppendString(str, L" ]"));
+
+		return AR_S_YES;
 }
 
 
-void Parser_PrintConfigList(const lalrConfigList_t *lst, const psrGrammar_t *gmr, arString_t *str)
+arStatus_t Parser_PrintConfigList(const lalrConfigList_t *lst, const psrGrammar_t *gmr, arString_t *str)
 {
 		lalrConfigNode_t *node;
 
@@ -652,10 +765,13 @@ void Parser_PrintConfigList(const lalrConfigList_t *lst, const psrGrammar_t *gmr
 
 		for(node = lst->head; node != NULL; node = node->next)
 		{
-				Parser_PrintConfig(node->config, gmr, str);
-				AR_AppendString(str, L"\r\n");
+				__CHECK_RET_VAL(Parser_PrintConfig(node->config, gmr, str));
+				__CHECK_RET_VAL(AR_AppendString(str, L"\r\n"));
 		}
-		AR_AppendString(str, L"\r\n");
+		
+		__CHECK_RET_VAL(AR_AppendString(str, L"\r\n"));
+
+		return AR_S_YES;
 }
 
 /************************************************************************************************************************/
@@ -664,6 +780,5 @@ void Parser_PrintConfigList(const lalrConfigList_t *lst, const psrGrammar_t *gmr
 
 
 AR_NAMESPACE_END
-
 
 
