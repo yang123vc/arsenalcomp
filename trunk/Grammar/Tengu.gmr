@@ -181,23 +181,23 @@
 
 
 %name    delim             :     "[\x{000A}\x{000B}\x{000C}\x{000D}\x{0085}\x{2028}\x{2029}\x{0020}\f\n\r\t\v\x{0009}\x{0020}\x{00A0}\x{1680}\x{180E}\x{2000}-\x{200A}\x{202F}\x{205F}\x{3000}]"
-                		;
+                        ;
 
 %name    comment        :    "/\*([^\*]|\*+[^\*/])*\*+/"    
-                	   ;
+                       ;
 
 %name    comment_line        :    "(//[^\x{000A}\x{000B}\x{000C}\x{000D}\x{0085}\x{2028}\x{2029}]*(\x{000A}|\x{000B}|\x{000C}|\x{000D}|\x{0085}|\x{2028}|\x{2029}|$))"
-                		  ;
+                          ;
 
 %name skip_lexem        :     "{delim}|{comment_line}|{comment}"
                 ;
 
 
-%name    digit            	:    "[0-9]"                
-                		;
+%name    digit                :    "[0-9]"                
+                        ;
 
-%name    number            	:    "{digit}+"                
-                		;
+%name    number                :    "{digit}+"                
+                        ;
 
 
 /*
@@ -209,32 +209,32 @@
 
 //ASCII + 中日韩
 
-%name    letter            	:    "[A-Z_a-z\x{0800}-\x{4E00}\x{4E00}-\x{9FA5}\x{3130}-\x{318F}\x{AC00}-\x{D7AF}]"
-                		;
+%name    letter                :    "[A-Z_a-z\x{0800}-\x{4E00}\x{4E00}-\x{9FA5}\x{3130}-\x{318F}\x{AC00}-\x{D7AF}]"
+                        ;
 
 
 
-%name hex_digit        	:    "[0-9a-fA-F]"
-                		;
+%name hex_digit            :    "[0-9a-fA-F]"
+                        ;
 
 
-%name hex_literal         	:    "0(x|X){hex_digit}+"
-                		;
+%name hex_literal             :    "0(x|X){hex_digit}+"
+                        ;
 
-%name oct_literal        	:    "0[0-7]+"
-                		;
+%name oct_literal            :    "0[0-7]+"
+                        ;
 
-%name dec_literal        	:    "(0|[1-9][0-9]*)"
-                		;
-
-
+%name dec_literal            :    "(0|[1-9][0-9]*)"
+                        ;
 
 
-%name    exponet           	:    "(e|E)(\+|\-)?[0-9]+"
-                    		;
 
-%name float_literal       	:    "(((([0-9]\.[0-9]*)){exponet}?)|([0-9]+{exponet}))"
-                    		;
+
+%name    exponet               :    "(e|E)(\+|\-)?[0-9]+"
+                            ;
+
+%name float_literal           :    "(((([0-9]\.[0-9]*)){exponet}?)|([0-9]+{exponet}))"
+                            ;
 
 
 
@@ -252,8 +252,8 @@
 
 
 
-%name    keyword_lhd       	:    "[A-Z_a-z0-9]"
-                		;
+%name    keyword_lhd           :    "[A-Z_a-z0-9]"
+                        ;
 
 
 %name        float_constant    :    "{float_literal}(?!{keyword_lhd})"

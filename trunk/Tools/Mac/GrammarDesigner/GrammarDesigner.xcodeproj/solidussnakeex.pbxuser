@@ -60,7 +60,7 @@
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
 				PBXFileTableDataSourceColumnWidthsKey = (
 					20,
-					973,
+					1053,
 					20,
 					48,
 					43,
@@ -99,8 +99,8 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 350761413;
-			PBXWorkspaceStateSaveDate = 350761413;
+			PBXPerProjectTemplateStateSaveDate = 350763835;
+			PBXWorkspaceStateSaveDate = 350763835;
 		};
 		perUserProjectItems = {
 			BE0252CB14E8371F009E8960 /* PBXTextBookmark */ = BE0252CB14E8371F009E8960 /* PBXTextBookmark */;
@@ -127,8 +127,8 @@
 			BE02535014E83B0D009E8960 /* PBXTextBookmark */ = BE02535014E83B0D009E8960 /* PBXTextBookmark */;
 			BE02535114E83B0D009E8960 /* PBXTextBookmark */ = BE02535114E83B0D009E8960 /* PBXTextBookmark */;
 			BE02535214E83B0D009E8960 /* PBXTextBookmark */ = BE02535214E83B0D009E8960 /* PBXTextBookmark */;
-			BE02535314E83B0D009E8960 /* PBXTextBookmark */ = BE02535314E83B0D009E8960 /* PBXTextBookmark */;
 			BE02535514E83B0D009E8960 /* PBXTextBookmark */ = BE02535514E83B0D009E8960 /* PBXTextBookmark */;
+			BE02536F14E83BA2009E8960 /* PBXTextBookmark */ = BE02536F14E83BA2009E8960 /* PBXTextBookmark */;
 			BE24530814581C0B003306D6 /* PBXTextBookmark */ = BE24530814581C0B003306D6 /* PBXTextBookmark */;
 			BE9CEBBF1439DC9000E46CEA /* PBXTextBookmark */ = BE9CEBBF1439DC9000E46CEA /* PBXTextBookmark */;
 			BE9CEBC31439DC9000E46CEA /* PBXTextBookmark */ = BE9CEBC31439DC9000E46CEA /* PBXTextBookmark */;
@@ -317,6 +317,7 @@
 	};
 	BE02530B14E838B2009E8960 /* grammar_config.h */ = {
 		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
 		name = grammar_config.h;
 		path = /Users/solidussnakeex/Desktop/Programming/Arsenal/Arsenal/Tools/grammar_config.h;
 		sourceTree = "<absolute>";
@@ -387,12 +388,6 @@
 		name = InputTextView.m;
 		path = /Users/solidussnakeex/Desktop/Programming/Arsenal/Tools/Mac/GrammarDesigner/InputTextView.m;
 		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1231, 6405}}";
-			sepNavSelRange = "{3311, 0}";
-			sepNavVisRange = "{3124, 574}";
-			sepNavWindowFrame = "{{145, 402}, {750, 558}}";
-		};
 	};
 	BE02534B14E83AAC009E8960 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -454,20 +449,6 @@
 		vrLen = 631;
 		vrLoc = 1125;
 	};
-	BE02535314E83B0D009E8960 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = BE02535414E83B0D009E8960 /* Arsenal.h */;
-		rLen = 1;
-		rLoc = 28;
-		rType = 1;
-	};
-	BE02535414E83B0D009E8960 /* Arsenal.h */ = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = Arsenal.h;
-		path = /Users/solidussnakeex/Desktop/Programming/Arsenal/Arsenal/Arsenal.h;
-		sourceTree = "<absolute>";
-	};
 	BE02535514E83B0D009E8960 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = BE02535614E83B0D009E8960 /* Arsenal.h */;
@@ -480,6 +461,7 @@
 	};
 	BE02535614E83B0D009E8960 /* Arsenal.h */ = {
 		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
 		name = Arsenal.h;
 		path = /Users/solidussnakeex/Desktop/Programming/Arsenal/Arsenal/Arsenal.h;
 		sourceTree = "<absolute>";
@@ -488,6 +470,22 @@
 			sepNavSelRange = "{675, 47}";
 			sepNavVisRange = "{0, 792}";
 		};
+	};
+	BE02536F14E83BA2009E8960 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = BE02537014E83BA2009E8960 /* Arsenal.h */;
+		name = "Arsenal.h: 29";
+		rLen = 47;
+		rLoc = 675;
+		rType = 0;
+		vrLen = 792;
+		vrLoc = 0;
+	};
+	BE02537014E83BA2009E8960 /* Arsenal.h */ = {
+		isa = PBXFileReference;
+		name = Arsenal.h;
+		path = /Users/solidussnakeex/Desktop/Programming/Arsenal/Arsenal/Arsenal.h;
+		sourceTree = "<absolute>";
 	};
 	BE1402C9143B61F200FEE3B4 /* GrammarDesignerDocument.m:434 */ = {
 		isa = PBXFileBreakpoint;
@@ -503,7 +501,7 @@
 		ignoreCount = 0;
 		lineNumber = 434;
 		location = GrammarDesigner;
-		modificationTime = 350763691.767651;
+		modificationTime = 350763853.382108;
 		originalNumberOfMultipleMatches = 1;
 		state = 2;
 	};
