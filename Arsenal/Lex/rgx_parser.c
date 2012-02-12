@@ -1,3 +1,4 @@
+/*************************************************************************/
 /*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
@@ -232,15 +233,15 @@ static rgxResult_t	__handle_quote(const wchar_t *input)
 				rgxCharRange_t range;
 				rgxNode_t		*tmp = NULL;
 				
-				if(*p == L'\0')/*å½¢å¦‚"abcè¿™ç§ä¸è‰¯è¾“å…¥*/
+				if(*p == L'\0')/*ĞÎÈç"abcÕâÖÖ²»Á¼ÊäÈë*/
 				{
 						__SET_ERR(g_res, NULL, NULL, p, AR_S_NO);
 						g_res.err.pos = p;
 						goto INVALID_POINT;
-				}else if(*p == L'\\')/*å½¢å¦‚\"\b\c\\ç­‰ç­‰çš„ä¸²*/
+				}else if(*p == L'\\')/*ĞÎÈç\"\b\c\\µÈµÈµÄ´®*/
 				{
 						
-						if(*(p+1) == L'\0')/*é”™è¯¯è¾“å…¥ä¾‹å¦‚\*/
+						if(*(p+1) == L'\0')/*´íÎóÊäÈëÀıÈç\*/
 						{
 								__SET_ERR(g_res, NULL, NULL, p, AR_S_NO);
 								goto INVALID_POINT;
@@ -293,7 +294,7 @@ static rgxResult_t	__handle_quote(const wchar_t *input)
 								case L'x':
 								{
 										uint_64_t num;
-										if(*(p + 1) == L'\0')/*å½¢å¦‚\xè¿™ç§ä¸è‰¯è¾“å…¥*/
+										if(*(p + 1) == L'\0')/*ĞÎÈç\xÕâÖÖ²»Á¼ÊäÈë*/
 										{
 												__SET_ERR(g_res, NULL, NULL, p, AR_S_NO);
 												goto INVALID_POINT;
@@ -312,7 +313,7 @@ static rgxResult_t	__handle_quote(const wchar_t *input)
 										}
 										break;
 								}
-								default:/*å…«è¿›åˆ¶*/
+								default:/*°Ë½øÖÆ*/
 								{
 										if(*p >= L'0' && *p <= L'7')
 										{
@@ -342,7 +343,7 @@ static rgxResult_t	__handle_quote(const wchar_t *input)
 										break;
 								}
 						}
-				}else/*æ ‡å‡†å­—ç¬¦*/
+				}else/*±ê×¼×Ö·û*/
 				{
 						c = *p;
 						++p;
@@ -368,7 +369,7 @@ static rgxResult_t	__handle_quote(const wchar_t *input)
 		
 		AR_ASSERT(*p == L'"');
 		
-		if(cat->left == NULL && cat->right == NULL)/*è¾“å…¥å‹ä¸º""çš„ç©ºå¼•ç”¨*/
+		if(cat->left == NULL && cat->right == NULL)/*ÊäÈëĞÍÎª""µÄ¿ÕÒıÓÃ*/
 		{
 				__SET_ERR(g_res, NULL, NULL, p, AR_S_NO);
 				goto INVALID_POINT;
@@ -457,7 +458,7 @@ static rgxResult_t	__handle_cset_range(const wchar_t *input)
 		
 		RGX_InitCharSet(&cset);
 		
-		if(*p == L'^') /*ä¾‹å¦‚[^a-z]*/
+		if(*p == L'^') /*ÀıÈç[^a-z]*/
 		{
 				cset.is_neg = true; 
 				p++;
@@ -467,29 +468,29 @@ static rgxResult_t	__handle_cset_range(const wchar_t *input)
 		{
 				rgxCharRange_t	range;	
 				rgxError_t err;
-				p = __get_charset(p, &range.beg, &err);/*ä¾æ¬¡æå–æ¯ä¸ªå­—ç¬¦*/
+				p = __get_charset(p, &range.beg, &err);/*ÒÀ´ÎÌáÈ¡Ã¿¸ö×Ö·û*/
 				
-				if(p == NULL)/*é”™è¯¯è¿”å›*/
+				if(p == NULL)/*´íÎó·µ»Ø*/
 				{
 						__SET_ERR(g_res, NULL, NULL, err.pos, err.status);
 						goto INVALID_POINT;
 				}else
 				{
-						if(*p == L'\0')/*é”™è¯¯è¾“å…¥ï¼Œå½¢å¦‚ä¸²â€˜[abcâ€™*/
+						if(*p == L'\0')/*´íÎóÊäÈë£¬ĞÎÈç´®¡®[abc¡¯*/
 						{
 								__SET_ERR(g_res, NULL, NULL, p, AR_S_NO);
 								goto INVALID_POINT;
 						}
 						
-						if(*p == L'-')/*å½¢å¦‚[a-z]*/
+						if(*p == L'-')/*ĞÎÈç[a-z]*/
 						{
 								p = __get_charset(p + 1, &range.end, &err);
-								if(p == NULL)/*é”™è¯¯è¿”å›*/
+								if(p == NULL)/*´íÎó·µ»Ø*/
 								{
 										__SET_ERR(g_res, NULL, NULL, err.pos, err.status);
 										goto INVALID_POINT;
 								}
-						}else/*å½¢å¦‚[ab]æˆ–è€…[a]ç­‰ç­‰*/
+						}else/*ĞÎÈç[ab]»òÕß[a]µÈµÈ*/
 						{
 								range.end = range.beg;
 						}
@@ -505,7 +506,7 @@ static rgxResult_t	__handle_cset_range(const wchar_t *input)
 		
 		AR_ASSERT(*p == L']');
 		
-		if(cset.is_neg)/*å¤„ç†[^a-z]å½¢å¼*/
+		if(cset.is_neg)/*´¦Àí[^a-z]ĞÎÊ½*/
 		{
 				g_res.err.status = RGX_ReverseNegativeCharSet(&cset);
 				
@@ -583,7 +584,7 @@ static rgxResult_t	__handle_charset(const wchar_t *input)
 		
 		__SET_ERR(g_res, NULL, NULL, NULL, AR_S_YES);
 		
-		if(*p == L'[')/*å½¢å¦‚[a-z0-9A-Z]ç­‰ç­‰*/
+		if(*p == L'[')/*ĞÎÈç[a-z0-9A-Z]µÈµÈ*/
 		{
 				return __handle_cset_range(p+1);
 				
@@ -600,7 +601,7 @@ static rgxResult_t	__handle_charset(const wchar_t *input)
 				}
 				return g_res;
 				
-		}else if(*p == L'\\')/*å¯èƒ½ä¸ºè½¬ä¹‰å­—ç¬¦æˆ–è€…\\B or \\E åŒ¹é…è¡Œé¦–å°¾ï¼Œå¦‚æœä¸ä¸ºè¡Œé¦–å°¾ï¼Œ åˆ™å¿½ç•¥*/
+		}else if(*p == L'\\')/*¿ÉÄÜÎª×ªÒå×Ö·û»òÕß\\B or \\E Æ¥ÅäĞĞÊ×Î²£¬Èç¹û²»ÎªĞĞÊ×Î²£¬ ÔòºöÂÔ*/
 		{
 				if(*(p + 1) == L'B' || *(p + 1) == L'E')
 				{
@@ -617,7 +618,7 @@ static rgxResult_t	__handle_charset(const wchar_t *input)
 						return g_res;
 				}
 		}
-		/*å°è¯•åŒ¹é…åŸºæœ¬å­—ç¬¦ï¼Œæ¯”å¦‚a or b or cç­‰ç­‰*/
+		/*³¢ÊÔÆ¥Åä»ù±¾×Ö·û£¬±ÈÈça or b or cµÈµÈ*/
 		
 		
 		
@@ -664,14 +665,14 @@ static rgxNode_t*       __handle_loopcount(rgxNode_t *expr, size_t min, size_t m
 RECHECK:
 		if(min < max)
 		{
-				if(min == 0)/*å½¢å¦‚{0,n}æˆ–è€…{0,æ­£æ— ç©·}å½¢å¼*/
+				if(min == 0)/*ĞÎÈç{0,n}»òÕß{0,ÕıÎŞÇî}ĞÎÊ½*/
 				{
-						if(is_infinite)/*å¦‚æœä¸º{0-æ­£æ— ç©·},åˆ™æ”¹ä¸º '*'æ¨¡å¼*/
+						if(is_infinite)/*Èç¹ûÎª{0-ÕıÎŞÇî},Ôò¸ÄÎª '*'Ä£Ê½*/
 						{
 								min = max; 
 								goto RECHECK;
 								
-						}else	/*{0,n}å½¢å¼ï¼Œéœ€è¦å°†å…¶ä¿®æ”¹æˆ(a?){n}çš„å½¢å¼*/
+						}else	/*{0,n}ĞÎÊ½£¬ĞèÒª½«ÆäĞŞ¸Ä³É(a?){n}µÄĞÎÊ½*/
 						{
 								rgxNode_t *new_expr, *max_node;
 								
@@ -726,7 +727,7 @@ RECHECK:
 								/***************************************************************************************/
 								
 						}
-				}else/*å½¢å¦‚{m,n}ä¸”m > 0 && m < n  && n < æ­£æ— ç©·*/
+				}else/*ĞÎÈç{m,n}ÇÒm > 0 && m < n  && n < ÕıÎŞÇî*/
 				{
 						rgxNode_t *cat, *min_node, *max_node, *new_expr;
 						
@@ -754,7 +755,7 @@ RECHECK:
 						if(is_infinite)
 						{
 								/*
-								 å¦‚æœæ˜¯æ­£æ— ç©·ï¼Œåˆ™å°†å…¶æ”¹å†™ä¸ºa{m}a*å½¢å¼,å¦‚æœnon_greedyä¸ºçœŸï¼Œåˆ™æ”¹å†™ä¸ºa{m}a*
+								 Èç¹ûÊÇÕıÎŞÇî£¬Ôò½«Æä¸ÄĞ´Îªa{m}a*ĞÎÊ½,Èç¹ûnon_greedyÎªÕæ£¬Ôò¸ÄĞ´Îªa{m}a*
 								 */
 								max_node = RGX_CreateNode(RGX_STAR_T);
 								
@@ -775,7 +776,7 @@ RECHECK:
 						}else
 						{
 								/*
-								 å¦‚æœæ˜¯ä¾‹å¦‚a{3,5}ï¼Œåˆ™å°†å…¶æ”¹å†™ä¸ºa{3}(a??){2}å½¢å¼,å¦‚æœnon_greedyä¸ºçœŸï¼Œåˆ™æ”¹å†™ä¸ºa{m}a*
+								 Èç¹ûÊÇÀıÈça{3,5}£¬Ôò½«Æä¸ÄĞ´Îªa{3}(a??){2}ĞÎÊ½,Èç¹ûnon_greedyÎªÕæ£¬Ôò¸ÄĞ´Îªa{m}a*
 								 */
 								
 								new_expr = RGX_CreateNode(RGX_QUEST_T);
@@ -872,7 +873,7 @@ RECHECK:
 				rgxNode_t *loop;
 				loop = NULL;
 				
-				if(is_infinite)	/*å¦‚æœä¸º{0-æ­£æ— ç©·},åˆ™æ”¹ä¸º '*'æ¨¡å¼*/
+				if(is_infinite)	/*Èç¹ûÎª{0-ÕıÎŞÇî},Ôò¸ÄÎª '*'Ä£Ê½*/
 				{
 						loop = RGX_CreateNode(RGX_STAR_T);
 						if(loop == NULL)
@@ -886,7 +887,7 @@ RECHECK:
 								loop->non_greedy = non_greedy;
 						}
 						return loop;
-				}else /*min == max && max > 0 æ¯”å¦‚a{3,3}è¢«æ”¹å†™æˆa{3}*/
+				}else /*min == max && max > 0 ±ÈÈça{3,3}±»¸ÄĞ´³Éa{3}*/
 				{
 						loop = RGX_CreateNode(RGX_FIXCOUNT_T);
 						
@@ -922,7 +923,7 @@ static rgxResult_t	__handle_postfix(rgxNode_t *expr, const wchar_t *input)
 		
 		switch(*p)
 		{
-				case '*':		/*åŒ¹é…{0-æ­£æ— ç©·}ä¸ª*/
+				case '*':		/*Æ¥Åä{0-ÕıÎŞÇî}¸ö*/
 				{
 						g_res.node = RGX_CreateNode(RGX_STAR_T);
 						if(g_res.node == NULL)
@@ -935,7 +936,7 @@ static rgxResult_t	__handle_postfix(rgxNode_t *expr, const wchar_t *input)
 						expr = NULL;
 						
 						++p;
-						if(*p == L'?')/*æƒ°æ€§åŒ¹é…ï¼Œä¼˜å…ˆåŒ¹é…0ä¸ª*/
+						if(*p == L'?')/*¶èĞÔÆ¥Åä£¬ÓÅÏÈÆ¥Åä0¸ö*/
 						{
 								g_res.node->non_greedy = true;
 								++p;
@@ -943,7 +944,7 @@ static rgxResult_t	__handle_postfix(rgxNode_t *expr, const wchar_t *input)
 						g_res.next = p;
 				}
 						break;
-				case '+':		/*åŒ¹é…{1-æ­£æ— ç©·}ä¸ª*/
+				case '+':		/*Æ¥Åä{1-ÕıÎŞÇî}¸ö*/
 				{
 						g_res.node = RGX_CreateNode(RGX_PLUS_T);
 						
@@ -956,7 +957,7 @@ static rgxResult_t	__handle_postfix(rgxNode_t *expr, const wchar_t *input)
 						g_res.node->left = expr;
 						expr = NULL;
 						++p;
-						if(*p == L'?')/*æƒ°æ€§åŒ¹é…ï¼Œä¼˜å…ˆåŒ¹é…1ä¸ª*/
+						if(*p == L'?')/*¶èĞÔÆ¥Åä£¬ÓÅÏÈÆ¥Åä1¸ö*/
 						{
 								g_res.node->non_greedy = true;
 								++p;
@@ -964,7 +965,7 @@ static rgxResult_t	__handle_postfix(rgxNode_t *expr, const wchar_t *input)
 						g_res.next = p;
 				}
 						break;
-				case '?':		/*åŒ¹é…{0-1}ä¸ª*/
+				case '?':		/*Æ¥Åä{0-1}¸ö*/
 				{
 						g_res.node = RGX_CreateNode(RGX_QUEST_T);
 						
@@ -978,7 +979,7 @@ static rgxResult_t	__handle_postfix(rgxNode_t *expr, const wchar_t *input)
 						g_res.node->left = expr;
 						expr = NULL;
 						++p;
-						if(*p == L'?')/*æƒ°æ€§åŒ¹é…ï¼Œä¼˜å…ˆåŒ¹é…0ä¸ª*/
+						if(*p == L'?')/*¶èĞÔÆ¥Åä£¬ÓÅÏÈÆ¥Åä0¸ö*/
 						{
 								g_res.node->non_greedy = true;
 								++p;
@@ -986,7 +987,7 @@ static rgxResult_t	__handle_postfix(rgxNode_t *expr, const wchar_t *input)
 						g_res.next = p;
 				}
 						break;
-				case '{':		/*åŒ¹é…{m-n}ä¸ª,å…¶ä¸­ï¼Œåˆ†ä¸º{m,n}, {m,}, {,n}, {m},ä¹Ÿå¯èƒ½æ˜¯åç§°ï¼Œä¾‹å¦‚{name},*/
+				case '{':		/*Æ¥Åä{m-n}¸ö,ÆäÖĞ£¬·ÖÎª{m,n}, {m,}, {,n}, {m},Ò²¿ÉÄÜÊÇÃû³Æ£¬ÀıÈç{name},*/
 				{
 						bool_t non_greedy = false;
 						const wchar_t *beg = p + 1;
@@ -1012,14 +1013,14 @@ static rgxResult_t	__handle_postfix(rgxNode_t *expr, const wchar_t *input)
 								/*beg = AR_wcstrim(beg,L" \t");*/
 								beg = AR_wcstrim_space(beg);
 								
-								if(*beg == L'}')		/*æ­¤æ—¶ä¸º{m,}å½¢å¼,æ„æ€ä¸ºä»{m-æ­£æ— ç©·}*/
+								if(*beg == L'}')		/*´ËÊ±Îª{m,}ĞÎÊ½,ÒâË¼Îª´Ó{m-ÕıÎŞÇî}*/
 								{
 										max = AR_SIZE_MAX;
 								}else
 								{
-										beg = AR_wtou(beg, &max, 10);/*æå–åˆ°n*/
+										beg = AR_wtou(beg, &max, 10);/*ÌáÈ¡µ½n*/
 										
-										if(beg == NULL) /*æ­¤æ—¶ å½¢å¼ä¸º{m,...éæ³•å­—ç¬¦}ï¼Œåˆ™å¤±è´¥*/
+										if(beg == NULL) /*´ËÊ± ĞÎÊ½Îª{m,...·Ç·¨×Ö·û}£¬ÔòÊ§°Ü*/
 										{
 												__SET_ERR(g_res, NULL, NULL, p, AR_S_NO);
 												
@@ -1028,17 +1029,17 @@ static rgxResult_t	__handle_postfix(rgxNode_t *expr, const wchar_t *input)
 										
 										beg = AR_wcstrim_space(beg);
 										
-										if(*beg != L'}')/*æ­¤æ—¶ä¸º{m,n éæ³•å­—ç¬¦ å½¢å¼,åˆ™å¤±è´¥*/
+										if(*beg != L'}')/*´ËÊ±Îª{m,n ·Ç·¨×Ö·û ĞÎÊ½,ÔòÊ§°Ü*/
 										{
 												__SET_ERR(g_res, NULL, NULL, p, AR_S_NO);
 												goto INVALID_POINT;
 										}
 								}
-						}else if(*beg == L'}')/*æ­¤æ—¶ä¸º{m}å½¢å¼,æ„æ€ä¸ºä»åŒ¹é…mä¸ªå…ƒç´ */
+						}else if(*beg == L'}')/*´ËÊ±Îª{m}ĞÎÊ½,ÒâË¼Îª´ÓÆ¥Åäm¸öÔªËØ*/
 						{
 								max = min;
 								
-						}else			/*æ­¤æ—¶å½¢å¼ä¸º{méæ³•å­—ç¬¦ï¼Œé”™è¯¯*/
+						}else			/*´ËÊ±ĞÎÊ½Îª{m·Ç·¨×Ö·û£¬´íÎó*/
 						{
 								
 								__SET_ERR(g_res, NULL, NULL, p, AR_S_NO);
@@ -1049,7 +1050,7 @@ static rgxResult_t	__handle_postfix(rgxNode_t *expr, const wchar_t *input)
 						 if(min > max || max == 0){ g_res.err.pos = p; goto INVALID_POINT;}
 						 */
 						
-						if(min > max || max == 0)	/*ä¾‹å¦‚{5,3}æˆ–è€…{0,0}è¿™ç§éæ³•æ ¼å¼*/
+						if(min > max || max == 0)	/*ÀıÈç{5,3}»òÕß{0,0}ÕâÖÖ·Ç·¨¸ñÊ½*/
 						{
 								__SET_ERR(g_res, NULL, NULL, p, AR_S_NO);
 								goto INVALID_POINT;
@@ -1057,7 +1058,7 @@ static rgxResult_t	__handle_postfix(rgxNode_t *expr, const wchar_t *input)
 						
 						++beg;
 						
-						if(*beg == L'?')		/*æƒ°æ€§æ¨¡å¼ï¼Œä¼˜å…ˆåŒ¹é…min*/
+						if(*beg == L'?')		/*¶èĞÔÄ£Ê½£¬ÓÅÏÈÆ¥Åämin*/
 						{
 								non_greedy = true;
 								++beg;
@@ -1074,7 +1075,7 @@ static rgxResult_t	__handle_postfix(rgxNode_t *expr, const wchar_t *input)
 						}
 				}
 						break;
-				default:/*æ²¡æœ‰åç¼€çš„å½¢å¼ï¼Œåˆ™ç›´æ¥è¿”å›è¾“å…¥*/
+				default:/*Ã»ÓĞºó×ºµÄĞÎÊ½£¬ÔòÖ±½Ó·µ»ØÊäÈë*/
 						__SET_ERR(g_res, input, expr, NULL, AR_S_YES);
 						return g_res;
 		}
@@ -1111,7 +1112,7 @@ static rgxResult_t __handle_factor(const wchar_t *input, const rgxNameSet_t *nam
 		
 		switch(*p)
 		{
-				case L'^':		/*å¦‚æœå•ç‹¬å…ƒç´ ä¸º^æˆ–è€…$ï¼Œåˆ™å…¶æ²¡æœ‰åç¼€ï¼Œåˆ™è§£æå®Œæˆåç›´æ¥è¿”å›*/
+				case L'^':		/*Èç¹ûµ¥¶ÀÔªËØÎª^»òÕß$£¬ÔòÆäÃ»ÓĞºó×º£¬Ôò½âÎöÍê³ÉºóÖ±½Ó·µ»Ø*/
 				case L'$':
 				{
 						g_res.node =  RGX_CreateNode(*p == L'^' ? RGX_BEGIN_T : RGX_END_T);
@@ -1126,12 +1127,12 @@ static rgxResult_t __handle_factor(const wchar_t *input, const rgxNameSet_t *nam
 						return g_res;
 						break;
 				}
-				case L'"':		/*å¦‚æœå•ç‹¬å…ƒç´ ä¸ºå¼•ç”¨ï¼Œåˆ™æœ‰åç¼€ï¼Œéœ€è¦__handle_postfixè§£æå…¶åç¼€ï¼Œå¦‚æœæœ‰çš„è¯ï¼*/
+				case L'"':		/*Èç¹ûµ¥¶ÀÔªËØÎªÒıÓÃ£¬ÔòÓĞºó×º£¬ĞèÒª__handle_postfix½âÎöÆäºó×º£¬Èç¹ûÓĞµÄ»°£¡*/
 				{
 						g_res = __handle_quote(p + 1);
 						break;
 				}
-				case L'(':		/*å¦‚æœå•ç‹¬å…ƒç´ ä¸ºåˆ†ç»„ï¼Œåˆ™æœ‰åç¼€ï¼Œéœ€è¦__handle_postfixè§£æå…¶åç¼€ï¼Œå¦‚æœæœ‰çš„è¯ï¼*/
+				case L'(':		/*Èç¹ûµ¥¶ÀÔªËØÎª·Ö×é£¬ÔòÓĞºó×º£¬ĞèÒª__handle_postfix½âÎöÆäºó×º£¬Èç¹ûÓĞµÄ»°£¡*/
 				{
 						++p;
 						
@@ -1181,13 +1182,13 @@ static rgxResult_t __handle_factor(const wchar_t *input, const rgxNameSet_t *nam
 										return g_res;
 										
 								}
-						}else	/*åˆ†ç»„å­è¡¨è¾¾å¼*/
+						}else	/*·Ö×é×Ó±í´ïÊ½*/
 						{
 								g_res = __handle_expr(p, L')', name_set);
 						}
 				}
 						break;
-				case L'{':		/*{å‡ºç°åœ¨è¿™é‡Œå¿…å®šä¸ºåç§°å¼•ç”¨ï¼Œä¾‹å¦‚{name}ï¼Œ å¦åˆ™ä¸ºé”™è¯¯*/
+				case L'{':		/*{³öÏÖÔÚÕâÀï±Ø¶¨ÎªÃû³ÆÒıÓÃ£¬ÀıÈç{name}£¬ ·ñÔòÎª´íÎó*/
 				{
 						
 						p += 1;
@@ -1255,7 +1256,7 @@ static rgxResult_t __handle_factor(const wchar_t *input, const rgxNameSet_t *nam
 						}
 				}
 						break;
-				default:/*å¤„ç†a*/
+				default:/*´¦Àía*/
 						g_res = __handle_charset(p);
 		}
 		
@@ -1312,8 +1313,8 @@ static rgxResult_t __handle_expr(const wchar_t *input, wchar_t tc, const rgxName
 				if(*p == L'|')
 				{
 						/*
-						 å¦‚æœæ•´æ¡è¡¨è¾¾å¼ä¾‹å¦‚"a|b"ï¼Œåˆ™å½“é‡åˆ°'|'æ—¶ä¼šå‡ºç°branch å’Œcatéƒ½ä¸ºNULL,è¿™æ—¶éœ€è¦å°†aç›´æ¥æ’å…¥branchèŠ‚ç‚¹
-						 å¦‚æœæ•´æ¡è¡¨è¾¾å¼ä¾‹å¦‚"ab|c"ï¼Œåˆ™å½“é‡åˆ°'|'æ—¶ä¼šå‡ºç°branch ä¸ºNULLï¼Œè¿™æ—¶éœ€è¦å°†aç›´æ¥æ’å…¥catèŠ‚ç‚¹ï¼Œå†å°†catæ’å…¥branchèŠ‚ç‚¹
+						 Èç¹ûÕûÌõ±í´ïÊ½ÀıÈç"a|b"£¬Ôòµ±Óöµ½'|'Ê±»á³öÏÖbranch ºÍcat¶¼ÎªNULL,ÕâÊ±ĞèÒª½«aÖ±½Ó²åÈëbranch½Úµã
+						 Èç¹ûÕûÌõ±í´ïÊ½ÀıÈç"ab|c"£¬Ôòµ±Óöµ½'|'Ê±»á³öÏÖbranch ÎªNULL£¬ÕâÊ±ĞèÒª½«aÖ±½Ó²åÈëcat½Úµã£¬ÔÙ½«cat²åÈëbranch½Úµã
 						 */
 						if(branch == NULL)
 						{
