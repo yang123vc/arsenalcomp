@@ -232,8 +232,6 @@
 			<key>Layout</key>
 			<array>
 				<dict>
-					<key>BecomeActive</key>
-					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -313,6 +311,8 @@
 					<key>Dock</key>
 					<array>
 						<dict>
+							<key>BecomeActive</key>
+							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -330,7 +330,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>BEAE26C614E83CE400EF6737</string>
+										<string>BE9FF64214E83DA900BF2AE4</string>
 										<key>history</key>
 										<array>
 											<string>BE1402F4143B62E900FEE3B4</string>
@@ -356,7 +356,7 @@
 											<string>BE02533514E8398F009E8960</string>
 											<string>BE02533614E8398F009E8960</string>
 											<string>BE6C19AD14E83C9B008630CD</string>
-											<string>BEAE26C514E83CE400EF6737</string>
+											<string>BE9FF62E14E83D9500BF2AE4</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -370,18 +370,18 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 0}, {1307, 643}}</string>
+								<string>{{0, 0}, {1307, 630}}</string>
 								<key>RubberWindowFrame</key>
 								<string>61 55 1619 973 0 0 1680 1028 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
 							<key>Proportion</key>
-							<string>643pt</string>
+							<string>630pt</string>
 						</dict>
 						<dict>
 							<key>Proportion</key>
-							<string>284pt</string>
+							<string>297pt</string>
 							<key>Tabs</key>
 							<array>
 								<dict>
@@ -395,7 +395,7 @@
 									<key>GeometryConfiguration</key>
 									<dict>
 										<key>Frame</key>
-										<string>{{10, 27}, {1307, 257}}</string>
+										<string>{{10, 27}, {1307, 270}}</string>
 										<key>RubberWindowFrame</key>
 										<string>61 55 1619 973 0 0 1680 1028 </string>
 									</dict>
@@ -479,11 +479,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>BEAE26C714E83CE400EF6737</string>
+				<string>BE9FF64314E83DA900BF2AE4</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>BEAE26C814E83CE400EF6737</string>
+				<string>BE9FF64414E83DA900BF2AE4</string>
 				<string>BE5AE25B13F1724E00D92048</string>
-				<string>BEAE26C914E83CE400EF6737</string>
+				<string>BE9FF64514E83DA900BF2AE4</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
