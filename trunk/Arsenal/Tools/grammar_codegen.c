@@ -168,7 +168,10 @@ arStatus_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 		arString_t		*handler_define = NULL;
 		AR_ASSERT(cfg != NULL && code != NULL);
 
-		if(cfg->has_error)return false;
+		if(cfg->has_error)
+		{
+				return AR_S_NO;
+		}
 
 		handler_define	= AR_CreateString();
 
