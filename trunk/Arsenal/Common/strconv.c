@@ -484,7 +484,6 @@ size_t					AR_str_to_wcs(arCodePage_t cp, const char *acp, size_t n, wchar_t *ou
 
 		if(out_len < len)
 		{
-				AR_SetLastError(AR_ECODE_SMALLBUF);
 				ret = 0;
 				goto CLEAN_POINT;
 		}
@@ -525,7 +524,6 @@ size_t					AR_wcs_to_str(arCodePage_t cp, const wchar_t *input, size_t n, char *
 
 		if(out_len < len)
 		{
-				AR_SetLastError(AR_ECODE_SMALLBUF);
 				ret = 0;
 				goto CLEAN_POINT;
 		}
@@ -572,7 +570,6 @@ wchar_t*				AR_str_convto_wcs(arCodePage_t cp, const char *input, size_t in_n)
 
 		if(out == NULL)
 		{
-				AR_SetLastError(AR_ECODE_NOMEM);
 				is_ok = false;
 				cd = NULL;
 				goto CLEAN_POINT;
@@ -584,7 +581,6 @@ wchar_t*				AR_str_convto_wcs(arCodePage_t cp, const char *input, size_t in_n)
 
         if(cd == (iconv_t)-1)
         {
-				AR_SetLastError(AR_ECODE_SYS);
 				is_ok = false;
 				cd = NULL;
 				goto CLEAN_POINT;
@@ -597,7 +593,6 @@ wchar_t*				AR_str_convto_wcs(arCodePage_t cp, const char *input, size_t in_n)
 
         if(iconv(cd, &inbuf, &inleft, &outbuf, &outleft) == (size_t)-1)
         {
-				AR_SetLastError(AR_ECODE_INVAL);
 				is_ok = false;
 				goto CLEAN_POINT;
         }
@@ -652,7 +647,6 @@ char*					AR_wcs_convto_str(arCodePage_t cp, const wchar_t *input, size_t in_n)
 
 		if(out == NULL)
 		{
-				AR_SetLastError(AR_ECODE_NOMEM);
 				is_ok = false;
 				cd = NULL;
 				goto CLEAN_POINT;
@@ -663,7 +657,6 @@ char*					AR_wcs_convto_str(arCodePage_t cp, const wchar_t *input, size_t in_n)
 
         if(cd == (iconv_t)-1)
         {
-				AR_SetLastError(AR_ECODE_SYS);
 				is_ok = false;
 				cd = NULL;
 				goto CLEAN_POINT;
@@ -677,7 +670,6 @@ char*					AR_wcs_convto_str(arCodePage_t cp, const wchar_t *input, size_t in_n)
 
             if(iconv(cd, &inbuf, &inleft, &outbuf, &outleft) != 0)
             {
-					AR_SetLastError(AR_ECODE_INVAL);
 					is_ok = false;
 					goto CLEAN_POINT;
             }

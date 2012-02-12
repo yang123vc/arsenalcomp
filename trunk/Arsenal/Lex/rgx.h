@@ -209,23 +209,9 @@ typedef enum
 		RGX_MATCH_I
 }rgxInsType_t;
 
-static const wchar_t *RGX_INS_NAME[] = 
-{
-		L"nop",
-		L"char",
-		L"match_begin",
-		L"match_end",
-		L"match_line_begin",
-		L"match_line_end",
-		L"match_any_char",
-		L"loop_begin",
-		L"loop_end",
-		L"lookahead_begin",
-		L"lookahead_end",
-		L"jmp",
-		L"branch",
-		L"match"
-};
+
+extern const wchar_t *RGX_INS_NAME[];
+
 
 typedef struct __regex_instruction_tag	rgxIns_t;
 

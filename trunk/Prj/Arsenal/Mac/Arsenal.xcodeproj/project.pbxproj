@@ -7,6 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BE02520314E83038009E8960 /* base64.c in Sources */ = {isa = PBXBuildFile; fileRef = BE0251FD14E83038009E8960 /* base64.c */; };
+		BE02520414E83038009E8960 /* heap.h in Headers */ = {isa = PBXBuildFile; fileRef = BE0251FE14E83038009E8960 /* heap.h */; };
+		BE02520514E83038009E8960 /* math.c in Sources */ = {isa = PBXBuildFile; fileRef = BE0251FF14E83038009E8960 /* math.c */; };
+		BE02520614E83038009E8960 /* matrix.c in Sources */ = {isa = PBXBuildFile; fileRef = BE02520014E83038009E8960 /* matrix.c */; };
+		BE02520714E83038009E8960 /* status.h in Headers */ = {isa = PBXBuildFile; fileRef = BE02520114E83038009E8960 /* status.h */; };
+		BE02520814E83038009E8960 /* vector.c in Sources */ = {isa = PBXBuildFile; fileRef = BE02520214E83038009E8960 /* vector.c */; };
+		BE02520914E83038009E8960 /* base64.c in Sources */ = {isa = PBXBuildFile; fileRef = BE0251FD14E83038009E8960 /* base64.c */; };
+		BE02520A14E83038009E8960 /* heap.h in Headers */ = {isa = PBXBuildFile; fileRef = BE0251FE14E83038009E8960 /* heap.h */; };
+		BE02520B14E83038009E8960 /* math.c in Sources */ = {isa = PBXBuildFile; fileRef = BE0251FF14E83038009E8960 /* math.c */; };
+		BE02520C14E83038009E8960 /* matrix.c in Sources */ = {isa = PBXBuildFile; fileRef = BE02520014E83038009E8960 /* matrix.c */; };
+		BE02520D14E83038009E8960 /* status.h in Headers */ = {isa = PBXBuildFile; fileRef = BE02520114E83038009E8960 /* status.h */; };
+		BE02520E14E83038009E8960 /* vector.c in Sources */ = {isa = PBXBuildFile; fileRef = BE02520214E83038009E8960 /* vector.c */; };
+		BE02523A14E8313F009E8960 /* rgx_parser.c in Sources */ = {isa = PBXBuildFile; fileRef = BE02523814E8313F009E8960 /* rgx_parser.c */; };
+		BE02523C14E8313F009E8960 /* rgx_parser.c in Sources */ = {isa = PBXBuildFile; fileRef = BE02523814E8313F009E8960 /* rgx_parser.c */; };
 		BE86A0A713F13DF70028846E /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BE86A0A613F13DF70028846E /* libiconv.dylib */; };
 		BE86A0A913F13E000028846E /* libpthread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BE86A0A813F13E000028846E /* libpthread.dylib */; };
 		BE88D08A13F172B300871F83 /* Arsenal.c in Sources */ = {isa = PBXBuildFile; fileRef = BE88D04213F172B300871F83 /* Arsenal.c */; };
@@ -39,7 +53,6 @@
 		BE88D0A513F172B300871F83 /* rgx_exec.c in Sources */ = {isa = PBXBuildFile; fileRef = BE88D05F13F172B300871F83 /* rgx_exec.c */; };
 		BE88D0A613F172B300871F83 /* rgx_misc.c in Sources */ = {isa = PBXBuildFile; fileRef = BE88D06013F172B300871F83 /* rgx_misc.c */; };
 		BE88D0A713F172B300871F83 /* rgx_node.c in Sources */ = {isa = PBXBuildFile; fileRef = BE88D06113F172B300871F83 /* rgx_node.c */; };
-		BE88D0A813F172B300871F83 /* rgx_parser.c in Sources */ = {isa = PBXBuildFile; fileRef = BE88D06213F172B300871F83 /* rgx_parser.c */; };
 		BE88D0A913F172B300871F83 /* grammar.c in Sources */ = {isa = PBXBuildFile; fileRef = BE88D06413F172B300871F83 /* grammar.c */; };
 		BE88D0AA13F172B300871F83 /* lalr.h in Headers */ = {isa = PBXBuildFile; fileRef = BE88D06513F172B300871F83 /* lalr.h */; };
 		BE88D0AB13F172B300871F83 /* lalr_build.c in Sources */ = {isa = PBXBuildFile; fileRef = BE88D06613F172B300871F83 /* lalr_build.c */; };
@@ -56,17 +69,6 @@
 		BE88D0B613F172B300871F83 /* symbol.c in Sources */ = {isa = PBXBuildFile; fileRef = BE88D07113F172B300871F83 /* symbol.c */; };
 		BE88D0B713F172B300871F83 /* tengu.c in Sources */ = {isa = PBXBuildFile; fileRef = BE88D07313F172B300871F83 /* tengu.c */; };
 		BE88D0B813F172B300871F83 /* tengu.h in Headers */ = {isa = PBXBuildFile; fileRef = BE88D07413F172B300871F83 /* tengu.h */; };
-		BE88D0B913F172B300871F83 /* tgu_parser_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = BE88D07513F172B300871F83 /* tgu_parser_impl.h */; };
-		BE88D0BA13F172B300871F83 /* tgucompiler.c in Sources */ = {isa = PBXBuildFile; fileRef = BE88D07613F172B300871F83 /* tgucompiler.c */; };
-		BE88D0BB13F172B300871F83 /* tgucompiler.h in Headers */ = {isa = PBXBuildFile; fileRef = BE88D07713F172B300871F83 /* tgucompiler.h */; };
-		BE88D0BC13F172B300871F83 /* tguparser.c in Sources */ = {isa = PBXBuildFile; fileRef = BE88D07813F172B300871F83 /* tguparser.c */; };
-		BE88D0BD13F172B300871F83 /* tguparser.h in Headers */ = {isa = PBXBuildFile; fileRef = BE88D07913F172B300871F83 /* tguparser.h */; };
-		BE88D0BE13F172B300871F83 /* tgusyntree.c in Sources */ = {isa = PBXBuildFile; fileRef = BE88D07A13F172B300871F83 /* tgusyntree.c */; };
-		BE88D0BF13F172B300871F83 /* tgusyntree.h in Headers */ = {isa = PBXBuildFile; fileRef = BE88D07B13F172B300871F83 /* tgusyntree.h */; };
-		BE88D0C013F172B300871F83 /* tguutility.c in Sources */ = {isa = PBXBuildFile; fileRef = BE88D07C13F172B300871F83 /* tguutility.c */; };
-		BE88D0C113F172B300871F83 /* tguutility.h in Headers */ = {isa = PBXBuildFile; fileRef = BE88D07D13F172B300871F83 /* tguutility.h */; };
-		BE88D0C213F172B300871F83 /* tguvm.c in Sources */ = {isa = PBXBuildFile; fileRef = BE88D07E13F172B300871F83 /* tguvm.c */; };
-		BE88D0C313F172B300871F83 /* tguvm.h in Headers */ = {isa = PBXBuildFile; fileRef = BE88D07F13F172B300871F83 /* tguvm.h */; };
 		BE88D0C413F172B300871F83 /* grammar_codegen.c in Sources */ = {isa = PBXBuildFile; fileRef = BE88D08113F172B300871F83 /* grammar_codegen.c */; };
 		BE88D0C513F172B300871F83 /* grammar_collector.c in Sources */ = {isa = PBXBuildFile; fileRef = BE88D08213F172B300871F83 /* grammar_collector.c */; };
 		BE88D0C613F172B300871F83 /* grammar_config.h in Headers */ = {isa = PBXBuildFile; fileRef = BE88D08313F172B300871F83 /* grammar_config.h */; };
@@ -106,7 +108,6 @@
 		BE88D0E813F172B300871F83 /* rgx_exec.c in Sources */ = {isa = PBXBuildFile; fileRef = BE88D05F13F172B300871F83 /* rgx_exec.c */; };
 		BE88D0E913F172B300871F83 /* rgx_misc.c in Sources */ = {isa = PBXBuildFile; fileRef = BE88D06013F172B300871F83 /* rgx_misc.c */; };
 		BE88D0EA13F172B300871F83 /* rgx_node.c in Sources */ = {isa = PBXBuildFile; fileRef = BE88D06113F172B300871F83 /* rgx_node.c */; };
-		BE88D0EB13F172B300871F83 /* rgx_parser.c in Sources */ = {isa = PBXBuildFile; fileRef = BE88D06213F172B300871F83 /* rgx_parser.c */; };
 		BE88D0EC13F172B300871F83 /* grammar.c in Sources */ = {isa = PBXBuildFile; fileRef = BE88D06413F172B300871F83 /* grammar.c */; };
 		BE88D0ED13F172B300871F83 /* lalr.h in Headers */ = {isa = PBXBuildFile; fileRef = BE88D06513F172B300871F83 /* lalr.h */; };
 		BE88D0EE13F172B300871F83 /* lalr_build.c in Sources */ = {isa = PBXBuildFile; fileRef = BE88D06613F172B300871F83 /* lalr_build.c */; };
@@ -123,17 +124,6 @@
 		BE88D0F913F172B300871F83 /* symbol.c in Sources */ = {isa = PBXBuildFile; fileRef = BE88D07113F172B300871F83 /* symbol.c */; };
 		BE88D0FA13F172B300871F83 /* tengu.c in Sources */ = {isa = PBXBuildFile; fileRef = BE88D07313F172B300871F83 /* tengu.c */; };
 		BE88D0FB13F172B300871F83 /* tengu.h in Headers */ = {isa = PBXBuildFile; fileRef = BE88D07413F172B300871F83 /* tengu.h */; };
-		BE88D0FC13F172B300871F83 /* tgu_parser_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = BE88D07513F172B300871F83 /* tgu_parser_impl.h */; };
-		BE88D0FD13F172B300871F83 /* tgucompiler.c in Sources */ = {isa = PBXBuildFile; fileRef = BE88D07613F172B300871F83 /* tgucompiler.c */; };
-		BE88D0FE13F172B300871F83 /* tgucompiler.h in Headers */ = {isa = PBXBuildFile; fileRef = BE88D07713F172B300871F83 /* tgucompiler.h */; };
-		BE88D0FF13F172B300871F83 /* tguparser.c in Sources */ = {isa = PBXBuildFile; fileRef = BE88D07813F172B300871F83 /* tguparser.c */; };
-		BE88D10013F172B300871F83 /* tguparser.h in Headers */ = {isa = PBXBuildFile; fileRef = BE88D07913F172B300871F83 /* tguparser.h */; };
-		BE88D10113F172B300871F83 /* tgusyntree.c in Sources */ = {isa = PBXBuildFile; fileRef = BE88D07A13F172B300871F83 /* tgusyntree.c */; };
-		BE88D10213F172B300871F83 /* tgusyntree.h in Headers */ = {isa = PBXBuildFile; fileRef = BE88D07B13F172B300871F83 /* tgusyntree.h */; };
-		BE88D10313F172B300871F83 /* tguutility.c in Sources */ = {isa = PBXBuildFile; fileRef = BE88D07C13F172B300871F83 /* tguutility.c */; };
-		BE88D10413F172B300871F83 /* tguutility.h in Headers */ = {isa = PBXBuildFile; fileRef = BE88D07D13F172B300871F83 /* tguutility.h */; };
-		BE88D10513F172B300871F83 /* tguvm.c in Sources */ = {isa = PBXBuildFile; fileRef = BE88D07E13F172B300871F83 /* tguvm.c */; };
-		BE88D10613F172B300871F83 /* tguvm.h in Headers */ = {isa = PBXBuildFile; fileRef = BE88D07F13F172B300871F83 /* tguvm.h */; };
 		BE88D10713F172B300871F83 /* grammar_codegen.c in Sources */ = {isa = PBXBuildFile; fileRef = BE88D08113F172B300871F83 /* grammar_codegen.c */; };
 		BE88D10813F172B300871F83 /* grammar_collector.c in Sources */ = {isa = PBXBuildFile; fileRef = BE88D08213F172B300871F83 /* grammar_collector.c */; };
 		BE88D10913F172B300871F83 /* grammar_config.h in Headers */ = {isa = PBXBuildFile; fileRef = BE88D08313F172B300871F83 /* grammar_config.h */; };
@@ -148,6 +138,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BE0251FD14E83038009E8960 /* base64.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = base64.c; sourceTree = "<group>"; };
+		BE0251FE14E83038009E8960 /* heap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = heap.h; sourceTree = "<group>"; };
+		BE0251FF14E83038009E8960 /* math.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = math.c; sourceTree = "<group>"; };
+		BE02520014E83038009E8960 /* matrix.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = matrix.c; sourceTree = "<group>"; };
+		BE02520114E83038009E8960 /* status.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = status.h; sourceTree = "<group>"; };
+		BE02520214E83038009E8960 /* vector.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = vector.c; sourceTree = "<group>"; };
+		BE02523814E8313F009E8960 /* rgx_parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rgx_parser.c; sourceTree = "<group>"; };
 		BE10243813F2615000A73802 /* export.def */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = export.def; sourceTree = "<group>"; };
 		BE86A0A213F13DBC0028846E /* Arsenal.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = Arsenal.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE86A0A613F13DF70028846E /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
@@ -183,7 +180,6 @@
 		BE88D05F13F172B300871F83 /* rgx_exec.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rgx_exec.c; sourceTree = "<group>"; };
 		BE88D06013F172B300871F83 /* rgx_misc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rgx_misc.c; sourceTree = "<group>"; };
 		BE88D06113F172B300871F83 /* rgx_node.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rgx_node.c; sourceTree = "<group>"; };
-		BE88D06213F172B300871F83 /* rgx_parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rgx_parser.c; sourceTree = "<group>"; };
 		BE88D06413F172B300871F83 /* grammar.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = grammar.c; sourceTree = "<group>"; };
 		BE88D06513F172B300871F83 /* lalr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lalr.h; sourceTree = "<group>"; };
 		BE88D06613F172B300871F83 /* lalr_build.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lalr_build.c; sourceTree = "<group>"; };
@@ -200,17 +196,6 @@
 		BE88D07113F172B300871F83 /* symbol.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = symbol.c; sourceTree = "<group>"; };
 		BE88D07313F172B300871F83 /* tengu.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tengu.c; sourceTree = "<group>"; };
 		BE88D07413F172B300871F83 /* tengu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tengu.h; sourceTree = "<group>"; };
-		BE88D07513F172B300871F83 /* tgu_parser_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tgu_parser_impl.h; sourceTree = "<group>"; };
-		BE88D07613F172B300871F83 /* tgucompiler.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tgucompiler.c; sourceTree = "<group>"; };
-		BE88D07713F172B300871F83 /* tgucompiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tgucompiler.h; sourceTree = "<group>"; };
-		BE88D07813F172B300871F83 /* tguparser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tguparser.c; sourceTree = "<group>"; };
-		BE88D07913F172B300871F83 /* tguparser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tguparser.h; sourceTree = "<group>"; };
-		BE88D07A13F172B300871F83 /* tgusyntree.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tgusyntree.c; sourceTree = "<group>"; };
-		BE88D07B13F172B300871F83 /* tgusyntree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tgusyntree.h; sourceTree = "<group>"; };
-		BE88D07C13F172B300871F83 /* tguutility.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tguutility.c; sourceTree = "<group>"; };
-		BE88D07D13F172B300871F83 /* tguutility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tguutility.h; sourceTree = "<group>"; };
-		BE88D07E13F172B300871F83 /* tguvm.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tguvm.c; sourceTree = "<group>"; };
-		BE88D07F13F172B300871F83 /* tguvm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tguvm.h; sourceTree = "<group>"; };
 		BE88D08113F172B300871F83 /* grammar_codegen.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = grammar_codegen.c; sourceTree = "<group>"; };
 		BE88D08213F172B300871F83 /* grammar_collector.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = grammar_collector.c; sourceTree = "<group>"; };
 		BE88D08313F172B300871F83 /* grammar_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = grammar_config.h; sourceTree = "<group>"; };
@@ -282,6 +267,12 @@
 		BE88D04413F172B300871F83 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				BE0251FD14E83038009E8960 /* base64.c */,
+				BE0251FE14E83038009E8960 /* heap.h */,
+				BE0251FF14E83038009E8960 /* math.c */,
+				BE02520014E83038009E8960 /* matrix.c */,
+				BE02520114E83038009E8960 /* status.h */,
+				BE02520214E83038009E8960 /* vector.c */,
 				BE88D04513F172B300871F83 /* algo.c */,
 				BE88D04613F172B300871F83 /* buffer.c */,
 				BE88D04713F172B300871F83 /* byteorder.c */,
@@ -318,7 +309,7 @@
 				BE88D05F13F172B300871F83 /* rgx_exec.c */,
 				BE88D06013F172B300871F83 /* rgx_misc.c */,
 				BE88D06113F172B300871F83 /* rgx_node.c */,
-				BE88D06213F172B300871F83 /* rgx_parser.c */,
+				BE02523814E8313F009E8960 /* rgx_parser.c */,
 			);
 			path = Lex;
 			sourceTree = "<group>";
@@ -349,17 +340,6 @@
 			children = (
 				BE88D07313F172B300871F83 /* tengu.c */,
 				BE88D07413F172B300871F83 /* tengu.h */,
-				BE88D07513F172B300871F83 /* tgu_parser_impl.h */,
-				BE88D07613F172B300871F83 /* tgucompiler.c */,
-				BE88D07713F172B300871F83 /* tgucompiler.h */,
-				BE88D07813F172B300871F83 /* tguparser.c */,
-				BE88D07913F172B300871F83 /* tguparser.h */,
-				BE88D07A13F172B300871F83 /* tgusyntree.c */,
-				BE88D07B13F172B300871F83 /* tgusyntree.h */,
-				BE88D07C13F172B300871F83 /* tguutility.c */,
-				BE88D07D13F172B300871F83 /* tguutility.h */,
-				BE88D07E13F172B300871F83 /* tguvm.c */,
-				BE88D07F13F172B300871F83 /* tguvm.h */,
 			);
 			path = Tengu;
 			sourceTree = "<group>";
@@ -402,16 +382,12 @@
 				BE88D0B213F172B300871F83 /* parser.h in Headers */,
 				BE88D0B413F172B300871F83 /* parser_in.h in Headers */,
 				BE88D0B813F172B300871F83 /* tengu.h in Headers */,
-				BE88D0B913F172B300871F83 /* tgu_parser_impl.h in Headers */,
-				BE88D0BB13F172B300871F83 /* tgucompiler.h in Headers */,
-				BE88D0BD13F172B300871F83 /* tguparser.h in Headers */,
-				BE88D0BF13F172B300871F83 /* tgusyntree.h in Headers */,
-				BE88D0C113F172B300871F83 /* tguutility.h in Headers */,
-				BE88D0C313F172B300871F83 /* tguvm.h in Headers */,
 				BE88D0C613F172B300871F83 /* grammar_config.h in Headers */,
 				BE88D0C813F172B300871F83 /* iniobj.h in Headers */,
 				BE88D0CA13F172B300871F83 /* serializer.h in Headers */,
 				BE88D0CC13F172B300871F83 /* tools.h in Headers */,
+				BE02520414E83038009E8960 /* heap.h in Headers */,
+				BE02520714E83038009E8960 /* status.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -434,16 +410,12 @@
 				BE88D0F513F172B300871F83 /* parser.h in Headers */,
 				BE88D0F713F172B300871F83 /* parser_in.h in Headers */,
 				BE88D0FB13F172B300871F83 /* tengu.h in Headers */,
-				BE88D0FC13F172B300871F83 /* tgu_parser_impl.h in Headers */,
-				BE88D0FE13F172B300871F83 /* tgucompiler.h in Headers */,
-				BE88D10013F172B300871F83 /* tguparser.h in Headers */,
-				BE88D10213F172B300871F83 /* tgusyntree.h in Headers */,
-				BE88D10413F172B300871F83 /* tguutility.h in Headers */,
-				BE88D10613F172B300871F83 /* tguvm.h in Headers */,
 				BE88D10913F172B300871F83 /* grammar_config.h in Headers */,
 				BE88D10B13F172B300871F83 /* iniobj.h in Headers */,
 				BE88D10D13F172B300871F83 /* serializer.h in Headers */,
 				BE88D10F13F172B300871F83 /* tools.h in Headers */,
+				BE02520A14E83038009E8960 /* heap.h in Headers */,
+				BE02520D14E83038009E8960 /* status.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -538,7 +510,6 @@
 				BE88D0A513F172B300871F83 /* rgx_exec.c in Sources */,
 				BE88D0A613F172B300871F83 /* rgx_misc.c in Sources */,
 				BE88D0A713F172B300871F83 /* rgx_node.c in Sources */,
-				BE88D0A813F172B300871F83 /* rgx_parser.c in Sources */,
 				BE88D0A913F172B300871F83 /* grammar.c in Sources */,
 				BE88D0AB13F172B300871F83 /* lalr_build.c in Sources */,
 				BE88D0AC13F172B300871F83 /* lalr_config.c in Sources */,
@@ -549,17 +520,17 @@
 				BE88D0B513F172B300871F83 /* report.c in Sources */,
 				BE88D0B613F172B300871F83 /* symbol.c in Sources */,
 				BE88D0B713F172B300871F83 /* tengu.c in Sources */,
-				BE88D0BA13F172B300871F83 /* tgucompiler.c in Sources */,
-				BE88D0BC13F172B300871F83 /* tguparser.c in Sources */,
-				BE88D0BE13F172B300871F83 /* tgusyntree.c in Sources */,
-				BE88D0C013F172B300871F83 /* tguutility.c in Sources */,
-				BE88D0C213F172B300871F83 /* tguvm.c in Sources */,
 				BE88D0C413F172B300871F83 /* grammar_codegen.c in Sources */,
 				BE88D0C513F172B300871F83 /* grammar_collector.c in Sources */,
 				BE88D0C713F172B300871F83 /* iniobj.c in Sources */,
 				BE88D0C913F172B300871F83 /* serializer.c in Sources */,
 				BE88D0CB13F172B300871F83 /* tools.c in Sources */,
 				BEC0D04C1422C40900D35745 /* lex_misc.c in Sources */,
+				BE02520314E83038009E8960 /* base64.c in Sources */,
+				BE02520514E83038009E8960 /* math.c in Sources */,
+				BE02520614E83038009E8960 /* matrix.c in Sources */,
+				BE02520814E83038009E8960 /* vector.c in Sources */,
+				BE02523C14E8313F009E8960 /* rgx_parser.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -588,7 +559,6 @@
 				BE88D0E813F172B300871F83 /* rgx_exec.c in Sources */,
 				BE88D0E913F172B300871F83 /* rgx_misc.c in Sources */,
 				BE88D0EA13F172B300871F83 /* rgx_node.c in Sources */,
-				BE88D0EB13F172B300871F83 /* rgx_parser.c in Sources */,
 				BE88D0EC13F172B300871F83 /* grammar.c in Sources */,
 				BE88D0EE13F172B300871F83 /* lalr_build.c in Sources */,
 				BE88D0EF13F172B300871F83 /* lalr_config.c in Sources */,
@@ -599,17 +569,17 @@
 				BE88D0F813F172B300871F83 /* report.c in Sources */,
 				BE88D0F913F172B300871F83 /* symbol.c in Sources */,
 				BE88D0FA13F172B300871F83 /* tengu.c in Sources */,
-				BE88D0FD13F172B300871F83 /* tgucompiler.c in Sources */,
-				BE88D0FF13F172B300871F83 /* tguparser.c in Sources */,
-				BE88D10113F172B300871F83 /* tgusyntree.c in Sources */,
-				BE88D10313F172B300871F83 /* tguutility.c in Sources */,
-				BE88D10513F172B300871F83 /* tguvm.c in Sources */,
 				BE88D10713F172B300871F83 /* grammar_codegen.c in Sources */,
 				BE88D10813F172B300871F83 /* grammar_collector.c in Sources */,
 				BE88D10A13F172B300871F83 /* iniobj.c in Sources */,
 				BE88D10C13F172B300871F83 /* serializer.c in Sources */,
 				BE88D10E13F172B300871F83 /* tools.c in Sources */,
 				BEC0D04D1422C40900D35745 /* lex_misc.c in Sources */,
+				BE02520914E83038009E8960 /* base64.c in Sources */,
+				BE02520B14E83038009E8960 /* math.c in Sources */,
+				BE02520C14E83038009E8960 /* matrix.c in Sources */,
+				BE02520E14E83038009E8960 /* vector.c in Sources */,
+				BE02523A14E8313F009E8960 /* rgx_parser.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

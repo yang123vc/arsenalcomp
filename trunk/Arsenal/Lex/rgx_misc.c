@@ -18,6 +18,25 @@
 AR_NAMESPACE_BEGIN
 
 
+const wchar_t *RGX_INS_NAME[] = 
+{
+		L"nop",
+		L"char",
+		L"match_begin",
+		L"match_end",
+		L"match_line_begin",
+		L"match_line_end",
+		L"match_any_char",
+		L"loop_begin",
+		L"loop_end",
+		L"lookahead_begin",
+		L"lookahead_end",
+		L"jmp",
+		L"branch",
+		L"match"
+};
+
+
 
 void					RGX_InitNameSet(rgxNameSet_t	*set)
 {

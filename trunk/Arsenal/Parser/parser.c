@@ -459,7 +459,7 @@ void	  Parser_DestroyParser(const parser_t *parser)
 						Parser_UnInitExpectedMsg(&psr->msg_set[i]);
 				}
 				AR_DEL(psr->msg_set);
-				psr->term_tbl;
+				psr->msg_set = NULL;
 		}
 
 		if(psr->term_tbl)

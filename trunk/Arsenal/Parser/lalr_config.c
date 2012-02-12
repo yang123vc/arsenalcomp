@@ -719,7 +719,8 @@ arStatus_t Parser_PrintConfig(const lalrConfig_t *config, const psrGrammar_t *gm
 		
 		__CHECK_RET_VAL(AR_AppendString(str, L". "));
 
-		for(i; i < rule->body.count; ++i)
+		
+		for(; i < rule->body.count; ++i)
 		{
 				const psrSymb_t	*curr;
 				curr = Parser_IndexOfSymbList(&rule->body, i);
