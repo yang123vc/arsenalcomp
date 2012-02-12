@@ -139,23 +139,6 @@
 		BE185E7914E8427A0095DB44 /* libpthread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BE185E7714E842740095DB44 /* libpthread.dylib */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		BE185EBE14E8475E0095DB44 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BE185EB614E8475E0095DB44 /* Test.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = BE185EA314E846F10095DB44;
-			remoteInfo = Test;
-		};
-		BECEC36414E84BA400A7D4CB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BE185EB614E8475E0095DB44 /* Test.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = BE185EC614E847860095DB44;
-			remoteInfo = TestDLL;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		BE185D9014E841B90095DB44 /* Arsenal.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Arsenal.c; sourceTree = "<group>"; };
 		BE185D9114E841B90095DB44 /* Arsenal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Arsenal.h; sourceTree = "<group>"; };
@@ -222,7 +205,6 @@
 		BE185DDE14E841B90095DB44 /* tools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tools.h; sourceTree = "<group>"; };
 		BE185E7414E842620095DB44 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
 		BE185E7714E842740095DB44 /* libpthread.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpthread.dylib; path = usr/lib/libpthread.dylib; sourceTree = SDKROOT; };
-		BE185EB614E8475E0095DB44 /* Test.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Test.xcodeproj; path = ../../Test/Mac_XCode4/Test.xcodeproj; sourceTree = "<group>"; };
 		BEA4E2C414E83F1E00A29A8D /* Arsenal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = Arsenal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEA4E2CF14E840DE00A29A8D /* Arsenal.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = Arsenal.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -360,15 +342,6 @@
 			path = Tools;
 			sourceTree = "<group>";
 		};
-		BE185EB714E8475E0095DB44 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				BE185EBF14E8475E0095DB44 /* TestLib */,
-				BECEC36514E84BA400A7D4CB /* TestDLL */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		BEA4E2B914E83F1D00A29A8D = {
 			isa = PBXGroup;
 			children = (
@@ -376,7 +349,6 @@
 				BE185E7414E842620095DB44 /* libiconv.dylib */,
 				BE185D8F14E841B90095DB44 /* Arsenal */,
 				BEA4E2C514E83F1E00A29A8D /* Products */,
-				BE185EB614E8475E0095DB44 /* Test.xcodeproj */,
 			);
 			sourceTree = "<group>";
 		};
@@ -504,12 +476,6 @@
 			mainGroup = BEA4E2B914E83F1D00A29A8D;
 			productRefGroup = BEA4E2C514E83F1E00A29A8D /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = BE185EB714E8475E0095DB44 /* Products */;
-					ProjectRef = BE185EB614E8475E0095DB44 /* Test.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				BEA4E2C314E83F1E00A29A8D /* ArsenalLIb */,
@@ -517,23 +483,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		BE185EBF14E8475E0095DB44 /* TestLib */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = TestLib;
-			remoteRef = BE185EBE14E8475E0095DB44 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		BECEC36514E84BA400A7D4CB /* TestDLL */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = TestDLL;
-			remoteRef = BECEC36414E84BA400A7D4CB /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
 		BEA4E2C014E83F1E00A29A8D /* Sources */ = {
