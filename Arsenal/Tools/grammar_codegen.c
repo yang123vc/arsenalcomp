@@ -162,7 +162,7 @@ static arStatus_t			InsertToHandlerTable(handlerTbl_t		*tbl, const wchar_t *name
 
 
 
-bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
+arStatus_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 {
 		size_t i;
 		arString_t		*handler_define = NULL;
@@ -777,7 +777,7 @@ bool_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 		AR_AppendString(code, L"\r\n\r\n\r\n");
 
 
-		return true;
+		return AR_S_YES;
 }
 
 

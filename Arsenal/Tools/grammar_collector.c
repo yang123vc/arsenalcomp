@@ -2916,6 +2916,7 @@ static cfgReport_t		__g_def_report =
 };
 
 
+#if(0)
 static arIOCtx_t	__def_io_ctx = 
 {		
 		cfg_on_error,
@@ -2928,6 +2929,7 @@ static psrHandler_t		__def_handler_ctx =
 		cfg_error,
 		cfg_free,
 };
+#endif
 
 
 static arSpinLock_t				__g_lock;
