@@ -63,9 +63,6 @@
     <ClCompile Include="..\..\..\Arsenal\Common\thread.c">
       <Filter>Arsenal\Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Arsenal\Lex\rgx_parser.c">
-      <Filter>Arsenal\Lex</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Arsenal\Lex\lex.c">
       <Filter>Arsenal\Lex</Filter>
     </ClCompile>
@@ -146,6 +143,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\Arsenal\Tools\grammar_collector.c">
       <Filter>Arsenal\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Arsenal\Lex\rgx_parser.c">
+      <Filter>Arsenal\Lex</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
