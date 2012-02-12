@@ -87,8 +87,32 @@
     <ClCompile Include="..\..\..\Arsenal\Lex\rgx_node.c">
       <Filter>Arsenal\Lex</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Arsenal\Parser\symbol.c">
-      <Filter>Arsenal\Parser</Filter>
+    <ClCompile Include="..\..\..\Arsenal\Tools\iniobj.c">
+      <Filter>Arsenal\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Arsenal\Tools\serializer.c">
+      <Filter>Arsenal\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Arsenal\Tools\tools.c">
+      <Filter>Arsenal\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Arsenal\Tengu\tengu.c">
+      <Filter>Arsenal\Tengu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Arsenal\Arsenal.c">
+      <Filter>Arsenal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Arsenal\Common\math.c">
+      <Filter>Arsenal\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Arsenal\Common\matrix.c">
+      <Filter>Arsenal\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Arsenal\Common\vector.c">
+      <Filter>Arsenal\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Arsenal\Common\base64.c">
+      <Filter>Arsenal\Common</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Arsenal\Parser\grammar.c">
       <Filter>Arsenal\Parser</Filter>
@@ -114,53 +138,14 @@
     <ClCompile Include="..\..\..\Arsenal\Parser\report.c">
       <Filter>Arsenal\Parser</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Arsenal\Parser\symbol.c">
+      <Filter>Arsenal\Parser</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\Arsenal\Tools\grammar_codegen.c">
       <Filter>Arsenal\Tools</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Arsenal\Tools\grammar_collector.c">
       <Filter>Arsenal\Tools</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Arsenal\Tools\iniobj.c">
-      <Filter>Arsenal\Tools</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Arsenal\Tools\serializer.c">
-      <Filter>Arsenal\Tools</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Arsenal\Tools\tools.c">
-      <Filter>Arsenal\Tools</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Arsenal\Tengu\tengu.c">
-      <Filter>Arsenal\Tengu</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Arsenal\Tengu\tgucompiler.c">
-      <Filter>Arsenal\Tengu</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Arsenal\Tengu\tguparser.c">
-      <Filter>Arsenal\Tengu</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Arsenal\Tengu\tgusyntree.c">
-      <Filter>Arsenal\Tengu</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Arsenal\Tengu\tguutility.c">
-      <Filter>Arsenal\Tengu</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Arsenal\Tengu\tguvm.c">
-      <Filter>Arsenal\Tengu</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Arsenal\Arsenal.c">
-      <Filter>Arsenal</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Arsenal\Common\math.c">
-      <Filter>Arsenal\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Arsenal\Common\matrix.c">
-      <Filter>Arsenal\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Arsenal\Common\vector.c">
-      <Filter>Arsenal\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Arsenal\Common\base64.c">
-      <Filter>Arsenal\Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -188,6 +173,24 @@
     <ClInclude Include="..\..\..\Arsenal\Lex\rgx.h">
       <Filter>Arsenal\Lex</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\Arsenal\Tools\iniobj.h">
+      <Filter>Arsenal\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Arsenal\Tools\serializer.h">
+      <Filter>Arsenal\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Arsenal\Tools\tools.h">
+      <Filter>Arsenal\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Arsenal\Tengu\tengu.h">
+      <Filter>Arsenal\Tengu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Arsenal\Arsenal.h">
+      <Filter>Arsenal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Arsenal\Common\heap.h">
+      <Filter>Arsenal\Common</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\Arsenal\Parser\lalr.h">
       <Filter>Arsenal\Parser</Filter>
     </ClInclude>
@@ -203,44 +206,11 @@
     <ClInclude Include="..\..\..\Arsenal\Parser\parser_in.h">
       <Filter>Arsenal\Parser</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\Arsenal\Common\status.h">
+      <Filter>Arsenal\Common</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\Arsenal\Tools\grammar_config.h">
       <Filter>Arsenal\Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Arsenal\Tools\iniobj.h">
-      <Filter>Arsenal\Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Arsenal\Tools\serializer.h">
-      <Filter>Arsenal\Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Arsenal\Tools\tools.h">
-      <Filter>Arsenal\Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Arsenal\Tengu\tengu.h">
-      <Filter>Arsenal\Tengu</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Arsenal\Tengu\tgu_parser_impl.h">
-      <Filter>Arsenal\Tengu</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Arsenal\Tengu\tgucompiler.h">
-      <Filter>Arsenal\Tengu</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Arsenal\Tengu\tguparser.h">
-      <Filter>Arsenal\Tengu</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Arsenal\Tengu\tgusyntree.h">
-      <Filter>Arsenal\Tengu</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Arsenal\Tengu\tguutility.h">
-      <Filter>Arsenal\Tengu</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Arsenal\Tengu\tguvm.h">
-      <Filter>Arsenal\Tengu</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Arsenal\Arsenal.h">
-      <Filter>Arsenal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Arsenal\Common\heap.h">
-      <Filter>Arsenal\Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

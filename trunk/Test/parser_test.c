@@ -1,4 +1,4 @@
-#if(1)
+#if(0)
 
 #include "test.h"
 
@@ -26,7 +26,7 @@ void parser_test()
 		arTxtBom_t bom;
 		arString_t *str = AR_CreateString();
 
-		if(!AR_LoadBomTextFile(L"..\\..\\..\\Grammar\\SQL.gmr", &bom, str))
+		if(AR_LoadBomTextFile(L"..\\..\\..\\Grammar\\SQL.gmr", &bom, str) != AR_S_YES)
 		{
 				AR_abort();
 		}

@@ -1,7 +1,6 @@
 #ifndef __ARSENAL_TEST_H__
 #define __ARSENAL_TEST_H__
 
-
 #define _CRT_SECURE_NO_WARNINGS 1
 #include "../Arsenal/Common/common.h"
 

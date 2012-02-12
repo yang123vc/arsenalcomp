@@ -25,14 +25,14 @@ static bool_t	__g_is_initialized = false;
 
 
 
-bool_t	Arsenal_Init(const arInit_t *ctx)
+arStatus_t	Arsenal_Init(const arInit_t *ctx)
 {
 
-        bool_t	result;
+        arStatus_t	result;
 		uint_64_t		total_beg, total_end;
 		/*AR_ASSERT(ctx != NULL);*/
 		AR_ASSERT(!__g_is_initialized);
-		result = true;
+		result = AR_S_YES;
 		total_beg = AR_GetTime_Milliseconds();
 		
 		if(!__g_is_initialized)
@@ -42,18 +42,19 @@ bool_t	Arsenal_Init(const arInit_t *ctx)
 				Parser_Init();
 				Tools_Init();
 				TGU_Init();
+
 				__g_is_initialized = true;
-				result = true;
+				result = AR_S_YES;
 		}else
 		{
-				result = false;
+				result = AR_S_NO;
 		}
 
 		total_end = AR_GetTime_Milliseconds();
 
 
 
-		if(result)
+		if(result == AR_S_YES)
 		{
 				wchar_t msg[1024];
 				AR_swprintf(msg, AR_NELEMS(msg), L"Arsenal initialized consume time == %Id\r\n", total_end - total_beg);
@@ -70,9 +71,10 @@ bool_t	Arsenal_Init(const arInit_t *ctx)
 
 
 
-bool_t	Arsenal_UnInit()
+arStatus_t	Arsenal_UnInit()
 {
 		AR_ASSERT(__g_is_initialized);
+
 		if(__g_is_initialized)
 		{
 				TGU_UnInit();
@@ -81,10 +83,10 @@ bool_t	Arsenal_UnInit()
 				Lex_UnInit();
 				AR_CommonUnInit();
 				__g_is_initialized = false;
-				return true;
+				return AR_S_YES;
 		}else
 		{
-				return false;
+				return AR_S_NO;
 		}
 }
 

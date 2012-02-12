@@ -14,12 +14,12 @@ AR_NAMESPACE_BEGIN
 arString_t*		AR_CreateString();
 void			AR_DestroyString(arString_t *str);
 
-void			AR_ReserveString(arString_t *str, size_t num);
+arStatus_t		AR_ReserveString(arString_t *str, size_t num);
 void			AR_ClearString(arString_t *str);
-size_t			AR_AppendString(arString_t *str, const wchar_t *sour);
+arStatus_t		AR_AppendString(arString_t *str, const wchar_t *sour);
 
-void			AR_FormatString(arString_t *str, const wchar_t *fmt, ...);
-void			AR_AppendFormatString(arString_t *str, const wchar_t *fmt, ...);
+arStatus_t		AR_FormatString(arString_t *str, const wchar_t *fmt, ...);
+arStatus_t		AR_AppendFormatString(arString_t *str, const wchar_t *fmt, ...);
 
 
 const wchar_t*	AR_GetStringCString(const arString_t *str);
@@ -1428,7 +1428,7 @@ void text_test_load()
 
 		arBuffer_t *buf = AR_CreateBuffer(0);
 		arString_t *str = AR_CreateString();
-		if(!AR_LoadBomTextFromBinary(buf, NULL, str))
+		if(AR_LoadBomTextFromBinary(buf, NULL, str) != AR_S_YES)
 		{
 				AR_ASSERT(false);
 		}
@@ -1451,20 +1451,20 @@ void text_test_save()
 		
 		arTxtBom_t bom;
 
-		if(!AR_LoadBomTextFile(INPUT_FILE,&bom, str))
+		if(AR_LoadBomTextFile(INPUT_FILE,&bom, str) != AR_S_YES)
 		{
 				AR_ASSERT(false);
 		}
 
 
-		if(!AR_SaveBomTextFile(OUTPUT_FILE, OUTPUT_TYPE, AR_GetStringCString(str)))
+		if(AR_SaveBomTextFile(OUTPUT_FILE, OUTPUT_TYPE, AR_GetStringCString(str)) != AR_S_YES)
 		{
 				AR_ASSERT(false);
 		}
 
 
 		
-		if(!AR_LoadBomTextFile(OUTPUT_FILE, &bom, str))
+		if(AR_LoadBomTextFile(OUTPUT_FILE, &bom, str) != AR_S_YES)
 		{
 				AR_ASSERT(false);
 		}

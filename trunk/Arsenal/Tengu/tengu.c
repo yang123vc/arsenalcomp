@@ -12,7 +12,6 @@
  */
 
 #include "tengu.h"
-#include "tguparser.h"
 
 
 AR_NAMESPACE_BEGIN
@@ -20,13 +19,13 @@ AR_NAMESPACE_BEGIN
 
 bool_t	TGU_Init()
 {
-		TGU_InitParser();
+		//TGU_InitParser();
 		return true;
 }
 
 bool_t	TGU_UnInit()
 {
-		TGU_UnInitParser();
+		//TGU_UnInitParser();
 		return true;
 
 }

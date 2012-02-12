@@ -21,8 +21,9 @@ AR_NAMESPACE_BEGIN
 
 const wchar_t*	AR_Version()
 {
-		return L"0.2.13.553";
+		return L"0.3.00.563";
 }
+
 
 
 
@@ -50,8 +51,9 @@ static void AR_STDCALL __def_print(const wchar_t *msg, void *ctx)
 
 static arInit_t	__g_ctx = {{__def_error, __def_print,  NULL}};
 
-bool_t AR_CommonInit(const arInit_t *info)
+arStatus_t AR_CommonInit(const arInit_t *info)
 {
+		
 		if(info)
 		{
 				__g_ctx = *info;
@@ -59,14 +61,14 @@ bool_t AR_CommonInit(const arInit_t *info)
 
 		AR_InitThread();
 		AR_InitMemory();
-		return true;
+		return AR_S_YES;
 }
 
-bool_t AR_CommonUnInit()
+arStatus_t AR_CommonUnInit()
 {
 		AR_UnInitMemory();
 		AR_UnInitThread();
-		return true;
+		return AR_S_YES;
 }
 
 
@@ -76,7 +78,7 @@ arIOCtx_t*	AR_global_ioctx()
 }
 
 
-void	AR_printf_ctx(arIOCtx_t *ctx, const wchar_t *msg,...)
+arStatus_t	AR_printf_ctx(arIOCtx_t *ctx, const wchar_t *msg,...)
 {
 		wchar_t *buf;
 		int_t len;
@@ -86,22 +88,38 @@ void	AR_printf_ctx(arIOCtx_t *ctx, const wchar_t *msg,...)
 		{
 				AR_va_start(arg_ptr, msg);
 				len = AR_vscwprintf(msg, arg_ptr);
-				if(len <= 0)return;
 				AR_va_end(arg_ptr);
 
+				if(len <= 0)
+				{
+						return AR_E_INVAL;
+				}
+
 				buf = AR_NEWARR0(wchar_t, len + 1);
+
+				if(buf == NULL)
+				{
+						return AR_E_NOMEM;
+				}
 				
 				AR_va_start(arg_ptr, msg);
 				AR_vswprintf(buf, len + 1, msg, arg_ptr);
 				AR_va_end(arg_ptr);
 
 				ctx->on_print(buf, ctx->ctx);
-				AR_DEL(buf);
+				
+				if(buf)
+				{
+						AR_DEL(buf);
+						buf = NULL;
+				}
 		}
+
+		return AR_S_YES;
 }
 
 
-void	AR_error_ctx(arIOCtx_t *ctx, int_t level, const wchar_t *msg, ...)
+arStatus_t	AR_error_ctx(arIOCtx_t *ctx, int_t level, const wchar_t *msg, ...)
 {		
 		wchar_t buf[1024];
 		va_list arg_ptr;
@@ -110,29 +128,31 @@ void	AR_error_ctx(arIOCtx_t *ctx, int_t level, const wchar_t *msg, ...)
 		{
 				AR_va_start(arg_ptr, msg);
 				
-				if(AR_VSWPRINTF(buf, 1024, msg, arg_ptr) <= 0)
+				if(AR_vswprintf(buf, 1024, msg, arg_ptr) <= 0)
 				{
 						buf[0] = L'\0';
 				}
 				AR_va_end(arg_ptr);
 
 				ctx->on_error(level, buf, ctx->ctx);
-				AR_DEL(buf);
+				
 		}
+
+		return AR_S_YES;
 }
 
 
 
 
-void AR_error(int_t level, const wchar_t *msg, ...)
+arStatus_t AR_error(int_t level, const wchar_t *msg, ...)
 {
-		wchar_t buf[1024];/*因为可能会存在因为内存不足调用此函数报告异常，所以这里假定错误信息小于1K*/
+		wchar_t buf[1024];
 		va_list arg_ptr;
 		
 		if(__g_ctx.global_io_ctx.on_error != NULL)
 		{
 				AR_va_start(arg_ptr, msg);
-				if(AR_VSWPRINTF(buf, 1024, msg, arg_ptr) <= 0)
+				if(AR_vswprintf(buf, 1024, msg, arg_ptr) <= 0)
 				{
 						buf[0] = L'\0';
 				}
@@ -149,12 +169,13 @@ void AR_error(int_t level, const wchar_t *msg, ...)
 				AR_abort();
 		}
 
+		return AR_S_YES;
 }
 
 
 
 
-void AR_printf(const wchar_t *msg,...)
+arStatus_t AR_printf(const wchar_t *msg,...)
 {
 		wchar_t *buf;
 		int_t len;
@@ -168,22 +189,39 @@ void AR_printf(const wchar_t *msg,...)
 				len = AR_vscwprintf(msg, arg_ptr);
 				AR_va_end(arg_ptr);
 
-				if(len <= 0)return;
+				if(len <= 0)
+				{
+						return AR_E_INVAL;
+				}
+
 				buf = AR_NEWARR0(wchar_t, len + 1);
 
+				if(buf == NULL)
+				{
+						return AR_E_NOMEM;
+				}
+
 				AR_va_start(arg_ptr, msg);
-				AR_vswprintf(buf, len + 1, msg, arg_ptr);
+				len = AR_vswprintf(buf, len + 1, msg, arg_ptr);
 				AR_va_end(arg_ptr);
-		
+				
+				if(len <= 0)
+				{
+						AR_DEL(buf);
+						return AR_E_INVAL;
+				}
+
 				__g_ctx.global_io_ctx.on_print(buf, __g_ctx.global_io_ctx.ctx);
 				
 				AR_DEL(buf);
 		}
+
+		return AR_S_YES;
 }
 
 void	AR_check(bool_t cond, const wchar_t *fmt, ...)
 {
-		wchar_t *buf;
+		wchar_t buf[1024];
 		int_t len;
 		va_list arg_ptr;
 		AR_ASSERT(fmt);
@@ -191,19 +229,7 @@ void	AR_check(bool_t cond, const wchar_t *fmt, ...)
 		if(!cond)
 		{
 				AR_va_start(arg_ptr, fmt);
-				len = AR_vscwprintf(fmt, arg_ptr);
-				AR_va_end(arg_ptr);
-				
-				if(len < 0)
-				{
-						AR_error(AR_ERR_FATAL, L"%ls : %ls\r\n", L"Arsenal internal error", AR_FUNC_NAME);
-						return;/*避免warning*/
-				}
-
-				buf = AR_NEWARR0(wchar_t, len + 1);
-
-				AR_va_start(arg_ptr, fmt);
-				len = AR_vswprintf(buf, len + 1, fmt, arg_ptr);
+				len = AR_vswprintf(buf, 1024, fmt, arg_ptr);
 				AR_va_end(arg_ptr);
 
 				if(len < 0)
@@ -213,7 +239,7 @@ void	AR_check(bool_t cond, const wchar_t *fmt, ...)
 				}
 				
 				AR_error(AR_ERR_FATAL, buf);
-				AR_DEL(buf);
+
 		}
 }
 

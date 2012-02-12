@@ -18,23 +18,6 @@ AR_NAMESPACE_BEGIN
 
 
 
-#define PAGE_SIZE				((size_t)(65536 - sizeof(page_t)))
-#define SMALL_SIZE				255
-#define MEDIUM_SIZE				32767
-
-#define SMALL_ALIGN(_bytes)		(AR_ALIGN_SIZE( ((_bytes) + SMALL_HEADER_SIZE) ) - SMALL_HEADER_SIZE )
-
-#define SMALL_HEADER_SIZE		((size_t)(sizeof(byte_t) + sizeof(byte_t)))
-#define MEDIUM_HEADER_SIZE		((size_t) ( sizeof(mediumEntry_t) + sizeof(byte_t)))
-#define MEDIUM_SMALLEST_SIZE	(AR_ALIGN_SIZE( 256 ) + AR_ALIGN_SIZE(MEDIUM_HEADER_SIZE))
-#define LARGE_HEADER_SIZE		((size_t)(sizeof(size_t*) + sizeof(byte_t)))
-
-
-#define HEAP_SMALL_ALLOC		0xaa
-#define HEAP_MEDIUM_ALLOC		0xbb
-#define HEAP_LARGE_ALLOC		0xcc
-#define HEAP_INVALID_ALLOC		0xdd
-
 
 
 struct __heap_page_tag;
@@ -184,7 +167,7 @@ static AR_INLINE void*	SmallAllocate(arHeap_t *heap, size_t bytes)
 		/*byte_left = PAGE_SIZE - heap->small_cur_page_offset;*/
 		byte_left = heap->small_cur_page->data_size - heap->small_cur_page_offset;
 		
-		if(bytes + 2 > byte_left)
+		if(bytes + SMALL_HEADER_SIZE > byte_left)
 		{
 				page_t *new_page = AllocatePage(heap, PAGE_SIZE);
 				if(!new_page)
@@ -221,7 +204,7 @@ static AR_INLINE void SmallFree(arHeap_t *heap, void *ptr)
 		
 		if(idx > ((SMALL_SIZE + 1) / AR_HEAP_ALIGN))
 		{
-				AR_error(AR_ERR_MEMORY, L"SmallFree: invalid memory block\r\n");
+				AR_error(AR_ERR_FATAL, L"SmallFree: invalid memory block\r\n");
 		}
 		
 		*dt = (size_t)heap->small_first_free[idx];
@@ -241,7 +224,7 @@ static AR_INLINE void* SmallRealloc(arHeap_t *heap, void *ptr, size_t nbytes)
 
 		if(idx > ((SMALL_SIZE + 1) / AR_HEAP_ALIGN))
 		{
-				AR_error(AR_ERR_MEMORY, L"SmallRealloc : invalid memory block\r\n");
+				AR_error(AR_ERR_FATAL, L"SmallRealloc : invalid memory block\r\n");
 		}
 
 		if(org_bytes < AR_ALIGN_SIZE(nbytes))

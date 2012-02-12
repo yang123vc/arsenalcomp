@@ -28,7 +28,7 @@ void	AR_InitMemory()
 		__g_heap = AR_CreateHeap();
 		if(__g_heap == NULL)
 		{
-				AR_error(AR_ERR_MEMORY, L"AR_InitMemory failure\r\n");
+				AR_error(AR_ERR_FATAL, L"AR_InitMemory failure\r\n");
 		}
 }
 
@@ -114,8 +114,6 @@ static AR_INLINE void*	realloc_mem(void *ptr, size_t size)
 /*****************************************************Memory*******************************/
 
 
-
-
 void*	AR_malloc(size_t nbytes)
 {
 		void *ptr;
@@ -131,10 +129,12 @@ void*	AR_malloc(size_t nbytes)
 				++i;
 		}
 
+		/*
 		if(!ptr)
 		{
-				AR_error(AR_ERR_MEMORY, L"malloc failure for %Id\r\n", nbytes);
+				AR_error(AR_ERR_FATAL, L"malloc failure for %Iu\r\n", nbytes);
 		}
+		*/
 		
 		return ptr;
 }
@@ -154,14 +154,17 @@ void*	AR_calloc(size_t num, size_t size)
 				++i;
 		}
 
+		/*
 		if(!ptr)
 		{
-				AR_error(AR_ERR_MEMORY, L"calloc failure for %Id\r\n", num * size);
+				AR_error(AR_ERR_FATAL, L"calloc failure for %Iu\r\n", num * size);
 		}
+		*/
 
 		return ptr;
 }		
 
+#if(0)
 void*	AR_realloc(void *block, size_t nbytes)
 {
 		void *ptr;
@@ -177,14 +180,16 @@ void*	AR_realloc(void *block, size_t nbytes)
 				++i;
 		}
 
-
+		/*
 		if(!ptr)
 		{
-				AR_error(AR_ERR_MEMORY, L"realloc failure for %Id\r\n", nbytes);
+				AR_error(AR_ERR_FATAL, L"realloc failure for %Iu\r\n", nbytes);
 		}
+		*/
 		
 		return ptr;
 }
+#endif
 
 
 void	AR_free(void *ptr)
@@ -193,78 +198,6 @@ void	AR_free(void *ptr)
 		{
 				free_mem(ptr);
 		}
-}
-
-
-
-void*	AR_try_malloc(size_t nbytes)
-{
-		void *ptr;
-		size_t i;
-		AR_ASSERT(nbytes > 0);
-		
-		i = 0;
-		ptr = NULL;
-		
-		while(i < AR_MEM_MAX_ALLOC_RETRY_COUNT && (ptr = malloc_mem(nbytes)) == NULL)
-		{
-				AR_YieldThread();
-				++i;
-		}
-
-		if(!ptr)
-		{
-				AR_error(AR_ERR_WARNING, L"malloc failure for %Id\r\n", nbytes);
-		}
-		
-		return ptr;
-}
-
-void*	AR_try_calloc(size_t num, size_t size)
-{
-		size_t i;
-		void *ptr;
-		AR_ASSERT(num > 0 && size > 0);
-		
-		ptr = NULL;
-		i = 0; 
-
-		while(i < AR_MEM_MAX_ALLOC_RETRY_COUNT && (ptr = calloc_mem(num,size)) == NULL)
-		{
-				AR_YieldThread();
-				++i;
-		}
-
-		if(!ptr)
-		{
-				AR_error(AR_ERR_WARNING, L"calloc failure for %Id\r\n", num * size);
-		}
-
-		return ptr;
-}
-
-void*	AR_try_realloc(void *block, size_t nbytes)
-{
-		void *ptr;
-		size_t i;
-		AR_ASSERT(nbytes > 0);
-		
-		i = 0;
-		ptr = NULL;
-
-		while(i < AR_MEM_MAX_ALLOC_RETRY_COUNT && (ptr = realloc_mem(block, nbytes)) == NULL)
-		{
-				AR_YieldThread();
-				++i;
-		}
-
-
-		if(!ptr)
-		{
-				AR_error(AR_ERR_WARNING, L"realloc failure for %Id\r\n", nbytes);
-		}
-		
-		return ptr;
 }
 
 
@@ -278,7 +211,10 @@ void	AR_memswap(void *a, void *b, size_t n)
 		
 		AR_ASSERT(a != NULL && b != NULL);
 
-		if(a == b)return;
+		if(a == b)
+		{
+				return;
+		}
 
 
 		if((size_t)a % sizeof(uint_t) != 0 || (size_t)b % sizeof(uint_t) != 0)

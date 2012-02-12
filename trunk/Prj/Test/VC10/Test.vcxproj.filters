@@ -57,9 +57,6 @@
     <ClCompile Include="..\..\..\Test\ini_test.c">
       <Filter>Test</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Test\lalr_dfa_test.c">
-      <Filter>Test</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Test\lex_test.c">
       <Filter>Test</Filter>
     </ClCompile>
@@ -87,13 +84,10 @@
     <ClCompile Include="..\..\..\Test\tengu_test.c">
       <Filter>Test</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Test\Lexer\lexer.c">
-      <Filter>Lexer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Test\Lexer\regexp.c">
-      <Filter>Lexer</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Test\math_test.c">
+      <Filter>Test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\grammar_config_test.c">
       <Filter>Test</Filter>
     </ClCompile>
   </ItemGroup>
@@ -121,12 +115,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Test\parser_gen_perf_sql_code_impl.h">
       <Filter>Test</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Test\Lexer\lexer.h">
-      <Filter>Lexer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Test\Lexer\regexp.h">
-      <Filter>Lexer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

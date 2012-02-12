@@ -23,10 +23,10 @@ AR_NAMESPACE_BEGIN
 
 
 /**********************************必须在所有其它Parser_族函数之前调用，否则行为未定义***************************/
-bool_t	Parser_Init();
+arStatus_t	Parser_Init();
 
 /**********************************必须在所有其它Parser_族函数之后调用，否则行为未定义***************************/
-bool_t	Parser_UnInit();
+arStatus_t	Parser_UnInit();
 
 
 
@@ -71,19 +71,27 @@ typedef struct __parser_token_tag
 		}while(0)
 
 
-typedef psrNode_t*		(AR_STDCALL *psrTermFunc_t)(const psrToken_t *tok,void *ctx);
-typedef psrNode_t*		(AR_STDCALL *psrRuleFunc_t)(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+typedef struct __parser_return_value_tag
+{
+		arStatus_t		status;
+		psrNode_t		*node;
+}psrRetVal_t;
+
+typedef psrRetVal_t		(AR_STDCALL *psrTermFunc_t)(const psrToken_t *tok,void *ctx);
+typedef psrRetVal_t		(AR_STDCALL *psrRuleFunc_t)(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 
 typedef void			(AR_STDCALL *psrFreeFunc_t)(psrNode_t *node, void *ctx);
 
+
+
 /*
-		此函数如果返回true 则parser继续在state stack上搜索是否有匹配的error 符号，否则，则丢弃当前导致错误的符号tok
+		此函数如果返回AR_S_YES 则parser继续在state stack上搜索是否有匹配的error 符号，否则，则丢弃当前导致错误的符号tok
 
 		可以将此返回值理解为是否希望尝试移入此tok，返回true则通过error token尝试，返回false，则此token被丢弃，可在此回调函数内
 		移动词法值到下一个所希望的元素。
 */
-typedef bool_t			(AR_STDCALL *psrErrorFunc_t)(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx);
+typedef arStatus_t		(AR_STDCALL *psrErrorFunc_t)(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx);
 
 
 
@@ -200,6 +208,8 @@ struct __parser_symbol_tag
 
 
 const psrSymb_t*		Parser_CreateSymb(const wchar_t *name, psrSymbType_t t);
+const psrSymb_t*		Parser_CreateSymbN(const wchar_t *name, size_t n, psrSymbType_t t);
+
 const psrSymb_t*		Parser_CopyNewSymb(const psrSymb_t *sour);
 void					Parser_DestroySymb(const psrSymb_t *symb);
 int_t					Parser_CompSymb(const psrSymb_t *l, const psrSymb_t *r);
@@ -216,28 +226,29 @@ typedef struct __parser_symbol_list_tag
 void				Parser_InitSymbList(psrSymbList_t *symb_lst);
 void				Parser_UnInitSymbList(psrSymbList_t *symb_lst);
 void				Parser_ClearSymbList(psrSymbList_t *symb_lst);
+arStatus_t			Parser_ReserveSymbListCapacity(psrSymbList_t *symb_lst, size_t cap);
 
-void				Parser_CopySymbList(psrSymbList_t *dest, const psrSymbList_t *sour);
+arStatus_t			Parser_CopySymbList(psrSymbList_t *dest, const psrSymbList_t *sour);
 
-void				Parser_InsertToSymbList(psrSymbList_t *symb_lst, const psrSymb_t *symb);
+arStatus_t			Parser_InsertToSymbList(psrSymbList_t *symb_lst, const psrSymb_t *symb);
 
 const psrSymb_t*	Parser_IndexOfSymbList(const psrSymbList_t *symb_lst, size_t idx);
 int_t				Parser_FindFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t* symb);
 
-bool_t				Parser_RemoveFromSymbListByIndex(psrSymbList_t *symb_lst, size_t index);
+arStatus_t			Parser_RemoveFromSymbListByIndex(psrSymbList_t *symb_lst, size_t index);
 
 int_t				Parser_BSearchFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t* symb);
 void				Parser_SortSymbList(psrSymbList_t *symb_lst);
 
 
 
-bool_t				Parser_InsertToSymbList_Unique(psrSymbList_t *symb_lst, const psrSymb_t *symb);
+arStatus_t			Parser_InsertToSymbList_Unique(psrSymbList_t *symb_lst, const psrSymb_t *symb);
 
 
 
 /********************************************************************************************************/
-void			Parser_PrintSymbol(const psrSymb_t *symb,	arString_t *str);
-void			Parser_PrintSymbolList(const psrSymbList_t *lst, arString_t *str);
+arStatus_t			Parser_PrintSymbol(const psrSymb_t *symb,	arString_t *str);
+arStatus_t			Parser_PrintSymbolList(const psrSymbList_t *lst, arString_t *str);
 
 
 
@@ -266,12 +277,12 @@ typedef struct __parser_symbmap_tag
 void					Parser_InitSymbMap(psrSymbMap_t *map);
 void					Parser_UnInitSymbMap(psrSymbMap_t *map);
 
-bool_t					Parser_InsertToSymbMap(psrSymbMap_t *map, const psrSymb_t *key, const psrSymb_t *val);
-bool_t					Parser_SetSymbEpsilon(psrSymbMap_t *map, const psrSymb_t *key, bool_t is_epsilon);
+arStatus_t				Parser_InsertToSymbMap(psrSymbMap_t *map, const psrSymb_t *key, const psrSymb_t *val);
+arStatus_t				Parser_SetSymbEpsilon(psrSymbMap_t *map, const psrSymb_t *key, bool_t is_epsilon);
 
 psrMapRec_t*			Parser_GetSymbolFromSymbMap(const psrSymbMap_t *map, const psrSymb_t *key);
 
-void					Parser_PrintSymbolMap(const psrSymbMap_t *map, arString_t *str);
+arStatus_t				Parser_PrintSymbolMap(const psrSymbMap_t *map, arString_t *str);
 
 
 
@@ -308,7 +319,7 @@ void			Parser_InitTermInfoList(psrTermInfoList_t	*lst);
 void			Parser_UnInitTermInfoList(psrTermInfoList_t	*lst);
 void			Parser_ClearTermInfoList(psrTermInfoList_t	*lst);
 
-bool_t			Parser_InsertToTermInfoList(psrTermInfoList_t	*lst, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f);
+arStatus_t		Parser_InsertToTermInfoList(psrTermInfoList_t	*lst, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f);
 psrTermInfo_t*	Parser_FindTermByValue(psrTermInfoList_t	*lst, size_t val);
 psrTermInfo_t*	Parser_FindTermByName(psrTermInfoList_t	*lst, const wchar_t *name);
 
@@ -334,7 +345,7 @@ typedef struct __parser_rule_tag
 
 }psrRule_t;
 
-psrRule_t*		Parser_CreateRule(const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, size_t auto_ret, const psrTermInfoList_t *term_list, arString_t *err_msg);
+arStatus_t		Parser_CreateRule(psrRule_t **prule, const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, size_t auto_ret, const psrTermInfoList_t *term_list, arString_t *err_msg);
 
 
 /*
@@ -343,10 +354,12 @@ head 格式为[a-z_][a-z_0-9]*
 符号 : 为分隔符，必须存在，并且被丢弃
 body_list中所有符号都被当做文本符号接收，由空格，制表符等AR_iswspace返回非0值的符号分隔
 */
-psrRule_t*		Parser_CreateRuleByStr(const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, size_t auto_ret, const psrTermInfoList_t *term_list, arString_t *err_msg);
+arStatus_t		Parser_CreateRuleByStr(psrRule_t **prule, const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, size_t auto_ret, const psrTermInfoList_t *term_list, arString_t *err_msg);
 void			Parser_DestroyRule(psrRule_t *rule);
 
 /****************************************************************************************************************************************/
+
+#define AR_PSR_MAX_SYMB_LIST	4096
 
 
 struct __parser_grammar_tag
@@ -367,7 +380,7 @@ struct __parser_grammar_tag
 
 psrGrammar_t*			Parser_CreateGrammar(const psrHandler_t *ctx);
 void					Parser_DestroyGrammar(psrGrammar_t *grammar);
-void					Parser_ClearGrammar(psrGrammar_t *grammar);
+arStatus_t				Parser_ClearGrammar(psrGrammar_t *grammar);
 
 const wchar_t*			Parser_GetGrammarLastError(const psrGrammar_t *grammar);
 void					Parser_ClearGrammarLastError(psrGrammar_t *grammar);
@@ -381,22 +394,22 @@ int_t					Parser_IndexOfGrammar(const psrGrammar_t *grammar, const psrRule_t *ru
 
 #define					Parser_GetRuleFromGrammar(_gmr, _idx) ((_gmr)->rules[(_idx)])
 
-const psrSymbList_t*			Parser_GetSymbList(const psrGrammar_t *grammar);
-const psrTermInfoList_t*		Parser_GetTermList(const psrGrammar_t *grammar);
-
-void							Parser_ResetTermSpecID(const psrGrammar_t *grammar);
-int_t							Parser_GetTermSpecID(const psrGrammar_t *grammar, const psrSymb_t *symb);
 
 
-const psrSymb_t*		Parser_GetSymbFromGrammarByName(const psrGrammar_t *grammar, const wchar_t *name);
+const psrSymbList_t*		Parser_GetSymbList(const psrGrammar_t *grammar);/*每次运算都会重新计算符号，grammar初始化会预留足够多的空间,AR_PSR_MAX_SYMB_LIST个，超出插入失败，程序崩溃*/
+const psrTermInfoList_t*	Parser_GetTermList(const psrGrammar_t *grammar);/*返回所有终结符*/
 
-bool_t					Parser_CheckIsValidGrammar(const psrGrammar_t *grammar, arIOCtx_t *io_ctx);
+void						Parser_ResetTermSpecID(const psrGrammar_t *grammar);
+int_t						Parser_GetTermSpecID(const psrGrammar_t *grammar, const psrSymb_t *symb);
+
+
+const psrSymb_t*			Parser_GetSymbFromGrammarByName(const psrGrammar_t *grammar, const wchar_t *name);
 
 
 
 
 const psrRule_t*		Parser_GetStartRule(const psrGrammar_t *grammar);
-bool_t					Parser_SetStartRule(psrGrammar_t *grammar, const wchar_t *rule_name);
+arStatus_t				Parser_SetStartRule(psrGrammar_t *grammar, const wchar_t *rule_name);
 
 const psrTermInfo_t*	Parser_GetRulePrecAssocInfo(const psrGrammar_t *grammar, const psrRule_t *rule);
 
@@ -405,10 +418,10 @@ psrTermInfo_t*			Parser_GetTermSymbInfoByName(const psrGrammar_t	*grammar, const
 psrTermInfo_t*			Parser_GetTermSymbInfoByValue(const psrGrammar_t	*grammar, size_t val);
 
 
-bool_t					Parser_InsertTerm(psrGrammar_t *grammar, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f);
-bool_t					Parser_InsertRule(psrGrammar_t *grammar, psrRule_t *rule);
+arStatus_t				Parser_InsertTerm(psrGrammar_t *grammar, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f);
+arStatus_t				Parser_InsertRule(psrGrammar_t *grammar, psrRule_t *rule);
 
-bool_t					Parser_InsertRuleBySymbList(psrGrammar_t *grammar, const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, size_t auto_ret);
+arStatus_t				Parser_InsertRuleBySymbList(psrGrammar_t *grammar, const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, size_t auto_ret);
 
 /*
 函数Parser_InsertRuleByStr所接受的字符格式为head : body_list
@@ -416,20 +429,14 @@ head 格式为[a-z_][a-z_0-9]*
 符号 : 为分隔符，必须存在，并且被丢弃
 body_list中所有符号都被当做文本符号接收，由空格，制表符等AR_iswspace返回非0值的符号分隔
 */
-bool_t					Parser_InsertRuleByStr(psrGrammar_t *grammar, const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, size_t auto_ret);
+arStatus_t				Parser_InsertRuleByStr(psrGrammar_t *grammar, const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, size_t auto_ret);
+
+arStatus_t				Parser_CheckIsValidGrammar(const psrGrammar_t *grammar, arIOCtx_t *io_ctx);
 
 
 
-
-void					Parser_CalcFirstSet(const psrGrammar_t *grammar, psrSymbMap_t *first_set);
-void					Parser_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *follow_set, const psrSymbMap_t *first_set);
-
-
-#if(0)
-bool_t					Parser_ReportLeftFactor(const psrGrammar_t *grammar, arString_t *output);
-bool_t					Parser_ReportLeftRecursion(const psrGrammar_t *grammar, arString_t *output);
-void					Parser_PrintGrammar(const psrGrammar_t *grammar, arString_t *str);
-#endif
+arStatus_t				Parser_CalcFirstSet(const psrGrammar_t *grammar, psrSymbMap_t *first_set);
+arStatus_t				Parser_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *follow_set, const psrSymbMap_t *first_set);
 
 
 /*******************************************************************Grammar结束*******************************************************************/
@@ -458,12 +465,29 @@ struct __parser_tag
 
 #define PSR_REPAIR_MAX_VALID_SHIFT	3
 
+
+#define PSR_MAX_STACK_CNT				4096
+
+struct __parser_node_stack
+{
+		psrNode_t		*nodes[PSR_MAX_STACK_CNT];
+		size_t			count;
+};
+
+
+struct __parser_stack_tag
+{
+		size_t			 states[PSR_MAX_STACK_CNT];
+		size_t			 count;
+};
+
+
 struct __parser_context_tag
 {
 		const parser_t				*parser;
 		bool_t						is_accepted;
-		psrStack_t					*state_stack;
-		psrNodeStack_t				*node_stack;
+		psrStack_t					state_stack;
+		psrNodeStack_t				node_stack;
 		void						*ctx;
 
 		bool_t						is_repair;
@@ -487,15 +511,18 @@ const	psrGrammar_t*	Parser_GetGrammar(const parser_t *parser);
 psrContext_t*	Parser_CreateContext(const parser_t *parser, void *ctx);
 void			Parser_DestroyContext(psrContext_t	*ctx);
 
+
 void			Parser_Clear(psrContext_t *parser);
 
+
 psrNode_t*		Parser_GetResult(psrContext_t *parser);/*在状态为accepted之后才可以调用*/
+
 
 bool_t			Parser_IsAccepted(const psrContext_t *parser);
 
 bool_t			Parser_IsRecovering(const psrContext_t *parser);
-
 void			Parser_RecoverDone(psrContext_t *parser);
+
 
 size_t			Parser_GetNodeCount(const psrContext_t *parser);
 
@@ -504,7 +531,7 @@ psrNode_t*		Parser_IndexOfNodeStack(psrContext_t *parser, size_t index);
 /*
 		由于采用了一个增广的文法，所以当EOI被增加到stack中时，只可能出现错误或者成为接受状态，EOI永远不会被SHIFT到parser中
 */
-bool_t			Parser_AddToken(psrContext_t *parser_context, const psrToken_t *tok);
+arStatus_t		Parser_AddToken(psrContext_t *parser_context, const psrToken_t *tok);
 
 
 /***************************************************************Parser结束************************************************************************/
@@ -515,11 +542,15 @@ bool_t			Parser_AddToken(psrContext_t *parser_context, const psrToken_t *tok);
 
 
 
+
+
+
 /**************************************************************************报告*******************************************************************/
 
-void	Parser_PrintParserConflict(const parser_t *parser, arString_t *out);
-size_t	Parser_CountParserConflict(const parser_t *parser);
-void	Parser_PrintParserActionTable(const parser_t *parser, arString_t *out, size_t width);
+arStatus_t		Parser_PrintParserActionTable(const parser_t *parser, arString_t *out, size_t width);
+arStatus_t		Parser_PrintParserConflict(const parser_t *parser, arString_t *out);
+size_t			Parser_CountParserConflict(const parser_t *parser);
+
 
 /*action table view*/
 

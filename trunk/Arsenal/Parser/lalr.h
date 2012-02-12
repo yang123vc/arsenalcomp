@@ -23,6 +23,13 @@ AR_NAMESPACE_BEGIN
 
 
 
+void Parser_Init_LALR_Config();
+void Parser_UnInit_LALR_Config();
+
+
+
+
+
 
 typedef struct __lalr_config_tag lalrConfig_t;
 
@@ -44,15 +51,22 @@ typedef struct __lalr_config_list_tag
 
 lalrConfigList_t*		Parser_CreateConfigList();
 void					Parser_DestroyConfigList(lalrConfigList_t *lst, bool_t destroy_config);
-void					Parser_InsertToConfigList(lalrConfigList_t *lst, lalrConfig_t *cfg);
 
+arStatus_t				Parser_InsertToConfigList(lalrConfigList_t *lst, lalrConfig_t *cfg);
+
+/*对lalrConfig_t本身不做拷贝*/
+arStatus_t				Parser_CopyConfigList(lalrConfigList_t *l, const lalrConfigList_t *r);
+
+/*链表的union，所以无存储分配*/
 void					Parser_UnionConfigList(lalrConfigList_t *l, lalrConfigList_t *r);
-void					Parser_CopyConfigList(lalrConfigList_t *l, const lalrConfigList_t *r);
+
 
 void					Parser_SortConfigList(lalrConfigList_t *l);
 int_t					Parser_CompConfigList(const lalrConfigList_t *l, const lalrConfigList_t *r);
 
 lalrConfig_t*			Parser_FindFromConfigList(lalrConfigList_t *lst, size_t rule_num, size_t delim);
+
+/*此函数生成lalrConfig_t，并插入lalrConfigList_t*和*/
 lalrConfig_t*			Parser_InsertToConfigListByValue(lalrConfigList_t *lst, size_t rule_num, size_t delim, const psrGrammar_t *grammar);
 
 /******************************************************************************************************/
@@ -68,10 +82,11 @@ typedef struct __lalr_config_follow_set_tag
 
 void	Parser_InitBitSet(lalrBitSet_t *bs, size_t nbits);
 void	Parser_UnInitBitSet(lalrBitSet_t *bs);
-void	Parser_SetBitInBitSet(lalrBitSet_t *bs, size_t bit_idx);
 void	Parser_ClearBitInBitSet(lalrBitSet_t *bs, size_t bit_idx);
-bool_t	Parser_IsSetInBitSet(const lalrBitSet_t *bs, size_t bit_idx);
-bool_t	Parser_UnionBitSet(lalrBitSet_t *dest, const lalrBitSet_t *src);
+
+arStatus_t	Parser_SetBitInBitSet(lalrBitSet_t *bs, size_t bit_idx);
+arStatus_t	Parser_IsSetInBitSet(const lalrBitSet_t *bs, size_t bit_idx);
+arStatus_t	Parser_UnionBitSet(lalrBitSet_t *dest, const lalrBitSet_t *src);
 
 
 
@@ -88,18 +103,18 @@ struct __lalr_config_tag
 };
 
 
-void	Parser_InitConfig(lalrConfig_t *config, size_t rule_num, size_t delim, const psrGrammar_t *grammar);
-void	Parser_UnInitConfig(lalrConfig_t *config);
-int_t	Parser_CompConfig(const lalrConfig_t *l, const lalrConfig_t *r);
+arStatus_t		Parser_InitConfig(lalrConfig_t *config, size_t rule_num, size_t delim, const psrGrammar_t *grammar);
+void			Parser_UnInitConfig(lalrConfig_t *config);
+int_t			Parser_CompConfig(const lalrConfig_t *l, const lalrConfig_t *r);
 
 
 
-void Parser_PrintConfig(const lalrConfig_t *config, const psrGrammar_t *gmr, arString_t *str);
-void Parser_PrintConfigList(const lalrConfigList_t *lst, const psrGrammar_t *gmr, arString_t *str);
+arStatus_t	Parser_PrintConfig(const lalrConfig_t *config, const psrGrammar_t *gmr, arString_t *str);
+arStatus_t	Parser_PrintConfigList(const lalrConfigList_t *lst, const psrGrammar_t *gmr, arString_t *str);
 
 
-void Parser_Init_LALR_Config();
-void Parser_UnInit_LALR_Config();
+
+
 
 /**************************************************LALR State***************************************/
 typedef struct	__lalr_action_tag			lalrAction_t;
@@ -161,12 +176,12 @@ typedef struct __lalr_state_set_tag
 void			Parser_InitStateSet(lalrStateSet_t *set);
 void			Parser_UnInitStateSet(lalrStateSet_t *set);
 
-void			Parser_InsertToStateSet(lalrStateSet_t *set, lalrState_t *state);
+
 lalrState_t*	Parser_FindStateByBasis(lalrStateSet_t *set, lalrConfigList_t *basis);
 int_t			Parser_IndexOfStateSet(const lalrStateSet_t *set, const lalrState_t *state);
 
-
-void			Parser_CollectState(lalrStateSet_t *empty_set, lalrState_t *start);
+arStatus_t		Parser_InsertToStateSet(lalrStateSet_t *set, lalrState_t *state);
+arStatus_t		Parser_CollectState(lalrStateSet_t *empty_set, lalrState_t *start);
 
 
 

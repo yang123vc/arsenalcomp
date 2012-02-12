@@ -21,6 +21,8 @@
 
 AR_NAMESPACE_BEGIN
 
+
+
 #include "calc_test3_impl.h"
 
 
@@ -33,10 +35,29 @@ void calc3_test()
 		{
 				_getws(buf);
 				if(AR_wcscmp(buf, L"quit") == 0)break;
-				x = calc(buf);
-				AR_printf(L"result value == %d\r\n", x);
+				arStatus_t status = calc(buf, &x);
+				if(status == AR_S_YES)
+				{
+						AR_printf(L"result value == %d\r\n", x);
+				}else if(status == AR_S_NO)
+				{
+						AR_printf(L"internal error\r\n");
+				}else
+				{
+						if(status == AR_E_NOMEM)
+						{
+								AR_printf(L"malloc failed!!\r\n");
+						}
+
+						if(status == AR_E_INVAL)
+						{
+								AR_printf(L"invalid input!\r\n");
+						}
+				}
 		}
 		
 } 
+
+
 
 AR_NAMESPACE_END

@@ -41,7 +41,7 @@ void vector_test()
 		//AR_srand(time(NULL));
 
 		arVector_t *vec = AR_CreateVector(2);
-
+		arVector_t *vec2 = AR_CreateVector(3);
 #if(0)
 		for(size_t i = 0; i < 3; ++i)
 		{
@@ -65,22 +65,27 @@ void vector_test()
 		AR_DestroyString(out);
 		out = NULL;
 		}
-
-		double res = AR_CalcVectorInnerProduct(vec, vec);
-
-		AR_printf(L"%f\r\n", res);
-
-
-		res = AR_CalcVectorLength(vec);
+		
+		double res;
+		arStatus_t status;
+		AR_CalcVectorInnerProduct(vec, vec, &res);
 
 		AR_printf(L"%f\r\n", res);
 
-		res = AR_CalcVectorLengthSqr(vec);
+
+		AR_CalcVectorLength(vec, &res);
+		
+
+		AR_printf(L"%f\r\n", res);
+
+		AR_CalcVectorLengthSqr(vec, &res);
 
 		AR_printf(L"%f\r\n", res);
 
 
 		AR_NormalizeVector(vec);
+
+
 
 		{
 		arString_t *out;
@@ -101,55 +106,44 @@ void vector_test()
 		AR_SetVectorValue(vec, 1, -2);
 		AR_SetVectorValue(vec, 2, 3);
 
-		AR_printf(L"AR_VEC_NORM_1 == %g\r\n", AR_CalcVectorNormNumber(vec, AR_VEC_NORM_1));
-		AR_printf(L"AR_VEC_NORM_2 == %g\r\n", AR_CalcVectorNormNumber(vec, AR_VEC_NORM_2));
-		AR_printf(L"AR_VEC_NORM_MAX == %g\r\n", AR_CalcVectorNormNumber(vec, AR_VEC_NORM_MAX));
-		AR_printf(L"AR_VEC_NORM_NEGAMAX == %g\r\n", AR_CalcVectorNormNumber(vec, AR_VEC_NORM_NEGAMAX));
+		status = AR_CalcVectorNormNumber(vec, AR_VEC_NORM_1, &res);
+		AR_ASSERT(status == AR_S_YES);
+		AR_printf(L"AR_VEC_NORM_1 == %g\r\n", res);
+		
+		status = AR_CalcVectorNormNumber(vec, AR_VEC_NORM_2, &res);
+		AR_ASSERT(status == AR_S_YES);
+		AR_printf(L"AR_VEC_NORM_2 == %g\r\n", res);
+
+		status = AR_CalcVectorNormNumber(vec, AR_VEC_NORM_MAX, &res);
+		AR_ASSERT(status == AR_S_YES);
+		AR_printf(L"AR_VEC_NORM_MAX == %g\r\n", res);
+
+		status = AR_CalcVectorNormNumber(vec, AR_VEC_NORM_NEGAMAX, &res);
+		AR_ASSERT(status == AR_S_YES);
+		AR_printf(L"AR_VEC_NORM_NEGAMAX == %g\r\n", res);
 
 
+
+		AR_SetVectorSize(vec2, 3);
+		AR_SetVectorSize(vec, 3);
+
+		AR_RandomVector(vec);
+		__print_vector(vec);
+
+		AR_MulVectorByValSelf(vec,3.0);
+		__print_vector(vec);
+
+		AR_RandomVector(vec2);
+		__print_vector(vec2);
+
+		AR_AddVectorByVectorSelf(vec,vec2);
+		__print_vector(vec);
 
 		AR_DestroyVector(vec);
+		AR_DestroyVector(vec2);
 }
 
 
-/*
-
-arMatrix_t*		AR_CreateMatrix(size_t rows, size_t cols);
-void			AR_DestroyMatrix(arMatrix_t *mat);
-
-arMatrix_t*		AR_CopyNewMatrix(const arMatrix_t *mat);
-void			AR_CopyMatrix(arMatrix_t *dest, const arMatrix_t *src);
-
-void			AR_SetMatrixSize(arMatrix_t *mat, size_t rows, size_t cols);
-void			AR_ZeroMatrix(arMatrix_t *mat);
-
-int_t			AR_CompareMatrix(const arMatrix_t *l, const arMatrix_t *r, double epsilon);
-
-size_t			AR_GetMatrixNumRows(const arMatrix_t *mat);
-size_t			AR_GetMatrixNumColumns(const arMatrix_t *mat);
-
-void			AR_SetMatrixValue(arMatrix_t *mat, size_t row, size_t col, double val);
-double			AR_GetMatrixValue(const arMatrix_t *mat, size_t row, size_t col);
-void			AR_GetMatrixRow(const arMatrix_t *mat, size_t row,  arVector_t *out);
-void			AR_GetMatrixColumn(const arMatrix_t *mat, size_t col,  arVector_t *out);
-const double*	AR_GetMatrixRawData(const arMatrix_t *mat);
-
-
-
-/****************************************生成标准矩阵类型******************************************
-
-void			AR_IdentityMatrix(arMatrix_t *mat);
-void			AR_DiagonalMatrix(arMatrix_t *mat, const arVector_t *vec);
-void			AR_RandomMatrix(arMatrix_t *mat);
-void			AR_NegateMatrix(arMatrix_t *mat);
-void			AR_ClampMatrix(arMatrix_t *mat, double min_val, double max_val);
-void			AR_SwapMatrixRows(arMatrix_t *mat, size_t l, size_t r);
-void			AR_SwapMatrixColumns(arMatrix_t *mat, size_t l, size_t r);
-void			AR_RemoveMatrixRow(arMatrix_t *mat, size_t r);
-void			AR_RemoveMatrixColumn(arMatrix_t *mat, size_t c);
-void			AR_ClearMatrixUpperTriangle(arMatrix_t *mat);
-void			AR_ClearMatrixLowerTriangle(arMatrix_t *mat);
-*/
 
 void __print_matrix(const arMatrix_t *mat, size_t precision = 2)
 {
@@ -160,9 +154,11 @@ void __print_matrix(const arMatrix_t *mat, size_t precision = 2)
 		str = NULL;
 }
 
+
+
 void matrix_test()
 {
-
+		arStatus_t status = AR_S_YES;
 		arMatrix_t *mat = NULL, *mat2 = NULL;
 		arString_t *str = NULL;
 
@@ -172,7 +168,9 @@ void matrix_test()
 		mat = AR_CreateMatrix(2,2);
 		mat2 = AR_CreateMatrix(2,2);
 		
-		AR_SetMatrixSize(mat, 9,5);
+		status = AR_SetMatrixSize(mat, 9,5);
+		AR_ASSERT(status == AR_S_YES);
+
 		AR_ZeroMatrix(mat);
 
 		AR_RandomMatrix(mat);
@@ -184,7 +182,7 @@ void matrix_test()
 		AR_CopyMatrix(mat2, mat);
 		__print_matrix(mat);
 
-		int ret = AR_CompareMatrix(mat, mat2, DBL_EPSILON);
+		int_t ret = AR_CompareMatrix(mat, mat2, DBL_EPSILON);
 		AR_printf(L"cmp == %d\r\n", ret);
 
 		AR_NegateMatrix(mat2);
@@ -216,6 +214,7 @@ void matrix_test()
 				nm = NULL;
 		}
 
+
 		{
 				arMatrix_t *nm = AR_CopyNewMatrix(mat);
 
@@ -242,6 +241,7 @@ void matrix_test()
 				}
 
 		}
+
 
 		{
 				AR_SetMatrixSize(mat, 4,5);
@@ -411,11 +411,10 @@ void matrix_test()
 
 
 
-
-
 void matrix_test2()
 {
-
+		arStatus_t status;
+		bool_t ret;
 		arMatrix_t *mat = NULL, *mat2 = NULL;
 		arString_t *str = NULL;
 		arVector_t *vtmp = AR_CreateVector(5);
@@ -428,27 +427,33 @@ void matrix_test2()
 		
 
 
-		
+		status = AR_S_YES;
+		ret = NULL;
 		AR_SetMatrixSize(mat, 5,5);
 		AR_RandomMatrix(mat);
 
 
-		AR_ASSERT(AR_IsSquareMatrix(mat));
+		AR_ASSERT(AR_IsSquareMatrix(mat) == AR_S_YES);
 
 		AR_IdentityMatrix(mat);
-		AR_ASSERT(AR_IsIdentityMatrix(mat, DBL_EPSILON));
+		status = AR_IsIdentityMatrix(mat, DBL_EPSILON);
+		AR_ASSERT(status == AR_S_YES);
 
 		AR_ZeroMatrix(mat);
-		AR_ASSERT(AR_IsZeroMatrix(mat, DBL_EPSILON));
+		status = AR_IsZeroMatrix(mat, DBL_EPSILON);
+		AR_ASSERT(status == AR_S_YES);
 
-		AR_SetVectorSize(vtmp, AR_GetMatrixNumRows(mat));
+		status = AR_SetVectorSize(vtmp, AR_GetMatrixNumRows(mat));
+		AR_ASSERT(status == AR_S_YES);
 		AR_RandomVector(vtmp);
 
 		AR_DiagonalMatrix(mat, vtmp);
-		
-		AR_ASSERT(AR_IsDiagonalMatrix(mat, DBL_EPSILON));
+		status = AR_IsDiagonalMatrix(mat, DBL_EPSILON);
+		AR_ASSERT(status == AR_S_YES);
 
-		AR_SetMatrixSize(mat, 4,4);
+		status = AR_SetMatrixSize(mat, 4,4);
+		AR_ASSERT(status == AR_S_YES);
+
 		AR_ZeroMatrix(mat);
 		AR_IdentityMatrix(mat);
 		
@@ -460,24 +465,27 @@ void matrix_test2()
 
 
 		__print_matrix(mat);
-		
-		AR_ASSERT(AR_IsTriDiagonalMatrix(mat, DBL_EPSILON));
+		status = AR_IsTriDiagonalMatrix(mat, DBL_EPSILON);
+		AR_ASSERT(status == AR_S_YES);
 
 
 		AR_ZeroMatrix(mat);
 		AR_IdentityMatrix(mat);
-		AR_ASSERT(AR_IsSymmetricMatrix(mat, DBL_EPSILON));
+		status = AR_IsSymmetricMatrix(mat, DBL_EPSILON);
+		AR_ASSERT(status == AR_S_YES);
 
 		AR_SetMatrixValue(mat, 0,3, 10);
 		AR_SetMatrixValue(mat, 3,0, 10);
 		__print_matrix(mat);
-		AR_ASSERT(AR_IsSymmetricMatrix(mat, DBL_EPSILON));
+		status = AR_IsSymmetricMatrix(mat, DBL_EPSILON);
+		AR_ASSERT(status == AR_S_YES);
 
 
 		AR_ZeroMatrix(mat);
 		AR_IdentityMatrix(mat);
 		AR_SetMatrixValue(mat, 0,0, 10);
-		AR_ASSERT(AR_IsOrthogonalMatrix(mat, DBL_EPSILON));
+		status = AR_IsOrthogonalMatrix(mat, DBL_EPSILON);
+		AR_ASSERT(status == AR_S_YES);
 
 
 		AR_SetMatrixSize(mat, 3,3);
@@ -496,9 +504,11 @@ void matrix_test2()
 		AR_SetMatrixValue(mat, 2,2,7.0/2.0);
 
 		__print_matrix(mat);
-		AR_ASSERT(AR_IsOrthogonalMatrix(mat, DBL_EPSILON));
+		status = AR_IsOrthogonalMatrix(mat, DBL_EPSILON);
+		AR_ASSERT(status == AR_S_YES);
 
-		if(AR_IsOrthonormalMatrix(mat, DBL_EPSILON))
+		status = AR_IsOrthonormalMatrix(mat, DBL_EPSILON);
+		if(status == AR_S_YES)
 		{
 				AR_ASSERT(false);
 		}
@@ -514,17 +524,17 @@ void matrix_test2()
 		}
 		__print_matrix(mat);
 
-		AR_ASSERT(AR_IsOrthonormalMatrix(mat, FLT_EPSILON));
-
+		status = AR_IsOrthonormalMatrix(mat, FLT_EPSILON);
+		AR_ASSERT(status == AR_S_YES);
+		
 
 		AR_SetMatrixValue(mat, 2,2,7.0/2.0);
 
 		__print_matrix(mat);
 
-		if(AR_IsOrthonormalMatrix(mat, FLT_EPSILON))
-		{
-				AR_ASSERT(false);
-		}
+		status = AR_IsOrthonormalMatrix(mat, FLT_EPSILON);
+		AR_ASSERT(status != AR_S_YES);
+		
 
 /****************************************判断矩阵类型******************************************
 
@@ -535,7 +545,7 @@ bool_t			AR_IsSymmetricPositiveSemiDefinite(const arMatrix_t *mat, double epsilo
 
 */
 
-END_POINT:
+
 		if(mat)
 		{
 				AR_DestroyMatrix(mat);
@@ -563,44 +573,13 @@ END_POINT:
 
 
 
-
-
-
-
-/****************************************基本矩阵计算****************************************
-
-void			AR_MultiplyMatrixByScalar(const arMatrix_t *mat, double value, arMatrix_t *dest);
-void			AR_MultiplyMatrixByScalarSelf(arMatrix_t *mat, double value);
-
-void			AR_MultiplyMatrixByVector(const arMatrix_t *mat, const arVector_t *other, arVector_t *dest);
-void			AR_MultiplyTransposeMatrixByVector(const arMatrix_t *mat, const arVector_t *other, arVector_t *dest);
-
-void			AR_MultiplyMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest);
-void			AR_MultiplyTransposeMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest);
-void			AR_MultiplyMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other);
-void			AR_MultiplyTransposeMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other);
-
-void			AR_AddMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest);
-void			AR_SubMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest);
-void			AR_SubMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other);
-void			AR_AddMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other);
-
-
-
-double			AR_CalcMatrixTrace(const arMatrix_t *mat);
-double			AR_CalcMatrixDeterminant(const arMatrix_t *mat);
-void			AR_TransposeMatrix(const arMatrix_t *mat, arMatrix_t *dest);
-void			AR_TransposeMatrixSelf(arMatrix_t *mat);
-*/
-
-
 void matrix_test3()
 {
-
+		arStatus_t status;
 		arMatrix_t *mat = NULL, *mat2 = NULL, *mat3 = NULL;
 		arString_t *str = NULL;
 		arVector_t *vtmp = NULL, *vtmp1 = NULL;
-
+		bool_t ret = true;
 
 		str = AR_CreateString();
 		vtmp = AR_CreateVector(5);
@@ -610,28 +589,36 @@ void matrix_test3()
 		mat2 = AR_CreateMatrix(2,2);
 		mat3 = AR_CreateMatrix(2,2);
 
-		AR_SetMatrixSize(mat,4,4);
+		status = AR_SetMatrixSize(mat,4,4);
+		AR_ASSERT(status == AR_S_YES);
 		AR_IdentityMatrix(mat);
 		__print_matrix(mat);
-		AR_MultiplyMatrixByScalar(mat, 3.0, mat2);
+
+		status = AR_MultiplyMatrixByScalar(mat, 3.0, mat2);
+		AR_ASSERT(status == AR_S_YES);
 		__print_matrix(mat2);
 
-		AR_MultiplyMatrixByScalarSelf(mat, 2.0);
+		status = AR_MultiplyMatrixByScalarSelf(mat, 2.0);
+		AR_ASSERT(status == AR_S_YES);
 		__print_matrix(mat);
 
-		AR_MultiplyMatrixByMatrix(mat,mat2, mat3);
+		status = AR_MultiplyMatrixByMatrix(mat,mat2, mat3);
+		AR_ASSERT(status == AR_S_YES);
 		__print_matrix(mat3);
 
-		AR_ASSERT(AR_IsDiagonalMatrix(mat3, DBL_EPSILON));
+		status = AR_IsDiagonalMatrix(mat3, DBL_EPSILON);
+		AR_ASSERT(ret);
 
-		AR_SetVectorSize(vtmp, 4);
+		status = AR_SetVectorSize(vtmp, 4);
+		AR_ASSERT(status == AR_S_YES);
+
 		for(size_t i = 0; i < 4; ++i)
 		{
 				AR_SetVectorValue(vtmp,i, i + 1);
 		}
 
-		AR_MultiplyMatrixByVector(mat3, vtmp, vtmp1);
-
+		status = AR_MultiplyMatrixByVector(mat3, vtmp, vtmp1);
+		AR_ASSERT(status == AR_S_YES);
 		__print_vector(vtmp1);
 
 
@@ -645,25 +632,30 @@ void matrix_test3()
 		__print_matrix(mat);
 		__print_vector(vtmp);
 
-		AR_MultiplyTransposeMatrixByVector(mat, vtmp, vtmp1);
+		status = AR_MultiplyTransposeMatrixByVector(mat, vtmp, vtmp1);
+		AR_ASSERT(status == AR_S_YES);
 		__print_vector(vtmp1);
 
 
 		AR_SetMatrixSize(mat, 2,4);
 		AR_RandomMatrix(mat);
 		__print_matrix(mat);
-		AR_TransposeMatrixSelf(mat);
+		status = AR_TransposeMatrixSelf(mat);
+		AR_ASSERT(status == AR_S_YES);
 		__print_matrix(mat);
 
 		AR_SetMatrixSize(mat2, 2,3);
 		AR_RandomMatrix(mat2);
 		__print_matrix(mat2);
 
-		AR_MultiplyMatrixByMatrix(mat,mat2, mat3);
+		status = AR_MultiplyMatrixByMatrix(mat,mat2, mat3);
+		AR_ASSERT(status == AR_S_YES);
 		__print_matrix(mat3);
 
-		AR_TransposeMatrixSelf(mat);
-		AR_MultiplyTransposeMatrixByMatrix(mat, mat2, mat3);
+		status = AR_TransposeMatrixSelf(mat);
+		AR_ASSERT(status == AR_S_YES);
+		status = AR_MultiplyTransposeMatrixByMatrix(mat, mat2, mat3);
+		AR_ASSERT(status == AR_S_YES);
 		__print_matrix(mat3);
 
 END_POINT:
@@ -706,8 +698,6 @@ END_POINT:
 
 
 
-
-
 /*
 
 bool_t			AR_InverseMatrixSelf(arMatrix_t *mat);
@@ -721,7 +711,7 @@ void			AR_InverseSolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVecto
 */
 void matrix_test4()
 {
-
+		arStatus_t status;
 		arMatrix_t *mat = NULL, *mat2 = NULL, *mat3 = NULL;
 		arString_t *str = NULL;
 		arVector_t *vtmp = NULL, *vtmp1 = NULL;
@@ -737,6 +727,7 @@ void matrix_test4()
 
 
 		AR_RandomMatrix(mat);
+		__print_matrix(mat);
 
 		AR_SetMatrixValue(mat, 0,0,1);
 		AR_SetMatrixValue(mat, 0,1,2);
@@ -746,7 +737,9 @@ void matrix_test4()
 		__print_matrix(mat);
 
 
-		AR_InverseMatrixSelf(mat);
+		status = AR_InverseMatrixSelf(mat);
+		AR_ASSERT(status == AR_S_YES);
+	
 
 		__print_matrix(mat);
 
@@ -758,44 +751,57 @@ void matrix_test4()
 						0.9706,    0.8003,    0.9157,
 		};
 
-		AR_SetMatrixData(mat, 3,3, tmp);
+		status = AR_SetMatrixData(mat, 3,3, tmp);
+		AR_ASSERT(status == AR_S_YES);
 
 		__print_matrix(mat);
 		
-		AR_InverseMatrixSelf(mat);
+		status = AR_InverseMatrixSelf(mat);
+		AR_ASSERT(status == AR_S_YES);
+		
 		__print_matrix(mat, 4);
 
 
-		AR_SetMatrixData(mat, 3,3, tmp);
+		status = AR_SetMatrixData(mat, 3,3, tmp);
+		AR_ASSERT(status == AR_S_YES);
 		AR_ClearMatrixUpperTriangle(mat);
 		__print_matrix(mat, 4);
 
-		AR_ASSERT(AR_InverseLowerTriangularMatrixSelf(mat));
+		status = AR_InverseLowerTriangularMatrixSelf(mat);
+		AR_ASSERT(status == AR_S_YES);
 		__print_matrix(mat, 4);
 
 
-		AR_SetMatrixData(mat, 3,3, tmp);
+		status = AR_SetMatrixData(mat, 3,3, tmp);
+		AR_ASSERT(status == AR_S_YES);
 		AR_ClearMatrixUpperTriangle(mat);
 		__print_matrix(mat, 4);
 
-		AR_ASSERT(AR_InverseMatrixSelf(mat));
+		status = AR_InverseMatrixSelf(mat);
+		AR_ASSERT(status == AR_S_YES);
+		
 		__print_matrix(mat, 4);
 
 
 
-		AR_SetMatrixData(mat, 3,3, tmp);
+		status = AR_SetMatrixData(mat, 3,3, tmp);
+		AR_ASSERT(status == AR_S_YES);
 		AR_ClearMatrixLowerTriangle(mat);
 		__print_matrix(mat, 4);
 
-		AR_ASSERT(AR_InverseUpperTriangularMatrixSelf(mat));
+		status = AR_InverseUpperTriangularMatrixSelf(mat);
+		AR_ASSERT(status == AR_S_YES);
+		
 		__print_matrix(mat, 4);
 
 
-		AR_SetMatrixData(mat, 3,3, tmp);
+		status = AR_SetMatrixData(mat, 3,3, tmp);
 		AR_ClearMatrixLowerTriangle(mat);
 		__print_matrix(mat, 4);
 
-		AR_ASSERT(AR_InverseMatrixSelf(mat));
+		status = AR_InverseMatrixSelf(mat);
+		AR_ASSERT(status == AR_S_YES);
+	
 		__print_matrix(mat, 4);
 
 
@@ -805,7 +811,8 @@ void matrix_test4()
 				3,4
 		};
 		
-		AR_SetMatrixData(mat, 2,2,a_tmp1);
+		status = AR_SetMatrixData(mat, 2,2,a_tmp1);
+		AR_ASSERT(status == AR_S_YES);
 		__print_matrix(mat);
 
 		/*
@@ -813,7 +820,9 @@ void matrix_test4()
 		__print_matrix(mat);
 		*/
 
-		AR_InverseMatrixByGaussJordanSelf(mat);
+		status = AR_InverseMatrixByGaussJordanSelf(mat);
+		AR_ASSERT(status == AR_S_YES);
+		
 		__print_matrix(mat);
 
 
@@ -828,7 +837,9 @@ void matrix_test4()
 		AR_SetMatrixData(mat, 2,2,a_tmp);
 		__print_matrix(mat);
 
-		AR_InverseMatrixByGaussJordanSelf(mat);
+		status = AR_InverseMatrixByGaussJordanSelf(mat);
+		AR_ASSERT(status == AR_S_YES);
+	
 		__print_matrix(mat);
 
 		double b[] = 
@@ -839,11 +850,12 @@ void matrix_test4()
 
 		arVector_t *vx = vtmp, *vb = vtmp1;
 
-		AR_SetVectorData(vb, 2, b);
+		status = AR_SetVectorData(vb, 2, b);
+		AR_ASSERT(status == AR_S_YES);
 		__print_vector(vb);
 
-		AR_InverseSolveMatrix(mat, vx, vb);
-
+		status = AR_InverseSolveMatrix(mat, vx, vb);
+		AR_ASSERT(status == AR_S_YES);
 		__print_vector(vx);
 		
 #if(0)
@@ -908,7 +920,8 @@ END_POINT:
 
 void matrix_test_factorization()
 {
-
+		arStatus_t status;
+		
 		arMatrix_t *mat = NULL, *mat2 = NULL, *mat3 = NULL, *L = NULL, *U = NULL;
 		arString_t *str = NULL;
 		arVector_t *vtmp = NULL, *vtmp1 = NULL;
@@ -935,23 +948,27 @@ void matrix_test_factorization()
 		AR_SetMatrixData(mat, 3,3,data);
 		__print_matrix(mat);
 
-		if(!AR_LUFactorMatrixSelf(mat, index, &det))
-		{
-				AR_ASSERT(false);
-		}
+		status = AR_S_YES;
+		
+
+		status = AR_LUFactorMatrixSelf(mat, index, &det);
+		AR_ASSERT(status == AR_S_YES);
+		
 
 		__print_matrix(mat);
 
 		AR_printf(L"det == %g\r\n", det);
 
 
-		AR_UnpackMatrixLUFactors(mat, L,U);
+		status = AR_UnpackMatrixLUFactors(mat, L,U);
+		AR_ASSERT(status == AR_S_YES);
 
 		__print_matrix(L);
 		__print_matrix(U);
 
 
-		AR_MultiplyMatrixLUFactors(mat, NULL, mat2);
+		status = AR_MultiplyMatrixLUFactors(mat, NULL, mat2);
+		AR_ASSERT(status == AR_S_YES);
 		__print_matrix(mat2);
 
 printf("------------------------------------------------\r\n");
@@ -963,22 +980,25 @@ printf("------------------------------------------------\r\n");
 				30,		80,		171
 		};
 
-		AR_SetMatrixData(mat, 3,3,data_ldlt);
-		__print_matrix(mat);
-		if(!AR_LDLTFactorMatrixSelf(mat))
-		{
-				AR_ASSERT(false);
-		}
+		status = AR_SetMatrixData(mat, 3,3,data_ldlt);
+		AR_ASSERT(status == AR_S_YES);
 
 		__print_matrix(mat);
+		status = AR_LDLTFactorMatrixSelf(mat);
+		AR_ASSERT(status == AR_S_YES);
+		
+
+		__print_matrix(mat);
 
 
-		AR_UnpackMatrixLDLTFactors(mat, L,U);
+		status = AR_UnpackMatrixLDLTFactors(mat, L,U);
+		AR_ASSERT(status == AR_S_YES);
 
 		__print_matrix(L);
 		__print_matrix(U);
 
-		AR_MultiplyMatrixLDLTFactors(mat, mat2);
+		status = AR_MultiplyMatrixLDLTFactors(mat, mat2);
+		AR_ASSERT(status == AR_S_YES);
 		__print_matrix(mat2);
 
 
@@ -997,7 +1017,12 @@ printf("------------------------------------------------\r\n");
 
 		AR_ReduceMatrixToEchelonFormSelf(mat, index);
 		__print_matrix(mat);
-		printf("rank == %u\r\n", AR_CalcMatrixRank(mat));
+
+		size_t calc = 0;
+		status = AR_CalcMatrixRank(mat, &calc);
+		AR_ASSERT(status == AR_S_YES);
+
+		printf("rank == %u\r\n", calc);
 		printf("------------------------\r\n");
 
 
@@ -1020,7 +1045,9 @@ printf("------------------------------------------------\r\n");
 				printf("%d ", index[i]);
 		}
 		printf("\r\n");
-		printf("rank == %u\r\n", AR_CalcMatrixRank(mat));
+		status = AR_CalcMatrixRank(mat, &calc);
+		AR_ASSERT(status == AR_S_YES);
+		printf("rank == %u\r\n", calc);
 		printf("------------------------\r\n");
 
 
@@ -1045,7 +1072,10 @@ printf("------------------------------------------------\r\n");
 				printf("%d ", index[i]);
 		}
 		printf("\r\n");
-		printf("rank == %u\r\n", AR_CalcMatrixRank(mat));
+		
+		status = AR_CalcMatrixRank(mat, &calc);
+		AR_ASSERT(status == AR_S_YES);
+		printf("rank == %u\r\n", calc);
 
 
 
@@ -1068,8 +1098,11 @@ printf("------------------------------------------------\r\n");
 				printf("%d ", index[i]);
 		}
 		printf("\r\n");
+		
+		status = AR_CalcMatrixRank(mat, &calc);
+		AR_ASSERT(status == AR_S_YES);
+		printf("rank == %u\r\n", calc);
 
-		printf("rank == %u\r\n", AR_CalcMatrixRank(mat));
 
 
 		double data_adj[] = 
@@ -1082,10 +1115,13 @@ printf("------------------------------------------------\r\n");
 		AR_SetMatrixData(mat, 3,3,data_adj);
 		__print_matrix(mat);
 
-		det = AR_CalcMatrixDeterminant(mat);
+		status = AR_CalcMatrixDeterminant(mat, &det);
+		AR_ASSERT(status == AR_S_NO);
 		printf("det == %g\r\n", det);
 
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		double data_chol[] = 
 		{
 				1,     1     ,1     ,1     ,1     ,1,
@@ -1100,16 +1136,24 @@ printf("------------------------------------------------\r\n");
 		AR_SetMatrixData(mat, 6,6,data_chol);
 		__print_matrix(mat);
 
-		AR_ASSERT(AR_IsSymmetricMatrix(mat, DBL_EPSILON));
+		status = AR_IsSymmetricMatrix(mat, DBL_EPSILON);
+		AR_ASSERT(status == AR_S_YES);
+		
 
-		AR_CholeskyFactorMatrixSelf(mat);
+		status = AR_CholeskyFactorMatrixSelf(mat);
+		AR_ASSERT(status == AR_S_YES);
+		
+
 		AR_ClearMatrixUpperTriangle(mat);
 		__print_matrix(mat);
 
-		AR_MultiplyMatrixCholeskyFactors(mat, mat2);
+		status = AR_MultiplyMatrixCholeskyFactors(mat, mat2);
+		AR_ASSERT(status == AR_S_YES);
+
 		__print_matrix(mat2);
 
-		AR_CholeskyInverseMatrix(mat, mat2);
+		status = AR_CholeskyInverseMatrix(mat, mat2);
+		AR_ASSERT(status == AR_S_YES);
 		__print_matrix(mat2);
 
 
@@ -1128,26 +1172,28 @@ printf("------------------------------------------------\r\n");
 
 		AR_CopyMatrix(mat2, mat);
 		
-		AR_ASSERT(AR_LUFactorMatrixSelf(mat2, index, NULL));
+		status = AR_LUFactorMatrixSelf(mat2, index, NULL);
+		AR_ASSERT(status == AR_S_YES);
 		__print_matrix(mat2);
 		
 		
 		
-
-		if(!AR_LDLTFactorMatrixSelf(mat))
-		{
-				AR_ASSERT(false);
-		}
+		status = AR_LDLTFactorMatrixSelf(mat);
+		AR_ASSERT(status == AR_S_YES);
+		
+		
 
 		__print_matrix(mat);
 
 
-		AR_UnpackMatrixLDLTFactors(mat, L,U);
+		status = AR_UnpackMatrixLDLTFactors(mat, L,U);
+		AR_ASSERT(status == AR_S_YES);
 
 		__print_matrix(L);
 		__print_matrix(U);
 
-		AR_MultiplyMatrixLDLTFactors(mat, mat2);
+		status = AR_MultiplyMatrixLDLTFactors(mat, mat2);
+		AR_ASSERT(status == AR_S_YES);
 		__print_matrix(mat2);
 
 
@@ -1162,12 +1208,16 @@ printf("------------------------------------------------\r\n");
 		AR_SetMatrixData(mat, 2,2,data_cho2);
 		__print_matrix(mat);
 
-		AR_ASSERT(!AR_CholeskyFactorMatrixSelf(mat));
+		status = AR_CholeskyFactorMatrixSelf(mat);
+		AR_ASSERT(status != AR_S_YES);
+		
 		
 		AR_SetMatrixData(mat, 2,2,data_cho2);
 		__print_matrix(mat);
 
-		AR_ASSERT(AR_IsPositiveDefiniteMatrix(mat, DBL_EPSILON));
+		status = AR_IsPositiveDefiniteMatrix(mat, DBL_EPSILON);
+		AR_ASSERT(status != AR_S_YES);
+	
 
 		
 
@@ -1224,7 +1274,8 @@ END_POINT:
 		}
 }
 
-
+#if(0)
+#endif
 
 void math_test()
 {
@@ -1233,10 +1284,11 @@ void math_test()
 		//misc_test();
 		//vector_test();
 
-		//matrix_test();
-		//matrix_test2();
-		//matrix_test3();
-		//matrix_test4();
+		/*matrix_test();
+		matrix_test2();
+		matrix_test3();
+		matrix_test4();
+		*/
 		matrix_test_factorization();
 
 }

@@ -28,19 +28,19 @@ iniObject_t*	Ini_CreateObject();
 void			Ini_DestroyObject(iniObject_t *obj);
 void			Ini_ClearObject(iniObject_t *obj);
 
-bool_t			Ini_LoadObjectFromString(iniObject_t *obj, const wchar_t *ini_data);
-void			Ini_SaveObjectToString(const iniObject_t *obj, arString_t *out);
+arStatus_t		Ini_LoadObjectFromString(iniObject_t *obj, const wchar_t *ini_data);
+arStatus_t		Ini_SaveObjectToString(const iniObject_t *obj, arString_t *out);
 
 
-bool_t			Ini_SectionIsExisted(const iniObject_t *obj, const wchar_t *sect);
-bool_t			Ini_InsertSection(iniObject_t *obj, const wchar_t *sect, const wchar_t *comment);
-bool_t			Ini_RemoveSection(iniObject_t *obj, const wchar_t *sect);
+arStatus_t		Ini_SectionIsExisted(const iniObject_t *obj, const wchar_t *sect);
+arStatus_t		Ini_InsertSection(iniObject_t *obj, const wchar_t *sect, const wchar_t *comment);
+arStatus_t		Ini_RemoveSection(iniObject_t *obj, const wchar_t *sect);
 
 const wchar_t*	Ini_GetString(const iniObject_t *obj, const wchar_t *sect, const wchar_t *key);
-bool_t			Ini_SetString(iniObject_t *obj, const wchar_t *sect, const wchar_t *key, const wchar_t *val, const wchar_t *comment);
+arStatus_t		Ini_SetString(iniObject_t *obj, const wchar_t *sect, const wchar_t *key, const wchar_t *val, const wchar_t *comment);
 
-bool_t			Ini_RemoveKey(iniObject_t *obj, const wchar_t *sect, const wchar_t *key);
-bool_t			Ini_SetComment(iniObject_t *obj, const wchar_t *sect, const wchar_t *key, const wchar_t *comment);
+arStatus_t		Ini_RemoveKey(iniObject_t *obj, const wchar_t *sect, const wchar_t *key);
+arStatus_t		Ini_SetComment(iniObject_t *obj, const wchar_t *sect, const wchar_t *key, const wchar_t *comment);
 const wchar_t*	Ini_GetComment(const iniObject_t *obj, const wchar_t *sect, const wchar_t *key);
 
 
@@ -53,9 +53,9 @@ double			Ini_GetFloat(const iniObject_t *obj, const wchar_t *sect, const wchar_t
 
 
 
-void			Ini_SetInt(iniObject_t *obj, const wchar_t *sect, const wchar_t *key, int_64_t val, const wchar_t *comment);
-void			Ini_SetUInt(iniObject_t *obj, const wchar_t *sect, const wchar_t *key, uint_64_t val, const wchar_t *comment);
-void			Ini_SetFloat(iniObject_t *obj, const wchar_t *sect, const wchar_t *key, double val, const wchar_t *comment);
+arStatus_t			Ini_SetInt(iniObject_t *obj, const wchar_t *sect, const wchar_t *key, int_64_t val, const wchar_t *comment);
+arStatus_t			Ini_SetUInt(iniObject_t *obj, const wchar_t *sect, const wchar_t *key, uint_64_t val, const wchar_t *comment);
+arStatus_t			Ini_SetFloat(iniObject_t *obj, const wchar_t *sect, const wchar_t *key, double val, const wchar_t *comment);
 
 
 

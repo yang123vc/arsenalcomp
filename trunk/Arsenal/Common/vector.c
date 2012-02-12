@@ -31,8 +31,20 @@ arVector_t*		AR_CreateVector(size_t size)
 		arVector_t *vec;
 		AR_ASSERT(size > 0);
 		vec = AR_NEW(arVector_t);
+		
+		if(vec == NULL)
+		{
+				return NULL;
+		}
+
 		vec->count = size;
 		vec->v = AR_NEWARR0(double, size);
+
+		if(vec->v == NULL)
+		{
+				AR_DEL(vec);
+				vec = NULL;
+		}
 		return vec;
 }
 
@@ -55,58 +67,98 @@ arVector_t*		AR_CopyNewVector(const arVector_t *vec)
 		AR_ASSERT(vec != NULL);
 
 		new_v = AR_CreateVector(vec->count);
+
+		if(new_v == NULL)
+		{
+				return NULL;
+		}
 		
-		AR_CopyVector(new_v, vec);
+		if(AR_CopyVector(new_v, vec) != AR_S_YES)
+		{
+				AR_DestroyVector(new_v);
+				new_v = NULL;
+		}
 
 		return new_v;
 }
 
-void			AR_CopyVector(arVector_t *dest, const arVector_t *src)
+arStatus_t		AR_CopyVector(arVector_t *dest, const arVector_t *src)
 {
 		AR_ASSERT(dest != NULL && src != NULL);
 
 		if(dest == src)
 		{
-				return;
+				return AR_S_YES;
 		}
 
 
 		if(dest->count != src->count)
 		{
-				AR_SetVectorSize(dest, src->count);
+				arStatus_t ret = AR_SetVectorSize(dest, src->count);
+				if(ret != AR_S_YES)
+				{
+						return ret;
+				}
 		}
 
 		AR_memcpy(dest->v, src->v, sizeof(double) * src->count);
+
+		return AR_S_YES;
 }
 
 
-void			AR_SetVectorSize(arVector_t *vec, size_t size)
+arStatus_t		AR_SetVectorSize(arVector_t *vec, size_t size)
 {
 		AR_ASSERT(vec != NULL);
 		AR_ASSERT(size > 0);
 
 		if(vec->count == size)
 		{
-				return;
-		}
-
-		if(vec->v)
+				return AR_S_YES;
+		}else if(vec->count > size)
 		{
-				AR_DEL(vec->v);
-				vec->v = NULL;
+				vec->count = size;
+				return AR_S_YES;
+		}else
+		{
+				double *p = AR_NEWARR(double, size);
+
+				if(p == NULL)
+				{
+						return AR_E_NOMEM;
+				}
+
+				if(vec->v)
+				{
+						AR_DEL(vec->v);
+						vec->v = NULL;
+				}
+
+				vec->count = size;
+				vec->v = p;
+
+				return AR_S_YES;
 		}
 
-		vec->count = size;
-		vec->v = AR_NEWARR0(double, size);
+		
 }
 
 
-void	AR_SetVectorData(arVector_t *vec, size_t size, const double *data)
+arStatus_t	AR_SetVectorData(arVector_t *vec, size_t size, const double *data)
 {
+		arStatus_t ret;
 		AR_ASSERT(vec != NULL && data != NULL);
 		AR_ASSERT(size > 0);
-		AR_SetVectorSize(vec, size);
+
+		ret = AR_SetVectorSize(vec, size);
+		if(ret != AR_S_YES)
+		{
+				return ret;
+		}
+
 		AR_memcpy(vec->v, data, vec->count * sizeof(double));
+
+		return AR_S_YES;
 }
 
 
@@ -168,30 +220,29 @@ void			AR_RandomVector(arVector_t *vec)
 }
 
 
-double			AR_CalcVectorLength(const arVector_t *vec)
+void		AR_CalcVectorLength(const arVector_t *vec, double *ret)
 {
-		double ret;
-		AR_ASSERT(vec != NULL);
+		AR_ASSERT(vec != NULL && ret != NULL);
+		
+		*ret = 0.0;
 
-		ret = AR_CalcVectorLengthSqr(vec);
-
-		return AR_sqrt_dbl(ret);
+		AR_CalcVectorLengthSqr(vec, ret);
+		
+		*ret = AR_sqrt_dbl(*ret);
 }
 
-double			AR_CalcVectorLengthSqr(const arVector_t *vec)
+void			AR_CalcVectorLengthSqr(const arVector_t *vec, double *ret)
 {
 		size_t i;
-		double ret;
-		AR_ASSERT(vec != NULL);
+		AR_ASSERT(vec != NULL && ret != NULL);
 
-		ret = 0.0;
+		*ret = 0.0;
 
 		for(i = 0; i < vec->count; ++i)
 		{
-				ret += vec->v[i] * vec->v[i];
+				*ret += vec->v[i] * vec->v[i];
 		}
 
-		return ret;
 		
 }
 
@@ -200,7 +251,7 @@ void			AR_NormalizeVector(arVector_t *vec)
 		double len = 0.0;
 		AR_ASSERT(vec != NULL);
 
-		len = AR_CalcVectorLength(vec);
+		AR_CalcVectorLength(vec, &len);
 
 		
 		if(!AR_DBL_EQ(len,0.0))
@@ -210,21 +261,34 @@ void			AR_NormalizeVector(arVector_t *vec)
 }
 
 
-double			AR_CalcVectorDistanceByVector(const arVector_t *vec, const arVector_t *other)
+arStatus_t			AR_CalcVectorDistanceByVector(const arVector_t *vec, const arVector_t *other, double *ret)
 {
 		arVector_t *tmp;
-		double ret;
+		
 		AR_ASSERT(vec != NULL && other != NULL);
 		AR_ASSERT(vec->count == other->count);
 		
 		tmp = NULL;
-		ret = 0.0;
+		*ret = 0.0;
 
 		tmp = AR_CopyNewVector(vec);
+		
+		if(tmp == NULL)
+		{
+				return AR_E_NOMEM;
+		}
+
 		AR_SubVectorByVectorSelf(tmp, other);
-		ret = AR_CalcVectorLength(tmp);
-		AR_DestroyVector(tmp);
-		return ret;
+		AR_CalcVectorLength(tmp, ret);
+
+
+		if(tmp)
+		{
+				AR_DestroyVector(tmp);
+				tmp = NULL;
+		}
+
+		return AR_S_YES;
 }
 
 
@@ -307,29 +371,28 @@ void			AR_SetVectorValue(arVector_t *vec, size_t idx, double val)
 
 
 
-double			AR_CalcVectorInnerProduct(const arVector_t *vec, const arVector_t *other)
+void			AR_CalcVectorInnerProduct(const arVector_t *vec, const arVector_t *other, double *ret)
 {
 		size_t i;
-		double ret = 0.0;
-		AR_ASSERT(vec != NULL && other != NULL);
+		AR_ASSERT(vec != NULL && other != NULL && ret != NULL);
 		AR_ASSERT(vec->count == other->count);
+
+		*ret = 0.0;
 
 		for(i = 0; i < vec->count; ++i)
 		{
-				ret += (vec->v[i] * other->v[i]);
+				*ret += (vec->v[i] * other->v[i]);
 		}
-		
-		return ret;
 }
 
 
 
-double			AR_CalcVectorNormNumber(const arVector_t *vec, arVectorNormType_t t)
+arStatus_t			AR_CalcVectorNormNumber(const arVector_t *vec, arVectorNormType_t t, double *ret)
 {
 		size_t i;
 		double sum, tmp;
-		AR_ASSERT(vec != NULL);
-
+		AR_ASSERT(vec != NULL && ret != NULL);
+		*ret = 0.0;
 		sum = 0.0;
 
 		switch(t)
@@ -366,11 +429,11 @@ double			AR_CalcVectorNormNumber(const arVector_t *vec, arVectorNormType_t t)
 				}
 				break;
 		default: /*AR_VEC_NORM_2:*/
-				sum = AR_CalcVectorLength(vec);
+				AR_CalcVectorLength(vec, &sum);
 				break;
 		}
-
-		return sum;
+		*ret = sum;
+		return AR_S_YES;
 
 }
 
@@ -424,38 +487,72 @@ void			AR_DivVectorByValSelf(arVector_t *vec, double val)
 
 
 
-void			AR_AddVectorByVector(const arVector_t *vec, const arVector_t *other, arVector_t *dest)
+arStatus_t		AR_AddVectorByVector(const arVector_t *vec, const arVector_t *other, arVector_t *dest)
 {
+		arStatus_t ret;
 		AR_ASSERT(vec != NULL && other != NULL && dest != NULL);
 		AR_ASSERT(vec->count == other->count);
-		AR_CopyVector(dest, vec);
+
+		ret = AR_CopyVector(dest, vec);
+		if(ret != AR_S_YES)
+		{
+				return ret;
+		}
+
 		AR_AddVectorByVectorSelf(dest, other);
+
+		return AR_S_YES;
 }
 
-void			AR_SubVectorByVector(const arVector_t *vec, const arVector_t *other, arVector_t *dest)
+arStatus_t			AR_SubVectorByVector(const arVector_t *vec, const arVector_t *other, arVector_t *dest)
 {
+		arStatus_t ret;
 		AR_ASSERT(vec != NULL && other != NULL && dest != NULL);
 		AR_ASSERT(vec->count == other->count);
-		AR_CopyVector(dest, vec);
+		
+		ret = AR_CopyVector(dest, vec);
+		if(ret != AR_S_YES)
+		{
+				return ret;
+		}
+
 		AR_SubVectorByVectorSelf(dest, other);
+
+		return AR_S_YES;
 }
 
-void			AR_MulVectorByVal(const arVector_t *vec, double val, arVector_t *dest)
+arStatus_t			AR_MulVectorByVal(const arVector_t *vec, double val, arVector_t *dest)
 {
+		arStatus_t ret;
 		AR_ASSERT(vec != NULL && dest != NULL);
-		AR_CopyVector(dest, vec);
+		
+		ret = AR_CopyVector(dest, vec);
+		if(ret != AR_S_YES)
+		{
+				return ret;
+		}
+
 		AR_MulVectorByValSelf(dest, val);
+
+		return AR_S_YES;
 }
 
 
-void			AR_DivVectorByVal(const arVector_t *vec, double val, arVector_t *dest)
+arStatus_t			AR_DivVectorByVal(const arVector_t *vec, double val, arVector_t *dest)
 {
-
+		arStatus_t ret;
 		AR_ASSERT(vec != NULL && dest != NULL);
 		AR_ASSERT(!AR_DBL_EQ(val,0.0));
 
-		AR_CopyVector(dest, vec);
+		ret = AR_CopyVector(dest, vec);
+		if(ret != AR_S_YES)
+		{
+				return ret;
+		}
+
 		AR_DivVectorByValSelf(dest, val);
+
+		return AR_S_YES;
 }
 
 
@@ -464,8 +561,9 @@ void			AR_DivVectorByVal(const arVector_t *vec, double val, arVector_t *dest)
 /***********************************************************************************************************************/
 
 
-void			AR_VectorToString(const arVector_t *vec, arString_t *str, size_t precision, const wchar_t *sp_str)
+arStatus_t			AR_VectorToString(const arVector_t *vec, arString_t *str, size_t precision, const wchar_t *sp_str)
 {
+		arStatus_t ret;
 		size_t i;
 		
 		wchar_t fmt[80];
@@ -478,16 +576,30 @@ void			AR_VectorToString(const arVector_t *vec, arString_t *str, size_t precisio
 		}
 		
 		
-		AR_swprintf(fmt, 64, L"%%.%Iuf",  precision);
+		if(AR_swprintf(fmt, 64, L"%%.%Iuf",  precision) < 0)
+		{
+				return AR_E_INVAL;
+		}
 
 		for(i = 0; i < vec->count; ++i)
 		{
-				AR_AppendFormatString(str, fmt, vec->v[i]);
+				ret = AR_AppendFormatString(str, fmt, vec->v[i]);
+				if(ret != AR_S_YES)
+				{
+						return ret;
+				}
+
 				if(i < vec->count - 1)
 				{
-						AR_AppendString(str, sp_str);
+						ret = AR_AppendString(str, sp_str);
+						if(ret != AR_S_YES)
+						{
+								return ret;
+						}
 				}
 		}
+
+		return AR_S_YES;
 }
 
 

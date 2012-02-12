@@ -14,7 +14,6 @@ extern void com_test();
 extern void str_test();
 extern void expr_test();
 extern void lex_test();
-extern void lex_test20();
 extern void lr_dfa_test();
 extern void action_tbl_test();
 extern void parser_test();
@@ -84,6 +83,7 @@ void parser_gen_perf_test();
 
 extern void math_test();
 
+extern void grammar_config_test();
 #endif
 
 
@@ -93,14 +93,11 @@ extern void math_test();
 void AR_Test()
 {
 #if defined(__LIB)
-		com_test();
+		//com_test();
 		//math_test();
 		//trie_tree_test();
 		//expr_test();
 		//lex_test();
-		//lex_test2();
-		//lex_test3();
-		//lex_test4();
 		
 		//lr_dfa_test();
 		//action_tbl_test();
@@ -117,7 +114,7 @@ void AR_Test()
 		//cache_test();
 		//calc_test1();
 		//calc_test();
-		//calc_test3();
+		
 		//calc_test();
 
 		//db_test();
@@ -168,7 +165,9 @@ void AR_Test()
 		
 		//parser_gen_perf_test();
 
-		//calc3_test();
+		calc3_test();
+
+		//grammar_config_test();
 
 		getchar();
 #else

@@ -20,7 +20,7 @@ AR_NAMESPACE_BEGIN
 
 
 
-static void __six_for_uint32_little(byte_t *out, uint_32_t w)
+void __six_for_uint32_little(byte_t *out, uint_32_t w)
 {
 		const byte_t *b;
 		AR_ASSERT(out != NULL);
@@ -33,7 +33,7 @@ static void __six_for_uint32_little(byte_t *out, uint_32_t w)
 		out[3] = b[2] & 0x3f;
 }
 
-static void __six_for_uint32_big(byte_t *out, uint_32_t w)
+void __six_for_uint32_big(byte_t *out, uint_32_t w)
 {
 		size_t i;
 		AR_ASSERT(out != NULL);
@@ -46,7 +46,7 @@ static void __six_for_uint32_big(byte_t *out, uint_32_t w)
 }
 
 
-static uint_32_t __uint32_for_six_little(const byte_t *input)
+uint_32_t __uint32_for_six_little(const byte_t *input)
 {
 		uint_32_t ret;
 		byte_t *b;
@@ -63,7 +63,7 @@ static uint_32_t __uint32_for_six_little(const byte_t *input)
 		return ret;
 }
 
-static uint_32_t __uint32_for_six_big(const byte_t *input)
+uint_32_t __uint32_for_six_big(const byte_t *input)
 {
 		uint_32_t ret;
 		AR_ASSERT(input != NULL);

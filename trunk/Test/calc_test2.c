@@ -10,6 +10,7 @@
 
 AR_NAMESPACE_BEGIN
 
+#if(0)
 
 static const wchar_t *__g_lex_name[] = {
 L"delim = [ \\r\\n\\t]",
@@ -461,6 +462,7 @@ void calc2_test()
 		
 }
 
+#endif
 
 AR_NAMESPACE_END
 

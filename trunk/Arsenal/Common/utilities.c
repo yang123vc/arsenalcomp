@@ -149,6 +149,18 @@ wchar_t*		AR_escstr_to_str(const wchar_t *src, arEscStrErr_t *error)
 		src_len = AR_wcslen(src);
 		res = AR_NEWARR0(wchar_t, src_len + 1);
 
+		if(res == NULL)
+		{
+				if(error)
+				{
+						error->pos = NULL;
+						error->type = AR_ESCSTR_ERR_MEMORY;
+						error->value = 0;
+				}
+
+				goto INVALID_POINT;
+		}
+
 		d = res; s = src;
 
 		while(*s)
@@ -182,7 +194,11 @@ wchar_t*		AR_escstr_to_str(const wchar_t *src, arEscStrErr_t *error)
 		return res;
 
 INVALID_POINT:
-		AR_DEL(res);
+		if(res)
+		{
+				AR_DEL(res);
+				res = NULL;
+		}
 		return NULL;
 }
 
@@ -201,6 +217,11 @@ wchar_t*		AR_str_to_escstr(const wchar_t *src)
 
 		src_len = AR_wcslen(src);
 		res = AR_NEWARR0(wchar_t, (src_len + 5) * 5 + 1);
+
+		if(res == NULL)
+		{
+				goto INVALID_POINT;
+		}
 
 		d = res; s = src;
 
@@ -265,6 +286,13 @@ wchar_t*		AR_str_to_escstr(const wchar_t *src)
 		*d = L'\0';
 
 		return res;
+INVALID_POINT:
+		if(res)
+		{
+				AR_DEL(res);
+				res = NULL;
+		}
+		return NULL;
 }
 
 
@@ -280,6 +308,18 @@ wchar_t*		AR_escstr_to_str_n(const wchar_t *src, size_t n, arEscStrErr_t *error)
 
 		res = AR_NEWARR0(wchar_t, n + 1);
 
+		if(res == NULL)
+		{
+				if(error)
+				{
+						error->pos = NULL;
+						error->type = AR_ESCSTR_ERR_MEMORY;
+						error->value = 0;
+				}
+
+				goto INVALID_POINT;
+		}
+
 		d = res; s = src;
 		
 		i = 0; 
@@ -289,7 +329,10 @@ wchar_t*		AR_escstr_to_str_n(const wchar_t *src, size_t n, arEscStrErr_t *error)
 				{
 						const wchar_t *next;
 						next = __transform_char(s + i + 1, d, error);
-						if(next == NULL) goto INVALID_POINT;
+						if(next == NULL)
+						{
+								goto INVALID_POINT;
+						}
 						
 						i = next - s;
 						d++;
@@ -311,7 +354,11 @@ wchar_t*		AR_escstr_to_str_n(const wchar_t *src, size_t n, arEscStrErr_t *error)
 		return res;
 
 INVALID_POINT:
-		AR_DEL(res);
+		if(res)
+		{
+				AR_DEL(res);
+				res = NULL;
+		}
 		return NULL;		
 }
 
@@ -327,6 +374,12 @@ wchar_t*		AR_str_to_escstr_n(const wchar_t *src, size_t n)
 		if(src == NULL)return NULL;
 
 		res = AR_NEWARR0(wchar_t, (n + 5) * 5 + 1);
+
+		if(res == NULL)
+		{
+				goto INVALID_POINT;
+		}
+
 
 		d = res; s = src;
 		i = 0;
@@ -391,6 +444,13 @@ wchar_t*		AR_str_to_escstr_n(const wchar_t *src, size_t n)
 		*d = L'\0';
 
 		return res;
+INVALID_POINT:
+		if(res)
+		{
+				AR_DEL(res);
+				res = NULL;
+		}
+		return NULL;
 }
 
 
@@ -406,8 +466,11 @@ int_t 		AR_escstr_to_str_buf(wchar_t *dest, size_t len, const wchar_t *src, arEs
 		AR_ASSERT(src != NULL);
 
 		str = AR_escstr_to_str(src, error);
-		
-		if(str == NULL)return -1;
+
+		if(str == NULL)
+		{
+				return -1;
+		}
 
 		ret = AR_wcslen(str);
 
@@ -441,7 +504,10 @@ int_t 		AR_str_to_escstr_buf(wchar_t *dest, size_t len, const wchar_t *src)
 
 		str = AR_str_to_escstr(src);
 		
-		if(str == NULL)return -1;
+		if(str == NULL)
+		{
+				return -1;
+		}
 
 		ret = AR_wcslen(str);
 
@@ -451,7 +517,11 @@ int_t 		AR_str_to_escstr_buf(wchar_t *dest, size_t len, const wchar_t *src)
 				return (int_t)ret + 1;
 		}else
 		{
-				if(len <= ret) { AR_DEL(str); return -1;}
+				if(len <= ret) 
+				{ 
+						AR_DEL(str); 
+						return -1;
+				}
 
 				AR_wcsncpy(dest, str, ret);
 				dest[ret] = L'\0';
@@ -470,7 +540,10 @@ int_t 			AR_escstr_to_str_buf_n(wchar_t *dest, size_t len, const wchar_t *src, s
 
 		str = AR_escstr_to_str_n(src, n, error);
 		
-		if(str == NULL)return -1;
+		if(str == NULL)
+		{
+				return -1;
+		}
 
 		ret = AR_wcslen(str);
 
@@ -504,7 +577,10 @@ int_t 			AR_str_to_escstr_buf_n(wchar_t *dest, size_t len, const wchar_t *src, s
 
 		str = AR_str_to_escstr_n(src, n);
 		
-		if(str == NULL)return -1;
+		if(str == NULL)
+		{
+				return -1;
+		}
 
 		ret = AR_wcslen(str);
 

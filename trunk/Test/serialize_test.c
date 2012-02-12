@@ -7,7 +7,6 @@
 
 
 
-
 #if defined(__LIB)
 
 AR_NAMESPACE_BEGIN
@@ -17,132 +16,6 @@ snObject_t*		__get_int(arBuffer_t	*buffer);
 snObject_t*		__get_str(arBuffer_t	*buffer);
 snObject_t*		__get_list(arBuffer_t	*buffer);
 snObject_t*		__get_dict(arBuffer_t	*buffer);
-
-
-void sn_test_int()
-{
-		arBuffer_t		*buf = AR_CreateBuffer(0);
-		const char *str = "19840120e";
-		AR_InsertBuffer(buf, (const byte_t*)str, strlen(str));
-		snObject_t *obj = __get_int(buf);
-		printf("remain buf == %d\r\n", AR_GetBufferAvailable(buf));
-}
-
-void sn_test_str()
-{
-		arBuffer_t		*buf = AR_CreateBuffer(0);
-		const char *str = ":abeeeee";
-		AR_InsertBuffer(buf, (const byte_t*)str, strlen(str));
-		snObject_t *obj = __get_str(buf);
-		printf("remain buf == %d\r\n", AR_GetBufferAvailable(buf));
-
-}
-
-
-void sn_test_list()
-{
-		arBuffer_t		*buf = AR_CreateBuffer(0);
-		const char *str = "2:abi3e2:dei888ee";
-		AR_InsertBuffer(buf, (const byte_t*)str, strlen(str));
-
-		snObject_t *obj = __get_list(buf);
-		printf("remain buf == %d\r\n", AR_GetBufferAvailable(buf));
-}
-
-
-void sn_test_dict()
-{
-		arBuffer_t		*buf = AR_CreateBuffer(0);
-		const char *str = "2:abi3e2:dei888ee";
-		AR_InsertBuffer(buf, (const byte_t*)str, strlen(str));
-		snObject_t *obj = __get_dict(buf);
-		printf("remain buf == %d\r\n", AR_GetBufferAvailable(buf));
-}
-
-
-void sn_test_obj()
-{
-		arBuffer_t		*buf = AR_CreateBuffer(0);
-		const char *str = "d2:abi3e2:dei888ee";
-		AR_InsertBuffer(buf, (const byte_t*)str, strlen(str));
-		snObject_t *obj = SN_GetObject(buf);
-		printf("remain buf == %d\r\n", AR_GetBufferAvailable(buf));
-
-		AR_DestroyBuffer(buf);
-		SN_DestroyObject(obj);
-}
-
-
-
-/************************************/
-
-void		__put_int(arBuffer_t	*buffer, const snInteger_t *integer);
-void __put_string(arBuffer_t	*buffer, const snString_t *string);
-
-void sn_put_int_test()
-{
-		arBuffer_t		*buffer;
-		snInteger_t		integer;
-		buffer = AR_CreateBuffer(0);
-
-		integer.is_signed = true;
-		integer.u = 102400000;
-		__put_int(buffer, &integer);
-
-		AR_DestroyBuffer(buffer);
-}
-
-
-void sn_put_str_test()
-{
-		arBuffer_t		*buffer;
-		snString_t		str;
-		buffer = AR_CreateBuffer(0);
-
-		SN_InitString(&str);
-		SN_SetStringByStr(&str, "abcdef");
-
-		__put_string(buffer, &str);
-		
-		AR_DestroyBuffer(buffer);
-}
-
-#endif
-
-
-void sn_test_torrent()
-{
-		arBuffer_t		*buffer;
-		buffer = AR_CreateBuffer(0);
-
-		FILE *f = fopen("d:\\temp\\1.torrent", "rb");
-		assert(f != NULL);
-
-		byte_t buf[4096];
-		
-		while(!ferror(f) && !feof(f))
-		{
-				size_t rn = fread(buf, sizeof(byte_t), sizeof(buf), f);
-				if(rn == 0)break;
-				AR_InsertBuffer(buffer, buf, rn);
-		}
-		fclose(f);
-		
-		snObject_t *obj = SN_GetObject(buffer);
-		SN_PutObject(buffer, obj);
-		SN_DestroyObject(obj);
-
-
-		FILE *new_f = fopen("d:\\temp\\new.torrent", "wb");
-		assert(new_f != NULL);
-
-		fwrite(AR_GetBufferData(buffer), sizeof(byte_t), AR_GetBufferAvailable(buffer), new_f);
-
-		fclose(new_f);
-
-		AR_DestroyBuffer(buffer);
-
-}
 
 
 
@@ -209,6 +82,20 @@ void sn_test_path()
 		
 		SN_DestroyObject(obj);
 }
+
+#endif
+
+
+
+
+
+
+
+
+
+
+
+/************************************/
 
 
 
@@ -390,12 +277,15 @@ void sn_test_str3()
 
 
 
-void sn_test_find()
+
+void sn_test_torrent()
 {
 		arBuffer_t		*buffer;
+		snRetVal_t		ret;
+		FILE *new_f = NULL;
 		buffer = AR_CreateBuffer(0);
 
-		FILE *f = fopen("d:\\user\\temp\\1.torrent", "rb");
+		FILE *f = fopen("d:\\1.torrent", "rb");
 		assert(f != NULL);
 
 		byte_t buf[4096];
@@ -408,14 +298,75 @@ void sn_test_find()
 		}
 		fclose(f);
 		
-		snObject_t *root = SN_GetObject(buffer);
+		ret = SN_GetObject(buffer);
+
+		if(ret.status != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+
+
+		SN_PutObject(buffer, ret.obj);
+		
+
+
+		new_f = fopen("d:\\new.torrent", "wb");
+		assert(new_f != NULL);
+
+		fwrite(AR_GetBufferData(buffer), sizeof(byte_t), AR_GetBufferAvailable(buffer), new_f);
+
+END_POINT:
+		if(new_f)
+		{
+				fclose(new_f);
+		}
+
+		if(buffer)
+		{
+				AR_DestroyBuffer(buffer);
+				buffer = NULL;
+		}
+
+		if(ret.obj)
+		{
+				SN_DestroyObject(ret.obj);
+				ret.obj = NULL;
+		}
+
+}
+
+
+
+void sn_test_find()
+{
+		arBuffer_t		*buffer;
+		buffer = AR_CreateBuffer(0);
+
+		FILE *f = fopen("d:\\1.torrent", "rb");
+		assert(f != NULL);
+
+		byte_t buf[4096];
+		
+		while(!ferror(f) && !feof(f))
+		{
+				size_t rn = fread(buf, sizeof(byte_t), sizeof(buf), f);
+				if(rn == 0)break;
+				AR_InsertBuffer(buffer, buf, rn);
+		}
+		fclose(f);
+		
+		snObject_t *root = SN_GetObject(buffer).obj;
 		AR_ASSERT(root != NULL);
 		AR_DestroyBuffer(buffer);
 		
 		int_t l;
 		wchar_t wcs[1024];
 
-		snObject_t *announce = SN_FindObjectByWcsPath(root, L"////announce");
+		snObject_t *announce = SN_FindObjectByWcsPath(root, L"////announce").obj;
+		if(announce == NULL)
+		{
+				goto END_POINT;
+		}
 
 		l = SN_GetWcsFromStringObject(announce, wcs, 1024);
 
@@ -423,7 +374,7 @@ void sn_test_find()
 
 		::MessageBoxW(NULL, wcs, 0, 0);
 
-		snObject_t *announce_list = SN_FindObjectByWcsPath(root, L"announce-list");
+		snObject_t *announce_list = SN_FindObjectByWcsPath(root, L"announce-list").obj;
 
 		if(announce_list != NULL)
 		{
@@ -431,7 +382,12 @@ void sn_test_find()
 				{
 						wchar_t buf[200];
 						AR_swprintf(buf, 200, L"/announce-list/%d", i);
-						snObject_t *obj = SN_FindObjectByWcsPath(root, buf);
+						snObject_t *obj = SN_FindObjectByWcsPath(root, buf).obj;
+						if(obj == NULL)
+						{
+								goto END_POINT;
+						}
+
 						AR_ASSERT(obj != NULL && SN_GetObjectType(obj) == SN_LIST_T);
 
 						for(size_t k = 0; k < SN_GetListObjectCount(obj); ++k)
@@ -451,9 +407,16 @@ void sn_test_find()
 
 
 
-		
-		SN_DestroyObject(root);
+END_POINT:
+		if(root)
+		{
+				SN_DestroyObject(root);
+				root = NULL;
+		}
 }
+
+
+
 
 
 void sn_test()
@@ -467,6 +430,9 @@ void sn_test()
 		sn_test_find();
 }
 
+
+
 AR_NAMESPACE_END
 
 #endif
+

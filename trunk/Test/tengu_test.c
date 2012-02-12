@@ -1,4 +1,4 @@
-
+#if(0)
 #include "test.h"
 
 #include "../Arsenal/Tengu/tengu.h"
@@ -141,3 +141,5 @@ AR_NAMESPACE_END
 
 #endif
 
+
+#endif

@@ -24,8 +24,8 @@ AR_NAMESPACE_BEGIN
 
 
 
-bool_t	Lex_Init();
-bool_t	Lex_UnInit();
+arStatus_t	Lex_Init();
+arStatus_t	Lex_UnInit();
 
 
 /******************************************************************************************************/
@@ -67,15 +67,15 @@ void	Lex_Destroy(lex_t *lex);
 const wchar_t*	Lex_GetLastError(const lex_t *lex);
 void			Lex_ClearLastError(lex_t *lex);
 
-bool_t	Lex_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr);
-bool_t	Lex_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action);
+arStatus_t		Lex_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr);
+arStatus_t		Lex_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *action);
 
-bool_t	Lex_RemoveByName(lex_t *lex, const wchar_t *name);
-bool_t	Lex_RemoveByValue(lex_t *lex, size_t value);
+arStatus_t		Lex_RemoveByName(lex_t *lex, const wchar_t *name);
+arStatus_t		Lex_RemoveByValue(lex_t *lex, size_t value);
 
-bool_t	Lex_Insert(lex_t *lex, const wchar_t *input);
-bool_t	Lex_GenerateTransTable(lex_t *lex);
-void	Lex_Clear(lex_t *lex);
+arStatus_t		Lex_Insert(lex_t *lex, const wchar_t *input);
+arStatus_t		Lex_GenerateTransTable(lex_t *lex);
+void			Lex_Clear(lex_t *lex);
 
 
 
@@ -88,7 +88,7 @@ typedef struct __lex_token_tag
 {
 		const wchar_t	*str;
 		
-		size_t			index;
+		size_t			index;	/*此为在整个输入源码中的索引位置，例如输入为"abc",那么a是0,b是1,c是2*/
 		size_t			count;
 		
 		size_t			line;
@@ -142,7 +142,7 @@ void			Lex_ResetMatchState(lexMatch_t *pmatch);
 
 const wchar_t*	Lex_GetNextInput(const lexMatch_t *match);
 
-bool_t			Lex_IsError(const lexMatch_t *match);
+arStatus_t		Lex_IsError(const lexMatch_t *match);
 
 void			Lex_ClearError(lexMatch_t *match);
 
@@ -152,7 +152,7 @@ void			Lex_Skip(lexMatch_t *pmatch);
 void			Lex_SkipTo(lexMatch_t *pmatch, const wchar_t *tok);
 
 
-bool_t			Lex_TrySkipTo(lexMatch_t *pmatch, const wchar_t *tok);
+arStatus_t		Lex_TrySkipTo(lexMatch_t *pmatch, const wchar_t *tok);
 
 /*丢弃N个字符*/
 void			Lex_SkipN(lexMatch_t *pmatch, size_t nchar);
@@ -168,7 +168,7 @@ void			Lex_MatchGetCoordinate(const lexMatch_t *pmatch, size_t *index, size_t *l
 
 
 
-bool_t			Lex_Match(lexMatch_t *match, lexToken_t *tok);
+arStatus_t			Lex_Match(lexMatch_t *match, lexToken_t *tok);
 
 
 

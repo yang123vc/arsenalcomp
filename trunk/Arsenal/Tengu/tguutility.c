@@ -103,7 +103,7 @@ bool_t			TGU_HasString(const wchar_t *name)
 		AR_ASSERT(name != NULL);
 
 		AR_LockSpinLock(&__g_tbl_lock);
-		res = AR_HasString(__g_tbl, name);
+		res = AR_HasString(__g_tbl, name) == AR_S_YES;
 		AR_UnLockSpinLock(&__g_tbl_lock);
 		return res;
 }
@@ -162,7 +162,7 @@ tguSrc_t*		TGU_LoadSources(const wchar_t *work_dir, const wchar_t *file_name)
 				arString_t *str;
 
 				str = AR_CreateString();
-				if(AR_LoadBomTextFile(path, NULL, str))
+				if(AR_LoadBomTextFile(path, NULL, str) != AR_S_YES)
 				{
 						src->code = AR_wcsdup(AR_GetStringCString(str));
 				}else

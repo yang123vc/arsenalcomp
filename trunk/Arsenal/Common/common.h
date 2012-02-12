@@ -22,6 +22,15 @@
 AR_NAMESPACE_BEGIN
 
 
+/*******************************************************************************error code********************************/
+
+#include "status.h"
+
+
+
+
+
+
 /*
 common.h -- misc founctions used in Arsenal
 
@@ -48,7 +57,6 @@ typedef struct __arsenal_io_context_tag
 }arIOCtx_t;
 
 
-
 typedef struct __ar_init_tag
 {
 		arIOCtx_t		global_io_ctx;
@@ -59,27 +67,27 @@ typedef struct __ar_init_tag
 
 
 
-bool_t AR_CommonInit(const arInit_t *info);
-bool_t AR_CommonUnInit();
+arStatus_t AR_CommonInit(const arInit_t *info);
+arStatus_t AR_CommonUnInit();
 
 arIOCtx_t*	AR_global_ioctx();
 
-void	AR_printf(const wchar_t *msg,...);
+arStatus_t	AR_printf(const wchar_t *msg,...);
 
 
 /*库内部错误为负数*/
 #define AR_ERR_MESSAGE		((int_t)-0x0099)
 #define AR_ERR_WARNING		((int_t)-0x0100)
 #define AR_ERR_FATAL		((int_t)-0x0101)
-#define AR_ERR_MEMORY		((int_t)-0x0102)
-
-
-void	AR_error(int_t level, const wchar_t *msg, ...);
 
 
 
-void	AR_printf_ctx(arIOCtx_t *ctx, const wchar_t *msg,...);
-void	AR_error_ctx(arIOCtx_t *ctx, int_t level, const wchar_t *msg, ...);
+arStatus_t	AR_error(int_t level, const wchar_t *msg, ...);
+
+
+
+arStatus_t	AR_printf_ctx(arIOCtx_t *ctx, const wchar_t *msg,...);
+arStatus_t	AR_error_ctx(arIOCtx_t *ctx, int_t level, const wchar_t *msg, ...);
 
 
 
@@ -184,7 +192,7 @@ static AR_INLINE const void* AR_GET_ELEM(const void *base, size_t width, size_t 
 使用arHeap_t来管理堆
 */
 
-#define AR_MEM_MAX_ALLOC_RETRY_COUNT	100000
+#define AR_MEM_MAX_ALLOC_RETRY_COUNT	1000000
 
 void	AR_InitMemory();
 void	AR_UnInitMemory();
@@ -196,12 +204,7 @@ void	AR_UnInitMemory();
 
 void*	AR_malloc(size_t nbytes);
 void*	AR_calloc(size_t num, size_t size);
-void*	AR_realloc(void *block, size_t nbytes);
 void	AR_free(void *ptr);
-
-void*	AR_try_malloc(size_t nbytes);
-void*	AR_try_calloc(size_t num, size_t size);
-void*	AR_try_realloc(void *block, size_t nbytes);
 
 
 #else
@@ -209,15 +212,16 @@ void*	AR_try_realloc(void *block, size_t nbytes);
 
 #define	AR_malloc		malloc
 #define	AR_calloc		calloc
-#define	AR_realloc		realloc
+
 #define AR_free			free
 
-#define AR_try_malloc	malloc
-#define AR_try_calloc	calloc
-#define AR_try_realloc	realloc
 
 
 #endif
+
+
+
+
 
 
 #define AR_memset				memset
@@ -234,15 +238,35 @@ void	AR_memswap(void *a, void *b, size_t n);
 #define AR_NEW0(_type) ((_type*)AR_calloc(1, sizeof(_type)))
 #define AR_NEWARR(_type, _n) ((_type*)AR_malloc(sizeof(_type) * (_n)))
 #define AR_NEWARR0(_type, _n) ((_type*)AR_calloc((_n), sizeof(_type)))
+
+/*
 #define AR_REALLOC(_type, _ptr, _new_count) ((_type*)AR_realloc((_ptr), sizeof(_type) * (_new_count)))
+*/
+
+
+#define AR_DO_REALLOC(_type, _org_ptr, _new_cap, _copy_cnt, _status)	\
+		do{																\
+				_type *new_arr;											\
+				new_arr = AR_NEWARR(_type, (_new_cap));					\
+				if(new_arr == NULL)										\
+				{														\
+						(_status) = AR_E_NOMEM;							\
+				}														\
+				if((_copy_cnt) > 0 && (_org_ptr) != NULL)				\
+				{														\
+						AR_memcpy(new_arr, (_org_ptr), (_copy_cnt) * sizeof(_type));	\
+				}																		\
+				if((_org_ptr))															\
+				{																		\
+						AR_DEL((_org_ptr));												\
+						(_org_ptr) = NULL;												\
+				}																		\
+				(_org_ptr) = new_arr;													\
+				(_status) = AR_S_YES;													\
+		}while(0);																		
+
+
 #define AR_DEL(_ptr) AR_free((void*)(_ptr))
-
-
-#define AR_TRY_NEW(_type) ((_type*)AR_try_malloc(sizeof(_type)))
-#define AR_TRY_NEW0(_type) ((_type*)AR_try_calloc(1, sizeof(_type)))
-#define AR_TRY_NEWARR(_type, _n) ((_type*)AR_try_malloc(sizeof(_type) * (_n)))
-#define AR_TRY_NEWARR0(_type, _n) ((_type*)AR_try_calloc((_n), sizeof(_type)))
-#define AR_TRY_REALLOC(_type, _ptr, _new_count) ((_type*)AR_try_realloc((_ptr), sizeof(_type) * (_new_count)))
 
 
 
@@ -472,7 +496,6 @@ const wchar_t* AR_reverse_wcsistr(const wchar_t *str, size_t l,  const wchar_t *
 
 #elif(AR_ARCH_VER == ARCH_64)
 
-
 		#define AR_wtoi			AR_wtoi64
 		#define AR_wtou			AR_wtou64
 
@@ -517,71 +540,6 @@ uint_t			AR_wcshash_n(const wchar_t *str, size_t n);
 
 
 
-
-
-
-
-/********************************************************String*****************************************************************/
-
-typedef struct __arsenal_string_tag		arString_t;
-
-
-
-
-arString_t*		AR_CreateString();
-void			AR_DestroyString(arString_t *str);
-
-/*预留num个wchar_t的空间*/
-void			AR_ReserveString(arString_t *str, size_t num);
-void			AR_ClearString(arString_t *str);
-size_t			AR_AppendString(arString_t *str, const wchar_t *sour);
-
-void			AR_FormatString(arString_t *str, const wchar_t *fmt, ...);
-void			AR_AppendFormatString(arString_t *str, const wchar_t *fmt, ...);
-
-void			AR_VFormatString(arString_t *str, const wchar_t *fmt, va_list va_args);
-void			AR_AppendVFormatString(arString_t *str, const wchar_t *fmt, va_list va_args);
-
-
-void			AR_AppendCharToString(arString_t *str, wchar_t chr);
-
-const wchar_t*	AR_GetStringCString(const arString_t *str);
-size_t			AR_GetStringLength(const arString_t *str);
-
-
-
-
-#define			AR_StrPrint(_s) do{ AR_printf(L"%ls\r\n", AR_GetStringCString((_s))); }while(0)
-#define			AR_StrPrintCtx(_ctx, _s)do{ AR_printf_ctx((_ctx), L"%ls\r\n", AR_GetStringCString((_s))); }while(0)
-
-
-
-/********************************************************StringTable*****************************************************************/
-
-
-
-
-typedef struct __string_table_			arStringTable_t;
-
-
-
-
-#define		MIN_BUCKET_SIZE		(139)
-
-
-arStringTable_t*		AR_CreateStrTable(size_t count);
-void					AR_DestroyStrTable(arStringTable_t* tbl);
-
-
-const wchar_t*			AR_GetString(arStringTable_t *tbl, const wchar_t *str);
-const wchar_t*			AR_GetStringN(arStringTable_t *tbl, const wchar_t *str, size_t n);
-
-bool_t					AR_HasString(const arStringTable_t *tbl, const wchar_t *str);
-bool_t					AR_HasStringN(const arStringTable_t *tbl, const wchar_t *str, size_t n);
-
-const wchar_t*			AR_GetStringUInt(arStringTable_t *tbl, uint_64_t num, size_t radix);
-const wchar_t*			AR_GetStringInt(arStringTable_t *tbl, int_64_t num, size_t radix);
-const wchar_t*			AR_GetStringFloat(arStringTable_t *tbl, double num, size_t prec);
 
 
 /*********************************************************String Convert****************************************************/
@@ -634,39 +592,6 @@ static AR_INLINE uint_64_t AR_BIT_MARK(uint_64_t pos) { return AR_BIGNUM_U64(0x0
 
 
 
-/**************************************************Buffer**********************************************************************/
-
-struct arsenal_buffer_tag;
-typedef struct arsenal_buffer_tag		arBuffer_t;
-
-arBuffer_t*		AR_CreateBuffer(size_t nbytes);
-void			AR_DestroyBuffer(arBuffer_t		*buffer);
-
-void			AR_ClearBuffer(arBuffer_t		*buffer);
-
-/*分配nbytes个字节以供使用*/
-byte_t*			AR_AllocBuffer(arBuffer_t *buffer, size_t	nbytes);
-/*向buffer写入nbytes个字节*/
-void			AR_InsertBuffer(arBuffer_t *buffer, const byte_t *data, size_t len);
-
-/*从buffer头擦除nbytes个字节*/
-size_t			AR_EraseBuffer(arBuffer_t *buffer, size_t nbytes);
-
-/*返回不重新分配内存还可以写的字节数*/
-size_t			AR_GetBufferCapacity(const arBuffer_t *buffer);
-
-/*AR_ReserveBuffer调用成功后，AR_GetBufferCapacity(buffer) >= nbytes*/
-void			AR_ReserveBuffer(arBuffer_t *buffer, size_t nbytes);
-
-/*可读内存块*/
-const byte_t*	AR_GetBufferData(const arBuffer_t *buffer);
-/*可读内存块长度*/
-size_t			AR_GetBufferAvailable(const arBuffer_t *buffer);
-
-
-size_t			AR_ReadBufferData(arBuffer_t *buffer, byte_t *dest, size_t len);
-
-
 
 
 
@@ -675,6 +600,7 @@ size_t			AR_ReadBufferData(arBuffer_t *buffer, byte_t *dest, size_t len);
 #define	AR_ESCSTR_ERR_VALUE				0x01
 #define	AR_ESCSTR_ERR_CHAR				0x02
 #define AR_ESCSTR_ERR_BUFFER			0x03
+#define AR_ESCSTR_ERR_MEMORY			0x04
 
 typedef struct __escape_string_error_tag
 {
@@ -701,8 +627,124 @@ int_t 			AR_str_to_escstr_buf_n(wchar_t *dest, size_t len, const wchar_t *src, s
 
 
 /**************************************************************base64*********************************************************/
-size_t AR_base64_encode(byte_t  *out, size_t olen, const byte_t *input, size_t ilen);
-size_t AR_base64_decode(byte_t  *out, size_t olen, const byte_t *input, size_t ilen);
+size_t			AR_base64_encode(byte_t  *out, size_t olen, const byte_t *input, size_t ilen);
+size_t			AR_base64_decode(byte_t  *out, size_t olen, const byte_t *input, size_t ilen);
+
+
+
+
+
+
+
+
+
+
+
+
+/********************************************************String*****************************************************************/
+
+typedef struct __arsenal_string_tag		arString_t;
+
+
+
+
+arString_t*		AR_CreateString();
+void			AR_DestroyString(arString_t *str);
+
+/*预留num个wchar_t的空间*/
+arStatus_t		AR_ReserveString(arString_t *str, size_t num);
+void			AR_ClearString(arString_t *str);
+arStatus_t		AR_AppendString(arString_t *str, const wchar_t *sour);
+
+arStatus_t		AR_FormatString(arString_t *str, const wchar_t *fmt, ...);
+arStatus_t		AR_AppendFormatString(arString_t *str, const wchar_t *fmt, ...);
+
+arStatus_t		AR_VFormatString(arString_t *str, const wchar_t *fmt, va_list va_args);
+arStatus_t		AR_AppendVFormatString(arString_t *str, const wchar_t *fmt, va_list va_args);
+
+
+arStatus_t		AR_AppendCharToString(arString_t *str, wchar_t chr);
+
+const wchar_t*	AR_GetStringCString(const arString_t *str);
+size_t			AR_GetStringLength(const arString_t *str);
+
+
+
+
+#define			AR_StrPrint(_s) do{ AR_printf(L"%ls\r\n", AR_GetStringCString((_s))); }while(0)
+#define			AR_StrPrintCtx(_ctx, _s)do{ AR_printf_ctx((_ctx), L"%ls\r\n", AR_GetStringCString((_s))); }while(0)
+
+
+
+/********************************************************StringTable*****************************************************************/
+
+
+
+
+typedef struct __string_table_			arStringTable_t;
+
+
+
+
+#define		MIN_BUCKET_SIZE		(139)
+
+
+arStringTable_t*		AR_CreateStrTable(size_t count);
+void					AR_DestroyStrTable(arStringTable_t* tbl);
+
+
+const wchar_t*			AR_GetString(arStringTable_t *tbl, const wchar_t *str);
+const wchar_t*			AR_GetStringN(arStringTable_t *tbl, const wchar_t *str, size_t n);
+
+arStatus_t				AR_HasString(const arStringTable_t *tbl, const wchar_t *str);
+arStatus_t				AR_HasStringN(const arStringTable_t *tbl, const wchar_t *str, size_t n);
+
+const wchar_t*			AR_GetStringUInt(arStringTable_t *tbl, uint_64_t num, size_t radix);
+const wchar_t*			AR_GetStringInt(arStringTable_t *tbl, int_64_t num, size_t radix);
+const wchar_t*			AR_GetStringFloat(arStringTable_t *tbl, double num, size_t prec);
+
+
+
+
+
+/**************************************************Buffer**********************************************************************/
+
+struct arsenal_buffer_tag;
+typedef struct arsenal_buffer_tag		arBuffer_t;
+
+arBuffer_t*		AR_CreateBuffer(size_t nbytes);
+void			AR_DestroyBuffer(arBuffer_t		*buffer);
+
+void			AR_ClearBuffer(arBuffer_t		*buffer);
+
+/*分配nbytes个字节以供使用*/
+byte_t*			AR_AllocBuffer(arBuffer_t *buffer, size_t	nbytes);
+/*向buffer写入nbytes个字节*/
+arStatus_t		AR_InsertBuffer(arBuffer_t *buffer, const byte_t *data, size_t len);
+
+/*从buffer头擦除nbytes个字节*/
+size_t			AR_EraseBuffer(arBuffer_t *buffer, size_t nbytes);
+
+/*返回不重新分配内存还可以写的字节数*/
+size_t			AR_GetBufferCapacity(const arBuffer_t *buffer);
+
+/*AR_ReserveBuffer调用成功后，AR_GetBufferCapacity(buffer) >= nbytes*/
+arStatus_t		AR_ReserveBuffer(arBuffer_t *buffer, size_t nbytes);
+
+/*可读内存块*/
+const byte_t*	AR_GetBufferData(const arBuffer_t *buffer);
+/*可读内存块长度*/
+size_t			AR_GetBufferAvailable(const arBuffer_t *buffer);
+
+
+size_t			AR_ReadBufferData(arBuffer_t *buffer, byte_t *dest, size_t len);
+
+
+
+
+
+
+
 
 
 
@@ -719,16 +761,13 @@ typedef enum
 		AR_TXT_BOM_UTF32_BE		=		0x20
 }arTxtBom_t;
 
-bool_t	AR_LoadBomTextFromBinary(arBuffer_t *input, arTxtBom_t *bom, arString_t *out);
+arStatus_t	AR_LoadBomTextFromBinary(arBuffer_t *input, arTxtBom_t *bom, arString_t *out);
 
-bool_t	AR_LoadBomTextFile(const wchar_t *path, arTxtBom_t *bom, arString_t *out);
+arStatus_t	AR_LoadBomTextFile(const wchar_t *path, arTxtBom_t *bom, arString_t *out);
 
-bool_t	AR_SaveBomTextFile(const wchar_t *path, arTxtBom_t bom, const wchar_t *input);
+arStatus_t	AR_SaveBomTextFile(const wchar_t *path, arTxtBom_t bom, const wchar_t *input);
 
-bool_t	AR_SaveBomTextToBinary(arBuffer_t *output, arTxtBom_t bom, const wchar_t *input);
-
-
-
+arStatus_t	AR_SaveBomTextToBinary(arBuffer_t *output, arTxtBom_t bom, const wchar_t *input);
 
 
 
@@ -872,12 +911,12 @@ typedef struct __arsenal_vector_tag arVector_t;
 arVector_t*		AR_CreateVector(size_t size);
 void			AR_DestroyVector(arVector_t *vec);
 arVector_t*		AR_CopyNewVector(const arVector_t *vec);
-void			AR_CopyVector(arVector_t *dest, const arVector_t *src);
+arStatus_t		AR_CopyVector(arVector_t *dest, const arVector_t *src);
 
-void			AR_SetVectorSize(arVector_t *vec, size_t size);
+arStatus_t		AR_SetVectorSize(arVector_t *vec, size_t size);
 size_t			AR_GetVectorSize(const arVector_t *vec);
 
-void			AR_SetVectorData(arVector_t *vec, size_t size, const double *data);
+arStatus_t		AR_SetVectorData(arVector_t *vec, size_t size, const double *data);
 const double*	AR_GetVectorData(const arVector_t *vec);
 
 void			AR_SwapElements(arVector_t *vec, size_t l, size_t r);
@@ -895,10 +934,10 @@ void			AR_RandomVector(arVector_t *vec);
 void			AR_NormalizeVector(arVector_t *vec);
 
 
-double			AR_CalcVectorLength(const arVector_t *vec);
-double			AR_CalcVectorLengthSqr(const arVector_t *vec);
-double			AR_CalcVectorDistanceByVector(const arVector_t *vec, const arVector_t *other);
-double			AR_CalcVectorInnerProduct(const arVector_t *vec, const arVector_t *other);
+void			AR_CalcVectorLength(const arVector_t *vec, double *ret);
+void			AR_CalcVectorLengthSqr(const arVector_t *vec, double *ret);
+void			AR_CalcVectorInnerProduct(const arVector_t *vec, const arVector_t *other, double *ret);
+arStatus_t		AR_CalcVectorDistanceByVector(const arVector_t *vec, const arVector_t *other, double *ret);
 
 
 
@@ -910,10 +949,10 @@ void			AR_DivVectorByValSelf(arVector_t *vec, double val);
 
 
 
-void			AR_AddVectorByVector(const arVector_t *vec, const arVector_t *other, arVector_t *dest);
-void			AR_SubVectorByVector(const arVector_t *vec, const arVector_t *other, arVector_t *dest);
-void			AR_MulVectorByVal(const arVector_t *vec, double val, arVector_t *dest);
-void			AR_DivVectorByVal(const arVector_t *vec, double val, arVector_t *dest);
+arStatus_t		AR_AddVectorByVector(const arVector_t *vec, const arVector_t *other, arVector_t *dest);
+arStatus_t		AR_SubVectorByVector(const arVector_t *vec, const arVector_t *other, arVector_t *dest);
+arStatus_t		AR_MulVectorByVal(const arVector_t *vec, double val, arVector_t *dest);
+arStatus_t		AR_DivVectorByVal(const arVector_t *vec, double val, arVector_t *dest);
 
 
 
@@ -926,11 +965,12 @@ typedef enum
 		AR_VEC_NORM_NEGAMAX
 }arVectorNormType_t;
 
-double			AR_CalcVectorNormNumber(const arVector_t *vec, arVectorNormType_t t);
+
+arStatus_t		AR_CalcVectorNormNumber(const arVector_t *vec, arVectorNormType_t t, double *ret);
 
 
 
-void			AR_VectorToString(const arVector_t *vec, arString_t *str, size_t precision, const wchar_t *sp_str);
+arStatus_t		AR_VectorToString(const arVector_t *vec, arString_t *str, size_t precision, const wchar_t *sp_str);
 
 /***************************************************************Matrix**********************************************************/
 
@@ -943,10 +983,10 @@ arMatrix_t*		AR_CreateMatrix(size_t rows, size_t cols);
 void			AR_DestroyMatrix(arMatrix_t *mat);
 
 arMatrix_t*		AR_CopyNewMatrix(const arMatrix_t *mat);
-void			AR_CopyMatrix(arMatrix_t *dest, const arMatrix_t *src);
+arStatus_t		AR_CopyMatrix(arMatrix_t *dest, const arMatrix_t *src);
 
-void			AR_SetMatrixSize(arMatrix_t *mat, size_t rows, size_t cols);
-void			AR_SetMatrixData(arMatrix_t *mat, size_t row, size_t col, const double *data);
+arStatus_t		AR_SetMatrixSize(arMatrix_t *mat, size_t rows, size_t cols);
+arStatus_t		AR_SetMatrixData(arMatrix_t *mat, size_t row, size_t col, const double *data);
 
 int_t			AR_CompareMatrix(const arMatrix_t *l, const arMatrix_t *r, double epsilon);
 
@@ -963,8 +1003,8 @@ void			AR_SetMatrixColumnByRawData(arMatrix_t *mat, size_t col, const double *da
 
 void			AR_SetMatrixRow(arMatrix_t *mat, size_t row,  const arVector_t *vec);
 void			AR_SetMatrixColumn(arMatrix_t *mat, size_t col,  const arVector_t *vec);
-void			AR_GetMatrixRow(const arMatrix_t *mat, size_t row,  arVector_t *out);
-void			AR_GetMatrixColumn(const arMatrix_t *mat, size_t col,  arVector_t *out);
+arStatus_t		AR_GetMatrixRow(const arMatrix_t *mat, size_t row,  arVector_t *out);
+arStatus_t		AR_GetMatrixColumn(const arMatrix_t *mat, size_t col,  arVector_t *out);
 
 const double*	AR_GetMatrixRawData(const arMatrix_t *mat);
 
@@ -972,12 +1012,12 @@ const double*	AR_GetMatrixRawData(const arMatrix_t *mat);
 /****************************************生成标准矩阵类型******************************************/
 void			AR_ZeroMatrix(arMatrix_t *mat);
 void			AR_IdentityMatrix(arMatrix_t *mat);
-void			AR_DiagonalMatrix(arMatrix_t *mat, const arVector_t *vec);
+arStatus_t		AR_DiagonalMatrix(arMatrix_t *mat, const arVector_t *vec);
 void			AR_RandomMatrix(arMatrix_t *mat);
 void			AR_NegateMatrix(arMatrix_t *mat);
 void			AR_ClampMatrix(arMatrix_t *mat, double min_val, double max_val);
-void			AR_SwapMatrixRows(arMatrix_t *mat, size_t l, size_t r);
-void			AR_SwapMatrixColumns(arMatrix_t *mat, size_t l, size_t r);
+arStatus_t		AR_SwapMatrixRows(arMatrix_t *mat, size_t l, size_t r);
+arStatus_t		AR_SwapMatrixColumns(arMatrix_t *mat, size_t l, size_t r);
 void			AR_RemoveMatrixRow(arMatrix_t *mat, size_t r);
 void			AR_RemoveMatrixColumn(arMatrix_t *mat, size_t c);
 void			AR_ClearMatrixUpperTriangle(arMatrix_t *mat);
@@ -985,66 +1025,68 @@ void			AR_ClearMatrixLowerTriangle(arMatrix_t *mat);
 
 /****************************************判断矩阵类型******************************************/
 
-bool_t			AR_IsSquareMatrix(const arMatrix_t *mat);
-bool_t			AR_IsZeroMatrix(const arMatrix_t *mat, double epsilon);
-bool_t			AR_IsIdentityMatrix(const arMatrix_t *mat, double epsilon);
-bool_t			AR_IsDiagonalMatrix(const arMatrix_t *mat, double epsilon);
-bool_t			AR_IsTriDiagonalMatrix(const arMatrix_t *mat, double epsilon);
-bool_t			AR_IsSymmetricMatrix(const arMatrix_t *mat, double epsilon);
-bool_t			AR_IsOrthogonalMatrix(const arMatrix_t *mat, double epsilon);
-bool_t			AR_IsOrthonormalMatrix(const arMatrix_t *mat, double epsilon);
+arStatus_t			AR_IsSquareMatrix(const arMatrix_t *mat);
+
+
+arStatus_t		AR_IsZeroMatrix(const arMatrix_t *mat, double epsilon);
+arStatus_t		AR_IsIdentityMatrix(const arMatrix_t *mat, double epsilon);
+arStatus_t		AR_IsDiagonalMatrix(const arMatrix_t *mat, double epsilon);
+arStatus_t		AR_IsTriDiagonalMatrix(const arMatrix_t *mat, double epsilon);
+arStatus_t		AR_IsSymmetricMatrix(const arMatrix_t *mat, double epsilon);
+arStatus_t		AR_IsOrthogonalMatrix(const arMatrix_t *mat, double epsilon);
+arStatus_t		AR_IsOrthonormalMatrix(const arMatrix_t *mat, double epsilon);
 
 /*是否正定矩阵*/
-bool_t			AR_IsPositiveDefiniteMatrix(const arMatrix_t *mat, double epsilon);
-bool_t			AR_IsSymmetricPositiveDefinite(const arMatrix_t *mat, double epsilon);
+arStatus_t		AR_IsPositiveDefiniteMatrix(const arMatrix_t *mat, double epsilon);
+arStatus_t		AR_IsSymmetricPositiveDefinite(const arMatrix_t *mat, double epsilon);
 
 /*是否半正定矩阵*/
-bool_t			AR_IsPositiveSemiDefinite(const arMatrix_t *mat, double epsilon);
-bool_t			AR_IsSymmetricPositiveSemiDefinite(const arMatrix_t *mat, double epsilon);
+arStatus_t		AR_IsPositiveSemiDefinite(const arMatrix_t *mat, double epsilon);
+arStatus_t		AR_IsSymmetricPositiveSemiDefinite(const arMatrix_t *mat, double epsilon);
 
 
 /****************************************基本矩阵计算******************************************/
 
-void			AR_MultiplyMatrixByScalar(const arMatrix_t *mat, double value, arMatrix_t *dest);
-void			AR_MultiplyMatrixByScalarSelf(arMatrix_t *mat, double value);
+arStatus_t		AR_MultiplyMatrixByScalar(const arMatrix_t *mat, double value, arMatrix_t *dest);
+arStatus_t		AR_MultiplyMatrixByScalarSelf(arMatrix_t *mat, double value);
 
-void			AR_MultiplyMatrixByVector(const arMatrix_t *mat, const arVector_t *other, arVector_t *dest);
-void			AR_MultiplyTransposeMatrixByVector(const arMatrix_t *mat, const arVector_t *other, arVector_t *dest);
+arStatus_t		AR_MultiplyMatrixByVector(const arMatrix_t *mat, const arVector_t *other, arVector_t *dest);
+arStatus_t		AR_MultiplyTransposeMatrixByVector(const arMatrix_t *mat, const arVector_t *other, arVector_t *dest);
 
-void			AR_MultiplyMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest);
-void			AR_MultiplyTransposeMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest);
-void			AR_MultiplyMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other);
-void			AR_MultiplyTransposeMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other);
+arStatus_t		AR_MultiplyMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest);
+arStatus_t		AR_MultiplyTransposeMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest);
+arStatus_t		AR_MultiplyMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other);
+arStatus_t		AR_MultiplyTransposeMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other);
 
-void			AR_AddMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest);
-void			AR_AddMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other);
+arStatus_t		AR_AddMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest);
+arStatus_t		AR_AddMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other);
 
-void			AR_SubMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest);
-void			AR_SubMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other);
-
-
+arStatus_t		AR_SubMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest);
+arStatus_t		AR_SubMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other);
 
 
 
-double			AR_CalcMatrixTrace(const arMatrix_t *mat);
-double			AR_CalcMatrixDeterminant(const arMatrix_t *mat);
-size_t			AR_CalcMatrixRank(const arMatrix_t *mat);
-void			AR_TransposeMatrix(const arMatrix_t *mat, arMatrix_t *dest);
-void			AR_TransposeMatrixSelf(arMatrix_t *mat);
+
+
+arStatus_t		AR_CalcMatrixTrace(const arMatrix_t *mat, double *ret);
+arStatus_t		AR_CalcMatrixDeterminant(const arMatrix_t *mat, double *ret);
+arStatus_t		AR_CalcMatrixRank(const arMatrix_t *mat, size_t *ret);
+arStatus_t		AR_TransposeMatrix(const arMatrix_t *mat, arMatrix_t *dest);
+arStatus_t		AR_TransposeMatrixSelf(arMatrix_t *mat);
 
 
 /*取逆矩阵*/
-bool_t			AR_InverseMatrixSelf(arMatrix_t *mat);
+arStatus_t		AR_InverseMatrixSelf(arMatrix_t *mat);
 
-bool_t			AR_InverseLowerTriangularMatrixSelf(arMatrix_t *mat);
-bool_t			AR_InverseUpperTriangularMatrixSelf(arMatrix_t *mat);
+arStatus_t		AR_InverseLowerTriangularMatrixSelf(arMatrix_t *mat);
+arStatus_t		AR_InverseUpperTriangularMatrixSelf(arMatrix_t *mat);
 
-bool_t			AR_InverseMatrixByGaussJordanSelf(arMatrix_t *mat);
-void			AR_InverseSolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t *b);
+arStatus_t		AR_InverseMatrixByGaussJordanSelf(arMatrix_t *mat);
+arStatus_t		AR_InverseSolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t *b);
 
 /*matlab rref(A)*/
 void			AR_ReduceMatrixToEchelonFormSelf(arMatrix_t *mat, size_t *index);
-void			AR_ReduceMatrixToEchelonForm(const arMatrix_t *mat, size_t *index, arMatrix_t *rm);
+arStatus_t		AR_ReduceMatrixToEchelonForm(const arMatrix_t *mat, size_t *index, arMatrix_t *rm);
 
 
 
@@ -1052,17 +1094,17 @@ void			AR_ReduceMatrixToEchelonForm(const arMatrix_t *mat, size_t *index, arMatr
 
 /*三对角矩阵*/
 void			AR_TriDiagonalClearMatrixSelf(arMatrix_t *mat);
-bool_t			AR_TriDiagonalSolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t *b);
-bool_t			AR_TriDiagonalInverseMatrix(const arMatrix_t *mat, arMatrix_t *inv);
+arStatus_t		AR_TriDiagonalSolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t *b);
+arStatus_t		AR_TriDiagonalInverseMatrix(const arMatrix_t *mat, arMatrix_t *inv);
 
 
 /*LU分解*/
 
-bool_t			AR_LUFactorMatrixSelf(arMatrix_t *mat, size_t *index, double *det);
-void			AR_LUInverseMatrix(const arMatrix_t *mat, const size_t *index, arMatrix_t *inv);
-void			AR_LUSolveMatrix(const arMatrix_t *mat, const size_t *index, arVector_t *x,const arVector_t *b);
-void			AR_UnpackMatrixLUFactors(const arMatrix_t *mat, arMatrix_t *L, arMatrix_t *U);
-void			AR_MultiplyMatrixLUFactors(const arMatrix_t *mat, const size_t *index, arMatrix_t *original_mat);
+arStatus_t		AR_LUFactorMatrixSelf(arMatrix_t *mat, size_t *index, double *det);
+arStatus_t		AR_LUInverseMatrix(const arMatrix_t *mat, const size_t *index, arMatrix_t *inv);
+arStatus_t		AR_LUSolveMatrix(const arMatrix_t *mat, const size_t *index, arVector_t *x,const arVector_t *b);
+arStatus_t		AR_UnpackMatrixLUFactors(const arMatrix_t *mat, arMatrix_t *L, arMatrix_t *U);
+arStatus_t		AR_MultiplyMatrixLUFactors(const arMatrix_t *mat, const size_t *index, arMatrix_t *original_mat);
 
 
 
@@ -1070,32 +1112,32 @@ void			AR_MultiplyMatrixLUFactors(const arMatrix_t *mat, const size_t *index, ar
 LDLT分解 A = L*D*L^t,矩阵为对称方阵
 */
 
-bool_t			AR_LDLTFactorMatrixSelf(arMatrix_t *mat);
+arStatus_t		AR_LDLTFactorMatrixSelf(arMatrix_t *mat);
 void			AR_LDLTSolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t *b);
-void			AR_LDLTInverseMatrix(const arMatrix_t *mat, arMatrix_t *inv);
-void			AR_UnpackMatrixLDLTFactors(const arMatrix_t *mat, arMatrix_t *L, arMatrix_t *D);
-void			AR_MultiplyMatrixLDLTFactors(const arMatrix_t *mat, arMatrix_t *original_mat);
+arStatus_t		AR_LDLTInverseMatrix(const arMatrix_t *mat, arMatrix_t *inv);
+arStatus_t		AR_UnpackMatrixLDLTFactors(const arMatrix_t *mat, arMatrix_t *L, arMatrix_t *D);
+arStatus_t		AR_MultiplyMatrixLDLTFactors(const arMatrix_t *mat, arMatrix_t *original_mat);
 
 
 
 /*Cholesky分解*/
-bool_t			AR_CholeskyFactorMatrixSelf(arMatrix_t *mat);
-void			AR_CholeskySolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t *b);
-void			AR_CholeskyInverseMatrix(const arMatrix_t *mat, arMatrix_t *inv);
-void			AR_MultiplyMatrixCholeskyFactors(const arMatrix_t *mat, arMatrix_t *original_mat);
+arStatus_t		AR_CholeskyFactorMatrixSelf(arMatrix_t *mat);
+arStatus_t		AR_CholeskySolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t *b);
+arStatus_t		AR_CholeskyInverseMatrix(const arMatrix_t *mat, arMatrix_t *inv);
+arStatus_t		AR_MultiplyMatrixCholeskyFactors(const arMatrix_t *mat, arMatrix_t *original_mat);
 
 
 /*QR分解*/
-bool_t			AR_QRFactorMatrixSelf(arMatrix_t *mat, arVector_t *c, arVector_t *d);
-void			AR_QRSloveMatrix(const arMatrix_t *mat, const arVector_t *c, const arVector_t *d, arVector_t *x, const arVector_t *b);
-void			AR_QRInverseMatrix(const arMatrix_t *mat, const arVector_t *c, const arVector_t *d, arMatrix_t *inv);
-void			AR_UnpackMatrixQRFactors(const arMatrix_t *mat, const arVector_t *c, const arVector_t *d, arMatrix_t *Q, arMatrix_t *R);
-void			AR_MultiplyMatrixQRFactors(const arMatrix_t *mat, const arVector_t *c, const arVector_t *d, arMatrix_t *original_matrix);
+arStatus_t		AR_QRFactorMatrixSelf(arMatrix_t *mat, arVector_t *c, arVector_t *d);
+arStatus_t		AR_QRSloveMatrix(const arMatrix_t *mat, const arVector_t *c, const arVector_t *d, arVector_t *x, const arVector_t *b);
+arStatus_t		AR_QRInverseMatrix(const arMatrix_t *mat, const arVector_t *c, const arVector_t *d, arMatrix_t *inv);
+arStatus_t		AR_UnpackMatrixQRFactors(const arMatrix_t *mat, const arVector_t *c, const arVector_t *d, arMatrix_t *Q, arMatrix_t *R);
+arStatus_t		AR_MultiplyMatrixQRFactors(const arMatrix_t *mat, const arVector_t *c, const arVector_t *d, arMatrix_t *original_matrix);
 
 
 
 /*************************************************************其他功能*************************************************************/
-void			AR_MatrixToString(const arMatrix_t *mat, arString_t *str, size_t precision, const wchar_t *sp_str, const wchar_t *row_sp);
+arStatus_t		AR_MatrixToString(const arMatrix_t *mat, arString_t *str, size_t precision, const wchar_t *sp_str, const wchar_t *row_sp);
 
 
 AR_NAMESPACE_END

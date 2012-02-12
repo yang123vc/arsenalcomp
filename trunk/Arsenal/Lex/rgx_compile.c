@@ -316,7 +316,7 @@ void			RGX_UnInitProg(rgxProg_t *prog)
 }
 
 
-void			RGX_Compile(rgxProg_t *prog, const rgxNode_t *tree)
+arStatus_t			RGX_Compile(rgxProg_t *prog, const rgxNode_t *tree)
 {
 		AR_ASSERT(prog != NULL && prog->count == 0 && prog->start == NULL && tree != NULL);
 
@@ -327,6 +327,12 @@ void			RGX_Compile(rgxProg_t *prog, const rgxNode_t *tree)
 		AR_ASSERT(prog->count > 0);
 
 		prog->start = AR_NEWARR0(rgxIns_t, prog->count);
+
+		if(prog->start == NULL)
+		{
+				return AR_E_NOMEM;
+		}
+
 		prog->pc = prog->start;
 
 		__emit_code(prog, tree);
@@ -347,6 +353,8 @@ void			RGX_Compile(rgxProg_t *prog, const rgxNode_t *tree)
 		}
 */
 
+		return AR_S_YES;
+
 }
 
 
@@ -355,11 +363,13 @@ void			RGX_Compile(rgxProg_t *prog, const rgxNode_t *tree)
 
 
 
-void			RGX_ProgToString(const rgxProg_t *prog, arString_t *str)
+arStatus_t			RGX_ProgToString(const rgxProg_t *prog, arString_t *str)
 {
 		size_t i;
-
+		arStatus_t	status;
 		AR_ASSERT(prog != NULL && str);
+
+		status = AR_S_YES;
 
 		for(i = 0; i < prog->count; ++i)
 		{
@@ -368,48 +378,113 @@ void			RGX_ProgToString(const rgxProg_t *prog, arString_t *str)
 				{
 				case RGX_CHAR_I:
 				{
-						AR_AppendFormatString(str, L"%2d. %ls [", i, RGX_INS_NAME[pc->opcode]);
+						status = AR_AppendFormatString(str, L"%2d. %ls [", i, RGX_INS_NAME[pc->opcode]);
+
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
+
 						if(pc->range.beg == pc->range.end)
 						{
 								if(AR_iswgraph(pc->range.beg) && pc->range.beg < (wchar_t)128)
 								{
-										AR_AppendFormatString(str, L"%c", pc->range.beg);
+										status = AR_AppendFormatString(str, L"%c", pc->range.beg);
+
+										if(status != AR_S_YES)
+										{
+												return status;
+										}
 								}else
 								{
-										AR_AppendFormatString(str, L"\\u%Id", pc->range.beg);
+										status = AR_AppendFormatString(str, L"\\u%Id", pc->range.beg);
+
+										if(status != AR_S_YES)
+										{
+												return status;
+										}
 								}
 						}else
 						{
 								if(AR_iswgraph(pc->range.beg) && pc->range.beg < (wchar_t)128)
 								{
-										AR_AppendFormatString(str, L"%c", pc->range.beg);
+										status = AR_AppendFormatString(str, L"%c", pc->range.beg);
+
+										if(status != AR_S_YES)
+										{
+												return status;
+										}
 								}else
 								{
-										AR_AppendFormatString(str, L"\\u%Id", pc->range.beg);
+										status = AR_AppendFormatString(str, L"\\u%Id", pc->range.beg);
+
+										if(status != AR_S_YES)
+										{
+												return status;
+										}
 								}
 
-								AR_AppendString(str, L"-");
+								status = AR_AppendString(str, L"-");
+
+								if(status != AR_S_YES)
+								{
+										return status;
+								}
 
 								if(AR_iswgraph(pc->range.end) && pc->range.end < (wchar_t)128)
 								{
-										AR_AppendFormatString(str, L"%c", pc->range.end);
+										status = AR_AppendFormatString(str, L"%c", pc->range.end);
+
+										if(status != AR_S_YES)
+										{
+												return status;
+										}
 								}else
 								{
-										AR_AppendFormatString(str, L"\\u%Id", pc->range.end);
+										status = AR_AppendFormatString(str, L"\\u%Id", pc->range.end);
+
+										if(status != AR_S_YES)
+										{
+												return status;
+										}
 								}
 						}
-						AR_AppendFormatString(str, L"]\r\n");
+						status = AR_AppendFormatString(str, L"]\r\n");
+
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
+
 						break;
 				}
 				
 				case RGX_LOOP_BEG_I:
 				{
-						AR_AppendFormatString(str, L"%2d. %ls %Id LoopCount == %Id\r\n", i, RGX_INS_NAME[pc->opcode], (size_t)(pc->left - prog->start), pc->fix_count);
+						status = AR_AppendFormatString(str, L"%2d. %ls %Id LoopCount == %Id\r\n", i, RGX_INS_NAME[pc->opcode], (size_t)(pc->left - prog->start), pc->fix_count);
+
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
+
 						break;
 				}
 				case RGX_LOOKAHEAD_BEG_I:
 				{
-						AR_AppendFormatString(str, L"%2d. %ls %Id\r\n", i, RGX_INS_NAME[pc->opcode], (size_t)(pc->left - prog->start));
+						if(!pc->lookahead.negative)
+						{
+								status = AR_AppendFormatString(str, L"%2d. %ls %Id\r\n", i, RGX_INS_NAME[pc->opcode], (size_t)(pc->left - prog->start));
+						}else
+						{
+								status = AR_AppendFormatString(str, L"%2d. Negative %ls %Id\r\n", i, RGX_INS_NAME[pc->opcode], (size_t)(pc->left - prog->start));
+						}
+
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
+
 						break;
 				}
 				case RGX_LOOP_END_I:
@@ -421,22 +496,44 @@ void			RGX_ProgToString(const rgxProg_t *prog, arString_t *str)
 				case RGX_ANY_CHAR_I:
 				case RGX_MATCH_I:
 				{
-						AR_AppendFormatString(str, L"%2d. %ls\r\n", i, RGX_INS_NAME[pc->opcode]);
+						status = AR_AppendFormatString(str, L"%2d. %ls\r\n", i, RGX_INS_NAME[pc->opcode]);
+
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
+
 						break;
 				}
 				case RGX_JMP_I:
 				{
-						AR_AppendFormatString(str, L"%2d. %ls %Id\r\n", i, RGX_INS_NAME[pc->opcode], (size_t)(pc->left - prog->start));
+						status = AR_AppendFormatString(str, L"%2d. %ls %Id\r\n", i, RGX_INS_NAME[pc->opcode], (size_t)(pc->left - prog->start));
+
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
+
 						break;
 				}
 				case RGX_BRANCH_I:
 				{
-						AR_AppendFormatString(str, L"%2d. %ls %Id %Id\r\n", i, RGX_INS_NAME[pc->opcode], (size_t)(pc->left - prog->start), (size_t)(pc->right - prog->start));
+						status = AR_AppendFormatString(str, L"%2d. %ls %Id %Id\r\n", i, RGX_INS_NAME[pc->opcode], (size_t)(pc->left - prog->start), (size_t)(pc->right - prog->start));
+
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
 
 						break;
 				}
 				case RGX_NOP_I:
-						AR_AppendFormatString(str, L"%2d. %ls\r\n", i,RGX_INS_NAME[RGX_NOP_I]);
+						status = AR_AppendFormatString(str, L"%2d. %ls\r\n", i,RGX_INS_NAME[RGX_NOP_I]);
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
+
 						break;
 				default:
 				{
@@ -445,6 +542,8 @@ void			RGX_ProgToString(const rgxProg_t *prog, arString_t *str)
 				}
 				}
 		}
+
+		return status;
 }
 
 

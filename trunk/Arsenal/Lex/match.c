@@ -67,19 +67,50 @@ void		Lex_DestroyProgSet(lexProgSet_t *set)
 		}
 }
 
-void Lex_InserToProgSet(lexProgSet_t *set, rgxProg_t *prog, const lexAction_t *act)
+arStatus_t Lex_InserToProgSet(lexProgSet_t *set, rgxProg_t *prog, const lexAction_t *act)
 {
 		AR_ASSERT(set != NULL && prog != NULL && act != NULL);
 
 		if(set->count == set->cap)
 		{
-				set->cap = (set->cap + 1)*2;
-				set->prog = AR_REALLOC(rgxProg_t*, set->prog, set->cap);
-				set->action = AR_REALLOC(lexAction_t, set->action, set->cap);
+				size_t new_cap;
+				rgxProg_t **new_progs;
+				lexAction_t *new_acts;
+
+				new_cap = (set->cap + 1)*2;
+				new_progs = AR_NEWARR(rgxProg_t*, new_cap);
+				new_acts = AR_NEWARR(lexAction_t, new_cap);
+				if(new_progs == NULL || new_acts == NULL)
+				{
+						if(new_progs)
+						{
+								AR_DEL(new_progs);
+								new_progs = NULL;
+						}
+
+						if(new_acts == NULL)
+						{
+								AR_DEL(new_acts);
+								new_acts = NULL;
+						}
+						return AR_E_NOMEM;
+				}
+
+				AR_memcpy(new_progs, set->prog, set->count * sizeof(rgxProg_t*));
+				AR_memcpy(new_acts, set->action, set->count * sizeof(lexAction_t));
+
+				AR_DEL(set->prog);
+				AR_DEL(set->action);
+
+				set->cap = new_cap;
+				set->prog = new_progs;
+				set->action = new_acts;
 		}
+
 		set->prog[set->count] = prog;
 		set->action[set->count] = *act;
 		set->count++;
+		return AR_S_YES;
 }
 
 
@@ -99,7 +130,7 @@ static void __exch_set(lexProgSet_t *set, int_t i,int_t j)
 		set->action[j] = act;
 }
 
-bool_t	Lex_RemoveFromProgSet(lexProgSet_t *set, size_t value)
+arStatus_t	Lex_RemoveFromProgSet(lexProgSet_t *set, size_t value)
 {
 		int_t l,r,cnt;
 		bool_t res = false;
@@ -131,7 +162,7 @@ bool_t	Lex_RemoveFromProgSet(lexProgSet_t *set, size_t value)
 
 		set->count = (size_t)cnt;
 
-		return res;
+		return res ? AR_S_YES : AR_S_NO;
 }
 
 
@@ -229,6 +260,10 @@ lexMatch_t*		Lex_CreateMatch(const lex_t *lex)
 		
 		pmatch = AR_NEW(lexMatch_t);
 
+		if(pmatch == NULL)
+		{
+				return NULL;
+		}
 
 		AR_memset(pmatch, 0, sizeof(*pmatch));
 
@@ -239,24 +274,51 @@ lexMatch_t*		Lex_CreateMatch(const lex_t *lex)
 		pmatch->flags = 0;
 		
 		pmatch->prog_set = Lex_CreateProgSet();
+
+		if(pmatch->prog_set == NULL)
+		{
+				AR_DEL(pmatch);
+				return NULL;
+		}
+
 		
+
 		for(i = 0; i < lex->rule_set.count; ++i)
 		{
 				rgxProg_t *prog;
 				prog = AR_NEW(rgxProg_t);
-				
+
+				if(prog == NULL)
+				{
+						Lex_DestroyMatch(pmatch);
+						return NULL;
+				}
 		
 
 				RGX_InitProg(prog);
-				RGX_Compile(prog, lex->rule_set.nodes[i]);
+
+				if(RGX_Compile(prog, lex->rule_set.nodes[i]) != AR_S_YES)
+				{
+						RGX_UnInitProg(prog);
+						AR_DEL(prog);
+						Lex_DestroyMatch(pmatch);
+						return NULL;
+				}
 				
-				Lex_InserToProgSet(pmatch->prog_set, prog, &lex->rule_set.action[i]);
+				if(Lex_InserToProgSet(pmatch->prog_set, prog, &lex->rule_set.action[i]) != AR_S_YES)
+				{
+						RGX_UnInitProg(prog);
+						AR_DEL(prog);
+						Lex_DestroyMatch(pmatch);
+						return NULL;
+				}
 		}
 
 		Lex_SortProgSet(pmatch->prog_set);
 		
 		return pmatch;
 }
+
 
 
 void Lex_DestroyMatch(lexMatch_t *pmatch)
@@ -278,10 +340,10 @@ const wchar_t* Lex_GetNextInput(const lexMatch_t *match)
 		return match->next;
 }
 
-bool_t	Lex_IsError(const lexMatch_t *match)
+arStatus_t	Lex_IsError(const lexMatch_t *match)
 {
 		AR_ASSERT(match != NULL);
-		return !match->is_ok;
+		return !match->is_ok ? AR_S_YES : AR_S_NO;
 }
 
 void	Lex_ClearError(lexMatch_t *match)
@@ -392,7 +454,7 @@ void			Lex_SkipTo(lexMatch_t *pmatch, const wchar_t *tok)
 		
 }
 
-bool_t			Lex_TrySkipTo(lexMatch_t *pmatch, const wchar_t *tok)
+arStatus_t		Lex_TrySkipTo(lexMatch_t *pmatch, const wchar_t *tok)
 {
 		const wchar_t *next;
 		AR_ASSERT(pmatch != NULL && pmatch->next != NULL);
@@ -400,11 +462,11 @@ bool_t			Lex_TrySkipTo(lexMatch_t *pmatch, const wchar_t *tok)
 		
 		if(next == NULL)
 		{
-				return false;
+				return AR_S_NO;
 		}else
 		{
 				Lex_SkipTo(pmatch, tok);
-				return true;
+				return AR_S_YES;
 		}
 
 }
@@ -478,13 +540,15 @@ void			Lex_MatchGetCoordinate(const lexMatch_t *pmatch, size_t *index, size_t *l
 
 #define LEX_MAX_EMPTY_MATCH_CNT 1
 
-bool_t Lex_Match(lexMatch_t *match, lexToken_t *tok)
+arStatus_t Lex_Match(lexMatch_t *match, lexToken_t *tok)
 {
+		arStatus_t status;
 		size_t i;
-
 		size_t empty_match_cnt = 0;
 
 		AR_ASSERT(match != NULL && tok != NULL);
+
+		status = AR_S_YES;
 REMATCH:
 		if(empty_match_cnt > LEX_MAX_EMPTY_MATCH_CNT)
 		{
@@ -495,12 +559,15 @@ REMATCH:
 
 				//AR_CHECK(false, L"%ls\r\n", L"Invalid empty pattern\r\n");
 				
-				return false;
+				return AR_E_LEXMPTYMATCH;
 		}
+
 
 		for(i = 0; i < match->prog_set->count; ++i)
 		{
-				if(RGX_Match(match->prog_set->prog[i], match, tok))
+				status = RGX_Match(match->prog_set->prog[i], match, tok);
+
+				if(status == AR_S_YES)
 				{
 						/*
 						{
@@ -521,13 +588,26 @@ REMATCH:
 								goto REMATCH;
 						}else
 						{
-								return true;
+								if(tok->count > 0)
+								{
+										return AR_S_YES;
+								}else
+								{
+										return AR_S_YES;
+								}
 						}
+				}else if(status == AR_S_NO)
+				{
+						continue;
+				}else
+				{
+						break;
 				}
 		}
 
+		AR_ASSERT(status != AR_S_YES);
 		match->is_ok = false;
-		return false;
+		return status;
 }
 
 

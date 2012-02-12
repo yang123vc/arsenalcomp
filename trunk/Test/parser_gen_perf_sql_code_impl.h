@@ -1,4 +1,4 @@
-
+#if(0)
 static const wchar_t *__g_sql_lex_name[] = {
 NULL
 };
@@ -7407,3 +7407,5 @@ static psrNode_t* AR_STDCALL handle_drop_assembly(psrNode_t **nodes, size_t coun
 
 
 
+
+#endif
