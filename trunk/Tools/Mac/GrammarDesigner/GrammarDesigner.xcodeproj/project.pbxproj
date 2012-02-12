@@ -33,7 +33,6 @@
 		BE47DE391426B84A006FE4E8 /* ApplicationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BE47DE381426B84A006FE4E8 /* ApplicationDelegate.m */; };
 		BE8DB506142D7A160031D571 /* GrammarCheckerTask.m in Sources */ = {isa = PBXBuildFile; fileRef = BE8DB505142D7A160031D571 /* GrammarCheckerTask.m */; };
 		BE9680F014330656003C8716 /* ConsoleMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = BE9680EF14330656003C8716 /* ConsoleMessage.m */; };
-		BE9CEBEE1439DCF500E46CEA /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BE9CEBED1439DCF500E46CEA /* Arsenal.a */; };
 		BEAE57FD1426F8F3004C25AA /* Preferences.m in Sources */ = {isa = PBXBuildFile; fileRef = BEAE57FC1426F8F3004C25AA /* Preferences.m */; };
 		BEAE58021426F9BC004C25AA /* ARTest.m in Sources */ = {isa = PBXBuildFile; fileRef = BEAE58011426F9BC004C25AA /* ARTest.m */; };
 		BEAE587E1426FCDA004C25AA /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEAE587D1426FCDA004C25AA /* Preferences.xib */; };
@@ -46,6 +45,7 @@
 		BEC6031C1431AB090061848F /* FindResultsView.m in Sources */ = {isa = PBXBuildFile; fileRef = BEC6031B1431AB090061848F /* FindResultsView.m */; };
 		BEDCDCB81429A48B00D041D4 /* ARDuplexTask.m in Sources */ = {isa = PBXBuildFile; fileRef = BEDCDCB71429A48B00D041D4 /* ARDuplexTask.m */; };
 		BEDCE03A142ADA7E00D041D4 /* GmrIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = BEDCE039142ADA7E00D041D4 /* GmrIcon.icns */; };
+		BEF7477714E84F82009F17CB /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BEF7477614E84F82009F17CB /* Arsenal.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -99,7 +99,6 @@
 		BE8DB505142D7A160031D571 /* GrammarCheckerTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrammarCheckerTask.m; sourceTree = "<group>"; };
 		BE9680EE14330656003C8716 /* ConsoleMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConsoleMessage.h; sourceTree = "<group>"; };
 		BE9680EF14330656003C8716 /* ConsoleMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConsoleMessage.m; sourceTree = "<group>"; };
-		BE9CEBED1439DCF500E46CEA /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = Arsenal.a; path = /Users/solidussnakeex/Desktop/Programming/Arsenal/Binary/LibRelease/Arsenal.a; sourceTree = "<absolute>"; };
 		BEAE57FB1426F8F3004C25AA /* Preferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Preferences.h; sourceTree = "<group>"; };
 		BEAE57FC1426F8F3004C25AA /* Preferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Preferences.m; sourceTree = "<group>"; };
 		BEAE58011426F9BC004C25AA /* ARTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ARTest.m; path = Helper/ARTest.m; sourceTree = "<group>"; };
@@ -116,6 +115,7 @@
 		BEC6031B1431AB090061848F /* FindResultsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FindResultsView.m; sourceTree = "<group>"; };
 		BEDCDCB71429A48B00D041D4 /* ARDuplexTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ARDuplexTask.m; path = Helper/ARDuplexTask.m; sourceTree = "<group>"; };
 		BEDCE039142ADA7E00D041D4 /* GmrIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = GmrIcon.icns; sourceTree = "<group>"; };
+		BEF7477614E84F82009F17CB /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = Arsenal.a; path = "../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-dklbavanfxrpxtdcqgesieswyeaq/Build/Products/Debug/Arsenal.a"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,10 +123,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BEF7477714E84F82009F17CB /* Arsenal.a in Frameworks */,
 				8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */,
 				BEC0D01F1422C35000D35745 /* libiconv.dylib in Frameworks */,
 				BEC0D0211422C35900D35745 /* libpthread.dylib in Frameworks */,
-				BE9CEBEE1439DCF500E46CEA /* Arsenal.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -162,6 +162,7 @@
 		2A37F4AAFDCFA73011CA2CEA /* GrammarDesigner */ = {
 			isa = PBXGroup;
 			children = (
+				BEF7477614E84F82009F17CB /* Arsenal.a */,
 				BE47DD0814269546006FE4E8 /* Helper */,
 				2A37F4ABFDCFA73011CA2CEA /* Classes */,
 				2A37F4AFFDCFA73011CA2CEA /* Other Sources */,
@@ -170,7 +171,6 @@
 				19C28FB0FE9D524F11CA2CBB /* Products */,
 				BEC0D01E1422C35000D35745 /* libiconv.dylib */,
 				BEC0D0201422C35900D35745 /* libpthread.dylib */,
-				BE9CEBED1439DCF500E46CEA /* Arsenal.a */,
 			);
 			name = GrammarDesigner;
 			sourceTree = "<group>";
@@ -410,7 +410,8 @@
 		C05733C808A9546B00998B17 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -418,12 +419,14 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = GrammarDesigner_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = "DEBUG=1";
 				INFOPLIST_FILE = "GrammarDesigner-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../../Binary/LibDebug\"",
 					"\"$(SRCROOT)/../../../Binary/LibRelease\"",
+					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-dklbavanfxrpxtdcqgesieswyeaq/Build/Products/Debug\"",
 				);
 				PRODUCT_NAME = GrammarDesigner;
 			};
@@ -432,17 +435,20 @@
 		C05733C908A9546B00998B17 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = GrammarDesigner_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = "NDEBUG=1";
 				INFOPLIST_FILE = "GrammarDesigner-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../../Binary/LibDebug\"",
 					"\"$(SRCROOT)/../../../Binary/LibRelease\"",
+					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-dklbavanfxrpxtdcqgesieswyeaq/Build/Products/Debug\"",
 				);
 				PRODUCT_NAME = GrammarDesigner;
 			};
