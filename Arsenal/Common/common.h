@@ -1136,6 +1136,8 @@ arStatus_t		AR_MultiplyMatrixQRFactors(const arMatrix_t *mat, const arVector_t *
 
 
 
+
+
 /*************************************************************其他功能*************************************************************/
 arStatus_t		AR_MatrixToString(const arMatrix_t *mat, arString_t *str, size_t precision, const wchar_t *sp_str, const wchar_t *row_sp);
 

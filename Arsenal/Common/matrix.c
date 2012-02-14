@@ -3439,51 +3439,6 @@ arStatus_t			AR_MultiplyMatrixCholeskyFactors(const arMatrix_t *mat, arMatrix_t 
 
 
 
-#if(0)
-#if(0)
-
-
-/*QR·Ö½â*/
-bool_t			AR_QRFactorMatrixSelf(arMatrix_t *mat, arVector_t *c, arVector_t *d, bool_t *is_singular)
-{
-		AR_ASSERT(false);
-
-		return false;
-}
-
-void			AR_QRSloveMatrix(const arMatrix_t *mat, const arVector_t *c, const arVector_t *d, arVector_t *x, const arVector_t *b)
-{
-
-}
-
-
-void			AR_QRInverseMatrix(const arMatrix_t *mat, const arVector_t *c, const arVector_t *d, arMatrix_t *inv)
-{
-
-}
-
-void			AR_UnpackMatrixQRFactors(const arMatrix_t *mat, const arVector_t *c, const arVector_t *d, arMatrix_t *Q, arMatrix_t *R)
-{
-		
-}
-
-void			AR_MultiplyMatrixQRFactors(const arMatrix_t *mat, const arVector_t *c, const arVector_t *d, arMatrix_t *original_matrix)
-{
-
-}
-
-
-
-
-#endif
-
-
-#endif
-
-
-
-
-
 
 
 
