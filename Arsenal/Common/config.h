@@ -114,10 +114,14 @@ _CHAR_UNSIGNED			是vs特性，/J
 
 
 
+
+
+
+
 #if defined(__cplusplus)
-		#define AR_NAMESPACE_BEGIN		namespace ARSpace { extern "C" {
-		#define AR_NAMESPACE_END		} }
-	
+
+				#define AR_NAMESPACE_BEGIN		namespace ARSpace { extern "C" {
+				#define AR_NAMESPACE_END		} }
 #else
 		#define AR_NAMESPACE_BEGIN
 		#define AR_NAMESPACE_END
@@ -147,6 +151,10 @@ _CHAR_UNSIGNED			是vs特性，/J
 		#pragma warning(disable : 4127)
 		#pragma warning(disable : 4201)
 		#pragma warning(disable : 4214)
+
+		#if !defined(NDEBUG)
+				#pragma warning(disable : 4190)
+		#endif
 
 		#if !defined(_CRT_SECURE_NO_WARNINGS)
 				#define _CRT_SECURE_NO_WARNINGS
@@ -276,9 +284,9 @@ _CHAR_UNSIGNED			是vs特性，/J
 #if (AR_COMPILER == AR_VC_LEGACY || AR_COMPILER == AR_VC || AR_COMPILER == AR_BCB6)
 
 		#if defined(NDEBUG)
-				#define AR_NDEBUG
+				#define AR_NDEBUG		1
 		#else
-				#define AR_DEBUG
+				#define AR_DEBUG		1
 		#endif
 
 

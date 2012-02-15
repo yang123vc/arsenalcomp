@@ -1,9 +1,8 @@
 
-/*
 #if defined(__cplusplus)
 		#define __AR_CHECK_RET_STATUS__	1
 #endif
-*/
+
 
 
 typedef enum 
@@ -40,6 +39,7 @@ typedef enum
 
 typedef	__tag_ret_error_t		arStatus_t;
 
+#define AR_GET_STATUS(_status)	(_status)
 
 #else
 
@@ -119,5 +119,7 @@ public:
 				return m_code != code;
 		}
 };
+
+#define AR_GET_STATUS(_status)	((_status).m_code)
 
 #endif

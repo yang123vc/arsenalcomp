@@ -10,7 +10,7 @@
 AR_NAMESPACE_BEGIN
 
 
-#if(0)
+#if(1)
 
 void rgx_compile_test(rgxNode_t *node)
 {
@@ -148,7 +148,7 @@ void lex_test_loop()
 				AR_printf(L"%ls\r\n", L"success\r\n");
 		}else
 		{
-				AR_printf(L"error code = %d, %ls\r\n", lex_status.m_code, L"failed\r\n");
+				AR_printf(L"error code = %d, %ls\r\n", AR_GET_STATUS(lex_status), L"failed\r\n");
 				
 		}
 
@@ -212,7 +212,7 @@ void lex_test_loop2()
 				AR_printf(L"%ls\r\n", L"success\r\n");
 		}else
 		{
-				AR_printf(L"error code = %d, %ls\r\n", lex_status.m_code, L"failed\r\n");
+				AR_printf(L"error code = %d, %ls\r\n", AR_GET_STATUS(lex_status), L"failed\r\n");
 				
 		}
 
@@ -278,7 +278,7 @@ void lex_chinese_char()
 				AR_printf(L"%ls\r\n", L"success\r\n");
 		}else
 		{
-				AR_printf(L"error code = %d, %ls\r\n", lex_status.m_code, L"failed\r\n");
+				AR_printf(L"error code = %d, %ls\r\n", AR_GET_STATUS(lex_status), L"failed\r\n");
 				
 		}
 
@@ -346,7 +346,7 @@ void lex_line_test()
 				AR_printf(L"%ls\r\n", L"success\r\n");
 		}else
 		{
-				AR_printf(L"error code = %d, %ls\r\n", lex_status.m_code, L"failed\r\n");
+				AR_printf(L"error code = %d, %ls\r\n", AR_GET_STATUS(lex_status), L"failed\r\n");
 				
 		}
 
@@ -404,7 +404,7 @@ void lex_line_test2()
 				AR_printf(L"%ls\r\n", L"success\r\n");
 		}else
 		{
-				AR_printf(L"error code = %d, %ls\r\n", lex_status.m_code, L"failed\r\n");
+				AR_printf(L"error code = %d, %ls\r\n", AR_GET_STATUS(lex_status), L"failed\r\n");
 				
 		}
 
@@ -479,7 +479,7 @@ void lex_line_test3()
 				AR_printf(L"%ls\r\n", L"success\r\n");
 		}else
 		{
-				AR_printf(L"error code = %d, %ls\r\n", lex_status.m_code, L"failed\r\n");
+				AR_printf(L"error code = %d, %ls\r\n", AR_GET_STATUS(lex_status), L"failed\r\n");
 				
 		}
 
@@ -546,7 +546,7 @@ void lex_line_test4()
 				AR_printf(L"%ls\r\n", L"success\r\n");
 		}else
 		{
-				AR_printf(L"error code = %d, %ls\r\n", lex_status.m_code, L"failed\r\n");
+				AR_printf(L"error code = %d, %ls\r\n", AR_GET_STATUS(lex_status), L"failed\r\n");
 				
 		}
 
@@ -610,7 +610,7 @@ void lex_quote_test7()
 				AR_printf(L"%ls\r\n", L"success\r\n");
 		}else
 		{
-				AR_printf(L"error code = %d, %ls\r\n", lex_status.m_code, L"failed\r\n");
+				AR_printf(L"error code = %d, %ls\r\n", AR_GET_STATUS(lex_status), L"failed\r\n");
 				
 		}
 
@@ -674,7 +674,8 @@ void lex_line_num_test()
 
 		act.priority = 1;
 		act.value = 261;
-		AR_ASSERT(Lex_InsertRule(lex, L"{hex_constant}|{oct_constant}|{dec_constant}", &act) == AR_S_YES);
+		
+		AR_ASSERT( Lex_InsertRule(lex, L"{hex_constant}|{oct_constant}|{dec_constant}", &act) == AR_S_YES  );
 
 		act.priority = 0;
 		act.value = 0;
@@ -691,6 +692,8 @@ void lex_line_num_test()
 		lexToken_t tok;
 		arStatus_t lex_status;
 		
+		
+
 		while(true)
 		{
 				lex_status = Lex_Match(match, &tok);
@@ -715,7 +718,7 @@ void lex_line_num_test()
 				AR_printf(L"%ls\r\n", L"success\r\n");
 		}else
 		{
-				AR_printf(L"error code = %d, %ls\r\n", lex_status.m_code, L"failed\r\n");
+				AR_printf(L"error code = %d, %ls\r\n", AR_GET_STATUS(lex_status), L"failed\r\n");
 				
 		}
 
