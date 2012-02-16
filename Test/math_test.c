@@ -26,7 +26,7 @@ void misc_test()
 }
 
 
-void __print_vector(const arVector_t *vec)
+static void __print_vector(const arVector_t *vec)
 {
 		arString_t *str = AR_CreateString();
 		AR_VectorToString(vec, str, 2, NULL);
