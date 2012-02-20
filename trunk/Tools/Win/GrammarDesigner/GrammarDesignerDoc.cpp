@@ -1538,7 +1538,7 @@ void CGrammarDesignerDoc::OnGenerateTemplate()
 		
 		code = ARSpace::AR_CreateString();
 		
-		if(!ARSpace::CFG_ConfigToCode(cfg, code))
+		if(ARSpace::CFG_ConfigToCode(cfg, code) != AR_S_YES)
 		{
 				main_frm->MessageBox(TEXT("Failed to generate parser template"));
 				goto END_POINT;
