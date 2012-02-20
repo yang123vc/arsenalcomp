@@ -2946,6 +2946,7 @@ static void __init_parser_tag()
 		psr_handler.error_f = cfg_error;
 		psr_handler.free_f = cfg_free;
 
+#if(0)
 		__g_lex		= __build_lex();
 		__g_grammar = __build_grammar(&psr_handler);
 		__g_parser	= __build_parser(__g_grammar);
@@ -2954,6 +2955,11 @@ static void __init_parser_tag()
 		{
 				AR_error(AR_ERR_FATAL, L"grammar config : failed to initialize\r\n");
 		}
+
+#endif
+		__g_lex		= NULL;
+		__g_grammar = NULL;
+		__g_parser	= NULL;
 }
 
 
@@ -2985,6 +2991,17 @@ static lexMatch_t*		__create_lex_match()
 		lexMatch_t		*match;
 
 		AR_LockSpinLock(&__g_lock);
+
+		if(__g_lex == NULL)
+		{
+				__g_lex = __build_lex();
+				if(__g_lex == NULL)
+				{
+						AR_error(AR_ERR_FATAL, L"grammar config : failed to initialize lexer\r\n");
+				}
+		}
+
+
 		match = Lex_CreateMatch(__g_lex);
 		AR_UnLockSpinLock(&__g_lock);
 
@@ -3001,6 +3018,32 @@ static psrContext_t*	__create_parser_context(void *ctx)
 {
 		psrContext_t	*parser_context = NULL;
 		AR_LockSpinLock(&__g_lock);
+
+
+		if(__g_grammar == NULL)
+		{
+				psrHandler_t	psr_handler;
+				psr_handler.error_f = cfg_error;
+				psr_handler.free_f = cfg_free;
+
+				__g_grammar = __build_grammar(&psr_handler);
+
+				if(__g_grammar == NULL)
+				{
+						AR_error(AR_ERR_FATAL, L"grammar config : failed to initialize grammar\r\n");
+				}
+
+		}
+
+		if(__g_parser == NULL)
+		{
+				__g_parser = __build_parser(__g_grammar);
+				if(__g_parser == NULL)
+				{
+						AR_error(AR_ERR_FATAL, L"grammar config : failed to initialize parser\r\n");
+				}
+		}
+
 		parser_context = Parser_CreateContext(__g_parser, ctx);
 		AR_UnLockSpinLock(&__g_lock);
 		return parser_context;

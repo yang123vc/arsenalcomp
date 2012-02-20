@@ -145,9 +145,9 @@ typedef struct __rule_tag
 #define	CFG_RULE_HANDLER_DECL			L"static psrRetVal_t AR_STDCALL handle_%ls(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);"
 #define	CFG_RULE_HANDLER_DECL_2			L"static psrRetVal_t AR_STDCALL %ls(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);"
 
-#define	CFG_RULE_HANDLER_DEFINE			L"static psrRetVal_t AR_STDCALL handle_%ls(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)\n{\n\t \n}\n"
-#define	CFG_RULE_HANDLER_DEFINE_2		L"static psrRetVal_t AR_STDCALL %ls(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)\n{\n\t psrRetVal_t ret = {AR_S_YES, NULL}; return ret;\n}\n"
-#define	CFG_RULE_HANDLER_DEFINE_3		L"static psrRetVal_t AR_STDCALL %ls(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)\n{\n\t %ls\n}\n"
+#define	CFG_RULE_HANDLER_DEFINE			L"static psrRetVal_t AR_STDCALL handle_%ls(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)\r\n{\r\n\t\tpsrRetVal_t ret = {AR_S_YES, NULL};\r\n\t\treturn ret;\r\n\r\n}\r\n"
+#define	CFG_RULE_HANDLER_DEFINE_2		L"static psrRetVal_t AR_STDCALL %ls(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)\r\n{\r\n\t\tpsrRetVal_t ret = {AR_S_YES, NULL};\r\n\t\treturn ret;\r\n\r\n}\r\n"
+#define	CFG_RULE_HANDLER_DEFINE_3		L"static psrRetVal_t AR_STDCALL %ls(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)\r\n{\r\n\t\t%ls\r\n}\r\n"
 
 
 

@@ -13,6 +13,10 @@
 
 AR_NAMESPACE_BEGIN
 
+
+
+#include "gen_code_impl.h"
+
 #if(0)
 
 /*******************************************decl****************************************/
@@ -39,7 +43,6 @@ static void				TGU_DestroyParserNode(parserNode_t	*node)	;
 
 /**************************************************************************************************/
 
-#include "gen_code_impl.h"
 
 
 
