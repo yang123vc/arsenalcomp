@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		67D1DEAC14F2FBF40075CAF8 /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 67D1DEAB14F2FBF40075CAF8 /* Arsenal.a */; };
 		BEAF6EDF14F25FC500BE72FF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEAF6EDE14F25FC500BE72FF /* Cocoa.framework */; };
 		BEAF6EE914F25FC500BE72FF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = BEAF6EE714F25FC500BE72FF /* InfoPlist.strings */; };
 		BEAF6EEB14F25FC500BE72FF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BEAF6EEA14F25FC500BE72FF /* main.m */; };
@@ -49,10 +50,10 @@
 		BEAF6F7214F2620400BE72FF /* StringConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = BEAF6F5814F2620400BE72FF /* StringConverter.m */; };
 		BEAF6F7314F2620400BE72FF /* StringConverter.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEAF6F5914F2620400BE72FF /* StringConverter.xib */; };
 		BEAF6F7414F2620400BE72FF /* TagsView.m in Sources */ = {isa = PBXBuildFile; fileRef = BEAF6F5B14F2620400BE72FF /* TagsView.m */; };
-		BEAF6F7614F2628600BE72FF /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BEAF6F7514F2628600BE72FF /* Arsenal.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		67D1DEAB14F2FBF40075CAF8 /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = Arsenal.a; path = "../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Release/Arsenal.a"; sourceTree = "<group>"; };
 		BEAF6EDA14F25FC500BE72FF /* GrammarDesigner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GrammarDesigner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEAF6EDE14F25FC500BE72FF /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		BEAF6EE114F25FC500BE72FF /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -124,7 +125,6 @@
 		BEAF6F5914F2620400BE72FF /* StringConverter.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = StringConverter.xib; sourceTree = "<group>"; };
 		BEAF6F5A14F2620400BE72FF /* TagsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagsView.h; sourceTree = "<group>"; };
 		BEAF6F5B14F2620400BE72FF /* TagsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagsView.m; sourceTree = "<group>"; };
-		BEAF6F7514F2628600BE72FF /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = Arsenal.a; path = "../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-dklbavanfxrpxtdcqgesieswyeaq/Build/Products/Release/Arsenal.a"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,7 +132,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BEAF6F7614F2628600BE72FF /* Arsenal.a in Frameworks */,
+				67D1DEAC14F2FBF40075CAF8 /* Arsenal.a in Frameworks */,
 				BEAF6F2B14F261D500BE72FF /* libiconv.dylib in Frameworks */,
 				BEAF6F2914F261D000BE72FF /* libpthread.dylib in Frameworks */,
 				BEAF6EDF14F25FC500BE72FF /* Cocoa.framework in Frameworks */,
@@ -145,7 +145,7 @@
 		BEAF6ECF14F25FC500BE72FF = {
 			isa = PBXGroup;
 			children = (
-				BEAF6F7514F2628600BE72FF /* Arsenal.a */,
+				67D1DEAB14F2FBF40075CAF8 /* Arsenal.a */,
 				BEAF6F2A14F261D500BE72FF /* libiconv.dylib */,
 				BEAF6F2814F261D000BE72FF /* libpthread.dylib */,
 				BEAF6EE414F25FC500BE72FF /* GrammarDesigner */,
@@ -520,6 +520,8 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-dklbavanfxrpxtdcqgesieswyeaq/Build/Products/Debug\"",
 					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-dklbavanfxrpxtdcqgesieswyeaq/Build/Products/Release\"",
+					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Debug\"",
+					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Release\"",
 				);
 				OBJROOT = ../../../Temp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -539,6 +541,8 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-dklbavanfxrpxtdcqgesieswyeaq/Build/Products/Debug\"",
 					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-dklbavanfxrpxtdcqgesieswyeaq/Build/Products/Release\"",
+					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Debug\"",
+					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Release\"",
 				);
 				OBJROOT = ../../../Temp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
