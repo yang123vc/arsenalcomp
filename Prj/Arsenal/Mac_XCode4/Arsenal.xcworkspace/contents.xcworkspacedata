@@ -8,6 +8,6 @@
       location = "group:../../Test/Mac_XCode4/Test.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:../../../Tools/Mac/GrammarDesigner/GrammarDesigner.xcodeproj">
+      location = "group:../../../Tools/Mac/GrammarDesigner2/GrammarDesigner.xcodeproj">
    </FileRef>
 </Workspace>
