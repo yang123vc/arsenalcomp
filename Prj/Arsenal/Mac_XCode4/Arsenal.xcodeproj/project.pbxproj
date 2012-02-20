@@ -635,9 +635,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				EXECUTABLE_PREFIX = "";
-				OBJROOT = ../../../Temp;
+				OBJROOT = "$(SYMROOT)";
 				PRODUCT_NAME = Arsenal;
-				SYMROOT = ../../../Binary;
+				SYMROOT = build;
 			};
 			name = Debug;
 		};
@@ -647,9 +647,9 @@
 				EXECUTABLE_PREFIX = "";
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = "NDEBUG=1";
-				OBJROOT = ../../../Temp;
+				OBJROOT = "$(SYMROOT)";
 				PRODUCT_NAME = Arsenal;
-				SYMROOT = ../../../Binary;
+				SYMROOT = build;
 			};
 			name = Release;
 		};
@@ -657,9 +657,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				EXECUTABLE_PREFIX = "";
-				OBJROOT = ../../../Temp;
+				OBJROOT = "$(SYMROOT)";
 				PRODUCT_NAME = Arsenal;
-				SYMROOT = ../../../Binary;
+				SYMROOT = build;
 			};
 			name = Debug;
 		};
@@ -669,9 +669,9 @@
 				EXECUTABLE_PREFIX = "";
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = "NDEBUG=1";
-				OBJROOT = ../../../Temp;
+				OBJROOT = "$(SYMROOT)";
 				PRODUCT_NAME = Arsenal;
-				SYMROOT = ../../../Binary;
+				SYMROOT = build;
 			};
 			name = Release;
 		};
