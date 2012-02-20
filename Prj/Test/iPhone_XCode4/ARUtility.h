@@ -39,6 +39,7 @@ wchar_t* healper_wcsndup(const wchar_t *sour, size_t len);
 {
 		
 }
+
 +(NSString*)convertUTF32ToNSString		:		(const wchar_t*)input;
 +(NSString*)convertUTF32ToNSString		:		(const wchar_t*)input Length : (size_t)len;
 

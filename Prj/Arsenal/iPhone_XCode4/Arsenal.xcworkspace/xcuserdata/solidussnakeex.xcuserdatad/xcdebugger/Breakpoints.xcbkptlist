@@ -70,7 +70,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "21"
          endingLineNumber = "21"
-         landmarkName = "tiny_error(int_t level, const wchar_t* msg, void *ctx)"
+         landmarkName = "tiny_error()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -84,7 +84,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "27"
          endingLineNumber = "27"
-         landmarkName = "tiny_printf(const wchar_t *msg, void *ctx)"
+         landmarkName = "tiny_printf()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
