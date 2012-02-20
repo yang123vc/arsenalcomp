@@ -1804,7 +1804,7 @@ static lex_t*	__build_lex()
 						Lex_Destroy(lex);										
 						AR_ASSERT(false);										
 						return NULL;											
-				}else/*错误*/
+				}else
 				{																
 						AR_error(AR_ERR_FATAL, L"failed to build lexer : name '%ls'!\r\n", __g_lex_name);
 						return NULL;
@@ -1828,7 +1828,7 @@ static lex_t*	__build_lex()
 						Lex_Destroy(lex);										
 						AR_ASSERT(false);										
 						return NULL;											
-				}else/*错误*/
+				}else
 				{																
 						AR_error(AR_ERR_FATAL, L"failed to build lexer : regex '%ls'!\r\n", __g_term_pattern[i].regex);
 						return NULL;
