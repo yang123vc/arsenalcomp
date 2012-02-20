@@ -1,8 +1,9 @@
 
+/*
 #if defined(__cplusplus)
 		#define __AR_CHECK_RET_STATUS__	1
 #endif
-
+*/
 
 
 typedef enum 

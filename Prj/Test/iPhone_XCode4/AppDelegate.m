@@ -6,11 +6,13 @@
 //  Copyright (c) 2012 none. All rights reserved.
 //
 
-#include "Arsenal.h"
-
-
-
+#import "ArsenalWrapper.h"
 #import "AppDelegate.h"
+
+
+
+
+
 
 @implementation AppDelegate
 
@@ -25,7 +27,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
-
+        Initialize_Arsenal();
         return YES;
 }
 							
@@ -66,6 +68,9 @@
          Save data if appropriate.
          See also applicationDidEnterBackground:.
          */
+        
+       UnInitialize_Arsenal();
+        
 }
 
 @end
