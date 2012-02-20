@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BE2E4B7514F216A100ACFBB5 /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BE2E4B7414F216A100ACFBB5 /* Arsenal.a */; };
+		6796796B14F30AE5004093F0 /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6796796A14F30AE5004093F0 /* Arsenal.a */; };
 		BE2E4B7814F2177100ACFBB5 /* ArsenalWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = BE2E4B7714F2177100ACFBB5 /* ArsenalWrapper.m */; };
 		BE82C8FB14F211CE00F30E56 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE82C8FA14F211CE00F30E56 /* UIKit.framework */; };
 		BE82C8FD14F211CE00F30E56 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE82C8FC14F211CE00F30E56 /* Foundation.framework */; };
@@ -27,7 +27,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		BE2E4B7414F216A100ACFBB5 /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = Arsenal.a; path = "../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-aemgsvjvwhfzdvfmozsywsigwotc/Build/Products/Debug-iphoneos/Arsenal.a"; sourceTree = "<group>"; };
+		6796796A14F30AE5004093F0 /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = Arsenal.a; path = "../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-bdnbcvvqaamlxggmwlivjjnjfwxa/Build/Products/Debug-iphoneos/Arsenal.a"; sourceTree = "<group>"; };
 		BE2E4B7614F2175800ACFBB5 /* ArsenalWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArsenalWrapper.h; sourceTree = SOURCE_ROOT; };
 		BE2E4B7714F2177100ACFBB5 /* ArsenalWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArsenalWrapper.m; sourceTree = SOURCE_ROOT; };
 		BE82C8F614F211CE00F30E56 /* Test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Test.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -44,7 +44,6 @@
 		BE82C95014F2149500F30E56 /* Test-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Test-Info.plist"; sourceTree = SOURCE_ROOT; };
 		BE82C95214F2149500F30E56 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = SOURCE_ROOT; };
 		BE82C95314F2149500F30E56 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = SOURCE_ROOT; };
-		BE82C95E14F2161400F30E56 /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = Arsenal.a; path = "../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-aemgsvjvwhfzdvfmozsywsigwotc/Build/Products/Release-iphoneos/Arsenal.a"; sourceTree = "<group>"; };
 		BED34EA014F21EF100426EF6 /* libpthread.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpthread.dylib; path = usr/lib/libpthread.dylib; sourceTree = SDKROOT; };
 		BED34EA314F21EF700426EF6 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
 		BED34EA814F2208C00426EF6 /* ARException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARException.h; sourceTree = SOURCE_ROOT; };
@@ -58,9 +57,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6796796B14F30AE5004093F0 /* Arsenal.a in Frameworks */,
 				BED34EA414F21EF700426EF6 /* libiconv.dylib in Frameworks */,
 				BED34EA114F21EF100426EF6 /* libpthread.dylib in Frameworks */,
-				BE2E4B7514F216A100ACFBB5 /* Arsenal.a in Frameworks */,
 				BE82C8FB14F211CE00F30E56 /* UIKit.framework in Frameworks */,
 				BE82C8FD14F211CE00F30E56 /* Foundation.framework in Frameworks */,
 				BE82C8FF14F211CE00F30E56 /* CoreGraphics.framework in Frameworks */,
@@ -73,10 +72,9 @@
 		BE82C8EB14F211CE00F30E56 = {
 			isa = PBXGroup;
 			children = (
+				6796796A14F30AE5004093F0 /* Arsenal.a */,
 				BED34EA314F21EF700426EF6 /* libiconv.dylib */,
 				BED34EA014F21EF100426EF6 /* libpthread.dylib */,
-				BE2E4B7414F216A100ACFBB5 /* Arsenal.a */,
-				BE82C95E14F2161400F30E56 /* Arsenal.a */,
 				BE82C92C14F2127500F30E56 /* dabaopku.plist */,
 				BE82C90014F211CE00F30E56 /* Test */,
 				BE82C8F914F211CE00F30E56 /* Frameworks */,
@@ -254,15 +252,15 @@
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				OBJROOT = ../../../Temp;
+				OBJROOT = "$(SYMROOT)";
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
-				SYMROOT = ../../../Binary;
+				SYMROOT = build;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -279,16 +277,16 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = "NDEBUG=1";
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				OBJROOT = ../../../Temp;
+				OBJROOT = "$(SYMROOT)";
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
-				SYMROOT = ../../../Binary;
+				SYMROOT = build;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -307,6 +305,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-aemgsvjvwhfzdvfmozsywsigwotc/Build/Products/Debug-iphoneos\"",
 					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-aemgsvjvwhfzdvfmozsywsigwotc/Build/Products/Release-iphoneos\"",
+					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-bdnbcvvqaamlxggmwlivjjnjfwxa/Build/Products/Debug-iphoneos\"",
 				);
 				OBJROOT = ../../../Temp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -329,6 +328,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-aemgsvjvwhfzdvfmozsywsigwotc/Build/Products/Debug-iphoneos\"",
 					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-aemgsvjvwhfzdvfmozsywsigwotc/Build/Products/Release-iphoneos\"",
+					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-bdnbcvvqaamlxggmwlivjjnjfwxa/Build/Products/Debug-iphoneos\"",
 				);
 				OBJROOT = ../../../Temp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
