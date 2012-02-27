@@ -417,6 +417,36 @@ END_POINT:
 
 
 
+void sn_test_float()
+{
+		snObject_t		*key = SN_CreateObject(SN_STRING_T);
+		SN_SetStringObjectByWcs(key, L"key");
+
+		snObject_t		*val = SN_CreateObject(SN_FLOAT_T);
+		SN_SetUFloatObject(val, 3.14159265);
+
+		snObject_t		*obj = SN_CreateObject(SN_DICT_T);
+
+		SN_InsertToDictObject(obj, key, val);
+
+		arBuffer_t *buffer  = AR_CreateBuffer(1024);
+
+		SN_PutObject(buffer, obj);
+
+
+		SN_DestroyObject(obj);
+		obj = NULL;
+
+
+
+		obj = SN_GetObject(buffer).obj;
+		SN_DestroyObject(obj);
+		obj = NULL;
+
+		AR_DestroyBuffer(buffer);
+		buffer = NULL;
+}
+
 
 
 void sn_test()
@@ -427,7 +457,9 @@ void sn_test()
 		//sn_test_str2();
 		//sn_test_str3();
 
-		sn_test_find();
+		//sn_test_find();
+
+		sn_test_float();
 }
 
 

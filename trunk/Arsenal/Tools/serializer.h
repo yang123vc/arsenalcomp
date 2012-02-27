@@ -22,6 +22,7 @@ AR_NAMESPACE_BEGIN
 typedef enum
 {
 		SN_INT_T,
+		SN_FLOAT_T,
 		SN_STRING_T,
 		SN_LIST_T,
 		SN_DICT_T
@@ -93,6 +94,13 @@ int_64_t		SN_GetIntObject(const snObject_t	*obj);
 uint_64_t		SN_GetUIntObject(const snObject_t	*obj);
 void			SN_SetUIntObject(snObject_t	*obj,	uint_64_t num);
 void			SN_SetIntObject(snObject_t	*obj,	int_64_t num);
+
+
+
+/*******************************Float***********************************************************/
+
+double		SN_GetFloatObject(const snObject_t	*obj);
+void		SN_SetUFloatObject(snObject_t	*obj,	double num);
 
 
 
