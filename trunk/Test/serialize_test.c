@@ -431,8 +431,14 @@ void sn_test_float()
 
 		arBuffer_t *buffer  = AR_CreateBuffer(1024);
 
-		SN_PutObject(buffer, obj);
+		if(SN_PutObject(buffer, obj) != AR_S_YES)
+		{
+				SN_DestroyObject(obj);
+				AR_DestroyBuffer(buffer);
+				buffer = NULL;
+				return;
 
+		}
 
 		SN_DestroyObject(obj);
 		obj = NULL;
@@ -440,8 +446,12 @@ void sn_test_float()
 
 
 		obj = SN_GetObject(buffer).obj;
-		SN_DestroyObject(obj);
-		obj = NULL;
+		
+		if(obj != NULL)
+		{
+				SN_DestroyObject(obj);
+				obj = NULL;
+		}
 
 		AR_DestroyBuffer(buffer);
 		buffer = NULL;
