@@ -76,7 +76,7 @@ void rgx_test_loop()
 						RGX_DestroyNode(cat);
 				}else
 				{
-						AR_printf(L"error  code == %d, position == %ls\r\n", result.err.status.m_code, result.err.pos);
+						//AR_printf(L"error  code == %d, position == %ls\r\n", result.err.status.m_code, result.err.pos);
 				}
 		}
 
