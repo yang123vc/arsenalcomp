@@ -93,7 +93,7 @@ extern void grammar_config_test();
 void AR_Test()
 {
 #if defined(__LIB)
-		//com_test();
+		com_test();
 		//math_test();
 		//trie_tree_test();
 		//expr_test();
@@ -143,7 +143,7 @@ void AR_Test()
 
 		//ray_test();
 
-		sn_test();
+		//sn_test();
 
 		//gen_code_test();
 
