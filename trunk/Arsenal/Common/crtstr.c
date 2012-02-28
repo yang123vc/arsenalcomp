@@ -1250,12 +1250,20 @@ const wchar_t*	AR_wtod(const wchar_t *in, double *num)
 /*此函数貌似不太完整，对溢出检测也没做到位*/
 const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *out)
 {
+		
 		const wchar_t *p;
 		double num = 0.0f,frac = 0.0f, exp = 1.0f;
 		double result = 0.0f;
 		bool_t is_neg = false, is_ok = false;
-
+		
+		wchar_t decimal_point;
 		AR_ASSERT(in != NULL && end != NULL && in <= end && out != NULL);
+		
+		{
+				const struct lconv *conv;
+				conv =  localeconv();
+				decimal_point = (wchar_t)*conv->decimal_point;
+		}
 
 		/*p = AR_wcstrim(in, L" \t");*/
 		p = AR_wcstrim_space_s(in, end);
@@ -1278,8 +1286,8 @@ const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *out)
 				++p;
 				is_ok = true;
 		}
-
-		if(p < end && *p == L'.')
+		
+		if(p < end && *p == decimal_point)
 		{
 				++p;
 				while(p < end && *p >= L'0' && *p <= L'9')
@@ -1871,7 +1879,15 @@ bool_t	AR_wcs_is_float(const wchar_t *in, const wchar_t *end)
 		
 		bool_t is_float;
 
+		wchar_t decimal_point;
+		
 		AR_ASSERT(in != NULL && end != NULL && in <= end);
+
+		{
+				const struct lconv *conv;
+				conv =  localeconv();
+				decimal_point = (wchar_t)*conv->decimal_point;
+		}
 
 		is_float = false;
 
@@ -1888,7 +1904,7 @@ bool_t	AR_wcs_is_float(const wchar_t *in, const wchar_t *end)
 				++p;
 		}
 
-		if(p < end && *p == L'.')/*也许是浮点，但可能有错误*/
+		if(p < end && *p == decimal_point)/*也许是浮点，但可能有错误*/
 		{
 				is_float = true;
 				++p;

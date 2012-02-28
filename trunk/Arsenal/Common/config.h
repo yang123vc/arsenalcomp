@@ -205,7 +205,7 @@ _CHAR_UNSIGNED			ÊÇvsÌØÐÔ£¬/J
 #include <wctype.h>
 #include <string.h>
 #include <float.h>
-
+#include <locale.h>
 
 
 #if defined(AR_HAS_C99_FEATURE)
