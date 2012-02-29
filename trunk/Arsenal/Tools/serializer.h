@@ -114,6 +114,31 @@ snRetVal_t		SN_FindObjectByWcsPath(snObject_t *obj, const wchar_t *path);
 snRetVal_t		SN_FindObjectByStrPath(snObject_t *obj, const char *path);
 
 
+/**************************************************************************************************************/
+
+
+arStatus_t			SN_InsertToListObjectByData(snObject_t *obj, const byte_t *data, size_t len);
+arStatus_t			SN_InsertToListObjectByUInt(snObject_t *obj, const uint_64_t val);
+arStatus_t			SN_InsertToListObjectByInt(snObject_t *obj, const int_64_t val);
+arStatus_t			SN_InsertToListObjectByWcs(snObject_t *obj, const wchar_t *val);
+arStatus_t			SN_InsertToListObjectByStr(snObject_t *obj, const char *val);
+
+arStatus_t			SN_InsertToDictObjectByWcsData(snObject_t *obj, const wchar_t *key, const byte_t *data, size_t len);
+arStatus_t			SN_InsertToDictObjectByWcsWcs(snObject_t *obj, const wchar_t *key, const wchar_t *val);
+arStatus_t			SN_InsertToDictObjectByWcsStr(snObject_t *obj, const wchar_t *key, const char *val);
+arStatus_t			SN_InsertToDictObjectByWcsUInt(snObject_t *obj, const wchar_t *key, uint_64_t val);
+arStatus_t			SN_InsertToDictObjectByWcsInt(snObject_t *obj, const wchar_t *key, int_64_t val);
+arStatus_t			SN_InsertToDictObjectByStrData(snObject_t *obj, const char *key, const byte_t *data, size_t len);
+arStatus_t			SN_InsertToDictObjectByStrWcs(snObject_t *obj, const char *key, const wchar_t *val);
+arStatus_t			SN_InsertToDictObjectByStrStr(snObject_t *obj, const char *key, const char *val);
+arStatus_t			SN_InsertToDictObjectByStrUInt(snObject_t *obj, const char *key, uint_64_t val);
+arStatus_t			SN_InsertToDictObjectByStrInt(snObject_t *obj, const char *key, int_64_t val);
+
+
+
+
+/**************************************************************************************************************/
+
 AR_NAMESPACE_END
 
 
