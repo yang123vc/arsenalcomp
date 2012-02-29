@@ -118,8 +118,8 @@ snRetVal_t		SN_FindObjectByStrPath(snObject_t *obj, const char *path);
 
 
 arStatus_t			SN_InsertToListObjectByData(snObject_t *obj, const byte_t *data, size_t len);
-arStatus_t			SN_InsertToListObjectByUInt(snObject_t *obj, const uint_64_t val);
-arStatus_t			SN_InsertToListObjectByInt(snObject_t *obj, const int_64_t val);
+arStatus_t			SN_InsertToListObjectByUInt(snObject_t *obj, uint_64_t val);
+arStatus_t			SN_InsertToListObjectByInt(snObject_t *obj, int_64_t val);
 arStatus_t			SN_InsertToListObjectByWcs(snObject_t *obj, const wchar_t *val);
 arStatus_t			SN_InsertToListObjectByStr(snObject_t *obj, const char *val);
 

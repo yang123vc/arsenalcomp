@@ -2438,11 +2438,11 @@ INVALID_POINT:
 
 
 
-arStatus_t			SN_InsertToListObjectByInt(snObject_t *obj, const int_64_t val)
+arStatus_t			SN_InsertToListObjectByInt(snObject_t *obj, int_64_t val)
 {
 		arStatus_t status;
 		snObject_t *sn_val;
-		AR_ASSERT(obj != NULL && val != NULL);
+		AR_ASSERT(obj != NULL);
 
 		sn_val = NULL;
 		status = AR_S_YES;
@@ -2469,11 +2469,11 @@ INVALID_POINT:
 
 
 
-arStatus_t			SN_InsertToListObjectByUInt(snObject_t *obj, const uint_64_t val)
+arStatus_t			SN_InsertToListObjectByUInt(snObject_t *obj, uint_64_t val)
 {
 		arStatus_t status;
 		snObject_t *sn_val;
-		AR_ASSERT(obj != NULL && val != NULL);
+		AR_ASSERT(obj != NULL);
 
 		sn_val = NULL;
 		status = AR_S_YES;
