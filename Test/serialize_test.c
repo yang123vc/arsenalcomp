@@ -458,6 +458,146 @@ void sn_test_float()
 }
 
 
+/*
+
+arStatus_t			SN_InsertToListObjectByData(snObject_t *obj, const byte_t *data, size_t len)
+arStatus_t			SN_InsertToListObjectByUInt(snObject_t *obj, const uint_64_t val)
+arStatus_t			SN_InsertToListObjectByInt(snObject_t *obj, const int_64_t val)
+arStatus_t			SN_InsertToListObjectByWcs(snObject_t *obj, const wchar_t *val)
+arStatus_t			SN_InsertToListObjectByStr(snObject_t *obj, const char *val)
+arStatus_t			SN_InsertToDictObjectByWcsData(snObject_t *obj, const wchar_t *key, const byte_t *data, size_t len)
+arStatus_t			SN_InsertToDictObjectByWcsWcs(snObject_t *obj, const wchar_t *key, const wchar_t *val)
+arStatus_t			SN_InsertToDictObjectByWcsStr(snObject_t *obj, const wchar_t *key, const char *val)
+arStatus_t			SN_InsertToDictObjectByWcsUInt(snObject_t *obj, const wchar_t *key, uint_64_t val)
+arStatus_t			SN_InsertToDictObjectByWcsInt(snObject_t *obj, const wchar_t *key, int_64_t val)
+arStatus_t			SN_InsertToDictObjectByStrData(snObject_t *obj, const char *key, const byte_t *data, size_t len)
+arStatus_t			SN_InsertToDictObjectByStrWcs(snObject_t *obj, const char *key, const wchar_t *val)
+arStatus_t			SN_InsertToDictObjectByStrStr(snObject_t *obj, const char *key, const char *val)
+arStatus_t			SN_InsertToDictObjectByStrUInt(snObject_t *obj, const char *key, uint_64_t val)
+arStatus_t			SN_InsertToDictObjectByStrInt(snObject_t *obj, const char *key, int_64_t val)
+*/
+
+
+
+		/*
+		SN_InsertToListObjectByData(obj, (const byte_t*)"abcdefg", strlen("abcdefg"));
+		SN_InsertToListObjectByUInt(obj,  33)
+		SN_InsertToListObjectByInt(obj, -55)
+		SN_InsertToListObjectByWcs(obj, L"中国字");
+		SN_InsertToListObjectByStr(obj, "中国字");
+		*/
+
+static void util_sn_test()
+{
+		arBuffer_t *buf = AR_CreateBuffer(100);
+		snObject_t *obj = NULL;
+		obj = SN_CreateObject(SN_DICT_T);
+
+
+		SN_InsertToDictObjectByStrData(obj, "中国字0", (const byte_t*)"abc", 3);
+		SN_InsertToDictObjectByStrWcs(obj, "中国字1", L"a中国字k");
+		SN_InsertToDictObjectByStrStr(obj, "中国字2", "a中国字");
+		SN_InsertToDictObjectByStrUInt(obj, "中国字3", 66);
+		SN_InsertToDictObjectByStrInt(obj, "中国字4", -66);
+
+
+		SN_InsertToDictObjectByWcsData(obj, L"中国字5", (const byte_t*)"abc", 3);
+		SN_InsertToDictObjectByWcsWcs(obj, L"中国字6", L"abc中国字");
+		SN_InsertToDictObjectByWcsStr(obj, L"中国字7", "abc中国字");
+		SN_InsertToDictObjectByWcsUInt(obj, L"中国字8", 88);
+		SN_InsertToDictObjectByWcsInt(obj, L"中国字9", -88);
+
+
+		{
+				AR_ClearBuffer(buf);
+				SN_PutObject(buf, obj);
+
+				FILE *f = fopen("d:\\1.txt", "w+");
+
+				assert(f != NULL);
+
+				fwrite(AR_GetBufferData(buf), 1, AR_GetBufferAvailable(buf), f);
+
+				fclose(f);
+				f = NULL;
+		}
+
+		if(obj)
+		{
+				SN_DestroyObject(obj);
+				obj = NULL;
+		}
+
+		snRetVal_t ret = SN_GetObject(buf);
+
+		if(ret.obj)
+		{
+				SN_DestroyObject(ret.obj);
+				ret.obj = NULL;
+		}
+
+
+		if(buf)
+		{
+				AR_DestroyBuffer(buf);
+				buf = NULL;
+		}
+}
+
+
+
+
+static void util_sn2_test()
+{
+		arBuffer_t *buf = AR_CreateBuffer(100);
+		snObject_t *obj = NULL;
+		obj = SN_CreateObject(SN_LIST_T);
+
+
+		SN_InsertToListObjectByData(obj, (const byte_t*)"abcdefg", strlen("abcdefg"));
+		SN_InsertToListObjectByUInt(obj,  33);
+		SN_InsertToListObjectByInt(obj, -55);
+		SN_InsertToListObjectByWcs(obj, L"中国字");
+		SN_InsertToListObjectByStr(obj, "中国字");
+
+
+		{
+				AR_ClearBuffer(buf);
+				SN_PutObject(buf, obj);
+
+				FILE *f = fopen("d:\\2.txt", "w+");
+
+				assert(f != NULL);
+
+				fwrite(AR_GetBufferData(buf), 1, AR_GetBufferAvailable(buf), f);
+
+				fclose(f);
+				f = NULL;
+		}
+
+		if(obj)
+		{
+				SN_DestroyObject(obj);
+				obj = NULL;
+		}
+
+		snRetVal_t ret = SN_GetObject(buf);
+
+		if(ret.obj)
+		{
+				SN_DestroyObject(ret.obj);
+				ret.obj = NULL;
+		}
+
+
+		if(buf)
+		{
+				AR_DestroyBuffer(buf);
+				buf = NULL;
+		}
+}
+
+
 
 void sn_test()
 {
@@ -469,7 +609,10 @@ void sn_test()
 
 		//sn_test_find();
 
-		sn_test_float();
+		//sn_test_float();
+		
+		util_sn_test();
+		//util_sn2_test();
 }
 
 

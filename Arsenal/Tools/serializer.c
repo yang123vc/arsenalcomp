@@ -466,11 +466,15 @@ static arStatus_t	SN_InsertToDict(snDict_t *dict, snObject_t *key, snObject_t *v
 
 		if(i < dict->count)
 		{
+
+				SN_DestroyObject(dict->pairs[i].key);
+
 				if(dict->pairs[i].val)
 				{
 						SN_DestroyObject(dict->pairs[i].val);
 				}
-
+				
+				dict->pairs[i].key = key;
 				dict->pairs[i].val = value;
 				return AR_S_YES;
 		}else
@@ -1914,6 +1918,619 @@ void		SN_SetUFloatObject(snObject_t	*obj,	double num)
 
 		obj->float_num.num = num;
 }
+
+
+
+
+#define FAILED_GOTO(_cond) do{ if(!(_cond))goto INVALID_POINT; }while(0)
+
+
+
+arStatus_t			SN_InsertToDictObjectByStrInt(snObject_t *obj, const char *key, int_64_t val)
+{
+		arStatus_t status;
+		snObject_t *sn_key, *sn_val;
+		AR_ASSERT(obj != NULL && key != NULL);
+
+		sn_key = NULL;
+		sn_val = NULL;
+
+		status = AR_S_YES;
+
+		sn_key = SN_CreateObject(SN_STRING_T);
+		FAILED_GOTO(sn_key != NULL);
+
+		status = SN_SetStringObjectByStr(sn_key, key);
+		FAILED_GOTO(status == AR_S_YES);
+
+		sn_val = SN_CreateObject(SN_INT_T);
+		FAILED_GOTO(sn_val != NULL);
+		SN_SetIntObject(sn_val, val);
+
+		status = SN_InsertToDictObject(obj, sn_key, sn_val);
+		FAILED_GOTO(status == AR_S_YES);
+
+		return AR_S_YES;
+INVALID_POINT:
+		if(sn_key)
+		{
+				SN_DestroyObject(sn_key);
+				sn_key = NULL;
+		}
+
+		if(sn_val)
+		{
+				SN_DestroyObject(sn_val);
+				sn_val = NULL;
+		}
+
+		return status;
+}
+
+
+
+arStatus_t			SN_InsertToDictObjectByStrUInt(snObject_t *obj, const char *key, uint_64_t val)
+{
+		arStatus_t status;
+		snObject_t *sn_key, *sn_val;
+		AR_ASSERT(obj != NULL && key != NULL);
+
+		sn_key = NULL;
+		sn_val = NULL;
+		status = AR_S_YES;
+
+		sn_key = SN_CreateObject(SN_STRING_T);
+		FAILED_GOTO(sn_key != NULL);
+
+		status = SN_SetStringObjectByStr(sn_key, key);
+		FAILED_GOTO(status == AR_S_YES);
+
+		sn_val = SN_CreateObject(SN_INT_T);
+		FAILED_GOTO(sn_val != NULL);
+		SN_SetUIntObject(sn_val, val);
+		
+		status = SN_InsertToDictObject(obj, sn_key, sn_val);
+		FAILED_GOTO(status == AR_S_YES);
+
+		return AR_S_YES;
+INVALID_POINT:
+		if(sn_key)
+		{
+				SN_DestroyObject(sn_key);
+				sn_key = NULL;
+		}
+
+		if(sn_val)
+		{
+				SN_DestroyObject(sn_val);
+				sn_val = NULL;
+		}
+
+		return status;
+}
+
+
+
+arStatus_t			SN_InsertToDictObjectByStrStr(snObject_t *obj, const char *key, const char *val)
+{
+		arStatus_t status;
+		snObject_t *sn_key, *sn_val;
+		AR_ASSERT(obj != NULL && key != NULL);
+
+		sn_key = NULL;
+		sn_val = NULL;
+		status = AR_S_YES;
+
+		sn_key = SN_CreateObject(SN_STRING_T);
+		FAILED_GOTO(sn_key != NULL);
+
+		status = SN_SetStringObjectByStr(sn_key, key);
+		FAILED_GOTO(status == AR_S_YES);
+
+		sn_val = SN_CreateObject(SN_STRING_T);
+		FAILED_GOTO(sn_val != NULL);
+		status = SN_SetStringObjectByStr(sn_val, val);
+		FAILED_GOTO(status == AR_S_YES);
+
+		status = SN_InsertToDictObject(obj, sn_key, sn_val);
+		FAILED_GOTO(status == AR_S_YES);
+
+		return AR_S_YES;
+INVALID_POINT:
+		if(sn_key)
+		{
+				SN_DestroyObject(sn_key);
+				sn_key = NULL;
+		}
+
+		if(sn_val)
+		{
+				SN_DestroyObject(sn_val);
+				sn_val = NULL;
+		}
+
+		return status;
+
+}
+
+
+
+
+
+arStatus_t			SN_InsertToDictObjectByStrWcs(snObject_t *obj, const char *key, const wchar_t *val)
+{
+		arStatus_t status;
+		snObject_t *sn_key, *sn_val;
+		AR_ASSERT(obj != NULL && key != NULL);
+
+		sn_key = NULL;
+		sn_val = NULL;
+
+		status = AR_S_YES;
+
+		sn_key = SN_CreateObject(SN_STRING_T);
+		FAILED_GOTO(sn_key != NULL);
+
+		status = SN_SetStringObjectByStr(sn_key, key);
+		FAILED_GOTO(status == AR_S_YES);
+
+		sn_val = SN_CreateObject(SN_STRING_T);
+		FAILED_GOTO(sn_val != NULL);
+		status = SN_SetStringObjectByWcs(sn_val, val);
+		FAILED_GOTO(status == AR_S_YES);
+
+		status = SN_InsertToDictObject(obj, sn_key, sn_val);
+		FAILED_GOTO(status == AR_S_YES);
+
+		return AR_S_YES;
+INVALID_POINT:
+		if(sn_key)
+		{
+				SN_DestroyObject(sn_key);
+				sn_key = NULL;
+		}
+
+		if(sn_val)
+		{
+				SN_DestroyObject(sn_val);
+				sn_val = NULL;
+		}
+
+		return status;
+
+}
+
+
+
+arStatus_t			SN_InsertToDictObjectByStrData(snObject_t *obj, const char *key, const byte_t *data, size_t len)
+{
+		arStatus_t status;
+		snObject_t *sn_key, *sn_val;
+		AR_ASSERT(obj != NULL && key != NULL && data != NULL && len > 0);
+
+		sn_key = NULL;
+		sn_val = NULL;
+
+		status = AR_S_YES;
+
+		sn_key = SN_CreateObject(SN_STRING_T);
+		FAILED_GOTO(sn_key != NULL);
+
+		status = SN_SetStringObjectByStr(sn_key, key);
+		FAILED_GOTO(status == AR_S_YES);
+
+		sn_val = SN_CreateObject(SN_STRING_T);
+		FAILED_GOTO(sn_val != NULL);
+
+		status = SN_SetStringObjectByData(sn_val, data, len);
+		FAILED_GOTO(status == AR_S_YES);
+
+		status = SN_InsertToDictObject(obj, sn_key, sn_val);
+		FAILED_GOTO(status == AR_S_YES);
+
+		return AR_S_YES;
+INVALID_POINT:
+		if(sn_key)
+		{
+				SN_DestroyObject(sn_key);
+				sn_key = NULL;
+		}
+
+		if(sn_val)
+		{
+				SN_DestroyObject(sn_val);
+				sn_val = NULL;
+		}
+
+		return status;
+}
+
+
+
+arStatus_t			SN_InsertToDictObjectByWcsInt(snObject_t *obj, const wchar_t *key, int_64_t val)
+{
+		arStatus_t status;
+		snObject_t *sn_key, *sn_val;
+		AR_ASSERT(obj != NULL && key != NULL);
+
+		sn_key = NULL;
+		sn_val = NULL;
+
+		status = AR_S_YES;
+
+		sn_key = SN_CreateObject(SN_STRING_T);
+		FAILED_GOTO(sn_key != NULL);
+
+		status = SN_SetStringObjectByWcs(sn_key, key);
+		FAILED_GOTO(status == AR_S_YES);
+
+		sn_val = SN_CreateObject(SN_INT_T);
+		FAILED_GOTO(sn_val != NULL);
+		SN_SetIntObject(sn_val, val);
+
+
+		status = SN_InsertToDictObject(obj, sn_key, sn_val);
+
+		FAILED_GOTO(status == AR_S_YES);
+
+		return AR_S_YES;
+INVALID_POINT:
+		if(sn_key)
+		{
+				SN_DestroyObject(sn_key);
+				sn_key = NULL;
+		}
+
+		if(sn_val)
+		{
+				SN_DestroyObject(sn_val);
+				sn_val = NULL;
+		}
+
+		return status;
+}
+
+
+
+
+arStatus_t			SN_InsertToDictObjectByWcsUInt(snObject_t *obj, const wchar_t *key, uint_64_t val)
+{
+		arStatus_t status;
+		snObject_t *sn_key, *sn_val;
+		AR_ASSERT(obj != NULL && key != NULL);
+
+		sn_key = NULL;
+		sn_val = NULL;
+
+		status = AR_S_YES;
+
+		sn_key = SN_CreateObject(SN_STRING_T);
+		FAILED_GOTO(sn_key != NULL);
+
+		status = SN_SetStringObjectByWcs(sn_key, key);
+		FAILED_GOTO(status == AR_S_YES);
+
+		sn_val = SN_CreateObject(SN_INT_T);
+		FAILED_GOTO(sn_val != NULL);
+		SN_SetUIntObject(sn_val, val);
+
+
+		status = SN_InsertToDictObject(obj, sn_key, sn_val);
+
+		FAILED_GOTO(status == AR_S_YES);
+
+		return AR_S_YES;
+INVALID_POINT:
+		if(sn_key)
+		{
+				SN_DestroyObject(sn_key);
+				sn_key = NULL;
+		}
+
+		if(sn_val)
+		{
+				SN_DestroyObject(sn_val);
+				sn_val = NULL;
+		}
+
+		return status;
+}
+
+
+
+
+arStatus_t			SN_InsertToDictObjectByWcsStr(snObject_t *obj, const wchar_t *key, const char *val)
+{
+		arStatus_t status;
+		snObject_t *sn_key, *sn_val;
+		AR_ASSERT(obj != NULL && key != NULL);
+
+		sn_key = NULL;
+		sn_val = NULL;
+
+		status = AR_S_YES;
+
+		sn_key = SN_CreateObject(SN_STRING_T);
+		FAILED_GOTO(sn_key != NULL);
+
+		status = SN_SetStringObjectByWcs(sn_key, key);
+		FAILED_GOTO(status == AR_S_YES);
+
+		sn_val = SN_CreateObject(SN_STRING_T);
+		FAILED_GOTO(sn_val != NULL);
+		status = SN_SetStringObjectByStr(sn_val, val);
+		FAILED_GOTO(status == AR_S_YES);
+
+		status = SN_InsertToDictObject(obj, sn_key, sn_val);
+
+		FAILED_GOTO(status == AR_S_YES);
+
+		return AR_S_YES;
+INVALID_POINT:
+		if(sn_key)
+		{
+				SN_DestroyObject(sn_key);
+				sn_key = NULL;
+		}
+
+		if(sn_val)
+		{
+				SN_DestroyObject(sn_val);
+				sn_val = NULL;
+		}
+
+		return status;
+
+}
+
+
+
+
+arStatus_t			SN_InsertToDictObjectByWcsWcs(snObject_t *obj, const wchar_t *key, const wchar_t *val)
+{
+		arStatus_t status;
+		snObject_t *sn_key, *sn_val;
+		AR_ASSERT(obj != NULL && key != NULL);
+
+		sn_key = NULL;
+		sn_val = NULL;
+
+		status = AR_S_YES;
+
+		sn_key = SN_CreateObject(SN_STRING_T);
+		FAILED_GOTO(sn_key != NULL);
+
+		status = SN_SetStringObjectByWcs(sn_key, key);
+		FAILED_GOTO(status == AR_S_YES);
+
+		sn_val = SN_CreateObject(SN_STRING_T);
+		FAILED_GOTO(sn_val != NULL);
+		status = SN_SetStringObjectByWcs(sn_val, val);
+		FAILED_GOTO(status == AR_S_YES);
+
+		status = SN_InsertToDictObject(obj, sn_key, sn_val);
+		FAILED_GOTO(status == AR_S_YES);
+
+		return AR_S_YES;
+INVALID_POINT:
+		if(sn_key)
+		{
+				SN_DestroyObject(sn_key);
+				sn_key = NULL;
+		}
+
+		if(sn_val)
+		{
+				SN_DestroyObject(sn_val);
+				sn_val = NULL;
+		}
+
+		return status;
+}
+
+
+
+arStatus_t			SN_InsertToDictObjectByWcsData(snObject_t *obj, const wchar_t *key, const byte_t *data, size_t len)
+{
+		arStatus_t status;
+		snObject_t *sn_key, *sn_val;
+		AR_ASSERT(obj != NULL && key != NULL && data != NULL && len > 0);
+
+		sn_key = NULL;
+		sn_val = NULL;
+
+		status = AR_S_YES;
+
+		sn_key = SN_CreateObject(SN_STRING_T);
+		FAILED_GOTO(sn_key != NULL);
+
+		status = SN_SetStringObjectByWcs(sn_key, key);
+		FAILED_GOTO(status == AR_S_YES);
+
+		sn_val = SN_CreateObject(SN_STRING_T);
+		FAILED_GOTO(sn_val != NULL);
+		status = SN_SetStringObjectByData(sn_val, data, len);
+		FAILED_GOTO(status == AR_S_YES);
+
+		status = SN_InsertToDictObject(obj, sn_key, sn_val);
+		FAILED_GOTO(status == AR_S_YES);
+
+		return AR_S_YES;
+INVALID_POINT:
+		if(sn_key)
+		{
+				SN_DestroyObject(sn_key);
+				sn_key = NULL;
+		}
+
+		if(sn_val)
+		{
+				SN_DestroyObject(sn_val);
+				sn_val = NULL;
+		}
+
+		return status;
+}
+
+
+
+
+
+
+arStatus_t			SN_InsertToListObjectByStr(snObject_t *obj, const char *val)
+{
+		arStatus_t status;
+		snObject_t *sn_val;
+		AR_ASSERT(obj != NULL && val != NULL);
+
+		sn_val = NULL;
+		status = AR_S_YES;
+		
+		sn_val = SN_CreateObject(SN_STRING_T);
+		FAILED_GOTO(sn_val != NULL);
+		status = SN_SetStringObjectByStr(sn_val, val);
+		FAILED_GOTO(status == AR_S_YES);
+
+		status = SN_InsertToListObject(obj, sn_val);
+		FAILED_GOTO(status == AR_S_YES);
+
+		return AR_S_YES;
+
+INVALID_POINT:
+		if(sn_val)
+		{
+				SN_DestroyObject(sn_val);
+				sn_val = NULL;
+		}
+
+		return status;
+}
+
+
+arStatus_t			SN_InsertToListObjectByWcs(snObject_t *obj, const wchar_t *val)
+{
+		arStatus_t status;
+		snObject_t *sn_val;
+		AR_ASSERT(obj != NULL && val != NULL);
+
+		sn_val = NULL;
+		status = AR_S_YES;
+		
+		sn_val = SN_CreateObject(SN_STRING_T);
+		FAILED_GOTO(sn_val != NULL);
+		status = SN_SetStringObjectByWcs(sn_val, val);
+		FAILED_GOTO(status == AR_S_YES);
+
+		status = SN_InsertToListObject(obj, sn_val);
+		FAILED_GOTO(status == AR_S_YES);
+
+		return AR_S_YES;
+
+INVALID_POINT:
+		if(sn_val)
+		{
+				SN_DestroyObject(sn_val);
+				sn_val = NULL;
+		}
+
+		return status;
+}
+
+
+
+arStatus_t			SN_InsertToListObjectByInt(snObject_t *obj, const int_64_t val)
+{
+		arStatus_t status;
+		snObject_t *sn_val;
+		AR_ASSERT(obj != NULL && val != NULL);
+
+		sn_val = NULL;
+		status = AR_S_YES;
+		
+		sn_val = SN_CreateObject(SN_INT_T);
+		FAILED_GOTO(sn_val != NULL);
+		SN_SetIntObject(sn_val, val);
+		FAILED_GOTO(status == AR_S_YES);
+
+		status = SN_InsertToListObject(obj, sn_val);
+		FAILED_GOTO(status == AR_S_YES);
+
+		return AR_S_YES;
+
+INVALID_POINT:
+		if(sn_val)
+		{
+				SN_DestroyObject(sn_val);
+				sn_val = NULL;
+		}
+
+		return status;
+}
+
+
+
+arStatus_t			SN_InsertToListObjectByUInt(snObject_t *obj, const uint_64_t val)
+{
+		arStatus_t status;
+		snObject_t *sn_val;
+		AR_ASSERT(obj != NULL && val != NULL);
+
+		sn_val = NULL;
+		status = AR_S_YES;
+		
+		sn_val = SN_CreateObject(SN_INT_T);
+		FAILED_GOTO(sn_val != NULL);
+		SN_SetUIntObject(sn_val, val);
+		FAILED_GOTO(status == AR_S_YES);
+
+		status = SN_InsertToListObject(obj, sn_val);
+		FAILED_GOTO(status == AR_S_YES);
+
+		return AR_S_YES;
+
+INVALID_POINT:
+		if(sn_val)
+		{
+				SN_DestroyObject(sn_val);
+				sn_val = NULL;
+		}
+
+		return status;
+
+}
+
+
+
+arStatus_t			SN_InsertToListObjectByData(snObject_t *obj, const byte_t *data, size_t len)
+{
+		arStatus_t status;
+		snObject_t *sn_val;
+		AR_ASSERT(obj != NULL && data != NULL && len > 0);
+
+		sn_val = NULL;
+		status = AR_S_YES;
+		
+		sn_val = SN_CreateObject(SN_STRING_T);
+		FAILED_GOTO(sn_val != NULL);
+		status = SN_SetStringObjectByData(sn_val, data, len);
+		FAILED_GOTO(status == AR_S_YES);
+
+		status = SN_InsertToListObject(obj, sn_val);
+		FAILED_GOTO(status == AR_S_YES);
+
+		return AR_S_YES;
+
+INVALID_POINT:
+		if(sn_val)
+		{
+				SN_DestroyObject(sn_val);
+				sn_val = NULL;
+		}
+
+		return status;
+}
+
+
 
 
 
