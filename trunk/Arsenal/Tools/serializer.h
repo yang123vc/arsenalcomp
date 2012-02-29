@@ -59,10 +59,13 @@ typedef struct __sn_dict_pair_tag
 
 arStatus_t			SN_InsertToDictObject(snObject_t *obj, snObject_t *key, snObject_t *value);
 arStatus_t			SN_RemoveFromDictObject(snObject_t *obj, const snObject_t *key);
-snObject_t*			SN_FindFromDictObject(snObject_t *obj, const snObject_t *key);
+
 size_t				SN_GetDictObjectCount(const snObject_t *obj);
 snPair_t*			SN_GetFromDictObject(snObject_t *obj, size_t idx);
 
+snObject_t*			SN_FindFromDictObject(snObject_t *obj, const snObject_t *key);
+snObject_t*			SN_FindFromDictObjectByStr(snObject_t *obj, const char *str);
+snObject_t*			SN_FindFromDictObjectByWcs(snObject_t *obj, const wchar_t *str);
 
 /*******************************List***********************************************************/
 arStatus_t		SN_InsertToListObject(snObject_t	*lst, snObject_t *obj);

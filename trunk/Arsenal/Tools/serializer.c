@@ -1525,7 +1525,57 @@ snObject_t*		SN_FindFromDictObject(snObject_t *obj, const snObject_t *key)
 		return SN_FindFromDict(&obj->dict,key);
 }
 
+snObject_t*			SN_FindFromDictObjectByStr(snObject_t *obj, const char *str)
+{
+		snObject_t *sn_key, *ret_obj;
+		AR_ASSERT(obj != NULL && str != NULL && AR_strlen(str) > 0);
 
+		sn_key = SN_CreateObject(SN_STRING_T);
+		if(sn_key == NULL)
+		{
+				return NULL;
+		}
+
+		if(SN_SetStringObjectByStr(sn_key, str) != AR_S_YES)
+		{
+				SN_DestroyObject(sn_key);
+				sn_key = NULL;
+				return NULL;
+		}
+
+		ret_obj = SN_FindFromDictObject(obj, sn_key);
+
+		SN_DestroyObject(sn_key);
+		sn_key = NULL;
+
+		return ret_obj;
+}
+
+snObject_t*			SN_FindFromDictObjectByWcs(snObject_t *obj, const wchar_t *str)
+{
+		snObject_t *sn_key, *ret_obj;
+		AR_ASSERT(obj != NULL && str != NULL && AR_wcslen(str) > 0);
+
+		sn_key = SN_CreateObject(SN_STRING_T);
+		if(sn_key == NULL)
+		{
+				return NULL;
+		}
+
+		if(SN_SetStringObjectByWcs(sn_key, str) != AR_S_YES)
+		{
+				SN_DestroyObject(sn_key);
+				sn_key = NULL;
+				return NULL;
+		}
+
+		ret_obj = SN_FindFromDictObject(obj, sn_key);
+
+		SN_DestroyObject(sn_key);
+		sn_key = NULL;
+
+		return ret_obj;
+}
 
 
 snPair_t*		SN_GetFromDictObject(snObject_t *obj, size_t idx)
