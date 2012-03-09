@@ -263,7 +263,7 @@ static UINT __get_codepage_for_winapi(arCodePage_t cp)
 
 
 
-size_t					AR_str_to_wcs(arCodePage_t cp, const char *acp, size_t n, wchar_t *out, size_t out_len)
+size_t					AR_str_to_wcs_buf(arCodePage_t cp, const char *acp, size_t n, wchar_t *out, size_t out_len)
 {
 		int len;
 		const UINT win_cp = __get_codepage_for_winapi(cp);
@@ -298,7 +298,7 @@ size_t					AR_str_to_wcs(arCodePage_t cp, const char *acp, size_t n, wchar_t *ou
 }
 
 
-size_t					AR_wcs_to_str(arCodePage_t cp, const wchar_t *input, size_t n, char *out, size_t out_len)
+size_t					AR_wcs_to_str_buf(arCodePage_t cp, const wchar_t *input, size_t n, char *out, size_t out_len)
 {
 		int len;
 		const UINT win_cp = __get_codepage_for_winapi(cp);
@@ -331,7 +331,7 @@ size_t					AR_wcs_to_str(arCodePage_t cp, const wchar_t *input, size_t n, char *
 }
 
 
-char*					AR_wcs_convto_str(arCodePage_t cp, const wchar_t *input, size_t in_n)
+char*					AR_wcs_to_str(arCodePage_t cp, const wchar_t *input, size_t in_n)
 {
 		char *ret;
 		int n;
@@ -375,7 +375,7 @@ char*					AR_wcs_convto_str(arCodePage_t cp, const wchar_t *input, size_t in_n)
 		}
 }
 
-wchar_t*				AR_str_convto_wcs(arCodePage_t cp, const char *input, size_t in_n)
+wchar_t*				AR_str_to_wcs(arCodePage_t cp, const char *input, size_t in_n)
 {
 		wchar_t *ret;
 		const UINT win_cp = __get_codepage_for_winapi(cp);
@@ -461,13 +461,13 @@ const char *__get_locale_str_for_iconv(arCodePage_t cp)
 
 
 
-size_t					AR_str_to_wcs(arCodePage_t cp, const char *acp, size_t n, wchar_t *out, size_t out_len)
+size_t					AR_str_to_wcs_buf(arCodePage_t cp, const char *acp, size_t n, wchar_t *out, size_t out_len)
 {
 		size_t len;
 		size_t ret;
 		wchar_t *wstr;
 		AR_ASSERT(acp != NULL);
-		wstr = AR_str_convto_wcs(cp, acp, n);
+		wstr = AR_str_to_wcs(cp, acp, n);
 		if(wstr == NULL)
 		{
 				ret = 0;
@@ -500,13 +500,13 @@ CLEAN_POINT:
 		return ret;
 }
 
-size_t					AR_wcs_to_str(arCodePage_t cp, const wchar_t *input, size_t n, char *out, size_t out_len)
+size_t					AR_wcs_to_str_buf(arCodePage_t cp, const wchar_t *input, size_t n, char *out, size_t out_len)
 {
 		size_t len;
 		size_t ret;
 		char *str;
 		AR_ASSERT(input != NULL);
-		str = AR_wcs_convto_str(cp, input, n);
+		str = AR_wcs_to_str(cp, input, n);
 
 		if(str == NULL)
 		{
@@ -544,7 +544,7 @@ CLEAN_POINT:
 
 
 
-wchar_t*				AR_str_convto_wcs(arCodePage_t cp, const char *input, size_t in_n)
+wchar_t*				AR_str_to_wcs(arCodePage_t cp, const char *input, size_t in_n)
 {
 
         char   *out    = NULL;
@@ -618,7 +618,7 @@ CLEAN_POINT:
 
 
 
-char*					AR_wcs_convto_str(arCodePage_t cp, const wchar_t *input, size_t in_n)
+char*					AR_wcs_to_str(arCodePage_t cp, const wchar_t *input, size_t in_n)
 {
         char   *in     = NULL;
         size_t in_len;

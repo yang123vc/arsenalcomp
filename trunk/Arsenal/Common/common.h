@@ -561,12 +561,12 @@ typedef enum
 		AR_CP_MAX
 }arCodePage_t;
 
-size_t					AR_str_to_wcs(arCodePage_t cp, const char *acp, size_t n, wchar_t *out, size_t out_len);
-size_t					AR_wcs_to_str(arCodePage_t cp, const wchar_t *input, size_t n, char *out, size_t out_len);
+size_t					AR_str_to_wcs_buf(arCodePage_t cp, const char *acp, size_t n, wchar_t *out, size_t out_len);
+size_t					AR_wcs_to_str_buf(arCodePage_t cp, const wchar_t *input, size_t n, char *out, size_t out_len);
 
 
-char*					AR_wcs_convto_str(arCodePage_t cp, const wchar_t *input, size_t in_n);
-wchar_t*				AR_str_convto_wcs(arCodePage_t cp, const char *input, size_t in_n);
+char*					AR_wcs_to_str(arCodePage_t cp, const wchar_t *input, size_t in_n);
+wchar_t*				AR_str_to_wcs(arCodePage_t cp, const char *input, size_t in_n);
 
 
 /*******************************************************BitMark****************************************************************/
