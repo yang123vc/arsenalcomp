@@ -207,7 +207,7 @@ static arStatus_t	SN_SetStringByWcs(snString_t	*dest, const wchar_t *str)
 {
 		const char *utf8;
 		AR_ASSERT(dest != NULL && str != NULL);
-		utf8 = AR_wcs_convto_str(AR_CP_UTF8, str, AR_wcslen(str));
+		utf8 = AR_wcs_to_str(AR_CP_UTF8, str, AR_wcslen(str));
 
 		if(utf8 == NULL)
 		{
@@ -1465,7 +1465,7 @@ snRetVal_t		SN_FindObjectByStrPath(snObject_t *obj, const char *path)
 		AR_ASSERT(obj != NULL && path != NULL);
 
 		/*wcs = AR_utf8_convto_wcs(path);*/
-		wcs = AR_str_convto_wcs(AR_CP_UTF8, path, AR_strlen(path));
+		wcs = AR_str_to_wcs(AR_CP_UTF8, path, AR_strlen(path));
 
 		if(wcs == NULL)
 		{
@@ -1782,7 +1782,11 @@ int_t			SN_GetWcsFromStringObject(const snObject_t	*obj, wchar_t *buf, size_t le
 		}
 
 		tmp = AR_NEWARR(char, l);
-		
+		if(tmp == NULL)
+		{
+				return -1;
+		}
+
 		l = SN_GetStrFromStringObject(obj, tmp, l);
 
 		if(l < 0)
@@ -1792,7 +1796,7 @@ int_t			SN_GetWcsFromStringObject(const snObject_t	*obj, wchar_t *buf, size_t le
 		}
 
 /*		wtmp = AR_utf8_convto_wcs(tmp);*/
-		wtmp = AR_str_convto_wcs(AR_CP_UTF8, tmp, AR_strlen(tmp));
+		wtmp = AR_str_to_wcs(AR_CP_UTF8, tmp, AR_strlen(tmp));
 
 		if(tmp == NULL)
 		{

@@ -1,0 +1,25 @@
+
+%name	delim 		:	"[ \r\n\t]"			;
+//%name	comment		:	"/\*([^\*]|\*+[^\*/])*\*+/"	;
+//%name	comment_line	:	"//[^\n]*\n"			;
+%name	digit		:	"[0-9]"				;
+//%name	number		:	"{digit}+"			;
+
+
+%token	%skip 		:	"{delim}+",1;
+
+%token	IP		: 	"(({digit}{1,2}|1{digit}{digit}|2[0-4]{digit}|25[0-5])\.({digit}{1,2}|1{digit}{digit}|2[0-4]{digit}|25[0-5])\.({digit}{1,2}|1{digit}{digit}|2[0-4]{digit}|25[0-5])\.({digit}{1,2}|1{digit}{digit}|2[0-4]{digit}|25[0-5]))(?!{digit})";
+
+%token	COLON		: 	":";
+
+%token	PORT		: 	"{digit}+";
+
+
+
+ip_list		:	ip_list	address
+			|	address
+			;
+
+address		:	IP
+			|	IP COLON PORT
+			;

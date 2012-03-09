@@ -45,8 +45,8 @@ FILE*	__AR_open_file(const wchar_t *path, const wchar_t *mode)
         char     *str_mode;
 		AR_ASSERT(path != NULL && mode != NULL);
 
-		str_path = AR_wcs_convto_str(AR_CP_UTF8, path, AR_wcslen(path));
-		str_mode = AR_wcs_convto_str(AR_CP_UTF8, mode, AR_wcslen(mode));
+		str_path = AR_wcs_to_str(AR_CP_UTF8, path, AR_wcslen(path));
+		str_mode = AR_wcs_to_str(AR_CP_UTF8, mode, AR_wcslen(mode));
 
 		file = NULL;
 
@@ -376,7 +376,7 @@ bool_t	AR_LoadBomTextFile(const wchar_t *path, arTxtBom_t *bom, arString_t *out)
 						for(cp = AR_CP_ACP; cp < AR_CP_MAX; ++cp)
 						{
 
-								str = AR_str_convto_wcs((arCodePage_t)cp, (const char*)AR_GetBufferData(ascii_buf), AR_GetBufferAvailable(ascii_buf));
+								str = AR_str_to_wcs((arCodePage_t)cp, (const char*)AR_GetBufferData(ascii_buf), AR_GetBufferAvailable(ascii_buf));
 								if(str != NULL)
 								{
 										break;
@@ -731,7 +731,7 @@ arStatus_t	AR_LoadBomTextFromBinary(arBuffer_t *input, arTxtBom_t *bom, arString
 				for(cp = AR_CP_ACP; cp < AR_CP_MAX; ++cp)
 				{
 
-						str = AR_str_convto_wcs((arCodePage_t)cp, (const char*)AR_GetBufferData(input), AR_GetBufferAvailable(input));
+						str = AR_str_to_wcs((arCodePage_t)cp, (const char*)AR_GetBufferData(input), AR_GetBufferAvailable(input));
 						if(str != NULL)
 						{
 								break;
@@ -1096,7 +1096,7 @@ arStatus_t	AR_SaveBomTextToBinary(arBuffer_t *output, arTxtBom_t bom, const wcha
 		if(bom == AR_TXT_BOM_ASCII)
 		{
 				size_t n;
-				char *s = AR_wcs_convto_str(AR_CP_ACP, input, AR_wcslen(input));
+				char *s = AR_wcs_to_str(AR_CP_ACP, input, AR_wcslen(input));
 				
 				if(!s)
 				{

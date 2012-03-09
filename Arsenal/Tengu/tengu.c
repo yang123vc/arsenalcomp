@@ -17,16 +17,16 @@
 AR_NAMESPACE_BEGIN
 
 
-bool_t	TGU_Init()
+arStatus_t	TGU_Init()
 {
 		//TGU_InitParser();
-		return true;
+		return AR_S_YES;
 }
 
-bool_t	TGU_UnInit()
+arStatus_t	TGU_UnInit()
 {
 		//TGU_UnInitParser();
-		return true;
+		return AR_S_YES;
 
 }
 

@@ -195,9 +195,9 @@ void com_conv()
 
 		//const wchar_t *s = L"";
 		
-		tmp = AR_wcs_convto_str(AR_CP_UTF8, s, AR_wcslen(s));
+		tmp = AR_wcs_to_str(AR_CP_UTF8, s, AR_wcslen(s));
 
-		wtmp = AR_str_convto_wcs(AR_CP_UTF8,tmp, AR_strlen(tmp));
+		wtmp = AR_str_to_wcs(AR_CP_UTF8,tmp, AR_strlen(tmp));
 		
 		AR_DEL(tmp); AR_DEL(wtmp);
 }
@@ -207,7 +207,7 @@ void com_conv2()
 {
 		char buf[1024];
 		size_t l;
-		l = AR_wcs_to_str(AR_CP_UTF8, L"", 0, buf, 1024);
+		l = AR_wcs_to_str_buf(AR_CP_UTF8, L"", 0, buf, 1024);
 		buf[l] = 0;
 }
 

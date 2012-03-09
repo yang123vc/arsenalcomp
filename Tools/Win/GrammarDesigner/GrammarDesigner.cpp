@@ -74,14 +74,18 @@ typedef struct __ar_init_tag
 }arInit_t;
 */
 
+
 static void	AR_STDCALL	__dummy_error_func(int_t level, const wchar_t *msg, void *ctx)
 {
+		wchar_t buf[1024];
 
+		swprintf(buf, 1024, L"Error : level = %d, Message = %ls\r\n", level, msg);
+		::OutputDebugStringW(buf);
 }
 
 static void	AR_STDCALL	__dummy_print_func(const wchar_t *msg, void *ctx)
 {
-
+		::OutputDebugStringW(msg);
 }
 
 static const ARSpace::arInit_t	__dummy_context = 
@@ -92,6 +96,7 @@ static const ARSpace::arInit_t	__dummy_context =
 		NULL
 		}
 };
+
 
 BOOL CGrammarDesignerApp::InitInstance()
 {
