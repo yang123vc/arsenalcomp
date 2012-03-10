@@ -1276,7 +1276,7 @@ INVALID_POINT:
 
 
 
-#define AR_PRINT_FUNCTION()	AR_LOG(L"enter function : %hs\r\n", AR_FUNC_NAME)
+#define AR_PRINT_FUNCTION()	AR_DPRINT(L"enter function : %hs\r\n", AR_FUNC_NAME)
 
 /*
 { L"action_decl			:		%action lexeme action_ins",				__handle_action_decl,0},

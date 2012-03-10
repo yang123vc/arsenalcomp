@@ -1093,7 +1093,7 @@ void		Parser_ResetTermSpecID(const psrGrammar_t *grammar)
 		for(i = 0; i < term_lst->count; ++i)
 		{
 				psrTermInfo_t *term;
-
+				
 				term = &term_lst->lst[i];
 				((psrSymb_t*)term->term)->spec_id = i;
 		}
@@ -1108,7 +1108,7 @@ void		Parser_ResetTermSpecID(const psrGrammar_t *grammar)
 				{
 						const psrSymb_t *symb = rule->body.lst[k];
 
-						if(symb->type == PARSER_TERM && !Parser_IsBuildInSymbol(symb))
+						if(symb->type == PARSER_TERM/* && !Parser_IsBuildInSymbol(symb)*/)
 						{
 								((psrSymb_t*)symb)->spec_id = Parser_IndexOfTermInfoListByName(term_lst, symb->name);
 								AR_ASSERT(symb->spec_id != -1);
@@ -1126,10 +1126,12 @@ int_t							Parser_GetTermSpecID(const psrGrammar_t *grammar, const psrSymb_t *s
 		AR_ASSERT(grammar != NULL && symb != NULL);
 
 		term_lst = Parser_GetTermList(grammar);
+		/*
 		if(Parser_IsBuildInSymbol(symb))
 		{
 				idx = Parser_IndexOfTermInfoListByName(term_lst, symb->name);
 		}else
+		*/
 		{
 				idx = (int_t)symb->spec_id;
 		}
