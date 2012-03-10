@@ -56,82 +56,12 @@ const psrSymb_t*		Parser_CreateSymb(const wchar_t *name, psrSymbType_t t)
 
 
 
-#if(0)
-const psrSymb_t*		Parser_CreateSymb(const wchar_t *name, psrSymbType_t t)
-{
-		psrSymb_t		*res;
-		AR_ASSERT(name != NULL && AR_wcslen(name) > 0);
-		res = AR_NEW0(psrSymb_t);
-
-		if(res == NULL)
-		{
-				return res;
-		}
-
-		res->name = Parser_AllocString(name);
-
-		if(res->name == NULL)
-		{
-				AR_DEL(res);
-				res = NULL;
-				return NULL;
-		}
-
-		res->type = t;
-		res->hash_code = AR_wcshash(res->name);
-		res->ref_count = 1;
-		
-		/*
-		wprintf(L"%s : (%s : %p) : %d\r\n", name, res->name, res->name, res->hash_code);
-		*/
-		return res;
-
-}
-#endif
-
-
-
-#if defined(AR_DEBUG)
-static void __trace_symb_refcount(const psrSymb_t *symb)
-{
-		AR_UNUSED(symb);
-
-		/*
-		if(symb == PARSER_StartSymb)
-		{
-
-				int x;
-				x = 0;
-				++x;
-		}
-		*/
-}
-
-#else
-
-#define __trace_symb_refcount(_ptr) do{}while(0)
-
-#endif
-
 
 
 const psrSymb_t*		Parser_CopyNewSymb(const psrSymb_t *sour)
 {
 		AR_ASSERT(sour != NULL && sour->ref_count > 0);
 
-		__trace_symb_refcount(sour);
-		/*
-		for(;;)
-		{
-				volatile int_t tmp = sour->ref_count;
-				AR_ASSERT(tmp >= 1);
-				
-				if(AR_CompExchange((uint_t*)&sour->ref_count, tmp+1, tmp) == (uint_t)tmp)
-				{
-						break;
-				}
-		}
-		*/
 		AR_AtomicInc((volatile int_t*)&sour->ref_count);
 		return sour;
 
@@ -142,24 +72,6 @@ void			Parser_DestroySymb(const psrSymb_t *symb)
 		
 		AR_ASSERT(symb != NULL && symb->ref_count > 0);
 		
-		__trace_symb_refcount(symb);
-		/*
-		for(;;)
-		{
-				volatile int_t tmp = symb->ref_count;
-				AR_ASSERT(tmp >= 1);
-				
-				if(AR_CompExchange((uint_t*)&symb->ref_count, tmp-1, tmp) == (uint_t)tmp)
-				{
-						if(tmp == 1)
-						{
-								AR_DEL((psrSymb_t*)symb);
-						}
-						break;
-				}
-		}
-		*/
-
 		if(AR_AtomicDec((volatile int_t*)&symb->ref_count) == 0)
 		{
 				AR_DEL((psrSymb_t*)symb);
@@ -169,49 +81,7 @@ void			Parser_DestroySymb(const psrSymb_t *symb)
 
 
 
-/*
-const psrSymb_t*		Parser_CopyNewSymb(const psrSymb_t *sour)
-{
-		AR_ASSERT(sour != NULL && sour->ref_count > 0);
 
-		((psrSymb_t*)sour)->ref_count++;
-		return sour;
-
-}
-
-void			Parser_DestroySymb(const psrSymb_t *symb)
-{
-		
-		AR_ASSERT(symb != NULL && symb->ref_count > 0);
-		
-		if(--((psrSymb_t*)symb)->ref_count == 0)
-		{
-				AR_DEL((psrSymb_t*)symb);
-		}
-}
-
-*/
-
-
-
-
-
-#if(0)
-int_t					Parser_CompSymb(const psrSymb_t *l, const psrSymb_t *r)
-{
-		int_t cmp;
-		AR_ASSERT(l != NULL && r != NULL);
-		if(l == r)return 0;
-		cmp = AR_CMP(l->type, r->type);
-		if(cmp != 0)return cmp;
-		cmp = AR_CMP(l->hash_code, r->hash_code);
-		if(cmp != 0)return cmp;
-		/*为何靠对比指针来断定字符串请参阅parser_in.h*/
-
-
-		return AR_CMP(l->name, r->name);		
-}
-#endif
 
 
 

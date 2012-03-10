@@ -361,7 +361,7 @@ void			Parser_DestroyRule(psrRule_t *rule);
 
 #define AR_PSR_MAX_SYMB_LIST	4096
 
-
+/*grammar对象不是线程安全的，只能在同一线程使用*/
 struct __parser_grammar_tag
 {
 		psrRule_t				**rules;
