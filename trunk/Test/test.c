@@ -143,7 +143,7 @@ void AR_Test()
 
 		//ray_test();
 
-		sn_test();
+		//sn_test();
 
 		//gen_code_test();
 
@@ -165,7 +165,7 @@ void AR_Test()
 		
 		//parser_gen_perf_test();
 
-		//calc3_test();
+		calc3_test();
 
 		//grammar_config_test();
 
