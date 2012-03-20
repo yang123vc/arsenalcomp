@@ -252,8 +252,7 @@
 
 
 
-%name    keyword_lhd           :    "[A-Z_a-z0-9]"
-                        ;
+%name    keyword_lhd           :    "{letter}|[0-9]"                        ;
 
 
 %name        float_constant    :    "{float_literal}(?!{keyword_lhd})"

@@ -55,7 +55,7 @@ FILE*	__AR_open_file(const wchar_t *path, const wchar_t *mode)
             file = fopen(str_path, str_mode);
 		}else
 		{
-				AR_error(AR_ERR_WARNING, L"Convert path('%ls') and mode('%ls') failed\r\n", path, mode);
+				AR_error(AR_ERR_WARNING, L"Failed to convert path('%ls') and mode('%ls') to utf8 strings\r\n", path, mode);
 		}
 
         if(str_path)
