@@ -139,7 +139,7 @@ static lex_t*	__build_lex()
 						Lex_Destroy(lex);										
 						AR_ASSERT(false);										
 						return NULL;											
-				}else/*´íÎó*/
+				}else
 				{																
 						AR_error(AR_ERR_FATAL, L"failed to build lexer : name '%ls'!\r\n", __g_lex_name);
 						return NULL;
@@ -163,7 +163,7 @@ static lex_t*	__build_lex()
 						Lex_Destroy(lex);										
 						AR_ASSERT(false);										
 						return NULL;											
-				}else/*´íÎó*/
+				}else
 				{																
 						AR_error(AR_ERR_FATAL, L"failed to build lexer : regex '%ls'!\r\n", __g_term_pattern[i].regex);
 						return NULL;
@@ -326,7 +326,7 @@ static psrRetVal_t AR_STDCALL default_leaf_handler(const psrToken_t *tok,void *c
 /*E	:	E % E */
 static psrRetVal_t AR_STDCALL on_calc(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
-	 { 
+		{ 
 		psrRetVal_t ret;
             int_t l, r;
             size_t op;
@@ -374,7 +374,7 @@ static psrRetVal_t AR_STDCALL on_calc(psrNode_t **nodes, size_t count, const wch
 /*E	:	( E ) */
 static psrRetVal_t AR_STDCALL auto_return_1(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
-	 { 
+		{ 
 		  psrRetVal_t ret = {AR_S_YES, (psrNode_t*)nodes[1]};
                 return ret;
 
@@ -387,7 +387,7 @@ static psrRetVal_t AR_STDCALL auto_return_1(psrNode_t **nodes, size_t count, con
 /*E	:	- E */
 static psrRetVal_t AR_STDCALL on_negative_num(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
-	 { 
+		{ 
 		psrRetVal_t ret;
 		ret.status = AR_S_YES;
 

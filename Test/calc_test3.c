@@ -27,6 +27,8 @@ AR_NAMESPACE_BEGIN
 
 
 
+
+
 void calc3_test()
 {
 		wchar_t buf[1024];
