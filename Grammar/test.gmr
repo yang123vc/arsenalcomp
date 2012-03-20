@@ -1,13 +1,34 @@
 
 %name	delim 		:	"[ \r\n\t]"			;
-//%name	comment		:	"/\*([^\*]|\*+[^\*/])*\*+/"	;
-//%name	comment_line	:	"//[^\n]*\n"			;
-%name	digit		:	"[0-9]"				;
-//%name	number		:	"{digit}+"			;
+%name	comment	:	"/\*([^\*]|\*+[^\*/])*\*+/"	;
+%name	comment_line	:	"//[^\n]*\n"			;
+%name	digit		:	"[0-9]"			;
+%name	number		:	"{digit}+"			;
+
+
+/*
+\x{4E00}-\x{9FA5}     (中文)
+\x{3130}-\x{318F}     (韩文)
+\x{AC00}-\x{D7A3}    (韩文)
+\x{0800}-\x{4E00}    (日文)
+*/
+
+//ASCII + 中日韩
+
+%name    letter                :    "[A-Z_a-z\x{0800}-\x{4E00}\x{4E00}-\x{9FA5}\x{3130}-\x{318F}\x{AC00}-\x{D7AF}]"
+                        ;
+
+
+%name    keyword_lhd           :    "{letter}|[0-9]"                        ;
+
 
 
 %token	%skip 		:	"{delim}+",1;
 
+
+
+
+/*
 %token	IP		: 	"(({digit}{1,2}|1{digit}{digit}|2[0-4]{digit}|25[0-5])\.({digit}{1,2}|1{digit}{digit}|2[0-4]{digit}|25[0-5])\.({digit}{1,2}|1{digit}{digit}|2[0-4]{digit}|25[0-5])\.({digit}{1,2}|1{digit}{digit}|2[0-4]{digit}|25[0-5]))(?!{digit})";
 
 %token	COLON		: 	":";
@@ -15,6 +36,7 @@
 %token	PORT		: 	"{digit}+";
 
 
+		:	
 
 ip_list		:	ip_list	address
 			|	address
@@ -23,3 +45,39 @@ ip_list		:	ip_list	address
 address		:	IP
 			|	IP COLON PORT
 			;
+*/
+
+
+
+%token    "d"		:    '"d"'        ,1           ;
+%token    "do"	:    '"do"'        ,1           ;
+%token  IDENTIFIER	:    "{letter}({letter}|{digit})*", 1 ;
+
+
+
+
+
+%token   INT_NUMBER	:    "{number}"        ,2   ;
+
+
+
+list			:	list var
+			|	var
+			;
+
+var			:	Identifier
+			|	Keyword
+			|	Number
+			;
+
+Identifier		:	IDENTIFIER
+			;
+
+
+Keyword		:	"do"
+			|	"d"
+			;
+
+Number			:	INT_NUMBER    
+			;
+
