@@ -105,7 +105,7 @@ static AR_INLINE void __check_is_newline(const wchar_t *sp, uint_32_t *pact, siz
 
 }
 
-
+/*
 #undef IS_NEW_LINE
 #undef LF
 #undef VT
@@ -114,7 +114,7 @@ static AR_INLINE void __check_is_newline(const wchar_t *sp, uint_32_t *pact, siz
 #undef NEL
 #undef LS
 #undef PS
-
+*/
 
 static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, size_t *py, uint_32_t *pact, lexMatch_t *match);
 static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match);

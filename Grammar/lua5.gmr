@@ -84,11 +84,11 @@
 
 
 %token	NAME		:	"{letter}({letter}|{digit})*"								%value "TOK_NAME"			;
-%token	STRING	:	"{string_sq}|{string_dq}"									%value "TOK_STRING"			;
-%token	NUMBER	:	"{float_constant}|{hex_constant}|{oct_constant}|{dec_constant}"	,2	%value "TOK_NUMBER"			;
+%token	STRING		:	"{string_sq}|{string_dq}"									%value "TOK_STRING"			;
+%token	NUMBER		:	"{float_constant}|{hex_constant}|{oct_constant}|{dec_constant}"	,2	%value "TOK_NUMBER"				;
 
-%token	"nil"		:	'"nil"(?!{keyword_lhd})'		,1					%value	"TOK_NIL"			;
-%token	"if"		:	'"if"(?!{keyword_lhd})'		,1					%value	"TOK_IF"			;
+%token	"nil"		:	'"nil"(?!{keyword_lhd})'		,1					%value	"TOK_NIL"				;
+%token	"if"		:	'"if"(?!{keyword_lhd})'		,1					%value	"TOK_IF"				;
 %token	"else"	:	'"else"(?!{keyword_lhd})'		,1					%value	"TOK_ELSE"			;
 %token	"elseif"	:	'"elseif"(?!{keyword_lhd})'	,1					%value	"TOK_ELSEIF"		;
 
@@ -180,22 +180,22 @@ semi		:	";"
 
 
 
-block      :	scope statlist 
+block      	:	scope statlist 
 		|	scope statlist laststat semi
 		;
 
-ublock     :	block "until" exp 
+ublock     	:	block "until" exp 
 		;
 
-scope      :	scope statlist binding semi
+scope      	:	scope statlist binding semi
 		|	.
 		;
 
-statlist   :	.
+statlist   	:	.
 		|	statlist stat semi
 		;
 
-stat       :	"do"		block "end"
+stat       	:	"do"		block "end"
 		|	"while"	exp	"do" block "end"
 		|	repetition "do"	block "end"
 		|	"repeat" ublock
