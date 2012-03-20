@@ -10,16 +10,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Test", "..\..\Test\VC9\Test
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{5975F1FD-9F44-4A4C-89AD-7611E754DFDE}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GrammarDesigner", "..\..\..\Tools\Win\GrammarDesigner\GrammarDesigner.vcproj", "{9352D2FE-1361-41BB-92E9-E3EF40FE0312}"
-	ProjectSection(ProjectDependencies) = postProject
-		{07325191-A3B8-44BD-B3F5-4EA631291A76} = {07325191-A3B8-44BD-B3F5-4EA631291A76}
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TenguEditor", "..\..\..\Tools\Win\TenguEditor\TenguEditor.vcproj", "{A027F852-58EF-47C5-A3A6-AB68B1C61623}"
-	ProjectSection(ProjectDependencies) = postProject
-		{07325191-A3B8-44BD-B3F5-4EA631291A76} = {07325191-A3B8-44BD-B3F5-4EA631291A76}
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		DLLDebug|Itanium = DLLDebug|Itanium
@@ -104,84 +94,8 @@ Global
 		{DE746646-D6E4-4CF4-993E-8873067957E6}.LibRelease|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).Build.0 = LibRelease|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
 		{DE746646-D6E4-4CF4-993E-8873067957E6}.LibRelease|x64.ActiveCfg = LibRelease|x64
 		{DE746646-D6E4-4CF4-993E-8873067957E6}.LibRelease|x64.Build.0 = LibRelease|x64
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.DLLDebug|Itanium.ActiveCfg = DLLDebug|Itanium
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.DLLDebug|Itanium.Build.0 = DLLDebug|Itanium
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.DLLDebug|Win32.ActiveCfg = DLLDebug|Win32
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.DLLDebug|Win32.Build.0 = DLLDebug|Win32
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.DLLDebug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).ActiveCfg = DLLDebug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.DLLDebug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).Build.0 = DLLDebug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.DLLDebug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).Deploy.0 = DLLDebug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.DLLDebug|x64.ActiveCfg = DLLDebug|x64
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.DLLDebug|x64.Build.0 = DLLDebug|x64
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.DLLRelease|Itanium.ActiveCfg = DLLRelease|Itanium
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.DLLRelease|Itanium.Build.0 = DLLRelease|Itanium
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.DLLRelease|Win32.ActiveCfg = DLLRelease|Win32
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.DLLRelease|Win32.Build.0 = DLLRelease|Win32
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.DLLRelease|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).ActiveCfg = DLLRelease|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.DLLRelease|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).Build.0 = DLLRelease|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.DLLRelease|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).Deploy.0 = DLLRelease|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.DLLRelease|x64.ActiveCfg = DLLRelease|x64
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.DLLRelease|x64.Build.0 = DLLRelease|x64
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.LibDebug|Itanium.ActiveCfg = LibDebug|Itanium
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.LibDebug|Itanium.Build.0 = LibDebug|Itanium
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.LibDebug|Win32.ActiveCfg = LibDebug|Win32
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.LibDebug|Win32.Build.0 = LibDebug|Win32
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.LibDebug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).ActiveCfg = LibDebug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.LibDebug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).Build.0 = LibDebug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.LibDebug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).Deploy.0 = LibDebug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.LibDebug|x64.ActiveCfg = LibDebug|x64
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.LibDebug|x64.Build.0 = LibDebug|x64
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.LibRelease|Itanium.ActiveCfg = LibRelease|Itanium
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.LibRelease|Itanium.Build.0 = LibRelease|Itanium
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.LibRelease|Win32.ActiveCfg = LibRelease|Win32
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.LibRelease|Win32.Build.0 = LibRelease|Win32
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.LibRelease|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).ActiveCfg = LibRelease|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.LibRelease|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).Build.0 = LibRelease|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.LibRelease|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).Deploy.0 = LibRelease|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.LibRelease|x64.ActiveCfg = LibRelease|x64
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312}.LibRelease|x64.Build.0 = LibRelease|x64
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.DLLDebug|Itanium.ActiveCfg = DLLDebug|Itanium
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.DLLDebug|Itanium.Build.0 = DLLDebug|Itanium
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.DLLDebug|Win32.ActiveCfg = DLLDebug|Win32
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.DLLDebug|Win32.Build.0 = DLLDebug|Win32
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.DLLDebug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).ActiveCfg = DLLDebug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.DLLDebug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).Build.0 = DLLDebug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.DLLDebug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).Deploy.0 = DLLDebug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.DLLDebug|x64.ActiveCfg = DLLDebug|x64
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.DLLDebug|x64.Build.0 = DLLDebug|x64
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.DLLRelease|Itanium.ActiveCfg = DLLRelease|Itanium
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.DLLRelease|Itanium.Build.0 = DLLRelease|Itanium
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.DLLRelease|Win32.ActiveCfg = DLLRelease|Win32
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.DLLRelease|Win32.Build.0 = DLLRelease|Win32
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.DLLRelease|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).ActiveCfg = DLLRelease|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.DLLRelease|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).Build.0 = DLLRelease|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.DLLRelease|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).Deploy.0 = DLLRelease|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.DLLRelease|x64.ActiveCfg = DLLRelease|x64
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.DLLRelease|x64.Build.0 = DLLRelease|x64
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.LibDebug|Itanium.ActiveCfg = LibDebug|Itanium
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.LibDebug|Itanium.Build.0 = LibDebug|Itanium
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.LibDebug|Win32.ActiveCfg = LibDebug|Win32
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.LibDebug|Win32.Build.0 = LibDebug|Win32
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.LibDebug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).ActiveCfg = LibDebug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.LibDebug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).Build.0 = LibDebug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.LibDebug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).Deploy.0 = LibDebug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.LibDebug|x64.ActiveCfg = LibDebug|x64
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.LibDebug|x64.Build.0 = LibDebug|x64
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.LibRelease|Itanium.ActiveCfg = LibRelease|Itanium
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.LibRelease|Itanium.Build.0 = LibRelease|Itanium
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.LibRelease|Win32.ActiveCfg = LibRelease|Win32
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.LibRelease|Win32.Build.0 = LibRelease|Win32
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.LibRelease|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).ActiveCfg = LibRelease|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.LibRelease|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).Build.0 = LibRelease|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.LibRelease|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).Deploy.0 = LibRelease|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.LibRelease|x64.ActiveCfg = LibRelease|x64
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623}.LibRelease|x64.Build.0 = LibRelease|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{9352D2FE-1361-41BB-92E9-E3EF40FE0312} = {5975F1FD-9F44-4A4C-89AD-7611E754DFDE}
-		{A027F852-58EF-47C5-A3A6-AB68B1C61623} = {5975F1FD-9F44-4A4C-89AD-7611E754DFDE}
 	EndGlobalSection
 EndGlobal

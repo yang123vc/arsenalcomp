@@ -1274,6 +1274,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\Arsenal\Common\base64.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\Arsenal\Common\buffer.c"
 				>
 			</File>
@@ -1302,6 +1306,18 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\Arsenal\Common\heap.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\math.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\matrix.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\Arsenal\Common\memory.c"
 				>
 			</File>
@@ -1311,6 +1327,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\Arsenal\Common\random.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\status.h"
 				>
 			</File>
 			<File
@@ -1347,6 +1367,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\Arsenal\Common\utilities.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\vector.c"
 				>
 			</File>
 		</Filter>
@@ -1505,50 +1529,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\Arsenal\Tengu\tengu.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Tengu\tgu_parser_impl.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Tengu\tgucompiler.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Tengu\tgucompiler.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Tengu\tguparser.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Tengu\tguparser.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Tengu\tgusyntree.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Tengu\tgusyntree.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Tengu\tguutility.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Tengu\tguutility.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Tengu\tguvm.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Arsenal\Tengu\tguvm.h"
 				>
 			</File>
 		</Filter>
