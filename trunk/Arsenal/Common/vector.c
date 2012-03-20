@@ -386,12 +386,12 @@ void			AR_CalcVectorInnerProduct(const arVector_t *vec, const arVector_t *other,
 }
 
 
-
-arStatus_t			AR_CalcVectorNormNumber(const arVector_t *vec, arVectorNormType_t t, double *ret)
+arStatus_t		AR_CalcVectorNormNumber(const arVector_t *vec, arVectorNormType_t t, double *ret)
 {
 		size_t i;
 		double sum, tmp;
 		AR_ASSERT(vec != NULL && ret != NULL);
+		
 		*ret = 0.0;
 		sum = 0.0;
 
@@ -432,9 +432,9 @@ arStatus_t			AR_CalcVectorNormNumber(const arVector_t *vec, arVectorNormType_t t
 				AR_CalcVectorLength(vec, &sum);
 				break;
 		}
+		
 		*ret = sum;
 		return AR_S_YES;
-
 }
 
 

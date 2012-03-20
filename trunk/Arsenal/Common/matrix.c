@@ -3440,6 +3440,58 @@ arStatus_t			AR_MultiplyMatrixCholeskyFactors(const arMatrix_t *mat, arMatrix_t 
 
 
 
+/**********************************************QR·Ö½â************************************************/
+
+arStatus_t		AR_QRFactorMatrixSelf(arMatrix_t *mat, arVector_t *c, arVector_t *d)
+{
+		AR_UNUSED(mat);
+		AR_UNUSED(c);
+		AR_UNUSED(d);
+		return AR_S_YES;
+}
+
+arStatus_t		AR_QRSloveMatrix(const arMatrix_t *mat, const arVector_t *c, const arVector_t *d, arVector_t *x, const arVector_t *b)
+{
+		AR_UNUSED(mat);
+		AR_UNUSED(c);
+		AR_UNUSED(d);
+		AR_UNUSED(x);
+		AR_UNUSED(b);
+		return AR_S_YES;
+}
+
+arStatus_t		AR_QRInverseMatrix(const arMatrix_t *mat, const arVector_t *c, const arVector_t *d, arMatrix_t *inv)
+{
+		AR_UNUSED(mat);
+		AR_UNUSED(c);
+		AR_UNUSED(d);
+		AR_UNUSED(inv);
+		return AR_S_YES;
+}
+
+arStatus_t		AR_UnpackMatrixQRFactors(const arMatrix_t *mat, const arVector_t *c, const arVector_t *d, arMatrix_t *Q, arMatrix_t *R)
+{
+		AR_UNUSED(mat);
+		AR_UNUSED(c);
+		AR_UNUSED(d);
+		AR_UNUSED(Q);
+		AR_UNUSED(R);
+		return AR_S_YES;
+}
+
+arStatus_t		AR_MultiplyMatrixQRFactors(const arMatrix_t *mat, const arVector_t *c, const arVector_t *d, arMatrix_t *original_matrix)
+{
+		AR_UNUSED(mat);
+		AR_UNUSED(c);
+		AR_UNUSED(d);
+		AR_UNUSED(original_matrix);
+
+		return AR_S_YES;
+}
+
+
+
+
 
 
 
