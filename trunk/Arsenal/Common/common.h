@@ -794,16 +794,14 @@ int_t			AR_AtomicDec(volatile int_t *dest);
 
 #if defined(OS_FAMILY_UNIX)
 	
-	#if(OS_TYPE == OS_IOS || OS_TYPE == OS_MAC_OS_X)
-		typedef			volatile int_t				arSpinLock_t;	
-#else
-		typedef			pthread_spinlock_t	        arSpinLock_t;
-
-	#endif
+		#if(OS_TYPE == OS_IOS || OS_TYPE == OS_MAC_OS_X)
+				typedef			volatile int_t				arSpinLock_t;	
+		#else
+				typedef			pthread_spinlock_t	        arSpinLock_t;
+		#endif
 
 #elif defined(OS_FAMILY_WINDOWS)
-
-    typedef         volatile int_t					arSpinLock_t;
+		typedef         volatile int_t					arSpinLock_t;
 #else
 
 #endif
@@ -1025,7 +1023,7 @@ void			AR_ClearMatrixLowerTriangle(arMatrix_t *mat);
 
 /****************************************≈–∂œæÿ’Û¿‡–Õ******************************************/
 
-arStatus_t			AR_IsSquareMatrix(const arMatrix_t *mat);
+arStatus_t		AR_IsSquareMatrix(const arMatrix_t *mat);
 
 
 arStatus_t		AR_IsZeroMatrix(const arMatrix_t *mat, double epsilon);
