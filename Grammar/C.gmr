@@ -1,16 +1,16 @@
 
 
-%name	delim 		:	"[ \r\n\t]"			
+%name	delim 			:	"[ \r\n\t]"			
 				;
 %name	comment		:	"/\*([^\*]|\*+[^\*/])*\*+/"	
 				;
-%name	comment_line	:	"//[^\n]*\n"			
+%name	comment_line		:	"//[^\n]*\n"			
 				;
 %name	digit			:	"[0-9]"				
 				;
-%name	number		:	"{digit}+"				
+%name	number			:	"{digit}+"				
 				;
-%name	letter		:	"[A-Z_a-z]"
+%name	letter			:	"[A-Z_a-z]"
 				;
 
 
@@ -18,22 +18,22 @@
 				;
 
 
-%name	octal_escape	:	"(\\[0-3][0-7][0-7])|(\\[0-7][0-7])|(\\[0-7])"
+%name	octal_escape		:	"(\\[0-3][0-7][0-7])|(\\[0-7][0-7])|(\\[0-7])"
 				;
 
 
 %name hex_digit		:	"[0-9a-fA-F]"
 				;
 
-%name hex_literal 	:	"0(x|X){hex_digit}+{int_type_suffix}?"
+%name hex_literal 		:	"0(x|X){hex_digit}+{int_type_suffix}?"
 				;
 
 
-%name dec_literal	:	"(0|[1-9][0-9]*){int_type_suffix}?"
+%name dec_literal		:	"(0|[1-9][0-9]*){int_type_suffix}?"
 				;
 
 
-%name oct_literal	:	"0[0-7]+{int_type_suffix}?"
+%name oct_literal		:	"0[0-7]+{int_type_suffix}?"
 				;
 
 
@@ -42,15 +42,15 @@
 				;
 
 %name float_type_suffix	:	"(f|F|d|D)"
-					;
+				;
 
-%name float_literal	:	"([0-9]+\.[0-9]*{exponet}?{float_type_suffix}?)"
+%name float_literal		:	"([0-9]+\.[0-9]*{exponet}?{float_type_suffix}?)"
 				;
 
 
 
 
-%name skip_lexem	: 	"{delim}|{comment}|{comment_line}"
+%name skip_lexem		: 	"{delim}|{comment}|{comment_line}"
 				;
 
 /*  '"'  == \x22,  '\'' == \x27 */
@@ -61,11 +61,11 @@
 %name	string_literal	: 	"(\x22({escape_seq}|[^\x22\\])*\x22)"
 				;
 
-%name	char_literal	:	"\x27({escape_seq}|[^\x27\\])\x27"
+%name	char_literal		:	"\x27({escape_seq}|[^\x27\\])\x27"
 				;
 
 
-%token %skip 	:	"{delim}+|{comment}+|{comment_line}+",1;
+%token %skip 			:	"{delim}+|{comment}+|{comment_line}+",1;
 
 
 
@@ -74,17 +74,17 @@
 %token	STRING_LITERAL	:	"{string_literal}";
 
 
-%token	OCT_CONSTANT	:	"{oct_literal}";
-%token	HEX_CONSTANT	:	"{hex_literal}";
-%token	DEC_CONSTANT	:	"{dec_literal}";
+%token	OCT_CONSTANT		:	"{oct_literal}";
+%token	HEX_CONSTANT		:	"{hex_literal}";
+%token	DEC_CONSTANT		:	"{dec_literal}";
 %token	FLOAT_CONSTANT	:	"{float_literal}";
-%token	CHAR_CONSTANT	:	"{char_literal}";
+%token	CHAR_CONSTANT		:	"{char_literal}";
 
 %token	IDENTIFIER		:	"{letter}({letter}|{digit})*";
 
 
 %name		keyword_lhd	:	"[A-Z_a-z0-9]"
-					;
+				;
 
 
 %token	"auto"	:	'"auto"(?!{keyword_lhd})'	,1		;		//AUTO
@@ -239,27 +239,27 @@ function_definition		:	declaration_specifiers declarator compound_statement
 
 
 /*声明*/
-declaration			:	declaration_specifiers ";"
+declaration				:	declaration_specifiers ";"
 					|	declaration_specifiers init_declarator_list ";"
 					|	error "}"
 					|	error ";"
 					;
 
 
-declaration_list		:	declaration
+declaration_list			:	declaration
 					|	declaration_list declaration
 					;
 
 
 
-storage_class_specifier	:	"typedef"
+storage_class_specifier		:	"typedef"
 					|	"extern"
 					|	"static"
 					|	"auto"
 					|	"register"
 					;
 
-declaration_specifiers	:	storage_class_specifier
+declaration_specifiers		:	storage_class_specifier
 					|	storage_class_specifier declaration_specifiers
 					|	type_qualifier
 					|	type_qualifier declaration_specifiers
@@ -294,7 +294,7 @@ type_specifier			:	"void"
 
 /*结构声明*/
 
-struct_or_union_specifier	:	struct_or_union IDENTIFIER "{" struct_declaration_list "}"
+struct_or_union_specifier		:	struct_or_union IDENTIFIER "{" struct_declaration_list "}"
 					|	struct_or_union "{" struct_declaration_list "}"
 					|	struct_or_union IDENTIFIER
 					|	struct_or_union "{" error "}"
@@ -304,30 +304,30 @@ struct_or_union			:	"struct"
 					|	"union"
 					;
 
-struct_declaration		:	specifier_qualifier_list struct_declarator_list ";"
+struct_declaration			:	specifier_qualifier_list struct_declarator_list ";"
 					|	specifier_qualifier_list  ";"
 					;
 
 
-struct_declaration_list	:	struct_declaration
+struct_declaration_list		:	struct_declaration
 					|	struct_declaration_list struct_declaration
 					;
 
 
-specifier_qualifier_list	:	type_specifier specifier_qualifier_list
+specifier_qualifier_list		:	type_specifier specifier_qualifier_list
 					|	type_specifier
 					|	type_qualifier specifier_qualifier_list
 					|	type_qualifier
 					;
 
-struct_declarator_list	:	struct_declarator 
+struct_declarator_list		:	struct_declarator 
 					|	struct_declarator_list "," struct_declarator
 					;
 
 /*
 去掉了位域
 */
-struct_declarator		:	declarator
+struct_declarator			:	declarator
 
 /*					|	":" constant_expression
 					|	declarator ":" constant_expression
@@ -369,7 +369,7 @@ declarator				:	pointer direct_declarator
 
 
 
-direct_declarator		:	IDENTIFIER
+direct_declarator			:	IDENTIFIER
 					|	"(" declarator ")"
 					|	direct_declarator "[" constant_expression "]"
 					|	direct_declarator "[" "]"
@@ -378,13 +378,13 @@ direct_declarator		:	IDENTIFIER
 					;
 
 
-abstract_declarator		:	pointer
+abstract_declarator			:	pointer
 					|	direct_abstract_declarator
 					|	pointer direct_abstract_declarator
 					;
 
 
-direct_abstract_declarator	:	"(" abstract_declarator ")"
+direct_abstract_declarator		:	"(" abstract_declarator ")"
 					|	"[" "]"
 					|	"[" constant_expression "]"
 					|	direct_abstract_declarator "[" "]"

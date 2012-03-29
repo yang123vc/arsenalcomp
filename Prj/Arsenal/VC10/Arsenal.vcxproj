@@ -88,6 +88,9 @@
     <ClCompile Include="..\..\..\Arsenal\Parser\report.c" />
     <ClCompile Include="..\..\..\Arsenal\Parser\symbol.c" />
     <ClCompile Include="..\..\..\Arsenal\Tengu\tengu.c" />
+    <ClCompile Include="..\..\..\Arsenal\Tengu\tengu_inner.c" />
+    <ClCompile Include="..\..\..\Arsenal\Tengu\tguutility.c" />
+    <ClCompile Include="..\..\..\Arsenal\Tengu\tguvm.c" />
     <ClCompile Include="..\..\..\Arsenal\Tools\grammar_codegen.c" />
     <ClCompile Include="..\..\..\Arsenal\Tools\grammar_collector.c" />
     <ClCompile Include="..\..\..\Arsenal\Tools\iniobj.c" />
@@ -112,6 +115,10 @@
     <ClInclude Include="..\..\..\Arsenal\Parser\parser.h" />
     <ClInclude Include="..\..\..\Arsenal\Parser\parser_in.h" />
     <ClInclude Include="..\..\..\Arsenal\Tengu\tengu.h" />
+    <ClInclude Include="..\..\..\Arsenal\Tengu\tengu_inner.h" />
+    <ClInclude Include="..\..\..\Arsenal\Tengu\tengu_parser_impl.h" />
+    <ClInclude Include="..\..\..\Arsenal\Tengu\tguutility.h" />
+    <ClInclude Include="..\..\..\Arsenal\Tengu\tguvm.h" />
     <ClInclude Include="..\..\..\Arsenal\Tools\grammar_config.h" />
     <ClInclude Include="..\..\..\Arsenal\Tools\iniobj.h" />
     <ClInclude Include="..\..\..\Arsenal\Tools\serializer.h" />

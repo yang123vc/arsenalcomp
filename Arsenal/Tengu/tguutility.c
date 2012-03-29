@@ -143,7 +143,18 @@ tguSrc_t*		TGU_LoadSources(const wchar_t *work_dir, const wchar_t *file_name)
 		AR_wcscat(path, file_name);
 
 		src = AR_NEW0(tguSrc_t);
+
+		if(src == NULL)
+		{
+				goto INVALID_POINT;
+		}
+
 		src->path = AR_wcsdup(path);
+
+		if(src->path == NULL)
+		{
+				goto INVALID_POINT;
+		}
 		
 		end_of_name = AR_wcsstr(file_name, L".");
 
@@ -160,8 +171,13 @@ tguSrc_t*		TGU_LoadSources(const wchar_t *work_dir, const wchar_t *file_name)
 
 		{
 				arString_t *str;
-
 				str = AR_CreateString();
+
+				if(str == NULL)
+				{
+						goto INVALID_POINT;
+				}
+
 				if(AR_LoadBomTextFile(path, NULL, str) != AR_S_YES)
 				{
 						src->code = AR_wcsdup(AR_GetStringCString(str));
@@ -174,11 +190,19 @@ tguSrc_t*		TGU_LoadSources(const wchar_t *work_dir, const wchar_t *file_name)
 
 		if(!src->code)
 		{
+				goto INVALID_POINT;
+		}
+		return src;
+
+
+INVALID_POINT:
+		if(src)
+		{
 				TGU_ReleaseSources(src);
 				src = NULL;
 		}
+		return NULL;
 
-		return src;
 }
 
 
