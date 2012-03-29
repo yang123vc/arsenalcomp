@@ -477,6 +477,7 @@ const char*		AR_stristr(const char *s, const char *p);
 const wchar_t*	AR_wcsistr(const wchar_t *s, const wchar_t *p);
 
 
+
 const wchar_t* AR_reverse_wcschr(const wchar_t* str, size_t l, wchar_t c);
 const wchar_t* AR_reverse_wcsstr(const wchar_t *str, size_t l,  const wchar_t *match, size_t ml);
 

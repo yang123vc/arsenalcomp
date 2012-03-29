@@ -146,7 +146,7 @@ static AR_INLINE uint_64_t __get_time_microseconds()
 		GetSystemTimeAsFileTime(&ft);
 #endif
 
-		/*我不知道这做了什么，也不想知道*/
+		/*此代码来自一个个地方，我不知道这做了什么，也不想知道*/
 		epoch.LowPart  = 0xD53E8000;
 		epoch.HighPart = 0x019DB1DE;
 		ts.LowPart  = ft.dwLowDateTime;

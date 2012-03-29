@@ -11,23 +11,20 @@
  *
  */
 
-
-#ifndef __TGU_COMPILER_H__
-#define __TGU_COMPILER_H__
-
-
-#include "tengu.h"
-#include "tgusyntree.h"
+#include "tengu_inner.h"
 
 
 AR_NAMESPACE_BEGIN
 
+		
+#if(AR_COMPILER == AR_VC_LEGACY || AR_COMPILER == AR_VC)
+		#pragma warning(disable : 4100)	/*在未完成前，暂时关闭*/
+#endif
 
-
-bool_t	TGU_Compile(const tguReport_t	*report, tguBlock_t	 *block, arString_t *out);
+#include "tengu_parser_impl.h"
 
 
 
 AR_NAMESPACE_END
 
-#endif
+

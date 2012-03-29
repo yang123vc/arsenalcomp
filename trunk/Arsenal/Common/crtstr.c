@@ -1649,6 +1649,7 @@ const wchar_t* AR_wtou32_s(const wchar_t *in, const wchar_t *end, uint_32_t  *nu
 
 
 #if(0)
+
 const wchar_t* AR_wcsstr_kmp(const wchar_t *s, const wchar_t *p)
 {
 		AR_ASSERT(s != NULL && p != NULL);
@@ -1704,7 +1705,69 @@ const wchar_t* AR_wcsstr_kmp_s(const wchar_t *beg, const wchar_t *end, const wch
 		return ret;
 }
 
+
+const wchar_t* AR_wcsstr_sunday_s(const wchar_t *s_b, const wchar_t *s_e, const wchar_t *p_b, const wchar_t *p_e)
+{
+		int_t pl, sl, s_pos, f_pos,k;
+
+		AR_ASSERT(s_b != NULL && s_e != NULL && s_b <= s_e);
+		AR_ASSERT(p_b != NULL && p_e != NULL && p_b <= p_e);
+
+		sl = s_e - s_b;
+		pl = p_e - p_b;
+
+		if(pl == 0)
+		{
+				return s_b + sl;
+		}
+
+		if(sl == 0)
+		{
+				return NULL;
+		}
+
+		s_pos = 0;
+		
+		while(s_pos + pl <= sl)
+		{
+				
+				for(f_pos = 0; f_pos < pl && s_b[s_pos + f_pos] == p_b[f_pos]; ++f_pos);
+				
+				if(f_pos == pl)
+				{
+						return s_b + s_pos;
+				}
+
+				k = 0;
+				for(k = pl - 1; k >= 0; --k)
+				{
+						if(s_b[s_pos + pl] == p_b[k])
+						{
+								s_pos += pl - k;
+								break;
+						}
+				}
+
+				if(k < 0)
+				{
+						s_pos = s_pos + pl + 1;
+				}
+		}
+
+		return NULL;
+}
+
+
+
+const wchar_t* AR_wcsstr_sunday(const wchar_t *s, const wchar_t *p)
+{
+		return AR_wcsstr_sunday_s(s, s + AR_wcslen(s), p, p + AR_wcslen(p));
+}
+
+
 #endif
+
+
 
 
 
