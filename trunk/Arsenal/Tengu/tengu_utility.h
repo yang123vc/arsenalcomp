@@ -15,7 +15,7 @@
 #ifndef __ARSENAL_TGUUTILITY_H__
 #define __ARSENAL_TGUUTILITY_H__
 
-#include "tengu_inner.h"
+#include "tengu.h"
 
 
 
@@ -53,6 +53,14 @@ typedef struct __tengu_sources_tag
 
 tguSrc_t*		TGU_LoadSources(const wchar_t *work_dir, const wchar_t *file_name);
 void			TGU_ReleaseSources(tguSrc_t		*src);
+
+
+
+
+/*********************************************************************************************************************/
+
+
+const wchar_t* TGU_TokenValToString(size_t tok_val);
 
 
 AR_NAMESPACE_END

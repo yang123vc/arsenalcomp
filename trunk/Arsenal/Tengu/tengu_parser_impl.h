@@ -15,6 +15,7 @@
  
 
 
+
 /*
 syntax_node
 */
@@ -110,6 +111,11 @@ handle_init_declarator
  
 
  
+          
+
+ 
+
+ 
  
 
  
@@ -196,51 +202,52 @@ TOK_NAME = 258,
 TOK_STRING = 259,
 TOK_FLOAT_NUMBER = 260,
 TOK_INT_NUMBER = 261,
-TOK_FOR = 262,
-TOK_DO = 263,
-TOK_WHILE = 264,
-TOK_IF = 265,
-TOK_ELSE = 266,
-TOK_CONTINUE = 267,
-TOK_BREAK = 268,
-TOK_RETURN = 269,
-TOK_NULL = 270,
-TOK_TRUE = 271,
-TOK_FALSE = 272,
-TOK_VAR = 273,
-TOK_IN = 274,
-TOK_IMPORT = 275,
-TOK_LIST = 276,
-TOK_TABLE = 277,
-TOK_ELLIPSIS = 278,
-TOK_INC = 279,
-TOK_DEC = 280,
-TOK_ANDAND = 281,
-TOK_OROR = 282,
-TOK_LE = 283,
-TOK_GE = 284,
-TOK_EQ = 285,
-TOK_NE = 286,
-TOK_LESS = 287,
-TOK_GREATER = 288,
-TOK_L_BRACES = 289,
-TOK_R_BRACES = 290,
-TOK_L_PAREN = 291,
-TOK_R_PAREN = 292,
-TOK_L_SQUARE = 293,
-TOK_R_SQUARE = 294,
-TOK_SEMICOLON = 295,
-TOK_COMMA = 296,
-TOK_ASSIGN = 297,
-TOK_ADD = 298,
-TOK_SUB = 299,
-TOK_MUL = 300,
-TOK_DIV = 301,
-TOK_MOD = 302,
-TOK_NOT = 303,
-TOK_COLON = 304,
-TOK_QUEST = 305,
-TOK_DOT = 306,
+TOK_IMPORT = 262,
+TOK_FROM = 263,
+TOK_FOR = 264,
+TOK_DO = 265,
+TOK_WHILE = 266,
+TOK_IF = 267,
+TOK_ELSE = 268,
+TOK_CONTINUE = 269,
+TOK_BREAK = 270,
+TOK_RETURN = 271,
+TOK_NULL = 272,
+TOK_TRUE = 273,
+TOK_FALSE = 274,
+TOK_VAR = 275,
+TOK_IN = 276,
+TOK_LIST = 277,
+TOK_TABLE = 278,
+TOK_ELLIPSIS = 279,
+TOK_INC = 280,
+TOK_DEC = 281,
+TOK_ANDAND = 282,
+TOK_OROR = 283,
+TOK_LE = 284,
+TOK_GE = 285,
+TOK_EQ = 286,
+TOK_NE = 287,
+TOK_LESS = 288,
+TOK_GREATER = 289,
+TOK_L_BRACES = 290,
+TOK_R_BRACES = 291,
+TOK_L_PAREN = 292,
+TOK_R_PAREN = 293,
+TOK_L_SQUARE = 294,
+TOK_R_SQUARE = 295,
+TOK_SEMICOLON = 296,
+TOK_COMMA = 297,
+TOK_ASSIGN = 298,
+TOK_ADD = 299,
+TOK_SUB = 300,
+TOK_MUL = 301,
+TOK_DIV = 302,
+TOK_MOD = 303,
+TOK_NOT = 304,
+TOK_COLON = 305,
+TOK_QUEST = 306,
+TOK_DOT = 307,
 };
 
 
@@ -258,6 +265,8 @@ psrTermFunc_t leaf;
 {L"STRING", TOK_STRING, 0, L"{string_dq}|{string_sq}", false, on_string_leaf_handler},
 {L"FLOAT_NUMBER", TOK_FLOAT_NUMBER, 2, L"{float_constant}", false, default_leaf_handler},
 {L"INT_NUMBER", TOK_INT_NUMBER, 2, L"{hex_constant}|{oct_constant}|{dec_constant}", false, default_leaf_handler},
+{L"#import", TOK_IMPORT, 1, L"\"#import\"(?!{keyword_lhd})", false, default_leaf_handler},
+{L"from", TOK_FROM, 1, L"\"from\"(?!{keyword_lhd})", false, default_leaf_handler},
 {L"for", TOK_FOR, 1, L"\"for\"(?!{keyword_lhd})", false, default_leaf_handler},
 {L"do", TOK_DO, 1, L"\"do\"(?!{keyword_lhd})", false, default_leaf_handler},
 {L"while", TOK_WHILE, 1, L"\"while\"(?!{keyword_lhd})", false, default_leaf_handler},
@@ -271,7 +280,6 @@ psrTermFunc_t leaf;
 {L"false", TOK_FALSE, 1, L"\"false\"(?!{keyword_lhd})", false, default_leaf_handler},
 {L"var", TOK_VAR, 1, L"\"var\"(?!{keyword_lhd})", false, default_leaf_handler},
 {L"in", TOK_IN, 1, L"\"in\"(?!{keyword_lhd})", false, default_leaf_handler},
-{L"import", TOK_IMPORT, 1, L"\"import\"(?!{keyword_lhd})", false, default_leaf_handler},
 {L"list", TOK_LIST, 1, L"\"list\"(?!{keyword_lhd})", false, default_leaf_handler},
 {L"table", TOK_TABLE, 1, L"\"table\"(?!{keyword_lhd})", false, default_leaf_handler},
 {L"...", TOK_ELLIPSIS, 2, L"\"...\"", false, default_leaf_handler},
@@ -306,7 +314,7 @@ psrTermFunc_t leaf;
 {L"CFG_LEXVAL_EOI", 0, 2, L"$", false, NULL}
 };
 
-#define __TERM_COUNT__ ((size_t)51)
+#define __TERM_COUNT__ ((size_t)52)
 
 static struct {const wchar_t *name; size_t tokval; size_t prec_level; psrAssocType_t	assoc;}__g_prec_pattern[] =  {
 {L"?", TOK_QUEST,1, PARSER_ASSOC_RIGHT},
@@ -324,7 +332,7 @@ static struct {const wchar_t *name; size_t tokval; size_t prec_level; psrAssocTy
 {L"*", TOK_MUL,6, PARSER_ASSOC_LEFT},
 {L"/", TOK_DIV,6, PARSER_ASSOC_LEFT},
 {L"%", TOK_MOD,6, PARSER_ASSOC_LEFT},
-{L"IF_WITHOUT_ELSE", 307,7, PARSER_ASSOC_NONASSOC},
+{L"IF_WITHOUT_ELSE", 308,7, PARSER_ASSOC_NONASSOC},
 {L"else", TOK_ELSE,8, PARSER_ASSOC_NONASSOC}
 };
 
@@ -365,6 +373,7 @@ static psrRetVal_t AR_STDCALL on_namelist_ellipsis(psrNode_t **nodes, size_t cou
 /*statement	:	iteration_statement */
 /*statement	:	jump_statement */
 /*statement	:	empty_statement */
+/*statement	:	import_statement */
 /*selection_statement	:	if_statement */
 /*selection_statement	:	if_else_statement */
 /*iteration_statement	:	while_statement */
@@ -379,7 +388,6 @@ static psrRetVal_t AR_STDCALL on_namelist_ellipsis(psrNode_t **nodes, size_t cou
 /*postfix_expression	:	primary_expression */
 /*primary_expression	:	constant */
 /*primary_expression	:	aggregate_constructor */
-/*primary_expression	:	import_expression */
 /*expression_list	:	expression */
 static psrRetVal_t AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
@@ -443,6 +451,11 @@ static psrRetVal_t AR_STDCALL handle_compound_element_list(psrNode_t **nodes, si
 
 /*compound_element	:	statement */
 static psrRetVal_t AR_STDCALL on_compound_element(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*import_statement	:	#import NAME ; */
+/*import_statement	:	#import NAME from STRING ; */
+/*import_statement	:	#import error ; */
+static psrRetVal_t AR_STDCALL on_import_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*empty_statement	:	; */
 static psrRetVal_t AR_STDCALL on_empty_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
@@ -539,10 +552,6 @@ static psrRetVal_t AR_STDCALL on_identifier_expression(psrNode_t **nodes, size_t
 /*constant	:	null */
 static psrRetVal_t AR_STDCALL on_constant(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*import_expression	:	import ( STRING ) */
-/*import_expression	:	import ( STRING , STRING ) */
-static psrRetVal_t AR_STDCALL on_import_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
 /*call_expression	:	postfix_expression ( expression_list ) */
 /*call_expression	:	postfix_expression ( error ) */
 /*call_expression	:	postfix_expression ( ) */
@@ -597,6 +606,7 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"statement  :  iteration_statement ", NULL, auto_return_0, 0},
 {L"statement  :  jump_statement ", NULL, auto_return_0, 0},
 {L"statement  :  empty_statement ", NULL, auto_return_0, 0},
+{L"statement  :  import_statement ", NULL, auto_return_0, 0},
 {L"compound_statement  :  start_block compound_element_list } ", NULL, on_compound_statement, 0},
 {L"compound_statement  :  start_block } ", NULL, on_empty_compound_statement, 0},
 {L"compound_statement  :  start_block error } ", NULL, on_compound_error_statement, 0},
@@ -605,6 +615,9 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"compound_element_list  :  compound_element ", NULL, handle_compound_element_list, 0},
 {L"compound_element  :  statement ", NULL, on_compound_element, 0},
 {L"compound_element  :  declaration ", NULL, auto_return_null, 0},
+{L"import_statement  :  #import NAME ; ", NULL, on_import_statement, 0},
+{L"import_statement  :  #import NAME from STRING ; ", NULL, on_import_statement, 0},
+{L"import_statement  :  #import error ; ", NULL, on_import_statement, 0},
 {L"empty_statement  :  ; ", NULL, on_empty_statement, 0},
 {L"expression_statement  :  expression semi ", NULL, on_expression_statement, 0},
 {L"expression_statement  :  error ; ", NULL, auto_return_null, 0},
@@ -665,15 +678,12 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"primary_expression  :  NAME ", NULL, on_identifier_expression, 0},
 {L"primary_expression  :  constant ", NULL, auto_return_0, 0},
 {L"primary_expression  :  aggregate_constructor ", NULL, auto_return_0, 0},
-{L"primary_expression  :  import_expression ", NULL, auto_return_0, 0},
 {L"constant  :  FLOAT_NUMBER ", NULL, on_constant, 0},
 {L"constant  :  INT_NUMBER ", NULL, on_constant, 0},
 {L"constant  :  STRING ", NULL, on_constant, 0},
 {L"constant  :  true ", NULL, on_constant, 0},
 {L"constant  :  false ", NULL, on_constant, 0},
 {L"constant  :  null ", NULL, on_constant, 0},
-{L"import_expression  :  import ( STRING ) ", NULL, on_import_statement, 0},
-{L"import_expression  :  import ( STRING , STRING ) ", NULL, on_import_statement, 0},
 {L"call_expression  :  postfix_expression ( expression_list ) ", NULL, on_call_expression, 0},
 {L"call_expression  :  postfix_expression ( error ) ", NULL, on_call_expression, 0},
 {L"call_expression  :  postfix_expression ( ) ", NULL, on_call_expression, 0},
@@ -681,7 +691,7 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"expression_list  :  expression_list , expression ", NULL, on_expression_list, 0}
 };
 
-#define __RULE_COUNT__ ((size_t)124)
+#define __RULE_COUNT__ ((size_t)125)
 #define START_RULE L"module"
 
 
@@ -948,6 +958,7 @@ static psrRetVal_t AR_STDCALL on_namelist_ellipsis(psrNode_t **nodes, size_t cou
 /*statement	:	iteration_statement */
 /*statement	:	jump_statement */
 /*statement	:	empty_statement */
+/*statement	:	import_statement */
 /*selection_statement	:	if_statement */
 /*selection_statement	:	if_else_statement */
 /*iteration_statement	:	while_statement */
@@ -962,7 +973,6 @@ static psrRetVal_t AR_STDCALL on_namelist_ellipsis(psrNode_t **nodes, size_t cou
 /*postfix_expression	:	primary_expression */
 /*primary_expression	:	constant */
 /*primary_expression	:	aggregate_constructor */
-/*primary_expression	:	import_expression */
 /*expression_list	:	expression */
 static psrRetVal_t AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
@@ -1162,6 +1172,19 @@ static psrRetVal_t AR_STDCALL handle_compound_element_list(psrNode_t **nodes, si
 
 /*compound_element	:	statement */
 static psrRetVal_t AR_STDCALL on_compound_element(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+		psrRetVal_t ret = {AR_S_YES, NULL};
+		return ret;
+
+}
+
+
+
+
+/*import_statement	:	#import NAME ; */
+/*import_statement	:	#import NAME from STRING ; */
+/*import_statement	:	#import error ; */
+static psrRetVal_t AR_STDCALL on_import_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		psrRetVal_t ret = {AR_S_YES, NULL};
 		return ret;
@@ -1433,18 +1456,6 @@ static psrRetVal_t AR_STDCALL on_identifier_expression(psrNode_t **nodes, size_t
 /*constant	:	false */
 /*constant	:	null */
 static psrRetVal_t AR_STDCALL on_constant(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-		psrRetVal_t ret = {AR_S_YES, NULL};
-		return ret;
-
-}
-
-
-
-
-/*import_expression	:	import ( STRING ) */
-/*import_expression	:	import ( STRING , STRING ) */
-static psrRetVal_t AR_STDCALL on_import_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		psrRetVal_t ret = {AR_S_YES, NULL};
 		return ret;
