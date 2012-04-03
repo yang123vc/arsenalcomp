@@ -12,7 +12,7 @@
  */
 
 #include "tengu_inner.h"
-
+#include "tengu_utility.h"
 
 AR_NAMESPACE_BEGIN
 
@@ -20,6 +20,7 @@ AR_NAMESPACE_BEGIN
 #if(AR_COMPILER == AR_VC_LEGACY || AR_COMPILER == AR_VC)
 		#pragma warning(disable : 4100)	/*在未完成前，暂时关闭*/
 #endif
+
 
 #include "tengu_parser_impl.h"
 

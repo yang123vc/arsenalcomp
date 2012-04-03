@@ -147,13 +147,13 @@
     <ClCompile Include="..\..\..\Arsenal\Lex\rgx_parser.c">
       <Filter>Arsenal\Lex</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Arsenal\Tengu\tguutility.c">
-      <Filter>Arsenal\Tengu</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Arsenal\Tengu\tguvm.c">
       <Filter>Arsenal\Tengu</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Arsenal\Tengu\tengu_inner.c">
+      <Filter>Arsenal\Tengu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Arsenal\Tengu\tengu_utility.c">
       <Filter>Arsenal\Tengu</Filter>
     </ClCompile>
   </ItemGroup>
@@ -221,9 +221,6 @@
     <ClInclude Include="..\..\..\Arsenal\Tools\grammar_config.h">
       <Filter>Arsenal\Tools</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Arsenal\Tengu\tguutility.h">
-      <Filter>Arsenal\Tengu</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Arsenal\Tengu\tengu_inner.h">
       <Filter>Arsenal\Tengu</Filter>
     </ClInclude>
@@ -231,6 +228,9 @@
       <Filter>Arsenal\Tengu</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Arsenal\Tengu\tengu_parser_impl.h">
+      <Filter>Arsenal\Tengu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Arsenal\Tengu\tengu_utility.h">
       <Filter>Arsenal\Tengu</Filter>
     </ClInclude>
   </ItemGroup>

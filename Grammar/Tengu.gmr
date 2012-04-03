@@ -195,7 +195,8 @@
 
 
 
-
+%token    "#import"    :    '"#import"(?!{keyword_lhd})'   ,1            %value    "TOK_IMPORT"            %action default_leaf_handler            ;
+%token    "from"    	  :    '"from"(?!{keyword_lhd})'   ,1            %value    "TOK_FROM"            %action default_leaf_handler            ;
 
 %token    "for"        :    '"for"(?!{keyword_lhd})'        ,1            %value    "TOK_FOR"            %action default_leaf_handler            ;
 %token    "do"        :    '"do"(?!{keyword_lhd})'        ,1            %value    "TOK_DO"            %action default_leaf_handler            ;
@@ -213,9 +214,6 @@
 %token    "var"        :    '"var"(?!{keyword_lhd})'        ,1            %value    "TOK_VAR"            %action default_leaf_handler            ;
 
 %token    "in"        :    '"in"(?!{keyword_lhd})'        ,1            %value    "TOK_IN"            %action default_leaf_handler            ;
-
-
-%token    "import"    :    '"import"(?!{keyword_lhd})'        ,1            %value    "TOK_IMPORT"            %action default_leaf_handler            ;
 
 
 %token    "list"    :    '"list"(?!{keyword_lhd})'        ,1            %value    "TOK_LIST"            %action default_leaf_handler            ;
@@ -281,12 +279,12 @@
 
 /**************************************************优先级*****************************************************/
 
-%right       "?"    ":"                          ;
-%left        "||"                                ;
-%left        "&&"                                ;
-%left        "=="    "!="    "<"    "<="    ">"    ">="            ;
-%left        "+"    "-"                          ;
-%left        "*"    "/"    "%"                   ;
+%right       "?"    ":"                          			;
+%left        "||"                                			;
+%left        "&&"                                			;
+%left        "=="    "!="    "<"    "<="    ">"    ">="            	;
+%left        "+"    "-"                          			;
+%left        "*"    "/"    "%"                   			;
 
 
 
@@ -306,36 +304,24 @@
 /**********************************************产生式****************************************/
 
 
-%start    program        ;
+%start    module	;
 
 
-program         :    translation_unit            %action    on_translation_unit    
-                |    .                    %action    on_translation_unit
+module		  :    element_list             %action    on_module
+                |    .                        %action    on_module
 	         ;
 
 
 
+element_list	:	element                	%action    auto_return_null
+		|	element_list    element  	%action    auto_return_null
+              ;
 
 
-
-
-
-
-
-
-
-
-
-translation_unit     :    element                	%action    auto_return_null
-                	|    translation_unit    element  %action    auto_return_null
-                	;
-
-
-element         :    declaration            %action    auto_return_null
-                |    function_defination        %action    auto_return_null
-                |    statement            %action    on_global_stmtement
-                
-                ;
+element	:	declaration            	%action    auto_return_null
+		|	function_defination        %action    auto_return_null
+		|	statement
+		;
 
 
 
@@ -464,6 +450,7 @@ statement           :    compound_statement            %action    auto_return_0
                     |    iteration_statement            %action    auto_return_0
                     |    jump_statement            %action    auto_return_0
                     |    empty_statement            %action    auto_return_0
+			|    import_statement 		%action auto_return_0
                     ;
 
 
@@ -578,7 +565,7 @@ if_else_statement        :    "if" "(" expression ")" statement "else" statement
 
 iteration_statement        :    while_statement            %action    auto_return_0
 		             |    do_while_statement            %action    auto_return_0
-                	      |    for_statement                %action    auto_return_0
+//                	      |    for_statement                %action    auto_return_0
 		             ;
 
 
@@ -609,6 +596,7 @@ do_while_statement           :    "do" enter_loop statement "while" "(" expressi
 		                ;	
 
 
+/*
 
 for_statement            :    "for"    "("    for_in_expression    ")"     enter_loop  statement leave_loop    %action    on_for_statement
 		           |    "for"    "("    error    ")"    enter_loop  statement leave_loop    %action    on_error_for_statement
@@ -616,6 +604,8 @@ for_statement            :    "for"    "("    for_in_expression    ")"     enter
 
 for_in_expression        :    NAME "in" expression    
                 	    ;
+
+*/
 
 
 enter_loop                :    .                    %action on_enter_loop
@@ -763,26 +753,21 @@ primary_expression        :    "(" expression")"                            %act
 		            |    NAME                                        %action    on_identifier_expression
                           |    constant            %action    auto_return_0
 		            |    aggregate_constructor    %action    auto_return_0
-              	     |    import_expression        %action    auto_return_0
 		            ;
 
 
 
 /**************************************import_expression***********************************************/
 
-constant        :    FLOAT_NUMBER            %action    on_constant
-                |    INT_NUMBER            %action    on_constant
-                |    STRING                %action    on_constant
-                |    "true"                %action    on_constant
-                |    "false"            %action    on_constant
-                |    "null"                %action    on_constant
+constant        :    FLOAT_NUMBER        %action    on_constant
+                |    INT_NUMBER          %action    on_constant
+                |    STRING              %action    on_constant
+                |    "true"              %action    on_constant
+                |    "false"            	%action    on_constant
+                |    "null"              %action    on_constant
                 ;
 
 
-
-import_expression        :    "import"    "(" STRING             ")"            %action    on_import_statement
-                	     |    "import"    "(" STRING "," STRING    ")"            %action    on_import_statement
-    	                   ;
 
 
 
@@ -814,8 +799,12 @@ expression_list        :    expression                    %action    auto_return
 
 
 
+/**************************************import_statement*****************************/
 
-
+import_statement	:	"#import"	NAME ";"
+			|	"#import"	NAME "from" STRING	";"
+			|	"#import"	error ";"
+			;
 
 
 

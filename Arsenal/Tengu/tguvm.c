@@ -43,165 +43,660 @@ void	TGU_UnInitVM()
 
 
 
-#if(0)
-
-void TGU_FormatVMError(tguMachine_t *vm, const wchar_t *fmt,...)
+arStatus_t TGU_FormatVMError(tguMachine_t *vm, const wchar_t *fmt,...)
 {
+		arStatus_t status;
 		va_list arg_ptr;
 
 		AR_va_start(arg_ptr, fmt);
-		AR_VFormatString(vm->last_error, fmt, arg_ptr);
+		status = AR_VFormatString(vm->last_error, fmt, arg_ptr);
 		AR_va_end(arg_ptr);
+		return status;
 }
+
 
 
 
 static void __set_run_env(tguMachine_t *vm,  tguVMFunc_t *func)
 {
 		AR_ASSERT(vm != NULL && func != NULL);
+		vm->curr_func = func;
+		vm->pc = func->code;
+		vm->fp = vm->stack.start;
 }
 
-static bool_t	__run_vm(tguMachine_t *vm)
+static arStatus_t	__run_vm(tguMachine_t *vm)
 {
+		arStatus_t status;
+		tguStackID_t	*top;
 		AR_ASSERT(vm != NULL);
 
-		return false;
-}
+		status = AR_S_YES;
 
+		top = vm->stack.top;
 
-
-
-
-
-
-
-bool_t			TGU_ExecuteVM(tguMachine_t *vm, const wchar_t *main_module)
-{
-		bool_t is_ok	= true;
-		const wchar_t	*module_name;
-		const tguVMObject_t	*val;
-
-		tguVMModule_t	*module;
-		tguVMFunc_t		*function;
-
-		AR_ASSERT(vm != NULL);
-		module_name = main_module == NULL ? TGU_DEFAULT_MODULE_NAME  : main_module;
-
-		val = TGU_GetVMTableByCStr(vm, vm->global_table, module_name);
-
-		if(val->type != TGU_VM_TYPE_MODULE)
+		for(;;)
 		{
-				TGU_FormatVMError(vm, L"Invalid Module name : %ls\r\n", module_name);
-				is_ok = false;
-				goto RET_POINT;
-		}else
-		{
-				module = val->val.module;
+				tguVMIns_t *ins = vm->pc++;
+
+				switch(ins->op)
+				{
+				case TGU_VM_OP_PUSH:			/*根据arg1决定压入什么, arg2意思取决于arg1*/
+				{
+						switch(ins->arg1)
+						{
+						case TGU_VM_TYPE_NULL:
+								*top++ = __g_null_object;
+								break;
+						case TGU_VM_TYPE_BOOL:
+						{
+								if(ins->arg2)
+								{
+										*top++ = __g_true_object;
+								}else
+								{
+										*top++ = __g_false_object;
+								}
+						}
+								break;
+						case TGU_VM_TYPE_INTEGER:
+						{
+								top->type = TGU_VM_TYPE_INTEGER;
+								top->val.integer_num = TGU_GetIntegerFromConstantPool(&vm->const_pool, (size_t)ins->arg2);
+								top++;
+						}
+								break;
+						case TGU_VM_TYPE_FLOAT:
+						{
+								top->type = TGU_VM_TYPE_FLOAT;
+								top->val.float_num = TGU_GetFloatFromConstantPool(&vm->const_pool, (size_t)ins->arg2);
+								top++;
+						}
+								break;
+						case TGU_VM_TYPE_STRING:
+						{
+								top->type = TGU_VM_TYPE_STRING;
+								top->val.str = TGU_GetStringFromConstantPool(&vm->const_pool, (size_t)ins->arg2);
+								top++;
+						}
+								break;
+						case TGU_VM_TYPE_LIST:
+						{
+								top->type = TGU_VM_TYPE_LIST;
+								top->val.list = TGU_CreateVMList(vm, 0);
+								if(top->val.list == NULL)
+								{
+										status = AR_E_NOMEM;
+										goto END_POINT; 
+								}
+						}
+								break;
+						case TGU_VM_TYPE_TABLE:
+						{
+								top->type = TGU_VM_TYPE_TABLE;
+								top->val.table = TGU_CreateVMTable(vm, 0);
+								if(top->val.table == NULL)
+								{
+										status = AR_E_NOMEM;
+										goto END_POINT; 
+								}
+						}
+								break;
+						case TGU_VM_TYPE_BINARY:
+						{
+								top->type = TGU_VM_TYPE_BINARY;
+								top->val.binary = TGU_CreateVMBinary(vm);
+								if(top->val.binary == NULL)
+								{
+										status = AR_E_NOMEM;
+										goto END_POINT; 
+								}
+						}
+								break;
+						case TGU_VM_TYPE_USERDATA:
+						case TGU_VM_TYPE_FUNC:
+						case TGU_VM_TYPE_C_FUNC:
+						default:
+								TGU_FormatVMError(vm, L"Invalid push type : %u\r\n", (uint_32_t)ins->arg1);
+								status = AR_E_TGUINVOPCODE;
+								goto END_POINT;
+								break;
+						}
+				}
+						break;
+				case TGU_VM_OP_POP:					/*arg2为调整数量*/
+				{
+						top -= ins->arg2;
+				}
+						break;
+				case TGU_VM_OP_GET_LOCAL:
+				{
+						*top++ = *(vm->fp + ins->arg2);
+				}
+						break;
+				case TGU_VM_OP_SET_LOCAL:
+				{
+						*(vm->fp + ins->arg2) = *(--top);
+				}
+						break;
+				case TGU_VM_OP_GET_MODULE:
+				{
+						tguVMObject_t *obj;
+						arStatus_t ret;
+						const tguVMString_t *module, *var;
+						module = TGU_GetStringFromConstantPool(&vm->const_pool, ins->arg1);
+						var = TGU_GetStringFromConstantPool(&vm->const_pool, ins->arg2);
+						
+						obj = NULL;
+						ret = AR_S_NO;
+						if(module != NULL && var != NULL)
+						{
+								ret = TGU_GetModuleGlobalFromVM(vm, module, var, &obj);
+						}else
+						{
+								ret = AR_E_TGUINVOPCODE;
+								TGU_FormatVMError(vm, L"tengu vm internal error\r\n");
+						}
+						
+						if(ret != AR_S_YES)
+						{
+								status = ret;
+								goto END_POINT;
+						}
+
+						*top++ = *obj;
+
+				}
+						break;
+				case TGU_VM_OP_SET_MODULE:
+				{
+						arStatus_t ret;
+						const tguVMString_t *module, *var;
+						module = TGU_GetStringFromConstantPool(&vm->const_pool, ins->arg1);
+						var = TGU_GetStringFromConstantPool(&vm->const_pool, ins->arg2);
+						
+						ret = AR_S_NO;
+						if(module != NULL && var != NULL)
+						{
+								ret = TGU_SetModuleGlobalToVM(vm, module, var, top - 1);
+						}else
+						{
+								ret = AR_E_TGUINVOPCODE;
+								TGU_FormatVMError(vm, L"tengu vm internal error\r\n");
+						}
+						
+						if(ret != AR_S_YES)
+						{
+								status = ret;
+								goto END_POINT;
+						}
+
+						top--;
+				}
+						break;
+				case TGU_VM_OP_IMPORT_MODULE:
+				{
+						arStatus_t ret;
+
+						tguVMObject_t	*val;
+						const tguVMString_t *module_name, *module_path;
+						module_name = NULL;
+						module_path = NULL;
+						ret = AR_S_YES;
+						
+						if(ins->arg1 == 1)
+						{
+								val = (top-1);
+
+								if(val->type != TGU_VM_TYPE_STRING)
+								{
+										ret = AR_E_TGUINVOPCODE;
+										goto ERROR_IMPORT_POINT;
+								}
+
+								module_name = val->val.str;
+								top -= 1;
+						}else
+						{
+								AR_ASSERT(ins->arg1 == 2);
+
+								val = (top-2);
+								if(val->type != TGU_VM_TYPE_STRING)
+								{
+										ret = AR_E_TGUINVOPCODE;
+										goto ERROR_IMPORT_POINT;
+								}
+
+								module_name = val->val.str;
+
+								val = (top-1);
+								if(val->type != TGU_VM_TYPE_STRING)
+								{
+										ret = AR_E_TGUINVOPCODE;
+										goto ERROR_IMPORT_POINT;
+								}
+								module_path = val->val.str;
+
+								top -= 2;
+						}
+						
+						ret = TGU_ImportModule(vm, module_path, module_name);
+
+						if(ret != AR_S_YES)
+						{
+								goto ERROR_IMPORT_POINT;
+						}
+
+						top->type = TGU_VM_TYPE_MODULE;
+						top->val.module = TGU_FindModuleFromVM(vm, module_name);
+						AR_ASSERT(top->val.module != NULL);
+						top++;
+
+ERROR_IMPORT_POINT:
+						if(ret != AR_S_YES)
+						{
+								ret = AR_E_TGUINVOPCODE;
+								TGU_FormatVMError(vm, L"tengu vm internal error\r\n");
+								
+								status = ret;
+								goto END_POINT;
+						}
+
+				}
+						break;
+				case TGU_VM_OP_INIT_DATA:
+				{
+						int_t n = (int_t)ins->arg2;
+
+						switch(ins->arg1)
+						{
+						case TGU_VM_TYPE_LIST:
+						{
+								tguVMList_t *list;
+								if((top - n - 1)->type != TGU_VM_TYPE_LIST)
+								{
+										TGU_FormatVMError(vm, L"Object does not match target type\r\n");
+										status = AR_E_TGUINVOPRAND;
+										goto END_POINT;
+								}
+
+								list = (top - n - 1)->val.list;
+								while(n > 0)
+								{
+										status = TGU_AppendVMList(vm, list, top - n);
+										if(status != AR_S_YES)
+										{
+												goto END_POINT;
+										}
+										n--;
+								}
+								top -= n;
+						}
+								break;
+						case TGU_VM_TYPE_TABLE:
+						{
+								tguVMTable_t *table;
+								if((top - n * 2 - 1)->type != TGU_VM_TYPE_TABLE)
+								{
+										TGU_FormatVMError(vm, L"Object does not match target type\r\n");
+										status = AR_E_TGUINVOPRAND;
+										goto END_POINT;
+								}
+
+								table = (top - n * 2 - 1)->val.table;
+
+								while(n > 0)
+								{
+										tguVMObject_t *obj = TGU_SetVMTable(vm, table, top - n * 2);
+
+										*obj = *(top - n * 2 + 1);
+										if(obj == NULL)
+										{
+												status = AR_E_NOMEM;
+												goto END_POINT;
+										}
+
+										
+										n--;
+								}
+
+								top -= 2 * n;
+
+						}
+								break;
+						default:
+								TGU_FormatVMError(vm, L"Invalid init type : %u\r\n", (uint_32_t)ins->arg1);
+								status = AR_E_TGUINVOPCODE;
+								goto END_POINT;
+								break;
+						}
+				}
+						break;
+				case TGU_VM_OP_EQ:
+				{
+						arStatus_t ret;
+						top -= 2;
+						ret = TGU_ObjectIsEqual(vm, top, top + 1);
+						if(ret == AR_S_YES)
+						{
+								*top++ = __g_true_object;
+						}else if(ret == AR_S_NO)
+						{
+								*top++ = __g_false_object;
+						}else
+						{
+								status = ret;
+								goto END_POINT;
+						}
+				}
+						break;
+				case TGU_VM_OP_LT:
+				{
+						arStatus_t ret;
+						top -= 2;
+						ret = TGU_ObjectIsLessThan(vm, top, top + 1);
+						if(ret == AR_S_YES)
+						{
+								*top++ = __g_true_object;
+						}else if(ret == AR_S_NO)
+						{
+								*top++ = __g_false_object;
+						}else
+						{
+								status = ret;
+								goto END_POINT;
+						}
+				}
+						break;
+				case TGU_VM_OP_LE:
+				{
+						arStatus_t ret;
+						top -= 2;
+						ret = TGU_ObjectIsLessThan(vm, top + 1, top);/*a <= b equal !(b < a)*/
+						if(ret == AR_S_YES)
+						{
+								*top++ = __g_false_object;
+						}else if(ret == AR_S_NO)
+						{
+								*top++ = __g_true_object;
+						}else
+						{
+								status = ret;
+								goto END_POINT;
+						}
+				}
+						break;
+				case TGU_VM_OP_GT:
+				{
+						arStatus_t ret;
+						top -= 2;
+						ret = TGU_ObjectIsLessThan(vm, top + 1, top); /*a > b equal b < a*/
+						
+						if(ret == AR_S_YES)
+						{
+								*top++ = __g_true_object;
+						}else if(ret == AR_S_NO)
+						{
+								*top++ = __g_false_object;
+						}else
+						{
+								status = ret;
+								goto END_POINT;
+						}
+				}
+						break;
+				case TGU_VM_OP_GE:
+				{
+						arStatus_t ret;
+						top -= 2;
+						ret = TGU_ObjectIsLessThan(vm, top, top + 1); /*a >= b equal !(a < b)*/
+						
+						if(ret == AR_S_YES)
+						{
+								*top++ = __g_false_object;
+						}else if(ret == AR_S_NO)
+						{
+								*top++ = __g_true_object;
+						}else
+						{
+								status = ret;
+								goto END_POINT;
+						}
+				}
+						break;
+				case TGU_VM_OP_ADD:
+				{
+						arStatus_t ret;
+						top -= 2;
+						ret = TGU_AddObjects(vm, top, top + 1, top + 2);
+						
+						if(ret != AR_S_YES)
+						{
+								status = ret;
+								goto END_POINT;
+						}
+						*top = *(top + 2);
+						top++;
+				}
+						break;
+				case TGU_VM_OP_SUB:
+				{
+						arStatus_t ret;
+						top -= 2;
+						ret = TGU_SubObjects(vm, top, top + 1, top + 2);
+						
+						if(ret != AR_S_YES)
+						{
+								status = ret;
+								goto END_POINT;
+						}
+						*top = *(top + 2);
+						top++;
+				}
+						break;
+				case TGU_VM_OP_MUL:
+				{
+						arStatus_t ret;
+						top -= 2;
+						ret = TGU_MulObjects(vm, top, top + 1, top + 2);
+						
+						if(ret != AR_S_YES)
+						{
+								status = ret;
+								goto END_POINT;
+						}
+						*top = *(top + 2);
+						top++;
+				}
+						break;
+				case TGU_VM_OP_DIV:
+				{
+						arStatus_t ret;
+						top -= 2;
+						ret = TGU_DivObjects(vm, top, top + 1, top + 2);
+						
+						if(ret != AR_S_YES)
+						{
+								status = ret;
+								goto END_POINT;
+						}
+						*top = *(top + 2);
+						top++;
+				}
+						break;
+				case TGU_VM_OP_MOD:
+				{
+						arStatus_t ret;
+						top -= 2;
+						ret = TGU_ModObjects(vm, top, top + 1, top + 2);
+						
+						if(ret != AR_S_YES)
+						{
+								status = ret;
+								goto END_POINT;
+						}
+						*top = *(top + 2);
+						top++;
+				}
+						break;
+				case TGU_VM_OP_UMINUS:
+				{
+						arStatus_t ret;
+						
+						ret = TGU_UminusObject(vm, top - 1);
+
+						if(ret != AR_S_YES)
+						{
+								status = ret;
+								goto END_POINT;
+						}
+				}
+						break;
+				case TGU_VM_OP_NOT:
+				{
+						arStatus_t ret;
+						
+						ret = TGU_NotObject(vm, top - 1);
+
+						if(ret != AR_S_YES)
+						{
+								status = ret;
+								goto END_POINT;
+						}
+				}
+						break;
+				case TGU_VM_OP_JMP:
+				{
+						vm->pc += (int_t)ins->arg2;
+				}
+						break;
+				case TGU_VM_OP_JMP_TRUE:
+				{
+						arStatus_t ret;
+						ret = TGU_ObjectIsTrue(vm, top);
+
+						if(ret == AR_S_YES)
+						{
+								vm->pc += (int_t)ins->arg2;
+						}
+				}
+						break;
+				case TGU_VM_OP_JMP_FALSE:
+				{
+						arStatus_t ret;
+						ret = TGU_ObjectIsTrue(vm, top);
+
+						if(ret == AR_S_NO)
+						{
+								vm->pc += (int_t)ins->arg2;
+						}
+				}
+						break;
+				
+				case TGU_VM_OP_DOT:
+				{
+						tguVMObject_t *tbl, *key, *result;
+						tbl = top - 2;
+						key = top - 1;
+						top -= 2;
+
+						if((status = TGU_DotObject(vm, tbl, key, &result)) != AR_S_YES)
+						{
+								goto END_POINT;
+						}
+						*top++ = *result;
+				}
+						break;
+				case TGU_VM_OP_INDEX:
+				{
+						tguVMObject_t *tbl, *index, *result;
+						tbl = top - 2;
+						index = top - 1;
+						top -= 2;
+
+						if((status = TGU_DotObject(vm, tbl, index, &result)) != AR_S_YES)
+						{
+								goto END_POINT;
+						}
+						*top++ = *result;
+				}
+						break;
+				case TGU_VM_OP_CALL:
+				{
+
+				}
+						break;
+				case TGU_VM_OP_RETURN:
+				{
+
+				}
+						break;
+				case TGU_VM_OP_NOP:
+				{
+
+				}
+						break;
+				default:
+						status = AR_E_INVAL;
+						goto END_POINT;
+						break;
+				}
 		}
 
-		val = TGU_GetVMTableByCStr(vm, module->table, TGU_DEFAULT_FUNCTION_NAME);
+END_POINT:
+		return status;
+}
 
-		if(val->type != TGU_VM_TYPE_FUNC)
+
+
+
+
+
+
+arStatus_t		TGU_ExecuteVM(tguMachine_t *vm, const tguVMString_t *module_name)
+{
+		arStatus_t status;
+
+		tguVMObject_t	*module;
+		tguVMObject_t	*val;
+
+		tguVMFunc_t		*function;
+
+		AR_ASSERT(vm != NULL && module_name != NULL);
+
+		status = AR_S_YES;
+		module = NULL;
+		val = NULL;
+		function = NULL;
+
+		module = TGU_GetVMTableByString(vm, vm->global_table, (tguVMString_t*)module_name);
+
+		if(module == NULL || module->type != TGU_VM_TYPE_MODULE)
+		{
+				TGU_FormatVMError(vm, L"Invalid module name : %ls\r\n", module_name->str);
+				status = AR_E_TGUINVCALL;
+				goto RET_POINT;
+		}
+
+		val = TGU_GetVMTableByCStr(vm, module->val.module->table, TGU_DEFAULT_FUNCTION_NAME);
+
+		if(val == NULL || val->type != TGU_VM_TYPE_FUNC)
 		{
 				TGU_FormatVMError(vm, L"Invalid function name : %ls\r\n", TGU_DEFAULT_FUNCTION_NAME);
-				is_ok = false;
+				status = AR_E_TGUINVCALL;
 				goto RET_POINT;
 		}
 
 		function = val->val.function;
-
+		
 		__set_run_env(vm, function);
 
-		is_ok = __run_vm(vm);
+		status = __run_vm(vm);
 
 RET_POINT:
-		return is_ok;
+		return status;
 
 }
-
-
-
-bool_t			TGU_RegisterCFuncVM(tguMachine_t *vm, const wchar_t *module_name,	 const wchar_t *func_name,  tguCFunction_t func)
-{
-		bool_t			is_ok = true;
-
-		const tguVMObject_t	*val;
-		tguVMObject_t	*obj;
-		tguVMModule_t	*module;
-		AR_ASSERT(vm != NULL && module_name != NULL && func_name && func != NULL);
-
-		val = TGU_GetVMTableByCStr(vm, vm->global_table, module_name);
-
-		if(val->type != TGU_VM_TYPE_MODULE)
-		{
-				is_ok = false;
-				goto END_POINT;
-		}
-
-		module = val->val.module;
-		val = TGU_GetVMTableByCStr(vm, TGU_GetVMModuleTable(module), func_name);
-
-		if(val != &__g_null_object)
-		{
-				is_ok = false;
-				goto END_POINT;
-		}
-
-		obj = TGU_SetVMTableByCStr(vm, TGU_GetVMModuleTable(module), func_name);
-
-		if(obj->type != TGU_VM_TYPE_NULL)
-		{
-				TGU_FormatVMError(vm, L"Name %ls existed\r\n", func_name);
-				is_ok = false;
-				goto END_POINT;
-		}
-
-		obj->type =		TGU_VM_TYPE_C_FUNC;
-		obj->val.c_function = func;
-
-END_POINT:
-		return is_ok;
-
-}
-
-
-
-bool_t			TGU_UnRegisterCFuncVM(tguMachine_t *vm, const wchar_t *module_name,	 const wchar_t *func_name)
-{
-		bool_t					is_ok = true;
-
-		const tguVMObject_t		*val;
-		tguVMModule_t			*module;
-		AR_ASSERT(vm != NULL && module_name != NULL && func_name);
-
-		val = TGU_GetVMTableByCStr(vm, vm->global_table, module_name);
-
-		if(val->type != TGU_VM_TYPE_MODULE)
-		{
-				is_ok = false;
-				goto END_POINT;
-		}
-
-		module = val->val.module;
-		val = TGU_GetVMTableByCStr(vm, TGU_GetVMModuleTable(module), func_name);
-
-		if(val->type != TGU_VM_TYPE_C_FUNC)
-		{
-				TGU_FormatVMError(vm, L"Can't found existed C function : %ls\r\n", func_name);
-				is_ok = false;
-				goto END_POINT;
-		}
-
-		is_ok = TGU_RemoveVMTableByCStr(vm, TGU_GetVMModuleTable(module), func_name);
-
-END_POINT:
-		return is_ok;
-
-}
-
-
-
-#endif
 
 
 

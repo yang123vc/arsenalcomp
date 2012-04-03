@@ -989,7 +989,7 @@ arStatus_t		Parser_AddToken(psrContext_t *parser_context, const psrToken_t *tok)
 		{
 				AR_ASSERT(false);
 				__on_error(parser_context, tok);
-				return AR_E_INVALIDTERM;
+				return AR_E_PSRINVTERM;
 		}
 		
 		is_done = false;

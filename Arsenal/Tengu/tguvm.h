@@ -68,9 +68,9 @@ typedef struct __tengu_vm_table_tag				tguVMTable_t;
 struct __tengu_vm_function_tag;
 typedef	struct __tengu_vm_function_tag			tguVMFunc_t;
 
-struct __tengu_vm_module_tag;
-typedef struct __tengu_vm_module_tag			tguVMModule_t;
 
+struct __tengu_vm_module_tag;
+typedef struct __tengu_vm_module_tag                    tguVMModule_t;
 
 
 typedef union __tengu_value_tag
@@ -89,8 +89,9 @@ typedef union __tengu_value_tag
 		tguVMTable_t		*table;
 		
 		tguVMFunc_t			*function;
-		tguVMModule_t		*module;
 		
+        tguVMModule_t       *module;
+
 		tguCFunction_t		c_function;
 }tguVMValue_t;
 
@@ -114,10 +115,11 @@ enum
 		TGU_VM_TYPE_TABLE,
 		
 		TGU_VM_TYPE_FUNC,
+
 		TGU_VM_TYPE_MODULE,
 
 		TGU_VM_TYPE_C_FUNC
-	
+		
 };
 
 
@@ -133,6 +135,22 @@ typedef struct __tgu_object_tag
 extern const tguVMObject_t	__g_true_object;
 extern const tguVMObject_t	__g_false_object;
 extern const tguVMObject_t	__g_null_object;
+
+
+arStatus_t	TGU_ObjectIsEqual(tguMachine_t *vm, const tguVMObject_t *l, const tguVMObject_t *r);
+arStatus_t	TGU_ObjectIsLessThan(tguMachine_t *vm, const tguVMObject_t *l, const tguVMObject_t *r);
+arStatus_t	TGU_AddObjects(tguMachine_t *vm, const tguVMObject_t *l, const tguVMObject_t *r, tguVMObject_t *result);
+arStatus_t	TGU_SubObjects(tguMachine_t *vm, const tguVMObject_t *l, const tguVMObject_t *r, tguVMObject_t *result);
+arStatus_t	TGU_MulObjects(tguMachine_t *vm, const tguVMObject_t *l, const tguVMObject_t *r, tguVMObject_t *result);
+arStatus_t	TGU_DivObjects(tguMachine_t *vm, const tguVMObject_t *l, const tguVMObject_t *r, tguVMObject_t *result);
+arStatus_t	TGU_ModObjects(tguMachine_t *vm, const tguVMObject_t *l, const tguVMObject_t *r, tguVMObject_t *result);
+
+arStatus_t  TGU_UminusObject(tguMachine_t *vm, tguVMObject_t *obj);
+arStatus_t  TGU_NotObject(tguMachine_t *vm, tguVMObject_t *obj);
+
+arStatus_t	TGU_ObjectIsTrue(tguMachine_t *vm, const tguVMObject_t *obj);
+
+arStatus_t	TGU_DotObject(tguMachine_t *vm, tguVMObject_t *obj, tguVMObject_t *key, tguVMObject_t **result);
 
 
 
@@ -197,7 +215,6 @@ void			TGU_DestroyVMBinary(tguMachine_t *vm, tguVMBinary_t *binary);
 
 
 
-
 struct __tengu_vm_list_tag
 {
 		tguMemMark_t		mark;
@@ -214,10 +231,10 @@ struct __tengu_vm_list_tag
 tguVMList_t*			TGU_CreateVMList(tguMachine_t *vm, size_t nsize);
 void					TGU_DestroyVMList(tguMachine_t *vm, tguVMList_t *lst);
 
-bool_t					TGU_SetVMList(tguMachine_t *vm, tguVMList_t *lst, size_t idx, tguVMObject_t *obj);
+arStatus_t				TGU_SetVMList(tguMachine_t *vm, tguVMList_t *lst, size_t idx, tguVMObject_t *obj);
 const tguVMObject_t*	TGU_GetVMList(tguMachine_t *vm, tguVMList_t *lst, size_t idx);
-size_t					TGU_AppendVMList(tguMachine_t *vm, tguVMList_t *lst, tguVMObject_t *obj);
-bool_t					TGU_RemoveVMList(tguMachine_t *vm, tguVMList_t *lst, size_t idx);
+arStatus_t				TGU_AppendVMList(tguMachine_t *vm, tguVMList_t *lst, tguVMObject_t *obj);
+arStatus_t				TGU_RemoveVMList(tguMachine_t *vm, tguVMList_t *lst, size_t idx);
 
 int_t					TGU_FindVMList(tguVMList_t	 *lst, tguVMObject_t *obj);
 size_t					TGU_GetVMListSize(tguVMList_t	 *lst);
@@ -250,16 +267,16 @@ void					TGU_DestroyVMTable(tguMachine_t *vm, tguVMTable_t *tbl);
 
 const tguVMObject_t*	TGU_GetVMTable(tguMachine_t *vm,	tguVMTable_t *tbl,			tguVMObject_t *key);
 tguVMObject_t*			TGU_SetVMTable(tguMachine_t *vm,	tguVMTable_t *tbl,			tguVMObject_t *key);
-bool_t					TGU_RemoveVMTable(tguMachine_t *vm, tguVMTable_t *tbl,			tguVMObject_t *key);
+arStatus_t				TGU_RemoveVMTable(tguMachine_t *vm, tguVMTable_t *tbl,			tguVMObject_t *key);
 
 
 
 
-const tguVMObject_t*	TGU_GetVMTableByBool(tguMachine_t *vm, tguVMTable_t *tbl,		tguVMBoolean_t		key);
-const tguVMObject_t*	TGU_GetVMTableByInt(tguMachine_t *vm, tguVMTable_t *tbl,		tguVMInteger_t		key);
-const tguVMObject_t*	TGU_GetVMTableByFloat(tguMachine_t *vm, tguVMTable_t *tbl,		tguVMFloat_t		key);
-const tguVMObject_t*	TGU_GetVMTableByString(tguMachine_t *vm, tguVMTable_t *tbl,		tguVMString_t		*key);
-const tguVMObject_t*	TGU_GetVMTableByCStr(tguMachine_t *vm, tguVMTable_t *tbl,		const wchar_t		*key);
+tguVMObject_t*	TGU_GetVMTableByBool(tguMachine_t *vm, tguVMTable_t *tbl,		tguVMBoolean_t		key);
+tguVMObject_t*	TGU_GetVMTableByInt(tguMachine_t *vm, tguVMTable_t *tbl,		tguVMInteger_t		key);
+tguVMObject_t*	TGU_GetVMTableByFloat(tguMachine_t *vm, tguVMTable_t *tbl,		tguVMFloat_t		key);
+tguVMObject_t*	TGU_GetVMTableByString(tguMachine_t *vm, tguVMTable_t *tbl,		tguVMString_t		*key);
+tguVMObject_t*	TGU_GetVMTableByCStr(tguMachine_t *vm, tguVMTable_t *tbl,		const wchar_t		*key);
 
 
 
@@ -271,11 +288,11 @@ tguVMObject_t*			TGU_SetVMTableByString(tguMachine_t *vm, tguVMTable_t *tbl,		tg
 tguVMObject_t*			TGU_SetVMTableByCStr(tguMachine_t *vm, tguVMTable_t *tbl,		const wchar_t		*key);
 
 
-bool_t					TGU_RemoveVMTableByBool(tguMachine_t *vm, tguVMTable_t *tbl,	tguVMBoolean_t		key);
-bool_t					TGU_RemoveVMTableByInt(tguMachine_t *vm, tguVMTable_t *tbl,		tguVMInteger_t		key);
-bool_t					TGU_RemoveVMTableByFloat(tguMachine_t *vm, tguVMTable_t *tbl,	tguVMFloat_t		key);
-bool_t					TGU_RemoveVMTableByString(tguMachine_t *vm, tguVMTable_t *tbl,	tguVMString_t		*key);
-bool_t					TGU_RemoveVMTableByCStr(tguMachine_t *vm, tguVMTable_t *tbl,	const wchar_t		*key);
+arStatus_t				TGU_RemoveVMTableByBool(tguMachine_t *vm, tguVMTable_t *tbl,	tguVMBoolean_t		key);
+arStatus_t				TGU_RemoveVMTableByInt(tguMachine_t *vm, tguVMTable_t *tbl,		tguVMInteger_t		key);
+arStatus_t				TGU_RemoveVMTableByFloat(tguMachine_t *vm, tguVMTable_t *tbl,	tguVMFloat_t		key);
+arStatus_t				TGU_RemoveVMTableByString(tguMachine_t *vm, tguVMTable_t *tbl,	tguVMString_t		*key);
+arStatus_t				TGU_RemoveVMTableByCStr(tguMachine_t *vm, tguVMTable_t *tbl,	const wchar_t		*key);
 
 
 
@@ -313,25 +330,21 @@ void				TGU_DestroyVMFunc(tguMachine_t *vm, tguVMFunc_t *func);
 
 
 
+
 struct  __tengu_vm_module_tag
 {
-		tguMemMark_t	mark;
-		tguVMModule_t	*next;
-		
-		tguVMTable_t	*table;
+		tguMemMark_t    mark;
+		tguVMModule_t   *next;
 
+		tguVMTable_t    *table;
+		
 		size_t			ref_cnt;
 };
 
 
 
-tguVMModule_t*			TGU_CreateVMModule(tguMachine_t *vm, tguVMString_t *module_name);
-void					TGU_DestroyVMModule(tguMachine_t *vm, tguVMModule_t *module);
-
-
-#define					TGU_GetVMModuleTable(_m)		((_m)->table)
-
-
+tguVMModule_t*                  TGU_CreateVMModule(tguMachine_t *vm, tguVMString_t *module_name);
+void                            TGU_DestroyVMModule(tguMachine_t *vm, tguVMModule_t *module);
 
 
 /***********************************************************************************************************************************/
@@ -347,7 +360,6 @@ typedef struct __tengu_vm_gc_pool_tag
 		tguVMList_t			*list_root;
 		tguVMTable_t		*table_root;
 		
-		tguVMModule_t		*module_root;
 }tguVMGCPool_t;
 
 
@@ -366,7 +378,7 @@ typedef struct __tengu_vm_constant_pool_tag
 		size_t				float_cnt;
 		size_t				float_cap;
 
-		wchar_t				**str_set;
+		tguVMString_t		**str_set;
 		size_t				str_cnt;
 		size_t				str_cap;
 }tguVMConstPool_t;
@@ -381,11 +393,14 @@ void	TGU_UnInitVMConstantPool(tguMachine_t *vm, tguVMConstPool_t *pool);
 以下三个函数在tguVMConstPool_t搜索，如果存在参数，则返回相关索引，否则将参数插入，并返回索引
 */
 
-size_t	TGU_GetIntegerConstant(tguMachine_t *vm,		tguVMConstPool_t *pool,		tguVMInteger_t num);
-size_t	TGU_GetFloatConstant(tguMachine_t *vm,			tguVMConstPool_t *pool,		tguVMFloat_t num);
-size_t	TGU_GetStringConstant(tguMachine_t *vm,			tguVMConstPool_t *pool,		const wchar_t *str);
+arStatus_t	TGU_GetIntegerConstant(tguMachine_t *vm,		tguVMConstPool_t *pool,		tguVMInteger_t num,		size_t *idx);
+arStatus_t	TGU_GetFloatConstant(tguMachine_t *vm,			tguVMConstPool_t *pool,		tguVMFloat_t num,		size_t *idx);
+arStatus_t	TGU_GetStringConstant(tguMachine_t *vm,			tguVMConstPool_t *pool,		const wchar_t *str,		size_t *idx);
 
 
+tguVMInteger_t	TGU_GetIntegerFromConstantPool(tguVMConstPool_t *pool, size_t idx);
+tguVMFloat_t	TGU_GetFloatFromConstantPool(tguVMConstPool_t *pool, size_t idx);
+tguVMString_t*	TGU_GetStringFromConstantPool(tguVMConstPool_t *pool, size_t idx);
 
 /*************************************************************************************************************************************/
 
@@ -401,9 +416,15 @@ typedef enum
 		TGU_VM_OP_PUSH				,			/*根据arg1决定压入什么, arg2意思取决于arg1*/
 		TGU_VM_OP_POP				,			/*arg2为调整数量*/
 
-		TGU_VM_OP_GET				,			/*arg1决定类型，arg2取决于arg1*/
-		TGU_VM_OP_SET				,			/*同上*/
+		TGU_VM_OP_GET_LOCAL			,			/*arg2为变量所在stack上偏移*/
+		TGU_VM_OP_SET_LOCAL			,			/*同上*/
 
+		TGU_VM_OP_GET_MODULE		,			/*arg1为模块名，arg2为变量名*/
+		TGU_VM_OP_SET_MODULE		,			/*同上*/
+
+		TGU_VM_OP_IMPORT_MODULE		,			/*arg1==1时，top-1为模块名称, arg1==2时，top-2为模块名，top-1为模块路径, 执行完成后，module在top-1上,编译器会自动生成call @main的指令*/
+
+		TGU_VM_OP_INIT_DATA			,			/*arg2为list时stack上数据数量， table时stack上key-value对数量*/
 
 		TGU_VM_OP_EQ				,
 		TGU_VM_OP_LT				,
@@ -419,16 +440,18 @@ typedef enum
 		TGU_VM_OP_UMINUS			,
 		TGU_VM_OP_NOT				,
 		
-		TGU_VM_OP_JMP				,
-		TGU_VM_OP_TEST				,
-		TGU_VM_OP_TESTTEST			,
+		TGU_VM_OP_JMP				,			/*无条件jmp,jmp长度为arg2*/
+		TGU_VM_OP_JMP_TRUE			,			/*如果top为真，则jmp，长度为arg2*/
+		TGU_VM_OP_JMP_FALSE			,			/*如果top为假，则jmp，长度为arg2*/
+		
+		TGU_VM_OP_DOT				,			/*x.a*/
+		TGU_VM_OP_INDEX				,			/*x[1], x[v];*/
 
 		TGU_VM_OP_CALL				,
 		TGU_VM_OP_RETURN			,
 		
 		TGU_VM_OP_NOP
 }tguVMOpCode_t;
-
 
 
 
@@ -457,23 +480,26 @@ typedef struct __call_info_tag
 {
 		tguVMIns_t		*pc;		
 		tguStackID_t	*fp;
-		tguStackID_t	*sp;
+		tguStackID_t	*top;
 }tguCallInfo_t;
 
 #define	TGU_MAX_CALL			512
 
 
+#define	TGU_MAX_STACK_SIZE		8192
+
 typedef struct __tengu_call_stack_tag
 {
+		tguStackID_t	stk[TGU_MAX_STACK_SIZE];
+
 		tguStackID_t	*start;
 		tguStackID_t	*last;
-		tguStackID_t	*sp;	/*last used slot*/
-		tguVMFunc_t		*func;
+		tguStackID_t	*top;	/*first free slot*/
 }tguCallStack_t;
 
 #define	TGU_STACK_SIZE(_stk)	((size_t) ( (_stk)->top - (_stk)->start + 1) )
 
-#define	TGU_MAX_STACK_SIZE		8192
+
 
 
 
@@ -503,12 +529,11 @@ struct	__tengu_machine_tag
 		tguVMGCPool_t			gc_pool;
 		tguVMConstPool_t		const_pool;
 
-/************************Value***********************/
+/************************module table***********************/
 		tguVMTable_t		*global_table;
 
+/************************last error***********************/
 		arString_t			*last_error;
-
-
 };
 
 
@@ -519,7 +544,7 @@ typedef struct __tengu_vm_init_tag
 
 tguMachine_t*	TGU_CreateVM(const tguVMInit_t *init);
 void			TGU_DestroyVM(tguMachine_t	*vm);
-void			TGU_FormatVMError(tguMachine_t *vm, const wchar_t *fmt,...);
+arStatus_t		TGU_FormatVMError(tguMachine_t *vm, const wchar_t *fmt,...);
 
 void			TGU_CollectGarbageVM(tguMachine_t	*vm);
 
@@ -527,25 +552,18 @@ void			TGU_CollectGarbageVM(tguMachine_t	*vm);
 
 
 
-#define			TGU_DEFAULT_MODULE_NAME			L"@module"
 #define			TGU_DEFAULT_FUNCTION_NAME		L"@main"
 
-bool_t			TGU_ExecuteVM(tguMachine_t *vm, const wchar_t *main_module);
+arStatus_t		TGU_ExecuteVM(tguMachine_t *vm, const tguVMString_t *module_name);
 
 
-tguVMModule_t*	TGU_GetModuleVM(tguMachine_t *vm, const wchar_t *module_name);
+arStatus_t		TGU_GetModuleGlobalFromVM(tguMachine_t *vm, const tguVMString_t *module_name, const tguVMString_t *var_name, tguVMObject_t **out);
+arStatus_t		TGU_SetModuleGlobalToVM(tguMachine_t *vm, const tguVMString_t *module_name, const tguVMString_t *var_name,  tguVMObject_t *obj);
+arStatus_t		TGU_VMHasModule(tguMachine_t *vm, const tguVMString_t *module_name);
 
+arStatus_t		TGU_ImportModule(tguMachine_t *vm, const tguVMString_t *path, const tguVMString_t *module_name);
 
-bool_t			TGU_RegisterModuleVM(tguMachine_t *vm, const wchar_t *module_name, const wchar_t *sources);
-bool_t			TGU_RegisterModuleVMFromFile(tguMachine_t *vm, const wchar_t *module_name, const wchar_t *path);
-
-
-
-
-
-
-
-
+tguVMModule_t*	TGU_FindModuleFromVM(tguMachine_t *vm, const tguVMString_t *module_name);
 
 AR_NAMESPACE_END
 

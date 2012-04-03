@@ -15,7 +15,7 @@
 #ifndef __ARSENAL_TGUUTILITY_H__
 #define __ARSENAL_TGUUTILITY_H__
 
-#include "tengu.h"
+#include "tengu_inner.h"
 
 
 
