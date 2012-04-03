@@ -330,12 +330,12 @@ static struct {const wchar_t *name; size_t tokval; size_t prec_level; psrAssocTy
 
 #define __PREC_COUNT__ ((size_t)17)
 
-/*program	:	translation_unit */
-/*program	:	 */
-static psrRetVal_t AR_STDCALL on_translation_unit(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+/*module	:	element_list */
+/*module	:	 */
+static psrRetVal_t AR_STDCALL on_module(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*translation_unit	:	element */
-/*translation_unit	:	translation_unit element */
+/*element_list	:	element */
+/*element_list	:	element_list element */
 /*element	:	declaration */
 /*element	:	function_defination */
 /*declaration	:	var init_declarator_list semi */
@@ -347,7 +347,7 @@ static psrRetVal_t AR_STDCALL on_translation_unit(psrNode_t **nodes, size_t coun
 static psrRetVal_t AR_STDCALL auto_return_null(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*element	:	statement */
-static psrRetVal_t AR_STDCALL on_global_stmtement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+static psrRetVal_t AR_STDCALL handle_element(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*function_signature	:	var NAME ( params ) */
 static psrRetVal_t AR_STDCALL on_function_signature(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
@@ -369,7 +369,6 @@ static psrRetVal_t AR_STDCALL on_namelist_ellipsis(psrNode_t **nodes, size_t cou
 /*selection_statement	:	if_else_statement */
 /*iteration_statement	:	while_statement */
 /*iteration_statement	:	do_while_statement */
-/*iteration_statement	:	for_statement */
 /*semi	:	; */
 /*expression	:	assignment_expression */
 /*assignment_expression	:	constant_expression */
@@ -467,15 +466,6 @@ static psrRetVal_t AR_STDCALL on_while_statement(psrNode_t **nodes, size_t count
 /*do_while_statement	:	do enter_loop statement while ( error ) leave_loop semi */
 static psrRetVal_t AR_STDCALL on_do_while_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*for_statement	:	for ( for_in_expression ) enter_loop statement leave_loop */
-static psrRetVal_t AR_STDCALL on_for_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
-/*for_statement	:	for ( error ) enter_loop statement leave_loop */
-static psrRetVal_t AR_STDCALL on_error_for_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
-/*for_in_expression	:	NAME in expression */
-static psrRetVal_t AR_STDCALL handle_for_in_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
 /*enter_loop	:	 */
 static psrRetVal_t AR_STDCALL on_enter_loop(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
@@ -565,13 +555,13 @@ static psrRetVal_t AR_STDCALL on_expression_list(psrNode_t **nodes, size_t count
 
 
 static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	handler; size_t	auto_ret; } __g_rule_pattern[] = {
-{L"program  :  translation_unit ", NULL, on_translation_unit, 0},
-{L"program  :   ", NULL, on_translation_unit, 0},
-{L"translation_unit  :  element ", NULL, auto_return_null, 0},
-{L"translation_unit  :  translation_unit element ", NULL, auto_return_null, 0},
+{L"module  :  element_list ", NULL, on_module, 0},
+{L"module  :   ", NULL, on_module, 0},
+{L"element_list  :  element ", NULL, auto_return_null, 0},
+{L"element_list  :  element_list element ", NULL, auto_return_null, 0},
 {L"element  :  declaration ", NULL, auto_return_null, 0},
 {L"element  :  function_defination ", NULL, auto_return_null, 0},
-{L"element  :  statement ", NULL, on_global_stmtement, 0},
+{L"element  :  statement ", NULL, handle_element, 0},
 {L"function_signature  :  var NAME ( params ) ", NULL, on_function_signature, 0},
 {L"function_defination  :  function_signature compound_statement ", NULL, on_function_defination, 0},
 {L"params  :  namelist , ... ", NULL, on_namelist_ellipsis, 0},
@@ -626,14 +616,10 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"if_else_statement  :  if ( error ) statement else statement ", NULL, on_if_else_statement, 0},
 {L"iteration_statement  :  while_statement ", NULL, auto_return_0, 0},
 {L"iteration_statement  :  do_while_statement ", NULL, auto_return_0, 0},
-{L"iteration_statement  :  for_statement ", NULL, auto_return_0, 0},
 {L"while_statement  :  while enter_loop ( expression ) statement leave_loop ", NULL, on_while_statement, 0},
 {L"while_statement  :  while enter_loop ( error ) statement leave_loop ", NULL, on_while_statement, 0},
 {L"do_while_statement  :  do enter_loop statement while ( expression ) leave_loop semi ", NULL, on_do_while_statement, 0},
 {L"do_while_statement  :  do enter_loop statement while ( error ) leave_loop semi ", NULL, on_do_while_statement, 0},
-{L"for_statement  :  for ( for_in_expression ) enter_loop statement leave_loop ", NULL, on_for_statement, 0},
-{L"for_statement  :  for ( error ) enter_loop statement leave_loop ", NULL, on_error_for_statement, 0},
-{L"for_in_expression  :  NAME in expression ", NULL, handle_for_in_expression, 0},
 {L"enter_loop  :   ", NULL, on_enter_loop, 0},
 {L"leave_loop  :   ", NULL, on_leave_loop, 0},
 {L"jump_statement  :  continue semi ", NULL, on_continue_statement, 0},
@@ -695,8 +681,8 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"expression_list  :  expression_list , expression ", NULL, on_expression_list, 0}
 };
 
-#define __RULE_COUNT__ ((size_t)128)
-#define START_RULE L"program"
+#define __RULE_COUNT__ ((size_t)124)
+#define START_RULE L"module"
 
 
 static lex_t*	__build_lex()													
@@ -879,9 +865,9 @@ static psrRetVal_t AR_STDCALL on_string_leaf_handler(const psrToken_t *tok,void 
 }
 
 
-/*program	:	translation_unit */
-/*program	:	 */
-static psrRetVal_t AR_STDCALL on_translation_unit(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+/*module	:	element_list */
+/*module	:	 */
+static psrRetVal_t AR_STDCALL on_module(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		psrRetVal_t ret = {AR_S_YES, NULL};
 		return ret;
@@ -891,8 +877,8 @@ static psrRetVal_t AR_STDCALL on_translation_unit(psrNode_t **nodes, size_t coun
 
 
 
-/*translation_unit	:	element */
-/*translation_unit	:	translation_unit element */
+/*element_list	:	element */
+/*element_list	:	element_list element */
 /*element	:	declaration */
 /*element	:	function_defination */
 /*declaration	:	var init_declarator_list semi */
@@ -912,7 +898,7 @@ static psrRetVal_t AR_STDCALL auto_return_null(psrNode_t **nodes, size_t count, 
 
 
 /*element	:	statement */
-static psrRetVal_t AR_STDCALL on_global_stmtement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+static psrRetVal_t AR_STDCALL handle_element(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		psrRetVal_t ret = {AR_S_YES, NULL};
 		return ret;
@@ -966,7 +952,6 @@ static psrRetVal_t AR_STDCALL on_namelist_ellipsis(psrNode_t **nodes, size_t cou
 /*selection_statement	:	if_else_statement */
 /*iteration_statement	:	while_statement */
 /*iteration_statement	:	do_while_statement */
-/*iteration_statement	:	for_statement */
 /*semi	:	; */
 /*expression	:	assignment_expression */
 /*assignment_expression	:	constant_expression */
@@ -1247,39 +1232,6 @@ static psrRetVal_t AR_STDCALL on_while_statement(psrNode_t **nodes, size_t count
 /*do_while_statement	:	do enter_loop statement while ( expression ) leave_loop semi */
 /*do_while_statement	:	do enter_loop statement while ( error ) leave_loop semi */
 static psrRetVal_t AR_STDCALL on_do_while_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-		psrRetVal_t ret = {AR_S_YES, NULL};
-		return ret;
-
-}
-
-
-
-
-/*for_statement	:	for ( for_in_expression ) enter_loop statement leave_loop */
-static psrRetVal_t AR_STDCALL on_for_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-		psrRetVal_t ret = {AR_S_YES, NULL};
-		return ret;
-
-}
-
-
-
-
-/*for_statement	:	for ( error ) enter_loop statement leave_loop */
-static psrRetVal_t AR_STDCALL on_error_for_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-		psrRetVal_t ret = {AR_S_YES, NULL};
-		return ret;
-
-}
-
-
-
-
-/*for_in_expression	:	NAME in expression */
-static psrRetVal_t AR_STDCALL handle_for_in_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		psrRetVal_t ret = {AR_S_YES, NULL};
 		return ret;
