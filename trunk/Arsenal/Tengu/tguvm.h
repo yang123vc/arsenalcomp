@@ -336,6 +336,8 @@ struct  __tengu_vm_module_tag
 		tguMemMark_t    mark;
 		tguVMModule_t   *next;
 
+		tguVMString_t	*name;
+		tguVMString_t	*path;
 		tguVMTable_t    *table;
 		
 		size_t			ref_cnt;
@@ -343,7 +345,7 @@ struct  __tengu_vm_module_tag
 
 
 
-tguVMModule_t*                  TGU_CreateVMModule(tguMachine_t *vm, tguVMString_t *module_name);
+tguVMModule_t*                  TGU_CreateVMModule(tguMachine_t *vm, tguVMString_t *module_name, tguVMString_t	*module_path);
 void                            TGU_DestroyVMModule(tguMachine_t *vm, tguVMModule_t *module);
 
 
@@ -564,6 +566,9 @@ arStatus_t		TGU_VMHasModule(tguMachine_t *vm, const tguVMString_t *module_name);
 arStatus_t		TGU_ImportModule(tguMachine_t *vm, const tguVMString_t *path, const tguVMString_t *module_name);
 
 tguVMModule_t*	TGU_FindModuleFromVM(tguMachine_t *vm, const tguVMString_t *module_name);
+
+
+
 
 AR_NAMESPACE_END
 

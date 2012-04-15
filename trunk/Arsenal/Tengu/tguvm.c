@@ -281,16 +281,20 @@ static arStatus_t	__run_vm(tguMachine_t *vm)
 						}
 						
 						ret = TGU_ImportModule(vm, module_path, module_name);
-
-						if(ret != AR_S_YES)
+						
+						if(ret != AR_S_YES)/*Ä£¿éÔØÈëÊ§°Ü£¬·µ»Ønull*/
 						{
-								goto ERROR_IMPORT_POINT;
-						}
+								*top++ = __g_null_object;
+								ret = AR_S_YES;
+						}else
+						{
+								top->type = TGU_VM_TYPE_MODULE;
+								top->val.module = TGU_FindModuleFromVM(vm, module_name);
+								top++;
 
-						top->type = TGU_VM_TYPE_MODULE;
-						top->val.module = TGU_FindModuleFromVM(vm, module_name);
-						AR_ASSERT(top->val.module != NULL);
-						top++;
+								AR_ASSERT(top->val.module != NULL);
+								
+						}
 
 ERROR_IMPORT_POINT:
 						if(ret != AR_S_YES)

@@ -276,7 +276,8 @@ int_t AR_bsearch(const void *key, const void *base, size_t num, size_t width, in
 		int_t	result;
 		AR_ASSERT(base != NULL && width > 0 && cmp_f != NULL && key != NULL);
 
-		lo = (const byte_t*)base; hi = (const byte_t*)base + (num - 1) * width;
+		lo = (const byte_t*)base; 
+		hi = (const byte_t*)base + (num - 1) * width;
 		
 		while(lo <= hi)
 		{

@@ -195,7 +195,7 @@
 
 
 
-%token    "#import"    :    '"#import"(?!{keyword_lhd})'   ,1            %value    "TOK_IMPORT"            %action default_leaf_handler            ;
+%token    "import"    :    '"import"(?!{keyword_lhd})'   ,1            %value    "TOK_IMPORT"            %action default_leaf_handler            ;
 %token    "from"    	  :    '"from"(?!{keyword_lhd})'   ,1            %value    "TOK_FROM"            %action default_leaf_handler            ;
 
 %token    "for"        :    '"for"(?!{keyword_lhd})'        ,1            %value    "TOK_FOR"            %action default_leaf_handler            ;
@@ -530,9 +530,9 @@ compound_element        :    statement        %action    on_compound_element
 :};
 
 
-import_statement	:	"#import"	NAME ";"				%action on_import_statement
-			|	"#import"	NAME "from" STRING	";"		%action on_import_statement
-			|	"#import"	error ";"				%action on_import_statement
+import_statement	:	"import"	NAME ";"				%action on_import_statement
+			|	"import"	NAME "from" STRING	";"		%action on_import_statement
+			|	"import"	error ";"				%action on_import_statement
 			;
 
 

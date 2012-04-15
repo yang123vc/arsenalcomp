@@ -123,7 +123,7 @@ arStatus_t			AR_ReserveString(arString_t *str, size_t num)
 				
 				size_t	new_cap;
 				arStatus_t status;
-				new_cap = (str->count + num)*2;
+				new_cap = (size_t)((double)(str->count + num) * 1.5);
 
 				AR_DO_REALLOC(wchar_t, str->str, new_cap, str->count, status);
 
@@ -167,7 +167,7 @@ arStatus_t	AR_AppendString(arString_t *str, const wchar_t *sour)
 		}
 
 		
-		for(i = 0; i < len; ++i)
+		for(i = 0; i < len && sour[i] != L'\0'; ++i)
 		{
 				str->str[str->count++] = sour[i];
 		}
