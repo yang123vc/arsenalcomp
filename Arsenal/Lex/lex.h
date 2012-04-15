@@ -168,7 +168,7 @@ void			Lex_MatchGetCoordinate(const lexMatch_t *pmatch, size_t *index, size_t *l
 
 
 
-arStatus_t			Lex_Match(lexMatch_t *match, lexToken_t *tok);
+arStatus_t		Lex_Match(lexMatch_t *match, lexToken_t *tok);
 
 
 
