@@ -5,9 +5,9 @@
       location = "group:Arsenal.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:../../Test/Mac_XCode4/Test.xcodeproj">
+      location = "group:../../../Tools/Mac/GrammarDesigner/GrammarDesigner.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:../../../Tools/Mac/GrammarDesigner/GrammarDesigner.xcodeproj">
+      location = "group:../../Test/Mac_XCode4/Test.xcodeproj">
    </FileRef>
 </Workspace>

@@ -333,7 +333,7 @@ _CHAR_UNSIGNED			是vs特性，/J
 
 #elif(AR_COMPILER == AR_GCC3 || AR_COMPILER == AR_GCC4)
 
-		#if defined(NDEBUG)
+        #if defined(NDEBUG)
 				#define AR_NDEBUG
 		#else
 				#define AR_DEBUG
@@ -384,8 +384,7 @@ _CHAR_UNSIGNED			是vs特性，/J
 		#define AR_NOOP
 
 		#define AR_FUNC_NAME			__PRETTY_FUNCTION__
-
-
+        
 		#define	AR_DEBUG_BREAK				__builtin_trap
 
 #else
