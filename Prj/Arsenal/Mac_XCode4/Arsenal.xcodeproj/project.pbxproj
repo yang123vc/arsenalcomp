@@ -635,6 +635,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				EXECUTABLE_PREFIX = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OBJROOT = "$(SYMROOT)";
 				PRODUCT_NAME = Arsenal;
 				SYMROOT = build;
@@ -647,6 +648,7 @@
 				EXECUTABLE_PREFIX = "";
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = "NDEBUG=1";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OBJROOT = "$(SYMROOT)";
 				PRODUCT_NAME = Arsenal;
 				SYMROOT = build;

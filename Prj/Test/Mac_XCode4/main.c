@@ -6,21 +6,21 @@
 //  Copyright (c) 2012 none. All rights reserved.
 //
 
-#include "Arsenal.h"
 
-#include <stdio.h>
+#include "stdhdr.h"
 
-
-
+extern void test();
 
 int main (int argc, const char * argv[])
 {
 
         // insert code here...
-        printf("Hello, World!\n");
         
         Arsenal_Init(NULL);
-        getchar();
+        
+        test();
+        
+        AR_printf(L"%ls\r\n", L"done");
         
         Arsenal_UnInit(NULL);
         return 0;

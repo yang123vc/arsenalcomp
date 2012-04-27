@@ -101,7 +101,7 @@ arStatus_t	AR_error_ctx(arIOCtx_t *ctx, int_t level, const wchar_t *msg, ...);
 
 
 
-#define AR_report()		AR_printf(L"File (%ls) : Line (%" AR_PLAT_INT_FMT L"d) : Function (%ls)\r\n", AR_WSTR(__FILE__), (size_t)__LINE__, AR_WSTR(AR_FUNC_NAME))
+#define AR_report()		AR_printf(L"File (%hs) : Line (%Id) : Function (%hs)\r\n", __FILE__, (size_t)__LINE__, AR_FUNC_NAME)
 
 void	AR_check(bool_t cond, const wchar_t *fmt, ...);
 
