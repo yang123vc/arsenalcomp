@@ -11,8 +11,14 @@
 
 #include "stdhdr.h"
 
+#if defined(__cplusplus)
+extern "C"{
+#endif
 
 void file_sys_test();
 
+#if defined(__cplusplus)
+}
+#endif
 
 #endif

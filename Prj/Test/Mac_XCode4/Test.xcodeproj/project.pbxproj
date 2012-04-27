@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		673C0BCD154A85D600A73324 /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 673C0BCC154A85D600A73324 /* Arsenal.a */; };
-		673C0BD0154A891100A73324 /* TestFileSystem.c in Sources */ = {isa = PBXBuildFile; fileRef = 673C0BCF154A891100A73324 /* TestFileSystem.c */; };
-		673C0BD1154A891100A73324 /* TestFileSystem.c in Sources */ = {isa = PBXBuildFile; fileRef = 673C0BCF154A891100A73324 /* TestFileSystem.c */; };
+		673C0BD0154A891100A73324 /* TestFileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 673C0BCF154A891100A73324 /* TestFileSystem.cpp */; };
+		673C0BD1154A891100A73324 /* TestFileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 673C0BCF154A891100A73324 /* TestFileSystem.cpp */; };
 		673C0BD5154A8B3600A73324 /* test.c in Sources */ = {isa = PBXBuildFile; fileRef = 673C0BD4154A8A4800A73324 /* test.c */; };
 		673C0BD6154A8B3B00A73324 /* test.c in Sources */ = {isa = PBXBuildFile; fileRef = 673C0BD4154A8A4800A73324 /* test.c */; };
 		BE185ED514E849250095DB44 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = BE185ED314E849250095DB44 /* main.c */; };
@@ -39,7 +39,7 @@
 
 /* Begin PBXFileReference section */
 		673C0BCC154A85D600A73324 /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = Arsenal.a; path = "../../../../../Temp/Xcode_Derived_Data/Arsenal-doktqrfexpgfyfbhxalwgaspvtgn/Build/Products/Debug/Arsenal.a"; sourceTree = "<group>"; };
-		673C0BCF154A891100A73324 /* TestFileSystem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = TestFileSystem.c; sourceTree = SOURCE_ROOT; };
+		673C0BCF154A891100A73324 /* TestFileSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestFileSystem.cpp; sourceTree = SOURCE_ROOT; };
 		673C0BD2154A894D00A73324 /* TestFileSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFileSystem.h; sourceTree = SOURCE_ROOT; };
 		673C0BD3154A897A00A73324 /* stdhdr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stdhdr.h; sourceTree = SOURCE_ROOT; };
 		673C0BD4154A8A4800A73324 /* test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = test.c; sourceTree = SOURCE_ROOT; };
@@ -90,7 +90,7 @@
 			children = (
 				BE185ED314E849250095DB44 /* main.c */,
 				673C0BD3154A897A00A73324 /* stdhdr.h */,
-				673C0BCF154A891100A73324 /* TestFileSystem.c */,
+				673C0BCF154A891100A73324 /* TestFileSystem.cpp */,
 				673C0BD2154A894D00A73324 /* TestFileSystem.h */,
 				673C0BD4154A8A4800A73324 /* test.c */,
 			);
@@ -168,7 +168,7 @@
 			files = (
 				673C0BD5154A8B3600A73324 /* test.c in Sources */,
 				BE185ED514E849250095DB44 /* main.c in Sources */,
-				673C0BD0154A891100A73324 /* TestFileSystem.c in Sources */,
+				673C0BD0154A891100A73324 /* TestFileSystem.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -178,7 +178,7 @@
 			files = (
 				673C0BD6154A8B3B00A73324 /* test.c in Sources */,
 				BE185ED614E849250095DB44 /* main.c in Sources */,
-				673C0BD1154A891100A73324 /* TestFileSystem.c in Sources */,
+				673C0BD1154A891100A73324 /* TestFileSystem.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
