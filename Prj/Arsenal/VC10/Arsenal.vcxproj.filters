@@ -156,6 +156,9 @@
     <ClCompile Include="..\..\..\Arsenal\Tengu\tengu_parser.c">
       <Filter>Arsenal\Tengu</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Arsenal\Common\enviroment.c">
+      <Filter>Arsenal\Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Arsenal\Common\common.h">
