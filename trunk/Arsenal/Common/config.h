@@ -336,7 +336,7 @@ _CHAR_UNSIGNED			ÊÇvsÌØÐÔ£¬/J
 
 		#define	AR_DEBUG_BREAK				__debugbreak
 
-#elif(AR_COMPILER == AR_GCC3 || AR_COMPILER == AR_GCC4)
+#elif(AR_COMPILER == AR_GCC3 || AR_COMPILER == AR_GCC4 || AR_COMPILER == AR_CLANG)
 
         #if defined(NDEBUG)
 				#define AR_NDEBUG
@@ -630,7 +630,7 @@ typedef void*					ptr_t;
 
                 #define AR_abort								abort
 
-#elif(AR_COMPILER == AR_GCC3 || AR_COMPILER == AR_GCC4)
+#elif(AR_COMPILER == AR_GCC3 || AR_COMPILER == AR_GCC4 || AR_COMPILER == AR_CLANG)
 
 		
 		#if defined(OS_FAMILY_WINDOWS)
