@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6728C3B5154C5E8300861D86 /* enviroment.c in Sources */ = {isa = PBXBuildFile; fileRef = 6728C3B4154C5E8300861D86 /* enviroment.c */; };
+		6728C3B6154C5E8300861D86 /* enviroment.c in Sources */ = {isa = PBXBuildFile; fileRef = 6728C3B4154C5E8300861D86 /* enviroment.c */; };
 		BE185DDF14E841B90095DB44 /* Arsenal.c in Sources */ = {isa = PBXBuildFile; fileRef = BE185D9014E841B90095DB44 /* Arsenal.c */; };
 		BE185DE014E841B90095DB44 /* Arsenal.c in Sources */ = {isa = PBXBuildFile; fileRef = BE185D9014E841B90095DB44 /* Arsenal.c */; };
 		BE185DE114E841B90095DB44 /* Arsenal.h in Headers */ = {isa = PBXBuildFile; fileRef = BE185D9114E841B90095DB44 /* Arsenal.h */; };
@@ -140,6 +142,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6728C3B4154C5E8300861D86 /* enviroment.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = enviroment.c; sourceTree = "<group>"; };
 		BE185D9014E841B90095DB44 /* Arsenal.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Arsenal.c; sourceTree = "<group>"; };
 		BE185D9114E841B90095DB44 /* Arsenal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Arsenal.h; sourceTree = "<group>"; };
 		BE185D9314E841B90095DB44 /* algo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = algo.c; sourceTree = "<group>"; };
@@ -249,6 +252,7 @@
 		BE185D9214E841B90095DB44 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				6728C3B4154C5E8300861D86 /* enviroment.c */,
 				BE185D9314E841B90095DB44 /* algo.c */,
 				BE185D9414E841B90095DB44 /* base64.c */,
 				BE185D9514E841B90095DB44 /* buffer.c */,
@@ -531,6 +535,7 @@
 				BE185E6714E841B90095DB44 /* iniobj.c in Sources */,
 				BE185E6B14E841B90095DB44 /* serializer.c in Sources */,
 				BE185E6F14E841B90095DB44 /* tools.c in Sources */,
+				6728C3B5154C5E8300861D86 /* enviroment.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -580,6 +585,7 @@
 				BE185E6814E841B90095DB44 /* iniobj.c in Sources */,
 				BE185E6C14E841B90095DB44 /* serializer.c in Sources */,
 				BE185E7014E841B90095DB44 /* tools.c in Sources */,
+				6728C3B6154C5E8300861D86 /* enviroment.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

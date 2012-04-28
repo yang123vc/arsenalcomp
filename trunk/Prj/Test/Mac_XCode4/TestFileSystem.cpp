@@ -20,7 +20,35 @@ extern "C"{
 #endif
       
         
+
+static void env_test()
+{
+        arString_t *str = AR_CreateString();
+        AR_setenv(L"TEST", L"刘鹏");
+
+        {
+
+                const char *t = getenv("TEST");
+                printf("%s\r\n", t);
+        }
         
+        AR_getenv(L"TEST", str);
+        AR_StrPrint(str);
+        
+        AR_getenv(L"PWD", str);
+        AR_StrPrint(str);
+        
+        AR_getenv(L"HOME", str);
+        AR_StrPrint(str);
+        
+        
+        AR_getenv(L"TMPDIR", str);
+        AR_StrPrint(str);
+        
+        AR_DestroyString(str);
+        str = NULL;
+        
+}
        
         
 
@@ -49,8 +77,8 @@ static void startup_items_test()
         
 void file_sys_test()
 {
-        
-        startup_items_test();
+        env_test();
+//        startup_items_test();
         
         
 }
