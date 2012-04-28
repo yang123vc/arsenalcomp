@@ -55,7 +55,7 @@
 #define AR_BCB6					0x2006
 #define AR_GCC3					0x3003
 #define AR_GCC4					0x3004
-
+#define AR_CLANG				0x4001
 
 #if defined(_MSC_VER)
 
@@ -66,17 +66,22 @@
 				#define	AR_COMPILER		AR_VC
 		#endif
 
-
 #elif defined(__BORLANDC__)
 
 		#define AR_COMPILER		AR_BCB6
 
+#elif defined(__clang__)
+		
+		#define AR_COMPILER		AR_CLANG
+
 #elif defined(__GNUC__)
 
-		#if(__GNUC__ >= 4)
+		#if(__GNUC__ == 4)
 				#define	AR_COMPILER		AR_GCC4
-		#else
+		#elif(__GNUC__ == 3)
 				#define	AR_COMPILER		AR_GCC3
+		#else
+				#error "Unknow Compiler!"
 		#endif
 		
 #else
