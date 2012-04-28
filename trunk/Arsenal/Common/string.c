@@ -58,6 +58,12 @@ void	AR_DestroyString(arString_t *str)
 }
 
 
+arStatus_t		AR_SetString(arString_t *str, const wchar_t *wcs)
+{
+		AR_ASSERT(str != NULL && wcs != NULL);
+		AR_ClearString(str);
+		return AR_AppendString(str, wcs);
+}
 
 const wchar_t*	AR_GetStringCString(const arString_t *str)
 {

@@ -1602,9 +1602,25 @@ static void base64_test2()
 		AR_printf(L"%ls\r\n", buf);
 		
 		AR_ASSERT(AR_strcmp((const char*)buf, src) == 0);
+}
 
 
+static void env_test()
+{
+		arString_t *str;
 
+		str = AR_CreateString();
+
+		AR_setenv(L"solidus", L"abc_xyz");
+
+		AR_getenv(L"solidus", str);
+		AR_ASSERT(AR_hasenv(L"solidus") == AR_S_YES);
+		AR_StrPrint(str);
+
+
+		AR_getenv(L"CLASSPATH", str);
+		AR_StrPrint(str);
+		
 }
 
 void com_test()
@@ -1680,8 +1696,9 @@ void com_test()
 		//base64_test();
 		//base64_test2();
 
-		float_test_2();
+		//float_test_2();
 		
+		env_test();
 }
 
 

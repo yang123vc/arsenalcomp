@@ -666,6 +666,7 @@ arStatus_t		AR_AppendVFormatString(arString_t *str, const wchar_t *fmt, va_list 
 
 arStatus_t		AR_AppendCharToString(arString_t *str, wchar_t chr);
 
+arStatus_t		AR_SetString(arString_t *str, const wchar_t *wcs);
 const wchar_t*	AR_GetStringCString(const arString_t *str);
 size_t			AR_GetStringLength(const arString_t *str);
 
@@ -778,6 +779,9 @@ arStatus_t	AR_SaveBomTextToBinary(arBuffer_t *output, arTxtBom_t bom, const wcha
 /************************************************************************************************************************************************************************/
 
 
+/**********************************************************System*************************************************************/
+
+
 
 /**********************************************************Threading*************************************************************/
 
@@ -825,10 +829,11 @@ uint_64_t		AR_GetTime_Milliseconds();
 
 
 
+/**********************************************************Environment*************************************************************/
 
-/**********************************************************File System*************************************************************/
-
-
+arStatus_t		AR_getenv(const wchar_t *key, arString_t *val);
+arStatus_t		AR_setenv(const wchar_t *key, const wchar_t *val);
+arStatus_t		AR_hasenv(const wchar_t *key);
 
 
 
