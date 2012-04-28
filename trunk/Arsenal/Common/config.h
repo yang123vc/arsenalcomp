@@ -118,8 +118,13 @@ _CHAR_UNSIGNED			ÊÇvsÌØÐÔ£¬/J
 
 
 
-
-
+#if(AR_COMPILER == AR_GCC3 || AR_COMPILER == AR_GCC4 || AR_COMPILER == AR_CLANG)
+		
+		#define AR_VAARGS_TREAT_CHAR_AS_INT			1
+		#define AR_VAARGS_TREAT_WCHAR_AS_INT		1
+#else
+		
+#endif
 
 
 

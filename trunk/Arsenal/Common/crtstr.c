@@ -567,7 +567,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list va_args)
 				case L'c':
 				case L'C':
 						len = 2;
-#if(AR_COMPILER == AR_GCC3 || AR_COMPILER == AR_GCC4 || AR_COMPILER == AR_CLANG)
+#if defined(AR_VAARGS_TREAT_WCHAR_AS_INT)
 						AR_va_arg(args, int);
 #else
 						AR_va_arg(args, wint_t);
@@ -578,7 +578,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list va_args)
 
 						len = 2;
 
-#if(AR_COMPILER == AR_GCC3 || AR_COMPILER == AR_GCC4 || AR_COMPILER == AR_CLANG)
+#if defined(AR_VAARGS_TREAT_CHAR_AS_INT)
 						AR_va_arg(args, int);
 #else
 						AR_va_arg(args, char);
@@ -588,7 +588,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list va_args)
 				case L'c' | __MODIFIER_UNICODE:
 				case L'C' | __MODIFIER_UNICODE:
 						len = 2;
-#if(AR_COMPILER == AR_GCC3 || AR_COMPILER == AR_GCC4 || AR_COMPILER == AR_CLANG)
+#if defined(AR_VAARGS_TREAT_WCHAR_AS_INT)
 						AR_va_arg(args, int);
 #else
 						AR_va_arg(args, wchar_t);
