@@ -102,7 +102,66 @@ static void path_test()
         AR_DestroyString(str);
         str = NULL;
 }
+   
+
         
+static void path_iter_test()
+{
+        {
+                arPathIter_t *it;
+                arStatus_t status;
+        
+                it = AR_CreatePathIterator(L"~/");
+                
+                if(it == NULL)
+                {
+                        return;
+                }
+                
+                AR_ASSERT(it != NULL);
+                
+                
+                status = AR_S_YES;
+                
+                while(!AR_PathIteratorIsDone(it))
+                {
+                        AR_printf(L"%ls\r\n", AR_PathIteratorCurrent(it));
+                        status = AR_PathIteratorNext(it);
+                }
+                
+                
+                AR_DestroyPathIterator(it);
+                it = NULL;
+        }
+        
+        
+        {
+                arPathIter_t *it;
+                arStatus_t status;
+                
+                it = AR_CreatePathIterator(L"/Applications/App Store.app/Contents/");
+                
+                if(it == NULL)
+                {
+                        return;
+                }
+                
+                AR_ASSERT(it != NULL);
+                
+                
+                status = AR_S_YES;
+                
+                while(!AR_PathIteratorIsDone(it))
+                {
+                        AR_printf(L"%ls\r\n", AR_PathIteratorCurrent(it));
+                        status = AR_PathIteratorNext(it);
+                }
+                
+                
+                AR_DestroyPathIterator(it);
+                it = NULL;
+        }
+}
 
 static void startup_items_test()
 {
@@ -130,7 +189,8 @@ static void startup_items_test()
 void file_sys_test()
 {
 //        env_test();
-        path_test();
+//        path_test();
+        path_iter_test();
         
         
 //        startup_items_test();
