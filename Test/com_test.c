@@ -1618,9 +1618,40 @@ static void env_test()
 		AR_StrPrint(str);
 
 
-		AR_getenv(L"CLASSPATH", str);
+		AR_getenv(L"HOMEDRIVE", str);
 		AR_StrPrint(str);
-		
+
+		AR_getenv(L"HOMEPATH", str);
+		AR_StrPrint(str);
+}
+
+static void path_test()
+{
+		arString_t *str;
+		arStatus_t status;
+		str = AR_CreateString();
+
+		status = AR_GetCurrentPath(str);
+
+		AR_ASSERT(status == AR_S_YES);
+		AR_StrPrint(str);
+
+
+		status = AR_GetHomePath(str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_StrPrint(str);
+
+
+		status = AR_GetTempPath(str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_StrPrint(str);
+
+		status = AR_GetExpandPath(L"C:\\temp", str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_StrPrint(str);
+
+		AR_DestroyString(str);
+		str = NULL;
 }
 
 void com_test()
@@ -1698,7 +1729,9 @@ void com_test()
 
 		//float_test_2();
 		
-		env_test();
+		//env_test();
+
+		path_test();
 }
 
 

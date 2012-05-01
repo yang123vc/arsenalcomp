@@ -341,7 +341,20 @@ arStatus_t			AR_AppendCharToString(arString_t *str, wchar_t chr)
 		return AR_S_YES;
 }
 
+wchar_t			AR_GetStringChar(const arString_t *str, size_t index)
+{
+		AR_ASSERT(str != NULL);
+		AR_ASSERT(index < AR_GetStringLength(str));
+		return AR_GetStringCString(str)[index];
+}
 
+void			AR_SetStringChar(arString_t *str, size_t index, wchar_t c)
+{
+		AR_ASSERT(str != NULL);
+		AR_ASSERT(index < AR_GetStringLength(str));
+		
+		str->str[index] = c;
+}
 
 
 
