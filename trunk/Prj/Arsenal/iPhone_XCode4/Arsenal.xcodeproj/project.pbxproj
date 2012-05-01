@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		6728C3CA154C6C5D00861D86 /* enviroment.c in Sources */ = {isa = PBXBuildFile; fileRef = 6728C3C9154C6C5D00861D86 /* enviroment.c */; };
+		6728C3D415503E6E00861D86 /* filesystem.c in Sources */ = {isa = PBXBuildFile; fileRef = 6728C3D315503E6E00861D86 /* filesystem.c */; };
 		BE328EEB14F20CA9006BCA74 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE328EEA14F20CA9006BCA74 /* Foundation.framework */; };
 		BE82C89A14F20EC600F30E56 /* Arsenal.c in Sources */ = {isa = PBXBuildFile; fileRef = BE82C84B14F20EC600F30E56 /* Arsenal.c */; };
 		BE82C89B14F20EC600F30E56 /* Arsenal.h in Headers */ = {isa = PBXBuildFile; fileRef = BE82C84C14F20EC600F30E56 /* Arsenal.h */; };
@@ -76,6 +77,7 @@
 
 /* Begin PBXFileReference section */
 		6728C3C9154C6C5D00861D86 /* enviroment.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = enviroment.c; sourceTree = "<group>"; };
+		6728C3D315503E6E00861D86 /* filesystem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = filesystem.c; sourceTree = "<group>"; };
 		BE328EE714F20CA9006BCA74 /* Arsenal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = Arsenal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE328EEA14F20CA9006BCA74 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		BE82C84814F20D5B00F30E56 /* dabaopku.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = dabaopku.plist; sourceTree = "<group>"; };
@@ -200,6 +202,7 @@
 		BE82C84D14F20EC600F30E56 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				6728C3D315503E6E00861D86 /* filesystem.c */,
 				6728C3C9154C6C5D00861D86 /* enviroment.c */,
 				BE82C84E14F20EC600F30E56 /* algo.c */,
 				BE82C84F14F20EC600F30E56 /* base64.c */,
@@ -419,6 +422,7 @@
 				BE82C8E014F20EC600F30E56 /* serializer.c in Sources */,
 				BE82C8E214F20EC600F30E56 /* tools.c in Sources */,
 				6728C3CA154C6C5D00861D86 /* enviroment.c in Sources */,
+				6728C3D415503E6E00861D86 /* filesystem.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
