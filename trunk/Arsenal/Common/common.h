@@ -670,7 +670,8 @@ arStatus_t		AR_SetString(arString_t *str, const wchar_t *wcs);
 const wchar_t*	AR_GetStringCString(const arString_t *str);
 size_t			AR_GetStringLength(const arString_t *str);
 
-
+wchar_t			AR_GetStringChar(const arString_t *str, size_t index);
+void			AR_SetStringChar(arString_t *str, size_t index, wchar_t c);
 
 
 #define			AR_StrPrint(_s) do{ AR_printf(L"%ls\r\n", AR_GetStringCString((_s))); }while(0)
@@ -839,6 +840,21 @@ arStatus_t		AR_hasenv(const wchar_t *key);
 
 
 /***************************************************************************************************************************************/
+
+
+
+
+/**********************************************************File System*************************************************************/
+
+/*Path*/
+arStatus_t		AR_GetCurrentPath(arString_t *str);
+arStatus_t		AR_GetHomePath(arString_t *str);
+arStatus_t		AR_GetTempPath(arString_t *str);
+arStatus_t		AR_GetExpandPath(const wchar_t *path, arString_t *expanded_path);
+arStatus_t		AR_GetNullPath(arString_t *str);
+/***************************************************************************************************************************************/
+
+
 
 
 /*******************************************************************Math*************************************************************************************************/
