@@ -1654,6 +1654,34 @@ static void path_test()
 		str = NULL;
 }
 
+
+static void path_iter_test()
+{
+		arPathIter_t *it;
+		arStatus_t status;
+		it = AR_CreatePathIterator(L"C:\\Temp\\1\\2");
+
+		if(it == NULL)
+		{
+				return;
+		}
+
+		AR_ASSERT(it != NULL);
+		
+
+		status = AR_S_YES;
+
+		while(!AR_PathIteratorIsDone(it))
+		{
+				::MessageBoxW(NULL, AR_PathIteratorCurrent(it), 0,0);
+				status = AR_PathIteratorNext(it);
+		}
+
+
+		AR_DestroyPathIterator(it);
+		it = NULL;
+}
+
 void com_test()
 {
 
@@ -1731,7 +1759,9 @@ void com_test()
 		
 		//env_test();
 
-		path_test();
+		//path_test();
+
+		path_iter_test();
 }
 
 
