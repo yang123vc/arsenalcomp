@@ -852,6 +852,10 @@ arStatus_t		AR_GetHomePath(arString_t *str);
 arStatus_t		AR_GetTempPath(arString_t *str);
 arStatus_t		AR_GetExpandPath(const wchar_t *path, arString_t *expanded_path);
 arStatus_t		AR_GetNullPath(arString_t *str);
+
+
+
+
 /***************************************************************************************************************************************/
 
 

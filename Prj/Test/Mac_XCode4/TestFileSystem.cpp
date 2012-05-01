@@ -50,6 +50,58 @@ static void env_test()
         
 }
        
+
+static void path_test()
+{
+        arString_t *str;
+        arStatus_t status;
+        str = AR_CreateString();
+        
+        status = AR_GetCurrentPath(str);
+        
+        AR_ASSERT(status == AR_S_YES);
+        AR_StrPrint(str);
+        
+        
+        status = AR_GetHomePath(str);
+        AR_ASSERT(status == AR_S_YES);
+        AR_StrPrint(str);
+        
+        
+        status = AR_GetTempPath(str);
+        AR_ASSERT(status == AR_S_YES);
+        AR_StrPrint(str);
+        
+        status = AR_GetNullPath(str);
+        AR_ASSERT(status == AR_S_YES);
+        AR_StrPrint(str);
+        
+        
+        status = AR_GetExpandPath(L"~/abc/", str);
+        AR_ASSERT(status == AR_S_YES);
+        AR_StrPrint(str);
+
+        
+        status = AR_GetExpandPath(L"~/$LOGNAME$Apple_Ubiquity_Message/", str);
+        AR_ASSERT(status == AR_S_YES);
+        AR_StrPrint(str);
+        
+        status = AR_GetExpandPath(L"~/$LOGNAME${TMPDIR}/", str);
+        AR_ASSERT(status == AR_S_YES);
+        AR_StrPrint(str);
+
+        status = AR_GetExpandPath(L"~/${TMPDIR}/", str);
+        AR_ASSERT(status == AR_S_YES);
+        AR_StrPrint(str);
+        
+        
+        status = AR_GetExpandPath(L"~///////tmp", str);
+        AR_ASSERT(status == AR_S_YES);
+        AR_StrPrint(str);
+        
+        AR_DestroyString(str);
+        str = NULL;
+}
         
 
 static void startup_items_test()
@@ -77,10 +129,11 @@ static void startup_items_test()
         
 void file_sys_test()
 {
-        env_test();
+//        env_test();
+        path_test();
+        
+        
 //        startup_items_test();
-        
-        
 }
 
 
