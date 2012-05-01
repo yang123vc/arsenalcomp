@@ -204,6 +204,7 @@ arPathIter_t*	AR_CreatePathIterator(const wchar_t *path)
 {
 		arPathIter_t *iter;
 		wchar_t *tmp;
+		arString_t *expanded_path;
 		arStatus_t status;
 		AR_ASSERT(path != NULL);
 
@@ -211,14 +212,42 @@ arPathIter_t*	AR_CreatePathIterator(const wchar_t *path)
 		iter = NULL;
 		status = AR_S_YES;
 
-		tmp = AR_NEWARR(wchar_t , AR_wcslen(path) + 10);
+
+		expanded_path = AR_CreateString();
+		if(expanded_path == NULL)
+		{
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+
+		status = AR_GetExpandPath(path, expanded_path);
+
+		if(status != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+
+		if(AR_GetStringChar(expanded_path, AR_GetStringLength(expanded_path) - 1) != L'\\')
+		{
+				status = AR_AppendString(expanded_path, L"\\");
+				if(status != AR_S_YES)
+				{
+						goto END_POINT;
+				}
+		}
+
+
+		tmp = AR_NEWARR(wchar_t , AR_GetStringLength(expanded_path) + 10);
 		if(tmp == NULL)
 		{
 				status = AR_E_NOMEM;
 				goto END_POINT;
 		}
 
-		AR_wcscpy(tmp, path);
+		AR_wcscpy(tmp, AR_GetStringCString(expanded_path));
+		
+		
+
 		AR_wcscat(tmp, L"*");
 
 
@@ -239,7 +268,7 @@ arPathIter_t*	AR_CreatePathIterator(const wchar_t *path)
 		}
 
 		iter->isdone = false;
-		iter->path = AR_wcsdup(path);
+		iter->path = AR_wcsdup(AR_GetStringCString(expanded_path));
 		iter->current = AR_CreateString();
 		
 		if(iter->path == NULL || iter->current == NULL)
@@ -266,6 +295,13 @@ arPathIter_t*	AR_CreatePathIterator(const wchar_t *path)
 
 
 END_POINT:
+
+		if(expanded_path != NULL)
+		{
+				AR_DestroyString(expanded_path);
+				expanded_path = NULL;
+		}
+
 		if(tmp != NULL)
 		{
 				AR_DEL(tmp);
@@ -730,7 +766,15 @@ arPathIter_t*	AR_CreatePathIterator(const wchar_t *path)
                 goto END_POINT;
         }
         
-        
+		if(AR_GetStringChar(expanded_path, AR_GetStringLength(expanded_path) - 1) != L'\\')
+		{
+				status = AR_AppendString(expanded_path, L"\\");
+				if(status != AR_S_YES)
+				{
+						goto END_POINT;
+				}
+		}
+
         s_tmp = AR_wcs_to_str(AR_CP_ACP, AR_GetStringCString(expanded_path), AR_GetStringLength(expanded_path));
         if(s_tmp == NULL)
         {
