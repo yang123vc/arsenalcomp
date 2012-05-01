@@ -356,7 +356,17 @@ void			AR_SetStringChar(arString_t *str, size_t index, wchar_t c)
 		str->str[index] = c;
 }
 
+int_t			AR_CompStringWithWcs(const arString_t *l, const wchar_t *r)
+{
+		AR_ASSERT(l != NULL && r != NULL);
+		return AR_wcscmp(AR_GetStringCString(l), r);
+}
 
+int_t			AR_CompStringWithString(const arString_t *l, const arString_t *r)
+{
+		AR_ASSERT(l != NULL && r != NULL);
+		return AR_wcscmp(AR_GetStringCString(l), AR_GetStringCString(r));
+}
 
 
 AR_NAMESPACE_END

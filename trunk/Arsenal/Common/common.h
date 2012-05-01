@@ -677,6 +677,8 @@ void			AR_SetStringChar(arString_t *str, size_t index, wchar_t c);
 #define			AR_StrPrint(_s) do{ AR_printf(L"%ls\r\n", AR_GetStringCString((_s))); }while(0)
 #define			AR_StrPrintCtx(_ctx, _s)do{ AR_printf_ctx((_ctx), L"%ls\r\n", AR_GetStringCString((_s))); }while(0)
 
+int_t			AR_CompStringWithWcs(const arString_t *l, const wchar_t *r);
+int_t			AR_CompStringWithString(const arString_t *l, const arString_t *r);
 
 
 /********************************************************StringTable*****************************************************************/
@@ -855,6 +857,17 @@ arStatus_t		AR_GetNullPath(arString_t *str);
 
 
 
+/*Path Iterator*/
+
+struct __arsenal_path_iterator_tag;
+typedef struct __arsenal_path_iterator_tag arPathIter_t; 
+
+arPathIter_t*	AR_CreatePathIterator(const wchar_t *path);
+void			AR_DestroyPathIterator(arPathIter_t *iter);
+
+const wchar_t*	AR_PathIteratorCurrent(const arPathIter_t *iter);
+arStatus_t		AR_PathIteratorNext(arPathIter_t *iter);
+bool_t			AR_PathIteratorIsDone(const arPathIter_t *iter);
 
 /***************************************************************************************************************************************/
 

@@ -11,7 +11,10 @@
  *
  */
 
-#include <pwd.h>
+#if defined(OS_FAMILY_UNIX)
+		#include <pwd.h>
+#endif
+
 #include "common.h"
 
 
@@ -182,6 +185,173 @@ arStatus_t		AR_GetExpandPath(const wchar_t *path, arString_t *expanded_path)
 		}
 }
 
+
+
+/*********************************Path Iterator**************************/
+
+struct __arsenal_path_iterator_tag
+{
+		bool_t				isdone;
+		HANDLE				hdl;
+		WIN32_FIND_DATAW	find_data;
+		arString_t			*current;
+		wchar_t				*path;
+};
+
+arPathIter_t*	AR_CreatePathIterator(const wchar_t *path)
+{
+		arPathIter_t *iter;
+		wchar_t *tmp;
+		arStatus_t status;
+		AR_ASSERT(path != NULL);
+
+		tmp = NULL;
+		iter = NULL;
+		status = AR_S_YES;
+
+		tmp = AR_NEWARR(wchar_t , AR_wcslen(path) + 10);
+		if(tmp == NULL)
+		{
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+
+		AR_wcscpy(tmp, path);
+		AR_wcscat(tmp, L"*");
+
+
+		iter = AR_NEW0(arPathIter_t);
+		
+		iter->hdl = FindFirstFileW(tmp, &iter->find_data);
+		
+		if(iter->hdl == INVALID_HANDLE_VALUE)
+		{
+				status = AR_E_FAIL;
+				goto END_POINT;
+		}
+
+		iter->isdone = false;
+		iter->path = AR_wcsdup(path);
+		iter->current = AR_CreateString();
+		
+		if(iter->path == NULL || iter->current == NULL)
+		{
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+
+		status = AR_SetString(iter->current, iter->find_data.cFileName);
+
+		if(AR_CompStringWithWcs(iter->current, L".") == 0 || AR_CompStringWithWcs(iter->current, L"..") == 0)
+		{
+				status = AR_PathIteratorNext(iter);
+				if(status == AR_S_YES || status == AR_S_NO)
+				{
+						
+				}else
+				{
+						goto END_POINT;
+				}
+		}
+
+		
+
+
+END_POINT:
+		if(tmp != NULL)
+		{
+				AR_DEL(tmp);
+				tmp = NULL;
+		}
+
+		if(status == AR_S_YES || status == AR_S_NO)
+		{
+
+		}else
+		{
+				if(iter != NULL)
+				{
+						AR_DestroyPathIterator(iter);
+						iter = NULL;
+				}
+		}
+		
+
+		return iter;
+}
+
+
+void			AR_DestroyPathIterator(arPathIter_t *iter)
+{
+		AR_ASSERT(iter != NULL);
+		if(iter->hdl != INVALID_HANDLE_VALUE && iter->hdl != NULL)
+		{
+				FindClose(iter->hdl);
+				iter->hdl = INVALID_HANDLE_VALUE;
+		}
+
+		if(iter->current)
+		{
+				AR_DestroyString(iter->current);
+				iter->current = NULL;
+		}
+
+		if(iter->path)
+		{
+				AR_DEL(iter->path);
+				iter->path = NULL;
+		}
+
+		AR_DEL(iter);
+		iter = NULL;
+}
+
+
+
+const wchar_t*	AR_PathIteratorCurrent(const arPathIter_t *iter)
+{
+		AR_ASSERT(iter != NULL);
+		AR_ASSERT(iter->current != NULL);
+		return AR_GetStringCString(iter->current);
+}
+
+
+arStatus_t		AR_PathIteratorNext(arPathIter_t *iter)
+{
+		arStatus_t status;
+		AR_ASSERT(iter != NULL);
+
+		status = AR_S_YES;
+
+		do{
+				AR_ClearString(iter->current);
+				
+				if(FindNextFileW(iter->hdl, &iter->find_data) != 0)
+				{
+						status = AR_SetString(iter->current, iter->find_data.cFileName);
+				}else
+				{
+						if(GetLastError() == ERROR_NO_MORE_FILES)
+						{
+								status = AR_S_NO;
+						}else
+						{
+								status = AR_E_FAIL;
+						}
+
+						iter->isdone = true;
+				}
+		
+		}while(status == AR_S_YES && (AR_CompStringWithWcs(iter->current, L".") == 0 || AR_CompStringWithWcs(iter->current, L"..") == 0));
+
+		return status;
+}
+
+bool_t		AR_PathIteratorIsDone(const arPathIter_t *iter)
+{
+		AR_ASSERT(iter != NULL);
+		return iter->isdone;
+}
 
 
 #elif defined(OS_FAMILY_UNIX)
