@@ -11,11 +11,13 @@
  *
  */
 
-#if defined(OS_FAMILY_UNIX)
-		#include <pwd.h>
-#endif
 
 #include "common.h"
+
+#if defined(OS_FAMILY_UNIX)
+#include <pwd.h>
+#include <dirent.h>
+#endif
 
 
 AR_NAMESPACE_BEGIN
@@ -221,6 +223,12 @@ arPathIter_t*	AR_CreatePathIterator(const wchar_t *path)
 
 
 		iter = AR_NEW0(arPathIter_t);
+        
+        if(iter == NULL)
+        {
+                status = AR_E_NOMEM;
+                goto END_POINT;
+        }
 		
 		iter->hdl = FindFirstFileW(tmp, &iter->find_data);
 		
@@ -681,6 +689,196 @@ END_POINT:
         }
         
         return status;
+}
+
+
+
+/*********************************Path iterator******************/
+
+struct __arsenal_path_iterator_tag
+{
+		bool_t				isdone;
+        DIR                 *hdl;
+		arString_t			*current;
+		wchar_t				*path;
+};
+
+arPathIter_t*	AR_CreatePathIterator(const wchar_t *path)
+{
+		arPathIter_t *iter;
+        char *s_tmp;
+		arStatus_t status;
+        arString_t *expanded_path;
+		AR_ASSERT(path != NULL);
+        
+		s_tmp = NULL;
+		iter = NULL;
+        expanded_path = NULL;
+		status = AR_S_YES;
+        
+        expanded_path = AR_CreateString();
+        if(expanded_path == NULL)
+        {
+                status = AR_E_NOMEM;
+                goto END_POINT;
+        }
+        
+        status = AR_GetExpandPath(path, expanded_path);
+
+        if(status != AR_S_YES)
+        {
+                goto END_POINT;
+        }
+        
+        
+        s_tmp = AR_wcs_to_str(AR_CP_ACP, AR_GetStringCString(expanded_path), AR_GetStringLength(expanded_path));
+        if(s_tmp == NULL)
+        {
+                status = AR_E_BADENCCONV;
+                goto END_POINT;
+        }
+        
+		iter = AR_NEW0(arPathIter_t);
+		
+        if(iter == NULL)
+        {
+                status = AR_E_NOMEM;
+                goto END_POINT;
+        }
+        
+		iter->hdl = opendir(s_tmp);
+		if(iter->hdl == NULL)
+		{
+				status = AR_E_FAIL;
+				goto END_POINT;
+		}
+        
+		iter->isdone = false;
+		iter->path = AR_wcsdup(AR_GetStringCString(expanded_path));
+		iter->current = AR_CreateString();
+		
+		if(iter->path == NULL || iter->current == NULL)
+		{
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+        
+        status = AR_PathIteratorNext(iter);
+        
+        
+END_POINT:
+		if(s_tmp != NULL)
+		{
+				AR_DEL(s_tmp);
+				s_tmp = NULL;
+		}
+        
+        if(expanded_path != NULL)
+        {
+                AR_DestroyString(expanded_path);
+                expanded_path = NULL;
+        }
+        
+		if(status == AR_S_YES || status == AR_S_NO)
+		{
+                
+		}else
+		{
+				if(iter != NULL)
+				{
+						AR_DestroyPathIterator(iter);
+						iter = NULL;
+				}
+		}
+		
+        
+		return iter;
+}
+
+
+void			AR_DestroyPathIterator(arPathIter_t *iter)
+{
+		AR_ASSERT(iter != NULL);
+		if(iter->hdl != NULL)
+		{
+				closedir(iter->hdl);
+				iter->hdl = NULL;
+		}
+        
+		if(iter->current)
+		{
+				AR_DestroyString(iter->current);
+				iter->current = NULL;
+		}
+        
+		if(iter->path)
+		{
+				AR_DEL(iter->path);
+				iter->path = NULL;
+		}
+        
+		AR_DEL(iter);
+		iter = NULL;
+}
+
+
+
+const wchar_t*	AR_PathIteratorCurrent(const arPathIter_t *iter)
+{
+		AR_ASSERT(iter != NULL);
+		AR_ASSERT(iter->current != NULL);
+		return AR_GetStringCString(iter->current);
+}
+
+
+
+arStatus_t		AR_PathIteratorNext(arPathIter_t *iter)
+{
+		arStatus_t status;
+		AR_ASSERT(iter != NULL);
+        
+		status = AR_S_YES;
+        
+		do{
+                struct dirent* entry;
+				
+                AR_ClearString(iter->current);
+				
+                entry = readdir(iter->hdl);
+                
+				if(entry != NULL)
+				{
+                        wchar_t *tmp = AR_str_to_wcs(AR_CP_ACP, entry->d_name, AR_strlen(entry->d_name));
+
+                        if(tmp == NULL)
+                        {
+                                status = AR_E_BADENCCONV;
+                                iter->isdone = true;
+                        }
+						
+                        status = AR_SetString(iter->current, tmp);
+                        
+                        if(tmp)
+                        {
+                                AR_DEL(tmp);
+                                tmp = NULL;
+                        }
+				}else
+				{
+                        status = AR_S_NO;
+                        iter->isdone = true;
+				}
+                
+		}while(status == AR_S_YES && (AR_CompStringWithWcs(iter->current, L".") == 0 || AR_CompStringWithWcs(iter->current, L"..") == 0));
+        
+		return status;
+}
+
+
+bool_t		AR_PathIteratorIsDone(const arPathIter_t *iter)
+{
+		AR_ASSERT(iter != NULL);
+		return iter->isdone;
 }
 
 
