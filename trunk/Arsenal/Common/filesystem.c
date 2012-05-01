@@ -766,9 +766,9 @@ arPathIter_t*	AR_CreatePathIterator(const wchar_t *path)
                 goto END_POINT;
         }
         
-		if(AR_GetStringChar(expanded_path, AR_GetStringLength(expanded_path) - 1) != L'\\')
+		if(AR_GetStringChar(expanded_path, AR_GetStringLength(expanded_path) - 1) != L'/')
 		{
-				status = AR_AppendString(expanded_path, L"\\");
+				status = AR_AppendString(expanded_path, L"/");
 				if(status != AR_S_YES)
 				{
 						goto END_POINT;
