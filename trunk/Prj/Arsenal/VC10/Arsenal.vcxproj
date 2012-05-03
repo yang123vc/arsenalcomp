@@ -106,8 +106,9 @@
     <ClInclude Include="..\..\..\Arsenal\Common\heap.h" />
     <ClInclude Include="..\..\..\Arsenal\Common\platform.h" />
     <ClInclude Include="..\..\..\Arsenal\Common\status.h" />
-    <ClInclude Include="..\..\..\Arsenal\Common\thread_apple.h" />
     <ClInclude Include="..\..\..\Arsenal\Common\thread_posix.h" />
+    <ClInclude Include="..\..\..\Arsenal\Common\thread_posix_apple.h" />
+    <ClInclude Include="..\..\..\Arsenal\Common\thread_posix_posix.h" />
     <ClInclude Include="..\..\..\Arsenal\Common\thread_win.h" />
     <ClInclude Include="..\..\..\Arsenal\Lex\lex.h" />
     <ClInclude Include="..\..\..\Arsenal\Lex\rgx.h" />

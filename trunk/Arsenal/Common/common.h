@@ -824,6 +824,34 @@ uint_64_t		AR_GetTime_Microseconds();
 uint_64_t		AR_GetTime_Milliseconds();
 
 
+
+
+struct __arsenal_thread_tag;
+typedef struct __arsenal_thread_tag arThread_t;
+
+typedef	void	(*arThreadFunc_t)(void *data);
+
+arThread_t*		AR_CreateThread(arThreadFunc_t func, void *data);
+void			AR_DestroyThread(arThread_t *thd);
+arStatus_t		AR_JoinThread(arThread_t *thd);
+arStatus_t		AR_JoinThreadWithTimeout(arThread_t *thd, size_t milliseconds);
+uint_64_t		AR_GetThreadId(arThread_t *thd);
+
+typedef enum
+{
+		AR_THREAD_PREC_LOW,
+		AR_THREAD_PREC_NORMAL, 
+		AR_THREAD_PREC_HIGH
+}arThreadPrio_t;
+
+arStatus_t		AR_SetThreadPriority(arThread_t *thd, arThreadPrio_t prio);
+arStatus_t		AR_GetThreadPriority(arThread_t *thd, arThreadPrio_t *p_prio);
+
+
+
+
+
+
 typedef struct __arsenal_mutex_tag		arMutex_t;
 
 arMutex_t*		AR_CreateMutex();
@@ -842,6 +870,52 @@ arStatus_t		AR_WaitEvent(arEvent_t *evt);
 arStatus_t		AR_WaitEventWithTimeout(arEvent_t *evt, size_t milliseconds);
 arStatus_t		AR_TryWaitEvent(arEvent_t *evt);
 arStatus_t		AR_ResetEvent(arEvent_t *evt);
+
+
+
+
+
+struct __arsenal_async_queue_tag;
+typedef struct __arsenal_async_queue_tag arAsyncQueue_t;
+
+
+struct __async_data_node_tag;
+typedef struct __async_data_node_tag	asyncDataNode_t;
+
+struct async_wait_info_tag;
+typedef struct async_wait_info_tag		asyncWaitInfo_t;
+
+struct __async_wait_node_tag;
+typedef struct __async_wait_node_tag	asyncWaitNode_t;
+
+
+struct __arsenal_async_queue_tag
+{
+		arSpinLock_t			mutex;
+		asyncWaitNode_t			*wait_head;
+		asyncWaitNode_t			*wait_tail;
+		size_t					wait_cnt;
+
+		asyncDataNode_t			*data_head;
+		asyncDataNode_t			*data_tail;
+		size_t					data_cnt;
+};
+
+
+
+void	AR_InitAsyncQueue(arAsyncQueue_t *queue);
+void	AR_UnInitAsyncQueue(arAsyncQueue_t *queue);
+void	AR_ClearAsyncQueue(arAsyncQueue_t *queue);
+
+arStatus_t	AR_GetFromAsyncQueue(arAsyncQueue_t *queue, void **pdata);
+arStatus_t	AR_GetFromAsyncQueueTimeOut(arAsyncQueue_t *queue, void **pdata, size_t	millisecond);
+arStatus_t	AR_PutToAsyncQueue(arAsyncQueue_t *queue, void *data);
+
+bool_t	AR_AsyncQueueIsEmpty(const arAsyncQueue_t *queue);
+bool_t	AR_HasIdleThreadInAsyncQueue(const arAsyncQueue_t *queue);
+
+
+
 
 
 

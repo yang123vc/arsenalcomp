@@ -173,9 +173,6 @@
     <ClInclude Include="..\..\..\Arsenal\Common\platform.h">
       <Filter>Arsenal\Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Arsenal\Common\thread_apple.h">
-      <Filter>Arsenal\Common</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Arsenal\Common\thread_posix.h">
       <Filter>Arsenal\Common</Filter>
     </ClInclude>
@@ -238,6 +235,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Arsenal\Tengu\tengu_parser.h">
       <Filter>Arsenal\Tengu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Arsenal\Common\thread_posix_apple.h">
+      <Filter>Arsenal\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Arsenal\Common\thread_posix_posix.h">
+      <Filter>Arsenal\Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
