@@ -17,6 +17,10 @@
 		673C0BD1154A891100A73324 /* TestFileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 673C0BCF154A891100A73324 /* TestFileSystem.cpp */; };
 		673C0BD5154A8B3600A73324 /* test.c in Sources */ = {isa = PBXBuildFile; fileRef = 673C0BD4154A8A4800A73324 /* test.c */; };
 		673C0BD6154A8B3B00A73324 /* test.c in Sources */ = {isa = PBXBuildFile; fileRef = 673C0BD4154A8A4800A73324 /* test.c */; };
+		679A46EA15527DD3006A5AD4 /* commonTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 679A46E915527DD3006A5AD4 /* commonTest.cpp */; };
+		679A46EB15527DD3006A5AD4 /* commonTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 679A46E915527DD3006A5AD4 /* commonTest.cpp */; };
+		679A46EE15527DF0006A5AD4 /* commonTest.h in Sources */ = {isa = PBXBuildFile; fileRef = 679A46ED15527DF0006A5AD4 /* commonTest.h */; };
+		679A46EF15527DF0006A5AD4 /* commonTest.h in Sources */ = {isa = PBXBuildFile; fileRef = 679A46ED15527DF0006A5AD4 /* commonTest.h */; };
 		BE185ED514E849250095DB44 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = BE185ED314E849250095DB44 /* main.c */; };
 		BE185ED614E849250095DB44 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = BE185ED314E849250095DB44 /* main.c */; };
 /* End PBXBuildFile section */
@@ -50,6 +54,8 @@
 		673C0BD2154A894D00A73324 /* TestFileSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFileSystem.h; sourceTree = SOURCE_ROOT; };
 		673C0BD3154A897A00A73324 /* stdhdr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stdhdr.h; sourceTree = SOURCE_ROOT; };
 		673C0BD4154A8A4800A73324 /* test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = test.c; sourceTree = SOURCE_ROOT; };
+		679A46E915527DD3006A5AD4 /* commonTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = commonTest.cpp; sourceTree = SOURCE_ROOT; };
+		679A46ED15527DF0006A5AD4 /* commonTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = commonTest.h; sourceTree = SOURCE_ROOT; };
 		BE185EA314E846F10095DB44 /* TestLib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TestLib; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE185EC614E847860095DB44 /* TestDLL */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TestDLL; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE185ED314E849250095DB44 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = SOURCE_ROOT; };
@@ -107,6 +113,8 @@
 				673C0BCF154A891100A73324 /* TestFileSystem.cpp */,
 				673C0BD2154A894D00A73324 /* TestFileSystem.h */,
 				673C0BD4154A8A4800A73324 /* test.c */,
+				679A46E915527DD3006A5AD4 /* commonTest.cpp */,
+				679A46ED15527DF0006A5AD4 /* commonTest.h */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -183,6 +191,8 @@
 				673C0BD5154A8B3600A73324 /* test.c in Sources */,
 				BE185ED514E849250095DB44 /* main.c in Sources */,
 				673C0BD0154A891100A73324 /* TestFileSystem.cpp in Sources */,
+				679A46EA15527DD3006A5AD4 /* commonTest.cpp in Sources */,
+				679A46EE15527DF0006A5AD4 /* commonTest.h in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -193,6 +203,8 @@
 				673C0BD6154A8B3B00A73324 /* test.c in Sources */,
 				BE185ED614E849250095DB44 /* main.c in Sources */,
 				673C0BD1154A891100A73324 /* TestFileSystem.cpp in Sources */,
+				679A46EB15527DD3006A5AD4 /* commonTest.cpp in Sources */,
+				679A46EF15527DF0006A5AD4 /* commonTest.h in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

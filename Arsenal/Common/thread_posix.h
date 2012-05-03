@@ -103,6 +103,8 @@ arThread_t*		AR_CreateThread(arThreadFunc_t func, void *data)
         }
         
         thd->prio = AR_THREAD_PREC_NORMAL;
+        thd->func = func;
+        thd->data = data;
         
         pthread_attr_init(&attributes);
         
@@ -497,6 +499,8 @@ arStatus_t		AR_WaitEventWithTimeout(arEvent_t *evt, size_t milliseconds)
         struct timeval tv;
 
         AR_ASSERT(evt != NULL);
+        
+        rc = 0;
         
         gettimeofday(&tv, NULL);
         abstime.tv_sec  = tv.tv_sec + milliseconds / 1000;
