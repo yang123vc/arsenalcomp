@@ -792,8 +792,6 @@ arStatus_t	AR_SaveBomTextToBinary(arBuffer_t *output, arTxtBom_t bom, const wcha
 void			AR_InitThread();
 void			AR_UnInitThread();
 
-/*uint_t		AR_CompExchange(volatile uint_t *dest, uint_t exch, uint_t compval);*/
-
 int_t			AR_AtomicInc(volatile int_t *dest);
 int_t			AR_AtomicDec(volatile int_t *dest);
 
@@ -824,6 +822,29 @@ void			AR_Sleep(size_t millisecond);
 
 uint_64_t		AR_GetTime_Microseconds();
 uint_64_t		AR_GetTime_Milliseconds();
+
+
+typedef struct __arsenal_mutex_tag		arMutex_t;
+
+arMutex_t*		AR_CreateMutex();
+void			AR_DestroyMutex();
+arStatus_t		AR_LockMutex(arMutex_t *mtx);
+arStatus_t		AR_LockMutexWithTimeout(arMutex_t *mtx, size_t milliseconds);
+arStatus_t		AR_TryLockMutex(arMutex_t *mtx);
+arStatus_t		AR_TryLockMutexWithTimeout(arMutex_t *mtx, size_t milliseconds);
+arStatus_t		AR_UnlockMutex(arMutex_t *mtx);
+
+
+typedef struct __arsenal_event_tag		arEvent_t;
+
+arEvent_t*		AR_CreateEvent(bool_t is_auto_reset);
+void			AR_DestroyEvent(arEvent_t *evt);
+arStatus_t		AR_SetEvent(arEvent_t *evt);
+arStatus_t		AR_WaitEvent(arEvent_t *evt);
+arStatus_t		AR_WaitEventWithTimeout(arEvent_t *evt, size_t milliseconds);
+arStatus_t		AR_TryWaitEvent(arEvent_t *evt);
+arStatus_t		AR_TryWaitEventWithTimeout(arEvent_t *evt, size_t milliseconds);
+arStatus_t		AR_ResetEvent(arEvent_t *evt);
 
 
 
