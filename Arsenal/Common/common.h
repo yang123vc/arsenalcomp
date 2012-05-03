@@ -827,11 +827,9 @@ uint_64_t		AR_GetTime_Milliseconds();
 typedef struct __arsenal_mutex_tag		arMutex_t;
 
 arMutex_t*		AR_CreateMutex();
-void			AR_DestroyMutex();
+void			AR_DestroyMutex(arMutex_t *mtx);
 arStatus_t		AR_LockMutex(arMutex_t *mtx);
-arStatus_t		AR_LockMutexWithTimeout(arMutex_t *mtx, size_t milliseconds);
 arStatus_t		AR_TryLockMutex(arMutex_t *mtx);
-arStatus_t		AR_TryLockMutexWithTimeout(arMutex_t *mtx, size_t milliseconds);
 arStatus_t		AR_UnlockMutex(arMutex_t *mtx);
 
 
@@ -843,7 +841,6 @@ arStatus_t		AR_SetEvent(arEvent_t *evt);
 arStatus_t		AR_WaitEvent(arEvent_t *evt);
 arStatus_t		AR_WaitEventWithTimeout(arEvent_t *evt, size_t milliseconds);
 arStatus_t		AR_TryWaitEvent(arEvent_t *evt);
-arStatus_t		AR_TryWaitEventWithTimeout(arEvent_t *evt, size_t milliseconds);
 arStatus_t		AR_ResetEvent(arEvent_t *evt);
 
 
