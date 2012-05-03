@@ -1807,7 +1807,8 @@ static void async_queue_test()
 
 void thd_test()
 {
-		async_queue_test();
+		evt_test();
+		//async_queue_test();
 }
 
 
