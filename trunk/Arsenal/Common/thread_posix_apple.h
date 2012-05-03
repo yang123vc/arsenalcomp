@@ -26,7 +26,10 @@
 
 void			AR_InitThread()
 {
-
+        sigset_t sset;
+        sigemptyset(&sset);
+        sigaddset(&sset, SIGPIPE);
+        pthread_sigmask(SIG_BLOCK, &sset, 0);
 
 }
 
