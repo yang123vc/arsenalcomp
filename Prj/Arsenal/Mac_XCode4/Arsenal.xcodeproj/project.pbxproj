@@ -10,6 +10,10 @@
 		6728C3B5154C5E8300861D86 /* enviroment.c in Sources */ = {isa = PBXBuildFile; fileRef = 6728C3B4154C5E8300861D86 /* enviroment.c */; };
 		6728C3B6154C5E8300861D86 /* enviroment.c in Sources */ = {isa = PBXBuildFile; fileRef = 6728C3B4154C5E8300861D86 /* enviroment.c */; };
 		6728C3E315503E9300861D86 /* filesystem.c in Sources */ = {isa = PBXBuildFile; fileRef = 6728C3E215503E9300861D86 /* filesystem.c */; };
+		679A46D9155262E1006A5AD4 /* thread_posix_apple.h in Headers */ = {isa = PBXBuildFile; fileRef = 679A46D7155262E1006A5AD4 /* thread_posix_apple.h */; };
+		679A46DA155262E1006A5AD4 /* thread_posix_apple.h in Headers */ = {isa = PBXBuildFile; fileRef = 679A46D7155262E1006A5AD4 /* thread_posix_apple.h */; };
+		679A46DB155262E1006A5AD4 /* thread_posix_posix.h in Headers */ = {isa = PBXBuildFile; fileRef = 679A46D8155262E1006A5AD4 /* thread_posix_posix.h */; };
+		679A46DC155262E1006A5AD4 /* thread_posix_posix.h in Headers */ = {isa = PBXBuildFile; fileRef = 679A46D8155262E1006A5AD4 /* thread_posix_posix.h */; };
 		BE185DDF14E841B90095DB44 /* Arsenal.c in Sources */ = {isa = PBXBuildFile; fileRef = BE185D9014E841B90095DB44 /* Arsenal.c */; };
 		BE185DE014E841B90095DB44 /* Arsenal.c in Sources */ = {isa = PBXBuildFile; fileRef = BE185D9014E841B90095DB44 /* Arsenal.c */; };
 		BE185DE114E841B90095DB44 /* Arsenal.h in Headers */ = {isa = PBXBuildFile; fileRef = BE185D9114E841B90095DB44 /* Arsenal.h */; };
@@ -56,8 +60,6 @@
 		BE185E0A14E841B90095DB44 /* textfile.c in Sources */ = {isa = PBXBuildFile; fileRef = BE185DA614E841B90095DB44 /* textfile.c */; };
 		BE185E0B14E841B90095DB44 /* thread.c in Sources */ = {isa = PBXBuildFile; fileRef = BE185DA714E841B90095DB44 /* thread.c */; };
 		BE185E0C14E841B90095DB44 /* thread.c in Sources */ = {isa = PBXBuildFile; fileRef = BE185DA714E841B90095DB44 /* thread.c */; };
-		BE185E0D14E841B90095DB44 /* thread_apple.h in Headers */ = {isa = PBXBuildFile; fileRef = BE185DA814E841B90095DB44 /* thread_apple.h */; };
-		BE185E0E14E841B90095DB44 /* thread_apple.h in Headers */ = {isa = PBXBuildFile; fileRef = BE185DA814E841B90095DB44 /* thread_apple.h */; };
 		BE185E0F14E841B90095DB44 /* thread_posix.h in Headers */ = {isa = PBXBuildFile; fileRef = BE185DA914E841B90095DB44 /* thread_posix.h */; };
 		BE185E1014E841B90095DB44 /* thread_posix.h in Headers */ = {isa = PBXBuildFile; fileRef = BE185DA914E841B90095DB44 /* thread_posix.h */; };
 		BE185E1114E841B90095DB44 /* thread_win.h in Headers */ = {isa = PBXBuildFile; fileRef = BE185DAA14E841B90095DB44 /* thread_win.h */; };
@@ -145,6 +147,8 @@
 /* Begin PBXFileReference section */
 		6728C3B4154C5E8300861D86 /* enviroment.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = enviroment.c; sourceTree = "<group>"; };
 		6728C3E215503E9300861D86 /* filesystem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = filesystem.c; sourceTree = "<group>"; };
+		679A46D7155262E1006A5AD4 /* thread_posix_apple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thread_posix_apple.h; sourceTree = "<group>"; };
+		679A46D8155262E1006A5AD4 /* thread_posix_posix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thread_posix_posix.h; sourceTree = "<group>"; };
 		BE185D9014E841B90095DB44 /* Arsenal.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Arsenal.c; sourceTree = "<group>"; };
 		BE185D9114E841B90095DB44 /* Arsenal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Arsenal.h; sourceTree = "<group>"; };
 		BE185D9314E841B90095DB44 /* algo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = algo.c; sourceTree = "<group>"; };
@@ -168,7 +172,6 @@
 		BE185DA514E841B90095DB44 /* strtable.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = strtable.c; sourceTree = "<group>"; };
 		BE185DA614E841B90095DB44 /* textfile.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = textfile.c; sourceTree = "<group>"; };
 		BE185DA714E841B90095DB44 /* thread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = thread.c; sourceTree = "<group>"; };
-		BE185DA814E841B90095DB44 /* thread_apple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thread_apple.h; sourceTree = "<group>"; };
 		BE185DA914E841B90095DB44 /* thread_posix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thread_posix.h; sourceTree = "<group>"; };
 		BE185DAA14E841B90095DB44 /* thread_win.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thread_win.h; sourceTree = "<group>"; };
 		BE185DAB14E841B90095DB44 /* utilities.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = utilities.c; sourceTree = "<group>"; };
@@ -254,6 +257,8 @@
 		BE185D9214E841B90095DB44 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				679A46D7155262E1006A5AD4 /* thread_posix_apple.h */,
+				679A46D8155262E1006A5AD4 /* thread_posix_posix.h */,
 				6728C3E215503E9300861D86 /* filesystem.c */,
 				6728C3B4154C5E8300861D86 /* enviroment.c */,
 				BE185D9314E841B90095DB44 /* algo.c */,
@@ -277,7 +282,6 @@
 				BE185DA514E841B90095DB44 /* strtable.c */,
 				BE185DA614E841B90095DB44 /* textfile.c */,
 				BE185DA714E841B90095DB44 /* thread.c */,
-				BE185DA814E841B90095DB44 /* thread_apple.h */,
 				BE185DA914E841B90095DB44 /* thread_posix.h */,
 				BE185DAA14E841B90095DB44 /* thread_win.h */,
 				BE185DAB14E841B90095DB44 /* utilities.c */,
@@ -381,7 +385,6 @@
 				BE185DF514E841B90095DB44 /* heap.h in Headers */,
 				BE185DFD14E841B90095DB44 /* platform.h in Headers */,
 				BE185E0114E841B90095DB44 /* status.h in Headers */,
-				BE185E0D14E841B90095DB44 /* thread_apple.h in Headers */,
 				BE185E0F14E841B90095DB44 /* thread_posix.h in Headers */,
 				BE185E1114E841B90095DB44 /* thread_win.h in Headers */,
 				BE185E1914E841B90095DB44 /* lex.h in Headers */,
@@ -396,6 +399,8 @@
 				BE185E6914E841B90095DB44 /* iniobj.h in Headers */,
 				BE185E6D14E841B90095DB44 /* serializer.h in Headers */,
 				BE185E7114E841B90095DB44 /* tools.h in Headers */,
+				679A46D9155262E1006A5AD4 /* thread_posix_apple.h in Headers */,
+				679A46DB155262E1006A5AD4 /* thread_posix_posix.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -409,7 +414,6 @@
 				BE185DF614E841B90095DB44 /* heap.h in Headers */,
 				BE185DFE14E841B90095DB44 /* platform.h in Headers */,
 				BE185E0214E841B90095DB44 /* status.h in Headers */,
-				BE185E0E14E841B90095DB44 /* thread_apple.h in Headers */,
 				BE185E1014E841B90095DB44 /* thread_posix.h in Headers */,
 				BE185E1214E841B90095DB44 /* thread_win.h in Headers */,
 				BE185E1A14E841B90095DB44 /* lex.h in Headers */,
@@ -424,6 +428,8 @@
 				BE185E6A14E841B90095DB44 /* iniobj.h in Headers */,
 				BE185E6E14E841B90095DB44 /* serializer.h in Headers */,
 				BE185E7214E841B90095DB44 /* tools.h in Headers */,
+				679A46DA155262E1006A5AD4 /* thread_posix_apple.h in Headers */,
+				679A46DC155262E1006A5AD4 /* thread_posix_posix.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
