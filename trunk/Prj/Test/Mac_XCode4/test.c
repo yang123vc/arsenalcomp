@@ -8,9 +8,10 @@
 
 #include "stdhdr.h"
 #include "TestFileSystem.h"
-
+#include "commonTest.h"
 
 void test()
 {
-        file_sys_test();
+//        file_sys_test();
+        common_test();
 }
