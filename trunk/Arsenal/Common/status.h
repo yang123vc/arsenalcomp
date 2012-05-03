@@ -22,6 +22,9 @@ typedef enum
 		AR_E_INVAL,
 		AR_E_RANGE,
 		AR_E_SYS,
+		AR_E_SIGEVT,
+		AR_E_WAITEVT,
+
 		AR_E_FILE,
 		AR_E_NET,
 		AR_E_SMALLBUF,

@@ -169,6 +169,115 @@ uint_64_t		AR_GetTime_Microseconds()
 
 
 
+
+
+arMutex_t*		AR_CreateMutex()
+{
+		CRITICAL_SECTION *mtx;
+
+		mtx = AR_NEW(CRITICAL_SECTION);
+		
+		if(mtx == NULL)
+		{
+				return NULL;
+		}
+
+		InitializeCriticalSectionAndSpinCount(mtx, 100000);
+		return (arMutex_t*)mtx;
+}
+
+void			AR_DestroyMutex(arMutex_t *mtx)
+{
+		AR_ASSERT(mtx != NULL);
+		DeleteCriticalSection((CRITICAL_SECTION*)mtx);
+		AR_DEL(mtx);
+		mtx = NULL;
+}
+
+arStatus_t		AR_LockMutex(arMutex_t *mtx)
+{
+		AR_ASSERT(mtx != NULL);
+		EnterCriticalSection((CRITICAL_SECTION*)mtx);
+		return AR_S_YES;
+}
+
+
+arStatus_t		AR_TryLockMutex(arMutex_t *mtx)
+{
+		AR_ASSERT(mtx != NULL);
+		
+		return TryEnterCriticalSection((CRITICAL_SECTION*)mtx) ? AR_S_YES : AR_S_NO;
+}
+
+
+arStatus_t		AR_UnlockMutex(arMutex_t *mtx)
+{
+		AR_ASSERT(mtx != NULL);
+		LeaveCriticalSection((CRITICAL_SECTION*)mtx);
+		return AR_S_YES;
+}
+
+
+
+arEvent_t*		AR_CreateEvent(bool_t is_auto_reset)
+{
+		HANDLE evt;
+		evt = CreateEvent(NULL, is_auto_reset ? FALSE : TRUE, FALSE, NULL);
+		return (arEvent_t*)evt;
+}
+
+
+void			AR_DestroyEvent(arEvent_t *evt)
+{
+		AR_ASSERT(evt != NULL);
+		CloseHandle(evt);
+		evt = NULL;
+}
+
+arStatus_t		AR_SetEvent(arEvent_t *evt)
+{
+		AR_ASSERT(evt != NULL);
+		return SetEvent((HANDLE)evt) ? AR_S_YES : AR_E_SIGEVT;
+}
+
+arStatus_t		AR_WaitEvent(arEvent_t *evt)
+{
+		AR_ASSERT(evt != NULL);
+		switch(WaitForSingleObject((HANDLE)evt, INFINITE))
+		{
+		case WAIT_OBJECT_0:
+				return AR_S_YES;
+		default:
+				return AR_E_WAITEVT;
+		}
+}
+
+arStatus_t		AR_WaitEventWithTimeout(arEvent_t *evt, size_t milliseconds)
+{
+		AR_ASSERT(evt != NULL);
+		switch(WaitForSingleObject((HANDLE)evt, (DWORD)milliseconds))
+		{
+		case WAIT_TIMEOUT:
+				return AR_S_NO;
+		case WAIT_OBJECT_0:
+				return AR_S_YES;
+		default:
+				return AR_E_WAITEVT;
+		}
+}
+
+
+arStatus_t		AR_TryWaitEvent(arEvent_t *evt)
+{
+		return AR_WaitEventWithTimeout(evt, 0);
+}
+
+arStatus_t		AR_ResetEvent(arEvent_t *evt)
+{
+		return ResetEvent((HANDLE)evt) ? AR_S_YES : AR_E_SIGEVT;
+}
+
+
 AR_NAMESPACE_END
 
 
