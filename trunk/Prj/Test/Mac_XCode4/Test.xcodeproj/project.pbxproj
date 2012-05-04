@@ -9,10 +9,9 @@
 /* Begin PBXBuildFile section */
 		6728C3B9154C645A00861D86 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6728C3B8154C645A00861D86 /* libiconv.dylib */; };
 		6728C3BC154C646200861D86 /* libpthread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6728C3BB154C646200861D86 /* libpthread.dylib */; };
-		6728C3BF154C64EA00861D86 /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 673C0BCC154A85D600A73324 /* Arsenal.a */; };
 		6728C3C0154C64FE00861D86 /* libpthread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6728C3BB154C646200861D86 /* libpthread.dylib */; };
 		6728C3C1154C650600861D86 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6728C3B8154C645A00861D86 /* libiconv.dylib */; };
-		673C0BCD154A85D600A73324 /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 673C0BCC154A85D600A73324 /* Arsenal.a */; };
+		672CC041155389EB00D54207 /* Arsenal.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 672CC040155389EB00D54207 /* Arsenal.dylib */; };
 		673C0BD0154A891100A73324 /* TestFileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 673C0BCF154A891100A73324 /* TestFileSystem.cpp */; };
 		673C0BD1154A891100A73324 /* TestFileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 673C0BCF154A891100A73324 /* TestFileSystem.cpp */; };
 		673C0BD5154A8B3600A73324 /* test.c in Sources */ = {isa = PBXBuildFile; fileRef = 673C0BD4154A8A4800A73324 /* test.c */; };
@@ -49,7 +48,7 @@
 /* Begin PBXFileReference section */
 		6728C3B8154C645A00861D86 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
 		6728C3BB154C646200861D86 /* libpthread.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpthread.dylib; path = usr/lib/libpthread.dylib; sourceTree = SDKROOT; };
-		673C0BCC154A85D600A73324 /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = Arsenal.a; path = "../../../../../Temp/Xcode_Derived_Data/Arsenal-doktqrfexpgfyfbhxalwgaspvtgn/Build/Products/Debug/Arsenal.a"; sourceTree = "<group>"; };
+		672CC040155389EB00D54207 /* Arsenal.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = Arsenal.dylib; path = "../../../../../Temp/Xcode_Derived_Data/Arsenal-doktqrfexpgfyfbhxalwgaspvtgn/Build/Products/Debug/Arsenal.dylib"; sourceTree = "<group>"; };
 		673C0BCF154A891100A73324 /* TestFileSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestFileSystem.cpp; sourceTree = SOURCE_ROOT; };
 		673C0BD2154A894D00A73324 /* TestFileSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFileSystem.h; sourceTree = SOURCE_ROOT; };
 		673C0BD3154A897A00A73324 /* stdhdr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stdhdr.h; sourceTree = SOURCE_ROOT; };
@@ -68,7 +67,6 @@
 			files = (
 				6728C3C1154C650600861D86 /* libiconv.dylib in Frameworks */,
 				6728C3C0154C64FE00861D86 /* libpthread.dylib in Frameworks */,
-				673C0BCD154A85D600A73324 /* Arsenal.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -76,9 +74,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6728C3BF154C64EA00861D86 /* Arsenal.a in Frameworks */,
 				6728C3BC154C646200861D86 /* libpthread.dylib in Frameworks */,
 				6728C3B9154C645A00861D86 /* libiconv.dylib in Frameworks */,
+				672CC041155389EB00D54207 /* Arsenal.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,9 +86,9 @@
 		BE185E9814E846F10095DB44 = {
 			isa = PBXGroup;
 			children = (
+				672CC040155389EB00D54207 /* Arsenal.dylib */,
 				6728C3BB154C646200861D86 /* libpthread.dylib */,
 				6728C3B8154C645A00861D86 /* libiconv.dylib */,
-				673C0BCC154A85D600A73324 /* Arsenal.a */,
 				BE185EA614E846F10095DB44 /* Test */,
 				BE185EA414E846F10095DB44 /* Products */,
 			);

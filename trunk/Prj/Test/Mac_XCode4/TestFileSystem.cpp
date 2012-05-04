@@ -11,15 +11,14 @@
 
 
 #if defined(__cplusplus)
+
 using namespace ARSpace;
-#include <vector>
-#include <queue>
 
 extern "C"{
         
 #endif
       
-        
+
 
 static void env_test()
 {
@@ -111,7 +110,7 @@ static void path_iter_test()
                 arPathIter_t *it;
                 arStatus_t status;
         
-                it = AR_CreatePathIterator(L"~/");
+                it = AR_CreatePathIterator(L"~/Desktop");
                 
                 if(it == NULL)
                 {

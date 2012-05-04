@@ -15,8 +15,12 @@ int main (int argc, const char * argv[])
 {
 
         // insert code here...
+        printf("%s\r\n", setlocale(LC_ALL, "zh_CN"));
         
         Arsenal_Init(NULL);
+        
+
+        AR_printf(L"%ls\r\n", L"Hellow world! 中文");
         
         test();
         
