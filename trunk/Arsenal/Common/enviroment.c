@@ -21,6 +21,31 @@ AR_NAMESPACE_BEGIN
 
 #if defined(OS_FAMILY_WINDOWS)
 
+#if(OS_TYPE == OS_WINDOWS_CE)
+
+
+arStatus_t		AR_getenv(const wchar_t *key, arString_t *val)
+{
+		AR_ASSERT(key != NULL && val != NULL);
+		return AR_E_NOTSUPPORTED;
+}
+
+
+arStatus_t		AR_setenv(const wchar_t *key, const wchar_t *val)
+{
+		AR_ASSERT(key != NULL && val != NULL);
+		return AR_E_NOTSUPPORTED;
+}
+
+arStatus_t		AR_hasenv(const wchar_t *key)
+{
+		AR_ASSERT(key != NULL);
+		return AR_E_NOTSUPPORTED;
+}
+
+
+#else
+
 arStatus_t		AR_getenv(const wchar_t *key, arString_t *val)
 {
 		arStatus_t status;
@@ -84,6 +109,9 @@ arStatus_t		AR_hasenv(const wchar_t *key)
 		AR_ASSERT(key != NULL);
 		return GetEnvironmentVariableW(key, 0, 0) > 0 ? AR_S_YES : AR_S_NO;
 }
+
+#endif
+
 
 
 #elif defined(OS_FAMILY_UNIX)
