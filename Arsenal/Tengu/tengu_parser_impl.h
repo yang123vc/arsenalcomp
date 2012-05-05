@@ -1,4 +1,4 @@
-
+﻿
  
 /*
  * The Arsenal Library
@@ -726,11 +726,12 @@ static lex_t*	__build_lex()
 		for(i = 0; i < __TERM_COUNT__; ++i)										
 		{																		
 				lexAction_t		act;											
+				arStatus_t status;
 				act.is_skip		=		__g_term_pattern[i].skip;				
 				act.priority	=		__g_term_pattern[i].lex_prec;			
 				act.value		=		__g_term_pattern[i].tokval;		
 
-				arStatus_t status;
+				
 				status = Lex_InsertRule(lex, __g_term_pattern[i].regex, &act);
 				if(status == AR_S_YES)							
 				{
@@ -754,7 +755,6 @@ static lex_t*	__build_lex()
 		}																					
 		return lex;																			
 }
-
 
 
 
