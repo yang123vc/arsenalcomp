@@ -56,7 +56,7 @@ arStatus_t TGU_FormatVMError(tguMachine_t *vm, const wchar_t *fmt,...)
 
 
 
-
+#if(0)
 static void __set_run_env(tguMachine_t *vm,  tguVMFunc_t *func)
 {
 		AR_ASSERT(vm != NULL && func != NULL);
@@ -64,6 +64,7 @@ static void __set_run_env(tguMachine_t *vm,  tguVMFunc_t *func)
 		vm->pc = func->code;
 		vm->fp = vm->stack.start;
 }
+
 
 static arStatus_t	__run_vm(tguMachine_t *vm)
 {
@@ -702,6 +703,7 @@ RET_POINT:
 
 }
 
+#endif
 
 
 
