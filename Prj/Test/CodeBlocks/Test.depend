@@ -178,3 +178,89 @@
 1297893146 source:/root/Desktop/Arsenal/Prj/Test/CodeBlocks/test.c
 	"test.h"
 
+1298744226 source:d:\code\solidus\compiler\arsenal\prj\test\codeblocks\main.c
+	"test.h"
+	<iostream>
+	<locale.h>
+	<wchar.h>
+
+1264896156 d:\code\solidus\compiler\arsenal\prj\test\codeblocks\test.h
+	"../../../Arsenal/Arsenal.h"
+
+1328811357 d:\code\solidus\compiler\arsenal\arsenal\arsenal.h
+	"./Common/common.h"
+	"./Lex/lex.h"
+	"./Parser/parser.h"
+	"./Tools/tools.h"
+	"./Tengu/tengu.h"
+
+1336192967 d:\code\solidus\compiler\arsenal\arsenal\common\common.h
+	"config.h"
+	"status.h"
+
+1335628697 d:\code\solidus\compiler\arsenal\arsenal\common\config.h
+	"platform.h"
+	<stdlib.h>
+	<crtdbg.h>
+	<stdlib.h>
+	<stdio.h>
+	<wchar.h>
+	<stddef.h>
+	<stdarg.h>
+	<limits.h>
+	<assert.h>
+	<memory.h>
+	<string.h>
+	<math.h>
+	<wctype.h>
+	<string.h>
+	<float.h>
+	<locale.h>
+	<stdint.h>
+	<stdbool.h>
+	<windows.h>
+	<unistd.h>
+	<pthread.h>
+	<iconv.h>
+	<sys/select.h>
+	<sys/time.h>
+	<libkern/OSAtomic.h>
+
+1316400836 d:\code\solidus\compiler\arsenal\arsenal\common\platform.h
+	<TargetConditionals.h>
+
+1336192967 d:\code\solidus\compiler\arsenal\arsenal\common\status.h
+
+1333866191 d:\code\solidus\compiler\arsenal\arsenal\lex\lex.h
+	"../Common/common.h"
+
+1331339591 d:\code\solidus\compiler\arsenal\arsenal\parser\parser.h
+	"../Common/common.h"
+
+1328811635 d:\code\solidus\compiler\arsenal\arsenal\tools\tools.h
+	"grammar_config.h"
+	"serializer.h"
+	"iniobj.h"
+
+1329709241 d:\code\solidus\compiler\arsenal\arsenal\tools\grammar_config.h
+	"../Parser/parser.h"
+	"../Lex/lex.h"
+
+1330533577 d:\code\solidus\compiler\arsenal\arsenal\tools\serializer.h
+	"../Common/common.h"
+
+1328786840 d:\code\solidus\compiler\arsenal\arsenal\tools\iniobj.h
+	"../Common/common.h"
+
+1330894088 d:\code\solidus\compiler\arsenal\arsenal\tengu\tengu.h
+	"../Common/common.h"
+	"../Lex/lex.h"
+	"../Parser/parser.h"
+
+1297893103 source:d:\code\solidus\compiler\arsenal\prj\test\codeblocks\test.c
+	"test.h"
+
+1302791304 source:d:\code\solidus\compiler\arsenal\prj\test\codeblocks\com_test.c
+	"test.h"
+	<locale.h>
+

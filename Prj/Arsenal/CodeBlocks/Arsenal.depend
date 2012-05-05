@@ -1,10 +1,10 @@
 # depslib dependency file v1.0
-1315497021 source:d:\code\solidus\compiler\arsenal\arsenal\arsenal.c
+1328811357 source:d:\code\solidus\compiler\arsenal\arsenal\arsenal.c
 	"Arsenal.h"
 
 1291721003 "
 
-1302178002 d:\code\solidus\compiler\arsenal\arsenal\arsenal.h
+1328811357 d:\code\solidus\compiler\arsenal\arsenal\arsenal.h
 	"./Common/common.h"
 	"./Lex/lex.h"
 	"./Parser/parser.h"
@@ -13,12 +13,13 @@
 
 1274018938 ools.h"
 
-1317275607 d:\code\solidus\compiler\arsenal\arsenal\common\common.h
+1336192967 d:\code\solidus\compiler\arsenal\arsenal\common\common.h
 	"config.h"
+	"status.h"
 
 1272589900 
 
-1317099838 d:\code\solidus\compiler\arsenal\arsenal\common\config.h
+1335628697 d:\code\solidus\compiler\arsenal\arsenal\common\config.h
 	"platform.h"
 	<stdlib.h>
 	<crtdbg.h>
@@ -35,6 +36,7 @@
 	<wctype.h>
 	<string.h>
 	<float.h>
+	<locale.h>
 	<stdint.h>
 	<stdbool.h>
 	<windows.h>
@@ -52,173 +54,177 @@
 
 1288287879 ditionals.h>
 
-1317208515 d:\code\solidus\compiler\arsenal\arsenal\lex\lex.h
+1333866191 d:\code\solidus\compiler\arsenal\arsenal\lex\lex.h
 	"../Common/common.h"
 
 1291712759 /common.h"
 
-1317208515 d:\code\solidus\compiler\arsenal\arsenal\parser\parser.h
+1331339591 d:\code\solidus\compiler\arsenal\arsenal\parser\parser.h
 	"../Common/common.h"
 
-1309189957 d:\code\solidus\compiler\arsenal\arsenal\tengu\tengu.h
+1330894088 d:\code\solidus\compiler\arsenal\arsenal\tengu\tengu.h
 	"../Common/common.h"
 	"../Lex/lex.h"
 	"../Parser/parser.h"
 
 1294861381 /parser.h"
 
-1311047069 d:\code\solidus\compiler\arsenal\arsenal\tools\tools.h
+1328811635 d:\code\solidus\compiler\arsenal\arsenal\tools\tools.h
 	"grammar_config.h"
 	"serializer.h"
 	"iniobj.h"
 
 1295312793 r.h"
 
-1315614997 d:\code\solidus\compiler\arsenal\arsenal\tools\grammar_config.h
+1329709241 d:\code\solidus\compiler\arsenal\arsenal\tools\grammar_config.h
 	"../Parser/parser.h"
 	"../Lex/lex.h"
 
 1290502149 x.h"
 
-1294401177 d:\code\solidus\compiler\arsenal\arsenal\tools\serializer.h
+1330533577 d:\code\solidus\compiler\arsenal\arsenal\tools\serializer.h
 	"../Common/common.h"
 
-1290538772 source:d:\code\solidus\compiler\arsenal\arsenal\common\algo.c
+1333866065 source:d:\code\solidus\compiler\arsenal\arsenal\common\algo.c
 	"common.h"
 
-1316678849 source:d:\code\solidus\compiler\arsenal\arsenal\common\buffer.c
+1329241041 source:d:\code\solidus\compiler\arsenal\arsenal\common\buffer.c
 	"common.h"
 
-1317542167 source:d:\code\solidus\compiler\arsenal\arsenal\common\common.c
+1331339676 source:d:\code\solidus\compiler\arsenal\arsenal\common\common.c
 	"common.h"
 
-1317099838 source:d:\code\solidus\compiler\arsenal\arsenal\common\crtstr.c
+1335628809 source:d:\code\solidus\compiler\arsenal\arsenal\common\crtstr.c
 	"common.h"
 
-1314783630 source:d:\code\solidus\compiler\arsenal\arsenal\common\heap.c
+1328164352 source:d:\code\solidus\compiler\arsenal\arsenal\common\heap.c
+	"heap.h"
+
+1331325541 source:d:\code\solidus\compiler\arsenal\arsenal\common\memory.c
+	"common.h"
+	"heap.h"
+
+1323448892 source:d:\code\solidus\compiler\arsenal\arsenal\common\random.c
 	"common.h"
 
-1316089464 source:d:\code\solidus\compiler\arsenal\arsenal\common\memory.c
+1331020857 source:d:\code\solidus\compiler\arsenal\arsenal\common\strconv.c
 	"common.h"
 
-1268609986 source:d:\code\solidus\compiler\arsenal\arsenal\common\random.c
+1335895951 source:d:\code\solidus\compiler\arsenal\arsenal\common\string.c
 	"common.h"
 
-1316672912 source:d:\code\solidus\compiler\arsenal\arsenal\common\strconv.c
+1328304256 source:d:\code\solidus\compiler\arsenal\arsenal\common\strtable.c
 	"common.h"
 
-1317099838 source:d:\code\solidus\compiler\arsenal\arsenal\common\string.c
-	"common.h"
-
-1297360584 source:d:\code\solidus\compiler\arsenal\arsenal\common\strtable.c
-	"common.h"
-
-1314558570 source:d:\code\solidus\compiler\arsenal\arsenal\common\thread.c
+1336192967 source:d:\code\solidus\compiler\arsenal\arsenal\common\thread.c
 	"common.h"
 	"thread_win.h"
-	"thread_apple.h"
 	"thread_posix.h"
 
 1288279902 six.h"
 
-1294401177 d:\code\solidus\compiler\arsenal\arsenal\common\thread_win.h
+1336192967 d:\code\solidus\compiler\arsenal\arsenal\common\thread_win.h
 	"common.h"
 
 1317389711 d:\code\solidus\compiler\arsenal\arsenal\common\thread_apple.h
 	"common.h"
 
-1316133979 d:\code\solidus\compiler\arsenal\arsenal\common\thread_posix.h
+1336192967 d:\code\solidus\compiler\arsenal\arsenal\common\thread_posix.h
+	<signal.h>
+	<sched.h>
+	<errno.h>
+	"common.h"
+	"thread_posix_apple.h"
+	"thread_posix_posix.h"
+
+1328123994 source:d:\code\solidus\compiler\arsenal\arsenal\common\utilities.c
 	"common.h"
 
-1314696578 source:d:\code\solidus\compiler\arsenal\arsenal\common\utilities.c
-	"common.h"
-
-1315481001 source:d:\code\solidus\compiler\arsenal\arsenal\lex\lex.c
+1328811161 source:d:\code\solidus\compiler\arsenal\arsenal\lex\lex.c
 	"rgx.h"
 	"lex.h"
 
-1316089464 d:\code\solidus\compiler\arsenal\arsenal\lex\rgx.h
+1329071175 d:\code\solidus\compiler\arsenal\arsenal\lex\rgx.h
 	"../Common/common.h"
 	"lex.h"
 
-1317205580 source:d:\code\solidus\compiler\arsenal\arsenal\lex\match.c
+1328943243 source:d:\code\solidus\compiler\arsenal\arsenal\lex\match.c
 	"lex.h"
 	"rgx.h"
 
-1315481001 source:d:\code\solidus\compiler\arsenal\arsenal\lex\rgx_compile.c
+1328297113 source:d:\code\solidus\compiler\arsenal\arsenal\lex\rgx_compile.c
 	"rgx.h"
 
-1317205580 source:d:\code\solidus\compiler\arsenal\arsenal\lex\rgx_exec.c
+1332240763 source:d:\code\solidus\compiler\arsenal\arsenal\lex\rgx_exec.c
 	"lex.h"
 	"rgx.h"
 
-1314956663 source:d:\code\solidus\compiler\arsenal\arsenal\lex\rgx_misc.c
+1329071175 source:d:\code\solidus\compiler\arsenal\arsenal\lex\rgx_misc.c
 	"rgx.h"
 
-1314783630 source:d:\code\solidus\compiler\arsenal\arsenal\lex\rgx_node.c
+1328297695 source:d:\code\solidus\compiler\arsenal\arsenal\lex\rgx_node.c
 	"rgx.h"
 
-1316089464 source:d:\code\solidus\compiler\arsenal\arsenal\lex\rgx_parser.c
+1329071569 source:d:\code\solidus\compiler\arsenal\arsenal\lex\rgx_parser.c
 	"rgx.h"
 
-1316586005 source:d:\code\solidus\compiler\arsenal\arsenal\parser\grammar.c
+1331339444 source:d:\code\solidus\compiler\arsenal\arsenal\parser\grammar.c
 	"parser.h"
 	"parser_in.h"
 
 1294293316 .h"
 
-1314162622 d:\code\solidus\compiler\arsenal\arsenal\parser\parser_in.h
+1331339043 d:\code\solidus\compiler\arsenal\arsenal\parser\parser_in.h
 	"parser.h"
 
-1314173940 source:d:\code\solidus\compiler\arsenal\arsenal\parser\lalr_build.c
+1331339043 source:d:\code\solidus\compiler\arsenal\arsenal\parser\lalr_build.c
 	"parser_in.h"
 	"lalr.h"
 
-1314207277 d:\code\solidus\compiler\arsenal\arsenal\parser\lalr.h
+1331339043 d:\code\solidus\compiler\arsenal\arsenal\parser\lalr.h
 	"parser.h"
 
-1314207277 source:d:\code\solidus\compiler\arsenal\arsenal\parser\lalr_config.c
+1331339043 source:d:\code\solidus\compiler\arsenal\arsenal\parser\lalr_config.c
 	"lalr.h"
 	"lalr_config_aux.h"
 
 1291624803 ig_aux.h"
 
-1314207277 d:\code\solidus\compiler\arsenal\arsenal\parser\lalr_config_aux.h
+1331339043 d:\code\solidus\compiler\arsenal\arsenal\parser\lalr_config_aux.h
 	"lalr.h"
 
-1301423638 source:d:\code\solidus\compiler\arsenal\arsenal\parser\lalr_state.c
+1331339043 source:d:\code\solidus\compiler\arsenal\arsenal\parser\lalr_state.c
 	"lalr.h"
 
-1314956663 source:d:\code\solidus\compiler\arsenal\arsenal\parser\lr_action.c
-	"lalr.h"
-	"lr_action.h"
-
-1309189957 d:\code\solidus\compiler\arsenal\arsenal\parser\lr_action.h
-	"parser.h"
-	"parser_in.h"
-
-1316488662 source:d:\code\solidus\compiler\arsenal\arsenal\parser\parser.c
-	"parser.h"
-	"parser_in.h"
-	"lr_action.h"
-
-1314162622 source:d:\code\solidus\compiler\arsenal\arsenal\parser\parser_in.c
-	"lalr.h"
-	"parser_in.h"
-
-1316587142 source:d:\code\solidus\compiler\arsenal\arsenal\parser\report.c
+1331339043 source:d:\code\solidus\compiler\arsenal\arsenal\parser\lr_action.c
 	"lalr.h"
 	"lr_action.h"
+
+1331339043 d:\code\solidus\compiler\arsenal\arsenal\parser\lr_action.h
 	"parser.h"
 	"parser_in.h"
 
-1314162622 source:d:\code\solidus\compiler\arsenal\arsenal\parser\symbol.c
+1333434254 source:d:\code\solidus\compiler\arsenal\arsenal\parser\parser.c
+	"parser.h"
+	"parser_in.h"
+	"lr_action.h"
+
+1331339043 source:d:\code\solidus\compiler\arsenal\arsenal\parser\parser_in.c
+	"lalr.h"
+	"parser_in.h"
+
+1331339043 source:d:\code\solidus\compiler\arsenal\arsenal\parser\report.c
+	"lalr.h"
+	"lr_action.h"
 	"parser.h"
 	"parser_in.h"
 
-1302178002 source:d:\code\solidus\compiler\arsenal\arsenal\tengu\tengu.c
+1331339210 source:d:\code\solidus\compiler\arsenal\arsenal\parser\symbol.c
+	"parser.h"
+	"parser_in.h"
+
+1330894088 source:d:\code\solidus\compiler\arsenal\arsenal\tengu\tengu.c
 	"tengu.h"
-	"tguparser.h"
 
 1300297696 d:\code\solidus\compiler\arsenal\arsenal\tengu\tguparser.h
 	"tengu.h"
@@ -250,22 +256,21 @@
 1315481001 source:d:\code\solidus\compiler\arsenal\arsenal\tengu\tguutility.c
 	"tguutility.h"
 
-1317099838 source:d:\code\solidus\compiler\arsenal\arsenal\tengu\tguvm.c
+1333458198 source:d:\code\solidus\compiler\arsenal\arsenal\tengu\tguvm.c
 	"tguvm.h"
 
-1315666196 d:\code\solidus\compiler\arsenal\arsenal\tengu\tguvm.h
+1333454102 d:\code\solidus\compiler\arsenal\arsenal\tengu\tguvm.h
 	"tengu.h"
-	"tgusyntree.h"
 
 1296108248 source:d:\code\solidus\compiler\arsenal\arsenal\tools\grammar_config.c
 	"grammar_config.h"
 
 1296108248 onfig.h"
 
-1302178002 source:d:\code\solidus\compiler\arsenal\arsenal\tools\serializer.c
+1331020857 source:d:\code\solidus\compiler\arsenal\arsenal\tools\serializer.c
 	"serializer.h"
 
-1302178002 source:d:\code\solidus\compiler\arsenal\arsenal\tools\tools.c
+1328868159 source:d:\code\solidus\compiler\arsenal\arsenal\tools\tools.c
 	"tools.h"
 
 1302790699 source:/root/Desktop/Programming/Arsenal/Arsenal/Arsenal.c
@@ -754,17 +759,17 @@
 1301634831 source:/root/Desktop/Arsenal/Arsenal/Tools/tools.c
 	"tools.h"
 
-1312779260 d:\code\solidus\compiler\arsenal\arsenal\tools\iniobj.h
+1328786840 d:\code\solidus\compiler\arsenal\arsenal\tools\iniobj.h
 	"../Common/common.h"
 
 1309189957 source:d:\code\solidus\compiler\arsenal\arsenal\common\byteorder.c
 	"common.h"
 
-1316680367 source:d:\code\solidus\compiler\arsenal\arsenal\common\textfile.c
+1332260923 source:d:\code\solidus\compiler\arsenal\arsenal\common\textfile.c
 	<iconv.h>
 	"common.h"
 
-1315585110 source:d:\code\solidus\compiler\arsenal\arsenal\lex\lex_misc.c
+1328246244 source:d:\code\solidus\compiler\arsenal\arsenal\lex\lex_misc.c
 	"rgx.h"
 
 1315493524 source:d:\code\solidus\compiler\arsenal\arsenal\tengu\tgucompiler.c
@@ -774,12 +779,34 @@
 	"tengu.h"
 	"tgusyntree.h"
 
-1316384441 source:d:\code\solidus\compiler\arsenal\arsenal\tools\grammar_codegen.c
+1329733904 source:d:\code\solidus\compiler\arsenal\arsenal\tools\grammar_codegen.c
 	"grammar_config.h"
 
-1317205580 source:d:\code\solidus\compiler\arsenal\arsenal\tools\grammar_collector.c
+1331336841 source:d:\code\solidus\compiler\arsenal\arsenal\tools\grammar_collector.c
 	"grammar_config.h"
 
-1315481001 source:d:\code\solidus\compiler\arsenal\arsenal\tools\iniobj.c
+1328787050 source:d:\code\solidus\compiler\arsenal\arsenal\tools\iniobj.c
 	"iniobj.h"
+
+1336192967 d:\code\solidus\compiler\arsenal\arsenal\common\status.h
+
+1332238575 d:\code\solidus\compiler\arsenal\arsenal\common\heap.h
+	"common.h"
+
+1336192967 d:\code\solidus\compiler\arsenal\arsenal\common\thread_posix_apple.h
+
+1336192967 d:\code\solidus\compiler\arsenal\arsenal\common\thread_posix_posix.h
+
+1333451415 source:d:\code\solidus\compiler\arsenal\arsenal\tengu\tengu_parser.c
+	"tengu.h"
+	"tengu_utility.h"
+	"tengu_parser_impl.h"
+
+1333451244 d:\code\solidus\compiler\arsenal\arsenal\tengu\tengu_utility.h
+	"tengu.h"
+
+1336227585 d:\code\solidus\compiler\arsenal\arsenal\tengu\tengu_parser_impl.h
+
+1333047592 source:d:\code\solidus\compiler\arsenal\arsenal\tengu\tengu_utility.c
+	"tengu_utility.h"
 
