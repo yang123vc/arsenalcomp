@@ -12,7 +12,7 @@ AR_NAMESPACE_BEGIN
 
 void text_test_save()
 {
-#define OUTPUT_FILE		L"/root/Desktop/ÖÐÎÄ²âÊÔÄ¿Â¼/x.txt"
+#define OUTPUT_FILE		L"/root/Desktop/x.txt"
 #define OUTPUT_TYPE		AR_TXT_BOM_ASCII
 
 		arString_t *str = AR_CreateString();
@@ -25,7 +25,7 @@ void text_test_save()
 		if(AR_SaveBomTextFile(OUTPUT_FILE, OUTPUT_TYPE, AR_GetStringCString(str)) != AR_S_YES)
 		{
 		}
-#if(0)
+
 		if(AR_SaveBomTextFile(OUTPUT_FILE, OUTPUT_TYPE, AR_GetStringCString(str)) != AR_S_YES)
 		{
 				AR_ASSERT(false);
@@ -39,7 +39,7 @@ void text_test_save()
 		}
 
 		AR_ASSERT(bom == OUTPUT_TYPE);
-#endif
+
 
 		AR_DestroyString(str);
 }
