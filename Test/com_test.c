@@ -1720,7 +1720,7 @@ static void output_thread(void *data)
 
 		while(true)
 		{
-				status = AR_GetFromAsyncQueueTimeOut(queue, &data, 2000);
+				status = AR_GetFromAsyncQueueWithTimeout(queue, &data, 2000);
 				if(status == AR_S_YES)
 				{
 						const char *s = (const char*)data;
@@ -1804,11 +1804,36 @@ static void async_queue_test()
 
 
 
+static void async_queue_test2()
+{
+		arAsyncQueue_t	queue;
+		arStatus_t status;
+		void *result;
+		AR_InitAsyncQueue(&queue);
+
+		const char *s = "abcdefg";
+
+		
+		status = AR_PutToAsyncQueue(&queue, (void*)s);
+
+		if(status != AR_S_YES)
+		{
+				AR_abort();
+		}
+		
+
+		//status = AR_GetFromAsyncQueueWithTimeout(&queue, &result, 5000);
+
+
+
+		AR_UnInitAsyncQueue(&queue);
+}
 
 void thd_test()
 {
-		evt_test();
+		//evt_test();
 		//async_queue_test();
+		async_queue_test2();
 }
 
 

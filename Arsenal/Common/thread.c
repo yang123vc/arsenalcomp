@@ -291,7 +291,7 @@ void	AR_UnInitAsyncQueue(arAsyncQueue_t *queue)
 
 
 
-arStatus_t	AR_GetFromAsyncQueueTimeOut(arAsyncQueue_t *queue, void **pdata, size_t	millisecond)
+arStatus_t	AR_GetFromAsyncQueueWithTimeout(arAsyncQueue_t *queue, void **pdata, size_t	millisecond)
 {
 		arStatus_t res;
 		AR_ASSERT(queue != NULL && pdata != NULL);
@@ -343,8 +343,8 @@ arStatus_t	AR_GetFromAsyncQueueTimeOut(arAsyncQueue_t *queue, void **pdata, size
 				{
 						AR_LockSpinLock(&queue->mutex);
 						/*
-						如果__remove_wait_node不成功，则证明在在本函数Com_WaitEventTimeout失败之后，
-						Com_LockSpinLock(&queue->mutex);之前，有Com_PutToAsyncQueue获得锁且将info.data
+						如果__remove_wait_node不成功，则证明在在本函数AR_WaitEventTimeout超时之后，
+						AR_LockSpinLock(&queue->mutex);之前，有AR_PutToAsyncQueue获得锁且将info.data
 						赋值
 						*/
 						if(__remove_wait_node(queue, &info))
@@ -358,6 +358,14 @@ arStatus_t	AR_GetFromAsyncQueueTimeOut(arAsyncQueue_t *queue, void **pdata, size
 						AR_UnLockSpinLock(&queue->mutex);
 				}else
 				{
+						/*如果不幸执行到此，最大的可能应该是setevent失败了，那么也许应该终止，这里不考虑此情况，继续试图删除掉已注册的waitinfo*/
+						
+						AR_LockSpinLock(&queue->mutex);
+
+						__remove_wait_node(queue, &info);
+
+						AR_UnLockSpinLock(&queue->mutex);
+
 						goto END_POINT;
 				}
 

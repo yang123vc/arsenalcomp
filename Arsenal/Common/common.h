@@ -792,9 +792,14 @@ arStatus_t	AR_SaveBomTextToBinary(arBuffer_t *output, arTxtBom_t bom, const wcha
 void			AR_InitThread();
 void			AR_UnInitThread();
 
+
+/**********************************************************atomic*************************************************************/
 int_t			AR_AtomicInc(volatile int_t *dest);
 int_t			AR_AtomicDec(volatile int_t *dest);
 
+
+
+/**********************************************************spinlock*************************************************************/
 
 #define			AR_MAXSPIN_COUNT		5000
 
@@ -812,6 +817,7 @@ int_t			AR_AtomicDec(volatile int_t *dest);
 
 #endif
 
+
 void			AR_InitSpinLock(arSpinLock_t *lock);
 void			AR_UnInitSpinLock(arSpinLock_t *lock);
 void			AR_LockSpinLock(arSpinLock_t *lock);
@@ -824,7 +830,7 @@ uint_64_t		AR_GetTime_Microseconds();
 uint_64_t		AR_GetTime_Milliseconds();
 
 
-
+/**********************************************************thread*************************************************************/
 
 struct __arsenal_thread_tag;
 typedef struct __arsenal_thread_tag arThread_t;
@@ -850,7 +856,7 @@ arStatus_t		AR_GetThreadPriority(arThread_t *thd, arThreadPrio_t *p_prio);
 
 
 
-
+/**********************************************************mutex*************************************************************/
 
 typedef struct __arsenal_mutex_tag		arMutex_t;
 
@@ -860,6 +866,8 @@ arStatus_t		AR_LockMutex(arMutex_t *mtx);
 arStatus_t		AR_TryLockMutex(arMutex_t *mtx);
 arStatus_t		AR_UnlockMutex(arMutex_t *mtx);
 
+
+/**********************************************************event*************************************************************/
 
 typedef struct __arsenal_event_tag		arEvent_t;
 
@@ -873,6 +881,7 @@ arStatus_t		AR_ResetEvent(arEvent_t *evt);
 
 
 
+/**********************************************************async queue*************************************************************/
 
 
 struct __arsenal_async_queue_tag;
@@ -908,7 +917,7 @@ void	AR_UnInitAsyncQueue(arAsyncQueue_t *queue);
 void	AR_ClearAsyncQueue(arAsyncQueue_t *queue);
 
 arStatus_t	AR_GetFromAsyncQueue(arAsyncQueue_t *queue, void **pdata);
-arStatus_t	AR_GetFromAsyncQueueTimeOut(arAsyncQueue_t *queue, void **pdata, size_t	millisecond);
+arStatus_t	AR_GetFromAsyncQueueWithTimeout(arAsyncQueue_t *queue, void **pdata, size_t	millisecond);
 arStatus_t	AR_PutToAsyncQueue(arAsyncQueue_t *queue, void *data);
 
 bool_t	AR_AsyncQueueIsEmpty(const arAsyncQueue_t *queue);
