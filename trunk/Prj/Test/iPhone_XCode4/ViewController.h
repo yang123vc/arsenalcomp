@@ -10,4 +10,7 @@
 
 @interface ViewController : UIViewController
 
+
+-(IBAction)onTest : (id)sender;
+
 @end

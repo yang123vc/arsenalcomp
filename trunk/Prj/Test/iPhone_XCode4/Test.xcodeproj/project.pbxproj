@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		67C97B8F15539B3F00FCB4E5 /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 67C97B8E15539B3F00FCB4E5 /* Arsenal.a */; };
+		67F44CD41554E7E8000308E6 /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 67F44CD31554E7E8000308E6 /* Arsenal.a */; };
+		67F44CD61554E959000308E6 /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 67F44CD51554E959000308E6 /* Arsenal.a */; };
 		BE2E4B7814F2177100ACFBB5 /* ArsenalWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = BE2E4B7714F2177100ACFBB5 /* ArsenalWrapper.m */; };
 		BE82C8FB14F211CE00F30E56 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE82C8FA14F211CE00F30E56 /* UIKit.framework */; };
 		BE82C8FD14F211CE00F30E56 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE82C8FC14F211CE00F30E56 /* Foundation.framework */; };
@@ -27,7 +28,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		67C97B8E15539B3F00FCB4E5 /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = Arsenal.a; path = "../../../../../Temp/Xcode_Derived_Data/Arsenal-dsikvwfmwyzznufxposbvavvvkye/Build/Products/Debug-iphonesimulator/Arsenal.a"; sourceTree = "<group>"; };
+		67F44CD31554E7E8000308E6 /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = Arsenal.a; path = "../../../../../Temp/Xcode_Derived_Data/Arsenal-dsikvwfmwyzznufxposbvavvvkye/Build/Products/Debug-iphoneos/Arsenal.a"; sourceTree = "<group>"; };
+		67F44CD51554E959000308E6 /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = Arsenal.a; path = "../../../../../Temp/Xcode_Derived_Data/Arsenal-dsikvwfmwyzznufxposbvavvvkye/Build/Products/Debug-iphonesimulator/Arsenal.a"; sourceTree = "<group>"; };
 		BE2E4B7614F2175800ACFBB5 /* ArsenalWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArsenalWrapper.h; sourceTree = SOURCE_ROOT; };
 		BE2E4B7714F2177100ACFBB5 /* ArsenalWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArsenalWrapper.m; sourceTree = SOURCE_ROOT; };
 		BE82C8F614F211CE00F30E56 /* Test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Test.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -62,7 +64,8 @@
 				BE82C8FB14F211CE00F30E56 /* UIKit.framework in Frameworks */,
 				BE82C8FD14F211CE00F30E56 /* Foundation.framework in Frameworks */,
 				BE82C8FF14F211CE00F30E56 /* CoreGraphics.framework in Frameworks */,
-				67C97B8F15539B3F00FCB4E5 /* Arsenal.a in Frameworks */,
+				67F44CD41554E7E8000308E6 /* Arsenal.a in Frameworks */,
+				67F44CD61554E959000308E6 /* Arsenal.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,7 +75,8 @@
 		BE82C8EB14F211CE00F30E56 = {
 			isa = PBXGroup;
 			children = (
-				67C97B8E15539B3F00FCB4E5 /* Arsenal.a */,
+				67F44CD51554E959000308E6 /* Arsenal.a */,
+				67F44CD31554E7E8000308E6 /* Arsenal.a */,
 				BED34EA314F21EF700426EF6 /* libiconv.dylib */,
 				BED34EA014F21EF100426EF6 /* libpthread.dylib */,
 				BE82C92C14F2127500F30E56 /* dabaopku.plist */,
