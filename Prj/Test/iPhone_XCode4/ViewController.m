@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 none. All rights reserved.
 //
 
+#import "ArsenalWrapper.h"
 #import "ViewController.h"
 
 @implementation ViewController
@@ -59,6 +60,17 @@
         } else {
             return YES;
         }
+}
+
+
+
+-(IBAction)onTest : (id)sender
+{
+        arAsyncQueue_t que;
+        AR_InitAsyncQueue(&que);
+        
+        
+       AR_UnInitAsyncQueue(&que);
 }
 
 @end
