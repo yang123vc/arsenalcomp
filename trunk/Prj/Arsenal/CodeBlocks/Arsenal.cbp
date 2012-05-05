@@ -77,10 +77,10 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add option="-Wno-unused" />
-			<Add option="-lpthreads" />
 			<Add option="-std=gnu99" />
+			<Add option="-Wno-unused" />
 			<Add option="-fgnu89-inline" />
+			<Add option="-lpthreads" />
 			<Add option="-fPIC" />
 		</Compiler>
 		<Linker>
@@ -200,23 +200,15 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="..\..\..\Arsenal\Tengu\tengu.h" />
-		<Unit filename="..\..\..\Arsenal\Tengu\tgu_parser_impl.h" />
-		<Unit filename="..\..\..\Arsenal\Tengu\tgucompiler.c">
+		<Unit filename="..\..\..\Arsenal\Tengu\tengu_parser.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="..\..\..\Arsenal\Tengu\tgucompiler.h" />
-		<Unit filename="..\..\..\Arsenal\Tengu\tguparser.c">
+		<Unit filename="..\..\..\Arsenal\Tengu\tengu_parser.h" />
+		<Unit filename="..\..\..\Arsenal\Tengu\tengu_parser_impl.h" />
+		<Unit filename="..\..\..\Arsenal\Tengu\tengu_utility.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="..\..\..\Arsenal\Tengu\tguparser.h" />
-		<Unit filename="..\..\..\Arsenal\Tengu\tgusyntree.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="..\..\..\Arsenal\Tengu\tgusyntree.h" />
-		<Unit filename="..\..\..\Arsenal\Tengu\tguutility.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="..\..\..\Arsenal\Tengu\tguutility.h" />
+		<Unit filename="..\..\..\Arsenal\Tengu\tengu_utility.h" />
 		<Unit filename="..\..\..\Arsenal\Tengu\tguvm.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -1,4 +1,4 @@
-﻿
+
  
 /*
  * The Arsenal Library
@@ -13,7 +13,6 @@
  *
  */
  
-
 
 
 /*
@@ -265,7 +264,7 @@ psrTermFunc_t leaf;
 {L"STRING", TOK_STRING, 0, L"{string_dq}|{string_sq}", false, on_string_leaf_handler},
 {L"FLOAT_NUMBER", TOK_FLOAT_NUMBER, 2, L"{float_constant}", false, default_leaf_handler},
 {L"INT_NUMBER", TOK_INT_NUMBER, 2, L"{hex_constant}|{oct_constant}|{dec_constant}", false, default_leaf_handler},
-{L"#import", TOK_IMPORT, 1, L"\"#import\"(?!{keyword_lhd})", false, default_leaf_handler},
+{L"import", TOK_IMPORT, 1, L"\"import\"(?!{keyword_lhd})", false, default_leaf_handler},
 {L"from", TOK_FROM, 1, L"\"from\"(?!{keyword_lhd})", false, default_leaf_handler},
 {L"for", TOK_FOR, 1, L"\"for\"(?!{keyword_lhd})", false, default_leaf_handler},
 {L"do", TOK_DO, 1, L"\"do\"(?!{keyword_lhd})", false, default_leaf_handler},
@@ -452,9 +451,9 @@ static psrRetVal_t AR_STDCALL handle_compound_element_list(psrNode_t **nodes, si
 /*compound_element	:	statement */
 static psrRetVal_t AR_STDCALL on_compound_element(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*import_statement	:	#import NAME ; */
-/*import_statement	:	#import NAME from STRING ; */
-/*import_statement	:	#import error ; */
+/*import_statement	:	import NAME ; */
+/*import_statement	:	import NAME from STRING ; */
+/*import_statement	:	import error ; */
 static psrRetVal_t AR_STDCALL on_import_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*empty_statement	:	; */
@@ -615,9 +614,9 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"compound_element_list  :  compound_element ", NULL, handle_compound_element_list, 0},
 {L"compound_element  :  statement ", NULL, on_compound_element, 0},
 {L"compound_element  :  declaration ", NULL, auto_return_null, 0},
-{L"import_statement  :  #import NAME ; ", NULL, on_import_statement, 0},
-{L"import_statement  :  #import NAME from STRING ; ", NULL, on_import_statement, 0},
-{L"import_statement  :  #import error ; ", NULL, on_import_statement, 0},
+{L"import_statement  :  import NAME ; ", NULL, on_import_statement, 0},
+{L"import_statement  :  import NAME from STRING ; ", NULL, on_import_statement, 0},
+{L"import_statement  :  import error ; ", NULL, on_import_statement, 0},
 {L"empty_statement  :  ; ", NULL, on_empty_statement, 0},
 {L"expression_statement  :  expression semi ", NULL, on_expression_statement, 0},
 {L"expression_statement  :  error ; ", NULL, auto_return_null, 0},
@@ -1181,9 +1180,9 @@ static psrRetVal_t AR_STDCALL on_compound_element(psrNode_t **nodes, size_t coun
 
 
 
-/*import_statement	:	#import NAME ; */
-/*import_statement	:	#import NAME from STRING ; */
-/*import_statement	:	#import error ; */
+/*import_statement	:	import NAME ; */
+/*import_statement	:	import NAME from STRING ; */
+/*import_statement	:	import error ; */
 static psrRetVal_t AR_STDCALL on_import_statement(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		psrRetVal_t ret = {AR_S_YES, NULL};
