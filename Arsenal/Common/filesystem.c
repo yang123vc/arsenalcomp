@@ -24,6 +24,58 @@ AR_NAMESPACE_BEGIN
 
 		
 #if defined(OS_FAMILY_WINDOWS)
+#ifndef MAX_PATH_LEN
+#undef MAX_PATH_LEN
+#endif
+
+#define MAX_PATH_LEN 32767
+
+#if(OS_TYPE == OS_WINDOWS_CE)
+
+arStatus_t		AR_GetCurrentPath(arString_t *str)
+{
+		AR_ASSERT(str != NULL);
+		return AR_SetString(str, L"\\");
+}
+
+
+arStatus_t		AR_GetHomePath(arString_t *str)
+{
+		AR_ASSERT(str != NULL);
+		return AR_SetString(str, L"\\");
+}
+
+
+arStatus_t		AR_GetTempPath(arString_t *str)
+{
+		wchar_t buf[MAX_PATH_LEN + 10];
+		DWORD n;
+		AR_ASSERT(str != NULL);
+		n = GetTempPathW(MAX_PATH_LEN, buf);
+		if (n > 0)
+		{
+				if(buf[n-1] != L'\\')
+				{
+						buf[n] = L'\\';
+						buf[n+1] = L'\0';
+				}
+				return AR_SetString(str, buf);
+		}else
+		{
+				return AR_E_FAIL;
+		}
+}
+
+
+arStatus_t		AR_GetExpandPath(const wchar_t *path, arString_t *expanded_path)
+{
+		AR_ASSERT(path != NULL && expanded_path != NULL);
+
+		return AR_E_NOTSUPPORTED;
+
+}
+
+#else
 
 arStatus_t		AR_GetCurrentPath(arString_t *str)
 {
@@ -132,15 +184,17 @@ END_POINT:
 		return status;
 }
 
+
+
 arStatus_t		AR_GetTempPath(arString_t *str)
 {
-		wchar_t tmp[MAX_PATH + 10];
+		wchar_t tmp[MAX_PATH_LEN + 10];
 		arStatus_t status;
 		DWORD n;
 		AR_ASSERT(str != NULL);
 
 		status = AR_S_YES;
-		n = GetTempPathW(MAX_PATH, tmp);
+		n = GetTempPathW(MAX_PATH_LEN, tmp);
 		if(n <= 0)
 		{
 				return AR_E_FAIL;
@@ -163,22 +217,17 @@ arStatus_t		AR_GetTempPath(arString_t *str)
 
 }
 
-arStatus_t		AR_GetNullPath(arString_t *str)
-{
-		AR_ASSERT(str != NULL);
-		return AR_SetString(str, L"NUL:");
-}
 
 arStatus_t		AR_GetExpandPath(const wchar_t *path, arString_t *expanded_path)
 {
-		wchar_t tmp[MAX_PATH + 10];
+		wchar_t tmp[MAX_PATH_LEN + 10];
 		arStatus_t status;
 		DWORD n;
 		AR_ASSERT(path != NULL && expanded_path != NULL);
 
 		status = AR_S_YES;
-		n = ExpandEnvironmentStringsW(path, tmp, MAX_PATH);
-		if(n <= 0 || n > MAX_PATH - 1)
+		n = ExpandEnvironmentStringsW(path, tmp, MAX_PATH_LEN);
+		if(n <= 0 || n > MAX_PATH_LEN - 1)
 		{
 				return AR_SetString(expanded_path, path);
 		}else
@@ -186,6 +235,16 @@ arStatus_t		AR_GetExpandPath(const wchar_t *path, arString_t *expanded_path)
 				return AR_SetString(expanded_path, tmp);
 		}
 }
+
+
+#endif
+
+arStatus_t		AR_GetNullPath(arString_t *str)
+{
+		AR_ASSERT(str != NULL);
+		return AR_SetString(str, L"NUL:");
+}
+
 
 
 

@@ -182,7 +182,7 @@ arMutex_t*		AR_CreateMutex()
 				return NULL;
 		}
 
-		InitializeCriticalSectionAndSpinCount(mtx, 100000);
+		InitializeCriticalSection(mtx);
 		return (arMutex_t*)mtx;
 }
 

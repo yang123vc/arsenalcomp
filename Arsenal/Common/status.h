@@ -25,6 +25,7 @@ typedef enum
 		AR_E_SMALLBUF,
 		AR_E_BADENCCONV,
 		AR_E_NOTFOUND,
+		AR_E_NOTSUPPORTED,
 
 		AR_E_SYS,
 		AR_E_FILE,
