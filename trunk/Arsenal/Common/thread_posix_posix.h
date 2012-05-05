@@ -19,8 +19,10 @@ void			AR_InitThread()
         sigset_t sset;
         sigemptyset(&sset);
         sigaddset(&sset, SIGPIPE);
-        pthread_sigmsk(SIG_BLOCK, &sset, 0);
-        
+
+        pthread_sigmask(SIG_BLOCK, &sset, 0);
+
+
 		AR_InitSpinLock(&__g_atomic_lock);
 
 }
