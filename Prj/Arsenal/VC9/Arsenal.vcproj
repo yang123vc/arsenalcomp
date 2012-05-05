@@ -1302,6 +1302,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\Arsenal\Common\enviroment.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\filesystem.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\Arsenal\Common\heap.c"
 				>
 			</File>
@@ -1354,11 +1362,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\Arsenal\Common\thread_apple.h"
+				RelativePath="..\..\..\Arsenal\Common\thread_posix.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\Arsenal\Common\thread_posix.h"
+				RelativePath="..\..\..\Arsenal\Common\thread_posix_apple.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\thread_posix_posix.h"
 				>
 			</File>
 			<File
@@ -1529,6 +1541,34 @@
 			</File>
 			<File
 				RelativePath="..\..\..\Arsenal\Tengu\tengu.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Tengu\tengu_parser.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Tengu\tengu_parser.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Tengu\tengu_parser_impl.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Tengu\tengu_utility.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Tengu\tengu_utility.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Tengu\tguvm.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Tengu\tguvm.h"
 				>
 			</File>
 		</Filter>
