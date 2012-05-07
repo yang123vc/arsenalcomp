@@ -56,7 +56,7 @@ extern "C"{
                 
                 while(true)
                 {
-                        status = AR_GetFromAsyncQueueTimeOut(queue, &data, 2000);
+                        status = AR_GetFromAsyncQueueWithTimeout(queue, &data, 2000);
                         if(status == AR_S_YES)
                         {
                                 const char *s = (const char*)data;
@@ -73,7 +73,7 @@ extern "C"{
                                         AR_DEL(s);
                                 }
                                 
-                        }else if(status == AR_S_NO)
+                        }else if(status == AR_E_TIMEOUT)
                         {
                                 printf("thread %p timeout\r\n", pthread_self());
                                 continue;
