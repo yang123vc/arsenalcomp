@@ -69,7 +69,7 @@ void			AR_YieldThread()
 		__Yield();
 }
 
-void			AR_Sleep(size_t millisecond)
+void			AR_Sleep(uint_64_t millisecond)
 {
 		Sleep((DWORD)millisecond);
 }
@@ -261,13 +261,13 @@ arStatus_t		AR_WaitEvent(arEvent_t *evt)
 		}
 }
 
-arStatus_t		AR_WaitEventWithTimeout(arEvent_t *evt, size_t milliseconds)
+arStatus_t		AR_WaitEventWithTimeout(arEvent_t *evt, uint_64_t milliseconds)
 {
 		AR_ASSERT(evt != NULL);
 		switch(WaitForSingleObject((HANDLE)evt, (DWORD)milliseconds))
 		{
 		case WAIT_TIMEOUT:
-				return AR_S_NO;
+				return AR_E_TIMEOUT;
 		case WAIT_OBJECT_0:
 				return AR_S_YES;
 		default:
@@ -371,7 +371,7 @@ arStatus_t		AR_JoinThread(arThread_t *thd)
 }
 
 
-arStatus_t		AR_JoinThreadWithTimeout(arThread_t *thd, size_t milliseconds)
+arStatus_t		AR_JoinThreadWithTimeout(arThread_t *thd, uint_64_t milliseconds)
 {
 		AR_ASSERT(thd != NULL && thd->thread_hdl != NULL);
 		switch(WaitForSingleObject(thd->thread_hdl, (DWORD)milliseconds))
@@ -379,7 +379,7 @@ arStatus_t		AR_JoinThreadWithTimeout(arThread_t *thd, size_t milliseconds)
 		case WAIT_OBJECT_0:
 				return AR_S_YES;
 		case WAIT_TIMEOUT:
-				return AR_S_NO;
+				return AR_E_TIMEOUT;
 		default:
 				AR_error(AR_ERR_WARNING, L"cannot join thread");
 				return AR_E_SYS;

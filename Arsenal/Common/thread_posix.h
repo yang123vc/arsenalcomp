@@ -165,7 +165,7 @@ arStatus_t		AR_JoinThread(arThread_t *thd)
 
 }
 
-arStatus_t		AR_JoinThreadWithTimeout(arThread_t *thd, size_t milliseconds)
+arStatus_t		AR_JoinThreadWithTimeout(arThread_t *thd, uint_64_t milliseconds)
 {
         void *result;
         arStatus_t status;
@@ -492,7 +492,7 @@ arStatus_t		AR_TryWaitEvent(arEvent_t *evt)
         return AR_WaitEventWithTimeout(evt, 0);
 }
 
-arStatus_t		AR_WaitEventWithTimeout(arEvent_t *evt, size_t milliseconds)
+arStatus_t		AR_WaitEventWithTimeout(arEvent_t *evt, uint_64_t milliseconds)
 {
         int rc;
         struct timespec abstime;
@@ -542,7 +542,7 @@ arStatus_t		AR_WaitEventWithTimeout(arEvent_t *evt, size_t milliseconds)
         }
 
         pthread_mutex_unlock(&evt->mtx);
-        return rc == 0 ? AR_S_YES : AR_S_NO;
+        return rc == 0 ? AR_S_YES : AR_E_TIMEOUT;
 }
 
 
