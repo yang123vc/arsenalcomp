@@ -291,7 +291,7 @@ void	AR_UnInitAsyncQueue(arAsyncQueue_t *queue)
 
 
 
-arStatus_t	AR_GetFromAsyncQueueWithTimeout(arAsyncQueue_t *queue, void **pdata, size_t	millisecond)
+arStatus_t	AR_GetFromAsyncQueueWithTimeout(arAsyncQueue_t *queue, void **pdata, uint_64_t	millisecond)
 {
 		arStatus_t res;
 		AR_ASSERT(queue != NULL && pdata != NULL);
@@ -339,7 +339,7 @@ arStatus_t	AR_GetFromAsyncQueueWithTimeout(arAsyncQueue_t *queue, void **pdata, 
 				{
 						*pdata = info.data;
 						res = AR_S_YES;
-				}else if(res == AR_S_NO)
+				}else if(res == AR_E_TIMEOUT)
 				{
 						AR_LockSpinLock(&queue->mutex);
 						/*
@@ -349,7 +349,7 @@ arStatus_t	AR_GetFromAsyncQueueWithTimeout(arAsyncQueue_t *queue, void **pdata, 
 						*/
 						if(__remove_wait_node(queue, &info))
 						{
-								res = AR_S_NO;
+								res = AR_E_TIMEOUT;
 						}else
 						{
 								res = AR_S_YES;

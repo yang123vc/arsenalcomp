@@ -824,7 +824,7 @@ void			AR_LockSpinLock(arSpinLock_t *lock);
 void			AR_UnLockSpinLock(arSpinLock_t *lock);
 
 void			AR_YieldThread();
-void			AR_Sleep(size_t millisecond);
+void			AR_Sleep(uint_64_t millisecond);
 
 uint_64_t		AR_GetTime_Microseconds();
 uint_64_t		AR_GetTime_Milliseconds();
@@ -840,7 +840,7 @@ typedef	void	(*arThreadFunc_t)(void *data);
 arThread_t*		AR_CreateThread(arThreadFunc_t func, void *data);
 void			AR_DestroyThread(arThread_t *thd);
 arStatus_t		AR_JoinThread(arThread_t *thd);
-arStatus_t		AR_JoinThreadWithTimeout(arThread_t *thd, size_t milliseconds);
+arStatus_t		AR_JoinThreadWithTimeout(arThread_t *thd, uint_64_t milliseconds);
 uint_64_t		AR_GetThreadId(arThread_t *thd);
 
 typedef enum
@@ -875,7 +875,7 @@ arEvent_t*		AR_CreateEvent(bool_t is_auto_reset);
 void			AR_DestroyEvent(arEvent_t *evt);
 arStatus_t		AR_SetEvent(arEvent_t *evt);
 arStatus_t		AR_WaitEvent(arEvent_t *evt);
-arStatus_t		AR_WaitEventWithTimeout(arEvent_t *evt, size_t milliseconds);
+arStatus_t		AR_WaitEventWithTimeout(arEvent_t *evt, uint_64_t milliseconds);
 arStatus_t		AR_TryWaitEvent(arEvent_t *evt);
 arStatus_t		AR_ResetEvent(arEvent_t *evt);
 
@@ -917,7 +917,7 @@ void	AR_UnInitAsyncQueue(arAsyncQueue_t *queue);
 void	AR_ClearAsyncQueue(arAsyncQueue_t *queue);
 
 arStatus_t	AR_GetFromAsyncQueue(arAsyncQueue_t *queue, void **pdata);
-arStatus_t	AR_GetFromAsyncQueueWithTimeout(arAsyncQueue_t *queue, void **pdata, size_t	millisecond);
+arStatus_t	AR_GetFromAsyncQueueWithTimeout(arAsyncQueue_t *queue, void **pdata, uint_64_t	millisecond);
 arStatus_t	AR_PutToAsyncQueue(arAsyncQueue_t *queue, void *data);
 
 bool_t	AR_AsyncQueueIsEmpty(const arAsyncQueue_t *queue);

@@ -1737,7 +1737,7 @@ static void output_thread(void *data)
 								AR_DEL(s);
 						}
 
-				}else if(status == AR_S_NO)
+				}else if(status == AR_E_TIMEOUT)
 				{
 						printf("thread %d timeout\r\n", GetCurrentThreadId());
 						continue;
@@ -1813,16 +1813,17 @@ static void async_queue_test2()
 
 		const char *s = "abcdefg";
 
-		
+		/*
 		status = AR_PutToAsyncQueue(&queue, (void*)s);
 
 		if(status != AR_S_YES)
 		{
 				AR_abort();
 		}
-		
+		*/
 
-		//status = AR_GetFromAsyncQueueWithTimeout(&queue, &result, 5000);
+		status = AR_GetFromAsyncQueueWithTimeout(&queue, &result, 5000);
+
 
 
 
@@ -1832,8 +1833,8 @@ static void async_queue_test2()
 void thd_test()
 {
 		//evt_test();
-		//async_queue_test();
-		async_queue_test2();
+		async_queue_test();
+		//async_queue_test2();
 }
 
 
