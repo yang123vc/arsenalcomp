@@ -141,7 +141,7 @@ static arStatus_t		__remove_from_rule_set(lexRuleSet_t *set, size_t value)
 						return AR_S_YES;
 				}
 		}
-		return AR_S_NO;
+		return AR_E_NOTFOUND;
 }
 
 
@@ -155,13 +155,13 @@ arStatus_t	Lex_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr)
 		if(AR_wcslen(name) == 0)
 		{
 				AR_FormatString(lex->last_err_msg, L"Lex Rule Error : empty name '%ls'\r\n", expr);
-				return AR_S_NO;
+				return AR_E_INVAL;
 		}
 
 		if(AR_wcslen(expr) == 0)
 		{
 				AR_FormatString(lex->last_err_msg, L"Lex Rule Error : empty expr '%ls'\r\n", name);
-				return AR_S_NO;
+				return AR_E_INVAL;
 		}
 
 
@@ -169,7 +169,7 @@ arStatus_t	Lex_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr)
 		{
 				/*AR_error( L"Lex Rule Error : Duplicate name defination %ls: %ls\r\n", name, expr);*/
 				AR_FormatString(lex->last_err_msg, L"Lex Name Error : Duplicate name defination %ls: %ls\r\n", name, expr);
-				return AR_S_NO;
+				return AR_E_EXISTED;
 		}
 
 		res = RGX_ParseExpr(expr, lex->name_tbl);
@@ -177,12 +177,8 @@ arStatus_t	Lex_InsertName(lex_t *lex, const wchar_t *name, const wchar_t *expr)
 		if(res.err.status != AR_S_YES)
 		{
 				AR_ASSERT(res.node == NULL);
-
-				if(res.err.status == AR_S_NO)
-				{
-						AR_FormatString(lex->last_err_msg, L"Lex Name Error : %ls: %ls\r\n", name, res.err.pos);
-				}
-
+				AR_FormatString(lex->last_err_msg, L"Lex Name Error : %ls: %ls\r\n", name, res.err.pos);
+				
 				return res.err.status;
 		}
 
@@ -234,7 +230,7 @@ arStatus_t	Lex_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *ac
 		if(AR_wcslen(rule) == 0)
 		{
 				AR_FormatString(lex->last_err_msg, L"Lex Rule Error : empty rule %Id\r\n", action->value);
-				return AR_S_NO;
+				return AR_E_INVAL;
 		}
 
 		res = RGX_ParseExpr(rule, lex->name_tbl);
@@ -244,11 +240,8 @@ arStatus_t	Lex_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *ac
 				AR_ASSERT(res.node == NULL);
 				/*AR_error(AR_LEX, L"Lex Rule Error : %d : %ls\n", action->type, res.err.pos);*/
 				/*AR_error(L"Lex Rule Error : %" AR_PLAT_INT_FMT L"d : %ls\n", (size_t)action->type, (size_t)res.err.pos);*/
-
-				if(res.err.status == AR_S_NO)
-				{
-						AR_FormatString(lex->last_err_msg, L"Lex Rule Error : %Id : %ls\n", (size_t)action->value, res.err.pos == NULL ? L"" : res.err.pos);
-				}
+				
+				AR_FormatString(lex->last_err_msg, L"Lex Rule Error : %Id : %ls\n", (size_t)action->value, res.err.pos == NULL ? L"" : res.err.pos);
 
 				return res.err.status;
 		}
@@ -317,7 +310,7 @@ arStatus_t	Lex_Insert(lex_t *lex, const wchar_t *input)
 				{
 						if(AR_wcsstr(p, L"%skip") == NULL)
 						{
-								return AR_S_NO;
+								return AR_E_INVAL;
 						}
 
 						p = AR_wcstrim_space(p + AR_wcslen(L"%skip"));
@@ -327,14 +320,20 @@ arStatus_t	Lex_Insert(lex_t *lex, const wchar_t *input)
 
 				act.priority = act.value = 0;
 				p = AR_wtou(p, (uint_t*)&act.value, 10);
-				if(p == NULL)return AR_S_NO;
+				if(p == NULL)
+				{
+						return AR_E_INVAL;
+				}
 
 				p = AR_wcstrim_space(p);
 
 				if(*p == L',')
 				{
 						p = AR_wtou(++p, (uint_t*)&act.priority, 10);
-						if(p == NULL)return AR_S_NO;
+						if(p == NULL)
+						{
+								return AR_E_INVAL;
+						}
 				}
 
 				p = AR_wcstrim_space(p);
@@ -354,7 +353,10 @@ arStatus_t	Lex_Insert(lex_t *lex, const wchar_t *input)
 				name[i] = L'\0';
 				p = AR_wcstrim_space(p);
 
-				if(*p != L'=')return AR_S_NO;
+				if(*p != L'=')
+				{
+						return AR_E_INVAL;
+				}
 				p = AR_wcstrim_space(++p);
 				return Lex_InsertName(lex, name, p);
 
@@ -363,7 +365,7 @@ arStatus_t	Lex_Insert(lex_t *lex, const wchar_t *input)
 				/*AR_error(L"Lex Rule Error : Invalid Input %ls\r\n", p);*/
 				
 				AR_FormatString(lex->last_err_msg, L"Lex Rule Error : Invalid Input %ls\r\n", p);
-				return AR_S_NO;
+				return AR_E_INVAL;
 		}
 
 
@@ -378,7 +380,7 @@ arStatus_t	Lex_GenerateTransTable(lex_t *lex)
 		/*
 		Lex_SortProgSet(lex->prog_set);
 		*/
-		return (bool_t)(lex->rule_set.count > 0) ? AR_S_YES : AR_S_NO;
+		return (bool_t)(lex->rule_set.count > 0) ? AR_S_YES : AR_E_EMPTY;
 }
 
 

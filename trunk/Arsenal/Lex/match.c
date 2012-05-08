@@ -162,7 +162,7 @@ arStatus_t	Lex_RemoveFromProgSet(lexProgSet_t *set, size_t value)
 
 		set->count = (size_t)cnt;
 
-		return res ? AR_S_YES : AR_S_NO;
+		return res ? AR_S_YES : AR_E_NOTFOUND;
 }
 
 

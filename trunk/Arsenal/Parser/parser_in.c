@@ -68,7 +68,7 @@ arStatus_t	Parser_Init()
 		if(__tbl == NULL)
 		{
 				AR_error(AR_ERR_FATAL, L"parser initialize failed\r\n");
-				return AR_S_NO;/*±‹√‚warning*/
+				return AR_E_NOMEM;/*±‹√‚warning*/
 		}
 
 		PARSER_EOISymb		=		Parser_CreateSymb(L"%EOI", PARSER_TERM);
@@ -80,7 +80,7 @@ arStatus_t	Parser_Init()
 		if(PARSER_EOISymb == NULL || PARSER_ErrorSymb == NULL || PARSER_DefPrecSymb == NULL || PARSER_StartSymb == NULL)
 		{
 				AR_error(AR_ERR_FATAL, L"parser initialize failed\r\n");
-				return AR_S_NO;/*±‹√‚warning*/
+				return AR_E_NOMEM;/*±‹√‚warning*/
 		}
 
 

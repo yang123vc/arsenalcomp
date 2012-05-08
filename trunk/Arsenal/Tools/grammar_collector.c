@@ -2577,13 +2577,9 @@ static lex_t* __build_lex()
 		{
 			
 				status = Lex_Insert(lex, __cfg_lex_name[i]);
-				if(status == AR_S_YES)
+				if(status != AR_S_YES)
 				{
-				}else if(status == AR_S_NO)
-				{
-						AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
-				}else
-				{
+						AR_ASSERT(false);
 						goto INVALID_POINT;
 				}
 		}
@@ -2598,27 +2594,20 @@ static lex_t* __build_lex()
 				
 				status = Lex_InsertRule(lex, __cfg_pattern[i].regex, &action);
 
-				if(status == AR_S_YES)
+				if(status != AR_S_YES)
 				{
-				}else if(status == AR_S_NO)
-				{
-						AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
-				}else
-				{
+						AR_ASSERT(false);
 						goto INVALID_POINT;
 				}
 		}
 
 		status = Lex_GenerateTransTable(lex);
-		if(status == AR_S_YES)
+		if(status != AR_S_YES)
 		{
-		}else if(status == AR_S_NO)
-		{
-				AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
-		}else
-		{
+				AR_ASSERT(false);
 				goto INVALID_POINT;
 		}
+
 
 		return lex;
 
@@ -2650,15 +2639,11 @@ static psrGrammar_t*	__build_grammar(psrHandler_t *handler)
 		for(i = 0; i < AR_NELEMS(__cfg_term); ++i)
 		{
 				status = Parser_InsertTerm(gmr, __cfg_term[i].name, (size_t)__cfg_term[i].val, PARSER_ASSOC_NONASSOC, 0, __build_leaf);
-				if(status == AR_S_YES)
+				if(status != AR_S_YES)
 				{
-						
-				}else if(status == AR_S_NO)
-				{
-						AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
-				}else
-				{
+						AR_ASSERT(false);
 						goto INVALID_POINT;
+						
 				}
 		}
 
@@ -2666,41 +2651,29 @@ static psrGrammar_t*	__build_grammar(psrHandler_t *handler)
 		{
 				status = Parser_InsertRuleByStr(gmr, __cfg_rule[i].rule, NULL, __cfg_rule[i].handler, __cfg_rule[i].auto_ret);
 
-				if(status == AR_S_YES)
+				if(status != AR_S_YES)
 				{
-						
-				}else if(status == AR_S_NO)
-				{
-						AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
-				}else
-				{
+						AR_ASSERT(false);
 						goto INVALID_POINT;
+						
 				}
 
 		}
 
 		status = Parser_SetStartRule(gmr, L"program");
-		if(status == AR_S_YES)
+		if(status != AR_S_YES)
 		{
-
-		}else if(status == AR_S_NO)
-		{
-				AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
-		}else
-		{
+				AR_ASSERT(false);
 				goto INVALID_POINT;
+
 		}
 
 		status = Parser_CheckIsValidGrammar(gmr, NULL);
-		if(status == AR_S_YES)
+		if(status != AR_S_YES)
 		{
-
-		}else if(status == AR_S_NO)
-		{
-				AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
-		}else
-		{
+				AR_ASSERT(false);
 				goto INVALID_POINT;
+
 		}
 
 

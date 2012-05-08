@@ -160,7 +160,7 @@ static AR_INLINE arStatus_t			Parser_InsertToTermInfoRec(psrTermInfoRec_t *rec, 
 		AR_ASSERT(rec != NULL && term != NULL);
 		if(Parser_FindTermFromRec(rec, term->val) != NULL)
 		{
-				return AR_S_NO;
+				return AR_E_EXISTED;
 		}
 
 		if(rec->count == rec->cap)
@@ -250,14 +250,9 @@ static AR_INLINE arStatus_t Parser_InsertToTermInfoTable(psrTermInfoTbl_t *tbl, 
 		if(status == AR_S_YES)
 		{
 				tbl->item_count++;
-				return AR_S_YES;
-		}else if(status == AR_S_NO)
-		{
-				return AR_S_NO;
-		}else /*AR_E_NOMEM*/
-		{
-				return status;
 		}
+		return status;
+
 }
 
 

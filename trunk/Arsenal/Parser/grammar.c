@@ -245,7 +245,7 @@ arStatus_t		Parser_CreateRule(psrRule_t **prule, const psrSymb_t *head, const ps
 				{
 						AR_FormatString(err_msg,L"Grammar Error: Duplicate Rule name <%ls>!\r\n", head->name);
 				}
-				return AR_S_NO;
+				return AR_E_EXISTED;
 		}
 
 		if(prec_tok != NULL && Parser_FindTermByName((psrTermInfoList_t*)term_list, prec_tok) == NULL)/*产生式优先级符号不存在于非终结符中，错误*/
@@ -255,7 +255,7 @@ arStatus_t		Parser_CreateRule(psrRule_t **prule, const psrSymb_t *head, const ps
 				{
 						AR_FormatString(err_msg, L"Grammar Error: Invalid prec \"%ls\" token <%ls>\r\n", prec_tok, head->name);
 				}
-				return AR_S_NO;
+				return AR_E_INVAL;
 		}
 		
 		
@@ -274,7 +274,7 @@ arStatus_t		Parser_CreateRule(psrRule_t **prule, const psrSymb_t *head, const ps
 								{
 										AR_FormatString(err_msg, L"Grammar Error: Invalid term token \"%ls\"\r\n", symb->name);
 								}
-								return AR_S_NO;
+								return AR_E_INVAL;
 						}
 						
 						if(Parser_CompSymb(symb, PARSER_ErrorSymb) == 0)
@@ -285,7 +285,7 @@ arStatus_t		Parser_CreateRule(psrRule_t **prule, const psrSymb_t *head, const ps
 										{
 												AR_FormatString(err_msg, L"Grammar Error: Duplicate error definition in <%ls>!\r\n", head->name);
 										}
-										return AR_S_NO;
+										return AR_E_INVAL;
 								}else
 								{
 										inerr = true;
@@ -301,7 +301,7 @@ arStatus_t		Parser_CreateRule(psrRule_t **prule, const psrSymb_t *head, const ps
 										AR_FormatString(err_msg, L"Grammar Error: Invalid non-term token \"%ls\"\r\n", symb->name);
 								}
 
-								return AR_S_NO;
+								return AR_E_INVAL;
 						}
 				}
 		}
@@ -406,7 +406,7 @@ arStatus_t Parser_CreateRuleByStr(psrRule_t **prule, const wchar_t *str, const w
 
 		if(!AR_iswalpha(*beg) && *beg != L'_')
 		{
-				status = AR_S_NO;
+				status = AR_E_INVAL;
 				goto END_POINT;
 		}
 		
@@ -418,7 +418,7 @@ arStatus_t Parser_CreateRuleByStr(psrRule_t **prule, const wchar_t *str, const w
 
 		if(*p == L'\0' || p - beg == 0)
 		{
-				status = AR_S_NO;
+				status = AR_E_INVAL;
 				goto END_POINT;
 		}else
 		{
@@ -437,7 +437,7 @@ arStatus_t Parser_CreateRuleByStr(psrRule_t **prule, const wchar_t *str, const w
 
 		if(*p != L':')
 		{
-				status = AR_S_NO;
+				status = AR_E_INVAL;
 				goto END_POINT;
 		}
 
@@ -904,20 +904,20 @@ arStatus_t				Parser_InsertTerm(psrGrammar_t *grammar, const wchar_t *name, size
 				/*AR_error(AR_GRAMMAR, L"Grammar Error : invalid token value %d\r\n", val);*/
 				/*AR_error(L"Grammar Error : invalid token value %" AR_PLAT_INT_FMT L"d\r\n", (size_t)val);*/
 				AR_FormatString(grammar->last_err_msg, L"Grammar Error : invalid token value %Id\r\n", (size_t)val);
-				return AR_S_NO;
+				return AR_E_RANGE;
 		}
 		
 		if(AR_wcslen(name) == 0)
 		{
 				AR_FormatString(grammar->last_err_msg, L"Grammar Error : invalid token name '%ls'\r\n", name);
-				return AR_S_NO;
+				return AR_E_INVAL;
 		}
 
 		
 		if(Parser_FindTermByName(&grammar->term_list, name) != NULL)
 		{
 				AR_FormatString(grammar->last_err_msg, L"Grammar Error : duplicate name : \"%ls\" definition\r\n", name);
-				return AR_S_NO;
+				return AR_E_EXISTED;
 		}
 
 		if(Parser_FindTermByValue(&grammar->term_list, val) != NULL)
@@ -925,14 +925,14 @@ arStatus_t				Parser_InsertTerm(psrGrammar_t *grammar, const wchar_t *name, size
 				/*AR_error(AR_GRAMMAR, L"Grammar Error : duplicate token value : %d definition\r\n", val);*/
 				/*AR_error(L"Grammar Error : duplicate token value : %" AR_PLAT_INT_FMT L"d definition\r\n", (size_t)val);*/
 				AR_FormatString(grammar->last_err_msg, L"Grammar Error : duplicate token value : %Id definition\r\n", (size_t)val);
-				return AR_S_NO;
+				return AR_E_EXISTED;
 		}
 
 
 		if(Parser_GetSymbFromGrammarByName(grammar, name) != NULL)
 		{
 				AR_FormatString(grammar->last_err_msg, L"Grammar Error : duplicate symbol name : \"%ls\" definition\r\n", name);
-				return AR_S_NO;
+				return AR_E_EXISTED;
 		}
 		
 		return Parser_InsertToTermInfoList(&grammar->term_list, name, val, assoc, prec, leaf_f);
@@ -952,7 +952,7 @@ arStatus_t				Parser_InsertRule(psrGrammar_t *grammar, psrRule_t *rule)
 		{
 				if(grammar->rules[i] == rule)
 				{
-						return AR_S_NO;
+						return AR_E_EXISTED;
 				}
 		}
 
@@ -960,7 +960,7 @@ arStatus_t				Parser_InsertRule(psrGrammar_t *grammar, psrRule_t *rule)
 		{
 				/*AR_error(L"Grammar Error : Non-term token %ls was reserved\r\n", rule->head->name);*/
 				AR_FormatString(grammar->last_err_msg, L"Grammar Error : Non-term token %ls was reserved\r\n", rule->head->name);
-				return AR_S_NO;
+				return AR_E_RESERVED;
 		}
 
 
@@ -972,7 +972,7 @@ arStatus_t				Parser_InsertRule(psrGrammar_t *grammar, psrRule_t *rule)
 				if(r != NULL && Parser_CompSymb(l, r) != 0)
 				{
 						AR_FormatString(grammar->last_err_msg, L"Grammar Error : duplicate symbol name : \"%ls\" definition\r\n", l->name);
-						return AR_S_NO;
+						return AR_E_EXISTED;
 				}
 		}
 
@@ -1200,12 +1200,12 @@ arStatus_t				Parser_SetStartRule(psrGrammar_t *grammar, const wchar_t *rule_nam
 
 		if(Parser_GetTermSymbInfoByName(grammar, rule_name) != NULL)
 		{
-				return AR_S_NO;
+				return AR_E_EXISTED;
 		}
 
 		if(AR_wcscmp(PARSER_StartSymb->name, rule_name) == 0)
 		{
-				return AR_S_NO;
+				return AR_E_INVAL;
 		}
 
 		lhs = NULL;
@@ -1229,7 +1229,7 @@ arStatus_t				Parser_SetStartRule(psrGrammar_t *grammar, const wchar_t *rule_nam
 
 		if(lhs == NULL)
 		{
-				return AR_S_NO;
+				return AR_E_INVAL;
 		}
 
 
@@ -1290,7 +1290,7 @@ arStatus_t			Parser_CheckIsValidGrammar(const psrGrammar_t *grammar, arIOCtx_t *
 				{
 						AR_printf_ctx(io_ctx, L"Grammar Error : empty grammar!\r\n");
 				}
-				return AR_S_NO;
+				return AR_E_INVAL;
 		}
 
 		lst = Parser_GetSymbList(grammar);
@@ -1396,10 +1396,11 @@ arStatus_t			Parser_CheckIsValidGrammar(const psrGrammar_t *grammar, arIOCtx_t *
 				}
 		}
 
-		return result ? AR_S_YES : AR_S_NO;
+		return result ? AR_S_YES : AR_E_INVAL;
 }
 
 /************************************************************************************************************************************/
+
 
 
 

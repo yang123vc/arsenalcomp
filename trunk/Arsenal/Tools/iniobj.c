@@ -657,7 +657,7 @@ static arStatus_t	__ini_remove_kvpair_from_section(iniSection_t *sec, const wcha
 
 		if(i >= sec->cnt)
 		{
-				return AR_S_NO;
+				return AR_E_RANGE;
 		}
 
 		__ini_destroy_kvpair(kv);
@@ -872,12 +872,12 @@ arStatus_t			Ini_InsertSection(iniObject_t *obj, const wchar_t *sect, const wcha
 
 		if(!__is_valid_section_name(sect))
 		{
-				return AR_S_NO;
+				return AR_E_INVAL;
 		}
 
 		if(Ini_SectionIsExisted(obj, sect) != AR_S_YES)
 		{
-				return AR_S_NO;
+				return AR_E_NOTFOUND;
 		}
 
 		if(obj->cnt == obj->cap)
@@ -951,7 +951,7 @@ arStatus_t			Ini_RemoveSection(iniObject_t *obj, const wchar_t *sect)
 
 		if(idx == -1)
 		{
-				return AR_S_NO;
+				return AR_E_NOTFOUND;
 		}
 
 		section = obj->sect[idx];
@@ -978,7 +978,7 @@ arStatus_t			Ini_RemoveKey(iniObject_t *obj, const wchar_t *sect, const wchar_t 
 		idx = __find_section(obj, sect);
 		if(idx == -1)
 		{
-				return AR_S_NO;
+				return AR_E_NOTFOUND;
 		}
 
 		section = obj->sect[idx];
@@ -997,7 +997,7 @@ arStatus_t			Ini_SetComment(iniObject_t *obj, const wchar_t *sect, const wchar_t
 		
 		if(kv == NULL)
 		{
-				return AR_S_NO;
+				return AR_E_NOTFOUND;
 		}
 
 		return __ini_reset_kvpair_comment(kv, comment);
@@ -1039,7 +1039,7 @@ arStatus_t			Ini_SetString(iniObject_t *obj, const wchar_t *sect, const wchar_t 
 
 		if(!__is_valid_section_name(sect) || !__is_valid_key_name(key))
 		{
-				return AR_S_NO;
+				return AR_E_INVAL;
 		}
 
 RECHECK_POINT:
@@ -1100,7 +1100,7 @@ static arStatus_t	__handle_line(iniObject_t *obj, const wchar_t *line, int_t *la
 		{
 		case INI_INVALID:
 		{
-				is_ok = AR_S_NO;
+				is_ok = AR_E_INVAL;
 		}
 				break;
 		case INI_EMPTY:
@@ -1166,7 +1166,7 @@ arStatus_t			Ini_LoadObjectFromString(iniObject_t *obj, const wchar_t *ini_data)
 		arStatus_t status;
 		const wchar_t	*s;
 		arString_t		*line;
-		
+		size_t	err_cnt;
 		int_t	last_sect_idx;
 		
 		AR_ASSERT(obj != NULL && ini_data != NULL);
@@ -1174,13 +1174,14 @@ arStatus_t			Ini_LoadObjectFromString(iniObject_t *obj, const wchar_t *ini_data)
 
 		Ini_ClearObject(obj);
 		line = AR_CreateString();
-
+		
 		if(line == NULL)
 		{
 				status = AR_E_NOMEM;
 				goto END_POINT;
 		}
 
+		err_cnt = 0;
 		s = ini_data;
 		
 		last_sect_idx = -1;
@@ -1197,17 +1198,11 @@ arStatus_t			Ini_LoadObjectFromString(iniObject_t *obj, const wchar_t *ini_data)
 				}else
 				{
 						arStatus_t tmp = __handle_line(obj, AR_GetStringCString(line), &last_sect_idx);
-						if(tmp == AR_S_YES)
+						
+						if(tmp != AR_S_YES)
 						{
-
-						}else if(tmp == AR_S_NO)
-						{
-								status = tmp;
-								goto END_POINT;
-						}else
-						{
-								status = tmp;
-								goto END_POINT;
+								AR_error(AR_ERR_WARNING, L"Invalid line : %ls\r\n", AR_GetStringCString(line));
+								err_cnt++;
 						}
 
 						AR_ClearString(line);
@@ -1219,17 +1214,10 @@ arStatus_t			Ini_LoadObjectFromString(iniObject_t *obj, const wchar_t *ini_data)
 		{
 				arStatus_t tmp = __handle_line(obj, AR_GetStringCString(line),  &last_sect_idx);
 
-				if(tmp == AR_S_YES)
-				{
-				}else if(tmp == AR_S_NO)
+				if(tmp != AR_S_YES)
 				{
 						status = tmp;
 						goto END_POINT;
-				}else
-				{
-						status = tmp;
-						goto END_POINT;
-
 				}
 		}
 
