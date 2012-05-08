@@ -864,7 +864,7 @@ arMutex_t*		AR_CreateMutex();
 void			AR_DestroyMutex(arMutex_t *mtx);
 arStatus_t		AR_LockMutex(arMutex_t *mtx);
 arStatus_t		AR_TryLockMutex(arMutex_t *mtx);
-arStatus_t		AR_UnlockMutex(arMutex_t *mtx);
+arStatus_t		AR_UnLockMutex(arMutex_t *mtx);
 
 
 /**********************************************************event*************************************************************/

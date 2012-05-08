@@ -47,7 +47,7 @@ arStatus_t	Arsenal_Init(const arInit_t *ctx)
 				result = AR_S_YES;
 		}else
 		{
-				result = AR_S_NO;
+				result = AR_E_FAIL;
 		}
 
 		total_end = AR_GetTime_Milliseconds();

@@ -210,7 +210,7 @@ arStatus_t		AR_TryLockMutex(arMutex_t *mtx)
 }
 
 
-arStatus_t		AR_UnlockMutex(arMutex_t *mtx)
+arStatus_t		AR_UnLockMutex(arMutex_t *mtx)
 {
 		AR_ASSERT(mtx != NULL);
 		LeaveCriticalSection((CRITICAL_SECTION*)mtx);
