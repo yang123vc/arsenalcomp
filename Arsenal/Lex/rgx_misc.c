@@ -77,7 +77,7 @@ arStatus_t				RGX_InsertToNameSet(rgxNameSet_t	*set, const wchar_t	*name, rgxNod
 		
 		if(RGX_FindFromNameSet(set, name) != NULL)
 		{
-				return AR_S_NO;
+				return AR_E_EXISTED;
 		}
 
 		if(set->count == set->cap)
@@ -134,7 +134,7 @@ arStatus_t				RGX_RemoveFromNameSet(rgxNameSet_t	*set, const wchar_t	*name)
 
 		if(i == set->count)
 		{
-				return AR_S_NO;
+				return AR_E_NOTFOUND;
 		}
 
 		while(i < set->count - 1)

@@ -207,7 +207,7 @@ arStatus_t			Parser_RemoveFromSymbListByIndex(psrSymbList_t *symb_lst, size_t in
 		
 		if(index >= symb_lst->count)
 		{
-				return AR_S_NO;
+				return AR_E_RANGE;
 		}
 
 		i = index;

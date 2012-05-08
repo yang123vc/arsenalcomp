@@ -391,7 +391,7 @@ static arStatus_t	SN_RemoveFromList(snList_t	*lst, size_t idx)
 		AR_ASSERT(lst != NULL);
 		if(idx >= lst->count)
 		{
-				return AR_S_NO;
+				return AR_E_RANGE;
 		}
 		SN_DestroyObject(lst->lst[idx]);
 		lst->lst[idx] = lst->lst[lst->count-1];
@@ -529,7 +529,7 @@ static arStatus_t	SN_RemoveFromDict(snDict_t *dict, const snObject_t *key)
 
 		if(i == dict->count)
 		{
-				return AR_S_NO;
+				return AR_E_RANGE;
 		}
 
 		SN_DestroyObject(dict->pairs[i].key);
@@ -1430,7 +1430,7 @@ snRetVal_t		SN_FindObjectByWcsPath(snObject_t *obj, const wchar_t *path)
 								}
 						}else
 						{
-								ret.status = AR_S_NO;
+								ret.status = AR_E_INVAL;
 								obj = NULL;
 								goto END_POINT;
 						}
@@ -1469,7 +1469,7 @@ snRetVal_t		SN_FindObjectByStrPath(snObject_t *obj, const char *path)
 
 		if(wcs == NULL)
 		{
-				ret.status = AR_S_NO;
+				ret.status = AR_E_BADENCCONV;
 				return ret;
 		}
 

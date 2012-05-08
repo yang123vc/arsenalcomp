@@ -691,18 +691,12 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 				const ARSpace::cfgName_t		*name = &cfg->name[i];
 
 				arStatus_t		status = ARSpace::Lex_InsertName(lexer, name->name, name->regex);
-
-				if(status == AR_S_YES)
-				{
-				}else if(status == AR_S_NO)
+				if(status != AR_S_YES)
 				{
 						CString msg;
 						msg.Format(TEXT("Name Error : \"%ls : %ls\""), name->name, name->regex);
 						output.Append(msg, COutputList::MSG_ERROR, name->line, tar);
 						has_error = true;
-				}else
-				{
-						
 				}
 		}
 
@@ -717,19 +711,12 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 
 				arStatus_t		status = ARSpace::Lex_InsertRule(lexer, tok->regex, &action);
 
-				if(status == AR_S_YES)
-				{
-
-				}else if(status == AR_S_NO)
+				if(status != AR_S_YES)
 				{
 						CString msg;
 						msg.Format(TEXT("Token Error :  \"%ls : %ls\""), tok->name, tok->regex);
 						output.Append(msg, COutputList::MSG_ERROR, tok->line, tar);
 						has_error = true;
-						//continue;
-				}else
-				{
-						abort();
 				}
 
 				if(tok->is_skip || tok->tokval == 0)
@@ -739,18 +726,13 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 
 				status = ARSpace::Parser_InsertTerm(grammar, tok->name, tok->tokval, ARSpace::PARSER_ASSOC_NONASSOC, 0, build_leaf);
 
-				if(status == AR_S_YES)
-				{
-				}else if(status == AR_S_NO)
+				if(status != AR_S_YES)
 				{
 						CString msg;
 
 						msg.Format(TEXT("Term Error : \"%ls : %ls\""), tok->name, tok->regex);
 						output.Append(msg, COutputList::MSG_ERROR, tok->line, tar);
 						has_error = true;
-				}else
-				{
-						abort();
 				}
 		}
 
@@ -766,17 +748,12 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 						{
 								arStatus_t		status = ARSpace::Parser_InsertTerm(grammar, prec->prec_tok_set[k], prec->prec_tok_val[k], prec->assoc, prec->prec_level, NULL);
 
-								if(status == AR_S_YES)
-								{
-								}else if(status == AR_S_NO)
+								if(status != AR_S_YES)
 								{
 										CString msg;
 										msg.Format(TEXT("Prec Error : \"%ls\"!"), prec->prec_tok_set[k]);
 										output.Append(msg, COutputList::MSG_ERROR, prec->line, tar);
 										has_error = true;
-								}else
-								{
-										abort();
 								}
 						}else
 						{
@@ -795,17 +772,12 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 				str.Format(TEXT("%ls : %ls"), rule->lhs, rule->rhs);
 				arStatus_t status = ARSpace::Parser_InsertRuleByStr(grammar, str.GetString(), rule->prec_tok,  build_rule, 0);
 
-				if(status == AR_S_YES)
-				{
-				}else if(status == AR_S_NO)
+				if(status != AR_S_YES)
 				{
 						CString msg;
 						msg.Format(TEXT("Rule Error : \"%ls\"!"), str.GetString());
 						output.Append(msg, COutputList::MSG_ERROR, rule->line, tar);
 						has_error = true;
-				}else
-				{
-						abort();
 				}
 		}
 
@@ -826,7 +798,7 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 
 				ARSpace::arStatus_t		status = ARSpace::Parser_SetStartRule(grammar, cfg->start.start_rule);
 
-				if(has_start_rule || status == ARSpace::AR_S_NO)
+				if(has_start_rule || status != ARSpace::AR_S_YES)
 				{
 						has_error = true;
 						CString msg;
@@ -1299,7 +1271,7 @@ void CGrammarDesignerDoc::OnParserParse()
 						info.type = ARSpace::CFG_REPORT_MESSAGE_T;
 						info.std_msg.message = (const TCHAR*)msg;
 						report_build_func(&info, (void*)output_context.m_output);
-						is_ok = ARSpace::AR_S_NO;
+						is_ok = ARSpace::AR_E_FAIL;
 				}
 		}
 
