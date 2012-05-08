@@ -330,7 +330,7 @@ arStatus_t		AR_TryLockMutex(arMutex_t *mtx)
         }
 }
 
-arStatus_t		AR_UnlockMutex(arMutex_t *mtx)
+arStatus_t		AR_UnLockMutex(arMutex_t *mtx)
 {
         AR_ASSERT(mtx != NULL);
         if(pthread_mutex_unlock((pthread_mutex_t*)mtx) != 0)
