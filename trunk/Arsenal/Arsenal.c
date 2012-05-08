@@ -86,7 +86,7 @@ arStatus_t	Arsenal_UnInit()
 				return AR_S_YES;
 		}else
 		{
-				return AR_S_NO;
+				return AR_E_FAIL;
 		}
 }
 
