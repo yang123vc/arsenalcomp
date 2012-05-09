@@ -540,8 +540,34 @@ uint_t			AR_wcshash_n(const wchar_t *str, size_t n);
 
 
 
+/********************************************************Basic Data Structure*********************************************************/
+
+typedef void (*AR_ds_destroy_func_t)(void *ctx, void *data);
+
+typedef struct __arsenal_list_node_tag 
+{
+        void *data;
+        struct __arsenal_list_node_tag  *next;
+        struct __arsenal_list_node_tag  *prev;
+}arListNode_t;
+
+typedef struct __arsenal_list_tag
+{
+        arListNode_t            *head;
+        arListNode_t            *tail;
+        size_t                  count;
+        
+        void                    *usr_ctx;
+        AR_ds_destroy_func_t    dtor;
+}arList_t;
 
 
+arList_t*       AR_CreateList(AR_ds_destroy_func_t dtor, void *ctx);
+void            AR_DestroyList(arList_t *lst);
+void			AR_ClearList(arList_t *lst);
+arStatus_t      AR_InsertToListByNode(arList_t *lst, arListNode_t *node, void *data);
+void			AR_RemoveFromList(arList_t *lst, arListNode_t *node);
+size_t          AR_GetListCount(const arList_t *lst);
 
 /*********************************************************String Convert****************************************************/
 
