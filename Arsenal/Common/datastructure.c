@@ -332,6 +332,55 @@ size_t			AR_GetHashCount(arHash_t *hash)
 }
 
 
+
+static arStatus_t __remove_key_by_hashcode(arHash_t *hash, void *key, uint_64_t hash_code)
+{
+		arStatus_t status;
+        arList_t *lst;
+        arListNode_t *node;
+		AR_ASSERT(hash != NULL && key != NULL);
+		status = AR_S_YES;
+		lst = hash->bucket[hash_code % (uint_64_t)hash->bucket_size];
+		
+		if(lst == NULL)
+        {
+                return AR_E_NOTFOUND;
+        }
+
+		for(node = lst->head; node != NULL; node = node->next)
+        {
+                arHashNode_t *hn;
+                hn = (arHashNode_t*)node->data;
+                AR_ASSERT(hn != NULL);
+                
+                if(hash->comp_f(hn->key, key) == 0)
+                {
+						if(hash->destroy_key_f)
+						{
+								hash->destroy_key_f(hn->key, hash->usr_ctx);
+								hn->key = NULL;
+						}
+
+						if(hash->destroy_val_f)
+						{
+								hash->destroy_val_f(hn->val, hash->usr_ctx);
+								hn->val = NULL;
+						}
+
+                        AR_DEL(hn);
+                        hn = NULL;
+                        AR_RemoveFromList(lst, node);
+                        AR_ASSERT(hash->item_count > 0);
+                        hash->item_count--;
+                        return AR_S_YES;
+                }
+        }
+
+        return AR_E_NOTFOUND;
+
+}
+
+
 arStatus_t		AR_InsertToHash(arHash_t *hash, void *key, void *val)
 {
         arStatus_t status;
@@ -345,7 +394,9 @@ arStatus_t		AR_InsertToHash(arHash_t *hash, void *key, void *val)
         key_init = false;
 		val_init = false;
 
-        AR_RemoveFromHash(hash, key);
+		hash_code = hash->hash_f(key);
+
+		__remove_key_by_hashcode(hash, key, hash_code);
         
         
         new_node = AR_NEW0(arHashNode_t);
@@ -385,7 +436,7 @@ arStatus_t		AR_InsertToHash(arHash_t *hash, void *key, void *val)
 
         val_init = true;
         
-        hash_code = hash->hash_f(key);
+        
         
         if(hash->bucket[hash_code % (uint_64_t)hash->bucket_size] == NULL)
         {
@@ -431,61 +482,15 @@ INVALID_POINT:
         }
         
         return status;
-        
-        
 }
 
 arStatus_t		AR_RemoveFromHash(arHash_t *hash, void *key)
 {
-        arStatus_t status;
-        arList_t *lst;
-        arListNode_t *node;
         uint_64_t hash_code;
-
         AR_ASSERT(hash != NULL);
         
-        status = AR_S_YES;
-        
-        
         hash_code = hash->hash_f(key);
-        
-        lst = hash->bucket[hash_code % (uint_64_t)hash->bucket_size];
-
-        if(lst == NULL)
-        {
-                return AR_E_NOTFOUND;
-        }
-
-        for(node = lst->head; node != NULL; node = node->next)
-        {
-                arHashNode_t *hn;
-                hn = (arHashNode_t*)node->data;
-                AR_ASSERT(hn != NULL);
-                
-                if(hash->comp_f(hn->key, key) == 0)
-                {
-						if(hash->destroy_key_f)
-						{
-								hash->destroy_key_f(hn->key, hash->usr_ctx);
-								hn->key = NULL;
-						}
-
-						if(hash->destroy_val_f)
-						{
-								hash->destroy_val_f(hn->val, hash->usr_ctx);
-								hn->val = NULL;
-						}
-
-                        AR_DEL(hn);
-                        hn = NULL;
-                        AR_RemoveFromList(lst, node);
-                        AR_ASSERT(hash->item_count > 0);
-                        hash->item_count--;
-                        return AR_S_YES;
-                }
-        }
-
-        return AR_E_NOTFOUND;
+        return __remove_key_by_hashcode(hash, key, hash_code);
 
 }
 
