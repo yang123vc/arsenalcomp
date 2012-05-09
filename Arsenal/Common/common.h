@@ -589,18 +589,19 @@ typedef struct __arsenal_hash_node_tag
 {
 		void	*key;
 		void	*val;
+		struct __arsenal_hash_node_tag	*next;
 }arHashNode_t;
 
 typedef struct __arsenal_hash_tag
 {
-		arList_t		**bucket;
+		arHashNode_t	**bucket;
 		uint_64_t		bucket_size;
 		uint_64_t		item_count;
 
 		AR_hash_hash_func_t		hash_f;
 		AR_hash_comp_func_t		comp_f;
-		AR_hash_copy_func_t	copykey_f;
-		AR_hash_copy_func_t	copyval_f;
+		AR_hash_copy_func_t		copykey_f;
+		AR_hash_copy_func_t		copyval_f;
 		
 		AR_hash_destroy_func_t	destroy_key_f;
 		AR_hash_destroy_func_t	destroy_val_f;
