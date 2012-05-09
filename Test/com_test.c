@@ -1932,7 +1932,8 @@ static void ds_dtor_test(void *data, void *ctx)
 		AR_UNUSED(ctx);
 }
 static void *usr_ctx = (void*)0x1234;
-void ds_test2()
+
+static void list_test()
 {
 		arList_t *lst = AR_CreateList(ds_dtor_test, usr_ctx), *lst_dest = AR_CreateList(ds_dtor_test, usr_ctx);
 
@@ -2122,9 +2123,98 @@ void ds_test2()
 		AR_DestroyList(lst_dest);
 		lst = NULL;
 		lst_dest = NULL;
-
-
 }
+
+/*
+typedef void			(*AR_hash_destroy_func_t)(void *key, void *val, void *ctx);
+typedef uint_64_t		(*AR_hash_hash_func_t)(void *key);
+typedef int_t			(*AR_hash_comp_func_t)(void *l, void *r);
+
+typedef struct __arsenal_hash_node_tag
+{
+		void	*key;
+		void	*val;
+}arHashNode_t;
+
+typedef struct __arsenal_hash_tag
+{
+		arList_t		**bucket;
+		uint_64_t		bucket_size;
+		uint_64_t		item_count;
+
+		AR_hash_hash_func_t		hash_f;
+		AR_hash_comp_func_t		comp_f;
+
+		AR_hash_destroy_func_t	dtor_f;
+		void					*usr_ctx;
+}arHash_t;
+
+arHash_t*		AR_CreateHash(size_t bucket_size, AR_hash_hash_func_t hash_f, AR_hash_comp_func_t comp_f, AR_hash_destroy_func_t dtor_f, void *usr_ctx);
+void			AR_DestroyHash(arHash_t *hash);
+void			AR_ClearHash(arHash_t *hash);
+
+arStatus_t		AR_InsertToHash(arHash_t *hash, void *key, void *val);
+arStatus_t		AR_RemoveFromHash(arHash_t *hash, void *key);
+arStatus_t		AR_FindFromHash(arHash_t *hash, void *key, void **pval);
+size_t			AR_GetHashCount(arHash_t *hash);
+
+
+*/
+
+static uint_64_t		hash_test(void *key)
+{
+		return (uint_64_t)key;
+}
+
+
+int_t		comp_test(void *l, void *r)
+{
+		return AR_CMP(l, r);
+}
+
+
+
+
+static void hash_test2()
+{
+		arHash_t *hash;
+
+		hash = AR_CreateHash(13, hash_test, comp_test, NULL, NULL);
+
+		AR_srand(time(NULL));
+
+
+		for(size_t i = 0; i < 10000000; ++i)
+		{
+				uint_64_t k = AR_rand64() % 139;
+				uint_64_t v = AR_rand64() % 10000;
+				arStatus_t s =  AR_InsertToHash(hash, (void*)k, (void*)v);
+				AR_ASSERT(s == AR_S_YES);
+		}
+
+
+		for(size_t i = 0; i < 10000; ++i)
+		{
+				uint_64_t k = AR_rand64() % 139;
+				void *pd;
+				arStatus_t s =  AR_FindFromHash(hash, (void*)k, &pd);
+				if(s == AR_S_YES)
+				{
+						AR_printf(L"%ls : %qu\r\n", L"hit", pd);
+				}
+		}
+
+		AR_DestroyHash(hash);
+		hash = NULL;
+}
+
+void ds_test2()
+{
+		hash_test2();
+}
+
+
+
 
 void com_test()
 {

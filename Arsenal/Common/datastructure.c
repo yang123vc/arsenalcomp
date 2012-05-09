@@ -269,7 +269,10 @@ void			AR_ClearHash(arHash_t *hash)
                 {
                         arHashNode_t *hn = (arHashNode_t*)node->data;
                         AR_ASSERT(hn != NULL);
-                        hash->dtor_f(hn->key, hn->val, hash->usr_ctx);
+						if(hash->dtor_f)
+						{
+								hash->dtor_f(hn->key, hn->val, hash->usr_ctx);
+						}
                         AR_DEL(hn);
                 }
                 
@@ -287,7 +290,7 @@ arStatus_t		AR_FindFromHash(arHash_t *hash, void *key, void **pval)
         arList_t *lst;
         arListNode_t *node;
         uint_64_t hash_code;
-        AR_ASSERT(hash != NULL && key != NULL && pval != NULL);
+        AR_ASSERT(hash != NULL && pval != NULL);
         
         hash_code = hash->hash_f(key);
         
@@ -327,7 +330,7 @@ arStatus_t		AR_InsertToHash(arHash_t *hash, void *key, void *val)
         arList_t *lst;
         uint_64_t hash_code;
         arHashNode_t *new_node;
-        AR_ASSERT(hash != NULL && key != NULL);
+        AR_ASSERT(hash != NULL);
         
         status = AR_S_YES;
         
@@ -389,7 +392,7 @@ arStatus_t		AR_RemoveFromHash(arHash_t *hash, void *key)
         arListNode_t *node;
         uint_64_t hash_code;
 
-        AR_ASSERT(hash != NULL && key != NULL);
+        AR_ASSERT(hash != NULL);
         
         status = AR_S_YES;
         
@@ -411,7 +414,11 @@ arStatus_t		AR_RemoveFromHash(arHash_t *hash, void *key)
                 
                 if(hash->comp_f(hn->key, key) == 0)
                 {
-                        hash->dtor_f(hn->key, hn->val, hash->usr_ctx);
+						if(hash->dtor_f)
+						{
+								hash->dtor_f(hn->key, hn->val, hash->usr_ctx);
+						}
+
                         AR_DEL(hn);
                         hn = NULL;
                         AR_RemoveFromList(lst, node);
