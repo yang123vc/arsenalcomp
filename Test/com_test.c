@@ -1,7 +1,7 @@
 
 #include "test.h"
 
-
+#include <string>
 #include <math.h>
 #include <time.h>
 
@@ -2125,42 +2125,6 @@ static void list_test()
 		lst_dest = NULL;
 }
 
-/*
-typedef void			(*AR_hash_destroy_func_t)(void *key, void *val, void *ctx);
-typedef uint_64_t		(*AR_hash_hash_func_t)(void *key);
-typedef int_t			(*AR_hash_comp_func_t)(void *l, void *r);
-
-typedef struct __arsenal_hash_node_tag
-{
-		void	*key;
-		void	*val;
-}arHashNode_t;
-
-typedef struct __arsenal_hash_tag
-{
-		arList_t		**bucket;
-		uint_64_t		bucket_size;
-		uint_64_t		item_count;
-
-		AR_hash_hash_func_t		hash_f;
-		AR_hash_comp_func_t		comp_f;
-
-		AR_hash_destroy_func_t	dtor_f;
-		void					*usr_ctx;
-}arHash_t;
-
-arHash_t*		AR_CreateHash(size_t bucket_size, AR_hash_hash_func_t hash_f, AR_hash_comp_func_t comp_f, AR_hash_destroy_func_t dtor_f, void *usr_ctx);
-void			AR_DestroyHash(arHash_t *hash);
-void			AR_ClearHash(arHash_t *hash);
-
-arStatus_t		AR_InsertToHash(arHash_t *hash, void *key, void *val);
-arStatus_t		AR_RemoveFromHash(arHash_t *hash, void *key);
-arStatus_t		AR_FindFromHash(arHash_t *hash, void *key, void **pval);
-size_t			AR_GetHashCount(arHash_t *hash);
-
-
-*/
-
 static uint_64_t		hash_test(void *key)
 {
 		return (uint_64_t)key;
@@ -2179,7 +2143,7 @@ static void hash_test2()
 {
 		arHash_t *hash;
 
-		hash = AR_CreateHash(13, hash_test, comp_test, NULL, NULL);
+		hash = AR_CreateHash(13, hash_test, comp_test, NULL, NULL, NULL, NULL, NULL);
 
 		AR_srand(time(NULL));
 
@@ -2208,9 +2172,89 @@ static void hash_test2()
 		hash = NULL;
 }
 
+
+
+
+uint_64_t		__wstring_hash_func(void *key)
+{
+		std::wstring *pwstr = (std::wstring*)key;
+		AR_ASSERT(pwstr != NULL);
+		return AR_wcshash(pwstr->c_str());
+}
+
+int_t	__wstring_comp_func(void *l, void *r)
+{
+		return AR_wcscmp(    ((std::wstring*)l)->c_str(), ((std::wstring*)r)->c_str());
+}
+
+arStatus_t	__wstring_copy_key_func(void *key, void **new_key, void *ctx)
+{
+		std::wstring *new_wcs = new std::wstring(((std::wstring*)key)->c_str());
+		*new_key = (void*)new_wcs;
+		return AR_S_YES;
+}
+
+void	__wstring_destroy_func(void *data, void *ctx)
+{
+		AR_ASSERT(data != NULL);
+		delete (std::wstring*)data;
+		data = NULL;
+}
+
+
+
+
+static void hash_test3()
+{
+		arHash_t *hash;
+
+		hash = AR_CreateHash(13, __wstring_hash_func, __wstring_comp_func, __wstring_copy_key_func, __wstring_copy_key_func, __wstring_destroy_func, __wstring_destroy_func, L"ctx_test");
+
+		AR_srand(time(NULL));
+
+
+		for(size_t i = 0; i < 1000; ++i)
+		{
+				wchar_t kt[512],vt[512];
+
+				uint_64_t k = AR_rand64() % 139;
+				uint_64_t v = AR_rand64() % 10000;
+				
+				AR_swprintf(kt, 512, L"%qu", k);
+				AR_swprintf(vt, 512, L"%qu", v);
+
+				std::wstring ks(kt), vs(vt);
+
+				arStatus_t s =  AR_InsertToHash(hash, (void*)&ks, (void*)&vs);
+				AR_ASSERT(s == AR_S_YES);
+		}
+
+
+		for(size_t i = 0; i < 10000; ++i)
+		{
+				uint_64_t k = AR_rand64() % 139;
+
+				wchar_t kt[512];
+				AR_swprintf(kt, 512, L"%qu", k);
+				std::wstring ks(kt);
+
+				std::wstring *pval = NULL;
+				arStatus_t s =  AR_FindFromHash(hash, (void*)&ks, (void**)&pval);
+				
+				if(s == AR_S_YES)
+				{
+						AR_printf(L"%ls : %ls\r\n", L"hit", ((std::wstring*)pval)->c_str());
+				}
+		}
+
+		AR_DestroyHash(hash);
+		hash = NULL;
+}
+
 void ds_test2()
 {
-		hash_test2();
+		//hash_test2();
+		hash_test3();
 }
 
 

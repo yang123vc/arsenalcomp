@@ -191,7 +191,7 @@ typedef struct __arsenal_hash_tag
 }arHash_t;
 */
 
-arHash_t*		AR_CreateHash(size_t bucket_size, AR_hash_hash_func_t hash_f, AR_hash_comp_func_t comp_f, AR_hash_destroy_func_t dtor_f, void *usr_ctx)
+arHash_t*		AR_CreateHash(size_t bucket_size, AR_hash_hash_func_t hash_f, AR_hash_comp_func_t comp_f, AR_hash_copy_func_t copykey_f, AR_hash_copy_func_t copyval_f, AR_hash_destroy_func_t destroy_key_f, AR_hash_destroy_func_t destroy_val_f, void *usr_ctx)
 {
 		arHash_t *hash;
 		AR_ASSERT(bucket_size > 0 && hash_f != NULL && comp_f != NULL);
@@ -212,7 +212,10 @@ arHash_t*		AR_CreateHash(size_t bucket_size, AR_hash_hash_func_t hash_f, AR_hash
 		hash->bucket_size = bucket_size;
 		hash->comp_f = comp_f;
 		hash->hash_f = hash_f;
-		hash->dtor_f = dtor_f;
+		hash->copykey_f = copykey_f;
+		hash->copyval_f = copyval_f;
+		hash->destroy_key_f = destroy_key_f;
+		hash->destroy_val_f = destroy_val_f;
 		hash->usr_ctx = usr_ctx;
 
 		return hash;
@@ -269,10 +272,15 @@ void			AR_ClearHash(arHash_t *hash)
                 {
                         arHashNode_t *hn = (arHashNode_t*)node->data;
                         AR_ASSERT(hn != NULL);
-						if(hash->dtor_f)
+						if(hash->destroy_key_f)
 						{
-								hash->dtor_f(hn->key, hn->val, hash->usr_ctx);
+								hash->destroy_key_f(hn->key, hash->usr_ctx);
 						}
+						if(hash->destroy_val_f)
+						{
+								hash->destroy_val_f(hn->val, hash->usr_ctx);
+						}
+
                         AR_DEL(hn);
                 }
                 
@@ -330,10 +338,13 @@ arStatus_t		AR_InsertToHash(arHash_t *hash, void *key, void *val)
         arList_t *lst;
         uint_64_t hash_code;
         arHashNode_t *new_node;
+		bool_t key_init, val_init;
         AR_ASSERT(hash != NULL);
         
         status = AR_S_YES;
-        
+        key_init = false;
+		val_init = false;
+
         AR_RemoveFromHash(hash, key);
         
         
@@ -344,10 +355,35 @@ arStatus_t		AR_InsertToHash(arHash_t *hash, void *key, void *val)
                 goto INVALID_POINT;
         }
         
-        new_node->key = key;
-        new_node->val = val;
-        
-        
+		if(hash->copykey_f != NULL)
+		{
+				status = hash->copykey_f(key, &new_node->key, hash->usr_ctx);
+
+				if(status != AR_S_YES)
+				{
+						goto INVALID_POINT;
+				}
+		}else
+		{
+				new_node->key = key;
+		}
+
+		key_init = true;
+
+		if(hash->copyval_f != NULL)
+		{
+				status = hash->copyval_f(val, &new_node->val, hash->usr_ctx);
+				
+				if(status != AR_S_YES)
+				{
+						goto INVALID_POINT;
+				}
+		}else
+		{
+				new_node->val = val;
+		}
+
+        val_init = true;
         
         hash_code = hash->hash_f(key);
         
@@ -376,6 +412,20 @@ arStatus_t		AR_InsertToHash(arHash_t *hash, void *key, void *val)
 INVALID_POINT:
         if(new_node != NULL)
         {
+				if(key_init && hash->destroy_key_f)
+				{
+						hash->destroy_key_f(new_node->key, hash->usr_ctx);
+						new_node->key = NULL;
+						key_init = false;
+				}
+
+				if(val_init && hash->destroy_val_f)
+				{
+						hash->destroy_val_f(new_node->val, hash->usr_ctx);
+						new_node->val = NULL;
+						val_init = false;
+				}
+
                 AR_DEL(new_node);
                 new_node = NULL;
         }
@@ -414,9 +464,16 @@ arStatus_t		AR_RemoveFromHash(arHash_t *hash, void *key)
                 
                 if(hash->comp_f(hn->key, key) == 0)
                 {
-						if(hash->dtor_f)
+						if(hash->destroy_key_f)
 						{
-								hash->dtor_f(hn->key, hn->val, hash->usr_ctx);
+								hash->destroy_key_f(hn->key, hash->usr_ctx);
+								hn->key = NULL;
+						}
+
+						if(hash->destroy_val_f)
+						{
+								hash->destroy_val_f(hn->val, hash->usr_ctx);
+								hn->val = NULL;
 						}
 
                         AR_DEL(hn);

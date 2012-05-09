@@ -503,8 +503,8 @@ arStatus_t		AR_WaitEventWithTimeout(arEvent_t *evt, uint_64_t milliseconds)
         rc = 0;
 
         gettimeofday(&tv, NULL);
-        abstime.tv_sec  = tv.tv_sec + milliseconds / 1000;
-        abstime.tv_nsec = tv.tv_usec*1000 + (milliseconds % 1000)*1000000;
+        abstime.tv_sec  = tv.tv_sec + (int_t)milliseconds / 1000;
+        abstime.tv_nsec = tv.tv_usec*1000 + ((int_t)milliseconds % 1000)*1000000;
         if (abstime.tv_nsec >= 1000000000)
         {
                 abstime.tv_nsec -= 1000000000;
