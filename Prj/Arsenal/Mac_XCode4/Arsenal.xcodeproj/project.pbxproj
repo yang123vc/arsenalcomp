@@ -15,6 +15,8 @@
 		679A46DB155262E1006A5AD4 /* thread_posix_posix.h in Headers */ = {isa = PBXBuildFile; fileRef = 679A46D8155262E1006A5AD4 /* thread_posix_posix.h */; };
 		679A46DC155262E1006A5AD4 /* thread_posix_posix.h in Headers */ = {isa = PBXBuildFile; fileRef = 679A46D8155262E1006A5AD4 /* thread_posix_posix.h */; };
 		67C97BA61553B18F00FCB4E5 /* filesystem.c in Sources */ = {isa = PBXBuildFile; fileRef = 6728C3E215503E9300861D86 /* filesystem.c */; };
+		67DBF857155A39AD0074C569 /* datastructure.c in Sources */ = {isa = PBXBuildFile; fileRef = 67DBF856155A39AD0074C569 /* datastructure.c */; };
+		67DBF858155A39AD0074C569 /* datastructure.c in Sources */ = {isa = PBXBuildFile; fileRef = 67DBF856155A39AD0074C569 /* datastructure.c */; };
 		BE185DDF14E841B90095DB44 /* Arsenal.c in Sources */ = {isa = PBXBuildFile; fileRef = BE185D9014E841B90095DB44 /* Arsenal.c */; };
 		BE185DE014E841B90095DB44 /* Arsenal.c in Sources */ = {isa = PBXBuildFile; fileRef = BE185D9014E841B90095DB44 /* Arsenal.c */; };
 		BE185DE114E841B90095DB44 /* Arsenal.h in Headers */ = {isa = PBXBuildFile; fileRef = BE185D9114E841B90095DB44 /* Arsenal.h */; };
@@ -150,6 +152,7 @@
 		6728C3E215503E9300861D86 /* filesystem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = filesystem.c; sourceTree = "<group>"; };
 		679A46D7155262E1006A5AD4 /* thread_posix_apple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thread_posix_apple.h; sourceTree = "<group>"; };
 		679A46D8155262E1006A5AD4 /* thread_posix_posix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thread_posix_posix.h; sourceTree = "<group>"; };
+		67DBF856155A39AD0074C569 /* datastructure.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = datastructure.c; sourceTree = "<group>"; };
 		BE185D9014E841B90095DB44 /* Arsenal.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Arsenal.c; sourceTree = "<group>"; };
 		BE185D9114E841B90095DB44 /* Arsenal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Arsenal.h; sourceTree = "<group>"; };
 		BE185D9314E841B90095DB44 /* algo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = algo.c; sourceTree = "<group>"; };
@@ -258,6 +261,7 @@
 		BE185D9214E841B90095DB44 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				67DBF856155A39AD0074C569 /* datastructure.c */,
 				679A46D7155262E1006A5AD4 /* thread_posix_apple.h */,
 				679A46D8155262E1006A5AD4 /* thread_posix_posix.h */,
 				6728C3E215503E9300861D86 /* filesystem.c */,
@@ -547,6 +551,7 @@
 				BE185E6F14E841B90095DB44 /* tools.c in Sources */,
 				6728C3B5154C5E8300861D86 /* enviroment.c in Sources */,
 				6728C3E315503E9300861D86 /* filesystem.c in Sources */,
+				67DBF857155A39AD0074C569 /* datastructure.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -598,6 +603,7 @@
 				BE185E6C14E841B90095DB44 /* serializer.c in Sources */,
 				BE185E7014E841B90095DB44 /* tools.c in Sources */,
 				6728C3B6154C5E8300861D86 /* enviroment.c in Sources */,
+				67DBF858155A39AD0074C569 /* datastructure.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

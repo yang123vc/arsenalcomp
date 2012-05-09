@@ -168,7 +168,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "486"
          endingLineNumber = "486"
-         landmarkName = "AR_GetHomePath()"
+         landmarkName = "AR_GetCurrentPath()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -182,7 +182,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "489"
          endingLineNumber = "489"
-         landmarkName = "AR_GetHomePath()"
+         landmarkName = "AR_GetCurrentPath()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -196,7 +196,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "492"
          endingLineNumber = "492"
-         landmarkName = "AR_GetHomePath()"
+         landmarkName = "AR_GetCurrentPath()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -294,7 +294,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "895"
          endingLineNumber = "895"
-         landmarkName = "AR_PathIteratorNext()"
+         landmarkName = "AR_CreatePathIterator()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -308,7 +308,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "897"
          endingLineNumber = "897"
-         landmarkName = "AR_PathIteratorNext()"
+         landmarkName = "AR_CreatePathIterator()"
          landmarkType = "7">
       </FileBreakpoint>
    </FileBreakpoints>

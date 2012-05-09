@@ -576,7 +576,7 @@ size_t          AR_GetListCount(const arList_t *lst);
 /*
 Hash
 */
-typedef void			(*AR_hash_destroy_func_t)(void *data, void *ctx);
+typedef void			(*AR_hash_destroy_func_t)(void *key, void *val, void *ctx);
 typedef uint_64_t		(*AR_hash_hash_func_t)(void *key);
 typedef int_t			(*AR_hash_comp_func_t)(void *l, void *r);
 
@@ -589,8 +589,8 @@ typedef struct __arsenal_hash_node_tag
 typedef struct __arsenal_hash_tag
 {
 		arList_t		**bucket;
-		size_t			bucket_size;
-		size_t			item_count;
+		uint_64_t		bucket_size;
+		uint_64_t		item_count;
 
 		AR_hash_hash_func_t		hash_f;
 		AR_hash_comp_func_t		comp_f;
@@ -607,6 +607,9 @@ arStatus_t		AR_InsertToHash(arHash_t *hash, void *key, void *val);
 arStatus_t		AR_RemoveFromHash(arHash_t *hash, void *key);
 arStatus_t		AR_FindFromHash(arHash_t *hash, void *key, void **pval);
 size_t			AR_GetHashCount(arHash_t *hash);
+
+
+
 /*********************************************************String Convert****************************************************/
 
 /*
