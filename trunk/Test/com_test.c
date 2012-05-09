@@ -2189,9 +2189,15 @@ int_t	__wstring_comp_func(void *l, void *r)
 
 arStatus_t	__wstring_copy_key_func(void *key, void **new_key, void *ctx)
 {
-		std::wstring *new_wcs = new std::wstring(((std::wstring*)key)->c_str());
-		*new_key = (void*)new_wcs;
-		return AR_S_YES;
+		if(AR_rand32() % 2)
+		{
+				std::wstring *new_wcs = new std::wstring(((std::wstring*)key)->c_str());
+				*new_key = (void*)new_wcs;
+				return AR_S_YES;
+		}else
+		{
+				return AR_E_NOMEM;
+		}
 }
 
 void	__wstring_destroy_func(void *data, void *ctx)
@@ -2226,7 +2232,10 @@ static void hash_test3()
 				std::wstring ks(kt), vs(vt);
 
 				arStatus_t s =  AR_InsertToHash(hash, (void*)&ks, (void*)&vs);
-				AR_ASSERT(s == AR_S_YES);
+				if(s != AR_S_YES)
+				{
+						AR_LOG(L"low memory\r\n");
+				}
 		}
 
 
