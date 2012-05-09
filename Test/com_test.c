@@ -1916,7 +1916,7 @@ unit_test_abort:                                \
 
 /*
 
-arList_t*       AR_CreateList(AR_ds_destroy_func_t dtor, void *ctx);
+arList_t*       AR_CreateList(AR_list_destroy_func_t dtor, void *ctx);
 void            AR_DestroyList(arList_t *lst);
 void			AR_ClearList(arList_t *lst);
 arStatus_t      AR_InsertToListByNode(arList_t *lst, arListNode_t *node, void *data);

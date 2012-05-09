@@ -13,18 +13,16 @@
 
 #include "common.h"
 
-/******************************************************Print**************************************************************/
+
 
 AR_NAMESPACE_BEGIN
 
 
 
-/*
-
- */
+/******************************************************List**************************************************************/
 
 
-arList_t*       AR_CreateList(AR_ds_destroy_func_t dtor, void *ctx)
+arList_t*       AR_CreateList(AR_list_destroy_func_t dtor, void *ctx)
 {
         arList_t *lst;
         
@@ -169,6 +167,96 @@ size_t          AR_GetListCount(const arList_t *lst)
         return lst->count;
 }
 
+
+/******************************************************Hash**************************************************************/
+/*
+
+typedef struct __arsenal_hash_node_tag
+{
+		void	*key;
+		void	*val;
+}arHashNode_t;
+
+typedef struct __arsenal_hash_tag
+{
+		arHashNode_t	**bucket;
+		size_t			bucket_size;
+		size_t			item_count;
+
+		AR_hash_hash_func_t		hash_f;
+		AR_hash_comp_func_t		comp_f;
+
+		AR_hash_destroy_func_t	dtor_f;
+		void					*usr_ctx;
+}arHash_t;
+*/
+
+arHash_t*		AR_CreateHash(size_t bucket_size, AR_hash_hash_func_t hash_f, AR_hash_comp_func_t comp_f, AR_hash_destroy_func_t dtor_f, void *usr_ctx)
+{
+		arHash_t *hash;
+		AR_ASSERT(bucket_size > 0 && hash_f != NULL && comp_f != NULL);
+		hash = AR_NEW0(arHash_t);
+		
+		if(hash == NULL)
+		{
+				goto FAILED_POINT;
+		}
+
+		hash->bucket = AR_NEWARR0(arList_t*, bucket_size);
+
+		if(hash->bucket == NULL)
+		{
+				goto FAILED_POINT;
+		}
+
+		hash->bucket_size = bucket_size;
+		hash->comp_f = comp_f;
+		hash->hash_f = hash_f;
+		hash->dtor_f = dtor_f;
+		hash->usr_ctx = usr_ctx;
+
+		return hash;
+
+FAILED_POINT:
+		if(hash && hash->bucket != NULL)
+		{
+				AR_DEL(hash->bucket);
+				hash->bucket = NULL;
+		}
+
+		if(hash)
+		{
+				AR_DEL(hash);
+				hash = NULL;
+		}
+
+		return NULL;
+
+}
+
+void			AR_DestroyHash(arHash_t *hash)
+{
+		AR_ASSERT(hash != NULL);
+		AR_ClearHash(hash);
+		if(hash->bucket)
+		{
+				AR_DEL(hash->bucket);
+				hash->bucket = NULL;
+		}
+
+		AR_DEL(hash);
+		hash = NULL;
+}
+
+void			AR_ClearHash(arHash_t *hash)
+{
+
+}
+
+arStatus_t		AR_InsertToHash(arHash_t *hash, void *key, void *val);
+arStatus_t		AR_RemoveFromHash(arHash_t *hash, void *key);
+arStatus_t		AR_FindFromHash(arHash_t *hash, void *key, void **pval);
+size_t			AR_GetHashCount(arHash_t *hash);
 
 
 
