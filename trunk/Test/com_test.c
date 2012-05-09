@@ -2219,7 +2219,7 @@ static void hash_test3()
 		AR_srand(time(NULL));
 
 
-		for(size_t i = 0; i < 1000; ++i)
+		for(size_t i = 0; i < 1000000; ++i)
 		{
 				wchar_t kt[512],vt[512];
 
