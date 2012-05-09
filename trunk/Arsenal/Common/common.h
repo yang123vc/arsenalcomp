@@ -576,9 +576,14 @@ size_t          AR_GetListCount(const arList_t *lst);
 /*
 Hash
 */
-typedef void			(*AR_hash_destroy_func_t)(void *key, void *val, void *ctx);
+
 typedef uint_64_t		(*AR_hash_hash_func_t)(void *key);
 typedef int_t			(*AR_hash_comp_func_t)(void *l, void *r);
+
+typedef arStatus_t		(*AR_hash_copy_func_t)(void *data, void **pnew_data, void *ctx);
+typedef void			(*AR_hash_destroy_func_t)(void *key, void *ctx);
+
+
 
 typedef struct __arsenal_hash_node_tag
 {
@@ -594,12 +599,15 @@ typedef struct __arsenal_hash_tag
 
 		AR_hash_hash_func_t		hash_f;
 		AR_hash_comp_func_t		comp_f;
-
-		AR_hash_destroy_func_t	dtor_f;
+		AR_hash_copy_func_t	copykey_f;
+		AR_hash_copy_func_t	copyval_f;
+		
+		AR_hash_destroy_func_t	destroy_key_f;
+		AR_hash_destroy_func_t	destroy_val_f;
 		void					*usr_ctx;
 }arHash_t;
 
-arHash_t*		AR_CreateHash(size_t bucket_size, AR_hash_hash_func_t hash_f, AR_hash_comp_func_t comp_f, AR_hash_destroy_func_t dtor_f, void *usr_ctx);
+arHash_t*		AR_CreateHash(size_t bucket_size, AR_hash_hash_func_t hash_f, AR_hash_comp_func_t comp_f, AR_hash_copy_func_t copykey_f, AR_hash_copy_func_t copyval_f, AR_hash_destroy_func_t destroy_key_f, AR_hash_destroy_func_t destroy_val_f, void *usr_ctx);
 void			AR_DestroyHash(arHash_t *hash);
 void			AR_ClearHash(arHash_t *hash);
 
