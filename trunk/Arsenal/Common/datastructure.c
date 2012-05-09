@@ -248,15 +248,182 @@ void			AR_DestroyHash(arHash_t *hash)
 		hash = NULL;
 }
 
+
 void			AR_ClearHash(arHash_t *hash)
 {
+        arList_t *lst;
+        arListNode_t *node;
+        size_t i;
+        AR_ASSERT(hash != NULL);
+        
+        for(i = 0; i < hash->bucket_size; ++i)
+        {
+                lst = hash->bucket[i];
+                
+                if(lst == NULL)
+                {
+                        continue;
+                }
+                
+                for(node = lst->head; node != NULL; node = node->next)
+                {
+                        arHashNode_t *hn = (arHashNode_t*)node->data;
+                        AR_ASSERT(hn != NULL);
+                        hash->dtor_f(hn->key, hn->val, hash->usr_ctx);
+                        AR_DEL(hn);
+                }
+                
+                AR_DestroyList(lst);
+                hash->bucket[i] = NULL;
+        }
 
+        hash->item_count = 0;
 }
 
-arStatus_t		AR_InsertToHash(arHash_t *hash, void *key, void *val);
-arStatus_t		AR_RemoveFromHash(arHash_t *hash, void *key);
-arStatus_t		AR_FindFromHash(arHash_t *hash, void *key, void **pval);
-size_t			AR_GetHashCount(arHash_t *hash);
+
+
+arStatus_t		AR_FindFromHash(arHash_t *hash, void *key, void **pval)
+{
+        arList_t *lst;
+        arListNode_t *node;
+        uint_64_t hash_code;
+        AR_ASSERT(hash != NULL && key != NULL && pval != NULL);
+        
+        hash_code = hash->hash_f(key);
+        
+        lst = hash->bucket[hash_code % hash->bucket_size];
+        
+        if(lst == NULL)
+        {
+                return AR_E_NOTFOUND;
+        }
+        
+        for(node = lst->head; node != NULL; node = node->next)
+        {
+                arHashNode_t *hn;
+                hn = (arHashNode_t*)node->data;
+                AR_ASSERT(hn != NULL);
+                
+                if(hash->comp_f(hn->key, key) == 0)
+                {
+                        *pval = hn->val;
+                        return AR_S_YES;
+                }
+        }
+        
+        return AR_E_NOTFOUND;
+}
+
+size_t			AR_GetHashCount(arHash_t *hash)
+{
+        AR_ASSERT(hash != NULL);
+        return (size_t)hash->item_count;
+}
+
+
+arStatus_t		AR_InsertToHash(arHash_t *hash, void *key, void *val)
+{
+        arStatus_t status;
+        arList_t *lst;
+        uint_64_t hash_code;
+        arHashNode_t *new_node;
+        AR_ASSERT(hash != NULL && key != NULL);
+        
+        status = AR_S_YES;
+        
+        AR_RemoveFromHash(hash, key);
+        
+        
+        new_node = AR_NEW0(arHashNode_t);
+        if(new_node == NULL)
+        {
+                status = AR_E_NOMEM;
+                goto INVALID_POINT;
+        }
+        
+        new_node->key = key;
+        new_node->val = val;
+        
+        
+        
+        hash_code = hash->hash_f(key);
+        
+        if(hash->bucket[hash_code % (uint_64_t)hash->bucket_size] == NULL)
+        {
+                hash->bucket[hash_code % hash->bucket_size] = AR_CreateList(NULL, NULL);
+                
+                if(hash->bucket[hash_code % hash->bucket_size] == NULL)
+                {
+                        status = AR_E_NOMEM;
+                        goto INVALID_POINT;
+                }
+        }
+
+        lst = hash->bucket[hash_code % hash->bucket_size];
+        status = AR_InsertToListByNode(lst, NULL, (void*)new_node);
+        
+        if(status != AR_S_YES)
+        {
+                goto INVALID_POINT;
+        }
+        
+        hash->item_count++;
+        return AR_S_YES;
+        
+INVALID_POINT:
+        if(new_node != NULL)
+        {
+                AR_DEL(new_node);
+                new_node = NULL;
+        }
+        
+        return status;
+        
+        
+}
+
+arStatus_t		AR_RemoveFromHash(arHash_t *hash, void *key)
+{
+        arStatus_t status;
+        arList_t *lst;
+        arListNode_t *node;
+        uint_64_t hash_code;
+
+        AR_ASSERT(hash != NULL && key != NULL);
+        
+        status = AR_S_YES;
+        
+        
+        hash_code = hash->hash_f(key);
+        
+        lst = hash->bucket[hash_code % (uint_64_t)hash->bucket_size];
+
+        if(lst == NULL)
+        {
+                return AR_E_NOTFOUND;
+        }
+
+        for(node = lst->head; node != NULL; node = node->next)
+        {
+                arHashNode_t *hn;
+                hn = (arHashNode_t*)node->data;
+                AR_ASSERT(hn != NULL);
+                
+                if(hash->comp_f(hn->key, key) == 0)
+                {
+                        hash->dtor_f(hn->key, hn->val, hash->usr_ctx);
+                        AR_DEL(hn);
+                        hn = NULL;
+                        AR_RemoveFromList(lst, node);
+                        AR_ASSERT(hash->item_count > 0);
+                        hash->item_count--;
+                        return AR_S_YES;
+                }
+        }
+
+        return AR_E_NOTFOUND;
+
+}
 
 
 
