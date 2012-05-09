@@ -1837,7 +1837,294 @@ void thd_test()
 		//async_queue_test2();
 }
 
+#define fail_if(expr, msg)                              \
+		if(expr) {                                            \
+		fprintf(stderr, "%s:%d Assertion '%s' met: %s\n" ,  \
+		__FILE__, __LINE__, #expr, msg);            \
+		unitfail++;                                         \
+		}
 
+
+#define fail_unless(expr, msg)                           \
+  if(!(expr)) {                                          \
+    fprintf(stderr, "%s:%d Assertion '%s' failed: %s\n", \
+            __FILE__, __LINE__, #expr, msg);             \
+    unitfail++;                                          \
+  }
+
+#define verify_memory(dynamic, check, len)                              \
+  if(dynamic && memcmp(dynamic, check, len)) {                          \
+    fprintf(stderr, "%s:%d The dynamic string didn't match '%s'\n",     \
+            __FILE__, __LINE__, check);                                 \
+    unitfail++;                                                         \
+  }
+
+/* fail() is for when the test case figured out by itself that a check
+   proved a failure */
+#define fail(msg) do {                                                 \
+    fprintf(stderr, "%s:%d test failed: '%s'\n",                       \
+            __FILE__, __LINE__, msg);                                  \
+    unitfail++;                                                        \
+  } WHILE_FALSE
+
+
+/* The abort macros mark the current test step as failed, and exit the test */
+#define abort_if(expr, msg)                                   \
+  if(expr) {                                                  \
+    fprintf(stderr, "%s:%d Abort assertion '%s' met: %s\n" ,  \
+            __FILE__, __LINE__, #expr, msg);                  \
+    unitfail++;                                               \
+    goto unit_test_abort;                                     \
+  }
+
+#define abort_unless(expr, msg)                                \
+  if(!(expr)) {                                                \
+    fprintf(stderr, "%s:%d Abort assertion '%s' failed: %s\n", \
+            __FILE__, __LINE__, #expr, msg);                   \
+    unitfail++;                                                \
+    goto unit_test_abort;                                      \
+  }
+
+#define abort_test(msg) do {                                  \
+    fprintf(stderr, "%s:%d test aborted: '%s'\n",             \
+            __FILE__, __LINE__, msg);                         \
+    unitfail++;                                               \
+    goto unit_test_abort;                                     \
+  } WHILE_FALSE
+
+
+
+extern int unitfail;
+
+#define UNITTEST_START                          \
+  int test(char *arg)                           \
+  {                                             \
+  (void)arg;                                    \
+  if (unit_setup()) {                           \
+    fail("unit_setup() failure");               \
+  } else {
+
+#define UNITTEST_STOP                           \
+    goto unit_test_abort; /* avoid warning */   \
+unit_test_abort:                                \
+    unit_stop();                                \
+  }                                             \
+  return unitfail;                              \
+  }
+
+
+
+/*
+
+arList_t*       AR_CreateList(AR_ds_destroy_func_t dtor, void *ctx);
+void            AR_DestroyList(arList_t *lst);
+void			AR_ClearList(arList_t *lst);
+arStatus_t      AR_InsertToListByNode(arList_t *lst, arListNode_t *node, void *data);
+void			AR_RemoveFromList(arList_t *lst, arListNode_t *node);
+size_t          AR_GetListCount(const arList_t *lst);
+*/
+
+
+
+static void ds_dtor_test(void *data, void *ctx)
+{
+		AR_UNUSED(data);
+		AR_UNUSED(ctx);
+}
+static void *usr_ctx = (void*)0x1234;
+void ds_test2()
+{
+		arList_t *lst = AR_CreateList(ds_dtor_test, usr_ctx), *lst_dest = AR_CreateList(ds_dtor_test, usr_ctx);
+
+		if(lst == NULL || lst_dest == NULL)
+		{
+				AR_CHECK(false, L"Create list failed");
+		}
+
+		/**************************************************************/
+
+		int unusedData_case1 = 1;
+		int unusedData_case2 = 2;
+		int unusedData_case3 = 3;
+		arListNode_t *head;
+		arListNode_t *node_next;
+		arListNode_t *node_prev;
+		arListNode_t *to_remove;
+		size_t llist_size = AR_GetListCount(lst);
+		int err_code = 0;
+
+		/**
+		* testing llist_init
+		* case 1:
+		* list initiation
+		* @assumptions:
+		* 1: list size will be 0
+		* 2: list head will be NULL
+		* 3: list tail will be NULL
+		* 4: list dtor will be NULL
+		*/
+		
+		AR_CHECK(lst->count == 0, L"list initial size should be zero");
+		AR_CHECK(lst->head == NULL, L"list head should initiate to NULL");
+		AR_CHECK(lst->tail == NULL, L"list tail should intiate to NULL");
+		AR_CHECK(lst->dtor == ds_dtor_test, L"list dtor shold initiate to ds_dtor_test");
+
+
+
+
+
+		arStatus_t status;
+		status = AR_InsertToListByNode(lst, lst->head, &unusedData_case1);
+		if(status == AR_S_YES) 
+		{
+				AR_CHECK(AR_GetListCount(lst) == 1,L"List size should be 1 after adding a new element");
+				/*test that the list head data holds my unusedData */
+				AR_CHECK(lst->head->data == &unusedData_case1, L"List size should be 1 after adding a new element");
+				/*same goes for the list tail */
+				AR_CHECK(lst->tail == lst->head, L"List size should be 1 after adding a new element");
+
+				/**
+				* testing AR_InsertToListByNode
+				* case 2:
+				* list has 1 element, adding one element after the head
+				* @assumptions:
+				* 1: the element next to head should be our newly created element
+				* 2: the list tail should be our newly created element
+				*/
+
+				status = AR_InsertToListByNode(lst, lst->head, &unusedData_case3);
+				if(status == AR_S_YES) 
+				{
+						AR_CHECK(lst->head->next->data == &unusedData_case3, L"the node next to head is not getting set correctly");
+						AR_CHECK(lst->tail->data == &unusedData_case3, L"the list tail is not getting set correctly");
+				}
+				else 
+				{
+						printf("skipping AR_InsertToListByNode as a non success error code was returned\n");
+				}
+
+				/**
+				* testing AR_InsertToListByNode
+				* case 3:
+				* list has >1 element, adding one element after "NULL"
+				* @assumptions:
+				* 1: the element next to head should be our newly created element
+				* 2: the list tail should different from newly created element
+				*/
+
+				status = AR_InsertToListByNode(lst, lst->head, &unusedData_case2);
+				if(status == status) 
+				{
+						AR_CHECK(lst->head->next->data == &unusedData_case2, L"the node next to head is not getting set correctly");
+						/* better safe than sorry, check that the tail isn't corrupted */
+						AR_CHECK(lst->tail->data != &unusedData_case2, L"the list tail is not getting set correctly");
+				}
+				else 
+				{
+						printf("skipping AR_InsertToListByNode as a non "
+								"success error code was returned\n");
+				}
+
+		}
+		else {
+				printf("skipping AR_InsertToListByNode as a non "
+						"success error code was returned\n");
+		}
+
+
+
+
+		/*		 unit tests for AR_RemoveFromList */
+
+		/**
+		* case 1:
+		* list has >1 element, removing head
+		* @assumptions:
+		* 1: list size will be decremented by one
+		* 2: head will be the head->next
+		* 3: "new" head's previous will be NULL
+		*/
+
+		head=lst->head;
+		AR_CHECK(head, L"lst->head is NULL");
+		node_next = head->next;
+		llist_size = AR_GetListCount(lst);
+
+		AR_RemoveFromList(lst, lst->head);
+
+		AR_CHECK(AR_GetListCount(lst) ==  (llist_size-1),
+				L"lst size not decremented as expected");
+		AR_CHECK(lst->head == node_next,
+				L"lst new head not modified properly");
+		AR_CHECK(lst->head, L"lst->head is NULL");
+		AR_CHECK(lst->head->prev == NULL,
+				L"new head previous not set to null");
+
+		/**
+		* case 2:
+		* removing non head element, with list having >=2 elements
+		* @setup:
+		* 1: insert another element to the list to make element >=2
+		* @assumptions:
+		* 1: list size will be decremented by one ; tested
+		* 2: element->previous->next will be element->next
+		* 3: element->next->previous will be element->previous
+		*/
+		AR_InsertToListByNode(lst, lst->head, &unusedData_case3);
+		llist_size = AR_GetListCount(lst);
+		to_remove = lst->head->next;
+		AR_CHECK(to_remove, L"to_remove is NULL");
+		node_next = to_remove->next;
+		node_prev = to_remove->prev;
+		AR_RemoveFromList(lst, to_remove);
+		AR_CHECK(node_prev->next == node_next,
+				L"element previous->next is not being adjusted");
+		AR_CHECK(node_next, L"next is NULL");
+		AR_CHECK(node_next->prev == node_prev,
+				L"element next->previous is not being adjusted");
+
+		/**
+		* case 3:
+		* removing the tail with list having >=1 element
+		* @assumptions
+		* 1: list size will be decremented by one ;tested
+		* 2: element->previous->next will be element->next ;tested
+		* 3: element->next->previous will be element->previous ;tested
+		* 4: list->tail will be tail->previous
+		*/
+
+		to_remove = lst->tail;
+		node_prev = to_remove->prev;
+		AR_RemoveFromList(lst, to_remove);
+		AR_CHECK(lst->tail == node_prev,
+				L"lst tail is not being adjusted when removing tail");
+
+		/**
+		* case 4:
+		* removing head with list having 1 element
+		* @assumptions:
+		* 1: list size will be decremented by one ;tested
+		* 2: list head will be null
+		* 3: list tail will be null
+		*/
+
+		to_remove = lst->head;
+		AR_RemoveFromList(lst, to_remove);
+		AR_CHECK(lst->head == NULL,
+				L"lst head is not NULL while the lst is empty");
+		AR_CHECK(lst->tail == NULL,
+				L"lst tail is not NULL while the lst is empty");
+
+
+
+
+		AR_DestroyList(lst);
+		AR_DestroyList(lst_dest);
+		lst = NULL;
+		lst_dest = NULL;
+
+
+}
 
 void com_test()
 {
@@ -1920,7 +2207,9 @@ void com_test()
 
 		//path_iter_test();
 
-		thd_test();
+		//thd_test();
+
+		ds_test2();
 }
 
 

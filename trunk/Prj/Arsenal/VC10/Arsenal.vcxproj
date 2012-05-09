@@ -58,6 +58,7 @@
     <ClCompile Include="..\..\..\Arsenal\Common\byteorder.c" />
     <ClCompile Include="..\..\..\Arsenal\Common\common.c" />
     <ClCompile Include="..\..\..\Arsenal\Common\crtstr.c" />
+    <ClCompile Include="..\..\..\Arsenal\Common\datastructure.c" />
     <ClCompile Include="..\..\..\Arsenal\Common\enviroment.c" />
     <ClCompile Include="..\..\..\Arsenal\Common\filesystem.c" />
     <ClCompile Include="..\..\..\Arsenal\Common\heap.c" />
