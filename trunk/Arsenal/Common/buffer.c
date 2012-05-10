@@ -151,6 +151,7 @@ void			AR_DestroyBuffer(arBuffer_t		*buffer)
 
 }
 
+
 void			AR_ClearBuffer(arBuffer_t		*buffer)
 {
 		AR_ASSERT(__buffer_is_valid(buffer));
@@ -160,6 +161,23 @@ void			AR_ClearBuffer(arBuffer_t		*buffer)
 		}
 		AR_memset(buffer, 0, sizeof(*buffer));
 }
+
+
+
+void            AR_SwapBuffer(arBuffer_t *l, arBuffer_t *r)
+{
+        AR_ASSERT(l != NULL && r != NULL);
+        
+        if(l != r)
+        {
+                arBuffer_t tmp = *l;
+                *l = *r;
+                *r = tmp;
+        }
+        
+}
+
+
 
 arStatus_t			AR_ReserveBuffer(arBuffer_t *pbuf, size_t nbytes)
 {

@@ -402,6 +402,18 @@ char*			AR_strnupr(char *s, size_t count);
 
 
 
+const char*		AR_strtrim(const char *in, const char *trim);
+const char*		AR_strtrim_space(const char *in);
+
+
+const char*		AR_strtrim_s(const char *in, const char *end, const char *trim);
+const char*		AR_strtrim_space_s(const char *in, const char *end);
+
+
+char*			AR_strtrim_right(char *in, const char *trim);
+char*			AR_strtrim_right_space(char *in);
+
+
 #define AR_wcscmp(_l, _r)		wcscmp((_l), (_r))
 #define AR_wcsncmp(_l, _r,_n)	wcsncmp((_l), (_r), (_n))
 #define AR_wcslen(_s)			wcslen((_s))
@@ -538,6 +550,8 @@ int_t			AR_wchartodigit(wchar_t ch);
 uint_t			AR_wcshash(const wchar_t *str);
 uint_t			AR_wcshash_n(const wchar_t *str, size_t n);
 
+uint_t			AR_strhash(const char *str);
+uint_t			AR_strhash_n(const char *str, size_t n);
 
 
 /********************************************************Basic Data Structure*********************************************************/
@@ -797,6 +811,7 @@ arBuffer_t*		AR_CreateBuffer(size_t nbytes);
 void			AR_DestroyBuffer(arBuffer_t		*buffer);
 
 void			AR_ClearBuffer(arBuffer_t		*buffer);
+void            AR_SwapBuffer(arBuffer_t *l, arBuffer_t *r);
 
 /*分配nbytes个字节以供使用*/
 byte_t*			AR_AllocBuffer(arBuffer_t *buffer, size_t	nbytes);
