@@ -1118,10 +1118,12 @@ uint_t	AR_strhash(const char *str)
 		AR_ASSERT(str != NULL);
 
 		ret = 0;
+		
 		for(i = 0; str[i]; ++i)
 		{
-				ret ^= (str[i] << (i & 0x0F));
+				ret = str[i] + (ret << 6) + (ret << 16) - ret;
 		}
+		
 		return ret;
 }
 
@@ -1134,10 +1136,12 @@ uint_t		AR_strhash_n(const char *str, size_t n)
 		AR_ASSERT(str != NULL);
 
 		ret = 0;
+		
 		for(i = 0; i < n && str[i]; ++i)
 		{
-				ret ^= (str[i] << (i & 0x0F));
+				ret = str[i] + (ret << 6) + (ret << 16) - ret;
 		}
+		
 		return ret;
 }
 
