@@ -2268,6 +2268,75 @@ void ds_test2()
 
 
 
+static const wchar_t*  __parse_ip(const wchar_t *s, wchar_t *ip)
+{
+        uint_32_t num[4];
+        size_t i;
+        const wchar_t *p;
+
+        AR_ASSERT(s != NULL && ip != NULL);
+        
+        p = s;
+        for(i = 0; i < 4; ++i)
+        {
+                p = AR_wcstrim_space(p);
+                p = AR_wtou32(p, &num[i], 10);
+                if(p == NULL || num[i] > 255)
+                {
+                        return NULL;
+                }
+
+				if(i < 3)
+				{
+						if(*p != L'.')
+						{
+								return NULL;
+						}
+						++p;
+				}
+        }
+
+		AR_swprintf(ip, 16, L"%u.%u.%u.%u", num[0], num[1], num[2], num[3]);
+
+        p = AR_wcstrim_space(p);
+        
+        if(*p == L'\0')
+        {
+                return p;
+        }
+        
+        if(*p != L',')
+        {
+                return NULL;
+        }
+        
+        return p + 1;
+}
+
+
+void str_test10()
+{
+		const wchar_t *ip = L"192.168.1.1,202.106.1.213,3.3.3.3";
+		wchar_t buf[20];
+
+		do{
+				ip = __parse_ip(ip, buf);
+				if(ip != NULL)
+				{
+						AR_printf(L"%ls\r\n", buf);
+				}
+		}while(ip != NULL && *ip != L'\0');
+
+}
+
+void str_test11()
+{
+		uint_t hash1 = AR_strhash("abc中国def");
+		uint_t hash2 = AR_strhash_n("abc中国def", AR_strlen("abc中国def"));
+
+		AR_ASSERT(hash1 == hash2);
+
+}
 
 void com_test()
 {
@@ -2285,6 +2354,8 @@ void com_test()
 		//str_test7();
 		//str_test8();
 		//str_test9();
+		//str_test10();
+		str_test11();
 
 		//com_test3();
 		//com_conv();
@@ -2352,7 +2423,7 @@ void com_test()
 
 		//thd_test();
 
-		ds_test2();
+		//ds_test2();
 }
 
 
