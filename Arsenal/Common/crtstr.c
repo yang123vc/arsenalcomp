@@ -947,6 +947,9 @@ const wchar_t*	AR_wcstrim_space_s(const wchar_t *in, const wchar_t *end)
 }
 
 
+
+
+
 /************************************************************************************************************************************/
 
 
@@ -1024,6 +1027,12 @@ wchar_t*	AR_wcstrim_right_space(wchar_t *in)
 		return in;
 }
 
+
+
+
+
+
+
 const wchar_t* AR_wcstrim(const wchar_t *in, const wchar_t *trim)
 {
 		AR_ASSERT(in != NULL && trim != NULL);
@@ -1038,6 +1047,10 @@ const wchar_t*	AR_wcstrim_space(const wchar_t *in)
 		while(*in != L'\0' && AR_iswspace(*in))in++;
 		return in;
 }
+
+
+
+
 
 
 const wchar_t* AR_wtoi64(const wchar_t *in,	 int_64_t  *num, size_t base)
@@ -1096,6 +1109,40 @@ uint_t		AR_wcshash_n(const wchar_t *str, size_t n)
 		}
 		return ret;
 }
+
+
+uint_t	AR_strhash(const char *str)
+{
+		uint_t	ret;
+		size_t	i;
+		AR_ASSERT(str != NULL);
+
+		ret = 0;
+		for(i = 0; str[i]; ++i)
+		{
+				ret ^= (str[i] << (i & 0x0F));
+		}
+		return ret;
+}
+
+
+uint_t		AR_strhash_n(const char *str, size_t n)
+{
+		uint_t	ret;
+		size_t	i;
+		if(n == 0)return 0;
+		AR_ASSERT(str != NULL);
+
+		ret = 0;
+		for(i = 0; i < n && str[i]; ++i)
+		{
+				ret ^= (str[i] << (i & 0x0F));
+		}
+		return ret;
+}
+
+
+
 
 
 wchar_t* AR_wcsdup(const wchar_t *sour)
@@ -2024,6 +2071,87 @@ bool_t	AR_wcs_is_int(const wchar_t *in, const wchar_t *end)
 }
 
 
+/*****************************************************************************************/
+
+
+
+const char* AR_strtrim_s(const char *in, const char *end, const char *trim)
+{
+		AR_ASSERT(in != NULL && end != NULL && trim != NULL);
+		while(in < end && AR_strchr(trim, *in) != NULL)in++;
+		return in;
+}
+
+
+
+
+const char*	AR_strtrim_space_s(const char *in, const char *end)
+{
+		AR_ASSERT(in != NULL && end != NULL);
+		while(in < end && AR_isspace(*in))in++;
+		return in;
+}
+
+
+const char* AR_strtrim(const char *in, const char *trim)
+{
+		AR_ASSERT(in != NULL && trim != NULL);
+		while(*in != '\0' && AR_strchr(trim, *in) != NULL)in++;
+		return in;
+}
+
+
+const char*	AR_strtrim_space(const char *in)
+{
+		AR_ASSERT(in != NULL);
+		while(*in != '\0' && AR_isspace(*in))in++;
+		return in;
+}
+
+
+
+char*		AR_strtrim_right(char *in, const char *trim)
+{
+		char *p = NULL, *plast = NULL;
+		AR_ASSERT(in != NULL && trim != NULL);
+		p = in;
+		while(*p != '\0')
+		{
+				if(AR_strchr(trim, *p) == NULL)
+				{
+						plast = NULL;
+				}else if(plast == NULL)
+				{
+						plast = p;
+				}
+				++p;
+		}
+
+		if(plast)*plast = '\0';
+		return in;
+}
+
+char*	AR_strtrim_right_space(char *in)
+{
+		char *p = NULL, *plast = NULL;
+		AR_ASSERT(in != NULL);
+		p = in;
+		while(*p != '\0')
+		{
+				/*if(AR_wcschr(trim, *p) == NULL)*/
+				if(AR_isspace(*p) == 0)
+				{
+						plast = NULL;
+				}else if(plast == NULL)
+				{
+						plast = p;
+				}
+				++p;
+		}
+
+		if(plast)*plast = '\0';
+		return in;
+}
 
 
 AR_NAMESPACE_END
