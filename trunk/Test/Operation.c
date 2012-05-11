@@ -377,7 +377,7 @@ void			Cloud_DestroyOperation(cldOperation_t *operation)
 						AR_error(AR_ERR_FATAL, L"destroy operation object failed\r\n");
 				}
 
-				if(operation->destroy_result_func && Cloud_GetOperationResult(operation, &result) == AR_S_YES)
+				if(operation->has_result && operation->destroy_result_func && Cloud_GetOperationResult(operation, &result) == AR_S_YES)
 				{
 						operation->destroy_result_func(result, operation->usr_ctx);
 				}
@@ -569,8 +569,26 @@ static arStatus_t Cloud_RunOperation(cldOperation_t *oper)
 arStatus_t		Cloud_GetOperationResult(cldOperation_t *oper, void **presult)
 {
 		arStatus_t status;
-		AR_ASSERT(oper != NULL && presult != NULL);
 		
+		AR_ASSERT(oper != NULL && presult != NULL);
+
+		status = AR_S_YES;
+
+		AR_LockSpinLock(&oper->mutex);
+
+		if(oper->state == CLOUD_OPER_FINISHED && !oper->has_result)
+		{
+				status = AR_E_NOTFOUND;
+		}
+
+		AR_UnLockSpinLock(&oper->mutex);
+
+		if(status != AR_S_YES)
+		{
+				return status;
+		}
+
+
 		status = AR_WaitEvent(oper->done_event);
 
 		if(status != AR_S_YES)
@@ -608,6 +626,22 @@ arStatus_t		Cloud_GetOperationResultWithTimeout(cldOperation_t *oper, void **pre
 
 		arStatus_t status;
 		AR_ASSERT(oper != NULL && presult != NULL);
+
+		status = AR_S_YES;
+
+		AR_LockSpinLock(&oper->mutex);
+
+		if(oper->state == CLOUD_OPER_FINISHED && !oper->has_result)
+		{
+				status = AR_E_NOTFOUND;
+		}
+
+		AR_UnLockSpinLock(&oper->mutex);
+
+		if(status != AR_S_YES)
+		{
+				return status;
+		}
 		
 		status = AR_WaitEventWithTimeout(oper->done_event, timeout_ms);
 
