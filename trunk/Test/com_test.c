@@ -5,6 +5,8 @@
 #include <math.h>
 #include <time.h>
 
+#include "Operation.h"
+
 #if defined(__LIB)
 
 AR_NAMESPACE_BEGIN
@@ -2339,7 +2341,132 @@ void str_test11()
 		uint_t hash2 = AR_strhash_n("abc中国def", AR_strlen("abc中国def"));
 
 		AR_ASSERT(hash1 == hash2);
+}
 
+
+
+
+
+static void operation_test1()
+{
+		cldOperationPool_t *pool;
+		
+		pool = Cloud_CreateOperationPool(2);
+
+		getchar();
+
+		if(Cloud_IncreaseOperationPoolThread(pool) != AR_S_YES)
+		{
+				AR_ASSERT(false);
+		}
+
+		getchar();
+
+		if(Cloud_IncreaseOperationPoolThread(pool) != AR_S_YES)
+		{
+				AR_ASSERT(false);
+		}
+
+
+		getchar();
+
+		if(Cloud_IncreaseOperationPoolThread(pool) == AR_S_YES)
+		{
+				AR_ASSERT(false);
+		}
+
+		getchar();
+
+
+		arStatus_t has_idle = Cloud_OperationPoolHasIdleThread(pool);
+
+		AR_printf(L"has idle thread %d\r\n", AR_GET_STATUS(has_idle));
+
+		Cloud_DestroyOperationPool(pool);
+
+		pool = NULL;
+}
+
+static void operation_test2()
+{
+		cldOperationPool_t *pool;
+		
+		pool = Cloud_CreateOperationPool(2);
+		
+		while(true)
+		{
+				char buf[1024];
+				char *s = NULL;
+				gets(buf);
+				if(strcmp(buf, "quit")== 0)break;
+				Cloud_PostToOperationPool(pool, (cldOperation_t*)0x01);
+		}
+		
+		if(pool != NULL)
+		{
+				Cloud_DestroyOperationPool(pool);
+				pool = NULL;
+		}
+
+		pool = NULL;
+}
+
+
+
+
+static void* oper_test_func(void *usr_ctx)
+{
+		std::string *pstr = (std::string*)usr_ctx;
+		AR_ASSERT(usr_ctx);
+		AR_LOG(L"%hs\r\n", AR_FUNC_NAME);
+		AR_LOG(L"%hs\r\n", pstr->c_str());
+		
+		::Sleep(5000);
+
+		std::string *result = new std::string("xxxxxx");
+
+		return (void*)result;
+}		
+
+void	oper_test_destroy(void *result, void *usr_ctx)/*此函数在销毁operation时，如果operation为finished并且结果未被取走时执行*/
+{
+		AR_LOG(L"%hs\r\n", AR_FUNC_NAME);
+		
+		std::string *pstr = (std::string*)usr_ctx;
+		std::string *presult = (std::string*)result;
+		AR_ASSERT(usr_ctx);
+		AR_LOG(L"%hs\r\n", pstr->c_str());
+
+		AR_LOG(L"result == %hs\r\n", presult->c_str());
+
+		
+		delete presult;
+		presult = NULL;
+}
+
+void operation_test3()
+{
+
+		Operation_Init();
+
+		std::string oper_mark = "abcdef";
+
+		cldOperation_t *oper = Cloud_CreateOperation(oper_test_func, oper_test_destroy, (void*)&oper_mark);
+
+		AR_ASSERT(oper != NULL);
+
+		Cloud_DestroyOperation(oper);
+
+		oper = NULL;
+
+
+		Operation_UnInit();
+}
+
+static void operation_test()
+{
+		//operation_test2();
+		operation_test3();
 }
 
 void com_test()
@@ -2358,7 +2485,7 @@ void com_test()
 		//str_test7();
 		//str_test8();
 		//str_test9();
-		str_test10();
+		//str_test10();
 		//str_test11();
 
 		//com_test3();
@@ -2428,6 +2555,8 @@ void com_test()
 		//thd_test();
 
 		//ds_test2();
+
+		operation_test();
 }
 
 
