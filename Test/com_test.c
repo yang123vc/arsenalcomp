@@ -1793,7 +1793,7 @@ static void async_queue_test()
 				thread_set[i] = NULL;
 		}
 
-		while(!AR_AsyncQueueIsEmpty(&queue))
+		while(AR_AsyncQueueIsEmpty(&queue) != AR_S_YES)
 		{
 				const char *s;
 				AR_GetFromAsyncQueue(&queue, (void**)&s);
@@ -2455,6 +2455,12 @@ void operation_test3()
 
 		AR_ASSERT(oper != NULL);
 
+		if(Cloud_StartOperation(oper) != AR_S_YES)
+		{
+				AR_ASSERT(false);
+		}
+
+		getchar();
 		Cloud_DestroyOperation(oper);
 
 		oper = NULL;
