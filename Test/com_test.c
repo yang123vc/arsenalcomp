@@ -2288,6 +2288,7 @@ static const wchar_t*  __parse_ip(const wchar_t *s, wchar_t *ip)
 
 				if(i < 3)
 				{
+						p = AR_wcstrim_space(p);
 						if(*p != L'.')
 						{
 								return NULL;
@@ -2299,24 +2300,22 @@ static const wchar_t*  __parse_ip(const wchar_t *s, wchar_t *ip)
 		AR_swprintf(ip, 16, L"%u.%u.%u.%u", num[0], num[1], num[2], num[3]);
 
         p = AR_wcstrim_space(p);
-        
-        if(*p == L'\0')
-        {
-                return p;
-        }
-        
-        if(*p != L',')
-        {
-                return NULL;
-        }
-        
-        return p + 1;
+
+		switch(*p)
+		{
+		case L'\0':
+				return p;
+		case L',':
+				return AR_wcstrim_space(p + 1);
+		default:
+				return NULL;
+		}
 }
 
 
 void str_test10()
 {
-		const wchar_t *ip = L"192.168.1.1,202.106.1.213,3.3.3.3";
+		const wchar_t *ip = L"	192		.		168		.		\r\n	001		.		1		,		202		.		106		.		1		.213,	3.3.3.3	,			3	";
 		wchar_t buf[20];
 
 		do{
@@ -2326,6 +2325,11 @@ void str_test10()
 						AR_printf(L"%ls\r\n", buf);
 				}
 		}while(ip != NULL && *ip != L'\0');
+
+		if(ip == NULL)
+		{
+				AR_printf(L"bad ip address\r\n");
+		}
 
 }
 
@@ -2354,8 +2358,8 @@ void com_test()
 		//str_test7();
 		//str_test8();
 		//str_test9();
-		//str_test10();
-		str_test11();
+		str_test10();
+		//str_test11();
 
 		//com_test3();
 		//com_conv();
