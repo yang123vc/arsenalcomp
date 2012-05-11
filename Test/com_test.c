@@ -2460,7 +2460,23 @@ void operation_test3()
 				AR_ASSERT(false);
 		}
 
-		getchar();
+		std::string *pres = NULL;
+
+		if(Cloud_GetOperationResult(oper, (void**)&pres) != AR_S_YES)
+		{
+				AR_ASSERT(false);
+		}
+
+		
+		delete pres;
+
+
+		if(Cloud_GetOperationResult(oper, (void**)&pres) == AR_S_YES)
+		{
+				AR_ASSERT(false);
+		}
+
+
 		Cloud_DestroyOperation(oper);
 
 		oper = NULL;
