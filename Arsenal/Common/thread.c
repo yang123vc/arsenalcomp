@@ -481,15 +481,15 @@ arStatus_t	AR_PutToAsyncQueue(arAsyncQueue_t *queue, void *data)
 }
 
 
-bool_t	AR_HasIdleThreadInAsyncQueue(const arAsyncQueue_t *queue)
+arStatus_t	AR_HasIdleThreadInAsyncQueue(const arAsyncQueue_t *queue)
 {
-		bool_t ret;
+		arStatus_t ret;
 		arAsyncQueue_t *que;
 		AR_ASSERT(queue != NULL);
 		que = (arAsyncQueue_t*)queue;
 		AR_LockSpinLock(&que->mutex);
 
-		ret = que->wait_cnt == 0 ? false : true;
+		ret = que->wait_cnt == 0 ? AR_S_NO : AR_S_YES;
 
 		AR_UnLockSpinLock(&que->mutex);
 		return ret;
@@ -498,15 +498,15 @@ bool_t	AR_HasIdleThreadInAsyncQueue(const arAsyncQueue_t *queue)
 
 
 
-bool_t	AR_AsyncQueueIsEmpty(const arAsyncQueue_t *queue)
+arStatus_t	AR_AsyncQueueIsEmpty(const arAsyncQueue_t *queue)
 {
-		bool_t ret;
+		arStatus_t ret;
 		arAsyncQueue_t *que;
 		AR_ASSERT(queue != NULL);
 		que = (arAsyncQueue_t*)queue;
 		AR_LockSpinLock(&que->mutex);
 
-		ret = que->data_cnt == 0 ? true : false;
+		ret = que->data_cnt == 0 ? AR_S_YES : AR_S_NO;
 
 		AR_UnLockSpinLock(&que->mutex);
 		return ret;

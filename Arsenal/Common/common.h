@@ -1011,8 +1011,8 @@ arStatus_t	AR_GetFromAsyncQueue(arAsyncQueue_t *queue, void **pdata);
 arStatus_t	AR_GetFromAsyncQueueWithTimeout(arAsyncQueue_t *queue, void **pdata, uint_64_t	millisecond);
 arStatus_t	AR_PutToAsyncQueue(arAsyncQueue_t *queue, void *data);
 
-bool_t	AR_AsyncQueueIsEmpty(const arAsyncQueue_t *queue);
-bool_t	AR_HasIdleThreadInAsyncQueue(const arAsyncQueue_t *queue);
+arStatus_t	AR_AsyncQueueIsEmpty(const arAsyncQueue_t *queue);
+arStatus_t	AR_HasIdleThreadInAsyncQueue(const arAsyncQueue_t *queue);
 
 
 
