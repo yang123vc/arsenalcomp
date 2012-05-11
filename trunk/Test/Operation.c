@@ -396,7 +396,7 @@ void			Cloud_DestroyOperation(cldOperation_t *operation)
 
 		AR_UnInitSpinLock(&operation->mutex);
 
-		AR_ASSERT(need_cancel ? (operation->state == CLOUD_OPER_FINISHED && operation->state == CLOUD_OPER_CANCELLED) : true);
+		AR_ASSERT(need_cancel ? (operation->state == CLOUD_OPER_FINISHED || operation->state == CLOUD_OPER_CANCELLED) : true);
 
 		AR_DEL(operation);
 		operation = NULL;
@@ -412,9 +412,17 @@ arStatus_t		Cloud_StartOperation(cldOperation_t *oper)
 		AR_ASSERT(oper != NULL);
 		AR_ASSERT(__g_pool != NULL);
 
-		if(Cloud_OperationIsReady(oper))
+		if(Cloud_OperationIsReady(oper) == AR_S_YES)
 		{
 				status = Cloud_PostToOperationPool(__g_pool, oper);
+
+				if(status == AR_S_YES)
+				{
+						AR_LockSpinLock(&oper->mutex);
+						oper->has_started = true;
+						AR_UnLockSpinLock(&oper->mutex);
+				}
+
 		}else
 		{
 				status = AR_E_INVAL;
