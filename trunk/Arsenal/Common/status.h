@@ -1,5 +1,5 @@
 
-#define __AR_CHECK_RET_STATUS__	1
+//#define __AR_CHECK_RET_STATUS__	1
 
 /*
 #if defined(__cplusplus)

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.10">
 	<data>
-		<int key="IBDocument.SystemTarget">1060</int>
-		<string key="IBDocument.SystemVersion">10K549</string>
+		<int key="IBDocument.SystemTarget">1070</int>
+		<string key="IBDocument.SystemVersion">11D50b</string>
 		<string key="IBDocument.InterfaceBuilderVersion">1938</string>
-		<string key="IBDocument.AppKitVersion">1038.36</string>
-		<string key="IBDocument.HIToolboxVersion">461.00</string>
+		<string key="IBDocument.AppKitVersion">1138.32</string>
+		<string key="IBDocument.HIToolboxVersion">568.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
 			<string key="NS.object.0">1938</string>
@@ -52,6 +52,7 @@
 				<string key="NSWindowTitle">GrammarDesigner</string>
 				<string key="NSWindowClass">NSWindow</string>
 				<string key="NSViewClass">View</string>
+				<nil key="NSUserInterfaceItemIdentifier"/>
 				<string key="NSWindowContentMinSize">{94, 86}</string>
 				<object class="NSView" key="NSWindowView" id="568628114">
 					<reference key="NSNextResponder"/>
@@ -170,6 +171,7 @@
 															<int key="NSDraggingSourceMaskForNonLocal">0</int>
 															<bool key="NSAllowsTypeSelect">YES</bool>
 															<int key="NSTableViewDraggingDestinationStyle">0</int>
+															<int key="NSTableViewGroupRowStyle">1</int>
 														</object>
 													</object>
 													<string key="NSFrame">{{1, 1}, {178, 558}}</string>
@@ -202,7 +204,7 @@
 											<string key="NSFrameSize">{180, 560}</string>
 											<reference key="NSSuperview" ref="461805900"/>
 											<reference key="NSNextKeyView" ref="883689474"/>
-											<int key="NSsFlags">562</int>
+											<int key="NSsFlags">133682</int>
 											<reference key="NSVScroller" ref="625043408"/>
 											<reference key="NSHScroller" ref="581077090"/>
 											<reference key="NSContentView" ref="883689474"/>
@@ -263,7 +265,7 @@
 																				<int key="NSTCFlags">1</int>
 																			</object>
 																			<object class="NSTextViewSharedData" key="NSSharedData">
-																				<int key="NSFlags">12099</int>
+																				<int key="NSFlags">67120963</int>
 																				<int key="NSTextCheckingTypes">0</int>
 																				<nil key="NSMarkedAttributes"/>
 																				<object class="NSColor" key="NSBackgroundColor" id="136817090">
@@ -316,9 +318,11 @@
 																					</object>
 																				</object>
 																				<nil key="NSDefaultParagraphStyle"/>
+																				<nil key="NSTextFinder"/>
+																				<int key="NSPreferredTextFinderStyle">1</int>
 																			</object>
 																			<int key="NSTVFlags">6</int>
-																			<string key="NSMaxSize">{1176, 1e+07}</string>
+																			<string key="NSMaxSize">{1176, 10000000}</string>
 																			<string key="NSMinize">{223, 0}</string>
 																			<nil key="NSDelegate"/>
 																		</object>
@@ -381,7 +385,7 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 															<string key="NSFrameSize">{570, 379}</string>
 															<reference key="NSSuperview" ref="618205998"/>
 															<reference key="NSNextKeyView" ref="924714394"/>
-															<int key="NSsFlags">530</int>
+															<int key="NSsFlags">133650</int>
 															<reference key="NSVScroller" ref="101884585"/>
 															<reference key="NSHScroller" ref="781305032"/>
 															<reference key="NSContentView" ref="924714394"/>
@@ -429,7 +433,7 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 																								<object class="_NSCornerView" key="NSCornerView">
 																									<nil key="NSNextResponder"/>
 																									<int key="NSvFlags">-2147483392</int>
-																									<string key="NSFrame">{{519.004, 0}, {16, 17}}</string>
+																									<string key="NSFrame">{{519.00400000000002, 0}, {16, 17}}</string>
 																								</object>
 																								<object class="NSMutableArray" key="NSTableColumns">
 																									<bool key="EncodedWithXMLCoder">YES</bool>
@@ -480,6 +484,7 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 																								<int key="NSDraggingSourceMaskForNonLocal">0</int>
 																								<bool key="NSAllowsTypeSelect">YES</bool>
 																								<int key="NSTableViewDraggingDestinationStyle">0</int>
+																								<int key="NSTableViewGroupRowStyle">1</int>
 																							</object>
 																						</object>
 																						<string key="NSFrame">{{1, 1}, {528, 119}}</string>
@@ -492,7 +497,7 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 																					<object class="NSScroller" id="1022895583">
 																						<reference key="NSNextResponder" ref="206218574"/>
 																						<int key="NSvFlags">-2147483392</int>
-																						<string key="NSFrame">{{519.004, 17}, {15, 71.9883}}</string>
+																						<string key="NSFrame">{{519.00400000000002, 17}, {15, 71.988299999999995}}</string>
 																						<reference key="NSSuperview" ref="206218574"/>
 																						<reference key="NSTarget" ref="206218574"/>
 																						<string key="NSAction">_doScroller:</string>
@@ -501,7 +506,7 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 																					<object class="NSScroller" id="698845421">
 																						<reference key="NSNextResponder" ref="206218574"/>
 																						<int key="NSvFlags">-2147483392</int>
-																						<string key="NSFrame">{{1, 105}, {531.977, 15}}</string>
+																						<string key="NSFrame">{{1, 105}, {531.97699999999998, 15}}</string>
 																						<reference key="NSSuperview" ref="206218574"/>
 																						<int key="NSsFlags">1</int>
 																						<reference key="NSTarget" ref="206218574"/>
@@ -512,7 +517,7 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 																				<string key="NSFrame">{{17, 17}, {530, 121}}</string>
 																				<reference key="NSSuperview" ref="161493198"/>
 																				<reference key="NSNextKeyView" ref="355754001"/>
-																				<int key="NSsFlags">562</int>
+																				<int key="NSsFlags">133682</int>
 																				<reference key="NSVScroller" ref="1022895583"/>
 																				<reference key="NSHScroller" ref="698845421"/>
 																				<reference key="NSContentView" ref="355754001"/>
@@ -557,7 +562,7 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 																								<object class="_NSCornerView" key="NSCornerView">
 																									<nil key="NSNextResponder"/>
 																									<int key="NSvFlags">-2147483392</int>
-																									<string key="NSFrame">{{510.965, 0}, {16, 17}}</string>
+																									<string key="NSFrame">{{510.96499999999997, 0}, {16, 17}}</string>
 																								</object>
 																								<object class="NSMutableArray" key="NSTableColumns">
 																									<bool key="EncodedWithXMLCoder">YES</bool>
@@ -603,6 +608,7 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 																								<int key="NSDraggingSourceMaskForNonLocal">0</int>
 																								<bool key="NSAllowsTypeSelect">YES</bool>
 																								<int key="NSTableViewDraggingDestinationStyle">0</int>
+																								<int key="NSTableViewGroupRowStyle">1</int>
 																							</object>
 																						</object>
 																						<string key="NSFrame">{{1, 1}, {528, 119}}</string>
@@ -615,7 +621,7 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 																					<object class="NSScroller" id="1040685730">
 																						<reference key="NSNextResponder" ref="844157094"/>
 																						<int key="NSvFlags">-2147483392</int>
-																						<string key="NSFrame">{{510.965, 17}, {15, 90.9805}}</string>
+																						<string key="NSFrame">{{510.96499999999997, 17}, {15, 90.980500000000006}}</string>
 																						<reference key="NSSuperview" ref="844157094"/>
 																						<reference key="NSTarget" ref="844157094"/>
 																						<string key="NSAction">_doScroller:</string>
@@ -624,7 +630,7 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 																					<object class="NSScroller" id="382685739">
 																						<reference key="NSNextResponder" ref="844157094"/>
 																						<int key="NSvFlags">-2147483392</int>
-																						<string key="NSFrame">{{1, 107.98}, {509.965, 15}}</string>
+																						<string key="NSFrame">{{1, 107.98}, {509.96499999999997, 15}}</string>
 																						<reference key="NSSuperview" ref="844157094"/>
 																						<int key="NSsFlags">1</int>
 																						<reference key="NSTarget" ref="844157094"/>
@@ -635,7 +641,7 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 																				<string key="NSFrame">{{17, 17}, {530, 121}}</string>
 																				<reference key="NSSuperview" ref="547106906"/>
 																				<reference key="NSNextKeyView" ref="873802328"/>
-																				<int key="NSsFlags">562</int>
+																				<int key="NSsFlags">133682</int>
 																				<reference key="NSVScroller" ref="1040685730"/>
 																				<reference key="NSHScroller" ref="382685739"/>
 																				<reference key="NSContentView" ref="873802328"/>
@@ -729,6 +735,7 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 																								<int key="NSDraggingSourceMaskForNonLocal">0</int>
 																								<bool key="NSAllowsTypeSelect">YES</bool>
 																								<int key="NSTableViewDraggingDestinationStyle">0</int>
+																								<int key="NSTableViewGroupRowStyle">1</int>
 																							</object>
 																						</object>
 																						<string key="NSFrame">{{1, 17}, {513, 88}}</string>
@@ -776,7 +783,7 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 																				<string key="NSFrame">{{17, 17}, {530, 121}}</string>
 																				<reference key="NSSuperview" ref="889726109"/>
 																				<reference key="NSNextKeyView" ref="260984257"/>
-																				<int key="NSsFlags">50</int>
+																				<int key="NSsFlags">133170</int>
 																				<reference key="NSVScroller" ref="26857176"/>
 																				<reference key="NSHScroller" ref="116528144"/>
 																				<reference key="NSContentView" ref="260984257"/>
@@ -828,7 +835,8 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1680, 1028}}</string>
 				<string key="NSMinSize">{94, 108}</string>
-				<string key="NSMaxSize">{1e+13, 1e+13}</string>
+				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
+				<bool key="NSWindowIsRestorable">YES</bool>
 			</object>
 			<object class="NSCustomObject" id="796877042">
 				<string key="NSClassName">NSApplication</string>
@@ -1473,10 +1481,6 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaFramework</string>
-		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencyDefaults">
-			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin.macosx</string>
-			<integer value="1060" key="NS.object.0"/>
-		</object>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDevelopmentDependencies">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin.InterfaceBuilder3</string>
 			<integer value="3000" key="NS.object.0"/>

@@ -7,11 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6728C3B9154C645A00861D86 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6728C3B8154C645A00861D86 /* libiconv.dylib */; };
+		67163060155FFB500098ADA3 /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6716305F155FFB500098ADA3 /* Arsenal.a */; };
+		67163065155FFB680098ADA3 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6728C3B8154C645A00861D86 /* libiconv.dylib */; };
+		67163067155FFB790098ADA3 /* Arsenal.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 67163066155FFB790098ADA3 /* Arsenal.dylib */; };
 		6728C3BC154C646200861D86 /* libpthread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6728C3BB154C646200861D86 /* libpthread.dylib */; };
 		6728C3C0154C64FE00861D86 /* libpthread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6728C3BB154C646200861D86 /* libpthread.dylib */; };
 		6728C3C1154C650600861D86 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6728C3B8154C645A00861D86 /* libiconv.dylib */; };
-		672CC041155389EB00D54207 /* Arsenal.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 672CC040155389EB00D54207 /* Arsenal.dylib */; };
 		673C0BD0154A891100A73324 /* TestFileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 673C0BCF154A891100A73324 /* TestFileSystem.cpp */; };
 		673C0BD1154A891100A73324 /* TestFileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 673C0BCF154A891100A73324 /* TestFileSystem.cpp */; };
 		673C0BD5154A8B3600A73324 /* test.c in Sources */ = {isa = PBXBuildFile; fileRef = 673C0BD4154A8A4800A73324 /* test.c */; };
@@ -46,9 +47,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		6716305F155FFB500098ADA3 /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = Arsenal.a; path = "../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Release/Arsenal.a"; sourceTree = "<group>"; };
+		67163066155FFB790098ADA3 /* Arsenal.dylib */ = {isa = PBXFileReference; lastKnownFileType = file; name = Arsenal.dylib; path = ../../Arsenal/Mac_XCode4/build/Release/Arsenal.dylib; sourceTree = "<group>"; };
 		6728C3B8154C645A00861D86 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
 		6728C3BB154C646200861D86 /* libpthread.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpthread.dylib; path = usr/lib/libpthread.dylib; sourceTree = SDKROOT; };
-		672CC040155389EB00D54207 /* Arsenal.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = Arsenal.dylib; path = "../../../../../Temp/Xcode_Derived_Data/Arsenal-doktqrfexpgfyfbhxalwgaspvtgn/Build/Products/Debug/Arsenal.dylib"; sourceTree = "<group>"; };
 		673C0BCF154A891100A73324 /* TestFileSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestFileSystem.cpp; sourceTree = SOURCE_ROOT; };
 		673C0BD2154A894D00A73324 /* TestFileSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFileSystem.h; sourceTree = SOURCE_ROOT; };
 		673C0BD3154A897A00A73324 /* stdhdr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stdhdr.h; sourceTree = SOURCE_ROOT; };
@@ -65,6 +67,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				67163060155FFB500098ADA3 /* Arsenal.a in Frameworks */,
 				6728C3C1154C650600861D86 /* libiconv.dylib in Frameworks */,
 				6728C3C0154C64FE00861D86 /* libpthread.dylib in Frameworks */,
 			);
@@ -74,9 +77,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				67163067155FFB790098ADA3 /* Arsenal.dylib in Frameworks */,
+				67163065155FFB680098ADA3 /* libiconv.dylib in Frameworks */,
 				6728C3BC154C646200861D86 /* libpthread.dylib in Frameworks */,
-				6728C3B9154C645A00861D86 /* libiconv.dylib in Frameworks */,
-				672CC041155389EB00D54207 /* Arsenal.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -86,7 +89,8 @@
 		BE185E9814E846F10095DB44 = {
 			isa = PBXGroup;
 			children = (
-				672CC040155389EB00D54207 /* Arsenal.dylib */,
+				67163066155FFB790098ADA3 /* Arsenal.dylib */,
+				6716305F155FFB500098ADA3 /* Arsenal.a */,
 				6728C3BB154C646200861D86 /* libpthread.dylib */,
 				6728C3B8154C645A00861D86 /* libiconv.dylib */,
 				BE185EA614E846F10095DB44 /* Test */,
@@ -265,6 +269,7 @@
 					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-dklbavanfxrpxtdcqgesieswyeaq/Build/Products/Release\"",
 					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Debug\"",
 					"\"$(SRCROOT)/../../../../../Temp/Xcode_Derived_Data/Arsenal-doktqrfexpgfyfbhxalwgaspvtgn/Build/Products/Debug\"",
+					"\"$(SRCROOT)/../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Release\"",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OBJROOT = "$(SYMROOT)";
@@ -285,6 +290,7 @@
 					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-dklbavanfxrpxtdcqgesieswyeaq/Build/Products/Release\"",
 					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Debug\"",
 					"\"$(SRCROOT)/../../../../../Temp/Xcode_Derived_Data/Arsenal-doktqrfexpgfyfbhxalwgaspvtgn/Build/Products/Debug\"",
+					"\"$(SRCROOT)/../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Release\"",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OBJROOT = "$(SYMROOT)";
@@ -303,6 +309,7 @@
 					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-dklbavanfxrpxtdcqgesieswyeaq/Build/Products/Debug\"",
 					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-dklbavanfxrpxtdcqgesieswyeaq/Build/Products/Release\"",
 					"\"$(SRCROOT)/../../../../../Temp/Xcode_Derived_Data/Arsenal-doktqrfexpgfyfbhxalwgaspvtgn/Build/Products/Debug\"",
+					"\"$(SRCROOT)/../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Release\"",
 				);
 				OBJROOT = "$(SYMROOT)";
 				PRODUCT_NAME = TestDLL;
@@ -321,6 +328,7 @@
 					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-dklbavanfxrpxtdcqgesieswyeaq/Build/Products/Debug\"",
 					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-dklbavanfxrpxtdcqgesieswyeaq/Build/Products/Release\"",
 					"\"$(SRCROOT)/../../../../../Temp/Xcode_Derived_Data/Arsenal-doktqrfexpgfyfbhxalwgaspvtgn/Build/Products/Debug\"",
+					"\"$(SRCROOT)/../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Release\"",
 				);
 				OBJROOT = "$(SYMROOT)";
 				PRODUCT_NAME = TestDLL;
