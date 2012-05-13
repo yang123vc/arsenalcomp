@@ -545,7 +545,7 @@ psrActionTable_t* __create_action_table(const psrGrammar_t *grammar, psrLRItemTy
 						rule_num = action->config->rule_num;
 						rule = Parser_GetRuleFromGrammar(grammar, action->config->rule_num);
 
-						body = Parser_IndexOfSymbList(&rule->body, config->delim);
+						body = Parser_GetSymbFromSymbList(&rule->body, config->delim);
 
 						term_info = Parser_GetRulePrecAssocInfo(grammar, rule);
 						

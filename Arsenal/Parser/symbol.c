@@ -222,7 +222,7 @@ arStatus_t			Parser_RemoveFromSymbListByIndex(psrSymbList_t *symb_lst, size_t in
 		
 }
 
-const psrSymb_t*	Parser_IndexOfSymbList(const psrSymbList_t *symb_lst, size_t idx)
+const psrSymb_t*	Parser_GetSymbFromSymbList(const psrSymbList_t *symb_lst, size_t idx)
 {
 		AR_ASSERT(symb_lst != NULL);
 		

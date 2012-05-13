@@ -619,7 +619,7 @@ size_t			Parser_GetNodeCount(const psrContext_t *parser_context)
 }
 
 
-psrNode_t*		Parser_IndexOfNodeStack(psrContext_t *parser_context, size_t index)
+psrNode_t*		Parser_GetNodeFromNodeStack(psrContext_t *parser_context, size_t index)
 {
 		AR_ASSERT(parser_context != NULL && index < parser_context->node_stack.count);
 		AR_ASSERT(parser_context->node_stack.count == parser_context->state_stack.count);

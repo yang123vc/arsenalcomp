@@ -160,7 +160,7 @@ Parser_IsRecovering
 Parser_RecoverDone			
 
 Parser_GetNodeCount
-Parser_IndexOfNodeStack
+Parser_GetNodeFromNodeStack
 
 Parser_PrintParserActionTable
 Parser_PrintParserConflict

@@ -320,7 +320,7 @@ void CActionView::DrawActionView(const ARSpace::psrActionView_t *view)
 		
 		for(int i = 0; view && i < (int)view->item_cnt; ++i)
 		{
-				this->m_list.InsertColumn(i + 1, Parser_IndexActionViewItem(view, i), 0, 100, -1);
+				this->m_list.InsertColumn(i + 1, Parser_GetActionViewFromItem(view, i), 0, 100, -1);
 		}
 
 		for(size_t i = 0; view && i < view->row; ++i)
@@ -332,7 +332,7 @@ void CActionView::DrawActionView(const ARSpace::psrActionView_t *view)
 
 				for(size_t k = 0; k < view->col; ++k)
 				{
-						const wchar_t *s = Parser_IndexActionViewAction(view, i,k);
+						const wchar_t *s = Parser_GetActionViewFromAction(view, i,k);
 						
 						LVITEM	item;
 						memset(&item, 0, sizeof(item));

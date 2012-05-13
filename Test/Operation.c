@@ -414,14 +414,15 @@ arStatus_t		Cloud_StartOperation(cldOperation_t *oper)
 
 		if(Cloud_OperationIsReady(oper) == AR_S_YES)
 		{
+				AR_LockSpinLock(&oper->mutex);
 				status = Cloud_PostToOperationPool(__g_pool, oper);
 
 				if(status == AR_S_YES)
 				{
-						AR_LockSpinLock(&oper->mutex);
 						oper->has_started = true;
-						AR_UnLockSpinLock(&oper->mutex);
 				}
+
+				AR_UnLockSpinLock(&oper->mutex);
 
 		}else
 		{
