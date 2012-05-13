@@ -232,7 +232,7 @@ arStatus_t			Parser_CopySymbList(psrSymbList_t *dest, const psrSymbList_t *sour)
 
 arStatus_t			Parser_InsertToSymbList(psrSymbList_t *symb_lst, const psrSymb_t *symb);
 
-const psrSymb_t*	Parser_IndexOfSymbList(const psrSymbList_t *symb_lst, size_t idx);
+const psrSymb_t*	Parser_GetSymbFromSymbList(const psrSymbList_t *symb_lst, size_t idx);
 int_t				Parser_FindFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t* symb);
 
 arStatus_t			Parser_RemoveFromSymbListByIndex(psrSymbList_t *symb_lst, size_t index);
@@ -526,7 +526,7 @@ void			Parser_RecoverDone(psrContext_t *parser);
 
 size_t			Parser_GetNodeCount(const psrContext_t *parser);
 
-psrNode_t*		Parser_IndexOfNodeStack(psrContext_t *parser, size_t index);
+psrNode_t*		Parser_GetNodeFromNodeStack(psrContext_t *parser, size_t index);
 
 /*
 		由于采用了一个增广的文法，所以当EOI被增加到stack中时，只可能出现错误或者成为接受状态，EOI永远不会被SHIFT到parser中
@@ -567,8 +567,8 @@ typedef struct __parser_action_item_view_tag
 const psrActionView_t*	Parser_CreateParserActionView(const parser_t *parser);
 void					Parser_DestroyParserActionView(const psrActionView_t *view);
 
-#define	Parser_IndexActionViewItem(_v, _n)			((_v)->item[(_n)])
-#define Parser_IndexActionViewAction(_v, _x,_y)	((_v)->action_tbl[AR_TBL_IDX_R((_x), (_y), (_v)->col)])
+#define	Parser_GetActionViewFromItem(_v, _n)			((_v)->item[(_n)])
+#define Parser_GetActionViewFromAction(_v, _x,_y)	((_v)->action_tbl[AR_TBL_IDX_R((_x), (_y), (_v)->col)])
 
 /*conflict*/
 typedef struct __parser_conflict_item_tag

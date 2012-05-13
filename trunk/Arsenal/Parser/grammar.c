@@ -1671,7 +1671,7 @@ arStatus_t				Parser_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *fo
 										psrMapRec_t *rec_tmp = NULL;
 										size_t x;
 										
-										next = Parser_IndexOfSymbList(&rule->body, next_idx);/*next为key之后的符号*/
+										next = Parser_GetSymbFromSymbList(&rule->body, next_idx);/*next为key之后的符号*/
 
 										first_rec = Parser_GetSymbolFromSymbMap(first_set, next);/*next的first-set*/
 

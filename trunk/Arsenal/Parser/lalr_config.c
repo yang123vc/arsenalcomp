@@ -712,7 +712,7 @@ arStatus_t Parser_PrintConfig(const lalrConfig_t *config, const psrGrammar_t *gm
 		for(i = 0; i < config->delim; ++i)
 		{
 				const psrSymb_t	*curr;
-				curr = Parser_IndexOfSymbList(&rule->body, i);
+				curr = Parser_GetSymbFromSymbList(&rule->body, i);
 				
 				__CHECK_RET_VAL(Parser_PrintSymbol(curr, str));
 		}
@@ -723,7 +723,7 @@ arStatus_t Parser_PrintConfig(const lalrConfig_t *config, const psrGrammar_t *gm
 		for(; i < rule->body.count; ++i)
 		{
 				const psrSymb_t	*curr;
-				curr = Parser_IndexOfSymbList(&rule->body, i);
+				curr = Parser_GetSymbFromSymbList(&rule->body, i);
 				__CHECK_RET_VAL(Parser_PrintSymbol(curr, str));
 		}
 
