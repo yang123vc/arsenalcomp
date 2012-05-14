@@ -2512,6 +2512,127 @@ static void str_test12()
 		AR_printf(L"%hs : %ls\r\n", "ls", L"lS");
 }
 
+/****************************************************************************************************************/
+
+static arStatus_t  __hex_char_to_digit(char c, byte_t *d)
+{
+		AR_ASSERT(d != NULL);
+        
+		if(c >= '0' && c <= '9')
+		{
+				*d = c - '0';
+		}else if(c >= 'a' && c <= 'f')
+		{
+				*d = 10 + c - 'a';
+		}else if(c >= 'A' && c <= 'F')
+		{
+				*d = 10 + c - 'A';
+		}else
+		{
+				return AR_E_INVAL;
+		}
+		return AR_S_YES;
+}
+
+
+int_t	AR_hexstr_to_data_s(const char *b, const char *e, byte_t *data, size_t len)
+{
+		int_t di;
+		arStatus_t status;
+		AR_ASSERT(b != NULL && e != NULL && b < e);
+		
+		status = AR_S_YES;
+		di = 0;
+		while(b < e)
+		{
+				byte_t d1,d2;
+				
+				status = __hex_char_to_digit(*b, &d1);
+                
+				if(status != AR_S_YES)
+				{
+						return -1;
+				}
+                
+				b++;
+				
+				if(b >= e)
+				{
+						return -1;
+				}
+                
+				status = __hex_char_to_digit(*b, &d2);
+                
+				if(status != AR_S_YES)
+				{
+						return -1;
+				}
+                
+				if(data && (di + 1) > len)
+				{
+						return -1;
+				}
+                
+				if(data)
+				{
+						data[di] = d1 * 16 + d2;
+				}
+                
+				++b;
+				di++;
+		}
+		return di;
+}
+
+
+
+int_t           AR_hexstr_to_data(const char *s, byte_t *data, size_t len)
+{
+        AR_ASSERT(s != NULL);
+        return AR_hexstr_to_data_s(s, s + AR_strlen(s), data, len);
+}
+
+
+static void __digit_to_hex_char(byte_t b, char tmp[2])
+{
+		uint_32_t v = (uint_32_t)b;
+		static const char *__tbl = "0123456789ABCDEF";
+        
+		tmp[1] = __tbl[v % 16];
+		v /= 16;
+		tmp[0] = __tbl[v % 16];
+}
+
+
+int_t	AR_data_to_hexstr(const byte_t *data, size_t l, char *out, size_t len)
+{
+		size_t i, si;
+		AR_ASSERT(data != NULL && l > 0);
+        
+		if(out == NULL)
+		{
+				return l * 2 + 1;
+		}else
+		{
+				if(len < l * 2 + 1)
+				{
+						return -1;
+				}
+                
+				for(i = 0,si = 0; i < l; ++i)
+				{
+						__digit_to_hex_char(data[i], out + si);
+						si += 2;
+						AR_ASSERT(si < len);
+				}
+                
+				out[si] = '\0';
+				return si + 1;
+		}
+}
+
+/****************************************************************************************************************/
+
 static void str_test13()
 {
 #if(0)
@@ -2535,7 +2656,15 @@ static void str_test13()
 		
 		int_t wn = AR_data_to_hexstr(b, sizeof(b), buf, l);
 		printf("buf == %s : l == %d\r\n", buf,wn);
+
+
+		
 #endif
+
+		byte_t data[16];
+		int_t wn = AR_data_to_hexstr(data, sizeof(data), NULL, 0);
+		printf("l == %d\r\n",wn);
+
 
 
 

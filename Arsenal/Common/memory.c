@@ -18,23 +18,31 @@
 AR_NAMESPACE_BEGIN
 
 
+#if !defined(AR_USE_CRT_ALLOCFUNC)
 
 static arSpinLock_t		__g_lock;
 static arHeap_t			*__g_heap = NULL;
 
+
+#endif
+
+
 void	AR_InitMemory()
 {
+#if !defined(AR_USE_CRT_ALLOCFUNC)
 		AR_InitSpinLock(&__g_lock);
 		__g_heap = AR_CreateHeap();
 		if(__g_heap == NULL)
 		{
 				AR_error(AR_ERR_FATAL, L"AR_InitMemory failure\r\n");
 		}
+#endif
 }
 
 
 void	AR_UnInitMemory()
 {
+#if !defined(AR_USE_CRT_ALLOCFUNC)
 		arHeapUsage_t	usage;
 
 
@@ -46,6 +54,7 @@ void	AR_UnInitMemory()
 		AR_DestroyHeap(__g_heap);
 		__g_heap = NULL;
 		AR_UnInitSpinLock(&__g_lock);
+#endif
 }
 
 
