@@ -75,6 +75,9 @@ arStatus_t		AR_GetExpandPath(const wchar_t *path, arString_t *expanded_path)
 
 }
 
+
+
+
 #else
 
 arStatus_t		AR_GetCurrentPath(arString_t *str)
@@ -454,6 +457,22 @@ bool_t		AR_PathIteratorIsDone(const arPathIter_t *iter)
 {
 		AR_ASSERT(iter != NULL);
 		return iter->isdone;
+}
+
+
+/*************************************************************File********************************************/
+
+
+FILE*	AR_open_file(const wchar_t *path, const wchar_t *mode)
+{
+		AR_ASSERT(path != NULL && mode != NULL);
+		return _wfopen(path, mode);
+}
+
+void	AR_close_file(FILE *f)
+{
+		AR_ASSERT(f != NULL);
+		fclose(f);
 }
 
 
@@ -984,7 +1003,50 @@ bool_t		AR_PathIteratorIsDone(const arPathIter_t *iter)
 		return iter->isdone;
 }
 
+/************************************************************File*************************************************************/
 
+
+FILE*	AR_open_file(const wchar_t *path, const wchar_t *mode)
+{
+        FILE    *file;
+        char    *str_path;
+        char     *str_mode;
+		AR_ASSERT(path != NULL && mode != NULL);
+
+		str_path = AR_wcs_to_str(AR_CP_UTF8, path, AR_wcslen(path));
+		str_mode = AR_wcs_to_str(AR_CP_UTF8, mode, AR_wcslen(mode));
+
+		file = NULL;
+
+		if(str_path && str_mode)
+		{
+				file = fopen(str_path, str_mode);
+		}else
+		{
+				AR_error(AR_ERR_WARNING, L"Failed to convert path('%ls') and mode('%ls') to utf8 strings\r\n", path, mode);
+		}
+
+        if(str_path)
+        {
+            AR_DEL(str_path);
+            str_path = NULL;
+        }
+
+        if(str_mode)
+        {
+            AR_DEL(str_mode);
+            str_mode = NULL;
+        }
+
+        return file;
+}
+
+
+void	AR_close_file(FILE *f)
+{
+		AR_ASSERT(f != NULL);
+		fclose(f);
+}
 
 #else
 		#error "Unknown OS!"

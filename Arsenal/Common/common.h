@@ -1061,6 +1061,11 @@ const wchar_t*	AR_PathIteratorCurrent(const arPathIter_t *iter);
 arStatus_t		AR_PathIteratorNext(arPathIter_t *iter);
 bool_t			AR_PathIteratorIsDone(const arPathIter_t *iter);
 
+
+/***********************************************************File*********************************/
+FILE*	AR_open_file(const wchar_t *path, const wchar_t *mode);
+void	AR_close_file(FILE *f);
+
 /***************************************************************************************************************************************/
 
 
