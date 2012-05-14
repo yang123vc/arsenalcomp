@@ -168,7 +168,6 @@ arStatus_t		AR_JoinThread(arThread_t *thd)
 
 arStatus_t		AR_JoinThreadWithTimeout(arThread_t *thd, uint_64_t milliseconds)
 {
-        void *result;
         arStatus_t status;
         AR_ASSERT(thd != NULL && thd->done != NULL && thd->thd != NULL);
         
