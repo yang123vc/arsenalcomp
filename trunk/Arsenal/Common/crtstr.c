@@ -215,6 +215,11 @@ const wchar_t*		AR_wcsistr(const wchar_t *s, const wchar_t *p)
 
 /**********************************************************string*************************************************************/
 
+
+#define __MODIFIER_ANSI			0x10000
+#define __MODIFIER_UNICODE		0x20000
+#define	__MODIFIER_INT64		0x40000
+
 static int_t __wcs_format_preprocess(const wchar_t *fmt, wchar_t *out)
 {
 		wchar_t *p;
@@ -231,6 +236,8 @@ static int_t __wcs_format_preprocess(const wchar_t *fmt, wchar_t *out)
 
 		while(*fmt)
 		{
+				int_t modifier = 0;
+
 				if(*fmt != L'%')
 				{
 						if(p)
@@ -386,13 +393,17 @@ static int_t __wcs_format_preprocess(const wchar_t *fmt, wchar_t *out)
 						fmt++;
 				}
 						break;
-						/*强制ANSI*/
-				case L'h':
+				case L'h':		/*强制ANSI*/
+						modifier |= __MODIFIER_ANSI;
+						fmt++;
+						break;
 				case L'l':
+						modifier |= __MODIFIER_UNICODE;
+						fmt++;
+						break;
 				case L'F':
 				case L'N':
 				case L'L':
-
 						if(p)
 						{
 								*p++ = *fmt;
@@ -403,7 +414,7 @@ static int_t __wcs_format_preprocess(const wchar_t *fmt, wchar_t *out)
 						break;
 				}
 
-				switch (*fmt)
+				switch (*fmt | modifier)
 				{
 				case L'd':
 				case L'i':
@@ -418,8 +429,6 @@ static int_t __wcs_format_preprocess(const wchar_t *fmt, wchar_t *out)
 				case L'f':
 				case L'p':
 				case L'n':
-				case L'c':
-				case L's':
 						if(p)
 						{
 								*p++ = *fmt;
@@ -427,21 +436,49 @@ static int_t __wcs_format_preprocess(const wchar_t *fmt, wchar_t *out)
 						fmt++;
 						need_l++;
 						break;
+				case L'c':
 				case L'C':
+				case L'c' | __MODIFIER_UNICODE:
+				case L'C' | __MODIFIER_UNICODE:
 						if(p)
 						{
+								*p++ = L'l';
 								*p++ = L'c';
 						}
 						fmt++;
-						need_l++;
+						need_l += 2;
 						break;
+				case L's':
 				case L'S':
+				case L's' | __MODIFIER_UNICODE:
+				case L'S' | __MODIFIER_UNICODE:
 						if(p)
 						{
+								*p++ = L'l';
 								*p++ = L's';
 						}
 						fmt++;
-						need_l++;
+						need_l += 2;
+						break;
+				case L'c' | __MODIFIER_ANSI:
+				case L'C' | __MODIFIER_ANSI:
+						if(p)
+						{
+								*p++ = L'h';
+								*p++ = L'c';
+						}
+						fmt++;
+						need_l += 2;
+						break;
+				case L's' | __MODIFIER_ANSI:
+				case L'S' | __MODIFIER_ANSI:
+						if(p)
+						{
+								*p++ = L'h';
+								*p++ = L's';
+						}
+						fmt++;
+						need_l += 2;
 						break;
 				default:
 						AR_ASSERT(false);
@@ -460,10 +497,6 @@ static int_t __wcs_format_preprocess(const wchar_t *fmt, wchar_t *out)
 }
 
 
-
-#define __MODIFIER_ANSI			0x10000
-#define __MODIFIER_UNICODE		0x20000
-#define	__MODIFIER_INT64		0x40000
 
 int_t AR_vscwprintf(const wchar_t *fmt, va_list va_args)
 {
