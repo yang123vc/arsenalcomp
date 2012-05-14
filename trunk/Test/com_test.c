@@ -2510,9 +2510,36 @@ static void str_test12()
 		AR_printf(L"%hS : %lS\r\n", "hS", L"lS");
 		AR_printf(L"%s : %S\r\n", "s", L"S");
 		AR_printf(L"%hs : %ls\r\n", "ls", L"lS");
-		
 }
 
+static void str_test13()
+{
+#if(0)
+		const char *s = "ffff";
+		size_t l = 0;
+		
+		printf("wn == %d\r\n", AR_hexstr_to_data_s(s, s + strlen(s), NULL, l));
+
+		byte_t tmp[2];
+		
+
+		printf("wn == %d\r\n", AR_hexstr_to_data_s(s, s + strlen(s), tmp, 2));
+
+		printf("%02X%02X\r\n", tmp[0],tmp[1]);
+
+
+		
+		byte_t b[] = {0xff,0xef,0x10};
+		char buf[10];
+		l = 10;
+		
+		int_t wn = AR_data_to_hexstr(b, sizeof(b), buf, l);
+		printf("buf == %s : l == %d\r\n", buf,wn);
+#endif
+
+
+
+}
 
 void com_test()
 {
@@ -2532,7 +2559,8 @@ void com_test()
 		//str_test9();
 		//str_test10();
 		//str_test11();
-		str_test12();
+		//str_test12();
+		str_test13();
 		//com_test3();
 		//com_conv();
 		//com_conv2();
