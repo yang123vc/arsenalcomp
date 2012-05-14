@@ -2495,7 +2495,22 @@ static void operation_test()
 static void str_test12()
 {
 		wprintf(L"%S\r\n", "abcdefg");
-		AR_printf(L"%S\r\n", L"aaaaaaaaaaa");
+
+		AR_printf(L"%ls\r\n", L"ls");
+		AR_printf(L"%lS\r\n", L"lS");
+		AR_printf(L"%s\r\n", L"s");
+		AR_printf(L"%S\r\n", L"S");
+
+
+		AR_printf(L"%hs\r\n", "hs");
+		AR_printf(L"%hS\r\n", "hS");
+		AR_printf(L"%s\r\n", L"s");
+		AR_printf(L"%S\r\n", L"S");
+
+		AR_printf(L"%hS : %lS\r\n", "hS", L"lS");
+		AR_printf(L"%s : %S\r\n", "s", L"S");
+		AR_printf(L"%hs : %ls\r\n", "ls", L"lS");
+		
 }
 
 
