@@ -2491,6 +2491,14 @@ static void operation_test()
 		operation_test3();
 }
 
+
+static void str_test12()
+{
+		wprintf(L"%S\r\n", "abcdefg");
+		AR_printf(L"%S\r\n", L"aaaaaaaaaaa");
+}
+
+
 void com_test()
 {
 
@@ -2509,7 +2517,7 @@ void com_test()
 		//str_test9();
 		//str_test10();
 		//str_test11();
-
+		str_test12();
 		//com_test3();
 		//com_conv();
 		//com_conv2();
@@ -2578,7 +2586,7 @@ void com_test()
 
 		//ds_test2();
 
-		operation_test();
+		//operation_test();
 }
 
 
