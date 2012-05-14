@@ -133,10 +133,22 @@ FAILED_POINT:
 
 void			AR_DestroyThread(arThread_t *thd)
 {
+        void *result;
+        int ret = 0;
         AR_ASSERT(thd != NULL && thd->thd != NULL);
         AR_JoinThread(thd);
-        pthread_detach(thd->thd);
-
+        
+        if((ret = pthread_join(thd->thd, &result)) != 0)
+        {
+                AR_LOG(L"can not join thread : error code == %d\r\n", ret);
+        }
+        
+        if((ret = pthread_detach(thd->thd)) != 0)
+        {
+                /*如果join成功后，此函数调用实际上是多余的，因此返回3的话也无所谓，代表线程所占用的资源已经释放了*/
+                /*AR_LOG(L"can not detach thread : error code == %d\r\n", ret);*/
+        }
+        
         AR_DestroyEvent(thd->done);
         thd->done = NULL;
         AR_DEL(thd);
@@ -146,23 +158,12 @@ void			AR_DestroyThread(arThread_t *thd)
 arStatus_t		AR_JoinThread(arThread_t *thd)
 {
         arStatus_t status;
-        void *result;
+        
         AR_ASSERT(thd != NULL && thd->done != NULL && thd->thd != NULL);
-
+        
         status = AR_WaitEvent(thd->done);
-        if(status != AR_S_YES)
-        {
-                return status;
-        }
-
-        if(pthread_join(thd->thd, &result) != 0)
-        {
-                AR_error(AR_ERR_WARNING, L"cannot join thread!");
-                return AR_E_SYS;
-        }
-
-        return AR_S_YES;
-
+        
+        return status;
 }
 
 arStatus_t		AR_JoinThreadWithTimeout(arThread_t *thd, uint_64_t milliseconds)
@@ -170,22 +171,15 @@ arStatus_t		AR_JoinThreadWithTimeout(arThread_t *thd, uint_64_t milliseconds)
         void *result;
         arStatus_t status;
         AR_ASSERT(thd != NULL && thd->done != NULL && thd->thd != NULL);
-
+        
         status = AR_WaitEventWithTimeout(thd->done, milliseconds);
-
-        if(status != AR_S_YES)
-        {
-                return status;
-        }
-
-        if(pthread_join(thd->thd, &result) != 0)
-        {
-                AR_error(AR_ERR_WARNING, L"cannot join thread!");
-                return AR_E_SYS;
-        }
-
-        return AR_S_YES;
+        
+        return status;
 }
+
+
+
+
 
 
 uint_64_t		AR_GetThreadId(arThread_t *thd)
