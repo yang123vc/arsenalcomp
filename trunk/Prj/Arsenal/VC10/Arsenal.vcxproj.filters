@@ -245,6 +245,18 @@
     <ClInclude Include="..\..\..\Arsenal\Common\thread_posix_posix.h">
       <Filter>Arsenal\Common</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\Arsenal\Common\filesystem_win.h">
+      <Filter>Arsenal\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Arsenal\Common\filesystem_posix.h">
+      <Filter>Arsenal\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Arsenal\Common\enviroment_posix.h">
+      <Filter>Arsenal\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Arsenal\Common\enviroment_win.h">
+      <Filter>Arsenal\Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="export.def">
