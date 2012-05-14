@@ -419,14 +419,27 @@ static int_t __wcs_format_preprocess(const wchar_t *fmt, wchar_t *out)
 				case L'p':
 				case L'n':
 				case L'c':
-				case L'C':
 				case L's':
-				case L'S':
 						if(p)
 						{
 								*p++ = *fmt;
 						}
-
+						fmt++;
+						need_l++;
+						break;
+				case L'C':
+						if(p)
+						{
+								*p++ = L'c';
+						}
+						fmt++;
+						need_l++;
+						break;
+				case L'S':
+						if(p)
+						{
+								*p++ = L's';
+						}
 						fmt++;
 						need_l++;
 						break;
@@ -595,6 +608,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list va_args)
 #endif
 						break;
 				case L's':
+				case L'S':
 				{
 						const wchar_t *str = AR_va_arg(args, const wchar_t*);
 						if(str == NULL)
@@ -604,19 +618,6 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list va_args)
 						{
 								len =(int_t)AR_wcslen(str);
 								len = AR_MAX(len, 1);
-						}
-						break;
-				}
-				case L'S':
-				{
-						const char *str = AR_va_arg(args, const char*);
-						if(str == NULL)
-						{
-								len = 6;/*(null)*/
-						}else
-						{
-								len = (int_t)AR_strlen(str);
-								len = AR_MAX(len,1);
 						}
 						break;
 				}
