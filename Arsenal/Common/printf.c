@@ -533,7 +533,7 @@ int_t AR_vscprintf(const char *fmt, va_list va_args)
 										return -1;
 								}
 								
-								AR_SPRINTF(buf, cclen, "%*.*f", width, prec + 6, f);
+								AR_SPRINTF(buf, cclen, "%*.*f", (int)width, (int)prec + 6, f);
 								len = AR_strlen(buf);
 								AR_DEL(buf);
 								break;
