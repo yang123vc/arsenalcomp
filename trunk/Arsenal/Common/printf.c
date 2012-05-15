@@ -109,7 +109,7 @@ static int_t __str_format_preprocess(const char *fmt, char *out)
 						}
 				}
 
-				while(*fmt && AR_iswdigit(*fmt))
+				while(*fmt && AR_isdigit(*fmt))
 				{
 						if(p)
 						{
@@ -140,7 +140,7 @@ static int_t __str_format_preprocess(const char *fmt, char *out)
 								fmt++;
 						}else
 						{
-								while(*fmt && AR_iswdigit(*fmt))
+								while(*fmt && AR_isdigit(*fmt))
 								{
 										if(p)
 										{
