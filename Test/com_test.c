@@ -290,6 +290,7 @@ void __format_v(const wchar_t *fmt, ...)
 		AR_va_end(arg_ptr);
 }
 
+
 void com_vscwprintf_test()
 {
 		uint_64_t  x = 7332201052963203716;
@@ -798,6 +799,9 @@ void com_str_test_vscwprintf()
 		int_t l = AR_scwprintf(L"%C : %C : %C : %C\r\n", L'a', L'b', L'c', L'd');
 		printf("l == %d\r\n", l);
 }
+
+
+
 
 void com_str_test_cmp()
 {
@@ -1339,9 +1343,14 @@ void str_test7()
 void com_str_test_vcprintf()
 {
 		//const char *s = "abc";
-		int_t n;
-		n = AR_scwprintf(L"%33s", L"abc");
-		n = AR_scwprintf(L"%.10s", L"abc");
+		int_t n11,n12,n21,n22;
+		n11 = AR_scwprintf(L"%33s", L"abc");
+		n12 = AR_scwprintf(L"%.10s", L"abc");
+
+
+		n21 = AR_scprintf("%33s", "abc");
+		n22 = AR_scprintf("%.10s", "abc");
+
 
 }
 
@@ -2693,7 +2702,7 @@ void com_test()
 		//str_test10();
 		//str_test11();
 		//str_test12();
-		str_test13();
+		//str_test13();
 		//com_test3();
 		//com_conv();
 		//com_conv2();
@@ -2736,8 +2745,8 @@ void com_test()
 		//float_test();
 		
 
-		//com_str_test_vcprintf();
-		//com_test_srpintf();
+		com_str_test_vcprintf();
+		com_test_srpintf();
 
 		//escstr_n_test1();
 		//escstr_n_test0();

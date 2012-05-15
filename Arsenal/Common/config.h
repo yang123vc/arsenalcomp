@@ -620,6 +620,7 @@ typedef void*					ptr_t;
 		#define AR_SWPRINTF										_snwprintf
 		#define AR_VSWPRINTF									_vsnwprintf
 
+		#define AR_SPRINTF										_snprintf
 		#define AR_VSPRINTF										_vsnprintf
 		
 		
@@ -633,6 +634,7 @@ typedef void*					ptr_t;
                 #define AR_SWPRINTF								_snwprintf
 				#define AR_VSWPRINTF							_vsnwprintf
 
+				#define AR_SPRINTF								_snprintf
 				#define AR_VSPRINTF								_vsnprintf
 
                 #define AR_abort								abort
@@ -644,12 +646,14 @@ typedef void*					ptr_t;
 				#define AR_SWPRINTF								_snwprintf
 				#define AR_VSWPRINTF							_vsnwprintf
 
+				#define AR_SPRINTF								_snprintf
 				#define AR_VSPRINTF								_vsnprintf
 
 		#else
 				#define AR_SWPRINTF			                    swprintf
 				#define AR_VSWPRINTF			                vswprintf
 
+				#define AR_SPRINTF								snprintf
 				#define AR_VSPRINTF(_dest, _cnt, _fmt, _args) 	vsprintf((_dest), (_fmt), (_args))
 
 		#endif
