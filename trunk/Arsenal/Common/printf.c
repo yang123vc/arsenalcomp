@@ -22,7 +22,8 @@ AR_NAMESPACE_BEGIN
 
 /**********************************************************str version*************************************************************/
 
-int_t __str_format_preprocess(const char *fmt, char *out)
+
+static int_t __str_format_preprocess(const char *fmt, char *out)
 {
 		char *p;
 		int_t	need_l;
@@ -182,7 +183,7 @@ int_t __str_format_preprocess(const char *fmt, char *out)
 				case 'q': /*64bit*/
 				{
 						const char *pfmt64 = AR_FMT64_STR;
-						while(*pfmt64 != L'\0')
+						while(*pfmt64 != '\0')
 						{
 								if(p)
 								{
@@ -240,44 +241,44 @@ int_t __str_format_preprocess(const char *fmt, char *out)
 						break;
 				case 'c':
 				case 'C':
-				case L'c' | __MODIFIER_ANSI:
-				case L'C' | __MODIFIER_ANSI:
+				case 'c' | __MODIFIER_ANSI:
+				case 'C' | __MODIFIER_ANSI:
 						if(p)
 						{
-								*p++ = L'h';
-								*p++ = L'c';
+								*p++ = 'h';
+								*p++ = 'c';
 						}
 						fmt++;
 						need_l += 2;
 						break;
-				case L's':
-				case L'S':
-				case L's' | __MODIFIER_ANSI:
-				case L'S' | __MODIFIER_ANSI:
+				case 's':
+				case 'S':
+				case 's' | __MODIFIER_ANSI:
+				case 'S' | __MODIFIER_ANSI:
 						if(p)
 						{
-								*p++ = L'h';
-								*p++ = L's';
+								*p++ = 'h';
+								*p++ = 's';
 						}
 						fmt++;
 						need_l += 2;
 						break;
-				case L'c' | __MODIFIER_UNICODE:
-				case L'C' | __MODIFIER_UNICODE:
+				case 'c' | __MODIFIER_UNICODE:
+				case 'C' | __MODIFIER_UNICODE:
 						if(p)
 						{
-								*p++ = L'l';
-								*p++ = L'c';
+								*p++ = 'l';
+								*p++ = 'c';
 						}
 						fmt++;
 						need_l += 2;
 						break;
-				case L's' | __MODIFIER_UNICODE:
-				case L'S' | __MODIFIER_UNICODE:
+				case 's' | __MODIFIER_UNICODE:
+				case 'S' | __MODIFIER_UNICODE:
 						if(p)
 						{
-								*p++ = L'l';
-								*p++ = L's';
+								*p++ = 'l';
+								*p++ = 's';
 						}
 						fmt++;
 						need_l += 2;
@@ -300,6 +301,399 @@ int_t __str_format_preprocess(const char *fmt, char *out)
 
 
 
+
+
+
+
+int_t AR_vscprintf(const char *fmt, va_list va_args)
+{
+		int_t res;
+		va_list args;
+		AR_ASSERT(fmt != NULL && va_args != NULL);
+		res = 0;
+
+		AR_va_copy(args, va_args);
+
+		while(*fmt)
+		{
+				int_t len = 0, width = 0, prec = 0, modifier = 0;
+				if(*fmt != '%' || *(++fmt) == '%')
+				{
+						fmt++;
+						res++;
+						continue;
+				}
+
+				/*处理%后面的*/
+
+
+				while(*fmt)
+				{
+						if(*fmt == '#')
+						{
+								res += 2; /*0x*/
+						}else if(*fmt == '*')
+						{
+								width = AR_va_arg(args, int);
+						}else if(*fmt == '-' || *fmt == '+' || *fmt == '0' || *fmt == ' ')
+						{
+
+						}else
+						{
+								break;
+						}
+						fmt++;
+				}
+
+				if(width == 0)
+				{
+						while(*fmt && AR_isdigit(*fmt))
+						{
+								width *= 10;
+								width += *fmt - '0';
+								fmt++;
+						}
+				}
+
+				if(*fmt == '.')
+				{
+						/*width.prec*/
+						fmt++;
+						if(*fmt == '*')
+						{
+								prec = AR_va_arg(args, int_32_t);
+								fmt++;
+						}else
+						{
+								prec = 0;
+								while(*fmt && AR_isdigit(*fmt))
+								{
+										prec *= 10;
+										prec += *fmt - '0';
+										fmt++;
+								}
+						}
+
+				}
+
+				modifier = 0;
+
+				if(*fmt == 'I')
+				{
+						/*例如%Id*/
+						fmt += 1;
+
+						#if(AR_ARCH_VER == ARCH_64)
+								modifier |= __MODIFIER_INT64;
+						#elif(AR_ARCH_VER == ARCH_32)
+
+						#endif
+				}else if(*fmt == 'q')
+				{
+						fmt += 1;
+						modifier |= __MODIFIER_INT64;
+				}else
+				{
+						switch (*fmt)
+						{
+								/*强制ANSI*/
+						case 'h':
+								modifier |= __MODIFIER_ANSI;
+								fmt++;
+								break;
+						case 'l':
+								modifier |= __MODIFIER_UNICODE;
+								fmt++;
+								break;
+								/*无用*/
+						case 'F':
+						case 'N':
+						case 'L':
+								fmt++;
+								break;
+						}
+				}
+
+				switch (*fmt | modifier)
+				{
+				case 'c':
+				case 'C':
+						len = 2;
+#if defined(AR_VAARGS_TREAT_WCHAR_AS_INT)
+						AR_va_arg(args, int);
+#else
+						AR_va_arg(args, wint_t);
+#endif
+						break;
+				case 'c' | __MODIFIER_ANSI:
+				case 'C' | __MODIFIER_ANSI:
+						len = 2;
+
+#if defined(AR_VAARGS_TREAT_CHAR_AS_INT)
+						AR_va_arg(args, int);
+#else
+						AR_va_arg(args, char);
+#endif
+						break;
+				case 'c' | __MODIFIER_UNICODE:
+				case 'C' | __MODIFIER_UNICODE:
+						len = 2;
+#if defined(AR_VAARGS_TREAT_WCHAR_AS_INT)
+						AR_va_arg(args, int);
+#else
+						AR_va_arg(args, wchar_t);
+#endif
+						break;
+				case 's':
+				case 'S':
+				case 's' | __MODIFIER_ANSI:
+				case 'S' | __MODIFIER_ANSI:
+				{
+						const char *str = AR_va_arg(args, const char*);
+						if(str == NULL)
+						{
+								len = 6;/*(null)*/
+						}else
+						{
+								len =(int_t)AR_strlen(str);
+								len = AR_MAX(len, 1);
+						}
+						break;
+				}
+				case 's' | __MODIFIER_UNICODE:
+				case 'S' | __MODIFIER_UNICODE:
+				{
+						const wchar_t *str = AR_va_arg(args, const wchar_t*);
+						if(str == NULL)
+						{
+								len = 6;/*(null)*/
+						}else
+						{
+								len = (int_t)AR_wcslen(str) * 4;
+								len = AR_MAX(len, 1);
+						}
+						break;
+
+				}
+				}
+
+				if(len != 0)
+				{
+						len = AR_MAX(len, width);
+						if(prec != 0)len = AR_MIN(len, prec);
+				}else
+				{
+						switch (*fmt)
+						{
+						case 'd':
+						case 'i':
+						case 'u':
+						case 'x':
+						case 'X':
+						case 'o':
+						{
+								if(modifier & __MODIFIER_INT64)
+								{
+										AR_va_arg(args, int_64_t);
+								}else
+								{
+										AR_va_arg(args, int_32_t);
+								}
+								len = 32;
+								len = AR_MAX(len, width + prec);
+								break;
+						}
+						case 'e':
+						case 'E':
+						case 'g':
+						case 'G':
+						{
+								AR_va_arg(args, double);
+								len = 128;
+								len = AR_MAX(len, width + prec);
+								break;
+						}
+						case 'f':
+						{
+								int_t cclen;
+								char *buf;
+								double f= AR_va_arg(args, double);
+
+								/*
+										312 == strlen("-1+(0{309})")
+										double 最大精度为.0{309},这里精度默认设置为6
+								*/
+
+								cclen = AR_MAX(width, 312 + prec + 6);/*取最大值*/
+
+								buf = AR_NEWARR0(char, cclen);
+
+								if(buf == NULL)
+								{
+										return -1;
+								}
+								
+								AR_SPRINTF(buf, cclen, "%*.*f", width, prec + 6, f);
+								len = AR_strlen(buf);
+								AR_DEL(buf);
+								break;
+						}
+						case 'p':
+						{
+								AR_va_arg(args, void*);
+								len = AR_MAX(32, width + prec);
+								break;
+						}
+						case 'n':
+						{
+								AR_va_arg(args, int*);
+								break;
+						}
+						default:
+						{
+								AR_ASSERT(false);
+								return -1;
+						}
+
+						}
+				}
+				fmt++;
+				res += len;
+		}
+		AR_va_end(args);
+		return res;
+}
+
+
+
+
+int_t			AR_scprintf(const char *fmt, ...)
+{
+		int_t len = -1;
+		va_list	arg_ptr;
+
+		AR_ASSERT(fmt != NULL);
+
+		AR_va_start(arg_ptr, fmt);
+		len = AR_vscprintf(fmt, arg_ptr);
+		AR_va_end(arg_ptr);
+		return len;
+}
+
+
+
+char*		AR_vtos(const char *fmt, ...)
+{
+		va_list			args;
+
+		char			*buf;
+		int_t			len;
+
+		AR_ASSERT(fmt != NULL);
+
+		AR_va_start (args, fmt);
+		len = AR_vscprintf(fmt, args);
+		AR_va_end (args);
+
+		if(len < 0)
+		{
+				return NULL;
+		}
+		
+		buf = AR_NEWARR(char, len + 1);
+
+		if(buf == NULL)
+		{
+				return NULL;
+		}
+
+		AR_va_start (args, fmt);
+		
+		if(AR_vsprintf(buf, len + 1, fmt, args) < 0)
+		{
+				AR_DEL(buf);
+				buf = NULL;
+		}
+		AR_va_end (args);
+		return buf;
+}
+
+
+
+
+int_t			AR_vsprintf(char *dest, size_t count, const char *fmt, va_list args)
+{
+		int_t res;
+		va_list save;
+
+		char *src_fmt;
+		int_t need_l;
+
+		AR_ASSERT(dest != NULL && fmt != NULL && args != NULL);
+
+		res = 0;
+		need_l = 0;
+		src_fmt = NULL;
+
+
+
+		/********************将Arsenal形式的printf格式，转换为目标CRT的格式***************/
+		need_l = __str_format_preprocess(fmt, NULL);
+		if(need_l <= 0)
+		{
+				res = -1;
+				goto END_POINT;
+		}
+
+		src_fmt = AR_NEWARR(char, need_l);
+
+		if(src_fmt == NULL)
+		{
+				res = -1;
+				goto END_POINT;
+		}
+
+		__str_format_preprocess(fmt, src_fmt);
+
+		AR_va_copy(save, args);
+		res = AR_VSPRINTF(dest, count, src_fmt, save);
+		AR_va_end(save);
+
+	   /*****************************************************************************/
+
+
+END_POINT:
+
+
+		if(src_fmt)
+		{
+				AR_DEL(src_fmt);
+				src_fmt = NULL;
+		}
+
+		if(res <= 0)						/*忽略掉此种错误*/
+		{
+				dest[0] = '\0';
+				res = 0;
+		}
+
+		return res;
+}
+
+
+
+int_t			AR_sprintf(char *dest, size_t count, const char *fmt, ...)
+{
+		int_t len = -1;
+		va_list	arg_ptr;
+		AR_ASSERT(fmt != NULL);
+
+		AR_va_start(arg_ptr, fmt);
+		len = AR_vsprintf(dest, count, fmt, arg_ptr);
+		AR_va_end(arg_ptr);
+		
+		return len;
+}
 
 
 /**********************************************************wcs version*************************************************************/
@@ -861,10 +1255,6 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list va_args)
 		AR_va_end(args);
 		return res;
 }
-#undef	__MODIFIER_ANSI
-#undef	__MODIFIER_UNICODE
-#undef	__MODIFIER_INT64
-
 
 
 int_t			AR_scwprintf(const wchar_t *fmt, ...)
@@ -991,6 +1381,13 @@ int_t			AR_swprintf(wchar_t *dest, size_t count, const wchar_t *fmt, ...)
 		
 		return len;
 }
+
+
+#undef	__MODIFIER_ANSI
+#undef	__MODIFIER_UNICODE
+#undef	__MODIFIER_INT64
+
+
 
 AR_NAMESPACE_END
 

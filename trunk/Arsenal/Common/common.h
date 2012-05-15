@@ -524,8 +524,8 @@ const wchar_t* AR_reverse_wcsistr(const wchar_t *str, size_t l,  const wchar_t *
 
 /******************************************************string format*********************************************/
 
-/*返回一个长度，足够容纳fmt + args*/
-int_t			AR_vscwprintf(const wchar_t *fmt, va_list args);
+
+int_t			AR_vscwprintf(const wchar_t *fmt, va_list args);/*返回一个长度，足够容纳fmt + args*/
 int_t			AR_scwprintf(const wchar_t *fmt, ...);
 wchar_t*		AR_vtow(const wchar_t *fmt, ...);
 
@@ -533,15 +533,13 @@ int_t			AR_swprintf(wchar_t *dest, size_t count, const wchar_t *fmt, ...);
 int_t			AR_vswprintf(wchar_t *dest, size_t count, const wchar_t *fmt, va_list args);
 
 
-#if(0)
-int_t			AR_vscprintf(const wchar_t *fmt, va_list args);
-int_t			AR_scprintf(const wchar_t *fmt, ...);
-wchar_t*		AR_vtos(const wchar_t *fmt, ...);
 
-int_t			AR_sprintf(wchar_t *dest, size_t count, const wchar_t *fmt, ...);
-int_t			AR_vwprintf(wchar_t *dest, size_t count, const wchar_t *fmt, va_list args);
+int_t			AR_vscprintf(const char *fmt, va_list args);	/*返回一个长度，足够容纳fmt + args*/
+int_t			AR_scprintf(const char *fmt, ...);
+char*			AR_vtos(const char *fmt, ...);
 
-#endif
+int_t			AR_sprintf(char *dest, size_t count, const char *fmt, ...);
+int_t			AR_vsprintf(char *dest, size_t count, const char *fmt, va_list args);
 
 
 
