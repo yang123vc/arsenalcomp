@@ -322,6 +322,7 @@ _CHAR_UNSIGNED			是vs特性，/J
 		#define AR_BIGNUM_U64(_num)	(_num##ui64)
 
 		#define	AR_FMT64			L"I64"
+		#define	AR_FMT64_STR		"I64"
 
 		#if(AR_COMPILER == AR_VC_LEGACY)
 				#define AR_NOOP					((void)0)
@@ -390,6 +391,7 @@ _CHAR_UNSIGNED			是vs特性，/J
 		#define AR_BIGNUM_U64(_num)	(_num##ULL)
 
 		#define	AR_FMT64			L"ll"
+		#define	AR_FMT64_STR		"ll"
 
 		#define AR_NOOP
 
