@@ -522,12 +522,7 @@ const wchar_t* AR_reverse_wcsistr(const wchar_t *str, size_t l,  const wchar_t *
 #endif
 
 
-/***************************************************************************************************/
-bool_t			AR_wcs_is_float(const wchar_t *in, const wchar_t *end);
-bool_t			AR_wcs_is_int(const wchar_t *in, const wchar_t *end);
-
-
-
+/******************************************************string format*********************************************/
 
 /*返回一个长度，足够容纳fmt + args*/
 int_t			AR_vscwprintf(const wchar_t *fmt, va_list args);
@@ -537,9 +532,22 @@ wchar_t*		AR_vtow(const wchar_t *fmt, ...);
 int_t			AR_swprintf(wchar_t *dest, size_t count, const wchar_t *fmt, ...);
 int_t			AR_vswprintf(wchar_t *dest, size_t count, const wchar_t *fmt, va_list args);
 
-//int_t			AR_vsprintf(char *dest, size_t count, const char *fmt, va_list args);
+
+#if(0)
+int_t			AR_vscprintf(const wchar_t *fmt, va_list args);
+int_t			AR_scprintf(const wchar_t *fmt, ...);
+wchar_t*		AR_vtos(const wchar_t *fmt, ...);
+
+int_t			AR_sprintf(wchar_t *dest, size_t count, const wchar_t *fmt, ...);
+int_t			AR_vwprintf(wchar_t *dest, size_t count, const wchar_t *fmt, va_list args);
+
+#endif
 
 
+
+/***************************************************************************************************/
+bool_t			AR_wcs_is_float(const wchar_t *in, const wchar_t *end);
+bool_t			AR_wcs_is_int(const wchar_t *in, const wchar_t *end);
 
 
 
