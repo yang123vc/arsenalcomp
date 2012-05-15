@@ -22,6 +22,284 @@ AR_NAMESPACE_BEGIN
 
 /**********************************************************str version*************************************************************/
 
+int_t __str_format_preprocess(const char *fmt, char *out)
+{
+		char *p;
+		int_t	need_l;
+		AR_ASSERT(fmt != NULL);
+
+		if(AR_strlen(fmt) == 0)
+		{
+				return 1;
+		}
+
+		p = out;
+		need_l = 0;
+
+		while(*fmt)
+		{
+				int_t modifier = 0;
+
+				if(*fmt != '%')
+				{
+						if(p)
+						{
+								*p++ = *fmt;
+						}
+						fmt++;
+						need_l++;
+
+						continue;
+				}else if(*fmt == '%' && *(fmt + 1) == '%')
+				{
+						if(p)
+						{
+								*p++ = *fmt;
+								*p++ = *fmt;
+						}
+						need_l += 2;
+						fmt += 2;
+						continue;
+				}else
+				{
+						if(p)
+						{
+								*p++ = *fmt;
+						}
+						need_l++;
+						fmt++;
+				}
+
+				/*处理%后面的*/
+
+
+				while(*fmt)
+				{
+						if(*fmt == '#')
+						{
+								if(p)
+								{
+										*p++ = *fmt;/*0x*/
+								}
+
+								need_l++;
+								fmt++;
+						}else if(*fmt == '*')
+						{
+								if(p)
+								{
+										*p++ = *fmt;
+								}
+
+								need_l++;
+								fmt++;
+						}else if(*fmt == '-' || *fmt == '+' || *fmt == '0' || *fmt == ' ')
+						{
+								if(p)
+								{
+										*p++ = *fmt;
+								}
+
+								need_l++;
+								fmt++;
+						}else
+						{
+								break;
+						}
+				}
+
+				while(*fmt && AR_iswdigit(*fmt))
+				{
+						if(p)
+						{
+								*p++ = *fmt;
+						}
+						need_l++;
+						fmt++;
+				}
+
+
+				if(*fmt == '.')
+				{
+						/*width.prec*/
+						if(p)
+						{
+								*p++ = *fmt;
+						}
+						need_l++;
+						fmt++;
+
+						if(*fmt == '*')
+						{
+								if(p)
+								{
+										*p++ = *fmt;
+								}
+								need_l++;
+								fmt++;
+						}else
+						{
+								while(*fmt && AR_iswdigit(*fmt))
+								{
+										if(p)
+										{
+												*p++ = *fmt;
+										}
+										need_l++;
+										fmt++;
+								}
+						}
+
+				}
+
+
+
+
+				switch (*fmt)
+				{
+				case 'I':
+				{
+						#if(AR_ARCH_VER == ARCH_64)
+						{
+								const char *pfmt64 = AR_FMT64_STR;
+								while(*pfmt64 != '\0')
+								{
+										if(p)
+										{
+												*p++ = *pfmt64;
+										}
+										pfmt64++;
+										need_l++;
+								}
+						}
+						#elif(AR_ARCH_VER == AR_ARCH_32)
+
+						#endif
+
+						fmt++;
+				}
+						break;
+				case 'q': /*64bit*/
+				{
+						const char *pfmt64 = AR_FMT64_STR;
+						while(*pfmt64 != L'\0')
+						{
+								if(p)
+								{
+										*p++ = *pfmt64;
+								}
+								pfmt64++;
+								need_l++;
+						}
+
+						fmt++;
+				}
+						break;
+				case 'h':		/*强制ANSI*/
+						modifier |= __MODIFIER_ANSI;
+						fmt++;
+						break;
+				case 'l':
+						modifier |= __MODIFIER_UNICODE;
+						fmt++;
+						break;
+				case 'F':
+				case 'N':
+				case 'L':
+						if(p)
+						{
+								*p++ = *fmt;
+						}
+
+						need_l++;
+						fmt++;
+						break;
+				}
+
+				switch (*fmt | modifier)
+				{
+				case 'd':
+				case 'i':
+				case 'u':
+				case 'x':
+				case 'X':
+				case 'o':
+				case 'e':
+				case 'E':
+				case 'g':
+				case 'G':
+				case 'f':
+				case 'p':
+				case 'n':
+						if(p)
+						{
+								*p++ = *fmt;
+						}
+						fmt++;
+						need_l++;
+						break;
+				case 'c':
+				case 'C':
+				case L'c' | __MODIFIER_ANSI:
+				case L'C' | __MODIFIER_ANSI:
+						if(p)
+						{
+								*p++ = L'h';
+								*p++ = L'c';
+						}
+						fmt++;
+						need_l += 2;
+						break;
+				case L's':
+				case L'S':
+				case L's' | __MODIFIER_ANSI:
+				case L'S' | __MODIFIER_ANSI:
+						if(p)
+						{
+								*p++ = L'h';
+								*p++ = L's';
+						}
+						fmt++;
+						need_l += 2;
+						break;
+				case L'c' | __MODIFIER_UNICODE:
+				case L'C' | __MODIFIER_UNICODE:
+						if(p)
+						{
+								*p++ = L'l';
+								*p++ = L'c';
+						}
+						fmt++;
+						need_l += 2;
+						break;
+				case L's' | __MODIFIER_UNICODE:
+				case L'S' | __MODIFIER_UNICODE:
+						if(p)
+						{
+								*p++ = L'l';
+								*p++ = L's';
+						}
+						fmt++;
+						need_l += 2;
+						break;
+				default:
+						AR_ASSERT(false);
+						return -1;
+						break;
+				}
+		}
+
+		if(p)
+		{
+				*p = '\0';
+		}
+
+		need_l++;
+		return need_l;
+}
+
+
+
 
 
 /**********************************************************wcs version*************************************************************/
