@@ -2683,6 +2683,13 @@ static void str_test13()
 
 }
 
+
+static void str_test14()
+{
+		printf("%lu\r\n", 3333);
+		AR_scwprintf(L"%lu\r\n", 3333);
+}
+
 void com_test()
 {
 
@@ -2703,6 +2710,7 @@ void com_test()
 		//str_test11();
 		//str_test12();
 		//str_test13();
+		str_test14();
 		//com_test3();
 		//com_conv();
 		//com_conv2();
@@ -2745,8 +2753,8 @@ void com_test()
 		//float_test();
 		
 
-		com_str_test_vcprintf();
-		com_test_srpintf();
+		//com_str_test_vcprintf();
+		//com_test_srpintf();
 
 		//escstr_n_test1();
 		//escstr_n_test0();
