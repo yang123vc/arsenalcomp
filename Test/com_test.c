@@ -2537,12 +2537,29 @@ static arStatus_t  __hex_char_to_digit(char c, byte_t *d)
 
 int_t	AR_hexstr_to_data_s(const char *b, const char *e, byte_t *data, size_t len)
 {
-		int_t di;
+		byte_t *p;
 		arStatus_t status;
+		size_t need_l;
 		AR_ASSERT(b != NULL && e != NULL && b < e);
 		
-		status = AR_S_YES;
-		di = 0;
+		need_l = e - b;
+
+		if(need_l % 2 != 0)
+		{
+				return -1;
+		}
+
+		if(data == NULL)
+		{
+				return (int_t)need_l / 2;
+		}
+
+		if(len < need_l / 2)
+		{
+				return -1;
+		}
+		
+		p = data;
 		while(b < e)
 		{
 				byte_t d1,d2;
@@ -2555,11 +2572,7 @@ int_t	AR_hexstr_to_data_s(const char *b, const char *e, byte_t *data, size_t len
 				}
                 
 				b++;
-				
-				if(b >= e)
-				{
-						return -1;
-				}
+				AR_ASSERT(b < e);
                 
 				status = __hex_char_to_digit(*b, &d2);
                 
@@ -2568,20 +2581,11 @@ int_t	AR_hexstr_to_data_s(const char *b, const char *e, byte_t *data, size_t len
 						return -1;
 				}
                 
-				if(data && (di + 1) > len)
-				{
-						return -1;
-				}
-                
-				if(data)
-				{
-						data[di] = d1 * 16 + d2;
-				}
-                
+				*p++ = d1 * 16 + d2;
 				++b;
-				di++;
 		}
-		return di;
+		
+		return need_l / 2;
 }
 
 
@@ -2635,20 +2639,20 @@ int_t	AR_data_to_hexstr(const byte_t *data, size_t l, char *out, size_t len)
 
 static void str_test13()
 {
-#if(0)
-		const char *s = "ffff";
+
+		const char *s = "ffffef";
 		size_t l = 0;
 		
 		printf("wn == %d\r\n", AR_hexstr_to_data_s(s, s + strlen(s), NULL, l));
 
-		byte_t tmp[2];
+		byte_t tmp[3];
 		
 
-		printf("wn == %d\r\n", AR_hexstr_to_data_s(s, s + strlen(s), tmp, 2));
+		printf("wn == %d\r\n", AR_hexstr_to_data_s(s, s + strlen(s), tmp, 3));
 
-		printf("%02X%02X\r\n", tmp[0],tmp[1]);
+		printf("%02X%02X%02X\r\n", tmp[0],tmp[1], tmp[2]);
 
-
+#if(0)
 		
 		byte_t b[] = {0xff,0xef,0x10};
 		char buf[10];
@@ -2659,13 +2663,13 @@ static void str_test13()
 
 
 		
-#endif
+
 
 		byte_t data[16];
 		int_t wn = AR_data_to_hexstr(data, sizeof(data), NULL, 0);
 		printf("l == %d\r\n",wn);
 
-
+#endif
 
 
 }
