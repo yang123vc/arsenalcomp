@@ -2686,8 +2686,16 @@ static void str_test13()
 
 static void str_test14()
 {
+		/*
 		printf("%lu\r\n", 3333);
 		AR_scwprintf(L"%lu\r\n", 3333);
+		*/
+		/*
+		long x = atol("3,1");
+		AR_printf(L"%d\r\n", x);
+		*/
+
+		printf("%c\r\n", 32);
 }
 
 void com_test()
