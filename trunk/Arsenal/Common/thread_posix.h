@@ -140,13 +140,13 @@ void			AR_DestroyThread(arThread_t *thd)
         
         if((ret = pthread_join(thd->thd, &result)) != 0)
         {
-                AR_LOG(L"can not join thread : error code == %d\r\n", ret);
+                AR_error(AR_ERR_WARNING, L"can not join thread : error code == %d\r\n", ret);
         }
         
         if((ret = pthread_detach(thd->thd)) != 0)
         {
                 /*如果join成功后，此函数调用实际上是多余的，因此返回3的话也无所谓，代表线程所占用的资源已经释放了*/
-                /*AR_LOG(L"can not detach thread : error code == %d\r\n", ret);*/
+                
         }
         
         AR_DestroyEvent(thd->done);
