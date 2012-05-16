@@ -423,7 +423,6 @@ arPathIter_t*	AR_CreatePathIterator(const wchar_t *path)
         
         status = AR_PathIteratorNext(iter);
         
-        
 END_POINT:
 		if(s_tmp != NULL)
 		{
@@ -437,7 +436,7 @@ END_POINT:
                 expanded_path = NULL;
         }
         
-		if(status == AR_S_YES || status == AR_S_NO)
+		if(status == AR_S_YES || status == AR_E_NOMORE)
 		{
                 
 		}else
@@ -521,9 +520,14 @@ arStatus_t		AR_PathIteratorNext(arPathIter_t *iter)
                                 AR_DEL(tmp);
                                 tmp = NULL;
                         }
+                        
+                        if(status != AR_S_YES)
+                        {
+                                iter->isdone = true;
+                        }
 				}else
 				{
-                        status = AR_S_NO;
+                        status = AR_E_NOMORE;
                         iter->isdone = true;
 				}
                 
@@ -539,6 +543,11 @@ bool_t		AR_PathIteratorIsDone(const arPathIter_t *iter)
 		return iter->isdone;
 }
 
+const wchar_t*  AR_PathIteratorPath(const arPathIter_t *iter)
+{
+        AR_ASSERT(iter != NULL && iter->path != NULL);
+        return iter->path;
+}
 /************************************************************File*************************************************************/
 
 
