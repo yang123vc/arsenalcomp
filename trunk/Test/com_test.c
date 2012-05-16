@@ -2726,7 +2726,7 @@ void com_test()
 		//str_test11();
 		//str_test12();
 		//str_test13();
-		str_test14();
+		//str_test14();
 		//com_test3();
 		//com_conv();
 		//com_conv2();
@@ -2789,7 +2789,7 @@ void com_test()
 
 		//path_test();
 
-		//path_iter_test();
+		path_iter_test();
 
 		//thd_test();
 

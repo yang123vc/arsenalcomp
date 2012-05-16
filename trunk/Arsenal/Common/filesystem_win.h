@@ -339,7 +339,7 @@ arPathIter_t*	AR_CreatePathIterator(const wchar_t *path)
 		if(AR_CompStringWithWcs(iter->current, L".") == 0 || AR_CompStringWithWcs(iter->current, L"..") == 0)
 		{
 				status = AR_PathIteratorNext(iter);
-				if(status == AR_S_YES || status == AR_S_NO)
+				if(status == AR_S_YES || status == AR_E_NOMORE)
 				{
 						
 				}else
@@ -365,7 +365,7 @@ END_POINT:
 				tmp = NULL;
 		}
 
-		if(status == AR_S_YES || status == AR_S_NO)
+		if(status == AR_S_YES || status == AR_E_NOMORE)
 		{
 
 		}else
@@ -430,11 +430,15 @@ arStatus_t		AR_PathIteratorNext(arPathIter_t *iter)
 				if(FindNextFileW(iter->hdl, &iter->find_data) != 0)
 				{
 						status = AR_SetString(iter->current, iter->find_data.cFileName);
+						if(status != AR_S_YES)
+						{
+								iter->isdone = true;
+						}
 				}else
 				{
 						if(GetLastError() == ERROR_NO_MORE_FILES)
 						{
-								status = AR_S_NO;
+								status = AR_E_NOMORE;
 						}else
 						{
 								status = AR_E_FAIL;
