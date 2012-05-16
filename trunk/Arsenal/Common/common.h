@@ -565,7 +565,8 @@ uint_t			AR_strhash_n(const char *str, size_t n);
 /*
 List
 */
-typedef void (*AR_list_destroy_func_t)(void *data, void *ctx);
+typedef arStatus_t		(*AR_list_copy_func_t)(void *data, void **pnew_data, void *ctx);
+typedef void			(*AR_list_destroy_func_t)(void *data, void *ctx);
 
 typedef struct __arsenal_list_node_tag 
 {
@@ -581,11 +582,12 @@ typedef struct __arsenal_list_tag
         size_t                  count;
         
         void                    *usr_ctx;
-        AR_list_destroy_func_t    dtor;
+		AR_list_copy_func_t		copy_f;
+        AR_list_destroy_func_t  dtor_f;
 }arList_t;
 
 
-arList_t*       AR_CreateList(AR_list_destroy_func_t dtor, void *ctx);
+arList_t*       AR_CreateList(AR_list_copy_func_t copy_f, AR_list_destroy_func_t dtor_f, void *ctx);
 void            AR_DestroyList(arList_t *lst);
 void			AR_ClearList(arList_t *lst);
 arStatus_t      AR_InsertToListByNode(arList_t *lst, arListNode_t *node, void *data);
