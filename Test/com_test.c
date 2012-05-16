@@ -1671,7 +1671,7 @@ static void path_iter_test()
 		
 		arPathIter_t *it;
 		arStatus_t status;
-		it = AR_CreatePathIterator(L"%Temp%");
+		it = AR_CreatePathIterator(L"%Temp%\\");
 
 		if(it == NULL)
 		{
@@ -1685,7 +1685,13 @@ static void path_iter_test()
 
 		while(!AR_PathIteratorIsDone(it))
 		{
-				::MessageBoxW(NULL, AR_PathIteratorCurrent(it), 0,0);
+				//::MessageBoxW(NULL, AR_PathIteratorCurrent(it), 0,0);
+
+				wchar_t buf[2048];
+				AR_swprintf(buf, 2048, L"%ls%ls", AR_PathIteratorPath(it), AR_PathIteratorCurrent(it));
+
+				AR_printf(L"%ls\r\n", buf);
+				
 				status = AR_PathIteratorNext(it);
 		}
 
