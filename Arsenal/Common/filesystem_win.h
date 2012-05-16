@@ -218,19 +218,38 @@ arStatus_t		AR_GetTempPath(arString_t *str)
 
 arStatus_t		AR_GetExpandPath(const wchar_t *path, arString_t *expanded_path)
 {
-		wchar_t tmp[MAX_PATH_LEN + 10];
-		arStatus_t status;
+		wchar_t *tmp;
 		DWORD n;
 		AR_ASSERT(path != NULL && expanded_path != NULL);
 
-		status = AR_S_YES;
-		n = ExpandEnvironmentStringsW(path, tmp, MAX_PATH_LEN);
-		if(n <= 0 || n > MAX_PATH_LEN - 1)
+		n = ExpandEnvironmentStringsW(path, NULL, 0);
+
+		if(n <= 0)
 		{
-				return AR_SetString(expanded_path, path);
+				return AR_E_SYS;
+		}
+
+		tmp = AR_NEWARR(wchar_t, n);
+		
+		if(tmp == NULL)
+		{
+				return AR_E_NOMEM;
+		}
+
+		n = ExpandEnvironmentStringsW(path, tmp, n);
+
+		if(n <= 0)
+		{
+				AR_DEL(tmp);
+				tmp = NULL;
+				return AR_E_SYS;
 		}else
 		{
-				return AR_SetString(expanded_path, tmp);
+				arStatus_t status;
+				status = AR_SetString(expanded_path, tmp);
+				AR_DEL(tmp);
+				tmp = NULL;
+				return status;
 		}
 }
 
@@ -458,6 +477,11 @@ bool_t		AR_PathIteratorIsDone(const arPathIter_t *iter)
 		return iter->isdone;
 }
 
+const wchar_t*  AR_PathIteratorPath(const arPathIter_t *iter)
+{
+		AR_ASSERT(iter != NULL && iter->path != NULL);
+		return iter->path;
+}
 
 /*************************************************************File********************************************/
 

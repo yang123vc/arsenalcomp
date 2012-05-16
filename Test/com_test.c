@@ -1668,9 +1668,10 @@ static void path_test()
 
 static void path_iter_test()
 {
+		
 		arPathIter_t *it;
 		arStatus_t status;
-		it = AR_CreatePathIterator(L"C:\\Temp\\1\\2");
+		it = AR_CreatePathIterator(L"%Temp%");
 
 		if(it == NULL)
 		{
