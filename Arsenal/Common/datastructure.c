@@ -21,8 +21,7 @@ AR_NAMESPACE_BEGIN
 
 /******************************************************List**************************************************************/
 
-
-arList_t*       AR_CreateList(AR_list_destroy_func_t dtor, void *ctx)
+arList_t*       AR_CreateList(AR_list_copy_func_t copy_f, AR_list_destroy_func_t dtor_f, void *ctx)
 {
         arList_t *lst;
         
@@ -30,7 +29,8 @@ arList_t*       AR_CreateList(AR_list_destroy_func_t dtor, void *ctx)
         
         if(lst)
         {
-                lst->dtor = dtor;
+				lst->copy_f = copy_f;
+                lst->dtor_f = dtor_f;
                 lst->usr_ctx = ctx;
         }
         
@@ -57,9 +57,9 @@ void AR_ClearList(arList_t *lst)
         {
                 tmp = node->next;
                 
-                if(lst->dtor)
+                if(lst->dtor_f)
                 {
-                        lst->dtor(node->data, lst->usr_ctx);
+                        lst->dtor_f(node->data, lst->usr_ctx);
                 }
                 
                 AR_DEL(node);
@@ -70,7 +70,6 @@ void AR_ClearList(arList_t *lst)
         lst->head = lst->tail = NULL;
         
 }
-
 
 arStatus_t      AR_InsertToListByNode(arList_t *lst, arListNode_t *node, void *data)
 {
@@ -84,7 +83,20 @@ arStatus_t      AR_InsertToListByNode(arList_t *lst, arListNode_t *node, void *d
                 return AR_E_NOMEM;
         }
         
-        new_node->data = data;
+		if(lst->copy_f)
+		{
+				arStatus_t status;
+
+				status = lst->copy_f(data, &new_node->data, lst->usr_ctx);
+				if(status != AR_S_YES)
+				{
+						AR_DEL(new_node);
+						return status;
+				}
+		}else
+		{
+				new_node->data = data;
+		}
         
         if(lst->count == 0)
         {
@@ -145,9 +157,9 @@ void      AR_RemoveFromList(arList_t *lst, arListNode_t *node)
                 }
         }
         
-        if(lst->dtor)
+        if(lst->dtor_f)
         {
-                lst->dtor(node->data, lst->usr_ctx);
+                lst->dtor_f(node->data, lst->usr_ctx);
         }
         
         AR_DEL(node);

@@ -1943,6 +1943,12 @@ size_t          AR_GetListCount(const arList_t *lst);
 */
 
 
+static arStatus_t		ds_copy_func(void *data, void **pnew_data, void *ctx)
+{
+		AR_UNUSED(ctx);
+		*pnew_data = data;
+		return AR_S_YES;
+}
 
 static void ds_dtor_test(void *data, void *ctx)
 {
@@ -1953,7 +1959,7 @@ static void *usr_ctx = (void*)0x1234;
 
 static void list_test()
 {
-		arList_t *lst = AR_CreateList(ds_dtor_test, usr_ctx), *lst_dest = AR_CreateList(ds_dtor_test, usr_ctx);
+		arList_t *lst = AR_CreateList(ds_copy_func, ds_dtor_test, usr_ctx), *lst_dest = AR_CreateList(ds_copy_func, ds_dtor_test, usr_ctx);
 
 		if(lst == NULL || lst_dest == NULL)
 		{
@@ -1986,7 +1992,8 @@ static void list_test()
 		AR_CHECK(lst->count == 0, L"list initial size should be zero");
 		AR_CHECK(lst->head == NULL, L"list head should initiate to NULL");
 		AR_CHECK(lst->tail == NULL, L"list tail should intiate to NULL");
-		AR_CHECK(lst->dtor == ds_dtor_test, L"list dtor shold initiate to ds_dtor_test");
+		AR_CHECK(lst->copy_f == ds_copy_func, L"list dtor shold initiate to ds_dtor_test");
+		AR_CHECK(lst->dtor_f == ds_dtor_test, L"list dtor shold initiate to ds_dtor_test");
 
 
 
@@ -2280,8 +2287,9 @@ static void hash_test3()
 
 void ds_test2()
 {
+		list_test();
 		//hash_test2();
-		hash_test3();
+		//hash_test3();
 }
 
 
@@ -2796,11 +2804,12 @@ void com_test()
 
 		//path_test();
 
-		path_iter_test();
+		//path_iter_test();
 
 		//thd_test();
 
-		//ds_test2();
+
+		ds_test2();
 
 		//operation_test();
 }
