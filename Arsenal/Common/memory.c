@@ -48,7 +48,7 @@ void	AR_UnInitMemory()
 
 		usage = AR_GetHeapMemUsage(__g_heap);
 
-		AR_LOG(L"Peak memroy used : %quKB" L"\r\n", usage.peak_mem_used/1024);
+		AR_error(AR_ERR_WARNING, L"Peak memroy used : %quKB" L"\r\n", usage.peak_mem_used/1024);
 
 
 		AR_DestroyHeap(__g_heap);

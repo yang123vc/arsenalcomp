@@ -101,7 +101,7 @@ arStatus_t	AR_error_ctx(arIOCtx_t *ctx, int_t level, const wchar_t *msg, ...);
 
 
 
-#define AR_report()		AR_printf(L"File (%hs) : Line (%Id) : Function (%hs)\r\n", __FILE__, (size_t)__LINE__, AR_FUNC_NAME)
+#define AR_report()		AR_error(AR_ERR_MESSAGE, L"File (%hs) : Line (%Id) : Function (%hs)\r\n", __FILE__, (size_t)__LINE__, AR_FUNC_NAME)
 
 void	AR_check(bool_t cond, const wchar_t *fmt, ...);
 
@@ -133,16 +133,16 @@ void	AR_check(bool_t cond, const wchar_t *fmt, ...);
 #define AR_UNUSED(_e)			((void)(_e))
 
 
-
+#if(0)
 #if !defined(AR_DISABLE_LOG)
 
-		#define AR_LOG					AR_printf
+		#define AR_LOG					AR_error
 
 #else
 		#define AR_LOG
 	
 #endif
-
+#endif
 
 
 
@@ -590,9 +590,18 @@ typedef struct __arsenal_list_tag
 arList_t*       AR_CreateList(AR_list_copy_func_t copy_f, AR_list_destroy_func_t dtor_f, void *ctx);
 void            AR_DestroyList(arList_t *lst);
 void			AR_ClearList(arList_t *lst);
-arStatus_t      AR_InsertToListByNode(arList_t *lst, arListNode_t *node, void *data);
+arStatus_t      AR_InsertToList(arList_t *lst, arListNode_t *node, void *data);
 void			AR_RemoveFromList(arList_t *lst, arListNode_t *node);
 size_t          AR_GetListCount(const arList_t *lst);
+
+arStatus_t		AR_PushListBack(arList_t *lst, void *data);
+arStatus_t		AR_PushListFront(arList_t *lst, void *data);
+
+arStatus_t		AR_PopListBack(arList_t *lst);
+arStatus_t		AR_PopListFront(arList_t *lst);
+
+arStatus_t		AR_GetListFrontData(arList_t *lst, void **pdata);
+arStatus_t		AR_GetListFrontData(arList_t *lst, void **pdata);
 
 
 /*

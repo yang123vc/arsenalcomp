@@ -71,7 +71,7 @@ void AR_ClearList(arList_t *lst)
         
 }
 
-arStatus_t      AR_InsertToListByNode(arList_t *lst, arListNode_t *node, void *data)
+arStatus_t      AR_InsertToList(arList_t *lst, arListNode_t *node, void *data)
 {
         arListNode_t *new_node;
         AR_ASSERT(lst != NULL);
@@ -179,6 +179,75 @@ size_t          AR_GetListCount(const arList_t *lst)
         return lst->count;
 }
 
+
+
+arStatus_t		AR_PushListBack(arList_t *lst, void *data)
+{
+		AR_ASSERT(lst != NULL);
+		return AR_InsertToList(lst, lst->tail, data);
+}
+
+arStatus_t		AR_PushListFront(arList_t *lst, void *data)
+{
+		AR_ASSERT(lst != NULL);
+		return AR_InsertToList(lst, NULL, data);
+}
+
+arStatus_t		AR_PopListBack(arList_t *lst)
+{
+		AR_ASSERT(lst != NULL);
+
+		if(AR_GetListCount(lst) > 0)
+		{
+				AR_RemoveFromList(lst, lst->tail);
+				return AR_S_YES;
+		}else
+		{
+				return AR_E_NOMORE;
+		}
+}
+
+arStatus_t		AR_PopListFront(arList_t *lst)
+{
+		AR_ASSERT(lst != NULL);
+
+		if(AR_GetListCount(lst) > 0)
+		{
+				AR_RemoveFromList(lst, lst->head);
+				return AR_S_YES;
+		}else
+		{
+				return AR_E_NOMORE;
+		}
+}
+
+arStatus_t		AR_GetListFrontData(arList_t *lst, void **pdata)
+{
+		AR_ASSERT(lst != NULL && pdata != NULL);
+		if(AR_GetListCount(lst) > 0)
+		{
+				AR_ASSERT(lst->head != NULL && lst->tail != NULL);
+				*pdata = lst->head->data;
+				return AR_S_YES;
+		}else
+		{
+				return AR_E_NOTFOUND;
+		}
+}
+
+arStatus_t		AR_GetListBackData(arList_t *lst, void **pdata)
+{
+		AR_ASSERT(lst != NULL && pdata != NULL);
+		if(AR_GetListCount(lst) > 0)
+		{
+				AR_ASSERT(lst->head != NULL && lst->tail != NULL);
+				*pdata = lst->tail->data;
+				return AR_S_YES;
+		}else
+		{
+				return AR_E_NOTFOUND;
+		}
+}
 
 /******************************************************Hash**************************************************************/
 /*

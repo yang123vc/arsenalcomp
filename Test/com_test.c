@@ -1937,7 +1937,7 @@ unit_test_abort:                                \
 arList_t*       AR_CreateList(AR_list_destroy_func_t dtor, void *ctx);
 void            AR_DestroyList(arList_t *lst);
 void			AR_ClearList(arList_t *lst);
-arStatus_t      AR_InsertToListByNode(arList_t *lst, arListNode_t *node, void *data);
+arStatus_t      AR_InsertToList(arList_t *lst, arListNode_t *node, void *data);
 void			AR_RemoveFromList(arList_t *lst, arListNode_t *node);
 size_t          AR_GetListCount(const arList_t *lst);
 */
@@ -2000,7 +2000,7 @@ static void list_test()
 
 
 		arStatus_t status;
-		status = AR_InsertToListByNode(lst, lst->head, &unusedData_case1);
+		status = AR_InsertToList(lst, lst->head, &unusedData_case1);
 		if(status == AR_S_YES) 
 		{
 				AR_CHECK(AR_GetListCount(lst) == 1,L"List size should be 1 after adding a new element");
@@ -2010,7 +2010,7 @@ static void list_test()
 				AR_CHECK(lst->tail == lst->head, L"List size should be 1 after adding a new element");
 
 				/**
-				* testing AR_InsertToListByNode
+				* testing AR_InsertToList
 				* case 2:
 				* list has 1 element, adding one element after the head
 				* @assumptions:
@@ -2018,7 +2018,7 @@ static void list_test()
 				* 2: the list tail should be our newly created element
 				*/
 
-				status = AR_InsertToListByNode(lst, lst->head, &unusedData_case3);
+				status = AR_InsertToList(lst, lst->head, &unusedData_case3);
 				if(status == AR_S_YES) 
 				{
 						AR_CHECK(lst->head->next->data == &unusedData_case3, L"the node next to head is not getting set correctly");
@@ -2026,11 +2026,11 @@ static void list_test()
 				}
 				else 
 				{
-						printf("skipping AR_InsertToListByNode as a non success error code was returned\n");
+						printf("skipping AR_InsertToList as a non success error code was returned\n");
 				}
 
 				/**
-				* testing AR_InsertToListByNode
+				* testing AR_InsertToList
 				* case 3:
 				* list has >1 element, adding one element after "NULL"
 				* @assumptions:
@@ -2038,7 +2038,7 @@ static void list_test()
 				* 2: the list tail should different from newly created element
 				*/
 
-				status = AR_InsertToListByNode(lst, lst->head, &unusedData_case2);
+				status = AR_InsertToList(lst, lst->head, &unusedData_case2);
 				if(status == status) 
 				{
 						AR_CHECK(lst->head->next->data == &unusedData_case2, L"the node next to head is not getting set correctly");
@@ -2047,13 +2047,13 @@ static void list_test()
 				}
 				else 
 				{
-						printf("skipping AR_InsertToListByNode as a non "
+						printf("skipping AR_InsertToList as a non "
 								"success error code was returned\n");
 				}
 
 		}
 		else {
-				printf("skipping AR_InsertToListByNode as a non "
+				printf("skipping AR_InsertToList as a non "
 						"success error code was returned\n");
 		}
 
@@ -2096,7 +2096,7 @@ static void list_test()
 		* 2: element->previous->next will be element->next
 		* 3: element->next->previous will be element->previous
 		*/
-		AR_InsertToListByNode(lst, lst->head, &unusedData_case3);
+		AR_InsertToList(lst, lst->head, &unusedData_case3);
 		llist_size = AR_GetListCount(lst);
 		to_remove = lst->head->next;
 		AR_CHECK(to_remove, L"to_remove is NULL");

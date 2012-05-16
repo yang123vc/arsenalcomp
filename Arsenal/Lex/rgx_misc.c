@@ -715,10 +715,10 @@ void	RGX_UnInitMisc()
 		{
 				wchar_t buf[1024];
 				AR_swprintf(buf, 1024, L"Total consume rgxThreadList_t == %Iu", count);
-				AR_LOG(L"%ls\r\n", buf);
+				AR_error(AR_ERR_MESSAGE, L"%ls\r\n", buf);
 
 				AR_swprintf(buf, 1024, L"Max consume rgxThread_t == %Iu",  __g_max_thread_count);
-				AR_LOG(L"%ls\r\n", buf);
+				AR_error(AR_ERR_MESSAGE, L"%ls\r\n", buf);
 		}
 
 	
