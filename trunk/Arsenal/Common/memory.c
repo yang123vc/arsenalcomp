@@ -36,8 +36,6 @@ AR_NAMESPACE_BEGIN
 				const char *							file;
 				int_t									line;
 				int_t									size;
-				/*int								frameNumber;*/
-				/*address_t				callStack[MAX_CALLSTACK_DEPTH];*/
 				struct __debug_memory_record_tag* 		prev;
 				struct __debug_memory_record_tag		*next;
 
@@ -67,11 +65,7 @@ AR_NAMESPACE_BEGIN
 				{
 						AR_ASSERT(dm->size > 0);
 
-						char buf[1024];
-						_fullpath(buf, dm->file, 1024);
-						
-
-						AR_error(AR_ERR_WARNING, L"size: %6d Bytes : %hs, line: %d\r\n", dm->size, buf, dm->line);
+						AR_error(AR_ERR_WARNING, L"size: %6d Bytes : %hs, line: %d\r\n", dm->size, dm->file, dm->line);
 						dm = dm->next;
 				}
 
