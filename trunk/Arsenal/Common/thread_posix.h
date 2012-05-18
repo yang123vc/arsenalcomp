@@ -288,8 +288,9 @@ void			AR_DestroyMutex(arMutex_t *mtx)
 {
         AR_ASSERT(mtx != NULL);
         pthread_mutex_destroy((pthread_mutex_t*)mtx);
-        mtx = NULL;
+        
         AR_DEL(mtx);
+		mtx = NULL;
 
 }
 
