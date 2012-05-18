@@ -701,7 +701,7 @@ typedef void*					ptr_t;
 
 		#ifndef AR_USE_CRT_ALLOCFUNC
 				#define	AR_ENABLE_MEMORY_LEAK_TEST				1
-				#define AR_DEBUG_MEMORY_CHECK_TWICE_FREE		1	
+				/*#define AR_DEBUG_MEMORY_CHECK_TWICE_FREE		1*/
 		#endif
 
 #endif

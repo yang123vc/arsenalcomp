@@ -157,11 +157,11 @@ void AR_Test()
 
 		//Tengu_Test();
 
-		mem_test();
+		//mem_test();
 		
 		//tokenizer_test();
 
-		//Ini_Test();
+		Ini_Test();
 		
 		//parser_gen_perf_test();
 
