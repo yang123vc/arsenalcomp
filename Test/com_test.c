@@ -2259,7 +2259,7 @@ static void hash_test3()
 				arStatus_t s =  AR_InsertToHash(hash, (void*)&ks, (void*)&vs);
 				if(s != AR_S_YES)
 				{
-						AR_LOG(L"low memory\r\n");
+						AR_error(AR_ERR_MESSAGE, L"low memory\r\n");
 				}
 		}
 
@@ -2442,8 +2442,8 @@ static void* oper_test_func(void *usr_ctx)
 {
 		std::string *pstr = (std::string*)usr_ctx;
 		AR_ASSERT(usr_ctx);
-		AR_LOG(L"%hs\r\n", AR_FUNC_NAME);
-		AR_LOG(L"%hs\r\n", pstr->c_str());
+		AR_error(AR_ERR_MESSAGE, L"%hs\r\n", AR_FUNC_NAME);
+		AR_error(AR_ERR_MESSAGE, L"%hs\r\n", pstr->c_str());
 		
 		::Sleep(5000);
 
@@ -2454,14 +2454,14 @@ static void* oper_test_func(void *usr_ctx)
 
 void	oper_test_destroy(void *result, void *usr_ctx)/*此函数在销毁operation时，如果operation为finished并且结果未被取走时执行*/
 {
-		AR_LOG(L"%hs\r\n", AR_FUNC_NAME);
+		AR_error(AR_ERR_MESSAGE, L"%hs\r\n", AR_FUNC_NAME);
 		
 		std::string *pstr = (std::string*)usr_ctx;
 		std::string *presult = (std::string*)result;
 		AR_ASSERT(usr_ctx);
-		AR_LOG(L"%hs\r\n", pstr->c_str());
+		AR_error(AR_ERR_MESSAGE, L"%hs\r\n", pstr->c_str());
 
-		AR_LOG(L"result == %hs\r\n", presult->c_str());
+		AR_error(AR_ERR_MESSAGE, L"result == %hs\r\n", presult->c_str());
 
 		
 		delete presult;

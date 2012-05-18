@@ -165,7 +165,7 @@ static void	__thread_worker(void *data)
 				{
                         if(operation == NULL)
                         {
-                                AR_LOG(L"Thread exit!\r\n");
+                                AR_error(AR_ERR_MESSAGE, L"Thread exit!\r\n");
                                 break;
                         }else
                         {
@@ -173,11 +173,11 @@ static void	__thread_worker(void *data)
                         }
 				}else if(status == AR_E_TIMEOUT)
 				{
-						AR_LOG(L"Timeout\r\n");
+						AR_error(AR_ERR_MESSAGE, L"Timeout\r\n");
 						continue;
 				}else
 				{
-                        AR_LOG(L"Thread terminated : %d\r\n", AR_GET_STATUS(status));
+                        AR_error(AR_ERR_MESSAGE, L"Thread terminated : %d\r\n", AR_GET_STATUS(status));
                         break;
 				}
 		}
@@ -241,7 +241,7 @@ arStatus_t				Cloud_PostToOperationPool(cldOperationPool_t *pool, cldOperation_t
 		{
 				if(Cloud_IncreaseOperationPoolThread(pool) != AR_S_YES)
 				{
-						AR_LOG(L"increase thread failed in Operation Pool!\r\n");
+						AR_error(AR_ERR_MESSAGE, L"increase thread failed in Operation Pool!\r\n");
 				}
 		}
 		
@@ -260,7 +260,7 @@ arStatus_t      Operation_Init()
 
 		if(__g_pool == NULL)
 		{
-				AR_LOG(L"failed to create operation pool!\r\n");
+				AR_error(AR_ERR_MESSAGE, L"failed to create operation pool!\r\n");
 				return AR_E_SYS;
 		}else
 		{
@@ -521,7 +521,7 @@ static arStatus_t Cloud_RunOperation(cldOperation_t *oper)
 		arStatus_t status;
 		AR_ASSERT(oper != NULL);
 
-		AR_LOG(L"on Cloud_RunOperation\r\n");
+		AR_error(AR_ERR_MESSAGE, L"on Cloud_RunOperation\r\n");
 		
 		status = AR_S_YES;
 		
