@@ -202,9 +202,23 @@ void	AR_UnInitMemory();
 
 #if !defined(AR_USE_CRT_ALLOCFUNC)
 
-void*	AR_malloc(size_t nbytes);
-void*	AR_calloc(size_t num, size_t size);
-void	AR_free(void *ptr);
+		#if defined(AR_ENABLE_MEMORY_LEAK_TEST)
+
+		void*	AR_debug_malloc(size_t nbytes, const char *file_name, int_t line);
+		void*	AR_debug_calloc(size_t num, size_t size, const char *file_name, int_t line);
+		void	AR_debug_free(void *ptr, const char *file_name, int_t line);
+
+		#define AR_malloc(_nb)		AR_debug_malloc((_nb), __FILE__, __LINE__)
+		#define AR_calloc(_n, _s)		AR_debug_calloc((_n),(_s), __FILE__, __LINE__)
+		#define AR_free(_p)		AR_debug_free((_p), __FILE__, __LINE__)
+		
+		#else
+		
+		void*	AR_malloc(size_t nbytes);
+		void*	AR_calloc(size_t num, size_t size);
+		void	AR_free(void *ptr);
+
+		#endif
 
 
 #else
@@ -216,8 +230,8 @@ void	AR_free(void *ptr);
 #define AR_free			free
 
 
-
 #endif
+
 
 
 
@@ -532,7 +546,8 @@ wchar_t*		AR_vtow(const wchar_t *fmt, ...);
 int_t			AR_swprintf(wchar_t *dest, size_t count, const wchar_t *fmt, ...);
 int_t			AR_vswprintf(wchar_t *dest, size_t count, const wchar_t *fmt, va_list args);
 
-
+int_t			AR_swprintf_nonalloc(wchar_t *dest, size_t count, const wchar_t *fmt, ...);
+int_t			AR_vswprintf_nonalloc(wchar_t *dest, size_t count, const wchar_t *fmt, va_list args);
 
 int_t			AR_vscprintf(const char *fmt, va_list args);	/*返回一个长度，足够容纳fmt + args*/
 int_t			AR_scprintf(const char *fmt, ...);

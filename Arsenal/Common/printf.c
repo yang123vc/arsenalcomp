@@ -1383,6 +1383,70 @@ int_t			AR_swprintf(wchar_t *dest, size_t count, const wchar_t *fmt, ...)
 }
 
 
+
+
+
+
+
+int_t			AR_vswprintf_nonalloc(wchar_t *dest, size_t count, const wchar_t *fmt, va_list args)
+{
+		int_t res;
+		va_list save;
+
+		wchar_t src_fmt[1024];
+
+
+		AR_ASSERT(dest != NULL && fmt != NULL && args != NULL);
+
+		res = 0;
+		
+		
+
+
+
+		/********************将Arsenal形式的printf格式，转换为目标CRT的格式***************/
+		
+		
+
+		if(__wcs_format_preprocess(fmt, src_fmt) <= 0)
+		{
+				dest[0] = L'\0';
+				return -1;
+		}
+		
+
+		AR_va_copy(save, args);
+		res = AR_VSWPRINTF(dest, count, src_fmt, save);
+		AR_va_end(save);
+
+		if(res < 0)
+		{
+				dest[0] = L'\0';
+				return -1;
+		}
+	   /*****************************************************************************/
+		return res;
+
+}
+
+
+
+int_t			AR_swprintf_nonalloc(wchar_t *dest, size_t count, const wchar_t *fmt, ...)
+{
+		int_t len = -1;
+		va_list	arg_ptr;
+		AR_ASSERT(fmt != NULL);
+
+		AR_va_start(arg_ptr, fmt);
+		len = AR_vswprintf_nonalloc(dest, count, fmt, arg_ptr);
+		
+		AR_va_end(arg_ptr);
+		
+		return len;
+}
+
+
+
 #undef	__MODIFIER_ANSI
 #undef	__MODIFIER_UNICODE
 #undef	__MODIFIER_INT64

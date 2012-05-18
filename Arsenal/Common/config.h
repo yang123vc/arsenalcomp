@@ -172,12 +172,13 @@ _CHAR_UNSIGNED			ÊÇvsÌØÐÔ£¬/J
 
 		#if(AR_COMPILER == AR_VC && OS_TYPE != OS_WINDOWS_CE)
 				#if !defined(NDEBUG)
+						
 						#define	AR_DISABLE_CRTSTDLIB
 						#define _CRTDBG_MAP_ALLOC
 						#include<stdlib.h>
 						#include<crtdbg.h>
-
 						#define	AR_USE_CRT_ALLOCFUNC	1
+						
 				#else
 
 				#endif
@@ -694,6 +695,16 @@ typedef void*					ptr_t;
 
 /*************************************************************************************************************/
 
+
+
+#ifndef NDEBUG
+
+		#ifndef AR_USE_CRT_ALLOCFUNC
+				#define	AR_ENABLE_MEMORY_LEAK_TEST				1
+				#define AR_DEBUG_MEMORY_CHECK_TWICE_FREE		1	
+		#endif
+
+#endif
 
 
 #endif
