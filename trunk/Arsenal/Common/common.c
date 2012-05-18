@@ -158,7 +158,7 @@ arStatus_t AR_error(int_t level, const wchar_t *msg, ...)
 		if(__g_ctx.global_io_ctx.on_error != NULL)
 		{
 				AR_va_start(arg_ptr, msg);
-				if(AR_vswprintf(buf, 1024, msg, arg_ptr) <= 0)
+				if(AR_vswprintf_nonalloc(buf, 1024, msg, arg_ptr) <= 0)
 				{
 						buf[0] = L'\0';
 				}

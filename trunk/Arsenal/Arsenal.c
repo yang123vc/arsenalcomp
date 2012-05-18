@@ -47,7 +47,7 @@ arStatus_t	Arsenal_Init(const arInit_t *ctx)
 						goto END_POINT;
 				}
 				cm_init = true;
-
+				
 				result = Lex_Init();
 				if(result != AR_S_YES)
 				{
@@ -89,6 +89,7 @@ arStatus_t	Arsenal_Init(const arInit_t *ctx)
 
 		return result;
 END_POINT:
+		
 		if(tgu_init)
 		{
 				TGU_UnInit();
@@ -112,7 +113,6 @@ END_POINT:
 				Lex_UnInit();
 				lex_init = false;
 		}
-
 		if(cm_init)
 		{
 				AR_CommonUnInit();
@@ -130,6 +130,7 @@ void	Arsenal_UnInit()
 {
 		if(--__g_init_count == 0)
 		{
+				
 				TGU_UnInit();
 				Tools_UnInit();
 				Parser_UnInit();

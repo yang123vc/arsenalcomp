@@ -205,13 +205,33 @@ void measure_realloc_test()
 }
 
 
+void debug_memory_test()
+{
+
+		byte_t *b = AR_NEWARR0(byte_t, 1024);
+		b = AR_NEWARR0(byte_t, 1024);
+		arStatus_t status;
+
+		
+		void *ptr = NULL;
+		AR_DO_REALLOC(int, ptr, 123, 0, status);
+
+		printf("%p\r\n", ptr);
+
+		AR_DO_REALLOC(int, ptr, 321, 0, status);
+
+		//AR_DEL(ptr);
+}
+
+
 
 void mem_test()
 {
+		debug_memory_test();
 		//alloc_test();
 
 		
-		measure_alloc_test();
+		//measure_alloc_test();
 		
 
 		//measure_realloc_test();
