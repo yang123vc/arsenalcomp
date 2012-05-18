@@ -170,13 +170,20 @@ void thd_test()
         }
         
         
+        void mem_test()
+        {
+                byte_t *b = AR_NEWARR(byte_t, 1024);
+                b = AR_NEWARR(byte_t, 4021);
+                
+        }
         
 void common_test()
 {
         AR_printf(L"On common_test\r\n");
         
         //thd_test();
-        str_test12();
+        //str_test12();
+        mem_test();
 }
         
         
