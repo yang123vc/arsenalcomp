@@ -135,8 +135,14 @@ arStatus_t	AR_error_ctx(arIOCtx_t *ctx, int_t level, const wchar_t *msg, ...)
 				AR_va_end(arg_ptr);
 
 				ctx->on_error(level, buf, ctx->ctx);
-				
 		}
+
+		
+		if(level <= AR_ERR_FATAL)
+		{
+				AR_abort();
+		}
+
 
 		return AR_S_YES;
 }
@@ -164,7 +170,7 @@ arStatus_t AR_error(int_t level, const wchar_t *msg, ...)
 		}
 
 
-		if(level < AR_ERR_WARNING)
+		if(level <= AR_ERR_FATAL)
 		{
 				AR_abort();
 		}

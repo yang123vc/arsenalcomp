@@ -27,7 +27,7 @@ AR_NAMESPACE_BEGIN
 
 
 arStatus_t	Arsenal_Init(const arInit_t *ctx);
-arStatus_t	Arsenal_UnInit();
+void		Arsenal_UnInit();
 
 
 

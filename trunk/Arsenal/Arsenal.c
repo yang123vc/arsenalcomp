@@ -20,48 +20,103 @@
 AR_NAMESPACE_BEGIN
 
 
-static bool_t	__g_is_initialized = false;
-
-
-
+static int_t __g_init_count = 0;
 
 arStatus_t	Arsenal_Init(const arInit_t *ctx)
 {
 
         arStatus_t	result;
 		uint_64_t		total_beg, total_end;
+		bool_t	cm_init,lex_init, psr_init,tools_init,tgu_init;
 		/*AR_ASSERT(ctx != NULL);*/
-		AR_ASSERT(!__g_is_initialized);
+		
 		result = AR_S_YES;
+		cm_init = false;
+		lex_init = false;
+		psr_init  = false;
+		tools_init = false;
+		tgu_init = false;
+
 		total_beg = AR_GetTime_Milliseconds();
 		
-		if(!__g_is_initialized)
+		if(__g_init_count == 0)
 		{
-				AR_CommonInit(ctx);
-				Lex_Init();
-				Parser_Init();
-				Tools_Init();
-				TGU_Init();
+				result = AR_CommonInit(ctx);
+				if(result != AR_S_YES)
+				{
+						goto END_POINT;
+				}
+				cm_init = true;
 
-				__g_is_initialized = true;
-				result = AR_S_YES;
-		}else
-		{
-				result = AR_E_FAIL;
+				result = Lex_Init();
+				if(result != AR_S_YES)
+				{
+						goto END_POINT;
+				}
+				lex_init = true;
+
+				result = Parser_Init();
+				if(result != AR_S_YES)
+				{
+						goto END_POINT;
+				}
+				psr_init = true;
+				
+				result = Tools_Init();
+				if(result != AR_S_YES)
+				{
+						goto END_POINT;
+				}
+				tools_init = true;
+
+				result = TGU_Init();
+				if(result != AR_S_YES)
+				{
+						goto END_POINT;
+				}
+				tgu_init = true;
 		}
 
 		total_end = AR_GetTime_Milliseconds();
 
+		__g_init_count++;
 
-
-		if(result == AR_S_YES)
 		{
 				wchar_t msg[1024];
 				AR_swprintf(msg, AR_NELEMS(msg), L"Arsenal initialized consume time == %Id\r\n", total_end - total_beg);
 				AR_printf(msg);
-		}else
+		}
+
+		return result;
+END_POINT:
+		if(tgu_init)
 		{
-				
+				TGU_UnInit();
+				tgu_init = false;
+		}
+
+		if(tools_init)
+		{
+				Tools_UnInit();
+				tools_init = false;
+		}
+
+		if(psr_init)
+		{
+				Parser_UnInit();
+				psr_init  = false;
+		}
+
+		if(lex_init)
+		{
+				Lex_UnInit();
+				lex_init = false;
+		}
+
+		if(cm_init)
+		{
+				AR_CommonUnInit();
+				cm_init = false;
 		}
 
 		return result;
@@ -71,22 +126,15 @@ arStatus_t	Arsenal_Init(const arInit_t *ctx)
 
 
 
-arStatus_t	Arsenal_UnInit()
+void	Arsenal_UnInit()
 {
-		AR_ASSERT(__g_is_initialized);
-
-		if(__g_is_initialized)
+		if(--__g_init_count == 0)
 		{
 				TGU_UnInit();
 				Tools_UnInit();
 				Parser_UnInit();
 				Lex_UnInit();
 				AR_CommonUnInit();
-				__g_is_initialized = false;
-				return AR_S_YES;
-		}else
-		{
-				return AR_E_FAIL;
 		}
 }
 
