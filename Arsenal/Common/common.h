@@ -615,8 +615,8 @@ arStatus_t		AR_PushListFront(arList_t *lst, void *data);
 arStatus_t		AR_PopListBack(arList_t *lst);
 arStatus_t		AR_PopListFront(arList_t *lst);
 
-arStatus_t		AR_GetListFrontData(arList_t *lst, void **pdata);
-arStatus_t		AR_GetListFrontData(arList_t *lst, void **pdata);
+arStatus_t		AR_GetListFront(arList_t *lst, void **pdata);
+arStatus_t		AR_GetListBack(arList_t *lst, void **pdata);
 
 
 /*
