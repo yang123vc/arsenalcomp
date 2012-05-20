@@ -48,10 +48,10 @@ int  main()
 
 
 
-	printf("done\r\n");
+        printf("done\r\n");
 
 
-	getchar();
+        //getchar();
 
 	return 0;
 

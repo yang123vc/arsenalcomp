@@ -45,15 +45,21 @@ void text_test_save()
 }
 
 
+static void mem_test()
+{
+    byte_t *b = AR_NEWARR(byte_t, 1024);
+}
+
+
 
 
 void com_test()
 {
         //setlocale(LC_ALL, "utf-8");
 
-       text_test_save();
+       //text_test_save();
 
-
+        mem_test();
 
 }
 
