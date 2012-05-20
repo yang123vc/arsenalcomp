@@ -221,7 +221,7 @@ arStatus_t		AR_PopListFront(arList_t *lst)
 		}
 }
 
-arStatus_t		AR_GetListFrontData(arList_t *lst, void **pdata)
+arStatus_t		AR_GetListFront(arList_t *lst, void **pdata)
 {
 		AR_ASSERT(lst != NULL && pdata != NULL);
 		if(AR_GetListCount(lst) > 0)
@@ -235,7 +235,7 @@ arStatus_t		AR_GetListFrontData(arList_t *lst, void **pdata)
 		}
 }
 
-arStatus_t		AR_GetListBackData(arList_t *lst, void **pdata)
+arStatus_t		AR_GetListBack(arList_t *lst, void **pdata)
 {
 		AR_ASSERT(lst != NULL && pdata != NULL);
 		if(AR_GetListCount(lst) > 0)
