@@ -820,21 +820,21 @@
 
 1333047592 lity.h"
 
-1336236922 source:/root/Desktop/Programming/Arsenal/Arsenal/Arsenal.c
+1337533379 source:/root/Desktop/Programming/Arsenal/Arsenal/Arsenal.c
 	"Arsenal.h"
 
-1336236922 /root/Desktop/Programming/Arsenal/Arsenal/Arsenal.h
+1337533379 /root/Desktop/Programming/Arsenal/Arsenal/Arsenal.h
 	"./Common/common.h"
 	"./Lex/lex.h"
 	"./Parser/parser.h"
 	"./Tools/tools.h"
 	"./Tengu/tengu.h"
 
-1336917760 /root/Desktop/Programming/Arsenal/Arsenal/Common/common.h
+1337533379 /root/Desktop/Programming/Arsenal/Arsenal/Common/common.h
 	"config.h"
 	"status.h"
 
-1336236922 /root/Desktop/Programming/Arsenal/Arsenal/Common/config.h
+1337533379 /root/Desktop/Programming/Arsenal/Arsenal/Common/config.h
 	"platform.h"
 	<stdlib.h>
 	<crtdbg.h>
@@ -865,7 +865,7 @@
 1336236922 /root/Desktop/Programming/Arsenal/Arsenal/Common/platform.h
 	<TargetConditionals.h>
 
-1336919283 /root/Desktop/Programming/Arsenal/Arsenal/Common/status.h
+1337533379 /root/Desktop/Programming/Arsenal/Arsenal/Common/status.h
 
 1336236921 /root/Desktop/Programming/Arsenal/Arsenal/Lex/lex.h
 	"../Common/common.h"
@@ -896,16 +896,16 @@
 1336236922 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/algo.c
 	"common.h"
 
-1336236922 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/buffer.c
+1336917760 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/buffer.c
 	"common.h"
 
 1336236922 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/byteorder.c
 	"common.h"
 
-1336236922 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/common.c
+1337533379 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/common.c
 	"common.h"
 
-1336236922 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/crtstr.c
+1337533379 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/crtstr.c
 	"common.h"
 
 1336236922 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/heap.c
@@ -914,7 +914,7 @@
 1336236922 /root/Desktop/Programming/Arsenal/Arsenal/Common/heap.h
 	"common.h"
 
-1336236922 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/memory.c
+1337533379 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/memory.c
 	"common.h"
 	"heap.h"
 
@@ -930,19 +930,19 @@
 1336236922 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/strtable.c
 	"common.h"
 
-1336236922 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/textfile.c
+1337533379 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/textfile.c
 	<iconv.h>
 	"common.h"
 
-1336236922 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/thread.c
+1336917760 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/thread.c
 	"common.h"
 	"thread_win.h"
 	"thread_posix.h"
 
-1336236922 /root/Desktop/Programming/Arsenal/Arsenal/Common/thread_win.h
+1336917760 /root/Desktop/Programming/Arsenal/Arsenal/Common/thread_win.h
 	"common.h"
 
-1336237686 /root/Desktop/Programming/Arsenal/Arsenal/Common/thread_posix.h
+1337533379 /root/Desktop/Programming/Arsenal/Arsenal/Common/thread_posix.h
 	<signal.h>
 	<sched.h>
 	<errno.h>
@@ -950,14 +950,14 @@
 	"thread_posix_apple.h"
 	"thread_posix_posix.h"
 
-1336236922 /root/Desktop/Programming/Arsenal/Arsenal/Common/thread_posix_apple.h
+1336917760 /root/Desktop/Programming/Arsenal/Arsenal/Common/thread_posix_apple.h
 
-1336237686 /root/Desktop/Programming/Arsenal/Arsenal/Common/thread_posix_posix.h
+1336917760 /root/Desktop/Programming/Arsenal/Arsenal/Common/thread_posix_posix.h
 
 1336236922 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/utilities.c
 	"common.h"
 
-1336236921 source:/root/Desktop/Programming/Arsenal/Arsenal/Lex/lex.c
+1336917761 source:/root/Desktop/Programming/Arsenal/Arsenal/Lex/lex.c
 	"rgx.h"
 	"lex.h"
 
@@ -968,7 +968,7 @@
 1336236921 source:/root/Desktop/Programming/Arsenal/Arsenal/Lex/lex_misc.c
 	"rgx.h"
 
-1336236921 source:/root/Desktop/Programming/Arsenal/Arsenal/Lex/match.c
+1336917761 source:/root/Desktop/Programming/Arsenal/Arsenal/Lex/match.c
 	"lex.h"
 	"rgx.h"
 
@@ -979,16 +979,16 @@
 	"lex.h"
 	"rgx.h"
 
-1336236921 source:/root/Desktop/Programming/Arsenal/Arsenal/Lex/rgx_misc.c
+1337533378 source:/root/Desktop/Programming/Arsenal/Arsenal/Lex/rgx_misc.c
 	"rgx.h"
 
 1336236921 source:/root/Desktop/Programming/Arsenal/Arsenal/Lex/rgx_node.c
 	"rgx.h"
 
-1336236921 source:/root/Desktop/Programming/Arsenal/Arsenal/Lex/rgx_parser.c
+1336917761 source:/root/Desktop/Programming/Arsenal/Arsenal/Lex/rgx_parser.c
 	"rgx.h"
 
-1336236922 source:/root/Desktop/Programming/Arsenal/Arsenal/Parser/grammar.c
+1336917761 source:/root/Desktop/Programming/Arsenal/Arsenal/Parser/grammar.c
 	"parser.h"
 	"parser_in.h"
 
@@ -1002,7 +1002,7 @@
 1336236922 /root/Desktop/Programming/Arsenal/Arsenal/Parser/lalr.h
 	"parser.h"
 
-1336236922 source:/root/Desktop/Programming/Arsenal/Arsenal/Parser/lalr_config.c
+1336917761 source:/root/Desktop/Programming/Arsenal/Arsenal/Parser/lalr_config.c
 	"lalr.h"
 	"lalr_config_aux.h"
 
@@ -1012,7 +1012,7 @@
 1336236922 source:/root/Desktop/Programming/Arsenal/Arsenal/Parser/lalr_state.c
 	"lalr.h"
 
-1336236922 source:/root/Desktop/Programming/Arsenal/Arsenal/Parser/lr_action.c
+1336917761 source:/root/Desktop/Programming/Arsenal/Arsenal/Parser/lr_action.c
 	"lalr.h"
 	"lr_action.h"
 
@@ -1020,12 +1020,12 @@
 	"parser.h"
 	"parser_in.h"
 
-1336236922 source:/root/Desktop/Programming/Arsenal/Arsenal/Parser/parser.c
+1336917761 source:/root/Desktop/Programming/Arsenal/Arsenal/Parser/parser.c
 	"parser.h"
 	"parser_in.h"
 	"lr_action.h"
 
-1336236922 source:/root/Desktop/Programming/Arsenal/Arsenal/Parser/parser_in.c
+1336917761 source:/root/Desktop/Programming/Arsenal/Arsenal/Parser/parser_in.c
 	"lalr.h"
 	"parser_in.h"
 
@@ -1035,7 +1035,7 @@
 	"parser.h"
 	"parser_in.h"
 
-1336236922 source:/root/Desktop/Programming/Arsenal/Arsenal/Parser/symbol.c
+1336917761 source:/root/Desktop/Programming/Arsenal/Arsenal/Parser/symbol.c
 	"parser.h"
 	"parser_in.h"
 
@@ -1055,22 +1055,22 @@
 1336236921 source:/root/Desktop/Programming/Arsenal/Arsenal/Tengu/tengu_utility.c
 	"tengu_utility.h"
 
-1336236921 source:/root/Desktop/Programming/Arsenal/Arsenal/Tengu/tguvm.c
+1336917761 source:/root/Desktop/Programming/Arsenal/Arsenal/Tengu/tguvm.c
 	"tguvm.h"
 
 1336236921 /root/Desktop/Programming/Arsenal/Arsenal/Tengu/tguvm.h
 	"tengu.h"
 
-1336236921 source:/root/Desktop/Programming/Arsenal/Arsenal/Tools/grammar_codegen.c
+1336917760 source:/root/Desktop/Programming/Arsenal/Arsenal/Tools/grammar_codegen.c
 	"grammar_config.h"
 
-1336236921 source:/root/Desktop/Programming/Arsenal/Arsenal/Tools/grammar_collector.c
+1336917760 source:/root/Desktop/Programming/Arsenal/Arsenal/Tools/grammar_collector.c
 	"grammar_config.h"
 
-1336236921 source:/root/Desktop/Programming/Arsenal/Arsenal/Tools/iniobj.c
+1336917760 source:/root/Desktop/Programming/Arsenal/Arsenal/Tools/iniobj.c
 	"iniobj.h"
 
-1336236921 source:/root/Desktop/Programming/Arsenal/Arsenal/Tools/serializer.c
+1336917760 source:/root/Desktop/Programming/Arsenal/Arsenal/Tools/serializer.c
 	"serializer.h"
 
 1336236921 source:/root/Desktop/Programming/Arsenal/Arsenal/Tools/tools.c
@@ -1079,13 +1079,17 @@
 1336236922 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/base64.c
 	"common.h"
 
-1336236922 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/enviroment.c
+1337533379 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/enviroment.c
 	"common.h"
+	"enviroment_win.h"
+	"enviroment_posix.h"
 
-1336236922 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/filesystem.c
+1337533379 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/filesystem.c
 	"common.h"
 	<pwd.h>
 	<dirent.h>
+	"filesystem_win.h"
+	"filesystem_posix.h"
 
 1336236922 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/math.c
 	"common.h"
@@ -1095,4 +1099,12 @@
 
 1336236922 source:/root/Desktop/Programming/Arsenal/Arsenal/Common/vector.c
 	"common.h"
+
+1337533379 /root/Desktop/Programming/Arsenal/Arsenal/Common/enviroment_win.h
+
+1337533379 /root/Desktop/Programming/Arsenal/Arsenal/Common/enviroment_posix.h
+
+1337533379 /root/Desktop/Programming/Arsenal/Arsenal/Common/filesystem_win.h
+
+1337533379 /root/Desktop/Programming/Arsenal/Arsenal/Common/filesystem_posix.h
 

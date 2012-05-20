@@ -110,12 +110,19 @@
 		<Unit filename="../../../Arsenal/Common/crtstr.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../../../Arsenal/Common/datastructure.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="../../../Arsenal/Common/enviroment.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../../../Arsenal/Common/enviroment_posix.h" />
+		<Unit filename="../../../Arsenal/Common/enviroment_win.h" />
 		<Unit filename="../../../Arsenal/Common/filesystem.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../../../Arsenal/Common/filesystem_posix.h" />
+		<Unit filename="../../../Arsenal/Common/filesystem_win.h" />
 		<Unit filename="../../../Arsenal/Common/heap.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -130,6 +137,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../Arsenal/Common/platform.h" />
+		<Unit filename="../../../Arsenal/Common/printf.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="../../../Arsenal/Common/random.c">
 			<Option compilerVar="CC" />
 		</Unit>
