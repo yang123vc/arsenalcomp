@@ -574,7 +574,7 @@ uint_t			AR_wcshash_n(const wchar_t *str, size_t n);
 uint_t			AR_strhash(const char *str);
 uint_t			AR_strhash_n(const char *str, size_t n);
 
-
+uint_t			AR_memhash(const byte_t *data, size_t len);
 /********************************************************Basic Data Structure*********************************************************/
 
 /*

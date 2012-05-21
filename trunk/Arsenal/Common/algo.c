@@ -319,6 +319,142 @@ int_t AR_bsearch(const void *key, const void *base, size_t num, size_t width, in
 }
 
 
+/******************************************************************Hash Memory***********************************************/
+
+
+
+/*³ö×Ô£ºhttp://www.azillionmonkeys.com/qed/hash.html*/
+
+#define get16bits(d) ((((uint_32_t)(((const uint_8_t *)(d))[1])) << 8)\
+                       +(uint_32_t)(((const uint_8_t *)(d))[0]) )
+ 
+uint_32_t __super_fast_hash_32(const byte_t * data, size_t len)
+{
+		uint_32_t hash, tmp;
+		size_t rem;
+		AR_ASSERT(data != NULL && len > 0);
+		
+		if(len == 0 || data == NULL)
+		{
+				return 0;
+		}
+		
+		hash = (uint_32_t)len;
+
+		rem = len & 3;
+		len >>= 2;
+
+		/* Main loop */
+
+		for (;len > 0; len--) 
+		{
+				hash  += get16bits (data);
+				tmp   = (get16bits (data+2) << 11) ^ hash;
+				hash  = (hash << 16) ^ tmp;
+				data  += 2 * sizeof(uint_16_t);
+				hash  += hash >> 11;
+		}
+		
+		/* Handle end cases */
+		switch (rem) 
+		{
+		case 3: hash += get16bits (data);
+				hash ^= hash << 16;
+				hash ^= data[sizeof (uint_16_t)] << 18;
+				hash += hash >> 11;
+				break;
+		case 2: hash += get16bits (data);
+				hash ^= hash << 11;
+				hash += hash >> 17;
+				break;
+		case 1: hash += *data;
+				hash ^= hash << 10;
+				hash += hash >> 1;
+		}
+
+		/* Force "avalanching" of final 127 bits */
+		hash ^= hash << 3;
+		hash += hash >> 5;
+		hash ^= hash << 4;
+		hash += hash >> 17;
+		hash ^= hash << 25;
+		hash += hash >> 6;
+		return hash;
+}
+
+
+
+uint_64_t __murmur_hash_64_a(const byte_t *key, size_t len, uint_64_t seed)
+{
+		static const uint_64_t m = AR_BIGNUM_U64(0xc6a4a7935bd1e995);
+		static const uint_64_t r = 47;
+		uint_64_t h;
+		const uint_64_t *data;
+		const uint_64_t *end;
+		const unsigned char * data2;
+		AR_ASSERT(key != NULL && len > 0);
+
+		h = seed ^ (len * m);
+		
+		data = (const uint_64_t *)key;
+		end = data + (len / 8);
+
+		while(data != end)
+		{
+				uint_64_t k = *data++;
+
+				k *= m; 
+				k ^= k >> r; 
+				k *= m; 
+
+				h ^= k;
+				h *= m; 
+		}
+
+		data2 = (const unsigned char*)data;
+
+		switch(len & 7)
+		{
+		case 7: 
+				h ^= (uint_64_t)data2[6] << 48;
+		case 6: 
+				h ^= (uint_64_t)data2[5] << 40;
+		case 5: 
+				h ^= (uint_64_t)data2[4] << 32;
+		case 4: 
+				h ^= (uint_64_t)data2[3] << 24;
+		case 3: 
+				h ^= (uint_64_t)data2[2] << 16;
+		case 2: 
+				h ^= (uint_64_t)data2[1] << 8;
+		case 1: 
+				h ^= (uint_64_t)data2[0];
+				h *= m;
+				break;
+		default:
+				AR_ASSERT(false);
+				break;
+		};
+
+		h ^= h >> r;
+		h *= m;
+		h ^= h >> r;
+
+		return h;
+} 
+
+uint_t AR_memhash(const byte_t *data, size_t len)
+{
+#if(AR_ARCH_VER == ARCH_64)
+		return __murmur_hash_64_a(data, len, 0);
+#elif(AR_ARCH_VER == ARCH_32)
+		return __super_fast_hash_32(data, len);
+#else
+		#error "Not Support Platform!"
+#endif
+
+}
+
 AR_NAMESPACE_END
 
 
