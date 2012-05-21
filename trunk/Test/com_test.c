@@ -1671,19 +1671,46 @@ static void path_iter_test()
 		
 		arPathIter_t *it;
 		arStatus_t status;
-		it = AR_CreatePathIterator(L"%Temp%\\");
+		it = AR_CreatePathIterator();
 
-		if(it == NULL)
-		{
-				return;
-		}
 
 		AR_ASSERT(it != NULL);
-		
 
-		status = AR_S_YES;
 
-		while(!AR_PathIteratorIsDone(it))
+		status = AR_PathIteratorSetPath(it, L"%Temp%\\");
+
+		while(status == AR_S_YES && !AR_PathIteratorIsDone(it))
+		{
+				//::MessageBoxW(NULL, AR_PathIteratorCurrent(it), 0,0);
+
+				wchar_t buf[2048];
+				AR_swprintf(buf, 2048, L"%ls%ls", AR_PathIteratorPath(it), AR_PathIteratorCurrent(it));
+
+				AR_printf(L"%ls\r\n", buf);
+				
+				status = AR_PathIteratorNext(it);
+		}
+
+
+
+		status = AR_PathIteratorSetPath(it, L"D:\\1");
+
+		while(status == AR_S_YES && !AR_PathIteratorIsDone(it))
+		{
+				//::MessageBoxW(NULL, AR_PathIteratorCurrent(it), 0,0);
+
+				wchar_t buf[2048];
+				AR_swprintf(buf, 2048, L"%ls%ls", AR_PathIteratorPath(it), AR_PathIteratorCurrent(it));
+
+				AR_printf(L"%ls\r\n", buf);
+				
+				status = AR_PathIteratorNext(it);
+		}
+
+
+		status = AR_PathIteratorSetPath(it, L"D:\\nodir");
+
+		while(status == AR_S_YES && !AR_PathIteratorIsDone(it))
 		{
 				//::MessageBoxW(NULL, AR_PathIteratorCurrent(it), 0,0);
 
@@ -2804,12 +2831,12 @@ void com_test()
 
 		//path_test();
 
-		//path_iter_test();
+		path_iter_test();
 
 		//thd_test();
 
 
-		ds_test2();
+		//ds_test2();
 
 		//operation_test();
 }
