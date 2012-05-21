@@ -36,6 +36,15 @@ typedef enum
 
 		AR_E_SYS,
 		AR_E_FILE,
+        AR_E_IO,
+        AR_E_PERM,
+        AR_E_NOTDIR,
+        AR_E_ISDIR,
+        AR_E_READONLY,
+        AR_E_NOTEMPTY,
+        AR_E_ACCES,
+        AR_E_NOTENOUGH,
+        
 		AR_E_NET,
 		AR_E_TIMEOUT,
 		AR_E_CANCELLED,

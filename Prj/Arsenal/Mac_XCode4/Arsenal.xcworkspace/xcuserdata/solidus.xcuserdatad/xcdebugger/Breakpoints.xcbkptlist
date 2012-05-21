@@ -167,9 +167,7 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "486"
-         endingLineNumber = "486"
-         landmarkName = "AR_GetCurrentPath()"
-         landmarkType = "7">
+         endingLineNumber = "486">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -181,9 +179,7 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "489"
-         endingLineNumber = "489"
-         landmarkName = "AR_GetCurrentPath()"
-         landmarkType = "7">
+         endingLineNumber = "489">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -195,9 +191,7 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "492"
-         endingLineNumber = "492"
-         landmarkName = "AR_GetCurrentPath()"
-         landmarkType = "7">
+         endingLineNumber = "492">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
@@ -293,9 +287,7 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "895"
-         endingLineNumber = "895"
-         landmarkName = "AR_CreatePathIterator()"
-         landmarkType = "7">
+         endingLineNumber = "895">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -307,9 +299,7 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "897"
-         endingLineNumber = "897"
-         landmarkName = "AR_CreatePathIterator()"
-         landmarkType = "7">
+         endingLineNumber = "897">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
