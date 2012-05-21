@@ -1729,8 +1729,6 @@ static void path_iter_test()
 
 
 
-
-
 static void evt_test()
 {
 		arStatus_t status;
@@ -2747,6 +2745,42 @@ static void str_test14()
 
 }
 
+
+
+/*str_rot13(base64_encode($url));½âÂë£ºbase64_decode(str_rot13($url));
+ÀýÈç"http://www.google.com/reader/view/"
+"nUE0pQbiY3q3ql5ao29aoTHhL29gY3WyLJEypv92nJI3Yj=="
+"nUE0pQbiY3q3ql5ao29aoTHhL29gY3WyLJEypv92nJI3Yj=="
+*/
+
+
+
+
+static void str_test15()
+{
+		byte_t buf[1024];
+		char output[1024];
+		const char *url = "http://www.google.com/reader/view/";
+
+		size_t n = AR_base64_encode(buf, 1024, (const byte_t*)url, strlen(url));
+		buf[n] = 0;
+
+		AR_printf(L"%hs\r\n", AR_strrot13((char*)buf, strlen((char*)buf)));
+
+		AR_ASSERT(AR_strcmp((char*)buf, "nUE0pQbiY3q3ql5ao29aoTHhL29gY3WyLJEypv92nJI3Yj==") == 0);
+
+		AR_strrot13((char*)buf, strlen((char*)buf));
+
+		AR_printf(L"%u\r\n", AR_base64_decode((byte_t*)output, 1024, buf, n));
+
+		output[n] = 0;
+		AR_printf(L"%hs\r\n", output);
+
+		
+		AR_ASSERT(AR_strcmp(output, url) == 0);
+
+}
+
 void com_test()
 {
 		
@@ -2769,6 +2803,7 @@ void com_test()
 		//str_test12();
 		//str_test13();
 		//str_test14();
+		str_test15();
 		//com_test3();
 		//com_conv();
 		//com_conv2();
@@ -2831,7 +2866,7 @@ void com_test()
 
 		//path_test();
 
-		path_iter_test();
+		//path_iter_test();
 
 		//thd_test();
 

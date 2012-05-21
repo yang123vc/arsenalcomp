@@ -575,6 +575,10 @@ uint_t			AR_strhash(const char *str);
 uint_t			AR_strhash_n(const char *str, size_t n);
 
 uint_t			AR_memhash(const byte_t *data, size_t len);
+
+
+char*			AR_strrot13(char *s, size_t n);
+
 /********************************************************Basic Data Structure*********************************************************/
 
 /*

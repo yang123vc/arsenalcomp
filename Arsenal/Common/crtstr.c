@@ -419,6 +419,27 @@ const wchar_t* AR_wtou32(const wchar_t *in,  uint_32_t *num, size_t base)
 
 
 
+char* AR_strrot13(char *s, size_t n)
+{
+		size_t i;
+		AR_ASSERT(s != NULL);
+		for(i = 0; i < n && s[i] != '\0'; ++i)
+		{
+				char b = s[i];
+				if( (b >= 'a' && b <= 'm') || (b >= 'A' && b <= 'M'))
+				{
+						s[i] = b + 13;
+				}else if((b >= 'n' && b <= 'z') || (b >= 'N' && b <= 'Z'))
+				{
+						s[i] = b - 13;
+				}else
+				{
+
+				}
+		}
+		
+		return s;
+}
 
 
 
