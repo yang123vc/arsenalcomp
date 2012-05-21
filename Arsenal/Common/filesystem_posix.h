@@ -399,7 +399,6 @@ struct __arsenal_path_iterator_tag
 };
 
 
-
 arPathIter_t*	AR_CreatePathIterator()
 {
         arPathIter_t *iter;
@@ -459,7 +458,7 @@ arStatus_t      AR_PathIteratorSetPath(arPathIter_t *iter, const wchar_t *path)
         }
         
         status = AR_GetExpandPath(path, expanded_path);
-
+        
         if(status != AR_S_YES)
         {
                 goto END_POINT;
@@ -473,7 +472,7 @@ arStatus_t      AR_PathIteratorSetPath(arPathIter_t *iter, const wchar_t *path)
 						goto END_POINT;
 				}
 		}
-
+        
         s_tmp = AR_wcs_to_str(AR_CP_ACP, AR_GetStringCString(expanded_path), AR_GetStringLength(expanded_path));
         if(s_tmp == NULL)
         {
@@ -536,8 +535,15 @@ END_POINT:
 const wchar_t*	AR_PathIteratorCurrent(const arPathIter_t *iter)
 {
 		AR_ASSERT(iter != NULL);
-		AR_ASSERT(iter->current != NULL);
-		return AR_GetStringCString(iter->current);
+        AR_ASSERT(iter->hdl != NULL && iter->path != NULL && iter->current != NULL);
+        
+        if(iter->current == NULL)
+        {
+                return NULL;
+        }else
+        {
+                return AR_GetStringCString(iter->current);
+        }
 }
 
 
@@ -547,7 +553,16 @@ arStatus_t		AR_PathIteratorNext(arPathIter_t *iter)
 		arStatus_t status;
 		AR_ASSERT(iter != NULL);
         
+        if(iter->hdl == NULL)
+        {
+                AR_ASSERT(iter->path == NULL && iter->current == NULL);
+                return AR_E_NOTREADY;
+        }
+        
 		status = AR_S_YES;
+        
+        
+        
         
 		do{
                 struct dirent* entry;
@@ -559,7 +574,7 @@ arStatus_t		AR_PathIteratorNext(arPathIter_t *iter)
 				if(entry != NULL)
 				{
                         wchar_t *tmp = AR_str_to_wcs(AR_CP_ACP, entry->d_name, AR_strlen(entry->d_name));
-
+                        
                         if(tmp == NULL)
                         {
                                 status = AR_E_BADENCCONV;
@@ -593,15 +608,16 @@ arStatus_t		AR_PathIteratorNext(arPathIter_t *iter)
 bool_t		AR_PathIteratorIsDone(const arPathIter_t *iter)
 {
 		AR_ASSERT(iter != NULL);
+        AR_ASSERT(iter->hdl != NULL && iter->path != NULL && iter->current != NULL);
 		return iter->isdone;
 }
 
 const wchar_t*  AR_PathIteratorPath(const arPathIter_t *iter)
 {
         AR_ASSERT(iter != NULL && iter->path != NULL);
+        AR_ASSERT(iter->hdl != NULL && iter->path != NULL && iter->current != NULL);
         return iter->path;
 }
-
 
 /************************************************************File*************************************************************/
 

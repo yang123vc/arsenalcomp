@@ -106,21 +106,39 @@ static void path_test()
         
 static void path_iter_test()
 {
-        {
-                arPathIter_t *it;
-                arStatus_t status;
+        arPathIter_t *it;
+        arStatus_t status;
+        it = AR_CreatePathIterator();
+        AR_ASSERT(it != NULL);
         
-                it = AR_CreatePathIterator(L"~/Desktop");
+        {
+                status = AR_PathIteratorSetPath(it, L"~/Desktop");
                 
-                if(it == NULL)
+                
+                while(!AR_PathIteratorIsDone(it))
                 {
-                        return;
+                        AR_printf(L"%ls\r\n", AR_PathIteratorCurrent(it));
+                        status = AR_PathIteratorNext(it);
                 }
+        }
+        
+        
+        {
+                status = AR_PathIteratorSetPath(it, L"/Applications/App Store.app/Contents/");
                 
-                AR_ASSERT(it != NULL);
                 
+                while(!AR_PathIteratorIsDone(it))
+                {
+                        AR_printf(L"%ls\r\n", AR_PathIteratorCurrent(it));
+                        status = AR_PathIteratorNext(it);
+                }
+               
+        }
+        
+        
+        {
+                status = AR_PathIteratorSetPath(it, L"/Users/solidus/Desktop/2");
                 
-                status = AR_S_YES;
                 
                 while(!AR_PathIteratorIsDone(it))
                 {
@@ -128,40 +146,15 @@ static void path_iter_test()
                         status = AR_PathIteratorNext(it);
                 }
                 
-                
-                AR_DestroyPathIterator(it);
-                it = NULL;
         }
         
         
-        {
-                arPathIter_t *it;
-                arStatus_t status;
-                
-                it = AR_CreatePathIterator(L"/Applications/App Store.app/Contents/");
-                
-                if(it == NULL)
-                {
-                        return;
-                }
-                
-                AR_ASSERT(it != NULL);
-                
-                
-                status = AR_S_YES;
-                
-                while(!AR_PathIteratorIsDone(it))
-                {
-                        AR_printf(L"%ls\r\n", AR_PathIteratorCurrent(it));
-                        status = AR_PathIteratorNext(it);
-                }
-                
-                
-                AR_DestroyPathIterator(it);
-                it = NULL;
-        }
+        AR_DestroyPathIterator(it);
+        it = NULL;
 }
 
+        
+        
 static void startup_items_test()
 {
         static const wchar_t *startup_paths[] = 
