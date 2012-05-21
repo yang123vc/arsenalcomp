@@ -19,6 +19,7 @@ void Ini_Test()
 		iniObject_t *obj;
 		str = AR_CreateString();
 		
+		obj = NULL;
 
 		if(AR_LoadBomTextFile(L"D:\\1.ini", NULL, str) != AR_S_YES)
 		{

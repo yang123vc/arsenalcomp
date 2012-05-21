@@ -22,8 +22,51 @@ AR_NAMESPACE_BEGIN
 #undef MAX_PATH_LEN
 #endif
 
-
 #define MAX_PATH_LEN 32767
+
+static arStatus_t       __map_last_error()
+{
+        switch(GetLastError())
+        {
+		case ERROR_FILE_NOT_FOUND:
+		case ERROR_PATH_NOT_FOUND:
+				return AR_E_NOTFOUND;
+		case ERROR_BAD_NETPATH:
+		case ERROR_CANT_RESOLVE_FILENAME:
+		case ERROR_INVALID_DRIVE:
+		case ERROR_INVALID_NAME:
+		case ERROR_DIRECTORY:
+		case ERROR_FILENAME_EXCED_RANGE:
+		case ERROR_BAD_PATHNAME:
+				return AR_E_INVAL;
+		case ERROR_ACCESS_DENIED:
+				return AR_E_ACCES;
+		case ERROR_ALREADY_EXISTS:
+		case ERROR_FILE_EXISTS:
+				return AR_E_EXISTED;
+		case ERROR_FILE_READ_ONLY:
+				return AR_E_READONLY;
+		case ERROR_DIR_NOT_EMPTY:
+				return AR_E_NOTEMPTY;
+		case ERROR_HANDLE_DISK_FULL:
+		case ERROR_DISK_FULL:
+				return AR_E_NOTENOUGH;
+		case ERROR_NEGATIVE_SEEK:
+		case ERROR_LOCK_VIOLATION:
+		case ERROR_HANDLE_EOF:
+		case ERROR_SHARING_VIOLATION:
+		case ERROR_CANNOT_MAKE:
+		case ERROR_WRITE_FAULT:
+		case ERROR_READ_FAULT:
+		default:
+				return AR_E_FILE;
+        }
+}
+
+
+
+	
+
 
 #if(OS_TYPE == OS_WINDOWS_CE)
 
@@ -57,7 +100,7 @@ arStatus_t		AR_GetTempPath(arString_t *str)
 				return AR_SetString(str, buf);
 		}else
 		{
-				return AR_E_FAIL;
+				return __map_last_error();
 		}
 }
 
@@ -88,7 +131,7 @@ arStatus_t		AR_GetCurrentPath(arString_t *str)
 		
 		if (l <= 0)
 		{
-				status = AR_E_FAIL;
+				status = __map_last_error();
 				goto END_POINT;
 		}
 
@@ -106,7 +149,7 @@ arStatus_t		AR_GetCurrentPath(arString_t *str)
 		{
 				AR_DEL(tmp);
 				tmp = NULL;
-				status = AR_E_FAIL;
+				status = __map_last_error();
 				goto END_POINT;
 		}
 		
@@ -195,14 +238,14 @@ arStatus_t		AR_GetTempPath(arString_t *str)
 		n = GetTempPathW(MAX_PATH_LEN, tmp);
 		if(n <= 0)
 		{
-				return AR_E_FAIL;
+				return __map_last_error();
 		}
 
 		n = GetLongPathNameW(tmp, tmp, n);
 
 		if(n <= 0)
 		{
-				return AR_E_FAIL;
+				return __map_last_error();
 		}
 
 		if(tmp[n - 1] != L'\\')
@@ -226,7 +269,7 @@ arStatus_t		AR_GetExpandPath(const wchar_t *path, arString_t *expanded_path)
 
 		if(n <= 0)
 		{
-				return AR_E_SYS;
+				return __map_last_error();
 		}
 
 		tmp = AR_NEWARR(wchar_t, n);
@@ -242,7 +285,7 @@ arStatus_t		AR_GetExpandPath(const wchar_t *path, arString_t *expanded_path)
 		{
 				AR_DEL(tmp);
 				tmp = NULL;
-				return AR_E_SYS;
+				return __map_last_error();
 		}else
 		{
 				arStatus_t status;
@@ -276,18 +319,56 @@ struct __arsenal_path_iterator_tag
 		wchar_t				*path;
 };
 
-arPathIter_t*	AR_CreatePathIterator(const wchar_t *path)
+arPathIter_t*	AR_CreatePathIterator()
 {
 		arPathIter_t *iter;
+		iter = AR_NEW0(arPathIter_t);
+		iter->hdl = INVALID_HANDLE_VALUE;
+		return iter;
+}
+
+
+static void __clear_path_iterator(arPathIter_t *iter)
+{
+		AR_ASSERT(iter != NULL);
+		if(iter->hdl != INVALID_HANDLE_VALUE && iter->hdl != NULL)
+		{
+				FindClose(iter->hdl);
+				iter->hdl = INVALID_HANDLE_VALUE;
+		}
+
+		if(iter->current)
+		{
+				AR_DestroyString(iter->current);
+				iter->current = NULL;
+		}
+
+		if(iter->path)
+		{
+				AR_DEL(iter->path);
+				iter->path = NULL;
+		}
+}
+
+void			AR_DestroyPathIterator(arPathIter_t *iter)
+{
+		AR_ASSERT(iter != NULL);
+		__clear_path_iterator(iter);
+
+		AR_DEL(iter);
+		iter = NULL;
+}
+
+arStatus_t      AR_PathIteratorSetPath(arPathIter_t *iter, const wchar_t *path)
+{
 		wchar_t *tmp;
 		arString_t *expanded_path;
 		arStatus_t status;
-		AR_ASSERT(path != NULL);
+		AR_ASSERT(iter != NULL && path != NULL);
 
 		tmp = NULL;
-		iter = NULL;
 		status = AR_S_YES;
-
+		__clear_path_iterator(iter);
 
 		expanded_path = AR_CreateString();
 		if(expanded_path == NULL)
@@ -326,20 +407,13 @@ arPathIter_t*	AR_CreatePathIterator(const wchar_t *path)
 
 		AR_wcscat(tmp, L"*");
 
-
-		iter = AR_NEW0(arPathIter_t);
-        
-        if(iter == NULL)
-        {
-                status = AR_E_NOMEM;
-                goto END_POINT;
-        }
+/****************************************************************************************/
 		
 		iter->hdl = FindFirstFileW(tmp, &iter->find_data);
 		
 		if(iter->hdl == INVALID_HANDLE_VALUE)
 		{
-				status = AR_E_FAIL;
+				status = __map_last_error();
 				goto END_POINT;
 		}
 
@@ -354,6 +428,11 @@ arPathIter_t*	AR_CreatePathIterator(const wchar_t *path)
 		}
 
 		status = AR_SetString(iter->current, iter->find_data.cFileName);
+		
+		if(status != AR_S_YES)
+		{
+				goto END_POINT;
+		}
 
 		if(AR_CompStringWithWcs(iter->current, L".") == 0 || AR_CompStringWithWcs(iter->current, L"..") == 0)
 		{
@@ -384,54 +463,27 @@ END_POINT:
 				tmp = NULL;
 		}
 
-		if(status == AR_S_YES || status == AR_E_NOMORE)
+		if(status == AR_S_YES)
 		{
-
+		}else if(status == AR_E_NOMORE)
+		{
+				status = AR_S_YES;
 		}else
 		{
-				if(iter != NULL)
-				{
-						AR_DestroyPathIterator(iter);
-						iter = NULL;
-				}
+				__clear_path_iterator(iter);
 		}
 		
 
-		return iter;
+		return status;
 }
 
-
-void			AR_DestroyPathIterator(arPathIter_t *iter)
-{
-		AR_ASSERT(iter != NULL);
-		if(iter->hdl != INVALID_HANDLE_VALUE && iter->hdl != NULL)
-		{
-				FindClose(iter->hdl);
-				iter->hdl = INVALID_HANDLE_VALUE;
-		}
-
-		if(iter->current)
-		{
-				AR_DestroyString(iter->current);
-				iter->current = NULL;
-		}
-
-		if(iter->path)
-		{
-				AR_DEL(iter->path);
-				iter->path = NULL;
-		}
-
-		AR_DEL(iter);
-		iter = NULL;
-}
 
 
 
 const wchar_t*	AR_PathIteratorCurrent(const arPathIter_t *iter)
 {
 		AR_ASSERT(iter != NULL);
-		AR_ASSERT(iter->current != NULL);
+		AR_ASSERT(iter->current != NULL && iter->hdl != INVALID_HANDLE_VALUE && iter->path != NULL);
 		return AR_GetStringCString(iter->current);
 }
 
@@ -440,6 +492,12 @@ arStatus_t		AR_PathIteratorNext(arPathIter_t *iter)
 {
 		arStatus_t status;
 		AR_ASSERT(iter != NULL);
+		AR_ASSERT(iter->current != NULL && iter->hdl != INVALID_HANDLE_VALUE && iter->path != NULL);
+
+		if(iter->hdl == INVALID_HANDLE_VALUE || iter->hdl == NULL)
+		{
+				return AR_E_NOTREADY;
+		}
 
 		status = AR_S_YES;
 
@@ -460,7 +518,7 @@ arStatus_t		AR_PathIteratorNext(arPathIter_t *iter)
 								status = AR_E_NOMORE;
 						}else
 						{
-								status = AR_E_FAIL;
+								status = __map_last_error();
 						}
 
 						iter->isdone = true;
@@ -474,12 +532,14 @@ arStatus_t		AR_PathIteratorNext(arPathIter_t *iter)
 bool_t		AR_PathIteratorIsDone(const arPathIter_t *iter)
 {
 		AR_ASSERT(iter != NULL);
+		AR_ASSERT(iter->current != NULL && iter->hdl != INVALID_HANDLE_VALUE && iter->path != NULL);
 		return iter->isdone;
 }
 
 const wchar_t*  AR_PathIteratorPath(const arPathIter_t *iter)
 {
 		AR_ASSERT(iter != NULL && iter->path != NULL);
+		AR_ASSERT(iter->current != NULL && iter->hdl != INVALID_HANDLE_VALUE && iter->path != NULL);
 		return iter->path;
 }
 
