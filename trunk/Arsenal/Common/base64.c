@@ -100,7 +100,7 @@ static size_t __base64_need_len(const byte_t *input, size_t ilen)
 {
 		size_t need_n;
 		AR_UNUSED(input);
-		need_n = 0;
+
 		need_n = ilen / 3 * 4;
 
 		if(ilen % 3)

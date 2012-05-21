@@ -165,7 +165,6 @@ arStatus_t	AR_AppendString(arString_t *str, const wchar_t *sour)
 		AR_ASSERT(str != NULL && sour != NULL);
 		len = AR_wcslen(sour);
 		
-		ret = AR_S_YES;
 		ret = AR_ReserveString(str,len);
 		if(ret != AR_S_YES)
 		{
