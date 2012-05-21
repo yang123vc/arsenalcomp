@@ -1086,8 +1086,11 @@ arStatus_t		AR_GetNullPath(arString_t *str);
 struct __arsenal_path_iterator_tag;
 typedef struct __arsenal_path_iterator_tag arPathIter_t; 
 
-arPathIter_t*	AR_CreatePathIterator(const wchar_t *path);
+
+
+arPathIter_t*	AR_CreatePathIterator();
 void			AR_DestroyPathIterator(arPathIter_t *iter);
+arStatus_t      AR_PathIteratorSetPath(arPathIter_t *iter, const wchar_t *path);
 
 const wchar_t*	AR_PathIteratorCurrent(const arPathIter_t *iter);
 arStatus_t		AR_PathIteratorNext(arPathIter_t *iter);
