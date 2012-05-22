@@ -2868,6 +2868,18 @@ void cache_test()
                 {
                         AR_ASSERT(false);
                 }
+
+                AR_swprintf(buf, 512, L"%d", rand() % 1000);
+                key = buf;
+                std::wstring *tmp;
+
+				if(Cache_AccessFromLFU(lfu, (void*)&key, (void**)&tmp) == AR_S_YES)
+                {
+                        AR_printf(L"%ls\r\n", tmp->c_str());
+
+
+                }
+
 		}
         
         
@@ -2878,10 +2890,12 @@ void cache_test()
                 AR_swprintf(buf, 512, L"%d", rand() % 1000);
                 key = buf;
                 std::wstring *val;
+				
 
                 if(Cache_AccessFromLFU(lfu, (void*)&key, (void**)&val) == AR_S_YES)
                 {
                         AR_printf(L"%ls\r\n", val->c_str());
+
 
                 }
 		}
