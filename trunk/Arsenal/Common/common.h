@@ -627,8 +627,8 @@ arStatus_t		AR_GetListBack(arList_t *lst, void **pdata);
 Hash
 */
 
-typedef uint_64_t		(*AR_hash_hash_func_t)(void *key);
-typedef int_t			(*AR_hash_comp_func_t)(void *l, void *r);
+typedef uint_64_t		(*AR_hash_hash_func_t)(void *key, void *ctx);
+typedef int_t			(*AR_hash_comp_func_t)(void *l, void *r, void *ctx);
 
 typedef arStatus_t		(*AR_hash_copy_func_t)(void *data, void **pnew_data, void *ctx);
 typedef void			(*AR_hash_destroy_func_t)(void *key, void *ctx);

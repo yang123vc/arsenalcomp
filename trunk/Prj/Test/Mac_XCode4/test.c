@@ -12,6 +12,6 @@
 
 void test()
 {
-        file_sys_test();
-        //common_test();
+       // file_sys_test();
+        common_test();
 }

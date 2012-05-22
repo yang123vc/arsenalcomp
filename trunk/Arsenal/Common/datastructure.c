@@ -378,14 +378,14 @@ arStatus_t		AR_FindFromHash(arHash_t *hash, void *key, void **pval)
         uint_64_t hash_code;
         AR_ASSERT(hash != NULL && pval != NULL);
         
-        hash_code = hash->hash_f(key);
+        hash_code = hash->hash_f(key, hash->usr_ctx);
         
         node = hash->bucket[hash_code % hash->bucket_size];
         
         
 		while(node)
 		{
-				if(hash->comp_f(node->key, key) == 0)
+				if(hash->comp_f(node->key, key, hash->usr_ctx) == 0)
                 {
                         *pval = node->val;
                         return AR_S_YES;
@@ -416,7 +416,7 @@ static arStatus_t __remove_key_by_hashcode(arHash_t *hash, void *key, uint_64_t 
 		prev = NULL;
 		while(node)
 		{
-				if(hash->comp_f(node->key, key) == 0)
+				if(hash->comp_f(node->key, key, hash->usr_ctx) == 0)
                 {
 						if(prev == NULL)
 						{
@@ -461,7 +461,7 @@ arStatus_t		AR_RemoveFromHash(arHash_t *hash, void *key)
         uint_64_t hash_code;
         AR_ASSERT(hash != NULL);
         
-        hash_code = hash->hash_f(key);
+        hash_code = hash->hash_f(key, hash->usr_ctx);
         return __remove_key_by_hashcode(hash, key, hash_code);
 
 }
@@ -480,7 +480,7 @@ arStatus_t		AR_InsertToHash(arHash_t *hash, void *key, void *val)
         key_init = false;
 		val_init = false;
 
-		hash_code = hash->hash_f(key);
+		hash_code = hash->hash_f(key, hash->usr_ctx);
 
 		new_node = AR_NEW0(arHashNode_t);
         if(new_node == NULL)

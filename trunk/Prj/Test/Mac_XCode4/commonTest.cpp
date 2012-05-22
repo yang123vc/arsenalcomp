@@ -6,7 +6,9 @@
 //  Copyright (c) 2012年 none. All rights reserved.
 //
 
+#include "lfu_cache.h"
 #include "TestFileSystem.h"
+
 
 
 
@@ -14,6 +16,7 @@
 using namespace ARSpace;
 #include <vector>
 #include <queue>
+#include <string>
 
 extern "C"{
         
@@ -148,34 +151,151 @@ void thd_test()
 }
         
 
-        static void str_test12()
-        {
-                //wprintf(L"%S\r\n", "abcdefg");
+
+static void str_test12()
+{
+        //wprintf(L"%S\r\n", "abcdefg");
                 
-                AR_printf(L"%ls\r\n", L"ls");
-                AR_printf(L"%lS\r\n", L"lS");
-                AR_printf(L"%s\r\n", L"s");
-                AR_printf(L"%S\r\n", L"S");
+        AR_printf(L"%ls\r\n", L"ls");
+        AR_printf(L"%lS\r\n", L"lS");
+        AR_printf(L"%s\r\n", L"s");
+        AR_printf(L"%S\r\n", L"S");
                 
                 
-                AR_printf(L"%hs\r\n", "hs");
-                AR_printf(L"%hS\r\n", "hS");
-                AR_printf(L"%s\r\n", L"s");
-                AR_printf(L"%S\r\n", L"S");
+        AR_printf(L"%hs\r\n", "hs");
+        AR_printf(L"%hS\r\n", "hS");
+        AR_printf(L"%s\r\n", L"s");
+        AR_printf(L"%S\r\n", L"S");
                 
-                AR_printf(L"%hS : %lS\r\n", "hS", L"lS");
-                AR_printf(L"%s : %S\r\n", "s", L"S");
-                AR_printf(L"%hs : %ls\r\n", "ls", L"lS");
+        AR_printf(L"%hS : %lS\r\n", "hS", L"lS");
+        AR_printf(L"%s : %S\r\n", "s", L"S");
+        AR_printf(L"%hs : %ls\r\n", "ls", L"lS");
                 
-        }
+}
         
         
-        void mem_test()
-        {
-                byte_t *b = AR_NEWARR(byte_t, 1024);
-                b = AR_NEWARR(byte_t, 4021);
+void mem_test()
+{
+        byte_t *b = AR_NEWARR(byte_t, 1024);
+        b = AR_NEWARR(byte_t, 4021);
                 
-        }
+}
+ 
+        
+        
+        
+uint_64_t		hash_func(void *key, void *usr_ctx)
+{
+        std::wstring *wcs = (std::wstring*)key;
+        AR_ASSERT(key != NULL);
+        return AR_wcshash(wcs->c_str());
+}
+        
+int_t			comp_func(void *l, void *r, void *usr_ctx)
+{
+        std::wstring *ls = (std::wstring*)l;
+        std::wstring *rs = (std::wstring*)r;
+        
+        AR_ASSERT(ls != NULL && rs != NULL);
+        return AR_wcscmp(ls->c_str(), rs->c_str());
+}
+        
+arStatus_t		copy_wcs_func(void *data, void **pnew_data, void *usr_ctx)
+{
+        std::wstring *src = (std::wstring*)data;
+        std::wstring **pdest = (std::wstring**)pnew_data;
+        
+        AR_printf(L"%ls\r\n", src->c_str());
+        *pdest = AR_NEW(std::wstring);
+        
+        *pdest = new ((void*)*pdest) std::wstring;
+        
+        **pdest = *src;
+        return AR_S_YES;
+        
+}
+        
+void destroy_wcs_func(void *data, void *usr_ctx)
+{
+        std::wstring *src = (std::wstring*)data;
+        AR_ASSERT(data != NULL);
+        src->~basic_string();
+        AR_DEL(src);
+}
+        
+        /*
+        typedef struct __cache_lfu_context_tag
+        {
+                Cache_hash_func_t       hash_f;
+                Cache_comp_func_t       comp_f;
+                
+                Cache_copy_func_t       copy_key_f;
+                Cache_copy_func_t       copy_data_f;
+                
+                Cache_destroy_func_t    destroy_key_f;
+                Cache_destroy_func_t    destroy_data_f;
+                void    *usr_ctx;
+        }cacheLFUCtx_t;
+        */
+
+void cache_test()
+{
+        cacheLFUCtx_t ctx = 
+        {
+                hash_func,
+                comp_func,
+                copy_wcs_func,
+                copy_wcs_func,
+                destroy_wcs_func,
+                destroy_wcs_func,
+                NULL
+        };
+
+        using namespace ARSpace;
+        
+        cacheLFU_t *lfu = Cache_CreateLFU(&ctx, 100);
+        
+        for(int i = 0; i < 1000; ++i)
+		{
+				wchar_t buf[512];
+                AR_swprintf(buf, 512, L"test:%d", i);
+                std::wstring key, val;
+                val = buf;
+                AR_swprintf(buf, 512, L"%d", i);
+                key = buf;
+                
+                if(Cache_InsertToLFU(lfu, &key, &val) != AR_S_YES)
+                {
+                        AR_ASSERT(false);
+                }
+		}
+        
+        
+		for(int i = 0; i < 1000; ++i)
+		{
+                std::wstring key;
+                wchar_t buf[512];
+                AR_swprintf(buf, 512, L"%d", rand() % 1000);
+                key = buf;
+                std::wstring *val;
+
+                if(Cache_AccessFromLFU(lfu, (void*)&key, (void**)&val) == AR_S_YES)
+                {
+                        AR_printf(L"%ls\r\n", val->c_str());
+
+                }
+		}
+        
+		for(int i = 0; i < 100; i++)
+		{
+				//AR_ASSERT(cache.Delete(i));
+		}
+        
+        
+        Cache_DestroyLFU(lfu);
+        lfu = NULL;
+}
+        
         
 void common_test()
 {
@@ -183,7 +303,8 @@ void common_test()
         
         //thd_test();
         //str_test12();
-        mem_test();
+        //mem_test();
+        cache_test();
 }
         
         
