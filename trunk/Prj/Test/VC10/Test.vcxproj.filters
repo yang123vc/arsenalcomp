@@ -93,6 +93,9 @@
     <ClCompile Include="..\..\..\Test\Operation.c">
       <Filter>Test</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Test\lfu_cache.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Test\avltree.h">
@@ -120,6 +123,9 @@
       <Filter>Test</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Test\Operation.h">
+      <Filter>Test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Test\lfu_cache.h">
       <Filter>Test</Filter>
     </ClInclude>
   </ItemGroup>
