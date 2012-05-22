@@ -5,6 +5,7 @@
 #include <math.h>
 #include <time.h>
 
+#include "lfu_cache.h"
 #include "Operation.h"
 
 #if defined(__LIB)
@@ -2175,13 +2176,13 @@ static void list_test()
 		lst_dest = NULL;
 }
 
-static uint_64_t		hash_test(void *key)
+static uint_64_t		hash_test(void *key, void *ctx)
 {
 		return (uint_64_t)key;
 }
 
 
-int_t		comp_test(void *l, void *r)
+int_t		comp_test(void *l, void *r, void *ctx)
 {
 		return AR_CMP(l, r);
 }
@@ -2225,14 +2226,14 @@ static void hash_test2()
 
 
 
-uint_64_t		__wstring_hash_func(void *key)
+uint_64_t		__wstring_hash_func(void *key, void *ctx)
 {
 		std::wstring *pwstr = (std::wstring*)key;
 		AR_ASSERT(pwstr != NULL);
 		return AR_wcshash(pwstr->c_str());
 }
 
-int_t	__wstring_comp_func(void *l, void *r)
+int_t	__wstring_comp_func(void *l, void *r, void *ctx)
 {
 		return AR_wcscmp(    ((std::wstring*)l)->c_str(), ((std::wstring*)r)->c_str());
 }
@@ -2781,6 +2782,120 @@ static void str_test15()
 
 }
 
+
+
+uint_64_t		hash_func(void *key, void *usr_ctx)
+{
+        std::wstring *wcs = (std::wstring*)key;
+        AR_ASSERT(key != NULL);
+        return AR_wcshash(wcs->c_str());
+}
+        
+int_t			comp_func(void *l, void *r, void *usr_ctx)
+{
+        std::wstring *ls = (std::wstring*)l;
+        std::wstring *rs = (std::wstring*)r;
+        
+        AR_ASSERT(ls != NULL && rs != NULL);
+        return AR_wcscmp(ls->c_str(), rs->c_str());
+}
+        
+arStatus_t		copy_wcs_func(void *data, void **pnew_data, void *usr_ctx)
+{
+        std::wstring *src = (std::wstring*)data;
+        std::wstring **pdest = (std::wstring**)pnew_data;
+        
+        AR_printf(L"%ls\r\n", src->c_str());
+        *pdest = AR_NEW(std::wstring);
+        
+        *pdest = new ((void*)*pdest) std::wstring;
+        
+        **pdest = *src;
+        return AR_S_YES;
+        
+}
+        
+void destroy_wcs_func(void *data, void *usr_ctx)
+{
+        std::wstring *src = (std::wstring*)data;
+        AR_ASSERT(data != NULL);
+        src->~basic_string();
+        AR_DEL(src);
+}
+        
+        /*
+        typedef struct __cache_lfu_context_tag
+        {
+                Cache_hash_func_t       hash_f;
+                Cache_comp_func_t       comp_f;
+                
+                Cache_copy_func_t       copy_key_f;
+                Cache_copy_func_t       copy_data_f;
+                
+                Cache_destroy_func_t    destroy_key_f;
+                Cache_destroy_func_t    destroy_data_f;
+                void    *usr_ctx;
+        }cacheLFUCtx_t;
+        */
+
+void cache_test()
+{
+        cacheLFUCtx_t ctx = 
+        {
+                hash_func,
+                comp_func,
+                copy_wcs_func,
+                copy_wcs_func,
+                destroy_wcs_func,
+                destroy_wcs_func,
+                NULL
+        };
+
+        using namespace ARSpace;
+        
+        cacheLFU_t *lfu = Cache_CreateLFU(&ctx, 100);
+        
+        for(int i = 0; i < 1000; ++i)
+		{
+				wchar_t buf[512];
+                AR_swprintf(buf, 512, L"test:%d", i);
+                std::wstring key, val;
+                val = buf;
+                AR_swprintf(buf, 512, L"%d", i);
+                key = buf;
+                
+                if(Cache_InsertToLFU(lfu, &key, &val) != AR_S_YES)
+                {
+                        AR_ASSERT(false);
+                }
+		}
+        
+        
+		for(int i = 0; i < 1000; ++i)
+		{
+                std::wstring key;
+                wchar_t buf[512];
+                AR_swprintf(buf, 512, L"%d", rand() % 1000);
+                key = buf;
+                std::wstring *val;
+
+                if(Cache_AccessFromLFU(lfu, (void*)&key, (void**)&val) == AR_S_YES)
+                {
+                        AR_printf(L"%ls\r\n", val->c_str());
+
+                }
+		}
+        
+		for(int i = 0; i < 100; i++)
+		{
+				//AR_ASSERT(cache.Delete(i));
+		}
+        
+        
+        Cache_DestroyLFU(lfu);
+        lfu = NULL;
+}
+        
 void com_test()
 {
 		
@@ -2803,7 +2918,7 @@ void com_test()
 		//str_test12();
 		//str_test13();
 		//str_test14();
-		str_test15();
+		//str_test15();
 		//com_test3();
 		//com_conv();
 		//com_conv2();
@@ -2874,6 +2989,8 @@ void com_test()
 		//ds_test2();
 
 		//operation_test();
+
+		cache_test();
 }
 
 
