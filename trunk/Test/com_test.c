@@ -2889,9 +2889,15 @@ void cache_test()
 				if(Cache_AccessFromLFU(lfu, (void*)&key, (void**)&tmp) == AR_S_YES)
                 {
                         AR_printf(L"hit %ls\r\n", tmp->c_str());
-
-
                 }
+
+				AR_swprintf(buf, 512, L"%d", AR_rand64() % 100000);
+                key = buf;
+
+				if(Cache_DeleteFromLFU(lfu, (void*)&key) == AR_S_YES)
+				{
+						AR_printf(L"key '%ls' is removed\r\n", key.c_str());
+				}
 
 		}
         
@@ -2913,9 +2919,17 @@ void cache_test()
                 }
 		}
         
-		//for(int i = 0; i < 100; i++)
+		for(int i = 0; i < 100000; i++)
 		{
-				//AR_ASSERT(cache.Delete(i));
+				std::wstring key;
+                wchar_t buf[512];
+                AR_swprintf(buf, 512, L"%d", rand() % 100000);
+                key = buf;
+
+				if(Cache_DeleteFromLFU(lfu, (void*)&key) == AR_S_YES)
+				{
+						AR_printf(L"key '%ls' is removed\r\n", key.c_str());
+				}
 		}
         
         

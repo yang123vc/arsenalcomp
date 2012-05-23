@@ -148,7 +148,7 @@ static void __heap_remove_at(cacheValueNode_t **arr, size_t count, size_t idx)
 		}
 
 		i = idx;
-		
+
 		while(i > 0)
 		{
 				p = (i - 1) / 2;
@@ -164,7 +164,7 @@ static void __heap_remove_at(cacheValueNode_t **arr, size_t count, size_t idx)
 				i = p;
 		}
 
-		if(i != idx)
+		if(i == idx)
 		{
 				__heap_fixdown(arr, count, i);
 		}
