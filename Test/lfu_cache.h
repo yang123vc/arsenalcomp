@@ -45,11 +45,12 @@ typedef struct __cache_lfu_context_tag
 
 cacheLFU_t*     Cache_CreateLFU(cacheLFUCtx_t *ctx, size_t max_items_cnt);
 void            Cache_DestroyLFU(cacheLFU_t *lfu);
+void			Cache_ClearLFU(cacheLFU_t *lfu);
 
 arStatus_t      Cache_InsertToLFU(cacheLFU_t *lfu, void *key, void *data);
 arStatus_t      Cache_AccessFromLFU(cacheLFU_t *lfu, void *key, void **pdata);
 arStatus_t      Cache_DeleteFromLFU(cacheLFU_t *lfu, void *key);
-arStatus_t      Cache_ClearLFU(cacheLFU_t *lfu);
+
 
 
 

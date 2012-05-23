@@ -13,253 +13,15 @@
 
 AR_NAMESPACE_BEGIN
 
-
-
-/*
-typedef uint_64_t		(*Cache_hash_func_t)(void *key);
-typedef int_t			(*Cache_comp_func_t)(void *l, void *r);
-
-typedef arStatus_t		(*Cache_copy_func_t)(void *data, void **pnew_data, void *ctx);
-typedef void			(*Cache_destroy_func_t)(void *data, void *ctx);
-
-
-typedef struct __cache_lfu_context_tag
-{
-        Cache_hash_func_t       hash_f;
-        Cache_comp_func_t       comp_f;
-        
-        Cache_copy_func_t       copy_key_f;
-        Cache_copy_func_t       copy_data_f;
-        
-        Cache_destroy_func_t    destroy_key_f;
-        Cache_destroy_func_t    destroy_data_f;
-        void    *usr_ctx;
-}cacheLFUCtx_t;
- */
-
-
-
-
-
-struct __cache_key_node_tag;
-typedef struct __cache_key_node_tag    cacheKeyNode_t;
-struct __cache_key_node_tag
-{
-        void            *key;
-        cacheKeyNode_t  *next;
-};
-
-static cacheKeyNode_t* create_keynode()
-{
-        return AR_NEW0(cacheKeyNode_t);
-}
-
-static void destroy_keynode(cacheKeyNode_t *node)
-{
-        AR_ASSERT(node);
-        AR_DEL(node);
-        node = NULL;
-}
-
-
-struct __cache_freq_node_tag;
-typedef struct __cache_freq_node_tag    cacheFreqNode_t;
-
-
-struct __cache_freq_node_tag
-{
-        size_t  access_count;
-        
-        
-        cacheFreqNode_t *prev;
-        cacheFreqNode_t *next;
-        
-        cacheKeyNode_t *key_head;
-        cacheKeyNode_t *key_tail;
-        size_t          key_cnt;
-};
-
-
- 
-struct __cache_lfu_tag
-{
-        arHash_t                *table;
-        
-        cacheFreqNode_t         *head;
-        cacheFreqNode_t         *tail;
-        
-        size_t                  max_items;
-        
-        
-        Cache_hash_func_t       hash_f;
-        Cache_comp_func_t       comp_f;
-        
-        Cache_copy_func_t       copy_key_f;
-        Cache_copy_func_t       copy_data_f;
-        
-        Cache_destroy_func_t    destroy_key_f;
-        Cache_destroy_func_t    destroy_data_f;
-        void                    *usr_ctx;
-};
-
-
-
-
-
-static cacheFreqNode_t*       create_freq_node(size_t access_cnt)
-{
-        cacheFreqNode_t *node; 
-        AR_ASSERT(access_cnt > 0);
-        
-        node = AR_NEW0(cacheFreqNode_t);
-        
-        if(node == NULL)
-        {
-                return NULL;
-        }
-        
-        node->access_count = access_cnt;
-        return node;
-}
-
-static void destroy_freq_node(cacheFreqNode_t *node)
-{
-        cacheKeyNode_t *curr,*tmp;
-        AR_ASSERT(node != NULL);
-        
-        curr = node->key_head;
-        while(curr)
-        {
-                tmp = curr->next;
-                AR_DEL(curr);
-                curr = tmp;
-        }
-        AR_DEL(node);
-        node = NULL;
-}
-
-
-
-static arStatus_t pushback_key_to_freq_node(cacheFreqNode_t *node, void *key)
-{
-        cacheKeyNode_t  *key_node;
-        AR_ASSERT(node != NULL);
-        
-        key_node = create_keynode();
-        if(key_node == NULL)
-        {
-                return AR_E_NOMEM;
-        }
-        
-        
-        key_node->key = key;
-
-        if(node->key_cnt == 0)
-        {
-                AR_ASSERT(node->key_head == NULL && node->key_tail == NULL);
-                node->key_head = node->key_tail = key_node;
-        }else
-        {
-                AR_ASSERT(node->key_head != NULL && node->key_tail != NULL);
-                node->key_tail->next = key_node;
-                node->key_tail = key_node;
-                key_node->next = NULL;
-        }
-        node->key_cnt++;
-        return AR_S_YES;
-}
-
-static arStatus_t popfron_from_freq_node(cacheFreqNode_t *node, void **pkey)
-{
-        cacheKeyNode_t *tmp;
-        AR_ASSERT(node != NULL && pkey != NULL);
-
-        if(node->key_cnt == 0)
-        {
-                AR_ASSERT(node->key_head == NULL && node->key_tail == NULL);
-                return AR_E_NOMORE;
-        }
-        
-        tmp = node->key_head;
-        
-        node->key_head = tmp->next;
-        
-        if(tmp == node->key_tail)
-        {
-                AR_ASSERT(node->key_head == NULL);
-                AR_ASSERT(node->key_cnt == 1);
-                node->key_head = node->key_tail = NULL;
-        }
-        
-        node->key_cnt--;
-        
-        *pkey = tmp->key;
-        
-        destroy_keynode(tmp);
-        node = NULL;
-        
-        return AR_S_YES;
-}
-
-static arStatus_t remove_from_freq_node(cacheLFU_t *lfu, cacheFreqNode_t *node, void *key)
-{
-        cacheKeyNode_t *curr, *prev;
-        AR_ASSERT(lfu != NULL && lfu->comp_f != NULL && node != NULL);
-        
-        curr = node->key_head;
-        prev = NULL;
-        
-        while(curr)
-        {
-                if(lfu->comp_f(key, curr->key, lfu->usr_ctx) == 0)
-                {
-                        break;
-                }
-                prev = curr;
-                curr = curr->next;
-        }
-        
-		AR_printf(L"%ls, access count == %Iu, key count == %Iu\r\n", ((std::wstring*)key)->c_str(), node->access_count, node->key_cnt);
-        if(curr == NULL)
-        {
-                return AR_E_NOTFOUND;
-        }
-        
-        if(prev == NULL)
-        {
-                AR_ASSERT(curr == node->key_head);
-                node->key_head = curr->next;
-
-                if(curr == node->key_tail)
-                {
-                        AR_ASSERT(node->key_cnt == 1);
-                        node->key_head = node->key_tail = NULL;
-                }
-                
-        }else
-        {
-                prev->next = curr->next;
-                
-                if(curr == node->key_tail)
-                {
-						AR_ASSERT(curr->next == NULL);
-                        node->key_tail = prev;
-                }
-        }
-        
-        --node->key_cnt;
-        
-        return AR_S_YES;
-        
-}
-
+#if(0)
 typedef struct __cahce_value_node_tag
 {
         void                    *data;
-        cacheFreqNode_t         *parent;
+        size_t					access_count;
 }cacheValueNode_t;
 
-static cacheValueNode_t* create_value_node(void *data, cacheFreqNode_t *parent)
+
+static cacheValueNode_t* create_value_node(void *data, size_t access_count)
 {
         cacheValueNode_t *node;
 
@@ -269,9 +31,10 @@ static cacheValueNode_t* create_value_node(void *data, cacheFreqNode_t *parent)
                 return NULL;
         }
         node->data = data;
-        node->parent = parent;
+        node->access_count = access_count;
         return node;
 }
+
 
 static void destroy_value_node(cacheValueNode_t *node)
 {
@@ -281,7 +44,24 @@ static void destroy_value_node(cacheValueNode_t *node)
 }
 
 
-
+struct __cache_lfu_tag
+{
+        arHash_t                *table;
+		
+        cacheValueNode_t		**min_heap;
+		size_t					items_count;
+        size_t                  max_items;
+        
+		Cache_hash_func_t       hash_f;
+        Cache_comp_func_t       comp_f;
+        
+        Cache_copy_func_t       copy_key_f;
+        Cache_copy_func_t       copy_data_f;
+        
+        Cache_destroy_func_t    destroy_key_f;
+        Cache_destroy_func_t    destroy_data_f;
+        void                    *usr_ctx;
+};
 
 
 
@@ -309,9 +89,9 @@ static void			table_destroy_key_func(void *key, void *ctx)
 
         AR_ASSERT(ctx != NULL);
         lfu = (cacheLFU_t*)ctx;
-        
         lfu->destroy_key_f(key, lfu->usr_ctx);
 }
+
 
 static void			table_destroy_data_func(void *data, void *ctx)
 {
@@ -321,9 +101,7 @@ static void			table_destroy_data_func(void *data, void *ctx)
         lfu = (cacheLFU_t*)ctx;
         val_node = (cacheValueNode_t*)data;
         
-        AR_printf(L"data == %ls\r\n", ((std::wstring*)(val_node->data))->c_str());
-        
-        lfu->destroy_key_f(val_node->data, lfu->usr_ctx);
+		lfu->destroy_key_f(val_node->data, lfu->usr_ctx);
         destroy_value_node(val_node);
         val_node = NULL;
 }
@@ -341,9 +119,16 @@ cacheLFU_t*     Cache_CreateLFU(cacheLFUCtx_t *ctx, size_t max_items_cnt)
         {
                 goto INVALID_POINT;
         }
-        
-        
-        lfu->max_items = max_items_cnt;
+
+		lfu->min_heap = AR_NEWARR0(cacheValueNode_t*, max_items_cnt);
+
+		if(lfu->min_heap == NULL)
+		{
+				goto INVALID_POINT;
+		}
+		
+		lfu->items_count = 0;
+		lfu->max_items = max_items_cnt;
         lfu->hash_f = ctx->hash_f;
         lfu->comp_f = ctx->comp_f;
         lfu->copy_key_f = ctx->copy_key_f;
@@ -364,6 +149,12 @@ cacheLFU_t*     Cache_CreateLFU(cacheLFUCtx_t *ctx, size_t max_items_cnt)
         return lfu;
 INVALID_POINT:
         
+		if(lfu && lfu->min_heap)
+		{
+				AR_DEL(lfu->min_heap);
+				lfu->min_heap = NULL;
+		}
+
         if(lfu && lfu->table)
         {
                 AR_DestroyHash(lfu->table);
@@ -383,66 +174,40 @@ INVALID_POINT:
 void            Cache_DestroyLFU(cacheLFU_t *lfu)
 {
         AR_ASSERT(lfu != NULL);
-        
-        Cache_ClearLFU(lfu);
+
+		Cache_ClearLFU(lfu);
+		
+		if(lfu->table)
+		{
+				AR_DestroyHash(lfu->table);
+				lfu->table = NULL;
+		}
+		
+		if(lfu->min_heap)
+		{
+				AR_DEL(lfu->min_heap);
+				lfu->min_heap = NULL;
+		}
                 
+		AR_DEL(lfu);
+		lfu = NULL;
 }
 
-arStatus_t      Cache_ClearLFU(cacheLFU_t *lfu)
+
+void      Cache_ClearLFU(cacheLFU_t *lfu)
 {
         AR_ASSERT(lfu != NULL);
-        return AR_E_FAIL;
+
+		lfu->items_count = 0;
+		AR_memset(lfu->min_heap, 0, sizeof(lfu->min_heap[0]) * lfu->max_items);
+		AR_ClearHash(lfu->table);
 }
+
 
 
 static void __free_one_least_used(cacheLFU_t *lfu)
 {
-        void *key;
         
-        AR_ASSERT(lfu != NULL);
-        
-        if(lfu->head == NULL)
-        {
-                AR_ASSERT(lfu->tail == NULL);
-                AR_ASSERT(AR_GetHashCount(lfu->table) == 0);
-                return;
-        }
-        
-        if(popfron_from_freq_node(lfu->head, &key) != AR_S_YES)
-        {
-                AR_ASSERT(false);
-        }
-        
-        {
-                std::wstring *key_wcs = (std::wstring*)key;
-                AR_printf(L"%ls\r\n", key_wcs->c_str());
-        }
-        if(AR_RemoveFromHash(lfu->table, key) != AR_S_YES)
-        {
-                AR_ASSERT(false);
-        }
-        
-        if(lfu->head->key_cnt == 0)
-        {
-                cacheFreqNode_t *tmp;
-                AR_ASSERT(lfu->head->key_head == NULL && lfu->head->key_tail == NULL);
-                tmp = lfu->head;
-                lfu->head = lfu->head->next;
-
-                if(lfu->head == NULL)
-                {
-                        lfu->head = lfu->tail = NULL;
-                        AR_ASSERT(AR_GetHashCount(lfu->table) == 0);
-                }else
-                {
-                        if(lfu->head->next)
-                        {
-                                lfu->head->next->prev = NULL;
-                        }
-                }
-                destroy_freq_node(tmp);
-                tmp = NULL;
-        }
 }
 
 
@@ -451,8 +216,8 @@ static arStatus_t     __replace_value_node(cacheLFU_t *lfu, cacheValueNode_t    
         arStatus_t status;
         void *new_data;
         AR_ASSERT(lfu != NULL && val_node != NULL);
-        
-        status = AR_S_YES;
+		
+		status = AR_S_YES;
         new_data = NULL;
 
         status = lfu->copy_data_f(data, &new_data, lfu->usr_ctx);
@@ -473,21 +238,12 @@ static arStatus_t     __replace_value_node(cacheLFU_t *lfu, cacheValueNode_t    
         return status;
 }
 
-
-
 arStatus_t      Cache_InsertToLFU(cacheLFU_t *lfu, void *key, void *data)
 {
         arStatus_t status;
-        
-        cacheFreqNode_t         *new_freq;
         cacheValueNode_t        *val_node;
         void                    *new_key, *new_data;
         AR_ASSERT(lfu != NULL);
-        
-        val_node = NULL;
-        new_freq = NULL;
-        new_key = NULL;
-        new_data = NULL;
         
         status = AR_FindFromHash(lfu->table, key, (void**)&val_node);
         
@@ -634,7 +390,7 @@ arStatus_t      Cache_AccessFromLFU(cacheLFU_t *lfu, void *key, void **pdata)
 {
         arStatus_t status;
         cacheValueNode_t *val_node;
-        cacheFreqNode_t *freq, *next_freq;
+        
         AR_ASSERT(lfu != NULL && pdata != NULL);
         
         status = AR_FindFromHash(lfu->table, key, (void**)&val_node);
@@ -644,90 +400,9 @@ arStatus_t      Cache_AccessFromLFU(cacheLFU_t *lfu, void *key, void **pdata)
                 return status;
         }
 
+		AR_ASSERT(val_node != NULL);
 		*pdata = val_node->data;
-		
 
-		
-
-        AR_ASSERT(val_node != NULL);
-        freq = val_node->parent;
-        AR_ASSERT(freq != NULL);
-        next_freq = freq->next;
-
-        AR_printf(L"key '%ls' access count '%Id' += 1\r\n", ((std::wstring*)key)->c_str(), freq->access_count);
-
-        if(next_freq == NULL || next_freq->access_count != freq->access_count + 1)
-        {
-                next_freq = create_freq_node(freq->access_count + 1);
-
-                if(next_freq == NULL)
-                {
-                        status = AR_E_NOMEM;
-                        goto INVALID_POINT;
-                }
-                        
-                status = pushback_key_to_freq_node(next_freq, key);
-
-                if(status != AR_S_YES)
-                {
-                        destroy_freq_node(next_freq);
-                        next_freq = NULL;
-                        goto INVALID_POINT;
-                }
-
-                next_freq->prev = freq;
-                next_freq->next = freq->next;
-                
-                freq->next = next_freq;
-                
-                if(next_freq->next)
-                {
-                        next_freq->next->prev = next_freq;
-                }
-        }else
-        {
-                status = pushback_key_to_freq_node(next_freq, key);
-                if(status != AR_S_YES)
-                {
-                        goto INVALID_POINT;
-                }
-        }
-        
-		AR_ASSERT(next_freq != NULL);
-        val_node->parent = next_freq;
-		AR_ASSERT(val_node->parent != NULL);
-        
-        if(remove_from_freq_node(lfu, freq, key) != AR_S_YES)
-        {
-                AR_ASSERT(false);
-        }
-        
-        if(freq->key_cnt == 0)
-        {
-                if(freq == lfu->head)
-                {
-                        lfu->head = freq->next;
-                }
-                
-                if(freq == lfu->tail)
-                {
-                        lfu->tail = freq->prev;
-                }
-                
-                if(freq->prev)
-                {
-                        freq->prev->next = freq->next;
-                }
-                
-                if(freq->next)
-                {
-                        freq->next->prev = freq->prev;
-                }
-                
-                destroy_freq_node(freq);
-        }
-        
-        return AR_S_YES;
         
 INVALID_POINT:
                 
@@ -746,7 +421,7 @@ arStatus_t      Cache_DeleteFromLFU(cacheLFU_t *lfu, void *key);
 
 
 
-
+#endif
 
 
 

@@ -403,13 +403,32 @@ size_t			AR_GetHashCount(arHash_t *hash)
         return (size_t)hash->item_count;
 }
 
+void			AR_HashForEach(arHash_t *hash, AR_hash_visit_func_t visit)
+{
+		arHashNode_t *node;
+		size_t i;
+		AR_ASSERT(hash != NULL && visit != NULL);
+		for(i = 0; i < hash->bucket_size; ++i)
+		{
+				node = hash->bucket[i];
+
+				while(node)
+				{
+						if(!visit(node->key, node->val, hash->usr_ctx))
+						{
+								return;
+						}
+						node = node->next;
+				}
+		}
+}
 
 
 static arStatus_t __remove_key_by_hashcode(arHash_t *hash, void *key, uint_64_t hash_code)
 {
 		arStatus_t status;
         arHashNode_t *prev, *node;
-		AR_ASSERT(hash != NULL && key != NULL);
+		AR_ASSERT(hash != NULL);
 		status = AR_S_YES;
 		node = hash->bucket[hash_code % (uint_64_t)hash->bucket_size];
 		
