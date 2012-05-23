@@ -62,7 +62,9 @@
     <ClCompile Include="..\..\..\Test\grammar_test.c" />
     <ClCompile Include="..\..\..\Test\ini_test.c" />
     <ClCompile Include="..\..\..\Test\lex_test.c" />
-    <ClCompile Include="..\..\..\Test\lfu_cache.cpp" />
+    <ClCompile Include="..\..\..\Test\lfu_cache.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+    </ClCompile>
     <ClCompile Include="..\..\..\Test\main.cpp" />
     <ClCompile Include="..\..\..\Test\math_test.c" />
     <ClCompile Include="..\..\..\Test\mem_test.c" />
