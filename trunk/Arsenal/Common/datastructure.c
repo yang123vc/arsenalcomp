@@ -342,12 +342,7 @@ void			AR_ClearHash(arHash_t *hash)
         for(i = 0; i < hash->bucket_size; ++i)
         {
                 node = hash->bucket[i];
-                
-                if(node == NULL)
-                {
-                        continue;
-                }
-                
+				
 				while(node)
 				{
 						if(hash->destroy_key_f)
@@ -363,6 +358,7 @@ void			AR_ClearHash(arHash_t *hash)
 						AR_DEL(node);
 						node = tmp;
 				}
+
                 hash->bucket[i] = NULL;
         }
 

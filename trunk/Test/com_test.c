@@ -2817,8 +2817,11 @@ arStatus_t		copy_wcs_func(void *data, void **pnew_data, void *usr_ctx)
         
         **pdest = *src;
         return AR_S_YES;
-        
 }
+
+
+
+
         
 void destroy_wcs_func(void *data, void *usr_ctx)
 {
@@ -2843,9 +2846,13 @@ void destroy_wcs_func(void *data, void *usr_ctx)
         }cacheLFUCtx_t;
         */
 
-#if(0)
+
 void cache_test()
 {
+
+		for(int x = 0; x < 10000000; ++x)
+		{
+				AR_srand(time(NULL));
         cacheLFUCtx_t ctx = 
         {
                 hash_func,
@@ -2859,9 +2866,9 @@ void cache_test()
 
         using namespace ARSpace;
         
-        cacheLFU_t *lfu = Cache_CreateLFU(&ctx, 100);
+        cacheLFU_t *lfu = Cache_CreateLFU(&ctx, 3079);
         
-        for(int i = 0; i < 1000; ++i)
+        for(int i = 0; i < 100000; ++i)
 		{
 				wchar_t buf[512];
                 AR_swprintf(buf, 512, L"test:%d", i);
@@ -2875,13 +2882,13 @@ void cache_test()
                         AR_ASSERT(false);
                 }
 
-                AR_swprintf(buf, 512, L"%d", rand() % 1000);
+                AR_swprintf(buf, 512, L"%d", AR_rand64() % 100000);
                 key = buf;
                 std::wstring *tmp;
 
 				if(Cache_AccessFromLFU(lfu, (void*)&key, (void**)&tmp) == AR_S_YES)
                 {
-                        AR_printf(L"%ls\r\n", tmp->c_str());
+                        AR_printf(L"hit %ls\r\n", tmp->c_str());
 
 
                 }
@@ -2889,24 +2896,24 @@ void cache_test()
 		}
         
         
-		for(int i = 0; i < 1000; ++i)
+		for(int i = 0; i < 100000; ++i)
 		{
                 std::wstring key;
                 wchar_t buf[512];
-                AR_swprintf(buf, 512, L"%d", rand() % 1000);
+                AR_swprintf(buf, 512, L"%d", rand() % 100000);
                 key = buf;
                 std::wstring *val;
 				
 
                 if(Cache_AccessFromLFU(lfu, (void*)&key, (void**)&val) == AR_S_YES)
                 {
-                        AR_printf(L"%ls\r\n", val->c_str());
+                        AR_printf(L"hit %ls\r\n", val->c_str());
 
 
                 }
 		}
         
-		for(int i = 0; i < 100; i++)
+		//for(int i = 0; i < 100; i++)
 		{
 				//AR_ASSERT(cache.Delete(i));
 		}
@@ -2914,8 +2921,16 @@ void cache_test()
         
         Cache_DestroyLFU(lfu);
         lfu = NULL;
+		}
 }
-#endif
+
+
+
+
+
+
+
+
 
 void com_test()
 {
@@ -3007,11 +3022,11 @@ void com_test()
 		//thd_test();
 
 
-		ds_test2();
+		//ds_test2();
 
 		//operation_test();
 
-		//cache_test();
+		cache_test();
 }
 
 

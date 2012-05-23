@@ -3,7 +3,7 @@
 //  Test
 //
 //  Created by Solidus on 12-5-22.
-//  Copyright (c) 2012å¹´ none. All rights reserved.
+//  Copyright (c) 2012Äê none. All rights reserved.
 //
 
 
@@ -13,15 +13,17 @@
 
 AR_NAMESPACE_BEGIN
 
-#if(0)
+
 typedef struct __cahce_value_node_tag
 {
+		void					*key;	/*Ö®ËùÒÔ±£ÁôÒ»·ÝkeyÊÇÒòÎªÇåÀíµ¯³öÊ±ºò¼õÉÙ±éÀú*/
         void                    *data;
-        size_t					access_count;
+		size_t					index_in_heap;
+		size_t					access_count;
 }cacheValueNode_t;
 
 
-static cacheValueNode_t* create_value_node(void *data, size_t access_count)
+static cacheValueNode_t* create_value_node(void *key, void *data)
 {
         cacheValueNode_t *node;
 
@@ -30,8 +32,10 @@ static cacheValueNode_t* create_value_node(void *data, size_t access_count)
         {
                 return NULL;
         }
+		node->key = key;
         node->data = data;
-        node->access_count = access_count;
+		node->access_count = 0;
+        node->index_in_heap = 0;
         return node;
 }
 
@@ -42,6 +46,159 @@ static void destroy_value_node(cacheValueNode_t *node)
         AR_DEL(node);
         node = NULL;
 }
+
+
+
+/*
+×îÐ¡¶þ²æ¶Ñ£¬²åÈëÐèÒª½«ÐÂÔªËØ·ÅÈëlfu->min_heap[item_count], lfu->item_count++;Ö®ºó£¬´Ólfu->item_coutn¿ªÊ¼fixup,
+É¾³ý½«lfu->min_heap[0]Óëlfu->min_heap[lfu->item_count-1]½»»»£¬lfu->item_count--;Ö®ºó´Ólfu->min_heap[0]¿ªÊ¼fixdown,
+*/
+
+static void __swap_min_heap(cacheValueNode_t **arr, size_t l, size_t r)
+{
+		AR_ASSERT(arr != NULL);
+		if(l != r)
+		{
+				cacheValueNode_t *t = arr[l];
+				arr[l] = arr[r];
+				arr[r] = t;
+
+				arr[l]->index_in_heap = l;
+				arr[r]->index_in_heap = r;
+
+				AR_ASSERT(arr[l]->index_in_heap != arr[r]->index_in_heap);
+		}
+}
+
+static void __heap_fixup(cacheValueNode_t **arr, size_t count, size_t idx)
+{
+		size_t p;
+		AR_ASSERT(idx < count);
+		AR_UNUSED(count);
+		
+		while(idx > 0)
+		{
+				p = (idx - 1) / 2;
+
+				AR_ASSERT(arr[p]->access_count > 0 && arr[idx]->access_count > 0);
+				if(arr[p]->access_count <= arr[idx]->access_count)/*¸¸½ÚµãÐ¡ÓÚµÈÓÚ×Ó½Úµã£¬ÔòÑ­»·ÖÕÖ¹*/
+				{
+						break;
+				}
+				
+				__swap_min_heap(arr, p, idx);/*·ñÔò½»»»Êý×é¼°ÆäË÷Òý*/
+
+				idx = p;
+		}
+}
+
+static void __heap_fixdown(cacheValueNode_t **arr, size_t count, size_t idx)
+{
+		size_t c;
+		AR_ASSERT(arr != NULL);
+		AR_ASSERT(idx < count);
+		
+		while(idx < count / 2)
+		{
+
+				c = idx * 2 + 1;
+
+				/*
+				±ÈÈç´Ë¶ÑÎª
+						8
+				       / \
+				      5   4
+				fixdownÐèÒª½«4ºÍ8½»»»£¬±£Ö¤¸¸Ð¡ÓÚ×Ó£¬Òò´ËÐèÒª¶Ô±ÈÁ½¸ö×Ó½Úµã
+				*/
+
+				if(c < count - 1 && arr[c]->access_count > arr[c+1]->access_count)	
+				{
+						++c;
+				}
+
+				AR_ASSERT(arr[c]->access_count > 0 && arr[idx]->access_count > 0);
+
+				if(arr[c]->access_count >= arr[idx]->access_count)
+				{
+						break;
+				}
+				
+				__swap_min_heap(arr, idx, c);/*·ñÔò½»»»Êý×é¼°ÆäË÷Òý*/
+				idx = c;
+		}
+}
+
+
+
+
+
+static void __heap_remove_at(cacheValueNode_t **arr, size_t count, size_t idx)
+{
+		cacheValueNode_t *tmp;
+		size_t i,p;
+		AR_ASSERT(arr != NULL && idx < count);
+		tmp = NULL;
+		__swap_min_heap(arr, idx, count - 1);
+		tmp = arr[count -1];
+		count--;
+		
+		if(count == 0 || idx == count)
+		{
+				return;
+		}
+
+		i = idx;
+		
+		while(i > 0)
+		{
+				p = (i - 1) / 2;
+				
+				AR_ASSERT(arr[p]->access_count > 0 && arr[i]->access_count > 0);
+				if(arr[p]->access_count <= arr[i]->access_count)
+				{
+						break;
+				}
+				
+				__swap_min_heap(arr, p, i);/*·ñÔò½»»»Êý×é¼°ÆäË÷Òý*/
+				
+				i = p;
+		}
+
+		if(i != idx)
+		{
+				__heap_fixdown(arr, count, i);
+		}
+
+}
+
+static bool_t __heap_verify(cacheValueNode_t **arr, size_t count)
+{
+		size_t i,l,r;
+		AR_ASSERT(arr != NULL);
+		i = 0;
+		while(i < count / 2)
+		{
+				l = (2 * i) + 1;
+				r = l + 1;
+
+				if(arr[i]->access_count > arr[l]->access_count)
+				{
+						return false;
+				}
+
+				if(r < count && arr[i]->access_count > arr[r]->access_count)
+				{
+						return false;
+				}
+				
+				i += 1;
+		}
+
+		
+		return true;
+}
+
+
 
 
 struct __cache_lfu_tag
@@ -171,6 +328,7 @@ INVALID_POINT:
 
 }
 
+
 void            Cache_DestroyLFU(cacheLFU_t *lfu)
 {
         AR_ASSERT(lfu != NULL);
@@ -198,17 +356,70 @@ void      Cache_ClearLFU(cacheLFU_t *lfu)
 {
         AR_ASSERT(lfu != NULL);
 
+		/*
+		for(size_t i = 0; i < lfu->items_count; ++i)
+		{
+				AR_printf(L"access count == %Iu\r\n", lfu->min_heap[i]->access_count);
+		}
+		*/
+
+		AR_ASSERT(__heap_verify(lfu->min_heap, lfu->items_count));
+
+#if(0)
+		{
+
+				size_t prev_access_count = 0;
+
+				while(lfu->items_count > 0)
+				{
+						cacheValueNode_t *tmp = lfu->min_heap[0];
+						AR_ASSERT(tmp->access_count >= prev_access_count);
+						__heap_remove_at(lfu->min_heap, lfu->items_count, 0);
+						lfu->items_count--;
+						/*
+						__swap_min_heap(lfu->min_heap, 0, lfu->items_count-1);
+						if(--lfu->items_count > 0)
+						{
+								__heap_fixdown(lfu->min_heap, lfu->items_count, 0);
+						}
+						*/
+				}
+		}
+#endif
+		
 		lfu->items_count = 0;
 		AR_memset(lfu->min_heap, 0, sizeof(lfu->min_heap[0]) * lfu->max_items);
+		
 		AR_ClearHash(lfu->table);
 }
 
 
 
-static void __free_one_least_used(cacheLFU_t *lfu)
+
+
+static void __free_one_least_used(cacheLFU_t *lfu)/*É¾³ýaccess_count ×îÐ¡µÄÒ»¸ö*/
 {
-        
+		arStatus_t status;
+		cacheValueNode_t *val_node;
+		AR_ASSERT(lfu != NULL);
+		val_node = NULL;
+		status = AR_S_YES;
+
+		if(lfu->items_count == 0)
+		{
+				AR_ASSERT(AR_GetHashCount(lfu->table) == 0);
+				return;
+		}
+		
+		__swap_min_heap(lfu->min_heap, 0, lfu->items_count - 1);
+		__heap_fixdown(lfu->min_heap, lfu->items_count-1, 0);
+		
+		val_node = lfu->min_heap[lfu->items_count - 1];
+		status = AR_RemoveFromHash(lfu->table, val_node->key);
+		AR_ASSERT(status == AR_S_YES);
+		lfu->items_count--;
 }
+
 
 
 static arStatus_t     __replace_value_node(cacheLFU_t *lfu, cacheValueNode_t        *val_node, void *data)
@@ -220,23 +431,33 @@ static arStatus_t     __replace_value_node(cacheLFU_t *lfu, cacheValueNode_t    
 		status = AR_S_YES;
         new_data = NULL;
 
-        status = lfu->copy_data_f(data, &new_data, lfu->usr_ctx);
+		if(lfu->copy_data_f)/*¸´ÖÆdata*/
+		{
+				status = lfu->copy_data_f(data, &new_data, lfu->usr_ctx);
         
-        if(status != AR_S_YES)
-        {
-                return status;
-        }
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
+		}else
+		{
+				new_data = data;
+		}
         
         if(lfu->destroy_data_f)
         {
                 lfu->destroy_data_f(val_node->data, lfu->usr_ctx);
                 val_node->data = NULL;
-        }
-
-        val_node->data = data;
+        }else
+		{
+				val_node->data = NULL;
+		}
+        
+		val_node->data = new_data;
         
         return status;
 }
+
 
 arStatus_t      Cache_InsertToLFU(cacheLFU_t *lfu, void *key, void *data)
 {
@@ -245,6 +466,11 @@ arStatus_t      Cache_InsertToLFU(cacheLFU_t *lfu, void *key, void *data)
         void                    *new_key, *new_data;
         AR_ASSERT(lfu != NULL);
         
+		status = AR_S_YES;
+		new_key = NULL;
+		new_data = NULL;
+		val_node = NULL;
+
         status = AR_FindFromHash(lfu->table, key, (void**)&val_node);
         
         if(status == AR_S_YES)
@@ -254,10 +480,14 @@ arStatus_t      Cache_InsertToLFU(cacheLFU_t *lfu, void *key, void *data)
 
         while(AR_GetHashCount(lfu->table) >= lfu->max_items)
         {
+				AR_ASSERT(AR_GetHashCount(lfu->table) == lfu->items_count);
                 __free_one_least_used(lfu);
+				AR_ASSERT(__heap_verify(lfu->min_heap, lfu->items_count));
         }
+        
+		status = AR_S_YES;
 
-        if(lfu->copy_key_f)
+		if(lfu->copy_key_f)
         {
                 status = lfu->copy_key_f(key, &new_key, lfu->usr_ctx);
         }else
@@ -283,92 +513,44 @@ arStatus_t      Cache_InsertToLFU(cacheLFU_t *lfu, void *key, void *data)
                 goto INVALID_POINT;
         }
         
-        val_node = create_value_node(new_data, NULL);
-        
-        AR_printf(L"%ls\r\n", ((std::wstring*)new_data)->c_str());
-        
-        if(val_node == NULL)
-        {
+        val_node = create_value_node(new_key, new_data);
+		
+		if(val_node == NULL)
+		{
                 status = AR_E_NOMEM;
                 goto INVALID_POINT;
         }
+		
+		val_node->access_count = 1;
         
-        status = AR_InsertToHash(lfu->table, new_key, (void*)val_node);
-
-        if(status != AR_S_YES)
+		status = AR_InsertToHash(lfu->table, new_key, (void*)val_node);
+        
+		if(status != AR_S_YES)
         {
                 goto INVALID_POINT;
         }
+
+		AR_ASSERT(lfu->items_count == AR_GetHashCount(lfu->table) - 1);
+		
+		val_node->index_in_heap = lfu->items_count;
+		lfu->min_heap[lfu->items_count] = val_node;
+		__heap_fixup(lfu->min_heap, lfu->items_count + 1, val_node->index_in_heap);
+		lfu->items_count++;
         
-        
-        if(lfu->head ==  NULL || lfu->head->access_count != 1)
-        {
-                new_freq = create_freq_node(1);
+		AR_ASSERT(__heap_verify(lfu->min_heap, lfu->items_count));
 
-                if(new_freq == NULL)
-                {
-                        status = AR_E_NOMEM;
-                        goto INVALID_POINT;
-                }
-                
-                val_node->parent = new_freq;
-                
-                status = pushback_key_to_freq_node(new_freq,new_key);
-                
-                if(status != AR_S_YES)
-                {
-                        goto INVALID_POINT;
-                }
-                
-                if(lfu->head == NULL)
-                {
-                        AR_ASSERT(lfu->head == NULL && lfu->tail == NULL);
-                        new_freq->prev = NULL;
-                        new_freq->next = NULL;
-                        
-                        lfu->head = new_freq;
-                        lfu->tail = new_freq;
-                }else
-                {
-                        AR_ASSERT(lfu->head != NULL && lfu->tail != NULL);
-                        
-                        new_freq->prev = NULL;
-                        new_freq->next = lfu->head->next;
-                        if(lfu->head->next)
-                        {
-                                lfu->head->next->prev = new_freq;
-                        }
-                        
-                        lfu->head = new_freq;
-                }
-        }else
-        {
-                status = pushback_key_to_freq_node(lfu->head,new_key);
-                
-                if(status != AR_S_YES)
-                {
-                        goto INVALID_POINT;
-                }
-
-				val_node->parent = lfu->head;
-        }
-
-        return status;
+		return status;
         
 
 INVALID_POINT:
-        
-        if(new_freq)
-        {
-                destroy_freq_node(new_freq);
-                new_freq = NULL;
-        }
-        
-        if(new_key && lfu->destroy_key_f)
+        AR_ASSERT(__heap_verify(lfu->min_heap, lfu->items_count));
+
+		if(new_key && lfu->destroy_key_f)
         {
                 lfu->destroy_key_f(new_key, lfu->usr_ctx);
                 new_key = NULL;
         }
+
         if(new_data && lfu->destroy_data_f)
         {
                 lfu->destroy_data_f(new_data, lfu->usr_ctx);
@@ -402,15 +584,45 @@ arStatus_t      Cache_AccessFromLFU(cacheLFU_t *lfu, void *key, void **pdata)
 
 		AR_ASSERT(val_node != NULL);
 		*pdata = val_node->data;
+		
+		AR_ASSERT(val_node == lfu->min_heap[val_node->index_in_heap]);
+		
+		val_node->access_count++;
+		__heap_fixdown(lfu->min_heap, lfu->items_count, val_node->index_in_heap);
+        
+		AR_ASSERT(__heap_verify(lfu->min_heap, lfu->items_count));
 
-        
-INVALID_POINT:
-                
-        return status;
-        
+		return status;
 }
 
-arStatus_t      Cache_DeleteFromLFU(cacheLFU_t *lfu, void *key);
+
+
+
+arStatus_t      Cache_DeleteFromLFU(cacheLFU_t *lfu, void *key)
+{
+		arStatus_t status;
+		cacheValueNode_t *val_node;
+		AR_ASSERT(lfu != NULL);
+
+		AR_ASSERT(AR_GetHashCount(lfu->table) == lfu->items_count);
+		status = AR_FindFromHash(lfu->table, key, (void**)&val_node);
+
+		if(status != AR_S_YES)
+		{
+				return status;
+		}
+
+		__heap_remove_at(lfu->min_heap, lfu->items_count, val_node->index_in_heap);
+		lfu->items_count--;
+		
+		AR_ASSERT(__heap_verify(lfu->min_heap, lfu->items_count));
+
+		status = AR_RemoveFromHash(lfu->table, key);
+
+		AR_ASSERT(status == AR_S_YES);
+		
+		return status;
+}
 
 
 
@@ -419,9 +631,6 @@ arStatus_t      Cache_DeleteFromLFU(cacheLFU_t *lfu, void *key);
 
 
 
-
-
-#endif
 
 
 

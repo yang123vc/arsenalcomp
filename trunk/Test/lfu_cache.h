@@ -1,4 +1,4 @@
-//
+﻿//
 //  lfu_cache.h
 //  Test
 //
