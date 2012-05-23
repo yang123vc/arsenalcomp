@@ -2187,14 +2187,18 @@ int_t		comp_test(void *l, void *r, void *ctx)
 		return AR_CMP(l, r);
 }
 
-
+bool_t		hash_visit_test(void *k, void *v, void *ctx)
+{
+		AR_printf(L"on hash visit func key == %qd, v == %qd\r\n", k,v);
+		return true;
+}
 
 
 static void hash_test2()
 {
 		arHash_t *hash;
 
-		hash = AR_CreateHash(13, hash_test, comp_test, NULL, NULL, NULL, NULL, NULL);
+		hash = AR_CreateHash(3079, hash_test, comp_test, NULL, NULL, NULL, NULL, NULL);
 
 		AR_srand(time(NULL));
 
@@ -2219,6 +2223,7 @@ static void hash_test2()
 				}
 		}
 
+		AR_HashForEach(hash, hash_visit_test);
 		AR_DestroyHash(hash);
 		hash = NULL;
 }
@@ -2313,8 +2318,8 @@ static void hash_test3()
 
 void ds_test2()
 {
-		list_test();
-		//hash_test2();
+		//list_test();
+		hash_test2();
 		//hash_test3();
 }
 
@@ -2838,6 +2843,7 @@ void destroy_wcs_func(void *data, void *usr_ctx)
         }cacheLFUCtx_t;
         */
 
+#if(0)
 void cache_test()
 {
         cacheLFUCtx_t ctx = 
@@ -2909,7 +2915,8 @@ void cache_test()
         Cache_DestroyLFU(lfu);
         lfu = NULL;
 }
-        
+#endif
+
 void com_test()
 {
 		
@@ -3000,11 +3007,11 @@ void com_test()
 		//thd_test();
 
 
-		//ds_test2();
+		ds_test2();
 
 		//operation_test();
 
-		cache_test();
+		//cache_test();
 }
 
 

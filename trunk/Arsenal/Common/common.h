@@ -632,7 +632,7 @@ typedef int_t			(*AR_hash_comp_func_t)(void *l, void *r, void *ctx);
 
 typedef arStatus_t		(*AR_hash_copy_func_t)(void *data, void **pnew_data, void *ctx);
 typedef void			(*AR_hash_destroy_func_t)(void *key, void *ctx);
-
+typedef bool_t			(*AR_hash_visit_func_t)(void *key, void *data, void *ctx);/*∑µªÿfalse‘Ú—≠ª∑÷’÷π*/
 
 
 typedef struct __arsenal_hash_node_tag
@@ -667,7 +667,7 @@ arStatus_t		AR_RemoveFromHash(arHash_t *hash, void *key);
 arStatus_t		AR_FindFromHash(arHash_t *hash, void *key, void **pval);
 size_t			AR_GetHashCount(arHash_t *hash);
 
-
+void			AR_HashForEach(arHash_t *hash, AR_hash_visit_func_t visit);
 
 /*********************************************************String Convert****************************************************/
 
