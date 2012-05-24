@@ -80,6 +80,7 @@
     <ClCompile Include="..\..\..\Test\tengu_test.c" />
     <ClCompile Include="..\..\..\Test\test.c" />
     <ClCompile Include="..\..\..\Test\tokenizer_test.c" />
+    <ClCompile Include="..\..\..\Test\uri.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Test\avltree.h" />
@@ -92,6 +93,7 @@
     <ClInclude Include="..\..\..\Test\rbtree.h" />
     <ClInclude Include="..\..\..\Test\splaytree.h" />
     <ClInclude Include="..\..\..\Test\test.h" />
+    <ClInclude Include="..\..\..\Test\uri.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{743020E8-FB7B-4D9A-B028-2AF8B24CFE2A}</ProjectGuid>

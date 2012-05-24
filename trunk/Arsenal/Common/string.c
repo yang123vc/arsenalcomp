@@ -368,4 +368,13 @@ int_t			AR_CompStringWithString(const arString_t *l, const arString_t *r)
 }
 
 
+void			AR_SwapString(arString_t *l, arString_t *r)
+{
+		arString_t tmp;
+		AR_ASSERT(l != NULL && r != NULL);
+		tmp = *l;
+		*l = *r;
+		*r = tmp;
+}
+
 AR_NAMESPACE_END
