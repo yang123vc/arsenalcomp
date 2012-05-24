@@ -806,6 +806,7 @@ void			AR_SetStringChar(arString_t *str, size_t index, wchar_t c);
 int_t			AR_CompStringWithWcs(const arString_t *l, const wchar_t *r);
 int_t			AR_CompStringWithString(const arString_t *l, const arString_t *r);
 
+void			AR_SwapString(arString_t *l, arString_t *r);
 
 /********************************************************StringTable*****************************************************************/
 

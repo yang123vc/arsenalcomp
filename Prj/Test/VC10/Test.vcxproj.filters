@@ -96,6 +96,9 @@
     <ClCompile Include="..\..\..\Test\lfu_cache.c">
       <Filter>Test</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Test\uri.c">
+      <Filter>Test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Test\avltree.h">
@@ -126,6 +129,9 @@
       <Filter>Test</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Test\lfu_cache.h">
+      <Filter>Test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Test\uri.h">
       <Filter>Test</Filter>
     </ClInclude>
   </ItemGroup>
