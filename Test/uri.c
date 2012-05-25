@@ -486,8 +486,9 @@ static uriParseRet_t __parse(arURI_t *uri, const wchar_t *begin, const wchar_t *
 		{
 				while(s < end && *s != L':' && *s != L'?' && *s != L'#' && *s != L'/')
 				{
-						ret.status = AR_AppendCharToString(tmp, *s);
+						ret.status = AR_AppendCharToString(tmp, AR_towlower(*s));
 						__GOEND_IF_FAIL(ret.status == AR_S_YES, ret.status, NULL);
+						++s;
 				}
 				
 				if(s < end && *s == L':')
@@ -829,6 +830,8 @@ arStatus_t		AR_SetURI(arURI_t *uri, const wchar_t *str)
 arStatus_t		AR_GetURI(const arURI_t *uri, arString_t *str)
 {
 		AR_ASSERT(uri != NULL && str != NULL);
+		AR_ClearString(str);
+
 		return AR_E_FAIL;
 }
 
@@ -837,18 +840,24 @@ arStatus_t		AR_GetURI(const arURI_t *uri, arString_t *str)
 arStatus_t		AR_GetURIScheme(const arURI_t *uri, arString_t *str)
 {
 		AR_ASSERT(uri != NULL && str != NULL);
+		AR_ClearString(str);
+
 		return AR_CopyString(str, uri->scheme);
 }
 
 arStatus_t		AR_GetURIUserInfo(const arURI_t *uri, arString_t *str)
 {
 		AR_ASSERT(uri != NULL && str != NULL);
+		AR_ClearString(str);
+
 		return AR_CopyString(str, uri->user_info);
 }
 
 arStatus_t		AR_GetURIHost(const arURI_t *uri, arString_t *str)
 {
 		AR_ASSERT(uri != NULL && str != NULL);
+		AR_ClearString(str);
+
 		return AR_CopyString(str, uri->host);
 }
 
@@ -866,6 +875,8 @@ arStatus_t		AR_GetURIAuthority(const arURI_t *uri, arString_t *str)
 		arStatus_t status;
 		AR_ASSERT(uri != NULL && str != NULL);
 		status = AR_S_YES;
+
+		AR_ClearString(str);
 
 		if(AR_GetStringLength(uri->user_info) > 0)
 		{
@@ -904,6 +915,12 @@ arStatus_t		AR_GetURIAuthority(const arURI_t *uri, arString_t *str)
 
 END_POINT:
 		return status;
+}
+
+arStatus_t		AR_GetURIPath(const arURI_t *uri, arString_t *str)
+{
+		AR_ASSERT(uri != NULL && str != NULL);
+		return AR_CopyString(str, uri->path);
 }
 
 
