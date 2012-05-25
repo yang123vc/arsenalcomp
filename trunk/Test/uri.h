@@ -57,7 +57,7 @@ arStatus_t		AR_GetURIFragment(const arURI_t *uri, arString_t *str);
 arStatus_t		AR_SetURIFragment(arURI_t *uri, const wchar_t *str);
 
 arStatus_t		AR_GetURIPathEtc(const arURI_t *uri, arString_t *str);
-arStatus_t		AR_SetURIPathEtc(const arURI_t *uri, const wchar_t *str);
+arStatus_t		AR_SetURIPathEtc(arURI_t *uri, const wchar_t *str);
 
 
 

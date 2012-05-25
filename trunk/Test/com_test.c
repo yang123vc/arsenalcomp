@@ -2956,13 +2956,18 @@ static void uri_parse_test()
 		AR_ASSERT(uri != NULL);
 
 
+		/*******************************************************************************/
 		status = AR_SetURI(uri, L"http://www.appinf.com");
 		AR_ASSERT(status == AR_S_YES);
-		
 
 		status = AR_GetURIScheme(uri, str);
 		AR_ASSERT(status == AR_S_YES);
 		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"http") == 0);
+
+		status = AR_GetURIHost(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"www.appinf.com") == 0);
+
 
 		status = AR_GetURIAuthority(uri, str);
 		AR_ASSERT(status == AR_S_YES);
@@ -2983,289 +2988,1191 @@ static void uri_parse_test()
 		AR_ASSERT(!AR_IsRelativeURI(uri));
 
 
+		/*******************************************************************************/
+		status = AR_SetURI(uri, L"http://www.appinf.com/");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"http") == 0);
+
+		status = AR_GetURIHost(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"www.appinf.com") == 0);
+
+		status = AR_GetURIAuthority(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"www.appinf.com") == 0);
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"/") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_GetStringLength(str) == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_GetStringLength(str) == 0);
+
+		AR_ASSERT(!AR_IsRelativeURI(uri));
+
+
+
+
+
+		/*******************************************************************************/
+		status = AR_SetURI(uri, L"ftp://anonymous@ftp.appinf.com/pub/");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"ftp") == 0);
+		
+		AR_ASSERT(AR_GetURIPort(uri) == 21);
+
+		AR_ASSERT(AR_GetURIUserInfo(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"anonymous") == 0);
+
+		status = AR_GetURIAuthority(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"anonymous@ftp.appinf.com") == 0);
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"/pub/") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_GetStringLength(str) == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_GetStringLength(str) == 0);
+
+		AR_ASSERT(!AR_IsRelativeURI(uri));
+
+
+
+		/*******************************************************************************/
+		status = AR_SetURI(uri, L"https://www.appinf.com/index.html#top");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"https") == 0);
+
+		status = AR_GetURIHost(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"www.appinf.com") == 0);
+
+		AR_ASSERT(AR_GetURIPort(uri) == 443);
+
+		AR_ASSERT(AR_GetURIUserInfo(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_GetStringLength(str) == 0);
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"/index.html") == 0);
+
+		
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"top") == 0);
+
+		AR_ASSERT(!AR_IsRelativeURI(uri));
+
+
+		
+		/*******************************************************************************/
+		status = AR_SetURI(uri, L"http://www.appinf.com/search.cgi?keyword=test&scope=all");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"http") == 0);
+
+		status = AR_GetURIHost(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"www.appinf.com") == 0);
+
+		AR_ASSERT(AR_GetURIPort(uri) == 80);
+
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"/search.cgi") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"keyword=test&scope=all") == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(!AR_IsRelativeURI(uri));
+
+		/*******************************************************************************/
+		status = AR_SetURI(uri, L"http://www.appinf.com/search.cgi?keyword=test&scope=all#result");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"http") == 0);
+
+		status = AR_GetURIHost(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"www.appinf.com") == 0);
+
+		AR_ASSERT(AR_GetURIPort(uri) == 80);
+
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"/search.cgi") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"keyword=test&scope=all") == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"result") == 0);
+
+		AR_ASSERT(!AR_IsRelativeURI(uri));
+
+
+		/*******************************************************************************/
+		status = AR_SetURI(uri, L"http://www.appinf.com/search.cgi?keyword=test%20encoded&scope=all#result");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"http") == 0);
+
+		status = AR_GetURIHost(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"www.appinf.com") == 0);
+
+		AR_ASSERT(AR_GetURIPort(uri) == 80);
+
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"/search.cgi") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"keyword=test encoded&scope=all") == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"result") == 0);
+
+		AR_ASSERT(!AR_IsRelativeURI(uri));
+
+
+		/*******************************************************************************/
+		status = AR_SetURI(uri, L"ldap://[2001:db8::7]/c=GB?objectClass?one");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"ldap") == 0);
+
+		status = AR_GetURIUserInfo(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIHost(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"2001:db8::7") == 0);
+
+		AR_ASSERT(AR_GetURIPort(uri) == 389);
+
+		status = AR_GetURIAuthority(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"[2001:db8::7]") == 0);
+
+
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"/c=GB") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"objectClass?one") == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(!AR_IsRelativeURI(uri));
+
+
+		/*******************************************************************************/
+		status = AR_SetURI(uri, L"mailto:John.Doe@example.com");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"mailto") == 0);
+
+		status = AR_GetURIUserInfo(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIHost(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(AR_GetURIPort(uri) == 0);
+
+		status = AR_GetURIAuthority(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"") == 0);
+
+
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"John.Doe@example.com") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(!AR_IsRelativeURI(uri));
+
+		
+		/*******************************************************************************/
+		status = AR_SetURI(uri, L"tel:+86-010-6970-1111");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"tel") == 0);
+
+		status = AR_GetURIUserInfo(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIHost(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(AR_GetURIPort(uri) == 0);
+
+		status = AR_GetURIAuthority(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"") == 0);
+
+
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"+86-010-6970-1111") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(!AR_IsRelativeURI(uri));
+
+
+
+		/*******************************************************************************/
+		status = AR_SetURI(uri, L"telnet://192.0.2.16:80");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"telnet") == 0);
+
+		status = AR_GetURIUserInfo(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIHost(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"192.0.2.16") == 0);
+
+		AR_ASSERT(AR_GetURIPort(uri) == 80);
+
+		status = AR_GetURIAuthority(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"192.0.2.16:80") == 0);
+
+
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(!AR_IsRelativeURI(uri));
+
+
+		/*******************************************************************************/
+		status = AR_SetURI(uri, L"urn:oasis:names:specification:docbook:dtd:xml:4.1.2");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"urn") == 0);
+
+		status = AR_GetURIUserInfo(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIHost(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(AR_GetURIPort(uri) == 0);
+
+		status = AR_GetURIAuthority(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"") == 0);
+
+
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"oasis:names:specification:docbook:dtd:xml:4.1.2") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(!AR_IsRelativeURI(uri));
+
+
+
+
+		/*******************************************************************************/
+		status = AR_SetURI(uri, L"");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"") == 0);
+
+		status = AR_GetURIUserInfo(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIHost(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(AR_GetURIPort(uri) == 0);
+
+		status = AR_GetURIAuthority(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"") == 0);
+
+
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+
+
+		/*******************************************************************************/
+		status = AR_SetURI(uri, L"/foo/bar");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"") == 0);
+
+		status = AR_GetURIUserInfo(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIHost(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(AR_GetURIPort(uri) == 0);
+
+		status = AR_GetURIAuthority(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"") == 0);
+
+
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"/foo/bar") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(AR_IsRelativeURI(uri));
+
+
+		/*******************************************************************************/
+		status = AR_SetURI(uri, L"./foo/bar");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"") == 0);
+
+		status = AR_GetURIUserInfo(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIHost(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(AR_GetURIPort(uri) == 0);
+
+		status = AR_GetURIAuthority(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"") == 0);
+
+
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"./foo/bar") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(AR_IsRelativeURI(uri));
+
+
+		/*******************************************************************************/
+		status = AR_SetURI(uri, L"../foo/bar");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"") == 0);
+
+		status = AR_GetURIUserInfo(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIHost(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(AR_GetURIPort(uri) == 0);
+
+		status = AR_GetURIAuthority(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"") == 0);
+
+
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"../foo/bar") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(AR_IsRelativeURI(uri));
+
+
+		/*******************************************************************************/
+		status = AR_SetURI(uri, L"index.html");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"") == 0);
+
+		status = AR_GetURIUserInfo(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIHost(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(AR_GetURIPort(uri) == 0);
+
+		status = AR_GetURIAuthority(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"") == 0);
+
+
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"index.html") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(AR_IsRelativeURI(uri));
+
+
+		/*******************************************************************************/
+		status = AR_SetURI(uri, L"index.html#frag");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"") == 0);
+
+		status = AR_GetURIUserInfo(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIHost(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(AR_GetURIPort(uri) == 0);
+
+		status = AR_GetURIAuthority(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"") == 0);
+
+
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"index.html") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"frag") == 0);
+
+		AR_ASSERT(AR_IsRelativeURI(uri));
+
+
+
+		/*******************************************************************************/
+		status = AR_SetURI(uri, L"?query=test");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"") == 0);
+
+		status = AR_GetURIUserInfo(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIHost(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(AR_GetURIPort(uri) == 0);
+
+		status = AR_GetURIAuthority(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"") == 0);
+
+
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"query=test") == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(AR_IsRelativeURI(uri));
+
+
+		/*******************************************************************************/
+		status = AR_SetURI(uri, L"?query=test#frag");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"") == 0);
+
+		status = AR_GetURIUserInfo(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIHost(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(AR_GetURIPort(uri) == 0);
+
+		status = AR_GetURIAuthority(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"") == 0);
+
+
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"query=test") == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"frag") == 0);
+
+		AR_ASSERT(AR_IsRelativeURI(uri));
+
+
+
+		/*******************************************************************************/
+		status = AR_SetURI(uri, L"#frag");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"") == 0);
+
+		status = AR_GetURIUserInfo(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIHost(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(AR_GetURIPort(uri) == 0);
+
+		status = AR_GetURIAuthority(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"") == 0);
+
+
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"frag") == 0);
+
+		AR_ASSERT(AR_IsRelativeURI(uri));
+
+
+		
+		/*******************************************************************************/
+		status = AR_SetURI(uri, L"#");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"") == 0);
+
+		status = AR_GetURIUserInfo(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIHost(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(AR_GetURIPort(uri) == 0);
+
+		status = AR_GetURIAuthority(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"") == 0);
+
+
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(AR_IsRelativeURI(uri));
+
+
+
+
+		/*******************************************************************************/
+		status = AR_SetURI(uri, L"file:///a/b/c");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"file") == 0);
+
+		status = AR_GetURIUserInfo(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIHost(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(AR_GetURIPort(uri) == 0);
+
+		status = AR_GetURIAuthority(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"") == 0);
+
+
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"/a/b/c") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(!AR_IsRelativeURI(uri));
+
+
+
+		/*******************************************************************************/
+		status = AR_SetURI(uri, L"file://localhost/a/b/c");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"file") == 0);
+
+		status = AR_GetURIUserInfo(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIHost(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"localhost") == 0);
+
+		AR_ASSERT(AR_GetURIPort(uri) == 0);
+
+		status = AR_GetURIAuthority(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"localhost") == 0);
+
+
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"/a/b/c") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(!AR_IsRelativeURI(uri));
+
+
+		
+		/*******************************************************************************/
+		status = AR_SetURI(uri, L"file:///c:/Windows/system32/");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"file") == 0);
+
+		status = AR_GetURIUserInfo(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIHost(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(AR_GetURIPort(uri) == 0);
+
+		status = AR_GetURIAuthority(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"") == 0);
+
+
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"/c:/Windows/system32/") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(!AR_IsRelativeURI(uri));
+
+
+
+		/*******************************************************************************/
+		status = AR_SetURI(uri, L"./c:/Windows/system32/");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"") == 0);
+
+		status = AR_GetURIUserInfo(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIHost(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(AR_GetURIPort(uri) == 0);
+
+		status = AR_GetURIAuthority(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"") == 0);
+
+
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"./c:/Windows/system32/") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(AR_IsRelativeURI(uri));
+
+		AR_DestroyURI(uri);
+		uri = NULL;
+		AR_DestroyString(str);
+		str = NULL;
+}
+
+static void uri_tostring_test()
+{
+		arURI_t	*uri;
+		arStatus_t status;
+		
+		status = AR_S_YES;
+		arString_t *str;
+
+		uri = AR_CreateURI(AR_CP_UTF8);
+		str = AR_CreateString();
+		
+		AR_ASSERT(uri != NULL);
+
+
+		AR_DestroyURI(uri);
+		uri = NULL;
+		AR_DestroyString(str);
+		str = NULL;
+}
+
+
+static void uri_construct_test()
+{
+
+		arURI_t	*uri;
+		arStatus_t status;
+		
+		status = AR_S_YES;
+		arString_t *str;
+
+		uri = AR_CreateURI(AR_CP_UTF8);
+		str = AR_CreateString();
+		
+		AR_ASSERT(uri != NULL);
+
+		/**************************************************************************/
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"") == 0);
+
+		status = AR_GetURIUserInfo(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIHost(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(AR_GetURIPort(uri) == 0);
+
+		status = AR_GetURIAuthority(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"") == 0);
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		
+		/**************************************************************************/
+		status = AR_SetURIScheme(uri, L"FTP");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"ftp") == 0);
+
+		status = AR_GetURIUserInfo(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIHost(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		AR_ASSERT(AR_GetURIPort(uri) == 21);
+
+		status = AR_GetURIAuthority(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"") == 0);
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
 #if(0)
-		URI uri("http://www.appinf.com");
-	assert (uri.getScheme() == "http");
-	assert (uri.getAuthority() == "www.appinf.com");
+		URI uri;
+	assert (uri.getScheme().empty());
+	assert (uri.getAuthority().empty());
+	assert (uri.getUserInfo().empty());
+	assert (uri.getHost().empty());
+	assert (uri.getPort() == 0);
 	assert (uri.getPath().empty());
 	assert (uri.getQuery().empty());
 	assert (uri.getFragment().empty());
-	assert (!uri.isRelative());
-
-	uri = "http://www.appinf.com/";
-	assert (uri.getScheme() == "http");
-	assert (uri.getAuthority() == "www.appinf.com");
-	assert (uri.getPath() == "/");
-	assert (uri.getQuery().empty());
-	assert (uri.getFragment().empty());
-	assert (!uri.isRelative());
 	
-	uri = "ftp://anonymous@ftp.appinf.com/pub/";
+	uri.setScheme("ftp");
 	assert (uri.getScheme() == "ftp");
-	assert (uri.getUserInfo() == "anonymous");
-	assert (uri.getHost() == "ftp.appinf.com");
 	assert (uri.getPort() == 21);
-	assert (uri.getAuthority() == "anonymous@ftp.appinf.com");
-	assert (uri.getPath() == "/pub/");
-	assert (uri.getQuery().empty());
-	assert (uri.getFragment().empty());
-	assert (!uri.isRelative());
-	assert (!uri.isRelative());
-
-	uri = "https://www.appinf.com/index.html#top";
-	assert (uri.getScheme() == "https");
-	assert (uri.getHost() == "www.appinf.com");
-	assert (uri.getPort() == 443);
+	
+	uri.setScheme("HTTP");
+	assert (uri.getScheme() == "http");
+	
+	uri.setAuthority("www.appinf.com");
+	assert (uri.getAuthority() == "www.appinf.com");
+	assert (uri.getPort() == 80);
+	
+	uri.setAuthority("user@services.appinf.com:8000");
+	assert (uri.getUserInfo() == "user");
+	assert (uri.getHost() == "services.appinf.com");
+	assert (uri.getPort() == 8000);
+	
+	uri.setPath("/index.html");
 	assert (uri.getPath() == "/index.html");
-	assert (uri.getQuery().empty());
-	assert (uri.getFragment() == "top");
-	assert (!uri.isRelative());
 	
-	uri = "http://www.appinf.com/search.cgi?keyword=test&scope=all";
-	assert (uri.getScheme() == "http");
-	assert (uri.getHost() == "www.appinf.com");
-	assert (uri.getPort() == 80);
-	assert (uri.getPath() == "/search.cgi");
-	assert (uri.getQuery() == "keyword=test&scope=all");
-	assert (uri.getFragment().empty());
-	assert (!uri.isRelative());
-
-	uri = "http://www.appinf.com/search.cgi?keyword=test&scope=all#result";
-	assert (uri.getScheme() == "http");
-	assert (uri.getHost() == "www.appinf.com");
-	assert (uri.getPort() == 80);
-	assert (uri.getPath() == "/search.cgi");
-	assert (uri.getQuery() == "keyword=test&scope=all");
-	assert (uri.getFragment() == "result");
-	assert (!uri.isRelative());
+	uri.setPath("/file%20with%20spaces.html");
+	assert (uri.getPath() == "/file with spaces.html");
 	
-	uri = "http://www.appinf.com/search.cgi?keyword=test%20encoded&scope=all#result";
-	assert (uri.getScheme() == "http");
-	assert (uri.getHost() == "www.appinf.com");
-	assert (uri.getPort() == 80);
-	assert (uri.getPath() == "/search.cgi");
-	assert (uri.getQuery() == "keyword=test encoded&scope=all");
-	assert (uri.getFragment() == "result");
-	assert (!uri.isRelative());
+	uri.setPathEtc("/query.cgi?query=foo");
+	assert (uri.getPath() == "/query.cgi");
+	assert (uri.getQuery() == "query=foo");
+	assert (uri.getFragment().empty());
+	assert (uri.getPathEtc() == "/query.cgi?query=foo");
+	assert (uri.getPathAndQuery() == "/query.cgi?query=foo");
 	
-	uri = "ldap://[2001:db8::7]/c=GB?objectClass?one";
-	assert (uri.getScheme() == "ldap");
-	assert (uri.getUserInfo().empty());
-	assert (uri.getHost() == "2001:db8::7");
-	assert (uri.getPort() == 389);
-	assert (uri.getAuthority() == "[2001:db8::7]");
-	assert (uri.getPath() == "/c=GB");
-	assert (uri.getQuery() == "objectClass?one");
-	assert (uri.getFragment().empty());
-	
-	uri = "mailto:John.Doe@example.com";
-	assert (uri.getScheme() == "mailto");
-	assert (uri.getUserInfo().empty());
-	assert (uri.getHost().empty());
-	assert (uri.getPort() == 0);
-	assert (uri.getAuthority().empty());
-	assert (uri.getPath() == "John.Doe@example.com");
-	assert (uri.getQuery().empty());
-	assert (uri.getFragment().empty());
-	
-	uri = "tel:+1-816-555-1212";
-	assert (uri.getScheme() == "tel");
-	assert (uri.getUserInfo().empty());
-	assert (uri.getHost().empty());
-	assert (uri.getPort() == 0);
-	assert (uri.getAuthority().empty());
-	assert (uri.getPath() == "+1-816-555-1212");
-	assert (uri.getQuery().empty());
-	assert (uri.getFragment().empty());
-	
-	uri = "telnet://192.0.2.16:80";
-	assert (uri.getScheme() == "telnet");
-	assert (uri.getUserInfo().empty());
-	assert (uri.getHost() == "192.0.2.16");
-	assert (uri.getPort() == 80);
-	assert (uri.getAuthority() == "192.0.2.16:80");
-	assert (uri.getPath().empty());
-	assert (uri.getQuery().empty());
-	assert (uri.getFragment().empty());
-	
-	uri = "urn:oasis:names:specification:docbook:dtd:xml:4.1.2";
-	assert (uri.getScheme() == "urn");
-	assert (uri.getUserInfo().empty());
-	assert (uri.getHost().empty());
-	assert (uri.getPort() == 0);
-	assert (uri.getAuthority().empty());
-	assert (uri.getPath() == "oasis:names:specification:docbook:dtd:xml:4.1.2");
-	assert (uri.getQuery().empty());
-	assert (uri.getFragment().empty());
-	
-	uri = "";
-	assert (uri.getScheme().empty());
-	assert (uri.getAuthority().empty());
-	assert (uri.getUserInfo().empty());
-	assert (uri.getHost().empty());
-	assert (uri.getPort() == 0);
-	assert (uri.getPath().empty());
-	assert (uri.getQuery().empty());
-	assert (uri.getFragment().empty());
-	assert (uri.empty());
-	
-	// relative references
-	
-	uri = "/foo/bar";
-	assert (uri.getScheme().empty());
-	assert (uri.getAuthority().empty());
-	assert (uri.getUserInfo().empty());
-	assert (uri.getHost().empty());
-	assert (uri.getPort() == 0);
-	assert (uri.getPath() == "/foo/bar");
-	assert (uri.getQuery().empty());
-	assert (uri.getFragment().empty());
-	assert (uri.isRelative());
-
-	uri = "./foo/bar";
-	assert (uri.getScheme().empty());
-	assert (uri.getAuthority().empty());
-	assert (uri.getUserInfo().empty());
-	assert (uri.getHost().empty());
-	assert (uri.getPort() == 0);
-	assert (uri.getPath() == "./foo/bar");
-	assert (uri.getQuery().empty());
-	assert (uri.getFragment().empty());
-	assert (uri.isRelative());
-
-	uri = "../foo/bar";
-	assert (uri.getScheme().empty());
-	assert (uri.getAuthority().empty());
-	assert (uri.getUserInfo().empty());
-	assert (uri.getHost().empty());
-	assert (uri.getPort() == 0);
-	assert (uri.getPath() == "../foo/bar");
-	assert (uri.getQuery().empty());
-	assert (uri.getFragment().empty());
-	assert (uri.isRelative());
-
-	uri = "index.html";
-	assert (uri.getScheme().empty());
-	assert (uri.getAuthority().empty());
-	assert (uri.getUserInfo().empty());
-	assert (uri.getHost().empty());
-	assert (uri.getPort() == 0);
-	assert (uri.getPath() == "index.html");
-	assert (uri.getQuery().empty());
-	assert (uri.getFragment().empty());
-	assert (uri.isRelative());
-
-	uri = "index.html#frag";
-	assert (uri.getScheme().empty());
-	assert (uri.getAuthority().empty());
-	assert (uri.getUserInfo().empty());
-	assert (uri.getHost().empty());
-	assert (uri.getPort() == 0);
-	assert (uri.getPath() == "index.html");
-	assert (uri.getQuery().empty());
+	uri.setPathEtc("/query.cgi?query=bar#frag");
+	assert (uri.getPath() == "/query.cgi");
+	assert (uri.getQuery() == "query=bar");
 	assert (uri.getFragment() == "frag");
-	assert (uri.isRelative());
+	assert (uri.getPathEtc() == "/query.cgi?query=bar#frag");
+	assert (uri.getPathAndQuery() == "/query.cgi?query=bar");
 	
-	uri = "?query=test";	
-	assert (uri.getScheme().empty());
-	assert (uri.getAuthority().empty());
-	assert (uri.getUserInfo().empty());
-	assert (uri.getHost().empty());
-	assert (uri.getPort() == 0);
-	assert (uri.getPath().empty());
+	uri.setQuery("query=test");
 	assert (uri.getQuery() == "query=test");
-	assert (uri.getFragment().empty());
-	assert (uri.isRelative());
-
-	uri = "?query=test#frag";	
-	assert (uri.getScheme().empty());
-	assert (uri.getAuthority().empty());
-	assert (uri.getUserInfo().empty());
-	assert (uri.getHost().empty());
-	assert (uri.getPort() == 0);
-	assert (uri.getPath().empty());
-	assert (uri.getQuery() == "query=test");
-	assert (uri.getFragment() == "frag");
-	assert (uri.isRelative());
 	
-	uri = "#frag";	
-	assert (uri.getScheme().empty());
-	assert (uri.getAuthority().empty());
-	assert (uri.getUserInfo().empty());
-	assert (uri.getHost().empty());
-	assert (uri.getPort() == 0);
-	assert (uri.getPath().empty());
-	assert (uri.getQuery().empty());
-	assert (uri.getFragment() == "frag");
-	assert (uri.isRelative());
-
-	uri = "#";	
-	assert (uri.getScheme().empty());
-	assert (uri.getAuthority().empty());
-	assert (uri.getUserInfo().empty());
-	assert (uri.getHost().empty());
-	assert (uri.getPort() == 0);
-	assert (uri.getPath().empty());
-	assert (uri.getQuery().empty());
-	assert (uri.getFragment().empty());
-	assert (uri.isRelative());
+	uri.setFragment("result");
+	assert (uri.getFragment() == "result");
 	
-	uri = "file:///a/b/c";
-	assert (uri.getScheme() == "file");
-	assert (uri.getAuthority().empty());
-	assert (uri.getUserInfo().empty());
-	assert (uri.getHost().empty());
-	assert (uri.getPort() == 0);
-	assert (uri.getPath() == "/a/b/c");
-	assert (uri.getQuery().empty());
-	assert (uri.getFragment().empty());
-	assert (!uri.isRelative());
-
-	uri = "file://localhost/a/b/c";
-	assert (uri.getScheme() == "file");
-	assert (uri.getAuthority() == "localhost");
-	assert (uri.getUserInfo().empty());
-	assert (uri.getHost() == "localhost");
-	assert (uri.getPort() == 0);
-	assert (uri.getPath() == "/a/b/c");
-	assert (uri.getQuery().empty());
-	assert (uri.getFragment().empty());
-	assert (!uri.isRelative());
+	URI uri2("file", "/home/guenter/foo.bar");
+	assert (uri2.getScheme() == "file");
+	assert (uri2.getPath() == "/home/guenter/foo.bar");
 	
-	uri = "file:///c:/Windows/system32/";
-	assert (uri.getScheme() == "file");
-	assert (uri.getAuthority().empty());
-	assert (uri.getUserInfo().empty());
-	assert (uri.getHost().empty());
-	assert (uri.getPort() == 0);
-	assert (uri.getPath() == "/c:/Windows/system32/");
-	assert (uri.getQuery().empty());
-	assert (uri.getFragment().empty());
-	assert (!uri.isRelative());
+	URI uri3("http", "www.appinf.com", "/index.html");
+	assert (uri3.getScheme() == "http");
+	assert (uri3.getAuthority() == "www.appinf.com");
+	assert (uri3.getPath() == "/index.html");
+	
+	URI uri4("http", "www.appinf.com:8000", "/index.html");
+	assert (uri4.getScheme() == "http");
+	assert (uri4.getAuthority() == "www.appinf.com:8000");
+	assert (uri4.getPath() == "/index.html");
 
-	uri = "./c:/Windows/system32/";
-	assert (uri.getScheme().empty());
-	assert (uri.getAuthority().empty());
-	assert (uri.getUserInfo().empty());
-	assert (uri.getHost().empty());
-	assert (uri.getPort() == 0);
-	assert (uri.getPath() == "./c:/Windows/system32/");
-	assert (uri.getQuery().empty());
-	assert (uri.getFragment().empty());
-	assert (uri.isRelative());
+	URI uri5("http", "user@www.appinf.com:8000", "/index.html");
+	assert (uri5.getScheme() == "http");
+	assert (uri5.getUserInfo() == "user");
+	assert (uri5.getHost() == "www.appinf.com");
+	assert (uri5.getPort() == 8000);
+	assert (uri5.getAuthority() == "user@www.appinf.com:8000");
+	assert (uri5.getPath() == "/index.html");
+
+	URI uri6("http", "user@www.appinf.com:80", "/index.html");
+	assert (uri6.getScheme() == "http");
+	assert (uri6.getUserInfo() == "user");
+	assert (uri6.getHost() == "www.appinf.com");
+	assert (uri6.getPort() == 80);
+	assert (uri6.getAuthority() == "user@www.appinf.com");
+	assert (uri6.getPath() == "/index.html");
+
+	URI uri7("http", "user@www.appinf.com:", "/index.html");
+	assert (uri7.getScheme() == "http");
+	assert (uri7.getUserInfo() == "user");
+	assert (uri7.getHost() == "www.appinf.com");
+	assert (uri7.getPort() == 80);
+	assert (uri7.getAuthority() == "user@www.appinf.com");
+	assert (uri7.getPath() == "/index.html");
+	
+	URI uri8("http", "www.appinf.com", "/index.html", "query=test");
+	assert (uri8.getScheme() == "http");
+	assert (uri8.getAuthority() == "www.appinf.com");
+	assert (uri8.getPath() == "/index.html");
+	assert (uri8.getQuery() == "query=test");
+
+	URI uri9("http", "www.appinf.com", "/index.html", "query=test", "fragment");
+	assert (uri9.getScheme() == "http");
+	assert (uri9.getAuthority() == "www.appinf.com");
+	assert (uri9.getPath() == "/index.html");
+	assert (uri9.getPathEtc() == "/index.html?query=test#fragment");
+	assert (uri9.getQuery() == "query=test");
+	assert (uri9.getFragment() == "fragment");
+
+	uri9.clear();
+	assert (uri9.getScheme().empty());
+	assert (uri9.getAuthority().empty());
+	assert (uri9.getUserInfo().empty());
+	assert (uri9.getHost().empty());
+	assert (uri9.getPort() == 0);
+	assert (uri9.getPath().empty());
+	assert (uri9.getQuery().empty());
+	assert (uri9.getFragment().empty());
+
+	URI uri10("ldap", "[2001:db8::7]", "/c=GB?objectClass?one");
+	assert (uri10.getScheme() == "ldap");
+	assert (uri10.getUserInfo().empty());
+	assert (uri10.getHost() == "2001:db8::7");
+	assert (uri10.getPort() == 389);
+	assert (uri10.getAuthority() == "[2001:db8::7]");
+	assert (uri10.getPathEtc() == "/c=GB?objectClass?one");
+	
+	URI uri11("http", "www.appinf.com", "/index.html?query=test#fragment");
+	assert (uri11.getScheme() == "http");
+	assert (uri11.getAuthority() == "www.appinf.com");
+	assert (uri11.getPath() == "/index.html");
+	assert (uri11.getPathEtc() == "/index.html?query=test#fragment");
+	assert (uri11.getQuery() == "query=test");
+	assert (uri11.getFragment() == "fragment");
 #endif
 
-
-
-	AR_DestroyURI(uri);
-	uri = NULL;
-	AR_DestroyString(str);
-	str = NULL;
+		AR_DestroyURI(uri);
+		uri = NULL;
+		AR_DestroyString(str);
+		str = NULL;
 }
 
 static void uri_test()
 {
+		uri_construct_test();
 		uri_parse_test();
+		uri_tostring_test();
 }
 
 

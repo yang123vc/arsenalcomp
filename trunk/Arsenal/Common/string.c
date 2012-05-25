@@ -411,4 +411,25 @@ void			AR_SwapString(arString_t *l, arString_t *r)
 		*r = tmp;
 }
 
+void			AR_StringToLower(arString_t *str)
+{
+		size_t i;
+		AR_ASSERT(str != NULL);
+		for(i = 0; i < str->count; ++i)
+		{
+				str->str[i] = AR_towlower(str->str[i]);
+		}
+
+}
+
+void			AR_StringToUpper(arString_t *str)
+{
+		size_t i;
+		AR_ASSERT(str != NULL);
+		for(i = 0; i < str->count; ++i)
+		{
+				str->str[i] = AR_towupper(str->str[i]);
+		}
+}
+
 AR_NAMESPACE_END
