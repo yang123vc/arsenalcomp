@@ -65,6 +65,13 @@ arStatus_t		AR_SetString(arString_t *str, const wchar_t *wcs)
 		return AR_AppendString(str, wcs);
 }
 
+
+arStatus_t		AR_CopyString(arString_t *src, const arString_t *dest)
+{
+		AR_ASSERT(src != NULL && dest != NULL);
+		return AR_SetString(src, AR_GetStringCString(dest));
+}
+
 const wchar_t*	AR_GetStringCString(const arString_t *str)
 {
 		AR_ASSERT(str != NULL && str->str != NULL);
@@ -182,7 +189,34 @@ arStatus_t	AR_AppendString(arString_t *str, const wchar_t *sour)
 
 }
 
+arStatus_t		AR_AppendStringN(arString_t *str, const wchar_t *sour, size_t n)
+{
+		size_t i;
+		arStatus_t ret;
+		AR_ASSERT(str != NULL && sour != NULL);
 
+		if(n == 0)
+		{
+				return AR_S_YES;
+		}
+
+		
+		ret = AR_ReserveString(str,n);
+
+		if(ret != AR_S_YES)
+		{
+				return ret;
+		}
+
+		
+		for(i = 0; i < n && sour[i] != L'\0'; ++i)
+		{
+				str->str[str->count++] = sour[i];
+		}
+		str->str[str->count] = L'\0';
+		
+		return ret;
+}
 
 
 
@@ -361,7 +395,7 @@ int_t			AR_CompStringWithWcs(const arString_t *l, const wchar_t *r)
 		return AR_wcscmp(AR_GetStringCString(l), r);
 }
 
-int_t			AR_CompStringWithString(const arString_t *l, const arString_t *r)
+int_t			AR_CompString(const arString_t *l, const arString_t *r)
 {
 		AR_ASSERT(l != NULL && r != NULL);
 		return AR_wcscmp(AR_GetStringCString(l), AR_GetStringCString(r));

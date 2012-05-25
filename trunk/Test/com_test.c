@@ -2941,7 +2941,287 @@ void cache_test()
 
 
 
+static void uri_parse_test()
+{
 
+#if(0)
+		URI uri("http://www.appinf.com");
+	assert (uri.getScheme() == "http");
+	assert (uri.getAuthority() == "www.appinf.com");
+	assert (uri.getPath().empty());
+	assert (uri.getQuery().empty());
+	assert (uri.getFragment().empty());
+	assert (!uri.isRelative());
+
+	uri = "http://www.appinf.com/";
+	assert (uri.getScheme() == "http");
+	assert (uri.getAuthority() == "www.appinf.com");
+	assert (uri.getPath() == "/");
+	assert (uri.getQuery().empty());
+	assert (uri.getFragment().empty());
+	assert (!uri.isRelative());
+	
+	uri = "ftp://anonymous@ftp.appinf.com/pub/";
+	assert (uri.getScheme() == "ftp");
+	assert (uri.getUserInfo() == "anonymous");
+	assert (uri.getHost() == "ftp.appinf.com");
+	assert (uri.getPort() == 21);
+	assert (uri.getAuthority() == "anonymous@ftp.appinf.com");
+	assert (uri.getPath() == "/pub/");
+	assert (uri.getQuery().empty());
+	assert (uri.getFragment().empty());
+	assert (!uri.isRelative());
+	assert (!uri.isRelative());
+
+	uri = "https://www.appinf.com/index.html#top";
+	assert (uri.getScheme() == "https");
+	assert (uri.getHost() == "www.appinf.com");
+	assert (uri.getPort() == 443);
+	assert (uri.getPath() == "/index.html");
+	assert (uri.getQuery().empty());
+	assert (uri.getFragment() == "top");
+	assert (!uri.isRelative());
+	
+	uri = "http://www.appinf.com/search.cgi?keyword=test&scope=all";
+	assert (uri.getScheme() == "http");
+	assert (uri.getHost() == "www.appinf.com");
+	assert (uri.getPort() == 80);
+	assert (uri.getPath() == "/search.cgi");
+	assert (uri.getQuery() == "keyword=test&scope=all");
+	assert (uri.getFragment().empty());
+	assert (!uri.isRelative());
+
+	uri = "http://www.appinf.com/search.cgi?keyword=test&scope=all#result";
+	assert (uri.getScheme() == "http");
+	assert (uri.getHost() == "www.appinf.com");
+	assert (uri.getPort() == 80);
+	assert (uri.getPath() == "/search.cgi");
+	assert (uri.getQuery() == "keyword=test&scope=all");
+	assert (uri.getFragment() == "result");
+	assert (!uri.isRelative());
+	
+	uri = "http://www.appinf.com/search.cgi?keyword=test%20encoded&scope=all#result";
+	assert (uri.getScheme() == "http");
+	assert (uri.getHost() == "www.appinf.com");
+	assert (uri.getPort() == 80);
+	assert (uri.getPath() == "/search.cgi");
+	assert (uri.getQuery() == "keyword=test encoded&scope=all");
+	assert (uri.getFragment() == "result");
+	assert (!uri.isRelative());
+	
+	uri = "ldap://[2001:db8::7]/c=GB?objectClass?one";
+	assert (uri.getScheme() == "ldap");
+	assert (uri.getUserInfo().empty());
+	assert (uri.getHost() == "2001:db8::7");
+	assert (uri.getPort() == 389);
+	assert (uri.getAuthority() == "[2001:db8::7]");
+	assert (uri.getPath() == "/c=GB");
+	assert (uri.getQuery() == "objectClass?one");
+	assert (uri.getFragment().empty());
+	
+	uri = "mailto:John.Doe@example.com";
+	assert (uri.getScheme() == "mailto");
+	assert (uri.getUserInfo().empty());
+	assert (uri.getHost().empty());
+	assert (uri.getPort() == 0);
+	assert (uri.getAuthority().empty());
+	assert (uri.getPath() == "John.Doe@example.com");
+	assert (uri.getQuery().empty());
+	assert (uri.getFragment().empty());
+	
+	uri = "tel:+1-816-555-1212";
+	assert (uri.getScheme() == "tel");
+	assert (uri.getUserInfo().empty());
+	assert (uri.getHost().empty());
+	assert (uri.getPort() == 0);
+	assert (uri.getAuthority().empty());
+	assert (uri.getPath() == "+1-816-555-1212");
+	assert (uri.getQuery().empty());
+	assert (uri.getFragment().empty());
+	
+	uri = "telnet://192.0.2.16:80";
+	assert (uri.getScheme() == "telnet");
+	assert (uri.getUserInfo().empty());
+	assert (uri.getHost() == "192.0.2.16");
+	assert (uri.getPort() == 80);
+	assert (uri.getAuthority() == "192.0.2.16:80");
+	assert (uri.getPath().empty());
+	assert (uri.getQuery().empty());
+	assert (uri.getFragment().empty());
+	
+	uri = "urn:oasis:names:specification:docbook:dtd:xml:4.1.2";
+	assert (uri.getScheme() == "urn");
+	assert (uri.getUserInfo().empty());
+	assert (uri.getHost().empty());
+	assert (uri.getPort() == 0);
+	assert (uri.getAuthority().empty());
+	assert (uri.getPath() == "oasis:names:specification:docbook:dtd:xml:4.1.2");
+	assert (uri.getQuery().empty());
+	assert (uri.getFragment().empty());
+	
+	uri = "";
+	assert (uri.getScheme().empty());
+	assert (uri.getAuthority().empty());
+	assert (uri.getUserInfo().empty());
+	assert (uri.getHost().empty());
+	assert (uri.getPort() == 0);
+	assert (uri.getPath().empty());
+	assert (uri.getQuery().empty());
+	assert (uri.getFragment().empty());
+	assert (uri.empty());
+	
+	// relative references
+	
+	uri = "/foo/bar";
+	assert (uri.getScheme().empty());
+	assert (uri.getAuthority().empty());
+	assert (uri.getUserInfo().empty());
+	assert (uri.getHost().empty());
+	assert (uri.getPort() == 0);
+	assert (uri.getPath() == "/foo/bar");
+	assert (uri.getQuery().empty());
+	assert (uri.getFragment().empty());
+	assert (uri.isRelative());
+
+	uri = "./foo/bar";
+	assert (uri.getScheme().empty());
+	assert (uri.getAuthority().empty());
+	assert (uri.getUserInfo().empty());
+	assert (uri.getHost().empty());
+	assert (uri.getPort() == 0);
+	assert (uri.getPath() == "./foo/bar");
+	assert (uri.getQuery().empty());
+	assert (uri.getFragment().empty());
+	assert (uri.isRelative());
+
+	uri = "../foo/bar";
+	assert (uri.getScheme().empty());
+	assert (uri.getAuthority().empty());
+	assert (uri.getUserInfo().empty());
+	assert (uri.getHost().empty());
+	assert (uri.getPort() == 0);
+	assert (uri.getPath() == "../foo/bar");
+	assert (uri.getQuery().empty());
+	assert (uri.getFragment().empty());
+	assert (uri.isRelative());
+
+	uri = "index.html";
+	assert (uri.getScheme().empty());
+	assert (uri.getAuthority().empty());
+	assert (uri.getUserInfo().empty());
+	assert (uri.getHost().empty());
+	assert (uri.getPort() == 0);
+	assert (uri.getPath() == "index.html");
+	assert (uri.getQuery().empty());
+	assert (uri.getFragment().empty());
+	assert (uri.isRelative());
+
+	uri = "index.html#frag";
+	assert (uri.getScheme().empty());
+	assert (uri.getAuthority().empty());
+	assert (uri.getUserInfo().empty());
+	assert (uri.getHost().empty());
+	assert (uri.getPort() == 0);
+	assert (uri.getPath() == "index.html");
+	assert (uri.getQuery().empty());
+	assert (uri.getFragment() == "frag");
+	assert (uri.isRelative());
+	
+	uri = "?query=test";	
+	assert (uri.getScheme().empty());
+	assert (uri.getAuthority().empty());
+	assert (uri.getUserInfo().empty());
+	assert (uri.getHost().empty());
+	assert (uri.getPort() == 0);
+	assert (uri.getPath().empty());
+	assert (uri.getQuery() == "query=test");
+	assert (uri.getFragment().empty());
+	assert (uri.isRelative());
+
+	uri = "?query=test#frag";	
+	assert (uri.getScheme().empty());
+	assert (uri.getAuthority().empty());
+	assert (uri.getUserInfo().empty());
+	assert (uri.getHost().empty());
+	assert (uri.getPort() == 0);
+	assert (uri.getPath().empty());
+	assert (uri.getQuery() == "query=test");
+	assert (uri.getFragment() == "frag");
+	assert (uri.isRelative());
+	
+	uri = "#frag";	
+	assert (uri.getScheme().empty());
+	assert (uri.getAuthority().empty());
+	assert (uri.getUserInfo().empty());
+	assert (uri.getHost().empty());
+	assert (uri.getPort() == 0);
+	assert (uri.getPath().empty());
+	assert (uri.getQuery().empty());
+	assert (uri.getFragment() == "frag");
+	assert (uri.isRelative());
+
+	uri = "#";	
+	assert (uri.getScheme().empty());
+	assert (uri.getAuthority().empty());
+	assert (uri.getUserInfo().empty());
+	assert (uri.getHost().empty());
+	assert (uri.getPort() == 0);
+	assert (uri.getPath().empty());
+	assert (uri.getQuery().empty());
+	assert (uri.getFragment().empty());
+	assert (uri.isRelative());
+	
+	uri = "file:///a/b/c";
+	assert (uri.getScheme() == "file");
+	assert (uri.getAuthority().empty());
+	assert (uri.getUserInfo().empty());
+	assert (uri.getHost().empty());
+	assert (uri.getPort() == 0);
+	assert (uri.getPath() == "/a/b/c");
+	assert (uri.getQuery().empty());
+	assert (uri.getFragment().empty());
+	assert (!uri.isRelative());
+
+	uri = "file://localhost/a/b/c";
+	assert (uri.getScheme() == "file");
+	assert (uri.getAuthority() == "localhost");
+	assert (uri.getUserInfo().empty());
+	assert (uri.getHost() == "localhost");
+	assert (uri.getPort() == 0);
+	assert (uri.getPath() == "/a/b/c");
+	assert (uri.getQuery().empty());
+	assert (uri.getFragment().empty());
+	assert (!uri.isRelative());
+	
+	uri = "file:///c:/Windows/system32/";
+	assert (uri.getScheme() == "file");
+	assert (uri.getAuthority().empty());
+	assert (uri.getUserInfo().empty());
+	assert (uri.getHost().empty());
+	assert (uri.getPort() == 0);
+	assert (uri.getPath() == "/c:/Windows/system32/");
+	assert (uri.getQuery().empty());
+	assert (uri.getFragment().empty());
+	assert (!uri.isRelative());
+
+	uri = "./c:/Windows/system32/";
+	assert (uri.getScheme().empty());
+	assert (uri.getAuthority().empty());
+	assert (uri.getUserInfo().empty());
+	assert (uri.getHost().empty());
+	assert (uri.getPort() == 0);
+	assert (uri.getPath() == "./c:/Windows/system32/");
+	assert (uri.getQuery().empty());
+	assert (uri.getFragment().empty());
+	assert (uri.isRelative());
+#endif
+
+}
+
+static void uri_test()
+{
+		uri_parse_test();
+}
 
 
 
@@ -3040,7 +3320,9 @@ void com_test()
 
 		//operation_test();
 
-		cache_test();
+		//cache_test();
+
+		uri_test();
 }
 
 
