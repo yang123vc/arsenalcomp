@@ -7,6 +7,7 @@
 
 #include "lfu_cache.h"
 #include "Operation.h"
+#include "uri.h"
 
 #if defined(__LIB)
 
@@ -2943,6 +2944,44 @@ void cache_test()
 
 static void uri_parse_test()
 {
+		arURI_t	*uri;
+		arStatus_t status;
+		
+		status = AR_S_YES;
+		arString_t *str;
+
+		uri = AR_CreateURI(AR_CP_UTF8);
+		str = AR_CreateString();
+		
+		AR_ASSERT(uri != NULL);
+
+
+		status = AR_SetURI(uri, L"http://www.appinf.com");
+		AR_ASSERT(status == AR_S_YES);
+		
+
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"http") == 0);
+
+		status = AR_GetURIAuthority(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"www.appinf.com") == 0);
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_GetStringLength(str) == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_GetStringLength(str) == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_GetStringLength(str) == 0);
+
+		AR_ASSERT(!AR_IsRelativeURI(uri));
+
 
 #if(0)
 		URI uri("http://www.appinf.com");
@@ -3216,6 +3255,12 @@ static void uri_parse_test()
 	assert (uri.isRelative());
 #endif
 
+
+
+	AR_DestroyURI(uri);
+	uri = NULL;
+	AR_DestroyString(str);
+	str = NULL;
 }
 
 static void uri_test()
