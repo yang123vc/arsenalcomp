@@ -796,6 +796,7 @@ arStatus_t		AR_AppendCharToString(arString_t *str, wchar_t chr);
 arStatus_t		AR_SetString(arString_t *str, const wchar_t *wcs);
 arStatus_t		AR_CopyString(arString_t *src, const arString_t *dest);
 
+
 const wchar_t*	AR_GetStringCString(const arString_t *str);
 #define			AR_CSTR		AR_GetStringCString
 
@@ -810,6 +811,10 @@ void			AR_SetStringChar(arString_t *str, size_t index, wchar_t c);
 
 int_t			AR_CompStringWithWcs(const arString_t *l, const wchar_t *r);
 int_t			AR_CompString(const arString_t *l, const arString_t *r);
+
+
+void			AR_StringToLower(arString_t *l);
+void			AR_StringToUpper(arString_t *l);
 
 void			AR_SwapString(arString_t *l, arString_t *r);
 

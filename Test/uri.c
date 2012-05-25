@@ -373,58 +373,58 @@ static uint_16_t	__get_well_known_port(const arURI_t *uri)
 {
 		AR_ASSERT(uri != NULL);
 
-		if(AR_CompStringWithWcs(uri->scheme, L"ftp"))
+		if(AR_CompStringWithWcs(uri->scheme, L"ftp") == 0)
 		{
 				return 21;
 		}
 
 
-		if(AR_CompStringWithWcs(uri->scheme, L"ssh"))
+		if(AR_CompStringWithWcs(uri->scheme, L"ssh") == 0)
 		{
 				return 22;
 		}
 
-		if(AR_CompStringWithWcs(uri->scheme, L"telnet"))
+		if(AR_CompStringWithWcs(uri->scheme, L"telnet") == 0)
 		{
 				return 23;
 		}
 
-		if(AR_CompStringWithWcs(uri->scheme, L"http"))
+		if(AR_CompStringWithWcs(uri->scheme, L"http") == 0)
 		{
 				return 80;
 		}
 
-		if(AR_CompStringWithWcs(uri->scheme, L"nntp"))
+		if(AR_CompStringWithWcs(uri->scheme, L"nntp") == 0)
 		{
 				return 119;
 		}
 
-		if(AR_CompStringWithWcs(uri->scheme, L"ladp"))
+		if(AR_CompStringWithWcs(uri->scheme, L"ldap") == 0)
 		{
 				return 389;
 		}
 
-		if(AR_CompStringWithWcs(uri->scheme, L"https"))
+		if(AR_CompStringWithWcs(uri->scheme, L"https") == 0)
 		{
 				return 443;
 		}
 
-		if(AR_CompStringWithWcs(uri->scheme, L"rtsp"))
+		if(AR_CompStringWithWcs(uri->scheme, L"rtsp") == 0)
 		{
 				return 554;
 		}
 
-		if(AR_CompStringWithWcs(uri->scheme, L"sip"))
+		if(AR_CompStringWithWcs(uri->scheme, L"sip") == 0)
 		{
 				return 5060;
 		}
 
-		if(AR_CompStringWithWcs(uri->scheme, L"sips"))
+		if(AR_CompStringWithWcs(uri->scheme, L"sips") == 0)
 		{
 				return 5061;
 		}
 
-		if(AR_CompStringWithWcs(uri->scheme, L"xmpp"))
+		if(AR_CompStringWithWcs(uri->scheme, L"xmpp") == 0)
 		{
 				return 5222;
 		}
@@ -486,7 +486,7 @@ static uriParseRet_t __parse(arURI_t *uri, const wchar_t *begin, const wchar_t *
 		{
 				while(s < end && *s != L':' && *s != L'?' && *s != L'#' && *s != L'/')
 				{
-						ret.status = AR_AppendCharToString(tmp, AR_towlower(*s));
+						ret.status = AR_AppendCharToString(tmp, *s);
 						__GOEND_IF_FAIL(ret.status == AR_S_YES, ret.status, NULL);
 						++s;
 				}
@@ -495,6 +495,7 @@ static uriParseRet_t __parse(arURI_t *uri, const wchar_t *begin, const wchar_t *
 				{
 						++s;
 						__GOEND_IF_FAIL(s < e, AR_E_INVAL, s - 1);
+						AR_StringToLower(tmp);
 						AR_SwapString(uri->scheme, tmp);
 						AR_ClearString(tmp);
 						
@@ -524,6 +525,13 @@ static uriParseRet_t __parse(arURI_t *uri, const wchar_t *begin, const wchar_t *
 				ret = __parse_pathetc(uri, begin, end);
 		}
 		
+		/*
+		if(uri->port == 0)
+		{
+				uri->port = __get_well_known_port(uri);
+		}
+		*/
+
 END_POINT:
 		if(tmp != NULL)
 		{
@@ -657,8 +665,12 @@ static uriParseRet_t __parse_host_port(arURI_t *uri, const wchar_t *begin, const
 				{
 						uri->port = __get_well_known_port(uri);
 				}
+		}else
+		{
+				uri->port = __get_well_known_port(uri);
 		}
 
+		AR_StringToLower(host);
 		AR_SwapString(uri->host, host);
 		ret.next = s;
 		ret.err_pos = NULL;
@@ -904,7 +916,7 @@ arStatus_t		AR_GetURIAuthority(const arURI_t *uri, arString_t *str)
 				__GOEND_IF_FAIL2(status == AR_S_YES, status);
 		}
 
-		if(uri->port > 0 && __get_well_known_port(uri) != 0)
+		if(uri->port > 0 && __get_well_known_port(uri) != uri->port)
 		{
 				status = AR_AppendString(str, L":");
 				__GOEND_IF_FAIL2(status == AR_S_YES, status);
@@ -969,16 +981,87 @@ END_POINT:
 }
 
 
-arStatus_t		AR_SetURIScheme(arURI_t *uri, const wchar_t *str);
-arStatus_t		AR_SetURIUserInfo(arURI_t *uri, const wchar_t *str);
-arStatus_t		AR_SetURIHost(arURI_t *uri, const wchar_t *str);
-void			AR_SetURIPort(arURI_t *uri, uint_16_t port);
-arStatus_t		AR_SetURIAuthority(arURI_t *uri, const wchar_t *str);
-arStatus_t		AR_SetURIPath(arURI_t *uri, const wchar_t *str);
-arStatus_t		AR_SetURIRawQuery(arURI_t *uri, const wchar_t *str);
-arStatus_t		AR_SetURIQuery(arURI_t *uri, const wchar_t *str);
-arStatus_t		AR_SetURIFragment(arURI_t *uri, const wchar_t *str);
-arStatus_t		AR_SetURIPathEtc(const arURI_t *uri, const wchar_t *str);
+arStatus_t		AR_SetURIScheme(arURI_t *uri, const wchar_t *str)
+{
+		arStatus_t status;
+		AR_ASSERT(uri != NULL && str != NULL);
+		status = AR_SetString(uri->scheme, str);
+		AR_StringToLower(uri->scheme);
+		if(status == AR_S_YES)
+		{
+				uri->port = __get_well_known_port(uri);
+		}
+
+		return status;
+
+}
+
+arStatus_t		AR_SetURIUserInfo(arURI_t *uri, const wchar_t *str)
+{
+		AR_ASSERT(uri != NULL && str != NULL);
+		AR_ClearString(uri->user_info);
+		return __decode(uri->code_page, str, str + AR_wcslen(str), uri->user_info);
+		
+}
+
+arStatus_t		AR_SetURIHost(arURI_t *uri, const wchar_t *str)
+{
+		AR_ASSERT(uri != NULL && str != NULL);
+		return AR_SetString(uri->host, str);
+}
+
+
+void			AR_SetURIPort(arURI_t *uri, uint_16_t port)
+{
+		AR_ASSERT(uri != NULL);
+		uri->port = port;
+}
+
+arStatus_t		AR_SetURIAuthority(arURI_t *uri, const wchar_t *str)
+{
+		uriParseRet_t	ret;
+		AR_ASSERT(uri != NULL && str != NULL);
+		ret.status = AR_S_YES;
+		ret.err_pos = NULL;
+		ret.next = NULL;
+		AR_ClearString(uri->user_info);
+		AR_ClearString(uri->host);
+		uri->port = 0;
+
+		ret = __parse_authority(uri, str, str + AR_wcslen(str));
+
+		return ret.status;
+}
+
+arStatus_t		AR_SetURIPath(arURI_t *uri, const wchar_t *str)
+{
+		AR_ASSERT(uri != NULL && str != NULL);
+		return __decode(uri->code_page, str, str + AR_wcslen(str), uri->path);
+}
+
+arStatus_t		AR_SetURIQuery(arURI_t *uri, const wchar_t *str)
+{
+		AR_ASSERT(uri != NULL && str != NULL);
+		return __decode(uri->code_page, str, str + AR_wcslen(str), uri->query);
+}
+
+
+arStatus_t		AR_SetURIFragment(arURI_t *uri, const wchar_t *str)
+{
+		AR_ASSERT(uri != NULL && str != NULL);
+		return __decode(uri->code_page, str, str + AR_wcslen(str), uri->fragment);
+}
+
+arStatus_t		AR_SetURIPathEtc(arURI_t *uri, const wchar_t *str)
+{
+
+		AR_ASSERT(uri != NULL && str != NULL);
+		AR_ClearString(uri->path);
+		AR_ClearString(uri->query);
+		AR_ClearString(uri->fragment);
+		return __parse_pathetc(uri, str, str + AR_wcslen(str)).status;
+}
+
 
 
 
