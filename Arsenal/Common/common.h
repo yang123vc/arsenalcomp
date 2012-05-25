@@ -782,6 +782,7 @@ void			AR_DestroyString(arString_t *str);
 arStatus_t		AR_ReserveString(arString_t *str, size_t num);
 void			AR_ClearString(arString_t *str);
 arStatus_t		AR_AppendString(arString_t *str, const wchar_t *sour);
+arStatus_t		AR_AppendStringN(arString_t *str, const wchar_t *sour, size_t n);
 
 arStatus_t		AR_FormatString(arString_t *str, const wchar_t *fmt, ...);
 arStatus_t		AR_AppendFormatString(arString_t *str, const wchar_t *fmt, ...);
@@ -793,7 +794,11 @@ arStatus_t		AR_AppendVFormatString(arString_t *str, const wchar_t *fmt, va_list 
 arStatus_t		AR_AppendCharToString(arString_t *str, wchar_t chr);
 
 arStatus_t		AR_SetString(arString_t *str, const wchar_t *wcs);
+arStatus_t		AR_CopyString(arString_t *src, const arString_t *dest);
+
 const wchar_t*	AR_GetStringCString(const arString_t *str);
+#define			AR_CSTR		AR_GetStringCString
+
 size_t			AR_GetStringLength(const arString_t *str);
 
 wchar_t			AR_GetStringChar(const arString_t *str, size_t index);
@@ -804,9 +809,11 @@ void			AR_SetStringChar(arString_t *str, size_t index, wchar_t c);
 #define			AR_StrPrintCtx(_ctx, _s)do{ AR_printf_ctx((_ctx), L"%ls\r\n", AR_GetStringCString((_s))); }while(0)
 
 int_t			AR_CompStringWithWcs(const arString_t *l, const wchar_t *r);
-int_t			AR_CompStringWithString(const arString_t *l, const arString_t *r);
+int_t			AR_CompString(const arString_t *l, const arString_t *r);
 
 void			AR_SwapString(arString_t *l, arString_t *r);
+
+
 
 /********************************************************StringTable*****************************************************************/
 
