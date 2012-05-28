@@ -622,6 +622,8 @@ arStatus_t		AR_PopListFront(arList_t *lst);
 arStatus_t		AR_GetListFront(arList_t *lst, void **pdata);
 arStatus_t		AR_GetListBack(arList_t *lst, void **pdata);
 
+#define			AR_IsEmptyList(_lst)	(AR_GetListCount((_lst)) == 0 ? true : false)
+
 
 /*
 Hash
@@ -666,6 +668,7 @@ arStatus_t		AR_InsertToHash(arHash_t *hash, void *key, void *val);
 arStatus_t		AR_RemoveFromHash(arHash_t *hash, void *key);
 arStatus_t		AR_FindFromHash(arHash_t *hash, void *key, void **pval);
 size_t			AR_GetHashCount(arHash_t *hash);
+#define			AR_IsEmptyHash(_h)	(AR_GetHashCount((_h)) == 0 ? true : false)
 
 void			AR_HashForEach(arHash_t *hash, AR_hash_visit_func_t visit);
 
@@ -907,6 +910,7 @@ arURI_t*		AR_CreateURI(arCodePage_t cp);
 void			AR_DestroyURI(arURI_t *uri);
 void			AR_ClearURI(arURI_t *uri);
 int_t			AR_CompURI(const arURI_t *l, const arURI_t *r);
+arStatus_t		AR_NormalizeURI(arURI_t *uri);
 
 arCodePage_t	AR_GetURICodePage(const arURI_t *uri);
 void			AR_SetURICodePage(arURI_t *uri, arCodePage_t cp);

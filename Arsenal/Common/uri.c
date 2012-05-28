@@ -1164,7 +1164,7 @@ arStatus_t		AR_GetURIEncodedQuery(const arURI_t *uri, arString_t *str)
 {
 		AR_ASSERT(uri != NULL && str != NULL);
 		AR_ClearString(str);
-		return __encode(uri->code_page, AR_GetStringCString(uri->query), AR_GetStringCString(uri->query) + AR_GetStringLength(uri->query), RESERVED_PATH_S, str);
+		return __encode(uri->code_page, AR_GetStringCString(uri->query), AR_GetStringCString(uri->query) + AR_GetStringLength(uri->query), RESERVED_QUERY_S, str);
 }
 
 
@@ -1603,8 +1603,214 @@ END_POINT:
 		return status;
 }
 
+/******************************************************************************************************************************/
+static arStatus_t	seg_copy_func(void *data, void **pnew_data, void *ctx)
+{
+		const wchar_t *src;
+		wchar_t **pdest;
+		
+		AR_ASSERT(data != NULL && pnew_data != NULL);
+		AR_UNUSED(ctx);
+		src = (const wchar_t*)data;
+		pdest = (wchar_t**)pnew_data;
+		*pdest = AR_wcsdup(src);
+		return *pdest == NULL ? AR_E_NOMEM : AR_S_YES;
+}
+
+static void	seg_destroy_func(void *data, void *ctx)
+{
+		AR_ASSERT(data != NULL);
+		AR_UNUSED(ctx);
+		AR_DEL(data);
+}
 
 
+static arStatus_t		__get_uri_path_segments(const arURI_t *uri, arList_t *lst)
+{
+		const wchar_t *p;
+		arString_t		*tmp;
+		arStatus_t		status;
+		AR_ASSERT(uri != NULL && lst != NULL);
+		status = AR_S_YES;
+		AR_ClearList(lst);
+
+		tmp = AR_CreateString();
+		__GOEND_IF_FAIL2(tmp != NULL, AR_E_NOMEM);
+
+		p = AR_GetStringCString(uri->path);
+
+		while(*p)
+		{
+				if(*p == L'/')
+				{
+						if(!AR_IsEmptyString(tmp))
+						{
+								status = AR_PushListBack(lst, (void*)AR_GetStringCString(tmp));
+								__GOEND_IF_FAIL2(status == AR_S_YES, status);
+								AR_ClearString(tmp);
+						}
+				}else
+				{
+						status = AR_AppendCharToString(tmp, *p);
+						__GOEND_IF_FAIL2(status == AR_S_YES, status);
+				}
+				++p;
+		}
+
+		if(!AR_IsEmptyString(tmp))
+		{
+				status = AR_PushListBack(lst, (void*)AR_GetStringCString(tmp));
+				__GOEND_IF_FAIL2(status == AR_S_YES, status);
+		}
+END_POINT:
+		if(tmp)
+		{
+				AR_DestroyString(tmp);
+				tmp = NULL;
+		}
+
+		return status;
+}
+
+
+static arStatus_t __build_path(arURI_t *uri, const arList_t *segments, bool_t leading_slash, bool_t  trailing_slash)
+{
+		arStatus_t		status;
+		const arListNode_t	*node;
+		bool_t	is_first;
+		AR_ASSERT(uri != NULL && segments != NULL);
+
+		status = AR_S_YES;
+		is_first = true;
+		AR_ClearString(uri->path);
+		for(node = segments->head; node != NULL; node = node->next)
+		{
+				const wchar_t *seg;
+
+				seg = (const wchar_t*)node->data;
+				AR_ASSERT(seg != NULL);
+
+				if(is_first)
+				{
+						
+						is_first = false;
+						if(leading_slash)
+						{
+								status = AR_AppendString(uri->path, L"/");
+								__GOEND_IF_FAIL2(status == AR_S_YES, status);
+						}else if(AR_IsEmptyString(uri->scheme) && AR_wcsstr(seg, L":") != NULL)
+						{
+								status = AR_AppendString(uri->path, L"./");
+								__GOEND_IF_FAIL2(status == AR_S_YES, status);
+						}
+				}else
+				{
+						status = AR_AppendString(uri->path, L"/");
+						__GOEND_IF_FAIL2(status == AR_S_YES, status);
+				}
+
+				status = AR_AppendString(uri->path, seg);
+				__GOEND_IF_FAIL2(status == AR_S_YES, status);
+		}
+
+		if(trailing_slash)
+		{
+				status = AR_AppendString(uri->path, L"/");
+				__GOEND_IF_FAIL2(status == AR_S_YES, status);
+		}
+
+END_POINT:
+		return status;
+
+}
+
+
+static arStatus_t		__remove_path_dot_segments(arURI_t *uri, bool_t is_remove_leading_slash)
+{
+		arList_t		*segments, *normalized;
+		const arListNode_t *node;
+		arStatus_t		status;
+		bool leading_slash, trailing_slash;
+		
+		AR_ASSERT(uri != NULL);
+		status = AR_S_YES;
+
+		if(AR_IsEmptyString(uri->path))
+		{
+				return AR_S_YES;
+		}
+		
+		normalized = AR_CreateList(seg_copy_func, seg_destroy_func, NULL);
+		segments = AR_CreateList(seg_copy_func, seg_destroy_func, NULL);
+
+		__GOEND_IF_FAIL2(normalized != NULL && segments != NULL, AR_E_NOMEM);
+		
+		status = __get_uri_path_segments(uri, segments);
+		
+		__GOEND_IF_FAIL2(status == AR_S_YES, status);
+
+		leading_slash = AR_GetStringCString(uri->path)[0] == L'/' ? true : false;
+		trailing_slash = AR_GetStringCString(uri->path)[AR_GetStringLength(uri->path) - 1] == L'/' ? true : false;
+
+		for(node = segments->head; node != NULL; node = node->next)
+		{
+				const wchar_t *seg = (const wchar_t*)node->data;
+				AR_ASSERT(seg != NULL);
+
+				if(AR_wcscmp(seg, L"..") == 0)
+				{
+						if(!AR_IsEmptyList(normalized))
+						{
+								const wchar_t *tmp = NULL;
+								AR_GetListBack(normalized, (void**)&tmp);
+								AR_ASSERT(tmp != NULL);
+								if(AR_wcscmp(tmp, L"..") == 0)
+								{
+										status = AR_PushListBack(normalized, (void*)seg);
+										__GOEND_IF_FAIL2(status == AR_S_YES, status);
+								}else
+								{
+										AR_PopListBack(normalized);
+								}
+						}else if(!is_remove_leading_slash)
+						{
+								status = AR_PushListBack(normalized, (void*)seg);
+								__GOEND_IF_FAIL2(status == AR_S_YES, status);
+						}
+
+				}else if(AR_wcscmp(seg, L".") != 0)
+				{
+						status = AR_PushListBack(normalized, (void*)seg);
+						__GOEND_IF_FAIL2(status == AR_S_YES, status);
+				}
+		}
+
+		status = __build_path(uri, normalized, leading_slash, trailing_slash);
+
+END_POINT:
+		
+		if(segments)
+		{
+				AR_DestroyList(segments);
+				segments = NULL;
+		}
+
+		if(normalized)
+		{
+				AR_DestroyList(normalized);
+				normalized = NULL;
+		}
+
+
+		return status;
+}
+
+
+arStatus_t		AR_NormalizeURI(arURI_t *uri)
+{
+		AR_ASSERT(uri != NULL);
+		return __remove_path_dot_segments(uri, !AR_IsRelativeURI(uri));
+}
 
 AR_NAMESPACE_END
 
