@@ -1,8 +1,24 @@
-#include "uri.h"
+/*
+ * The Arsenal Library
+ * Copyright (c) 2009-2012 by Solidus
+ * 
+ * Permission to use, copy, modify, distribute and sell this software
+ * and its documentation for any purpose is hereby granted without fee,
+ * provided that the above copyright notice appear in all copies and
+ * that both that copyright notice and this permission notice appear
+ * in supporting documentation.It is provided "as is" without express 
+ * or implied warranty.
+ *
+ */
+
+
+#include "common.h"
 
 
 AR_NAMESPACE_BEGIN
 
+
+/*此模块修改自Poco URI模块*/
 		
 struct __arsenal_uri_tag
 {
@@ -14,6 +30,8 @@ struct __arsenal_uri_tag
 		arString_t		*query;
 		arString_t		*fragment;
 		uint_16_t		port;
+
+		bool_t			_parse_encoded;
 };
 
 arURI_t*		AR_CreateURI(arCodePage_t cp)
@@ -32,6 +50,7 @@ arURI_t*		AR_CreateURI(arCodePage_t cp)
 		uri->path = AR_CreateString();
 		uri->query = AR_CreateString();
 		uri->fragment = AR_CreateString();
+		uri->_parse_encoded = false;
 
 		if(uri->scheme == NULL || uri->user_info == NULL || uri->host == NULL || uri->path == NULL || uri->query == NULL || uri->fragment == NULL)
 		{
@@ -122,6 +141,8 @@ void			AR_ClearURI(arURI_t *uri)
 		}
 
 		uri->port = 0;
+
+		uri->_parse_encoded = false;
 }
 
 
@@ -211,7 +232,7 @@ static arStatus_t	__encode(arCodePage_t cp, const wchar_t *begin, const wchar_t 
 
 		for(s = str; *s != '\0'; ++s)
 		{
-				char c = *s;
+				uint_8_t c = (uint_8_t)*s;
 
 				if( (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '-' || c == '_' || c == '.' || c == '~')
 				{
@@ -222,7 +243,7 @@ static arStatus_t	__encode(arCodePage_t cp, const wchar_t *begin, const wchar_t 
 						}
 				}else if(c <= 0x20 || c >= 0x7F || AR_strchr(ILLEGAL_S,c) != NULL || AR_strchr(reserved,c) != NULL)
 				{
-						status = AR_AppendFormatString(output, L"%%%0*X", (uint_32_t)c);
+						status = AR_AppendFormatString(output, L"%%%02X", (uint_32_t)c);
 						if(status != AR_S_YES)
 						{
 								goto END_POINT;
@@ -248,6 +269,7 @@ END_POINT:
 }
 
 
+#if(0)
 /*
 这里假定输入全为已编码URL(假定其字符范围均符合RFC3986)，已编码URL的编码为参数cp，将其转换为指定的unicode
 */
@@ -309,10 +331,10 @@ static arStatus_t	__decode(arCodePage_t cp, const wchar_t *begin, const wchar_t 
 								c = hi - L'0';
 						}else if(hi >= L'A' && hi <= 'F')
 						{
-								c = hi - L'A';
+								c = hi - L'A' + 10;
 						}else if(hi >= 'a' && hi <= 'f')
 						{
-								c = hi - L'a';
+								c = hi - L'a' + 10;
 						}else
 						{
 								status = AR_E_INVAL;
@@ -326,10 +348,10 @@ static arStatus_t	__decode(arCodePage_t cp, const wchar_t *begin, const wchar_t 
 								c += lo - L'0';
 						}else if(lo >= L'A' && lo <= 'F')
 						{
-								c += lo - L'A';
+								c += lo - L'A' + 10;
 						}else if(lo >= 'a' && lo <= 'f')
 						{
-								c += lo - L'a';
+								c += lo - L'a' + 10;
 						}else
 						{
 								status = AR_E_INVAL;
@@ -365,6 +387,141 @@ END_POINT:
 				AR_DEL(wbuf);
 				wbuf = NULL;
 		}
+		return status;
+}
+#endif
+
+
+static arStatus_t	__decode(arCodePage_t cp, const wchar_t *begin, const wchar_t *end, arString_t *output)
+{
+		arStatus_t		status;
+		const char *s;
+		char *buf, *w, *str;
+		wchar_t *wbuf;
+		AR_ASSERT(begin != NULL && end != NULL && output != NULL);
+		
+		status = AR_S_YES;
+		wbuf = NULL;
+		str = NULL;
+		buf = NULL;
+
+		if(begin == end)/*字符串为空*/
+		{
+				return AR_S_YES;
+		}
+
+		str = AR_wcs_to_str(cp, begin, end - begin);
+
+		if(str == NULL)
+		{
+				status =  AR_E_BADENCCONV;
+				goto END_POINT;
+		}
+		
+		buf = AR_NEWARR0(char, AR_strlen(str) + 1);
+		
+		if(buf == NULL)
+		{
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+
+		w = buf;
+		s = str;
+		
+		while(*s != '\0')
+		{
+
+				char c, hi,lo;
+				
+				c = *s++;
+				
+				if(c == '%')
+				{
+						if(*s == '\0')
+						{
+								status = AR_E_INVAL;
+								goto END_POINT;
+						}
+						
+						hi = *s++;
+
+						if(*s == '\0')
+						{
+								status = AR_E_INVAL;
+								goto END_POINT;
+						}
+
+						lo = *s++;
+
+						if(hi >= '0' && hi <= '9')
+						{
+								c = hi - '0';
+						}else if(hi >= 'A' && hi <= 'F')
+						{
+								c = hi - L'A' + 10;
+						}else if(hi >= 'a' && hi <= 'f')
+						{
+								c = hi - 'a' + 10;
+						}else
+						{
+								status = AR_E_INVAL;
+								goto END_POINT;
+						}
+
+						c *= 16;
+
+						if(lo >= '0' && lo <= '9')
+						{
+								c += lo - L'0';
+						}else if(lo >= 'A' && lo <= 'F')
+						{
+								c += lo - 'A' + 10;
+						}else if(lo >= 'a' && lo <= 'f')
+						{
+								c += lo - 'a' + 10;
+						}else
+						{
+								status = AR_E_INVAL;
+								goto END_POINT;
+						}
+				}
+				*w++ = (char)c;
+		}
+		*w++ = '\0';
+
+		wbuf = AR_str_to_wcs(cp, buf, AR_strlen(buf));
+
+		if(wbuf == NULL)
+		{
+				status = AR_E_BADENCCONV;
+				goto END_POINT;
+		}
+
+		status = AR_AppendString(output, wbuf);
+		if(status != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+
+END_POINT:
+		if(buf)
+		{
+				AR_DEL(buf);
+				buf = NULL;
+		}
+		if(wbuf)
+		{
+				AR_DEL(wbuf);
+				wbuf = NULL;
+		}
+
+		if(str)
+		{
+				AR_DEL(str);
+				str = NULL;
+		}
+
 		return status;
 }
 
@@ -567,7 +724,13 @@ static uriParseRet_t __parse_authority(arURI_t *uri, const wchar_t *begin, const
 		{
 				if(*s == L'@')
 				{
-						ret.status = AR_AppendStringN(uri->user_info, part_begin, s - part_begin);
+						if(uri->_parse_encoded)
+						{
+								ret.status = __decode(uri->code_page, part_begin, s, uri->user_info);
+						}else
+						{
+								ret.status = AR_AppendStringN(uri->user_info, part_begin, s - part_begin);
+						}
 						__GOEND_IF_FAIL(ret.status == AR_S_YES, ret.status, NULL);
 						part_begin = s + 1;
 				}
@@ -751,7 +914,14 @@ static uriParseRet_t __parse_path(arURI_t *uri, const wchar_t *begin, const wcha
 				++s;
 		}
 		
-		ret.status = __decode(uri->code_page, path_begin, s, uri->path);
+		if(uri->_parse_encoded)
+		{
+				ret.status = __decode(uri->code_page, path_begin, s, uri->path);
+		}else
+		{
+				ret.status = AR_SetStringN(uri->path, path_begin, s - path_begin);
+		}
+
 		__GOEND_IF_FAIL(ret.status == AR_S_YES, ret.status, begin);
 		ret.next = s;
 END_POINT:
@@ -778,7 +948,14 @@ static uriParseRet_t __parse_query(arURI_t *uri, const wchar_t *begin, const wch
 				s++;
 		}
 		
-		ret.status = __decode(uri->code_page, query_begin, s, uri->query);
+		if(uri->_parse_encoded)
+		{
+				ret.status = __decode(uri->code_page, query_begin, s, uri->query);
+		}else
+		{
+				ret.status = AR_SetStringN(uri->query, query_begin, s - query_begin);
+		}
+
 		__GOEND_IF_FAIL(ret.status == AR_S_YES, ret.status, begin);
 
 		ret.next = s;
@@ -805,7 +982,13 @@ static uriParseRet_t __parse_fragment(arURI_t *uri, const wchar_t *begin, const 
 				s++;
 		}
 		
-		ret.status = __decode(uri->code_page, fragment_begin, s, uri->fragment);
+		if(uri->_parse_encoded)
+		{
+				ret.status = __decode(uri->code_page, fragment_begin, s, uri->fragment);
+		}else
+		{
+				ret.status = AR_SetStringN(uri->fragment, fragment_begin, s - fragment_begin);
+		}
 		__GOEND_IF_FAIL(ret.status == AR_S_YES, ret.status, begin);
 		ret.next = s;
 END_POINT:
@@ -823,31 +1006,6 @@ bool_t	AR_IsRelativeURI(const arURI_t *uri)
 }
 
 
-arStatus_t		AR_SetURI(arURI_t *uri, const wchar_t *str)
-{
-		arStatus_t status;
-		AR_ASSERT(uri != NULL && str != NULL);
-		AR_ClearURI(uri);
-		status = __parse(uri, str, str + AR_wcslen(str)).status;
-		
-		if(status != AR_S_YES)
-		{
-				AR_ClearURI(uri);
-		}
-
-		return status;
-}
-
-
-arStatus_t		AR_GetURI(const arURI_t *uri, arString_t *str)
-{
-		AR_ASSERT(uri != NULL && str != NULL);
-		AR_ClearString(str);
-
-		return AR_E_FAIL;
-}
-
-
 
 arStatus_t		AR_GetURIScheme(const arURI_t *uri, arString_t *str)
 {
@@ -861,8 +1019,8 @@ arStatus_t		AR_GetURIUserInfo(const arURI_t *uri, arString_t *str)
 {
 		AR_ASSERT(uri != NULL && str != NULL);
 		AR_ClearString(str);
-
 		return AR_CopyString(str, uri->user_info);
+		/*return __encode(uri->code_page, AR_GetStringCString(uri->user_info), AR_GetStringCString(uri->user_info) + AR_GetStringLength(uri->user_info), ILLEGAL_S, str);*/
 }
 
 arStatus_t		AR_GetURIHost(const arURI_t *uri, arString_t *str)
@@ -892,7 +1050,57 @@ arStatus_t		AR_GetURIAuthority(const arURI_t *uri, arString_t *str)
 
 		if(AR_GetStringLength(uri->user_info) > 0)
 		{
+				/*status = __encode(uri->code_page, AR_GetStringCString(uri->user_info), AR_GetStringCString(uri->user_info) + AR_GetStringLength(uri->user_info), ILLEGAL_S, str);*/
+
 				status = AR_AppendString(str, AR_GetStringCString(uri->user_info));
+				
+				__GOEND_IF_FAIL2(status == AR_S_YES, status);
+
+				status = AR_AppendString(str, L"@");
+				__GOEND_IF_FAIL2(status == AR_S_YES, status);
+		}
+
+		if(AR_wcsstr(AR_GetStringCString(uri->host), L":") != NULL)
+		{
+				status = AR_AppendString(str, L"[");
+				__GOEND_IF_FAIL2(status == AR_S_YES, status);
+
+				status = AR_AppendString(str, AR_GetStringCString(uri->host));
+				__GOEND_IF_FAIL2(status == AR_S_YES, status);
+
+				status = AR_AppendString(str, L"]");
+				__GOEND_IF_FAIL2(status == AR_S_YES, status);
+		}else
+		{
+				status = AR_AppendString(str, AR_GetStringCString(uri->host));
+				__GOEND_IF_FAIL2(status == AR_S_YES, status);
+		}
+
+		if(uri->port > 0 && __get_well_known_port(uri) != uri->port)
+		{
+				status = AR_AppendString(str, L":");
+				__GOEND_IF_FAIL2(status == AR_S_YES, status);
+				
+				status = AR_AppendFormatString(str, L"%u", (uint_32_t)uri->port);
+				__GOEND_IF_FAIL2(status == AR_S_YES, status);
+		}
+
+END_POINT:
+		return status;
+}
+
+
+arStatus_t		AR_GetURIEncodedAuthority(const arURI_t *uri, arString_t *str)
+{
+		arStatus_t status;
+		AR_ASSERT(uri != NULL && str != NULL);
+		status = AR_S_YES;
+
+		AR_ClearString(str);
+
+		if(AR_GetStringLength(uri->user_info) > 0)
+		{
+				status = __encode(uri->code_page, AR_GetStringCString(uri->user_info), AR_GetStringCString(uri->user_info) + AR_GetStringLength(uri->user_info), ILLEGAL_S, str);
 				
 				__GOEND_IF_FAIL2(status == AR_S_YES, status);
 
@@ -932,28 +1140,58 @@ END_POINT:
 arStatus_t		AR_GetURIPath(const arURI_t *uri, arString_t *str)
 {
 		AR_ASSERT(uri != NULL && str != NULL);
+		AR_ClearString(str);
 		return AR_CopyString(str, uri->path);
+}
+
+arStatus_t		AR_GetURIEncodedPath(const arURI_t *uri, arString_t *str)
+{
+		AR_ASSERT(uri != NULL && str != NULL);
+		AR_ClearString(str);
+		return __encode(uri->code_page, AR_GetStringCString(uri->path), AR_GetStringCString(uri->path) + AR_GetStringLength(uri->path), RESERVED_PATH_S, str);
 }
 
 
 arStatus_t		AR_GetURIQuery(const arURI_t *uri, arString_t *str)
 {
 		AR_ASSERT(uri != NULL && str != NULL);
+		AR_ClearString(str);
 		return AR_CopyString(str, uri->query);
 }
+
+
+arStatus_t		AR_GetURIEncodedQuery(const arURI_t *uri, arString_t *str)
+{
+		AR_ASSERT(uri != NULL && str != NULL);
+		AR_ClearString(str);
+		return __encode(uri->code_page, AR_GetStringCString(uri->query), AR_GetStringCString(uri->query) + AR_GetStringLength(uri->query), RESERVED_PATH_S, str);
+}
+
+
+
 
 arStatus_t		AR_GetURIFragment(const arURI_t *uri, arString_t *str)
 {
 		AR_ASSERT(uri != NULL && str != NULL);
+		AR_ClearString(str);
 		return AR_CopyString(str, uri->fragment);
 }
+
+arStatus_t		AR_GetURIEncodedFragment(const arURI_t *uri, arString_t *str)
+{
+		AR_ASSERT(uri != NULL && str != NULL);
+		AR_ClearString(str);
+		return __encode(uri->code_page, AR_GetStringCString(uri->fragment), AR_GetStringCString(uri->fragment) + AR_GetStringLength(uri->fragment), RESERVED_FRAGMENT_S, str);
+}
+
 
 arStatus_t		AR_GetURIPathEtc(const arURI_t *uri, arString_t *str)
 {
 		arStatus_t status;
 		AR_ASSERT(uri != NULL && str != NULL);
 
-		status = __encode(uri->code_page, AR_GetStringCString(uri->path), AR_GetStringCString(uri->path) + AR_GetStringLength(uri->path), RESERVED_PATH_S, str);
+		AR_ClearString(str);
+		status = AR_CatString(str, uri->path);
 
 		__GOEND_IF_FAIL2(status == AR_S_YES, status);
 
@@ -961,7 +1199,6 @@ arStatus_t		AR_GetURIPathEtc(const arURI_t *uri, arString_t *str)
 		{
 				status = AR_AppendString(str, L"?");
 				__GOEND_IF_FAIL2(status == AR_S_YES, status);
-
 				status = AR_AppendString(str, AR_GetStringCString(uri->query));
 				__GOEND_IF_FAIL2(status == AR_S_YES, status);
 		}
@@ -981,17 +1218,50 @@ END_POINT:
 }
 
 
+arStatus_t		AR_GetURIEncodedPathEtc(const arURI_t *uri, arString_t *str)
+{
+		arStatus_t status;
+		AR_ASSERT(uri != NULL && str != NULL);
+
+		AR_ClearString(str);
+		status = __encode(uri->code_page, AR_GetStringCString(uri->path), AR_GetStringCString(uri->path) + AR_GetStringLength(uri->path), RESERVED_PATH_S, str);
+
+		__GOEND_IF_FAIL2(status == AR_S_YES, status);
+
+		if(AR_GetStringLength(uri->query) > 0)
+		{
+				status = AR_AppendString(str, L"?");
+				__GOEND_IF_FAIL2(status == AR_S_YES, status);
+
+				status = __encode(uri->code_page, AR_GetStringCString(uri->query), AR_GetStringCString(uri->query) + AR_GetStringLength(uri->query), RESERVED_QUERY_S, str);
+				__GOEND_IF_FAIL2(status == AR_S_YES, status);
+		}
+
+		if(AR_GetStringLength(uri->fragment) > 0)
+		{
+				status = AR_AppendString(str, L"#");
+				__GOEND_IF_FAIL2(status == AR_S_YES, status);
+
+				status = __encode(uri->code_page, AR_GetStringCString(uri->fragment), AR_GetStringCString(uri->fragment) + AR_GetStringLength(uri->fragment), RESERVED_FRAGMENT_S, str);
+				__GOEND_IF_FAIL2(status == AR_S_YES, status);
+		}
+END_POINT:
+		return status;
+}
+
+
+
 arStatus_t		AR_SetURIScheme(arURI_t *uri, const wchar_t *str)
 {
 		arStatus_t status;
 		AR_ASSERT(uri != NULL && str != NULL);
 		status = AR_SetString(uri->scheme, str);
-		AR_StringToLower(uri->scheme);
 		if(status == AR_S_YES)
 		{
+				AR_StringToLower(uri->scheme);
 				uri->port = __get_well_known_port(uri);
 		}
-
+		
 		return status;
 
 }
@@ -1001,13 +1271,28 @@ arStatus_t		AR_SetURIUserInfo(arURI_t *uri, const wchar_t *str)
 		AR_ASSERT(uri != NULL && str != NULL);
 		AR_ClearString(uri->user_info);
 		return __decode(uri->code_page, str, str + AR_wcslen(str), uri->user_info);
-		
 }
+
+arStatus_t		AR_SetURIEncodedUserInfo(arURI_t *uri, const wchar_t *str)
+{
+		AR_ASSERT(uri != NULL && str != NULL);
+		AR_ClearString(uri->user_info);
+		return AR_SetString(uri->user_info, str);
+}
+
 
 arStatus_t		AR_SetURIHost(arURI_t *uri, const wchar_t *str)
 {
+		arStatus_t status;
 		AR_ASSERT(uri != NULL && str != NULL);
-		return AR_SetString(uri->host, str);
+		AR_ClearString(uri->host);
+		status =  AR_SetString(uri->host, str);
+		if(status == AR_S_YES)
+		{
+				AR_StringToLower(uri->host);
+		}
+
+		return status;
 }
 
 
@@ -1027,28 +1312,71 @@ arStatus_t		AR_SetURIAuthority(arURI_t *uri, const wchar_t *str)
 		AR_ClearString(uri->user_info);
 		AR_ClearString(uri->host);
 		uri->port = 0;
-
+		uri->_parse_encoded = false;
 		ret = __parse_authority(uri, str, str + AR_wcslen(str));
-
 		return ret.status;
 }
+
+arStatus_t		AR_SetURIEncodedAuthority(arURI_t *uri, const wchar_t *str)
+{
+		uriParseRet_t	ret;
+		AR_ASSERT(uri != NULL && str != NULL);
+		ret.status = AR_S_YES;
+		ret.err_pos = NULL;
+		ret.next = NULL;
+		AR_ClearString(uri->user_info);
+		AR_ClearString(uri->host);
+		uri->port = 0;
+		uri->_parse_encoded = true;
+		ret = __parse_authority(uri, str, str + AR_wcslen(str));
+		return ret.status;
+}
+
+
 
 arStatus_t		AR_SetURIPath(arURI_t *uri, const wchar_t *str)
 {
 		AR_ASSERT(uri != NULL && str != NULL);
+		AR_ClearString(uri->path);
+		return AR_SetString(uri->path, str);
+}
+
+arStatus_t		AR_SetURIEncodedPath(arURI_t *uri, const wchar_t *str)
+{
+		AR_ASSERT(uri != NULL && str != NULL);
+		AR_ClearString(uri->path);
 		return __decode(uri->code_page, str, str + AR_wcslen(str), uri->path);
 }
+
 
 arStatus_t		AR_SetURIQuery(arURI_t *uri, const wchar_t *str)
 {
 		AR_ASSERT(uri != NULL && str != NULL);
+		AR_ClearString(uri->query);
+		return AR_SetString(uri->query, str);
+}
+
+
+arStatus_t		AR_SetURIEncodedQuery(arURI_t *uri, const wchar_t *str)
+{
+		AR_ASSERT(uri != NULL && str != NULL);
+		AR_ClearString(uri->query);
 		return __decode(uri->code_page, str, str + AR_wcslen(str), uri->query);
 }
+
 
 
 arStatus_t		AR_SetURIFragment(arURI_t *uri, const wchar_t *str)
 {
 		AR_ASSERT(uri != NULL && str != NULL);
+		AR_ClearString(uri->fragment);
+		return AR_SetString(uri->fragment, str);
+}
+
+arStatus_t		AR_SetURIEncodedFragment(arURI_t *uri, const wchar_t *str)
+{
+		AR_ASSERT(uri != NULL && str != NULL);
+		AR_ClearString(uri->fragment);
 		return __decode(uri->code_page, str, str + AR_wcslen(str), uri->fragment);
 }
 
@@ -1059,10 +1387,221 @@ arStatus_t		AR_SetURIPathEtc(arURI_t *uri, const wchar_t *str)
 		AR_ClearString(uri->path);
 		AR_ClearString(uri->query);
 		AR_ClearString(uri->fragment);
+		uri->_parse_encoded = false;
+		return __parse_pathetc(uri, str, str + AR_wcslen(str)).status;
+}
+
+arStatus_t		AR_SetURIEncodedPathEtc(arURI_t *uri, const wchar_t *str)
+{
+		AR_ASSERT(uri != NULL && str != NULL);
+		AR_ClearString(uri->path);
+		AR_ClearString(uri->query);
+		AR_ClearString(uri->fragment);
+		uri->_parse_encoded = true;
 		return __parse_pathetc(uri, str, str + AR_wcslen(str)).status;
 }
 
 
+
+arStatus_t		AR_SetURI(arURI_t *uri, const wchar_t *str)
+{
+		arStatus_t status;
+		AR_ASSERT(uri != NULL && str != NULL);
+		AR_ClearURI(uri);
+		uri->_parse_encoded = false;
+		status = __parse(uri, str, str + AR_wcslen(str)).status;
+		
+		if(status != AR_S_YES)
+		{
+				AR_ClearURI(uri);
+		}
+		
+		return status;
+}
+
+arStatus_t		AR_SetEncodedURI(arURI_t *uri, const wchar_t *str)
+{
+		arStatus_t status;
+		AR_ASSERT(uri != NULL && str != NULL);
+		AR_ClearURI(uri);
+		uri->_parse_encoded = true;
+		status = __parse(uri, str, str + AR_wcslen(str)).status;
+		
+		if(status != AR_S_YES)
+		{
+				AR_ClearURI(uri);
+		}
+		uri->_parse_encoded = false;
+		return status;
+}
+
+
+
+arStatus_t		AR_GetEncodedURI(const arURI_t *uri, arString_t *str)
+{
+		arStatus_t status;
+		arString_t *auth;
+		AR_ASSERT(uri != NULL && str != NULL);
+		AR_ClearString(str);
+		status = AR_S_YES;
+		auth = NULL;
+
+		if(AR_IsRelativeURI(uri))
+		{
+				status = __encode(uri->code_page, AR_GetStringCString(uri->path), AR_GetStringCString(uri->path) + AR_GetStringLength(uri->path), RESERVED_PATH_S, str);
+				__GOEND_IF_FAIL2(status == AR_S_YES, status);
+		}else
+		{
+				status = AR_AppendString(str, AR_GetStringCString(uri->scheme));
+				__GOEND_IF_FAIL2(status == AR_S_YES, status);
+				status = AR_AppendString(str, L":");
+				__GOEND_IF_FAIL2(status == AR_S_YES, status);
+
+				auth = AR_CreateString();
+				__GOEND_IF_FAIL2(auth != NULL, AR_E_NOMEM);
+
+				status = AR_GetURIAuthority(uri, auth);
+				__GOEND_IF_FAIL2(status == AR_S_YES, status);
+
+				if(!AR_IsEmptyString(auth) || AR_CompStringWithWcs(uri->scheme, L"file") == 0)
+				{
+						status = AR_AppendString(str, L"//");
+						__GOEND_IF_FAIL2(status == AR_S_YES, status);
+						
+						status = AR_CatString(str, auth);
+						
+						__GOEND_IF_FAIL2(status == AR_S_YES, status);
+				}
+
+				if(!AR_IsEmptyString(uri->path))
+				{
+						if(!AR_IsEmptyString(auth) && AR_GetStringChar(uri->path, 0) != L'/')
+						{
+								status = AR_AppendCharToString(str, L'/');
+								__GOEND_IF_FAIL2(status == AR_S_YES, status);
+						}
+
+						status = __encode(uri->code_page, AR_GetStringCString(uri->path), AR_GetStringCString(uri->path) + AR_GetStringLength(uri->path), RESERVED_PATH_S, str);
+						__GOEND_IF_FAIL2(status == AR_S_YES, status);
+				}else if(!AR_IsEmptyString(uri->query) || !AR_IsEmptyString(uri->fragment))
+				{
+						status = AR_AppendCharToString(str, L'/');
+						__GOEND_IF_FAIL2(status == AR_S_YES, status);
+				}
+		}
+
+		if(!AR_IsEmptyString(uri->query))
+		{
+				status = AR_AppendCharToString(str, L'?');
+				__GOEND_IF_FAIL2(status == AR_S_YES, status);
+
+				status = __encode(uri->code_page, AR_GetStringCString(uri->query), AR_GetStringCString(uri->query) + AR_GetStringLength(uri->query), RESERVED_QUERY_S, str);
+				__GOEND_IF_FAIL2(status == AR_S_YES, status);
+		}
+
+
+		if(!AR_IsEmptyString(uri->fragment))
+		{
+				status = AR_AppendCharToString(str, L'#');
+				__GOEND_IF_FAIL2(status == AR_S_YES, status);
+
+				status = __encode(uri->code_page, AR_GetStringCString(uri->fragment), AR_GetStringCString(uri->fragment) + AR_GetStringLength(uri->fragment), RESERVED_FRAGMENT_S, str);
+				__GOEND_IF_FAIL2(status == AR_S_YES, status);
+		}
+
+
+END_POINT:
+		if(auth != NULL)
+		{
+				AR_DestroyString(auth);
+				auth = NULL;
+		}
+
+		return status;
+}
+
+
+arStatus_t		AR_GetURI(const arURI_t *uri, arString_t *str)
+{
+		arStatus_t status;
+		arString_t *auth;
+		AR_ASSERT(uri != NULL && str != NULL);
+		AR_ClearString(str);
+		status = AR_S_YES;
+		auth = NULL;
+
+		if(AR_IsRelativeURI(uri))
+		{
+				status = AR_CatString(str, uri->path);
+				__GOEND_IF_FAIL2(status == AR_S_YES, status);
+		}else
+		{
+				status = AR_CatString(str, uri->scheme);
+				__GOEND_IF_FAIL2(status == AR_S_YES, status);
+				status = AR_AppendString(str, L":");
+				__GOEND_IF_FAIL2(status == AR_S_YES, status);
+
+				auth = AR_CreateString();
+				__GOEND_IF_FAIL2(auth != NULL, AR_E_NOMEM);
+
+				status = AR_GetURIAuthority(uri, auth);
+				__GOEND_IF_FAIL2(status == AR_S_YES, status);
+
+				if(!AR_IsEmptyString(auth) || AR_CompStringWithWcs(uri->scheme, L"file") == 0)
+				{
+						status = AR_AppendString(str, L"//");
+						__GOEND_IF_FAIL2(status == AR_S_YES, status);
+						
+						status = AR_CatString(str, auth);
+						__GOEND_IF_FAIL2(status == AR_S_YES, status);
+				}
+
+				if(!AR_IsEmptyString(uri->path))
+				{
+						if(!AR_IsEmptyString(auth) && AR_GetStringChar(uri->path, 0) != L'/')
+						{
+								status = AR_AppendCharToString(str, L'/');
+								__GOEND_IF_FAIL2(status == AR_S_YES, status);
+						}
+
+						status = AR_CatString(str, uri->path);
+						__GOEND_IF_FAIL2(status == AR_S_YES, status);
+				}else if(!AR_IsEmptyString(uri->query) || !AR_IsEmptyString(uri->fragment))
+				{
+						status = AR_AppendCharToString(str, L'/');
+						__GOEND_IF_FAIL2(status == AR_S_YES, status);
+				}
+		}
+
+		if(!AR_IsEmptyString(uri->query))
+		{
+				status = AR_AppendCharToString(str, L'?');
+				__GOEND_IF_FAIL2(status == AR_S_YES, status);
+
+				status = AR_CatString(str, uri->query);
+				__GOEND_IF_FAIL2(status == AR_S_YES, status);
+		}
+
+
+		if(!AR_IsEmptyString(uri->fragment))
+		{
+				status = AR_AppendCharToString(str, L'#');
+				__GOEND_IF_FAIL2(status == AR_S_YES, status);
+
+				status = AR_CatString(str, uri->fragment);
+				__GOEND_IF_FAIL2(status == AR_S_YES, status);
+		}
+
+
+END_POINT:
+		if(auth != NULL)
+		{
+				AR_DestroyString(auth);
+				auth = NULL;
+		}
+
+		return status;
+}
 
 
 

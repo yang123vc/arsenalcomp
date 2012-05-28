@@ -7,7 +7,7 @@
 
 #include "lfu_cache.h"
 #include "Operation.h"
-#include "uri.h"
+
 
 #if defined(__LIB)
 
@@ -3145,7 +3145,7 @@ static void uri_parse_test()
 
 
 		/*******************************************************************************/
-		status = AR_SetURI(uri, L"http://www.appinf.com/search.cgi?keyword=test%20encoded&scope=all#result");
+		status = AR_SetEncodedURI(uri, L"http://www.appinf.com/search.cgi?keyword=test%20encoded&scope=all#result");
 		AR_ASSERT(status == AR_S_YES);
 
 		status = AR_GetURIScheme(uri, str);
@@ -3930,25 +3930,6 @@ static void uri_parse_test()
 		str = NULL;
 }
 
-static void uri_tostring_test()
-{
-		arURI_t	*uri;
-		arStatus_t status;
-		
-		status = AR_S_YES;
-		arString_t *str;
-
-		uri = AR_CreateURI(AR_CP_UTF8);
-		str = AR_CreateString();
-		
-		AR_ASSERT(uri != NULL);
-
-
-		AR_DestroyURI(uri);
-		uri = NULL;
-		AR_DestroyString(str);
-		str = NULL;
-}
 
 
 static void uri_construct_test()
@@ -4030,137 +4011,152 @@ static void uri_construct_test()
 		status = AR_GetURIFragment(uri, str);
 		AR_ASSERT(status == AR_S_YES);
 		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
-#if(0)
-		URI uri;
-	assert (uri.getScheme().empty());
-	assert (uri.getAuthority().empty());
-	assert (uri.getUserInfo().empty());
-	assert (uri.getHost().empty());
-	assert (uri.getPort() == 0);
-	assert (uri.getPath().empty());
-	assert (uri.getQuery().empty());
-	assert (uri.getFragment().empty());
-	
-	uri.setScheme("ftp");
-	assert (uri.getScheme() == "ftp");
-	assert (uri.getPort() == 21);
-	
-	uri.setScheme("HTTP");
-	assert (uri.getScheme() == "http");
-	
-	uri.setAuthority("www.appinf.com");
-	assert (uri.getAuthority() == "www.appinf.com");
-	assert (uri.getPort() == 80);
-	
-	uri.setAuthority("user@services.appinf.com:8000");
-	assert (uri.getUserInfo() == "user");
-	assert (uri.getHost() == "services.appinf.com");
-	assert (uri.getPort() == 8000);
-	
-	uri.setPath("/index.html");
-	assert (uri.getPath() == "/index.html");
-	
-	uri.setPath("/file%20with%20spaces.html");
-	assert (uri.getPath() == "/file with spaces.html");
-	
-	uri.setPathEtc("/query.cgi?query=foo");
-	assert (uri.getPath() == "/query.cgi");
-	assert (uri.getQuery() == "query=foo");
-	assert (uri.getFragment().empty());
-	assert (uri.getPathEtc() == "/query.cgi?query=foo");
-	assert (uri.getPathAndQuery() == "/query.cgi?query=foo");
-	
-	uri.setPathEtc("/query.cgi?query=bar#frag");
-	assert (uri.getPath() == "/query.cgi");
-	assert (uri.getQuery() == "query=bar");
-	assert (uri.getFragment() == "frag");
-	assert (uri.getPathEtc() == "/query.cgi?query=bar#frag");
-	assert (uri.getPathAndQuery() == "/query.cgi?query=bar");
-	
-	uri.setQuery("query=test");
-	assert (uri.getQuery() == "query=test");
-	
-	uri.setFragment("result");
-	assert (uri.getFragment() == "result");
-	
-	URI uri2("file", "/home/guenter/foo.bar");
-	assert (uri2.getScheme() == "file");
-	assert (uri2.getPath() == "/home/guenter/foo.bar");
-	
-	URI uri3("http", "www.appinf.com", "/index.html");
-	assert (uri3.getScheme() == "http");
-	assert (uri3.getAuthority() == "www.appinf.com");
-	assert (uri3.getPath() == "/index.html");
-	
-	URI uri4("http", "www.appinf.com:8000", "/index.html");
-	assert (uri4.getScheme() == "http");
-	assert (uri4.getAuthority() == "www.appinf.com:8000");
-	assert (uri4.getPath() == "/index.html");
 
-	URI uri5("http", "user@www.appinf.com:8000", "/index.html");
-	assert (uri5.getScheme() == "http");
-	assert (uri5.getUserInfo() == "user");
-	assert (uri5.getHost() == "www.appinf.com");
-	assert (uri5.getPort() == 8000);
-	assert (uri5.getAuthority() == "user@www.appinf.com:8000");
-	assert (uri5.getPath() == "/index.html");
+		/**************************************************************************/
+		AR_ClearURI(uri);
+		status = AR_SetURIAuthority(uri, L"www.appinf.com");
+		AR_ASSERT(status == AR_S_YES);
 
-	URI uri6("http", "user@www.appinf.com:80", "/index.html");
-	assert (uri6.getScheme() == "http");
-	assert (uri6.getUserInfo() == "user");
-	assert (uri6.getHost() == "www.appinf.com");
-	assert (uri6.getPort() == 80);
-	assert (uri6.getAuthority() == "user@www.appinf.com");
-	assert (uri6.getPath() == "/index.html");
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
 
-	URI uri7("http", "user@www.appinf.com:", "/index.html");
-	assert (uri7.getScheme() == "http");
-	assert (uri7.getUserInfo() == "user");
-	assert (uri7.getHost() == "www.appinf.com");
-	assert (uri7.getPort() == 80);
-	assert (uri7.getAuthority() == "user@www.appinf.com");
-	assert (uri7.getPath() == "/index.html");
-	
-	URI uri8("http", "www.appinf.com", "/index.html", "query=test");
-	assert (uri8.getScheme() == "http");
-	assert (uri8.getAuthority() == "www.appinf.com");
-	assert (uri8.getPath() == "/index.html");
-	assert (uri8.getQuery() == "query=test");
+		status = AR_GetURIUserInfo(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
 
-	URI uri9("http", "www.appinf.com", "/index.html", "query=test", "fragment");
-	assert (uri9.getScheme() == "http");
-	assert (uri9.getAuthority() == "www.appinf.com");
-	assert (uri9.getPath() == "/index.html");
-	assert (uri9.getPathEtc() == "/index.html?query=test#fragment");
-	assert (uri9.getQuery() == "query=test");
-	assert (uri9.getFragment() == "fragment");
+		status = AR_GetURIHost(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"www.appinf.com") == 0);
 
-	uri9.clear();
-	assert (uri9.getScheme().empty());
-	assert (uri9.getAuthority().empty());
-	assert (uri9.getUserInfo().empty());
-	assert (uri9.getHost().empty());
-	assert (uri9.getPort() == 0);
-	assert (uri9.getPath().empty());
-	assert (uri9.getQuery().empty());
-	assert (uri9.getFragment().empty());
+		AR_ASSERT(AR_GetURIPort(uri) == 0);
 
-	URI uri10("ldap", "[2001:db8::7]", "/c=GB?objectClass?one");
-	assert (uri10.getScheme() == "ldap");
-	assert (uri10.getUserInfo().empty());
-	assert (uri10.getHost() == "2001:db8::7");
-	assert (uri10.getPort() == 389);
-	assert (uri10.getAuthority() == "[2001:db8::7]");
-	assert (uri10.getPathEtc() == "/c=GB?objectClass?one");
-	
-	URI uri11("http", "www.appinf.com", "/index.html?query=test#fragment");
-	assert (uri11.getScheme() == "http");
-	assert (uri11.getAuthority() == "www.appinf.com");
-	assert (uri11.getPath() == "/index.html");
-	assert (uri11.getPathEtc() == "/index.html?query=test#fragment");
-	assert (uri11.getQuery() == "query=test");
-	assert (uri11.getFragment() == "fragment");
-#endif
+		status = AR_GetURIAuthority(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"www.appinf.com") == 0);
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		/**************************************************************************/
+		AR_ClearURI(uri);
+		status = AR_SetURIAuthority(uri, L"user@services.appinf.com:8000");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIUserInfo(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"user") == 0);
+
+		status = AR_GetURIHost(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"services.appinf.com") == 0);
+
+		AR_ASSERT(AR_GetURIPort(uri) == 8000);
+
+		status = AR_GetURIAuthority(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"user@services.appinf.com:8000") == 0);
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_SetURIPath(uri, L"/index.html");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"/index.html") == 0);
+
+
+		status = AR_SetURIEncodedPath(uri, L"/file%20with%20spaces.html");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"/file with spaces.html") == 0);
+		
+		status = AR_SetURIPathEtc(uri, L"/query.cgi?query=foo");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"/query.cgi") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"query=foo") == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIPathEtc(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"/query.cgi?query=foo") == 0);
+
+
+
+
+		status = AR_SetURIPathEtc(uri, L"/query.cgi?query=bar#frag");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"/query.cgi") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"query=bar") == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"frag") == 0);
+
+		status = AR_GetURIPathEtc(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"/query.cgi?query=bar#frag") == 0);
+		
+
+		status = AR_SetURIQuery(uri, L"query=test");
+		AR_ASSERT(status == AR_S_YES);
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"query=test") == 0);
+
+		status = AR_SetURIFragment(uri, L"result");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"result") == 0);
+
+		status = AR_GetURIPathEtc(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"/query.cgi?query=test#result") == 0);
+
+
 
 		AR_DestroyURI(uri);
 		uri = NULL;
@@ -4168,11 +4164,304 @@ static void uri_construct_test()
 		str = NULL;
 }
 
+
+static void uri_tostring_test()
+{
+		arURI_t	*uri;
+		arStatus_t status;
+		
+		status = AR_S_YES;
+		arString_t *str;
+
+		uri = AR_CreateURI(AR_CP_UTF8);
+		str = AR_CreateString();
+		
+		AR_ASSERT(uri != NULL && str != NULL);
+
+		/**********************************************************************************/
+
+		AR_ASSERT(AR_SetURI(uri, L"http://www.appinf.com") == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"http://www.appinf.com") == 0);
+
+
+		
+		AR_ASSERT(AR_SetURI(uri, L"ftp://anonymous@ftp.appinf.com/pub/") == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"ftp://anonymous@ftp.appinf.com/pub/") == 0);
+
+
+		AR_ASSERT(AR_SetURI(uri, L"ftp://anonymous@ftp.appinf.com/%e4%b8%ad%e5%9b%bd%e5%ad%97") == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_ICompStringWithWcs(str, L"ftp://anonymous@ftp.appinf.com/%e4%b8%ad%e5%9b%bd%e5%ad%97") == 0);
+
+		AR_SetURICodePage(uri, AR_CP_GB2312);
+		AR_ASSERT(AR_SetURI(uri, L"ftp://anonymous@ftp.appinf.com/%d6%d0%b9%fa%d7%d6") == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_ICompStringWithWcs(str, L"ftp://anonymous@ftp.appinf.com/%d6%d0%b9%fa%d7%d6") == 0);
+		AR_SetURICodePage(uri, AR_CP_UTF8);
+
+
+		AR_ASSERT(AR_SetEncodedURI(uri, L"ftp://anonymous@ftp.appinf.com/%e4%b8%ad%e5%9b%bd%e5%ad%97") == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_ICompStringWithWcs(str, L"ftp://anonymous@ftp.appinf.com/中国字") == 0);
+		
+
+		AR_ASSERT(AR_SetURI(uri, L"https://www.appinf.com/index.html#top") == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"https://www.appinf.com/index.html#top") == 0);
+		
+	
+		AR_ASSERT(AR_SetURI(uri, L"http://www.appinf.com/search.cgi?keyword=test&scope=all") == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"http://www.appinf.com/search.cgi?keyword=test&scope=all") == 0);
+
+		AR_ASSERT(AR_SetURI(uri, L"http://www.appinf.com/search.cgi?keyword=test&scope=all#result") == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"http://www.appinf.com/search.cgi?keyword=test&scope=all#result") == 0);
+		
+		
+		AR_ASSERT(AR_SetURI(uri, L"http://www.appinf.com/search.cgi?keyword=test%20encoded&scope=all#result") == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"http://www.appinf.com/search.cgi?keyword=test%20encoded&scope=all#result") == 0);
+
+
+		AR_ASSERT(AR_SetURI(uri, L"ldap://[2001:db8::7]/c=GB?objectClass?one") == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"ldap://[2001:db8::7]/c=GB?objectClass?one") == 0);
+
+
+		AR_ASSERT(AR_SetURI(uri, L"mailto:John.Doe@example.com") == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"mailto:John.Doe@example.com") == 0);
+
+
+		AR_ASSERT(AR_SetURI(uri, L"tel:+1-816-555-1212") == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"tel:+1-816-555-1212") == 0);
+
+		AR_ASSERT(AR_SetURI(uri, L"telnet://192.0.2.16:80") == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"telnet://192.0.2.16:80") == 0);
+
+
+
+		AR_SetURICodePage(uri, AR_CP_GB2312);
+		AR_ASSERT(AR_SetURI(uri, L"ftp://anonymous@ftp.appinf.com") == AR_S_YES);
+
+		AR_ASSERT(AR_SetURIPath(uri, L"/中国字") == AR_S_YES);
+
+		AR_ASSERT(AR_GetEncodedURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_ICompStringWithWcs(str, L"ftp://anonymous@ftp.appinf.com/%d6%d0%b9%fa%d7%d6") == 0);
+		AR_SetURICodePage(uri, AR_CP_UTF8);
+
+
+		AR_ASSERT(AR_SetURI(uri, L"urn:oasis:names:specification:docbook:dtd:xml:4.1.2") == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"urn:oasis:names:specification:docbook:dtd:xml:4.1.2") == 0);
+
+
+		AR_ASSERT(AR_SetURI(uri, L"") == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+		
+
+		AR_ASSERT(AR_SetURI(uri, L"/foo/bar") == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"/foo/bar") == 0);
+		
+
+		AR_ASSERT(AR_SetURI(uri, L"./foo/bar") == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"./foo/bar") == 0);
+
+		AR_ASSERT(AR_SetURI(uri, L"../foo/bar") == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"../foo/bar") == 0);
+
+		AR_ASSERT(AR_SetURI(uri, L"//foo/bar") == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"//foo/bar") == 0);
+
+
+		AR_ASSERT(AR_SetURI(uri, L"index.html") == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"index.html") == 0);
+
+		AR_ASSERT(AR_SetURI(uri, L"index.html#frag") == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"index.html#frag") == 0);
+
+		AR_ASSERT(AR_SetURI(uri, L"?query=test") == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"?query=test") == 0);
+
+		AR_ASSERT(AR_SetURI(uri, L"?query=test#frag") == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"?query=test#frag") == 0);
+
+
+		AR_ASSERT(AR_SetURI(uri, L"#frag") == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"#frag") == 0);
+
+		AR_ASSERT(AR_SetURI(uri, L"#") == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+
+		AR_ASSERT(AR_SetURI(uri, L"file:///a/b/c") == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"file:///a/b/c") == 0);
+
+		AR_ASSERT(AR_SetURI(uri, L"file://localhost/a/b/c") == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"file://localhost/a/b/c") == 0);
+
+		AR_ASSERT(AR_SetURI(uri, L"file:///c:/Windows/system32/") == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"file:///c:/Windows/system32/") == 0);
+
+		AR_ASSERT(AR_SetURI(uri, L"./c:/Windows/system32/") == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"./c:/Windows/system32/") == 0);
+
+
+		AR_ASSERT(AR_SetURI(uri, L"http://www.appinf.com") == AR_S_YES);
+		AR_ASSERT(AR_SetURIQuery(uri, L"query=test") == AR_S_YES);
+
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"http://www.appinf.com/?query=test") == 0);
+
+		/**********************************************************************************/
+
+		AR_ASSERT(AR_SetURI(uri, L"http://www.example.com/List of holidays.xml") == AR_S_YES);
+		AR_ASSERT(AR_GetEncodedURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"http://www.example.com/List%20of%20holidays.xml") == 0);
+
+
+		AR_ASSERT(AR_SetEncodedURI(uri, L"http://qt.nokia.com/List%20of%20holidays.xml") == AR_S_YES);
+		AR_ASSERT(AR_GetEncodedURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"http://qt.nokia.com/List%20of%20holidays.xml") == 0);
+		
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"http://qt.nokia.com/List of holidays.xml") == 0);
+
+
+
+		AR_SetURICodePage(uri, AR_CP_UTF8);
+		AR_ASSERT(AR_SetURI(uri, L"http://www.example.com/List of holidays.xml?搜索1=关键字1a=b关键字2=搜索2") == AR_S_YES);
+		AR_ASSERT(AR_GetEncodedURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_ICompStringWithWcs(str, L"http://www.example.com/List%20of%20holidays.xml?%e6%90%9c%e7%b4%a21=%e5%85%b3%e9%94%ae%e5%ad%971a=b%e5%85%b3%e9%94%ae%e5%ad%972=%e6%90%9c%e7%b4%a22") == 0);
+
+		
+		AR_ASSERT(AR_SetEncodedURI(uri, L"http://www.example.com/List%20of%20holidays.xml?%e6%90%9c%e7%b4%a21=%e5%85%b3%e9%94%ae%e5%ad%971a=b%e5%85%b3%e9%94%ae%e5%ad%972=%e6%90%9c%e7%b4%a22") == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"http://www.example.com/List of holidays.xml?搜索1=关键字1a=b关键字2=搜索2") == 0);
+		
+
+		AR_DestroyURI(uri);
+		uri = NULL;
+		AR_DestroyString(str);
+		str = NULL;
+}
+
+static void uri_compare_test()
+{
+		
+		arURI_t	*u1, *u2;
+		arString_t *str;
+		arStatus_t status;
+		status = AR_S_YES;
+
+		u1 = AR_CreateURI(AR_CP_UTF8);
+		u2 = AR_CreateURI(AR_CP_UTF8);
+		str = AR_CreateString();
+		AR_ASSERT(u1 != NULL && u2 != NULL && str != NULL);
+
+		AR_SetURI(u1, L"http://www.appinf.com");
+		AR_SetURI(u2, L"HTTP://www.appinf.com:80");
+
+		AR_ASSERT(AR_CompURI(u1, u2) == 0);
+
+		AR_ASSERT(AR_GetURI(u1, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"http://www.appinf.com") == 0);
+
+		AR_ASSERT(AR_GetURI(u2, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"http://www.appinf.com") == 0);
+		
+
+
+		AR_SetURI(u1, L"?query");
+		AR_ASSERT(AR_GetURI(u1, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"?query") == 0);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"?query2") != 0);
+
+
+		AR_SetURI(u1, L"#frag");
+		AR_ASSERT(AR_GetURI(u1, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"#frag") == 0);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"#frag2") != 0);
+
+
+		AR_SetURI(u1, L"/index.html#frag");
+		AR_ASSERT(AR_GetURI(u1, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"/index.html#frag") == 0);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"/index.html") != 0);
+
+
+		AR_SetURICodePage(u1, AR_CP_GB2312);
+		AR_SetURICodePage(u2, AR_CP_GB2312);
+		AR_SetURI(u1, L"http://www.appinf.COM/pub/中国字");
+		AR_SetEncodedURI(u2, L"HTTP://www.appinf.com:80/pub/%d6%d0%b9%fa%d7%d6");
+
+		AR_ASSERT(AR_CompURI(u1, u2) == 0);
+
+		AR_ASSERT(AR_GetURI(u1, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"http://www.appinf.com/pub/中国字") == 0);
+
+		AR_ASSERT(AR_GetURI(u2, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"http://www.appinf.com/pub/中国字") == 0);
+
+
+		AR_SetURICodePage(u1, AR_CP_UTF8);
+		AR_SetURI(u1, L"http://www.appinf.COM/pub/中国字");
+
+		AR_SetURICodePage(u2, AR_CP_GB2312);
+		AR_SetEncodedURI(u2, L"HTTP://www.appinf.com:80/pub/%d6%d0%b9%fa%d7%d6");
+
+
+		AR_ASSERT(AR_CompURI(u1, u2) == 0);
+
+		AR_SetURICodePage(u1, AR_CP_GB2312);
+		AR_ASSERT(AR_GetEncodedURI(u1, str) == AR_S_YES);
+		AR_ASSERT(AR_ICompStringWithWcs(str, L"HTTP://www.appinf.com/pub/%d6%d0%b9%fa%d7%d6") == 0);
+
+		AR_SetURICodePage(u2, AR_CP_UTF8);
+		AR_ASSERT(AR_GetURI(u2, str) == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"http://www.appinf.com/pub/中国字") == 0);
+
+		AR_ASSERT(AR_GetEncodedURI(u2, str) == AR_S_YES);
+		AR_ASSERT(AR_ICompStringWithWcs(str, L"http://www.appinf.com/pub/%e4%b8%ad%e5%9b%bd%e5%ad%97") == 0);
+
+
+		
+		
+		AR_DestroyURI(u1);
+		AR_DestroyURI(u2);
+		AR_DestroyString(str);
+		u1 = NULL;
+		u2 = NULL;
+		str = NULL;
+		
+}
+
 static void uri_test()
 {
 		uri_construct_test();
 		uri_parse_test();
 		uri_tostring_test();
+		uri_compare_test();
 }
 
 
