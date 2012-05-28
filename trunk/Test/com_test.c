@@ -4453,8 +4453,263 @@ static void uri_compare_test()
 		u1 = NULL;
 		u2 = NULL;
 		str = NULL;
-		
 }
+
+
+static void uri_normalize_test()
+{
+
+		arURI_t	*uri;
+		arStatus_t status;
+		
+		status = AR_S_YES;
+		arString_t *str;
+
+		uri = AR_CreateURI(AR_CP_UTF8);
+		str = AR_CreateString();
+		
+		AR_ASSERT(uri != NULL && str != NULL);
+
+		AR_ASSERT(AR_SetURI(uri, L"http://www.appinf.com") == AR_S_YES);
+		AR_ASSERT(AR_NormalizeURI(uri) == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_ICompStringWithWcs(str, L"http://www.appinf.com") == 0);
+
+
+		AR_ASSERT(AR_SetURI(uri, L"http://www.appinf.com/") == AR_S_YES);
+		AR_ASSERT(AR_NormalizeURI(uri) == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_ICompStringWithWcs(str, L"http://www.appinf.com/") == 0);
+
+
+		AR_ASSERT(AR_SetURI(uri, L"http://www.appinf.com/foo/bar/./index.html") == AR_S_YES);
+		AR_ASSERT(AR_NormalizeURI(uri) == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_ICompStringWithWcs(str, L"http://www.appinf.com/foo/bar/index.html") == 0);
+
+
+		AR_ASSERT(AR_SetURI(uri, L"http://www.appinf.com/foo/bar/../index.html") == AR_S_YES);
+		AR_ASSERT(AR_NormalizeURI(uri) == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_ICompStringWithWcs(str, L"http://www.appinf.com/foo/index.html") == 0);
+
+
+		AR_ASSERT(AR_SetURI(uri, L"http://www.appinf.com/foo/./bar/../index.html") == AR_S_YES);
+		AR_ASSERT(AR_NormalizeURI(uri) == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_ICompStringWithWcs(str, L"http://www.appinf.com/foo/index.html") == 0);
+
+
+
+		AR_ASSERT(AR_SetURI(uri, L"http://www.appinf.com/foo/./bar/../index.html") == AR_S_YES);
+		AR_ASSERT(AR_NormalizeURI(uri) == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_ICompStringWithWcs(str, L"http://www.appinf.com/foo/index.html") == 0);
+
+
+		AR_ASSERT(AR_SetURI(uri, L"http://www.appinf.com/foo/bar/../../index.html") == AR_S_YES);
+		AR_ASSERT(AR_NormalizeURI(uri) == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_ICompStringWithWcs(str, L"http://www.appinf.com/index.html") == 0);
+
+
+
+		AR_ASSERT(AR_SetURI(uri, L"http://www.appinf.com/foo/bar/../../../index.html") == AR_S_YES);
+		AR_ASSERT(AR_NormalizeURI(uri) == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_ICompStringWithWcs(str, L"http://www.appinf.com/index.html") == 0);
+
+
+		AR_ASSERT(AR_SetURI(uri, L"http://www.appinf.com/foo/bar/.././../index.html") == AR_S_YES);
+		AR_ASSERT(AR_NormalizeURI(uri) == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_ICompStringWithWcs(str, L"http://www.appinf.com/index.html") == 0);
+
+
+
+		AR_ASSERT(AR_SetURI(uri, L"http://www.appinf.com/./foo/bar/index.html") == AR_S_YES);
+		AR_ASSERT(AR_NormalizeURI(uri) == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_ICompStringWithWcs(str, L"http://www.appinf.com/foo/bar/index.html") == 0);
+
+
+
+		AR_ASSERT(AR_SetURI(uri, L"http://www.appinf.com/../foo/bar/index.html") == AR_S_YES);
+		AR_ASSERT(AR_NormalizeURI(uri) == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_ICompStringWithWcs(str, L"http://www.appinf.com/foo/bar/index.html") == 0);
+
+
+		AR_ASSERT(AR_SetURI(uri, L"http://www.appinf.com/../foo/bar/") == AR_S_YES);
+		AR_ASSERT(AR_NormalizeURI(uri) == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_ICompStringWithWcs(str, L"http://www.appinf.com/foo/bar/") == 0);
+
+
+		AR_ASSERT(AR_SetURI(uri, L"http://www.appinf.com/../foo/../") == AR_S_YES);
+		AR_ASSERT(AR_NormalizeURI(uri) == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_ICompStringWithWcs(str, L"http://www.appinf.com/") == 0);
+
+
+		AR_ASSERT(AR_SetURI(uri, L"file:///c:/Windows/system32/") == AR_S_YES);
+		AR_ASSERT(AR_NormalizeURI(uri) == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_ICompStringWithWcs(str, L"file:///c:/Windows/system32/") == 0);
+
+		AR_ClearURI(uri);
+		AR_ASSERT(AR_SetURIPath(uri, L"c:/windows/system32/") == AR_S_YES);
+		AR_ASSERT(AR_NormalizeURI(uri) == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_ICompStringWithWcs(str, L"./c:/windows/system32/") == 0);
+		
+
+		AR_ASSERT(AR_SetURI(uri, L"//.././../index.html") == AR_S_YES);
+		AR_ASSERT(AR_IsRelativeURI(uri));
+		AR_ASSERT(AR_NormalizeURI(uri) == AR_S_YES);
+		AR_ASSERT(AR_GetURI(uri, str) == AR_S_YES);
+		AR_ASSERT(AR_ICompStringWithWcs(str, L"/../../index.html") == 0);
+
+		AR_DestroyURI(uri);
+		uri = NULL;
+		AR_DestroyString(str);
+		str = NULL;
+}
+
+static void uri_misc_test()
+{
+
+		arURI_t	*uri;
+		arStatus_t status;
+		status = AR_S_YES;
+		arString_t *str;
+
+		uri = AR_CreateURI(AR_CP_UTF8);
+		str = AR_CreateString();
+		
+		AR_ASSERT(uri != NULL && str != NULL);
+
+
+		/*******************************************************************************/
+		status = AR_SetEncodedURI(uri, L"http://google.com/search?q=hello%25world#frag%20ment");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"http") == 0);
+
+		status = AR_GetURIHost(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"google.com") == 0);
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"/search") == 0);
+
+		status = AR_GetURIEncodedQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"q=hello%25world") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"q=hello%world") == 0);
+
+
+		status = AR_GetURIEncodedFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"frag%20ment") == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"frag ment") == 0);
+
+		status = AR_GetEncodedURI(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"http://google.com/search?q=hello%25world#frag%20ment") == 0);
+
+		status = AR_GetURIEncodedPathEtc(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"/search?q=hello%25world#frag%20ment") == 0);
+		AR_ASSERT(!AR_IsRelativeURI(uri));
+
+
+
+
+		/*******************************************************************************/
+		status = AR_SetURIQuery(uri, L"q=goodbye cruel world");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"http") == 0);
+
+		status = AR_GetURIHost(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"google.com") == 0);
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"/search") == 0);
+
+		status = AR_GetURIEncodedQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"q=goodbye%20cruel%20world") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"q=goodbye cruel world") == 0);
+
+
+		status = AR_GetURIEncodedFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"frag%20ment") == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"frag ment") == 0);
+
+		status = AR_GetEncodedURI(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"http://google.com/search?q=goodbye%20cruel%20world#frag%20ment") == 0);
+
+		status = AR_GetURIEncodedPathEtc(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"/search?q=goodbye%20cruel%20world#frag%20ment") == 0);
+		AR_ASSERT(!AR_IsRelativeURI(uri));
+
+		/*******************************************************************************/
+		status = AR_SetURIEncodedQuery(uri, L"q=pony%7eride");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"q=pony~ride") == 0);
+
+		status = AR_GetURIEncodedQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"q=pony~ride") == 0);
+
+
+		status = AR_GetEncodedURI(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"http://google.com/search?q=pony~ride#frag%20ment") == 0);
+
+
+		status = AR_GetURIEncodedPathEtc(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"/search?q=pony~ride#frag%20ment") == 0);
+
+
+		AR_ASSERT(!AR_IsRelativeURI(uri));
+
+
+		AR_DestroyURI(uri);
+		uri = NULL;
+		AR_DestroyString(str);
+		str = NULL;
+
+}
+
 
 static void uri_test()
 {
@@ -4462,6 +4717,8 @@ static void uri_test()
 		uri_parse_test();
 		uri_tostring_test();
 		uri_compare_test();
+		uri_normalize_test();
+		uri_misc_test();
 }
 
 
