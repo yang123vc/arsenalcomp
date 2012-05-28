@@ -4703,6 +4703,50 @@ static void uri_misc_test()
 		AR_ASSERT(!AR_IsRelativeURI(uri));
 
 
+
+
+		/*******************************************************************************/
+		status = AR_SetURI(uri, L"https://developer.apple.com/library/safari/#documentation/Tools/Conceptual/SafariExtensionGuide/ExtensionsOverview/ExtensionsOverview.html#//apple_ref/doc/uid/TP40009977-CH15-SW1");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"https") == 0);
+
+		status = AR_GetURIHost(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"developer.apple.com") == 0);
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"/library/safari/") == 0);
+
+		status = AR_GetURIEncodedQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"") == 0);
+
+		
+		status = AR_GetURIEncodedFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"documentation/Tools/Conceptual/SafariExtensionGuide/ExtensionsOverview/ExtensionsOverview.html#//apple_ref/doc/uid/TP40009977-CH15-SW1") == 0);
+		
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"documentation/Tools/Conceptual/SafariExtensionGuide/ExtensionsOverview/ExtensionsOverview.html#//apple_ref/doc/uid/TP40009977-CH15-SW1") == 0);
+
+		
+		status = AR_GetEncodedURI(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"https://developer.apple.com/library/safari/#documentation/Tools/Conceptual/SafariExtensionGuide/ExtensionsOverview/ExtensionsOverview.html#//apple_ref/doc/uid/TP40009977-CH15-SW1") == 0);
+		
+
+
+		
 		AR_DestroyURI(uri);
 		uri = NULL;
 		AR_DestroyString(str);
