@@ -781,8 +781,11 @@ void			AR_DestroyString(arString_t *str);
 /*预留num个wchar_t的空间*/
 arStatus_t		AR_ReserveString(arString_t *str, size_t num);
 void			AR_ClearString(arString_t *str);
+
 arStatus_t		AR_AppendString(arString_t *str, const wchar_t *sour);
 arStatus_t		AR_AppendStringN(arString_t *str, const wchar_t *sour, size_t n);
+
+#define			AR_CatString(_dest, _str)		AR_AppendString((_dest), AR_GetStringCString((_str)))
 
 arStatus_t		AR_FormatString(arString_t *str, const wchar_t *fmt, ...);
 arStatus_t		AR_AppendFormatString(arString_t *str, const wchar_t *fmt, ...);
@@ -794,6 +797,8 @@ arStatus_t		AR_AppendVFormatString(arString_t *str, const wchar_t *fmt, va_list 
 arStatus_t		AR_AppendCharToString(arString_t *str, wchar_t chr);
 
 arStatus_t		AR_SetString(arString_t *str, const wchar_t *wcs);
+arStatus_t		AR_SetStringN(arString_t *str, const wchar_t *wcs, size_t n);
+
 arStatus_t		AR_CopyString(arString_t *src, const arString_t *dest);
 
 
@@ -801,6 +806,8 @@ const wchar_t*	AR_GetStringCString(const arString_t *str);
 #define			AR_CSTR		AR_GetStringCString
 
 size_t			AR_GetStringLength(const arString_t *str);
+
+#define			AR_IsEmptyString(_str)	(AR_GetStringLength((_str)) == 0 ? true : false)
 
 wchar_t			AR_GetStringChar(const arString_t *str, size_t index);
 void			AR_SetStringChar(arString_t *str, size_t index, wchar_t c);
@@ -812,6 +819,8 @@ void			AR_SetStringChar(arString_t *str, size_t index, wchar_t c);
 int_t			AR_CompStringWithWcs(const arString_t *l, const wchar_t *r);
 int_t			AR_CompString(const arString_t *l, const arString_t *r);
 
+int_t			AR_ICompStringWithWcs(const arString_t *l, const wchar_t *r);
+int_t			AR_ICompString(const arString_t *l, const arString_t *r);
 
 void			AR_StringToLower(arString_t *l);
 void			AR_StringToUpper(arString_t *l);
@@ -886,6 +895,77 @@ size_t			AR_ReadBufferData(arBuffer_t *buffer, byte_t *dest, size_t len);
 
 
 
+
+/************************************************************URI****************************************************************/
+
+
+struct __arsenal_uri_tag;
+typedef struct __arsenal_uri_tag		arURI_t;
+
+
+arURI_t*		AR_CreateURI(arCodePage_t cp);
+void			AR_DestroyURI(arURI_t *uri);
+void			AR_ClearURI(arURI_t *uri);
+int_t			AR_CompURI(const arURI_t *l, const arURI_t *r);
+
+arCodePage_t	AR_GetURICodePage(const arURI_t *uri);
+void			AR_SetURICodePage(arURI_t *uri, arCodePage_t cp);
+
+bool_t			AR_IsRelativeURI(const arURI_t *uri);
+
+
+/*这里默认认为输入的URI完全为编码后的URL，之后根据URI设置的code page将编码后的uri解码，并转换为unicode*/
+arStatus_t		AR_SetURI(arURI_t *uri, const wchar_t *str);
+arStatus_t		AR_SetEncodedURI(arURI_t *uri, const wchar_t *str);
+
+/*取得的URI为编码后的URI,并以unicode方式返回*/
+arStatus_t		AR_GetURI(const arURI_t *uri, arString_t *str);
+arStatus_t		AR_GetEncodedURI(const arURI_t *uri, arString_t *str);
+
+
+
+arStatus_t		AR_GetURIScheme(const arURI_t *uri, arString_t *str);
+arStatus_t		AR_SetURIScheme(arURI_t *uri, const wchar_t *str);
+
+arStatus_t		AR_GetURIUserInfo(const arURI_t *uri, arString_t *str);
+
+arStatus_t		AR_SetURIUserInfo(arURI_t *uri, const wchar_t *str);
+arStatus_t		AR_SetURIEncodedUserInfo(arURI_t *uri, const wchar_t *str);
+
+arStatus_t		AR_GetURIHost(const arURI_t *uri, arString_t *str);
+arStatus_t		AR_SetURIHost(arURI_t *uri, const wchar_t *str);
+
+uint_16_t		AR_GetURIPort(const arURI_t *uri);
+void			AR_SetURIPort(arURI_t *uri, uint_16_t port);
+
+
+arStatus_t		AR_GetURIAuthority(const arURI_t *uri, arString_t *str);
+arStatus_t		AR_GetURIEncodedAuthority(const arURI_t *uri, arString_t *str);
+arStatus_t		AR_SetURIAuthority(arURI_t *uri, const wchar_t *str);
+arStatus_t		AR_SetURIEncodedAuthority(arURI_t *uri, const wchar_t *str);
+
+
+arStatus_t		AR_GetURIPath(const arURI_t *uri, arString_t *str);
+arStatus_t		AR_GetURIEncodedPath(const arURI_t *uri, arString_t *str);
+
+arStatus_t		AR_SetURIPath(arURI_t *uri, const wchar_t *str);
+arStatus_t		AR_SetURIEncodedPath(arURI_t *uri, const wchar_t *str);
+		
+arStatus_t		AR_GetURIQuery(const arURI_t *uri, arString_t *str);
+arStatus_t		AR_GetURIEncodedQuery(const arURI_t *uri, arString_t *str);
+arStatus_t		AR_SetURIQuery(arURI_t *uri, const wchar_t *str);
+arStatus_t		AR_SetURIEncodedQuery(arURI_t *uri, const wchar_t *str);
+
+arStatus_t		AR_GetURIFragment(const arURI_t *uri, arString_t *str);
+arStatus_t		AR_GetURIEncodedFragment(const arURI_t *uri, arString_t *str);
+arStatus_t		AR_SetURIFragment(arURI_t *uri, const wchar_t *str);
+arStatus_t		AR_SetURIEncodedFragment(arURI_t *uri, const wchar_t *str);
+
+
+arStatus_t		AR_GetURIPathEtc(const arURI_t *uri, arString_t *str);
+arStatus_t		AR_GetURIEncodedPathEtc(const arURI_t *uri, arString_t *str);
+arStatus_t		AR_SetURIPathEtc(arURI_t *uri, const wchar_t *str);
+arStatus_t		AR_SetURIEncodedPathEtc(arURI_t *uri, const wchar_t *str);
 
 
 

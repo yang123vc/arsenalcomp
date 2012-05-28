@@ -168,6 +168,9 @@
     <ClCompile Include="..\..\..\Arsenal\Common\printf.c">
       <Filter>Arsenal\Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Arsenal\Common\uri.c">
+      <Filter>Arsenal\Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Arsenal\Common\common.h">

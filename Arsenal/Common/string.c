@@ -65,6 +65,12 @@ arStatus_t		AR_SetString(arString_t *str, const wchar_t *wcs)
 		return AR_AppendString(str, wcs);
 }
 
+arStatus_t		AR_SetStringN(arString_t *str, const wchar_t *wcs, size_t n)
+{
+		AR_ASSERT(str != NULL && wcs != NULL);
+		AR_ClearString(str);
+		return AR_AppendStringN(str, wcs, n);
+}
 
 arStatus_t		AR_CopyString(arString_t *src, const arString_t *dest)
 {
@@ -401,6 +407,17 @@ int_t			AR_CompString(const arString_t *l, const arString_t *r)
 		return AR_wcscmp(AR_GetStringCString(l), AR_GetStringCString(r));
 }
 
+int_t			AR_ICompStringWithWcs(const arString_t *l, const wchar_t *r)
+{
+		AR_ASSERT(l != NULL && r != NULL);
+		return AR_wcsicmp(AR_GetStringCString(l), r);
+}
+
+int_t			AR_ICompString(const arString_t *l, const arString_t *r)
+{
+		AR_ASSERT(l != NULL && r != NULL);
+		return AR_wcsicmp(AR_GetStringCString(l), AR_GetStringCString(r));
+}
 
 void			AR_SwapString(arString_t *l, arString_t *r)
 {
