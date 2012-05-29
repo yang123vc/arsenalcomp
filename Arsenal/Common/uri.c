@@ -1730,7 +1730,7 @@ static arStatus_t		__remove_path_dot_segments(arURI_t *uri, bool_t is_remove_lea
 		arList_t		*segments, *normalized;
 		const arListNode_t *node;
 		arStatus_t		status;
-		bool leading_slash, trailing_slash;
+		bool_t leading_slash, trailing_slash;
 		
 		AR_ASSERT(uri != NULL);
 		status = AR_S_YES;
