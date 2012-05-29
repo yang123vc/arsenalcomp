@@ -432,7 +432,6 @@ uint_64_t __murmur_hash_64_a(const byte_t *key, size_t len, uint_64_t seed)
 				h *= m;
 				break;
 		default:
-				AR_ASSERT(false);
 				break;
 		};
 
