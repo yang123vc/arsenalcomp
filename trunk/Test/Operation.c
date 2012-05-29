@@ -10,11 +10,13 @@
 
 CLD_EXTERN_C_BEGIN
 
+
 static arStatus_t Cloud_RunOperation(cldOperation_t *operation);
 
 
 
 /*********************************************************************************************************************/
+
 
 
 
@@ -64,7 +66,7 @@ INVALID_POINT:
         if(pool != NULL && pool->thread_cnt > 0)
         {
                 AR_ASSERT(que_init);
-         
+                
                 for(i = 0; i < pool->thread_cnt; ++i)
                 {
                         if(AR_PutToAsyncQueue(&pool->async_que, NULL) != AR_S_YES)      /*这里出现错误就无法恢复也没必要恢复了，应用程序直接挂掉！！*/
@@ -89,7 +91,7 @@ INVALID_POINT:
         {
                 AR_UnInitAsyncQueue(&pool->async_que);
         }
-
+        
         if(pool != NULL && mutex_is_init)
         {
                 AR_UnInitSpinLock(&pool->mutex);
@@ -111,9 +113,9 @@ void    Cloud_DestroyOperationPool(cldOperationPool_t *pool)
 {
         size_t i;
         AR_ASSERT(pool != NULL);
-
+        
 		AR_ASSERT(AR_AsyncQueueIsEmpty(&pool->async_que) == AR_S_YES);
-
+        
 		for(i = 0; i < pool->thread_cnt; ++i)
 		{
 				if(AR_PutToAsyncQueue(&pool->async_que, NULL) != AR_S_YES)      /*这里出现错误就无法恢复也没必要恢复了，应用程序直接挂掉！！*/
@@ -121,7 +123,7 @@ void    Cloud_DestroyOperationPool(cldOperationPool_t *pool)
                         AR_error(AR_ERR_FATAL, L"destroy operation pool failed!\r\n");
                 }
 		}
-
+        
         for(i = 0; i < pool->thread_cnt; ++i)
         {
                 AR_ASSERT(pool->thd[i] != NULL);
@@ -133,14 +135,14 @@ void    Cloud_DestroyOperationPool(cldOperationPool_t *pool)
                 AR_DestroyThread(pool->thd[i]);
                 pool->thd[i] = NULL;
         }
-
+        
         pool->thread_cnt = 0;
         
 		AR_ASSERT(AR_AsyncQueueIsEmpty(&pool->async_que) == AR_S_YES);
         AR_UnInitAsyncQueue(&pool->async_que);
         
         AR_UnInitSpinLock(&pool->mutex);
-
+        
         AR_DEL(pool);
         pool = NULL;
         
@@ -165,7 +167,7 @@ static void	__thread_worker(void *data)
 				{
                         if(operation == NULL)
                         {
-                                AR_error(AR_ERR_MESSAGE, L"Thread exit!\r\n");
+                                AR_error(AR_ERR_MESSAGE,L"Thread exit!\r\n");
                                 break;
                         }else
                         {
@@ -173,11 +175,11 @@ static void	__thread_worker(void *data)
                         }
 				}else if(status == AR_E_TIMEOUT)
 				{
-						AR_error(AR_ERR_MESSAGE, L"Timeout\r\n");
+						AR_error(AR_ERR_MESSAGE,L"Timeout\r\n");
 						continue;
 				}else
 				{
-                        AR_error(AR_ERR_MESSAGE, L"Thread terminated : %d\r\n", AR_GET_STATUS(status));
+                        AR_error(AR_ERR_WARNING,L"Thread terminated : %d\r\n", AR_GET_STATUS(status));
                         break;
 				}
 		}
@@ -226,7 +228,7 @@ size_t					Cloud_GetOperationPoolThreadCount(cldOperationPool_t *pool)
 {
 		size_t cnt;
 		AR_ASSERT(pool != NULL);
-
+        
 		AR_LockSpinLock(&pool->mutex);
 		cnt = pool->thread_cnt;
 		AR_UnLockSpinLock(&pool->mutex);
@@ -241,7 +243,7 @@ arStatus_t				Cloud_PostToOperationPool(cldOperationPool_t *pool, cldOperation_t
 		{
 				if(Cloud_IncreaseOperationPoolThread(pool) != AR_S_YES)
 				{
-						AR_error(AR_ERR_MESSAGE, L"increase thread failed in Operation Pool!\r\n");
+						AR_error(AR_ERR_WARNING, L"increase thread failed in Operation Pool!\r\n");
 				}
 		}
 		
@@ -257,10 +259,10 @@ static cldOperationPool_t		*__g_pool = NULL;
 arStatus_t      Operation_Init()
 {
         __g_pool = Cloud_CreateOperationPool(0);
-
+        
 		if(__g_pool == NULL)
 		{
-				AR_error(AR_ERR_MESSAGE, L"failed to create operation pool!\r\n");
+				AR_error(AR_ERR_WARNING,L"failed to create operation pool!\r\n");
 				return AR_E_SYS;
 		}else
 		{
@@ -278,15 +280,6 @@ void            Operation_UnInit()
 		}
 }
 
-
-
-/*
-typedef void* (*cldOperationFunc_t)(void *usr_ctx);
-
-struct __cloud_operation_tag;
-typedef struct __cloud_operation_tag	cldOperation_t;
-
-*/
 
 typedef enum
 {
@@ -306,7 +299,7 @@ struct __cloud_operation_tag
 		cldOperationState_t		state;
 		
 		
-
+        
 		void					*usr_ctx;
 		cldOperationFunc_t		func;
 		cldOperationDestroyResultFunc_t	destroy_result_func;
@@ -317,7 +310,7 @@ cldOperation_t*	Cloud_CreateOperation(cldOperationFunc_t func, cldOperationDestr
 {
 		cldOperation_t *oper;
 		AR_ASSERT(func != NULL);
-
+        
 		oper = AR_NEW0(cldOperation_t);
 		if(oper == NULL)
 		{
@@ -331,20 +324,20 @@ cldOperation_t*	Cloud_CreateOperation(cldOperationFunc_t func, cldOperationDestr
 				oper = NULL;
 				return NULL;
 		}
-
+        
 		AR_InitSpinLock(&oper->mutex);
-
+        
 		oper->state = CLOUD_OPER_READY;
 		oper->has_started = false;
 		oper->has_result = false;
-
+        
 		oper->func = func;
 		oper->destroy_result_func = destroy_func;
 		oper->usr_ctx = usr_ctx;
 		oper->result = NULL;
-
+        
 		return oper;
-
+        
 }
 
 void			Cloud_DestroyOperation(cldOperation_t *operation)
@@ -354,54 +347,117 @@ void			Cloud_DestroyOperation(cldOperation_t *operation)
 		AR_ASSERT(operation != NULL);
 		result = NULL;
 		need_cancel = false;
-
+        
 		AR_LockSpinLock(&operation->mutex);
 		
 		if(operation->has_started)
 		{
 				need_cancel = true;
 		}
-
+        
 		AR_UnLockSpinLock(&operation->mutex);
-
+        
 		if(need_cancel)
 		{
 				Cloud_CancelOperation(operation);
 		}
-
-
+        
+        
 		if(need_cancel)
 		{
 				if(AR_WaitEvent(operation->done_event) != AR_S_YES)
 				{
 						AR_error(AR_ERR_FATAL, L"destroy operation object failed\r\n");
 				}
-
-				if(operation->has_result && operation->destroy_result_func && Cloud_GetOperationResult(operation, &result) == AR_S_YES)
-				{
-						operation->destroy_result_func(result, operation->usr_ctx);
-				}
+                
+                AR_LockSpinLock(&operation->mutex);
+                
+                if(operation->has_result && operation->destroy_result_func != NULL)
+                {
+                        AR_UnLockSpinLock(&operation->mutex);
+                        
+                        if(Cloud_GetOperationResult(operation, &result) == AR_S_YES)
+                        {
+                                AR_LockSpinLock(&operation->mutex);
+                                operation->destroy_result_func(result, operation->usr_ctx);
+                                AR_UnLockSpinLock(&operation->mutex);
+                        }
+                }else
+                {
+                        AR_UnLockSpinLock(&operation->mutex);
+                }
 		}else
 		{
 				AR_ASSERT(operation->result == NULL);
 		}
-
+        
 		
-
-		AR_ASSERT(!operation->has_result);
+/*        
+        AR_ASSERT(!operation->has_result);
 		AR_ASSERT(operation->result == NULL);
-		
+*/
 		AR_DestroyEvent(operation->done_event);
 		operation->done_event = NULL;
-
+        
 		AR_UnInitSpinLock(&operation->mutex);
-
+        
 		AR_ASSERT(need_cancel ? (operation->state == CLOUD_OPER_FINISHED || operation->state == CLOUD_OPER_CANCELLED) : true);
-
+        
 		AR_DEL(operation);
 		operation = NULL;
 }
 
+
+static arStatus_t Cloud_RunOperation(cldOperation_t *oper)
+{
+		arStatus_t status;
+		AR_ASSERT(oper != NULL);
+
+		AR_error(AR_ERR_MESSAGE,L"enter function %hs\r\n", AR_FUNC_NAME);
+        
+		status = AR_S_YES;
+		
+		AR_LockSpinLock(&oper->mutex);
+		
+		if(oper->state != CLOUD_OPER_READY)
+		{
+				status = AR_S_NO;
+                oper->has_result = false;
+		}else
+		{
+				oper->state = CLOUD_OPER_EXECUTING;
+		}
+        
+		if(status != AR_S_YES)
+		{
+				AR_ASSERT(oper->state == CLOUD_OPER_CANCELLED);
+                AR_UnLockSpinLock(&oper->mutex);
+                
+				if(AR_SetEvent(oper->done_event) != AR_S_YES)
+				{
+						AR_error(AR_ERR_FATAL, L"run operation failed, app terminated\r\n");
+				}
+                
+				return status;
+		}else
+        {
+                AR_UnLockSpinLock(&oper->mutex);
+                oper->result = oper->func(oper->usr_ctx);
+
+                AR_LockSpinLock(&oper->mutex);
+                AR_ASSERT(oper->state == CLOUD_OPER_EXECUTING);
+                oper->state = CLOUD_OPER_FINISHED;
+                oper->has_result = true;
+                AR_UnLockSpinLock(&oper->mutex);
+        
+                if(AR_SetEvent(oper->done_event) != AR_S_YES)
+                {
+                        AR_error(AR_ERR_FATAL, L"run operation failed, app terminated\r\n");
+                }
+        }
+        
+		return AR_S_YES;
+}
 
 
 
@@ -411,24 +467,24 @@ arStatus_t		Cloud_StartOperation(cldOperation_t *oper)
 		arStatus_t status;
 		AR_ASSERT(oper != NULL);
 		AR_ASSERT(__g_pool != NULL);
-
+        
 		if(Cloud_OperationIsReady(oper) == AR_S_YES)
 		{
 				AR_LockSpinLock(&oper->mutex);
 				status = Cloud_PostToOperationPool(__g_pool, oper);
-
+                
 				if(status == AR_S_YES)
 				{
 						oper->has_started = true;
 				}
-
+                
 				AR_UnLockSpinLock(&oper->mutex);
-
+                
 		}else
 		{
 				status = AR_E_INVAL;
 		}
-
+        
 		return status;
 }
 
@@ -438,9 +494,9 @@ arStatus_t		Cloud_CancelOperation(cldOperation_t *oper)
 {
 		arStatus_t status;
 		AR_ASSERT(oper != NULL);
-
+        
 		AR_LockSpinLock(&oper->mutex);
-
+        
 		if(oper->state == CLOUD_OPER_READY)
 		{
 				oper->state = CLOUD_OPER_CANCELLED;
@@ -450,9 +506,9 @@ arStatus_t		Cloud_CancelOperation(cldOperation_t *oper)
 				status = AR_S_NO;
 		}
 		AR_UnLockSpinLock(&oper->mutex);
-
+        
 		return status;
-
+        
 }
 
 
@@ -460,13 +516,13 @@ arStatus_t		Cloud_OperationIsReady(cldOperation_t *oper)
 {
 		arStatus_t status;
 		AR_ASSERT(oper != NULL);
-
+        
 		AR_LockSpinLock(&oper->mutex);
-
+        
 		status = oper->state == CLOUD_OPER_READY ? AR_S_YES : AR_S_NO;
-
+        
 		AR_UnLockSpinLock(&oper->mutex);
-
+        
 		return status;
 }
 
@@ -475,13 +531,13 @@ arStatus_t		Cloud_OperationIsExecuting(cldOperation_t *oper)
 {
 		arStatus_t status;
 		AR_ASSERT(oper != NULL);
-
+        
 		AR_LockSpinLock(&oper->mutex);
-
+        
 		status = oper->state == CLOUD_OPER_EXECUTING ? AR_S_YES : AR_S_NO;
-
+        
 		AR_UnLockSpinLock(&oper->mutex);
-
+        
 		return status;
 }
 
@@ -489,13 +545,13 @@ arStatus_t		Cloud_OperationIsCancelled(cldOperation_t *oper)
 {
 		arStatus_t status;
 		AR_ASSERT(oper != NULL);
-
+        
 		AR_LockSpinLock(&oper->mutex);
-
+        
 		status = oper->state == CLOUD_OPER_CANCELLED ? AR_S_YES : AR_S_NO;
-
+        
 		AR_UnLockSpinLock(&oper->mutex);
-
+        
 		return status;
 }
 
@@ -503,67 +559,17 @@ arStatus_t		Cloud_OperationIsFinished(cldOperation_t *oper)
 {
 		arStatus_t status;
 		AR_ASSERT(oper != NULL);
-
+        
 		AR_LockSpinLock(&oper->mutex);
-
+        
 		status = oper->state == CLOUD_OPER_FINISHED ? AR_S_YES : AR_S_NO;
-
+        
 		AR_UnLockSpinLock(&oper->mutex);
-
+        
 		return status;
 }
 
 
-
-
-static arStatus_t Cloud_RunOperation(cldOperation_t *oper)
-{
-		arStatus_t status;
-		AR_ASSERT(oper != NULL);
-
-		AR_error(AR_ERR_MESSAGE, L"on Cloud_RunOperation\r\n");
-		
-		status = AR_S_YES;
-		
-		AR_LockSpinLock(&oper->mutex);
-		
-		if(oper->state != CLOUD_OPER_READY)
-		{
-				status = AR_S_NO;
-		}else
-		{
-				oper->state = CLOUD_OPER_EXECUTING;
-		}
-
-		AR_UnLockSpinLock(&oper->mutex);
-
-		if(status != AR_S_YES)
-		{
-				AR_ASSERT(oper->state == CLOUD_OPER_CANCELLED);
-
-				if(AR_SetEvent(oper->done_event) != AR_S_YES)
-				{
-						AR_error(AR_ERR_FATAL, L"run operation failed, app terminated\r\n");
-				}
-
-				return status;
-		}
-		
-		oper->result = oper->func(oper->usr_ctx);
-
-		AR_LockSpinLock(&oper->mutex);
-		AR_ASSERT(oper->state == CLOUD_OPER_EXECUTING);
-		oper->state = CLOUD_OPER_FINISHED;
-		oper->has_result = true;
-		AR_UnLockSpinLock(&oper->mutex);
-
-		if(AR_SetEvent(oper->done_event) != AR_S_YES)
-		{
-				AR_error(AR_ERR_FATAL, L"run operation failed, app terminated\r\n");
-		}
-
-		return AR_S_YES;
-}
 
 
 
@@ -572,108 +578,119 @@ arStatus_t		Cloud_GetOperationResult(cldOperation_t *oper, void **presult)
 		arStatus_t status;
 		
 		AR_ASSERT(oper != NULL && presult != NULL);
-
+        
 		status = AR_S_YES;
-
+        
 		AR_LockSpinLock(&oper->mutex);
-
+        
 		if(oper->state == CLOUD_OPER_FINISHED && !oper->has_result)
 		{
 				status = AR_E_NOTFOUND;
 		}
-
+        
 		AR_UnLockSpinLock(&oper->mutex);
-
+        
 		if(status != AR_S_YES)
 		{
 				return status;
 		}
-
-
+        
+        
 		status = AR_WaitEvent(oper->done_event);
-
+        
 		if(status != AR_S_YES)
 		{
 				return status;
 		}
-
+        
 		AR_LockSpinLock(&oper->mutex);
-
+        
 		switch(oper->state)
 		{
-		case CLOUD_OPER_CANCELLED:
-				status = AR_E_CANCELLED;
-				break;
-		case CLOUD_OPER_FINISHED:
-				AR_ASSERT(oper->has_result);
-				*presult = oper->result;
-				oper->result = NULL;
-				oper->has_result = false;
-				status = AR_S_YES;
-				break;
-		default:
-				AR_ASSERT(false);
-				AR_error(AR_ERR_FATAL, L"internal error\r\n");
+                case CLOUD_OPER_CANCELLED:
+                        status = AR_E_CANCELLED;
+                        break;
+                case CLOUD_OPER_FINISHED:
+                        if(oper->has_result)
+                        {
+                                *presult = oper->result;
+                                oper->result = NULL;
+                                oper->has_result = false;
+                                status = AR_S_YES;
+                        }else
+                        {
+                                status = AR_E_NOTFOUND;
+                        }
+                        break;
+                default:
+                        AR_ASSERT(false);
+                        AR_error(AR_ERR_FATAL, L"internal error\r\n");
 		}
 		
 		AR_UnLockSpinLock(&oper->mutex);
-
+        
 		return status;
 }
 
 
 arStatus_t		Cloud_GetOperationResultWithTimeout(cldOperation_t *oper, void **presult, uint_64_t timeout_ms)
 {
-
+        
 		arStatus_t status;
 		AR_ASSERT(oper != NULL && presult != NULL);
-
+        
 		status = AR_S_YES;
-
+        
 		AR_LockSpinLock(&oper->mutex);
-
+        
 		if(oper->state == CLOUD_OPER_FINISHED && !oper->has_result)
 		{
 				status = AR_E_NOTFOUND;
 		}
-
+        
 		AR_UnLockSpinLock(&oper->mutex);
-
+        
 		if(status != AR_S_YES)
 		{
 				return status;
 		}
 		
 		status = AR_WaitEventWithTimeout(oper->done_event, timeout_ms);
-
+        
 		if(status != AR_S_YES)
 		{
 				return status;
 		}
-
+        
 		AR_LockSpinLock(&oper->mutex);
-
+        
 		switch(oper->state)
 		{
-		case CLOUD_OPER_CANCELLED:
-				status = AR_E_CANCELLED;
-				break;
-		case CLOUD_OPER_FINISHED:
-				AR_ASSERT(oper->has_result);
-				*presult = oper->result;
-				oper->result = NULL;
-				oper->has_result = false;
-				status = AR_S_YES;
-				break;
-		default:
-				AR_ASSERT(false);
-				AR_error(AR_ERR_FATAL, L"internal error\r\n");
+                case CLOUD_OPER_CANCELLED:
+                        status = AR_E_CANCELLED;
+                        break;
+                case CLOUD_OPER_FINISHED:
+                        if(oper->has_result)
+                        {
+                                *presult = oper->result;
+                                oper->result = NULL;
+                                oper->has_result = false;
+                                status = AR_S_YES;
+                        }else
+                        {
+                                status = AR_E_EMPTY;
+                        }
+                        break;
+                default:
+                        AR_ASSERT(false);
+                        AR_error(AR_ERR_FATAL, L"internal error\r\n");
 		}
 		
 		AR_UnLockSpinLock(&oper->mutex);
-
+        
 		return status;
 }
+
 
 
 

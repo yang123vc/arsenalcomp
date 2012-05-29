@@ -69,8 +69,6 @@ arStatus_t              Cloud_OperationPoolHasIdleThread(cldOperationPool_t *poo
 arStatus_t				Cloud_PostToOperationPool(cldOperationPool_t *pool, cldOperation_t *operation);
 size_t					Cloud_GetOperationPoolThreadCount(cldOperationPool_t *pool);
 
-
-
 CLD_EXTERN_C_END
 
 #endif
