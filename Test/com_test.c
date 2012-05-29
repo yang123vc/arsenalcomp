@@ -2484,6 +2484,8 @@ static void* oper_test_func(void *usr_ctx)
 		return (void*)result;
 }		
 
+
+
 void	oper_test_destroy(void *result, void *usr_ctx)/*此函数在销毁operation时，如果operation为finished并且结果未被取走时执行*/
 {
 		AR_error(AR_ERR_MESSAGE, L"%hs\r\n", AR_FUNC_NAME);
@@ -2498,6 +2500,24 @@ void	oper_test_destroy(void *result, void *usr_ctx)/*此函数在销毁operation时，如
 		
 		delete presult;
 		presult = NULL;
+}
+
+
+
+static void wait_test_func(void *usr_ctx)
+{
+		cldOperation_t *oper = (cldOperation_t*)usr_ctx;
+		void *result;
+		arStatus_t status = Cloud_GetOperationResult(oper, &result);
+
+		AR_printf(L"Cloud_GetOperationResult == %u\r\n", AR_GET_STATUS(status));
+
+		
+		if(status == AR_S_YES)
+		{
+				delete (std::string*)result;
+		}
+
 }
 
 void operation_test3()
@@ -2516,15 +2536,19 @@ void operation_test3()
 				AR_ASSERT(false);
 		}
 
+		arThread_t *thd = AR_CreateThread(wait_test_func, oper);
+
 		std::string *pres = NULL;
 
-		if(Cloud_GetOperationResult(oper, (void**)&pres) != AR_S_YES)
-		{
-				AR_ASSERT(false);
-		}
+		Sleep(6000);
+		arStatus_t status = Cloud_GetOperationResult(oper, (void**)&pres);
 
-		
-		delete pres;
+		AR_ASSERT(status == AR_S_YES || status == AR_E_NOTFOUND);
+
+		if(status == AR_S_YES)
+		{
+				delete pres;
+		}
 
 
 		if(Cloud_GetOperationResult(oper, (void**)&pres) == AR_S_YES)
@@ -2537,6 +2561,8 @@ void operation_test3()
 
 		oper = NULL;
 
+		AR_DestroyThread(thd);
+		thd = NULL;
 
 		Operation_UnInit();
 }
@@ -4860,11 +4886,11 @@ void com_test()
 
 		//ds_test2();
 
-		//operation_test();
+		operation_test();
 
 		//cache_test();
 
-		uri_test();
+		//uri_test();
 }
 
 
