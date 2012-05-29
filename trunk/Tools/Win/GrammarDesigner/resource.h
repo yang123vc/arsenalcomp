@@ -49,6 +49,8 @@
 #define IDS_FIND_OUTPUT_WND             325
 #define IDR_MENU1                       326
 #define IDR_FIND_OUTPUT_POPUP           326
+#define IDD_DIALOG1                     327
+#define IDD_DIALOG_BASE64_CONV          327
 #define IDC_EDIT1                       1001
 #define IDC_EDIT_LINE                   1001
 #define IDC_EDIT_STRING                 1001
@@ -179,7 +181,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        327
+#define _APS_NEXT_RESOURCE_VALUE        328
 #define _APS_NEXT_COMMAND_VALUE         32905
 #define _APS_NEXT_CONTROL_VALUE         1013
 #define _APS_NEXT_SYMED_VALUE           310
