@@ -23,10 +23,8 @@ AR_NAMESPACE_BEGIN
 		static arSpinLock_t		__g_lock;
 		static arHeap_t			*__g_heap = NULL;
 
-		#if !defined(AR_USE_CRT_ALLOCFUNC)
-				static AR_INLINE void*	malloc_mem(size_t bytes);
-				static AR_INLINE void	free_mem(void *ptr);
-		#endif
+		static AR_INLINE void*	malloc_mem(size_t bytes);
+		static AR_INLINE void	free_mem(void *ptr);
 
 
 		#if defined(AR_ENABLE_MEMORY_LEAK_TEST)
