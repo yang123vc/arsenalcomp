@@ -2246,7 +2246,7 @@ int_t	__wstring_comp_func(void *l, void *r, void *ctx)
 
 arStatus_t	__wstring_copy_key_func(void *key, void **new_key, void *ctx)
 {
-		if(AR_rand32() % 2)
+		if(1)//AR_rand32() % 2)
 		{
 				std::wstring *new_wcs = new std::wstring(((std::wstring*)key)->c_str());
 				*new_key = (void*)new_wcs;
@@ -2317,11 +2317,68 @@ static void hash_test3()
 		hash = NULL;
 }
 
+
+/*
+arHashIter_t;
+void	AR_InitHashIterator(arHash_t *hash, arHashIter_t *iter);
+void	AR_UnInitHashIterator(arHashIter_t *iter);
+bool_t	AR_HashIteratorIsDone(const arHashIter_t *iter);
+void	AR_HashIteratorNext(arHashIter_t *iter);
+void*	AR_GetHashIteratorKey(const arHashIter_t *iter);
+void*	AR_GetHashIteratorData(const arHashIter_t *iter);
+*/
+static void hash_test4()
+{
+		arHashIter_t iter;
+		arHash_t *hash;
+		
+		hash = AR_CreateHash(139000, __wstring_hash_func, __wstring_comp_func, __wstring_copy_key_func, __wstring_copy_key_func, __wstring_destroy_func, __wstring_destroy_func, L"ctx_test");
+
+		AR_srand(time(NULL));
+
+		for(size_t i = 0; i < 1000000; ++i)
+		{
+				wchar_t kt[512],vt[512];
+
+				uint_64_t k = AR_rand64() % 13900;
+				uint_64_t v = AR_rand64() % 10000;
+				
+				AR_swprintf(kt, 512, L"%qu", k);
+				AR_swprintf(vt, 512, L"%qu", v);
+
+				std::wstring ks(kt), vs(vt);
+
+				arStatus_t s =  AR_InsertToHash(hash, (void*)&ks, (void*)&vs);
+				if(s != AR_S_YES)
+				{
+						AR_error(AR_ERR_MESSAGE, L"low memory\r\n");
+				}
+		}
+
+		AR_InitHashIterator(hash, &iter);
+		size_t cnt = 0;
+		while(!AR_HashIteratorIsDone(&iter))
+		{
+				const std::wstring *key = (const std::wstring*)AR_GetHashIteratorKey(&iter);
+				const std::wstring *data = (const std::wstring*)AR_GetHashIteratorData(&iter);
+				AR_printf(L"%ls : %ls\r\n", key->c_str(), data->c_str());
+				AR_HashIteratorNext(&iter);
+				cnt++;
+		}
+
+		AR_ASSERT(cnt == AR_GetHashCount(hash));
+		AR_UnInitHashIterator(&iter);
+		AR_DestroyHash(hash);
+		hash = NULL;
+
+}
+
 void ds_test2()
 {
 		//list_test();
-		hash_test2();
+		//hash_test2();
 		//hash_test3();
+		hash_test4();
 }
 
 
@@ -4884,9 +4941,9 @@ void com_test()
 		//thd_test();
 
 
-		//ds_test2();
+		ds_test2();
 
-		operation_test();
+		//operation_test();
 
 		//cache_test();
 

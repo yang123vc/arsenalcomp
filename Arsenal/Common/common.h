@@ -672,6 +672,24 @@ size_t			AR_GetHashCount(arHash_t *hash);
 
 void			AR_HashForEach(arHash_t *hash, AR_hash_visit_func_t visit);
 
+
+typedef struct __arsenal_hash_iterator_tag
+{
+		arHash_t		*hash;
+		size_t			bucket_idx;
+		arHashNode_t	*curr;
+}arHashIter_t;
+
+void	AR_InitHashIterator(arHash_t *hash, arHashIter_t *iter);
+void	AR_UnInitHashIterator(arHashIter_t *iter);
+
+bool_t	AR_HashIteratorIsDone(const arHashIter_t *iter);
+void	AR_HashIteratorNext(arHashIter_t *iter);
+void*	AR_GetHashIteratorKey(const arHashIter_t *iter);
+void*	AR_GetHashIteratorData(const arHashIter_t *iter);
+
+
+
 /*********************************************************String Convert****************************************************/
 
 /*

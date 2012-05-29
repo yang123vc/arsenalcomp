@@ -567,6 +567,76 @@ INVALID_POINT:
         return status;
 }
 
+/*
+typedef struct __arsenal_hash_iterator_tag
+{
+		arHash_t		*hash;
+		size_t			bucket_idx;
+		arHashNode_t	*curr;
+}arHashIter_t;
+*/
+
+void	AR_InitHashIterator(arHash_t *hash, arHashIter_t *iter)
+{
+		AR_ASSERT(hash != NULL && iter != NULL);
+		iter->hash = hash;
+		iter->bucket_idx = 0;
+		iter->curr = hash->bucket[0];
+		if(iter->curr == NULL)
+		{
+				AR_HashIteratorNext(iter);
+		}
+}
+
+void	AR_UnInitHashIterator(arHashIter_t *iter)
+{
+		AR_ASSERT(iter != NULL);
+		AR_memset(iter, 0, sizeof(*iter));
+}
+
+bool_t	AR_HashIteratorIsDone(const arHashIter_t *iter)
+{
+		AR_ASSERT(iter != NULL);
+		return iter->curr == NULL ? true : false;
+}
+
+
+void	AR_HashIteratorNext(arHashIter_t *iter)
+{
+		AR_ASSERT(iter != NULL && iter->hash != NULL);
+
+		if(iter->curr != NULL)
+		{
+				iter->curr = iter->curr->next;
+		}
+		
+		while(iter->curr == NULL)
+		{
+				if(iter->bucket_idx < iter->hash->bucket_size - 1)
+				{
+						iter->bucket_idx++;
+						iter->curr = iter->hash->bucket[iter->bucket_idx];
+				}else
+				{
+						break;
+				}
+
+		}
+}
+
+void*	AR_GetHashIteratorKey(const arHashIter_t *iter)
+{
+		AR_ASSERT(iter != NULL);
+		AR_ASSERT(!AR_HashIteratorIsDone(iter));
+		return iter->curr->key;
+}
+
+void*	AR_GetHashIteratorData(const arHashIter_t *iter)
+{
+		AR_ASSERT(iter != NULL);
+		AR_ASSERT(!AR_HashIteratorIsDone(iter));
+		return iter->curr->val;
+}
 
 
 AR_NAMESPACE_END
