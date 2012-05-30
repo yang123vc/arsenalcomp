@@ -6,6 +6,14 @@
 #include "Arsenal.h"
 #pragma comment(lib, "Arsenal.lib")
 
+#pragma comment(lib, "Wldap32.lib")
+#pragma comment(lib,"odbc32.lib")
+#pragma comment(lib,"odbcbcp.lib")
+#pragma comment(lib,"OdbcCP32.Lib")
+#pragma comment(lib, "shlwapi.lib")
+#pragma comment(lib, "Mpr.lib")
+#pragma comment(lib, "iphlpapi.lib")
+#pragma comment(lib, "ws2_32.lib")
 
 
 //using namespace std;
