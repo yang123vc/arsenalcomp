@@ -4863,6 +4863,13 @@ static void uri_exception_test()
 
 
 		/*******************************************************************************/
+		status = AR_SetEncodedURI(uri, L"itunes.apple.com/cn/app/id523405218?mt=8");
+		AR_ASSERT(status == AR_S_YES);
+
+		AR_GetURI(uri, str);
+		AR_printf(L"%ls\r\n", AR_GetStringCString(str));
+
+		
 
 		AR_DestroyURI(uri);
 		uri = NULL;
@@ -4976,11 +4983,11 @@ void com_test()
 
 		//ds_test2();
 
-		operation_test();
+		//operation_test();
 
 		//cache_test();
 
-		//uri_test();
+		uri_test();
 }
 
 
