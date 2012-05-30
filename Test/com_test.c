@@ -2462,20 +2462,20 @@ void str_test11()
 
 static void operation_test1()
 {
-		cldOperationPool_t *pool;
+		operationPool_t *pool;
 		
-		pool = Cloud_CreateOperationPool(2);
+		pool = Operation_CreatePool(2);
 
 		getchar();
 
-		if(Cloud_IncreaseOperationPoolThread(pool) != AR_S_YES)
+		if(Operation_IncreasePoolThread(pool) != AR_S_YES)
 		{
 				AR_ASSERT(false);
 		}
 
 		getchar();
 
-		if(Cloud_IncreaseOperationPoolThread(pool) != AR_S_YES)
+		if(Operation_IncreasePoolThread(pool) != AR_S_YES)
 		{
 				AR_ASSERT(false);
 		}
@@ -2483,7 +2483,7 @@ static void operation_test1()
 
 		getchar();
 
-		if(Cloud_IncreaseOperationPoolThread(pool) == AR_S_YES)
+		if(Operation_IncreasePoolThread(pool) == AR_S_YES)
 		{
 				AR_ASSERT(false);
 		}
@@ -2491,20 +2491,20 @@ static void operation_test1()
 		getchar();
 
 
-		arStatus_t has_idle = Cloud_OperationPoolHasIdleThread(pool);
+		arStatus_t has_idle = Operation_PoolHasIdleThread(pool);
 
 		AR_printf(L"has idle thread %d\r\n", AR_GET_STATUS(has_idle));
 
-		Cloud_DestroyOperationPool(pool);
+		Operation_DestroyPool(pool);
 
 		pool = NULL;
 }
 
 static void operation_test2()
 {
-		cldOperationPool_t *pool;
+		operationPool_t *pool;
 		
-		pool = Cloud_CreateOperationPool(2);
+		pool = Operation_CreatePool(2);
 		
 		while(true)
 		{
@@ -2512,12 +2512,12 @@ static void operation_test2()
 				char *s = NULL;
 				gets(buf);
 				if(strcmp(buf, "quit")== 0)break;
-				Cloud_PostToOperationPool(pool, (cldOperation_t*)0x01);
+				Operation_PostToPool(pool, (operation_t*)0x01);
 		}
 		
 		if(pool != NULL)
 		{
-				Cloud_DestroyOperationPool(pool);
+				Operation_DestroyPool(pool);
 				pool = NULL;
 		}
 
@@ -2563,11 +2563,11 @@ void	oper_test_destroy(void *result, void *usr_ctx)/*此函数在销毁operation时，如
 
 static void wait_test_func(void *usr_ctx)
 {
-		cldOperation_t *oper = (cldOperation_t*)usr_ctx;
+		operation_t *oper = (operation_t*)usr_ctx;
 		void *result;
-		arStatus_t status = Cloud_GetOperationResult(oper, &result);
+		arStatus_t status = Operation_GetResult(oper, &result);
 
-		AR_printf(L"Cloud_GetOperationResult == %u\r\n", AR_GET_STATUS(status));
+		AR_printf(L"Operation_GetResult == %u\r\n", AR_GET_STATUS(status));
 
 		
 		if(status == AR_S_YES)
@@ -2584,11 +2584,11 @@ void operation_test3()
 
 		std::string oper_mark = "abcdef";
 
-		cldOperation_t *oper = Cloud_CreateOperation(oper_test_func, oper_test_destroy, (void*)&oper_mark);
+		operation_t *oper = Operation_Create(oper_test_func, oper_test_destroy, (void*)&oper_mark);
 
 		AR_ASSERT(oper != NULL);
 
-		if(Cloud_StartOperation(oper) != AR_S_YES)
+		if(Operation_Start(oper) != AR_S_YES)
 		{
 				AR_ASSERT(false);
 		}
@@ -2598,7 +2598,7 @@ void operation_test3()
 		std::string *pres = NULL;
 
 		Sleep(6000);
-		arStatus_t status = Cloud_GetOperationResult(oper, (void**)&pres);
+		arStatus_t status = Operation_GetResult(oper, (void**)&pres);
 
 		AR_ASSERT(status == AR_S_YES || status == AR_E_NOTFOUND);
 
@@ -2608,13 +2608,13 @@ void operation_test3()
 		}
 
 
-		if(Cloud_GetOperationResult(oper, (void**)&pres) == AR_S_YES)
+		if(Operation_GetResult(oper, (void**)&pres) == AR_S_YES)
 		{
 				AR_ASSERT(false);
 		}
 
 
-		Cloud_DestroyOperation(oper);
+		Operation_Destroy(oper);
 
 		oper = NULL;
 
@@ -4976,11 +4976,11 @@ void com_test()
 
 		//ds_test2();
 
-		//operation_test();
+		operation_test();
 
 		//cache_test();
 
-		uri_test();
+		//uri_test();
 }
 
 
