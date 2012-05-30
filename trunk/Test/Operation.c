@@ -6,6 +6,7 @@
 //  Copyright (c) 2012年 none. All rights reserved.
 //
 
+#if defined(__LIB)
 
 #include "operation.h"
 
@@ -698,3 +699,7 @@ arStatus_t		Operation_GetResultWithTimeout(operation_t *oper, void **presult, ui
 
 
 CLD_EXTERN_C_END
+
+#endif
+
+

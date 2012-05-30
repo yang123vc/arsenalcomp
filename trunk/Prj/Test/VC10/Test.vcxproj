@@ -55,316 +55,1450 @@
     <ClCompile Include="..\..\..\Test\calc_test2.c" />
     <ClCompile Include="..\..\..\Test\calc_test3.c" />
     <ClCompile Include="..\..\..\Test\com_test.c" />
+    <ClCompile Include="..\..\..\Test\curl_helper.c" />
     <ClCompile Include="..\..\..\Test\curl_test.c" />
     <ClCompile Include="..\..\..\Test\ds_test.c" />
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\amigaos.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\asyn-ares.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\asyn-thread.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\axtls.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\base64.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\connect.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\content_encoding.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\cookie.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\curl_addrinfo.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\curl_fnmatch.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\curl_gethostname.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\curl_gssapi.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\curl_memrchr.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\curl_ntlm.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\curl_ntlm_core.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\curl_ntlm_msgs.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\curl_ntlm_wb.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\curl_rand.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\curl_rtmp.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\curl_sspi.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\curl_threads.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\cyassl.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\dict.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\easy.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\escape.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\file.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\fileinfo.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\formdata.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\ftp.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\ftplistparser.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\getenv.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\getinfo.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\gopher.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\gtls.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\hash.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\hmac.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\hostasyn.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\hostip.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\hostip4.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\hostip6.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\hostsyn.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\http.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\http_chunks.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\http_digest.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\http_negotiate.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\http_negotiate_sspi.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\http_proxy.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\idn_win32.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\if2ip.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\imap.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\inet_ntop.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\inet_pton.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\krb4.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\krb5.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\ldap.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\llist.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\md4.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\md5.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\memdebug.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\mprintf.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\multi.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\netrc.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\non-ascii.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\nonblock.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\nss.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\nwlib.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\nwos.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\openldap.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\parsedate.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\pingpong.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\polarssl.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\pop3.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\progress.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\qssl.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\rawstr.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\rtsp.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\security.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\select.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\sendf.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\share.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\slist.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\smtp.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\socks.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\socks_gssapi.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\socks_sspi.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\speedcheck.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\splay.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\ssh.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\sslgen.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\ssluse.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\strdup.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\strequal.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\strerror.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\strtok.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\strtoofft.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\telnet.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\tftp.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\timeval.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\transfer.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\url.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\version.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\warnless.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\wildcard.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Itanium'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\gen_code_test.c" />
     <ClCompile Include="..\..\..\Test\gmr_test.c" />
@@ -394,6 +1528,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\Test\avltree.h" />
     <ClInclude Include="..\..\..\Test\calc_test3_impl.h" />
+    <ClInclude Include="..\..\..\Test\curl_helper.h" />
     <ClInclude Include="..\..\..\Test\extlib\libcurl\include\curl\curl.h" />
     <ClInclude Include="..\..\..\Test\extlib\libcurl\include\curl\curlbuild.h" />
     <ClInclude Include="..\..\..\Test\extlib\libcurl\include\curl\curlrules.h" />
@@ -726,7 +1861,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\Arsenal</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
@@ -742,7 +1877,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN64;_DEBUG;_WINDOWS;</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\Arsenal</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
@@ -758,7 +1893,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN64;_DEBUG;_WINDOWS;</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\Arsenal</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
@@ -791,7 +1926,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN64;_DEBUG;_CONSOLE;__LIB</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\Arsenal</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <StringPooling>false</StringPooling>
       <FunctionLevelLinking>false</FunctionLevelLinking>
@@ -809,7 +1944,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN64;_DEBUG;_CONSOLE;__LIB</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\Arsenal</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <StringPooling>false</StringPooling>
       <FunctionLevelLinking>false</FunctionLevelLinking>
@@ -830,7 +1965,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\Arsenal</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
@@ -850,7 +1985,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN64;NDEBUG;_WINDOWS;</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\Arsenal</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
@@ -870,7 +2005,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN64;NDEBUG;_WINDOWS;</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\Arsenal</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
@@ -889,7 +2024,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;__LIB</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\Arsenal</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include</AdditionalIncludeDirectories>
       <StringPooling>false</StringPooling>
       <ExceptionHandling>Sync</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -911,7 +2046,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN64;NDEBUG;_CONSOLE;__LIB</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\Arsenal</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include</AdditionalIncludeDirectories>
       <StringPooling>false</StringPooling>
       <ExceptionHandling>Sync</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -933,7 +2068,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN64;NDEBUG;_CONSOLE;__LIB</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\Arsenal</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include</AdditionalIncludeDirectories>
       <StringPooling>false</StringPooling>
       <ExceptionHandling>Sync</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
