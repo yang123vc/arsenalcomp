@@ -1,4 +1,4 @@
-﻿//
+//
 //  Operation.c
 //  Cloud
 //
@@ -6,12 +6,13 @@
 //  Copyright (c) 2012年 none. All rights reserved.
 //
 
-#include "Operation.h"
+
+#include "operation.h"
+
 
 CLD_EXTERN_C_BEGIN
 
-
-static arStatus_t Cloud_RunOperation(cldOperation_t *operation);
+static arStatus_t Operation_Run(operation_t *operation);
 
 
 
@@ -19,12 +20,11 @@ static arStatus_t Cloud_RunOperation(cldOperation_t *operation);
 
 
 
-
-cldOperationPool_t*     Cloud_CreateOperationPool(size_t init_thread_cnt)
+operationPool_t*     Operation_CreatePool(size_t init_thread_cnt)
 {
         size_t i;
         bool_t que_init, mutex_is_init;
-        cldOperationPool_t *pool;
+        operationPool_t *pool;
         
         
 		if(init_thread_cnt > CLOUD_MAX_OPERATION_POOL_SIZE)
@@ -36,7 +36,7 @@ cldOperationPool_t*     Cloud_CreateOperationPool(size_t init_thread_cnt)
         que_init = false;
         mutex_is_init = false;
         
-        pool = AR_NEW0(cldOperationPool_t);
+        pool = AR_NEW0(operationPool_t);
         
         if(pool == NULL)
         {
@@ -51,7 +51,7 @@ cldOperationPool_t*     Cloud_CreateOperationPool(size_t init_thread_cnt)
         
         for(i = 0; i < init_thread_cnt; ++i)
         {
-                if(Cloud_IncreaseOperationPoolThread(pool) != AR_S_YES)
+                if(Operation_IncreasePoolThread(pool) != AR_S_YES)
                 {
                         goto INVALID_POINT;
                 }
@@ -109,7 +109,7 @@ INVALID_POINT:
 
 
 
-void    Cloud_DestroyOperationPool(cldOperationPool_t *pool)
+void    Operation_DestroyPool(operationPool_t *pool)
 {
         size_t i;
         AR_ASSERT(pool != NULL);
@@ -159,7 +159,7 @@ static void	__thread_worker(void *data)
 		while(true)
 		{
                 arStatus_t status;
-                cldOperation_t *operation = NULL;
+                operation_t *operation = NULL;
                 
 				status = AR_GetFromAsyncQueueWithTimeout(q, (void**)&operation, CLOUD_OPERATION_POLL_TIMEOUT);
                 
@@ -171,7 +171,7 @@ static void	__thread_worker(void *data)
                                 break;
                         }else
                         {
-								Cloud_RunOperation(operation);
+								Operation_Run(operation);
                         }
 				}else if(status == AR_E_TIMEOUT)
 				{
@@ -187,7 +187,7 @@ static void	__thread_worker(void *data)
 
 
 
-arStatus_t              Cloud_IncreaseOperationPoolThread(cldOperationPool_t *pool)
+arStatus_t              Operation_IncreasePoolThread(operationPool_t *pool)
 {
         arThread_t *thd;
         AR_ASSERT(pool != NULL);
@@ -217,14 +217,14 @@ arStatus_t              Cloud_IncreaseOperationPoolThread(cldOperationPool_t *po
 
 
 
-arStatus_t              Cloud_OperationPoolHasIdleThread(cldOperationPool_t *pool)
+arStatus_t              Operation_PoolHasIdleThread(operationPool_t *pool)
 {
         
         AR_ASSERT(pool != NULL);
         return AR_HasIdleThreadInAsyncQueue(&pool->async_que);
 }
 
-size_t					Cloud_GetOperationPoolThreadCount(cldOperationPool_t *pool)
+size_t					Operation_GetPoolThreadCount(operationPool_t *pool)
 {
 		size_t cnt;
 		AR_ASSERT(pool != NULL);
@@ -235,13 +235,13 @@ size_t					Cloud_GetOperationPoolThreadCount(cldOperationPool_t *pool)
 		return cnt;
 }
 
-arStatus_t				Cloud_PostToOperationPool(cldOperationPool_t *pool, cldOperation_t *operation)
+arStatus_t				Operation_PostToPool(operationPool_t *pool, operation_t *operation)
 {
 		AR_ASSERT(pool != NULL && operation != NULL);
 		
-		if(Cloud_OperationPoolHasIdleThread(pool) == AR_S_NO && Cloud_GetOperationPoolThreadCount(pool) < CLOUD_MAX_OPERATION_POOL_SIZE)
+		if(Operation_PoolHasIdleThread(pool) == AR_S_NO && Operation_GetPoolThreadCount(pool) < CLOUD_MAX_OPERATION_POOL_SIZE)
 		{
-				if(Cloud_IncreaseOperationPoolThread(pool) != AR_S_YES)
+				if(Operation_IncreasePoolThread(pool) != AR_S_YES)
 				{
 						AR_error(AR_ERR_WARNING, L"increase thread failed in Operation Pool!\r\n");
 				}
@@ -254,11 +254,11 @@ arStatus_t				Cloud_PostToOperationPool(cldOperationPool_t *pool, cldOperation_t
 /*******************************************Operation********************************/
 
 
-static cldOperationPool_t		*__g_pool = NULL;
+static operationPool_t		*__g_pool = NULL;
 
 arStatus_t      Operation_Init()
 {
-        __g_pool = Cloud_CreateOperationPool(0);
+        __g_pool = Operation_CreatePool(0);
         
 		if(__g_pool == NULL)
 		{
@@ -275,7 +275,7 @@ void            Operation_UnInit()
 {
 		if(__g_pool != NULL)
 		{
-				Cloud_DestroyOperationPool(__g_pool);
+				Operation_DestroyPool(__g_pool);
 				__g_pool = NULL;
 		}
 }
@@ -289,7 +289,7 @@ typedef enum
 		CLOUD_OPER_FINISHED,
 }cldOperationState_t;
 
-struct __cloud_operation_tag
+struct __operation_tag
 {
 		arSpinLock_t			mutex;
 		arEvent_t				*done_event;
@@ -301,17 +301,17 @@ struct __cloud_operation_tag
 		
         
 		void					*usr_ctx;
-		cldOperationFunc_t		func;
-		cldOperationDestroyResultFunc_t	destroy_result_func;
+		operationFunc_t		func;
+		operationDestroyResultFunc_t	destroy_result_func;
 		void					*result;
 };
 
-cldOperation_t*	Cloud_CreateOperation(cldOperationFunc_t func, cldOperationDestroyResultFunc_t destroy_func, void *usr_ctx)
+operation_t*	Operation_Create(operationFunc_t func, operationDestroyResultFunc_t destroy_func, void *usr_ctx)
 {
-		cldOperation_t *oper;
+		operation_t *oper;
 		AR_ASSERT(func != NULL);
         
-		oper = AR_NEW0(cldOperation_t);
+		oper = AR_NEW0(operation_t);
 		if(oper == NULL)
 		{
 				return NULL;
@@ -340,7 +340,7 @@ cldOperation_t*	Cloud_CreateOperation(cldOperationFunc_t func, cldOperationDestr
         
 }
 
-void			Cloud_DestroyOperation(cldOperation_t *operation)
+void			Operation_Destroy(operation_t *operation)
 {
 		void *result;
 		bool_t need_cancel;
@@ -359,7 +359,7 @@ void			Cloud_DestroyOperation(cldOperation_t *operation)
         
 		if(need_cancel)
 		{
-				Cloud_CancelOperation(operation);
+				Operation_Cancel(operation);
 		}
         
         
@@ -376,7 +376,7 @@ void			Cloud_DestroyOperation(cldOperation_t *operation)
                 {
                         AR_UnLockSpinLock(&operation->mutex);
                         
-                        if(Cloud_GetOperationResult(operation, &result) == AR_S_YES)
+                        if(Operation_GetResult(operation, &result) == AR_S_YES)
                         {
                                 AR_LockSpinLock(&operation->mutex);
                                 operation->destroy_result_func(result, operation->usr_ctx);
@@ -408,7 +408,7 @@ void			Cloud_DestroyOperation(cldOperation_t *operation)
 }
 
 
-static arStatus_t Cloud_RunOperation(cldOperation_t *oper)
+static arStatus_t Operation_Run(operation_t *oper)
 {
 		arStatus_t status;
 		AR_ASSERT(oper != NULL);
@@ -462,16 +462,16 @@ static arStatus_t Cloud_RunOperation(cldOperation_t *oper)
 
 
 
-arStatus_t		Cloud_StartOperation(cldOperation_t *oper)
+arStatus_t		Operation_Start(operation_t *oper)
 {
 		arStatus_t status;
 		AR_ASSERT(oper != NULL);
 		AR_ASSERT(__g_pool != NULL);
         
-		if(Cloud_OperationIsReady(oper) == AR_S_YES)
+		if(Operation_IsReady(oper) == AR_S_YES)
 		{
 				AR_LockSpinLock(&oper->mutex);
-				status = Cloud_PostToOperationPool(__g_pool, oper);
+				status = Operation_PostToPool(__g_pool, oper);
                 
 				if(status == AR_S_YES)
 				{
@@ -490,7 +490,7 @@ arStatus_t		Cloud_StartOperation(cldOperation_t *oper)
 
 
 
-arStatus_t		Cloud_CancelOperation(cldOperation_t *oper)
+arStatus_t		Operation_Cancel(operation_t *oper)
 {
 		arStatus_t status;
 		AR_ASSERT(oper != NULL);
@@ -512,7 +512,7 @@ arStatus_t		Cloud_CancelOperation(cldOperation_t *oper)
 }
 
 
-arStatus_t		Cloud_OperationIsReady(cldOperation_t *oper)
+arStatus_t		Operation_IsReady(operation_t *oper)
 {
 		arStatus_t status;
 		AR_ASSERT(oper != NULL);
@@ -527,7 +527,7 @@ arStatus_t		Cloud_OperationIsReady(cldOperation_t *oper)
 }
 
 
-arStatus_t		Cloud_OperationIsExecuting(cldOperation_t *oper)
+arStatus_t		Operation_IsExecuting(operation_t *oper)
 {
 		arStatus_t status;
 		AR_ASSERT(oper != NULL);
@@ -541,7 +541,7 @@ arStatus_t		Cloud_OperationIsExecuting(cldOperation_t *oper)
 		return status;
 }
 
-arStatus_t		Cloud_OperationIsCancelled(cldOperation_t *oper)
+arStatus_t		Operation_IsCancelled(operation_t *oper)
 {
 		arStatus_t status;
 		AR_ASSERT(oper != NULL);
@@ -555,7 +555,7 @@ arStatus_t		Cloud_OperationIsCancelled(cldOperation_t *oper)
 		return status;
 }
 
-arStatus_t		Cloud_OperationIsFinished(cldOperation_t *oper)
+arStatus_t		Operation_IsFinished(operation_t *oper)
 {
 		arStatus_t status;
 		AR_ASSERT(oper != NULL);
@@ -573,7 +573,7 @@ arStatus_t		Cloud_OperationIsFinished(cldOperation_t *oper)
 
 
 
-arStatus_t		Cloud_GetOperationResult(cldOperation_t *oper, void **presult)
+arStatus_t		Operation_GetResult(operation_t *oper, void **presult)
 {
 		arStatus_t status;
 		
@@ -633,7 +633,7 @@ arStatus_t		Cloud_GetOperationResult(cldOperation_t *oper, void **presult)
 }
 
 
-arStatus_t		Cloud_GetOperationResultWithTimeout(cldOperation_t *oper, void **presult, uint_64_t timeout_ms)
+arStatus_t		Operation_GetResultWithTimeout(operation_t *oper, void **presult, uint_64_t timeout_ms)
 {
         
 		arStatus_t status;
@@ -690,8 +690,6 @@ arStatus_t		Cloud_GetOperationResultWithTimeout(cldOperation_t *oper, void **pre
         
 		return status;
 }
-
-
 
 
 
