@@ -4837,6 +4837,38 @@ static void uri_misc_test()
 
 }
 
+static void uri_exception_test()
+{
+		arURI_t	*uri;
+		arStatus_t status;
+		status = AR_S_YES;
+		arString_t *str;
+
+		uri = AR_CreateURI(AR_CP_UTF8);
+		str = AR_CreateString();
+		
+		AR_ASSERT(uri != NULL && str != NULL);
+
+
+		/*******************************************************************************/
+		status = AR_SetEncodedURI(uri, L"http://google.com/search?q=hello%25world#frag%0ment");
+		AR_ASSERT(status != AR_S_YES);
+
+		status = AR_SetURI(uri, L"http:///searchq=hello%2world#frag%0ment");
+		AR_ASSERT(status == AR_S_YES);
+
+		AR_GetURI(uri, str);
+		AR_printf(L"%ls\r\n", AR_GetStringCString(str));
+
+
+
+		/*******************************************************************************/
+
+		AR_DestroyURI(uri);
+		uri = NULL;
+		AR_DestroyString(str);
+		str = NULL;
+}
 
 static void uri_test()
 {
@@ -4846,6 +4878,7 @@ static void uri_test()
 		uri_compare_test();
 		uri_normalize_test();
 		uri_misc_test();
+		uri_exception_test();
 }
 
 
@@ -4941,13 +4974,13 @@ void com_test()
 		//thd_test();
 
 
-		ds_test2();
+		//ds_test2();
 
 		//operation_test();
 
 		//cache_test();
 
-		//uri_test();
+		uri_test();
 }
 
 
