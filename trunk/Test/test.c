@@ -5,6 +5,8 @@
 
 
 
+
+
 AR_NAMESPACE_BEGIN
 
 #if defined(__LIB)
@@ -84,6 +86,8 @@ void parser_gen_perf_test();
 extern void math_test();
 
 extern void grammar_config_test();
+
+extern void curl_test();
 #endif
 
 
@@ -93,7 +97,7 @@ extern void grammar_config_test();
 void AR_Test()
 {
 #if defined(__LIB)
-		com_test();
+		//com_test();
 		//math_test();
 		//trie_tree_test();
 		//expr_test();
@@ -169,6 +173,7 @@ void AR_Test()
 
 		//grammar_config_test();
 
+		curl_test();
 		getchar();
 #else
 		ARSpace::AR_printf(L"dll version\r\n");

@@ -55,7 +55,317 @@
     <ClCompile Include="..\..\..\Test\calc_test2.c" />
     <ClCompile Include="..\..\..\Test\calc_test3.c" />
     <ClCompile Include="..\..\..\Test\com_test.c" />
+    <ClCompile Include="..\..\..\Test\curl_test.c" />
     <ClCompile Include="..\..\..\Test\ds_test.c" />
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\amigaos.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\asyn-ares.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\asyn-thread.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\axtls.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\base64.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\connect.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\content_encoding.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\cookie.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\curl_addrinfo.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\curl_fnmatch.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\curl_gethostname.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\curl_gssapi.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\curl_memrchr.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\curl_ntlm.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\curl_ntlm_core.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\curl_ntlm_msgs.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\curl_ntlm_wb.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\curl_rand.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\curl_rtmp.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\curl_sspi.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\curl_threads.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\cyassl.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\dict.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\easy.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\escape.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\file.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\fileinfo.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\formdata.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\ftp.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\ftplistparser.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\getenv.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\getinfo.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\gopher.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\gtls.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\hash.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\hmac.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\hostasyn.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\hostip.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\hostip4.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\hostip6.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\hostsyn.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\http.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\http_chunks.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\http_digest.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\http_negotiate.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\http_negotiate_sspi.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\http_proxy.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\idn_win32.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\if2ip.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\imap.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\inet_ntop.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\inet_pton.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\krb4.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\krb5.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\ldap.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\llist.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\md4.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\md5.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\memdebug.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\mprintf.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\multi.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\netrc.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\non-ascii.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\nonblock.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\nss.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\nwlib.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\nwos.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\openldap.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\parsedate.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\pingpong.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\polarssl.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\pop3.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\progress.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\qssl.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\rawstr.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\rtsp.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\security.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\select.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\sendf.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\share.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\slist.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\smtp.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\socks.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\socks_gssapi.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\socks_sspi.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\speedcheck.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\splay.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\ssh.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\sslgen.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\ssluse.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\strdup.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\strequal.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\strerror.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\strtok.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\strtoofft.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\telnet.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\tftp.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\timeval.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\transfer.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\url.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\version.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\warnless.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\wildcard.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">Default</CompileAs>
+    </ClCompile>
     <ClCompile Include="..\..\..\Test\gen_code_test.c" />
     <ClCompile Include="..\..\..\Test\gmr_test.c" />
     <ClCompile Include="..\..\..\Test\grammar_config_test.c" />
@@ -84,6 +394,120 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\Test\avltree.h" />
     <ClInclude Include="..\..\..\Test\calc_test3_impl.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\include\curl\curl.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\include\curl\curlbuild.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\include\curl\curlrules.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\include\curl\curlver.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\include\curl\easy.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\include\curl\mprintf.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\include\curl\multi.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\include\curl\stdcheaders.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\include\curl\typecheck-gcc.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\amigaos.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\arpa_telnet.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\asyn.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\axtls.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\config-amigaos.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\config-dos.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\config-mac.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\config-os400.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\config-riscos.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\config-symbian.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\config-tpf.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\config-vms.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\config-vxworks.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\config-win32.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\config-win32ce.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\connect.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\content_encoding.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\cookie.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\curlx.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\curl_addrinfo.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\curl_base64.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\curl_fnmatch.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\curl_gethostname.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\curl_gssapi.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\curl_hmac.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\curl_ldap.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\curl_md4.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\curl_md5.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\curl_memory.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\curl_memrchr.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\curl_ntlm.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\curl_ntlm_core.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\curl_ntlm_msgs.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\curl_ntlm_wb.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\curl_rand.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\curl_rtmp.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\curl_sspi.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\curl_threads.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\cyassl.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\dict.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\easyif.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\escape.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\file.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\fileinfo.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\formdata.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\ftp.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\ftplistparser.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\getinfo.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\gopher.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\gtls.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\hash.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\hostip.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\http.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\http_chunks.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\http_digest.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\http_negotiate.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\http_proxy.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\if2ip.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\imap.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\inet_ntop.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\inet_pton.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\krb4.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\llist.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\memdebug.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\multiif.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\netrc.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\non-ascii.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\nonblock.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\nssg.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\parsedate.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\pingpong.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\polarssl.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\pop3.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\progress.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\qssl.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\rawstr.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\rtsp.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\select.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\sendf.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\setup-os400.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\setup.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\setup_once.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\share.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\slist.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\smtp.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\sockaddr.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\socks.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\speedcheck.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\splay.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\ssh.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\sslgen.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\ssluse.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\strdup.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\strequal.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\strerror.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\strtok.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\strtoofft.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\telnet.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\tftp.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\timeval.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\transfer.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\url.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\urldata.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\warnless.h" />
+    <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\wildcard.h" />
     <ClInclude Include="..\..\..\Test\gen_code_impl.h" />
     <ClInclude Include="..\..\..\Test\lfu_cache.h" />
     <ClInclude Include="..\..\..\Test\Operation.h" />
@@ -92,6 +516,12 @@
     <ClInclude Include="..\..\..\Test\rbtree.h" />
     <ClInclude Include="..\..\..\Test\splaytree.h" />
     <ClInclude Include="..\..\..\Test\test.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\Test\extlib\libcurl\include\curl\curlbuild.h.in" />
+    <None Include="..\..\..\Test\extlib\libcurl\lib\curl_config.h.in" />
+    <None Include="..\..\..\Test\extlib\libcurl\lib\libcurl.imp" />
+    <None Include="..\..\..\Test\extlib\libcurl\lib\libcurl.vers.in" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{743020E8-FB7B-4D9A-B028-2AF8B24CFE2A}</ProjectGuid>
@@ -343,7 +773,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;__LIB</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\Arsenal</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <StringPooling>false</StringPooling>
       <FunctionLevelLinking>false</FunctionLevelLinking>
