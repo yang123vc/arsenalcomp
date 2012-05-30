@@ -7,6 +7,8 @@
 //
 
 
+#if defined(__LIB)
+
 #include "lfu_cache.h"
 
 
@@ -642,6 +644,7 @@ AR_NAMESPACE_END
 
 
 
+#endif
 
 
 

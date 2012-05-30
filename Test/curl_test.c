@@ -1,29 +1,30 @@
 #include "test.h"
-#include <curl/curl.h>
-#include "../Arsenal/Common/common.h"
 
-
-#include <vector>
-#include <math.h>
-#include <time.h>
-
-#if defined(__LIB)
+#include "curl_helper.h"
 
 AR_NAMESPACE_BEGIN
+
+#if defined(__LIB)
 
 
 void curl_test()
 {
-		curl_global_init();
+		curl_global_init(CURL_GLOBAL_ALL);
+
+
+
+
+		curl_global_cleanup();
 
 
 }
+
+#endif
 
 
 AR_NAMESPACE_END
 
 
-#endif
 
 
 
