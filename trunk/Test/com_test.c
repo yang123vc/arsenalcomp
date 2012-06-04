@@ -4869,6 +4869,16 @@ static void uri_exception_test()
 		AR_GetURI(uri, str);
 		AR_printf(L"%ls\r\n", AR_GetStringCString(str));
 
+
+
+		/*******************************************************************************/
+		status = AR_SetEncodedURI(uri, L"http:////itunes.apple.com/cn/app/id523405218?mt=8");
+		AR_ASSERT(status == AR_S_YES);
+
+		AR_GetURI(uri, str);
+		AR_printf(L"%ls\r\n", AR_GetStringCString(str));
+
+		AR_ASSERT(AR_IsRelativeURI(uri));
 		
 
 		AR_DestroyURI(uri);
@@ -4889,6 +4899,37 @@ static void uri_test()
 }
 
 
+static void str_test16()
+{
+		const wchar_t *host = L"a.b.c.d.e.f.g.baidu.com";
+		const wchar_t *p;
+
+		p = AR_reverse_wcschr(host, AR_wcslen(host), L'.');
+
+		while(p != NULL)
+		{
+				AR_printf(L"%ls\r\n", p);
+				p = AR_reverse_wcschr(host, AR_wcslen(host) - AR_wcslen(p), L'.');
+		}
+
+		p = AR_reverse_wcschr(host, AR_wcslen(host), L'x');
+		AR_ASSERT(p == NULL);
+
+
+
+		host = L"a..b..c..d..e..f..g..baidu..com";
+
+		p = AR_reverse_wcsstr(host, AR_wcslen(host), L"..", 2);
+
+		while(p != NULL)
+		{
+				AR_printf(L"%ls\r\n", p);
+				p = AR_reverse_wcsstr(host, AR_wcslen(host) - AR_wcslen(p), L"..", 2);
+		}
+
+		p = AR_reverse_wcsstr(host, AR_wcslen(host), L"ccc", 3);
+		AR_ASSERT(p == NULL);
+}
 
 
 void com_test()
@@ -4914,6 +4955,7 @@ void com_test()
 		//str_test13();
 		//str_test14();
 		//str_test15();
+		str_test16();
 		//com_test3();
 		//com_conv();
 		//com_conv2();
@@ -4987,7 +5029,7 @@ void com_test()
 
 		//cache_test();
 
-		uri_test();
+		//uri_test();
 }
 
 
