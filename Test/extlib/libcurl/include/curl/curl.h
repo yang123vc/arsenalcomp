@@ -1,5 +1,10 @@
 #ifndef __CURL_CURL_H
 #define __CURL_CURL_H
+
+#ifndef CURL_STATICLIB
+#define CURL_STATICLIB	1
+#endif
+
 /***************************************************************************
  *                                  _   _ ____  _
  *  Project                     ___| | | |  _ \| |
@@ -96,8 +101,7 @@ typedef void CURL;
  * Decorate exportable functions for Win32 and Symbian OS DLL linking.
  * This avoids using a .def file for building libcurl.dll.
  */
-#if (defined(WIN32) || defined(_WIN32) || defined(__SYMBIAN32__)) && \
-     !defined(CURL_STATICLIB)
+#if (defined(WIN32) || defined(_WIN32) || defined(__SYMBIAN32__)) && !defined(CURL_STATICLIB)
 #if defined(BUILDING_LIBCURL)
 #define CURL_EXTERN  __declspec(dllexport)
 #else
