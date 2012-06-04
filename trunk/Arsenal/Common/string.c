@@ -78,6 +78,26 @@ arStatus_t		AR_CopyString(arString_t *src, const arString_t *dest)
 		return AR_SetString(src, AR_GetStringCString(dest));
 }
 
+arString_t*		AR_CopyNewString(arString_t *src)
+{
+		arString_t *new_str;
+		AR_ASSERT(src != NULL);
+		new_str = AR_CreateString();
+		if(new_str == NULL)
+		{
+				return NULL;
+		}
+
+		if(AR_CopyString(new_str, src) != AR_S_YES)
+		{
+				AR_DestroyString(new_str);
+				new_str = NULL;
+				return NULL;
+		}
+
+		return new_str;
+}
+
 const wchar_t*	AR_GetStringCString(const arString_t *str)
 {
 		AR_ASSERT(str != NULL && str->str != NULL);
