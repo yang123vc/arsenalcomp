@@ -512,6 +512,13 @@ const wchar_t* AR_reverse_wcsistr(const wchar_t *str, size_t l,  const wchar_t *
 
 
 
+const char* AR_reverse_strchr(const char* str, size_t l, char c);
+const char* AR_reverse_strstr(const char *str, size_t l,  const char *match, size_t ml);
+
+const char* AR_reverse_strichr(const char* str, size_t l, char c);
+const char* AR_reverse_stristr(const char *str, size_t l,  const char *match, size_t ml);
+
+
 #if(AR_ARCH_VER	== ARCH_32)
 
 		#define AR_wtoi			AR_wtoi32
