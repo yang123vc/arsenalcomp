@@ -828,7 +828,7 @@ arStatus_t		AR_SetString(arString_t *str, const wchar_t *wcs);
 arStatus_t		AR_SetStringN(arString_t *str, const wchar_t *wcs, size_t n);
 
 arStatus_t		AR_CopyString(arString_t *src, const arString_t *dest);
-
+arString_t*		AR_CopyNewString(arString_t *src);
 
 const wchar_t*	AR_GetStringCString(const arString_t *str);
 #define			AR_CSTR		AR_GetStringCString
