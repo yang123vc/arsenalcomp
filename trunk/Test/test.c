@@ -173,7 +173,6 @@ void AR_Test()
 
 		//grammar_config_test();
 
-		curl_test();
 		getchar();
 #else
 		ARSpace::AR_printf(L"dll version\r\n");
