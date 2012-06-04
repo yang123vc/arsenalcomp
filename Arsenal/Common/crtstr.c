@@ -1207,7 +1207,13 @@ const wchar_t* AR_reverse_wcschr(const wchar_t* str, size_t l, wchar_t c)
 				idx--;
 		}
 
-		return str + idx;
+		if(idx == 0 && str[0] != c)
+		{
+				return NULL;
+		}else
+		{
+				return str + idx;
+		}
 }
 
 
@@ -1292,7 +1298,13 @@ const wchar_t* AR_reverse_wcsichr(const wchar_t* str, size_t l, wchar_t c)
 				idx--;
 		}
 
-		return str + idx;
+		if(idx == 0 && AR_towlower(str[0]) != c)
+		{
+				return NULL;
+		}else
+		{
+				return str + idx;
+		}
 }
 
 
