@@ -4901,6 +4901,7 @@ static void uri_test()
 
 static void str_test16()
 {
+		{
 		const wchar_t *host = L"a.b.c.d.e.f.g.baidu.com";
 		const wchar_t *p;
 
@@ -4929,7 +4930,43 @@ static void str_test16()
 
 		p = AR_reverse_wcsstr(host, AR_wcslen(host), L"ccc", 3);
 		AR_ASSERT(p == NULL);
+		}
+		/*********************************************************************/
+
+		{
+		const char *host = "a.b.c.d.e.f.g.baidu.com";
+		const char *p;
+
+		p = AR_reverse_strchr(host, AR_strlen(host), '.');
+
+		while(p != NULL)
+		{
+				AR_printf(L"%hs\r\n", p);
+				p = AR_reverse_strchr(host, AR_strlen(host) - AR_strlen(p), '.');
+		}
+
+		p = AR_reverse_strchr(host, AR_strlen(host), 'x');
+		AR_ASSERT(p == NULL);
+
+
+
+		host = "a..b..c..d..e..f..g..baidu..com";
+
+		p = AR_reverse_strstr(host, AR_strlen(host), "..", 2);
+
+		while(p != NULL)
+		{
+				AR_printf(L"%hs\r\n", p);
+				p = AR_reverse_strstr(host, AR_strlen(host) - AR_strlen(p), "..", 2);
+		}
+
+		p = AR_reverse_strstr(host, AR_strlen(host), "ccc", 3);
+		AR_ASSERT(p == NULL);
+		}
+
 }
+
+
 
 
 void com_test()

@@ -1361,6 +1361,175 @@ const wchar_t* AR_reverse_wcsistr(const wchar_t *str, size_t l,  const wchar_t *
 
 
 
+const char* AR_reverse_strchr(const char* str, size_t l, char c)
+{
+		size_t idx;
+
+		AR_ASSERT(str != NULL);
+
+		if(l == 0)
+		{
+				return str + l;
+		}
+
+		idx = l - 1;
+		while(str[idx] != c)
+		{
+				if(idx == 0)
+				{
+						break;
+				}
+
+				idx--;
+		}
+
+		if(idx == 0 && str[0] != c)
+		{
+				return NULL;
+		}else
+		{
+				return str + idx;
+		}
+}
+
+const char* AR_reverse_strstr(const char *str, size_t l,  const char *match, size_t ml)
+{
+		size_t delta;
+		uint_t	search_hash, match_hash;
+		size_t i;
+		AR_ASSERT(str != NULL && match != NULL);
+
+		if (ml > l)
+		{
+				return NULL;
+		}
+
+		if(ml == 0)
+		{
+				return str + l;
+		}
+
+		if(ml == 1)
+		{
+				return AR_reverse_strchr(str, l, match[0]);
+		}
+
+
+		delta = l - ml;
+
+
+		search_hash = 0;
+		match_hash = 0;
+
+		for(i = 0; i < ml; ++i)
+		{
+				search_hash += (uint_t)str[delta + i];
+				match_hash += (uint_t)match[i];
+		}
+
+
+		while(search_hash != match_hash || AR_strncmp(str + delta, match, ml) != 0)
+		{
+				if(delta == 0)
+				{
+						return NULL;
+				}
+
+				delta--;
+				search_hash -= str[delta + ml];
+				search_hash += str[delta];
+		}
+
+		return str + delta;
+}
+
+
+
+const char* AR_reverse_strichr(const char* str, size_t l, char c)
+{
+		size_t idx;
+		char low_c;
+		AR_ASSERT(str != NULL);
+
+		if(l == 0)
+		{
+				return str + l;
+		}
+
+		low_c = (char)AR_tolower(c);
+		idx = l - 1;
+
+		while(AR_tolower(str[idx]) != low_c)
+		{
+				if(idx == 0)
+				{
+						break;
+				}
+
+				idx--;
+		}
+
+		if(idx == 0 && AR_tolower(str[0]) != c)
+		{
+				return NULL;
+		}else
+		{
+				return str + idx;
+		}
+}
+
+const char* AR_reverse_stristr(const char *str, size_t l,  const char *match, size_t ml)
+{
+		size_t delta;
+		uint_t	search_hash, match_hash;
+		size_t i;
+		AR_ASSERT(str != NULL && match != NULL);
+
+		if (ml > l)
+		{
+				return NULL;
+		}
+
+		if(ml == 0)
+		{
+				return str + l;
+		}
+
+		if(ml == 1)
+		{
+				return AR_reverse_strichr(str, l, match[0]);
+		}
+
+
+		delta = l - ml;
+
+
+		search_hash = 0;
+		match_hash = 0;
+
+		for(i = 0; i < ml; ++i)
+		{
+				search_hash += (uint_t)AR_tolower(str[delta + i]);
+				match_hash += (uint_t)AR_tolower(match[i]);
+		}
+
+
+		while(search_hash != match_hash || AR_strnicmp(str + delta, match, ml) != 0)
+		{
+				if(delta == 0)
+				{
+						return NULL;
+				}
+
+				delta--;
+				search_hash -= (uint_t)AR_tolower(str[delta + ml]);
+				search_hash += (uint_t)AR_tolower(str[delta]);
+		}
+
+		return str + delta;
+
+}
+
 
 bool_t	AR_wcs_is_float(const wchar_t *in, const wchar_t *end)
 {
