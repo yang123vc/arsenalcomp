@@ -899,6 +899,9 @@ void			AR_DestroyBuffer(arBuffer_t		*buffer);
 void			AR_ClearBuffer(arBuffer_t		*buffer);
 void            AR_SwapBuffer(arBuffer_t *l, arBuffer_t *r);
 
+arStatus_t		AR_CopyBuffer(arBuffer_t *dest, const arBuffer_t *src);
+arBuffer_t*		AR_CopyNewBuffer(const arBuffer_t *buf);
+
 /*分配nbytes个字节以供使用*/
 byte_t*			AR_AllocBuffer(arBuffer_t *buffer, size_t	nbytes);
 /*向buffer写入nbytes个字节*/

@@ -4948,7 +4948,7 @@ static void str_test16()
 		p = AR_reverse_strchr(host, AR_strlen(host), 'x');
 		AR_ASSERT(p == NULL);
 
-
+		
 
 		host = "a..b..c..d..e..f..g..baidu..com";
 
