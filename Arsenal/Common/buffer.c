@@ -178,6 +178,36 @@ void            AR_SwapBuffer(arBuffer_t *l, arBuffer_t *r)
 }
 
 
+arStatus_t		AR_CopyBuffer(arBuffer_t *dest, const arBuffer_t *src)
+{
+		AR_ASSERT(dest != NULL && src != NULL);
+		AR_ClearBuffer(dest);
+		return AR_InsertBuffer(dest, AR_GetBufferData(src), AR_GetBufferAvailable(src));
+}
+
+arBuffer_t*		AR_CopyNewBuffer(const arBuffer_t *buf)
+{
+		arBuffer_t *new_buf;
+		AR_ASSERT(buf != NULL);
+
+		new_buf = AR_CreateBuffer(AR_GetBufferAvailable(buf));
+		if(new_buf == NULL)
+		{
+				return NULL;
+		}
+
+		if(AR_CopyBuffer(new_buf, buf) != AR_S_YES)
+		{
+				AR_DestroyBuffer(new_buf);
+				new_buf = NULL;
+		}
+
+
+		return new_buf;
+
+}
+
+
 
 arStatus_t			AR_ReserveBuffer(arBuffer_t *pbuf, size_t nbytes)
 {
