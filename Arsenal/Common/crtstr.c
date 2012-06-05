@@ -321,8 +321,33 @@ wchar_t*		AR_wcsncat(wchar_t *dest, const wchar_t *sour, size_t n)
 		*d = 0;
 
 		return dest;
+}
 
+char*			AR_strcat(char *dest, const char *sour)
+{
+		char *d;
+		AR_ASSERT(dest != NULL && sour != NULL);
+		d = dest;
+		while(*d)d++;
 
+		while(*sour)*d++ = *sour++;
+		*d = 0;
+		return dest;
+}
+
+char*			AR_strncat(char *dest, const char *sour, size_t n)
+{
+		char *d;
+		size_t i;
+		AR_ASSERT(dest != NULL && sour != NULL);
+		d = dest;
+		while(*d)d++;
+
+		for(i = 0; i < n && sour[i]; ++i,++d) *d = sour[i];
+
+		*d = 0;
+
+		return dest;
 }
 
 
