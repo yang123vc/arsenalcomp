@@ -276,6 +276,34 @@ arStatus_t			AR_InsertBuffer(arBuffer_t *buffer, const byte_t *data, size_t len)
 		}
 }
 
+
+arStatus_t		AR_InsertCStringToBuffer(arBuffer_t *buffer, const char *str)
+{
+		size_t l;
+		AR_ASSERT(buffer != NULL && str != NULL);
+		l = AR_strlen(str);
+		if(l > 0)
+		{
+				return AR_InsertBuffer(buffer, (const byte_t*)str, l * sizeof(char));
+		}else
+		{
+				return AR_S_YES;
+		}
+
+
+}
+arStatus_t		AR_InsertBufferToBuffer(arBuffer_t *buffer, const arBuffer_t *other)
+{
+		AR_ASSERT(buffer != NULL && other != NULL);
+		if(AR_GetBufferAvailable(other) > 0)
+		{
+				return AR_InsertBuffer(buffer, AR_GetBufferData(other), AR_GetBufferAvailable(other));
+		}else
+		{
+				return AR_S_YES;
+		}
+}
+
 size_t			AR_EraseBuffer(arBuffer_t *pbuf, size_t nbytes)
 {
 		size_t rm_data_len = 0;

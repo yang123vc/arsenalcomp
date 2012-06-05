@@ -409,6 +409,7 @@ int_t			AR_wcsnicmp(const wchar_t *l, const wchar_t *r, size_t n);
 #define AR_isgraph(_c)			isgraph((_c))
 #define AR_isprint(_c)			isprint((_c))
 
+
 char*			AR_strupr(char *s);
 char*			AR_strlwr(char *s);
 char*			AR_strnlwr(char *s, size_t count);
@@ -469,6 +470,10 @@ const wchar_t*	AR_wcstrim_space(const wchar_t *in);
 
 wchar_t*		AR_wcscat(wchar_t *dest, const wchar_t *sour);
 wchar_t*		AR_wcsncat(wchar_t *dest, const wchar_t *sour, size_t n);
+
+char*			AR_strcat(char *dest, const char *sour);
+char*			AR_strncat(char *dest, const char *sour, size_t n);
+
 
 const wchar_t*	AR_wtoi32(const wchar_t *in, int_32_t  *num, size_t base);
 const wchar_t*	AR_wtou32(const wchar_t *in, uint_32_t *num, size_t base);
@@ -907,6 +912,9 @@ byte_t*			AR_AllocBuffer(arBuffer_t *buffer, size_t	nbytes);
 /*向buffer写入nbytes个字节*/
 arStatus_t		AR_InsertBuffer(arBuffer_t *buffer, const byte_t *data, size_t len);
 
+
+
+
 /*从buffer头擦除nbytes个字节*/
 size_t			AR_EraseBuffer(arBuffer_t *buffer, size_t nbytes);
 
@@ -924,8 +932,9 @@ size_t			AR_GetBufferAvailable(const arBuffer_t *buffer);
 
 size_t			AR_ReadBufferData(arBuffer_t *buffer, byte_t *dest, size_t len);
 
-
-
+/*************************************helper****************************************/
+arStatus_t		AR_InsertCStringToBuffer(arBuffer_t *buffer, const char *str);
+arStatus_t		AR_InsertBufferToBuffer(arBuffer_t *buffer, const arBuffer_t *other);
 
 /************************************************************URI****************************************************************/
 

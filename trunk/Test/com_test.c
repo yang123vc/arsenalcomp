@@ -4966,7 +4966,29 @@ static void str_test16()
 
 }
 
+static void str_test17()
+{
+		byte_t buf[1024];
+		char output[1024];
+		const char *url = "http://weibo.com/";
 
+		size_t n = AR_base64_encode(buf, 1024, (const byte_t*)url, strlen(url));
+		buf[n] = 0;
+
+		AR_printf(L"%hs\r\n", AR_strrot13((char*)buf, strlen((char*)buf)));
+
+		output[0] = 0;
+		AR_strcat(output, "nTxhLzScMUHhL29g");
+
+		AR_strrot13(output, AR_strlen(output));
+
+		n = AR_base64_decode(buf, 1024, (const byte_t*)output, AR_strlen(output));
+		buf[n] = 0;
+		AR_printf(L"%hs\r\n", buf);
+		
+
+	
+}
 
 
 void com_test()
@@ -4992,7 +5014,8 @@ void com_test()
 		//str_test13();
 		//str_test14();
 		//str_test15();
-		str_test16();
+		//str_test16();
+		str_test17();
 		//com_test3();
 		//com_conv();
 		//com_conv2();
