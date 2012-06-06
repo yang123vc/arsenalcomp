@@ -4978,17 +4978,15 @@ static void str_test17()
 		AR_printf(L"%hs\r\n", AR_strrot13((char*)buf, strlen((char*)buf)));
 
 		output[0] = 0;
-		AR_strcat(output, "nTxhLzScMUHhL29g");
+		AR_strcat(output, "c2M9MTA0fHxjbj0xMDTlhazlj7jlkI3np7B8fG9uPTEwNOWumOaWueWQjeensHx8b3U9aHR0cDovL3d3dy50YW9iYW8uY29tL3x8cHU9aHR0cDovL3d3dy4zNjAuY24vfHx0dD0xMDTmjqjojZDmloflrZd8fHR1PWh0dHA6Ly93d3cucXEuY29tLw==");
 
-		AR_strrot13(output, AR_strlen(output));
+		//AR_strrot13(output, AR_strlen(output));
 
 		n = AR_base64_decode(buf, 1024, (const byte_t*)output, AR_strlen(output));
 		buf[n] = 0;
 		AR_printf(L"%hs\r\n", buf);
-		
-
-	
 }
+
 
 
 void com_test()
