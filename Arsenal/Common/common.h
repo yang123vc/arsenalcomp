@@ -536,6 +536,9 @@ int_t			AR_vsprintf(char *dest, size_t count, const char *fmt, va_list args);
 
 
 /*返回的是需要元素数组的长度包含0*/
+int_t			AR_i64tos_buf(char *out, size_t nbuf, int_64_t num, size_t radix);
+int_t			AR_u64tos_buf(char *out, size_t nbuf, uint_64_t num, size_t radix);
+
 int_t			AR_i64tow_buf(wchar_t *out, size_t nbuf, int_64_t num, size_t radix);
 int_t			AR_u64tow_buf(wchar_t *out, size_t nbuf, uint_64_t num, size_t radix);
 
