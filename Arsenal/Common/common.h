@@ -475,37 +475,12 @@ char*			AR_strcat(char *dest, const char *sour);
 char*			AR_strncat(char *dest, const char *sour, size_t n);
 
 
-const wchar_t*	AR_wtoi32(const wchar_t *in, int_32_t  *num, size_t base);
-const wchar_t*	AR_wtou32(const wchar_t *in, uint_32_t *num, size_t base);
-const wchar_t*	AR_wtoi64(const wchar_t *in, int_64_t  *num, size_t base);
-const wchar_t*	AR_wtou64(const wchar_t *in, uint_64_t  *num, size_t base);
-
-const char*		AR_stoi64(const char *in,	 int_64_t  *num, size_t base);
-const char*		AR_stou64(const char *in,	 uint_64_t  *num, size_t base);
-const char*		AR_stoi32(const char *in,  int_32_t *num, size_t base);
-const char*		AR_stou32(const char *in,  uint_32_t *num, size_t base);
-
-const wchar_t*	AR_wtod(const wchar_t *in, double *num);
-const char*		AR_stod(const char *in, double *num);
 
 /********************************************************************************************************************************************/
 const wchar_t*	AR_wcstrim_s(const wchar_t *in, const wchar_t *end, const wchar_t *trim);
 const wchar_t*	AR_wcstrim_space_s(const wchar_t *in, const wchar_t *end);
 
-const wchar_t*	AR_wtoi32_s(const wchar_t *in, const wchar_t *end, int_32_t  *num, size_t base);
-const wchar_t*	AR_wtou32_s(const wchar_t *in, const wchar_t *end, uint_32_t *num, size_t base);
 
-const wchar_t*	AR_wtoi64_s(const wchar_t *in, const wchar_t *end, int_64_t  *num, size_t base);
-const wchar_t*	AR_wtou64_s(const wchar_t *in, const wchar_t *end, uint_64_t  *num, size_t base);
-const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *num);
-
-
-const char* AR_stoi64_s(const char *in, const char *end, int_64_t  *num, size_t base);
-const char* AR_stou64_s(const char *in, const char *end, uint_64_t  *num, size_t base);
-const char* AR_stoi32_s(const char *in, const char *end, int_32_t  *num, size_t base);
-const char* AR_stou32_s(const char *in, const char *end, uint_32_t  *num, size_t base);
-
-const char*	AR_stod_s(const char *in, const char *end, double *out);
 
 /*此函数相当于修改字符串，因此不存在_s版，且trim之后的字符串结尾为\0*/
 wchar_t*		AR_wcstrim_right(wchar_t *in, const wchar_t *trim);
@@ -537,28 +512,6 @@ const char* AR_reverse_strichr(const char* str, size_t l, char c);
 const char* AR_reverse_stristr(const char *str, size_t l,  const char *match, size_t ml);
 
 
-#if(AR_ARCH_VER	== ARCH_32)
-
-		#define AR_wtoi			AR_wtoi32
-		#define AR_wtou			AR_wtou32
-
-		#define AR_wtou_s		AR_wtou32_s
-		#define AR_wtoi_s		AR_wtoi32_s
-
-
-#elif(AR_ARCH_VER == ARCH_64)
-
-		#define AR_wtoi			AR_wtoi64
-		#define AR_wtou			AR_wtou64
-
-		#define AR_wtou_s		AR_wtou64_s
-		#define AR_wtoi_s		AR_wtoi64_s
-
-#else
-		
-		#error "Not Support Platform!"
-
-#endif
 
 
 /******************************************************string format*********************************************/
@@ -583,7 +536,8 @@ int_t			AR_vsprintf(char *dest, size_t count, const char *fmt, va_list args);
 
 
 
-/***************************************************************************************************/
+
+/*************************************************String Format**************************************************/
 bool_t			AR_wcs_is_float(const wchar_t *in, const wchar_t *end);
 bool_t			AR_wcs_is_int(const wchar_t *in, const wchar_t *end);
 
@@ -595,6 +549,37 @@ int_t			AR_wchartodigit(wchar_t ch);
 int_t			AR_chartodigit(char ch);
 
 
+const wchar_t*	AR_wtoi32_s(const wchar_t *in, const wchar_t *end, int_32_t  *num, size_t base);
+const wchar_t*	AR_wtou32_s(const wchar_t *in, const wchar_t *end, uint_32_t *num, size_t base);
+const wchar_t*	AR_wtoi64_s(const wchar_t *in, const wchar_t *end, int_64_t  *num, size_t base);
+const wchar_t*	AR_wtou64_s(const wchar_t *in, const wchar_t *end, uint_64_t  *num, size_t base);
+
+
+const wchar_t*	AR_wtoi32(const wchar_t *in, int_32_t  *num, size_t base);
+const wchar_t*	AR_wtou32(const wchar_t *in, uint_32_t *num, size_t base);
+const wchar_t*	AR_wtoi64(const wchar_t *in, int_64_t  *num, size_t base);
+const wchar_t*	AR_wtou64(const wchar_t *in, uint_64_t  *num, size_t base);
+
+
+const char*		AR_stoi64(const char *in,	 int_64_t  *num, size_t base);
+const char*		AR_stou64(const char *in,	 uint_64_t  *num, size_t base);
+const char*		AR_stoi32(const char *in,  int_32_t *num, size_t base);
+const char*		AR_stou32(const char *in,  uint_32_t *num, size_t base);
+
+const char*		AR_stoi64_s(const char *in, const char *end, int_64_t  *num, size_t base);
+const char*		AR_stou64_s(const char *in, const char *end, uint_64_t  *num, size_t base);
+const char*		AR_stoi32_s(const char *in, const char *end, int_32_t  *num, size_t base);
+const char*		AR_stou32_s(const char *in, const char *end, uint_32_t  *num, size_t base);
+
+
+const wchar_t*	AR_wtod(const wchar_t *in, double *num);
+const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *num);
+const char*		AR_stod_s(const char *in, const char *end, double *out);
+const char*		AR_stod(const char *in, double *num);
+
+
+
+/*********************************************************hash function*********************************************/
 
 uint_t			AR_wcshash(const wchar_t *str);
 uint_t			AR_wcshash_n(const wchar_t *str, size_t n);
@@ -605,7 +590,45 @@ uint_t			AR_strhash_n(const char *str, size_t n);
 uint_t			AR_memhash(const byte_t *data, size_t len);
 
 
-char*			AR_strrot13(char *s, size_t n);
+
+#if(AR_ARCH_VER	== ARCH_32)
+
+		#define AR_wtoi			AR_wtoi32
+		#define AR_wtou			AR_wtou32
+
+		#define AR_wtou_s		AR_wtou32_s
+		#define AR_wtoi_s		AR_wtoi32_s
+
+
+		#define AR_stoi			AR_stoi32
+		#define AR_stou			AR_stou32
+
+		#define AR_stou_s		AR_stou32_s
+		#define AR_stoi_s		AR_stoi32_s
+
+#elif(AR_ARCH_VER == ARCH_64)
+
+		#define AR_wtoi			AR_wtoi64
+		#define AR_wtou			AR_wtou64
+
+		#define AR_wtou_s		AR_wtou64_s
+		#define AR_wtoi_s		AR_wtoi64_s
+
+		#define AR_stoi			AR_stoi64
+		#define AR_stou			AR_stou64
+
+		#define AR_stou_s		AR_stou64_s
+		#define AR_stoi_s		AR_stoi64_s
+
+#else
+		
+		#error "Not Support Platform!"
+
+#endif
+
+
+
+
 
 /********************************************************Basic Data Structure*********************************************************/
 
@@ -801,12 +824,14 @@ int_t 			AR_escstr_to_str_buf_n(wchar_t *dest, size_t len, const wchar_t *src, s
 int_t 			AR_str_to_escstr_buf_n(wchar_t *dest, size_t len, const wchar_t *src, size_t n);
 
 
+/*************************************************encode && decode**************************************************/
+
+/**************************************************************rot13*********************************************************/
+char*			AR_strrot13(char *s, size_t n);
 
 /**************************************************************base64*********************************************************/
 size_t			AR_base64_encode(byte_t  *out, size_t olen, const byte_t *input, size_t ilen);
 size_t			AR_base64_decode(byte_t  *out, size_t olen, const byte_t *input, size_t ilen);
-
-
 
 
 

@@ -68,6 +68,7 @@
     <ClCompile Include="..\..\..\Arsenal\Common\random.c" />
     <ClCompile Include="..\..\..\Arsenal\Common\strconv.c" />
     <ClCompile Include="..\..\..\Arsenal\Common\printf.c" />
+    <ClCompile Include="..\..\..\Arsenal\Common\strformat.c" />
     <ClCompile Include="..\..\..\Arsenal\Common\string.c" />
     <ClCompile Include="..\..\..\Arsenal\Common\strtable.c" />
     <ClCompile Include="..\..\..\Arsenal\Common\textfile.c" />
