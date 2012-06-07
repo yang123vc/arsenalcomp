@@ -486,11 +486,6 @@ const wchar_t*	AR_wcstrim_space_s(const wchar_t *in, const wchar_t *end);
 wchar_t*		AR_wcstrim_right(wchar_t *in, const wchar_t *trim);
 wchar_t*		AR_wcstrim_right_space(wchar_t *in);
 
-/*返回的是需要元素数组的长度包含0*/
-int_t			AR_i64tow_buf(wchar_t *out, size_t nbuf, int_64_t num, size_t radix);
-int_t			AR_u64tow_buf(wchar_t *out, size_t nbuf, uint_64_t num, size_t radix);
-
-
 
 const char*		AR_stristr(const char *s, const char *p);
 const wchar_t*	AR_wcsistr(const wchar_t *s, const wchar_t *p);
@@ -537,7 +532,15 @@ int_t			AR_vsprintf(char *dest, size_t count, const char *fmt, va_list args);
 
 
 
-/*************************************************String Format**************************************************/
+/*************************************************String Number Convert**************************************************/
+
+
+/*返回的是需要元素数组的长度包含0*/
+int_t			AR_i64tow_buf(wchar_t *out, size_t nbuf, int_64_t num, size_t radix);
+int_t			AR_u64tow_buf(wchar_t *out, size_t nbuf, uint_64_t num, size_t radix);
+
+
+
 bool_t			AR_wcs_is_float(const wchar_t *in, const wchar_t *end);
 bool_t			AR_wcs_is_int(const wchar_t *in, const wchar_t *end);
 

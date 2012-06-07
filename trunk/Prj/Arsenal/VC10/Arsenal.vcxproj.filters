@@ -171,7 +171,7 @@
     <ClCompile Include="..\..\..\Arsenal\Common\uri.c">
       <Filter>Arsenal\Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Arsenal\Common\strformat.c">
+    <ClCompile Include="..\..\..\Arsenal\Common\strnum.c">
       <Filter>Arsenal\Common</Filter>
     </ClCompile>
   </ItemGroup>
