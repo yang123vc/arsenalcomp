@@ -4989,6 +4989,120 @@ static void str_test17()
 
 
 
+
+
+/****************************************************************************************/
+
+
+
+
+/*********************************************************************************************/
+static void str_test18()
+{
+		printf("------------------------\r\n");
+		{
+				int_64_t		num;
+				const char *s, *p;
+				s = "-11111111111111111111111111111111";
+				
+				p = AR_stoi64(s, &num, 10);
+				
+
+				AR_printf(L"next == %hs\r\n", p);
+				AR_printf(L"num == %Id\r\n", num);
+
+		}
+		
+
+		{
+				uint_32_t		num;
+				const char *s = "11111111111111111111111111111111";
+
+				const char *p = AR_stou32(s, &num, 10);
+				const char *next;
+
+				AR_printf(L"next == %hs\r\n", p);
+				printf("num == %u\r\n", num);
+				printf("strtoul == %u\r\n", strtoul(s, (char**)&next, 10));
+				AR_printf(L"next == %hs\r\n", next);
+		}
+
+
+		{
+				int_32_t		num;
+				const char *s = "-11111111111111111111111111111111";
+				
+				const char *p = AR_stoi32(s, &num, 10);
+
+				AR_printf(L"next == %hs\r\n", p);
+				printf("num == %d\r\n", num);
+				printf("strtol == %d\r\n", strtol(s, NULL, 10));
+
+		}
+
+
+		{
+				int_32_t		num;
+				const char *s = "11111111111111111111111111111111";
+				
+				const char *p = AR_stoi32(s, &num, 10);
+
+				AR_printf(L"next == %hs\r\n", p);
+				printf("num == %d\r\n", num);
+				printf("strtol == %d\r\n", strtol(s, NULL, 10));
+
+		}
+
+		{
+				int_32_t		num;
+				const char *s = "0x468321xyz";
+				
+				const char *p = AR_stoi32(s, &num, 0);
+
+				AR_printf(L"next == %hs\r\n", p);
+				printf("num == %d\r\n", num);
+				printf("strtol == %d\r\n", strtol(s, NULL, 10));
+
+
+		}
+
+
+		{
+				int_32_t		num;
+				const char *s = "-0x468321xyz";
+				
+				const char	 *p = AR_stoi32(s, &num, 0);
+
+				AR_printf(L"next == %hs\r\n", p);
+				printf("num == %d\r\n", num);
+				printf("strtol == %d\r\n", strtol(s, NULL, 10));
+		}
+
+
+		{
+				int_32_t		num;
+				const char *s = "0464321xyz";
+				
+				const char *p = AR_stoi32(s, &num, 0);
+
+				AR_printf(L"next == %hs\r\n", p);
+				printf("num == %d\r\n", num);
+				printf("strtol == %d\r\n", strtol(s, NULL, 10));
+		}
+
+
+				{
+				int_32_t		num;
+				const char *s = "0464321xyz";
+				
+				const char *p = AR_stoi32(s, &num, 0);
+
+				AR_printf(L"next == %hs\r\n", p);
+				printf("num == %d\r\n", num);
+				printf("strtol == %d\r\n", strtol(s, NULL, 10));
+		}
+}
+
 void com_test()
 {
 		
@@ -4997,7 +5111,7 @@ void com_test()
 		//algo_test1();
 		
 		//str_test();
-		//str_test1();
+		str_test1();
 		//str_test2();
 		//str_test3();
 		//str_test4();
@@ -5013,7 +5127,8 @@ void com_test()
 		//str_test14();
 		//str_test15();
 		//str_test16();
-		str_test17();
+		//str_test17();
+		str_test18();
 		//com_test3();
 		//com_conv();
 		//com_conv2();

@@ -266,7 +266,16 @@ int_t AR_wchartodigit(wchar_t ch)
 }
 
 
-
+int_t			AR_chartodigit(char ch)
+{
+		if(ch >= '0' && ch <= '9')
+		{
+				return ch - '0';
+		}else
+		{
+				return -1;
+		}
+}
 
 
 
@@ -441,6 +450,33 @@ const wchar_t* AR_wtou32(const wchar_t *in,  uint_32_t *num, size_t base)
 		return AR_wtou32_s(in, in + AR_wcslen(in), num, base);
 }
 
+/************************************************************************************/
+
+
+const char* AR_stoi64(const char *in,	 int_64_t  *num, size_t base)
+{
+		return AR_stoi64_s(in, in + AR_strlen(in), num, base);
+}
+
+const char* AR_stou64(const char *in,	 uint_64_t  *num, size_t base)
+{
+		return AR_stou64_s(in, in + AR_strlen(in), num, base);
+}
+
+
+const char* AR_stoi32(const char *in,  int_32_t *num, size_t base)
+{
+		return AR_stoi32_s(in, in + AR_strlen(in), num, base);
+}
+
+
+const char* AR_stou32(const char *in,  uint_32_t *num, size_t base)
+{
+		return AR_stou32_s(in, in + AR_strlen(in), num, base);
+}
+
+
+/**************************************************************************************/
 
 
 
@@ -681,6 +717,14 @@ const wchar_t*	AR_wtod(const wchar_t *in, double *num)
 		return AR_wtod_s(in, in + AR_wcslen(in), num);
 }
 
+
+
+const char*	AR_stod(const char *in, double *num)
+{
+
+		AR_ASSERT(in != NULL && num != NULL);
+		return AR_stod_s(in, in + AR_strlen(in), num);
+}
 
 
 
@@ -1085,7 +1129,434 @@ const wchar_t* AR_wtou32_s(const wchar_t *in, const wchar_t *end, uint_32_t  *nu
 
 }
 
+/***********************************************************str********************************************************************/
 
+
+static const char* __stou64_s(const char *in, const char *end, uint_64_t  *num, size_t base, uint_32_t flag)
+{
+		uint_64_t val,digit, maxval;
+		const char *p;
+
+		AR_ASSERT(in != NULL && end != NULL && num != NULL && (base == 0 || (base > 1 && base <= 36)));
+
+		/*p = AR_wcstrim_s(in, end, L" \t");*/
+		p = AR_strtrim_space_s(in,end);
+
+		if(p >= end)
+		{
+				return NULL;
+		}
+
+		if(*p == '-')
+		{
+				flag |= __NEG;
+				++p;
+		}else if(*p == '+')
+		{
+				++p;
+		}
+
+		if(flag & __NEG && flag & __UNSIGNED)
+		{
+				return NULL;
+		}
+
+		if(p >= end)
+		{
+				return NULL;
+		}
+
+		if(base == 0)
+		{
+				if(AR_chartodigit(*p) != 0)
+				{
+						base = 10;
+				}else if(*(p + 1) == 'x' || *(p + 1) == 'X')
+				{
+						base = 16;
+				}else
+				{
+						base = 8;
+				}
+		}
+
+		if(base == 16)
+		{
+				if(AR_chartodigit(*p) == 0 && (*(p + 1) == 'x' || *(p + 1) == 'X'))
+				{
+						p += 2;
+				}
+		}
+
+		if(p >= end)
+		{
+				return NULL;
+		}
+
+		maxval = AR_UINT64_MAX / base;
+		digit = 0;
+		val = 0;
+
+		while(p < end)
+		{
+				int_t tmp;
+				if((tmp = AR_chartodigit(*p)) != -1)
+				{
+						/*tmp = (*p - L'0');*/
+				}else if(*p >= 'A' && *p <= 'Z')
+				{
+						tmp = ((*p - 'A') + 10);
+				}else if(*p >= 'a' && *p <= 'z')
+				{
+						tmp = ((*p - 'a') + 10);
+				}else
+				{
+						break;
+				}
+
+				digit = (uint_64_t)tmp;
+				if(digit >= base)
+				{
+						break;
+				}
+
+				flag |= __READDIGIT;
+
+
+
+				if (val < maxval || (val == maxval && digit <= AR_UINT64_MAX % base))
+				{
+						val = val * base + digit;
+				}else
+				{
+						flag |= __OVERFLOW;
+				}
+				++p;
+		}
+
+		if(!(flag & __READDIGIT))
+		{
+				val = 0;
+				p = NULL;
+		}else if((flag & __OVERFLOW) || ((!(flag & __UNSIGNED)) && (((flag & __NEG) && (val > -AR_INT64_MIN)) || (!(flag & __NEG) && (val > AR_INT64_MAX)))))
+		{
+				p = NULL;
+				/*errno = ERANGE;*/
+				
+				if(flag & __UNSIGNED)
+				{
+						val = AR_UINT64_MAX;
+				} else if (flag & __NEG )
+				{
+						val = (uint_64_t)(-AR_INT64_MIN);
+				}else
+				{
+						val = AR_INT64_MAX;
+				}
+		}
+
+		if(flag & __NEG)
+		{
+				val = (uint_64_t)(-(int_64_t)val);
+		}
+		*num = val;
+		return p;
+}
+
+
+
+static const char* __stou32_s(const char *in, const char *end, uint_32_t  *num, size_t base, uint_32_t flag)
+{
+		uint_32_t val,digit, maxval;
+		const char *p;
+
+		AR_ASSERT(in != NULL && end != NULL && num != NULL && (base == 0 || (base > 1 && base <= 36)));
+
+		/*p = AR_wcstrim_s(in, end, L" \t");*/
+		p = AR_strtrim_space_s(in,end);
+
+		if(p >= end)
+		{
+				return NULL;
+		}
+
+		if(*p == '-')
+		{
+				flag |= __NEG;
+				++p;
+		}else if(*p == '+')
+		{
+				++p;
+		}
+
+		if(flag & __NEG && flag & __UNSIGNED)
+		{
+				return NULL;
+		}
+
+		if(p >= end)
+		{
+				return NULL;
+		}
+
+		if(base == 0)
+		{
+				if(AR_chartodigit(*p) != 0)
+				{
+						base = 10;
+				}else if(*(p + 1) == 'x' || *(p + 1) == 'X')
+				{
+						base = 16;
+				}else
+				{
+						base = 8;
+				}
+		}
+
+		if(base == 16)
+		{
+				if(AR_chartodigit(*p) == 0 && (*(p + 1) == 'x' || *(p + 1) == 'X'))
+				{
+						p += 2;
+				}
+		}
+
+		if(p >= end)
+		{
+				return NULL;
+		}
+
+		maxval = AR_UINT32_MAX / (uint_32_t)base;
+		digit = 0;
+		val = 0;
+
+		while(p < end)
+		{
+				int_t tmp;
+				if((tmp = AR_chartodigit(*p)) != -1)
+				{
+						/*tmp = (*p - L'0');*/
+				}else if(*p >= 'A' && *p <= 'Z')
+				{
+						tmp = ((*p - 'A') + 10);
+				}else if(*p >= 'a' && *p <= 'z')
+				{
+						tmp = ((*p - 'a') + 10);
+				}else
+				{
+						break;
+				}
+
+				digit = (uint_32_t)tmp;
+				if(digit >= base)
+				{
+						break;
+				}
+
+				flag |= __READDIGIT;
+
+
+
+				if (val < maxval || (val == maxval && digit <= AR_UINT32_MAX % base))
+				{
+						val = val * (uint_32_t)base + digit;
+				}else
+				{
+						flag |= __OVERFLOW;
+				}
+				++p;
+		}
+
+		if(!(flag & __READDIGIT))
+		{
+				val = 0;
+				p = NULL;
+		}else if((flag & __OVERFLOW) || ((!(flag & __UNSIGNED)) && (((flag & __NEG) && (val > -AR_INT32_MIN)) || (!(flag & __NEG) && (val > AR_INT32_MAX)))))
+		{
+				p = NULL;
+				/*errno = ERANGE;*/
+				if ( flag & __UNSIGNED )
+				{
+						val = AR_UINT32_MAX;
+				} else if (flag & __NEG )
+				{
+						val = (uint_32_t)(-AR_INT32_MIN);
+				}else
+				{
+						val = AR_INT32_MAX;
+				}
+		}
+
+		if(flag & __NEG)
+		{
+				val = (uint_32_t)(-(int_32_t)val);
+		}
+		*num = val;
+		return p;
+}
+
+
+
+
+const char* AR_stoi64_s(const char *in, const char *end, int_64_t  *num, size_t base)
+{
+		uint_32_t flag = 0;
+		uint_64_t val;
+		const char *p;
+		AR_ASSERT(in != NULL && end != NULL && num != NULL && (base == 0 || (base > 1 && base <= 36)));
+
+		p = __stou64_s(in, end, &val, base, flag);
+
+		*num = (int_64_t)val;
+
+		return p;
+}
+
+
+const char* AR_stou64_s(const char *in, const char *end, uint_64_t  *num, size_t base)
+{
+		uint_32_t flag = __UNSIGNED;
+		const char *p;
+		AR_ASSERT(in != NULL && end != NULL && num != NULL && (base == 0 || (base > 1 && base <= 36)));
+
+		p = __stou64_s(in, end, num, base, flag);
+
+		return p;
+
+}
+
+
+const char* AR_stoi32_s(const char *in, const char *end, int_32_t  *num, size_t base)
+{
+		uint_32_t flag = 0;
+		uint_32_t val;
+		const char *p;
+		AR_ASSERT(in != NULL && end != NULL && num != NULL && (base == 0 || (base > 1 && base <= 36)));
+
+		p = __stou32_s(in, end, &val, base, flag);
+
+		*num = (int_32_t)val;
+
+		return p;
+}
+
+
+const char* AR_stou32_s(const char *in, const char *end, uint_32_t  *num, size_t base)
+{
+		uint_32_t flag = __UNSIGNED;
+		const char *p;
+		AR_ASSERT(in != NULL && end != NULL && num != NULL && (base == 0 || (base > 1 && base <= 36)));
+
+		p = __stou32_s(in, end, num, base, flag);
+
+		return p;
+
+}
+
+
+
+/*此函数貌似不太完整，对溢出检测也没做到位*/
+const char*	AR_stod_s(const char *in, const char *end, double *out)
+{
+		
+		const char *p;
+		double num = 0.0f,frac = 0.0f, exp = 1.0f;
+		double result = 0.0f;
+		bool_t is_neg = false, is_ok = false;
+		
+		char decimal_point;
+		AR_ASSERT(in != NULL && end != NULL && in <= end && out != NULL);
+		
+		{
+				const struct lconv *conv;
+				conv =  localeconv();
+				decimal_point = *conv->decimal_point;
+		}
+
+		/*p = AR_wcstrim(in, L" \t");*/
+		p = AR_strtrim_space_s(in, end);
+
+		if(*p == L'-')
+		{
+				++p;
+				is_neg = true;
+		}else if(*p == L'+')
+		{
+				is_neg = false;
+				++p;
+		}
+
+
+		while(p < end && *p >= '0' && *p <= '9')
+		{
+				num *= 10.0f;
+				num += (double)(*p - '0');
+				++p;
+				is_ok = true;
+		}
+		
+		if(p < end && *p == decimal_point)
+		{
+				++p;
+				while(p < end && *p >= '0' && *p <= '9')
+				{
+						exp *= 10.0f;
+						frac *= 10.0f;
+						frac += (double)(*p - '0');
+						++p;
+						is_ok = true;
+				}
+		}
+		result = num + frac / exp;
+
+
+		if(p < end && (*p == 'e' || *p == 'E'))
+		{
+				bool_t factor;
+				size_t i, e;
+				++p;
+
+				if(*p == '+')
+				{
+						factor = true;
+						++p;
+				}else if(*p == '-')
+				{
+						factor = false;
+						++p;
+				}else
+				{
+						factor = true;
+				}
+				
+				e = 0;
+				is_ok = false;
+				while(p < end && *p >= '0' && *p <= '9')
+				{
+						e *= 10;
+						e += (*p - '0');
+						++p;
+						is_ok = true;
+				}
+
+				for(i = 0; i < e; ++i)
+				{
+						if(factor)
+						{
+								result *= 10.0f;
+						}else
+						{
+								result /= 10.0f;
+						}
+				}
+		}
+		if(is_neg)result = -result;
+		*out = result;
+		return is_ok ? p : NULL;
+}
+
+
+/***********************************************************************************************************************************/
 
 #if(0)
 
@@ -1636,6 +2107,97 @@ bool_t	AR_wcs_is_int(const wchar_t *in, const wchar_t *end)
 		}
 
 		if(AR_wtou64_s(in, end, (uint_64_t*)&un, 0) != NULL)
+		{
+				return true;
+		}
+
+		return false;
+}
+
+/**********************************************************str*************************************/
+
+
+bool_t	AR_str_is_float(const char *in, const char *end)
+{
+		const char *p;
+		
+		bool_t is_float;
+
+		char decimal_point;
+		
+		AR_ASSERT(in != NULL && end != NULL && in <= end);
+
+		{
+				const struct lconv *conv;
+				conv =  localeconv();
+				decimal_point = *conv->decimal_point;
+		}
+
+		is_float = false;
+
+		p = AR_strtrim_space_s(in, end);
+
+		if(*p == '-' || *p == '+')
+		{
+				++p;
+		}
+
+
+		while(p < end && *p >= '0' && *p <= '9')/*可能是个整数*/
+		{
+				++p;
+		}
+
+		if(p < end && *p == decimal_point)/*也许是浮点，但可能有错误*/
+		{
+				is_float = true;
+				++p;
+
+				while(p < end && *p >= '0' && *p <= '9')
+				{
+						++p;
+				}
+		}
+
+		if(p < end && (*p == 'e' || *p == 'E'))/*可能是浮点，但是会有错误*/
+		{
+				++p;
+
+				if(*p == '+' || *p == '-')
+				{
+						++p;
+				}
+				
+				is_float = false;
+
+				while(p < end && *p >= '0' && *p <= '9')/*e后必须跟随指数*/
+				{
+						++p;
+						is_float = true;
+				}
+		}
+		return is_float;
+}
+
+
+bool_t	AR_str_is_int(const char *in, const char *end)
+{
+		int_64_t un;
+
+		AR_ASSERT(in != NULL && end != NULL && in <= end);
+
+		if(AR_str_is_float(in, end))
+		{
+				return false;
+		}
+
+		
+		if(AR_stoi64_s(in, end, &un, 0) != NULL)
+		{
+				return true;
+		}
+
+		if(AR_stou64_s(in, end, (uint_64_t*)&un, 0) != NULL)
 		{
 				return true;
 		}
