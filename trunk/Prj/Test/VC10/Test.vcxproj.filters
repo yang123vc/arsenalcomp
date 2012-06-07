@@ -423,6 +423,9 @@
     <ClCompile Include="..\..\..\Test\extlib\libcurl\lib\wildcard.c">
       <Filter>extlib\libcurl\lib\src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Test\uri_test.c">
+      <Filter>Test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Test\avltree.h">
