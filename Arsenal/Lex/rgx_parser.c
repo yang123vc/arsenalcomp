@@ -32,7 +32,7 @@ static const wchar_t*	__transform_char(const wchar_t *input, wchar_t *c, rgxErro
 		switch(*p)
 		{
 				case L'\0':
-						err->status = AR_E_INVAL;
+						err->status = AR_E_MALFORMAT;
 						err->pos = p;
 						return NULL;
 				case L'{':
@@ -85,7 +85,7 @@ static const wchar_t*	__transform_char(const wchar_t *input, wchar_t *c, rgxErro
 								
 								if(ret == NULL)
 								{
-										err->status = AR_E_INVAL;
+										err->status = AR_E_MALFORMAT;
 										err->pos = p;
 										return NULL;
 								}else
@@ -118,7 +118,7 @@ static const wchar_t*	__transform_char(const wchar_t *input, wchar_t *c, rgxErro
 								
 								if(ret == NULL)
 								{
-										err->status = AR_E_INVAL;
+										err->status = AR_E_MALFORMAT;
 										err->pos = p;
 										return NULL;
 								}else
@@ -145,7 +145,7 @@ static const wchar_t*	__transform_char(const wchar_t *input, wchar_t *c, rgxErro
 								ret = AR_wtou32_s(p, p + 2, &val, 16);
 								if(ret == NULL)
 								{
-										err->status = AR_E_INVAL;
+										err->status = AR_E_MALFORMAT;
 										err->pos = p;
 										return NULL;
 								}else
@@ -177,7 +177,7 @@ static const wchar_t*	__transform_char(const wchar_t *input, wchar_t *c, rgxErro
 								
 								if(ret == NULL)
 								{
-										err->status = AR_E_INVAL;
+										err->status = AR_E_MALFORMAT;
 										err->pos = p;
 										return NULL;
 								}else
@@ -193,7 +193,7 @@ static const wchar_t*	__transform_char(const wchar_t *input, wchar_t *c, rgxErro
 				}
 						break;
 				default:
-						err->status = AR_E_INVAL;
+						err->status = AR_E_MALFORMAT;
 						err->pos = p;
 						return NULL;
 		}
@@ -235,7 +235,7 @@ static rgxResult_t	__handle_quote(const wchar_t *input)
 				
 				if(*p == L'\0')/*形如"abc这种不良输入*/
 				{
-						__SET_ERR(g_res, NULL, NULL, p, AR_E_INVAL);
+						__SET_ERR(g_res, NULL, NULL, p, AR_E_MALFORMAT);
 						g_res.err.pos = p;
 						goto INVALID_POINT;
 				}else if(*p == L'\\')/*形如\"\b\c\\等等的串*/
@@ -243,7 +243,7 @@ static rgxResult_t	__handle_quote(const wchar_t *input)
 						
 						if(*(p+1) == L'\0')/*错误输入例如\*/
 						{
-								__SET_ERR(g_res, NULL, NULL, p, AR_E_INVAL);
+								__SET_ERR(g_res, NULL, NULL, p, AR_E_MALFORMAT);
 								goto INVALID_POINT;
 						}
 						
@@ -296,7 +296,7 @@ static rgxResult_t	__handle_quote(const wchar_t *input)
 										uint_64_t num;
 										if(*(p + 1) == L'\0')/*形如\x这种不良输入*/
 										{
-												__SET_ERR(g_res, NULL, NULL, p, AR_E_INVAL);
+												__SET_ERR(g_res, NULL, NULL, p, AR_E_MALFORMAT);
 												goto INVALID_POINT;
 										}else
 										{
@@ -305,7 +305,7 @@ static rgxResult_t	__handle_quote(const wchar_t *input)
 												
 												if(tmp_ptr == NULL || num > (uint_64_t)AR_WCHARMAX)
 												{
-														__SET_ERR(g_res, NULL, NULL, p, AR_E_INVAL);
+														__SET_ERR(g_res, NULL, NULL, p, AR_E_MALFORMAT);
 														goto INVALID_POINT;
 												}
 												p = tmp_ptr;
@@ -337,7 +337,7 @@ static rgxResult_t	__handle_quote(const wchar_t *input)
 												}
 										}else
 										{
-												__SET_ERR(g_res, NULL, NULL, p, AR_E_INVAL);
+												__SET_ERR(g_res, NULL, NULL, p, AR_E_MALFORMAT);
 												goto INVALID_POINT;
 										}
 										break;
@@ -371,7 +371,7 @@ static rgxResult_t	__handle_quote(const wchar_t *input)
 		
 		if(cat->left == NULL && cat->right == NULL)/*输入型为""的空引用*/
 		{
-				__SET_ERR(g_res, NULL, NULL, p, AR_E_INVAL);
+				__SET_ERR(g_res, NULL, NULL, p, AR_E_MALFORMAT);
 				goto INVALID_POINT;
 		}
 		__SET_ERR(g_res, ++p, cat, NULL, AR_S_YES);
@@ -400,7 +400,7 @@ static const wchar_t* __get_charset(const wchar_t *input, wchar_t *c, rgxError_t
 		switch(*input)
 		{
 				case L'\0':
-						err->status = AR_E_INVAL;
+						err->status = AR_E_MALFORMAT;
 						err->pos = input;
 						return NULL;
 				case L'\a': 
@@ -411,7 +411,7 @@ static const wchar_t* __get_charset(const wchar_t *input, wchar_t *c, rgxError_t
 				case L'\v': 
 				case L'\b':
 						/*				AR_ASSERT(0);*/
-						err->status = AR_E_INVAL;
+						err->status = AR_E_MALFORMAT;
 						err->pos = input;
 						return NULL;
 				case L'{':
@@ -429,7 +429,7 @@ static const wchar_t* __get_charset(const wchar_t *input, wchar_t *c, rgxError_t
 				case L'^':
 				case L'$':
 				case L'.':
-						err->status = AR_E_INVAL;
+						err->status = AR_E_MALFORMAT;
 						err->pos = input;
 						return NULL;
 				case L'\\':
@@ -478,7 +478,7 @@ static rgxResult_t	__handle_cset_range(const wchar_t *input)
 				{
 						if(*p == L'\0')/*错误输入，形如串‘[abc’*/
 						{
-								__SET_ERR(g_res, NULL, NULL, p, AR_E_INVAL);
+								__SET_ERR(g_res, NULL, NULL, p, AR_E_MALFORMAT);
 								goto INVALID_POINT;
 						}
 						
@@ -1022,7 +1022,7 @@ static rgxResult_t	__handle_postfix(rgxNode_t *expr, const wchar_t *input)
 										
 										if(beg == NULL) /*此时 形式为{m,...非法字符}，则失败*/
 										{
-												__SET_ERR(g_res, NULL, NULL, p, AR_E_INVAL);
+												__SET_ERR(g_res, NULL, NULL, p, AR_E_MALFORMAT);
 												
 												goto INVALID_POINT;
 										}
@@ -1031,7 +1031,7 @@ static rgxResult_t	__handle_postfix(rgxNode_t *expr, const wchar_t *input)
 										
 										if(*beg != L'}')/*此时为{m,n 非法字符 形式,则失败*/
 										{
-												__SET_ERR(g_res, NULL, NULL, p, AR_E_INVAL);
+												__SET_ERR(g_res, NULL, NULL, p, AR_E_MALFORMAT);
 												goto INVALID_POINT;
 										}
 								}
@@ -1042,7 +1042,7 @@ static rgxResult_t	__handle_postfix(rgxNode_t *expr, const wchar_t *input)
 						}else			/*此时形式为{m非法字符，错误*/
 						{
 								
-								__SET_ERR(g_res, NULL, NULL, p, AR_E_INVAL);
+								__SET_ERR(g_res, NULL, NULL, p, AR_E_MALFORMAT);
 								goto INVALID_POINT;
 						}
 						
@@ -1178,7 +1178,7 @@ static rgxResult_t __handle_factor(const wchar_t *input, const rgxNameSet_t *nam
 										
 								}else
 								{
-										__SET_ERR(g_res, NULL, NULL, p, AR_E_INVAL);
+										__SET_ERR(g_res, NULL, NULL, p, AR_E_MALFORMAT);
 										return g_res;
 										
 								}
@@ -1211,7 +1211,7 @@ static rgxResult_t __handle_factor(const wchar_t *input, const rgxNameSet_t *nam
 								
 								if(*p != L'}' || count >= AR_RGX_MAXNAME)
 								{
-										__SET_ERR(g_res, NULL, NULL, p, AR_E_INVAL);
+										__SET_ERR(g_res, NULL, NULL, p, AR_E_MALFORMAT);
 										return g_res;
 								}else
 								{
@@ -1251,7 +1251,7 @@ static rgxResult_t __handle_factor(const wchar_t *input, const rgxNameSet_t *nam
 								/*
 								 AR_ASSERT(0);
 								 */
-								__SET_ERR(g_res, NULL, NULL, p, AR_E_INVAL);
+								__SET_ERR(g_res, NULL, NULL, p, AR_E_MALFORMAT);
 								return g_res;
 						}
 				}
@@ -1396,13 +1396,13 @@ static rgxResult_t __handle_expr(const wchar_t *input, wchar_t tc, const rgxName
 		
 		if(*p != tc)
 		{ 
-				__SET_ERR(g_res, NULL, NULL, p, AR_E_INVAL);
+				__SET_ERR(g_res, NULL, NULL, p, AR_E_MALFORMAT);
 				goto INVALID_POINT;
 		}
 		
 		if(cat == NULL && branch == NULL) 
 		{ 
-				__SET_ERR(g_res, NULL, NULL, p, AR_E_INVAL);
+				__SET_ERR(g_res, NULL, NULL, p, AR_E_MALFORMAT);
 				goto INVALID_POINT;
 		}
 		

@@ -310,7 +310,7 @@ arStatus_t	Lex_Insert(lex_t *lex, const wchar_t *input)
 				{
 						if(AR_wcsstr(p, L"%skip") == NULL)
 						{
-								return AR_E_INVAL;
+								return AR_E_MALFORMAT;
 						}
 
 						p = AR_wcstrim_space(p + AR_wcslen(L"%skip"));
@@ -322,7 +322,7 @@ arStatus_t	Lex_Insert(lex_t *lex, const wchar_t *input)
 				p = AR_wtou(p, (uint_t*)&act.value, 10);
 				if(p == NULL)
 				{
-						return AR_E_INVAL;
+						return AR_E_MALFORMAT;
 				}
 
 				p = AR_wcstrim_space(p);
@@ -332,7 +332,7 @@ arStatus_t	Lex_Insert(lex_t *lex, const wchar_t *input)
 						p = AR_wtou(++p, (uint_t*)&act.priority, 10);
 						if(p == NULL)
 						{
-								return AR_E_INVAL;
+								return AR_E_MALFORMAT;
 						}
 				}
 
@@ -355,7 +355,7 @@ arStatus_t	Lex_Insert(lex_t *lex, const wchar_t *input)
 
 				if(*p != L'=')
 				{
-						return AR_E_INVAL;
+						return AR_E_MALFORMAT;
 				}
 				p = AR_wcstrim_space(++p);
 				return Lex_InsertName(lex, name, p);
@@ -365,7 +365,7 @@ arStatus_t	Lex_Insert(lex_t *lex, const wchar_t *input)
 				/*AR_error(L"Lex Rule Error : Invalid Input %ls\r\n", p);*/
 				
 				AR_FormatString(lex->last_err_msg, L"Lex Rule Error : Invalid Input %ls\r\n", p);
-				return AR_E_INVAL;
+				return AR_E_MALFORMAT;
 		}
 
 
