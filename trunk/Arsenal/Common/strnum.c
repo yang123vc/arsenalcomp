@@ -189,6 +189,75 @@ int_t			AR_i64tow_buf(wchar_t *out, size_t nbuf, int_64_t num, size_t radix)
 }
 
 
+
+
+/*******************************************************************************************************/
+
+int_t			AR_u64tos_buf(char *out, size_t nbuf, uint_64_t num, size_t radix)
+{
+		char buf[__BUFFER_LEN];
+		char *p;
+		int_t len;
+		static const char* __tbl = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		AR_ASSERT(radix >= 2 && radix <= 36);
+
+		p = buf + __BUFFER_LEN;
+		*--p = 0;
+		do{ *--p = __tbl[num % radix];}while((num /= radix) > 0);
+
+		len = (int_t)(buf + __BUFFER_LEN - p);/*返回的是需要元素数组的长度包含0*/
+
+		if(out != NULL)
+		{
+				if(nbuf < (size_t)len)return -1;
+				AR_strcpy(out, p);
+				return len;
+		}else
+		{
+				return len;
+		}
+
+}
+
+
+
+
+int_t			AR_i64tos_buf(char *out, size_t nbuf, int_64_t num, size_t radix)
+{
+		bool_t is_neg;
+		char buf[__BUFFER_LEN];
+		char *p;
+		int_t len;
+		/*static const wchar_t* __tbl = L"0123456789ABCDEF";*/
+		static const char* __tbl = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		AR_ASSERT(radix >= 2 && radix <= 36);
+		is_neg = false;
+
+		if(num < 0){ is_neg = true; num = -num;}
+
+		p = buf + __BUFFER_LEN;
+		*--p = 0;
+		do{ *--p = __tbl[num % radix];}while((num /= radix) > 0);
+		if(is_neg)*--p = L'-';
+
+		len = (int_t)(buf + __BUFFER_LEN - p);/*返回的是需要元素数组的长度包含0*/
+
+		if(out != NULL)
+		{
+				if(nbuf < (size_t)len)
+				{
+						return -1;
+				}
+				AR_strcpy(out, p);
+				return len;
+		}else
+		{
+				return len;
+		}
+}
+
+
+
 #undef __BUFFER_LEN
 
 
