@@ -1290,7 +1290,7 @@ arStatus_t			Parser_CheckIsValidGrammar(const psrGrammar_t *grammar, arIOCtx_t *
 				{
 						AR_printf_ctx(io_ctx, L"Grammar Error : empty grammar!\r\n");
 				}
-				return AR_E_INVAL;
+				return AR_E_NOTREADY;
 		}
 
 		lst = Parser_GetSymbList(grammar);
