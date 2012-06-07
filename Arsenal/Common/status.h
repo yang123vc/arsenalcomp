@@ -28,6 +28,7 @@ typedef enum
 		AR_E_RESERVED,
 		AR_E_EMPTY,
 		AR_E_NOMORE,
+		AR_E_IGNORED,
 		
 		AR_E_SMALLBUF,
 		AR_E_BADENCCONV,
