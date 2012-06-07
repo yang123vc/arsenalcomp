@@ -1407,6 +1407,9 @@ arStatus_t		AR_SetURI(arURI_t *uri, const wchar_t *str)
 {
 		arStatus_t status;
 		AR_ASSERT(uri != NULL && str != NULL);
+		
+		str = AR_wcstrim_space(str);
+
 		AR_ClearURI(uri);
 		uri->_parse_encoded = false;
 		status = __parse(uri, str, str + AR_wcslen(str)).status;
@@ -1422,16 +1425,37 @@ arStatus_t		AR_SetURI(arURI_t *uri, const wchar_t *str)
 arStatus_t		AR_SetEncodedURI(arURI_t *uri, const wchar_t *str)
 {
 		arStatus_t status;
+		wchar_t *tmp;
+		const wchar_t *s;
 		AR_ASSERT(uri != NULL && str != NULL);
+		tmp = AR_NEWARR(wchar_t, AR_wcslen(str) + 1);
+		if(tmp == NULL)
+		{
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+		AR_wcscpy(tmp, str);
+
+		s = AR_wcstrim_space(tmp);
+		AR_wcstrim_right_space(tmp);
+
 		AR_ClearURI(uri);
 		uri->_parse_encoded = true;
-		status = __parse(uri, str, str + AR_wcslen(str)).status;
+		status = __parse(uri, s, s + AR_wcslen(s)).status;
 		
 		if(status != AR_S_YES)
 		{
 				AR_ClearURI(uri);
 		}
 		uri->_parse_encoded = false;
+
+END_POINT:
+		if(tmp)
+		{
+				AR_DEL(tmp);
+				tmp = NULL;
+		}
+
 		return status;
 }
 

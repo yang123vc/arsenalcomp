@@ -4872,13 +4872,22 @@ static void uri_exception_test()
 
 
 		/*******************************************************************************/
-		status = AR_SetEncodedURI(uri, L"http:////itunes.apple.com/cn/app/id523405218?mt=8");
+		status = AR_SetEncodedURI(uri, L"		http:////itunes.apple.com/cn/app/id523405218?mt=8				");
 		AR_ASSERT(status == AR_S_YES);
 
 		AR_GetURI(uri, str);
 		AR_printf(L"%ls\r\n", AR_GetStringCString(str));
 
-		AR_ASSERT(AR_IsRelativeURI(uri));
+		AR_ASSERT(!AR_IsRelativeURI(uri));
+		
+		/*******************************************************************************/
+		status = AR_SetEncodedURI(uri, L"		http:////itunes			.apple.com/cn/app/id523405218?mt=8				");
+		AR_ASSERT(status == AR_S_YES);
+
+		AR_GetURI(uri, str);
+		AR_printf(L"%ls\r\n", AR_GetStringCString(str));
+
+		AR_ASSERT(!AR_IsRelativeURI(uri));
 		
 
 		AR_DestroyURI(uri);
@@ -5202,7 +5211,7 @@ void com_test()
 
 		//cache_test();
 
-		//uri_test();
+		uri_test();
 }
 
 
