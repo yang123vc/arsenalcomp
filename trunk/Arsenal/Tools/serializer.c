@@ -679,7 +679,7 @@ static snRetVal_t	__get_int(arBuffer_t	*buffer)
 		
 		if(pbuf == NULL)
 		{
-				ret.status = AR_E_INVAL;
+				ret.status = AR_E_MALFORMAT;
 				return ret;
 		}
 
@@ -699,13 +699,13 @@ static snRetVal_t	__get_int(arBuffer_t	*buffer)
 		
 		if(idx == buf_len)
 		{
-				ret.status = AR_E_INVAL;
+				ret.status = AR_E_MALFORMAT;
 				return ret;
 		}
 
 		if(pbuf[idx] != 'e')
 		{
-				ret.status = AR_E_INVAL;
+				ret.status = AR_E_MALFORMAT;
 				return ret;
 		}
 
@@ -763,7 +763,7 @@ static snRetVal_t	__get_float(arBuffer_t	*buffer)
 		
 		if(pbuf == NULL || pbuf[0] != 'e')
 		{
-				ret.status = AR_E_INVAL;
+				ret.status = AR_E_MALFORMAT;
 				goto END_POINT;
 		}
 
@@ -776,13 +776,13 @@ static snRetVal_t	__get_float(arBuffer_t	*buffer)
 				need_n= SN_GetWcsFromStringObject(str_obj, buf, 1024);
 				if(need_n <= 0)
 				{
-						ret.status = AR_E_INVAL;
+						ret.status = AR_E_BADENCCONV;
 						goto END_POINT;
 				}
 
 				if(AR_wtod(buf, &num) == NULL)
 				{
-						ret.status = AR_E_INVAL;
+						ret.status = AR_E_MALFORMAT;
 						goto END_POINT;
 				}
 		}
@@ -823,7 +823,7 @@ static snRetVal_t		__get_str(arBuffer_t	*buffer)
 		
 		if(pbuf == NULL)
 		{
-				ret.status = AR_E_INVAL;
+				ret.status = AR_E_MALFORMAT;
 				return ret;
 		}
 		
@@ -835,13 +835,13 @@ static snRetVal_t		__get_str(arBuffer_t	*buffer)
 
 		if(idx  == buf_len || pbuf[idx] != ':' || l == 0)
 		{
-				ret.status = AR_E_INVAL;
+				ret.status = AR_E_MALFORMAT;
 				return ret;
 		}
 
 		if(buf_len <  idx + 1 + l)
 		{
-				ret.status = AR_E_INVAL;
+				ret.status = AR_E_MALFORMAT;
 				return ret;
 		}
 
@@ -883,7 +883,7 @@ static snRetVal_t		__get_obj(arBuffer_t	*buffer)
 		
 		if(data == NULL)
 		{
-				ret.status = AR_E_INVAL;
+				ret.status = AR_E_MALFORMAT;
 				return ret;
 		}
 
@@ -910,7 +910,7 @@ static snRetVal_t		__get_obj(arBuffer_t	*buffer)
 						return __get_str(buffer);
 				}else
 				{
-						ret.status = AR_E_INVAL;
+						ret.status = AR_E_MALFORMAT;
 						return ret;
 				}
 		}
@@ -940,7 +940,7 @@ static snRetVal_t		__get_list(arBuffer_t	*buffer)
 				pb = AR_GetBufferData(buffer);
 				if(pb == NULL)
 				{
-						ret.status = AR_E_INVAL;
+						ret.status = AR_E_MALFORMAT;
 						goto FAILED_POINT;
 				}
 
@@ -1121,7 +1121,7 @@ static arStatus_t		__put_float(arBuffer_t	*buffer, const snFloat_t *float_num)
 
 		if(AR_swprintf(buf, 1024, L"%.*g", (uint_32_t)30, float_num->num) <= 0)
 		{
-				status = AR_E_INVAL;
+				status = AR_E_MALFORMAT;
 				return status;
 		}
 
@@ -1430,7 +1430,7 @@ snRetVal_t		SN_FindObjectByWcsPath(snObject_t *obj, const wchar_t *path)
 								}
 						}else
 						{
-								ret.status = AR_E_INVAL;
+								ret.status = AR_E_NOTMATCHED;
 								obj = NULL;
 								goto END_POINT;
 						}

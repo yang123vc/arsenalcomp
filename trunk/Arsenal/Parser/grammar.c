@@ -406,7 +406,7 @@ arStatus_t Parser_CreateRuleByStr(psrRule_t **prule, const wchar_t *str, const w
 
 		if(!AR_iswalpha(*beg) && *beg != L'_')
 		{
-				status = AR_E_INVAL;
+				status = AR_E_MALFORMAT;
 				goto END_POINT;
 		}
 		
@@ -418,7 +418,7 @@ arStatus_t Parser_CreateRuleByStr(psrRule_t **prule, const wchar_t *str, const w
 
 		if(*p == L'\0' || p - beg == 0)
 		{
-				status = AR_E_INVAL;
+				status = AR_E_MALFORMAT;
 				goto END_POINT;
 		}else
 		{
@@ -437,7 +437,7 @@ arStatus_t Parser_CreateRuleByStr(psrRule_t **prule, const wchar_t *str, const w
 
 		if(*p != L':')
 		{
-				status = AR_E_INVAL;
+				status = AR_E_MALFORMAT;
 				goto END_POINT;
 		}
 

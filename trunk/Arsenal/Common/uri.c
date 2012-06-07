@@ -312,7 +312,7 @@ static arStatus_t	__decode(arCodePage_t cp, const wchar_t *begin, const wchar_t 
 				{
 						if(s == end)
 						{
-								status = AR_E_INVAL;
+								status = AR_E_MALFORMAT;
 								goto END_POINT;
 						}
 						
@@ -320,7 +320,7 @@ static arStatus_t	__decode(arCodePage_t cp, const wchar_t *begin, const wchar_t 
 
 						if(s == end)
 						{
-								status = AR_E_INVAL;
+								status = AR_E_MALFORMAT;
 								goto END_POINT;
 						}
 
@@ -337,7 +337,7 @@ static arStatus_t	__decode(arCodePage_t cp, const wchar_t *begin, const wchar_t 
 								c = hi - L'a' + 10;
 						}else
 						{
-								status = AR_E_INVAL;
+								status = AR_E_MALFORMAT;
 								goto END_POINT;
 						}
 
@@ -354,7 +354,7 @@ static arStatus_t	__decode(arCodePage_t cp, const wchar_t *begin, const wchar_t 
 								c += lo - L'a' + 10;
 						}else
 						{
-								status = AR_E_INVAL;
+								status = AR_E_MALFORMAT;
 								goto END_POINT;
 						}
 				}
@@ -440,7 +440,7 @@ static arStatus_t	__decode(arCodePage_t cp, const wchar_t *begin, const wchar_t 
 				{
 						if(*s == '\0')
 						{
-								status = AR_E_INVAL;
+								status = AR_E_MALFORMAT;
 								goto END_POINT;
 						}
 						
@@ -448,7 +448,7 @@ static arStatus_t	__decode(arCodePage_t cp, const wchar_t *begin, const wchar_t 
 
 						if(*s == '\0')
 						{
-								status = AR_E_INVAL;
+								status = AR_E_MALFORMAT;
 								goto END_POINT;
 						}
 
@@ -465,7 +465,7 @@ static arStatus_t	__decode(arCodePage_t cp, const wchar_t *begin, const wchar_t 
 								c = hi - 'a' + 10;
 						}else
 						{
-								status = AR_E_INVAL;
+								status = AR_E_MALFORMAT;
 								goto END_POINT;
 						}
 
@@ -482,7 +482,7 @@ static arStatus_t	__decode(arCodePage_t cp, const wchar_t *begin, const wchar_t 
 								c += lo - 'a' + 10;
 						}else
 						{
-								status = AR_E_INVAL;
+								status = AR_E_MALFORMAT;
 								goto END_POINT;
 						}
 				}
@@ -651,7 +651,7 @@ static uriParseRet_t __parse(arURI_t *uri, const wchar_t *begin, const wchar_t *
 				if(s < end && *s == L':')
 				{
 						++s;
-						__GOEND_IF_FAIL(s < e, AR_E_INVAL, s - 1);
+						__GOEND_IF_FAIL(s < e, AR_E_MALFORMAT, s - 1);
 						AR_StringToLower(tmp);
 						AR_SwapString(uri->scheme, tmp);
 						AR_ClearString(tmp);
@@ -789,7 +789,7 @@ static uriParseRet_t __parse_host_port(arURI_t *uri, const wchar_t *begin, const
 						++s;
 				}
 				
-				__GOEND_IF_FAIL(s < end, AR_E_INVAL, begin);
+				__GOEND_IF_FAIL(s < end, AR_E_MALFORMAT, begin);
 				++s;
 		}else
 		{
@@ -814,7 +814,7 @@ static uriParseRet_t __parse_host_port(arURI_t *uri, const wchar_t *begin, const
 
 						if(s_next == NULL)
 						{
-								__GOEND_IF_FAIL(false, AR_E_INVAL, s);
+								__GOEND_IF_FAIL(false, AR_E_MALFORMAT, s);
 						}
 
 						if(port == 0 || port > 65535)

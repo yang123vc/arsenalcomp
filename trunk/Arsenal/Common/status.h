@@ -22,6 +22,7 @@ typedef enum
 
 		AR_E_NOMEM = 0x1000,
 		AR_E_INVAL,
+		AR_E_MALFORMAT,
 		AR_E_RANGE,
 		AR_E_NOTFOUND,
 		AR_E_EXISTED,
@@ -34,6 +35,7 @@ typedef enum
 		AR_E_BADENCCONV,
 		AR_E_NOTREADY,
 		AR_E_NOTSUPPORTED,
+		AR_E_NOTMATCHED,
 
 		AR_E_SYS,
 		AR_E_FILE,
@@ -59,6 +61,8 @@ typedef enum
 		AR_E_TGUINVOPRAND,
 		AR_E_TGUINVOBJ,
 		AR_E_TGUINVCALL,
+
+		AR_E_ABORT,
 		AR_E_FAIL
 }__tag_ret_error_t;
 

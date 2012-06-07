@@ -1100,7 +1100,7 @@ static arStatus_t	__handle_line(iniObject_t *obj, const wchar_t *line, int_t *la
 		{
 		case INI_INVALID:
 		{
-				is_ok = AR_E_INVAL;
+				is_ok = AR_E_MALFORMAT;
 		}
 				break;
 		case INI_EMPTY:
