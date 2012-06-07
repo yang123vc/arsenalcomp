@@ -1522,6 +1522,7 @@
     <ClCompile Include="..\..\..\Test\tengu_test.c" />
     <ClCompile Include="..\..\..\Test\test.c" />
     <ClCompile Include="..\..\..\Test\tokenizer_test.c" />
+    <ClCompile Include="..\..\..\Test\uri_test.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Test\avltree.h" />
