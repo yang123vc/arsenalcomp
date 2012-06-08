@@ -805,7 +805,7 @@ const char*		AR_stristr(const char *s, const char *p)
 		size_t i;
 		AR_ASSERT(s != NULL && p != NULL);
 
-		if(*p)
+		if(*p == '\0')
 		{
 				return s;
 		}
@@ -825,7 +825,7 @@ const wchar_t*		AR_wcsistr(const wchar_t *s, const wchar_t *p)
 		size_t i;
 		AR_ASSERT(s != NULL && p != NULL);
 
-		if(*p)
+		if(*p == L'\0')
 		{
 				return s;
 		}
