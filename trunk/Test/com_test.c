@@ -3227,6 +3227,198 @@ static void str_test18()
 		}
 }
 
+
+static void str_test19()
+{
+		const char *str =    "lazy";
+		const char *string = "The quick brown dog jumps over the lazy fox";
+		char fmt1[] =   "         1         2         3         4         5";
+		char fmt2[] =   "12345678901234567890123456789012345678901234567890";
+  
+		char *pdest;
+		int  result;
+		printf( "String to be searched:\n   %s\n", string );
+		printf( "   %s\n   %s\n\n", fmt1, fmt2 );
+		pdest = strstr((char*)string, str );
+		result = (int)(pdest - string + 1);
+		if ( pdest != NULL )
+		{
+				printf( "%s found at position %d\n", str, result );
+		}
+		else
+		{
+				printf( "%s not found\n", str );
+		}
+
+
+		pdest = (char*)AR_stristr_s(string, string + AR_strlen(string), str, str + AR_strlen(str));
+		result = (int)(pdest - string + 1);
+		if ( pdest != NULL )
+		{
+				printf( "%s found at position %d\n", str, result );
+		}
+		else
+		{
+				printf( "%s not found\n", str );
+		}
+
+		str = "fox";
+		pdest = (char*)AR_stristr_s(string, string + AR_strlen(string), str, str + AR_strlen(str));
+		result = (int)(pdest - string + 1);
+		if ( pdest != NULL )
+		{
+				printf( "%s found at position %d\n", str, result );
+		}
+		else
+		{
+				printf( "%s not found\n", str );
+		}
+
+
+		/*******************************************************************************/
+
+		str = "";
+		pdest = (char*)AR_stristr_s(string, string + AR_strlen(string), str, str + AR_strlen(str));
+		
+		if ( pdest != NULL )
+		{
+				printf( "found str : '%s'\n", pdest);
+		}
+		else
+		{
+				printf( "%s not found\n", str );
+		}
+
+		pdest = (char*)AR_strstr(string, string + AR_strlen(string), str, str + AR_strlen(str));
+		
+		if ( pdest != NULL )
+		{
+				printf( "found str : '%s'\n", pdest);
+		}
+		else
+		{
+				printf( "%s not found\n", pdest);
+		}
+
+		/*******************************************************************************/
+
+		str = "";
+		string = "";
+
+		pdest = (char*)AR_stristr_s(string, string + AR_strlen(string), str, str + AR_strlen(str));
+		
+		if ( pdest != NULL )
+		{
+				printf( "found str : '%s'\n", pdest);
+		}
+		else
+		{
+				printf( "%s not found\n", str );
+		}
+
+		pdest = (char*)AR_strstr(string, string + AR_strlen(string), str, str + AR_strlen(str));
+		
+		if ( pdest != NULL )
+		{
+				printf( "found str : '%s'\n", pdest);
+		}
+		else
+		{
+				printf( "%s not found\n", pdest);
+		}
+
+
+		/*******************************************************************************/
+
+		str = "fox abc";
+		string = "The quick brown dog jumps over the lazy fox";
+
+		pdest = (char*)AR_strstr_s(string, string + AR_strlen(string), str, str + 3);
+		
+		if (pdest != NULL)
+		{
+				AR_ASSERT(pdest == AR_strstr(string, "fox"));
+				printf( "found str : '%s'\n", pdest);
+		}
+		else
+		{
+				printf( "%s not found\n", str );
+		}
+
+		/*******************************************************************************/
+
+		str = "FOX abc";
+		string = "The quick brown dog jumps over the lazy fox";
+
+		pdest = (char*)AR_stristr_s(string, string + AR_strlen(string), str, str + 3);
+		
+		if (pdest != NULL)
+		{
+				AR_ASSERT(pdest == AR_strstr(string, "fox"));
+				printf( "found str : '%s'\n", pdest);
+		}
+		else
+		{
+				printf( "%s not found\n", str );
+		}
+
+
+		/*******************************************************************************/
+
+		str = "FOX abc";
+		string = "The quick brown dog jumps over the lazy fox";
+
+		pdest = (char*)AR_stristr_s(string, string + AR_strlen(string), str, str + 4);
+		
+		if (pdest != NULL)
+		{
+				AR_ASSERT(false);
+				printf( "found str : '%s'\n", pdest);
+		}
+		else
+		{
+				printf( "%s not found\n", str );
+		}
+
+
+
+		/*******************************************************************************/
+		const wchar_t *wcs = L"FOX abc";
+		const wchar_t *wstr = L"The quick brown dog jumps over the lazy fox";
+		const wchar_t *pwdest;
+
+		pwdest = AR_wcsistr_s(wstr, wstr + AR_wcslen(wstr), wcs, wcs + 3);
+		
+		if(pwdest != NULL)
+		{
+				AR_ASSERT(pwdest == AR_wcsstr(wstr, L"fox"));
+				printf("found str : '%ls'\n", pwdest);
+		}
+		else
+		{
+				printf( "%ls not found\n", wstr);
+		}
+
+
+		/*******************************************************************************/
+		wcs = L"FOX abc";
+		wstr = L"The quick brown dog jumps over the lazy fox";
+		
+
+		pwdest = AR_wcsistr_s(wstr, wstr + AR_wcslen(wstr), wcs, wcs + 4);
+		
+		if(pwdest != NULL)
+		{
+				AR_ASSERT(false);
+				printf("found str : '%ls'\n", pwdest);
+		}
+		else
+		{
+				printf( "%ls not found\n", wstr);
+		}
+
+}
+
 extern void uri_test();
 
 void com_test()
@@ -3255,6 +3447,7 @@ void com_test()
 		//str_test16();
 		//str_test17();
 		//str_test18();
+		str_test19();
 		//com_test3();
 		//com_conv();
 		//com_conv2();
@@ -3328,7 +3521,7 @@ void com_test()
 
 		//cache_test();
 
-		uri_test();
+		//uri_test();
 }
 
 

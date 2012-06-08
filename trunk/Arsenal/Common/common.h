@@ -487,24 +487,29 @@ wchar_t*		AR_wcstrim_right(wchar_t *in, const wchar_t *trim);
 wchar_t*		AR_wcstrim_right_space(wchar_t *in);
 
 
+const char*		AR_strstr_s(const char *s, const char *se, const char *p, const char *pe);
+const wchar_t*	AR_wcsstr_s(const wchar_t *s, const wchar_t *se, const wchar_t *p, const wchar_t *pe);
+const char*		AR_stristr_s(const char *s, const char *se, const char *p, const char *pe);
+const wchar_t*	AR_wcsistr_s(const wchar_t *s, const wchar_t *se, const wchar_t *p, const wchar_t *pe);
+
 const char*		AR_stristr(const char *s, const char *p);
 const wchar_t*	AR_wcsistr(const wchar_t *s, const wchar_t *p);
 
 
 
-const wchar_t* AR_reverse_wcschr(const wchar_t* str, size_t l, wchar_t c);
-const wchar_t* AR_reverse_wcsstr(const wchar_t *str, size_t l,  const wchar_t *match, size_t ml);
+const wchar_t*	AR_reverse_wcschr(const wchar_t* str, size_t l, wchar_t c);
+const wchar_t*	AR_reverse_wcsstr(const wchar_t *str, size_t l,  const wchar_t *match, size_t ml);
 
 const wchar_t* AR_reverse_wcsichr(const wchar_t* str, size_t l, wchar_t c);
 const wchar_t* AR_reverse_wcsistr(const wchar_t *str, size_t l,  const wchar_t *match, size_t ml);
 
 
 
-const char* AR_reverse_strchr(const char* str, size_t l, char c);
-const char* AR_reverse_strstr(const char *str, size_t l,  const char *match, size_t ml);
+const char*		AR_reverse_strchr(const char* str, size_t l, char c);
+const char*		AR_reverse_strstr(const char *str, size_t l,  const char *match, size_t ml);
 
-const char* AR_reverse_strichr(const char* str, size_t l, char c);
-const char* AR_reverse_stristr(const char *str, size_t l,  const char *match, size_t ml);
+const char*		AR_reverse_strichr(const char* str, size_t l, char c);
+const char*		AR_reverse_stristr(const char *str, size_t l,  const char *match, size_t ml);
 
 
 
