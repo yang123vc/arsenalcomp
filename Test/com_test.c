@@ -3441,40 +3441,56 @@ extern void uri_test();
 
 static bool_t   is_ignore_url(const char *url)
 {
+
         static const char *dns_top = "biz.com.edu.gov.info.int.mil.name.net.org.pro.aero.cat.coop.jobs.museum.travel.arpa.root.mobi.post.tel.asia.geo.kid.mail.sco.web.xxx.nato.example.invalid.test.bitnet.csnet.onion.uucp.xn--0zwm56d.xn--g6w251d";
 		static const char *dns_nation = "ac.ad.ae.af.ag.ai.al.am.an.ao.aq.ar.as.at.au.aw.ax.az.ba.bb.bd.be.bf.bg.bh.bi.bj.bm.bn.bo.br.bs.bt.bv.bw.by.bz.ca.cc.cd.cf.cg.ch.ci.ck.cl.cm.cn.co.cr.cu.cv.cx.cy.cz.de.dj.dk.dm.do.dz.ec.ee.eg.eh.er.es.et.eu.fi.fj.fk.fm.fo.fr.ga.gb.gd.ge.gf.gg.gh.gi.gl.gm.gn.gp.gq.gr.gs.gt.gu.gw.gy.hk.hm.hn.hr.ht.hu.id.ie.il.im.in.io.iq.ir.is.it.je.jm.jo.jp.ke.kg.kh.ki.km.kn.kp.kr.kw.ky.kz.la.lb.lc.li.lk.lr.ls.lt.lu.lv.ly.ma.mc.md.me.mg.mh.mk.ml.mm.mn.mo.mp.mq.mr.ms.mt.mu.mv.mw.mx.my.mz.na.nc.ne.nf.ng.ni.nl.no.np.nr.nu.nz.om.pa.pe.pf.pg.ph.pk.pl.pm.pn.pr.ps.pt.pw.py.qa.re.ro.rs.ru.rw.sa.sb.sc.sd.se.sg.sh.si.sj.sk.sl.sm.sn.so.sr.st.su.sv.sy.sz.tc.td.tf.tg.th.tj.tk.tl.tm.tn.to.tp.tr.tt.tv.tw.tz.ua.ug.uk.um.us.uy.uz.va.vc.ve.vg.vi.vn.vu.wf.ws.ye.yt.yu.za.zm.zw.xn--fiqs8s.xn--fiqz9s.xn--j6w193g.xn--kprw13d.xn--kpry57d";
         const char *p, *b;
-
+		bool_t ignored;
         AR_ASSERT(url != NULL);
+
+		ignored = true;
         p = url;
         
-		while(*p != '\0' && (AR_isspace(*p) || *p == '.'))
+		while(*p != '\0' && ignored)
 		{
-				++p;
+				while(*p != '\0' && (AR_isspace(*p) || *p == '.'))
+				{
+						++p;
+				}
+
+				b = p;
+
+				while(*p != '\0' && *p != '.')
+				{
+						++p;
+				}
+
+				if(p - b > 0)  /*空串，或者类似... ... .. .. .这类由space和.组成的串*/
+				{
+
+						if(AR_stristr_s(dns_top, dns_top + AR_strlen(dns_top), b, p) != NULL)
+						{
+								++p;
+								ignored = true;
+								continue;
+						}
+
+						if(AR_stristr_s(dns_nation, dns_nation + AR_strlen(dns_nation), b, p) != NULL)
+						{
+								++p;
+								ignored = true;
+								continue;
+						}
+						ignored = false;
+				}
+				
+				if(*p != '\0')
+				{
+						++p;
+				}
 		}
 
-		b = p;
-
-		while(*p != '\0' && *p != '.')
-		{
-				++p;
-		}
-
-		if(p - b == 0)  /*空串，或者类似... ... .. .. .这类由space和.组成的串*/
-		{
-				return true;
-		}
-
-		if(AR_stristr_s(dns_top, dns_top + AR_strlen(dns_top), b, p) != NULL)
-		{
-				return true;
-		}
-
-		if(AR_stristr_s(dns_nation, dns_nation + AR_strlen(dns_nation), b, p) != NULL)
-		{
-				return true;
-		}
-		return false;
+		return ignored;
 }
 
 
@@ -3483,15 +3499,7 @@ static void str_test20()
 		bool_t ignored = is_ignore_url(".com.cn.jp");
 		AR_ASSERT(ignored);
 
-		ignored = is_ignore_url(".com.cn.jp");
-		AR_ASSERT(ignored);
-
-		ignored = is_ignore_url(".com.cn.jp");
-		AR_ASSERT(ignored);
-
-		ignored = is_ignore_url(".com.cn.jp");
-		AR_ASSERT(ignored);
-
+		
 
 		ignored = is_ignore_url("     .. .. . . . . . .. ");
 		AR_ASSERT(ignored);
@@ -3499,6 +3507,23 @@ static void str_test20()
 
 		ignored = is_ignore_url("     beijing.com.cn");
 		AR_ASSERT(!ignored);
+
+
+		ignored = is_ignore_url("bj.jxedt.com");
+		AR_ASSERT(!ignored);
+
+
+		ignored = is_ignore_url("bj.	jxedt.		com");
+		AR_ASSERT(!ignored);
+
+
+		ignored = is_ignore_url("bj.	jxedt.		com");
+		AR_ASSERT(!ignored);
+
+		ignored = is_ignore_url("weibo");
+		AR_ASSERT(!ignored);
+
+
 }
 
 void com_test()
