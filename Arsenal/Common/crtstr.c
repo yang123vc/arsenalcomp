@@ -181,43 +181,6 @@ int_t	AR_wcsnicmp(const wchar_t *l, const wchar_t *r, size_t n)
 
 
 
-const char*		AR_stristr(const char *s, const char *p)
-{
-		size_t i;
-		AR_ASSERT(s != NULL && p != NULL);
-		while(*s)
-		{
-				for(i = 0; s[i] && p[i] && AR_tolower(s[i]) == AR_tolower(p[i]); ++i);
-				if(p[i] == '\0')return s;
-				++s;
-		}
-		return NULL;
-
-}
-
-const wchar_t*		AR_wcsistr(const wchar_t *s, const wchar_t *p)
-{
-		size_t i;
-		AR_ASSERT(s != NULL && p != NULL);
-		while(*s)
-		{
-				for(i = 0; s[i] && p[i] && AR_towlower(s[i]) == AR_towlower(p[i]); ++i);
-				if(p[i] == L'\0')return s;
-				++s;
-		}
-		return NULL;
-}
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -648,6 +611,238 @@ const wchar_t* AR_wcsstr_sunday(const wchar_t *s, const wchar_t *p)
 
 
 
+
+const char* AR_strtrim_s(const char *in, const char *end, const char *trim)
+{
+		AR_ASSERT(in != NULL && end != NULL && trim != NULL);
+		while(in < end && AR_strchr(trim, *in) != NULL)in++;
+		return in;
+}
+
+
+
+
+const char*	AR_strtrim_space_s(const char *in, const char *end)
+{
+		AR_ASSERT(in != NULL && end != NULL);
+		while(in < end && AR_isspace(*in))in++;
+		return in;
+}
+
+
+const char* AR_strtrim(const char *in, const char *trim)
+{
+		AR_ASSERT(in != NULL && trim != NULL);
+		while(*in != '\0' && AR_strchr(trim, *in) != NULL)in++;
+		return in;
+}
+
+
+const char*	AR_strtrim_space(const char *in)
+{
+		AR_ASSERT(in != NULL);
+		while(*in != '\0' && AR_isspace(*in))in++;
+		return in;
+}
+
+
+
+char*		AR_strtrim_right(char *in, const char *trim)
+{
+		char *p = NULL, *plast = NULL;
+		AR_ASSERT(in != NULL && trim != NULL);
+		p = in;
+		while(*p != '\0')
+		{
+				if(AR_strchr(trim, *p) == NULL)
+				{
+						plast = NULL;
+				}else if(plast == NULL)
+				{
+						plast = p;
+				}
+				++p;
+		}
+
+		if(plast)*plast = '\0';
+		return in;
+}
+
+char*	AR_strtrim_right_space(char *in)
+{
+		char *p = NULL, *plast = NULL;
+		AR_ASSERT(in != NULL);
+		p = in;
+		while(*p != '\0')
+		{
+				/*if(AR_wcschr(trim, *p) == NULL)*/
+				if(AR_isspace(*p) == 0)
+				{
+						plast = NULL;
+				}else if(plast == NULL)
+				{
+						plast = p;
+				}
+				++p;
+		}
+
+		if(plast)*plast = '\0';
+		return in;
+}
+
+
+
+
+/**************************************************************string search*******************************************/
+
+
+const char*		AR_strstr_s(const char *s, const char *se, const char *p, const char *pe)
+{
+		size_t i;
+		
+		AR_ASSERT(s != NULL && se != NULL && s <= se);
+		AR_ASSERT(p != NULL && pe != NULL && p <= pe);
+
+		if(p == pe || *p == '\0')
+		{
+				return s;
+		}
+
+		while(s < se)
+		{
+				for(i = 0; s < se && s[i] && p < pe && p[i] && s[i] == p[i]; ++i);
+				
+				if(p + i >= pe || p[i] == '\0')
+				{
+						return s;
+				}
+				++s;
+		}
+		
+		return NULL;
+}
+
+const wchar_t*	AR_wcsstr_s(const wchar_t *s, const wchar_t *se, const wchar_t *p, const wchar_t *pe)
+{
+		size_t i;
+		
+		AR_ASSERT(s != NULL && se != NULL && s <= se);
+		AR_ASSERT(p != NULL && pe != NULL && p <= pe);
+
+		if(p == pe || *p == L'\0')
+		{
+				return s;
+		}
+
+		while(s < se)
+		{
+				for(i = 0; s < se && s[i] && p < pe && p[i] && s[i] == p[i]; ++i);
+
+				if(p + i >= pe || p[i] == L'\0')
+				{
+						return s;
+				}
+				++s;
+		}
+		
+		return NULL;
+}
+
+const char*		AR_stristr_s(const char *s, const char *se, const char *p, const char *pe)
+{
+		size_t i;
+		
+		AR_ASSERT(s != NULL && se != NULL && s <= se);
+		AR_ASSERT(p != NULL && pe != NULL && p <= pe);
+
+		if(p == pe || *p == '\0')
+		{
+				return s;
+		}
+
+		while(s < se)
+		{
+				for(i = 0; s < se && s[i] && p < pe && p[i] && AR_tolower(s[i]) == AR_tolower(p[i]); ++i);
+				if(p + i >= pe || p[i] == '\0')
+				{
+						return s;
+				}
+				++s;
+		}
+		
+		return NULL;
+}
+
+const wchar_t*	AR_wcsistr_s(const wchar_t *s, const wchar_t *se, const wchar_t *p, const wchar_t *pe)
+{
+		size_t i;
+		
+		AR_ASSERT(s != NULL && se != NULL && s <= se);
+		AR_ASSERT(p != NULL && pe != NULL && p <= pe);
+
+		if(p == pe || *p == L'\0')
+		{
+				return s;
+		}
+
+		while(s < se)
+		{
+				for(i = 0; s < se && s[i] && p < pe && p[i] && AR_tolower(s[i]) == AR_tolower(p[i]); ++i);
+
+				if(p + i >= pe || p[i] == L'\0')
+				{
+						return s;
+				}
+				++s;
+		}
+		
+		return NULL;
+}
+
+
+const char*		AR_stristr(const char *s, const char *p)
+{
+		size_t i;
+		AR_ASSERT(s != NULL && p != NULL);
+
+		if(*p)
+		{
+				return s;
+		}
+
+		while(*s)
+		{
+				for(i = 0; s[i] && p[i] && AR_tolower(s[i]) == AR_tolower(p[i]); ++i);
+				if(p[i] == '\0')return s;
+				++s;
+		}
+		return NULL;
+
+}
+
+const wchar_t*		AR_wcsistr(const wchar_t *s, const wchar_t *p)
+{
+		size_t i;
+		AR_ASSERT(s != NULL && p != NULL);
+
+		if(*p)
+		{
+				return s;
+		}
+
+		while(*s)
+		{
+				for(i = 0; s[i] && p[i] && AR_towlower(s[i]) == AR_towlower(p[i]); ++i);
+				if(p[i] == L'\0')return s;
+				++s;
+		}
+		return NULL;
+}
+
+
+
+//¥””“µΩ◊Û≤È’“
+
 const wchar_t* AR_reverse_wcschr(const wchar_t* str, size_t l, wchar_t c)
 {
 		size_t idx;
@@ -995,86 +1190,6 @@ const char* AR_reverse_stristr(const char *str, size_t l,  const char *match, si
 
 
 /*****************************************************************************************/
-
-
-
-const char* AR_strtrim_s(const char *in, const char *end, const char *trim)
-{
-		AR_ASSERT(in != NULL && end != NULL && trim != NULL);
-		while(in < end && AR_strchr(trim, *in) != NULL)in++;
-		return in;
-}
-
-
-
-
-const char*	AR_strtrim_space_s(const char *in, const char *end)
-{
-		AR_ASSERT(in != NULL && end != NULL);
-		while(in < end && AR_isspace(*in))in++;
-		return in;
-}
-
-
-const char* AR_strtrim(const char *in, const char *trim)
-{
-		AR_ASSERT(in != NULL && trim != NULL);
-		while(*in != '\0' && AR_strchr(trim, *in) != NULL)in++;
-		return in;
-}
-
-
-const char*	AR_strtrim_space(const char *in)
-{
-		AR_ASSERT(in != NULL);
-		while(*in != '\0' && AR_isspace(*in))in++;
-		return in;
-}
-
-
-
-char*		AR_strtrim_right(char *in, const char *trim)
-{
-		char *p = NULL, *plast = NULL;
-		AR_ASSERT(in != NULL && trim != NULL);
-		p = in;
-		while(*p != '\0')
-		{
-				if(AR_strchr(trim, *p) == NULL)
-				{
-						plast = NULL;
-				}else if(plast == NULL)
-				{
-						plast = p;
-				}
-				++p;
-		}
-
-		if(plast)*plast = '\0';
-		return in;
-}
-
-char*	AR_strtrim_right_space(char *in)
-{
-		char *p = NULL, *plast = NULL;
-		AR_ASSERT(in != NULL);
-		p = in;
-		while(*p != '\0')
-		{
-				/*if(AR_wcschr(trim, *p) == NULL)*/
-				if(AR_isspace(*p) == 0)
-				{
-						plast = NULL;
-				}else if(plast == NULL)
-				{
-						plast = p;
-				}
-				++p;
-		}
-
-		if(plast)*plast = '\0';
-		return in;
-}
 
 
 AR_NAMESPACE_END
