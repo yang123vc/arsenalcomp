@@ -1717,6 +1717,13 @@ void misc_test()
         }
         
 
+void charset_test()
+{
+        const wchar_t *s = L"中国";
+        
+        char *str = AR_wcs_to_str(AR_CP_BIG5, s, AR_wcslen(s));
+        
+}
         
 void common_test()
 {
@@ -1726,7 +1733,9 @@ void common_test()
         //str_test12();
         //mem_test();
         //misc_test();
-        uri_test();
+        //uri_test();
+        
+        charset_test();
 }
         
         
