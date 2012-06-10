@@ -80,6 +80,24 @@
     <ClInclude Include="textfile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="EncodeConvert.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="md2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="md4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="md5.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sha1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sha2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="event_dll.bat">
@@ -179,6 +197,24 @@
       <Filter>Sources Files</Filter>
     </ClCompile>
     <ClCompile Include="textfile.cpp">
+      <Filter>Sources Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EncodeConvert.cpp">
+      <Filter>Sources Files</Filter>
+    </ClCompile>
+    <ClCompile Include="md2.cpp">
+      <Filter>Sources Files</Filter>
+    </ClCompile>
+    <ClCompile Include="md4.cpp">
+      <Filter>Sources Files</Filter>
+    </ClCompile>
+    <ClCompile Include="md5.cpp">
+      <Filter>Sources Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sha1.cpp">
+      <Filter>Sources Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sha2.cpp">
       <Filter>Sources Files</Filter>
     </ClCompile>
   </ItemGroup>

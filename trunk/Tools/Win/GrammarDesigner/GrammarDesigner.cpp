@@ -100,6 +100,7 @@ static const ARSpace::arInit_t	__dummy_context =
 
 BOOL CGrammarDesignerApp::InitInstance()
 {
+//TODO: call AfxInitRichEdit2() to initialize richedit2 library.
 
 		ARSpace::Arsenal_Init(&__dummy_context);
 	
