@@ -50,11 +50,12 @@
 #define IDR_MENU1                       326
 #define IDR_FIND_OUTPUT_POPUP           326
 #define IDD_DIALOG1                     327
-#define IDD_DIALOG_BASE64_CONV          327
+#define IDD_DIALOG_ENCODE_CONV          328
 #define IDC_EDIT1                       1001
 #define IDC_EDIT_LINE                   1001
 #define IDC_EDIT_STRING                 1001
 #define IDC_STATIC_LINE                 1002
+#define IDC_EDIT_STRING_OUTPUT          1002
 #define IDC_EDIT_CODE                   1003
 #define IDC_BUTTON_TO_CODE              1005
 #define IDC_BUTTON_TO_STRING            1006
@@ -64,6 +65,21 @@
 #define IDC_APP_NAME                    1009
 #define IDC_APP_HOMEPAGE                1010
 #define IDC_APP_GMR_DESIGNER_VERSION    1011
+#define IDC_RADIO_CS_CURRENT            1013
+#define IDC_RADIO_CS_UTF8               1014
+#define IDC_RADIO_CS_GB2312             1015
+#define IDC_RADIO_CS_BIG5               1016
+#define IDC_EDIT_STRING_INPUT           1017
+#define IDC_BUTTON_CONVERT              1019
+#define IDC_RADIO_ENCTYPE_BASE64        1020
+#define IDC_RADIO_ENCTYPE_ROT13         1021
+#define IDC_RADIO_ENCTYPE_HEX           1022
+#define IDC_RADIO_ENCTYPE_URL           1023
+#define IDC_RADIO_ENCTYPE_MD5           1024
+#define IDC_RADIO_ENCTYPE_SHA           1025
+#define IDC_RADIO_ENCODE                1026
+#define IDC_RADIO2                      1027
+#define IDC_RADIO_DECODE                1027
 #define ID_EDIT_UNDO32771               32771
 #define ID_EDIT_SELECTALL               32772
 #define ID_EDIT_SELECTALL32773          32773
@@ -169,6 +185,7 @@
 #define ID_VIEW_FIND_OUTPUT_WND         32901
 #define ID_FIND_OUTPUTWND_FONT          32903
 #define ID_SHOW_FINDRESULTS             32904
+#define ID_STRINGS_ENCODECONVERT        32905
 #define ID_INDICATOR_LINE               59142
 #define ID_INDICATOR_COL                59143
 #define IDS_ACTVIEW_WND                 61204
@@ -181,9 +198,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        328
-#define _APS_NEXT_COMMAND_VALUE         32905
-#define _APS_NEXT_CONTROL_VALUE         1013
+#define _APS_NEXT_RESOURCE_VALUE        329
+#define _APS_NEXT_COMMAND_VALUE         32906
+#define _APS_NEXT_CONTROL_VALUE         1028
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

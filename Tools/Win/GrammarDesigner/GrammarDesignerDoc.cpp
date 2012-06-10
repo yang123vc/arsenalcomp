@@ -26,6 +26,7 @@
 #include "GrammarDesignerView.h"
 
 #include "StringConvDlg.h"
+#include "EncodeConvert.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -80,6 +81,7 @@ BEGIN_MESSAGE_MAP(CGrammarDesignerDoc, CRichEditDoc)
 		ON_COMMAND(ID_EDIT_FINDALLREFERENCES, &CGrammarDesignerDoc::OnEditFindallreferences)
 		ON_UPDATE_COMMAND_UI(ID_EDIT_FINDALLREFERENCES, &CGrammarDesignerDoc::OnUpdateEditFindallreferences)
 		ON_UPDATE_COMMAND_UI(ID_PARSER_BUILD, &CGrammarDesignerDoc::OnUpdateParserBuild)
+		ON_COMMAND(ID_STRINGS_ENCODECONVERT, &CGrammarDesignerDoc::OnStringsEncodeconvert)
 END_MESSAGE_MAP()
 
 
@@ -1556,4 +1558,12 @@ void CGrammarDesignerDoc::OnStringsStringconverter()
 		dlg.DoModal();
 
 		
+}
+
+
+void CGrammarDesignerDoc::OnStringsEncodeconvert()
+{
+		// TODO: Add your command handler code here
+		CEncodeConvert dlg;
+		dlg.DoModal();
 }

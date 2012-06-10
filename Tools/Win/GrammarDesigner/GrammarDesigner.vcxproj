@@ -570,6 +570,7 @@
     <ClInclude Include="BackEndThread.h" />
     <ClInclude Include="BufferDC.h" />
     <ClInclude Include="DocManagerEx.h" />
+    <ClInclude Include="EncodeConvert.h" />
     <ClInclude Include="FindOutputWnd.h" />
     <ClInclude Include="GrammarDesigner.h" />
     <ClInclude Include="GrammarDesignerDoc.h" />
@@ -577,10 +578,15 @@
     <ClInclude Include="HyperLink.h" />
     <ClInclude Include="InputPane.h" />
     <ClInclude Include="MainFrm.h" />
+    <ClInclude Include="md2.h" />
+    <ClInclude Include="md4.h" />
+    <ClInclude Include="md5.h" />
     <ClInclude Include="OutputWnd.h" />
     <ClInclude Include="PrintNode.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="resource_id.h" />
+    <ClInclude Include="sha1.h" />
+    <ClInclude Include="sha2.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StringConvDlg.h" />
     <ClInclude Include="SyntaxPane.h" />
@@ -612,6 +618,7 @@
     <ClCompile Include="BackEndThread.cpp" />
     <ClCompile Include="BufferDC.cpp" />
     <ClCompile Include="DocManagerEx.cpp" />
+    <ClCompile Include="EncodeConvert.cpp" />
     <ClCompile Include="FindOutputWnd.cpp" />
     <ClCompile Include="GrammarDesigner.cpp" />
     <ClCompile Include="GrammarDesignerDoc.cpp" />
@@ -619,8 +626,23 @@
     <ClCompile Include="HyperLink.cpp" />
     <ClCompile Include="InputPane.cpp" />
     <ClCompile Include="MainFrm.cpp" />
+    <ClCompile Include="md2.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="md4.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="md5.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="OutputWnd.cpp" />
     <ClCompile Include="PrintNode.cpp" />
+    <ClCompile Include="sha1.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="sha2.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Win32'">Create</PrecompiledHeader>
