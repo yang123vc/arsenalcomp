@@ -76,6 +76,14 @@ AR_wtoi64_s
 AR_wtou64_s
 AR_wtod_s
 
+AR_strrot13
+AR_base64_encode
+AR_CreateURI
+AR_SetURI
+AR_GetEncodedURI
+AR_SetEncodedURI
+AR_GetURI
+AR_DestroyURI
 
 ;Lex
 
@@ -186,4 +194,9 @@ CFG_DestroyLexicalSet
 CFG_CollectGrammarConfig
 CFG_DestroyGrammarConfig
 CFG_ConfigToCode
+
+
+
+
+
 
