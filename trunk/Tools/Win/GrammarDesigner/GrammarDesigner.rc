@@ -339,8 +339,8 @@ STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_CAPTI
 CAPTION "Encode Convert"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    CONTROL         "",IDC_EDIT_STRING_INPUT,"RichEdit20W",ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_WANTRETURN | WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,54,22,281,114
-    CONTROL         "",IDC_EDIT_STRING_OUTPUT,"RichEdit20W",ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_WANTRETURN | WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,54,154,281,114
+    CONTROL         "",IDC_EDIT_STRING_INPUT,"RichEdit20W",WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP | 0x10c4,54,22,281,114
+    CONTROL         "",IDC_EDIT_STRING_OUTPUT,"RichEdit20W",WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP | 0x10c4,54,154,281,114
     CONTROL         "Current",IDC_RADIO_CS_CURRENT,"Button",BS_AUTORADIOBUTTON | WS_GROUP,366,18,54,10
     CONTROL         "UTF-8",IDC_RADIO_CS_UTF8,"Button",BS_AUTORADIOBUTTON,366,36,54,10
     CONTROL         "GB2312",IDC_RADIO_CS_GB2312,"Button",BS_AUTORADIOBUTTON,366,54,54,10
@@ -578,8 +578,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,1,3,650
- PRODUCTVERSION 0,1,3,650
+ FILEVERSION 0,1,3,750
+ PRODUCTVERSION 0,1,3,750
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -596,12 +596,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "None"
             VALUE "FileDescription", "Grammar Designer"
-            VALUE "FileVersion", "0.1.3.650"
+            VALUE "FileVersion", "0.1.3.750"
             VALUE "InternalName", "GrammarDesigner.exe"
             VALUE "LegalCopyright", "Solidus.  All rights reserved."
             VALUE "OriginalFilename", "GrammarDesigner.exe"
             VALUE "ProductName", "Grammar Designer"
-            VALUE "ProductVersion", "0.1.3.650"
+            VALUE "ProductVersion", "0.1.3.750"
         END
     END
     BLOCK "VarFileInfo"
