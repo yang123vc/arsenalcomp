@@ -13,7 +13,8 @@ AR_NAMESPACE_BEGIN
 
 #define _CHECK_AND_JMP(__stmt)	do{  if(__stmt == AR_E_NOMEM){ goto END_POINT; }}while( 0 )
 
-void Ini_Test()
+
+static void ini_test1()
 {
 		arString_t	*str;
 		iniObject_t *obj;
@@ -87,6 +88,64 @@ END_POINT:
 				AR_DestroyString(str);
 				str = NULL;
 		}
+}
+
+static void ini_test2()
+{
+		arString_t	*str;
+		iniObject_t *obj;
+		str = AR_CreateString();
+		
+		obj = NULL;
+
+		if(AR_LoadBomTextFile(L"D:\\1.ini", NULL, str) != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+
+		obj = Ini_CreateObject();
+
+		if(obj == NULL)
+		{
+				goto END_POINT;
+		}
+
+		if(Ini_LoadObjectFromString(obj, AR_GetStringCString(str)) != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+		
+		/*
+		printf("Ini_GetInt == %d\r\n", Ini_GetInt(obj,  INI_EMPTY_SECTION_NAME, L"a", 0));
+		printf("Ini_GetUInt == %u\r\n", Ini_GetUInt(obj,  INI_EMPTY_SECTION_NAME, L"b", 0));
+		printf("Ini_GetFloat == %g\r\n", Ini_GetFloat(obj,  INI_EMPTY_SECTION_NAME, L"c", 0.0f));
+		*/
+
+
+		{
+				const wchar_t *files = Ini_GetString(obj, L"360main", L"files0");
+				printf("%ls\r\n", files);
+		}
+
+END_POINT:
+		if(obj)
+		{
+				Ini_DestroyObject(obj);
+				obj = NULL;
+		}
+
+		if(str)
+		{
+				AR_DestroyString(str);
+				str = NULL;
+		}
+}
+
+void Ini_Test()
+{
+		//ini_test1();
+		ini_test2();
+
 }
 
 
