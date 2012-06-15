@@ -28,14 +28,14 @@ typedef enum
 		INI_COMMENT,
 }arIniLineType_t;
 
-#define AR_MAX_LINE_LENGTH		1024
+
 
 
 static const wchar_t __g_comment[] = L"#;";
 
 
 
-static arIniLineType_t __parse_line(const wchar_t *line, wchar_t key[AR_MAX_LINE_LENGTH], wchar_t val[AR_MAX_LINE_LENGTH], wchar_t comment[AR_MAX_LINE_LENGTH])
+static arIniLineType_t __parse_line(const wchar_t *line, wchar_t *key, wchar_t *val, wchar_t *comment)
 {
 		
 		enum
@@ -60,10 +60,11 @@ static arIniLineType_t __parse_line(const wchar_t *line, wchar_t key[AR_MAX_LINE
 		AR_ASSERT(line != NULL && key != NULL && val != NULL && comment != NULL);
 
 		line_len = AR_wcslen(line);
-		if(line_len >= AR_MAX_LINE_LENGTH)
+		
+		/*if(line_len >= AR_MAX_LINE_LENGTH)
 		{
 				return INI_INVALID;
-		}else if(line_len == 0)
+		}else */if(line_len == 0)
 		{
 				return INI_EMPTY;
 		}
@@ -1090,10 +1091,23 @@ static arStatus_t	__handle_line(iniObject_t *obj, const wchar_t *line, int_t *la
 {
 		arStatus_t	is_ok;
 		arIniLineType_t ret;
-		wchar_t key[AR_MAX_LINE_LENGTH], val[AR_MAX_LINE_LENGTH], comment[AR_MAX_LINE_LENGTH];
+		size_t line_len;
+		wchar_t *key, *val, *comment;
 		AR_ASSERT(obj != NULL && line != NULL);
 
 		is_ok = AR_S_YES;
+		line_len = AR_wcslen(line);
+
+		key = AR_NEWARR0(wchar_t, line_len + 1);
+		val = AR_NEWARR0(wchar_t, line_len + 1);
+		comment = AR_NEWARR0(wchar_t, line_len + 1);
+
+		if(key == NULL || val == NULL || comment == NULL)
+		{
+				is_ok = AR_E_NOMEM;
+				goto END_POINT;
+		}
+
 		ret = __parse_line(line, key,val, comment);
 
 		switch(ret)
@@ -1158,6 +1172,24 @@ static arStatus_t	__handle_line(iniObject_t *obj, const wchar_t *line, int_t *la
 		}
 
 END_POINT:
+		if(key)
+		{
+				AR_DEL(key);
+				key = NULL;
+		}
+
+		if(val)
+		{
+				AR_DEL(val);
+				val = NULL;
+		}
+
+		if(comment)
+		{
+				AR_DEL(comment);
+				comment = NULL;
+		}
+
 		return is_ok;
 }
 
