@@ -27,6 +27,9 @@ AR_check
 ;AR_wcsicmp
 ;AR_wcsnicmp
 
+AR_wcstrim
+AR_wcstrim_space
+
 AR_Version
 
 AR_CreateString			

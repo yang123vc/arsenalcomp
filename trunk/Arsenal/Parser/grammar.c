@@ -1276,20 +1276,25 @@ psrTermInfo_t*			Parser_GetTermSymbInfoByValue(const psrGrammar_t	*grammar, size
 
 
 
-arStatus_t			Parser_CheckIsValidGrammar(const psrGrammar_t *grammar, arIOCtx_t *io_ctx)
+arStatus_t			Parser_CheckIsValidGrammar(const psrGrammar_t *grammar)
 {
 		size_t i,j,k;
 		bool_t result;
 		const psrSymbList_t *lst;
 		bool_t	*mark_tbl; 
+		psrGrammar_t *gmr;
 		AR_ASSERT(grammar != NULL);
-		
+		gmr = (psrGrammar_t*)grammar;
+		Parser_ClearGrammarLastError(gmr);
 		if(grammar->count < 2)/*Start和输入的第一个产生式一定>=2*/
 		{
+				AR_FormatString(gmr->last_err_msg, L"Grammar Error : empty grammar!\r\n");
+				/*
 				if(io_ctx)
 				{
 						AR_printf_ctx(io_ctx, L"Grammar Error : empty grammar!\r\n");
 				}
+				*/
 				return AR_E_NOTREADY;
 		}
 
@@ -1336,10 +1341,13 @@ arStatus_t			Parser_CheckIsValidGrammar(const psrGrammar_t *grammar, arIOCtx_t *
 
 										if(!mark_tbl[AR_TBL_IDX_R(h,s,lst->count)])
 										{
+												AR_AppendFormatString(gmr->last_err_msg, L"Grammar Error : The rule <%ls> not exist in this grammar <%ls>\r\n", symb->name, rule->head->name);
+												/*
 												if(io_ctx)
 												{
 														AR_printf_ctx(io_ctx, L"Grammar Error : The rule <%ls> not exist in this grammar <%ls>\r\n", symb->name, rule->head->name);
 												}
+												*/
 
 												mark_tbl[AR_TBL_IDX_R(h,s,lst->count)] = true;
 										}
@@ -1389,10 +1397,13 @@ arStatus_t			Parser_CheckIsValidGrammar(const psrGrammar_t *grammar, arIOCtx_t *
 
 				if(!is_ok)
 				{
+						AR_AppendFormatString(gmr->last_err_msg, L"Grammar Warning : The rule <%ls> is declared but never used\r\n", symb->name);
+						/*
 						if(io_ctx)
 						{
 								AR_printf_ctx((arIOCtx_t*)io_ctx,L"Grammar Warning : The rule <%ls> is declared but never used\r\n", symb->name);
 						}
+						*/
 				}
 		}
 

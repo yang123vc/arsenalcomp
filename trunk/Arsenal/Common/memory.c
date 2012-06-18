@@ -63,7 +63,7 @@ AR_NAMESPACE_BEGIN
 				{
 						AR_ASSERT(dm->size > 0);
 
-						AR_error(AR_ERR_WARNING, L"size: %6d Bytes : %hs, line: %d\r\n", dm->size, dm->file, dm->line);
+						AR_error(AR_ERR_DEBUG, L"size: %6d Bytes : %hs, line: %d\r\n", dm->size, dm->file, dm->line);
 						dm = dm->next;
 				}
 

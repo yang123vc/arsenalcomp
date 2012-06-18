@@ -570,7 +570,7 @@ void CGrammarDesignerDoc::OnUpdateEditFindallreferences(CCmdUI *pCmdUI)
 }
 
 
-
+/*
 static void	AR_STDCALL	__report_io_error_func(int_t level, const wchar_t *msg, void *ctx)
 {
 		COutputWnd		*output;
@@ -586,7 +586,7 @@ static void	AR_STDCALL	__report_io_print_func(const wchar_t *msg, void *ctx)
 		output = (COutputWnd*)ctx;
 		output->Append(msg, COutputList::MSG_MESSAGE, 0, NULL);
 } 
-
+*/
 
 struct OutputContext
 {
@@ -813,6 +813,7 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 		/*********************************************检查并报告语法错误*******************************************************/
 		{
 		
+				/*
 				ARSpace::arIOCtx_t	io_context = 
 				{
 						__report_io_error_func,
@@ -820,12 +821,37 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 						(void*)&output
 				
 				};
+				*/
 		
-				ARSpace::arStatus_t status = ARSpace::Parser_CheckIsValidGrammar(grammar, &io_context);
+				ARSpace::Parser_ClearGrammarLastError(grammar);
+				//ARSpace::arStatus_t status = ARSpace::Parser_CheckIsValidGrammar(grammar, &io_context);
+				ARSpace::arStatus_t status = ARSpace::Parser_CheckIsValidGrammar(grammar);
+				
 				if(status != ARSpace::AR_S_YES)
 				{
 						has_error = true;
 				}
+
+				const wchar_t *last_error = ARSpace::Parser_GetGrammarLastError(grammar);
+				ASSERT(last_error != NULL);
+
+				const wchar_t *p, *b;
+				p = last_error;
+				while(*p != L'\0')
+				{
+						p = AR_wcstrim_space(p);
+						b = p;
+						while(*p != L'\n')++p;
+						if(p > b)
+						{
+								CString msg;
+								msg.SetString(b, (int)(p - b));
+								
+								output.Append(msg, COutputList::MSG_MESSAGE, 0, NULL);
+						}
+						++p;
+				}
+
 		}
 		/******************************************************************************************************/
 

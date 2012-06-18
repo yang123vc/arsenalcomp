@@ -817,7 +817,7 @@ static psrGrammar_t*	__build_grammar(const psrHandler_t	*handler)
 		}				
 
 
-		if(Parser_SetStartRule(grammar,START_RULE) != AR_S_YES || Parser_CheckIsValidGrammar(grammar, NULL) != AR_S_YES)
+		if(Parser_SetStartRule(grammar,START_RULE) != AR_S_YES || Parser_CheckIsValidGrammar(grammar) != AR_S_YES)
 		{
 				AR_error(AR_ERR_WARNING, L"failed to build grammar!\r\n");
 				Parser_DestroyGrammar(grammar);

@@ -76,6 +76,7 @@ arStatus_t	AR_printf(const wchar_t *msg,...);
 
 
 /*库内部错误为负数*/
+#define AR_ERR_DEBUG		((int_t)-0x0098)
 #define AR_ERR_MESSAGE		((int_t)-0x0099)
 #define AR_ERR_WARNING		((int_t)-0x0100)
 #define AR_ERR_FATAL		((int_t)-0x0101)
@@ -85,10 +86,10 @@ arStatus_t	AR_printf(const wchar_t *msg,...);
 arStatus_t	AR_error(int_t level, const wchar_t *msg, ...);
 
 
-
+/*
 arStatus_t	AR_printf_ctx(arIOCtx_t *ctx, const wchar_t *msg,...);
 arStatus_t	AR_error_ctx(arIOCtx_t *ctx, int_t level, const wchar_t *msg, ...);
-
+*/
 
 
 
