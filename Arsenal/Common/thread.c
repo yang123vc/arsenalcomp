@@ -146,6 +146,16 @@ static void __init_wait_queue(arAsyncQueue_t *queue)
 		queue->wait_cnt = 0;
 }
 
+static asyncWaitInfo_t* __top_wait(arAsyncQueue_t *queue)
+{
+		asyncWaitNode_t *node;
+		AR_ASSERT(queue && queue->wait_cnt > 0 && queue->wait_head != NULL && queue->wait_tail != NULL);
+
+		node = queue->wait_head;
+		return node->info;
+}
+
+
 
 static asyncWaitInfo_t* __pop_wait(arAsyncQueue_t *queue)
 {
@@ -430,6 +440,13 @@ arStatus_t	AR_GetFromAsyncQueue(arAsyncQueue_t *queue, void **pdata)
 				
 				if(status != AR_S_YES)
 				{
+						/*不幸执行到此，可能出现任何问题，依然尝试性的清理一下info*/
+						AR_LockSpinLock(&queue->mutex);
+
+						__remove_wait_node(queue, &info);
+
+						AR_UnLockSpinLock(&queue->mutex);
+
 						goto END_POINT;
 				}
 
@@ -449,6 +466,7 @@ END_POINT:
 }
 
 
+#if(0)
 
 arStatus_t	AR_PutToAsyncQueue(arAsyncQueue_t *queue, void *data)
 {
@@ -479,7 +497,41 @@ arStatus_t	AR_PutToAsyncQueue(arAsyncQueue_t *queue, void *data)
 
 		return status;
 }
+#endif
 
+
+arStatus_t	AR_PutToAsyncQueue(arAsyncQueue_t *queue, void *data)
+{
+		arStatus_t	status;
+		AR_ASSERT(queue != NULL);
+
+		status = AR_S_YES;
+
+		AR_LockSpinLock(&queue->mutex);
+		
+		if(queue->wait_cnt > 0)
+		{
+				asyncWaitInfo_t *info = __top_wait(queue);
+				AR_ASSERT(info != NULL && info->event != NULL);
+				info->data = data;
+				status = AR_SetEvent(info->event);
+
+				if(status != AR_S_YES)
+				{
+						AR_error(AR_ERR_WARNING, L"%ls\r\n", L"failed to put data!");
+				}else
+				{
+						__pop_wait(queue);
+				}
+		}else
+		{
+				status = __push_data(queue, data);
+		}
+		
+		AR_UnLockSpinLock(&queue->mutex);
+
+		return status;
+}
 
 arStatus_t	AR_HasIdleThreadInAsyncQueue(const arAsyncQueue_t *queue)
 {
