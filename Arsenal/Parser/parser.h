@@ -431,7 +431,7 @@ body_listÖĞËùÓĞ·ûºÅ¶¼±»µ±×öÎÄ±¾·ûºÅ½ÓÊÕ£¬ÓÉ¿Õ¸ñ£¬ÖÆ±í·ûµÈAR_iswspace·µ»Ø·Ç0ÖµµÄ·
 */
 arStatus_t				Parser_InsertRuleByStr(psrGrammar_t *grammar, const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, size_t auto_ret);
 
-arStatus_t				Parser_CheckIsValidGrammar(const psrGrammar_t *grammar, arIOCtx_t *io_ctx);
+arStatus_t				Parser_CheckIsValidGrammar(const psrGrammar_t *grammar);
 
 
 

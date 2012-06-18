@@ -2668,7 +2668,7 @@ static psrGrammar_t*	__build_grammar(psrHandler_t *handler)
 
 		}
 
-		status = Parser_CheckIsValidGrammar(gmr, NULL);
+		status = Parser_CheckIsValidGrammar(gmr);
 		if(status != AR_S_YES)
 		{
 				AR_ASSERT(false);
@@ -2696,7 +2696,7 @@ INVALID_POINT:
 static const parser_t*		__build_parser(const psrGrammar_t *gmr)
 {
 		const parser_t *parser;
-		AR_ASSERT(gmr && Parser_CheckIsValidGrammar(gmr, NULL) == AR_S_YES);
+		AR_ASSERT(gmr && Parser_CheckIsValidGrammar(gmr) == AR_S_YES);
 
 		parser = Parser_CreateParser(gmr, PARSER_SLR);
 		AR_ASSERT(parser && Parser_CountParserConflict(parser) == 0);
