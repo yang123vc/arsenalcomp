@@ -20,76 +20,34 @@
 
 AR_NAMESPACE_BEGIN
 
-
-struct __rgx_name_tag;
-typedef struct __rgx_name_tag			rgxName_t;
-
-struct __rgx_name_set_tag;
-typedef struct __rgx_name_set_tag		rgxNameSet_t;
-
-struct __rgx_node_tag;
-typedef struct __rgx_node_tag			rgxNode_t;
-
-
-
-/************************************************NameSet***************************************************/
-#define	AR_RGX_MAXNAME					256
-
-
-
-struct __rgx_name_tag
-{
-		wchar_t			name[AR_RGX_MAXNAME];
-		rgxNode_t		*node;
-};
-
-struct __rgx_name_set_tag
-{
-		rgxName_t		*name;
-		size_t			count;
-		size_t			cap;
-};
-
-
-void					Regex_InitNameSet(rgxNameSet_t	*set);
-void					Regex_UnInitNameSet(rgxNameSet_t	*set);
-bool_t					Regex_InsertToNameSet(rgxNameSet_t	*set, const wchar_t	*name, rgxNode_t *node);
-bool_t					Regex_RemoveFromNameSet(rgxNameSet_t	*set, const wchar_t	*name);
-const rgxNode_t*		Regex_FindFromNameSet(const rgxNameSet_t	*set, const wchar_t *name);
-void					Regex_ClearNameSet(rgxNameSet_t *set);
-
-
+struct __regex_node_tag;
+typedef struct __regex_node_tag	regex_node_t;
 
 
 /************************************************Regex Node***************************************************/
 typedef enum
 {
-		RGX_BEGIN_T,
-		RGX_END_T,
-		RGX_LINE_BEGIN_T,
-		RGX_LINE_END_T,
-		RGX_ANY_CHAR_T,
+		regex_begin_t,
+		regex_end_t,
+		regex_line_begin_t,
+		regex_line_end_t,
+		regex_any_char_t,
+		regex_cset_t,
+		regex_cat_t,
+		regex_branch_t,
+		regex_star_t,
+		regex_quest_t,
+		regex_plus_t,
+		regex_fixcount_t,
+		regex_lookahead_t,
+		regex_final_t
+}node_type_t;
 
-		RGX_CSET_T,
-
-		RGX_CAT_T,
-		RGX_BRANCH_T,
-
-		RGX_STAR_T,
-		RGX_QUEST_T,
-		RGX_PLUS_T,
-		RGX_FIXCOUNT_T,
-		RGX_LOOKAHEAD_T,
-		RGX_FINAL_T
-}rgxNodeType_t;
-
-
-
-struct __rgx_node_tag
+struct __regex_node_tag
 {
-		rgxNodeType_t		type;
-		rgxNode_t			*left;
-		rgxNode_t			*right;
+		node_type_t			type;
+		regex_node_t		*left;
+		regex_node_t		*right;
 		
 		size_t				ref_count;
 
@@ -106,18 +64,21 @@ struct __rgx_node_tag
 		};
 };
 
+regex_node_t*	regex_node_create(node_type_t t);
+regex_node_t*	regex_node_copynew(const regex_node_t *node);
+void			regex_node_destroy(regex_node_t *node);
+arStatus_t		regex_node_insert(regex_node_t *node, regex_node_t *child);
+arStatus_t		regex_node_tostring(const regex_node_t *node);
 
 
-rgxNode_t*		RGX_CreateNode(rgxNodeType_t type);
+typedef struct __regex_error_tag
+{
+		arStatus_t		status;
+		const wchar_t	*pos;
+}regex_error_t;
 
-rgxNode_t*		RGX_CopyNewNode(const rgxNode_t *node);
+regex_node_t*	regex_parse(const wchar_t *pattern,  regex_error_t *err);
 
-void			RGX_DestroyNode(rgxNode_t *node);
-
-bool_t			RGX_InsertToNode(rgxNode_t *root, rgxNode_t *node);
-
-
-void			RGX_ToString(const rgxNode_t *node, arString_t *str);
 
 
 

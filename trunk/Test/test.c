@@ -88,6 +88,9 @@ extern void math_test();
 extern void grammar_config_test();
 
 extern void curl_test();
+
+extern void rgx_test();
+
 #endif
 
 
@@ -165,13 +168,15 @@ void AR_Test()
 		
 		//tokenizer_test();
 
-		Ini_Test();
+		//Ini_Test();
 		
 		//parser_gen_perf_test();
 
 		//calc3_test();
 
 		//grammar_config_test();
+
+		rgx_test();
 
 		getchar();
 #else

@@ -1503,6 +1503,7 @@
     <ClCompile Include="..\..\..\Test\grammar_config_test.c" />
     <ClCompile Include="..\..\..\Test\grammar_test.c" />
     <ClCompile Include="..\..\..\Test\ini_test.c" />
+    <ClCompile Include="..\..\..\Test\Lexer\regexp.c" />
     <ClCompile Include="..\..\..\Test\lex_test.c" />
     <ClCompile Include="..\..\..\Test\lfu_cache.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
@@ -1517,6 +1518,7 @@
     <ClCompile Include="..\..\..\Test\psr_misc.c" />
     <ClCompile Include="..\..\..\Test\ray_test.c" />
     <ClCompile Include="..\..\..\Test\rbtree.c" />
+    <ClCompile Include="..\..\..\Test\regexp_test.cpp" />
     <ClCompile Include="..\..\..\Test\serialize_test.c" />
     <ClCompile Include="..\..\..\Test\splaytree.c" />
     <ClCompile Include="..\..\..\Test\tengu_test.c" />
@@ -1527,6 +1529,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\Test\avltree.h" />
     <ClInclude Include="..\..\..\Test\calc_test3_impl.h" />
+    <ClInclude Include="..\..\..\Test\extlib\deelx\deelx.h" />
     <ClInclude Include="..\..\..\Test\extlib\libcurl\include\curl\curl.h" />
     <ClInclude Include="..\..\..\Test\extlib\libcurl\include\curl\curlbuild.h" />
     <ClInclude Include="..\..\..\Test\extlib\libcurl\include\curl\curlrules.h" />
@@ -1642,6 +1645,7 @@
     <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\warnless.h" />
     <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\wildcard.h" />
     <ClInclude Include="..\..\..\Test\gen_code_impl.h" />
+    <ClInclude Include="..\..\..\Test\Lexer\regexp.h" />
     <ClInclude Include="..\..\..\Test\lfu_cache.h" />
     <ClInclude Include="..\..\..\Test\Operation.h" />
     <ClInclude Include="..\..\..\Test\parser_gen_perf_javascript_code_impl.h" />
