@@ -14,6 +14,7 @@
 AR_NAMESPACE_BEGIN
 
 
+					
 
 arString_t*		AR_CreateString();
 void			AR_DestroyString(arString_t *str);
