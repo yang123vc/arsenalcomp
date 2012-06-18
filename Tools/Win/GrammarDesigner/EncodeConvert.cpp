@@ -311,14 +311,15 @@ BOOL	CEncodeConvert::rot13_convert(const CString &input, CString &output)
 				return FALSE;
 		}
 
-		tmp = strdup(mbs.c_str());
+		tmp = new char[mbs.size() + 1];
+		strcpy(tmp, mbs.c_str());
 
 		ARSpace::AR_strrot13(tmp, strlen(tmp));
 
 
 		output = str_convert(this->GetEncodeCharset(), tmp);
 
-		free(tmp);
+		delete []tmp;
 		tmp = NULL;
 
 		if(output.GetLength() == 0)
