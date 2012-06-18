@@ -288,7 +288,7 @@ static  psrGrammar_t* __build_grammar()
 				str = NULL;
 		}
 
-		status = Parser_CheckIsValidGrammar(gmr, AR_global_ioctx());
+		status = Parser_CheckIsValidGrammar(gmr);
 		CHECK_AND_JMP(status);
 
 
