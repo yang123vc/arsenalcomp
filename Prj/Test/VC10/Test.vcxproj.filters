@@ -31,6 +31,9 @@
     <Filter Include="extlib\libcurl\lib\src">
       <UniqueIdentifier>{468a3da2-cc5a-4b77-ad4d-efa79ffb187c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="extlib\deelx">
+      <UniqueIdentifier>{4039e73b-4408-48ba-a2c8-059001dfc341}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\Test\avltree.c">
@@ -426,6 +429,12 @@
     <ClCompile Include="..\..\..\Test\uri_test.c">
       <Filter>Test</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Test\regexp_test.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\Lexer\regexp.c">
+      <Filter>Lexer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Test\avltree.h">
@@ -799,6 +808,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\wildcard.h">
       <Filter>extlib\libcurl\lib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Test\extlib\deelx\deelx.h">
+      <Filter>extlib\deelx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Test\Lexer\regexp.h">
+      <Filter>Lexer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
