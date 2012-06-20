@@ -13,10 +13,10 @@ static void deelx_test1()
 		AR_printf(L"%hs\r\n", AR_FUNC_NAME);
 
 		const wchar_t * str1 = L"12345";
-		const wchar_t * str2 = L"12345 abcde";
+		const wchar_t * str2 = L"aaaaaaa";
 
 
-		CRegexpT<wchar_t> regexp(L"\\d+");
+		CRegexpT<wchar_t> regexp(L"((^a)*?)*?");
 
 		// test
 		MatchResult result = regexp.MatchExact(str2);
