@@ -71,16 +71,51 @@ arStatus_t		regex_node_insert(regex_node_t *node, regex_node_t *child);
 arStatus_t		regex_node_tostring(const regex_node_t *node);
 
 
+
 typedef struct __regex_error_tag
 {
-		arStatus_t		status;
-		const wchar_t	*pos;
-}regex_error_t;
-
-regex_node_t*	regex_parse(const wchar_t *pattern,  regex_error_t *err);
+		regex_node_t	*node;
+		const wchar_t	*errpos;
+}regex_result_t;
 
 
+arStatus_t	regex_parse(const wchar_t *pattern,  regex_result_t *result);
 
+struct __arsenal_regex_tag;
+typedef struct __arsenal_regex_tag		arRegex_t;
+
+#define AR_REGEX_STACK_COUNT		1024
+#define AR_REGEX_ERROR_BUFFER		1024
+struct __arsenal_regex_tag
+{
+		regex_node_t	*node;
+
+		wchar_t			*sp_stack[AR_REGEX_STACK_COUNT];
+		size_t			count_stack[AR_REGEX_STACK_COUNT];
+		size_t			stack_idx;
+
+		const wchar_t	*sp;
+		size_t			count;
+
+
+		const wchar_t	*input;
+		size_t			input_len;
+		
+
+		bool_t			is_ignorecase;
+		bool_t			is_singleline;
+
+		wchar_t			last_error[AR_REGEX_ERROR_BUFFER];
+};
+
+typedef struct __arsenal_regex_match_result_tag
+{
+		const wchar_t	*start;
+		size_t			count;
+}arRegexMatch_t;
+
+
+arStatus_t		AR_RegexMatch(arRegex_t *regex, const wchar_t *input);
 
 AR_NAMESPACE_END
 
