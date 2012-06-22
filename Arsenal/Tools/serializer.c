@@ -1101,7 +1101,7 @@ static arStatus_t		__put_int(arBuffer_t	*buffer, const snInteger_t *integer)
 		if(is_neg)*--p = '-';
 		*--p = 'i';
 
-		return AR_InsertBuffer(buffer, (const byte_t*)p, AR_strlen(p));
+		return AR_InsertToBuffer(buffer, (const byte_t*)p, AR_strlen(p));
 }
 
 
@@ -1125,7 +1125,7 @@ static arStatus_t		__put_float(arBuffer_t	*buffer, const snFloat_t *float_num)
 				return status;
 		}
 
-		status = AR_InsertBuffer(buffer, (const byte_t*)&b, 1);
+		status = AR_InsertToBuffer(buffer, (const byte_t*)&b, 1);
 		
 		if(status != AR_S_YES)
 		{
@@ -1154,7 +1154,7 @@ static arStatus_t		__put_float(arBuffer_t	*buffer, const snFloat_t *float_num)
 				}
 		}
 		
-		status = AR_InsertBuffer(buffer, (const byte_t*)&e, 1);
+		status = AR_InsertToBuffer(buffer, (const byte_t*)&e, 1);
 
 		if(status != AR_S_YES)
 		{
@@ -1184,13 +1184,13 @@ static arStatus_t __put_string(arBuffer_t	*buffer, const snString_t *string)
 
 		do{ *--p = _tbl[l % 10];}while((l /= 10));
 
-		status = AR_InsertBuffer(buffer, (const byte_t*)p, AR_strlen(p));
+		status = AR_InsertToBuffer(buffer, (const byte_t*)p, AR_strlen(p));
 		if(status != AR_S_YES)
 		{
 				return status;
 		}
 
-		status = AR_InsertBuffer(buffer, string->data, string->len);
+		status = AR_InsertToBuffer(buffer, string->data, string->len);
 
 		if(status != AR_S_YES)
 		{
@@ -1253,7 +1253,7 @@ static arStatus_t __put_list(arBuffer_t	*buffer, const snList_t *lst)
 		arStatus_t		status;
 		AR_ASSERT(buffer != NULL && lst != NULL);
 
-		status = AR_InsertBuffer(buffer, (const byte_t*)h, 1);
+		status = AR_InsertToBuffer(buffer, (const byte_t*)h, 1);
 
 		if(status != AR_S_YES)
 		{
@@ -1270,7 +1270,7 @@ static arStatus_t __put_list(arBuffer_t	*buffer, const snList_t *lst)
 				}
 		}
 
-		status = AR_InsertBuffer(buffer, (const byte_t*)e, 1);
+		status = AR_InsertToBuffer(buffer, (const byte_t*)e, 1);
 
 		if(status != AR_S_YES)
 		{
@@ -1289,7 +1289,7 @@ static arStatus_t __put_dict(arBuffer_t	*buffer, const snDict_t *dict)
 		AR_ASSERT(buffer != NULL && dict != NULL);
 		
 
-		status = AR_InsertBuffer(buffer, (const byte_t*)h, 1);
+		status = AR_InsertToBuffer(buffer, (const byte_t*)h, 1);
 
 		if(status != AR_S_YES)
 		{
@@ -1309,7 +1309,7 @@ static arStatus_t __put_dict(arBuffer_t	*buffer, const snDict_t *dict)
 						return status;
 				}
 		}
-		status = AR_InsertBuffer(buffer, (const byte_t*)e, 1);
+		status = AR_InsertToBuffer(buffer, (const byte_t*)e, 1);
 		if(status != AR_S_YES)
 		{
 				return status;

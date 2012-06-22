@@ -116,7 +116,7 @@ static AR_INLINE  bool_t __move_internal(arBuffer_t *pbuf, size_t len)
 
 
 
-#define INIT_BUF_LEN	1024
+#define INIT_BUF_LEN	1
 
 arBuffer_t*		AR_CreateBuffer(size_t nbytes)
 {
@@ -182,7 +182,7 @@ arStatus_t		AR_CopyBuffer(arBuffer_t *dest, const arBuffer_t *src)
 {
 		AR_ASSERT(dest != NULL && src != NULL);
 		AR_ClearBuffer(dest);
-		return AR_InsertBuffer(dest, AR_GetBufferData(src), AR_GetBufferAvailable(src));
+		return AR_InsertToBuffer(dest, AR_GetBufferData(src), AR_GetBufferAvailable(src));
 }
 
 arBuffer_t*		AR_CopyNewBuffer(const arBuffer_t *buf)
@@ -230,7 +230,7 @@ arStatus_t			AR_ReserveBuffer(arBuffer_t *pbuf, size_t nbytes)
 		return AR_S_YES;
 }
 
-byte_t*			AR_AllocBuffer(arBuffer_t *buffer, size_t	nbytes)
+byte_t*			AR_AllocFromBuffer(arBuffer_t *buffer, size_t	nbytes)
 {
 		size_t write_able = 0;
 		byte_t *res = NULL;
@@ -255,7 +255,7 @@ byte_t*			AR_AllocBuffer(arBuffer_t *buffer, size_t	nbytes)
 }
 
 
-arStatus_t			AR_InsertBuffer(arBuffer_t *buffer, const byte_t *data, size_t len)
+arStatus_t			AR_InsertToBuffer(arBuffer_t *buffer, const byte_t *data, size_t len)
 {
 		byte_t *ptr = NULL;
 		AR_ASSERT(__buffer_is_valid(buffer));
@@ -264,7 +264,7 @@ arStatus_t			AR_InsertBuffer(arBuffer_t *buffer, const byte_t *data, size_t len)
 				return AR_S_YES;
 		}
 
-		ptr = AR_AllocBuffer(buffer, len);
+		ptr = AR_AllocFromBuffer(buffer, len);
 
 		if(ptr)
 		{
@@ -284,7 +284,7 @@ arStatus_t		AR_InsertCStringToBuffer(arBuffer_t *buffer, const char *str)
 		l = AR_strlen(str);
 		if(l > 0)
 		{
-				return AR_InsertBuffer(buffer, (const byte_t*)str, l * sizeof(char));
+				return AR_InsertToBuffer(buffer, (const byte_t*)str, l * sizeof(char));
 		}else
 		{
 				return AR_S_YES;
@@ -297,7 +297,7 @@ arStatus_t		AR_InsertBufferToBuffer(arBuffer_t *buffer, const arBuffer_t *other)
 		AR_ASSERT(buffer != NULL && other != NULL);
 		if(AR_GetBufferAvailable(other) > 0)
 		{
-				return AR_InsertBuffer(buffer, AR_GetBufferData(other), AR_GetBufferAvailable(other));
+				return AR_InsertToBuffer(buffer, AR_GetBufferData(other), AR_GetBufferAvailable(other));
 		}else
 		{
 				return AR_S_YES;
@@ -343,6 +343,28 @@ size_t			AR_GetBufferAvailable(const arBuffer_t *buffer)
 		AR_ASSERT(__buffer_is_valid(buffer));
 		return (buffer->write_cur - buffer->read_cur);
 }
+
+
+
+void            AR_ResetBufferData(arBuffer_t *buffer, size_t offset, const byte_t *data, size_t len)
+{
+        size_t available_bytes;
+        size_t write_bytes;
+
+		available_bytes =  AR_GetBufferAvailable(buffer);
+        
+		AR_ASSERT(buffer != NULL && offset < available_bytes && data != NULL && len < available_bytes);
+        
+        if(available_bytes == 0 || len == 0)
+        {
+                return;
+        }
+        
+        write_bytes = AR_MIN(available_bytes - offset, len);
+
+        AR_memcpy(buffer->read_cur + offset, data, write_bytes);
+}
+
 
 
 size_t			AR_ReadBufferData(arBuffer_t *buffer, byte_t *dest, size_t len)

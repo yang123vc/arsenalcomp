@@ -759,7 +759,7 @@ void buffer_test()
 		{
 				size_t rn = fread(buf, sizeof(byte_t), sizeof(buf), f);
 				if(rn == 0)break;
-				AR_InsertBuffer(buffer, buf, rn);
+				AR_InsertToBuffer(buffer, buf, rn);
 
 				if(AR_GetBufferAvailable(buffer) > 4096)
 				{
@@ -782,7 +782,27 @@ void buffer_test()
 
 }
 
+void buffer_test2()
+{
+		arBuffer_t *buf = AR_CreateBuffer(1);
 
+		AR_InsertCStringToBuffer(buf, "0123456789abcdef");
+		const char *d = "zzzzzz";
+		
+		AR_ResetBufferData(buf, 15, (const byte_t*)d, AR_strlen(d));
+
+		byte_t b = 0;
+		AR_InsertToBuffer(buf, &b, 1);
+
+		AR_printf(L"%hs\r\n", AR_GetBufferData(buf));
+
+		if(buf)
+		{
+				AR_DestroyBuffer(buf);
+				buf = NULL;
+		}
+
+}
 
 
 void com_timer_test()
@@ -3554,7 +3574,7 @@ void com_test()
 		//str_test17();
 		//str_test18();
 		//str_test19();
-		str_test20();
+		//str_test20();
 
 		//com_test3();
 		//com_conv();
@@ -3580,6 +3600,7 @@ void com_test()
 		//escstr_test_buf1();
 
 		//buffer_test();
+		buffer_test2();
 
 		//com_timer_test();
 

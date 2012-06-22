@@ -47,8 +47,8 @@ AR_GetStringLength
 AR_CreateBuffer
 AR_DestroyBuffer
 AR_ClearBuffer
-AR_AllocBuffer
-AR_InsertBuffer
+AR_AllocFromBuffer
+AR_InsertToBuffer
 AR_EraseBuffer
 AR_GetBufferCapacity
 AR_ReserveBuffer
