@@ -961,9 +961,9 @@ arStatus_t		AR_CopyBuffer(arBuffer_t *dest, const arBuffer_t *src);
 arBuffer_t*		AR_CopyNewBuffer(const arBuffer_t *buf);
 
 /*分配nbytes个字节以供使用*/
-byte_t*			AR_AllocBuffer(arBuffer_t *buffer, size_t	nbytes);
+byte_t*			AR_AllocFromBuffer(arBuffer_t *buffer, size_t	nbytes);
 /*向buffer写入nbytes个字节*/
-arStatus_t		AR_InsertBuffer(arBuffer_t *buffer, const byte_t *data, size_t len);
+arStatus_t		AR_InsertToBuffer(arBuffer_t *buffer, const byte_t *data, size_t len);
 
 
 
@@ -982,6 +982,7 @@ const byte_t*	AR_GetBufferData(const arBuffer_t *buffer);
 /*可读内存块长度*/
 size_t			AR_GetBufferAvailable(const arBuffer_t *buffer);
 
+void            AR_ResetBufferData(arBuffer_t *buffer, size_t offset, const byte_t *data, size_t len);
 
 size_t			AR_ReadBufferData(arBuffer_t *buffer, byte_t *dest, size_t len);
 

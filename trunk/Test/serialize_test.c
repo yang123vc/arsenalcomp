@@ -34,7 +34,7 @@ void sn_test_path()
 		{
 				size_t rn = fread(buf, sizeof(byte_t), sizeof(buf), f);
 				if(rn == 0)break;
-				AR_InsertBuffer(buffer, buf, rn);
+				AR_InsertToBuffer(buffer, buf, rn);
 		}
 		fclose(f);
 		
@@ -294,7 +294,7 @@ void sn_test_torrent()
 		{
 				size_t rn = fread(buf, sizeof(byte_t), sizeof(buf), f);
 				if(rn == 0)break;
-				AR_InsertBuffer(buffer, buf, rn);
+				AR_InsertToBuffer(buffer, buf, rn);
 		}
 		fclose(f);
 		
@@ -351,7 +351,7 @@ void sn_test_find()
 		{
 				size_t rn = fread(buf, sizeof(byte_t), sizeof(buf), f);
 				if(rn == 0)break;
-				AR_InsertBuffer(buffer, buf, rn);
+				AR_InsertToBuffer(buffer, buf, rn);
 		}
 		fclose(f);
 		
