@@ -26,6 +26,8 @@ static arStatus_t       __map_last_error()
         
         switch(errno)
         {
+				case 0:
+						return AR_S_YES;
                 case ERANGE:
                         return AR_E_RANGE;
                 case EIO:
@@ -50,7 +52,7 @@ static arStatus_t       __map_last_error()
                 case ENOTEMPTY:
                         return AR_E_NOTEMPTY;
                 case ENAMETOOLONG:
-                        return AR_E_INVAL;
+                        return AR_E_PATH;
                 case ENOMEM:
                          return AR_E_NOMEM;
                 case ENFILE:

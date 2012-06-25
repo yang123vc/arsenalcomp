@@ -1457,28 +1457,13 @@ void align_test()
 
 
 
-void text_test_load()
+
+void text_test_load_save()
 {
 
-		arBuffer_t *buf = AR_CreateBuffer(0);
-		arString_t *str = AR_CreateString();
-		if(AR_LoadBomTextFromBinary(buf, NULL, str) != AR_S_YES)
-		{
-				AR_ASSERT(false);
-		}
-
-		AR_DestroyString(str);
-		AR_DestroyBuffer(buf);
-		buf = NULL;
-
-}
-
-void text_test_save()
-{
-
-#define INPUT_FILE		L"..\\..\\..\\misc\\txt_enc_test\\empty_ascii.txt"
-//#define INPUT_FILE		L"D:\\User\\Temp\\Temp\\output2.txt"
-#define OUTPUT_FILE		L"D:\\test.txt"
+//#define INPUT_FILE		L"..\\..\\..\\misc\\txt_enc_test\\empty_ascii.txt"
+#define INPUT_FILE		L"D:\\Code\\Solidus\\Compiler\\Arsenal\\misc\\txt_enc_test\\utf8_read_test.txt"
+#define OUTPUT_FILE		L"E:\\test.txt"
 #define OUTPUT_TYPE		AR_TXT_BOM_UTF_8
 
 		arString_t *str = AR_CreateString();
@@ -3600,7 +3585,7 @@ void com_test()
 		//escstr_test_buf1();
 
 		//buffer_test();
-		buffer_test2();
+		//buffer_test2();
 
 		//com_timer_test();
 
@@ -3625,8 +3610,9 @@ void com_test()
 		//escstr_n_test1();
 		//escstr_n_test0();
 		//align_test();
-		//text_test_save();
-		//text_test_load();
+		
+		
+		text_test_load_save();
 
 		//rand_test();
 		

@@ -28,6 +28,8 @@ static arStatus_t       __map_last_error()
 {
         switch(GetLastError())
         {
+		case 0:
+				return AR_S_YES;
 		case ERROR_FILE_NOT_FOUND:
 		case ERROR_PATH_NOT_FOUND:
 				return AR_E_NOTFOUND;
@@ -35,10 +37,9 @@ static arStatus_t       __map_last_error()
 		case ERROR_CANT_RESOLVE_FILENAME:
 		case ERROR_INVALID_DRIVE:
 		case ERROR_INVALID_NAME:
-		case ERROR_DIRECTORY:
 		case ERROR_FILENAME_EXCED_RANGE:
 		case ERROR_BAD_PATHNAME:
-				return AR_E_INVAL;
+				return AR_E_PATH;
 		case ERROR_ACCESS_DENIED:
 				return AR_E_ACCES;
 		case ERROR_ALREADY_EXISTS:
@@ -51,6 +52,8 @@ static arStatus_t       __map_last_error()
 		case ERROR_HANDLE_DISK_FULL:
 		case ERROR_DISK_FULL:
 				return AR_E_NOTENOUGH;
+		case ERROR_DIRECTORY:
+				return AR_E_ISDIR;
 		case ERROR_NEGATIVE_SEEK:
 		case ERROR_LOCK_VIOLATION:
 		case ERROR_HANDLE_EOF:
@@ -545,18 +548,24 @@ const wchar_t*  AR_PathIteratorPath(const arPathIter_t *iter)
 
 /*************************************************************File********************************************/
 
-
-FILE*	AR_open_file(const wchar_t *path, const wchar_t *mode)
+arFile_t*				AR_open_file(const wchar_t *path, const wchar_t *mode)
 {
+		FILE *file;
 		AR_ASSERT(path != NULL && mode != NULL);
-		return _wfopen(path, mode);
+		file = _wfopen(path, mode);
+		return file;
 }
 
-void	AR_close_file(FILE *f)
+void					AR_close_file(arFile_t *f)
 {
+		FILE *file;
 		AR_ASSERT(f != NULL);
-		fclose(f);
+		file = (FILE*)f;
+		fclose(file);
 }
+
+
 
 AR_NAMESPACE_END
+
 

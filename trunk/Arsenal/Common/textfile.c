@@ -391,9 +391,9 @@ FAILED_POINT:
 arStatus_t	AR_LoadBomTextFile(const wchar_t *path, arTxtBom_t *bom, arString_t *out)
 {
 
-		arStatus_t ret;
-		FILE	*file = NULL;
-		arBuffer_t *buf;
+		arStatus_t		ret;
+		arFile_t		*file = NULL;
+		arBuffer_t		*buf;
 		
 		AR_ASSERT(path != NULL && out != NULL);
 
@@ -424,7 +424,8 @@ arStatus_t	AR_LoadBomTextFile(const wchar_t *path, arTxtBom_t *bom, arString_t *
 				byte_t	tmp[256];
 				
 				do{
-						rn = fread((void*)tmp, 1, sizeof(tmp), file);
+						ret = AR_read_file(file, tmp, 256, &rn);
+						/*rn = fread((void*)tmp, 1, sizeof(tmp), file);*/
 						if(rn > 0)
 						{
 								ret = AR_InsertToBuffer(buf, tmp, rn);
@@ -433,9 +434,10 @@ arStatus_t	AR_LoadBomTextFile(const wchar_t *path, arTxtBom_t *bom, arString_t *
 										goto FAILED_POINT;
 								}
 						}
-				}while(!feof(file) && !ferror(file));
+				//}while(!feof(file) && !ferror(file));
+				}while(AR_eof_file(file) != AR_S_YES && AR_error_file(file) != AR_S_YES);
 
-				if(ferror(file))
+				if(AR_error_file(file) == AR_S_YES)
 				{
 						ret = AR_E_FILE;
 						AR_error(AR_ERR_WARNING, L"fread failed for %ls in function '%hs'\r\n", path, AR_FUNC_NAME);
@@ -745,9 +747,10 @@ FAILED_POINT:
 
 arStatus_t	AR_SaveBomTextFile(const wchar_t *path, arTxtBom_t bom, const wchar_t *input)
 {
-		FILE			*file;
+		arFile_t		*file;
 		arStatus_t		ret;
 		arBuffer_t		*buf;
+		size_t wn;
 		AR_ASSERT(path != NULL && input != NULL);
 
 
@@ -781,17 +784,46 @@ arStatus_t	AR_SaveBomTextFile(const wchar_t *path, arTxtBom_t bom, const wchar_t
 		}
 
 		
-		if(fwrite((const byte_t*)AR_GetBufferData(buf), 1, AR_GetBufferAvailable(buf), file) != AR_GetBufferAvailable(buf))
+		/*if(fwrite((const byte_t*)AR_GetBufferData(buf), 1, AR_GetBufferAvailable(buf), file) != AR_GetBufferAvailable(buf))*/
+#if(0)
+		wn = 0;
+		ret = AR_write_file(file, AR_GetBufferData(buf), AR_GetBufferAvailable(buf), &wn);
+		if(ret != AR_S_YES || wn != AR_GetBufferAvailable(buf))
+		{
+				ret = AR_E_FILE;
+				AR_error(AR_ERR_WARNING, L"fwrite failed for %ls in function '%hs'\r\n", path, AR_FUNC_NAME);
+				goto FAILED_POINT;
+		}
+#endif
+
+		do{
+				byte_t tmp[256];
+				size_t read_n;
+				wn = 0;
+				read_n = AR_ReadBufferData(buf, tmp, 256);
+				ret = AR_write_file(file, tmp, read_n, &wn);
+				
+				if(ret != AR_S_YES || wn != read_n)
+				{
+						ret = AR_E_FILE;
+						AR_error(AR_ERR_WARNING, L"fwrite failed for %ls in function '%hs'\r\n", path, AR_FUNC_NAME);
+						goto FAILED_POINT;
+				}
+
+		}while(AR_GetBufferAvailable(buf) > 0 && AR_eof_file(file) != AR_S_YES && AR_error_file(file) != AR_S_YES);
+
+		if(AR_error_file(file) == AR_S_YES)
 		{
 				ret = AR_E_FILE;
 				AR_error(AR_ERR_WARNING, L"fwrite failed for %ls in function '%hs'\r\n", path, AR_FUNC_NAME);
 				goto FAILED_POINT;
 		}
 
+
 FAILED_POINT:
 		if(file)
 		{
-				fclose(file);
+				AR_close_file(file);
 				file = NULL;
 		}
 

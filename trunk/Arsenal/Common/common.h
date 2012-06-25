@@ -1290,8 +1290,14 @@ bool_t			AR_PathIteratorIsDone(const arPathIter_t *iter);
 const wchar_t*  AR_PathIteratorPath(const arPathIter_t *iter);
 
 /***********************************************************File*********************************/
-FILE*	AR_open_file(const wchar_t *path, const wchar_t *mode);
-void	AR_close_file(FILE *f);
+typedef void			arFile_t;
+arFile_t*				AR_open_file(const wchar_t *path, const wchar_t *mode);
+void					AR_close_file(arFile_t *f);
+
+arStatus_t				AR_read_file(arFile_t *file, byte_t *data, size_t len, size_t *rn);
+arStatus_t				AR_write_file(arFile_t *file, const byte_t *data, size_t len, size_t *wn);
+arStatus_t				AR_eof_file(arFile_t *file);
+arStatus_t				AR_error_file(arFile_t *file);
 
 /***************************************************************************************************************************************/
 
