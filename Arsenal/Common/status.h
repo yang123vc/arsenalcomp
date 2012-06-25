@@ -39,6 +39,7 @@ typedef enum
 
 		AR_E_SYS,
 		AR_E_FILE,
+		AR_E_PATH,
         AR_E_IO,
         AR_E_PERM,
         AR_E_NOTDIR,
