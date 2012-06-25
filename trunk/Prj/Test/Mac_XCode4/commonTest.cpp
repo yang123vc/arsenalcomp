@@ -1724,18 +1724,58 @@ void charset_test()
         char *str = AR_wcs_to_str(AR_CP_BIG5, s, AR_wcslen(s));
         
 }
+
+        
+        
+void text_test_load_save()
+{
+
+#define INPUT_FILE		L"/Users/solidus/Programming/Arsenal/misc/txt_enc_test/utf8_read_test.txt"
+#define OUTPUT_FILE		L"/Users/solidus/Desktop/test.txt"
+#define OUTPUT_TYPE		AR_TXT_BOM_UTF_8
+                
+        arString_t *str = AR_CreateString();
+        arTxtBom_t bom;
+                
+        if(AR_LoadBomTextFile(INPUT_FILE,&bom, str) != AR_S_YES)
+        {
+                AR_ASSERT(false);
+        }
+                
+        if(AR_SaveBomTextFile(OUTPUT_FILE, OUTPUT_TYPE, AR_GetStringCString(str)) != AR_S_YES)
+        {
+                AR_ASSERT(false);
+        }
+                
+                
+
+        if(AR_LoadBomTextFile(OUTPUT_FILE, &bom, str) != AR_S_YES)
+        {
+                AR_ASSERT(false);
+        }
+                
+        AR_ASSERT(bom == OUTPUT_TYPE);
+                
+        AR_DestroyString(str);
+}
+ 
+        
+
         
 void common_test()
 {
         AR_printf(L"On common_test\r\n");
+        
         
         //thd_test();
         //str_test12();
         //mem_test();
         //misc_test();
         //uri_test();
+        //charset_test();
         
-        charset_test();
+        text_test_load_save();
+        
 }
         
         
