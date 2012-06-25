@@ -624,7 +624,7 @@ const wchar_t*  AR_PathIteratorPath(const arPathIter_t *iter)
 /************************************************************File*************************************************************/
 
 
-FILE*	AR_open_file(const wchar_t *path, const wchar_t *mode)
+arFile_t*	AR_open_file(const wchar_t *path, const wchar_t *mode)
 {
         FILE    *file;
         char    *str_path;
@@ -656,14 +656,17 @@ FILE*	AR_open_file(const wchar_t *path, const wchar_t *mode)
             str_mode = NULL;
         }
 
-        return file;
+        return (arFile_t*)file;
 }
 
 
-void	AR_close_file(FILE *f)
+void	AR_close_file(arFile_t *f)
 {
+        FILE *file;
 		AR_ASSERT(f != NULL);
-		fclose(f);
+        file = (FILE*)f;
+		fclose(file);
+        file = NULL;
 }
 
 /*********************************************************Path*******************************************************/
