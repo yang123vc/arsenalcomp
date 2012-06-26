@@ -804,6 +804,40 @@ void buffer_test2()
 
 }
 
+void buffer_test3()
+{
+
+		arBuffer_t *buf = AR_CreateBuffer(1);
+
+		AR_InsertCStringToBuffer(buf, "0123456789abcdef");
+		const char *d = "zzzzzz";
+		
+		AR_ResetBufferData(buf, 15, (const byte_t*)d, AR_strlen(d));
+
+		byte_t b = 0;
+		AR_InsertToBuffer(buf, &b, 1);
+
+		AR_printf(L"%hs\r\n", AR_GetBufferData(buf));
+
+
+		while(AR_GetBufferAvailable(buf) > 1)
+		{
+				size_t en = AR_EraseBufferBack(buf, 2);
+				byte_t b = 0;
+				AR_InsertToBuffer(buf, &b, 1);
+
+				AR_printf(L"%hs\r\n", AR_GetBufferData(buf));
+				
+				
+		}
+
+		if(buf)
+		{
+				AR_DestroyBuffer(buf);
+				buf = NULL;
+		}
+		
+}
 
 void com_timer_test()
 {
@@ -3612,7 +3646,7 @@ void com_test()
 		//align_test();
 		
 		
-		text_test_load_save();
+		//text_test_load_save();
 
 		//rand_test();
 		
@@ -3637,6 +3671,8 @@ void com_test()
 		//cache_test();
 
 		//uri_test();
+
+		buffer_test3();
 }
 
 

@@ -325,6 +325,27 @@ size_t			AR_EraseBuffer(arBuffer_t *pbuf, size_t nbytes)
 }
 
 
+size_t			AR_EraseBufferBack(arBuffer_t *pbuf, size_t nbytes)
+{
+		size_t rm_data_len = 0;
+		AR_ASSERT(__buffer_is_valid(pbuf));
+		if(nbytes == 0)return 0;
+
+		rm_data_len = AR_MIN(AR_GetBufferAvailable(pbuf), nbytes);
+		
+		pbuf->write_cur -= rm_data_len;
+
+		AR_ASSERT(pbuf->read_cur <= pbuf->write_cur);
+
+		if(pbuf->read_cur == pbuf->write_cur)
+		{
+				pbuf->read_cur = pbuf->first;
+				pbuf->write_cur = pbuf->read_cur;
+		}
+		return rm_data_len;
+
+}
+
 size_t			AR_GetBufferCapacity(const arBuffer_t *buffer)
 {
 		AR_ASSERT(__buffer_is_valid(buffer));
