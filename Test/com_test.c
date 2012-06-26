@@ -3670,9 +3670,9 @@ void com_test()
 
 		//cache_test();
 
-		//uri_test();
+		uri_test();
 
-		buffer_test3();
+		//buffer_test3();
 }
 
 
