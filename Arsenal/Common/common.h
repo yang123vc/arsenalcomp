@@ -970,6 +970,7 @@ arStatus_t		AR_InsertToBuffer(arBuffer_t *buffer, const byte_t *data, size_t len
 
 /*从buffer头擦除nbytes个字节*/
 size_t			AR_EraseBuffer(arBuffer_t *buffer, size_t nbytes);
+size_t			AR_EraseBufferBack(arBuffer_t *buffer, size_t nbytes);
 
 /*返回不重新分配内存还可以写的字节数*/
 size_t			AR_GetBufferCapacity(const arBuffer_t *buffer);
