@@ -1905,6 +1905,38 @@ static void uri_exception_test()
 		str = NULL;
 }
 
+
+static void uri_misc_test2()
+{
+		arURI_t	*uri;
+		arStatus_t status;
+		status = AR_S_YES;
+		arString_t *str;
+
+		uri = AR_CreateURI(AR_CP_UTF8);
+		str = AR_CreateString();
+		
+		AR_ASSERT(uri != NULL && str != NULL);
+
+		/*******************************************************************************/
+
+		status = AR_SetURI(uri, L"pdown://p2=663AD0730A4071E5AF91D8CEC70998357A804A14");
+		AR_ASSERT(status == AR_S_YES);
+
+		AR_GetURI(uri, str);
+		AR_printf(L"%ls\r\n", AR_GetStringCString(str));
+
+		AR_ASSERT(!AR_IsRelativeURI(uri));
+
+		
+
+		/*******************************************************************************/
+		AR_DestroyURI(uri);
+		uri = NULL;
+		AR_DestroyString(str);
+		str = NULL;
+}
+
 void uri_test()
 {
 		uri_construct_test();
@@ -1914,6 +1946,8 @@ void uri_test()
 		uri_normalize_test();
 		uri_misc_test();
 		uri_exception_test();
+
+		uri_misc_test2();
 }
 
 
