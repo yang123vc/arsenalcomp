@@ -39,7 +39,7 @@ arStatus_t	Arsenal_Init(const arInit_t *ctx)
 
 		total_beg = AR_GetTime_Milliseconds();
 		
-		if(__g_init_count == 0)
+		if(AR_AtomicInc(&__g_init_count) == 1)
 		{
 				result = AR_CommonInit(ctx);
 				if(result != AR_S_YES)
@@ -79,7 +79,7 @@ arStatus_t	Arsenal_Init(const arInit_t *ctx)
 
 		total_end = AR_GetTime_Milliseconds();
 
-		__g_init_count++;
+		/*__g_init_count++;*/
 
 		{
 				wchar_t msg[1024];
@@ -128,9 +128,11 @@ END_POINT:
 
 void	Arsenal_UnInit()
 {
-		if(--__g_init_count == 0)
+
+		/*if(--__g_init_count == 0)*/
+
+		if(AR_AtomicDec(&__g_init_count) == 0)
 		{
-				
 				TGU_UnInit();
 				Tools_UnInit();
 				Parser_UnInit();
