@@ -669,8 +669,8 @@ const wchar_t* AR_reverse_wcschr(const wchar_t* str, size_t l, wchar_t c)
 
 const wchar_t* AR_reverse_wcsstr(const wchar_t *str, size_t l,  const wchar_t *match, size_t ml)
 {
-		size_t delta;
-		uint_t	search_hash, match_hash;
+		size_t			delta;
+		uint_64_t		search_hash, match_hash;
 		size_t i;
 		AR_ASSERT(str != NULL && match != NULL);
 
@@ -698,8 +698,8 @@ const wchar_t* AR_reverse_wcsstr(const wchar_t *str, size_t l,  const wchar_t *m
 
 		for(i = 0; i < ml; ++i)
 		{
-				search_hash += (uint_t)str[delta + i];
-				match_hash += (uint_t)match[i];
+				search_hash += (uint_64_t)str[delta + i];
+				match_hash += (uint_64_t)match[i];
 		}
 
 
@@ -711,8 +711,8 @@ const wchar_t* AR_reverse_wcsstr(const wchar_t *str, size_t l,  const wchar_t *m
 				}
 
 				delta--;
-				search_hash -= str[delta + ml];
-				search_hash += str[delta];
+				search_hash -= (uint_64_t)str[delta + ml];
+				search_hash += (uint_64_t)str[delta];
 		}
 
 		return str + delta;
@@ -756,8 +756,8 @@ const wchar_t* AR_reverse_wcsichr(const wchar_t* str, size_t l, wchar_t c)
 
 const wchar_t* AR_reverse_wcsistr(const wchar_t *str, size_t l,  const wchar_t *match, size_t ml)
 {
-		size_t delta;
-		uint_t	search_hash, match_hash;
+		size_t			delta;
+		uint_64_t		search_hash, match_hash;
 		size_t i;
 		AR_ASSERT(str != NULL && match != NULL);
 
@@ -785,8 +785,8 @@ const wchar_t* AR_reverse_wcsistr(const wchar_t *str, size_t l,  const wchar_t *
 
 		for(i = 0; i < ml; ++i)
 		{
-				search_hash += (uint_t)AR_towlower(str[delta + i]);
-				match_hash += (uint_t)AR_towlower(match[i]);
+				search_hash += (uint_64_t)AR_towlower(str[delta + i]);
+				match_hash += (uint_64_t)AR_towlower(match[i]);
 		}
 
 
@@ -798,8 +798,8 @@ const wchar_t* AR_reverse_wcsistr(const wchar_t *str, size_t l,  const wchar_t *
 				}
 
 				delta--;
-				search_hash -= (uint_t)AR_towlower(str[delta + ml]);
-				search_hash += (uint_t)AR_towlower(str[delta]);
+				search_hash -= (uint_64_t)AR_towlower(str[delta + ml]);
+				search_hash += (uint_64_t)AR_towlower(str[delta]);
 		}
 
 		return str + delta;
@@ -840,8 +840,8 @@ const char* AR_reverse_strchr(const char* str, size_t l, char c)
 
 const char* AR_reverse_strstr(const char *str, size_t l,  const char *match, size_t ml)
 {
-		size_t delta;
-		uint_t	search_hash, match_hash;
+		size_t			delta;
+		uint_64_t		search_hash, match_hash;
 		size_t i;
 		AR_ASSERT(str != NULL && match != NULL);
 
@@ -869,8 +869,8 @@ const char* AR_reverse_strstr(const char *str, size_t l,  const char *match, siz
 
 		for(i = 0; i < ml; ++i)
 		{
-				search_hash += (uint_t)str[delta + i];
-				match_hash += (uint_t)match[i];
+				search_hash += (uint_64_t)str[delta + i];
+				match_hash += (uint_64_t)match[i];
 		}
 
 
@@ -882,8 +882,8 @@ const char* AR_reverse_strstr(const char *str, size_t l,  const char *match, siz
 				}
 
 				delta--;
-				search_hash -= str[delta + ml];
-				search_hash += str[delta];
+				search_hash -= (uint_64_t)str[delta + ml];
+				search_hash += (uint_64_t)str[delta];
 		}
 
 		return str + delta;
@@ -927,7 +927,7 @@ const char* AR_reverse_strichr(const char* str, size_t l, char c)
 const char* AR_reverse_stristr(const char *str, size_t l,  const char *match, size_t ml)
 {
 		size_t delta;
-		uint_t	search_hash, match_hash;
+		uint_64_t	search_hash, match_hash;
 		size_t i;
 		AR_ASSERT(str != NULL && match != NULL);
 
@@ -955,8 +955,8 @@ const char* AR_reverse_stristr(const char *str, size_t l,  const char *match, si
 
 		for(i = 0; i < ml; ++i)
 		{
-				search_hash += (uint_t)AR_tolower(str[delta + i]);
-				match_hash += (uint_t)AR_tolower(match[i]);
+				search_hash += (uint_64_t)AR_tolower(str[delta + i]);
+				match_hash += (uint_64_t)AR_tolower(match[i]);
 		}
 
 
@@ -968,8 +968,8 @@ const char* AR_reverse_stristr(const char *str, size_t l,  const char *match, si
 				}
 
 				delta--;
-				search_hash -= (uint_t)AR_tolower(str[delta + ml]);
-				search_hash += (uint_t)AR_tolower(str[delta]);
+				search_hash -= (uint_64_t)AR_tolower(str[delta + ml]);
+				search_hash += (uint_64_t)AR_tolower(str[delta]);
 		}
 
 		return str + delta;
