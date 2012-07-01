@@ -3562,14 +3562,81 @@ static void str_test20()
 
 		ignored = is_ignore_url("weibo");
 		AR_ASSERT(!ignored);
-
-
 }
+
+
+
+const char*		AR_strstr_s2(const char *s, const char *se, const char *p, const char *pe)
+{
+		size_t i;
+		uint_64_t search_hash, pattern_hash;
+		size_t l, pl;
+		AR_ASSERT(s != NULL && se != NULL && s <= se);
+		AR_ASSERT(p != NULL && pe != NULL && p <= pe);
+
+		
+		l = se - s;
+		pl = pe - p;
+
+		if (pl > l)
+		{
+				return NULL;
+		}
+
+		if(pl == 0 || *p == '\0')
+		{
+				return s;
+		}
+
+		search_hash = 0;
+		pattern_hash = 0;
+
+		for(i = 0; i < pl; ++i)
+		{
+				search_hash = (uint_64_t)s[i];
+				pattern_hash = (uint_64_t)p[i];
+				
+		}
+
+		i = 0;
+
+		while(search_hash != pattern_hash || AR_strncmp(s, p, pl) != 0)
+		{
+				i++;
+
+				if(se - (s + i) < pl)
+				{
+						return NULL;
+				}
+
+				search_hash -= (uint_64_t)s[i-1];
+				search_hash += (uint_64_t)s[i - 1 + pl];
+		}
+
+		return s + i;
+}
+
+
+
+static void strstr_test0()
+{
+		const char *p = "xyz";
+		const char *s = "axyz";
+
+		//const char *s = "xyz";
+
+		const char *matched = AR_strstr_s2(s, s + AR_strlen(s), p, p + AR_strlen(p));
+
+
+		printf("matched == %s\r\n", matched);
+}
+
+
 
 void com_test()
 {
 		
-		
+		strstr_test0();
 		//bsearch_test();
 		//algo_test1();
 		
@@ -3670,7 +3737,7 @@ void com_test()
 
 		//cache_test();
 
-		uri_test();
+		//uri_test();
 
 		//buffer_test3();
 }
