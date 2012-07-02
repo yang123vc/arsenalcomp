@@ -3566,69 +3566,45 @@ static void str_test20()
 
 
 
-const char*		AR_strstr_s2(const char *s, const char *se, const char *p, const char *pe)
-{
-		size_t i;
-		uint_64_t search_hash, pattern_hash;
-		size_t l, pl;
-		AR_ASSERT(s != NULL && se != NULL && s <= se);
-		AR_ASSERT(p != NULL && pe != NULL && p <= pe);
-
-		
-		l = se - s;
-		pl = pe - p;
-
-		if (pl > l)
-		{
-				return NULL;
-		}
-
-		if(pl == 0 || *p == '\0')
-		{
-				return s;
-		}
-
-		search_hash = 0;
-		pattern_hash = 0;
-
-		for(i = 0; i < pl; ++i)
-		{
-				search_hash = (uint_64_t)s[i];
-				pattern_hash = (uint_64_t)p[i];
-				
-		}
-
-		i = 0;
-
-		while(search_hash != pattern_hash || AR_strncmp(s, p, pl) != 0)
-		{
-				i++;
-
-				if(se - (s + i) < pl)
-				{
-						return NULL;
-				}
-
-				search_hash -= (uint_64_t)s[i-1];
-				search_hash += (uint_64_t)s[i - 1 + pl];
-		}
-
-		return s + i;
-}
-
-
 
 static void strstr_test0()
 {
-		const char *p = "xyz";
-		const char *s = "axyz";
+		{
+				const char *p = "w";
+				const char *s = "axyz";
+				const char *matched = AR_strstr_s(s, s + AR_strlen(s), p, p + AR_strlen(p));
+				printf("matched == %s\r\n", matched);
+		}
 
-		//const char *s = "xyz";
+		{
+				const wchar_t *p = L"yz";
+				const wchar_t *s = L"axyz";
+				const wchar_t *matched = AR_wcsstr_s(s, s + AR_wcslen(s), p, p + AR_wcslen(p));
+				printf("matched == %ls\r\n", matched);
+		}
 
-		const char *matched = AR_strstr_s2(s, s + AR_strlen(s), p, p + AR_strlen(p));
 
+		{
+				const char *p = "yz";
+				const char *s = "ZXyZX";
+				const char *matched = AR_stristr_s(s, s + AR_strlen(s), p, p + AR_strlen(p));
+				printf("matched == %s\r\n", matched);
+		}
+		
 
-		printf("matched == %s\r\n", matched);
+		{
+				const wchar_t *p = L"YZ";
+				const wchar_t *s = L"axyz";
+				const wchar_t *matched = AR_wcsistr_s(s, s + AR_wcslen(s), p, p + AR_wcslen(p));
+				printf("matched == %ls\r\n", matched);
+		}
+
+		{
+				const wchar_t *p = L"中国";
+				const wchar_t *s = L"abx中国字xxx";
+				const wchar_t *matched = AR_wcsistr_s(s, s + AR_wcslen(s), p, p + AR_wcslen(p));
+				printf("matched == %ls\r\n", matched);
+		}
 }
 
 
@@ -3636,7 +3612,7 @@ static void strstr_test0()
 void com_test()
 {
 		
-		strstr_test0();
+		//strstr_test0();
 		//bsearch_test();
 		//algo_test1();
 		
@@ -3656,10 +3632,10 @@ void com_test()
 		//str_test13();
 		//str_test14();
 		//str_test15();
-		//str_test16();
+		str_test16();
 		//str_test17();
 		//str_test18();
-		//str_test19();
+		str_test19();
 		//str_test20();
 
 		//com_test3();
