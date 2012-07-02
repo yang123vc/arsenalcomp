@@ -811,6 +811,7 @@ const wchar_t*	AR_wcsistr_s(const wchar_t *s, const wchar_t *se, const wchar_t *
 				return s;
 		}
 		
+        
 		if(AR_UINT64_MAX / AR_WCHARMAX > pl)
 		{
 				uint_64_t search_hash, pattern_hash;
