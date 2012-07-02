@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "AR_wcsistr_s:crtstr.c">
+         <PersistentStrings>
+            <PersistentString
+               value = "AR_UINT64_MAX / AR_WCHARMAX">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
