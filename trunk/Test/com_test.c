@@ -3329,7 +3329,7 @@ static void str_test19()
 				printf( "%s not found\n", str );
 		}
 
-		pdest = (char*)AR_strstr(string, string + AR_strlen(string), str, str + AR_strlen(str));
+		pdest = (char*)AR_strstr_s(string, string + AR_strlen(string), str, str + AR_strlen(str));
 		
 		if ( pdest != NULL )
 		{
@@ -3356,7 +3356,7 @@ static void str_test19()
 				printf( "%s not found\n", str );
 		}
 
-		pdest = (char*)AR_strstr(string, string + AR_strlen(string), str, str + AR_strlen(str));
+		pdest = (char*)AR_strstr_s(string, string + AR_strlen(string), str, str + AR_strlen(str));
 		
 		if ( pdest != NULL )
 		{
