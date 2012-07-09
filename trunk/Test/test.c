@@ -100,7 +100,7 @@ extern void rgx_test();
 void AR_Test()
 {
 #if defined(__LIB)
-		com_test();
+		//com_test();
 		//math_test();
 		//trie_tree_test();
 		//expr_test();
@@ -137,7 +137,7 @@ void AR_Test()
 
 		//parser_perf_test();
 		
-		//rgx_test();
+		rgx_test();
 		//calc_test();
 
 		//parser_test();
