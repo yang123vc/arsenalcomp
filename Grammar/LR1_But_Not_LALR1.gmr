@@ -1,32 +1,33 @@
+﻿
 
+%token "a"    :    "a"
+        ;
 
-%token "a"	:	"a"
-		;
+%token    "b"    :    "b"
+        ;
 
-%token	"b"	:	"b"
-		;
+%token    "c"    :    "c"
+        ;
 
-%token	"c"	:	"c"
-		;
+%token    "d"    :    "d"
+        ;
 
-%token	"d"	:	"d"
-		;
+%token    "e"    :    "e"
+        ;
 
-%token	"e"	:	"e"
-		;
+%start    G;
 
-%start	G;
+G    :     A;
 
-G	: 	A;
+A    :    a B1 c
+    |    a B2 d
+    |    e B1 d
+    |    e B2 c
+    ;
 
-A	:	a B1 c
-	|	a B2 d
-	|	e B1 d
-	|	e B2 c
-	;
+B1     :     b
+    ;
+B2     :     b
+    ;
 
-B1 	:	 b
-	;
-B2 	:	 b
-	;
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		678305E215AB641200932EEF /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 678305E115AB641200932EEF /* Arsenal.a */; };
 		BEAF6EDF14F25FC500BE72FF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEAF6EDE14F25FC500BE72FF /* Cocoa.framework */; };
 		BEAF6EE914F25FC500BE72FF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = BEAF6EE714F25FC500BE72FF /* InfoPlist.strings */; };
 		BEAF6EEB14F25FC500BE72FF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BEAF6EEA14F25FC500BE72FF /* main.m */; };
@@ -52,6 +53,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		678305E115AB641200932EEF /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = Arsenal.a; path = "../../../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Debug/Arsenal.a"; sourceTree = "<group>"; };
 		BEAF6EDA14F25FC500BE72FF /* GrammarDesigner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GrammarDesigner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEAF6EDE14F25FC500BE72FF /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		BEAF6EE114F25FC500BE72FF /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -130,6 +132,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				678305E215AB641200932EEF /* Arsenal.a in Frameworks */,
 				BEAF6F2B14F261D500BE72FF /* libiconv.dylib in Frameworks */,
 				BEAF6F2914F261D000BE72FF /* libpthread.dylib in Frameworks */,
 				BEAF6EDF14F25FC500BE72FF /* Cocoa.framework in Frameworks */,
@@ -142,6 +145,7 @@
 		BEAF6ECF14F25FC500BE72FF = {
 			isa = PBXGroup;
 			children = (
+				678305E115AB641200932EEF /* Arsenal.a */,
 				BEAF6F2A14F261D500BE72FF /* libiconv.dylib */,
 				BEAF6F2814F261D000BE72FF /* libpthread.dylib */,
 				BEAF6EE414F25FC500BE72FF /* GrammarDesigner */,

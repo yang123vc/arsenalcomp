@@ -474,7 +474,7 @@ using namespace ARSpace;
 		
 		arBuffer_t *buf = AR_CreateBuffer(len);
 		arString_t *str = AR_CreateString();
-		AR_InsertBuffer(buf, (const byte_t*)[data bytes], len);
+		AR_InsertToBuffer(buf, (const byte_t*)[data bytes], len);
 		
 		if(AR_LoadBomTextFromBinary(buf, NULL, str) == AR_S_YES)
 		{
