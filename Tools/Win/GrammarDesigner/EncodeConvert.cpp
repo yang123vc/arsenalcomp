@@ -349,34 +349,60 @@ BOOL		CEncodeConvert::base64_convert(const CString &input, CString &output)
 				return FALSE;
 		}
 
-		mbs = wcs_convert(this->GetEncodeCharset(), input);
-
-		if(mbs == "")
+		if(this->IsEncode())
 		{
-				output = L"invalid charset!";
-				return FALSE;
-		}
+				mbs = wcs_convert(this->GetEncodeCharset(), input);
 
-		n = ARSpace::AR_base64_encode(NULL, 0, (const byte_t*)mbs.c_str(), mbs.size());
+				if(mbs == "")
+				{
+						output = L"invalid charset!";
+						return FALSE;
+				}
 
-		if(n == 0)
-		{
-				output = L"invalid input!";
-				return FALSE;
-		}
+				n = ARSpace::AR_base64_encode(NULL, 0, (const byte_t*)mbs.c_str(), mbs.size());
 
-		tmp = new byte[n + 1];
-		if(ARSpace::AR_base64_encode(tmp, n, (const byte_t*)mbs.c_str(), mbs.size()) != n)
-		{
-				output = L"invalid input!";
+				if(n == 0)
+				{
+						output = L"invalid input!";
+						return FALSE;
+				}
+
+				tmp = new byte[n + 1];
+				n = ARSpace::AR_base64_encode(tmp, n, (const byte_t*)mbs.c_str(), mbs.size());
+				tmp[n] = 0;
+
+				output = str_convert(CP_UTF8, (const char*)tmp);
+
 				delete []tmp;
-				return FALSE;
+		}else
+		{
+				mbs = wcs_convert(this->GetEncodeCharset(), input);
+
+				if(mbs == "")
+				{
+						output = L"invalid charset!";
+						return FALSE;
+				}
+
+				n = ARSpace::AR_base64_decode(NULL, 0, (const byte_t*)mbs.c_str(), mbs.size());
+
+				if(n == 0)
+				{
+						output = L"invalid input!";
+						return FALSE;
+				}
+
+				tmp = new byte[n + 1];
+
+				n = ARSpace::AR_base64_decode(tmp, n, (const byte_t*)mbs.c_str(), mbs.size());
+				
+				tmp[n] = 0;
+
+				output = str_convert(CP_UTF8, (const char*)tmp);
+
+				delete []tmp;
 		}
-		tmp[n] = 0;
 
-		output = str_convert(CP_UTF8, (const char*)tmp);
-
-		delete []tmp;
 		return TRUE;
 }
 
@@ -475,6 +501,7 @@ BOOL					CEncodeConvert::url_convert(const CString &input, CString &output)
 
 		if(this->IsEncode())
 		{
+				/*
 				if(AR_SetURI(uri, input) != AR_S_YES)
 				{
 						output = L"input is not valid url!";
@@ -483,9 +510,24 @@ BOOL					CEncodeConvert::url_convert(const CString &input, CString &output)
 				}
 
 				AR_GetEncodedURI(uri, str);
+				*/
+				if(AR_EncodeURLString(cp, input, str) != AR_S_YES)
+				{
+						output = L"input is not valid url!";
+						ret = FALSE;
+						goto END_POINT;
+				}
+
 				output = AR_GetStringCString(str);
 		}else
 		{
+				if(AR_DecodeURLString(cp, input, str) != AR_S_YES)
+				{
+						output = L"input is not valid url!";
+						ret = FALSE;
+						goto END_POINT;
+				}
+				/*
 				if(AR_SetEncodedURI(uri, input) != AR_S_YES)
 				{
 						output = L"input is not valid url!";
@@ -493,6 +535,7 @@ BOOL					CEncodeConvert::url_convert(const CString &input, CString &output)
 						goto END_POINT;
 				}
 				AR_GetURI(uri, str);
+				*/
 				output = AR_GetStringCString(str);
 		}
 END_POINT:

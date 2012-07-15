@@ -1836,5 +1836,84 @@ arStatus_t		AR_NormalizeURI(arURI_t *uri)
 		return __remove_path_dot_segments(uri, !AR_IsRelativeURI(uri));
 }
 
+
+
+
+
+static arStatus_t	__url_encode(arCodePage_t cp, const wchar_t *begin, const wchar_t *end, arString_t *output)
+{
+		arStatus_t status;
+		const char *s;
+		char *str;
+		
+		AR_ASSERT(begin != NULL && end != NULL && begin <= end && output != NULL);
+		status = AR_S_YES;
+
+		if(begin == end)
+		{
+				return AR_S_YES;
+		}
+
+		str = AR_wcs_to_str(cp, begin, end - begin);
+		
+		if(str == NULL)
+		{
+				status = AR_E_BADENCCONV;
+				goto END_POINT;
+		}
+		
+
+
+		for(s = str; *s != '\0'; ++s)
+		{
+				uint_8_t c = (uint_8_t)*s;
+
+				if( (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9'))
+				{
+						status = AR_AppendCharToString(output, (wchar_t)c);
+						if(status != AR_S_YES)
+						{
+								goto END_POINT;
+						}
+				}else
+				{
+						status = AR_AppendFormatString(output, L"%%%02X", (uint_32_t)c);
+						if(status != AR_S_YES)
+						{
+								goto END_POINT;
+						}
+				}
+		}
+
+END_POINT:
+		if(str)
+		{
+				AR_DEL(str);
+				str = NULL;
+		}
+
+		return status;
+}
+
+
+arStatus_t		AR_EncodeURLString(arCodePage_t cp, const wchar_t *uri, arString_t *out)
+{
+		AR_ASSERT(uri != NULL && out != NULL);
+		AR_ClearString(out);
+		
+		return __url_encode(cp, uri, uri + AR_wcslen(uri), out);
+}
+
+
+arStatus_t		AR_DecodeURLString(arCodePage_t cp, const wchar_t *uri, arString_t *out)
+{
+		
+		AR_ASSERT(uri != NULL && out != NULL);
+		AR_ClearString(out);
+		/*uri decode¼æÈÝurl encode*/
+		return __decode(cp, uri, uri + AR_wcslen(uri), out);
+}
+
+
 AR_NAMESPACE_END
 

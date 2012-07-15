@@ -1064,8 +1064,8 @@ arStatus_t		AR_SetURIPathEtc(arURI_t *uri, const wchar_t *str);
 arStatus_t		AR_SetURIEncodedPathEtc(arURI_t *uri, const wchar_t *str);
 
 
-
-
+arStatus_t		AR_EncodeURLString(arCodePage_t cp, const wchar_t *uri, arString_t *out);
+arStatus_t		AR_DecodeURLString(arCodePage_t cp, const wchar_t *uri, arString_t *out);
 
 
 
