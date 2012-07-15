@@ -203,7 +203,7 @@ size_t AR_base64_decode(byte_t  *out, size_t olen, const byte_t *input, size_t i
 
 		AR_ASSERT(input != NULL && ilen > 0);
 
-		need_n = 3 * ilen / 4;
+		need_n = ilen;
 
 		if(out == NULL)
 		{
