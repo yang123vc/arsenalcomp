@@ -1839,6 +1839,7 @@ arStatus_t		AR_NormalizeURI(arURI_t *uri)
 
 
 
+/**********************************************************URLEncoder && URLDecoder*************************************************/
 
 static arStatus_t	__url_encode(arCodePage_t cp, const wchar_t *begin, const wchar_t *end, arString_t *output)
 {
