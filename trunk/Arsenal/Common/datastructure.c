@@ -372,7 +372,7 @@ arStatus_t		AR_FindFromHash(arHash_t *hash, void *key, void **pval)
         
         arHashNode_t *node;
         uint_64_t hash_code;
-        AR_ASSERT(hash != NULL && pval != NULL);
+        AR_ASSERT(hash != NULL /*&& pval != NULL*/);
         
         hash_code = hash->hash_f(key, hash->usr_ctx);
         
@@ -383,7 +383,10 @@ arStatus_t		AR_FindFromHash(arHash_t *hash, void *key, void **pval)
 		{
 				if(hash->comp_f(node->key, key, hash->usr_ctx) == 0)
                 {
-                        *pval = node->val;
+						if(pval)
+						{
+								*pval = node->val;
+						}
                         return AR_S_YES;
                 }
 
