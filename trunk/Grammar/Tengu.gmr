@@ -352,10 +352,6 @@ function_defination        :    function_signature    compound_statement    %act
                            ;
 
 
-function_defination_noname	:	 "var"	"(" params ")" compound_statement
-				;
-
-
 
 params          :    namelist    ","    "..."        %action on_namelist_ellipsis
                 |    namelist        		     %action    auto_return_0
@@ -401,7 +397,6 @@ init_declarator_list            :    init_declarator                        	   
 init_declarator	:    	NAME    "="     expression                %action    	on_declarator
 			|   	NAME	"=" 	aggregate_constructor	%action	on_declarator
                     	|    	NAME                            		%action    on_declarator
-			|	NAME 	"="	function_defination_noname	%action 	on_declarator
                     ;
 
 
@@ -426,7 +421,6 @@ list_field_list            	:    	list_field_list  "," list_field
 
 list_field			:	expression
 				|	aggregate_constructor
-				|	function_defination_noname
 				;
 
 
@@ -443,7 +437,6 @@ table_field_list		:    table_field_list ","        table_field
 
 table_field                	:	expression    ":"    expression
 				|	expression	":"	aggregate_constructor
-				|	expression	":"	function_defination_noname
                     	      	;
 
 
