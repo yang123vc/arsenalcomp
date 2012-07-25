@@ -940,7 +940,8 @@ RECHECK_POINT:
 
 						if(!on_error_is_handled)
 						{
-								*status_ptr = __on_error(parser_context, tok);
+								//*status_ptr = __on_error(parser_context, tok);
+								__on_error(parser_context, tok);
 						}
 
 						

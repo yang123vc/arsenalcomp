@@ -344,15 +344,16 @@ element	:	declaration            	%action    auto_return_null
 ;
 
 
-function_signature        :    "var"        NAME "(" params ")"                        %action    on_function_signature
-		             ;
+function_signature		:    	"var"        NAME "(" params ")"                        %action    on_function_signature
+				;
 
 
 function_defination        :    function_signature    compound_statement    %action    on_function_defination
                            ;
 
 
-
+function_defination_noname	:	 "var"	"(" params ")" compound_statement
+				;
 
 
 
@@ -397,9 +398,10 @@ init_declarator_list            :    init_declarator                        	   
 
 
 
-init_declarator     :    NAME    "="     expression                %action    on_declarator
-			|   NAME	"=" 	aggregate_constructor	%action	on_declarator
-                    |    NAME                            %action    on_declarator
+init_declarator	:    	NAME    "="     expression                %action    	on_declarator
+			|   	NAME	"=" 	aggregate_constructor	%action	on_declarator
+                    	|    	NAME                            		%action    on_declarator
+			|	NAME 	"="	function_defination_noname	%action 	on_declarator
                     ;
 
 
@@ -424,6 +426,7 @@ list_field_list            	:    	list_field_list  "," list_field
 
 list_field			:	expression
 				|	aggregate_constructor
+				|	function_defination_noname
 				;
 
 
@@ -440,6 +443,7 @@ table_field_list		:    table_field_list ","        table_field
 
 table_field                	:	expression    ":"    expression
 				|	expression	":"	aggregate_constructor
+				|	expression	":"	function_defination_noname
                     	      	;
 
 
@@ -452,18 +456,29 @@ optional_dot        		:    ","
 /*************************************语句***************************************************/
 
 
-statement		:    compound_statement            %action    auto_return_0
-			|    expression_statement            %action    auto_return_0
-			|    selection_statement            %action    auto_return_0
-			|    iteration_statement            %action    auto_return_0
-			|    jump_statement            %action    auto_return_0
-			|    empty_statement            %action    auto_return_0
-			|    import_statement 		%action auto_return_0
+statement		:    	compound_statement            %action    auto_return_0
+			|    	expression_statement            %action    auto_return_0
+			|    	selection_statement            %action    auto_return_0
+			|    	iteration_statement            %action    auto_return_0
+			|    	jump_statement            %action    auto_return_0
+			|    	empty_statement            %action    auto_return_0
+			|	import_statement 		%action auto_return_0
+			|	throw_statement		%action auto_return_0
+			|	try_statement			%action auto_return_0
                     ;
 
 
 
 
+/**************************************************Exception statement*************************************************/
+
+throw_statement	:	"throw" expression semi
+			;
+
+try_statement		:	"try"	compound_statement        "finally"	compound_statement
+			|	"try" 	compound_statement        "catch"	"("	NAME ")"	compound_statement
+			|	"try" 	compound_statement        "catch"	"("	NAME ")"	compound_statement	"finally" 	compound_statement
+			;
 
 
 
@@ -594,7 +609,7 @@ if_else_statement        :    "if" "(" expression ")" statement "else" statement
 
 iteration_statement        :    while_statement            %action    auto_return_0
 		             |    do_while_statement            %action    auto_return_0
-//                	      |    for_statement                %action    auto_return_0
+                	      |    for_statement                %action    auto_return_0
 		             ;
 
 
@@ -625,7 +640,7 @@ do_while_statement           :    "do" enter_loop statement "while" "(" expressi
 		                ;	
 
 
-/*
+
 
 for_statement            :    "for"    "("    for_in_expression    ")"     enter_loop  statement leave_loop    %action    on_for_statement
 		           |    "for"    "("    error    ")"    enter_loop  statement leave_loop    %action    on_error_for_statement
@@ -634,7 +649,6 @@ for_statement            :    "for"    "("    for_in_expression    ")"     enter
 for_in_expression        :    NAME "in" expression    
                 	    ;
 
-*/
 
 
 enter_loop                :    .                    %action on_enter_loop
@@ -687,9 +701,9 @@ expression          :    assignment_expression        %action auto_return_0
 
 
 
-assignment_expression        :    constant_expression                        %action     auto_return_0
-                    		  |    unary_expression    "="    assignment_expression    %action    on_assignment_expression
-		                ;
+assignment_expression	:    constant_expression                        %action     auto_return_0
+				|    unary_expression    "="    assignment_expression    %action    on_assignment_expression
+				;
 
 
 
@@ -777,11 +791,11 @@ postfix_expression        	:    postfix_expression    "++"        %action    on_
 
 
 
-primary_expression        :    "(" expression")"                            %action    on_lp_rp_expression
-                	     |    "(" error ")"                                %action    on_lp_rp_expression
-		            |    NAME                                        %action    on_identifier_expression
-                          |    constant            				%action    auto_return_0
-		            ;
+primary_expression        	:    	"(" expression")"                            %action    on_lp_rp_expression
+                	     	|    	"(" error ")"                                %action    on_lp_rp_expression
+		            	|    	NAME                                        %action    on_identifier_expression
+				|	constant            				%action    auto_return_0
+		            	;
 
 
 
