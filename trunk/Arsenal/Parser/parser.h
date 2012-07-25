@@ -88,7 +88,7 @@ typedef void			(AR_STDCALL *psrFreeFunc_t)(psrNode_t *node, void *ctx);
 /*
 		此函数如果返回AR_S_YES 则parser继续在state stack上搜索是否有匹配的error 符号，否则，则丢弃当前导致错误的符号tok
 
-		可以将此返回值理解为是否希望尝试移入此tok，返回true则通过error token尝试，返回false，则此token被丢弃，可在此回调函数内
+		可以将此返回值理解为是否希望尝试移入此tok，返回AR_S_YES则通过error token尝试，返回AR_S_NO，则此token被丢弃，可在此回调函数内
 		移动词法值到下一个所希望的元素。
 */
 typedef arStatus_t		(AR_STDCALL *psrErrorFunc_t)(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx);

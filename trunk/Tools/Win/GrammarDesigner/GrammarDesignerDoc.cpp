@@ -1264,6 +1264,7 @@ void CGrammarDesignerDoc::OnParserParse()
 						ARSpace::psrToken_t		psr_tok;
 
 						PARSER_TOTERMTOK(&token, &psr_tok);
+
 						is_ok = ARSpace::Parser_AddToken(parser_context, &psr_tok);
 						
 						if(token.value == 0)
@@ -1316,7 +1317,7 @@ void CGrammarDesignerDoc::OnParserParse()
 		output.Append(str.GetString());
 		}
 
-		if(is_ok == ARSpace::AR_S_YES)
+		if(is_ok == ARSpace::AR_S_YES/* && Parser_IsAccepted(parser_context)*/)
 		{
 				CPrintNode *node = (CPrintNode*)ARSpace::Parser_GetResult(parser_context);
 				
