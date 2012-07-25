@@ -194,7 +194,6 @@
 
 
 
-
 %token    "import"    :    '"import"(?!{keyword_lhd})'   ,1            %value    "TOK_IMPORT"            %action default_leaf_handler            ;
 %token    "from"    	  :    '"from"(?!{keyword_lhd})'   ,1            %value    "TOK_FROM"            %action default_leaf_handler            ;
 
@@ -215,9 +214,17 @@
 
 %token    "in"        :    '"in"(?!{keyword_lhd})'        ,1            %value    "TOK_IN"            %action default_leaf_handler            ;
 
+/*
+%token    "list"    		:    '"list"(?!{keyword_lhd})'        ,1            %value    "TOK_LIST"            %action default_leaf_handler            ;
+%token    "table"  		:    '"table"(?!{keyword_lhd})'        ,1            %value   "TOK_TABLE"            %action default_leaf_handler           ;
+*/
 
-%token    "list"    :    '"list"(?!{keyword_lhd})'        ,1            %value    "TOK_LIST"            %action default_leaf_handler            ;
-%token    "table"   :    '"table"(?!{keyword_lhd})'        ,1            %value   "TOK_TABLE"            %action default_leaf_handler           ;
+%token    "try"    		:    '"try"(?!{keyword_lhd})'   ,1            	%value    	"TOK_TRY"        	%action default_leaf_handler            	;
+%token    "catch"  		:    '"catch"(?!{keyword_lhd})'   ,1            %value    	"TOK_CATCH"        	%action default_leaf_handler        	;
+%token    "finally"  	:    '"finally"(?!{keyword_lhd})'   ,1          %value    	"TOK_FINALLY"       	%action default_leaf_handler        	;
+%token    "throw"  		:    '"throw"(?!{keyword_lhd})'   ,1          	%value    	"TOK_THROW"         	%action default_leaf_handler        	;
+
+
 
 
 %token    "..."        :    '"..."'    ,2                        %value    "TOK_ELLIPSIS"        %action default_leaf_handler            ;    
@@ -391,65 +398,66 @@ init_declarator_list            :    init_declarator                        	   
 
 
 init_declarator     :    NAME    "="     expression                %action    on_declarator
+			|   NAME	"=" 	aggregate_constructor	%action	on_declarator
                     |    NAME                            %action    on_declarator
                     ;
 
 
 
+aggregate_constructor	:	list_constructor 
+				|	table_constructor
+				;
 
 
 
-aggregate_constructor       :    table_constructor
-                    		 |    list_constructor
-                            ;
-
-
-
-list_constructor    :   list "{"    list_field_list     optional_dot    "}"
-                    |   list "{"    "}"
-                    |   list "{"    error "}"
-                    ;
-
-
-
-
-list_field_list            :    list_field_list  "," expression         
-                    		|    expression                         
+list_constructor    		:   "["    list_field_list     optional_dot    "]"		%action on_list_contructor
+                    		|   "["    "]"							%action on_list_contructor
+                    		|   "["    error "]"							%action on_list_contructor
                     		;
 
 
 
 
+list_field_list            	:    	list_field_list  "," list_field
+				|	list_field
+                    		;
+
+list_field			:	expression
+				|	aggregate_constructor
+				;
 
 
-table_constructor            :    "table" "{"    table_field_list optional_dot    "}"        	%action    on_table_constructor
-                    		  |    "table" "{"    "}"                					%action    on_table_constructor
-		                |    "table" "{" error "}"                				%action    on_table_constructor
-                    		  ;
+table_constructor		:     "{"    table_field_list optional_dot    "}"        	%action    on_table_constructor
+				|     "{"    "}"                					%action    on_table_constructor
+				|     "{" error "}"                				%action    on_table_constructor
+                    		;
 
 
-table_field_list             :    table_field_list ","        table_field
-                    		  |    table_field
-                    		  ;
+table_field_list		:    table_field_list ","        table_field
+				|    table_field
+				;
 
 
-table_field                :    expression    ":"    expression
-                    	      ;
+table_field                	:	expression    ":"    expression
+				|	expression	":"	aggregate_constructor
+                    	      	;
 
 
-optional_dot        :    ","
-                    |    .
-                    ;
+
+optional_dot        		:    ","
+                    		|    .
+                    		;
+
 
 /*************************************语句***************************************************/
 
 
-statement           :    compound_statement            %action    auto_return_0
-                    |    expression_statement            %action    auto_return_0
-                    |    selection_statement            %action    auto_return_0
-                    |    iteration_statement            %action    auto_return_0
-                    |    jump_statement            %action    auto_return_0
-                    |    empty_statement            %action    auto_return_0
+statement		:    compound_statement            %action    auto_return_0
+			|    expression_statement            %action    auto_return_0
+			|    selection_statement            %action    auto_return_0
+			|    iteration_statement            %action    auto_return_0
+			|    jump_statement            %action    auto_return_0
+			|    empty_statement            %action    auto_return_0
 			|    import_statement 		%action auto_return_0
                     ;
 
@@ -772,8 +780,7 @@ postfix_expression        	:    postfix_expression    "++"        %action    on_
 primary_expression        :    "(" expression")"                            %action    on_lp_rp_expression
                 	     |    "(" error ")"                                %action    on_lp_rp_expression
 		            |    NAME                                        %action    on_identifier_expression
-                          |    constant            %action    auto_return_0
-		            |    aggregate_constructor    %action    auto_return_0
+                          |    constant            				%action    auto_return_0
 		            ;
 
 

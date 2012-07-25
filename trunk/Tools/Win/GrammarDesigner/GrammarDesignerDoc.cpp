@@ -503,11 +503,16 @@ void CGrammarDesignerDoc::OnEditFindallreferences()
 								}
 
 								CString buf;
-								view->GetRichEditCtrl().GetLine(i, buf.GetBufferSetLength(line_len + 1), line_len);
-
+								view->GetRichEditCtrl().GetLine(i, buf.GetBufferSetLength(line_len + 2), line_len + 2);
 								buf.SetAt(line_len, _T('\0')); // null terminate
-								buf.ReleaseBuffer(line_len + 1);
-
+								buf.ReleaseBuffer(line_len + 2);
+								/*
+								wchar_t *wtmp = new wchar_t[line_len + 2];
+								view->GetRichEditCtrl().GetLine(i, wtmp, line_len + 1);
+								wtmp[line_len] = L'\0';
+								
+								buf = wtmp;
+								*/
 
 
 								CString tmp = buf;
