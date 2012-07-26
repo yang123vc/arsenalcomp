@@ -1830,10 +1830,125 @@ END_POINT:
 }
 
 
+static arStatus_t	__normalize_host(arURI_t *uri)
+{
+		arString_t *str, *new_host;
+		arStatus_t status;
+		const wchar_t *p;
+		AR_ASSERT(uri != NULL);
+
+		status = AR_S_YES;
+
+		str = AR_CreateString();
+		new_host = AR_CreateString();
+		if(str == NULL || new_host == NULL )
+		{
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+
+
+		status = AR_GetURIHost(uri, str);
+
+		if(status != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+
+		p = AR_GetStringCString(str);
+		
+		p = AR_wcstrim_space(p);
+		if(*p == L'\0')
+		{
+				goto END_POINT;
+		}
+
+		p = AR_wcstrim(p, L".");
+		
+		if(*p == L'\0')
+		{
+				goto END_POINT;
+		}
+
+
+		while(*p != L'\0')
+		{
+				while(*p != L'\0' && *p != L'.')
+				{
+						status = AR_AppendCharToString(new_host, AR_towlower(*p));
+						if(status != AR_S_YES)
+						{
+								goto END_POINT;
+						}
+						++p;
+				}
+
+				if(*p == L'.')
+				{
+						while(*p == L'.')
+						{
+								p = AR_wcstrim(p, L".");		/*如果是最后一个，就不加.了*/
+								p = AR_wcstrim_space(p);		/*如果是最后一个，就不加.了*/
+						}
+
+						if(*p == L'\0')
+						{
+
+						}else
+						{
+								status = AR_AppendCharToString(new_host, L'.');
+								if(status != AR_S_YES)
+								{
+										goto END_POINT;
+								}
+						}
+				}
+		}
+
+END_POINT:
+
+		if(status == AR_S_YES)
+		{
+				status = AR_SetURIHost(uri, AR_GetStringCString(new_host));
+		}
+
+		if(str)
+		{
+				AR_DestroyString(str);
+				str = NULL;
+		}
+
+		if(new_host)
+		{
+				AR_DestroyString(new_host);
+				new_host = NULL;
+		}
+
+		return status;
+}
+
+
 arStatus_t		AR_NormalizeURI(arURI_t *uri)
 {
+		arStatus_t		status;
 		AR_ASSERT(uri != NULL);
-		return __remove_path_dot_segments(uri, !AR_IsRelativeURI(uri));
+		
+		status = __normalize_host(uri);
+
+		if(status != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+
+		status = __remove_path_dot_segments(uri, !AR_IsRelativeURI(uri));
+
+		if(status != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+
+END_POINT:
+		return status;
 }
 
 

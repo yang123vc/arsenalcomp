@@ -1937,6 +1937,242 @@ static void uri_misc_test2()
 		str = NULL;
 }
 
+
+
+static void uri_chinese_host_test()
+{
+		arURI_t	*uri;
+		arStatus_t status;
+		status = AR_S_YES;
+		arString_t *str;
+
+		uri = AR_CreateURI(AR_CP_UTF8);
+		str = AR_CreateString();
+		
+		AR_ASSERT(uri != NULL && str != NULL);
+
+		/*******************************************************************************/
+
+		
+		status = AR_SetURI(uri, L"http://中文.com/abc");
+		AR_ASSERT(status == AR_S_YES);
+
+		AR_GetURI(uri, str);
+		const wchar_t *s = AR_GetStringCString(str);
+		AR_printf(L"%ls\r\n", s);
+
+		AR_GetURIHost(uri, str);
+		s = AR_GetStringCString(str);
+		AR_printf(L"%ls\r\n", s);
+
+
+		AR_ASSERT(!AR_IsRelativeURI(uri));
+
+		
+
+		/*******************************************************************************/
+		AR_DestroyURI(uri);
+		uri = NULL;
+		AR_DestroyString(str);
+		str = NULL;
+}
+
+
+static void work_test()
+{
+		AR_printf(L"\r\n\r\n---------------------\r\n");
+		static struct {
+				const wchar_t *original;
+				const wchar_t *normalized;
+		}tbl[] = 
+		{
+				{L"http://a.b.c.d.com", L"http://a.b.c.d.com"},
+				{L"http://a.b.c.d.com.", L"http://a.b.c.d.com"},
+				{L"http://a.b.c.d.com/", L"http://a.b.c.d.com/"},
+
+				{L"http://a...b.c.d.com", L"http://a.b.c.d.com"},
+				{L"http://a..b.c.d.com", L"http://a.b.c.d.com"},
+				{L"http://.a.b.c.d.com", L"http://a.b.c.d.com"},
+				{L"http://.a.b.c.d.com.", L"http://a.b.c.d.com"},
+				{L"http://.a.b.c.d.com./", L"http://a.b.c.d.com/"},
+
+				{L"http://a.b.c.d.com.//?C=1&a=2&&d=4&sid=pp&B=3&", L"http://a.b.c.d.com/?a=2&b=3&c=1&d=4"},
+				{L"http://www.google.com/q?", L"http://www.google.com/q?r?"},
+				{L"http://www.google.com/q?r?s", L"http://www.google.com/q?r?s"},
+
+		};
+
+		arURI_t	*uri;
+		arStatus_t status;
+		status = AR_S_YES;
+		arString_t *str;
+		const wchar_t *s = NULL;
+		uri = AR_CreateURI(AR_CP_UTF8);
+		str = AR_CreateString();
+		AR_ASSERT(uri != NULL && str != NULL);
+
+		/*******************************************************************************/
+		AR_printf(L"%ls\r\n", L"begin test");
+		for(size_t i = 0; i < AR_NELEMS(tbl); ++i)
+		{
+				status = AR_SetURI(uri, tbl[i].original);
+				AR_ASSERT(status == AR_S_YES);
+				
+				
+				status =  AR_GetURI(uri, str);
+
+				AR_ASSERT(status == AR_S_YES);
+
+				s = AR_GetStringCString(str);
+
+				AR_printf(L"before normalize : %ls\r\n", s);
+
+
+
+
+				status = AR_NormalizeURI(uri);
+				AR_ASSERT(status == AR_S_YES);
+
+				status =  AR_GetURI(uri, str);
+
+				AR_ASSERT(status == AR_S_YES);
+
+				s = AR_GetStringCString(str);
+
+				AR_printf(L"normalized : %ls\r\n", s);
+
+				//AR_ASSERT(!AR_IsRelativeURI(uri));
+		}
+		
+		AR_printf(L"%ls\r\n", L"end test");
+		/*******************************************************************************/
+		AR_DestroyURI(uri);
+		uri = NULL;
+		AR_DestroyString(str);
+		str = NULL;
+}
+
+
+
+static void work_test2()
+{
+
+		AR_printf(L"\r\n\r\n---------------------\r\n");
+		static struct {
+				const wchar_t *original;
+				const wchar_t *normalized;
+		}tbl[] = 
+		{
+				{L"http://%31%36%38%2e%31%38%38%2e%39%39%2e%32%36/%2E%73%65%63%75%72%65/%77%77%77%2E%65%62%61%79%2E%63%6F%6D/", L"http://168.188.99.26/.secure/www.ebay.com/"},
+
+				{L"http://195.127.0.11/uploads/%20%20%20%20/.verify/.eBaysecure=updateuserdataxplimnbqmn-xplmvalidateinfoswqpcmlx=hgplmcx/", L"http://195.127.0.11/uploads/    /.verify/.ebaysecure=updateuserdataxplimnbqmn-xplmvalidateinfoswqpcmlx=hgplmcx/"},
+
+				{L"http://host%23.com/%257Ea%2521b%2540c%2523d%2524e%25f%255E00%252611%252A22%252833%252944_55%252B", L"http://host%23.com/~a!b@c%23d$e%25f^00&11*22(33)44_55+"},
+		};
+		
+		//http%3A%2F%2Fhost%2523%2Ecom%2F%7Ea%21b%40c%2523d%24e%2525f%5E00%2611%2A22%2833%2944%5F55%2B
+		arURI_t	*uri;
+		arStatus_t status;
+		status = AR_S_YES;
+		arString_t *str;
+		const wchar_t *s = NULL;
+		uri = AR_CreateURI(AR_CP_UTF8);
+		str = AR_CreateString();
+		AR_ASSERT(uri != NULL && str != NULL);
+
+		/*******************************************************************************/
+		AR_printf(L"%ls\r\n", L"begin test");
+		for(size_t i = 0; i < AR_NELEMS(tbl); ++i)
+		{
+				status = AR_DecodeURLString(AR_CP_UTF8, tbl[i].original, str);
+				AR_ASSERT(status == AR_S_YES);
+
+				s = AR_GetStringCString(str);
+				AR_printf(L"%ls\r\n", s);
+
+				
+				arString_t *str2 = AR_CreateString();
+
+				status = AR_DecodeURLString(AR_CP_UTF8, s, str2);
+				AR_ASSERT(status == AR_S_YES);
+				s = AR_GetStringCString(str2);
+				AR_printf(L"%ls\r\n", s);
+				AR_printf(L"---------------------------------------\r\n");
+
+				
+		}
+		
+		AR_printf(L"%ls\r\n", L"end test");
+		/*******************************************************************************/
+		AR_DestroyURI(uri);
+		uri = NULL;
+		AR_DestroyString(str);
+		str = NULL;
+
+
+
+		/*
+
+                    # test delete  \r \n \t
+                    ('http://a.b.c.d.com.//\r\n/\t/', http://a.b.c.d.com/),
+                    ("http://www.google.com/foo\tbar\rbaz\n2", http://www.google.com/foobarbaz2),
+
+                    # punycode test，保证测试的中文是 gbk 编码
+                    ("http://测试.com/", http://xn--0zwm56d.com/),
+
+                    # query
+                    ('http://a.b.c.d.com.//?C=1&a=2&&d=4&sid=pp&B=3&', http://a.b.c.d.com/?a=2&b=3&c=1&d=4),
+                    ("http://www.google.com/q?", http://www.google.com/q),
+                    ("http://www.google.com/q?r?", http://www.google.com/q?r?),
+                    ("http://www.google.com/q?r?s", http://www.google.com/q?r?s),
+
+                    # host2ip
+                    ("http://3279880203/blah", http://195.127.0.11/blah),
+
+                    # decode
+                
+
+                    ("", ),
+
+                    ("http://host%23.com/%257Ea%2521b%2540c%2523d%2524e%25f%255E00%252611%252A22%252833%252944_55%252B", ),
+
+                    #   relative path
+                    ("http://www.google.com/blah/..", http://www.google.com/),
+                    ("http://www.google.com.../", http://www.google.com/),
+
+                    # fragment
+                    ("http://www.evil.com/blah#frag", http://www.evil.com/blah),
+                    ("http://evil.com/foo#bar#baz", http://evil.com/foo),
+
+                    # upper to lower
+                    ("http://www.GOOgle.com", http://www.google.com/),
+
+                    ("http://evil.com/foo;", http://evil.com/foo;),
+
+                    ("http://evil.com/foo?bar;", http://evil.com/foo?bar;),
+
+                    #
+                    ("http://\x01\x80.com/", http://%01%80.com/),
+                    ("http://notrailingslash.com", http://notrailingslash.com/),
+                    ("http://www.gotaport.com:1234/", http://www.gotaport.com:1234/),
+                    ("  http://www.google.com/  ", http://www.google.com/),
+                    ("http:// leadingspace.com/", http://%20leadingspace.com/),
+                    ("http://%20leadingspace.com/", http://%20leadingspace.com/),
+                    ("https://www.securesite.com/", https://www.securesite.com/),
+                    ("http://host.com/ab%23cd", http://host.com/ab%23cd),
+                    ("http://host.com//twoslashes?more//slashes", http://host.com/twoslashes?more//slashes),
+                    ("http://host/%25%32%35", http://host/%25),
+                    ("http://host/%25%32%35%25%32%35", http://host/%25%25),
+                    ("http://host/%2525252525252525", http://host/%25),
+                    ("http://host/asdf%25%32%35asd", http://host/asdf%25asd),
+                    ("http://host/%%%25%32%35asd%%", http://host/%25%25%25asd%25%25),
+                    ("http://www.google.com/", http://www.google.com/),
+                    ("http://%31%36%38%2e%31%38%38%2e%39%39%2e%32%36/%2E%73%65%63%75%72%65/%77%77%77%2E%65%62%61%79%2E%63%6F%6D/", http://168.188.99.26/.secure/www.ebay.com/),
+
+		*/
+
+}
+
 void uri_test()
 {
 		uri_construct_test();
@@ -1948,6 +2184,11 @@ void uri_test()
 		uri_exception_test();
 
 		uri_misc_test2();
+
+		uri_chinese_host_test();
+
+		work_test();
+		work_test2();
 }
 
 
