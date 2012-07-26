@@ -3632,10 +3632,10 @@ void com_test()
 		//str_test13();
 		//str_test14();
 		//str_test15();
-		str_test16();
+		//str_test16();
 		//str_test17();
 		//str_test18();
-		str_test19();
+		//str_test19();
 		//str_test20();
 
 		//com_test3();
@@ -3713,7 +3713,7 @@ void com_test()
 
 		//cache_test();
 
-		//uri_test();
+		uri_test();
 
 		//buffer_test3();
 }
