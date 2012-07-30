@@ -362,10 +362,8 @@ params          :    namelist    ","    "..."        %action on_namelist_ellipsi
 
 
 namelist        :    namelist    "," NAME        %action    on_name_list
-                |    NAME                    	 %action    on_name
+                |    NAME				 %action    on_name
                 ;
-
-
 
 
 
@@ -814,7 +812,7 @@ constant        :    FLOAT_NUMBER        %action    on_constant
 
 
 
-call_expression        :    postfix_expression "(" expression_list ")"        	%action    on_call_expression
+call_expression        :    postfix_expression "(" call_param_list ")"        	%action    on_call_expression
                 |    postfix_expression "(" error ")"                		%action    on_call_expression
                 |    postfix_expression "("     ")"                			%action    on_call_expression
                 ;
@@ -824,11 +822,21 @@ call_expression        :    postfix_expression "(" expression_list ")"        	%
 
 
 
-
+/*
 expression_list        :    expression                    %action    auto_return_0
                 	  |    expression_list "," expression        %action    on_expression_list
                        ;
+*/
 
+
+call_param_list	:	call_param
+			|	call_param_list "," call_param
+			;
+
+
+call_param		:	expression
+			|	aggregate_constructor
+			;
 
 
 
