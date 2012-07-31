@@ -92,8 +92,7 @@ static void disableLineWrap(NSTextView		*txtView)
 		
 		WideCharWrapper *s = [ARUtility convertNSStringToUTF32 : str];
 		
-				
-		
+        
 		int_t len = AR_str_to_escstr_buf(NULL, 0, [s string]);
 		
 		if(len == 0)

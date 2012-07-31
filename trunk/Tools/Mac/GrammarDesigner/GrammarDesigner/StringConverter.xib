@@ -65,7 +65,7 @@
 											<int key="NSvFlags">2322</int>
 											<string key="NSFrameSize">{480, 133}</string>
 											<reference key="NSSuperview" ref="963449678"/>
-											<reference key="NSNextKeyView" ref="161885292"/>
+											<reference key="NSNextKeyView" ref="49969086"/>
 											<object class="NSTextContainer" key="NSTextContainer" id="833206800">
 												<object class="NSLayoutManager" key="NSLayoutManager">
 													<object class="NSTextStorage" key="NSTextStorage">
@@ -190,7 +190,7 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 							</array>
 							<string key="NSFrame">{{91, 243}, {482, 175}}</string>
 							<reference key="NSSuperview" ref="182272219"/>
-							<reference key="NSNextKeyView" ref="49969086"/>
+							<reference key="NSNextKeyView" ref="963449678"/>
 							<int key="NSsFlags">133650</int>
 							<reference key="NSVScroller" ref="161885292"/>
 							<reference key="NSHScroller" ref="49969086"/>
@@ -209,7 +209,7 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 											<int key="NSvFlags">2322</int>
 											<string key="NSFrameSize">{480, 133}</string>
 											<reference key="NSSuperview" ref="43009253"/>
-											<reference key="NSNextKeyView" ref="336729227"/>
+											<reference key="NSNextKeyView" ref="423496122"/>
 											<object class="NSTextContainer" key="NSTextContainer" id="359772147">
 												<object class="NSLayoutManager" key="NSLayoutManager">
 													<object class="NSTextStorage" key="NSTextStorage">
@@ -286,7 +286,7 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 							</array>
 							<string key="NSFrame">{{91, 60}, {482, 175}}</string>
 							<reference key="NSSuperview" ref="182272219"/>
-							<reference key="NSNextKeyView" ref="423496122"/>
+							<reference key="NSNextKeyView" ref="43009253"/>
 							<int key="NSsFlags">133650</int>
 							<reference key="NSVScroller" ref="336729227"/>
 							<reference key="NSHScroller" ref="423496122"/>
