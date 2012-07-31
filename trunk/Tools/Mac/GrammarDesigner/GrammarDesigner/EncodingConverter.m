@@ -6,6 +6,9 @@
 //  Copyright (c) 2012年 none. All rights reserved.
 //
 
+#include <openssl/md5.h>
+#include <openssl/sha.h>
+
 #import "EncodingConverter.h"
 
 
@@ -572,6 +575,102 @@ END_POINT:
 }
 
 
+
+
+static NSString* md5_convert(NSString *input, arCodePage_t cp)
+{
+		AR_ASSERT(input != NULL);
+        
+		if([input length] == 0)
+		{
+                return @"empty input!";
+		}
+        
+        NSString *ret = @"";
+        
+        @try{
+                
+                WideCharWrapper *wcs_wrapper = [ARUtility convertNSStringToUTF32 : input];
+                char *mbs = AR_wcs_to_str(cp, [wcs_wrapper string], AR_wcslen([wcs_wrapper string]));
+                if(mbs == NULL)
+                {
+                        ret = @"invalid charset";
+                        return ret;
+                }
+                
+                byte_t md5[16];
+                AR_memset(md5, 0, 16);
+                MD5((const unsigned char*)mbs, AR_strlen(mbs), (unsigned char*)md5);
+                AR_DEL(mbs);
+                mbs = NULL;
+                
+                char buf[33];
+                AR_data_to_hexstr(md5, 16, buf, 33);
+                buf[32] = '\0';
+                
+                wchar_t *wcs = AR_str_to_wcs(AR_CP_UTF8, buf, 32);
+                ret = [ARUtility convertUTF32ToNSString : wcs];
+                
+                return ret;
+
+        }@catch(NSException *e)
+        {
+                ret = [e reason];
+        }
+        
+        return ret;
+}
+
+
+
+
+
+static NSString* sha1_convert(NSString *input, arCodePage_t cp)
+{
+		AR_ASSERT(input != NULL);
+        
+		if([input length] == 0)
+		{
+                return @"empty input!";
+		}
+        
+        NSString *ret = @"";
+        
+        @try{
+                
+                WideCharWrapper *wcs_wrapper = [ARUtility convertNSStringToUTF32 : input];
+                char *mbs = AR_wcs_to_str(cp, [wcs_wrapper string], AR_wcslen([wcs_wrapper string]));
+                
+                if(mbs == NULL)
+                {
+                        ret = @"invalid charset";
+                        return ret;
+                }
+                
+                byte_t hash[20];
+                AR_memset(hash, 0, 20);
+                
+                SHA1((const unsigned char*)mbs, AR_strlen(mbs), (unsigned char*)hash);
+                AR_DEL(mbs);
+                mbs = NULL;
+                
+                char buf[41];
+                AR_data_to_hexstr(hash, 20, buf, 41);
+                buf[40] = '\0';
+                
+                wchar_t *wcs = AR_str_to_wcs(AR_CP_UTF8, buf, 40);
+                ret = [ARUtility convertUTF32ToNSString : wcs];
+                
+                return ret;
+                
+        }@catch(NSException *e)
+        {
+                ret = [e reason];
+        }
+        
+        return ret;
+}
+
 /*********************************************************************************/
 
 
@@ -776,8 +875,25 @@ typedef enum
                         break;
                         
                 case INPUT_MD5:
+                {
+                        NSString *ret = md5_convert(input_text, cp);
+                        
+                        if(ret != nil)
+                        {
+                                [output setString : ret];
+                        }
+                }
+                        
                         break;
                 case INPUT_SHA1:
+                {
+                        NSString *ret = sha1_convert(input_text, cp);
+                        
+                        if(ret != nil)
+                        {
+                                [output setString : ret];
+                        }
+                }
                         break;
                 
                 default:
