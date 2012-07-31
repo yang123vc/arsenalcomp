@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6744542F15C787A7000ABF71 /* EncodingConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6744542D15C787A7000ABF71 /* EncodingConverter.m */; };
+		6744543015C787A7000ABF71 /* EncodingConverter.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6744542E15C787A7000ABF71 /* EncodingConverter.xib */; };
 		679874E915ADED54002CA924 /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 679874E815ADED54002CA924 /* Arsenal.a */; };
 		BEAF6EDF14F25FC500BE72FF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEAF6EDE14F25FC500BE72FF /* Cocoa.framework */; };
 		BEAF6EE914F25FC500BE72FF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = BEAF6EE714F25FC500BE72FF /* InfoPlist.strings */; };
@@ -53,6 +55,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6744542C15C787A7000ABF71 /* EncodingConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncodingConverter.h; sourceTree = "<group>"; };
+		6744542D15C787A7000ABF71 /* EncodingConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EncodingConverter.m; sourceTree = "<group>"; };
+		6744542E15C787A7000ABF71 /* EncodingConverter.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EncodingConverter.xib; sourceTree = "<group>"; };
 		679874E815ADED54002CA924 /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = Arsenal.a; path = "../../../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Debug/Arsenal.a"; sourceTree = "<group>"; };
 		BEAF6EDA14F25FC500BE72FF /* GrammarDesigner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GrammarDesigner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEAF6EDE14F25FC500BE72FF /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
@@ -218,6 +223,9 @@
 				BEAF6F5714F2620400BE72FF /* StringConverter.h */,
 				BEAF6F5814F2620400BE72FF /* StringConverter.m */,
 				BEAF6F5914F2620400BE72FF /* StringConverter.xib */,
+				6744542C15C787A7000ABF71 /* EncodingConverter.h */,
+				6744542D15C787A7000ABF71 /* EncodingConverter.m */,
+				6744542E15C787A7000ABF71 /* EncodingConverter.xib */,
 				BEAF6F5A14F2620400BE72FF /* TagsView.h */,
 				BEAF6F5B14F2620400BE72FF /* TagsView.m */,
 				BEAF6F0714F2617A00BE72FF /* Helper */,
@@ -348,6 +356,7 @@
 				BEAF6F6B14F2620400BE72FF /* InputChecker.xib in Resources */,
 				BEAF6F7014F2620400BE72FF /* Preferences.xib in Resources */,
 				BEAF6F7314F2620400BE72FF /* StringConverter.xib in Resources */,
+				6744543015C787A7000ABF71 /* EncodingConverter.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -385,6 +394,7 @@
 				BEAF6F7114F2620400BE72FF /* SplitViewDelegate.m in Sources */,
 				BEAF6F7214F2620400BE72FF /* StringConverter.m in Sources */,
 				BEAF6F7414F2620400BE72FF /* TagsView.m in Sources */,
+				6744542F15C787A7000ABF71 /* EncodingConverter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
