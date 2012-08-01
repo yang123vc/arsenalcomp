@@ -1392,20 +1392,27 @@ int_t			AR_vswprintf_nonalloc(wchar_t *dest, size_t count, const wchar_t *fmt, v
 {
 		int_t res;
 		va_list save;
-
+		int_t need_l;
 		wchar_t src_fmt[1024];
 
 
 		AR_ASSERT(dest != NULL && fmt != NULL && args != NULL);
 
 		res = 0;
-		
+		need_l = 0;
 		
 
 
 
 		/********************将Arsenal形式的printf格式，转换为目标CRT的格式***************/
 		
+		need_l = __wcs_format_preprocess(fmt, NULL);
+
+		if(need_l <= 0 || need_l >= 1024)
+		{
+				dest[0] = L'\0';
+				return -1;
+		}
 		
 
 		if(__wcs_format_preprocess(fmt, src_fmt) <= 0)
