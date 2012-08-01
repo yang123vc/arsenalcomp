@@ -1167,9 +1167,6 @@ arStatus_t		AR_GetURIEncodedQuery(const arURI_t *uri, arString_t *str)
 		return __encode(uri->code_page, AR_GetStringCString(uri->query), AR_GetStringCString(uri->query) + AR_GetStringLength(uri->query), RESERVED_QUERY_S, str);
 }
 
-
-
-
 arStatus_t		AR_GetURIFragment(const arURI_t *uri, arString_t *str)
 {
 		AR_ASSERT(uri != NULL && str != NULL);
@@ -1952,6 +1949,259 @@ END_POINT:
 }
 
 
+/************************************************************************************************************************/
+
+
+
+static arStatus_t	__item_copy_func(void *data, void **pnew_data, void *ctx)
+{
+        wchar_t *nwcs;
+        AR_ASSERT(data != NULL && pnew_data != NULL);
+        AR_UNUSED(ctx);
+        nwcs = AR_wcsdup((const wchar_t*)data);
+        
+        if(nwcs)
+        {
+                *pnew_data = (void*)nwcs;
+                return AR_S_YES;
+        }else
+        {
+                return AR_E_NOMEM;
+        }
+}
+
+
+static void __item_destroy_func(void *data, void *ctx)
+{
+        AR_ASSERT(data != NULL);
+        AR_UNUSED(ctx);
+
+        AR_DEL(data);
+        data = NULL;
+}
+
+
+static uint_64_t	__item_hash_func(void *key, void *ctx)
+{
+        AR_ASSERT(key != NULL);
+        AR_UNUSED(ctx);
+        return (uint_64_t)AR_wcshash((const wchar_t*)key);
+}
+
+static int_t		__item_comp_func(void *l, void *r, void *ctx)
+{
+        AR_ASSERT(l != NULL && r != NULL);
+        AR_UNUSED(ctx);
+        return AR_wcsicmp((const wchar_t*)l, (const wchar_t*)r);
+}
+
+
+arHash_t*		AR_CreateURIQueryTable()
+{
+		return AR_CreateHash(31, __item_hash_func, __item_comp_func, __item_copy_func, __item_copy_func, __item_destroy_func, __item_destroy_func, NULL);
+}
+
+void			AR_DestroyURIQueryTable(arHash_t *tbl)
+{
+		AR_ASSERT(tbl != NULL);
+		AR_DestroyHash(tbl);
+		tbl = NULL;
+}
+
+
+
+static arStatus_t __parse_query_items(const wchar_t *query, arHash_t *hash)
+{
+        arStatus_t  status;
+
+        wchar_t *name, *value;
+        const wchar_t *b, *p;
+        size_t l;                
+        AR_ASSERT(query != NULL && hash != NULL);
+		status = AR_S_YES;
+        
+        l = AR_wcslen(query);
+        
+        if(l == 0)
+        {
+                return status;
+        }
+        
+        name = AR_NEWARR(wchar_t, l + 1);
+        value = AR_NEWARR(wchar_t, l + 1);
+        
+        if(name == NULL || value == NULL)
+        {
+                status = AR_E_NOMEM;
+                goto END_POINT;
+        }
+        
+        
+        b = NULL;
+        p = AR_wcstrim_space(query);
+        
+
+		while(p != NULL && *p != L'\0')
+        {
+                b = p;
+                p = AR_wcsstr(b, L"=");
+                if(p == NULL || p == b)
+                {
+                        status = AR_E_MALFORMAT;
+                        goto END_POINT;
+                }
+                AR_wcsncpy(name, b, p-b);
+                name[p-b] = L'\0';
+
+                ++p;
+                if(*p == L'\0')
+                {
+                        status = AR_E_MALFORMAT;
+                        goto END_POINT;
+                }
+
+                
+                b = p;
+                p = AR_wcsstr(p, L"&");
+                
+                if(p == NULL)
+                {
+                        p = b + AR_wcslen(b);
+                }
+                 
+                if(p == b)/*–Œ»Á?x=  */
+                {
+                        status = AR_E_MALFORMAT;
+                        goto END_POINT;
+                }
+
+                AR_wcsncpy(value, b, p - b);
+                value[p-b] = L'\0';
+                
+				if(*p == L'&')
+                {
+                        ++p;
+                }
+                /*
+				AR_DPRINT(AR_ERR_DEBUG, L"insert query : '%ls : %ls'\r\n", name, value);
+				*/
+
+                if(AR_InsertToHash(hash, (void*)name, (void*)value) != AR_S_YES)
+                {
+                        status = AR_E_NOMEM;
+                        goto END_POINT;
+                }
+        }
+
+END_POINT:
+        if(name)
+        {
+                AR_DEL(name);
+                name = NULL;
+        }
+        
+        if(value)
+        {
+                AR_DEL(value);
+                value = NULL;
+        }
+
+        return status;
+}
+
+
+
+static arStatus_t __generate_query(const arHash_t *hash, arString_t *out)
+{
+		arStatus_t status;
+		arHashIter_t	iter; 
+		size_t cnt;
+
+		AR_ASSERT(hash != NULL && out != NULL);
+
+		status = AR_S_YES;
+		cnt = 0;
+		AR_InitHashIterator((arHash_t*)hash, &iter);
+
+		AR_ClearString(out);
+		/*
+		status = AR_AppendString(out, L"?");
+		if(status != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+		*/
+
+		
+		while(!AR_HashIteratorIsDone(&iter))
+		{
+				const wchar_t *key = (const wchar_t*)AR_GetHashIteratorKey(&iter);
+				const wchar_t *value = (const wchar_t*)AR_GetHashIteratorData(&iter);
+				AR_ASSERT(key != NULL && value != NULL);
+
+				status = AR_AppendFormatString(out, L"%ls=%ls", key, value);
+				if(status != AR_S_YES)
+				{
+						goto END_POINT;
+				}
+				cnt++;
+				AR_HashIteratorNext(&iter);
+
+				if(!AR_HashIteratorIsDone(&iter))
+				{
+						status = AR_AppendString(out, L"&");
+						if(status != AR_S_YES)
+						{
+								goto END_POINT;
+						}
+				}
+
+		}
+
+		if(cnt == 0)
+		{
+				AR_ClearString(out);
+		}
+
+END_POINT:
+		AR_UnInitHashIterator(&iter);
+		return status;
+
+}
+
+arStatus_t		AR_GetURIQueryItems(const arURI_t *uri, arHash_t *hash)
+{
+		arStatus_t		status;
+		const wchar_t *query;
+		AR_ASSERT(uri != NULL && hash != NULL);
+		status = AR_S_YES;
+		AR_ClearHash(hash);
+
+		query = AR_GetStringCString(uri->query);
+
+		if(query == NULL || AR_wcslen(query) == 0)
+		{
+				goto END_POINT;
+		}
+
+		status = __parse_query_items(query, hash);
+
+END_POINT:
+		return status;
+}
+
+arStatus_t		AR_SetURIQueryItems(arURI_t *uri, const arHash_t *hash)
+{
+		arStatus_t		status;
+		status = AR_S_YES;
+		AR_ClearString(uri->query);
+		status = __generate_query(hash, uri->query);
+		return status;
+}
+
+
+
+
 
 
 /**********************************************************URLEncoder && URLDecoder*************************************************/
@@ -2012,6 +2262,7 @@ END_POINT:
 }
 
 
+
 arStatus_t		AR_EncodeURLString(arCodePage_t cp, const wchar_t *uri, arString_t *out)
 {
 		AR_ASSERT(uri != NULL && out != NULL);
@@ -2029,6 +2280,14 @@ arStatus_t		AR_DecodeURLString(arCodePage_t cp, const wchar_t *uri, arString_t *
 		/*uri decodeºÊ»›url encode*/
 		return __decode(cp, uri, uri + AR_wcslen(uri), out);
 }
+
+
+/***************************************************************************************************************************/
+
+
+
+
+
 
 
 AR_NAMESPACE_END
