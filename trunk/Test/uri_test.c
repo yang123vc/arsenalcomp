@@ -2175,6 +2175,173 @@ static void work_test2()
 
 }
 
+static void __print_query_items(const arHash_t *hash)
+{
+		arHashIter_t	iter; 
+
+		AR_ASSERT(hash != NULL);
+
+
+		AR_InitHashIterator((arHash_t*)hash, &iter);
+
+
+		while(!AR_HashIteratorIsDone(&iter))
+		{
+				const wchar_t *key = (const wchar_t*)AR_GetHashIteratorKey(&iter);
+				const wchar_t *value = (const wchar_t*)AR_GetHashIteratorData(&iter);
+				AR_ASSERT(key != NULL && value != NULL);
+				AR_printf(L"%ls=%ls\r\n", key, value);
+				AR_HashIteratorNext(&iter);
+		}
+
+END_POINT:
+		AR_UnInitHashIterator(&iter);
+
+}
+
+static void __query_table_test()
+{
+		arURI_t	*uri;
+		arStatus_t status;
+		status = AR_S_YES;
+		arString_t *str;
+		arHash_t		*query_items;
+		uri = AR_CreateURI(AR_CP_UTF8);
+		str = AR_CreateString();
+		query_items = AR_CreateURIQueryTable();
+		AR_ASSERT(uri != NULL && str != NULL && query_items != NULL);
+
+		/*******************************************************************************/
+
+		{
+				AR_printf(L"%ls\r\n", L"-------------------------------");
+				AR_printf(L"%ls\r\n", L"-------------------------------");
+				AR_ClearHash(query_items);
+				status = AR_SetURI(uri, L"https://www.google.com.hk/search?hl=en&safe=off&client=aff-cs-360chromium&hs=KZr&q=http+%2F%2Fandroid.hkjc.com&oq=http%3A%2F&gs_l=serp.3.1.0l6j0i10j0l3.269398.272080.0.274290.16.9.0.0.0.0.369.995.0j2j1j1.5.0...0.0...1c.iXo9HsOWgZg");
+				AR_ASSERT(status == AR_S_YES);
+
+
+				status = AR_GetURIQueryItems(uri, query_items);
+				AR_ASSERT(status == AR_S_YES);
+				__print_query_items(query_items);
+
+				status = AR_SetURIQueryItems(uri, query_items);
+				AR_ASSERT(status == AR_S_YES);
+
+				AR_printf(L"%ls\r\n", L"-------------------------------");
+				status = AR_GetURIQueryItems(uri, query_items);
+				AR_ASSERT(status == AR_S_YES);
+				__print_query_items(query_items);
+		}
+
+
+		{
+				AR_printf(L"%ls\r\n", L"-------------------------------");
+				AR_printf(L"%ls\r\n", L"-------------------------------");
+				AR_ClearHash(query_items);
+				status = AR_SetURI(uri, L"https://www.google.com.hk/search?hl=en&safe=off&client=aff-cs-360chromium&hs=KZr&q=http+%2F%2Fandroid.hkjc.com&oq=http%3A%2F&");
+				AR_ASSERT(status == AR_S_YES);
+
+
+				status = AR_GetURIQueryItems(uri, query_items);
+				AR_ASSERT(status == AR_S_YES);
+				__print_query_items(query_items);
+
+				status = AR_SetURIQueryItems(uri, query_items);
+				AR_ASSERT(status == AR_S_YES);
+
+				AR_printf(L"%ls\r\n", L"-------------------------------");
+				status = AR_GetURIQueryItems(uri, query_items);
+				AR_ASSERT(status == AR_S_YES);
+				__print_query_items(query_items);
+		}
+
+
+		{
+				AR_printf(L"%ls\r\n", L"-------------------------------");
+				AR_printf(L"%ls\r\n", L"-------------------------------");
+				AR_ClearHash(query_items);
+				status = AR_SetURI(uri, L"https://www.google.com.hk/search?hl=en&safe=off");
+				AR_ASSERT(status == AR_S_YES);
+
+
+				status = AR_GetURIQueryItems(uri, query_items);
+				AR_ASSERT(status == AR_S_YES);
+				__print_query_items(query_items);
+
+				status = AR_SetURIQueryItems(uri, query_items);
+				AR_ASSERT(status == AR_S_YES);
+
+				AR_printf(L"%ls\r\n", L"-------------------------------");
+				status = AR_GetURIQueryItems(uri, query_items);
+				AR_ASSERT(status == AR_S_YES);
+				__print_query_items(query_items);
+		}
+
+
+		{
+				AR_printf(L"%ls\r\n", L"-------------------------------");
+				AR_printf(L"%ls\r\n", L"-------------------------------");
+				AR_ClearHash(query_items);
+				status = AR_SetURI(uri, L"https://www.google.com.hk/search?hl=en&");
+				AR_ASSERT(status == AR_S_YES);
+
+
+				status = AR_GetURIQueryItems(uri, query_items);
+				AR_ASSERT(status == AR_S_YES);
+				__print_query_items(query_items);
+
+				status = AR_SetURIQueryItems(uri, query_items);
+				AR_ASSERT(status == AR_S_YES);
+
+				AR_printf(L"%ls\r\n", L"-------------------------------");
+				status = AR_GetURIQueryItems(uri, query_items);
+				AR_ASSERT(status == AR_S_YES);
+				__print_query_items(query_items);
+		}
+
+
+		{
+				AR_printf(L"%ls\r\n", L"-------------------------------");
+				AR_printf(L"%ls\r\n", L"-------------------------------");
+				AR_ClearHash(query_items);
+				status = AR_SetURI(uri, L"https://www.google.com.hk/search?&");
+				AR_ASSERT(status == AR_S_YES);
+		}
+
+
+		{
+				AR_printf(L"%ls\r\n", L"-------------------------------");
+				AR_printf(L"%ls\r\n", L"-------------------------------");
+				AR_ClearHash(query_items);
+				status = AR_SetURI(uri, L"https://www.google.com.hk/search?");
+				AR_ASSERT(status == AR_S_YES);
+
+
+				status = AR_GetURIQueryItems(uri, query_items);
+				AR_ASSERT(status == AR_S_YES);
+				__print_query_items(query_items);
+
+				status = AR_SetURIQueryItems(uri, query_items);
+				AR_ASSERT(status == AR_S_YES);
+
+				AR_printf(L"%ls\r\n", L"-------------------------------");
+				status = AR_GetURIQueryItems(uri, query_items);
+				AR_ASSERT(status == AR_S_YES);
+				__print_query_items(query_items);
+		}
+
+		/*******************************************************************************/
+
+		AR_DestroyURIQueryTable(query_items);
+		query_items = NULL;
+
+		AR_DestroyURI(uri);
+		uri = NULL;
+		AR_DestroyString(str);
+		str = NULL;
+}
+
 void uri_test()
 {
 		uri_construct_test();
@@ -2191,6 +2358,8 @@ void uri_test()
 
 		work_test();
 		work_test2();
+
+		__query_table_test();
 }
 
 
