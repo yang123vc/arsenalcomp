@@ -152,21 +152,19 @@ arStatus_t	AR_error_ctx(arIOCtx_t *ctx, int_t level, const wchar_t *msg, ...)
 
 arStatus_t AR_error(int_t level, const wchar_t *msg, ...)
 {
-		wchar_t buf[1024];
+		wchar_t buf[2048];
 		va_list arg_ptr;
 		
 		if(__g_ctx.global_io_ctx.on_error != NULL)
 		{
 				AR_va_start(arg_ptr, msg);
-				if(AR_vswprintf_nonalloc(buf, 1024, msg, arg_ptr) <= 0)
+				if(AR_vswprintf_nonalloc(buf, 2048, msg, arg_ptr) <= 0)
 				{
 						buf[0] = L'\0';
 				}
 				AR_va_end(arg_ptr);
 				
 				__g_ctx.global_io_ctx.on_error(level, buf, __g_ctx.global_io_ctx.ctx);
-				
-				
 		}
 
 
@@ -178,6 +176,26 @@ arStatus_t AR_error(int_t level, const wchar_t *msg, ...)
 		return AR_S_YES;
 }
 
+
+arStatus_t	AR_debug_print(const wchar_t *msg, ...)
+{
+		wchar_t buf[2048];
+		va_list arg_ptr;
+		
+		if(__g_ctx.global_io_ctx.on_error != NULL)
+		{
+				AR_va_start(arg_ptr, msg);
+				if(AR_vswprintf_nonalloc(buf, 2048, msg, arg_ptr) <= 0)
+				{
+						buf[0] = L'\0';
+				}
+				AR_va_end(arg_ptr);
+				
+				__g_ctx.global_io_ctx.on_error(AR_ERR_DEBUG, buf, __g_ctx.global_io_ctx.ctx);
+		}
+		
+		return AR_S_YES;
+}
 
 
 

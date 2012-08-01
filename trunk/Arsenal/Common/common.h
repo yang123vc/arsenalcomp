@@ -73,7 +73,7 @@ arStatus_t AR_CommonUnInit();
 arIOCtx_t*	AR_global_ioctx();
 
 arStatus_t	AR_printf(const wchar_t *msg,...);
-
+arStatus_t	AR_debug_print(const wchar_t *msg, ...);
 
 /*库内部错误为负数*/
 #define AR_ERR_DEBUG		((int_t)-0x0098)
@@ -84,6 +84,11 @@ arStatus_t	AR_printf(const wchar_t *msg,...);
 
 
 arStatus_t	AR_error(int_t level, const wchar_t *msg, ...);
+
+
+
+
+
 
 
 /*
@@ -117,7 +122,7 @@ void	AR_check(bool_t cond, const wchar_t *fmt, ...);
 
 #if defined(AR_DEBUG)
 
-#define AR_DPRINT				AR_printf
+#define AR_DPRINT				AR_debug_print
 
 #define AR_ASSERT(_cond)		assert((_cond))
 
