@@ -2067,7 +2067,7 @@ static void work_test2()
 
 				{L"http://195.127.0.11/uploads/%20%20%20%20/.verify/.eBaysecure=updateuserdataxplimnbqmn-xplmvalidateinfoswqpcmlx=hgplmcx/", L"http://195.127.0.11/uploads/    /.verify/.ebaysecure=updateuserdataxplimnbqmn-xplmvalidateinfoswqpcmlx=hgplmcx/"},
 
-				{L"http://host%23.com/%257Ea%2521b%2540c%2523d%2524e%25f%255E00%252611%252A22%252833%252944_55%252B", L"http://host%23.com/~a!b@c%23d$e%25f^00&11*22(33)44_55+"},
+				//{L"http://host%23.com/%257Ea%2521b%2540c%2523d%2524e%25f%255E00%252611%252A22%252833%252944_55%252B", L"http://host%23.com/~a!b@c%23d$e%25f^00&11*22(33)44_55+"},
 		};
 		
 		//http%3A%2F%2Fhost%2523%2Ecom%2F%7Ea%21b%40c%2523d%24e%2525f%5E00%2611%2A22%2833%2944%5F55%2B
@@ -2099,6 +2099,8 @@ static void work_test2()
 				AR_printf(L"%ls\r\n", s);
 				AR_printf(L"---------------------------------------\r\n");
 
+				AR_DestroyString(str2);
+				str2 = NULL;
 				
 		}
 		
