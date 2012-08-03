@@ -317,7 +317,7 @@ arStatus_t		AR_GetNullPath(arString_t *str)
 		return AR_SetString(str, L"NUL:");
 }
 
-arStatus_t		AR_GetFullPath(const wchar_t *path, arString_t *full_path)
+arStatus_t		AR_GetRealPath(const wchar_t *path, arString_t *full_path)
 {
 		arStatus_t status;
 		wchar_t *buf;

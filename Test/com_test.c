@@ -3614,11 +3614,14 @@ void full_path_test()
 		arStatus_t status;
 		str = AR_CreateString();
 
-		status = AR_GetFullPath(L"./", str);
+		status = AR_GetRealPath(L"./abc.exe", str);
 		AR_ASSERT(status == AR_S_YES);
-
 		AR_printf(L"%ls\r\n", AR_GetStringCString(str));
 
+
+		status = AR_GetRealPath(L"./../", str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_printf(L"%ls\r\n", AR_GetStringCString(str));
 
 		AR_DestroyString(str);
 		str = NULL;
