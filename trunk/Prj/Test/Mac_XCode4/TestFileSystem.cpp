@@ -276,7 +276,7 @@ void file_sys_test()
         
 //        startup_items_test();
         
-//        full_path_test();
+        full_path_test();
 }
 
 

@@ -453,6 +453,7 @@ END_POINT:
         
 }
 
+
 arStatus_t		AR_GetRealPath(const wchar_t *path, arString_t *full_path)
 {
         arList_t        *lst;
@@ -472,7 +473,7 @@ arStatus_t		AR_GetRealPath(const wchar_t *path, arString_t *full_path)
         {
                 return AR_S_YES;
         }
-       
+        
         status = AR_S_YES;
         
         final_list = AR_CreateList(NULL, NULL, NULL);
@@ -524,7 +525,7 @@ arStatus_t		AR_GetRealPath(const wchar_t *path, arString_t *full_path)
                         goto END_POINT;
                 }
         }
-
+        
         status = __split_path(lst, p);
         
         if(status != AR_S_YES)
@@ -532,7 +533,7 @@ arStatus_t		AR_GetRealPath(const wchar_t *path, arString_t *full_path)
                 goto END_POINT;
         }
         
-                
+        
         for(node = lst->head; node != NULL; node = node->next)
         {
                 const wchar_t *item = (wchar_t*)(node->data);
@@ -555,7 +556,7 @@ arStatus_t		AR_GetRealPath(const wchar_t *path, arString_t *full_path)
                         }
                 }
         }
-
+        
         for(node = final_list->head; node != NULL; node = node->next)
         {
                 const wchar_t *item = (wchar_t*)(node->data);
@@ -581,17 +582,19 @@ arStatus_t		AR_GetRealPath(const wchar_t *path, arString_t *full_path)
                 }
         }
         
-        
-        if(path[path_len-1] == L'/' && AR_GetStringCString(full_path)[AR_GetStringLength(full_path) - 1] != L'/')
+        if(path[path_len-1] == L'/')
         {
-                status = AR_AppendString(full_path, L"/");
-                
-                if(status != AR_S_YES)
+                const wchar_t *wcs = AR_GetStringCString(full_path);
+                if(wcs[AR_GetStringLength(full_path) - 1] != L'/')
                 {
-                        goto END_POINT;
+                        status = AR_AppendString(full_path, L"/");
+                        if(status != AR_S_YES)
+                        {
+                                goto END_POINT;
+                        }
                 }
         }
-
+        
         
 END_POINT:
         
@@ -600,7 +603,7 @@ END_POINT:
                 AR_DestroyString(curr_path);
                 curr_path = NULL;
         }
-
+        
         if(final_list)
         {
                 AR_DestroyList(final_list);
@@ -623,8 +626,6 @@ END_POINT:
         return status;
         
 }
-
-
 
 
 /*********************************Path iterator******************/
