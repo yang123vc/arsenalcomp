@@ -1764,6 +1764,20 @@ static void path_iter_test()
 				status = AR_PathIteratorNext(it);
 		}
 
+		status = AR_PathIteratorSetPath(it, L"..");
+
+		while(status == AR_S_YES && !AR_PathIteratorIsDone(it))
+		{
+				//::MessageBoxW(NULL, AR_PathIteratorCurrent(it), 0,0);
+
+				wchar_t buf[2048];
+				AR_swprintf(buf, 2048, L"%ls%ls", AR_PathIteratorPath(it), AR_PathIteratorCurrent(it));
+
+				AR_printf(L"%ls\r\n", buf);
+				
+				status = AR_PathIteratorNext(it);
+		}
+
 
 		AR_DestroyPathIterator(it);
 		it = NULL;
@@ -3747,7 +3761,7 @@ void com_test()
 
 		//path_test();
 
-		//path_iter_test();
+		path_iter_test();
 
 		//thd_test();
 
@@ -3762,7 +3776,7 @@ void com_test()
 
 		//buffer_test3();
 
-		full_path_test();
+		//full_path_test();
 }
 
 
