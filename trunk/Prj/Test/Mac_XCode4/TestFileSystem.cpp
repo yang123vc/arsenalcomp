@@ -176,17 +176,107 @@ static void startup_items_test()
         
         
 }
+
         
+static void full_path_test()
+{
+        arString_t *str = AR_CreateString();
+        
+        arStatus_t status = AR_GetRealPath(L"/Library/Preferences/", str);
+        AR_ASSERT(status == AR_S_YES);
+        AR_printf(L"%ls\r\n", AR_GetStringCString(str));
+        
+
+        status = AR_GetRealPath(L"./Library/Preferences/", str);
+        AR_ASSERT(status == AR_S_YES);
+        AR_printf(L"%ls\r\n", AR_GetStringCString(str));
+        
+        
+        status = AR_GetRealPath(L"../Library/Preferences/", str);
+        AR_ASSERT(status == AR_S_YES);
+        AR_printf(L"%ls\r\n", AR_GetStringCString(str));
+        
+        
+        status = AR_GetRealPath(L".././Library/Preferences/", str);
+        AR_ASSERT(status == AR_S_YES);
+        AR_printf(L"%ls\r\n", AR_GetStringCString(str));
+        
+        
+        status = AR_GetRealPath(L"../../Library/Preferences/", str);
+        AR_ASSERT(status == AR_S_YES);
+        AR_printf(L"%ls\r\n", AR_GetStringCString(str));
+
+        
+        status = AR_GetRealPath(L"..../Library/Preferences/", str);
+        AR_ASSERT(status == AR_S_YES);
+        AR_printf(L"%ls\r\n", AR_GetStringCString(str));
+        
+        
+        status = AR_GetRealPath(L"./..../Library/Preferences/", str);
+        AR_ASSERT(status == AR_S_YES);
+        AR_printf(L"%ls\r\n", AR_GetStringCString(str));
+        
+        
+        static const wchar_t *path_tbl[] = 
+        {
+                L"",
+                L"/",
+                L"/usr",
+                L"/usr/",
+                L"usr/",
+                L"/usr/local",
+                L"/usr/local/bin",
+                L"//usr/local/bin/",
+                L"/usr//local/bin/",
+                L"/usr/local//bin/",
+                L"/usr/local/bin//",
+                L"/usr/local/./bin/",
+                L"./usr/local/bin/",
+                L"./usr/local/bin/./",
+                L"./usr/local/bin/.",
+                L"/usr/local//bin/",
+                L"/usr/local/bin//",
+                L"/usr/local/./bin/",
+                L"./usr/local/bin/",
+                L"./usr/local/bin/./",
+                L"./usr/local/bin/.",
+                L"/usr/local/lib/../bin/",
+                L"/usr/local/lib/../bin/",
+                L"/usr/local/lib/../../",
+                L"/usr/local/lib/..",
+                L"../usr/local/lib/",
+                L"/usr/../lib/",
+                L"/usr/../../lib/",
+                L"local/../../lib/",
+                L"a/b/c/d",
+                
+        };
+        
+        
+        for(size_t i = 0; i < AR_NELEMS(path_tbl); ++i)
+        {
+                status = AR_GetRealPath(path_tbl[i], str);
+                AR_ASSERT(status == AR_S_YES);
+                AR_printf(L"%Iu : %ls\r\n", i, AR_GetStringCString(str));
+        }
+        
+        AR_DestroyString(str);
+        str = NULL;
+
+                       
+}
         
         
 void file_sys_test()
 {
 //        env_test();
 //        path_test();
-        path_iter_test();
+//      path_iter_test();
         
         
 //        startup_items_test();
+        
+        full_path_test();
 }
 
 
