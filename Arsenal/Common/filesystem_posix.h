@@ -21,10 +21,10 @@ AR_NAMESPACE_BEGIN
 #endif
 
 
-static arStatus_t       __map_last_error()
+static arStatus_t       __map_last_error(int errcode)
 {
         
-        switch(errno)
+        switch(errcode)
         {
 				case 0:
 						return AR_S_YES;
@@ -81,7 +81,8 @@ arStatus_t		AR_GetCurrentPath(arString_t *str)
         
         if(getcwd(tmp, PATH_MAX) == NULL)
         {
-                status = __map_last_error();
+                int err_code = errno;
+                status = __map_last_error(err_code);
                 goto END_POINT;
         }
         
@@ -490,7 +491,8 @@ arStatus_t      AR_PathIteratorSetPath(arPathIter_t *iter, const wchar_t *path)
 		iter->hdl = opendir(s_tmp);
 		if(iter->hdl == NULL)
 		{
-                status = __map_last_error();
+                int err_code = errno;
+                status = __map_last_error(err_code);
 				goto END_POINT;
 		}
         
@@ -675,7 +677,8 @@ void	AR_close_file(arFile_t *f)
 
 /*********************************************************Path*******************************************************/
 
-#if(0)
+#if(1)
+
 arStatus_t      AR_path_is_existed(const wchar_t *path)
 {
         arStatus_t status;
@@ -1064,7 +1067,8 @@ arStatus_t AR_path_get_size(const wchar_t *path, uint_64_t *ps)
                 *ps = (uint_64_t)st.st_size;
         }else
         {
-                status = __map_last_error();
+                int err_code = errno;
+                status = __map_last_error(err_code);
         }
         
 END_POINT:
@@ -1097,7 +1101,8 @@ arStatus_t      AR_path_set_size(const wchar_t *path, uint_64_t size)
 
         if(truncate(utf8, (off_t)size) != 0)
         {
-                status = __map_last_error();
+                int err_code = errno;
+                status = __map_last_error(err_code);
         }
                 
 END_POINT:
@@ -1131,7 +1136,8 @@ arStatus_t      AR_path_set_writeable(const wchar_t *path, bool_t flag)
         
         if(lstat(utf8, &st) != 0)
         {
-                status = __map_last_error();
+                int err_code = errno;
+                status = __map_last_error(err_code);
                 goto END_POINT;
         }
         
@@ -1146,7 +1152,8 @@ arStatus_t      AR_path_set_writeable(const wchar_t *path, bool_t flag)
 
         if (chmod(utf8, mode) != 0)
         {
-                status = __map_last_error();
+                int err_code = errno;
+                status = __map_last_error(err_code);
                 goto END_POINT;
         }
                 
@@ -1182,7 +1189,8 @@ arStatus_t      AR_path_set_executable(const wchar_t *path, bool_t flag)
         
         if(lstat(utf8, &st) != 0)
         {
-                status = __map_last_error();
+                int err_code = errno;
+                status = __map_last_error(err_code);
                 goto END_POINT;
         }
         
@@ -1197,7 +1205,8 @@ arStatus_t      AR_path_set_executable(const wchar_t *path, bool_t flag)
 
         if(chmod(utf8, mode) != 0)
         {
-                status = __map_last_error();
+                int err_code = errno;
+                status = __map_last_error(err_code);
                 goto END_POINT;
         }
         
@@ -1231,7 +1240,8 @@ arStatus_t      AR_path_rename(const wchar_t *src_path, const wchar_t *dest_path
         
         if(rename(src_utf8, dest_utf8) != 0)
         {
-                status = __map_last_error();
+                int err_code = errno;
+                status = __map_last_error(err_code);
                 goto END_POINT;
         }
         
@@ -1280,8 +1290,9 @@ arStatus_t      AR_path_remove(const wchar_t *path)
         
         if(rc != 0)
         {
-                AR_error(AR_ERR_WARNING,L"remove %ls error : %hs\r\n", path, strerror(errno));
-                status = __map_last_error();
+                int err_code = errno;
+                AR_error(AR_ERR_WARNING,L"remove %ls error : %hs\r\n", path, strerror(err_code));
+                status = __map_last_error(err_code);
                 goto END_POINT;
         }
 
@@ -1302,9 +1313,11 @@ arStatus_t AR_path_create_file(const wchar_t *path)
         arStatus_t status;
         char *utf8;
         int n;
+        int err_code;
         AR_ASSERT(path != NULL);
         
         status = AR_S_YES;
+        err_code = 0;
         utf8 = AR_wcs_to_str(AR_CP_UTF8, path, AR_wcslen(path));
         
         if(utf8 == NULL)
@@ -1320,15 +1333,15 @@ arStatus_t AR_path_create_file(const wchar_t *path)
                 status = AR_S_YES;
                 goto END_POINT;
         }
-        
-        if(n == -1 && errno == EEXIST)
+        err_code = errno;
+        if(n == -1 && err_code == EEXIST)
         {
                 status = AR_E_EXISTED;
                 goto END_POINT;
         }else
         {
-                AR_error(AR_ERR_WARNING, L"create %ls error : %hs\r\n", path, strerror(errno));
-                status = __map_last_error();
+                AR_error(AR_ERR_WARNING, L"create %ls error : %hs\r\n", path, strerror(err_code));
+                status = __map_last_error(err_code);
                 goto END_POINT;
         }
         
@@ -1369,8 +1382,9 @@ arStatus_t AR_path_create_dir(const wchar_t *path)
         
         if(mkdir(utf8, S_IRWXU | S_IRWXG | S_IRWXO) != 0)
         {
-                AR_error(AR_ERR_WARNING, L"create %ls error : %hs\r\n", path, strerror(errno));
-                status = __map_last_error();
+                int err_code = errno;
+                AR_error(AR_ERR_WARNING, L"create %ls error : %hs\r\n", path, strerror(err_code));
+                status = __map_last_error(err_code);
                 goto END_POINT;
         }
         

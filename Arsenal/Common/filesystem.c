@@ -65,7 +65,8 @@ arStatus_t		AR_read_file(arFile_t *file, byte_t *data, size_t len, size_t *rn)
 
 		if(ret != len)
 		{
-				status = __map_last_error();
+                int err_code = errno;
+				status = __map_last_error(err_code);
 		}else
 		{
 				status = AR_S_YES;
@@ -93,7 +94,8 @@ arStatus_t		AR_write_file(arFile_t *file, const byte_t *data, size_t len, size_t
 
 		if(ret != len)
 		{
-				status = __map_last_error();
+                int errcode = errno;
+				status = __map_last_error(errcode);
 		}else
 		{
 				status = AR_S_YES;
