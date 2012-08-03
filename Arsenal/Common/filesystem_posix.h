@@ -394,6 +394,236 @@ END_POINT:
 }
 
 
+/*****************************************************************************************/
+static arStatus_t      __insert_item(arList_t *lst, const wchar_t *item)
+{
+        wchar_t *t;
+        AR_ASSERT(lst != NULL && item != NULL);
+        t = AR_wcsdup(item);
+        if(t == NULL)
+        {
+                return AR_E_NOMEM;
+        }
+        return AR_PushListBack(lst, (void*)t);
+}
+
+
+static arStatus_t      __split_path(arList_t *lst, const wchar_t *path)
+{
+        arStatus_t status;
+        const wchar_t *p, *b;
+        AR_ASSERT(lst != NULL && path != NULL);
+        status = AR_S_YES;
+        p = path;
+        
+        while(*p != L'\0')
+        {
+                p = AR_wcstrim(p, L"/");
+                //AR_ASSERT(*p != L'/');
+                b = p;
+                while(*p != L'\0' && *p != L'/')
+                {
+                        ++p;
+                }
+                
+                if(p - b > 0)
+                {
+                        wchar_t *item = AR_wcsndup(b, p - b);
+                        if(item == NULL)
+                        {
+                                status = AR_E_NOMEM;
+                                goto END_POINT;
+                        }
+                        status = AR_PushListBack(lst, (void*)item);
+                        
+                        if(status != AR_S_YES)
+                        {
+                                AR_DEL(item);
+                                goto END_POINT;
+                        }
+                }
+                if(*p != L'\0')
+                {
+                        ++p;
+                }
+        }
+        
+END_POINT:
+        return status;
+        
+}
+
+arStatus_t		AR_GetRealPath(const wchar_t *path, arString_t *full_path)
+{
+        arList_t        *lst;
+        arList_t        *final_list;
+        arListNode_t    *node;
+        arStatus_t      status;
+        const wchar_t   *p;
+        
+        arString_t      *curr_path;
+        size_t path_len;
+        AR_ASSERT(path != NULL && full_path != NULL);
+        
+        AR_ClearString(full_path);
+        
+        path_len = AR_wcslen(path);
+        if(path_len == 0)
+        {
+                return AR_S_YES;
+        }
+       
+        status = AR_S_YES;
+        
+        final_list = AR_CreateList(NULL, NULL, NULL);
+        lst =  AR_CreateList(NULL, NULL, NULL);
+        curr_path = AR_CreateString();
+        
+        if(curr_path == NULL || lst == NULL || final_list == NULL)
+        {
+                status = AR_E_NOMEM;
+                goto END_POINT;
+        }
+        
+        
+        p = AR_wcstrim_space(path);
+        
+        if(*p == L'/')
+        {
+                status = __insert_item(lst, L"/");
+                if(status != AR_S_YES)
+                {
+                        goto END_POINT;
+                }
+                p = AR_wcstrim(p, L"/");
+        }else
+        {
+                const wchar_t *wcs;
+                status = AR_GetCurrentPath(curr_path);
+                if(status != AR_S_YES)
+                {
+                        goto END_POINT;
+                }
+                
+                
+                wcs = AR_GetStringCString(curr_path);
+                AR_ASSERT(*wcs == L'/');
+                
+                status = __insert_item(lst, L"/");
+                if(status != AR_S_YES)
+                {
+                        goto END_POINT;
+                }
+                
+                wcs++;
+                
+                status = __split_path(lst, wcs);
+                
+                if(status != AR_S_YES)
+                {
+                        goto END_POINT;
+                }
+        }
+
+        status = __split_path(lst, p);
+        
+        if(status != AR_S_YES)
+        {
+                goto END_POINT;
+        }
+        
+                
+        for(node = lst->head; node != NULL; node = node->next)
+        {
+                const wchar_t *item = (wchar_t*)(node->data);
+                AR_ASSERT(item != NULL);
+                
+                if(AR_wcscmp(item, L".") == 0)
+                {
+                }else if(AR_wcscmp(item, L"..") == 0)
+                {
+                        if(AR_GetListCount(final_list) > 1)
+                        {
+                                AR_PopListBack(final_list);
+                        }
+                }else
+                {
+                        status = AR_PushListBack(final_list, (void*)item);
+                        if(status != AR_S_YES)
+                        {
+                                goto END_POINT;
+                        }
+                }
+        }
+
+        for(node = final_list->head; node != NULL; node = node->next)
+        {
+                const wchar_t *item = (wchar_t*)(node->data);
+                AR_ASSERT(item != NULL);
+                //AR_printf(L"%ls\r\n", item);
+                
+                status = AR_AppendString(full_path, item);
+                
+                if(status != AR_S_YES)
+                {
+                        goto END_POINT;
+                }
+                
+                if(node->prev == NULL || node->next == NULL)
+                {
+                }else
+                {
+                        status = AR_AppendString(full_path, L"/");
+                        if(status != AR_S_YES)
+                        {
+                                goto END_POINT;
+                        }
+                }
+        }
+        
+        
+        if(path[path_len-1] == L'/' && AR_GetStringCString(full_path)[AR_GetStringLength(full_path) - 1] != L'/')
+        {
+                status = AR_AppendString(full_path, L"/");
+                
+                if(status != AR_S_YES)
+                {
+                        goto END_POINT;
+                }
+        }
+
+        
+END_POINT:
+        
+        if(curr_path)
+        {
+                AR_DestroyString(curr_path);
+                curr_path = NULL;
+        }
+
+        if(final_list)
+        {
+                AR_DestroyList(final_list);
+                final_list = NULL;
+        }
+        
+        if(lst)
+        {
+                for(node = lst->head; node != NULL; node = node->next)
+                {
+                        wchar_t *item = (wchar_t*)(node->data);
+                        AR_ASSERT(item != NULL);
+                        AR_DEL(item);
+                }
+                
+                AR_DestroyList(lst);
+                lst = NULL;
+        }
+        
+        return status;
+        
+}
+
 
 /*********************************Path iterator******************/
 
