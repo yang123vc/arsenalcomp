@@ -1287,7 +1287,7 @@ arStatus_t		AR_GetHomePath(arString_t *str);
 arStatus_t		AR_GetTempPath(arString_t *str);
 arStatus_t		AR_GetExpandPath(const wchar_t *path, arString_t *expanded_path);
 arStatus_t		AR_GetNullPath(arString_t *str);
-
+arStatus_t		AR_GetFullPath(const wchar_t *path, arString_t *full_path);
 
 
 /*Path Iterator*/
@@ -1305,6 +1305,7 @@ const wchar_t*	AR_PathIteratorCurrent(const arPathIter_t *iter);
 arStatus_t		AR_PathIteratorNext(arPathIter_t *iter);
 bool_t			AR_PathIteratorIsDone(const arPathIter_t *iter);
 const wchar_t*  AR_PathIteratorPath(const arPathIter_t *iter);
+
 
 /***********************************************************File*********************************/
 typedef void			arFile_t;
