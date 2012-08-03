@@ -1287,7 +1287,7 @@ arStatus_t		AR_GetHomePath(arString_t *str);
 arStatus_t		AR_GetTempPath(arString_t *str);
 arStatus_t		AR_GetExpandPath(const wchar_t *path, arString_t *expanded_path);
 arStatus_t		AR_GetNullPath(arString_t *str);
-arStatus_t		AR_GetFullPath(const wchar_t *path, arString_t *full_path);
+arStatus_t		AR_GetRealPath(const wchar_t *path, arString_t *full_path);
 
 
 /*Path Iterator*/
