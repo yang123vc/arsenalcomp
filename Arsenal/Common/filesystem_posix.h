@@ -907,7 +907,7 @@ void	AR_close_file(arFile_t *f)
 
 /*********************************************************Path*******************************************************/
 
-#if(1)
+#if(0)
 
 arStatus_t      AR_path_is_existed(const wchar_t *path)
 {
