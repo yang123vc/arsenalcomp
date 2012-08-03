@@ -116,9 +116,9 @@ static void path_iter_test()
                 status = AR_PathIteratorSetPath(it, L"~/Desktop");
                 
                 
-                while(!AR_PathIteratorIsDone(it))
+                while(status == AR_S_YES && !AR_PathIteratorIsDone(it))
                 {
-                        AR_printf(L"%ls\r\n", AR_PathIteratorCurrent(it));
+                        AR_printf(L"%ls%ls\r\n", AR_PathIteratorPath(it), AR_PathIteratorCurrent(it));
                         status = AR_PathIteratorNext(it);
                 }
         }
@@ -128,9 +128,9 @@ static void path_iter_test()
                 status = AR_PathIteratorSetPath(it, L"/Applications/App Store.app/Contents/");
                 
                 
-                while(!AR_PathIteratorIsDone(it))
+                while(status == AR_S_YES && !AR_PathIteratorIsDone(it))
                 {
-                        AR_printf(L"%ls\r\n", AR_PathIteratorCurrent(it));
+                        AR_printf(L"%ls%ls\r\n", AR_PathIteratorPath(it), AR_PathIteratorCurrent(it));
                         status = AR_PathIteratorNext(it);
                 }
                
@@ -141,9 +141,9 @@ static void path_iter_test()
                 status = AR_PathIteratorSetPath(it, L"/Users/solidus/Desktop/2");
                 
                 
-                while(!AR_PathIteratorIsDone(it))
+                while(status == AR_S_YES && !AR_PathIteratorIsDone(it))
                 {
-                        AR_printf(L"%ls\r\n", AR_PathIteratorCurrent(it));
+                        AR_printf(L"%ls%ls\r\n", AR_PathIteratorPath(it), AR_PathIteratorCurrent(it));
                         status = AR_PathIteratorNext(it);
                 }
                 
@@ -271,12 +271,12 @@ void file_sys_test()
 {
 //        env_test();
 //        path_test();
-//      path_iter_test();
+      path_iter_test();
         
         
 //        startup_items_test();
         
-        full_path_test();
+//        full_path_test();
 }
 
 

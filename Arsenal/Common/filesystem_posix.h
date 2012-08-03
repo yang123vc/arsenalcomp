@@ -625,6 +625,8 @@ END_POINT:
 }
 
 
+
+
 /*********************************Path iterator******************/
 
 struct __arsenal_path_iterator_tag
@@ -679,7 +681,7 @@ arStatus_t      AR_PathIteratorSetPath(arPathIter_t *iter, const wchar_t *path)
 {
         char *s_tmp;
 		arStatus_t status;
-        arString_t *expanded_path;
+        arString_t *expanded_path, *absolute_path;
 		AR_ASSERT(iter != NULL && path != NULL);
         
 		s_tmp = NULL;
@@ -688,6 +690,7 @@ arStatus_t      AR_PathIteratorSetPath(arPathIter_t *iter, const wchar_t *path)
         __clear_path_iterator(iter);
         
         expanded_path = AR_CreateString();
+        absolute_path = AR_CreateString();
         if(expanded_path == NULL)
         {
                 status = AR_E_NOMEM;
@@ -701,16 +704,27 @@ arStatus_t      AR_PathIteratorSetPath(arPathIter_t *iter, const wchar_t *path)
                 goto END_POINT;
         }
         
-		if(AR_GetStringChar(expanded_path, AR_GetStringLength(expanded_path) - 1) != L'/')
+        status = AR_GetRealPath(AR_GetStringCString(expanded_path), absolute_path);
+        
+        if(status != AR_S_YES)
+        {
+                goto END_POINT;
+        }
+        
+        /*
+         AR_error(AR_ERR_DEBUG, L"absolute_path : %ls\r\n", AR_GetStringCString(absolute_path));
+         */
+        
+		if(AR_GetStringChar(absolute_path, AR_GetStringLength(absolute_path) - 1) != L'/')
 		{
-				status = AR_AppendString(expanded_path, L"/");
+				status = AR_AppendString(absolute_path, L"/");
 				if(status != AR_S_YES)
 				{
 						goto END_POINT;
 				}
 		}
         
-        s_tmp = AR_wcs_to_str(AR_CP_ACP, AR_GetStringCString(expanded_path), AR_GetStringLength(expanded_path));
+        s_tmp = AR_wcs_to_str(AR_CP_ACP, AR_GetStringCString(absolute_path), AR_GetStringLength(absolute_path));
         if(s_tmp == NULL)
         {
                 status = AR_E_BADENCCONV;
@@ -727,7 +741,7 @@ arStatus_t      AR_PathIteratorSetPath(arPathIter_t *iter, const wchar_t *path)
 		}
         
 		iter->isdone = false;
-		iter->path = AR_wcsdup(AR_GetStringCString(expanded_path));
+		iter->path = AR_wcsdup(AR_GetStringCString(absolute_path));
 		iter->current = AR_CreateString();
 		
 		if(iter->path == NULL || iter->current == NULL)
@@ -749,6 +763,11 @@ END_POINT:
         {
                 AR_DestroyString(expanded_path);
                 expanded_path = NULL;
+        }
+        if(absolute_path != NULL)
+        {
+                AR_DestroyString(absolute_path);
+                absolute_path = NULL;
         }
         
 		if(status == AR_S_YES)
@@ -856,6 +875,9 @@ const wchar_t*  AR_PathIteratorPath(const arPathIter_t *iter)
         AR_ASSERT(iter->hdl != NULL && iter->path != NULL && iter->current != NULL);
         return iter->path;
 }
+
+
+
 
 /************************************************************File*************************************************************/
 
