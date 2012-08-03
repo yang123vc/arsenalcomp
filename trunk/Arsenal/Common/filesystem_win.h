@@ -24,9 +24,9 @@ AR_NAMESPACE_BEGIN
 
 #define MAX_PATH_LEN 32767
 
-static arStatus_t       __map_last_error()
+static arStatus_t       __map_last_error(DWORD last_error)
 {
-        switch(GetLastError())
+        switch(last_error)
         {
 		case 0:
 				return AR_S_YES;
@@ -134,7 +134,8 @@ arStatus_t		AR_GetCurrentPath(arString_t *str)
 		
 		if (l <= 0)
 		{
-				status = __map_last_error();
+				DWORD last_error = GetLastError();
+				status = __map_last_error(last_error);
 				goto END_POINT;
 		}
 
@@ -150,9 +151,10 @@ arStatus_t		AR_GetCurrentPath(arString_t *str)
 
 		if(n <= 0 || n > l)
 		{
+				DWORD last_error = GetLastError();
 				AR_DEL(tmp);
 				tmp = NULL;
-				status = __map_last_error();
+				status = __map_last_error(last_error);
 				goto END_POINT;
 		}
 		
@@ -241,14 +243,16 @@ arStatus_t		AR_GetTempPath(arString_t *str)
 		n = GetTempPathW(MAX_PATH_LEN, tmp);
 		if(n <= 0)
 		{
-				return __map_last_error();
+				DWORD last_error = GetLastError();
+				return __map_last_error(last_error);
 		}
 
 		n = GetLongPathNameW(tmp, tmp, n);
 
 		if(n <= 0)
 		{
-				return __map_last_error();
+				DWORD last_error = GetLastError();
+				return __map_last_error(last_error);
 		}
 
 		if(tmp[n - 1] != L'\\')
@@ -272,7 +276,8 @@ arStatus_t		AR_GetExpandPath(const wchar_t *path, arString_t *expanded_path)
 
 		if(n <= 0)
 		{
-				return __map_last_error();
+				DWORD last_error = GetLastError();
+				return __map_last_error(last_error);
 		}
 
 		tmp = AR_NEWARR(wchar_t, n);
@@ -286,9 +291,13 @@ arStatus_t		AR_GetExpandPath(const wchar_t *path, arString_t *expanded_path)
 
 		if(n <= 0)
 		{
+				DWORD last_error = GetLastError();
+				
 				AR_DEL(tmp);
 				tmp = NULL;
-				return __map_last_error();
+				
+
+				return __map_last_error(last_error);
 		}else
 		{
 				arStatus_t status;
@@ -416,7 +425,8 @@ arStatus_t      AR_PathIteratorSetPath(arPathIter_t *iter, const wchar_t *path)
 		
 		if(iter->hdl == INVALID_HANDLE_VALUE)
 		{
-				status = __map_last_error();
+				DWORD last_error = GetLastError();
+				status = __map_last_error(last_error);
 				goto END_POINT;
 		}
 
@@ -521,7 +531,8 @@ arStatus_t		AR_PathIteratorNext(arPathIter_t *iter)
 								status = AR_E_NOMORE;
 						}else
 						{
-								status = __map_last_error();
+								DWORD last_error = GetLastError();
+								status = __map_last_error(last_error);
 						}
 
 						iter->isdone = true;
