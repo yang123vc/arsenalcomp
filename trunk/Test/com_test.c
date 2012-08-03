@@ -3607,7 +3607,23 @@ static void strstr_test0()
 		}
 }
 
+void full_path_test()
+{
 
+		arString_t *str;
+		arStatus_t status;
+		str = AR_CreateString();
+
+		status = AR_GetFullPath(L"./", str);
+		AR_ASSERT(status == AR_S_YES);
+
+		AR_printf(L"%ls\r\n", AR_GetStringCString(str));
+
+
+		AR_DestroyString(str);
+		str = NULL;
+
+}
 
 void com_test()
 {
@@ -3713,9 +3729,11 @@ void com_test()
 
 		//cache_test();
 
-		uri_test();
+		//uri_test();
 
 		//buffer_test3();
+
+		full_path_test();
 }
 
 

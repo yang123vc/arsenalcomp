@@ -317,7 +317,43 @@ arStatus_t		AR_GetNullPath(arString_t *str)
 		return AR_SetString(str, L"NUL:");
 }
 
+arStatus_t		AR_GetFullPath(const wchar_t *path, arString_t *full_path)
+{
+		arStatus_t status;
+		wchar_t *buf;
+		DWORD l;
+		AR_ASSERT(path != NULL && full_path != NULL);
+		status = AR_S_YES;
+		buf = AR_NEWARR(wchar_t, 4096);
+		if(buf == NULL)
+		{
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
 
+		l = GetFullPathNameW(path, 4096, buf, NULL);
+
+		if(l <= 0)
+		{
+				DWORD err_code = GetLastError();
+				status = __map_last_error(err_code);
+				goto END_POINT;
+		}else
+		{
+				buf[l] = L'\0';
+		}
+
+		status = AR_SetString(full_path, buf);
+
+END_POINT:
+
+		if(buf)
+		{
+				AR_DEL(buf);
+				buf = NULL;
+		}
+		return status;
+}
 
 
 /*********************************Path Iterator**************************/
