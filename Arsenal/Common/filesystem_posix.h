@@ -541,6 +541,7 @@ arStatus_t		AR_GetRealPath(const wchar_t *path, arString_t *full_path)
                 
                 if(AR_wcscmp(item, L".") == 0)
                 {
+                        
                 }else if(AR_wcscmp(item, L"..") == 0)
                 {
                         if(AR_GetListCount(final_list) > 1)
