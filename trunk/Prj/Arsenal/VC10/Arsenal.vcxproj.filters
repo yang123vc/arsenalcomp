@@ -248,12 +248,6 @@
     <ClInclude Include="..\..\..\Arsenal\Tengu\tengu_parser.h">
       <Filter>Arsenal\Tengu</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Arsenal\Common\thread_posix_apple.h">
-      <Filter>Arsenal\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Arsenal\Common\thread_posix_posix.h">
-      <Filter>Arsenal\Common</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Arsenal\Common\filesystem_win.h">
       <Filter>Arsenal\Common</Filter>
     </ClInclude>
@@ -264,6 +258,18 @@
       <Filter>Arsenal\Common</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Arsenal\Common\enviroment_win.h">
+      <Filter>Arsenal\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Arsenal\Common\filesystem_path_posix.h">
+      <Filter>Arsenal\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Arsenal\Common\filesystem_path_win.h">
+      <Filter>Arsenal\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Arsenal\Common\thread_posix_posix.h">
+      <Filter>Arsenal\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Arsenal\Common\thread_posix_apple.h">
       <Filter>Arsenal\Common</Filter>
     </ClInclude>
   </ItemGroup>
