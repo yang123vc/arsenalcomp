@@ -14,6 +14,10 @@
 		674D8C8415734D4B00CC43A6 /* uri.c in Sources */ = {isa = PBXBuildFile; fileRef = 674D8C8215734D4B00CC43A6 /* uri.c */; };
 		675B2B621562254100DADFE2 /* printf.c in Sources */ = {isa = PBXBuildFile; fileRef = 675B2B611562254100DADFE2 /* printf.c */; };
 		675B2B631562254100DADFE2 /* printf.c in Sources */ = {isa = PBXBuildFile; fileRef = 675B2B611562254100DADFE2 /* printf.c */; };
+		6793D97E15CFB50800A59636 /* filesystem_path_posix.h in Headers */ = {isa = PBXBuildFile; fileRef = 6793D97C15CFB50800A59636 /* filesystem_path_posix.h */; };
+		6793D97F15CFB50800A59636 /* filesystem_path_posix.h in Headers */ = {isa = PBXBuildFile; fileRef = 6793D97C15CFB50800A59636 /* filesystem_path_posix.h */; };
+		6793D98015CFB50800A59636 /* filesystem_path_win.h in Headers */ = {isa = PBXBuildFile; fileRef = 6793D97D15CFB50800A59636 /* filesystem_path_win.h */; };
+		6793D98115CFB50800A59636 /* filesystem_path_win.h in Headers */ = {isa = PBXBuildFile; fileRef = 6793D97D15CFB50800A59636 /* filesystem_path_win.h */; };
 		679A46D9155262E1006A5AD4 /* thread_posix_apple.h in Headers */ = {isa = PBXBuildFile; fileRef = 679A46D7155262E1006A5AD4 /* thread_posix_apple.h */; };
 		679A46DA155262E1006A5AD4 /* thread_posix_apple.h in Headers */ = {isa = PBXBuildFile; fileRef = 679A46D7155262E1006A5AD4 /* thread_posix_apple.h */; };
 		679A46DB155262E1006A5AD4 /* thread_posix_posix.h in Headers */ = {isa = PBXBuildFile; fileRef = 679A46D8155262E1006A5AD4 /* thread_posix_posix.h */; };
@@ -166,6 +170,8 @@
 		6728C3E215503E9300861D86 /* filesystem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = filesystem.c; sourceTree = "<group>"; };
 		674D8C8215734D4B00CC43A6 /* uri.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = uri.c; sourceTree = "<group>"; };
 		675B2B611562254100DADFE2 /* printf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = printf.c; sourceTree = "<group>"; };
+		6793D97C15CFB50800A59636 /* filesystem_path_posix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filesystem_path_posix.h; sourceTree = "<group>"; };
+		6793D97D15CFB50800A59636 /* filesystem_path_win.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filesystem_path_win.h; sourceTree = "<group>"; };
 		679A46D7155262E1006A5AD4 /* thread_posix_apple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thread_posix_apple.h; sourceTree = "<group>"; };
 		679A46D8155262E1006A5AD4 /* thread_posix_posix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thread_posix_posix.h; sourceTree = "<group>"; };
 		67CCEDD41584B3650082DC8F /* strnum.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = strnum.c; sourceTree = "<group>"; };
@@ -293,9 +299,11 @@
 				BE185DA914E841B90095DB44 /* thread_posix.h */,
 				BE185DAA14E841B90095DB44 /* thread_win.h */,
 				BE185DA714E841B90095DB44 /* thread.c */,
+				6728C3E215503E9300861D86 /* filesystem.c */,
 				67E28CB215615FF7005A2C79 /* filesystem_posix.h */,
 				67E28CB315615FF7005A2C79 /* filesystem_win.h */,
-				6728C3E215503E9300861D86 /* filesystem.c */,
+				6793D97C15CFB50800A59636 /* filesystem_path_posix.h */,
+				6793D97D15CFB50800A59636 /* filesystem_path_win.h */,
 				6728C3B4154C5E8300861D86 /* enviroment.c */,
 				BE185D9314E841B90095DB44 /* algo.c */,
 				BE185D9414E841B90095DB44 /* base64.c */,
@@ -438,6 +446,8 @@
 				67E28CB615615FF7005A2C79 /* enviroment_win.h in Headers */,
 				67E28CB815615FF7005A2C79 /* filesystem_posix.h in Headers */,
 				67E28CBA15615FF7005A2C79 /* filesystem_win.h in Headers */,
+				6793D97E15CFB50800A59636 /* filesystem_path_posix.h in Headers */,
+				6793D98015CFB50800A59636 /* filesystem_path_win.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -471,6 +481,8 @@
 				67E28CB715615FF7005A2C79 /* enviroment_win.h in Headers */,
 				67E28CB915615FF7005A2C79 /* filesystem_posix.h in Headers */,
 				67E28CBB15615FF7005A2C79 /* filesystem_win.h in Headers */,
+				6793D97F15CFB50800A59636 /* filesystem_path_posix.h in Headers */,
+				6793D98115CFB50800A59636 /* filesystem_path_win.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

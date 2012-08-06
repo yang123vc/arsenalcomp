@@ -11,7 +11,8 @@
  *
  */
 
-
+#ifndef __ARSENAL_COMMON_FILESYSTEM_WIN_H__
+#define __ARSENAL_COMMON_FILESYSTEM_WIN_H__
 
 
 AR_NAMESPACE_BEGIN
@@ -631,3 +632,4 @@ void					AR_close_file(arFile_t *f)
 AR_NAMESPACE_END
 
 
+#endif

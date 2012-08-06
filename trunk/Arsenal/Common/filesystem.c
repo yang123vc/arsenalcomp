@@ -40,10 +40,12 @@
 #if defined(OS_FAMILY_WINDOWS)
 
 		#include "filesystem_win.h"
+        #include "filesystem_path_win.h"
 
 #elif defined(OS_FAMILY_UNIX)
 
 		#include "filesystem_posix.h"
+        #include "filesystem_path_posix.h"
 #else
 		#error "Unknown OS!"
 #endif
