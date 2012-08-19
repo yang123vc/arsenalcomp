@@ -3665,8 +3665,8 @@ void full_path_test()
 
 		AR_DestroyString(str);
 		str = NULL;
-
 }
+
 
 void com_test()
 {
@@ -3761,7 +3761,7 @@ void com_test()
 
 		//path_test();
 
-		path_iter_test();
+		//path_iter_test();
 
 		//thd_test();
 
