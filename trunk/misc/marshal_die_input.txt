@@ -1,0 +1,16 @@
+﻿
+
+
+daemonHandshake {
+	user			:	wchar_t[1024];
+	session_id		:	int_t;
+};
+
+
+daemonKeepalive{
+	unused	:	uint_t;
+};
+
+
+
+
