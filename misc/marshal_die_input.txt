@@ -1,4 +1,4 @@
-
+﻿
 
 daemonHandshake {
 	user			:	wchar_t[1024];
@@ -16,7 +16,7 @@ daemonTest{
 		t1 : uint_t;
 		t2 : uint_t;
 		t3 : wchar_t[1024];
-		
+		t4 : daemonKeepalive[1024];
 	};
 };
 
