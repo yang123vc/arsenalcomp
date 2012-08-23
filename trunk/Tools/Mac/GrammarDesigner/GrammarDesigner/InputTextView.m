@@ -234,7 +234,7 @@
 		
 		[panel setCanChooseDirectories:NO];
 		[panel setCanChooseFiles:YES];
-		[panel setDirectory:NSHomeDirectory()];
+		//[panel setDirectory:NSHomeDirectory()];
 
 		if ([panel runModal] == NSOKButton) 
 		{
@@ -268,7 +268,7 @@
 		}
 		
 		NSSavePanel *panel = [NSSavePanel savePanel];
-		[panel setDirectory:NSHomeDirectory()]; 
+		//[panel setDirectory:NSHomeDirectory()]; 
 		if ([panel runModal] == NSOKButton) 
 		{
 				NSString *path = [[panel URL] path];
