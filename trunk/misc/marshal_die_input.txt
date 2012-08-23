@@ -1,4 +1,3 @@
-﻿
 
 
 daemonHandshake {
@@ -11,6 +10,15 @@ daemonKeepalive{
 	unused	:	uint_t;
 };
 
+
+daemonTest{
+	test : {
+		t1 : uint_t;
+		t2 : uint_t;
+		t3 : wchar_t[1024];
+		
+	};
+};
 
 
 
