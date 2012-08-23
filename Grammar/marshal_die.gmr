@@ -1,41 +1,41 @@
 ﻿
-%name delim    	:    "[\t\r\n ]+"
-            		;
+%name delim        	:    "[\t\r\n ]+"
+                    	;
 
-%name letter    	:     "[A-Z_a-z]"
-            		;
+%name letter        :     "[A-Z_a-z]"
+                    ;
 
 
-%name digit    	:    "[0-9]"
-            		;
+%name digit        	:    "[0-9]"
+                    	;
 
-%name number    	:    "0|[1-9]{digit}*"
-            		;
+%name number        	:    "0|[1-9]{digit}*"
+                    	;
 
-%name name        	:    "{letter}({letter}|{digit})*"
-            		;
+%name name          	:    "{letter}({letter}|{digit})*"
+                    	;
 
 
 /* 
-	'"'  == \x22,  '\'' == \x27 
+    '"'  == \x22,  '\'' == \x27 
 */
 
 
-%name lexeme        	:    "{name}|(\x22([^\x22\n])+\x22)|(\x27([^\x27\n])+\x27)"
-            		;
+%name lexeme            :    "{name}|(\x22([^\x22\n])+\x22)|(\x27([^\x27\n])+\x27)"
+                    ;
 
-%name comment		:     "/\*([^\*]|\*+[^\*/])*\*+/"
-                	;
+%name comment        :     "/\*([^\*]|\*+[^\*/])*\*+/"
+                    ;
 
-%name comment_line	:     "//[^\n]*\n"
-                	;
+%name comment_line    :     "//[^\n]*\n"
+                    ;
 
-%name skip_lexem 	:     "{delim}|{comment}|{comment_line}"
-                	;
+%name skip_lexem     :     "{delim}|{comment}|{comment_line}"
+                    ;
 
 
-%name key_lookahead       	:     '{skip_lexem}+|"{"'
-                		;
+%name key_lookahead           :     '{skip_lexem}+|"{"'
+                        ;
 
 
 %token    %skip            :    "{skip_lexem}+"
@@ -75,10 +75,10 @@
 
 
 %token    CODE           :    '"%code"'
-                    		;
+                            ;
 
 %token    CODE_BLOCK        :    '\{:[^\u0]*?:\}'            /*'\{((\\\{|\\\})|[^\{\}])*?\}'*/
-                    			;
+                                ;
 
 
 %token    "."        :    '"."'
