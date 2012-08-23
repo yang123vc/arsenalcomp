@@ -16,11 +16,6 @@
                     	;
 
 
-/* 
-    '"'  == \x22,  '\'' == \x27 
-*/
-
-
 %name lexeme            	:    "{name}"
                     		;
 
@@ -36,6 +31,103 @@
 
 %name key_lookahead       	:     '{skip_lexem}+|"{"'
                         	;
+
+
+%code header{:
+/*
+ * MarshalDie
+ * Copyright (c) 2012 by Solidus
+ * 
+ * Permission to use, copy, modify, distribute and sell this software
+ * and its documentation for any purpose is hereby granted without fee,
+ * provided that the above copyright notice appear in all copies and
+ * that both that copyright notice and this permission notice appear
+ * in supporting documentation.It is provided "as is" without express 
+ * or implied warranty.
+ *
+ */
+
+:}
+;
+
+
+%code include{:
+
+#include <vector>
+#include <list>
+#include <string>
+#include <set>
+#include <map>
+:}
+;
+
+%code class_def{:
+
+typedef enum
+{
+	INT_T,
+	UINT_T,
+	CHAR_T,
+	WCHAR_T,
+	FLOAT_T,
+	DOUBLE_T,
+	CUSTOM_T,
+}FieldType_t;
+
+struct Type
+{
+	FieldType_t	type;
+	bool		is_array;
+	size_t		array_size;
+	std::wstring	custom_name;
+};
+
+
+class StrucDefine
+{
+private:
+	typedef std::map<std::wstring, Type>	FieldMap;
+private:
+	std::wstring			m_name;
+	FieldMap			m_fields;
+
+public:
+	StrucDefine()
+	{
+
+	}
+
+	~StrucDefine()
+	{
+		
+	}
+
+	const std::wstring&	Name()const
+	{
+		return m_name;
+	}
+
+
+	std::wstring	GenerateMarshalCode()const
+	{
+		return L"";
+	}
+
+	std::wstring	GenerateUnMarshalCode()const
+	{
+		return L"";
+	}
+};
+
+std::vector<StrucDefine>	g_struct_list;
+
+
+
+	
+:}
+;
+
+
 
 
 %token    %skip            	:    "{skip_lexem}+"
@@ -78,6 +170,8 @@
 
 %token    "]"        	:    '"]"'
             			;
+
+
 
 %start            		program    ;
 
