@@ -86,7 +86,7 @@ arThread_t*		AR_CreateThread(arThreadFunc_t func, void *data)
 {
         arThread_t *thd;
         pthread_attr_t attributes;
-        AR_ASSERT(func != NULL && data != NULL);
+        AR_ASSERT(func != NULL);
 
 
         thd = AR_NEW0(arThread_t);
