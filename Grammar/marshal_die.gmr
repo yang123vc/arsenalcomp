@@ -58,6 +58,8 @@
 #include <string>
 #include <set>
 #include <map>
+#include "Arsenal.h"
+
 :}
 ;
 
@@ -120,6 +122,9 @@ public:
 };
 
 std::vector<StrucDefine>	g_struct_list;
+std::vector<std::wstring>	g_head_code;
+std::vector<std::wstring>	g_tail_code;
+
 
 
 
