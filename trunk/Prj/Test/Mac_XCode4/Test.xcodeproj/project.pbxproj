@@ -15,11 +15,13 @@
 		673C0BD1154A891100A73324 /* TestFileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 673C0BCF154A891100A73324 /* TestFileSystem.cpp */; };
 		673C0BD5154A8B3600A73324 /* test.c in Sources */ = {isa = PBXBuildFile; fileRef = 673C0BD4154A8A4800A73324 /* test.c */; };
 		673C0BD6154A8B3B00A73324 /* test.c in Sources */ = {isa = PBXBuildFile; fileRef = 673C0BD4154A8A4800A73324 /* test.c */; };
-		6793D98515CFB61800A59636 /* Arsenal.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6793D98415CFB61800A59636 /* Arsenal.dylib */; };
 		679A46EA15527DD3006A5AD4 /* commonTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 679A46E915527DD3006A5AD4 /* commonTest.cpp */; };
 		679A46EB15527DD3006A5AD4 /* commonTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 679A46E915527DD3006A5AD4 /* commonTest.cpp */; };
 		679A46EE15527DF0006A5AD4 /* commonTest.h in Sources */ = {isa = PBXBuildFile; fileRef = 679A46ED15527DF0006A5AD4 /* commonTest.h */; };
 		679A46EF15527DF0006A5AD4 /* commonTest.h in Sources */ = {isa = PBXBuildFile; fileRef = 679A46ED15527DF0006A5AD4 /* commonTest.h */; };
+		679F04D815ECBA1B00BA8476 /* marshal_die_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 679F04D715ECBA1B00BA8476 /* marshal_die_test.cpp */; };
+		679F04D915ECBA1B00BA8476 /* marshal_die_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 679F04D715ECBA1B00BA8476 /* marshal_die_test.cpp */; };
+		679F04DE15ECBAB300BA8476 /* Arsenal.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 679F04DD15ECBAB300BA8476 /* Arsenal.dylib */; };
 		67F26D15156B55E0003FAA7E /* lfu_cache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67F26D14156B55E0003FAA7E /* lfu_cache.cpp */; };
 		67F26D16156B55E0003FAA7E /* lfu_cache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67F26D14156B55E0003FAA7E /* lfu_cache.cpp */; };
 		BE185ED514E849250095DB44 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = BE185ED314E849250095DB44 /* main.c */; };
@@ -54,9 +56,10 @@
 		673C0BD2154A894D00A73324 /* TestFileSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFileSystem.h; sourceTree = SOURCE_ROOT; };
 		673C0BD3154A897A00A73324 /* stdhdr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stdhdr.h; sourceTree = SOURCE_ROOT; };
 		673C0BD4154A8A4800A73324 /* test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = test.c; sourceTree = SOURCE_ROOT; };
-		6793D98415CFB61800A59636 /* Arsenal.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = Arsenal.dylib; path = "../../../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Release/Arsenal.dylib"; sourceTree = "<group>"; };
 		679A46E915527DD3006A5AD4 /* commonTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = commonTest.cpp; sourceTree = SOURCE_ROOT; };
 		679A46ED15527DF0006A5AD4 /* commonTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = commonTest.h; sourceTree = SOURCE_ROOT; };
+		679F04D715ECBA1B00BA8476 /* marshal_die_test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = marshal_die_test.cpp; sourceTree = SOURCE_ROOT; };
+		679F04DD15ECBAB300BA8476 /* Arsenal.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = Arsenal.dylib; path = "../../../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Debug/Arsenal.dylib"; sourceTree = "<group>"; };
 		67F26D12156B55C9003FAA7E /* lfu_cache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lfu_cache.h; sourceTree = SOURCE_ROOT; };
 		67F26D14156B55E0003FAA7E /* lfu_cache.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lfu_cache.cpp; sourceTree = SOURCE_ROOT; };
 		BE185EA314E846F10095DB44 /* TestLib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TestLib; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -78,7 +81,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6793D98515CFB61800A59636 /* Arsenal.dylib in Frameworks */,
+				679F04DE15ECBAB300BA8476 /* Arsenal.dylib in Frameworks */,
 				67163065155FFB680098ADA3 /* libiconv.dylib in Frameworks */,
 				6728C3BC154C646200861D86 /* libpthread.dylib in Frameworks */,
 			);
@@ -90,7 +93,7 @@
 		BE185E9814E846F10095DB44 = {
 			isa = PBXGroup;
 			children = (
-				6793D98415CFB61800A59636 /* Arsenal.dylib */,
+				679F04DD15ECBAB300BA8476 /* Arsenal.dylib */,
 				6728C3BB154C646200861D86 /* libpthread.dylib */,
 				6728C3B8154C645A00861D86 /* libiconv.dylib */,
 				BE185EA614E846F10095DB44 /* Test */,
@@ -119,6 +122,7 @@
 				679A46ED15527DF0006A5AD4 /* commonTest.h */,
 				67F26D12156B55C9003FAA7E /* lfu_cache.h */,
 				67F26D14156B55E0003FAA7E /* lfu_cache.cpp */,
+				679F04D715ECBA1B00BA8476 /* marshal_die_test.cpp */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -198,6 +202,7 @@
 				679A46EA15527DD3006A5AD4 /* commonTest.cpp in Sources */,
 				679A46EE15527DF0006A5AD4 /* commonTest.h in Sources */,
 				67F26D15156B55E0003FAA7E /* lfu_cache.cpp in Sources */,
+				679F04D815ECBA1B00BA8476 /* marshal_die_test.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -211,6 +216,7 @@
 				679A46EB15527DD3006A5AD4 /* commonTest.cpp in Sources */,
 				679A46EF15527DF0006A5AD4 /* commonTest.h in Sources */,
 				67F26D16156B55E0003FAA7E /* lfu_cache.cpp in Sources */,
+				679F04D915ECBA1B00BA8476 /* marshal_die_test.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -319,6 +325,7 @@
 					"\"$(SRCROOT)/../../../../../Temp/Xcode_Derived_Data/Arsenal-doktqrfexpgfyfbhxalwgaspvtgn/Build/Products/Debug\"",
 					"\"$(SRCROOT)/../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Release\"",
 					"\"$(SRCROOT)/../../../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Release\"",
+					"\"$(SRCROOT)/../../../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Debug\"",
 				);
 				OBJROOT = "$(SYMROOT)";
 				PRODUCT_NAME = TestDLL;
@@ -339,6 +346,7 @@
 					"\"$(SRCROOT)/../../../../../Temp/Xcode_Derived_Data/Arsenal-doktqrfexpgfyfbhxalwgaspvtgn/Build/Products/Debug\"",
 					"\"$(SRCROOT)/../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Release\"",
 					"\"$(SRCROOT)/../../../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Release\"",
+					"\"$(SRCROOT)/../../../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Debug\"",
 				);
 				OBJROOT = "$(SYMROOT)";
 				PRODUCT_NAME = TestDLL;
