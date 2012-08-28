@@ -273,16 +273,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				HEADER_SEARCH_PATHS = ../../../Arsenal;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-dklbavanfxrpxtdcqgesieswyeaq/Build/Products/Debug\"",
-					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-dklbavanfxrpxtdcqgesieswyeaq/Build/Products/Release\"",
-					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Debug\"",
-					"\"$(SRCROOT)/../../../../../Temp/Xcode_Derived_Data/Arsenal-doktqrfexpgfyfbhxalwgaspvtgn/Build/Products/Debug\"",
-					"\"$(SRCROOT)/../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Release\"",
-					"\"$(SRCROOT)/../../../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Release\"",
-					"\"$(SRCROOT)/../../../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Debug\"",
-				);
+				LIBRARY_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OBJROOT = "$(SYMROOT)";
 				PRODUCT_NAME = TestLib;
@@ -296,16 +287,7 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "NDEBUG=1";
 				HEADER_SEARCH_PATHS = ../../../Arsenal;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-dklbavanfxrpxtdcqgesieswyeaq/Build/Products/Debug\"",
-					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-dklbavanfxrpxtdcqgesieswyeaq/Build/Products/Release\"",
-					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Debug\"",
-					"\"$(SRCROOT)/../../../../../Temp/Xcode_Derived_Data/Arsenal-doktqrfexpgfyfbhxalwgaspvtgn/Build/Products/Debug\"",
-					"\"$(SRCROOT)/../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Release\"",
-					"\"$(SRCROOT)/../../../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Release\"",
-					"\"$(SRCROOT)/../../../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Debug\"",
-				);
+				LIBRARY_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OBJROOT = "$(SYMROOT)";
 				PRODUCT_NAME = TestLib;
@@ -318,15 +300,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				HEADER_SEARCH_PATHS = ../../../Arsenal;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-dklbavanfxrpxtdcqgesieswyeaq/Build/Products/Debug\"",
-					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-dklbavanfxrpxtdcqgesieswyeaq/Build/Products/Release\"",
-					"\"$(SRCROOT)/../../../../../Temp/Xcode_Derived_Data/Arsenal-doktqrfexpgfyfbhxalwgaspvtgn/Build/Products/Debug\"",
-					"\"$(SRCROOT)/../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Release\"",
-					"\"$(SRCROOT)/../../../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Release\"",
-					"\"$(SRCROOT)/../../../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Debug\"",
-				);
+				LIBRARY_SEARCH_PATHS = "";
 				OBJROOT = "$(SYMROOT)";
 				PRODUCT_NAME = TestDLL;
 				SYMROOT = build;
@@ -339,15 +313,7 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "NDEBUG=1";
 				HEADER_SEARCH_PATHS = ../../../Arsenal;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-dklbavanfxrpxtdcqgesieswyeaq/Build/Products/Debug\"",
-					"\"$(SRCROOT)/../../../../../../Library/Developer/Xcode/DerivedData/Arsenal-dklbavanfxrpxtdcqgesieswyeaq/Build/Products/Release\"",
-					"\"$(SRCROOT)/../../../../../Temp/Xcode_Derived_Data/Arsenal-doktqrfexpgfyfbhxalwgaspvtgn/Build/Products/Debug\"",
-					"\"$(SRCROOT)/../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Release\"",
-					"\"$(SRCROOT)/../../../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Release\"",
-					"\"$(SRCROOT)/../../../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Debug\"",
-				);
+				LIBRARY_SEARCH_PATHS = "";
 				OBJROOT = "$(SYMROOT)";
 				PRODUCT_NAME = TestDLL;
 				SYMROOT = build;
