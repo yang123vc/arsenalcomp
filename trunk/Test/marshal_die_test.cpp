@@ -121,7 +121,7 @@ static const wchar_t* get_inner_type_name(FieldType_t t)
 
 
 
-static std::wstring generate_inner_type_marshal_code(const std::wstring &sn_obj_name, const std::wstring &obj_name, const std::wstring &field_name, FieldType_t t, bool_t is_array, size_t array_size)
+static std::wstring generate_inner_type_marshal_code(const std::wstring &out_buffer_name, const std::wstring &in_obj_pointer, const std::wstring &in_obj_field, FieldType_t t, bool_t is_array, size_t array_size)
 {
         std::wstring ret;
         AR_ASSERT(is_inner_type(t));
@@ -132,19 +132,17 @@ static std::wstring generate_inner_type_marshal_code(const std::wstring &sn_obj_
                 {
                         AR_error(AR_ERR_FATAL, L"empty array size for %ls\r\n",  get_inner_type_name(t));
                 }
-                
-                ret += L"{\n";
-                ret += L"ret=";
-                
+
                 switch(t)
                 {
                         case BYET_T:
                         case CHAR_T:
-                        case WCHAR_T:
-                                ret += L"SN_CreateObject(SN_STRING_T)\nif(ret == NULL){goto END_POINT;}\n";
+						case INT8_T:
+						case UINTT8_T:
+								ret += L"SN_CreateObject(SN_STRING_T)\nif(ret == NULL){goto END_POINT;}\n";
                                 break;
-                        case INT8_T:
-                        case UINTT8_T:
+						case WCHAR_T:
+								ret += L"";
                         case INT16_T:
                         case UINTT16_T:
                         case INT32_T:
