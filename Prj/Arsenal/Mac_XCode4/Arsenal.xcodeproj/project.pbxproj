@@ -513,6 +513,7 @@
 				BEA4E2CB14E840DE00A29A8D /* Sources */,
 				BEA4E2CC14E840DE00A29A8D /* Frameworks */,
 				BEA4E2CD14E840DE00A29A8D /* Headers */,
+				670C63FC15EC972C007D116A /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -549,6 +550,22 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		670C63FC15EC972C007D116A /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "bin_dir=\"$PLATFORM_DEVELOPER_BIN_DIR\";\nnm_cmd=\"$bin_dir/nm\";\ndylib_path=\"$BUILD_DIR/$CONFIGURATION/$EXECUTABLE_NAME\";\noutfile=\"$BUILT_PRODUCTS_DIR/Arsenal_Debug.export\";\necho $nm_cmd;\necho $dylib_path;\necho $outfile;\n\npython << EOF;\nimport sys;\nimport os;\nimport subprocess;\nimport re;\n\n\nnm_call = subprocess.Popen(\"$nm_cmd -g $dylib_path\", stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE, shell = True);\nnm_result = nm_call.stdout.read();\n#print(nm_result);\n\n\n\np = re.compile('^[0-9a-f]+.*\\s(\\S+)$', re.MULTILINE);\nprint(p);\nresult = p.findall(nm_result);\n\nresult_str = \"\";\n\nfor item in result:\n    result_str += item;\n    result_str += \"\\n\";\n    pass;\n\n\n\nout_file = \"$PROJECT_DIR\" + \"/\" + \"$PRODUCT_NAME\" + \"_$CONFIGURATION.exp\";\n\nf = open(out_file, \"w\");\nf.write(result_str);\nf.close();\n\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		BEA4E2C014E83F1E00A29A8D /* Sources */ = {
@@ -738,8 +755,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				EXECUTABLE_PREFIX = "";
+				EXPORTED_SYMBOLS_FILE = Arsenal_Debug.exp;
 				OBJROOT = "$(SYMROOT)";
 				PRODUCT_NAME = Arsenal;
+				SDKROOT = macosx10.6;
 				SYMROOT = build;
 			};
 			name = Debug;
@@ -748,10 +767,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				EXECUTABLE_PREFIX = "";
+				EXPORTED_SYMBOLS_FILE = Arsenal_Release.exp;
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = "NDEBUG=1";
 				OBJROOT = "$(SYMROOT)";
 				PRODUCT_NAME = Arsenal;
+				SDKROOT = macosx10.6;
 				SYMROOT = build;
 			};
 			name = Release;
