@@ -1970,6 +1970,24 @@ void text_test_load_save()
         }
         
         
+static void str_test20()
+{
+        char buf[1024];
+        
+        int_t n = AR_wcs_to_str_buf(AR_CP_UTF8, L"中文", 2, buf, 1024);
+        
+        buf[n] = 0;
+        printf("%s\r\n", buf);
+        
+        
+        {
+                wchar_t wbuf[1024];
+                const char *utf8 = "中文";
+                int_t n = AR_str_to_wcs_buf(AR_CP_GB2312, utf8, strlen(utf8), wbuf, 1024);
+                wbuf[n] = 0;
+                AR_printf(L"%ls\r\n", wbuf);
+        }
+}
         
 void common_test()
 {
@@ -1985,7 +2003,8 @@ void common_test()
         
         //text_test_load_save();
         
-        str_test19();
+        //str_test19();
+        str_test20();
         
 }
         
