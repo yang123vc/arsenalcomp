@@ -214,6 +214,10 @@ void com_conv2()
 		size_t l;
 		l = AR_wcs_to_str_buf(AR_CP_UTF8, L"", 0, buf, 1024);
 		buf[l] = 0;
+
+		const wchar_t *s = L"ÖÐÎÄ";
+		l = AR_wcs_to_str_buf(AR_CP_UTF8, s, AR_wcslen(s), buf, 1024);
+		buf[l] = 0;
 }
 
 
@@ -3699,7 +3703,7 @@ void com_test()
 
 		//com_test3();
 		//com_conv();
-		//com_conv2();
+		com_conv2();
 		//com_hash_test();
 
 		//com_vscwprintf_test();
