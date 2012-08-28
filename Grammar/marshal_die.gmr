@@ -1,36 +1,37 @@
 ﻿
-%name delim        	:    "[\t\r\n ]+"
-                    	;
+%name delim            :    "[\t\r\n ]+"
+                        ;
 
 %name letter        :     "[A-Z_a-z]"
                     ;
 
 
-%name digit        	:    "[0-9]"
-                    	;
+%name digit            :    "[0-9]"
+                        ;
 
-%name number        	:    "0|[1-9]{digit}*"
-                    	;
+%name number            :    "0|[1-9]{digit}*"
+                        ;
 
-%name name          	:    "{letter}({letter}|{digit})*"
-                    	;
-
-
-%name lexeme            	:    "{name}"
-                    		;
-
-%name comment        	:     "/\*([^\*]|\*+[^\*/])*\*+/"
-                    		;
-
-%name comment_line    	:     "//[^\n]*\n"
-                    		;
-
-%name skip_lexem     	:     "{delim}|{comment}|{comment_line}"
-                    		;
+%name name              :    "{letter}({letter}|{digit})*"
+                        ;
 
 
-%name key_lookahead       	:     '{skip_lexem}+|"{"'
-                        	;
+%name lexeme                :    "{name}"
+                            ;
+
+
+%name comment            :     "/\*([^\*]|\*+[^\*/])*\*+/"
+                            ;
+
+%name comment_line        :     "//[^\n]*\n"
+                            ;
+
+%name skip_lexem         :     "{delim}|{comment}|{comment_line}"
+                            ;
+
+
+%name key_lookahead           :     '{skip_lexem}+|"{"'
+                            ;
 
 
 %code header{:
@@ -67,172 +68,172 @@
 
 typedef enum
 {
-	INT_T,
-	UINT_T,
-	CHAR_T,
-	WCHAR_T,
-	FLOAT_T,
-	DOUBLE_T,
-	CUSTOM_T,
+    INT_T,
+    UINT_T,
+    CHAR_T,
+    WCHAR_T,
+    FLOAT_T,
+    DOUBLE_T,
+    CUSTOM_T,
 }FieldType_t;
 
 struct Type
 {
-	FieldType_t	type;
-	bool		is_array;
-	size_t		array_size;
-	std::wstring	custom_name;
+    FieldType_t    type;
+    bool        is_array;
+    size_t        array_size;
+    std::wstring    custom_name;
 };
 
 
 class StrucDefine
 {
 private:
-	typedef std::map<std::wstring, Type>	FieldMap;
+    typedef std::map<std::wstring, Type>    FieldMap;
 private:
-	std::wstring			m_name;
-	FieldMap			m_fields;
+    std::wstring            m_name;
+    FieldMap            m_fields;
 
 public:
-	StrucDefine()
-	{
+    StrucDefine()
+    {
 
-	}
+    }
 
-	~StrucDefine()
-	{
-		
-	}
+    ~StrucDefine()
+    {
+        
+    }
 
-	const std::wstring&	Name()const
-	{
-		return m_name;
-	}
+    const std::wstring&    Name()const
+    {
+        return m_name;
+    }
 
 
-	std::wstring	GenerateMarshalCode()const
-	{
-		return L"";
-	}
+    std::wstring    GenerateMarshalCode()const
+    {
+        return L"";
+    }
 
-	std::wstring	GenerateUnMarshalCode()const
-	{
-		return L"";
-	}
+    std::wstring    GenerateUnMarshalCode()const
+    {
+        return L"";
+    }
 };
 
-std::vector<StrucDefine>	g_struct_list;
-std::vector<std::wstring>	g_head_code;
-std::vector<std::wstring>	g_tail_code;
+std::vector<StrucDefine>    g_struct_list;
+std::vector<std::wstring>    g_head_code;
+std::vector<std::wstring>    g_tail_code;
 
 
 
 
-	
+    
 :}
 ;
 
 
 
 
-%token    %skip            	:    "{skip_lexem}+"
-                		;
+%token    %skip                :    "{skip_lexem}+"
+                        ;
 
 
-%token    CODE_BLOCK		:    '\{:[^\u0]*?:\}'            /*'\{((\\\{|\\\})|[^\{\}])*?\}'*/
-				;
+%token    CODE_BLOCK        :    '\{:[^\u0]*?:\}'            /*'\{((\\\{|\\\})|[^\{\}])*?\}'*/
+                ;
 
-%token    HEAD		:    '"%head"'
-				;
+%token    HEAD        :    '"%head"'
+                ;
 
-%token    TAIL		:    '"%tail"'
-				;
+%token    TAIL        :    '"%tail"'
+                ;
 
 
-%token    LEXEME		:    "{lexeme}"
-                		;
+%token    LEXEME        :    "{lexeme}"
+                        ;
                 
 
-%token    NUMBER		:    "{number}"
-                		;
+%token    NUMBER        :    "{number}"
+                        ;
 
 
-%token    ":"        	:    '":"'
-            			;
+%token    ":"            :    '":"'
+                        ;
 
-%token    ";"        	:    '";"'
-            			;
+%token    ";"            :    '";"'
+                        ;
 
-%token    "{"        	:    '"{"'
-            			;
+%token    "{"            :    '"{"'
+                        ;
 
-%token    "}"        	:    '"}"'
-            			;
-
-
-%token    "["        	:    '"["'
-            			;
-
-%token    "]"        	:    '"]"'
-            			;
+%token    "}"            :    '"}"'
+                        ;
 
 
+%token    "["            :    '"["'
+                        ;
 
-%start            		program    ;
+%token    "]"            :    '"]"'
+                        ;
 
 
 
-program			:	item_list
-				|	.
-				;
-
-
-item_list			:	item_list	item
-				|	item
-				;
+%start                    program    ;
 
 
 
-item				:	head_code
-				|	tail_code
-				|	struct_def
-				;
+program            :    item_list
+                |    .
+                ;
 
 
-head_code			:	HEAD 	CODE_BLOCK
-				;
-
-tail_code			:	TAIL	CODE_BLOCK
-				;
+item_list            :    item_list    item
+                |    item
+                ;
 
 
 
-struct_def			:	LEXEME	anonymous_def ";"
-				;
-
-anonymous_def			:	"{"	def_list	"}"
-				;
-
-def_list			:	def_list	def
-				|	def
-				;
-
-def				:	field	":"	type	";"
-				;
+item                :    head_code
+                |    tail_code
+                |    struct_def
+                ;
 
 
-field				:	LEXEME		%action	auto_return_0
-				{:
-					
-					psrRetVal_t ret = {AR_S_YES, nodes[0]};
-					nodes[0] = NULL;
-					return ret;
-				:}
-				;
+head_code            :    HEAD     CODE_BLOCK
+                ;
 
-type				:	LEXEME
-				|	LEXEME "["	NUMBER "]"
-				|	anonymous_def
-				;
+tail_code            :    TAIL    CODE_BLOCK
+                ;
+
+
+
+struct_def            :    LEXEME    anonymous_def ";"
+                ;
+
+anonymous_def            :    "{"    def_list    "}"
+                ;
+
+def_list            :    def_list    def
+                |    def
+                ;
+
+def                :    field    ":"    type    ";"
+                ;
+
+
+field                :    LEXEME        %action    auto_return_0
+                {:
+                    
+                    psrRetVal_t ret = {AR_S_YES, nodes[0]};
+                    nodes[0] = NULL;
+                    return ret;
+                :}
+                ;
+
+type                :    LEXEME
+                |    LEXEME "["    NUMBER "]"
+                |    anonymous_def
+                ;
 
 
