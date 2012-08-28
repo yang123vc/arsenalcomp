@@ -172,5 +172,31 @@
          landmarkName = "AR_LoadBomTextFromBinary()"
          landmarkType = "7">
       </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../../Test/Mac_XCode4/commonTest.cpp"
+         timestampString = "367841374.008247"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "1975"
+         endingLineNumber = "1975"
+         landmarkName = "str_test20()"
+         landmarkType = "7">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../../Test/Mac_XCode4/commonTest.cpp"
+         timestampString = "367841474.959485"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "1984"
+         endingLineNumber = "1984"
+         landmarkName = "str_test20()"
+         landmarkType = "7">
+      </FileBreakpoint>
    </FileBreakpoints>
 </Bucket>

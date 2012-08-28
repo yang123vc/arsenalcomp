@@ -472,22 +472,34 @@ const char *__get_locale_str_for_iconv(arCodePage_t cp)
 
 
 
-size_t					AR_str_to_wcs_buf(arCodePage_t cp, const char *acp, size_t n, wchar_t *out, size_t out_len)
+int_t					AR_str_to_wcs_buf(arCodePage_t cp, const char *acp, size_t n, wchar_t *out, size_t out_len)
 {
 		size_t len;
 		size_t ret;
 		wchar_t *wstr;
 		AR_ASSERT(acp != NULL);
+        
+        if(n == 0)
+        {
+                return 0;
+        }
+        
 		wstr = AR_str_to_wcs(cp, acp, n);
 		if(wstr == NULL)
 		{
-				ret = 0;
+				ret = -1;
 				goto CLEAN_POINT;
 		}
 
 		len = AR_wcslen(wstr);
+        
+        if(len == 0)
+        {
+                ret = -1;
+                goto CLEAN_POINT;
+        }
 
-		if(len == 0 || out == NULL || out_len == 0)
+		if(out == NULL || out_len == 0)
 		{
 				ret = len;
 				goto CLEAN_POINT;
@@ -495,13 +507,13 @@ size_t					AR_str_to_wcs_buf(arCodePage_t cp, const char *acp, size_t n, wchar_t
 
 		if(out_len < len)
 		{
-				ret = 0;
+				ret = -1;
 				goto CLEAN_POINT;
 		}
 
 		AR_wcsncpy(out, wstr, len);
 		ret = len;
-
+        
 CLEAN_POINT:
 		if(wstr)
 		{
@@ -511,23 +523,35 @@ CLEAN_POINT:
 		return ret;
 }
 
-size_t					AR_wcs_to_str_buf(arCodePage_t cp, const wchar_t *input, size_t n, char *out, size_t out_len)
+int_t					AR_wcs_to_str_buf(arCodePage_t cp, const wchar_t *input, size_t n, char *out, size_t out_len)
 {
 		size_t len;
 		size_t ret;
 		char *str;
 		AR_ASSERT(input != NULL);
+        
+        if(n == 0)
+        {
+                return 0;
+        }
+        
 		str = AR_wcs_to_str(cp, input, n);
 
 		if(str == NULL)
 		{
-				ret = 0;
+				ret = -1;
 				goto CLEAN_POINT;
 		}
 
 		len = AR_strlen(str);
+        
+        if(len == 0)
+        {
+                ret = -1;
+                goto CLEAN_POINT;
+        }
 
-		if(len == 0 || out == NULL || out_len == 0)
+		if(out == NULL || out_len == 0)
 		{
 				ret = len;
 				goto CLEAN_POINT;
@@ -535,7 +559,7 @@ size_t					AR_wcs_to_str_buf(arCodePage_t cp, const wchar_t *input, size_t n, ch
 
 		if(out_len < len)
 		{
-				ret = 0;
+				ret = -1;
 				goto CLEAN_POINT;
 		}
 
