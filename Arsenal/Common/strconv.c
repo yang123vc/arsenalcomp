@@ -263,34 +263,38 @@ static UINT __get_codepage_for_winapi(arCodePage_t cp)
 
 
 
-size_t					AR_str_to_wcs_buf(arCodePage_t cp, const char *acp, size_t n, wchar_t *out, size_t out_len)
+int_t					AR_str_to_wcs_buf(arCodePage_t cp, const char *acp, size_t n, wchar_t *out, size_t out_len)
 {
 		int len;
 		const UINT win_cp = __get_codepage_for_winapi(cp);
 		AR_ASSERT(acp != NULL);
 
+		if(n == 0)
+		{
+				return 0;
+		}
+
 		len = MultiByteToWideChar(win_cp, 0, acp, (int)n, 0, 0);
 
-
-		if(len == 0 || out_len == 0 || out == NULL)
+		if(len <= 0)
 		{
-				if(len == 0)
-				{
-						
-				}
+				return -1;
+		}
 
+		if(out_len == 0 || out == NULL)
+		{
 				return len;
 		}
 
 		if((int)out_len < len)
 		{
-				
-				return 0;
+				return -1;
 		}
 
-		if(MultiByteToWideChar(win_cp, 0, acp, (int)n, out, (int)out_len) == 0)
+		len = MultiByteToWideChar(win_cp, 0, acp, (int)n, out, (int)out_len);
+		if(len == 0)
 		{
-				return 0;
+				return -1;
 		}else
 		{
 				return len;
@@ -298,20 +302,26 @@ size_t					AR_str_to_wcs_buf(arCodePage_t cp, const char *acp, size_t n, wchar_t
 }
 
 
-size_t					AR_wcs_to_str_buf(arCodePage_t cp, const wchar_t *input, size_t n, char *out, size_t out_len)
+int_t					AR_wcs_to_str_buf(arCodePage_t cp, const wchar_t *input, size_t n, char *out, size_t out_len)
 {
 		int len;
 		const UINT win_cp = __get_codepage_for_winapi(cp);
 		AR_ASSERT(input != NULL);
 
+		if(n == 0)
+		{
+				return 0;
+		}
+
 		len = WideCharToMultiByte(win_cp, 0, input, (int)n, 0, 0, NULL, NULL);
 
-		if(len == 0 || out == NULL || out_len == 0)
+		if(len == 0)
 		{
-				if(len == 0)
-				{
-						
-				}
+				return -1;
+		}
+
+		if(out == NULL || out_len == 0)
+		{
 				return len;
 		}
 
@@ -320,10 +330,11 @@ size_t					AR_wcs_to_str_buf(arCodePage_t cp, const wchar_t *input, size_t n, ch
 				return 0;
 		}
 
+		len = WideCharToMultiByte(win_cp, 0, input, (int)n, out, (int)out_len, NULL, NULL);
 
-		if(WideCharToMultiByte(win_cp, 0, input, (int)n, out, (int)out_len, NULL, NULL) == 0)
+		if(len <= 0)
 		{
-				return 0;
+				return -1;
 		}else
 		{
 				return len;
