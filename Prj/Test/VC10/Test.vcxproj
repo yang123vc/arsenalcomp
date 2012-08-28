@@ -1509,6 +1509,7 @@
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\main.cpp" />
+    <ClCompile Include="..\..\..\Test\marshal_die_test.cpp" />
     <ClCompile Include="..\..\..\Test\math_test.c" />
     <ClCompile Include="..\..\..\Test\mem_test.c" />
     <ClCompile Include="..\..\..\Test\Operation.c" />
