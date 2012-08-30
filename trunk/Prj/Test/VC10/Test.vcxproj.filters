@@ -818,6 +818,9 @@
     <ClInclude Include="..\..\..\Test\Lexer\regexp.h">
       <Filter>Lexer</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\Test\marshal_die_predef.h">
+      <Filter>Test</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\Test\extlib\libcurl\include\curl\curlbuild.h.in">

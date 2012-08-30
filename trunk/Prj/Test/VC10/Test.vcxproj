@@ -1648,6 +1648,7 @@
     <ClInclude Include="..\..\..\Test\gen_code_impl.h" />
     <ClInclude Include="..\..\..\Test\Lexer\regexp.h" />
     <ClInclude Include="..\..\..\Test\lfu_cache.h" />
+    <ClInclude Include="..\..\..\Test\marshal_die_predef.h" />
     <ClInclude Include="..\..\..\Test\Operation.h" />
     <ClInclude Include="..\..\..\Test\parser_gen_perf_javascript_code_impl.h" />
     <ClInclude Include="..\..\..\Test\parser_gen_perf_sql_code_impl.h" />

@@ -138,7 +138,8 @@ arStatus_t			SN_InsertToDictObjectByStrUInt(snObject_t *obj, const char *key, ui
 arStatus_t			SN_InsertToDictObjectByStrInt(snObject_t *obj, const char *key, int_64_t val);
 
 
-
+arStatus_t			SN_InsertToDictObjectByWcsObject(snObject_t *obj, const wchar_t *key, snObject_t *val);
+arStatus_t			SN_InsertToDictObjectByStrObject(snObject_t *obj, const char *key, snObject_t *val);
 
 /**************************************************************************************************************/
 
