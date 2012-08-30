@@ -169,23 +169,28 @@ static void	SN_UnInitString(snString_t	*str)
 static arStatus_t	SN_SetStringByData(snString_t	*dest, const byte_t *data, size_t len)
 {
 		byte_t *tmp_data;
-		AR_ASSERT(dest != NULL && data != NULL && len > 0);
+		AR_ASSERT(dest != NULL);
 
-		tmp_data = AR_NEWARR(byte_t, len);
-
-		if(tmp_data == NULL)
+		if(len > 0)
 		{
-				return AR_E_NOMEM;
-		}
+				tmp_data = AR_NEWARR(byte_t, len);
 
-		if(dest->data != NULL)
+				if(tmp_data == NULL)
+				{
+						return AR_E_NOMEM;
+				}
+				
+				dest->data = tmp_data;
+				AR_memcpy(dest->data, data, len);
+		}else
 		{
-				AR_DEL(dest->data);
-				dest->data = NULL;
+				if(dest->data != NULL)
+				{
+						AR_DEL(dest->data);
+						dest->data = NULL;
+				}
 		}
-
-		dest->data = tmp_data;
-		AR_memcpy(dest->data, data, len);
+		
 		dest->len = len;
 		return AR_S_YES;
 }
@@ -196,34 +201,56 @@ static arStatus_t	SN_SetStringByStr(snString_t	*dest, const char *str)
 		AR_ASSERT(dest != NULL && str != NULL);
 		l = AR_strlen(str);
 
-		if(l == 0)
-		{
-				return AR_E_INVAL;
-		}
 		return SN_SetStringByData(dest, (const byte_t*)str, l);
 }
 
+
 static arStatus_t	SN_SetStringByWcs(snString_t	*dest, const wchar_t *str)
 {
+		arStatus_t status;
+		size_t l;
 		const char *utf8;
 		AR_ASSERT(dest != NULL && str != NULL);
-		utf8 = AR_wcs_to_str(AR_CP_UTF8, str, AR_wcslen(str));
 
-		if(utf8 == NULL)
+		status = AR_S_YES;
+		l = AR_wcslen(str);
+		utf8 = NULL;
+
+		if(l > 0)
 		{
-				return AR_E_NOMEM;
+				utf8 = AR_wcs_to_str(AR_CP_UTF8, str, AR_wcslen(str));
+				
+				if(utf8 == NULL)
+				{
+						status = AR_E_NOMEM;
+						goto END_POINT;
+				}
+				status = SN_SetStringByStr(dest, utf8);
+		}else
+		{
+				status = SN_SetStringByStr(dest, "");
 		}
 
-		SN_SetStringByStr(dest, utf8);
-		AR_DEL(utf8);
-		return AR_S_YES;
+END_POINT:
+		if(utf8)
+		{
+				AR_DEL(utf8);
+				utf8 = NULL;
+		}
+
+		return status;
 }
 
 
 
 static arStatus_t	SN_CompStringByString(const snString_t	*l,  const snString_t	*r)
 {
-		AR_ASSERT(l != NULL && r != NULL && l->len > 0 && r->len > 0 && l->data != NULL && r->data != NULL);
+		AR_ASSERT(l != NULL && r != NULL);
+
+		if(l->len == 0 && r->len == 0)
+		{
+				return AR_S_EQ;
+		}
 		
 		if(l->len < r->len)
 		{
@@ -255,7 +282,7 @@ static arStatus_t	SN_CompStringByData(const snString_t	*l,  const byte_t *data, 
 		arStatus_t status;
 		snString_t		other;
 		
-		AR_ASSERT(l != NULL && l->len > 0 && data != NULL && len > 0);
+		AR_ASSERT(l != NULL);
 
 		SN_InitString(&other);
 
@@ -273,11 +300,12 @@ END_POINT:
 		return status;
 }
 
+
 static arStatus_t	SN_CompStringByStr(const snString_t		*l,	 const char *str)
 {
 		snString_t		other;
 		arStatus_t		status;
-		AR_ASSERT(l != NULL && l->len > 0 && str != NULL);
+		AR_ASSERT(l != NULL && str != NULL);
 
 		SN_InitString(&other);
 
@@ -299,7 +327,7 @@ static arStatus_t	SN_CompStringByWcs(const snString_t		*l,	 const wchar_t *str)
 {
 		snString_t		other;
 		arStatus_t		status;
-		AR_ASSERT(l != NULL && l->len > 0 && str != NULL);
+		AR_ASSERT(l != NULL && str != NULL);
 
 		SN_InitString(&other);
 		
@@ -538,8 +566,8 @@ static arStatus_t	SN_RemoveFromDict(snDict_t *dict, const snObject_t *key)
 		dict->pairs[i] = dict->pairs[dict->count-1];
 		dict->count--;
 		return AR_S_YES;
-		
 }
+
 
 static snObject_t* SN_FindFromDict(snDict_t *dict, const snObject_t *key)
 {
@@ -771,9 +799,9 @@ static snRetVal_t	__get_float(arBuffer_t	*buffer)
 		AR_EraseBuffer(buffer, 1);
 		
 		{
-				wchar_t buf[1024];
+				wchar_t buf[512];
 				int_t need_n;
-				need_n= SN_GetWcsFromStringObject(str_obj, buf, 1024);
+				need_n= SN_GetWcsFromStringObject(str_obj, buf, 512);
 				if(need_n <= 0)
 				{
 						ret.status = AR_E_BADENCCONV;
@@ -833,7 +861,7 @@ static snRetVal_t		__get_str(arBuffer_t	*buffer)
 				l += (pbuf[idx] - '0');
 		}
 
-		if(idx  == buf_len || pbuf[idx] != ':' || l == 0)
+		if(idx  == buf_len || pbuf[idx] != ':')
 		{
 				ret.status = AR_E_MALFORMAT;
 				return ret;
@@ -853,6 +881,7 @@ static snRetVal_t		__get_str(arBuffer_t	*buffer)
 		}
 
 		idx++;
+
 
 		ret.status = SN_SetStringByData(&ret.obj->string, pbuf + idx, l);
 		
@@ -1174,7 +1203,7 @@ static arStatus_t __put_string(arBuffer_t	*buffer, const snString_t *string)
 		size_t	l;
 		static const char _tbl[] = "0123456789";
 		arStatus_t status;
-		AR_ASSERT(buf != NULL && string != NULL && string->len > 0 && string->data != NULL);
+		AR_ASSERT(buf != NULL && string != NULL);
 		
 		l = string->len;
 		
@@ -1182,8 +1211,11 @@ static arStatus_t __put_string(arBuffer_t	*buffer, const snString_t *string)
 		*--p = '\0';
 		*--p = ':';
 
-		do{ *--p = _tbl[l % 10];}while((l /= 10));
+		do{ 
+				*--p = _tbl[l % 10];
+		}while((l /= 10));
 
+		
 		status = AR_InsertToBuffer(buffer, (const byte_t*)p, AR_strlen(p));
 		if(status != AR_S_YES)
 		{
@@ -1661,7 +1693,6 @@ size_t			SN_GetListObjectCount(const snObject_t *lst)
 arStatus_t			SN_SetStringObjectByData(snObject_t	*dest, const byte_t *data, size_t len)
 {
 		AR_ASSERT(dest != NULL && dest->type == SN_STRING_T);
-		AR_ASSERT(data != NULL && len > 0);
 		
 		if(dest->type != SN_STRING_T)
 		{
@@ -1704,22 +1735,30 @@ arStatus_t			SN_SetStringObjectByWcs(snObject_t	*dest, const wchar_t *str)
 int_t			SN_GetDataFromStringObject(const snObject_t	*obj, byte_t *buf, size_t len)
 {
 		AR_ASSERT(obj != NULL && obj->type == SN_STRING_T);
+		
 		if(obj->type != SN_STRING_T)
 		{
 				return -1;
 		}
 
-		if(buf != NULL)
+		if(buf == NULL)
+		{
+				return (int_t)obj->string.len;
+
+		}else
 		{
 				if(len < obj->string.len)
 				{
 						return -1;
 				}
-
-				AR_memcpy(buf, obj->string.data, obj->string.len);
+				
+				if(obj->string.len > 0)
+				{
+						AR_memcpy(buf, obj->string.data, obj->string.len);
+				}
+				return (int_t)obj->string.len;
 		}
-		
-		return (int_t)obj->string.len;
+
 }		
 
 
@@ -1743,22 +1782,22 @@ int_t			SN_GetStrFromStringObject(const snObject_t	*obj, char *buf, size_t len)
 		
 		if(buf == NULL)
 		{
-				return l + 1;
+				return l;
 		}else
 		{
-				if((int_t)len < (l + 1))
+				if((int_t)len < l)
 				{
 						return -1;
 				}
-
+				
 				l = SN_GetDataFromStringObject(obj, (byte_t*)buf, l);
 
 				if(l < 0)
 				{
 						return l;
 				}
-				buf[l] = 0;
-				return l + 1;
+				
+				return l;
 		}
 }
 
@@ -1781,7 +1820,8 @@ int_t			SN_GetWcsFromStringObject(const snObject_t	*obj, wchar_t *buf, size_t le
 				return l;
 		}
 
-		tmp = AR_NEWARR(char, l);
+		tmp = AR_NEWARR(char, l + 1);
+
 		if(tmp == NULL)
 		{
 				return -1;
@@ -1795,8 +1835,8 @@ int_t			SN_GetWcsFromStringObject(const snObject_t	*obj, wchar_t *buf, size_t le
 				return -1;
 		}
 
-/*		wtmp = AR_utf8_convto_wcs(tmp);*/
-		wtmp = AR_str_to_wcs(AR_CP_UTF8, tmp, AR_strlen(tmp));
+		tmp[l] = '\0';
+		wtmp = AR_str_to_wcs(AR_CP_UTF8, tmp, l);
 
 		if(tmp == NULL)
 		{
@@ -1806,13 +1846,13 @@ int_t			SN_GetWcsFromStringObject(const snObject_t	*obj, wchar_t *buf, size_t le
 		
 		if(buf == NULL)
 		{
-				int_t ret = (int_t)(AR_wcslen(wtmp) + 1);
+				int_t ret = (int_t)AR_wcslen(wtmp);
 				AR_DEL(tmp);
 				AR_DEL(wtmp);
 				return ret;
 		}else
 		{
-				int_t ret = (int_t)(AR_wcslen(wtmp) + 1);
+				int_t ret = (int_t)AR_wcslen(wtmp);
 
 				if((int_t)len < ret)
 				{
@@ -1820,7 +1860,8 @@ int_t			SN_GetWcsFromStringObject(const snObject_t	*obj, wchar_t *buf, size_t le
 						AR_DEL(wtmp);
 						return -1;
 				}
-				AR_wcscpy(buf, wtmp);
+
+				AR_wcsncpy(buf, wtmp, ret);
 				AR_DEL(tmp);
 				AR_DEL(wtmp);
 				return ret;
@@ -1852,7 +1893,6 @@ arStatus_t			SN_CompStringObjectByStringObject(const snObject_t	*l, const snObje
 arStatus_t			SN_CompStringObjectByData(const snObject_t	*l,			const byte_t *data, size_t len)
 {
 		AR_ASSERT(l != NULL && l->type == SN_STRING_T);
-		AR_ASSERT(data != NULL && len > 0);
 		
 		if(l->type != SN_STRING_T)
 		{
@@ -2160,7 +2200,7 @@ arStatus_t			SN_InsertToDictObjectByStrData(snObject_t *obj, const char *key, co
 {
 		arStatus_t status;
 		snObject_t *sn_key, *sn_val;
-		AR_ASSERT(obj != NULL && key != NULL && data != NULL && len > 0);
+		AR_ASSERT(obj != NULL && key != NULL);
 
 		sn_key = NULL;
 		sn_val = NULL;
@@ -2388,7 +2428,7 @@ arStatus_t			SN_InsertToDictObjectByWcsData(snObject_t *obj, const wchar_t *key,
 {
 		arStatus_t status;
 		snObject_t *sn_key, *sn_val;
-		AR_ASSERT(obj != NULL && key != NULL && data != NULL && len > 0);
+		AR_ASSERT(obj != NULL && key != NULL);
 
 		sn_key = NULL;
 		sn_val = NULL;
@@ -2426,6 +2466,63 @@ INVALID_POINT:
 		return status;
 }
 
+
+
+
+arStatus_t			SN_InsertToDictObjectByWcsObject(snObject_t *obj, const wchar_t *key, snObject_t *val)
+{
+		arStatus_t		status;
+		snObject_t		*sn_key;
+		AR_ASSERT(obj != NULL && key != NULL && AR_wcslen(key) > 0 && val != NULL);
+
+		status = AR_S_YES;
+		sn_key = SN_CreateObject(SN_STRING_T);
+		FAILED_GOTO(sn_key != NULL);
+		
+		status = SN_SetStringObjectByWcs(sn_key, key);
+		FAILED_GOTO(status != AR_S_YES);
+
+		status = SN_InsertToDictObject(obj, sn_key, val);
+		FAILED_GOTO(status == AR_S_YES);
+
+		return AR_S_YES;
+INVALID_POINT:
+		if(sn_key)
+		{
+				SN_DestroyObject(sn_key);
+				sn_key = NULL;
+		}
+
+		return status;
+}
+
+arStatus_t			SN_InsertToDictObjectByStrObject(snObject_t *obj, const char *key, snObject_t *val)
+{
+		arStatus_t		status;
+		snObject_t		*sn_key;
+		AR_ASSERT(obj != NULL && key != NULL && AR_strlen(key) > 0 && val != NULL);
+
+		status = AR_S_YES;
+		sn_key = SN_CreateObject(SN_STRING_T);
+		FAILED_GOTO(sn_key != NULL);
+		
+		status = SN_SetStringObjectByStr(sn_key, key);
+		FAILED_GOTO(status != AR_S_YES);
+
+		status = SN_InsertToDictObject(obj, sn_key, val);
+		FAILED_GOTO(status == AR_S_YES);
+
+		return AR_S_YES;
+
+INVALID_POINT:
+		if(sn_key)
+		{
+				SN_DestroyObject(sn_key);
+				sn_key = NULL;
+		}
+
+		return status;
+}
 
 
 
@@ -2559,7 +2656,7 @@ arStatus_t			SN_InsertToListObjectByData(snObject_t *obj, const byte_t *data, si
 {
 		arStatus_t status;
 		snObject_t *sn_val;
-		AR_ASSERT(obj != NULL && data != NULL && len > 0);
+		AR_ASSERT(obj != NULL);
 
 		sn_val = NULL;
 		status = AR_S_YES;
@@ -2583,8 +2680,6 @@ INVALID_POINT:
 
 		return status;
 }
-
-
 
 
 

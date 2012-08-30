@@ -12,8 +12,9 @@
 #include <list>
 #include <string>
 #include <set>
-#include "Arsenal.h"
 
+#include "Arsenal.h"
+#include "marshal_die_predef.h"
 
 
 
@@ -28,6 +29,7 @@ using namespace ARSpace;
 MARSHAL_DIE_BEGIN
 
 
+#if(0)
 typedef enum
 {
         BYET_T,
@@ -88,8 +90,6 @@ static bool_t is_inner_type(FieldType_t t)
                 case UINTT64_T:
                 case CHAR_T:
                 case WCHAR_T:
-                case FLOAT_T:
-                case DOUBLE_T:
                         return true;
                 case CUSTOM_T:
                 default:
@@ -120,7 +120,22 @@ static const wchar_t* get_inner_type_name(FieldType_t t)
 
 
 
+/*
+BYET_T:
+                case INT8_T:
+                case UINTT8_T:
+                case INT16_T:
+                case UINTT16_T:
+                case INT32_T:
+                case UINTT32_T:
+                case INT64_T:
+                case UINTT64_T:
+                case CHAR_T:
+                case WCHAR_T:
+                case FLOAT_T:
+                case DOUBLE_T
 
+*/
 static std::wstring generate_inner_type_marshal_code(const std::wstring &out_buffer_name, const std::wstring &in_obj_pointer, const std::wstring &in_obj_field, FieldType_t t, bool_t is_array, size_t array_size)
 {
         std::wstring ret;
@@ -214,6 +229,7 @@ struct Type
 std::vector<std::wstring>    g_head_code;
 std::vector<std::wstring>    g_tail_code;
 
+#endif
 
 
 void marshal_die_test()
