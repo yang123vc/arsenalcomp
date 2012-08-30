@@ -2001,7 +2001,8 @@ double		SN_GetFloatObject(const snObject_t	*obj)
 		return obj->float_num.num;
 }
 
-void		SN_SetUFloatObject(snObject_t	*obj,	double num)
+
+void		SN_SetFloatObject(snObject_t	*obj,	double num)
 {
 		AR_ASSERT(obj != NULL && obj->type == SN_FLOAT_T);
 
@@ -2017,8 +2018,6 @@ void		SN_SetUFloatObject(snObject_t	*obj,	double num)
 
 
 #define FAILED_GOTO(_cond) do{ if(!(_cond))goto INVALID_POINT; }while(0)
-
-
 
 arStatus_t			SN_InsertToDictObjectByStrInt(snObject_t *obj, const char *key, int_64_t val)
 {
@@ -2527,6 +2526,90 @@ INVALID_POINT:
 
 
 
+arStatus_t			SN_InsertToDictObjectByStrFloat(snObject_t *obj, const char *key, double val)
+{
+		arStatus_t status;
+		snObject_t *sn_key, *sn_val;
+		AR_ASSERT(obj != NULL && key != NULL);
+
+		sn_key = NULL;
+		sn_val = NULL;
+
+		status = AR_S_YES;
+
+		sn_key = SN_CreateObject(SN_STRING_T);
+		FAILED_GOTO(sn_key != NULL);
+
+		status = SN_SetStringObjectByStr(sn_key, key);
+		FAILED_GOTO(status == AR_S_YES);
+
+		sn_val = SN_CreateObject(SN_FLOAT_T);
+		FAILED_GOTO(sn_val != NULL);
+		SN_SetFloatObject(sn_val, val);
+
+		status = SN_InsertToDictObject(obj, sn_key, sn_val);
+		FAILED_GOTO(status == AR_S_YES);
+
+		return AR_S_YES;
+INVALID_POINT:
+		if(sn_key)
+		{
+				SN_DestroyObject(sn_key);
+				sn_key = NULL;
+		}
+
+		if(sn_val)
+		{
+				SN_DestroyObject(sn_val);
+				sn_val = NULL;
+		}
+
+		return status;
+}
+
+arStatus_t			SN_InsertToDictObjectByWcsFloat(snObject_t *obj, const wchar_t *key, double val)
+{
+		arStatus_t status;
+		snObject_t *sn_key, *sn_val;
+		AR_ASSERT(obj != NULL && key != NULL);
+
+		sn_key = NULL;
+		sn_val = NULL;
+
+		status = AR_S_YES;
+
+		sn_key = SN_CreateObject(SN_STRING_T);
+		FAILED_GOTO(sn_key != NULL);
+
+		status = SN_SetStringObjectByWcs(sn_key, key);
+		FAILED_GOTO(status == AR_S_YES);
+
+		sn_val = SN_CreateObject(SN_FLOAT_T);
+		FAILED_GOTO(sn_val != NULL);
+		SN_SetFloatObject(sn_val, val);
+
+		status = SN_InsertToDictObject(obj, sn_key, sn_val);
+		FAILED_GOTO(status == AR_S_YES);
+
+		return AR_S_YES;
+INVALID_POINT:
+		if(sn_key)
+		{
+				SN_DestroyObject(sn_key);
+				sn_key = NULL;
+		}
+
+		if(sn_val)
+		{
+				SN_DestroyObject(sn_val);
+				sn_val = NULL;
+		}
+
+		return status;
+}
+
+
+
 
 arStatus_t			SN_InsertToListObjectByStr(snObject_t *obj, const char *val)
 {
@@ -2557,6 +2640,34 @@ INVALID_POINT:
 		return status;
 }
 
+
+arStatus_t			SN_InsertToListObjectByFloat(snObject_t *obj, double val)
+{
+		arStatus_t status;
+		snObject_t *sn_val;
+		AR_ASSERT(obj != NULL && val != NULL);
+
+		sn_val = NULL;
+		status = AR_S_YES;
+		
+		sn_val = SN_CreateObject(SN_FLOAT_T);
+		FAILED_GOTO(sn_val != NULL);
+		SN_SetFloatObject(sn_val, val);
+		
+		status = SN_InsertToListObject(obj, sn_val);
+		FAILED_GOTO(status == AR_S_YES);
+
+		return AR_S_YES;
+
+INVALID_POINT:
+		if(sn_val)
+		{
+				SN_DestroyObject(sn_val);
+				sn_val = NULL;
+		}
+
+		return status;
+}
 
 arStatus_t			SN_InsertToListObjectByWcs(snObject_t *obj, const wchar_t *val)
 {

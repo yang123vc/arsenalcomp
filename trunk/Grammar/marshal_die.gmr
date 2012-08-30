@@ -64,75 +64,140 @@
 :}
 ;
 
+
 %code class_def{:
 
 typedef enum
 {
-    INT_T,
-    UINT_T,
-    CHAR_T,
-    WCHAR_T,
-    FLOAT_T,
-    DOUBLE_T,
-    CUSTOM_T,
+        BYET_T,
+
+        INT8_T,
+        UINTT8_T,
+        
+        INT16_T,
+        UINTT16_T,
+        
+        INT32_T,
+        UINTT32_T,
+        
+        INT64_T,
+        UINTT64_T,
+
+        CHAR_T,
+        WCHAR_T,
+        
+        FLOAT_T,
+        DOUBLE_T,
+        
+        CUSTOM_T,
 }FieldType_t;
 
-struct Type
+
+const wchar_t* __g_inner_type[CUSTOM_T] = 
 {
-    FieldType_t    type;
-    bool        is_array;
-    size_t        array_size;
-    std::wstring    custom_name;
-};
+        L"byte_t",
+        L"int_8_t",
+        L"uint_8_t",
+        L"int_16_t",
+        L"uint_16_t",
+        L"int_32_t",
+        L"uint_32_t",
+        L"int_64_t",
+        L"uint_64_t",
 
+	 L"float",
+        L"double",
 
-class StrucDefine
-{
-private:
-    typedef std::map<std::wstring, Type>    FieldMap;
-private:
-    std::wstring            m_name;
-    FieldMap            m_fields;
-
-public:
-    StrucDefine()
-    {
-
-    }
-
-    ~StrucDefine()
-    {
+        L"char",
+        L"wchar_t",
         
-    }
-
-    const std::wstring&    Name()const
-    {
-        return m_name;
-    }
-
-
-    std::wstring    GenerateMarshalCode()const
-    {
-        return L"";
-    }
-
-    std::wstring    GenerateUnMarshalCode()const
-    {
-        return L"";
-    }
 };
 
-std::vector<StrucDefine>    g_struct_list;
-std::vector<std::wstring>    g_head_code;
-std::vector<std::wstring>    g_tail_code;
+
+static bool_t is_inner_type(FieldType_t t)
+{
+        switch(t)
+        {
+                case BYET_T:
+                case INT8_T:
+                case UINTT8_T:
+                case INT16_T:
+                case UINTT16_T:
+                case INT32_T:
+                case UINTT32_T:
+                case INT64_T:
+                case UINTT64_T:
+                case CHAR_T:
+                case WCHAR_T:
+                        return true;
+                case CUSTOM_T:
+                default:
+                        return false;
+        };
+}
+
+
+
+static bool_t is_inner_type_name(const wchar_t *name)
+{
+        for(size_t i = 0; i < CUSTOM_T; ++i)
+        {
+                if(AR_wcscmp(name, __g_inner_type[i]) == 0)
+                {
+                        return true;
+                }
+        }
+        
+        return false;
+}
+
+static const wchar_t* get_inner_type_name(FieldType_t t)
+{
+        AR_ASSERT(is_inner_type(t));
+        return __g_inner_type[t];
+}
+
+
+typedef struct Type		Type_t;
+typedef struct Field		Field_t;
+std::vector<Type_t*>    				g_type_list;
+typedef std::map<std::wstring, Field_t*>    	FieldMap;
+
+
+
+typedef struct Field
+{
+	std::wstring		name;
+	Type_t			*type;
+	bool_t			is_array;
+	size_t			array_size;
+}Field_t;
+
+
+
+typedef struct Type
+{
+        FieldType_t             type;
+        bool_t                  is_inner_type;
+
+        std::wstring            name;
+        
+        FieldMap                fields;
+}Type_t;
 
 
 
 
-    
+
+
+
 :}
 ;
 
+
+%code {:
+/******************************************************************************************/
+:};
 
 
 
@@ -178,62 +243,113 @@ std::vector<std::wstring>    g_tail_code;
                         ;
 
 
+%code {:
 
-%start                    program    ;
+typedef enum
+{
+	FIELD_T,
+	TYPE_T,
+	NAME_T,
+	
+}nodeType_t;
+
+typedef struct node_tag
+{
+	nodeType_t	t;
+
+	union{
+		Field_t	*field;
+		Type_t		*type;
+		wchar_t	name[256];
+	};
+}node_t;
+
+:};
+
+
+%start          program    ;
 
 
 
-program            :    item_list
+program         :    item_list
                 |    .
                 ;
 
 
-item_list            :    item_list    item
+item_list       :    item_list    item
                 |    item
                 ;
 
 
 
-item                :    head_code
+item  		  :    head_code
                 |    tail_code
-                |    struct_def
+                |    named_type_def
                 ;
 
 
-head_code            :    HEAD     CODE_BLOCK
+head_code       :    HEAD     CODE_BLOCK
                 ;
 
-tail_code            :    TAIL    CODE_BLOCK
-                ;
-
-
-
-struct_def            :    LEXEME    anonymous_def ";"
-                ;
-
-anonymous_def            :    "{"    def_list    "}"
-                ;
-
-def_list            :    def_list    def
-                |    def
-                ;
-
-def                :    field    ":"    type    ";"
+tail_code       :    TAIL    CODE_BLOCK
                 ;
 
 
-field                :    LEXEME        %action    auto_return_0
-                {:
-                    
-                    psrRetVal_t ret = {AR_S_YES, nodes[0]};
-                    nodes[0] = NULL;
-                    return ret;
-                :}
-                ;
 
-type                :    LEXEME
-                |    LEXEME "["    NUMBER "]"
-                |    anonymous_def
-                ;
+named_type_def  	:    LEXEME    anonymous_type_def ";"
+                	;
+
+anonymous_type_def   :    "{"    field_def_list    "}"
+                	;
+
+field_def_list	:    field_def_list	field_def
+	              |    field_def
+                	;
+
+
+/*field_type节点为Filed_t*，这里将其命名，并当做综合属性传递给上层*/
+field_def		:    field_name    ":"    field_type    ";"
+                	;
+
+
+field_name         	:    LEXEME        %action    auto_return_0
+                	{:
+				psrRetVal_t ret = {AR_S_YES, nodes[0]};
+		              nodes[0] = NULL;
+		              return ret;
+	             :}
+			;
+
+
+/*创建一个Field_t，并当做综合属性，传递给上层，这里只能解决类型和是否为数组的问题，上层负责命名*/
+
+field_type		:    LEXEME						%action on_named_type_name
+			{:
+				psrRetVal_t	ret = {AR_S_YES, NULL};		/*搜索g_type_list,有返回Type节点， 否则报告错误程序终止*/
+
+
+				return ret;
+			:}
+	
+			|    LEXEME "["    NUMBER "]"			%action on_named_array_type
+			{:
+				psrRetVal_t	ret = {AR_S_YES, NULL};		/*搜索g_type_list,如果未找到则程序终止，返回Type节点*/
+
+
+				return ret;
+			:}
+			
+			|    anonymous_type_def					%action	on_named_anonymous_type				
+			{:
+				psrRetVal_t	ret = {AR_S_YES, NULL};		/*创建Type*并加入g_type_list*/
+
+				return ret;
+			:}
+
+                	;
+
+
+
+
 
 
