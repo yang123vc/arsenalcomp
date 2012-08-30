@@ -376,6 +376,12 @@ typedef struct {
 		wchar_t					w;
 		wchar_t					w_str[1024];
 
+		float					f;
+		float					f_arr[1024];
+
+		double					d;
+		double					d_arr[1024];
+
 }daemonKeepalive_t;
 
 
@@ -433,6 +439,29 @@ static snObject_t*		__put_daemonKeepalive_t(daemonKeepalive_t *stu)
 		}
 
 		if(__put_WCHAR_T_array_to_dict(obj, L"w_str", stu->w_str) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+
+
+		if(__put_FLOAT_T_to_dict(obj, L"f", stu->f) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+		if(__put_FLOAT_T_array_to_dict(obj, L"f_arr", stu->f_arr, 1024) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+
+		if(__put_DOUBLE_T_to_dict(obj, L"d", stu->d) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+		if(__put_DOUBLE_T_array_to_dict(obj, L"d_arr", stu->d_arr, 1024) != AR_S_YES)
 		{
 				goto INVALID_POINT;
 		}
@@ -531,6 +560,30 @@ static bool_t	__get_daemonKeepalive_t(snObject_t *obj, daemonKeepalive_t *stu)
 		{
 				goto INVALID_POINT;
 		}
+
+
+
+		if(__get_FLOAT_T_from_dict(obj, L"f", &stu->f) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+		if(__get_FLOAT_T_array_from_dict(obj, L"f_arr", stu->f_arr, 1024) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+
+		if(__get_DOUBLE_T_from_dict(obj, L"d", &stu->d) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+		if(__get_DOUBLE_T_array_from_dict(obj, L"d_arr", stu->d_arr, 1024) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
 
 
 
@@ -691,11 +744,27 @@ static void marshal_die_test1()
 				ka.b_arr[i] = i % 255;
 		}
 
+
+
+
 		ka.c = 'x';
 		AR_strcpy(ka.c_str, "ka.c");
 
 		ka.w = L'X';
 		AR_wcscpy(ka.w_str, L"ka.w");
+
+
+		for(size_t i = 0; i < AR_NELEMS(ka.f_arr); ++i)
+		{
+				ka.f_arr[i] = AR_rand_flt();
+		}
+
+
+		for(size_t i = 0; i < AR_NELEMS(ka.d_arr); ++i)
+		{
+				ka.d_arr[i] = AR_rand_dbl();
+		}
+
 
 
 
