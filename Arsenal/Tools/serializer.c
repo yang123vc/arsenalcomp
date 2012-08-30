@@ -2479,7 +2479,7 @@ arStatus_t			SN_InsertToDictObjectByWcsObject(snObject_t *obj, const wchar_t *ke
 		FAILED_GOTO(sn_key != NULL);
 		
 		status = SN_SetStringObjectByWcs(sn_key, key);
-		FAILED_GOTO(status != AR_S_YES);
+		FAILED_GOTO(status == AR_S_YES);
 
 		status = SN_InsertToDictObject(obj, sn_key, val);
 		FAILED_GOTO(status == AR_S_YES);
@@ -2506,7 +2506,7 @@ arStatus_t			SN_InsertToDictObjectByStrObject(snObject_t *obj, const char *key, 
 		FAILED_GOTO(sn_key != NULL);
 		
 		status = SN_SetStringObjectByStr(sn_key, key);
-		FAILED_GOTO(status != AR_S_YES);
+		FAILED_GOTO(status == AR_S_YES);
 
 		status = SN_InsertToDictObject(obj, sn_key, val);
 		FAILED_GOTO(status == AR_S_YES);

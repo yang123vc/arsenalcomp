@@ -158,9 +158,8 @@ static const wchar_t* get_inner_type_name(FieldType_t t)
 }
 
 
-typedef struct Type		Type_t;
-typedef struct Field		Field_t;
-std::vector<Type_t*>    				g_type_list;
+typedef struct Type					Type_t;
+typedef struct Field					Field_t;
 typedef std::map<std::wstring, Field_t*>    	FieldMap;
 
 
@@ -188,7 +187,9 @@ typedef struct Type
 
 
 
-
+std::vector<Type_t*>    			g_type_list;
+std::vector<std::wstring>			g_head_code;
+std::vector<std::wstring>			g_tail_code;
 
 
 :}
@@ -200,71 +201,122 @@ typedef struct Type
 :};
 
 
-
-%token    %skip                :    "{skip_lexem}+"
-                        ;
-
-
-%token    CODE_BLOCK        :    '\{:[^\u0]*?:\}'            /*'\{((\\\{|\\\})|[^\{\}])*?\}'*/
-                ;
-
-%token    HEAD        :    '"%head"'
-                ;
-
-%token    TAIL        :    '"%tail"'
-                ;
-
-
-%token    LEXEME        :    "{lexeme}"
-                        ;
-                
-
-%token    NUMBER        :    "{number}"
-                        ;
-
-
-%token    ":"            :    '":"'
-                        ;
-
-%token    ";"            :    '";"'
-                        ;
-
-%token    "{"            :    '"{"'
-                        ;
-
-%token    "}"            :    '"}"'
-                        ;
-
-
-%token    "["            :    '"["'
-                        ;
-
-%token    "]"            :    '"]"'
-                        ;
-
-
 %code {:
+
+
+
 
 typedef enum
 {
 	FIELD_T,
 	TYPE_T,
 	NAME_T,
-	
-}nodeType_t;
+	NUM_T,
+	CODEBLOCK_T,
+}astNodeType_t;
 
 typedef struct node_tag
 {
-	nodeType_t	t;
-
+	astNodeType_t		t;
+	size_t			line;
 	union{
 		Field_t	*field;
 		Type_t		*type;
 		wchar_t	name[256];
+		uint_64_t	num;
+		struct {
+			bool_t		is_tail;
+			wchar_t	*code;
+		}code_block;
 	};
-}node_t;
+}ast_node_t;
 
 :};
+
+
+%token    %skip                	:    "{skip_lexem}+"
+                        		;
+
+
+%token    CODE_BLOCK        :    '\{:[^\u0]*?:\}'            %value "TOK_CLODE_BLOCK"	%action on_codeblock
+				{:
+						
+						ast_node_t	*node = AR_NEW0(ast_node_t);
+						node->t = CODEBLOCK_T;
+						node->line = tok->line;
+						node->code_block.code = AR_wcsndup(tok->str + 2, tok->str_cnt - 2);
+						node->code_block.is_tail = false;
+						psrRetVal_t ret = {AR_S_YES, (psrToken_t*)node}; 
+						return ret;
+				:}
+                		;
+
+
+%token    HEAD        	:    '"%head"'			%value "TOK_HEAD"		
+                		;
+
+%token    TAIL        	:    '"%tail"'			%value "TOK_TAIL"
+				;
+
+
+%token    LEXEME        	:    "{lexeme}"			%value "TOK_NAME"		%action on_codeblock
+				{:
+						ast_node_t	*node = AR_NEW0(ast_node_t);
+						node->t = NAME_T;
+						node->line = tok->line;
+						if(tok->str_cnt >= 256)
+						{
+							wchar_t *tmp = AR_wcsndup(tok->str, tok->str_cnt);
+							AR_error(AR_ERR_FATAIL, L"invalid name length : '%ls' line : %Iu!", tmp, tok->line );
+							AR_abort();
+						}
+						
+						AR_wcsncpy(node->name, tok->str, tok->str_cnt);
+						node->name[tok->str_cnt] = L'\0';
+						psrRetVal_t ret = {AR_S_YES, (psrToken_t*)node}; 
+						return ret;
+				:}
+                        	;
+                
+
+%token    NUMBER        	:    "{number}"			%value "TOK_NUM"		%action on_number
+				{:
+						ast_node_t	*node = AR_NEW0(ast_node_t);
+						node->t = NUM_T;
+						node->line = tok->line;
+						if(AR_wtou64_s(tok->str, tok->str + tok->str_cnt, &node->num, 10) == NULL)
+						{
+							wchar_t *tmp = AR_wcsndup(tok->str, tok->str_cnt);
+							AR_error(AR_ERR_FATAIL, L"invalid number : '%ls' line : %Iu!", tmp, tok->line);
+							AR_abort();
+						}
+
+						psrRetVal_t ret = {AR_S_YES, (psrToken_t*)node}; 
+						return ret;
+
+				:}
+                        	;
+
+
+%token    ":"            	:    '":"'					
+                        	;
+
+%token    ";"            	:    '";"'
+                        	;
+
+%token    "{"            	:    '"{"'
+                        	;
+
+%token    "}"            	:    '"}"'
+                        	;
+
+
+%token    "["            	:    '"["'
+                        	;
+
+%token    "]"            	:    '"]"'
+                        	;
+
 
 
 %start          program    ;
@@ -288,15 +340,35 @@ item  		  :    head_code
                 ;
 
 
-head_code       :    HEAD     CODE_BLOCK
-                ;
+head_code       	:    HEAD     CODE_BLOCK		%action on_head_code_def
+			{:	
+				ast_node_t *n = (ast_node_t*)nodes[1];
+				AR_ASSERT(n != NULL);
+				if(n->codeblock.code)
+				{
+					g_head_code.push_back(n->codeblock.code);
+				}
+			:}
+                	;
 
-tail_code       :    TAIL    CODE_BLOCK
-                ;
+
+tail_code       	:    TAIL    CODE_BLOCK			%action on_head_code_def
+			{:	
+				ast_node_t *n = (ast_node_t*)nodes[1];
+				AR_ASSERT(n != NULL);
+				if(n->codeblock.code)
+				{
+					g_tail_code.push_back(n->codeblock.code);
+				}
+			:}
+			;
 
 
 
-named_type_def  	:    LEXEME    anonymous_type_def ";"
+named_type_def  	:    LEXEME    anonymous_type_def ";"	%action on_named_type_def
+			{:
+				
+			:}
                 	;
 
 anonymous_type_def   :    "{"    field_def_list    "}"

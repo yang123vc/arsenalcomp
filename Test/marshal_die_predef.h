@@ -690,11 +690,51 @@ static arStatus_t		__put_BYTE_T_to_dict(snObject_t *obj, const wchar_t *field_na
 		return __put_UINT8_T_to_dict(obj, field_name, (uint_8_t)v);
 }
 
+
 static arStatus_t		__put_BYTE_T_array_to_dict(snObject_t *obj, const wchar_t *field_name, const byte_t *arr, size_t arr_size)
 {
-		AR_ASSERT(obj != NULL && field_name != NULL);
-		return __put_UINT8_T_array_to_dict(obj, field_name, (uint_8_t*)arr, arr_size);
+		arStatus_t		ar_status;
+		snObject_t		*data_obj;
+		AR_ASSERT(obj != NULL && field_name != NULL && arr != NULL && arr_size > 0);
+		AR_ASSERT(SN_GetObjectType(obj) == SN_DICT_T);
+		
+		ar_status = AR_S_YES;
+		data_obj = NULL;
+
+		data_obj = SN_CreateObject(SN_STRING_T);
+
+		if(data_obj == NULL)
+		{
+				ar_status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+
+		ar_status = SN_SetStringObjectByData(data_obj, arr, arr_size);
+
+		if(ar_status != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+
+		ar_status = SN_InsertToDictObjectByWcsObject(obj, field_name, data_obj);
+
+		if(ar_status != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+
+END_POINT:
+		if(ar_status != AR_S_YES)
+		{
+				if(data_obj)
+				{
+						SN_DestroyObject(data_obj);
+						data_obj = NULL;
+				}
+		}
+		return ar_status;
 }
+
 
 
 static arStatus_t		__put_CHAR_T_to_dict(snObject_t *obj, const wchar_t *field_name, char v)
@@ -892,6 +932,7 @@ static arStatus_t		__get_UINT8_T_from_dict(snObject_t *obj, const wchar_t *field
 		snObject_t		*int_obj;
 		AR_ASSERT(obj != NULL && field_name != NULL && pv != NULL);
 		AR_ASSERT(SN_GetObjectType(obj) == SN_DICT_T);
+		ar_status = AR_S_YES;
 
 		int_obj = SN_FindFromDictObjectByWcs(obj, field_name);
 
@@ -907,7 +948,7 @@ static arStatus_t		__get_UINT8_T_from_dict(snObject_t *obj, const wchar_t *field
 				goto END_POINT;
 		}
 
-		*pv = (int_8_t)SN_GetUIntObject(int_obj);
+		*pv = (uint_8_t)SN_GetUIntObject(int_obj);
 
 END_POINT:
 		return ar_status;
@@ -1039,6 +1080,8 @@ static arStatus_t		__get_UINT32_T_from_dict(snObject_t *obj, const wchar_t *fiel
 		snObject_t		*int_obj;
 		AR_ASSERT(obj != NULL && field_name != NULL && pv != NULL);
 		AR_ASSERT(SN_GetObjectType(obj) == SN_DICT_T);
+		
+		ar_status = AR_S_YES;
 
 		int_obj = SN_FindFromDictObjectByWcs(obj, field_name);
 
@@ -1310,8 +1353,33 @@ static arStatus_t		__get_BYTE_T_from_dict(snObject_t *obj, const wchar_t *field_
 
 static arStatus_t		__get_BYTE_T_array_from_dict(snObject_t *obj, const wchar_t *field_name, byte_t *arr, size_t arr_size)
 {
+		arStatus_t		ar_status;
+		snObject_t		*data_obj;
+		int_t			ret;
 		AR_ASSERT(obj != NULL && field_name != NULL && arr != NULL && arr_size > 0);
-		return __get_UINT8_T_array_from_dict(obj, field_name, (uint_8_t*)arr, arr_size);
+		AR_ASSERT(SN_GetObjectType(obj) == SN_DICT_T);
+
+		ar_status = AR_S_YES;
+
+		data_obj = SN_FindFromDictObjectByWcs(obj, field_name);
+		
+		if(SN_GetObjectType(data_obj) != SN_STRING_T)
+		{
+				ar_status = AR_E_NOTMATCHED;
+				goto END_POINT;
+		}
+
+		ret = SN_GetDataFromStringObject(data_obj, arr, arr_size);
+
+		if(ret < 0 || (size_t)ret != arr_size)
+		{
+				ar_status = AR_E_FAIL;
+				goto END_POINT;
+		}
+
+END_POINT:
+		return ar_status;
+
 }
 
 
