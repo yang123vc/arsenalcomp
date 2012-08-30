@@ -343,11 +343,13 @@ static bool_t	__get_daemonHandShake_t_array(snObject_t *obj, daemonHandShake_t *
 						goto INVALID_POINT;
 				}
 				
+				/***********************************************************/
 				if(!__get_daemonHandShake_t(item, &stu[i]))
 				{
 						is_ok = false;
 						goto INVALID_POINT;
 				}
+				/*********************************************************/
 		}
 		return true;
 
@@ -496,10 +498,8 @@ static bool_t	__get_daemonKeepalive_t(snObject_t *obj, daemonKeepalive_t *stu)
 				is_ok = false;
 				goto INVALID_POINT;
 		}
-
-
-
 		
+
 		if(__get_BYTE_T_from_dict(obj, L"b", &stu->b) != AR_S_YES)
 		{
 				goto INVALID_POINT;
@@ -531,7 +531,6 @@ static bool_t	__get_daemonKeepalive_t(snObject_t *obj, daemonKeepalive_t *stu)
 		{
 				goto INVALID_POINT;
 		}
-
 
 
 
