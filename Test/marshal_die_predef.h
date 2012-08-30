@@ -1461,7 +1461,7 @@ static arStatus_t		__get_FLOAT_T_from_dict(snObject_t *obj, const wchar_t *field
 		snObject_t		*flt_obj;
 		AR_ASSERT(obj != NULL && field_name != NULL && pv != NULL);
 		AR_ASSERT(SN_GetObjectType(obj) == SN_DICT_T);
-
+		ar_status = AR_S_YES;
 		flt_obj = SN_FindFromDictObjectByWcs(obj, field_name);
 
 		if(flt_obj == NULL)
@@ -1484,7 +1484,7 @@ END_POINT:
 
 
 
-static arStatus_t		__get_FLOAT_T_array_from_dict(snObject_t *obj, const wchar_t *field_name, uint_64_t *arr, size_t arr_size)
+static arStatus_t		__get_FLOAT_T_array_from_dict(snObject_t *obj, const wchar_t *field_name, float *arr, size_t arr_size)
 {
 		arStatus_t		ar_status;
 		snObject_t		*arr_list;
@@ -1520,7 +1520,7 @@ static arStatus_t		__get_FLOAT_T_array_from_dict(snObject_t *obj, const wchar_t 
 						goto END_POINT;
 				}
 
-				arr[i] = (float)SN_GetUIntObject(flt_obj);
+				arr[i] = (float)SN_GetFloatObject(flt_obj);
 		}
 END_POINT:
 		return ar_status;
@@ -1535,7 +1535,7 @@ static arStatus_t		__get_DOUBLE_T_from_dict(snObject_t *obj, const wchar_t *fiel
 		snObject_t		*flt_obj;
 		AR_ASSERT(obj != NULL && field_name != NULL && pv != NULL);
 		AR_ASSERT(SN_GetObjectType(obj) == SN_DICT_T);
-
+		ar_status = AR_S_YES;
 		flt_obj = SN_FindFromDictObjectByWcs(obj, field_name);
 
 		if(flt_obj == NULL)
@@ -1594,7 +1594,7 @@ static arStatus_t		__get_DOUBLE_T_array_from_dict(snObject_t *obj, const wchar_t
 						goto END_POINT;
 				}
 
-				arr[i] = SN_GetUIntObject(flt_obj);
+				arr[i] = SN_GetFloatObject(flt_obj);
 		}
 END_POINT:
 		return ar_status;
