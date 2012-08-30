@@ -14,6 +14,6 @@ extern void marshal_die_test();
 void test()
 {
         //file_sys_test();
-        common_test();
-        //marshal_die_test();
+        //common_test();
+        marshal_die_test();
 }

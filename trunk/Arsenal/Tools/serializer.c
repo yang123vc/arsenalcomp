@@ -2645,7 +2645,7 @@ arStatus_t			SN_InsertToListObjectByFloat(snObject_t *obj, double val)
 {
 		arStatus_t status;
 		snObject_t *sn_val;
-		AR_ASSERT(obj != NULL && val != NULL);
+		AR_ASSERT(obj != NULL);
 
 		sn_val = NULL;
 		status = AR_S_YES;

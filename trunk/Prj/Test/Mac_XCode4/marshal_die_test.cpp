@@ -130,7 +130,8 @@ static std::wstring generate_inner_type_marshal_code(const std::wstring &sn_obj_
         {
                 if(array_size == 0)
                 {
-                        AR_error(AR_ERR_FATAL, L"empty array size for %ls\r\n",  get_inner_type_name(t));
+                        AR_error(AR_ERR_FATAL, L"empty array size for %ls!\r\n",  get_inner_type_name(t));
+                        exit(-1);
                 }
                 
                 ret += L"{\n";
