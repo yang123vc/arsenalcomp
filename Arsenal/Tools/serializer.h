@@ -103,7 +103,7 @@ void			SN_SetIntObject(snObject_t	*obj,	int_64_t num);
 /*******************************Float***********************************************************/
 
 double		SN_GetFloatObject(const snObject_t	*obj);
-void		SN_SetUFloatObject(snObject_t	*obj,	double num);
+void		SN_SetFloatObject(snObject_t	*obj,	double num);
 
 
 
@@ -125,6 +125,7 @@ arStatus_t			SN_InsertToListObjectByUInt(snObject_t *obj, uint_64_t val);
 arStatus_t			SN_InsertToListObjectByInt(snObject_t *obj, int_64_t val);
 arStatus_t			SN_InsertToListObjectByWcs(snObject_t *obj, const wchar_t *val);
 arStatus_t			SN_InsertToListObjectByStr(snObject_t *obj, const char *val);
+arStatus_t			SN_InsertToListObjectByFloat(snObject_t *obj, double val);
 
 arStatus_t			SN_InsertToDictObjectByWcsData(snObject_t *obj, const wchar_t *key, const byte_t *data, size_t len);
 arStatus_t			SN_InsertToDictObjectByWcsWcs(snObject_t *obj, const wchar_t *key, const wchar_t *val);
@@ -136,6 +137,9 @@ arStatus_t			SN_InsertToDictObjectByStrWcs(snObject_t *obj, const char *key, con
 arStatus_t			SN_InsertToDictObjectByStrStr(snObject_t *obj, const char *key, const char *val);
 arStatus_t			SN_InsertToDictObjectByStrUInt(snObject_t *obj, const char *key, uint_64_t val);
 arStatus_t			SN_InsertToDictObjectByStrInt(snObject_t *obj, const char *key, int_64_t val);
+
+arStatus_t			SN_InsertToDictObjectByStrFloat(snObject_t *obj, const char *key, double val);
+arStatus_t			SN_InsertToDictObjectByWcsFloat(snObject_t *obj, const wchar_t *key, double val);
 
 
 arStatus_t			SN_InsertToDictObjectByWcsObject(snObject_t *obj, const wchar_t *key, snObject_t *val);
