@@ -429,7 +429,7 @@ void sn_test_float()
 		SN_SetStringObjectByWcs(key, L"key");
 
 		snObject_t		*val = SN_CreateObject(SN_FLOAT_T);
-		SN_SetUFloatObject(val, 3.14159265);
+		SN_SetFloatObject(val, 3.14159265);
 
 		snObject_t		*obj = SN_CreateObject(SN_DICT_T);
 
