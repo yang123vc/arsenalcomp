@@ -569,8 +569,6 @@ static bool_t	__get_daemonKeepalive_t(snObject_t *obj, daemonKeepalive_t *stu)
 		AR_ASSERT(SN_GetObjectType(obj) == SN_DICT_T);
 		is_ok = true;
 
-
-
 		/***************************************************************************/
 		
 		if(__get_UINT32_T_from_dict(obj, L"u", &stu->u) != AR_S_YES)
