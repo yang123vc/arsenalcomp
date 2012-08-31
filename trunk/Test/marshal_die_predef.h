@@ -112,7 +112,7 @@ static arStatus_t		__get_BYTE_T_array_from_dict(snObject_t *obj, const wchar_t *
 
 		data_obj = SN_FindFromDictObjectByWcs(obj, field_name);
 		
-		if(SN_GetObjectType(data_obj) != SN_STRING_T)
+		if(data_obj == NULL || SN_GetObjectType(data_obj) != SN_STRING_T)
 		{
 				ar_status = AR_E_NOTMATCHED;
 				goto END_POINT;
@@ -130,6 +130,63 @@ END_POINT:
 		return ar_status;
 }
 
+
+/**********************************************************bool_t***************************************************/
+
+
+
+static arStatus_t		__put_BOOL_T_to_dict(snObject_t *obj, const wchar_t *field_name, bool_t v)
+{
+		AR_ASSERT(obj != NULL && field_name != NULL);
+		return __put_BYTE_T_to_dict(obj, field_name, (byte_t)v);
+}
+
+
+/*这里可以优化，但是，何必呢~~~~*/
+
+static arStatus_t		__put_BOOL_T_array_to_dict(snObject_t *obj, const wchar_t *field_name, bool_t *arr, size_t arr_size)
+{
+		return __put_BYTE_T_array_to_dict(obj, field_name, (byte_t*)arr, arr_size);
+}
+
+
+
+
+
+static arStatus_t		__get_BOOL_T_from_dict(snObject_t *obj, const wchar_t *field_name, bool_t *pv)
+{
+		byte_t v;
+		arStatus_t		ar_status;
+		AR_ASSERT(obj != NULL && field_name != NULL && pv != NULL);
+		ar_status = __get_BYTE_T_from_dict(obj, field_name, &v);
+		if(ar_status == AR_S_YES)
+		{
+				*pv = (bool_t)v ? true : false;
+		}
+		return ar_status;
+
+}
+
+
+/*...，同上*/
+static arStatus_t		__get_BOOL_T_array_from_dict(snObject_t *obj, const wchar_t *field_name, bool_t *arr, size_t arr_size)
+{
+		arStatus_t		ar_status;
+		size_t			i;
+		AR_ASSERT(obj != NULL && field_name != NULL && arr != NULL && arr_size > 0);
+
+		ar_status = __get_BYTE_T_array_from_dict(obj, field_name, (byte_t*)arr, arr_size);
+
+		if(ar_status == AR_S_YES)
+		{
+				for(i = 0; i < arr_size; ++i)
+				{
+						arr[i] = arr[i] ? true : false;
+				}
+		}
+
+		return ar_status;
+}
 
 
 /**********************************************************char***************************************************/
@@ -226,7 +283,7 @@ static arStatus_t		__get_CHAR_T_array_from_dict(snObject_t *obj, const wchar_t *
 
 		str_obj = SN_FindFromDictObjectByWcs(obj, field_name);
 		
-		if(SN_GetObjectType(str_obj) != SN_STRING_T)
+		if(str_obj == NULL || SN_GetObjectType(str_obj) != SN_STRING_T)
 		{
 				ar_status = AR_E_NOTMATCHED;
 				goto END_POINT;
@@ -353,7 +410,7 @@ static arStatus_t		__get_WCHAR_T_array_from_dict(snObject_t *obj, const wchar_t 
 
 		str_obj = SN_FindFromDictObjectByWcs(obj, field_name);
 		
-		if(SN_GetObjectType(str_obj) != SN_STRING_T)
+		if(str_obj == NULL || SN_GetObjectType(str_obj) != SN_STRING_T)
 		{
 				ar_status = AR_E_NOTMATCHED;
 				goto END_POINT;
@@ -952,7 +1009,6 @@ static arStatus_t		__get_INT64_T_array_from_dict(snObject_t *obj, const wchar_t 
 		
 		__CHECK_ARG(obj, field_name);
 
-		
 		ar_status = __get_BYTE_T_array_from_dict(obj, field_name, (byte_t*)arr, sizeof(arr[0]) * arr_size);
 
 		for(i = 0; i < arr_size; ++i)
@@ -1097,15 +1153,9 @@ static arStatus_t		__get_FLOAT_T_from_dict(snObject_t *obj, const wchar_t *field
 
 		flt_obj = SN_FindFromDictObjectByWcs(obj, field_name);
 
-		if(flt_obj == NULL)
+		if(flt_obj == NULL || SN_GetObjectType(flt_obj) != SN_FLOAT_T)
 		{
-				ar_status = AR_E_NOTFOUND;
-				goto END_POINT;
-		}
-
-		if(SN_GetObjectType(flt_obj) != SN_FLOAT_T)
-		{
-				ar_status = AR_E_NOTMATCHED;
+				ar_status = AR_E_INVAL;
 				goto END_POINT;
 		}
 
@@ -1182,7 +1232,7 @@ static arStatus_t		__get_FLOAT_T_array_from_dict(snObject_t *obj, const wchar_t 
 
 		arr_list = SN_FindFromDictObjectByWcs(obj, field_name);
 		
-		if(SN_GetObjectType(arr_list) != SN_LIST_T)
+		if(arr_list == NULL || SN_GetObjectType(arr_list) != SN_LIST_T)
 		{
 				ar_status = AR_E_NOTMATCHED;
 				goto END_POINT;
@@ -1301,13 +1351,8 @@ static arStatus_t		__get_DOUBLE_T_from_dict(snObject_t *obj, const wchar_t *fiel
 
 		flt_obj = SN_FindFromDictObjectByWcs(obj, field_name);
 
-		if(flt_obj == NULL)
-		{
-				ar_status = AR_E_NOTFOUND;
-				goto END_POINT;
-		}
-
-		if(SN_GetObjectType(flt_obj) != SN_FLOAT_T)
+		
+		if(flt_obj == NULL || SN_GetObjectType(flt_obj) != SN_FLOAT_T)
 		{
 				ar_status = AR_E_NOTMATCHED;
 				goto END_POINT;
