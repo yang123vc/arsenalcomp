@@ -219,6 +219,8 @@ std::vector<std::wstring>    g_tail_code;
 
 typedef struct {
 		uint_32_t		session_id;
+		bool_t			bool_val;
+		bool_t			bool_arr[1024];
 }daemonHandShake_t;
 
 
@@ -240,6 +242,18 @@ static snObject_t*		__put_daemonHandShake_t(daemonHandShake_t *stu)
 		{
 				goto INVALID_POINT;
 		}
+
+		if(__put_BOOL_T_to_dict(obj, L"bool_val", stu->bool_val) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+
+		if(__put_BOOL_T_array_to_dict(obj, L"bool_arr", stu->bool_arr, 1024) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
 
 		/**********************************************/
 		return obj;
@@ -272,7 +286,19 @@ static bool_t	__get_daemonHandShake_t(snObject_t *obj, daemonHandShake_t *stu)
 				is_ok = false;
 				goto INVALID_POINT;
 		}
+
+		if(__get_BOOL_T_from_dict(obj, L"bool_val", &stu->bool_val) != AR_S_YES)
+		{
+				is_ok = false;
+				goto INVALID_POINT;
+		}
 		
+		if(__get_BOOL_T_array_from_dict(obj, L"bool_arr", stu->bool_arr, 1024) != AR_S_YES)
+		{
+				is_ok = false;
+				goto INVALID_POINT;
+		}
+
 		/************************************************************************************/
 
 		return true;
@@ -604,10 +630,7 @@ static bool_t	__get_daemonKeepalive_t(snObject_t *obj, daemonKeepalive_t *stu)
 		{
 				goto INVALID_POINT;
 		}
-
-
-
-
+		
 		if(__get_DOUBLE_T_from_dict(obj, L"d", &stu->d) != AR_S_YES)
 		{
 				goto INVALID_POINT;
@@ -639,8 +662,6 @@ static bool_t	__get_daemonKeepalive_t(snObject_t *obj, daemonKeepalive_t *stu)
 		{
 				goto INVALID_POINT;
 		}
-
-
 
 
 
