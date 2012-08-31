@@ -362,8 +362,10 @@ INVALID_POINT:
 
 
 typedef struct {
+
 		uint_32_t				u;
 		uint_32_t				u_arr[1024];
+
 		daemonHandShake_t		h;
 		daemonHandShake_t		h_arr[1024];
 
@@ -381,6 +383,12 @@ typedef struct {
 
 		double					d;
 		double					d_arr[1024];
+
+		uint_16_t				u16;
+		uint_16_t				u16_arr[1024];
+
+		int_64_t				i64;
+		int_64_t				i64_arr[1024];
 
 }daemonKeepalive_t;
 
@@ -467,6 +475,28 @@ static snObject_t*		__put_daemonKeepalive_t(daemonKeepalive_t *stu)
 		}
 
 
+		if(__put_UINT16_T_to_dict(obj, L"u16", stu->u16) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+		if(__put_UINT16_T_array_to_dict(obj, L"u16_arr", stu->u16_arr, 1024) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+
+		if(__put_INT64_T_to_dict(obj, L"i64", stu->i64) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+		if(__put_INT64_T_array_to_dict(obj, L"i64_arr", stu->i64_arr, 1024) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+
 		/***********************************生成单个结构********************************/
 		tmp = __put_daemonHandShake_t(&stu->h);
 		if(tmp == NULL)
@@ -516,11 +546,13 @@ static bool_t	__get_daemonKeepalive_t(snObject_t *obj, daemonKeepalive_t *stu)
 
 
 		/***************************************************************************/
+		
 		if(__get_UINT32_T_from_dict(obj, L"u", &stu->u) != AR_S_YES)
 		{
 				is_ok = false;
 				goto INVALID_POINT;
 		}
+		
 
 		if(__get_UINT32_T_array_from_dict(obj, L"u_arr", stu->u_arr, 1024) != AR_S_YES)
 		{
@@ -574,6 +606,8 @@ static bool_t	__get_daemonKeepalive_t(snObject_t *obj, daemonKeepalive_t *stu)
 		}
 
 
+
+
 		if(__get_DOUBLE_T_from_dict(obj, L"d", &stu->d) != AR_S_YES)
 		{
 				goto INVALID_POINT;
@@ -583,6 +617,29 @@ static bool_t	__get_daemonKeepalive_t(snObject_t *obj, daemonKeepalive_t *stu)
 		{
 				goto INVALID_POINT;
 		}
+
+
+		if(__get_UINT16_T_from_dict(obj, L"u16", &stu->u16) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+		if(__get_UINT16_T_array_from_dict(obj, L"u16_arr", stu->u16_arr, 1024) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+
+		if(__get_INT64_T_from_dict(obj, L"i64", &stu->i64) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+		if(__get_INT64_T_array_from_dict(obj, L"i64_arr", stu->i64_arr, 1024) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
 
 
 
@@ -721,7 +778,6 @@ static void marshal_die_test1()
 		AR_memset(&kb, 0, sizeof(kb));
 		AR_printf(L"sizeof daemonKeepalive_t = %u KB\r\n", sizeof(ka) / 1024);
 
-
 		ka.h.session_id = 123;
 		
 		for(size_t i = 0; i < AR_NELEMS(ka.h_arr); ++i)
@@ -742,6 +798,14 @@ static void marshal_die_test1()
 		for(size_t i = 0; i < AR_NELEMS(ka.b_arr); ++i)
 		{
 				ka.b_arr[i] = i % 255;
+		}
+
+
+		ka.u16 = AR_rand32() % 65536;
+		
+		for(size_t i = 0; i < AR_NELEMS(ka.u16_arr); ++i)
+		{
+				ka.u16_arr[i] = AR_rand32() % 65536;
 		}
 
 
@@ -798,6 +862,7 @@ static void marshal_die_test1()
 		AR_DestroyBuffer(buf);
 		buf = NULL;
 		
+
 		AR_printf(L"AR_memcmp(&ka, &kb, sizeof(ka)) = %u\r\n", AR_memcmp(&ka, &kb, sizeof(ka)));
 
 }
