@@ -66,9 +66,6 @@
     <ClCompile Include="..\..\..\Test\tokenizer_test.c">
       <Filter>Test</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Test\gen_code_test.c">
-      <Filter>Test</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Test\gmr_test.c">
       <Filter>Test</Filter>
     </ClCompile>
@@ -436,6 +433,12 @@
       <Filter>Lexer</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\marshal_die_test.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\marshal_die.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Test\gen_code_test.c">
       <Filter>Test</Filter>
     </ClCompile>
   </ItemGroup>
