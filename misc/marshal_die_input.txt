@@ -2,19 +2,21 @@
 
 daemonHandshake {
 	user			:	wchar_t[1024];
-	session_id		:	int_t;
+	session_id		:	int_32_t;
 };
 
 
 daemonKeepalive{
-	unused	:	uint_t;
+	test	:	bool_t[1024];
+	unused	:	uint_32_t;
+	int_32	:	int_32_t[1024];
 };
 
 
 daemonTest{
 	test : {
-		t1 : uint_t;
-		t2 : uint_t;
+		t1 : uint_32_t;
+		t2 : uint_32_t;
 		t3 : wchar_t[1024];
 		t4 : daemonKeepalive[1024];
 	};

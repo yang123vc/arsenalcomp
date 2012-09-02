@@ -60,6 +60,7 @@
 #include <set>
 #include <map>
 #include "Arsenal.h"
+using namespace ARSpace;
 
 :}
 ;
@@ -69,6 +70,7 @@
 
 typedef enum
 {
+	 BOOL_T,
         BYET_T,
 
         INT8_T,
@@ -83,18 +85,19 @@ typedef enum
         INT64_T,
         UINTT64_T,
 
-        CHAR_T,
-        WCHAR_T,
-        
-        FLOAT_T,
+	 FLOAT_T,
         DOUBLE_T,
         
+        CHAR_T,
+        WCHAR_T,
+
         CUSTOM_T,
 }FieldType_t;
 
 
 const wchar_t* __g_inner_type[CUSTOM_T] = 
 {
+	 L"bool_t",
         L"byte_t",
         L"int_8_t",
         L"uint_8_t",
@@ -118,6 +121,7 @@ static bool_t is_inner_type(FieldType_t t)
 {
         switch(t)
         {
+		   case BOOL_T:
                 case BYET_T:
                 case INT8_T:
                 case UINTT8_T:
@@ -127,6 +131,8 @@ static bool_t is_inner_type(FieldType_t t)
                 case UINTT32_T:
                 case INT64_T:
                 case UINTT64_T:
+		  case FLOAT_T:
+		  case DOUBLE_T:
                 case CHAR_T:
                 case WCHAR_T:
                         return true;
@@ -135,6 +141,7 @@ static bool_t is_inner_type(FieldType_t t)
                         return false;
         };
 }
+
 
 
 
@@ -160,7 +167,7 @@ static const wchar_t* get_inner_type_name(FieldType_t t)
 
 typedef struct Type					Type_t;
 typedef struct Field					Field_t;
-typedef std::map<std::wstring, Field_t*>    	FieldMap;
+typedef std::vector<Field_t*>    			FieldList;
 
 
 
@@ -177,12 +184,39 @@ typedef struct Field
 typedef struct Type
 {
         FieldType_t             type;
+	 std::wstring             name;
         bool_t                  is_inner_type;
 
-        std::wstring            name;
         
-        FieldMap                fields;
+        
+        FieldList		   fields;
 }Type_t;
+
+
+void insert_field_to_type(Type_t *type, Field_t *field)
+{
+	size_t i;
+
+	AR_ASSERT(type != NULL && field != NULL);
+
+	for(size_t i = 0; i < type->fields.size(); ++i)
+	{
+		if(type->fields[i]->name == field->name)
+		{
+			AR_error(AR_ERR_FATAL, L"duplicate field name '%ls'\r\n", field->name.c_str());
+			AR_abort();
+		}
+	}
+
+	if(is_inner_type_name(field->name.c_str()))
+	{
+		AR_error(AR_ERR_FATAL, L"invalid field name '%ls'\r\n", field->name.c_str());
+		AR_abort();
+	}
+	
+	type->fields.push_back(field);
+	
+}
 
 
 
@@ -190,6 +224,7 @@ typedef struct Type
 std::vector<Type_t*>    			g_type_list;
 std::vector<std::wstring>			g_head_code;
 std::vector<std::wstring>			g_tail_code;
+
 
 
 :}
@@ -231,6 +266,67 @@ typedef struct node_tag
 	};
 }ast_node_t;
 
+
+ast_node_t* create_anonymous_type()
+{
+	static uint_32_t	id = 0;
+	ast_node_t	*node;
+	static wchar_t	name[128];
+	AR_swprintf(name, 128, L"anonymous_type_%u", id);
+	id++;
+	
+	node = new ast_node_t;
+	node->t = TYPE_T;
+	node->type = new Type_t;
+	node->type->name = name;
+	node->type->type = CUSTOM_T;
+	node->type->is_inner_type = false;
+	
+	return node;
+}
+
+Type_t*	find_type(const std::wstring &name)
+{
+		for(size_t i = 0; i < g_type_list.size(); ++i)
+		{
+				if(g_type_list[i]->name == name)
+				{
+						return g_type_list[i];
+				}
+		}
+		return NULL;
+
+}
+
+void		insert_type(Type_t *type)
+{
+		AR_ASSERT(type != NULL);
+
+		if(find_type(type->name) != NULL)
+		{
+				AR_error(AR_ERR_FATAL, L"duplicate type name '%ls'\r\n", type->name.c_str());
+				AR_abort();
+		}
+		
+		g_type_list.push_back(type);
+}
+
+
+
+void init_inner_type()
+{
+	for(size_t i = 0; i < CUSTOM_T; ++i)
+	{
+		Type_t *type = new Type_t;
+		type->name = get_inner_type_name((FieldType_t)i);
+		type->type = (FieldType_t)i;
+		type->is_inner_type = true;
+		insert_type(type);
+	}
+}
+
+
+
 :};
 
 
@@ -241,7 +337,7 @@ typedef struct node_tag
 %token    CODE_BLOCK        :    '\{:[^\u0]*?:\}'            %value "TOK_CLODE_BLOCK"	%action on_codeblock
 				{:
 						
-						ast_node_t	*node = AR_NEW0(ast_node_t);
+						ast_node_t	*node = new ast_node_t;
 						node->t = CODEBLOCK_T;
 						node->line = tok->line;
 						node->code_block.code = AR_wcsndup(tok->str + 2, tok->str_cnt - 2);
@@ -261,13 +357,13 @@ typedef struct node_tag
 
 %token    LEXEME        	:    "{lexeme}"			%value "TOK_NAME"		%action on_codeblock
 				{:
-						ast_node_t	*node = AR_NEW0(ast_node_t);
+						ast_node_t	*node = new ast_node_t;
 						node->t = NAME_T;
 						node->line = tok->line;
 						if(tok->str_cnt >= 256)
 						{
 							wchar_t *tmp = AR_wcsndup(tok->str, tok->str_cnt);
-							AR_error(AR_ERR_FATAIL, L"invalid name length : '%ls' line : %Iu!", tmp, tok->line );
+							AR_error(AR_ERR_FATAL, L"invalid name length : '%ls' line : %Iu!", tmp, tok->line );
 							AR_abort();
 						}
 						
@@ -281,13 +377,13 @@ typedef struct node_tag
 
 %token    NUMBER        	:    "{number}"			%value "TOK_NUM"		%action on_number
 				{:
-						ast_node_t	*node = AR_NEW0(ast_node_t);
+						ast_node_t	*node = new ast_node_t;
 						node->t = NUM_T;
 						node->line = tok->line;
 						if(AR_wtou64_s(tok->str, tok->str + tok->str_cnt, &node->num, 10) == NULL)
 						{
 							wchar_t *tmp = AR_wcsndup(tok->str, tok->str_cnt);
-							AR_error(AR_ERR_FATAIL, L"invalid number : '%ls' line : %Iu!", tmp, tok->line);
+							AR_error(AR_ERR_FATAL, L"invalid number : '%ls' line : %Iu!", tmp, tok->line);
 							AR_abort();
 						}
 
@@ -319,6 +415,7 @@ typedef struct node_tag
 
 
 
+
 %start          program    ;
 
 
@@ -342,24 +439,29 @@ item  		  :    head_code
 
 head_code       	:    HEAD     CODE_BLOCK		%action on_head_code_def
 			{:	
+				psrRetVal_t ret = {AR_S_YES, NULL};
 				ast_node_t *n = (ast_node_t*)nodes[1];
 				AR_ASSERT(n != NULL);
-				if(n->codeblock.code)
+				if(n->code_block.code)
 				{
-					g_head_code.push_back(n->codeblock.code);
+					g_head_code.push_back(n->code_block.code);
 				}
+
+				return ret;
 			:}
                 	;
 
 
 tail_code       	:    TAIL    CODE_BLOCK			%action on_head_code_def
 			{:	
+				psrRetVal_t ret = {AR_S_YES, NULL};
 				ast_node_t *n = (ast_node_t*)nodes[1];
 				AR_ASSERT(n != NULL);
-				if(n->codeblock.code)
+				if(n->code_block.code)
 				{
-					g_tail_code.push_back(n->codeblock.code);
+					g_tail_code.push_back(n->code_block.code);
 				}
+				return ret;
 			:}
 			;
 
@@ -367,20 +469,139 @@ tail_code       	:    TAIL    CODE_BLOCK			%action on_head_code_def
 
 named_type_def  	:    LEXEME    anonymous_type_def ";"	%action on_named_type_def
 			{:
-				
+				psrRetVal_t ret = {AR_S_YES, NULL};
+				ast_node_t *type_name = (ast_node_t*)nodes[0];
+				ast_node_t *type_node = (ast_node_t*)nodes[1];
+				AR_ASSERT(type_name != NULL && type_name->t == NAME_T);
+				AR_ASSERT(type_node != NULL && type_node->t == TYPE_T);
+				type_node->type->name = type_name->name;
+				insert_type(type_node->type);
+				return ret;
+
 			:}
                 	;
 
-anonymous_type_def   :    "{"    field_def_list    "}"
+
+anonymous_type_def   :    "{"    field_def_list    "}"		%action	auto_return_1
+			{:
+				psrRetVal_t ret = {AR_S_YES, nodes[1]};
+				return ret;
+
+			:}
                 	;
 
-field_def_list	:    field_def_list	field_def
-	              |    field_def
+
+field_def_list	:    field_def_list	field_def		%action 	on_filed_def_list
+			{:
+				psrRetVal_t ret = {AR_S_YES, NULL};
+				ast_node_t *type_node = (ast_node_t*)nodes[0];
+				ast_node_t *new_field = (ast_node_t*)nodes[1];
+				AR_ASSERT(type_node != NULL && new_field != NULL);
+				AR_ASSERT(type_node->t == TYPE_T && new_field->t == FIELD_T);
+				
+				insert_field_to_type(type_node->type, new_field->field);
+				ret.node = type_node;
+				return ret;
+
+			:}
+	              |    field_def				%action	on_new_field_def_list
+			{:
+				psrRetVal_t ret = {AR_S_YES, NULL};
+				ast_node_t *new_type = create_anonymous_type();
+				ast_node_t *new_field = (ast_node_t*)nodes[0];
+				AR_ASSERT(new_field != NULL);
+				nodes[0] = NULL;
+				insert_field_to_type(new_type->type, new_field->field);
+				ret.node = (psrNode_t*)new_type;
+				return ret;
+			:}
                 	;
 
 
-/*field_type节点为Filed_t*，这里将其命名，并当做综合属性传递给上层*/
-field_def		:    field_name    ":"    field_type    ";"
+/*
+	field_type节点为Filed_t*，这里将其命名，并当做综合属性传递给上层
+*/
+
+field_def		:    	field_name    ":"    LEXEME    ";"		%action on_named_field_name
+			{:
+				psrRetVal_t	ret = {AR_S_YES, NULL};		/*搜索g_type_list,有返回Type节点， 否则报告错误程序终止*/
+				ast_node_t *name = (ast_node_t*)nodes[0];
+				ast_node_t *type_name = (ast_node_t*)nodes[2];
+				AR_ASSERT(name->t == NAME_T && type_name->t == NAME_T);
+
+				ast_node_t *field_node = new ast_node_t;
+				field_node->t = FIELD_T;
+				field_node->field = new Field_t;
+				field_node->field->name = name->name;
+				field_node->field->type = find_type(type_name->name);
+				field_node->field->is_array = false;
+				field_node->field->array_size = 0;
+				if(field_node->field->type == NULL)
+				{
+					AR_error(AR_ERR_FATAL, L"invalid type name '%ls'\r\n", type_name->name);
+					AR_abort();
+				}
+				ret.node = (psrNode_t*)field_node;
+				return ret;
+			:}
+
+			|	field_name    ":"    LEXEME "["    NUMBER "]"	";"	%action on_named_array_field
+			{:
+				psrRetVal_t	ret = {AR_S_YES, NULL};		/*搜索g_type_list,有返回Type节点， 否则报告错误程序终止*/
+				ast_node_t *name = (ast_node_t*)nodes[0];
+				ast_node_t *type_name = (ast_node_t*)nodes[2];
+				ast_node_t *array_size = (ast_node_t*)nodes[4];
+				AR_ASSERT(name != NULL && type_name != NULL && array_size != NULL);
+				AR_ASSERT(name->t == NAME_T && type_name->t == NAME_T);
+				
+				ast_node_t *field_node = new ast_node_t;
+				field_node->t = FIELD_T;
+				field_node->field = new Field_t;
+				field_node->field->name = name->name;
+				field_node->field->type = find_type(type_name->name);
+
+				if(field_node->field->type == NULL)
+				{
+					AR_error(AR_ERR_FATAL, L"invalid type name '%ls'\r\n", type_name->name);
+					AR_abort();
+				}
+
+
+				field_node->field->is_array = true;
+				field_node->field->array_size = array_size->num;
+
+				if(field_node->field->array_size == 0)
+				{
+					AR_error(AR_ERR_FATAL, L"invalid array size '%ls' : %u\r\n", type_name->name, field_node->field->array_size);
+					AR_abort();
+				}
+
+				ret.node = (psrNode_t*)field_node;
+				return ret;
+
+			:}
+
+			|	field_name    ":"    anonymous_type_def	";"		%action on_named_nesting_field
+			{:
+				psrRetVal_t	ret = {AR_S_YES, NULL};		/*搜索g_type_list,有返回Type节点， 否则报告错误程序终止*/
+				ast_node_t *name = (ast_node_t*)nodes[0];
+				ast_node_t *type = (ast_node_t*)nodes[2];
+				AR_ASSERT(name != NULL && type != NULL);
+				AR_ASSERT(name->t == NAME_T && type->t == TYPE_T);
+
+				insert_type(type->type);
+
+				ast_node_t *field_node = new ast_node_t;
+				field_node->t = FIELD_T;
+				field_node->field = new Field_t;
+				field_node->field->name = name->name;
+				field_node->field->type = type->type;
+				field_node->field->is_array = false;
+				field_node->field->array_size = 0;
+				type->type = NULL;
+				ret.node = (psrNode_t*)field_node;
+				return ret;
+			:}
                 	;
 
 
@@ -393,34 +614,178 @@ field_name         	:    LEXEME        %action    auto_return_0
 			;
 
 
-/*创建一个Field_t，并当做综合属性，传递给上层，这里只能解决类型和是否为数组的问题，上层负责命名*/
-
-field_type		:    LEXEME						%action on_named_type_name
-			{:
-				psrRetVal_t	ret = {AR_S_YES, NULL};		/*搜索g_type_list,有返回Type节点， 否则报告错误程序终止*/
+%code main{:
 
 
-				return ret;
-			:}
-	
-			|    LEXEME "["    NUMBER "]"			%action on_named_array_type
-			{:
-				psrRetVal_t	ret = {AR_S_YES, NULL};		/*搜索g_type_list,如果未找到则程序终止，返回Type节点*/
 
 
-				return ret;
-			:}
-			
-			|    anonymous_type_def					%action	on_named_anonymous_type				
-			{:
-				psrRetVal_t	ret = {AR_S_YES, NULL};		/*创建Type*并加入g_type_list*/
+static arStatus_t		AR_STDCALL handle_on_error(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
+{
+		AR_ASSERT(ctx != NULL && tok != NULL);
+		
+		wchar_t msg[32];
+		if(tok->str_cnt > 0)
+		{
+				AR_wcsncpy(msg, tok->str, AR_MIN(tok->str_cnt, 32));
+		}else
+		{
+				AR_wcscpy(msg, L"EOI");
+		}
 
-				return ret;
-			:}
+		AR_error(AR_ERR_FATAL, L"invalid token : '%ls'\r\n", msg);
+		AR_abort();
+		return AR_S_NO;
+}
 
-                	;
+static void		AR_STDCALL free_node(psrNode_t *node, void *ctx)
+{
+
+}
+
+static const psrHandler_t		__g_handler = 
+{
+		handle_on_error,
+		free_node
+};
 
 
+
+
+
+void generate_type_list(const std::wstring &input)
+{
+		
+		
+		lex_t *lex = __build_lex();
+		psrGrammar_t	*gmr = __build_grammar(&__g_handler);
+		const parser_t		*parser = Parser_CreateParser(gmr, PARSER_LALR);
+		psrContext_t *parser_ctx = Parser_CreateContext(parser, NULL);
+
+
+
+
+
+
+		ARSpace::lexMatch_t *match = ARSpace::Lex_CreateMatch(lex);
+		ARSpace::Lex_ResetInput(match, input.c_str());
+		
+		ARSpace::Lex_MatchClearFlags(match);
+		
+		ARSpace::lexToken_t		token;
+
+		memset(&token, 0, sizeof(token));
+		
+		arStatus_t status = AR_S_YES;
+
+		while(status == AR_S_YES)
+		{
+
+				status = ARSpace::Lex_Match(match, &token);
+
+				if(status == AR_S_YES)
+				{
+						ARSpace::psrToken_t		psr_tok;
+
+						PARSER_TOTERMTOK(&token, &psr_tok);
+
+						status = ARSpace::Parser_AddToken(parser_ctx, &psr_tok);
+						
+						if(token.value == 0)
+						{
+								break;
+						}
+
+				}else if(status == AR_S_NO)
+				{
+						size_t len = wcslen(ARSpace::Lex_GetNextInput(match));
+						if(len > 20) len = 20;
+
+						size_t line;
+						ARSpace::Lex_MatchGetCoordinate(match, NULL, &line, NULL);
+
+						
+						wchar_t msg[1024];
+						AR_wcsncpy(msg, ARSpace::Lex_GetNextInput(match),  (int)len);
+						AR_error(AR_ERR_FATAL, L"Input Error : %ls line : %Iu", msg, line);
+						AR_abort();
+
+				}else
+				{
+						AR_error(AR_ERR_FATAL, L"inner error !\r\n");
+						AR_abort();
+				}
+
+		}
+
+		Parser_DestroyContext(parser_ctx);
+		parser_ctx = NULL;
+
+		Parser_DestroyParser(parser);
+		parser = NULL;
+
+		Parser_DestroyGrammar(gmr);
+		gmr = NULL;
+
+		Lex_Destroy(lex);
+		lex = NULL;
+
+		Lex_DestroyMatch(match);
+		match = NULL;
+
+}
+
+
+
+static void handle_types()
+{
+		for(size_t i = 0; i < g_type_list.size(); ++i)
+		{
+				Type_t *type = g_type_list[i];
+				AR_ASSERT(type != NULL);
+				AR_printf(L"type name : %ls\r\n", type->name.c_str());
+				for(size_t k = 0; k < type->fields.size(); ++k)
+				{
+						Field_t *field = type->fields[k];
+						if(field->is_array)
+						{
+								AR_printf(L"%ls    %ls[%Iu] ;\r\n", field->type->name.c_str(), field->name.c_str(), field->array_size);
+						}else
+						{
+								AR_printf(L"%ls    %ls ;\r\n", field->type->name.c_str(), field->name.c_str());
+						}
+
+				}
+
+		}
+}
+
+
+#define INPUT_PATH		L"D:\\Code\\Solidus\\Compiler\\Arsenal\\misc\\marshal_die_input.txt"
+
+extern "C" void marshal_die_main()
+{
+		init_inner_type();
+		arString_t *input = AR_CreateString();
+
+		if(AR_LoadBomTextFile(INPUT_PATH, NULL, input) != AR_S_YES)
+		{
+				AR_error(AR_ERR_FATAL, L"Failed to load '%ls'\r\n", INPUT_PATH);
+				AR_abort();
+		}
+
+
+		generate_type_list(AR_GetStringCString(input));
+
+		handle_types();
+
+		AR_DestroyString(input);
+
+}
+
+
+
+
+:}BTM;
 
 
 

@@ -92,6 +92,8 @@ extern void curl_test();
 extern void rgx_test();
 
 extern void marshal_die_test();
+
+extern void marshal_die_main();
 #endif
 
 
@@ -179,7 +181,9 @@ void AR_Test()
 
 		//rgx_test();
 
-		marshal_die_test();
+		//marshal_die_test();
+
+		marshal_die_main();
 
 		getchar();
 #else

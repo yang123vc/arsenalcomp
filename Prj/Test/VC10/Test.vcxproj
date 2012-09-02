@@ -1498,7 +1498,9 @@
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
-    <ClCompile Include="..\..\..\Test\gen_code_test.c" />
+    <ClCompile Include="..\..\..\Test\gen_code_test.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">CompileAsCpp</CompileAs>
+    </ClCompile>
     <ClCompile Include="..\..\..\Test\gmr_test.c" />
     <ClCompile Include="..\..\..\Test\grammar_config_test.c" />
     <ClCompile Include="..\..\..\Test\grammar_test.c" />
@@ -1509,6 +1511,7 @@
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\main.cpp" />
+    <ClCompile Include="..\..\..\Test\marshal_die.cpp" />
     <ClCompile Include="..\..\..\Test\marshal_die_test.cpp" />
     <ClCompile Include="..\..\..\Test\math_test.c" />
     <ClCompile Include="..\..\..\Test\mem_test.c" />

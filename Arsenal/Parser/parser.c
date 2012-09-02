@@ -644,7 +644,7 @@ psrNode_t*		Parser_GetNodeFromNodeStack(psrContext_t *parser_context, size_t ind
 static arStatus_t __handle_shift(psrContext_t *parser_context, size_t shift_to, const psrToken_t *tok, const psrTermInfo_t *term)
 {
 		psrRetVal_t			ret;
-		AR_ASSERT(parser_context != NULL && tok != NULL && term != NULL && term->leaf_f != NULL);
+		AR_ASSERT(parser_context != NULL && tok != NULL && term != NULL);
 
 		
 		Parser_PushStack(&parser_context->state_stack, shift_to);
