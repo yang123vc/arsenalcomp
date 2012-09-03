@@ -181,9 +181,9 @@ void AR_Test()
 
 		//rgx_test();
 
-		//marshal_die_test();
+		marshal_die_test();
 
-		marshal_die_main();
+		//marshal_die_main();
 
 		getchar();
 #else

@@ -238,18 +238,18 @@ static snObject_t*		__put_daemonHandShake_t(daemonHandShake_t *stu)
 		}
 
 		/**********************************************/
-		if(__put_UINT32_T_to_dict(obj, L"session_id", stu->session_id) != AR_S_YES)
+		if(__put_uint_32_t_to_dict(obj, L"session_id", stu->session_id) != AR_S_YES)
 		{
 				goto INVALID_POINT;
 		}
 
-		if(__put_BOOL_T_to_dict(obj, L"bool_val", stu->bool_val) != AR_S_YES)
+		if(__put_bool_t_to_dict(obj, L"bool_val", stu->bool_val) != AR_S_YES)
 		{
 				goto INVALID_POINT;
 		}
 
 
-		if(__put_BOOL_T_array_to_dict(obj, L"bool_arr", stu->bool_arr, 1024) != AR_S_YES)
+		if(__put_bool_t_array_to_dict(obj, L"bool_arr", stu->bool_arr, 1024) != AR_S_YES)
 		{
 				goto INVALID_POINT;
 		}
@@ -281,19 +281,19 @@ static bool_t	__get_daemonHandShake_t(snObject_t *obj, daemonHandShake_t *stu)
 		}
 
 		/************************************************************************************/
-		if(__get_UINT32_T_from_dict(obj, L"session_id", &stu->session_id) != AR_S_YES)
+		if(__get_uint_32_t_from_dict(obj, L"session_id", &stu->session_id) != AR_S_YES)
 		{
 				is_ok = false;
 				goto INVALID_POINT;
 		}
 
-		if(__get_BOOL_T_from_dict(obj, L"bool_val", &stu->bool_val) != AR_S_YES)
+		if(__get_bool_t_from_dict(obj, L"bool_val", &stu->bool_val) != AR_S_YES)
 		{
 				is_ok = false;
 				goto INVALID_POINT;
 		}
 		
-		if(__get_BOOL_T_array_from_dict(obj, L"bool_arr", stu->bool_arr, 1024) != AR_S_YES)
+		if(__get_bool_t_array_from_dict(obj, L"bool_arr", stu->bool_arr, 1024) != AR_S_YES)
 		{
 				is_ok = false;
 				goto INVALID_POINT;
@@ -434,90 +434,90 @@ static snObject_t*		__put_daemonKeepalive_t(daemonKeepalive_t *stu)
 		}
 
 		/**********************************************/
-		if(__put_UINT32_T_to_dict(obj, L"u", stu->u) != AR_S_YES)
+		if(__put_uint_32_t_to_dict(obj, L"u", stu->u) != AR_S_YES)
 		{
 				goto INVALID_POINT;
 		}
 
-		if(__put_UINT32_T_array_to_dict(obj, L"u_arr", stu->u_arr, 1024) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-
-		if(__put_BYTE_T_to_dict(obj, L"b", stu->b) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-		if(__put_BYTE_T_array_to_dict(obj, L"b_arr", stu->b_arr, 1024) != AR_S_YES)
+		if(__put_uint_32_t_array_to_dict(obj, L"u_arr", stu->u_arr, 1024) != AR_S_YES)
 		{
 				goto INVALID_POINT;
 		}
 
 
-		if(__put_CHAR_T_to_dict(obj, L"c", stu->c) != AR_S_YES)
+		if(__put_byte_t_to_dict(obj, L"b", stu->b) != AR_S_YES)
 		{
 				goto INVALID_POINT;
 		}
 
-		if(__put_CHAR_T_array_to_dict(obj, L"c_str", stu->c_str) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-
-		if(__put_WCHAR_T_to_dict(obj, L"w", stu->w) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-		if(__put_WCHAR_T_array_to_dict(obj, L"w_str", stu->w_str) != AR_S_YES)
+		if(__put_byte_t_array_to_dict(obj, L"b_arr", stu->b_arr, 1024) != AR_S_YES)
 		{
 				goto INVALID_POINT;
 		}
 
 
-
-		if(__put_FLOAT_T_to_dict(obj, L"f", stu->f) != AR_S_YES)
+		if(__put_char_to_dict(obj, L"c", stu->c) != AR_S_YES)
 		{
 				goto INVALID_POINT;
 		}
 
-		if(__put_FLOAT_T_array_to_dict(obj, L"f_arr", stu->f_arr, 1024) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-
-		if(__put_DOUBLE_T_to_dict(obj, L"d", stu->d) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-		if(__put_DOUBLE_T_array_to_dict(obj, L"d_arr", stu->d_arr, 1024) != AR_S_YES)
+		if(__put_char_array_to_dict(obj, L"c_str", stu->c_str) != AR_S_YES)
 		{
 				goto INVALID_POINT;
 		}
 
 
-		if(__put_UINT16_T_to_dict(obj, L"u16", stu->u16) != AR_S_YES)
+		if(__put_wchar_t_to_dict(obj, L"w", stu->w) != AR_S_YES)
 		{
 				goto INVALID_POINT;
 		}
 
-		if(__put_UINT16_T_array_to_dict(obj, L"u16_arr", stu->u16_arr, 1024) != AR_S_YES)
+		if(__put_wchar_t_array_to_dict(obj, L"w_str", stu->w_str) != AR_S_YES)
 		{
 				goto INVALID_POINT;
 		}
 
 
-		if(__put_INT64_T_to_dict(obj, L"i64", stu->i64) != AR_S_YES)
+
+		if(__put_float_to_dict(obj, L"f", stu->f) != AR_S_YES)
 		{
 				goto INVALID_POINT;
 		}
 
-		if(__put_INT64_T_array_to_dict(obj, L"i64_arr", stu->i64_arr, 1024) != AR_S_YES)
+		if(__put_float_array_to_dict(obj, L"f_arr", stu->f_arr, 1024) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+
+		if(__put_double_to_dict(obj, L"d", stu->d) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+		if(__put_double_array_to_dict(obj, L"d_arr", stu->d_arr, 1024) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+
+		if(__put_uint_16_t_to_dict(obj, L"u16", stu->u16) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+		if(__put_uint_16_t_array_to_dict(obj, L"u16_arr", stu->u16_arr, 1024) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+
+		if(__put_int_64_t_to_dict(obj, L"i64", stu->i64) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+		if(__put_int_64_t_array_to_dict(obj, L"i64_arr", stu->i64_arr, 1024) != AR_S_YES)
 		{
 				goto INVALID_POINT;
 		}
@@ -571,92 +571,92 @@ static bool_t	__get_daemonKeepalive_t(snObject_t *obj, daemonKeepalive_t *stu)
 
 		/***************************************************************************/
 		
-		if(__get_UINT32_T_from_dict(obj, L"u", &stu->u) != AR_S_YES)
+		if(__get_uint_32_t_from_dict(obj, L"u", &stu->u) != AR_S_YES)
 		{
 				is_ok = false;
 				goto INVALID_POINT;
 		}
 		
 
-		if(__get_UINT32_T_array_from_dict(obj, L"u_arr", stu->u_arr, 1024) != AR_S_YES)
+		if(__get_uint_32_t_array_from_dict(obj, L"u_arr", stu->u_arr, 1024) != AR_S_YES)
 		{
 				is_ok = false;
 				goto INVALID_POINT;
 		}
 		
 
-		if(__get_BYTE_T_from_dict(obj, L"b", &stu->b) != AR_S_YES)
+		if(__get_byte_t_from_dict(obj, L"b", &stu->b) != AR_S_YES)
 		{
 				goto INVALID_POINT;
 		}
 
-		if(__get_BYTE_T_array_from_dict(obj, L"b_arr", stu->b_arr, 1024) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-
-		if(__get_CHAR_T_from_dict(obj, L"c", &stu->c) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-		if(__get_CHAR_T_array_from_dict(obj, L"c_str", stu->c_str, 1024) != AR_S_YES)
+		if(__get_byte_t_array_from_dict(obj, L"b_arr", stu->b_arr, 1024) != AR_S_YES)
 		{
 				goto INVALID_POINT;
 		}
 
 
-		if(__get_WCHAR_T_from_dict(obj, L"w", &stu->w) != AR_S_YES)
+		if(__get_char_from_dict(obj, L"c", &stu->c) != AR_S_YES)
 		{
 				goto INVALID_POINT;
 		}
 
-		if(__get_WCHAR_T_array_from_dict(obj, L"w_str", stu->w_str, 1024) != AR_S_YES)
+		if(__get_char_array_from_dict(obj, L"c_str", stu->c_str, 1024) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+
+		if(__get_wchar_t_from_dict(obj, L"w", &stu->w) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+		if(__get_wchar_t_array_from_dict(obj, L"w_str", stu->w_str, 1024) != AR_S_YES)
 		{
 				goto INVALID_POINT;
 		}
 
 
 
-		if(__get_FLOAT_T_from_dict(obj, L"f", &stu->f) != AR_S_YES)
+		if(__get_float_from_dict(obj, L"f", &stu->f) != AR_S_YES)
 		{
 				goto INVALID_POINT;
 		}
 
-		if(__get_FLOAT_T_array_from_dict(obj, L"f_arr", stu->f_arr, 1024) != AR_S_YES)
+		if(__get_float_array_from_dict(obj, L"f_arr", stu->f_arr, 1024) != AR_S_YES)
 		{
 				goto INVALID_POINT;
 		}
 		
-		if(__get_DOUBLE_T_from_dict(obj, L"d", &stu->d) != AR_S_YES)
+		if(__get_double_from_dict(obj, L"d", &stu->d) != AR_S_YES)
 		{
 				goto INVALID_POINT;
 		}
 
-		if(__get_DOUBLE_T_array_from_dict(obj, L"d_arr", stu->d_arr, 1024) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-
-		if(__get_UINT16_T_from_dict(obj, L"u16", &stu->u16) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-		if(__get_UINT16_T_array_from_dict(obj, L"u16_arr", stu->u16_arr, 1024) != AR_S_YES)
+		if(__get_double_array_from_dict(obj, L"d_arr", stu->d_arr, 1024) != AR_S_YES)
 		{
 				goto INVALID_POINT;
 		}
 
 
-		if(__get_INT64_T_from_dict(obj, L"i64", &stu->i64) != AR_S_YES)
+		if(__get_uint_16_t_from_dict(obj, L"u16", &stu->u16) != AR_S_YES)
 		{
 				goto INVALID_POINT;
 		}
 
-		if(__get_INT64_T_array_from_dict(obj, L"i64_arr", stu->i64_arr, 1024) != AR_S_YES)
+		if(__get_uint_16_t_array_from_dict(obj, L"u16_arr", stu->u16_arr, 1024) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+
+		if(__get_int_64_t_from_dict(obj, L"i64", &stu->i64) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+		if(__get_int_64_t_array_from_dict(obj, L"i64_arr", stu->i64_arr, 1024) != AR_S_YES)
 		{
 				goto INVALID_POINT;
 		}

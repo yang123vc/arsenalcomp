@@ -29,6 +29,7 @@ AR_check
 
 AR_wcstrim
 AR_wcstrim_space
+AR_wcsndup
 
 AR_Version
 
