@@ -94,6 +94,9 @@ extern void rgx_test();
 extern void marshal_die_test();
 
 extern void marshal_die_main();
+
+extern void marshal_result_test();
+
 #endif
 
 
@@ -153,7 +156,7 @@ void AR_Test()
 
 		//ray_test();
 
-		sn_test();
+		//sn_test();
 
 		//gen_code_test();
 
@@ -181,7 +184,9 @@ void AR_Test()
 
 		//rgx_test();
 
-		marshal_die_test();
+		//marshal_die_test();
+
+		marshal_result_test();
 
 		//marshal_die_main();
 

@@ -284,10 +284,8 @@ static std::wstring generate_for_put_get_type()
 						ret += L"\n\n";
 
 				}
-
 		}
-
-
+		
 		return ret;
 }
 
@@ -337,9 +335,11 @@ std::wstring generate_for_struct_def()
 				}
 		}
 
-
 		return ret;
 }
+
+
+
 
 
 
