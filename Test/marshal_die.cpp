@@ -661,3 +661,32 @@ INVALID_POINT:
 
 
 
+static daemonTest_t t1, t2;
+
+extern "C" void marshal_result_test()
+{
+		
+
+		AR_memset(&t1, 0, sizeof(t1));
+		AR_memset(&t2, 0, sizeof(t2));
+
+		AR_printf(L"sizeof daemonTest_t == %Iu KB\r\n", sizeof(t1) / 1024);
+		
+		AR_memset(t1.kp.x, 0xab, 1024);
+		t1.kp.unused = 44;
+
+		t1.test.t1 = 0x01;
+		t1.test.t2 = 0x02;
+		AR_wcscpy(t1.test.t3, L"中国字真麻烦！");
+
+		snObject_t *obj = __put_daemonTest_t(&t1);
+
+		__get_daemonTest_t(obj, &t2);
+
+		AR_ASSERT(AR_memcmp(&t1, &t2, sizeof(t1)) == 0);
+
+		SN_DestroyObject(obj);
+		obj = NULL;
+
+}
+
