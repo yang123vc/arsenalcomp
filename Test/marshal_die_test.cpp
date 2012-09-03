@@ -886,6 +886,8 @@ static void marshal_die_test1()
 
 }
 
+namespace TESTSP{
+}
 
 void marshal_die_test()
 {
