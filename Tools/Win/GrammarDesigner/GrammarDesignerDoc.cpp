@@ -888,7 +888,7 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 
 				if(conflict > 0)
 				{
-						str.Format(TEXT("The grammar has %d conflicts !"), (uint_32_t)conflict);
+						str.Format(TEXT("This grammar has %d conflicts !"), (uint_32_t)conflict);
 						output.Append(str, COutputList::MSG_MESSAGE, 0, tar);
 				}
 				
