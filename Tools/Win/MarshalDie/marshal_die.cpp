@@ -290,6 +290,7 @@ static std::wstring generate_for_put_get_type()
 }
 
 /************************************************************struct def*******************************************************************/
+
 std::wstring generate_for_struct_def_type(const Type_t *type)
 {
 		std::wstring ret;
@@ -314,8 +315,10 @@ std::wstring generate_for_struct_def_type(const Type_t *type)
 		ret += L"}" + type->name + L";\r\n\r\n";
 
 		return ret;
-		
 }
+
+
+
 
 std::wstring generate_for_struct_def()
 {
@@ -340,10 +343,134 @@ std::wstring generate_for_struct_def()
 
 
 
+/************************************************************uni struct def*******************************************************************/
+
+static std::wstring type_unistruct_name(const Type_t *type)
+{
+		std::wstring upper;
+		AR_ASSERT(type != NULL && !is_inner_type(type->type));
+
+		for(size_t k = 0; k < type->name.size(); ++k)
+		{
+				upper += towupper(type->name[k]);
+		}
+		return upper;
+}
+
+
+std::wstring generate_for_unistruct_def()
+{
+
+		std::wstring ret, enum_type, uni_type, marshal_code, unmarshal_code;
+
+		/****************************************generate_for_enum****************************************/
+		enum_type += L"enum {\r\n\r\n";
+
+		for(size_t i = 0; i < g_type_list.size(); ++i)
+		{
+				const Type_t *type = g_type_list[i];
+				AR_ASSERT(type != NULL);
+
+				if(is_inner_type(type->type))
+				{
+						continue;
+				}
+
+				if(type->is_anonymous_type)
+				{
+						continue;
+				}
+				enum_type += L"\t\t";
+				enum_type += type_unistruct_name(type);
+				enum_type += L",\r\n";
+		}
+		
+		enum_type += L"};\r\n\r\n";
+
+
+		/****************************************generate_for_enum****************************************/
+		/*
+		typedef struct {
+				int				type;
+				union{
+						daemonKeppalive_t		daemonKeppalive_t
+				};
+		}
+		*/
+		
+		uni_type += L"typedef struct {\r\n\t\tint\t\ttype;\r\n";
+
+		for(size_t i = 0; i < g_type_list.size(); ++i)
+		{
+				const Type_t *type = g_type_list[i];
+				AR_ASSERT(type != NULL);
+
+				if(is_inner_type(type->type))
+				{
+						continue;
+				}
+
+				if(type->is_anonymous_type)
+				{
+						continue;
+				}
+				
+				uni_type += (L"\t\t" + type->name	+ L"\t\t" + type->name + L";\r\n");
+		}
+		
+		uni_type += L"}uniType_t;\r\n";
+		
+		/****************************************marshal uni_type_code****************************************/
+
+		marshal_code = L"\r\nstatic arStatus_t\t\tUnionType_Marshal(uniType_t *uni_type, arBuffer_t *out)\r\n{\r\n\t\tarStatus_t\t\tar_status;\r\n\t\tsnObject_t\t\t*key, *val;\r\n\t\tsnObject_t\t\t*final_obj;\r\n\t\tAR_ASSERT(uni_type != NULL && out != NULL);\r\n\t\tar_status = AR_S_YES;\r\n\t\tkey = NULL;\r\n\t\tval\t= NULL;\r\n\t\tfinal_obj = NULL;\r\n\t\t\r\n\t\tkey = SN_CreateObject(SN_INT_T);\r\n\t\tif(key == NULL)\r\n\t\t{\r\n\t\t\t\tar_status = AR_E_NOMEM;\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\r\n\t\tSN_SetIntObject(key, uni_type->type);\r\n\r\n\t\tswitch(uni_type->type)\r\n\t\t{\r\n/**********************************************/\r\n";
+
+
+		for(size_t i = 0; i < g_type_list.size(); ++i)
+		{
+				std::wstring case_stat;
+				const Type_t *type = g_type_list[i];
+				AR_ASSERT(type != NULL);
+
+				if(is_inner_type(type->type))
+				{
+						continue;
+				}
+
+				if(type->is_anonymous_type)
+				{
+						continue;
+				}
+
+				case_stat += (L"\t\tcase " + type_unistruct_name(type) + L" :\r\n");
+
+				wchar_t tmp[1024];
+				AR_swprintf(tmp, 1024, L"val = __put_%ls(&uni_type->%ls)", type->name.c_str(), type->name.c_str());
+				case_stat += L"\t\t\t\t" + (std::wstring)tmp + L";\r\n";
+				case_stat += L"\t\t\t\tbreak;\r\n";
+				
+				marshal_code += case_stat;
+		}
+
+		marshal_code += L"/**********************************************/\r\n\t\tdefault:\r\n\t\t\t\tar_status = AR_E_INVAL;\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\t\t\r\n\r\n\t\tif(val == NULL)\r\n\t\t{\r\n\t\t\t\tar_status = AR_E_INVAL;\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\r\n\r\n\t\tfinal_obj = SN_CreateObject(SN_LIST_T);\r\n\r\n\t\tif(final_obj == NULL)\r\n\t\t{\r\n\t\t\t\tar_status = AR_E_NOMEM;\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\r\n\t\tar_status = SN_InsertToListObject(final_obj, key);\r\n\t\t\r\n\t\tif(ar_status != AR_S_YES)\r\n\t\t{\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\r\n\t\tkey = NULL;\r\n\r\n\t\tar_status = SN_InsertToListObject(final_obj, val);\r\n\t\t\r\n\t\tif(ar_status != AR_S_YES)\r\n\t\t{\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\r\n\t\tval = NULL;\r\n\r\n\t\tar_status = SN_PutObject(out, final_obj);\r\n\r\n\t\tif(ar_status != AR_S_YES)\r\n\t\t{\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\r\nEND_POINT:\r\n\r\n\t\tif(key)\r\n\t\t{\r\n\t\t\t\tSN_DestroyObject(key);\r\n\t\t\t\tkey = NULL;\r\n\t\t}\r\n\t\t\r\n\t\tif(val)\r\n\t\t{\r\n\t\t\t\tSN_DestroyObject(val);\r\n\t\t\t\tval = NULL;\r\n\t\t}\r\n\r\n\t\tif(final_obj)\r\n\t\t{\r\n\t\t\t\tSN_DestroyObject(final_obj);\r\n\t\t\t\tfinal_obj = NULL;\r\n\t\t}\r\n\r\n\t\treturn ar_status;\r\n}\r\n";
+
+
+		/****************************************unmarshal uni_type_code****************************************/
+
+
+		/****************************************final code****************************************/
+
+		ret = L"\r\n" + enum_type + L"\r\n" + uni_type + L"\r\n" + marshal_code + L"\r\n";
+		
+		return ret;
+
+}
+
+
 
 
 
 #define INPUT_PATH		L"D:\\Code\\Solidus\\Compiler\\Arsenal\\misc\\marshal_die_input.txt"
+#define OUT_PATH		L"C:\\Users\\liupeng\\Desktop\\1.txt"
 
 void marshal_die_main()
 {
@@ -368,14 +495,13 @@ void marshal_die_main()
 		std::wstring struct_def_code = generate_for_struct_def();
 		std::wstring put_get_types_code = generate_for_put_get_type();
 		
+		std::wstring unistruct_code = generate_for_unistruct_def();
 
 
-		AR_printf(L"%ls\r\n", struct_def_code.c_str());
+		AR_printf(L"%ls\r\n", unistruct_code.c_str());
 		
-		
-		
-		std::wstring final_code = struct_def_code + put_get_types_code;
-		AR_SaveBomTextFile(L"C:\\Users\\liupeng\\Desktop\\1.txt", AR_TXT_BOM_UTF_8, final_code.c_str());
+		std::wstring final_code = struct_def_code + put_get_types_code +  unistruct_code;
+		AR_SaveBomTextFile(OUT_PATH, AR_TXT_BOM_UTF_8, final_code.c_str());
 
 		AR_DestroyString(input);
 		input = NULL;
