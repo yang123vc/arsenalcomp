@@ -17,7 +17,7 @@ header
  *
  */
 
- 
+
 
 
 /*
@@ -28,7 +28,6 @@ include
 
 #include "generate_type.h"
 
- 
 
 
 /*
@@ -92,7 +91,7 @@ ast_node_t* create_anonymous_type()
 	node->type->name = name;
 	node->type->type = CUSTOM_T;
 	node->type->is_inner_type = false;
-	
+	node->type->is_anonymous_type = true;
 	return node;
 }
 
@@ -477,6 +476,7 @@ static psrRetVal_t AR_STDCALL on_named_type_def(psrNode_t **nodes, size_t count,
 				AR_ASSERT(type_name != NULL && type_name->t == NAME_T);
 				AR_ASSERT(type_node != NULL && type_node->t == TYPE_T);
 				type_node->type->name = type_name->name;
+				type_node->type->is_anonymous_type = false;
 				insert_type(type_node->type);
 				return ret;
 
@@ -773,12 +773,6 @@ extern "C" void generate_type_list(const std::wstring &input)
 		match = NULL;
 
 }
-
-
-
-
-
- 
 
 
 

@@ -135,6 +135,7 @@ typedef struct Type
 {
         FieldType_t        type;
 		std::wstring       name;
+		bool_t			   is_anonymous_type;
         bool_t             is_inner_type;
         FieldList		   fields;
 }Type_t;
@@ -175,7 +176,7 @@ extern std::vector<std::wstring>			g_tail_code;
 
 
 
-static Type_t*	find_type(const std::wstring &name)
+static AR_INLINE Type_t*	find_type(const std::wstring &name)
 {
 		for(size_t i = 0; i < g_type_list.size(); ++i)
 		{
@@ -188,7 +189,7 @@ static Type_t*	find_type(const std::wstring &name)
 
 }
 
-static void		insert_type(Type_t *type)
+static AR_INLINE void		insert_type(Type_t *type)
 {
 		AR_ASSERT(type != NULL);
 
@@ -203,7 +204,7 @@ static void		insert_type(Type_t *type)
 
 
 
-static void init_inner_type()
+static AR_INLINE void init_inner_type()
 {
 	for(size_t i = 0; i < CUSTOM_T; ++i)
 	{

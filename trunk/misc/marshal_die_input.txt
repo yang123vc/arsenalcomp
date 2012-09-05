@@ -17,3 +17,8 @@ daemonTest_t{
 
 
 
+
+daemonQueryCPUTemp_t{
+	unused 		: uint_32_t;
+	unused2  	: daemonTest_t;
+};
