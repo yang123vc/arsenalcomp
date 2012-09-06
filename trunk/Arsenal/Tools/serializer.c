@@ -486,6 +486,7 @@ static arStatus_t	SN_InsertToDict(snDict_t *dict, snObject_t *key, snObject_t *v
 
 		for(i = 0; i < dict->count; ++i)
 		{
+				AR_ASSERT(dict->pairs[i].key != NULL && dict->pairs[i].val != NULL);
 				if(SN_CompStringByString(&key->string, &(dict->pairs[i].key->string)) == AR_S_EQ)
 				{
 						break;
@@ -504,6 +505,12 @@ static arStatus_t	SN_InsertToDict(snDict_t *dict, snObject_t *key, snObject_t *v
 				
 				dict->pairs[i].key = key;
 				dict->pairs[i].val = value;
+
+
+				/*
+				AR_ASSERT(dict->pairs[i].key != NULL && dict->pairs[i].val != NULL);
+				*/
+
 				return AR_S_YES;
 		}else
 		{
@@ -522,7 +529,7 @@ static arStatus_t	SN_InsertToDict(snDict_t *dict, snObject_t *key, snObject_t *v
 
 						if(dict->count > 0)
 						{
-								AR_memcpy(new_pairs, dict->pairs, sizeof(dict->count) * sizeof(snPair_t));
+								AR_memcpy(new_pairs, dict->pairs, dict->count * sizeof(snPair_t));
 						}
 
 						if(dict->pairs)
@@ -538,6 +545,14 @@ static arStatus_t	SN_InsertToDict(snDict_t *dict, snObject_t *key, snObject_t *v
 				dict->pairs[dict->count].key = key;
 				dict->pairs[dict->count].val = value;
 				dict->count++;
+
+				
+				for(i = 0; i < dict->count; ++i)
+				{
+						AR_ASSERT(dict->pairs[i].key != NULL && dict->pairs[i].val != NULL);
+				}
+
+				
 				return AR_S_YES;
 		}
 }
