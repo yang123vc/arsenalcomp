@@ -1,4 +1,7 @@
 ﻿
+%uni clisrvMessage_t;
+
+
 daemonKeepalive_t{
 	unused 	: uint_32_t;
 	x	: int_32_t[1024];
@@ -24,5 +27,40 @@ daemonQueryCPUTemp_t{
 };
 
 
+basicTest_t{
+	b	:	bool_t;
+	b_arr	:	bool_t[128];
+	c	:	char;
+	c_arr	:	char[1024];
+	w	:	wchar_t;
+	w_arr	:	wchar_t[1024];
+	bt	:	byte_t;
+	bt_arr	:	byte_t[1024];
 
-%uni clisrvMessage_t;
+	i8	:	int_8_t;
+	i8_arr	:	int_8_t[1024];
+	u8	:	uint_8_t;
+	u8_arr	:	uint_8_t[1024];
+
+
+	i16	:	int_16_t;
+	i16_arr	:	int_16_t[1024];
+	u16	:	uint_16_t;
+	u16_arr	:	uint_16_t[1024];
+	
+	i32	:	int_32_t;
+	i32_arr	:	int_32_t[1024];
+	u32	:	uint_32_t;
+	u32_arr	:	uint_32_t[1024];
+
+	i64	:	int_64_t;
+	i64_arr	:	int_64_t[1024];
+	u64	:	uint_64_t;
+	u64_arr	:	uint_64_t[1024];
+
+	f	:	float;
+	f_arr	:	float[1024];
+	
+	d	:	double;
+	d_arr	:	double[1024];
+};

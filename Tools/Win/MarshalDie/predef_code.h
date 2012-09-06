@@ -91,7 +91,7 @@ static const wchar_t* __g_inner_type_marshal_array_call_name[CUSTOM_T] =
 		L"__put_float_array_to_dict",
 		L"__put_double_array_to_dict",
 
-		L"__put_char_to_array_dict",
+		L"__put_char_array_to_dict",
 		L"__put_wchar_t_array_to_dict",
 };
 
