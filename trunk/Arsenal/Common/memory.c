@@ -65,7 +65,7 @@ AR_NAMESPACE_BEGIN
 						/*
 						AR_error(AR_ERR_DEBUG, L"size: %6d Bytes : %hs, line: %d\r\n", dm->size, dm->file, dm->line);
 						*/
-						AR_DPRINT(L"size: %6d Bytes : %hs, line: %d\r\n", dm->size, dm->file, dm->line);
+						AR_DPRINT(L"[Memory leak] size: %6d Bytes : %hs, line: %d\r\n", dm->size, dm->file, dm->line);
 						dm = dm->next;
 				}
 

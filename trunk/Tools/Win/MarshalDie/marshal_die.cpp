@@ -455,11 +455,40 @@ std::wstring generate_for_unistruct_def()
 
 
 		/****************************************unmarshal uni_type_code****************************************/
+		unmarshal_code = L"\r\nstatic arStatus_t\t\tclisrvMessage_t_UnMarshal(clisrvMessage_t*uni_type, arBuffer_t *in)\r\n{\r\n\t\tsnRetVal_t\t\tsn_ret;\r\n\t\tarStatus_t\t\tar_status;\r\n\t\tsnObject_t\t\t*type_obj, *data_obj;\r\n\t\tAR_ASSERT(uni_type != NULL && in != NULL);\r\n\r\n\t\tar_status = AR_S_YES;\r\n\t\ttype_obj = NULL;\r\n\t\tdata_obj = NULL;\r\n\t\tAR_memset(uni_type, 0, sizeof(*uni_type));\r\n\r\n\t\t\r\n\t\tsn_ret = SN_GetObject(in);\r\n\r\n\t\tar_status = sn_ret.status;\r\n\r\n\t\tif(ar_status != AR_S_YES)\r\n\t\t{\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\r\n\t\tif(SN_GetObjectType(sn_ret.obj) != SN_LIST_T || SN_GetListObjectCount(sn_ret.obj) != 2)\r\n\t\t{\r\n\t\t\t\tar_status = AR_E_INVAL;\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\t\t\r\n\t\ttype_obj = SN_GetFromListObject(sn_ret.obj, 0);\r\n\r\n\t\tif(type_obj == NULL || SN_GetObjectType(type_obj) != SN_INT_T)\r\n\t\t{\r\n\t\t\t\tar_status = AR_E_INVAL;\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\r\n\t\tdata_obj = SN_GetFromListObject(sn_ret.obj, 1);\r\n\r\n\t\tif(data_obj == NULL || SN_GetObjectType(data_obj) != SN_DICT_T)\r\n\t\t{\r\n\t\t\t\tar_status = AR_E_INVAL;\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\t\tuni_type->type = SN_GetIntObject(type_obj);\r\n\t\tswitch(uni_type->type)\r\n\t\t{\r\n\t\t/*******************************************************************************************/\r\n";
+
+		for(size_t i = 0; i < g_type_list.size(); ++i)
+		{
+				std::wstring case_stat;
+				const Type_t *type = g_type_list[i];
+				AR_ASSERT(type != NULL);
+
+				if(is_inner_type(type->type))
+				{
+						continue;
+				}
+
+				if(type->is_anonymous_type)
+				{
+						continue;
+				}
+
+				case_stat += (L"\t\tcase " + type_unistruct_name(type) + L" :\r\n");
+
+				wchar_t tmp[2048];
+				AR_swprintf(tmp, 2048, L"if(!__get_%ls(data_obj, &uni_type->%ls))\r\n\t\t\t\t{\r\n\t\t\t\t\t\t\t\tar_status = AR_E_INVAL;\r\n\t\t\t\t\t\t\t\tgoto END_POINT;\r\n\t\t\t\t}", type->name.c_str(), type->name.c_str());
+				case_stat += L"\t\t\t\t" + (std::wstring)tmp + L";\r\n";
+				case_stat += L"\t\t\t\tbreak;\r\n";
+				
+				unmarshal_code += case_stat;
+		}
 
 
+
+		unmarshal_code += L"/*******************************************************************************************/\r\n\t\tdefault:\r\n\t\t\t\tar_status = AR_E_INVAL;\r\n\t\t\t\tgoto END_POINT;\r\n\t\t\t\tbreak;\r\n\t\t}\r\n\r\n\r\nEND_POINT:\r\n\t\tif(sn_ret.obj)\r\n\t\t{\r\n\t\t\t\tSN_DestroyObject(sn_ret.obj);\r\n\t\t\t\tsn_ret.obj = NULL;\r\n\t\t}\r\n\r\n\t\treturn ar_status;\r\n}\r\n\r\n";
 		/****************************************final code****************************************/
 
-		ret = L"\r\n" + enum_type + L"\r\n" + uni_type + L"\r\n" + marshal_code + L"\r\n";
+		ret = L"\r\n" + enum_type + L"\r\n" + uni_type + L"\r\n" + marshal_code + L"\r\n" + unmarshal_code + L"\r\n";
 		
 		return ret;
 
@@ -533,7 +562,11 @@ int main()
 
 		Arsenal_Init(&ai);
 
+
+
 		marshal_die_main();
+
+
 
 		Arsenal_UnInit();
 
