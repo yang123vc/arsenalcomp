@@ -1,7 +1,9 @@
 ﻿
+
 #include "generate_type.h"
 #include "predef_code.h"
-
+#include <shellapi.h>
+#pragma comment(lib, "shell32.lib")
 
 static std::wstring generate_for_head_code()
 {
@@ -498,19 +500,20 @@ std::wstring generate_for_unistruct_def()
 
 
 
-#define INPUT_PATH		L"D:\\Code\\Solidus\\Compiler\\Arsenal\\misc\\marshal_die_input.txt"
-#define OUT_PATH		L"C:\\Users\\liupeng\\Desktop\\1.txt"
-
-void marshal_die_main()
+void marshal_die_main(const wchar_t *input_path, const wchar_t *output_path)
 {
 		init_inner_type();
 		arString_t *input = AR_CreateString();
 		arString_t *output = AR_CreateString();
 
-		if(AR_LoadBomTextFile(INPUT_PATH, NULL, input) != AR_S_YES)
+		AR_GetExpandPath(input_path, input);
+		AR_GetExpandPath(output_path, output);
+
+
+		if(AR_LoadBomTextFile(input_path, NULL, input) != AR_S_YES)
 		{
-				AR_error(AR_ERR_FATAL, L"Failed to load '%ls'\r\n", INPUT_PATH);
-				AR_abort();
+				AR_error(AR_ERR_FATAL, L"Failed to load '%ls'\r\n", input_path);
+				exit(-1);
 		}
 
 
@@ -531,7 +534,11 @@ void marshal_die_main()
 		
 		std::wstring final_code = predef_head_code + inner_types_codes + struct_def_code + put_get_types_code +  unistruct_code + predef_tail_code;
 
-		AR_SaveBomTextFile(OUT_PATH, AR_TXT_BOM_UTF_8, final_code.c_str());
+		if(AR_SaveBomTextFile(output_path, AR_TXT_BOM_UTF_8, final_code.c_str()) != AR_S_YES)
+		{
+				AR_error(AR_ERR_FATAL, L"Failed to save '%ls'\r\n", output_path);
+				exit(-1);
+		}
 
 		AR_DestroyString(input);
 		input = NULL;
@@ -547,24 +554,57 @@ void marshal_die_main()
 static void AR_STDCALL tiny_error(int_t level, const wchar_t* msg, void *ctx)
 {
 		printf("%ls", msg);
+		if(level == AR_ERR_FATAL)
+		{
+				exit(-1);
+		}
 }
 
 static void AR_STDCALL tiny_printf(const wchar_t *msg, void *ctx)
 {
 		printf("%ls", msg);
+
 }
 
 
 
-int main()
+
+#define INPUT_PATH		L"D:\\Code\\Solidus\\Compiler\\Arsenal\\misc\\marshal_die_input.txt"
+#define OUT_PATH		L"C:\\Users\\liupeng\\Desktop\\1.txt"
+
+int main(int argc, const char **argv)
 {
+		std::wstring input, output;
+		LPWSTR	*szArglist;
+		int		nArgs;
+		int		i;
+		szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
+		
+		if(NULL == szArglist)
+		{
+				wprintf(L"CommandLineToArgvW failed\n");
+				return 0;
+		}
+
+		if(nArgs != 3)
+		{
+				printf("bad command line\r\n");
+				return 0;
+		}
+
+		input = szArglist[1];
+		output = szArglist[2];
+		LocalFree(szArglist);
+
+		
+
 		arInit_t ai = {{tiny_error, tiny_printf, NULL}};
 
 		Arsenal_Init(&ai);
 
+		
 
-
-		marshal_die_main();
+		marshal_die_main(input.c_str(), output.c_str());
 
 
 

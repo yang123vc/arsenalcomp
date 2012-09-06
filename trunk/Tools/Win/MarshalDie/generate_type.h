@@ -152,14 +152,14 @@ static AR_INLINE void insert_field_to_type(Type_t *type, Field_t *field)
 		if(type->fields[i]->name == field->name)
 		{
 			AR_error(AR_ERR_FATAL, L"duplicate field name '%ls'\r\n", field->name.c_str());
-			AR_abort();
+			exit(-1);
 		}
 	}
 
 	if(is_inner_type_name(field->name.c_str()))
 	{
 		AR_error(AR_ERR_FATAL, L"invalid field name '%ls'\r\n", field->name.c_str());
-		AR_abort();
+		exit(-1);
 	}
 	
 	type->fields.push_back(field);
@@ -196,7 +196,7 @@ static AR_INLINE void		insert_type(Type_t *type)
 		if(find_type(type->name) != NULL)
 		{
 				AR_error(AR_ERR_FATAL, L"duplicate type name '%ls'\r\n", type->name.c_str());
-				AR_abort();
+				exit(-1);
 		}
 		
 		g_type_list.push_back(type);

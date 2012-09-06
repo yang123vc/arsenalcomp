@@ -388,7 +388,7 @@ static psrRetVal_t AR_STDCALL on_codeblock(const psrToken_t *tok,void *ctx)
 						{
 							wchar_t *tmp = AR_wcsndup(tok->str, tok->str_cnt);
 							AR_error(AR_ERR_FATAL, L"invalid name length : '%ls' line : %Iu!", tmp, tok->line );
-							AR_abort();
+							exit(-1);
 						}
 						
 						AR_wcsncpy(node->name, tok->str, tok->str_cnt);
@@ -409,7 +409,7 @@ static psrRetVal_t AR_STDCALL on_number(const psrToken_t *tok,void *ctx)
 						{
 							wchar_t *tmp = AR_wcsndup(tok->str, tok->str_cnt);
 							AR_error(AR_ERR_FATAL, L"invalid number : '%ls' line : %Iu!", tmp, tok->line);
-							AR_abort();
+							exit(-1);
 						}
 
 						psrRetVal_t ret = {AR_S_YES, (psrToken_t*)node}; 
@@ -580,7 +580,7 @@ static psrRetVal_t AR_STDCALL on_named_field_name(psrNode_t **nodes, size_t coun
 				if(field_node->field->type == NULL)
 				{
 					AR_error(AR_ERR_FATAL, L"invalid type name '%ls'\r\n", type_name->name);
-					AR_abort();
+					exit(-1);
 				}
 				ret.node = (psrNode_t*)field_node;
 				return ret;
@@ -610,7 +610,7 @@ static psrRetVal_t AR_STDCALL on_named_array_field(psrNode_t **nodes, size_t cou
 				if(field_node->field->type == NULL)
 				{
 					AR_error(AR_ERR_FATAL, L"invalid type name '%ls'\r\n", type_name->name);
-					AR_abort();
+					exit(-1);
 				}
 
 
@@ -620,7 +620,7 @@ static psrRetVal_t AR_STDCALL on_named_array_field(psrNode_t **nodes, size_t cou
 				if(field_node->field->array_size == 0)
 				{
 					AR_error(AR_ERR_FATAL, L"invalid array size '%ls' : %u\r\n", type_name->name, field_node->field->array_size);
-					AR_abort();
+					exit(-1);
 				}
 
 				ret.node = (psrNode_t*)field_node;
@@ -697,7 +697,7 @@ static arStatus_t		AR_STDCALL handle_on_error(const psrToken_t *tok, const size_
 		}
 
 		AR_error(AR_ERR_FATAL, L"invalid token : '%ls'\r\n", msg);
-		AR_abort();
+		exit(-1);
 		return AR_S_NO;
 }
 
@@ -771,12 +771,12 @@ extern "C" void generate_type_list(const std::wstring &input)
 						wchar_t msg[1024];
 						AR_wcsncpy(msg, ARSpace::Lex_GetNextInput(match),  (int)len);
 						AR_error(AR_ERR_FATAL, L"Input Error : %ls line : %Iu", msg, line);
-						AR_abort();
+						exit(-1);
 
 				}else
 				{
 						AR_error(AR_ERR_FATAL, L"inner error !\r\n");
-						AR_abort();
+						exit(-1);
 				}
 
 		}
