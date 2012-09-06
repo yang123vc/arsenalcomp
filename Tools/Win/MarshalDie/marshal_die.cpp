@@ -132,7 +132,7 @@ static std::wstring generate_for_put_custom_type(const Type_t *type)
 		return ret;
 }
 
-#define PUT_ARRAY_FUNC_FMT	L"\r\nstatic snObject_t*\t\t__put_%ls_array(%ls *stu, size_t arr_size)\r\n{\r\n\t\tsnObject_t\t\t*stu_list;\r\n\t\tsize_t i;\r\n\t\tAR_ASSERT(stu != NULL && arr_size > 0);\r\n\r\n\t\tstu_list = SN_CreateObject(SN_LIST_T);\r\n\r\n\t\tfor(i = 0; i < arr_size; ++i)\r\n\t\t{\r\n\r\n\t\t\t\t/*************************************************************************/\r\n\t\t\t\tsnObject_t *tmp = __put_%ls(&stu[i]);\r\n\t\t\t\tif(tmp == NULL)\r\n\t\t\t\t{\r\n\t\t\t\t\t\tgoto INVALID_POINT;\r\n\t\t\t\t}\r\n\t\t\t\t/*************************************************************************/\r\n\r\n\r\n\t\t\t\tif(SN_InsertToListObject(stu_list, tmp) != AR_S_YES)\r\n\t\t\t\t{\r\n\t\t\t\t\t\tgoto INVALID_POINT;\r\n\t\t\t\t}\r\n\t\t}\r\n\r\n\t\treturn stu_list;\r\nINVALID_POINT:\r\n\r\n\t\tif(stu_list)\r\n\t\t{\r\n\t\t\t\tSN_DestroyObject(stu_list);\r\n\t\t\t\tstu_list = NULL;\r\n\t\t}\r\n\r\n\t\treturn stu_list;\r\n}\r\n\r\n"
+#define PUT_ARRAY_FUNC_FMT	L"\r\nstatic snObject_t*\t\t__put_%ls_array(%ls *stu, size_t arr_size)\r\n{\r\n\t\tsnObject_t\t\t*stu_list;\r\n\t\tsize_t i;\r\n\t\tAR_ASSERT(stu != NULL && arr_size > 0);\r\n\r\n\t\tstu_list = SN_CreateObject(SN_LIST_T);\r\n\r\n\t\tfor(i = 0; i < arr_size; ++i)\r\n\t\t{\r\n\r\n\t\t\t\t/*************************************************************************/\r\n\t\t\t\tsnObject_t *tmp = __put_%ls(&stu[i]);\r\n\t\t\t\tif(tmp == NULL)\r\n\t\t\t\t{\r\n\t\t\t\t\t\tgoto INVALID_POINT;\r\n\t\t\t\t}\r\n\t\t\t\t/*************************************************************************/\r\n\r\n\r\n\t\t\t\tif(SN_InsertToListObject(stu_list, tmp) != AR_S_YES)\r\n\t\t\t\t{\r\n\t\t\t\t\t\tSN_DestroyObject(tmp);\r\n\t\t\t\t\t\ttmp = NULL;\r\n\t\t\t\t\t\tgoto INVALID_POINT;\r\n\t\t\t\t}\r\n\t\t}\r\n\r\n\t\treturn stu_list;\r\nINVALID_POINT:\r\n\r\n\t\tif(stu_list)\r\n\t\t{\r\n\t\t\t\tSN_DestroyObject(stu_list);\r\n\t\t\t\tstu_list = NULL;\r\n\t\t}\r\n\r\n\t\treturn stu_list;\r\n}\r\n\r\n"
 
 static std::wstring generate_for_put_custom_array_type(const Type_t *type)
 {
@@ -201,7 +201,7 @@ static std::wstring generate_func_call_for_get_field(const Field_t *field)
 		return ret;
 }
 
-#define GET_FUNC_FMT			L"static bool_t\t__get_%ls(snObject_t *obj, %ls *stu)\r\n{\r\n\t\tbool_t\tis_ok;\r\n\t\tsnObject_t *tmp;\r\n\t\tAR_ASSERT(stu != NULL && obj != NULL);\r\n\t\tAR_ASSERT(SN_GetObjectType(obj) == SN_DICT_T);\r\n\t\tis_ok = true;\r\n\r\n\t\t/***************************************************************************/\r\n\t\t%ls\r\n\t\t/***************************************************************************/\r\n\r\n\t\treturn true;\r\nINVALID_POINT:\r\n\t\tis_ok = false;\r\n\t\treturn is_ok;\r\n}"
+#define GET_FUNC_FMT			L"static bool_t\t__get_%ls(snObject_t *obj, %ls *stu)\r\n{\r\n\t\tbool_t\tis_ok;\r\n\t\tsnObject_t *tmp;\r\n\t\tAR_ASSERT(stu != NULL && obj != NULL);\r\n\t\tAR_ASSERT(SN_GetObjectType(obj) == SN_DICT_T);\r\n\t\tis_ok = true;\r\n\r\n\t\t/***************************************************************************/\r\n%ls\r\n\t\t/***************************************************************************/\r\n\r\n\t\treturn true;\r\nINVALID_POINT:\r\n\t\tis_ok = false;\r\n\t\treturn is_ok;\r\n}"
 
 
 static std::wstring generate_for_get_custom_type(const Type_t *type)
@@ -418,11 +418,11 @@ std::wstring generate_for_unistruct_def()
 				uni_type += (L"\t\t" + type->name	+ L"\t\t" + type->name + L";\r\n");
 		}
 		
-		uni_type += L"}uniType_t;\r\n";
+		uni_type += L"}" + g_uni_name + L";\r\n";
 		
 		/****************************************marshal uni_type_code****************************************/
 
-		marshal_code = L"\r\nstatic arStatus_t\t\tUnionType_Marshal(uniType_t *uni_type, arBuffer_t *out)\r\n{\r\n\t\tarStatus_t\t\tar_status;\r\n\t\tsnObject_t\t\t*key, *val;\r\n\t\tsnObject_t\t\t*final_obj;\r\n\t\tAR_ASSERT(uni_type != NULL && out != NULL);\r\n\t\tar_status = AR_S_YES;\r\n\t\tkey = NULL;\r\n\t\tval\t= NULL;\r\n\t\tfinal_obj = NULL;\r\n\t\t\r\n\t\tkey = SN_CreateObject(SN_INT_T);\r\n\t\tif(key == NULL)\r\n\t\t{\r\n\t\t\t\tar_status = AR_E_NOMEM;\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\r\n\t\tSN_SetIntObject(key, uni_type->type);\r\n\r\n\t\tswitch(uni_type->type)\r\n\t\t{\r\n/**********************************************/\r\n";
+		marshal_code = L"\r\nstatic arStatus_t\t\t" + g_uni_name + L"_Marshal(" + g_uni_name + L"*uni_type, arBuffer_t *out)\r\n{\r\n\t\tarStatus_t\t\tar_status;\r\n\t\tsnObject_t\t\t*key, *val;\r\n\t\tsnObject_t\t\t*final_obj;\r\n\t\tAR_ASSERT(uni_type != NULL && out != NULL);\r\n\t\tar_status = AR_S_YES;\r\n\t\tkey = NULL;\r\n\t\tval\t= NULL;\r\n\t\tfinal_obj = NULL;\r\n\t\t\r\n\t\tkey = SN_CreateObject(SN_INT_T);\r\n\t\tif(key == NULL)\r\n\t\t{\r\n\t\t\t\tar_status = AR_E_NOMEM;\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\r\n\t\tSN_SetIntObject(key, uni_type->type);\r\n\r\n\t\tswitch(uni_type->type)\r\n\t\t{\r\n/**********************************************/\r\n";
 
 
 		for(size_t i = 0; i < g_type_list.size(); ++i)
@@ -500,7 +500,8 @@ void marshal_die_main()
 
 		AR_printf(L"%ls\r\n", unistruct_code.c_str());
 		
-		std::wstring final_code = struct_def_code + put_get_types_code +  unistruct_code;
+		std::wstring final_code = predef_head_code + inner_types_codes + struct_def_code + put_get_types_code +  unistruct_code + predef_tail_code;
+
 		AR_SaveBomTextFile(OUT_PATH, AR_TXT_BOM_UTF_8, final_code.c_str());
 
 		AR_DestroyString(input);

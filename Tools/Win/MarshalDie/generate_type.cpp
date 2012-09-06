@@ -17,7 +17,7 @@ header
  *
  */
 
-
+ 
 
 
 /*
@@ -28,6 +28,7 @@ include
 
 #include "generate_type.h"
 
+ 
 
 
 /*
@@ -38,7 +39,7 @@ class_def
 std::vector<Type_t*>    			g_type_list;
 std::vector<std::wstring>			g_head_code;
 std::vector<std::wstring>			g_tail_code;
-
+std::wstring						g_uni_name = L"uniType_t";
 
  
 
@@ -125,8 +126,9 @@ enum{
 TOK_CLODE_BLOCK = 258,
 TOK_HEAD = 259,
 TOK_TAIL = 260,
-TOK_NAME = 261,
-TOK_NUM = 262,
+TOK_UNI = 261,
+TOK_NAME = 262,
+TOK_NUM = 263,
 };
 
 
@@ -143,18 +145,19 @@ psrTermFunc_t leaf;
 {L"CODE_BLOCK", TOK_CLODE_BLOCK, 0, L"\\{:[^\\u0]*?:\\}", false, on_codeblock},
 {L"HEAD", TOK_HEAD, 0, L"\"%head\"", false, NULL},
 {L"TAIL", TOK_TAIL, 0, L"\"%tail\"", false, NULL},
+{L"UNI", TOK_UNI, 0, L"\"%uni\"", false, NULL},
 {L"LEXEME", TOK_NAME, 0, L"{lexeme}", false, on_codeblock},
 {L"NUMBER", TOK_NUM, 0, L"{number}", false, on_number},
-{L":", 263, 0, L"\":\"", false, NULL},
-{L";", 264, 0, L"\";\"", false, NULL},
-{L"{", 265, 0, L"\"{\"", false, NULL},
-{L"}", 266, 0, L"\"}\"", false, NULL},
-{L"[", 267, 0, L"\"[\"", false, NULL},
-{L"]", 268, 0, L"\"]\"", false, NULL},
+{L":", 264, 0, L"\":\"", false, NULL},
+{L";", 265, 0, L"\";\"", false, NULL},
+{L"{", 266, 0, L"\"{\"", false, NULL},
+{L"}", 267, 0, L"\"}\"", false, NULL},
+{L"[", 268, 0, L"\"[\"", false, NULL},
+{L"]", 269, 0, L"\"]\"", false, NULL},
 {L"CFG_LEXVAL_EOI", 0, 2, L"$", false, NULL}
 };
 
-#define __TERM_COUNT__ ((size_t)13)
+#define __TERM_COUNT__ ((size_t)14)
 
 static struct {const wchar_t *name; size_t tokval; size_t prec_level; psrAssocType_t	assoc;}__g_prec_pattern[] =  {
 NULL
@@ -172,12 +175,16 @@ static psrRetVal_t AR_STDCALL handle_item_list(psrNode_t **nodes, size_t count, 
 
 /*item	:	head_code */
 /*item	:	tail_code */
+/*item	:	uni_name */
 /*item	:	named_type_def */
 static psrRetVal_t AR_STDCALL handle_item(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*head_code	:	HEAD CODE_BLOCK ; */
 /*tail_code	:	TAIL CODE_BLOCK ; */
 static psrRetVal_t AR_STDCALL on_head_code_def(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
+/*uni_name	:	UNI LEXEME ; */
+static psrRetVal_t AR_STDCALL on_uni_name(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
 /*named_type_def	:	LEXEME anonymous_type_def ; */
 static psrRetVal_t AR_STDCALL on_named_type_def(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
@@ -213,9 +220,11 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"item_list  :  item ", NULL, handle_item_list, 0},
 {L"item  :  head_code ", NULL, handle_item, 0},
 {L"item  :  tail_code ", NULL, handle_item, 0},
+{L"item  :  uni_name ", NULL, handle_item, 0},
 {L"item  :  named_type_def ", NULL, handle_item, 0},
 {L"head_code  :  HEAD CODE_BLOCK ; ", NULL, on_head_code_def, 0},
 {L"tail_code  :  TAIL CODE_BLOCK ; ", NULL, on_head_code_def, 0},
+{L"uni_name  :  UNI LEXEME ; ", NULL, on_uni_name, 0},
 {L"named_type_def  :  LEXEME anonymous_type_def ; ", NULL, on_named_type_def, 0},
 {L"anonymous_type_def  :  { field_def_list } ", NULL, auto_return_1, 0},
 {L"field_def_list  :  field_def_list field_def ", NULL, on_filed_def_list, 0},
@@ -226,7 +235,7 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"field_name  :  LEXEME ", NULL, auto_return_0, 0}
 };
 
-#define __RULE_COUNT__ ((size_t)17)
+#define __RULE_COUNT__ ((size_t)19)
 #define START_RULE L"program"
 
 
@@ -436,6 +445,7 @@ static psrRetVal_t AR_STDCALL handle_item_list(psrNode_t **nodes, size_t count, 
 
 /*item	:	head_code */
 /*item	:	tail_code */
+/*item	:	uni_name */
 /*item	:	named_type_def */
 static psrRetVal_t AR_STDCALL handle_item(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
@@ -459,6 +469,20 @@ static psrRetVal_t AR_STDCALL on_head_code_def(psrNode_t **nodes, size_t count, 
 				{
 					g_tail_code.push_back(n->code_block.code);
 				}
+				return ret;
+			 }
+}
+
+
+
+
+/*uni_name	:	UNI LEXEME ; */
+static psrRetVal_t AR_STDCALL on_uni_name(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+		{ 
+				psrRetVal_t ret = {AR_S_YES, NULL};
+				ast_node_t *n = (ast_node_t*)nodes[1];
+				g_uni_name = n->name;
 				return ret;
 			 }
 }
@@ -773,6 +797,12 @@ extern "C" void generate_type_list(const std::wstring &input)
 		match = NULL;
 
 }
+
+
+
+
+
+ 
 
 
 

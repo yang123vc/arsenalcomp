@@ -172,7 +172,7 @@ static AR_INLINE void insert_field_to_type(Type_t *type, Field_t *field)
 extern std::vector<Type_t*>    				g_type_list;
 extern std::vector<std::wstring>			g_head_code;
 extern std::vector<std::wstring>			g_tail_code;
-
+extern std::wstring							g_uni_name;
 
 
 

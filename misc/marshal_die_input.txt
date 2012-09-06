@@ -22,3 +22,7 @@ daemonQueryCPUTemp_t{
 	unused 		: uint_32_t;
 	unused2  	: daemonTest_t;
 };
+
+
+
+%uni clisrvMessage_t;
