@@ -208,6 +208,7 @@ CFG_ConfigToCode
 
 
 
-
+AR_GetExpandPath
+AR_GetRealPath
 
 
