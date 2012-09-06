@@ -83,7 +83,7 @@ static void test3()
 		u1.type = BASICTEST_T;
 		AR_wcscpy(u1.basicTest_t.w_arr, L"中国字真麻烦！");
 		AR_strcpy(u1.basicTest_t.c_arr, "中国字真麻烦！");
-
+		
 
 		//snObject_t *obj = __put_basicTest_t(&u1.basicTest_t);
 
@@ -97,7 +97,7 @@ static void test3()
 		
 		status = clisrvMessage_t_UnMarshal(&u2, buf);
 
-		AR_printf(L"cmp u1 and u2 : %d\r\n", AR_memcmp(&u1, &u2, sizeof(u2)));
+		AR_printf(L"cmp u1 and u2 : %d\r\n", AR_memcmp(&u1.basicTest_t, &u2.basicTest_t, sizeof(u2.basicTest_t)));
 
 		AR_DestroyBuffer(buf);
 		buf = NULL;
