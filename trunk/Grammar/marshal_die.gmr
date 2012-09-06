@@ -66,7 +66,7 @@
 std::vector<Type_t*>    			g_type_list;
 std::vector<std::wstring>			g_head_code;
 std::vector<std::wstring>			g_tail_code;
-
+std::wstring					g_uni_name = L"uniType_t";
 
 :}
 ;
@@ -154,6 +154,9 @@ ast_node_t* create_anonymous_type()
 %token    TAIL        	:    '"%tail"'			%value "TOK_TAIL"
 				;
 
+%token    UNI        	:    '"%uni"'				%value "TOK_UNI"
+				;
+
 
 %token    LEXEME        	:    "{lexeme}"			%value "TOK_NAME"		%action on_codeblock
 				{:
@@ -233,6 +236,7 @@ item_list       :    item_list    item
 
 item  		  :    head_code
                 |    tail_code
+		  |    uni_name
                 |    named_type_def
                 ;
 
@@ -265,6 +269,15 @@ tail_code       	:    TAIL    CODE_BLOCK	";"		%action on_head_code_def
 			:}
 			;
 
+
+uni_name		:	UNI	LEXEME	";"	%action on_uni_name
+			{:
+				psrRetVal_t ret = {AR_S_YES, NULL};
+				ast_node_t *n = (ast_node_t*)nodes[1];
+				g_uni_name = n->name;
+				return ret;
+			:}
+			;
 
 
 named_type_def  	:    LEXEME    anonymous_type_def ";"	%action on_named_type_def
