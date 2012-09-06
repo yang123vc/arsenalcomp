@@ -2280,87 +2280,6 @@ typedef struct {
 		daemonQueryCPUTemp_t		daemonQueryCPUTemp_t;
 }clisrvMessage_t;
 
-static arStatus_t		clisrvMessage_t_UnMarshal(clisrvMessage_t*uni_type, arBuffer_t *in)
-{
-		snRetVal_t		sn_ret;
-		arStatus_t		ar_status;
-		snObject_t		*type_obj, *data_obj;
-		AR_ASSERT(uni_type != NULL && in != NULL);
-
-		ar_status = AR_S_YES;
-		
-		sn_ret = SN_GetObject(in);
-
-		ar_status = sn_ret.status;
-
-		if(ar_status != AR_S_YES)
-		{
-				goto END_POINT;
-		}
-
-		if(SN_GetObjectType(sn_ret.obj) != SN_LIST_T || SN_GetListObjectCount(sn_ret.obj) != 2)
-		{
-				ar_status = AR_E_INVAL;
-				goto END_POINT;
-		}
-		
-		type_obj = SN_GetFromListObject(sn_ret.obj, 0);
-
-		if(type_obj == NULL || SN_GetObjectType(type_obj) != SN_INT_T)
-		{
-				ar_status = AR_E_INVAL;
-				goto END_POINT;
-		}
-
-		data_obj = SN_GetFromListObject(sn_ret.obj, 1);
-
-		if(data_obj == NULL || SN_GetObjectType(data_obj) != SN_DICT_T)
-		{
-				ar_status = AR_E_INVAL;
-				goto END_POINT;
-		}
-		uni_type->type = SN_GetIntObject(type_obj);
-		switch(uni_type->type)
-		{
-		/*******************************************************************************************/
-		case DAEMONKEEPALIVE_T:
-				if(!__get_daemonKeepalive_t(data_obj, &uni_type->daemonKeepalive_t))
-				{
-						ar_status = AR_E_INVAL;
-						goto END_POINT;
-				}
-				break;
-		case DAEMONTEST_T:
-				if(!__get_daemonTest_t(data_obj, &uni_type->daemonTest_t))
-				{
-						ar_status = AR_E_INVAL;
-						goto END_POINT;
-				}
-				break;
-		case DAEMONQUERYCPUTEMP_T:
-				if(!__get_daemonQueryCPUTemp_t(data_obj, &uni_type->daemonQueryCPUTemp_t))
-				{
-						ar_status = AR_E_INVAL;
-						goto END_POINT;
-				}
-				break;
-		/*******************************************************************************************/
-		default:
-				ar_status = AR_E_INVAL;
-				goto END_POINT;
-				break;
-		}
-
-
-END_POINT:
-		if(sn_ret.obj)
-		{
-				SN_DestroyObject(sn_ret.obj);
-				sn_ret.obj = NULL;
-		}
-
-		return ar_status;
-}
 
 static arStatus_t		clisrvMessage_t_Marshal(clisrvMessage_t*uni_type, arBuffer_t *out)
 {
@@ -2463,4 +2382,92 @@ END_POINT:
 
 		return ar_status;
 }
+
+
+static arStatus_t		clisrvMessage_t_UnMarshal(clisrvMessage_t*uni_type, arBuffer_t *in)
+{
+		snRetVal_t		sn_ret;
+		arStatus_t		ar_status;
+		snObject_t		*type_obj, *data_obj;
+		AR_ASSERT(uni_type != NULL && in != NULL);
+
+		ar_status = AR_S_YES;
+		type_obj = NULL;
+		data_obj = NULL;
+		AR_memset(uni_type, 0, sizeof(*uni_type));
+
+		
+		sn_ret = SN_GetObject(in);
+
+		ar_status = sn_ret.status;
+
+		if(ar_status != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+
+		if(SN_GetObjectType(sn_ret.obj) != SN_LIST_T || SN_GetListObjectCount(sn_ret.obj) != 2)
+		{
+				ar_status = AR_E_INVAL;
+				goto END_POINT;
+		}
+		
+		type_obj = SN_GetFromListObject(sn_ret.obj, 0);
+
+		if(type_obj == NULL || SN_GetObjectType(type_obj) != SN_INT_T)
+		{
+				ar_status = AR_E_INVAL;
+				goto END_POINT;
+		}
+
+		data_obj = SN_GetFromListObject(sn_ret.obj, 1);
+
+		if(data_obj == NULL || SN_GetObjectType(data_obj) != SN_DICT_T)
+		{
+				ar_status = AR_E_INVAL;
+				goto END_POINT;
+		}
+		uni_type->type = SN_GetIntObject(type_obj);
+		switch(uni_type->type)
+		{
+		/*******************************************************************************************/
+		case DAEMONKEEPALIVE_T :
+				if(!__get_daemonKeepalive_t(data_obj, &uni_type->daemonKeepalive_t))
+				{
+								ar_status = AR_E_INVAL;
+								goto END_POINT;
+				};
+				break;
+		case DAEMONTEST_T :
+				if(!__get_daemonTest_t(data_obj, &uni_type->daemonTest_t))
+				{
+								ar_status = AR_E_INVAL;
+								goto END_POINT;
+				};
+				break;
+		case DAEMONQUERYCPUTEMP_T :
+				if(!__get_daemonQueryCPUTemp_t(data_obj, &uni_type->daemonQueryCPUTemp_t))
+				{
+								ar_status = AR_E_INVAL;
+								goto END_POINT;
+				};
+				break;
+/*******************************************************************************************/
+		default:
+				ar_status = AR_E_INVAL;
+				goto END_POINT;
+				break;
+		}
+
+
+END_POINT:
+		if(sn_ret.obj)
+		{
+				SN_DestroyObject(sn_ret.obj);
+				sn_ret.obj = NULL;
+		}
+
+		return ar_status;
+}
+
 
