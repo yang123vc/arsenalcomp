@@ -756,6 +756,7 @@
 			buildSettings = {
 				EXECUTABLE_PREFIX = "";
 				EXPORTED_SYMBOLS_FILE = Arsenal_Debug.exp;
+				INSTALL_PATH = "@loader_path/../Frameworks/";
 				OBJROOT = "$(SYMROOT)";
 				PRODUCT_NAME = Arsenal;
 				SDKROOT = macosx10.6;
@@ -770,6 +771,7 @@
 				EXPORTED_SYMBOLS_FILE = Arsenal_Release.exp;
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = "NDEBUG=1";
+				INSTALL_PATH = "@loader_path/../Frameworks/";
 				OBJROOT = "$(SYMROOT)";
 				PRODUCT_NAME = Arsenal;
 				SDKROOT = macosx10.6;
