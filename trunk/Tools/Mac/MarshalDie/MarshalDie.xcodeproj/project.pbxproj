@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		67414B2715F9951400E78D72 /* MarshalDie.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 67414B2615F9951400E78D72 /* MarshalDie.1 */; };
-		67414B3C15F99C1F00E78D72 /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 67414B3B15F99C1F00E78D72 /* Arsenal.a */; };
 		67414B3E15F99C9100E78D72 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 67414B3D15F99C9100E78D72 /* libiconv.dylib */; };
 		67414B4015F99C9600E78D72 /* libpthread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 67414B3F15F99C9600E78D72 /* libpthread.dylib */; };
 		67414B5615F99FF500E78D72 /* generate_type.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67414B5215F99FF500E78D72 /* generate_type.cpp */; };
@@ -31,7 +30,6 @@
 /* Begin PBXFileReference section */
 		67414B2015F9951400E78D72 /* MarshalDie */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MarshalDie; sourceTree = BUILT_PRODUCTS_DIR; };
 		67414B2615F9951400E78D72 /* MarshalDie.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = MarshalDie.1; sourceTree = "<group>"; };
-		67414B3B15F99C1F00E78D72 /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = Arsenal.a; path = "../../../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Debug/Arsenal.a"; sourceTree = "<group>"; };
 		67414B3D15F99C9100E78D72 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
 		67414B3F15F99C9600E78D72 /* libpthread.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpthread.dylib; path = usr/lib/libpthread.dylib; sourceTree = SDKROOT; };
 		67414B5215F99FF500E78D72 /* generate_type.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = generate_type.cpp; sourceTree = "<group>"; };
@@ -47,7 +45,6 @@
 			files = (
 				67414B4015F99C9600E78D72 /* libpthread.dylib in Frameworks */,
 				67414B3E15F99C9100E78D72 /* libiconv.dylib in Frameworks */,
-				67414B3C15F99C1F00E78D72 /* Arsenal.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,7 +56,6 @@
 			children = (
 				67414B3F15F99C9600E78D72 /* libpthread.dylib */,
 				67414B3D15F99C9100E78D72 /* libiconv.dylib */,
-				67414B3B15F99C1F00E78D72 /* Arsenal.a */,
 				67414B2315F9951400E78D72 /* MarshalDie */,
 				67414B2115F9951400E78D72 /* Products */,
 			);
@@ -198,6 +194,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Debug\"",
+					"\"$(SRCROOT)/../../../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Release\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -210,6 +207,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Debug\"",
+					"\"$(SRCROOT)/../../../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Release\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

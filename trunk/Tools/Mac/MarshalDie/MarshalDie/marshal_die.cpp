@@ -597,7 +597,8 @@ int main(int argc, const char **argv)
 
         if(argc != 3)
         {
-                printf("bad command line\r\n");
+                printf("invalid command line\r\n");
+                printf("MarshalDie 'input path' 'output path'\r\n");
                 return -1;
         }
         
