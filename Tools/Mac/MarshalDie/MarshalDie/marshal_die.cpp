@@ -417,7 +417,7 @@ std::wstring generate_for_unistruct_def()
 						continue;
 				}
 				
-				uni_type += (L"\t\t" + type->name	+ L"\t\t" + type->name + L";\r\n");
+				uni_type += (L"\t\t" + type->name	+ L"\t\t" + type->name + L"_val;\r\n");
 		}
 		
 		uni_type += L"}" + g_uni_name + L";\r\n";
@@ -446,7 +446,8 @@ std::wstring generate_for_unistruct_def()
 				case_stat += (L"\t\tcase " + type_unistruct_name(type) + L" :\r\n");
 
 				wchar_t tmp[1024];
-				AR_swprintf(tmp, 1024, L"val = __put_%ls(&uni_type->%ls)", type->name.c_str(), type->name.c_str());
+                std::wstring uni_val_type_name = type->name + L"_val";
+				AR_swprintf(tmp, 1024, L"val = __put_%ls(&uni_type->%ls)", type->name.c_str(), uni_val_type_name.c_str());
 				case_stat += L"\t\t\t\t" + (std::wstring)tmp + L";\r\n";
 				case_stat += L"\t\t\t\tbreak;\r\n";
 				
@@ -478,7 +479,8 @@ std::wstring generate_for_unistruct_def()
 				case_stat += (L"\t\tcase " + type_unistruct_name(type) + L" :\r\n");
 
 				wchar_t tmp[2048];
-				AR_swprintf(tmp, 2048, L"if(!__get_%ls(data_obj, &uni_type->%ls))\r\n\t\t\t\t{\r\n\t\t\t\t\t\t\t\tar_status = AR_E_INVAL;\r\n\t\t\t\t\t\t\t\tgoto END_POINT;\r\n\t\t\t\t}", type->name.c_str(), type->name.c_str());
+                std::wstring uni_val_type_name = type->name + L"_val";
+				AR_swprintf(tmp, 2048, L"if(!__get_%ls(data_obj, &uni_type->%ls))\r\n\t\t\t\t{\r\n\t\t\t\t\t\t\t\tar_status = AR_E_INVAL;\r\n\t\t\t\t\t\t\t\tgoto END_POINT;\r\n\t\t\t\t}", type->name.c_str(), uni_val_type_name.c_str());
 				case_stat += L"\t\t\t\t" + (std::wstring)tmp + L";\r\n";
 				case_stat += L"\t\t\t\tbreak;\r\n";
 				
@@ -503,16 +505,33 @@ std::wstring generate_for_unistruct_def()
 void marshal_die_main(const wchar_t *input_path, const wchar_t *output_path)
 {
 		init_inner_type();
-		arString_t *input = AR_CreateString();
-		arString_t *output = AR_CreateString();
+        
+		arString_t      *input = AR_CreateString();
+		arString_t      *output = AR_CreateString();
+        
+        arString_t      *real_in = AR_CreateString();
+        arString_t      *real_out = AR_CreateString();
 
+        
 		AR_GetExpandPath(input_path, input);
 		AR_GetExpandPath(output_path, output);
+        
+        if(AR_GetRealPath(AR_GetStringCString(input), real_in) != AR_S_YES)
+        {
+                AR_error(AR_ERR_FATAL, L"failed to get real path '%ls'\r\n", AR_GetStringCString(input));
+                exit(-1);
+        }
+        
+        if(AR_GetRealPath(AR_GetStringCString(output), real_out) != AR_S_YES)
+        {
+                AR_error(AR_ERR_FATAL, L"failed to get real path '%ls'\r\n", AR_GetStringCString(output));
+                exit(-1);
+        }
+        
 
-
-		if(AR_LoadBomTextFile(input_path, NULL, input) != AR_S_YES)
+		if(AR_LoadBomTextFile(AR_GetStringCString(real_in), NULL, input) != AR_S_YES)
 		{
-				AR_error(AR_ERR_FATAL, L"Failed to load '%ls'\r\n", input_path);
+				AR_error(AR_ERR_FATAL, L"Failed to load '%ls'\r\n", AR_GetStringCString(real_in));
 				exit(-1);
 		}
 
@@ -534,7 +553,7 @@ void marshal_die_main(const wchar_t *input_path, const wchar_t *output_path)
 		
 		std::wstring final_code = predef_head_code + inner_types_codes + struct_def_code + put_get_types_code +  unistruct_code + predef_tail_code;
 
-		if(AR_SaveBomTextFile(output_path, AR_TXT_BOM_UTF_8, final_code.c_str()) != AR_S_YES)
+		if(AR_SaveBomTextFile(AR_GetStringCString(real_out), AR_TXT_BOM_UTF_8, final_code.c_str()) != AR_S_YES)
 		{
 				AR_error(AR_ERR_FATAL, L"Failed to save '%ls'\r\n", output_path);
 				exit(-1);
@@ -544,7 +563,10 @@ void marshal_die_main(const wchar_t *input_path, const wchar_t *output_path)
 		input = NULL;
 		AR_DestroyString(output);
 		output = NULL;
-
+        AR_DestroyString(real_in);
+		real_in = NULL;
+		AR_DestroyString(real_out);
+		real_out = NULL;
 }
 
 
@@ -569,13 +591,10 @@ static void AR_STDCALL tiny_printf(const wchar_t *msg, void *ctx)
 
 
 
-#define INPUT_PATH		L"D:\\Code\\Solidus\\Compiler\\Arsenal\\misc\\marshal_die_input.txt"
-#define OUTPUT_PATH		L"C:\\Users\\liupeng\\Desktop\\1.txt"
-
 int main(int argc, const char **argv)
 {
         wchar_t *input, *output;
-        
+
         if(argc != 3)
         {
                 printf("bad command line\r\n");
@@ -590,6 +609,8 @@ int main(int argc, const char **argv)
 		Arsenal_Init(&ai);
         
         
+        
+        
         input = AR_str_to_wcs(AR_CP_UTF8, argv[1], AR_strlen(argv[1]));
         output = AR_str_to_wcs(AR_CP_UTF8, argv[2], AR_strlen(argv[2]));
 		
@@ -598,6 +619,7 @@ int main(int argc, const char **argv)
                 AR_error(AR_ERR_FATAL, L"bad convert path\r\n");
                 exit(-1);
         }
+
         
 		marshal_die_main(input, output);
 
@@ -611,7 +633,6 @@ int main(int argc, const char **argv)
 
         
 		printf("done\r\n");
-		getchar();
 
 		return 0;
 
