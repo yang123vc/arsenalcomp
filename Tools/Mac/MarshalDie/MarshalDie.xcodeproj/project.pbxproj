@@ -1,0 +1,242 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		67414B2715F9951400E78D72 /* MarshalDie.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 67414B2615F9951400E78D72 /* MarshalDie.1 */; };
+		67414B3C15F99C1F00E78D72 /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 67414B3B15F99C1F00E78D72 /* Arsenal.a */; };
+		67414B3E15F99C9100E78D72 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 67414B3D15F99C9100E78D72 /* libiconv.dylib */; };
+		67414B4015F99C9600E78D72 /* libpthread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 67414B3F15F99C9600E78D72 /* libpthread.dylib */; };
+		67414B5615F99FF500E78D72 /* generate_type.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67414B5215F99FF500E78D72 /* generate_type.cpp */; };
+		67414B5715F99FF500E78D72 /* marshal_die.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67414B5415F99FF500E78D72 /* marshal_die.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		67414B1E15F9951400E78D72 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				67414B2715F9951400E78D72 /* MarshalDie.1 in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		67414B2015F9951400E78D72 /* MarshalDie */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MarshalDie; sourceTree = BUILT_PRODUCTS_DIR; };
+		67414B2615F9951400E78D72 /* MarshalDie.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = MarshalDie.1; sourceTree = "<group>"; };
+		67414B3B15F99C1F00E78D72 /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = Arsenal.a; path = "../../../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Debug/Arsenal.a"; sourceTree = "<group>"; };
+		67414B3D15F99C9100E78D72 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
+		67414B3F15F99C9600E78D72 /* libpthread.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpthread.dylib; path = usr/lib/libpthread.dylib; sourceTree = SDKROOT; };
+		67414B5215F99FF500E78D72 /* generate_type.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = generate_type.cpp; sourceTree = "<group>"; };
+		67414B5315F99FF500E78D72 /* generate_type.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = generate_type.h; sourceTree = "<group>"; };
+		67414B5415F99FF500E78D72 /* marshal_die.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = marshal_die.cpp; sourceTree = "<group>"; };
+		67414B5515F99FF500E78D72 /* predef_code.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = predef_code.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		67414B1D15F9951400E78D72 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				67414B4015F99C9600E78D72 /* libpthread.dylib in Frameworks */,
+				67414B3E15F99C9100E78D72 /* libiconv.dylib in Frameworks */,
+				67414B3C15F99C1F00E78D72 /* Arsenal.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		67414B1515F9951300E78D72 = {
+			isa = PBXGroup;
+			children = (
+				67414B3F15F99C9600E78D72 /* libpthread.dylib */,
+				67414B3D15F99C9100E78D72 /* libiconv.dylib */,
+				67414B3B15F99C1F00E78D72 /* Arsenal.a */,
+				67414B2315F9951400E78D72 /* MarshalDie */,
+				67414B2115F9951400E78D72 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		67414B2115F9951400E78D72 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				67414B2015F9951400E78D72 /* MarshalDie */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		67414B2315F9951400E78D72 /* MarshalDie */ = {
+			isa = PBXGroup;
+			children = (
+				67414B5215F99FF500E78D72 /* generate_type.cpp */,
+				67414B5315F99FF500E78D72 /* generate_type.h */,
+				67414B5415F99FF500E78D72 /* marshal_die.cpp */,
+				67414B5515F99FF500E78D72 /* predef_code.h */,
+				67414B2615F9951400E78D72 /* MarshalDie.1 */,
+			);
+			path = MarshalDie;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		67414B1F15F9951400E78D72 /* MarshalDie */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 67414B2A15F9951400E78D72 /* Build configuration list for PBXNativeTarget "MarshalDie" */;
+			buildPhases = (
+				67414B1C15F9951400E78D72 /* Sources */,
+				67414B1D15F9951400E78D72 /* Frameworks */,
+				67414B1E15F9951400E78D72 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MarshalDie;
+			productName = MarshalDie;
+			productReference = 67414B2015F9951400E78D72 /* MarshalDie */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		67414B1715F9951300E78D72 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
+			buildConfigurationList = 67414B1A15F9951300E78D72 /* Build configuration list for PBXProject "MarshalDie" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 67414B1515F9951300E78D72;
+			productRefGroup = 67414B2115F9951400E78D72 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				67414B1F15F9951400E78D72 /* MarshalDie */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		67414B1C15F9951400E78D72 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				67414B5615F99FF500E78D72 /* generate_type.cpp in Sources */,
+				67414B5715F99FF500E78D72 /* marshal_die.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		67414B2815F9951400E78D72 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = NO;
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = ../../../Arsenal;
+			};
+			name = Debug;
+		};
+		67414B2915F9951400E78D72 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = "NDEBUG=1";
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = NO;
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = ../../../Arsenal;
+			};
+			name = Release;
+		};
+		67414B2B15F9951400E78D72 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Debug\"",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		67414B2C15F9951400E78D72 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_OPTIMIZATION_LEVEL = 3;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Debug\"",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		67414B1A15F9951300E78D72 /* Build configuration list for PBXProject "MarshalDie" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				67414B2815F9951400E78D72 /* Debug */,
+				67414B2915F9951400E78D72 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		67414B2A15F9951400E78D72 /* Build configuration list for PBXNativeTarget "MarshalDie" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				67414B2B15F9951400E78D72 /* Debug */,
+				67414B2C15F9951400E78D72 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 67414B1715F9951300E78D72 /* Project object */;
+}

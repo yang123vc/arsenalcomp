@@ -198,7 +198,7 @@ wchar_t* healper_wcsndup(const wchar_t *sour, size_t len)
 				@throw [ARStringConvertException exceptionWithReason : @"can't convert utf8* to wchar_t* string"];
 		}else if(len == 0)
         {
-                return WideCharWrapper *wrapper = [WideCharWrapper WideCharWithString : L""];
+                return [WideCharWrapper WideCharWithString : L""];
         }
 		
 		
