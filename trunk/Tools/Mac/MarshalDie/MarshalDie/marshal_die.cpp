@@ -3,6 +3,7 @@
 #include "generate_type.h"
 #include "predef_code.h"
 
+using namespace std;
 
 static std::wstring generate_for_head_code()
 {
@@ -573,45 +574,39 @@ static void AR_STDCALL tiny_printf(const wchar_t *msg, void *ctx)
 
 int main(int argc, const char **argv)
 {
-		std::wstring input, output;
+        wchar_t *input, *output;
         
-#if(0)
-		LPWSTR	*szArglist;
-		int		nArgs;
-		int		i;
-		szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
-		
-		if(NULL == szArglist)
-		{
-				wprintf(L"CommandLineToArgvW failed\n");
-				return 0;
-		}
-
-		if(nArgs != 3)
-		{
-				printf("bad command line\r\n");
-				return 0;
-		}
-
-		input = szArglist[1];
-		output = szArglist[2];
-		LocalFree(szArglist);
-#endif
+        if(argc != 3)
+        {
+                printf("bad command line\r\n");
+                return -1;
+        }
         
-        input = INPUT_PATH;
-        output = OUTPUT_PATH;
+
 		
 
 		arInit_t ai = {{tiny_error, tiny_printf, NULL}};
 
 		Arsenal_Init(&ai);
-
+        
+        
+        input = AR_str_to_wcs(AR_CP_UTF8, argv[1], AR_strlen(argv[1]));
+        output = AR_str_to_wcs(AR_CP_UTF8, argv[2], AR_strlen(argv[2]));
 		
+        if(input == NULL || output == NULL)
+        {
+                AR_error(AR_ERR_FATAL, L"bad convert path\r\n");
+                exit(-1);
+        }
+        
+		marshal_die_main(input, output);
 
-		marshal_die_main(input.c_str(), output.c_str());
 
-
-
+        AR_DEL(input);
+        input = NULL;
+        AR_DEL(output);
+        output = NULL;
+        
 		Arsenal_UnInit();
 
         
