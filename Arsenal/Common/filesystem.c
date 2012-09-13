@@ -62,9 +62,14 @@ arStatus_t		AR_read_file(arFile_t *file, byte_t *data, size_t len, size_t *rn)
 		AR_ASSERT(file != NULL && data != NULL && len > 0);
 
 		status = AR_S_YES;
+		if(rn)
+		{
+				*rn = 0;
+		}
 
 		ret = fread((void*)data, 1, (size_t)len, (FILE*)file);
 
+		/*
 		if(ret != len)
 		{
                 int err_code = errno;
@@ -73,6 +78,7 @@ arStatus_t		AR_read_file(arFile_t *file, byte_t *data, size_t len, size_t *rn)
 		{
 				status = AR_S_YES;
 		}
+		*/
 
 		if(rn)
 		{
