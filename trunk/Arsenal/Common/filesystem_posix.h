@@ -64,7 +64,7 @@ static arStatus_t       __map_last_error(int errcode)
                 case ENFILE:
                 case EMFILE:
                 default:
-                        AR_error(AR_ERR_WARNING, L"file error : %d, '%hs'\r\n", strerror(errno));
+                        AR_error(AR_ERR_WARNING, L"file error : '%hs'\r\n", strerror(errno));
                         return AR_E_FILE;
         }
 }
