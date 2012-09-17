@@ -199,7 +199,7 @@
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "Yes"
+         shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "../../../Tools/Mac/MarshalDie/MarshalDie/marshal_die.cpp"
@@ -225,7 +225,7 @@
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "Yes"
+         shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "../../../Tools/Mac/MarshalDie/MarshalDie/marshal_die.cpp"
