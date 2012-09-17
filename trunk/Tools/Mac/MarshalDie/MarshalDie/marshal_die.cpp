@@ -586,7 +586,7 @@ void marshal_die_main(const wchar_t *input_path, const wchar_t *output_path)
                 
                 *(p + 1) = L'\0';
                 
-                AR_printf(L"%ls\r\n", inner_path);
+                //AR_printf(L"%ls\r\n", inner_path);
                 
                 AR_wcscat(inner_path, L"marshal_inner_types.h");
                 
