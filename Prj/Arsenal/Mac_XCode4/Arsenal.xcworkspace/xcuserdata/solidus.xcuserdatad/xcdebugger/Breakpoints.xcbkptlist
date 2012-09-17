@@ -203,11 +203,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "../../../Tools/Mac/MarshalDie/MarshalDie/marshal_die.cpp"
-         timestampString = "368692237.662754"
+         timestampString = "369565962.169303"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "596"
-         endingLineNumber = "596"
+         startingLineNumber = "620"
+         endingLineNumber = "620"
          landmarkName = "main(int argc, const char **argv)"
          landmarkType = "7">
       </FileBreakpoint>
@@ -235,6 +235,19 @@
          startingLineNumber = "427"
          endingLineNumber = "427"
          landmarkName = "generate_for_unistruct_def()"
+         landmarkType = "7">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../../../Tools/Mac/MarshalDie/MarshalDie/marshal_die.cpp"
+         timestampString = "369565775.038111"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "564"
+         endingLineNumber = "564"
+         landmarkName = "marshal_die_main(const wchar_t *input_path, const wchar_t *output_path)"
          landmarkType = "7">
       </FileBreakpoint>
    </FileBreakpoints>
