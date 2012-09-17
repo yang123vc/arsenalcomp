@@ -511,7 +511,7 @@ void marshal_die_main(const wchar_t *input_path, const wchar_t *output_path)
         
         arString_t      *real_in = AR_CreateString();
         arString_t      *real_out = AR_CreateString();
-
+        
         
 		AR_GetExpandPath(input_path, input);
 		AR_GetExpandPath(output_path, output);
@@ -552,13 +552,37 @@ void marshal_die_main(const wchar_t *input_path, const wchar_t *output_path)
 		AR_printf(L"%ls\r\n", unistruct_code.c_str());
         
         
-		std::wstring final_code = predef_head_code + inner_types_codes + struct_def_code + put_get_types_code +  unistruct_code + predef_tail_code;
+		std::wstring final_code = predef_head_code + /*inner_types_codes +*/ struct_def_code + put_get_types_code +  unistruct_code + predef_tail_code;
 
 		if(AR_SaveBomTextFile(AR_GetStringCString(real_out), AR_TXT_BOM_UTF_8, final_code.c_str()) != AR_S_YES)
 		{
 				AR_error(AR_ERR_FATAL, L"Failed to save '%ls'\r\n", output_path);
 				exit(-1);
 		}
+        
+        {
+                const wchar_t *final_path = AR_GetStringCString(real_out);
+                
+                wchar_t *inner_path = AR_NEWARR(wchar_t, 2048);
+                AR_wcscpy(inner_path, final_path);
+                wchar_t *p = (wchar_t*)AR_reverse_wcschr(inner_path, AR_wcslen(inner_path), L'/');
+                
+                *(p + 1) = L'\0';
+                
+                AR_printf(L"%ls\r\n", inner_path);
+                
+                AR_wcscat(inner_path, L"marshal_inner_types.h");
+                
+                
+                if(AR_SaveBomTextFile(inner_path, AR_TXT_BOM_UTF_8, inner_types_codes.c_str()) != AR_S_YES)
+                {
+                        AR_error(AR_ERR_FATAL, L"Failed to save '%ls'\r\n", inner_path);
+                        exit(-1);
+                }
+                
+                AR_DEL(inner_path);
+                inner_path = NULL;
+        }
 
 		AR_DestroyString(input);
 		input = NULL;
