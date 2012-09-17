@@ -5,6 +5,7 @@
 #include <shellapi.h>
 #pragma comment(lib, "shell32.lib")
 
+
 static std::wstring generate_for_head_code()
 {
 		std::wstring ret;
@@ -203,7 +204,7 @@ static std::wstring generate_func_call_for_get_field(const Field_t *field)
 		return ret;
 }
 
-#define GET_FUNC_FMT			L"static bool_t\t__get_%ls(snObject_t *obj, %ls *stu)\r\n{\r\n\t\tbool_t\tis_ok;\r\n\t\tsnObject_t *tmp;\r\n\t\tAR_ASSERT(stu != NULL && obj != NULL);\r\n\t\tAR_ASSERT(SN_GetObjectType(obj) == SN_DICT_T);\r\n\t\tis_ok = true;\r\n\r\n\t\t/***************************************************************************/\r\n%ls\r\n\t\t/***************************************************************************/\r\n\r\n\t\treturn true;\r\nINVALID_POINT:\r\n\t\tis_ok = false;\r\n\t\treturn is_ok;\r\n}"
+#define GET_FUNC_FMT			L"static bool_t\t__get_%ls(snObject_t *obj, %ls *stu)\r\n{\r\n\t\tbool_t\tis_ok;\r\n\t\tAR_ASSERT(stu != NULL && obj != NULL);\r\n\t\tAR_ASSERT(SN_GetObjectType(obj) == SN_DICT_T);\r\n\t\tis_ok = true;\r\n\r\n\t\t/***************************************************************************/\r\n%ls\r\n\t\t/***************************************************************************/\r\n\r\n\t\treturn true;\r\nINVALID_POINT:\r\n\t\tis_ok = false;\r\n\t\treturn is_ok;\r\n}"
 
 
 static std::wstring generate_for_get_custom_type(const Type_t *type)
@@ -360,24 +361,25 @@ static std::wstring type_unistruct_name(const Type_t *type)
 }
 
 
+
 std::wstring generate_for_unistruct_def()
 {
-
+        
 		std::wstring ret, enum_type, uni_type, marshal_code, unmarshal_code;
-
+        
 		/****************************************generate_for_enum****************************************/
 		enum_type += L"enum {\r\n\r\n";
-
+        
 		for(size_t i = 0; i < g_type_list.size(); ++i)
 		{
 				const Type_t *type = g_type_list[i];
 				AR_ASSERT(type != NULL);
-
+                
 				if(is_inner_type(type->type))
 				{
 						continue;
 				}
-
+                
 				if(type->is_anonymous_type)
 				{
 						continue;
@@ -388,43 +390,57 @@ std::wstring generate_for_unistruct_def()
 		}
 		
 		enum_type += L"};\r\n\r\n";
-
-
-		/****************************************generate_for_enum****************************************/
+        
+        
+		/****************************************generate_for_struct****************************************/
 		/*
-		typedef struct {
-				int				type;
-				union{
-						daemonKeppalive_t		daemonKeppalive_t
-				};
-		}
-		*/
+         typedef struct {
+         uint_32_t                       type;
+         union{
+         daemonKeppalive_t		daemonKeppalive_t
+         };
+         }
+         */
 		
-		uni_type += L"typedef struct {\r\n\t\tint\t\ttype;\r\n";
-
+		uni_type += L"typedef struct {\r\n\t\tuint_32_t\t\ttype;\r\n\t\tunion{\r\n";
+        
 		for(size_t i = 0; i < g_type_list.size(); ++i)
 		{
 				const Type_t *type = g_type_list[i];
 				AR_ASSERT(type != NULL);
-
+                
 				if(is_inner_type(type->type))
 				{
 						continue;
 				}
-
+                
 				if(type->is_anonymous_type)
 				{
 						continue;
 				}
 				
-				uni_type += (L"\t\t" + type->name	+ L"\t\t" + type->name + L";\r\n");
+				uni_type += (L"\t\t" + type->name	+ L"\t\t" + type->name + L"_val;\r\n");
 		}
 		
-		uni_type += L"}" + g_uni_name + L";\r\n";
+		uni_type += L"\t\t};\r\n}" + g_uni_name + L";\r\n";
 		
+        
+        ret = L"\r\n" + enum_type + L"\r\n" + uni_type + L"\r\n";
+        
+        return ret;
+        
+}
+
+
+
+std::wstring generate_for_unistruct_put_get()
+{
+
+		std::wstring ret, marshal_code, unmarshal_code;
+        
 		/****************************************marshal uni_type_code****************************************/
 
-		marshal_code = L"\r\nstatic arStatus_t\t\t" + g_uni_name + L"_Marshal(" + g_uni_name + L"*uni_type, arBuffer_t *out)\r\n{\r\n\t\tarStatus_t\t\tar_status;\r\n\t\tsnObject_t\t\t*key, *val;\r\n\t\tsnObject_t\t\t*final_obj;\r\n\t\tAR_ASSERT(uni_type != NULL && out != NULL);\r\n\t\tar_status = AR_S_YES;\r\n\t\tkey = NULL;\r\n\t\tval\t= NULL;\r\n\t\tfinal_obj = NULL;\r\n\t\t\r\n\t\tkey = SN_CreateObject(SN_INT_T);\r\n\t\tif(key == NULL)\r\n\t\t{\r\n\t\t\t\tar_status = AR_E_NOMEM;\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\r\n\t\tSN_SetIntObject(key, uni_type->type);\r\n\r\n\t\tswitch(uni_type->type)\r\n\t\t{\r\n/**********************************************/\r\n";
+		marshal_code = L"\r\nstatic arStatus_t\t\t" + g_uni_name + L"_Marshal(" + g_uni_name + L" *uni_type, arBuffer_t *out)\r\n{\r\n\t\tarStatus_t\t\tar_status;\r\n\t\tsnObject_t\t\t*key, *val;\r\n\t\tsnObject_t\t\t*final_obj;\r\n\t\tAR_ASSERT(uni_type != NULL && out != NULL);\r\n\t\tar_status = AR_S_YES;\r\n\t\tkey = NULL;\r\n\t\tval\t= NULL;\r\n\t\tfinal_obj = NULL;\r\n\t\t\r\n\t\tkey = SN_CreateObject(SN_INT_T);\r\n\t\tif(key == NULL)\r\n\t\t{\r\n\t\t\t\tar_status = AR_E_NOMEM;\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\r\n\t\tSN_SetUIntObject(key, uni_type->type);\r\n\r\n\t\tswitch(uni_type->type)\r\n\t\t{\r\n/**********************************************/\r\n";
 
 
 		for(size_t i = 0; i < g_type_list.size(); ++i)
@@ -446,7 +462,8 @@ std::wstring generate_for_unistruct_def()
 				case_stat += (L"\t\tcase " + type_unistruct_name(type) + L" :\r\n");
 
 				wchar_t tmp[1024];
-				AR_swprintf(tmp, 1024, L"val = __put_%ls(&uni_type->%ls)", type->name.c_str(), type->name.c_str());
+                std::wstring uni_val_type_name = type->name + L"_val";
+				AR_swprintf(tmp, 1024, L"val = __put_%ls(&uni_type->%ls)", type->name.c_str(), uni_val_type_name.c_str());
 				case_stat += L"\t\t\t\t" + (std::wstring)tmp + L";\r\n";
 				case_stat += L"\t\t\t\tbreak;\r\n";
 				
@@ -457,7 +474,7 @@ std::wstring generate_for_unistruct_def()
 
 
 		/****************************************unmarshal uni_type_code****************************************/
-		unmarshal_code = L"\r\nstatic arStatus_t\t\tclisrvMessage_t_UnMarshal(clisrvMessage_t*uni_type, arBuffer_t *in)\r\n{\r\n\t\tsnRetVal_t\t\tsn_ret;\r\n\t\tarStatus_t\t\tar_status;\r\n\t\tsnObject_t\t\t*type_obj, *data_obj;\r\n\t\tAR_ASSERT(uni_type != NULL && in != NULL);\r\n\r\n\t\tar_status = AR_S_YES;\r\n\t\ttype_obj = NULL;\r\n\t\tdata_obj = NULL;\r\n\t\tAR_memset(uni_type, 0, sizeof(*uni_type));\r\n\r\n\t\t\r\n\t\tsn_ret = SN_GetObject(in);\r\n\r\n\t\tar_status = sn_ret.status;\r\n\r\n\t\tif(ar_status != AR_S_YES)\r\n\t\t{\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\r\n\t\tif(SN_GetObjectType(sn_ret.obj) != SN_LIST_T || SN_GetListObjectCount(sn_ret.obj) != 2)\r\n\t\t{\r\n\t\t\t\tar_status = AR_E_INVAL;\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\t\t\r\n\t\ttype_obj = SN_GetFromListObject(sn_ret.obj, 0);\r\n\r\n\t\tif(type_obj == NULL || SN_GetObjectType(type_obj) != SN_INT_T)\r\n\t\t{\r\n\t\t\t\tar_status = AR_E_INVAL;\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\r\n\t\tdata_obj = SN_GetFromListObject(sn_ret.obj, 1);\r\n\r\n\t\tif(data_obj == NULL || SN_GetObjectType(data_obj) != SN_DICT_T)\r\n\t\t{\r\n\t\t\t\tar_status = AR_E_INVAL;\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\t\tuni_type->type = SN_GetIntObject(type_obj);\r\n\t\tswitch(uni_type->type)\r\n\t\t{\r\n\t\t/*******************************************************************************************/\r\n";
+		unmarshal_code = L"\r\nstatic arStatus_t\t\t" + g_uni_name + L"_UnMarshal(" + g_uni_name + L" *uni_type, arBuffer_t *in)\r\n{\r\n\t\tsnRetVal_t\t\tsn_ret;\r\n\t\tarStatus_t\t\tar_status;\r\n\t\tsnObject_t\t\t*type_obj, *data_obj;\r\n\t\tAR_ASSERT(uni_type != NULL && in != NULL);\r\n\r\n\t\tar_status = AR_S_YES;\r\n\t\ttype_obj = NULL;\r\n\t\tdata_obj = NULL;\r\n\t\tAR_memset(uni_type, 0, sizeof(*uni_type));\r\n\r\n\t\t\r\n\t\tsn_ret = SN_GetObject(in);\r\n\r\n\t\tar_status = sn_ret.status;\r\n\r\n\t\tif(ar_status != AR_S_YES)\r\n\t\t{\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\r\n\t\tif(SN_GetObjectType(sn_ret.obj) != SN_LIST_T || SN_GetListObjectCount(sn_ret.obj) != 2)\r\n\t\t{\r\n\t\t\t\tar_status = AR_E_INVAL;\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\t\t\r\n\t\ttype_obj = SN_GetFromListObject(sn_ret.obj, 0);\r\n\r\n\t\tif(type_obj == NULL || SN_GetObjectType(type_obj) != SN_INT_T)\r\n\t\t{\r\n\t\t\t\tar_status = AR_E_INVAL;\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\r\n\t\tdata_obj = SN_GetFromListObject(sn_ret.obj, 1);\r\n\r\n\t\tif(data_obj == NULL || SN_GetObjectType(data_obj) != SN_DICT_T)\r\n\t\t{\r\n\t\t\t\tar_status = AR_E_INVAL;\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\t\tuni_type->type = (uint_32_t)SN_GetUIntObject(type_obj);\r\n\t\tswitch(uni_type->type)\r\n\t\t{\r\n\t\t/*******************************************************************************************/\r\n";
 
 		for(size_t i = 0; i < g_type_list.size(); ++i)
 		{
@@ -478,7 +495,8 @@ std::wstring generate_for_unistruct_def()
 				case_stat += (L"\t\tcase " + type_unistruct_name(type) + L" :\r\n");
 
 				wchar_t tmp[2048];
-				AR_swprintf(tmp, 2048, L"if(!__get_%ls(data_obj, &uni_type->%ls))\r\n\t\t\t\t{\r\n\t\t\t\t\t\t\t\tar_status = AR_E_INVAL;\r\n\t\t\t\t\t\t\t\tgoto END_POINT;\r\n\t\t\t\t}", type->name.c_str(), type->name.c_str());
+                std::wstring uni_val_type_name = type->name + L"_val";
+				AR_swprintf(tmp, 2048, L"if(!__get_%ls(data_obj, &uni_type->%ls))\r\n\t\t\t\t{\r\n\t\t\t\t\t\t\t\tar_status = AR_E_INVAL;\r\n\t\t\t\t\t\t\t\tgoto END_POINT;\r\n\t\t\t\t}", type->name.c_str(), uni_val_type_name.c_str());
 				case_stat += L"\t\t\t\t" + (std::wstring)tmp + L";\r\n";
 				case_stat += L"\t\t\t\tbreak;\r\n";
 				
@@ -490,7 +508,7 @@ std::wstring generate_for_unistruct_def()
 		unmarshal_code += L"/*******************************************************************************************/\r\n\t\tdefault:\r\n\t\t\t\tar_status = AR_E_INVAL;\r\n\t\t\t\tgoto END_POINT;\r\n\t\t\t\tbreak;\r\n\t\t}\r\n\r\n\r\nEND_POINT:\r\n\t\tif(sn_ret.obj)\r\n\t\t{\r\n\t\t\t\tSN_DestroyObject(sn_ret.obj);\r\n\t\t\t\tsn_ret.obj = NULL;\r\n\t\t}\r\n\r\n\t\treturn ar_status;\r\n}\r\n\r\n";
 		/****************************************final code****************************************/
 
-		ret = L"\r\n" + enum_type + L"\r\n" + uni_type + L"\r\n" + marshal_code + L"\r\n" + unmarshal_code + L"\r\n";
+		ret = marshal_code + L"\r\n" + unmarshal_code + L"\r\n";
 		
 		return ret;
 
@@ -503,16 +521,33 @@ std::wstring generate_for_unistruct_def()
 void marshal_die_main(const wchar_t *input_path, const wchar_t *output_path)
 {
 		init_inner_type();
-		arString_t *input = AR_CreateString();
-		arString_t *output = AR_CreateString();
-
+        
+		arString_t      *input = AR_CreateString();
+		arString_t      *output = AR_CreateString();
+        
+        arString_t      *real_in = AR_CreateString();
+        arString_t      *real_out = AR_CreateString();
+        
+        
 		AR_GetExpandPath(input_path, input);
 		AR_GetExpandPath(output_path, output);
+        
+        if(AR_GetRealPath(AR_GetStringCString(input), real_in) != AR_S_YES)
+        {
+                AR_error(AR_ERR_FATAL, L"failed to get real path '%ls'\r\n", AR_GetStringCString(input));
+                exit(-1);
+        }
+        
+        if(AR_GetRealPath(AR_GetStringCString(output), real_out) != AR_S_YES)
+        {
+                AR_error(AR_ERR_FATAL, L"failed to get real path '%ls'\r\n", AR_GetStringCString(output));
+                exit(-1);
+        }
+        
 
-
-		if(AR_LoadBomTextFile(input_path, NULL, input) != AR_S_YES)
+		if(AR_LoadBomTextFile(AR_GetStringCString(real_in), NULL, input) != AR_S_YES)
 		{
-				AR_error(AR_ERR_FATAL, L"Failed to load '%ls'\r\n", input_path);
+				AR_error(AR_ERR_FATAL, L"Failed to load '%ls'\r\n", AR_GetStringCString(real_in));
 				exit(-1);
 		}
 
@@ -527,23 +562,54 @@ void marshal_die_main(const wchar_t *input_path, const wchar_t *output_path)
 		std::wstring struct_def_code = generate_for_struct_def();
 		std::wstring put_get_types_code = generate_for_put_get_type();
 		
-		std::wstring unistruct_code = generate_for_unistruct_def();
+		std::wstring    unistruct_def   =         generate_for_unistruct_def();
+        std::wstring    unistruct_put_get   =    generate_for_unistruct_put_get();
 
 
-		AR_printf(L"%ls\r\n", unistruct_code.c_str());
-		
-		std::wstring final_code = predef_head_code + inner_types_codes + struct_def_code + put_get_types_code +  unistruct_code + predef_tail_code;
+		AR_printf(L"%ls\r\n", unistruct_def.c_str());
+		AR_printf(L"%ls\r\n", unistruct_put_get.c_str());
+        
+		std::wstring final_code = predef_head_code + /*inner_types_codes +*/ struct_def_code + unistruct_def + put_get_types_code +  unistruct_put_get + predef_tail_code;
 
-		if(AR_SaveBomTextFile(output_path, AR_TXT_BOM_UTF_8, final_code.c_str()) != AR_S_YES)
+		if(AR_SaveBomTextFile(AR_GetStringCString(real_out), AR_TXT_BOM_UTF_8, final_code.c_str()) != AR_S_YES)
 		{
 				AR_error(AR_ERR_FATAL, L"Failed to save '%ls'\r\n", output_path);
 				exit(-1);
 		}
+        
+        
+        {
+                const wchar_t *final_path = AR_GetStringCString(real_out);
+                
+                wchar_t *inner_path = AR_NEWARR(wchar_t, 2048);
+                AR_wcscpy(inner_path, final_path);
+                wchar_t *p = (wchar_t*)AR_reverse_wcschr(inner_path, AR_wcslen(inner_path), L'\\');
+                
+                *(p + 1) = L'\0';
+                
+                AR_printf(L"%ls\r\n", inner_path);
+                
+                AR_wcscat(inner_path, L"marshal_inner_types.h");
+                
+                
+                if(AR_SaveBomTextFile(inner_path, AR_TXT_BOM_UTF_8, inner_types_codes.c_str()) != AR_S_YES)
+                {
+                        AR_error(AR_ERR_FATAL, L"Failed to save '%ls'\r\n", inner_path);
+                        exit(-1);
+                }
+                
+                AR_DEL(inner_path);
+                inner_path = NULL;
+        }
 
 		AR_DestroyString(input);
 		input = NULL;
 		AR_DestroyString(output);
 		output = NULL;
+        AR_DestroyString(real_in);
+		real_in = NULL;
+		AR_DestroyString(real_out);
+		real_out = NULL;
 
 }
 
