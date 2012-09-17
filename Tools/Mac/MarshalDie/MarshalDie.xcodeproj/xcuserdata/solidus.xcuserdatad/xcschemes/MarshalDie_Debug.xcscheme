@@ -58,11 +58,11 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "~/Desktop/spec.txt"
+            argument = "~/Desktop/interprocess_message_desc.md"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "~/Desktop/1.txt"
+            argument = "~/Desktop/1.c"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
