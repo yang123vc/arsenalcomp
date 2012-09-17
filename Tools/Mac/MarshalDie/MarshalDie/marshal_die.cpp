@@ -400,7 +400,7 @@ std::wstring generate_for_unistruct_def()
 		}
 		*/
 		
-		uni_type += L"typedef struct {\r\n\t\tuint_32_t\t\ttype;\r\n";
+		uni_type += L"typedef struct {\r\n\t\tuint_32_t\t\ttype;\r\n\t\tunion{\r\n";
 
 		for(size_t i = 0; i < g_type_list.size(); ++i)
 		{
@@ -420,7 +420,7 @@ std::wstring generate_for_unistruct_def()
 				uni_type += (L"\t\t" + type->name	+ L"\t\t" + type->name + L"_val;\r\n");
 		}
 		
-		uni_type += L"}" + g_uni_name + L";\r\n";
+		uni_type += L"\t\t};\r\n}" + g_uni_name + L";\r\n";
 		
 		/****************************************marshal uni_type_code****************************************/
 
