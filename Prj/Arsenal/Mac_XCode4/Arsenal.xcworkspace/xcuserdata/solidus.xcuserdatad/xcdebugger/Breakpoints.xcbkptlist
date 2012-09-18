@@ -234,7 +234,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "442"
          endingLineNumber = "442"
-         landmarkName = "generate_for_unistruct_def()"
+         landmarkName = "generate_for_unistruct_put_get()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
