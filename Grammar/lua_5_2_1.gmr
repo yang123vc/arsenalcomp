@@ -123,6 +123,7 @@
 %token	"=="		:	'"=="'		,1								%value 	"TOK_EQ"		;
 %token	"~="		:	'"~="'		,1								%value	"TOK_NE"		;
 
+%token	"::"		:	'"::"'		,1								%value	"TOK_COLONCOLON"	;
 
 %token	":"		:	'":"'			,0								%value "TOK_COLON"				;
 %token	"{"		:	'"{"'			,0								%value "TOK_L_BRACES"		;
@@ -286,6 +287,7 @@ exp		:	"nil"
 		|	exp	"/"	exp
 		|	exp	"%"	exp
 		|	exp	"^"	exp
+		|	"::"  NAME  "::"
 		;
 
 
