@@ -74,6 +74,7 @@ arStatus_t AR_CommonUnInit()
 }
 
 
+#if(0)
 arIOCtx_t*	AR_global_ioctx()
 {
 		return &__g_ctx.global_io_ctx;
@@ -148,6 +149,7 @@ arStatus_t	AR_error_ctx(arIOCtx_t *ctx, int_t level, const wchar_t *msg, ...)
 
 		return AR_S_YES;
 }
+#endif
 
 
 
@@ -181,13 +183,13 @@ arStatus_t AR_error(int_t level, const wchar_t *msg, ...)
 
 arStatus_t	AR_debug_print(const wchar_t *msg, ...)
 {
-		wchar_t buf[2048];
+		wchar_t buf[4096];
 		va_list arg_ptr;
 		
 		if(__g_ctx.global_io_ctx.on_error != NULL)
 		{
 				AR_va_start(arg_ptr, msg);
-				if(AR_vswprintf_nonalloc(buf, 2048, msg, arg_ptr) <= 0)
+				if(AR_vswprintf_nonalloc(buf, 4096, msg, arg_ptr) <= 0)
 				{
 						buf[0] = L'\0';
 				}
@@ -255,13 +257,12 @@ void	AR_check(bool_t cond, const wchar_t *fmt, ...)
 		if(!cond)
 		{
 				AR_va_start(arg_ptr, fmt);
-				len = AR_vswprintf(buf, 1024, fmt, arg_ptr);
+				len = AR_vswprintf_nonalloc(buf, 1024, fmt, arg_ptr);
 				AR_va_end(arg_ptr);
-
+				
 				if(len < 0)
 				{
-						AR_error(AR_ERR_FATAL, L"%ls : %ls\r\n", L"Arsenal internal error", AR_FUNC_NAME);
-						return;/*±ÜÃâwarning*/
+						buf[0] = L'\0';
 				}
 				
 				AR_error(AR_ERR_FATAL, buf);

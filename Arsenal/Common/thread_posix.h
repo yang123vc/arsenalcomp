@@ -542,9 +542,6 @@ arStatus_t		AR_WaitEventWithTimeout(arEvent_t *evt, uint_64_t milliseconds)
 
 
 
-
-
-
 AR_NAMESPACE_END
 
 

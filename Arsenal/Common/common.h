@@ -70,7 +70,7 @@ typedef struct __ar_init_tag
 arStatus_t AR_CommonInit(const arInit_t *info);
 arStatus_t AR_CommonUnInit();
 
-arIOCtx_t*	AR_global_ioctx();
+
 
 arStatus_t	AR_printf(const wchar_t *msg,...);
 arStatus_t	AR_debug_print(const wchar_t *msg, ...);
