@@ -271,6 +271,8 @@ arMutex_t*		AR_CreateMutex()
 
 #if defined(PTHREAD_MUTEX_RECURSIVE_NP)
         pthread_mutexattr_settype_np(&attr, PTHREAD_MUTEX_RECURSIVE_NP);
+#elif defined(PTHREAD_MUTEX_RECURSIVE)
+        pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
 #endif
         if(pthread_mutex_init(mtx, &attr) != 0)
         {
