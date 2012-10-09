@@ -16,8 +16,8 @@ Arsenal_UnInit
 AR_error
 AR_printf
 
-AR_error_ctx
-AR_printf_ctx
+;AR_error_ctx
+;AR_printf_ctx
 
 AR_check
 
