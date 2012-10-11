@@ -291,7 +291,7 @@ static rgxResult_t	__handle_quote(const wchar_t *input)
 										c = L'\'';
 										++p;
 										break;
-								case L'x':
+								case L'x'://注意，这里一定会对数字按照16禁止从头读到尾，因此，如果转义例如\xABCD123则应当后面的123全部转义
 								{
 										uint_64_t num;
 										if(*(p + 1) == L'\0')/*形如\x这种不良输入*/

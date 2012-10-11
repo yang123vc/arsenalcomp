@@ -3672,6 +3672,20 @@ void full_path_test()
 }
 
 
+void esc_wchar_hex_test()
+{
+		const wchar_t *s = L"一、360安全卫士安装许可协议：";
+
+		wchar_t *escs = AR_str_to_escstr(s);
+
+
+		wchar_t *src_s = AR_escstr_to_str(escs, NULL);
+
+		AR_printf(L"%ls\r\n", escs);
+		AR_printf(L"%ls\r\n", src_s);
+		
+}
+
 void com_test()
 {
 		
@@ -3781,6 +3795,8 @@ void com_test()
 		//buffer_test3();
 
 		//full_path_test();
+
+		esc_wchar_hex_test();
 }
 
 
