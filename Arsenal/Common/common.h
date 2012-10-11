@@ -214,9 +214,9 @@ void	AR_UnInitMemory();
 		void*	AR_debug_calloc(size_t num, size_t size, const char *file_name, int_t line);
 		void	AR_debug_free(void *ptr, const char *file_name, int_t line);
 
-		#define AR_malloc(_nb)		AR_debug_malloc((_nb), __FILE__, __LINE__)
+		#define AR_malloc(_nb)			AR_debug_malloc((_nb), __FILE__, __LINE__)
 		#define AR_calloc(_n, _s)		AR_debug_calloc((_n),(_s), __FILE__, __LINE__)
-		#define AR_free(_p)		AR_debug_free((_p), __FILE__, __LINE__)
+		#define AR_free(_p)				AR_debug_free((_p), __FILE__, __LINE__)
 		
 		#else
 		
