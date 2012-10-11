@@ -378,9 +378,9 @@ wchar_t*		AR_str_to_escstr_n(const wchar_t *src, size_t n)
 		wchar_t *d;
 		const wchar_t *s;
 		size_t i;
-		
+		bool_t	print_escape_char;
 		if(src == NULL)return NULL;
-
+		print_escape_char = false;
 		res = AR_NEWARR0(wchar_t, (n + 5) * 5 + 1);
 
 		if(res == NULL)
@@ -430,7 +430,7 @@ wchar_t*		AR_str_to_escstr_n(const wchar_t *src, size_t n)
 						break;
 				default:
 				{
-						if(AR_iswprint(s[i]))
+						if(!print_escape_char && AR_iswprint(s[i]))
 						{
 								*d++ = s[i];
 						}else
@@ -441,7 +441,11 @@ wchar_t*		AR_str_to_escstr_n(const wchar_t *src, size_t n)
 								AR_ASSERT(l > 0);
 								*d++ = L'\\';
 								*d++ = L'x';
-								for(l = 0; buf[l]; ++l) *d++ = buf[l];
+								for(l = 0; buf[l]; ++l)
+								{
+										*d++ = buf[l];
+								}
+								print_escape_char = true;
 						}
 				}
 				}
