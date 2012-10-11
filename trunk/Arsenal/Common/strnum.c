@@ -138,7 +138,13 @@ int_t			AR_u64tow_buf(wchar_t *out, size_t nbuf, uint_64_t num, size_t radix)
 
 		p = buf + __BUFFER_LEN;
 		*--p = 0;
-		do{ *--p = __tbl[num % radix];}while((num /= radix) > 0);
+		
+        do{
+                *--p = __tbl[num % radix];
+                
+                num /= radix;
+                
+        }while(num > 0);
 
 		len = (int_t)(buf + __BUFFER_LEN - p);/*返回的是需要元素数组的长度包含0*/
 

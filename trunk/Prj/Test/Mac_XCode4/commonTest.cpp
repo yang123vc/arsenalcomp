@@ -1989,6 +1989,35 @@ static void str_test20()
         }
 }
         
+        
+static void str_test21()
+{
+        const wchar_t *s = L"一、360安全卫士安装许可协议：";
+        wchar_t *esc_s = AR_str_to_escstr(s);
+        
+        AR_printf(L"%ls\r\n", esc_s);
+        
+        arEscStrErr_t err;
+        
+        const wchar_t *src_s = AR_escstr_to_str(esc_s, &err);
+        
+        
+        AR_printf(L"%ls\r\n", src_s);
+}
+ 
+static void str_test22()
+{
+        wchar_t buf[64], buf2[64];
+        uint_64_t v = L'、', v2 = L'中';
+
+        
+        int_t l = AR_u64tow_buf(buf, AR_NELEMS(buf), v, 16);
+        int_t l2 = AR_u64tow_buf(buf2, AR_NELEMS(buf2), v2, 16);
+        
+        AR_ASSERT(l > 0);
+        
+}
+        
 void common_test()
 {
         AR_printf(L"On common_test\r\n");
@@ -2004,8 +2033,10 @@ void common_test()
         //text_test_load_save();
         
         //str_test19();
-        str_test20();
-        
+        //str_test20();
+ 
+        str_test21();
+        //str_test22();
 }
         
         
