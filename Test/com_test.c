@@ -3683,6 +3683,13 @@ void esc_wchar_hex_test()
 
 		AR_printf(L"%ls\r\n", escs);
 		AR_printf(L"%ls\r\n", src_s);
+
+		AR_DEL(src_s);
+		AR_DEL(escs);
+
+		src_s = NULL;
+		src_s = NULL;
+
 		
 }
 
