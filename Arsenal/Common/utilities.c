@@ -212,9 +212,13 @@ wchar_t*		AR_str_to_escstr(const wchar_t *src)
 		wchar_t *d;
 		const wchar_t *s;
 		size_t	src_len;
-		
-		if(src == NULL)return NULL;
+		bool_t	print_escape_char;
 
+		if(src == NULL)
+		{
+				return NULL;
+		}
+		print_escape_char = false;/*考虑对 不可打字符+数字的情形*/
 		src_len = AR_wcslen(src);
 		res = AR_NEWARR0(wchar_t, (src_len + 5) * 5 + 1);
 
@@ -264,7 +268,7 @@ wchar_t*		AR_str_to_escstr(const wchar_t *src)
 						break;
 				default:
 				{
-						if(AR_iswprint(*s))
+						if(!print_escape_char && AR_iswprint(*s))
 						{
 								*d++ = *s;
 						}else
@@ -275,7 +279,11 @@ wchar_t*		AR_str_to_escstr(const wchar_t *src)
 								AR_ASSERT(l > 0);
 								*d++ = L'\\';
 								*d++ = L'x';
-								for(l = 0; buf[l]; ++l) *d++ = buf[l];
+								for(l = 0; buf[l]; ++l)
+								{
+										*d++ = buf[l];
+								}
+								print_escape_char = true;
 						}
 				}
 				}
