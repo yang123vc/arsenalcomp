@@ -212,3 +212,7 @@ AR_GetExpandPath
 AR_GetRealPath
 
 
+AR_malloc
+AR_wcscat
+AR_free
+AR_reverse_wcschr
