@@ -312,7 +312,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "502"
          endingLineNumber = "502"
-         landmarkName = "AR_str_to_escstr_buf()"
+         landmarkName = "AR_escstr_to_str_buf()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -324,9 +324,7 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "505"
-         endingLineNumber = "505"
-         landmarkName = "AR_str_to_escstr_buf()"
-         landmarkType = "7">
+         endingLineNumber = "505">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
@@ -392,6 +390,32 @@
          endingLineNumber = "2010"
          landmarkName = "str_test22()"
          landmarkType = "7">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../../Test/Mac_XCode4/commonTest.cpp"
+         timestampString = "371650222.061772"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "1995"
+         endingLineNumber = "1995"
+         landmarkName = "str_test21()"
+         landmarkType = "7">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../../../Tools/Mac/GrammarDesigner/GrammarDesigner/StringConverter.m"
+         timestampString = "371650787.037713"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "111"
+         endingLineNumber = "111"
+         landmarkName = "-convertToCode:"
+         landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>
 </Bucket>
