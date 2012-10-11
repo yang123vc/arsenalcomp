@@ -15,7 +15,7 @@ int main (int argc, const char * argv[])
 {
 
         // insert code here...
-        printf("%s\r\n", setlocale(LC_ALL, "zh_CN.UTF-8"));
+        //printf("%s\r\n", setlocale(LC_ALL, "zh_CN.UTF-8"));
         
         Arsenal_Init(NULL);
         
