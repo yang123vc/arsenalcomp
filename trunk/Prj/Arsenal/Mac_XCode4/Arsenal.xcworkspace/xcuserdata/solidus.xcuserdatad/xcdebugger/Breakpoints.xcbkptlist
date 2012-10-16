@@ -383,11 +383,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "../../Test/Mac_XCode4/commonTest.cpp"
-         timestampString = "371646001.172702"
+         timestampString = "372088798.428667"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "2010"
-         endingLineNumber = "2010"
+         startingLineNumber = "2011"
+         endingLineNumber = "2011"
          landmarkName = "str_test22()"
          landmarkType = "7">
       </FileBreakpoint>
@@ -416,6 +416,19 @@
          endingLineNumber = "111"
          landmarkName = "-convertToCode:"
          landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../../Test/Mac_XCode4/commonTest.cpp"
+         timestampString = "372088793.693844"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "1737"
+         endingLineNumber = "1737"
+         landmarkName = "text_test_load_save()"
+         landmarkType = "7">
       </FileBreakpoint>
    </FileBreakpoints>
 </Bucket>

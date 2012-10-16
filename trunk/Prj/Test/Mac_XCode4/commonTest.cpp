@@ -1730,7 +1730,7 @@ void charset_test()
 void text_test_load_save()
 {
 
-#define INPUT_FILE		L"/Users/solidus/Programming/Arsenal/misc/txt_enc_test/utf8_read_test.txt"
+#define INPUT_FILE		L"/Users/solidus/Desktop/Programming/Arsenal/misc/txt_enc_test/utf8_read_test.txt"
 #define OUTPUT_FILE		L"/Users/solidus/Desktop/test.txt"
 #define OUTPUT_TYPE		AR_TXT_BOM_UTF_8
                 
@@ -2005,6 +2005,7 @@ static void str_test21()
         AR_printf(L"%ls\r\n", src_s);
 }
  
+        
 static void str_test22()
 {
         wchar_t buf[64], buf2[64];
@@ -2030,12 +2031,12 @@ void common_test()
         //uri_test();
         //charset_test();
         
-        //text_test_load_save();
+        text_test_load_save();
         
         //str_test19();
         //str_test20();
  
-        str_test21();
+        //str_test21();
         //str_test22();
 }
         
