@@ -21,7 +21,6 @@ AR_NAMESPACE_BEGIN
 
 		
 
-
 static void uri_parse_test()
 {
 		arURI_t	*uri;

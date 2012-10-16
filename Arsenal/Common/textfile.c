@@ -402,10 +402,10 @@ arStatus_t	AR_LoadBomTextFile(const wchar_t *path, arTxtBom_t *bom, arString_t *
 		file = NULL;
 		
 
-		file = AR_open_file(path, L"rb");
-		if(!file)
+		ret = AR_open_file(&file, path, L"rb");
+
+		if(ret != AR_S_YES)
 		{
-				ret = AR_E_FILE;
 				AR_error(AR_ERR_WARNING, L"__AR_open_file failed for %ls in function '%hs'\r\n", path, AR_FUNC_NAME);
 				goto FAILED_POINT;
 		}
@@ -774,11 +774,11 @@ arStatus_t	AR_SaveBomTextFile(const wchar_t *path, arTxtBom_t bom, const wchar_t
 		}
 
 
-		file = AR_open_file(path, L"wb");
+		
+		ret = AR_open_file(&file, path, L"wb");
 
-		if(!file)
+		if(ret != AR_S_YES)
 		{
-				ret = AR_E_FILE;
 				AR_error(AR_ERR_WARNING, L"__AR_open_file failed for %ls in function '%hs'\r\n", path, AR_FUNC_NAME);
 				goto FAILED_POINT;
 		}
