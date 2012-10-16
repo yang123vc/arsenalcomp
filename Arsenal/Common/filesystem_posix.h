@@ -886,21 +886,23 @@ const wchar_t*  AR_PathIteratorPath(const arPathIter_t *iter)
 /************************************************************File*************************************************************/
 
 
-arFile_t*	AR_open_file(const wchar_t *path, const wchar_t *mode)
+arStatus_t	AR_open_file(arFile_t **pfile, const wchar_t *path, const wchar_t *mode)
 {
-        FILE    *file;
+        arStatus_t ret;
         char    *str_path;
         char     *str_mode;
-		AR_ASSERT(path != NULL && mode != NULL);
+        AR_ASSERT(pfile != NULL);
+        AR_ASSERT(path != NULL && mode != NULL);
 
 		str_path = AR_wcs_to_str(AR_CP_UTF8, path, AR_wcslen(path));
 		str_mode = AR_wcs_to_str(AR_CP_UTF8, mode, AR_wcslen(mode));
 
-		file = NULL;
+        ret = AR_S_YES;
+        *pfile = NULL;
 
 		if(str_path && str_mode)
 		{
-				file = fopen(str_path, str_mode);
+				*pfile = fopen(str_path, str_mode);
 		}else
 		{
 				AR_error(AR_ERR_WARNING, L"Failed to convert path('%ls') and mode('%ls') to utf8 strings\r\n", path, mode);
@@ -917,8 +919,14 @@ arFile_t*	AR_open_file(const wchar_t *path, const wchar_t *mode)
             AR_DEL(str_mode);
             str_mode = NULL;
         }
-
-        return (arFile_t*)file;
+        
+        if(*pfile == NULL)
+        {
+                int err_code = errno;
+                ret = __map_last_error(err_code);
+        }
+        
+        return ret;
 }
 
 
