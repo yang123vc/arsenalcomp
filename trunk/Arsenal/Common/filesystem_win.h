@@ -104,7 +104,8 @@ arStatus_t		AR_GetTempPath(arString_t *str)
 				return AR_SetString(str, buf);
 		}else
 		{
-				return __map_last_error();
+				DWORD last_error = GetLastError();
+				return __map_last_error(last_error);
 		}
 }
 
@@ -611,12 +612,23 @@ const wchar_t*  AR_PathIteratorPath(const arPathIter_t *iter)
 
 /*************************************************************File********************************************/
 
-arFile_t*				AR_open_file(const wchar_t *path, const wchar_t *mode)
+arStatus_t				AR_open_file(arFile_t **pfile, const wchar_t *path, const wchar_t *mode)
 {
-		FILE *file;
+		arStatus_t		status;
+		AR_ASSERT(pfile != NULL);
 		AR_ASSERT(path != NULL && mode != NULL);
-		file = _wfopen(path, mode);
-		return file;
+
+		status = AR_S_YES;
+
+		*pfile = _wfopen(path, mode);
+
+		if(*pfile == NULL)
+		{
+				DWORD last_error = GetLastError();
+				status = __map_last_error(last_error);
+		}
+		
+		return status;
 }
 
 void					AR_close_file(arFile_t *f)

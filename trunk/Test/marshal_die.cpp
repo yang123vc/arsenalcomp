@@ -7,12 +7,12 @@ using namespace ARSpace;
 #endif
 
 
+#if(0)
 #include "marshal_die_predef.h"
 
 
 /**********************************************************************************************************************/
 
-#if(0)
 static daemonTest_t t1, t2;
 
 static void test1()
@@ -71,7 +71,7 @@ static void test2()
 		buf = NULL;
 }
 
-#endif
+
 
 clisrvMessage_t		u1,u2;
 
@@ -104,13 +104,13 @@ static void test3()
 		
 
 }
+#endif
 
-
-extern "C" void marshal_result_test()
+void marshal_result_test()
 {
 		
 		//test2();
-		test3();
+		//test3();
 
 }
 

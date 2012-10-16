@@ -274,7 +274,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="export.def">
+    <None Include="export_debug.def">
+      <Filter>Arsenal</Filter>
+    </None>
+    <None Include="export_release.def">
       <Filter>Arsenal</Filter>
     </None>
   </ItemGroup>

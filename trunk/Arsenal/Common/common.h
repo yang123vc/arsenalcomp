@@ -1309,7 +1309,8 @@ const wchar_t*  AR_PathIteratorPath(const arPathIter_t *iter);
 
 /***********************************************************File*********************************/
 typedef void			arFile_t;
-arFile_t*				AR_open_file(const wchar_t *path, const wchar_t *mode);
+
+arStatus_t				AR_open_file(arFile_t **pfile, const wchar_t *path, const wchar_t *mode);
 void					AR_close_file(arFile_t *f);
 
 arStatus_t				AR_read_file(arFile_t *file, byte_t *data, size_t len, size_t *rn);
