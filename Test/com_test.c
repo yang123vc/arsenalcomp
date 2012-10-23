@@ -3689,7 +3689,10 @@ void esc_wchar_hex_test()
 
 		src_s = NULL;
 		src_s = NULL;
+}
 
+void test_xor()
+{
 		
 }
 
@@ -3803,7 +3806,9 @@ void com_test()
 
 		//full_path_test();
 
-		esc_wchar_hex_test();
+		//esc_wchar_hex_test();
+
+		test_xor();
 }
 
 
