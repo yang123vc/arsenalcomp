@@ -1,22 +1,16 @@
-/*
- * The Arsenal Library
- * Copyright (c) 2009-2012 by Solidus
- * 
- * Permission to use, copy, modify, distribute and sell this software
- * and its documentation for any purpose is hereby granted without fee,
- * provided that the above copyright notice appear in all copies and
- * that both that copyright notice and this permission notice appear
- * in supporting documentation.It is provided "as is" without express 
- * or implied warranty.
- *
- */
+//
+//  path_posix.h
+//  Common
+//
+//  Created by Solidus on 12-8-6.
+//  Copyright (c) 2012年 none. All rights reserved.
+//
 
 #ifndef __ARSENAL_COMMON_PATH_POSIX_H__
 #define __ARSENAL_COMMON_PATH_POSIX_H__
 
 AR_NAMESPACE_BEGIN
 
-#if(0)
 /*********************************************************Path*******************************************************/
 
 
@@ -28,6 +22,9 @@ arStatus_t      AR_path_is_existed(const wchar_t *path)
         char *utf8;
         struct stat st;
         AR_ASSERT(path != NULL);
+        /*
+         AR_error(AR_ERR_WARNING, L"%hs : %ls\r\n", AR_FUNC_NAME, path);
+         */
         
         status = AR_S_YES;
         
@@ -39,7 +36,21 @@ arStatus_t      AR_path_is_existed(const wchar_t *path)
                 goto END_POINT;
         }
         
-        status = lstat(utf8, &st) == 0 ? AR_S_YES : AR_S_NO;
+        
+        
+        if(lstat(utf8, &st) == 0)
+        {
+                status = AR_S_YES;
+        }else
+        {
+                int err_code = errno;
+                status = __map_last_error(err_code);
+                
+                if(status == AR_E_NOTFOUND)
+                {
+                        status = AR_S_NO;
+                }
+        }
         
 END_POINT:
         if(utf8 != NULL)
@@ -666,9 +677,18 @@ arStatus_t AR_path_create_file(const wchar_t *path)
         int err_code;
         AR_ASSERT(path != NULL);
         
+        /*
+         AR_error(AR_ERR_WARNING, L"%hs : %ls\r\n", AR_FUNC_NAME, path);
+         */
+        
+        
         status = AR_S_YES;
         err_code = 0;
         utf8 = AR_wcs_to_str(AR_CP_UTF8, path, AR_wcslen(path));
+        
+        /*
+         AR_error(AR_ERR_WARNING, L"%hs : utf8 : %hs\r\n", AR_FUNC_NAME, utf8);
+         */
         
         if(utf8 == NULL)
         {
@@ -762,7 +782,9 @@ arStatus_t      AR_path_create_path(const wchar_t *path)
         wchar_t         *b;
         wchar_t         *buf;
         AR_ASSERT(path != NULL);
-        
+        /*
+         AR_error(AR_ERR_WARNING, L"%hs : %ls\r\n", AR_FUNC_NAME, path);
+         */
         
         if(AR_wcslen(path) == 0)
         {
@@ -790,12 +812,19 @@ arStatus_t      AR_path_create_path(const wchar_t *path)
                 goto END_POINT;
         }
         
+        /*
+         AR_error(AR_ERR_WARNING, L"%hs : expanded %ls\r\n", AR_FUNC_NAME, path, AR_GetStringCString(expanded));
+         */
+        
         status = AR_GetRealPath(AR_GetStringCString(expanded), absolute);
         if(status != AR_S_YES)
         {
                 goto END_POINT;
         }
         
+        /*
+         AR_error(AR_ERR_WARNING, L"%hs : expanded absolute %ls\r\n", AR_FUNC_NAME, path, AR_GetStringCString(absolute));
+         */
         
         buf = AR_NEWARR(wchar_t , AR_GetStringLength(absolute) + 1);
         
@@ -804,6 +833,7 @@ arStatus_t      AR_path_create_path(const wchar_t *path)
                 status = AR_E_NOMEM;
                 goto END_POINT;
         }
+        
         b = buf;
         p = AR_GetStringCString(absolute);
         
@@ -838,7 +868,7 @@ arStatus_t      AR_path_create_path(const wchar_t *path)
                         
                         if(status != AR_S_YES)
                         {
-                                AR_error(AR_ERR_WARNING, L"AR_path_create_path : create dir '%ls' failed!\r\n", buf);
+                                AR_error(AR_ERR_WARNING, L"AR_path_create_path : create dir '%ls' failed!\r\n", buf);                                
                                 goto END_POINT;
                         }
                         
@@ -854,6 +884,8 @@ arStatus_t      AR_path_create_path(const wchar_t *path)
                         *b++ = *p++;
                 }
         }
+        
+        *b = L'\0';
         
         if(*(b-1) == L'/')
         {
@@ -1107,7 +1139,101 @@ END_POINT:
         return status;
 }
 
-#endif
+
+
+
+arStatus_t      AR_path_copyfile(const wchar_t *src, const wchar_t *dest, bool_t truncated)
+{
+        arStatus_t status;
+        arFile_t *s, *d;
+        AR_ASSERT(src != NULL || dest != NULL);
+        status = AR_S_YES;
+        s = NULL;
+        d = NULL;
+        
+        status = AR_open_file(&s, src, L"rb");
+        
+        if(status != AR_S_YES)
+        {
+                goto END_POINT;
+        }
+        
+        
+        if(truncated)
+        {
+                status = AR_open_file(&d, dest, L"wb+");
+                
+                if(status != AR_S_YES)
+                {
+                        goto END_POINT;
+                }
+                
+        }else
+        {
+                status = AR_path_is_existed(dest);
+                
+                if(status == AR_S_YES)
+                {
+                        status = AR_E_EXISTED;
+                        goto END_POINT;
+                        
+                }else if(status == AR_S_NO)
+                {
+                        status = AR_open_file(&d, dest, L"wb+");
+                        
+                        if(status != AR_S_YES)
+                        {
+                                goto END_POINT;
+                        }
+                        
+                }else
+                {
+                        goto END_POINT;
+                }
+        }
+        
+        
+        
+        while(AR_eof_file(s) == AR_S_NO)
+        {
+                byte_t buf[4096];
+                size_t rn, wn;
+                status = AR_read_file(s, buf, 4096, &rn);
+                if(status != AR_S_YES)
+                {
+                        goto END_POINT;
+                }
+                
+                status = AR_write_file(d, buf, rn, &wn);
+                
+                if(status != AR_S_YES)
+                {
+                        goto END_POINT;
+                }
+                
+                if(AR_error_file(s) != AR_S_NO || AR_error_file(d) != AR_S_NO)
+                {
+                        status = AR_E_FAIL;
+                        goto END_POINT;
+                }
+        }
+        
+END_POINT:
+        if(s)
+        {
+                AR_close_file(s);
+                s = NULL;
+        }
+        
+        if(d)
+        {
+                AR_close_file(d);
+                d = NULL;
+        }
+        
+        return status;
+}
+
 
 
 AR_NAMESPACE_END
