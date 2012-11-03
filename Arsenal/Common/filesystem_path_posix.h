@@ -13,7 +13,7 @@ AR_NAMESPACE_BEGIN
 
 /*********************************************************Path*******************************************************/
 
-
+#if(0)
 
 
 arStatus_t      AR_path_is_existed(const wchar_t *path)
@@ -1233,6 +1233,9 @@ END_POINT:
         
         return status;
 }
+
+#endif
+
 
 
 
