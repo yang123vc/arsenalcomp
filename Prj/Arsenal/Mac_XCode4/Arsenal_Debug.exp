@@ -346,7 +346,6 @@ _AR_debug_malloc
 _AR_debug_print
 _AR_eof_file
 _AR_error
-_AR_error_ctx
 _AR_error_file
 _AR_escstr_to_str
 _AR_escstr_to_str_buf
@@ -357,7 +356,6 @@ _AR_exp_flt
 _AR_floor_dbl
 _AR_floor_flt
 _AR_getenv
-_AR_global_ioctx
 _AR_hasenv
 _AR_i64tos_buf
 _AR_i64tow_buf
@@ -371,7 +369,6 @@ _AR_open_file
 _AR_pow_dbl
 _AR_pow_flt
 _AR_printf
-_AR_printf_ctx
 _AR_qsort
 _AR_rand32
 _AR_rand64
