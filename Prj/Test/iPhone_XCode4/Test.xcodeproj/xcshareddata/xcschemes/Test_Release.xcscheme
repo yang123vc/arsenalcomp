@@ -13,10 +13,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "BE328EE614F20CA9006BCA74"
-               BuildableName = "Arsenal.a"
-               BlueprintName = "ArsenalLib"
-               ReferencedContainer = "container:Arsenal.xcodeproj">
+               BlueprintIdentifier = "BE82C8F514F211CE00F30E56"
+               BuildableName = "Test.app"
+               BlueprintName = "Test"
+               ReferencedContainer = "container:Test.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -28,6 +28,15 @@
       buildConfiguration = "Release">
       <Testables>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "BE82C8F514F211CE00F30E56"
+            BuildableName = "Test.app"
+            BlueprintName = "Test"
+            ReferencedContainer = "container:Test.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </TestAction>
    <LaunchAction
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.GDB"
@@ -35,8 +44,18 @@
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Release"
+      ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
+      <BuildableProductRunnable>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "BE82C8F514F211CE00F30E56"
+            BuildableName = "Test.app"
+            BlueprintName = "Test"
+            ReferencedContainer = "container:Test.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -46,6 +65,15 @@
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Release"
       debugDocumentVersioning = "YES">
+      <BuildableProductRunnable>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "BE82C8F514F211CE00F30E56"
+            BuildableName = "Test.app"
+            BlueprintName = "Test"
+            ReferencedContainer = "container:Test.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Release">

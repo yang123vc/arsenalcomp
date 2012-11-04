@@ -4,22 +4,22 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>TestDLL_Debug.xcscheme</key>
+		<key>TestDLL_Debug.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>4</integer>
 		</dict>
-		<key>TestDLL_Release.xcscheme</key>
+		<key>TestDLL_Release.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>5</integer>
 		</dict>
-		<key>TestLib_Debug.xcscheme</key>
+		<key>TestLib_Debug.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>10</integer>
 		</dict>
-		<key>TestLib_Release.xcscheme</key>
+		<key>TestLib_Release.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>11</integer>
