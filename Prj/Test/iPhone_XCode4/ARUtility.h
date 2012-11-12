@@ -14,6 +14,7 @@
 
 #import "ARException.h"
 
+NAME_MAX
 
 wchar_t* healper_wcsndup(const wchar_t *sour, size_t len);
 

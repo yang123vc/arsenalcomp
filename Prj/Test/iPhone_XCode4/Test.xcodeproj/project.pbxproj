@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		676AB39616469120008C4A7D /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 676AB39516469120008C4A7D /* Arsenal.a */; };
+		672BDB81165003F6002D500E /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 672BDB80165003F6002D500E /* Arsenal.a */; };
 		BE2E4B7814F2177100ACFBB5 /* ArsenalWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = BE2E4B7714F2177100ACFBB5 /* ArsenalWrapper.m */; };
 		BE82C8FB14F211CE00F30E56 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE82C8FA14F211CE00F30E56 /* UIKit.framework */; };
 		BE82C8FD14F211CE00F30E56 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE82C8FC14F211CE00F30E56 /* Foundation.framework */; };
@@ -27,7 +27,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		676AB39516469120008C4A7D /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = Arsenal.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		672BDB80165003F6002D500E /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = Arsenal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE2E4B7614F2175800ACFBB5 /* ArsenalWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArsenalWrapper.h; sourceTree = SOURCE_ROOT; };
 		BE2E4B7714F2177100ACFBB5 /* ArsenalWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArsenalWrapper.m; sourceTree = SOURCE_ROOT; };
 		BE82C8F614F211CE00F30E56 /* Test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Test.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -57,7 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				676AB39616469120008C4A7D /* Arsenal.a in Frameworks */,
+				672BDB81165003F6002D500E /* Arsenal.a in Frameworks */,
 				BED34EA414F21EF700426EF6 /* libiconv.dylib in Frameworks */,
 				BED34EA114F21EF100426EF6 /* libpthread.dylib in Frameworks */,
 				BE82C8FB14F211CE00F30E56 /* UIKit.framework in Frameworks */,
@@ -72,7 +72,7 @@
 		BE82C8EB14F211CE00F30E56 = {
 			isa = PBXGroup;
 			children = (
-				676AB39516469120008C4A7D /* Arsenal.a */,
+				672BDB80165003F6002D500E /* Arsenal.a */,
 				BED34EA314F21EF700426EF6 /* libiconv.dylib */,
 				BED34EA014F21EF100426EF6 /* libpthread.dylib */,
 				BE82C92C14F2127500F30E56 /* dabaopku.plist */,
