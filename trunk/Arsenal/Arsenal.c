@@ -26,9 +26,9 @@ static int_t __g_init_count = 0;
 arStatus_t	Arsenal_Init(const arInit_t *ctx)
 {
 
-        arStatus_t	result;
+        arStatus_t      result;
 		uint_64_t		total_beg, total_end;
-		bool_t	cm_init,lex_init, psr_init,tools_init,tgu_init;
+		bool_t          cm_init,lex_init, psr_init,tools_init,tgu_init;
 		/*AR_ASSERT(ctx != NULL);*/
 		
 		result = AR_S_YES;
