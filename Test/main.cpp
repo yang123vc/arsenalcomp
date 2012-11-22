@@ -115,23 +115,6 @@ static size_t	AR_STDCALL build_backtrace_symbol(void **callstack, size_t callsta
 }
 
 
-static void backtrace_test()
-{
-		void *callstack[128];
-		static char stackinfo [10240];
-
-		size_t n;
-		n = build_backtrace(callstack, 128);
-
-		size_t sl = build_backtrace_symbol(callstack, n, stackinfo, 10240);
-
-		stackinfo[sl] = '\0';
-
-		printf("%s\r\n", stackinfo);
-
-
-
-}
 
 #endif
 
