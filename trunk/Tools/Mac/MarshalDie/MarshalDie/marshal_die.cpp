@@ -647,7 +647,11 @@ int main(int argc, const char **argv)
 
 		
 
-		arInit_t ai = {{tiny_error, tiny_printf, NULL}};
+		arInit_t ai = 
+        {
+                {tiny_error, tiny_printf, NULL},
+                {NULL,NULL}
+        };
 
 		Arsenal_Init(&ai);
         
