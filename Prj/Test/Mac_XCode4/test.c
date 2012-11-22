@@ -9,7 +9,6 @@
 #include "stdhdr.h"
 #include "TestFileSystem.h"
 #include "commonTest.h"
-extern void marshal_die_test();
 
 void test()
 {

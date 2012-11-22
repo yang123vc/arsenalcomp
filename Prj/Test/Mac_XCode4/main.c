@@ -44,14 +44,14 @@ static size_t AR_STDCALL __build_backtrace_string(void **call_stack, size_t call
         if(call_stack_cnt == 0)
         {
                 str[0] = '\0';
-                return;
+                return 0;
         }
         
         strings = backtrace_symbols(call_stack, (int)call_stack_cnt);
         if(strings == NULL) 
         {
                 str[0] = '\0';
-                return;
+                return 0;
         }
         
         remain = l - 1;
