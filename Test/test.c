@@ -106,7 +106,7 @@ extern void marshal_result_test();
 void AR_Test()
 {
 #if defined(__LIB)
-		com_test();
+		//com_test();
 		//math_test();
 		//trie_tree_test();
 		//expr_test();
@@ -182,7 +182,7 @@ void AR_Test()
 
 		//grammar_config_test();
 
-		//rgx_test();
+		rgx_test();
 
 		//marshal_die_test();
 

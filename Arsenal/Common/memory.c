@@ -37,7 +37,10 @@ AR_NAMESPACE_BEGIN
 				struct __debug_memory_record_tag* 		prev;
 				struct __debug_memory_record_tag		*next;
 
+				void									*callstack[AR_MAX_CALLSTACK];
+				size_t									callstack_cnt;
 		}debugMemory_t;
+
 
 		static arSpinLock_t		__g_debug_mem_lock;
 		static debugMemory_t	*__g_debug_alloc_mem = NULL;
@@ -61,11 +64,30 @@ AR_NAMESPACE_BEGIN
 
 				while(dm)
 				{
+						const arBacktrace_t *backtrace;
+						static char stackinfo[10240];
 						AR_ASSERT(dm->size > 0);
-						/*
-						AR_error(AR_ERR_DEBUG, L"size: %6d Bytes : %hs, line: %d\r\n", dm->size, dm->file, dm->line);
-						*/
-						AR_DPRINT(L"[Memory leak] size: %6d Bytes : %hs, line: %d\r\n", dm->size, dm->file, dm->line);
+
+						backtrace = AR_GetBacktrace();
+						AR_ASSERT(backtrace != NULL);
+
+						if(backtrace->gen_backtrace_sym)
+						{
+								size_t l;
+								l = backtrace->gen_backtrace_sym(dm->callstack, dm->callstack_cnt, stackinfo, AR_NELEMS(stackinfo));
+								stackinfo[l] = '\0';
+
+								AR_DPRINT(L"[Memory Leak] size: %6d Bytes : %hs, line: %d, \r\nstack: \r\n%hs\r\n", dm->size, dm->file, dm->line, stackinfo);
+
+						}else
+						{
+								AR_DPRINT(L"[Memory leak] size: %6d Bytes : %hs, line: %d\r\n", dm->size, dm->file, dm->line);
+						}
+						
+                        
+
+
+						
 						dm = dm->next;
 				}
 
@@ -196,7 +218,11 @@ static AR_INLINE void	free_mem(void *ptr)
 		void*	AR_debug_malloc(size_t nbytes, const char *file_name, int_t line)
 		{
 				debugMemory_t *m;
+				const arBacktrace_t *backtrace;
 				AR_ASSERT(nbytes > 0 && file_name != NULL);
+
+				backtrace = AR_GetBacktrace();
+				AR_ASSERT(backtrace != NULL);
 
 				m = (debugMemory_t*)malloc_mem(nbytes + sizeof(debugMemory_t));
 
@@ -215,6 +241,11 @@ static AR_INLINE void	free_mem(void *ptr)
 				m->size = nbytes;
 				m->prev = NULL;
 				m->next = __g_debug_alloc_mem;
+
+				if(backtrace->gen_backtrace)
+				{
+						m->callstack_cnt = backtrace->gen_backtrace(m->callstack, AR_MAX_CALLSTACK);
+				}
 
 				if(__g_debug_alloc_mem)
 				{

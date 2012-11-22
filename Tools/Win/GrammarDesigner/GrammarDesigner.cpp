@@ -94,6 +94,11 @@ static const ARSpace::arInit_t	__dummy_context =
 		__dummy_error_func,
 		__dummy_print_func,
 		NULL
+		},
+
+		{
+				NULL,
+				NULL
 		}
 };
 

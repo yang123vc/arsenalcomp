@@ -46,9 +46,6 @@ typedef void	(AR_STDCALL *AR_print_func_t)(const wchar_t *msg, void *ctx);
 
 
 
-
-
-
 typedef struct __arsenal_io_context_tag
 {
 		AR_error_func_t	on_error;
@@ -57,9 +54,20 @@ typedef struct __arsenal_io_context_tag
 }arIOCtx_t;
 
 
+typedef size_t	(AR_STDCALL *AR_backtrace_func_t)(void **callstack, size_t callstack_cnt);
+typedef size_t	(AR_STDCALL *AR_backtrace_symbol_t)(void **callstack, size_t callstack_cnt, char *str, size_t len);
+
+typedef struct __arsenal_callstack_tag
+{
+		AR_backtrace_func_t				gen_backtrace;
+		AR_backtrace_symbol_t			gen_backtrace_sym;
+}arBacktrace_t;
+
+
 typedef struct __ar_init_tag
 {
-		arIOCtx_t		global_io_ctx;
+		arIOCtx_t				global_io_ctx;
+		arBacktrace_t			backtrace;
 }arInit_t;
 
 
@@ -70,7 +78,7 @@ typedef struct __ar_init_tag
 arStatus_t AR_CommonInit(const arInit_t *info);
 arStatus_t AR_CommonUnInit();
 
-
+const arBacktrace_t*	AR_GetBacktrace();
 
 arStatus_t	AR_printf(const wchar_t *msg,...);
 arStatus_t	AR_debug_print(const wchar_t *msg, ...);

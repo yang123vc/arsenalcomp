@@ -702,11 +702,15 @@ typedef void*					ptr_t;
 
 
 
-#ifndef NDEBUG
+#ifndef AR_NDEBUG
 
 		#ifndef AR_USE_CRT_ALLOCFUNC
 				#define	AR_ENABLE_MEMORY_LEAK_TEST				1
 				/*#define AR_DEBUG_MEMORY_CHECK_TWICE_FREE		1*/
+		#endif
+
+		#if defined(AR_ENABLE_MEMORY_LEAK_TEST)
+				#define AR_MAX_CALLSTACK						32
 		#endif
 
 #endif
