@@ -51,7 +51,11 @@ static void AR_STDCALL __def_print(const wchar_t *msg, void *ctx)
 
 
 
-static arInit_t	__g_ctx = {{__def_error, __def_print,  NULL}};
+static arInit_t	__g_ctx = 
+{
+		{__def_error, __def_print,  NULL},
+		{NULL, NULL}
+};
 
 arStatus_t AR_CommonInit(const arInit_t *info)
 {
@@ -71,6 +75,11 @@ arStatus_t AR_CommonUnInit()
 		AR_UnInitMemory();
 		AR_UnInitThread();
 		return AR_S_YES;
+}
+
+const arBacktrace_t*	AR_GetBacktrace()
+{
+		return &__g_ctx.backtrace;
 }
 
 

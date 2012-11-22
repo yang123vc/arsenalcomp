@@ -277,3 +277,9 @@ AR_reverse_wcschr
 AR_debug_malloc
 AR_debug_free
 
+AR_GetURIPort
+AR_IsRelativeURI 
+AR_CompStringWithWcs
+AR_ICompStringWithWcs
+AR_CompURI
+
