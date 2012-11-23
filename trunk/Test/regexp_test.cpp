@@ -26,7 +26,6 @@ static void deelx_test1()
 
 		AR_printf(L"%d\r\n", ret);
 
-		AR_NEWARR(byte_t, 1024);
 
 }
 

@@ -73,73 +73,6 @@ static arStatus_t       __map_last_error(int errcode)
 
 
 
-arStatus_t		AR_read_file(arFile_t *file, byte_t *data, size_t len, size_t *rn)
-{
-		size_t ret;
-		arStatus_t status;
-		AR_ASSERT(file != NULL && data != NULL && len > 0);
-
-		status = AR_S_YES;
-		if(rn)
-		{
-				*rn = 0;
-		}
-
-		ret = fread((void*)data, 1, (size_t)len, (FILE*)file);
-
-		/*
-		if(ret != len)
-		{
-                int err_code = errno;
-				status = __map_last_error(err_code);
-		}else
-		{
-				status = AR_S_YES;
-		}
-		*/
-
-		if(rn)
-		{
-				*rn = ret;
-		}
-
-		return status;
-}
-
-
-arStatus_t		AR_write_file(arFile_t *file, const byte_t *data, size_t len, size_t *wn)
-{
-		
-		size_t ret;
-		arStatus_t status;
-		AR_ASSERT(file != NULL && data != NULL && len > 0);
-
-		status = AR_S_YES;
-
-		ret = fwrite((const void*)data, 1, (size_t)len, (FILE*)file);
-
-		
-		if(ret != len)
-		{
-                int errcode = errno;
-				status = __map_last_error(errcode);
-		}else
-		{
-				status = AR_S_YES;
-		}
-		
-
-		if(wn)
-		{
-				*wn = ret;
-		}
-		return status;
-}
-
-
-
-
-
 
 
 		
@@ -1011,6 +944,73 @@ void	AR_close_file(arFile_t *f)
 		fclose(file);
         file = NULL;
 }
+
+
+arStatus_t		AR_read_file(arFile_t *file, byte_t *data, size_t len, size_t *rn)
+{
+		size_t ret;
+		arStatus_t status;
+		AR_ASSERT(file != NULL && data != NULL && len > 0);
+
+		status = AR_S_YES;
+		if(rn)
+		{
+				*rn = 0;
+		}
+
+		ret = fread((void*)data, 1, (size_t)len, (FILE*)file);
+
+		/*
+		if(ret != len)
+		{
+                int err_code = errno;
+				status = __map_last_error(err_code);
+		}else
+		{
+				status = AR_S_YES;
+		}
+		*/
+
+		if(rn)
+		{
+				*rn = ret;
+		}
+
+		return status;
+}
+
+
+arStatus_t		AR_write_file(arFile_t *file, const byte_t *data, size_t len, size_t *wn)
+{
+		
+		size_t ret;
+		arStatus_t status;
+		AR_ASSERT(file != NULL && data != NULL && len > 0);
+
+		status = AR_S_YES;
+
+		ret = fwrite((const void*)data, 1, (size_t)len, (FILE*)file);
+
+		
+		if(ret != len)
+		{
+                int errcode = errno;
+				status = __map_last_error(errcode);
+		}else
+		{
+				status = AR_S_YES;
+		}
+		
+
+		if(wn)
+		{
+				*wn = ret;
+		}
+		return status;
+}
+
+
+
 
 
 
