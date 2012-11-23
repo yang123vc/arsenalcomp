@@ -55,67 +55,6 @@ AR_NAMESPACE_BEGIN
 
 
 
-arStatus_t		AR_read_file(arFile_t *file, byte_t *data, size_t len, size_t *rn)
-{
-		size_t ret;
-		arStatus_t status;
-		AR_ASSERT(file != NULL && data != NULL && len > 0);
-
-		status = AR_S_YES;
-		if(rn)
-		{
-				*rn = 0;
-		}
-
-		ret = fread((void*)data, 1, (size_t)len, (FILE*)file);
-
-		/*
-		if(ret != len)
-		{
-                int err_code = errno;
-				status = __map_last_error(err_code);
-		}else
-		{
-				status = AR_S_YES;
-		}
-		*/
-
-		if(rn)
-		{
-				*rn = ret;
-		}
-
-		return status;
-}
-
-
-arStatus_t		AR_write_file(arFile_t *file, const byte_t *data, size_t len, size_t *wn)
-{
-		
-		size_t ret;
-		arStatus_t status;
-		AR_ASSERT(file != NULL && data != NULL && len > 0);
-
-		status = AR_S_YES;
-
-		ret = fwrite((const void*)data, 1, (size_t)len, (FILE*)file);
-
-		if(ret != len)
-		{
-                int errcode = errno;
-				status = __map_last_error(errcode);
-		}else
-		{
-				status = AR_S_YES;
-		}
-
-		if(wn)
-		{
-				*wn = ret;
-		}
-		return status;
-}
-
 
 
 arStatus_t		AR_eof_file(arFile_t *file)

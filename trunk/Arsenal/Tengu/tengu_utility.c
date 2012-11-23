@@ -103,7 +103,7 @@ bool_t			TGU_HasString(const wchar_t *name)
 		AR_ASSERT(name != NULL);
 
 		AR_LockSpinLock(&__g_tbl_lock);
-		res = AR_HasString(__g_tbl, name) == AR_S_YES;
+		res = AR_HasString(__g_tbl, name) == AR_S_YES ? true : false;
 		AR_UnLockSpinLock(&__g_tbl_lock);
 		return res;
 }

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="gb2312"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
-	Name="Test"
-	ProjectGUID="{DE746646-D6E4-4CF4-993E-8873067957E6}"
-	RootNamespace="Test"
+	Version="8.00"
+	Name="Arsenal"
+	ProjectGUID="{07325191-A3B8-44BD-B3F5-4EA63129ABCD}"
+	RootNamespace="Arsenal"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -29,7 +29,7 @@
 			Name="DLLDebug|Win32"
 			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			CharacterSet="1"
 			>
 			<Tool
@@ -46,14 +46,14 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
+				TargetEnvironment="3"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\Arsenal"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;AR_SHARED_LIB"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;"
 				MinimalRebuild="true"
-				ExceptionHandling="1"
+				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="false"
@@ -61,7 +61,7 @@
 				AssemblerOutput="2"
 				WarningLevel="4"
 				DebugInformationFormat="4"
-				CompileAs="2"
+				CompileAs="1"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -71,16 +71,19 @@
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
+				CommandLine=""
 			/>
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(OutDir)\"
+				GenerateManifest="true"
 				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
+				ModuleDefinitionFile="export_debug.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
 				GenerateMapFile="true"
-				SubSystem="1"
+				SubSystem="2"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -104,13 +107,14 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine=""
 			/>
 		</Configuration>
 		<Configuration
 			Name="DLLDebug|x64"
 			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			CharacterSet="1"
 			>
 			<Tool
@@ -131,11 +135,11 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/Zi"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\Arsenal"
-				PreprocessorDefinitions="WIN64;_DEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN64;_DEBUG;_WINDOWS;_USRDLL;"
 				MinimalRebuild="true"
-				ExceptionHandling="1"
+				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="false"
@@ -157,12 +161,15 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(OutDir)\"
+				GenerateManifest="true"
 				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
+				ModuleDefinitionFile="export_debug.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
 				GenerateMapFile="true"
-				SubSystem="1"
+				SubSystem="2"
+				RandomizedBaseAddress="0"
+				DataExecutionPrevention="0"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -191,7 +198,7 @@
 			Name="DLLDebug|Itanium"
 			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			CharacterSet="1"
 			>
 			<Tool
@@ -213,10 +220,9 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\Arsenal"
-				PreprocessorDefinitions="WIN64;_DEBUG;_CONSOLE;AR_SHARED_LIB"
+				PreprocessorDefinitions="WIN64;_DEBUG;_WINDOWS;_USRDLL;"
 				MinimalRebuild="true"
-				ExceptionHandling="1"
+				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="false"
@@ -224,7 +230,7 @@
 				AssemblerOutput="2"
 				WarningLevel="4"
 				DebugInformationFormat="4"
-				CompileAs="2"
+				CompileAs="1"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -234,16 +240,19 @@
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
+				CommandLine=""
 			/>
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(OutDir)\"
+				GenerateManifest="true"
 				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
+				ModuleDefinitionFile="export_debug.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
 				GenerateMapFile="true"
-				SubSystem="1"
+				SubSystem="2"
+				DataExecutionPrevention="0"
 				TargetMachine="5"
 			/>
 			<Tool
@@ -266,13 +275,14 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine=""
 			/>
 		</Configuration>
 		<Configuration
 			Name="DLLDebug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
 			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			CharacterSet="1"
 			>
 			<Tool
@@ -296,12 +306,12 @@
 				ExecutionBucket="7"
 				Optimization="0"
 				FavorSizeOrSpeed="0"
-				AdditionalIncludeDirectories="..\..\..\Arsenal"
-				PreprocessorDefinitions="AR_SHARED_LIB;_DEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES);WINCE;DEBUG;_WINDOWS;$(ARCHFAM);$(_ARCHFAM_);_UNICODE;UNICODE;POCKETPC2003_UI_MODEL"
-				MinimalRebuild="false"
+				PreprocessorDefinitions="_USRDLL;_DEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES);WINCE;DEBUG;_WINDOWS;_USRDLL;TEST_EXPORTS;$(ARCHFAM);$(_ARCHFAM_);_UNICODE;UNICODE"
+				MinimalRebuild="true"
 				RuntimeLibrary="3"
 				WarningLevel="3"
 				DebugInformationFormat="3"
+				CompileAs="1"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -316,14 +326,15 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions=" /subsystem:windowsce,5.01"
-				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(OutDir)\"
+				LinkIncremental="2"
+				ModuleDefinitionFile="export_debug.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
 				StackReserveSize="65536"
 				StackCommitSize="4096"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
-				EntryPointSymbol="WinMainCRTStartup"
+				OptimizeReferences="0"
+				EnableCOMDATFolding="0"
+				DataExecutionPrevention="0"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -356,90 +367,7 @@
 			Name="DLLRelease|Win32"
 			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
-			ConfigurationType="1"
-			CharacterSet="1"
-			WholeProgramOptimization="1"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="2"
-				EnableIntrinsicFunctions="true"
-				FavorSizeOrSpeed="1"
-				AdditionalIncludeDirectories="..\..\..\Arsenal"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;AR_SHARED_LIB"
-				ExceptionHandling="1"
-				RuntimeLibrary="2"
-				EnableFunctionLevelLinking="true"
-				RuntimeTypeInfo="false"
-				UsePrecompiledHeader="0"
-				WarningLevel="4"
-				DebugInformationFormat="3"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(OutDir)\"
-				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
-				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
-				GenerateMapFile="true"
-				SubSystem="1"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
-				TargetMachine="1"
-				Profile="true"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
-			Name="DLLRelease|x64"
-			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -462,15 +390,17 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
+				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
-				AdditionalIncludeDirectories="..\..\..\Arsenal"
-				PreprocessorDefinitions="WIN64;NDEBUG;_CONSOLE"
-				ExceptionHandling="1"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;"
+				ExceptionHandling="0"
 				RuntimeLibrary="2"
+				BufferSecurityCheck="false"
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
+				AssemblerOutput="0"
 				WarningLevel="4"
 				DebugInformationFormat="3"
 				CompileAs="2"
@@ -487,16 +417,107 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(OutDir)\"
+				GenerateManifest="true"
 				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
+				ModuleDefinitionFile="export_release.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
 				GenerateMapFile="true"
-				SubSystem="1"
+				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				DataExecutionPrevention="0"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+				PageHeapConserveMemory="false"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine=""
+			/>
+		</Configuration>
+		<Configuration
+			Name="DLLRelease|x64"
+			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
+			ConfigurationType="2"
+			CharacterSet="1"
+			WholeProgramOptimization="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TargetEnvironment="3"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				InlineFunctionExpansion="2"
+				EnableIntrinsicFunctions="true"
+				FavorSizeOrSpeed="1"
+				PreprocessorDefinitions="WIN64;NDEBUG;_WINDOWS;_USRDLL;"
+				ExceptionHandling="0"
+				RuntimeLibrary="2"
+				EnableFunctionLevelLinking="true"
+				RuntimeTypeInfo="false"
+				UsePrecompiledHeader="0"
+				AssemblerOutput="0"
+				WarningLevel="4"
+				DebugInformationFormat="3"
+				CompileAs="2"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				LinkIncremental="1"
+				GenerateManifest="true"
+				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
+				ModuleDefinitionFile="export_release.def"
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
+				GenerateMapFile="true"
+				SubSystem="2"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="17"
-				Profile="true"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -524,7 +545,7 @@
 			Name="DLLRelease|Itanium"
 			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -547,18 +568,20 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
+				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
-				AdditionalIncludeDirectories="..\..\..\Arsenal"
-				PreprocessorDefinitions="WIN64;NDEBUG;_CONSOLE;AR_SHARED_LIB"
-				ExceptionHandling="1"
+				PreprocessorDefinitions="WIN64;NDEBUG;_WINDOWS;_USRDLL;"
+				ExceptionHandling="0"
 				RuntimeLibrary="2"
+				BufferSecurityCheck="false"
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
+				AssemblerOutput="0"
 				WarningLevel="4"
 				DebugInformationFormat="3"
-				CompileAs="2"
+				CompileAs="1"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -572,16 +595,17 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(OutDir)\"
+				GenerateManifest="true"
 				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
+				ModuleDefinitionFile="export_release.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
 				GenerateMapFile="true"
-				SubSystem="1"
+				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				DataExecutionPrevention="0"
 				TargetMachine="5"
-				Profile="true"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -603,13 +627,14 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine=""
 			/>
 		</Configuration>
 		<Configuration
 			Name="DLLRelease|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
 			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			CharacterSet="1"
 			>
 			<Tool
@@ -633,8 +658,7 @@
 				ExecutionBucket="7"
 				Optimization="2"
 				FavorSizeOrSpeed="2"
-				AdditionalIncludeDirectories="..\..\..\Arsenal"
-				PreprocessorDefinitions="AR_SHARED_LIB;NDEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES);WINCE;_WINDOWS;$(ARCHFAM);$(_ARCHFAM_);_UNICODE;UNICODE;POCKETPC2003_UI_MODEL"
+				PreprocessorDefinitions="_USRDLL;NDEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES);WINCE;_WINDOWS;_USRDLL;TEST_EXPORTS;$(ARCHFAM);$(_ARCHFAM_);_UNICODE;UNICODE"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
 				WarningLevel="3"
@@ -654,13 +678,14 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=" /subsystem:windowsce,5.01"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(OutDir)\"
+				ModuleDefinitionFile="export_release.def"
 				GenerateDebugInformation="true"
 				StackReserveSize="65536"
 				StackCommitSize="4096"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				EntryPointSymbol="WinMainCRTStartup"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -693,7 +718,7 @@
 			Name="LibDebug|Win32"
 			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="4"
 			CharacterSet="1"
 			>
 			<Tool
@@ -710,19 +735,22 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
+				TargetEnvironment="3"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\Arsenal"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;__LIB"
-				ExceptionHandling="1"
+				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG; _LIB;"
+				MinimalRebuild="true"
+				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				RuntimeTypeInfo="true"
+				RuntimeTypeInfo="false"
+				AssemblerOutput="2"
 				WarningLevel="4"
+				WarnAsError="false"
 				DebugInformationFormat="4"
-				CompileAs="2"
+				CompileAs="1"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -734,20 +762,10 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalOptions="/LTCG"
-				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(OutDir)\"
-				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
-				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
-				GenerateMapFile="true"
+				Name="VCLibrarianTool"
 			/>
 			<Tool
 				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -759,10 +777,6 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
-				Name="VCAppVerifierTool"
-				PageHeapConserveMemory="false"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -770,7 +784,7 @@
 			Name="LibDebug|x64"
 			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="4"
 			CharacterSet="1"
 			>
 			<Tool
@@ -793,13 +807,16 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zi"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\Arsenal"
-				PreprocessorDefinitions="WIN64;_DEBUG;_CONSOLE; __LIB"
-				ExceptionHandling="1"
+				PreprocessorDefinitions="WIN64;_WINDOWS;_DEBUG; _LIB;"
+				StringPooling="false"
+				MinimalRebuild="true"
+				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				RuntimeTypeInfo="false"
+				AssemblerOutput="2"
 				WarningLevel="4"
+				WarnAsError="false"
 				DebugInformationFormat="4"
 				CompileAs="2"
 			/>
@@ -813,21 +830,10 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalOptions="/Zi"
-				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(OutDir)\"
-				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
-				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
-				GenerateMapFile="true"
-				TargetMachine="17"
+				Name="VCLibrarianTool"
 			/>
 			<Tool
 				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -839,9 +845,6 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -849,7 +852,7 @@
 			Name="LibDebug|Itanium"
 			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="4"
 			CharacterSet="1"
 			>
 			<Tool
@@ -871,15 +874,17 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\Arsenal"
-				PreprocessorDefinitions="WIN64;_DEBUG;_CONSOLE;__LIB"
-				ExceptionHandling="1"
+				PreprocessorDefinitions="WIN64;_WINDOWS;_DEBUG; _LIB;"
+				MinimalRebuild="true"
+				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				RuntimeTypeInfo="false"
+				AssemblerOutput="2"
 				WarningLevel="4"
+				WarnAsError="false"
 				DebugInformationFormat="4"
-				CompileAs="2"
+				CompileAs="1"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -891,20 +896,10 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLinkerTool"
-				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(OutDir)\"
-				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
-				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
-				GenerateMapFile="true"
-				TargetMachine="5"
+				Name="VCLibrarianTool"
 			/>
 			<Tool
 				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -916,9 +911,6 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -926,7 +918,7 @@
 			Name="LibDebug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
 			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="4"
 			CharacterSet="1"
 			>
 			<Tool
@@ -950,13 +942,12 @@
 				ExecutionBucket="7"
 				Optimization="0"
 				FavorSizeOrSpeed="0"
-				AdditionalIncludeDirectories="..\..\..\Arsenal"
-				PreprocessorDefinitions="__LIB;_DEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES);WINCE;DEBUG;_WINDOWS;$(ARCHFAM);$(_ARCHFAM_);_UNICODE;UNICODE;POCKETPC2003_UI_MODEL"
-				MinimalRebuild="false"
+				PreprocessorDefinitions="_DEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES);WINCE;DEBUG;_LIB;$(ARCHFAM);$(_ARCHFAM_);_UNICODE;UNICODE"
+				MinimalRebuild="true"
 				RuntimeLibrary="1"
-				WarningLevel="4"
+				WarningLevel="3"
 				DebugInformationFormat="3"
-				CompileAs="2"
+				CompileAs="1"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -969,16 +960,8 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLinkerTool"
+				Name="VCLibrarianTool"
 				AdditionalOptions=" /subsystem:windowsce,5.01"
-				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(OutDir)\"
-				GenerateDebugInformation="true"
-				StackReserveSize="65536"
-				StackCommitSize="4096"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
-				EntryPointSymbol="WinMainCRTStartup"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -1011,83 +994,8 @@
 			Name="LibRelease|Win32"
 			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
-			ConfigurationType="1"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="2"
-				FavorSizeOrSpeed="1"
-				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="..\..\..\Arsenal"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;__LIB"
-				ExceptionHandling="1"
-				RuntimeTypeInfo="false"
-				WarningLevel="4"
-				DebugInformationFormat="3"
-				CompileAs="2"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				AdditionalOptions="/LTCG"
-				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(OutDir)\"
-				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
-				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
-				GenerateMapFile="true"
-				Profile="true"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
-			Name="LibRelease|x64"
-			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="4"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -1108,12 +1016,14 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
+				InlineFunctionExpansion="2"
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="..\..\..\Arsenal"
-				PreprocessorDefinitions="WIN64;NDEBUG;_CONSOLE;__LIB"
-				ExceptionHandling="1"
+				PreprocessorDefinitions="WIN32;_WINDOWS; NDEBUG;_LIB;"
+				ExceptionHandling="0"
+				BufferSecurityCheck="false"
 				RuntimeTypeInfo="false"
+				AssemblerOutput="0"
 				WarningLevel="4"
 				DebugInformationFormat="3"
 				CompileAs="2"
@@ -1128,21 +1038,10 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLinkerTool"
-				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(OutDir)\"
-				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
-				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
-				GenerateMapFile="true"
-				TargetMachine="17"
-				Profile="true"
+				Name="VCLibrarianTool"
 			/>
 			<Tool
 				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -1154,7 +1053,69 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
-				Name="VCAppVerifierTool"
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="LibRelease|x64"
+			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
+			ConfigurationType="4"
+			CharacterSet="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TargetEnvironment="3"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				InlineFunctionExpansion="2"
+				FavorSizeOrSpeed="1"
+				WholeProgramOptimization="true"
+				PreprocessorDefinitions="WIN64;_WINDOWS; NDEBUG;_LIB;"
+				ExceptionHandling="0"
+				RuntimeTypeInfo="false"
+				AssemblerOutput="0"
+				WarningLevel="4"
+				DebugInformationFormat="3"
+				CompileAs="2"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLibrarianTool"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1164,7 +1125,8 @@
 			Name="LibRelease|Itanium"
 			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="4"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -1185,15 +1147,17 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
+				InlineFunctionExpansion="2"
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="..\..\..\Arsenal"
-				PreprocessorDefinitions="WIN64;NDEBUG;_CONSOLE;__LIB"
-				ExceptionHandling="1"
+				PreprocessorDefinitions="WIN64;_WINDOWS; NDEBUG;_LIB;"
+				ExceptionHandling="0"
+				BufferSecurityCheck="false"
 				RuntimeTypeInfo="false"
+				AssemblerOutput="0"
 				WarningLevel="4"
 				DebugInformationFormat="3"
-				CompileAs="2"
+				CompileAs="1"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -1205,21 +1169,10 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLinkerTool"
-				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(OutDir)\"
-				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
-				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
-				GenerateMapFile="true"
-				TargetMachine="5"
-				Profile="true"
+				Name="VCLibrarianTool"
 			/>
 			<Tool
 				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -1231,9 +1184,6 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -1241,7 +1191,7 @@
 			Name="LibRelease|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
 			OutputDirectory="..\..\..\binary\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="4"
 			CharacterSet="1"
 			>
 			<Tool
@@ -1265,8 +1215,7 @@
 				ExecutionBucket="7"
 				Optimization="2"
 				FavorSizeOrSpeed="2"
-				AdditionalIncludeDirectories="..\..\..\Arsenal"
-				PreprocessorDefinitions="__LIB;NDEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES);WINCE;_WINDOWS;$(ARCHFAM);$(_ARCHFAM_);_UNICODE;UNICODE;POCKETPC2003_UI_MODEL"
+				PreprocessorDefinitions="NDEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES);WINCE;_LIB;$(ARCHFAM);$(_ARCHFAM_);_UNICODE;UNICODE"
 				MinimalRebuild="false"
 				WarningLevel="3"
 				DebugInformationFormat="3"
@@ -1283,16 +1232,8 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLinkerTool"
+				Name="VCLibrarianTool"
 				AdditionalOptions=" /subsystem:windowsce,5.01"
-				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(OutDir)\"
-				GenerateDebugInformation="true"
-				StackReserveSize="65536"
-				StackCommitSize="4096"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
-				EntryPointSymbol="WinMainCRTStartup"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -1326,244 +1267,363 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Source Files"
-			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
+			Name="Common"
 			>
 			<File
-				RelativePath="..\..\..\Test\main.cpp"
+				RelativePath="..\..\..\Arsenal\Common\algo.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\base64.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\buffer.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\byteorder.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\common.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\common.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\config.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\crtstr.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\datastructure.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\enviroment.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\enviroment_posix.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\enviroment_win.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\filesystem.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\filesystem_path_posix.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\filesystem_path_win.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\filesystem_posix.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\filesystem_win.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\heap.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\heap.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\math.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\matrix.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\memory.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\platform.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\printf.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\random.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\status.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\strconv.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\string.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\strnum.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\strtable.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\textfile.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\thread.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\thread_posix.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\thread_posix_apple.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\thread_posix_posix.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\thread_win.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\uri.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\utilities.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\vector.c"
 				>
 			</File>
 		</Filter>
 		<Filter
-			Name="Test"
+			Name="Parser"
+			>
+			<File
+				RelativePath="..\..\..\Arsenal\Parser\grammar.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Parser\lalr.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Parser\lalr_build.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Parser\lalr_config.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Parser\lalr_config_aux.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Parser\lalr_state.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Parser\lr_action.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Parser\lr_action.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Parser\parser.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Parser\parser.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Parser\parser_in.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Parser\parser_in.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Parser\report.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Parser\symbol.c"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Lex"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\..\Test\calc_test.c"
+				RelativePath="..\..\..\Arsenal\Lex\lex.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\Test\calc_test2.c"
+				RelativePath="..\..\..\Arsenal\Lex\lex.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\Test\calc_test3.c"
+				RelativePath="..\..\..\Arsenal\Lex\lex_misc.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\Test\calc_test3_impl.h"
+				RelativePath="..\..\..\Arsenal\Lex\match.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\Test\com_test.c"
+				RelativePath="..\..\..\Arsenal\Lex\rgx.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\Test\gen_code_impl.h"
+				RelativePath="..\..\..\Arsenal\Lex\rgx_compile.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\Test\gen_code_test.c"
+				RelativePath="..\..\..\Arsenal\Lex\rgx_exec.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\Test\gmr_test.c"
+				RelativePath="..\..\..\Arsenal\Lex\rgx_misc.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\Test\grammar_config_test.c"
+				RelativePath="..\..\..\Arsenal\Lex\rgx_node.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\Test\grammar_test.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Test\ini_test.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Test\lex_test.c"
-				>
-				<FileConfiguration
-					Name="LibRelease|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						CompileAs="2"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\..\Test\lfu_cache.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Test\lfu_cache.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Test\marshal_die.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Test\marshal_die_predef.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Test\marshal_die_test.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Test\math_test.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Test\mem_test.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Test\Operation.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Test\Operation.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Test\parser_gen_perf_javascript_code_impl.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Test\parser_gen_perf_sql_code_impl.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Test\parser_gen_perf_test.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Test\parser_test.c"
-				>
-				<FileConfiguration
-					Name="LibRelease|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						CompileAs="2"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\..\Test\perf_test.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Test\psr_misc.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Test\ray_test.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Test\regexp_test.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Test\serialize_test.c"
-				>
-				<FileConfiguration
-					Name="LibRelease|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						CompileAs="2"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\..\Test\tengu_test.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Test\test.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Test\test.h"
-				>
-				<FileConfiguration
-					Name="LibRelease|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\..\Test\tokenizer_test.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Test\uri_test.c"
+				RelativePath="..\..\..\Arsenal\Lex\rgx_parser.c"
 				>
 			</File>
 		</Filter>
 		<Filter
-			Name="DSTest"
+			Name="Tools"
 			>
 			<File
-				RelativePath="..\..\..\Test\avltree.c"
+				RelativePath="..\..\..\Arsenal\Tools\grammar_codegen.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\Test\avltree.h"
+				RelativePath="..\..\..\Arsenal\Tools\grammar_collector.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\Test\ds_test.c"
+				RelativePath="..\..\..\Arsenal\Tools\grammar_config.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\Test\rbtree.c"
+				RelativePath="..\..\..\Arsenal\Tools\iniobj.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\Test\rbtree.h"
+				RelativePath="..\..\..\Arsenal\Tools\iniobj.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\Test\splaytree.c"
+				RelativePath="..\..\..\Arsenal\Tools\serializer.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\Test\splaytree.h"
+				RelativePath="..\..\..\Arsenal\Tools\serializer.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Tools\tools.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Tools\tools.h"
 				>
 			</File>
 		</Filter>
 		<Filter
-			Name="Lexer"
+			Name="Tengu"
 			>
 			<File
-				RelativePath="..\..\..\Test\Lexer\lexer.c"
+				RelativePath="..\..\..\Arsenal\Tengu\tengu.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\Test\Lexer\lexer.h"
+				RelativePath="..\..\..\Arsenal\Tengu\tengu.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\Test\Lexer\regexp.c"
+				RelativePath="..\..\..\Arsenal\Tengu\tengu_parser.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\Test\Lexer\regexp.h"
+				RelativePath="..\..\..\Arsenal\Tengu\tengu_parser.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Tengu\tengu_parser_impl.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Tengu\tengu_utility.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Tengu\tengu_utility.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Tengu\tguvm.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Tengu\tguvm.h"
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath="..\..\..\Arsenal\Arsenal.c"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\Arsenal\Arsenal.h"
+			>
+		</File>
+		<File
+			RelativePath=".\export.def"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

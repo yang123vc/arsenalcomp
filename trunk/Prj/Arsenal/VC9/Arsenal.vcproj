@@ -78,7 +78,7 @@
 				LinkIncremental="1"
 				GenerateManifest="true"
 				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
-				ModuleDefinitionFile="export.def"
+				ModuleDefinitionFile="export_debug.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
 				GenerateMapFile="true"
@@ -163,7 +163,7 @@
 				LinkIncremental="1"
 				GenerateManifest="true"
 				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
-				ModuleDefinitionFile="export.def"
+				ModuleDefinitionFile="export_debug.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
 				GenerateMapFile="true"
@@ -247,7 +247,7 @@
 				LinkIncremental="1"
 				GenerateManifest="true"
 				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
-				ModuleDefinitionFile="export.def"
+				ModuleDefinitionFile="export_debug.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
 				GenerateMapFile="true"
@@ -327,7 +327,7 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=" /subsystem:windowsce,5.01"
 				LinkIncremental="2"
-				ModuleDefinitionFile="export.def"
+				ModuleDefinitionFile="export_debug.def"
 				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
 				StackReserveSize="65536"
@@ -419,7 +419,7 @@
 				LinkIncremental="1"
 				GenerateManifest="true"
 				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
-				ModuleDefinitionFile="export.def"
+				ModuleDefinitionFile="export_release.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
 				GenerateMapFile="true"
@@ -508,7 +508,7 @@
 				LinkIncremental="1"
 				GenerateManifest="true"
 				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
-				ModuleDefinitionFile="export.def"
+				ModuleDefinitionFile="export_release.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
 				GenerateMapFile="true"
@@ -597,7 +597,7 @@
 				LinkIncremental="1"
 				GenerateManifest="true"
 				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
-				ModuleDefinitionFile="export.def"
+				ModuleDefinitionFile="export_release.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
 				GenerateMapFile="true"
@@ -678,7 +678,7 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=" /subsystem:windowsce,5.01"
 				LinkIncremental="1"
-				ModuleDefinitionFile="export.def"
+				ModuleDefinitionFile="export_release.def"
 				GenerateDebugInformation="true"
 				StackReserveSize="65536"
 				StackCommitSize="4096"
@@ -1302,11 +1302,39 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\Arsenal\Common\datastructure.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\Arsenal\Common\enviroment.c"
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\Arsenal\Common\enviroment_posix.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\enviroment_win.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\Arsenal\Common\filesystem.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\filesystem_path_posix.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\filesystem_path_win.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\filesystem_posix.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\filesystem_win.h"
 				>
 			</File>
 			<File
@@ -1334,6 +1362,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\Arsenal\Common\printf.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\Arsenal\Common\random.c"
 				>
 			</File>
@@ -1347,6 +1379,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\Arsenal\Common\string.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\strnum.c"
 				>
 			</File>
 			<File
@@ -1375,6 +1411,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\Arsenal\Common\thread_win.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\uri.c"
 				>
 			</File>
 			<File
