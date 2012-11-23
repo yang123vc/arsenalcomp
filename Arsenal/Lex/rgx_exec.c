@@ -210,7 +210,7 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 												}
 										}else
 										{
-												is_ok = (*sp >= pc->range.beg && *sp <= pc->range.end);
+												is_ok = (*sp >= pc->range.beg && *sp <= pc->range.end) ? true : false;
 										}
 								}
 
@@ -511,7 +511,7 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 												}
 										}else
 										{
-												is_ok = (*sp >= pc->range.beg && *sp <= pc->range.end);
+												is_ok = (*sp >= pc->range.beg && *sp <= pc->range.end) ? true : false;
 										}
 								}
 
@@ -815,7 +815,7 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 												}
 										}else
 										{
-												is_ok = (*sp >= pc->range.beg && *sp <= pc->range.end);
+												is_ok = (*sp >= pc->range.beg && *sp <= pc->range.end) ? true : false;
 										}
 								}
 

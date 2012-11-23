@@ -40,7 +40,7 @@ void __six_for_uint32_big(byte_t *out, uint_32_t w)
 
 		for(i = 0; i < 4 ; i++)
 		{
-				out[i] = w & 0x3f;
+				out[i] = (byte_t)(w & 0x3f);
 				w >>= 6;
 		}
 }
@@ -233,7 +233,7 @@ size_t AR_base64_decode(byte_t  *out, size_t olen, const byte_t *input, size_t i
 						
 						for(j = 0; j * 8 < k * 6; ++j)
 						{
-								*o++ = w & 0xff;
+								*o++ = (byte_t)(w & 0xff);
 								w >>= 8;
 								++need_n;
 						}

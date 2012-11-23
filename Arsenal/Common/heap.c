@@ -454,7 +454,7 @@ static AR_INLINE void	MediumFree(arHeap_t *heap, void *ptr)
 		AR_ASSERT(e->free_block == 0);
 		
 		p = e->page;
-		is_in_freelist = p->largest_free >= MEDIUM_SMALLEST_SIZE ;
+		is_in_freelist = p->largest_free >= MEDIUM_SMALLEST_SIZE ? true : false;
 		
 		prev = e->prev;
 
