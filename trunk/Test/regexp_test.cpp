@@ -32,8 +32,8 @@ static void deelx_test1()
 void rgx_test()
 {
 		deelx_test1();
-		
 }
+
 
 AR_NAMESPACE_END
 
