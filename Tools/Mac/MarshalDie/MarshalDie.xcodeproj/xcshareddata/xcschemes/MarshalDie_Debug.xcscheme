@@ -58,7 +58,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "~/Desktop/interprocess_message_desc.md"
+            argument = "~/Desktop/1.txt"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
