@@ -727,7 +727,7 @@ main
 
 static arStatus_t		AR_STDCALL handle_on_error(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
 {
-		AR_ASSERT(ctx != NULL && tok != NULL);
+		AR_ASSERT(tok != NULL);
 		
 		wchar_t msg[32];
 		if(tok->str_cnt > 0)
