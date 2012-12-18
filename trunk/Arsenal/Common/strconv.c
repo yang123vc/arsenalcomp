@@ -616,6 +616,7 @@ wchar_t*				AR_str_to_wcs(arCodePage_t cp, const char *input, size_t in_n)
 
         if(cd == (iconv_t)-1)
         {
+				AR_error(AR_ERR_WARNING, L"iconv_open failed : %hs\r\n", strerror(errno));
 				is_ok = false;
 				cd = NULL;
 				goto CLEAN_POINT;
@@ -628,6 +629,7 @@ wchar_t*				AR_str_to_wcs(arCodePage_t cp, const char *input, size_t in_n)
 
         if(iconv(cd, &inbuf, &inleft, &outbuf, &outleft) == (size_t)-1)
         {
+				AR_error(AR_ERR_WARNING, L"iconv failed : %hs\r\n", strerror(errno));
 				is_ok = false;
 				goto CLEAN_POINT;
         }
@@ -692,6 +694,7 @@ char*					AR_wcs_to_str(arCodePage_t cp, const wchar_t *input, size_t in_n)
 
         if(cd == (iconv_t)-1)
         {
+				AR_error(AR_ERR_WARNING, L"iconv_open failed : %hs\r\n", strerror(errno));
 				is_ok = false;
 				cd = NULL;
 				goto CLEAN_POINT;
@@ -705,6 +708,7 @@ char*					AR_wcs_to_str(arCodePage_t cp, const wchar_t *input, size_t in_n)
 
             if(iconv(cd, &inbuf, &inleft, &outbuf, &outleft) != 0)
             {
+					AR_error(AR_ERR_WARNING, L"iconv failed : %hs\r\n", strerror(errno));
 					is_ok = false;
 					goto CLEAN_POINT;
             }
