@@ -39,7 +39,7 @@ class_def
 std::vector<Type_t*>    			g_type_list;
 std::vector<std::wstring>			g_head_code;
 std::vector<std::wstring>			g_tail_code;
-std::wstring						g_uni_name = L"uniType_t";
+std::wstring					g_uni_name = L"uniType_t";
 
  
 
@@ -207,6 +207,9 @@ static psrRetVal_t AR_STDCALL on_named_array_field(psrNode_t **nodes, size_t cou
 /*field_def	:	field_name : anonymous_type_def ; */
 static psrRetVal_t AR_STDCALL on_named_nesting_field(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
+/*field_def	:	field_name : anonymous_type_def [ NUMBER ] ; */
+static psrRetVal_t AR_STDCALL on_named_nesting_field_array(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
+
 /*field_name	:	LEXEME */
 static psrRetVal_t AR_STDCALL auto_return_0(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
@@ -232,10 +235,11 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"field_def  :  field_name : LEXEME ; ", NULL, on_named_field_name, 0},
 {L"field_def  :  field_name : LEXEME [ NUMBER ] ; ", NULL, on_named_array_field, 0},
 {L"field_def  :  field_name : anonymous_type_def ; ", NULL, on_named_nesting_field, 0},
+{L"field_def  :  field_name : anonymous_type_def [ NUMBER ] ; ", NULL, on_named_nesting_field_array, 0},
 {L"field_name  :  LEXEME ", NULL, auto_return_0, 0}
 };
 
-#define __RULE_COUNT__ ((size_t)19)
+#define __RULE_COUNT__ ((size_t)20)
 #define START_RULE L"program"
 
 
@@ -388,7 +392,7 @@ static psrRetVal_t AR_STDCALL on_codeblock(const psrToken_t *tok,void *ctx)
 						{
 							wchar_t *tmp = AR_wcsndup(tok->str, tok->str_cnt);
 							AR_error(AR_ERR_FATAL, L"invalid name length : '%ls' line : %Iu!", tmp, tok->line );
-							exit(-1);
+							AR_abort();
 						}
 						
 						AR_wcsncpy(node->name, tok->str, tok->str_cnt);
@@ -409,7 +413,7 @@ static psrRetVal_t AR_STDCALL on_number(const psrToken_t *tok,void *ctx)
 						{
 							wchar_t *tmp = AR_wcsndup(tok->str, tok->str_cnt);
 							AR_error(AR_ERR_FATAL, L"invalid number : '%ls' line : %Iu!", tmp, tok->line);
-							exit(-1);
+							AR_abort();
 						}
 
 						psrRetVal_t ret = {AR_S_YES, (psrToken_t*)node}; 
@@ -580,7 +584,7 @@ static psrRetVal_t AR_STDCALL on_named_field_name(psrNode_t **nodes, size_t coun
 				if(field_node->field->type == NULL)
 				{
 					AR_error(AR_ERR_FATAL, L"invalid type name '%ls'\r\n", type_name->name);
-					exit(-1);
+					AR_abort();
 				}
 				ret.node = (psrNode_t*)field_node;
 				return ret;
@@ -610,7 +614,7 @@ static psrRetVal_t AR_STDCALL on_named_array_field(psrNode_t **nodes, size_t cou
 				if(field_node->field->type == NULL)
 				{
 					AR_error(AR_ERR_FATAL, L"invalid type name '%ls'\r\n", type_name->name);
-					exit(-1);
+					AR_abort();
 				}
 
 
@@ -620,7 +624,7 @@ static psrRetVal_t AR_STDCALL on_named_array_field(psrNode_t **nodes, size_t cou
 				if(field_node->field->array_size == 0)
 				{
 					AR_error(AR_ERR_FATAL, L"invalid array size '%ls' : %u\r\n", type_name->name, field_node->field->array_size);
-					exit(-1);
+					AR_abort();
 				}
 
 				ret.node = (psrNode_t*)field_node;
@@ -651,6 +655,44 @@ static psrRetVal_t AR_STDCALL on_named_nesting_field(psrNode_t **nodes, size_t c
 				field_node->field->type = type->type;
 				field_node->field->is_array = false;
 				field_node->field->array_size = 0;
+				type->type = NULL;
+				ret.node = (psrNode_t*)field_node;
+				return ret;
+			 }
+}
+
+
+
+
+/*field_def	:	field_name : anonymous_type_def [ NUMBER ] ; */
+static psrRetVal_t AR_STDCALL on_named_nesting_field_array(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
+{
+		{ 
+				psrRetVal_t	ret = {AR_S_YES, NULL};		/*搜索g_type_list,有返回Type节点， 否则报告错误程序终止*/
+				ast_node_t *name = (ast_node_t*)nodes[0];
+				ast_node_t *type = (ast_node_t*)nodes[2];
+				ast_node_t *array_size = (ast_node_t*)nodes[4];
+
+				AR_ASSERT(name != NULL && type != NULL);
+				AR_ASSERT(name->t == NAME_T && type->t == TYPE_T);
+
+				insert_type(type->type);
+
+				ast_node_t *field_node = new ast_node_t;
+				field_node->t = FIELD_T;
+				field_node->field = new Field_t;
+				field_node->field->name = name->name;
+				field_node->field->type = type->type;
+				field_node->field->is_array = true;
+				field_node->field->array_size = array_size->num;
+				
+				if(field_node->field->array_size == 0)
+				{
+					AR_error(AR_ERR_FATAL, L"invalid array size 'anonymous type' : %u\r\n", field_node->field->array_size);
+					AR_abort();
+				}
+
+
 				type->type = NULL;
 				ret.node = (psrNode_t*)field_node;
 				return ret;
@@ -697,7 +739,7 @@ static arStatus_t		AR_STDCALL handle_on_error(const psrToken_t *tok, const size_
 		}
 
 		AR_error(AR_ERR_FATAL, L"invalid token : '%ls'\r\n", msg);
-		exit(-1);
+		AR_abort();
 		return AR_S_NO;
 }
 
@@ -771,12 +813,12 @@ extern "C" void generate_type_list(const std::wstring &input)
 						wchar_t msg[1024];
 						AR_wcsncpy(msg, ARSpace::Lex_GetNextInput(match),  (int)len);
 						AR_error(AR_ERR_FATAL, L"Input Error : %ls line : %Iu", msg, line);
-						exit(-1);
+						AR_abort();
 
 				}else
 				{
 						AR_error(AR_ERR_FATAL, L"inner error !\r\n");
-						exit(-1);
+						AR_abort();
 				}
 
 		}

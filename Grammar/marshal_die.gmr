@@ -416,6 +416,38 @@ field_def		:    	field_name    ":"    LEXEME    ";"		%action on_named_field_name
 				ret.node = (psrNode_t*)field_node;
 				return ret;
 			:}
+			|	field_name    ":"    anonymous_type_def	 "["    NUMBER "]" 	";"		%action on_named_nesting_field_array
+			{:
+				psrRetVal_t	ret = {AR_S_YES, NULL};		/*搜索g_type_list,有返回Type节点， 否则报告错误程序终止*/
+				ast_node_t *name = (ast_node_t*)nodes[0];
+				ast_node_t *type = (ast_node_t*)nodes[2];
+				ast_node_t *array_size = (ast_node_t*)nodes[4];
+
+				AR_ASSERT(name != NULL && type != NULL);
+				AR_ASSERT(name->t == NAME_T && type->t == TYPE_T);
+
+				insert_type(type->type);
+
+				ast_node_t *field_node = new ast_node_t;
+				field_node->t = FIELD_T;
+				field_node->field = new Field_t;
+				field_node->field->name = name->name;
+				field_node->field->type = type->type;
+				field_node->field->is_array = true;
+				field_node->field->array_size = array_size->num;
+				
+				if(field_node->field->array_size == 0)
+				{
+					AR_error(AR_ERR_FATAL, L"invalid array size 'anonymous type' : %u\r\n", field_node->field->array_size);
+					AR_abort();
+				}
+
+
+				type->type = NULL;
+				ret.node = (psrNode_t*)field_node;
+				return ret;
+			:}
+
                 	;
 
 
