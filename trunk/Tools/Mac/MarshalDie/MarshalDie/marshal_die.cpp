@@ -203,7 +203,7 @@ static std::wstring generate_func_call_for_get_field(const Field_t *field)
 		return ret;
 }
 
-#define GET_FUNC_FMT			L"static bool_t\t__get_%ls(snObject_t *obj, %ls *stu)\r\n{\r\n\t\tbool_t\tis_ok;\r\n\t\tAR_ASSERT(stu != NULL && obj != NULL);\r\n\t\tAR_ASSERT(SN_GetObjectType(obj) == SN_DICT_T);\r\n\t\tis_ok = true;\r\n\r\n\t\t/***************************************************************************/\r\n%ls\r\n\t\t/***************************************************************************/\r\n\r\n\t\treturn true;\r\nINVALID_POINT:\r\n\t\tis_ok = false;\r\n\t\treturn is_ok;\r\n}"
+#define GET_FUNC_FMT			L"static bool_t\t__get_%ls(snObject_t *obj, %ls *stu)\r\n{\r\n\t\tbool_t\tis_ok;\r\n\t\tsnObject_t\t*tmp;\r\n\t\tAR_ASSERT(stu != NULL && obj != NULL);\r\n\t\tAR_ASSERT(SN_GetObjectType(obj) == SN_DICT_T);\r\n\t\tis_ok = true;\r\n\t\ttmp = NULL;\r\n\r\n\t\t/***************************************************************************/\r\n%ls\r\n\t\t/***************************************************************************/\r\n\r\n\t\treturn true;\r\nINVALID_POINT:\r\n\t\tis_ok = false;\r\n\t\treturn is_ok;\r\n}"
 
 
 static std::wstring generate_for_get_custom_type(const Type_t *type)
