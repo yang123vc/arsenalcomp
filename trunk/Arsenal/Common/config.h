@@ -282,7 +282,7 @@ _CHAR_UNSIGNED			 «vsÃÿ–‘£¨/J
 		#include <iconv.h>
         #include <sys/select.h>
         #include <sys/time.h>
-		
+		#include <errno.h>
 		#if(OS_TYPE == OS_MAC_OS_X || OS_TYPE == OS_IOS)
 			#include <libkern/OSAtomic.h>
 		#endif
