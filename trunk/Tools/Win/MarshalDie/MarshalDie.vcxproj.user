@@ -4,4 +4,8 @@
     <LocalDebuggerCommandArguments>"D:\Code\Solidus\Compiler\Arsenal\misc\marshal_die_input.txt"  "C:\Users\Administrator\Desktop\1.c"</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">
+    <LocalDebuggerCommandArguments>"C:\Users\solidus\Desktop\1.txt" "C:\Users\solidus\Desktop\1.c"</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
 </Project>
