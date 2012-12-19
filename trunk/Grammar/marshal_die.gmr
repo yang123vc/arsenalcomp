@@ -442,7 +442,6 @@ field_def		:    	field_name    ":"    LEXEME    ";"		%action on_named_field_name
 					AR_abort();
 				}
 
-
 				type->type = NULL;
 				ret.node = (psrNode_t*)field_node;
 				return ret;
@@ -500,8 +499,7 @@ static const psrHandler_t		__g_handler =
 
 extern "C" void generate_type_list(const std::wstring &input)
 {
-		
-		
+
 		lex_t *lex = __build_lex();
 		psrGrammar_t	*gmr = __build_grammar(&__g_handler);
 		const parser_t		*parser = Parser_CreateParser(gmr, PARSER_LALR);

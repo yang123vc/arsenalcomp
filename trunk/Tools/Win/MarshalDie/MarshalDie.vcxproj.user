@@ -5,7 +5,11 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">
-    <LocalDebuggerCommandArguments>"C:\Users\solidus\Desktop\1.txt" "C:\Users\solidus\Desktop\1.c"</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>"C:\Users\liupeng\Desktop\1.txt" "C:\Users\liupeng\Desktop\1.c"</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">
+    <LocalDebuggerCommandArguments>"C:\Users\liupeng\Desktop\1.txt" "C:\Users\liupeng\Desktop\1.c"</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
 </Project>
