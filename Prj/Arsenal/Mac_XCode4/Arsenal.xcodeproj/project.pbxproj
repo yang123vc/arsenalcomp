@@ -10,8 +10,6 @@
 		6728C3B5154C5E8300861D86 /* enviroment.c in Sources */ = {isa = PBXBuildFile; fileRef = 6728C3B4154C5E8300861D86 /* enviroment.c */; };
 		6728C3B6154C5E8300861D86 /* enviroment.c in Sources */ = {isa = PBXBuildFile; fileRef = 6728C3B4154C5E8300861D86 /* enviroment.c */; };
 		6728C3E315503E9300861D86 /* filesystem.c in Sources */ = {isa = PBXBuildFile; fileRef = 6728C3E215503E9300861D86 /* filesystem.c */; };
-		67387CAB16468E8400FE0910 /* Arsenal_Debug.exp in Sources */ = {isa = PBXBuildFile; fileRef = 67387CA916468E8400FE0910 /* Arsenal_Debug.exp */; };
-		67387CAC16468E8400FE0910 /* Arsenal_Release.exp in Sources */ = {isa = PBXBuildFile; fileRef = 67387CAA16468E8400FE0910 /* Arsenal_Release.exp */; };
 		674D8C8315734D4B00CC43A6 /* uri.c in Sources */ = {isa = PBXBuildFile; fileRef = 674D8C8215734D4B00CC43A6 /* uri.c */; };
 		674D8C8415734D4B00CC43A6 /* uri.c in Sources */ = {isa = PBXBuildFile; fileRef = 674D8C8215734D4B00CC43A6 /* uri.c */; };
 		675B2B621562254100DADFE2 /* printf.c in Sources */ = {isa = PBXBuildFile; fileRef = 675B2B611562254100DADFE2 /* printf.c */; };
@@ -626,8 +624,6 @@
 				675B2B621562254100DADFE2 /* printf.c in Sources */,
 				674D8C8315734D4B00CC43A6 /* uri.c in Sources */,
 				67CCEDD51584B3650082DC8F /* strnum.c in Sources */,
-				67387CAB16468E8400FE0910 /* Arsenal_Debug.exp in Sources */,
-				67387CAC16468E8400FE0910 /* Arsenal_Release.exp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
