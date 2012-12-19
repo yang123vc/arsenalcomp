@@ -583,7 +583,7 @@ static psrRetVal_t AR_STDCALL on_named_field_name(psrNode_t **nodes, size_t coun
 				field_node->field->array_size = 0;
 				if(field_node->field->type == NULL)
 				{
-					AR_error(AR_ERR_FATAL, L"invalid type name '%ls'\r\n", type_name->name);
+					AR_error(AR_ERR_FATAL, L"invalid type name '%ls', %Iu\r\n", type_name->name, type_name->line);
 					AR_abort();
 				}
 				ret.node = (psrNode_t*)field_node;
