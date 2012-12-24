@@ -114,7 +114,7 @@ arStatus_t Lex_InserToProgSet(lexProgSet_t *set, rgxProg_t *prog, const lexActio
 }
 
 
-static void __exch_set(lexProgSet_t *set, int_t i,int_t j)
+static void __exch_set(lexProgSet_t *set, ar_int_t i,ar_int_t j)
 {
 		rgxProg_t		*prog;
 		lexAction_t		act;
@@ -132,11 +132,11 @@ static void __exch_set(lexProgSet_t *set, int_t i,int_t j)
 
 arStatus_t	Lex_RemoveFromProgSet(lexProgSet_t *set, size_t value)
 {
-		int_t l,r,cnt;
+		ar_int_t l,r,cnt;
 		bool_t res = false;
 		AR_ASSERT(set != NULL);
 
-		l = 0; r = (int_t)set->count - (int_t)1, cnt = (int_t)set->count;
+		l = 0; r = (ar_int_t)set->count - (ar_int_t)1, cnt = (ar_int_t)set->count;
 
 		while(l <= r)
 		{
@@ -150,7 +150,7 @@ arStatus_t	Lex_RemoveFromProgSet(lexProgSet_t *set, size_t value)
 		}
 
 
-		for(l = r + 1; l < (int_t)set->count; ++l)
+		for(l = r + 1; l < (ar_int_t)set->count; ++l)
 		{
 				rgxProg_t *prog = set->prog[l];
 				set->prog[l] = NULL;
@@ -169,11 +169,11 @@ arStatus_t	Lex_RemoveFromProgSet(lexProgSet_t *set, size_t value)
 
 void Lex_SortProgSet(lexProgSet_t *set)
 {
-		int_t i,j;
+		ar_int_t i,j;
 
 
 
-		for(i = (int_t)set->count - 1; i > 0; --i)
+		for(i = (ar_int_t)set->count - 1; i > 0; --i)
 		{
 				if(set->action[i].priority > set->action[i-1].priority)
 				{
@@ -181,7 +181,7 @@ void Lex_SortProgSet(lexProgSet_t *set)
 				}
 		}
 		
-		for(i = 1; i < (int_t)set->count; ++i)
+		for(i = 1; i < (ar_int_t)set->count; ++i)
 		{
 				for(j = i; j > 0 && set->action[j].priority > set->action[j-1].priority; --j)
 				{
@@ -195,7 +195,7 @@ void Lex_SortProgSet(lexProgSet_t *set)
 
 #define __ALL_FLAGS		(LEX_IGNORE_CASE|LEX_SINGLE_LINE)
 
-void			Lex_MatchFlags(lexMatch_t *pmatch, uint_t flags, bool_t is_on)
+void			Lex_MatchFlags(lexMatch_t *pmatch, ar_uint_t flags, bool_t is_on)
 {
 		AR_ASSERT(pmatch != NULL);
 		flags &= __ALL_FLAGS;

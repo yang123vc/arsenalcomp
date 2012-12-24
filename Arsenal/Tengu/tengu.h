@@ -98,7 +98,7 @@ typedef struct __tengu_report_tag
 struct	__tengu_machine_tag;
 typedef struct	__tengu_machine_tag		tguMachine_t;
 
-typedef int_t	(AR_STDCALL *tguCFunction_t)(tguMachine_t *vm);
+typedef ar_int_t	(AR_STDCALL *tguCFunction_t)(tguMachine_t *vm);
 
 
 

@@ -405,7 +405,7 @@ END_POINT:
 }
 
 
-arStatus_t AR_path_get_size(const wchar_t *path, uint_64_t *ps)
+arStatus_t AR_path_get_size(const wchar_t *path, ar_uint_64_t *ps)
 {
         arStatus_t status;
         char *utf8;
@@ -425,7 +425,7 @@ arStatus_t AR_path_get_size(const wchar_t *path, uint_64_t *ps)
         if(lstat(utf8, &st) == 0)
         {
                 status = AR_S_YES;
-                *ps = (uint_64_t)st.st_size;
+                *ps = (ar_uint_64_t)st.st_size;
         }else
         {
                 int err_code = errno;
@@ -444,7 +444,7 @@ END_POINT:
         
 }
 
-arStatus_t      AR_path_set_size(const wchar_t *path, uint_64_t size)
+arStatus_t      AR_path_set_size(const wchar_t *path, ar_uint_64_t size)
 {
         
         arStatus_t status;
@@ -1022,7 +1022,7 @@ static arStatus_t       __remove_dir(const wchar_t *path)
         
         while(status == AR_S_YES && !AR_PathIteratorIsDone(iter))
         {
-                int_t ret;
+                ar_int_t ret;
                 ret = AR_swprintf(buf, 2048, L"%ls%ls", AR_PathIteratorPath(iter), AR_PathIteratorCurrent(iter));
                 
                 if(ret <= 0)
@@ -1196,7 +1196,7 @@ arStatus_t      AR_path_copyfile(const wchar_t *src, const wchar_t *dest, bool_t
         
         while(AR_eof_file(s) == AR_S_NO)
         {
-                byte_t buf[4096];
+                ar_byte_t buf[4096];
                 size_t rn, wn;
                 status = AR_read_file(s, buf, 4096, &rn);
                 if(status != AR_S_YES)

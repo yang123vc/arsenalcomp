@@ -120,7 +120,7 @@ typedef struct __cfg_predef_tag
 		size_t					line;
 		const wchar_t			*name;
 		const wchar_t			*code;
-		uint_32_t				flags;
+		ar_uint_32_t				flags;
 }cfgPreDef_t;
 
 
@@ -231,7 +231,7 @@ typedef struct __cfg_report_info_tag
 		}								syntax_error;
 
 		struct	{
-				int_t					err_level;
+				ar_int_t					err_level;
 				const	wchar_t			*err_msg;
 		
 		}								error;

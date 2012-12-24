@@ -520,7 +520,7 @@ psrContext_t*	Parser_CreateContext(const parser_t *parser, void *ctx)
 		Parser_InitStack(&psr_ctx->state_stack);
 		Parser_InitNodeStack(&psr_ctx->node_stack);
 		
-		AR_AtomicInc((int_t*)&(((parser_t*)parser)->ref_cnt));
+		AR_AtomicInc((ar_int_t*)&(((parser_t*)parser)->ref_cnt));
 
 		return psr_ctx;
 }
@@ -558,7 +558,7 @@ void			Parser_DestroyContext(psrContext_t	*parser_context)
 		{
 				AR_ASSERT(parser_context->parser->ref_cnt > 1);
 
-				AR_AtomicDec((int_t*)&(((parser_t*)(parser_context->parser))->ref_cnt));
+				AR_AtomicDec((ar_int_t*)&(((parser_t*)(parser_context->parser))->ref_cnt));
 
 				Parser_Clear(parser_context);
 				Parser_UnInitNodeStack(&parser_context->node_stack);
@@ -694,7 +694,7 @@ static arStatus_t __handle_reduce(psrContext_t *parser_context, const psrAction_
 {
 		psrNode_t		**nodes;
 		psrRetVal_t		ret;
-		int_t			next_state;
+		ar_int_t			next_state;
 		const	psrRule_t *rule;
 		
 		AR_ASSERT(parser_context != NULL && action != NULL && action->type == PARSER_REDUCE);

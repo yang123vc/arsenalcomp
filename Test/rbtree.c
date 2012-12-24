@@ -244,7 +244,7 @@ static AR_INLINE void	__fix_insert(rbNode_t *node, rbNode_t **proot)
 
 
 
-rbNode_t*		rb_insert_equal(rbTree_t	*tree, int_t data)
+rbNode_t*		rb_insert_equal(rbTree_t	*tree, ar_int_t data)
 {
 		rbNode_t *new_node;
 		AR_ASSERT(tree != NULL);
@@ -260,7 +260,7 @@ rbNode_t*		rb_insert_equal(rbTree_t	*tree, int_t data)
 		{
 				rbNode_t *p = NULL, *curr = tree->root;
 
-				int_t cmp = 0;
+				ar_int_t cmp = 0;
 				while(curr)
 				{
 						p = curr;
@@ -298,7 +298,7 @@ rbNode_t*		rb_insert_equal(rbTree_t	*tree, int_t data)
 
 
 
-rbNode_t*		rb_find(rbTree_t		*tree, int_t key)
+rbNode_t*		rb_find(rbTree_t		*tree, ar_int_t key)
 {
 		rbNode_t		*curr = tree->root;
 		AR_ASSERT(tree != NULL);
@@ -532,7 +532,7 @@ static AR_INLINE rbNode_t* __unlink_node(rbNode_t *node, rbNode_t **proot, rbNod
 
 //////////////////////////////////////////
 
-bool_t	rb_remove(rbTree_t	*tree, int_t key)
+bool_t	rb_remove(rbTree_t	*tree, ar_int_t key)
 {
 		rbNode_t		*node;
 		bool_t			found = false;
@@ -674,13 +674,13 @@ bool_t rb_verify_tree(const rbTree_t *self)
 
 /********************************************test****************************************/
 #define AR_EXCH(_type, _a,_b)	do{_type t = (_a); (_a) = (_b); (_b) = t;}while(0)
-static AR_INLINE void shuffle(int_t *arr, size_t n)
+static AR_INLINE void shuffle(ar_int_t *arr, size_t n)
 {
-		int_t i;
-		for(i = (int_t)n - 1; i > 0; --i)
+		ar_int_t i;
+		for(i = (ar_int_t)n - 1; i > 0; --i)
 		{
-				int_t idx = rand()%i;
-				int_t t = arr[i];
+				ar_int_t idx = rand()%i;
+				ar_int_t t = arr[i];
 				arr[i] = arr[idx];
 				arr[idx] = t;
 		}
@@ -691,11 +691,11 @@ static void	 rb_test_insert()
 {
 		rbTree_t		tree;
 		rbNode_t		*node;
-		int_t			i;
+		ar_int_t			i;
 		
 		rb_init(&tree);
 		
-		int_t arr[15];
+		ar_int_t arr[15];
 		for(i = 0; i < 15; ++i)
 		{
 				arr[i] = rand()%100;

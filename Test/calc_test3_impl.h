@@ -295,7 +295,7 @@ static psrRetVal_t AR_STDCALL default_leaf_handler(const psrToken_t *tok,void *c
                 {
                 case TOK_NUMBER:
                 {
-                    int_t num;
+                    ar_int_t num;
                     AR_wtoi_s(tok->str, tok->str + tok->str_cnt, &num, 10);
                     ret.node = (psrNode_t*)num;
 			return ret;
@@ -328,13 +328,13 @@ static psrRetVal_t AR_STDCALL on_calc(psrNode_t **nodes, size_t count, const wch
 {
 		{ 
 		psrRetVal_t ret;
-            int_t l, r;
+            ar_int_t l, r;
             size_t op;
             AR_ASSERT(nodes != NULL && count == 3);
 		ret.status = AR_S_YES;
-            l = (int_t)nodes[0];
+            l = (ar_int_t)nodes[0];
             op = (size_t)nodes[1];
-            r = (int_t)nodes[2];
+            r = (ar_int_t)nodes[2];
             switch(op)
             {
             case TOK_ADD:
@@ -391,9 +391,9 @@ static psrRetVal_t AR_STDCALL on_negative_num(psrNode_t **nodes, size_t count, c
 		psrRetVal_t ret;
 		ret.status = AR_S_YES;
 
-            int_t n;
+            ar_int_t n;
             AR_ASSERT(nodes != NULL && count == 2);
-            n = (int_t)nodes[1];
+            n = (ar_int_t)nodes[1];
             ret.node = (psrNode_t*)-n;
 		return ret;
          }
@@ -420,7 +420,7 @@ static arStatus_t calc(const wchar_t *input, int *result)
 		const parser_t		*parser;
 		psrContext_t *ctx;
 		bool_t dump;
-		int_t v = 0;
+		ar_int_t v = 0;
 		arStatus_t status;
 		AR_ASSERT(result != NULL);
 		lex = __build_lex();

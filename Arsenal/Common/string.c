@@ -282,7 +282,7 @@ arStatus_t	AR_AppendFormatString(arString_t *str, const wchar_t *fmt, ...)
 arStatus_t			AR_VFormatString(arString_t *str, const wchar_t *fmt, va_list va_args)
 {
 		arStatus_t ret;
-		int_t len;
+		ar_int_t len;
 		va_list save;
 		AR_ASSERT(str != NULL && fmt != NULL && va_args != NULL);
 		AR_ClearString(str);
@@ -323,7 +323,7 @@ arStatus_t			AR_VFormatString(arString_t *str, const wchar_t *fmt, va_list va_ar
 arStatus_t			AR_AppendVFormatString(arString_t *str, const wchar_t *fmt, va_list va_args)
 {
 		arStatus_t ret;
-		int_t len;
+		ar_int_t len;
 		wchar_t *buf;
 		va_list save;
 		AR_ASSERT(str != NULL && fmt != NULL && va_args != NULL);
@@ -415,25 +415,25 @@ void			AR_SetStringChar(arString_t *str, size_t index, wchar_t c)
 		str->str[index] = c;
 }
 
-int_t			AR_CompStringWithWcs(const arString_t *l, const wchar_t *r)
+ar_int_t			AR_CompStringWithWcs(const arString_t *l, const wchar_t *r)
 {
 		AR_ASSERT(l != NULL && r != NULL);
 		return AR_wcscmp(AR_GetStringCString(l), r);
 }
 
-int_t			AR_CompString(const arString_t *l, const arString_t *r)
+ar_int_t			AR_CompString(const arString_t *l, const arString_t *r)
 {
 		AR_ASSERT(l != NULL && r != NULL);
 		return AR_wcscmp(AR_GetStringCString(l), AR_GetStringCString(r));
 }
 
-int_t			AR_ICompStringWithWcs(const arString_t *l, const wchar_t *r)
+ar_int_t			AR_ICompStringWithWcs(const arString_t *l, const wchar_t *r)
 {
 		AR_ASSERT(l != NULL && r != NULL);
 		return AR_wcsicmp(AR_GetStringCString(l), r);
 }
 
-int_t			AR_ICompString(const arString_t *l, const arString_t *r)
+ar_int_t			AR_ICompString(const arString_t *l, const arString_t *r)
 {
 		AR_ASSERT(l != NULL && r != NULL);
 		return AR_wcsicmp(AR_GetStringCString(l), AR_GetStringCString(r));

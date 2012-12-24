@@ -31,7 +31,7 @@ void parser_test()
 				AR_abort();
 		}
 
-		uint_64_t beg, end;
+		ar_uint_64_t beg, end;
 		
 		beg = AR_GetTime_Milliseconds();
 

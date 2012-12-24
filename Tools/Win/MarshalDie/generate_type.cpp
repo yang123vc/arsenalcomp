@@ -69,7 +69,7 @@ typedef struct node_tag
 		Field_t	*field;
 		Type_t		*type;
 		wchar_t	name[256];
-		uint_64_t	num;
+		ar_uint_64_t	num;
 		struct {
 			bool_t		is_tail;
 			wchar_t	*code;
@@ -80,7 +80,7 @@ typedef struct node_tag
 
 ast_node_t* create_anonymous_type()
 {
-	static uint_32_t	id = 0;
+	static ar_uint_32_t	id = 0;
 	ast_node_t	*node;
 	static wchar_t	name[128];
 	AR_swprintf(name, 128, L"anonymous_type_%u", id);
@@ -583,7 +583,7 @@ static psrRetVal_t AR_STDCALL on_named_field_name(psrNode_t **nodes, size_t coun
 				field_node->field->array_size = 0;
 				if(field_node->field->type == NULL)
 				{
-					AR_error(AR_ERR_FATAL, L"invalid type name '%ls', %Iu\r\n", type_name->name, type_name->line);
+					AR_error(AR_ERR_FATAL, L"invalid type name '%ls'\r\n", type_name->name);
 					AR_abort();
 				}
 				ret.node = (psrNode_t*)field_node;
@@ -692,7 +692,6 @@ static psrRetVal_t AR_STDCALL on_named_nesting_field_array(psrNode_t **nodes, si
 					AR_abort();
 				}
 
-
 				type->type = NULL;
 				ret.node = (psrNode_t*)field_node;
 				return ret;
@@ -760,8 +759,7 @@ static const psrHandler_t		__g_handler =
 
 extern "C" void generate_type_list(const std::wstring &input)
 {
-		
-		
+
 		lex_t *lex = __build_lex();
 		psrGrammar_t	*gmr = __build_grammar(&__g_handler);
 		const parser_t		*parser = Parser_CreateParser(gmr, PARSER_LALR);

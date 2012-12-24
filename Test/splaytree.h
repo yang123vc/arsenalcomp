@@ -22,7 +22,7 @@ typedef struct __splay_tree_tag			splayTree_t;
 struct __splay_node_tag
 {
 		
-		int_t			data;
+		ar_int_t			data;
 		splayNode_t		*parent;
 		splayNode_t		*left;
 		splayNode_t		*right;

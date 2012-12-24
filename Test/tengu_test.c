@@ -35,7 +35,7 @@ static tguReport_t		__g_report =
 };
 
 
-static int_t	AR_STDCALL tgu_print (tguMachine_t *vm)
+static ar_int_t	AR_STDCALL tgu_print (tguMachine_t *vm)
 {
 		AR_ASSERT(vm != NULL);
 		return 0;

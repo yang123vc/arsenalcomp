@@ -309,7 +309,7 @@ void			AR_SwapElements(arVector_t *vec, size_t l, size_t r)
 }
 
 /*
-int_t			AR_CompareVector(const arVector_t *l, const arVector_t *r)
+ar_int_t			AR_CompareVector(const arVector_t *l, const arVector_t *r)
 {
 		size_t i;
 		AR_ASSERT(l != NULL && r != NULL);
@@ -327,7 +327,7 @@ int_t			AR_CompareVector(const arVector_t *l, const arVector_t *r)
 }
 */
 
-int_t			AR_CompareVector(const arVector_t *l, const arVector_t *r, double epsilon)
+ar_int_t			AR_CompareVector(const arVector_t *l, const arVector_t *r, double epsilon)
 {
 		size_t i;
 		AR_ASSERT(l != NULL && r != NULL);

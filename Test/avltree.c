@@ -9,7 +9,7 @@
 
 AR_NAMESPACE_BEGIN
 
-static AR_INLINE avlNode_t*		__create_node(int_t d)
+static AR_INLINE avlNode_t*		__create_node(ar_int_t d)
 {
 		avlNode_t		*node = AR_NEW0(avlNode_t);
 		node->data = d;
@@ -386,7 +386,7 @@ typedef enum { AVL_ERASE = -1, AVL_INSERT = 1}cmd_t;
 
 
 /*node为被增加或删除的节点的父节点， bf == 1则增删节点为node右节点，bf == -1，则增删节点为node左节点*/
-static AR_INLINE void __fixup(avlNode_t *node, avlNode_t **proot, int_t bf, cmd_t cmd)
+static AR_INLINE void __fixup(avlNode_t *node, avlNode_t **proot, ar_int_t bf, cmd_t cmd)
 {
 		avlNode_t		*p;
 		AR_ASSERT(proot != NULL && *proot != NULL && (bf == 1 || bf == -1 || bf == 0));
@@ -395,7 +395,7 @@ static AR_INLINE void __fixup(avlNode_t *node, avlNode_t **proot, int_t bf, cmd_
 		{
 				p = node->parent;
 
-				node->bf += ((int_t)cmd * bf);
+				node->bf += ((ar_int_t)cmd * bf);
 				
 				if(p == NULL)
 				{
@@ -579,7 +579,7 @@ void	avl_uninit(avlTree_t	*tree)
 
 
 
-avlNode_t* avl_insert_equal(avlTree_t	*tree, int_t data)
+avlNode_t* avl_insert_equal(avlTree_t	*tree, ar_int_t data)
 {
 		avlNode_t		*p = NULL, *curr = NULL, *new_node = NULL;
 		AR_ASSERT(tree != NULL);
@@ -633,7 +633,7 @@ avlNode_t* avl_insert_equal(avlTree_t	*tree, int_t data)
 static AR_INLINE avlNode_t* __unlink_node(avlNode_t *node, avlNode_t **proot, avlNode_t **pleft_most, avlNode_t **pright_most)
 {
 		avlNode_t		*rm, *chd, *p;
-		int_t			bf;
+		ar_int_t			bf;
 
 		AR_ASSERT(node != NULL && proot != NULL && *proot != NULL && pleft_most != NULL && *pleft_most != NULL && pright_most != NULL && *pright_most != NULL);
 
@@ -687,7 +687,7 @@ static AR_INLINE avlNode_t* __unlink_node(avlNode_t *node, avlNode_t **proot, av
 
 				rm->parent = node->parent;
 				{
-						int_t bf = rm->bf; 
+						ar_int_t bf = rm->bf; 
 						rm->bf = node->bf; 
 						node->bf = bf;
 				}
@@ -742,7 +742,7 @@ static AR_INLINE avlNode_t* __unlink_node(avlNode_t *node, avlNode_t **proot, av
 
 
 
-avlNode_t*		avl_find(avlTree_t		*tree, int_t key)
+avlNode_t*		avl_find(avlTree_t		*tree, ar_int_t key)
 {
 		avlNode_t		*curr = tree->root;
 		AR_ASSERT(tree != NULL);
@@ -765,7 +765,7 @@ avlNode_t*		avl_find(avlTree_t		*tree, int_t key)
 }
 
 
-bool_t	avl_remove(avlTree_t	*tree, int_t key)
+bool_t	avl_remove(avlTree_t	*tree, ar_int_t key)
 {
 		avlNode_t		*node;
 		bool_t			found = false;
@@ -818,9 +818,9 @@ void	avl_print_tree(const avlTree_t *tree)
 }
 
 
-static int_t __calc_height(const avlNode_t *node)
+static ar_int_t __calc_height(const avlNode_t *node)
 {
-		int_t l, r;
+		ar_int_t l, r;
 		if(node == NULL)return 0;
 
 		l = __calc_height(node->child[AVL_LEFT]);
@@ -839,8 +839,8 @@ bool_t avl_verify_tree(const avlTree_t	*tree)
 
 		while(curr)
 		{
-				int_t l = __calc_height(curr->child[AVL_LEFT]);
-				int_t r = __calc_height(curr->child[AVL_RIGHT]);
+				ar_int_t l = __calc_height(curr->child[AVL_LEFT]);
+				ar_int_t r = __calc_height(curr->child[AVL_RIGHT]);
 
 				if(curr->bf != (r - l))
 				{
@@ -887,7 +887,7 @@ void	avl_test_insert()
 {
 		avlTree_t		tree;
 		avlNode_t		*node;
-		int_t			i;
+		ar_int_t			i;
 		
 		avl_init(&tree);
 
@@ -925,16 +925,16 @@ void	avl_test_insert()
 void	avl_test_remove()
 {
 		avlTree_t		tree;
-		int_t			*rec;
-		int_t			i;
+		ar_int_t			*rec;
+		ar_int_t			i;
 		
-		rec = AR_NEWARR0(int_t, INSERT_CNT);
+		rec = AR_NEWARR0(ar_int_t, INSERT_CNT);
 
 		avl_init(&tree);
 
 		for(i = 0; i < INSERT_CNT; ++i)
 		{
-				int_t n = rand()%999999;
+				ar_int_t n = rand()%999999;
 				avl_insert_equal(&tree, n);
 				rec[i] = n;
 		}

@@ -182,7 +182,7 @@ void matrix_test()
 		AR_CopyMatrix(mat2, mat);
 		__print_matrix(mat);
 
-		int_t ret = AR_CompareMatrix(mat, mat2, DBL_EPSILON);
+		ar_int_t ret = AR_CompareMatrix(mat, mat2, DBL_EPSILON);
 		AR_printf(L"cmp == %d\r\n", ret);
 
 		AR_NegateMatrix(mat2);
@@ -300,7 +300,7 @@ void matrix_test()
 
 				while(AR_GetMatrixNumColumns(mat) > 1)
 				{
-						uint_32_t n = AR_rand32() % AR_GetMatrixNumColumns(mat);
+						ar_uint_32_t n = AR_rand32() % AR_GetMatrixNumColumns(mat);
 						AR_printf(L"remove %d\r\n", n);
 						AR_RemoveMatrixColumn(mat, n);
 						__print_matrix(mat);

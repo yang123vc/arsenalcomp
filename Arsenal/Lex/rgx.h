@@ -222,10 +222,10 @@ struct __regex_instruction_tag
 		rgxIns_t		*left;
 		rgxIns_t		*right;
 
-		int_t			mark;
+		ar_int_t			mark;
 
 		union{
-				int_t			final;
+				ar_int_t			final;
 
 				size_t	fix_count;
 
@@ -260,10 +260,10 @@ typedef struct __thread_tag
 		const wchar_t			*sp;
 		size_t					line;
 		size_t					col;
-		uint_32_t				act;
+		ar_uint_32_t				act;
 }rgxThread_t;
 
-rgxThread_t		RGX_BuildThread(rgxIns_t *pc, const wchar_t *sp, size_t x, size_t y, uint_32_t act);
+rgxThread_t		RGX_BuildThread(rgxIns_t *pc, const wchar_t *sp, size_t x, size_t y, ar_uint_32_t act);
 
 #define AR_RGX_MAX_THREAD_CNT	512
 
@@ -293,7 +293,7 @@ struct __regex_program_tag
 		size_t					count;
 		
 		rgxIns_t				*pc;
-		int_t					mark;
+		ar_int_t					mark;
 		
 		rgxThreadList_t			*curr;
 		rgxThreadList_t			*next;

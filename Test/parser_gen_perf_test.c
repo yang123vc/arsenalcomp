@@ -39,7 +39,7 @@ static void javascript_grammar_test()
 {		
 
 		AR_printf(L"begin javascript_grammar_test\r\n");
-		uint_64_t sum = 0;
+		ar_uint_64_t sum = 0;
 		std::vector<lex_t*>				vl;
 		std::vector<psrGrammar_t*>		vg;
 		std::vector<const parser_t*>	vp;
@@ -47,7 +47,7 @@ static void javascript_grammar_test()
 		for(int i = 0; i < 10; ++i)
 		{
 				psrGrammar_t	*gmr;
-				uint_64_t		beg, end;
+				ar_uint_64_t		beg, end;
 				beg = AR_GetTime_Milliseconds();
 				lex_t *lex = __javascript_build_lex();
 				gmr = __javascript_build_grammar(&__g_handler);
@@ -87,7 +87,7 @@ static void sql_grammar_test()
 {		
 
 		AR_printf(L"begin sql_grammar_test\r\n");
-		uint_64_t sum = 0;
+		ar_uint_64_t sum = 0;
 		std::vector<lex_t*>				vl;
 		std::vector<psrGrammar_t*>		vg;
 		std::vector<const parser_t*>	vp;
@@ -95,7 +95,7 @@ static void sql_grammar_test()
 		for(int i = 0; i < 10; ++i)
 		{
 				psrGrammar_t	*gmr;
-				uint_64_t		beg, end;
+				ar_uint_64_t		beg, end;
 				beg = AR_GetTime_Milliseconds();
 				lex_t *lex = __sql_build_lex();
 				gmr = __sql_build_grammar(&__g_handler);

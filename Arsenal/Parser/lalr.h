@@ -45,7 +45,7 @@ typedef struct __lalr_config_list_tag
 {
 		lalrConfigNode_t		*head;
 		lalrConfigNode_t		*tail;
-		uint_32_t				count;
+		ar_uint_32_t				count;
 }lalrConfigList_t;
 
 
@@ -62,7 +62,7 @@ void					Parser_UnionConfigList(lalrConfigList_t *l, lalrConfigList_t *r);
 
 
 void					Parser_SortConfigList(lalrConfigList_t *l);
-int_t					Parser_CompConfigList(const lalrConfigList_t *l, const lalrConfigList_t *r);
+ar_int_t					Parser_CompConfigList(const lalrConfigList_t *l, const lalrConfigList_t *r);
 
 lalrConfig_t*			Parser_FindFromConfigList(lalrConfigList_t *lst, size_t rule_num, size_t delim);
 
@@ -76,8 +76,8 @@ lalrConfig_t*			Parser_InsertToConfigListByValue(lalrConfigList_t *lst, size_t r
 
 typedef struct __lalr_config_follow_set_tag
 {
-		uint_8_t		*bit_set;
-		uint_16_t		bit_cnt;
+		ar_uint_8_t		*bit_set;
+		ar_uint_16_t		bit_cnt;
 }lalrBitSet_t;
 
 void	Parser_InitBitSet(lalrBitSet_t *bs, size_t nbits);
@@ -93,8 +93,8 @@ arStatus_t	Parser_UnionBitSet(lalrBitSet_t *dest, const lalrBitSet_t *src);
 struct __lalr_config_tag
 {
 		bool_t					is_completed;
-		uint_8_t				delim;
-		uint_16_t				rule_num;
+		ar_uint_8_t				delim;
+		ar_uint_16_t				rule_num;
 		
 		lalrConfigList_t		*forward;
 		lalrConfigList_t		*backward;
@@ -105,7 +105,7 @@ struct __lalr_config_tag
 
 arStatus_t		Parser_InitConfig(lalrConfig_t *config, size_t rule_num, size_t delim, const psrGrammar_t *grammar);
 void			Parser_UnInitConfig(lalrConfig_t *config);
-int_t			Parser_CompConfig(const lalrConfig_t *l, const lalrConfig_t *r);
+ar_int_t			Parser_CompConfig(const lalrConfig_t *l, const lalrConfig_t *r);
 
 
 
@@ -178,7 +178,7 @@ void			Parser_UnInitStateSet(lalrStateSet_t *set);
 
 
 lalrState_t*	Parser_FindStateByBasis(lalrStateSet_t *set, lalrConfigList_t *basis);
-int_t			Parser_IndexOfStateSet(const lalrStateSet_t *set, const lalrState_t *state);
+ar_int_t			Parser_IndexOfStateSet(const lalrStateSet_t *set, const lalrState_t *state);
 
 arStatus_t		Parser_InsertToStateSet(lalrStateSet_t *set, lalrState_t *state);
 arStatus_t		Parser_CollectState(lalrStateSet_t *empty_set, lalrState_t *start);

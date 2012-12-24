@@ -106,7 +106,7 @@ static void __emit_code(rgxProg_t *prog, const rgxNode_t *node)
 		case RGX_FINAL_T:
 		{
 				prog->pc->opcode = RGX_MATCH_I;
-				prog->pc->final = (int_t)node->final_val;
+				prog->pc->final = (ar_int_t)node->final_val;
 				prog->pc++;/*count = 1*/
 		}
 				break;

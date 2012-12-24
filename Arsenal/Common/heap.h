@@ -32,10 +32,10 @@ AR_NAMESPACE_BEGIN
 
 #define SMALL_ALIGN(_bytes)		(AR_ALIGN_SIZE( ((_bytes) + SMALL_HEADER_SIZE) ) - SMALL_HEADER_SIZE )
 
-#define SMALL_HEADER_SIZE		((size_t)(sizeof(byte_t) + sizeof(byte_t)))
-#define MEDIUM_HEADER_SIZE		((size_t) ( sizeof(mediumEntry_t) + sizeof(byte_t)))
+#define SMALL_HEADER_SIZE		((size_t)(sizeof(ar_byte_t) + sizeof(ar_byte_t)))
+#define MEDIUM_HEADER_SIZE		((size_t) ( sizeof(mediumEntry_t) + sizeof(ar_byte_t)))
 #define MEDIUM_SMALLEST_SIZE	(AR_ALIGN_SIZE( 256 ) + AR_ALIGN_SIZE(MEDIUM_HEADER_SIZE))
-#define LARGE_HEADER_SIZE		((size_t)(sizeof(size_t*) + sizeof(byte_t)))
+#define LARGE_HEADER_SIZE		((size_t)(sizeof(size_t*) + sizeof(ar_byte_t)))
 
 
 #define HEAP_SMALL_ALLOC		0xaa
@@ -57,8 +57,8 @@ void			AR_FreeToHeap(arHeap_t *heap, void *ptr);
 
 typedef struct __arsenal_heap_usage_tag
 {
-		uint_64_t	acutal_mem_used;
-		uint_64_t	peak_mem_used;
+		ar_uint_64_t	acutal_mem_used;
+		ar_uint_64_t	peak_mem_used;
 }arHeapUsage_t;
 
 arHeapUsage_t	AR_GetHeapMemUsage(const arHeap_t *heap);

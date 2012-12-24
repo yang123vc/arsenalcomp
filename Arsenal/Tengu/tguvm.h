@@ -38,7 +38,7 @@ typedef struct	__insctruction_tag		tguVMIns_t;
 
 
 
-typedef int_64_t								tguVMInteger_t;
+typedef ar_int_64_t								tguVMInteger_t;
 
 typedef	double									tguVMFloat_t;
 
@@ -126,7 +126,7 @@ enum
 
 typedef struct __tgu_object_tag
 {
-		uint_8_t		type;
+		ar_uint_8_t		type;
 		tguVMValue_t	val;
 }tguVMObject_t;
 
@@ -175,7 +175,7 @@ struct __tengu_vm_string_tag
 
 		wchar_t					*str;
 		size_t					n;
-		uint_t					hash;
+		ar_uint_t					hash;
 };
 
 
@@ -191,12 +191,12 @@ struct __tengu_vm_userdata_tag
 		tguVMUserData_t			*next;
 
 		void					*data;
-		int_t					tag;
+		ar_int_t					tag;
 };
 
 
 
-tguVMUserData_t*	TGU_CreateVMUserData(tguMachine_t *vm, void *user_data, int_t tag);
+tguVMUserData_t*	TGU_CreateVMUserData(tguMachine_t *vm, void *user_data, ar_int_t tag);
 void				TGU_DestroyVMUserData(tguMachine_t *vm, tguVMUserData_t *data);
 
 
@@ -236,7 +236,7 @@ const tguVMObject_t*	TGU_GetVMList(tguMachine_t *vm, tguVMList_t *lst, size_t id
 arStatus_t				TGU_AppendVMList(tguMachine_t *vm, tguVMList_t *lst, tguVMObject_t *obj);
 arStatus_t				TGU_RemoveVMList(tguMachine_t *vm, tguVMList_t *lst, size_t idx);
 
-int_t					TGU_FindVMList(tguVMList_t	 *lst, tguVMObject_t *obj);
+ar_int_t					TGU_FindVMList(tguVMList_t	 *lst, tguVMObject_t *obj);
 size_t					TGU_GetVMListSize(tguVMList_t	 *lst);
 
 
@@ -459,9 +459,9 @@ typedef enum
 
 struct	__insctruction_tag
 {
-		uint_8_t		op;
-		uint_8_t		arg1;
-		int_16_t		arg2;
+		ar_uint_8_t		op;
+		ar_uint_8_t		arg1;
+		ar_int_16_t		arg2;
 };
 
 

@@ -38,7 +38,7 @@ static void parse_code(lex_t *lex, const wchar_t *sources)
 		{
 				
 				size_t tok_cnt = 0;
-				uint_64_t beg, end;
+				ar_uint_64_t beg, end;
 
 				beg = AR_GetTime_Microseconds();
 				//DWORD beg, end;
@@ -116,7 +116,7 @@ void ray_test()
 {
 		
 		rayParser_t		*parser;
-		uint_64_t beg, end;
+		ar_uint_64_t beg, end;
 
 		
 		beg = AR_GetTime_Milliseconds();

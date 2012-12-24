@@ -608,7 +608,7 @@ END_POINT:
 /***********************************************************/
 
 
-rgxThread_t		RGX_BuildThread(rgxIns_t *pc, const wchar_t *sp, size_t x, size_t y, uint_32_t act)
+rgxThread_t		RGX_BuildThread(rgxIns_t *pc, const wchar_t *sp, size_t x, size_t y, ar_uint_32_t act)
 {
 		rgxThread_t tmp;
 		AR_ASSERT(pc != NULL && sp != NULL);

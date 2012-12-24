@@ -23,14 +23,14 @@ AR_NAMESPACE_BEGIN
 
 
 
-typedef int_t (*cmp_func_t)(const void *l, const void *r);
+typedef ar_int_t (*cmp_func_t)(const void *l, const void *r);
 
 
 
 
-void __insertion_sort(byte_t *lo, byte_t *hi, size_t width, cmp_func_t cmp_f)
+void __insertion_sort(ar_byte_t *lo, ar_byte_t *hi, size_t width, cmp_func_t cmp_f)
 {
-		byte_t *p,*t;
+		ar_byte_t *p,*t;
 		AR_ASSERT(lo != NULL && hi != NULL && lo < hi && width > 0 && cmp_f != NULL);
 		
 		for(p = hi; p > lo; p -= width)
@@ -57,19 +57,19 @@ void __insertion_sort(byte_t *lo, byte_t *hi, size_t width, cmp_func_t cmp_f)
 
 typedef struct __qsort_range_tag
 {
-		byte_t*	l_beg;
-		byte_t*	l_end;
+		ar_byte_t*	l_beg;
+		ar_byte_t*	l_end;
 
-		byte_t*	r_beg;
-		byte_t*	r_end;
+		ar_byte_t*	r_beg;
+		ar_byte_t*	r_end;
 }qsort_range_t;
 
 
-static qsort_range_t __partition(byte_t *lo, byte_t *hi, size_t width, cmp_func_t cmp_f)
+static qsort_range_t __partition(ar_byte_t *lo, ar_byte_t *hi, size_t width, cmp_func_t cmp_f)
 {
 		qsort_range_t res;
 		
-		byte_t *mid, *loguy, *higuy;
+		ar_byte_t *mid, *loguy, *higuy;
 
 		AR_ASSERT(lo != NULL && hi != NULL && lo < hi && width > 0 && cmp_f != NULL);
 		
@@ -160,10 +160,10 @@ static qsort_range_t __partition(byte_t *lo, byte_t *hi, size_t width, cmp_func_
 
 
 
-static void __qsort(byte_t *lo, byte_t *hi, size_t width, cmp_func_t cmp_f)
+static void __qsort(ar_byte_t *lo, ar_byte_t *hi, size_t width, cmp_func_t cmp_f)
 {
-		byte_t	*lo_stk[__QSORT_STKSIZE], *hi_stk[__QSORT_STKSIZE];/*这玩意儿要还是溢出了也没得办法~~*/
-		int_t	stk_top = 0;
+		ar_byte_t	*lo_stk[__QSORT_STKSIZE], *hi_stk[__QSORT_STKSIZE];/*这玩意儿要还是溢出了也没得办法~~*/
+		ar_int_t	stk_top = 0;
 		
 		qsort_range_t	range;
 		AR_ASSERT(lo != NULL && hi != NULL && lo <= hi && width > 0 && cmp_f != NULL);
@@ -228,23 +228,23 @@ __RECURSE_POINT:
 
 
 
-void AR_qsort(void *base, size_t num, size_t width, int_t (*cmp_f)(const void*, const void*))
+void AR_qsort(void *base, size_t num, size_t width, ar_int_t (*cmp_f)(const void*, const void*))
 {
 		AR_ASSERT(base != NULL && width > 0 && cmp_f != NULL);
 		
 		if(num > 0)
 		{
-				__qsort((byte_t*)base, (byte_t*)base + (width * (num-1)), width,cmp_f);
+				__qsort((ar_byte_t*)base, (ar_byte_t*)base + (width * (num-1)), width,cmp_f);
 		}
 }
 
 /*
-int_t AR_bsearch(const void *key, const void *base, size_t num, size_t width, int_t (*cmp_f)(const void*, const void*))
+ar_int_t AR_bsearch(const void *key, const void *base, size_t num, size_t width, ar_int_t (*cmp_f)(const void*, const void*))
 {
-		int_t l,r,m,cmp;
+		ar_int_t l,r,m,cmp;
 		AR_ASSERT(base != NULL && width > 0 && cmp_f != NULL && key != NULL);
 
-		l = 0; r = (int_t)(num -1);
+		l = 0; r = (ar_int_t)(num -1);
 
 		while(l <= r)
 		{
@@ -269,15 +269,15 @@ int_t AR_bsearch(const void *key, const void *base, size_t num, size_t width, in
 */
 
 
-int_t AR_bsearch(const void *key, const void *base, size_t num, size_t width, int_t (*cmp_f)(const void*, const void*))
+ar_int_t AR_bsearch(const void *key, const void *base, size_t num, size_t width, ar_int_t (*cmp_f)(const void*, const void*))
 {
-		const byte_t	*lo, *hi, *mid;
+		const ar_byte_t	*lo, *hi, *mid;
 		size_t	half;
-		int_t	result;
+		ar_int_t	result;
 		AR_ASSERT(base != NULL && width > 0 && cmp_f != NULL && key != NULL);
 
-		lo = (const byte_t*)base; 
-		hi = (const byte_t*)base + (num - 1) * width;
+		lo = (const ar_byte_t*)base; 
+		hi = (const ar_byte_t*)base + (num - 1) * width;
 		
 		while(lo <= hi)
 		{
@@ -288,7 +288,7 @@ int_t AR_bsearch(const void *key, const void *base, size_t num, size_t width, in
 						
 						if(result == 0)
 						{
-								return (mid - (const byte_t*)base) / width;
+								return (mid - (const ar_byte_t*)base) / width;
 
 						}else if(result < 0)
 						{
@@ -304,7 +304,7 @@ int_t AR_bsearch(const void *key, const void *base, size_t num, size_t width, in
 						result = cmp_f(key, (const void*)lo);
 						if(result == 0)
 						{
-								return (lo - (const byte_t*)base) / width;
+								return (lo - (const ar_byte_t*)base) / width;
 						}else
 						{
 								break;
@@ -325,12 +325,12 @@ int_t AR_bsearch(const void *key, const void *base, size_t num, size_t width, in
 
 /*出自：http://www.azillionmonkeys.com/qed/hash.html*/
 
-#define get16bits(d) ((((uint_32_t)(((const uint_8_t *)(d))[1])) << 8)\
-                       +(uint_32_t)(((const uint_8_t *)(d))[0]) )
+#define get16bits(d) ((((ar_uint_32_t)(((const ar_uint_8_t *)(d))[1])) << 8)\
+                       +(ar_uint_32_t)(((const ar_uint_8_t *)(d))[0]) )
  
-uint_32_t __super_fast_hash_32(const byte_t * data, size_t len)
+ar_uint_32_t __super_fast_hash_32(const ar_byte_t * data, size_t len)
 {
-		uint_32_t hash, tmp;
+		ar_uint_32_t hash, tmp;
 		size_t rem;
 		AR_ASSERT(data != NULL && len > 0);
 		
@@ -339,7 +339,7 @@ uint_32_t __super_fast_hash_32(const byte_t * data, size_t len)
 				return 0;
 		}
 		
-		hash = (uint_32_t)len;
+		hash = (ar_uint_32_t)len;
 
 		rem = len & 3;
 		len >>= 2;
@@ -351,7 +351,7 @@ uint_32_t __super_fast_hash_32(const byte_t * data, size_t len)
 				hash  += get16bits (data);
 				tmp   = (get16bits (data+2) << 11) ^ hash;
 				hash  = (hash << 16) ^ tmp;
-				data  += 2 * sizeof(uint_16_t);
+				data  += 2 * sizeof(ar_uint_16_t);
 				hash  += hash >> 11;
 		}
 		
@@ -360,7 +360,7 @@ uint_32_t __super_fast_hash_32(const byte_t * data, size_t len)
 		{
 		case 3: hash += get16bits (data);
 				hash ^= hash << 16;
-				hash ^= data[sizeof (uint_16_t)] << 18;
+				hash ^= data[sizeof (ar_uint_16_t)] << 18;
 				hash += hash >> 11;
 				break;
 		case 2: hash += get16bits (data);
@@ -384,24 +384,24 @@ uint_32_t __super_fast_hash_32(const byte_t * data, size_t len)
 
 
 
-uint_64_t __murmur_hash_64_a(const byte_t *key, size_t len, uint_64_t seed)
+ar_uint_64_t __murmur_hash_64_a(const ar_byte_t *key, size_t len, ar_uint_64_t seed)
 {
-		static const uint_64_t m = AR_BIGNUM_U64(0xc6a4a7935bd1e995);
-		static const uint_64_t r = 47;
-		uint_64_t h;
-		const uint_64_t *data;
-		const uint_64_t *end;
+		static const ar_uint_64_t m = AR_BIGNUM_U64(0xc6a4a7935bd1e995);
+		static const ar_uint_64_t r = 47;
+		ar_uint_64_t h;
+		const ar_uint_64_t *data;
+		const ar_uint_64_t *end;
 		const unsigned char * data2;
 		AR_ASSERT(key != NULL && len > 0);
 
 		h = seed ^ (len * m);
 		
-		data = (const uint_64_t *)key;
+		data = (const ar_uint_64_t *)key;
 		end = data + (len / 8);
 
 		while(data != end)
 		{
-				uint_64_t k = *data++;
+				ar_uint_64_t k = *data++;
 
 				k *= m; 
 				k ^= k >> r; 
@@ -416,19 +416,19 @@ uint_64_t __murmur_hash_64_a(const byte_t *key, size_t len, uint_64_t seed)
 		switch(len & 7)
 		{
 		case 7: 
-				h ^= (uint_64_t)data2[6] << 48;
+				h ^= (ar_uint_64_t)data2[6] << 48;
 		case 6: 
-				h ^= (uint_64_t)data2[5] << 40;
+				h ^= (ar_uint_64_t)data2[5] << 40;
 		case 5: 
-				h ^= (uint_64_t)data2[4] << 32;
+				h ^= (ar_uint_64_t)data2[4] << 32;
 		case 4: 
-				h ^= (uint_64_t)data2[3] << 24;
+				h ^= (ar_uint_64_t)data2[3] << 24;
 		case 3: 
-				h ^= (uint_64_t)data2[2] << 16;
+				h ^= (ar_uint_64_t)data2[2] << 16;
 		case 2: 
-				h ^= (uint_64_t)data2[1] << 8;
+				h ^= (ar_uint_64_t)data2[1] << 8;
 		case 1: 
-				h ^= (uint_64_t)data2[0];
+				h ^= (ar_uint_64_t)data2[0];
 				h *= m;
 				break;
 		default:
@@ -442,7 +442,7 @@ uint_64_t __murmur_hash_64_a(const byte_t *key, size_t len, uint_64_t seed)
 		return h;
 } 
 
-uint_t AR_memhash(const byte_t *data, size_t len)
+ar_uint_t AR_memhash(const ar_byte_t *data, size_t len)
 {
 #if(AR_ARCH_VER == ARCH_64)
 		return __murmur_hash_64_a(data, len, 0);

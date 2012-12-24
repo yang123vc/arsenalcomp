@@ -47,14 +47,14 @@ const wchar_t*	Ini_GetComment(const iniObject_t *obj, const wchar_t *sect, const
 
 
 
-int_64_t		Ini_GetInt(const iniObject_t *obj, const wchar_t *sect, const wchar_t *key, int_64_t default_data);
-uint_64_t		Ini_GetUInt(const iniObject_t *obj, const wchar_t *sect, const wchar_t *key, uint_64_t default_data);
+ar_int_64_t		Ini_GetInt(const iniObject_t *obj, const wchar_t *sect, const wchar_t *key, ar_int_64_t default_data);
+ar_uint_64_t		Ini_GetUInt(const iniObject_t *obj, const wchar_t *sect, const wchar_t *key, ar_uint_64_t default_data);
 double			Ini_GetFloat(const iniObject_t *obj, const wchar_t *sect, const wchar_t *key, double default_data);
 
 
 
-arStatus_t			Ini_SetInt(iniObject_t *obj, const wchar_t *sect, const wchar_t *key, int_64_t val, const wchar_t *comment);
-arStatus_t			Ini_SetUInt(iniObject_t *obj, const wchar_t *sect, const wchar_t *key, uint_64_t val, const wchar_t *comment);
+arStatus_t			Ini_SetInt(iniObject_t *obj, const wchar_t *sect, const wchar_t *key, ar_int_64_t val, const wchar_t *comment);
+arStatus_t			Ini_SetUInt(iniObject_t *obj, const wchar_t *sect, const wchar_t *key, ar_uint_64_t val, const wchar_t *comment);
 arStatus_t			Ini_SetFloat(iniObject_t *obj, const wchar_t *sect, const wchar_t *key, double val, const wchar_t *comment);
 
 

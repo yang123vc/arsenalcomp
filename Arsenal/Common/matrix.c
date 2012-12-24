@@ -191,7 +191,7 @@ size_t			AR_GetMatrixNumColumns(const arMatrix_t *mat)
 		return mat->ncols;
 }
 
-int_t			AR_CompareMatrix(const arMatrix_t *l, const arMatrix_t *r, double epsilon)
+ar_int_t			AR_CompareMatrix(const arMatrix_t *l, const arMatrix_t *r, double epsilon)
 {
 		size_t i;
 		AR_ASSERT(l != NULL && r != NULL);
@@ -1616,7 +1616,7 @@ void			AR_ReduceMatrixToEchelonFormSelf(arMatrix_t *mat, size_t *index)
 
 
 		size_t i,j,k,r,c;
-		int_t reduced_r;
+		ar_int_t reduced_r;
 		double d,max_val,t;
 
 		AR_ASSERT(mat != NULL);
@@ -1907,12 +1907,12 @@ arStatus_t			AR_InverseLowerTriangularMatrixSelf(arMatrix_t *mat)
 
 arStatus_t			AR_InverseUpperTriangularMatrixSelf(arMatrix_t *mat)
 {
-		int_t i,j,k;
+		ar_int_t i,j,k;
 		double d,sum,l,r;
 		AR_ASSERT(mat != NULL);
 		AR_ASSERT(mat->nrows == mat->ncols);
 
-		for(i = (int_t)(mat->nrows - 1); i >= 0; --i)
+		for(i = (ar_int_t)(mat->nrows - 1); i >= 0; --i)
 		{
 				d = AR_GetMatrixValue(mat, (size_t)i, (size_t)i);
 
@@ -1924,7 +1924,7 @@ arStatus_t			AR_InverseUpperTriangularMatrixSelf(arMatrix_t *mat)
 				d = 1.0 / d;
 				AR_SetMatrixValue(mat, i,i, d);
 
-				for(j = (int_t)(mat->nrows - 1); j > i; --j)
+				for(j = (ar_int_t)(mat->nrows - 1); j > i; --j)
 				{
 						sum = 0.0;
 						for(k = j; k > i; --k)
@@ -2037,7 +2037,7 @@ arStatus_t			AR_InverseMatrixByGaussJordanSelf(arMatrix_t *mat)
 		
 		size_t i, j, k, r, c;
 		double d, max_val, t;
-		int_t x;
+		ar_int_t x;
 		size_t *col_index, *row_index;
 		bool_t *pivot_mark;
 
@@ -2139,7 +2139,7 @@ arStatus_t			AR_InverseMatrixByGaussJordanSelf(arMatrix_t *mat)
 		}
 
 		
-		for(x = (int_t)(mat->nrows - 1); x >= 0; x--)
+		for(x = (ar_int_t)(mat->nrows - 1); x >= 0; x--)
 		{
 				if(row_index[x] != col_index[x])
 				{
@@ -2212,7 +2212,7 @@ void			AR_TriDiagonalClearMatrixSelf(arMatrix_t *mat)
 arStatus_t			AR_TriDiagonalSolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t *b)
 {
 		size_t i;
-		int_t k;
+		ar_int_t k;
 		
 		double *tmp, d,t;
 		arStatus_t status;
@@ -2269,7 +2269,7 @@ arStatus_t			AR_TriDiagonalSolveMatrix(const arMatrix_t *mat, arVector_t *x, con
 
 
 		
-		for(k = (int_t)mat->nrows - 2; k >= 0; k--)
+		for(k = (ar_int_t)mat->nrows - 2; k >= 0; k--)
 		{
 				t = AR_GetVectorValue(x,k);
 				t = t - tmp[k + 1] * AR_GetVectorValue(x, k + 1);
@@ -2552,7 +2552,7 @@ arStatus_t		AR_LUFactorMatrixSelf(arMatrix_t *mat, size_t *index, double *det)
 
 arStatus_t			AR_LUSolveMatrix(const arMatrix_t *mat, const size_t *index, arVector_t *x,const arVector_t *b)
 {
-		int_t i,j;
+		ar_int_t i,j;
 		double s;
 		arStatus_t status;
 		AR_ASSERT(mat != NULL && b != NULL && x != NULL);
@@ -2567,7 +2567,7 @@ arStatus_t			AR_LUSolveMatrix(const arMatrix_t *mat, const size_t *index, arVect
 				return status;
 		}
 
-		for(i = 0; i < (int_t)mat->nrows; ++i)
+		for(i = 0; i < (ar_int_t)mat->nrows; ++i)
 		{
 				if(index)
 				{
@@ -2586,10 +2586,10 @@ arStatus_t			AR_LUSolveMatrix(const arMatrix_t *mat, const size_t *index, arVect
 		}
 
 
-		for(i = (int_t)AR_GetMatrixNumRows(mat) - 1; i >= 0; --i)
+		for(i = (ar_int_t)AR_GetMatrixNumRows(mat) - 1; i >= 0; --i)
 		{
 				s = AR_GetVectorValue(x, i);
-				for(j = i + 1; j < (int_t)mat->nrows; ++j)
+				for(j = i + 1; j < (ar_int_t)mat->nrows; ++j)
 				{
 						s -= AR_GetMatrixValue(mat, i,j) * AR_GetVectorValue(x, j);
 				}
@@ -2905,7 +2905,7 @@ END_POINT:
 
 void			AR_LDLTSolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t *b)
 {
-		int_t i, j;
+		ar_int_t i, j;
 		double sum;
 
 		AR_ASSERT(mat->nrows == mat->ncols);
@@ -2915,7 +2915,7 @@ void			AR_LDLTSolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t
 		AR_ZeroVector(x);
 
 		
-		for (i = 0; i < (int_t)mat->nrows; i++) 
+		for (i = 0; i < (ar_int_t)mat->nrows; i++) 
 		{
 				sum = AR_GetVectorValue(b,(size_t)i);
 				
@@ -2928,18 +2928,18 @@ void			AR_LDLTSolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t
 		}
 
 		
-		for (i = 0; i < (int_t)mat->nrows; i++)
+		for (i = 0; i < (ar_int_t)mat->nrows; i++)
 		{ 
 				sum = AR_GetVectorValue(x,(size_t)i);
 				AR_SetVectorValue(x,i,sum / AR_GetMatrixValue(mat, (size_t)i,(size_t)i));
 		}
 
 
-		for(i = (int_t)mat->nrows - 1; i >= 0; i--)
+		for(i = (ar_int_t)mat->nrows - 1; i >= 0; i--)
 		{
 				sum = AR_GetVectorValue(x,i);
 
-				for (j = i + 1; j < (int_t)mat->nrows; j++)
+				for (j = i + 1; j < (ar_int_t)mat->nrows; j++)
 				{
 						sum = sum - AR_GetMatrixValue(mat, j,i) * AR_GetVectorValue(x, j);
 				}
@@ -3280,7 +3280,7 @@ G'x = z;
 arStatus_t			AR_CholeskySolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t *b)
 {
 		arStatus_t status;
-		int_t i,j;
+		ar_int_t i,j;
 		double sum;
 
 		AR_ASSERT(mat->nrows == mat->ncols);
@@ -3293,7 +3293,7 @@ arStatus_t			AR_CholeskySolveMatrix(const arMatrix_t *mat, arVector_t *x, const 
 				return status;
 		}
 
-		for(i = 0; i < (int_t)mat->nrows; ++i)
+		for(i = 0; i < (ar_int_t)mat->nrows; ++i)
 		{
 				sum = AR_GetVectorValue(b, (size_t)i);
 
@@ -3307,11 +3307,11 @@ arStatus_t			AR_CholeskySolveMatrix(const arMatrix_t *mat, arVector_t *x, const 
 				AR_SetVectorValue(x, (size_t)i, sum / AR_GetMatrixValue(mat, (size_t)i,(size_t)i));
 		}
 
-		for(i = (int_t)mat->nrows - 1; i >= 0; --i)
+		for(i = (ar_int_t)mat->nrows - 1; i >= 0; --i)
 		{
 				sum = AR_GetVectorValue(x, (size_t)i);
 
-				for(j = i + 1; j < (int_t)mat->nrows; ++j)
+				for(j = i + 1; j < (ar_int_t)mat->nrows; ++j)
 				{
 						sum -= AR_GetMatrixValue(mat,(size_t)j,(size_t)i) * AR_GetVectorValue(x, j);
 				}

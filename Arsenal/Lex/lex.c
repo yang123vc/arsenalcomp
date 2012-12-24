@@ -274,7 +274,7 @@ arStatus_t	Lex_InsertRule(lex_t *lex, const wchar_t *rule, const lexAction_t *ac
 				return AR_E_NOMEM;
 		}
 
-		final->final_val = (int_t)action->value;
+		final->final_val = (ar_int_t)action->value;
 
 		cat->left = res.node;
 		cat->right = final;
@@ -319,7 +319,7 @@ arStatus_t	Lex_Insert(lex_t *lex, const wchar_t *input)
 				}
 
 				act.priority = act.value = 0;
-				p = AR_wtou(p, (uint_t*)&act.value, 10);
+				p = AR_wtou(p, (ar_uint_t*)&act.value, 10);
 				if(p == NULL)
 				{
 						return AR_E_MALFORMAT;
@@ -329,7 +329,7 @@ arStatus_t	Lex_Insert(lex_t *lex, const wchar_t *input)
 
 				if(*p == L',')
 				{
-						p = AR_wtou(++p, (uint_t*)&act.priority, 10);
+						p = AR_wtou(++p, (ar_uint_t*)&act.priority, 10);
 						if(p == NULL)
 						{
 								return AR_E_MALFORMAT;

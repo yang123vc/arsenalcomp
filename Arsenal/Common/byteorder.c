@@ -19,11 +19,11 @@ AR_NAMESPACE_BEGIN
 
 
 
-int_16_t		AR_BYTEFLIP_16(int_16_t val)
+ar_int_16_t		AR_BYTEFLIP_16(ar_int_16_t val)
 {
-		byte_t t;
+		ar_byte_t t;
 		union{
-				byte_t b[2]; int_16_t v;
+				ar_byte_t b[2]; ar_int_16_t v;
 		}v16;
 		v16.v = val;
 		t = v16.b[0];
@@ -32,11 +32,11 @@ int_16_t		AR_BYTEFLIP_16(int_16_t val)
 		return v16.v;
 }
 
-uint_16_t		AR_BYTEFLIP_U16(uint_16_t val)
+ar_uint_16_t		AR_BYTEFLIP_U16(ar_uint_16_t val)
 {
-		byte_t t;
+		ar_byte_t t;
 		union{
-				byte_t b[2]; uint_16_t v;
+				ar_byte_t b[2]; ar_uint_16_t v;
 		}v16;
 		v16.v = val;
 		t = v16.b[0];
@@ -46,11 +46,11 @@ uint_16_t		AR_BYTEFLIP_U16(uint_16_t val)
 }
 
 
-int_32_t		AR_BYTEFLIP_32(int_32_t val)
+ar_int_32_t		AR_BYTEFLIP_32(ar_int_32_t val)
 {
-		byte_t t;
+		ar_byte_t t;
 		union{
-				byte_t b[4]; int_32_t v;
+				ar_byte_t b[4]; ar_int_32_t v;
 		}v32;
 		v32.v = val;
 		t = v32.b[0];
@@ -63,11 +63,11 @@ int_32_t		AR_BYTEFLIP_32(int_32_t val)
 		return v32.v;
 }
 
-uint_32_t		AR_BYTEFLIP_U32(uint_32_t val)
+ar_uint_32_t		AR_BYTEFLIP_U32(ar_uint_32_t val)
 {
-		byte_t t;
+		ar_byte_t t;
 		union{
-				byte_t b[4]; uint_32_t v;
+				ar_byte_t b[4]; ar_uint_32_t v;
 		}v32;
 		v32.v = val;
 		t = v32.b[0];
@@ -81,11 +81,11 @@ uint_32_t		AR_BYTEFLIP_U32(uint_32_t val)
 }
 
 
-int_64_t		AR_BYTEFLIP_64(int_64_t val)
+ar_int_64_t		AR_BYTEFLIP_64(ar_int_64_t val)
 {
-		byte_t t;
+		ar_byte_t t;
 		union{
-				byte_t b[8]; int_64_t v;
+				ar_byte_t b[8]; ar_int_64_t v;
 		}v64;
 		v64.v = val;
 		t = v64.b[0];
@@ -111,11 +111,11 @@ int_64_t		AR_BYTEFLIP_64(int_64_t val)
 }
 
 
-uint_64_t		AR_BYTEFLIP_U64(uint_64_t val)
+ar_uint_64_t		AR_BYTEFLIP_U64(ar_uint_64_t val)
 {
-		byte_t t;
+		ar_byte_t t;
 		union{
-				byte_t b[8]; uint_64_t v;
+				ar_byte_t b[8]; ar_uint_64_t v;
 		}v64;
 		v64.v = val;
 		t = v64.b[0];

@@ -28,7 +28,7 @@ private:
 		EncodingType	m_encoding;
 
 		ARSpace::psrModeType_t	m_parser_mode;
-		uint_t					m_lexer_mode;
+		ar_uint_t					m_lexer_mode;
 private:
 		CString			m_src_cache;
 

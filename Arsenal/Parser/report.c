@@ -667,7 +667,7 @@ static const psrActionView_t*	Parser_CreateActionView(const psrActionTable_t *tb
 
 				for(k = 0; k < tbl->goto_col; ++k)
 				{
-						int_t state =  tbl->goto_tbl[AR_TBL_IDX_R(r, k, tbl->goto_col)];
+						ar_int_t state =  tbl->goto_tbl[AR_TBL_IDX_R(r, k, tbl->goto_col)];
 						msg = AR_vtow(L"%Id", state);
 
 						if(msg == NULL)

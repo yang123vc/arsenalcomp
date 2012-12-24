@@ -99,7 +99,7 @@ typedef struct node_tag
 		Field_t	*field;
 		Type_t		*type;
 		wchar_t	name[256];
-		uint_64_t	num;
+		ar_uint_64_t	num;
 		struct {
 			bool_t		is_tail;
 			wchar_t	*code;
@@ -110,7 +110,7 @@ typedef struct node_tag
 
 ast_node_t* create_anonymous_type()
 {
-	static uint_32_t	id = 0;
+	static ar_uint_32_t	id = 0;
 	ast_node_t	*node;
 	static wchar_t	name[128];
 	AR_swprintf(name, 128, L"anonymous_type_%u", id);

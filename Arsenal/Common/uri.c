@@ -29,7 +29,7 @@ struct __arsenal_uri_tag
 		arString_t		*path;
 		arString_t		*query;
 		arString_t		*fragment;
-		uint_16_t		port;
+		ar_uint_16_t		port;
 
 		bool_t			_parse_encoded;
 };
@@ -158,9 +158,9 @@ void			AR_SetURICodePage(arURI_t *uri, arCodePage_t cp)
 		uri->code_page = cp;
 }
 
-int_t			AR_CompURI(const arURI_t *l, const arURI_t *r)
+ar_int_t			AR_CompURI(const arURI_t *l, const arURI_t *r)
 {
-		int_t cmp;
+		ar_int_t cmp;
 		AR_ASSERT(l != NULL && r != NULL);
 		cmp = 0;
 		cmp =  AR_CompString(l->scheme, r->scheme);
@@ -232,7 +232,7 @@ static arStatus_t	__encode(arCodePage_t cp, const wchar_t *begin, const wchar_t 
 
 		for(s = str; *s != '\0'; ++s)
 		{
-				uint_8_t c = (uint_8_t)*s;
+				ar_uint_8_t c = (ar_uint_8_t)*s;
 
 				if( (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '-' || c == '_' || c == '.' || c == '~')
 				{
@@ -243,7 +243,7 @@ static arStatus_t	__encode(arCodePage_t cp, const wchar_t *begin, const wchar_t 
 						}
 				}else if(c <= 0x20 || c >= 0x7F || AR_strchr(ILLEGAL_S,c) != NULL || AR_strchr(reserved,c) != NULL)
 				{
-						status = AR_AppendFormatString(output, L"%%%02X", (uint_32_t)c);
+						status = AR_AppendFormatString(output, L"%%%02X", (ar_uint_32_t)c);
 						if(status != AR_S_YES)
 						{
 								goto END_POINT;
@@ -526,7 +526,7 @@ END_POINT:
 }
 
 
-static uint_16_t	__get_well_known_port(const arURI_t *uri)
+static ar_uint_16_t	__get_well_known_port(const arURI_t *uri)
 {
 		AR_ASSERT(uri != NULL);
 
@@ -807,7 +807,7 @@ static uriParseRet_t __parse_host_port(arURI_t *uri, const wchar_t *begin, const
 
 				if(AR_iswdigit(*s))
 				{
-						uint_32_t port;
+						ar_uint_32_t port;
 						const wchar_t *s_next;
 						
 						s_next = AR_wtou32_s(s, end, &port, 10);
@@ -822,7 +822,7 @@ static uriParseRet_t __parse_host_port(arURI_t *uri, const wchar_t *begin, const
 								__GOEND_IF_FAIL(false, AR_E_RANGE, s);
 						}
 
-						uri->port = (uint_16_t)port;
+						uri->port = (ar_uint_16_t)port;
 						s = s_next;
 				}else
 				{
@@ -1031,7 +1031,7 @@ arStatus_t		AR_GetURIHost(const arURI_t *uri, arString_t *str)
 		return AR_CopyString(str, uri->host);
 }
 
-uint_16_t		AR_GetURIPort(const arURI_t *uri)
+ar_uint_16_t		AR_GetURIPort(const arURI_t *uri)
 {
 		AR_ASSERT(uri != NULL);
 		return uri->port;
@@ -1081,7 +1081,7 @@ arStatus_t		AR_GetURIAuthority(const arURI_t *uri, arString_t *str)
 				status = AR_AppendString(str, L":");
 				__GOEND_IF_FAIL2(status == AR_S_YES, status);
 				
-				status = AR_AppendFormatString(str, L"%u", (uint_32_t)uri->port);
+				status = AR_AppendFormatString(str, L"%u", (ar_uint_32_t)uri->port);
 				__GOEND_IF_FAIL2(status == AR_S_YES, status);
 		}
 
@@ -1129,7 +1129,7 @@ arStatus_t		AR_GetURIEncodedAuthority(const arURI_t *uri, arString_t *str)
 				status = AR_AppendString(str, L":");
 				__GOEND_IF_FAIL2(status == AR_S_YES, status);
 				
-				status = AR_AppendFormatString(str, L"%u", (uint_32_t)uri->port);
+				status = AR_AppendFormatString(str, L"%u", (ar_uint_32_t)uri->port);
 				__GOEND_IF_FAIL2(status == AR_S_YES, status);
 		}
 
@@ -1293,7 +1293,7 @@ arStatus_t		AR_SetURIHost(arURI_t *uri, const wchar_t *str)
 }
 
 
-void			AR_SetURIPort(arURI_t *uri, uint_16_t port)
+void			AR_SetURIPort(arURI_t *uri, ar_uint_16_t port)
 {
 		AR_ASSERT(uri != NULL);
 		uri->port = port;
@@ -1981,14 +1981,14 @@ static void __item_destroy_func(void *data, void *ctx)
 }
 
 
-static uint_64_t	__item_hash_func(void *key, void *ctx)
+static ar_uint_64_t	__item_hash_func(void *key, void *ctx)
 {
         AR_ASSERT(key != NULL);
         AR_UNUSED(ctx);
-        return (uint_64_t)AR_wcshash((const wchar_t*)key);
+        return (ar_uint_64_t)AR_wcshash((const wchar_t*)key);
 }
 
-static int_t		__item_comp_func(void *l, void *r, void *ctx)
+static ar_int_t		__item_comp_func(void *l, void *r, void *ctx)
 {
         AR_ASSERT(l != NULL && r != NULL);
         AR_UNUSED(ctx);
@@ -2232,7 +2232,7 @@ static arStatus_t	__url_encode(arCodePage_t cp, const wchar_t *begin, const wcha
 
 		for(s = str; *s != '\0'; ++s)
 		{
-				uint_8_t c = (uint_8_t)*s;
+				ar_uint_8_t c = (ar_uint_8_t)*s;
 
 				if( (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9'))
 				{
@@ -2243,7 +2243,7 @@ static arStatus_t	__url_encode(arCodePage_t cp, const wchar_t *begin, const wcha
 						}
 				}else
 				{
-						status = AR_AppendFormatString(output, L"%%%02X", (uint_32_t)c);
+						status = AR_AppendFormatString(output, L"%%%02X", (ar_uint_32_t)c);
 						if(status != AR_S_YES)
 						{
 								goto END_POINT;

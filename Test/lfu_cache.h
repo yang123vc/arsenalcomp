@@ -23,8 +23,8 @@ typedef struct __cache_lfu_tag  cacheLFU_t;
 
 
 
-typedef uint_64_t		(*Cache_hash_func_t)(void *key, void *usr_ctx);
-typedef int_t			(*Cache_comp_func_t)(void *l, void *r, void *usr_ctx);
+typedef ar_uint_64_t		(*Cache_hash_func_t)(void *key, void *usr_ctx);
+typedef ar_int_t			(*Cache_comp_func_t)(void *l, void *r, void *usr_ctx);
 
 typedef arStatus_t		(*Cache_copy_func_t)(void *data, void **pnew_data, void *usr_ctx);
 typedef void			(*Cache_destroy_func_t)(void *data, void *usr_ctx);

@@ -32,8 +32,8 @@ AR_NAMESPACE_BEGIN
 		typedef struct __debug_memory_record_tag
 		{
 				const char *							file;
-				int_t									line;
-				int_t									size;
+				ar_int_t									line;
+				ar_int_t									size;
 				struct __debug_memory_record_tag* 		prev;
 				struct __debug_memory_record_tag		*next;
 
@@ -215,7 +215,7 @@ static AR_INLINE void	free_mem(void *ptr)
 
 #if defined(AR_ENABLE_MEMORY_LEAK_TEST)
 
-		void*	AR_debug_malloc(size_t nbytes, const char *file_name, int_t line)
+		void*	AR_debug_malloc(size_t nbytes, const char *file_name, ar_int_t line)
 		{
 				debugMemory_t *m;
 				const arBacktrace_t *backtrace;
@@ -260,12 +260,12 @@ static AR_INLINE void	free_mem(void *ptr)
 				AR_UnLockSpinLock(&__g_debug_mem_lock);
 
 
-				return (void*)(((byte_t*)m) + sizeof(debugMemory_t));
+				return (void*)(((ar_byte_t*)m) + sizeof(debugMemory_t));
 		}
 		
 
 
-		void*	AR_debug_calloc(size_t num, size_t size, const char *file_name, int_t line)
+		void*	AR_debug_calloc(size_t num, size_t size, const char *file_name, ar_int_t line)
 		{
 				void *ptr;
 				AR_ASSERT(num > 0 && size > 0 && file_name != NULL);
@@ -281,7 +281,7 @@ static AR_INLINE void	free_mem(void *ptr)
 		}
 		
 
-		void	AR_debug_free(void *ptr, const char *file_name, int_t line)
+		void	AR_debug_free(void *ptr, const char *file_name, ar_int_t line)
 		{
 				debugMemory_t *dm;
 				AR_ASSERT(file_name != NULL);
@@ -293,7 +293,7 @@ static AR_INLINE void	free_mem(void *ptr)
 				
 				AR_LockSpinLock(&__g_debug_mem_lock);
 
-				dm = (debugMemory_t *) ( ( (byte_t *) ptr ) - sizeof( debugMemory_t ) );
+				dm = (debugMemory_t *) ( ( (ar_byte_t *) ptr ) - sizeof( debugMemory_t ) );
 
 #if defined(AR_DEBUG_MEMORY_CHECK_TWICE_FREE)
 				if(dm->size < 0)
@@ -422,7 +422,7 @@ static AR_INLINE void	free_mem(void *ptr)
 
 void	AR_memswap(void *a, void *b, size_t n)
 {
-		int_t cnt;
+		ar_int_t cnt;
 		
 		AR_ASSERT(a != NULL && b != NULL);
 
@@ -432,40 +432,40 @@ void	AR_memswap(void *a, void *b, size_t n)
 		}
 
 
-		if((size_t)a % sizeof(uint_t) != 0 || (size_t)b % sizeof(uint_t) != 0)
+		if((size_t)a % sizeof(ar_uint_t) != 0 || (size_t)b % sizeof(ar_uint_t) != 0)
 		{
-				cnt = (int_t)n;
+				cnt = (ar_int_t)n;
 
 				while(cnt-- > 0)
 				{
-						byte_t t = *(byte_t*)a;
-						*(byte_t*)a = *(byte_t*)b;
-						*(byte_t*)b = t;
-						a = (byte_t*)a + 1;
-						b = (byte_t*)b + 1;
+						ar_byte_t t = *(ar_byte_t*)a;
+						*(ar_byte_t*)a = *(ar_byte_t*)b;
+						*(ar_byte_t*)b = t;
+						a = (ar_byte_t*)a + 1;
+						b = (ar_byte_t*)b + 1;
 				}
 		}else
 		{
-				cnt = (int_t)(n / sizeof(int_t));
+				cnt = (ar_int_t)(n / sizeof(ar_int_t));
 
 				while(cnt-- > 0)
 				{
-						uint_t t = *(uint_t*)a;
-						*(uint_t*)a = *(uint_t*)b;
-						*(uint_t*)b = t;
-						a = (uint_t*)a + 1;
-						b = (uint_t*)b + 1;
+						ar_uint_t t = *(ar_uint_t*)a;
+						*(ar_uint_t*)a = *(ar_uint_t*)b;
+						*(ar_uint_t*)b = t;
+						a = (ar_uint_t*)a + 1;
+						b = (ar_uint_t*)b + 1;
 				}
 
-				cnt = (int_t)(n %  sizeof(int_t));
+				cnt = (ar_int_t)(n %  sizeof(ar_int_t));
 
 				while(cnt-- > 0)
 				{
-						byte_t t = *(byte_t*)a;
-						*(byte_t*)a = *(byte_t*)b;
-						*(byte_t*)b = t;
-						a = (byte_t*)a + 1;
-						b = (byte_t*)b + 1;
+						ar_byte_t t = *(ar_byte_t*)a;
+						*(ar_byte_t*)a = *(ar_byte_t*)b;
+						*(ar_byte_t*)b = t;
+						a = (ar_byte_t*)a + 1;
+						b = (ar_byte_t*)b + 1;
 				}
 		}
 

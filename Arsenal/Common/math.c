@@ -52,16 +52,16 @@ double AR_logbase_dbl(double a, double base)
 
 
 
-int_32_t		AR_abs_32(int_32_t x)
+ar_int_32_t		AR_abs_32(ar_int_32_t x)
 {
-		int_32_t y = x >> 31;
+		ar_int_32_t y = x >> 31;
 		return ( ( x ^ y ) - y );
 }
 
 
-int_64_t		AR_abs_64(int_64_t x)
+ar_int_64_t		AR_abs_64(ar_int_64_t x)
 {
-		int_64_t y = x >> 63;
+		ar_int_64_t y = x >> 63;
 		return ( ( x ^ y ) - y );
 }
 

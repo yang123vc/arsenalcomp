@@ -121,9 +121,9 @@ struct __lex_match_result_tag
 		const wchar_t					*next;
 		size_t							line;
 		size_t							col;
-		uint_32_t						next_action;
+		ar_uint_32_t						next_action;
 
-		uint_t							flags;
+		ar_uint_t							flags;
 		lexProgSet_t					*prog_set;
 };
 
@@ -161,7 +161,7 @@ void			Lex_SkipN(lexMatch_t *pmatch, size_t nchar);
 void			Lex_PutBack(lexMatch_t *pmatch, const lexToken_t *tok);
 
 
-void			Lex_MatchFlags(lexMatch_t *pmatch, uint_t flags, bool_t is_on);
+void			Lex_MatchFlags(lexMatch_t *pmatch, ar_uint_t flags, bool_t is_on);
 void			Lex_MatchClearFlags(lexMatch_t *pmatch);
 
 void			Lex_MatchGetCoordinate(const lexMatch_t *pmatch, size_t *index, size_t *line, size_t *col);

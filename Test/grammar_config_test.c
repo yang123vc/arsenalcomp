@@ -43,7 +43,7 @@ typedef struct __cfg_report_info_tag
 		}								syntax_error;
 
 		struct	{
-				int_t					err_level;
+				ar_int_t					err_level;
 				const	wchar_t			*err_msg;
 		
 		}								error;

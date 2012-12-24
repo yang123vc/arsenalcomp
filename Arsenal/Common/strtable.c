@@ -171,7 +171,7 @@ const wchar_t*			AR_GetStringN(arStringTable_t *tbl, const wchar_t *str, size_t 
 
 
 
-const wchar_t*			AR_GetStringInt(arStringTable_t *tbl, int_64_t num, size_t radix)
+const wchar_t*			AR_GetStringInt(arStringTable_t *tbl, ar_int_64_t num, size_t radix)
 {
 		wchar_t buf[1024];
 
@@ -180,7 +180,7 @@ const wchar_t*			AR_GetStringInt(arStringTable_t *tbl, int_64_t num, size_t radi
 		return AR_GetString(tbl, buf);
 }
 
-const wchar_t*			AR_GetStringUInt(arStringTable_t *tbl, uint_64_t num, size_t radix)
+const wchar_t*			AR_GetStringUInt(arStringTable_t *tbl, ar_uint_64_t num, size_t radix)
 {
 		wchar_t buf[1024];
 		
@@ -198,7 +198,7 @@ const wchar_t*			AR_GetStringFloat(arStringTable_t *tbl, double num, size_t prec
 		
 		AR_ASSERT(tbl != NULL && prec > 0);
 		
-		AR_swprintf(buf, 1024, L"%.*g", (uint_32_t)prec, num);
+		AR_swprintf(buf, 1024, L"%.*g", (ar_uint_32_t)prec, num);
 		
 		return AR_GetString(tbl, buf);
 }

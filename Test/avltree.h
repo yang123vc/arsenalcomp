@@ -26,15 +26,15 @@ typedef enum
 		AVL_RIGHT = 1
 }avlDir_t;
 
-#define OPPOSITE(_i)	(avlDir_t)(1 - (int_t)(_i))
+#define OPPOSITE(_i)	(avlDir_t)(1 - (ar_int_t)(_i))
 
 struct __avl_node_tag
 {
 		
-		int_t			data;
+		ar_int_t			data;
 		avlNode_t		*parent;
 		avlNode_t		*child[2];
-		int_t			bf;
+		ar_int_t			bf;
 };
 
 
@@ -54,8 +54,8 @@ void	avl_clear(avlTree_t		*tree);
 
 avlNode_t*		avl_get_successor(avlNode_t		*node);
 avlNode_t*		avl_get_previous(avlNode_t		*node);
-avlNode_t*		avl_insert_equal(avlTree_t	*tree, int_t data);
-bool_t			avl_remove(avlTree_t	*tree, int_t key);
+avlNode_t*		avl_insert_equal(avlTree_t	*tree, ar_int_t data);
+bool_t			avl_remove(avlTree_t	*tree, ar_int_t key);
 void			avl_print_tree(const avlTree_t *tree);
 bool_t			avl_verify_tree(const avlTree_t	*tree);
 

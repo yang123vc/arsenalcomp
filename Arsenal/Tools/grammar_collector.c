@@ -1891,7 +1891,7 @@ static psrRetVal_t		AR_STDCALL __handle_token_def(psrNode_t **nodes, size_t coun
 
 		if(ns[2])
 		{
-				AR_wtou(ns[2]->lexeme.lexeme, (uint_t*)&res->token.tokval, 10);
+				AR_wtou(ns[2]->lexeme.lexeme, (ar_uint_t*)&res->token.tokval, 10);
 		}else
 		{
 				res->token.tokval = 0;
@@ -1899,7 +1899,7 @@ static psrRetVal_t		AR_STDCALL __handle_token_def(psrNode_t **nodes, size_t coun
 
 		if(ns[5])
 		{
-				AR_wtou(ns[5]->lexeme.lexeme, (uint_t*)&res->token.lex_prec, 10);
+				AR_wtou(ns[5]->lexeme.lexeme, (ar_uint_t*)&res->token.lex_prec, 10);
 		}
 
 		if(ns[6])
@@ -2712,7 +2712,7 @@ static const parser_t*		__build_parser(const psrGrammar_t *gmr)
 
 
 
-static void	AR_STDCALL cfg_on_error(int_t level, const wchar_t *msg, void *ctx)
+static void	AR_STDCALL cfg_on_error(ar_int_t level, const wchar_t *msg, void *ctx)
 {
 		cfgReport_t				*report = NULL;
 		cfgReportInfo_t			info;

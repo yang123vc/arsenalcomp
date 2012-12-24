@@ -75,7 +75,7 @@ typedef struct __ar_init_tag
 */
 
 
-static void	AR_STDCALL	__dummy_error_func(int_t level, const wchar_t *msg, void *ctx)
+static void	AR_STDCALL	__dummy_error_func(ar_int_t level, const wchar_t *msg, void *ctx)
 {
 		wchar_t buf[1024];
 

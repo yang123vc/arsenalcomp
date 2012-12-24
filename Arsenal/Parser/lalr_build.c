@@ -115,7 +115,7 @@ static	arStatus_t	__calc_lr0_closure(lalrConfigList_t *all_config, const psrGram
 														如果sp为终结符，则将其加入新项new_config的follow_set中，之后循环中止，因为在
 														本条语法规则中不会有sp之后的终结符加入到new_config中
 														*/
-														int_t idx = Parser_GetTermSpecID(grammar, sp);
+														ar_int_t idx = Parser_GetTermSpecID(grammar, sp);
 														AR_ASSERT(idx >= 0);
 
 														status = Parser_SetBitInBitSet(&new_config->follow_set, (size_t)idx);/*资源分配点1，new_config存储于all_config中*/
@@ -140,7 +140,7 @@ static	arStatus_t	__calc_lr0_closure(lalrConfigList_t *all_config, const psrGram
 
 														for(x = 0; x < rec->lst.count; ++x)
 														{
-																int_t idx;
+																ar_int_t idx;
 																AR_ASSERT(rec->lst.lst[x]->type == PARSER_TERM);
 																
 																idx = Parser_GetTermSpecID(grammar, rec->lst.lst[x]);
@@ -509,7 +509,7 @@ lalrState_t*	Parser_Create_LR0_State(const psrGrammar_t *grammar)
 		lalrConfigList_t		*basis;
 		lalrConfig_t			*first_cfg;
 		lalrStateSet_t			set;
-		int_t idx;
+		ar_int_t idx;
 		AR_ASSERT(grammar != NULL);
 		
 		
@@ -762,7 +762,7 @@ lalrState_t*	Parser_Create_LALR_State(const psrGrammar_t *grammar)
 		lalrConfigList_t		*basis;
 		lalrConfig_t			*first_cfg;
 		lalrStateSet_t			set;
-		int_t idx;
+		ar_int_t idx;
 		AR_ASSERT(grammar != NULL);
 		
 		start = NULL;

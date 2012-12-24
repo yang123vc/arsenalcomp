@@ -224,7 +224,7 @@ struct __cache_lfu_tag
 
 
 
-static uint_64_t	table_hash_func(void *key, void *usr_ctx)
+static ar_uint_64_t	table_hash_func(void *key, void *usr_ctx)
 {
         cacheLFU_t *lfu;
         AR_ASSERT(usr_ctx != NULL);
@@ -232,7 +232,7 @@ static uint_64_t	table_hash_func(void *key, void *usr_ctx)
         return lfu->hash_f(key, lfu->usr_ctx);
 }
 
-static int_t			table_comp_func(void *l, void *r, void *usr_ctx)
+static ar_int_t			table_comp_func(void *l, void *r, void *usr_ctx)
 {
         cacheLFU_t *lfu;
         AR_ASSERT(usr_ctx != NULL);

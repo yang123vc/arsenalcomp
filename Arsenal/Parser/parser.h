@@ -200,10 +200,10 @@ struct __parser_symbol_tag
 {
 		psrSymbType_t	type;
 		const wchar_t	*name;
-		uint_t			hash_code;
+		ar_uint_t			hash_code;
 		size_t			ref_count;
 		
-		int_t			spec_id;
+		ar_int_t			spec_id;
 };
 
 
@@ -212,7 +212,7 @@ const psrSymb_t*		Parser_CreateSymbN(const wchar_t *name, size_t n, psrSymbType_
 
 const psrSymb_t*		Parser_CopyNewSymb(const psrSymb_t *sour);
 void					Parser_DestroySymb(const psrSymb_t *symb);
-int_t					Parser_CompSymb(const psrSymb_t *l, const psrSymb_t *r);
+ar_int_t					Parser_CompSymb(const psrSymb_t *l, const psrSymb_t *r);
 
 /***************************************symbol_list***************************************************/
 
@@ -233,11 +233,11 @@ arStatus_t			Parser_CopySymbList(psrSymbList_t *dest, const psrSymbList_t *sour)
 arStatus_t			Parser_InsertToSymbList(psrSymbList_t *symb_lst, const psrSymb_t *symb);
 
 const psrSymb_t*	Parser_GetSymbFromSymbList(const psrSymbList_t *symb_lst, size_t idx);
-int_t				Parser_FindFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t* symb);
+ar_int_t				Parser_FindFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t* symb);
 
 arStatus_t			Parser_RemoveFromSymbListByIndex(psrSymbList_t *symb_lst, size_t index);
 
-int_t				Parser_BSearchFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t* symb);
+ar_int_t				Parser_BSearchFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t* symb);
 void				Parser_SortSymbList(psrSymbList_t *symb_lst);
 
 
@@ -323,8 +323,8 @@ arStatus_t		Parser_InsertToTermInfoList(psrTermInfoList_t	*lst, const wchar_t *n
 psrTermInfo_t*	Parser_FindTermByValue(psrTermInfoList_t	*lst, size_t val);
 psrTermInfo_t*	Parser_FindTermByName(psrTermInfoList_t	*lst, const wchar_t *name);
 
-int_t			Parser_IndexOfTermInfoListByValue(const psrTermInfoList_t	*lst, size_t val);
-int_t			Parser_IndexOfTermInfoListByName(const psrTermInfoList_t	*lst, const wchar_t *name);
+ar_int_t			Parser_IndexOfTermInfoListByValue(const psrTermInfoList_t	*lst, size_t val);
+ar_int_t			Parser_IndexOfTermInfoListByName(const psrTermInfoList_t	*lst, const wchar_t *name);
 psrTermInfo_t*	Parser_GetTermByIndex(psrTermInfoList_t	*lst, size_t index);
 
 
@@ -390,7 +390,7 @@ const psrHandler_t*		Parser_GetGrammarHandler(const psrGrammar_t *grammar);
 
 
 
-int_t					Parser_IndexOfGrammar(const psrGrammar_t *grammar, const psrRule_t *rule);
+ar_int_t					Parser_IndexOfGrammar(const psrGrammar_t *grammar, const psrRule_t *rule);
 
 #define					Parser_GetRuleFromGrammar(_gmr, _idx) ((_gmr)->rules[(_idx)])
 
@@ -400,7 +400,7 @@ const psrSymbList_t*		Parser_GetSymbList(const psrGrammar_t *grammar);/*每次运算
 const psrTermInfoList_t*	Parser_GetTermList(const psrGrammar_t *grammar);/*返回所有终结符*/
 
 void						Parser_ResetTermSpecID(const psrGrammar_t *grammar);
-int_t						Parser_GetTermSpecID(const psrGrammar_t *grammar, const psrSymb_t *symb);
+ar_int_t						Parser_GetTermSpecID(const psrGrammar_t *grammar, const psrSymb_t *symb);
 
 
 const psrSymb_t*			Parser_GetSymbFromGrammarByName(const psrGrammar_t *grammar, const wchar_t *name);

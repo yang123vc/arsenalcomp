@@ -48,7 +48,7 @@ arStatus_t		Operation_IsCancelled(operation_t *operation);
 arStatus_t		Operation_IsFinished(operation_t *operation);
 
 arStatus_t		Operation_GetResult(operation_t *operation, void **presult);
-arStatus_t		Operation_GetResultWithTimeout(operation_t *operation, void **presult, uint_64_t timeout_ms);
+arStatus_t		Operation_GetResultWithTimeout(operation_t *operation, void **presult, ar_uint_64_t timeout_ms);
 
 
 
