@@ -16,8 +16,8 @@ AR_NAMESPACE_BEGIN
 
 
 /*
-typedef uint_64_t		(*Cache_hash_func_t)(void *key);
-typedef int_t			(*Cache_comp_func_t)(void *l, void *r);
+typedef ar_uint_64_t		(*Cache_hash_func_t)(void *key);
+typedef ar_int_t			(*Cache_comp_func_t)(void *l, void *r);
 
 typedef arStatus_t		(*Cache_copy_func_t)(void *data, void **pnew_data, void *ctx);
 typedef void			(*Cache_destroy_func_t)(void *data, void *ctx);
@@ -285,7 +285,7 @@ static void destroy_value_node(cacheValueNode_t *node)
 
 
 
-static uint_64_t	table_hash_func(void *key, void *usr_ctx)
+static ar_uint_64_t	table_hash_func(void *key, void *usr_ctx)
 {
         cacheLFU_t *lfu;
         AR_ASSERT(usr_ctx != NULL);
@@ -293,7 +293,7 @@ static uint_64_t	table_hash_func(void *key, void *usr_ctx)
         return lfu->hash_f(key, lfu->usr_ctx);
 }
 
-static int_t			table_comp_func(void *l, void *r, void *usr_ctx)
+static ar_int_t			table_comp_func(void *l, void *r, void *usr_ctx)
 {
         cacheLFU_t *lfu;
         AR_ASSERT(usr_ctx != NULL);

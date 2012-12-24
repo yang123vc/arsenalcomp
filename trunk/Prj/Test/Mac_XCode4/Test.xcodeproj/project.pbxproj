@@ -19,10 +19,9 @@
 		679A46EB15527DD3006A5AD4 /* commonTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 679A46E915527DD3006A5AD4 /* commonTest.cpp */; };
 		679A46EE15527DF0006A5AD4 /* commonTest.h in Sources */ = {isa = PBXBuildFile; fileRef = 679A46ED15527DF0006A5AD4 /* commonTest.h */; };
 		679A46EF15527DF0006A5AD4 /* commonTest.h in Sources */ = {isa = PBXBuildFile; fileRef = 679A46ED15527DF0006A5AD4 /* commonTest.h */; };
-		67AD47C5165E87690022BD1B /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 67AD47C4165E87690022BD1B /* Arsenal.a */; };
-		67AD47C9165E87B10022BD1B /* Arsenal.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 67AD47C8165E87B10022BD1B /* Arsenal.dylib */; };
 		67F26D15156B55E0003FAA7E /* lfu_cache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67F26D14156B55E0003FAA7E /* lfu_cache.cpp */; };
 		67F26D16156B55E0003FAA7E /* lfu_cache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67F26D14156B55E0003FAA7E /* lfu_cache.cpp */; };
+		67F3B18E16884C9C000BA1D7 /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 67F3B18D16884C9C000BA1D7 /* Arsenal.a */; };
 		BE185ED514E849250095DB44 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = BE185ED314E849250095DB44 /* main.c */; };
 		BE185ED614E849250095DB44 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = BE185ED314E849250095DB44 /* main.c */; };
 /* End PBXBuildFile section */
@@ -57,11 +56,9 @@
 		673C0BD4154A8A4800A73324 /* test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = test.c; sourceTree = SOURCE_ROOT; };
 		679A46E915527DD3006A5AD4 /* commonTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = commonTest.cpp; sourceTree = SOURCE_ROOT; };
 		679A46ED15527DF0006A5AD4 /* commonTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = commonTest.h; sourceTree = SOURCE_ROOT; };
-		67AD47C4165E87690022BD1B /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = Arsenal.a; path = "../../../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Release/Arsenal.a"; sourceTree = "<group>"; };
-		67AD47C6165E879C0022BD1B /* Arsenal.dylib */ = {isa = PBXFileReference; lastKnownFileType = file; name = Arsenal.dylib; path = ../../Arsenal/Mac_XCode4/build/Release/Arsenal.dylib; sourceTree = "<group>"; };
-		67AD47C8165E87B10022BD1B /* Arsenal.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = Arsenal.dylib; path = "../../../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Release/Arsenal.dylib"; sourceTree = "<group>"; };
 		67F26D12156B55C9003FAA7E /* lfu_cache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lfu_cache.h; sourceTree = SOURCE_ROOT; };
 		67F26D14156B55E0003FAA7E /* lfu_cache.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lfu_cache.cpp; sourceTree = SOURCE_ROOT; };
+		67F3B18D16884C9C000BA1D7 /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = Arsenal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE185EA314E846F10095DB44 /* TestLib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TestLib; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE185EC614E847860095DB44 /* TestDLL */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TestDLL; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE185ED314E849250095DB44 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = SOURCE_ROOT; };
@@ -72,7 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				67AD47C5165E87690022BD1B /* Arsenal.a in Frameworks */,
+				67F3B18E16884C9C000BA1D7 /* Arsenal.a in Frameworks */,
 				6728C3C1154C650600861D86 /* libiconv.dylib in Frameworks */,
 				6728C3C0154C64FE00861D86 /* libpthread.dylib in Frameworks */,
 			);
@@ -82,7 +79,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				67AD47C9165E87B10022BD1B /* Arsenal.dylib in Frameworks */,
 				67163065155FFB680098ADA3 /* libiconv.dylib in Frameworks */,
 				6728C3BC154C646200861D86 /* libpthread.dylib in Frameworks */,
 			);
@@ -94,9 +90,7 @@
 		BE185E9814E846F10095DB44 = {
 			isa = PBXGroup;
 			children = (
-				67AD47C8165E87B10022BD1B /* Arsenal.dylib */,
-				67AD47C6165E879C0022BD1B /* Arsenal.dylib */,
-				67AD47C4165E87690022BD1B /* Arsenal.a */,
+				67F3B18D16884C9C000BA1D7 /* Arsenal.a */,
 				6728C3BB154C646200861D86 /* libpthread.dylib */,
 				6728C3B8154C645A00861D86 /* libiconv.dylib */,
 				BE185EA614E846F10095DB44 /* Test */,

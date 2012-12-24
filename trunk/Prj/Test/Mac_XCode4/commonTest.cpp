@@ -176,8 +176,8 @@ static void str_test12()
         
 void mem_test()
 {
-        byte_t *b = AR_NEWARR(byte_t, 1024);
-        b = AR_NEWARR(byte_t, 4021);
+        ar_byte_t *b = AR_NEWARR(ar_byte_t, 1024);
+        b = AR_NEWARR(ar_byte_t, 4021);
                 
 }
  
@@ -1974,7 +1974,7 @@ static void str_test20()
 {
         char buf[1024];
         
-        int_t n = AR_wcs_to_str_buf(AR_CP_UTF8, L"中文", 2, buf, 1024);
+        ar_int_t n = AR_wcs_to_str_buf(AR_CP_UTF8, L"中文", 2, buf, 1024);
         
         buf[n] = 0;
         printf("%s\r\n", buf);
@@ -1983,7 +1983,7 @@ static void str_test20()
         {
                 wchar_t wbuf[1024];
                 const char *utf8 = "中文";
-                int_t n = AR_str_to_wcs_buf(AR_CP_GB2312, utf8, strlen(utf8), wbuf, 1024);
+                ar_int_t n = AR_str_to_wcs_buf(AR_CP_GB2312, utf8, strlen(utf8), wbuf, 1024);
                 wbuf[n] = 0;
                 AR_printf(L"%ls\r\n", wbuf);
         }
@@ -2009,11 +2009,11 @@ static void str_test21()
 static void str_test22()
 {
         wchar_t buf[64], buf2[64];
-        uint_64_t v = L'、', v2 = L'中';
+        ar_uint_64_t v = L'、', v2 = L'中';
 
         
-        int_t l = AR_u64tow_buf(buf, AR_NELEMS(buf), v, 16);
-        int_t l2 = AR_u64tow_buf(buf2, AR_NELEMS(buf2), v2, 16);
+        ar_int_t l = AR_u64tow_buf(buf, AR_NELEMS(buf), v, 16);
+        ar_int_t l2 = AR_u64tow_buf(buf2, AR_NELEMS(buf2), v2, 16);
         
         AR_ASSERT(l > 0);
         

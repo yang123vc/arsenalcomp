@@ -439,7 +439,7 @@ using namespace ARSpace;
 		
 		NSMutableData *retData = [NSMutableData dataWithCapacity : 4096];
 		
-		const byte_t header[3] = {0xEF, 0xBB, 0xBF};
+		const ar_byte_t header[3] = {0xEF, 0xBB, 0xBF};
 		[retData appendBytes : (const void*)header
 					  length : sizeof(header)
 		 ];
@@ -474,7 +474,7 @@ using namespace ARSpace;
 		
 		arBuffer_t *buf = AR_CreateBuffer(len);
 		arString_t *str = AR_CreateString();
-		AR_InsertToBuffer(buf, (const byte_t*)[data bytes], len);
+		AR_InsertToBuffer(buf, (const ar_byte_t*)[data bytes], len);
 		
 		if(AR_LoadBomTextFromBinary(buf, NULL, str) == AR_S_YES)
 		{

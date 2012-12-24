@@ -122,7 +122,7 @@ wchar_t* healper_wcsndup(const wchar_t *sour, size_t len)
 		char *utf8 = NULL;
 		assert(input != NULL);
 		size_t n = wcslen(input);
-        int_t need_n = 0;
+        ar_int_t need_n = 0;
 		if(n == 0)
 		{
 				return @"";
@@ -189,7 +189,7 @@ wchar_t* healper_wcsndup(const wchar_t *sour, size_t len)
 		
 		const char *utf8 = [input cStringUsingEncoding:NSUTF8StringEncoding];
 		
-		int_t len;
+		ar_int_t len;
 		
 		len = AR_str_to_wcs_buf(AR_CP_UTF8, utf8, strlen(utf8), NULL, 0);
 		

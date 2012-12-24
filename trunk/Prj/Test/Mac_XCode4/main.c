@@ -89,7 +89,7 @@ static size_t AR_STDCALL __build_backtrace_string(void **call_stack, size_t call
 
 
 
-static void AR_STDCALL __on_error(int_t level, const wchar_t* msg, void *ctx)
+static void AR_STDCALL __on_error(ar_int_t level, const wchar_t* msg, void *ctx)
 {
 		AR_UNUSED(level);
 		AR_UNUSED(ctx);
