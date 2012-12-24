@@ -2039,7 +2039,7 @@ arStatus_t			AR_InverseMatrixByGaussJordanSelf(arMatrix_t *mat)
 		double d, max_val, t;
 		ar_int_t x;
 		size_t *col_index, *row_index;
-		bool_t *pivot_mark;
+		ar_bool_t *pivot_mark;
 
 		AR_ASSERT(mat != NULL);
 		AR_ASSERT(mat->nrows == mat->ncols);
@@ -2048,7 +2048,7 @@ arStatus_t			AR_InverseMatrixByGaussJordanSelf(arMatrix_t *mat)
 		
 		col_index = AR_NEWARR0(size_t, mat->nrows);
 		row_index = AR_NEWARR0(size_t, mat->nrows);
-		pivot_mark = AR_NEWARR0(bool_t, mat->nrows);
+		pivot_mark = AR_NEWARR0(ar_bool_t, mat->nrows);
 		
 		if(col_index == NULL || row_index == NULL || pivot_mark == NULL)
 		{

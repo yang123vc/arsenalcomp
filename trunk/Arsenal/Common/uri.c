@@ -31,7 +31,7 @@ struct __arsenal_uri_tag
 		arString_t		*fragment;
 		ar_uint_16_t		port;
 
-		bool_t			_parse_encoded;
+		ar_bool_t			_parse_encoded;
 };
 
 arURI_t*		AR_CreateURI(arCodePage_t cp)
@@ -999,7 +999,7 @@ END_POINT:
 
 /**************************************************************Public*************************************************/
 
-bool_t	AR_IsRelativeURI(const arURI_t *uri)
+ar_bool_t	AR_IsRelativeURI(const arURI_t *uri)
 {
 		AR_ASSERT(uri != NULL);
 		return AR_GetStringLength(uri->scheme) == 0 ? true : false;
@@ -1694,11 +1694,11 @@ END_POINT:
 }
 
 
-static arStatus_t __build_path(arURI_t *uri, const arList_t *segments, bool_t leading_slash, bool_t  trailing_slash)
+static arStatus_t __build_path(arURI_t *uri, const arList_t *segments, ar_bool_t leading_slash, ar_bool_t  trailing_slash)
 {
 		arStatus_t		status;
 		const arListNode_t	*node;
-		bool_t	is_first;
+		ar_bool_t	is_first;
 		AR_ASSERT(uri != NULL && segments != NULL);
 
 		status = AR_S_YES;
@@ -1746,12 +1746,12 @@ END_POINT:
 }
 
 
-static arStatus_t		__remove_path_dot_segments(arURI_t *uri, bool_t is_remove_leading_slash)
+static arStatus_t		__remove_path_dot_segments(arURI_t *uri, ar_bool_t is_remove_leading_slash)
 {
 		arList_t		*segments, *normalized;
 		const arListNode_t *node;
 		arStatus_t		status;
-		bool_t leading_slash, trailing_slash;
+		ar_bool_t leading_slash, trailing_slash;
 		
 		AR_ASSERT(uri != NULL);
 		status = AR_S_YES;

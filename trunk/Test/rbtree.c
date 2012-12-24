@@ -532,10 +532,10 @@ static AR_INLINE rbNode_t* __unlink_node(rbNode_t *node, rbNode_t **proot, rbNod
 
 //////////////////////////////////////////
 
-bool_t	rb_remove(rbTree_t	*tree, ar_int_t key)
+ar_bool_t	rb_remove(rbTree_t	*tree, ar_int_t key)
 {
 		rbNode_t		*node;
-		bool_t			found = false;
+		ar_bool_t			found = false;
 		AR_ASSERT(tree != NULL);
 		node = rb_find(tree, key);
 
@@ -597,7 +597,7 @@ static AR_INLINE size_t __count_black(const rbNode_t *node)
 }
 
 
-bool_t rb_verify_tree(const rbTree_t *self)
+ar_bool_t rb_verify_tree(const rbTree_t *self)
 {
 		const rbNode_t		*curr;
 		size_t bn;

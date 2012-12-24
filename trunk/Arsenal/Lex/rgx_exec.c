@@ -194,7 +194,7 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 						{
 						case RGX_CHAR_I:
 						{
-								bool_t is_ok = false;
+								ar_bool_t is_ok = false;
 								if(*sp != L'\0')
 								{
 										if(match->flags & LEX_IGNORE_CASE)
@@ -223,7 +223,7 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 						}
 						case RGX_ANY_CHAR_I:
 						{
-								bool_t is_ok = false;
+								ar_bool_t is_ok = false;
 
 								if(*sp != L'\0')
 								{
@@ -495,7 +495,7 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 						{
 						case RGX_CHAR_I:
 						{
-								bool_t is_ok = false;
+								ar_bool_t is_ok = false;
 								if(*sp != L'\0')
 								{
 										if(match->flags & LEX_IGNORE_CASE)
@@ -525,7 +525,7 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 						}
 						case RGX_ANY_CHAR_I:
 						{
-								bool_t is_ok = false;
+								ar_bool_t is_ok = false;
 
 								if(*sp != L'\0')
 								{
@@ -799,7 +799,7 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 						{
 						case RGX_CHAR_I:
 						{
-								bool_t is_ok = false;
+								ar_bool_t is_ok = false;
 								if(*sp != L'\0')
 								{
 										if(match->flags & LEX_IGNORE_CASE)
@@ -830,7 +830,7 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 						}
 						case RGX_ANY_CHAR_I:
 						{
-								bool_t is_ok = false;
+								ar_bool_t is_ok = false;
 
 								if(*sp != L'\0')
 								{

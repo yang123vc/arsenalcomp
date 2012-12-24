@@ -154,7 +154,7 @@ arStatus_t	Parser_UnionBitSet(lalrBitSet_t *dest, const lalrBitSet_t *src)
 {
 		size_t i;
 		size_t nbyte;
-		bool_t has_changed;
+		ar_bool_t has_changed;
 		AR_ASSERT(dest && src);
 		AR_ASSERT(dest->bit_cnt == src->bit_cnt);
 		AR_ASSERT(dest->bit_cnt > 0);
@@ -206,7 +206,7 @@ lalrConfigList_t*		Parser_CreateConfigList()
 		return res;
 }
 
-void					Parser_DestroyConfigList(lalrConfigList_t *lst, bool_t destroy_config)
+void					Parser_DestroyConfigList(lalrConfigList_t *lst, ar_bool_t destroy_config)
 {
 		lalrConfigNode_t		*node;
 

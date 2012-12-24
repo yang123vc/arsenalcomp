@@ -393,7 +393,7 @@ void grammar_test()
 		psrGrammar_t	*gmr;
 		psrSymbMap_t	first, follow;
 		size_t i,k;
-		bool_t is_ok;
+		ar_bool_t is_ok;
 		arString_t		*str;
 
 		str = AR_CreateString();

@@ -48,7 +48,7 @@ rbNode_t*		rb_get_previous(rbNode_t  *node);
 
 
 rbNode_t*		rb_insert_equal(rbTree_t	*tree, ar_int_t data);
-bool_t			rb_remove(rbTree_t	*tree, ar_int_t key);
+ar_bool_t			rb_remove(rbTree_t	*tree, ar_int_t key);
 
 AR_NAMESPACE_END
 

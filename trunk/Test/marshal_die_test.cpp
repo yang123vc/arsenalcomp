@@ -7,7 +7,7 @@
 //
 
 
-#if(0)
+#if(1)
 #include <map>
 #include <vector>
 #include <list>
@@ -15,7 +15,7 @@
 #include <set>
 
 #include "Arsenal.h"
-#include "marshal_die_predef.h"
+
 
 
 
@@ -29,189 +29,33 @@ using namespace ARSpace;
 
 MARSHAL_DIE_BEGIN
 
-
-
-typedef enum
-{
-        BYET_T,
-
-        INT8_T,
-        UINTT8_T,
-        
-        INT16_T,
-        UINTT16_T,
-        
-        INT32_T,
-        UINTT32_T,
-        
-        INT64_T,
-        UINTT64_T,
-
-        CHAR_T,
-        WCHAR_T,
-        
-        FLOAT_T,
-        DOUBLE_T,
-        
-        CUSTOM_T,
-}FieldType_t;
-
-
-const wchar_t* __g_inner_type[CUSTOM_T] = 
-{
-        L"ar_byte_t",
-        L"ar_int_8_t",
-        L"ar_uint_8_t",
-        L"ar_int_16_t",
-        L"ar_uint_16_t",
-        L"ar_int_32_t",
-        L"ar_uint_32_t",
-        L"ar_int_64_t",
-        L"ar_uint_64_t",
-
-		L"float",
-        L"double",
-
-        L"char",
-        L"wchar_t",
-        
-};
-
-
-static bool_t is_inner_type(FieldType_t t)
-{
-        switch(t)
-        {
-                case BYET_T:
-                case INT8_T:
-                case UINTT8_T:
-                case INT16_T:
-                case UINTT16_T:
-                case INT32_T:
-                case UINTT32_T:
-                case INT64_T:
-                case UINTT64_T:
-                case CHAR_T:
-                case WCHAR_T:
-                        return true;
-                case CUSTOM_T:
-                default:
-                        return false;
-        };
-}
-
-
-
-static bool_t is_inner_type_name(const wchar_t *name)
-{
-        for(size_t i = 0; i < CUSTOM_T; ++i)
-        {
-                if(AR_wcscmp(name, __g_inner_type[i]) == 0)
-                {
-                        return true;
-                }
-        }
-        
-        return false;
-}
-
-static const wchar_t* get_inner_type_name(FieldType_t t)
-{
-        AR_ASSERT(is_inner_type(t));
-        return __g_inner_type[t];
-}
+#include "marshal_die_predef.h"
 
 
 
 
-static std::wstring generate_inner_type_marshal_code(const std::wstring &out_buffer_name, const std::wstring &in_obj_pointer, const std::wstring &in_obj_field, FieldType_t t, bool_t is_array, size_t array_size)
-{
-        std::wstring ret;
-        AR_ASSERT(is_inner_type(t));
-        
-        if(is_array)
-        {
-                if(array_size == 0)
-                {
-                        AR_error(AR_ERR_FATAL, L"empty array size for %ls\r\n",  get_inner_type_name(t));
-                }
-
-                switch(t)
-                {
-                        case BYET_T:
-								break;
-                        case CHAR_T:
-								break;
-						case INT8_T:
-								break;
-						case UINTT8_T:
-                                break;
-						case WCHAR_T:
-								break;
-                        case INT16_T:
-								break;
-                        case UINTT16_T:
-								break;
-                        case INT32_T:
-								break;
-                        case UINTT32_T:
-								break;
-                        case INT64_T:
-								break;
-                        case UINTT64_T:
-								break;
-                        case FLOAT_T:
-								break;
-                        case DOUBLE_T:
-                                break;
-                        default:
-                                AR_ASSERT(false);
-                                break;
-                }
-        }else
-        {
-                
-        }
-        
-        
-}
-
-
-struct Type;
-
-std::vector<Type*>    g_type_list;
-typedef std::map<std::wstring, Type*>    FieldMap;
-
-struct Type
-{
-        FieldType_t             type;
-        bool_t                  is_inner_type;
-
-        std::wstring            name;
-        
-        bool                    is_array;
-        size_t                  array_size;
-        
-        
-        FieldMap                fields;
-        
-
-        const std::wstring& generate_marshal_code()
-        {
-                return std::wstring(L"");
-        }
-        
-        const std::wstring& generate_unmarshal_code()
-        {
-                return std::wstring(L"");
-        }
-};
 
 
 
 
-std::vector<std::wstring>    g_head_code;
-std::vector<std::wstring>    g_tail_code;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -219,13 +63,148 @@ std::vector<std::wstring>    g_tail_code;
 
 
 typedef struct {
-		ar_uint_32_t		session_id;
-		bool_t			bool_val;
-		bool_t			bool_arr[1024];
-}daemonHandShake_t;
+		ar_uint_32_t		agent_cli_main_ver;
+		ar_uint_32_t		agent_cli_sub_ver;
+		ar_uint_32_t		agent_cli_rev_ver;
+		ar_uint_32_t		agent_session_type;
+		ar_byte_t		extinfo[4096];
+		ar_uint_32_t		extcount;
+}agentHandshake_t;
 
 
-static snObject_t*		__put_daemonHandShake_t(daemonHandShake_t *stu)
+
+
+
+typedef struct {
+		ar_uint_32_t		agent_srv_main_ver;
+		ar_uint_32_t		agent_srv_sub_ver;
+		ar_uint_32_t		agent_srv_rev_ver;
+		ar_byte_t		extinfo[4096];
+		ar_uint_32_t		extcount;
+}agentHandshakeReply_t;
+
+
+
+
+
+typedef struct {
+		ar_uint_32_t		err_code;
+		wchar_t		err_msg[1024];
+}agentErrorMsg_t;
+
+
+
+
+
+typedef struct {
+		ar_uint_64_t		randkey;
+}agentRequestURLRecordCount_t;
+
+
+
+
+
+typedef struct {
+		ar_uint_32_t		count;
+}agentURLRecordCount_t;
+
+
+
+
+
+typedef struct {
+		ar_uint_32_t		start;
+		ar_uint_32_t		count;
+}agentRequestURLRecord_t;
+
+
+
+
+
+typedef struct {
+		ar_uint_64_t		id;
+		wchar_t		full_url[1024];
+		ar_uint_32_t		type;
+		ar_uint_32_t		sub_type;
+		ar_uint_64_t		blocked_time_ms;
+		wchar_t		browser[128];
+		wchar_t		user[128];
+}agentURLRecord_t;
+
+
+
+
+
+typedef struct {
+		ar_uint_64_t		start_id;
+		ar_uint_64_t		end_id;
+}removeURLRecord_t;
+
+
+
+
+enum {
+
+		AGENTHANDSHAKE_T,
+		AGENTHANDSHAKEREPLY_T,
+		AGENTERRORMSG_T,
+		AGENTREQUESTURLRECORDCOUNT_T,
+		AGENTURLRECORDCOUNT_T,
+		AGENTREQUESTURLRECORD_T,
+		AGENTURLRECORD_T,
+		REMOVEURLRECORD_T,
+};
+
+
+typedef struct {
+		ar_uint_32_t		type;
+		union{
+		agentHandshake_t		agentHandshake_t_val;
+		agentHandshakeReply_t		agentHandshakeReply_t_val;
+		agentErrorMsg_t		agentErrorMsg_t_val;
+		agentRequestURLRecordCount_t		agentRequestURLRecordCount_t_val;
+		agentURLRecordCount_t		agentURLRecordCount_t_val;
+		agentRequestURLRecord_t		agentRequestURLRecord_t_val;
+		agentURLRecord_t		agentURLRecord_t_val;
+		removeURLRecord_t		removeURLRecord_t_val;
+		};
+}agentInterprocessMessage_t;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/******************************agentHandshake_t********************************/
+
+static snObject_t*		__put_agentHandshake_t(agentHandshake_t *stu)
 {
 		snObject_t		*obj, *tmp;
 		AR_ASSERT(stu != NULL);
@@ -237,26 +216,50 @@ static snObject_t*		__put_daemonHandShake_t(daemonHandShake_t *stu)
 		{
 				goto INVALID_POINT;
 		}
-
-		/**********************************************/
-		if(__put_uint_32_t_to_dict(obj, L"session_id", stu->session_id) != AR_S_YES)
+/************************************************************************************************/
+		if(__put_uint_32_t_to_dict(obj, L"agent_cli_main_ver", stu->agent_cli_main_ver) != AR_S_YES)
 		{
-				goto INVALID_POINT;
-		}
-
-		if(__put_bool_t_to_dict(obj, L"bool_val", stu->bool_val) != AR_S_YES)
-		{
-				goto INVALID_POINT;
+				goto INVALID_POINT;		
 		}
 
 
-		if(__put_bool_t_array_to_dict(obj, L"bool_arr", stu->bool_arr, 1024) != AR_S_YES)
+
+		if(__put_uint_32_t_to_dict(obj, L"agent_cli_sub_ver", stu->agent_cli_sub_ver) != AR_S_YES)
 		{
-				goto INVALID_POINT;
+				goto INVALID_POINT;		
 		}
 
 
-		/**********************************************/
+
+		if(__put_uint_32_t_to_dict(obj, L"agent_cli_rev_ver", stu->agent_cli_rev_ver) != AR_S_YES)
+		{
+				goto INVALID_POINT;		
+		}
+
+
+
+		if(__put_uint_32_t_to_dict(obj, L"agent_session_type", stu->agent_session_type) != AR_S_YES)
+		{
+				goto INVALID_POINT;		
+		}
+
+
+
+		if(__put_byte_t_array_to_dict(obj, L"extinfo", stu->extinfo, 4096) != AR_S_YES)
+		{
+				goto INVALID_POINT;		
+		}
+
+
+		if(__put_uint_32_t_to_dict(obj, L"extcount", stu->extcount) != AR_S_YES)
+		{
+				goto INVALID_POINT;		
+		}
+
+
+
+
+/************************************************************************************************/
 		return obj;
 INVALID_POINT:
 		if(obj)
@@ -268,49 +271,7 @@ INVALID_POINT:
 }
 
 
-static bool_t	__get_daemonHandShake_t(snObject_t *obj, daemonHandShake_t *stu)
-{
-		bool_t	is_ok;
-		AR_ASSERT(stu != NULL && obj != NULL);
-
-		is_ok = true;
-
-		if(SN_GetObjectType(obj) != SN_DICT_T)
-		{
-				is_ok = false;
-				goto INVALID_POINT;
-		}
-
-		/************************************************************************************/
-		if(__get_uint_32_t_from_dict(obj, L"session_id", &stu->session_id) != AR_S_YES)
-		{
-				is_ok = false;
-				goto INVALID_POINT;
-		}
-
-		if(__get_bool_t_from_dict(obj, L"bool_val", &stu->bool_val) != AR_S_YES)
-		{
-				is_ok = false;
-				goto INVALID_POINT;
-		}
-		
-		if(__get_bool_t_array_from_dict(obj, L"bool_arr", stu->bool_arr, 1024) != AR_S_YES)
-		{
-				is_ok = false;
-				goto INVALID_POINT;
-		}
-
-		/************************************************************************************/
-
-		return true;
-INVALID_POINT:
-		is_ok = false;
-		return is_ok;
-}
-
-
-
-static snObject_t*		__put_daemonHandShake_t_array(daemonHandShake_t *stu, size_t arr_size)
+static snObject_t*		__put_agentHandshake_t_array(agentHandshake_t *stu, size_t arr_size)
 {
 		snObject_t		*stu_list;
 		size_t i;
@@ -320,15 +281,20 @@ static snObject_t*		__put_daemonHandShake_t_array(daemonHandShake_t *stu, size_t
 
 		for(i = 0; i < arr_size; ++i)
 		{
+
 				/*************************************************************************/
-				snObject_t *tmp = __put_daemonHandShake_t(&stu[i]);
+				snObject_t *tmp = __put_agentHandshake_t(&stu[i]);
 				if(tmp == NULL)
 				{
 						goto INVALID_POINT;
 				}
 				/*************************************************************************/
+
+
 				if(SN_InsertToListObject(stu_list, tmp) != AR_S_YES)
 				{
+						SN_DestroyObject(tmp);
+						tmp = NULL;
 						goto INVALID_POINT;
 				}
 		}
@@ -347,349 +313,50 @@ INVALID_POINT:
 
 
 
-static bool_t	__get_daemonHandShake_t_array(snObject_t *obj, daemonHandShake_t *stu, size_t arr_size)
+static ar_bool_t	__get_agentHandshake_t(snObject_t *obj, agentHandshake_t *stu)
 {
-		bool_t	is_ok;
-		size_t list_cnt;
-		size_t i;
-		AR_ASSERT(stu != NULL && obj != NULL && arr_size > 0);
-		AR_ASSERT(SN_GetObjectType(obj) == SN_LIST_T);
-
-		is_ok = true;
-		list_cnt = SN_GetListObjectCount(obj);
-		if(list_cnt != arr_size)
-		{
-				goto INVALID_POINT;
-		}
-
-		for(i = 0; i < list_cnt; ++i)
-		{
-				snObject_t *item = SN_GetFromListObject(obj, i);
-				if(item == NULL || SN_GetObjectType(item) != SN_DICT_T)
-				{
-						goto INVALID_POINT;
-				}
-				
-				/***********************************************************/
-				if(!__get_daemonHandShake_t(item, &stu[i]))
-				{
-						is_ok = false;
-						goto INVALID_POINT;
-				}
-				/*********************************************************/
-		}
-		return true;
-
-INVALID_POINT:
-		is_ok = false;
-		return is_ok;
-}
-
-
-
-
-typedef struct {
-
-		ar_uint_32_t				u;
-		ar_uint_32_t				u_arr[1024];
-
-		daemonHandShake_t		h;
-		daemonHandShake_t		h_arr[1024];
-
-		ar_byte_t					b;
-		ar_byte_t					b_arr[1024];
-
-		char					c;
-		char					c_str[1024];
-
-		wchar_t					w;
-		wchar_t					w_str[1024];
-
-		float					f;
-		float					f_arr[1024];
-
-		double					d;
-		double					d_arr[1024];
-
-		ar_uint_16_t				u16;
-		ar_uint_16_t				u16_arr[1024];
-
-		ar_int_64_t				i64;
-		ar_int_64_t				i64_arr[1024];
-
-}daemonKeepalive_t;
-
-
-
-static snObject_t*		__put_daemonKeepalive_t(daemonKeepalive_t *stu)
-{
-		snObject_t		*obj, *tmp;
-		AR_ASSERT(stu != NULL);
-		obj = NULL;
-		tmp = NULL;
-
-		obj = SN_CreateObject(SN_DICT_T);
-		if(obj == NULL)
-		{
-				goto INVALID_POINT;
-		}
-
-		/**********************************************/
-		if(__put_uint_32_t_to_dict(obj, L"u", stu->u) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-		if(__put_uint_32_t_array_to_dict(obj, L"u_arr", stu->u_arr, 1024) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-
-		if(__put_byte_t_to_dict(obj, L"b", stu->b) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-		if(__put_byte_t_array_to_dict(obj, L"b_arr", stu->b_arr, 1024) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-
-		if(__put_char_to_dict(obj, L"c", stu->c) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-		if(__put_char_array_to_dict(obj, L"c_str", stu->c_str) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-
-		if(__put_wchar_t_to_dict(obj, L"w", stu->w) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-		if(__put_wchar_t_array_to_dict(obj, L"w_str", stu->w_str) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-
-
-		if(__put_float_to_dict(obj, L"f", stu->f) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-		if(__put_float_array_to_dict(obj, L"f_arr", stu->f_arr, 1024) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-
-		if(__put_double_to_dict(obj, L"d", stu->d) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-		if(__put_double_array_to_dict(obj, L"d_arr", stu->d_arr, 1024) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-
-		if(__put_uint_16_t_to_dict(obj, L"u16", stu->u16) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-		if(__put_uint_16_t_array_to_dict(obj, L"u16_arr", stu->u16_arr, 1024) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-
-		if(__put_int_64_t_to_dict(obj, L"i64", stu->i64) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-		if(__put_int_64_t_array_to_dict(obj, L"i64_arr", stu->i64_arr, 1024) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-
-		/***********************************生成单个结构********************************/
-		tmp = __put_daemonHandShake_t(&stu->h);
-		if(tmp == NULL)
-		{
-				goto INVALID_POINT;
-		}
-
-
-		if(SN_InsertToDictObjectByWcsObject(obj, L"h", tmp) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-		/***********************************生成结构数组********************************/
-		tmp = __put_daemonHandShake_t_array(stu->h_arr, 1024);
-		if(tmp == NULL)
-		{
-				goto INVALID_POINT;
-		}
-
-		if(SN_InsertToDictObjectByWcsObject(obj, L"h_arr", tmp) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-		/**********************************************/
-		return obj;
-INVALID_POINT:
-		if(obj)
-		{
-				SN_DestroyObject(obj);
-				obj = NULL;
-		}
-		return NULL;
-}
-
-
-
-static bool_t	__get_daemonKeepalive_t(snObject_t *obj, daemonKeepalive_t *stu)
-{
-		bool_t	is_ok;
-		snObject_t *tmp;
+		ar_bool_t	is_ok;
 		AR_ASSERT(stu != NULL && obj != NULL);
 		AR_ASSERT(SN_GetObjectType(obj) == SN_DICT_T);
 		is_ok = true;
 
 		/***************************************************************************/
-		
-		if(__get_uint_32_t_from_dict(obj, L"u", &stu->u) != AR_S_YES)
-		{
-				is_ok = false;
-				goto INVALID_POINT;
-		}
-		
-
-		if(__get_uint_32_t_array_from_dict(obj, L"u_arr", stu->u_arr, 1024) != AR_S_YES)
-		{
-				is_ok = false;
-				goto INVALID_POINT;
-		}
-		
-
-		if(__get_byte_t_from_dict(obj, L"b", &stu->b) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-		if(__get_byte_t_array_from_dict(obj, L"b_arr", stu->b_arr, 1024) != AR_S_YES)
+		if(__get_uint_32_t_from_dict(obj, L"agent_cli_main_ver", &stu->agent_cli_main_ver) != AR_S_YES)
 		{
 				goto INVALID_POINT;
 		}
 
 
-		if(__get_char_from_dict(obj, L"c", &stu->c) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-		if(__get_char_array_from_dict(obj, L"c_str", stu->c_str, 1024) != AR_S_YES)
+		if(__get_uint_32_t_from_dict(obj, L"agent_cli_sub_ver", &stu->agent_cli_sub_ver) != AR_S_YES)
 		{
 				goto INVALID_POINT;
 		}
 
 
-		if(__get_wchar_t_from_dict(obj, L"w", &stu->w) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-		if(__get_wchar_t_array_from_dict(obj, L"w_str", stu->w_str, 1024) != AR_S_YES)
+		if(__get_uint_32_t_from_dict(obj, L"agent_cli_rev_ver", &stu->agent_cli_rev_ver) != AR_S_YES)
 		{
 				goto INVALID_POINT;
 		}
 
 
-
-		if(__get_float_from_dict(obj, L"f", &stu->f) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-		if(__get_float_array_from_dict(obj, L"f_arr", stu->f_arr, 1024) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-		
-		if(__get_double_from_dict(obj, L"d", &stu->d) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-		if(__get_double_array_from_dict(obj, L"d_arr", stu->d_arr, 1024) != AR_S_YES)
+		if(__get_uint_32_t_from_dict(obj, L"agent_session_type", &stu->agent_session_type) != AR_S_YES)
 		{
 				goto INVALID_POINT;
 		}
 
 
-		if(__get_uint_16_t_from_dict(obj, L"u16", &stu->u16) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-		if(__get_uint_16_t_array_from_dict(obj, L"u16_arr", stu->u16_arr, 1024) != AR_S_YES)
+		if(__get_byte_t_array_from_dict(obj, L"extinfo", stu->extinfo, 4096) != AR_S_YES)
 		{
 				goto INVALID_POINT;
 		}
 
 
-		if(__get_int_64_t_from_dict(obj, L"i64", &stu->i64) != AR_S_YES)
-		{
-				goto INVALID_POINT;
-		}
-
-		if(__get_int_64_t_array_from_dict(obj, L"i64_arr", stu->i64_arr, 1024) != AR_S_YES)
+		if(__get_uint_32_t_from_dict(obj, L"extcount", &stu->extcount) != AR_S_YES)
 		{
 				goto INVALID_POINT;
 		}
 
 
-
-		tmp = SN_FindFromDictObjectByWcs(obj, L"h");
-		if(tmp == NULL)
-		{
-				is_ok = false;
-				goto INVALID_POINT;
-		}
-
-		if(!__get_daemonHandShake_t(tmp, &stu->h))
-		{
-				is_ok = false;
-				goto INVALID_POINT;
-		}
-
-
-		tmp = SN_FindFromDictObjectByWcs(obj, L"h_arr");
-		if(tmp == NULL)
-		{
-				is_ok = false;
-				goto INVALID_POINT;
-		}
-
-		if(!__get_daemonHandShake_t_array(tmp, stu->h_arr, 1024))
-		{
-				is_ok = false;
-				goto INVALID_POINT;
-		}
 
 		/***************************************************************************/
 
@@ -700,50 +367,9 @@ INVALID_POINT:
 }
 
 
-
-static snObject_t*		__put_daemonKeepalive_t_array(daemonKeepalive_t *stu, size_t arr_size)
+static ar_bool_t	__get_agentHandshake_t_array(snObject_t *obj, agentHandshake_t *stu, size_t arr_size)
 {
-		snObject_t		*stu_list;
-		size_t i;
-		AR_ASSERT(stu != NULL && arr_size > 0);
-
-		stu_list = SN_CreateObject(SN_LIST_T);
-
-		for(i = 0; i < arr_size; ++i)
-		{
-
-				/*************************************************************************/
-				snObject_t *tmp = __put_daemonKeepalive_t(&stu[i]);
-				if(tmp == NULL)
-				{
-						goto INVALID_POINT;
-				}
-				/*************************************************************************/
-
-
-				if(SN_InsertToListObject(stu_list, tmp) != AR_S_YES)
-				{
-						goto INVALID_POINT;
-				}
-		}
-
-		return stu_list;
-INVALID_POINT:
-
-		if(stu_list)
-		{
-				SN_DestroyObject(stu_list);
-				stu_list = NULL;
-		}
-
-		return stu_list;
-}
-
-
-
-static bool_t	__get_daemonKeepalive_t_array(snObject_t *obj, daemonKeepalive_t *stu, size_t arr_size)
-{
-		bool_t	is_ok;
+		ar_bool_t	is_ok;
 		size_t list_cnt;
 		size_t i;
 		AR_ASSERT(stu != NULL && obj != NULL && arr_size > 0);
@@ -773,7 +399,7 @@ static bool_t	__get_daemonKeepalive_t_array(snObject_t *obj, daemonKeepalive_t *
 				}
 				
 				/********************************************************************/
-				if(!__get_daemonKeepalive_t(item, &stu[i]))
+				if(!__get_agentHandshake_t(item, &stu[i]))
 				{
 						is_ok = false;
 						goto INVALID_POINT;
@@ -788,104 +414,1498 @@ INVALID_POINT:
 }
 
 
-daemonKeepalive_t ka;
-daemonKeepalive_t kb;
 
-static void marshal_die_test1()
+
+
+
+
+
+/******************************agentHandshakeReply_t********************************/
+
+static snObject_t*		__put_agentHandshakeReply_t(agentHandshakeReply_t *stu)
 {
-		
-		AR_memset(&ka, 0, sizeof(ka));
-		AR_memset(&kb, 0, sizeof(kb));
-		AR_printf(L"sizeof daemonKeepalive_t = %u KB\r\n", sizeof(ka) / 1024);
-
-		ka.h.session_id = 123;
-		
-		for(size_t i = 0; i < AR_NELEMS(ka.h_arr); ++i)
-		{
-				ka.h_arr[i].session_id = i;
-		}
-
-		ka.u = 456;
-
-		for(size_t i = 0; i < AR_NELEMS(ka.u_arr); ++i)
-		{
-				ka.u_arr[i] = i;
-		}
-
-
-		ka.b = 129;
-
-		for(size_t i = 0; i < AR_NELEMS(ka.b_arr); ++i)
-		{
-				ka.b_arr[i] = i % 255;
-		}
-
-
-		ka.u16 = AR_rand32() % 65536;
-		
-		for(size_t i = 0; i < AR_NELEMS(ka.u16_arr); ++i)
-		{
-				ka.u16_arr[i] = AR_rand32() % 65536;
-		}
-
-
-
-
-		ka.c = 'x';
-		AR_strcpy(ka.c_str, "ka.c");
-
-		ka.w = L'X';
-		AR_wcscpy(ka.w_str, L"ka.w");
-
-
-		for(size_t i = 0; i < AR_NELEMS(ka.f_arr); ++i)
-		{
-				ka.f_arr[i] = AR_rand_flt();
-		}
-
-
-		for(size_t i = 0; i < AR_NELEMS(ka.d_arr); ++i)
-		{
-				ka.d_arr[i] = AR_rand_dbl();
-		}
-
-
-
-
-		ar_uint_64_t beg = AR_GetTime_Milliseconds();
-		snObject_t *obj = __put_daemonKeepalive_t(&ka);
-		
-
-
-		if(!__get_daemonKeepalive_t(obj, &kb))
-		{
-				AR_ASSERT(false);
-		}
-		
-		
-
-		ar_uint_64_t end = AR_GetTime_Milliseconds();
-		AR_printf(L"elapsed = %u\r\n", end - beg);
-
-		arBuffer_t *buf = AR_CreateBuffer(128);
-
-		if(SN_PutObject(buf, obj) != AR_S_YES)
-		{
-				AR_ASSERT(false);
-		}
-
-		AR_printf(L"serialize = %u KB\r\n", AR_GetBufferAvailable(buf) / 1024);
-
-		SN_DestroyObject(obj);
+		snObject_t		*obj, *tmp;
+		AR_ASSERT(stu != NULL);
 		obj = NULL;
+		tmp = NULL;
 
-		AR_DestroyBuffer(buf);
-		buf = NULL;
+		obj = SN_CreateObject(SN_DICT_T);
+		if(obj == NULL)
+		{
+				goto INVALID_POINT;
+		}
+/************************************************************************************************/
+		if(__put_uint_32_t_to_dict(obj, L"agent_srv_main_ver", stu->agent_srv_main_ver) != AR_S_YES)
+		{
+				goto INVALID_POINT;		
+		}
+
+
+
+		if(__put_uint_32_t_to_dict(obj, L"agent_srv_sub_ver", stu->agent_srv_sub_ver) != AR_S_YES)
+		{
+				goto INVALID_POINT;		
+		}
+
+
+
+		if(__put_uint_32_t_to_dict(obj, L"agent_srv_rev_ver", stu->agent_srv_rev_ver) != AR_S_YES)
+		{
+				goto INVALID_POINT;		
+		}
+
+
+
+		if(__put_byte_t_array_to_dict(obj, L"extinfo", stu->extinfo, 4096) != AR_S_YES)
+		{
+				goto INVALID_POINT;		
+		}
+
+
+		if(__put_uint_32_t_to_dict(obj, L"extcount", stu->extcount) != AR_S_YES)
+		{
+				goto INVALID_POINT;		
+		}
+
+
+
+
+/************************************************************************************************/
+		return obj;
+INVALID_POINT:
+		if(obj)
+		{
+				SN_DestroyObject(obj);
+				obj = NULL;
+		}
+		return NULL;
+}
+
+
+static snObject_t*		__put_agentHandshakeReply_t_array(agentHandshakeReply_t *stu, size_t arr_size)
+{
+		snObject_t		*stu_list;
+		size_t i;
+		AR_ASSERT(stu != NULL && arr_size > 0);
+
+		stu_list = SN_CreateObject(SN_LIST_T);
+
+		for(i = 0; i < arr_size; ++i)
+		{
+
+				/*************************************************************************/
+				snObject_t *tmp = __put_agentHandshakeReply_t(&stu[i]);
+				if(tmp == NULL)
+				{
+						goto INVALID_POINT;
+				}
+				/*************************************************************************/
+
+
+				if(SN_InsertToListObject(stu_list, tmp) != AR_S_YES)
+				{
+						SN_DestroyObject(tmp);
+						tmp = NULL;
+						goto INVALID_POINT;
+				}
+		}
+
+		return stu_list;
+INVALID_POINT:
+
+		if(stu_list)
+		{
+				SN_DestroyObject(stu_list);
+				stu_list = NULL;
+		}
+
+		return stu_list;
+}
+
+
+
+static ar_bool_t	__get_agentHandshakeReply_t(snObject_t *obj, agentHandshakeReply_t *stu)
+{
+		ar_bool_t	is_ok;
+		AR_ASSERT(stu != NULL && obj != NULL);
+		AR_ASSERT(SN_GetObjectType(obj) == SN_DICT_T);
+		is_ok = true;
+
+		/***************************************************************************/
+		if(__get_uint_32_t_from_dict(obj, L"agent_srv_main_ver", &stu->agent_srv_main_ver) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+
+		if(__get_uint_32_t_from_dict(obj, L"agent_srv_sub_ver", &stu->agent_srv_sub_ver) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+
+		if(__get_uint_32_t_from_dict(obj, L"agent_srv_rev_ver", &stu->agent_srv_rev_ver) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+
+		if(__get_byte_t_array_from_dict(obj, L"extinfo", stu->extinfo, 4096) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+
+		if(__get_uint_32_t_from_dict(obj, L"extcount", &stu->extcount) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+
+
+		/***************************************************************************/
+
+		return true;
+INVALID_POINT:
+		is_ok = false;
+		return is_ok;
+}
+
+
+static ar_bool_t	__get_agentHandshakeReply_t_array(snObject_t *obj, agentHandshakeReply_t *stu, size_t arr_size)
+{
+		ar_bool_t	is_ok;
+		size_t list_cnt;
+		size_t i;
+		AR_ASSERT(stu != NULL && obj != NULL && arr_size > 0);
+
+		is_ok = true;
+
+		if(SN_GetObjectType(obj) != SN_LIST_T)
+		{
+				is_ok = false;
+				goto INVALID_POINT;
+		}
+
+		list_cnt = SN_GetListObjectCount(obj);
+
+		if(list_cnt != arr_size)
+		{
+				goto INVALID_POINT;
+		}
+
+
+		for(i = 0; i < list_cnt; ++i)
+		{
+				snObject_t *item = SN_GetFromListObject(obj, i);
+				if(item == NULL || SN_GetObjectType(item) != SN_DICT_T)
+				{
+						goto INVALID_POINT;
+				}
+				
+				/********************************************************************/
+				if(!__get_agentHandshakeReply_t(item, &stu[i]))
+				{
+						is_ok = false;
+						goto INVALID_POINT;
+				}
+				/********************************************************************/
+		}
+		return true;
+
+INVALID_POINT:
+		is_ok = false;
+		return is_ok;
+}
+
+
+
+
+
+
+
+
+/******************************agentErrorMsg_t********************************/
+
+static snObject_t*		__put_agentErrorMsg_t(agentErrorMsg_t *stu)
+{
+		snObject_t		*obj, *tmp;
+		AR_ASSERT(stu != NULL);
+		obj = NULL;
+		tmp = NULL;
+
+		obj = SN_CreateObject(SN_DICT_T);
+		if(obj == NULL)
+		{
+				goto INVALID_POINT;
+		}
+/************************************************************************************************/
+		if(__put_uint_32_t_to_dict(obj, L"err_code", stu->err_code) != AR_S_YES)
+		{
+				goto INVALID_POINT;		
+		}
+
+
+
+		if(__put_wchar_t_array_to_dict(obj, L"err_msg", stu->err_msg) != AR_S_YES)
+		{
+				goto INVALID_POINT;		
+		}
+
+
+
+
+/************************************************************************************************/
+		return obj;
+INVALID_POINT:
+		if(obj)
+		{
+				SN_DestroyObject(obj);
+				obj = NULL;
+		}
+		return NULL;
+}
+
+
+static snObject_t*		__put_agentErrorMsg_t_array(agentErrorMsg_t *stu, size_t arr_size)
+{
+		snObject_t		*stu_list;
+		size_t i;
+		AR_ASSERT(stu != NULL && arr_size > 0);
+
+		stu_list = SN_CreateObject(SN_LIST_T);
+
+		for(i = 0; i < arr_size; ++i)
+		{
+
+				/*************************************************************************/
+				snObject_t *tmp = __put_agentErrorMsg_t(&stu[i]);
+				if(tmp == NULL)
+				{
+						goto INVALID_POINT;
+				}
+				/*************************************************************************/
+
+
+				if(SN_InsertToListObject(stu_list, tmp) != AR_S_YES)
+				{
+						SN_DestroyObject(tmp);
+						tmp = NULL;
+						goto INVALID_POINT;
+				}
+		}
+
+		return stu_list;
+INVALID_POINT:
+
+		if(stu_list)
+		{
+				SN_DestroyObject(stu_list);
+				stu_list = NULL;
+		}
+
+		return stu_list;
+}
+
+
+
+static ar_bool_t	__get_agentErrorMsg_t(snObject_t *obj, agentErrorMsg_t *stu)
+{
+		ar_bool_t	is_ok;
+		AR_ASSERT(stu != NULL && obj != NULL);
+		AR_ASSERT(SN_GetObjectType(obj) == SN_DICT_T);
+		is_ok = true;
+
+		/***************************************************************************/
+		if(__get_uint_32_t_from_dict(obj, L"err_code", &stu->err_code) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+
+		if(__get_wchar_t_array_from_dict(obj, L"err_msg", stu->err_msg, 1024) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+
+
+		/***************************************************************************/
+
+		return true;
+INVALID_POINT:
+		is_ok = false;
+		return is_ok;
+}
+
+
+static ar_bool_t	__get_agentErrorMsg_t_array(snObject_t *obj, agentErrorMsg_t *stu, size_t arr_size)
+{
+		ar_bool_t	is_ok;
+		size_t list_cnt;
+		size_t i;
+		AR_ASSERT(stu != NULL && obj != NULL && arr_size > 0);
+
+		is_ok = true;
+
+		if(SN_GetObjectType(obj) != SN_LIST_T)
+		{
+				is_ok = false;
+				goto INVALID_POINT;
+		}
+
+		list_cnt = SN_GetListObjectCount(obj);
+
+		if(list_cnt != arr_size)
+		{
+				goto INVALID_POINT;
+		}
+
+
+		for(i = 0; i < list_cnt; ++i)
+		{
+				snObject_t *item = SN_GetFromListObject(obj, i);
+				if(item == NULL || SN_GetObjectType(item) != SN_DICT_T)
+				{
+						goto INVALID_POINT;
+				}
+				
+				/********************************************************************/
+				if(!__get_agentErrorMsg_t(item, &stu[i]))
+				{
+						is_ok = false;
+						goto INVALID_POINT;
+				}
+				/********************************************************************/
+		}
+		return true;
+
+INVALID_POINT:
+		is_ok = false;
+		return is_ok;
+}
+
+
+
+
+
+
+
+
+/******************************agentRequestURLRecordCount_t********************************/
+
+static snObject_t*		__put_agentRequestURLRecordCount_t(agentRequestURLRecordCount_t *stu)
+{
+		snObject_t		*obj, *tmp;
+		AR_ASSERT(stu != NULL);
+		obj = NULL;
+		tmp = NULL;
+
+		obj = SN_CreateObject(SN_DICT_T);
+		if(obj == NULL)
+		{
+				goto INVALID_POINT;
+		}
+/************************************************************************************************/
+		if(__put_uint_64_t_to_dict(obj, L"randkey", stu->randkey) != AR_S_YES)
+		{
+				goto INVALID_POINT;		
+		}
+
+
+
+
+/************************************************************************************************/
+		return obj;
+INVALID_POINT:
+		if(obj)
+		{
+				SN_DestroyObject(obj);
+				obj = NULL;
+		}
+		return NULL;
+}
+
+
+static snObject_t*		__put_agentRequestURLRecordCount_t_array(agentRequestURLRecordCount_t *stu, size_t arr_size)
+{
+		snObject_t		*stu_list;
+		size_t i;
+		AR_ASSERT(stu != NULL && arr_size > 0);
+
+		stu_list = SN_CreateObject(SN_LIST_T);
+
+		for(i = 0; i < arr_size; ++i)
+		{
+
+				/*************************************************************************/
+				snObject_t *tmp = __put_agentRequestURLRecordCount_t(&stu[i]);
+				if(tmp == NULL)
+				{
+						goto INVALID_POINT;
+				}
+				/*************************************************************************/
+
+
+				if(SN_InsertToListObject(stu_list, tmp) != AR_S_YES)
+				{
+						SN_DestroyObject(tmp);
+						tmp = NULL;
+						goto INVALID_POINT;
+				}
+		}
+
+		return stu_list;
+INVALID_POINT:
+
+		if(stu_list)
+		{
+				SN_DestroyObject(stu_list);
+				stu_list = NULL;
+		}
+
+		return stu_list;
+}
+
+
+
+static ar_bool_t	__get_agentRequestURLRecordCount_t(snObject_t *obj, agentRequestURLRecordCount_t *stu)
+{
+		ar_bool_t	is_ok;
+		AR_ASSERT(stu != NULL && obj != NULL);
+		AR_ASSERT(SN_GetObjectType(obj) == SN_DICT_T);
+		is_ok = true;
+
+		/***************************************************************************/
+		if(__get_uint_64_t_from_dict(obj, L"randkey", &stu->randkey) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+
+
+		/***************************************************************************/
+
+		return true;
+INVALID_POINT:
+		is_ok = false;
+		return is_ok;
+}
+
+
+static ar_bool_t	__get_agentRequestURLRecordCount_t_array(snObject_t *obj, agentRequestURLRecordCount_t *stu, size_t arr_size)
+{
+		ar_bool_t	is_ok;
+		size_t list_cnt;
+		size_t i;
+		AR_ASSERT(stu != NULL && obj != NULL && arr_size > 0);
+
+		is_ok = true;
+
+		if(SN_GetObjectType(obj) != SN_LIST_T)
+		{
+				is_ok = false;
+				goto INVALID_POINT;
+		}
+
+		list_cnt = SN_GetListObjectCount(obj);
+
+		if(list_cnt != arr_size)
+		{
+				goto INVALID_POINT;
+		}
+
+
+		for(i = 0; i < list_cnt; ++i)
+		{
+				snObject_t *item = SN_GetFromListObject(obj, i);
+				if(item == NULL || SN_GetObjectType(item) != SN_DICT_T)
+				{
+						goto INVALID_POINT;
+				}
+				
+				/********************************************************************/
+				if(!__get_agentRequestURLRecordCount_t(item, &stu[i]))
+				{
+						is_ok = false;
+						goto INVALID_POINT;
+				}
+				/********************************************************************/
+		}
+		return true;
+
+INVALID_POINT:
+		is_ok = false;
+		return is_ok;
+}
+
+
+
+
+
+
+
+
+/******************************agentURLRecordCount_t********************************/
+
+static snObject_t*		__put_agentURLRecordCount_t(agentURLRecordCount_t *stu)
+{
+		snObject_t		*obj, *tmp;
+		AR_ASSERT(stu != NULL);
+		obj = NULL;
+		tmp = NULL;
+
+		obj = SN_CreateObject(SN_DICT_T);
+		if(obj == NULL)
+		{
+				goto INVALID_POINT;
+		}
+/************************************************************************************************/
+		if(__put_uint_32_t_to_dict(obj, L"count", stu->count) != AR_S_YES)
+		{
+				goto INVALID_POINT;		
+		}
+
+
+
+
+/************************************************************************************************/
+		return obj;
+INVALID_POINT:
+		if(obj)
+		{
+				SN_DestroyObject(obj);
+				obj = NULL;
+		}
+		return NULL;
+}
+
+
+static snObject_t*		__put_agentURLRecordCount_t_array(agentURLRecordCount_t *stu, size_t arr_size)
+{
+		snObject_t		*stu_list;
+		size_t i;
+		AR_ASSERT(stu != NULL && arr_size > 0);
+
+		stu_list = SN_CreateObject(SN_LIST_T);
+
+		for(i = 0; i < arr_size; ++i)
+		{
+
+				/*************************************************************************/
+				snObject_t *tmp = __put_agentURLRecordCount_t(&stu[i]);
+				if(tmp == NULL)
+				{
+						goto INVALID_POINT;
+				}
+				/*************************************************************************/
+
+
+				if(SN_InsertToListObject(stu_list, tmp) != AR_S_YES)
+				{
+						SN_DestroyObject(tmp);
+						tmp = NULL;
+						goto INVALID_POINT;
+				}
+		}
+
+		return stu_list;
+INVALID_POINT:
+
+		if(stu_list)
+		{
+				SN_DestroyObject(stu_list);
+				stu_list = NULL;
+		}
+
+		return stu_list;
+}
+
+
+
+static ar_bool_t	__get_agentURLRecordCount_t(snObject_t *obj, agentURLRecordCount_t *stu)
+{
+		ar_bool_t	is_ok;
+		AR_ASSERT(stu != NULL && obj != NULL);
+		AR_ASSERT(SN_GetObjectType(obj) == SN_DICT_T);
+		is_ok = true;
+
+		/***************************************************************************/
+		if(__get_uint_32_t_from_dict(obj, L"count", &stu->count) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+
+
+		/***************************************************************************/
+
+		return true;
+INVALID_POINT:
+		is_ok = false;
+		return is_ok;
+}
+
+
+static ar_bool_t	__get_agentURLRecordCount_t_array(snObject_t *obj, agentURLRecordCount_t *stu, size_t arr_size)
+{
+		ar_bool_t	is_ok;
+		size_t list_cnt;
+		size_t i;
+		AR_ASSERT(stu != NULL && obj != NULL && arr_size > 0);
+
+		is_ok = true;
+
+		if(SN_GetObjectType(obj) != SN_LIST_T)
+		{
+				is_ok = false;
+				goto INVALID_POINT;
+		}
+
+		list_cnt = SN_GetListObjectCount(obj);
+
+		if(list_cnt != arr_size)
+		{
+				goto INVALID_POINT;
+		}
+
+
+		for(i = 0; i < list_cnt; ++i)
+		{
+				snObject_t *item = SN_GetFromListObject(obj, i);
+				if(item == NULL || SN_GetObjectType(item) != SN_DICT_T)
+				{
+						goto INVALID_POINT;
+				}
+				
+				/********************************************************************/
+				if(!__get_agentURLRecordCount_t(item, &stu[i]))
+				{
+						is_ok = false;
+						goto INVALID_POINT;
+				}
+				/********************************************************************/
+		}
+		return true;
+
+INVALID_POINT:
+		is_ok = false;
+		return is_ok;
+}
+
+
+
+
+
+
+
+
+/******************************agentRequestURLRecord_t********************************/
+
+static snObject_t*		__put_agentRequestURLRecord_t(agentRequestURLRecord_t *stu)
+{
+		snObject_t		*obj, *tmp;
+		AR_ASSERT(stu != NULL);
+		obj = NULL;
+		tmp = NULL;
+
+		obj = SN_CreateObject(SN_DICT_T);
+		if(obj == NULL)
+		{
+				goto INVALID_POINT;
+		}
+/************************************************************************************************/
+		if(__put_uint_32_t_to_dict(obj, L"start", stu->start) != AR_S_YES)
+		{
+				goto INVALID_POINT;		
+		}
+
+
+
+		if(__put_uint_32_t_to_dict(obj, L"count", stu->count) != AR_S_YES)
+		{
+				goto INVALID_POINT;		
+		}
+
+
+
+
+/************************************************************************************************/
+		return obj;
+INVALID_POINT:
+		if(obj)
+		{
+				SN_DestroyObject(obj);
+				obj = NULL;
+		}
+		return NULL;
+}
+
+
+static snObject_t*		__put_agentRequestURLRecord_t_array(agentRequestURLRecord_t *stu, size_t arr_size)
+{
+		snObject_t		*stu_list;
+		size_t i;
+		AR_ASSERT(stu != NULL && arr_size > 0);
+
+		stu_list = SN_CreateObject(SN_LIST_T);
+
+		for(i = 0; i < arr_size; ++i)
+		{
+
+				/*************************************************************************/
+				snObject_t *tmp = __put_agentRequestURLRecord_t(&stu[i]);
+				if(tmp == NULL)
+				{
+						goto INVALID_POINT;
+				}
+				/*************************************************************************/
+
+
+				if(SN_InsertToListObject(stu_list, tmp) != AR_S_YES)
+				{
+						SN_DestroyObject(tmp);
+						tmp = NULL;
+						goto INVALID_POINT;
+				}
+		}
+
+		return stu_list;
+INVALID_POINT:
+
+		if(stu_list)
+		{
+				SN_DestroyObject(stu_list);
+				stu_list = NULL;
+		}
+
+		return stu_list;
+}
+
+
+
+static ar_bool_t	__get_agentRequestURLRecord_t(snObject_t *obj, agentRequestURLRecord_t *stu)
+{
+		ar_bool_t	is_ok;
+		AR_ASSERT(stu != NULL && obj != NULL);
+		AR_ASSERT(SN_GetObjectType(obj) == SN_DICT_T);
+		is_ok = true;
+
+		/***************************************************************************/
+		if(__get_uint_32_t_from_dict(obj, L"start", &stu->start) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+
+		if(__get_uint_32_t_from_dict(obj, L"count", &stu->count) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+
+
+		/***************************************************************************/
+
+		return true;
+INVALID_POINT:
+		is_ok = false;
+		return is_ok;
+}
+
+
+static ar_bool_t	__get_agentRequestURLRecord_t_array(snObject_t *obj, agentRequestURLRecord_t *stu, size_t arr_size)
+{
+		ar_bool_t	is_ok;
+		size_t list_cnt;
+		size_t i;
+		AR_ASSERT(stu != NULL && obj != NULL && arr_size > 0);
+
+		is_ok = true;
+
+		if(SN_GetObjectType(obj) != SN_LIST_T)
+		{
+				is_ok = false;
+				goto INVALID_POINT;
+		}
+
+		list_cnt = SN_GetListObjectCount(obj);
+
+		if(list_cnt != arr_size)
+		{
+				goto INVALID_POINT;
+		}
+
+
+		for(i = 0; i < list_cnt; ++i)
+		{
+				snObject_t *item = SN_GetFromListObject(obj, i);
+				if(item == NULL || SN_GetObjectType(item) != SN_DICT_T)
+				{
+						goto INVALID_POINT;
+				}
+				
+				/********************************************************************/
+				if(!__get_agentRequestURLRecord_t(item, &stu[i]))
+				{
+						is_ok = false;
+						goto INVALID_POINT;
+				}
+				/********************************************************************/
+		}
+		return true;
+
+INVALID_POINT:
+		is_ok = false;
+		return is_ok;
+}
+
+
+
+
+
+
+
+
+/******************************agentURLRecord_t********************************/
+
+static snObject_t*		__put_agentURLRecord_t(agentURLRecord_t *stu)
+{
+		snObject_t		*obj, *tmp;
+		AR_ASSERT(stu != NULL);
+		obj = NULL;
+		tmp = NULL;
+
+		obj = SN_CreateObject(SN_DICT_T);
+		if(obj == NULL)
+		{
+				goto INVALID_POINT;
+		}
+/************************************************************************************************/
+		if(__put_uint_64_t_to_dict(obj, L"id", stu->id) != AR_S_YES)
+		{
+				goto INVALID_POINT;		
+		}
+
+
+
+		if(__put_wchar_t_array_to_dict(obj, L"full_url", stu->full_url) != AR_S_YES)
+		{
+				goto INVALID_POINT;		
+		}
+
+
+
+		if(__put_uint_32_t_to_dict(obj, L"type", stu->type) != AR_S_YES)
+		{
+				goto INVALID_POINT;		
+		}
+
+
+
+		if(__put_uint_32_t_to_dict(obj, L"sub_type", stu->sub_type) != AR_S_YES)
+		{
+				goto INVALID_POINT;		
+		}
+
+
+
+		if(__put_uint_64_t_to_dict(obj, L"blocked_time_ms", stu->blocked_time_ms) != AR_S_YES)
+		{
+				goto INVALID_POINT;		
+		}
+
+
+
+		if(__put_wchar_t_array_to_dict(obj, L"browser", stu->browser) != AR_S_YES)
+		{
+				goto INVALID_POINT;		
+		}
+
+
+
+		if(__put_wchar_t_array_to_dict(obj, L"user", stu->user) != AR_S_YES)
+		{
+				goto INVALID_POINT;		
+		}
+
+
+
+
+/************************************************************************************************/
+		return obj;
+INVALID_POINT:
+		if(obj)
+		{
+				SN_DestroyObject(obj);
+				obj = NULL;
+		}
+		return NULL;
+}
+
+
+static snObject_t*		__put_agentURLRecord_t_array(agentURLRecord_t *stu, size_t arr_size)
+{
+		snObject_t		*stu_list;
+		size_t i;
+		AR_ASSERT(stu != NULL && arr_size > 0);
+
+		stu_list = SN_CreateObject(SN_LIST_T);
+
+		for(i = 0; i < arr_size; ++i)
+		{
+
+				/*************************************************************************/
+				snObject_t *tmp = __put_agentURLRecord_t(&stu[i]);
+				if(tmp == NULL)
+				{
+						goto INVALID_POINT;
+				}
+				/*************************************************************************/
+
+
+				if(SN_InsertToListObject(stu_list, tmp) != AR_S_YES)
+				{
+						SN_DestroyObject(tmp);
+						tmp = NULL;
+						goto INVALID_POINT;
+				}
+		}
+
+		return stu_list;
+INVALID_POINT:
+
+		if(stu_list)
+		{
+				SN_DestroyObject(stu_list);
+				stu_list = NULL;
+		}
+
+		return stu_list;
+}
+
+
+
+static ar_bool_t	__get_agentURLRecord_t(snObject_t *obj, agentURLRecord_t *stu)
+{
+		ar_bool_t	is_ok;
+		AR_ASSERT(stu != NULL && obj != NULL);
+		AR_ASSERT(SN_GetObjectType(obj) == SN_DICT_T);
+		is_ok = true;
+
+		/***************************************************************************/
+		if(__get_uint_64_t_from_dict(obj, L"id", &stu->id) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+
+		if(__get_wchar_t_array_from_dict(obj, L"full_url", stu->full_url, 1024) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+
+		if(__get_uint_32_t_from_dict(obj, L"type", &stu->type) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+
+		if(__get_uint_32_t_from_dict(obj, L"sub_type", &stu->sub_type) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+
+		if(__get_uint_64_t_from_dict(obj, L"blocked_time_ms", &stu->blocked_time_ms) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+
+		if(__get_wchar_t_array_from_dict(obj, L"browser", stu->browser, 128) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+
+		if(__get_wchar_t_array_from_dict(obj, L"user", stu->user, 128) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+
+
+		/***************************************************************************/
+
+		return true;
+INVALID_POINT:
+		is_ok = false;
+		return is_ok;
+}
+
+
+static ar_bool_t	__get_agentURLRecord_t_array(snObject_t *obj, agentURLRecord_t *stu, size_t arr_size)
+{
+		ar_bool_t	is_ok;
+		size_t list_cnt;
+		size_t i;
+		AR_ASSERT(stu != NULL && obj != NULL && arr_size > 0);
+
+		is_ok = true;
+
+		if(SN_GetObjectType(obj) != SN_LIST_T)
+		{
+				is_ok = false;
+				goto INVALID_POINT;
+		}
+
+		list_cnt = SN_GetListObjectCount(obj);
+
+		if(list_cnt != arr_size)
+		{
+				goto INVALID_POINT;
+		}
+
+
+		for(i = 0; i < list_cnt; ++i)
+		{
+				snObject_t *item = SN_GetFromListObject(obj, i);
+				if(item == NULL || SN_GetObjectType(item) != SN_DICT_T)
+				{
+						goto INVALID_POINT;
+				}
+				
+				/********************************************************************/
+				if(!__get_agentURLRecord_t(item, &stu[i]))
+				{
+						is_ok = false;
+						goto INVALID_POINT;
+				}
+				/********************************************************************/
+		}
+		return true;
+
+INVALID_POINT:
+		is_ok = false;
+		return is_ok;
+}
+
+
+
+
+
+
+
+
+/******************************removeURLRecord_t********************************/
+
+static snObject_t*		__put_removeURLRecord_t(removeURLRecord_t *stu)
+{
+		snObject_t		*obj, *tmp;
+		AR_ASSERT(stu != NULL);
+		obj = NULL;
+		tmp = NULL;
+
+		obj = SN_CreateObject(SN_DICT_T);
+		if(obj == NULL)
+		{
+				goto INVALID_POINT;
+		}
+/************************************************************************************************/
+		if(__put_uint_64_t_to_dict(obj, L"start_id", stu->start_id) != AR_S_YES)
+		{
+				goto INVALID_POINT;		
+		}
+
+
+
+		if(__put_uint_64_t_to_dict(obj, L"end_id", stu->end_id) != AR_S_YES)
+		{
+				goto INVALID_POINT;		
+		}
+
+
+
+
+/************************************************************************************************/
+		return obj;
+INVALID_POINT:
+		if(obj)
+		{
+				SN_DestroyObject(obj);
+				obj = NULL;
+		}
+		return NULL;
+}
+
+
+static snObject_t*		__put_removeURLRecord_t_array(removeURLRecord_t *stu, size_t arr_size)
+{
+		snObject_t		*stu_list;
+		size_t i;
+		AR_ASSERT(stu != NULL && arr_size > 0);
+
+		stu_list = SN_CreateObject(SN_LIST_T);
+
+		for(i = 0; i < arr_size; ++i)
+		{
+
+				/*************************************************************************/
+				snObject_t *tmp = __put_removeURLRecord_t(&stu[i]);
+				if(tmp == NULL)
+				{
+						goto INVALID_POINT;
+				}
+				/*************************************************************************/
+
+
+				if(SN_InsertToListObject(stu_list, tmp) != AR_S_YES)
+				{
+						SN_DestroyObject(tmp);
+						tmp = NULL;
+						goto INVALID_POINT;
+				}
+		}
+
+		return stu_list;
+INVALID_POINT:
+
+		if(stu_list)
+		{
+				SN_DestroyObject(stu_list);
+				stu_list = NULL;
+		}
+
+		return stu_list;
+}
+
+
+
+static ar_bool_t	__get_removeURLRecord_t(snObject_t *obj, removeURLRecord_t *stu)
+{
+		ar_bool_t	is_ok;
+		AR_ASSERT(stu != NULL && obj != NULL);
+		AR_ASSERT(SN_GetObjectType(obj) == SN_DICT_T);
+		is_ok = true;
+
+		/***************************************************************************/
+		if(__get_uint_64_t_from_dict(obj, L"start_id", &stu->start_id) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+
+		if(__get_uint_64_t_from_dict(obj, L"end_id", &stu->end_id) != AR_S_YES)
+		{
+				goto INVALID_POINT;
+		}
+
+
+
+		/***************************************************************************/
+
+		return true;
+INVALID_POINT:
+		is_ok = false;
+		return is_ok;
+}
+
+
+static ar_bool_t	__get_removeURLRecord_t_array(snObject_t *obj, removeURLRecord_t *stu, size_t arr_size)
+{
+		ar_bool_t	is_ok;
+		size_t list_cnt;
+		size_t i;
+		AR_ASSERT(stu != NULL && obj != NULL && arr_size > 0);
+
+		is_ok = true;
+
+		if(SN_GetObjectType(obj) != SN_LIST_T)
+		{
+				is_ok = false;
+				goto INVALID_POINT;
+		}
+
+		list_cnt = SN_GetListObjectCount(obj);
+
+		if(list_cnt != arr_size)
+		{
+				goto INVALID_POINT;
+		}
+
+
+		for(i = 0; i < list_cnt; ++i)
+		{
+				snObject_t *item = SN_GetFromListObject(obj, i);
+				if(item == NULL || SN_GetObjectType(item) != SN_DICT_T)
+				{
+						goto INVALID_POINT;
+				}
+				
+				/********************************************************************/
+				if(!__get_removeURLRecord_t(item, &stu[i]))
+				{
+						is_ok = false;
+						goto INVALID_POINT;
+				}
+				/********************************************************************/
+		}
+		return true;
+
+INVALID_POINT:
+		is_ok = false;
+		return is_ok;
+}
+
+
+
+
+
+static arStatus_t		agentInterprocessMessage_t_Marshal(agentInterprocessMessage_t *uni_type, arBuffer_t *out)
+{
+		arStatus_t		ar_status;
+		snObject_t		*key, *val;
+		snObject_t		*final_obj;
+		AR_ASSERT(uni_type != NULL && out != NULL);
+		ar_status = AR_S_YES;
+		key = NULL;
+		val	= NULL;
+		final_obj = NULL;
+		
+		key = SN_CreateObject(SN_INT_T);
+		if(key == NULL)
+		{
+				ar_status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+
+		SN_SetUIntObject(key, uni_type->type);
+
+		switch(uni_type->type)
+		{
+/**********************************************/
+		case AGENTHANDSHAKE_T :
+				val = __put_agentHandshake_t(&uni_type->agentHandshake_t_val);
+				break;
+		case AGENTHANDSHAKEREPLY_T :
+				val = __put_agentHandshakeReply_t(&uni_type->agentHandshakeReply_t_val);
+				break;
+		case AGENTERRORMSG_T :
+				val = __put_agentErrorMsg_t(&uni_type->agentErrorMsg_t_val);
+				break;
+		case AGENTREQUESTURLRECORDCOUNT_T :
+				val = __put_agentRequestURLRecordCount_t(&uni_type->agentRequestURLRecordCount_t_val);
+				break;
+		case AGENTURLRECORDCOUNT_T :
+				val = __put_agentURLRecordCount_t(&uni_type->agentURLRecordCount_t_val);
+				break;
+		case AGENTREQUESTURLRECORD_T :
+				val = __put_agentRequestURLRecord_t(&uni_type->agentRequestURLRecord_t_val);
+				break;
+		case AGENTURLRECORD_T :
+				val = __put_agentURLRecord_t(&uni_type->agentURLRecord_t_val);
+				break;
+		case REMOVEURLRECORD_T :
+				val = __put_removeURLRecord_t(&uni_type->removeURLRecord_t_val);
+				break;
+/**********************************************/
+		default:
+				ar_status = AR_E_INVAL;
+				goto END_POINT;
+		}
 		
 
-		AR_printf(L"AR_memcmp(&ka, &kb, sizeof(ka)) = %u\r\n", AR_memcmp(&ka, &kb, sizeof(ka)));
+		if(val == NULL)
+		{
+				ar_status = AR_E_INVAL;
+				goto END_POINT;
+		}
 
+
+		final_obj = SN_CreateObject(SN_LIST_T);
+
+		if(final_obj == NULL)
+		{
+				ar_status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+
+		ar_status = SN_InsertToListObject(final_obj, key);
+		
+		if(ar_status != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+
+		key = NULL;
+
+		ar_status = SN_InsertToListObject(final_obj, val);
+		
+		if(ar_status != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+
+		val = NULL;
+
+		ar_status = SN_PutObject(out, final_obj);
+
+		if(ar_status != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+
+END_POINT:
+
+		if(key)
+		{
+				SN_DestroyObject(key);
+				key = NULL;
+		}
+		
+		if(val)
+		{
+				SN_DestroyObject(val);
+				val = NULL;
+		}
+
+		if(final_obj)
+		{
+				SN_DestroyObject(final_obj);
+				final_obj = NULL;
+		}
+
+		return ar_status;
 }
+
+
+static arStatus_t		agentInterprocessMessage_t_UnMarshal(agentInterprocessMessage_t *uni_type, arBuffer_t *in)
+{
+		snRetVal_t		sn_ret;
+		arStatus_t		ar_status;
+		snObject_t		*type_obj, *data_obj;
+		AR_ASSERT(uni_type != NULL && in != NULL);
+
+		ar_status = AR_S_YES;
+		type_obj = NULL;
+		data_obj = NULL;
+		AR_memset(uni_type, 0, sizeof(*uni_type));
+
+		
+		sn_ret = SN_GetObject(in);
+
+		ar_status = sn_ret.status;
+
+		if(ar_status != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+
+		if(SN_GetObjectType(sn_ret.obj) != SN_LIST_T || SN_GetListObjectCount(sn_ret.obj) != 2)
+		{
+				ar_status = AR_E_INVAL;
+				goto END_POINT;
+		}
+		
+		type_obj = SN_GetFromListObject(sn_ret.obj, 0);
+
+		if(type_obj == NULL || SN_GetObjectType(type_obj) != SN_INT_T)
+		{
+				ar_status = AR_E_INVAL;
+				goto END_POINT;
+		}
+
+		data_obj = SN_GetFromListObject(sn_ret.obj, 1);
+
+		if(data_obj == NULL || SN_GetObjectType(data_obj) != SN_DICT_T)
+		{
+				ar_status = AR_E_INVAL;
+				goto END_POINT;
+		}
+		uni_type->type = (ar_uint_32_t)SN_GetUIntObject(type_obj);
+		switch(uni_type->type)
+		{
+		/*******************************************************************************************/
+		case AGENTHANDSHAKE_T :
+				if(!__get_agentHandshake_t(data_obj, &uni_type->agentHandshake_t_val))
+				{
+								ar_status = AR_E_INVAL;
+								goto END_POINT;
+				};
+				break;
+		case AGENTHANDSHAKEREPLY_T :
+				if(!__get_agentHandshakeReply_t(data_obj, &uni_type->agentHandshakeReply_t_val))
+				{
+								ar_status = AR_E_INVAL;
+								goto END_POINT;
+				};
+				break;
+		case AGENTERRORMSG_T :
+				if(!__get_agentErrorMsg_t(data_obj, &uni_type->agentErrorMsg_t_val))
+				{
+								ar_status = AR_E_INVAL;
+								goto END_POINT;
+				};
+				break;
+		case AGENTREQUESTURLRECORDCOUNT_T :
+				if(!__get_agentRequestURLRecordCount_t(data_obj, &uni_type->agentRequestURLRecordCount_t_val))
+				{
+								ar_status = AR_E_INVAL;
+								goto END_POINT;
+				};
+				break;
+		case AGENTURLRECORDCOUNT_T :
+				if(!__get_agentURLRecordCount_t(data_obj, &uni_type->agentURLRecordCount_t_val))
+				{
+								ar_status = AR_E_INVAL;
+								goto END_POINT;
+				};
+				break;
+		case AGENTREQUESTURLRECORD_T :
+				if(!__get_agentRequestURLRecord_t(data_obj, &uni_type->agentRequestURLRecord_t_val))
+				{
+								ar_status = AR_E_INVAL;
+								goto END_POINT;
+				};
+				break;
+		case AGENTURLRECORD_T :
+				if(!__get_agentURLRecord_t(data_obj, &uni_type->agentURLRecord_t_val))
+				{
+								ar_status = AR_E_INVAL;
+								goto END_POINT;
+				};
+				break;
+		case REMOVEURLRECORD_T :
+				if(!__get_removeURLRecord_t(data_obj, &uni_type->removeURLRecord_t_val))
+				{
+								ar_status = AR_E_INVAL;
+								goto END_POINT;
+				};
+				break;
+/*******************************************************************************************/
+		default:
+				ar_status = AR_E_INVAL;
+				goto END_POINT;
+				break;
+		}
+
+
+END_POINT:
+		if(sn_ret.obj)
+		{
+				SN_DestroyObject(sn_ret.obj);
+				sn_ret.obj = NULL;
+		}
+
+		return ar_status;
+}
+
+
+
+
+
 
 namespace TESTSP{
 }

@@ -25,7 +25,7 @@ void			Parser_UnInitTermInfoList(psrTermInfoList_t	*lst);
 void			Parser_ClearTermInfoList(psrTermInfoList_t	*lst);
 psrTermInfo_t*	Parser_FindTermByName(psrTermInfoList_t	*lst, const wchar_t *name);
 psrTermInfo_t*	Parser_FindTermByValue(psrTermInfoList_t	*lst, size_t val);
-bool_t			Parser_InsertToTermInfoList(psrTermInfoList_t	*lst, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f);
+ar_bool_t			Parser_InsertToTermInfoList(psrTermInfoList_t	*lst, const wchar_t *name, size_t val, psrAssocType_t assoc, size_t prec, psrTermFunc_t	leaf_f);
 */
 
 
@@ -224,7 +224,7 @@ arStatus_t		Parser_CreateRule(psrRule_t **prule, const psrSymb_t *head, const ps
 {
 		psrRule_t *rule;
 		size_t i;
-		bool_t			inerr;
+		ar_bool_t			inerr;
 		const wchar_t*  right_term;
 		
 		
@@ -583,7 +583,7 @@ psrRule_t*		Parser_CopyNewRule(const psrRule_t *rule)
 
 }
 
-bool_t			Parser_IsEmptyRule(const psrRule_t *rule)
+ar_bool_t			Parser_IsEmptyRule(const psrRule_t *rule)
 {
 		AR_ASSERT(rule != NULL);
 
@@ -1279,9 +1279,9 @@ psrTermInfo_t*			Parser_GetTermSymbInfoByValue(const psrGrammar_t	*grammar, size
 arStatus_t			Parser_CheckIsValidGrammar(const psrGrammar_t *grammar)
 {
 		size_t i,j,k;
-		bool_t result;
+		ar_bool_t result;
 		const psrSymbList_t *lst;
-		bool_t	*mark_tbl; 
+		ar_bool_t	*mark_tbl; 
 		psrGrammar_t *gmr;
 		AR_ASSERT(grammar != NULL);
 		gmr = (psrGrammar_t*)grammar;
@@ -1301,7 +1301,7 @@ arStatus_t			Parser_CheckIsValidGrammar(const psrGrammar_t *grammar)
 		lst = Parser_GetSymbList(grammar);
 		AR_ASSERT(lst != NULL);
 
-		mark_tbl = AR_NEWARR0(bool_t, lst->count * lst->count);/*用mark_tbl记录此错误是否已经报告过了*/
+		mark_tbl = AR_NEWARR0(ar_bool_t, lst->count * lst->count);/*用mark_tbl记录此错误是否已经报告过了*/
 
 		if(mark_tbl == NULL)
 		{
@@ -1323,7 +1323,7 @@ arStatus_t			Parser_CheckIsValidGrammar(const psrGrammar_t *grammar)
 
 						if(symb->type == PARSER_NONTERM)		
 						{
-								bool_t is_ok;
+								ar_bool_t is_ok;
 								is_ok = false;
 								for(k = 0; !is_ok && k < grammar->count; ++k)/*检查这里引用的非终结符symb是否存有定义*/
 								{
@@ -1366,7 +1366,7 @@ arStatus_t			Parser_CheckIsValidGrammar(const psrGrammar_t *grammar)
 		for(i = 0; i < lst->count; ++i)/*此部分检查非终结符是否被引用过*/
 		{
 				const psrSymb_t *symb;
-				bool_t is_ok;
+				ar_bool_t is_ok;
 				symb = lst->lst[i];
 				is_ok = false;
 				
@@ -1426,7 +1426,7 @@ firstset求法为，例如A->X(0)...X(n-1);
 arStatus_t					Parser_CalcFirstSet(const psrGrammar_t *grammar, psrSymbMap_t *first_set)
 {
 		size_t i;
-		bool_t changed;
+		ar_bool_t changed;
 		const psrSymbList_t		*lst;
 		const psrSymb_t			*key;
 		arStatus_t status;
@@ -1600,7 +1600,7 @@ j == n-1:Follow(X(i)) += (First(X(j)) - {Epsilon})，循环结束，并将Follow(X(i) +=
 arStatus_t				Parser_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *follow_set, const psrSymbMap_t *first_set)
 {
 		size_t i;
-		bool_t changed;
+		ar_bool_t changed;
 		const psrSymbList_t *lst;
 		psrMapRec_t *rec1 = NULL, *rec2 = NULL;
 		arStatus_t status;

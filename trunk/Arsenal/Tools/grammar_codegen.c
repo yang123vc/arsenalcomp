@@ -53,7 +53,7 @@ typedef struct __handler_record_tag
 {
 		wchar_t			*name;
 		wchar_t			*handler_def;
-		bool_t			has_spec_def;
+		ar_bool_t			has_spec_def;
 }handlerRec_t;
 
 typedef struct __handler_table_tag
@@ -103,7 +103,7 @@ static handlerRec_t*	FindFromHandlerTable(handlerTbl_t		*tbl, const wchar_t *nam
 		return NULL;
 }
 
-static arStatus_t			InsertToHandlerTable(handlerTbl_t		*tbl, const wchar_t *name, const wchar_t *handler_def, bool_t has_spec_def)
+static arStatus_t			InsertToHandlerTable(handlerTbl_t		*tbl, const wchar_t *name, const wchar_t *handler_def, ar_bool_t has_spec_def)
 {
 		handlerRec_t *rec;
 		AR_ASSERT(tbl != NULL && name != NULL);
@@ -481,7 +481,7 @@ arStatus_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 				{
 						size_t tmp_len;
 						wchar_t *handler, *handler_def, *tmp;
-						bool_t	has_spec_def = false;
+						ar_bool_t	has_spec_def = false;
                         /***************************************************生成handler和handler_def*******************************************************/
 						if(cfg->rule[i].action_name)
 						{
@@ -567,7 +567,7 @@ arStatus_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
                                 /****************************************************生成handler对应的注释*****************************************************************/
 								for(k = 0; k < cfg->rule_cnt; ++k)
 								{
-										bool_t insert_comment = false;
+										ar_bool_t insert_comment = false;
                                         
 										if(cfg->rule[k].action_name == NULL && cfg->rule[i].action_name == NULL)
 										{

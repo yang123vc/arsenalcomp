@@ -220,7 +220,7 @@ arStatus_t		AR_UnLockMutex(arMutex_t *mtx)
 
 /****************************************************************************Event************************************************/
 
-arEvent_t*		AR_CreateEvent(bool_t is_auto_reset)
+arEvent_t*		AR_CreateEvent(ar_bool_t is_auto_reset)
 {
 		HANDLE evt;
 		evt = CreateEvent(NULL, is_auto_reset ? FALSE : TRUE, FALSE, NULL);

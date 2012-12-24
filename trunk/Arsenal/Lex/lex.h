@@ -36,7 +36,7 @@ typedef struct __lex_action_tag
 {
 		size_t			value;
 		size_t			priority;
-		bool_t			is_skip;
+		ar_bool_t			is_skip;
 }lexAction_t;
 
 
@@ -116,7 +116,7 @@ typedef struct __lex_match_result_tag	lexMatch_t;
 
 struct __lex_match_result_tag
 {
-		bool_t							is_ok;
+		ar_bool_t							is_ok;
 		const wchar_t					*input;
 		const wchar_t					*next;
 		size_t							line;
@@ -161,7 +161,7 @@ void			Lex_SkipN(lexMatch_t *pmatch, size_t nchar);
 void			Lex_PutBack(lexMatch_t *pmatch, const lexToken_t *tok);
 
 
-void			Lex_MatchFlags(lexMatch_t *pmatch, ar_uint_t flags, bool_t is_on);
+void			Lex_MatchFlags(lexMatch_t *pmatch, ar_uint_t flags, ar_bool_t is_on);
 void			Lex_MatchClearFlags(lexMatch_t *pmatch);
 
 void			Lex_MatchGetCoordinate(const lexMatch_t *pmatch, size_t *index, size_t *line, size_t *col);
@@ -186,7 +186,7 @@ arStatus_t		Lex_Match(lexMatch_t *match, lexToken_t *tok);
 //AR_LEX_CR+LF:		AR_LEX_CR followed by AR_LEX_LF
 
 
-bool_t Lex_IsLineTerminator(wchar_t c);
+ar_bool_t Lex_IsLineTerminator(wchar_t c);
 
 /*****************************************************************************************************/
 

@@ -21,7 +21,7 @@ AR_NAMESPACE_BEGIN
 
 typedef struct __sn_int_tag
 {
-		bool_t	is_signed;
+		ar_bool_t	is_signed;
 		union{
 				ar_uint_64_t		u;
 				ar_int_64_t		s;
@@ -712,7 +712,7 @@ static snRetVal_t	__get_int(arBuffer_t	*buffer)
 		const ar_byte_t	*pbuf;
 		
 		ar_uint_64_t		num = 0;
-		bool_t			is_neg = false;
+		ar_bool_t			is_neg = false;
 
 		snRetVal_t		ret = {AR_S_YES, NULL};
 		AR_ASSERT(buffer != NULL);
@@ -1115,7 +1115,7 @@ static arStatus_t		__put_int(arBuffer_t	*buffer, const snInteger_t *integer)
 {
 		char buf[256];
 		char *p;
-		bool_t	is_neg = false;
+		ar_bool_t	is_neg = false;
 		ar_uint_64_t		num;
 		
 		static const char _tbl[] = "0123456789";

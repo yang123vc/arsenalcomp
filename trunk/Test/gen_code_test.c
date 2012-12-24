@@ -62,7 +62,7 @@ static void		AR_STDCALL handle_free_node(psrNode_t *node, void *ctx)
 		AR_ASSERT(node != NULL);
 }
 
-static bool_t		AR_STDCALL handle_on_error(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
+static ar_bool_t		AR_STDCALL handle_on_error(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
 {
 		AR_ASSERT(ctx != NULL && tok != NULL);
 		

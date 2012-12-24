@@ -71,7 +71,7 @@ typedef struct node_tag
 		wchar_t	name[256];
 		ar_uint_64_t	num;
 		struct {
-			bool_t		is_tail;
+			ar_bool_t	is_tail;
 			wchar_t	*code;
 		}code_block;
 	};
@@ -138,7 +138,7 @@ static struct {const wchar_t *name;
 size_t tokval;
 size_t lex_prec;
 const wchar_t *regex;
-bool_t skip;
+ar_bool_t skip;
 psrTermFunc_t leaf;
 }__g_term_pattern[] =  {
 {NULL, 257,0, L"{skip_lexem}+", true, NULL},

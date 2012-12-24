@@ -759,7 +759,7 @@ void lex_line_test7()
 		
 
 		lexToken_t tok;
-		bool_t is_ok = false;
+		ar_bool_t is_ok = false;
 		
 		
 
@@ -816,7 +816,7 @@ void lex_line_test5()
 		
 
 		lexToken_t tok;
-		bool_t is_ok = false;
+		ar_bool_t is_ok = false;
 		
 		printf("\r\n");
 
@@ -875,7 +875,7 @@ void lex_line_test6()
 		
 
 		lexToken_t tok;
-		bool_t is_ok = false;
+		ar_bool_t is_ok = false;
 		
 		printf("\r\n");
 

@@ -117,11 +117,11 @@ arStatus_t	AR_error_ctx(arIOCtx_t *ctx, ar_int_t level, const wchar_t *msg, ...)
 
 #define AR_report()		AR_error(AR_ERR_MESSAGE, L"File (%hs) : Line (%Id) : Function (%hs)\r\n", __FILE__, (size_t)__LINE__, AR_FUNC_NAME)
 
-void	AR_check(bool_t cond, const wchar_t *fmt, ...);
+void	AR_check(ar_bool_t cond, const wchar_t *fmt, ...);
 
 #define AR_CHECK		AR_check
 
-#define AR_STATIC_CHECK(_expr)	do {typedef char __static_assert_t[ (bool_t)(_expr) ]; }while(0)
+#define AR_STATIC_CHECK(_expr)	do {typedef char __static_assert_t[ (ar_bool_t)(_expr) ]; }while(0)
 
 
 
@@ -563,11 +563,11 @@ ar_int_t			AR_u64tow_buf(wchar_t *out, size_t nbuf, ar_uint_64_t num, size_t rad
 
 
 
-bool_t			AR_wcs_is_float(const wchar_t *in, const wchar_t *end);
-bool_t			AR_wcs_is_int(const wchar_t *in, const wchar_t *end);
+ar_bool_t			AR_wcs_is_float(const wchar_t *in, const wchar_t *end);
+ar_bool_t			AR_wcs_is_int(const wchar_t *in, const wchar_t *end);
 
-bool_t			AR_str_is_float(const char *in, const char *end);
-bool_t			AR_str_is_int(const char *in, const char *end);
+ar_bool_t			AR_str_is_float(const char *in, const char *end);
+ar_bool_t			AR_str_is_int(const char *in, const char *end);
 
 
 ar_int_t			AR_wchartodigit(wchar_t ch);
@@ -710,7 +710,7 @@ typedef ar_int_t			(*AR_hash_comp_func_t)(void *l, void *r, void *ctx);
 
 typedef arStatus_t		(*AR_hash_copy_func_t)(void *data, void **pnew_data, void *ctx);
 typedef void			(*AR_hash_destroy_func_t)(void *key, void *ctx);
-typedef bool_t			(*AR_hash_visit_func_t)(void *key, void *data, void *ctx);/*返回false则循环终止*/
+typedef ar_bool_t			(*AR_hash_visit_func_t)(void *key, void *data, void *ctx);/*返回false则循环终止*/
 
 
 typedef struct __arsenal_hash_node_tag
@@ -759,7 +759,7 @@ typedef struct __arsenal_hash_iterator_tag
 void	AR_InitHashIterator(arHash_t *hash, arHashIter_t *iter);
 void	AR_UnInitHashIterator(arHashIter_t *iter);
 
-bool_t	AR_HashIteratorIsDone(const arHashIter_t *iter);
+ar_bool_t	AR_HashIteratorIsDone(const arHashIter_t *iter);
 void	AR_HashIteratorNext(arHashIter_t *iter);
 void*	AR_GetHashIteratorKey(const arHashIter_t *iter);
 void*	AR_GetHashIteratorData(const arHashIter_t *iter);
@@ -1020,7 +1020,7 @@ arStatus_t		AR_NormalizeURI(arURI_t *uri);
 arCodePage_t	AR_GetURICodePage(const arURI_t *uri);
 void			AR_SetURICodePage(arURI_t *uri, arCodePage_t cp);
 
-bool_t			AR_IsRelativeURI(const arURI_t *uri);
+ar_bool_t			AR_IsRelativeURI(const arURI_t *uri);
 
 
 /*这里默认认为输入的URI完全为编码后的URL，之后根据URI设置的code page将编码后的uri解码，并转换为unicode*/
@@ -1211,7 +1211,7 @@ arStatus_t		AR_UnLockMutex(arMutex_t *mtx);
 
 typedef struct __arsenal_event_tag		arEvent_t;
 
-arEvent_t*		AR_CreateEvent(bool_t is_auto_reset);
+arEvent_t*		AR_CreateEvent(ar_bool_t is_auto_reset);
 void			AR_DestroyEvent(arEvent_t *evt);
 arStatus_t		AR_SetEvent(arEvent_t *evt);
 arStatus_t		AR_WaitEvent(arEvent_t *evt);
@@ -1311,7 +1311,7 @@ arStatus_t      AR_PathIteratorSetPath(arPathIter_t *iter, const wchar_t *path);
 
 const wchar_t*	AR_PathIteratorCurrent(const arPathIter_t *iter);
 arStatus_t		AR_PathIteratorNext(arPathIter_t *iter);
-bool_t			AR_PathIteratorIsDone(const arPathIter_t *iter);
+ar_bool_t			AR_PathIteratorIsDone(const arPathIter_t *iter);
 const wchar_t*  AR_PathIteratorPath(const arPathIter_t *iter);
 
 
@@ -1342,7 +1342,7 @@ ar_int_32_t		AR_abs_32(ar_int_32_t x);
 ar_int_64_t		AR_abs_64(ar_int_64_t x);
 
 
-bool_t			AR_is_equal_flt(float x, float y, float epsilon);
+ar_bool_t			AR_is_equal_flt(float x, float y, float epsilon);
 
 float			AR_logbase_flt(float a, float base);
 float			AR_abs_flt(float x);
@@ -1361,7 +1361,7 @@ float			AR_atan_flt(float f);
 float			AR_atan2_flt(float y, float x);
 
 
-bool_t			AR_is_equal_dbl(double x, double y, double epsilon);
+ar_bool_t			AR_is_equal_dbl(double x, double y, double epsilon);
 
 double			AR_logbase_dbl(double a, double base);
 double			AR_abs_dbl(double x);
@@ -1384,20 +1384,20 @@ double			AR_atan2_dbl(double y, double x);
 /*float macro_oper*/
 
 #define AR_FLT_EQ(_x, _y)		AR_is_equal_flt((float)(_x), (float)(_y), FLT_EPSILON)
-#define AR_FLT_LE(_x, _y)		(bool_t) ((((float)(_x)) < ((float)(_y))))
-#define AR_FLT_GE(_x, _y)		(bool_t) ((((float)(_x)) > ((float)(_y))))
-#define AR_FLT_LEEQ(_x, _y)		(bool_t)( AR_FLT_EQ((_x), (_y)) || AR_FLT_LE((_x), (_y)))
-#define AR_FLT_GEEQ(_x, _y)		(bool_t)( AR_FLT_EQ((_x), (_y)) || AR_FLT_GE((_x), (_y)))
+#define AR_FLT_LE(_x, _y)		(ar_bool_t) ((((float)(_x)) < ((float)(_y))))
+#define AR_FLT_GE(_x, _y)		(ar_bool_t) ((((float)(_x)) > ((float)(_y))))
+#define AR_FLT_LEEQ(_x, _y)		(ar_bool_t)( AR_FLT_EQ((_x), (_y)) || AR_FLT_LE((_x), (_y)))
+#define AR_FLT_GEEQ(_x, _y)		(ar_bool_t)( AR_FLT_EQ((_x), (_y)) || AR_FLT_GE((_x), (_y)))
 
 #define AR_FLT_MOD(_x,_y)		((float)(_x) - AR_floor_flt((float)(_x) / (float)(_y)) * (float)(_y))
 #define AR_FLT_POW(_x,_y)		(float)AR_pow_flt((float)(_x), (float)(_y))
 
 
 #define AR_DBL_EQ(_x, _y)		AR_is_equal_dbl((double)(_x), (double)(_y), DBL_EPSILON)
-#define AR_DBL_LE(_x, _y)		(bool_t) ((((double)(_x)) < ((double)(_y))))
-#define AR_DBL_GE(_x, _y)		(bool_t) ((((double)(_x)) > ((double)(_y))))
-#define AR_DBL_LEEQ(_x, _y)		(bool_t)( AR_DBL_EQ((_x), (_y)) || AR_DBL_LE((_x), (_y)))
-#define AR_DBL_GEEQ(_x, _y)		(bool_t)( AR_DBL_EQ((_x), (_y)) || AR_DBL_GE((_x), (_y)))
+#define AR_DBL_LE(_x, _y)		(ar_bool_t) ((((double)(_x)) < ((double)(_y))))
+#define AR_DBL_GE(_x, _y)		(ar_bool_t) ((((double)(_x)) > ((double)(_y))))
+#define AR_DBL_LEEQ(_x, _y)		(ar_bool_t)( AR_DBL_EQ((_x), (_y)) || AR_DBL_LE((_x), (_y)))
+#define AR_DBL_GEEQ(_x, _y)		(ar_bool_t)( AR_DBL_EQ((_x), (_y)) || AR_DBL_GE((_x), (_y)))
 
 #define AR_DBL_MOD(_x,_y)		((double)(_x) - AR_floor_dbl((double)(_x) / (double)(_y)) * (double)(_y))
 #define AR_DBL_POW(_x,_y)		(double)AR_pow_dbl((double)(_x), (double)(_y))

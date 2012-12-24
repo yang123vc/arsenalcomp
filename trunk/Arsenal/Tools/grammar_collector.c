@@ -30,7 +30,7 @@ typedef enum
 
 typedef struct __config_parser_data_tag
 {
-		bool_t					has_error;
+		ar_bool_t					has_error;
 		cfgReport_t				*report;
 		arStringTable_t			*name;
 		arStringTable_t			*token;
@@ -269,7 +269,7 @@ typedef struct  __cfg_lex_pattern_tag
 {
 		size_t			val;
 		const wchar_t	*regex;
-		bool_t			is_skip;
+		ar_bool_t			is_skip;
 		size_t			prec;
 }cfgLexPattern_t;
 
@@ -2308,7 +2308,7 @@ static psrRetVal_t		AR_STDCALL __handle_program(psrNode_t **nodes, size_t count,
 		cfgNode_t		**ns = (cfgNode_t**)nodes;
 		cfgNode_t		*res = NULL;
 		size_t	i;
-		bool_t			has_err = false;
+		ar_bool_t			has_err = false;
 		cfgNodeList_t	name, token, prec, rule, error, empty, predef;
 		cfgStart_t		*start_rule = NULL;
 		cfgParserData_t	*parser_ctx;

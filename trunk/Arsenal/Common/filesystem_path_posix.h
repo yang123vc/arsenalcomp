@@ -477,7 +477,7 @@ END_POINT:
 }
 
 
-arStatus_t      AR_path_set_writeable(const wchar_t *path, bool_t flag)
+arStatus_t      AR_path_set_writeable(const wchar_t *path, ar_bool_t flag)
 {
         
         arStatus_t status;
@@ -530,7 +530,7 @@ END_POINT:
 
 
 
-arStatus_t      AR_path_set_executable(const wchar_t *path, bool_t flag)
+arStatus_t      AR_path_set_executable(const wchar_t *path, ar_bool_t flag)
 {
         
         arStatus_t status;
@@ -1142,7 +1142,7 @@ END_POINT:
 
 
 
-arStatus_t      AR_path_copyfile(const wchar_t *src, const wchar_t *dest, bool_t truncated)
+arStatus_t      AR_path_copyfile(const wchar_t *src, const wchar_t *dest, ar_bool_t truncated)
 {
         arStatus_t status;
         arFile_t *s, *d;

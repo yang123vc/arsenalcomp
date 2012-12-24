@@ -12,4 +12,8 @@
     <LocalDebuggerCommandArguments>"C:\Users\liupeng\Desktop\1.txt" "C:\Users\liupeng\Desktop\1.c"</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">
+    <LocalDebuggerCommandArguments>"C:\Users\liupeng\Desktop\1.txt" "C:\Users\liupeng\Desktop\1.c"</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
 </Project>

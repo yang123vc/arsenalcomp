@@ -346,15 +346,15 @@ arStatus_t		AR_UnLockMutex(arMutex_t *mtx)
 
 struct __arsenal_event_tag
 {
-        bool_t           is_auto_reset;
-        volatile bool_t  state;
+        ar_bool_t           is_auto_reset;
+        volatile ar_bool_t  state;
         pthread_mutex_t  mtx;
         pthread_cond_t   cond;
 };
 
-arEvent_t*		AR_CreateEvent(bool_t is_auto_reset)
+arEvent_t*		AR_CreateEvent(ar_bool_t is_auto_reset)
 {
-        bool_t mtx_init,cond_init;
+        ar_bool_t mtx_init,cond_init;
         arEvent_t *evt;
         evt = AR_NEW0(arEvent_t);
         if(evt == NULL)

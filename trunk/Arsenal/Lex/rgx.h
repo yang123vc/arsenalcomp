@@ -79,7 +79,7 @@ struct __rgx_char_range_tag
 
 struct __rgx_charset_tag
 {
-		bool_t					is_neg;
+		ar_bool_t					is_neg;
 		rgxCharRange_t			*range;
 };
 
@@ -133,8 +133,8 @@ struct __rgx_node_tag
 				}range;
 				
 				size_t					fix_count;
-				bool_t					negative_lookahead;
-				bool_t					non_greedy;
+				ar_bool_t					negative_lookahead;
+				ar_bool_t					non_greedy;
 				size_t					final_val;
 		};
 };
@@ -235,7 +235,7 @@ struct __regex_instruction_tag
 				}range;
 				
 				struct {
-						bool_t			negative;
+						ar_bool_t			negative;
 				}lookahead;
 				
 				

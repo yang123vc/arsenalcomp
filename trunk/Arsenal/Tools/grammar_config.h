@@ -60,10 +60,10 @@ typedef struct __cfg_token_tag
 		size_t			tokval;
 		size_t			lex_prec;
 		const wchar_t	*regex;
-		bool_t			is_skip;
+		ar_bool_t			is_skip;
 
 		const wchar_t	*code_name;
-		bool_t			is_assigned_code_name;
+		ar_bool_t			is_assigned_code_name;
 
 		const	wchar_t	*action_name;
 		const	wchar_t	*action_ins;
@@ -71,7 +71,7 @@ typedef struct __cfg_token_tag
 }cfgToken_t;
 
 
-#define CFG_TERM_DEF_BEGIN	L"static struct {const wchar_t *name;\r\nsize_t tokval;\r\nsize_t lex_prec;\r\nconst wchar_t *regex;\r\nbool_t skip;\r\npsrTermFunc_t leaf;\r\n}__g_term_pattern[] =  {"
+#define CFG_TERM_DEF_BEGIN	L"static struct {const wchar_t *name;\r\nsize_t tokval;\r\nsize_t lex_prec;\r\nconst wchar_t *regex;\r\nar_bool_t skip;\r\npsrTermFunc_t leaf;\r\n}__g_term_pattern[] =  {"
 #define CFG_TERM_DEF_END	L"};"
 
 #define CFG_TERM_DEF_ITEM_1	L"{L\"%ls\", %ls, " L"%Id, L\"%ls\", %ls, %ls}"
@@ -189,7 +189,7 @@ typedef struct __cfg_config_tag
 		
 		cfgStart_t		start;
 
-		bool_t			has_error;
+		ar_bool_t			has_error;
 
 		void			*remain_data;
 }cfgConfig_t;
@@ -298,7 +298,7 @@ typedef enum
 
 typedef struct __config_lexical_set_tag
 {
-		bool_t			has_error;
+		ar_bool_t			has_error;
 		lexToken_t		*token_set;
 		size_t			cnt;
 		size_t			cap;

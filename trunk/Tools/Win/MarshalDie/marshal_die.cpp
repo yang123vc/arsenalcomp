@@ -204,7 +204,7 @@ static std::wstring generate_func_call_for_get_field(const Field_t *field)
 		return ret;
 }
 
-#define GET_FUNC_FMT			L"static bool_t\t__get_%ls(snObject_t *obj, %ls *stu)\r\n{\r\n\t\tbool_t\tis_ok;\r\n\t\tAR_ASSERT(stu != NULL && obj != NULL);\r\n\t\tAR_ASSERT(SN_GetObjectType(obj) == SN_DICT_T);\r\n\t\tis_ok = true;\r\n\r\n\t\t/***************************************************************************/\r\n%ls\r\n\t\t/***************************************************************************/\r\n\r\n\t\treturn true;\r\nINVALID_POINT:\r\n\t\tis_ok = false;\r\n\t\treturn is_ok;\r\n}"
+#define GET_FUNC_FMT			L"static ar_bool_t\t__get_%ls(snObject_t *obj, %ls *stu)\r\n{\r\n\t\tar_bool_t\tis_ok;\r\n\t\tAR_ASSERT(stu != NULL && obj != NULL);\r\n\t\tAR_ASSERT(SN_GetObjectType(obj) == SN_DICT_T);\r\n\t\tis_ok = true;\r\n\r\n\t\t/***************************************************************************/\r\n%ls\r\n\t\t/***************************************************************************/\r\n\r\n\t\treturn true;\r\nINVALID_POINT:\r\n\t\tis_ok = false;\r\n\t\treturn is_ok;\r\n}"
 
 
 static std::wstring generate_for_get_custom_type(const Type_t *type)
@@ -233,7 +233,7 @@ static std::wstring generate_for_get_custom_type(const Type_t *type)
 
 
 
-#define GET_ARRAY_FUNC_FMT	L"\r\nstatic bool_t\t__get_%ls_array(snObject_t *obj, %ls *stu, size_t arr_size)\r\n{\r\n\t\tbool_t\tis_ok;\r\n\t\tsize_t list_cnt;\r\n\t\tsize_t i;\r\n\t\tAR_ASSERT(stu != NULL && obj != NULL && arr_size > 0);\r\n\r\n\t\tis_ok = true;\r\n\r\n\t\tif(SN_GetObjectType(obj) != SN_LIST_T)\r\n\t\t{\r\n\t\t\t\tis_ok = false;\r\n\t\t\t\tgoto INVALID_POINT;\r\n\t\t}\r\n\r\n\t\tlist_cnt = SN_GetListObjectCount(obj);\r\n\r\n\t\tif(list_cnt != arr_size)\r\n\t\t{\r\n\t\t\t\tgoto INVALID_POINT;\r\n\t\t}\r\n\r\n\r\n\t\tfor(i = 0; i < list_cnt; ++i)\r\n\t\t{\r\n\t\t\t\tsnObject_t *item = SN_GetFromListObject(obj, i);\r\n\t\t\t\tif(item == NULL || SN_GetObjectType(item) != SN_DICT_T)\r\n\t\t\t\t{\r\n\t\t\t\t\t\tgoto INVALID_POINT;\r\n\t\t\t\t}\r\n\t\t\t\t\r\n\t\t\t\t/********************************************************************/\r\n\t\t\t\tif(!__get_%ls(item, &stu[i]))\r\n\t\t\t\t{\r\n\t\t\t\t\t\tis_ok = false;\r\n\t\t\t\t\t\tgoto INVALID_POINT;\r\n\t\t\t\t}\r\n\t\t\t\t/********************************************************************/\r\n\t\t}\r\n\t\treturn true;\r\n\r\nINVALID_POINT:\r\n\t\tis_ok = false;\r\n\t\treturn is_ok;\r\n}\r\n\n\n"
+#define GET_ARRAY_FUNC_FMT	L"\r\nstatic ar_bool_t\t__get_%ls_array(snObject_t *obj, %ls *stu, size_t arr_size)\r\n{\r\n\t\tar_bool_t\tis_ok;\r\n\t\tsize_t list_cnt;\r\n\t\tsize_t i;\r\n\t\tAR_ASSERT(stu != NULL && obj != NULL && arr_size > 0);\r\n\r\n\t\tis_ok = true;\r\n\r\n\t\tif(SN_GetObjectType(obj) != SN_LIST_T)\r\n\t\t{\r\n\t\t\t\tis_ok = false;\r\n\t\t\t\tgoto INVALID_POINT;\r\n\t\t}\r\n\r\n\t\tlist_cnt = SN_GetListObjectCount(obj);\r\n\r\n\t\tif(list_cnt != arr_size)\r\n\t\t{\r\n\t\t\t\tgoto INVALID_POINT;\r\n\t\t}\r\n\r\n\r\n\t\tfor(i = 0; i < list_cnt; ++i)\r\n\t\t{\r\n\t\t\t\tsnObject_t *item = SN_GetFromListObject(obj, i);\r\n\t\t\t\tif(item == NULL || SN_GetObjectType(item) != SN_DICT_T)\r\n\t\t\t\t{\r\n\t\t\t\t\t\tgoto INVALID_POINT;\r\n\t\t\t\t}\r\n\t\t\t\t\r\n\t\t\t\t/********************************************************************/\r\n\t\t\t\tif(!__get_%ls(item, &stu[i]))\r\n\t\t\t\t{\r\n\t\t\t\t\t\tis_ok = false;\r\n\t\t\t\t\t\tgoto INVALID_POINT;\r\n\t\t\t\t}\r\n\t\t\t\t/********************************************************************/\r\n\t\t}\r\n\t\treturn true;\r\n\r\nINVALID_POINT:\r\n\t\tis_ok = false;\r\n\t\treturn is_ok;\r\n}\r\n\n\n"
 
 static std::wstring generate_for_get_custom_array_type(const Type_t *type)
 {
@@ -402,7 +402,7 @@ std::wstring generate_for_unistruct_def()
          }
          */
 		
-		uni_type += L"typedef struct {\r\n\t\tuint_32_t\t\ttype;\r\n\t\tunion{\r\n";
+		uni_type += L"typedef struct {\r\n\t\tar_uint_32_t\t\ttype;\r\n\t\tunion{\r\n";
         
 		for(size_t i = 0; i < g_type_list.size(); ++i)
 		{
