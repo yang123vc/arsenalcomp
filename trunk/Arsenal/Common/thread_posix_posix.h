@@ -33,7 +33,7 @@ void			AR_UnInitThread()
 
 }
 
-int_t			AR_AtomicInc(volatile int_t *dest)
+ar_int_t			AR_AtomicInc(volatile ar_int_t *dest)
 {
 		AR_LockSpinLock(&__g_atomic_lock);
 		*dest += 1;
@@ -41,7 +41,7 @@ int_t			AR_AtomicInc(volatile int_t *dest)
 		return *dest;
 }
 
-int_t			AR_AtomicDec(volatile int_t *dest)
+ar_int_t			AR_AtomicDec(volatile ar_int_t *dest)
 {
 		AR_LockSpinLock(&__g_atomic_lock);
 		*dest -= 1;
@@ -59,7 +59,7 @@ void			AR_YieldThread()
 		pthread_yield();
 }
 
-void			AR_Sleep(uint_64_t millisecond)
+void			AR_Sleep(ar_uint_64_t millisecond)
 {
 		long m = (long)millisecond;
 

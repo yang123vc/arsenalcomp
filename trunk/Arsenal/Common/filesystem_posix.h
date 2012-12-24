@@ -946,7 +946,7 @@ void	AR_close_file(arFile_t *f)
 }
 
 
-arStatus_t		AR_read_file(arFile_t *file, byte_t *data, size_t len, size_t *rn)
+arStatus_t		AR_read_file(arFile_t *file, ar_byte_t *data, size_t len, size_t *rn)
 {
 		size_t ret;
 		arStatus_t status;
@@ -980,7 +980,7 @@ arStatus_t		AR_read_file(arFile_t *file, byte_t *data, size_t len, size_t *rn)
 }
 
 
-arStatus_t		AR_write_file(arFile_t *file, const byte_t *data, size_t len, size_t *wn)
+arStatus_t		AR_write_file(arFile_t *file, const ar_byte_t *data, size_t len, size_t *wn)
 {
 		
 		size_t ret;

@@ -27,14 +27,14 @@
 
 #if(AR_ARCH_VER == ARCH_32)
 		
-		#define ATOMIC_INC(_dest) (int_t)InterlockedIncrement((__VOLATILE__ LONG*)(_dest))
-		#define ATOMIC_DEC(_dest) (int_t)InterlockedDecrement((__VOLATILE__ LONG*)(_dest))
+		#define ATOMIC_INC(_dest) (ar_int_t)InterlockedIncrement((__VOLATILE__ LONG*)(_dest))
+		#define ATOMIC_DEC(_dest) (ar_int_t)InterlockedDecrement((__VOLATILE__ LONG*)(_dest))
 		#define COMP_EXCH(_dest, _exch, _comp_val)	InterlockedCompareExchange((__VOLATILE__ LONG*)(_dest), (LONG )(_exch), (LONG)(_comp_val))
 
 #elif(AR_ARCH_VER == ARCH_64)
 		
-		#define ATOMIC_INC(_dest) (int_t)InterlockedIncrement64((__VOLATILE__ LONGLONG*)(_dest))
-		#define ATOMIC_DEC(_dest) (int_t)InterlockedDecrement64((__VOLATILE__ LONGLONG*)(_dest))
+		#define ATOMIC_INC(_dest) (ar_int_t)InterlockedIncrement64((__VOLATILE__ LONGLONG*)(_dest))
+		#define ATOMIC_DEC(_dest) (ar_int_t)InterlockedDecrement64((__VOLATILE__ LONGLONG*)(_dest))
 		#define COMP_EXCH(_dest, _exch, _comp_val)	InterlockedCompareExchange64((__VOLATILE__ LONGLONG*)(_dest), (LONGLONG )(_exch), (LONGLONG)(_comp_val))
 #else
 		#error "Target ARCH  not supported"
@@ -69,19 +69,19 @@ void			AR_YieldThread()
 		__Yield();
 }
 
-void			AR_Sleep(uint_64_t millisecond)
+void			AR_Sleep(ar_uint_64_t millisecond)
 {
 		Sleep((DWORD)millisecond);
 }
 
-int_t			AR_AtomicInc(volatile int_t *dest)
+ar_int_t			AR_AtomicInc(volatile ar_int_t *dest)
 {
-		return (int_t)ATOMIC_INC(dest);
+		return (ar_int_t)ATOMIC_INC(dest);
 }
 
-int_t			AR_AtomicDec(volatile int_t *dest)
+ar_int_t			AR_AtomicDec(volatile ar_int_t *dest)
 {
-		return (int_t)ATOMIC_DEC(dest);
+		return (ar_int_t)ATOMIC_DEC(dest);
 }
 
 
@@ -130,7 +130,7 @@ void			AR_UnLockSpinLock(arSpinLock_t *lock)
 }
 
 
-static AR_INLINE uint_64_t __get_time_microseconds()
+static AR_INLINE ar_uint_64_t __get_time_microseconds()
 {
 		FILETIME ft;
 		ULARGE_INTEGER epoch; /* UNIX epoch (1970-01-01 00:00:00) expressed in Windows NT FILETIME*/
@@ -156,7 +156,7 @@ static AR_INLINE uint_64_t __get_time_microseconds()
 }
 
 
-uint_64_t		AR_GetTime_Microseconds()
+ar_uint_64_t		AR_GetTime_Microseconds()
 {
 		return __get_time_microseconds();
 }
@@ -261,7 +261,7 @@ arStatus_t		AR_WaitEvent(arEvent_t *evt)
 		}
 }
 
-arStatus_t		AR_WaitEventWithTimeout(arEvent_t *evt, uint_64_t milliseconds)
+arStatus_t		AR_WaitEventWithTimeout(arEvent_t *evt, ar_uint_64_t milliseconds)
 {
 		AR_ASSERT(evt != NULL);
 		switch(WaitForSingleObject((HANDLE)evt, (DWORD)milliseconds))
@@ -302,7 +302,7 @@ arStatus_t		AR_ResetEvent(arEvent_t *evt)
 struct __arsenal_thread_tag
 {
 		HANDLE			thread_hdl;
-		uint_64_t		thread_id;
+		ar_uint_64_t		thread_id;
 		void			*data;
 		arThreadFunc_t	func;
 };
@@ -327,7 +327,7 @@ arThread_t*		AR_CreateThread(arThreadFunc_t func, void *data)
 		thd->func = func;
 		thd->data = data;
 		thd->thread_hdl = CreateThread(NULL, 0, __entry, (void*)thd, 0, &thd_id);
-		thd->thread_id = (uint_64_t)thd_id;
+		thd->thread_id = (ar_uint_64_t)thd_id;
 
 		if(thd->thread_hdl == NULL)
 		{
@@ -371,7 +371,7 @@ arStatus_t		AR_JoinThread(arThread_t *thd)
 }
 
 
-arStatus_t		AR_JoinThreadWithTimeout(arThread_t *thd, uint_64_t milliseconds)
+arStatus_t		AR_JoinThreadWithTimeout(arThread_t *thd, ar_uint_64_t milliseconds)
 {
 		AR_ASSERT(thd != NULL && thd->thread_hdl != NULL);
 		switch(WaitForSingleObject(thd->thread_hdl, (DWORD)milliseconds))
@@ -386,7 +386,7 @@ arStatus_t		AR_JoinThreadWithTimeout(arThread_t *thd, uint_64_t milliseconds)
 		}
 }
 
-uint_64_t		AR_GetThreadId(arThread_t *thd)
+ar_uint_64_t		AR_GetThreadId(arThread_t *thd)
 {
 		AR_ASSERT(thd != NULL && thd->thread_hdl != NULL);
 		return thd->thread_id;

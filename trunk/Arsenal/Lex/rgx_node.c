@@ -184,7 +184,7 @@ rgxNode_t*		RGX_CopyNewNode(const rgxNode_t *node)
 
 		res = (rgxNode_t*)node;
 
-		AR_AtomicInc((volatile int_t*)&node->ref_count);
+		AR_AtomicInc((volatile ar_int_t*)&node->ref_count);
 
 		return res;
 }
@@ -197,7 +197,7 @@ void			RGX_DestroyNode(rgxNode_t *node)
 		
 		AR_ASSERT(node->ref_count >= 1);
 
-		if(AR_AtomicDec((volatile int_t*)&node->ref_count) > 0)
+		if(AR_AtomicDec((volatile ar_int_t*)&node->ref_count) > 0)
 		{
 				return;
 		}
@@ -618,7 +618,7 @@ arStatus_t		RGX_ToString(const rgxNode_t *node, arString_t *str)
 						return status;
 				}
 
-				AR_u64tow_buf(buf, 128, (uint_64_t)node->fix_count, 10);
+				AR_u64tow_buf(buf, 128, (ar_uint_64_t)node->fix_count, 10);
 
 
 				status = AR_AppendString(str, buf);		

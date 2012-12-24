@@ -20,12 +20,12 @@ AR_NAMESPACE_BEGIN
 
 
 
-void __six_for_uint32_little(byte_t *out, uint_32_t w)
+void __six_for_uint32_little(ar_byte_t *out, ar_uint_32_t w)
 {
-		const byte_t *b;
+		const ar_byte_t *b;
 		AR_ASSERT(out != NULL);
 		
-		b = (const byte_t*)&w;
+		b = (const ar_byte_t*)&w;
 		
 		out[0] = ( b[0] & 0xfc ) >> 2;
 		out[1] = ( ( b[0] & 0x3 ) << 4 ) + ( ( b[1] & 0xf0 ) >> 4 );
@@ -33,27 +33,27 @@ void __six_for_uint32_little(byte_t *out, uint_32_t w)
 		out[3] = b[2] & 0x3f;
 }
 
-void __six_for_uint32_big(byte_t *out, uint_32_t w)
+void __six_for_uint32_big(ar_byte_t *out, ar_uint_32_t w)
 {
 		size_t i;
 		AR_ASSERT(out != NULL);
 
 		for(i = 0; i < 4 ; i++)
 		{
-				out[i] = (byte_t)(w & 0x3f);
+				out[i] = (ar_byte_t)(w & 0x3f);
 				w >>= 6;
 		}
 }
 
 
-uint_32_t __uint32_for_six_little(const byte_t *input)
+ar_uint_32_t __uint32_for_six_little(const ar_byte_t *input)
 {
-		uint_32_t ret;
-		byte_t *b;
+		ar_uint_32_t ret;
+		ar_byte_t *b;
 		AR_ASSERT(input != NULL);
 		
 		ret = 0;
-		b = (byte_t*)&ret;
+		b = (ar_byte_t*)&ret;
 		b[0] |= input[0] << 2;
 		b[0] |= (input[1] & 0x30 ) >> 4;
 		b[1] |= (input[1] & 0xf ) << 4;
@@ -63,9 +63,9 @@ uint_32_t __uint32_for_six_little(const byte_t *input)
 		return ret;
 }
 
-uint_32_t __uint32_for_six_big(const byte_t *input)
+ar_uint_32_t __uint32_for_six_big(const ar_byte_t *input)
 {
-		uint_32_t ret;
+		ar_uint_32_t ret;
 		AR_ASSERT(input != NULL);
 		ret = 0;
 
@@ -96,7 +96,7 @@ uint_32_t __uint32_for_six_big(const byte_t *input)
 
 static const char ___g_base64_digits[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-static size_t __base64_need_len(const byte_t *input, size_t ilen)
+static size_t __base64_need_len(const ar_byte_t *input, size_t ilen)
 {
 		size_t need_n;
 		AR_UNUSED(input);
@@ -117,10 +117,10 @@ static size_t __base64_need_len(const byte_t *input, size_t ilen)
 
 
 
-size_t AR_base64_encode(byte_t  *out, size_t olen, const byte_t *input, size_t ilen)
+size_t AR_base64_encode(ar_byte_t  *out, size_t olen, const ar_byte_t *input, size_t ilen)
 {
 		size_t r, need_n,i,j;
-		uint_32_t w;
+		ar_uint_32_t w;
 		AR_ASSERT(input != NULL && ilen > 0);
 
 		need_n = __base64_need_len(input, ilen);
@@ -147,7 +147,7 @@ size_t AR_base64_encode(byte_t  *out, size_t olen, const byte_t *input, size_t i
 				++i;
 				if(r == 0 || i == 3)
 				{
-						byte_t tmp[4];
+						ar_byte_t tmp[4];
 						__six_for_uint32(tmp, w);
 						for(j = 0; j * 6 < i * 8; ++j)
 						{
@@ -172,7 +172,7 @@ size_t AR_base64_encode(byte_t  *out, size_t olen, const byte_t *input, size_t i
 
 
 
-static const byte_t __g_base64_to_sixtet[] = 
+static const ar_byte_t __g_base64_to_sixtet[] = 
 {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
@@ -194,11 +194,11 @@ static const byte_t __g_base64_to_sixtet[] =
 
 
 
-size_t AR_base64_decode(byte_t  *out, size_t olen, const byte_t *input, size_t ilen)
+size_t AR_base64_decode(ar_byte_t  *out, size_t olen, const ar_byte_t *input, size_t ilen)
 {
-		byte_t *o;
+		ar_byte_t *o;
 		size_t need_n,i,j,k;
-		byte_t tmp[4] = {0,0,0,0};
+		ar_byte_t tmp[4] = {0,0,0,0};
 		
 
 		AR_ASSERT(input != NULL && ilen > 0);
@@ -228,12 +228,12 @@ size_t AR_base64_decode(byte_t  *out, size_t olen, const byte_t *input, size_t i
 				if(input[i+1] == '\0' || input[i+1] == '=' || k == 4)
 				{
 						
-						uint_32_t w = 0;
+						ar_uint_32_t w = 0;
 						w = __uint32_for_six(tmp);
 						
 						for(j = 0; j * 8 < k * 6; ++j)
 						{
-								*o++ = (byte_t)(w & 0xff);
+								*o++ = (ar_byte_t)(w & 0xff);
 								w >>= 8;
 								++need_n;
 						}

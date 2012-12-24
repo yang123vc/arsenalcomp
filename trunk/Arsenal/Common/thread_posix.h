@@ -36,11 +36,11 @@ AR_NAMESPACE_BEGIN
 
 #define RESOLUTION		1000000LL
 
-uint_64_t		AR_GetTime_Microseconds()
+ar_uint_64_t		AR_GetTime_Microseconds()
 {
 		struct timeval tv;
 		gettimeofday(&tv, NULL);
-		return (uint_64_t)tv.tv_sec * (uint_64_t)RESOLUTION + (uint_64_t)tv.tv_usec;
+		return (ar_uint_64_t)tv.tv_sec * (ar_uint_64_t)RESOLUTION + (ar_uint_64_t)tv.tv_usec;
 }
 
 
@@ -166,7 +166,7 @@ arStatus_t		AR_JoinThread(arThread_t *thd)
         return status;
 }
 
-arStatus_t		AR_JoinThreadWithTimeout(arThread_t *thd, uint_64_t milliseconds)
+arStatus_t		AR_JoinThreadWithTimeout(arThread_t *thd, ar_uint_64_t milliseconds)
 {
         arStatus_t status;
         AR_ASSERT(thd != NULL && thd->done != NULL && thd->thd != NULL);
@@ -181,10 +181,10 @@ arStatus_t		AR_JoinThreadWithTimeout(arThread_t *thd, uint_64_t milliseconds)
 
 
 
-uint_64_t		AR_GetThreadId(arThread_t *thd)
+ar_uint_64_t		AR_GetThreadId(arThread_t *thd)
 {
 		AR_ASSERT(thd != NULL && thd->thd != NULL);
-		return (uint_64_t)thd->thd;
+		return (ar_uint_64_t)thd->thd;
 }
 
 
@@ -488,7 +488,7 @@ arStatus_t		AR_TryWaitEvent(arEvent_t *evt)
         return AR_WaitEventWithTimeout(evt, 0);
 }
 
-arStatus_t		AR_WaitEventWithTimeout(arEvent_t *evt, uint_64_t milliseconds)
+arStatus_t		AR_WaitEventWithTimeout(arEvent_t *evt, ar_uint_64_t milliseconds)
 {
         int rc;
         struct timespec abstime;
@@ -499,8 +499,8 @@ arStatus_t		AR_WaitEventWithTimeout(arEvent_t *evt, uint_64_t milliseconds)
         rc = 0;
 
         gettimeofday(&tv, NULL);
-        abstime.tv_sec  = tv.tv_sec + (int_t)milliseconds / 1000;
-        abstime.tv_nsec = tv.tv_usec*1000 + ((int_t)milliseconds % 1000)*1000000;
+        abstime.tv_sec  = tv.tv_sec + (ar_int_t)milliseconds / 1000;
+        abstime.tv_nsec = tv.tv_usec*1000 + ((ar_int_t)milliseconds % 1000)*1000000;
         if (abstime.tv_nsec >= 1000000000)
         {
                 abstime.tv_nsec -= 1000000000;

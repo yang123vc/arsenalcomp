@@ -73,7 +73,7 @@ static const wchar_t*	__transform_char(const wchar_t *input, wchar_t *c, rgxErro
 						return ++p;
 				case L'u':
 				{
-						const wchar_t *ret; uint_32_t val;
+						const wchar_t *ret; ar_uint_32_t val;
 						p += 1;
 						
 						if(*p != L'{')
@@ -133,7 +133,7 @@ static const wchar_t*	__transform_char(const wchar_t *input, wchar_t *c, rgxErro
 						break;
 				case L'x':
 				{
-						const wchar_t *ret;  uint_32_t val;
+						const wchar_t *ret;  ar_uint_32_t val;
 						
 						p += 1;
 						
@@ -290,7 +290,7 @@ static rgxResult_t	__handle_quote(const wchar_t *input)
 										break;
 								case L'x':
 								{
-										uint_64_t num;
+										ar_uint_64_t num;
 										if(*(p + 1) == L'\0')/*形如\x这种不良输入*/
 										{
 												__SET_ERR(g_res, NULL, NULL, p, AR_E_MALFORMAT);
@@ -300,7 +300,7 @@ static rgxResult_t	__handle_quote(const wchar_t *input)
 												const wchar_t *tmp_ptr;
 												tmp_ptr = AR_wtou64(p + 1, &num, 16);
 												
-												if(tmp_ptr == NULL || num > (uint_64_t)AR_WCHARMAX)
+												if(tmp_ptr == NULL || num > (ar_uint_64_t)AR_WCHARMAX)
 												{
 														__SET_ERR(g_res, NULL, NULL, p, AR_E_MALFORMAT);
 														goto INVALID_POINT;
@@ -988,7 +988,7 @@ static rgxResult_t	__handle_postfix(rgxNode_t *expr, const wchar_t *input)
 				{
 						bool_t non_greedy = false;
 						const wchar_t *beg = p + 1;
-						uint_t min,max;
+						ar_uint_t min,max;
 						
 						/*beg = AR_wcstrim(beg,L" \t");*/
 						beg = AR_wcstrim_space(beg);

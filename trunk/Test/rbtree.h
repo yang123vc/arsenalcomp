@@ -26,7 +26,7 @@ struct __rb_node_tag
 		rbNode_t		*left;
 		rbNode_t		*right;
 		
-		int_t			data;
+		ar_int_t			data;
 };
 
 
@@ -47,8 +47,8 @@ rbNode_t*		rb_get_successor(rbNode_t *node);
 rbNode_t*		rb_get_previous(rbNode_t  *node);
 
 
-rbNode_t*		rb_insert_equal(rbTree_t	*tree, int_t data);
-bool_t			rb_remove(rbTree_t	*tree, int_t key);
+rbNode_t*		rb_insert_equal(rbTree_t	*tree, ar_int_t data);
+bool_t			rb_remove(rbTree_t	*tree, ar_int_t key);
 
 AR_NAMESPACE_END
 

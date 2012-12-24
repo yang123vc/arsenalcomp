@@ -59,15 +59,15 @@ typedef enum
 
 const wchar_t* __g_inner_type[CUSTOM_T] = 
 {
-        L"byte_t",
-        L"int_8_t",
-        L"uint_8_t",
-        L"int_16_t",
-        L"uint_16_t",
-        L"int_32_t",
-        L"uint_32_t",
-        L"int_64_t",
-        L"uint_64_t",
+        L"ar_byte_t",
+        L"ar_int_8_t",
+        L"ar_uint_8_t",
+        L"ar_int_16_t",
+        L"ar_uint_16_t",
+        L"ar_int_32_t",
+        L"ar_uint_32_t",
+        L"ar_int_64_t",
+        L"ar_uint_64_t",
 
 		L"float",
         L"double",
@@ -219,7 +219,7 @@ std::vector<std::wstring>    g_tail_code;
 
 
 typedef struct {
-		uint_32_t		session_id;
+		ar_uint_32_t		session_id;
 		bool_t			bool_val;
 		bool_t			bool_arr[1024];
 }daemonHandShake_t;
@@ -390,14 +390,14 @@ INVALID_POINT:
 
 typedef struct {
 
-		uint_32_t				u;
-		uint_32_t				u_arr[1024];
+		ar_uint_32_t				u;
+		ar_uint_32_t				u_arr[1024];
 
 		daemonHandShake_t		h;
 		daemonHandShake_t		h_arr[1024];
 
-		byte_t					b;
-		byte_t					b_arr[1024];
+		ar_byte_t					b;
+		ar_byte_t					b_arr[1024];
 
 		char					c;
 		char					c_str[1024];
@@ -411,11 +411,11 @@ typedef struct {
 		double					d;
 		double					d_arr[1024];
 
-		uint_16_t				u16;
-		uint_16_t				u16_arr[1024];
+		ar_uint_16_t				u16;
+		ar_uint_16_t				u16_arr[1024];
 
-		int_64_t				i64;
-		int_64_t				i64_arr[1024];
+		ar_int_64_t				i64;
+		ar_int_64_t				i64_arr[1024];
 
 }daemonKeepalive_t;
 
@@ -852,7 +852,7 @@ static void marshal_die_test1()
 
 
 
-		uint_64_t beg = AR_GetTime_Milliseconds();
+		ar_uint_64_t beg = AR_GetTime_Milliseconds();
 		snObject_t *obj = __put_daemonKeepalive_t(&ka);
 		
 
@@ -864,7 +864,7 @@ static void marshal_die_test1()
 		
 		
 
-		uint_64_t end = AR_GetTime_Milliseconds();
+		ar_uint_64_t end = AR_GetTime_Milliseconds();
 		AR_printf(L"elapsed = %u\r\n", end - beg);
 
 		arBuffer_t *buf = AR_CreateBuffer(128);

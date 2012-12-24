@@ -25,13 +25,13 @@ typedef struct __heap_page_tag	page_t;
 
 struct __heap_page_tag
 {
-		byte_t				*data;
+		ar_byte_t				*data;
 		size_t				data_size;
 		page_t				*next;
 		page_t				*prev;
 
 		size_t				largest_free;		/*medium分配时使用*/
-		byte_t*				first_free;			/*medium分配时使用*/
+		ar_byte_t*				first_free;			/*medium分配时使用*/
 };
 
 
@@ -56,7 +56,7 @@ struct __medium_entery_tag
 
 struct __arsenal_heap_tag
 {
-		byte_t			*small_first_free[((SMALL_SIZE + 1)	/	AR_HEAP_ALIGN)+1];/*SMALL_SIZE对齐整理后+header会存在超出256的值,因此数组+1*/
+		ar_byte_t			*small_first_free[((SMALL_SIZE + 1)	/	AR_HEAP_ALIGN)+1];/*SMALL_SIZE对齐整理后+header会存在超出256的值,因此数组+1*/
 		page_t			*small_cur_page;
 		size_t			small_cur_page_offset;
 		page_t 			*small_first_used_page;
@@ -76,7 +76,7 @@ struct __arsenal_heap_tag
 static AR_INLINE page_t*		AllocatePage(arHeap_t *heap, size_t page_bytes)
 {
 		page_t *page;
-		byte_t	*ptr;
+		ar_byte_t	*ptr;
 		size_t size;
 		
 		AR_ASSERT(heap != NULL && page_bytes > 0);
@@ -84,7 +84,7 @@ static AR_INLINE page_t*		AllocatePage(arHeap_t *heap, size_t page_bytes)
 		
 
 		size = page_bytes + sizeof(page_t);
-		ptr = (byte_t*)malloc(size);
+		ptr = (ar_byte_t*)malloc(size);
 
 
 		if(!ptr)
@@ -96,9 +96,9 @@ static AR_INLINE page_t*		AllocatePage(arHeap_t *heap, size_t page_bytes)
 		
 		page = (page_t*)ptr;
 
-		page->data = (byte_t*)AR_ALIGN_SIZE((size_t)(ptr + sizeof(page_t)));
+		page->data = (ar_byte_t*)AR_ALIGN_SIZE((size_t)(ptr + sizeof(page_t)));
 		
-		page->data_size = size - (size_t)((byte_t*)page->data - (byte_t*)page);
+		page->data_size = size - (size_t)((ar_byte_t*)page->data - (ar_byte_t*)page);
 
 		page->next = NULL;
 		page->prev = NULL;
@@ -123,7 +123,7 @@ static AR_INLINE void	FreePage(arHeap_t *heap, page_t *page)
 		
 		
 		heap->page_allocated--;
-		heap->actual_mem_used -= (page->data_size + (size_t)((byte_t*)page->data - (byte_t*)page));
+		heap->actual_mem_used -= (page->data_size + (size_t)((ar_byte_t*)page->data - (ar_byte_t*)page));
 
 		free(page);
 		page = NULL;
@@ -133,7 +133,7 @@ static AR_INLINE void	FreePage(arHeap_t *heap, page_t *page)
 
 static AR_INLINE void*	SmallAllocate(arHeap_t *heap, size_t bytes)
 {
-		byte_t *block;
+		ar_byte_t *block;
 		size_t	byte_left;
 		AR_ASSERT(heap != NULL && bytes > 0 && bytes <= SMALL_SIZE);
 
@@ -157,7 +157,7 @@ static AR_INLINE void*	SmallAllocate(arHeap_t *heap, size_t bytes)
 		{
 				size_t next = *(size_t*)(block + SMALL_HEADER_SIZE);
 				block[1] = HEAP_SMALL_ALLOC;
-				heap->small_first_free[bytes/AR_HEAP_ALIGN] = (byte_t*)next;
+				heap->small_first_free[bytes/AR_HEAP_ALIGN] = (ar_byte_t*)next;
 				
 				return (void*)(block + SMALL_HEADER_SIZE);
 		}
@@ -182,7 +182,7 @@ static AR_INLINE void*	SmallAllocate(arHeap_t *heap, size_t bytes)
 		}
 
 		block = heap->small_cur_page->data + heap->small_cur_page_offset;
-		block[0] = (byte_t)(bytes/AR_HEAP_ALIGN);
+		block[0] = (ar_byte_t)(bytes/AR_HEAP_ALIGN);
 		block[1] = HEAP_SMALL_ALLOC;
 		heap->small_cur_page_offset += (bytes + SMALL_HEADER_SIZE);
 		return block + SMALL_HEADER_SIZE;
@@ -191,11 +191,11 @@ static AR_INLINE void*	SmallAllocate(arHeap_t *heap, size_t bytes)
 
 static AR_INLINE void SmallFree(arHeap_t *heap, void *ptr)
 {
-		byte_t *p, *d;
+		ar_byte_t *p, *d;
 		size_t *dt, idx;
 		AR_ASSERT(heap != NULL && ptr != NULL);
 		
-		p = (byte_t*)ptr;
+		p = (ar_byte_t*)ptr;
 		p[-1] = HEAP_INVALID_ALLOC;
 		idx = (size_t)p[-2];
 		
@@ -214,11 +214,11 @@ static AR_INLINE void SmallFree(arHeap_t *heap, void *ptr)
 
 static AR_INLINE void* SmallRealloc(arHeap_t *heap, void *ptr, size_t nbytes)
 {
-		byte_t *p;
+		ar_byte_t *p;
 		size_t idx, org_bytes;
 		AR_ASSERT(heap != NULL && ptr != NULL);
 		
-		p = (byte_t*)ptr;
+		p = (ar_byte_t*)ptr;
 		idx = (size_t)p[-2];
 		org_bytes = (idx + 1)* AR_HEAP_ALIGN - SMALL_HEADER_SIZE;
 
@@ -245,7 +245,7 @@ static AR_INLINE void* SmallRealloc(arHeap_t *heap, void *ptr, size_t nbytes)
 
 static AR_INLINE void*			MediumAllocDataFromPage(arHeap_t *heap, page_t *page, size_t bytes)
 {
-		byte_t *ret;
+		ar_byte_t *ret;
 		mediumEntry_t		*best, *nw;
 		
 		AR_ASSERT(heap != NULL && page != NULL);
@@ -262,7 +262,7 @@ static AR_INLINE void*			MediumAllocDataFromPage(arHeap_t *heap, page_t *page, s
 
 		if(best->size >= (bytes + MEDIUM_SMALLEST_SIZE))
 		{
-				nw = (mediumEntry_t*)((byte_t*)best + best->size - bytes);
+				nw = (mediumEntry_t*)((ar_byte_t*)best + best->size - bytes);
 				
 				nw->page		= page;
 				nw->prev		= best;
@@ -288,7 +288,7 @@ static AR_INLINE void*			MediumAllocDataFromPage(arHeap_t *heap, page_t *page, s
 						best->prev_free->next_free = best->next_free;
 				}else
 				{
-						page->first_free = (byte_t*)best->next_free;
+						page->first_free = (ar_byte_t*)best->next_free;
 				}
 
 				if(best->next_free)
@@ -302,9 +302,9 @@ static AR_INLINE void*			MediumAllocDataFromPage(arHeap_t *heap, page_t *page, s
 				page->largest_free = 0;
 		}
 
-		/*ret = ((byte_t*)(nw)) + MEDIUM_HEADER_SIZE;*/
+		/*ret = ((ar_byte_t*)(nw)) + MEDIUM_HEADER_SIZE;*/
 		
-		ret = ((byte_t*)(nw)) + AR_ALIGN_SIZE(MEDIUM_HEADER_SIZE);
+		ret = ((ar_byte_t*)(nw)) + AR_ALIGN_SIZE(MEDIUM_HEADER_SIZE);
 		ret[-1] = HEAP_MEDIUM_ALLOC;
 		return (void*)ret;
 }
@@ -447,9 +447,9 @@ static AR_INLINE void	MediumFree(arHeap_t *heap, void *ptr)
 		mediumEntry_t		*prev, *next;
 		AR_ASSERT(heap != NULL && ptr != NULL);
 
-		((byte_t*)ptr)[-1] = HEAP_INVALID_ALLOC;
+		((ar_byte_t*)ptr)[-1] = HEAP_INVALID_ALLOC;
 		
-		e = (mediumEntry_t*)((byte_t*)ptr - AR_ALIGN_SIZE(MEDIUM_HEADER_SIZE));
+		e = (mediumEntry_t*)((ar_byte_t*)ptr - AR_ALIGN_SIZE(MEDIUM_HEADER_SIZE));
 		AR_ASSERT(e->size > 0);
 		AR_ASSERT(e->free_block == 0);
 		
@@ -481,7 +481,7 @@ static AR_INLINE void	MediumFree(arHeap_t *heap, void *ptr)
 						e->next_free->prev_free = e;
 				}
 				
-				p->first_free = (byte_t*)e;
+				p->first_free = (ar_byte_t*)e;
 				p->largest_free = e->size;
 				e->free_block = 1;
 		}
@@ -504,8 +504,8 @@ static AR_INLINE void	MediumFree(arHeap_t *heap, void *ptr)
 				}else
 				{
 						/*执行后first_free有可能为NULL*/
-						AR_ASSERT((byte_t*)next == (byte_t*)p->first_free );
-						p->first_free = (byte_t*)next->next_free; 
+						AR_ASSERT((ar_byte_t*)next == (ar_byte_t*)p->first_free );
+						p->first_free = (ar_byte_t*)next->next_free; 
 				}
 
 				if ( next->next_free ) 
@@ -528,7 +528,7 @@ static AR_INLINE void	MediumFree(arHeap_t *heap, void *ptr)
 				/*
 				执行到此，证明p->first_free不是最大块，则将块e放到p->first_free中
 				*/
-				AR_ASSERT((byte_t*)e != p->first_free);
+				AR_ASSERT((ar_byte_t*)e != p->first_free);
 				p->largest_free = e->size;
 
 				if(e->prev_free)
@@ -548,7 +548,7 @@ static AR_INLINE void	MediumFree(arHeap_t *heap, void *ptr)
 						e->next_free->prev_free = e;
 				}
 
-				p->first_free = (byte_t*)e;
+				p->first_free = (ar_byte_t*)e;
 		}
 
 
@@ -637,8 +637,8 @@ static AR_INLINE void* MediumRealloc(arHeap_t *heap, void *ptr, size_t bytes)
 		mediumEntry_t		*e;
 		size_t new_bytes;
 		AR_ASSERT(heap != NULL && ptr != NULL);
-		/*e = (mediumEntry_t*)((byte_t*)ptr - MEDIUM_HEADER_SIZE);*/
-		e = (mediumEntry_t*)((byte_t*)ptr - AR_ALIGN_SIZE(MEDIUM_HEADER_SIZE));
+		/*e = (mediumEntry_t*)((ar_byte_t*)ptr - MEDIUM_HEADER_SIZE);*/
+		e = (mediumEntry_t*)((ar_byte_t*)ptr - AR_ALIGN_SIZE(MEDIUM_HEADER_SIZE));
 		
 		AR_ASSERT(e->size > AR_ALIGN_SIZE(MEDIUM_HEADER_SIZE));
 		AR_ASSERT(e->free_block == 0);
@@ -665,7 +665,7 @@ static AR_INLINE void*	LargeAllocate(arHeap_t *heap, size_t bytes)
 {
 		page_t *p;
 		size_t *base_ptr;
-		byte_t *ret;
+		ar_byte_t *ret;
 		AR_ASSERT(heap != NULL && bytes > MEDIUM_SIZE);
 
 		p = AllocatePage(heap, bytes + AR_ALIGN_SIZE(LARGE_HEADER_SIZE));
@@ -675,7 +675,7 @@ static AR_INLINE void*	LargeAllocate(arHeap_t *heap, size_t bytes)
 				return NULL;
 		}
 
-		ret = (byte_t*)p->data + AR_ALIGN_SIZE(LARGE_HEADER_SIZE);
+		ret = (ar_byte_t*)p->data + AR_ALIGN_SIZE(LARGE_HEADER_SIZE);
 
 		base_ptr = (size_t*)(ret - AR_ALIGN_SIZE(LARGE_HEADER_SIZE));
 		base_ptr[0] = (size_t)p;
@@ -699,8 +699,8 @@ static AR_INLINE void	LargeFree(arHeap_t *heap, void *ptr)
 {
 		page_t *p;
 		AR_ASSERT(heap != NULL && ptr != NULL);
-		((byte_t*)ptr)[-1] = HEAP_INVALID_ALLOC;
-		p = (page_t*)(*((size_t*)((byte_t*)ptr - AR_ALIGN_SIZE(LARGE_HEADER_SIZE))));
+		((ar_byte_t*)ptr)[-1] = HEAP_INVALID_ALLOC;
+		p = (page_t*)(*((size_t*)((ar_byte_t*)ptr - AR_ALIGN_SIZE(LARGE_HEADER_SIZE))));
 		
 		if(p->prev)
 		{
@@ -729,7 +729,7 @@ static AR_INLINE void* LargeRealloc(arHeap_t *heap, void *ptr, size_t nbytes)
 		page_t *p;
 
 		AR_ASSERT(heap != NULL && ptr != NULL);
-		p = (page_t*)(*((size_t*)((byte_t*)ptr - AR_ALIGN_SIZE(LARGE_HEADER_SIZE))));
+		p = (page_t*)(*((size_t*)((ar_byte_t*)ptr - AR_ALIGN_SIZE(LARGE_HEADER_SIZE))));
 
 
 		AR_ASSERT(p->data_size > AR_ALIGN_SIZE(LARGE_HEADER_SIZE));
@@ -891,10 +891,10 @@ void*			AR_ClearedAllocFromHeap(arHeap_t *heap, size_t num, size_t elem_size)
 
 void	AR_FreeToHeap(arHeap_t *heap, void *ptr)
 {
-		byte_t *p;
+		ar_byte_t *p;
 		AR_ASSERT(heap != NULL && ptr != NULL);
 
-		p = (byte_t*)ptr;
+		p = (ar_byte_t*)ptr;
 
 		switch(p[-1])
 		{
@@ -916,7 +916,7 @@ void	AR_FreeToHeap(arHeap_t *heap, void *ptr)
 
 void*	AR_ReallocFromHeap(arHeap_t *heap, void *ptr, size_t bytes)
 {
-		byte_t *p;
+		ar_byte_t *p;
 		AR_ASSERT(heap != NULL);
 		AR_ASSERT(bytes > 0);
 		
@@ -925,7 +925,7 @@ void*	AR_ReallocFromHeap(arHeap_t *heap, void *ptr, size_t bytes)
 				return AR_AllocFromHeap(heap, bytes);
 		}
 
-		p = (byte_t*)ptr;
+		p = (ar_byte_t*)ptr;
 
 		switch(p[-1])
 		{
@@ -950,8 +950,8 @@ arHeapUsage_t	AR_GetHeapMemUsage(const arHeap_t *heap)
 {
 		arHeapUsage_t	ret;
 		AR_ASSERT(heap != NULL);
-		ret.acutal_mem_used = (uint_64_t)heap->actual_mem_used;
-		ret.peak_mem_used = (uint_64_t)heap->peak_mem_used;
+		ret.acutal_mem_used = (ar_uint_64_t)heap->actual_mem_used;
+		ret.peak_mem_used = (ar_uint_64_t)heap->peak_mem_used;
 		return ret;
 }
 

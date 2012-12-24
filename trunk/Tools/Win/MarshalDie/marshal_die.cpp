@@ -395,7 +395,7 @@ std::wstring generate_for_unistruct_def()
 		/****************************************generate_for_struct****************************************/
 		/*
          typedef struct {
-         uint_32_t                       type;
+         ar_uint_32_t                       type;
          union{
          daemonKeppalive_t		daemonKeppalive_t
          };
@@ -474,7 +474,7 @@ std::wstring generate_for_unistruct_put_get()
 
 
 		/****************************************unmarshal uni_type_code****************************************/
-		unmarshal_code = L"\r\nstatic arStatus_t\t\t" + g_uni_name + L"_UnMarshal(" + g_uni_name + L" *uni_type, arBuffer_t *in)\r\n{\r\n\t\tsnRetVal_t\t\tsn_ret;\r\n\t\tarStatus_t\t\tar_status;\r\n\t\tsnObject_t\t\t*type_obj, *data_obj;\r\n\t\tAR_ASSERT(uni_type != NULL && in != NULL);\r\n\r\n\t\tar_status = AR_S_YES;\r\n\t\ttype_obj = NULL;\r\n\t\tdata_obj = NULL;\r\n\t\tAR_memset(uni_type, 0, sizeof(*uni_type));\r\n\r\n\t\t\r\n\t\tsn_ret = SN_GetObject(in);\r\n\r\n\t\tar_status = sn_ret.status;\r\n\r\n\t\tif(ar_status != AR_S_YES)\r\n\t\t{\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\r\n\t\tif(SN_GetObjectType(sn_ret.obj) != SN_LIST_T || SN_GetListObjectCount(sn_ret.obj) != 2)\r\n\t\t{\r\n\t\t\t\tar_status = AR_E_INVAL;\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\t\t\r\n\t\ttype_obj = SN_GetFromListObject(sn_ret.obj, 0);\r\n\r\n\t\tif(type_obj == NULL || SN_GetObjectType(type_obj) != SN_INT_T)\r\n\t\t{\r\n\t\t\t\tar_status = AR_E_INVAL;\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\r\n\t\tdata_obj = SN_GetFromListObject(sn_ret.obj, 1);\r\n\r\n\t\tif(data_obj == NULL || SN_GetObjectType(data_obj) != SN_DICT_T)\r\n\t\t{\r\n\t\t\t\tar_status = AR_E_INVAL;\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\t\tuni_type->type = (uint_32_t)SN_GetUIntObject(type_obj);\r\n\t\tswitch(uni_type->type)\r\n\t\t{\r\n\t\t/*******************************************************************************************/\r\n";
+		unmarshal_code = L"\r\nstatic arStatus_t\t\t" + g_uni_name + L"_UnMarshal(" + g_uni_name + L" *uni_type, arBuffer_t *in)\r\n{\r\n\t\tsnRetVal_t\t\tsn_ret;\r\n\t\tarStatus_t\t\tar_status;\r\n\t\tsnObject_t\t\t*type_obj, *data_obj;\r\n\t\tAR_ASSERT(uni_type != NULL && in != NULL);\r\n\r\n\t\tar_status = AR_S_YES;\r\n\t\ttype_obj = NULL;\r\n\t\tdata_obj = NULL;\r\n\t\tAR_memset(uni_type, 0, sizeof(*uni_type));\r\n\r\n\t\t\r\n\t\tsn_ret = SN_GetObject(in);\r\n\r\n\t\tar_status = sn_ret.status;\r\n\r\n\t\tif(ar_status != AR_S_YES)\r\n\t\t{\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\r\n\t\tif(SN_GetObjectType(sn_ret.obj) != SN_LIST_T || SN_GetListObjectCount(sn_ret.obj) != 2)\r\n\t\t{\r\n\t\t\t\tar_status = AR_E_INVAL;\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\t\t\r\n\t\ttype_obj = SN_GetFromListObject(sn_ret.obj, 0);\r\n\r\n\t\tif(type_obj == NULL || SN_GetObjectType(type_obj) != SN_INT_T)\r\n\t\t{\r\n\t\t\t\tar_status = AR_E_INVAL;\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\r\n\t\tdata_obj = SN_GetFromListObject(sn_ret.obj, 1);\r\n\r\n\t\tif(data_obj == NULL || SN_GetObjectType(data_obj) != SN_DICT_T)\r\n\t\t{\r\n\t\t\t\tar_status = AR_E_INVAL;\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\t\tuni_type->type = (ar_uint_32_t)SN_GetUIntObject(type_obj);\r\n\t\tswitch(uni_type->type)\r\n\t\t{\r\n\t\t/*******************************************************************************************/\r\n";
 
 		for(size_t i = 0; i < g_type_list.size(); ++i)
 		{
@@ -617,7 +617,7 @@ void marshal_die_main(const wchar_t *input_path, const wchar_t *output_path)
 
 
  
-static void AR_STDCALL tiny_error(int_t level, const wchar_t* msg, void *ctx)
+static void AR_STDCALL tiny_error(ar_int_t level, const wchar_t* msg, void *ctx)
 {
 		printf("%ls", msg);
 		if(level == AR_ERR_FATAL)

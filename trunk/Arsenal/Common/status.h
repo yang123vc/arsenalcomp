@@ -106,10 +106,10 @@ public:
 		}
 
 		explicit arStatus_t(bool_t t);
-		explicit arStatus_t(int_32_t t);
-		explicit arStatus_t(int_64_t t);
-		explicit arStatus_t(uint_32_t t);
-		explicit arStatus_t(uint_64_t t);
+		explicit arStatus_t(ar_int_32_t t);
+		explicit arStatus_t(ar_int_64_t t);
+		explicit arStatus_t(ar_uint_32_t t);
+		explicit arStatus_t(ar_uint_64_t t);
 
 
 		arStatus_t(__tag_ret_error_t t)

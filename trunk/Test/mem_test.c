@@ -104,7 +104,7 @@ void alloc_test()
 
 void measure_alloc_test()
 {
-		uint_64_t beg, end;
+		ar_uint_64_t beg, end;
 		
 		for(size_t i = 0; i < 500; ++i)
 		{
@@ -192,7 +192,7 @@ void realloc_test()
 
 void measure_realloc_test()
 {
-		uint_64_t beg, end;
+		ar_uint_64_t beg, end;
 		
 		for(size_t i = 0; i < 500; ++i)
 		{
@@ -208,8 +208,8 @@ void measure_realloc_test()
 void debug_memory_test()
 {
 
-		byte_t *b = AR_NEWARR0(byte_t, 1024);
-		b = AR_NEWARR0(byte_t, 1024);
+		ar_byte_t *b = AR_NEWARR0(ar_byte_t, 1024);
+		b = AR_NEWARR0(ar_byte_t, 1024);
 		arStatus_t status;
 
 		

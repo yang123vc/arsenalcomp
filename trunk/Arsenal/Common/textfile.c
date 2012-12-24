@@ -41,7 +41,7 @@ AR_NAMESPACE_BEGIN
 
 static bool_t	__dectect_encoding(arBuffer_t *input, arTxtBom_t *bom)
 {
-		byte_t tmp[4] = {0xcc, 0xcc,0xcc,0xcc};
+		ar_byte_t tmp[4] = {0xcc, 0xcc,0xcc,0xcc};
 		size_t input_len;
 		size_t read_n;
 		AR_ASSERT(input != NULL && bom != NULL);
@@ -120,7 +120,7 @@ typedef enum
 static txtReadStatus_t		__read_wchar(arBuffer_t *input, arTxtBom_t enc, wchar_t *out)
 {
 
-		uint_32_t e;
+		ar_uint_32_t e;
 
 		AR_ASSERT(input != NULL);
 
@@ -130,10 +130,10 @@ static txtReadStatus_t		__read_wchar(arBuffer_t *input, arTxtBom_t enc, wchar_t 
 		{
 		case AR_TXT_BOM_UTF_8:
 		{
-				byte_t		b;
-				byte_t		buf[5];
+				ar_byte_t		b;
+				ar_byte_t		buf[5];
 				size_t		rn;
-				uint_32_t	v;
+				ar_uint_32_t	v;
 
 				b = 0;
 				rn = 0;
@@ -146,7 +146,7 @@ static txtReadStatus_t		__read_wchar(arBuffer_t *input, arTxtBom_t enc, wchar_t 
 						return TXT_READ_EOF;
 				}
 
-				v = (uint_32_t)b;
+				v = (ar_uint_32_t)b;
 
 				if(v >= 0xfc)
 				{
@@ -224,7 +224,7 @@ static txtReadStatus_t		__read_wchar(arBuffer_t *input, arTxtBom_t enc, wchar_t 
 		case AR_TXT_BOM_UTF16_BE:
 		case AR_TXT_BOM_UTF16_LE:
 		{
-				byte_t buf[2];
+				ar_byte_t buf[2];
 				size_t	rn;
 				rn = AR_ReadBufferData(input, buf, 2);
 				if(rn != 2)
@@ -234,17 +234,17 @@ static txtReadStatus_t		__read_wchar(arBuffer_t *input, arTxtBom_t enc, wchar_t 
 
 				if(enc == AR_TXT_BOM_UTF16_BE)
 				{
-						e = ((uint_32_t)buf[0]) << 8 | (uint_32_t)buf[1];
+						e = ((ar_uint_32_t)buf[0]) << 8 | (ar_uint_32_t)buf[1];
 				}else
 				{
-						e = ((uint_32_t)buf[1]) << 8 | (uint_32_t)buf[0];
+						e = ((ar_uint_32_t)buf[1]) << 8 | (ar_uint_32_t)buf[0];
 				}
 		}
 				break;
 		case AR_TXT_BOM_UTF32_BE:
 		case AR_TXT_BOM_UTF32_LE:
 		{
-				byte_t buf[4];
+				ar_byte_t buf[4];
 				size_t	rn;
 				rn = AR_ReadBufferData(input, buf, 4);
 				if(rn != 4)
@@ -254,10 +254,10 @@ static txtReadStatus_t		__read_wchar(arBuffer_t *input, arTxtBom_t enc, wchar_t 
 
 				if(enc == AR_TXT_BOM_UTF32_BE)
 				{
-						e = ((uint_32_t)buf[0]) << 24 | (uint_32_t)buf[1] << 16 | (uint_32_t)buf[2] << 8 | (uint_32_t)buf[3];
+						e = ((ar_uint_32_t)buf[0]) << 24 | (ar_uint_32_t)buf[1] << 16 | (ar_uint_32_t)buf[2] << 8 | (ar_uint_32_t)buf[3];
 				}else
 				{
-						e = (uint_32_t)buf[0] | (uint_32_t)buf[1] << 8 | (uint_32_t)buf[2] << 16 | ((uint_32_t)buf[3]) << 24;
+						e = (ar_uint_32_t)buf[0] | (ar_uint_32_t)buf[1] << 8 | (ar_uint_32_t)buf[2] << 16 | ((ar_uint_32_t)buf[3]) << 24;
 				}
 		}
 				break;
@@ -421,7 +421,7 @@ arStatus_t	AR_LoadBomTextFile(const wchar_t *path, arTxtBom_t *bom, arString_t *
 
 		{
 				size_t	rn;
-				byte_t	tmp[256];
+				ar_byte_t	tmp[256];
 				
 				do{
 						ret = AR_read_file(file, tmp, 256, &rn);
@@ -482,7 +482,7 @@ FAILED_POINT:
 
 static arStatus_t __write_bom(arBuffer_t *out, arTxtBom_t bom)
 {
-		byte_t buf[4];
+		ar_byte_t buf[4];
 		size_t wn;
 		arStatus_t ret;
 		AR_ASSERT(out != NULL);
@@ -539,7 +539,7 @@ static arStatus_t __write_bom(arBuffer_t *out, arTxtBom_t bom)
 
 		if(wn > 0)
 		{
-				ret = AR_InsertToBuffer(out, (byte_t*)buf, wn);
+				ret = AR_InsertToBuffer(out, (ar_byte_t*)buf, wn);
 				
 		}
 		return ret;
@@ -561,103 +561,103 @@ static arStatus_t __write_wchar(arBuffer_t *out, arTxtBom_t bom, wchar_t c)
 		{
 		case AR_TXT_BOM_UTF_8:
 		{
-				byte_t utf8[10];
+				ar_byte_t utf8[10];
 				size_t n;
-				byte_t *e;
-				uint_32_t	uc = (uint_32_t)c;
+				ar_byte_t *e;
+				ar_uint_32_t	uc = (ar_uint_32_t)c;
 
 				e = utf8;
 
 				if(uc < 0x80)
 				{
-						*e++ = (byte_t)uc;
+						*e++ = (ar_byte_t)uc;
 				}else if(uc < 0x800)
 				{
 						/*<11011111> < 000 0000 0000>*/
-						*e++ = (byte_t)((uc >> 6) & 0x1f)|0xc0;
-						*e++ = (byte_t)(uc & 0x3f)|0x80;
+						*e++ = (ar_byte_t)((uc >> 6) & 0x1f)|0xc0;
+						*e++ = (ar_byte_t)(uc & 0x3f)|0x80;
 				}else if(uc < 0x10000)
 				{
 						/*<11101111> <0000 0000 0000 0000>*/
-						*e++ = (byte_t)(((uc >> 12) & 0x0f)|0xe0);
-						*e++ = (byte_t)(((uc >> 6) & 0x3f)|0x80);
-						*e++ = (byte_t)((uc & 0x3f)|0x80);
+						*e++ = (ar_byte_t)(((uc >> 12) & 0x0f)|0xe0);
+						*e++ = (ar_byte_t)(((uc >> 6) & 0x3f)|0x80);
+						*e++ = (ar_byte_t)((uc & 0x3f)|0x80);
 				}else if(uc < 0x200000)
 				{
 						/*<11110111> <0 0000 0000 0000 0000 0000>*/
-						*e++ = (byte_t)(((uc >> 18) & 0x07)|0xf0);
-						*e++ = (byte_t)(((uc >> 12) & 0x3f)|0x80);
-						*e++ = (byte_t)(((uc >> 6) & 0x3f)|0x80);
-						*e++ = (byte_t)((uc & 0x3f)|0x80);
+						*e++ = (ar_byte_t)(((uc >> 18) & 0x07)|0xf0);
+						*e++ = (ar_byte_t)(((uc >> 12) & 0x3f)|0x80);
+						*e++ = (ar_byte_t)(((uc >> 6) & 0x3f)|0x80);
+						*e++ = (ar_byte_t)((uc & 0x3f)|0x80);
 				}else if(uc < 0x4000000)
 				{
 						/*<11111011> <00 0000 0000 0000 0000 0000 0000>*/
-						*e++ = (byte_t)(((uc >> 24) & 0x03)|0xf8);
-						*e++ = (byte_t)(((uc >> 18) & 0x3f)|0x80);
-						*e++ = (byte_t)(((uc >> 12) & 0x3f)|0x80);
-						*e++ = (byte_t)(((uc >> 6) & 0x3f)|0x80);
-						*e++ = (byte_t)((uc & 0x3f)|0x80);
+						*e++ = (ar_byte_t)(((uc >> 24) & 0x03)|0xf8);
+						*e++ = (ar_byte_t)(((uc >> 18) & 0x3f)|0x80);
+						*e++ = (ar_byte_t)(((uc >> 12) & 0x3f)|0x80);
+						*e++ = (ar_byte_t)(((uc >> 6) & 0x3f)|0x80);
+						*e++ = (ar_byte_t)((uc & 0x3f)|0x80);
 				}else
 				{
 						/*<11111101> <0000 0000 0000 0000 0000 0000 0000 0000>*/
-						*e++ = (byte_t)(((uc >> 30) & 0x01)|0xfc);
-						*e++ = (byte_t)(((uc >> 24) & 0x3f)|0x80);
-						*e++ = (byte_t)(((uc >> 18) & 0x3f)|0x80);
-						*e++ = (byte_t)(((uc >> 12) & 0x3f)|0x80);
-						*e++ = (byte_t)(((uc >> 6) & 0x3f)|0x80);
-						*e++ = (byte_t)((uc & 0x3f)|0x80);
+						*e++ = (ar_byte_t)(((uc >> 30) & 0x01)|0xfc);
+						*e++ = (ar_byte_t)(((uc >> 24) & 0x3f)|0x80);
+						*e++ = (ar_byte_t)(((uc >> 18) & 0x3f)|0x80);
+						*e++ = (ar_byte_t)(((uc >> 12) & 0x3f)|0x80);
+						*e++ = (ar_byte_t)(((uc >> 6) & 0x3f)|0x80);
+						*e++ = (ar_byte_t)((uc & 0x3f)|0x80);
 				}
 
 				n =  e - utf8;
 
-				ret = AR_InsertToBuffer(out, (byte_t*)utf8, n);
+				ret = AR_InsertToBuffer(out, (ar_byte_t*)utf8, n);
 				
 		}
 				break;
 		case AR_TXT_BOM_UTF16_BE:
 		case AR_TXT_BOM_UTF16_LE:
 		{
-				byte_t buf[2];
-				uint_16_t	uc = (uint_16_t)c;
+				ar_byte_t buf[2];
+				ar_uint_16_t	uc = (ar_uint_16_t)c;
 
 
 				if(bom == AR_TXT_BOM_UTF16_BE)
 				{
-						buf[0] = (byte_t)(uc >> 8);
-						buf[1] = (byte_t)(uc & 0x00FF);
+						buf[0] = (ar_byte_t)(uc >> 8);
+						buf[1] = (ar_byte_t)(uc & 0x00FF);
 
 				}else
 				{
-						buf[1] = (byte_t)(uc >> 8);
-						buf[0] = (byte_t)(uc & 0x00FF);
+						buf[1] = (ar_byte_t)(uc >> 8);
+						buf[0] = (ar_byte_t)(uc & 0x00FF);
 				}
 
-				ret = AR_InsertToBuffer(out, (byte_t*)buf, 2);
+				ret = AR_InsertToBuffer(out, (ar_byte_t*)buf, 2);
 				
 		}
 				break;
 		case AR_TXT_BOM_UTF32_BE:
 		case AR_TXT_BOM_UTF32_LE:
 		{
-				byte_t buf[4];
-				uint_32_t	uc = (uint_32_t)c;
+				ar_byte_t buf[4];
+				ar_uint_32_t	uc = (ar_uint_32_t)c;
 
 
 				if(bom == AR_TXT_BOM_UTF32_BE)
 				{
-						buf[0] = (byte_t)(uc >> 24);
-						buf[1] = (byte_t)(uc >> 16);
-						buf[2] = (byte_t)(uc >> 8);
-						buf[3] = (byte_t)(uc & 0x000000FF);
+						buf[0] = (ar_byte_t)(uc >> 24);
+						buf[1] = (ar_byte_t)(uc >> 16);
+						buf[2] = (ar_byte_t)(uc >> 8);
+						buf[3] = (ar_byte_t)(uc & 0x000000FF);
 				}else
 				{
-						buf[3] = (byte_t)(uc >> 24);
-						buf[2] = (byte_t)(uc >> 16);
-						buf[1] = (byte_t)(uc >> 8);
-						buf[0] = (byte_t)(uc & 0x000000FF);
+						buf[3] = (ar_byte_t)(uc >> 24);
+						buf[2] = (ar_byte_t)(uc >> 16);
+						buf[1] = (ar_byte_t)(uc >> 8);
+						buf[0] = (ar_byte_t)(uc & 0x000000FF);
 				}
 
-				ret = AR_InsertToBuffer(out, (byte_t*)buf, 4);
+				ret = AR_InsertToBuffer(out, (ar_byte_t*)buf, 4);
 		}
 				break;
 		case AR_TXT_BOM_ASCII:
@@ -699,7 +699,7 @@ arStatus_t	AR_SaveBomTextToBinary(arBuffer_t *output, arTxtBom_t bom, const wcha
 						goto CLEAR_LOCAL;
 				}else
 				{
-						ret = AR_InsertToBuffer(output, (byte_t*)s, n);
+						ret = AR_InsertToBuffer(output, (ar_byte_t*)s, n);
 						if(ret != AR_S_YES)
 						{
 								goto CLEAR_LOCAL;
@@ -784,7 +784,7 @@ arStatus_t	AR_SaveBomTextFile(const wchar_t *path, arTxtBom_t bom, const wchar_t
 		}
 
 		
-		/*if(fwrite((const byte_t*)AR_GetBufferData(buf), 1, AR_GetBufferAvailable(buf), file) != AR_GetBufferAvailable(buf))*/
+		/*if(fwrite((const ar_byte_t*)AR_GetBufferData(buf), 1, AR_GetBufferAvailable(buf), file) != AR_GetBufferAvailable(buf))*/
 #if(0)
 		wn = 0;
 		ret = AR_write_file(file, AR_GetBufferData(buf), AR_GetBufferAvailable(buf), &wn);
@@ -797,7 +797,7 @@ arStatus_t	AR_SaveBomTextFile(const wchar_t *path, arTxtBom_t bom, const wchar_t
 #endif
 
 		do{
-				byte_t tmp[256];
+				ar_byte_t tmp[256];
 				size_t read_n;
 				wn = 0;
 				read_n = AR_ReadBufferData(buf, tmp, 256);

@@ -39,27 +39,27 @@ void			AR_UnInitThread()
 
 }
 
-int_t			AR_AtomicInc(volatile int_t *dest)
+ar_int_t			AR_AtomicInc(volatile ar_int_t *dest)
 {
 		AR_ASSERT(dest != NULL);
 #if(AR_ARCH_VER == ARCH_32)
-		return (int_t)OSAtomicIncrement32Barrier(dest);
+		return (ar_int_t)OSAtomicIncrement32Barrier(dest);
 #elif(AR_ARCH_VER == ARCH_64)
-		return (int_t)OSAtomicIncrement64Barrier(dest);
+		return (ar_int_t)OSAtomicIncrement64Barrier(dest);
 #else
 #error	"Unknow Platform";
 #endif
 
 }
 
-int_t			AR_AtomicDec(volatile int_t *dest)
+ar_int_t			AR_AtomicDec(volatile ar_int_t *dest)
 {
 		AR_ASSERT(dest != NULL);
 
 #if(AR_ARCH_VER == ARCH_32)
-		return (int_t)OSAtomicDecrement32Barrier(dest);
+		return (ar_int_t)OSAtomicDecrement32Barrier(dest);
 #elif(AR_ARCH_VER == ARCH_64)
-		return (int_t)OSAtomicDecrement64Barrier(dest);
+		return (ar_int_t)OSAtomicDecrement64Barrier(dest);
 #else
 #error	"Unknow Platform";
 #endif
@@ -121,7 +121,7 @@ void			AR_YieldThread()
 		pthread_yield_np();
 }
 
-void			AR_Sleep(uint_64_t millisecond)
+void			AR_Sleep(ar_uint_64_t millisecond)
 {
 		useconds_t m = (useconds_t)millisecond;
 

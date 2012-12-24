@@ -634,7 +634,7 @@ arStatus_t		Operation_GetResult(operation_t *oper, void **presult)
 }
 
 
-arStatus_t		Operation_GetResultWithTimeout(operation_t *oper, void **presult, uint_64_t timeout_ms)
+arStatus_t		Operation_GetResultWithTimeout(operation_t *oper, void **presult, ar_uint_64_t timeout_ms)
 {
         
 		arStatus_t status;

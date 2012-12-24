@@ -36,8 +36,8 @@ void	TGU_UnInitUtility();
 
 const wchar_t*	TGU_AllocString(const wchar_t *str);
 const wchar_t*	TGU_AllocStringN(const wchar_t *str, size_t n);
-const wchar_t*  TGU_AllocStringInt(int_64_t num, size_t radix);
-const wchar_t*  TGU_AllocStringUInt(uint_64_t num, size_t radix);
+const wchar_t*  TGU_AllocStringInt(ar_int_64_t num, size_t radix);
+const wchar_t*  TGU_AllocStringUInt(ar_uint_64_t num, size_t radix);
 const wchar_t*  TGU_AllocStringFloat(double num);
 bool_t			TGU_HasString(const wchar_t *name);
 

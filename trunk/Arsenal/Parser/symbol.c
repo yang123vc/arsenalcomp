@@ -62,7 +62,7 @@ const psrSymb_t*		Parser_CopyNewSymb(const psrSymb_t *sour)
 {
 		AR_ASSERT(sour != NULL && sour->ref_count > 0);
 
-		AR_AtomicInc((volatile int_t*)&sour->ref_count);
+		AR_AtomicInc((volatile ar_int_t*)&sour->ref_count);
 		return sour;
 
 }
@@ -72,7 +72,7 @@ void			Parser_DestroySymb(const psrSymb_t *symb)
 		
 		AR_ASSERT(symb != NULL && symb->ref_count > 0);
 		
-		if(AR_AtomicDec((volatile int_t*)&symb->ref_count) == 0)
+		if(AR_AtomicDec((volatile ar_int_t*)&symb->ref_count) == 0)
 		{
 				AR_DEL((psrSymb_t*)symb);
 		}
@@ -85,20 +85,20 @@ void			Parser_DestroySymb(const psrSymb_t *symb)
 
 
 
-int_t					Parser_CompSymb(const psrSymb_t *l, const psrSymb_t *r)
+ar_int_t					Parser_CompSymb(const psrSymb_t *l, const psrSymb_t *r)
 {
-		int_t cmp;
+		ar_int_t cmp;
 		AR_ASSERT(l != NULL && r != NULL);
 		
 		if(l == r)return 0;
 
-		cmp = (int_t)l->type - (int_t)r->type;
+		cmp = (ar_int_t)l->type - (ar_int_t)r->type;
 		if(cmp != 0) return cmp;
 
 		cmp = l->hash_code - r->hash_code;
 		if(cmp != 0) return cmp;
 
-		cmp = (int_t)l->name - (int_t)r->name;
+		cmp = (ar_int_t)l->name - (ar_int_t)r->name;
 		
 		return cmp;
 }
@@ -235,11 +235,11 @@ const psrSymb_t*	Parser_GetSymbFromSymbList(const psrSymbList_t *symb_lst, size_
 		}
 }
 
-int_t				Parser_FindFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t* symb)
+ar_int_t				Parser_FindFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t* symb)
 {
-		int_t i;
+		ar_int_t i;
 
-		for(i = 0; i < (int_t)symb_lst->count; ++i)
+		for(i = 0; i < (ar_int_t)symb_lst->count; ++i)
 		{
 				if(Parser_CompSymb(symb_lst->lst[i], symb) == 0)return i;
 		}
@@ -248,9 +248,9 @@ int_t				Parser_FindFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t*
 
 
 
-int_t				Parser_BSearchFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t* symb)
+ar_int_t				Parser_BSearchFromSymbList(const psrSymbList_t *symb_lst, const psrSymb_t* symb)
 {
-		int_t l,r,m,cmp;
+		ar_int_t l,r,m,cmp;
 		AR_ASSERT(symb_lst != NULL && symb != NULL);
 
 
@@ -291,7 +291,7 @@ static int __comp_symb(const void *left, const void *right)
 
 */
 
-static int_t __comp_symb(const void *left, const void *right)
+static ar_int_t __comp_symb(const void *left, const void *right)
 {
 		const psrSymb_t *l,*r;
 		l = *(const psrSymb_t**)left;

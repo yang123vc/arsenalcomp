@@ -132,9 +132,9 @@ wchar_t* AR_wcsnupr(wchar_t *s, size_t count)
 /***********************************************************************compare***************************************************/
 
 
-int_t	AR_stricmp(const char *l, const char *r)
+ar_int_t	AR_stricmp(const char *l, const char *r)
 {
-		int_t ret;
+		ar_int_t ret;
 		AR_ASSERT(l != NULL && r != NULL);
 
 		for(ret = 0; (ret = (AR_tolower(*l) - AR_tolower(*r))) == 0 && *l && *r; ++l, ++r);
@@ -142,9 +142,9 @@ int_t	AR_stricmp(const char *l, const char *r)
 		return ret;
 }
 
-int_t	AR_strnicmp(const char *l, const char *r, size_t n)
+ar_int_t	AR_strnicmp(const char *l, const char *r, size_t n)
 {
-		int_t ret;
+		ar_int_t ret;
 		size_t i;
 		AR_ASSERT(l != NULL && r != NULL);
 
@@ -154,9 +154,9 @@ int_t	AR_strnicmp(const char *l, const char *r, size_t n)
 
 }
 
-int_t	AR_wcsicmp(const wchar_t *l, const wchar_t *r)
+ar_int_t	AR_wcsicmp(const wchar_t *l, const wchar_t *r)
 {
-		int_t ret;
+		ar_int_t ret;
 		AR_ASSERT(l != NULL && r != NULL);
 
 		for(ret = 0; (ret = (AR_towlower(*l) - AR_towlower(*r))) == 0 && *l && *r; ++l, ++r);
@@ -165,9 +165,9 @@ int_t	AR_wcsicmp(const wchar_t *l, const wchar_t *r)
 
 }
 
-int_t	AR_wcsnicmp(const wchar_t *l, const wchar_t *r, size_t n)
+ar_int_t	AR_wcsnicmp(const wchar_t *l, const wchar_t *r, size_t n)
 {
-		int_t ret;
+		ar_int_t ret;
 		size_t i;
 		AR_ASSERT(l != NULL && r != NULL);
 
@@ -614,14 +614,14 @@ const char*		AR_strstr_s(const char *s, const char *se, const char *p, const cha
 		
 		if(AR_UINT64_MAX / AR_UCHARMAX > pl)
 		{
-				uint_64_t search_hash, pattern_hash;
+				ar_uint_64_t search_hash, pattern_hash;
 				search_hash = 0;
 				pattern_hash = 0;
 
 				for(i = 0; i < pl; ++i)
 				{
-						search_hash += (uint_64_t)s[i];
-						pattern_hash += (uint_64_t)p[i];
+						search_hash += (ar_uint_64_t)s[i];
+						pattern_hash += (ar_uint_64_t)p[i];
 
 				}
 
@@ -634,8 +634,8 @@ const char*		AR_strstr_s(const char *s, const char *se, const char *p, const cha
 								return NULL;
 						}
 
-						search_hash -= (uint_64_t)s[i];
-						search_hash += (uint_64_t)s[i + pl];
+						search_hash -= (ar_uint_64_t)s[i];
+						search_hash += (ar_uint_64_t)s[i + pl];
 						i++;
 				}
 
@@ -679,14 +679,14 @@ const wchar_t*	AR_wcsstr_s(const wchar_t *s, const wchar_t *se, const wchar_t *p
 		
 		if(AR_UINT64_MAX / AR_WCHARMAX > pl)
 		{
-				uint_64_t search_hash, pattern_hash;
+				ar_uint_64_t search_hash, pattern_hash;
 				search_hash = 0;
 				pattern_hash = 0;
 
 				for(i = 0; i < pl; ++i)
 				{
-						search_hash += (uint_64_t)s[i];
-						pattern_hash += (uint_64_t)p[i];
+						search_hash += (ar_uint_64_t)s[i];
+						pattern_hash += (ar_uint_64_t)p[i];
 
 				}
 
@@ -699,8 +699,8 @@ const wchar_t*	AR_wcsstr_s(const wchar_t *s, const wchar_t *se, const wchar_t *p
 								return NULL;
 						}
 
-						search_hash -= (uint_64_t)s[i];
-						search_hash += (uint_64_t)s[i + pl];
+						search_hash -= (ar_uint_64_t)s[i];
+						search_hash += (ar_uint_64_t)s[i + pl];
 						i++;
 				}
 
@@ -747,15 +747,15 @@ const char*		AR_stristr_s(const char *s, const char *se, const char *p, const ch
 		
 		if(AR_UINT64_MAX / AR_UCHARMAX > pl)
 		{
-				uint_64_t search_hash, pattern_hash;
+				ar_uint_64_t search_hash, pattern_hash;
 
 				search_hash = 0;
 				pattern_hash = 0;
 
 				for(i = 0; i < pl; ++i)
 				{
-						search_hash += (uint_64_t)AR_tolower(s[i]);
-						pattern_hash += (uint_64_t)AR_tolower(p[i]);
+						search_hash += (ar_uint_64_t)AR_tolower(s[i]);
+						pattern_hash += (ar_uint_64_t)AR_tolower(p[i]);
 
 				}
 
@@ -768,8 +768,8 @@ const char*		AR_stristr_s(const char *s, const char *se, const char *p, const ch
 								return NULL;
 						}
 
-						search_hash -= (uint_64_t)AR_tolower(s[i]);
-						search_hash += (uint_64_t)AR_tolower(s[i + pl]);
+						search_hash -= (ar_uint_64_t)AR_tolower(s[i]);
+						search_hash += (ar_uint_64_t)AR_tolower(s[i + pl]);
 						i++;
 				}
 
@@ -814,15 +814,15 @@ const wchar_t*	AR_wcsistr_s(const wchar_t *s, const wchar_t *se, const wchar_t *
         
 		if(AR_UINT64_MAX / AR_WCHARMAX > pl)
 		{
-				uint_64_t search_hash, pattern_hash;
+				ar_uint_64_t search_hash, pattern_hash;
 
 				search_hash = 0;
 				pattern_hash = 0;
 
 				for(i = 0; i < pl; ++i)
 				{
-						search_hash += (uint_64_t)AR_towlower(s[i]);
-						pattern_hash += (uint_64_t)AR_towlower(p[i]);
+						search_hash += (ar_uint_64_t)AR_towlower(s[i]);
+						pattern_hash += (ar_uint_64_t)AR_towlower(p[i]);
 
 				}
 
@@ -835,8 +835,8 @@ const wchar_t*	AR_wcsistr_s(const wchar_t *s, const wchar_t *se, const wchar_t *
 								return NULL;
 						}
 
-						search_hash -= (uint_64_t)AR_towlower(s[i]);
-						search_hash += (uint_64_t)AR_towlower(s[i + pl]);
+						search_hash -= (ar_uint_64_t)AR_towlower(s[i]);
+						search_hash += (ar_uint_64_t)AR_towlower(s[i + pl]);
 						i++;
 				}
 
@@ -970,14 +970,14 @@ const wchar_t* AR_reverse_wcsstr(const wchar_t *str, size_t l,  const wchar_t *m
 
 		if(AR_UINT64_MAX / AR_WCHARMAX > ml)
 		{
-				uint_64_t		search_hash, match_hash;
+				ar_uint_64_t		search_hash, match_hash;
 				search_hash = 0;
 				match_hash = 0;
 
 				for(i = 0; i < ml; ++i)
 				{
-						search_hash += (uint_64_t)str[delta + i];
-						match_hash += (uint_64_t)match[i];
+						search_hash += (ar_uint_64_t)str[delta + i];
+						match_hash += (ar_uint_64_t)match[i];
 				}
 
 
@@ -989,8 +989,8 @@ const wchar_t* AR_reverse_wcsstr(const wchar_t *str, size_t l,  const wchar_t *m
 						}
 
 						delta--;
-						search_hash -= (uint_64_t)str[delta + ml];
-						search_hash += (uint_64_t)str[delta];
+						search_hash -= (ar_uint_64_t)str[delta + ml];
+						search_hash += (ar_uint_64_t)str[delta];
 				}
 
 				return str + delta;
@@ -1073,14 +1073,14 @@ const wchar_t* AR_reverse_wcsistr(const wchar_t *str, size_t l,  const wchar_t *
 
 		if(AR_UINT64_MAX / AR_WCHARMAX > ml)
 		{
-				uint_64_t		search_hash, match_hash;
+				ar_uint_64_t		search_hash, match_hash;
 				search_hash = 0;
 				match_hash = 0;
 
 				for(i = 0; i < ml; ++i)
 				{
-						search_hash += (uint_64_t)AR_towlower(str[delta + i]);
-						match_hash += (uint_64_t)AR_towlower(match[i]);
+						search_hash += (ar_uint_64_t)AR_towlower(str[delta + i]);
+						match_hash += (ar_uint_64_t)AR_towlower(match[i]);
 				}
 
 
@@ -1092,8 +1092,8 @@ const wchar_t* AR_reverse_wcsistr(const wchar_t *str, size_t l,  const wchar_t *
 						}
 
 						delta--;
-						search_hash -= (uint_64_t)AR_towlower(str[delta + ml]);
-						search_hash += (uint_64_t)AR_towlower(str[delta]);
+						search_hash -= (ar_uint_64_t)AR_towlower(str[delta + ml]);
+						search_hash += (ar_uint_64_t)AR_towlower(str[delta]);
 				}
 
 				return str + delta;
@@ -1171,14 +1171,14 @@ const char* AR_reverse_strstr(const char *str, size_t l,  const char *match, siz
 
 		if(AR_UINT64_MAX / AR_UCHARMAX > ml)
 		{
-				uint_64_t		search_hash, match_hash;
+				ar_uint_64_t		search_hash, match_hash;
 				search_hash = 0;
 				match_hash = 0;
 
 				for(i = 0; i < ml; ++i)
 				{
-						search_hash += (uint_64_t)str[delta + i];
-						match_hash += (uint_64_t)match[i];
+						search_hash += (ar_uint_64_t)str[delta + i];
+						match_hash += (ar_uint_64_t)match[i];
 				}
 
 
@@ -1190,8 +1190,8 @@ const char* AR_reverse_strstr(const char *str, size_t l,  const char *match, siz
 						}
 
 						delta--;
-						search_hash -= (uint_64_t)str[delta + ml];
-						search_hash += (uint_64_t)str[delta];
+						search_hash -= (ar_uint_64_t)str[delta + ml];
+						search_hash += (ar_uint_64_t)str[delta];
 				}
 
 				return str + delta;
@@ -1272,14 +1272,14 @@ const char* AR_reverse_stristr(const char *str, size_t l,  const char *match, si
 
 		if(AR_UINT64_MAX / AR_UCHARMAX > ml)
 		{
-				uint_64_t	search_hash, match_hash;
+				ar_uint_64_t	search_hash, match_hash;
 				search_hash = 0;
 				match_hash = 0;
 
 				for(i = 0; i < ml; ++i)
 				{
-						search_hash += (uint_64_t)AR_tolower(str[delta + i]);
-						match_hash += (uint_64_t)AR_tolower(match[i]);
+						search_hash += (ar_uint_64_t)AR_tolower(str[delta + i]);
+						match_hash += (ar_uint_64_t)AR_tolower(match[i]);
 				}
 
 
@@ -1291,8 +1291,8 @@ const char* AR_reverse_stristr(const char *str, size_t l,  const char *match, si
 						}
 
 						delta--;
-						search_hash -= (uint_64_t)AR_tolower(str[delta + ml]);
-						search_hash += (uint_64_t)AR_tolower(str[delta]);
+						search_hash -= (ar_uint_64_t)AR_tolower(str[delta + ml]);
+						search_hash += (ar_uint_64_t)AR_tolower(str[delta]);
 				}
 
 				return str + delta;
@@ -1318,9 +1318,9 @@ const char* AR_reverse_stristr(const char *str, size_t l,  const char *match, si
 
 
 
-uint_t	AR_wcshash(const wchar_t *str)
+ar_uint_t	AR_wcshash(const wchar_t *str)
 {
-		uint_t	ret;
+		ar_uint_t	ret;
 		size_t	i;
 		AR_ASSERT(str != NULL);
 
@@ -1333,9 +1333,9 @@ uint_t	AR_wcshash(const wchar_t *str)
 }
 
 
-uint_t		AR_wcshash_n(const wchar_t *str, size_t n)
+ar_uint_t		AR_wcshash_n(const wchar_t *str, size_t n)
 {
-		uint_t	ret;
+		ar_uint_t	ret;
 		size_t	i;
 		if(n == 0)return 0;
 		AR_ASSERT(str != NULL);
@@ -1349,9 +1349,9 @@ uint_t		AR_wcshash_n(const wchar_t *str, size_t n)
 }
 
 
-uint_t	AR_strhash(const char *str)
+ar_uint_t	AR_strhash(const char *str)
 {
-		uint_t	ret;
+		ar_uint_t	ret;
 		size_t	i;
 		AR_ASSERT(str != NULL);
 
@@ -1366,9 +1366,9 @@ uint_t	AR_strhash(const char *str)
 }
 
 
-uint_t		AR_strhash_n(const char *str, size_t n)
+ar_uint_t		AR_strhash_n(const char *str, size_t n)
 {
-		uint_t	ret;
+		ar_uint_t	ret;
 		size_t	i;
 		if(n == 0)return 0;
 		AR_ASSERT(str != NULL);
@@ -1475,7 +1475,7 @@ const wchar_t* AR_wcsstr_kmp_s(const wchar_t *beg, const wchar_t *end, const wch
 
 const wchar_t* AR_wcsstr_sunday_s(const wchar_t *s_b, const wchar_t *s_e, const wchar_t *p_b, const wchar_t *p_e)
 {
-		int_t pl, sl, s_pos, f_pos,k;
+		ar_int_t pl, sl, s_pos, f_pos,k;
 
 		AR_ASSERT(s_b != NULL && s_e != NULL && s_b <= s_e);
 		AR_ASSERT(p_b != NULL && p_e != NULL && p_b <= p_e);

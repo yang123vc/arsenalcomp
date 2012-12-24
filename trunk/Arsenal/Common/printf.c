@@ -23,10 +23,10 @@ AR_NAMESPACE_BEGIN
 /**********************************************************str version*************************************************************/
 
 
-static int_t __str_format_preprocess(const char *fmt, char *out)
+static ar_int_t __str_format_preprocess(const char *fmt, char *out)
 {
 		char *p;
-		int_t	need_l;
+		ar_int_t	need_l;
 		AR_ASSERT(fmt != NULL);
 
 		if(AR_strlen(fmt) == 0)
@@ -39,7 +39,7 @@ static int_t __str_format_preprocess(const char *fmt, char *out)
 
 		while(*fmt)
 		{
-				int_t modifier = 0;
+				ar_int_t modifier = 0;
 
 				if(*fmt != '%')
 				{
@@ -305,9 +305,9 @@ static int_t __str_format_preprocess(const char *fmt, char *out)
 
 
 
-int_t AR_vscprintf(const char *fmt, va_list va_args)
+ar_int_t AR_vscprintf(const char *fmt, va_list va_args)
 {
-		int_t res;
+		ar_int_t res;
 		va_list args;
 		AR_ASSERT(fmt != NULL && va_args != NULL);
 		res = 0;
@@ -316,7 +316,7 @@ int_t AR_vscprintf(const char *fmt, va_list va_args)
 
 		while(*fmt)
 		{
-				int_t len = 0, width = 0, prec = 0, modifier = 0;
+				ar_int_t len = 0, width = 0, prec = 0, modifier = 0;
 				if(*fmt != '%' || *(++fmt) == '%')
 				{
 						fmt++;
@@ -361,7 +361,7 @@ int_t AR_vscprintf(const char *fmt, va_list va_args)
 						fmt++;
 						if(*fmt == '*')
 						{
-								prec = AR_va_arg(args, int_32_t);
+								prec = AR_va_arg(args, ar_int_32_t);
 								fmt++;
 						}else
 						{
@@ -455,7 +455,7 @@ int_t AR_vscprintf(const char *fmt, va_list va_args)
 								len = 6;/*(null)*/
 						}else
 						{
-								len =(int_t)AR_strlen(str);
+								len =(ar_int_t)AR_strlen(str);
 								len = AR_MAX(len, 1);
 						}
 						break;
@@ -469,7 +469,7 @@ int_t AR_vscprintf(const char *fmt, va_list va_args)
 								len = 6;/*(null)*/
 						}else
 						{
-								len = (int_t)AR_wcslen(str) * 4;
+								len = (ar_int_t)AR_wcslen(str) * 4;
 								len = AR_MAX(len, 1);
 						}
 						break;
@@ -494,10 +494,10 @@ int_t AR_vscprintf(const char *fmt, va_list va_args)
 						{
 								if(modifier & __MODIFIER_INT64)
 								{
-										AR_va_arg(args, int_64_t);
+										AR_va_arg(args, ar_int_64_t);
 								}else
 								{
-										AR_va_arg(args, int_32_t);
+										AR_va_arg(args, ar_int_32_t);
 								}
 								len = 32;
 								len = AR_MAX(len, width + prec);
@@ -515,7 +515,7 @@ int_t AR_vscprintf(const char *fmt, va_list va_args)
 						}
 						case 'f':
 						{
-								int_t cclen;
+								ar_int_t cclen;
 								char *buf;
 								double f= AR_va_arg(args, double);
 
@@ -567,9 +567,9 @@ int_t AR_vscprintf(const char *fmt, va_list va_args)
 
 
 
-int_t			AR_scprintf(const char *fmt, ...)
+ar_int_t			AR_scprintf(const char *fmt, ...)
 {
-		int_t len = -1;
+		ar_int_t len = -1;
 		va_list	arg_ptr;
 
 		AR_ASSERT(fmt != NULL);
@@ -587,7 +587,7 @@ char*		AR_vtos(const char *fmt, ...)
 		va_list			args;
 
 		char			*buf;
-		int_t			len;
+		ar_int_t			len;
 
 		AR_ASSERT(fmt != NULL);
 
@@ -621,13 +621,13 @@ char*		AR_vtos(const char *fmt, ...)
 
 
 
-int_t			AR_vsprintf(char *dest, size_t count, const char *fmt, va_list args)
+ar_int_t			AR_vsprintf(char *dest, size_t count, const char *fmt, va_list args)
 {
-		int_t res;
+		ar_int_t res;
 		va_list save;
 
 		char *src_fmt;
-		int_t need_l;
+		ar_int_t need_l;
 
 		AR_ASSERT(dest != NULL && fmt != NULL && args != NULL);
 
@@ -682,9 +682,9 @@ END_POINT:
 
 
 
-int_t			AR_sprintf(char *dest, size_t count, const char *fmt, ...)
+ar_int_t			AR_sprintf(char *dest, size_t count, const char *fmt, ...)
 {
-		int_t len = -1;
+		ar_int_t len = -1;
 		va_list	arg_ptr;
 		AR_ASSERT(fmt != NULL);
 
@@ -701,10 +701,10 @@ int_t			AR_sprintf(char *dest, size_t count, const char *fmt, ...)
 
 
 
-static int_t __wcs_format_preprocess(const wchar_t *fmt, wchar_t *out)
+static ar_int_t __wcs_format_preprocess(const wchar_t *fmt, wchar_t *out)
 {
 		wchar_t *p;
-		int_t	need_l;
+		ar_int_t	need_l;
 		AR_ASSERT(fmt != NULL);
 
 		if(AR_wcslen(fmt) == 0)
@@ -717,7 +717,7 @@ static int_t __wcs_format_preprocess(const wchar_t *fmt, wchar_t *out)
 
 		while(*fmt)
 		{
-				int_t modifier = 0;
+				ar_int_t modifier = 0;
 
 				if(*fmt != L'%')
 				{
@@ -979,9 +979,9 @@ static int_t __wcs_format_preprocess(const wchar_t *fmt, wchar_t *out)
 
 
 
-int_t AR_vscwprintf(const wchar_t *fmt, va_list va_args)
+ar_int_t AR_vscwprintf(const wchar_t *fmt, va_list va_args)
 {
-		int_t res;
+		ar_int_t res;
 		va_list args;
 		AR_ASSERT(fmt != NULL && va_args != NULL);
 		res = 0;
@@ -990,7 +990,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list va_args)
 
 		while(*fmt)
 		{
-				int_t len = 0, width = 0, prec = 0, modifier = 0;
+				ar_int_t len = 0, width = 0, prec = 0, modifier = 0;
 				if(*fmt != L'%' || *(++fmt) == L'%')
 				{
 						fmt++;
@@ -1035,7 +1035,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list va_args)
 						fmt++;
 						if(*fmt == L'*')
 						{
-								prec = AR_va_arg(args, int_32_t);
+								prec = AR_va_arg(args, ar_int_32_t);
 								fmt++;
 						}else
 						{
@@ -1130,7 +1130,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list va_args)
 								len = 6;/*(null)*/
 						}else
 						{
-								len =(int_t)AR_wcslen(str);
+								len =(ar_int_t)AR_wcslen(str);
 								len = AR_MAX(len, 1);
 						}
 						break;
@@ -1144,7 +1144,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list va_args)
 								len = 6;/*(null)*/
 						}else
 						{
-								len = (int_t)AR_strlen(str);
+								len = (ar_int_t)AR_strlen(str);
 								len = AR_MAX(len,1);
 						}
 						break;
@@ -1158,7 +1158,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list va_args)
 								len = 6;/*(null)*/
 						}else
 						{
-								len = (int_t)AR_wcslen(str);
+								len = (ar_int_t)AR_wcslen(str);
 								len = AR_MAX(len, 1);
 						}
 						break;
@@ -1183,10 +1183,10 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list va_args)
 						{
 								if(modifier & __MODIFIER_INT64)
 								{
-										AR_va_arg(args, int_64_t);
+										AR_va_arg(args, ar_int_64_t);
 								}else
 								{
-										AR_va_arg(args, int_32_t);
+										AR_va_arg(args, ar_int_32_t);
 								}
 								len = 32;
 								len = AR_MAX(len, width + prec);
@@ -1204,7 +1204,7 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list va_args)
 						}
 						case L'f':
 						{
-								int_t cclen;
+								ar_int_t cclen;
 								wchar_t *buf;
 								double f= AR_va_arg(args, double);
 
@@ -1257,9 +1257,9 @@ int_t AR_vscwprintf(const wchar_t *fmt, va_list va_args)
 }
 
 
-int_t			AR_scwprintf(const wchar_t *fmt, ...)
+ar_int_t			AR_scwprintf(const wchar_t *fmt, ...)
 {
-		int_t len = -1;
+		ar_int_t len = -1;
 		va_list	arg_ptr;
 
 		AR_ASSERT(fmt != NULL);
@@ -1277,7 +1277,7 @@ wchar_t*		AR_vtow(const wchar_t *fmt, ...)
 		va_list			args;
 
 		wchar_t			*buf;
-		int_t			len;
+		ar_int_t			len;
 
 		AR_ASSERT(fmt != NULL);
 
@@ -1309,13 +1309,13 @@ wchar_t*		AR_vtow(const wchar_t *fmt, ...)
 
 
 
-int_t			AR_vswprintf(wchar_t *dest, size_t count, const wchar_t *fmt, va_list args)
+ar_int_t			AR_vswprintf(wchar_t *dest, size_t count, const wchar_t *fmt, va_list args)
 {
-		int_t res;
+		ar_int_t res;
 		va_list save;
 
 		wchar_t *src_fmt;
-		int_t need_l;
+		ar_int_t need_l;
 
 		AR_ASSERT(dest != NULL && fmt != NULL && args != NULL);
 
@@ -1369,9 +1369,9 @@ END_POINT:
 }
 
 
-int_t			AR_swprintf(wchar_t *dest, size_t count, const wchar_t *fmt, ...)
+ar_int_t			AR_swprintf(wchar_t *dest, size_t count, const wchar_t *fmt, ...)
 {
-		int_t len = -1;
+		ar_int_t len = -1;
 		va_list	arg_ptr;
 		AR_ASSERT(fmt != NULL);
 
@@ -1388,11 +1388,11 @@ int_t			AR_swprintf(wchar_t *dest, size_t count, const wchar_t *fmt, ...)
 
 
 
-int_t			AR_vswprintf_nonalloc(wchar_t *dest, size_t count, const wchar_t *fmt, va_list args)
+ar_int_t			AR_vswprintf_nonalloc(wchar_t *dest, size_t count, const wchar_t *fmt, va_list args)
 {
-		int_t res;
+		ar_int_t res;
 		va_list save;
-		int_t need_l;
+		ar_int_t need_l;
 		wchar_t src_fmt[1024];
 
 
@@ -1438,9 +1438,9 @@ int_t			AR_vswprintf_nonalloc(wchar_t *dest, size_t count, const wchar_t *fmt, v
 
 
 
-int_t			AR_swprintf_nonalloc(wchar_t *dest, size_t count, const wchar_t *fmt, ...)
+ar_int_t			AR_swprintf_nonalloc(wchar_t *dest, size_t count, const wchar_t *fmt, ...)
 {
-		int_t len = -1;
+		ar_int_t len = -1;
 		va_list	arg_ptr;
 		AR_ASSERT(fmt != NULL);
 

@@ -44,8 +44,8 @@ const wchar_t*	Parser_AllocString(const wchar_t *str);
 const wchar_t*	Parser_AllocStringN(const wchar_t *str, size_t n);
 
 /*
-const wchar_t*  Parser_AllocStringInt(int_64_t num, size_t radix);
-const wchar_t*  Parser_AllocStringUInt(uint_64_t num, size_t radix);
+const wchar_t*  Parser_AllocStringInt(ar_int_64_t num, size_t radix);
+const wchar_t*  Parser_AllocStringUInt(ar_uint_64_t num, size_t radix);
 */
 
 

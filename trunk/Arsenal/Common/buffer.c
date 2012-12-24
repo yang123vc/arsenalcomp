@@ -21,10 +21,10 @@ AR_NAMESPACE_BEGIN
 
 struct arsenal_buffer_tag
 {
-		byte_t	*first;
-		byte_t	*last;
-		byte_t	*read_cur;
-		byte_t	*write_cur;
+		ar_byte_t	*first;
+		ar_byte_t	*last;
+		ar_byte_t	*read_cur;
+		ar_byte_t	*write_cur;
 };
 
 
@@ -52,8 +52,8 @@ static AR_INLINE arStatus_t		__increase_capability(arBuffer_t *pbuf, size_t inc_
 {
 		size_t cur_len = 0;
 		size_t data_len = 0;
-		byte_t *new_buf = NULL;
-		byte_t *old_buf = NULL;
+		ar_byte_t *new_buf = NULL;
+		ar_byte_t *old_buf = NULL;
 		AR_ASSERT(__buffer_is_valid(pbuf));
 		
 		if(inc_len == 0)
@@ -64,7 +64,7 @@ static AR_INLINE arStatus_t		__increase_capability(arBuffer_t *pbuf, size_t inc_
 		cur_len = pbuf->last - pbuf->first;
 		data_len = pbuf->write_cur - pbuf->read_cur;
 
-		new_buf = AR_NEWARR(byte_t, inc_len + cur_len);
+		new_buf = AR_NEWARR(ar_byte_t, inc_len + cur_len);
 
 		if(new_buf == NULL)
 		{
@@ -230,10 +230,10 @@ arStatus_t			AR_ReserveBuffer(arBuffer_t *pbuf, size_t nbytes)
 		return AR_S_YES;
 }
 
-byte_t*			AR_AllocFromBuffer(arBuffer_t *buffer, size_t	nbytes)
+ar_byte_t*			AR_AllocFromBuffer(arBuffer_t *buffer, size_t	nbytes)
 {
 		size_t write_able = 0;
-		byte_t *res = NULL;
+		ar_byte_t *res = NULL;
 		AR_ASSERT(__buffer_is_valid(buffer));
 
 		if(nbytes == 0) return NULL;
@@ -255,9 +255,9 @@ byte_t*			AR_AllocFromBuffer(arBuffer_t *buffer, size_t	nbytes)
 }
 
 
-arStatus_t			AR_InsertToBuffer(arBuffer_t *buffer, const byte_t *data, size_t len)
+arStatus_t			AR_InsertToBuffer(arBuffer_t *buffer, const ar_byte_t *data, size_t len)
 {
-		byte_t *ptr = NULL;
+		ar_byte_t *ptr = NULL;
 		AR_ASSERT(__buffer_is_valid(buffer));
 		if(len == 0)
 		{
@@ -284,7 +284,7 @@ arStatus_t		AR_InsertCStringToBuffer(arBuffer_t *buffer, const char *str)
 		l = AR_strlen(str);
 		if(l > 0)
 		{
-				return AR_InsertToBuffer(buffer, (const byte_t*)str, l * sizeof(char));
+				return AR_InsertToBuffer(buffer, (const ar_byte_t*)str, l * sizeof(char));
 		}else
 		{
 				return AR_S_YES;
@@ -353,7 +353,7 @@ size_t			AR_GetBufferCapacity(const arBuffer_t *buffer)
 }
 
 
-const byte_t*	AR_GetBufferData(const arBuffer_t *pbuf)
+const ar_byte_t*	AR_GetBufferData(const arBuffer_t *pbuf)
 {
 		AR_ASSERT(__buffer_is_valid(pbuf));
 		return AR_GetBufferAvailable(pbuf) > 0 ? pbuf->read_cur : NULL;
@@ -367,7 +367,7 @@ size_t			AR_GetBufferAvailable(const arBuffer_t *buffer)
 
 
 
-void            AR_ResetBufferData(arBuffer_t *buffer, size_t offset, const byte_t *data, size_t len)
+void            AR_ResetBufferData(arBuffer_t *buffer, size_t offset, const ar_byte_t *data, size_t len)
 {
         size_t available_bytes;
         size_t write_bytes;
@@ -388,10 +388,10 @@ void            AR_ResetBufferData(arBuffer_t *buffer, size_t offset, const byte
 
 
 
-size_t			AR_ReadBufferData(arBuffer_t *buffer, byte_t *dest, size_t len)
+size_t			AR_ReadBufferData(arBuffer_t *buffer, ar_byte_t *dest, size_t len)
 {
 		size_t read_n;
-		const byte_t *data;
+		const ar_byte_t *data;
 		AR_ASSERT(buffer != NULL);
 		
 		data  = AR_GetBufferData(buffer);

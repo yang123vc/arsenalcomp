@@ -3,9 +3,9 @@
 #define __CHECK_ARG(_obj, _fn)	do{ if(SN_GetObjectType((_obj)) != SN_DICT_T || AR_wcslen((_fn)) == 0) {ar_status = AR_E_INVAL; goto END_POINT; }}while(0)
 
 
-/************************************************byte_t*****************************************************/
+/************************************************ar_byte_t*****************************************************/
 
-static arStatus_t		__put_byte_t_to_dict(snObject_t *obj, const wchar_t *field_name, byte_t v)
+static arStatus_t		__put_byte_t_to_dict(snObject_t *obj, const wchar_t *field_name, ar_byte_t v)
 {
 		arStatus_t		ar_status;
 		AR_ASSERT(obj != NULL && field_name != NULL);
@@ -14,14 +14,14 @@ static arStatus_t		__put_byte_t_to_dict(snObject_t *obj, const wchar_t *field_na
 
 		__CHECK_ARG(obj,field_name);
 		
-		ar_status = SN_InsertToDictObjectByWcsUInt(obj, field_name, (uint_64_t)v);
+		ar_status = SN_InsertToDictObjectByWcsUInt(obj, field_name, (ar_uint_64_t)v);
 		
 END_POINT:
 		return ar_status;
 }
 
 
-static arStatus_t		__put_byte_t_array_to_dict(snObject_t *obj, const wchar_t *field_name, const byte_t *arr, size_t arr_size)
+static arStatus_t		__put_byte_t_array_to_dict(snObject_t *obj, const wchar_t *field_name, const ar_byte_t *arr, size_t arr_size)
 {
 		arStatus_t		ar_status;
 		snObject_t		*data_obj;
@@ -68,7 +68,7 @@ END_POINT:
 
 
 
-static arStatus_t		__get_byte_t_from_dict(snObject_t *obj, const wchar_t *field_name, byte_t *pv)
+static arStatus_t		__get_byte_t_from_dict(snObject_t *obj, const wchar_t *field_name, ar_byte_t *pv)
 {
 		arStatus_t		ar_status;
 		snObject_t		*int_obj;
@@ -87,17 +87,17 @@ static arStatus_t		__get_byte_t_from_dict(snObject_t *obj, const wchar_t *field_
 				goto END_POINT;
 		}
 		
-		*pv = (uint_8_t)SN_GetUIntObject(int_obj);
+		*pv = (ar_uint_8_t)SN_GetUIntObject(int_obj);
 
 END_POINT:
 		return ar_status;
 }
 
-static arStatus_t		__get_byte_t_array_from_dict(snObject_t *obj, const wchar_t *field_name, byte_t *arr, size_t arr_size)
+static arStatus_t		__get_byte_t_array_from_dict(snObject_t *obj, const wchar_t *field_name, ar_byte_t *arr, size_t arr_size)
 {
 		arStatus_t		ar_status;
 		snObject_t		*data_obj;
-		int_t			ret;
+		ar_int_t			ret;
 		AR_ASSERT(obj != NULL && field_name != NULL && arr != NULL && arr_size > 0);
 		
 		ar_status = AR_S_YES;
@@ -134,7 +134,7 @@ END_POINT:
 static arStatus_t		__put_bool_t_to_dict(snObject_t *obj, const wchar_t *field_name, bool_t v)
 {
 		AR_ASSERT(obj != NULL && field_name != NULL);
-		return __put_byte_t_to_dict(obj, field_name, (byte_t)v);
+		return __put_byte_t_to_dict(obj, field_name, (ar_byte_t)v);
 }
 
 
@@ -142,7 +142,7 @@ static arStatus_t		__put_bool_t_to_dict(snObject_t *obj, const wchar_t *field_na
 
 static arStatus_t		__put_bool_t_array_to_dict(snObject_t *obj, const wchar_t *field_name, bool_t *arr, size_t arr_size)
 {
-		return __put_byte_t_array_to_dict(obj, field_name, (byte_t*)arr, arr_size);
+		return __put_byte_t_array_to_dict(obj, field_name, (ar_byte_t*)arr, arr_size);
 }
 
 
@@ -151,7 +151,7 @@ static arStatus_t		__put_bool_t_array_to_dict(snObject_t *obj, const wchar_t *fi
 
 static arStatus_t		__get_bool_t_from_dict(snObject_t *obj, const wchar_t *field_name, bool_t *pv)
 {
-		byte_t v;
+		ar_byte_t v;
 		arStatus_t		ar_status;
 		AR_ASSERT(obj != NULL && field_name != NULL && pv != NULL);
 		ar_status = __get_byte_t_from_dict(obj, field_name, &v);
@@ -171,7 +171,7 @@ static arStatus_t		__get_bool_t_array_from_dict(snObject_t *obj, const wchar_t *
 		size_t			i;
 		AR_ASSERT(obj != NULL && field_name != NULL && arr != NULL && arr_size > 0);
 
-		ar_status = __get_byte_t_array_from_dict(obj, field_name, (byte_t*)arr, arr_size);
+		ar_status = __get_byte_t_array_from_dict(obj, field_name, (ar_byte_t*)arr, arr_size);
 
 		if(ar_status == AR_S_YES)
 		{
@@ -192,7 +192,7 @@ static arStatus_t		__get_bool_t_array_from_dict(snObject_t *obj, const wchar_t *
 static arStatus_t		__put_char_to_dict(snObject_t *obj, const wchar_t *field_name, char v)
 {
 		AR_ASSERT(obj != NULL && field_name != NULL);
-		return __put_byte_t_to_dict(obj, field_name, (byte_t)v);
+		return __put_byte_t_to_dict(obj, field_name, (ar_byte_t)v);
 }
 
 
@@ -246,7 +246,7 @@ END_POINT:
 static arStatus_t		__get_char_from_dict(snObject_t *obj, const wchar_t *field_name, char *pv)
 {
 		arStatus_t		ar_status;
-		byte_t			v;
+		ar_byte_t			v;
 		AR_ASSERT(obj != NULL && field_name != NULL && pv != NULL);
 		
 		ar_status = AR_S_YES;
@@ -273,7 +273,7 @@ static arStatus_t		__get_char_array_from_dict(snObject_t *obj, const wchar_t *fi
 {
 		arStatus_t		ar_status;
 		snObject_t		*str_obj;
-		int_t			ret;
+		ar_int_t			ret;
 		AR_ASSERT(obj != NULL && field_name != NULL && arr != NULL && arr_size > 0);
 		
 		ar_status = AR_S_YES;
@@ -310,26 +310,26 @@ END_POINT:
 
 static arStatus_t		__put_wchar_t_to_dict(snObject_t *obj, const wchar_t *field_name, wchar_t v)
 {
-		uint_32_t t;
+		ar_uint_32_t t;
 		AR_ASSERT(obj != NULL && field_name != NULL);
 
-		t = (uint_32_t)v;
+		t = (ar_uint_32_t)v;
 		t = AR_LTON_32(t);
-		return __put_byte_t_array_to_dict(obj, field_name, (const byte_t*)&t, sizeof(uint_32_t));
+		return __put_byte_t_array_to_dict(obj, field_name, (const ar_byte_t*)&t, sizeof(ar_uint_32_t));
 }
 
 
 static arStatus_t		__get_wchar_t_from_dict(snObject_t *obj, const wchar_t *field_name, wchar_t *pv)
 {
 		arStatus_t		ar_status;
-		uint_32_t		t;
+		ar_uint_32_t		t;
 		
 		AR_ASSERT(obj != NULL && field_name != NULL && pv != NULL);
 		
 		ar_status = AR_S_YES;
 		__CHECK_ARG(obj, field_name);
 		
-		ar_status = __get_byte_t_array_from_dict(obj, field_name, (byte_t*)&t, sizeof(uint_32_t));
+		ar_status = __get_byte_t_array_from_dict(obj, field_name, (ar_byte_t*)&t, sizeof(ar_uint_32_t));
 
 		if(ar_status != AR_S_YES)
 		{
@@ -399,7 +399,7 @@ static arStatus_t		__get_wchar_t_array_from_dict(snObject_t *obj, const wchar_t 
 {
 		arStatus_t		ar_status;
 		snObject_t		*str_obj;
-		int_t			ret;
+		ar_int_t			ret;
 		AR_ASSERT(obj != NULL && field_name != NULL && arr != NULL && arr_size > 0);
 
 		ar_status = AR_S_YES;
@@ -432,32 +432,32 @@ END_POINT:
 
 /************************************************Integer 8*****************************************************/
 
-static arStatus_t		__put_int_8_t_to_dict(snObject_t *obj, const wchar_t *field_name, int_8_t v)
+static arStatus_t		__put_int_8_t_to_dict(snObject_t *obj, const wchar_t *field_name, ar_int_8_t v)
 {
 		AR_ASSERT(obj != NULL && field_name != NULL);
-		return __put_byte_t_to_dict(obj, field_name, (byte_t)v);
+		return __put_byte_t_to_dict(obj, field_name, (ar_byte_t)v);
 }
 
 
 
-static arStatus_t		__put_int_8_t_array_to_dict(snObject_t *obj, const wchar_t *field_name, int_8_t *arr, size_t arr_size)
+static arStatus_t		__put_int_8_t_array_to_dict(snObject_t *obj, const wchar_t *field_name, ar_int_8_t *arr, size_t arr_size)
 {
-		return __put_byte_t_array_to_dict(obj, field_name, (byte_t*)arr, arr_size);
+		return __put_byte_t_array_to_dict(obj, field_name, (ar_byte_t*)arr, arr_size);
 }
 
 
 
 
 
-static arStatus_t		__get_int_8_t_from_dict(snObject_t *obj, const wchar_t *field_name, int_8_t *pv)
+static arStatus_t		__get_int_8_t_from_dict(snObject_t *obj, const wchar_t *field_name, ar_int_8_t *pv)
 {
-		byte_t v;
+		ar_byte_t v;
 		arStatus_t		ar_status;
 		AR_ASSERT(obj != NULL && field_name != NULL && pv != NULL);
 		ar_status = __get_byte_t_from_dict(obj, field_name, &v);
 		if(ar_status == AR_S_YES)
 		{
-				*pv = (int_8_t)v;
+				*pv = (ar_int_8_t)v;
 		}
 		return ar_status;
 
@@ -465,12 +465,12 @@ static arStatus_t		__get_int_8_t_from_dict(snObject_t *obj, const wchar_t *field
 
 
 
-static arStatus_t		__get_int_8_t_array_from_dict(snObject_t *obj, const wchar_t *field_name, int_8_t *arr, size_t arr_size)
+static arStatus_t		__get_int_8_t_array_from_dict(snObject_t *obj, const wchar_t *field_name, ar_int_8_t *arr, size_t arr_size)
 {
 		arStatus_t		ar_status;
 		AR_ASSERT(obj != NULL && field_name != NULL && arr != NULL && arr_size > 0);
 
-		ar_status = __get_byte_t_array_from_dict(obj, field_name, (byte_t*)arr, arr_size);
+		ar_status = __get_byte_t_array_from_dict(obj, field_name, (ar_byte_t*)arr, arr_size);
 		return ar_status;
 }
 
@@ -479,32 +479,32 @@ static arStatus_t		__get_int_8_t_array_from_dict(snObject_t *obj, const wchar_t 
 
 
 
-static arStatus_t		__put_uint_8_t_to_dict(snObject_t *obj, const wchar_t *field_name, uint_8_t v)
+static arStatus_t		__put_uint_8_t_to_dict(snObject_t *obj, const wchar_t *field_name, ar_uint_8_t v)
 {
 		AR_ASSERT(obj != NULL && field_name != NULL);
-		return __put_byte_t_to_dict(obj, field_name, (byte_t)v);
+		return __put_byte_t_to_dict(obj, field_name, (ar_byte_t)v);
 }
 
 
 
-static arStatus_t		__put_uint_8_t_array_to_dict(snObject_t *obj, const wchar_t *field_name, uint_8_t *arr, size_t arr_size)
+static arStatus_t		__put_uint_8_t_array_to_dict(snObject_t *obj, const wchar_t *field_name, ar_uint_8_t *arr, size_t arr_size)
 {
-		return __put_byte_t_array_to_dict(obj, field_name, (byte_t*)arr, arr_size);
+		return __put_byte_t_array_to_dict(obj, field_name, (ar_byte_t*)arr, arr_size);
 }
 
 
 
 
 
-static arStatus_t		__get_uint_8_t_from_dict(snObject_t *obj, const wchar_t *field_name, uint_8_t *pv)
+static arStatus_t		__get_uint_8_t_from_dict(snObject_t *obj, const wchar_t *field_name, ar_uint_8_t *pv)
 {
-		byte_t v;
+		ar_byte_t v;
 		arStatus_t		ar_status;
 		AR_ASSERT(obj != NULL && field_name != NULL && pv != NULL);
 		ar_status = __get_byte_t_from_dict(obj, field_name, &v);
 		if(ar_status == AR_S_YES)
 		{
-				*pv = (uint_8_t)v;
+				*pv = (ar_uint_8_t)v;
 		}
 		return ar_status;
 
@@ -512,12 +512,12 @@ static arStatus_t		__get_uint_8_t_from_dict(snObject_t *obj, const wchar_t *fiel
 
 
 
-static arStatus_t		__get_uint_8_t_array_from_dict(snObject_t *obj, const wchar_t *field_name, uint_8_t *arr, size_t arr_size)
+static arStatus_t		__get_uint_8_t_array_from_dict(snObject_t *obj, const wchar_t *field_name, ar_uint_8_t *arr, size_t arr_size)
 {
 		arStatus_t		ar_status;
 		AR_ASSERT(obj != NULL && field_name != NULL && arr != NULL && arr_size > 0);
 
-		ar_status = __get_byte_t_array_from_dict(obj, field_name, (byte_t*)arr, arr_size);
+		ar_status = __get_byte_t_array_from_dict(obj, field_name, (ar_byte_t*)arr, arr_size);
 		return ar_status;
 }
 
@@ -526,15 +526,15 @@ static arStatus_t		__get_uint_8_t_array_from_dict(snObject_t *obj, const wchar_t
 
 /************************************************Integer 16*****************************************************/
 
-static arStatus_t		__put_int_16_t_to_dict(snObject_t *obj, const wchar_t *field_name, int_16_t v)
+static arStatus_t		__put_int_16_t_to_dict(snObject_t *obj, const wchar_t *field_name, ar_int_16_t v)
 {
 		AR_ASSERT(obj != NULL && field_name != NULL);
 		v = AR_LTON_16(v);
-		return __put_byte_t_array_to_dict(obj, field_name, (const byte_t*)&v, sizeof(int_16_t));
+		return __put_byte_t_array_to_dict(obj, field_name, (const ar_byte_t*)&v, sizeof(ar_int_16_t));
 }
 
 
-static arStatus_t		__get_int_16_t_from_dict(snObject_t *obj, const wchar_t *field_name, int_16_t *pv)
+static arStatus_t		__get_int_16_t_from_dict(snObject_t *obj, const wchar_t *field_name, ar_int_16_t *pv)
 {
 		arStatus_t		ar_status;
 		
@@ -543,7 +543,7 @@ static arStatus_t		__get_int_16_t_from_dict(snObject_t *obj, const wchar_t *fiel
 		ar_status = AR_S_YES;
 		__CHECK_ARG(obj, field_name);
 		
-		ar_status = __get_byte_t_array_from_dict(obj, field_name, (byte_t*)pv, sizeof(int_16_t));
+		ar_status = __get_byte_t_array_from_dict(obj, field_name, (ar_byte_t*)pv, sizeof(ar_int_16_t));
 
 		if(ar_status != AR_S_YES)
 		{
@@ -559,10 +559,10 @@ END_POINT:
 
 
 
-static arStatus_t		__put_int_16_t_array_to_dict(snObject_t *obj, const wchar_t *field_name, int_16_t *arr, size_t arr_size)
+static arStatus_t		__put_int_16_t_array_to_dict(snObject_t *obj, const wchar_t *field_name, ar_int_16_t *arr, size_t arr_size)
 {
 		arStatus_t		ar_status;
-		int_16_t		*tmp_arr;
+		ar_int_16_t		*tmp_arr;
 		size_t			i;
 		AR_ASSERT(obj != NULL && field_name != NULL && arr_size > 0);
 		
@@ -570,7 +570,7 @@ static arStatus_t		__put_int_16_t_array_to_dict(snObject_t *obj, const wchar_t *
 		tmp_arr = NULL;
 		__CHECK_ARG(obj, field_name);
 
-		tmp_arr = AR_NEWARR(int_16_t, arr_size);
+		tmp_arr = AR_NEWARR(ar_int_16_t, arr_size);
 		
 		if(tmp_arr == NULL)
 		{
@@ -583,7 +583,7 @@ static arStatus_t		__put_int_16_t_array_to_dict(snObject_t *obj, const wchar_t *
 				tmp_arr[i] = AR_LTON_16(arr[i]);
 		}
 
-		ar_status = __put_byte_t_array_to_dict(obj, field_name, (byte_t*)tmp_arr, sizeof(tmp_arr[0]) * arr_size);
+		ar_status = __put_byte_t_array_to_dict(obj, field_name, (ar_byte_t*)tmp_arr, sizeof(tmp_arr[0]) * arr_size);
 
 END_POINT:
 
@@ -597,7 +597,7 @@ END_POINT:
 }
 
 
-static arStatus_t		__get_int_16_t_array_from_dict(snObject_t *obj, const wchar_t *field_name, int_16_t *arr, size_t arr_size)
+static arStatus_t		__get_int_16_t_array_from_dict(snObject_t *obj, const wchar_t *field_name, ar_int_16_t *arr, size_t arr_size)
 {
 		arStatus_t		ar_status;
 		size_t			i;
@@ -608,7 +608,7 @@ static arStatus_t		__get_int_16_t_array_from_dict(snObject_t *obj, const wchar_t
 		__CHECK_ARG(obj, field_name);
 
 		
-		ar_status = __get_byte_t_array_from_dict(obj, field_name, (byte_t*)arr, sizeof(arr[0]) * arr_size);
+		ar_status = __get_byte_t_array_from_dict(obj, field_name, (ar_byte_t*)arr, sizeof(arr[0]) * arr_size);
 
 		for(i = 0; i < arr_size; ++i)
 		{
@@ -625,15 +625,15 @@ END_POINT:
 
 
 
-static arStatus_t		__put_uint_16_t_to_dict(snObject_t *obj, const wchar_t *field_name, uint_16_t v)
+static arStatus_t		__put_uint_16_t_to_dict(snObject_t *obj, const wchar_t *field_name, ar_uint_16_t v)
 {
 		AR_ASSERT(obj != NULL && field_name != NULL);
 		v = AR_LTON_U16(v);
-		return __put_byte_t_array_to_dict(obj, field_name, (const byte_t*)&v, sizeof(uint_16_t));
+		return __put_byte_t_array_to_dict(obj, field_name, (const ar_byte_t*)&v, sizeof(ar_uint_16_t));
 }
 
 
-static arStatus_t		__get_uint_16_t_from_dict(snObject_t *obj, const wchar_t *field_name, uint_16_t *pv)
+static arStatus_t		__get_uint_16_t_from_dict(snObject_t *obj, const wchar_t *field_name, ar_uint_16_t *pv)
 {
 		arStatus_t		ar_status;
 		
@@ -642,7 +642,7 @@ static arStatus_t		__get_uint_16_t_from_dict(snObject_t *obj, const wchar_t *fie
 		ar_status = AR_S_YES;
 		__CHECK_ARG(obj, field_name);
 		
-		ar_status = __get_byte_t_array_from_dict(obj, field_name, (byte_t*)pv, sizeof(uint_16_t));
+		ar_status = __get_byte_t_array_from_dict(obj, field_name, (ar_byte_t*)pv, sizeof(ar_uint_16_t));
 
 		if(ar_status != AR_S_YES)
 		{
@@ -658,10 +658,10 @@ END_POINT:
 
 
 
-static arStatus_t		__put_uint_16_t_array_to_dict(snObject_t *obj, const wchar_t *field_name, uint_16_t *arr, size_t arr_size)
+static arStatus_t		__put_uint_16_t_array_to_dict(snObject_t *obj, const wchar_t *field_name, ar_uint_16_t *arr, size_t arr_size)
 {
 		arStatus_t		ar_status;
-		uint_16_t		*tmp_arr;
+		ar_uint_16_t		*tmp_arr;
 		size_t			i;
 		AR_ASSERT(obj != NULL && field_name != NULL && arr_size > 0);
 		
@@ -669,7 +669,7 @@ static arStatus_t		__put_uint_16_t_array_to_dict(snObject_t *obj, const wchar_t 
 		tmp_arr = NULL;
 		__CHECK_ARG(obj, field_name);
 
-		tmp_arr = AR_NEWARR(uint_16_t, arr_size);
+		tmp_arr = AR_NEWARR(ar_uint_16_t, arr_size);
 		
 		if(tmp_arr == NULL)
 		{
@@ -682,7 +682,7 @@ static arStatus_t		__put_uint_16_t_array_to_dict(snObject_t *obj, const wchar_t 
 				tmp_arr[i] = AR_LTON_U16(arr[i]);
 		}
 
-		ar_status = __put_byte_t_array_to_dict(obj, field_name, (byte_t*)tmp_arr, sizeof(tmp_arr[0]) * arr_size);
+		ar_status = __put_byte_t_array_to_dict(obj, field_name, (ar_byte_t*)tmp_arr, sizeof(tmp_arr[0]) * arr_size);
 
 END_POINT:
 
@@ -696,7 +696,7 @@ END_POINT:
 }
 
 
-static arStatus_t		__get_uint_16_t_array_from_dict(snObject_t *obj, const wchar_t *field_name, uint_16_t *arr, size_t arr_size)
+static arStatus_t		__get_uint_16_t_array_from_dict(snObject_t *obj, const wchar_t *field_name, ar_uint_16_t *arr, size_t arr_size)
 {
 		arStatus_t		ar_status;
 		size_t			i;
@@ -707,7 +707,7 @@ static arStatus_t		__get_uint_16_t_array_from_dict(snObject_t *obj, const wchar_
 		__CHECK_ARG(obj, field_name);
 
 		
-		ar_status = __get_byte_t_array_from_dict(obj, field_name, (byte_t*)arr, sizeof(arr[0]) * arr_size);
+		ar_status = __get_byte_t_array_from_dict(obj, field_name, (ar_byte_t*)arr, sizeof(arr[0]) * arr_size);
 
 		for(i = 0; i < arr_size; ++i)
 		{
@@ -727,15 +727,15 @@ END_POINT:
 
 /************************************************Integer 32*****************************************************/
 
-static arStatus_t		__put_int_32_t_to_dict(snObject_t *obj, const wchar_t *field_name, int_32_t v)
+static arStatus_t		__put_int_32_t_to_dict(snObject_t *obj, const wchar_t *field_name, ar_int_32_t v)
 {
 		AR_ASSERT(obj != NULL && field_name != NULL);
 		v = AR_LTON_32(v);
-		return __put_byte_t_array_to_dict(obj, field_name, (const byte_t*)&v, sizeof(int_32_t));
+		return __put_byte_t_array_to_dict(obj, field_name, (const ar_byte_t*)&v, sizeof(ar_int_32_t));
 }
 
 
-static arStatus_t		__get_int_32_t_from_dict(snObject_t *obj, const wchar_t *field_name, int_32_t *pv)
+static arStatus_t		__get_int_32_t_from_dict(snObject_t *obj, const wchar_t *field_name, ar_int_32_t *pv)
 {
 		arStatus_t		ar_status;
 		
@@ -744,7 +744,7 @@ static arStatus_t		__get_int_32_t_from_dict(snObject_t *obj, const wchar_t *fiel
 		ar_status = AR_S_YES;
 		__CHECK_ARG(obj, field_name);
 		
-		ar_status = __get_byte_t_array_from_dict(obj, field_name, (byte_t*)pv, sizeof(int_32_t));
+		ar_status = __get_byte_t_array_from_dict(obj, field_name, (ar_byte_t*)pv, sizeof(ar_int_32_t));
 
 		if(ar_status != AR_S_YES)
 		{
@@ -760,10 +760,10 @@ END_POINT:
 
 
 
-static arStatus_t		__put_int_32_t_array_to_dict(snObject_t *obj, const wchar_t *field_name, int_32_t *arr, size_t arr_size)
+static arStatus_t		__put_int_32_t_array_to_dict(snObject_t *obj, const wchar_t *field_name, ar_int_32_t *arr, size_t arr_size)
 {
 		arStatus_t		ar_status;
-		int_32_t		*tmp_arr;
+		ar_int_32_t		*tmp_arr;
 		size_t			i;
 		AR_ASSERT(obj != NULL && field_name != NULL && arr_size > 0);
 		
@@ -771,7 +771,7 @@ static arStatus_t		__put_int_32_t_array_to_dict(snObject_t *obj, const wchar_t *
 		tmp_arr = NULL;
 		__CHECK_ARG(obj, field_name);
 
-		tmp_arr = AR_NEWARR(int_32_t, arr_size);
+		tmp_arr = AR_NEWARR(ar_int_32_t, arr_size);
 		
 		if(tmp_arr == NULL)
 		{
@@ -784,7 +784,7 @@ static arStatus_t		__put_int_32_t_array_to_dict(snObject_t *obj, const wchar_t *
 				tmp_arr[i] = AR_LTON_32(arr[i]);
 		}
 
-		ar_status = __put_byte_t_array_to_dict(obj, field_name, (byte_t*)tmp_arr, sizeof(tmp_arr[0]) * arr_size);
+		ar_status = __put_byte_t_array_to_dict(obj, field_name, (ar_byte_t*)tmp_arr, sizeof(tmp_arr[0]) * arr_size);
 
 END_POINT:
 
@@ -798,7 +798,7 @@ END_POINT:
 }
 
 
-static arStatus_t		__get_int_32_t_array_from_dict(snObject_t *obj, const wchar_t *field_name, int_32_t *arr, size_t arr_size)
+static arStatus_t		__get_int_32_t_array_from_dict(snObject_t *obj, const wchar_t *field_name, ar_int_32_t *arr, size_t arr_size)
 {
 		arStatus_t		ar_status;
 		size_t			i;
@@ -809,7 +809,7 @@ static arStatus_t		__get_int_32_t_array_from_dict(snObject_t *obj, const wchar_t
 		__CHECK_ARG(obj, field_name);
 
 		
-		ar_status = __get_byte_t_array_from_dict(obj, field_name, (byte_t*)arr, sizeof(arr[0]) * arr_size);
+		ar_status = __get_byte_t_array_from_dict(obj, field_name, (ar_byte_t*)arr, sizeof(arr[0]) * arr_size);
 
 		for(i = 0; i < arr_size; ++i)
 		{
@@ -826,15 +826,15 @@ END_POINT:
 
 
 
-static arStatus_t		__put_uint_32_t_to_dict(snObject_t *obj, const wchar_t *field_name, uint_32_t v)
+static arStatus_t		__put_uint_32_t_to_dict(snObject_t *obj, const wchar_t *field_name, ar_uint_32_t v)
 {
 		AR_ASSERT(obj != NULL && field_name != NULL);
 		v = AR_LTON_U32(v);
-		return __put_byte_t_array_to_dict(obj, field_name, (const byte_t*)&v, sizeof(uint_32_t));
+		return __put_byte_t_array_to_dict(obj, field_name, (const ar_byte_t*)&v, sizeof(ar_uint_32_t));
 }
 
 
-static arStatus_t		__get_uint_32_t_from_dict(snObject_t *obj, const wchar_t *field_name, uint_32_t *pv)
+static arStatus_t		__get_uint_32_t_from_dict(snObject_t *obj, const wchar_t *field_name, ar_uint_32_t *pv)
 {
 		arStatus_t		ar_status;
 		
@@ -843,7 +843,7 @@ static arStatus_t		__get_uint_32_t_from_dict(snObject_t *obj, const wchar_t *fie
 		ar_status = AR_S_YES;
 		__CHECK_ARG(obj, field_name);
 		
-		ar_status = __get_byte_t_array_from_dict(obj, field_name, (byte_t*)pv, sizeof(uint_32_t));
+		ar_status = __get_byte_t_array_from_dict(obj, field_name, (ar_byte_t*)pv, sizeof(ar_uint_32_t));
 
 		if(ar_status != AR_S_YES)
 		{
@@ -859,10 +859,10 @@ END_POINT:
 
 
 
-static arStatus_t		__put_uint_32_t_array_to_dict(snObject_t *obj, const wchar_t *field_name, uint_32_t *arr, size_t arr_size)
+static arStatus_t		__put_uint_32_t_array_to_dict(snObject_t *obj, const wchar_t *field_name, ar_uint_32_t *arr, size_t arr_size)
 {
 		arStatus_t		ar_status;
-		uint_32_t		*tmp_arr;
+		ar_uint_32_t		*tmp_arr;
 		size_t			i;
 		AR_ASSERT(obj != NULL && field_name != NULL && arr_size > 0);
 		
@@ -870,7 +870,7 @@ static arStatus_t		__put_uint_32_t_array_to_dict(snObject_t *obj, const wchar_t 
 		tmp_arr = NULL;
 		__CHECK_ARG(obj, field_name);
 
-		tmp_arr = AR_NEWARR(uint_32_t, arr_size);
+		tmp_arr = AR_NEWARR(ar_uint_32_t, arr_size);
 		
 		if(tmp_arr == NULL)
 		{
@@ -883,7 +883,7 @@ static arStatus_t		__put_uint_32_t_array_to_dict(snObject_t *obj, const wchar_t 
 				tmp_arr[i] = AR_LTON_U32(arr[i]);
 		}
 
-		ar_status = __put_byte_t_array_to_dict(obj, field_name, (byte_t*)tmp_arr, sizeof(tmp_arr[0]) * arr_size);
+		ar_status = __put_byte_t_array_to_dict(obj, field_name, (ar_byte_t*)tmp_arr, sizeof(tmp_arr[0]) * arr_size);
 
 END_POINT:
 
@@ -897,7 +897,7 @@ END_POINT:
 }
 
 
-static arStatus_t		__get_uint_32_t_array_from_dict(snObject_t *obj, const wchar_t *field_name, uint_32_t *arr, size_t arr_size)
+static arStatus_t		__get_uint_32_t_array_from_dict(snObject_t *obj, const wchar_t *field_name, ar_uint_32_t *arr, size_t arr_size)
 {
 		arStatus_t		ar_status;
 		size_t			i;
@@ -908,7 +908,7 @@ static arStatus_t		__get_uint_32_t_array_from_dict(snObject_t *obj, const wchar_
 		__CHECK_ARG(obj, field_name);
 
 		
-		ar_status = __get_byte_t_array_from_dict(obj, field_name, (byte_t*)arr, sizeof(arr[0]) * arr_size);
+		ar_status = __get_byte_t_array_from_dict(obj, field_name, (ar_byte_t*)arr, sizeof(arr[0]) * arr_size);
 
 		for(i = 0; i < arr_size; ++i)
 		{
@@ -925,15 +925,15 @@ END_POINT:
 
 /************************************************Integer 64*****************************************************/
 
-static arStatus_t		__put_int_64_t_to_dict(snObject_t *obj, const wchar_t *field_name, int_64_t v)
+static arStatus_t		__put_int_64_t_to_dict(snObject_t *obj, const wchar_t *field_name, ar_int_64_t v)
 {
 		AR_ASSERT(obj != NULL && field_name != NULL);
 		v = AR_LTON_64(v);
-		return __put_byte_t_array_to_dict(obj, field_name, (const byte_t*)&v, sizeof(int_64_t));
+		return __put_byte_t_array_to_dict(obj, field_name, (const ar_byte_t*)&v, sizeof(ar_int_64_t));
 }
 
 
-static arStatus_t		__get_int_64_t_from_dict(snObject_t *obj, const wchar_t *field_name, int_64_t *pv)
+static arStatus_t		__get_int_64_t_from_dict(snObject_t *obj, const wchar_t *field_name, ar_int_64_t *pv)
 {
 		arStatus_t		ar_status;
 		
@@ -942,7 +942,7 @@ static arStatus_t		__get_int_64_t_from_dict(snObject_t *obj, const wchar_t *fiel
 		ar_status = AR_S_YES;
 		__CHECK_ARG(obj, field_name);
 		
-		ar_status = __get_byte_t_array_from_dict(obj, field_name, (byte_t*)pv, sizeof(int_64_t));
+		ar_status = __get_byte_t_array_from_dict(obj, field_name, (ar_byte_t*)pv, sizeof(ar_int_64_t));
 
 		if(ar_status != AR_S_YES)
 		{
@@ -958,10 +958,10 @@ END_POINT:
 
 
 
-static arStatus_t		__put_int_64_t_array_to_dict(snObject_t *obj, const wchar_t *field_name, int_64_t *arr, size_t arr_size)
+static arStatus_t		__put_int_64_t_array_to_dict(snObject_t *obj, const wchar_t *field_name, ar_int_64_t *arr, size_t arr_size)
 {
 		arStatus_t		ar_status;
-		int_64_t		*tmp_arr;
+		ar_int_64_t		*tmp_arr;
 		size_t			i;
 		AR_ASSERT(obj != NULL && field_name != NULL && arr_size > 0);
 		
@@ -969,7 +969,7 @@ static arStatus_t		__put_int_64_t_array_to_dict(snObject_t *obj, const wchar_t *
 		tmp_arr = NULL;
 		__CHECK_ARG(obj, field_name);
 
-		tmp_arr = AR_NEWARR(int_64_t, arr_size);
+		tmp_arr = AR_NEWARR(ar_int_64_t, arr_size);
 		
 		if(tmp_arr == NULL)
 		{
@@ -982,7 +982,7 @@ static arStatus_t		__put_int_64_t_array_to_dict(snObject_t *obj, const wchar_t *
 				tmp_arr[i] = AR_LTON_64(arr[i]);
 		}
 
-		ar_status = __put_byte_t_array_to_dict(obj, field_name, (byte_t*)tmp_arr, sizeof(tmp_arr[0]) * arr_size);
+		ar_status = __put_byte_t_array_to_dict(obj, field_name, (ar_byte_t*)tmp_arr, sizeof(tmp_arr[0]) * arr_size);
 
 END_POINT:
 
@@ -996,7 +996,7 @@ END_POINT:
 }
 
 
-static arStatus_t		__get_int_64_t_array_from_dict(snObject_t *obj, const wchar_t *field_name, int_64_t *arr, size_t arr_size)
+static arStatus_t		__get_int_64_t_array_from_dict(snObject_t *obj, const wchar_t *field_name, ar_int_64_t *arr, size_t arr_size)
 {
 		arStatus_t		ar_status;
 		size_t			i;
@@ -1006,7 +1006,7 @@ static arStatus_t		__get_int_64_t_array_from_dict(snObject_t *obj, const wchar_t
 		
 		__CHECK_ARG(obj, field_name);
 
-		ar_status = __get_byte_t_array_from_dict(obj, field_name, (byte_t*)arr, sizeof(arr[0]) * arr_size);
+		ar_status = __get_byte_t_array_from_dict(obj, field_name, (ar_byte_t*)arr, sizeof(arr[0]) * arr_size);
 
 		for(i = 0; i < arr_size; ++i)
 		{
@@ -1023,15 +1023,15 @@ END_POINT:
 
 
 
-static arStatus_t		__put_uint_64_t_to_dict(snObject_t *obj, const wchar_t *field_name, uint_64_t v)
+static arStatus_t		__put_uint_64_t_to_dict(snObject_t *obj, const wchar_t *field_name, ar_uint_64_t v)
 {
 		AR_ASSERT(obj != NULL && field_name != NULL);
 		v = AR_LTON_U64(v);
-		return __put_byte_t_array_to_dict(obj, field_name, (const byte_t*)&v, sizeof(uint_64_t));
+		return __put_byte_t_array_to_dict(obj, field_name, (const ar_byte_t*)&v, sizeof(ar_uint_64_t));
 }
 
 
-static arStatus_t		__get_uint_64_t_from_dict(snObject_t *obj, const wchar_t *field_name, uint_64_t *pv)
+static arStatus_t		__get_uint_64_t_from_dict(snObject_t *obj, const wchar_t *field_name, ar_uint_64_t *pv)
 {
 		arStatus_t		ar_status;
 		
@@ -1040,7 +1040,7 @@ static arStatus_t		__get_uint_64_t_from_dict(snObject_t *obj, const wchar_t *fie
 		ar_status = AR_S_YES;
 		__CHECK_ARG(obj, field_name);
 		
-		ar_status = __get_byte_t_array_from_dict(obj, field_name, (byte_t*)pv, sizeof(uint_64_t));
+		ar_status = __get_byte_t_array_from_dict(obj, field_name, (ar_byte_t*)pv, sizeof(ar_uint_64_t));
 
 		if(ar_status != AR_S_YES)
 		{
@@ -1056,10 +1056,10 @@ END_POINT:
 
 
 
-static arStatus_t		__put_uint_64_t_array_to_dict(snObject_t *obj, const wchar_t *field_name, uint_64_t *arr, size_t arr_size)
+static arStatus_t		__put_uint_64_t_array_to_dict(snObject_t *obj, const wchar_t *field_name, ar_uint_64_t *arr, size_t arr_size)
 {
 		arStatus_t		ar_status;
-		uint_64_t		*tmp_arr;
+		ar_uint_64_t		*tmp_arr;
 		size_t			i;
 		AR_ASSERT(obj != NULL && field_name != NULL && arr_size > 0);
 		
@@ -1067,7 +1067,7 @@ static arStatus_t		__put_uint_64_t_array_to_dict(snObject_t *obj, const wchar_t 
 		tmp_arr = NULL;
 		__CHECK_ARG(obj, field_name);
 
-		tmp_arr = AR_NEWARR(uint_64_t, arr_size);
+		tmp_arr = AR_NEWARR(ar_uint_64_t, arr_size);
 		
 		if(tmp_arr == NULL)
 		{
@@ -1080,7 +1080,7 @@ static arStatus_t		__put_uint_64_t_array_to_dict(snObject_t *obj, const wchar_t 
 				tmp_arr[i] = AR_LTON_U64(arr[i]);
 		}
 
-		ar_status = __put_byte_t_array_to_dict(obj, field_name, (byte_t*)tmp_arr, sizeof(tmp_arr[0]) * arr_size);
+		ar_status = __put_byte_t_array_to_dict(obj, field_name, (ar_byte_t*)tmp_arr, sizeof(tmp_arr[0]) * arr_size);
 
 END_POINT:
 
@@ -1094,7 +1094,7 @@ END_POINT:
 }
 
 
-static arStatus_t		__get_uint_64_t_array_from_dict(snObject_t *obj, const wchar_t *field_name, uint_64_t *arr, size_t arr_size)
+static arStatus_t		__get_uint_64_t_array_from_dict(snObject_t *obj, const wchar_t *field_name, ar_uint_64_t *arr, size_t arr_size)
 {
 		arStatus_t		ar_status;
 		size_t			i;
@@ -1105,7 +1105,7 @@ static arStatus_t		__get_uint_64_t_array_from_dict(snObject_t *obj, const wchar_
 		__CHECK_ARG(obj, field_name);
 
 		
-		ar_status = __get_byte_t_array_from_dict(obj, field_name, (byte_t*)arr, sizeof(arr[0]) * arr_size);
+		ar_status = __get_byte_t_array_from_dict(obj, field_name, (ar_byte_t*)arr, sizeof(arr[0]) * arr_size);
 
 		for(i = 0; i < arr_size; ++i)
 		{
@@ -1446,8 +1446,8 @@ END_POINT:
 
 
 typedef struct {
-		uint_32_t		unused;
-		int_32_t		x[1024];
+		ar_uint_32_t		unused;
+		ar_int_32_t		x[1024];
 }daemonKeepalive_t;
 
 
@@ -1455,8 +1455,8 @@ typedef struct {
 
 
 typedef struct {
-		uint_32_t		t1;
-		uint_32_t		t2;
+		ar_uint_32_t		t1;
+		ar_uint_32_t		t2;
 		wchar_t		t3[1024];
 }anonymous_type_1;
 
@@ -1475,7 +1475,7 @@ typedef struct {
 
 
 typedef struct {
-		uint_32_t		unused;
+		ar_uint_32_t		unused;
 		daemonTest_t		unused2;
 }daemonQueryCPUTemp_t;
 
@@ -1490,24 +1490,24 @@ typedef struct {
 		char		c_arr[1024];
 		wchar_t		w;
 		wchar_t		w_arr[1024];
-		byte_t		bt;
-		byte_t		bt_arr[1024];
-		int_8_t		i8;
-		int_8_t		i8_arr[1024];
-		uint_8_t		u8;
-		uint_8_t		u8_arr[1024];
-		int_16_t		i16;
-		int_16_t		i16_arr[1024];
-		uint_16_t		u16;
-		uint_16_t		u16_arr[1024];
-		int_32_t		i32;
-		int_32_t		i32_arr[1024];
-		uint_32_t		u32;
-		uint_32_t		u32_arr[1024];
-		int_64_t		i64;
-		int_64_t		i64_arr[1024];
-		uint_64_t		u64;
-		uint_64_t		u64_arr[1024];
+		ar_byte_t		bt;
+		ar_byte_t		bt_arr[1024];
+		ar_int_8_t		i8;
+		ar_int_8_t		i8_arr[1024];
+		ar_uint_8_t		u8;
+		ar_uint_8_t		u8_arr[1024];
+		ar_int_16_t		i16;
+		ar_int_16_t		i16_arr[1024];
+		ar_uint_16_t		u16;
+		ar_uint_16_t		u16_arr[1024];
+		ar_int_32_t		i32;
+		ar_int_32_t		i32_arr[1024];
+		ar_uint_32_t		u32;
+		ar_uint_32_t		u32_arr[1024];
+		ar_int_64_t		i64;
+		ar_int_64_t		i64_arr[1024];
+		ar_uint_64_t		u64;
+		ar_uint_64_t		u64_arr[1024];
 }basicTest_t;
 
 

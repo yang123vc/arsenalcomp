@@ -15,28 +15,28 @@
 
 AR_NAMESPACE_BEGIN
 
-void			AR_srand(uint_64_t seed)
+void			AR_srand(ar_uint_64_t seed)
 {
 		srand((unsigned int)seed);
 }
 
 
-uint_64_t AR_rand64()
+ar_uint_64_t AR_rand64()
 {
-		uint_64_t res = rand();
-		res ^= (uint_64_t)rand() << 15;
-		res ^= (uint_64_t)rand() << 30;
-		res ^= (uint_64_t)rand() << 45;
-		res ^= (uint_64_t)rand() << 60;
+		ar_uint_64_t res = rand();
+		res ^= (ar_uint_64_t)rand() << 15;
+		res ^= (ar_uint_64_t)rand() << 30;
+		res ^= (ar_uint_64_t)rand() << 45;
+		res ^= (ar_uint_64_t)rand() << 60;
 		return res;
 
 }
 
-uint_32_t AR_rand32()
+ar_uint_32_t AR_rand32()
 {
-		uint_32_t res = rand();
-		res ^= (uint_32_t)rand() << 15;
-		res ^= (uint_32_t)rand() << 30;
+		ar_uint_32_t res = rand();
+		res ^= (ar_uint_32_t)rand() << 15;
+		res ^= (ar_uint_32_t)rand() << 30;
 		return res;
 }
 

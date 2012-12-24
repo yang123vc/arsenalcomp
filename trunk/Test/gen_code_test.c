@@ -80,7 +80,7 @@ static const psrHandler_t		__g_handler =
 
 void gen_code_test()
 {
-		uint_64_t sum = 0;
+		ar_uint_64_t sum = 0;
 		std::vector<lex_t*>				vl;
 		std::vector<psrGrammar_t*>		vg;
 		std::vector<const parser_t*>			vp;
@@ -88,7 +88,7 @@ void gen_code_test()
 		{
 				getchar();
 				psrGrammar_t	*gmr;
-				uint_64_t		beg, end;
+				ar_uint_64_t		beg, end;
 				beg = AR_GetTime_Milliseconds();
 				lex_t *lex = __build_lex();
 				gmr = __build_grammar(&__g_handler);

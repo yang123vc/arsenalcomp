@@ -106,7 +106,7 @@ psrTermInfo_t*	Parser_FindTermByValue(psrTermInfoList_t	*lst, size_t val)
 
 
 
-int_t			Parser_IndexOfTermInfoListByName(const psrTermInfoList_t	*lst, const wchar_t *name)
+ar_int_t			Parser_IndexOfTermInfoListByName(const psrTermInfoList_t	*lst, const wchar_t *name)
 {
 
 		size_t i;
@@ -119,7 +119,7 @@ int_t			Parser_IndexOfTermInfoListByName(const psrTermInfoList_t	*lst, const wch
 				*/
 				if(AR_wcscmp(info->term->name, name) == 0)
 				{
-						return (int_t)i;
+						return (ar_int_t)i;
 				}
 		}
 
@@ -128,7 +128,7 @@ int_t			Parser_IndexOfTermInfoListByName(const psrTermInfoList_t	*lst, const wch
 
 
 
-int_t			Parser_IndexOfTermInfoListByValue(const psrTermInfoList_t	*lst, size_t val)
+ar_int_t			Parser_IndexOfTermInfoListByValue(const psrTermInfoList_t	*lst, size_t val)
 {
 
 		size_t i;
@@ -138,7 +138,7 @@ int_t			Parser_IndexOfTermInfoListByValue(const psrTermInfoList_t	*lst, size_t v
 				psrTermInfo_t	*info = &lst->lst[i];
 				if(info->val == val)
 				{
-						return (int_t)i;
+						return (ar_int_t)i;
 				}
 		}
 		
@@ -1066,14 +1066,14 @@ arStatus_t				Parser_InsertRuleByStr(psrGrammar_t *grammar, const wchar_t *str, 
 
 
 
-int_t					Parser_IndexOfGrammar(const psrGrammar_t *grammar, const psrRule_t *rule)
+ar_int_t					Parser_IndexOfGrammar(const psrGrammar_t *grammar, const psrRule_t *rule)
 {
 		size_t i;
 		for(i = 0; i < grammar->count; ++i)
 		{
 				if(grammar->rules[i] == rule)
 				{
-						return (int_t)i;
+						return (ar_int_t)i;
 				}
 		}
 
@@ -1119,9 +1119,9 @@ void		Parser_ResetTermSpecID(const psrGrammar_t *grammar)
 }
 
 
-int_t							Parser_GetTermSpecID(const psrGrammar_t *grammar, const psrSymb_t *symb)
+ar_int_t							Parser_GetTermSpecID(const psrGrammar_t *grammar, const psrSymb_t *symb)
 {
-		int_t idx;
+		ar_int_t idx;
 		const psrTermInfoList_t *term_lst;
 		AR_ASSERT(grammar != NULL && symb != NULL);
 
@@ -1133,7 +1133,7 @@ int_t							Parser_GetTermSpecID(const psrGrammar_t *grammar, const psrSymb_t *s
 		}else
 		*/
 		{
-				idx = (int_t)symb->spec_id;
+				idx = (ar_int_t)symb->spec_id;
 		}
 		AR_ASSERT(idx != -1);
 		return idx;
@@ -1797,7 +1797,7 @@ arStatus_t			Parser_PrintGrammar(const psrGrammar_t *grammar, arString_t *str)
 						AR_ASSERT(rule->prec_tok != NULL);
 						info = Parser_FindTermByName((psrTermInfoList_t*)&grammar->term_list, rule->prec_tok);
 						AR_ASSERT(info != NULL);
-						__CHECK_RET_VAL(AR_AppendFormatString(str, L" prec = %qd assoc = %qd prec_tok = %ls", (uint_64_t)info->prec, (uint_64_t)info->assoc, info->term->name));
+						__CHECK_RET_VAL(AR_AppendFormatString(str, L" prec = %qd assoc = %qd prec_tok = %ls", (ar_uint_64_t)info->prec, (ar_uint_64_t)info->assoc, info->term->name));
 				}
 				
 				__CHECK_RET_VAL(AR_AppendString(str, L"\r\n"));

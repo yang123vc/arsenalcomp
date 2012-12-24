@@ -371,7 +371,7 @@ arStatus_t		AR_FindFromHash(arHash_t *hash, void *key, void **pval)
 {
         
         arHashNode_t *node;
-        uint_64_t hash_code;
+        ar_uint_64_t hash_code;
         AR_ASSERT(hash != NULL /*&& pval != NULL*/);
         
         hash_code = hash->hash_f(key, hash->usr_ctx);
@@ -423,13 +423,13 @@ void			AR_HashForEach(arHash_t *hash, AR_hash_visit_func_t visit)
 }
 
 
-static arStatus_t __remove_key_by_hashcode(arHash_t *hash, void *key, uint_64_t hash_code)
+static arStatus_t __remove_key_by_hashcode(arHash_t *hash, void *key, ar_uint_64_t hash_code)
 {
 		arStatus_t status;
         arHashNode_t *prev, *node;
 		AR_ASSERT(hash != NULL);
 		status = AR_S_YES;
-		node = hash->bucket[hash_code % (uint_64_t)hash->bucket_size];
+		node = hash->bucket[hash_code % (ar_uint_64_t)hash->bucket_size];
 		
 		prev = NULL;
 		while(node)
@@ -438,7 +438,7 @@ static arStatus_t __remove_key_by_hashcode(arHash_t *hash, void *key, uint_64_t 
                 {
 						if(prev == NULL)
 						{
-								hash->bucket[hash_code % (uint_64_t)hash->bucket_size] = node->next;
+								hash->bucket[hash_code % (ar_uint_64_t)hash->bucket_size] = node->next;
 								node->next = NULL;
 						}else
 						{
@@ -476,7 +476,7 @@ static arStatus_t __remove_key_by_hashcode(arHash_t *hash, void *key, uint_64_t 
 
 arStatus_t		AR_RemoveFromHash(arHash_t *hash, void *key)
 {
-        uint_64_t hash_code;
+        ar_uint_64_t hash_code;
         AR_ASSERT(hash != NULL);
         
         hash_code = hash->hash_f(key, hash->usr_ctx);
@@ -489,7 +489,7 @@ arStatus_t		AR_RemoveFromHash(arHash_t *hash, void *key)
 arStatus_t		AR_InsertToHash(arHash_t *hash, void *key, void *val)
 {
         arStatus_t status;
-        uint_64_t hash_code;
+        ar_uint_64_t hash_code;
         arHashNode_t *new_node;
 		bool_t key_init, val_init;
         AR_ASSERT(hash != NULL);
@@ -539,8 +539,8 @@ arStatus_t		AR_InsertToHash(arHash_t *hash, void *key, void *val)
 
 		__remove_key_by_hashcode(hash, key, hash_code);
        
-		new_node->next = hash->bucket[hash_code % (uint_64_t)hash->bucket_size];
-        hash->bucket[hash_code % (uint_64_t)hash->bucket_size] = new_node;
+		new_node->next = hash->bucket[hash_code % (ar_uint_64_t)hash->bucket_size];
+        hash->bucket[hash_code % (ar_uint_64_t)hash->bucket_size] = new_node;
         
         hash->item_count++;
         return AR_S_YES;

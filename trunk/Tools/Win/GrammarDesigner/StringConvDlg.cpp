@@ -202,7 +202,7 @@ void CStringConvDlg::OnBnClickedButtonToCode()
 				return;
 		}
 		
-		int_t len = ARSpace::AR_str_to_escstr_buf(NULL, 0, input.GetString());
+		ar_int_t len = ARSpace::AR_str_to_escstr_buf(NULL, 0, input.GetString());
 
 		AR_ASSERT(len > 0);
 
@@ -233,7 +233,7 @@ void CStringConvDlg::OnBnClickedButtonToString()
 		}
 		
 		ARSpace::arEscStrErr_t	err;
-		int_t len;
+		ar_int_t len;
 		
 		len = ARSpace::AR_escstr_to_str_buf(NULL, 0, input.GetString(), &err);
 		

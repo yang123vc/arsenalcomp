@@ -480,7 +480,7 @@ typedef struct __match_state_tag
 {
 		const wchar_t	*start;
 		const wchar_t	*end;
-		uint_32_t		flags;
+		ar_uint_32_t		flags;
 
 		struct {
 				const wchar_t	*init;
@@ -567,7 +567,7 @@ static const wchar_t*	__transform_char(const wchar_t *input, wchar_t *c)
 				return ++p;
 		case L'u':
 		{
-				const wchar_t *ret; uint_32_t val;
+				const wchar_t *ret; ar_uint_32_t val;
 				p += 1;
 
 				if(*p != L'{')
@@ -620,7 +620,7 @@ static const wchar_t*	__transform_char(const wchar_t *input, wchar_t *c)
 				break;
 		case L'x':
 		{
-				const wchar_t *ret;  uint_32_t val;
+				const wchar_t *ret;  ar_uint_32_t val;
 
 				p += 1;
 				

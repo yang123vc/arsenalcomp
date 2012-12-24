@@ -74,7 +74,7 @@ static void __add_thread(rgxThreadList_t *lst,  rgxThread_t thd, rgxProg_t *prog
 
 
 
-static AR_INLINE void __check_is_newline(const wchar_t *sp, uint_32_t *pact, size_t *px, size_t *py)
+static AR_INLINE void __check_is_newline(const wchar_t *sp, ar_uint_32_t *pact, size_t *px, size_t *py)
 {
 		AR_ASSERT(sp != NULL && pact != NULL && px != NULL && py != NULL);
 
@@ -116,7 +116,7 @@ static AR_INLINE void __check_is_newline(const wchar_t *sp, uint_32_t *pact, siz
 #undef PS
 */
 
-static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, size_t *py, uint_32_t *pact, lexMatch_t *match);
+static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, size_t *py, ar_uint_32_t *pact, lexMatch_t *match);
 static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match);
 
 
@@ -286,7 +286,7 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 								for(i = 0; i < loop_cnt && is_ok == AR_S_YES; ++i)
 								{
 										size_t	x = 0,y = 0;
-										uint_32_t act = RGX_ACT_NOACTION;
+										ar_uint_32_t act = RGX_ACT_NOACTION;
 										rgxProg_t loop;
 										loop.start = pc + 1;
 										loop.pc = loop.start;
@@ -427,14 +427,14 @@ static void __clear_for_loop(rgxProg_t *prog)
 
 
 
-static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, size_t *py, uint_32_t *pact, lexMatch_t *match)
+static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, size_t *py, ar_uint_32_t *pact, lexMatch_t *match)
 {
 		arStatus_t status;
 		rgxThreadList_t *curr, *next;
 		rgxIns_t				*pc;
 		
 		const wchar_t	*sp, *final_next;
-		uint_32_t		act, final_act;
+		ar_uint_32_t		act, final_act;
 		size_t i,x,y, final_row, final_col;
 		
 		
@@ -720,7 +720,7 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 		const wchar_t	*sp, *final_next;
 
 		size_t i,x,y, final_row, final_col;
-		uint_32_t		act, final_act;
+		ar_uint_32_t		act, final_act;
 		
 
 		AR_ASSERT(prog != NULL && match->next != NULL && match->input != NULL);

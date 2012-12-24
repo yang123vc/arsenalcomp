@@ -21,7 +21,7 @@ AR_NAMESPACE_BEGIN
 
 const wchar_t*	AR_Version()
 {
-		return L"0.3.01.920";
+		return L"0.4.01.920";
 }
 
 
@@ -32,7 +32,7 @@ const wchar_t*	AR_Version()
 /***********************************************************Init****************************************************************/
 
 
-static void AR_STDCALL __def_error(int_t level, const wchar_t* msg, void *ctx)
+static void AR_STDCALL __def_error(ar_int_t level, const wchar_t* msg, void *ctx)
 {
 		AR_UNUSED(level);
 		AR_UNUSED(ctx);
@@ -93,7 +93,7 @@ arIOCtx_t*	AR_global_ioctx()
 arStatus_t	AR_printf_ctx(arIOCtx_t *ctx, const wchar_t *msg,...)
 {
 		wchar_t *buf;
-		int_t len;
+		ar_int_t len;
 		va_list arg_ptr;
 		
 		if(ctx && ctx->on_print)
@@ -131,7 +131,7 @@ arStatus_t	AR_printf_ctx(arIOCtx_t *ctx, const wchar_t *msg,...)
 }
 
 
-arStatus_t	AR_error_ctx(arIOCtx_t *ctx, int_t level, const wchar_t *msg, ...)
+arStatus_t	AR_error_ctx(arIOCtx_t *ctx, ar_int_t level, const wchar_t *msg, ...)
 {		
 		wchar_t buf[1024];
 		va_list arg_ptr;
@@ -163,7 +163,7 @@ arStatus_t	AR_error_ctx(arIOCtx_t *ctx, int_t level, const wchar_t *msg, ...)
 
 
 
-arStatus_t AR_error(int_t level, const wchar_t *msg, ...)
+arStatus_t AR_error(ar_int_t level, const wchar_t *msg, ...)
 {
 		wchar_t buf[2048];
 		va_list arg_ptr;
@@ -215,7 +215,7 @@ arStatus_t	AR_debug_print(const wchar_t *msg, ...)
 arStatus_t AR_printf(const wchar_t *msg,...)
 {
 		wchar_t *buf;
-		int_t len;
+		ar_int_t len;
 		va_list arg_ptr;
 
 		if(__g_ctx.global_io_ctx.on_print != NULL)
@@ -259,7 +259,7 @@ arStatus_t AR_printf(const wchar_t *msg,...)
 void	AR_check(bool_t cond, const wchar_t *fmt, ...)
 {
 		wchar_t buf[1024];
-		int_t len;
+		ar_int_t len;
 		va_list arg_ptr;
 		AR_ASSERT(fmt);
 		

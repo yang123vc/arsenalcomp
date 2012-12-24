@@ -158,7 +158,7 @@ static arStatus_t	__run_vm(tguMachine_t *vm)
 						case TGU_VM_TYPE_FUNC:
 						case TGU_VM_TYPE_C_FUNC:
 						default:
-								TGU_FormatVMError(vm, L"Invalid push type : %u\r\n", (uint_32_t)ins->arg1);
+								TGU_FormatVMError(vm, L"Invalid push type : %u\r\n", (ar_uint_32_t)ins->arg1);
 								status = AR_E_TGUINVOPCODE;
 								goto END_POINT;
 								break;
@@ -311,7 +311,7 @@ ERROR_IMPORT_POINT:
 						break;
 				case TGU_VM_OP_INIT_DATA:
 				{
-						int_t n = (int_t)ins->arg2;
+						ar_int_t n = (ar_int_t)ins->arg2;
 
 						switch(ins->arg1)
 						{
@@ -370,7 +370,7 @@ ERROR_IMPORT_POINT:
 						}
 								break;
 						default:
-								TGU_FormatVMError(vm, L"Invalid init type : %u\r\n", (uint_32_t)ins->arg1);
+								TGU_FormatVMError(vm, L"Invalid init type : %u\r\n", (ar_uint_32_t)ins->arg1);
 								status = AR_E_TGUINVOPCODE;
 								goto END_POINT;
 								break;
@@ -572,7 +572,7 @@ ERROR_IMPORT_POINT:
 						break;
 				case TGU_VM_OP_JMP:
 				{
-						vm->pc += (int_t)ins->arg2;
+						vm->pc += (ar_int_t)ins->arg2;
 				}
 						break;
 				case TGU_VM_OP_JMP_TRUE:
@@ -582,7 +582,7 @@ ERROR_IMPORT_POINT:
 
 						if(ret == AR_S_YES)
 						{
-								vm->pc += (int_t)ins->arg2;
+								vm->pc += (ar_int_t)ins->arg2;
 						}
 				}
 						break;
@@ -593,7 +593,7 @@ ERROR_IMPORT_POINT:
 
 						if(ret == AR_S_NO)
 						{
-								vm->pc += (int_t)ins->arg2;
+								vm->pc += (ar_int_t)ins->arg2;
 						}
 				}
 						break;

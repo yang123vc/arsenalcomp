@@ -28,11 +28,11 @@ void sn_test_path()
 		FILE *f = fopen("d:\\temp\\1.torrent", "rb");
 		assert(f != NULL);
 
-		byte_t buf[4096];
+		ar_byte_t buf[4096];
 		
 		while(!ferror(f) && !feof(f))
 		{
-				size_t rn = fread(buf, sizeof(byte_t), sizeof(buf), f);
+				size_t rn = fread(buf, sizeof(ar_byte_t), sizeof(buf), f);
 				if(rn == 0)break;
 				AR_InsertToBuffer(buffer, buf, rn);
 		}
@@ -42,7 +42,7 @@ void sn_test_path()
 		AR_ASSERT(obj != NULL);
 		AR_DestroyBuffer(buffer);
 		
-		int_t l;
+		ar_int_t l;
 		wchar_t wcs[1024];
 
 		snObject_t *announce = SN_FindObjectByWcsPath(obj, L"announce");
@@ -103,14 +103,14 @@ void sn_test_str()
 {
 		snObject_t *obj;
 		
-		int_t	ret;
-		byte_t	data[512];
+		ar_int_t	ret;
+		ar_byte_t	data[512];
 		char	str[512];
 		wchar_t wcs[512];
 
 		obj = SN_CreateObject(SN_STRING_T);
 
-		byte_t buf[] = 
+		ar_byte_t buf[] = 
 		{
 				'a',
 				'b',
@@ -167,14 +167,14 @@ void sn_test_str2()
 {
 		snObject_t *obj;
 		
-		int_t	ret;
-		byte_t	data[512];
+		ar_int_t	ret;
+		ar_byte_t	data[512];
 		char	str[512];
 		wchar_t wcs[512];
 
 		obj = SN_CreateObject(SN_STRING_T);
 
-		byte_t buf[] = 
+		ar_byte_t buf[] = 
 		{
 				'a',
 				'b',
@@ -228,14 +228,14 @@ void sn_test_str3()
 {
 		snObject_t *obj;
 		
-		int_t	ret;
-		byte_t	data[512];
+		ar_int_t	ret;
+		ar_byte_t	data[512];
 		char	str[512];
 		wchar_t wcs[512];
 
 		obj = SN_CreateObject(SN_STRING_T);
 
-		//byte_t buf[] = "字符集问题太麻烦了，操！！！abcdefg";
+		//ar_byte_t buf[] = "字符集问题太麻烦了，操！！！abcdefg";
 
 		const wchar_t *txt = L"字符集问题太麻烦了，操！！！abcdefg";
 
@@ -294,11 +294,11 @@ void sn_test_torrent()
 		FILE *f = fopen("d:\\1.torrent", "rb");
 		assert(f != NULL);
 
-		byte_t buf[4096];
+		ar_byte_t buf[4096];
 		
 		while(!ferror(f) && !feof(f))
 		{
-				size_t rn = fread(buf, sizeof(byte_t), sizeof(buf), f);
+				size_t rn = fread(buf, sizeof(ar_byte_t), sizeof(buf), f);
 				if(rn == 0)break;
 				AR_InsertToBuffer(buffer, buf, rn);
 		}
@@ -319,7 +319,7 @@ void sn_test_torrent()
 		new_f = fopen("d:\\new.torrent", "wb");
 		assert(new_f != NULL);
 
-		fwrite(AR_GetBufferData(buffer), sizeof(byte_t), AR_GetBufferAvailable(buffer), new_f);
+		fwrite(AR_GetBufferData(buffer), sizeof(ar_byte_t), AR_GetBufferAvailable(buffer), new_f);
 
 END_POINT:
 		if(new_f)
@@ -351,11 +351,11 @@ void sn_test_find()
 		FILE *f = fopen("d:\\1.torrent", "rb");
 		assert(f != NULL);
 
-		byte_t buf[4096];
+		ar_byte_t buf[4096];
 		
 		while(!ferror(f) && !feof(f))
 		{
-				size_t rn = fread(buf, sizeof(byte_t), sizeof(buf), f);
+				size_t rn = fread(buf, sizeof(ar_byte_t), sizeof(buf), f);
 				if(rn == 0)break;
 				AR_InsertToBuffer(buffer, buf, rn);
 		}
@@ -365,7 +365,7 @@ void sn_test_find()
 		AR_ASSERT(root != NULL);
 		AR_DestroyBuffer(buffer);
 		
-		int_t l;
+		ar_int_t l;
 		wchar_t wcs[1024];
 
 		snObject_t *announce = SN_FindObjectByWcsPath(root, L"////announce").obj;
@@ -466,27 +466,27 @@ void sn_test_float()
 
 /*
 
-arStatus_t			SN_InsertToListObjectByData(snObject_t *obj, const byte_t *data, size_t len)
-arStatus_t			SN_InsertToListObjectByUInt(snObject_t *obj, const uint_64_t val)
-arStatus_t			SN_InsertToListObjectByInt(snObject_t *obj, const int_64_t val)
+arStatus_t			SN_InsertToListObjectByData(snObject_t *obj, const ar_byte_t *data, size_t len)
+arStatus_t			SN_InsertToListObjectByUInt(snObject_t *obj, const ar_uint_64_t val)
+arStatus_t			SN_InsertToListObjectByInt(snObject_t *obj, const ar_int_64_t val)
 arStatus_t			SN_InsertToListObjectByWcs(snObject_t *obj, const wchar_t *val)
 arStatus_t			SN_InsertToListObjectByStr(snObject_t *obj, const char *val)
-arStatus_t			SN_InsertToDictObjectByWcsData(snObject_t *obj, const wchar_t *key, const byte_t *data, size_t len)
+arStatus_t			SN_InsertToDictObjectByWcsData(snObject_t *obj, const wchar_t *key, const ar_byte_t *data, size_t len)
 arStatus_t			SN_InsertToDictObjectByWcsWcs(snObject_t *obj, const wchar_t *key, const wchar_t *val)
 arStatus_t			SN_InsertToDictObjectByWcsStr(snObject_t *obj, const wchar_t *key, const char *val)
-arStatus_t			SN_InsertToDictObjectByWcsUInt(snObject_t *obj, const wchar_t *key, uint_64_t val)
-arStatus_t			SN_InsertToDictObjectByWcsInt(snObject_t *obj, const wchar_t *key, int_64_t val)
-arStatus_t			SN_InsertToDictObjectByStrData(snObject_t *obj, const char *key, const byte_t *data, size_t len)
+arStatus_t			SN_InsertToDictObjectByWcsUInt(snObject_t *obj, const wchar_t *key, ar_uint_64_t val)
+arStatus_t			SN_InsertToDictObjectByWcsInt(snObject_t *obj, const wchar_t *key, ar_int_64_t val)
+arStatus_t			SN_InsertToDictObjectByStrData(snObject_t *obj, const char *key, const ar_byte_t *data, size_t len)
 arStatus_t			SN_InsertToDictObjectByStrWcs(snObject_t *obj, const char *key, const wchar_t *val)
 arStatus_t			SN_InsertToDictObjectByStrStr(snObject_t *obj, const char *key, const char *val)
-arStatus_t			SN_InsertToDictObjectByStrUInt(snObject_t *obj, const char *key, uint_64_t val)
-arStatus_t			SN_InsertToDictObjectByStrInt(snObject_t *obj, const char *key, int_64_t val)
+arStatus_t			SN_InsertToDictObjectByStrUInt(snObject_t *obj, const char *key, ar_uint_64_t val)
+arStatus_t			SN_InsertToDictObjectByStrInt(snObject_t *obj, const char *key, ar_int_64_t val)
 */
 
 
 
 		/*
-		SN_InsertToListObjectByData(obj, (const byte_t*)"abcdefg", strlen("abcdefg"));
+		SN_InsertToListObjectByData(obj, (const ar_byte_t*)"abcdefg", strlen("abcdefg"));
 		SN_InsertToListObjectByUInt(obj,  33)
 		SN_InsertToListObjectByInt(obj, -55)
 		SN_InsertToListObjectByWcs(obj, L"中国字");
@@ -501,14 +501,14 @@ static void util_sn_test()
 
 
 		
-		SN_InsertToDictObjectByStrData(obj, "中国字0", (const byte_t*)"abc", 3);
+		SN_InsertToDictObjectByStrData(obj, "中国字0", (const ar_byte_t*)"abc", 3);
 		SN_InsertToDictObjectByStrWcs(obj, "中国字1", L"a中国字k");
 		SN_InsertToDictObjectByStrStr(obj, "中国字2", "a中国字");
 		SN_InsertToDictObjectByStrUInt(obj, "中国字3", 66);
 		SN_InsertToDictObjectByStrInt(obj, "中国字4", -66);
 
 
-		SN_InsertToDictObjectByWcsData(obj, L"中国字5", (const byte_t*)"abc", 3);
+		SN_InsertToDictObjectByWcsData(obj, L"中国字5", (const ar_byte_t*)"abc", 3);
 		SN_InsertToDictObjectByWcsWcs(obj, L"中国字6", L"abc中国字");
 		SN_InsertToDictObjectByWcsStr(obj, L"中国字7", "abc中国字");
 		SN_InsertToDictObjectByWcsUInt(obj, L"中国字8", 88);
@@ -565,7 +565,7 @@ static void util_sn2_test()
 		obj = SN_CreateObject(SN_LIST_T);
 
 
-		SN_InsertToListObjectByData(obj, (const byte_t*)"abcdefg", strlen("abcdefg"));
+		SN_InsertToListObjectByData(obj, (const ar_byte_t*)"abcdefg", strlen("abcdefg"));
 		SN_InsertToListObjectByUInt(obj,  33);
 		SN_InsertToListObjectByInt(obj, -55);
 		SN_InsertToListObjectByWcs(obj, L"中国字");
@@ -620,9 +620,9 @@ static void util_sn3_test()
 
 
 		
-		SN_InsertToDictObjectByStrData(obj, "", (const byte_t*)"abc", 3);
+		SN_InsertToDictObjectByStrData(obj, "", (const ar_byte_t*)"abc", 3);
 		SN_InsertToDictObjectByStrWcs(obj, "", L"a中国字k");
-		SN_InsertToDictObjectByWcsData(obj, L"", (const byte_t*)"abc", 3);
+		SN_InsertToDictObjectByWcsData(obj, L"", (const ar_byte_t*)"abc", 3);
 		SN_InsertToDictObjectByWcsWcs(obj, L"", L"abc中国字");
 		SN_InsertToDictObjectByWcsStr(obj, L"", "abc中国字");
 		SN_InsertToDictObjectByWcsStr(obj, L"   ", "空格！！");

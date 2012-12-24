@@ -576,7 +576,7 @@ void CGrammarDesignerDoc::OnUpdateEditFindallreferences(CCmdUI *pCmdUI)
 
 
 /*
-static void	AR_STDCALL	__report_io_error_func(int_t level, const wchar_t *msg, void *ctx)
+static void	AR_STDCALL	__report_io_error_func(ar_int_t level, const wchar_t *msg, void *ctx)
 {
 		COutputWnd		*output;
 		AR_ASSERT(ctx != NULL);
@@ -888,7 +888,7 @@ bool CGrammarDesignerDoc::BuildParser(const ARSpace::cfgConfig_t		*cfg)
 
 				if(conflict > 0)
 				{
-						str.Format(TEXT("This grammar has %d conflicts !"), (uint_32_t)conflict);
+						str.Format(TEXT("This grammar has %d conflicts !"), (ar_uint_32_t)conflict);
 						output.Append(str, COutputList::MSG_MESSAGE, 0, tar);
 				}
 				
@@ -1313,7 +1313,7 @@ void CGrammarDesignerDoc::OnParserParse()
 
 		{
 		CString str;
-		str.Format(TEXT("Parse code Tick count %I64d"), (uint_64_t)(end - beg));
+		str.Format(TEXT("Parse code Tick count %I64d"), (ar_uint_64_t)(end - beg));
 		output.Append(str.GetString());
 		}
 

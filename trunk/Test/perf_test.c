@@ -18,7 +18,7 @@ AR_NAMESPACE_BEGIN
 static const wchar_t* __load_txt(const wchar_t *path)
 {
 		FILE *pf;
-		byte_t	*buf;
+		ar_byte_t	*buf;
 		size_t rn;
 		const wchar_t *ret;
 		
@@ -28,7 +28,7 @@ static const wchar_t* __load_txt(const wchar_t *path)
 
 		if(pf == NULL)return NULL;
 
-		buf = AR_NEWARR(byte_t, LOAD_TXT_MAX_BUF);
+		buf = AR_NEWARR(ar_byte_t, LOAD_TXT_MAX_BUF);
 		rn = fread((void*)buf, 1, LOAD_TXT_MAX_BUF, pf);
 		fclose(pf);
 		if(rn < 3){AR_DEL(buf); return NULL;}
