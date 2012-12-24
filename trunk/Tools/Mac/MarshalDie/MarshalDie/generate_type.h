@@ -6,7 +6,7 @@
 #include <set>
 #include <map>
 #include "Arsenal.h"
-
+#pragma comment(lib, "Arsenal.lib")
 
 using namespace ARSpace;
 
@@ -42,16 +42,16 @@ typedef enum
 
 static const wchar_t* __g_inner_type[CUSTOM_T] = 
 {
-		L"bool_t",
-        L"byte_t",
-        L"int_8_t",
-        L"uint_8_t",
-        L"int_16_t",
-        L"uint_16_t",
-        L"int_32_t",
-        L"uint_32_t",
-        L"int_64_t",
-        L"uint_64_t",
+		L"ar_bool_t",
+        L"ar_byte_t",
+        L"ar_int_8_t",
+        L"ar_uint_8_t",
+        L"ar_int_16_t",
+        L"ar_uint_16_t",
+        L"ar_int_32_t",
+        L"ar_uint_32_t",
+        L"ar_int_64_t",
+        L"ar_uint_64_t",
 
 		L"float",
         L"double",
@@ -67,7 +67,7 @@ static const wchar_t* __g_inner_type[CUSTOM_T] =
 
 
 
-static AR_INLINE  bool_t is_inner_type(FieldType_t t)
+static AR_INLINE  ar_bool_t is_inner_type(FieldType_t t)
 {
         switch(t)
         {
@@ -95,7 +95,7 @@ static AR_INLINE  bool_t is_inner_type(FieldType_t t)
 
 
 
-static AR_INLINE  bool_t is_inner_type_name(const wchar_t *name)
+static AR_INLINE  ar_bool_t is_inner_type_name(const wchar_t *name)
 {
         for(size_t i = 0; i < CUSTOM_T; ++i)
         {
@@ -125,7 +125,7 @@ typedef struct Field
 {
 	std::wstring		name;
 	Type_t				*type;
-	bool_t				is_array;
+	ar_bool_t				is_array;
 	size_t				array_size;
 }Field_t;
 
@@ -135,8 +135,8 @@ typedef struct Type
 {
         FieldType_t        type;
 		std::wstring       name;
-		bool_t			   is_anonymous_type;
-        bool_t             is_inner_type;
+		ar_bool_t			   is_anonymous_type;
+        ar_bool_t             is_inner_type;
         FieldList		   fields;
 }Type_t;
 
