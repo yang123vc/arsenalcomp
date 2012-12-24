@@ -178,7 +178,7 @@ void			Parser_UnInitStateSet(lalrStateSet_t *set);
 
 
 lalrState_t*	Parser_FindStateByBasis(lalrStateSet_t *set, lalrConfigList_t *basis);
-ar_int_t			Parser_IndexOfStateSet(const lalrStateSet_t *set, const lalrState_t *state);
+ar_int_t		Parser_IndexOfStateSet(const lalrStateSet_t *set, const lalrState_t *state);
 
 arStatus_t		Parser_InsertToStateSet(lalrStateSet_t *set, lalrState_t *state);
 arStatus_t		Parser_CollectState(lalrStateSet_t *empty_set, lalrState_t *start);
