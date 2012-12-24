@@ -260,7 +260,7 @@ typedef struct __parser_symbmap_record_tag
 {
 		const psrSymb_t							*key;
 		psrSymbList_t							lst;
-		bool_t									can_empty;
+		ar_bool_t									can_empty;
 		struct __parser_symbmap_record_tag		*next;
 }psrMapRec_t;
 
@@ -278,7 +278,7 @@ void					Parser_InitSymbMap(psrSymbMap_t *map);
 void					Parser_UnInitSymbMap(psrSymbMap_t *map);
 
 arStatus_t				Parser_InsertToSymbMap(psrSymbMap_t *map, const psrSymb_t *key, const psrSymb_t *val);
-arStatus_t				Parser_SetSymbEpsilon(psrSymbMap_t *map, const psrSymb_t *key, bool_t is_epsilon);
+arStatus_t				Parser_SetSymbEpsilon(psrSymbMap_t *map, const psrSymb_t *key, ar_bool_t is_epsilon);
 
 psrMapRec_t*			Parser_GetSymbolFromSymbMap(const psrSymbMap_t *map, const psrSymb_t *key);
 
@@ -485,12 +485,12 @@ struct __parser_stack_tag
 struct __parser_context_tag
 {
 		const parser_t				*parser;
-		bool_t						is_accepted;
+		ar_bool_t						is_accepted;
 		psrStack_t					state_stack;
 		psrNodeStack_t				node_stack;
 		void						*ctx;
 
-		bool_t						is_repair;
+		ar_bool_t						is_repair;
 		size_t						repair_valid_shift;
 };
 
@@ -518,9 +518,9 @@ void			Parser_Clear(psrContext_t *parser);
 psrNode_t*		Parser_GetResult(psrContext_t *parser);/*在状态为accepted之后才可以调用*/
 
 
-bool_t			Parser_IsAccepted(const psrContext_t *parser);
+ar_bool_t			Parser_IsAccepted(const psrContext_t *parser);
 
-bool_t			Parser_IsRecovering(const psrContext_t *parser);
+ar_bool_t			Parser_IsRecovering(const psrContext_t *parser);
 void			Parser_RecoverDone(psrContext_t *parser);
 
 

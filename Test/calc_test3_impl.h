@@ -57,7 +57,7 @@ static struct {const wchar_t *name;
 size_t tokval;
 size_t lex_prec;
 const wchar_t *regex;
-bool_t skip;
+ar_bool_t skip;
 psrTermFunc_t leaf;
 }__g_term_pattern[] =  {
 {NULL, 257,1, L"{delim}+|{comment}+|{comment_line}+", true, NULL},
@@ -353,7 +353,7 @@ static psrRetVal_t AR_STDCALL on_calc(psrNode_t **nodes, size_t count, const wch
                 {
 			ret.status = AR_E_INVAL;
 			ret.node = (psrNode_t*)0;
-                    *(bool_t*)ctx = false;
+                    *(ar_bool_t*)ctx = false;
                     return ret;
                 }else
                 {
@@ -419,7 +419,7 @@ static arStatus_t calc(const wchar_t *input, int *result)
 		psrGrammar_t	*grammar;
 		const parser_t		*parser;
 		psrContext_t *ctx;
-		bool_t dump;
+		ar_bool_t dump;
 		ar_int_t v = 0;
 		arStatus_t status;
 		AR_ASSERT(result != NULL);

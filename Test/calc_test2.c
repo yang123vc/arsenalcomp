@@ -40,7 +40,7 @@ enum
 
 
 
-static struct {const wchar_t *name; size_t tokval; size_t lex_prec; const wchar_t *regex; bool_t skip; }__g_term_pattern[] =  {
+static struct {const wchar_t *name; size_t tokval; size_t lex_prec; const wchar_t *regex; ar_bool_t skip; }__g_term_pattern[] =  {
 {NULL, 257,1, L"{delim}+|{comment}+|{comment_line}+", true},
 {L"NUM", OP_NUM, 0, L"{number}", false},
 {L"+", OP_ADD, 0, L"\"+\"", false},
@@ -316,7 +316,7 @@ enum
 };
 */
 
-static bool_t		AR_STDCALL handle_on_error(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
+static ar_bool_t		AR_STDCALL handle_on_error(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
 {
 		AR_ASSERT(tok != NULL);
 		
@@ -393,7 +393,7 @@ static int calc(const wchar_t *input)
 		psrGrammar_t	*grammar;
 		const parser_t		*parser;
 		psrContext_t *ctx;
-		bool_t is_ok;
+		ar_bool_t is_ok;
 		lex = __build_lex(NULL);
 		grammar = __build_grammar(&__g_handler, NULL);
 		parser = Parser_CreateParser(grammar, PARSER_SLR);

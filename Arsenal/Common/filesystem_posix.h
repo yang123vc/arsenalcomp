@@ -641,7 +641,7 @@ END_POINT:
 
 struct __arsenal_path_iterator_tag
 {
-		bool_t				isdone;
+		ar_bool_t				isdone;
         DIR                 *hdl;
 		arString_t			*current;
 		wchar_t				*path;
@@ -872,7 +872,7 @@ arStatus_t		AR_PathIteratorNext(arPathIter_t *iter)
 }
 
 
-bool_t		AR_PathIteratorIsDone(const arPathIter_t *iter)
+ar_bool_t		AR_PathIteratorIsDone(const arPathIter_t *iter)
 {
 		AR_ASSERT(iter != NULL);
         AR_ASSERT(iter->hdl != NULL && iter->path != NULL && iter->current != NULL);

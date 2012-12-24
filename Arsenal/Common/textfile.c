@@ -39,7 +39,7 @@ AR_NAMESPACE_BEGIN
 
 
 
-static bool_t	__dectect_encoding(arBuffer_t *input, arTxtBom_t *bom)
+static ar_bool_t	__dectect_encoding(arBuffer_t *input, arTxtBom_t *bom)
 {
 		ar_byte_t tmp[4] = {0xcc, 0xcc,0xcc,0xcc};
 		size_t input_len;

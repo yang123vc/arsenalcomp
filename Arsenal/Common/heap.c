@@ -443,7 +443,7 @@ static AR_INLINE void	MediumFree(arHeap_t *heap, void *ptr)
 {
 		mediumEntry_t		*e;
 		page_t					*p;
-		bool_t					is_in_freelist;
+		ar_bool_t					is_in_freelist;
 		mediumEntry_t		*prev, *next;
 		AR_ASSERT(heap != NULL && ptr != NULL);
 

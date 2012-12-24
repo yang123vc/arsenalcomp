@@ -1114,7 +1114,7 @@ RECHECK_POINT:
 								}else if(x > 0 && x == max && __calc_leftfactor(rules[bk[0]], rules[i]) == x)
 								{
 										size_t j;
-										bool_t need_i = true, need_k = true;
+										ar_bool_t need_i = true, need_k = true;
 										for(j = 0; j < n; ++j)
 										{
 												if(bk[j] == i)need_i = false;
@@ -1286,7 +1286,7 @@ const psrStatusView_t*		Parser_CreateParserStatusView(const parser_t *parser)
 		const psrSymbList_t		*symb_list;
 		psrStatusView_t	*ret;
 		size_t i;
-		bool_t is_ok;
+		ar_bool_t is_ok;
 		AR_ASSERT(parser != NULL && parser->grammar != NULL);
 
 		

@@ -652,9 +652,9 @@ static rgxResult_t	__handle_charset(const wchar_t *input)
 
 
 
-static rgxNode_t*       __handle_loopcount(rgxNode_t *expr, size_t min, size_t max, bool_t non_greedy)
+static rgxNode_t*       __handle_loopcount(rgxNode_t *expr, size_t min, size_t max, ar_bool_t non_greedy)
 {
-		bool_t is_infinite;
+		ar_bool_t is_infinite;
 		
 		AR_ASSERT(expr != NULL && min <= max && max > 0);
 		
@@ -989,7 +989,7 @@ static rgxResult_t	__handle_postfix(rgxNode_t *expr, const wchar_t *input)
 						break;
 				case '{':		/*匹配{m-n}个,其中，分为{m,n}, {m,}, {,n}, {m},也可能是名称，例如{name},*/
 				{
-						bool_t non_greedy = false;
+						ar_bool_t non_greedy = false;
 						const wchar_t *beg = p + 1;
 						ar_uint_t min,max;
 						

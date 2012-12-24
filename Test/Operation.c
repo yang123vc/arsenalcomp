@@ -24,7 +24,7 @@ static arStatus_t Operation_Run(operation_t *operation);
 operationPool_t*     Operation_CreatePool(size_t init_thread_cnt)
 {
         size_t i;
-        bool_t que_init, mutex_is_init;
+        ar_bool_t que_init, mutex_is_init;
         operationPool_t *pool;
         
         
@@ -295,8 +295,8 @@ struct __operation_tag
 		arSpinLock_t			mutex;
 		arEvent_t				*done_event;
 		
-		bool_t					has_started;
-		bool_t					has_result;
+		ar_bool_t					has_started;
+		ar_bool_t					has_result;
 		cldOperationState_t		state;
 		
 		
@@ -344,7 +344,7 @@ operation_t*	Operation_Create(operationFunc_t func, operationDestroyResultFunc_t
 void			Operation_Destroy(operation_t *operation)
 {
 		void *result;
-		bool_t need_cancel;
+		ar_bool_t need_cancel;
 		AR_ASSERT(operation != NULL);
 		result = NULL;
 		need_cancel = false;

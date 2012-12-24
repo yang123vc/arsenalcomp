@@ -414,7 +414,7 @@ void matrix_test()
 void matrix_test2()
 {
 		arStatus_t status;
-		bool_t ret;
+		ar_bool_t ret;
 		arMatrix_t *mat = NULL, *mat2 = NULL;
 		arString_t *str = NULL;
 		arVector_t *vtmp = AR_CreateVector(5);
@@ -538,10 +538,10 @@ void matrix_test2()
 
 /****************************************≈–∂œæÿ’Û¿‡–Õ******************************************
 
-bool_t			AR_IsPositiveDefiniteMatrix(const arMatrix_t *mat, double epsilon);
-bool_t			AR_IsSymmetricPositiveDefinite(const arMatrix_t *mat, double epsilon);
-bool_t			AR_IsPositiveSemiDefinite(const arMatrix_t *mat, double epsilon);
-bool_t			AR_IsSymmetricPositiveSemiDefinite(const arMatrix_t *mat, double epsilon);
+ar_bool_t			AR_IsPositiveDefiniteMatrix(const arMatrix_t *mat, double epsilon);
+ar_bool_t			AR_IsSymmetricPositiveDefinite(const arMatrix_t *mat, double epsilon);
+ar_bool_t			AR_IsPositiveSemiDefinite(const arMatrix_t *mat, double epsilon);
+ar_bool_t			AR_IsSymmetricPositiveSemiDefinite(const arMatrix_t *mat, double epsilon);
 
 */
 
@@ -579,7 +579,7 @@ void matrix_test3()
 		arMatrix_t *mat = NULL, *mat2 = NULL, *mat3 = NULL;
 		arString_t *str = NULL;
 		arVector_t *vtmp = NULL, *vtmp1 = NULL;
-		bool_t ret = true;
+		ar_bool_t ret = true;
 
 		str = AR_CreateString();
 		vtmp = AR_CreateVector(5);
@@ -700,12 +700,12 @@ END_POINT:
 
 /*
 
-bool_t			AR_InverseMatrixSelf(arMatrix_t *mat);
+ar_bool_t			AR_InverseMatrixSelf(arMatrix_t *mat);
 
-bool_t			AR_InverseLowerTriangularMatrixSelf(arMatrix_t *mat);
-bool_t			AR_InverseUpperTriangularMatrixSelf(arMatrix_t *mat);
+ar_bool_t			AR_InverseLowerTriangularMatrixSelf(arMatrix_t *mat);
+ar_bool_t			AR_InverseUpperTriangularMatrixSelf(arMatrix_t *mat);
 
-bool_t			AR_InverseMatrixByGaussJordanSelf(arMatrix_t *mat);
+ar_bool_t			AR_InverseMatrixByGaussJordanSelf(arMatrix_t *mat);
 void			AR_InverseSolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t *b);
 
 */

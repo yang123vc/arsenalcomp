@@ -18,7 +18,7 @@
 AR_NAMESPACE_BEGIN
 
 
-bool_t Lex_IsLineTerminator(wchar_t c)
+ar_bool_t Lex_IsLineTerminator(wchar_t c)
 {
 		switch(c)
 		{

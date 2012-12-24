@@ -101,7 +101,7 @@ typedef struct node_tag
 		wchar_t	name[256];
 		ar_uint_64_t	num;
 		struct {
-			bool_t		is_tail;
+			ar_bool_t	is_tail;
 			wchar_t	*code;
 		}code_block;
 	};

@@ -29,7 +29,7 @@ const psrSymb_t	*PARSER_StartSymb = NULL;
 
 
 
-bool_t			Parser_IsBuildInSymbol(const psrSymb_t		*symb)
+ar_bool_t			Parser_IsBuildInSymbol(const psrSymb_t		*symb)
 {
 		AR_ASSERT(symb != NULL);
 

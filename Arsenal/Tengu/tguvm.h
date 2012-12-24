@@ -42,7 +42,7 @@ typedef ar_int_64_t								tguVMInteger_t;
 
 typedef	double									tguVMFloat_t;
 
-typedef	bool_t									tguVMBoolean_t;
+typedef	ar_bool_t									tguVMBoolean_t;
 
 
 struct __tengu_vm_string_tag;
@@ -309,7 +309,7 @@ struct __tengu_vm_function_tag
 		tguMemMark_t			mark;
 		tguVMFunc_t				*next;
 
-		bool_t					is_veriadic;
+		ar_bool_t					is_veriadic;
 		size_t					param_cnt;
 		
 		tguVMIns_t				*code;

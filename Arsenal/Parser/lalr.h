@@ -50,7 +50,7 @@ typedef struct __lalr_config_list_tag
 
 
 lalrConfigList_t*		Parser_CreateConfigList();
-void					Parser_DestroyConfigList(lalrConfigList_t *lst, bool_t destroy_config);
+void					Parser_DestroyConfigList(lalrConfigList_t *lst, ar_bool_t destroy_config);
 
 arStatus_t				Parser_InsertToConfigList(lalrConfigList_t *lst, lalrConfig_t *cfg);
 
@@ -92,7 +92,7 @@ arStatus_t	Parser_UnionBitSet(lalrBitSet_t *dest, const lalrBitSet_t *src);
 
 struct __lalr_config_tag
 {
-		bool_t					is_completed;
+		ar_bool_t					is_completed;
 		ar_uint_8_t				delim;
 		ar_uint_16_t				rule_num;
 		

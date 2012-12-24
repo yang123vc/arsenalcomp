@@ -18,7 +18,7 @@
 AR_NAMESPACE_BEGIN
 
 
-bool_t	AR_is_equal_flt(float x, float y, float epsilon)
+ar_bool_t	AR_is_equal_flt(float x, float y, float epsilon)
 {
 		if(x == y || AR_abs_flt(x - y) < epsilon)
 		{
@@ -29,7 +29,7 @@ bool_t	AR_is_equal_flt(float x, float y, float epsilon)
 		}
 }
 
-bool_t	AR_is_equal_dbl(double x, double y, double epsilon)
+ar_bool_t	AR_is_equal_dbl(double x, double y, double epsilon)
 {
 		if(x == y || AR_abs_dbl(x - y) < epsilon)
 		{

@@ -112,7 +112,7 @@ typedef struct __cfg_config_tag
 		
 		cfgStart_t		start;
 
-		bool_t			has_error;
+		ar_bool_t			has_error;
 
 		void			*remain_data;
 }cfgConfig_t;

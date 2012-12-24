@@ -212,7 +212,7 @@ wchar_t*		AR_str_to_escstr(const wchar_t *src)
 		wchar_t *d;
 		const wchar_t *s;
 		size_t	src_len;
-		bool_t	print_escape_char;
+		ar_bool_t	print_escape_char;
 
 		if(src == NULL)
 		{
@@ -378,7 +378,7 @@ wchar_t*		AR_str_to_escstr_n(const wchar_t *src, size_t n)
 		wchar_t *d;
 		const wchar_t *s;
 		size_t i;
-		bool_t	print_escape_char;
+		ar_bool_t	print_escape_char;
 		if(src == NULL)return NULL;
 		print_escape_char = false;
 		res = AR_NEWARR0(wchar_t, (n + 5) * 5 + 1);

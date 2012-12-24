@@ -173,7 +173,7 @@ static void __heap_remove_at(cacheValueNode_t **arr, size_t count, size_t idx)
 
 }
 
-static bool_t __heap_verify(cacheValueNode_t **arr, size_t count)
+static ar_bool_t __heap_verify(cacheValueNode_t **arr, size_t count)
 {
 		size_t i,l,r;
 		AR_ASSERT(arr != NULL);

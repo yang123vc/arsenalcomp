@@ -55,9 +55,9 @@ void	avl_clear(avlTree_t		*tree);
 avlNode_t*		avl_get_successor(avlNode_t		*node);
 avlNode_t*		avl_get_previous(avlNode_t		*node);
 avlNode_t*		avl_insert_equal(avlTree_t	*tree, ar_int_t data);
-bool_t			avl_remove(avlTree_t	*tree, ar_int_t key);
+ar_bool_t			avl_remove(avlTree_t	*tree, ar_int_t key);
 void			avl_print_tree(const avlTree_t *tree);
-bool_t			avl_verify_tree(const avlTree_t	*tree);
+ar_bool_t			avl_verify_tree(const avlTree_t	*tree);
 
 
 

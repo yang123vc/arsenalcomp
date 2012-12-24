@@ -303,7 +303,7 @@ arStatus_t	Lex_Insert(lex_t *lex, const wchar_t *input)
 		if(AR_iswdigit(*p) || *p == L'%')/*action*/
 		{
 				lexAction_t		act;
-				bool_t			is_skip;
+				ar_bool_t			is_skip;
 
 				is_skip = false;
 				if(*p == L'%')
@@ -380,7 +380,7 @@ arStatus_t	Lex_GenerateTransTable(lex_t *lex)
 		/*
 		Lex_SortProgSet(lex->prog_set);
 		*/
-		return (bool_t)(lex->rule_set.count > 0) ? AR_S_YES : AR_E_EMPTY;
+		return (ar_bool_t)(lex->rule_set.count > 0) ? AR_S_YES : AR_E_EMPTY;
 }
 
 

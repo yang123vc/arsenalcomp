@@ -218,9 +218,9 @@ static AR_INLINE void __rotate_node(avlNode_t *node, avlNode_t **proot, avlDir_t
 /*
 返回true 为树高旋转后未更改，返回false,为树高降低
 */
-static AR_INLINE bool_t __rotate_once(avlNode_t *node, avlNode_t **proot, avlDir_t dir)
+static AR_INLINE ar_bool_t __rotate_once(avlNode_t *node, avlNode_t **proot, avlDir_t dir)
 {
-		bool_t	height_changed = true;
+		ar_bool_t	height_changed = true;
 		AR_ASSERT(node != NULL && proot != NULL && *proot != NULL);
 		
 		if(node->child[OPPOSITE(dir)]->bf == 0)height_changed = false;
@@ -341,7 +341,7 @@ static AR_INLINE bool_t __rotate_once(avlNode_t *node, avlNode_t **proot, avlDir
 /*
 返回true 为树高旋转后未更改，返回false,为树高降低
 */
-static AR_INLINE bool_t __rotate_twice(avlNode_t *node, avlNode_t **proot, avlDir_t dir)
+static AR_INLINE ar_bool_t __rotate_twice(avlNode_t *node, avlNode_t **proot, avlDir_t dir)
 {
 		AR_ASSERT(node != NULL && proot != NULL && *proot != NULL);
 		AR_ASSERT(node->child[OPPOSITE(dir)] != NULL);
@@ -354,7 +354,7 @@ static AR_INLINE bool_t __rotate_twice(avlNode_t *node, avlNode_t **proot, avlDi
 /*
 返回true 为树高旋转后未更改，返回false,为树高降低
 */
-static AR_INLINE bool_t __rebalance_node(avlNode_t *node, avlNode_t **proot)
+static AR_INLINE ar_bool_t __rebalance_node(avlNode_t *node, avlNode_t **proot)
 {
 		AR_ASSERT(node != NULL && proot != NULL && *proot != NULL);
 		AR_ASSERT(node->bf <-1 || node->bf > 1);
@@ -765,10 +765,10 @@ avlNode_t*		avl_find(avlTree_t		*tree, ar_int_t key)
 }
 
 
-bool_t	avl_remove(avlTree_t	*tree, ar_int_t key)
+ar_bool_t	avl_remove(avlTree_t	*tree, ar_int_t key)
 {
 		avlNode_t		*node;
-		bool_t			found = false;
+		ar_bool_t			found = false;
 		AR_ASSERT(tree != NULL);
 		node = avl_find(tree, key);
 
@@ -830,7 +830,7 @@ static ar_int_t __calc_height(const avlNode_t *node)
 
 
 
-bool_t avl_verify_tree(const avlTree_t	*tree)
+ar_bool_t avl_verify_tree(const avlTree_t	*tree)
 {
 		avlNode_t		*curr;
 		AR_ASSERT(tree != NULL);

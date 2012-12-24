@@ -17,7 +17,7 @@ static struct {const wchar_t *name;
 size_t tokval;
 size_t lex_prec;
 const wchar_t *regex;
-bool_t skip;
+ar_bool_t skip;
 psrTermFunc_t leaf;
 }__g_sql_term_pattern[] =  {
 {L"(", 257, 0, L"\"none\"", false, NULL},

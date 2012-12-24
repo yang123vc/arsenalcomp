@@ -591,7 +591,7 @@ wchar_t*				AR_str_to_wcs(arCodePage_t cp, const char *input, size_t in_n)
         size_t outleft;
         iconv_t cd;
 		const char *cp_iconv = __get_locale_str_for_iconv(cp);
-		bool_t	is_ok = true;
+		ar_bool_t	is_ok = true;
 
 		AR_ASSERT(input != NULL);
 
@@ -667,7 +667,7 @@ char*					AR_wcs_to_str(arCodePage_t cp, const wchar_t *input, size_t in_n)
         size_t out_len = 0;
 
         iconv_t cd  = NULL;
-        bool_t is_ok;
+        ar_bool_t is_ok;
 		const char *cp_iconv = __get_locale_str_for_iconv(cp);
         AR_ASSERT(input != NULL);
 

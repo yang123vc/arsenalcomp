@@ -374,7 +374,7 @@ arStatus_t		AR_GetNullPath(arString_t *str)
 
 struct __arsenal_path_iterator_tag
 {
-		bool_t				isdone;
+		ar_bool_t				isdone;
 		HANDLE				hdl;
 		WIN32_FIND_DATAW	find_data;
 		arString_t			*current;
@@ -608,7 +608,7 @@ arStatus_t		AR_PathIteratorNext(arPathIter_t *iter)
 		return status;
 }
 
-bool_t		AR_PathIteratorIsDone(const arPathIter_t *iter)
+ar_bool_t		AR_PathIteratorIsDone(const arPathIter_t *iter)
 {
 		AR_ASSERT(iter != NULL);
 		AR_ASSERT(iter->current != NULL && iter->hdl != INVALID_HANDLE_VALUE && iter->path != NULL);

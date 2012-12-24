@@ -441,11 +441,11 @@ AR_NAMESPACE_BEGIN
 /*
 typedef struct __arsenal_match_result_tag
 {
-		bool_t			has_error;
+		ar_bool_t			has_error;
 		const wchar_t	*pattern_error_position;
 		const wchar_t	*next;
 
-		bool_t			is_matched;
+		ar_bool_t			is_matched;
 		const wchar_t	*matched_start;
 		size_t			matched_len;
 
@@ -495,10 +495,10 @@ typedef struct __match_state_tag
 
 typedef struct __match_result_tag
 {
-		bool_t			has_error;
+		ar_bool_t			has_error;
 		const wchar_t	*pattern_error_position;
 		const wchar_t	*pattern_next;
-		bool_t			is_matched;
+		ar_bool_t			is_matched;
 		const wchar_t	*source_next;
 }matchResult_t;
 
@@ -783,7 +783,7 @@ static matchResult_t	__match_cset_range(matchState_t *ms, const wchar_t *src, co
 {
 		matchResult_t		g_res;
 		const wchar_t *s, *p;
-		bool_t	sig = true;
+		ar_bool_t	sig = true;
 		AR_ASSERT(src != NULL && pattern != NULL);
 		
 		_CLR_RESULT(&g_res);
@@ -800,7 +800,7 @@ static matchResult_t	__match_cset_range(matchState_t *ms, const wchar_t *src, co
 		{
 				wchar_t b,e;
 				const wchar_t *pn;
-				bool_t is_ok;
+				ar_bool_t is_ok;
 				pn = __get_charset(p, &b);
 
 				if(pn == NULL)
@@ -893,7 +893,7 @@ static matchResult_t	__match_charset(matchState_t *ms, const wchar_t *src, const
 
 		}else if(*p == L'.')
 		{
-				bool_t is_ok;
+				ar_bool_t is_ok;
 				if(ms->flags & AR_MATCH_SINGLE_LINE)/*single line 可以匹配包含\r\n在内的所有字符*/
 				{
 						is_ok = true;
@@ -925,7 +925,7 @@ static matchResult_t	__match_charset(matchState_t *ms, const wchar_t *src, const
 				if(*(p + 1) == L'B' || *(p + 1) == L'E')
 				{
 						++p;
-						bool_t is_ok = false;
+						ar_bool_t is_ok = false;
 						if(*p == L'B')
 						{
 								
@@ -960,7 +960,7 @@ static matchResult_t	__match_charset(matchState_t *ms, const wchar_t *src, const
 				return g_res;
 		}else
 		{
-				bool_t is_ok = false;
+				ar_bool_t is_ok = false;
 
 				if(ms->flags & AR_MATCH_IGNORE_CASE)
 				{

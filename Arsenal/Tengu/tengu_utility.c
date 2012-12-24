@@ -97,9 +97,9 @@ const wchar_t*  TGU_AllocStringFloat(double num)
 }
 
 
-bool_t			TGU_HasString(const wchar_t *name)
+ar_bool_t			TGU_HasString(const wchar_t *name)
 {
-		bool_t	res;
+		ar_bool_t	res;
 		AR_ASSERT(name != NULL);
 
 		AR_LockSpinLock(&__g_tbl_lock);

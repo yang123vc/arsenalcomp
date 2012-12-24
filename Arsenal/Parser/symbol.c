@@ -473,7 +473,7 @@ psrMapRec_t*		Parser_GetSymbolFromSymbMap(const psrSymbMap_t *map, const psrSymb
 }
 
 
-arStatus_t				Parser_SetSymbEpsilon(psrSymbMap_t *map, const psrSymb_t *key, bool_t is_epsilon)
+arStatus_t				Parser_SetSymbEpsilon(psrSymbMap_t *map, const psrSymb_t *key, ar_bool_t is_epsilon)
 {
 		psrMapRec_t *rec;
 		AR_ASSERT(map != NULL && key != NULL);

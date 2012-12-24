@@ -58,8 +58,8 @@ struct __regex_node_tag
 				}range;
 				
 				size_t					fix_count;
-				bool_t					negative_lookahead;
-				bool_t					non_greedy;
+				ar_bool_t					negative_lookahead;
+				ar_bool_t					non_greedy;
 				size_t					final_val;
 		};
 };
@@ -102,8 +102,8 @@ struct __arsenal_regex_tag
 		size_t			input_len;
 		
 
-		bool_t			is_ignorecase;
-		bool_t			is_singleline;
+		ar_bool_t			is_ignorecase;
+		ar_bool_t			is_singleline;
 
 		wchar_t			last_error[AR_REGEX_ERROR_BUFFER];
 };

@@ -226,7 +226,7 @@ static void __uninit_wait_queue(arAsyncQueue_t *queue)
 
 
 
-static bool_t __remove_wait_node(arAsyncQueue_t *queue, asyncWaitInfo_t *info)
+static ar_bool_t __remove_wait_node(arAsyncQueue_t *queue, asyncWaitInfo_t *info)
 {
 		asyncWaitNode_t *curr, *prev;
 		AR_ASSERT(queue != NULL && info != NULL);

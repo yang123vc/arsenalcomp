@@ -445,12 +445,12 @@ _CHAR_UNSIGNED			 «vsÃÿ–‘£¨/J
 
 
 
-/*sizeof(bool_t) ±ÿ–Îµ»”⁄1*/
+/*sizeof(ar_bool_t) ±ÿ–Îµ»”⁄1*/
 
 #if defined(AR_HAS_BOOL_TRUE_FALSE)
-		typedef bool					bool_t;
+		typedef bool					ar_bool_t;
 #else
-		typedef	AR_INT8_T				bool_t;
+		typedef	AR_INT8_T				ar_bool_t;
 		#define	true					((AR_INT8_T)1)
 		#define false					((AR_INT8_T)0)
 #endif

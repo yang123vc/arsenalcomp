@@ -345,7 +345,7 @@ typedef struct __ini_keyval_tag
 		wchar_t			*key;
 		wchar_t			*val;
 		wchar_t			*comment;
-		bool_t			is_comment;
+		ar_bool_t			is_comment;
 }iniKeyVal_t;
 
 static void		__ini_destroy_kvpair(iniKeyVal_t *kv);
@@ -799,11 +799,11 @@ static iniKeyVal_t*		__find_keyval(iniObject_t *obj, const wchar_t *sect, const 
 
 
 
-static bool_t	__is_valid_section_name(const wchar_t *name)
+static ar_bool_t	__is_valid_section_name(const wchar_t *name)
 {
 		
 		const wchar_t *p;
-		bool_t empty;
+		ar_bool_t empty;
 		AR_ASSERT(name != NULL);
 		
 		empty = true;
@@ -832,10 +832,10 @@ static bool_t	__is_valid_section_name(const wchar_t *name)
 		return !empty;
 }
 
-static bool_t	__is_valid_key_name(const wchar_t *name)
+static ar_bool_t	__is_valid_key_name(const wchar_t *name)
 {
 		const wchar_t *p;
-		bool_t empty;
+		ar_bool_t empty;
 		AR_ASSERT(name != NULL);
 		
 		empty = true;

@@ -491,8 +491,8 @@ const	psrGrammar_t*	Parser_GetGrammar(const parser_t *parser)
 typedef struct __parser_context_tag
 {
 		const parser_t							*parser;
-		bool_t									is_repair;
-		bool_t									is_accepted;
+		ar_bool_t									is_repair;
+		ar_bool_t									is_accepted;
 		struct __parser_stack_tag				*state_stack;
 		struct __parser_node_stack				*node_stack;
 }psrContext_t;
@@ -590,14 +590,14 @@ psrNode_t*	Parser_GetResult(psrContext_t *parser_context)
 }
 
 
-bool_t	   Parser_IsAccepted(const psrContext_t *parser_context)
+ar_bool_t	   Parser_IsAccepted(const psrContext_t *parser_context)
 {
 		AR_ASSERT(parser_context != NULL);
 		return parser_context->is_accepted;
 }
 
 
-bool_t	Parser_IsRecovering(const psrContext_t *parser_context)
+ar_bool_t	Parser_IsRecovering(const psrContext_t *parser_context)
 {
 		AR_ASSERT(parser_context != NULL);
 		return parser_context->is_repair;
@@ -827,7 +827,7 @@ typedef enum
 static errRecovery_t __error_recovery(psrContext_t *parser_context, const psrToken_t *tok, arStatus_t *status_ptr)
 {		
 		const psrHandler_t	*handler;
-		bool_t	on_error_is_handled;
+		ar_bool_t	on_error_is_handled;
 		AR_ASSERT(parser_context != NULL && parser_context->parser != NULL && status_ptr != NULL);
 		
 		handler = Parser_GetGrammarHandler(Parser_GetGrammar(parser_context->parser));
@@ -840,7 +840,7 @@ static errRecovery_t __error_recovery(psrContext_t *parser_context, const psrTok
 RECHECK_POINT:
 		if(!parser_context->is_repair)
 		{
-				bool_t found = false;
+				ar_bool_t found = false;
 				arStatus_t status_tmp;
 
 				status_tmp = __on_error(parser_context, tok);
@@ -958,7 +958,7 @@ RECHECK_POINT:
 arStatus_t		Parser_AddToken(psrContext_t *parser_context, const psrToken_t *tok)
 {
 
-		bool_t					is_done;
+		ar_bool_t					is_done;
 		const psrTermInfo_t		*term;
 
 		AR_ASSERT(parser_context != NULL && !parser_context->is_accepted && tok != NULL);

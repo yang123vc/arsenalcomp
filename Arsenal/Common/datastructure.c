@@ -491,7 +491,7 @@ arStatus_t		AR_InsertToHash(arHash_t *hash, void *key, void *val)
         arStatus_t status;
         ar_uint_64_t hash_code;
         arHashNode_t *new_node;
-		bool_t key_init, val_init;
+		ar_bool_t key_init, val_init;
         AR_ASSERT(hash != NULL);
         
         status = AR_S_YES;
@@ -597,7 +597,7 @@ void	AR_UnInitHashIterator(arHashIter_t *iter)
 		AR_memset(iter, 0, sizeof(*iter));
 }
 
-bool_t	AR_HashIteratorIsDone(const arHashIter_t *iter)
+ar_bool_t	AR_HashIteratorIsDone(const arHashIter_t *iter)
 {
 		AR_ASSERT(iter != NULL);
 		return iter->curr == NULL ? true : false;

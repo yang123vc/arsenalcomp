@@ -105,7 +105,7 @@ public:
 				m_code = AR_S_YES;
 		}
 
-		explicit arStatus_t(bool_t t);
+		explicit arStatus_t(ar_bool_t t);
 		explicit arStatus_t(ar_int_32_t t);
 		explicit arStatus_t(ar_int_64_t t);
 		explicit arStatus_t(ar_uint_32_t t);
@@ -136,23 +136,23 @@ public:
 				return *this;
 		}
 
-		bool_t operator==(const arStatus_t &other)
+		ar_bool_t operator==(const arStatus_t &other)
 		{
 				return m_code == other.m_code;
 		}
 
-		bool_t operator!=(const arStatus_t &other)
+		ar_bool_t operator!=(const arStatus_t &other)
 		{
 				return m_code != other.m_code;
 		}
 
 
-		bool_t operator==(__tag_ret_error_t code)
+		ar_bool_t operator==(__tag_ret_error_t code)
 		{
 				return m_code == code;
 		}
 
-		bool_t operator!=(__tag_ret_error_t code)
+		ar_bool_t operator!=(__tag_ret_error_t code)
 		{
 				return m_code != code;
 		}

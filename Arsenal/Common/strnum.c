@@ -165,7 +165,7 @@ ar_int_t			AR_u64tow_buf(wchar_t *out, size_t nbuf, ar_uint_64_t num, size_t rad
 
 ar_int_t			AR_i64tow_buf(wchar_t *out, size_t nbuf, ar_int_64_t num, size_t radix)
 {
-		bool_t is_neg;
+		ar_bool_t is_neg;
 		wchar_t buf[__BUFFER_LEN];
 		wchar_t *p;
 		ar_int_t len;
@@ -233,7 +233,7 @@ ar_int_t			AR_u64tos_buf(char *out, size_t nbuf, ar_uint_64_t num, size_t radix)
 
 ar_int_t			AR_i64tos_buf(char *out, size_t nbuf, ar_int_64_t num, size_t radix)
 {
-		bool_t is_neg;
+		ar_bool_t is_neg;
 		char buf[__BUFFER_LEN];
 		char *p;
 		ar_int_t len;
@@ -313,7 +313,7 @@ const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *out)
 		const wchar_t *p;
 		double num = 0.0f,frac = 0.0f, exp = 1.0f;
 		double result = 0.0f;
-		bool_t is_neg = false, is_ok = false;
+		ar_bool_t is_neg = false, is_ok = false;
 		
 		wchar_t decimal_point;
 		AR_ASSERT(in != NULL && end != NULL && in <= end && out != NULL);
@@ -363,7 +363,7 @@ const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *out)
 
 		if(p < end && (*p == L'e' || *p == L'E'))
 		{
-				bool_t factor;
+				ar_bool_t factor;
 				size_t i, e;
 				++p;
 
@@ -1038,7 +1038,7 @@ const char*	AR_stod_s(const char *in, const char *end, double *out)
 		const char *p;
 		double num = 0.0f,frac = 0.0f, exp = 1.0f;
 		double result = 0.0f;
-		bool_t is_neg = false, is_ok = false;
+		ar_bool_t is_neg = false, is_ok = false;
 		
 		char decimal_point;
 		AR_ASSERT(in != NULL && end != NULL && in <= end && out != NULL);
@@ -1088,7 +1088,7 @@ const char*	AR_stod_s(const char *in, const char *end, double *out)
 
 		if(p < end && (*p == 'e' || *p == 'E'))
 		{
-				bool_t factor;
+				ar_bool_t factor;
 				size_t i, e;
 				++p;
 
@@ -1133,11 +1133,11 @@ const char*	AR_stod_s(const char *in, const char *end, double *out)
 
 
 
-bool_t	AR_wcs_is_float(const wchar_t *in, const wchar_t *end)
+ar_bool_t	AR_wcs_is_float(const wchar_t *in, const wchar_t *end)
 {
 		const wchar_t *p;
 		
-		bool_t is_float;
+		ar_bool_t is_float;
 
 		wchar_t decimal_point;
 		
@@ -1195,7 +1195,7 @@ bool_t	AR_wcs_is_float(const wchar_t *in, const wchar_t *end)
 		return is_float;
 }
 
-bool_t	AR_wcs_is_int(const wchar_t *in, const wchar_t *end)
+ar_bool_t	AR_wcs_is_int(const wchar_t *in, const wchar_t *end)
 {
 		ar_int_64_t un;
 
@@ -1223,11 +1223,11 @@ bool_t	AR_wcs_is_int(const wchar_t *in, const wchar_t *end)
 /**********************************************************str*************************************/
 
 
-bool_t	AR_str_is_float(const char *in, const char *end)
+ar_bool_t	AR_str_is_float(const char *in, const char *end)
 {
 		const char *p;
 		
-		bool_t is_float;
+		ar_bool_t is_float;
 
 		char decimal_point;
 		
@@ -1286,7 +1286,7 @@ bool_t	AR_str_is_float(const char *in, const char *end)
 }
 
 
-bool_t	AR_str_is_int(const char *in, const char *end)
+ar_bool_t	AR_str_is_int(const char *in, const char *end)
 {
 		ar_int_64_t un;
 
