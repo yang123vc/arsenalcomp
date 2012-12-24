@@ -3,6 +3,8 @@
 #include "generate_type.h"
 #include "predef_code.h"
 
+/****/
+
 using namespace std;
 
 static std::wstring generate_for_head_code()
@@ -203,7 +205,7 @@ static std::wstring generate_func_call_for_get_field(const Field_t *field)
 		return ret;
 }
 
-#define GET_FUNC_FMT			L"static bool_t\t__get_%ls(snObject_t *obj, %ls *stu)\r\n{\r\n\t\tbool_t\tis_ok;\r\n\t\tsnObject_t\t*tmp;\r\n\t\tAR_ASSERT(stu != NULL && obj != NULL);\r\n\t\tAR_ASSERT(SN_GetObjectType(obj) == SN_DICT_T);\r\n\t\tis_ok = true;\r\n\t\ttmp = NULL;\r\n\r\n\t\t/***************************************************************************/\r\n%ls\r\n\t\t/***************************************************************************/\r\n\r\n\t\treturn true;\r\nINVALID_POINT:\r\n\t\tis_ok = false;\r\n\t\treturn is_ok;\r\n}"
+#define GET_FUNC_FMT			L"static ar_bool_t\t__get_%ls(snObject_t *obj, %ls *stu)\r\n{\r\n\t\tar_bool_t\tis_ok;\r\n\t\tsnObject_t\t*tmp;\r\n\t\tAR_ASSERT(stu != NULL && obj != NULL);\r\n\t\tAR_ASSERT(SN_GetObjectType(obj) == SN_DICT_T);\r\n\t\tis_ok = true;\r\n\t\ttmp = NULL;\r\n\r\n\t\t/***************************************************************************/\r\n%ls\r\n\t\t/***************************************************************************/\r\n\r\n\t\treturn true;\r\nINVALID_POINT:\r\n\t\tis_ok = false;\r\n\t\treturn is_ok;\r\n}"
 
 
 static std::wstring generate_for_get_custom_type(const Type_t *type)
@@ -232,7 +234,7 @@ static std::wstring generate_for_get_custom_type(const Type_t *type)
 
 
 
-#define GET_ARRAY_FUNC_FMT	L"\r\nstatic bool_t\t__get_%ls_array(snObject_t *obj, %ls *stu, size_t arr_size)\r\n{\r\n\t\tbool_t\tis_ok;\r\n\t\tsize_t list_cnt;\r\n\t\tsize_t i;\r\n\t\tAR_ASSERT(stu != NULL && obj != NULL && arr_size > 0);\r\n\r\n\t\tis_ok = true;\r\n\r\n\t\tif(SN_GetObjectType(obj) != SN_LIST_T)\r\n\t\t{\r\n\t\t\t\tis_ok = false;\r\n\t\t\t\tgoto INVALID_POINT;\r\n\t\t}\r\n\r\n\t\tlist_cnt = SN_GetListObjectCount(obj);\r\n\r\n\t\tif(list_cnt != arr_size)\r\n\t\t{\r\n\t\t\t\tgoto INVALID_POINT;\r\n\t\t}\r\n\r\n\r\n\t\tfor(i = 0; i < list_cnt; ++i)\r\n\t\t{\r\n\t\t\t\tsnObject_t *item = SN_GetFromListObject(obj, i);\r\n\t\t\t\tif(item == NULL || SN_GetObjectType(item) != SN_DICT_T)\r\n\t\t\t\t{\r\n\t\t\t\t\t\tgoto INVALID_POINT;\r\n\t\t\t\t}\r\n\t\t\t\t\r\n\t\t\t\t/********************************************************************/\r\n\t\t\t\tif(!__get_%ls(item, &stu[i]))\r\n\t\t\t\t{\r\n\t\t\t\t\t\tis_ok = false;\r\n\t\t\t\t\t\tgoto INVALID_POINT;\r\n\t\t\t\t}\r\n\t\t\t\t/********************************************************************/\r\n\t\t}\r\n\t\treturn true;\r\n\r\nINVALID_POINT:\r\n\t\tis_ok = false;\r\n\t\treturn is_ok;\r\n}\r\n\n\n"
+#define GET_ARRAY_FUNC_FMT	L"\r\nstatic ar_bool_t\t__get_%ls_array(snObject_t *obj, %ls *stu, size_t arr_size)\r\n{\r\n\t\tar_bool_t\tis_ok;\r\n\t\tsize_t list_cnt;\r\n\t\tsize_t i;\r\n\t\tAR_ASSERT(stu != NULL && obj != NULL && arr_size > 0);\r\n\r\n\t\tis_ok = true;\r\n\r\n\t\tif(SN_GetObjectType(obj) != SN_LIST_T)\r\n\t\t{\r\n\t\t\t\tis_ok = false;\r\n\t\t\t\tgoto INVALID_POINT;\r\n\t\t}\r\n\r\n\t\tlist_cnt = SN_GetListObjectCount(obj);\r\n\r\n\t\tif(list_cnt != arr_size)\r\n\t\t{\r\n\t\t\t\tgoto INVALID_POINT;\r\n\t\t}\r\n\r\n\r\n\t\tfor(i = 0; i < list_cnt; ++i)\r\n\t\t{\r\n\t\t\t\tsnObject_t *item = SN_GetFromListObject(obj, i);\r\n\t\t\t\tif(item == NULL || SN_GetObjectType(item) != SN_DICT_T)\r\n\t\t\t\t{\r\n\t\t\t\t\t\tgoto INVALID_POINT;\r\n\t\t\t\t}\r\n\t\t\t\t\r\n\t\t\t\t/********************************************************************/\r\n\t\t\t\tif(!__get_%ls(item, &stu[i]))\r\n\t\t\t\t{\r\n\t\t\t\t\t\tis_ok = false;\r\n\t\t\t\t\t\tgoto INVALID_POINT;\r\n\t\t\t\t}\r\n\t\t\t\t/********************************************************************/\r\n\t\t}\r\n\t\treturn true;\r\n\r\nINVALID_POINT:\r\n\t\tis_ok = false;\r\n\t\treturn is_ok;\r\n}\r\n\n\n"
 
 static std::wstring generate_for_get_custom_array_type(const Type_t *type)
 {
@@ -394,14 +396,14 @@ std::wstring generate_for_unistruct_def()
 		/****************************************generate_for_struct****************************************/
 		/*
          typedef struct {
-         uint_32_t                       type;
+         ar_uint_32_t                       type;
          union{
          daemonKeppalive_t		daemonKeppalive_t
          };
          }
          */
 		
-		uni_type += L"typedef struct {\r\n\t\tuint_32_t\t\ttype;\r\n\t\tunion{\r\n";
+		uni_type += L"typedef struct {\r\n\t\tar_uint_32_t\t\ttype;\r\n\t\tunion{\r\n";
         
 		for(size_t i = 0; i < g_type_list.size(); ++i)
 		{
@@ -473,7 +475,7 @@ std::wstring generate_for_unistruct_put_get()
 
 
 		/****************************************unmarshal uni_type_code****************************************/
-		unmarshal_code = L"\r\nstatic arStatus_t\t\t" + g_uni_name + L"_UnMarshal(" + g_uni_name + L" *uni_type, arBuffer_t *in)\r\n{\r\n\t\tsnRetVal_t\t\tsn_ret;\r\n\t\tarStatus_t\t\tar_status;\r\n\t\tsnObject_t\t\t*type_obj, *data_obj;\r\n\t\tAR_ASSERT(uni_type != NULL && in != NULL);\r\n\r\n\t\tar_status = AR_S_YES;\r\n\t\ttype_obj = NULL;\r\n\t\tdata_obj = NULL;\r\n\t\tAR_memset(uni_type, 0, sizeof(*uni_type));\r\n\r\n\t\t\r\n\t\tsn_ret = SN_GetObject(in);\r\n\r\n\t\tar_status = sn_ret.status;\r\n\r\n\t\tif(ar_status != AR_S_YES)\r\n\t\t{\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\r\n\t\tif(SN_GetObjectType(sn_ret.obj) != SN_LIST_T || SN_GetListObjectCount(sn_ret.obj) != 2)\r\n\t\t{\r\n\t\t\t\tar_status = AR_E_INVAL;\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\t\t\r\n\t\ttype_obj = SN_GetFromListObject(sn_ret.obj, 0);\r\n\r\n\t\tif(type_obj == NULL || SN_GetObjectType(type_obj) != SN_INT_T)\r\n\t\t{\r\n\t\t\t\tar_status = AR_E_INVAL;\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\r\n\t\tdata_obj = SN_GetFromListObject(sn_ret.obj, 1);\r\n\r\n\t\tif(data_obj == NULL || SN_GetObjectType(data_obj) != SN_DICT_T)\r\n\t\t{\r\n\t\t\t\tar_status = AR_E_INVAL;\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\t\tuni_type->type = (uint_32_t)SN_GetUIntObject(type_obj);\r\n\t\tswitch(uni_type->type)\r\n\t\t{\r\n\t\t/*******************************************************************************************/\r\n";
+		unmarshal_code = L"\r\nstatic arStatus_t\t\t" + g_uni_name + L"_UnMarshal(" + g_uni_name + L" *uni_type, arBuffer_t *in)\r\n{\r\n\t\tsnRetVal_t\t\tsn_ret;\r\n\t\tarStatus_t\t\tar_status;\r\n\t\tsnObject_t\t\t*type_obj, *data_obj;\r\n\t\tAR_ASSERT(uni_type != NULL && in != NULL);\r\n\r\n\t\tar_status = AR_S_YES;\r\n\t\ttype_obj = NULL;\r\n\t\tdata_obj = NULL;\r\n\t\tAR_memset(uni_type, 0, sizeof(*uni_type));\r\n\r\n\t\t\r\n\t\tsn_ret = SN_GetObject(in);\r\n\r\n\t\tar_status = sn_ret.status;\r\n\r\n\t\tif(ar_status != AR_S_YES)\r\n\t\t{\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\r\n\t\tif(SN_GetObjectType(sn_ret.obj) != SN_LIST_T || SN_GetListObjectCount(sn_ret.obj) != 2)\r\n\t\t{\r\n\t\t\t\tar_status = AR_E_INVAL;\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\t\t\r\n\t\ttype_obj = SN_GetFromListObject(sn_ret.obj, 0);\r\n\r\n\t\tif(type_obj == NULL || SN_GetObjectType(type_obj) != SN_INT_T)\r\n\t\t{\r\n\t\t\t\tar_status = AR_E_INVAL;\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\r\n\t\tdata_obj = SN_GetFromListObject(sn_ret.obj, 1);\r\n\r\n\t\tif(data_obj == NULL || SN_GetObjectType(data_obj) != SN_DICT_T)\r\n\t\t{\r\n\t\t\t\tar_status = AR_E_INVAL;\r\n\t\t\t\tgoto END_POINT;\r\n\t\t}\r\n\t\tuni_type->type = (ar_uint_32_t)SN_GetUIntObject(type_obj);\r\n\t\tswitch(uni_type->type)\r\n\t\t{\r\n\t\t/*******************************************************************************************/\r\n";
 
 		for(size_t i = 0; i < g_type_list.size(); ++i)
 		{
@@ -615,7 +617,7 @@ void marshal_die_main(const wchar_t *input_path, const wchar_t *output_path)
 
 
  
-static void AR_STDCALL tiny_error(int_t level, const wchar_t* msg, void *ctx)
+static void AR_STDCALL tiny_error(ar_int_t level, const wchar_t* msg, void *ctx)
 {
 		printf("%ls", msg);
 		if(level == AR_ERR_FATAL)

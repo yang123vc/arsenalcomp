@@ -69,9 +69,9 @@ typedef struct node_tag
 		Field_t	*field;
 		Type_t		*type;
 		wchar_t	name[256];
-		uint_64_t	num;
+		ar_uint_64_t	num;
 		struct {
-			bool_t		is_tail;
+			ar_bool_t	is_tail;
 			wchar_t	*code;
 		}code_block;
 	};
@@ -80,7 +80,7 @@ typedef struct node_tag
 
 ast_node_t* create_anonymous_type()
 {
-	static uint_32_t	id = 0;
+	static ar_uint_32_t	id = 0;
 	ast_node_t	*node;
 	static wchar_t	name[128];
 	AR_swprintf(name, 128, L"anonymous_type_%u", id);
@@ -138,7 +138,7 @@ static struct {const wchar_t *name;
 size_t tokval;
 size_t lex_prec;
 const wchar_t *regex;
-bool_t skip;
+ar_bool_t skip;
 psrTermFunc_t leaf;
 }__g_term_pattern[] =  {
 {NULL, 257,0, L"{skip_lexem}+", true, NULL},
@@ -692,7 +692,6 @@ static psrRetVal_t AR_STDCALL on_named_nesting_field_array(psrNode_t **nodes, si
 					AR_abort();
 				}
 
-
 				type->type = NULL;
 				ret.node = (psrNode_t*)field_node;
 				return ret;
@@ -760,8 +759,7 @@ static const psrHandler_t		__g_handler =
 
 extern "C" void generate_type_list(const std::wstring &input)
 {
-		
-		
+
 		lex_t *lex = __build_lex();
 		psrGrammar_t	*gmr = __build_grammar(&__g_handler);
 		const parser_t		*parser = Parser_CreateParser(gmr, PARSER_LALR);
