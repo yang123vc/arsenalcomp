@@ -16,7 +16,7 @@
 #import "ARUtility.h"
 
 
-static void	AR_STDCALL __default_error_func(int_t level, const wchar_t *msg, void *ctx)
+static void	AR_STDCALL __default_error_func(ar_int_t level, const wchar_t *msg, void *ctx)
 {
 		assert(ctx != NULL && msg != NULL);
 		NSObject<ArsenalContext> *context = (NSObject<ArsenalContext>*)ctx;

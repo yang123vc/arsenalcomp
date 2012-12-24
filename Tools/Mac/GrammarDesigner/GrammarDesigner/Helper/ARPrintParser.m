@@ -302,7 +302,7 @@ static void AR_STDCALL report_build_func(const cfgReportInfo_t *report, void *ct
 
 
 
-static void	AR_STDCALL	__report_io_error_func(int_t level, const wchar_t *msg, void *ctx)
+static void	AR_STDCALL	__report_io_error_func(ar_int_t level, const wchar_t *msg, void *ctx)
 {
 		NSObject<PrintNodeParserDelegate>		*context;
 		AR_ASSERT(ctx != NULL);
@@ -690,7 +690,7 @@ FAILED_POINT:
 				return NO;
 		}else
 		{
-				uint_64_t beg, end;
+				ar_uint_64_t beg, end;
 				
 				beg = AR_GetTime_Milliseconds();
 				
@@ -721,7 +721,7 @@ FAILED_POINT:
 				{
 #if(1)
 						str = [NSString stringWithFormat : @"The grammar has %u conflicts",
-							   (uint_32_t)conflict
+							   (ar_uint_32_t)conflict
 							   ];
 						
 						[ delegate onBuildParserMsg : PRINT_NODE_MSG_T
@@ -770,7 +770,7 @@ FAILED_POINT:
 		match = Lex_CreateMatch(lex);
 		Lex_ResetInput(match, [wcs string]);
 		Lex_MatchClearFlags(match);
-		uint_t flags = 0;
+		ar_uint_t flags = 0;
 		if(lexIsSingleLine)
 		{
 				flags |= LEX_SINGLE_LINE;
@@ -786,7 +786,7 @@ FAILED_POINT:
 		lexToken_t		token;
 		memset(&token, 0, sizeof(token));
 		
-		uint_64_t beg = 0, end = 0;
+		ar_uint_64_t beg = 0, end = 0;
 		
 		beg = AR_GetTime_Milliseconds();
 		
@@ -836,7 +836,7 @@ FAILED_POINT:
 		end = AR_GetTime_Milliseconds();
 		
 		{
-				NSString *str = [NSString stringWithFormat : @"Parse code Tick count %u", (uint_32_t)(end - beg)];
+				NSString *str = [NSString stringWithFormat : @"Parse code Tick count %u", (ar_uint_32_t)(end - beg)];
 
 				[delegate onParseMsg : PRINT_NODE_MSG_T
 								 Msg : str

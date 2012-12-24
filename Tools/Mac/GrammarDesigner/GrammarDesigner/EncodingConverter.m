@@ -12,9 +12,9 @@
 #import "EncodingConverter.h"
 
 
-static void __digit_to_hex_char(byte_t b, char tmp[2])
+static void __digit_to_hex_char(ar_byte_t b, char tmp[2])
 {
-		uint_32_t v = (uint_32_t)b;
+		ar_uint_32_t v = (ar_uint_32_t)b;
 		static const char *__tbl = "0123456789ABCDEF";
         
 		tmp[1] = __tbl[v % 16];
@@ -23,7 +23,7 @@ static void __digit_to_hex_char(byte_t b, char tmp[2])
 }
 
 
-static int_t	AR_data_to_hexstr(const byte_t *data, size_t l, char *out, size_t len)
+static ar_int_t	AR_data_to_hexstr(const ar_byte_t *data, size_t l, char *out, size_t len)
 {
 		size_t i, si;
 		AR_ASSERT(data != NULL && l > 0);
@@ -52,7 +52,7 @@ static int_t	AR_data_to_hexstr(const byte_t *data, size_t l, char *out, size_t l
 
 
 
-static arStatus_t  __hex_char_to_digit(char c, byte_t *d)
+static arStatus_t  __hex_char_to_digit(char c, ar_byte_t *d)
 {
 		AR_ASSERT(d != NULL);
         
@@ -73,9 +73,9 @@ static arStatus_t  __hex_char_to_digit(char c, byte_t *d)
 }
 
 
-static int_t	AR_hexstr_to_data_s(const char *b, const char *e, byte_t *data, size_t len)
+static ar_int_t	AR_hexstr_to_data_s(const char *b, const char *e, ar_byte_t *data, size_t len)
 {
-		byte_t *p;
+		ar_byte_t *p;
 		arStatus_t status;
 		size_t need_l;
 		AR_ASSERT(b != NULL && e != NULL && b < e);
@@ -89,7 +89,7 @@ static int_t	AR_hexstr_to_data_s(const char *b, const char *e, byte_t *data, siz
         
 		if(data == NULL)
 		{
-				return (int_t)need_l / 2;
+				return (ar_int_t)need_l / 2;
 		}
         
 		if(len < need_l / 2)
@@ -100,7 +100,7 @@ static int_t	AR_hexstr_to_data_s(const char *b, const char *e, byte_t *data, siz
 		p = data;
 		while(b < e)
 		{
-				byte_t d1,d2;
+				ar_byte_t d1,d2;
 				
 				status = __hex_char_to_digit(*b, &d1);
                 
@@ -128,7 +128,7 @@ static int_t	AR_hexstr_to_data_s(const char *b, const char *e, byte_t *data, siz
 
 
 
-static int_t           AR_hexstr_to_data(const char *s, byte_t *data, size_t len)
+static ar_int_t           AR_hexstr_to_data(const char *s, ar_byte_t *data, size_t len)
 {
         AR_ASSERT(s != NULL);
         return AR_hexstr_to_data_s(s, s + AR_strlen(s), data, len);
@@ -211,7 +211,7 @@ static NSString*	rot13_convert(NSString *input, arCodePage_t cp)
 
 
 
-static NSString* base64_convert(NSString *input, arCodePage_t cp, bool_t is_encode)
+static NSString* base64_convert(NSString *input, arCodePage_t cp, ar_bool_t is_encode)
 {
 		
 		AR_ASSERT(input != NULL);
@@ -231,7 +231,7 @@ static NSString* base64_convert(NSString *input, arCodePage_t cp, bool_t is_enco
                 {
                         return @"invalid charset";
                 }
-                size_t n = AR_base64_encode(NULL, 0, (const byte_t*)mbs, AR_strlen(mbs));
+                size_t n = AR_base64_encode(NULL, 0, (const ar_byte_t*)mbs, AR_strlen(mbs));
                 
 				if(n == 0)
 				{
@@ -240,8 +240,8 @@ static NSString* base64_convert(NSString *input, arCodePage_t cp, bool_t is_enco
                         return @"invalid input!";
 				}
                 
-				byte_t *tmp = AR_NEWARR(byte_t, n + 1);
-                n = AR_base64_encode(tmp, n, (const byte_t*)mbs, AR_strlen(mbs));
+				ar_byte_t *tmp = AR_NEWARR(ar_byte_t, n + 1);
+                n = AR_base64_encode(tmp, n, (const ar_byte_t*)mbs, AR_strlen(mbs));
 				tmp[n] = 0;
                 
                 wchar_t *wcs = AR_str_to_wcs(AR_CP_UTF8, (const char*)tmp, n);
@@ -275,7 +275,7 @@ static NSString* base64_convert(NSString *input, arCodePage_t cp, bool_t is_enco
                         return @"invalid charset";
                 }
                                 
-				size_t n = AR_base64_decode(NULL, 0, (const byte_t*)mbs, AR_strlen(mbs));
+				size_t n = AR_base64_decode(NULL, 0, (const ar_byte_t*)mbs, AR_strlen(mbs));
 
                 if(n == 0)
 				{
@@ -284,8 +284,8 @@ static NSString* base64_convert(NSString *input, arCodePage_t cp, bool_t is_enco
                         return @"invalid input!";
 				}
                 
-				byte_t *tmp = AR_NEWARR(byte_t, n + 1);
-                n = AR_base64_decode(tmp, n, (const byte_t*)mbs, AR_strlen(mbs));
+				ar_byte_t *tmp = AR_NEWARR(ar_byte_t, n + 1);
+                n = AR_base64_decode(tmp, n, (const ar_byte_t*)mbs, AR_strlen(mbs));
 				tmp[n] = 0;
                 wchar_t *wcs = AR_str_to_wcs(cp, (const char*)tmp, n);
                 
@@ -316,7 +316,7 @@ static NSString* base64_convert(NSString *input, arCodePage_t cp, bool_t is_enco
 }
 
 
-static NSString*	hex_convert(NSString *input, arCodePage_t cp, bool_t is_encode)
+static NSString*	hex_convert(NSString *input, arCodePage_t cp, ar_bool_t is_encode)
 {
         
 		AR_ASSERT(input != NULL);
@@ -339,7 +339,7 @@ static NSString*	hex_convert(NSString *input, arCodePage_t cp, bool_t is_encode)
                         
                         size_t l = AR_strlen(mbs);
                         char *tmp = AR_NEWARR(char, l * 2 + 1);
-                        AR_data_to_hexstr((const byte_t*)mbs, l, tmp, l * 2 + 1);
+                        AR_data_to_hexstr((const ar_byte_t*)mbs, l, tmp, l * 2 + 1);
                         
                         wchar_t *wcs = AR_str_to_wcs(AR_CP_UTF8, (const char*)tmp, AR_strlen(tmp));
                         
@@ -375,7 +375,7 @@ static NSString*	hex_convert(NSString *input, arCodePage_t cp, bool_t is_encode)
                         size_t l = AR_strlen(mbs);
                         char *tmp = AR_NEWARR(char, l * 2 + 1);
                         
-                        int_t n = AR_hexstr_to_data(mbs, (byte_t*)tmp, l * 2 + 1);
+                        ar_int_t n = AR_hexstr_to_data(mbs, (ar_byte_t*)tmp, l * 2 + 1);
                         if(n <= -1)
                         {
                                 AR_DEL(tmp);
@@ -419,7 +419,7 @@ static NSString*	hex_convert(NSString *input, arCodePage_t cp, bool_t is_encode)
 
 
 
-static NSString* cstr_convert(NSString *input, bool_t is_encode)
+static NSString* cstr_convert(NSString *input, ar_bool_t is_encode)
 {
         
 		AR_ASSERT(input != NULL);
@@ -437,7 +437,7 @@ static NSString* cstr_convert(NSString *input, bool_t is_encode)
                 
                 if(is_encode)
                 {
-                        int_t len = AR_str_to_escstr_buf(NULL, 0, [wcs_wrapper string]);
+                        ar_int_t len = AR_str_to_escstr_buf(NULL, 0, [wcs_wrapper string]);
                         
                         if(len == 0)
                         {
@@ -457,7 +457,7 @@ static NSString* cstr_convert(NSString *input, bool_t is_encode)
                 {
                         
                         arEscStrErr_t	err;
-                        int_t len;
+                        ar_int_t len;
                         
                         len = AR_escstr_to_str_buf(NULL, 0, [wcs_wrapper string], &err);
                         
@@ -516,7 +516,7 @@ static NSString* cstr_convert(NSString *input, bool_t is_encode)
         return ret;
 }
 
-static NSString* url_convert(NSString *input, arCodePage_t cp, bool_t is_encode)
+static NSString* url_convert(NSString *input, arCodePage_t cp, ar_bool_t is_encode)
 {
 		arURI_t *uri;
 		arString_t *str;
@@ -598,7 +598,7 @@ static NSString* md5_convert(NSString *input, arCodePage_t cp)
                         return ret;
                 }
                 
-                byte_t md5[16];
+                ar_byte_t md5[16];
                 AR_memset(md5, 0, 16);
                 MD5((const unsigned char*)mbs, AR_strlen(mbs), (unsigned char*)md5);
                 AR_DEL(mbs);
@@ -647,7 +647,7 @@ static NSString* sha1_convert(NSString *input, arCodePage_t cp)
                         return ret;
                 }
                 
-                byte_t hash[20];
+                ar_byte_t hash[20];
                 AR_memset(hash, 0, 20);
                 
                 SHA1((const unsigned char*)mbs, AR_strlen(mbs), (unsigned char*)hash);
