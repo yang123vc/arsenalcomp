@@ -201,7 +201,8 @@ struct __parser_symbol_tag
 		psrSymbType_t	type;
 		const wchar_t	*name;
 		ar_uint_t			hash_code;
-		size_t			ref_count;
+
+		volatile ar_int_t	ref_count;
 		
 		ar_int_t			spec_id;
 };
