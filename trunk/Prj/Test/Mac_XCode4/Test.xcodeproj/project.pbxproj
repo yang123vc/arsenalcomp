@@ -15,6 +15,7 @@
 		673C0BD1154A891100A73324 /* TestFileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 673C0BCF154A891100A73324 /* TestFileSystem.cpp */; };
 		673C0BD5154A8B3600A73324 /* test.c in Sources */ = {isa = PBXBuildFile; fileRef = 673C0BD4154A8A4800A73324 /* test.c */; };
 		673C0BD6154A8B3B00A73324 /* test.c in Sources */ = {isa = PBXBuildFile; fileRef = 673C0BD4154A8A4800A73324 /* test.c */; };
+		67502262168C9E440015FA03 /* Arsenal.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 67502261168C9E440015FA03 /* Arsenal.dylib */; };
 		679A46EA15527DD3006A5AD4 /* commonTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 679A46E915527DD3006A5AD4 /* commonTest.cpp */; };
 		679A46EB15527DD3006A5AD4 /* commonTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 679A46E915527DD3006A5AD4 /* commonTest.cpp */; };
 		679A46EE15527DF0006A5AD4 /* commonTest.h in Sources */ = {isa = PBXBuildFile; fileRef = 679A46ED15527DF0006A5AD4 /* commonTest.h */; };
@@ -56,6 +57,7 @@
 		673C0BD2154A894D00A73324 /* TestFileSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFileSystem.h; sourceTree = SOURCE_ROOT; };
 		673C0BD3154A897A00A73324 /* stdhdr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stdhdr.h; sourceTree = SOURCE_ROOT; };
 		673C0BD4154A8A4800A73324 /* test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = test.c; sourceTree = SOURCE_ROOT; };
+		67502261168C9E440015FA03 /* Arsenal.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = Arsenal.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		679A46E915527DD3006A5AD4 /* commonTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = commonTest.cpp; sourceTree = SOURCE_ROOT; };
 		679A46ED15527DF0006A5AD4 /* commonTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = commonTest.h; sourceTree = SOURCE_ROOT; };
 		67DB43F11688503A00F05430 /* marshal_die_test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = marshal_die_test.cpp; sourceTree = SOURCE_ROOT; };
@@ -83,6 +85,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				67502262168C9E440015FA03 /* Arsenal.dylib in Frameworks */,
 				67163065155FFB680098ADA3 /* libiconv.dylib in Frameworks */,
 				6728C3BC154C646200861D86 /* libpthread.dylib in Frameworks */,
 			);
@@ -94,6 +97,7 @@
 		BE185E9814E846F10095DB44 = {
 			isa = PBXGroup;
 			children = (
+				67502261168C9E440015FA03 /* Arsenal.dylib */,
 				67F3B18D16884C9C000BA1D7 /* Arsenal.a */,
 				6728C3BB154C646200861D86 /* libpthread.dylib */,
 				6728C3B8154C645A00861D86 /* libiconv.dylib */,
