@@ -1914,7 +1914,7 @@ void marshal_die_test()
 {
         AR_printf(L"%hs\r\n", AR_FUNC_NAME);
 
-		marshal_die_test1();
+		//marshal_die_test1();
         
 }
 
