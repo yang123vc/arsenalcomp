@@ -39,44 +39,45 @@ arStatus_t	Arsenal_Init(const arInit_t *ctx)
 		tgu_init = false;
 
 		total_beg = AR_GetTime_Milliseconds();
-		
-		if(AR_AtomicInc(&__g_init_count) == 1)
+
+		result = AR_CommonInit(ctx);
+
+		if(result != AR_S_YES)
 		{
-				result = AR_CommonInit(ctx);
-				if(result != AR_S_YES)
-				{
-						goto END_POINT;
-				}
-				cm_init = true;
-				
-				result = Lex_Init();
-				if(result != AR_S_YES)
-				{
-						goto END_POINT;
-				}
-				lex_init = true;
+				goto END_POINT;
 
-				result = Parser_Init();
-				if(result != AR_S_YES)
-				{
-						goto END_POINT;
-				}
-				psr_init = true;
-				
-				result = Tools_Init();
-				if(result != AR_S_YES)
-				{
-						goto END_POINT;
-				}
-				tools_init = true;
-
-				result = TGU_Init();
-				if(result != AR_S_YES)
-				{
-						goto END_POINT;
-				}
-				tgu_init = true;
 		}
+
+		cm_init = true;
+
+		result = Lex_Init();
+
+		if(result != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+		lex_init = true;
+
+		result = Parser_Init();
+		if(result != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+		psr_init = true;
+
+		result = Tools_Init();
+		if(result != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+		tools_init = true;
+
+		result = TGU_Init();
+		if(result != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+		tgu_init = true;
 
 		total_end = AR_GetTime_Milliseconds();
 
@@ -132,14 +133,11 @@ void	Arsenal_UnInit()
 
 		/*if(--__g_init_count == 0)*/
 
-		if(AR_AtomicDec(&__g_init_count) == 0)
-		{
-				TGU_UnInit();
-				Tools_UnInit();
-				Parser_UnInit();
-				Lex_UnInit();
-				AR_CommonUnInit();
-		}
+		TGU_UnInit();
+		Tools_UnInit();
+		Parser_UnInit();
+		Lex_UnInit();
+		AR_CommonUnInit();
 }
 
 

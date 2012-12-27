@@ -140,14 +140,11 @@ int main()
 		
 #endif
 
-		Arsenal_Init(&ai);
-		Arsenal_Init(&ai);
+
 		Arsenal_Init(&ai);
 
 		AR_Test();
 
-		Arsenal_UnInit();
-		Arsenal_UnInit();
 		Arsenal_UnInit();
 
 
