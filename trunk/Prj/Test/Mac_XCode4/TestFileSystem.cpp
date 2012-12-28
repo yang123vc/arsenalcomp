@@ -265,18 +265,45 @@ static void full_path_test()
 
                        
 }
+
         
+        
+        
+static void file_seek_test()
+{
+        arFile_t *f;
+        arStatus_t		status = AR_open_file(&f, L"/Users/solidus/Desktop/urllib/urllib.dat", L"rb");
+        
+        status = AR_seek_file(f, -100, AR_FILE_SEEK_END);
+        
+        ar_uint_64_t offset;
+        
+        status = AR_tell_file(f, &offset);
+                
+                
+                
+        
+END_POINT:
+        if(f)
+        {
+                AR_close_file(f);
+                f = NULL;
+
+        }
+}
         
 void file_sys_test()
 {
 //        env_test();
 //        path_test();
-      path_iter_test();
+      //path_iter_test();
         
         
 //        startup_items_test();
         
-        full_path_test();
+//full_path_test();
+        
+        file_seek_test();
 }
 
 

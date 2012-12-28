@@ -789,3 +789,8 @@ ___super_fast_hash_32
 ___uint32_for_six_big
 ___uint32_for_six_little
 _cfg_on_print
+
+
+_AR_seek_file
+_AR_tell_file
+

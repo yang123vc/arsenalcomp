@@ -21,7 +21,6 @@
 AR_NAMESPACE_BEGIN
 
 
-static ar_int_t __g_init_count = 0;
 
 arStatus_t	Arsenal_Init(const arInit_t *ctx)
 {
