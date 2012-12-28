@@ -716,10 +716,56 @@ arStatus_t		AR_write_file(arFile_t *file, const ar_byte_t *data, size_t len, siz
 }
 
 
+arStatus_t				AR_seek_file(arFile_t *file, ar_int_64_t offset, arFileSeekType_t where)
+{
+		int origin,ret;
 
+		AR_ASSERT(file != NULL);
 
+		switch(where)
+		{
+		case AR_FILE_SEEK_BEG:
+				origin = SEEK_SET;
+				break;
+		case AR_FILE_SEEK_CUR:
+				origin = SEEK_CUR;
+				break;
+		case AR_FILE_SEEK_END:
+				origin = SEEK_END;
+				break;
+		default:
+				return AR_E_INVAL;
+		}
 
+		ret = _fseeki64((FILE*)file, (__int64)offset, origin);
 
+		if(ret == 0)
+		{
+				return AR_S_YES;
+		}else
+		{
+				int errcode = GetLastError();
+				return __map_last_error(errcode);
+		}
+}
+
+arStatus_t				AR_tell_file(arFile_t *file, ar_uint_64_t *offset)
+{
+		__int64 ret;
+		AR_ASSERT(file != NULL && offset != NULL);
+
+		ret = _ftelli64((FILE*)file);
+  
+		if(ret < 0)
+		{
+				int errcode = GetLastError();
+				return __map_last_error(errcode);
+		}else
+		{
+				*offset = (ar_uint_64_t)ret;
+				return AR_S_YES;
+		}
+}
 
 
 AR_NAMESPACE_END
