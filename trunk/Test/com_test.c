@@ -3691,10 +3691,29 @@ void esc_wchar_hex_test()
 		src_s = NULL;
 }
 
-void test_xor()
+static void file_test()
 {
+		arFile_t *f;
 		
+		arStatus_t		status = AR_open_file(&f, L"C:\\Users\\liupeng\\Desktop\\urllib\\urllib.dat", L"rb");
+
+		status = AR_seek_file(f, 100, AR_FILE_SEEK_END);
+
+		ar_uint_64_t offset;
+
+		status = AR_tell_file(f, &offset);
+
+
+
+
+END_POINT:
+		if(f)
+		{
+				AR_close_file(f);
+				f = NULL;
+		}
 }
+
 
 void com_test()
 {
@@ -3808,7 +3827,7 @@ void com_test()
 
 		//esc_wchar_hex_test();
 
-		test_xor();
+		file_test();
 }
 
 

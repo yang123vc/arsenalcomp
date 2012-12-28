@@ -1326,6 +1326,15 @@ arStatus_t				AR_write_file(arFile_t *file, const ar_byte_t *data, size_t len, s
 arStatus_t				AR_eof_file(arFile_t *file);
 arStatus_t				AR_error_file(arFile_t *file);
 
+typedef enum
+{
+		AR_FILE_SEEK_BEG,
+		AR_FILE_SEEK_CUR,
+		AR_FILE_SEEK_END
+}arFileSeekType_t;
+
+arStatus_t				AR_seek_file(arFile_t *file, ar_int_64_t offset, arFileSeekType_t where);
+arStatus_t				AR_tell_file(arFile_t *file, ar_uint_64_t *offset);
 /***************************************************************************************************************************************/
 
 
