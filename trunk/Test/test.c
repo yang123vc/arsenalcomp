@@ -97,6 +97,8 @@ extern void marshal_die_main();
 
 extern void marshal_result_test();
 
+extern void urllib_test();
+
 #endif
 
 
@@ -106,7 +108,7 @@ extern void marshal_result_test();
 void AR_Test()
 {
 #if defined(__LIB)
-		//com_test();
+		com_test();
 		//math_test();
 		//trie_tree_test();
 		//expr_test();
@@ -182,13 +184,14 @@ void AR_Test()
 
 		//grammar_config_test();
 
-		rgx_test();
+		//rgx_test();
 
 		//marshal_die_test();
 
 		//marshal_result_test();
 
 		//marshal_die_main();
+		
 
 		getchar();
 #else

@@ -1311,7 +1311,7 @@ arStatus_t      AR_PathIteratorSetPath(arPathIter_t *iter, const wchar_t *path);
 
 const wchar_t*	AR_PathIteratorCurrent(const arPathIter_t *iter);
 arStatus_t		AR_PathIteratorNext(arPathIter_t *iter);
-ar_bool_t			AR_PathIteratorIsDone(const arPathIter_t *iter);
+ar_bool_t		AR_PathIteratorIsDone(const arPathIter_t *iter);
 const wchar_t*  AR_PathIteratorPath(const arPathIter_t *iter);
 
 
@@ -1342,7 +1342,7 @@ ar_int_32_t		AR_abs_32(ar_int_32_t x);
 ar_int_64_t		AR_abs_64(ar_int_64_t x);
 
 
-ar_bool_t			AR_is_equal_flt(float x, float y, float epsilon);
+ar_bool_t		AR_is_equal_flt(float x, float y, float epsilon);
 
 float			AR_logbase_flt(float a, float base);
 float			AR_abs_flt(float x);
