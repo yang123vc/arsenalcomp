@@ -98,7 +98,7 @@ static void ini_test2()
 		
 		obj = NULL;
 
-		if(AR_LoadBomTextFile(L"D:\\1.ini", NULL, str) != AR_S_YES)
+		if(AR_LoadBomTextFile(L"C:\\Users\\liupeng\\Desktop\\360zipplugin.ini", NULL, str) != AR_S_YES)
 		{
 				goto END_POINT;
 		}
@@ -124,6 +124,12 @@ static void ini_test2()
 
 		{
 				const wchar_t *files = Ini_GetString(obj, L"360main", L"files0");
+				printf("%ls\r\n", files);
+		}
+
+		
+		{
+				const wchar_t *files = Ini_GetString(obj, L"RarFiles.lst", L"URL");
 				printf("%ls\r\n", files);
 		}
 
