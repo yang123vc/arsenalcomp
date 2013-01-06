@@ -49,7 +49,7 @@ struct __regex_node_tag
 		regex_node_t		*left;
 		regex_node_t		*right;
 		
-		size_t				ref_count;
+		volatile ar_uint_t	ref_count;
 
 		union{
 				struct {
@@ -57,10 +57,10 @@ struct __regex_node_tag
 						wchar_t end;
 				}range;
 				
-				size_t					fix_count;
-				ar_bool_t					negative_lookahead;
-				ar_bool_t					non_greedy;
-				size_t					final_val;
+				ar_uint_t				fix_count;
+				ar_bool_t				negative_lookahead;
+				ar_bool_t				non_greedy;
+				ar_uint_t				final_val;
 		};
 };
 
