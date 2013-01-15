@@ -131,43 +131,32 @@ static lex_t*	__build_lex()
 		{
 				arStatus_t status;
 				status = Lex_Insert(lex, __g_lex_name[i]);
-				if(status == AR_S_YES)							
+				if(status != AR_S_YES)							
 				{
-				}else if(status == AR_S_NO)
-				{
-						AR_error(AR_ERR_WARNING, L"failed to build lexer : name '%ls'!\r\n", __g_lex_name);
-						Lex_Destroy(lex);										
-						AR_ASSERT(false);										
-						return NULL;											
-				}else
-				{																
-						AR_error(AR_ERR_FATAL, L"failed to build lexer : name '%ls'!\r\n", __g_lex_name);
-						return NULL;
-				}																
+					AR_error(AR_ERR_WARNING, L"failed to build lexer : name '%ls'!\r\n", __g_lex_name);
+					Lex_Destroy(lex);										
+					AR_ASSERT(false);										
+					return NULL;									
+				}
 		}
 
 		for(i = 0; i < __TERM_COUNT__; ++i)										
 		{																		
 				lexAction_t		act;											
+				arStatus_t status;
 				act.is_skip		=		__g_term_pattern[i].skip;				
 				act.priority	=		__g_term_pattern[i].lex_prec;			
 				act.value		=		__g_term_pattern[i].tokval;		
 
-				arStatus_t status;
+				
 				status = Lex_InsertRule(lex, __g_term_pattern[i].regex, &act);
-				if(status == AR_S_YES)							
+				if(status != AR_S_YES)							
 				{
-				}else if(status == AR_S_NO)
-				{
-						AR_error(AR_ERR_WARNING, L"failed to build lexer : regex '%ls'!\r\n", __g_term_pattern[i].regex);
-						Lex_Destroy(lex);										
-						AR_ASSERT(false);										
-						return NULL;											
-				}else
-				{																
-						AR_error(AR_ERR_FATAL, L"failed to build lexer : regex '%ls'!\r\n", __g_term_pattern[i].regex);
-						return NULL;
-				}							
+					AR_error(AR_ERR_WARNING, L"failed to build lexer : regex '%ls'!\r\n", __g_term_pattern[i].regex);
+					Lex_Destroy(lex);										
+					AR_ASSERT(false);										
+					return NULL;
+				}
 		}
 
 
@@ -177,8 +166,6 @@ static lex_t*	__build_lex()
 		}																					
 		return lex;																			
 }
-
-
 
 
 static psrGrammar_t*	__build_grammar(const psrHandler_t	*handler)															
@@ -202,19 +189,13 @@ static psrGrammar_t*	__build_grammar(const psrHandler_t	*handler)
 
 				status = Parser_InsertTerm(grammar, __g_term_pattern[i].name, __g_term_pattern[i].tokval, PARSER_ASSOC_NONASSOC,0, __g_term_pattern[i].leaf);
 
-				if(status == AR_S_YES)
-				{
-				}else if(status == AR_S_NO)	
+				if(status != AR_S_YES)
 				{
 						AR_error(AR_ERR_WARNING, L"failed to build grammar : term '%ls'!\r\n", __g_term_pattern[i].name);
 						Parser_DestroyGrammar(grammar);																			
 						grammar = NULL;																							
 						AR_ASSERT(false);																						
-						return NULL;																							
-				}else
-				{
-						AR_error(AR_ERR_FATAL, L"failed to build grammar : term '%ls'!\r\n", __g_term_pattern[i].name);
-						return NULL;																					
+						return NULL;														
 				}
 		}					
 
@@ -227,19 +208,14 @@ static psrGrammar_t*	__build_grammar(const psrHandler_t	*handler)
 						arStatus_t status;
 						status = Parser_InsertTerm(grammar, __g_prec_pattern[i].name, __g_prec_pattern[i].tokval, __g_prec_pattern[i].assoc, __g_prec_pattern[i].prec_level, NULL);
 
-						if(status == AR_S_YES)
-						{
-
-						}else if(status == AR_S_NO)
+						if(status != AR_S_YES)
 						{
 								AR_error(AR_ERR_WARNING, L"failed to build grammar : prec '%ls'!\r\n", __g_term_pattern[i].name);
 								Parser_DestroyGrammar(grammar);																												
 								grammar = NULL;																																
 								AR_ASSERT(false);																															
-								return NULL;																																
-						}else
-						{
-								AR_error(AR_ERR_WARNING, L"failed to build grammar : prec '%ls'!\r\n", __g_term_pattern[i].name);
+								return NULL;									
+
 						}
 				}else																																						
 				{																																							
@@ -253,18 +229,13 @@ static psrGrammar_t*	__build_grammar(const psrHandler_t	*handler)
 				arStatus_t status;
 				status = Parser_InsertRuleByStr(grammar, __g_rule_pattern[i].rule, __g_rule_pattern[i].prec_token, __g_rule_pattern[i].handler, __g_rule_pattern[i].auto_ret);
 				
-				if(status == AR_S_YES)		
-				{
-				}else if(status == AR_S_NO)
+				if(status != AR_S_YES)
 				{		
 						AR_error(AR_ERR_WARNING, L"failed to build grammar : rule '%ls'!\r\n", __g_rule_pattern[i].rule);
 						Parser_DestroyGrammar(grammar);																														
 						grammar = NULL;																																		
 						AR_ASSERT(false);																																	
 						return NULL;																																		
-				}else
-				{
-						AR_error(AR_ERR_FATAL, L"failed to build grammar : rule '%ls'!\r\n", __g_rule_pattern[i].rule);
 				}
 		}				
 

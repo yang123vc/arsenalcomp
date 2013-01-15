@@ -42,7 +42,7 @@
                 {
                 case TOK_NUMBER:
                 {
-                    int_t num;
+                    ar_int_t num;
                     AR_wtoi_s(tok->str, tok->str + tok->str_cnt, &num, 10);
                     ret.node = (psrNode_t*)num;
 			return ret;
@@ -87,13 +87,13 @@ E        :    E    "+"     E        %action    "on_calc"
         |    E    "%"    E        %action    "on_calc"
         {:
 		psrRetVal_t ret;
-            int_t l, r;
+            ar_int_t l, r;
             size_t op;
             AR_ASSERT(nodes != NULL && count == 3);
 		ret.status = AR_S_YES;
-            l = (int_t)nodes[0];
+            l = (ar_int_t)nodes[0];
             op = (size_t)nodes[1];
-            r = (int_t)nodes[2];
+            r = (ar_int_t)nodes[2];
             switch(op)
             {
             case TOK_ADD:
@@ -112,7 +112,7 @@ E        :    E    "+"     E        %action    "on_calc"
                 {
 			ret.status = AR_E_INVAL;
 			ret.node = (psrNode_t*)0;
-                    *(bool_t*)ctx = false;
+                    *(ar_bool_t*)ctx = false;
                     return ret;
                 }else
                 {
@@ -137,9 +137,9 @@ E        :    E    "+"     E        %action    "on_calc"
 		psrRetVal_t ret;
 		ret.status = AR_S_YES;
 
-            int_t n;
+            ar_int_t n;
             AR_ASSERT(nodes != NULL && count == 2);
-            n = (int_t)nodes[1];
+            n = (ar_int_t)nodes[1];
             ret.node = (psrNode_t*)-n;
 		return ret;
         :}
@@ -167,8 +167,8 @@ static arStatus_t calc(const wchar_t *input, int *result)
 		psrGrammar_t	*grammar;
 		const parser_t		*parser;
 		psrContext_t *ctx;
-		bool_t dump;
-		int_t v = 0;
+		ar_bool_t dump;
+		ar_int_t v = 0;
 		arStatus_t status;
 		AR_ASSERT(result != NULL);
 		lex = __build_lex();
