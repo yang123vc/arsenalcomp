@@ -4,7 +4,7 @@
 #define AR_LEX_VT		L'\x000B'		//Vertical Tab
 #define AR_LEX_FF		L'\x000C'		//Form Feed
 #define AR_LEX_CR		L'\x000D'		//Carriage Return
-#define AR_LEX_NEL	L'\x0085'		//Next Line
+#define AR_LEX_NEL		L'\x0085'		//Next Line
 #define AR_LEX_LS		L'\x2028'		//Line Separator
 #define AR_LEX_PS		L'\x2029'		//Paragraph Separator
 */
