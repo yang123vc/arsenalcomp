@@ -250,7 +250,7 @@ void		DestroyExprNode(exprNode_t *node)
 						AR_memset(&ret, 0, sizeof(ret));
 
 						expr_node = NULL;
-						expr_node =	CreateExprNode();
+						expr_node =	CreateExprNode(CONSTANT_T);
 						
 						if(expr_node == NULL)
 						{
@@ -273,8 +273,8 @@ void		DestroyExprNode(exprNode_t *node)
 							return ret;
 						}
 						
-						AR_wcsncpy(node->constant.constant, tok->str, tok->str_cnt);
-						node->name[tok->str_cnt] = L'\0';
+						AR_wcsncpy(node->constant.constant, tok->str + 1, tok->str_cnt - 1);
+						node->name[tok->str_cnt - 2] = L'\0';
 						ret.status = AR_S_YES;
 						ret.node = (psrToken_t*)expr_node;
 						return ret;
@@ -283,7 +283,47 @@ void		DestroyExprNode(exprNode_t *node)
 
 			;
 
-%token FILE_VAR	:	"{file_variable}"				,2		%value		"TOK_FILE_VAR"		
+%token FILE_VAR	:	"{file_variable}"				,2		%value		"TOK_FILE_VAR"		%action on_file_variable
+				{:
+												psrRetVal_t	ret;
+						exprNode_t	*expr_node;
+
+						AR_ASSERT(tok != NULL);
+						AR_UNUSED(ctx);
+
+						AR_memset(&ret, 0, sizeof(ret));
+
+						expr_node = NULL;
+						expr_node =	CreateExprNode(CONSTANT_T);
+						
+						if(expr_node == NULL)
+						{
+							AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+							ret.status = AR_E_NOMEM;
+							ret.node = NULL;
+							return ret;
+						}
+
+						node->t = CONSTANT_T;
+						node->line = tok->line;
+						node->col = tok->col;
+
+						if(tok->str_cnt >= 1024 || tok->str_cnt <= 7)
+						{
+							AR_error(AR_ERR_WARNING, L"invalid variable length, line : (%Iu, %Iu)!", tok->line, tok->col);
+							DestroyExprNode(expr_node);
+							ret.status = AR_E_INVAL;
+							ret.node = NULL;
+							return ret;
+						}
+						
+						AR_wcsncpy(node->var.constant, tok->str + 1, tok->str_cnt - 1);
+						node->name[tok->str_cnt - 2] = L'\0';
+						ret.status = AR_S_YES;
+						ret.node = (psrToken_t*)expr_node;
+						return ret;
+			:}
+
 			;
 
 
