@@ -281,7 +281,6 @@ void		DestroyExprNode(exprNode_t *node)
 				:}
                         	;
 
-			;
 
 %token FILE_VAR	:	"{file_variable}"				,2		%value		"TOK_FILE_VAR"		%action on_file_variable
 				{:
