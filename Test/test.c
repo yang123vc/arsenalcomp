@@ -99,6 +99,8 @@ extern void marshal_result_test();
 
 extern void urllib_test();
 
+extern void v3checker_test();
+
 #endif
 
 
@@ -145,7 +147,7 @@ void AR_Test()
 
 		//parser_perf_test();
 		
-		rgx_test();
+		//rgx_test();
 
 		//calc_test();
 
@@ -177,7 +179,7 @@ void AR_Test()
 		
 		//tokenizer_test();
 
-		Ini_Test();
+		//Ini_Test();
 		
 		//parser_gen_perf_test();
 
@@ -193,6 +195,7 @@ void AR_Test()
 
 		//marshal_die_main();
 		
+		v3checker_test();
 
 		getchar();
 #else
