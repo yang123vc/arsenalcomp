@@ -83,7 +83,6 @@
 
 typedef enum
 {
-	OPERATOR_T,
 	VARIABLE_T,
 	CONSTANT_T,
 	NAME_T,
@@ -142,7 +141,7 @@ typedef struct __call_node_tag
 {
 	wchar_t	name[256];		//最大256个名称
 	exprNode_t	*params[32];		//最大32个参数
-	size_t		param_count;
+	size_t		param_cnt;
 }call_t;
 
 
@@ -153,7 +152,6 @@ struct __checker_expression_node_tag
 	size_t			col;
 
 	union{
-		exprOperator_t	op;
 		var_t			var;
 		constant_t		constant;
 		name_t			name;
@@ -176,7 +174,7 @@ exprNode_t*	CreateExprNode(checkerNodeType_t	t)
 	}
 
 	node->t = t;
-	reuturn node;
+	return node;
 }
 
 void		DestroyExprNode(exprNode_t *node)
@@ -185,8 +183,6 @@ void		DestroyExprNode(exprNode_t *node)
 
 	switch(node->t)
 	{
-	case 	OPERATOR_T:
-		break;
 	case 	VARIABLE_T:
 		break;
 	case 	CONSTANT_T:
@@ -211,7 +207,7 @@ void		DestroyExprNode(exprNode_t *node)
 	case	CALL_T:
 	{
 		size_t i;
-		for(i = 0; i < node->call.count; ++i)
+		for(i = 0; i < node->call.param_cnt; ++i)
 		{
 			if(node->call.params[i] != NULL)
 			{
@@ -240,7 +236,49 @@ void		DestroyExprNode(exprNode_t *node)
 
 
 %token	CONSTANT	:	"{string_sq}|{string_dq}"			,2		%value 	"TOK_CONSTANT"		%action on_constant
-				{:
+			{:
+
+					psrRetVal_t	ret;
+					exprNode_t	*expr_node;
+
+					AR_ASSERT(tok != NULL);
+					AR_UNUSED(ctx);
+					AR_memset(&ret, 0, sizeof(ret));
+
+					expr_node = NULL;
+					expr_node =	CreateExprNode(CONSTANT_T);
+						
+					if(expr_node == NULL)
+					{
+						AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+						ret.status = AR_E_NOMEM;
+						ret.node = NULL;
+						return ret;
+					}
+
+					expr_node->line = tok->line;
+					expr_node->col = tok->col;
+
+					if(tok->str_cnt >= 1024 || tok->str_cnt <= 2)
+					{
+						AR_error(AR_ERR_WARNING, L"invalid constant length, (%Iu, %Iu)!", tok->line, tok->col);
+						DestroyExprNode(expr_node);
+						ret.status = AR_E_MALFORMAT;
+						ret.node = NULL;
+						return ret;
+					}
+						
+					AR_wcsncpy(expr_node->constant.constant, tok->str + 1, tok->str_cnt - 1);	//消去'xxx'或"xxx"中的'和"
+					expr_node->constant.constant[tok->str_cnt - 2] = L'\0';
+					ret.status = AR_S_YES;
+					ret.node = (psrToken_t*)expr_node;
+					return ret;
+			:}
+                   	;
+
+
+%token FILE_VAR	:	"{file_variable}"				,2		%value		"TOK_FILE_VAR"		%action on_file_variable
+			{:
 						psrRetVal_t	ret;
 						exprNode_t	*expr_node;
 
@@ -250,7 +288,7 @@ void		DestroyExprNode(exprNode_t *node)
 						AR_memset(&ret, 0, sizeof(ret));
 
 						expr_node = NULL;
-						expr_node =	CreateExprNode(CONSTANT_T);
+						expr_node =	CreateExprNode(VARIABLE_T);
 						
 						if(expr_node == NULL)
 						{
@@ -260,31 +298,31 @@ void		DestroyExprNode(exprNode_t *node)
 							return ret;
 						}
 
-						node->t = CONSTANT_T;
-						node->line = tok->line;
-						node->col = tok->col;
+						expr_node->line = tok->line;
+						expr_node->col = tok->col;
 
-						if(tok->str_cnt >= 1024 || tok->str_cnt <= 2)
+						if(tok->str_cnt >= 1024 || tok->str_cnt <= 7)		
 						{
-							AR_error(AR_ERR_WARNING, L"invalid constant length, line : (%Iu, %Iu)!", tok->line, tok->col);
+							AR_error(AR_ERR_WARNING, L"invalid variable length, (%Iu, %Iu)!", tok->line, tok->col);
 							DestroyExprNode(expr_node);
-							ret.status = AR_E_INVAL;
+							ret.status = AR_E_MALFORMAT;
 							ret.node = NULL;
 							return ret;
 						}
 						
-						AR_wcsncpy(node->constant.constant, tok->str + 1, tok->str_cnt - 1);
-						node->name[tok->str_cnt - 2] = L'\0';
+						AR_wcsncpy(expr_node->var.name, tok->str + 6, tok->str_cnt - 1);	//消去%fver_...%中的%fver_和%
+						expr_node->var.name[tok->str_cnt - 7] = L'\0';
+						expr_node->var.is_file_check = true;
 						ret.status = AR_S_YES;
-						ret.node = (psrToken_t*)expr_node;
+						ret.node = (psrNode_t*)expr_node;
 						return ret;
-				:}
-                        	;
+			:}
+			;
 
 
-%token FILE_VAR	:	"{file_variable}"				,2		%value		"TOK_FILE_VAR"		%action on_file_variable
-				{:
-												psrRetVal_t	ret;
+%token VAR		:	"{variable}"					,2		%value		"TOK_VAR"	%action on_variable
+			{:
+						psrRetVal_t	ret;
 						exprNode_t	*expr_node;
 
 						AR_ASSERT(tok != NULL);
@@ -293,7 +331,7 @@ void		DestroyExprNode(exprNode_t *node)
 						AR_memset(&ret, 0, sizeof(ret));
 
 						expr_node = NULL;
-						expr_node =	CreateExprNode(CONSTANT_T);
+						expr_node =	CreateExprNode(VARIABLE_T);
 						
 						if(expr_node == NULL)
 						{
@@ -303,78 +341,209 @@ void		DestroyExprNode(exprNode_t *node)
 							return ret;
 						}
 
-						node->t = CONSTANT_T;
-						node->line = tok->line;
-						node->col = tok->col;
+						expr_node->line = tok->line;
+						expr_node->col = tok->col;
 
-						if(tok->str_cnt >= 1024 || tok->str_cnt <= 7)
+						if(tok->str_cnt >= 1024 || tok->str_cnt <= 2)	
 						{
-							AR_error(AR_ERR_WARNING, L"invalid variable length, line : (%Iu, %Iu)!", tok->line, tok->col);
+							AR_error(AR_ERR_WARNING, L"invalid variable length, (%Iu, %Iu)!", tok->line, tok->col);
 							DestroyExprNode(expr_node);
-							ret.status = AR_E_INVAL;
+							ret.status = AR_E_MALFORMAT;
 							ret.node = NULL;
 							return ret;
 						}
 						
-						AR_wcsncpy(node->var.constant, tok->str + 1, tok->str_cnt - 1);
-						node->name[tok->str_cnt - 2] = L'\0';
+						AR_wcsncpy(expr_node->var.name, tok->str + 1, tok->str_cnt - 1);	//消去%xxx%中的'%'
+						expr_node->var.name[tok->str_cnt - 2] = L'\0';
+						expr_node->var.is_file_check = false;
 						ret.status = AR_S_YES;
-						ret.node = (psrToken_t*)expr_node;
+						ret.node = (psrNode_t*)expr_node;
 						return ret;
 			:}
-
-			;
-
-
-%token VAR		:	"{variable}"					,2		%value		"TOK_VAR"			
 			;
 
 
 
-%token NAME     	:    "{letter}({letter}|{digit})*"              ,2		%value    	"TOK_NAME"           	
+%token NAME     	:    "{letter}({letter}|{digit})*"              ,2		%value    	"TOK_NAME"	%action on_name
+			{:
+						psrRetVal_t	ret;
+						exprNode_t	*expr_node;
+
+						AR_ASSERT(tok != NULL);
+						AR_UNUSED(ctx);
+
+						AR_memset(&ret, 0, sizeof(ret));
+
+						expr_node = NULL;
+						expr_node =	CreateExprNode(NAME_T);
+						
+						if(expr_node == NULL)
+						{
+							AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+							ret.status = AR_E_NOMEM;
+							ret.node = NULL;
+							return ret;
+						}
+
+						expr_node->line = tok->line;
+						expr_node->col = tok->col;
+
+						if(tok->str_cnt >= 1024)	
+						{
+							AR_error(AR_ERR_WARNING, L"invalid variable length, (%Iu, %Iu)!", tok->line, tok->col);
+							DestroyExprNode(expr_node);
+							ret.status = AR_E_MALFORMAT;
+							ret.node = NULL;
+							return ret;
+						}
+						
+						AR_wcsncpy(expr_node->name.name, tok->str, tok->str_cnt);
+						expr_node->name.name[tok->str_cnt - 2] = L'\0';
+						ret.status = AR_S_YES;
+						ret.node = (psrNode_t*)expr_node;
+						return ret;
+	
+			:}
+			;
+
+%code{:
+	exprNode_t*	CreateOperatorExprNode(const psrToken_t *tok)
+	{
+		exprNode_t	*expr_node;
+		AR_ASSERT(tok != NULL);
+
+		expr_node = NULL;
+		expr_node =	CreateExprNode(EXPR_T);
+
+		if(expr_node == NULL)
+		{
+			AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+			return NULL;
+		}
+
+		expr_node->line = tok->line;
+		expr_node->col = tok->col;
+
+		switch(tok->term_val)
+		{
+			case TOK_GE:
+				expr_node->expr.op = CHECKER_EXPR_GE;
+				break;
+			case TOK_EQ:
+				expr_node->expr.op = CHECKER_EXPR_EQ;
+				break;
+			case TOK_NE:
+				expr_node->expr.op = CHECKER_EXPR_NE;
+				break;
+			case TOK_ANDAND:
+				expr_node->expr.op = CHECKER_EXPR_AND;
+				break;
+			case TOK_OROR:
+				expr_node->expr.op = CHECKER_EXPR_OR;
+				break;
+			case TOK_LESS:
+				expr_node->expr.op = CHECKER_EXPR_LESS;
+				break;
+			case TOK_GREATER:
+				expr_node->expr.op = CHECKER_EXPR_GREATER;
+				break;
+			case TOK_NOT:
+				expr_node->expr.op = CHECKER_EXPR_NOT;
+				break;
+			default:
+			{
+				wchar_t tmp[128];
+				if(tok->term_val != 0)
+				{
+					AR_wcsncpy(tmp, tok->str, AR_MIN(tok->str_cnt, 32));
+				}else
+				{
+					AR_wcscpy(tmp, L"%EOI");
+				}
+
+				AR_error(AR_ERR_WARNING, L"invalid token type : %ls\r\n", tmp);
+
+				return NULL;
+			}
+		}
+		
+		return expr_node;
+	}
+	
+:}
+;
+
+
+
+%token	"<="		:	'"<="'		,1						%value 	"TOK_LE"			%action on_operator
+			{:
+						psrRetVal_t	ret;
+						exprNode_t	*expr_node;
+
+						AR_ASSERT(tok != NULL);
+						AR_UNUSED(ctx);
+
+						AR_memset(&ret, 0, sizeof(ret));
+
+						expr_node = NULL;
+						expr_node =	CreateOperatorExprNode(tok);
+						
+						if(expr_node == NULL)
+						{
+							AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+							ret.status = AR_E_NOMEM;
+							ret.node = NULL;
+						}else
+						{
+							ret.status = AR_S_YES;
+							ret.node = (psrNode_t*)expr_node;
+						}
+						return ret;
+			:}
+			;
+
+%token	">="		:	'">="'		,1						%value 	"TOK_GE"	%action on_operator
+			;
+
+%token	"=="		:	'"=="'		,1						%value 	"TOK_EQ"	%action on_operator		
+			;
+
+%token	"!="		:	'"!="'		,1						%value		"TOK_NE"	%action on_operator		
+			;
+
+
+%token	"&&"		:	'"&&"'		,1						%value 	"TOK_ANDAND"	%action on_operator		
+			;
+
+%token	"||"		:	'"||"'		,1						%value		"TOK_OROR"	%action on_operator		
 			;
 
 
 
-
-
-%token	"<="		:	'"<="'		,1						%value 	"TOK_LE"			
+%token	"<"		:	'"<"'		,0						%value	"TOK_LESS"		%action on_operator	
 			;
 
-%token	">="		:	'">="'		,1						%value 	"TOK_GE"			
+%token	">"		:	'">"'		,0						%value	"TOK_GREATER"		%action on_operator	
 			;
 
-%token	"=="		:	'"=="'		,1						%value 	"TOK_EQ"			
-			;
-
-%token	"!="		:	'"!="'		,1						%value		"TOK_NE"			
+%token	"!"		:	'"!"'		,0						%value "TOK_NOT"		%action on_operator	
 			;
 
 
-%token	"&&"		:	'"&&"'		,1						%value 	"TOK_ANDAND"			
+%token	"("		:	'"("'		,0						%value "TOK_L_PAREN"		%action autoreturn_null
+			{:
+				psrRetVal_t ret = {AR_S_YES, NULL};
+				AR_UNUSED(tok);
+				AR_UNUSED(ctx);
+				return ret;
+			:}	
 			;
 
-%token	"||"		:	'"||"'		,1						%value		"TOK_OROR"			
+%token	")"		:	'")"'		,0						%value "TOK_R_PAREN"		%action autoreturn_null
 			;
 
 
-%token	"("		:	'"("'		,0						%value "TOK_L_PAREN"			
-			;
-
-%token	")"		:	'")"'		,0						%value "TOK_R_PAREN"			
-			;
-
-
-%token	"<"		:	'"<"'		,0						%value	"TOK_LESS"			
-			;
-
-%token	">"		:	'">"'		,0						%value	"TOK_GREATER"			
-			;
-
-%token	"!"		:	'"!"'		,0						%value "TOK_NOT"			
-			;
-
-%token	","		:	'","'		,0						%value "TOK_COMMA"
+%token	","		:	'","'		,0						%value "TOK_COMMA"		%action autoreturn_null
 			;
 
 
@@ -393,53 +562,440 @@ void		DestroyExprNode(exprNode_t *node)
 
 
 
-%start		expression					;
+%start		expression				;
 
 
-expression 	:	expr
+expression 	:	expr				%action autoreturn_0					
 		;
 
 	
-expr		:	"("	 expr	")"
-		|	"("	error ")"
-     		|	expr "&&"	expr
-     		|	expr "||"	expr
-     		|	expr "<="	expr
-     		|	expr ">="	expr
-     		|	expr "<"	expr
-     		|	expr ">"	expr
-     		|	expr "=="	expr
-     		|	expr "!="	expr
-		|	call
-		|	unary_expr
-		|	term
+expr		:	"("	 expr	")"		%action autoreturn_1
+		{:
+			psrRetVal_t		ret = {AR_S_YES, NULL};
+			AR_ASSERT(count == 3 && nodes != NULL);
+			
+			AR_UNUSED(count);
+			AR_UNUSED(name);
+			AR_UNUSED(ctx);
+
+
+			ret.status = AR_S_YES;
+			ret.node = (psrNode_t*)nodes[1];
+			nodes[1] = NULL;
+			return ret;
+		:}
+		|	"("	error ")"		%action on_error_subexpr
+		{:
+			psrRetVal_t		ret = {AR_E_ABORT, NULL};
+			AR_UNUSED(nodes);
+			AR_UNUSED(count);
+			AR_UNUSED(name);
+			AR_UNUSED(ctx);
+
+			return ret;
+		:}
+     		|	expr "&&"	expr		%action on_binary_expression
+		{:
+				psrRetVal_t		ret = {AR_S_YES, NULL};
+				exprNode_t		**ns = (exprNode_t**)nodes;
+				exprNode_t		*res_node;
+				AR_ASSERT(ns != NULL && count == 3);
+				
+				AR_UNUSED(count);
+				AR_UNUSED(name);
+				AR_UNUSED(ctx);
+
+
+				res_node = ns[1];
+				ns[1] = NULL;
+
+				if(res_node == NULL)
+				{
+					ret.status = AR_E_ABORT;
+					ret.node = NULL;
+					return ret;
+				}
+
+				res_node->expr.left = ns[0];
+				ns[0] = NULL;
+				res_node->expr.right = ns[2];
+				ns[2] = NULL;
+				
+				ret.status = AR_S_YES;
+				ret.node = res_node;
+				return ret;
+
+		:}
+     		|	expr "||"	expr		%action on_binary_expression
+     		|	expr "<="	expr		%action on_binary_expression
+     		|	expr ">="	expr		%action on_binary_expression
+     		|	expr "<"	expr		%action on_binary_expression
+     		|	expr ">"	expr		%action on_binary_expression
+     		|	expr "=="	expr		%action on_binary_expression
+     		|	expr "!="	expr		%action on_binary_expression
+		|	unary_expr			%action autoreturn_0
+		{:
+			psrRetVal_t		ret = {AR_S_YES, NULL};
+			AR_ASSERT(count == 1 && nodes != NULL);
+	
+			AR_UNUSED(count);
+			AR_UNUSED(name);
+			AR_UNUSED(ctx);
+
+			ret.status = AR_S_YES;
+			ret.node = (psrNode_t*)nodes[0];
+			nodes[0] = NULL;
+			return ret;
+		:}
+		|	call				%action autoreturn_0
+		|	term				%action autoreturn_0
 		;
 
-unary_expr	:	"!" expr			%prec	NOTEXPR
+unary_expr	:	"!" expr			%prec	NOTEXPR	%action on_unary_expression
+		{:
+				psrRetVal_t		ret = {AR_S_YES, NULL};
+				exprNode_t		**ns = (exprNode_t**)nodes;
+				exprNode_t		*res_node;
+				AR_ASSERT(ns != NULL && count == 2);
+				
+				AR_UNUSED(count);
+				AR_UNUSED(ctx);
+				AR_UNUSED(name);
+
+				res_node = ns[0];
+				ns[0] = NULL;
+
+				if(res_node == NULL)
+				{
+					ret.status = AR_E_ABORT;
+					ret.node = NULL;
+					return ret;
+				}
+
+				res_node ->expr.left = ns[1];
+				ns[1] = NULL;
+
+				ret.status = AR_S_YES;
+				ret.node = res_node;
+				return ret;
+		:}
 		;
 
 
-term		:	VAR
-		|	CONSTANT
-		|	FILE_VAR
+term		:	VAR				%action autoreturn_0
+		|	CONSTANT			%action autoreturn_0
+		|	FILE_VAR			%action autoreturn_0
 		;
 
 
-call		:	NAME	"(" params ")"
+call		:	NAME	"(" params ")"	%action on_call_expression
+		{:
+				psrRetVal_t		ret = {AR_S_YES, NULL};
+				exprNode_t		**ns = (exprNode_t**)nodes;
+				exprNode_t		*name_node,*res_node;
+				AR_ASSERT(ns != NULL && count == 4);
+				
+				AR_UNUSED(count);
+				AR_UNUSED(ctx);
+				AR_UNUSED(name);
+
+				name_node = ns[0];
+				res_node = ns[2];
+				
+
+				if(name_node == NULL || res_node == NULL)
+				{
+					ret.status = AR_E_ABORT;
+					ret.node = NULL;
+					return ret;
+				}
+				
+				AR_wcscpy(res_node->call.name, name_node->name.name);
+				ns[2] = NULL;
+
+				ret.status = AR_S_YES;
+				ret.node = res_node;
+				return ret;
+		:}
+
+		|	NAME 	"("	error ")"	%action on_error_call_expression
+		{:
+				psrRetVal_t		ret = {AR_E_ABORT, NULL};
+
+				AR_UNUSED(nodes);
+				AR_UNUSED(count);
+				AR_UNUSED(ctx);
+				AR_UNUSED(name);
+
+				return ret;
+		:}
 		;
 
 
 
 
 
-params        :    params "," param		
-              |    param	
-		|	.			
+params        :    params "," param		%action insert_new_params
+		{:
+				psrRetVal_t		ret = {AR_S_YES, NULL};	//嗨~~，为啥非要在这里创建call Expression呢？因为我懒得写nodelist一类的东西塞进exprNode_t里了，先这样，以后再说~~
+				exprNode_t		*expr_node, *new_node;
+				AR_ASSERT(nodes != NULL && count == 2);
+				AR_UNUSED(ctx);
+				AR_memset(&ret, 0, sizeof(ret));
+				
+				AR_UNUSED(count);
+				AR_UNUSED(ctx);
+				AR_UNUSED(name);
+
+				if(nodes[0] == NULL || nodes[1] == NULL)
+				{
+					ret.status = AR_E_ABORT;
+					ret.node = NULL;
+					return ret;
+				}	
+
+				expr_node = (exprNode_t*)nodes[0];
+				new_node = (exprNode_t*)nodes[1];
+
+				if(expr_node->call.param_cnt >= AR_NELEMS(expr_node->call.params))
+				{
+					AR_error(AR_ERR_WARNING, L"invalid params count : %Iu\r\n", expr_node->call.param_cnt);
+					ret.status = AR_E_NOTENOUGH;
+					ret.node = NULL;
+					return ret;
+				}
+	
+				expr_node->call.params[expr_node->call.param_cnt] = new_node;
+				expr_node->call.param_cnt++;
+
+				nodes[0] = nodes[1] = NULL;
+				ret.status = AR_S_YES;
+				ret.node = (psrNode_t*)expr_node;
+				return ret;
+
+		:}		
+              |    param				%action on_call_params_expr
+		{:
+				psrRetVal_t		ret = {AR_S_YES, NULL};	//嗨~~，为啥非要在这里创建call Expression呢？因为我懒得写nodelist一类的东西塞进exprNode_t里了，先这样，以后再说~~
+				exprNode_t		*expr_node;
+				AR_ASSERT(nodes != NULL && count == 1);
+
+				AR_UNUSED(count);
+				AR_UNUSED(ctx);
+				AR_UNUSED(name);
+
+				AR_memset(&ret, 0, sizeof(ret));
+
+				expr_node = NULL;
+				expr_node =	CreateExprNode(CALL_T);
+						
+				if(expr_node == NULL)
+				{
+					AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+					ret.status = AR_E_NOMEM;
+					ret.node = NULL;
+					return ret;
+				}
+				
+				expr_node->call.params[0] = (exprNode_t*)nodes[0];
+				nodes[0] = NULL;
+				expr_node->call.param_cnt = 1;
+
+				ret.status = AR_S_YES;
+				ret.node = (psrNode_t*)expr_node;
+				return ret;
+
+		:}
+		|	.				%action on_empty_call_params
+		{:
+				psrRetVal_t		ret = {AR_S_YES, NULL};	//看上头~~
+				exprNode_t		*expr_node;
+				AR_ASSERT(nodes != NULL && count == 0);
+
+				AR_UNUSED(nodes);
+				AR_UNUSED(count);
+				AR_UNUSED(ctx);
+				AR_UNUSED(name);
+
+				AR_memset(&ret, 0, sizeof(ret));
+
+				expr_node = NULL;
+				expr_node =	CreateExprNode(CALL_T);
+						
+				if(expr_node == NULL)
+				{
+					AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+					ret.status = AR_E_NOMEM;
+					ret.node = NULL;
+					return ret;
+				}
+				
+				expr_node->call.param_cnt = 0;
+
+				ret.status = AR_S_YES;
+				ret.node = (psrNode_t*)expr_node;
+				return ret;	
+		:}
               ;
 
 
-param		:	CONSTANT
-		|	VAR
-		|	FILE_VAR
-		;
+param		:	CONSTANT			%action autoreturn_0
+		|	VAR				%action autoreturn_0
+		|	FILE_VAR			%action autoreturn_0
+		;	
+
+
+
+
+
+
+
+
+
+
+
+%code main{:
+
+
+
+
+static arStatus_t		AR_STDCALL handle_on_error(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
+{
+		wchar_t msg[32];
+		AR_ASSERT(tok != NULL);
+		
+		AR_UNUSED(expected);
+		AR_UNUSED(count);
+		AR_UNUSED(ctx);
+	
+		if(tok->str_cnt > 0)
+		{
+				AR_wcsncpy(msg, tok->str, AR_MIN(tok->str_cnt, 32));
+		}else
+		{
+				AR_wcscpy(msg, L"%EOI");
+		}
+
+		AR_error(AR_ERR_WARNING, L"invalid token : '%ls' (%Iu,%Iu)\r\n", msg, tok->line, tok->col);
+		return AR_S_NO;
+}
+
+
+static void		AR_STDCALL free_node(psrNode_t *node, void *ctx)
+{
+		AR_ASSERT(node != NULL);
+		AR_UNUSED(ctx);
+		DestroyExprNode((exprNode_t*)node);
+}
+
+
+static const psrHandler_t		__g_handler = 
+{
+		handle_on_error,
+		free_node
+};
+
+
+
+
+
+exprNode_t*	v3_build_check_expr(const wchar_t *expr)
+{
+
+		lex_t 				*lex;
+		psrGrammar_t			*gmr;
+		const parser_t		*parser;
+		psrContext_t 			*parser_ctx;
+		
+
+		AR_ASSERT(expr != NULL);
+
+		__build_lex();
+		 = __build_grammar(&__g_handler);
+		= Parser_CreateParser(gmr, PARSER_LALR);
+		 = Parser_CreateContext(parser, NULL);
+		
+		
+		
+		
+
+
+
+		ARSpace::lexMatch_t *match = ARSpace::Lex_CreateMatch(lex);
+		ARSpace::Lex_ResetInput(match, input.c_str());
+		
+		ARSpace::Lex_MatchClearFlags(match);
+		
+		ARSpace::lexToken_t		token;
+
+		memset(&token, 0, sizeof(token));
+		
+		arStatus_t status = AR_S_YES;
+
+		while(status == AR_S_YES)
+		{
+
+				status = ARSpace::Lex_Match(match, &token);
+
+				if(status == AR_S_YES)
+				{
+						ARSpace::psrToken_t		psr_tok;
+
+						PARSER_TOTERMTOK(&token, &psr_tok);
+
+						status = ARSpace::Parser_AddToken(parser_ctx, &psr_tok);
+						
+						if(token.value == 0)
+						{
+								break;
+						}
+
+				}else if(status == AR_S_NO)
+				{
+						size_t len = wcslen(ARSpace::Lex_GetNextInput(match));
+						if(len > 20) len = 20;
+
+						size_t line;
+						ARSpace::Lex_MatchGetCoordinate(match, NULL, &line, NULL);
+
+						
+						wchar_t msg[1024];
+						AR_wcsncpy(msg, ARSpace::Lex_GetNextInput(match),  (int)len);
+						AR_error(AR_ERR_FATAL, L"Input Error : %ls line : %Iu", msg, line);
+						AR_abort();
+
+				}else
+				{
+						AR_error(AR_ERR_FATAL, L"inner error !\r\n");
+						AR_abort();
+				}
+
+		}
+
+		Parser_DestroyContext(parser_ctx);
+		parser_ctx = NULL;
+
+		Parser_DestroyParser(parser);
+		parser = NULL;
+
+		Parser_DestroyGrammar(gmr);
+		gmr = NULL;
+
+		Lex_Destroy(lex);
+		lex = NULL;
+
+		Lex_DestroyMatch(match);
+		match = NULL;
+
+}
+
+
+
+
+
+:}BTM;
+
+
+
+
 
