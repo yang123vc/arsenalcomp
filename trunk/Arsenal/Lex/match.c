@@ -277,6 +277,7 @@ lexMatch_t*		Lex_CreateMatch(const lex_t *lex)
 
 		if(pmatch->prog_set == NULL)
 		{
+				AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
 				AR_DEL(pmatch);
 				return NULL;
 		}
@@ -290,10 +291,11 @@ lexMatch_t*		Lex_CreateMatch(const lex_t *lex)
 
 				if(prog == NULL)
 				{
+						AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
 						Lex_DestroyMatch(pmatch);
 						return NULL;
 				}
-		
+				
 
 				RGX_InitProg(prog);
 
@@ -307,6 +309,7 @@ lexMatch_t*		Lex_CreateMatch(const lex_t *lex)
 				
 				if(Lex_InserToProgSet(pmatch->prog_set, prog, &lex->rule_set.action[i]) != AR_S_YES)
 				{
+
 						RGX_UnInitProg(prog);
 						AR_DEL(prog);
 						Lex_DestroyMatch(pmatch);
