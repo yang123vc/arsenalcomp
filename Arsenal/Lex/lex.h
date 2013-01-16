@@ -116,14 +116,14 @@ typedef struct __lex_match_result_tag	lexMatch_t;
 
 struct __lex_match_result_tag
 {
-		ar_bool_t							is_ok;
+		ar_bool_t						is_ok;
 		const wchar_t					*input;
 		const wchar_t					*next;
 		size_t							line;
 		size_t							col;
-		ar_uint_32_t						next_action;
+		ar_uint_32_t					next_action;
 
-		ar_uint_t							flags;
+		ar_uint_t						flags;
 		lexProgSet_t					*prog_set;
 };
 

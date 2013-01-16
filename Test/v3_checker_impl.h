@@ -3,7 +3,7 @@
 /******************************************************************************************/
  
 
- 
+
 enum{
 TOK_DELIM_ID = 257,
 TOK_CONSTANT = 258,
@@ -24,6 +24,8 @@ TOK_R_PAREN = 272,
 TOK_COMMA = 273,
 };
 
+
+ 
 
 typedef enum
 {
@@ -276,8 +278,6 @@ static psrRetVal_t AR_STDCALL on_operator(const psrToken_t *tok,void *ctx);
 
 
 static psrRetVal_t AR_STDCALL autoreturn_null(const psrToken_t *tok,void *ctx);
-
-
 
 
 
@@ -1088,6 +1088,59 @@ static psrRetVal_t AR_STDCALL on_empty_call_params(psrNode_t **nodes, size_t cou
 
 
 
+
+
+/*
+main
+*/
+ 
+
+
+
+
+static arStatus_t		AR_STDCALL handle_on_error(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
+{
+		wchar_t msg[32];
+		AR_ASSERT(tok != NULL);
+		
+		AR_UNUSED(expected);
+		AR_UNUSED(count);
+		AR_UNUSED(ctx);
+	
+		if(tok->str_cnt > 0)
+		{
+				AR_wcsncpy(msg, tok->str, AR_MIN(tok->str_cnt, 32));
+		}else
+		{
+				AR_wcscpy(msg, L"%EOI");
+		}
+
+		AR_error(AR_ERR_WARNING, L"invalid token : '%ls' (%Iu,%Iu)\r\n", msg, tok->line, tok->col);
+		return AR_S_NO;
+}
+
+
+static void		AR_STDCALL free_node(psrNode_t *node, void *ctx)
+{
+		AR_ASSERT(node != NULL);
+		AR_UNUSED(ctx);
+		DestroyExprNode((exprNode_t*)node);
+}
+
+
+static const psrHandler_t		__g_expr_handler = 
+{
+		handle_on_error,
+		free_node
+};
+
+
+
+
+
+
+
+ 
 
 
 
