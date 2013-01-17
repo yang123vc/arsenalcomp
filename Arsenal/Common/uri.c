@@ -29,9 +29,9 @@ struct __arsenal_uri_tag
 		arString_t		*path;
 		arString_t		*query;
 		arString_t		*fragment;
-		ar_uint_16_t		port;
+		ar_uint_16_t	port;
 
-		ar_bool_t			_parse_encoded;
+		ar_bool_t		_parse_encoded;
 };
 
 arURI_t*		AR_CreateURI(arCodePage_t cp)

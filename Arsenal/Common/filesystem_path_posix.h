@@ -1,10 +1,16 @@
-//
-//  path_posix.h
-//  Common
-//
-//  Created by Solidus on 12-8-6.
-//  Copyright (c) 2012年 none. All rights reserved.
-//
+/*
+ * The Arsenal Library
+ * Copyright (c) 2009-2012 by Solidus
+ * 
+ * Permission to use, copy, modify, distribute and sell this software
+ * and its documentation for any purpose is hereby granted without fee,
+ * provided that the above copyright notice appear in all copies and
+ * that both that copyright notice and this permission notice appear
+ * in supporting documentation.It is provided "as is" without express 
+ * or implied warranty.
+ *
+ */
+
 
 #ifndef __ARSENAL_COMMON_PATH_POSIX_H__
 #define __ARSENAL_COMMON_PATH_POSIX_H__
