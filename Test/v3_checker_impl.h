@@ -55,6 +55,7 @@ typedef enum
 
 }exprOperator_t;
 
+#define IsBinaryOperator(_op)	((_op) < CHECKER_EXPR_NOT)
 
 typedef struct __var_node_tag
 {
@@ -1063,7 +1064,7 @@ main
 
 static arStatus_t		AR_STDCALL handle_on_error(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
 {
-		wchar_t msg[32];
+		wchar_t msg[33];
 		AR_ASSERT(tok != NULL);
 		
 		AR_UNUSED(expected);
@@ -1073,14 +1074,16 @@ static arStatus_t		AR_STDCALL handle_on_error(const psrToken_t *tok, const size_
 		if(tok->str_cnt > 0)
 		{
 				AR_wcsncpy(msg, tok->str, AR_MIN(tok->str_cnt, 32));
+				msg[AR_MIN(tok->str_cnt, 32)] = L'\0';
 		}else
 		{
 				AR_wcscpy(msg, L"%EOI");
 		}
 
 		AR_error(AR_ERR_WARNING, L"invalid token : '%ls' (%Iu,%Iu)\r\n", msg, tok->line, tok->col);
-		return AR_S_NO;
+		return AR_S_YES;
 }
+
 
 
 static void		AR_STDCALL free_node(psrNode_t *node, void *ctx)
