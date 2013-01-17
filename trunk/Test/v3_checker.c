@@ -232,8 +232,6 @@ ar_bool_t v3check(const wchar_t *expr)
 				goto END_POINT;
 		}
 
-
-
 END_POINT:
 		if(expr_node)
 		{
