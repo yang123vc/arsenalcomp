@@ -108,17 +108,31 @@ void V3_CheckerUnInit()
 
 exprNode_t*	v3_build_check_expr(const wchar_t *expr)
 {
-#if(0)
+
 		psrContext_t 			*parser_ctx;
-		lexMatch_t			*match;
-		lexToken_t			token;
+		lexMatch_t				*match;
+		lexToken_t				token;
+		
 		AR_ASSERT(expr != NULL);
 
-		 = Parser_CreateContext(parser, NULL);
-		= Lex_CreateMatch(lex);
+		AR_ASSERT(__g_v3_lex != NULL && __g_v3_parser != NULL);
 
-		Lex_ResetInput(match, input.c_str());
+		match = Lex_CreateMatch(__g_v3_lex);
+		parser_ctx = Parser_CreateContext(__g_v3_parser, NULL);
+
+		if(match == NULL || parser_ctx == NULL)
+		{
+				AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+				return NULL;
+		}
+		
+
+		Lex_ResetInput(match, expr);
 		Lex_MatchClearFlags(match);
+
+
+#if(0)
+		
 		
 		
 		AR_memset(&token, 0, sizeof(token));
