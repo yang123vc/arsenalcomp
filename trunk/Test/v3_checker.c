@@ -29,6 +29,7 @@ static psrGrammar_t			*__g_v3_grammar = NULL;
 static const parser_t		*__g_v3_parser = NULL;
 
 
+
 arStatus_t V3_CheckerInit()
 {
 		arStatus_t status;
@@ -210,6 +211,237 @@ exprNode_t*	v3_build_check_expr(const wchar_t *expr)
 		return expr_node;
 }
 
+static ar_bool_t exprnode_is_value_type(const exprNode_t *node)
+{
+		AR_ASSERT(node != NULL);
+
+		switch(node->t)
+		{
+		case VARIABLE_T:
+		case CONSTANT_T:
+				return true;
+		case EXPR_T:
+		case CALL_T:
+		case NAME_T:
+		default:
+				return false;
+		}
+}
+
+
+
+static ar_bool_t exprnode_is_expr_type(const exprNode_t *node)
+{
+		AR_ASSERT(node != NULL);
+
+		switch(node->t)
+		{
+		case EXPR_T:
+		case CALL_T:
+				return true;
+		case VARIABLE_T:
+		case CONSTANT_T:
+		case NAME_T:
+		default:
+				return false;
+		}
+}
+
+
+static ar_bool_t evaluate(const exprNode_t *node);
+
+static ar_bool_t evaluate_value(const exprNode_t *node)
+{
+		AR_ASSERT(node != NULL);
+
+		switch(node->t)
+		{
+		case VARIABLE_T:
+				AR_DPRINT(L"variable : '%ls'\r\n", node->var.name);
+				return true;
+				break;
+		case CONSTANT_T:
+				AR_DPRINT(L"constant : '%ls'\r\n", node->constant.constant);
+				return true;
+				break;
+		case EXPR_T:
+		case CALL_T:
+		case NAME_T:
+		default:
+				AR_ASSERT(false);
+				return false;
+		}
+}
+
+static ar_bool_t evaluate_binary_value_expr(exprOperator_t op, const exprNode_t *left, const exprNode_t *right)
+{
+		AR_ASSERT(left != NULL && right != NULL);
+
+		AR_ASSERT(IsBinaryOperator(op));
+		AR_ASSERT(exprnode_is_value_type(left) && exprnode_is_value_type(right));
+
+
+
+		/************************************************************************************************/
+		{
+				ar_int_t cmp;
+				const wchar_t *left_str, *right_str;
+
+				if(left->t == VARIABLE_T)
+				{
+						left_str = left->var.name;	
+				}else
+				{
+						left_str = left->constant.constant;
+				}
+
+				if(right->t == VARIABLE_T)
+				{
+						right_str = right->var.name;	
+				}else
+				{
+						right_str = right->constant.constant;
+				}
+				
+				AR_DPRINT(L"left : '%ls'\r\n", left_str);
+				AR_DPRINT(L"right : '%ls'\r\n", right_str);
+
+				cmp = AR_wcscmp(left_str, right_str);
+
+				switch(op)
+				{
+				case CHECKER_EXPR_OR:
+						return true;
+				case CHECKER_EXPR_AND:
+						return true;
+				case CHECKER_EXPR_LESS:
+						return cmp < 0;
+				case CHECKER_EXPR_GREATER:
+						return cmp > 0;
+				case CHECKER_EXPR_LE:
+						return cmp <= 0;
+				case CHECKER_EXPR_GE:
+						return cmp >= 0;
+				case CHECKER_EXPR_EQ:
+						return cmp == 0;
+				case CHECKER_EXPR_NE:
+						return cmp != 0;
+				case CHECKER_EXPR_NOT:
+				default:
+						AR_error(AR_ERR_WARNING, L"logical error\r\n");
+						AR_ASSERT(false);
+						return false;
+				}
+		}
+
+
+
+		/************************************************************************************************/
+
+
+
+}
+
+static ar_bool_t evaluate_call(const wchar_t *name, const exprNode_t **params, size_t param_count)
+{
+		size_t i;
+		AR_ASSERT(name != NULL && params != NULL);
+
+		AR_DPRINT(L"Call : %ls(", name);
+
+		for(i = 0; i < param_count; ++i)
+		{
+				AR_ASSERT(params[i] && exprnode_is_value_type(params[i]));
+
+				if(params[i]->t == VARIABLE_T)
+				{
+						AR_DPRINT(L"%ls", params[i]->var.name);
+				}else
+				{
+						AR_DPRINT(L"%ls", params[i]->constant.constant);
+				}
+
+				if(i < param_count - 1)
+				{
+						AR_DPRINT(L", ");
+				}
+
+		}
+		AR_DPRINT(L")\r\n", name);
+
+		return true;
+
+}
+
+static ar_bool_t evaluate_expr(exprOperator_t op, const exprNode_t *left, const exprNode_t *right)
+{
+		ar_bool_t l_is_value, r_is_value;
+		
+		AR_ASSERT(left != NULL);
+
+		l_is_value = r_is_value = false;
+
+		l_is_value = exprnode_is_value_type(left);
+
+		if(op != CHECKER_EXPR_NOT)
+		{
+				AR_ASSERT(right != NULL);
+				r_is_value = exprnode_is_value_type(right);
+		}
+
+
+		if(l_is_value && r_is_value)
+		{
+				return evaluate_binary_value_expr(op, left, right);
+		}
+		
+
+		switch(op)
+		{
+				case CHECKER_EXPR_OR:
+						return evaluate(left) || evaluate(right);
+				case CHECKER_EXPR_AND:
+						return evaluate(left) && evaluate(right);
+				case CHECKER_EXPR_LESS:
+						return evaluate(left) < evaluate(right);
+				case CHECKER_EXPR_GREATER:
+						return evaluate(left) > evaluate(right);
+				case CHECKER_EXPR_LE:
+						return evaluate(left) <= evaluate(right);
+				case CHECKER_EXPR_GE:
+						return evaluate(left) >= evaluate(right);
+				case CHECKER_EXPR_EQ:
+						return evaluate(left) == evaluate(right);
+				case CHECKER_EXPR_NE:
+						return evaluate(left) != evaluate(right);
+				case CHECKER_EXPR_NOT:
+						return !evaluate(left);
+				default:
+						AR_error(AR_ERR_WARNING, L"logical error\r\n");
+						AR_ASSERT(false);
+						return false;
+		}
+}
+
+static ar_bool_t evaluate(const exprNode_t *node)
+{
+		switch(node->t)
+		{
+		case EXPR_T:
+				return evaluate_expr(node->expr.op, node->expr.left, node->expr.right);
+		case CALL_T:
+				return evaluate_call(node->call.name, (const exprNode_t**)node->call.params, node->call.param_cnt);
+		case VARIABLE_T:
+		case CONSTANT_T:
+				return evaluate_value(node);
+				break;
+		case NAME_T:
+		default:
+				AR_error(AR_ERR_WARNING, L"logical error : invalid node type '%u'\r\n", node->t);
+				return false;
+		}
+}
+
 
 
 
@@ -230,6 +462,9 @@ ar_bool_t v3check(const wchar_t *expr)
 				//AR_error(AR_ERR_WARNING, L"failed to parse '%ls'\r\n", expr);
 				ret = false;
 				goto END_POINT;
+		}else
+		{
+				ret = evaluate(expr_node);
 		}
 
 END_POINT:
