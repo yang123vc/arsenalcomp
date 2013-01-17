@@ -849,7 +849,8 @@ static arStatus_t		AR_STDCALL handle_on_error(const psrToken_t *tok, const size_
 		AR_UNUSED(expected);
 		AR_UNUSED(count);
 		AR_UNUSED(ctx);
-	
+
+		
 		if(tok->str_cnt > 0)
 		{
 				AR_wcsncpy(msg, tok->str, AR_MIN(tok->str_cnt, 32));
