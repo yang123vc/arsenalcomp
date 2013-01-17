@@ -3,7 +3,7 @@
 /******************************************************************************************/
  
 
-
+ 
 enum{
 TOK_DELIM_ID = 257,
 TOK_CONSTANT = 258,
@@ -24,8 +24,6 @@ TOK_R_PAREN = 272,
 TOK_COMMA = 273,
 };
 
-
- 
 
 typedef enum
 {
@@ -179,7 +177,12 @@ void		DestroyExprNode(exprNode_t *node)
 
  
 
+
+/*
+CreateOperatorExprNode
+*/
  
+	
 	exprNode_t*	CreateOperatorExprNode(const psrToken_t *tok)
 	{
 		exprNode_t	*expr_node;
@@ -199,50 +202,51 @@ void		DestroyExprNode(exprNode_t *node)
 
 		switch(tok->term_val)
 		{
-			case TOK_GE:
+		case TOK_LE:
+				expr_node->expr.op = CHECKER_EXPR_LE;
+				break;
+		case TOK_GE:
 				expr_node->expr.op = CHECKER_EXPR_GE;
 				break;
-			case TOK_EQ:
+		case TOK_EQ:
 				expr_node->expr.op = CHECKER_EXPR_EQ;
 				break;
-			case TOK_NE:
+		case TOK_NE:
 				expr_node->expr.op = CHECKER_EXPR_NE;
 				break;
-			case TOK_ANDAND:
+		case TOK_ANDAND:
 				expr_node->expr.op = CHECKER_EXPR_AND;
 				break;
-			case TOK_OROR:
+		case TOK_OROR:
 				expr_node->expr.op = CHECKER_EXPR_OR;
 				break;
-			case TOK_LESS:
+		case TOK_LESS:
 				expr_node->expr.op = CHECKER_EXPR_LESS;
 				break;
-			case TOK_GREATER:
+		case TOK_GREATER:
 				expr_node->expr.op = CHECKER_EXPR_GREATER;
 				break;
-			case TOK_NOT:
+		case TOK_NOT:
 				expr_node->expr.op = CHECKER_EXPR_NOT;
 				break;
-			default:
-			{
+		default:
+		{
 				wchar_t tmp[128];
 				if(tok->term_val != 0)
 				{
-					AR_wcsncpy(tmp, tok->str, AR_MIN(tok->str_cnt, 32));
+						AR_wcsncpy(tmp, tok->str, AR_MIN(tok->str_cnt, 32));
 				}else
 				{
-					AR_wcscpy(tmp, L"%EOI");
+						AR_wcscpy(tmp, L"%EOI");
 				}
 
 				AR_error(AR_ERR_WARNING, L"invalid token type : %ls\r\n", tmp);
-
 				return NULL;
-			}
 		}
-		
+		}
 		return expr_node;
 	}
-	
+
  
 
 static const wchar_t *__g_lex_name[] = {
@@ -278,6 +282,8 @@ static psrRetVal_t AR_STDCALL on_operator(const psrToken_t *tok,void *ctx);
 
 
 static psrRetVal_t AR_STDCALL autoreturn_null(const psrToken_t *tok,void *ctx);
+
+
 
 
 
@@ -341,9 +347,6 @@ static psrRetVal_t AR_STDCALL autoreturn_0(psrNode_t **nodes, size_t count, cons
 /*expr	:	( expr ) */
 static psrRetVal_t AR_STDCALL autoreturn_1(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*expr	:	( error ) */
-static psrRetVal_t AR_STDCALL on_error_subexpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
 /*expr	:	expr && expr */
 /*expr	:	expr || expr */
 /*expr	:	expr <= expr */
@@ -360,9 +363,6 @@ static psrRetVal_t AR_STDCALL on_unary_expression(psrNode_t **nodes, size_t coun
 /*call	:	NAME ( params ) */
 static psrRetVal_t AR_STDCALL on_call_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
-/*call	:	NAME ( error ) */
-static psrRetVal_t AR_STDCALL on_error_call_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
-
 /*params	:	params , param */
 static psrRetVal_t AR_STDCALL insert_new_params(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx);
 
@@ -378,7 +378,6 @@ static psrRetVal_t AR_STDCALL on_empty_call_params(psrNode_t **nodes, size_t cou
 static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	handler; size_t	auto_ret; } __g_rule_pattern[] = {
 {L"expression  :  expr ", NULL, autoreturn_0, 0},
 {L"expr  :  ( expr ) ", NULL, autoreturn_1, 0},
-{L"expr  :  ( error ) ", NULL, on_error_subexpr, 0},
 {L"expr  :  expr && expr ", NULL, on_binary_expression, 0},
 {L"expr  :  expr || expr ", NULL, on_binary_expression, 0},
 {L"expr  :  expr <= expr ", NULL, on_binary_expression, 0},
@@ -395,7 +394,6 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"term  :  CONSTANT ", NULL, autoreturn_0, 0},
 {L"term  :  FILE_VAR ", NULL, autoreturn_0, 0},
 {L"call  :  NAME ( params ) ", NULL, on_call_expression, 0},
-{L"call  :  NAME ( error ) ", NULL, on_error_call_expression, 0},
 {L"params  :  params , param ", NULL, insert_new_params, 0},
 {L"params  :  param ", NULL, on_call_params_expr, 0},
 {L"params  :   ", NULL, on_empty_call_params, 0},
@@ -404,7 +402,7 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 {L"param  :  FILE_VAR ", NULL, autoreturn_0, 0}
 };
 
-#define __RULE_COUNT__ ((size_t)26)
+#define __RULE_COUNT__ ((size_t)24)
 #define START_RULE L"expression"
 
 
@@ -713,7 +711,7 @@ static psrRetVal_t AR_STDCALL on_name(const psrToken_t *tok,void *ctx)
 						}
 						
 						AR_wcsncpy(expr_node->name.name, tok->str, tok->str_cnt);
-						expr_node->name.name[tok->str_cnt - 2] = L'\0';
+						expr_node->name.name[tok->str_cnt] = L'\0';
 						ret.status = AR_S_YES;
 						ret.node = (psrNode_t*)expr_node;
 						return ret;
@@ -807,23 +805,6 @@ static psrRetVal_t AR_STDCALL autoreturn_1(psrNode_t **nodes, size_t count, cons
 			ret.status = AR_S_YES;
 			ret.node = (psrNode_t*)nodes[1];
 			nodes[1] = NULL;
-			return ret;
-		 }
-}
-
-
-
-
-/*expr	:	( error ) */
-static psrRetVal_t AR_STDCALL on_error_subexpr(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-		{ 
-			psrRetVal_t		ret = {AR_E_ABORT, NULL};
-			AR_UNUSED(nodes);
-			AR_UNUSED(count);
-			AR_UNUSED(name);
-			AR_UNUSED(ctx);
-
 			return ret;
 		 }
 }
@@ -948,31 +929,13 @@ static psrRetVal_t AR_STDCALL on_call_expression(psrNode_t **nodes, size_t count
 
 
 
-/*call	:	NAME ( error ) */
-static psrRetVal_t AR_STDCALL on_error_call_expression(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
-{
-		{ 
-				psrRetVal_t		ret = {AR_E_ABORT, NULL};
-
-				AR_UNUSED(nodes);
-				AR_UNUSED(count);
-				AR_UNUSED(ctx);
-				AR_UNUSED(name);
-
-				return ret;
-		 }
-}
-
-
-
-
 /*params	:	params , param */
 static psrRetVal_t AR_STDCALL insert_new_params(psrNode_t **nodes, size_t count, const wchar_t *name, void *ctx)
 {
 		{ 
 				psrRetVal_t		ret = {AR_S_YES, NULL};	//嗨~~，为啥非要在这里创建call Expression呢？因为我懒得写nodelist一类的东西塞进exprNode_t里了，先这样，以后再说~~
 				exprNode_t		*expr_node, *new_node;
-				AR_ASSERT(nodes != NULL && count == 2);
+				AR_ASSERT(nodes != NULL && count == 3);
 				AR_UNUSED(ctx);
 				AR_memset(&ret, 0, sizeof(ret));
 				
@@ -980,7 +943,7 @@ static psrRetVal_t AR_STDCALL insert_new_params(psrNode_t **nodes, size_t count,
 				AR_UNUSED(ctx);
 				AR_UNUSED(name);
 
-				if(nodes[0] == NULL || nodes[1] == NULL)
+				if(nodes[0] == NULL || nodes[2] == NULL)
 				{
 					ret.status = AR_E_ABORT;
 					ret.node = NULL;
@@ -988,7 +951,7 @@ static psrRetVal_t AR_STDCALL insert_new_params(psrNode_t **nodes, size_t count,
 				}	
 
 				expr_node = (exprNode_t*)nodes[0];
-				new_node = (exprNode_t*)nodes[1];
+				new_node = (exprNode_t*)nodes[2];
 
 				if(expr_node->call.param_cnt >= AR_NELEMS(expr_node->call.params))
 				{
@@ -1001,7 +964,7 @@ static psrRetVal_t AR_STDCALL insert_new_params(psrNode_t **nodes, size_t count,
 				expr_node->call.params[expr_node->call.param_cnt] = new_node;
 				expr_node->call.param_cnt++;
 
-				nodes[0] = nodes[1] = NULL;
+				nodes[0] = nodes[2] = NULL;
 				ret.status = AR_S_YES;
 				ret.node = (psrNode_t*)expr_node;
 				return ret;

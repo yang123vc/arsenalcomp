@@ -108,14 +108,16 @@ void V3_CheckerUnInit()
 
 exprNode_t*	v3_build_check_expr(const wchar_t *expr)
 {
-
+		exprNode_t				*expr_node;
 		psrContext_t 			*parser_ctx;
 		lexMatch_t				*match;
 		lexToken_t				token;
 		
 		AR_ASSERT(expr != NULL);
-
+		
 		AR_ASSERT(__g_v3_lex != NULL && __g_v3_parser != NULL);
+
+		expr_node = NULL;
 
 		match = Lex_CreateMatch(__g_v3_lex);
 		parser_ctx = Parser_CreateContext(__g_v3_parser, NULL);
@@ -130,11 +132,6 @@ exprNode_t*	v3_build_check_expr(const wchar_t *expr)
 		Lex_ResetInput(match, expr);
 		Lex_MatchClearFlags(match);
 
-
-#if(0)
-		
-		
-		
 		AR_memset(&token, 0, sizeof(token));
 		
 		arStatus_t status = AR_S_YES;
@@ -142,60 +139,75 @@ exprNode_t*	v3_build_check_expr(const wchar_t *expr)
 		while(status == AR_S_YES)
 		{
 
-				status = ARSpace::Lex_Match(match, &token);
+				status = Lex_Match(match, &token);
 
-				if(status == AR_S_YES)
+				if(status == AR_S_NO)
 				{
-						ARSpace::psrToken_t		psr_tok;
+						wchar_t msg[1024];
+						size_t line, col;
+						size_t len = AR_wcslen(Lex_GetNextInput(match));
+						if(len > 20)
+						{
+								len = 20;
+						}
+						
+						Lex_MatchGetCoordinate(match, NULL, &line, &col);
 
+						AR_wcsncpy(msg, Lex_GetNextInput(match),  (int)len);
+
+						AR_error(AR_ERR_WARNING, L"Invalid expression : %ls line : %Iu", msg, line);
+
+						break;
+				}else if(status != AR_S_YES)
+				{
+						AR_error(AR_ERR_WARNING, L"lexer error : %u!\r\n", status);
+						break;
+				}else
+				{
+						psrToken_t		psr_tok;
+						AR_memset(&psr_tok, 0, sizeof(psr_tok));
+						
 						PARSER_TOTERMTOK(&token, &psr_tok);
 
-						status = ARSpace::Parser_AddToken(parser_ctx, &psr_tok);
+						status = Parser_AddToken(parser_ctx, &psr_tok);
 						
 						if(token.value == 0)
 						{
 								break;
 						}
-
-				}else if(status == AR_S_NO)
-				{
-						size_t len = wcslen(ARSpace::Lex_GetNextInput(match));
-						if(len > 20) len = 20;
-
-						size_t line;
-						ARSpace::Lex_MatchGetCoordinate(match, NULL, &line, NULL);
-
-						
-						wchar_t msg[1024];
-						AR_wcsncpy(msg, ARSpace::Lex_GetNextInput(match),  (int)len);
-						AR_error(AR_ERR_FATAL, L"Input Error : %ls line : %Iu", msg, line);
-						AR_abort();
-
-				}else
-				{
-						AR_error(AR_ERR_FATAL, L"inner error !\r\n");
-						AR_abort();
 				}
-
 		}
 
-		Parser_DestroyContext(parser_ctx);
-		parser_ctx = NULL;
+		if(status == AR_S_YES)
+		{
+				expr_node  = (exprNode_t*)Parser_GetResult(parser_ctx);
 
-		Parser_DestroyParser(parser);
-		parser = NULL;
+				if(expr_node == NULL)
+				{
+						status = AR_E_FAIL;
+				}
+		}
 
-		Parser_DestroyGrammar(gmr);
-		gmr = NULL;
 
-		Lex_Destroy(lex);
-		lex = NULL;
+		if(parser_ctx)
+		{
+				Parser_DestroyContext(parser_ctx);
+				parser_ctx = NULL;
+		}
+		
+		if(match)
+		{
+				Lex_DestroyMatch(match);
+				match = NULL;
+		}
 
-		Lex_DestroyMatch(match);
-		match = NULL;
-#endif
+		if(status != AR_S_YES && expr_node)
+		{
+				DestroyExprNode(expr_node);
+				expr_node = NULL;
+		}
 
-		return NULL;
+		return expr_node;
 }
 
 
@@ -204,7 +216,32 @@ exprNode_t*	v3_build_check_expr(const wchar_t *expr)
 
 ar_bool_t v3check(const wchar_t *expr)
 {
-		return false;
+		exprNode_t *expr_node;
+		ar_bool_t ret;
+
+		AR_ASSERT(expr != NULL);
+
+		ret = true;
+		
+		expr_node= v3_build_check_expr(expr);
+
+		if(expr_node == NULL)
+		{
+				//AR_error(AR_ERR_WARNING, L"failed to parse '%ls'\r\n", expr);
+				ret = false;
+				goto END_POINT;
+		}
+
+
+
+END_POINT:
+		if(expr_node)
+		{
+				DestroyExprNode(expr_node);
+				expr_node = NULL;
+		}
+		return ret;
+		
 }
 
 
@@ -213,6 +250,10 @@ ar_bool_t v3check(const wchar_t *expr)
 
 void v3checker_test()
 {
+		arStatus_t status = V3_CheckerInit();
+
+		AR_ASSERT(status == AR_S_YES);
+
 		wchar_t expr[1024];
 
 		while(true)
@@ -228,13 +269,15 @@ void v3checker_test()
 
 				if(is_valid)
 				{
-						AR_printf(L"'%ls' is valid\r\n", expr);
+						//AR_printf(L"'%ls' is valid\r\n", expr);
 				}else
 				{
-						AR_printf(L"'%ls' failed\r\n", expr);
+						//AR_printf(L"'%ls' failed\r\n", expr);
 				}
 		}
-		
+
+
+		V3_CheckerUnInit();
 } 
 
 
