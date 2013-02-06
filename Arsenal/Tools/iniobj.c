@@ -859,7 +859,7 @@ arStatus_t			Ini_SectionIsExisted(const iniObject_t *obj, const wchar_t *sect)
 {
 		AR_ASSERT(obj != NULL && sect != NULL);
 
-		return __find_section(obj, sect) != -1 ? AR_S_NO : AR_S_YES;
+		return __find_section(obj, sect) != -1 ?  AR_S_YES : AR_S_NO;
 
 }
 
@@ -876,7 +876,7 @@ arStatus_t			Ini_InsertSection(iniObject_t *obj, const wchar_t *sect, const wcha
 				return AR_E_INVAL;
 		}
 
-		if(Ini_SectionIsExisted(obj, sect) != AR_S_YES)
+		if(Ini_SectionIsExisted(obj, sect) == AR_S_YES)
 		{
 				return AR_E_NOTFOUND;
 		}
