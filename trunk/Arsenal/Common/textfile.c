@@ -796,11 +796,15 @@ arStatus_t	AR_SaveBomTextFile(const wchar_t *path, arTxtBom_t bom, const wchar_t
 		}
 #endif
 
-		do{
+		while(AR_GetBufferAvailable(buf) > 0 && AR_eof_file(file) != AR_S_YES && AR_error_file(file) != AR_S_YES)
+		{
 				ar_byte_t tmp[256];
 				size_t read_n;
 				wn = 0;
 				read_n = AR_ReadBufferData(buf, tmp, 256);
+				
+				AR_ASSERT(read_n > 0);
+
 				ret = AR_write_file(file, tmp, read_n, &wn);
 				
 				if(ret != AR_S_YES || wn != read_n)
@@ -810,7 +814,7 @@ arStatus_t	AR_SaveBomTextFile(const wchar_t *path, arTxtBom_t bom, const wchar_t
 						goto FAILED_POINT;
 				}
 
-		}while(AR_GetBufferAvailable(buf) > 0 && AR_eof_file(file) != AR_S_YES && AR_error_file(file) != AR_S_YES);
+		}
 
 		if(AR_error_file(file) == AR_S_YES)
 		{
