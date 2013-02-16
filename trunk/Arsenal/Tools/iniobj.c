@@ -1420,6 +1420,69 @@ arStatus_t			Ini_SetFloat(iniObject_t *obj, const wchar_t *sect, const wchar_t *
 		return Ini_SetString(obj, sect, key, buf, comment);
 }
 
+/*******************************************************************************************************************/
+
+
+size_t          Ini_GetSectionCount(const iniObject_t *obj)
+{
+        AR_ASSERT(obj != NULL);
+        return obj->cnt;
+}
+
+
+const wchar_t*  Ini_GetSectionNameByIndex(const iniObject_t *obj, size_t idx)
+{
+        AR_ASSERT(obj != NULL);
+        
+        if(idx < obj->cnt)
+        {
+                return obj->sect[idx]->section_name;
+        }else
+        {
+                return NULL;
+        }
+}
+
+
+size_t  Ini_GetSectionItemsCount(const iniObject_t *obj, const wchar_t *sect)
+{
+        ar_int_t idx;
+		AR_ASSERT(obj != NULL && sect != NULL);
+        
+        
+		idx = __find_section(obj, sect);
+		
+		if(idx == -1)
+		{
+                return 0;
+        }
+        
+        return obj->sect[idx]->cnt;
+}
+
+
+const wchar_t*  Ini_GetSectionKeyByIndex(const iniObject_t *obj, const wchar_t *sect, size_t idx)
+{
+        ar_int_t i;
+		AR_ASSERT(obj != NULL && sect != NULL);
+        
+		i = __find_section(obj, sect);
+		
+		if(idx == -1)
+		{
+                return NULL;
+        }
+        
+        
+        if(idx < obj->sect[idx]->cnt)
+        {
+                return obj->sect[i]->kv_pairs[idx]->key;
+        }else
+        {
+                return NULL;
+        }
+}
+
 
 
 AR_NAMESPACE_END

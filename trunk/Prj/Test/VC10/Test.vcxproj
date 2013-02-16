@@ -1515,7 +1515,6 @@
     <ClCompile Include="..\..\..\Test\marshal_die_test.cpp" />
     <ClCompile Include="..\..\..\Test\math_test.c" />
     <ClCompile Include="..\..\..\Test\mem_test.c" />
-    <ClCompile Include="..\..\..\Test\Operation.c" />
     <ClCompile Include="..\..\..\Test\parser_gen_perf_test.c" />
     <ClCompile Include="..\..\..\Test\parser_test.c" />
     <ClCompile Include="..\..\..\Test\perf_test.c" />
@@ -1529,7 +1528,6 @@
     <ClCompile Include="..\..\..\Test\test.c" />
     <ClCompile Include="..\..\..\Test\tokenizer_test.c" />
     <ClCompile Include="..\..\..\Test\uri_test.c" />
-    <ClCompile Include="..\..\..\Test\v3_checker.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Test\avltree.h" />
@@ -1653,13 +1651,11 @@
     <ClInclude Include="..\..\..\Test\Lexer\regexp.h" />
     <ClInclude Include="..\..\..\Test\lfu_cache.h" />
     <ClInclude Include="..\..\..\Test\marshal_die_predef.h" />
-    <ClInclude Include="..\..\..\Test\Operation.h" />
     <ClInclude Include="..\..\..\Test\parser_gen_perf_javascript_code_impl.h" />
     <ClInclude Include="..\..\..\Test\parser_gen_perf_sql_code_impl.h" />
     <ClInclude Include="..\..\..\Test\rbtree.h" />
     <ClInclude Include="..\..\..\Test\splaytree.h" />
     <ClInclude Include="..\..\..\Test\test.h" />
-    <ClInclude Include="..\..\..\Test\v3_checker_impl.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\Test\extlib\libcurl\include\curl\curlbuild.h.in" />

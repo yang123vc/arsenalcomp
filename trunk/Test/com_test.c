@@ -6,7 +6,7 @@
 #include <time.h>
 
 #include "lfu_cache.h"
-#include "Operation.h"
+
 
 
 #if defined(__LIB)
@@ -2518,70 +2518,6 @@ void str_test11()
 
 
 
-static void operation_test1()
-{
-		operationPool_t *pool;
-		
-		pool = Operation_CreatePool(2);
-
-		getchar();
-
-		if(Operation_IncreasePoolThread(pool) != AR_S_YES)
-		{
-				AR_ASSERT(false);
-		}
-
-		getchar();
-
-		if(Operation_IncreasePoolThread(pool) != AR_S_YES)
-		{
-				AR_ASSERT(false);
-		}
-
-
-		getchar();
-
-		if(Operation_IncreasePoolThread(pool) == AR_S_YES)
-		{
-				AR_ASSERT(false);
-		}
-
-		getchar();
-
-
-		arStatus_t has_idle = Operation_PoolHasIdleThread(pool);
-
-		AR_printf(L"has idle thread %d\r\n", AR_GET_STATUS(has_idle));
-
-		Operation_DestroyPool(pool);
-
-		pool = NULL;
-}
-
-static void operation_test2()
-{
-		operationPool_t *pool;
-		
-		pool = Operation_CreatePool(2);
-		
-		while(true)
-		{
-				char buf[1024];
-				char *s = NULL;
-				gets(buf);
-				if(strcmp(buf, "quit")== 0)break;
-				Operation_PostToPool(pool, (operation_t*)0x01);
-		}
-		
-		if(pool != NULL)
-		{
-				Operation_DestroyPool(pool);
-				pool = NULL;
-		}
-
-		pool = NULL;
-}
-
 
 
 
@@ -2619,74 +2555,7 @@ void	oper_test_destroy(void *result, void *usr_ctx)/*此函数在销毁operation时，如
 
 
 
-static void wait_test_func(void *usr_ctx)
-{
-		operation_t *oper = (operation_t*)usr_ctx;
-		void *result;
-		arStatus_t status = Operation_GetResult(oper, &result);
 
-		AR_printf(L"Operation_GetResult == %u\r\n", AR_GET_STATUS(status));
-
-		
-		if(status == AR_S_YES)
-		{
-				delete (std::string*)result;
-		}
-
-}
-
-void operation_test3()
-{
-
-		Operation_Init();
-
-		std::string oper_mark = "abcdef";
-
-		operation_t *oper = Operation_Create(oper_test_func, oper_test_destroy, (void*)&oper_mark);
-
-		AR_ASSERT(oper != NULL);
-
-		if(Operation_Start(oper) != AR_S_YES)
-		{
-				AR_ASSERT(false);
-		}
-
-		arThread_t *thd = AR_CreateThread(wait_test_func, oper);
-
-		std::string *pres = NULL;
-
-		Sleep(6000);
-		arStatus_t status = Operation_GetResult(oper, (void**)&pres);
-
-		AR_ASSERT(status == AR_S_YES || status == AR_E_NOTFOUND);
-
-		if(status == AR_S_YES)
-		{
-				delete pres;
-		}
-
-
-		if(Operation_GetResult(oper, (void**)&pres) == AR_S_YES)
-		{
-				AR_ASSERT(false);
-		}
-
-
-		Operation_Destroy(oper);
-
-		oper = NULL;
-
-		AR_DestroyThread(thd);
-		thd = NULL;
-
-		Operation_UnInit();
-}
-
-static void operation_test()
-{
-		//operation_test2();
-		operation_test3();
-}
 
 
 static void str_test12()
