@@ -161,7 +161,7 @@ void AR_Test()
 
 		//ray_test();
 
-		//sn_test();
+		sn_test();
 
 		//gen_code_test();
 
@@ -195,7 +195,7 @@ void AR_Test()
 
 		//marshal_die_main();
 		
-		v3checker_test();
+		//v3checker_test();
 
 		getchar();
 #else

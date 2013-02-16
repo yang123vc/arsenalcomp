@@ -682,7 +682,7 @@ static void util_sn3_test()
 
 void sn_test()
 {
-		//sn_test_torrent();
+		sn_test_torrent();
 		//sn_test_path();
 		//sn_test_str();
 		//sn_test_str2();
@@ -693,7 +693,7 @@ void sn_test()
 		//util_sn_test();
 		//util_sn2_test();
 
-		util_sn3_test();
+		//util_sn3_test();
 }
 
 
