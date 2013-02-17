@@ -262,7 +262,8 @@ Ini_GetSectionNameByIndex
 Ini_GetSectionItemsCount
 Ini_GetSectionKeyByIndex
 
-
+Ini_LoadObjectFromFile
+Ini_SaveObjectToFile
 
 
 

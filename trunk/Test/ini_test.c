@@ -147,10 +147,29 @@ END_POINT:
 		}
 }
 
+void ini_test3()
+{
+		iniObject_t *obj = Ini_CreateObject();
+		AR_ASSERT(obj != NULL);
+
+		arStatus_t status;
+		status = Ini_LoadObjectFromFile(obj, L"G:\\Temp\\1.ini");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = Ini_SaveObjectToFile(obj, L"G:\\Temp\\2.ini");
+		AR_ASSERT(status == AR_S_YES);
+		
+		Ini_DestroyObject(obj);
+		obj = NULL;
+
+}
+
 void Ini_Test()
 {
 		//ini_test1();
-		ini_test2();
+		//ini_test2();
+
+		ini_test3();
 
 }
 

@@ -1307,6 +1307,9 @@ arStatus_t			Ini_SaveObjectToString(const iniObject_t *obj, arString_t *out)
 								__CHECK_RET_VAL(AR_AppendFormatString(out, L"%ls\r\n", comment));
 						}else
 						{
+								__CHECK_RET_VAL(AR_AppendFormatString(out, L"%ls=%ls %ls\r\n", key, val, comment));
+
+								/*
 								if(AR_wcslen(val) == 0)
 								{
 										__CHECK_RET_VAL(AR_AppendFormatString(out, L"%ls %ls\r\n", key, comment));
@@ -1314,6 +1317,7 @@ arStatus_t			Ini_SaveObjectToString(const iniObject_t *obj, arString_t *out)
 								{
 										__CHECK_RET_VAL(AR_AppendFormatString(out, L"%ls=%ls %ls\r\n", key, val, comment));
 								}
+								*/
 						}
 				}
 				__CHECK_RET_VAL(AR_AppendString(out, L"\r\n"));
@@ -1483,6 +1487,99 @@ const wchar_t*  Ini_GetSectionKeyByIndex(const iniObject_t *obj, const wchar_t *
         }
 }
 
+
+
+
+arStatus_t		Ini_LoadObjectFromFile(iniObject_t *obj, const wchar_t *path)
+{
+        arStatus_t    status;
+        arString_t      *str;
+        AR_ASSERT(obj != NULL && path != NULL);
+        
+        status = AR_S_YES;
+        str = AR_CreateString();
+        
+        if(str == NULL)
+        {
+                AR_error(AR_ERR_WARNING, L"low mem : %ls\r\n", AR_FUNC_NAME);
+                status = AR_E_NOMEM;
+                goto END_POINT;
+        }
+        
+        status = AR_LoadBomTextFile(path, NULL, str);
+        
+        if(status != AR_S_YES)
+        {
+                AR_error(AR_ERR_WARNING, L"failed to load ini file: %ls\r\n", path);
+                goto END_POINT;
+        }
+        
+        Ini_ClearObject(obj);
+
+        status = Ini_LoadObjectFromString(obj, AR_GetStringCString(str));
+        
+        if(status != AR_S_YES)
+        {
+                AR_error(AR_ERR_WARNING, L"failed to load ini file: %ls\r\n", path);
+                goto END_POINT;
+        }
+        
+END_POINT:
+        if(str)
+        {
+                AR_DestroyString(str);
+                str = NULL;
+        }
+        
+        return status;
+
+}
+
+arStatus_t		Ini_SaveObjectToFile(const iniObject_t *obj, const wchar_t *path)
+{
+        arStatus_t      status;
+        arString_t      *str;
+        AR_ASSERT(obj != NULL && path != NULL);
+        
+        status = AR_S_YES;
+        str = AR_CreateString();
+        
+        if(str == NULL)
+        {
+                AR_error(AR_ERR_WARNING, L"low mem : %ls\r\n", AR_FUNC_NAME);
+                status = AR_E_NOMEM;
+                goto END_POINT;
+        }
+        
+        status = Ini_SaveObjectToString(obj, str);
+        
+        if(status  != AR_S_YES)
+        {
+                AR_error(AR_ERR_WARNING, L"failed to save ini file : %ls\r\n", path);
+                goto END_POINT;
+        }
+
+        
+        
+        status = AR_SaveBomTextFile(path, AR_TXT_BOM_UTF_8, AR_GetStringCString(str));
+        
+        if(status != AR_S_YES)
+        {
+                AR_error(AR_ERR_WARNING, L"failed to save ini file: %ls\r\n", path);
+                goto END_POINT;
+        }
+        
+        
+END_POINT:
+        
+        if(str)
+        {
+                AR_DestroyString(str);
+                str = NULL;
+        }
+        return status;
+
+}
 
 
 AR_NAMESPACE_END
