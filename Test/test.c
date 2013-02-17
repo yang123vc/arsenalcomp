@@ -161,7 +161,7 @@ void AR_Test()
 
 		//ray_test();
 
-		sn_test();
+		//sn_test();
 
 		//gen_code_test();
 
@@ -179,7 +179,7 @@ void AR_Test()
 		
 		//tokenizer_test();
 
-		//Ini_Test();
+		Ini_Test();
 		
 		//parser_gen_perf_test();
 

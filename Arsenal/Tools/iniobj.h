@@ -31,6 +31,10 @@ void			Ini_ClearObject(iniObject_t *obj);
 arStatus_t		Ini_LoadObjectFromString(iniObject_t *obj, const wchar_t *ini_data);
 arStatus_t		Ini_SaveObjectToString(const iniObject_t *obj, arString_t *out);
 
+arStatus_t		Ini_LoadObjectFromFile(iniObject_t *obj, const wchar_t *path);
+arStatus_t		Ini_SaveObjectToFile(const iniObject_t *obj, const wchar_t *path);
+
+
 
 arStatus_t		Ini_SectionIsExisted(const iniObject_t *obj, const wchar_t *sect);
 arStatus_t		Ini_InsertSection(iniObject_t *obj, const wchar_t *sect, const wchar_t *comment);
