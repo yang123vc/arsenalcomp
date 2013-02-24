@@ -52,287 +52,291 @@ static arIniLineType_t __parse_line(const wchar_t *line, wchar_t *key, wchar_t *
 				after_value_name,
 				after_value_name_ws,
 		}stat;
-
+        
 		const wchar_t *p;
 		const wchar_t *b, *e;
 		size_t line_len;
 		arIniLineType_t last_type;
 		AR_ASSERT(line != NULL && key != NULL && val != NULL && comment != NULL);
-
+        
 		line_len = AR_wcslen(line);
 		
 		/*if(line_len >= AR_MAX_LINE_LENGTH)
-		{
-				return INI_INVALID;
-		}else */if(line_len == 0)
-		{
-				return INI_EMPTY;
-		}
-
+         {
+         return INI_INVALID;
+         }else */if(line_len == 0)
+         {
+                 return INI_EMPTY;
+         }
+        
 		stat = start;
 		last_type = INI_COMMENT;
 		p = line;
 		b = NULL;
 		e = NULL;
-
+        
 		key[0] = L'\0';
 		val[0] = L'\0';
 		comment[0] = L'\0';
-
-
+        
+        AR_DPRINT(L"line : '%ls'\r\n", line);
+        
 		for(p = line; p <= line + line_len; ++p)
 		{
 				switch(stat)
 				{
-				case start:
-				{
-						if(*p == L'\0')
-						{
-								return INI_EMPTY;
-						}else if(AR_iswspace(*p))
-						{
-
-						}else if(*p == L'[')
-						{
-								stat = after_sect_tag_l;
-						}else if(AR_wcschr(__g_comment, *p) != NULL)
-						{
-								stat = after_comment_tag;
-								b = p;
-								e = b;
-						}else
-						{
-								stat = after_key_name;
-								b = p;
-								e = b;
-						}
-				}
-						break;
-				case try_get_comment:
-				{
-						if(*p == L'\0')
-						{
-								return last_type;
-						}else if(AR_wcschr(__g_comment, *p) != NULL)
-						{
-								stat = after_comment_tag;
-								b = p;
-								e = b;
-						}else if(*p == L'\0')
-						{
-								return last_type;
-						}else
-						{
-
-						}
-										
-				}
-						break;
-				case after_comment_tag:
-				{
-						e = p;
-						if(*p == L'\0')
-						{
-								size_t l = e - b;
-								AR_wcsncpy(comment, b, l);
-								comment[l] = L'\0';
-								return last_type;
-						}
-				}
-						break;
-				case after_sect_tag_l:
-				{
-						if(*p == L'\0')
-						{
-								return INI_INVALID;
-						}else if(AR_iswspace(*p))
-						{
-
-						}else if(*p == L'[' || *p == L']')
-						{
-								return INI_INVALID;
-						}else
-						{
-								b = p;
-								e = b;
-								stat = after_sect_name;
-						}
-				}
-						break;
-				case after_sect_name:
-				{
-						if(*p == L'\0')
-						{
-								return INI_INVALID;
-
-						}else if(*p == L']')
-						{
-								size_t l = e - b + 1;
-								AR_wcsncpy(key, b, l);
-								key[l] = L'\0';
-								last_type = INI_SECT;
-								stat = try_get_comment;
-						}else if(*p == L'[')
-						{
-								return INI_INVALID;
-
-						}else if(AR_iswspace(*p))
-						{
-								stat = after_sect_name_ws;
-						}else
-						{
-								e = p;
-						}
-				}
-						break;
-				case after_sect_name_ws:
-				{
-						if(*p == L'\0')
-						{
-								return INI_INVALID;
-						
-						}else if(*p == L']')
-						{
-								size_t l = e - b + 1;
-								AR_wcsncpy(key, b, l);
-								key[l] = L'\0';
-								last_type = INI_SECT;
-								stat = try_get_comment;
-						}else if(*p == L'[')
-						{
-								return INI_INVALID;
-
-						}else if(AR_iswspace(*p))
-						{
-
-						}else
-						{
-								e = p;
-								stat = after_sect_name;
-						}
-				}
-						break;
-
-				case after_key_name:
-				{
-						if(*p == L'\0')
-						{
-								return INI_INVALID;
-						}else if(*p == L'=')
-						{
-								size_t	l = e - b + 1;
-								AR_wcsncpy(key, b, l);
-								key[l] = L'\0';
-								stat = after_equal;
-						}else if(AR_iswspace(*p))
-						{
-								stat = after_key_name_ws;
-						}else
-						{
-								e = p;
-						}
-				}
-						break;
-				case after_key_name_ws:
-				{
-						if(*p == L'\0')
-						{
-								return INI_INVALID;
-						}else if(*p == L'=')
-						{
-								size_t	l = e - b + 1;
-								AR_wcsncpy(key, b, l);
-								key[l] = L'\0';
-								stat = after_equal;
-						}else if(AR_iswspace(*p))
-						{
-
-						}else
-						{
-								e = p;
-						}
-				}
-						break;
-				case after_equal:
-				{
-						if(*p == L'\0')
-						{
-								return INI_KEY_VAL;
-
-						}else if(AR_iswspace(*p))
-						{
-
-						}else if(AR_wcschr(__g_comment, *p) != NULL)
-						{
-								last_type = INI_KEY_VAL;
-								stat = try_get_comment;
-								--p; 
-						}else
-						{
-								b = p;
-								e = b;
-								stat = after_value_name;
-						}
-				}
-						break;
-				case  after_value_name:
-				{
-						if(*p == L'\0')
-						{
-								size_t	l = e - b + 1;
-								AR_wcsncpy(val, b, l);
-								val[l] = L'\0';
-								return INI_KEY_VAL;
-						}else if(AR_iswspace(*p))
-						{
-								stat = after_value_name_ws;
-						}else if(AR_wcschr(__g_comment, *p) != NULL)
-						{
-								size_t	l = e - b + 1;
-								AR_wcsncpy(val, b, l);
-								val[l] = L'\0';
-								last_type = INI_KEY_VAL;
-								stat = try_get_comment;
-								--p;
-						}else
-						{
-								e = p;
-						}
-				}
-						break;
-				case  after_value_name_ws:
-				{
-						if(*p == L'\0')
-						{
-								size_t	l = e - b + 1;
-								AR_wcsncpy(val, b, l);
-								val[l] = L'\0';
-								return INI_KEY_VAL;
-						}else if(AR_iswspace(*p))
-						{
-
-						}else if(AR_wcschr(__g_comment, *p) != NULL)
-						{
-								size_t	l = e - b + 1;
-								AR_wcsncpy(val, b, l);
-								val[l] = L'\0';
-								last_type = INI_KEY_VAL;
-								stat = try_get_comment;
-								--p;
-						}else
-						{
-								stat = after_value_name;
-						}
-				}
-						break;
-				default:
-						AR_ASSERT(false);
-						break;
+                        case start:
+                        {
+                                if(*p == L'\0')
+                                {
+                                        return INI_EMPTY;
+                                }else if(AR_iswspace(*p))
+                                {
+                                        
+                                }else if(*p == L'[')
+                                {
+                                        stat = after_sect_tag_l;
+                                }else if(AR_wcschr(__g_comment, *p) != NULL)
+                                {
+                                        stat = after_comment_tag;
+                                        b = p;
+                                        e = b;
+                                }else
+                                {
+                                        stat = after_key_name;
+                                        b = p;
+                                        e = b;
+                                }
+                        }
+                                break;
+                        case try_get_comment:
+                        {
+                                if(*p == L'\0')
+                                {
+                                        return last_type;
+                                }else if(AR_wcschr(__g_comment, *p) != NULL)
+                                {
+                                        stat = after_comment_tag;
+                                        b = p;
+                                        e = b;
+                                }else if(*p == L'\0')
+                                {
+                                        return last_type;
+                                }else
+                                {
+                                        
+                                }
+                                
+                        }
+                                break;
+                        case after_comment_tag:
+                        {
+                                e = p;
+                                if(*p == L'\0')
+                                {
+                                        size_t l = e - b;
+                                        AR_wcsncpy(comment, b, l);
+                                        comment[l] = L'\0';
+                                        return last_type;
+                                }
+                        }
+                                break;
+                        case after_sect_tag_l:
+                        {
+                                if(*p == L'\0')
+                                {
+                                        return INI_INVALID;
+                                }else if(AR_iswspace(*p))
+                                {
+                                        
+                                }else if(*p == L'[' || *p == L']')
+                                {
+                                        return INI_INVALID;
+                                }else
+                                {
+                                        b = p;
+                                        e = b;
+                                        stat = after_sect_name;
+                                }
+                        }
+                                break;
+                        case after_sect_name:
+                        {
+                                if(*p == L'\0')
+                                {
+                                        return INI_INVALID;
+                                        
+                                }else if(*p == L']')
+                                {
+                                        size_t l = e - b + 1;
+                                        AR_wcsncpy(key, b, l);
+                                        key[l] = L'\0';
+                                        last_type = INI_SECT;
+                                        stat = try_get_comment;
+                                }else if(*p == L'[')
+                                {
+                                        return INI_INVALID;
+                                        
+                                }else if(AR_iswspace(*p))
+                                {
+                                        stat = after_sect_name_ws;
+                                }else
+                                {
+                                        e = p;
+                                }
+                        }
+                                break;
+                        case after_sect_name_ws:
+                        {
+                                if(*p == L'\0')
+                                {
+                                        return INI_INVALID;
+                                        
+                                }else if(*p == L']')
+                                {
+                                        size_t l = e - b + 1;
+                                        AR_wcsncpy(key, b, l);
+                                        key[l] = L'\0';
+                                        last_type = INI_SECT;
+                                        stat = try_get_comment;
+                                }else if(*p == L'[')
+                                {
+                                        return INI_INVALID;
+                                        
+                                }else if(AR_iswspace(*p))
+                                {
+                                        
+                                }else
+                                {
+                                        e = p;
+                                        stat = after_sect_name;
+                                }
+                        }
+                                break;
+                                
+                        case after_key_name:
+                        {
+                                if(*p == L'\0')
+                                {
+                                        return INI_INVALID;
+                                }else if(*p == L'=')
+                                {
+                                        size_t	l = e - b + 1;
+                                        AR_wcsncpy(key, b, l);
+                                        key[l] = L'\0';
+                                        stat = after_equal;
+                                }else if(AR_iswspace(*p))
+                                {
+                                        stat = after_key_name_ws;
+                                }else
+                                {
+                                        e = p;
+                                }
+                        }
+                                break;
+                        case after_key_name_ws:
+                        {
+                                if(*p == L'\0')
+                                {
+                                        return INI_INVALID;
+                                }else if(*p == L'=')
+                                {
+                                        size_t	l = e - b + 1;
+                                        AR_wcsncpy(key, b, l);
+                                        key[l] = L'\0';
+                                        stat = after_equal;
+                                }else if(AR_iswspace(*p))
+                                {
+                                        
+                                }else
+                                {
+                                        e = p;
+                                }
+                        }
+                                break;
+                        case after_equal:
+                        {
+                                if(*p == L'\0')
+                                {
+                                        return INI_KEY_VAL;
+                                        
+                                }else if(AR_iswspace(*p))
+                                {
+                                        
+                                }else if(AR_wcschr(__g_comment, *p) != NULL)
+                                {
+                                        last_type = INI_KEY_VAL;
+                                        stat = try_get_comment;
+                                        --p; 
+                                }else
+                                {
+                                        b = p;
+                                        e = b;
+                                        stat = after_value_name;
+                                }
+                        }
+                                break;
+                        case  after_value_name:
+                        {
+                                if(*p == L'\0')
+                                {
+                                        size_t	l = e - b + 1;
+                                        AR_wcsncpy(val, b, l);
+                                        val[l] = L'\0';
+                                        
+                                        AR_DPRINT(L"'%ls : %ls'\r\n", key, val);
+                                        
+                                        return INI_KEY_VAL;
+                                }else if(AR_iswspace(*p))
+                                {
+                                        stat = after_value_name_ws;
+                                }else if(AR_wcschr(__g_comment, *p) != NULL)
+                                {
+                                        size_t	l = e - b + 1;
+                                        AR_wcsncpy(val, b, l);
+                                        val[l] = L'\0';
+                                        last_type = INI_KEY_VAL;
+                                        stat = try_get_comment;
+                                        --p;
+                                }else
+                                {
+                                        e = p;
+                                }
+                        }
+                                break;
+                        case  after_value_name_ws:
+                        {
+                                if(*p == L'\0')
+                                {
+                                        size_t	l = e - b + 1;
+                                        AR_wcsncpy(val, b, l);
+                                        val[l] = L'\0';
+                                        return INI_KEY_VAL;
+                                }else if(AR_iswspace(*p))
+                                {
+                                        
+                                }else if(AR_wcschr(__g_comment, *p) != NULL)
+                                {
+                                        size_t	l = e - b + 1;
+                                        AR_wcsncpy(val, b, l);
+                                        val[l] = L'\0';
+                                        last_type = INI_KEY_VAL;
+                                        stat = try_get_comment;
+                                        --p;
+                                }else
+                                {
+                                        stat = after_value_name;
+                                        e = p;
+                                }
+                        }
+                                break;
+                        default:
+                                AR_ASSERT(false);
+                                break;
 				}
 		}
 		return INI_INVALID;
 }
-
 
 
 
