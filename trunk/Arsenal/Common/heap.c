@@ -30,8 +30,8 @@ struct __heap_page_tag
 		page_t				*next;
 		page_t				*prev;
 
-		size_t				largest_free;		/*medium分配时使用*/
-		ar_byte_t*				first_free;			/*medium分配时使用*/
+		size_t				largest_free;		/*medium used*/
+		ar_byte_t*				first_free;			/*medium used*/
 };
 
 

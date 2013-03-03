@@ -218,7 +218,7 @@ wchar_t*		AR_str_to_escstr(const wchar_t *src)
 		{
 				return NULL;
 		}
-		print_escape_char = false;/*考虑对 不可打字符+数字的情形*/
+		print_escape_char = false;  /*Consider the case of non-print characters and digital, example : \x3601234*/
 		src_len = AR_wcslen(src);
 		res = AR_NEWARR0(wchar_t, (src_len) * 10 + 1);
 

@@ -146,7 +146,7 @@ ar_int_t			AR_u64tow_buf(wchar_t *out, size_t nbuf, ar_uint_64_t num, size_t rad
                 
         }while(num > 0);
 
-		len = (ar_int_t)(buf + __BUFFER_LEN - p);/*返回的是需要元素数组的长度包含0*/
+		len = (ar_int_t)(buf + __BUFFER_LEN - p);/*Returned need the length of the array of elements contains '\0'*/
 
 		if(out != NULL)
 		{
@@ -184,7 +184,7 @@ ar_int_t			AR_i64tow_buf(wchar_t *out, size_t nbuf, ar_int_64_t num, size_t radi
 		}while(num  > 0);
 		if(is_neg)*--p = L'-';
 
-		len = (ar_int_t)(buf + __BUFFER_LEN - p);/*返回的是需要元素数组的长度包含0*/
+		len = (ar_int_t)(buf + __BUFFER_LEN - p);/*Returned need the length of the array of elements contains '\0'*/
 
 		if(out != NULL)
 		{
@@ -214,7 +214,7 @@ ar_int_t			AR_u64tos_buf(char *out, size_t nbuf, ar_uint_64_t num, size_t radix)
 		*--p = 0;
 		do{ *--p = __tbl[num % radix];}while((num /= radix) > 0);
 
-		len = (ar_int_t)(buf + __BUFFER_LEN - p);/*返回的是需要元素数组的长度包含0*/
+		len = (ar_int_t)(buf + __BUFFER_LEN - p);/*Returned need the length of the array of elements contains '\0'*/
 
 		if(out != NULL)
 		{
@@ -249,7 +249,7 @@ ar_int_t			AR_i64tos_buf(char *out, size_t nbuf, ar_int_64_t num, size_t radix)
 		do{ *--p = __tbl[num % radix];}while((num /= radix) > 0);
 		if(is_neg)*--p = L'-';
 
-		len = (ar_int_t)(buf + __BUFFER_LEN - p);/*返回的是需要元素数组的长度包含0*/
+		len = (ar_int_t)(buf + __BUFFER_LEN - p);/*Returned need the length of the array of elements contains '\0'*/
 
 		if(out != NULL)
 		{
@@ -306,7 +306,9 @@ const char*	AR_stod(const char *in, double *num)
 
 
 
-/*此函数貌似不太完整，对溢出检测也没做到位*/
+/* This function looks like not complete and did not do bit overflow detection */
+
+
 const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *out)
 {
 		
@@ -1030,8 +1032,8 @@ const char* AR_stou32_s(const char *in, const char *end, ar_uint_32_t  *num, siz
 }
 
 
+/*This function looks like not complete and did not do bit overflow detection */
 
-/*此函数貌似不太完整，对溢出检测也没做到位*/
 const char*	AR_stod_s(const char *in, const char *end, double *out)
 {
 		
@@ -1133,6 +1135,7 @@ const char*	AR_stod_s(const char *in, const char *end, double *out)
 
 
 
+
 ar_bool_t	AR_wcs_is_float(const wchar_t *in, const wchar_t *end)
 {
 		const wchar_t *p;
@@ -1159,12 +1162,12 @@ ar_bool_t	AR_wcs_is_float(const wchar_t *in, const wchar_t *end)
 		}
 
 
-		while(p < end && *p >= L'0' && *p <= L'9')/*可能是个整数*/
+		while(p < end && *p >= L'0' && *p <= L'9')/*Possible is an integer*/
 		{
 				++p;
 		}
 
-		if(p < end && *p == decimal_point)/*也许是浮点，但可能有错误*/
+		if(p < end && *p == decimal_point)/*May be floating-point, but there may be an error*/
 		{
 				is_float = true;
 				++p;
@@ -1175,7 +1178,7 @@ ar_bool_t	AR_wcs_is_float(const wchar_t *in, const wchar_t *end)
 				}
 		}
 
-		if(p < end && (*p == L'e' || *p == L'E'))/*可能是浮点，但是会有错误*/
+		if(p < end && (*p == L'e' || *p == L'E'))/*May be floating-point, but there may be an error*/
 		{
 				++p;
 
@@ -1186,7 +1189,7 @@ ar_bool_t	AR_wcs_is_float(const wchar_t *in, const wchar_t *end)
 				
 				is_float = false;
 
-				while(p < end && *p >= L'0' && *p <= L'9')/*e后必须跟随指数*/
+				while(p < end && *p >= L'0' && *p <= L'9')/*e must be followed index*/
 				{
 						++p;
 						is_float = true;
@@ -1249,12 +1252,12 @@ ar_bool_t	AR_str_is_float(const char *in, const char *end)
 		}
 
 
-		while(p < end && *p >= '0' && *p <= '9')/*可能是个整数*/
+		while(p < end && *p >= '0' && *p <= '9')/*Possible is an integer*/
 		{
 				++p;
 		}
 
-		if(p < end && *p == decimal_point)/*也许是浮点，但可能有错误*/
+		if(p < end && *p == decimal_point)/*May be floating-point, but there may be an error*/
 		{
 				is_float = true;
 				++p;
@@ -1265,7 +1268,7 @@ ar_bool_t	AR_str_is_float(const char *in, const char *end)
 				}
 		}
 
-		if(p < end && (*p == 'e' || *p == 'E'))/*可能是浮点，但是会有错误*/
+		if(p < end && (*p == 'e' || *p == 'E'))/*May be floating-point, but there may be an error*/
 		{
 				++p;
 
@@ -1276,7 +1279,7 @@ ar_bool_t	AR_str_is_float(const char *in, const char *end)
 				
 				is_float = false;
 
-				while(p < end && *p >= '0' && *p <= '9')/*e后必须跟随指数*/
+				while(p < end && *p >= '0' && *p <= '9')/*e must be followed index*/
 				{
 						++p;
 						is_float = true;

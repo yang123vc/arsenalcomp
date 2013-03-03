@@ -151,7 +151,7 @@ static txtReadStatus_t		__read_wchar(arBuffer_t *input, arTxtBom_t enc, wchar_t 
 				if(v >= 0xfc)
 				{
 						/*6:<11111100>*/
-						/*╤айёоб╣двж╫з*/
+						/*Reading the remaining bytes*/
 						rn = AR_ReadBufferData(input, buf, 5);
 						if(rn != 5)
 						{

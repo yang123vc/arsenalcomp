@@ -23,7 +23,7 @@
 
 //#define	AR_USE_CRT_ALLOCFUNC	1
 
-/**********************************************************»∑∂®±‡“Î∆˜∫Õ∆ΩÃ®***********************************************************************/
+/********************************************************Determine the compiler and platform*************************************************************/
 
 
 #define ARCH_32			0x20u
@@ -108,10 +108,8 @@
 #endif
 
 
-/*
-__CHAR_UNSIGNED__		”¶∏√ «gccÃÿ–‘
-_CHAR_UNSIGNED			 «vsÃÿ–‘£¨/J
-*/
+
+
 #if defined(__CHAR_UNSIGNED__) || defined(_CHAR_UNSIGNED)			
 		#define AR_CHAR_IS_UNSIGNED		1		
 #endif
@@ -144,11 +142,14 @@ _CHAR_UNSIGNED			 «vsÃÿ–‘£¨/J
 
 
 
-/**********************************************************±‡“Î∆˜œ‡πÿµƒ≈‰÷√***********************************************************************/
+
+/**********************************************************compilers specific options***********************************************************************/
 
 /*
-    ≈‰÷√±‡“Î∆˜œ‡πÿµƒ—°œÓ
+	config complier specific options
+    
 */
+
 
 
 
@@ -243,7 +244,8 @@ _CHAR_UNSIGNED			 «vsÃÿ–‘£¨/J
 
 
 
-/*includeœ‡πÿ∆ΩÃ®À˘–ËµƒÕ∑Œƒº˛*/
+/*include plat spec headers*/
+
 
 #if defined(OS_FAMILY_WINDOWS)
 
@@ -302,8 +304,7 @@ _CHAR_UNSIGNED			 «vsÃÿ–‘£¨/J
 
 
 
-/*…Ë÷√∆ΩÃ®œ‡πÿ¿‡–Õ*/
-
+/*setup platform spec types*/
 
 #if (AR_COMPILER == AR_VC_LEGACY || AR_COMPILER == AR_VC || AR_COMPILER == AR_BCB6)
 
@@ -445,7 +446,7 @@ _CHAR_UNSIGNED			 «vsÃÿ–‘£¨/J
 
 
 
-/*sizeof(ar_bool_t) ±ÿ–Îµ»”⁄1*/
+/*sizeof(bool_t) must be 1*/
 
 #if defined(AR_HAS_BOOL_TRUE_FALSE)
 		typedef bool					ar_bool_t;
@@ -459,7 +460,7 @@ _CHAR_UNSIGNED			 «vsÃÿ–‘£¨/J
 #if defined(AR_HAS_INLINE)
 		#define AR_INLINE				inline
 #else
-		#define AR_INLINE				/*C99±Í◊º÷Æ«∞µƒ±‡“Î∆˜∂®“ÂŒﬁ*/
+		#define AR_INLINE				/*not supported this defined before C99*/
 #endif
 
 
@@ -467,13 +468,11 @@ _CHAR_UNSIGNED			 «vsÃÿ–‘£¨/J
 
 
 
-/************************∆ΩÃ®Œﬁπÿµƒ∂®“Â***********************************/
 
 
 
 
-
-/**************************“‘œ¬æ˘Œ™Œ¥∂®“Â ±µƒƒ¨»œ÷µ****************************/
+/**************************The following are the default value when undefined****************************/
 
 #ifndef CHAR_BIT
 		#define	CHAR_BIT		8
@@ -611,9 +610,9 @@ typedef AR_INT64_T				ar_int_64_t;
 typedef AR_UINT64_T				ar_uint_64_t;
 
 
-typedef AR_PLAT_INT_T			ar_int_t;/*∏˙À˘‘⁄¥¶¿Ì∆˜µ»≥§µƒ”–∑˚∫≈’˚ ˝*/
+typedef AR_PLAT_INT_T			ar_int_t; /*Dependent on the length of the processor*/
 
-typedef AR_PLAT_UINT_T			ar_uint_t;/*∏˙À˘‘⁄¥¶¿Ì∆˜µ»≥§µƒŒﬁ∑˚∫≈’˚ ˝,¿Ì¬€…œ◊‹ «µ»”⁄size_t*/
+typedef AR_PLAT_UINT_T			ar_uint_t; /*Dependent on the length of the processor*/
 
 typedef ar_uint_8_t				ar_byte_t;
 

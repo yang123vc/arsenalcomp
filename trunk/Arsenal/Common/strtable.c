@@ -144,7 +144,7 @@ const wchar_t*			AR_GetStringN(arStringTable_t *tbl, const wchar_t *str, size_t 
 
 		
 
-		/***************************´´½¨ÐÂrecord*************************/
+		/***************************Create a new record*************************/
 		record = AR_NEW0(arStringRec_t);
 
 		if(record == NULL)
