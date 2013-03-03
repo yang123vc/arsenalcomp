@@ -71,7 +71,7 @@ static ar_int_t __str_format_preprocess(const char *fmt, char *out)
 						fmt++;
 				}
 
-				/*处理%后面的*/
+				/*Dealing with '%' behind*/
 
 
 				while(*fmt)
@@ -196,7 +196,7 @@ static ar_int_t __str_format_preprocess(const char *fmt, char *out)
 						fmt++;
 				}
 						break;
-				case 'h':		/*强制ANSI*/
+				case 'h':		/*Forced ANSI*/
 						modifier |= __MODIFIER_ANSI;
 						fmt++;
 						break;
@@ -324,7 +324,7 @@ ar_int_t AR_vscprintf(const char *fmt, va_list va_args)
 						continue;
 				}
 
-				/*处理%后面的*/
+				/*Dealing with '%' behind*/
 
 
 				while(*fmt)
@@ -380,7 +380,7 @@ ar_int_t AR_vscprintf(const char *fmt, va_list va_args)
 
 				if(*fmt == 'I')
 				{
-						/*例如%Id*/
+						/*%Id*/
 						fmt += 1;
 
 						#if(AR_ARCH_VER == ARCH_64)
@@ -396,7 +396,7 @@ ar_int_t AR_vscprintf(const char *fmt, va_list va_args)
 				{
 						switch (*fmt)
 						{
-								/*强制ANSI*/
+								/*forced ANSI*/
 						case 'h':
 								modifier |= __MODIFIER_ANSI;
 								fmt++;
@@ -405,7 +405,7 @@ ar_int_t AR_vscprintf(const char *fmt, va_list va_args)
 								modifier |= __MODIFIER_UNICODE;
 								fmt++;
 								break;
-								/*无用*/
+								/*useless*/
 						case 'F':
 						case 'N':
 						case 'L':
@@ -521,10 +521,11 @@ ar_int_t AR_vscprintf(const char *fmt, va_list va_args)
 
 								/*
 										312 == strlen("-1+(0{309})")
-										double 最大精度为.0{309},这里精度默认设置为6
+										double Maximum accuracy .0 {309}, 
+										precision default is set to 6
 								*/
 
-								cclen = AR_MAX(width, 312 + prec + 6);/*取最大值*/
+								cclen = AR_MAX(width, 312 + prec + 6);/*Take the maximum*/
 
 								buf = AR_NEWARR0(char, cclen);
 
@@ -637,7 +638,7 @@ ar_int_t			AR_vsprintf(char *dest, size_t count, const char *fmt, va_list args)
 
 
 
-		/********************将Arsenal形式的printf格式，转换为目标CRT的格式***************/
+		/********************converted to the format of the target CRT***************/
 		need_l = __str_format_preprocess(fmt, NULL);
 		if(need_l <= 0)
 		{
@@ -671,11 +672,14 @@ END_POINT:
 				src_fmt = NULL;
 		}
 
-		if(res <= 0)						/*忽略掉此种错误*/
+#if(0)
+		if(res <= 0)						/*ignored such errors*/
 		{
 				dest[0] = '\0';
 				res = 0;
 		}
+#endif
+
 
 		return res;
 }
@@ -749,7 +753,7 @@ static ar_int_t __wcs_format_preprocess(const wchar_t *fmt, wchar_t *out)
 						fmt++;
 				}
 
-				/*处理%后面的*/
+				/*dealing with '%' behind*/
 
 
 				while(*fmt)
@@ -874,7 +878,7 @@ static ar_int_t __wcs_format_preprocess(const wchar_t *fmt, wchar_t *out)
 						fmt++;
 				}
 						break;
-				case L'h':		/*强制ANSI*/
+				case L'h':		/*forced ANSI*/
 						modifier |= __MODIFIER_ANSI;
 						fmt++;
 						break;
@@ -998,7 +1002,7 @@ ar_int_t AR_vscwprintf(const wchar_t *fmt, va_list va_args)
 						continue;
 				}
 
-				/*处理%后面的*/
+				/*dealing with '%' behind*/
 
 
 				while(*fmt)
@@ -1054,7 +1058,7 @@ ar_int_t AR_vscwprintf(const wchar_t *fmt, va_list va_args)
 
 				if(*fmt == L'I')
 				{
-						/*例如%Id*/
+						/*%Id*/
 						fmt += 1;
 
 						#if(AR_ARCH_VER == ARCH_64)
@@ -1064,14 +1068,14 @@ ar_int_t AR_vscwprintf(const wchar_t *fmt, va_list va_args)
 						#endif
 				}else if(*fmt == L'q')
 				{
-						/*例如%lld*/
+						/*%lld*/
 						fmt += 1;
 						modifier |= __MODIFIER_INT64;
 				}else
 				{
 						switch (*fmt)
 						{
-								/*强制ANSI*/
+								/*forced ANSI*/
 						case L'h':
 								modifier |= __MODIFIER_ANSI;
 								fmt++;
@@ -1080,7 +1084,7 @@ ar_int_t AR_vscwprintf(const wchar_t *fmt, va_list va_args)
 								modifier |= __MODIFIER_UNICODE;
 								fmt++;
 								break;
-								/*无用*/
+								/*useless*/
 						case L'F':
 						case L'N':
 						case L'L':
@@ -1325,7 +1329,7 @@ ar_int_t			AR_vswprintf(wchar_t *dest, size_t count, const wchar_t *fmt, va_list
 
 
 
-		/********************将Arsenal形式的printf格式，转换为目标CRT的格式***************/
+		/********************converted to the format of the target CRT***************/
 		need_l = __wcs_format_preprocess(fmt, NULL);
 		if(need_l <= 0)
 		{
@@ -1358,12 +1362,14 @@ END_POINT:
 				AR_DEL(src_fmt);
 				src_fmt = NULL;
 		}
-
+		
+#if(0)
 		if(res <= 0)						/*忽略掉此种错误*/
 		{
 				dest[0] = L'\0';
 				res = 0;
 		}
+#endif
 
 		return res;
 }
@@ -1404,7 +1410,7 @@ ar_int_t			AR_vswprintf_nonalloc(wchar_t *dest, size_t count, const wchar_t *fmt
 
 
 
-		/********************将Arsenal形式的printf格式，转换为目标CRT的格式***************/
+		/******************** converted to the format of the target CRT***************/
 		
 		need_l = __wcs_format_preprocess(fmt, NULL);
 

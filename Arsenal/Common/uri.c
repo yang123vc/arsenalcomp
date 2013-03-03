@@ -18,7 +18,7 @@
 AR_NAMESPACE_BEGIN
 
 
-/*此模块修改自Poco URI模块*/
+/*This module is modified from the the Poco URI module*/
 		
 struct __arsenal_uri_tag
 {
@@ -205,7 +205,8 @@ ar_int_t			AR_CompURI(const arURI_t *l, const arURI_t *r)
 
 
 /*
-这里假定输入全为未编码URL，未编码URL均为unicode，将其转换为指定的url形式(%AB)后，当做unicode存入output
+It is assumed that the input all unencoded URL, the unencoded URL are unicode,
+convert it to a url specified in the form (% AB), as unicode stored in output
 */
 static arStatus_t	__encode(arCodePage_t cp, const wchar_t *begin, const wchar_t *end, const char *reserved, arString_t *output)
 {
@@ -269,127 +270,6 @@ END_POINT:
 }
 
 
-#if(0)
-/*
-这里假定输入全为已编码URL(假定其字符范围均符合RFC3986)，已编码URL的编码为参数cp，将其转换为指定的unicode
-*/
-static arStatus_t	__decode(arCodePage_t cp, const wchar_t *begin, const wchar_t *end, arString_t *output)
-{
-		arStatus_t		status;
-		const wchar_t *s;
-		char *buf, *w;
-		wchar_t *wbuf;
-		AR_ASSERT(begin != NULL && end != NULL && output != NULL);
-		
-		status = AR_S_YES;
-
-		if(begin == end)/*字符串为空*/
-		{
-				return AR_S_YES;
-		}
-
-		wbuf = NULL;
-		
-		buf = AR_NEWARR0(char, (end - begin) * 2 + 1);/*绝对够用了，实际上只能比编码后的url小才对*/
-		
-		if(buf == NULL)
-		{
-				status = AR_E_NOMEM;
-				goto END_POINT;
-		}
-
-		w = buf;
-		s = begin;
-
-		while(s < end)
-		{
-
-				wchar_t c, hi,lo;
-				
-				c = *s++;
-				
-				if(c == L'%')
-				{
-						if(s == end)
-						{
-								status = AR_E_MALFORMAT;
-								goto END_POINT;
-						}
-						
-						hi = *s++;
-
-						if(s == end)
-						{
-								status = AR_E_MALFORMAT;
-								goto END_POINT;
-						}
-
-						lo = *s++;
-
-						if(hi >= L'0' && hi <= L'9')
-						{
-								c = hi - L'0';
-						}else if(hi >= L'A' && hi <= 'F')
-						{
-								c = hi - L'A' + 10;
-						}else if(hi >= 'a' && hi <= 'f')
-						{
-								c = hi - L'a' + 10;
-						}else
-						{
-								status = AR_E_MALFORMAT;
-								goto END_POINT;
-						}
-
-						c *= 16;
-
-						if(lo >= L'0' && lo <= L'9')
-						{
-								c += lo - L'0';
-						}else if(lo >= L'A' && lo <= 'F')
-						{
-								c += lo - L'A' + 10;
-						}else if(lo >= 'a' && lo <= 'f')
-						{
-								c += lo - L'a' + 10;
-						}else
-						{
-								status = AR_E_MALFORMAT;
-								goto END_POINT;
-						}
-				}
-				*w++ = (char)c;
-		}
-		*w++ = '\0';
-
-		wbuf = AR_str_to_wcs(cp, buf, AR_strlen(buf));
-
-		if(wbuf == NULL)
-		{
-				status = AR_E_BADENCCONV;
-				goto END_POINT;
-		}
-
-		status = AR_AppendString(output, wbuf);
-		if(status != AR_S_YES)
-		{
-				goto END_POINT;
-		}
-
-END_POINT:
-		if(buf)
-		{
-				AR_DEL(buf);
-				buf = NULL;
-		}
-		if(wbuf)
-		{
-				AR_DEL(wbuf);
-				wbuf = NULL;
-		}
-		return status;
-}
-#endif
 
 
 static arStatus_t	__decode(arCodePage_t cp, const wchar_t *begin, const wchar_t *end, arString_t *output)
@@ -405,7 +285,7 @@ static arStatus_t	__decode(arCodePage_t cp, const wchar_t *begin, const wchar_t 
 		str = NULL;
 		buf = NULL;
 
-		if(begin == end)/*字符串为空*/
+		if(begin == end)/*String is empty*/
 		{
 				return AR_S_YES;
 		}
@@ -771,7 +651,7 @@ static uriParseRet_t __parse_host_port(arURI_t *uri, const wchar_t *begin, const
 		__GOEND_IF_FAIL(host != NULL, AR_E_NOMEM, NULL);
 		s = begin;
 
-		/*		input : ipv6格式 'http://[xx::xx::xx::xx....]/path/x.php'
+		/*		input : ipv6 format 'http://[xx::xx::xx::xx....]/path/x.php'
 				host = [xx::xx::xx::xx...];
 
 				input : 'http://www.a.b.c.d.baidu.com/path/x.php'
@@ -1884,8 +1764,8 @@ static arStatus_t	__normalize_host(arURI_t *uri)
 				{
 						while(*p == L'.')
 						{
-								p = AR_wcstrim(p, L".");		/*如果是最后一个，就不加.了*/
-								p = AR_wcstrim_space(p);		/*如果是最后一个，就不加.了*/
+								p = AR_wcstrim(p, L".");		/*If it is the last one, do not add '.'*/
+								p = AR_wcstrim_space(p);		/*If it is the last one, do not add '.'*/
 						}
 
 						if(*p == L'\0')
@@ -2069,7 +1949,7 @@ static arStatus_t __parse_query_items(const wchar_t *query, arHash_t *hash)
                         p = b + AR_wcslen(b);
                 }
                  
-                if(p == b)/*形如?x=  */
+                if(p == b)/*like ?x=  */
                 {
                         status = AR_E_MALFORMAT;
                         goto END_POINT;
@@ -2277,7 +2157,7 @@ arStatus_t		AR_DecodeURLString(arCodePage_t cp, const wchar_t *uri, arString_t *
 		
 		AR_ASSERT(uri != NULL && out != NULL);
 		AR_ClearString(out);
-		/*uri decode兼容url encode*/
+		/*url encode compatible*/
 		return __decode(cp, uri, uri + AR_wcslen(uri), out);
 }
 

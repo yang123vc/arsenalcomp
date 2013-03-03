@@ -105,7 +105,7 @@ arStatus_t      AR_InsertToList(arList_t *lst, arListNode_t *node, void *data)
         }else
         {
                 AR_ASSERT(lst->head != NULL && lst->tail != NULL);
-                if(node == NULL)                /*如果node为空，则將￼新node插入队首*/
+                if(node == NULL)                /*If the node is empty, new node insertion  first*/
                 {
                         new_node->prev = NULL;
                         new_node->next = lst->head;

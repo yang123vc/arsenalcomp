@@ -19,7 +19,7 @@
 AR_NAMESPACE_BEGIN
 
 
-/*此模块修改自DOOM3 SDK*/
+/*This module is modified from DOOM3 SDK*/
 /**********************************************************Heap***************************************************************/
 
 #define AR_HEAP_ALIGN			8
