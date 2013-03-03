@@ -83,7 +83,7 @@ const arBacktrace_t*	AR_GetBacktrace();
 arStatus_t	AR_printf(const wchar_t *msg,...);
 arStatus_t	AR_debug_print(const wchar_t *msg, ...);
 
-/*库内部错误为负数*/
+/*The libraries internal error is negative*/
 #define AR_ERR_DEBUG		((ar_int_t)-0x0098)
 #define AR_ERR_MESSAGE		((ar_int_t)-0x0099)
 #define AR_ERR_WARNING		((ar_int_t)-0x0100)
@@ -160,7 +160,7 @@ void	AR_check(ar_bool_t cond, const wchar_t *fmt, ...);
 
 
 
-/***********************************************************一些宏*********************************************************/
+/***********************************************************macros*********************************************************/
 
 
 #define AR_MAX(_a,_b) ((_a) > (_b) ? (_a) : (_b))
@@ -200,10 +200,9 @@ static AR_INLINE const void* AR_GET_ELEM(const void *base, size_t width, size_t 
 
 
 
-/**********************************************************内存管理***************************************************************/
+/**********************************************************memory management***************************************************************/
 
-/*内存管理部分暂时只使用标准CRT，并不支持重定位标准存储分配函数，对管理可以依赖AR_USE_CRT_ALLOCFUNC宏控制，定义此宏，则使用当前CRT管理内存，否则
-使用arHeap_t来管理堆
+/*Defined AR_USE_CRT_ALLOCFUNC, using CRT memory alloc functions，otherwise, use the 'arHeap_t'
 */
 
 #define AR_MEM_MAX_ALLOC_RETRY_COUNT	1000000
@@ -309,7 +308,7 @@ void	AR_memswap(void *a, void *b, size_t n);
 
 
 
-/***********************************************************字节序操作*********************************************************/
+/***********************************************************Byte Order operations*********************************************************/
 
 
 
@@ -469,13 +468,13 @@ wchar_t*			AR_wcsnupr(wchar_t *s, size_t count);
 
 wchar_t*		AR_wcsdup(const wchar_t *sour);
 
-/*len == 0时返回空串L""*/
+/*returns an empty string(L"") when len == 0*/
 wchar_t*		AR_wcsndup(const wchar_t *sour, size_t len);
 
 
 char*			AR_strdup(const char *sour);
 
-/*len == 0时返回空串L""*/
+/*returns an empty string("") when len == 0*/
 char*			AR_strndup(const char *sour, size_t len);
 
 
@@ -496,7 +495,7 @@ const wchar_t*	AR_wcstrim_space_s(const wchar_t *in, const wchar_t *end);
 
 
 
-/*此函数相当于修改字符串，因此不存在_s版，且trim之后的字符串结尾为\0*/
+/*This function to modify the string, so there is no _s version, and trim the end of the string L'\0'*/
 wchar_t*		AR_wcstrim_right(wchar_t *in, const wchar_t *trim);
 wchar_t*		AR_wcstrim_right_space(wchar_t *in);
 
@@ -531,7 +530,7 @@ const char*		AR_reverse_stristr(const char *str, size_t l,  const char *match, s
 /******************************************************string format*********************************************/
 
 
-ar_int_t			AR_vscwprintf(const wchar_t *fmt, va_list args);/*返回一个长度，足够容纳fmt + args*/
+ar_int_t			AR_vscwprintf(const wchar_t *fmt, va_list args);/*Returns a length sufficient to accommodate fmt + args*/
 ar_int_t			AR_scwprintf(const wchar_t *fmt, ...);
 wchar_t*		AR_vtow(const wchar_t *fmt, ...);
 
@@ -541,7 +540,7 @@ ar_int_t			AR_vswprintf(wchar_t *dest, size_t count, const wchar_t *fmt, va_list
 ar_int_t			AR_swprintf_nonalloc(wchar_t *dest, size_t count, const wchar_t *fmt, ...);
 ar_int_t			AR_vswprintf_nonalloc(wchar_t *dest, size_t count, const wchar_t *fmt, va_list args);
 
-ar_int_t			AR_vscprintf(const char *fmt, va_list args);	/*返回一个长度，足够容纳fmt + args*/
+ar_int_t			AR_vscprintf(const char *fmt, va_list args);	/*Returns a length sufficient to accommodate fmt + args*/
 ar_int_t			AR_scprintf(const char *fmt, ...);
 char*			AR_vtos(const char *fmt, ...);
 
@@ -554,7 +553,7 @@ ar_int_t			AR_vsprintf(char *dest, size_t count, const char *fmt, va_list args);
 /*************************************************String Number Convert**************************************************/
 
 
-/*返回的是需要元素数组的长度包含0*/
+/*Returned need the length of the array of elements contains 0*/
 ar_int_t			AR_i64tos_buf(char *out, size_t nbuf, ar_int_64_t num, size_t radix);
 ar_int_t			AR_u64tos_buf(char *out, size_t nbuf, ar_uint_64_t num, size_t radix);
 
@@ -710,7 +709,7 @@ typedef ar_int_t			(*AR_hash_comp_func_t)(void *l, void *r, void *ctx);
 
 typedef arStatus_t		(*AR_hash_copy_func_t)(void *data, void **pnew_data, void *ctx);
 typedef void			(*AR_hash_destroy_func_t)(void *key, void *ctx);
-typedef ar_bool_t			(*AR_hash_visit_func_t)(void *key, void *data, void *ctx);/*返回false则循环终止*/
+typedef ar_bool_t			(*AR_hash_visit_func_t)(void *key, void *data, void *ctx);/*When it returns false loop terminates*/
 
 
 typedef struct __arsenal_hash_node_tag
@@ -769,8 +768,7 @@ void*	AR_GetHashIteratorData(const arHashIter_t *iter);
 /*********************************************************String Convert****************************************************/
 
 /*
-在windows下，需要修改__get_codepage_for_winapi，
-在支持iconv的平台下，需要修改__get_locale_str_for_iconv
+Under the windows need to modify __get_codepage_for_winapi，If the platform supports iconv library, modify __get_locale_str_for_iconv
 
 
 */
@@ -877,7 +875,7 @@ typedef struct __arsenal_string_tag		arString_t;
 arString_t*		AR_CreateString();
 void			AR_DestroyString(arString_t *str);
 
-/*预留num个wchar_t的空间*/
+/*Space reserved num of wchar_t*/
 arStatus_t		AR_ReserveString(arString_t *str, size_t num);
 void			AR_ClearString(arString_t *str);
 
@@ -973,27 +971,27 @@ void            AR_SwapBuffer(arBuffer_t *l, arBuffer_t *r);
 arStatus_t		AR_CopyBuffer(arBuffer_t *dest, const arBuffer_t *src);
 arBuffer_t*		AR_CopyNewBuffer(const arBuffer_t *buf);
 
-/*分配nbytes个字节以供使用*/
+/*nbytes bytes are allocated for use*/
 ar_byte_t*			AR_AllocFromBuffer(arBuffer_t *buffer, size_t	nbytes);
-/*向buffer写入nbytes个字节*/
+/*Nbytes bytes to be written to the buffer*/
 arStatus_t		AR_InsertToBuffer(arBuffer_t *buffer, const ar_byte_t *data, size_t len);
 
 
 
 
-/*从buffer头擦除nbytes个字节*/
+/*Nbytes bytes from the buffer in front erase*/
 size_t			AR_EraseBuffer(arBuffer_t *buffer, size_t nbytes);
 size_t			AR_EraseBufferBack(arBuffer_t *buffer, size_t nbytes);
 
-/*返回不重新分配内存还可以写的字节数*/
+/*Returns the number of bytes not reallocate memory can also write*/
 size_t			AR_GetBufferCapacity(const arBuffer_t *buffer);
 
 /*AR_ReserveBuffer调用成功后，AR_GetBufferCapacity(buffer) >= nbytes*/
 arStatus_t		AR_ReserveBuffer(arBuffer_t *buffer, size_t nbytes);
 
-/*可读内存块*/
+/*Readable memory block*/
 const ar_byte_t*	AR_GetBufferData(const arBuffer_t *buffer);
-/*可读内存块长度*/
+/*The readable memory block length*/
 size_t			AR_GetBufferAvailable(const arBuffer_t *buffer);
 
 void            AR_ResetBufferData(arBuffer_t *buffer, size_t offset, const ar_byte_t *data, size_t len);
@@ -1027,7 +1025,7 @@ ar_bool_t			AR_IsRelativeURI(const arURI_t *uri);
 arStatus_t		AR_SetURI(arURI_t *uri, const wchar_t *str);
 arStatus_t		AR_SetEncodedURI(arURI_t *uri, const wchar_t *str);
 
-/*取得的URI为编码后的URI,并以unicode方式返回*/
+/*get unicode encoded URI*/
 arStatus_t		AR_GetURI(const arURI_t *uri, arString_t *str);
 arStatus_t		AR_GetEncodedURI(const arURI_t *uri, arString_t *str);
 
@@ -1128,7 +1126,7 @@ arStatus_t	AR_SaveBomTextToBinary(arBuffer_t *output, arTxtBom_t bom, const wcha
 
 /**********************************************************Threading*************************************************************/
 
-/*thread模块初始化函数，只能由AR_Init调用*/
+/*The thread module initialization function, and can only be invoked by AR_Init*/
 void			AR_InitThread();
 void			AR_UnInitThread();
 
