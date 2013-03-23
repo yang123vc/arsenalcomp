@@ -385,6 +385,7 @@ _AR_reverse_wcsistr
 _AR_reverse_wcsstr
 _AR_scprintf
 _AR_scwprintf
+_AR_seek_file
 _AR_setenv
 _AR_sin_dbl
 _AR_sin_flt
@@ -436,6 +437,7 @@ _AR_swprintf
 _AR_swprintf_nonalloc
 _AR_tan_dbl
 _AR_tan_flt
+_AR_tell_file
 _AR_u64tos_buf
 _AR_u64tow_buf
 _AR_vscprintf
@@ -789,8 +791,3 @@ ___super_fast_hash_32
 ___uint32_for_six_big
 ___uint32_for_six_little
 _cfg_on_print
-
-
-_AR_seek_file
-_AR_tell_file
-

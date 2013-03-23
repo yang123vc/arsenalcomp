@@ -157,7 +157,7 @@ void	AR_UnInitMemory()
 #if !defined(AR_USE_CRT_ALLOCFUNC)
 
 		arHeapUsage_t	usage;
-
+        AR_memset(&usage, 0, sizeof(usage));
 
 		#if defined(AR_ENABLE_MEMORY_LEAK_TEST)
 				uninit_debug_memory();

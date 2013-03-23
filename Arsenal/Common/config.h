@@ -21,7 +21,6 @@
 
 
 
-//#define	AR_USE_CRT_ALLOCFUNC	1
 
 /********************************************************Determine the compiler and platform*************************************************************/
 
@@ -169,22 +168,6 @@
 
 		#if !defined(_CRT_SECURE_NO_WARNINGS)
 				#define _CRT_SECURE_NO_WARNINGS
-		#endif
-
-		#if(AR_COMPILER == AR_VC && OS_TYPE != OS_WINDOWS_CE)
-				#if !defined(NDEBUG)
-/*
-						#define	AR_DISABLE_CRTSTDLIB
-						#define _CRTDBG_MAP_ALLOC
-						#include<stdlib.h>
-						#include<crtdbg.h>
-						#define	AR_USE_CRT_ALLOCFUNC	1
-*/
-						
-				#else
-
-				#endif
-				
 		#endif
 
 
@@ -408,9 +391,8 @@
 		#define	AR_FMT64			L"ll"
 		#define	AR_FMT64_STR		"ll"
 
-		#define AR_NOOP
-
-		#define AR_FUNC_NAME			__PRETTY_FUNCTION__
+        #define AR_NOOP                 (void)
+        #define AR_FUNC_NAME			__PRETTY_FUNCTION__
         
 		#define	AR_DEBUG_BREAK				__builtin_trap
 
@@ -713,7 +695,10 @@ typedef void*					ar_ptr_t;
 
 
 
+
 #ifndef AR_NDEBUG
+        
+        //#define	AR_USE_CRT_ALLOCFUNC	1
 
 		#ifndef AR_USE_CRT_ALLOCFUNC
 				#define	AR_ENABLE_MEMORY_LEAK_TEST				1

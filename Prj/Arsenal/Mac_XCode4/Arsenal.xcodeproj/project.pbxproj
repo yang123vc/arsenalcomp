@@ -272,6 +272,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		67D9D58716FD7D42003E6EDD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BE185E7714E842740095DB44 /* libpthread.dylib */,
+				BE185E7414E842620095DB44 /* libiconv.dylib */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		67D9D58816FD7D4F003E6EDD /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				67387CA916468E8400FE0910 /* Arsenal_Debug.exp */,
+				67387CAA16468E8400FE0910 /* Arsenal_Release.exp */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		BE185D8F14E841B90095DB44 /* Arsenal */ = {
 			isa = PBXGroup;
 			children = (
@@ -290,6 +308,11 @@
 		BE185D9214E841B90095DB44 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				BE185DA014E841B90095DB44 /* platform.h */,
+				BE185D9914E841B90095DB44 /* config.h */,
+				BE185D9714E841B90095DB44 /* common.c */,
+				BE185D9814E841B90095DB44 /* common.h */,
+				BE185D9F14E841B90095DB44 /* memory.c */,
 				67CCEDD41584B3650082DC8F /* strnum.c */,
 				674D8C8215734D4B00CC43A6 /* uri.c */,
 				675B2B611562254100DADFE2 /* printf.c */,
@@ -311,16 +334,12 @@
 				BE185D9414E841B90095DB44 /* base64.c */,
 				BE185D9514E841B90095DB44 /* buffer.c */,
 				BE185D9614E841B90095DB44 /* byteorder.c */,
-				BE185D9714E841B90095DB44 /* common.c */,
-				BE185D9814E841B90095DB44 /* common.h */,
-				BE185D9914E841B90095DB44 /* config.h */,
 				BE185D9A14E841B90095DB44 /* crtstr.c */,
 				BE185D9B14E841B90095DB44 /* heap.c */,
 				BE185D9C14E841B90095DB44 /* heap.h */,
 				BE185D9D14E841B90095DB44 /* math.c */,
 				BE185D9E14E841B90095DB44 /* matrix.c */,
-				BE185D9F14E841B90095DB44 /* memory.c */,
-				BE185DA014E841B90095DB44 /* platform.h */,
+				BE185DAC14E841B90095DB44 /* vector.c */,
 				BE185DA114E841B90095DB44 /* random.c */,
 				BE185DA214E841B90095DB44 /* status.h */,
 				BE185DA314E841B90095DB44 /* strconv.c */,
@@ -328,7 +347,6 @@
 				BE185DA514E841B90095DB44 /* strtable.c */,
 				BE185DA614E841B90095DB44 /* textfile.c */,
 				BE185DAB14E841B90095DB44 /* utilities.c */,
-				BE185DAC14E841B90095DB44 /* vector.c */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -399,10 +417,8 @@
 		BEA4E2B914E83F1D00A29A8D = {
 			isa = PBXGroup;
 			children = (
-				67387CA916468E8400FE0910 /* Arsenal_Debug.exp */,
-				67387CAA16468E8400FE0910 /* Arsenal_Release.exp */,
-				BE185E7714E842740095DB44 /* libpthread.dylib */,
-				BE185E7414E842620095DB44 /* libiconv.dylib */,
+				67D9D58816FD7D4F003E6EDD /* Resources */,
+				67D9D58716FD7D42003E6EDD /* Frameworks */,
 				BE185D8F14E841B90095DB44 /* Arsenal */,
 				BEA4E2C514E83F1E00A29A8D /* Products */,
 			);
@@ -690,6 +706,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_LINK_OBJC_RUNTIME = NO;
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -700,14 +717,14 @@
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = NO;
-				SDKROOT = macosx;
+				SDKROOT = macosx10.6;
 			};
 			name = Debug;
 		};
@@ -716,18 +733,19 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_LINK_OBJC_RUNTIME = NO;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "NDEBUG=1";
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
-				SDKROOT = macosx;
+				SDKROOT = macosx10.6;
 			};
 			name = Release;
 		};
@@ -735,9 +753,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				EXECUTABLE_PREFIX = "";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OBJROOT = "$(SYMROOT)";
 				PRODUCT_NAME = Arsenal;
+				SDKROOT = macosx10.6;
 				SYMROOT = build;
 			};
 			name = Debug;
@@ -748,9 +768,11 @@
 				EXECUTABLE_PREFIX = "";
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = "NDEBUG=1";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OBJROOT = "$(SYMROOT)";
 				PRODUCT_NAME = Arsenal;
+				SDKROOT = macosx10.6;
 				SYMROOT = build;
 			};
 			name = Release;
@@ -760,6 +782,7 @@
 			buildSettings = {
 				EXECUTABLE_PREFIX = "";
 				EXPORTED_SYMBOLS_FILE = Arsenal_Debug.exp;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INSTALL_PATH = "@loader_path/../Frameworks/";
 				OBJROOT = "$(SYMROOT)";
 				PRODUCT_NAME = Arsenal;
@@ -775,6 +798,7 @@
 				EXPORTED_SYMBOLS_FILE = Arsenal_Release.exp;
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = "NDEBUG=1";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INSTALL_PATH = "@loader_path/../Frameworks/";
 				OBJROOT = "$(SYMROOT)";
 				PRODUCT_NAME = Arsenal;
