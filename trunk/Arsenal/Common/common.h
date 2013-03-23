@@ -137,7 +137,7 @@ void	AR_check(ar_bool_t cond, const wchar_t *fmt, ...);
 
 #else
 
-#define AR_DPRINT
+#define AR_DPRINT               AR_NOOP
 
 #define AR_ASSERT(_cond)		/*(_cond)*/
 
