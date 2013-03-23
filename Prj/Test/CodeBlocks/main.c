@@ -12,7 +12,7 @@ using namespace ARSpace;
 
 
 
-void AR_STDCALL tiny_error(int_t level, const wchar_t* msg, void *ctx)
+void AR_STDCALL tiny_error(ar_int_t level, const wchar_t* msg, void *ctx)
 {
 
         printf("%ls\r\n", msg);

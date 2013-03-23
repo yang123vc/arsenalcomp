@@ -121,6 +121,8 @@
 		<Unit filename="../../../Arsenal/Common/filesystem.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../../../Arsenal/Common/filesystem_path_posix.h" />
+		<Unit filename="../../../Arsenal/Common/filesystem_path_win.h" />
 		<Unit filename="../../../Arsenal/Common/filesystem_posix.h" />
 		<Unit filename="../../../Arsenal/Common/filesystem_win.h" />
 		<Unit filename="../../../Arsenal/Common/heap.c">
@@ -150,6 +152,9 @@
 		<Unit filename="../../../Arsenal/Common/string.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../../../Arsenal/Common/strnum.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="../../../Arsenal/Common/strtable.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -163,6 +168,9 @@
 		<Unit filename="../../../Arsenal/Common/thread_posix_apple.h" />
 		<Unit filename="../../../Arsenal/Common/thread_posix_posix.h" />
 		<Unit filename="../../../Arsenal/Common/thread_win.h" />
+		<Unit filename="../../../Arsenal/Common/uri.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="../../../Arsenal/Common/utilities.c">
 			<Option compilerVar="CC" />
 		</Unit>

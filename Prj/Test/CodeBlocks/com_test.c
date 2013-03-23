@@ -47,19 +47,50 @@ void text_test_save()
 
 static void mem_test()
 {
-    byte_t *b = AR_NEWARR(byte_t, 1024);
+    ar_byte_t *b = AR_NEWARR(ar_byte_t, 1024);
 }
 
 
+static void file_seek_test()
+{
+        arFile_t *f;
+        ar_uint_64_t offset;
+
+        arStatus_t		status = AR_open_file(&f, L"/bin/bash", L"rb");
+
+        status = AR_seek_file(f, 0, AR_FILE_SEEK_END);
+        AR_ASSERT(status == AR_S_YES);
+        status = AR_tell_file(f, &offset);
+        AR_ASSERT(status == AR_S_YES);
+        AR_printf(L"%qu\r\n", offset);
+
+        status = AR_seek_file(f, -100, AR_FILE_SEEK_END);
+        AR_ASSERT(status == AR_S_YES);
+        status = AR_tell_file(f, &offset);
+        AR_ASSERT(status == AR_S_YES);
+        AR_printf(L"%qu\r\n", offset);
+
+
+
+END_POINT:
+        if(f)
+        {
+                AR_close_file(f);
+                f = NULL;
+
+        }
+}
 
 
 void com_test()
 {
+
+        file_seek_test();
         //setlocale(LC_ALL, "utf-8");
 
        //text_test_save();
 
-        mem_test();
+        //mem_test();
 
 }
 
