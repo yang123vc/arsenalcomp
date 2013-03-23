@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="LibDebug" />
-	<File name="../../../Arsenal/Arsenal.c" open="1" top="0" tabpos="1">
+	<File name="../../../Arsenal/Arsenal.c" open="0" top="0" tabpos="1">
 		<Cursor position="1666" topLine="74" />
 	</File>
-	<File name="../../../Arsenal/Arsenal.h" open="1" top="0" tabpos="2">
-		<Cursor position="698" topLine="19" />
+	<File name="../../../Arsenal/Arsenal.h" open="0" top="0" tabpos="2">
+		<Cursor position="698" topLine="7" />
 	</File>
 	<File name="../../../Arsenal/Common/algo.c" open="0" top="0" tabpos="6">
 		<Cursor position="0" topLine="0" />
@@ -16,16 +16,16 @@
 	<File name="../../../Arsenal/Common/common.c" open="0" top="0" tabpos="9">
 		<Cursor position="2849" topLine="105" />
 	</File>
-	<File name="../../../Arsenal/Common/common.h" open="1" top="0" tabpos="8">
+	<File name="../../../Arsenal/Common/common.h" open="0" top="0" tabpos="8">
 		<Cursor position="10533" topLine="429" />
 	</File>
 	<File name="../../../Arsenal/Common/config.h" open="0" top="0" tabpos="10">
 		<Cursor position="10830" topLine="503" />
 	</File>
-	<File name="../../../Arsenal/Common/crtstr.c" open="1" top="0" tabpos="7">
+	<File name="../../../Arsenal/Common/crtstr.c" open="0" top="0" tabpos="7">
 		<Cursor position="22877" topLine="1244" />
 	</File>
-	<File name="../../../Arsenal/Common/memory.c" open="1" top="0" tabpos="10">
+	<File name="../../../Arsenal/Common/memory.c" open="0" top="0" tabpos="10">
 		<Cursor position="4353" topLine="210" />
 	</File>
 	<File name="../../../Arsenal/Common/status.h" open="0" top="0" tabpos="28">
@@ -64,7 +64,7 @@
 	<File name="../../../Arsenal/Parser/parser.h" open="0" top="0" tabpos="9">
 		<Cursor position="11614" topLine="369" />
 	</File>
-	<File name="../../../Arsenal/Parser/symbol.c" open="1" top="0" tabpos="5">
+	<File name="../../../Arsenal/Parser/symbol.c" open="0" top="0" tabpos="5">
 		<Cursor position="4015" topLine="203" />
 	</File>
 	<File name="../../../Arsenal/Tengu/tengu.c" open="0" top="0" tabpos="11">
@@ -91,7 +91,7 @@
 	<File name="../../../Arsenal/Tools/grammar_config.h" open="0" top="0" tabpos="4">
 		<Cursor position="5487" topLine="206" />
 	</File>
-	<File name="../../../Arsenal/Tools/serializer.c" open="1" top="0" tabpos="6">
-		<Cursor position="13042" topLine="675" />
+	<File name="../../../Arsenal/Tools/serializer.c" open="0" top="0" tabpos="6">
+		<Cursor position="13618" topLine="719" />
 	</File>
 </CodeBlocks_layout_file>

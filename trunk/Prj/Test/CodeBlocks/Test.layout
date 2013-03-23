@@ -2,10 +2,10 @@
 <CodeBlocks_layout_file>
 	<ActiveTarget name="LibDebug" />
 	<File name="com_test.c" open="1" top="1" tabpos="1">
-		<Cursor position="873" topLine="41" />
+		<Cursor position="1301" topLine="43" />
 	</File>
 	<File name="main.c" open="1" top="0" tabpos="2">
-		<Cursor position="67" topLine="5" />
+		<Cursor position="686" topLine="11" />
 	</File>
 	<File name="test.c" open="1" top="0" tabpos="3">
 		<Cursor position="168" topLine="0" />
