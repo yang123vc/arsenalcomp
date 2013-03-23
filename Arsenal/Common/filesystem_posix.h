@@ -1032,8 +1032,14 @@ arStatus_t				AR_seek_file(arFile_t *file, ar_int_64_t offset, arFileSeekType_t 
                 default:
                         return AR_E_INVAL;
 		}
-        
+
+#if(OS_TYPE == OS_MAC_OS_X)     //mac OS X
+
 		ret = fseeko((FILE*)file, (off_t)offset, origin);
+#else
+        ret = fseeko64((FILE*)file, (off64_t)offset, origin);
+#endif
+        
         
 		if(ret == 0)
 		{
@@ -1047,13 +1053,22 @@ arStatus_t				AR_seek_file(arFile_t *file, ar_int_64_t offset, arFileSeekType_t 
 
 arStatus_t				AR_tell_file(arFile_t *file, ar_uint_64_t *offset)
 {
-        int ret;
-        fpos_t off;
+        
+#if(OS_TYPE == OS_MAC_OS_X)     //mac OS X
+        off_t off;
+#else
+        off64_t off;
+#endif
+        
 		AR_ASSERT(file != NULL && offset != NULL);
+
+#if(OS_TYPE == OS_MAC_OS_X)     //mac OS X
+        off = ftello((FILE*)file);
+#else
+        off = ftello64((FILE*)file);
+#endif
         
-		ret = fgetpos((FILE*)file, &off);
-        
-		if(ret != 0)
+		if(off < 0)
 		{
 				int errcode = errno;
 				return __map_last_error(errcode);
@@ -1063,6 +1078,7 @@ arStatus_t				AR_tell_file(arFile_t *file, ar_uint_64_t *offset)
 				return AR_S_YES;
 		}
 }
+
 
 
 
