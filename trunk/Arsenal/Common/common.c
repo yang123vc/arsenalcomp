@@ -21,7 +21,7 @@ AR_NAMESPACE_BEGIN
 
 const wchar_t*	AR_Version()
 {
-		return L"0.4.02.980";
+		return L"0.4.03.980";
 }
 
 
@@ -81,6 +81,210 @@ const arBacktrace_t*	AR_GetBacktrace()
 {
 		return &__g_ctx.backtrace;
 }
+
+
+arStatus_t AR_error(ar_int_t level, const wchar_t *msg, ...)
+{
+        arStatus_t status;
+		va_list arg_ptr;
+        wchar_t *buf;
+        AR_ASSERT(msg != NULL);
+        status = AR_S_YES;
+        buf = NULL;
+		
+		if(__g_ctx.global_io_ctx.on_error != NULL)
+		{
+                
+				ar_int_t len;
+                
+                AR_va_start(arg_ptr, msg);
+				len = AR_vscwprintf(msg, arg_ptr);
+				AR_va_end(arg_ptr);
+                
+				if(len <= 0)
+				{
+                        status = AR_E_INVAL;
+                        goto END_POINT;
+				}
+                
+				buf = (wchar_t*)malloc(sizeof(wchar_t) * (len + 1));	/*this function may be called in AR_UninitMemory,so we just use native CRT function */
+                
+				if(buf == NULL)
+				{
+                        status = AR_E_NOMEM;
+                        goto END_POINT;
+				}
+                
+				AR_va_start(arg_ptr, msg);
+				len = AR_vswprintf_nonalloc(buf, len + 1, msg, arg_ptr);
+				AR_va_end(arg_ptr);
+				
+				if(len <= 0)
+				{
+                        status = AR_E_INVAL;
+                        goto END_POINT;
+				}
+                
+				__g_ctx.global_io_ctx.on_error(level, buf, __g_ctx.global_io_ctx.ctx);
+		}
+        
+END_POINT:
+        
+        if(buf)
+        {
+                free(buf);
+                buf = NULL;
+        }
+        
+		if(level <= AR_ERR_FATAL)
+		{
+				AR_abort();
+		}
+		return status;
+        
+}
+
+
+
+
+
+
+arStatus_t	AR_debug_print(const wchar_t *msg, ...)
+{
+        
+        arStatus_t status;
+		va_list arg_ptr;
+        wchar_t *buf;
+        AR_ASSERT(msg != NULL);
+        status = AR_S_YES;
+        buf = NULL;
+        
+
+		if(__g_ctx.global_io_ctx.on_error != NULL)
+		{
+                ar_int_t len;
+                
+                AR_va_start(arg_ptr, msg);
+				len = AR_vscwprintf(msg, arg_ptr);
+				AR_va_end(arg_ptr);
+                
+				if(len <= 0)
+				{
+                        status = AR_E_INVAL;
+                        goto END_POINT;
+				}
+                
+				buf = (wchar_t*)malloc(sizeof(wchar_t) * (len + 1)); /*this function may be called in AR_UninitMemory,so we just use native CRT function */
+                
+				if(buf == NULL)
+				{
+                        status = AR_E_NOMEM;
+                        goto END_POINT;
+				}
+                
+				AR_va_start(arg_ptr, msg);
+				len = AR_vswprintf_nonalloc(buf, len + 1, msg, arg_ptr);
+				AR_va_end(arg_ptr);
+				
+				if(len <= 0)
+				{
+                        status = AR_E_INVAL;
+                        goto END_POINT;
+				}
+				
+                __g_ctx.global_io_ctx.on_error(AR_ERR_DEBUG, buf, __g_ctx.global_io_ctx.ctx);
+                
+		}
+        
+END_POINT:
+        if(buf)
+        {
+                free(buf);
+                buf = NULL;
+        }
+        
+		return status;
+        
+        
+}
+
+
+
+
+arStatus_t AR_printf(const wchar_t *msg,...)
+{
+		wchar_t *buf;
+		ar_int_t len;
+		va_list arg_ptr;
+
+		if(__g_ctx.global_io_ctx.on_print != NULL)
+		{
+		
+				
+				AR_va_start(arg_ptr, msg);
+				len = AR_vscwprintf(msg, arg_ptr);
+				AR_va_end(arg_ptr);
+
+				if(len <= 0)
+				{
+						return AR_E_INVAL;
+				}
+
+				buf = AR_NEWARR0(wchar_t, len + 1);
+
+				if(buf == NULL)
+				{
+						return AR_E_NOMEM;
+				}
+
+				AR_va_start(arg_ptr, msg);
+				len = AR_vswprintf(buf, len + 1, msg, arg_ptr);
+				AR_va_end(arg_ptr);
+				
+				if(len <= 0)
+				{
+						AR_DEL(buf);
+						return AR_E_INVAL;
+				}
+
+				__g_ctx.global_io_ctx.on_print(buf, __g_ctx.global_io_ctx.ctx);
+				
+				AR_DEL(buf);
+		}
+
+		return AR_S_YES;
+}
+
+
+void	AR_check(ar_bool_t cond, const wchar_t *fmt, ...)
+{
+		wchar_t buf[1024];
+		ar_int_t len;
+		va_list arg_ptr;
+		AR_ASSERT(fmt);
+		
+		if(!cond)
+		{
+				AR_va_start(arg_ptr, fmt);
+				len = AR_vswprintf_nonalloc(buf, 1024, fmt, arg_ptr);
+				AR_va_end(arg_ptr);
+				
+				if(len < 0)
+				{
+						buf[0] = L'\0';
+				}
+				
+				AR_error(AR_ERR_FATAL, buf);
+
+		}
+}
+
+
+
+
+
+/***************************************************ctx**********************************/
+
 
 
 #if(0)
@@ -159,128 +363,6 @@ arStatus_t	AR_error_ctx(arIOCtx_t *ctx, ar_int_t level, const wchar_t *msg, ...)
 		return AR_S_YES;
 }
 #endif
-
-
-
-
-arStatus_t AR_error(ar_int_t level, const wchar_t *msg, ...)
-{
-		wchar_t buf[2048];
-		va_list arg_ptr;
-		
-		if(__g_ctx.global_io_ctx.on_error != NULL)
-		{
-				AR_va_start(arg_ptr, msg);
-				if(AR_vswprintf_nonalloc(buf, 2048, msg, arg_ptr) <= 0)
-				{
-						buf[0] = L'\0';
-				}
-				AR_va_end(arg_ptr);
-				
-				__g_ctx.global_io_ctx.on_error(level, buf, __g_ctx.global_io_ctx.ctx);
-		}
-
-
-		if(level <= AR_ERR_FATAL)
-		{
-				AR_abort();
-		}
-
-		return AR_S_YES;
-}
-
-
-arStatus_t	AR_debug_print(const wchar_t *msg, ...)
-{
-		wchar_t buf[4096];
-		va_list arg_ptr;
-		
-		if(__g_ctx.global_io_ctx.on_error != NULL)
-		{
-				AR_va_start(arg_ptr, msg);
-				if(AR_vswprintf_nonalloc(buf, 4096, msg, arg_ptr) <= 0)
-				{
-						buf[0] = L'\0';
-				}
-				AR_va_end(arg_ptr);
-				
-				__g_ctx.global_io_ctx.on_error(AR_ERR_DEBUG, buf, __g_ctx.global_io_ctx.ctx);
-		}
-		
-		return AR_S_YES;
-}
-
-
-
-arStatus_t AR_printf(const wchar_t *msg,...)
-{
-		wchar_t *buf;
-		ar_int_t len;
-		va_list arg_ptr;
-
-		if(__g_ctx.global_io_ctx.on_print != NULL)
-		{
-		
-				
-				AR_va_start(arg_ptr, msg);
-				len = AR_vscwprintf(msg, arg_ptr);
-				AR_va_end(arg_ptr);
-
-				if(len <= 0)
-				{
-						return AR_E_INVAL;
-				}
-
-				buf = AR_NEWARR0(wchar_t, len + 1);
-
-				if(buf == NULL)
-				{
-						return AR_E_NOMEM;
-				}
-
-				AR_va_start(arg_ptr, msg);
-				len = AR_vswprintf(buf, len + 1, msg, arg_ptr);
-				AR_va_end(arg_ptr);
-				
-				if(len <= 0)
-				{
-						AR_DEL(buf);
-						return AR_E_INVAL;
-				}
-
-				__g_ctx.global_io_ctx.on_print(buf, __g_ctx.global_io_ctx.ctx);
-				
-				AR_DEL(buf);
-		}
-
-		return AR_S_YES;
-}
-
-void	AR_check(ar_bool_t cond, const wchar_t *fmt, ...)
-{
-		wchar_t buf[1024];
-		ar_int_t len;
-		va_list arg_ptr;
-		AR_ASSERT(fmt);
-		
-		if(!cond)
-		{
-				AR_va_start(arg_ptr, fmt);
-				len = AR_vswprintf_nonalloc(buf, 1024, fmt, arg_ptr);
-				AR_va_end(arg_ptr);
-				
-				if(len < 0)
-				{
-						buf[0] = L'\0';
-				}
-				
-				AR_error(AR_ERR_FATAL, buf);
-
-		}
-}
-
-/***************************************************ctx**********************************/
-
 
 
 

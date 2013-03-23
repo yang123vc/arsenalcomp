@@ -31,9 +31,12 @@
 #include "GrammarDesignerView.h"
 #include "AboutDialog.h"
 
-
 #ifdef _DEBUG
+
+
 #define new DEBUG_NEW
+
+
 #endif
 
 
@@ -88,6 +91,68 @@ static void	AR_STDCALL	__dummy_print_func(const wchar_t *msg, void *ctx)
 		::OutputDebugStringW(msg);
 }
 
+
+
+static size_t AR_STDCALL build_backtrace(void **callstack, size_t callstack_cnt)
+{
+		AR_ASSERT(callstack != NULL && callstack_cnt > 0);
+		return (size_t)CaptureStackBackTrace(1, callstack_cnt, callstack, NULL);
+}
+
+static size_t	AR_STDCALL build_backtrace_symbol(void **callstack, size_t callstack_cnt, char *str, size_t len)
+{
+		unsigned int	i;
+		SYMBOL_INFO		*symbol;
+		HANDLE			process;
+		char			*p;
+		size_t			remain;
+		
+		AR_ASSERT(callstack != NULL && str != NULL && len > 0);
+		
+		if(callstack_cnt == 0)
+		{
+				str[0] = '\0';
+                return 0;
+		}
+
+		process = GetCurrentProcess();
+
+		SymInitialize( process, NULL, TRUE );
+		symbol               = ( SYMBOL_INFO * )calloc( sizeof( SYMBOL_INFO ) + 256 * sizeof( char ), 1 );
+		symbol->MaxNameLen   = 255;
+		symbol->SizeOfStruct = sizeof( SYMBOL_INFO );
+
+		p = str;
+		remain = len - 1;
+
+		for(i = 0; i < callstack_cnt; i++ )
+		{
+				size_t n;
+				SymFromAddr( process, (DWORD64)(callstack[i]), 0, symbol );
+
+				if(_snprintf(p, remain, "%s\r\n", symbol->Name) <= 0)
+				{
+						break;
+				}
+				
+				n = strlen(p);
+				
+				if(n == 0)
+				{
+						break;
+				}
+				
+				p += n;
+				remain -= n;
+		}
+		
+		*p = '\0';
+		free(symbol);
+		return (size_t)strlen(str);
+}
+
+
+
 static const ARSpace::arInit_t	__dummy_context = 
 {
 		{
@@ -97,8 +162,8 @@ static const ARSpace::arInit_t	__dummy_context =
 		},
 
 		{
-				NULL,
-				NULL
+				build_backtrace,
+				build_backtrace_symbol
 		}
 };
 
@@ -108,7 +173,8 @@ BOOL CGrammarDesignerApp::InitInstance()
 //TODO: call AfxInitRichEdit2() to initialize richedit2 library.
 
 		ARSpace::Arsenal_Init(&__dummy_context);
-	
+		
+		
 
 	// InitCommonControlsEx() is required on Windows XP if an application
 	// manifest specifies use of ComCtl32.dll version 6 or later to enable
