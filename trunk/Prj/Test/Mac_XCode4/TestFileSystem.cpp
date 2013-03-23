@@ -272,14 +272,21 @@ static void full_path_test()
 static void file_seek_test()
 {
         arFile_t *f;
-        arStatus_t		status = AR_open_file(&f, L"/Users/solidus/Desktop/urllib/urllib.dat", L"rb");
-        
-        status = AR_seek_file(f, -100, AR_FILE_SEEK_END);
-        
         ar_uint_64_t offset;
         
+        arStatus_t		status = AR_open_file(&f, L"/Users/solidus/Desktop/1.doc", L"rb");
+        
+        status = AR_seek_file(f, 0, AR_FILE_SEEK_END);
+        AR_ASSERT(status == AR_S_YES);
         status = AR_tell_file(f, &offset);
-                
+        AR_ASSERT(status == AR_S_YES);
+        AR_printf(L"%qu\r\n", offset);
+        
+        status = AR_seek_file(f, -100, AR_FILE_SEEK_END);
+        AR_ASSERT(status == AR_S_YES);
+        status = AR_tell_file(f, &offset);
+        AR_ASSERT(status == AR_S_YES);
+        AR_printf(L"%qu\r\n", offset);                
                 
                 
         

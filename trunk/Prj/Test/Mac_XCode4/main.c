@@ -134,7 +134,6 @@ int main (int argc, const char * argv[])
         
         Arsenal_Init(&ctx);
         
-        AR_NEWARR(char, 10240);
 
         AR_printf(L"%ls\r\n", L"Hellow world! 中文");
         
