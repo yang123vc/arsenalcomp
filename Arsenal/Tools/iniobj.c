@@ -1476,7 +1476,7 @@ const wchar_t*  Ini_GetSectionKeyByIndex(const iniObject_t *obj, const wchar_t *
         
 		i = __find_section(obj, sect);
 		
-		if(idx == -1)
+		if(i == -1)
 		{
                 return NULL;
         }
