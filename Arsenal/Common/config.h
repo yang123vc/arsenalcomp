@@ -697,7 +697,7 @@ typedef void*					ar_ptr_t;
 
 
 #ifndef AR_NDEBUG
-        
+
         //#define	AR_USE_CRT_ALLOCFUNC	1
 
 		#ifndef AR_USE_CRT_ALLOCFUNC

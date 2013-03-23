@@ -83,9 +83,14 @@
 
 #pragma warning(disable : 4100)
 
+
+
 #include "Arsenal.h"
 #pragma comment(lib, "Arsenal.lib")
 
+
+#include <Dbghelp.h>
+#pragma comment(lib, "Dbghelp.lib")
 
 #define	REGENTRY_NAME	TEXT("Solidus Studio")
 
