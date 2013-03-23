@@ -185,10 +185,8 @@
 
 
 /************************************************/
-#if !defined(AR_DISABLE_CRTSTDLIB)
-		#include<stdlib.h>
-#endif
 
+#include<stdlib.h>
 #include <stdio.h>
 #include <wchar.h>
 #include <stddef.h>
@@ -262,12 +260,31 @@
 
 
 #elif defined(OS_FAMILY_UNIX)
+
+		#if(OS_TYPE == OS_LINUX) && (AR_ARCH_VER == ARCH_32)
+
+				#ifndef __USE_FILE_OFFSET64
+						#define __USE_FILE_OFFSET64
+				#endif
+
+				#ifndef __USE_LARGEFILE64
+						#define __USE_LARGEFILE64
+				#endif
+
+				#ifndef _LARGEFILE64_SOURCE
+						#define _LARGEFILE64_SOURCE
+				#endif
+
+		#endif
+
+
         #include <unistd.h>
         #include <pthread.h>
 		#include <iconv.h>
         #include <sys/select.h>
         #include <sys/time.h>
 		#include <errno.h>
+
 		#if(OS_TYPE == OS_MAC_OS_X || OS_TYPE == OS_IOS)
 			#include <libkern/OSAtomic.h>
 		#endif
