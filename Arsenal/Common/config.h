@@ -184,7 +184,56 @@
 
 
 
-/************************************************/
+/*******************************pre defined macro,before any headers**********************/
+
+
+#if defined(OS_FAMILY_WINDOWS)
+
+		#ifndef WIN32_LEAN_AND_MEAN
+				#define WIN32_LEAN_AND_MEAN		1		
+		#endif
+
+		#if(AR_COMPILER == AR_VC_LEGACY || OS_TYPE == OS_WINDOWS_CE)
+				struct _RPC_ASYNC_STATE;
+		#endif
+
+		#ifndef WINVER                          
+				#define WINVER 0x0600           
+		#endif
+
+		#ifndef _WIN32_WINNT            
+				#define _WIN32_WINNT 0x0600     
+		#endif
+
+		#ifndef _WIN32_WINDOWS					
+				#define _WIN32_WINDOWS 0x0410 
+		#endif
+
+#elif defined(OS_FAMILY_UNIX)
+		
+		#if(OS_TYPE == OS_LINUX) && (AR_ARCH_VER == ARCH_32)
+
+				#ifndef __USE_FILE_OFFSET64
+						#define __USE_FILE_OFFSET64
+				#endif
+
+				#ifndef __USE_LARGEFILE64
+						#define __USE_LARGEFILE64
+				#endif
+
+				#ifndef _LARGEFILE64_SOURCE
+						#define _LARGEFILE64_SOURCE
+				#endif
+		#endif
+
+#else
+		#error "Unknown OS not supported!"
+#endif
+
+
+
+/*****************standarded C headers*******************************/
+
 
 #include<stdlib.h>
 #include <stdio.h>
@@ -215,14 +264,6 @@
 		#define AR_HAS_BOOL_TRUE_FALSE
 #endif
 
-#if defined(OS_FAMILY_WINDOWS)
-
-#elif defined(OS_FAMILY_UNIX)
-		#define AR_WCHAR_IS_UTF32_SUPPORT		1
-#else
-		#error "Unknown OS not supported!"
-#endif
-
 
 
 /*include plat spec headers*/
@@ -230,25 +271,6 @@
 
 #if defined(OS_FAMILY_WINDOWS)
 
-		#ifndef WIN32_LEAN_AND_MEAN
-				#define WIN32_LEAN_AND_MEAN		1		
-		#endif
-
-		#if(AR_COMPILER == AR_VC_LEGACY || OS_TYPE == OS_WINDOWS_CE)
-				struct _RPC_ASYNC_STATE;
-		#endif
-
-		#ifndef WINVER                          
-				#define WINVER 0x0600           
-		#endif
-
-		#ifndef _WIN32_WINNT            
-				#define _WIN32_WINNT 0x0600     
-		#endif
-
-		#ifndef _WIN32_WINDOWS					
-				#define _WIN32_WINDOWS 0x0410 
-		#endif
 		
 		#include <windows.h>
 		
@@ -257,26 +279,9 @@
 		#define			AR_PATH_SP_CHAR			L'\\'
 		
 		#define			AR_LINE_SP				L"\r\n"
-
+		
 
 #elif defined(OS_FAMILY_UNIX)
-
-		#if(OS_TYPE == OS_LINUX) && (AR_ARCH_VER == ARCH_32)
-
-				#ifndef __USE_FILE_OFFSET64
-						#define __USE_FILE_OFFSET64
-				#endif
-
-				#ifndef __USE_LARGEFILE64
-						#define __USE_LARGEFILE64
-				#endif
-
-				#ifndef _LARGEFILE64_SOURCE
-						#define _LARGEFILE64_SOURCE
-				#endif
-
-		#endif
-
 
         #include <unistd.h>
         #include <pthread.h>
@@ -284,7 +289,7 @@
         #include <sys/select.h>
         #include <sys/time.h>
 		#include <errno.h>
-
+		
 		#if(OS_TYPE == OS_MAC_OS_X || OS_TYPE == OS_IOS)
 			#include <libkern/OSAtomic.h>
 		#endif
@@ -297,7 +302,9 @@
 		#else
 			#define			AR_LINE_SP				L"\n"
 		#endif
-
+		
+		
+		#define AR_WCHAR_IS_UTF32_SUPPORT				1
 #else
 		#error "Unknown OS not supported!"
 #endif
