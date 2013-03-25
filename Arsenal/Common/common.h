@@ -137,7 +137,7 @@ void	AR_check(ar_bool_t cond, const wchar_t *fmt, ...);
 
 #else
 
-#define AR_DPRINT               AR_NOOP
+#define AR_DPRINT               false && AR_debug_print
 
 #define AR_ASSERT(_cond)		/*(_cond)*/
 
@@ -147,16 +147,6 @@ void	AR_check(ar_bool_t cond, const wchar_t *fmt, ...);
 #define AR_UNUSED(_e)			((void)(_e))
 
 
-#if(0)
-#if !defined(AR_DISABLE_LOG)
-
-		#define AR_LOG					AR_error
-
-#else
-		#define AR_LOG
-	
-#endif
-#endif
 
 
 
