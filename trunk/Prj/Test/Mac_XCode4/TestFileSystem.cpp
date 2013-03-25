@@ -267,12 +267,19 @@ static void full_path_test()
 }
 
         
-        
+static int retint()
+{
+        printf("retint\r\n");
+        return 33;
+}
         
 static void file_seek_test()
 {
         arFile_t *f;
         ar_uint_64_t offset;
+        
+        AR_DPRINT(L"%ls\r\n", L"test printffdfasdf");
+        AR_DPRINT(L"test : %u\r\n", retint());
         
         arStatus_t		status = AR_open_file(&f, L"/Users/solidus/Desktop/1.doc", L"rb");
         
