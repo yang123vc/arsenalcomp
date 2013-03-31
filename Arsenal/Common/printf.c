@@ -521,7 +521,7 @@ ar_int_t AR_vscprintf(const char *fmt, va_list va_args)
 
 								/*
 										312 == strlen("-1+(0{309})")
-										double Maximum accuracy .0 {309}, 
+										double maximum accuracy .0 {309}, 
 										precision default is set to 6
 								*/
 
