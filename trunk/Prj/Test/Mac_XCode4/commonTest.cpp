@@ -2018,7 +2018,23 @@ static void str_test22()
         AR_ASSERT(l > 0);
         
 }
+
+static void string_test1()
+{
+        arString_t *str = AR_CreateString();
         
+        AR_AppendString(str, L"abcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefgabcdefg");
+        
+        if(str)
+        {
+                AR_DestroyString(str);
+        }
+        
+        arStatus_t status;
+        wchar_t *p = NULL;
+        AR_DO_REALLOC(wchar_t, p, 1024, 33, status);
+
+}
 void common_test()
 {
         AR_printf(L"On common_test\r\n");
@@ -2031,13 +2047,15 @@ void common_test()
         //uri_test();
         //charset_test();
         
-        text_test_load_save();
+        //text_test_load_save();
         
         //str_test19();
         //str_test20();
  
         //str_test21();
         //str_test22();
+        
+        string_test1();
 }
         
         
