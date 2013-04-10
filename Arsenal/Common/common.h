@@ -261,26 +261,29 @@ void	AR_memswap(void *a, void *b, size_t n);
 */
 
 
-#define AR_DO_REALLOC(_type, _org_ptr, _new_cap, _copy_cnt, _status)	\
-		do{																\
-				_type *new_arr;											\
-				new_arr = AR_NEWARR(_type, (_new_cap));					\
-				if(new_arr == NULL)										\
-				{														\
-						(_status) = AR_E_NOMEM;							\
-				}														\
-				if((_copy_cnt) > 0 && (_org_ptr) != NULL)				\
-				{														\
-						AR_memcpy(new_arr, (_org_ptr), (_copy_cnt) * sizeof(_type));	\
-				}																		\
-				if((_org_ptr))															\
-				{																		\
-						AR_DEL((_org_ptr));												\
-						(_org_ptr) = NULL;												\
-				}																		\
-				(_org_ptr) = new_arr;													\
-				(_status) = AR_S_YES;													\
-		}while(0);																		
+#define AR_DO_REALLOC(_type, _org_ptr, _new_cap, _copy_cnt, _status)                            \
+		do{                                                                                     \
+				_type *new_arr;                                                                 \
+				new_arr = AR_NEWARR(_type, (_new_cap));                                         \
+				if(new_arr == NULL)                                                             \
+				{                                                                               \
+                        AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);           \
+						(_status) = AR_E_NOMEM;                                                 \
+                        break;                                                                  \
+				}                                                                               \
+                                                                                                \
+                if((_copy_cnt) > 0 && (_org_ptr) != NULL)                                       \
+                {                                                                               \
+                        AR_memcpy(new_arr, (_org_ptr), (_copy_cnt) * sizeof(_type));            \
+                }                                                                               \
+                if((_org_ptr))                                                                  \
+                {                                                                               \
+                        AR_DEL((_org_ptr));                                                     \
+                        (_org_ptr) = NULL;                                                      \
+                }                                                                               \
+                (_org_ptr) = new_arr;                                                           \
+                (_status) = AR_S_YES;                                                           \
+		}while(0);
 
 
 #define AR_DEL(_ptr) AR_free((void*)(_ptr))

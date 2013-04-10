@@ -494,8 +494,11 @@ ar_int_t 		AR_escstr_to_str_buf(wchar_t *dest, size_t len, const wchar_t *src, a
 		{
 				if(len <= ret) 
 				{ 
-						AR_DEL(str); 
-						error->type = AR_ESCSTR_ERR_BUFFER; 
+						AR_DEL(str);
+                        if(error)
+                        {
+                                error->type = AR_ESCSTR_ERR_BUFFER;
+                        }
 						return -1;
 				}else
 				{
@@ -566,9 +569,12 @@ ar_int_t 			AR_escstr_to_str_buf_n(wchar_t *dest, size_t len, const wchar_t *src
 		}else
 		{
 				if(len <= ret) 
-				{ 
-						AR_DEL(str); 
-						error->type = AR_ESCSTR_ERR_BUFFER; 
+				{
+						AR_DEL(str);
+                        if(error)
+                        {
+                                error->type = AR_ESCSTR_ERR_BUFFER;
+                        }
 						return -1;
 				}else
 				{

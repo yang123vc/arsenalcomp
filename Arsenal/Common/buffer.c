@@ -182,7 +182,14 @@ arStatus_t		AR_CopyBuffer(arBuffer_t *dest, const arBuffer_t *src)
 {
 		AR_ASSERT(dest != NULL && src != NULL);
 		AR_ClearBuffer(dest);
-		return AR_InsertToBuffer(dest, AR_GetBufferData(src), AR_GetBufferAvailable(src));
+        
+        if(AR_GetBufferAvailable(src) > 0)
+        {
+                return AR_InsertToBuffer(dest, AR_GetBufferData(src), AR_GetBufferAvailable(src));
+        }else
+        {
+                return AR_S_YES;
+        }
 }
 
 arBuffer_t*		AR_CopyNewBuffer(const arBuffer_t *buf)
@@ -259,7 +266,7 @@ arStatus_t			AR_InsertToBuffer(arBuffer_t *buffer, const ar_byte_t *data, size_t
 {
 		ar_byte_t *ptr = NULL;
 		AR_ASSERT(__buffer_is_valid(buffer));
-		if(len == 0)
+		if(len == 0 || data == NULL)
 		{
 				return AR_S_YES;
 		}
