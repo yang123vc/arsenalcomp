@@ -623,6 +623,12 @@ static iniKeyVal_t* __ini_insert_kvpair_to_section(iniSection_t *sec, const wcha
 
 						if(new_kv_pairs == NULL)
 						{
+								if(kv)
+								{
+										__ini_destroy_kvpair(kv);
+										kv = NULL;
+								}
+
 								return NULL;
 						}
 
@@ -683,6 +689,11 @@ static arStatus_t	__ini_insert_comment_to_section(iniSection_t *sec, const wchar
 		AR_ASSERT(sec != NULL);
 		
 		kv = __ini_create_kvpair(NULL, NULL, comment);
+		if(kv == NULL)
+		{
+				return AR_E_NOMEM;
+		}
+
 		kv->is_comment = true;
 
 		if(sec->cnt == sec->cap)
@@ -695,6 +706,8 @@ static arStatus_t	__ini_insert_comment_to_section(iniSection_t *sec, const wchar
 
 				if(new_kv_pairs == NULL)
 				{
+						__ini_destroy_kvpair(kv);
+						kv = NULL;
 						return AR_E_NOMEM;
 				}
 
