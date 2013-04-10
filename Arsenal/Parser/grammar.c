@@ -1710,7 +1710,7 @@ arStatus_t				Parser_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *fo
 												}
 										}
 										/*如果next不可导出空串，则循环终止*/
-										if(!first_rec->can_empty)
+										if(first_rec && !first_rec->can_empty)
 										{
 												break;
 										}
