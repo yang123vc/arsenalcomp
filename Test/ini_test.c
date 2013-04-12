@@ -164,12 +164,34 @@ void ini_test3()
 
 }
 
+
+void ini_test4()
+{
+		
+		arString_t	*str;
+		iniObject_t *obj;
+		str = AR_CreateString();
+		
+		obj = NULL;
+
+		if(AR_LoadBomTextFile(L"D:\\2.sig", NULL, str) != AR_S_YES)
+		{
+				AR_ASSERT(false);
+		}
+		AR_printf(L"%ls\r\n", AR_CSTR(str));
+		
+		AR_ASSERT(AR_GetStringLength(str) == 512);
+
+		AR_DestroyString(str);
+		str = NULL;
+}
+
 void Ini_Test()
 {
 		//ini_test1();
 		//ini_test2();
 
-		ini_test3();
+		ini_test4();
 
 }
 
