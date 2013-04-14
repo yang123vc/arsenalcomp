@@ -1089,7 +1089,7 @@ arStatus_t		AR_SetURIQueryItems(arURI_t *uri, const arHash_t *hash);
 
 typedef enum
 {
-		AR_TXT_BOM_ASCII		=		0x01,
+		AR_TXT_BOM_NONE		=		0x01,
 		AR_TXT_BOM_UTF16_BE		=		0x02,
 		AR_TXT_BOM_UTF16_LE		=		0x04,
 		AR_TXT_BOM_UTF_8		=		0x08,

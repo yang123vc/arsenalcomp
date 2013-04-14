@@ -75,7 +75,7 @@ static ar_bool_t	__dectect_encoding(arBuffer_t *input, arTxtBom_t *bom)
 						read_n = 4;
 				}else
 				{
-						*bom = AR_TXT_BOM_ASCII;
+						*bom = AR_TXT_BOM_NONE;
 						read_n = 0;
 				}
 		}else if(tmp[0] == 0xEF && tmp[1] == 0xBB)
@@ -86,13 +86,13 @@ static ar_bool_t	__dectect_encoding(arBuffer_t *input, arTxtBom_t *bom)
 						read_n = 3;
 				}else
 				{
-						*bom = AR_TXT_BOM_ASCII;
+						*bom = AR_TXT_BOM_NONE;
 						read_n = 0;
 				}
 		}
 		else
 		{
-				*bom = AR_TXT_BOM_ASCII;
+				*bom = AR_TXT_BOM_NONE;
 				read_n = 0;
 		}
 
@@ -261,7 +261,7 @@ static txtReadStatus_t		__read_wchar(arBuffer_t *input, arTxtBom_t enc, wchar_t 
 				}
 		}
 				break;
-		case AR_TXT_BOM_ASCII:
+		case AR_TXT_BOM_NONE:
 		default:
 				return TXT_READ_INVALID;
 				break;
@@ -296,7 +296,7 @@ arStatus_t	AR_LoadBomTextFromBinary(arBuffer_t *input, arTxtBom_t *bom, arString
 		{
 				if(bom)
 				{
-						*bom = AR_TXT_BOM_ASCII;
+						*bom = AR_TXT_BOM_NONE;
 				}
 				return AR_S_YES;
 		}
@@ -308,7 +308,7 @@ arStatus_t	AR_LoadBomTextFromBinary(arBuffer_t *input, arTxtBom_t *bom, arString
 				goto FAILED_POINT;
 		}
 
-		if(enc == AR_TXT_BOM_ASCII)
+		if(enc == AR_TXT_BOM_NONE)
 		{
 				
 				wchar_t *str = NULL;
@@ -530,7 +530,7 @@ static arStatus_t __write_bom(arBuffer_t *out, arTxtBom_t bom)
 				buf[3] = 0x00;
 		}
 				break;
-		case AR_TXT_BOM_ASCII:
+		case AR_TXT_BOM_NONE:
 		default:
 				wn = 0;
 				ret = AR_E_INVAL;
@@ -660,7 +660,7 @@ static arStatus_t __write_wchar(arBuffer_t *out, arTxtBom_t bom, wchar_t c)
 				ret = AR_InsertToBuffer(out, (ar_byte_t*)buf, 4);
 		}
 				break;
-		case AR_TXT_BOM_ASCII:
+		case AR_TXT_BOM_NONE:
 		default:
 				break;
 		}
@@ -681,7 +681,7 @@ arStatus_t	AR_SaveBomTextToBinary(arBuffer_t *output, arTxtBom_t bom, const wcha
 		ret = AR_S_YES;
 
 
-		if(bom == AR_TXT_BOM_ASCII)
+		if(bom == AR_TXT_BOM_NONE)
 		{
 				size_t n;
 				char *s = AR_wcs_to_str(AR_CP_ACP, input, AR_wcslen(input));
