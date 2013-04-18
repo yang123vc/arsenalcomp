@@ -340,6 +340,8 @@ _AR_check
 _AR_close_file
 _AR_cos_dbl
 _AR_cos_flt
+_AR_data_to_hexstr
+_AR_data_to_hexwcs
 _AR_debug_calloc
 _AR_debug_free
 _AR_debug_malloc
@@ -357,6 +359,10 @@ _AR_floor_dbl
 _AR_floor_flt
 _AR_getenv
 _AR_hasenv
+_AR_hexstr_to_data
+_AR_hexstr_to_data_s
+_AR_hexwcs_to_data
+_AR_hexwcs_to_data_s
 _AR_i64tos_buf
 _AR_i64tow_buf
 _AR_is_equal_dbl
