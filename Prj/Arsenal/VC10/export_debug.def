@@ -315,3 +315,10 @@ AR_CompStringWithWcs
 AR_ICompStringWithWcs
 AR_CompURI
 
+
+AR_hexstr_to_data
+AR_hexstr_to_data_s
+AR_data_to_hexstr
+AR_hexwcs_to_data
+AR_hexwcs_to_data_s
+AR_data_to_hexwcs

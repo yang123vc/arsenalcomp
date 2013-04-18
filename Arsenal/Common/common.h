@@ -840,6 +840,13 @@ ar_int_t 			AR_escstr_to_str_buf_n(wchar_t *dest, size_t len, const wchar_t *src
 ar_int_t 			AR_str_to_escstr_buf_n(wchar_t *dest, size_t len, const wchar_t *src, size_t n);
 
 
+ar_int_t		AR_hexstr_to_data(const char *s, ar_byte_t *data, size_t len);
+ar_int_t		AR_hexstr_to_data_s(const char *b, const char *e, ar_byte_t *data, size_t len);
+ar_int_t		AR_data_to_hexstr(const ar_byte_t *data, size_t l, char *out, size_t len, ar_bool_t is_upper);
+ar_int_t		AR_hexwcs_to_data(const wchar_t *s, ar_byte_t *data, size_t len);
+ar_int_t		AR_hexwcs_to_data_s(const wchar_t *b, const wchar_t *e, ar_byte_t *data, size_t len);
+ar_int_t		AR_data_to_hexwcs(const ar_byte_t *data, size_t l, wchar_t *out, size_t len, ar_bool_t is_upper);
+
 /*************************************************encode && decode**************************************************/
 
 /**************************************************************rot13*********************************************************/

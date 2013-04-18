@@ -622,6 +622,270 @@ ar_int_t 			AR_str_to_escstr_buf_n(wchar_t *dest, size_t len, const wchar_t *src
 		}
 }
 
+/********************************************************************************************************************/
+
+
+static arStatus_t  __hex_char_to_digit(char c, ar_byte_t *d)
+{
+		AR_ASSERT(d != NULL);
+        
+		if(c >= '0' && c <= '9')
+		{
+				*d = c - '0';
+		}else if(c >= 'a' && c <= 'f')
+		{
+				*d = 10 + c - 'a';
+		}else if(c >= 'A' && c <= 'F')
+		{
+				*d = 10 + c - 'A';
+		}else
+		{
+				return AR_E_INVAL;
+		}
+		return AR_S_YES;
+}
+
+ar_int_t           AR_hexstr_to_data(const char *s, ar_byte_t *data, size_t len)
+{
+        AR_ASSERT(s != NULL);
+        return AR_hexstr_to_data_s(s, s + AR_strlen(s), data, len);
+}
+
+
+ar_int_t	AR_hexstr_to_data_s(const char *b, const char *e, ar_byte_t *data, size_t len)
+{
+		ar_byte_t *p;
+		arStatus_t status;
+		size_t need_l;
+		AR_ASSERT(b != NULL && e != NULL && b < e);
+		
+		need_l = e - b;
+        
+		if(need_l % 2 != 0)
+		{
+				return -1;
+		}
+        
+		if(data == NULL)
+		{
+				return (ar_int_t)need_l / 2;
+		}
+        
+		if(len < need_l / 2)
+		{
+				return -1;
+		}
+		
+		p = data;
+		while(b < e)
+		{
+				ar_byte_t d1,d2;
+				
+				status = __hex_char_to_digit(*b, &d1);
+                
+				if(status != AR_S_YES)
+				{
+						return -1;
+				}
+                
+				b++;
+				AR_ASSERT(b < e);
+                
+				status = __hex_char_to_digit(*b, &d2);
+                
+				if(status != AR_S_YES)
+				{
+						return -1;
+				}
+                
+				*p++ = d1 * 16 + d2;
+				++b;
+		}
+		
+		return need_l / 2;
+}
+
+
+
+
+static void __digit_to_hex_char(ar_byte_t b, char tmp[2], ar_bool_t is_upper)
+{
+		ar_uint_32_t v = (ar_uint_32_t)b;
+		static const char *__tbl =NULL;
+        
+        if(is_upper)
+        {
+                __tbl = "0123456789ABCDEF";
+        }else
+        {
+                __tbl = "0123456789abcdef";
+        }
+        
+		tmp[1] = __tbl[v % 16];
+		v /= 16;
+		tmp[0] = __tbl[v % 16];
+}
+
+ar_int_t           AR_data_to_hexstr(const ar_byte_t *data, size_t l, char *out, size_t len, ar_bool_t is_upper)
+{
+		size_t i, si;
+		AR_ASSERT(data != NULL && l > 0);
+        
+		if(out == NULL)
+		{
+				return l * 2;
+		}else
+		{
+				if(len < l * 2)
+				{
+						return -1;
+				}
+                
+				for(i = 0,si = 0; i < l; ++i)
+				{
+						__digit_to_hex_char(data[i], out + si, is_upper);
+						si += 2;
+                        //AR_ASSERT(si < len);
+				}
+				return si;
+		}
+}
+
+
+
+
+
+/****************************************************************/
+
+
+static arStatus_t  __hex_wchar_t_to_digit(wchar_t c, ar_byte_t *d)
+{
+		AR_ASSERT(d != NULL);
+        
+		if(c >= L'0' && c <= L'9')
+		{
+				*d = (ar_byte_t)(c - L'0');
+		}else if(c >= L'a' && c <= L'f')
+		{
+				*d = (ar_byte_t)(10 + c - L'a');
+		}else if(c >= L'A' && c <= L'F')
+		{
+				*d = (ar_byte_t)(10 + c - L'A');
+		}else
+		{
+				return AR_E_INVAL;
+		}
+		return AR_S_YES;
+}
+
+
+ar_int_t           AR_hexwcs_to_data(const wchar_t *s, ar_byte_t *data, size_t len)
+{
+        AR_ASSERT(s != NULL);
+        return AR_hexwcs_to_data_s(s, s + AR_wcslen(s), data, len);
+}
+
+
+
+ar_int_t	AR_hexwcs_to_data_s(const wchar_t *b, const wchar_t *e, ar_byte_t *data, size_t len)
+{
+		ar_byte_t *p;
+		arStatus_t status;
+		size_t need_l;
+		AR_ASSERT(b != NULL && e != NULL && b < e);
+		
+		need_l = e - b;
+        
+		if(need_l % 2 != 0)
+		{
+				return -1;
+		}
+        
+		if(data == NULL)
+		{
+				return (ar_int_t)need_l / 2;
+		}
+        
+		if(len < need_l / 2)
+		{
+				return -1;
+		}
+		
+		p = data;
+		while(b < e)
+		{
+				ar_byte_t d1,d2;
+				
+				status = __hex_wchar_t_to_digit(*b, &d1);
+                
+				if(status != AR_S_YES)
+				{
+						return -1;
+				}
+                
+				b++;
+				AR_ASSERT(b < e);
+                
+				status = __hex_wchar_t_to_digit(*b, &d2);
+                
+				if(status != AR_S_YES)
+				{
+						return -1;
+				}
+                
+				*p++ = d1 * 16 + d2;
+				++b;
+		}
+		
+		return need_l / 2;
+}
+
+
+
+
+static void __digit_to_hex_wchar_t(ar_byte_t b, wchar_t tmp[2], ar_bool_t is_upper)
+{
+		ar_uint_32_t v = (ar_uint_32_t)b;
+		static const wchar_t *__tbl =NULL;
+        
+        if(is_upper)
+        {
+                __tbl = L"0123456789ABCDEF";
+        }else
+        {
+                __tbl = L"0123456789abcdef";
+        }
+        
+		tmp[1] = __tbl[v % 16];
+		v /= 16;
+		tmp[0] = __tbl[v % 16];
+}
+
+
+ar_int_t           AR_data_to_hexwcs(const ar_byte_t *data, size_t l, wchar_t *out, size_t len, ar_bool_t is_upper)
+{
+		size_t i, si;
+		AR_ASSERT(data != NULL && l > 0);
+        
+		if(out == NULL)
+		{
+				return l * 2;
+		}else
+		{
+				if(len < l * 2)
+				{
+						return -1;
+				}
+                
+				for(i = 0,si = 0; i < l; ++i)
+				{
+						__digit_to_hex_wchar_t(data[i], out + si, is_upper);
+						si += 2;
+                        //AR_ASSERT(si < len);
+				}
+				return si;
+		}
+}
 
 
 AR_NAMESPACE_END
