@@ -140,21 +140,26 @@ CEncodeConvert::EncodeType		CEncodeConvert::GetEncodeType()
 int			CEncodeConvert::GetEncodeCharset()
 {
 
-		
+
 
 		if( ((CButton*)this->GetDlgItem(IDC_RADIO_CS_UTF8))->GetCheck())
 		{
 				return CP_UTF8;
-		}else if( ((CButton*)this->GetDlgItem(IDC_RADIO_CS_GB2312))->GetCheck())
+		}
+		
+		if( ((CButton*)this->GetDlgItem(IDC_RADIO_CS_GB2312))->GetCheck())
 		{
 				return 936;
-		}else if( ((CButton*)this->GetDlgItem(IDC_RADIO_CS_BIG5))->GetCheck())
+		}
+		
+		if( ((CButton*)this->GetDlgItem(IDC_RADIO_CS_BIG5))->GetCheck())
 		{
 				return 950;
-		}else
-		{
-				return CP_ACP;
 		}
+
+		
+		return CP_ACP;
+
 }
 
 BOOL					CEncodeConvert::IsEncode()
