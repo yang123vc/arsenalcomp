@@ -1481,6 +1481,25 @@ void escstr_n_test0()
 		}
 }
 
+
+void escstr_test2()
+{
+		
+		wchar_t *str = AR_escstr_to_str(L"\x652F\x6301\x7F51\x76FE\x7684\x62E6\x622A\x6B3A\x8BC8\x9493\x9C7C\x7F51\x7AD9\x3001\x62E6\x622A\x6728\x9A6C\x7F51\x7AD9\x4EE5\x53CA\x7F51\x8D2D\x4FDD\x9556\x7B49\x529F\x80FD\x3002", NULL);
+		
+		AR_error(AR_ERR_WARNING, L"%ls\r\n", str);
+		
+		
+		AR_DEL(str);
+		str = NULL;
+
+		wchar_t *escstr = 	AR_str_to_escstr(L"\x13|360ÍøÒ³·À»¤");
+
+		AR_DEL(escstr);
+		escstr = NULL;
+		
+}
+
 void align_test()
 {
 		ar_byte_t *p1 = (ar_byte_t*)AR_malloc(37);
@@ -2580,126 +2599,7 @@ static void str_test12()
 
 /****************************************************************************************************************/
 
-static arStatus_t  __hex_char_to_digit(char c, ar_byte_t *d)
-{
-		AR_ASSERT(d != NULL);
-        
-		if(c >= '0' && c <= '9')
-		{
-				*d = c - '0';
-		}else if(c >= 'a' && c <= 'f')
-		{
-				*d = 10 + c - 'a';
-		}else if(c >= 'A' && c <= 'F')
-		{
-				*d = 10 + c - 'A';
-		}else
-		{
-				return AR_E_INVAL;
-		}
-		return AR_S_YES;
-}
 
-
-ar_int_t	AR_hexstr_to_data_s(const char *b, const char *e, ar_byte_t *data, size_t len)
-{
-		ar_byte_t *p;
-		arStatus_t status;
-		size_t need_l;
-		AR_ASSERT(b != NULL && e != NULL && b < e);
-		
-		need_l = e - b;
-
-		if(need_l % 2 != 0)
-		{
-				return -1;
-		}
-
-		if(data == NULL)
-		{
-				return (ar_int_t)need_l / 2;
-		}
-
-		if(len < need_l / 2)
-		{
-				return -1;
-		}
-		
-		p = data;
-		while(b < e)
-		{
-				ar_byte_t d1,d2;
-				
-				status = __hex_char_to_digit(*b, &d1);
-                
-				if(status != AR_S_YES)
-				{
-						return -1;
-				}
-                
-				b++;
-				AR_ASSERT(b < e);
-                
-				status = __hex_char_to_digit(*b, &d2);
-                
-				if(status != AR_S_YES)
-				{
-						return -1;
-				}
-                
-				*p++ = d1 * 16 + d2;
-				++b;
-		}
-		
-		return need_l / 2;
-}
-
-
-
-ar_int_t           AR_hexstr_to_data(const char *s, ar_byte_t *data, size_t len)
-{
-        AR_ASSERT(s != NULL);
-        return AR_hexstr_to_data_s(s, s + AR_strlen(s), data, len);
-}
-
-
-static void __digit_to_hex_char(ar_byte_t b, char tmp[2])
-{
-		ar_uint_32_t v = (ar_uint_32_t)b;
-		static const char *__tbl = "0123456789ABCDEF";
-        
-		tmp[1] = __tbl[v % 16];
-		v /= 16;
-		tmp[0] = __tbl[v % 16];
-}
-
-
-ar_int_t	AR_data_to_hexstr(const ar_byte_t *data, size_t l, char *out, size_t len)
-{
-		size_t i, si;
-		AR_ASSERT(data != NULL && l > 0);
-        
-		if(out == NULL)
-		{
-				return l * 2 + 1;
-		}else
-		{
-				if(len < l * 2 + 1)
-				{
-						return -1;
-				}
-                
-				for(i = 0,si = 0; i < l; ++i)
-				{
-						__digit_to_hex_char(data[i], out + si);
-						si += 2;
-						AR_ASSERT(si < len);
-				}
-                
-				out[si] = '\0';
-				return si + 1;
-		}
-}
 
 /****************************************************************************************************************/
 
@@ -3659,10 +3559,12 @@ void com_test()
 		//com_str_test_vcprintf();
 		//com_test_srpintf();
 
+		//escstr_test1();
 		//escstr_n_test1();
 		//escstr_n_test0();
 		//align_test();
 		
+		escstr_test2();
 		
 		//text_test_load_save();
 
@@ -3696,7 +3598,7 @@ void com_test()
 
 		//esc_wchar_hex_test();
 
-		file_test();
+		//file_test();
 }
 
 

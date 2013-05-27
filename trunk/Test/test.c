@@ -110,7 +110,7 @@ extern void v3checker_test();
 void AR_Test()
 {
 #if defined(__LIB)
-		//com_test();
+		com_test();
 		//math_test();
 		//trie_tree_test();
 		//expr_test();
@@ -179,7 +179,7 @@ void AR_Test()
 		
 		//tokenizer_test();
 
-		Ini_Test();
+		//Ini_Test();
 		
 		//parser_gen_perf_test();
 

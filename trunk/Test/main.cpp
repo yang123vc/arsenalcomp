@@ -135,7 +135,7 @@ int main()
 
 #if(OS_TYPE != OS_WINDOWS_CE)		
 	//	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-		printf("current locale == %ls\r\n", setlocale(LC_ALL,NULL));
+		printf("current locale == %ls\r\n", setlocale(LC_CTYPE, "UTF-8"));
 #else
 		
 #endif
