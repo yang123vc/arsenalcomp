@@ -438,6 +438,9 @@
     <ClCompile Include="..\..\..\Test\gen_code_test.c">
       <Filter>Test</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Test\Base64Transcoder.c">
+      <Filter>Test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Test\avltree.h">
@@ -816,6 +819,9 @@
       <Filter>Lexer</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Test\marshal_die_predef.h">
+      <Filter>Test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Test\Base64Transcoder.h">
       <Filter>Test</Filter>
     </ClInclude>
   </ItemGroup>

@@ -223,7 +223,7 @@ BOOL		CEncodeConvert::base64_convert(const CString &input, CString &output)
 		
 		std::string mbs;
 		ar_byte_t *tmp;
-		size_t n;
+		ar_int_t n;
 		AR_ASSERT(input.GetLength() > 0);
 
 		if(input.GetLength() == 0)
@@ -244,14 +244,14 @@ BOOL		CEncodeConvert::base64_convert(const CString &input, CString &output)
 
 				n = ARSpace::AR_base64_encode(NULL, 0, (const ar_byte_t*)mbs.c_str(), mbs.size());
 
-				if(n == 0)
+				if(n <= 0)
 				{
 						output = L"invalid input!";
 						return FALSE;
 				}
 
 				tmp = new byte[n + 1];
-				n = ARSpace::AR_base64_encode(tmp, n, (const ar_byte_t*)mbs.c_str(), mbs.size());
+				n = ARSpace::AR_base64_encode(tmp, (size_t)n, (const ar_byte_t*)mbs.c_str(), mbs.size());
 				tmp[n] = 0;
 
 				output = str_convert(CP_UTF8, (const char*)tmp);
@@ -269,7 +269,7 @@ BOOL		CEncodeConvert::base64_convert(const CString &input, CString &output)
 
 				n = ARSpace::AR_base64_decode(NULL, 0, (const ar_byte_t*)mbs.c_str(), mbs.size());
 
-				if(n == 0)
+				if(n <= 0)
 				{
 						output = L"invalid input!";
 						return FALSE;
@@ -277,8 +277,13 @@ BOOL		CEncodeConvert::base64_convert(const CString &input, CString &output)
 
 				tmp = new byte[n + 1];
 
-				n = ARSpace::AR_base64_decode(tmp, n, (const ar_byte_t*)mbs.c_str(), mbs.size());
-				
+				n = ARSpace::AR_base64_decode(tmp, (size_t)n, (const ar_byte_t*)mbs.c_str(), mbs.size());
+				if(n <= 0)
+				{
+						output = L"invalid charset!";
+						return FALSE;
+				}
+
 				tmp[n] = 0;
 
 				output = str_convert(CP_UTF8, (const char*)tmp);
