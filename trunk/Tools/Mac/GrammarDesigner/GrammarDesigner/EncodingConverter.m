@@ -107,9 +107,9 @@ static NSString* base64_convert(NSString *input, arCodePage_t cp, ar_bool_t is_e
                 {
                         return @"invalid charset";
                 }
-                size_t n = AR_base64_encode(NULL, 0, (const ar_byte_t*)mbs, AR_strlen(mbs));
+                ar_int_t n = AR_base64_encode(NULL, 0, (const ar_byte_t*)mbs, AR_strlen(mbs));
                 
-				if(n == 0)
+				if(n <= 0)
 				{
                         AR_DEL(mbs);
                         mbs = NULL;
@@ -151,9 +151,9 @@ static NSString* base64_convert(NSString *input, arCodePage_t cp, ar_bool_t is_e
                         return @"invalid charset";
                 }
                                 
-				size_t n = AR_base64_decode(NULL, 0, (const ar_byte_t*)mbs, AR_strlen(mbs));
+				ar_int_t n = AR_base64_decode(NULL, 0, (const ar_byte_t*)mbs, AR_strlen(mbs));
 
-                if(n == 0)
+                if(n <= 0)
 				{
                         AR_DEL(mbs);
                         mbs = NULL;
@@ -162,6 +162,14 @@ static NSString* base64_convert(NSString *input, arCodePage_t cp, ar_bool_t is_e
                 
 				ar_byte_t *tmp = AR_NEWARR(ar_byte_t, n + 1);
                 n = AR_base64_decode(tmp, n, (const ar_byte_t*)mbs, AR_strlen(mbs));
+                
+                if(n <= 0)
+                {
+                        AR_DEL(mbs);
+                        mbs = NULL;
+                        return @"invalid input!";
+                }
+                
 				tmp[n] = 0;
                 wchar_t *wcs = AR_str_to_wcs(cp, (const char*)tmp, n);
                 
