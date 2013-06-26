@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\Test\avltree.c" />
+    <ClCompile Include="..\..\..\Test\Base64Transcoder.c" />
     <ClCompile Include="..\..\..\Test\calc_test2.c" />
     <ClCompile Include="..\..\..\Test\calc_test3.c" />
     <ClCompile Include="..\..\..\Test\com_test.c" />
@@ -1531,6 +1532,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Test\avltree.h" />
+    <ClInclude Include="..\..\..\Test\Base64Transcoder.h" />
     <ClInclude Include="..\..\..\Test\calc_test3_impl.h" />
     <ClInclude Include="..\..\..\Test\extlib\deelx\deelx.h" />
     <ClInclude Include="..\..\..\Test\extlib\libcurl\include\curl\curl.h" />

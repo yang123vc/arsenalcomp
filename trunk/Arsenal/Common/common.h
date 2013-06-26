@@ -853,8 +853,8 @@ ar_int_t		AR_data_to_hexwcs(const ar_byte_t *data, size_t l, wchar_t *out, size_
 char*			AR_strrot13(char *s, size_t n);
 
 /**************************************************************base64*********************************************************/
-size_t			AR_base64_encode(ar_byte_t  *out, size_t olen, const ar_byte_t *input, size_t ilen);
-size_t			AR_base64_decode(ar_byte_t  *out, size_t olen, const ar_byte_t *input, size_t ilen);
+ar_int_t			AR_base64_encode(ar_byte_t  *out, size_t olen, const ar_byte_t *input, size_t ilen);
+ar_int_t			AR_base64_decode(ar_byte_t  *out, size_t olen, const ar_byte_t *input, size_t ilen);
 
 
 

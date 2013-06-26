@@ -5,6 +5,8 @@
 #include <math.h>
 #include <time.h>
 
+#include "Base64Transcoder.h"
+
 #include "lfu_cache.h"
 
 
@@ -1617,68 +1619,6 @@ void rand_test()
 size_t AR_base64_encode(ar_byte_t  *out, size_t olen, const ar_byte_t *input, size_t ilen);
 size_t AR_base64_decode(ar_byte_t  *out, size_t olen, const ar_byte_t *input, size_t ilen);
 */
-static void base64_test()
-{
-		static const wchar_t *src = L"中国字！！~~中国字~~~！！！中文网中文！";
-
-		size_t n = AR_base64_encode(NULL, 0, (ar_byte_t*)src, AR_wcslen(src) * sizeof(wchar_t));
-
-		AR_printf(L"src == %d, n = %d\r\n", AR_wcslen(src), n);
-
-		char *o = new char[n + 1];
-
-		n = AR_base64_encode((ar_byte_t*)o, n + 1, (ar_byte_t*)src, AR_wcslen(src) * sizeof(wchar_t));
-		AR_printf(L"n = %d\r\n", n);
-		o[n] = 0;
-
-		AR_printf(L"%hs\r\n", o);
-
-		
-
-		n = AR_base64_decode(NULL, 0, (const ar_byte_t*)o, AR_strlen(o));
-		AR_printf(L"decode n = %d\r\n", n);
-		
-		ar_byte_t *buf = new ar_byte_t[n + 2];
-		memset(buf, 0, n + 1);
-		
-		n = AR_base64_decode(buf, n + 2, (const ar_byte_t*)o, AR_strlen(o));
-		AR_printf(L"decode n = %d\r\n", n);
-		AR_printf(L"%ls\r\n", buf);
-		
-		AR_ASSERT(AR_wcscmp((const wchar_t*)buf, src) == 0);
-}
-
-static void base64_test2()
-{
-		const char *src = "Man is distinguished, not only by his reason, but by this singular passion from other animals, which is a lust of the mind, that by a perseverance of delight in the continued and indefatigable generation of knowledge, exceeds the short vehemence of any carnal pleasure.";
-
-
-		size_t n = AR_base64_encode(NULL, 0, (ar_byte_t*)src, AR_strlen(src) * sizeof(char));
-
-		AR_printf(L"src == %d, n = %d\r\n", AR_strlen(src), n);
-
-		char *o = new char[n + 1];
-
-		n = AR_base64_encode((ar_byte_t*)o, n + 1, (ar_byte_t*)src, AR_strlen(src) * sizeof(char));
-		AR_printf(L"n = %d\r\n", n);
-		o[n] = 0;
-
-		AR_printf(L"%hs\r\n", o);
-
-		
-
-		n = AR_base64_decode(NULL, 0, (const ar_byte_t*)o, AR_strlen(o));
-		AR_printf(L"decode n = %d\r\n", n);
-		
-		ar_byte_t *buf = new ar_byte_t[n + 2];
-		memset(buf, 0, n + 1);
-		
-		n = AR_base64_decode(buf, n + 2, (const ar_byte_t*)o, AR_strlen(o));
-		AR_printf(L"decode n = %d\r\n", n);
-		AR_printf(L"%ls\r\n", buf);
-		
-		AR_ASSERT(AR_strcmp((const char*)buf, src) == 0);
-}
 
 
 static void env_test()
@@ -2679,7 +2619,7 @@ static void str_test15()
 		char output[1024];
 		const char *url = "http://www.google.com/reader/view/";
 
-		size_t n = AR_base64_encode(buf, 1024, (const ar_byte_t*)url, strlen(url));
+		ar_int_t n = AR_base64_encode(buf, 1024, (const ar_byte_t*)url, strlen(url));
 		buf[n] = 0;
 
 		AR_printf(L"%hs\r\n", AR_strrot13((char*)buf, strlen((char*)buf)));
@@ -2923,7 +2863,7 @@ static void str_test17()
 		char output[1024];
 		const char *url = "http://weibo.com/";
 
-		size_t n = AR_base64_encode(buf, 1024, (const ar_byte_t*)url, strlen(url));
+		ar_int_t n = AR_base64_encode(buf, 1024, (const ar_byte_t*)url, strlen(url));
 		buf[n] = 0;
 
 		AR_printf(L"%hs\r\n", AR_strrot13((char*)buf, strlen((char*)buf)));
@@ -3484,6 +3424,376 @@ END_POINT:
 }
 
 
+static void base64_test()
+{
+		static const wchar_t *src = L"中国字！！~~中国字~~~！！！中文网中文！";
+
+		ar_int_t n = AR_base64_encode(NULL, 0, (ar_byte_t*)src, AR_wcslen(src) * sizeof(wchar_t));
+
+		AR_printf(L"src == %d, n = %d\r\n", AR_wcslen(src), n);
+
+		char *o = new char[n + 1];
+
+		n = AR_base64_encode((ar_byte_t*)o, n + 1, (ar_byte_t*)src, AR_wcslen(src) * sizeof(wchar_t));
+		AR_printf(L"n = %d\r\n", n);
+		o[n] = 0;
+
+		AR_printf(L"%hs\r\n", o);
+
+		
+
+		n = AR_base64_decode(NULL, 0, (const ar_byte_t*)o, AR_strlen(o));
+		AR_printf(L"decode n = %d\r\n", n);
+		
+		ar_byte_t *buf = new ar_byte_t[n + 2];
+		memset(buf, 0, n + 1);
+		
+		n = AR_base64_decode(buf, n + 2, (const ar_byte_t*)o, AR_strlen(o));
+		AR_printf(L"decode n = %d\r\n", n);
+		AR_printf(L"%ls\r\n", buf);
+		
+		AR_ASSERT(AR_wcscmp((const wchar_t*)buf, src) == 0);
+}
+
+
+
+class ZBase64
+{
+public:
+		static std::string Encode(const unsigned char* Data,int DataByte)
+		{
+				using namespace std;
+				//编码表
+				const char EncodeTable[]="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+				//返回值
+				string strEncode;
+				unsigned char Tmp[4]={0};
+				int LineLength=0;
+				for(int i=0;i<(int)(DataByte / 3);i++)
+				{
+						Tmp[1] = *Data++;
+						Tmp[2] = *Data++;
+						Tmp[3] = *Data++;
+						strEncode+= EncodeTable[Tmp[1] >> 2];
+						strEncode+= EncodeTable[((Tmp[1] << 4) | (Tmp[2] >> 4)) & 0x3F];
+						strEncode+= EncodeTable[((Tmp[2] << 2) | (Tmp[3] >> 6)) & 0x3F];
+						strEncode+= EncodeTable[Tmp[3] & 0x3F];
+						//if(LineLength+=4,LineLength==76) {strEncode+="\r\n";LineLength=0;}
+				}
+				//对剩余数据进行编码
+				int Mod=DataByte % 3;
+				if(Mod==1)
+				{
+						Tmp[1] = *Data++;
+						strEncode+= EncodeTable[(Tmp[1] & 0xFC) >> 2];
+						strEncode+= EncodeTable[((Tmp[1] & 0x03) << 4)];
+						strEncode+= "==";
+				}
+				else if(Mod==2)
+				{
+						Tmp[1] = *Data++;
+						Tmp[2] = *Data++;
+						strEncode+= EncodeTable[(Tmp[1] & 0xFC) >> 2];
+						strEncode+= EncodeTable[((Tmp[1] & 0x03) << 4) | ((Tmp[2] & 0xF0) >> 4)];
+						strEncode+= EncodeTable[((Tmp[2] & 0x0F) << 2)];
+						strEncode+= "=";
+				}
+
+				return strEncode;
+		}
+
+		static std::string Decode(const char* Data,int DataByte,int& OutByte)
+		{
+				using namespace std;
+				//解码表
+				const char DecodeTable[] =
+				{
+						0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+						0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+						62, // '+'
+						0, 0, 0,
+						63, // '/'
+						52, 53, 54, 55, 56, 57, 58, 59, 60, 61, // '0'-'9'
+						0, 0, 0, 0, 0, 0, 0,
+						0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+						13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, // 'A'-'Z'
+						0, 0, 0, 0, 0, 0,
+						26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38,
+						39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, // 'a'-'z'
+				};
+				//返回值
+				string strDecode;
+				int nValue;
+				int i= 0;
+				while (i < DataByte)
+				{
+						if (*Data != '\r' && *Data!='\n')
+						{
+								nValue = DecodeTable[*Data++] << 18;
+								nValue += DecodeTable[*Data++] << 12;
+								strDecode+=(nValue & 0x00FF0000) >> 16;
+								OutByte++;
+								if (*Data != '=')
+								{
+										nValue += DecodeTable[*Data++] << 6;
+										strDecode+=(nValue & 0x0000FF00) >> 8;
+										OutByte++;
+										if (*Data != '=')
+										{
+												nValue += DecodeTable[*Data++];
+												strDecode+=nValue & 0x000000FF;
+												OutByte++;
+										}
+								}
+								i += 4;
+						}
+						else// 回车换行,跳过
+						{
+								Data++;
+								i++;
+						}
+				}
+				return strDecode;
+		}
+};
+
+
+static void base64_encode_test()
+{
+		
+		for(size_t i = 0; i < 200000; ++i)
+		{
+				size_t src_len = AR_rand32() % 1234;
+				if(src_len == 0)
+				{
+						src_len = 1024;
+				}
+				ar_byte_t *buf = AR_NEWARR(ar_byte_t , src_len);
+				AR_ASSERT(buf != NULL);
+				for(size_t k = 0; k < src_len; ++k)
+				{
+						buf[k] = AR_rand32() % 256;
+				}
+
+				
+				static ar_byte_t b64_trans_output[10240];
+				size_t b64_trans_len = 10240;
+				Base64EncodeData(buf, src_len, (char*)b64_trans_output, &b64_trans_len);
+				b64_trans_output[b64_trans_len] = '\0';
+
+				
+				std::string zbase64_output = ZBase64::Encode(buf, src_len);
+				size_t zbase64_output_len = zbase64_output.size();
+				
+
+				static ar_byte_t encoded[10240];
+				ar_int_t encoded_len = AR_base64_encode(encoded, 10240, buf, src_len);
+				AR_ASSERT(encoded_len >= 0);
+				encoded[encoded_len] = '\0';
+
+				printf("base64 output len : %u\r\n", encoded_len);
+
+				AR_ASSERT(encoded_len == zbase64_output_len);
+				AR_ASSERT(AR_strcmp(zbase64_output.c_str(), (const char*)encoded) == 0);
+				AR_DEL(buf);
+				buf = NULL;
+				//AR_ASSERT(AR_memcmp(encoded, b64_trans_output, encoded_len) == 0);
+		}
+		
+		printf("done cmp base64 encode\r\n");
+
+}
+
+static void base64_decode_test()
+{
+		for(size_t i = 0; i < 200000; ++i)
+		{
+			
+				size_t src_len = AR_rand32() % 12345;
+				if(src_len == 0)
+				{
+						src_len = 1024;
+				}
+
+				if(AR_rand32() % 2 == 0)
+				{
+						if(src_len % 2 == 0)
+						{
+								src_len += 1;
+						}
+				}
+						
+				ar_byte_t *buf = AR_NEWARR(ar_byte_t , src_len);
+				AR_ASSERT(buf != NULL);
+				for(size_t k = 0; k < src_len; ++k)
+				{
+						buf[k] = AR_rand32() % 256;
+				}
+
+				std::string zbase64_output = ZBase64::Encode(buf, src_len);
+				size_t zbase64_output_len = zbase64_output.size();
+
+				printf("zbase64_output.c_str().size() == %u\r\n", zbase64_output_len);
+
+
+				static ar_byte_t base64_trans_output[102400];
+				size_t base64_trans_len = 102400;
+				Base64DecodeData(zbase64_output.c_str(), zbase64_output.size(), (void*)base64_trans_output, &base64_trans_len);
+
+
+				
+				static ar_byte_t decoded[102400];
+				size_t ll = AR_base64_decode(decoded, 102400, (const ar_byte_t*)zbase64_output.c_str(), zbase64_output.size());
+				
+				AR_ASSERT(ll == base64_trans_len);
+				AR_ASSERT(ll == src_len);
+
+				AR_ASSERT(AR_memcmp(base64_trans_output, decoded, ll) == 0);
+				AR_ASSERT(AR_memcmp(decoded, buf, ll) == 0);
+				AR_DEL(buf);
+				buf = NULL;
+		}
+		
+		printf("done cmp base64 decode\r\n");
+
+
+}
+
+
+static void base64_mutation_test()
+{
+		
+		for(size_t i = 0; i < 200000; ++i)
+		{
+			
+				size_t src_len = AR_rand32() % 10000;
+				if(src_len == 0)
+				{
+						src_len = 1024;
+				}
+
+				if(AR_rand32() % 2 == 0)
+				{
+						if(src_len % 2 == 0)
+						{
+								src_len += 1;
+						}
+				}
+						
+				ar_byte_t *buf = AR_NEWARR(ar_byte_t , src_len);
+				AR_ASSERT(buf != NULL);
+				for(size_t k = 0; k < src_len; ++k)
+				{
+						buf[k] = AR_rand32() % 256;
+				}
+
+				std::string zbase64_output = ZBase64::Encode(buf, src_len);
+				size_t zbase64_output_len = zbase64_output.size();
+
+				
+
+				std::string mutation_base64;
+
+				for(size_t k = 0; k < zbase64_output.size(); ++k)
+				{
+						mutation_base64 += zbase64_output[k];
+
+						if(AR_rand32() % 4 == 0)
+						{
+								static const char space[] = 
+								{
+										' ',
+										'\r',
+										'\n',
+								};
+
+								mutation_base64 += space[AR_rand32() % 3];
+						}
+				}
+
+				printf("----------------------------------------------\r\n");
+				printf("zbase64_output.c_str().size() == %u\r\n", zbase64_output_len);
+				printf("mutation_base64 : %s\r\n", mutation_base64.c_str());
+				printf("------end----------------------------------------\r\n");
+				
+
+
+				
+				static ar_byte_t decoded[102400];
+				size_t ll = AR_base64_decode(decoded, 102400, (const ar_byte_t*)mutation_base64.c_str(), mutation_base64.size());
+
+				AR_ASSERT(ll == src_len);
+				AR_ASSERT(AR_memcmp(decoded, buf, ll) == 0);
+				AR_DEL(buf);
+				buf = NULL;
+		}
+		
+		printf("done base64_mutation_test\r\n");
+
+
+}
+
+
+static void base64_misc_test()
+{
+
+		const char *base64_str = "L5QUckBjvKPDOORIIy8wzfe5R2I9SK/H1zvnV0oLxVO1thJvD2tjoqR3OinRcFzc/p90tdw =";
+		
+
+		static ar_byte_t decoded[10240];
+		size_t ll = AR_base64_decode(decoded, 10240, (const ar_byte_t*)base64_str, AR_strlen(base64_str));
+
+
+
+}
+
+
+static void base64_test1()
+{
+
+		//test encode;
+		AR_srand(time(NULL));
+		
+		//base64_encode_test();
+		//base64_decode_test();
+		base64_mutation_test();
+		//base64_misc_test();
+}
+
+
+static void base64_test2()
+{
+		const char *src = "Man is distinguished, not only by his reason, but by this singular passion from other animals, which is a lust of the mind, that by a perseverance of delight in the continued and indefatigable generation of knowledge, exceeds the short vehemence of any carnal pleasure.";
+
+
+		ar_int_t n = AR_base64_encode(NULL, 0, (ar_byte_t*)src, AR_strlen(src) * sizeof(char));
+
+		AR_printf(L"src == %d, n = %d\r\n", AR_strlen(src), n);
+
+		char *o = new char[n + 1];
+
+		n = AR_base64_encode((ar_byte_t*)o, n + 1, (ar_byte_t*)src, AR_strlen(src) * sizeof(char));
+		AR_printf(L"n = %d\r\n", n);
+		o[n] = 0;
+
+		AR_printf(L"%hs\r\n", o);
+
+		
+
+		n = AR_base64_decode(NULL, 0, (const ar_byte_t*)o, AR_strlen(o));
+		AR_printf(L"decode n = %d\r\n", n);
+		
+		ar_byte_t *buf = new ar_byte_t[n + 2];
+		memset(buf, 0, n + 1);
+		
+		n = AR_base64_decode(buf, n + 2, (const ar_byte_t*)o, AR_strlen(o));
+		AR_printf(L"decode n = %d\r\n", n);
+		AR_printf(L"%ls\r\n", buf);
+		
+		AR_ASSERT(AR_strcmp((const char*)buf, src) == 0);
+}
+
+
 void com_test()
 {
 		
@@ -3564,13 +3874,14 @@ void com_test()
 		//escstr_n_test0();
 		//align_test();
 		
-		escstr_test2();
+		//escstr_test2();
 		
 		//text_test_load_save();
 
 		//rand_test();
 		
 		//base64_test();
+		base64_test1();
 		//base64_test2();
 
 		//float_test_2();

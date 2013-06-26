@@ -117,7 +117,7 @@ static size_t __base64_need_len(const ar_byte_t *input, size_t ilen)
 
 
 
-size_t AR_base64_encode(ar_byte_t  *out, size_t olen, const ar_byte_t *input, size_t ilen)
+ar_int_t AR_base64_encode(ar_byte_t  *out, size_t olen, const ar_byte_t *input, size_t ilen)
 {
 		size_t r, need_n,i,j;
 		ar_uint_32_t w;
@@ -126,12 +126,12 @@ size_t AR_base64_encode(ar_byte_t  *out, size_t olen, const ar_byte_t *input, si
 		need_n = __base64_need_len(input, ilen);
 		if(out == NULL)
 		{
-				return need_n;
+				return (ar_int_t)need_n;
 		}
 
 		if(olen < need_n)
 		{
-				return 0;
+				return -1;
 		}
 
 		
@@ -167,7 +167,7 @@ size_t AR_base64_encode(ar_byte_t  *out, size_t olen, const ar_byte_t *input, si
 				}
 		}
 
-		return need_n;
+		return (ar_int_t)need_n;
 }
 
 
@@ -194,7 +194,7 @@ static const ar_byte_t __g_base64_to_sixtet[] =
 
 
 
-size_t AR_base64_decode(ar_byte_t  *out, size_t olen, const ar_byte_t *input, size_t ilen)
+ar_int_t AR_base64_decode(ar_byte_t  *out, size_t olen, const ar_byte_t *input, size_t ilen)
 {
 		ar_byte_t *o;
 		size_t need_n,i,j,k;
@@ -207,44 +207,58 @@ size_t AR_base64_decode(ar_byte_t  *out, size_t olen, const ar_byte_t *input, si
 
 		if(out == NULL)
 		{
-				return need_n;
+				return (ar_int_t)need_n;
 		}
 
 		if(olen < need_n)
 		{
-				return 0;
+				return -1;
 		}
 
+		need_n = 0;
+		o = out;
+		k = 0;
 
-		for(i = 0, o = out, need_n = 0, k = 0; i < ilen && input[i] != '\0' && input[i] != '='; ++i)
+		for(i = 0; i < ilen && input[i] != '\0' && input[i] != '='; ++i)
 		{
-				if(input[i] == ' ' || input[i] == '\n')
+				if(AR_isspace(input[i]))
 				{
 						continue;
 				}
-
+				
 				tmp[k++] = __g_base64_to_sixtet[input[i]];
 				
 				if(input[i+1] == '\0' || input[i+1] == '=' || k == 4)
 				{
-						
 						ar_uint_32_t w = 0;
 						w = __uint32_for_six(tmp);
 						
-						for(j = 0; j * 8 < k * 6; ++j)
-						{
+						for(j = 0; j < k - 1; ++j)
+						{				
 								*o++ = (ar_byte_t)(w & 0xff);
 								w >>= 8;
 								++need_n;
 						}
-
+						
 						tmp[0] = tmp[1] = tmp[2] = tmp[3] = 0;
 						k = 0;
 				}
 		}
 
+		if(k > 0)
+		{
+				ar_uint_32_t w = 0;
+				w = __uint32_for_six(tmp);
+				
+				for(j = 0; j < k - 1; ++j)
+				{		
+						*o++ = (ar_byte_t)(w & 0xff);
+						w >>= 8;
+						++need_n;
+				}
+		}
 		
-		return need_n;
+		return (ar_int_t)need_n;
 }
 
 
