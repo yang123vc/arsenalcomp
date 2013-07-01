@@ -127,6 +127,8 @@ int strcmp(const char *l, const char *r)
 
 
 
+
+
 int		dec	=	0;
 int		dec2	=	10;
 int		dec3	=	10L;
