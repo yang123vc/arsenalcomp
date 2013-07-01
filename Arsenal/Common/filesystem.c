@@ -29,6 +29,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <utime.h>
+#include <sys/xattr.h>
 
 
 #endif

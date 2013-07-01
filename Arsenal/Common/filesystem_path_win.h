@@ -19,6 +19,43 @@ AR_NAMESPACE_BEGIN
 
 
 
+arStatus_t      AR_path_is_hidden(const wchar_t *path);
+arStatus_t      AR_path_is_dev(const wchar_t *path);
+arStatus_t      AR_path_is_dir(const wchar_t *path);
+
+arStatus_t      AR_path_is_link(const wchar_t *path);
+arStatus_t      AR_path_is_file(const wchar_t *path);
+
+
+arStatus_t      AR_path_is_executable(const wchar_t *path);
+arStatus_t      AR_path_is_writeable(const wchar_t *path);
+arStatus_t      AR_path_is_readable(const wchar_t *path);
+
+arStatus_t      AR_path_is_existed(const wchar_t *path);
+
+arStatus_t      AR_path_set_executable(const wchar_t *path, ar_bool_t flag);
+arStatus_t      AR_path_set_writeable(const wchar_t *path, ar_bool_t flag);
+arStatus_t      AR_path_rename(const wchar_t *src_path, const wchar_t *dest_path);
+arStatus_t      AR_path_remove(const wchar_t *path);
+arStatus_t      AR_path_create_file(const wchar_t *path);
+arStatus_t      AR_path_create_dir(const wchar_t *path);
+
+arStatus_t      AR_path_create_path(const wchar_t *path);
+arStatus_t      AR_path_remove_path(const wchar_t *path);
+
+
+arStatus_t      AR_path_copyfile(const wchar_t *src, const wchar_t *dest, ar_bool_t truncated);
+arStatus_t      AR_path_copylink(const wchar_t *src, const wchar_t *dest, ar_bool_t truncated);
+
+arStatus_t      AR_path_get_size(const wchar_t *path, ar_uint_64_t *ps);
+arStatus_t      AR_path_set_size(const wchar_t *path, ar_uint_64_t size);
+
+
+arStatus_t      AR_path_copydir(const wchar_t *src, const wchar_t *dest);
+
+
+
+
 
 AR_NAMESPACE_END
 
