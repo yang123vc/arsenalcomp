@@ -13,7 +13,7 @@ AR_NAMESPACE_BEGIN
 void text_test_save()
 {
 #define OUTPUT_FILE		L"/root/Desktop/x.txt"
-#define OUTPUT_TYPE		AR_TXT_BOM_ASCII
+#define OUTPUT_TYPE		AR_TXT_BOM_NONE
 
 		arString_t *str = AR_CreateString();
 
@@ -82,11 +82,24 @@ END_POINT:
 }
 
 
+static void dir_copy_test()
+{
+    arStatus_t status = AR_path_copydir(L"/home/solidus/Desktop/1/Test", L"/home/solidus/Desktop/2/Test/");
+
+}
+
 void com_test()
 {
 
-        file_seek_test();
-        //setlocale(LC_ALL, "utf-8");
+
+        setlocale(LC_CTYPE, "utf-8");
+
+        AR_error(AR_ERR_WARNING, L"test message : %ls", L"zhongguozi");
+
+        dir_copy_test();
+
+        //file_seek_test();
+
 
        //text_test_save();
 
