@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		671E7D811781299800B22D92 /* filesystem_path_posix_apple.h in Headers */ = {isa = PBXBuildFile; fileRef = 671E7D7F1781299800B22D92 /* filesystem_path_posix_apple.h */; };
+		671E7D821781299800B22D92 /* filesystem_path_posix_apple.h in Headers */ = {isa = PBXBuildFile; fileRef = 671E7D7F1781299800B22D92 /* filesystem_path_posix_apple.h */; };
+		671E7D831781299800B22D92 /* filesystem_path_posix_posix.h in Headers */ = {isa = PBXBuildFile; fileRef = 671E7D801781299800B22D92 /* filesystem_path_posix_posix.h */; };
+		671E7D841781299800B22D92 /* filesystem_path_posix_posix.h in Headers */ = {isa = PBXBuildFile; fileRef = 671E7D801781299800B22D92 /* filesystem_path_posix_posix.h */; };
 		6728C3B5154C5E8300861D86 /* enviroment.c in Sources */ = {isa = PBXBuildFile; fileRef = 6728C3B4154C5E8300861D86 /* enviroment.c */; };
 		6728C3B6154C5E8300861D86 /* enviroment.c in Sources */ = {isa = PBXBuildFile; fileRef = 6728C3B4154C5E8300861D86 /* enviroment.c */; };
 		6728C3E315503E9300861D86 /* filesystem.c in Sources */ = {isa = PBXBuildFile; fileRef = 6728C3E215503E9300861D86 /* filesystem.c */; };
@@ -166,6 +170,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		671E7D7F1781299800B22D92 /* filesystem_path_posix_apple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filesystem_path_posix_apple.h; sourceTree = "<group>"; };
+		671E7D801781299800B22D92 /* filesystem_path_posix_posix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filesystem_path_posix_posix.h; sourceTree = "<group>"; };
 		6728C3B4154C5E8300861D86 /* enviroment.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = enviroment.c; sourceTree = "<group>"; };
 		6728C3E215503E9300861D86 /* filesystem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = filesystem.c; sourceTree = "<group>"; };
 		67387CA916468E8400FE0910 /* Arsenal_Debug.exp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.exports; path = Arsenal_Debug.exp; sourceTree = "<group>"; };
@@ -327,8 +333,10 @@
 				6728C3E215503E9300861D86 /* filesystem.c */,
 				67E28CB215615FF7005A2C79 /* filesystem_posix.h */,
 				67E28CB315615FF7005A2C79 /* filesystem_win.h */,
-				6793D97C15CFB50800A59636 /* filesystem_path_posix.h */,
 				6793D97D15CFB50800A59636 /* filesystem_path_win.h */,
+				6793D97C15CFB50800A59636 /* filesystem_path_posix.h */,
+				671E7D7F1781299800B22D92 /* filesystem_path_posix_apple.h */,
+				671E7D801781299800B22D92 /* filesystem_path_posix_posix.h */,
 				6728C3B4154C5E8300861D86 /* enviroment.c */,
 				BE185D9314E841B90095DB44 /* algo.c */,
 				BE185D9414E841B90095DB44 /* base64.c */,
@@ -468,6 +476,8 @@
 				67E28CBA15615FF7005A2C79 /* filesystem_win.h in Headers */,
 				6793D97E15CFB50800A59636 /* filesystem_path_posix.h in Headers */,
 				6793D98015CFB50800A59636 /* filesystem_path_win.h in Headers */,
+				671E7D811781299800B22D92 /* filesystem_path_posix_apple.h in Headers */,
+				671E7D831781299800B22D92 /* filesystem_path_posix_posix.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -503,6 +513,8 @@
 				67E28CBB15615FF7005A2C79 /* filesystem_win.h in Headers */,
 				6793D97F15CFB50800A59636 /* filesystem_path_posix.h in Headers */,
 				6793D98115CFB50800A59636 /* filesystem_path_win.h in Headers */,
+				671E7D821781299800B22D92 /* filesystem_path_posix_apple.h in Headers */,
+				671E7D841781299800B22D92 /* filesystem_path_posix_posix.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -796,6 +808,7 @@
 				EXECUTABLE_PREFIX = "";
 				EXPORTED_SYMBOLS_FILE = Arsenal_Debug.exp;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				INSTALL_PATH = "@loader_path/../Frameworks/";
 				OBJROOT = "$(SYMROOT)";
 				PRODUCT_NAME = Arsenal;
@@ -813,6 +826,7 @@
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = "NDEBUG=1";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				INSTALL_PATH = "@loader_path/../Frameworks/";
 				OBJROOT = "$(SYMROOT)";
 				PRODUCT_NAME = Arsenal;
