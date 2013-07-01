@@ -35,9 +35,12 @@
 #define OS_VXWORKS       0x000c
 #define OS_CYGWIN        0x000d
 #define OS_IOS			 0x000e
+#define OS_ANDROID		 0x000f
 #define OS_UNKNOWN_UNIX  0x00ff
+
 #define OS_WINDOWS_NT    0x1001
 #define OS_WINDOWS_CE    0x1011
+
 #define OS_VMS           0x2001
 
 
