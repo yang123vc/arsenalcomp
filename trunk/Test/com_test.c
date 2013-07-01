@@ -3794,6 +3794,148 @@ static void base64_test2()
 }
 
 
+
+/*
+
+arStatus_t      AR_path_is_hidden(const wchar_t *path);
+arStatus_t      AR_path_is_dev(const wchar_t *path);
+arStatus_t      AR_path_is_dir(const wchar_t *path);
+
+arStatus_t      AR_path_is_link(const wchar_t *path);
+arStatus_t      AR_path_is_file(const wchar_t *path);
+
+
+arStatus_t      AR_path_is_executable(const wchar_t *path);
+arStatus_t      AR_path_is_writeable(const wchar_t *path);
+arStatus_t      AR_path_is_readable(const wchar_t *path);
+
+*/
+
+static void path_test1()
+{
+		/*
+		wchar_t ext[128];
+		
+		ext[0] = L'\0';
+		_wsplitpath(L"C:\\1.txt", NULL, NULL, NULL, ext);
+
+		AR_error(AR_ERR_MESSAGE, L"%ls\r\n", ext);
+		*/
+
+		arStatus_t status;
+
+		status = AR_path_is_executable(L"g:\\1.exe");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_path_is_executable(L"g:\\1.txt");
+		AR_ASSERT(status == AR_S_NO);
+
+
+		status = AR_path_is_executable(L"g");
+		AR_ASSERT(status == AR_S_NO);
+
+
+		status = AR_path_is_file(L"g:\\1.txt");
+		AR_ASSERT(AR_S_YES == status);
+
+		status = AR_path_is_hidden(L"g:\\1.txt");
+		AR_ASSERT(AR_S_YES == status);
+
+		status = AR_path_is_readable(L"g:\\1.txt");
+		AR_ASSERT(AR_S_YES == status);
+
+		status = AR_path_is_writeable(L"g:\\1.txt");
+		//AR_ASSERT(status == AR_S_NO);
+
+		status = AR_path_is_dir(L"g:\\");
+		AR_ASSERT(status == AR_S_YES);
+
+
+		status = AR_path_is_existed(L"g:\\");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_path_is_existed(L"g:\\1.txt");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_path_is_existed(L"g:\\Data");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_path_is_existed(L"g:\\xyz");
+		AR_ASSERT(status == AR_S_NO);
+
+		status = AR_path_is_existed(L"g:\\xyz\\");
+		AR_ASSERT(status == AR_S_NO);
+
+		status = AR_path_is_existed(L"w:\\");
+		AR_ASSERT(status == AR_S_NO);
+
+		//status = AR_path_is_dev(L"C:\\");
+		//AR_ASSERT(status == AR_S_NO);
+
+		status = AR_path_set_writeable(L"g:\\1.txt", true);
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_path_set_writeable(L"g:\\2.txt", false);
+		//AR_ASSERT(status != AR_S_YES);
+
+		status = AR_path_rename(L"g:\\3.txt", L"g:\\4.txt");
+		//AR_ASSERT(status == AR_S_YES);
+
+
+		status = AR_path_remove(L"g:\\4.txt");
+		status = AR_path_remove(L"g:\\x");
+
+		status = AR_path_create_file(L"g:\\x.txt");
+		status = AR_path_create_file(L"g:\\x.txt");
+
+
+		status = AR_path_create_dir(L"g:\\x\\");
+		status = AR_path_create_dir(L"g:\\x");
+		
+		status = AR_path_create_dir(L"g:\\x.txt");
+		
+
+		status = AR_path_copyfile(L"g:\\1.txt", L"g:\\2.txt", true);
+		status = AR_path_copyfile(L"g:\\1.txt", L"g:\\2.txt", true);
+		status = AR_path_copyfile(L"g:\\1.txt", L"g:\\2.txt", false);
+}
+
+
+static void path_test2()
+{
+		arStatus_t status;
+		status = AR_path_create_path(L"g:\\1\\2\\3\\4\\1.txt");
+		status = AR_path_create_path(L"g:\\x\\\\\\\\\\\\\\\\\\\\2\\\\\\\\3\\\\4\\\\\\\\1.txt");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_path_remove_path(L"g:\\x");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_path_remove_path(L"g:\\1\\\\\\");
+		//AR_ASSERT(status == AR_S_YES);
+
+		status = AR_path_remove_path(L"g:\\1.txt");
+		//AR_ASSERT(status == AR_S_YES);
+
+		ar_uint_64_t fsize = 0;
+
+		status = AR_path_get_size(L"g:\\2.txt", &fsize);
+		AR_printf(L"fsize == %qu\r\n", fsize);
+		
+		fsize = 1024000;
+		status = AR_path_set_size(L"g:\\2.txt", fsize);
+		
+		status = AR_path_get_size(L"g:\\2.txt", &fsize);
+		AR_printf(L"fsize == %qu\r\n", fsize);
+
+
+		status = AR_path_copydir(L"D:\\Tools\\Dev\\Python", L"G:\\Temp\\Python\\");
+
+
+}
+
+
+
 void com_test()
 {
 		
@@ -3881,7 +4023,7 @@ void com_test()
 		//rand_test();
 		
 		//base64_test();
-		base64_test1();
+		//base64_test1();
 		//base64_test2();
 
 		//float_test_2();
@@ -3910,6 +4052,10 @@ void com_test()
 		//esc_wchar_hex_test();
 
 		//file_test();
+
+		//path_test1();
+		path_test2();
+
 }
 
 
