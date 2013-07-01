@@ -70,7 +70,7 @@
 		#define AR_COMPILER		AR_BCB6
 
 #elif defined(__clang__)
-		
+
 		#define AR_COMPILER		AR_CLANG
 
 #elif defined(__GNUC__)
@@ -82,7 +82,7 @@
 		#else
 				#error "Unknow Compiler!"
 		#endif
-		
+
 #else
 
 		#error "Unknow Compiler!"
@@ -109,18 +109,18 @@
 
 
 
-#if defined(__CHAR_UNSIGNED__) || defined(_CHAR_UNSIGNED)			
-		#define AR_CHAR_IS_UNSIGNED		1		
+#if defined(__CHAR_UNSIGNED__) || defined(_CHAR_UNSIGNED)
+		#define AR_CHAR_IS_UNSIGNED		1
 #endif
 
 
 
 #if(AR_COMPILER == AR_GCC3 || AR_COMPILER == AR_GCC4 || AR_COMPILER == AR_CLANG)
-		
+
 		#define AR_VAARGS_TREAT_CHAR_AS_INT			1
 		#define AR_VAARGS_TREAT_WCHAR_AS_INT		1
 #else
-		
+
 #endif
 
 
@@ -146,7 +146,7 @@
 
 /*
 	config complier specific options
-    
+
 */
 
 
@@ -190,28 +190,28 @@
 #if defined(OS_FAMILY_WINDOWS)
 
 		#ifndef WIN32_LEAN_AND_MEAN
-				#define WIN32_LEAN_AND_MEAN		1		
+				#define WIN32_LEAN_AND_MEAN		1
 		#endif
 
 		#if(AR_COMPILER == AR_VC_LEGACY || OS_TYPE == OS_WINDOWS_CE)
 				struct _RPC_ASYNC_STATE;
 		#endif
 
-		#ifndef WINVER                          
-				#define WINVER 0x0600           
+		#ifndef WINVER
+				#define WINVER 0x0600
 		#endif
 
-		#ifndef _WIN32_WINNT            
-				#define _WIN32_WINNT 0x0600     
+		#ifndef _WIN32_WINNT
+				#define _WIN32_WINNT 0x0600
 		#endif
 
-		#ifndef _WIN32_WINDOWS					
-				#define _WIN32_WINDOWS 0x0410 
+		#ifndef _WIN32_WINDOWS
+				#define _WIN32_WINDOWS 0x0410
 		#endif
 
 #elif defined(OS_FAMILY_UNIX)
-		
-		#if(OS_TYPE == OS_LINUX) && (AR_ARCH_VER == ARCH_32)
+
+		#if(OS_TYPE == OS_LINUX) //&& (AR_ARCH_VER == ARCH_32)
 
 				#ifndef __USE_FILE_OFFSET64
 						#define __USE_FILE_OFFSET64
@@ -271,15 +271,15 @@
 
 #if defined(OS_FAMILY_WINDOWS)
 
-		
+
 		#include <windows.h>
-		
+
 
 		#define			AR_PATH_SP				L"\\"
 		#define			AR_PATH_SP_CHAR			L'\\'
-		
+
 		#define			AR_LINE_SP				L"\r\n"
-		
+
 
 #elif defined(OS_FAMILY_UNIX)
 
@@ -289,21 +289,21 @@
         #include <sys/select.h>
         #include <sys/time.h>
 		#include <errno.h>
-		
+
 		#if(OS_TYPE == OS_MAC_OS_X || OS_TYPE == OS_IOS)
 			#include <libkern/OSAtomic.h>
 		#endif
 
 		#define AR_PATH_SP				L"/"
 		#define AR_PATH_SP_CHAR			L'/'
-		
+
 		#if(OS_TYPE == OS_MAC_OS_X || OS_TYPE == OS_IOS)
 			#define			AR_LINE_SP				L"\r"
 		#else
 			#define			AR_LINE_SP				L"\n"
 		#endif
-		
-		
+
+
 		#define AR_WCHAR_IS_UTF32_SUPPORT				1
 #else
 		#error "Unknown OS not supported!"
@@ -417,7 +417,7 @@
 
         #define AR_NOOP                 (void)
         #define AR_FUNC_NAME			__PRETTY_FUNCTION__
-        
+
 		#define	AR_DEBUG_BREAK				__builtin_trap
 
 #else
@@ -491,7 +491,7 @@
 		#else
 				#define	CHAR_MIN		(0)
 		#endif
-				
+
 #endif
 
 
@@ -516,7 +516,7 @@
 				#define WCHAR_MIN		 0x0000
 		#endif
 
-		
+
 #endif
 
 #ifndef WCHAR_MAX
@@ -566,7 +566,7 @@
 
 
 
-		
+
 
 #define AR_CHARMIN				CHAR_MIN
 #define AR_CHARMAX				CHAR_MAX
@@ -645,8 +645,8 @@ typedef void*					ar_ptr_t;
 
 		#define AR_SPRINTF										_snprintf
 		#define AR_VSPRINTF										_vsnprintf
-		
-		
+
+
 		#if(OS_TYPE == OS_WINDOWS_CE)
 				#define AR_abort()								exit(3)
 		#else
@@ -664,7 +664,7 @@ typedef void*					ar_ptr_t;
 
 #elif(AR_COMPILER == AR_GCC3 || AR_COMPILER == AR_GCC4 || AR_COMPILER == AR_CLANG)
 
-		
+
 		#if defined(OS_FAMILY_WINDOWS)
 				#define AR_SWPRINTF								_snwprintf
 				#define AR_VSWPRINTF							_vsnwprintf
@@ -695,9 +695,13 @@ typedef void*					ar_ptr_t;
 /****************************************ø…±‰≤Œ ˝*******************************************/
 
 #if defined(OS_FAMILY_UNIX)
-		
+
 		#if (OS_TYPE == OS_MAC_OS_X || OS_TYPE == OS_IOS)
 				#define AR_HAS_VA_COPY_FUNCTION	1
+		#endif
+
+		#if (OS_TYPE == OS_LINUX && AR_ARCH_VER == ARCH_64)
+                #define AR_HAS_VA_COPY_FUNCTION	1
 		#endif
 
 #endif
