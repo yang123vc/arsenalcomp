@@ -18,10 +18,21 @@
 AR_NAMESPACE_BEGIN
 
 
+#if(0)
+arStatus_t      AR_path_is_hidden(const wchar_t *path)
+{
 
-arStatus_t      AR_path_is_hidden(const wchar_t *path);
-arStatus_t      AR_path_is_dev(const wchar_t *path);
-arStatus_t      AR_path_is_dir(const wchar_t *path);
+}
+
+arStatus_t      AR_path_is_dev(const wchar_t *path)
+{
+
+}
+
+arStatus_t      AR_path_is_dir(const wchar_t *path)
+{
+
+}
 
 arStatus_t      AR_path_is_link(const wchar_t *path);
 arStatus_t      AR_path_is_file(const wchar_t *path);
@@ -53,6 +64,8 @@ arStatus_t      AR_path_set_size(const wchar_t *path, ar_uint_64_t size);
 
 arStatus_t      AR_path_copydir(const wchar_t *src, const wchar_t *dest);
 
+
+#endif
 
 
 
