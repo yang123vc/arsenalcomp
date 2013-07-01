@@ -3,7 +3,6 @@
 #include <locale.h>
 
 
-
 AR_NAMESPACE_BEGIN
 
 
