@@ -127,8 +127,8 @@
 
 #if defined(__cplusplus)
 
-				#define AR_NAMESPACE_BEGIN		namespace ARSpace { extern "C" {
-				#define AR_NAMESPACE_END		} }
+		#define AR_NAMESPACE_BEGIN		namespace ARSpace { extern "C" {
+		#define AR_NAMESPACE_END		} }
 #else
 		#define AR_NAMESPACE_BEGIN
 		#define AR_NAMESPACE_END
@@ -375,14 +375,8 @@
 		/**/
 		#if(AR_ARCH_VER == ARCH_32)
 
-                #if (OS_TYPE == OS_ANDROID)
-                        #define AR_STDCALL
-                        #define AR_CCALL
-
-                #else
-                        #define AR_STDCALL		__attribute__((stdcall))
-                        #define AR_CCALL		__attribute__((cdecl))
-                #endif
+                #define AR_STDCALL		__attribute__((stdcall))
+                #define AR_CCALL		__attribute__((cdecl))
 		#else
                 #define AR_STDCALL
 				#define AR_CCALL
@@ -396,6 +390,14 @@
 		#elif(OS_TYPE == OS_IOS)
 				#undef	AR_STDCALL
 				#define	AR_STDCALL
+
+		#elif(OS_TYPE == OS_ANDROID)
+				#undef	AR_STDCALL
+				#undef AR_CCALL
+				
+				#define AR_STDCALL
+				#define AR_CCALL
+
 		#endif
 
 
