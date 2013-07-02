@@ -170,6 +170,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		670F86D01782D920009202A9 /* thread_posix_android.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = thread_posix_android.h; sourceTree = "<group>"; };
 		671E7D7F1781299800B22D92 /* filesystem_path_posix_apple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filesystem_path_posix_apple.h; sourceTree = "<group>"; };
 		671E7D801781299800B22D92 /* filesystem_path_posix_posix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filesystem_path_posix_posix.h; sourceTree = "<group>"; };
 		6728C3B4154C5E8300861D86 /* enviroment.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = enviroment.c; sourceTree = "<group>"; };
@@ -326,6 +327,7 @@
 				67E28CB015615FF7005A2C79 /* enviroment_posix.h */,
 				67E28CB115615FF7005A2C79 /* enviroment_win.h */,
 				67DBF856155A39AD0074C569 /* datastructure.c */,
+				670F86D01782D920009202A9 /* thread_posix_android.h */,
 				679A46D7155262E1006A5AD4 /* thread_posix_apple.h */,
 				679A46D8155262E1006A5AD4 /* thread_posix_posix.h */,
 				BE185DA914E841B90095DB44 /* thread_posix.h */,
