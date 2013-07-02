@@ -1143,10 +1143,10 @@ ar_int_t			AR_AtomicDec(volatile ar_int_t *dest);
 
 #if defined(OS_FAMILY_UNIX)
 	
-		#if(OS_TYPE == OS_IOS || OS_TYPE == OS_MAC_OS_X)
+		#if(OS_TYPE == OS_IOS || OS_TYPE == OS_MAC_OS_X || OS_TYPE == OS_ANDROID)
 				typedef			volatile ar_int_t				arSpinLock_t;	
 		#else
-				typedef			pthread_spinlock_t	        arSpinLock_t;
+				typedef			pthread_spinlock_t              arSpinLock_t;
 		#endif
 
 #elif defined(OS_FAMILY_WINDOWS)
