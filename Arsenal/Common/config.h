@@ -374,8 +374,15 @@
 
 		/**/
 		#if(AR_ARCH_VER == ARCH_32)
-				#define AR_STDCALL		__attribute__((stdcall))
-				#define AR_CCALL		__attribute__((cdecl))
+
+                #if (OS_TYPE == OS_ANDROID)
+                        #define AR_STDCALL
+                        #define AR_CCALL
+
+                #else
+                        #define AR_STDCALL		__attribute__((stdcall))
+                        #define AR_CCALL		__attribute__((cdecl))
+                #endif
 		#else
                 #define AR_STDCALL
 				#define AR_CCALL
@@ -673,13 +680,14 @@ typedef void*					ar_ptr_t;
 				#define AR_VSPRINTF								_vsnprintf
 
 		#else
+
 				#define AR_SWPRINTF			                    swprintf
 				#define AR_VSWPRINTF			                vswprintf
 
 				#define AR_SPRINTF								snprintf
 				#define AR_VSPRINTF(_dest, _cnt, _fmt, _args) 	vsprintf((_dest), (_fmt), (_args))
 
-		#endif
+        #endif
 
 
 		#define AR_abort										abort
@@ -709,7 +717,13 @@ typedef void*					ar_ptr_t;
 				#define AR_HAS_VA_COPY_FUNCTION	1
 		#endif
 
+        #if (OS_TYPE != OS_ANDROID)
+                #define AR_HAS_XATTR_HEADER            1
+                #define AR_HAS_DECIMAL_POINT            1
+        #endif
+
 #endif
+
 
 
 #define AR_va_start		va_start
@@ -722,6 +736,7 @@ typedef void*					ar_ptr_t;
 #else
 		#define AR_va_copy(_d,_s)	memcpy((void*)&(_d), (void*)&(_s), sizeof(va_list))
 #endif
+
 
 
 /*************************************************************************************************************/

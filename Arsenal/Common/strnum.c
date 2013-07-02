@@ -318,13 +318,18 @@ const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *out)
 		ar_bool_t is_neg = false, is_ok = false;
 		
 		wchar_t decimal_point;
+        
 		AR_ASSERT(in != NULL && end != NULL && in <= end && out != NULL);
 		
+#if defined(AR_HAS_DECIMAL_POINT)
 		{
 				const struct lconv *conv;
 				conv =  localeconv();
 				decimal_point = (wchar_t)*conv->decimal_point;
 		}
+#else
+        decimal_point = L'.';
+#endif
 
 		/*p = AR_wcstrim(in, L" \t");*/
 		p = AR_wcstrim_space_s(in, end);
@@ -1045,11 +1050,15 @@ const char*	AR_stod_s(const char *in, const char *end, double *out)
 		char decimal_point;
 		AR_ASSERT(in != NULL && end != NULL && in <= end && out != NULL);
 		
+#if defined(AR_HAS_DECIMAL_POINT)
 		{
 				const struct lconv *conv;
 				conv =  localeconv();
 				decimal_point = *conv->decimal_point;
 		}
+#else
+        decimal_point = '.';
+#endif
 
 		/*p = AR_wcstrim(in, L" \t");*/
 		p = AR_strtrim_space_s(in, end);
@@ -1146,11 +1155,16 @@ ar_bool_t	AR_wcs_is_float(const wchar_t *in, const wchar_t *end)
 		
 		AR_ASSERT(in != NULL && end != NULL && in <= end);
 
+#if defined(AR_HAS_DECIMAL_POINT)
 		{
 				const struct lconv *conv;
 				conv =  localeconv();
 				decimal_point = (wchar_t)*conv->decimal_point;
 		}
+#else
+        decimal_point = L'.';
+#endif
+        
 
 		is_float = false;
 
@@ -1235,12 +1249,18 @@ ar_bool_t	AR_str_is_float(const char *in, const char *end)
 		char decimal_point;
 		
 		AR_ASSERT(in != NULL && end != NULL && in <= end);
-
+        
+#if defined(AR_HAS_DECIMAL_POINT)
 		{
 				const struct lconv *conv;
 				conv =  localeconv();
 				decimal_point = *conv->decimal_point;
 		}
+#else
+        decimal_point = '.';
+        
+#endif
+        
 
 		is_float = false;
 

@@ -26,16 +26,16 @@ AR_NAMESPACE_BEGIN
 #define AR_ALIGN_SIZE(_bytes)	( ((_bytes) + AR_HEAP_ALIGN - 1 ) & ~(AR_HEAP_ALIGN - 1) )
 
 
-#define PAGE_SIZE				((size_t)(65536 - sizeof(page_t)))
-#define SMALL_SIZE				255
-#define MEDIUM_SIZE				32767
+#define AR_PAGE_SIZE				((size_t)(65536 - sizeof(page_t)))
+#define AR_SMALL_SIZE				255
+#define AR_MEDIUM_SIZE				32767
 
-#define SMALL_ALIGN(_bytes)		(AR_ALIGN_SIZE( ((_bytes) + SMALL_HEADER_SIZE) ) - SMALL_HEADER_SIZE )
+#define AR_SMALL_ALIGN(_bytes)		(AR_ALIGN_SIZE( ((_bytes) + AR_SMALL_HEADER_SIZE) ) - AR_SMALL_HEADER_SIZE )
 
-#define SMALL_HEADER_SIZE		((size_t)(sizeof(ar_byte_t) + sizeof(ar_byte_t)))
-#define MEDIUM_HEADER_SIZE		((size_t) ( sizeof(mediumEntry_t) + sizeof(ar_byte_t)))
-#define MEDIUM_SMALLEST_SIZE	(AR_ALIGN_SIZE( 256 ) + AR_ALIGN_SIZE(MEDIUM_HEADER_SIZE))
-#define LARGE_HEADER_SIZE		((size_t)(sizeof(size_t*) + sizeof(ar_byte_t)))
+#define AR_SMALL_HEADER_SIZE		((size_t)(sizeof(ar_byte_t) + sizeof(ar_byte_t)))
+#define AR_MEDIUM_HEADER_SIZE		((size_t) ( sizeof(mediumEntry_t) + sizeof(ar_byte_t)))
+#define AR_MEDIUM_SMALLEST_SIZE	(AR_ALIGN_SIZE( 256 ) + AR_ALIGN_SIZE(AR_MEDIUM_HEADER_SIZE))
+#define AR_LARGE_HEADER_SIZE		((size_t)(sizeof(size_t*) + sizeof(ar_byte_t)))
 
 
 #define HEAP_SMALL_ALLOC		0xaa
