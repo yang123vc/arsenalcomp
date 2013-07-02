@@ -46,21 +46,28 @@
 
 
 #if defined(__FreeBSD__)
-	#define OS_FAMILY_UNIX								1
-	#define OS_FAMILY_BSD								1
-	#define OS_TYPE										OS_FREE_BSD
+        #define OS_FAMILY_UNIX								1
+        #define OS_FAMILY_BSD								1
+        #define OS_TYPE										OS_FREE_BSD
 #elif defined(_AIX) || defined(__TOS_AIX__)
-	#define OS_FAMILY_UNIX								1
-	#define OS_TYPE										OS_AIX
+        #define OS_FAMILY_UNIX								1
+        #define OS_TYPE										OS_AIX
 #elif defined(hpux) || defined(_hpux)
-	#define OS_FAMILY_UNIX								1
-	#define OS_TYPE										OS_HPUX
+        #define OS_FAMILY_UNIX								1
+        #define OS_TYPE										OS_HPUX
 #elif defined(__digital__) || defined(__osf__)
-	#define OS_FAMILY_UNIX								1
-	#define OS_TYPE										OS_TRU64
+        #define OS_FAMILY_UNIX								1
+        #define OS_TYPE										OS_TRU64
 #elif defined(linux) || defined(__linux) || defined(__linux__) || defined(__TOS_LINUX__)
-	#define OS_FAMILY_UNIX								1
-	#define OS_TYPE										OS_LINUX
+        #define OS_FAMILY_UNIX								1
+        #define OS_TYPE										OS_LINUX
+
+        #if defined(ANDROID) || defined(_ANDROID)
+                #undef OS_TYPE
+                #define OS_TYPE                             OS_ANDROID
+        #endif
+
+
 #elif defined(__APPLE__) || defined(__TOS_MACOS__)
 		#define OS_FAMILY_UNIX								1
 		#define OS_FAMILY_BSD								1
@@ -113,9 +120,6 @@
 #elif defined(__VMS)
 	#define OS_FAMILY_VMS								1
 	#define OS_TYPE										OS_VMS
-#elif defined(ANDROID)
-	#define OS_FAMILY_UNIX								1
-	#define OS_TYPE										OS_ANDROID
 #endif
 
 
