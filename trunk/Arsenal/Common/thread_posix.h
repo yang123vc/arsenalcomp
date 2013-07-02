@@ -27,6 +27,10 @@ AR_NAMESPACE_BEGIN
 
 		#include "thread_posix_apple.h"
 
+#elif (OS_TYPE == OS_ANDROID)
+
+        #include "thread_posix_android.h"
+
 #else
 		#include "thread_posix_posix.h"
 #endif
@@ -88,7 +92,6 @@ arThread_t*		AR_CreateThread(arThreadFunc_t func, void *data)
         pthread_attr_t attributes;
         AR_ASSERT(func != NULL);
 
-
         thd = AR_NEW0(arThread_t);
 
         if(thd == NULL)
@@ -122,7 +125,7 @@ FAILED_POINT:
                 thd->done = NULL;
         }
 
-        if(thd->thd == NULL)
+        if(thd)
         {
                 AR_DEL(thd);
                 thd = NULL;

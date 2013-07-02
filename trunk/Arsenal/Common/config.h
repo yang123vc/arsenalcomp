@@ -74,10 +74,11 @@
 		#define AR_COMPILER		AR_CLANG
 
 #elif defined(__GNUC__)
-
 		#if(__GNUC__ == 4)
 				#define	AR_COMPILER		AR_GCC4
+
 		#elif(__GNUC__ == 3)
+
 				#define	AR_COMPILER		AR_GCC3
 		#else
 				#error "Unknow Compiler!"
@@ -705,17 +706,8 @@ typedef void*					ar_ptr_t;
 /****************************************va_list*******************************************/
 
 #if defined(OS_FAMILY_UNIX)
-		/*
-		#if (OS_TYPE == OS_MAC_OS_X || OS_TYPE == OS_IOS)
-				#define AR_HAS_VA_COPY_FUNCTION	1
-		#endif
 
-		#if (OS_TYPE == OS_LINUX && AR_ARCH_VER == ARCH_64)
-                #define AR_HAS_VA_COPY_FUNCTION	1
-		#endif
-		*/
-
-		#if defined(va_copy)
+        #if defined(va_copy)
 				#define AR_HAS_VA_COPY_FUNCTION	1
 		#endif
 
