@@ -6,7 +6,7 @@ include $(CLEAR_VARS)
 
 
 LOCAL_MODULE := Arsenal
-
+LOCAL_MODULE_FILENAME := Arsenal
 
 LOCAL_CFLAGS :=\
         -Wno-multichar\
@@ -14,9 +14,9 @@ LOCAL_CFLAGS :=\
         -D_ANDROID\
   
 ifeq ($(NDK_DEBUG),1)
-        LOCAL_CFLAGS := -O0 -DDEBUG -g $(LOCAL_CFLAGS)
+        LOCAL_CFLAGS := -DDEBUG $(LOCAL_CFLAGS)
 else
-        LOCAL_CFLAGS := -O2 -DNDEBUG -g $(LOCAL_CFLAGS)
+        LOCAL_CFLAGS := -DNDEBUG $(LOCAL_CFLAGS)
 endif
   
 
