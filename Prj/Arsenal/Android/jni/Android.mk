@@ -77,7 +77,7 @@ LOCAL_C_INCLUDES += \
 
 
   
-include $(BUILD_STATIC_LIBRARY)
+include $(BUILD_SHARED_LIBRARY)
 
 
 

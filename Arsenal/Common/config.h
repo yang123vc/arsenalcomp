@@ -210,9 +210,10 @@
 				#define _WIN32_WINDOWS 0x0410
 		#endif
 
+
 #elif defined(OS_FAMILY_UNIX)
 
-		#if(OS_TYPE == OS_LINUX) //&& (AR_ARCH_VER == ARCH_32)
+		#if(OS_TYPE == OS_LINUX)
 
 				#ifndef __USE_FILE_OFFSET64
 						#define __USE_FILE_OFFSET64
@@ -708,12 +709,32 @@ typedef void*					ar_ptr_t;
 #if defined(OS_FAMILY_UNIX)
 
         #if defined(va_copy)
-				#define AR_HAS_VA_COPY_FUNCTION	1
+				#define AR_HAS_VA_COPY_FUNCTION         1
 		#endif
 
-        #if (OS_TYPE != OS_ANDROID)
-                #define AR_HAS_XATTR_HEADER            1
-                #define AR_HAS_DECIMAL_POINT            1
+
+        #define AR_HAS_XATTR_HEADER             1
+        #define AR_HAS_DECIMAL_POINT            1
+        #define AR_HAS_STAT64                           1
+        #define AR_HAS_FSEEK_AND_TELL_64                1
+
+
+        #if (OS_TYPE == OS_IOS)
+                #undef AR_HAS_STAT64
+                #undef AR_HAS_FSEEK_AND_TELL_64
+        #endif
+
+        #if(OS_TYPE == OS_MAC_OS_X)
+                #undef AR_HAS_STAT64
+                #undef AR_HAS_FSEEK_AND_TELL_64
+        #endif
+
+
+        #if (OS_TYPE == OS_ANDROID)
+                #undef AR_HAS_XATTR_HEADER
+                #undef AR_HAS_DECIMAL_POINT
+
+                #undef AR_HAS_FSEEK_AND_TELL_64
         #endif
 
 #endif

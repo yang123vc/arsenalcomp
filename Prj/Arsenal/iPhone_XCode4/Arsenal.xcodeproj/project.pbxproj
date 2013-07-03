@@ -90,6 +90,9 @@
 		672BDCD816500431002D500E /* serializer.h in Headers */ = {isa = PBXBuildFile; fileRef = 672BDC8516500431002D500E /* serializer.h */; };
 		672BDCD916500431002D500E /* tools.c in Sources */ = {isa = PBXBuildFile; fileRef = 672BDC8616500431002D500E /* tools.c */; };
 		672BDCDA16500431002D500E /* tools.h in Headers */ = {isa = PBXBuildFile; fileRef = 672BDC8716500431002D500E /* tools.h */; };
+		67940A611783F21A002B6140 /* filesystem_path_posix_apple.h in Headers */ = {isa = PBXBuildFile; fileRef = 67940A5E1783F21A002B6140 /* filesystem_path_posix_apple.h */; };
+		67940A621783F21A002B6140 /* filesystem_path_posix_posix.h in Headers */ = {isa = PBXBuildFile; fileRef = 67940A5F1783F21A002B6140 /* filesystem_path_posix_posix.h */; };
+		67940A631783F21A002B6140 /* thread_posix_android.h in Headers */ = {isa = PBXBuildFile; fileRef = 67940A601783F21A002B6140 /* thread_posix_android.h */; };
 		BE328EEB14F20CA9006BCA74 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE328EEA14F20CA9006BCA74 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
@@ -177,6 +180,9 @@
 		672BDC8516500431002D500E /* serializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = serializer.h; sourceTree = "<group>"; };
 		672BDC8616500431002D500E /* tools.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tools.c; sourceTree = "<group>"; };
 		672BDC8716500431002D500E /* tools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tools.h; sourceTree = "<group>"; };
+		67940A5E1783F21A002B6140 /* filesystem_path_posix_apple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filesystem_path_posix_apple.h; sourceTree = "<group>"; };
+		67940A5F1783F21A002B6140 /* filesystem_path_posix_posix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filesystem_path_posix_posix.h; sourceTree = "<group>"; };
+		67940A601783F21A002B6140 /* thread_posix_android.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thread_posix_android.h; sourceTree = "<group>"; };
 		BE328EE714F20CA9006BCA74 /* Arsenal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = Arsenal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE328EEA14F20CA9006BCA74 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		BE82C84814F20D5B00F30E56 /* dabaopku.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = dabaopku.plist; sourceTree = "<group>"; };
@@ -225,6 +231,8 @@
 				672BDC3D16500431002D500E /* enviroment_posix.h */,
 				672BDC3E16500431002D500E /* enviroment_win.h */,
 				672BDC3F16500431002D500E /* filesystem.c */,
+				67940A5E1783F21A002B6140 /* filesystem_path_posix_apple.h */,
+				67940A5F1783F21A002B6140 /* filesystem_path_posix_posix.h */,
 				672BDC4016500431002D500E /* filesystem_path_posix.h */,
 				672BDC4116500431002D500E /* filesystem_path_win.h */,
 				672BDC4216500431002D500E /* filesystem_posix.h */,
@@ -244,9 +252,10 @@
 				672BDC5016500431002D500E /* strtable.c */,
 				672BDC5116500431002D500E /* textfile.c */,
 				672BDC5216500431002D500E /* thread.c */,
-				672BDC5316500431002D500E /* thread_posix.h */,
+				67940A601783F21A002B6140 /* thread_posix_android.h */,
 				672BDC5416500431002D500E /* thread_posix_apple.h */,
 				672BDC5516500431002D500E /* thread_posix_posix.h */,
+				672BDC5316500431002D500E /* thread_posix.h */,
 				672BDC5616500431002D500E /* thread_win.h */,
 				672BDC5716500431002D500E /* uri.c */,
 				672BDC5816500431002D500E /* utilities.c */,
@@ -390,6 +399,9 @@
 				672BDCD616500431002D500E /* iniobj.h in Headers */,
 				672BDCD816500431002D500E /* serializer.h in Headers */,
 				672BDCDA16500431002D500E /* tools.h in Headers */,
+				67940A611783F21A002B6140 /* filesystem_path_posix_apple.h in Headers */,
+				67940A621783F21A002B6140 /* filesystem_path_posix_posix.h in Headers */,
+				67940A631783F21A002B6140 /* thread_posix_android.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -566,6 +578,7 @@
 				GCC_PREFIX_HEADER = "";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = Arsenal;
+				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -580,6 +593,7 @@
 				GCC_PREFIX_HEADER = "";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = Arsenal;
+				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
