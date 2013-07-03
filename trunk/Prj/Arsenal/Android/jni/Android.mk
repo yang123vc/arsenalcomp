@@ -7,13 +7,18 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE := Arsenal
 
-LOCAL_CFLAGS :=\
-  -Wno-multichar\
-  -DANDROID\
-  -D_ANDROID\
-  -DIN_LIBRARY\
-  -DLIBDIR="c"\
 
+LOCAL_CFLAGS :=\
+        -Wno-multichar\
+        -DANDROID\
+        -D_ANDROID\
+  
+ifeq ($(APP_OPTIM),debug)
+        LOCAL_CFLAGS := -O0 -DDEBUG -g $(LOCAL_CFLAGS)
+else
+        LOCAL_CFLAGS := -O2 -DNDEBUG -g $(LOCAL_CFLAGS)
+endif
+  
 
 LOCAL_SRC_FILES := \
         ../../../../Arsenal/Common/thread.c\
@@ -31,12 +36,12 @@ LOCAL_SRC_FILES := \
         ../../../../Arsenal/Common/base64.c\
         ../../../../Arsenal/Common/algo.c\
         ../../../../Arsenal/Common/filesystem.c\
-       ../../../../Arsenal/Common/datastructure.c\
-       ../../../../Arsenal/Common/enviroment.c\
-       ../../../../Arsenal/Common/uri.c\
-       ../../../../Arsenal/Common/strnum.c\
+        ../../../../Arsenal/Common/datastructure.c\
+        ../../../../Arsenal/Common/enviroment.c\
+        ../../../../Arsenal/Common/uri.c\
+        ../../../../Arsenal/Common/strnum.c\
         ../../../../Arsenal/Common/memory.c\
-       ../../../../Arsenal/Common/common.c\
+        ../../../../Arsenal/Common/common.c\
         ../../../../Arsenal/Common/printf.c\
         ../../../../Arsenal/Common/strconv.c\
         ../../../../Arsenal/Common/buffer.c\
@@ -76,8 +81,18 @@ LOCAL_C_INCLUDES += \
         $(LOCAL_PATH)/../External/libiconv-1.14/jni/include\
 
 
-  
-include $(BUILD_SHARED_LIBRARY)
+LOCAL_LDLIBS := -l$(LOCAL_PATH)/../External/libiconv-1.14/libs/armeabi/libiconv.a
+
+
+
+ifeq ($(LIB_MODE),shared)
+        include $(BUILD_SHARED_LIBRARY)
+else
+        include $(BUILD_STATIC_LIBRARY)
+endif
+
+
+
 
 
 

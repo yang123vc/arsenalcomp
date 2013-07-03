@@ -138,7 +138,7 @@ void			AR_DestroyThread(arThread_t *thd)
 {
         void *result;
         int ret = 0;
-        AR_ASSERT(thd != NULL && thd->thd != NULL);
+        AR_ASSERT(thd != NULL);
         AR_JoinThread(thd);
         
         if((ret = pthread_join(thd->thd, &result)) != 0)
@@ -164,7 +164,7 @@ arStatus_t		AR_JoinThread(arThread_t *thd)
 {
         arStatus_t status;
         
-        AR_ASSERT(thd != NULL && thd->done != NULL && thd->thd != NULL);
+        AR_ASSERT(thd != NULL && thd->done != NULL);
         
         status = AR_WaitEvent(thd->done);
         
@@ -174,7 +174,7 @@ arStatus_t		AR_JoinThread(arThread_t *thd)
 arStatus_t		AR_JoinThreadWithTimeout(arThread_t *thd, ar_uint_64_t milliseconds)
 {
         arStatus_t status;
-        AR_ASSERT(thd != NULL && thd->done != NULL && thd->thd != NULL);
+        AR_ASSERT(thd != NULL && thd->done != NULL);
         
         status = AR_WaitEventWithTimeout(thd->done, milliseconds);
         
@@ -188,7 +188,7 @@ arStatus_t		AR_JoinThreadWithTimeout(arThread_t *thd, ar_uint_64_t milliseconds)
 
 ar_uint_64_t		AR_GetThreadId(arThread_t *thd)
 {
-		AR_ASSERT(thd != NULL && thd->thd != NULL);
+		AR_ASSERT(thd != NULL);
 		return (ar_uint_64_t)thd->thd;
 }
 
@@ -225,7 +225,7 @@ static int __map_prio(arThreadPrio_t prio)
 arStatus_t		AR_SetThreadPriority(arThread_t *thd, arThreadPrio_t prio)
 {
         struct sched_param par;
-        AR_ASSERT(thd != NULL && thd->thd != NULL);
+        AR_ASSERT(thd != NULL);
 
         if(prio == thd->prio)
         {
@@ -248,7 +248,7 @@ arStatus_t		AR_SetThreadPriority(arThread_t *thd, arThreadPrio_t prio)
 
 arStatus_t		AR_GetThreadPriority(arThread_t *thd, arThreadPrio_t *p_prio)
 {
-        AR_ASSERT(thd != NULL && thd->thd != NULL);
+        AR_ASSERT(thd != NULL);
 
         *p_prio = thd->prio;
         return AR_S_YES;

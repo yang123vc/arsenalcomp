@@ -309,7 +309,7 @@ ar_int_t AR_vscprintf(const char *fmt, va_list va_args)
 {
 		ar_int_t res;
 		va_list args;
-		AR_ASSERT(fmt != NULL && va_args != NULL);
+		AR_ASSERT(fmt != NULL);
 		res = 0;
 
 		AR_va_copy(args, va_args);
@@ -630,7 +630,7 @@ ar_int_t			AR_vsprintf(char *dest, size_t count, const char *fmt, va_list args)
 		char *src_fmt;
 		ar_int_t need_l;
 
-		AR_ASSERT(dest != NULL && fmt != NULL && args != NULL);
+		AR_ASSERT(dest != NULL && fmt != NULL);
 
 		res = 0;
 		need_l = 0;
@@ -987,7 +987,7 @@ ar_int_t AR_vscwprintf(const wchar_t *fmt, va_list va_args)
 {
 		ar_int_t res;
 		va_list args;
-		AR_ASSERT(fmt != NULL && va_args != NULL);
+		AR_ASSERT(fmt != NULL);
 		res = 0;
 
 		AR_va_copy(args, va_args);
@@ -1321,7 +1321,7 @@ ar_int_t			AR_vswprintf(wchar_t *dest, size_t count, const wchar_t *fmt, va_list
 		wchar_t *src_fmt;
 		ar_int_t need_l;
 
-		AR_ASSERT(dest != NULL && fmt != NULL && args != NULL);
+		AR_ASSERT(dest != NULL && fmt != NULL);
 
 		res = 0;
 		need_l = 0;
@@ -1402,7 +1402,7 @@ ar_int_t			AR_vswprintf_nonalloc(wchar_t *dest, size_t count, const wchar_t *fmt
 		wchar_t src_fmt[1024];
 
 
-		AR_ASSERT(dest != NULL && fmt != NULL && args != NULL);
+		AR_ASSERT(dest != NULL && fmt != NULL);
 
 		res = 0;
 		need_l = 0;

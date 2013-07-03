@@ -284,7 +284,7 @@ arStatus_t			AR_VFormatString(arString_t *str, const wchar_t *fmt, va_list va_ar
 		arStatus_t ret;
 		ar_int_t len;
 		va_list save;
-		AR_ASSERT(str != NULL && fmt != NULL && va_args != NULL);
+		AR_ASSERT(str != NULL && fmt != NULL);
 		AR_ClearString(str);
 		
 		AR_va_copy(save, va_args);
@@ -326,7 +326,7 @@ arStatus_t			AR_AppendVFormatString(arString_t *str, const wchar_t *fmt, va_list
 		ar_int_t len;
 		wchar_t *buf;
 		va_list save;
-		AR_ASSERT(str != NULL && fmt != NULL && va_args != NULL);
+		AR_ASSERT(str != NULL && fmt != NULL);
 
 		buf = NULL;
 		ret = AR_S_YES;
