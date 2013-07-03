@@ -2,8 +2,8 @@ LOCAL_PATH:= $(call my-dir)
 
 include $(CLEAR_VARS)  
 
-
 LOCAL_MODULE := libiconv  
+
 LOCAL_CFLAGS :=\
   -Wno-multichar\
   -DANDROID\
@@ -14,9 +14,9 @@ LOCAL_CFLAGS :=\
   
 
 ifeq ($(NDK_DEBUG),1)
-        LOCAL_CFLAGS := -O0 -DDEBUG -g $(LOCAL_CFLAGS)
+        LOCAL_CFLAGS := -DDEBUG $(LOCAL_CFLAGS)
 else
-        LOCAL_CFLAGS := -O2 -DNDEBUG -g $(LOCAL_CFLAGS)
+        LOCAL_CFLAGS := -DNDEBUG $(LOCAL_CFLAGS)
 endif
   
 
