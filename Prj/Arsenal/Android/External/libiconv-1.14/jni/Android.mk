@@ -13,11 +13,12 @@ LOCAL_CFLAGS :=\
   -DIN_LIBRARY\
   
 
-ifeq ($(APP_OPTIM),debug)
+ifeq ($(NDK_DEBUG),1)
         LOCAL_CFLAGS := -O0 -DDEBUG -g $(LOCAL_CFLAGS)
 else
         LOCAL_CFLAGS := -O2 -DNDEBUG -g $(LOCAL_CFLAGS)
 endif
+  
 
 
 LOCAL_SRC_FILES := \
