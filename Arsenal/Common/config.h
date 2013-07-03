@@ -772,6 +772,9 @@ typedef void*					ar_ptr_t;
 				#define AR_MAX_CALLSTACK						32
 		#endif
 
+#else
+
+
 #endif
 
 

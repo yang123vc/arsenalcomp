@@ -1,8 +1,7 @@
 LOCAL_PATH:= $(call my-dir)  
-#libiconv.so
+
 include $(CLEAR_VARS)  
 
-TARGET_PLATFORM := android-14
 
 LOCAL_MODULE := libiconv  
 LOCAL_CFLAGS :=\
@@ -13,6 +12,14 @@ LOCAL_CFLAGS :=\
   -DBUILDING_LIBICONV\
   -DIN_LIBRARY\
   
+
+ifeq ($(APP_OPTIM),debug)
+        LOCAL_CFLAGS := -O0 -DDEBUG -g $(LOCAL_CFLAGS)
+else
+        LOCAL_CFLAGS := -O2 -DNDEBUG -g $(LOCAL_CFLAGS)
+endif
+
+
 LOCAL_SRC_FILES := \
     libcharset/lib/localcharset.c\
     lib/iconv.c \
@@ -25,7 +32,17 @@ LOCAL_C_INCLUDES += \
   $(LOCAL_PATH)/libcharset/include \
   $(LOCAL_PATH)/srclib \
   
-include $(BUILD_SHARED_LIBRARY)
+TARGET_PLATFORM := android-14
+
+
+ifeq ($(LIB_MODE),shared)
+        include $(BUILD_SHARED_LIBRARY)
+else
+        include $(BUILD_STATIC_LIBRARY)
+endif
+
+
+
 
 
 
