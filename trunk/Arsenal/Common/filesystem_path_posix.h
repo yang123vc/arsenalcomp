@@ -116,7 +116,13 @@ arStatus_t AR_path_get_size(const wchar_t *path, ar_uint_64_t *ps)
 {
         arStatus_t status;
         char *utf8;
+        
+#if defined(AR_HAS_STAT64)
         struct stat64 st;
+#else
+        struct stat st;
+#endif
+        
         AR_ASSERT(path != NULL && ps != NULL);
         
         status = AR_S_YES;
@@ -128,8 +134,11 @@ arStatus_t AR_path_get_size(const wchar_t *path, ar_uint_64_t *ps)
                 status = AR_E_BADENCCONV;
                 goto END_POINT;
         }
-        
+#if defined(AR_HAS_STAT64)
         if(lstat64(utf8, &st) == 0)
+#else
+        if(lstat(utf8, &st) == 0)
+#endif
         {
                 status = AR_S_YES;
                 *ps = (ar_uint_64_t)st.st_size;
