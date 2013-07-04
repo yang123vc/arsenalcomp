@@ -9,6 +9,5 @@ endif
 
 
 
-APP_MODULES := Arsenal Test
+APP_MODULES := Arsenal
 
-#APP_PROJECT_PATH := $(call my-dir)/../

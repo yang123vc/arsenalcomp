@@ -84,7 +84,8 @@ LOCAL_C_INCLUDES += \
         $(LOCAL_PATH)/../External/libiconv-1.14/jni/include\
 
 
-LOCAL_LDLIBS := -l$(LOCAL_PATH)/../External/libiconv-1.14/libs/armeabi/libiconv.a
+#LOCAL_LDLIBS := -l$(LOCAL_PATH)/../External/libiconv-1.14/libs/armeabi/libiconv.a
+LOCAL_LDLIBS := -l$(LOCAL_PATH)/../../../../Binary/External/libs/libiconv.a
 
 
 ifeq ($(LIB_MODE),shared)
@@ -102,42 +103,6 @@ endif
 
 
 
-
-
-#Test
-include $(CLEAR_VARS)  
-
-LOCAL_MODULE := Test
-LOCAL_MODULE_FILENAME := Test
-
-LOCAL_CFLAGS :=\
-        -Wno-multichar\
-        -DANDROID\
-        -D_ANDROID\
-  
-ifeq ($(NDK_DEBUG),1)
-        LOCAL_CFLAGS := -DDEBUG $(LOCAL_CFLAGS)
-else
-        LOCAL_CFLAGS := -DNDEBUG $(LOCAL_CFLAGS)
-endif
-
-
-LOCAL_SRC_FILES := ../../../Test/Android/Test/main.c
-
-
-
-LOCAL_C_INCLUDES += \
-        ../../../../Arsenal/    \
-
-
-
-ifeq ($(LIB_MODE),shared)
-        LOCAL_SHARED_LIBRARIES := Arsenal
-else
-        LOCAL_STATIC_LIBRARIES := Arsenal
-endif
-
-include $(BUILD_EXECUTABLE)
 
 
 
