@@ -104,7 +104,8 @@ def build_external_libraries():
         return ret;
 
 
-def build_arsenal(is_debug):
+
+def build_arsenal(is_debug, is_shared):
         save_dir = os.path.abspath(".");
         save_dir = fixpathend(save_dir);
         print(save_dir);
@@ -112,53 +113,61 @@ def build_arsenal(is_debug):
         binary_path = save_dir + "../../../../Binary/";
         
         
-        arsenal_static_binary_file = binary_path + "Arsenal.a";
-        arsenal_shared_binary_file = binary_path + "Arsenal.so";
+        if is_shared:
+                binary_path += "dll/";
+                arsenal_binary_file = binary_path + "Arsenal.so";
+                pass;
+        else:
+                binary_path += "lib/";
+                arsenal_binary_file = binary_path + "Arsenal.a";
+                pass;
+        
+        
+        print(binary_path);
+        print(arsenal_binary_file);
         
         
         arsenal_prj_path = save_dir + "../";
         
-        arsenal_static_lib_path = arsenal_prj_path + "obj/local/armeabi/Arsenal.a";
-        arsenal_shared_lib_path = arsenal_prj_path + "libs/armeabi/Arsenal.so";
+        arsenal_temp_lib_path = arsenal_prj_path + "obj/local/armeabi/Arsenal.a";
+        if is_shared:
+                arsenal_temp_lib_path = arsenal_prj_path + "libs/armeabi/Arsenal.so";
+                pass;
         
         print(arsenal_prj_path);
-        print(arsenal_static_lib_path);
-        print(arsenal_shared_lib_path);
+        print(arsenal_temp_lib_path);
 
         ret = True;
         
         try:
-        
-                if os.path.exists(arsenal_static_binary_file):
-                        if os.path.isfile(arsenal_static_binary_file):
-                                os.remove(arsenal_static_binary_file);
+                if not os.path.exists(binary_path):
+                        os.makedirs(binary_path);
+                        pass;
+                
+                
+                if os.path.exists(arsenal_binary_file):
+                        if os.path.isfile(arsenal_binary_file):
+                                os.remove(arsenal_binary_file);
                                 pass;
                         pass;        
                 
-                if os.path.exists(arsenal_shared_binary_file):
-                        if os.path.isfile(arsenal_shared_binary_file):
-                                os.remove(arsenal_shared_binary_file);
-                                pass;
-                        pass;           
-        
-        
-
-        
+                
                 dbg_str = "NDK_DEBUG=0";
                 if is_debug:
                         dbg_str = "NDK_DEBUG=1";
                         pass;
                 
-                os.chdir(arsenal_prj_path + "jni/");
-                subprocess.call(["ndk-build", dbg_str, "LIB_MODE=static", "-B"]);
-                os.chdir(save_dir);
-                shutil.copyfile(arsenal_static_lib_path, arsenal_static_binary_file);
+                lib_str = "LIB_MODE=static";
+                if is_shared:
+                        lib_str = "LIB_MODE=shared";
+                        pass;
+                        
                 
-                
                 os.chdir(arsenal_prj_path + "jni/");
-                subprocess.call(["ndk-build", dbg_str, "LIB_MODE=shared", "-B"]);
+                subprocess.call(["ndk-build", dbg_str, lib_str, "-B"]);
                 os.chdir(save_dir);
-                shutil.copyfile(arsenal_shared_lib_path, arsenal_shared_binary_file);
+                shutil.copyfile(arsenal_temp_lib_path, arsenal_binary_file);
+                
                 
                 pass;
         except Exception as e:
@@ -197,9 +206,13 @@ if not build_external_libraries():
         pass;
 
 
-if not build_arsenal(False):
-        print("failed to build Arsenal library\r\n");
+if not build_arsenal(False, True):
+        print("failed to build Arsenal shared library\r\n");
         sys.exit(-1);
         pass;
 
 
+if not build_arsenal(False, False):
+        print("failed to build Arsenal static library\r\n");
+        sys.exit(-1);
+        pass;
