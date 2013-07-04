@@ -287,7 +287,6 @@
 
         #include <unistd.h>
         #include <pthread.h>
-		#include <iconv.h>
         #include <sys/select.h>
         #include <sys/time.h>
 		#include <errno.h>

@@ -11,6 +11,7 @@
  *
  */
 
+#include <iconv.h>
 #include "common.h"
 
 
