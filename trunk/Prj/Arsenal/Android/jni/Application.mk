@@ -11,3 +11,4 @@ endif
 
 APP_MODULES := Arsenal
 
+APP_ABI := armeabi #armeabi-v7a mips
