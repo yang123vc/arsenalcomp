@@ -6,3 +6,6 @@ ifeq ($(NDK_DEBUG),1)
 else
         APP_OPTIM := release
 endif
+
+
+APP_ABI := armeabi #armeabi-v7a mips
