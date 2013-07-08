@@ -2341,8 +2341,55 @@ static void __query_table_test()
 		str = NULL;
 }
 
+
+
+
+static void work_test3()
+{
+
+		AR_printf(L"\r\n\r\n---------------------\r\n");
+		
+		arURI_t	*uri;
+		arStatus_t status;
+		status = AR_S_YES;
+		arString_t *str;
+		const wchar_t *s = NULL;
+		uri = AR_CreateURI(AR_CP_GB2312);
+		str = AR_CreateString();
+		AR_ASSERT(uri != NULL && str != NULL);
+
+		status = AR_SetURIPath(uri, L"中文-_. ");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIEncodedPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+
+		AR_printf(L"%ls\r\n", AR_CSTR(str));
+
+
+		AR_ClearURI(uri);
+		
+
+		status = AR_SetURI(uri, L"http://ud03.kinoko.name/中文.rar");
+		AR_ASSERT(status == AR_S_YES);
+		status = AR_GetEncodedURI(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_printf(L"%ls\r\n", AR_CSTR(str));
+
+		/*******************************************************************************/
+		AR_DestroyURI(uri);
+		uri = NULL;
+		AR_DestroyString(str);
+		str = NULL;
+
+
+
+}
+
+
 void uri_test()
 {
+		/*
 		uri_construct_test();
 		uri_parse_test();
 		uri_tostring_test();
@@ -2359,6 +2406,10 @@ void uri_test()
 		work_test2();
 
 		__query_table_test();
+		*/
+
+		work_test3();
+
 }
 
 

@@ -4043,7 +4043,7 @@ void com_test()
 
 		//cache_test();
 
-		//uri_test();
+		uri_test();
 
 		//buffer_test3();
 
@@ -4054,7 +4054,9 @@ void com_test()
 		//file_test();
 
 		//path_test1();
-		path_test2();
+		//path_test2();
+
+
 
 }
 

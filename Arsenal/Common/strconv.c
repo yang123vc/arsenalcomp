@@ -11,7 +11,11 @@
  *
  */
 
-#include <iconv.h>
+
+#if defined(OS_FAMILY_UNIX)
+		#include <iconv.h>
+#endif
+
 #include "common.h"
 
 
