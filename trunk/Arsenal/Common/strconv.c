@@ -12,6 +12,8 @@
  */
 
 
+#include "platform.h"
+
 #if defined(OS_FAMILY_UNIX)
 		#include <iconv.h>
 #endif
