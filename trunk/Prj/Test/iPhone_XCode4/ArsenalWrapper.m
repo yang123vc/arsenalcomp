@@ -93,7 +93,7 @@ static size_t AR_STDCALL __build_backtrace_string(void **call_stack, size_t call
 /************************************************************************************************************************/
 
 
-static void AR_STDCALL tiny_error(int_t level, const wchar_t* msg, void *ctx)
+static void AR_STDCALL tiny_error(ar_int_t level, const wchar_t* msg, void *ctx)
 {
         wprintf(L"%ls\r\n", msg);
 }
