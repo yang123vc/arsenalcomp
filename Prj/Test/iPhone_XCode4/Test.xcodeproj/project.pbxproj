@@ -239,8 +239,8 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_ENTITLEMENTS = dabaopku.plist;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "IOS Dev Crack";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "IOS Dev Crack";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -250,13 +250,14 @@
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				OBJROOT = "$(SYMROOT)";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				OBJROOT = build;
 				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				SYMROOT = build;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -269,20 +270,21 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_ENTITLEMENTS = dabaopku.plist;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "IOS Dev Crack";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "IOS Dev Crack";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = "NDEBUG=1";
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				OBJROOT = "$(SYMROOT)";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				OBJROOT = build;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				SYMROOT = build;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -308,9 +310,9 @@
 					"\"$(SRCROOT)/../../../../../Temp/Xcode_Derived_Data/Arsenal-dsikvwfmwyzznufxposbvavvvkye/Build/Products/Debug-iphonesimulator\"",
 					"\"$(SRCROOT)/../../../../../../Temp/Arsenal-bdnbcvvqaamlxggmwlivjjnjfwxa/Build/Products/Debug-iphoneos\"",
 				);
-				OBJROOT = ../../../Temp;
+				OBJROOT = build;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SYMROOT = ../../../Binary;
+				SYMROOT = build;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -334,9 +336,9 @@
 					"\"$(SRCROOT)/../../../../../Temp/Xcode_Derived_Data/Arsenal-dsikvwfmwyzznufxposbvavvvkye/Build/Products/Debug-iphonesimulator\"",
 					"\"$(SRCROOT)/../../../../../../Temp/Arsenal-bdnbcvvqaamlxggmwlivjjnjfwxa/Build/Products/Debug-iphoneos\"",
 				);
-				OBJROOT = ../../../Temp;
+				OBJROOT = build;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SYMROOT = ../../../Binary;
+				SYMROOT = build;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
