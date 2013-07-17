@@ -196,23 +196,57 @@ def build_arsenal(is_debug, is_shared):
 
         pass;
 
+      
+
+
+def main():
+        if not hasattr(sys, "argv"):
+                return "False";
+        
+        print(sys.argv);
         
         
+        is_debug = False;
+        is_shared = False;
 
-
-if not build_external_libraries():
-        print("failed to build external libraries\r\n");
-        sys.exit(-1);
+        print(len(sys.argv));
+        
+        i = 1;
+        
+        while i < len(sys.argv):
+                if sys.argv[i] == "debug":
+                        is_debug = True;
+                        pass;
+                elif sys.argv[i] == "shared":
+                        is_shared = True;
+                        pass;
+                elif sys.argv[i] == "static":
+                        is_shared = False;
+                        pass;
+                else:
+                        print("invalid parameter : " + sys.argv[i]);
+                        pass;
+                
+                
+                
+                i = i + 1;
+                pass;
+        
+        
+        
+        if not build_external_libraries():
+                print("failed to build external libraries\r\n");
+                sys.exit(-1);
+                pass;
+        
+        
+        if not build_arsenal(is_debug, is_shared):
+                print("failed to build Arsenal shared library\r\n");
+                sys.exit(-1);
+                pass;
+        
         pass;
 
-
-if not build_arsenal(False, True):
-        print("failed to build Arsenal shared library\r\n");
-        sys.exit(-1);
-        pass;
+main();  #this function used in command-line mode
 
 
-if not build_arsenal(False, False):
-        print("failed to build Arsenal static library\r\n");
-        sys.exit(-1);
-        pass;
