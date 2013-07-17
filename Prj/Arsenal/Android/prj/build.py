@@ -217,6 +217,9 @@ def main():
                 if sys.argv[i] == "debug":
                         is_debug = True;
                         pass;
+                elif sys.argv[i] == "release":
+                        is_debug = False;
+                        pass;
                 elif sys.argv[i] == "shared":
                         is_shared = True;
                         pass;
