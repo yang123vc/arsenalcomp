@@ -40,7 +40,7 @@ def build_external_libraries():
         binary_path = save_dir + "../../../../Binary/";
         
         #iconv ########################
-        iconv_path = save_dir + ".." + "/External/libiconv-1.14/";
+        iconv_path = save_dir + ".." + "/External/libiconv/1.14/";
         
         iconv_static_lib_path = iconv_path + "obj/local/armeabi/libiconv.a";
         iconv_shared_lib_path = iconv_path + "libs/armeabi/libiconv.so";
