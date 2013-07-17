@@ -81,11 +81,14 @@ LOCAL_SRC_FILES := \
 
 
 LOCAL_C_INCLUDES += \
-        $(LOCAL_PATH)/../External/libiconv-1.14/jni/include\
+        $(LOCAL_PATH)/../External/libiconv/1.14/include \
 
 
 #LOCAL_LDLIBS := -l$(LOCAL_PATH)/../External/libiconv-1.14/libs/armeabi/libiconv.a
-LOCAL_LDLIBS := -l$(LOCAL_PATH)/../../../../Binary/External/libs/libiconv.a
+
+#LOCAL_LDLIBS := -l/Volumes/Code/Solidus/Arsenal/Binary/External/libs/libiconv.a
+
+LOCAL_LDLIBS := -l$(LOCAL_PATH)/../../../..//Binary/External/libs/libiconv.a
 
 
 ifeq ($(LIB_MODE),shared)
