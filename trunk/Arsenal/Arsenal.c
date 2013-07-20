@@ -28,7 +28,7 @@ arStatus_t	Arsenal_Init(const arInit_t *ctx)
         arStatus_t      result;
 		ar_uint_64_t		total_beg, total_end;
 		ar_bool_t          cm_init,lex_init, psr_init,tools_init,tgu_init;
-		/*AR_ASSERT(ctx != NULL);*/
+        AR_ASSERT(ctx != NULL);
 		
 		result = AR_S_YES;
 		cm_init = false;
@@ -80,8 +80,6 @@ arStatus_t	Arsenal_Init(const arInit_t *ctx)
 
 		total_end = AR_GetTime_Milliseconds();
 
-		/*__g_init_count++;*/
-
 		{
 				wchar_t msg[1024];
 				AR_swprintf(msg, AR_NELEMS(msg), L"Arsenal initialized consume time == %Id\r\n", total_end - total_beg);
@@ -129,9 +127,7 @@ END_POINT:
 
 void	Arsenal_UnInit()
 {
-
-		/*if(--__g_init_count == 0)*/
-
+        
 		TGU_UnInit();
 		Tools_UnInit();
 		Parser_UnInit();
