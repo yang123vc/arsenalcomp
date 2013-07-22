@@ -2225,7 +2225,7 @@ static void hash_test2()
 		{
 				ar_uint_64_t k = AR_rand64() % 139;
 				ar_uint_64_t v = AR_rand64() % 10000;
-				arStatus_t s =  AR_InsertToHash(hash, (void*)k, (void*)v);
+				arStatus_t s =  AR_SetToHash(hash, (void*)k, (void*)v);
 				AR_ASSERT(s == AR_S_YES);
 		}
 
@@ -2305,7 +2305,7 @@ static void hash_test3()
 
 				std::wstring ks(kt), vs(vt);
 
-				arStatus_t s =  AR_InsertToHash(hash, (void*)&ks, (void*)&vs);
+				arStatus_t s =  AR_SetToHash(hash, (void*)&ks, (void*)&vs);
 				if(s != AR_S_YES)
 				{
 						AR_error(AR_ERR_MESSAGE, L"low memory\r\n");
@@ -2365,7 +2365,7 @@ static void hash_test4()
 
 				std::wstring ks(kt), vs(vt);
 
-				arStatus_t s =  AR_InsertToHash(hash, (void*)&ks, (void*)&vs);
+				arStatus_t s =  AR_SetToHash(hash, (void*)&ks, (void*)&vs);
 				if(s != AR_S_YES)
 				{
 						AR_error(AR_ERR_MESSAGE, L"low memory\r\n");
@@ -2393,8 +2393,8 @@ static void hash_test4()
 void ds_test2()
 {
 		//list_test();
-		//hash_test2();
-		//hash_test3();
+		hash_test2();
+		hash_test3();
 		hash_test4();
 }
 
@@ -4037,13 +4037,13 @@ void com_test()
 		//thd_test();
 
 
-		//ds_test2();
+		ds_test2();
 
 		//operation_test();
 
 		//cache_test();
 
-		uri_test();
+		//uri_test();
 
 		//buffer_test3();
 
