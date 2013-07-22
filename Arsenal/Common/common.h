@@ -697,12 +697,12 @@ arStatus_t		AR_GetListBack(arList_t *lst, void **pdata);
 Hash
 */
 
-typedef ar_uint_64_t		(*AR_hash_hash_func_t)(void *key, void *ctx);
-typedef ar_int_t			(*AR_hash_comp_func_t)(void *l, void *r, void *ctx);
+typedef ar_uint_64_t    (*AR_hash_hash_func_t)(void *key, void *ctx);
+typedef ar_int_t        (*AR_hash_comp_func_t)(void *l, void *r, void *ctx);
 
-typedef arStatus_t		(*AR_hash_copy_func_t)(void *data, void **pnew_data, void *ctx);
-typedef void			(*AR_hash_destroy_func_t)(void *key, void *ctx);
-typedef ar_bool_t			(*AR_hash_visit_func_t)(void *key, void *data, void *ctx);/*When it returns false loop terminates*/
+typedef arStatus_t      (*AR_hash_copy_func_t)(void *data, void **pnew_data, void *ctx);
+typedef void            (*AR_hash_destroy_func_t)(void *key, void *ctx);
+typedef ar_bool_t       (*AR_hash_visit_func_t)(void *key, void *data, void *ctx);/*When it returns false loop terminates*/
 
 
 typedef struct __arsenal_hash_node_tag
@@ -733,6 +733,8 @@ void			AR_DestroyHash(arHash_t *hash);
 void			AR_ClearHash(arHash_t *hash);
 
 arStatus_t		AR_InsertToHash(arHash_t *hash, void *key, void *val);
+arStatus_t		AR_SetToHash(arHash_t *hash, void *key, void *val);
+
 arStatus_t		AR_RemoveFromHash(arHash_t *hash, void *key);
 arStatus_t		AR_FindFromHash(arHash_t *hash, void *key, void **pval);
 size_t			AR_GetHashCount(arHash_t *hash);

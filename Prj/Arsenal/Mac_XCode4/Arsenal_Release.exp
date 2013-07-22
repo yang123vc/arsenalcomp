@@ -260,6 +260,7 @@ _AR_SetString
 _AR_SetStringChar
 _AR_SetStringN
 _AR_SetThreadPriority
+_AR_SetToHash
 _AR_SetURI
 _AR_SetURIAuthority
 _AR_SetURICodePage

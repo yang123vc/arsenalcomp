@@ -1966,7 +1966,7 @@ static arStatus_t __parse_query_items(const wchar_t *query, arHash_t *hash)
 				AR_DPRINT(AR_ERR_DEBUG, L"insert query : '%ls : %ls'\r\n", name, value);
 				*/
 
-                if(AR_InsertToHash(hash, (void*)name, (void*)value) != AR_S_YES)
+                if(AR_SetToHash(hash, (void*)name, (void*)value) != AR_S_YES)
                 {
                         status = AR_E_NOMEM;
                         goto END_POINT;
