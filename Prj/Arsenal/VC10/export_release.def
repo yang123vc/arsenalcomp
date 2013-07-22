@@ -96,6 +96,11 @@ AR_base64_encode
 AR_EncodeURLString
 AR_DecodeURLString
 
+
+
+AR_InsertToHash
+AR_SetToHash
+
 ;Lex
 
 Lex_Create				
