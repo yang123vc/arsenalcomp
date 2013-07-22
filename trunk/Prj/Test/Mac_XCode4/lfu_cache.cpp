@@ -537,7 +537,7 @@ arStatus_t      Cache_InsertToLFU(cacheLFU_t *lfu, void *key, void *data)
                 goto INVALID_POINT;
         }
         
-        status = AR_InsertToHash(lfu->table, new_key, (void*)val_node);
+        status = AR_SetToHash(lfu->table, new_key, (void*)val_node);
 
         if(status != AR_S_YES)
         {

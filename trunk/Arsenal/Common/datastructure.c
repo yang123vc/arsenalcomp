@@ -366,6 +366,31 @@ void			AR_ClearHash(arHash_t *hash)
 }
 
 
+static arHashNode_t*   __find_by_hashcode(arHash_t *hash, ar_uint_64_t hc, void *key, void **pval)
+{
+        arHashNode_t *node;
+        AR_ASSERT(hash != NULL);
+        
+        node = hash->bucket[hc % hash->bucket_size];
+        
+		while(node)
+		{
+				if(hash->comp_f(node->key, key, hash->usr_ctx) == 0)
+                {
+						if(pval)
+						{
+								*pval = node->val;
+						}
+                        
+                        return node;
+                }
+                
+				node = node->next;
+		}
+        
+        return NULL;
+        
+}
 
 arStatus_t		AR_FindFromHash(arHash_t *hash, void *key, void **pval)
 {
@@ -376,25 +401,17 @@ arStatus_t		AR_FindFromHash(arHash_t *hash, void *key, void **pval)
         
         hash_code = hash->hash_f(key, hash->usr_ctx);
         
-        node = hash->bucket[hash_code % hash->bucket_size];
+        node = __find_by_hashcode(hash, hash_code, key, pval);
         
-        
-		while(node)
-		{
-				if(hash->comp_f(node->key, key, hash->usr_ctx) == 0)
-                {
-						if(pval)
-						{
-								*pval = node->val;
-						}
-                        return AR_S_YES;
-                }
-
-				node = node->next;
-		}
-        
-		return AR_E_NOTFOUND;
+        if(node)
+        {
+                return AR_S_YES;
+        }else
+        {
+                return AR_E_NOTFOUND;
+        }
 }
+
 
 size_t			AR_GetHashCount(arHash_t *hash)
 {
@@ -497,8 +514,14 @@ arStatus_t		AR_InsertToHash(arHash_t *hash, void *key, void *val)
         status = AR_S_YES;
         key_init = false;
 		val_init = false;
-
+        
 		hash_code = hash->hash_f(key, hash->usr_ctx);
+        
+        if(__find_by_hashcode(hash, hash_code, key, NULL) != NULL)
+        {
+                return AR_E_EXISTED;
+        }
+        
 
 		new_node = AR_NEW0(arHashNode_t);
         if(new_node == NULL)
@@ -537,7 +560,7 @@ arStatus_t		AR_InsertToHash(arHash_t *hash, void *key, void *val)
 
         val_init = true;
 
-		__remove_key_by_hashcode(hash, key, hash_code);
+		//__remove_key_by_hashcode(hash, key, hash_code);
        
 		new_node->next = hash->bucket[hash_code % (ar_uint_64_t)hash->bucket_size];
         hash->bucket[hash_code % (ar_uint_64_t)hash->bucket_size] = new_node;
@@ -569,6 +592,94 @@ INVALID_POINT:
         
         return status;
 }
+
+
+arStatus_t		AR_SetToHash(arHash_t *hash, void *key, void *val)
+{
+        arStatus_t status;
+        ar_uint_64_t hash_code;
+        arHashNode_t *new_node;
+		ar_bool_t key_init, val_init;
+        AR_ASSERT(hash != NULL);
+        
+        status = AR_S_YES;
+        key_init = false;
+		val_init = false;
+        
+		hash_code = hash->hash_f(key, hash->usr_ctx);
+        
+        
+		new_node = AR_NEW0(arHashNode_t);
+        if(new_node == NULL)
+        {
+                status = AR_E_NOMEM;
+                goto INVALID_POINT;
+        }
+        
+		if(hash->copykey_f != NULL)
+		{
+				status = hash->copykey_f(key, &new_node->key, hash->usr_ctx);
+                
+				if(status != AR_S_YES)
+				{
+						goto INVALID_POINT;
+				}
+		}else
+		{
+				new_node->key = key;
+		}
+        
+		key_init = true;
+        
+		if(hash->copyval_f != NULL)
+		{
+				status = hash->copyval_f(val, &new_node->val, hash->usr_ctx);
+				
+				if(status != AR_S_YES)
+				{
+						goto INVALID_POINT;
+				}
+		}else
+		{
+				new_node->val = val;
+		}
+        
+        val_init = true;
+        
+		__remove_key_by_hashcode(hash, key, hash_code);
+        
+		new_node->next = hash->bucket[hash_code % (ar_uint_64_t)hash->bucket_size];
+        hash->bucket[hash_code % (ar_uint_64_t)hash->bucket_size] = new_node;
+        
+        hash->item_count++;
+        return AR_S_YES;
+        
+        
+INVALID_POINT:
+        if(new_node != NULL)
+        {
+				if(key_init && hash->destroy_key_f)
+				{
+						hash->destroy_key_f(new_node->key, hash->usr_ctx);
+						new_node->key = NULL;
+						key_init = false;
+				}
+                
+				if(val_init && hash->destroy_val_f)
+				{
+						hash->destroy_val_f(new_node->val, hash->usr_ctx);
+						new_node->val = NULL;
+						val_init = false;
+				}
+                
+                AR_DEL(new_node);
+                new_node = NULL;
+        }
+        
+        return status;
+
+}
+
 
 /*
 typedef struct __arsenal_hash_iterator_tag
