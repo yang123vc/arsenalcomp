@@ -14,11 +14,20 @@
 
 
 #if defined(OS_FAMILY_WINDOWS)
+
 		#include "thread_win.h"
 
 #elif defined(OS_FAMILY_UNIX)
-			
-		#include "thread_posix.h"
+
+        #include <sys/select.h>
+        #include <sys/time.h>
+
+        #if(OS_TYPE == OS_MAC_OS_X || OS_TYPE == OS_IOS)
+                #include <libkern/OSAtomic.h>
+        #endif
+
+
+        #include "thread_posix.h"
 #else
 
 		#error "Target OS system not supported"
