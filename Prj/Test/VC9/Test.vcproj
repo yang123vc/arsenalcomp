@@ -1425,14 +1425,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\Test\Operation.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Test\Operation.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\Test\parser_gen_perf_javascript_code_impl.h"
 				>
 			</File>
