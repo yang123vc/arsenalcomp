@@ -286,14 +286,9 @@
 #elif defined(OS_FAMILY_UNIX)
 
         #include <unistd.h>
-        #include <pthread.h>
-        #include <sys/select.h>
-        #include <sys/time.h>
 		#include <errno.h>
+        #include <pthread.h>
 
-		#if(OS_TYPE == OS_MAC_OS_X || OS_TYPE == OS_IOS)
-			#include <libkern/OSAtomic.h>
-		#endif
 
 		#define AR_PATH_SP				L"/"
 		#define AR_PATH_SP_CHAR			L'/'

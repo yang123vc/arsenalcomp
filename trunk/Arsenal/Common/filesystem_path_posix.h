@@ -15,6 +15,10 @@
 #ifndef __ARSENAL_COMMON_PATH_POSIX_H__
 #define __ARSENAL_COMMON_PATH_POSIX_H__
 
+
+
+
+
 AR_NAMESPACE_BEGIN
 
 /*********************************************************Path*******************************************************/
