@@ -36,7 +36,8 @@ typedef enum
 		AR_E_NOTREADY,
 		AR_E_NOTSUPPORTED,
 		AR_E_NOTMATCHED,
-
+        AR_E_ALREADY,
+        
 		AR_E_SYS,
 		AR_E_FILE,
 		AR_E_PATH,
