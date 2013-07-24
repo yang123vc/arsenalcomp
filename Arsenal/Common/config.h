@@ -254,7 +254,7 @@
 
 
 #if defined(AR_HAS_C99_FEATURE)
-    #include <stdint.h>
+
 	#include <stdbool.h>
 #endif
 
