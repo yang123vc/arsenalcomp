@@ -434,6 +434,7 @@ _AR_stou64
 _AR_stou64_s
 _AR_str_is_float
 _AR_str_is_int
+_AR_str_similar_text
 _AR_str_to_escstr
 _AR_str_to_escstr_buf
 _AR_str_to_escstr_buf_n
@@ -479,6 +480,7 @@ _AR_vtow
 _AR_wchartodigit
 _AR_wcs_is_float
 _AR_wcs_is_int
+_AR_wcs_similar_text
 _AR_wcs_to_str
 _AR_wcs_to_str_buf
 _AR_wcscat

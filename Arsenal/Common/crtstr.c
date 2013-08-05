@@ -1413,6 +1413,106 @@ char* AR_strrot13(char *s, size_t n)
 
 
 
+
+
+
+size_t AR_str_similar_text(const char *s1, size_t l1, const char *s2, size_t l2)
+{
+        size_t sum, pos1, pos2, max;
+        const char *p, *q, *e1, *e2;
+        size_t l;
+        AR_ASSERT(s1 != NULL  && s2 != NULL);
+        
+        max = 0;
+        sum = 0;
+        pos1 = 0;
+        pos2 = 0;
+        e1 = s1 + l1;
+        e2 = s2 + l2;
+        
+        for(p = s1; p < e1; ++p)
+        {
+                for(q = s2; q < e2; ++q)
+                {
+                        for(l = 0; (p + l < e1) && (q + l < e2) && (p[l] == q[l]); ++l);
+                        
+                        if(l > max)
+                        {
+                                max = l;
+                                pos1 = p - s1;
+                                pos2 = q - s2;
+                        }
+                }
+        }
+        
+        sum = max;
+        
+        if(sum > 0)
+        {
+                if(pos1 > 0 && pos2 > 0)
+                {
+                        sum += AR_str_similar_text(s1, pos1, s2, pos2);
+                }
+                
+                if(pos1 + max < l1 && pos2 + max < l2)
+                {
+                        sum += AR_str_similar_text(s1 + pos1 + max, l1 - pos1 - max, s2 + pos2 + max, l2 - pos2 - max);
+                }
+        }
+        
+        return sum;
+}
+
+
+
+size_t AR_wcs_similar_text(const wchar_t *s1, size_t l1, const wchar_t *s2, size_t l2)
+{
+        size_t sum, pos1, pos2, max;
+        const wchar_t *p, *q, *e1, *e2;
+        size_t l;
+        AR_ASSERT(s1 != NULL  && s2 != NULL);
+        
+        max = 0;
+        sum = 0;
+        pos1 = 0;
+        pos2 = 0;
+        e1 = s1 + l1;
+        e2 = s2 + l2;
+        
+        for(p = s1; p < e1; ++p)
+        {
+                for(q = s2; q < e2; ++q)
+                {
+                        for(l = 0; (p + l < e1) && (q + l < e2) && (p[l] == q[l]); ++l);
+                        
+                        if(l > max)
+                        {
+                                max = l;
+                                pos1 = p - s1;
+                                pos2 = q - s2;
+                        }
+                }
+        }
+        
+        sum = max;
+        
+        if(sum > 0)
+        {
+                if(pos1 > 0 && pos2 > 0)
+                {
+                        sum += AR_wcs_similar_text(s1, pos1, s2, pos2);
+                }
+                
+                if(pos1 + max < l1 && pos2 + max < l2)
+                {
+                        sum += AR_wcs_similar_text(s1 + pos1 + max, l1 - pos1 - max, s2 + pos2 + max, l2 - pos2 - max);
+                }
+        }
+        
+        return sum;
+}
+
+
 /***********************************************************************************************************************************/
 
 #if(0)
