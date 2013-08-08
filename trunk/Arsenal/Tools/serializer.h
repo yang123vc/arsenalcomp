@@ -70,7 +70,7 @@ snObject_t*			SN_FindFromDictObjectByWcs(snObject_t *obj, const wchar_t *str);
 /*******************************List***********************************************************/
 arStatus_t		SN_InsertToListObject(snObject_t	*lst, snObject_t *obj);
 arStatus_t		SN_RemoveFromListObject(snObject_t	*lst, size_t idx);
-ar_int_t			SN_IndexOfListObject(const snObject_t *lst, const snObject_t *obj);
+ar_int_t        SN_IndexOfListObject(const snObject_t *lst, const snObject_t *obj);
 snObject_t*		SN_GetFromListObject(snObject_t *lst, size_t idx);
 size_t			SN_GetListObjectCount(const snObject_t *lst);
 
@@ -79,22 +79,22 @@ arStatus_t		SN_SetStringObjectByData(snObject_t	*dest, const ar_byte_t *data, si
 arStatus_t		SN_SetStringObjectByStr(snObject_t	*dest, const char *str);
 arStatus_t		SN_SetStringObjectByWcs(snObject_t	*dest, const wchar_t *str);
 
-ar_int_t			SN_GetWcsFromStringObject(const snObject_t	*obj, wchar_t *buf, size_t len);
-ar_int_t			SN_GetStrFromStringObject(const snObject_t	*obj, char *buf, size_t len);
-ar_int_t			SN_GetDataFromStringObject(const snObject_t	*obj, ar_byte_t *buf, size_t len);
+ar_int_t        SN_GetWcsFromStringObject(const snObject_t	*obj, wchar_t *buf, size_t len);
+ar_int_t        SN_GetStrFromStringObject(const snObject_t	*obj, char *buf, size_t len);
+ar_int_t        SN_GetDataFromStringObject(const snObject_t	*obj, ar_byte_t *buf, size_t len);
 
 
 
-arStatus_t			SN_CompStringObjectByStringObject(const snObject_t		*l,		const snObject_t		*r);
-arStatus_t			SN_CompStringObjectByData(const snObject_t				*l,		const ar_byte_t *data,		size_t len);
-arStatus_t			SN_CompStringObjectByStr(const snObject_t				*l,		const char *str);
-arStatus_t			SN_CompStringObjectByWcs(const snObject_t				*l,		const wchar_t *str);
+arStatus_t      SN_CompStringObjectByStringObject(const snObject_t		*l,		const snObject_t		*r);
+arStatus_t      SN_CompStringObjectByData(const snObject_t				*l,		const ar_byte_t *data,		size_t len);
+arStatus_t      SN_CompStringObjectByStr(const snObject_t				*l,		const char *str);
+arStatus_t      SN_CompStringObjectByWcs(const snObject_t				*l,		const wchar_t *str);
 
 
 /*******************************Int***********************************************************/
 
 ar_int_64_t		SN_GetIntObject(const snObject_t	*obj);
-ar_uint_64_t		SN_GetUIntObject(const snObject_t	*obj);
+ar_uint_64_t    SN_GetUIntObject(const snObject_t	*obj);
 void			SN_SetUIntObject(snObject_t	*obj,	ar_uint_64_t num);
 void			SN_SetIntObject(snObject_t	*obj,	ar_int_64_t num);
 
