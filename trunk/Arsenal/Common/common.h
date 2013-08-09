@@ -778,11 +778,11 @@ typedef enum
 		AR_CP_MAX
 }arCodePage_t;
 
-ar_int_t					AR_str_to_wcs_buf(arCodePage_t cp, const char *acp, size_t n, wchar_t *out, size_t out_len);
-ar_int_t					AR_wcs_to_str_buf(arCodePage_t cp, const wchar_t *input, size_t n, char *out, size_t out_len);
+ar_int_t                AR_str_to_wcs_buf(arCodePage_t cp, const char *acp, size_t n, wchar_t *out, size_t out_len);
+ar_int_t                AR_wcs_to_str_buf(arCodePage_t cp, const wchar_t *input, size_t n, char *out, size_t out_len);
 
 
-char*					AR_wcs_to_str(arCodePage_t cp, const wchar_t *input, size_t in_n);
+char*                   AR_wcs_to_str(arCodePage_t cp, const wchar_t *input, size_t in_n);
 wchar_t*				AR_str_to_wcs(arCodePage_t cp, const char *input, size_t in_n);
 
 
@@ -1106,6 +1106,8 @@ typedef enum
 		AR_TXT_BOM_UTF32_BE		=		0x20
 }arTxtBom_t;
 
+arStatus_t  AR_DetectTextBom(const ar_byte_t *data, size_t length, arTxtBom_t *bom, size_t *bom_len);
+
 arStatus_t	AR_LoadBomTextFromBinary(arBuffer_t *input, arTxtBom_t *bom, arString_t *out);
 
 arStatus_t	AR_LoadBomTextFile(const wchar_t *path, arTxtBom_t *bom, arString_t *out);
@@ -1113,7 +1115,6 @@ arStatus_t	AR_LoadBomTextFile(const wchar_t *path, arTxtBom_t *bom, arString_t *
 arStatus_t	AR_SaveBomTextFile(const wchar_t *path, arTxtBom_t bom, const wchar_t *input);
 
 arStatus_t	AR_SaveBomTextToBinary(arBuffer_t *output, arTxtBom_t bom, const wchar_t *input);
-
 
 
 

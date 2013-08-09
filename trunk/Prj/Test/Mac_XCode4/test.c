@@ -9,10 +9,14 @@
 #include "stdhdr.h"
 #include "TestFileSystem.h"
 #include "commonTest.h"
+#include "plist_test.h"
 
 void test()
 {
         //file_sys_test();
-        common_test();               
-        //marshal_die_test();     
+        //common_test();
+        //marshal_die_test();
+        
+        plist_test();
+        
 }

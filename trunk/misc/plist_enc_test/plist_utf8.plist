@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>b</key>
+	<integer>33</integer>
+	<key>c</key>
+	<date>2013-08-09T08:19:20Z</date>
+	<key>a</key>
+	<string>a</string>
+	<key>d</key>
+	<string>中国字</string>
+</dict>
+</plist>
