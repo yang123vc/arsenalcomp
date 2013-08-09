@@ -176,13 +176,16 @@ void            PList_DestroyElem(plistElem_t            *elem);
 typedef struct __plist_xml_parser
 {
         
-        wchar_t         *src;
+        arString_t      *content;
         
         const wchar_t   *begin;
         const wchar_t   *curr;
         const wchar_t   *end;
         
         arString_t      *errmsg;
+        ar_bool_t       has_error;
+        
+        plistElem_t     *root;
 }plistXMLParser_t;
 
 
@@ -190,19 +193,21 @@ plistXMLParser_t*       PList_CreateXMLParser();
 void                    PList_DestroyXMLParser(plistXMLParser_t *parser);
 void                    PList_ClearXMLParser(plistXMLParser_t *parser);
 
-arStatus_t              PList_SetXMLParserWithBytes(plistXMLParser_t *parser, const ar_byte_t *xml_data, size_t length);
 arStatus_t              PList_SetXMLParserWithWcs(plistXMLParser_t *parser, const wchar_t *xml, size_t length);
 
 
 arStatus_t              PList_ParseXML(plistXMLParser_t *parser, plistElem_t **result);
+
+#define                 PList_XMLParserInError(_psr) ((_psr)->has_error)
 const wchar_t*          PList_GetXMLParserErrorMessage(const plistXMLParser_t *parser);
 
 
 
 
 /**********************************Utility********************************************/
+arStatus_t              PList_LoadXMLFromBinary(arBuffer_t *buf, arString_t *out);
+arStatus_t              PList_LoadXMLFromFile(const wchar_t *path, arString_t *out);
 
-arStatus_t            PList_GetXMLCodePage(const char *xml, size_t length, arCodePage_t *cp);
 
 
 

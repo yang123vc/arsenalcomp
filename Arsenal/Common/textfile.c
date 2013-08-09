@@ -25,18 +25,85 @@ AR_NAMESPACE_BEGIN
 /***********************************************************Misc**********************************************************/
 
 
+arStatus_t      AR_DetectTextBom(const ar_byte_t *data, size_t length, arTxtBom_t *bom, size_t *bom_len)
+{
+        ar_byte_t tmp[4] = {0xcc, 0xcc,0xcc,0xcc};
+		size_t read_n;
+        arTxtBom_t data_bom;
+        AR_ASSERT(data != NULL);
+        
+		read_n = 0;
+        data_bom = AR_TXT_BOM_NONE;
+        
+		AR_memcpy(tmp, data, AR_MIN(length, 4));
+        
+		if(tmp[0] == 0xFF && tmp[1] == 0xFE)
+		{
+				if(tmp[2] == 0x00 && tmp[3] == 0x00)
+				{
+                        data_bom = AR_TXT_BOM_UTF32_LE;
+                        read_n = 4;
+				}else
+				{
+						data_bom = AR_TXT_BOM_UTF16_LE;
+						read_n = 2;
+				}
+		}else if(tmp[0] == 0xFE && tmp[1] == 0xFF)
+		{
+				data_bom = AR_TXT_BOM_UTF16_BE;
+				read_n = 2;
+                
+		}else if(tmp[0] == 0x00 && tmp[1] == 0x00)
+		{
+				if(tmp[2] == 0xFE && tmp[3] == 0xFF)
+				{
+						data_bom = AR_TXT_BOM_UTF32_BE;
+						read_n = 4;
+				}else
+				{
+						data_bom = AR_TXT_BOM_NONE;
+						read_n = 0;
+				}
+		}else if(tmp[0] == 0xEF && tmp[1] == 0xBB)
+		{
+				if( tmp[2] == 0xBF)
+				{
+						data_bom = AR_TXT_BOM_UTF_8;
+						read_n = 3;
+				}else
+				{
+						data_bom = AR_TXT_BOM_NONE;
+						read_n = 0;
+				}
+		}else
+		{
+                data_bom = AR_TXT_BOM_NONE;
+				read_n = 0;
+		}
+        
+        if(bom)
+        {
+                *bom = data_bom;
+        }
+        
+        if(bom_len)
+        {
+                *bom_len = read_n;
+        }
+        
+        return AR_S_YES;
+}
+
+
+
+
+
+
+
 
 /***************************************Read File**********************************************************/
 
-
-
-
-
-
-
-
-
-
+/*****************************************************************************************/
 
 
 static ar_bool_t	__dectect_encoding(arBuffer_t *input, arTxtBom_t *bom)
@@ -106,8 +173,6 @@ static ar_bool_t	__dectect_encoding(arBuffer_t *input, arTxtBom_t *bom)
 
 		return true;
 }
-
-
 
 
 typedef enum

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		671357A617B4D9B6001133BC /* plist_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 671357A517B4D9B6001133BC /* plist_test.cpp */; };
+		671357A717B4D9C2001133BC /* plist_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 671357A517B4D9B6001133BC /* plist_test.cpp */; };
 		67163065155FFB680098ADA3 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6728C3B8154C645A00861D86 /* libiconv.dylib */; };
 		6728C3BC154C646200861D86 /* libpthread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6728C3BB154C646200861D86 /* libpthread.dylib */; };
 		6728C3C0154C64FE00861D86 /* libpthread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6728C3BB154C646200861D86 /* libpthread.dylib */; };
@@ -53,6 +55,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		671357A517B4D9B6001133BC /* plist_test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = plist_test.cpp; sourceTree = SOURCE_ROOT; };
+		671357A817B4DA51001133BC /* plist_test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = plist_test.h; sourceTree = SOURCE_ROOT; };
 		6728C3B8154C645A00861D86 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
 		6728C3BB154C646200861D86 /* libpthread.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpthread.dylib; path = usr/lib/libpthread.dylib; sourceTree = SDKROOT; };
 		673C0BCF154A891100A73324 /* TestFileSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestFileSystem.cpp; sourceTree = SOURCE_ROOT; };
@@ -135,6 +139,8 @@
 				67F26D14156B55E0003FAA7E /* lfu_cache.cpp */,
 				67DB43F41688505C00F05430 /* marshal_inner_types.h */,
 				67DB43F11688503A00F05430 /* marshal_die_test.cpp */,
+				671357A517B4D9B6001133BC /* plist_test.cpp */,
+				671357A817B4DA51001133BC /* plist_test.h */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -216,6 +222,7 @@
 				67F26D15156B55E0003FAA7E /* lfu_cache.cpp in Sources */,
 				67DB43F21688503A00F05430 /* marshal_die_test.cpp in Sources */,
 				67CEFDC5177B66E600D7D9D4 /* Base64Transcoder.c in Sources */,
+				671357A617B4D9B6001133BC /* plist_test.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -223,6 +230,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				671357A717B4D9C2001133BC /* plist_test.cpp in Sources */,
 				673C0BD6154A8B3B00A73324 /* test.c in Sources */,
 				BE185ED614E849250095DB44 /* main.c in Sources */,
 				673C0BD1154A891100A73324 /* TestFileSystem.cpp in Sources */,
