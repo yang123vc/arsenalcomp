@@ -64,6 +64,7 @@ arStatus_t      PList_AppendString(plistString_t  *str, const wchar_t *wcs);
 arStatus_t      PList_AppendStringN(plistString_t  *str, const wchar_t *wcs, size_t n);
 
 ar_bool_t       PList_IsEmptyString(const plistString_t  *str);
+const wchar_t*  PList_GetStringCString(const plistString_t *str);
 
 typedef struct __plist_boolean_tag
 {
@@ -151,7 +152,7 @@ void            PList_UnInitDict(plistDict_t *dict);
 
 plistElem_t*    PList_FindValueByElem(plistDict_t *dict, const plistElem_t *key);
 plistElem_t*    PList_FindValueByString(plistDict_t *dict, const wchar_t *key);
-
+arStatus_t      PList_SetDictValueForKey(plistDict_t *dict, plistElem_t *key, plistElem_t *val);
 
 
 struct  __plist_element_tag

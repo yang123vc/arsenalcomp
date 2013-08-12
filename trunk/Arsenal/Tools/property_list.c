@@ -1403,41 +1403,358 @@ static ar_bool_t    __check_for_closetag(plistXMLParser_t *parser, const wchar_t
 
 
 
+// pInfo should be set to the first content character of the <plist>
+static plistElem_t* __parse_xml_plisttag(plistXMLParser_t *parser)
+{
+        plistElem_t *result, *tmp;
+        const wchar_t *save;
+        AR_ASSERT(parser != NULL && parser->curr != NULL);
+        
+        result = NULL;
+        tmp = NULL;
+        
+        result = __get_xml_content_object(parser);
+        
+        if(!result)
+        {
+                if(!parser->has_error)
+                {
+                        parser->has_error = true;
+                        AR_FormatString(parser->errmsg, L"Encountered empty plist tag");
+                }
+                return NULL;
+        }
+        
+        save = parser->curr;
+        
+        tmp = __get_xml_content_object(parser);
+        
+        if(tmp)
+        {
+                PList_DestroyElem(result);
+                result = NULL;
+                PList_DestroyElem(tmp);
+                tmp = NULL;
+                parser->curr = save;
+                
+                parser->has_error = true;
+                AR_FormatString(parser->errmsg, L"Encountered unexpected element at line %qu (plist can only include one object)",  __calc_linenumber(parser));
+                return NULL;
+        }
+        
+        if(parser->has_error)
+        {
+                // Parse failed catastrophically
+                PList_DestroyElem(result);
+                result = NULL;
+
+                return NULL;
+        }
+        
+        
+        if(__check_for_closetag(parser, __g_plist_tags[PLIST_IX], PLIST_TAG_LENGTH))
+        {
+                return result;
+        }else
+        {
+                PList_DestroyElem(result);
+                result = NULL;
+                return NULL;
+        }
+}
+
+
+static plistElem_t* __parse_xml_arraytag(plistXMLParser_t *parser)
+{
+        plistElem_t     *array, *tmp;
+        AR_ASSERT(parser != NULL && parser->curr != NULL);
+        
+        array = PList_CreateElem(PLIST_ELEM_ARRAY_T);
+        tmp = NULL;
+        if(array == NULL)
+        {
+                parser->has_error = true;
+                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                goto INVALID_POINT;
+        }
+        
+        tmp = __get_xml_content_object(parser);
+        while(tmp)
+        {
+                if(PList_PushToArray(&array->array, tmp) != AR_S_YES)
+                {
+                        PList_DestroyElem(tmp);
+                        tmp = NULL;
+                        parser->has_error = true;
+                        AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                        goto INVALID_POINT;
+                }
+                tmp = __get_xml_content_object(parser);
+        }
+        
+        if(parser->has_error)
+        {
+                goto INVALID_POINT;
+        }
+        
+        
+        if(!__check_for_closetag(parser, __g_plist_tags[ARRAY_IX], ARRAY_TAG_LENGTH))
+        {
+                goto INVALID_POINT;
+        }
+        
+        return array;
+INVALID_POINT:
+        if(array)
+        {
+                PList_DestroyElem(array);
+                array = NULL;
+        }
+        return NULL;
+}
+
+static plistElem_t* __parse_xml_dicttag(plistXMLParser_t *parser)
+{
+        plistElem_t     *dict, *k, *v;
+        const wchar_t   *base;
+        AR_ASSERT(parser != NULL && parser->curr != NULL);
+        
+        dict = NULL;
+        k = NULL;
+        v = NULL;
+        
+        dict = PList_CreateElem(PLIST_ELEM_DICT_T);
+
+        if(dict == NULL)
+        {
+                parser->has_error = true;
+                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                goto INVALID_POINT;
+        }
+        
+        base = parser->curr;
+        
+        k = __get_xml_content_object(parser);
+        
+        while(k)
+        {
+                if(PList_GetElemType(k) != PLIST_ELEM_STRING_T)
+                {
+                        PList_DestroyElem(k);
+                        k = NULL;
+                        
+                        if(!parser->has_error)
+                        {
+                                parser->has_error = true;
+                                AR_FormatString(parser->errmsg, L"Found non-string inside <dict> at line %qu)",  __calc_linenumber(parser));
+                        }
+                        
+                        goto INVALID_POINT;
+                }
+                
+                v = __get_xml_content_object(parser);
+                
+                if(v == NULL)
+                {
+                        PList_DestroyElem(k);
+                        k = NULL;
+                        
+                        if(!parser->has_error)
+                        {
+                                parser->has_error = true;
+                                AR_FormatString(parser->errmsg, L"Value missing for key inside <dict> at line %qu)",  __calc_linenumber(parser));
+                        }
+                        
+                        goto INVALID_POINT;
+                }
+                
+                if(PList_SetDictValueForKey(&dict->dict, k, v) != AR_S_YES)
+                {
+                        parser->has_error = true;
+                        parser->curr = base;
+                        AR_FormatString(parser->errmsg, L"Failed to set for key %ls inside <dict> at line %qu)", PList_GetStringCString(&k->str), __calc_linenumber(parser));
+                        
+                        
+                        PList_DestroyElem(k);
+                        k = NULL;
+                        PList_DestroyElem(v);
+                        v = NULL;
+                        
+                        goto INVALID_POINT;
+                }
+                
+                k = NULL;
+                v = NULL;
+                
+                base = parser->curr;
+                k = __get_xml_content_object(parser);
+        }
+        
+        if(parser->has_error)
+        {
+                goto INVALID_POINT;
+        }
+        
+        
+        if(!__check_for_closetag(parser, __g_plist_tags[DICT_IX], DICT_TAG_LENGTH))
+        {
+                goto INVALID_POINT;
+        }
+        
+        
+        return dict;
+        
+INVALID_POINT:
+        if(dict)
+        {
+                PList_DestroyElem(dict);
+                dict = NULL;
+        }
+        return NULL;
+
+}
+
+
+static plistElem_t* __parse_xml_datatag(plistXMLParser_t *parser)
+{
+        plistElem_t *data;
+        const wchar_t *mark;
+        char *base64_str;
+        size_t i, base64_str_len;
+        ar_int_t l;
+        AR_ASSERT(parser != NULL && parser->curr != NULL);
+        
+        data = NULL;
+        mark = parser->curr;
+        data = PList_CreateElem(PLIST_ELEM_DATA_T);
+        base64_str = NULL;
+        base64_str_len = 0;
+        
+        if(data == NULL)
+        {
+                parser->has_error = true;
+                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                goto INVALID_POINT;
+        }
+        
+        mark = parser->curr;
+        
+        while(parser->curr < parser->end)
+        {
+                wchar_t ch = (char)*parser->curr;  /*valid base64 string always ascii*/
+                if(ch == L'<')
+                {
+                        break;
+                }else
+                {
+                        parser->curr++;
+                }
+        }
+        
+        if(parser->curr >= parser->end)
+        {
+                parser->has_error = true;
+                AR_FormatString(parser->errmsg, L"Encountered unexpected EOF");
+                goto INVALID_POINT;
+        }
+        
+        base64_str_len = parser->curr - mark;
+        
+        if(base64_str_len > 0)
+        {
+        
+                base64_str = AR_NEWARR(char, base64_str_len);
+        
+                if(base64_str == NULL)
+                {
+                        parser->has_error = true;
+                        AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                        goto INVALID_POINT;
+                }
+                
+                for(i = 0; i < parser->curr - mark; ++i)
+                {
+                        base64_str[i] = (char)mark[i];
+                }
+        
+                //ar_int_t AR_base64_decode(ar_byte_t  *out, size_t olen, const ar_byte_t *input, size_t ilen)
+
+                l = AR_base64_decode(NULL, 0, (const ar_byte_t*)base64_str, base64_str_len);
+                
+                if(l > 0)
+                {
+                        ar_int_t real_l;
+                        ar_byte_t *tmp = AR_AllocFromBuffer(data->data.buf, (size_t)l);
+                        
+                        if(tmp == NULL)
+                        {
+                                parser->has_error = true;
+                                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                                goto INVALID_POINT;
+                        }
+                        
+                        real_l = AR_base64_decode(tmp, l, (const ar_byte_t*)base64_str, base64_str_len);
+                        AR_ASSERT(real_l < l);
+                        AR_EraseBufferBack(data->data.buf, l - real_l);
+                }
+        }
+        
+        
+        if(!__check_for_closetag(parser, __g_plist_tags[DATA_IX], DATA_TAG_LENGTH))
+        {
+                goto INVALID_POINT;
+        }
+        
+        if(base64_str)
+        {
+                AR_DEL(base64_str);
+                base64_str = NULL;
+        }
+
+        return data;
+        
+        
+        
+INVALID_POINT:
+        
+        if(data)
+        {
+                PList_DestroyElem(data);
+                data = NULL;
+        }
+        
+        if(base64_str)
+        {
+                AR_DEL(base64_str);
+                base64_str = NULL;
+        }
+        
+        return NULL;
+
+}
+
+static plistElem_t* __parse_xml_datetag(plistXMLParser_t *parser);
+static plistElem_t* __parse_xml_realtag(plistXMLParser_t *parser);
+static plistElem_t* __parse_xml_integertag(plistXMLParser_t *parser);
+
 
 
 #if(0)
 
-// pInfo should be set to the first content character of the <plist>
-
-static CFTypeRef parsePListTag(_CFXMLPlistParseInfo *pInfo) {
-        CFTypeRef result, tmp = NULL;
-        const UniChar *save;
-        result = getContentObject(pInfo, NULL);
+static CFTypeRef parseDataTag(_CFXMLPlistParseInfo *pInfo) {
+        CFDataRef result;
+        const UniChar *base = pInfo->curr;
+        result = __CFPLDataDecode(pInfo, pInfo->mutabilityOption == kCFPropertyListMutableContainersAndLeaves);
         if (!result) {
-                if (!pInfo->error) pInfo->error = __CFPropertyListCreateError(pInfo->allocator, kCFPropertyListReadCorruptError, CFSTR("Encountered empty plist tag"));
+                pInfo->curr = base;
+                pInfo->error = __CFPropertyListCreateError(pInfo->allocator, kCFPropertyListReadCorruptError, CFSTR("Could not interpret <data> at line %d (should be base64-encoded)"), lineNumber(pInfo));
                 return NULL;
         }
-        save = pInfo->curr; // Save this in case the next step fails
-        tmp = getContentObject(pInfo, NULL);
-        if (tmp) {
-                // Got an extra object
-                CFRelease(tmp);
-                CFRelease(result);
-                pInfo->curr = save;
-                pInfo->error = __CFPropertyListCreateError(pInfo->allocator, kCFPropertyListReadCorruptError, CFSTR("Encountered unexpected element at line %d (plist can only include one object)"), lineNumber(pInfo));
-                return NULL;
-        }
-        if (pInfo->error) {
-                // Parse failed catastrophically
-                CFRelease(result);
-                return NULL;
-        }
-        if (checkForCloseTag(pInfo, CFXMLPlistTags[PLIST_IX], PLIST_TAG_LENGTH)) {
-                return result;
-        }
+        if (checkForCloseTag(pInfo, CFXMLPlistTags[DATA_IX], DATA_TAG_LENGTH)) return result;
         CFRelease(result);
         return NULL;
 }
+
 
 #endif
 
