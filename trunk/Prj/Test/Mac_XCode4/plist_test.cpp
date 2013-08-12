@@ -64,7 +64,7 @@ static void load_test()
         arString_t *xml = AR_CreateString();
         
         system("pwd");
-        status = PList_LoadXMLFromFile(L"/Users/solidus/Desktop/Code/Arsenal/misc/plist_enc_test/plist_big5.plist", xml);
+        status = PList_LoadXMLFromFile(L"/Users/solidus/Documents/Code/Solidus/Arsenal/misc/plist_enc_test/plist_big5.plist", xml);
         
         AR_printf(L"%ls\r\n", AR_CSTR(xml));
         
