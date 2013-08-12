@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>name</key>
+	<string>张三</string>
+	<key>name1</key>
+	<string>李四</string>
+	<key>name2</key>
+	<string>王五</string>
+	<key>name3</key>
+	<array>
+		<string>b</string>
+		<string>a</string>
+	</array>
+	<key>name4</key>
+	<true/>
+	<key>name5</key>
+	<false/>
+	<key>name3tex</key>
+	<data>ENi/X/9/AACupOyH/38AADAGAAAAAAAAMAQQAAEAAADwv552/38AADgugAABAAAAYNi/X/9/AABupm2S/38AAAAAAAAAAAAAACiAAAEAAAAAMAAAAQAAAGjYHHj/fwAAAQAAAAAAAADwv552/38AAAAAAAAAAAAAAZGhdv9/AABg279f/38AAD6jbpL/fwAAAQAAAAAAAAAB2r9f/38AAAAAAAAAAAAA0K2edv9/AAAAAAAAAAAAAAH4v1//fwAAoNu/X/9/AACwahAAAQAAABBznXb/fwAAoHMQAAEAAADAKZ52/38AAAIAAAAAAAAA//////////8AAAAAAAAAAAAwAAABAAAAAAAAAAAAAAAAagAAAQAAAABqAAABAAAAwNm/X/9/AAC5e+2H/38AANDZv1//fwAAAQAAAAAAAAABAAAAAAAAAKqwbZL/fwAA8EAAAAEAAAABAO2HAAAAAARqAAABAAAAAQAAAAEAAABADhAAAQAAABA8gAABAAAAADAAAAEAAAD//////////wAAAAAAAAAAAAAAAAAAAAAAMAAAAQAAAJCxnnb/fwAAAGoAAAEAAAABAAAAAAAAAP//////////AAAAAAAAAAAAMAAAAQAAAAAAAAAAAAAAAGoAAAEAAAAAagAAAQAAAJDav1//fwAAuXvth/9/AACQ2r9f/38AAAEAAAAAAAAA/v////////+qsG2S/38AAAAwAAABAAAAAAAAAAAAAAAAagAAAQAAAIDBnnb/fwAAQA4QAAEAAAAQPIAAAQAAAJCxnnb/fwAAAgAAAAAAAAD4/////////+F7EAABAAAAADAAAAEAAADQwZ52/38AAABqAAABAAAAAGoAAAEAAAAw279f/38AALl77Yf/fwAAAAAAAAAAAAAEAAAAAAAAADgAAAAAAAAA+HkQAAEAAADwQAAAAQAAAAQAgAABAAAABGoAAAEAAAAEAAAAAAAAAAAAAAAAAAAAINu/X/9/AAAQ279f/38AAHCm7If/fwAAACiAAAEAAAAfAAAAAAAAADAEEAABAAAA8CmAAAEAAADQwZ52/38AAAAAAAAAAAAAYNu/X/9/AAD8pW2S/38AAAAAAAAAAAAAACiAAAEAAAAAMAAAAQAAAGjYHHj/fwAAAQAAAAAAAADQwZ52/38AAAAAAAAAAAAAAZGhdv9/AABg3r9f/38AAD6jbpL/fwAAEHQQAAEAAAABAAAAAAAAAAEAAAAAAAAAATADAAEAAABQ3L9f/38AADh77Yf/fwAAAAAAAAAAAAAIAAAAAAAAAIAAAAAAAAAAsH0QAAEAAACQL552/38AAAgAAAAAAAAABGoAAAEAAABA2Bx4/38AAA==</data>
+	<key>name8</key>
+	<data></data>
+	
+	<key>name7</key>
+    <dict>
+        <key>$class</key>
+        <dict>
+            <key>CF$UID</key>
+            <integer>13</integer>
+        </dict>
+    
+        <key>channel</key>
+        <integer>0</integer>
+    
+        <key>note</key>
+        <integer>62</integer>
+    
+        <key>text</key>
+        <dict>
+            <key>CF$UID</key>
+            <integer>0</integer>
+        </dict>
+    
+        <key>time</key>
+        <real>3.8076884999999994</real>
+    
+        <key>timeInQuarterNotes</key>
+        <real>8.25</real>
+    
+        <key>type</key>
+        <integer>1</integer>
+        
+        <key>velocity</key>
+        <integer>0</integer>
+    </dict>
+
+</dict>
+</plist>
