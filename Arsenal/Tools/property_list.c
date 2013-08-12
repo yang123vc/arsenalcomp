@@ -16,19 +16,77 @@ AR_NAMESPACE_BEGIN
 
 /*this module is modified from apple CF-550*/
 
-/*
-typedef struct __plist_xml_parser
+plistElem_t     *__g_boolean_true = NULL;
+plistElem_t     *__g_boolean_false = NULL;
+
+arStatus_t      PList_Init()
 {
+        arStatus_t status;
         
-        arString_t      *content;
+        status = AR_S_YES;
         
-        const wchar_t   *begin;
-        const wchar_t   *curr;
-        const wchar_t   *end;
+        __g_boolean_true = PList_CreateElem(PLIST_ELEM_BOOLEAN_T);
+        __g_boolean_false = PList_CreateElem(PLIST_ELEM_BOOLEAN_T);
         
-        arString_t      *errmsg;
-}plistXMLParser_t;
-*/
+        if(__g_boolean_true == NULL || __g_boolean_false == NULL)
+        {
+                status = AR_E_NOMEM;
+                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                goto END_POINT;
+        }
+        
+        __g_boolean_true->boolean.val = true;
+        __g_boolean_false->boolean.val = false;
+        
+END_POINT:
+        if(status != AR_S_YES)
+        {
+                if(__g_boolean_true)
+                {
+                        PList_DestroyElem(__g_boolean_true);
+                        __g_boolean_true = NULL;
+                }
+                
+                if(__g_boolean_false)
+                {
+                        PList_DestroyElem(__g_boolean_false);
+                        __g_boolean_false = NULL;
+                }
+        }
+        
+        return status;
+}
+
+
+void            PList_UnInit()
+{
+        PList_DestroyElem(__g_boolean_true);
+        PList_DestroyElem(__g_boolean_false);
+}
+
+
+
+/********************************************************PList elements********************************************************/
+
+
+
+plistElem_t*    PList_CreateElem(plistElemType_t        t)
+{
+        return NULL;
+        
+}
+
+void            PList_DestroyElem(plistElem_t            *elem)
+{
+        AR_ASSERT(elem != NULL);
+}
+
+
+
+
+
+/********************************************************XML Parser********************************************************/
+
 
 plistXMLParser_t*       PList_CreateXMLParser()
 {
@@ -175,8 +233,46 @@ static const wchar_t __g_plist_tags[13][10]=
 
 
 
+#define PLIST_IX        0
+#define ARRAY_IX        1
+#define DICT_IX         2
+#define KEY_IX          3
+#define STRING_IX       4
+#define DATA_IX     	5
+#define DATE_IX     	6
+#define REAL_IX     	7
+#define INTEGER_IX      8
+#define TRUE_IX         9
+#define FALSE_IX        10
+#define DOCTYPE_IX      11
+#define CDSECT_IX       12
+
+#define PLIST_TAG_LENGTH        5
+#define ARRAY_TAG_LENGTH        5
+#define DICT_TAG_LENGTH         4
+#define KEY_TAG_LENGTH			3
+#define STRING_TAG_LENGTH       6
+#define DATA_TAG_LENGTH         4
+#define DATE_TAG_LENGTH         4
+#define REAL_TAG_LENGTH         4
+#define INTEGER_TAG_LENGTH      7
+#define TRUE_TAG_LENGTH         4
+#define FALSE_TAG_LENGTH        5
+#define DOCTYPE_TAG_LENGTH      7
+#define CDSECT_TAG_LENGTH       9
 
 
+ar_bool_t __match_string(const wchar_t *l, const wchar_t *r, size_t n)
+{
+        AR_ASSERT(l != NULL && r != NULL);
+        if(AR_wcsnicmp(l, r, n) == 0)
+        {
+                return true;
+        }else
+        {
+                return false;
+        }
+}
 
 
 static size_t __calc_linenumber(const plistXMLParser_t *parser)
@@ -246,7 +342,7 @@ static void __skip_xml_comment(plistXMLParser_t *parser)
         }
         
         parser->has_error = true;
-        AR_FormatString(parser->errmsg, L"Unterminated comment started on line %u", (ar_uint_32_t)__calc_linenumber(parser));
+        AR_FormatString(parser->errmsg, L"Unterminated comment started on line %qu", __calc_linenumber(parser));
         
 }
 
@@ -275,11 +371,1075 @@ static void __skip_xml_processing_instruction(plistXMLParser_t *parser)
         parser->curr = beg;
         
         parser->has_error = true;
-        AR_FormatString(parser->errmsg, L"Encountered unexpected EOF while parsing the processing instruction begun on line %d", (ar_uint_32_t)__calc_linenumber(parser));
+        AR_FormatString(parser->errmsg, L"Encountered unexpected EOF while parsing the processing instruction begun on line %qu", __calc_linenumber(parser));
+}
+
+
+static void __skip_xml_inline_dtd(plistXMLParser_t *parser);
+
+        
+
+// first character should be immediately after the "<!"
+static void __skip_xml_dtd(plistXMLParser_t *parser)
+{
+        AR_ASSERT(parser != NULL);
+        AR_ASSERT(parser->curr != NULL);
+
+        if(parser->end - parser->curr < DOCTYPE_TAG_LENGTH || !__match_string(parser->curr, __g_plist_tags[DOCTYPE_IX], DOCTYPE_TAG_LENGTH))
+        {
+                parser->has_error = true;
+                AR_FormatString(parser->errmsg, L"Malformed DTD on line %qu", __calc_linenumber(parser));
+                return;
+        }
+        
+        parser->curr += DOCTYPE_TAG_LENGTH;
+        __skip_whitespace(parser);
+        
+ 
+        
+        // Look for either the beginning of a complex DTD or the end of the DOCTYPE structure
+        while (parser->curr < parser->end)
+        {
+                wchar_t ch = *(parser->curr);
+                
+                if (ch == L'[') // inline DTD
+                {
+                        break;
+                }
+                
+                if (ch == L'>') // End of the DTD
+                {
+                        parser->curr++;
+                        return;
+                }
+                parser->curr++;
+        }
+        
+        if (parser->curr == parser->end)
+        {
+                
+                parser->has_error = true;
+                AR_FormatString(parser->errmsg, L"Encountered unexpected EOF while parsing DTD");
+                return;
+        }
+        
+        __skip_xml_inline_dtd(parser);
+        
+        if(parser->has_error)
+        {
+                return;
+        }
+        
+        __skip_whitespace(parser);
+        
+        
+        if (parser->curr < parser->end)
+        {
+                if(*(parser->curr) == L'>')
+                {
+                        parser->curr++;
+                }else
+                {
+                        parser->has_error = true;
+                        AR_FormatString(parser->errmsg, L"Encountered unexpected character %c on line %qu while parsing DTD", *(parser->curr), __calc_linenumber(parser));
+                }
+        }else
+        {
+                parser->has_error = true;
+                AR_FormatString(parser->errmsg, L"Encountered unexpected EOF while parsing DTD");
+        }
+}
+
+static void __skip_xml_peref(plistXMLParser_t *parser);
+
+
+
+// First character should be just past '['
+static void __skip_xml_inline_dtd(plistXMLParser_t *parser)
+{
+        AR_ASSERT(parser != NULL);
+        AR_ASSERT(parser->curr != NULL);
+
+        
+        while (!parser->has_error && parser->curr < parser->end)
+        {
+                wchar_t ch;
+                __skip_whitespace(parser);
+                ch = *parser->curr;
+                
+                if (ch == L'%')
+                {
+                        parser->curr++;
+                        __skip_xml_peref(parser);
+                        
+                }else if(ch == L'<')
+                {
+                        parser->curr++;
+                        
+                        if (parser->curr >= parser->end)
+                        {
+                                parser->has_error = true;
+                                AR_FormatString(parser->errmsg, L"Encountered unexpected EOF while parsing inline DTD");
+                                return;
+                        }
+                        ch = *parser->curr;
+                        if (ch == L'?')
+                        {
+                                parser->curr++;
+                                __skip_xml_processing_instruction(parser);
+                        }else if(ch == L'!')
+                        {
+                                if (parser->curr + 2 < parser->end && (*(parser->curr+1) == '-' && *(parser->curr+2) == '-'))
+                                {
+                                        parser->curr += 3;
+                                        __skip_xml_comment(parser);
+                                }else
+                                {
+                                        // Skip the myriad of DTD declarations of the form "<!string" ... ">"
+                                        parser->curr ++; // Past both '<' and '!'
+                                        while (parser->curr < parser->end)
+                                        {
+                                                if (*(parser->curr) == L'>')
+                                                {
+                                                        break;
+                                                }
+                                                parser->curr++;
+                                        }
+                                        
+                                        if (*(parser->curr) != '>')
+                                        {
+                                                parser->has_error = true;
+                                                AR_FormatString(parser->errmsg, L"Encountered unexpected EOF while parsing inline DTD");
+                                                return;
+                                        }
+                                        parser->curr++;
+                                }
+                        }else
+                        {
+                                parser->has_error = true;
+                                AR_FormatString(parser->errmsg, L"Encountered unexpected character %c on line %d while parsing inline DTD", ch, __calc_linenumber(parser));
+                                return;
+                        }
+                } else if(ch == L']')
+                {
+                        parser->curr ++;
+                        return;
+                }else
+                {
+                        parser->has_error = true;
+                        AR_FormatString(parser->errmsg, L"Encountered unexpected character %c on line %d while parsing inline DTD", ch, __calc_linenumber(parser));
+                        return;
+                }
+        }
+        
+        if(!parser->has_error)
+        {
+                parser->has_error = true;
+                AR_FormatString(parser->errmsg, L"Encountered unexpected EOF while parsing inline DTD");
+        }
+}
+
+static void __skip_xml_peref(plistXMLParser_t *parser)
+{
+        const wchar_t *p;
+        AR_ASSERT(parser != NULL && parser->curr != NULL);
+        
+        p = parser->curr;
+        
+        while(p < parser->end)
+        {
+                if(*p == L';')
+                {
+                        parser->curr = p + 1;
+                        return;
+                }
+                ++p;
+        }
+        
+        parser->has_error = true;
+        AR_FormatString(parser->errmsg, L"Encountered unexpected EOF while parsing percent-escape sequence begun on line %qu", __calc_linenumber(parser));
 }
 
 
 
+static plistElem_t*     __parse_xml_element(plistXMLParser_t *parser);
+
+static plistElem_t*     __get_xml_content_object(plistXMLParser_t *parser)
+{
+        
+        AR_ASSERT(parser != NULL && parser->curr != NULL);
+        
+        while (!parser->has_error && parser->curr < parser->end)
+        {
+                __skip_whitespace(parser);
+                
+                if(parser->curr >= parser->end)
+                {
+                        parser->has_error = true;
+                        AR_FormatString(parser->errmsg, L"Encountered unexpected EOF");
+                        return NULL;
+                }
+                
+                if(*parser->curr != L'<')
+                {
+                        parser->has_error = true;
+                        AR_FormatString(parser->errmsg, L"Encountered unexpected character %c on line %qu", *parser->curr, __calc_linenumber(parser));
+                        return NULL;
+                }
+                parser->curr++;
+
+                if (parser->curr >= parser->end)
+                {
+                        parser->has_error = true;
+                        AR_FormatString(parser->errmsg, L"Encountered unexpected EOF");
+                        return NULL;
+                }
+                
+                switch (*(parser->curr))
+                {
+                case '?':
+                                // Processing instruction
+                                __skip_xml_processing_instruction(parser);
+                                break;
+                case '!':
+                                // Could be a comment
+                                if(parser->curr+2 >= parser->end)
+                                {
+                                        parser->has_error = true;
+                                        AR_FormatString(parser->errmsg, L"Encountered unexpected EOF");
+                                        return NULL;
+                                }
+                                
+                                if(*(parser->curr+1) == '-' && *(parser->curr+2) == '-')
+                                {
+                                        parser->curr += 2;
+                                        __skip_xml_comment(parser);
+                                }else
+                                {
+                                        parser->has_error = true;
+                                        AR_FormatString(parser->errmsg, L"Encountered unexpected item %s begun on line %qu", parser->curr, __calc_linenumber(parser));
+                                        return NULL;
+                                }
+                                break;
+                        case '/':
+                                // Whoops!  Looks like we got to the end tag for the element whose content we're parsing
+                                parser->curr--;// Back off to the '<'
+                                return NULL;
+                        default:
+                                // Should be an element
+                                return __parse_xml_element(parser);
+                }
+        }
+        // Do not set the error string here; if it wasn't already set by one of the recursive parsing calls, the caller will quickly detect the failure (b/c pInfo->curr >= pInfo->end) and provide a more useful one of the form "end tag for <blah> not found"
+        return NULL;
+}
+
+static plistElem_t* __parse_xml_plisttag(plistXMLParser_t *parser);
+static plistElem_t* __parse_xml_arraytag(plistXMLParser_t *parser);
+static plistElem_t* __parse_xml_dicttag(plistXMLParser_t *parser);
+static plistElem_t* __parse_xml_datatag(plistXMLParser_t *parser);
+static plistElem_t* __parse_xml_datetag(plistXMLParser_t *parser);
+static plistElem_t* __parse_xml_realtag(plistXMLParser_t *parser);
+static plistElem_t* __parse_xml_integertag(plistXMLParser_t *parser);
+
+static plistElem_t* __get_string(plistXMLParser_t *parser);
+static ar_bool_t    __check_for_closetag(plistXMLParser_t *parser, const wchar_t *tag, size_t tag_len);
+
+
+static plistElem_t*     __parse_xml_element(plistXMLParser_t *parser)
+{
+        const wchar_t *marker;
+        ar_int_t        marker_length;
+        ar_bool_t       is_empty;
+        ar_uint_t       marker_idx;
+        AR_ASSERT(parser != NULL);
+        AR_ASSERT(parser->curr != NULL);
+        
+        marker = parser->curr;
+        marker_length = -1;
+        is_empty = false;
+        marker_idx = -1;
+        
+        while(parser->curr < parser->end)
+        {
+                wchar_t ch = *parser->curr;
+                
+                if(AR_iswspace(ch))
+                {
+                        if(marker_length == -1)
+                        {
+                                marker_length = parser->curr - marker;
+                        }
+                }else if(ch == L'>')
+                {
+                        break;
+                }
+                
+                parser->curr++;
+        }
+        
+        if(parser->curr >= parser->end)
+        {
+                return NULL;
+        }
+        
+        if( *(parser->curr - 1) == L'/')
+        {
+                is_empty = true;
+        }
+        
+        if(marker_length == -1)
+        {
+                marker_length = parser->curr - (is_empty ? 1 : 0) - marker;
+        }
+        
+        parser->curr++; // Advance past '>'
+        
+        
+        if(marker_length == 0)
+        {
+                parser->curr = marker;
+                parser->has_error = true;
+                AR_FormatString(parser->errmsg, L"Malformed tag on line %qu", __calc_linenumber(parser));
+                return NULL;
+
+        }
+
+        switch (*marker)
+        {
+                case L'A':
+                case L'a':   // Array
+                        if(marker_length == ARRAY_TAG_LENGTH && __match_string(marker, __g_plist_tags[ARRAY_IX], ARRAY_TAG_LENGTH))
+                        {
+                                marker_idx = ARRAY_IX;
+                        }
+                        break;
+                case L'D': // Dictionary, data, or date; Fortunately, they all have the same marker length....
+                case L'd':
+                        if (marker_length != DICT_TAG_LENGTH)
+                        {
+                                break;
+                        }
+                        
+                        if(__match_string(marker, __g_plist_tags[DICT_IX], DICT_TAG_LENGTH))
+                        {
+                                marker_idx = DICT_IX;
+                        }else if(__match_string(marker, __g_plist_tags[DATA_IX], DATA_TAG_LENGTH))
+                        {
+                                marker_idx = DATA_IX;
+                        }else if(__match_string(marker, __g_plist_tags[DATE_IX], DATE_TAG_LENGTH))
+                        {
+                                marker_idx = DATE_IX;
+                        }
+                        
+                        break;
+                        
+                case L'I':
+                case L'i': // integer
+                        if(marker_length == INTEGER_TAG_LENGTH && __match_string(marker, __g_plist_tags[INTEGER_IX], INTEGER_TAG_LENGTH))
+                        {
+                                marker_idx = INTEGER_IX;
+                        }
+                        break;
+                        
+                case L'K':
+                case L'k': // Key of a dictionary
+                        if(marker_length == KEY_TAG_LENGTH && __match_string(marker, __g_plist_tags[KEY_IX], KEY_TAG_LENGTH))
+                        {
+                                marker_idx = KEY_IX;
+                        }
+                        break;
+                        
+                case L'P':
+                case L'p': // Plist
+                        
+                        if(marker_length == PLIST_TAG_LENGTH && __match_string(marker, __g_plist_tags[PLIST_IX], PLIST_TAG_LENGTH))
+                        {
+                                marker_idx = PLIST_IX;
+                        }
+                        break;
+                case L'R':
+                case L'r': // real
+                        
+                        if(marker_length == REAL_TAG_LENGTH && __match_string(marker, __g_plist_tags[REAL_IX], REAL_TAG_LENGTH))
+                        {
+                                marker_idx = REAL_IX;
+                        }
+                        break;
+                        
+                case L'S':
+                case L's': // String
+                        
+                        if(marker_length == STRING_TAG_LENGTH && __match_string(marker, __g_plist_tags[STRING_IX], STRING_TAG_LENGTH))
+                        {
+                                marker_idx = STRING_IX;
+                        }
+                        break;
+                        
+                case L'T':
+                case L't': // true (boolean)
+                        if(marker_length == TRUE_TAG_LENGTH && __match_string(marker, __g_plist_tags[TRUE_IX], TRUE_TAG_LENGTH))
+                        {
+                                marker_idx = TRUE_IX;
+                        }
+                        break;
+                case L'F':
+                case L'f': // false (boolean)
+                        
+                        if(marker_length == FALSE_TAG_LENGTH && __match_string(marker, __g_plist_tags[FALSE_IX], FALSE_TAG_LENGTH))
+                        {
+                                marker_idx = FALSE_IX;
+                        }
+                        break;
+        }
+
+        
+        
+        
+        switch (marker_idx)
+        {
+                case PLIST_IX:
+                        if (is_empty)
+                        {
+                                parser->has_error = true;
+                                AR_FormatString(parser->errmsg, L"Encountered empty plist tag", __calc_linenumber(parser));
+                                return NULL;
+                        }
+                        return __parse_xml_plisttag(parser);
+                case ARRAY_IX:
+                        
+                        if (is_empty)
+                        {
+                                plistElem_t *arr = PList_CreateElem(PLIST_ELEM_ARRAY_T);
+                                
+                                if(arr == NULL)
+                                {
+                                        parser->has_error = true;
+                                        AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                                        return NULL;
+                                }else
+                                {
+                                        return arr;
+                                }
+                        }else
+                        {
+                                return __parse_xml_arraytag(parser);
+                        }
+                case DICT_IX:
+                        if (is_empty)
+                        {
+                                plistElem_t *dict = PList_CreateElem(PLIST_ELEM_DICT_T);
+                                
+                                if(dict == NULL)
+                                {
+                                        parser->has_error = true;
+                                        AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                                        return NULL;
+                                }else
+                                {
+                                        return dict;
+                                }
+                        }else
+                        {
+                                return __parse_xml_dicttag(parser);
+                        }
+                case KEY_IX:
+                case STRING_IX:
+                {
+                        size_t tag_len = 0;
+                        plistElem_t *str = NULL;
+                        
+                        tag_len = marker_idx == KEY_IX ? KEY_TAG_LENGTH : STRING_TAG_LENGTH;
+                        
+                        if(is_empty)
+                        {
+                                str = PList_CreateElem(PLIST_ELEM_STRING_T);
+                                if(str == NULL)
+                                {
+                                        parser->has_error = true;
+                                        AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                                        return NULL;
+                                }else
+                                {
+                                        return str;
+                                }
+                        }else
+                        {
+                                str = __get_string(parser);
+                                
+                                if(str == NULL) // getString will already have set the error string
+                                {
+                                        return NULL;
+                                }
+                                
+                                if(!__check_for_closetag(parser, __g_plist_tags[marker_idx], tag_len))
+                                {
+                                        PList_DestroyElem(str);
+                                        str = NULL;
+                                        return NULL;
+                                }
+                                
+                                return str;
+                        }
+                }
+                case DATA_IX:
+                        if(is_empty)
+                        {
+                                parser->has_error = true;
+                                AR_FormatString(parser->errmsg, L"Encountered empty <data> on line %qu", __calc_linenumber(parser));
+                                return NULL;
+                        }else
+                        {
+                                return __parse_xml_datatag(parser);
+                        }
+                case DATE_IX:
+                        if (is_empty)
+                        {
+                                parser->has_error = true;
+                                AR_FormatString(parser->errmsg, L"Encountered empty <date> on line %qu", __calc_linenumber(parser));
+                                return NULL;
+                        } else {
+                                return __parse_xml_datetag(parser);
+                        }
+                case TRUE_IX:
+                        if (!is_empty)
+                        {
+                                if(!__check_for_closetag(parser, __g_plist_tags[TRUE_IX], TRUE_TAG_LENGTH))
+                                {
+                                        return NULL;
+                                }
+                        }else
+                        {
+                                return __g_boolean_true;
+                        }
+                case FALSE_IX:
+                        if (!is_empty)
+                        {
+                                if(!__check_for_closetag(parser, __g_plist_tags[FALSE_IX], FALSE_TAG_LENGTH))
+                                {
+                                        return NULL;
+                                }
+                        }else
+                        {
+                                return __g_boolean_false;
+                        }
+                        
+                case REAL_IX:
+                        if(is_empty)
+                        {
+                                parser->has_error = true;
+                                AR_FormatString(parser->errmsg, L"Encountered empty <real> on line %qu", __calc_linenumber(parser));
+                                return NULL;
+                        }else
+                        {
+                                return __parse_xml_realtag(parser);
+                        }
+                case INTEGER_IX:
+                        if(is_empty)
+                        {
+                                parser->has_error = true;
+                                AR_FormatString(parser->errmsg, L"Encountered empty <integer> on line %qu", __calc_linenumber(parser));
+                                return NULL;
+                        }else
+                        {
+                                return __parse_xml_integertag(parser);
+                        }
+                default:
+                {
+                        const wchar_t *marker_str = AR_wcsndup(marker, marker_length);
+                        
+                        parser->has_error = true;
+                        parser->curr = marker;
+                        
+                        if(marker_str == NULL)
+                        {
+                                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                        }else
+                        {
+                                parser->has_error = true;
+                                AR_FormatString(parser->errmsg, L"Encountered unknown tag %ls on line %qu", marker_str, __calc_linenumber(parser));
+                                AR_DEL(marker_str);
+                        }
+                        return NULL;
+                }
+        }
+
+        
+        
+        
+}
+
+
+static ar_bool_t __cat_from_mark_to_buf(const wchar_t *beg, const wchar_t *end, plistElem_t *str)
+{
+        AR_ASSERT(beg != NULL && beg >= end);
+        AR_ASSERT(str != NULL && PList_GetElemType(str) == PLIST_ELEM_STRING_T);
+        
+        if(end - beg == 0)
+        {
+                return true;
+        }
+        
+        if(PList_AppendStringN(&str->str, beg, end - beg) != AR_S_YES)
+        {
+                return false;
+        }else
+        {
+                return true;
+        }
+}
+
+static void __parse_xml_cdsect_pl(plistXMLParser_t *parser, plistElem_t *str);
+static void __parse_xml_entity_reference_pl(plistXMLParser_t *parser, plistElem_t *str);
+
+
+// String could be comprised of characters, CDSects, or references to one of the "well-known" entities ('<', '>', '&', ''', '"')
+// returns a retained object in *string.
+static plistElem_t* __get_string(plistXMLParser_t *parser)
+{
+        plistElem_t *str;
+        const wchar_t *mark;
+        AR_ASSERT(parser != NULL);
+        AR_ASSERT(parser->curr != NULL);
+        
+        str = NULL;
+        mark = parser->curr; // At any time in the while loop below, the characters between mark and p have not yet been added to *string
+        
+        str = PList_CreateElem(PLIST_ELEM_STRING_T);
+        
+        if(str == NULL)
+        {
+                parser->has_error = true;
+                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                goto INVALID_POINT;
+        }
+        
+        while(!parser->has_error && parser->curr < parser->end)
+        {
+                wchar_t ch = *parser->curr;
+                
+                if(ch == L'<')
+                {
+                        
+                        if(parser->curr + 1 >= parser->end)
+                        {
+                                break;
+                        }
+                        
+                        // Could be a CDSect; could be the end of the string
+                        
+                        if(*(parser->curr + 1) != L'!') // End of the string
+                        {
+                                break;
+                        }
+                        
+                        if(!__cat_from_mark_to_buf(mark, parser->curr, str))
+                        {
+                                parser->has_error = true;
+                                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                                goto INVALID_POINT;
+                        }
+                        
+                        __parse_xml_cdsect_pl(parser, str);
+                        mark = parser->curr;
+                        
+                }else if(ch == L'&')
+                {
+                        if(!__cat_from_mark_to_buf(mark, parser->curr, str))
+                        {
+                                parser->has_error = true;
+                                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                                goto INVALID_POINT;
+                        }
+                        
+                        __parse_xml_entity_reference_pl(parser, str);
+                        mark = parser->curr;
+                }else
+                {
+                        ++parser->curr;
+                }
+        }
+        
+        
+        if(parser->has_error)
+        {
+                goto INVALID_POINT;
+        }
+        
+        if(!__cat_from_mark_to_buf(mark, parser->curr, str))
+        {
+                parser->has_error = true;
+                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                goto INVALID_POINT;
+        }
+        
+        
+        return str;
+        
+        
+INVALID_POINT:
+        if(str)
+        {
+                PList_DestroyElem(str);
+                str = NULL;
+        }
+        
+        return NULL;
+}
+
+
+
+static void __parse_xml_cdsect_pl(plistXMLParser_t *parser, plistElem_t *str)
+{
+        const wchar_t *begin, *end;
+        
+        AR_ASSERT(parser != NULL && parser->curr != NULL);
+        AR_ASSERT(str != NULL && PList_GetElemType(str) == PLIST_ELEM_STRING_T);
+        
+        if(parser->end - parser->curr < CDSECT_TAG_LENGTH)
+        {
+                parser->has_error = true;
+                AR_FormatString(parser->errmsg, L"Encountered unexpected EOF");
+                return;
+        }
+        
+        if(!__match_string(parser->curr, __g_plist_tags[CDSECT_IX], CDSECT_TAG_LENGTH))
+        {
+                parser->has_error = true;
+                AR_FormatString(parser->errmsg, L"Encountered improper CDATA opening at line %qu", __calc_linenumber(parser));
+                return;
+        }
+        
+        parser->curr += CDSECT_TAG_LENGTH;
+        
+        begin = parser->curr;
+        end = parser->end - 2;
+        
+        while(parser->curr < end)
+        {
+                if(*parser->curr == L']' && *(parser->curr + 1) == L']' && *(parser->curr + 2) == L'>')
+                {
+                        if(!__cat_from_mark_to_buf(begin, parser->curr, str))
+                        {
+                                parser->has_error = true;
+                                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                                return;
+                        }
+                        
+                        parser->curr += 3;
+                        return;
+                }
+                
+                parser->curr++;
+        }
+        
+        parser->curr = begin;
+        parser->has_error = true;
+        AR_FormatString(parser->errmsg, L"Could not find end of CDATA started on line %qu", __calc_linenumber(parser));
+        return;
+}
+
+
+
+static void __parse_xml_entity_reference_pl(plistXMLParser_t *parser, plistElem_t *str)
+{
+        ar_int_t len;
+        wchar_t ch;
+        
+        AR_ASSERT(parser != NULL && parser->curr != NULL);
+        AR_ASSERT(str != NULL && PList_GetElemType(str) == PLIST_ELEM_STRING_T);
+        
+        len = parser->end - parser->curr;
+        
+        if(len < 1)
+        {
+                parser->has_error = true;
+                AR_FormatString(parser->errmsg, L"Encountered unexpected EOF");
+                return;
+        }
+        
+        
+        switch (*(parser->curr))
+        {
+                case L'l':  // "lt"
+                {
+                        if (len >= 3 && *(parser->curr+1) == 't' && *(parser->curr+2) == ';')
+                        {
+                                ch = L'<';
+                                parser->curr += 3;
+                                break;
+                        }else
+                        {
+                                parser->has_error = true;
+                                AR_FormatString(parser->errmsg, L"Encountered unknown ampersand-escape sequence at line %qu", __calc_linenumber(parser));
+                                return;
+                        }
+                }
+                        break;
+                case L'g': // "gt"
+                {
+                        if (len >= 3 && *(parser->curr+1) == L't' && *(parser->curr+2) == L';')
+                        {
+                                ch = L'>';
+                                parser->curr += 3;
+                                break;
+                        }else
+                        {
+                                parser->has_error = true;
+                                AR_FormatString(parser->errmsg, L"Encountered unknown ampersand-escape sequence at line %qu", __calc_linenumber(parser));
+                                return;
+                        }
+                }
+                        break;
+                case L'a': // "apos" or "amp"
+                {
+                        if (len < 4)    // Not enough characters for either conversion
+                        {
+                                parser->has_error = true;
+                                AR_FormatString(parser->errmsg, L"Encountered unexpected EOF");
+                                return;
+                        }
+                        
+                        if (*(parser->curr+1) == L'm')
+                        {
+                                // "amp"
+                                if(*(parser->curr+2) == L'p' && *(parser->curr+3) == L';')
+                                {
+                                        ch = L'&';
+                                        parser->curr += 4;
+                                        break;
+                                }
+                                
+                        } else if (*(parser->curr+1) == L'p')
+                        {
+                                // "apos"
+                                if (len > 4 && *(parser->curr+2) == 'o' && *(parser->curr+3) == L's' && *(parser->curr+4) == L';')
+                                {
+                                        ch = L'\'';
+                                        parser->curr += 5;
+                                        break;
+                                }
+                        }else
+                        {
+                                parser->has_error = true;
+                                AR_FormatString(parser->errmsg, L"Encountered unknown ampersand-escape sequence at line %qu", __calc_linenumber(parser));
+                                return;
+                        }
+                }
+                        break;
+                case L'q':  // "quote"
+                {
+                        if (len >= 5 && *(parser->curr+1) == L'u' && *(parser->curr+2) == L'o' && *(parser->curr+3) == L't' && *(parser->curr+4) == L';')
+                        {
+                                ch = L'\"';
+                                parser->curr += 5;
+                                break;
+                        }else
+                        {
+                                parser->has_error = true;
+                                AR_FormatString(parser->errmsg, L"Encountered unknown ampersand-escape sequence at line %qu", __calc_linenumber(parser));
+                                return;
+                        }
+                }
+                        break;
+                case L'#':
+                {
+                        ar_uint_16_t num = 0;
+                        ar_bool_t is_hex = false;
+                        
+                        if(len < 4)   // Not enough characters to make it all fit!  Need at least "&#d;"
+                        {
+                                parser->has_error = true;
+                                AR_FormatString(parser->errmsg, L"Encountered unexpected EOF");
+                                return;
+                        }
+                        
+                        parser->curr++;
+                        if (*(parser->curr) == 'x')
+                        {
+                                is_hex = true;
+                                parser->curr ++;
+                        }
+                        
+                        while (parser->curr < parser->end)
+                        {
+                                ch = *(parser->curr);
+                                parser->curr ++;
+                                
+                                if(ch == ';')
+                                {
+                                        if(!__cat_from_mark_to_buf(&ch, &ch + 1, str))
+                                        {
+                                                parser->has_error = true;
+                                                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                                                return;
+                                        }
+                                        return;
+                                }
+                                
+                                if(!is_hex)
+                                {
+                                        num = num * 10;
+                                }else
+                                {
+                                        num = num * 16;
+                                }
+                                
+                                if(ch <= L'9' && ch >= L'0')
+                                {
+                                        num += (ch - L'0');
+                                        
+                                }else if(!is_hex)
+                                {
+                                        parser->has_error = true;
+                                        AR_FormatString(parser->errmsg, L"Encountered unexpected character %c at line %qu", ch, __calc_linenumber(parser));
+                                        return;
+                                }else if(ch >= L'a' && ch <= L'f')
+                                {
+                                        num += 10 + (ch - L'a');
+                                        
+                                }else if(ch >= L'A' && ch <= L'F')
+                                {
+                                        num += 10 + (ch - L'A');
+                                        
+                                }else
+                                {
+                                        parser->has_error = true;
+                                        AR_FormatString(parser->errmsg, L"Encountered unexpected character %c at line %qu", ch, __calc_linenumber(parser));
+                                        return;
+                                }
+                        }
+                        
+                        parser->has_error = true;
+                        AR_FormatString(parser->errmsg, L"Encountered unexpected EOF");
+                        return;
+                }
+                default:
+                        parser->has_error = true;
+                        AR_FormatString(parser->errmsg, L"Encountered unknown ampersand-escape sequence at line %qu", __calc_linenumber(parser));
+                        return;
+        }
+        
+        if(!__cat_from_mark_to_buf(&ch, &ch + 1, str))
+        {
+                parser->has_error = true;
+                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                return;
+        }
+}
+
+
+static ar_bool_t    __check_for_closetag(plistXMLParser_t *parser, const wchar_t *tag, size_t tag_len)
+{
+        
+        AR_ASSERT(parser != NULL && parser->curr != NULL);
+        AR_ASSERT(tag != NULL && tag_len > 0);
+        if(parser->end - parser->curr < tag_len + 3)
+        {
+                if(!parser->has_error)
+                {
+                        parser->has_error = true;
+                        AR_FormatString(parser->errmsg, L"Encountered unexpected EOF");
+                }
+                
+                return false;
+        }
+        
+        if(*parser->curr != L'<' || *(++parser->curr) != L'/')
+        {
+                if(!parser->has_error)
+                {
+                        parser->has_error = true;
+                        AR_FormatString(parser->errmsg, L"Encountered unexpected character %c on line %qu", *(parser->curr), __calc_linenumber(parser));
+                }
+                return false;
+        }
+        
+        parser->curr++;
+        
+        if(!__match_string(parser->curr, tag, tag_len))
+        {
+                
+                if(!parser->has_error)
+                {
+                        wchar_t buf[128];
+                        AR_ASSERT(tag_len < 128);
+                        AR_wcsncpy(buf, tag, tag_len);
+                        parser->has_error = true;
+                        AR_FormatString(parser->errmsg, L"Close tag on line %qu does not match open tag %ls", __calc_linenumber(parser), buf);
+                }
+                return false;
+        }
+
+        parser->curr += tag_len;
+        
+        __skip_whitespace(parser);
+        
+        if(parser->curr == parser->end)
+        {
+                if(!parser->has_error)
+                {
+                        parser->has_error = true;
+                        AR_FormatString(parser->errmsg, L"Encountered unexpected EOF");
+                }
+                
+                return false;
+        }
+        
+        
+        if(*parser->curr != L'>')
+        {
+                if(!parser->has_error)
+                {
+                        parser->has_error = true;
+                        AR_FormatString(parser->errmsg, L"Encountered unexpected character %c on line %qu", *(parser->curr), __calc_linenumber(parser));
+                }
+                return false;
+        }
+        
+        parser->curr++;
+        return true;
+}
+
+
+
+
+
+#if(0)
+
+// pInfo should be set to the first content character of the <plist>
+
+static CFTypeRef parsePListTag(_CFXMLPlistParseInfo *pInfo) {
+        CFTypeRef result, tmp = NULL;
+        const UniChar *save;
+        result = getContentObject(pInfo, NULL);
+        if (!result) {
+                if (!pInfo->error) pInfo->error = __CFPropertyListCreateError(pInfo->allocator, kCFPropertyListReadCorruptError, CFSTR("Encountered empty plist tag"));
+                return NULL;
+        }
+        save = pInfo->curr; // Save this in case the next step fails
+        tmp = getContentObject(pInfo, NULL);
+        if (tmp) {
+                // Got an extra object
+                CFRelease(tmp);
+                CFRelease(result);
+                pInfo->curr = save;
+                pInfo->error = __CFPropertyListCreateError(pInfo->allocator, kCFPropertyListReadCorruptError, CFSTR("Encountered unexpected element at line %d (plist can only include one object)"), lineNumber(pInfo));
+                return NULL;
+        }
+        if (pInfo->error) {
+                // Parse failed catastrophically
+                CFRelease(result);
+                return NULL;
+        }
+        if (checkForCloseTag(pInfo, CFXMLPlistTags[PLIST_IX], PLIST_TAG_LENGTH)) {
+                return result;
+        }
+        CFRelease(result);
+        return NULL;
+}
+
+#endif
 
 
 arStatus_t              PList_ParseXML(plistXMLParser_t *parser, plistElem_t **result)

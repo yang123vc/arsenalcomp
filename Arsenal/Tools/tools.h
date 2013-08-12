@@ -21,8 +21,8 @@
 
 AR_NAMESPACE_BEGIN
 
-arStatus_t	Tools_Init();
-arStatus_t	Tools_UnInit();
+arStatus_t      Tools_Init();
+void            Tools_UnInit();
 
 
 

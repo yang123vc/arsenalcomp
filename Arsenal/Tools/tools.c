@@ -20,14 +20,49 @@ AR_NAMESPACE_BEGIN
 
 arStatus_t	Tools_Init()
 {
+        arStatus_t status;
+        ar_bool_t cfg_is_init = false, plist_is_init = false;
+        
+        status = AR_S_YES;
+        
 		CFG_Init();
-		return AR_S_YES;
+        cfg_is_init = true;
+        
+        status = PList_Init();
+        if(status != AR_S_YES)
+        {
+                
+        }
+        plist_is_init = true;
+        
+        
+END_POINT:
+        
+        if(status == AR_S_YES)
+        {
+                return status;
+        }
+        
+        if(plist_is_init)
+        {
+                PList_UnInit();
+                plist_is_init = false;
+        }
+        
+        if(cfg_is_init)
+        {
+                CFG_UnInit();
+                cfg_is_init = false;
+        }
+        
+        return status;
+
 }
 
-arStatus_t	Tools_UnInit()
+void	Tools_UnInit()
 {
+        PList_UnInit();
 		CFG_UnInit();
-		return AR_S_YES;
 }
 
 
