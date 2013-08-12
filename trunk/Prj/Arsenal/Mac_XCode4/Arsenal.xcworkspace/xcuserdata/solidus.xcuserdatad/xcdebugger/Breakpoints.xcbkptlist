@@ -21,25 +21,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "../../Test/Mac_XCode4/plist_test.cpp"
-         timestampString = "397728806.516352"
+         timestampString = "397971671.112991"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "20"
-         endingLineNumber = "20"
+         startingLineNumber = "63"
+         endingLineNumber = "63"
          landmarkName = "load_test()"
-         landmarkType = "7">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "../../../Arsenal/Tools/property_list.c"
-         timestampString = "397729030.387808"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "165"
-         endingLineNumber = "165"
-         landmarkName = "PList_LoadXMLFromBinary()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -52,7 +39,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "52"
          endingLineNumber = "52"
-         landmarkName = "__detect_xml_codepage()"
+         landmarkName = "PList_CreateXMLParser()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -65,20 +52,20 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "44"
          endingLineNumber = "44"
-         landmarkName = "__detect_xml_codepage()"
+         landmarkName = "PList_CreateXMLParser()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "../../../Arsenal/Tools/property_list.c"
-         timestampString = "397729778.638429"
+         filePath = "../../Test/Mac_XCode4/plist_test.cpp"
+         timestampString = "397971669.424111"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "79"
-         endingLineNumber = "79"
-         landmarkName = "__detect_xml_codepage()"
+         startingLineNumber = "55"
+         endingLineNumber = "55"
+         landmarkName = "format_test()"
          landmarkType = "7">
       </FileBreakpoint>
    </FileBreakpoints>

@@ -16,6 +16,8 @@
 AR_NAMESPACE_BEGIN
 
 
+arStatus_t      PList_Init();
+void            PList_UnInit();
 
 typedef enum
 {
@@ -53,15 +55,19 @@ typedef struct __plist_string_tag
 
 arStatus_t      PList_InitString(plistString_t  *str);
 void            PList_UnInitString(plistString_t  *str);
+
 ar_int_t        PList_CompareString(const plistString_t  *l, const plistString_t  *r);
 ar_int_t        PList_CompareStringWithWcs(const plistString_t  *l, const wchar_t *wcs);
 ar_int_t        PList_CompareStringWithStr(const plistString_t  *l, const char *str);
 
+arStatus_t      PList_AppendString(plistString_t  *str, const wchar_t *wcs);
+arStatus_t      PList_AppendStringN(plistString_t  *str, const wchar_t *wcs, size_t n);
 
+ar_bool_t       PList_IsEmptyString(const plistString_t  *str);
 
 typedef struct __plist_boolean_tag
 {
-        ar_bool_t       boolean;
+        ar_bool_t       val;
 }plistBoolean_t;
 
 
@@ -168,9 +174,10 @@ struct  __plist_element_tag
 
 plistElem_t*    PList_CreateElem(plistElemType_t        t);
 void            PList_DestroyElem(plistElem_t            *elem);
+#define         PList_GetElemType(_elem)        ((_elem)->type)
 
 
-
+/*************************************************Parser****************************************************/
 
 
 typedef struct __plist_xml_parser
