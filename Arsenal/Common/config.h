@@ -652,6 +652,7 @@ typedef void*					ar_ptr_t;
 		#define AR_VSPRINTF										_vsnprintf
 
 
+
 		#if(OS_TYPE == OS_WINDOWS_CE)
 				#define AR_abort()								exit(3)
 		#else
