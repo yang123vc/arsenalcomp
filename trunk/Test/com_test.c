@@ -3934,7 +3934,11 @@ static void path_test2()
 
 }
 
+static void float_test2()
+{
+		AR_is_nan_flt(0.0/0.0);
 
+}
 
 void com_test()
 {
@@ -4007,6 +4011,7 @@ void com_test()
 
 		//float_test();
 		
+		float_test2();
 
 		//com_str_test_vcprintf();
 		//com_test_srpintf();
@@ -4037,7 +4042,7 @@ void com_test()
 		//thd_test();
 
 
-		ds_test2();
+		//ds_test2();
 
 		//operation_test();
 

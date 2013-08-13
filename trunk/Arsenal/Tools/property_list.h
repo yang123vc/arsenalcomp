@@ -79,6 +79,18 @@ typedef enum
         PLIST_NUMBER_REAL_T,
 }plistNumberType_t;
 
+
+typedef enum
+{
+		PLIST_REAL_NORMAL_T,
+		PLIST_REAL_NAN_T,
+		PLIST_REAL_POSITIVE_NAN_T,
+		PLIST_REAL_NEGATIVE_NAN_T,
+		PLIST_REAL_INF_T,
+		PLIST_REAL_POSITIVE_INF_T,
+		PLIST_REAL_NEGATIVE_INF_T,
+}plistRealType_t;
+
 typedef struct __plist_number_tag
 {
         plistNumberType_t       type;
@@ -93,7 +105,10 @@ typedef struct __plist_number_tag
                         };
                 }               integer;
                 
-                double          real;
+				struct {
+						plistRealType_t			t;
+						double					num;
+				}		real;
         };
         
 }plistNumber_t;
