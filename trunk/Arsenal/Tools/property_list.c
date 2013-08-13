@@ -72,6 +72,460 @@ void            PList_UnInit()
 /********************************************************PList elements********************************************************/
 
 
+/*****plistString_t***********/
+
+
+arStatus_t      PList_InitString(plistString_t  *str)
+{
+        AR_ASSERT(str != NULL);
+        
+        AR_memset(str, 0, sizeof(*str));
+        
+        str->str = AR_CreateString();
+        
+        if(str->str == NULL)
+        {
+                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                return AR_E_NOMEM;
+        }else
+        {
+                return AR_S_YES;
+        }
+}
+
+void            PList_UnInitString(plistString_t  *str)
+{
+        AR_ASSERT(str != NULL && str->str != NULL);
+        
+        AR_DestroyString(str->str);
+        str->str = NULL;
+        AR_memset(str, 0, sizeof(*str));
+}
+
+
+ar_int_t        PList_CompareString(const plistString_t  *l, const plistString_t  *r)
+{
+        AR_ASSERT(l != NULL && r != NULL);
+        AR_ASSERT(l->str && r->str);
+        return AR_CompString(l->str, r->str);
+}
+
+ar_int_t        PList_CompareStringWithWcs(const plistString_t  *l, const wchar_t *wcs)
+{
+        AR_ASSERT(l != NULL && wcs != NULL);
+        return AR_CompStringWithWcs(l->str, wcs);
+}
+
+
+arStatus_t      PList_AppendString(plistString_t  *str, const wchar_t *wcs)
+{
+        AR_ASSERT(str != NULL && str->str != NULL && wcs != NULL);
+        return AR_AppendString(str->str, wcs);
+}
+
+arStatus_t      PList_AppendStringN(plistString_t  *str, const wchar_t *wcs, size_t n)
+{
+        AR_ASSERT(str != NULL && str->str != NULL && wcs != NULL);
+        return AR_AppendStringN(str->str, wcs, n);
+}
+
+ar_bool_t       PList_IsEmptyString(const plistString_t  *str)
+{
+        AR_ASSERT(str != NULL);
+        return AR_IsEmptyString(str->str);
+}
+
+const wchar_t*  PList_GetStringCString(const plistString_t *str)
+{
+        AR_ASSERT(str != NULL && str->str != NULL);
+        return AR_CSTR(str->str);
+}
+
+/*****plistData_t***********/
+
+arStatus_t      PList_InitData(plistData_t *data)
+{
+        AR_ASSERT(data != NULL);
+        
+        AR_memset(data, 0, sizeof(*data));
+        
+        data->buf = AR_CreateBuffer(0);
+        
+        if(data->buf == NULL)
+        {
+                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                return AR_E_NOMEM;
+        }else
+        {
+                return AR_S_YES;
+        }
+}
+
+void            PList_UnInitData(plistData_t *data)
+{
+        AR_ASSERT(data != NULL && data->buf != NULL);
+        
+        AR_DestroyBuffer(data->buf);
+        data->buf = NULL;
+        AR_memset(data, 0, sizeof(*data));
+}
+
+/*****plistArray_t***********/
+
+void      PList_InitArray(plistArray_t *arr)
+{
+        AR_ASSERT(arr != NULL);
+        AR_memset(arr, 0, sizeof(*arr));
+}
+
+void            PList_UnInitArray(plistArray_t *arr)
+{
+        AR_ASSERT(arr != NULL);
+        PList_ClearArray(arr);
+        
+        if(arr->items)
+        {
+                AR_DEL(arr->items);
+                arr->items = NULL;
+        }
+        
+        AR_memset(arr, 0, sizeof(*arr));
+}
+
+void            PList_ClearArray(plistArray_t *arr)
+{
+        size_t i;
+        AR_ASSERT(arr != NULL);
+        
+        for(i = 0; i < arr->count; ++i)
+        {
+                PList_DestroyElem(arr->items[i]);
+                arr->items[i] = NULL;
+        }
+        arr->count = 0;
+}
+
+arStatus_t      PList_PushToArray(plistArray_t *arr, plistElem_t *elem)
+{
+        AR_ASSERT(arr != NULL && elem != NULL);
+        
+        if(arr->count == arr->cap)
+		{
+				size_t          new_cap;
+				plistElem_t     **new_items;
+                
+				new_cap = (arr->cap + 4) * 2;
+				new_items = AR_NEWARR(plistElem_t*, new_cap);
+                
+				if(new_items == NULL)
+				{
+						return AR_E_NOMEM;
+				}
+                
+				if(arr->count > 0)
+				{
+						AR_memcpy(new_items, arr->items, arr->count * sizeof(plistElem_t*));
+				}
+                
+				if(arr->items)
+				{
+						AR_DEL(arr->items);
+						arr->items = NULL;
+				}
+				arr->cap = new_cap;
+				arr->items = new_items;
+		}
+        
+        arr->items[arr->count++] = elem;
+		return AR_S_YES;
+}
+
+plistElem_t*    PList_GetElemByIndex(plistArray_t *arr, size_t idx)
+{
+        AR_ASSERT(arr != NULL && idx < arr->count);
+        return arr->items[idx];
+}
+
+arStatus_t      PList_RemoveElemByIndex(plistArray_t *arr, size_t idx)
+{
+        AR_ASSERT(arr != NULL);
+		if(idx >= arr->count)
+		{
+				return AR_E_RANGE;
+		}
+        
+		PList_DestroyElem(arr->items[idx]);
+		arr->items[idx] = arr->items[arr->count-1];
+		arr->count--;
+		return AR_S_YES;
+}
+
+/*****plistDict_t***********/
+
+void      PList_InitDict(plistDict_t *dict)
+{
+        AR_ASSERT(dict != NULL);
+        AR_memset(dict, 0, sizeof(*dict));
+        
+        
+        
+}
+
+void            PList_UnInitDict(plistDict_t *dict)
+{
+        AR_ASSERT(dict != NULL);
+        PList_ClearDict(dict);
+        
+        if(dict->keys)
+        {
+                AR_DEL(dict->keys);
+                dict->keys = NULL;
+        }
+        
+        if(dict->values)
+        {
+                AR_DEL(dict->values);
+                dict->values = NULL;
+        }
+        AR_memset(dict, 0, sizeof(*dict));
+}
+
+
+void            PList_ClearDict(plistDict_t *dict)
+{
+        size_t i;
+        AR_ASSERT(dict != NULL);
+        
+        for(i = 0; i < dict->count; ++i)
+        {
+                PList_DestroyElem(dict->keys[i]);
+                dict->keys[i] = NULL;
+                PList_DestroyElem(dict->values[i]);
+                dict->values[i] = NULL;
+        }
+        dict->count = 0;
+}
+
+
+plistElem_t*    PList_FindValueByElem(plistDict_t *dict, const plistElem_t *key)
+{
+        size_t i;
+        AR_ASSERT(dict != NULL && key != NULL);
+        AR_ASSERT(PList_GetElemType(key) == PLIST_ELEM_STRING_T);
+        
+        for(i = 0; i < dict->count; ++i)
+        {
+                ar_int_t cmp;
+                AR_ASSERT(PList_GetElemType(dict->keys[i]) == PLIST_ELEM_STRING_T);
+                cmp = PList_CompareString(&dict->keys[i]->str, &key->str);
+                
+                if(cmp == 0)
+                {
+                        return dict->values[i];
+                }
+        }
+        return NULL;
+}
+
+plistElem_t*    PList_FindValueByString(plistDict_t *dict, const wchar_t *key)
+{
+        size_t i;
+        AR_ASSERT(dict != NULL && key != NULL);
+        
+        for(i = 0; i < dict->count; ++i)
+        {
+                ar_int_t cmp;
+                AR_ASSERT(PList_GetElemType(dict->keys[i]) == PLIST_ELEM_STRING_T);
+                cmp = PList_CompareStringWithWcs(&dict->keys[i]->str, key);
+                
+                if(cmp == 0)
+                {
+                        return dict->values[i];
+                }
+        }
+        return NULL;
+}
+
+arStatus_t      PList_SetDictValueForKey(plistDict_t *dict, plistElem_t *key, plistElem_t *val)
+{
+        size_t i;
+		AR_ASSERT(dict != NULL && key != NULL && PList_GetElemType(key) == PLIST_ELEM_STRING_T && val != NULL);
+        
+		for(i = 0; i < dict->count; ++i)
+		{
+				AR_ASSERT(dict->keys[i] != NULL && dict->values[i] != NULL);
+                AR_ASSERT(PList_GetElemType(dict->keys[i]) == PLIST_ELEM_STRING_T);
+                
+				if(PList_CompareString(&dict->keys[i]->str, &key->str) == 0)
+				{
+						break;
+				}
+		}
+        
+		if(i < dict->count)
+		{
+                PList_DestroyElem(dict->keys[i]);
+                dict->keys[i] = key;
+                
+                PList_DestroyElem(dict->values[i]);
+                dict->values[i] = val;
+               
+                
+				return AR_S_YES;
+		}else
+		{
+				if(dict->count == dict->cap)
+				{
+						size_t			new_cap;
+						plistElem_t		**new_keys, **new_values;
+                        
+						new_cap = (dict->cap + 4) * 2;
+						new_keys = AR_NEWARR(plistElem_t*, new_cap);
+						new_values = AR_NEWARR(plistElem_t*, new_cap);
+                        
+						if(new_keys == NULL || new_values == NULL)
+						{
+                                if(new_keys)
+                                {
+                                        AR_DEL(new_keys);
+                                        new_keys = NULL;
+                                }
+                                if(new_values)
+                                {
+                                        AR_DEL(new_values);
+                                        new_values = NULL;
+                                }
+                                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+								return AR_E_NOMEM;
+						}
+                        
+						if(dict->count > 0)
+						{
+								AR_memcpy(new_keys, dict->keys, dict->count * sizeof(plistElem_t*));
+								AR_memcpy(new_values, dict->values, dict->count * sizeof(plistElem_t*));
+						}
+                        
+						if(dict->keys)
+						{
+								AR_DEL(dict->keys);
+								dict->keys = NULL;
+						}
+                        
+                        if(dict->values)
+                        {
+                                AR_DEL(dict->values);
+                                dict->values = NULL;
+                        }
+                        
+						dict->cap = new_cap;
+                        dict->keys = new_keys;
+                        dict->values = new_values;
+				}
+                
+				dict->keys[dict->count] = key;
+				dict->values[dict->count] = val;
+				dict->count++;
+                
+#if defined(AR_DEBUG)
+				for(i = 0; i < dict->count; ++i)
+				{
+						AR_ASSERT(dict->keys[i] != NULL && dict->values[i] != NULL);
+				}
+#endif
+				
+				return AR_S_YES;
+		}
+}
+
+arStatus_t      PList_RemoveValueForKey(plistDict_t *dict, plistElem_t *key)
+{
+        size_t i;
+		AR_ASSERT(dict != NULL && key != NULL && PList_GetElemType(key) == PLIST_ELEM_STRING_T);
+        
+		for(i = 0; i < dict->count; ++i)
+		{
+				AR_ASSERT(dict->keys[i] != NULL && dict->values[i] != NULL);
+                AR_ASSERT(PList_GetElemType(dict->keys[i]) == PLIST_ELEM_STRING_T);
+                
+				if(PList_CompareString(&dict->keys[i]->str, &key->str) == 0)
+				{
+						break;
+				}
+		}
+
+        
+		if(i >= dict->count)
+		{
+                return AR_E_NOTFOUND;
+		}
+        
+        PList_DestroyElem(dict->keys[i]);
+        PList_DestroyElem(dict->values[i]);
+        
+        dict->keys[i] = dict->keys[dict->count-1];
+        dict->values[i] = dict->values[dict->count-1];
+        
+		dict->count--;
+		return AR_S_YES;
+}
+
+
+
+
+/*plistDict_t*/
+
+
+#if(0)
+
+
+
+typedef struct __plist_dict_tag
+{
+        plistElem_t     **keys;
+        plistElem_t     **values;
+        size_t          count;
+        size_t          cap;
+}plistDict_t;
+
+arStatus_t      PList_InitDict(plistDict_t *dict);
+void            PList_UnInitDict(plistDict_t *dict);
+
+plistElem_t*    PList_FindValueByElem(plistDict_t *dict, const plistElem_t *key);
+plistElem_t*    PList_FindValueByString(plistDict_t *dict, const wchar_t *key);
+arStatus_t      PList_SetDictValueForKey(plistDict_t *dict, plistElem_t *key, plistElem_t *val);
+arStatus_t      PList_RemoveValueForKey(plistDict_t *dict, plistElem_t *key);
+
+struct  __plist_element_tag
+{
+        plistElemType_t type;
+        
+        union
+        {
+                plistString_t           str;
+                plistBoolean_t          boolean;
+                plistNumber_t           number;
+                plistData_t             data;
+                plistDate_t             date;
+                plistArray_t            array;
+                plistDict_t             dict;
+        };
+};
+
+
+
+plistElem_t*    PList_CreateElem(plistElemType_t        t);
+void            PList_DestroyElem(plistElem_t            *elem);
+#define         PList_GetElemType(_elem)        ((_elem)->type)
+
+
+
+
+#endif
+
+
+
+/*plistElem_t*/
+
 
 plistElem_t*    PList_CreateElem(plistElemType_t        t)
 {
@@ -83,9 +537,6 @@ void            PList_DestroyElem(plistElem_t            *elem)
 {
         AR_ASSERT(elem != NULL);
 }
-
-
-
 
 
 /********************************************************XML Parser********************************************************/
@@ -119,7 +570,6 @@ plistXMLParser_t*       PList_CreateXMLParser()
         parser->end = NULL;
         parser->has_error = false;
         
-        parser->root = NULL;
         
         return parser;
         
@@ -171,9 +621,8 @@ void                    PList_ClearXMLParser(plistXMLParser_t *parser)
         parser->curr = NULL;
         parser->end = NULL;
         parser->has_error = false;
-        
-        parser->root = NULL;
 }
+
 
 
 arStatus_t              PList_SetXMLParserWithWcs(plistXMLParser_t *parser, const wchar_t *xml, size_t length)
@@ -647,330 +1096,7 @@ static plistElem_t* __parse_xml_integertag(plistXMLParser_t *parser);
 
 static plistElem_t* __get_string(plistXMLParser_t *parser);
 static ar_bool_t    __check_for_closetag(plistXMLParser_t *parser, const wchar_t *tag, size_t tag_len);
-
-
-static plistElem_t*     __parse_xml_element(plistXMLParser_t *parser)
-{
-        const wchar_t *marker;
-        ar_int_t        marker_length;
-        ar_bool_t       is_empty;
-        ar_uint_t       marker_idx;
-        AR_ASSERT(parser != NULL);
-        AR_ASSERT(parser->curr != NULL);
-        
-        marker = parser->curr;
-        marker_length = -1;
-        is_empty = false;
-        marker_idx = -1;
-        
-        while(parser->curr < parser->end)
-        {
-                wchar_t ch = *parser->curr;
-                
-                if(AR_iswspace(ch))
-                {
-                        if(marker_length == -1)
-                        {
-                                marker_length = parser->curr - marker;
-                        }
-                }else if(ch == L'>')
-                {
-                        break;
-                }
-                
-                parser->curr++;
-        }
-        
-        if(parser->curr >= parser->end)
-        {
-                return NULL;
-        }
-        
-        if( *(parser->curr - 1) == L'/')
-        {
-                is_empty = true;
-        }
-        
-        if(marker_length == -1)
-        {
-                marker_length = parser->curr - (is_empty ? 1 : 0) - marker;
-        }
-        
-        parser->curr++; // Advance past '>'
-        
-        
-        if(marker_length == 0)
-        {
-                parser->curr = marker;
-                parser->has_error = true;
-                AR_FormatString(parser->errmsg, L"Malformed tag on line %qu", __calc_linenumber(parser));
-                return NULL;
-
-        }
-
-        switch (*marker)
-        {
-                case L'A':
-                case L'a':   // Array
-                        if(marker_length == ARRAY_TAG_LENGTH && __match_string(marker, __g_plist_tags[ARRAY_IX], ARRAY_TAG_LENGTH))
-                        {
-                                marker_idx = ARRAY_IX;
-                        }
-                        break;
-                case L'D': // Dictionary, data, or date; Fortunately, they all have the same marker length....
-                case L'd':
-                        if (marker_length != DICT_TAG_LENGTH)
-                        {
-                                break;
-                        }
-                        
-                        if(__match_string(marker, __g_plist_tags[DICT_IX], DICT_TAG_LENGTH))
-                        {
-                                marker_idx = DICT_IX;
-                        }else if(__match_string(marker, __g_plist_tags[DATA_IX], DATA_TAG_LENGTH))
-                        {
-                                marker_idx = DATA_IX;
-                        }else if(__match_string(marker, __g_plist_tags[DATE_IX], DATE_TAG_LENGTH))
-                        {
-                                marker_idx = DATE_IX;
-                        }
-                        
-                        break;
-                        
-                case L'I':
-                case L'i': // integer
-                        if(marker_length == INTEGER_TAG_LENGTH && __match_string(marker, __g_plist_tags[INTEGER_IX], INTEGER_TAG_LENGTH))
-                        {
-                                marker_idx = INTEGER_IX;
-                        }
-                        break;
-                        
-                case L'K':
-                case L'k': // Key of a dictionary
-                        if(marker_length == KEY_TAG_LENGTH && __match_string(marker, __g_plist_tags[KEY_IX], KEY_TAG_LENGTH))
-                        {
-                                marker_idx = KEY_IX;
-                        }
-                        break;
-                        
-                case L'P':
-                case L'p': // Plist
-                        
-                        if(marker_length == PLIST_TAG_LENGTH && __match_string(marker, __g_plist_tags[PLIST_IX], PLIST_TAG_LENGTH))
-                        {
-                                marker_idx = PLIST_IX;
-                        }
-                        break;
-                case L'R':
-                case L'r': // real
-                        
-                        if(marker_length == REAL_TAG_LENGTH && __match_string(marker, __g_plist_tags[REAL_IX], REAL_TAG_LENGTH))
-                        {
-                                marker_idx = REAL_IX;
-                        }
-                        break;
-                        
-                case L'S':
-                case L's': // String
-                        
-                        if(marker_length == STRING_TAG_LENGTH && __match_string(marker, __g_plist_tags[STRING_IX], STRING_TAG_LENGTH))
-                        {
-                                marker_idx = STRING_IX;
-                        }
-                        break;
-                        
-                case L'T':
-                case L't': // true (boolean)
-                        if(marker_length == TRUE_TAG_LENGTH && __match_string(marker, __g_plist_tags[TRUE_IX], TRUE_TAG_LENGTH))
-                        {
-                                marker_idx = TRUE_IX;
-                        }
-                        break;
-                case L'F':
-                case L'f': // false (boolean)
-                        
-                        if(marker_length == FALSE_TAG_LENGTH && __match_string(marker, __g_plist_tags[FALSE_IX], FALSE_TAG_LENGTH))
-                        {
-                                marker_idx = FALSE_IX;
-                        }
-                        break;
-        }
-
-        
-        
-        
-        switch (marker_idx)
-        {
-                case PLIST_IX:
-                        if (is_empty)
-                        {
-                                parser->has_error = true;
-                                AR_FormatString(parser->errmsg, L"Encountered empty plist tag", __calc_linenumber(parser));
-                                return NULL;
-                        }
-                        return __parse_xml_plisttag(parser);
-                case ARRAY_IX:
-                        
-                        if (is_empty)
-                        {
-                                plistElem_t *arr = PList_CreateElem(PLIST_ELEM_ARRAY_T);
-                                
-                                if(arr == NULL)
-                                {
-                                        parser->has_error = true;
-                                        AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
-                                        return NULL;
-                                }else
-                                {
-                                        return arr;
-                                }
-                        }else
-                        {
-                                return __parse_xml_arraytag(parser);
-                        }
-                case DICT_IX:
-                        if (is_empty)
-                        {
-                                plistElem_t *dict = PList_CreateElem(PLIST_ELEM_DICT_T);
-                                
-                                if(dict == NULL)
-                                {
-                                        parser->has_error = true;
-                                        AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
-                                        return NULL;
-                                }else
-                                {
-                                        return dict;
-                                }
-                        }else
-                        {
-                                return __parse_xml_dicttag(parser);
-                        }
-                case KEY_IX:
-                case STRING_IX:
-                {
-                        size_t tag_len = 0;
-                        plistElem_t *str = NULL;
-                        
-                        tag_len = marker_idx == KEY_IX ? KEY_TAG_LENGTH : STRING_TAG_LENGTH;
-                        
-                        if(is_empty)
-                        {
-                                str = PList_CreateElem(PLIST_ELEM_STRING_T);
-                                if(str == NULL)
-                                {
-                                        parser->has_error = true;
-                                        AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
-                                        return NULL;
-                                }else
-                                {
-                                        return str;
-                                }
-                        }else
-                        {
-                                str = __get_string(parser);
-                                
-                                if(str == NULL) // getString will already have set the error string
-                                {
-                                        return NULL;
-                                }
-                                
-                                if(!__check_for_closetag(parser, __g_plist_tags[marker_idx], tag_len))
-                                {
-                                        PList_DestroyElem(str);
-                                        str = NULL;
-                                        return NULL;
-                                }
-                                
-                                return str;
-                        }
-                }
-                case DATA_IX:
-                        if(is_empty)
-                        {
-                                parser->has_error = true;
-                                AR_FormatString(parser->errmsg, L"Encountered empty <data> on line %qu", __calc_linenumber(parser));
-                                return NULL;
-                        }else
-                        {
-                                return __parse_xml_datatag(parser);
-                        }
-                case DATE_IX:
-                        if (is_empty)
-                        {
-                                parser->has_error = true;
-                                AR_FormatString(parser->errmsg, L"Encountered empty <date> on line %qu", __calc_linenumber(parser));
-                                return NULL;
-                        } else {
-                                return __parse_xml_datetag(parser);
-                        }
-                case TRUE_IX:
-                        if (!is_empty)
-                        {
-                                if(!__check_for_closetag(parser, __g_plist_tags[TRUE_IX], TRUE_TAG_LENGTH))
-                                {
-                                        return NULL;
-                                }
-                        }else
-                        {
-                                return __g_boolean_true;
-                        }
-                case FALSE_IX:
-                        if (!is_empty)
-                        {
-                                if(!__check_for_closetag(parser, __g_plist_tags[FALSE_IX], FALSE_TAG_LENGTH))
-                                {
-                                        return NULL;
-                                }
-                        }else
-                        {
-                                return __g_boolean_false;
-                        }
-                        
-                case REAL_IX:
-                        if(is_empty)
-                        {
-                                parser->has_error = true;
-                                AR_FormatString(parser->errmsg, L"Encountered empty <real> on line %qu", __calc_linenumber(parser));
-                                return NULL;
-                        }else
-                        {
-                                return __parse_xml_realtag(parser);
-                        }
-                case INTEGER_IX:
-                        if(is_empty)
-                        {
-                                parser->has_error = true;
-                                AR_FormatString(parser->errmsg, L"Encountered empty <integer> on line %qu", __calc_linenumber(parser));
-                                return NULL;
-                        }else
-                        {
-                                return __parse_xml_integertag(parser);
-                        }
-                default:
-                {
-                        const wchar_t *marker_str = AR_wcsndup(marker, marker_length);
-                        
-                        parser->has_error = true;
-                        parser->curr = marker;
-                        
-                        if(marker_str == NULL)
-                        {
-                                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
-                        }else
-                        {
-                                parser->has_error = true;
-                                AR_FormatString(parser->errmsg, L"Encountered unknown tag %ls on line %qu", marker_str, __calc_linenumber(parser));
-                                AR_DEL(marker_str);
-                        }
-                        return NULL;
-                }
-        }
-
-        
-        
-        
-}
+static plistElem_t*     __parse_xml_element(plistXMLParser_t *parser);
 
 
 static ar_bool_t __cat_from_mark_to_buf(const wchar_t *beg, const wchar_t *end, plistElem_t *str)
@@ -1889,10 +2015,77 @@ static plistElem_t* __parse_xml_realtag(plistXMLParser_t *parser)
                 goto INVALID_POINT;
         }
         
+        num = PList_CreateElem(PLIST_ELEM_NUMBER_T);
+
+        if(num == NULL)
+        {
+                parser->has_error = true;
+                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                goto INVALID_POINT;
+        }
+        
+        
         wcs = PList_GetStringCString(&str->str);
+        num->number.type = PLIST_NUMBER_REAL_T;
         
+        if(AR_wcsicmp(wcs, L"nan") == 0)
+        {
+                num->number.real.t = PLIST_REAL_NAN_T;
+        }else if(AR_wcsicmp(wcs, L"+infinity") == 0)
+        {
+                num->number.real.t = PLIST_REAL_POSITIVE_INF_T;
+                
+        }else if(AR_wcsicmp(wcs, L"-infinity") == 0)
+        {
+                num->number.real.t = PLIST_REAL_NEGATIVE_INF_T;
+                
+        }else if(AR_wcsicmp(wcs, L"infinity") == 0)
+        {
+                num->number.real.t = PLIST_REAL_INF_T;
+                
+        }else if(AR_wcsicmp(wcs, L"inf") == 0)
+        {
+                num->number.real.t = PLIST_REAL_INF_T;
+                
+        }else if(AR_wcsicmp(wcs, L"-inf") == 0)
+        {
+                num->number.real.t = PLIST_REAL_NEGATIVE_INF_T;
+                
+        }else if(AR_wcsicmp(wcs, L"+inf") == 0)
+        {
+                num->number.real.t = PLIST_REAL_POSITIVE_INF_T;
+        }else
+        {
+                num->number.real.t = PLIST_REAL_NORMAL_T;
+
+                if(AR_wtod(wcs, &num->number.real.num) == NULL)
+                {
+                        parser->has_error = true;
+                        AR_FormatString(parser->errmsg, L"Encountered misformatted real %ls on line %qu)", wcs, __calc_linenumber(parser));
+                        goto INVALID_POINT;
+                }
+                
+                if(AR_is_nan_dbl(num->number.real.num))
+                {
+                        num->number.real.t = PLIST_REAL_NAN_T;
+                }
+                
+                if(AR_is_inf_dbl(num->number.real.num))
+                {
+                        num->number.real.t = PLIST_REAL_INF_T;
+                }
+        }
         
+        if(!__check_for_closetag(parser, __g_plist_tags[REAL_IX], REAL_TAG_LENGTH))
+        {
+                goto INVALID_POINT;
+        }
         
+        if(str)
+        {
+                PList_DestroyElem(str);
+                str = NULL;
+        }
         
         return num;
 INVALID_POINT:
@@ -1912,28 +2105,475 @@ INVALID_POINT:
         return NULL;
 }
 
-static plistElem_t* __parse_xml_integertag(plistXMLParser_t *parser);
 
 
-
-#if(0)
-INFINITY
-
-#endif
-
-
-arStatus_t              PList_ParseXML(plistXMLParser_t *parser, plistElem_t **result)
+static plistElem_t* __parse_xml_integertag(plistXMLParser_t *parser)
 {
-        arStatus_t status;
-        AR_ASSERT(parser != NULL && result != NULL);
         
-        status = AR_S_YES;
+        plistElem_t *str, *num;
+        const wchar_t *wcs;
+        AR_ASSERT(parser != NULL && parser->curr != NULL);
         
+        str = NULL;
+        num = NULL;
+        wcs = NULL;
+        
+        str = __get_string(parser);
+        
+        if(str == NULL)
+        {
+                if(!parser->has_error)
+                {
+                        parser->has_error = true;
+                        AR_FormatString(parser->errmsg, L"Encountered empty <integer> on line %qu)", __calc_linenumber(parser));
+                }
+                goto INVALID_POINT;
+        }
+        
+        num = PList_CreateElem(PLIST_ELEM_NUMBER_T);
+        
+        if(num == NULL)
+        {
+                parser->has_error = true;
+                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                goto INVALID_POINT;
+        }
+        
+        wcs = PList_GetStringCString(&str->str);
+        num->number.type = PLIST_NUMBER_REAL_T;
+        
+        if(AR_wtou64(wcs, &num->number.integer.unsigned_num, 0) == NULL)
+        {
+                if(AR_wtoi64(wcs, &num->number.integer.signed_num, 0) == NULL)
+                {
+                        parser->has_error = true;
+                        AR_FormatString(parser->errmsg, L"Invalid <integer> %ls on line %qu)", wcs, __calc_linenumber(parser));
+                        goto INVALID_POINT;
+                        
+                }else
+                {
+                        num->number.integer.is_signed = true;
+                }
+        }else
+        {
+                num->number.integer.is_signed = false;
+        }
+        
+        
+        if(str)
+        {
+                PList_DestroyElem(str);
+                str = NULL;
+        }
+        
+        return num;
+INVALID_POINT:
+        
+        if(num)
+        {
+                PList_DestroyElem(num);
+                num = NULL;
+        }
+        
+        if(str)
+        {
+                PList_DestroyElem(str);
+                str = NULL;
+        }
+        
+        return NULL;
+   
+}
+
+static plistElem_t*     __parse_xml_element(plistXMLParser_t *parser)
+{
+        const wchar_t *marker;
+        ar_int_t        marker_length;
+        ar_bool_t       is_empty;
+        ar_uint_t       marker_idx;
+        AR_ASSERT(parser != NULL);
+        AR_ASSERT(parser->curr != NULL);
+        
+        marker = parser->curr;
+        marker_length = -1;
+        is_empty = false;
+        marker_idx = -1;
+        
+        while(parser->curr < parser->end)
+        {
+                wchar_t ch = *parser->curr;
+                
+                if(AR_iswspace(ch))
+                {
+                        if(marker_length == -1)
+                        {
+                                marker_length = parser->curr - marker;
+                        }
+                }else if(ch == L'>')
+                {
+                        break;
+                }
+                
+                parser->curr++;
+        }
+        
+        if(parser->curr >= parser->end)
+        {
+                return NULL;
+        }
+        
+        if( *(parser->curr - 1) == L'/')
+        {
+                is_empty = true;
+        }
+        
+        if(marker_length == -1)
+        {
+                marker_length = parser->curr - (is_empty ? 1 : 0) - marker;
+        }
+        
+        parser->curr++; // Advance past '>'
+        
+        
+        if(marker_length == 0)
+        {
+                parser->curr = marker;
+                parser->has_error = true;
+                AR_FormatString(parser->errmsg, L"Malformed tag on line %qu", __calc_linenumber(parser));
+                return NULL;
+                
+        }
+        
+        switch (*marker)
+        {
+                case L'A':
+                case L'a':   // Array
+                        if(marker_length == ARRAY_TAG_LENGTH && __match_string(marker, __g_plist_tags[ARRAY_IX], ARRAY_TAG_LENGTH))
+                        {
+                                marker_idx = ARRAY_IX;
+                        }
+                        break;
+                case L'D': // Dictionary, data, or date; Fortunately, they all have the same marker length....
+                case L'd':
+                        if (marker_length != DICT_TAG_LENGTH)
+                        {
+                                break;
+                        }
+                        
+                        if(__match_string(marker, __g_plist_tags[DICT_IX], DICT_TAG_LENGTH))
+                        {
+                                marker_idx = DICT_IX;
+                        }else if(__match_string(marker, __g_plist_tags[DATA_IX], DATA_TAG_LENGTH))
+                        {
+                                marker_idx = DATA_IX;
+                        }else if(__match_string(marker, __g_plist_tags[DATE_IX], DATE_TAG_LENGTH))
+                        {
+                                marker_idx = DATE_IX;
+                        }
+                        
+                        break;
+                        
+                case L'I':
+                case L'i': // integer
+                        if(marker_length == INTEGER_TAG_LENGTH && __match_string(marker, __g_plist_tags[INTEGER_IX], INTEGER_TAG_LENGTH))
+                        {
+                                marker_idx = INTEGER_IX;
+                        }
+                        break;
+                        
+                case L'K':
+                case L'k': // Key of a dictionary
+                        if(marker_length == KEY_TAG_LENGTH && __match_string(marker, __g_plist_tags[KEY_IX], KEY_TAG_LENGTH))
+                        {
+                                marker_idx = KEY_IX;
+                        }
+                        break;
+                        
+                case L'P':
+                case L'p': // Plist
+                        
+                        if(marker_length == PLIST_TAG_LENGTH && __match_string(marker, __g_plist_tags[PLIST_IX], PLIST_TAG_LENGTH))
+                        {
+                                marker_idx = PLIST_IX;
+                        }
+                        break;
+                case L'R':
+                case L'r': // real
+                        
+                        if(marker_length == REAL_TAG_LENGTH && __match_string(marker, __g_plist_tags[REAL_IX], REAL_TAG_LENGTH))
+                        {
+                                marker_idx = REAL_IX;
+                        }
+                        break;
+                        
+                case L'S':
+                case L's': // String
+                        
+                        if(marker_length == STRING_TAG_LENGTH && __match_string(marker, __g_plist_tags[STRING_IX], STRING_TAG_LENGTH))
+                        {
+                                marker_idx = STRING_IX;
+                        }
+                        break;
+                        
+                case L'T':
+                case L't': // true (boolean)
+                        if(marker_length == TRUE_TAG_LENGTH && __match_string(marker, __g_plist_tags[TRUE_IX], TRUE_TAG_LENGTH))
+                        {
+                                marker_idx = TRUE_IX;
+                        }
+                        break;
+                case L'F':
+                case L'f': // false (boolean)
+                        
+                        if(marker_length == FALSE_TAG_LENGTH && __match_string(marker, __g_plist_tags[FALSE_IX], FALSE_TAG_LENGTH))
+                        {
+                                marker_idx = FALSE_IX;
+                        }
+                        break;
+        }
+        
+        
+        
+        
+        switch (marker_idx)
+        {
+                case PLIST_IX:
+                        if (is_empty)
+                        {
+                                parser->has_error = true;
+                                AR_FormatString(parser->errmsg, L"Encountered empty plist tag", __calc_linenumber(parser));
+                                return NULL;
+                        }
+                        return __parse_xml_plisttag(parser);
+                case ARRAY_IX:
+                        
+                        if (is_empty)
+                        {
+                                plistElem_t *arr = PList_CreateElem(PLIST_ELEM_ARRAY_T);
+                                
+                                if(arr == NULL)
+                                {
+                                        parser->has_error = true;
+                                        AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                                        return NULL;
+                                }else
+                                {
+                                        return arr;
+                                }
+                        }else
+                        {
+                                return __parse_xml_arraytag(parser);
+                        }
+                case DICT_IX:
+                        if (is_empty)
+                        {
+                                plistElem_t *dict = PList_CreateElem(PLIST_ELEM_DICT_T);
+                                
+                                if(dict == NULL)
+                                {
+                                        parser->has_error = true;
+                                        AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                                        return NULL;
+                                }else
+                                {
+                                        return dict;
+                                }
+                        }else
+                        {
+                                return __parse_xml_dicttag(parser);
+                        }
+                case KEY_IX:
+                case STRING_IX:
+                {
+                        size_t tag_len = 0;
+                        plistElem_t *str = NULL;
+                        
+                        tag_len = marker_idx == KEY_IX ? KEY_TAG_LENGTH : STRING_TAG_LENGTH;
+                        
+                        if(is_empty)
+                        {
+                                str = PList_CreateElem(PLIST_ELEM_STRING_T);
+                                if(str == NULL)
+                                {
+                                        parser->has_error = true;
+                                        AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                                        return NULL;
+                                }else
+                                {
+                                        return str;
+                                }
+                        }else
+                        {
+                                str = __get_string(parser);
+                                
+                                if(str == NULL) // getString will already have set the error string
+                                {
+                                        return NULL;
+                                }
+                                
+                                if(!__check_for_closetag(parser, __g_plist_tags[marker_idx], tag_len))
+                                {
+                                        PList_DestroyElem(str);
+                                        str = NULL;
+                                        return NULL;
+                                }
+                                
+                                return str;
+                        }
+                }
+                case DATA_IX:
+                        if(is_empty)
+                        {
+                                parser->has_error = true;
+                                AR_FormatString(parser->errmsg, L"Encountered empty <data> on line %qu", __calc_linenumber(parser));
+                                return NULL;
+                        }else
+                        {
+                                return __parse_xml_datatag(parser);
+                        }
+                case DATE_IX:
+                        if (is_empty)
+                        {
+                                parser->has_error = true;
+                                AR_FormatString(parser->errmsg, L"Encountered empty <date> on line %qu", __calc_linenumber(parser));
+                                return NULL;
+                        } else {
+                                return __parse_xml_datetag(parser);
+                        }
+                case TRUE_IX:
+                        if (!is_empty)
+                        {
+                                if(!__check_for_closetag(parser, __g_plist_tags[TRUE_IX], TRUE_TAG_LENGTH))
+                                {
+                                        return NULL;
+                                }
+                        }else
+                        {
+                                return __g_boolean_true;
+                        }
+                case FALSE_IX:
+                        if (!is_empty)
+                        {
+                                if(!__check_for_closetag(parser, __g_plist_tags[FALSE_IX], FALSE_TAG_LENGTH))
+                                {
+                                        return NULL;
+                                }
+                        }else
+                        {
+                                return __g_boolean_false;
+                        }
+                        
+                case REAL_IX:
+                        if(is_empty)
+                        {
+                                parser->has_error = true;
+                                AR_FormatString(parser->errmsg, L"Encountered empty <real> on line %qu", __calc_linenumber(parser));
+                                return NULL;
+                        }else
+                        {
+                                return __parse_xml_realtag(parser);
+                        }
+                case INTEGER_IX:
+                        if(is_empty)
+                        {
+                                parser->has_error = true;
+                                AR_FormatString(parser->errmsg, L"Encountered empty <integer> on line %qu", __calc_linenumber(parser));
+                                return NULL;
+                        }else
+                        {
+                                return __parse_xml_integertag(parser);
+                        }
+                default:
+                {
+                        const wchar_t *marker_str = AR_wcsndup(marker, marker_length);
+                        
+                        parser->has_error = true;
+                        parser->curr = marker;
+                        
+                        if(marker_str == NULL)
+                        {
+                                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                        }else
+                        {
+                                parser->has_error = true;
+                                AR_FormatString(parser->errmsg, L"Encountered unknown tag %ls on line %qu", marker_str, __calc_linenumber(parser));
+                                AR_DEL(marker_str);
+                        }
+                        return NULL;
+                }
+        }
+        
+        
+        
+        
+}
+
+static plistElem_t*     __parse_property_list(plistXMLParser_t *parser)
+{
+        AR_ASSERT(parser != NULL && parser->curr != NULL);
+        
+        
+        while(!parser->has_error && parser->curr < parser->end)
+        {
+                wchar_t ch;
+                __skip_whitespace(parser);
+                
+                if(parser->curr + 1 >= parser->end)
+                {
+                        parser->has_error = true;
+                        AR_FormatString(parser->errmsg, L"No XML content found");
+                        return NULL;
+                }
+                
+                if(*parser->curr != L'<')
+                {
+                        parser->has_error = true;
+                        AR_FormatString(parser->errmsg, L"Unexpected character %c at line %qu", *parser->curr, __calc_linenumber(parser));
+                        return NULL;
+                }
+                
+                parser->curr++;
+                ch = *parser->curr;
+                
+                if(ch == L'!')
+                {
+                        /*comment or DTD*/
+                        parser->curr++;
+                        if(parser->curr + 1 < parser->end && *parser->curr == L'-' && *(parser->curr + 1) == L'-')
+                        {
+                                /*Comment*/
+                                parser->curr += 2;
+                                __skip_xml_comment(parser);
+                        }else
+                        {
+                                __skip_xml_dtd(parser);
+                        }
+                }else if(ch == L'?')
+                {
+                        parser->curr++;
+                        __skip_xml_processing_instruction(parser);
+                }else
+                {
+                        return __parse_xml_element(parser);
+                }
+        }
+        
+        if(!parser->has_error)
+        {
+                parser->has_error = true;
+                AR_FormatString(parser->errmsg, L"Encountered unexpected EOF");
+        }
+        return NULL;
+}
 
 
 
-END_POINT:
-        return status;
+plistElem_t*            PList_ParseXML(plistXMLParser_t *parser)
+{
+        AR_ASSERT(parser != NULL && parser->curr != NULL);
+        
+        return __parse_property_list(parser);
+        
 }
 
 
@@ -2176,7 +2816,7 @@ arStatus_t              PList_LoadXMLFromFile(const wchar_t *path, arString_t *o
 		}
         
         
-		buf = AR_CreateBuffer(1024);
+		buf = AR_CreateBuffer(0);
         
 		if(buf == NULL)
 		{

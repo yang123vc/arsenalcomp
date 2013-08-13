@@ -546,12 +546,12 @@ static arStatus_t	SN_InsertToDict(snDict_t *dict, snObject_t *key, snObject_t *v
 				dict->pairs[dict->count].val = value;
 				dict->count++;
 
-				
+#if defined(AR_DEBUG)
 				for(i = 0; i < dict->count; ++i)
 				{
 						AR_ASSERT(dict->pairs[i].key != NULL && dict->pairs[i].val != NULL);
 				}
-
+#endif
 				
 				return AR_S_YES;
 		}
@@ -572,7 +572,7 @@ static arStatus_t	SN_RemoveFromDict(snDict_t *dict, const snObject_t *key)
 
 		if(i == dict->count)
 		{
-				return AR_E_RANGE;
+                return AR_E_NOTFOUND;
 		}
 
 		SN_DestroyObject(dict->pairs[i].key);
