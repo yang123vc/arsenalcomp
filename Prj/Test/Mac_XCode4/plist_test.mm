@@ -158,17 +158,33 @@ static void time_test()
        // localtime_r(&time, &tm);
         
 //        const struct tm *gm_tm = gmtime(&tm);
+}
 
+static void real_test()
+{
+        AR_ASSERT(!AR_is_inf_flt(0.14));
+        AR_ASSERT(!AR_is_inf_dbl(0.14));
+        
+        AR_ASSERT(!AR_is_nan_flt(0.14));
+        AR_ASSERT(!AR_is_nan_dbl(0.14));
+        
+        AR_ASSERT(AR_is_nan_flt(NAN));
+        AR_ASSERT(AR_is_nan_dbl(NAN));
+        
+        AR_ASSERT(!AR_is_inf_dbl(HUGE_VAL));
+        
         
 }
+
 
 void plist_test()
 {
         //format_test();
         //base64_test_for_plist();
         //load_test();
+        //time_test();
         
-        time_test();
+        real_test();
 }
 
 
