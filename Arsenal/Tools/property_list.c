@@ -21,7 +21,7 @@ plistElem_t     *__g_boolean_false = NULL;
 
 arStatus_t      PList_Init()
 {
-        return AR_S_YES;
+
         arStatus_t status;
         
         status = AR_S_YES;
@@ -61,7 +61,7 @@ END_POINT:
 
 void            PList_UnInit()
 {
-        return;
+
         PList_DestroyElem(__g_boolean_true);
         PList_DestroyElem(__g_boolean_false);
          
@@ -1463,7 +1463,8 @@ static ar_bool_t    __check_for_closetag(plistXMLParser_t *parser, const wchar_t
         
         AR_ASSERT(parser != NULL && parser->curr != NULL);
         AR_ASSERT(tag != NULL && tag_len > 0);
-        if(parser->end - parser->curr < tag_len + 3)
+        
+		if((size_t)(parser->end - parser->curr) < (tag_len + 3))
         {
                 if(!parser->has_error)
                 {
@@ -1801,7 +1802,7 @@ static plistElem_t* __parse_xml_datatag(plistXMLParser_t *parser)
                         goto INVALID_POINT;
                 }
                 
-                for(i = 0; i < parser->curr - mark; ++i)
+                for(i = 0; i < (size_t)(parser->curr - mark); ++i)
                 {
                         base64_str[i] = (char)mark[i];
                 }
@@ -2190,7 +2191,7 @@ static plistElem_t*     __parse_xml_element(plistXMLParser_t *parser)
         const wchar_t *marker;
         ar_int_t        marker_length;
         ar_bool_t       is_empty;
-        ar_uint_t       marker_idx;
+        ar_int_t       marker_idx;
         AR_ASSERT(parser != NULL);
         AR_ASSERT(parser->curr != NULL);
         
