@@ -6,7 +6,8 @@
 //  Copyright (c) 2013年 none. All rights reserved.
 //
 
-
+#include <CoreFoundation/CoreFoundation.h>
+#import <Foundation/Foundation.h>
 #include "Arsenal.h"
 
 
@@ -74,11 +75,100 @@ static void load_test()
 
 
 
+#define __DATE_TIME_MILLISECONDS        (1000)
+#define __DATE_TIME_SECONDS             (1000    *       __DATE_TIME_MILLISECONDS)
+#define __DATE_TIME_MINUTES             (60      *       __DATE_TIME_SECONDS)
+#define __DATE_TIME_HOURS               (60      *       __DATE_TIME_MINUTES)
+#define __DATE_TIME_DAYS                (24      *       __DATE_TIME_HOURS)
+
+static double __to_julian_day(ar_int_t year, ar_int_t month, ar_int_t day, ar_int_t hour, ar_int_t minute, ar_int_t second, ar_int_t millisecond, ar_int_t microsecond)
+{
+        // lookup table for (153*month - 457)/5 - note that 3 <= month <= 14.
+        static const ar_int_t lookup[] = {-91, -60, -30, 0, 31, 61, 92, 122, 153, 184, 214, 245, 275, 306, 337};
+        
+        // day to double
+        double dday = double(day) + ((double((hour*60 + minute)*60 + second)*1000 + millisecond)*1000 + microsecond)/86400000000.0;
+        
+        if (month < 3)
+        {
+                month += 12;
+                --year;
+        }
+        
+        double dyear = (double)year;
+        return dday + lookup[month] + 365*year + AR_floor_dbl(dyear/4) - AR_floor_dbl(dyear/100) + AR_floor_dbl(dyear/400) + 1721118.5;
+}
+
+static ar_int_64_t __to_utc_time(ar_int_t year, ar_int_t month, ar_int_t day, ar_int_t hour, ar_int_t minute, ar_int_t second, ar_int_t millisecond, ar_int_t microsecond)
+{
+        double julian_day = __to_julian_day(year, month, day, 0, 0, 0, 0, 0);
+        ar_int_64_t utc_time = (ar_int_64_t)(((julian_day - 2299160.5)*864000000000.0));
+        
+        return utc_time + 10 * (hour*__DATE_TIME_HOURS + minute*__DATE_TIME_MINUTES + second*__DATE_TIME_SECONDS + millisecond*__DATE_TIME_MILLISECONDS + microsecond);
+}
+
+
+static void time_test()
+{
+        CFAbsoluteTime at = 0.0;
+        
+        CFGregorianDate date = {1984, 1, 1, 1, 0, 0};
+      
+        
+        at = CFGregorianDateGetAbsoluteTime(date, NULL);
+        
+        AR_printf(L"%f\r\n", at);
+
+        
+        //ar_int_64_t utc_time = __to_utc_time(1984, 1,1,1,0,0,0,0);
+        
+        
+        time_t t;
+        struct tm tm;
+        AR_memset(&tm, 0, sizeof(tm));
+        
+        tm.tm_year = 1984 - 1900;
+        tm.tm_mon = 0;
+        tm.tm_mday = 1;
+        tm.tm_hour = 1;
+        tm.tm_min = 1;
+        tm.tm_sec = 1;
+        //tm.tm_zone = "CST";
+        
+        const char *ts = asctime(&tm);
+        printf("%s\r\n", ts);
+        
+        t = mktime(&tm);
+        
+        struct tm tm2;
+        localtime_r(&t, &tm2);
+        
+#if(0)
+        time_t timep;
+        struct tm *p;
+        time(&timep); /*获得time_t结构的时间，UTC时间*/
+        p = gmtime(&timep); /*转换为struct tm结构的UTC时间*/
+
+//        t = mktime(p);
+#endif
+
+        NSDate *ns_date = [NSDate dateWithTimeIntervalSince1970 : (NSTimeInterval)t];
+        NSLog(@"%@", ns_date);
+        
+       // localtime_r(&time, &tm);
+        
+//        const struct tm *gm_tm = gmtime(&tm);
+
+        
+}
+
 void plist_test()
 {
         //format_test();
         //base64_test_for_plist();
         //load_test();
+        
+        time_test();
 }
 
 

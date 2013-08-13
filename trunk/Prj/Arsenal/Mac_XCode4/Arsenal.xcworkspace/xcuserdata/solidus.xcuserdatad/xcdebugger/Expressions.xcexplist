@@ -3,6 +3,20 @@
    version = "1.0">
    <ContextStates>
       <ContextState
+         contextName = "time_test:plist_test.mm">
+         <PersistentStrings>
+            <PersistentString
+               value = "tm2">
+            </PersistentString>
+            <PersistentString
+               value = "tm">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "time_test:plist_test.cpp">
+      </ContextState>
+      <ContextState
          contextName = "AR_vswprintf:printf.c">
          <PersistentStrings>
             <PersistentString
