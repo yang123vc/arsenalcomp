@@ -31,7 +31,7 @@ arStatus_t	Tools_Init()
         status = PList_Init();
         if(status != AR_S_YES)
         {
-                
+                goto END_POINT;
         }
         plist_is_init = true;
         

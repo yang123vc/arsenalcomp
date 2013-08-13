@@ -1381,6 +1381,12 @@ arStatus_t      AR_path_copydir(const wchar_t *src, const wchar_t *dest);
 /*******************************************************************Math*************************************************************************************************/
 
 
+ar_bool_t	AR_is_inf_flt(float num);
+ar_bool_t	AR_is_inf_dbl(double num);
+ar_bool_t	AR_is_nan_flt(float num);
+ar_bool_t	AR_is_nan_dbl(double num);
+
+
 #define AR_FLOAT_PRINT_PRECISION		3
 
 

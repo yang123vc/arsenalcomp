@@ -18,6 +18,77 @@
 AR_NAMESPACE_BEGIN
 
 
+ar_bool_t	AR_is_nan_flt(float num)
+{
+#if defined(AR_HAS_C99_FEATURE)
+		return isnan(num) != 0;
+#else 
+
+		#if defined(OS_FAMILY_WINDOWS)
+				return _isnan(num) != 0;
+		#else
+				#error "Unknow platform !";
+		#endif
+
+#endif
+}
+
+
+ar_bool_t	AR_is_nan_dbl(double num)
+{
+#if defined(AR_HAS_C99_FEATURE)
+		return isnan(num) != 0;
+#else 
+
+		#if defined(OS_FAMILY_WINDOWS)
+				return _isnan(num) != 0;
+		#else
+				#error "Unknow platform !";
+		#endif
+
+#endif
+}
+
+
+ar_bool_t	AR_is_inf_flt(float num)
+{
+#if defined(AR_HAS_C99_FEATURE)
+		return isinf(num) != 0;
+#else 
+
+		#if defined(OS_FAMILY_WINDOWS)
+				return _finite(num) == 0;
+		#else
+				#error "Unknow platform !";
+		#endif
+
+#endif
+}
+
+
+ar_bool_t	AR_is_inf_dbl(double num)
+{
+#if defined(AR_HAS_C99_FEATURE)
+		return isinf(num) != 0;
+#else 
+
+		#if defined(OS_FAMILY_WINDOWS)
+				return _finite(num) == 0;
+		#else
+				#error "Unknow platform !";
+		#endif
+
+#endif
+}
+
+
+
+
+
+
+
+/****************************************************************************************************************************/
+
 ar_bool_t	AR_is_equal_flt(float x, float y, float epsilon)
 {
 		if(x == y || AR_abs_flt(x - y) < epsilon)
