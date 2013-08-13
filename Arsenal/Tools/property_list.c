@@ -21,6 +21,7 @@ plistElem_t     *__g_boolean_false = NULL;
 
 arStatus_t      PList_Init()
 {
+        return AR_S_YES;
         arStatus_t status;
         
         status = AR_S_YES;
@@ -60,8 +61,10 @@ END_POINT:
 
 void            PList_UnInit()
 {
+        return;
         PList_DestroyElem(__g_boolean_true);
         PList_DestroyElem(__g_boolean_false);
+         
 }
 
 
@@ -1733,28 +1736,188 @@ INVALID_POINT:
 
 }
 
-static plistElem_t* __parse_xml_datetag(plistXMLParser_t *parser);
-static plistElem_t* __parse_xml_realtag(plistXMLParser_t *parser);
+
+
+static ar_bool_t __read_2_digit_number(plistXMLParser_t *parser, ar_uint_32_t *num)
+{
+        wchar_t ch1, ch2;
+        AR_ASSERT(parser != NULL && parser->curr != NULL);
+        
+
+        if(parser->curr + 2 >= parser->end)
+        {
+                return false;
+        }
+        
+        ch1 = *parser->curr;
+        ch2 = *(parser->curr + 1);
+        parser->curr += 2;
+        
+        if(!AR_iswdigit(ch1) || !AR_isdigit(ch2))
+        {
+                return false;
+        }
+        *num = (ch1 - L'0') * 10 + (ch2 - L'0');
+        return true;
+}
+
+
+// YYYY '-' MM '-' DD 'T' hh ':' mm ':' ss 'Z'
+static plistElem_t* __parse_xml_datetag(plistXMLParser_t *parser)
+{
+        ar_uint_32_t year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0;
+
+        ar_bool_t bad_form = false;
+        
+        AR_ASSERT(parser != NULL && parser->curr != NULL);
+
+        while(parser->curr < parser->end && AR_iswdigit(*parser->curr))
+        {
+                year = 10 * year + (*parser->curr) - L'0';
+                parser->curr++;
+        }
+        
+        if (parser->curr >= parser->end || *parser->curr != L'-')
+        {
+                bad_form = true;
+        }else
+        {
+                parser->curr++;
+        }
+
+        
+        if(!bad_form && __read_2_digit_number(parser, &month) && parser->curr < parser->end && *parser->curr == L'-')
+        {
+                parser->curr++;
+        }else
+        {
+                bad_form = true;
+        }
+        
+        
+        if(!bad_form && __read_2_digit_number(parser, &day) && parser->curr < parser->end && *parser->curr == L'T')
+        {
+                parser->curr++;
+        }else
+        {
+                bad_form = true;
+        }
+        
+        
+        if(!bad_form && __read_2_digit_number(parser, &hour) && parser->curr < parser->end && *parser->curr == L':')
+        {
+                parser->curr++;
+        }else
+        {
+                bad_form = true;
+        }
+        
+        
+        
+        if(!bad_form && __read_2_digit_number(parser, &minute) && parser->curr < parser->end && *parser->curr == L':')
+        {
+                parser->curr++;
+        }else
+        {
+                bad_form = true;
+        }
+        
+        
+        if(!bad_form && __read_2_digit_number(parser, &second) && parser->curr < parser->end && *parser->curr == L'Z')
+        {
+                parser->curr++;
+        }else
+        {
+                bad_form = true;
+        }
+        
+        if(bad_form)
+        {
+                parser->has_error = true;
+                AR_FormatString(parser->errmsg, L"Could not interpret <date> at line %qu)", __calc_linenumber(parser));
+                return NULL;
+        }
+        
+        
+        if(!__check_for_closetag(parser, __g_plist_tags[DATE_IX], DATE_TAG_LENGTH))
+        {
+                return NULL;
+        }
+
+        
+        {
+                plistElem_t *date = PList_CreateElem(PLIST_ELEM_DATE_T);
+                
+                if(date == NULL)
+                {
+                        parser->has_error = true;
+                        AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                        return NULL;
+                }
+
+                date->date.year = (ar_uint_16_t)year;
+                date->date.month = (ar_uint_8_t)month;
+                date->date.day = (ar_uint_8_t)day;
+                date->date.hour = (ar_uint_8_t)hour;
+                date->date.minute = (ar_uint_8_t)minute;
+                date->date.second = (ar_uint_8_t)second;
+                return date;
+        }
+}
+
+
+
+static plistElem_t* __parse_xml_realtag(plistXMLParser_t *parser)
+{
+        plistElem_t *str, *num;
+        const wchar_t *wcs;
+        AR_ASSERT(parser != NULL && parser->curr != NULL);
+        
+        str = NULL;
+        num = NULL;
+        wcs = NULL;
+        
+        str = __get_string(parser);
+        
+        if(str == NULL)
+        {
+                if(!parser->has_error)
+                {
+                        parser->has_error = true;
+                        AR_FormatString(parser->errmsg, L"Encountered empty <real> on line %qu)", __calc_linenumber(parser));
+                }
+                goto INVALID_POINT;
+        }
+        
+        wcs = PList_GetStringCString(&str->str);
+        
+        
+        
+        
+        return num;
+INVALID_POINT:
+        
+        if(num)
+        {
+                PList_DestroyElem(num);
+                num = NULL;
+        }
+        
+        if(str)
+        {
+                PList_DestroyElem(str);
+                str = NULL;
+        }
+        
+        return NULL;
+}
+
 static plistElem_t* __parse_xml_integertag(plistXMLParser_t *parser);
 
 
 
 #if(0)
-
-static CFTypeRef parseDataTag(_CFXMLPlistParseInfo *pInfo) {
-        CFDataRef result;
-        const UniChar *base = pInfo->curr;
-        result = __CFPLDataDecode(pInfo, pInfo->mutabilityOption == kCFPropertyListMutableContainersAndLeaves);
-        if (!result) {
-                pInfo->curr = base;
-                pInfo->error = __CFPropertyListCreateError(pInfo->allocator, kCFPropertyListReadCorruptError, CFSTR("Could not interpret <data> at line %d (should be base64-encoded)"), lineNumber(pInfo));
-                return NULL;
-        }
-        if (checkForCloseTag(pInfo, CFXMLPlistTags[DATA_IX], DATA_TAG_LENGTH)) return result;
-        CFRelease(result);
-        return NULL;
-}
-
+INFINITY
 
 #endif
 

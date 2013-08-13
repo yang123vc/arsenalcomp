@@ -7,8 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		671357A617B4D9B6001133BC /* plist_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 671357A517B4D9B6001133BC /* plist_test.cpp */; };
-		671357A717B4D9C2001133BC /* plist_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 671357A517B4D9B6001133BC /* plist_test.cpp */; };
+		671357A617B4D9B6001133BC /* plist_test.mm in Sources */ = {isa = PBXBuildFile; fileRef = 671357A517B4D9B6001133BC /* plist_test.mm */; };
+		671357A717B4D9C2001133BC /* plist_test.mm in Sources */ = {isa = PBXBuildFile; fileRef = 671357A517B4D9B6001133BC /* plist_test.mm */; };
+		671357AA17B9DE13001133BC /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 671357A917B9DE13001133BC /* CoreFoundation.framework */; };
+		671357AD17B9E3E5001133BC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 671357AB17B9E3E5001133BC /* Foundation.framework */; };
+		671357AE17B9E3E5001133BC /* SecurityFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 671357AC17B9E3E5001133BC /* SecurityFoundation.framework */; };
 		67163065155FFB680098ADA3 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6728C3B8154C645A00861D86 /* libiconv.dylib */; };
 		6728C3BC154C646200861D86 /* libpthread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6728C3BB154C646200861D86 /* libpthread.dylib */; };
 		6728C3C0154C64FE00861D86 /* libpthread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6728C3BB154C646200861D86 /* libpthread.dylib */; };
@@ -55,8 +58,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		671357A517B4D9B6001133BC /* plist_test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = plist_test.cpp; sourceTree = SOURCE_ROOT; };
+		671357A517B4D9B6001133BC /* plist_test.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = plist_test.mm; sourceTree = SOURCE_ROOT; };
 		671357A817B4DA51001133BC /* plist_test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = plist_test.h; sourceTree = SOURCE_ROOT; };
+		671357A917B9DE13001133BC /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		671357AB17B9E3E5001133BC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		671357AC17B9E3E5001133BC /* SecurityFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SecurityFoundation.framework; path = System/Library/Frameworks/SecurityFoundation.framework; sourceTree = SDKROOT; };
 		6728C3B8154C645A00861D86 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
 		6728C3BB154C646200861D86 /* libpthread.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpthread.dylib; path = usr/lib/libpthread.dylib; sourceTree = SDKROOT; };
 		673C0BCF154A891100A73324 /* TestFileSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestFileSystem.cpp; sourceTree = SOURCE_ROOT; };
@@ -83,6 +89,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				671357AD17B9E3E5001133BC /* Foundation.framework in Frameworks */,
+				671357AE17B9E3E5001133BC /* SecurityFoundation.framework in Frameworks */,
+				671357AA17B9DE13001133BC /* CoreFoundation.framework in Frameworks */,
 				67F3B18E16884C9C000BA1D7 /* Arsenal.a in Frameworks */,
 				6728C3C1154C650600861D86 /* libiconv.dylib in Frameworks */,
 				6728C3C0154C64FE00861D86 /* libpthread.dylib in Frameworks */,
@@ -105,6 +114,9 @@
 		BE185E9814E846F10095DB44 = {
 			isa = PBXGroup;
 			children = (
+				671357AB17B9E3E5001133BC /* Foundation.framework */,
+				671357AC17B9E3E5001133BC /* SecurityFoundation.framework */,
+				671357A917B9DE13001133BC /* CoreFoundation.framework */,
 				67502261168C9E440015FA03 /* Arsenal.dylib */,
 				67F3B18D16884C9C000BA1D7 /* Arsenal.a */,
 				6728C3BB154C646200861D86 /* libpthread.dylib */,
@@ -139,7 +151,7 @@
 				67F26D14156B55E0003FAA7E /* lfu_cache.cpp */,
 				67DB43F41688505C00F05430 /* marshal_inner_types.h */,
 				67DB43F11688503A00F05430 /* marshal_die_test.cpp */,
-				671357A517B4D9B6001133BC /* plist_test.cpp */,
+				671357A517B4D9B6001133BC /* plist_test.mm */,
 				671357A817B4DA51001133BC /* plist_test.h */,
 			);
 			path = Test;
@@ -222,7 +234,7 @@
 				67F26D15156B55E0003FAA7E /* lfu_cache.cpp in Sources */,
 				67DB43F21688503A00F05430 /* marshal_die_test.cpp in Sources */,
 				67CEFDC5177B66E600D7D9D4 /* Base64Transcoder.c in Sources */,
-				671357A617B4D9B6001133BC /* plist_test.cpp in Sources */,
+				671357A617B4D9B6001133BC /* plist_test.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -230,7 +242,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				671357A717B4D9C2001133BC /* plist_test.cpp in Sources */,
+				671357A717B4D9C2001133BC /* plist_test.mm in Sources */,
 				673C0BD6154A8B3B00A73324 /* test.c in Sources */,
 				BE185ED614E849250095DB44 /* main.c in Sources */,
 				673C0BD1154A891100A73324 /* TestFileSystem.cpp in Sources */,

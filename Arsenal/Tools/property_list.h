@@ -110,16 +110,12 @@ void            PList_UnInitData(plistData_t *data);
 
 typedef struct __plist_date_tag
 {
-        ar_uint_64_t    utc_time;
-        
         ar_uint_16_t    year;
-        ar_uint_16_t    month;
-        ar_uint_16_t    day;
-        ar_uint_16_t    hour;
-        ar_uint_16_t    minute;
-        ar_uint_16_t    second;
-        ar_uint_16_t    millisecond;
-        ar_uint_16_t    microsecond;
+        ar_uint_8_t     month;
+        ar_uint_8_t     day;
+        ar_uint_8_t     hour;
+        ar_uint_8_t     minute;
+        ar_uint_8_t     second;
 }plistDate_t;
 
 
