@@ -294,6 +294,9 @@ static void save_plist_elem_test()
                 status = PList_SaveElemToXML(elem,xml);
                 AR_printf(L"%ls\r\n", AR_CSTR(xml));
                 
+                
+                AR_SaveBomTextFile(L"/Users/solidus/Desktop/1.txt", AR_TXT_BOM_UTF_8, AR_CSTR(xml));
+                
                 AR_DestroyString(xml);
                 xml = NULL;
                 
