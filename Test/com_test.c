@@ -3936,7 +3936,7 @@ static void path_test2()
 
 static void float_test2()
 {
-		AR_is_nan_flt(0.0/0.0);
+		//AR_is_nan_flt(0.0/0.0);
 
 }
 
