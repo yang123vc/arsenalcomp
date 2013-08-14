@@ -391,6 +391,8 @@
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <FloatingPointExceptions>false</FloatingPointExceptions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <AssemblerOutput>NoListing</AssemblerOutput>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -411,6 +413,8 @@
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <FloatingPointExceptions>false</FloatingPointExceptions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <AssemblerOutput>NoListing</AssemblerOutput>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -432,6 +436,8 @@
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <FloatingPointExceptions>false</FloatingPointExceptions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <AssemblerOutput>NoListing</AssemblerOutput>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -453,11 +459,12 @@
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <OpenMPSupport>false</OpenMPSupport>
-      <AssemblerOutput>All</AssemblerOutput>
+      <AssemblerOutput>NoListing</AssemblerOutput>
       <CompileAs>CompileAsCpp</CompileAs>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <FloatingPointExceptions>false</FloatingPointExceptions>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -478,11 +485,12 @@
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <OpenMPSupport>false</OpenMPSupport>
-      <AssemblerOutput>All</AssemblerOutput>
+      <AssemblerOutput>NoListing</AssemblerOutput>
       <CompileAs>CompileAsC</CompileAs>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <FloatingPointExceptions>false</FloatingPointExceptions>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -503,11 +511,12 @@
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <OpenMPSupport>false</OpenMPSupport>
-      <AssemblerOutput>All</AssemblerOutput>
+      <AssemblerOutput>NoListing</AssemblerOutput>
       <CompileAs>CompileAsCpp</CompileAs>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <FloatingPointExceptions>false</FloatingPointExceptions>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -529,6 +538,8 @@
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <FloatingPointExceptions>false</FloatingPointExceptions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <AssemblerOutput>NoListing</AssemblerOutput>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -555,6 +566,8 @@
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <FloatingPointExceptions>false</FloatingPointExceptions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <AssemblerOutput>NoListing</AssemblerOutput>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -582,6 +595,8 @@
       <ExceptionHandling>false</ExceptionHandling>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <MinimalRebuild>false</MinimalRebuild>
+      <AssemblerOutput>NoListing</AssemblerOutput>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -611,6 +626,8 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <MinimalRebuild>false</MinimalRebuild>
+      <AssemblerOutput>NoListing</AssemblerOutput>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -639,6 +656,8 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <MinimalRebuild>false</MinimalRebuild>
+      <AssemblerOutput>NoListing</AssemblerOutput>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -667,6 +686,8 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <MinimalRebuild>false</MinimalRebuild>
+      <AssemblerOutput>NoListing</AssemblerOutput>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
