@@ -233,7 +233,7 @@ arStatus_t      PList_SaveElemToBinary(const plistElem_t *elem, arBuffer_t *data
 
 /*************************************************Parser****************************************************/
 
-
+/*xml plist parser*/
 typedef struct __plist_xml_parser
 {
         
