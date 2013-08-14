@@ -245,9 +245,8 @@ const ar_byte_t*        PList_GetDataPointer(const plistData_t *data)
         {
                 return AR_GetBufferData(data->buf);
         }
-        
-        return AR_GetBufferData(data->buf);
 }
+
 
 size_t                  PList_GetDataLength(const plistData_t *data)
 {
@@ -336,13 +335,13 @@ ar_bool_t      PList_RemoveArrayByIndex(plistArray_t *arr, size_t idx)
         AR_ASSERT(arr != NULL);
 		if(idx >= arr->count)
 		{
-				return AR_E_RANGE;
+				return false;
 		}
         
 		PList_DestroyElem(arr->items[idx]);
 		arr->items[idx] = arr->items[arr->count-1];
 		arr->count--;
-		return AR_S_YES;
+		return true;
 }
 
 /*****plistDict_t***********/
