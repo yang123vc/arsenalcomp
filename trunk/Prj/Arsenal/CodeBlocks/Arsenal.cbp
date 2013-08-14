@@ -265,6 +265,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../Arsenal/Tools/iniobj.h" />
+		<Unit filename="../../../Arsenal/Tools/property_list.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Arsenal/Tools/property_list.h" />
 		<Unit filename="../../../Arsenal/Tools/serializer.c">
 			<Option compilerVar="CC" />
 		</Unit>
