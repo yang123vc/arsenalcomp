@@ -26,8 +26,10 @@ arStatus_t      PList_Init()
         
         status = AR_S_YES;
         
-        __g_boolean_true = PList_CreateElem(PLIST_ELEM_BOOLEAN_T);
-        __g_boolean_false = PList_CreateElem(PLIST_ELEM_BOOLEAN_T);
+        __g_boolean_true = AR_NEW0(plistElem_t);//PList_CreateElem(PLIST_ELEM_BOOLEAN_T);
+        __g_boolean_false = AR_NEW0(plistElem_t);//PList_CreateElem(PLIST_ELEM_BOOLEAN_T);
+        __g_boolean_true->type = PLIST_ELEM_BOOLEAN_T;
+        __g_boolean_false->type = PLIST_ELEM_BOOLEAN_T;
         
         if(__g_boolean_true == NULL || __g_boolean_false == NULL)
         {
@@ -44,13 +46,13 @@ END_POINT:
         {
                 if(__g_boolean_true)
                 {
-                        PList_DestroyElem(__g_boolean_true);
+                        AR_DEL(__g_boolean_true);
                         __g_boolean_true = NULL;
                 }
                 
                 if(__g_boolean_false)
                 {
-                        PList_DestroyElem(__g_boolean_false);
+                        AR_DEL(__g_boolean_false);
                         __g_boolean_false = NULL;
                 }
         }
@@ -62,8 +64,10 @@ END_POINT:
 void            PList_UnInit()
 {
 
-        PList_DestroyElem(__g_boolean_true);
-        PList_DestroyElem(__g_boolean_false);
+        AR_DEL(__g_boolean_true);
+        __g_boolean_true = NULL;
+        AR_DEL(__g_boolean_false);
+        __g_boolean_false = NULL;
          
 }
 
@@ -472,72 +476,155 @@ arStatus_t      PList_RemoveValueForKey(plistDict_t *dict, plistElem_t *key)
 
 
 
-/*plistDict_t*/
-
-
-#if(0)
-
-
-
-typedef struct __plist_dict_tag
-{
-        plistElem_t     **keys;
-        plistElem_t     **values;
-        size_t          count;
-        size_t          cap;
-}plistDict_t;
-
-arStatus_t      PList_InitDict(plistDict_t *dict);
-void            PList_UnInitDict(plistDict_t *dict);
-
-plistElem_t*    PList_FindValueByElem(plistDict_t *dict, const plistElem_t *key);
-plistElem_t*    PList_FindValueByString(plistDict_t *dict, const wchar_t *key);
-arStatus_t      PList_SetDictValueForKey(plistDict_t *dict, plistElem_t *key, plistElem_t *val);
-arStatus_t      PList_RemoveValueForKey(plistDict_t *dict, plistElem_t *key);
-
-struct  __plist_element_tag
-{
-        plistElemType_t type;
-        
-        union
-        {
-                plistString_t           str;
-                plistBoolean_t          boolean;
-                plistNumber_t           number;
-                plistData_t             data;
-                plistDate_t             date;
-                plistArray_t            array;
-                plistDict_t             dict;
-        };
-};
-
-
-
-plistElem_t*    PList_CreateElem(plistElemType_t        t);
-void            PList_DestroyElem(plistElem_t            *elem);
-#define         PList_GetElemType(_elem)        ((_elem)->type)
-
-
-
-
-#endif
-
-
-
 /*plistElem_t*/
 
 
 plistElem_t*    PList_CreateElem(plistElemType_t        t)
 {
-        return NULL;
         
+        plistElem_t *elem = NULL;
+        
+        AR_ASSERT(t < PLIST_ELEM_MAX_T);
+        
+        elem = AR_NEW0(plistElem_t);
+        
+        if(elem == NULL)
+        {
+                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                goto INVALID_POINT;
+        }
+        elem->type = t;
+        switch(elem->type)
+        {
+                case PLIST_ELEM_STRING_T:
+                        if(PList_InitString(&elem->str) != AR_S_YES)
+                        {
+                                goto INVALID_POINT;
+                        }
+                        break;
+                case PLIST_ELEM_BOOLEAN_T:
+                        break;
+                case PLIST_ELEM_NUMBER_T:
+                        break;
+                case PLIST_ELEM_DATA_T:
+                        if(PList_InitData(&elem->data) != AR_S_YES)
+                        {
+                                goto INVALID_POINT;
+                        }
+                        break;
+                case PLIST_ELEM_DATE_T:
+                        break;
+                case PLIST_ELEM_ARRAY_T:
+                        PList_InitArray(&elem->array);
+                        break;
+                case PLIST_ELEM_DICT_T:
+                        PList_InitDict(&elem->dict);
+                        break;
+                case PLIST_ELEM_MAX_T:
+                default:
+                        AR_error(AR_ERR_WARNING, L"invalid plist element type : %u\r\n", t);
+                        goto INVALID_POINT;
+        }
+        
+        return elem;
+        
+INVALID_POINT:
+        if(elem)
+        {
+                AR_DEL(elem);
+                elem = NULL;
+        }
+        return NULL;
 }
 
 void            PList_DestroyElem(plistElem_t            *elem)
 {
         AR_ASSERT(elem != NULL);
+        AR_ASSERT(PList_GetElemType(elem) < PLIST_ELEM_MAX_T);
+ 
+        
+        switch(PList_GetElemType(elem))
+        {
+                case PLIST_ELEM_STRING_T:
+                        PList_UnInitString(&elem->str);
+                        break;
+                case PLIST_ELEM_BOOLEAN_T:
+                        if(elem == __g_boolean_true || elem == __g_boolean_true)
+                        {
+                                elem = NULL;
+                        }
+                        break;
+                case PLIST_ELEM_NUMBER_T:
+                        break;
+                case PLIST_ELEM_DATA_T:
+                        PList_UnInitData(&elem->data);
+                        break;
+                case PLIST_ELEM_DATE_T:
+                        break;
+                case PLIST_ELEM_ARRAY_T:
+                        PList_UnInitArray(&elem->array);
+                        break;
+                case PLIST_ELEM_DICT_T:
+                        PList_UnInitDict(&elem->dict);
+                        break;
+                case PLIST_ELEM_MAX_T:
+                default:
+                        AR_error(AR_ERR_WARNING, L"invalid plist element type : %u\r\n", PList_GetElemType(elem));
+                        
+        }
+        
+        if(elem)
+        {
+                AR_DEL(elem);
+                elem = NULL;
+        }
+        
 }
 
+
+const wchar_t*  PList_GetElemCString(const plistElem_t *elem)
+{
+        AR_ASSERT(elem != NULL);
+        AR_ASSERT(PList_GetElemType(elem) ==  PLIST_ELEM_STRING_T);
+        return PList_GetStringCString(&elem->str);
+}
+
+
+const ar_byte_t*        PList_GetElemData(const plistElem_t *elem)
+{
+        AR_ASSERT(elem != NULL);
+        AR_ASSERT(PList_GetElemType(elem) ==  PLIST_ELEM_DATA_T);
+        
+        if(PList_GetElemDataLength(elem) == 0)
+        {
+                return NULL;
+        }else
+        {
+                return AR_GetBufferData(elem->data.buf);
+        }
+}
+
+size_t                  PList_GetElemDataLength(const plistElem_t *elem)
+{
+        AR_ASSERT(elem != NULL);
+        AR_ASSERT(PList_GetElemType(elem) ==  PLIST_ELEM_DATA_T);
+        return AR_GetBufferAvailable(elem->data.buf);
+}
+
+
+const plistNumber_t*    PList_GetElemNumber(const plistElem_t *elem)
+{
+        AR_ASSERT(elem != NULL);
+        AR_ASSERT(PList_GetElemType(elem) ==  PLIST_ELEM_NUMBER_T);
+        return &elem->number;
+}
+
+size_t            PList_GetElemArrayCount(const plistElem_t *elem)
+{
+        AR_ASSERT(elem != NULL);
+        AR_ASSERT(PList_GetElemType(elem) ==  PLIST_ELEM_ARRAY_T);
+        return elem->array.count;
+}
 
 /********************************************************XML Parser********************************************************/
 
@@ -653,7 +740,7 @@ END_POINT:
 const wchar_t*          PList_GetXMLParserErrorMessage(const plistXMLParser_t *parser)
 {
         AR_ASSERT(parser != NULL);
-        if(parser->has_error)
+        if(!parser->has_error)
         {
                 return L"";
         }else
@@ -742,7 +829,9 @@ static size_t __calc_linenumber(const plistXMLParser_t *parser)
         p = parser->begin;
         count = 0;
         
-        while (p < parser->curr)
+        /*AR_printf(L"%ls\r\n", parser->curr);*/
+        
+        while (p <= parser->curr)
         {
                 if(!Lex_IsLineTerminator(*p))
                 {
@@ -755,6 +844,8 @@ static size_t __calc_linenumber(const plistXMLParser_t *parser)
                         {
                                 ++p;
                         }
+                        
+                        ++p;
                 }
         }
         
@@ -867,7 +958,7 @@ static void __skip_xml_dtd(plistXMLParser_t *parser)
                 parser->curr++;
         }
         
-        if (parser->curr == parser->end)
+        if (parser->curr >= parser->end)
         {
                 
                 parser->has_error = true;
@@ -1101,7 +1192,7 @@ static plistElem_t*     __parse_xml_element(plistXMLParser_t *parser);
 
 static ar_bool_t __cat_from_mark_to_buf(const wchar_t *beg, const wchar_t *end, plistElem_t *str)
 {
-        AR_ASSERT(beg != NULL && beg >= end);
+        AR_ASSERT(beg != NULL && beg <= end);
         AR_ASSERT(str != NULL && PList_GetElemType(str) == PLIST_ELEM_STRING_T);
         
         if(end - beg == 0)
@@ -1475,6 +1566,8 @@ static ar_bool_t    __check_for_closetag(plistXMLParser_t *parser, const wchar_t
                 return false;
         }
         
+//        AR_DPRINT(L"%ls\r\n", parser->curr);
+                
         if(*parser->curr != L'<' || *(++parser->curr) != L'/')
         {
                 if(!parser->has_error)
@@ -1486,6 +1579,10 @@ static ar_bool_t    __check_for_closetag(plistXMLParser_t *parser, const wchar_t
         }
         
         parser->curr++;
+        
+//        AR_DPRINT(L"%ls\r\n", parser->curr);
+//        AR_DPRINT(L"%ls\r\n", tag);
+
         
         if(!__match_string(parser->curr, tag, tag_len))
         {
@@ -1802,13 +1899,13 @@ static plistElem_t* __parse_xml_datatag(plistXMLParser_t *parser)
                         goto INVALID_POINT;
                 }
                 
+                AR_DPRINT(L"%ls\r\n", mark);
+                
                 for(i = 0; i < (size_t)(parser->curr - mark); ++i)
                 {
                         base64_str[i] = (char)mark[i];
                 }
         
-                //ar_int_t AR_base64_decode(ar_byte_t  *out, size_t olen, const ar_byte_t *input, size_t ilen)
-
                 l = AR_base64_decode(NULL, 0, (const ar_byte_t*)base64_str, base64_str_len);
                 
                 if(l > 0)
@@ -2160,6 +2257,13 @@ static plistElem_t* __parse_xml_integertag(plistXMLParser_t *parser)
                 num->number.integer.is_signed = false;
         }
         
+        
+        if(!__check_for_closetag(parser, __g_plist_tags[INTEGER_IX], INTEGER_TAG_LENGTH))
+        {
+                goto INVALID_POINT;
+        }
+        
+
         
         if(str)
         {

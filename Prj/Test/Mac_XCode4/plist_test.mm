@@ -162,18 +162,74 @@ static void time_test()
 
 static void real_test()
 {
-        AR_ASSERT(!AR_is_inf_flt(0.14));
+        AR_ASSERT(!AR_is_inf_flt(0.14f));
         AR_ASSERT(!AR_is_inf_dbl(0.14));
         
-        AR_ASSERT(!AR_is_nan_flt(0.14));
+        AR_ASSERT(!AR_is_nan_flt(0.14f));
         AR_ASSERT(!AR_is_nan_dbl(0.14));
         
         AR_ASSERT(AR_is_nan_flt(NAN));
         AR_ASSERT(AR_is_nan_dbl(NAN));
         
         AR_ASSERT(!AR_is_inf_dbl(HUGE_VAL));
+}
+
+
+static void parse_xml_test1()
+{
+        //L"/Users/solidus/Documents/Code/Solidus/Arsenal/misc/test.plist"
+//#define PLIST_FILE_PATH L"/Users/solidus/Desktop/Code/Arsenal/misc/test.plist"
+        #define PLIST_FILE_PATH L"/Users/solidus/Desktop/test2.plist"
         
+        arStatus_t status;
+        arString_t *xml = AR_CreateString();
+        status = PList_LoadXMLFromFile(PLIST_FILE_PATH, xml);
         
+        AR_printf(L"%ls\r\n", AR_CSTR(xml));
+                
+        plistXMLParser_t *parser = PList_CreateXMLParser();
+        
+        status = PList_SetXMLParserWithWcs(parser, AR_CSTR(xml), AR_GetStringLength(xml));
+        AR_ASSERT(status == AR_S_YES);
+        
+        plistElem_t *elem = PList_ParseXML(parser);
+        
+        if(elem == NULL)
+        {
+                AR_ASSERT(PList_XMLParserInError(parser));
+                
+                AR_error(AR_ERR_WARNING, L"%ls\r\n", PList_GetXMLParserErrorMessage(parser));
+                //AR_ASSERT(false);
+                
+        }else
+        {
+                //AR_printf(L"%ls\r\n", PList_GetElemCString(elem));
+                //const char *s = (const char*)PList_GetElemData(elem);
+                //AR_printf(L"%hs\r\n", s);
+                /*
+                const plistNumber_t *number = PList_GetElemNumber(elem);
+                if(number->integer.is_signed)
+                {
+                        AR_printf(L"%qd\r\n", number->integer.signed_num);
+                }else
+                {
+                        AR_printf(L"%qd\r\n", number->integer.unsigned_num);
+                }
+                */
+                
+                size_t arr_cnt = PList_GetElemArrayCount(elem);
+                AR_printf(L"array count : %Iu\r\n", arr_cnt);
+                
+                PList_DestroyElem(elem);
+                elem = NULL;
+        }
+        
+        PList_DestroyXMLParser(parser);
+        parser = NULL;
+        AR_DestroyString(xml);
+        xml = NULL;
+        
+
 }
 
 
@@ -183,8 +239,8 @@ void plist_test()
         //base64_test_for_plist();
         //load_test();
         //time_test();
-        
-        real_test();
+        //real_test();
+        parse_xml_test1();
 }
 
 
