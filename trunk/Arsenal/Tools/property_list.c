@@ -17,8 +17,56 @@
 
 AR_NAMESPACE_BEGIN
 
+static const wchar_t __g_plist_tags[13][10]=
+{
+        {L'p', L'l', L'i', L's', L't', L'\0', L'\0', L'\0', L'\0', L'\0'},
+        {L'a', L'r', L'r', L'a', L'y', L'\0', L'\0', L'\0', L'\0', L'\0'},
+        {L'd', L'i', L'c', L't', L'\0',L'\0', L'\0', L'\0', L'\0', L'\0'},
+        {L'k', L'e', L'y', L'\0',L'\0',L'\0', L'\0', L'\0', L'\0', L'\0'},
+        {L's', L't', L'r', L'i', L'n', L'g',  L'\0', L'\0', L'\0', L'\0'},
+        {L'd', L'a', L't', L'a', L'\0',L'\0', L'\0', L'\0', L'\0', L'\0'},
+        {L'd', L'a', L't', L'e', L'\0',L'\0', L'\0', L'\0', L'\0', L'\0'},
+        {L'r', L'e', L'a', L'l', L'\0',L'\0', L'\0', L'\0', L'\0', L'\0'},
+        {L'i', L'n', L't', L'e', L'g', L'e',  L'r',  L'\0', L'\0', L'\0'},
+        {L't', L'r', L'u', L'e', L'\0',L'\0', L'\0', L'\0', L'\0', L'\0'},
+        {L'f', L'a', L'l', L's', L'e', L'\0', L'\0', L'\0', L'\0', L'\0'},
+        {L'D', L'O', L'C', L'T', L'Y', L'P',  L'E',  L'\0', L'\0', L'\0'},
+        {L'<', L'!', L'[', L'C', L'D', L'A',  L'T',  L'A',  L'[',  L'\0'}
+};
+
+
+
+#define PLIST_IX        0
+#define ARRAY_IX        1
+#define DICT_IX         2
+#define KEY_IX          3
+#define STRING_IX       4
+#define DATA_IX     	5
+#define DATE_IX     	6
+#define REAL_IX     	7
+#define INTEGER_IX      8
+#define TRUE_IX         9
+#define FALSE_IX        10
+#define DOCTYPE_IX      11
+#define CDSECT_IX       12
+
+#define PLIST_TAG_LENGTH        5
+#define ARRAY_TAG_LENGTH        5
+#define DICT_TAG_LENGTH         4
+#define KEY_TAG_LENGTH			3
+#define STRING_TAG_LENGTH       6
+#define DATA_TAG_LENGTH         4
+#define DATE_TAG_LENGTH         4
+#define REAL_TAG_LENGTH         4
+#define INTEGER_TAG_LENGTH      7
+#define TRUE_TAG_LENGTH         4
+#define FALSE_TAG_LENGTH        5
+#define DOCTYPE_TAG_LENGTH      7
+#define CDSECT_TAG_LENGTH       9
 
 /*this module is modified from apple CF-550*/
+
+
 
 plistElem_t     *__g_boolean_true = NULL;
 plistElem_t     *__g_boolean_false = NULL;
@@ -32,8 +80,6 @@ arStatus_t      PList_Init()
         
         __g_boolean_true = AR_NEW0(plistElem_t);//PList_CreateElem(PLIST_ELEM_BOOLEAN_T);
         __g_boolean_false = AR_NEW0(plistElem_t);//PList_CreateElem(PLIST_ELEM_BOOLEAN_T);
-        __g_boolean_true->type = PLIST_ELEM_BOOLEAN_T;
-        __g_boolean_false->type = PLIST_ELEM_BOOLEAN_T;
         
         if(__g_boolean_true == NULL || __g_boolean_false == NULL)
         {
@@ -42,6 +88,9 @@ arStatus_t      PList_Init()
                 goto END_POINT;
         }
         
+        
+        __g_boolean_true->type = PLIST_ELEM_BOOLEAN_T;
+        __g_boolean_false->type = PLIST_ELEM_BOOLEAN_T;
         __g_boolean_true->boolean.val = true;
         __g_boolean_false->boolean.val = false;
         
@@ -149,6 +198,12 @@ const wchar_t*  PList_GetStringCString(const plistString_t *str)
         return AR_CSTR(str->str);
 }
 
+size_t          PList_GetStringLength(const plistString_t *str)
+{
+        AR_ASSERT(str != NULL && str->str != NULL);
+        return AR_GetStringLength(str->str);
+}
+
 /*****plistData_t***********/
 
 arStatus_t      PList_InitData(plistData_t *data)
@@ -176,6 +231,28 @@ void            PList_UnInitData(plistData_t *data)
         AR_DestroyBuffer(data->buf);
         data->buf = NULL;
         AR_memset(data, 0, sizeof(*data));
+}
+
+
+const ar_byte_t*        PList_GetDataPointer(const plistData_t *data)
+{
+        AR_ASSERT(data != NULL);
+        
+        if(PList_GetDataLength(data) == 0)
+        {
+                return NULL;
+        }else
+        {
+                return AR_GetBufferData(data->buf);
+        }
+        
+        return AR_GetBufferData(data->buf);
+}
+
+size_t                  PList_GetDataLength(const plistData_t *data)
+{
+        AR_ASSERT(data != NULL);
+        return AR_GetBufferAvailable(data->buf);
 }
 
 /*****plistArray_t***********/
@@ -248,13 +325,13 @@ arStatus_t      PList_PushToArray(plistArray_t *arr, plistElem_t *elem)
 		return AR_S_YES;
 }
 
-plistElem_t*    PList_GetElemByIndex(plistArray_t *arr, size_t idx)
+plistElem_t*    PList_GetArrayByIndex(plistArray_t *arr, size_t idx)
 {
         AR_ASSERT(arr != NULL && idx < arr->count);
         return arr->items[idx];
 }
 
-arStatus_t      PList_RemoveElemByIndex(plistArray_t *arr, size_t idx)
+ar_bool_t      PList_RemoveArrayByIndex(plistArray_t *arr, size_t idx)
 {
         AR_ASSERT(arr != NULL);
 		if(idx >= arr->count)
@@ -477,7 +554,19 @@ arStatus_t      PList_RemoveValueForKey(plistDict_t *dict, plistElem_t *key)
 		return AR_S_YES;
 }
 
+const wchar_t*  PList_GetDictKeyWcsByIndex(plistDict_t *dict, size_t idx)
+{
+		AR_ASSERT(dict != NULL);
+        AR_ASSERT(idx < dict->count);
+        return PList_GetElemCString(dict->keys[idx]);
 
+}
+plistElem_t*    PList_GetDictValueByIndex(plistDict_t *dict, size_t idx)
+{
+        AR_ASSERT(dict != NULL);
+        AR_ASSERT(idx < dict->count);
+        return dict->values[idx];
+}
 
 
 /*plistElem_t*/
@@ -553,7 +642,7 @@ void            PList_DestroyElem(plistElem_t            *elem)
                         PList_UnInitString(&elem->str);
                         break;
                 case PLIST_ELEM_BOOLEAN_T:
-                        if(elem == __g_boolean_true || elem == __g_boolean_true)
+                        if(elem == __g_boolean_true || elem == __g_boolean_false)
                         {
                                 elem = NULL;
                         }
@@ -594,25 +683,20 @@ const wchar_t*  PList_GetElemCString(const plistElem_t *elem)
 }
 
 
-const ar_byte_t*        PList_GetElemData(const plistElem_t *elem)
+const ar_byte_t*        PList_GetElemDataPointer(const plistElem_t *elem)
 {
         AR_ASSERT(elem != NULL);
         AR_ASSERT(PList_GetElemType(elem) ==  PLIST_ELEM_DATA_T);
         
-        if(PList_GetElemDataLength(elem) == 0)
-        {
-                return NULL;
-        }else
-        {
-                return AR_GetBufferData(elem->data.buf);
-        }
+        
+        return PList_GetDataPointer(&elem->data);
 }
 
 size_t                  PList_GetElemDataLength(const plistElem_t *elem)
 {
         AR_ASSERT(elem != NULL);
         AR_ASSERT(PList_GetElemType(elem) ==  PLIST_ELEM_DATA_T);
-        return AR_GetBufferAvailable(elem->data.buf);
+        return PList_GetDataLength(&elem->data);
 }
 
 
@@ -629,6 +713,573 @@ size_t            PList_GetElemArrayCount(const plistElem_t *elem)
         AR_ASSERT(PList_GetElemType(elem) ==  PLIST_ELEM_ARRAY_T);
         return elem->array.count;
 }
+
+plistElem_t*            PList_GetElemArrayByIndex(plistElem_t *elem, size_t idx)
+{
+        AR_ASSERT(elem != NULL);
+        AR_ASSERT(PList_GetElemType(elem) ==  PLIST_ELEM_ARRAY_T);
+        
+        return PList_GetArrayByIndex(&elem->array, idx);
+        
+}
+
+size_t                  PList_GetElemDictCount(const plistElem_t *elem)
+{
+        AR_ASSERT(elem != NULL);
+        AR_ASSERT(PList_GetElemType(elem) ==  PLIST_ELEM_DICT_T);
+        return elem->dict.count;
+}
+
+
+plistElem_t*            PList_FindElemDictValueByWcs(plistElem_t *elem, const wchar_t *key)
+{
+        AR_ASSERT(elem != NULL && key != NULL);
+        AR_ASSERT(PList_GetElemType(elem) ==  PLIST_ELEM_DICT_T);
+
+        return PList_FindValueByString(&elem->dict, key);
+        
+}
+
+
+const wchar_t*          PList_GetElemDictKeyWcsByIndex(plistElem_t *elem, size_t idx)
+{
+        AR_ASSERT(elem != NULL);
+        AR_ASSERT(PList_GetElemType(elem) ==  PLIST_ELEM_DICT_T);
+        AR_ASSERT(idx < PList_GetElemDictCount(elem));
+        
+        return PList_GetDictKeyWcsByIndex(&elem->dict, idx);
+        
+}
+
+plistElem_t*            PList_GetElemDictValueByIndex(plistElem_t *elem, size_t idx)
+{
+        AR_ASSERT(elem != NULL);
+        AR_ASSERT(PList_GetElemType(elem) ==  PLIST_ELEM_DICT_T);
+        AR_ASSERT(idx < PList_GetElemDictCount(elem));
+        return PList_GetDictValueByIndex(&elem->dict, idx);
+}
+
+
+
+static arStatus_t __append_xml_indents(arString_t *out, size_t n_indents)
+{
+        static const wchar_t *tabs = L"\t";
+        size_t i;
+        AR_ASSERT(out != NULL);
+        
+        
+        for(i = 0; i < n_indents; ++i)
+        {
+                if(AR_AppendString(out, tabs) != AR_S_YES)
+                {
+                        return AR_E_NOMEM;
+                }
+        }
+        
+        return AR_S_YES;
+}
+
+static arStatus_t __apend_xml_escapedstring(arString_t *out, const wchar_t *s, size_t len)
+{
+        size_t i;
+        AR_ASSERT(out != NULL && s != NULL);
+        
+        for(i = 0; i < len; ++i)
+        {
+                wchar_t ch = s[i];
+                
+                switch(ch)
+                {
+                        case L'<':
+                                if(AR_AppendString(out, L"&lt;") != AR_S_YES)
+                                {
+                                        return AR_E_NOMEM;
+                                }
+                                break;
+                        case L'>':
+                                if(AR_AppendString(out, L"&gt;") != AR_S_YES)
+                                {
+                                        return AR_E_NOMEM;
+                                }
+                                break;
+                        case L'&':
+                                if(AR_AppendString(out, L"&amp;") != AR_S_YES)
+                                {
+                                        return AR_E_NOMEM;
+                                }
+                                break;
+                        default:
+                                if(AR_AppendCharToString(out, ch) != AR_S_YES)
+                                {
+                                        return AR_E_NOMEM;
+                                }
+                                break;
+                                
+                }
+        }
+        return AR_S_YES;
+}
+
+static arStatus_t __apend_xml_data_use_base64(arString_t *out, const ar_byte_t *data, size_t len)
+{
+        ar_int_t l;
+        char *buf;
+        size_t i;
+        AR_ASSERT(out != NULL);
+        
+        if(len == 0)
+        {
+                return AR_S_YES;
+        }
+        
+        l = AR_base64_encode(NULL, 0, data, len);
+        
+        if(l > 0)
+        {
+                buf = AR_NEWARR(char, l);
+                
+                if(buf == NULL)
+                {
+                        return AR_E_NOMEM;
+                }
+                
+                l = AR_base64_encode((ar_byte_t*)buf, l, data, len);
+                AR_ASSERT(l >= 0);
+                for(i = 0; i < (size_t)l; ++i)
+                {
+                        wchar_t ch = (wchar_t)buf[i];
+                        
+                        if(AR_AppendCharToString(out, ch) != AR_S_YES)
+                        {
+                                AR_DEL(buf);
+                                buf = NULL;
+                                return AR_E_NOMEM;
+                        }
+                }
+                
+                
+                AR_DEL(buf);
+                buf = NULL;
+        }
+        return AR_S_YES;
+}
+
+
+#define __CHECK_STATUS_AND_GOTO_ENDPOINT()              \
+        do{                                             \
+                if(status != AR_S_YES)goto END_POINT;   \
+        }while(0)
+
+
+static arStatus_t __append_xml_0(arString_t *out, const plistElem_t *elem, size_t indentation)
+{
+        arStatus_t status;
+        AR_ASSERT(out != NULL && elem != NULL);
+        
+        status = AR_S_YES;
+        
+        switch(PList_GetElemType(elem))
+        {
+                case PLIST_ELEM_STRING_T:
+                {
+                        status = AR_AppendString(out, L"<");
+                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                        
+                        status = AR_AppendStringN(out, __g_plist_tags[STRING_IX], STRING_TAG_LENGTH);
+                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                        
+                        status = AR_AppendString(out, L">");
+                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                        
+                        status = __apend_xml_escapedstring(out, PList_GetStringCString(&elem->str), PList_GetStringLength(&elem->str));
+                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                        
+                        status = AR_AppendString(out, L"</");
+                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                        
+                        status = AR_AppendStringN(out, __g_plist_tags[STRING_IX], STRING_TAG_LENGTH);
+                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                        
+                        status = AR_AppendString(out, L">\r\n");
+                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                }
+                        break;
+                case PLIST_ELEM_BOOLEAN_T:
+                {
+                        if(elem->boolean.val)
+                        {
+                                status = AR_AppendString(out, L"<");
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                
+                                status = AR_AppendStringN(out, __g_plist_tags[TRUE_IX], TRUE_TAG_LENGTH);
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                
+                                status = AR_AppendString(out, L"/>\r\n");
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                        }else
+                        {
+                                status = AR_AppendString(out, L"<");
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                
+                                status = AR_AppendStringN(out, __g_plist_tags[FALSE_IX], FALSE_TAG_LENGTH);
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                
+                                status = AR_AppendString(out, L"/>\r\n");
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                
+                        }
+                }
+                        break;
+                case PLIST_ELEM_NUMBER_T:
+                {
+                        if(elem->number.type == PLIST_NUMBER_INTEGER_T)
+                        {
+                                status = AR_AppendString(out, L"<");
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                
+                                status = AR_AppendStringN(out, __g_plist_tags[INTEGER_IX], INTEGER_TAG_LENGTH);
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                
+                                status = AR_AppendString(out, L">");
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                
+                                if(elem->number.integer.is_signed)
+                                {
+                                        status = AR_AppendFormatString(out, L"%qd",elem->number.integer.signed_num);
+                                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                        
+                                }else
+                                {
+                                        status = AR_AppendFormatString(out, L"%qu",elem->number.integer.unsigned_num);
+                                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                        
+                                }
+                                
+                                status = AR_AppendString(out, L"</");
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                
+                                status = AR_AppendStringN(out, __g_plist_tags[INTEGER_IX], INTEGER_TAG_LENGTH);
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                
+                                status = AR_AppendString(out, L">\r\n");
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                
+                        }else
+                        {
+                                status = AR_AppendString(out, L"<");
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                
+                                status = AR_AppendStringN(out, __g_plist_tags[REAL_IX], REAL_TAG_LENGTH);
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                
+                                status = AR_AppendString(out, L">");
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                
+                                switch(elem->number.real.t)
+                                {
+                                        case PLIST_REAL_NAN_T:
+                                                status = AR_AppendString(out, L"nan");
+                                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                                
+                                                break;
+                                        case PLIST_REAL_INF_T:
+                                                status = AR_AppendString(out, L"inf");
+                                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                                
+                                                break;
+                                        case PLIST_REAL_POSITIVE_INF_T:
+                                                status = AR_AppendString(out, L"+inf");
+                                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                                
+                                                break;
+                                        case PLIST_REAL_NEGATIVE_INF_T:
+                                                AR_AppendString(out, L"-inf");
+                                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                                
+                                                break;
+                                        case PLIST_REAL_NORMAL_T:
+                                        default:
+                                                status = AR_AppendFormatString(out, L"%g",elem->number.real.num);
+                                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                                
+                                                break;
+                                }
+                                
+                                status = AR_AppendString(out, L"</");
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                
+                                status = AR_AppendStringN(out, __g_plist_tags[REAL_IX], REAL_TAG_LENGTH);
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                
+                                status = AR_AppendString(out, L">\r\n");
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                        }
+                }
+                        break;
+                case PLIST_ELEM_DATA_T:
+                {
+                        status = AR_AppendString(out, L"<");
+                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                        
+                        status = AR_AppendStringN(out, __g_plist_tags[DATA_IX], DATA_TAG_LENGTH);
+                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                        
+                        status = AR_AppendString(out, L">\r\n");
+                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                        
+                        status = __apend_xml_data_use_base64(out, PList_GetElemDataPointer(elem), PList_GetElemDataLength(elem));
+                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                        
+                        status = AR_AppendString(out, L"\r\n");
+                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                        
+                        status = __append_xml_indents(out, indentation);
+                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                        
+                        status = AR_AppendString(out, L"</");
+                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                        
+                        status = AR_AppendStringN(out, __g_plist_tags[DATA_IX], DATA_TAG_LENGTH);
+                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                        
+                        status = AR_AppendString(out, L">\r\n");
+                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                }
+                        break;
+                case PLIST_ELEM_DATE_T:
+                {
+                        status = AR_AppendString(out, L"<");
+                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                        
+                        status = AR_AppendStringN(out, __g_plist_tags[DATE_IX], DATE_TAG_LENGTH);
+                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                        
+                        status = AR_AppendString(out, L">");
+                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                        
+                        status = AR_AppendFormatString(out, L"%04d-%02d-%02dT%02d:%02d:%02dZ",
+                                              (ar_int_32_t)elem->date.year,
+                                              (ar_int_32_t)elem->date.month,
+                                              (ar_int_32_t)elem->date.day,
+                                              (ar_int_32_t)elem->date.hour,
+                                              (ar_int_32_t)elem->date.minute,
+                                              (ar_int_32_t)elem->date.second
+                                              );
+                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                        
+                        
+                        status = AR_AppendString(out, L"</");
+                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                        
+                        status = AR_AppendStringN(out, __g_plist_tags[DATE_IX], DATE_TAG_LENGTH);
+                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                        
+                        status = AR_AppendString(out, L">\r\n");
+                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                        
+                }
+                        break;
+                case PLIST_ELEM_ARRAY_T:
+                {
+                        size_t i;
+                        size_t count;
+                                                
+                        count = PList_GetElemArrayCount(elem);
+                        
+                        if(count == 0)
+                        {
+                                status = AR_AppendString(out, L"<");
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                
+                                status = AR_AppendStringN(out, __g_plist_tags[ARRAY_IX], ARRAY_TAG_LENGTH);
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                
+                                status = AR_AppendString(out, L"/>\r\n");
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                
+                        }else
+                        {
+                                status = AR_AppendString(out, L"<");
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                
+                                status = AR_AppendStringN(out, __g_plist_tags[ARRAY_IX], ARRAY_TAG_LENGTH);
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                
+                                status = AR_AppendString(out, L">\r\n");
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+
+                        
+                                for(i = 0; i < count; ++i)
+                                {
+                                        const plistElem_t *tmp = PList_GetElemArrayByIndex((plistElem_t*)elem,i);
+                                        AR_ASSERT(tmp != NULL);
+                                        status = __append_xml_indents(out, indentation + 1);
+                                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                        
+                                        status = __append_xml_0(out, tmp, indentation + 1);
+                                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                }
+                        
+                                status = __append_xml_indents(out, indentation);
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                
+                                status = AR_AppendString(out, L"</");
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                
+                                status = AR_AppendStringN(out, __g_plist_tags[ARRAY_IX], ARRAY_TAG_LENGTH);
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                
+                                status = AR_AppendString(out, L">\r\n");
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                        }
+                }
+                        break;
+                case PLIST_ELEM_DICT_T:
+                {
+                        size_t i;
+                        size_t count;
+                        
+                        count = PList_GetElemDictCount(elem);
+                        
+                        if(count == 0)
+                        {
+                                status = AR_AppendString(out, L"<");
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                
+                                status = AR_AppendStringN(out, __g_plist_tags[DICT_IX], DICT_TAG_LENGTH);
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                
+                                status = AR_AppendString(out, L"/>\r\n");
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                
+                        }else
+                        {
+                                status = AR_AppendString(out, L"<");
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                
+                                status = AR_AppendStringN(out, __g_plist_tags[DICT_IX], DICT_TAG_LENGTH);
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                
+                                status = AR_AppendString(out, L">\r\n");
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+
+                                for(i = 0; i < count; ++i)
+                                {
+                                        const wchar_t *key;
+                                        const plistElem_t *val;
+                                        
+                                        key = PList_GetElemDictKeyWcsByIndex((plistElem_t*)elem, i);
+                                        val = PList_GetElemDictValueByIndex((plistElem_t*)elem, i);
+                                        AR_ASSERT(key != NULL && val != NULL);
+                                        
+                                        status = __append_xml_indents(out, indentation + 1);
+                                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                        
+                                        status = AR_AppendString(out, L"<");
+                                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                        
+                                        status = AR_AppendStringN(out, __g_plist_tags[KEY_IX], KEY_TAG_LENGTH);
+                                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                        
+                                        status = AR_AppendString(out, L">");
+                                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                        
+                                        status = __apend_xml_escapedstring(out, key, AR_wcslen(key));
+                                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                        
+                                        status = AR_AppendString(out, L"</");
+                                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                        
+                                        status = AR_AppendStringN(out, __g_plist_tags[KEY_IX], KEY_TAG_LENGTH);
+                                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                        
+                                        status = AR_AppendString(out, L">\r\n");
+                                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                        
+                                        status = __append_xml_indents(out, indentation + 1);
+                                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                        status = __append_xml_0(out, val, indentation + 1);
+                                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                }
+                                
+                                status = __append_xml_indents(out, indentation);
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                
+                                status = AR_AppendString(out, L"</");
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                
+                                status = AR_AppendStringN(out, __g_plist_tags[DICT_IX], DICT_TAG_LENGTH);
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                
+                                status = AR_AppendString(out, L">\r\n");
+                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                
+                                
+                        }
+                }
+                        break;
+                case PLIST_ELEM_MAX_T:
+                default:
+                        status = AR_E_INVAL;
+                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                        break;
+                        
+        }
+
+END_POINT:
+        return AR_S_YES;
+        
+}
+
+
+
+
+arStatus_t              PList_SaveElemToXML(const plistElem_t *elem, arString_t *out)
+{
+        arStatus_t status;
+        AR_ASSERT(elem != NULL && out != NULL);
+        status = AR_S_YES;
+        AR_ClearString(out);
+        
+        
+        status = AR_AppendString(out, L"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n");
+        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+        
+        status = AR_AppendString(out, L"<!DOCTYPE ");
+        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+        
+        status = AR_AppendStringN(out, __g_plist_tags[PLIST_IX], PLIST_TAG_LENGTH);
+        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+        
+        status = AR_AppendString(out, L" PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\r\n");
+        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+        
+        status = AR_AppendString(out, L"<");
+        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+        
+        status = AR_AppendStringN(out, __g_plist_tags[PLIST_IX], PLIST_TAG_LENGTH);
+        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+        
+        status = AR_AppendString(out, L" version=\"1.0\">\r\n");
+        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+        
+        
+        status = __append_xml_0(out, elem, 0);
+        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+        
+        status = AR_AppendString(out, L"</");
+        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+        
+        status = AR_AppendStringN(out, __g_plist_tags[PLIST_IX], PLIST_TAG_LENGTH);
+        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+        
+        status = AR_AppendString(out, L">\r\n");
+        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+        
+END_POINT:
+        return status;
+}
+
 
 /********************************************************XML Parser********************************************************/
 
@@ -757,52 +1408,6 @@ const wchar_t*          PList_GetXMLParserErrorMessage(const plistXMLParser_t *p
 
 
 
-static const wchar_t __g_plist_tags[13][10]=
-{
-        {L'p', L'l', L'i', L's', L't', L'\0', L'\0', L'\0', L'\0', L'\0'},
-        {L'a', L'r', L'r', L'a', L'y', L'\0', L'\0', L'\0', L'\0', L'\0'},
-        {L'd', L'i', L'c', L't', L'\0',L'\0', L'\0', L'\0', L'\0', L'\0'},
-        {L'k', L'e', L'y', L'\0',L'\0',L'\0', L'\0', L'\0', L'\0', L'\0'},
-        {L's', L't', L'r', L'i', L'n', L'g',  L'\0', L'\0', L'\0', L'\0'},
-        {L'd', L'a', L't', L'a', L'\0',L'\0', L'\0', L'\0', L'\0', L'\0'},
-        {L'd', L'a', L't', L'e', L'\0',L'\0', L'\0', L'\0', L'\0', L'\0'},
-        {L'r', L'e', L'a', L'l', L'\0',L'\0', L'\0', L'\0', L'\0', L'\0'},
-        {L'i', L'n', L't', L'e', L'g', L'e',  L'r',  L'\0', L'\0', L'\0'},
-        {L't', L'r', L'u', L'e', L'\0',L'\0', L'\0', L'\0', L'\0', L'\0'},
-        {L'f', L'a', L'l', L's', L'e', L'\0', L'\0', L'\0', L'\0', L'\0'},
-        {L'D', L'O', L'C', L'T', L'Y', L'P',  L'E',  L'\0', L'\0', L'\0'},
-        {L'<', L'!', L'[', L'C', L'D', L'A',  L'T',  L'A',  L'[',  L'\0'}
-};
-
-
-
-#define PLIST_IX        0
-#define ARRAY_IX        1
-#define DICT_IX         2
-#define KEY_IX          3
-#define STRING_IX       4
-#define DATA_IX     	5
-#define DATE_IX     	6
-#define REAL_IX     	7
-#define INTEGER_IX      8
-#define TRUE_IX         9
-#define FALSE_IX        10
-#define DOCTYPE_IX      11
-#define CDSECT_IX       12
-
-#define PLIST_TAG_LENGTH        5
-#define ARRAY_TAG_LENGTH        5
-#define DICT_TAG_LENGTH         4
-#define KEY_TAG_LENGTH			3
-#define STRING_TAG_LENGTH       6
-#define DATA_TAG_LENGTH         4
-#define DATE_TAG_LENGTH         4
-#define REAL_TAG_LENGTH         4
-#define INTEGER_TAG_LENGTH      7
-#define TRUE_TAG_LENGTH         4
-#define FALSE_TAG_LENGTH        5
-#define DOCTYPE_TAG_LENGTH      7
-#define CDSECT_TAG_LENGTH       9
 
 
 ar_bool_t __match_string(const wchar_t *l, const wchar_t *r, size_t n)
@@ -1372,6 +1977,8 @@ static void __parse_xml_entity_reference_pl(plistXMLParser_t *parser, plistElem_
         
         AR_ASSERT(parser != NULL && parser->curr != NULL);
         AR_ASSERT(str != NULL && PList_GetElemType(str) == PLIST_ELEM_STRING_T);
+
+        parser->curr++;
         
         len = parser->end - parser->curr;
         
@@ -1492,6 +2099,7 @@ static void __parse_xml_entity_reference_pl(plistXMLParser_t *parser, plistElem_
                                 
                                 if(ch == ';')
                                 {
+                                        ch = (wchar_t)num;
                                         if(!__cat_from_mark_to_buf(&ch, &ch + 1, str))
                                         {
                                                 parser->has_error = true;
@@ -1532,6 +2140,8 @@ static void __parse_xml_entity_reference_pl(plistXMLParser_t *parser, plistElem_
                                         AR_FormatString(parser->errmsg, L"Encountered unexpected character %c at line %qu", ch, __calc_linenumber(parser));
                                         return;
                                 }
+                                
+                                
                         }
                         
                         parser->has_error = true;
