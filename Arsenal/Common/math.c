@@ -20,10 +20,9 @@ AR_NAMESPACE_BEGIN
 
 ar_bool_t	AR_is_nan_flt(float num)
 {
-#if defined(AR_HAS_C99_FEATURE)
+#if defined(isnan)
 		return isnan(num) != 0;
 #else 
-
 		#if defined(OS_FAMILY_WINDOWS)
 				return _isnan(num) != 0;
 		#else
@@ -36,7 +35,7 @@ ar_bool_t	AR_is_nan_flt(float num)
 
 ar_bool_t	AR_is_nan_dbl(double num)
 {
-#if defined(AR_HAS_C99_FEATURE)
+#if defined(isnan)
 		return isnan(num) != 0;
 #else 
 
@@ -52,7 +51,7 @@ ar_bool_t	AR_is_nan_dbl(double num)
 
 ar_bool_t	AR_is_inf_flt(float num)
 {
-#if defined(AR_HAS_C99_FEATURE)
+#if defined(isinf)
 		return isinf(num) != 0;
 #else 
 
@@ -68,7 +67,7 @@ ar_bool_t	AR_is_inf_flt(float num)
 
 ar_bool_t	AR_is_inf_dbl(double num)
 {
-#if defined(AR_HAS_C99_FEATURE)
+#if defined(isinf)
 		return isinf(num) != 0;
 #else 
 

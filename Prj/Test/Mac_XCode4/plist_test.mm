@@ -229,7 +229,6 @@ static void parse_xml_test1()
         AR_DestroyString(xml);
         xml = NULL;
         
-
 }
 
 
