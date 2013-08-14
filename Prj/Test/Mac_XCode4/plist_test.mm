@@ -203,7 +203,12 @@ static void parse_xml_test1()
                 
         }else
         {
-                //AR_printf(L"%ls\r\n", PList_GetElemCString(elem));
+                /*
+                const wchar_t *s = PList_GetElemCString(elem);
+                AR_printf(L"%ls\r\n", s);
+                */
+                
+                
                 //const char *s = (const char*)PList_GetElemData(elem);
                 //AR_printf(L"%hs\r\n", s);
                 /*
@@ -217,8 +222,32 @@ static void parse_xml_test1()
                 }
                 */
                 
+
                 size_t arr_cnt = PList_GetElemArrayCount(elem);
                 AR_printf(L"array count : %Iu\r\n", arr_cnt);
+                
+                for(size_t i = 0; i < arr_cnt; ++i)
+                {
+                        plistElem_t *val = PList_GetElemArrayByIndex(elem, i);
+                        
+                        AR_printf(L"type : %u\r\n", val->type);
+                }
+
+                
+                /*
+                size_t dict_cnt = PList_GetElemDictCount(elem);
+                AR_printf(L"dict count : %Iu\r\n", dict_cnt);
+                
+                for(size_t i = 0; i < dict_cnt; ++i)
+                {
+                        
+                }
+                */
+                
+                
+                //plistElem_t *val = PList_FindElemDictValueByWcs(elem, L"a");
+                
+                
                 
                 PList_DestroyElem(elem);
                 elem = NULL;
@@ -228,9 +257,55 @@ static void parse_xml_test1()
         parser = NULL;
         AR_DestroyString(xml);
         xml = NULL;
-        
 }
 
+
+static void save_plist_elem_test()
+{
+        //L"/Users/solidus/Documents/Code/Solidus/Arsenal/misc/test.plist"
+        //#define PLIST_FILE_PATH L"/Users/solidus/Desktop/Code/Arsenal/misc/test.plist"
+#define PLIST_FILE_PATH L"/Users/solidus/Desktop/test2.plist"
+        
+        arStatus_t status;
+        arString_t *xml = AR_CreateString();
+        status = PList_LoadXMLFromFile(PLIST_FILE_PATH, xml);
+        
+        AR_printf(L"%ls\r\n", AR_CSTR(xml));
+        
+        plistXMLParser_t *parser = PList_CreateXMLParser();
+        
+        status = PList_SetXMLParserWithWcs(parser, AR_CSTR(xml), AR_GetStringLength(xml));
+        AR_ASSERT(status == AR_S_YES);
+        
+        plistElem_t *elem = PList_ParseXML(parser);
+        
+        if(elem == NULL)
+        {
+                AR_ASSERT(PList_XMLParserInError(parser));
+                
+                AR_error(AR_ERR_WARNING, L"%ls\r\n", PList_GetXMLParserErrorMessage(parser));
+                //AR_ASSERT(false);
+                
+        }else
+        {
+                arString_t *xml = AR_CreateString();
+                AR_ASSERT(xml != NULL);
+                
+                status = PList_SaveElemToXML(elem,xml);
+                AR_printf(L"%ls\r\n", AR_CSTR(xml));
+                
+                AR_DestroyString(xml);
+                xml = NULL;
+                
+                PList_DestroyElem(elem);
+                elem = NULL;
+        }
+        
+        PList_DestroyXMLParser(parser);
+        parser = NULL;
+        AR_DestroyString(xml);
+        xml = NULL;
+}
 
 void plist_test()
 {
@@ -239,7 +314,9 @@ void plist_test()
         //load_test();
         //time_test();
         //real_test();
-        parse_xml_test1();
+        //parse_xml_test1();
+        
+        save_plist_elem_test();
 }
 
 

@@ -71,6 +71,7 @@ arStatus_t      PList_AppendStringN(plistString_t  *str, const wchar_t *wcs, siz
 
 ar_bool_t       PList_IsEmptyString(const plistString_t  *str);
 const wchar_t*  PList_GetStringCString(const plistString_t *str);
+size_t          PList_GetStringLength(const plistString_t *str);
 
 typedef struct __plist_boolean_tag
 {
@@ -123,8 +124,10 @@ typedef struct __plist_data_tag
         arBuffer_t      *buf;
 }plistData_t;
 
-arStatus_t      PList_InitData(plistData_t *data);
-void            PList_UnInitData(plistData_t *data);
+arStatus_t              PList_InitData(plistData_t *data);
+void                    PList_UnInitData(plistData_t *data);
+const ar_byte_t*        PList_GetDataPointer(const plistData_t *data);
+size_t                  PList_GetDataLength(const plistData_t *data);
 
 
 typedef struct __plist_date_tag
@@ -152,8 +155,8 @@ void            PList_UnInitArray(plistArray_t *arr);
 void            PList_ClearArray(plistArray_t *arr);
 arStatus_t      PList_PushToArray(plistArray_t *arr, plistElem_t *elem);
 #define         PList_GetArrayCount(_arr)       ((_arr)->count)
-plistElem_t*    PList_GetElemByIndex(plistArray_t *arr, size_t idx);
-arStatus_t      PList_RemoveElemByIndex(plistArray_t *arr, size_t idx);
+plistElem_t*    PList_GetArrayByIndex(plistArray_t *arr, size_t idx);
+ar_bool_t       PList_RemoveArrayByIndex(plistArray_t *arr, size_t idx);
 
 typedef struct __plist_dict_tag
 {
@@ -173,6 +176,9 @@ arStatus_t      PList_SetDictValueForKey(plistDict_t *dict, plistElem_t *key, pl
 arStatus_t      PList_RemoveValueForKey(plistDict_t *dict, plistElem_t *key);
 
 #define         PList_GetDictCount(_d)  ((_d)->count)
+const wchar_t*  PList_GetDictKeyWcsByIndex(plistDict_t *dict, size_t idx);
+plistElem_t*    PList_GetDictValueByIndex(plistDict_t *dict, size_t idx);
+
 
 struct  __plist_element_tag
 {
@@ -198,11 +204,21 @@ void            PList_DestroyElem(plistElem_t            *elem);
 
 const wchar_t*          PList_GetElemCString(const plistElem_t *elem);
 
-const ar_byte_t*        PList_GetElemData(const plistElem_t *elem);
+const ar_byte_t*        PList_GetElemDataPointer(const plistElem_t *elem);
 size_t                  PList_GetElemDataLength(const plistElem_t *elem);
+
 const plistNumber_t*    PList_GetElemNumber(const plistElem_t *elem);
 
 size_t                  PList_GetElemArrayCount(const plistElem_t *elem);
+plistElem_t*            PList_GetElemArrayByIndex(plistElem_t *elem, size_t idx);
+
+size_t                  PList_GetElemDictCount(const plistElem_t *elem);
+plistElem_t*            PList_FindElemDictValueByWcs(plistElem_t *elem, const wchar_t *key);
+const wchar_t*          PList_GetElemDictKeyWcsByIndex(plistElem_t *elem, size_t idx);
+plistElem_t*            PList_GetElemDictValueByIndex(plistElem_t *elem, size_t idx);
+
+
+arStatus_t              PList_SaveElemToXML(const plistElem_t *elem, arString_t *out);
 
 
 /***************************************************************************************/
@@ -244,8 +260,6 @@ plistElem_t*            PList_ParseXML(plistXMLParser_t *parser);
 
 #define                 PList_XMLParserInError(_psr) ((_psr)->has_error)
 const wchar_t*          PList_GetXMLParserErrorMessage(const plistXMLParser_t *parser);
-
-
 
 
 
