@@ -262,6 +262,36 @@ plistElem_t*            PList_ParseXML(plistXMLParser_t *parser);
 const wchar_t*          PList_GetXMLParserErrorMessage(const plistXMLParser_t *parser);
 
 
+/*binary plist parser*/
+
+
+typedef struct {
+        ar_uint_8_t     _magic[6];
+        ar_uint_8_t     _version[2];
+}CFBinaryPlistHeader;
+
+typedef struct {
+        ar_uint_8_t     _unused[5];
+        ar_uint_8_t     _sortVersion;
+        ar_uint_8_t     _offsetIntSize;
+        ar_uint_8_t     _objectRefSize;
+        ar_uint_64_t	_numObjects;
+        ar_uint_64_t	_topObject;
+        ar_uint_64_t	_offsetTableOffset;
+}plistBinaryTrailer_t;
+
+
+
+typedef struct __plist_binary_parser
+{
+        const ar_byte_t *data;
+        size_t          length;
+        
+        arString_t      *errmsg;
+        
+        plistBinaryTrailer_t    trailer;
+}plistBinaryParser_t;
+
 
 /**********************************Utility********************************************/
 arStatus_t              PList_LoadXMLFromBinary(arBuffer_t *buf, arString_t *out);
