@@ -3298,6 +3298,30 @@ plistElem_t*            PList_ParseXML(plistXMLParser_t *parser)
 
 
 
+/*********************************************Binary Plist Parser*********************************************/
+
+
+enum {
+        kCFBinaryPlistMarkerNull = 0x00,
+        kCFBinaryPlistMarkerFalse = 0x08,
+        kCFBinaryPlistMarkerTrue = 0x09,
+        kCFBinaryPlistMarkerFill = 0x0F,
+        kCFBinaryPlistMarkerInt = 0x10,
+        kCFBinaryPlistMarkerReal = 0x20,
+        kCFBinaryPlistMarkerDate = 0x33,
+        kCFBinaryPlistMarkerData = 0x40,
+        kCFBinaryPlistMarkerASCIIString = 0x50,
+        kCFBinaryPlistMarkerUnicode16String = 0x60,
+        kCFBinaryPlistMarkerUID = 0x80,
+        kCFBinaryPlistMarkerArray = 0xA0,
+        kCFBinaryPlistMarkerSet = 0xC0,
+        kCFBinaryPlistMarkerDict = 0xD0
+};
+
+
+
+
+
 
 
 
@@ -3594,6 +3618,7 @@ FAILED_POINT:
         
 		return ret;
 }
+
 
 
 
