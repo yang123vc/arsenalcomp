@@ -25,9 +25,7 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "3461"
-         endingLineNumber = "3461"
-         landmarkName = "__get_binary_plist_toplevelinfo()"
-         landmarkType = "7">
+         endingLineNumber = "3461">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
@@ -39,7 +37,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "3515"
          endingLineNumber = "3515"
-         landmarkName = "__get_binary_plist_toplevelinfo()"
+         landmarkName = "_readInt()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -52,7 +50,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "3510"
          endingLineNumber = "3510"
-         landmarkName = "__get_binary_plist_toplevelinfo()"
+         landmarkName = "_readInt()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -65,7 +63,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "3505"
          endingLineNumber = "3505"
-         landmarkName = "__get_binary_plist_toplevelinfo()"
+         landmarkName = "_readInt()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -78,7 +76,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "3500"
          endingLineNumber = "3500"
-         landmarkName = "__get_binary_plist_toplevelinfo()"
+         landmarkName = "_readInt()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -91,7 +89,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "3495"
          endingLineNumber = "3495"
-         landmarkName = "__get_binary_plist_toplevelinfo()"
+         landmarkName = "_readInt()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -104,7 +102,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "3490"
          endingLineNumber = "3490"
-         landmarkName = "__get_binary_plist_toplevelinfo()"
+         landmarkName = "_readInt()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -116,9 +114,7 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "3485"
-         endingLineNumber = "3485"
-         landmarkName = "__get_binary_plist_toplevelinfo()"
-         landmarkType = "7">
+         endingLineNumber = "3485">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
@@ -129,9 +125,7 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "3480"
-         endingLineNumber = "3480"
-         landmarkName = "__get_binary_plist_toplevelinfo()"
-         landmarkType = "7">
+         endingLineNumber = "3480">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
@@ -259,9 +253,7 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "3537"
-         endingLineNumber = "3537"
-         landmarkName = "__get_binary_plist_toplevelinfo()"
-         landmarkType = "7">
+         endingLineNumber = "3537">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
