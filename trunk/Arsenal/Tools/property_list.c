@@ -3413,7 +3413,7 @@ static AR_INLINE ar_uint_64_t _getSizedInt(const ar_byte_t *data, ar_uint_8_t va
         {
                 ar_uint_64_t val = *(ar_uint_64_t*)data;
                 return AR_NTOL_U64(val);
-        } else
+        }else
         {
                 // Compatability with existing archives, including anything with a non-power-of-2 size and 16-byte values
                 ar_uint_64_t res = 0;
@@ -3425,7 +3425,6 @@ static AR_INLINE ar_uint_64_t _getSizedInt(const ar_byte_t *data, ar_uint_8_t va
                 return res;
         }
         
-        return 0;
 }
 
 
@@ -3505,7 +3504,7 @@ static AR_INLINE bool _readInt(const ar_byte_t *ptr, const ar_byte_t *end_byte_p
                 return false;
         }
         
-        cnt = 1 << (marker & 0x0f);
+        cnt = (ar_uint_64_t)(1 << (marker & 0x0f));
         
         err = CF_NO_ERROR;
         extent = check_ptr_add(ptr, cnt, &err) - 1;
@@ -3521,7 +3520,7 @@ static AR_INLINE bool _readInt(const ar_byte_t *ptr, const ar_byte_t *end_byte_p
         }
         
         // integers are not required to be in the most compact possible representation, but only the last 64 bits are significant currently
-        *bigint = _getSizedInt(ptr, cnt);
+        *bigint = _getSizedInt(ptr, (ar_uint_8_t)cnt);
         
         ptr += cnt;
         
@@ -3795,7 +3794,7 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
                 case kCFBinaryPlistMarkerInt:
                 {
                         const ar_byte_t *ptr = (databytes + startOffset);
-                        ar_int_32_t err = CF_NO_ERROR;
+                        ar_int_t err = CF_NO_ERROR;
                         ar_uint_64_t cnt;
                         const ar_byte_t *extent;
                         
@@ -3808,7 +3807,7 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
                                 return false;
                         }
                         
-                        cnt = 1 << (marker & 0x0f);
+                        cnt = (ar_uint_64_t)(1 << (marker & 0x0f));
                         extent = check_ptr_add(ptr, cnt, &err) - 1;
                         
                         if (CF_NO_ERROR != err)
@@ -3831,7 +3830,7 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
                         // negative 1, 2, 4-byte integers are always emitted as 8 bytes in format '00'
                         // integers are not required to be in the most compact possible representation, but only the last 64 bits are significant currently
                         
-                        bigint = _getSizedInt(ptr, cnt);
+                        bigint = _getSizedInt(ptr, (ar_uint_8_t)cnt);
                         ptr += cnt;
                         
                         *pelem = PList_CreateElem(PLIST_ELEM_NUMBER_T);
@@ -3978,7 +3977,7 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
                         default:
                                 return false;
                         }
-                        return false;
+
                 }
                         break;
 
@@ -4749,7 +4748,7 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
         
 #endif
         
-END_POINT:
+
         return ret;
 }
 
