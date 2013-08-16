@@ -3375,7 +3375,8 @@ static AR_INLINE ar_uint_64_t _getSizedInt(const ar_byte_t *data, ar_uint_8_t va
         {
                 // Compatability with existing archives, including anything with a non-power-of-2 size and 16-byte values
                 ar_uint_64_t res = 0;
-                for (size_t idx = 0; idx < valSize; idx++)
+                size_t idx;
+                for (idx = 0; idx < valSize; idx++)
                 {
                         res = (res << 8) + data[idx];
                 }
@@ -3396,14 +3397,14 @@ enum {
 
 static AR_INLINE ar_uint_32_t __check_uint32_add_unsigned_unsigned(ar_uint_32_t x, ar_uint_32_t y, ar_int_t *err)
 {
-        if((UINT_MAX - y) < x)
+        if((AR_UINT32_MAX - y) < x)
                 *err = *err | CF_OVERFLOW_ERROR;
         return x + y;
 }
 
 static AR_INLINE ar_uint_64_t __check_uint64_add_unsigned_unsigned(ar_uint_64_t x, ar_uint_64_t y, ar_int_t *err)
 {
-        if((ULLONG_MAX - y) < x)
+        if((AR_UINT64_MAX - y) < x)
                 *err = *err | CF_OVERFLOW_ERROR;
         return x + y;
 }
@@ -3424,7 +3425,7 @@ static AR_INLINE ar_uint_64_t __check_uint64_mul_unsigned_unsigned(ar_uint_64_t 
                 return 0;
         }
         
-        if(ULLONG_MAX/x < y)
+        if(AR_UINT64_MAX/x < y)
         {
                 *err = *err | CF_OVERFLOW_ERROR;
         }

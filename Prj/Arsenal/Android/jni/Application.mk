@@ -11,4 +11,22 @@ endif
 
 APP_MODULES := Arsenal
 
-APP_ABI := armeabi #armeabi-v7a mips
+APP_ABI := armeabi
+
+ifeq ($(PLAT),armeabi)
+        APP_ABI := armeabi
+endif
+
+ifeq ($(PLAT),armeabi-v7a)
+        APP_ABI := armeabi-v7a
+endif
+
+ifeq ($(PLAT),mips)
+        APP_ABI := mips
+endif
+
+ifeq ($(PLAT),x86)
+        APP_ABI := x86
+endif
+
+

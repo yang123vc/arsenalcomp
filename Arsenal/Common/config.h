@@ -29,7 +29,7 @@
 #define ARCH_64			0x40u
 
 
-#if(ARCH == ARCH_IA32 || ARCH == ARCH_ARM || ARCH == ARCH_PPC)
+#if(ARCH == ARCH_IA32 || ARCH == ARCH_ARM || ARCH == ARCH_PPC || ARCH == ARCH_MIPS)
 
 
 #define AR_ARCH_VER		ARCH_32

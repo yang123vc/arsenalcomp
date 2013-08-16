@@ -139,44 +139,66 @@
 #define ARCH_ARM     0x0a
 
 
+
 #if defined(__ALPHA) || defined(__alpha) || defined(__alpha__) || defined(_M_ALPHA)
+
 	#define ARCH										ARCH_ALPHA
 	#define ARCH_LITTLE_ENDIAN							1
+
 #elif defined(i386) || defined(__i386) || defined(__i386__) || defined(_M_IX86)
+
 	#define ARCH										ARCH_IA32
 	#define ARCH_LITTLE_ENDIAN							1
+
 #elif defined(_IA64) || defined(__IA64__) || defined(__ia64__) || defined(__ia64) || defined(_M_IA64)
+
 	#define ARCH										ARCH_IA64
+
 	#if defined(hpux) || defined(_hpux)
 		#define ARCH_BIG_ENDIAN							1
 	#else
 		#define ARCH_LITTLE_ENDIAN						1
 	#endif
+
 #elif defined(__x86_64__) || defined(_M_X64)
+
 	#define ARCH										ARCH_X64
 	#define ARCH_LITTLE_ENDIAN							1
+
 #elif defined(__mips__) || defined(__mips) || defined(__MIPS__) || defined(_M_MRX000)
+
 	#define ARCH										ARCH_MIPS
 	#define ARCH_BIG_ENDIAN								1
+
 #elif defined(__hppa) || defined(__hppa__)
+
 	#define ARCH										ARCH_HPPA
 	#define ARCH_BIG_ENDIAN								1
+
 #elif defined(__PPC) || defined(__POWERPC__) || defined(__powerpc) || defined(__PPC__) || defined(__powerpc__) || defined(__ppc__) || defined(_ARCH_PPC) || defined(_M_PPC)
+
 	#define ARCH										ARCH_PPC
 	#define ARCH_BIG_ENDIAN								1
+
 #elif defined(_POWER) || defined(_ARCH_PWR) || defined(_ARCH_PWR2) || defined(_ARCH_PWR3) || defined(_ARCH_PWR4) || defined(__THW_RS6000)
+
 	#define ARCH										ARCH_POWER
 	#define ARCH_BIG_ENDIAN								1
+
 #elif defined(__sparc__) || defined(__sparc) || defined(sparc)
+
 	#define ARCH										ARCH_SPARC
 	#define ARCH_BIG_ENDIAN								1
+
 #elif defined(__arm__) || defined(__arm) || defined(ARM) || defined(_ARM_) || defined(__ARM__) || defined(_M_ARM)
+
 	#define ARCH										ARCH_ARM
 	#if defined(__ARMEB__)
 		#define ARCH_BIG_ENDIAN							1
 	#else
 		#define ARCH_LITTLE_ENDIAN						1
 	#endif
+
 #endif
 
 
