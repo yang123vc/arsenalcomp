@@ -1493,7 +1493,7 @@ static void __skip_xml_comment(plistXMLParser_t *parser)
         }
         
         parser->has_error = true;
-        AR_FormatString(parser->errmsg, L"Unterminated comment started on line %qu", __calc_linenumber(parser));
+        AR_FormatString(parser->errmsg, L"Unterminated comment started on line %Iu", __calc_linenumber(parser));
         
 }
 
@@ -1522,7 +1522,7 @@ static void __skip_xml_processing_instruction(plistXMLParser_t *parser)
         parser->curr = beg;
         
         parser->has_error = true;
-        AR_FormatString(parser->errmsg, L"Encountered unexpected EOF while parsing the processing instruction begun on line %qu", __calc_linenumber(parser));
+        AR_FormatString(parser->errmsg, L"Encountered unexpected EOF while parsing the processing instruction begun on line %Iu", __calc_linenumber(parser));
 }
 
 
@@ -1539,7 +1539,7 @@ static void __skip_xml_dtd(plistXMLParser_t *parser)
         if(parser->end - parser->curr < DOCTYPE_TAG_LENGTH || !__match_string(parser->curr, __g_plist_tags[DOCTYPE_IX], DOCTYPE_TAG_LENGTH))
         {
                 parser->has_error = true;
-                AR_FormatString(parser->errmsg, L"Malformed DTD on line %qu", __calc_linenumber(parser));
+                AR_FormatString(parser->errmsg, L"Malformed DTD on line %Iu", __calc_linenumber(parser));
                 return;
         }
         
@@ -1592,7 +1592,7 @@ static void __skip_xml_dtd(plistXMLParser_t *parser)
                 }else
                 {
                         parser->has_error = true;
-                        AR_FormatString(parser->errmsg, L"Encountered unexpected character %c on line %qu while parsing DTD", *(parser->curr), __calc_linenumber(parser));
+                        AR_FormatString(parser->errmsg, L"Encountered unexpected character %c on line %Iu while parsing DTD", *(parser->curr), __calc_linenumber(parser));
                 }
         }else
         {
@@ -1708,7 +1708,7 @@ static void __skip_xml_peref(plistXMLParser_t *parser)
         }
         
         parser->has_error = true;
-        AR_FormatString(parser->errmsg, L"Encountered unexpected EOF while parsing percent-escape sequence begun on line %qu", __calc_linenumber(parser));
+        AR_FormatString(parser->errmsg, L"Encountered unexpected EOF while parsing percent-escape sequence begun on line %Iu", __calc_linenumber(parser));
 }
 
 
@@ -1734,7 +1734,7 @@ static plistElem_t*     __get_xml_content_object(plistXMLParser_t *parser)
                 if(*parser->curr != L'<')
                 {
                         parser->has_error = true;
-                        AR_FormatString(parser->errmsg, L"Encountered unexpected character %c on line %qu", *parser->curr, __calc_linenumber(parser));
+                        AR_FormatString(parser->errmsg, L"Encountered unexpected character %c on line %Iu", *parser->curr, __calc_linenumber(parser));
                         return NULL;
                 }
                 parser->curr++;
@@ -1768,7 +1768,7 @@ static plistElem_t*     __get_xml_content_object(plistXMLParser_t *parser)
                                 }else
                                 {
                                         parser->has_error = true;
-                                        AR_FormatString(parser->errmsg, L"Encountered unexpected item %s begun on line %qu", parser->curr, __calc_linenumber(parser));
+                                        AR_FormatString(parser->errmsg, L"Encountered unexpected item %s begun on line %Iu", parser->curr, __calc_linenumber(parser));
                                         return NULL;
                                 }
                                 break;
@@ -1934,7 +1934,7 @@ static void __parse_xml_cdsect_pl(plistXMLParser_t *parser, plistElem_t *str)
         if(!__match_string(parser->curr, __g_plist_tags[CDSECT_IX], CDSECT_TAG_LENGTH))
         {
                 parser->has_error = true;
-                AR_FormatString(parser->errmsg, L"Encountered improper CDATA opening at line %qu", __calc_linenumber(parser));
+                AR_FormatString(parser->errmsg, L"Encountered improper CDATA opening at line %Iu", __calc_linenumber(parser));
                 return;
         }
         
@@ -1963,7 +1963,7 @@ static void __parse_xml_cdsect_pl(plistXMLParser_t *parser, plistElem_t *str)
         
         parser->curr = begin;
         parser->has_error = true;
-        AR_FormatString(parser->errmsg, L"Could not find end of CDATA started on line %qu", __calc_linenumber(parser));
+        AR_FormatString(parser->errmsg, L"Could not find end of CDATA started on line %Iu", __calc_linenumber(parser));
         return;
 }
 
@@ -2001,7 +2001,7 @@ static void __parse_xml_entity_reference_pl(plistXMLParser_t *parser, plistElem_
                         }else
                         {
                                 parser->has_error = true;
-                                AR_FormatString(parser->errmsg, L"Encountered unknown ampersand-escape sequence at line %qu", __calc_linenumber(parser));
+                                AR_FormatString(parser->errmsg, L"Encountered unknown ampersand-escape sequence at line %Iu", __calc_linenumber(parser));
                                 return;
                         }
                 }
@@ -2016,7 +2016,7 @@ static void __parse_xml_entity_reference_pl(plistXMLParser_t *parser, plistElem_
                         }else
                         {
                                 parser->has_error = true;
-                                AR_FormatString(parser->errmsg, L"Encountered unknown ampersand-escape sequence at line %qu", __calc_linenumber(parser));
+                                AR_FormatString(parser->errmsg, L"Encountered unknown ampersand-escape sequence at line %Iu", __calc_linenumber(parser));
                                 return;
                         }
                 }
@@ -2052,7 +2052,7 @@ static void __parse_xml_entity_reference_pl(plistXMLParser_t *parser, plistElem_
                         }else
                         {
                                 parser->has_error = true;
-                                AR_FormatString(parser->errmsg, L"Encountered unknown ampersand-escape sequence at line %qu", __calc_linenumber(parser));
+                                AR_FormatString(parser->errmsg, L"Encountered unknown ampersand-escape sequence at line %Iu", __calc_linenumber(parser));
                                 return;
                         }
                 }
@@ -2067,7 +2067,7 @@ static void __parse_xml_entity_reference_pl(plistXMLParser_t *parser, plistElem_
                         }else
                         {
                                 parser->has_error = true;
-                                AR_FormatString(parser->errmsg, L"Encountered unknown ampersand-escape sequence at line %qu", __calc_linenumber(parser));
+                                AR_FormatString(parser->errmsg, L"Encountered unknown ampersand-escape sequence at line %Iu", __calc_linenumber(parser));
                                 return;
                         }
                 }
@@ -2123,7 +2123,7 @@ static void __parse_xml_entity_reference_pl(plistXMLParser_t *parser, plistElem_
                                 }else if(!is_hex)
                                 {
                                         parser->has_error = true;
-                                        AR_FormatString(parser->errmsg, L"Encountered unexpected character %c at line %qu", ch, __calc_linenumber(parser));
+                                        AR_FormatString(parser->errmsg, L"Encountered unexpected character %c at line %Iu", ch, __calc_linenumber(parser));
                                         return;
                                 }else if(ch >= L'a' && ch <= L'f')
                                 {
@@ -2136,7 +2136,7 @@ static void __parse_xml_entity_reference_pl(plistXMLParser_t *parser, plistElem_
                                 }else
                                 {
                                         parser->has_error = true;
-                                        AR_FormatString(parser->errmsg, L"Encountered unexpected character %c at line %qu", ch, __calc_linenumber(parser));
+                                        AR_FormatString(parser->errmsg, L"Encountered unexpected character %c at line %Iu", ch, __calc_linenumber(parser));
                                         return;
                                 }
                                 
@@ -2149,7 +2149,7 @@ static void __parse_xml_entity_reference_pl(plistXMLParser_t *parser, plistElem_
                 }
                 default:
                         parser->has_error = true;
-                        AR_FormatString(parser->errmsg, L"Encountered unknown ampersand-escape sequence at line %qu", __calc_linenumber(parser));
+                        AR_FormatString(parser->errmsg, L"Encountered unknown ampersand-escape sequence at line %Iu", __calc_linenumber(parser));
                         return;
         }
         
@@ -2186,7 +2186,7 @@ static ar_bool_t    __check_for_closetag(plistXMLParser_t *parser, const wchar_t
                 if(!parser->has_error)
                 {
                         parser->has_error = true;
-                        AR_FormatString(parser->errmsg, L"Encountered unexpected character %c on line %qu", *(parser->curr), __calc_linenumber(parser));
+                        AR_FormatString(parser->errmsg, L"Encountered unexpected character %c on line %Iu", *(parser->curr), __calc_linenumber(parser));
                 }
                 return false;
         }
@@ -2206,7 +2206,7 @@ static ar_bool_t    __check_for_closetag(plistXMLParser_t *parser, const wchar_t
                         AR_ASSERT(tag_len < 128);
                         AR_wcsncpy(buf, tag, tag_len);
                         parser->has_error = true;
-                        AR_FormatString(parser->errmsg, L"Close tag on line %qu does not match open tag %ls", __calc_linenumber(parser), buf);
+                        AR_FormatString(parser->errmsg, L"Close tag on line %Iu does not match open tag %ls", __calc_linenumber(parser), buf);
                 }
                 return false;
         }
@@ -2232,7 +2232,7 @@ static ar_bool_t    __check_for_closetag(plistXMLParser_t *parser, const wchar_t
                 if(!parser->has_error)
                 {
                         parser->has_error = true;
-                        AR_FormatString(parser->errmsg, L"Encountered unexpected character %c on line %qu", *(parser->curr), __calc_linenumber(parser));
+                        AR_FormatString(parser->errmsg, L"Encountered unexpected character %c on line %Iu", *(parser->curr), __calc_linenumber(parser));
                 }
                 return false;
         }
@@ -2278,7 +2278,7 @@ static plistElem_t* __parse_xml_plisttag(plistXMLParser_t *parser)
                 parser->curr = save;
                 
                 parser->has_error = true;
-                AR_FormatString(parser->errmsg, L"Encountered unexpected element at line %qu (plist can only include one object)",  __calc_linenumber(parser));
+                AR_FormatString(parser->errmsg, L"Encountered unexpected element at line %Iu (plist can only include one object)",  __calc_linenumber(parser));
                 return NULL;
         }
         
@@ -2386,7 +2386,7 @@ static plistElem_t* __parse_xml_dicttag(plistXMLParser_t *parser)
                         if(!parser->has_error)
                         {
                                 parser->has_error = true;
-                                AR_FormatString(parser->errmsg, L"Found non-string inside <dict> at line %qu)",  __calc_linenumber(parser));
+                                AR_FormatString(parser->errmsg, L"Found non-string inside <dict> at line %Iu)",  __calc_linenumber(parser));
                         }
                         
                         goto INVALID_POINT;
@@ -2402,7 +2402,7 @@ static plistElem_t* __parse_xml_dicttag(plistXMLParser_t *parser)
                         if(!parser->has_error)
                         {
                                 parser->has_error = true;
-                                AR_FormatString(parser->errmsg, L"Value missing for key inside <dict> at line %qu)",  __calc_linenumber(parser));
+                                AR_FormatString(parser->errmsg, L"Value missing for key inside <dict> at line %Iu)",  __calc_linenumber(parser));
                         }
                         
                         goto INVALID_POINT;
@@ -2412,7 +2412,7 @@ static plistElem_t* __parse_xml_dicttag(plistXMLParser_t *parser)
                 {
                         parser->has_error = true;
                         parser->curr = base;
-                        AR_FormatString(parser->errmsg, L"Failed to set for key %ls inside <dict> at line %qu)", PList_GetStringCString(&k->str), __calc_linenumber(parser));
+                        AR_FormatString(parser->errmsg, L"Failed to set for key %ls inside <dict> at line %Iu)", PList_GetStringCString(&k->str), __calc_linenumber(parser));
                         
                         
                         PList_DestroyElem(k);
@@ -2671,7 +2671,7 @@ static plistElem_t* __parse_xml_datetag(plistXMLParser_t *parser)
         if(bad_form)
         {
                 parser->has_error = true;
-                AR_FormatString(parser->errmsg, L"Could not interpret <date> at line %qu)", __calc_linenumber(parser));
+                AR_FormatString(parser->errmsg, L"Could not interpret <date> at line %Iu)", __calc_linenumber(parser));
                 return NULL;
         }
         
@@ -2721,7 +2721,7 @@ static plistElem_t* __parse_xml_realtag(plistXMLParser_t *parser)
                 if(!parser->has_error)
                 {
                         parser->has_error = true;
-                        AR_FormatString(parser->errmsg, L"Encountered empty <real> on line %qu)", __calc_linenumber(parser));
+                        AR_FormatString(parser->errmsg, L"Encountered empty <real> on line %Iu)", __calc_linenumber(parser));
                 }
                 goto INVALID_POINT;
         }
@@ -2772,7 +2772,7 @@ static plistElem_t* __parse_xml_realtag(plistXMLParser_t *parser)
                 if(AR_wtod(wcs, &num->number.real.num) == NULL)
                 {
                         parser->has_error = true;
-                        AR_FormatString(parser->errmsg, L"Encountered misformatted real %ls on line %qu)", wcs, __calc_linenumber(parser));
+                        AR_FormatString(parser->errmsg, L"Encountered misformatted real %ls on line %Iu)", wcs, __calc_linenumber(parser));
                         goto INVALID_POINT;
                 }
                 
@@ -2836,7 +2836,7 @@ static plistElem_t* __parse_xml_integertag(plistXMLParser_t *parser)
                 if(!parser->has_error)
                 {
                         parser->has_error = true;
-                        AR_FormatString(parser->errmsg, L"Encountered empty <integer> on line %qu)", __calc_linenumber(parser));
+                        AR_FormatString(parser->errmsg, L"Encountered empty <integer> on line %Iu)", __calc_linenumber(parser));
                 }
                 goto INVALID_POINT;
         }
@@ -2858,7 +2858,7 @@ static plistElem_t* __parse_xml_integertag(plistXMLParser_t *parser)
                 if(AR_wtoi64(wcs, &num->number.integer.signed_num, 0) == NULL)
                 {
                         parser->has_error = true;
-                        AR_FormatString(parser->errmsg, L"Invalid <integer> %ls on line %qu)", wcs, __calc_linenumber(parser));
+                        AR_FormatString(parser->errmsg, L"Invalid <integer> %ls on line %Iu)", wcs, __calc_linenumber(parser));
                         goto INVALID_POINT;
                         
                 }else
@@ -2957,7 +2957,7 @@ static plistElem_t*     __parse_xml_element(plistXMLParser_t *parser)
         {
                 parser->curr = marker;
                 parser->has_error = true;
-                AR_FormatString(parser->errmsg, L"Malformed tag on line %qu", __calc_linenumber(parser));
+                AR_FormatString(parser->errmsg, L"Malformed tag on line %Iu", __calc_linenumber(parser));
                 return NULL;
                 
         }
@@ -3143,7 +3143,7 @@ static plistElem_t*     __parse_xml_element(plistXMLParser_t *parser)
                         if(is_empty)
                         {
                                 parser->has_error = true;
-                                AR_FormatString(parser->errmsg, L"Encountered empty <data> on line %qu", __calc_linenumber(parser));
+                                AR_FormatString(parser->errmsg, L"Encountered empty <data> on line %Iu", __calc_linenumber(parser));
                                 return NULL;
                         }else
                         {
@@ -3153,7 +3153,7 @@ static plistElem_t*     __parse_xml_element(plistXMLParser_t *parser)
                         if (is_empty)
                         {
                                 parser->has_error = true;
-                                AR_FormatString(parser->errmsg, L"Encountered empty <date> on line %qu", __calc_linenumber(parser));
+                                AR_FormatString(parser->errmsg, L"Encountered empty <date> on line %Iu", __calc_linenumber(parser));
                                 return NULL;
                         } else {
                                 return __parse_xml_datetag(parser);
@@ -3185,7 +3185,7 @@ static plistElem_t*     __parse_xml_element(plistXMLParser_t *parser)
                         if(is_empty)
                         {
                                 parser->has_error = true;
-                                AR_FormatString(parser->errmsg, L"Encountered empty <real> on line %qu", __calc_linenumber(parser));
+                                AR_FormatString(parser->errmsg, L"Encountered empty <real> on line %Iu", __calc_linenumber(parser));
                                 return NULL;
                         }else
                         {
@@ -3195,7 +3195,7 @@ static plistElem_t*     __parse_xml_element(plistXMLParser_t *parser)
                         if(is_empty)
                         {
                                 parser->has_error = true;
-                                AR_FormatString(parser->errmsg, L"Encountered empty <integer> on line %qu", __calc_linenumber(parser));
+                                AR_FormatString(parser->errmsg, L"Encountered empty <integer> on line %Iu", __calc_linenumber(parser));
                                 return NULL;
                         }else
                         {
@@ -3214,7 +3214,7 @@ static plistElem_t*     __parse_xml_element(plistXMLParser_t *parser)
                         }else
                         {
                                 parser->has_error = true;
-                                AR_FormatString(parser->errmsg, L"Encountered unknown tag %ls on line %qu", marker_str, __calc_linenumber(parser));
+                                AR_FormatString(parser->errmsg, L"Encountered unknown tag %ls on line %Iu", marker_str, __calc_linenumber(parser));
                                 AR_DEL(marker_str);
                         }
                         return NULL;
@@ -3246,7 +3246,7 @@ static plistElem_t*     __parse_property_list(plistXMLParser_t *parser)
                 if(*parser->curr != L'<')
                 {
                         parser->has_error = true;
-                        AR_FormatString(parser->errmsg, L"Unexpected character %c at line %qu", *parser->curr, __calc_linenumber(parser));
+                        AR_FormatString(parser->errmsg, L"Unexpected character %c at line %Iu", *parser->curr, __calc_linenumber(parser));
                         return NULL;
                 }
                 
@@ -3300,6 +3300,19 @@ plistElem_t*            PList_ParseXML(plistXMLParser_t *parser)
 
 /*********************************************Binary Plist Parser*********************************************/
 
+/*
+ 
+ typedef struct __plist_binary_parser
+ {
+ arBuffer_t      *data;
+ 
+ arString_t      *errmsg;
+ ar_bool_t       has_error;
+ plistBinaryTrailer_t    trailer;
+ }plistBinaryParser_t;
+ */
+
+
 
 enum {
         kCFBinaryPlistMarkerNull = 0x00,
@@ -3320,9 +3333,368 @@ enum {
 
 
 
+typedef struct {
+        ar_uint_8_t     _magic[6];
+        ar_uint_8_t     _version[2];
+}CFBinaryPlistHeader;
 
 
 
+typedef struct {
+        ar_uint_8_t     _unused[5];
+        ar_uint_8_t     _sortVersion;
+        ar_uint_8_t     _offsetIntSize;
+        ar_uint_8_t     _objectRefSize;
+        ar_uint_64_t	_numObjects;
+        ar_uint_64_t	_topObject;
+        ar_uint_64_t	_offsetTableOffset;
+}CFBinaryPlistTrailer;
+
+
+static AR_INLINE ar_uint_64_t _getSizedInt(const ar_byte_t *data, ar_uint_8_t valSize)
+{
+        if (valSize == 1)
+        {
+                return (ar_uint_64_t)*data;
+                
+        } else if (valSize == 2)
+        {
+                ar_uint_16_t val = *(ar_uint_16_t*)data;
+                return (ar_uint_64_t)AR_NTOL_U16(val);
+                
+        } else if (valSize == 4)
+        {
+                ar_uint_32_t val = *(ar_uint_32_t*)data;
+                return (ar_uint_64_t)AR_NTOL_U32(val);
+
+        } else if (valSize == 8)
+        {
+                ar_uint_64_t val = *(ar_uint_64_t*)data;
+                return AR_NTOL_U64(val);
+        } else
+        {
+                // Compatability with existing archives, including anything with a non-power-of-2 size and 16-byte values
+                ar_uint_64_t res = 0;
+                for (size_t idx = 0; idx < valSize; idx++)
+                {
+                        res = (res << 8) + data[idx];
+                }
+                return res;
+        }
+        
+        return 0;
+}
+
+
+
+
+enum {
+        CF_NO_ERROR = 0,
+        CF_OVERFLOW_ERROR = (1 << 0),
+};
+
+
+static AR_INLINE ar_uint_32_t __check_uint32_add_unsigned_unsigned(ar_uint_32_t x, ar_uint_32_t y, ar_int_t *err)
+{
+        if((UINT_MAX - y) < x)
+                *err = *err | CF_OVERFLOW_ERROR;
+        return x + y;
+}
+
+static AR_INLINE ar_uint_64_t __check_uint64_add_unsigned_unsigned(ar_uint_64_t x, ar_uint_64_t y, ar_int_t *err)
+{
+        if((ULLONG_MAX - y) < x)
+                *err = *err | CF_OVERFLOW_ERROR;
+        return x + y;
+}
+
+static AR_INLINE ar_uint_32_t __check_uint32_mul_unsigned_unsigned(ar_uint_32_t x, ar_uint_32_t y, ar_int_t *err)
+{
+        ar_uint_64_t tmp = (ar_uint_64_t) x * (ar_uint_64_t) y;
+        /* If any of the upper 32 bits touched, overflow */
+        if(tmp & 0xffffffff00000000ULL)
+                *err = *err | CF_OVERFLOW_ERROR;
+        return (ar_uint_32_t) tmp;
+}
+
+static AR_INLINE ar_uint_64_t __check_uint64_mul_unsigned_unsigned(ar_uint_64_t x, ar_uint_64_t y, ar_int_t *err)
+{
+        if(x == 0)
+        {
+                return 0;
+        }
+        
+        if(ULLONG_MAX/x < y)
+        {
+                *err = *err | CF_OVERFLOW_ERROR;
+        }
+        return x * y;
+};
+
+
+#if AR_ARCH_VER == ARCH_64
+        #define check_ptr_add(p, a, err)	(const ar_byte_t*)__check_uint64_add_unsigned_unsigned((uintptr_t)p, (uintptr_t)a, err)
+        #define check_size_t_mul(b, a, err)	(size_t)__check_uint64_mul_unsigned_unsigned((size_t)b, (size_t)a, err)
+#else
+        #define check_ptr_add(p, a, err)	(const ar_byte_t*)__check_uint32_add_unsigned_unsigned((uintptr_t)p, (uintptr_t)a, err)
+        #define check_size_t_mul(b, a, err)	(size_t)__check_uint32_mul_unsigned_unsigned((size_t)b, (size_t)a, err)
+#endif
+
+
+
+
+
+static ar_bool_t __get_binary_plist_toplevelinfo(const ar_byte_t *data, size_t length, ar_uint_8_t *marker, ar_uint_64_t *offset, CFBinaryPlistTrailer *trailer)
+{
+        
+        AR_ASSERT(data != NULL && marker != NULL && offset != NULL && trailer != NULL);
+        
+        if(length < sizeof(*trailer) + 8 + 1)
+        {
+                return false;
+        }
+        
+        // Tiger and earlier will parse "bplist00"
+        // Leopard will parse "bplist00" or "bplist01"
+        // SnowLeopard will parse "bplist0?" where ? is any one character
+
+        if (AR_memcmp((const ar_byte_t*)"bplist0", data, 7) != 0)
+        {
+                return false;
+        }
+
+        AR_memcpy((ar_byte_t*)trailer, data + length - sizeof(*trailer), sizeof(*trailer));
+        
+        
+        // In Leopard, the unused bytes in the trailer must be 0 or the parse will fail
+        // This check is not present in Tiger and earlier or after Leopard
+
+        // In Leopard, the unused bytes in the trailer must be 0 or the parse will fail
+        // This check is not present in Tiger and earlier or after Leopard
+        trailer->_numObjects = AR_NTOL_64(trailer->_numObjects);
+        trailer->_topObject = AR_NTOL_64(trailer->_topObject);
+        trailer->_offsetTableOffset = AR_NTOL_64(trailer->_offsetTableOffset);
+        
+        if (LONG_MAX < trailer->_numObjects)
+        {
+                return false;
+        }
+        
+        if (LONG_MAX < trailer->_offsetTableOffset)
+        {
+                return false;
+        }
+        
+        if (trailer->_numObjects < 1)
+        {
+                return false;
+        }
+        
+        if (trailer->_numObjects <= trailer->_topObject)
+        {
+                return false;
+        }
+        
+        if (trailer->_offsetTableOffset < 9)
+        {
+                return false;
+        }
+        
+        if (length - sizeof(*trailer) <= trailer->_offsetTableOffset)
+        {
+                return false;
+        }
+        
+        if (trailer->_offsetIntSize < 1)
+        {
+                return false;
+        }
+        
+        if (trailer->_objectRefSize < 1)
+        {
+                return false;
+        }
+        
+        
+        {
+                ar_int_t err = CF_NO_ERROR;
+                ar_uint_64_t offsetIntSize;
+                ar_uint_64_t offsetTableSize;
+                ar_uint_64_t objectDataSize;
+                ar_uint_64_t tmpSum;
+                const ar_byte_t *objectsFirstByte;
+                const ar_byte_t *offsetsFirstByte;
+                const ar_byte_t *offsetsLastByte;
+                const ar_byte_t *bytesptr;
+                ar_uint_64_t maxOffset;
+                size_t idx;
+                ar_uint_64_t off;
+                offsetIntSize = trailer->_offsetIntSize;
+                offsetTableSize = __check_uint64_mul_unsigned_unsigned(trailer->_numObjects, offsetIntSize, &err);
+                
+                if (CF_NO_ERROR != err)
+                {
+                        return false;
+                }
+                
+                if(offsetTableSize < 1)
+                {
+                        return false;
+                }
+             
+                
+                objectDataSize = trailer->_offsetTableOffset - 8;
+                tmpSum = __check_uint64_add_unsigned_unsigned(8, objectDataSize, &err);
+                
+                tmpSum = __check_uint64_add_unsigned_unsigned(tmpSum, offsetTableSize, &err);
+                tmpSum = __check_uint64_add_unsigned_unsigned(tmpSum, sizeof(*trailer), &err);
+                
+                if (CF_NO_ERROR != err)
+                {
+                        return false;
+                }
+                
+                
+                if (length != tmpSum)
+                {
+                        return false;
+                }
+                
+                if (trailer->_objectRefSize < 8 && (1ULL << (8 * trailer->_objectRefSize)) <= trailer->_numObjects)
+                {
+                        return false;
+                }
+                
+                if (trailer->_offsetIntSize < 8 && (1ULL << (8 * trailer->_offsetIntSize)) <= trailer->_offsetTableOffset)
+                {
+                        return false;
+                }
+
+                
+                
+                objectsFirstByte = check_ptr_add(data, 8, &err);
+                
+                if (CF_NO_ERROR != err)
+                {
+                        return false;
+                }
+                
+                offsetsFirstByte = check_ptr_add(data, trailer->_offsetTableOffset, &err);
+                
+                if (CF_NO_ERROR != err)
+                {
+                        return false;
+                }
+                
+                
+                offsetsLastByte = check_ptr_add(offsetsFirstByte, offsetTableSize - 1, &err);
+                
+                if (CF_NO_ERROR != err)
+                {
+                        return false;
+                }
+                
+                bytesptr = data + trailer->_offsetTableOffset;
+                
+                maxOffset = trailer->_offsetTableOffset - 1;
+                
+                for (idx = 0; idx < trailer->_numObjects; idx++)
+                {
+                        ar_uint_64_t offset = _getSizedInt(bytesptr, trailer->_offsetIntSize);
+                        if (maxOffset < offset)
+                        {
+                                return false;
+                        }
+                        bytesptr += trailer->_offsetIntSize;
+                }
+                
+                bytesptr = data + trailer->_offsetTableOffset + trailer->_topObject * trailer->_offsetIntSize;
+                
+                
+                off = _getSizedInt(bytesptr, trailer->_offsetIntSize);
+                
+                if(off < 8 || trailer->_offsetTableOffset <= off)
+                {
+                        return false;
+                }
+                
+                
+                if(offset)
+                {
+                        *offset = off;
+                }
+                
+                if (marker)
+                {
+                        *marker = *(data + off);
+                }
+        }
+
+        return true;
+        
+}
+
+
+arStatus_t      PList_TryParseBinaryPlist(const ar_byte_t *data, size_t length, plistElem_t **pelem, arString_t *errmsg)
+{
+        ar_uint_8_t marker;
+        CFBinaryPlistTrailer trailer;
+        ar_uint_64_t offset;
+        arStatus_t status;
+        AR_ASSERT(data != NULL && length > 0 && pelem != NULL);
+        
+        status = AR_S_YES;
+        
+        if(length < 8)
+        {
+                if(errmsg)
+                {
+                        AR_FormatString(errmsg, L"Invalid data length : %Iu!", length);
+                }
+                status = AR_E_MALFORMAT;
+                goto INVALID_POINT;
+        }
+        
+        
+        
+        if(!__get_binary_plist_toplevelinfo(data, length, &marker, &offset, &trailer))
+        {
+                if(errmsg)
+                {
+                        AR_FormatString(errmsg, L"Encountered invalid plist header : %Iu!", length);
+                }
+                status = AR_E_MALFORMAT;
+                goto INVALID_POINT;
+        }
+        
+#if(0)
+        if(8 <= length && __CFBinaryPlistGetTopLevelInfo(databytes, datalen, &marker, &offset, &trailer))
+        {
+                // FALSE: We know for binary plist parsing that the result objects will be retained
+                // by their containing collections as the parsing proceeds, so we do not need
+                // to use retaining callbacks for the objects map in this case. WHY: the file might
+                // be malformed and contain hash-equal keys for the same dictionary (for example)
+                // and the later key will cause the previous one to be released when we set the second
+                // in the dictionary.
+                CFMutableDictionaryRef objects = CFDictionaryCreateMutable(kCFAllocatorSystemDefault, 0, NULL, &kCFTypeDictionaryValueCallBacks);
+                _CFDictionarySetCapacity(objects, trailer._numObjects);
+                CFPropertyListRef pl = NULL;
+                if (__CFBinaryPlistCreateObject2(databytes, datalen, offset, &trailer, allocator, option, objects, NULL, 0, &pl)) {
+                        if (plist) *plist = pl;
+                } else {
+                        if (plist) *plist = NULL;
+                        if (errorString) *errorString = (CFStringRef)CFRetain(CFSTR("binary data is corrupt"));
+                }
+                CFRelease(objects);
+                return true;
+        }
+#endif
+        
+        
+INVALID_POINT:
+        return status;
+
+}
 
 
 
@@ -3539,15 +3911,66 @@ END_POINT:
 arStatus_t              PList_LoadXMLFromFile(const wchar_t *path, arString_t *out)
 {
         arStatus_t		ret;
-		arFile_t		*file = NULL;
 		arBuffer_t		*buf;
 		
 		AR_ASSERT(path != NULL && out != NULL);
         
 		ret = AR_S_YES;
 		buf = NULL;
-		file = NULL;
+        
+		buf = AR_CreateBuffer(0);
+        
+		if(buf == NULL)
+		{
+				ret = AR_E_NOMEM;
+				goto FAILED_POINT;
+		}
+
+        ret = PList_LoadBinaryFromFile(path, buf);
+        
+        if(ret != AR_S_YES)
+        {
+                goto FAILED_POINT;
+        }
+        
+        {
+                static const ar_byte_t tmp = '\0';
+                
+                ret = AR_InsertToBuffer(buf, &tmp, 1);
+                if(ret != AR_S_YES)
+                {
+                        goto FAILED_POINT;
+                }
+        }
+        
+		ret = PList_LoadXMLFromBinary(buf, out);
+        
+FAILED_POINT:
+        
+		if(buf)
+		{
+				AR_DestroyBuffer(buf);
+				buf = NULL;
+		}
+        
+		return ret;
+}
+
+
+
+arStatus_t              PList_LoadBinaryFromFile(const wchar_t *path, arBuffer_t *buf)
+{
+        
+        
+        arStatus_t		ret;
+		arFile_t		*file = NULL;
 		
+		AR_ASSERT(path != NULL && buf != NULL);
+        
+		ret = AR_S_YES;
+		file = NULL;
+        
+        AR_ClearBuffer(buf);
         
 		ret = AR_open_file(&file, path, L"rb");
         
@@ -3557,14 +3980,6 @@ arStatus_t              PList_LoadXMLFromFile(const wchar_t *path, arString_t *o
 				goto FAILED_POINT;
 		}
         
-        
-		buf = AR_CreateBuffer(0);
-        
-		if(buf == NULL)
-		{
-				ret = AR_E_NOMEM;
-				goto FAILED_POINT;
-		}
         
 		{
 				size_t	rn;
@@ -3589,31 +4004,14 @@ arStatus_t              PList_LoadXMLFromFile(const wchar_t *path, arString_t *o
 						ret = AR_E_FILE;
 						AR_error(AR_ERR_WARNING, L"fread failed for %ls in function '%hs'\r\n", path, AR_FUNC_NAME);
 						goto FAILED_POINT;
-				}else
-				{
-						tmp[0] = '\0';
-						
-						ret = AR_InsertToBuffer(buf, tmp, 1);
-						if(ret != AR_S_YES)
-						{
-								goto FAILED_POINT;
-						}
 				}
 		}
-        
-		ret = PList_LoadXMLFromBinary(buf, out);
         
 FAILED_POINT:
 		if(file)
 		{
 				AR_close_file(file);
 				file = NULL;
-		}
-        
-		if(buf)
-		{
-				AR_DestroyBuffer(buf);
-				buf = NULL;
 		}
         
 		return ret;
