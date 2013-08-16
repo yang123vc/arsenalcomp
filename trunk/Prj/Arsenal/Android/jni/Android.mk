@@ -89,7 +89,8 @@ LOCAL_C_INCLUDES += \
 
 #LOCAL_LDLIBS := -l/Volumes/Code/Solidus/Arsenal/Binary/External/libs/libiconv.a
 
-LOCAL_LDLIBS := -l$(LOCAL_PATH)/../../../..//Binary/External/libs/libiconv.a
+LOCAL_LDLIBS := -l$(LOCAL_PATH)/../../../../Binary/External/libs/libiconv.a
+
 
 
 ifeq ($(LIB_MODE),shared)

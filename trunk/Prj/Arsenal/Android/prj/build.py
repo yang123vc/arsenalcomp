@@ -32,23 +32,26 @@ def fixpathend(path):
 
 #build iconv and copy it to binary
 
-def build_external_libraries():
+def build_external_libraries(plat_name):
+        
+        assert(isinstance(plat_name, str));
         
         save_dir = os.path.abspath(".");
         save_dir = fixpathend(save_dir);
         print(save_dir);
+        
         binary_path = save_dir + "../../../../Binary/";
         
         #iconv ########################
         iconv_path = save_dir + ".." + "/External/libiconv/1.14/";
         
-        iconv_static_lib_path = iconv_path + "obj/local/armeabi/libiconv.a";
-        iconv_shared_lib_path = iconv_path + "libs/armeabi/libiconv.so";
+        iconv_static_lib_path = iconv_path + "obj/local/" + plat_name + "/libiconv.a";
+        iconv_shared_lib_path = iconv_path + "libs/" + plat_name + "/libiconv.so";
         
         print(iconv_path);
         print(iconv_static_lib_path);
         print(iconv_shared_lib_path);        
-
+        
         
         external_libs_path = binary_path + "External/libs/";
         
@@ -63,16 +66,16 @@ def build_external_libraries():
         
                 os.makedirs(external_libs_path);
         
-
+                plat_str = "PLAT=" + plat_name;
                 
                 os.chdir(iconv_path + "jni/");
-                subprocess.call(["ndk-build", "NDK_DEBUG=0", "LIB_MODE=static", "-B"]);
+                subprocess.call(["ndk-build", "NDK_DEBUG=0", "LIB_MODE=static", plat_str, "-B"]);
                 os.chdir(save_dir);
                 shutil.copyfile(iconv_static_lib_path, external_libs_path + "libiconv.a");
 
 
                 os.chdir(iconv_path + "jni/");
-                subprocess.call(["ndk-build", "NDK_DEBUG=0", "LIB_MODE=shared", "-B"]);
+                subprocess.call(["ndk-build", "NDK_DEBUG=0", "LIB_MODE=shared", plat_str, "-B"]);
                 os.chdir(save_dir);
                 shutil.copyfile(iconv_shared_lib_path, external_libs_path + "libiconv.so");
 
@@ -105,7 +108,10 @@ def build_external_libraries():
 
 
 
-def build_arsenal(is_debug, is_shared):
+def build_arsenal(is_debug, is_shared, plat_name):
+        
+        assert(isinstance(plat_name, str));
+        
         save_dir = os.path.abspath(".");
         save_dir = fixpathend(save_dir);
         print(save_dir);
@@ -129,9 +135,9 @@ def build_arsenal(is_debug, is_shared):
         
         arsenal_prj_path = save_dir + "../";
         
-        arsenal_temp_lib_path = arsenal_prj_path + "obj/local/armeabi/Arsenal.a";
+        arsenal_temp_lib_path = arsenal_prj_path + "obj/local/" + plat_name + "/Arsenal.a";
         if is_shared:
-                arsenal_temp_lib_path = arsenal_prj_path + "libs/armeabi/Arsenal.so";
+                arsenal_temp_lib_path = arsenal_prj_path + "libs/" + plat_name + "/Arsenal.so";
                 pass;
         
         print(arsenal_prj_path);
@@ -162,9 +168,11 @@ def build_arsenal(is_debug, is_shared):
                         lib_str = "LIB_MODE=shared";
                         pass;
                         
+                plat_str = "PLAT=" + plat_name;
+                
                 
                 os.chdir(arsenal_prj_path + "jni/");
-                subprocess.call(["ndk-build", dbg_str, lib_str, "-B"]);
+                subprocess.call(["ndk-build", dbg_str, lib_str, plat_str, "-B"]);
                 os.chdir(save_dir);
                 shutil.copyfile(arsenal_temp_lib_path, arsenal_binary_file);
                 
@@ -208,7 +216,8 @@ def main():
         
         is_debug = False;
         is_shared = False;
-
+        plat_name = "armeabi";
+        
         print(len(sys.argv));
         
         i = 1;
@@ -226,6 +235,18 @@ def main():
                 elif sys.argv[i] == "static":
                         is_shared = False;
                         pass;
+                elif sys.argv[i] == "arm":
+                        plat_name = "armeabi";
+                        pass;
+                elif sys.argv[i] == "x86":
+                        plat_name = "x86";
+                        pass;
+                elif sys.argv[i] == "armv7":
+                        plat_name = "armeabi-v7a";
+                        pass;
+                elif sys.argv[i] == "mips":
+                        plat_name = "mips";
+                        pass;
                 else:
                         print("invalid parameter : " + sys.argv[i]);
                         pass;
@@ -237,13 +258,13 @@ def main():
         
         
         
-        if not build_external_libraries():
+        if not build_external_libraries(plat_name):
                 print("failed to build external libraries\r\n");
                 sys.exit(-1);
                 pass;
         
         
-        if not build_arsenal(is_debug, is_shared):
+        if not build_arsenal(is_debug, is_shared, plat_name):
                 print("failed to build Arsenal shared library\r\n");
                 sys.exit(-1);
                 pass;
