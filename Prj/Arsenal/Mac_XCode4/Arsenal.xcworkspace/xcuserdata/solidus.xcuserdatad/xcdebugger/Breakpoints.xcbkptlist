@@ -8,12 +8,272 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "../../Test/Mac_XCode4/plist_test.mm"
-         timestampString = "398168108.825501"
+         timestampString = "398319325.565667"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "298"
-         endingLineNumber = "298"
-         landmarkName = "save_plist_elem_test()"
+         startingLineNumber = "328"
+         endingLineNumber = "328"
+         landmarkName = "plist_parse_binary_test1()"
+         landmarkType = "7">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../../../Arsenal/Tools/property_list.c"
+         timestampString = "398319329.145296"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "3461"
+         endingLineNumber = "3461"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
+         landmarkType = "7">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../../../Arsenal/Tools/property_list.c"
+         timestampString = "398319467.679348"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "3515"
+         endingLineNumber = "3515"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
+         landmarkType = "7">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../../../Arsenal/Tools/property_list.c"
+         timestampString = "398319469.747326"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "3510"
+         endingLineNumber = "3510"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
+         landmarkType = "7">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../../../Arsenal/Tools/property_list.c"
+         timestampString = "398319471.95298"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "3505"
+         endingLineNumber = "3505"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
+         landmarkType = "7">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../../../Arsenal/Tools/property_list.c"
+         timestampString = "398319473.454714"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "3500"
+         endingLineNumber = "3500"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
+         landmarkType = "7">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../../../Arsenal/Tools/property_list.c"
+         timestampString = "398319475.996851"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "3495"
+         endingLineNumber = "3495"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
+         landmarkType = "7">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../../../Arsenal/Tools/property_list.c"
+         timestampString = "398319477.671065"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "3490"
+         endingLineNumber = "3490"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
+         landmarkType = "7">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../../../Arsenal/Tools/property_list.c"
+         timestampString = "398319479.392612"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "3485"
+         endingLineNumber = "3485"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
+         landmarkType = "7">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../../../Arsenal/Tools/property_list.c"
+         timestampString = "398319482.148503"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "3480"
+         endingLineNumber = "3480"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
+         landmarkType = "7">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../../../Arsenal/Tools/property_list.c"
+         timestampString = "398319996.626517"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "3606"
+         endingLineNumber = "3606"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
+         landmarkType = "7">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../../../Arsenal/Tools/property_list.c"
+         timestampString = "398319996.626517"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "3594"
+         endingLineNumber = "3594"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
+         landmarkType = "7">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../../../Arsenal/Tools/property_list.c"
+         timestampString = "398319996.626517"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "3586"
+         endingLineNumber = "3586"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
+         landmarkType = "7">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../../../Arsenal/Tools/property_list.c"
+         timestampString = "398319996.626517"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "3579"
+         endingLineNumber = "3579"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
+         landmarkType = "7">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../../../Arsenal/Tools/property_list.c"
+         timestampString = "398319996.626517"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "3570"
+         endingLineNumber = "3570"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
+         landmarkType = "7">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../../../Arsenal/Tools/property_list.c"
+         timestampString = "398319996.626517"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "3565"
+         endingLineNumber = "3565"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
+         landmarkType = "7">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../../../Arsenal/Tools/property_list.c"
+         timestampString = "398319996.626517"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "3560"
+         endingLineNumber = "3560"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
+         landmarkType = "7">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../../../Arsenal/Tools/property_list.c"
+         timestampString = "398319996.626517"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "3554"
+         endingLineNumber = "3554"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
+         landmarkType = "7">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../../../Arsenal/Tools/property_list.c"
+         timestampString = "398319996.626517"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "3542"
+         endingLineNumber = "3542"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
+         landmarkType = "7">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../../../Arsenal/Tools/property_list.c"
+         timestampString = "398319996.626517"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "3537"
+         endingLineNumber = "3537"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
+         landmarkType = "7">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../../../Arsenal/Tools/property_list.c"
+         timestampString = "398319996.626517"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "3618"
+         endingLineNumber = "3618"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
          landmarkType = "7">
       </FileBreakpoint>
    </FileBreakpoints>

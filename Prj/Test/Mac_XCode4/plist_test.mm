@@ -310,6 +310,39 @@ static void save_plist_elem_test()
         xml = NULL;
 }
 
+static void plist_parse_binary_test1()
+{
+        
+#define BINPLIST_FILE_PATH L"/Users/solidus/Desktop/test2_bin.plist"
+
+        
+        arStatus_t status;
+        arBuffer_t *bin = AR_CreateBuffer(1024);
+        AR_ASSERT(bin != NULL);
+        
+        status = PList_LoadBinaryFromFile(BINPLIST_FILE_PATH, bin);
+        AR_ASSERT(status == AR_S_YES);
+        
+        plistElem_t *elem = NULL;
+        
+        status = PList_TryParseBinaryPlist(AR_GetBufferData(bin), AR_GetBufferAvailable(bin),&elem, NULL);
+        
+        
+        if(bin)
+        {
+                AR_DestroyBuffer(bin);
+                bin = NULL;
+        }
+        
+        if(elem)
+        {
+                PList_DestroyElem(elem);
+                elem = NULL;
+        }
+
+        
+}
+
 void plist_test()
 {
         //format_test();
@@ -320,6 +353,8 @@ void plist_test()
         //parse_xml_test1();
         
         save_plist_elem_test();
+        
+        plist_parse_binary_test1();
 }
 
 
