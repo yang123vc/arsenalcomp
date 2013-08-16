@@ -706,6 +706,48 @@ const plistNumber_t*    PList_GetElemNumber(const plistElem_t *elem)
         return &elem->number;
 }
 
+
+void    PList_SetElemSignedInteger(plistElem_t *elem, ar_int_64_t num)
+{
+        AR_ASSERT(elem != NULL);
+        AR_ASSERT(PList_GetElemType(elem) ==  PLIST_ELEM_NUMBER_T);
+        
+        elem->number.type = PLIST_NUMBER_INTEGER_T;
+        elem->number.integer.is_signed = true;
+        elem->number.integer.signed_num = num;
+        
+}
+
+void                    PList_SetElemUnsignedInteger(plistElem_t *elem, ar_uint_64_t num)
+{
+        AR_ASSERT(elem != NULL);
+        AR_ASSERT(PList_GetElemType(elem) ==  PLIST_ELEM_NUMBER_T);
+        
+        elem->number.type = PLIST_NUMBER_INTEGER_T;
+        elem->number.integer.is_signed = false;
+        elem->number.integer.unsigned_num = num;
+}
+
+void                    PList_SetElemReal(plistElem_t *elem, double num)
+{
+        AR_ASSERT(elem != NULL);
+        AR_ASSERT(PList_GetElemType(elem) ==  PLIST_ELEM_NUMBER_T);
+        
+        PList_SetElemRealByType(elem, PLIST_REAL_NORMAL_T, num);
+}
+
+void                    PList_SetElemRealByType(plistElem_t *elem, plistRealType_t t, double num)
+{
+        AR_ASSERT(elem != NULL);
+        AR_ASSERT(PList_GetElemType(elem) ==  PLIST_ELEM_NUMBER_T);
+        
+        elem->number.type = PLIST_NUMBER_REAL_T;
+        elem->number.real.t = t;
+        elem->number.real.num = num;
+}
+
+
+
 size_t            PList_GetElemArrayCount(const plistElem_t *elem)
 {
         AR_ASSERT(elem != NULL);
@@ -3434,12 +3476,63 @@ static AR_INLINE ar_uint_64_t __check_uint64_mul_unsigned_unsigned(ar_uint_64_t 
 
 
 #if AR_ARCH_VER == ARCH_64
-        #define check_ptr_add(p, a, err)	(const ar_byte_t*)__check_uint64_add_unsigned_unsigned((uintptr_t)p, (uintptr_t)a, err)
+
+        #define check_ptr_add(p, a, err)	(const ar_byte_t*)__check_uint64_add_unsigned_unsigned((ar_uint_64_t)p, (ar_uint_64_t)a, err)
         #define check_size_t_mul(b, a, err)	(size_t)__check_uint64_mul_unsigned_unsigned((size_t)b, (size_t)a, err)
 #else
-        #define check_ptr_add(p, a, err)	(const ar_byte_t*)__check_uint32_add_unsigned_unsigned((uintptr_t)p, (uintptr_t)a, err)
+        #define check_ptr_add(p, a, err)	(const ar_byte_t*)__check_uint32_add_unsigned_unsigned((ar_uint_32_t)p, (ar_uint_32_t)a, err)
         #define check_size_t_mul(b, a, err)	(size_t)__check_uint32_mul_unsigned_unsigned((size_t)b, (size_t)a, err)
 #endif
+
+
+static AR_INLINE bool _readInt(const ar_byte_t *ptr, const ar_byte_t *end_byte_ptr, ar_uint_64_t *bigint, const ar_byte_t **newptr)
+{
+        
+        ar_byte_t marker;
+        ar_uint_64_t cnt;
+        ar_int_t err;
+        const ar_byte_t *extent;
+        
+        if (end_byte_ptr < ptr)
+        {
+                return false;
+        }
+        
+        marker = *ptr++;
+        
+        if ((marker & 0xf0) != kCFBinaryPlistMarkerInt)
+        {
+                return false;
+        }
+        
+        cnt = 1 << (marker & 0x0f);
+        
+        err = CF_NO_ERROR;
+        extent = check_ptr_add(ptr, cnt, &err) - 1;
+        
+        if(CF_NO_ERROR != err)
+        {
+                return false;
+        }
+        
+        if(end_byte_ptr < extent)
+        {
+                return false;
+        }
+        
+        // integers are not required to be in the most compact possible representation, but only the last 64 bits are significant currently
+        *bigint = _getSizedInt(ptr, cnt);
+        
+        ptr += cnt;
+        
+        if(newptr)
+        {
+                *newptr = ptr;
+        }
+        
+        return true;
+}
+
 
 
 
@@ -3620,20 +3713,1046 @@ static ar_bool_t __get_binary_plist_toplevelinfo(const ar_byte_t *data, size_t l
                 }
                 
                 
-                if(offset)
-                {
-                        *offset = off;
-                }
-                
-                if (marker)
-                {
-                        *marker = *(data + off);
-                }
+                *offset = off;
+                *marker = *(data + off);
         }
 
         return true;
         
 }
+
+
+ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t datalen, ar_uint_64_t startOffset, const CFBinaryPlistTrailer *trailer, arHash_t *objects, arHash_t *set, plistElem_t **pelem)
+{
+        ar_bool_t ret;
+        
+        ar_uint_64_t objectsRangeStart, objectsRangeEnd;
+        
+        ar_uint_64_t off;
+        plistElem_t **list;
+        plistElem_t *buf[256];
+        ar_byte_t       marker;
+        AR_ASSERT(databytes != NULL && datalen > 0 && trailer != NULL && pelem != NULL);
+        ret = true;
+        
+        if(objects)
+        {
+                AR_FindFromHash(objects, (void*)startOffset, (void**)pelem);
+                
+                if(*pelem)
+                {
+                        return true;
+                }
+        }
+        
+        if(set)
+        {
+                if(AR_FindFromHash(set, (void*)startOffset, NULL) == AR_S_YES)
+                {
+                        return false;
+                }
+        }
+
+        
+        objectsRangeStart = 8;
+        objectsRangeEnd = trailer->_offsetTableOffset - 1;
+        
+        if(startOffset < objectsRangeStart || objectsRangeEnd < startOffset)
+        {
+                return false;
+                
+        }
+        
+        marker = *(databytes + startOffset);
+        
+        switch(marker & 0xf0)
+        {
+                case kCFBinaryPlistMarkerNull:
+                {
+                        switch (marker)
+                        {
+                                case kCFBinaryPlistMarkerNull:
+                                {
+                                        *pelem = __g_boolean_false;
+                                        return true;
+                                }
+                                case kCFBinaryPlistMarkerFalse:
+                                {
+                                        *pelem = __g_boolean_false;
+                                        return true;
+                                }
+                                case kCFBinaryPlistMarkerTrue:
+                                {
+                                        *pelem = __g_boolean_true;
+                                }
+                                default:
+                                {
+                                        return false;
+                                }
+                        }
+                }
+                        break;
+                case kCFBinaryPlistMarkerInt:
+                {
+                        const ar_byte_t *ptr = (databytes + startOffset);
+                        ar_int_32_t err = CF_NO_ERROR;
+                        ar_uint_64_t cnt;
+                        const ar_byte_t *extent;
+                        
+                        ar_uint_64_t bigint;
+                        
+                        ptr = check_ptr_add(ptr, 1, &err);
+                        
+                        if (CF_NO_ERROR != err)
+                        {
+                                return false;
+                        }
+                        
+                        cnt = 1 << (marker & 0x0f);
+                        extent = check_ptr_add(ptr, cnt, &err) - 1;
+                        
+                        if (CF_NO_ERROR != err)
+                        {
+                                return false;
+                        }
+                        
+                        if(databytes + objectsRangeEnd < extent)
+                        {
+                                return false;
+                        }
+                        
+                        if (16 < cnt)
+                        {
+                                return false;
+                        }
+                        
+                        // in format version '00', 1, 2, and 4-byte integers have to be interpreted as unsigned,
+                        // whereas 8-byte integers are signed (and 16-byte when available)
+                        // negative 1, 2, 4-byte integers are always emitted as 8 bytes in format '00'
+                        // integers are not required to be in the most compact possible representation, but only the last 64 bits are significant currently
+                        
+                        bigint = _getSizedInt(ptr, cnt);
+                        ptr += cnt;
+                        
+                        *pelem = PList_CreateElem(PLIST_ELEM_NUMBER_T);
+                        
+                        if(*pelem == NULL)
+                        {
+                                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                                return false;
+                        }
+                        
+                        if(cnt < 8)
+                        {
+                                PList_SetElemUnsignedInteger(*pelem, (ar_uint_32_t)bigint);
+                        }else
+                        {
+                                PList_SetElemSignedInteger(*pelem, (ar_int_64_t)bigint);
+                        }
+                        
+                        if(objects && *pelem)
+                        {
+                                if(AR_SetToHash(objects, (void*)startOffset, *pelem) != AR_S_YES)
+                                {
+                                        PList_DestroyElem(*pelem);
+                                        *pelem = NULL;
+                                        
+                                        AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                                }
+                        }
+                        return (*pelem) ? true : false;
+                }
+                        break;
+                case kCFBinaryPlistMarkerReal:
+                {
+                        switch (marker & 0x0f)
+                        {
+                        case 2:
+                        {
+                                const ar_byte_t *ptr = (databytes + startOffset);
+                                ar_int_t err = CF_NO_ERROR;
+                                
+                                ar_uint_32_t swapped32;
+                                const ar_byte_t *extent;
+                                float f;
+                                ptr = check_ptr_add(ptr, 1, &err);
+                                
+                                if (CF_NO_ERROR != err)
+                                {
+                                        return false;
+                                }
+                                
+                                extent = check_ptr_add(ptr, 4, &err) - 1;
+                                
+                                if(CF_NO_ERROR != err)
+                                {
+                                        return false;
+                                }
+                                
+                                if (databytes + objectsRangeEnd < extent)
+                                {
+                                        return false;
+                                }
+                                
+                                
+                                AR_memcpy(&swapped32, ptr, 4);
+                                
+                                swapped32 = AR_NTOL_U32(swapped32);
+                                AR_memcpy((void*)&f, (void*)&swapped32, 4);
+                                
+                                
+                                *pelem = PList_CreateElem(PLIST_ELEM_NUMBER_T);
+                                
+                                if(*pelem == NULL)
+                                {
+                                        AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                                        return false;
+                                }
+
+                                PList_SetElemReal(*pelem, (double)f);
+                                
+                                // these are always immutable
+                                if (objects && *pelem)
+                                {
+                                        if(AR_SetToHash(objects, (void*)startOffset, *pelem) != AR_S_YES)
+                                        {
+                                                PList_DestroyElem(*pelem);
+                                                *pelem = NULL;
+                                                
+                                                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                                        }
+                                }
+                                return (*pelem) ? true : false;
+                        }
+                        case 3:
+                        {
+                                const ar_byte_t *ptr = (databytes + startOffset);
+                                
+                                ar_int_t err = CF_NO_ERROR;
+                                const ar_byte_t *extent;
+                                ar_uint_64_t swapped64;
+                                double d;
+                                
+                                ptr = check_ptr_add(ptr, 1, &err);
+                                
+                                if (CF_NO_ERROR != err)
+                                {
+                                        return false;
+                                }
+                                
+                                extent = check_ptr_add(ptr, 8, &err) - 1;
+                                
+                                if (CF_NO_ERROR != err)
+                                {
+                                        return false;
+                                }
+                                
+                                if (databytes + objectsRangeEnd < extent)
+                                {
+                                        return false;
+                                }
+                                
+                                
+                                
+                                AR_memcpy(&swapped64, ptr, 8);
+                                swapped64 = AR_NTOL_U64(swapped64);
+
+                                AR_memcpy((void*)&d, &swapped64, 8);
+                                
+                                
+                                PList_SetElemReal(*pelem, d);
+                                
+                                // these are always immutable
+                                if (objects && *pelem)
+                                {
+                                        if(AR_SetToHash(objects, (void*)startOffset, *pelem) != AR_S_YES)
+                                        {
+                                                PList_DestroyElem(*pelem);
+                                                *pelem = NULL;
+                                                
+                                                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                                        }
+                                }
+                                return (*pelem) ? true : false;
+                        }
+                        default:
+                                return false;
+                        }
+                        return false;
+                }
+                        break;
+
+        }
+        
+        
+#if(0)
+        
+        CF_EXPORT bool __CFBinaryPlistCreateObject2(const uint8_t *databytes, uint64_t datalen, uint64_t startOffset, const CFBinaryPlistTrailer *trailer, CFAllocatorRef allocator, CFOptionFlags mutabilityOption, CFMutableDictionaryRef objects, CFMutableSetRef set, CFIndex curDepth, CFPropertyListRef *plist)
+        {
+                
+                if (objects)
+                {
+                        *plist = CFDictionaryGetValue(objects, (const void *)(uintptr_t)startOffset);
+                        if (*plist)
+                        {
+                                CFRetain(*plist);
+                                return true;
+                        }
+                }
+                
+                // at any one invocation of this function, set should contain the offsets in the "path" down to this object
+                if (set && CFSetContainsValue(set, (const void *)(uintptr_t)startOffset))
+                {
+                        return false;
+                }
+                
+                // databytes is trusted to be at least datalen bytes long
+                // *trailer contents are trusted, even for overflows -- was checked when the trailer was parsed
+                uint64_t objectsRangeStart = 8, objectsRangeEnd = trailer->_offsetTableOffset - 1;
+                
+                if(startOffset < objectsRangeStart || objectsRangeEnd < startOffset)
+                {
+                        FAIL_FALSE;
+                }
+                
+                uint64_t off;
+                CFPropertyListRef *list, buffer[256];
+                CFAllocatorRef listAllocator;
+                
+                uint8_t marker = *(databytes + startOffset);
+                
+                switch (marker & 0xf0)
+                {
+                        case kCFBinaryPlistMarkerNull:
+                                
+                                switch (marker)
+                        {
+                                case kCFBinaryPlistMarkerNull:
+                                        *plist = kCFNull;
+                                        return true;
+                                case kCFBinaryPlistMarkerFalse:
+                                        *plist = CFRetain(kCFBooleanFalse);
+                                        return true;
+                                case kCFBinaryPlistMarkerTrue:
+                                        *plist = CFRetain(kCFBooleanTrue);
+                                        return true;
+                        }
+                                FAIL_FALSE;
+                        case kCFBinaryPlistMarkerInt:
+                        {
+                                const uint8_t *ptr = (databytes + startOffset);
+                                int32_t err = CF_NO_ERROR;
+                                ptr = check_ptr_add(ptr, 1, &err);
+                                
+                                if (CF_NO_ERROR != err)
+                                {
+                                        FAIL_FALSE;
+                                }
+                                
+                                uint64_t cnt = 1 << (marker & 0x0f);
+                                const uint8_t *extent = check_ptr_add(ptr, cnt, &err) - 1;
+                                
+                                if (CF_NO_ERROR != err)
+                                {
+                                        FAIL_FALSE;
+                                }
+                                
+                                if (databytes + objectsRangeEnd < extent)
+                                {
+                                        FAIL_FALSE;
+                                }
+                                
+                                if (16 < cnt)
+                                {
+                                        FAIL_FALSE;
+                                }
+                                
+                                // in format version '00', 1, 2, and 4-byte integers have to be interpreted as unsigned,
+                                // whereas 8-byte integers are signed (and 16-byte when available)
+                                // negative 1, 2, 4-byte integers are always emitted as 8 bytes in format '00'
+                                // integers are not required to be in the most compact possible representation, but only the last 64 bits are significant currently
+                                uint64_t bigint = _getSizedInt(ptr, cnt);
+                                ptr += cnt;
+                                if (8 < cnt)
+                                {
+                                        CFSInt128Struct val;
+                                        val.high = 0;
+                                        val.low = bigint;
+                                        *plist = CFNumberCreate(allocator, kCFNumberSInt128Type, &val);
+                                } else {
+                                        *plist = CFNumberCreate(allocator, kCFNumberSInt64Type, &bigint);
+                                }
+                                // these are always immutable
+                                if (objects && *plist)
+                                {
+                                        CFDictionarySetValue(objects, (const void *)(uintptr_t)startOffset, *plist);
+                                }
+                                
+                                return (*plist) ? true : false;
+                                
+                        }
+                        case kCFBinaryPlistMarkerReal:
+                                switch (marker & 0x0f)
+                        {
+                                case 2:
+                                {
+                                        const uint8_t *ptr = (databytes + startOffset);
+                                        int32_t err = CF_NO_ERROR;
+                                        ptr = check_ptr_add(ptr, 1, &err);
+                                        
+                                        if (CF_NO_ERROR != err)
+                                        {
+                                                FAIL_FALSE;
+                                        }
+                                        
+                                        const uint8_t *extent = check_ptr_add(ptr, 4, &err) - 1;
+                                        
+                                        if (CF_NO_ERROR != err)
+                                        {
+                                                FAIL_FALSE;
+                                        }
+                                        
+                                        if (databytes + objectsRangeEnd < extent)
+                                        {
+                                                FAIL_FALSE;
+                                        }
+                                        
+                                        CFSwappedFloat32 swapped32;
+                                        memmove(&swapped32, ptr, 4);
+                                        
+                                        float f = CFConvertFloat32SwappedToHost(swapped32);
+                                        
+                                        *plist = CFNumberCreate(allocator, kCFNumberFloat32Type, &f);
+                                        
+                                        // these are always immutable
+                                        if (objects && *plist)
+                                        {
+                                                CFDictionarySetValue(objects, (const void *)(uintptr_t)startOffset, *plist);
+                                        }
+                                        return (*plist) ? true : false;
+                                }
+                                case 3:
+                                {
+                                        const uint8_t *ptr = (databytes + startOffset);
+                                        int32_t err = CF_NO_ERROR;
+                                        ptr = check_ptr_add(ptr, 1, &err);
+                                        if (CF_NO_ERROR != err)
+                                        {
+                                                FAIL_FALSE;
+                                        }
+                                        
+                                        const uint8_t *extent = check_ptr_add(ptr, 8, &err) - 1;
+                                        
+                                        if (CF_NO_ERROR != err)
+                                        {
+                                                FAIL_FALSE;
+                                        }
+                                        
+                                        if (databytes + objectsRangeEnd < extent)
+                                        {
+                                                FAIL_FALSE;
+                                        }
+                                        
+                                        CFSwappedFloat64 swapped64;
+                                        memmove(&swapped64, ptr, 8);
+                                        double d = CFConvertFloat64SwappedToHost(swapped64);
+                                        *plist = CFNumberCreate(allocator, kCFNumberFloat64Type, &d);
+                                        // these are always immutable
+                                        if (objects && *plist)
+                                        {
+                                                CFDictionarySetValue(objects, (const void *)(uintptr_t)startOffset, *plist);
+                                        }
+                                        return (*plist) ? true : false;
+                                }
+                        }
+                                FAIL_FALSE;
+                        case kCFBinaryPlistMarkerDate & 0xf0:
+                                switch (marker)
+                                {
+                                case kCFBinaryPlistMarkerDate:
+                                {
+                                        const uint8_t *ptr = (databytes + startOffset);
+                                        int32_t err = CF_NO_ERROR;
+                                        ptr = check_ptr_add(ptr, 1, &err);
+                                        
+                                        if (CF_NO_ERROR != err)
+                                        {
+                                                FAIL_FALSE;
+                                        }
+                                        
+                                        const uint8_t *extent = check_ptr_add(ptr, 8, &err) - 1;
+                                        
+                                        if (CF_NO_ERROR != err)
+                                        {
+                                                FAIL_FALSE;
+                                        }
+                                        
+                                        if(databytes + objectsRangeEnd < extent)
+                                        {
+                                                FAIL_FALSE;
+                                        }
+                                        
+                                        CFSwappedFloat64 swapped64;
+                                        memmove(&swapped64, ptr, 8);
+                                        
+                                        double d = CFConvertFloat64SwappedToHost(swapped64);
+                                        *plist = CFDateCreate(allocator, d);
+                                        
+                                        // these are always immutable
+                                        if (objects && *plist)
+                                        {
+                                                CFDictionarySetValue(objects, (const void *)(uintptr_t)startOffset, *plist);
+                                        }
+                                        
+                                        return (*plist) ? true : false;
+                                }
+                        }
+                                FAIL_FALSE;
+                        case kCFBinaryPlistMarkerData:
+                        {
+                                const uint8_t *ptr = databytes + startOffset;
+                                
+                                int32_t err = CF_NO_ERROR;
+                                
+                                ptr = check_ptr_add(ptr, 1, &err);
+                                
+                                if (CF_NO_ERROR != err)
+                                {
+                                        FAIL_FALSE;
+                                }
+                                
+                                CFIndex cnt = marker & 0x0f;
+                                
+                                if (0xf == cnt)
+                                {
+                                        uint64_t bigint = 0;
+                                        
+                                        if (!_readInt(ptr, databytes + objectsRangeEnd, &bigint, &ptr))
+                                        {
+                                                FAIL_FALSE;
+                                        }
+                                        
+                                        if (LONG_MAX < bigint)
+                                        {
+                                                FAIL_FALSE;
+                                        }
+                                        
+                                        cnt = (CFIndex)bigint;
+                                }
+                                
+                                const uint8_t *extent = check_ptr_add(ptr, cnt, &err) - 1;
+                                
+                                if (CF_NO_ERROR != err)
+                                {
+                                        FAIL_FALSE;
+                                }
+                                
+                                if (databytes + objectsRangeEnd < extent)
+                                {
+                                        FAIL_FALSE;
+                                }
+                                
+                                if (mutabilityOption == kCFPropertyListMutableContainersAndLeaves)
+                                {
+                                        *plist = CFDataCreateMutable(allocator, 0);
+                                        
+                                        if (*plist)
+                                        {
+                                                CFDataAppendBytes((CFMutableDataRef)*plist, ptr, cnt);
+                                        }
+                                        
+                                } else
+                                {
+                                        *plist = CFDataCreate(allocator, ptr, cnt);
+                                }
+                                
+                                if (objects && *plist && (mutabilityOption != kCFPropertyListMutableContainersAndLeaves))
+                                {
+                                        CFDictionarySetValue(objects, (const void *)(uintptr_t)startOffset, *plist);
+                                }
+                                
+                                return (*plist) ? true : false;
+                        }
+                        case kCFBinaryPlistMarkerASCIIString:
+                        {
+                                const uint8_t *ptr = databytes + startOffset;
+                                int32_t err = CF_NO_ERROR;
+                                
+                                ptr = check_ptr_add(ptr, 1, &err);
+                                if (CF_NO_ERROR != err)
+                                {
+                                        FAIL_FALSE;
+                                }
+                                
+                                CFIndex cnt = marker & 0x0f;
+                                if (0xf == cnt)
+                                {
+                                        uint64_t bigint = 0;
+                                        if (!_readInt(ptr, databytes + objectsRangeEnd, &bigint, &ptr))
+                                        {
+                                                FAIL_FALSE;
+                                        }
+                                        
+                                        if (LONG_MAX < bigint)
+                                        {
+                                                FAIL_FALSE;
+                                        }
+                                        
+                                        cnt = (CFIndex)bigint;
+                                }
+                                const uint8_t *extent = check_ptr_add(ptr, cnt, &err) - 1;
+                                if (CF_NO_ERROR != err)
+                                {
+                                        FAIL_FALSE;
+                                }
+                                
+                                if (databytes + objectsRangeEnd < extent)
+                                {
+                                        FAIL_FALSE;
+                                }
+                                
+                                if (mutabilityOption == kCFPropertyListMutableContainersAndLeaves)
+                                {
+                                        CFStringRef str = CFStringCreateWithBytes(allocator, ptr, cnt, kCFStringEncodingASCII, false);
+                                        *plist = str ? CFStringCreateMutableCopy(allocator, 0, str) : NULL;
+                                        if(str)
+                                        {
+                                                CFRelease(str);
+                                        }
+                                } else {
+                                        *plist = CFStringCreateWithBytes(allocator, ptr, cnt, kCFStringEncodingASCII, false);
+                                }
+                                
+                                if (objects && *plist && (mutabilityOption != kCFPropertyListMutableContainersAndLeaves))
+                                {
+                                        CFDictionarySetValue(objects, (const void *)(uintptr_t)startOffset, *plist);
+                                }
+                                
+                                return (*plist) ? true : false;
+                        }
+                        case kCFBinaryPlistMarkerUnicode16String:
+                        {
+                                const uint8_t *ptr = databytes + startOffset;
+                                int32_t err = CF_NO_ERROR;
+                                ptr = check_ptr_add(ptr, 1, &err);
+                                if (CF_NO_ERROR != err)
+                                {
+                                        FAIL_FALSE;
+                                }
+                                
+                                CFIndex cnt = marker & 0x0f;
+                                
+                                if (0xf == cnt)
+                                {
+                                        uint64_t bigint = 0;
+                                        if (!_readInt(ptr, databytes + objectsRangeEnd, &bigint, &ptr))
+                                        {
+                                                FAIL_FALSE;
+                                        }
+                                        
+                                        if (LONG_MAX < bigint)
+                                        {
+                                                FAIL_FALSE;
+                                        }
+                                        
+                                        cnt = (CFIndex)bigint;
+                                }
+                                
+                                const uint8_t *extent = check_ptr_add(ptr, cnt, &err) - 1;
+                                extent = check_ptr_add(extent, cnt, &err);	// 2 bytes per character
+                                if (CF_NO_ERROR != err)
+                                {
+                                        FAIL_FALSE;
+                                }
+                                
+                                if (databytes + objectsRangeEnd < extent)
+                                {
+                                        FAIL_FALSE;
+                                }
+                                
+                                size_t byte_cnt = check_size_t_mul(cnt, sizeof(UniChar), &err);
+                                if (CF_NO_ERROR != err)
+                                {
+                                        FAIL_FALSE;
+                                }
+                                
+                                UniChar *chars = (UniChar *)CFAllocatorAllocate(allocator, byte_cnt, 0);
+                                if (!chars)
+                                {
+                                        FAIL_FALSE;
+                                }
+                                
+                                memmove(chars, ptr, byte_cnt);
+                                for (CFIndex idx = 0; idx < cnt; idx++)
+                                {
+                                        chars[idx] = CFSwapInt16BigToHost(chars[idx]);
+                                }
+                                
+                                if (mutabilityOption == kCFPropertyListMutableContainersAndLeaves)
+                                {
+                                        CFStringRef str = CFStringCreateWithCharactersNoCopy(allocator, chars, cnt, allocator);
+                                        *plist = str ? CFStringCreateMutableCopy(allocator, 0, str) : NULL;
+                                        if (str)
+                                        {
+                                                CFRelease(str);
+                                        }
+                                } else
+                                {
+                                        *plist = CFStringCreateWithCharactersNoCopy(allocator, chars, cnt, allocator);
+                                }
+                                
+                                if(objects && *plist && (mutabilityOption != kCFPropertyListMutableContainersAndLeaves))
+                                {
+                                        CFDictionarySetValue(objects, (const void *)(uintptr_t)startOffset, *plist);
+                                }
+                                return (*plist) ? true : false;
+                        }
+                        case kCFBinaryPlistMarkerUID:
+                        {
+                                const uint8_t *ptr = databytes + startOffset;
+                                
+                                int32_t err = CF_NO_ERROR;
+                                
+                                ptr = check_ptr_add(ptr, 1, &err);
+                                
+                                if (CF_NO_ERROR != err)
+                                {
+                                        FAIL_FALSE;
+                                }
+                                
+                                CFIndex cnt = (marker & 0x0f) + 1;
+                                
+                                const uint8_t *extent = check_ptr_add(ptr, cnt, &err) - 1;
+                                if (CF_NO_ERROR != err)
+                                {
+                                        FAIL_FALSE;
+                                }
+                                
+                                if (databytes + objectsRangeEnd < extent)
+                                {
+                                        FAIL_FALSE;
+                                }
+                                
+                                // uids are not required to be in the most compact possible representation, but only the last 64 bits are significant currently
+                                uint64_t bigint = _getSizedInt(ptr, cnt);
+                                ptr += cnt;
+                                if (UINT32_MAX < bigint)
+                                {
+                                        FAIL_FALSE;
+                                }
+                                
+                                *plist = _CFKeyedArchiverUIDCreate(allocator, (uint32_t)bigint);
+                                
+                                // these are always immutable
+                                if (objects && *plist)
+                                {
+                                        CFDictionarySetValue(objects, (const void *)(uintptr_t)startOffset, *plist);
+                                }
+                                return (*plist) ? true : false;
+                        }
+                        case kCFBinaryPlistMarkerArray:
+                        case kCFBinaryPlistMarkerSet:
+                        {
+                                const uint8_t *ptr = databytes + startOffset;
+                                int32_t err = CF_NO_ERROR;
+                                ptr = check_ptr_add(ptr, 1, &err);
+                                if (CF_NO_ERROR != err) FAIL_FALSE;
+                                CFIndex cnt = marker & 0x0f;
+                                
+                                if (0xf == cnt)
+                                {
+                                        uint64_t bigint = 0;
+                                        if (!_readInt(ptr, databytes + objectsRangeEnd, &bigint, &ptr))
+                                        {
+                                                FAIL_FALSE;
+                                        }
+                                        
+                                        if(LONG_MAX < bigint)
+                                        {
+                                                FAIL_FALSE;
+                                        }
+                                        
+                                        cnt = (CFIndex)bigint;
+                                }
+                                
+                                size_t byte_cnt = check_size_t_mul(cnt, trailer->_objectRefSize, &err);
+                                
+                                if (CF_NO_ERROR != err)
+                                {
+                                        FAIL_FALSE;
+                                }
+                                
+                                const uint8_t *extent = check_ptr_add(ptr, byte_cnt, &err) - 1;
+                                
+                                if (CF_NO_ERROR != err)
+                                {
+                                        FAIL_FALSE;
+                                }
+                                
+                                if (databytes + objectsRangeEnd < extent)
+                                {
+                                        FAIL_FALSE;
+                                }
+                                
+                                byte_cnt = check_size_t_mul(cnt, sizeof(CFPropertyListRef), &err);
+                                
+                                if (CF_NO_ERROR != err)
+                                {
+                                        FAIL_FALSE;
+                                }
+                                
+                                list = (cnt <= 256) ? buffer : (CFPropertyListRef *)CFAllocatorAllocate(kCFAllocatorSystemDefault, byte_cnt, 0);
+                                listAllocator = (list == buffer ? kCFAllocatorNull : kCFAllocatorSystemDefault);
+                                
+                                if(!list)
+                                {
+                                        FAIL_FALSE;
+                                }
+                                
+                                Boolean madeSet = false;
+                                
+                                if (!set && 15 < curDepth)
+                                {
+                                        set = CFSetCreateMutable(kCFAllocatorSystemDefault, 0, NULL);
+                                        madeSet = set ? true : false;
+                                }
+                                
+                                if (set)
+                                {
+                                        CFSetAddValue(set, (const void *)(uintptr_t)startOffset);
+                                }
+                                
+                                for (CFIndex idx = 0; idx < cnt; idx++)
+                                {
+                                        CFPropertyListRef pl;
+                                        off = _getOffsetOfRefAt(databytes, ptr, trailer);
+                                        
+                                        if (!__CFBinaryPlistCreateObject2(databytes, datalen, off, trailer, allocator, mutabilityOption, objects, set, curDepth + 1, &pl))
+                                        {
+                                                while (idx--)
+                                                {
+                                                        CFRelease(list[idx]);
+                                                }
+                                                if (list != buffer)
+                                                {
+                                                        CFAllocatorDeallocate(kCFAllocatorSystemDefault, list);
+                                                }
+                                                
+                                                FAIL_FALSE;
+                                        }
+                                        list[idx] = pl;
+                                        ptr += trailer->_objectRefSize;
+                                }
+                                
+                                if(set)
+                                {
+                                        CFSetRemoveValue(set, (const void *)(uintptr_t)startOffset);
+                                }
+                                
+                                if (madeSet)
+                                {
+                                        CFRelease(set);
+                                        set = NULL;
+                                }
+                                
+                                if ((marker & 0xf0) == kCFBinaryPlistMarkerArray)
+                                {
+                                        if (mutabilityOption != kCFPropertyListImmutable)
+                                        {
+                                                *plist = CFArrayCreateMutable(allocator, 0, &kCFTypeArrayCallBacks);
+                                                CFArrayReplaceValues((CFMutableArrayRef)*plist, CFRangeMake(0, 0), list, cnt);
+                                        } else
+                                        {
+                                                *plist = CFArrayCreate(allocator, list, cnt, &kCFTypeArrayCallBacks);
+                                        }
+                                } else
+                                {
+                                        if (mutabilityOption != kCFPropertyListImmutable)
+                                        {
+                                                *plist = CFSetCreateMutable(allocator, 0, &kCFTypeSetCallBacks);
+                                                for (CFIndex idx = 0; idx < cnt; idx++)
+                                                {
+                                                        CFSetAddValue((CFMutableSetRef)*plist, list[idx]);
+                                                }
+                                        }else
+                                        {
+                                                *plist = CFSetCreate(allocator, list, cnt, &kCFTypeSetCallBacks);
+                                        }
+                                }
+                                
+                                for (CFIndex idx = 0; idx < cnt; idx++)
+                                {
+                                        CFRelease(list[idx]);
+                                }
+                                
+                                if (objects && *plist && (mutabilityOption == kCFPropertyListImmutable))
+                                {
+                                        CFDictionarySetValue(objects, (const void *)(uintptr_t)startOffset, *plist);
+                                }
+                                
+                                if (list != buffer)
+                                {
+                                        CFAllocatorDeallocate(kCFAllocatorSystemDefault, list);
+                                }
+                                
+                                return (*plist) ? true : false;
+                        }
+                        case kCFBinaryPlistMarkerDict:
+                        {
+                                const uint8_t *ptr = databytes + startOffset;
+                                int32_t err = CF_NO_ERROR;
+                                ptr = check_ptr_add(ptr, 1, &err);
+                                if (CF_NO_ERROR != err)
+                                {
+                                        FAIL_FALSE;
+                                }
+                                
+                                CFIndex cnt = marker & 0x0f;
+                                
+                                if (0xf == cnt)
+                                {
+                                        uint64_t bigint = 0;
+                                        
+                                        if (!_readInt(ptr, databytes + objectsRangeEnd, &bigint, &ptr))
+                                        {
+                                                FAIL_FALSE;
+                                        }
+                                        
+                                        if (LONG_MAX < bigint)
+                                        {
+                                                FAIL_FALSE;
+                                        }
+                                        
+                                        cnt = (CFIndex)bigint;
+                                }
+                                cnt = check_size_t_mul(cnt, 2, &err);
+                                
+                                if (CF_NO_ERROR != err)
+                                {
+                                        FAIL_FALSE;
+                                }
+                                
+                                size_t byte_cnt = check_size_t_mul(cnt, trailer->_objectRefSize, &err);
+                                
+                                if (CF_NO_ERROR != err)
+                                {
+                                        FAIL_FALSE;
+                                }
+                                
+                                const uint8_t *extent = check_ptr_add(ptr, byte_cnt, &err) - 1;
+                                
+                                if (CF_NO_ERROR != err)
+                                {
+                                        FAIL_FALSE;
+                                }
+                                
+                                if (databytes + objectsRangeEnd < extent)
+                                {
+                                        FAIL_FALSE;
+                                }
+                                
+                                byte_cnt = check_size_t_mul(cnt, sizeof(CFPropertyListRef), &err);
+                                
+                                if (CF_NO_ERROR != err)
+                                {
+                                        FAIL_FALSE;
+                                }
+                                
+                                list = (cnt <= 256) ? buffer : (CFPropertyListRef *)CFAllocatorAllocate(kCFAllocatorSystemDefault, byte_cnt, 0);
+                                listAllocator = (list == buffer ? kCFAllocatorNull : kCFAllocatorSystemDefault);
+                                if (!list)
+                                {
+                                        FAIL_FALSE;
+                                }
+                                
+                                Boolean madeSet = false;
+                                
+                                if (!set && 15 < curDepth)
+                                {
+                                        set = CFSetCreateMutable(kCFAllocatorSystemDefault, 0, NULL);
+                                        madeSet = set ? true : false;
+                                }
+                                
+                                if (set)
+                                {
+                                        CFSetAddValue(set, (const void *)(uintptr_t)startOffset);
+                                }
+                                
+                                for (CFIndex idx = 0; idx < cnt; idx++)
+                                {
+                                        CFPropertyListRef pl = NULL;
+                                        off = _getOffsetOfRefAt(databytes, ptr, trailer);
+                                        
+                                        if (!__CFBinaryPlistCreateObject2(databytes, datalen, off, trailer, allocator, mutabilityOption, objects, set, curDepth + 1, &pl) || (idx < cnt / 2 && !_plistIsPrimitive(pl)))
+                                        {
+                                                if (pl) CFRelease(pl);
+                                                
+                                                while (idx--)
+                                                {
+                                                        CFRelease(list[idx]);
+                                                }
+                                                if (list != buffer)
+                                                {
+                                                        CFAllocatorDeallocate(kCFAllocatorSystemDefault, list);
+                                                }
+                                                
+                                                FAIL_FALSE;
+                                        }
+                                        list[idx] = pl;
+                                        ptr += trailer->_objectRefSize;
+                                }
+                                
+                                if(set)
+                                {
+                                        CFSetRemoveValue(set, (const void *)(uintptr_t)startOffset);
+                                }
+                                
+                                if (madeSet)
+                                {
+                                        CFRelease(set);
+                                        set = NULL;
+                                }
+                                
+                                if (mutabilityOption != kCFPropertyListImmutable)
+                                {
+                                        *plist = CFDictionaryCreateMutable(allocator, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+                                        
+                                        for (CFIndex idx = 0; idx < cnt / 2; idx++)
+                                        {
+                                                CFDictionaryAddValue((CFMutableDictionaryRef)*plist, list[idx], list[idx + cnt / 2]);
+                                        }
+                                } else
+                                {
+                                        *plist = CFDictionaryCreate(allocator, list, list + cnt / 2, cnt / 2, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+                                }
+                                
+                                for(CFIndex idx = 0; idx < cnt; idx++)
+                                {
+                                        CFRelease(list[idx]);
+                                }
+                                
+                                if (objects && *plist && (mutabilityOption == kCFPropertyListImmutable))
+                                {
+                                        CFDictionarySetValue(objects, (const void *)(uintptr_t)startOffset, *plist);
+                                }
+                                if (list != buffer)
+                                {
+                                        CFAllocatorDeallocate(kCFAllocatorSystemDefault, list);
+                                }
+                                return (*plist) ? true : false;
+                        }
+                }
+                FAIL_FALSE;
+        }
+        
+
+        
+#endif
+        
+END_POINT:
+        return ret;
+}
+
 
 
 arStatus_t      PList_TryParseBinaryPlist(const ar_byte_t *data, size_t length, plistElem_t **pelem, arString_t *errmsg)
