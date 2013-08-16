@@ -202,12 +202,20 @@ plistElem_t*    PList_CreateElem(plistElemType_t        t);
 void            PList_DestroyElem(plistElem_t            *elem);
 #define         PList_GetElemType(_elem)        ((_elem)->type)
 
+
+void                    PList_SetElemSignedInteger(plistElem_t *elem, ar_int_64_t num);
+void                    PList_SetElemUnsignedInteger(plistElem_t *elem, ar_uint_64_t num);
+void                    PList_SetElemReal(plistElem_t *elem, double num);
+void                    PList_SetElemRealByType(plistElem_t *elem, plistRealType_t t, double num);
+const plistNumber_t*    PList_GetElemNumber(const plistElem_t *elem);
+
+
 const wchar_t*          PList_GetElemCString(const plistElem_t *elem);
 
 const ar_byte_t*        PList_GetElemDataPointer(const plistElem_t *elem);
 size_t                  PList_GetElemDataLength(const plistElem_t *elem);
 
-const plistNumber_t*    PList_GetElemNumber(const plistElem_t *elem);
+
 
 size_t                  PList_GetElemArrayCount(const plistElem_t *elem);
 plistElem_t*            PList_GetElemArrayByIndex(plistElem_t *elem, size_t idx);
