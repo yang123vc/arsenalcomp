@@ -310,6 +310,7 @@ static void save_plist_elem_test()
         xml = NULL;
 }
 
+
 static void plist_parse_binary_test1()
 {
         
@@ -344,6 +345,7 @@ static void plist_parse_binary_test1()
 }
 
 
+#if(0)
 static void __absolutetime_to_gmtime(double abstime, ar_uint_16_t *year, ar_uint_16_t *mon, ar_uint_16_t *day, ar_uint_16_t *hour, ar_uint_16_t *min, ar_uint_16_t *sec)
 {
         struct tm tm_2001_0101_00_00_00;
@@ -411,20 +413,22 @@ static void time_test2()
         
 }
 
+#endif
+
 void plist_test()
 {
         //format_test();
         //base64_test_for_plist();
         //load_test();
         //time_test();
-        time_test2();
+        //time_test2();
         
         //real_test();
         //parse_xml_test1();
         
         //save_plist_elem_test();
         
-        //plist_parse_binary_test1();
+        plist_parse_binary_test1();
 }
 
 
