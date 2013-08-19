@@ -3941,7 +3941,8 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
         
         if(objects)
         {
-                AR_FindFromHash(objects, (void*)startOffset, (void**)pelem);
+				size_t offset = (size_t)startOffset;
+                AR_FindFromHash(objects, (void*)offset, (void**)pelem);
                 
                 if(*pelem)
                 {
@@ -3951,7 +3952,8 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
         
         if(set)
         {
-                if(AR_FindFromHash(set, (void*)startOffset, NULL) == AR_S_YES)
+				size_t offset = (size_t)startOffset;
+                if(AR_FindFromHash(set, (void*)offset, NULL) == AR_S_YES)
                 {
                         return false;
                 }
@@ -4056,7 +4058,8 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
                         
                         if(objects && *pelem)
                         {
-                                if(AR_SetToHash(objects, (void*)startOffset, *pelem) != AR_S_YES)
+								size_t offset = (size_t)startOffset;
+                                if(AR_SetToHash(objects, (void*)offset, *pelem) != AR_S_YES)
                                 {
                                         PList_DestroyElem(*pelem);
                                         *pelem = NULL;
@@ -4118,7 +4121,8 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
                                 // these are always immutable
                                 if (objects && *pelem)
                                 {
-                                        if(AR_SetToHash(objects, (void*)startOffset, *pelem) != AR_S_YES)
+										size_t offset = (size_t)startOffset;
+                                        if(AR_SetToHash(objects, (void*)offset, *pelem) != AR_S_YES)
                                         {
                                                 PList_DestroyElem(*pelem);
                                                 *pelem = NULL;
@@ -4178,7 +4182,8 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
                                 // these are always immutable
                                 if (objects && *pelem)
                                 {
-                                        if(AR_SetToHash(objects, (void*)startOffset, *pelem) != AR_S_YES)
+										size_t offset = (size_t)startOffset;
+                                        if(AR_SetToHash(objects, (void*)offset, *pelem) != AR_S_YES)
                                         {
                                                 PList_DestroyElem(*pelem);
                                                 *pelem = NULL;
@@ -4250,7 +4255,8 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
                                         // these are always immutable
                                         if (objects && *pelem)
                                         {
-                                                if(AR_SetToHash(objects, (void*)startOffset, *pelem) != AR_S_YES)
+												size_t offset = (size_t)startOffset;
+                                                if(AR_SetToHash(objects, (void*)offset, *pelem) != AR_S_YES)
                                                 {
                                                         PList_DestroyElem(*pelem);
                                                         *pelem = NULL;
@@ -4331,7 +4337,8 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
                         
                         if (objects && *pelem)
                         {
-                                if(AR_SetToHash(objects, (void*)startOffset, *pelem) != AR_S_YES)
+								size_t offset = (size_t)startOffset;
+                                if(AR_SetToHash(objects, (void*)offset, *pelem) != AR_S_YES)
                                 {
                                         PList_DestroyElem(*pelem);
                                         *pelem = NULL;
@@ -4413,7 +4420,8 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
                         
                         if (objects && *pelem)
                         {
-                                if(AR_SetToHash(objects, (void*)startOffset, *pelem) != AR_S_YES)
+								size_t offset = (size_t)startOffset;
+                                if(AR_SetToHash(objects, (void*)offset, *pelem) != AR_S_YES)
                                 {
                                         PList_DestroyElem(*pelem);
                                         *pelem = NULL;
@@ -4504,7 +4512,8 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
                         
                         if( objects && *pelem)
                         {
-                                if(AR_SetToHash(objects, (void*)startOffset, *pelem) != AR_S_YES)
+								size_t offset = (size_t)startOffset;
+                                if(AR_SetToHash(objects, (void*)offset, *pelem) != AR_S_YES)
                                 {
                                         PList_DestroyElem(*pelem);
                                         *pelem = NULL;
@@ -4548,7 +4557,7 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
                         }
                         
                         // uids are not required to be in the most compact possible representation, but only the last 64 bits are significant currently
-                        bigint = _getSizedInt(ptr, cnt);
+                        bigint = _getSizedInt(ptr, (ar_uint_8_t)cnt);
                         ptr += cnt;
                         if (AR_UINT32_MAX < bigint)
                         {
@@ -4567,7 +4576,8 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
                         
                         if(objects && *pelem)
                         {
-                                if(AR_SetToHash(objects, (void*)startOffset, *pelem) != AR_S_YES)
+								size_t offset = (size_t)startOffset;
+                                if(AR_SetToHash(objects, (void*)offset, *pelem) != AR_S_YES)
                                 {
                                         PList_DestroyElem(*pelem);
                                         *pelem = NULL;
