@@ -61,6 +61,7 @@ typedef struct __plist_string_tag
 
 arStatus_t      PList_InitString(plistString_t  *str);
 void            PList_UnInitString(plistString_t  *str);
+arStatus_t      PList_CopyString(plistString_t  *dest, plistString_t  *src);
 
 ar_int_t        PList_CompareString(const plistString_t  *l, const plistString_t  *r);
 ar_int_t        PList_CompareStringWithWcs(const plistString_t  *l, const wchar_t *wcs);
@@ -128,6 +129,7 @@ typedef struct __plist_data_tag
 
 arStatus_t              PList_InitData(plistData_t *data);
 void                    PList_UnInitData(plistData_t *data);
+arStatus_t              PList_CopyData(plistData_t *dest, plistData_t *src);
 const ar_byte_t*        PList_GetDataPointer(const plistData_t *data);
 size_t                  PList_GetDataLength(const plistData_t *data);
 arStatus_t              PList_SetData(plistData_t *data, const ar_byte_t *buf, size_t length);
@@ -155,10 +157,12 @@ typedef struct __plist_array_tag
 void            PList_InitArray(plistArray_t *arr);
 void            PList_UnInitArray(plistArray_t *arr);
 void            PList_ClearArray(plistArray_t *arr);
+arStatus_t      PList_CopyArray(plistArray_t *dest, plistArray_t *src);
 arStatus_t      PList_PushToArray(plistArray_t *arr, plistElem_t *elem);
 #define         PList_GetArrayCount(_arr)       ((_arr)->count)
 plistElem_t*    PList_GetArrayByIndex(plistArray_t *arr, size_t idx);
 ar_bool_t       PList_RemoveArrayByIndex(plistArray_t *arr, size_t idx);
+
 
 typedef struct __plist_dict_tag
 {
@@ -171,6 +175,7 @@ typedef struct __plist_dict_tag
 void            PList_InitDict(plistDict_t *dict);
 void            PList_UnInitDict(plistDict_t *dict);
 void            PList_ClearDict(plistDict_t *dict);
+arStatus_t      PList_CopyDict(plistDict_t *dest, plistDict_t *src);
 
 plistElem_t*    PList_FindValueByElem(plistDict_t *dict, const plistElem_t *key);
 plistElem_t*    PList_FindValueByString(plistDict_t *dict, const wchar_t *key);
@@ -184,7 +189,7 @@ plistElem_t*    PList_GetDictValueByIndex(plistDict_t *dict, size_t idx);
 
 struct  __plist_element_tag
 {
-        plistElemType_t type;
+        plistElemType_t         type;
 
         union
         {
@@ -202,8 +207,12 @@ struct  __plist_element_tag
 
 plistElem_t*    PList_CreateElem(plistElemType_t        t);
 void            PList_DestroyElem(plistElem_t            *elem);
+plistElem_t*    PList_CopyNewElem(plistElem_t            *elem);
 #define         PList_GetElemType(_elem)        ((_elem)->type)
 
+
+ar_bool_t               PList_GetElemBooleanValue(const plistElem_t *elem);
+void                    PList_SetElemBooleanValue(plistElem_t *elem, ar_bool_t val);
 
 void                    PList_SetElemSignedInteger(plistElem_t *elem, ar_int_64_t num);
 void                    PList_SetElemUnsignedInteger(plistElem_t *elem, ar_uint_64_t num);
@@ -226,9 +235,12 @@ arStatus_t              PList_SetElemData(plistElem_t *elem, const ar_byte_t *da
 
 size_t                  PList_GetElemArrayCount(const plistElem_t *elem);
 plistElem_t*            PList_GetElemArrayByIndex(plistElem_t *elem, size_t idx);
+arStatus_t              PList_AppendToElemArray(plistElem_t *elem, plistElem_t *item);
 
 size_t                  PList_GetElemDictCount(const plistElem_t *elem);
 plistElem_t*            PList_FindElemDictValueByWcs(plistElem_t *elem, const wchar_t *key);
+arStatus_t              PList_SetElemDictValueForKey(plistElem_t *elem, plistElem_t *key, plistElem_t *val);
+
 const wchar_t*          PList_GetElemDictKeyWcsByIndex(plistElem_t *elem, size_t idx);
 plistElem_t*            PList_GetElemDictValueByIndex(plistElem_t *elem, size_t idx);
 
@@ -236,10 +248,12 @@ plistElem_t*            PList_GetElemDictValueByIndex(plistElem_t *elem, size_t 
 arStatus_t              PList_SaveElemToXML(const plistElem_t *elem, arString_t *out);
 
 
+
+
 /***************************************************************************************/
 
-arStatus_t      PList_LoadElemFromBinary(arBuffer_t *data, plistType_t *ptype, plistElem_t **pelem);
-arStatus_t      PList_SaveElemToBinary(const plistElem_t *elem, arBuffer_t *data, plistType_t type);
+arStatus_t              PList_LoadElemFromBinary(arBuffer_t *data, plistType_t *ptype, plistElem_t **pelem);
+arStatus_t              PList_SaveElemToBinary(const plistElem_t *elem, arBuffer_t *data, plistType_t type);
 
 
 

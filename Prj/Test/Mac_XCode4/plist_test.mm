@@ -264,7 +264,7 @@ static void save_plist_elem_test()
 {
         //L"/Users/solidus/Documents/Code/Solidus/Arsenal/misc/test.plist"
         //#define PLIST_FILE_PATH L"/Users/solidus/Desktop/Code/Arsenal/misc/test.plist"
-#define PLIST_FILE_PATH L"/Users/solidus/Desktop/test2.plist"
+#define PLIST_FILE_PATH L"/Users/solidus/Desktop/test.plist"
         
         arStatus_t status;
         arString_t *xml = AR_CreateString();
@@ -276,9 +276,8 @@ static void save_plist_elem_test()
         
         status = PList_SetXMLParserWithWcs(parser, AR_CSTR(xml), AR_GetStringLength(xml));
         AR_ASSERT(status == AR_S_YES);
-        
         plistElem_t *elem = PList_ParseXML(parser);
-        
+
         if(elem == NULL)
         {
                 AR_ASSERT(PList_XMLParserInError(parser));
@@ -291,11 +290,14 @@ static void save_plist_elem_test()
                 arString_t *xml = AR_CreateString();
                 AR_ASSERT(xml != NULL);
                 
-                status = PList_SaveElemToXML(elem,xml);
+                plistElem_t *new_elem = PList_CopyNewElem(elem);
+                AR_ASSERT(new_elem != NULL);
+                status = PList_SaveElemToXML(new_elem,xml);
                 AR_printf(L"%ls\r\n", AR_CSTR(xml));
+                PList_DestroyElem(new_elem);
+                new_elem = NULL;
                 
-                
-                AR_SaveBomTextFile(L"/Users/solidus/Desktop/1.txt", AR_TXT_BOM_UTF_8, AR_CSTR(xml));
+                AR_SaveBomTextFile(L"/Users/solidus/Desktop/1.plist", AR_TXT_BOM_UTF_8, AR_CSTR(xml));
                 
                 AR_DestroyString(xml);
                 xml = NULL;
@@ -303,7 +305,12 @@ static void save_plist_elem_test()
                 PList_DestroyElem(elem);
                 elem = NULL;
         }
-        
+
+        if(elem)
+        {
+                PList_DestroyElem(elem);
+                elem = NULL;
+        }
         PList_DestroyXMLParser(parser);
         parser = NULL;
         AR_DestroyString(xml);
@@ -327,6 +334,24 @@ static void plist_parse_binary_test1()
         plistElem_t *elem = NULL;
         
         status = PList_TryParseBinaryPlist(AR_GetBufferData(bin), AR_GetBufferAvailable(bin),&elem, NULL);
+        
+        if(status == AR_S_YES && elem != NULL)
+        {
+                arString_t *xml = AR_CreateString();
+                AR_ASSERT(xml != NULL);
+                
+                status = PList_SaveElemToXML(elem,xml);
+                AR_printf(L"%ls\r\n", AR_CSTR(xml));
+                
+                AR_SaveBomTextFile(L"/Users/solidus/Desktop/2_bin.plist", AR_TXT_BOM_UTF_8, AR_CSTR(xml));
+                
+                AR_DestroyString(xml);
+                xml = NULL;
+                
+                PList_DestroyElem(elem);
+                elem = NULL;
+
+        }
         
         
         if(bin)
@@ -429,6 +454,8 @@ void plist_test()
         //save_plist_elem_test();
         
         plist_parse_binary_test1();
+        
+        //getchar();
 }
 
 
