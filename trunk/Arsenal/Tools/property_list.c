@@ -11,11 +11,139 @@
  *
  */
 
+
+
+
+
 #include "../Lex/lex.h"
 #include "property_list.h"
 
+#if defined(OS_FAMILY_WINDOWS)
+		#include <time.h>		
+#elif defined(OS_FAMILY_UNIX)
+		
+#else 
+		#error "Unknow platform !"
+#endif
 
 AR_NAMESPACE_BEGIN
+
+
+/****************************************************plat dep*********************************/
+
+
+#if defined(OS_FAMILY_WINDOWS)
+		
+
+		static unsigned int __is_leap(unsigned int y)
+		{
+				y += 1900;
+				return (y % 4) == 0 && ((y % 100) != 0 || (y % 400) == 0);
+		}
+		
+		static time_t __my_timegm (struct tm *tm)
+		{
+				static const unsigned ndays[2][12] =
+				{
+						{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
+						{31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
+				};
+
+
+				time_t res = 0;
+				int i;
+
+				AR_ASSERT(tm != NULL);
+
+				for (i = 70; i < tm->tm_year; ++i)
+						res += __is_leap(i) ? 366 : 365;
+
+				for (i = 0; i < tm->tm_mon; ++i)
+						res += ndays[__is_leap(tm->tm_year)][i];
+
+				res += tm->tm_mday - 1;
+				res *= 24;
+				res += tm->tm_hour;
+				res *= 60;
+				res += tm->tm_min;
+				res *= 60;
+				res += tm->tm_sec;
+
+				return res;
+		}
+
+
+
+		#if !defined(timegm)
+				#define timegm __my_timegm
+		#endif
+
+#elif defined(OS_FAMILY_UNIX)
+		
+#else 
+		#error "Unknow platform !"
+#endif
+
+
+static void __absolutetime_to_gmtime(double abstime, ar_uint_16_t *year, ar_uint_16_t *mon, ar_uint_16_t *day, ar_uint_16_t *hour, ar_uint_16_t *min, ar_uint_16_t *sec)
+{
+        struct tm tm_2001_0101_00_00_00;
+        time_t gmtime_2001_0101_00_00_00_val;
+        time_t curr_gmt;
+        struct tm gm_time;
+        AR_memset(&tm_2001_0101_00_00_00, 0, sizeof(tm_2001_0101_00_00_00));
+        
+        tm_2001_0101_00_00_00.tm_sec = 0;
+        tm_2001_0101_00_00_00.tm_min = 0;
+        tm_2001_0101_00_00_00.tm_hour = 0;    /* hours (0 - 23) */
+        tm_2001_0101_00_00_00.tm_mday = 1;    /* day of month (1 - 31) */
+        tm_2001_0101_00_00_00.tm_mon = 0;     /* month of year (0 - 11) */
+        tm_2001_0101_00_00_00.tm_year = 2001 - 1900;    /* year - 1900 */
+        
+        gmtime_2001_0101_00_00_00_val = timegm(&tm_2001_0101_00_00_00);
+        
+        curr_gmt = gmtime_2001_0101_00_00_00_val + (time_t)abstime;
+        gm_time = *gmtime(&curr_gmt);
+        
+        
+        if(year)
+        {
+                *year = (ar_uint_16_t)gm_time.tm_year + 1900;
+        }
+        
+        if(mon)
+        {
+                *mon = (ar_uint_16_t)gm_time.tm_mon + 1;
+        }
+        
+        if(day)
+        {
+                *day = (ar_uint_16_t)gm_time.tm_mday;
+        }
+        
+        
+        if(hour)
+        {
+                *hour = (ar_uint_16_t)gm_time.tm_hour;
+        }
+        
+        
+        if(min)
+        {
+                *min = (ar_uint_16_t)gm_time.tm_min;
+        }
+        
+        if(sec)
+        {
+                *sec = (ar_uint_16_t)gm_time.tm_sec;
+        }
+        
+}
+
+
+
+/***********************************************************************************************/
+
 
 static const wchar_t __g_plist_tags[13][10]=
 {
@@ -3488,7 +3616,7 @@ static AR_INLINE ar_uint_64_t __check_uint64_mul_unsigned_unsigned(ar_uint_64_t 
                 *err = *err | CF_OVERFLOW_ERROR;
         }
         return x * y;
-};
+}
 
 
 #if AR_ARCH_VER == ARCH_64
@@ -3501,7 +3629,8 @@ static AR_INLINE ar_uint_64_t __check_uint64_mul_unsigned_unsigned(ar_uint_64_t 
 #endif
 
 
-static AR_INLINE bool _readInt(const ar_byte_t *ptr, const ar_byte_t *end_byte_ptr, ar_uint_64_t *bigint, const ar_byte_t **newptr)
+
+static AR_INLINE ar_bool_t _readInt(const ar_byte_t *ptr, const ar_byte_t *end_byte_ptr, ar_uint_64_t *bigint, const ar_byte_t **newptr)
 {
         
         ar_byte_t marker;
@@ -3740,62 +3869,6 @@ static ar_bool_t __get_binary_plist_toplevelinfo(const ar_byte_t *data, size_t l
 
 
 
-
-
-static void __absolutetime_to_gmtime(double abstime, ar_uint_16_t *year, ar_uint_16_t *mon, ar_uint_16_t *day, ar_uint_16_t *hour, ar_uint_16_t *min, ar_uint_16_t *sec)
-{
-        struct tm tm_2001_0101_00_00_00;
-        time_t gmtime_2001_0101_00_00_00_val;
-        time_t curr_gmt;
-        struct tm gm_time;
-        AR_memset(&tm_2001_0101_00_00_00, 0, sizeof(tm_2001_0101_00_00_00));
-        
-        tm_2001_0101_00_00_00.tm_sec = 0;
-        tm_2001_0101_00_00_00.tm_min = 0;
-        tm_2001_0101_00_00_00.tm_hour = 0;    /* hours (0 - 23) */
-        tm_2001_0101_00_00_00.tm_mday = 1;    /* day of month (1 - 31) */
-        tm_2001_0101_00_00_00.tm_mon = 0;     /* month of year (0 - 11) */
-        tm_2001_0101_00_00_00.tm_year = 2001 - 1900;    /* year - 1900 */
-        
-        gmtime_2001_0101_00_00_00_val = timegm(&tm_2001_0101_00_00_00);
-        
-        curr_gmt = gmtime_2001_0101_00_00_00_val + (time_t)abstime;
-        gm_time = *gmtime(&curr_gmt);
-        
-        
-        if(year)
-        {
-                *year = (ar_uint_16_t)gm_time.tm_year + 1900;
-        }
-        
-        if(mon)
-        {
-                *mon = (ar_uint_16_t)gm_time.tm_mon + 1;
-        }
-        
-        if(day)
-        {
-                *day = (ar_uint_16_t)gm_time.tm_mday;
-        }
-        
-        
-        if(hour)
-        {
-                *hour = (ar_uint_16_t)gm_time.tm_hour;
-        }
-        
-        
-        if(min)
-        {
-                *min = (ar_uint_16_t)gm_time.tm_min;
-        }
-        
-        if(sec)
-        {
-                *sec = (ar_uint_16_t)gm_time.tm_sec;
-        }
-        
-}
 
 
 
