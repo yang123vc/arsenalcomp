@@ -748,6 +748,23 @@ void                    PList_SetElemRealByType(plistElem_t *elem, plistRealType
 
 
 
+
+void                    PList_SetElemGMTDate(plistElem_t *elem, ar_uint_16_t year, ar_uint_16_t mon, ar_uint_16_t day, ar_uint_16_t hour, ar_uint_16_t min, ar_uint_16_t sec)
+{
+        AR_ASSERT(elem != NULL);
+        AR_ASSERT(PList_GetElemType(elem) ==  PLIST_ELEM_DATE_T);
+        
+        elem->date.year = year;
+        elem->date.month = (ar_uint_8_t)mon;
+        elem->date.day = (ar_uint_8_t)day;
+        elem->date.hour = (ar_uint_8_t)hour;
+        elem->date.minute = (ar_uint_8_t)min;
+        elem->date.second = (ar_uint_8_t)sec;
+
+}
+
+
+
 size_t            PList_GetElemArrayCount(const plistElem_t *elem)
 {
         AR_ASSERT(elem != NULL);
@@ -3721,6 +3738,68 @@ static ar_bool_t __get_binary_plist_toplevelinfo(const ar_byte_t *data, size_t l
 }
 
 
+
+
+
+
+static void __absolutetime_to_gmtime(double abstime, ar_uint_16_t *year, ar_uint_16_t *mon, ar_uint_16_t *day, ar_uint_16_t *hour, ar_uint_16_t *min, ar_uint_16_t *sec)
+{
+        struct tm tm_2001_0101_00_00_00;
+        time_t gmtime_2001_0101_00_00_00_val;
+        time_t curr_gmt;
+        struct tm gm_time;
+        AR_memset(&tm_2001_0101_00_00_00, 0, sizeof(tm_2001_0101_00_00_00));
+        
+        tm_2001_0101_00_00_00.tm_sec = 0;
+        tm_2001_0101_00_00_00.tm_min = 0;
+        tm_2001_0101_00_00_00.tm_hour = 0;    /* hours (0 - 23) */
+        tm_2001_0101_00_00_00.tm_mday = 1;    /* day of month (1 - 31) */
+        tm_2001_0101_00_00_00.tm_mon = 0;     /* month of year (0 - 11) */
+        tm_2001_0101_00_00_00.tm_year = 2001 - 1900;    /* year - 1900 */
+        
+        gmtime_2001_0101_00_00_00_val = timegm(&tm_2001_0101_00_00_00);
+        
+        curr_gmt = gmtime_2001_0101_00_00_00_val + (time_t)abstime;
+        gm_time = *gmtime(&curr_gmt);
+        
+        
+        if(year)
+        {
+                *year = (ar_uint_16_t)gm_time.tm_year + 1900;
+        }
+        
+        if(mon)
+        {
+                *mon = (ar_uint_16_t)gm_time.tm_mon + 1;
+        }
+        
+        if(day)
+        {
+                *day = (ar_uint_16_t)gm_time.tm_mday;
+        }
+        
+        
+        if(hour)
+        {
+                *hour = (ar_uint_16_t)gm_time.tm_hour;
+        }
+        
+        
+        if(min)
+        {
+                *min = (ar_uint_16_t)gm_time.tm_min;
+        }
+        
+        if(sec)
+        {
+                *sec = (ar_uint_16_t)gm_time.tm_sec;
+        }
+        
+}
+
+
+
+
 ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t datalen, ar_uint_64_t startOffset, const CFBinaryPlistTrailer *trailer, arHash_t *objects, arHash_t *set, plistElem_t **pelem)
 {
         ar_bool_t ret;
@@ -3959,6 +4038,15 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
                                 AR_memcpy((void*)&d, &swapped64, 8);
                                 
                                 
+                                *pelem = PList_CreateElem(PLIST_ELEM_NUMBER_T);
+                                
+                                if(*pelem == NULL)
+                                {
+                                        AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                                        return false;
+                                }
+                                
+                                
                                 PList_SetElemReal(*pelem, d);
                                 
                                 // these are always immutable
@@ -3979,6 +4067,78 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
                         }
 
                 }
+                        break;
+                case kCFBinaryPlistMarkerDate & 0xf0:
+                {
+                        switch (marker)
+                        {
+                                case kCFBinaryPlistMarkerDate:
+                                {
+                                        const ar_byte_t *extent;
+                                        const ar_byte_t *ptr = (databytes + startOffset);
+                                        ar_int_t err = CF_NO_ERROR;
+                                        ar_uint_64_t swapped64;
+                                        double d;
+                                        ar_uint_16_t year, mon, day, hour, min, sec;
+                                        
+                                        ptr = check_ptr_add(ptr, 1, &err);
+                                        
+                                        if (CF_NO_ERROR != err)
+                                        {
+                                                return false;
+                                        }
+                                        
+                                        extent = check_ptr_add(ptr, 8, &err) - 1;
+                                        
+                                        if (CF_NO_ERROR != err)
+                                        {
+                                                return false;
+                                        }
+                                        
+                                        if(databytes + objectsRangeEnd < extent)
+                                        {
+                                                return false;
+                                        }
+                                        
+                                        AR_memcpy(&swapped64, ptr, 8);
+                                        
+                                        swapped64 = AR_NTOL_U64(swapped64);
+                                        AR_memcpy((void*)&d, &swapped64, 8);
+                                        
+                                        
+                                        __absolutetime_to_gmtime(d, &year, &mon, &day, &hour, &min, &sec);
+                                        
+                                        
+                                        *pelem = PList_CreateElem(PLIST_ELEM_DATE_T);
+                                        
+                                        if(*pelem == NULL)
+                                        {
+                                                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                                                return false;
+                                        }
+                                        
+                                        
+                                        PList_SetElemGMTDate(*pelem, year, mon, day, hour,min, sec);
+
+                                        
+                                        // these are always immutable
+                                        if (objects && *pelem)
+                                        {
+                                                if(AR_SetToHash(objects, (void*)startOffset, *pelem) != AR_S_YES)
+                                                {
+                                                        PList_DestroyElem(*pelem);
+                                                        *pelem = NULL;
+                                                        
+                                                        AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                                                }
+                                        }
+                                        return (*pelem) ? true : false;
+
+                                }
+                        }
+                        return false;
+                }
+                        
                         break;
 
         }
