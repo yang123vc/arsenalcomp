@@ -326,6 +326,14 @@ arStatus_t      PList_AppendStringN(plistString_t  *str, const wchar_t *wcs, siz
         return AR_AppendStringN(str->str, wcs, n);
 }
 
+
+arStatus_t      PList_AppendCharToString(plistString_t *str, wchar_t ch)
+{
+        AR_ASSERT(str != NULL && str->str != NULL);
+        return AR_AppendCharToString(str->str, ch);
+}
+
+
 ar_bool_t       PList_IsEmptyString(const plistString_t  *str)
 {
         AR_ASSERT(str != NULL);
@@ -393,6 +401,16 @@ size_t                  PList_GetDataLength(const plistData_t *data)
         AR_ASSERT(data != NULL);
         return AR_GetBufferAvailable(data->buf);
 }
+
+
+arStatus_t              PList_SetData(plistData_t *data, const ar_byte_t *buf, size_t length)
+{
+        AR_ASSERT(data != NULL);
+
+        AR_ClearBuffer(data->buf);
+        return AR_InsertToBuffer(data->buf, buf, length);
+}
+
 
 /*****plistArray_t***********/
 
@@ -822,6 +840,14 @@ const wchar_t*  PList_GetElemCString(const plistElem_t *elem)
 }
 
 
+arStatus_t              PList_AppendCharToElemString(plistElem_t *elem, wchar_t ch)
+{
+        AR_ASSERT(elem != NULL);
+        AR_ASSERT(PList_GetElemType(elem) ==  PLIST_ELEM_STRING_T);
+        return PList_AppendCharToString(&elem->str, ch);
+}
+
+
 const ar_byte_t*        PList_GetElemDataPointer(const plistElem_t *elem)
 {
         AR_ASSERT(elem != NULL);
@@ -838,6 +864,21 @@ size_t                  PList_GetElemDataLength(const plistElem_t *elem)
         return PList_GetDataLength(&elem->data);
 }
 
+
+arStatus_t              PList_SetElemData(plistElem_t *elem, const ar_byte_t *data, size_t length)
+{
+        AR_ASSERT(elem != NULL);
+        AR_ASSERT(PList_GetElemType(elem) ==  PLIST_ELEM_DATA_T);
+        
+        if(data == NULL || length == 0)
+        {
+                return AR_S_YES;
+        }else
+        {
+                return PList_SetData(&elem->data, data, length);
+        }
+        
+}
 
 const plistNumber_t*    PList_GetElemNumber(const plistElem_t *elem)
 {
@@ -4225,12 +4266,327 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
                 }
                         
                         break;
+                case kCFBinaryPlistMarkerData:
+                {
+                        const ar_byte_t *ptr = databytes + startOffset;
+                        ar_int_t err = CF_NO_ERROR;
+                        size_t  cnt;
+                        
+                        const ar_byte_t *extent;
+                        
+                        ptr = check_ptr_add(ptr, 1, &err);
+                        
+                        if (CF_NO_ERROR != err)
+                        {
+                                return false;
+                        }
+                        
+                        cnt = (size_t)(marker & 0x0f);
+                        
+                        if (0xf == cnt)
+                        {
+                                ar_uint_64_t bigint = 0;
+                                
+                                if (!_readInt(ptr, databytes + objectsRangeEnd, &bigint, &ptr))
+                                {
+                                        return false;
+                                }
+                                
+                                if (LONG_MAX < bigint)
+                                {
+                                        return false;
+                                }
+                                
+                                cnt = (size_t)bigint;
+                        }
+                        
+                        extent = check_ptr_add(ptr, cnt, &err) - 1;
+                        
+                        if (CF_NO_ERROR != err)
+                        {
+                                return false;
+                        }
+                        
+                        if (databytes + objectsRangeEnd < extent)
+                        {
+                                return false;
+                        }
+                        
+                        
+                        *pelem = PList_CreateElem(PLIST_ELEM_DATA_T);
+                        
+                        if(*pelem == NULL)
+                        {
+                                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                                return false;
+                        }
+                        
+                        if(PList_SetElemData(*pelem, ptr, cnt) != AR_S_YES)
+                        {
+                                PList_DestroyElem(*pelem);
+                                *pelem = NULL;
+                                return false;
+                        }
+                        
+                        
+                        if (objects && *pelem)
+                        {
+                                if(AR_SetToHash(objects, (void*)startOffset, *pelem) != AR_S_YES)
+                                {
+                                        PList_DestroyElem(*pelem);
+                                        *pelem = NULL;
+                                        
+                                        AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                                }
+                        }
+                        
+                        return (*pelem) ? true : false;
+                }
+                        
+                        break;
+                        
+                case kCFBinaryPlistMarkerASCIIString:
+                {
+                        const ar_byte_t *ptr = databytes + startOffset;
+                        ar_int_t err = CF_NO_ERROR;
+                        size_t cnt;
+                        const ar_byte_t *extent;
+                        size_t i;
+                        
+                        ptr = check_ptr_add(ptr, 1, &err);
+                        
+                        if (CF_NO_ERROR != err)
+                        {
+                                return false;
+                        }
+                        
+                        cnt = (size_t)(marker & 0x0f);
+                        
+                        if (0xf == cnt)
+                        {
+                                ar_uint_64_t bigint = 0;
+                                if (!_readInt(ptr, databytes + objectsRangeEnd, &bigint, &ptr))
+                                {
+                                        return false;
+                                }
+                                
+                                if (LONG_MAX < bigint)
+                                {
+                                        return false;
+                                }
+                                
+                                cnt = (size_t)bigint;
+                        }
+                        
+                        extent = check_ptr_add(ptr, cnt, &err) - 1;
+                        
+                        if (CF_NO_ERROR != err)
+                        {
+                                return false;
+                        }
+                        
+                        if (databytes + objectsRangeEnd < extent)
+                        {
+                                return false;
+                        }
+                        
+                        
+                        *pelem = PList_CreateElem(PLIST_ELEM_STRING_T);
+                        
+                        if(*pelem == NULL)
+                        {
+                                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                                return false;
+                        }
+                        
+                        for(i = 0; i < cnt; ++i)
+                        {
+                                wchar_t ch = (wchar_t)ptr[i];
+                                
+                                if( PList_AppendCharToElemString(*pelem, ch) != AR_S_YES)
+                                {
+                                        PList_DestroyElem(*pelem);
+                                        *pelem = NULL;
+                                        return false;
+                                }
+                        }
+                        
+                        if (objects && *pelem)
+                        {
+                                if(AR_SetToHash(objects, (void*)startOffset, *pelem) != AR_S_YES)
+                                {
+                                        PList_DestroyElem(*pelem);
+                                        *pelem = NULL;
+                                        
+                                        AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                                }
+                        }
+                        
+                        return (*pelem) ? true : false;
+                }
+                        break;
+                case kCFBinaryPlistMarkerUnicode16String:
+                {
+                        const ar_byte_t *ptr = databytes + startOffset;
+                        ar_int_t err = CF_NO_ERROR;
+                        size_t cnt;
+                        const ar_byte_t *extent;
+                        size_t byte_cnt;
+                        size_t i;
+                        ptr = check_ptr_add(ptr, 1, &err);
+                        if (CF_NO_ERROR != err)
+                        {
+                                return false;
+                        }
+                        
+                        cnt = (size_t)(marker & 0x0f);
+                        
+                        if(0xf == cnt)
+                        {
+                                ar_uint_64_t bigint = 0;
+                                if (!_readInt(ptr, databytes + objectsRangeEnd, &bigint, &ptr))
+                                {
+                                        return false;
+                                }
+                                
+                                if (LONG_MAX < bigint)
+                                {
+                                        return false;
+                                }
+                                cnt = (size_t)bigint;
+                        }
+                        
+                        extent = check_ptr_add(ptr, cnt, &err) - 1;
+                        
+                        extent = check_ptr_add(extent, cnt, &err);	// 2 bytes per character
+                        
+                        if (CF_NO_ERROR != err)
+                        {
+                                return false;
+                        }
+                        if (databytes + objectsRangeEnd < extent)
+                        {
+                                return false;
+                        }
+                        
+                        byte_cnt = check_size_t_mul(cnt, sizeof(ar_uint_16_t), &err);
+                        if (CF_NO_ERROR != err)
+                        {
+                                return false;
+                        }
+                        
+                        
+                        *pelem = PList_CreateElem(PLIST_ELEM_STRING_T);
+                        
+                        if(*pelem == NULL)
+                        {
+                                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                                return false;
+                        }
 
+                        
+                        
+                        i = 0;
+                        while(i < cnt)
+                        {
+                                ar_uint_16_t *val = ((ar_uint_16_t*)ptr) + i;
+                                wchar_t ch = (wchar_t)(*val);
+
+                                if(PList_AppendCharToElemString(*pelem, ch) != AR_S_YES)
+                                {
+                                        PList_DestroyElem(*pelem);
+                                        *pelem = NULL;
+                                        return false;
+                                }
+
+                                
+                        }
+                        
+                        if( objects && *pelem)
+                        {
+                                if(AR_SetToHash(objects, (void*)startOffset, *pelem) != AR_S_YES)
+                                {
+                                        PList_DestroyElem(*pelem);
+                                        *pelem = NULL;
+                                        
+                                        AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                                }
+                        }
+
+                        return (*pelem) ? true : false;
+                        
+                }
+
+                        break;
+
+                case kCFBinaryPlistMarkerUID:
+                {
+                        const ar_byte_t *ptr = databytes + startOffset;
+                        size_t cnt;
+                        const ar_byte_t *extent;
+                        ar_int_t err = CF_NO_ERROR;
+                        ar_uint_64_t bigint;
+                        ptr = check_ptr_add(ptr, 1, &err);
+                        
+                        if (CF_NO_ERROR != err)
+                        {
+                                return false;
+                        }
+                        
+                        cnt = (marker & 0x0f) + 1;
+                        
+                        extent = check_ptr_add(ptr, cnt, &err) - 1;
+                        
+                        if(CF_NO_ERROR != err)
+                        {
+                                return false;
+                        }
+                        
+                        if (databytes + objectsRangeEnd < extent)
+                        {
+                                return false;
+                        }
+                        
+                        // uids are not required to be in the most compact possible representation, but only the last 64 bits are significant currently
+                        bigint = _getSizedInt(ptr, cnt);
+                        ptr += cnt;
+                        if (AR_UINT32_MAX < bigint)
+                        {
+                                return false;
+                        }
+
+                        *pelem = PList_CreateElem(PLIST_ELEM_NUMBER_T);
+                        
+                        if(*pelem == NULL)
+                        {
+                                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                                return false;
+                        }
+                        
+                        PList_SetElemUnsignedInteger(*pelem, (ar_uint_32_t)bigint);
+                        
+                        if(objects && *pelem)
+                        {
+                                if(AR_SetToHash(objects, (void*)startOffset, *pelem) != AR_S_YES)
+                                {
+                                        PList_DestroyElem(*pelem);
+                                        *pelem = NULL;
+                                        
+                                        AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                                }
+                        }
+                        return (*pelem) ? true : false;
+                }
+                        break;
+
+                        
         }
+
         
-        
+
+
 #if(0)
-        
+
         CF_EXPORT bool __CFBinaryPlistCreateObject2(const uint8_t *databytes, uint64_t datalen, uint64_t startOffset, const CFBinaryPlistTrailer *trailer, CFAllocatorRef allocator, CFOptionFlags mutabilityOption, CFMutableDictionaryRef objects, CFMutableSetRef set, CFIndex curDepth, CFPropertyListRef *plist)
         {
                 

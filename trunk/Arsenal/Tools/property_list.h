@@ -68,6 +68,8 @@ ar_int_t        PList_CompareStringWithWcs(const plistString_t  *l, const wchar_
 
 arStatus_t      PList_AppendString(plistString_t  *str, const wchar_t *wcs);
 arStatus_t      PList_AppendStringN(plistString_t  *str, const wchar_t *wcs, size_t n);
+arStatus_t      PList_AppendCharToString(plistString_t *str, wchar_t ch);
+
 
 ar_bool_t       PList_IsEmptyString(const plistString_t  *str);
 const wchar_t*  PList_GetStringCString(const plistString_t *str);
@@ -128,7 +130,7 @@ arStatus_t              PList_InitData(plistData_t *data);
 void                    PList_UnInitData(plistData_t *data);
 const ar_byte_t*        PList_GetDataPointer(const plistData_t *data);
 size_t                  PList_GetDataLength(const plistData_t *data);
-
+arStatus_t              PList_SetData(plistData_t *data, const ar_byte_t *buf, size_t length);
 
 typedef struct __plist_date_tag
 {
@@ -214,9 +216,12 @@ void                    PList_SetElemGMTDate(plistElem_t *elem, ar_uint_16_t yea
 
 
 const wchar_t*          PList_GetElemCString(const plistElem_t *elem);
+arStatus_t              PList_AppendCharToElemString(plistElem_t *elem, wchar_t ch);
 
 const ar_byte_t*        PList_GetElemDataPointer(const plistElem_t *elem);
 size_t                  PList_GetElemDataLength(const plistElem_t *elem);
+
+arStatus_t              PList_SetElemData(plistElem_t *elem, const ar_byte_t *data, size_t length);
 
 
 size_t                  PList_GetElemArrayCount(const plistElem_t *elem);
