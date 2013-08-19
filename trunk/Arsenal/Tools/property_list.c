@@ -32,56 +32,68 @@ AR_NAMESPACE_BEGIN
 /****************************************************plat dep*********************************/
 
 
+
 #if defined(OS_FAMILY_WINDOWS)
-		
-
-		static unsigned int __is_leap(unsigned int y)
-		{
-				y += 1900;
-				return (y % 4) == 0 && ((y % 100) != 0 || (y % 400) == 0);
-		}
-		
-		static time_t __my_timegm (struct tm *tm)
-		{
-				static const unsigned ndays[2][12] =
-				{
-						{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
-						{31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
-				};
-
-
-				time_t res = 0;
-				int i;
-
-				AR_ASSERT(tm != NULL);
-
-				for (i = 70; i < tm->tm_year; ++i)
-						res += __is_leap(i) ? 366 : 365;
-
-				for (i = 0; i < tm->tm_mon; ++i)
-						res += ndays[__is_leap(tm->tm_year)][i];
-
-				res += tm->tm_mday - 1;
-				res *= 24;
-				res += tm->tm_hour;
-				res *= 60;
-				res += tm->tm_min;
-				res *= 60;
-				res += tm->tm_sec;
-
-				return res;
-		}
-
-
 
 		#if !defined(timegm)
-				#define timegm __my_timegm
+                #define __NO_TIMEGM__   1
 		#endif
 
 #elif defined(OS_FAMILY_UNIX)
-		
-#else 
+
+        #if(OS_TYPE == OS_ANDROID)
+                #define __NO_TIMEGM__   1
+        #endif
+
+#else
 		#error "Unknow platform !"
+#endif
+
+
+#if defined(__NO_TIMEGM__)
+
+
+        static unsigned int __is_leap(unsigned int y)
+        {
+                y += 1900;
+                return (y % 4) == 0 && ((y % 100) != 0 || (y % 400) == 0);
+        }
+
+        static time_t __my_timegm (struct tm *tm)
+        {
+                static const unsigned ndays[2][12] =
+                {
+                        {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
+                        {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
+                };
+        
+        
+                time_t res = 0;
+                int i;
+        
+                AR_ASSERT(tm != NULL);
+        
+                for (i = 70; i < tm->tm_year; ++i)
+                        res += __is_leap(i) ? 366 : 365;
+        
+                for (i = 0; i < tm->tm_mon; ++i)
+                        res += ndays[__is_leap(tm->tm_year)][i];
+        
+                res += tm->tm_mday - 1;
+                res *= 24;
+                res += tm->tm_hour;
+                res *= 60;
+                res += tm->tm_min;
+                res *= 60;
+                res += tm->tm_sec;
+        
+                return res;
+        }
+
+
+        #define timegm __my_timegm
+
+
 #endif
 
 
