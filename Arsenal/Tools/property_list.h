@@ -209,12 +209,14 @@ void                    PList_SetElemReal(plistElem_t *elem, double num);
 void                    PList_SetElemRealByType(plistElem_t *elem, plistRealType_t t, double num);
 const plistNumber_t*    PList_GetElemNumber(const plistElem_t *elem);
 
+void                    PList_SetElemGMTDate(plistElem_t *elem, ar_uint_16_t year, ar_uint_16_t mon, ar_uint_16_t day, ar_uint_16_t hour, ar_uint_16_t min, ar_uint_16_t sec);
+
+
 
 const wchar_t*          PList_GetElemCString(const plistElem_t *elem);
 
 const ar_byte_t*        PList_GetElemDataPointer(const plistElem_t *elem);
 size_t                  PList_GetElemDataLength(const plistElem_t *elem);
-
 
 
 size_t                  PList_GetElemArrayCount(const plistElem_t *elem);

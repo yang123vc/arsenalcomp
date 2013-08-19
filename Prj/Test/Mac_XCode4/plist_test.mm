@@ -343,18 +343,88 @@ static void plist_parse_binary_test1()
         
 }
 
+
+static void __absolutetime_to_gmtime(double abstime, ar_uint_16_t *year, ar_uint_16_t *mon, ar_uint_16_t *day, ar_uint_16_t *hour, ar_uint_16_t *min, ar_uint_16_t *sec)
+{
+        struct tm tm_2001_0101_00_00_00;
+        time_t gmtime_2001_0101_00_00_00_val;
+        time_t curr_gmt;
+        struct tm gm_time;
+        AR_memset(&tm_2001_0101_00_00_00, 0, sizeof(tm_2001_0101_00_00_00));
+        
+        tm_2001_0101_00_00_00.tm_sec = 0;
+        tm_2001_0101_00_00_00.tm_min = 0;
+        tm_2001_0101_00_00_00.tm_hour = 0;    /* hours (0 - 23) */
+        tm_2001_0101_00_00_00.tm_mday = 1;    /* day of month (1 - 31) */
+        tm_2001_0101_00_00_00.tm_mon = 0;     /* month of year (0 - 11) */
+        tm_2001_0101_00_00_00.tm_year = 2001 - 1900;    /* year - 1900 */
+        
+        gmtime_2001_0101_00_00_00_val = timegm(&tm_2001_0101_00_00_00);
+        
+        curr_gmt = gmtime_2001_0101_00_00_00_val + (time_t)abstime;
+        gm_time = *gmtime(&curr_gmt);
+        
+        
+        if(year)
+        {
+                *year = (ar_uint_16_t)gm_time.tm_year + 1900;
+        }
+        
+        if(mon)
+        {
+                *mon = (ar_uint_16_t)gm_time.tm_mon + 1;
+        }
+        
+        if(day)
+        {
+                *day = (ar_uint_16_t)gm_time.tm_mday;
+        }
+        
+        
+        if(hour)
+        {
+                *hour = (ar_uint_16_t)gm_time.tm_hour;
+        }
+        
+        
+        if(min)
+        {
+                *min = (ar_uint_16_t)gm_time.tm_min;
+        }
+        
+        if(sec)
+        {
+                *sec = (ar_uint_16_t)gm_time.tm_sec;
+        }
+        
+}
+
+
+static void time_test2()
+{
+        
+        CFAbsoluteTime at = CFAbsoluteTimeGetCurrent();
+        
+        ar_uint_16_t year, mon, day, hour, min, sec;
+        __absolutetime_to_gmtime(at,&year, &mon, &day, &hour, &min, &sec);
+        
+        
+}
+
 void plist_test()
 {
         //format_test();
         //base64_test_for_plist();
         //load_test();
         //time_test();
+        time_test2();
+        
         //real_test();
         //parse_xml_test1();
         
-        save_plist_elem_test();
+        //save_plist_elem_test();
         
-        plist_parse_binary_test1();
+        //plist_parse_binary_test1();
 }
 
 
