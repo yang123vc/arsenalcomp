@@ -1457,6 +1457,8 @@ double			AR_atan2_dbl(double y, double x);
 
 
 
+#define AR_CMP_FLT(_a,_b) (  AR_FLT_LE( (_a), (_b) ) ? -1 : ( AR_FLT_EQ((_a),(_b)) ? 0 : 1))
+#define AR_CMP_DBL(_a,_b) (  AR_DBL_LE( (_a), (_b) ) ? -1 : ( AR_DBL_EQ((_a),(_b)) ? 0 : 1))
 
 
 
