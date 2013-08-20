@@ -264,7 +264,7 @@ static void save_plist_elem_test()
 {
         //L"/Users/solidus/Documents/Code/Solidus/Arsenal/misc/test.plist"
         //#define PLIST_FILE_PATH L"/Users/solidus/Desktop/Code/Arsenal/misc/test.plist"
-#define PLIST_FILE_PATH L"/Users/solidus/Desktop/test.plist"
+#define PLIST_FILE_PATH L"/Users/solidus/Desktop/test_xml.plist"
         
         arStatus_t status;
         arString_t *xml = AR_CreateString();
@@ -321,7 +321,7 @@ static void save_plist_elem_test()
 static void plist_parse_binary_test1()
 {
         
-#define BINPLIST_FILE_PATH L"/Users/solidus/Desktop/test2_bin.plist"
+#define BINPLIST_FILE_PATH L"/Users/solidus/Desktop/dict_bin.plist"
 
         
         arStatus_t status;
@@ -337,20 +337,21 @@ static void plist_parse_binary_test1()
         
         if(status == AR_S_YES && elem != NULL)
         {
+                
                 arString_t *xml = AR_CreateString();
                 AR_ASSERT(xml != NULL);
                 
                 status = PList_SaveElemToXML(elem,xml);
-                AR_printf(L"%ls\r\n", AR_CSTR(xml));
+                //AR_printf(L"%ls\r\n", AR_CSTR(xml));
                 
-                AR_SaveBomTextFile(L"/Users/solidus/Desktop/2_bin.plist", AR_TXT_BOM_UTF_8, AR_CSTR(xml));
+                AR_SaveBomTextFile(L"/Users/solidus/Desktop/1_xml.plist", AR_TXT_BOM_UTF_8, AR_CSTR(xml));
                 
                 AR_DestroyString(xml);
                 xml = NULL;
                 
                 PList_DestroyElem(elem);
                 elem = NULL;
-
+                
         }
         
         
@@ -370,75 +371,6 @@ static void plist_parse_binary_test1()
 }
 
 
-#if(0)
-static void __absolutetime_to_gmtime(double abstime, ar_uint_16_t *year, ar_uint_16_t *mon, ar_uint_16_t *day, ar_uint_16_t *hour, ar_uint_16_t *min, ar_uint_16_t *sec)
-{
-        struct tm tm_2001_0101_00_00_00;
-        time_t gmtime_2001_0101_00_00_00_val;
-        time_t curr_gmt;
-        struct tm gm_time;
-        AR_memset(&tm_2001_0101_00_00_00, 0, sizeof(tm_2001_0101_00_00_00));
-        
-        tm_2001_0101_00_00_00.tm_sec = 0;
-        tm_2001_0101_00_00_00.tm_min = 0;
-        tm_2001_0101_00_00_00.tm_hour = 0;    /* hours (0 - 23) */
-        tm_2001_0101_00_00_00.tm_mday = 1;    /* day of month (1 - 31) */
-        tm_2001_0101_00_00_00.tm_mon = 0;     /* month of year (0 - 11) */
-        tm_2001_0101_00_00_00.tm_year = 2001 - 1900;    /* year - 1900 */
-        
-        gmtime_2001_0101_00_00_00_val = timegm(&tm_2001_0101_00_00_00);
-        
-        curr_gmt = gmtime_2001_0101_00_00_00_val + (time_t)abstime;
-        gm_time = *gmtime(&curr_gmt);
-        
-        
-        if(year)
-        {
-                *year = (ar_uint_16_t)gm_time.tm_year + 1900;
-        }
-        
-        if(mon)
-        {
-                *mon = (ar_uint_16_t)gm_time.tm_mon + 1;
-        }
-        
-        if(day)
-        {
-                *day = (ar_uint_16_t)gm_time.tm_mday;
-        }
-        
-        
-        if(hour)
-        {
-                *hour = (ar_uint_16_t)gm_time.tm_hour;
-        }
-        
-        
-        if(min)
-        {
-                *min = (ar_uint_16_t)gm_time.tm_min;
-        }
-        
-        if(sec)
-        {
-                *sec = (ar_uint_16_t)gm_time.tm_sec;
-        }
-        
-}
-
-
-static void time_test2()
-{
-        
-        CFAbsoluteTime at = CFAbsoluteTimeGetCurrent();
-        
-        ar_uint_16_t year, mon, day, hour, min, sec;
-        __absolutetime_to_gmtime(at,&year, &mon, &day, &hour, &min, &sec);
-        
-        
-}
-
-#endif
 
 void plist_test()
 {

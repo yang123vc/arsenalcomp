@@ -259,6 +259,12 @@ void            PList_UnInitString(plistString_t  *str)
         AR_memset(str, 0, sizeof(*str));
 }
 
+arStatus_t      PList_ReserveString(plistString_t  *str, size_t cap)
+{
+        AR_ASSERT(str != NULL);
+        return AR_ReserveString(str->str, cap);
+}
+
 arStatus_t      PList_CopyString(plistString_t  *dest, plistString_t  *src)
 {
         AR_ASSERT(dest != NULL && src != NULL);
@@ -975,6 +981,12 @@ arStatus_t              PList_AppendCharToElemString(plistElem_t *elem, wchar_t 
         return PList_AppendCharToString(&elem->str, ch);
 }
 
+arStatus_t              PList_ReserveElemString(plistElem_t *elem, size_t cap)
+{
+        AR_ASSERT(elem != NULL);
+        AR_ASSERT(PList_GetElemType(elem) ==  PLIST_ELEM_STRING_T);
+        return PList_ReserveString(&elem->str, cap);
+}
 
 const ar_byte_t*        PList_GetElemDataPointer(const plistElem_t *elem)
 {
@@ -2896,13 +2908,13 @@ static plistElem_t* __parse_xml_datatag(plistXMLParser_t *parser)
                         goto INVALID_POINT;
                 }
                 
-                AR_DPRINT(L"%ls\r\n", mark);
+                //AR_DPRINT(L"%ls\r\n", mark);
                 
                 for(i = 0; i < (size_t)(parser->curr - mark); ++i)
                 {
                         base64_str[i] = (char)mark[i];
                 }
-        
+                
                 l = AR_base64_decode(NULL, 0, (const ar_byte_t*)base64_str, base64_str_len);
                 
                 if(l > 0)
@@ -4129,6 +4141,8 @@ ar_int_t   __set_comp_func(void *l, void *r, void *ctx)
 }
 
 
+
+
 ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t datalen, ar_uint_64_t startOffset, const CFBinaryPlistTrailer *trailer, arHash_t *objects, arHash_t *set, size_t curr_depth, plistElem_t **pelem)
 {
 
@@ -4156,6 +4170,12 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
                                 return false;
                         }else
                         {
+                                /*
+                                if(PList_GetElemType(*pelem) == PLIST_ELEM_STRING_T)
+                                {
+                                        AR_DPRINT(L"%ls\r\n", PList_GetElemCString(*pelem));
+                                }
+                                */
                                 return true;
                         }
                 }
@@ -4673,19 +4693,20 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
                                 return false;
                         }
                         
+                        if(PList_ReserveElemString(*pelem, cnt) != AR_S_YES)
+                        {
+                                PList_DestroyElem(*pelem);
+                                *pelem = NULL;
+                                return false;
+                        }
+                        
                         for(i = 0; i < cnt; ++i)
                         {
                                 wchar_t ch = (wchar_t)ptr[i];
-                                
-                                if( PList_AppendCharToElemString(*pelem, ch) != AR_S_YES)
-                                {
-                                        PList_DestroyElem(*pelem);
-                                        *pelem = NULL;
-                                        return false;
-                                }
+                                PList_AppendCharToElemString(*pelem, ch);
                         }
                         
-                        AR_DPRINT(L"kCFBinaryPlistMarkerASCIIString : %ls\r\n", PList_GetElemCString(*pelem));
+                        //AR_DPRINT(L"kCFBinaryPlistMarkerASCIIString : %ls\r\n", PList_GetElemCString(*pelem));
                         
                         if (objects && *pelem)
                         {
@@ -4768,6 +4789,13 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
                         }
 
                         
+                        if(PList_ReserveElemString(*pelem, cnt) != AR_S_YES)
+                        {
+                                PList_DestroyElem(*pelem);
+                                *pelem = NULL;
+                                return false;
+                        }
+
                         
                         i = 0;
                         while(i < cnt)
@@ -4775,20 +4803,12 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
                                 ar_uint_16_t *val = ((ar_uint_16_t*)ptr) + i;
                                 wchar_t ch = (wchar_t)AR_NTOL_U16(*val);
 
-                                if(PList_AppendCharToElemString(*pelem, ch) != AR_S_YES)
-                                {
-                                        PList_DestroyElem(*pelem);
-                                        *pelem = NULL;
-                                        return false;
-                                }else
-                                {
-                                        ++i;
-                                }
-                                
+                                PList_AppendCharToElemString(*pelem, ch);
+                                ++i;
                         }
                         
 
-                        AR_DPRINT(L"kCFBinaryPlistMarkerUnicode16String : %ls\r\n", PList_GetElemCString(*pelem));
+                        //AR_DPRINT(L"kCFBinaryPlistMarkerUnicode16String : %ls\r\n", PList_GetElemCString(*pelem));
 
                         if( objects && *pelem)
                         {
@@ -5428,6 +5448,7 @@ arStatus_t      PList_TryParseBinaryPlist(const ar_byte_t *data, size_t length, 
 END_POINT:
         if(objects)
         {
+                AR_DPRINT(L"total objects : %Iu\r\n", AR_GetHashCount(objects));
                 AR_DestroyHash(objects);
                 objects = NULL;
         }

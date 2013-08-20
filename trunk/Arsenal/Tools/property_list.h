@@ -61,7 +61,10 @@ typedef struct __plist_string_tag
 
 arStatus_t      PList_InitString(plistString_t  *str);
 void            PList_UnInitString(plistString_t  *str);
+arStatus_t      PList_ReserveString(plistString_t  *str, size_t cap);
+
 arStatus_t      PList_CopyString(plistString_t  *dest, plistString_t  *src);
+
 
 ar_int_t        PList_CompareString(const plistString_t  *l, const plistString_t  *r);
 ar_int_t        PList_CompareStringWithWcs(const plistString_t  *l, const wchar_t *wcs);
@@ -226,6 +229,7 @@ void                    PList_SetElemGMTDate(plistElem_t *elem, ar_uint_16_t yea
 
 const wchar_t*          PList_GetElemCString(const plistElem_t *elem);
 arStatus_t              PList_AppendCharToElemString(plistElem_t *elem, wchar_t ch);
+arStatus_t              PList_ReserveElemString(plistElem_t *elem, size_t cap);
 
 const ar_byte_t*        PList_GetElemDataPointer(const plistElem_t *elem);
 size_t                  PList_GetElemDataLength(const plistElem_t *elem);
