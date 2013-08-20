@@ -323,6 +323,143 @@ size_t          PList_GetStringLength(const plistString_t *str)
         return AR_GetStringLength(str->str);
 }
 
+/**********plistDate_t**********/
+
+ar_int_t PList_CompNumber(const plistNumber_t *l, const plistNumber_t *r)
+{
+        AR_ASSERT(l != NULL && r != NULL);
+        
+        if(l->type != r->type)
+        {
+                return AR_CMP(l->type, r->type);
+        }
+        
+        if(l->type == PLIST_NUMBER_INTEGER_T)
+        {
+                if(l->integer.is_signed)
+                {
+                        if(r->integer.is_signed)
+                        {
+                                return AR_CMP(l->integer.signed_num, r->integer.signed_num);
+                        }else
+                        {
+                                return AR_CMP(l->integer.signed_num, (ar_int_64_t)r->integer.unsigned_num);
+                        }
+                        
+                        
+                }else
+                {
+                        if(!r->integer.is_signed)
+                        {
+                                return AR_CMP(l->integer.unsigned_num, r->integer.unsigned_num);
+                        }else
+                        {
+                                return AR_CMP(l->integer.unsigned_num, (ar_uint_64_t)r->integer.signed_num);
+                        }
+                }
+                
+        }else   //PLIST_NUMBER_REAL_T
+        {
+                switch(l->real.t)
+                {
+                        case PLIST_REAL_NORMAL_T:
+                        {
+                                switch(r->real.t)
+                                {
+                                        case PLIST_REAL_NORMAL_T:
+                                                return AR_CMP_DBL(l->real.num, r->real.num);
+                                        case PLIST_REAL_NAN_T:
+                                                return 1;
+                                        case PLIST_REAL_INF_T:
+                                                return -1;
+                                        case PLIST_REAL_POSITIVE_INF_T:
+                                                return -1;
+                                        case PLIST_REAL_NEGATIVE_INF_T:
+                                                return 1;
+                                        default:
+                                                AR_ASSERT(false);
+                                }
+                        }
+                                break;
+                        case PLIST_REAL_NAN_T:
+                        {
+                                switch(r->real.t)
+                                {
+                                        case PLIST_REAL_NORMAL_T:
+                                                return -1;
+                                        case PLIST_REAL_NAN_T:
+                                                return 0;
+                                        case PLIST_REAL_INF_T:
+                                                return -1;
+                                        case PLIST_REAL_POSITIVE_INF_T:
+                                                return -1;
+                                        case PLIST_REAL_NEGATIVE_INF_T:
+                                                return -1;
+                                        default:
+                                                AR_ASSERT(false);
+                                }
+                        }
+                                break;
+                        case PLIST_REAL_INF_T:
+                                switch(r->real.t)
+                                {
+                                case PLIST_REAL_NORMAL_T:
+                                        return 1;
+                                case PLIST_REAL_NAN_T:
+                                        return 1;
+                                case PLIST_REAL_INF_T:
+                                        return 0;
+                                case PLIST_REAL_POSITIVE_INF_T:
+                                        return -1;
+                                case PLIST_REAL_NEGATIVE_INF_T:
+                                        return 1;
+                                default:
+                                        AR_ASSERT(false);
+                                }
+                                break;
+                        case PLIST_REAL_POSITIVE_INF_T:
+                                switch(r->real.t)
+                                {
+                                case PLIST_REAL_NORMAL_T:
+                                        return 1;
+                                case PLIST_REAL_NAN_T:
+                                        return 1;
+                                case PLIST_REAL_INF_T:
+                                        return 1;
+                                case PLIST_REAL_POSITIVE_INF_T:
+                                        return 0;
+                                case PLIST_REAL_NEGATIVE_INF_T:
+                                        return 1;
+                                default:
+                                        AR_ASSERT(false);
+                                }
+                                break;
+                        case PLIST_REAL_NEGATIVE_INF_T:
+                                switch(r->real.t)
+                                {
+                                case PLIST_REAL_NORMAL_T:
+                                        return -1;
+                                case PLIST_REAL_NAN_T:
+                                        return 1;
+                                case PLIST_REAL_INF_T:
+                                        return -1;
+                                case PLIST_REAL_POSITIVE_INF_T:
+                                        return -1;
+                                case PLIST_REAL_NEGATIVE_INF_T:
+                                        return 0;
+                                default:
+                                        AR_ASSERT(false);
+                                }
+                                break;
+                        default:
+                                AR_ASSERT(false);
+                }
+                
+        }
+        
+}
+
+
 /*****plistData_t***********/
 
 arStatus_t      PList_InitData(plistData_t *data)
@@ -351,6 +488,37 @@ void            PList_UnInitData(plistData_t *data)
         data->buf = NULL;
         AR_memset(data, 0, sizeof(*data));
 }
+
+ar_int_t                PList_CompData(const plistData_t *l, const plistData_t *r)
+{
+        size_t ll, lr;
+        AR_ASSERT(l != NULL && r != NULL);
+        
+        if(l == r)
+        {
+                return 0;
+        }
+        
+        ll = AR_GetBufferAvailable(l->buf);
+        lr = AR_GetBufferAvailable(r->buf);
+        
+        
+        if(ll != lr)
+        {
+                return AR_CMP(ll,lr);
+        }
+        
+        
+        if(ll == 0)
+        {
+                return 0;
+        }else
+        {
+                return AR_memcmp(AR_GetBufferData(l->buf), AR_GetBufferData(r->buf), ll);
+        }
+}
+
+
 
 arStatus_t              PList_CopyData(plistData_t *dest, plistData_t *src)
 {
@@ -388,6 +556,45 @@ arStatus_t              PList_SetData(plistData_t *data, const ar_byte_t *buf, s
         return AR_InsertToBuffer(data->buf, buf, length);
 }
 
+
+/******plistDate_t*************/
+
+ar_int_t        PList_CompDate(const plistDate_t *l, const plistDate_t *r)
+{
+        AR_ASSERT(l != NULL && r != NULL);
+        
+        if(l->year != r->year)
+        {
+                return AR_CMP(l->year, r->year);
+        }
+        
+        if(l->month != r->month)
+        {
+                return AR_CMP(l->month, r->month);
+        }
+        
+        if(l->day != r->day)
+        {
+                return AR_CMP(l->day, r->day);
+        }
+        
+        if(l->hour != r->hour)
+        {
+                return AR_CMP(l->hour, r->hour);
+        }
+
+        if(l->minute != r->minute)
+        {
+                return AR_CMP(l->minute, r->minute);
+        }
+        
+        if(l->second != r->second)
+        {
+                return AR_CMP(l->second, r->second);
+        }
+        
+        return 0;
+}
 
 /*****plistArray_t***********/
 
@@ -513,6 +720,35 @@ ar_bool_t      PList_RemoveArrayByIndex(plistArray_t *arr, size_t idx)
 		return true;
 }
 
+ar_int_t        PList_CompArray(const plistArray_t *l, const plistArray_t *r)
+{
+        size_t i;
+        AR_ASSERT(l != NULL && r != NULL);
+        
+        if(l == r)
+        {
+                return 0;
+        }
+        
+        if(l->count != r->count)
+        {
+                return AR_CMP(l->count, r->count);
+        }
+        
+        for(i = 0; i < l->count; ++i)
+        {
+                ar_int_t cmp;
+                cmp = PList_CompElem(l->items[i], r->items[i]);
+                
+                if(cmp != 0)
+                {
+                        return cmp;
+                }
+        }
+        
+        return 0;
+}
+
 /*****plistDict_t***********/
 
 void      PList_InitDict(plistDict_t *dict)
@@ -607,6 +843,54 @@ arStatus_t      PList_CopyDict(plistDict_t *dest, plistDict_t *src)
         return AR_S_YES;
         
 }
+
+
+ar_int_t        PList_CompDict(const plistDict_t *l, const plistDict_t *r)
+{
+        size_t i;
+        AR_ASSERT(l != NULL && r != NULL);
+        
+        if(l == r)
+        {
+                return 0;
+        }
+        
+        if(l->count != r->count)
+        {
+                return AR_CMP(l->count, r->count);
+        }
+        
+        for(i = 0; i < l->count; ++i)
+        {
+                const plistElem_t *lk, *lv, *rk, *rv;
+                ar_int_t cmp;
+                
+                lk = l->keys[i];
+                lv = l->values[i];
+                
+                rk = r->keys[i];
+                rv = r->values[i];
+                
+                cmp = PList_CompElem(lk,rk);
+                
+                if(cmp != 0)
+                {
+                        return cmp;
+                }
+                
+                
+                cmp = PList_CompElem(lv,rv);
+                
+                if(cmp != 0)
+                {
+                        return cmp;
+                }
+                
+        }
+        return 0;
+        
+}
+
 
 plistElem_t*    PList_FindValueByElem(plistDict_t *dict, const plistElem_t *key)
 {
@@ -785,6 +1069,15 @@ plistElem_t*    PList_GetDictValueByIndex(plistDict_t *dict, size_t idx)
 }
 
 
+plistElem_t*    PList_GetDictKeyByIndex(plistDict_t *dict, size_t idx)
+{
+        AR_ASSERT(dict != NULL);
+        AR_ASSERT(idx < dict->count);
+        return dict->keys[idx];
+}
+
+
+
 /*plistElem_t*/
 
 
@@ -908,6 +1201,117 @@ plistElem_t*    PList_CopyNewElem(plistElem_t            *elem)
 
         return new_elem;
 }
+
+
+ar_int_t        PList_CompElem(const plistElem_t *l, const plistElem_t *r)
+{
+        
+        AR_ASSERT(l != NULL && r != NULL);
+        
+        if(l == r)
+        {
+                return 0;
+        }
+        
+        if(PList_GetElemType(l) != PList_GetElemType(r))
+        {
+                return AR_CMP(PList_GetElemType(l),PList_GetElemType(r));
+        }
+        
+        
+        switch(PList_GetElemType(l))
+        {
+                case PLIST_ELEM_BOOLEAN_T:
+                        return AR_CMP(l->boolean.val, r->boolean.val);
+                case PLIST_ELEM_NUMBER_T:
+                        return PList_CompNumber(&l->number, &r->number);
+                case PLIST_ELEM_DATE_T:
+                        return PList_CompDate(&l->date, &r->date);
+                case PLIST_ELEM_STRING_T:
+                        return PList_CompareString(&l->str, &r->str);
+                case PLIST_ELEM_DATA_T:
+                        return PList_CompData(&l->data, &r->data);
+                case PLIST_ELEM_ARRAY_T:
+                        return PList_CompArray(&l->array, &r->array);
+                case PLIST_ELEM_DICT_T:
+                        return PList_CompDict(&l->dict, &r->dict);
+                case PLIST_ELEM_MAX_T:
+                default:
+                        AR_error(AR_ERR_WARNING, L"invalid plist element type : %u\r\n", PList_GetElemType(l));
+                        AR_ASSERT(false);
+                        return 0;
+        }
+}
+
+
+
+ar_uint_64_t    PList_HashElem(const plistElem_t *elem)
+{
+        AR_ASSERT(elem != NULL);
+        
+        
+        
+        switch(PList_GetElemType(elem))
+        {
+                case PLIST_ELEM_BOOLEAN_T:
+                        if(elem->boolean.val)
+                        {
+                                return 1;
+                        }else
+                        {
+                                return 0;
+                        }
+                case PLIST_ELEM_NUMBER_T:
+                        
+                        if(elem->number.type == PLIST_NUMBER_INTEGER_T)
+                        {
+                                return elem->number.integer.unsigned_num;
+                        }else
+                        {
+                                switch(elem->number.real.t)
+                                {
+                                        case PLIST_REAL_NORMAL_T:
+                                        {
+                                                return AR_memhash((const ar_byte_t*)&elem->number.real,  sizeof(elem->number.real));
+                                        }
+                                                break;
+                                        case PLIST_REAL_NAN_T:
+                                        case PLIST_REAL_INF_T:
+                                        case PLIST_REAL_POSITIVE_INF_T:
+                                        case PLIST_REAL_NEGATIVE_INF_T:
+                                                return (ar_uint_64_t)elem->number.real.t;
+                                        default:
+                                                AR_ASSERT(false);
+                                                return 0;
+                                }
+                        }
+                case PLIST_ELEM_DATE_T:
+                {
+                        return (ar_uint_64_t)(elem->date.year + elem->date.month + elem->date.day + elem->date.hour + elem->date.minute + elem->date.second);
+                }
+                case PLIST_ELEM_STRING_T:
+                        return AR_wcshash(PList_GetElemCString(elem));
+                case PLIST_ELEM_DATA_T:
+                        if(PList_GetElemDataPointer(elem) == NULL)
+                        {
+                                return 0;
+                        }else
+                        {
+                                return AR_memhash(PList_GetElemDataPointer(elem), PList_GetElemDataLength(elem));
+                        }
+                case PLIST_ELEM_ARRAY_T:
+                        return 0;
+                case PLIST_ELEM_DICT_T:
+                        return 0;
+                case PLIST_ELEM_MAX_T:
+                default:
+                        AR_error(AR_ERR_WARNING, L"invalid plist element type : %u\r\n", PList_GetElemType(elem));
+                        AR_ASSERT(false);
+                        return 0;
+        }
+}
+
+
 
 
 void            PList_DestroyElem(plistElem_t            *elem)
@@ -1145,6 +1549,16 @@ const wchar_t*          PList_GetElemDictKeyWcsByIndex(plistElem_t *elem, size_t
         return PList_GetDictKeyWcsByIndex(&elem->dict, idx);
         
 }
+
+
+plistElem_t*            PList_GetElemDictKeyByIndex(plistElem_t *elem, size_t idx)
+{
+        AR_ASSERT(elem != NULL);
+        AR_ASSERT(PList_GetElemType(elem) ==  PLIST_ELEM_DICT_T);
+        AR_ASSERT(idx < PList_GetElemDictCount(elem));
+        return PList_GetDictKeyByIndex(&elem->dict, idx);
+}
+
 
 plistElem_t*            PList_GetElemDictValueByIndex(plistElem_t *elem, size_t idx)
 {
@@ -1674,6 +2088,7 @@ arStatus_t              PList_SaveElemToXML(const plistElem_t *elem, arString_t 
 END_POINT:
         return status;
 }
+
 
 
 /********************************************************XML Parser********************************************************/
@@ -4124,6 +4539,323 @@ static AR_INLINE ar_uint_64_t _getOffsetOfRefAt(const ar_byte_t *databytes, cons
 }
 
 
+
+
+/******************save binary******************************/
+static arStatus_t _appendInt(arBuffer_t *buf, ar_uint_64_t bigint)
+{
+        ar_byte_t marker;
+        ar_byte_t *bytes;
+        size_t nbytes;
+        
+        if(bigint <= (ar_uint_64_t)0xff)
+        {
+                nbytes = 1;
+                marker = kCFBinaryPlistMarkerInt | 0;
+                
+        } else if (bigint <= (ar_uint_64_t)0xffff)
+        {
+                nbytes = 2;
+                marker = kCFBinaryPlistMarkerInt | 1;
+                
+        } else if (bigint <= (ar_uint_64_t)0xffffffff)
+        {
+                nbytes = 4;
+                marker = kCFBinaryPlistMarkerInt | 2;
+                
+        } else
+        {
+                nbytes = 8;
+                marker = kCFBinaryPlistMarkerInt | 3;
+        }
+        
+        bigint = AR_LTON_U64(bigint);
+        bytes = (ar_byte_t*)&bigint + sizeof(bigint) - nbytes;
+        
+        if(AR_InsertToBuffer(buf, &marker, 1) != AR_S_YES)
+        {
+                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                return AR_E_NOMEM;
+        }
+        
+        if(AR_InsertToBuffer(buf, bytes, nbytes) != AR_S_YES)
+        {
+                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                return AR_E_NOMEM;
+        }
+        
+        return AR_S_YES;
+        
+}
+
+
+/*******************/
+
+
+
+static arStatus_t _flattenPlist(const plistElem_t *plist, plistArray_t *objlist, arHash_t *objtable, arHash_t *uniquingset)
+{
+        
+        plistElem_t *unique;
+        ar_uint_32_t refnum;
+        plistElemType_t type;
+        size_t idx;
+        
+        AR_ASSERT(plist != NULL);
+
+        type = PList_GetElemType(plist);
+        
+        
+        if(type == PLIST_ELEM_STRING_T || type == PLIST_ELEM_BOOLEAN_T || type == PLIST_ELEM_NUMBER_T || type == PLIST_ELEM_DATA_T || type == PLIST_ELEM_DATE_T)
+        {
+                
+                if(AR_FindFromHash(uniquingset, (void*)plist, (void**)&unique) != AR_S_YES)
+                {
+                        if(AR_SetToHash(uniquingset, (void*)plist, (void*)plist) != AR_S_YES)
+                        {
+                                return AR_E_NOMEM;
+                        }
+                }else
+                {
+                        if(unique != plist)
+                        {
+                                size_t tmp;
+                                arStatus_t status;
+                                status = AR_FindFromHash(objtable, (void*)unique, (void**)&tmp);
+                                AR_ASSERT(status == AR_S_YES);
+
+                                refnum = (ar_uint_32_t)tmp;
+                                
+                                status = AR_SetToHash(objtable, (void*)plist, (void*)refnum);
+                                
+                                return status;
+                        }else
+                        {
+                                return AR_S_YES;
+                        }
+                }
+        }
+        
+        
+        refnum = (ar_uint_32_t)PList_GetArrayCount(objlist);
+        
+        if(PList_PushToArray(objlist,(plistElem_t*)plist) != AR_S_YES)
+        {
+                return AR_E_NOMEM;
+        }
+        
+        if(AR_SetToHash(objtable, (void*)plist, (void*)refnum) != AR_S_YES)
+        {
+                return AR_E_NOMEM;
+        }
+        
+        
+        if(PList_GetElemType(plist) == PLIST_ELEM_DICT_T)
+        {
+                
+                size_t count = PList_GetElemDictCount(plist);
+                
+                
+                for(idx = 0; idx < count; ++idx)
+                {
+                        const plistElem_t *key = PList_GetElemDictKeyByIndex((plistElem_t*)plist, idx);
+                        const plistElem_t *val = PList_GetElemDictValueByIndex((plistElem_t*)plist, idx);
+                        
+                        AR_ASSERT(key != NULL && val != NULL);
+                        
+                        arStatus_t status;
+                        status = _flattenPlist(key, objlist, objtable, uniquingset);
+                        
+                        if(status != AR_S_YES)
+                        {
+                                return status;
+                        }
+                        
+                        status = _flattenPlist(val, objlist, objtable, uniquingset);
+                        
+                        if(status != AR_S_YES)
+                        {
+                                return status;
+                        }
+                }
+
+        }else if(PList_GetElemType(plist) == PLIST_ELEM_ARRAY_T)
+        {
+                size_t count = PList_GetElemArrayCount(plist);
+                
+                for (idx = 0; idx < count; idx++)
+                {
+                        arStatus_t status;
+                        const plistElem_t *item = PList_GetElemArrayByIndex((plistElem_t*)plist, idx);
+                        AR_ASSERT(item != NULL);
+                        status = _flattenPlist(item, objlist, objtable, uniquingset);
+                        
+                        if(status != AR_S_YES)
+                        {
+                                return status;
+                        }
+                }
+        }
+        
+        return AR_S_YES;
+        
+}
+
+
+/* Get the number of bytes required to hold the value in 'count'. Will return a power of 2 value big enough to hold 'count'.
+ */
+static AR_INLINE ar_byte_t _byteCount(ar_uint_64_t count)
+{
+        ar_uint_64_t mask = ~(ar_uint_64_t)0;
+        ar_byte_t size = 0;
+        
+        // Find something big enough to hold 'count'
+        while (count & mask)
+        {
+                size++;
+                mask = mask << 8;
+        }
+        
+        // Ensure that 'count' is a power of 2
+        // For sizes bigger than 8, just use the required count
+        while ((size != 1 && size != 2 && size != 4 && size != 8) && size <= 8)
+        {
+                size++;
+        }
+        
+        return size;
+}
+
+
+
+
+
+
+/*******************/
+
+static ar_uint_64_t    __flattenplist_hash_func(void *key, void *ctx)
+{
+        AR_UNUSED(ctx);
+        AR_ASSERT(key != NULL);
+        return PList_HashElem((const plistElem_t*)key);
+}
+
+static ar_int_t   __flattenplist_comp_func(void *l, void *r, void *ctx)
+{
+        AR_UNUSED(ctx);
+        return PList_CompElem((plistElem_t*)l, (plistElem_t*)r);
+}
+
+
+
+arStatus_t              PList_SaveElemToBinary(const plistElem_t *elem, arBuffer_t *out)
+{
+        arStatus_t status;
+        
+        plistArray_t objlist;
+        arHash_t *objtable;
+        arHash_t *uniquingset;
+        
+        ar_uint_64_t *offsets, length_so_far;
+        ar_uint_64_t refnum;
+        size_t  idx, idx2, cnt;
+        
+        CFBinaryPlistTrailer trailer;
+        
+        AR_ASSERT(elem != NULL && out != NULL);
+        
+        status = AR_S_YES;
+        objtable = NULL;
+        uniquingset = NULL;
+        offsets = NULL;
+        length_so_far = 0;
+        refnum = 0;
+        
+        PList_InitArray(&objlist);
+        
+        objtable = AR_CreateHash(123, __flattenplist_hash_func, __flattenplist_comp_func, NULL, NULL, NULL, NULL, NULL);
+        uniquingset = AR_CreateHash(123, __flattenplist_hash_func, __flattenplist_comp_func, NULL, NULL, NULL, NULL, NULL);
+        
+        if(objtable == NULL || uniquingset == NULL)
+        {
+                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                status = AR_E_NOMEM;
+                goto END_POINT;
+        }
+        
+        AR_ClearBuffer(out);
+        
+        status = _flattenPlist(elem, &objlist, objtable, uniquingset);
+        
+        if(status != AR_S_YES)
+        {
+                goto END_POINT;
+        }
+        
+        
+        status = AR_InsertToBuffer(out, (const ar_byte_t*)"bplist00", 8);
+        
+        if(status != AR_S_YES)
+        {
+                goto END_POINT;
+        }
+        
+        
+        cnt = PList_GetArrayCount(&objlist);
+        
+        offsets = AR_NEWARR0(ar_uint_64_t, cnt);
+        
+        if(offsets == NULL)
+        {
+                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                status = AR_E_NOMEM;
+                goto END_POINT;
+        }
+        
+        
+        AR_memset(&trailer, 0, sizeof(trailer));
+        
+        trailer._numObjects = AR_LTON_U64((ar_uint_64_t)cnt);
+        trailer._topObject = 0;	// true for this implementation
+        trailer._objectRefSize = _byteCount(cnt);
+
+        for(idx = 0; idx < cnt; ++idx)
+        {
+                plistElem_t *item = PList_GetArrayByIndex(&objlist, (size_t)idx);
+                AR_ASSERT(item != NULL);
+                plistElemType_t type = PList_GetElemType(item);
+                offsets[idx] = (ar_uint_64_t)AR_GetBufferAvailable(out);
+                
+        }
+
+        
+        
+END_POINT:
+        
+        if(offsets)
+        {
+                AR_DEL(offsets);
+                offsets = NULL;
+        }
+        
+        if(objtable)
+        {
+                AR_DestroyHash(objtable);
+                objtable = NULL;
+        }
+        
+        if(uniquingset)
+        {
+                AR_DestroyHash(uniquingset);
+                uniquingset = NULL;
+        }
+        PList_UnInitArray(&objlist);
+        
+        
+        
+        return status;
+        
+}
 
 
 /*******************/
