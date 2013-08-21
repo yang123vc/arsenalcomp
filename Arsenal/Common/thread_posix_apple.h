@@ -47,7 +47,7 @@ ar_int_t			AR_AtomicInc(volatile ar_int_t *dest)
 #elif(AR_ARCH_VER == ARCH_64)
 		return (ar_int_t)OSAtomicIncrement64Barrier(dest);
 #else
-#error	"Unknow Platform";
+#error	"Unknown Platform";
 #endif
 
 }
@@ -61,7 +61,7 @@ ar_int_t			AR_AtomicDec(volatile ar_int_t *dest)
 #elif(AR_ARCH_VER == ARCH_64)
 		return (ar_int_t)OSAtomicDecrement64Barrier(dest);
 #else
-#error	"Unknow Platform";
+#error	"Unknown Platform";
 #endif
 }
 

@@ -81,12 +81,12 @@
 
 				#define	AR_COMPILER		AR_GCC3
 		#else
-				#error "Unknow Compiler!"
+				#error "Unknown Compiler!"
 		#endif
 
 #else
 
-		#error "Unknow Compiler!"
+		#error "Unknown Compiler!"
 
 #endif
 
@@ -298,6 +298,7 @@
 		#else
 			#define			AR_LINE_SP				L"\n"
 		#endif
+
 
 
 		#define AR_WCHAR_IS_UTF32_SUPPORT				1
@@ -693,7 +694,7 @@ typedef void*					ar_ptr_t;
 
 #else
 
-		#error "Unknow Compiler!"
+		#error "Unknown Compiler!"
 
 #endif
 

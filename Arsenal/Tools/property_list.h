@@ -92,14 +92,7 @@ typedef enum
 }plistNumberType_t;
 
 
-typedef enum
-{
-		PLIST_REAL_NORMAL_T,
-		PLIST_REAL_NAN_T,
-		PLIST_REAL_INF_T,
-		PLIST_REAL_POSITIVE_INF_T,
-		PLIST_REAL_NEGATIVE_INF_T,
-}plistRealType_t;
+
 
 typedef struct __plist_number_tag
 {
@@ -116,7 +109,6 @@ typedef struct __plist_number_tag
                 }               integer;
                 
 				struct {
-						plistRealType_t			t;
 						double					num;
 				}		real;
         };
@@ -231,7 +223,6 @@ void                    PList_SetElemBooleanValue(plistElem_t *elem, ar_bool_t v
 void                    PList_SetElemSignedInteger(plistElem_t *elem, ar_int_64_t num);
 void                    PList_SetElemUnsignedInteger(plistElem_t *elem, ar_uint_64_t num);
 void                    PList_SetElemReal(plistElem_t *elem, double num);
-void                    PList_SetElemRealByType(plistElem_t *elem, plistRealType_t t, double num);
 const plistNumber_t*    PList_GetElemNumber(const plistElem_t *elem);
 
 void                    PList_SetElemGMTDate(plistElem_t *elem, ar_uint_16_t year, ar_uint_16_t mon, ar_uint_16_t day, ar_uint_16_t hour, ar_uint_16_t min, ar_uint_16_t sec);
