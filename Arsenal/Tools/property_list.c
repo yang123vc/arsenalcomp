@@ -1469,6 +1469,26 @@ void                    PList_SetElemRealByType(plistElem_t *elem, plistRealType
         elem->number.type = PLIST_NUMBER_REAL_T;
         elem->number.real.t = t;
         elem->number.real.num = num;
+        
+        if(AR_is_nan_dbl(num))
+        {
+                elem->number.real.t = PLIST_REAL_NAN_T;
+                
+        }else if(AR_is_inf_dbl(num))
+        {
+                if(elem->number.real.num < 0.0)
+                {
+                        elem->number.real.t = PLIST_REAL_NEGATIVE_INF_T;
+                        
+                }else if(elem->number.real.num > 0.0)
+                {
+                        elem->number.real.t = PLIST_REAL_POSITIVE_INF_T;
+                }else
+                {
+                        elem->number.real.t = PLIST_REAL_INF_T;
+                }
+        }
+        
 }
 
 
@@ -4542,54 +4562,7 @@ static AR_INLINE ar_uint_64_t _getOffsetOfRefAt(const ar_byte_t *databytes, cons
 
 
 /******************save binary******************************/
-static arStatus_t _appendInt(arBuffer_t *buf, ar_uint_64_t bigint)
-{
-        ar_byte_t marker;
-        ar_byte_t *bytes;
-        size_t nbytes;
-        
-        if(bigint <= (ar_uint_64_t)0xff)
-        {
-                nbytes = 1;
-                marker = kCFBinaryPlistMarkerInt | 0;
-                
-        } else if (bigint <= (ar_uint_64_t)0xffff)
-        {
-                nbytes = 2;
-                marker = kCFBinaryPlistMarkerInt | 1;
-                
-        } else if (bigint <= (ar_uint_64_t)0xffffffff)
-        {
-                nbytes = 4;
-                marker = kCFBinaryPlistMarkerInt | 2;
-                
-        } else
-        {
-                nbytes = 8;
-                marker = kCFBinaryPlistMarkerInt | 3;
-        }
-        
-        bigint = AR_LTON_U64(bigint);
-        bytes = (ar_byte_t*)&bigint + sizeof(bigint) - nbytes;
-        
-        if(AR_InsertToBuffer(buf, &marker, 1) != AR_S_YES)
-        {
-                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
-                return AR_E_NOMEM;
-        }
-        
-        if(AR_InsertToBuffer(buf, bytes, nbytes) != AR_S_YES)
-        {
-                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
-                return AR_E_NOMEM;
-        }
-        
-        return AR_S_YES;
-        
-}
 
-
-/*******************/
 
 
 
@@ -4728,6 +4701,53 @@ static AR_INLINE ar_byte_t _byteCount(ar_uint_64_t count)
 
 
 
+static arStatus_t _appendInt(arBuffer_t *buf, ar_uint_64_t bigint)
+{
+        ar_byte_t marker;
+        ar_byte_t *bytes;
+        size_t nbytes;
+        
+        if(bigint <= (ar_uint_64_t)0xff)
+        {
+                nbytes = 1;
+                marker = kCFBinaryPlistMarkerInt | 0;
+                
+        } else if (bigint <= (ar_uint_64_t)0xffff)
+        {
+                nbytes = 2;
+                marker = kCFBinaryPlistMarkerInt | 1;
+                
+        } else if (bigint <= (ar_uint_64_t)0xffffffff)
+        {
+                nbytes = 4;
+                marker = kCFBinaryPlistMarkerInt | 2;
+                
+        } else
+        {
+                nbytes = 8;
+                marker = kCFBinaryPlistMarkerInt | 3;
+        }
+        
+        bigint = AR_LTON_U64(bigint);
+        bytes = (ar_byte_t*)&bigint + sizeof(bigint) - nbytes;
+        
+        if(AR_InsertToBuffer(buf, &marker, 1) != AR_S_YES)
+        {
+                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                return AR_E_NOMEM;
+        }
+        
+        if(AR_InsertToBuffer(buf, bytes, nbytes) != AR_S_YES)
+        {
+                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                return AR_E_NOMEM;
+        }
+        
+        return AR_S_YES;
+        
+}
+
+
 
 
 
@@ -4825,6 +4845,131 @@ arStatus_t              PList_SaveElemToBinary(const plistElem_t *elem, arBuffer
                 AR_ASSERT(item != NULL);
                 plistElemType_t type = PList_GetElemType(item);
                 offsets[idx] = (ar_uint_64_t)AR_GetBufferAvailable(out);
+                
+                if (type == PLIST_ELEM_STRING_T)
+                {
+                        
+                        ar_uint_16_t *chars = NULL, chars_buf[512];
+                        
+                        const wchar_t *wcs = PList_GetElemCString(elem);
+                        size_t  count = AR_wcslen(wcs);
+                        ar_byte_t marker;
+                        
+                        if(count > 0)
+                        {
+                                if(count <= 512)
+                                {
+                                        chars = chars_buf;
+                                }else
+                                {
+                                        chars = AR_NEWARR0(ar_uint_16_t, count);
+                                        
+                                        if(chars == NULL)
+                                        {
+                                                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                                                status = AR_E_NOMEM;
+                                                goto END_POINT;
+                                        }
+                                }
+                        }
+                        
+                        
+                        marker = (ar_byte_t)(kCFBinaryPlistMarkerUnicode16String | (count < 15 ? count : 0xf));
+                        
+                        status = AR_InsertToBuffer(out, &marker, 1);
+                        
+                        if(status != AR_S_YES)
+                        {
+                                if(chars && chars != chars_buf)
+                                {
+                                        AR_DEL(chars);
+                                        chars = NULL;
+                                }
+                                
+                                goto END_POINT;
+                        }
+                        
+                        if(count >= 15)
+                        {
+                                status = _appendInt(out, (ar_uint_64_t)count);
+                                
+                                if(status != AR_S_YES)
+                                {
+                                        if(chars && chars != chars_buf)
+                                        {
+                                                AR_DEL(chars);
+                                                chars = NULL;
+                                        }
+                                        goto END_POINT;
+                                }
+                        }
+                        
+                        for(idx2 = 0; idx2 < count; ++idx2)
+                        {
+                                chars[idx2] = AR_LTON_U16((ar_uint_16_t)wcs[idx2]);
+                        }
+                        
+                        status = AR_InsertToBuffer(out, (const ar_byte_t*)chars, count * sizeof(ar_uint_16_t));
+                        
+                        if(status != AR_S_YES)
+                        {
+                                if(chars && chars != chars_buf)
+                                {
+                                        AR_DEL(chars);
+                                        chars = NULL;
+                                }
+                                goto END_POINT;
+                        }
+
+                        if(chars && chars != chars_buf)
+                        {
+                                AR_DEL(chars);
+                                chars = NULL;
+                        }
+                        
+                } else if (type == PLIST_ELEM_NUMBER_T)
+                {
+                        ar_byte_t marker;
+                        ar_uint_64_t bigint;
+                        const plistNumber_t *number = PList_GetElemNumber(elem);
+                        AR_ASSERT(number != NULL);
+                        
+                        if(number->type == PLIST_NUMBER_REAL_T)
+                        {
+                                ar_uint_64_t swapped64;
+                                
+                                AR_memcpy((ar_byte_t*)&swapped64, (const ar_byte_t*)&number->real.num, sizeof(number->real.num));
+                                swapped64 = AR_LTON_U64(swapped64);
+                                
+                                
+                                marker = kCFBinaryPlistMarkerReal | 3;
+                                status = AR_InsertToBuffer(out, &marker, 1);
+                                if(status != AR_S_YES)
+                                {
+                                        goto END_POINT;
+                                }
+                                
+                                status = AR_InsertToBuffer(out, (const ar_byte_t*)&swapped64, 8);
+                                if(status != AR_S_YES)
+                                {
+                                        goto END_POINT;
+                                }
+                                
+                        }else
+                        {
+                                bigint = number->integer.unsigned_num;
+                                status = _appendInt(out, bigint);
+                                
+                                if(status != AR_S_YES)
+                                {
+                                        goto END_POINT;
+                                }
+
+                        }
+                }else if(type == PLIST_ELEM_BOOLEAN_T)
+                {
+                        
+                }
                 
         }
 
@@ -5109,7 +5254,6 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
 
                                 PList_SetElemReal(*pelem, (double)f);
                                 
-                                // these are always immutable
                                 if (objects && *pelem)
                                 {
 										size_t offset = (size_t)startOffset;
@@ -5177,7 +5321,7 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
                                 
                                 PList_SetElemReal(*pelem, d);
                                 
-                                // these are always immutable
+
                                 if (objects && *pelem)
                                 {
 										size_t offset = (size_t)startOffset;
