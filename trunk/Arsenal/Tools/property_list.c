@@ -23,7 +23,7 @@
 #elif defined(OS_FAMILY_UNIX)
 		
 #else 
-		#error "Unknow platform !"
+		#error "Unknown platform !"
 #endif
 
 AR_NAMESPACE_BEGIN
@@ -46,7 +46,7 @@ AR_NAMESPACE_BEGIN
         #endif
 
 #else
-		#error "Unknow platform !"
+		#error "Unknown platform !"
 #endif
 
 
@@ -360,103 +360,8 @@ ar_int_t PList_CompNumber(const plistNumber_t *l, const plistNumber_t *r)
                 
         }else   //PLIST_NUMBER_REAL_T
         {
-                switch(l->real.t)
-                {
-                        case PLIST_REAL_NORMAL_T:
-                        {
-                                switch(r->real.t)
-                                {
-                                        case PLIST_REAL_NORMAL_T:
-                                                return AR_CMP_DBL(l->real.num, r->real.num);
-                                        case PLIST_REAL_NAN_T:
-                                                return 1;
-                                        case PLIST_REAL_INF_T:
-                                                return -1;
-                                        case PLIST_REAL_POSITIVE_INF_T:
-                                                return -1;
-                                        case PLIST_REAL_NEGATIVE_INF_T:
-                                                return 1;
-                                        default:
-                                                AR_ASSERT(false);
-                                }
-                        }
-                                break;
-                        case PLIST_REAL_NAN_T:
-                        {
-                                switch(r->real.t)
-                                {
-                                        case PLIST_REAL_NORMAL_T:
-                                                return -1;
-                                        case PLIST_REAL_NAN_T:
-                                                return 0;
-                                        case PLIST_REAL_INF_T:
-                                                return -1;
-                                        case PLIST_REAL_POSITIVE_INF_T:
-                                                return -1;
-                                        case PLIST_REAL_NEGATIVE_INF_T:
-                                                return -1;
-                                        default:
-                                                AR_ASSERT(false);
-                                }
-                        }
-                                break;
-                        case PLIST_REAL_INF_T:
-                                switch(r->real.t)
-                                {
-                                case PLIST_REAL_NORMAL_T:
-                                        return 1;
-                                case PLIST_REAL_NAN_T:
-                                        return 1;
-                                case PLIST_REAL_INF_T:
-                                        return 0;
-                                case PLIST_REAL_POSITIVE_INF_T:
-                                        return -1;
-                                case PLIST_REAL_NEGATIVE_INF_T:
-                                        return 1;
-                                default:
-                                        AR_ASSERT(false);
-                                }
-                                break;
-                        case PLIST_REAL_POSITIVE_INF_T:
-                                switch(r->real.t)
-                                {
-                                case PLIST_REAL_NORMAL_T:
-                                        return 1;
-                                case PLIST_REAL_NAN_T:
-                                        return 1;
-                                case PLIST_REAL_INF_T:
-                                        return 1;
-                                case PLIST_REAL_POSITIVE_INF_T:
-                                        return 0;
-                                case PLIST_REAL_NEGATIVE_INF_T:
-                                        return 1;
-                                default:
-                                        AR_ASSERT(false);
-                                }
-                                break;
-                        case PLIST_REAL_NEGATIVE_INF_T:
-                                switch(r->real.t)
-                                {
-                                case PLIST_REAL_NORMAL_T:
-                                        return -1;
-                                case PLIST_REAL_NAN_T:
-                                        return 1;
-                                case PLIST_REAL_INF_T:
-                                        return -1;
-                                case PLIST_REAL_POSITIVE_INF_T:
-                                        return -1;
-                                case PLIST_REAL_NEGATIVE_INF_T:
-                                        return 0;
-                                default:
-                                        AR_ASSERT(false);
-                                }
-                                break;
-                        default:
-                                AR_ASSERT(false);
-                }
-                
+                return AR_CMP_DBL(l->real.num, r->real.num);
         }
-        
 }
 
 
@@ -1268,22 +1173,7 @@ ar_uint_64_t    PList_HashElem(const plistElem_t *elem)
                                 return elem->number.integer.unsigned_num;
                         }else
                         {
-                                switch(elem->number.real.t)
-                                {
-                                        case PLIST_REAL_NORMAL_T:
-                                        {
-                                                return AR_memhash((const ar_byte_t*)&elem->number.real,  sizeof(elem->number.real));
-                                        }
-                                                break;
-                                        case PLIST_REAL_NAN_T:
-                                        case PLIST_REAL_INF_T:
-                                        case PLIST_REAL_POSITIVE_INF_T:
-                                        case PLIST_REAL_NEGATIVE_INF_T:
-                                                return (ar_uint_64_t)elem->number.real.t;
-                                        default:
-                                                AR_ASSERT(false);
-                                                return 0;
-                                }
+                                return AR_memhash((const ar_byte_t*)&elem->number.real,  sizeof(elem->number.real));
                         }
                 case PLIST_ELEM_DATE_T:
                 {
@@ -1458,39 +1348,10 @@ void                    PList_SetElemReal(plistElem_t *elem, double num)
         AR_ASSERT(elem != NULL);
         AR_ASSERT(PList_GetElemType(elem) ==  PLIST_ELEM_NUMBER_T);
         
-        PList_SetElemRealByType(elem, PLIST_REAL_NORMAL_T, num);
-}
-
-void                    PList_SetElemRealByType(plistElem_t *elem, plistRealType_t t, double num)
-{
-        AR_ASSERT(elem != NULL);
-        AR_ASSERT(PList_GetElemType(elem) ==  PLIST_ELEM_NUMBER_T);
-        
         elem->number.type = PLIST_NUMBER_REAL_T;
-        elem->number.real.t = t;
         elem->number.real.num = num;
         
-        if(AR_is_nan_dbl(num))
-        {
-                elem->number.real.t = PLIST_REAL_NAN_T;
-                
-        }else if(AR_is_inf_dbl(num))
-        {
-                if(elem->number.real.num < 0.0)
-                {
-                        elem->number.real.t = PLIST_REAL_NEGATIVE_INF_T;
-                        
-                }else if(elem->number.real.num > 0.0)
-                {
-                        elem->number.real.t = PLIST_REAL_POSITIVE_INF_T;
-                }else
-                {
-                        elem->number.real.t = PLIST_REAL_INF_T;
-                }
-        }
-        
 }
-
 
 
 
@@ -1804,34 +1665,21 @@ static arStatus_t __append_xml_0(arString_t *out, const plistElem_t *elem, size_
                                 status = AR_AppendString(out, L">");
                                 __CHECK_STATUS_AND_GOTO_ENDPOINT();
                                 
-                                switch(elem->number.real.t)
+                                if(AR_is_nan_dbl(elem->number.real.num))
                                 {
-                                        case PLIST_REAL_NAN_T:
-                                                status = AR_AppendString(out, L"nan");
-                                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
-                                                
-                                                break;
-                                        case PLIST_REAL_INF_T:
-                                                status = AR_AppendString(out, L"inf");
-                                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
-                                                
-                                                break;
-                                        case PLIST_REAL_POSITIVE_INF_T:
-                                                status = AR_AppendString(out, L"+inf");
-                                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
-                                                
-                                                break;
-                                        case PLIST_REAL_NEGATIVE_INF_T:
-                                                AR_AppendString(out, L"-inf");
-                                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
-                                                
-                                                break;
-                                        case PLIST_REAL_NORMAL_T:
-                                        default:
-                                                status = AR_AppendFormatString(out, L"%.20f",elem->number.real.num);
-                                                __CHECK_STATUS_AND_GOTO_ENDPOINT();
-                                                
-                                                break;
+                                        status = AR_AppendString(out, L"nan");
+                                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                        
+                                }else if(AR_is_inf_dbl(elem->number.real.num))
+                                {
+                                        status = AR_AppendString(out, L"inf");
+                                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                }else
+                                {
+                                        status = AR_AppendFormatString(out, L"%.20f",elem->number.real.num);
+                                        __CHECK_STATUS_AND_GOTO_ENDPOINT();
+                                        
+
                                 }
                                 
                                 status = AR_AppendString(out, L"</");
@@ -3572,34 +3420,33 @@ static plistElem_t* __parse_xml_realtag(plistXMLParser_t *parser)
         
         if(AR_wcsicmp(wcs, L"nan") == 0)
         {
-                num->number.real.t = PLIST_REAL_NAN_T;
+                num->number.real.num = AR_nan_value_dbl();
+
         }else if(AR_wcsicmp(wcs, L"+infinity") == 0)
         {
-                num->number.real.t = PLIST_REAL_POSITIVE_INF_T;
+                num->number.real.num = AR_infinity_value_dbl();
                 
         }else if(AR_wcsicmp(wcs, L"-infinity") == 0)
         {
-                num->number.real.t = PLIST_REAL_NEGATIVE_INF_T;
+                num->number.real.num = AR_infinity_value_dbl();
                 
         }else if(AR_wcsicmp(wcs, L"infinity") == 0)
         {
-                num->number.real.t = PLIST_REAL_INF_T;
+                num->number.real.num = AR_infinity_value_dbl();
                 
         }else if(AR_wcsicmp(wcs, L"inf") == 0)
         {
-                num->number.real.t = PLIST_REAL_INF_T;
+                num->number.real.num = AR_infinity_value_dbl();
                 
         }else if(AR_wcsicmp(wcs, L"-inf") == 0)
         {
-                num->number.real.t = PLIST_REAL_NEGATIVE_INF_T;
+                num->number.real.num = AR_infinity_value_dbl();
                 
         }else if(AR_wcsicmp(wcs, L"+inf") == 0)
         {
-                num->number.real.t = PLIST_REAL_POSITIVE_INF_T;
+                num->number.real.num = AR_infinity_value_dbl();
         }else
         {
-                num->number.real.t = PLIST_REAL_NORMAL_T;
-
                 if(AR_wtod(wcs, &num->number.real.num) == NULL)
                 {
                         parser->has_error = true;
@@ -3607,15 +3454,6 @@ static plistElem_t* __parse_xml_realtag(plistXMLParser_t *parser)
                         goto INVALID_POINT;
                 }
                 
-                if(AR_is_nan_dbl(num->number.real.num))
-                {
-                        num->number.real.t = PLIST_REAL_NAN_T;
-                }
-                
-                if(AR_is_inf_dbl(num->number.real.num))
-                {
-                        num->number.real.t = PLIST_REAL_INF_T;
-                }
         }
         
         if(!__check_for_closetag(parser, __g_plist_tags[REAL_IX], REAL_TAG_LENGTH))

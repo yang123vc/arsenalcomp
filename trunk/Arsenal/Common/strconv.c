@@ -533,7 +533,7 @@ CLEAN_POINT:
 
 #else
 
-#error Unknow platform
+#error Unknown platform
 
 #endif
 

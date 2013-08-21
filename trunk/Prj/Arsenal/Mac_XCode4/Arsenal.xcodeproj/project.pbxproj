@@ -193,6 +193,8 @@
 		67E28CB115615FF7005A2C79 /* enviroment_win.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = enviroment_win.h; sourceTree = "<group>"; };
 		67E28CB215615FF7005A2C79 /* filesystem_posix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filesystem_posix.h; sourceTree = "<group>"; };
 		67E28CB315615FF7005A2C79 /* filesystem_win.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filesystem_win.h; sourceTree = "<group>"; };
+		67EEB80417C4730E00334796 /* math_posix.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = math_posix.h; sourceTree = "<group>"; };
+		67EEB80517C4731B00334796 /* math_win.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = math_win.h; sourceTree = "<group>"; };
 		BE185D9014E841B90095DB44 /* Arsenal.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Arsenal.c; sourceTree = "<group>"; };
 		BE185D9114E841B90095DB44 /* Arsenal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Arsenal.h; sourceTree = "<group>"; };
 		BE185D9314E841B90095DB44 /* algo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = algo.c; sourceTree = "<group>"; };
@@ -352,6 +354,8 @@
 				BE185D9B14E841B90095DB44 /* heap.c */,
 				BE185D9C14E841B90095DB44 /* heap.h */,
 				BE185D9D14E841B90095DB44 /* math.c */,
+				67EEB80417C4730E00334796 /* math_posix.h */,
+				67EEB80517C4731B00334796 /* math_win.h */,
 				BE185D9E14E841B90095DB44 /* matrix.c */,
 				BE185DAC14E841B90095DB44 /* vector.c */,
 				BE185DA114E841B90095DB44 /* random.c */,
