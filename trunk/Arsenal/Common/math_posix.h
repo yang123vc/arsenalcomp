@@ -24,7 +24,7 @@ double  AR_nan_value_dbl()
 }
 
 
-double  AR_infinity_value_dbl()
+double  AR_inf_value_dbl()
 {
         return INFINITY;
 }

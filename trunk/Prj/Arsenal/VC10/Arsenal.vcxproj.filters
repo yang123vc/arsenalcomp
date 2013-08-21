@@ -287,6 +287,12 @@
     <ClInclude Include="..\..\..\Arsenal\Tools\property_list.h">
       <Filter>Arsenal\Tools</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\Arsenal\Common\math_win.h">
+      <Filter>Arsenal\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Arsenal\Common\math_posix.h">
+      <Filter>Arsenal\Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="export_debug.def">
