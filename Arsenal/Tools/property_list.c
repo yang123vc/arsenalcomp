@@ -3424,27 +3424,27 @@ static plistElem_t* __parse_xml_realtag(plistXMLParser_t *parser)
 
         }else if(AR_wcsicmp(wcs, L"+infinity") == 0)
         {
-                num->number.real.num = AR_infinity_value_dbl();
+                num->number.real.num = AR_inf_value_dbl();
                 
         }else if(AR_wcsicmp(wcs, L"-infinity") == 0)
         {
-                num->number.real.num = AR_infinity_value_dbl();
+                num->number.real.num = AR_inf_value_dbl();
                 
         }else if(AR_wcsicmp(wcs, L"infinity") == 0)
         {
-                num->number.real.num = AR_infinity_value_dbl();
+                num->number.real.num = AR_inf_value_dbl();
                 
         }else if(AR_wcsicmp(wcs, L"inf") == 0)
         {
-                num->number.real.num = AR_infinity_value_dbl();
+                num->number.real.num = AR_inf_value_dbl();
                 
         }else if(AR_wcsicmp(wcs, L"-inf") == 0)
         {
-                num->number.real.num = AR_infinity_value_dbl();
+                num->number.real.num = AR_inf_value_dbl();
                 
         }else if(AR_wcsicmp(wcs, L"+inf") == 0)
         {
-                num->number.real.num = AR_infinity_value_dbl();
+                num->number.real.num = AR_inf_value_dbl();
         }else
         {
                 if(AR_wtod(wcs, &num->number.real.num) == NULL)
@@ -4471,10 +4471,10 @@ static arStatus_t _flattenPlist(const plistElem_t *plist, plistArray_t *objlist,
                 {
                         const plistElem_t *key = PList_GetElemDictKeyByIndex((plistElem_t*)plist, idx);
                         const plistElem_t *val = PList_GetElemDictValueByIndex((plistElem_t*)plist, idx);
-                        
+                        arStatus_t status;
                         AR_ASSERT(key != NULL && val != NULL);
                         
-                        arStatus_t status;
+                        
                         status = _flattenPlist(key, objlist, objtable, uniquingset);
                         
                         if(status != AR_S_YES)
@@ -4680,8 +4680,9 @@ arStatus_t              PList_SaveElemToBinary(const plistElem_t *elem, arBuffer
         for(idx = 0; idx < cnt; ++idx)
         {
                 plistElem_t *item = PList_GetArrayByIndex(&objlist, (size_t)idx);
+				plistElemType_t type ;
                 AR_ASSERT(item != NULL);
-                plistElemType_t type = PList_GetElemType(item);
+                type = PList_GetElemType(item);
                 offsets[idx] = (ar_uint_64_t)AR_GetBufferAvailable(out);
                 
                 if (type == PLIST_ELEM_STRING_T)
@@ -5702,7 +5703,8 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
                         
                         if(set)
                         {
-                                if(AR_SetToHash(set, (void*)(ar_ptr_t)startOffset, NULL) != AR_S_YES)
+								size_t offset = (size_t)startOffset;
+                                if(AR_SetToHash(set, (void*)offset, NULL) != AR_S_YES)
                                 {
                                         AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
                                         
@@ -5760,7 +5762,8 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
                         
                         if(set)
                         {
-                                AR_RemoveFromHash(set, (void*)(ar_ptr_t)startOffset);
+								size_t offset = (size_t)startOffset;
+                                AR_RemoveFromHash(set, (void*)offset);
                         }
                         
                         if(madeSet)
@@ -5931,7 +5934,8 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
                         
                         if(set)
                         {
-                                if(AR_SetToHash(set, (void*)(ar_ptr_t)startOffset, NULL) != AR_S_YES)
+								size_t offset = (size_t)startOffset;
+                                if(AR_SetToHash(set, (void*)offset, NULL) != AR_S_YES)
                                 {
                                         AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
                                         
@@ -5990,7 +5994,8 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
                         
                         if(set)
                         {
-                                AR_RemoveFromHash(set, (void*)(ar_ptr_t)startOffset);
+								size_t offset = (size_t)startOffset;
+                                AR_RemoveFromHash(set, (void*)offset);
                         }
                         
                         if(madeSet)

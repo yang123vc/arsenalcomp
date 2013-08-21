@@ -117,6 +117,8 @@
     <ClInclude Include="..\..\..\Arsenal\Common\filesystem_posix.h" />
     <ClInclude Include="..\..\..\Arsenal\Common\filesystem_win.h" />
     <ClInclude Include="..\..\..\Arsenal\Common\heap.h" />
+    <ClInclude Include="..\..\..\Arsenal\Common\math_posix.h" />
+    <ClInclude Include="..\..\..\Arsenal\Common\math_win.h" />
     <ClInclude Include="..\..\..\Arsenal\Common\platform.h" />
     <ClInclude Include="..\..\..\Arsenal\Common\status.h" />
     <ClInclude Include="..\..\..\Arsenal\Common\thread_posix.h" />

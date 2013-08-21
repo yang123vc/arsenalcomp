@@ -30,7 +30,7 @@ double  AR_nan_value_dbl()
 }
 
 
-double  AR_infinity_value_dbl()
+double  AR_inf_value_dbl()
 {
         return HUGE_VAL;
 }
@@ -52,7 +52,7 @@ ar_bool_t	AR_is_nan_dbl(double num)
 #if defined(isnan)
 		return isnan(num) != 0;
 #else
-        return return _isnan(num) != 0;
+        return _isnan(num) != 0;
 #endif
         
 }
@@ -82,7 +82,6 @@ ar_bool_t	AR_is_inf_dbl(double num)
 
 
 
-'
 AR_NAMESPACE_END
 
 #endif

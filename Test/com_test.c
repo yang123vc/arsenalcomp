@@ -3939,6 +3939,44 @@ static void float_test2()
 		//AR_is_nan_flt(0.0/0.0);
 
 }
+static void float_test3()
+{
+		double nan = AR_nan_value_dbl();
+
+		AR_ASSERT(AR_is_nan_dbl(nan));
+
+		double inf = AR_inf_value_dbl();
+		AR_ASSERT(AR_is_inf_dbl(inf));
+		AR_ASSERT(AR_is_inf_dbl(-inf));
+
+
+		if(nan > inf)
+		{
+				printf("nan > inf\r\n");
+		}
+
+		if(nan < inf)
+		{
+				printf("nan < inf\r\n");
+		}
+
+		ar_int_t cmp = AR_CMP_DBL(1.0,2.0);
+		AR_ASSERT(cmp == -1);
+		cmp = AR_CMP_DBL(3.0,2.0);
+		AR_ASSERT(cmp == 1);
+
+		cmp = AR_CMP_DBL(3.0,3.0);
+		AR_ASSERT(cmp == 0);
+
+		if(-inf > 0.0)
+		{
+				printf("positive-inf\r\n");
+		}else
+		{
+				printf("negative-inf\r\n");
+		}
+
+}
 
 void com_test()
 {
@@ -4011,7 +4049,10 @@ void com_test()
 
 		//float_test();
 		
-		float_test2();
+		//float_test2();
+
+		float_test3();
+
 
 		//com_str_test_vcprintf();
 		//com_test_srpintf();
