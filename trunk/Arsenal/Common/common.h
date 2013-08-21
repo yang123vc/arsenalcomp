@@ -1380,6 +1380,8 @@ arStatus_t      AR_path_copydir(const wchar_t *src, const wchar_t *dest);
 
 /*******************************************************************Math*************************************************************************************************/
 
+float  AR_nan_value_flt();
+float  AR_inf_value_flt();
 
 double  AR_nan_value_dbl();
 double  AR_inf_value_dbl();
