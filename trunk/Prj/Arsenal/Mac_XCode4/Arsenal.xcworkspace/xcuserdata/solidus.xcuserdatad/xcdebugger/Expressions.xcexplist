@@ -3,10 +3,15 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "__skip_xml_processing_instruction:property_list.c">
+         contextName = "AR_vswprintf:printf.c">
+         <PersistentStrings>
+            <PersistentString
+               value = "str_fmt[1]">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "time_test:plist_test.cpp">
+         contextName = "__get_xml_content_object:property_list.c">
       </ContextState>
       <ContextState
          contextName = "__parse_xml_element:property_list.c">
@@ -74,20 +79,21 @@
          contextName = "__parse_binary_plist_object:property_list.c">
          <PersistentStrings>
             <PersistentString
+               value = "buf">
+            </PersistentString>
+            <PersistentString
                value = "objectsRangeStart">
             </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "AR_vswprintf:printf.c">
-         <PersistentStrings>
             <PersistentString
-               value = "str_fmt[1]">
+               value = "cnt">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "__get_xml_content_object:property_list.c">
+         contextName = "__skip_xml_processing_instruction:property_list.c">
+      </ContextState>
+      <ContextState
+         contextName = "time_test:plist_test.cpp">
       </ContextState>
    </ContextStates>
 </VariablesViewState>
