@@ -154,7 +154,7 @@ typedef struct __plist_array_tag
 
 
 void            PList_InitArray(plistArray_t *arr);
-void            PList_UnInitArray(plistArray_t *arr);
+void            PList_UnInitArray(plistArray_t *arr, ar_bool_t dont_clear_items);
 void            PList_ClearArray(plistArray_t *arr);
 arStatus_t      PList_CopyArray(plistArray_t *dest, plistArray_t *src);
 arStatus_t      PList_PushToArray(plistArray_t *arr, plistElem_t *elem);
@@ -226,7 +226,7 @@ void                    PList_SetElemReal(plistElem_t *elem, double num);
 const plistNumber_t*    PList_GetElemNumber(const plistElem_t *elem);
 
 void                    PList_SetElemGMTDate(plistElem_t *elem, ar_uint_16_t year, ar_uint_16_t mon, ar_uint_16_t day, ar_uint_16_t hour, ar_uint_16_t min, ar_uint_16_t sec);
-
+void                    PList_GetElemGMTDate(const plistElem_t *elem, ar_uint_16_t *year, ar_uint_16_t *mon, ar_uint_16_t *day, ar_uint_16_t *hour, ar_uint_16_t *min, ar_uint_16_t *sec);
 
 
 const wchar_t*          PList_GetElemCString(const plistElem_t *elem);
@@ -235,7 +235,6 @@ arStatus_t              PList_ReserveElemString(plistElem_t *elem, size_t cap);
 
 const ar_byte_t*        PList_GetElemDataPointer(const plistElem_t *elem);
 size_t                  PList_GetElemDataLength(const plistElem_t *elem);
-
 arStatus_t              PList_SetElemData(plistElem_t *elem, const ar_byte_t *data, size_t length);
 
 
@@ -246,10 +245,7 @@ arStatus_t              PList_AppendToElemArray(plistElem_t *elem, plistElem_t *
 size_t                  PList_GetElemDictCount(const plistElem_t *elem);
 plistElem_t*            PList_FindElemDictValueByWcs(plistElem_t *elem, const wchar_t *key);
 arStatus_t              PList_SetElemDictValueForKey(plistElem_t *elem, plistElem_t *key, plistElem_t *val);
-
-
 const wchar_t*          PList_GetElemDictKeyWcsByIndex(plistElem_t *elem, size_t idx);
-
 plistElem_t*            PList_GetElemDictKeyByIndex(plistElem_t *elem, size_t idx);
 plistElem_t*            PList_GetElemDictValueByIndex(plistElem_t *elem, size_t idx);
 

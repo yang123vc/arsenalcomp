@@ -153,6 +153,44 @@ static void __absolutetime_to_gmtime(double abstime, ar_uint_16_t *year, ar_uint
 }
 
 
+static double __gmtime_to_absolutetime(ar_uint_16_t year, ar_uint_16_t mon, ar_uint_16_t day, ar_uint_16_t hour, ar_uint_16_t min, ar_uint_16_t sec)
+{
+        struct tm tm_2001_0101_00_00_00;
+        time_t gmtime_2001_0101_00_00_00_val;
+        time_t curr_gmt;
+        struct tm gm_time;
+        
+        AR_ASSERT(mon >= 1 && mon <= 12);
+        AR_ASSERT(day >= 1 && day <= 31);
+        AR_ASSERT(hour >= 0 && hour <= 23);
+        AR_ASSERT(min >= 0 && min <= 59);
+        AR_ASSERT(sec >= 0 && sec <= 60);
+        
+        AR_memset(&tm_2001_0101_00_00_00, 0, sizeof(tm_2001_0101_00_00_00));
+        tm_2001_0101_00_00_00.tm_sec = 0;
+        tm_2001_0101_00_00_00.tm_min = 0;
+        tm_2001_0101_00_00_00.tm_hour = 0;    /* hours (0 - 23) */
+        tm_2001_0101_00_00_00.tm_mday = 1;    /* day of month (1 - 31) */
+        tm_2001_0101_00_00_00.tm_mon = 0;     /* month of year (0 - 11) */
+        tm_2001_0101_00_00_00.tm_year = 2001 - 1900;    /* year - 1900 */
+        
+        gmtime_2001_0101_00_00_00_val = timegm(&tm_2001_0101_00_00_00);
+        
+        
+        AR_memset(&gm_time, 0, sizeof(gm_time));
+        gm_time.tm_year = (int)year - 1900;
+        gm_time.tm_mon = mon - 1;
+        gm_time.tm_mday = day;
+        gm_time.tm_hour = hour;
+        gm_time.tm_min = min;
+        gm_time.tm_sec = sec;
+        
+        curr_gmt = timegm(&gm_time);
+        
+        return (double)(curr_gmt - gmtime_2001_0101_00_00_00_val);
+}
+
+
 
 /***********************************************************************************************/
 
@@ -509,10 +547,15 @@ void      PList_InitArray(plistArray_t *arr)
         AR_memset(arr, 0, sizeof(*arr));
 }
 
-void            PList_UnInitArray(plistArray_t *arr)
+void            PList_UnInitArray(plistArray_t *arr, ar_bool_t dont_clear_items)
 {
+        
         AR_ASSERT(arr != NULL);
-        PList_ClearArray(arr);
+        
+        if(!dont_clear_items)
+        {
+                PList_ClearArray(arr);
+        }
         
         if(arr->items)
         {
@@ -522,6 +565,9 @@ void            PList_UnInitArray(plistArray_t *arr)
         
         AR_memset(arr, 0, sizeof(*arr));
 }
+
+
+
 
 void            PList_ClearArray(plistArray_t *arr)
 {
@@ -1225,7 +1271,7 @@ void            PList_DestroyElem(plistElem_t            *elem)
                 case PLIST_ELEM_DATE_T:
                         break;
                 case PLIST_ELEM_ARRAY_T:
-                        PList_UnInitArray(&elem->array);
+                        PList_UnInitArray(&elem->array, false);
                         break;
                 case PLIST_ELEM_DICT_T:
                         PList_UnInitDict(&elem->dict);
@@ -1258,6 +1304,7 @@ void                    PList_SetElemBooleanValue(plistElem_t *elem, ar_bool_t v
         AR_ASSERT(PList_GetElemType(elem) ==  PLIST_ELEM_BOOLEAN_T);
         elem->boolean.val = val;
 }
+
 
 
 const wchar_t*  PList_GetElemCString(const plistElem_t *elem)
@@ -1367,6 +1414,43 @@ void                    PList_SetElemGMTDate(plistElem_t *elem, ar_uint_16_t yea
         elem->date.minute = (ar_uint_8_t)min;
         elem->date.second = (ar_uint_8_t)sec;
 
+}
+
+
+void                    PList_GetElemGMTDate(const plistElem_t *elem, ar_uint_16_t *year, ar_uint_16_t *mon, ar_uint_16_t *day, ar_uint_16_t *hour, ar_uint_16_t *min, ar_uint_16_t *sec)
+{
+        AR_ASSERT(elem != NULL);
+        AR_ASSERT(PList_GetElemType(elem) ==  PLIST_ELEM_DATE_T);
+        
+        if(year)
+        {
+                *year = elem->date.year;
+        }
+        
+        if(mon)
+        {
+                *mon = elem->date.month;
+        }
+        
+        if(day)
+        {
+                *day = elem->date.day;
+        }
+        
+        if(hour)
+        {
+                *hour = elem->date.hour;
+        }
+        
+        if(min)
+        {
+                *min = elem->date.minute;
+        }
+        
+        if(sec)
+        {
+                *sec = elem->date.second;
+        }
 }
 
 
@@ -4469,11 +4553,9 @@ static arStatus_t _flattenPlist(const plistElem_t *plist, plistArray_t *objlist,
                 
                 for(idx = 0; idx < count; ++idx)
                 {
-                        const plistElem_t *key = PList_GetElemDictKeyByIndex((plistElem_t*)plist, idx);
-                        const plistElem_t *val = PList_GetElemDictValueByIndex((plistElem_t*)plist, idx);
                         arStatus_t status;
-                        AR_ASSERT(key != NULL && val != NULL);
-                        
+                        const plistElem_t *key = PList_GetElemDictKeyByIndex((plistElem_t*)plist, idx);
+                        AR_ASSERT(key != NULL);
                         
                         status = _flattenPlist(key, objlist, objtable, uniquingset);
                         
@@ -4481,6 +4563,15 @@ static arStatus_t _flattenPlist(const plistElem_t *plist, plistArray_t *objlist,
                         {
                                 return status;
                         }
+                }
+                
+                
+                for(idx = 0; idx < count; ++idx)
+                {
+                        arStatus_t status;
+                        const plistElem_t *val = PList_GetElemDictValueByIndex((plistElem_t*)plist, idx);
+                        
+                        AR_ASSERT(val != NULL);
                         
                         status = _flattenPlist(val, objlist, objtable, uniquingset);
                         
@@ -4490,6 +4581,8 @@ static arStatus_t _flattenPlist(const plistElem_t *plist, plistArray_t *objlist,
                         }
                 }
 
+                
+                
         }else if(PList_GetElemType(plist) == PLIST_ELEM_ARRAY_T)
         {
                 size_t count = PList_GetElemArrayCount(plist);
@@ -4615,7 +4708,7 @@ arStatus_t              PList_SaveElemToBinary(const plistElem_t *elem, arBuffer
         arHash_t *uniquingset;
         
         ar_uint_64_t *offsets, length_so_far;
-        ar_uint_64_t refnum;
+
         size_t  idx, idx2, cnt;
         
         CFBinaryPlistTrailer trailer;
@@ -4627,7 +4720,7 @@ arStatus_t              PList_SaveElemToBinary(const plistElem_t *elem, arBuffer
         uniquingset = NULL;
         offsets = NULL;
         length_so_far = 0;
-        refnum = 0;
+
         
         PList_InitArray(&objlist);
         
@@ -4690,19 +4783,32 @@ arStatus_t              PList_SaveElemToBinary(const plistElem_t *elem, arBuffer
                         
                         ar_uint_16_t *chars = NULL, chars_buf[512];
                         
-                        const wchar_t *wcs = PList_GetElemCString(elem);
+                        const wchar_t *wcs = PList_GetElemCString(item);
                         size_t  count = AR_wcslen(wcs);
                         ar_byte_t marker;
                         
-                        if(count > 0)
+                        
+                        if(count == 0)
+                        {
+                                marker = (ar_byte_t)(kCFBinaryPlistMarkerASCIIString | 0);
+                                
+                                status = AR_InsertToBuffer(out, &marker, 1);
+                                
+                                if(status != AR_S_YES)
+                                {
+                                        goto END_POINT;
+                                }
+                                
+                        }else
                         {
                                 if(count <= 512)
                                 {
                                         chars = chars_buf;
+                                        
                                 }else
                                 {
                                         chars = AR_NEWARR0(ar_uint_16_t, count);
-                                        
+                                                
                                         if(chars == NULL)
                                         {
                                                 AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
@@ -4710,27 +4816,50 @@ arStatus_t              PList_SaveElemToBinary(const plistElem_t *elem, arBuffer
                                                 goto END_POINT;
                                         }
                                 }
-                        }
-                        
-                        
-                        marker = (ar_byte_t)(kCFBinaryPlistMarkerUnicode16String | (count < 15 ? count : 0xf));
-                        
-                        status = AR_InsertToBuffer(out, &marker, 1);
-                        
-                        if(status != AR_S_YES)
-                        {
-                                if(chars && chars != chars_buf)
+                                
+                                
+                                if(count < 15)
                                 {
-                                        AR_DEL(chars);
-                                        chars = NULL;
+                                        marker = (ar_byte_t)(kCFBinaryPlistMarkerUnicode16String | count);
+                                }else
+                                {
+                                        marker = (ar_byte_t)(kCFBinaryPlistMarkerUnicode16String | 0xf);
                                 }
                                 
-                                goto END_POINT;
-                        }
-                        
-                        if(count >= 15)
-                        {
-                                status = _appendInt(out, (ar_uint_64_t)count);
+                                status = AR_InsertToBuffer(out, &marker, 1);
+                                
+                                if(status != AR_S_YES)
+                                {
+                                        if(chars && chars != chars_buf)
+                                        {
+                                                AR_DEL(chars);
+                                                chars = NULL;
+                                        }
+                                        
+                                        goto END_POINT;
+                                }
+                                
+                                if(count >= 15)
+                                {
+                                        status = _appendInt(out, (ar_uint_64_t)count);
+                                        
+                                        if(status != AR_S_YES)
+                                        {
+                                                if(chars && chars != chars_buf)
+                                                {
+                                                        AR_DEL(chars);
+                                                        chars = NULL;
+                                                }
+                                                goto END_POINT;
+                                        }
+                                }
+                                
+                                for(idx2 = 0; idx2 < count; ++idx2)
+                                {
+                                        chars[idx2] = AR_LTON_U16((ar_uint_16_t)wcs[idx2]);
+                                }
+                                
+                                status = AR_InsertToBuffer(out, (const ar_byte_t*)chars, count * sizeof(ar_uint_16_t));
                                 
                                 if(status != AR_S_YES)
                                 {
@@ -4741,36 +4870,19 @@ arStatus_t              PList_SaveElemToBinary(const plistElem_t *elem, arBuffer
                                         }
                                         goto END_POINT;
                                 }
-                        }
-                        
-                        for(idx2 = 0; idx2 < count; ++idx2)
-                        {
-                                chars[idx2] = AR_LTON_U16((ar_uint_16_t)wcs[idx2]);
-                        }
-                        
-                        status = AR_InsertToBuffer(out, (const ar_byte_t*)chars, count * sizeof(ar_uint_16_t));
-                        
-                        if(status != AR_S_YES)
-                        {
+                                
                                 if(chars && chars != chars_buf)
                                 {
                                         AR_DEL(chars);
                                         chars = NULL;
                                 }
-                                goto END_POINT;
-                        }
-
-                        if(chars && chars != chars_buf)
-                        {
-                                AR_DEL(chars);
-                                chars = NULL;
                         }
                         
                 } else if (type == PLIST_ELEM_NUMBER_T)
                 {
                         ar_byte_t marker;
                         ar_uint_64_t bigint;
-                        const plistNumber_t *number = PList_GetElemNumber(elem);
+                        const plistNumber_t *number = PList_GetElemNumber(item);
                         AR_ASSERT(number != NULL);
                         
                         if(number->type == PLIST_NUMBER_REAL_T)
@@ -4779,7 +4891,6 @@ arStatus_t              PList_SaveElemToBinary(const plistElem_t *elem, arBuffer
                                 
                                 AR_memcpy((ar_byte_t*)&swapped64, (const ar_byte_t*)&number->real.num, sizeof(number->real.num));
                                 swapped64 = AR_LTON_U64(swapped64);
-                                
                                 
                                 marker = kCFBinaryPlistMarkerReal | 3;
                                 status = AR_InsertToBuffer(out, &marker, 1);
@@ -4807,11 +4918,280 @@ arStatus_t              PList_SaveElemToBinary(const plistElem_t *elem, arBuffer
                         }
                 }else if(type == PLIST_ELEM_BOOLEAN_T)
                 {
+                        ar_byte_t marker;
                         
+                        if(PList_GetElemBooleanValue(item))
+                        {
+                                marker = kCFBinaryPlistMarkerTrue;
+                        }else
+                        {
+                                marker = kCFBinaryPlistMarkerFalse;
+                        }
+                        
+                        status = AR_InsertToBuffer(out, &marker, 1);
+                        if(status != AR_S_YES)
+                        {
+                                goto END_POINT;
+                        }
+                }else if(type == PLIST_ELEM_DATA_T)
+                {
+                        const ar_byte_t *pdata;
+                        size_t count;
+                        
+                        ar_byte_t marker;
+                        
+                        count = PList_GetElemDataLength(item);
+                        pdata = PList_GetElemDataPointer(item);
+                        
+                        if(count < 15)
+                        {
+                                marker = (ar_byte_t)(kCFBinaryPlistMarkerData | count);
+                        }else
+                        {
+                                marker = (ar_byte_t)(kCFBinaryPlistMarkerData | 0xf);
+                        }
+
+                        status = AR_InsertToBuffer(out, &marker, 1);
+                        if(status != AR_S_YES)
+                        {
+                                goto END_POINT;
+                        }
+                        
+                        if(count >= 15)
+                        {
+                                status = _appendInt(out, (ar_uint_64_t)count);
+                                if(status != AR_S_YES)
+                                {
+                                        goto END_POINT;
+                                }
+                        }
+                        
+                        if(count > 0)
+                        {
+                                status = AR_InsertToBuffer(out, pdata, count);
+                        
+                                if(status != AR_S_YES)
+                                {
+                                        goto END_POINT;
+                                }
+                        }
+                }else if(type == PLIST_ELEM_DATE_T)
+                {
+                        double abstime;
+                        ar_uint_64_t swapped64;
+                        
+                        ar_uint_16_t year;
+                        ar_uint_16_t mon;
+                        ar_uint_16_t day;
+                        ar_uint_16_t hour;
+                        ar_uint_16_t min;
+                        ar_uint_16_t sec;
+                        
+                        ar_byte_t marker;
+                        
+                        marker = kCFBinaryPlistMarkerDate;
+                        
+                        status = AR_InsertToBuffer(out, &marker, 1);
+                        if(status != AR_S_YES)
+                        {
+                                goto END_POINT;
+                        }
+                        
+                        PList_GetElemGMTDate(item, &year, &mon, &day, &hour, &min, &sec);
+                        abstime = __gmtime_to_absolutetime(year, mon, day, hour, min, sec);
+                        
+                        AR_memcpy(&swapped64, &abstime, sizeof(abstime));
+                        swapped64 = AR_LTON_U64(swapped64);
+                        
+                        status = AR_InsertToBuffer(out, (const ar_byte_t*)&swapped64, sizeof(swapped64));
+                        if(status != AR_S_YES)
+                        {
+                                goto END_POINT;
+                        }
+                }else if(type == PLIST_ELEM_DICT_T)
+                {
+                        size_t i;
+                        size_t count;
+
+                        ar_byte_t marker;
+                        count = PList_GetElemDictCount(item);
+                        
+                        if(count < 15)
+                        {
+                                marker = (ar_byte_t)(kCFBinaryPlistMarkerDict | count);
+                        }else
+                        {
+                                marker = (ar_byte_t)(kCFBinaryPlistMarkerDict | 0xf);
+                        }
+                        
+                        status = AR_InsertToBuffer(out, &marker, 1);
+                        if(status != AR_S_YES)
+                        {
+                                goto END_POINT;
+                        }
+                        
+                        if(count >= 15)
+                        {
+                                status = _appendInt(out, (ar_uint_64_t)count);
+                                if(status != AR_S_YES)
+                                {
+                                        goto END_POINT;
+                                }
+                        }
+                        
+                        
+                        for(i = 0; i < count; ++i)
+                        {
+                                size_t tmp;
+                                const plistElem_t *key;
+                                ar_uint_32_t swapped = 0;
+                                ar_byte_t *source = (ar_byte_t*)&swapped;
+                                
+                                key = PList_GetElemDictKeyByIndex((plistElem_t*)item, i);
+
+                                AR_ASSERT(key != NULL);
+                                
+                                if(AR_FindFromHash(objtable, (void*)key, (void**)&tmp) != AR_S_YES)
+                                {
+                                        status = AR_E_INVAL;
+                                        goto END_POINT;
+                                }
+                                
+                                swapped = (ar_uint_32_t)tmp;
+                                swapped = AR_LTON_U32(swapped);
+                                
+                                status = AR_InsertToBuffer(out, source + sizeof(swapped) - trailer._objectRefSize, trailer._objectRefSize);
+                                if(status != AR_S_YES)
+                                {
+                                        goto END_POINT;
+                                }
+                        }
+                        
+                        
+                        for(i = 0; i < count; ++i)
+                        {
+                                size_t tmp;
+                                const plistElem_t *val;
+                                ar_uint_32_t swapped = 0;
+                                ar_byte_t *source = (ar_byte_t*)&swapped;
+                                
+                                val = PList_GetElemDictValueByIndex((plistElem_t*)item, i);
+                                
+                                AR_ASSERT(val != NULL);
+                                
+                                if(AR_FindFromHash(objtable, (void*)val, (void**)&tmp) != AR_S_YES)
+                                {
+                                        status = AR_E_INVAL;
+                                        goto END_POINT;
+                                }
+                                
+                                swapped = (ar_uint_32_t)tmp;
+                                swapped = AR_LTON_U32(swapped);
+                                
+                                status = AR_InsertToBuffer(out, source + sizeof(swapped) - trailer._objectRefSize, trailer._objectRefSize);
+                                if(status != AR_S_YES)
+                                {
+                                        goto END_POINT;
+                                }
+                        }
+                        
+                        
+                        
+                }else if(type == PLIST_ELEM_ARRAY_T)
+                {
+                        
+                        size_t i;
+                        size_t count;
+                        
+                        ar_byte_t marker;
+                        count = PList_GetElemArrayCount(item);
+                        
+                        if(count < 15)
+                        {
+                                marker = (ar_byte_t)(kCFBinaryPlistMarkerArray | count);
+                        }else
+                        {
+                                marker = (ar_byte_t)(kCFBinaryPlistMarkerArray | 0xf);
+                        }
+                        
+                        status = AR_InsertToBuffer(out, &marker, 1);
+                        if(status != AR_S_YES)
+                        {
+                                goto END_POINT;
+                        }
+                        
+                        if(count >= 15)
+                        {
+                                status = _appendInt(out, (ar_uint_64_t)count);
+                                if(status != AR_S_YES)
+                                {
+                                        goto END_POINT;
+                                }
+                        }
+                        
+                        
+                        for(i = 0; i < count; ++i)
+                        {
+                                size_t tmp;
+                                const plistElem_t *val;
+                                ar_uint_32_t swapped = 0;
+                                ar_byte_t *source = (ar_byte_t*)&swapped;
+                                
+                                val = PList_GetElemArrayByIndex((plistElem_t*)item, i);
+                                AR_ASSERT(val != NULL);
+                                
+                                if(AR_FindFromHash(objtable, (void*)val, (void**)&tmp) != AR_S_YES)
+                                {
+                                        status = AR_E_INVAL;
+                                        goto END_POINT;
+                                }
+                                
+                                swapped = (ar_uint_32_t)tmp;
+                                swapped = AR_LTON_U32(swapped);
+                                
+                                status = AR_InsertToBuffer(out, source + sizeof(swapped) - trailer._objectRefSize, trailer._objectRefSize);
+                                if(status != AR_S_YES)
+                                {
+                                        goto END_POINT;
+                                }
+                        }
+                        
+                        
+                }else
+                {
+                        AR_error(AR_ERR_WARNING, L"invalid plistElem_t value : %u\r\n", type);
+                        status = AR_E_INVAL;
+                        goto END_POINT;
                 }
                 
         }
 
+        length_so_far = (ar_uint_64_t)AR_GetBufferAvailable(out);
+        
+        trailer._offsetTableOffset = AR_LTON_U64(length_so_far);
+        trailer._offsetIntSize = _byteCount(length_so_far);
+        
+        for(idx = 0; idx < cnt; ++idx)
+        {
+                ar_uint_64_t swapped = AR_LTON_U64(offsets[idx]);
+                ar_byte_t *source = (ar_byte_t*)&swapped;
+                status = AR_InsertToBuffer(out, source + sizeof(*offsets) - trailer._offsetIntSize, trailer._offsetIntSize);
+                if(status != AR_S_YES)
+                {
+                        goto END_POINT;
+                }
+        }
+        
+        length_so_far += cnt * trailer._offsetIntSize;
+        
+        status = AR_InsertToBuffer(out, (const ar_byte_t*)&trailer, sizeof(trailer));
+        
+        if(status != AR_S_YES)
+        {
+                goto END_POINT;
+        }
+        
+        length_so_far += sizeof(trailer);
         
         
 END_POINT:
@@ -4833,7 +5213,7 @@ END_POINT:
                 AR_DestroyHash(uniquingset);
                 uniquingset = NULL;
         }
-        PList_UnInitArray(&objlist);
+        PList_UnInitArray(&objlist, true);
         
         
         
@@ -4842,12 +5222,16 @@ END_POINT:
 }
 
 
+
+
 /*******************/
 
 static ar_uint_64_t    __set_hash_func(void *key, void *ctx)
 {
+        size_t val;
         AR_UNUSED(ctx);
-        return (ar_uint_64_t)key;
+        val = (size_t)key;
+        return (ar_uint_64_t)val;
 }
 
 ar_int_t   __set_comp_func(void *l, void *r, void *ctx)
@@ -5735,6 +6119,7 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
                                 {
                                         while(idx--)
                                         {
+                                                AR_ASSERT(list[idx] != NULL);
                                                 PList_DestroyElem(list[idx]);
                                                 list[idx] = NULL;
                                         }
@@ -5781,6 +6166,7 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
                                 size_t i;
                                 for(i = 0; i < cnt; i++)
                                 {
+                                        AR_ASSERT(list[idx] != NULL);
                                         PList_DestroyElem(list[i]);
                                         list[i] = NULL;
                                 }
@@ -5966,6 +6352,7 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
                                 {
                                         while(idx--)
                                         {
+                                                AR_ASSERT(list[idx] != NULL);
                                                 PList_DestroyElem(list[idx]);
                                                 list[idx] = NULL;
                                         }
@@ -5986,7 +6373,7 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
                                         
                                         return false;
                                 }
-                                
+
                                 list[idx] = pl;
                                 ptr += trailer->_objectRefSize;
                         }
@@ -6012,8 +6399,11 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
                                 size_t i;
                                 for(i = 0; i < cnt; i++)
                                 {
-                                        PList_DestroyElem(list[i]);
-                                        list[i] = NULL;
+                                        if(list[i])
+                                        {
+                                                PList_DestroyElem(list[i]);
+                                                list[i] = NULL;
+                                        }
                                 }
                                 
                                 if(list != buf)
@@ -6030,13 +6420,21 @@ ar_bool_t      __parse_binary_plist_object(const ar_byte_t *databytes, size_t da
                         
                         for(idx = 0; idx < cnt / 2; ++idx)
                         {
-                                if(PList_SetElemDictValueForKey(*pelem, list[idx], list[idx + cnt/2]) != AR_S_YES)
+                                plistElem_t *key, *val;
+                                key = list[idx];
+                                val = list[idx + cnt / 2];
+                                AR_ASSERT(key != NULL && val != NULL);
+                                
+                                if((PList_GetElemType(key) != PLIST_ELEM_STRING_T) || PList_SetElemDictValueForKey(*pelem, key, val) != AR_S_YES)
                                 {
                                         size_t i;
                                         for(i = 0; i < cnt; i++)
                                         {
-                                                PList_DestroyElem(list[i]);
-                                                list[i] = NULL;
+                                                if(list[i])
+                                                {
+                                                        PList_DestroyElem(list[i]);
+                                                        list[i] = NULL;
+                                                }
                                         }
                                         
                                         if(list != buf)

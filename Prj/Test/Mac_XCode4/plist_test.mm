@@ -321,7 +321,7 @@ static void save_plist_elem_test()
 static void plist_parse_binary_test1()
 {
         
-#define BINPLIST_FILE_PATH L"/Users/solidus/Desktop/dict_bin.plist"
+#define BINPLIST_FILE_PATH L"/Users/solidus/Desktop/1_bin.plist"
 
         
         arStatus_t status;
@@ -370,6 +370,80 @@ static void plist_parse_binary_test1()
         
 }
 
+
+
+
+
+static void plist_parse_binary_test2()
+{
+        
+#define BINPLIST_FILE_PATH L"/Users/solidus/Desktop/dict_bin.plist"
+        
+        
+        arStatus_t status;
+        arBuffer_t *bin = AR_CreateBuffer(1024);
+        AR_ASSERT(bin != NULL);
+        
+        status = PList_LoadBinaryFromFile(BINPLIST_FILE_PATH, bin);
+        AR_ASSERT(status == AR_S_YES);
+        
+        plistElem_t *elem = NULL;
+        
+        status = PList_TryParseBinaryPlist(AR_GetBufferData(bin), AR_GetBufferAvailable(bin),&elem, NULL);
+        
+        if(status == AR_S_YES && elem != NULL)
+        {
+                
+                arBuffer_t *out = AR_CreateBuffer(1024);
+                AR_ASSERT(out != NULL);
+                
+                status = PList_SaveElemToBinary(elem,out);
+                AR_ASSERT(status == AR_S_YES);
+                //AR_printf(L"%ls\r\n", AR_CSTR(xml));
+                
+                
+                arFile_t *f = NULL;
+                
+                status = AR_open_file(&f, L"/Users/solidus/Desktop/1_bin.plist", L"w+");
+                
+                AR_ASSERT(status == AR_S_YES);
+                AR_ASSERT(f != NULL);
+                
+                size_t wn;
+                status = AR_write_file(f, AR_GetBufferData(out), AR_GetBufferAvailable(out), &wn);
+                
+                AR_ASSERT(status == AR_S_YES);
+                AR_ASSERT(wn == AR_GetBufferAvailable(out));
+                
+                AR_DestroyBuffer(out);
+                out = NULL;
+                
+                PList_DestroyElem(elem);
+                elem = NULL;
+                
+        }
+        
+        
+        if(bin)
+        {
+                AR_DestroyBuffer(bin);
+                bin = NULL;
+        }
+        
+        if(elem)
+        {
+                PList_DestroyElem(elem);
+                elem = NULL;
+        }
+        
+        
+}
+
+
+
+
+
+
 static ar_byte_t _byteCount(ar_uint_64_t count)
 {
         ar_uint_64_t mask = ~(ar_uint_64_t)0;
@@ -396,9 +470,13 @@ static ar_byte_t _byteCount(ar_uint_64_t count)
 
 static void misc_test_1()
 {
-        float v = AR_nan_value_dbl();
+        float v = AR_inf_value_dbl();
         
         ar_bool_t ret = AR_is_inf_flt(v);
+        
+        float v1 = AR_nan_value_dbl();
+        
+        ret = AR_is_nan_flt(v1);
         
         
 }
@@ -419,9 +497,11 @@ void plist_test()
         
         //save_plist_elem_test();
         
+        plist_parse_binary_test2();
         //plist_parse_binary_test1();
         
-        misc_test_1();
+        
+        //misc_test_1();
         
         
         
