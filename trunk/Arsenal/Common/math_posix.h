@@ -30,6 +30,8 @@ double  AR_inf_value_dbl()
 }
 
 
+
+
 ar_bool_t	AR_is_nan_flt(float num)
 {
 		return isnan(num) != 0;
