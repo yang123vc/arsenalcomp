@@ -264,7 +264,7 @@ static void save_plist_elem_test()
 {
         //L"/Users/solidus/Documents/Code/Solidus/Arsenal/misc/test.plist"
         //#define PLIST_FILE_PATH L"/Users/solidus/Desktop/Code/Arsenal/misc/test.plist"
-#define PLIST_FILE_PATH L"/Users/solidus/Desktop/test_xml.plist"
+#define PLIST_FILE_PATH L"/Users/solidus/Desktop/test.plist"
         
         arStatus_t status;
         arString_t *xml = AR_CreateString();
@@ -396,11 +396,15 @@ static ar_byte_t _byteCount(ar_uint_64_t count)
 
 static void misc_test_1()
 {
-        size_t c1 = _byteCount(1);
-
+        float v = AR_nan_value_dbl();
         
-        size_t c2 = _byteCount(1000);
+        ar_bool_t ret = AR_is_inf_flt(v);
+        
+        
 }
+
+
+
 
 void plist_test()
 {
@@ -419,7 +423,12 @@ void plist_test()
         
         misc_test_1();
         
+        
+        
+        
         //getchar();
+        
+        
 }
 
 

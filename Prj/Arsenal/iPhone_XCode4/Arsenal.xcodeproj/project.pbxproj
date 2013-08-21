@@ -95,6 +95,8 @@
 		67940A611783F21A002B6140 /* filesystem_path_posix_apple.h in Headers */ = {isa = PBXBuildFile; fileRef = 67940A5E1783F21A002B6140 /* filesystem_path_posix_apple.h */; };
 		67940A621783F21A002B6140 /* filesystem_path_posix_posix.h in Headers */ = {isa = PBXBuildFile; fileRef = 67940A5F1783F21A002B6140 /* filesystem_path_posix_posix.h */; };
 		67940A631783F21A002B6140 /* thread_posix_android.h in Headers */ = {isa = PBXBuildFile; fileRef = 67940A601783F21A002B6140 /* thread_posix_android.h */; };
+		67EEB80817C4873D00334796 /* math_posix.h in Headers */ = {isa = PBXBuildFile; fileRef = 67EEB80617C4873D00334796 /* math_posix.h */; };
+		67EEB80917C4873D00334796 /* math_win.h in Headers */ = {isa = PBXBuildFile; fileRef = 67EEB80717C4873D00334796 /* math_win.h */; };
 		BE328EEB14F20CA9006BCA74 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE328EEA14F20CA9006BCA74 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
@@ -187,6 +189,8 @@
 		67940A5E1783F21A002B6140 /* filesystem_path_posix_apple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filesystem_path_posix_apple.h; sourceTree = "<group>"; };
 		67940A5F1783F21A002B6140 /* filesystem_path_posix_posix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filesystem_path_posix_posix.h; sourceTree = "<group>"; };
 		67940A601783F21A002B6140 /* thread_posix_android.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thread_posix_android.h; sourceTree = "<group>"; };
+		67EEB80617C4873D00334796 /* math_posix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = math_posix.h; sourceTree = "<group>"; };
+		67EEB80717C4873D00334796 /* math_win.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = math_win.h; sourceTree = "<group>"; };
 		BE328EE714F20CA9006BCA74 /* Arsenal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = Arsenal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE328EEA14F20CA9006BCA74 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		BE82C84814F20D5B00F30E56 /* dabaopku.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = dabaopku.plist; sourceTree = "<group>"; };
@@ -222,6 +226,8 @@
 		672BDC3216500431002D500E /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				67EEB80617C4873D00334796 /* math_posix.h */,
+				67EEB80717C4873D00334796 /* math_win.h */,
 				672BDC3316500431002D500E /* algo.c */,
 				672BDC3416500431002D500E /* base64.c */,
 				672BDC3516500431002D500E /* buffer.c */,
@@ -409,6 +415,8 @@
 				67940A621783F21A002B6140 /* filesystem_path_posix_posix.h in Headers */,
 				67940A631783F21A002B6140 /* thread_posix_android.h in Headers */,
 				671357B217BB40E8001133BC /* property_list.h in Headers */,
+				67EEB80817C4873D00334796 /* math_posix.h in Headers */,
+				67EEB80917C4873D00334796 /* math_win.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
