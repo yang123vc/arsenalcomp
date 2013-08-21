@@ -26,7 +26,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4709"
          endingLineNumber = "4709"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "_byteCount()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -39,7 +39,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4811"
          endingLineNumber = "4811"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "PList_SaveElemToBinary()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -52,7 +52,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4800"
          endingLineNumber = "4800"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "PList_SaveElemToBinary()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -64,9 +64,7 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4167"
-         endingLineNumber = "4167"
-         landmarkName = "__parse_binary_plist_object()"
-         landmarkType = "7">
+         endingLineNumber = "4167">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
@@ -78,7 +76,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4189"
          endingLineNumber = "4189"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "_getSizedInt()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -91,7 +89,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4199"
          endingLineNumber = "4199"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "_getSizedInt()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -104,7 +102,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4217"
          endingLineNumber = "4217"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "_getSizedInt()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -116,9 +114,7 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4229"
-         endingLineNumber = "4229"
-         landmarkName = "__parse_binary_plist_object()"
-         landmarkType = "7">
+         endingLineNumber = "4229">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
@@ -130,7 +126,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4240"
          endingLineNumber = "4240"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "__check_uint64_add_unsigned_unsigned()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -143,7 +139,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4248"
          endingLineNumber = "4248"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "__check_uint32_mul_unsigned_unsigned()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -155,9 +151,7 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4266"
-         endingLineNumber = "4266"
-         landmarkName = "__parse_binary_plist_object()"
-         landmarkType = "7">
+         endingLineNumber = "4266">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
@@ -168,9 +162,7 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4274"
-         endingLineNumber = "4274"
-         landmarkName = "__parse_binary_plist_object()"
-         landmarkType = "7">
+         endingLineNumber = "4274">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
@@ -182,7 +174,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4279"
          endingLineNumber = "4279"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "_readInt()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -195,7 +187,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4284"
          endingLineNumber = "4284"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "_readInt()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -208,7 +200,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4300"
          endingLineNumber = "4300"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "_readInt()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -221,7 +213,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4348"
          endingLineNumber = "4348"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -234,7 +226,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4355"
          endingLineNumber = "4355"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -247,7 +239,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4360"
          endingLineNumber = "4360"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -260,7 +252,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4375"
          endingLineNumber = "4375"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -273,7 +265,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4414"
          endingLineNumber = "4414"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -286,7 +278,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4421"
          endingLineNumber = "4421"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -299,7 +291,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4426"
          endingLineNumber = "4426"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -312,7 +304,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4442"
          endingLineNumber = "4442"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -325,7 +317,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4463"
          endingLineNumber = "4463"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -338,7 +330,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4395"
          endingLineNumber = "4395"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -351,7 +343,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4493"
          endingLineNumber = "4493"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -364,7 +356,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4500"
          endingLineNumber = "4500"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -377,7 +369,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4505"
          endingLineNumber = "4505"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -390,7 +382,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4522"
          endingLineNumber = "4522"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "_getOffsetOfRefAt()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -402,22 +394,7 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4544"
-         endingLineNumber = "4544"
-         landmarkName = "__parse_binary_plist_object()"
-         landmarkType = "7">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "../../../Arsenal/Tools/property_list.c"
-         timestampString = "398658570.132297"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "4552"
-         endingLineNumber = "4552"
-         landmarkName = "__parse_binary_plist_object()"
-         landmarkType = "7">
+         endingLineNumber = "4544">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
@@ -429,46 +406,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4471"
          endingLineNumber = "4471"
-         landmarkName = "__parse_binary_plist_object()"
-         landmarkType = "7">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "../../../Arsenal/Tools/property_list.c"
-         timestampString = "398658570.132297"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "4579"
-         endingLineNumber = "4579"
-         landmarkName = "__parse_binary_plist_object()"
-         landmarkType = "7">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "../../../Arsenal/Tools/property_list.c"
-         timestampString = "398658570.132297"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "4568"
-         endingLineNumber = "4568"
-         landmarkName = "__parse_binary_plist_object()"
-         landmarkType = "7">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "../../../Arsenal/Tools/property_list.c"
-         timestampString = "398658570.132297"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "4584"
-         endingLineNumber = "4584"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "__get_binary_plist_toplevelinfo()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -480,9 +418,7 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4594"
-         endingLineNumber = "4594"
-         landmarkName = "__parse_binary_plist_object()"
-         landmarkType = "7">
+         endingLineNumber = "4594">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
@@ -494,7 +430,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4599"
          endingLineNumber = "4599"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "_flattenPlist()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -507,7 +443,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4608"
          endingLineNumber = "4608"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "_flattenPlist()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -520,7 +456,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4615"
          endingLineNumber = "4615"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "_flattenPlist()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -533,7 +469,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4633"
          endingLineNumber = "4633"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "_flattenPlist()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -546,7 +482,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4654"
          endingLineNumber = "4654"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "_flattenPlist()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -559,7 +495,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4664"
          endingLineNumber = "4664"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "_flattenPlist()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -572,7 +508,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4669"
          endingLineNumber = "4669"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "_flattenPlist()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -585,7 +521,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4679"
          endingLineNumber = "4679"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "_flattenPlist()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -598,7 +534,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4684"
          endingLineNumber = "4684"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "_flattenPlist()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -611,7 +547,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4693"
          endingLineNumber = "4693"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "_flattenPlist()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -623,9 +559,7 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4743"
-         endingLineNumber = "4743"
-         landmarkName = "__parse_binary_plist_object()"
-         landmarkType = "7">
+         endingLineNumber = "4743">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
@@ -637,7 +571,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4753"
          endingLineNumber = "4753"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "PList_SaveElemToBinary()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -650,7 +584,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4758"
          endingLineNumber = "4758"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "PList_SaveElemToBinary()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -663,7 +597,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4769"
          endingLineNumber = "4769"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "PList_SaveElemToBinary()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -676,7 +610,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4773"
          endingLineNumber = "4773"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "PList_SaveElemToBinary()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -689,7 +623,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4779"
          endingLineNumber = "4779"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "PList_SaveElemToBinary()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -702,7 +636,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4788"
          endingLineNumber = "4788"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "PList_SaveElemToBinary()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -715,7 +649,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4827"
          endingLineNumber = "4827"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "PList_SaveElemToBinary()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -728,7 +662,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4848"
          endingLineNumber = "4848"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "PList_SaveElemToBinary()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -741,7 +675,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4857"
          endingLineNumber = "4857"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "PList_SaveElemToBinary()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -753,9 +687,7 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4862"
-         endingLineNumber = "4862"
-         landmarkName = "__parse_binary_plist_object()"
-         landmarkType = "7">
+         endingLineNumber = "4862">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
@@ -767,7 +699,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4870"
          endingLineNumber = "4870"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "__set_comp_func()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -779,9 +711,7 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4878"
-         endingLineNumber = "4878"
-         landmarkName = "__parse_binary_plist_object()"
-         landmarkType = "7">
+         endingLineNumber = "4878">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
@@ -1156,9 +1086,7 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4325"
-         endingLineNumber = "4325"
-         landmarkName = "__parse_binary_plist_object()"
-         landmarkType = "7">
+         endingLineNumber = "4325">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
@@ -1183,7 +1111,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "4725"
          endingLineNumber = "4725"
-         landmarkName = "__parse_binary_plist_object()"
+         landmarkName = "_byteCount()"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -1223,6 +1151,32 @@
          startingLineNumber = "4971"
          endingLineNumber = "4971"
          landmarkName = "__parse_binary_plist_object()"
+         landmarkType = "7">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../../Test/Mac_XCode4/plist_test.mm"
+         timestampString = "398743589.536342"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "375"
+         endingLineNumber = "375"
+         landmarkName = "_byteCount(ar_uint_64_t count)"
+         landmarkType = "7">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../../Test/Mac_XCode4/plist_test.mm"
+         timestampString = "398743619.457755"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "399"
+         endingLineNumber = "399"
+         landmarkName = "misc_test_1()"
          landmarkType = "7">
       </FileBreakpoint>
    </FileBreakpoints>

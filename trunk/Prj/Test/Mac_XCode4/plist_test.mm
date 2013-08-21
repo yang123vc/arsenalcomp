@@ -370,7 +370,37 @@ static void plist_parse_binary_test1()
         
 }
 
+static ar_byte_t _byteCount(ar_uint_64_t count)
+{
+        ar_uint_64_t mask = ~(ar_uint_64_t)0;
+        ar_byte_t size = 0;
+        
+        // Find something big enough to hold 'count'
+        while (count & mask)
+        {
+                size++;
+                mask = mask << 8;
+        }
+        
+        // Ensure that 'count' is a power of 2
+        // For sizes bigger than 8, just use the required count
+        while ((size != 1 && size != 2 && size != 4 && size != 8) && size <= 8)
+        {
+                size++;
+        }
+        
+        return size;
+}
 
+
+
+static void misc_test_1()
+{
+        size_t c1 = _byteCount(1);
+
+        
+        size_t c2 = _byteCount(1000);
+}
 
 void plist_test()
 {
@@ -385,7 +415,9 @@ void plist_test()
         
         //save_plist_elem_test();
         
-        plist_parse_binary_test1();
+        //plist_parse_binary_test1();
+        
+        misc_test_1();
         
         //getchar();
 }
