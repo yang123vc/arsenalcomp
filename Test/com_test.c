@@ -3939,6 +3939,24 @@ static void float_test2()
 		//AR_is_nan_flt(0.0/0.0);
 
 }
+
+
+/*
+float  AR_nan_value_flt()
+{
+        return (float)NAN;
+        
+}
+
+
+float  AR_inf_value_flt()
+{
+        return (float)INFINITY;
+}
+
+*/
+
+
 static void float_test3()
 {
 		double nan = AR_nan_value_dbl();
@@ -3977,6 +3995,23 @@ static void float_test3()
 		}
 
 }
+
+
+static void float_test4()
+{
+		float nan = AR_nan_value_dbl();
+
+		AR_ASSERT(AR_is_nan_flt(nan));
+
+		float inf = AR_inf_value_dbl();
+
+		AR_ASSERT(AR_is_inf_flt(inf));
+		AR_ASSERT(AR_is_inf_flt(-inf));
+
+
+}
+
+
 
 void com_test()
 {
@@ -4051,8 +4086,9 @@ void com_test()
 		
 		//float_test2();
 
-		float_test3();
+		//float_test3();
 
+		float_test4();
 
 		//com_str_test_vcprintf();
 		//com_test_srpintf();

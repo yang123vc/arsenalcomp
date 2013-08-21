@@ -30,6 +30,18 @@ double  AR_inf_value_dbl()
 }
 
 
+float  AR_nan_value_flt()
+{
+        return NAN;
+        
+}
+
+
+float  AR_inf_value_flt()
+{
+        return INFINITY;
+}
+
 
 
 ar_bool_t	AR_is_nan_flt(float num)

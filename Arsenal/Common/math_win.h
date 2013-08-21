@@ -36,6 +36,20 @@ double  AR_inf_value_dbl()
 }
 
 
+
+float  AR_nan_value_flt()
+{
+        return (float)AR_nan_value_dbl();
+}
+
+
+float  AR_inf_value_flt()
+{
+        return (float)AR_inf_value_dbl();
+}
+
+
+
 ar_bool_t	AR_is_nan_flt(float num)
 {
 #if defined(isnan)
