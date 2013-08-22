@@ -756,10 +756,13 @@ typedef void*					ar_ptr_t;
 
 
 
+/*
+#define	AR_USE_CRT_ALLOCFUNC	1
+*/
 
 #ifndef AR_NDEBUG
 
-        //#define	AR_USE_CRT_ALLOCFUNC	1
+
 
 		#ifndef AR_USE_CRT_ALLOCFUNC
 				#define	AR_ENABLE_MEMORY_LEAK_TEST				1
@@ -771,7 +774,8 @@ typedef void*					ar_ptr_t;
 		#endif
 
 #else
-        
+
+        #define	AR_USE_CRT_ALLOCFUNC	1
 
 #endif
 
