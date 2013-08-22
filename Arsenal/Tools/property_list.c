@@ -1236,9 +1236,41 @@ ar_uint_64_t    PList_HashElem(const plistElem_t *elem)
                                 return AR_memhash(PList_GetElemDataPointer(elem), PList_GetElemDataLength(elem));
                         }
                 case PLIST_ELEM_ARRAY_T:
-                        return 0;
+                {
+                        
+                        //return (ar_uint_64_t)elem;
+                        
+                        plistElem_t *first_val = NULL;
+                        
+                        if(PList_GetElemArrayCount(elem) > 0)
+                        {
+                                first_val = PList_GetElemArrayByIndex((plistElem_t*)elem,0);
+                                AR_ASSERT(first_val != NULL);
+                                return PList_HashElem(first_val);
+                        }else
+                        {
+                                return 0;
+                        }
+                }
+                        break;
                 case PLIST_ELEM_DICT_T:
-                        return 0;
+                {
+                        //return (ar_uint_64_t)elem;
+                        
+                        plistElem_t *first_key = NULL;
+                        
+                        if(PList_GetElemDictCount(elem) > 0)
+                        {
+                                first_key = PList_GetElemDictKeyByIndex((plistElem_t*)elem, 0);
+                                AR_ASSERT(first_key != NULL);
+                                return PList_HashElem(first_key);
+                        }else
+                        {
+                                return 0;
+                        }
+                        
+                }
+                        break;
                 case PLIST_ELEM_MAX_T:
                 default:
                         AR_error(AR_ERR_WARNING, L"invalid plist element type : %u\r\n", PList_GetElemType(elem));
@@ -4684,20 +4716,89 @@ static arStatus_t _appendInt(arBuffer_t *buf, ar_uint_64_t bigint)
 
 /*******************/
 
+#if(0)
+
 static ar_uint_64_t    __flattenplist_hash_func(void *key, void *ctx)
 {
         AR_UNUSED(ctx);
         AR_ASSERT(key != NULL);
+        
         return PList_HashElem((const plistElem_t*)key);
 }
+
 
 static ar_int_t   __flattenplist_comp_func(void *l, void *r, void *ctx)
 {
         AR_UNUSED(ctx);
+        
         return PList_CompElem((plistElem_t*)l, (plistElem_t*)r);
+}
+#endif
+
+
+
+static ar_uint_64_t    __flattenplist_hash_func(void *key, void *ctx)
+{
+        plistElem_t *k;
+        AR_UNUSED(ctx);
+        AR_ASSERT(key != NULL);
+        
+        k = (plistElem_t*)key;
+        
+        if(PList_GetElemType(k) == PLIST_ELEM_ARRAY_T || PList_GetElemType(k)  == PLIST_ELEM_DICT_T)
+        {
+                return (ar_uint_64_t)k;
+        }else
+        {
+                return PList_HashElem((const plistElem_t*)key);
+        }
 }
 
 
+static ar_int_t   __flattenplist_comp_func(void *l, void *r, void *ctx)
+{
+        plistElem_t *lk, *rk;
+        plistElemType_t lt, rt;
+        AR_UNUSED(ctx);
+        AR_ASSERT(l != NULL && r != NULL);
+        
+        lk = (plistElem_t*)l;
+        rk = (plistElem_t*)r;
+        
+        lt = PList_GetElemType(lk);
+        rt = PList_GetElemType(rk);
+        
+        if(lt != rt)
+        {
+                return AR_CMP(lt, rt);
+        }
+        
+        if(lt == PLIST_ELEM_ARRAY_T || lt == PLIST_ELEM_DICT_T)
+        {
+                return AR_CMP(lk, rk);
+        }else
+        {
+                return PList_CompElem((plistElem_t*)l, (plistElem_t*)r);
+        }
+}
+
+
+static ar_bool_t __is_ascii_wcs(const wchar_t *wcs)
+{
+        AR_ASSERT(wcs != NULL);
+        
+        while(*wcs)
+        {
+                if(*wcs > 0x7f)
+                {
+                        return false;
+                }
+                
+                wcs++;
+        }
+        
+        return true;
+}
 
 arStatus_t              PList_SaveElemToBinary(const plistElem_t *elem, arBuffer_t *out)
 {
@@ -4724,8 +4825,8 @@ arStatus_t              PList_SaveElemToBinary(const plistElem_t *elem, arBuffer
         
         PList_InitArray(&objlist);
         
-        objtable = AR_CreateHash(123, __flattenplist_hash_func, __flattenplist_comp_func, NULL, NULL, NULL, NULL, NULL);
-        uniquingset = AR_CreateHash(123, __flattenplist_hash_func, __flattenplist_comp_func, NULL, NULL, NULL, NULL, NULL);
+        objtable = AR_CreateHash(1369, __flattenplist_hash_func, __flattenplist_comp_func, NULL, NULL, NULL, NULL, NULL);
+        uniquingset = AR_CreateHash(1369, __flattenplist_hash_func, __flattenplist_comp_func, NULL, NULL, NULL, NULL, NULL);
         
         if(objtable == NULL || uniquingset == NULL)
         {
@@ -4788,9 +4889,17 @@ arStatus_t              PList_SaveElemToBinary(const plistElem_t *elem, arBuffer
                         ar_byte_t marker;
                         
                         
-                        if(count == 0)
+                        if(count == 0 || __is_ascii_wcs(wcs))
                         {
-                                marker = (ar_byte_t)(kCFBinaryPlistMarkerASCIIString | 0);
+                                
+                                if(count < 15)
+                                {
+                                        marker = (ar_byte_t)(kCFBinaryPlistMarkerASCIIString | count);
+                                }else
+                                {
+                                        marker = (ar_byte_t)(kCFBinaryPlistMarkerASCIIString | 0xf);
+                                }
+                                
                                 
                                 status = AR_InsertToBuffer(out, &marker, 1);
                                 
@@ -4798,6 +4907,30 @@ arStatus_t              PList_SaveElemToBinary(const plistElem_t *elem, arBuffer
                                 {
                                         goto END_POINT;
                                 }
+
+                                
+                                if(count >= 15)
+                                {
+                                        status = _appendInt(out, (ar_uint_64_t)count);
+                                        if(status != AR_S_YES)
+                                        {
+                                                goto END_POINT;
+                                        }
+                                }
+                                
+                                while(*wcs)
+                                {
+                                        ar_byte_t b = (ar_byte_t)*wcs;
+                                        
+                                        status = AR_InsertToBuffer(out, &b, 1);
+                                        
+                                        if(status != AR_S_YES)
+                                        {
+                                                goto END_POINT;
+                                        }
+                                        wcs++;
+                                }
+                                
                                 
                         }else
                         {
@@ -4808,7 +4941,7 @@ arStatus_t              PList_SaveElemToBinary(const plistElem_t *elem, arBuffer
                                 }else
                                 {
                                         chars = AR_NEWARR0(ar_uint_16_t, count);
-                                                
+                                        
                                         if(chars == NULL)
                                         {
                                                 AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
@@ -4877,7 +5010,7 @@ arStatus_t              PList_SaveElemToBinary(const plistElem_t *elem, arBuffer
                                         chars = NULL;
                                 }
                         }
-                        
+                
                 } else if (type == PLIST_ELEM_NUMBER_T)
                 {
                         ar_byte_t marker;

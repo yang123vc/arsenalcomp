@@ -377,7 +377,7 @@ static void plist_parse_binary_test1()
 static void plist_parse_binary_test2()
 {
         
-#define BINPLIST_FILE_PATH L"/Users/solidus/Desktop/dict_bin.plist"
+#define BINPLIST_FILE_PATH L"/Users/solidus/Desktop/test_bin.plist"
         
         
         arStatus_t status;
@@ -398,13 +398,21 @@ static void plist_parse_binary_test2()
                 AR_ASSERT(out != NULL);
                 
                 status = PList_SaveElemToBinary(elem,out);
+                
+                if(status != AR_S_YES)
+                {
+                        AR_DestroyBuffer(out);
+                        out = NULL;
+                        goto END_POINT;
+                }
+                
                 AR_ASSERT(status == AR_S_YES);
                 //AR_printf(L"%ls\r\n", AR_CSTR(xml));
                 
                 
                 arFile_t *f = NULL;
                 
-                status = AR_open_file(&f, L"/Users/solidus/Desktop/1_bin.plist", L"w+");
+                status = AR_open_file(&f, L"/Users/solidus/Desktop/save_test_bin.plist", L"w+");
                 
                 AR_ASSERT(status == AR_S_YES);
                 AR_ASSERT(f != NULL);
@@ -423,7 +431,7 @@ static void plist_parse_binary_test2()
                 
         }
         
-        
+END_POINT:
         if(bin)
         {
                 AR_DestroyBuffer(bin);
