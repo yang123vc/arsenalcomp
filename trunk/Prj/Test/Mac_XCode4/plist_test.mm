@@ -10,6 +10,7 @@
 #import <Foundation/Foundation.h>
 #include "Arsenal.h"
 
+#include "../../../Arsenal/Tools/property_list_internal.h"
 
 
 
@@ -491,6 +492,92 @@ static void misc_test_1()
 
 
 
+static void plist_test1()
+{
+        arStatus_t              status ;
+        plistType_t     type;
+        plistElem_t     *elem;
+        arString_t      *errmsg = AR_CreateString();
+        
+        elem = NULL;
+        
+        status = PList_LoadElemFromFile(L"/Users/solidus/Dropbox/Working/Test/Data/plist/Bookmarks_bin.plist", &type, &elem, errmsg);
+        
+        if(status == AR_S_YES)
+        {
+                PList_SaveElemToFile(elem, PLIST_BINARY_1_T, L"/Users/solidus/Desktop/1.plist");
+        }else
+        {
+                AR_printf(L"%ls\r\n", AR_CSTR(errmsg));
+        }
+
+
+        if(elem)
+        {
+                PList_DestroyElem(elem);
+                elem = NULL;
+        }
+        
+        if(errmsg)
+        {
+                AR_DestroyString(errmsg);
+        }
+}
+
+
+static void plist_test2()
+{
+        arStatus_t              status ;
+        plistType_t     type;
+        plistElem_t     *elem;
+        arString_t      *errmsg = AR_CreateString();
+        
+        elem = NULL;
+        
+        status = PList_LoadElemFromFile(L"/Users/solidus/Dropbox/Working/Test/Data/plist/Bookmarks_xml.plist", &type, &elem, errmsg);
+        
+        if(status == AR_S_YES)
+        {
+                PList_SaveElemToFile(elem, PLIST_XML_1_T, L"/Users/solidus/Desktop/2.plist");
+        }else
+        {
+                AR_printf(L"%ls\r\n", AR_CSTR(errmsg));
+        }
+        
+        
+        if(elem)
+        {
+                PList_DestroyElem(elem);
+                elem = NULL;
+        }
+        
+        if(errmsg)
+        {
+                AR_DestroyString(errmsg);
+        }
+}
+
+
+
+
+static void perf_plist()
+{
+        
+        for(size_t i = 0; i < 10; ++i)
+        {
+                ar_uint_64_t beg, end;
+                
+                beg = AR_GetTime_Milliseconds();
+                
+                plist_test1();
+                
+                end = AR_GetTime_Milliseconds();
+                
+                AR_printf(L"elapsed time %qu ms\r\n", end - beg);
+        }
+
+}
+
 
 void plist_test()
 {
@@ -505,14 +592,14 @@ void plist_test()
         
         //save_plist_elem_test();
         
-        plist_parse_binary_test2();
+        //plist_parse_binary_test2();
         //plist_parse_binary_test1();
         
         
         //misc_test_1();
+                
         
-        
-        
+        plist_test2();
         
         //getchar();
         
