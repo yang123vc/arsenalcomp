@@ -101,6 +101,8 @@ extern void urllib_test();
 
 extern void v3checker_test();
 
+extern void plist_test();
+
 #endif
 
 
@@ -110,7 +112,7 @@ extern void v3checker_test();
 void AR_Test()
 {
 #if defined(__LIB)
-		com_test();
+		//com_test();
 		//math_test();
 		//trie_tree_test();
 		//expr_test();
@@ -196,6 +198,8 @@ void AR_Test()
 		//marshal_die_main();
 		
 		//v3checker_test();
+
+		plist_test();
 
 		getchar();
 #else

@@ -441,6 +441,9 @@
     <ClCompile Include="..\..\..\Test\Base64Transcoder.c">
       <Filter>Test</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Test\plist_test.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Test\avltree.h">
