@@ -1326,6 +1326,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\Arsenal\Common\filesystem_path_posix_apple.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\filesystem_path_posix_posix.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\Arsenal\Common\filesystem_path_win.h"
 				>
 			</File>
@@ -1347,6 +1355,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\Arsenal\Common\math.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\math_posix.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\math_win.h"
 				>
 			</File>
 			<File
@@ -1399,6 +1415,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\Arsenal\Common\thread_posix.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Common\thread_posix_android.h"
 				>
 			</File>
 			<File
@@ -1553,6 +1573,22 @@
 			</File>
 			<File
 				RelativePath="..\..\..\Arsenal\Tools\iniobj.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Tools\property_list.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Tools\property_list.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Tools\property_list_internal.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Arsenal\Tools\property_list_internal.h"
 				>
 			</File>
 			<File

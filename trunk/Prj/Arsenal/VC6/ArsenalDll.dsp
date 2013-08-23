@@ -96,7 +96,15 @@ SOURCE=..\..\..\Arsenal\Common\algo.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\Arsenal\Common\base64.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\Arsenal\Common\buffer.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Common\byteorder.c
 # End Source File
 # Begin Source File
 
@@ -116,7 +124,71 @@ SOURCE=..\..\..\Arsenal\Common\crtstr.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\Arsenal\Common\datastructure.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Common\enviroment.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Common\enviroment_posix.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Common\enviroment_win.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Common\filesystem.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Common\filesystem_path_posix.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Common\filesystem_path_posix_apple.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Common\filesystem_path_posix_posix.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Common\filesystem_path_win.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Common\filesystem_posix.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Common\filesystem_win.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\Arsenal\Common\heap.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Common\heap.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Common\math.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Common\math_posix.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Common\math_win.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Common\matrix.c
 # End Source File
 # Begin Source File
 
@@ -128,7 +200,15 @@ SOURCE=..\..\..\Arsenal\Common\platform.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\Arsenal\Common\printf.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\Arsenal\Common\random.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Common\status.h
 # End Source File
 # Begin Source File
 
@@ -137,6 +217,10 @@ SOURCE=..\..\..\Arsenal\Common\strconv.c
 # Begin Source File
 
 SOURCE=..\..\..\Arsenal\Common\string.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Common\strnum.c
 # End Source File
 # Begin Source File
 
@@ -160,11 +244,31 @@ SOURCE=..\..\..\Arsenal\Common\thread_posix.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\Arsenal\Common\thread_posix_android.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Common\thread_posix_apple.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Common\thread_posix_posix.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\Arsenal\Common\thread_win.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\Arsenal\Common\uri.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\Arsenal\Common\utilities.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Arsenal\Common\vector.c
 # End Source File
 # End Group
 # Begin Group "Lex"
