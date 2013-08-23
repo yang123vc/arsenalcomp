@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
  * 
@@ -22,15 +22,15 @@ AR_NAMESPACE_BEGIN
 
 
 
-/**********************************±ØĞëÔÚËùÓĞÆäËüParser_×åº¯ÊıÖ®Ç°µ÷ÓÃ£¬·ñÔòĞĞÎªÎ´¶¨Òå***************************/
+/**********************************å¿…é¡»åœ¨æ‰€æœ‰å…¶å®ƒParser_æ—å‡½æ•°ä¹‹å‰è°ƒç”¨ï¼Œå¦åˆ™è¡Œä¸ºæœªå®šä¹‰***************************/
 arStatus_t	Parser_Init();
 
-/**********************************±ØĞëÔÚËùÓĞÆäËüParser_×åº¯ÊıÖ®ºóµ÷ÓÃ£¬·ñÔòĞĞÎªÎ´¶¨Òå***************************/
+/**********************************å¿…é¡»åœ¨æ‰€æœ‰å…¶å®ƒParser_æ—å‡½æ•°ä¹‹åè°ƒç”¨ï¼Œå¦åˆ™è¡Œä¸ºæœªå®šä¹‰***************************/
 arStatus_t	Parser_UnInit();
 
 
 
-/*******************************************¸¨ÖúÄ£¿é********************************************/
+/*******************************************è¾…åŠ©æ¨¡å—********************************************/
 
 
 typedef void			psrNode_t;
@@ -86,10 +86,10 @@ typedef void			(AR_STDCALL *psrFreeFunc_t)(psrNode_t *node, void *ctx);
 
 
 /*
-		´Ëº¯ÊıÈç¹û·µ»ØAR_S_YES Ôòparser¼ÌĞøÔÚstate stackÉÏËÑË÷ÊÇ·ñÓĞÆ¥ÅäµÄerror ·ûºÅ£¬·ñÔò£¬Ôò¶ªÆúµ±Ç°µ¼ÖÂ´íÎóµÄ·ûºÅtok
+		æ­¤å‡½æ•°å¦‚æœè¿”å›AR_S_YES åˆ™parserç»§ç»­åœ¨state stackä¸Šæœç´¢æ˜¯å¦æœ‰åŒ¹é…çš„error ç¬¦å·ï¼Œå¦åˆ™ï¼Œåˆ™ä¸¢å¼ƒå½“å‰å¯¼è‡´é”™è¯¯çš„ç¬¦å·tok
 
-		¿ÉÒÔ½«´Ë·µ»ØÖµÀí½âÎªÊÇ·ñÏ£Íû³¢ÊÔÒÆÈë´Ëtok£¬·µ»ØAR_S_YESÔòÍ¨¹ıerror token³¢ÊÔ£¬·µ»ØAR_S_NO£¬Ôò´Ëtoken±»¶ªÆú£¬¿ÉÔÚ´Ë»Øµ÷º¯ÊıÄÚ
-		ÒÆ¶¯´Ê·¨Öµµ½ÏÂÒ»¸öËùÏ£ÍûµÄÔªËØ¡£
+		å¯ä»¥å°†æ­¤è¿”å›å€¼ç†è§£ä¸ºæ˜¯å¦å¸Œæœ›å°è¯•ç§»å…¥æ­¤tokï¼Œè¿”å›AR_S_YESåˆ™é€šè¿‡error tokenå°è¯•ï¼Œè¿”å›AR_S_NOï¼Œåˆ™æ­¤tokenè¢«ä¸¢å¼ƒï¼Œå¯åœ¨æ­¤å›è°ƒå‡½æ•°å†…
+		ç§»åŠ¨è¯æ³•å€¼åˆ°ä¸‹ä¸€ä¸ªæ‰€å¸Œæœ›çš„å…ƒç´ ã€‚
 */
 typedef arStatus_t		(AR_STDCALL *psrErrorFunc_t)(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx);
 
@@ -107,20 +107,20 @@ typedef struct __parser_handler_tag
 
 
 
-#define PARSER_EOI_TOKVAL				0x0000/*end of input·ûºÅµÄ´Ê·¨Öµ*/
+#define PARSER_EOI_TOKVAL				0x0000/*end of inputç¬¦å·çš„è¯æ³•å€¼*/
 #define Parser_EPSILON_TOKVAL			0x0001
 /*#define PARSER_LALR_TOKVAL			0x0002*/
 #define PARSER_ERROR_TOKVAL				0x0003
 #define PARSER_DEFPREC_TOKVAL			0x0004
 
-#define PARSER_MIN_TOKENVAL				0x0100		/*×îĞ¡ÖÕ½á·ûvalue*/
+#define PARSER_MIN_TOKENVAL				0x0100		/*æœ€å°ç»ˆç»“ç¬¦value*/
 
 
 /*
-ËùÓĞ·ûºÅÈçÎŞÌØÊâ¶¨Òå£¬Ôò½áºÏĞÔ¶¼ÎªNO_ASSOC£¬×ó½áºÏ±íÊ¾ÔÚ·¢Éú³åÍ»Ê±£¬ÓÅÏÈÑ¡ÔñÍ¬ÓÅÏÈ¼¶µÄ¹æÔ¼£¬¶øÓÒ½áºÏÓëÆäÏà·´£¬ÀıÈç
+æ‰€æœ‰ç¬¦å·å¦‚æ— ç‰¹æ®Šå®šä¹‰ï¼Œåˆ™ç»“åˆæ€§éƒ½ä¸ºNO_ASSOCï¼Œå·¦ç»“åˆè¡¨ç¤ºåœ¨å‘ç”Ÿå†²çªæ—¶ï¼Œä¼˜å…ˆé€‰æ‹©åŒä¼˜å…ˆçº§çš„è§„çº¦ï¼Œè€Œå³ç»“åˆä¸å…¶ç›¸åï¼Œä¾‹å¦‚
 expr -> id | expr '-' expr;
 
-ÔÚ ÊäÈëÎª expr - expr - exprÊ±£¬Èç¹ûÎŞ½áºÏĞÔ£¬ÔòÎª³åÍ»£¬ÈçÉùÃ÷'-'Îª×ó½áºÏ£¬ÔòÓÅÏÈ¹éÓÚÇ°ÃæµÄexpr-expr£¬ÓÒ½áºÏ·´Ö®
+åœ¨ è¾“å…¥ä¸º expr - expr - expræ—¶ï¼Œå¦‚æœæ— ç»“åˆæ€§ï¼Œåˆ™ä¸ºå†²çªï¼Œå¦‚å£°æ˜'-'ä¸ºå·¦ç»“åˆï¼Œåˆ™ä¼˜å…ˆå½’äºå‰é¢çš„expr-exprï¼Œå³ç»“åˆåä¹‹
 
 */
 
@@ -129,7 +129,7 @@ typedef enum
 		PARSER_ASSOC_NONASSOC,
 		PARSER_ASSOC_LEFT,
 		PARSER_ASSOC_RIGHT
-}psrAssocType_t;/*ÖÕ½á·û½áºÏĞÔ*/
+}psrAssocType_t;/*ç»ˆç»“ç¬¦ç»“åˆæ€§*/
 
 
 typedef enum
@@ -140,9 +140,9 @@ typedef enum
 
 typedef psrLRItemType_t psrModeType_t;
 
-/*******************************************¸¨ÖúÄ£¿é½áÊø****************************************************************/
+/*******************************************è¾…åŠ©æ¨¡å—ç»“æŸ****************************************************************/
 
-/***************************************************Ç°ÏòÉùÃ÷************************************************/
+/***************************************************å‰å‘å£°æ˜************************************************/
 
 struct __parser_symbol_tag;
 typedef struct __parser_symbol_tag		psrSymb_t;
@@ -178,7 +178,7 @@ struct __parser_context_tag;
 typedef struct __parser_context_tag			psrContext_t;
 
 
-/***************************************************Ç°ÏòÉùÃ÷½áÊø************************************************/
+/***************************************************å‰å‘å£°æ˜ç»“æŸ************************************************/
 
 
 
@@ -287,7 +287,7 @@ arStatus_t				Parser_PrintSymbolMap(const psrSymbMap_t *map, arString_t *str);
 
 
 
-/****************************************************************Symbol½áÊø***********************************************************************/
+/****************************************************************Symbolç»“æŸ***********************************************************************/
 
 
 
@@ -303,7 +303,7 @@ typedef struct __terminal_info_tag
 		size_t					prec;
 		psrAssocType_t			assoc;
 		size_t					val;
-		psrTermFunc_t			leaf_f;	/*µ±ÓĞºÏ·¨µÄtokenÒÆÈëÊ±£¬½«µ÷ÓÃ¶ÔÓ¦µÄleaf_f*/
+		psrTermFunc_t			leaf_f;	/*å½“æœ‰åˆæ³•çš„tokenç§»å…¥æ—¶ï¼Œå°†è°ƒç”¨å¯¹åº”çš„leaf_f*/
 }psrTermInfo_t;
 
 
@@ -350,10 +350,10 @@ arStatus_t		Parser_CreateRule(psrRule_t **prule, const psrSymb_t *head, const ps
 
 
 /*
-º¯ÊıParser_CreateRuleByStrËù½ÓÊÜµÄ×Ö·û¸ñÊ½Îªhead : body_list
-head ¸ñÊ½Îª[a-z_][a-z_0-9]*
-·ûºÅ : Îª·Ö¸ô·û£¬±ØĞë´æÔÚ£¬²¢ÇÒ±»¶ªÆú
-body_listÖĞËùÓĞ·ûºÅ¶¼±»µ±×öÎÄ±¾·ûºÅ½ÓÊÕ£¬ÓÉ¿Õ¸ñ£¬ÖÆ±í·ûµÈAR_iswspace·µ»Ø·Ç0ÖµµÄ·ûºÅ·Ö¸ô
+å‡½æ•°Parser_CreateRuleByStræ‰€æ¥å—çš„å­—ç¬¦æ ¼å¼ä¸ºhead : body_list
+head æ ¼å¼ä¸º[a-z_][a-z_0-9]*
+ç¬¦å· : ä¸ºåˆ†éš”ç¬¦ï¼Œå¿…é¡»å­˜åœ¨ï¼Œå¹¶ä¸”è¢«ä¸¢å¼ƒ
+body_listä¸­æ‰€æœ‰ç¬¦å·éƒ½è¢«å½“åšæ–‡æœ¬ç¬¦å·æ¥æ”¶ï¼Œç”±ç©ºæ ¼ï¼Œåˆ¶è¡¨ç¬¦ç­‰AR_iswspaceè¿”å›é0å€¼çš„ç¬¦å·åˆ†éš”
 */
 arStatus_t		Parser_CreateRuleByStr(psrRule_t **prule, const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, size_t auto_ret, const psrTermInfoList_t *term_list, arString_t *err_msg);
 void			Parser_DestroyRule(psrRule_t *rule);
@@ -362,7 +362,7 @@ void			Parser_DestroyRule(psrRule_t *rule);
 
 #define AR_PSR_MAX_SYMB_LIST	4096
 
-/*grammar¶ÔÏó²»ÊÇÏß³Ì°²È«µÄ£¬Ö»ÄÜÔÚÍ¬Ò»Ïß³ÌÊ¹ÓÃ*/
+/*grammarå¯¹è±¡ä¸æ˜¯çº¿ç¨‹å®‰å…¨çš„ï¼Œåªèƒ½åœ¨åŒä¸€çº¿ç¨‹ä½¿ç”¨*/
 struct __parser_grammar_tag
 {
 		psrRule_t				**rules;
@@ -397,8 +397,8 @@ ar_int_t				Parser_IndexOfGrammar(const psrGrammar_t *grammar, const psrRule_t *
 
 
 
-const psrSymbList_t*		Parser_GetSymbList(const psrGrammar_t *grammar);/*Ã¿´ÎÔËËã¶¼»áÖØĞÂ¼ÆËã·ûºÅ£¬grammar³õÊ¼»¯»áÔ¤Áô×ã¹»¶àµÄ¿Õ¼ä,AR_PSR_MAX_SYMB_LIST¸ö£¬³¬³ö²åÈëÊ§°Ü£¬³ÌĞò±ÀÀ£*/
-const psrTermInfoList_t*	Parser_GetTermList(const psrGrammar_t *grammar);/*·µ»ØËùÓĞÖÕ½á·û*/
+const psrSymbList_t*		Parser_GetSymbList(const psrGrammar_t *grammar);/*æ¯æ¬¡è¿ç®—éƒ½ä¼šé‡æ–°è®¡ç®—ç¬¦å·ï¼Œgrammaråˆå§‹åŒ–ä¼šé¢„ç•™è¶³å¤Ÿå¤šçš„ç©ºé—´,AR_PSR_MAX_SYMB_LISTä¸ªï¼Œè¶…å‡ºæ’å…¥å¤±è´¥ï¼Œç¨‹åºå´©æºƒ*/
+const psrTermInfoList_t*	Parser_GetTermList(const psrGrammar_t *grammar);/*è¿”å›æ‰€æœ‰ç»ˆç»“ç¬¦*/
 
 void						Parser_ResetTermSpecID(const psrGrammar_t *grammar);
 ar_int_t					Parser_GetTermSpecID(const psrGrammar_t *grammar, const psrSymb_t *symb);
@@ -425,10 +425,10 @@ arStatus_t				Parser_InsertRule(psrGrammar_t *grammar, psrRule_t *rule);
 arStatus_t				Parser_InsertRuleBySymbList(psrGrammar_t *grammar, const psrSymb_t *head, const psrSymbList_t *body, const wchar_t *prec_tok, psrRuleFunc_t rule_f, size_t auto_ret);
 
 /*
-º¯ÊıParser_InsertRuleByStrËù½ÓÊÜµÄ×Ö·û¸ñÊ½Îªhead : body_list
-head ¸ñÊ½Îª[a-z_][a-z_0-9]*
-·ûºÅ : Îª·Ö¸ô·û£¬±ØĞë´æÔÚ£¬²¢ÇÒ±»¶ªÆú
-body_listÖĞËùÓĞ·ûºÅ¶¼±»µ±×öÎÄ±¾·ûºÅ½ÓÊÕ£¬ÓÉ¿Õ¸ñ£¬ÖÆ±í·ûµÈAR_iswspace·µ»Ø·Ç0ÖµµÄ·ûºÅ·Ö¸ô
+å‡½æ•°Parser_InsertRuleByStræ‰€æ¥å—çš„å­—ç¬¦æ ¼å¼ä¸ºhead : body_list
+head æ ¼å¼ä¸º[a-z_][a-z_0-9]*
+ç¬¦å· : ä¸ºåˆ†éš”ç¬¦ï¼Œå¿…é¡»å­˜åœ¨ï¼Œå¹¶ä¸”è¢«ä¸¢å¼ƒ
+body_listä¸­æ‰€æœ‰ç¬¦å·éƒ½è¢«å½“åšæ–‡æœ¬ç¬¦å·æ¥æ”¶ï¼Œç”±ç©ºæ ¼ï¼Œåˆ¶è¡¨ç¬¦ç­‰AR_iswspaceè¿”å›é0å€¼çš„ç¬¦å·åˆ†éš”
 */
 arStatus_t				Parser_InsertRuleByStr(psrGrammar_t *grammar, const wchar_t *str, const wchar_t *prec, psrRuleFunc_t rule_f, size_t auto_ret);
 
@@ -440,7 +440,7 @@ arStatus_t				Parser_CalcFirstSet(const psrGrammar_t *grammar, psrSymbMap_t *fir
 arStatus_t				Parser_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *follow_set, const psrSymbMap_t *first_set);
 
 
-/*******************************************************************Grammar½áÊø*******************************************************************/
+/*******************************************************************Grammarç»“æŸ*******************************************************************/
 
 
 
@@ -516,7 +516,7 @@ void			Parser_DestroyContext(psrContext_t	*ctx);
 void			Parser_Clear(psrContext_t *parser);
 
 
-psrNode_t*		Parser_GetResult(psrContext_t *parser);/*ÔÚ×´Ì¬ÎªacceptedÖ®ºó²Å¿ÉÒÔµ÷ÓÃ*/
+psrNode_t*		Parser_GetResult(psrContext_t *parser);/*åœ¨çŠ¶æ€ä¸ºacceptedä¹‹åæ‰å¯ä»¥è°ƒç”¨*/
 
 
 ar_bool_t			Parser_IsAccepted(const psrContext_t *parser);
@@ -530,12 +530,12 @@ size_t			Parser_GetNodeCount(const psrContext_t *parser);
 psrNode_t*		Parser_GetNodeFromNodeStack(psrContext_t *parser, size_t index);
 
 /*
-		ÓÉÓÚ²ÉÓÃÁËÒ»¸öÔö¹ãµÄÎÄ·¨£¬ËùÒÔµ±EOI±»Ôö¼Óµ½stackÖĞÊ±£¬Ö»¿ÉÄÜ³öÏÖ´íÎó»òÕß³ÉÎª½ÓÊÜ×´Ì¬£¬EOIÓÀÔ¶²»»á±»SHIFTµ½parserÖĞ
+		ç”±äºé‡‡ç”¨äº†ä¸€ä¸ªå¢å¹¿çš„æ–‡æ³•ï¼Œæ‰€ä»¥å½“EOIè¢«å¢åŠ åˆ°stackä¸­æ—¶ï¼Œåªå¯èƒ½å‡ºç°é”™è¯¯æˆ–è€…æˆä¸ºæ¥å—çŠ¶æ€ï¼ŒEOIæ°¸è¿œä¸ä¼šè¢«SHIFTåˆ°parserä¸­
 */
 arStatus_t		Parser_AddToken(psrContext_t *parser_context, const psrToken_t *tok);
 
 
-/***************************************************************Parser½áÊø************************************************************************/
+/***************************************************************Parserç»“æŸ************************************************************************/
 
 
 
@@ -546,7 +546,7 @@ arStatus_t		Parser_AddToken(psrContext_t *parser_context, const psrToken_t *tok)
 
 
 
-/**************************************************************************±¨¸æ*******************************************************************/
+/**************************************************************************æŠ¥å‘Š*******************************************************************/
 
 arStatus_t		Parser_PrintParserActionTable(const parser_t *parser, arString_t *out, size_t width);
 arStatus_t		Parser_PrintParserConflict(const parser_t *parser, arString_t *out);
@@ -620,7 +620,7 @@ void							Parser_DestroyParserStatusView(const psrStatusView_t *view);
 
 
 
-/**************************************************************************±¨¸æ½áÊø*******************************************************************/
+/**************************************************************************æŠ¥å‘Šç»“æŸ*******************************************************************/
 
 AR_NAMESPACE_END
 

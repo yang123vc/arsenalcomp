@@ -774,7 +774,7 @@ typedef void*					ar_ptr_t;
 
 #else
 
-        #define	AR_USE_CRT_ALLOCFUNC	1
+        //#define	AR_USE_CRT_ALLOCFUNC	1
 
 #endif
 

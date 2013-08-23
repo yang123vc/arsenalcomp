@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
  * 
@@ -993,9 +993,9 @@ static snRetVal_t		__get_list(arBuffer_t	*buffer)
 						break;
 				}
 				
-				tmp_ret = __get_obj(buffer);/*×ÊÔ´1*/
+				tmp_ret = __get_obj(buffer);/*èµ„æº1*/
 
-				if(tmp_ret.status != AR_S_YES)	/*»ñÈ¡1Ê§°Ü*/
+				if(tmp_ret.status != AR_S_YES)	/*è·å–1å¤±è´¥*/
 				{
 						ret.status = tmp_ret.status;
 						goto FAILED_POINT;
@@ -1004,7 +1004,7 @@ static snRetVal_t		__get_list(arBuffer_t	*buffer)
 				AR_ASSERT(tmp_ret.obj != NULL);
 				ret.status = SN_InsertToList(&ret.obj->list, tmp_ret.obj);	
 
-				if(ret.status != AR_S_YES)/*×ÊÔ´1²åÈë0Ê§°Ü,ÇåÀí×ÊÔ´1*/
+				if(ret.status != AR_S_YES)/*èµ„æº1æ’å…¥0å¤±è´¥,æ¸…ç†èµ„æº1*/
 				{
 						SN_DestroyObject(tmp_ret.obj);
 						tmp_ret.obj = NULL;
@@ -1018,7 +1018,7 @@ static snRetVal_t		__get_list(arBuffer_t	*buffer)
 FAILED_POINT:
 		if(ret.obj != NULL)
 		{
-				SN_DestroyObject(ret.obj);/*ÇåÀí×ÊÔ´0*/
+				SN_DestroyObject(ret.obj);/*æ¸…ç†èµ„æº0*/
 				ret.obj = NULL;
 		}
 

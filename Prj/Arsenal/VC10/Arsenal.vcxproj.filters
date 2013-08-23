@@ -177,6 +177,9 @@
     <ClCompile Include="..\..\..\Arsenal\Tools\property_list.c">
       <Filter>Arsenal\Tools</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Arsenal\Tools\property_list_internal.c">
+      <Filter>Arsenal\Tools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Arsenal\Common\common.h">
@@ -292,6 +295,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Arsenal\Common\math_posix.h">
       <Filter>Arsenal\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Arsenal\Tools\property_list_internal.h">
+      <Filter>Arsenal\Tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

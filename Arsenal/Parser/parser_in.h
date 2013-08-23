@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
  * 
@@ -21,13 +21,13 @@ AR_NAMESPACE_BEGIN
 
 /*typedef struct __parser_symbol_tag psrSymb_t;*/
 
-/*ÒÔÏÂÎªÖÕ½á·û*/
-extern const psrSymb_t	*PARSER_EOISymb;   /*±íÊ¾ÊäÈë½áÎ²·ûºÅ*/
-extern const psrSymb_t	*PARSER_ErrorSymb;/*ÌØÊâµÄ´íÎó´¦Àí²úÉúÊ½±ê¼ÇÖÕ½á·û£¬*/
-extern const psrSymb_t	*PARSER_DefPrecSymb;/*ËùÓĞÎŞÖÕ½á·ûµÄ²úÉúÊ½ÇÒÎ´Ö¸¶¨prec_tokµÄ²úÉúÊ½ËùÏà¹ØµÄÖÕ½á·û*/
+/*ä»¥ä¸‹ä¸ºç»ˆç»“ç¬¦*/
+extern const psrSymb_t	*PARSER_EOISymb;   /*è¡¨ç¤ºè¾“å…¥ç»“å°¾ç¬¦å·*/
+extern const psrSymb_t	*PARSER_ErrorSymb;/*ç‰¹æ®Šçš„é”™è¯¯å¤„ç†äº§ç”Ÿå¼æ ‡è®°ç»ˆç»“ç¬¦ï¼Œ*/
+extern const psrSymb_t	*PARSER_DefPrecSymb;/*æ‰€æœ‰æ— ç»ˆç»“ç¬¦çš„äº§ç”Ÿå¼ä¸”æœªæŒ‡å®šprec_tokçš„äº§ç”Ÿå¼æ‰€ç›¸å…³çš„ç»ˆç»“ç¬¦*/
 
-/*ÒÔÏÂ¶¼Îª·ÇÖÕ½á·û*/
-extern const psrSymb_t	*PARSER_StartSymb;/*µÚÒ»¸ö·ûºÅ£¬±»×ª»»Îª %Start -> gmr->head[0]*/
+/*ä»¥ä¸‹éƒ½ä¸ºéç»ˆç»“ç¬¦*/
+extern const psrSymb_t	*PARSER_StartSymb;/*ç¬¬ä¸€ä¸ªç¬¦å·ï¼Œè¢«è½¬æ¢ä¸º %Start -> gmr->head[0]*/
 
 
 #define			PARSER_MAX_TERM_SYMB_SPEC_ID	2
@@ -35,7 +35,7 @@ extern const psrSymb_t	*PARSER_StartSymb;/*µÚÒ»¸ö·ûºÅ£¬±»×ª»»Îª %Start -> gmr->h
 ar_bool_t			Parser_IsBuildInSymbol(const psrSymb_t	*symb);
 
 
-/*ËùÓĞparserÅäÖÃÏà¹ØµÄ·ûºÅ¶¼ÓÉÒÔÏÂº¯Êı·ÖÅä£¬´Ë¹¦ÄÜÎª·ûºÅ¶Ô±ÈÌá¹©ÁËO(1)µÄĞÔÄÜ(Ö»Ğè¶Ô±ÈÖ¸Õë)*/
+/*æ‰€æœ‰parseré…ç½®ç›¸å…³çš„ç¬¦å·éƒ½ç”±ä»¥ä¸‹å‡½æ•°åˆ†é…ï¼Œæ­¤åŠŸèƒ½ä¸ºç¬¦å·å¯¹æ¯”æä¾›äº†O(1)çš„æ€§èƒ½(åªéœ€å¯¹æ¯”æŒ‡é’ˆ)*/
 
 #define PARSER_STRTBL_BUCKET		(1536)
 

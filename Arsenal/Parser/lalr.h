@@ -1,4 +1,4 @@
-
+ï»¿
 /*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
@@ -54,10 +54,10 @@ void					Parser_DestroyConfigList(lalrConfigList_t *lst, ar_bool_t destroy_confi
 
 arStatus_t				Parser_InsertToConfigList(lalrConfigList_t *lst, lalrConfig_t *cfg);
 
-/*¶ÔlalrConfig_t±¾Éí²»×ö¿½±´*/
+/*å¯¹lalrConfig_tæœ¬èº«ä¸åšæ‹·è´*/
 arStatus_t				Parser_CopyConfigList(lalrConfigList_t *l, const lalrConfigList_t *r);
 
-/*Á´±íµÄunion£¬ËùÒÔÎŞ´æ´¢·ÖÅä*/
+/*é“¾è¡¨çš„unionï¼Œæ‰€ä»¥æ— å­˜å‚¨åˆ†é…*/
 void					Parser_UnionConfigList(lalrConfigList_t *l, lalrConfigList_t *r);
 
 
@@ -66,7 +66,7 @@ ar_int_t					Parser_CompConfigList(const lalrConfigList_t *l, const lalrConfigLi
 
 lalrConfig_t*			Parser_FindFromConfigList(lalrConfigList_t *lst, size_t rule_num, size_t delim);
 
-/*´Ëº¯ÊıÉú³ÉlalrConfig_t£¬²¢²åÈëlalrConfigList_t*ºÍ*/
+/*æ­¤å‡½æ•°ç”ŸæˆlalrConfig_tï¼Œå¹¶æ’å…¥lalrConfigList_t*å’Œ*/
 lalrConfig_t*			Parser_InsertToConfigListByValue(lalrConfigList_t *lst, size_t rule_num, size_t delim, const psrGrammar_t *grammar);
 
 /******************************************************************************************************/
@@ -129,8 +129,8 @@ typedef enum
 
 
 /*
-Èç¹ûact_type == LALR_ACT_SHIFT£¬ÔòlalrAction_tÃèÊöÁËconfigÍ¨¹ı·ûºÅsymbµ½´ïÁË×´Ì¬to,
-Èç¹ûact_type == (LALR_ACT_REDUCE || LALR_ACT_ACCEPT)ÔòÃèÊöÁËconfigÔÚsymbÉÏÖ´ĞĞ¹æÔ¼²Ù×÷
+å¦‚æœact_type == LALR_ACT_SHIFTï¼Œåˆ™lalrAction_tæè¿°äº†configé€šè¿‡ç¬¦å·symbåˆ°è¾¾äº†çŠ¶æ€to,
+å¦‚æœact_type == (LALR_ACT_REDUCE || LALR_ACT_ACCEPT)åˆ™æè¿°äº†configåœ¨symbä¸Šæ‰§è¡Œè§„çº¦æ“ä½œ
 
 */
 struct __lalr_action_tag
@@ -144,8 +144,8 @@ struct __lalr_action_tag
 
 struct __lalr_state_tag
 {
-		lalrConfigList_t		*basis;			/*ºËĞÄÏî¼¯*/
-		lalrConfigList_t		*all_config;	/*closureÏî¼¯*/
+		lalrConfigList_t		*basis;			/*æ ¸å¿ƒé¡¹é›†*/
+		lalrConfigList_t		*all_config;	/*closureé¡¹é›†*/
 
 		lalrAction_t			*actions;
 		size_t					count;

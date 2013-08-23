@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
  * 
@@ -20,11 +20,11 @@ AR_NAMESPACE_BEGIN
 static arSpinLock_t		__tbl_lock;
 static arStringTable_t *__tbl = NULL;
 
-const psrSymb_t	*PARSER_EOISymb = NULL;   /*±íÊ¾ÊäÈë½áÎ²·ûºÅ*/
-const psrSymb_t	*PARSER_ErrorSymb= NULL;/*ÌØÊâµÄ´íÎó´¦Àí²úÉúÊ½±ê¼ÇÖÕ½á·û£¬*/
-const psrSymb_t	*PARSER_DefPrecSymb = NULL;/*Ìá¹©Ä¬ÈÏprecºÍassocÊôĞÔµÄÖÕ½á·û*/
+const psrSymb_t	*PARSER_EOISymb = NULL;   /*è¡¨ç¤ºè¾“å…¥ç»“å°¾ç¬¦å·*/
+const psrSymb_t	*PARSER_ErrorSymb= NULL;/*ç‰¹æ®Šçš„é”™è¯¯å¤„ç†äº§ç”Ÿå¼æ ‡è®°ç»ˆç»“ç¬¦ï¼Œ*/
+const psrSymb_t	*PARSER_DefPrecSymb = NULL;/*æä¾›é»˜è®¤precå’Œassocå±æ€§çš„ç»ˆç»“ç¬¦*/
 
-/*ÒÔÏÂ¶¼Îª·ÇÖÕ½á·û*/
+/*ä»¥ä¸‹éƒ½ä¸ºéç»ˆç»“ç¬¦*/
 const psrSymb_t	*PARSER_StartSymb = NULL;
 
 
@@ -68,7 +68,7 @@ arStatus_t	Parser_Init()
 		if(__tbl == NULL)
 		{
 				AR_error(AR_ERR_FATAL, L"parser initialize failed\r\n");
-				return AR_E_NOMEM;/*±ÜÃâwarning*/
+				return AR_E_NOMEM;/*é¿å…warning*/
 		}
 
 		PARSER_EOISymb		=		Parser_CreateSymb(L"%EOI", PARSER_TERM);
@@ -80,7 +80,7 @@ arStatus_t	Parser_Init()
 		if(PARSER_EOISymb == NULL || PARSER_ErrorSymb == NULL || PARSER_DefPrecSymb == NULL || PARSER_StartSymb == NULL)
 		{
 				AR_error(AR_ERR_FATAL, L"parser initialize failed\r\n");
-				return AR_E_NOMEM;/*±ÜÃâwarning*/
+				return AR_E_NOMEM;/*é¿å…warning*/
 		}
 
 

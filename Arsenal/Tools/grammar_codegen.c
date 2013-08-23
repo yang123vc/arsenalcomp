@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
  *
@@ -25,7 +25,7 @@ AR_NAMESPACE_BEGIN
 
 
 
-/****************************************************************Éú³ÉÄ£°å´úÂë²¿·Ö***********************************************/
+/****************************************************************ç”Ÿæˆæ¨¡æ¿ä»£ç éƒ¨åˆ†***********************************************/
 
 static const wchar_t CFG_DEF_BUILD_LEX[] =
 L"\r\nstatic lex_t*\t__build_lex()\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n{\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\tlex_t\t*lex;\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\tsize_t i;\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\tlex = Lex_Create();\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\tif(lex == NULL)\r\n\t\t{\r\n\t\t\t\treturn NULL;\r\n\t\t}\r\n\r\n\t\tfor(i = 0; i < __NAME_COUNT__; ++i)\t\t\t\t\t\t\t\t\t\t\r\n\t\t{\r\n\t\t\t\tarStatus_t status;\r\n\t\t\t\tstatus = Lex_Insert(lex, __g_lex_name[i]);\r\n\t\t\t\tif(status != AR_S_YES)\t\t\t\t\t\t\t\r\n\t\t\t\t{\r\n\t\t\t\t\tAR_error(AR_ERR_WARNING, L\"failed to build lexer : name '%ls'!\\r\\n\", __g_lex_name);\r\n\t\t\t\t\tLex_Destroy(lex);\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t\tAR_ASSERT(false);\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t\treturn NULL;\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t}\r\n\t\t}\r\n\r\n\t\tfor(i = 0; i < __TERM_COUNT__; ++i)\t\t\t\t\t\t\t\t\t\t\r\n\t\t{\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\tlexAction_t\t\tact;\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\tarStatus_t status;\r\n\t\t\t\tact.is_skip\t\t=\t\t__g_term_pattern[i].skip;\t\t\t\t\r\n\t\t\t\tact.priority\t=\t\t__g_term_pattern[i].lex_prec;\t\t\t\r\n\t\t\t\tact.value\t\t=\t\t__g_term_pattern[i].tokval;\t\t\r\n\r\n\t\t\t\t\r\n\t\t\t\tstatus = Lex_InsertRule(lex, __g_term_pattern[i].regex, &act);\r\n\t\t\t\tif(status != AR_S_YES)\t\t\t\t\t\t\t\r\n\t\t\t\t{\r\n\t\t\t\t\tAR_error(AR_ERR_WARNING, L\"failed to build lexer : regex '%ls'!\\r\\n\", __g_term_pattern[i].regex);\r\n\t\t\t\t\tLex_Destroy(lex);\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t\tAR_ASSERT(false);\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t\treturn NULL;\r\n\t\t\t\t}\r\n\t\t}\r\n\r\n\r\n\t\tif(Lex_GenerateTransTable(lex) != AR_S_YES)\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t{\r\n\t\t\t\tAR_CHECK(false, L\"Arsenal internal error : %hs\\r\\n\", AR_FUNC_NAME);\t\t\r\n\t\t}\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t\treturn lex;\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n}"
@@ -241,7 +241,7 @@ arStatus_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 		
         /*********************************************************************************************************************/
 		
-		if(cfg->tok_cnt > 0)	/*ÉùÃ÷ÖÕ½á·û´¦Àíº¯Êı*/
+		if(cfg->tok_cnt > 0)	/*å£°æ˜ç»ˆç»“ç¬¦å¤„ç†å‡½æ•°*/
 		{
 				handlerTbl_t	token_handler_tbl;
                 
@@ -301,7 +301,7 @@ arStatus_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
         /*********************************************************************************************************************/
         
         
-		if(cfg->tok_cnt > 0)/*Îª´æÔÚÃû×ÖµÄ´Ê·¨ÖµÉú³ÉÃ¶¾Ù*/
+		if(cfg->tok_cnt > 0)/*ä¸ºå­˜åœ¨åå­—çš„è¯æ³•å€¼ç”Ÿæˆæšä¸¾*/
 		{
 				arString_t		*enum_str;
 				enum_str = AR_CreateString();
@@ -367,7 +367,7 @@ arStatus_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 		AR_AppendFormatString(code,  CFG_CNT_DEF, L"__TERM_COUNT__", cfg->tok_cnt);
         
         
-        /************************************************Éú³ÉÓÅÏÈ¼¶Ïà¹Ø´úÂë***************************************************************/
+        /************************************************ç”Ÿæˆä¼˜å…ˆçº§ç›¸å…³ä»£ç ***************************************************************/
 		if(cfg->prec_cnt > 0)
 		{
 				AR_AppendString(code, L"\n");
@@ -417,7 +417,7 @@ arStatus_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 								
 								if(code_name == NULL)
 								{
-										/*Ò»Ğ©ºóÆÚ¶¨ÒåµÄprec token²»»áÔÚcfg->tokÖĞ£¬Òò´ËÒ²Ã»ÓĞcode_name*/
+										/*ä¸€äº›åæœŸå®šä¹‰çš„prec tokenä¸ä¼šåœ¨cfg->tokä¸­ï¼Œå› æ­¤ä¹Ÿæ²¡æœ‰code_name*/
 										code_name = AR_vtow(L"%Id", tok_val);
 								}
                                 
@@ -482,7 +482,7 @@ arStatus_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 						size_t tmp_len;
 						wchar_t *handler, *handler_def, *tmp;
 						ar_bool_t	has_spec_def = false;
-                        /***************************************************Éú³ÉhandlerºÍhandler_def*******************************************************/
+                        /***************************************************ç”Ÿæˆhandlerå’Œhandler_def*******************************************************/
 						if(cfg->rule[i].action_name)
 						{
 								if(AR_wcscmp(cfg->rule[i].action_name, L"NULL") == 0)
@@ -564,7 +564,7 @@ arStatus_t			CFG_ConfigToCode(const cfgConfig_t *cfg, arString_t	*code)
 								arString_t		*comment = AR_CreateString();
 								arString_t		*define  = AR_CreateString();
                                 
-                                /****************************************************Éú³Éhandler¶ÔÓ¦µÄ×¢ÊÍ*****************************************************************/
+                                /****************************************************ç”Ÿæˆhandlerå¯¹åº”çš„æ³¨é‡Š*****************************************************************/
 								for(k = 0; k < cfg->rule_cnt; ++k)
 								{
 										ar_bool_t insert_comment = false;

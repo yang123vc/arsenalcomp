@@ -1,4 +1,4 @@
-
+ï»¿
 /*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
@@ -20,7 +20,7 @@ AR_NAMESPACE_BEGIN
 
 
 /*
-´Ëº¯ÊıËùÉú³ÉµÄËùÓĞheapÉÏÊı¾İ¶¼»á·ÅÈëall_configÖĞ£¬Òò´Ë£¬ÔÚÈİ´íÂß¼­ÏÂ£¬²»ĞèÒªÇåÀíÈÎºÎ×ÊÔ´
+æ­¤å‡½æ•°æ‰€ç”Ÿæˆçš„æ‰€æœ‰heapä¸Šæ•°æ®éƒ½ä¼šæ”¾å…¥all_configä¸­ï¼Œå› æ­¤ï¼Œåœ¨å®¹é”™é€»è¾‘ä¸‹ï¼Œä¸éœ€è¦æ¸…ç†ä»»ä½•èµ„æº
 */
 static	arStatus_t	__calc_lr0_closure(lalrConfigList_t *all_config, const psrGrammar_t *grammar, const psrSymbMap_t *first_set, ar_bool_t lr0)
 {
@@ -50,7 +50,7 @@ static	arStatus_t	__calc_lr0_closure(lalrConfigList_t *all_config, const psrGram
 
 				/*
 				A -> a . B C;
-				Ôò body[delim] == BÔò½«ËùÓĞ B -> . a b c;×°Èë±¾Ïî
+				åˆ™ body[delim] == Båˆ™å°†æ‰€æœ‰ B -> . a b c;è£…å…¥æœ¬é¡¹
 				*/
 				symb = rule->body.lst[delim];
 
@@ -65,12 +65,12 @@ static	arStatus_t	__calc_lr0_closure(lalrConfigList_t *all_config, const psrGram
 
 								inner_rule = grammar->rules[i];
 								inner_rule_num = i;
-								/*¼ìË÷Ã¿Ò»ÌõÓï·¨*/
+								/*æ£€ç´¢æ¯ä¸€æ¡è¯­æ³•*/
 
 								if(Parser_CompSymb(symb, inner_rule->head) == 0)
 								{
 										/*
-										Èç¹ûµ±Ç°lhsÓësymbÏàÍ¬£¬Ôò½«µ±Ç°Óï·¨ÀıÈç B -> . a b c¼ÓÈëÏî¼¯all_config
+										å¦‚æœå½“å‰lhsä¸symbç›¸åŒï¼Œåˆ™å°†å½“å‰è¯­æ³•ä¾‹å¦‚ B -> . a b cåŠ å…¥é¡¹é›†all_config
 										*/
 										size_t k;
 										lalrConfig_t *new_config;
@@ -79,7 +79,7 @@ static	arStatus_t	__calc_lr0_closure(lalrConfigList_t *all_config, const psrGram
 
 										if(new_config == NULL)
 										{
-												new_config = Parser_InsertToConfigListByValue(all_config, inner_rule_num, 0, grammar);/*×ÊÔ´·ÖÅäµã0*/
+												new_config = Parser_InsertToConfigListByValue(all_config, inner_rule_num, 0, grammar);/*èµ„æºåˆ†é…ç‚¹0*/
 
 												if(new_config == NULL)
 												{
@@ -90,7 +90,7 @@ static	arStatus_t	__calc_lr0_closure(lalrConfigList_t *all_config, const psrGram
 
 										AR_ASSERT(new_config != NULL);
 
-										/*lr0Ä£Ê½£¬²»¼ÆËã´«²¥Á´ÒÔ¼°follow set*/
+										/*lr0æ¨¡å¼ï¼Œä¸è®¡ç®—ä¼ æ’­é“¾ä»¥åŠfollow set*/
 										if(lr0)
 										{
 												continue;
@@ -104,7 +104,7 @@ static	arStatus_t	__calc_lr0_closure(lalrConfigList_t *all_config, const psrGram
 												body[k] == C 
 										*/
 
-										for(k = delim + 1; k < rule->body.count; ++k)/*¼ÆËã´«²¥Á´*/
+										for(k = delim + 1; k < rule->body.count; ++k)/*è®¡ç®—ä¼ æ’­é“¾*/
 										{
 												const psrSymb_t *sp = rule->body.lst[k];
 												AR_ASSERT(sp != NULL);
@@ -112,13 +112,13 @@ static	arStatus_t	__calc_lr0_closure(lalrConfigList_t *all_config, const psrGram
 												if(sp->type == PARSER_TERM)
 												{
 														/*
-														Èç¹ûspÎªÖÕ½á·û£¬Ôò½«Æä¼ÓÈëĞÂÏînew_configµÄfollow_setÖĞ£¬Ö®ºóÑ­»·ÖĞÖ¹£¬ÒòÎªÔÚ
-														±¾ÌõÓï·¨¹æÔòÖĞ²»»áÓĞspÖ®ºóµÄÖÕ½á·û¼ÓÈëµ½new_configÖĞ
+														å¦‚æœspä¸ºç»ˆç»“ç¬¦ï¼Œåˆ™å°†å…¶åŠ å…¥æ–°é¡¹new_configçš„follow_setä¸­ï¼Œä¹‹åå¾ªç¯ä¸­æ­¢ï¼Œå› ä¸ºåœ¨
+														æœ¬æ¡è¯­æ³•è§„åˆ™ä¸­ä¸ä¼šæœ‰spä¹‹åçš„ç»ˆç»“ç¬¦åŠ å…¥åˆ°new_configä¸­
 														*/
 														ar_int_t idx = Parser_GetTermSpecID(grammar, sp);
 														AR_ASSERT(idx >= 0);
 
-														status = Parser_SetBitInBitSet(&new_config->follow_set, (size_t)idx);/*×ÊÔ´·ÖÅäµã1£¬new_config´æ´¢ÓÚall_configÖĞ*/
+														status = Parser_SetBitInBitSet(&new_config->follow_set, (size_t)idx);/*èµ„æºåˆ†é…ç‚¹1ï¼Œnew_configå­˜å‚¨äºall_configä¸­*/
 														
 														if(status  != AR_S_YES)
 														{
@@ -129,8 +129,8 @@ static	arStatus_t	__calc_lr0_closure(lalrConfigList_t *all_config, const psrGram
 												}else
 												{
 														/*
-														Èç¹ûspÎª·ÇÖÕ½á·û£¬Ôò½«Æäfirst_set¼ÓÈëµ½new_configÖĞ£¬Èç¹û´ËÖÕ½á·û¿Éµ¼³ö¿Õ´®£¬
-														ÔòÑ­»·¼ÌĞø£¬·ñÔòÑ­»·ÖĞÖ¹
+														å¦‚æœspä¸ºéç»ˆç»“ç¬¦ï¼Œåˆ™å°†å…¶first_setåŠ å…¥åˆ°new_configä¸­ï¼Œå¦‚æœæ­¤ç»ˆç»“ç¬¦å¯å¯¼å‡ºç©ºä¸²ï¼Œ
+														åˆ™å¾ªç¯ç»§ç»­ï¼Œå¦åˆ™å¾ªç¯ä¸­æ­¢
 														*/
 														const psrMapRec_t *rec;
 														size_t x;
@@ -146,7 +146,7 @@ static	arStatus_t	__calc_lr0_closure(lalrConfigList_t *all_config, const psrGram
 																idx = Parser_GetTermSpecID(grammar, rec->lst.lst[x]);
 																AR_ASSERT(idx >= 0);
 
-																status = Parser_SetBitInBitSet(&new_config->follow_set, (size_t)idx);/*×ÊÔ´·ÖÅäµã2,Í¬µã1*/
+																status = Parser_SetBitInBitSet(&new_config->follow_set, (size_t)idx);/*èµ„æºåˆ†é…ç‚¹2,åŒç‚¹1*/
 
 																if(status != AR_S_YES)
 																{
@@ -162,12 +162,12 @@ static	arStatus_t	__calc_lr0_closure(lalrConfigList_t *all_config, const psrGram
 										}
 												
 										/*
-										ĞÎÈçnode->configÎªA -> a . B C D;
-										ÈôC D¾ù¿Éµ¼³ö¿Õ´®£¬ ÔòÔòAµÄfollow_set½«»á´«²¥ÖÁĞÂÏîÖĞ
+										å½¢å¦‚node->configä¸ºA -> a . B C D;
+										è‹¥C Då‡å¯å¯¼å‡ºç©ºä¸²ï¼Œ åˆ™åˆ™Açš„follow_setå°†ä¼šä¼ æ’­è‡³æ–°é¡¹ä¸­
 										*/
 										if(k == rule->body.count)
 										{
-												status = Parser_InsertToConfigList(node->config->forward, new_config);/*×ÊÔ´·ÖÅäµã3,nodeÊÇall_configÖĞµÄ½Úµã*/
+												status = Parser_InsertToConfigList(node->config->forward, new_config);/*èµ„æºåˆ†é…ç‚¹3,nodeæ˜¯all_configä¸­çš„èŠ‚ç‚¹*/
 
 												if(status != AR_S_YES)
 												{
@@ -190,8 +190,8 @@ static	arStatus_t	__build_goto(lalrState_t *start, const psrGrammar_t *grammar, 
 
 
 /*
-´Ëº¯Êı»áÉú³ÉĞÂµÄlalr×´Ì¬£¬²¢½«Æä²åÈëlalrStateSet_t£¬²¢µİ¹éµ÷ÓÃ__build_goto£¬Òò´ËËùÓĞÎ´·ÅÈësetµÄstate¶¼ĞèÒªÇåÀí£¬
-ÒòÎªstateÒÀÀµÓÚbasis£¬Òò´Ë´Ëº¯ÊıÎŞÂÛ³É¹¦Óë·ñ£¬¶¼ĞèÒª´¦Àíbasis£¬ÇåÀí×ÊÔ´»òÕß¹éÊô¸ønew_state
+æ­¤å‡½æ•°ä¼šç”Ÿæˆæ–°çš„lalrçŠ¶æ€ï¼Œå¹¶å°†å…¶æ’å…¥lalrStateSet_tï¼Œå¹¶é€’å½’è°ƒç”¨__build_gotoï¼Œå› æ­¤æ‰€æœ‰æœªæ”¾å…¥setçš„stateéƒ½éœ€è¦æ¸…ç†ï¼Œ
+å› ä¸ºstateä¾èµ–äºbasisï¼Œå› æ­¤æ­¤å‡½æ•°æ— è®ºæˆåŠŸä¸å¦ï¼Œéƒ½éœ€è¦å¤„ç†basisï¼Œæ¸…ç†èµ„æºæˆ–è€…å½’å±ç»™new_state
 */
 static	lalrState_t* __build_state(lalrConfigList_t *basis, const psrGrammar_t *grammar, lalrStateSet_t *set, const psrSymbMap_t *first_set, ar_bool_t lr0)
 {
@@ -206,52 +206,52 @@ static	lalrState_t* __build_state(lalrConfigList_t *basis, const psrGrammar_t *g
 		if(new_state)
 		{
 				/*
-				´ËºËĞÄÏîÒÑ¾­´æÔÚÓÚstate_setÖĞ£¬ÔòÖ±½Ó½«basisÖĞµÄbackward´«²¥Á´·ÅÈëÒÑ´æÔÚµÄ×´Ì¬µÄºóÏò´«²¥Á´£¬Ö®ºóÇåÀíµôÎŞÓÃµÄbasis
+				æ­¤æ ¸å¿ƒé¡¹å·²ç»å­˜åœ¨äºstate_setä¸­ï¼Œåˆ™ç›´æ¥å°†basisä¸­çš„backwardä¼ æ’­é“¾æ”¾å…¥å·²å­˜åœ¨çš„çŠ¶æ€çš„åå‘ä¼ æ’­é“¾ï¼Œä¹‹åæ¸…ç†æ‰æ— ç”¨çš„basis
 				*/
 				if(!lr0)
 				{
 						lalrConfigNode_t *l, *r;
-						/*½«ĞÂµÄºËĞÄÏîµÄÏòºó´«²¥µÄ±í(ÓÉgotoÉú³É) copyµ½ÒÑ´æÔÚµÄ×´Ì¬£¨Ïî¼¯£©ÖĞ*/
+						/*å°†æ–°çš„æ ¸å¿ƒé¡¹çš„å‘åä¼ æ’­çš„è¡¨(ç”±gotoç”Ÿæˆ) copyåˆ°å·²å­˜åœ¨çš„çŠ¶æ€ï¼ˆé¡¹é›†ï¼‰ä¸­*/
 						for(l = basis->head, r = new_state->basis->head; l != NULL && r != NULL; l = l->next, r = r->next)
 						{
 								Parser_UnionConfigList(r->config->backward, l->config->backward);
 						}
 				}
 				
-				/*Ïú»ÙÎŞÓÃºËĞÄÏî*/
+				/*é”€æ¯æ— ç”¨æ ¸å¿ƒé¡¹*/
 				Parser_DestroyConfigList(basis, true);
 				
 				return new_state;
 		}else
 		{
 				/*
-				ºËĞÄÏî²»´æÔÚÓÚ×´Ì¬¼¯ÖĞ£¬Òò´ËĞèÒªĞÂ½¨×´Ì¬²¢ÔÚÆäÉÏ¼ÆËãgoto µİ¹éµ÷ÓÃ
+				æ ¸å¿ƒé¡¹ä¸å­˜åœ¨äºçŠ¶æ€é›†ä¸­ï¼Œå› æ­¤éœ€è¦æ–°å»ºçŠ¶æ€å¹¶åœ¨å…¶ä¸Šè®¡ç®—goto é€’å½’è°ƒç”¨
 				*/
 
 				lalrConfigList_t *all_config;
 
-				all_config = Parser_CreateConfigList();/*×ÊÔ´·ÖÅäµã0*/
+				all_config = Parser_CreateConfigList();/*èµ„æºåˆ†é…ç‚¹0*/
 
-				if(all_config == NULL)/*Ê§°ÜÔòÖ»ĞèÇåÀíµôbasis£¬Ö®ºó·µ»Ø¿Õ£¬ĞÂ×´Ì¬Î´½¨Á¢*/
+				if(all_config == NULL)/*å¤±è´¥åˆ™åªéœ€æ¸…ç†æ‰basisï¼Œä¹‹åè¿”å›ç©ºï¼Œæ–°çŠ¶æ€æœªå»ºç«‹*/
 				{
-						Parser_DestroyConfigList(basis, true);/*ÇåÀíbasis¼°ÆäÄÚ²¿config*/
+						Parser_DestroyConfigList(basis, true);/*æ¸…ç†basisåŠå…¶å†…éƒ¨config*/
 						return NULL;
 				}
 
-				if(Parser_CopyConfigList(all_config, basis) != AR_S_YES)/*×ÊÔ´·ÖÅäµã1£¬Èç¹ûÊ§°Ü£¬ÔòÇåÀíall_configºÍbasis*/
+				if(Parser_CopyConfigList(all_config, basis) != AR_S_YES)/*èµ„æºåˆ†é…ç‚¹1ï¼Œå¦‚æœå¤±è´¥ï¼Œåˆ™æ¸…ç†all_configå’Œbasis*/
 				{
-						Parser_DestroyConfigList(all_config, false);/*ÇåÀíall_config*/
+						Parser_DestroyConfigList(all_config, false);/*æ¸…ç†all_config*/
 						all_config = NULL;
-						Parser_DestroyConfigList(basis, true);/*ÇåÀíbasis¼°ÆäÄÚ²¿Ëù°üº¬µÄconfig*/
+						Parser_DestroyConfigList(basis, true);/*æ¸…ç†basisåŠå…¶å†…éƒ¨æ‰€åŒ…å«çš„config*/
 						basis = NULL;
 
 						return NULL;
 				}
 
 
-				if(__calc_lr0_closure(all_config, grammar, first_set, lr0) != AR_S_YES)/*×ÊÔ´·ÖÅäµã2£¬¼ÆËãlr0±Õ°ü£¬Èç¹ûÊ§°Ü£¬ÔòÇåÀíall_configºÍbasis*/
+				if(__calc_lr0_closure(all_config, grammar, first_set, lr0) != AR_S_YES)/*èµ„æºåˆ†é…ç‚¹2ï¼Œè®¡ç®—lr0é—­åŒ…ï¼Œå¦‚æœå¤±è´¥ï¼Œåˆ™æ¸…ç†all_configå’Œbasis*/
 				{
-						Parser_DestroyConfigList(all_config, true);/*´ËÊ±all_config±Ø¶¨°üº¬basisËùÓĞconfig£¬¼°ÆäÑÜÉúµÄlr0·ÇºËĞÄÏî£¬Òò´ËÒªÇåÀíall_config¼°ÆäËù°üº¬config*/
+						Parser_DestroyConfigList(all_config, true);/*æ­¤æ—¶all_configå¿…å®šåŒ…å«basisæ‰€æœ‰configï¼ŒåŠå…¶è¡ç”Ÿçš„lr0éæ ¸å¿ƒé¡¹ï¼Œå› æ­¤è¦æ¸…ç†all_configåŠå…¶æ‰€åŒ…å«config*/
 						all_config = NULL;
 						
 						Parser_DestroyConfigList(basis, false); 
@@ -262,11 +262,11 @@ static	lalrState_t* __build_state(lalrConfigList_t *basis, const psrGrammar_t *g
 
 				Parser_SortConfigList(all_config);
 				
-				new_state = Parser_CreateState();/*×ÊÔ´·ÖÅäµã3*/
+				new_state = Parser_CreateState();/*èµ„æºåˆ†é…ç‚¹3*/
 
-				if(new_state == NULL)/*Èç¹ûÊ§°Ü£¬Ôò×´Ì¬´´½¨Î´ÍêÕû£¬»¹ÊÇÖ»ĞèÒªÇåÀíall_configºÍbasis*/
+				if(new_state == NULL)/*å¦‚æœå¤±è´¥ï¼Œåˆ™çŠ¶æ€åˆ›å»ºæœªå®Œæ•´ï¼Œè¿˜æ˜¯åªéœ€è¦æ¸…ç†all_configå’Œbasis*/
 				{
-						Parser_DestroyConfigList(all_config, true);/*´ËÊ±all_config±Ø¶¨°üº¬basisËùÓĞconfig£¬¼°ÆäÑÜÉúµÄlr0·ÇºËĞÄÏî£¬Òò´ËÒªÇåÀíall_config¼°ÆäËù°üº¬config*/
+						Parser_DestroyConfigList(all_config, true);/*æ­¤æ—¶all_configå¿…å®šåŒ…å«basisæ‰€æœ‰configï¼ŒåŠå…¶è¡ç”Ÿçš„lr0éæ ¸å¿ƒé¡¹ï¼Œå› æ­¤è¦æ¸…ç†all_configåŠå…¶æ‰€åŒ…å«config*/
 						all_config = NULL;
 						
 						Parser_DestroyConfigList(basis, false); 
@@ -280,7 +280,7 @@ static	lalrState_t* __build_state(lalrConfigList_t *basis, const psrGrammar_t *g
 				new_state->basis = basis;
 				new_state->all_config = all_config;
 
-				if(Parser_InsertToStateSet(set, new_state) != AR_S_YES)/*×ÊÔ´·ÖÅäµã4£¬Èç¹ûÊ§°Ü£¬new_stateÎ´±»²åÈë×´Ì¬¼¯ºÏsetÖĞ£¬Òò´ËÇåÀíµô´Ë×´Ì¬µÄ×ÊÔ´¾Í¿ÉÒÔÁË*/
+				if(Parser_InsertToStateSet(set, new_state) != AR_S_YES)/*èµ„æºåˆ†é…ç‚¹4ï¼Œå¦‚æœå¤±è´¥ï¼Œnew_stateæœªè¢«æ’å…¥çŠ¶æ€é›†åˆsetä¸­ï¼Œå› æ­¤æ¸…ç†æ‰æ­¤çŠ¶æ€çš„èµ„æºå°±å¯ä»¥äº†*/
 				{
 						Parser_DestroyState(new_state);
 						new_state = NULL;
@@ -288,7 +288,7 @@ static	lalrState_t* __build_state(lalrConfigList_t *basis, const psrGrammar_t *g
 				}
 
 				
-				/*build_gotoÊ§°Ü£¬²»±ØÇåÀínew_state£¬ÒòÎªnew_stateÒÑ¾­±»²åÈëµ½setÖĞ*/
+				/*build_gotoå¤±è´¥ï¼Œä¸å¿…æ¸…ç†new_stateï¼Œå› ä¸ºnew_stateå·²ç»è¢«æ’å…¥åˆ°setä¸­*/
 				if(__build_goto(new_state, grammar, set, first_set, lr0) != AR_S_YES)
 				{
 						return NULL;
@@ -312,7 +312,7 @@ static	arStatus_t	__build_goto(lalrState_t *start, const psrGrammar_t *grammar, 
 		}
 
 
-		/*±éÀú×´Ì¬(Ïî¼¯)startµÄÃ¿Ò»¸öÏî*/
+		/*éå†çŠ¶æ€(é¡¹é›†)startçš„æ¯ä¸€ä¸ªé¡¹*/
 		for(node = start->all_config->head; node != NULL; node = node->next)
 		{
 				lalrState_t				*new_state;
@@ -328,13 +328,13 @@ static	arStatus_t	__build_goto(lalrState_t *start, const psrGrammar_t *grammar, 
 						continue;
 				}
 
-				if(node->config->delim >= rule->body.count)/*Ïînode->configÃ»ÓĞgotoÁË*/
+				if(node->config->delim >= rule->body.count)/*é¡¹node->configæ²¡æœ‰gotoäº†*/
 				{
 						continue;
 				}
 
 				/*A -> a. B c ;
-				Ôò´ËÊ± delim == 1,Ôòbody[delim] == B;Ôòsymb== BÎªÏÂÒ»¸ö×ªÒÆ
+				åˆ™æ­¤æ—¶ delim == 1,åˆ™body[delim] == B;åˆ™symb== Bä¸ºä¸‹ä¸€ä¸ªè½¬ç§»
 				*/
 				symb = rule->body.lst[node->config->delim]; 
 
@@ -342,15 +342,15 @@ static	arStatus_t	__build_goto(lalrState_t *start, const psrGrammar_t *grammar, 
 
 
 
-				goto_list = Parser_CreateConfigList();/*×ÊÔ´·ÖÅäµã0£¬´´½¨ĞÂlist*/
+				goto_list = Parser_CreateConfigList();/*èµ„æºåˆ†é…ç‚¹0ï¼Œåˆ›å»ºæ–°list*/
 
-				if(goto_list == NULL)/*Ê§°Ü£¬Ôò·µ»Ø£¬²»ÓÃÇåÀí×ÊÔ´*/
+				if(goto_list == NULL)/*å¤±è´¥ï¼Œåˆ™è¿”å›ï¼Œä¸ç”¨æ¸…ç†èµ„æº*/
 				{
 						return AR_E_NOMEM;
 				}
 				
 
-				/*ÒÔÏÂÎªÇó×´Ì¬(Ïî¼¯)startµÄËùÓĞÏîÔÚ·ûºÅsymbÉÏµÄ×ªÒÆ*/
+				/*ä»¥ä¸‹ä¸ºæ±‚çŠ¶æ€(é¡¹é›†)startçš„æ‰€æœ‰é¡¹åœ¨ç¬¦å·symbä¸Šçš„è½¬ç§»*/
 				for(inner_node = start->all_config->head; inner_node != NULL; inner_node = inner_node->next)
 				{
 						const psrSymb_t			*bsp;
@@ -361,33 +361,33 @@ static	arStatus_t	__build_goto(lalrState_t *start, const psrGrammar_t *grammar, 
 
 						if(inner_node->config->is_completed)
 						{
-								continue;/*±»¼ÆËã¹ıÔò²»ÔÙ¼ÆËã*/
+								continue;/*è¢«è®¡ç®—è¿‡åˆ™ä¸å†è®¡ç®—*/
 						}
 
 						AR_ASSERT(inner_node->config->delim <= inner_rule->body.count);
 
-						if(inner_node->config->delim == inner_rule->body.count)/*ÕâÌõ²úÉúÊ½Ã»×ªÒÆÁË*/
+						if(inner_node->config->delim == inner_rule->body.count)/*è¿™æ¡äº§ç”Ÿå¼æ²¡è½¬ç§»äº†*/
 						{
 								continue;
 						}
 
 						bsp = inner_rule->body.lst[inner_node->config->delim];
 						
-						if(Parser_CompSymb(symb, bsp) != 0)/*ÕâÌõ²úÉúÊ½ÔÚ´ËsymbÏÂÎŞ×ªÒÆ*/
+						if(Parser_CompSymb(symb, bsp) != 0)/*è¿™æ¡äº§ç”Ÿå¼åœ¨æ­¤symbä¸‹æ— è½¬ç§»*/
 						{
 								continue;
 						}
 
 						inner_node->config->is_completed = true;
 
-						/*ÊÇ·ñÒÑ´æÔÚÓÚgoto_listÖĞÖĞ*/
+						/*æ˜¯å¦å·²å­˜åœ¨äºgoto_listä¸­ä¸­*/
 						new_config = Parser_FindFromConfigList(goto_list, inner_node->config->rule_num, inner_node->config->delim + 1);
 
 						if(new_config == NULL)
 						{
-								new_config = Parser_InsertToConfigListByValue(goto_list, inner_node->config->rule_num, inner_node->config->delim + 1, grammar);/*×ÊÔ´·ÖÅäµã1*/
+								new_config = Parser_InsertToConfigListByValue(goto_list, inner_node->config->rule_num, inner_node->config->delim + 1, grammar);/*èµ„æºåˆ†é…ç‚¹1*/
 
-								if(new_config == NULL)/*Ê§°Ü£¬ÔòÇåÀíµô×ÊÔ´·ÖÅäµã0µÄgoto_list×ÊÔ´£¬È»ºó·µ»Ø´íÎó*/
+								if(new_config == NULL)/*å¤±è´¥ï¼Œåˆ™æ¸…ç†æ‰èµ„æºåˆ†é…ç‚¹0çš„goto_listèµ„æºï¼Œç„¶åè¿”å›é”™è¯¯*/
 								{
 										Parser_DestroyConfigList(goto_list, true);
 										goto_list = NULL;
@@ -414,18 +414,18 @@ static	arStatus_t	__build_goto(lalrState_t *start, const psrGrammar_t *grammar, 
 
 										s3 :	[A		:	a .			, $]	//config 3
 										
-										config0µÄ$ĞèÒª´«µİµ½config1
+										config0çš„$éœ€è¦ä¼ é€’åˆ°config1
 										
 								*/
 
 								/*
-										¼ÇÂ¼´ÓÏîinner_node->config ¾­¹ı·ûºÅsymb£¬×ªÒÆµ½new_config,
-								ÀıÈç£ºs0 -> [A'		: . A, $] ¾­¹ı·ûºÅA×ªÒÆµ½  s1 :    [A'		: A . $ ] 
+										è®°å½•ä»é¡¹inner_node->config ç»è¿‡ç¬¦å·symbï¼Œè½¬ç§»åˆ°new_config,
+								ä¾‹å¦‚ï¼šs0 -> [A'		: . A, $] ç»è¿‡ç¬¦å·Aè½¬ç§»åˆ°  s1 :    [A'		: A . $ ] 
 
 								*/
 								
 
-								if(Parser_InsertToConfigList(new_config->backward, inner_node->config) != AR_S_YES)/*×ÊÔ´·ÖÅäµã2£¬ÒòÎª·ÖÅäµã1µÄ×ÊÔ´¹éÊôÓÚ×ÊÔ´0£¬ Òò´ËÈç¹û´Ë´¦Ê§°Ü£¬Ö»ĞèÒªÇåÀí·ÖÅäµã0*/
+								if(Parser_InsertToConfigList(new_config->backward, inner_node->config) != AR_S_YES)/*èµ„æºåˆ†é…ç‚¹2ï¼Œå› ä¸ºåˆ†é…ç‚¹1çš„èµ„æºå½’å±äºèµ„æº0ï¼Œ å› æ­¤å¦‚æœæ­¤å¤„å¤±è´¥ï¼Œåªéœ€è¦æ¸…ç†åˆ†é…ç‚¹0*/
 								{
 										Parser_DestroyConfigList(goto_list, true);
 										goto_list = NULL;
@@ -434,7 +434,7 @@ static	arStatus_t	__build_goto(lalrState_t *start, const psrGrammar_t *grammar, 
 						}
 				}
 
-				/*goto_listÒ»¶¨»áÔÚ__build_stateÖĞ±»ÇåÀí£¬ÇÒÈç¹ûnew_state!=NULL£¬Ôò±Ø¶¨ÒÑ±»²åÈëµ½setÖĞ*/
+				/*goto_listä¸€å®šä¼šåœ¨__build_stateä¸­è¢«æ¸…ç†ï¼Œä¸”å¦‚æœnew_state!=NULLï¼Œåˆ™å¿…å®šå·²è¢«æ’å…¥åˆ°setä¸­*/
 				new_state = __build_state(goto_list, grammar, set, first_set, lr0);
 
 				if(new_state == NULL)
@@ -550,7 +550,7 @@ lalrState_t*	Parser_Create_LR0_State(const psrGrammar_t *grammar)
 		}
 
 		
-		/*****************************ÉèÖÃ³õÊ¼»¯ºËĞÄ×´Ì¬£¬S' : S $*******************************************/
+		/*****************************è®¾ç½®åˆå§‹åŒ–æ ¸å¿ƒçŠ¶æ€ï¼ŒS' : S $*******************************************/
 		idx = Parser_GetTermSpecID(grammar,PARSER_EOISymb);
 		AR_ASSERT(idx >= 0);
 
@@ -571,7 +571,7 @@ lalrState_t*	Parser_Create_LR0_State(const psrGrammar_t *grammar)
 
 		if(__build_slr_actions(&set, grammar, &follow_set) != AR_S_YES)
 		{
-				start = NULL;/*Èç¹û__build_state½áÊø£¬Ôò¿ÉÒÔÈ·¶¨state´æÔÚÓÚsetÖĞ*/
+				start = NULL;/*å¦‚æœ__build_stateç»“æŸï¼Œåˆ™å¯ä»¥ç¡®å®šstateå­˜åœ¨äºsetä¸­*/
 				goto END_POINT;
 		}
 
@@ -675,10 +675,10 @@ static arStatus_t __build_propagation_links(lalrStateSet_t *set)
 												changed = true;
 												next_config->is_completed = false;
 
-										}else if(tmp == AR_S_NO)/*ÎŞ¸üĞÂµÄ´«²¥£¬Ôò²»¶¯*/
+										}else if(tmp == AR_S_NO)/*æ— æ›´æ–°çš„ä¼ æ’­ï¼Œåˆ™ä¸åŠ¨*/
 										{
 
-										}else /*´æ´¢·ÖÅäÊ§°Ü£¬Ôò·µ»Ø´íÎó*/
+										}else /*å­˜å‚¨åˆ†é…å¤±è´¥ï¼Œåˆ™è¿”å›é”™è¯¯*/
 										{
 												return tmp;
 										}
@@ -714,7 +714,7 @@ static arStatus_t __build_actions(lalrStateSet_t *set, const psrGrammar_t *gramm
 				{
 						psrRule_t *rule = Parser_GetRuleFromGrammar(grammar, node->config->rule_num);
 						/*
-						node->config->delim == rule->body.count±íÃ÷ÁË´ËÏîÎª¹æÔ¼×´Ì¬
+						node->config->delim == rule->body.countè¡¨æ˜äº†æ­¤é¡¹ä¸ºè§„çº¦çŠ¶æ€
 						*/
 
 						if(node->config->delim == rule->body.count)
@@ -729,7 +729,7 @@ static arStatus_t __build_actions(lalrStateSet_t *set, const psrGrammar_t *gramm
 										{
 												lalrAction_t *action = Parser_InsertAction(state, NULL, term_lst->lst[x].term, node->config);
 
-												if(action == NULL)/*´æ´¢·ÖÅäÊ§°Ü*/
+												if(action == NULL)/*å­˜å‚¨åˆ†é…å¤±è´¥*/
 												{
 														return AR_E_NOMEM;
 												}
@@ -741,7 +741,7 @@ static arStatus_t __build_actions(lalrStateSet_t *set, const psrGrammar_t *gramm
 										}else if(tmp == AR_S_NO)
 										{
 
-										}else /*´íÎó,malloc == NULLµÈ*/
+										}else /*é”™è¯¯,malloc == NULLç­‰*/
 										{
 												return tmp;
 										}
@@ -828,7 +828,7 @@ lalrState_t*	Parser_Create_LALR_State(const psrGrammar_t *grammar)
 		}
 
 END_POINT:
-		if(start == NULL)/*start == NULLµÄÒâË¼ÊÇÇ°ÃæÊ§°ÜÁË*/
+		if(start == NULL)/*start == NULLçš„æ„æ€æ˜¯å‰é¢å¤±è´¥äº†*/
 		{
 				size_t i;
 				for(i = 0; i < set.count; ++i)

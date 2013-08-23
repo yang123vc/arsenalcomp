@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
  * 
@@ -88,7 +88,7 @@ typedef struct __lex_token_tag
 {
 		const wchar_t	*str;
 		
-		size_t			index;	/*´ËÎªÔÚÕû¸öÊäÈëÔ´ÂëÖĞµÄË÷ÒıÎ»ÖÃ£¬ÀıÈçÊäÈëÎª"abc",ÄÇÃ´aÊÇ0,bÊÇ1,cÊÇ2*/
+		size_t			index;	/*æ­¤ä¸ºåœ¨æ•´ä¸ªè¾“å…¥æºç ä¸­çš„ç´¢å¼•ä½ç½®ï¼Œä¾‹å¦‚è¾“å…¥ä¸º"abc",é‚£ä¹ˆaæ˜¯0,bæ˜¯1,cæ˜¯2*/
 		size_t			count;
 		
 		size_t			line;
@@ -146,18 +146,18 @@ arStatus_t		Lex_IsError(const lexMatch_t *match);
 
 void			Lex_ClearError(lexMatch_t *match);
 
-/*Ìøµ½ÏÂÒ»¸ö·Ç¿Õ°×token*/
+/*è·³åˆ°ä¸‹ä¸€ä¸ªéç©ºç™½token*/
 void			Lex_Skip(lexMatch_t *pmatch);
-/*Ìøµ½ÓëtokÏàÍ¬µÄ·ûºÅ£¬Èç¹ûÎ´ÕÒµ½,pmatchÖ±½ÓÌøµ½·ûºÅ½áÎ²*/
+/*è·³åˆ°ä¸tokç›¸åŒçš„ç¬¦å·ï¼Œå¦‚æœæœªæ‰¾åˆ°,pmatchç›´æ¥è·³åˆ°ç¬¦å·ç»“å°¾*/
 void			Lex_SkipTo(lexMatch_t *pmatch, const wchar_t *tok);
 
 
 arStatus_t		Lex_TrySkipTo(lexMatch_t *pmatch, const wchar_t *tok);
 
-/*¶ªÆúN¸ö×Ö·û*/
+/*ä¸¢å¼ƒNä¸ªå­—ç¬¦*/
 void			Lex_SkipN(lexMatch_t *pmatch, size_t nchar);
 
-/*Lex_PutBack»áÖØÖÃMatch_tµÄĞĞÁĞºÅ¼°nextÖ¸ÕëÎª´ËtokenµÄ£¬²¢²»»á²¾¼ÇÒ»¸ö¶ÓÁĞ*/
+/*Lex_PutBackä¼šé‡ç½®Match_tçš„è¡Œåˆ—å·åŠnextæŒ‡é’ˆä¸ºæ­¤tokençš„ï¼Œå¹¶ä¸ä¼šç°¿è®°ä¸€ä¸ªé˜Ÿåˆ—*/
 void			Lex_PutBack(lexMatch_t *pmatch, const lexToken_t *tok);
 
 

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
  * 
@@ -76,8 +76,8 @@ psrTermInfo_t*	Parser_FindTermByName(psrTermInfoList_t	*lst, const wchar_t *name
 		for(i = 0; i < lst->count; ++i)
 		{
 				psrTermInfo_t	*info = &lst->lst[i];
-				/*×¢Òâ£¬ÕâÀïµÄ²ÎÊıname¿ÉÄÜÊÇÈÎºÎ·ÇParser_StringTable·ÖÅäµÄÄÚ´æ£¬
-				 *Òò´Ë£¬ÕâÀï±ØĞëÓÃAR_wcscmp±È½Ï×Ö·û´®¶ø·ÇÀàËÆParser_CompSymbÄÚ²¿µÄ±È½ÏstrÖ¸Õë
+				/*æ³¨æ„ï¼Œè¿™é‡Œçš„å‚æ•°nameå¯èƒ½æ˜¯ä»»ä½•éParser_StringTableåˆ†é…çš„å†…å­˜ï¼Œ
+				 *å› æ­¤ï¼Œè¿™é‡Œå¿…é¡»ç”¨AR_wcscmpæ¯”è¾ƒå­—ç¬¦ä¸²è€Œéç±»ä¼¼Parser_CompSymbå†…éƒ¨çš„æ¯”è¾ƒstræŒ‡é’ˆ
 				*/
 				if(AR_wcscmp(info->term->name, name) == 0)
 				{
@@ -114,8 +114,8 @@ ar_int_t			Parser_IndexOfTermInfoListByName(const psrTermInfoList_t	*lst, const 
 		for(i = 0; i < lst->count; ++i)
 		{
 				psrTermInfo_t	*info = &lst->lst[i];
-				/*×¢Òâ£¬ÕâÀïµÄ²ÎÊıname¿ÉÄÜÊÇÈÎºÎ·ÇParser_StringTable·ÖÅäµÄÄÚ´æ£¬
-				 *Òò´Ë£¬ÕâÀï±ØĞëÓÃAR_wcscmp±È½Ï×Ö·û´®¶ø·ÇÀàËÆParser_CompSymbÄÚ²¿µÄ±È½ÏstrÖ¸Õë
+				/*æ³¨æ„ï¼Œè¿™é‡Œçš„å‚æ•°nameå¯èƒ½æ˜¯ä»»ä½•éParser_StringTableåˆ†é…çš„å†…å­˜ï¼Œ
+				 *å› æ­¤ï¼Œè¿™é‡Œå¿…é¡»ç”¨AR_wcscmpæ¯”è¾ƒå­—ç¬¦ä¸²è€Œéç±»ä¼¼Parser_CompSymbå†…éƒ¨çš„æ¯”è¾ƒstræŒ‡é’ˆ
 				*/
 				if(AR_wcscmp(info->term->name, name) == 0)
 				{
@@ -239,7 +239,7 @@ arStatus_t		Parser_CreateRule(psrRule_t **prule, const psrSymb_t *head, const ps
 		right_term = NULL; 
 		inerr = false;
 
-		if(Parser_FindTermByName((psrTermInfoList_t*)term_list, head->name) != NULL)/*ÊäÈëµÄ·ÇÖÕ½á·ûºÅÒÑ´æÔÚÓÚ·ÇÖÕ½á·ûÖĞ£¬´íÎó*/
+		if(Parser_FindTermByName((psrTermInfoList_t*)term_list, head->name) != NULL)/*è¾“å…¥çš„éç»ˆç»“ç¬¦å·å·²å­˜åœ¨äºéç»ˆç»“ç¬¦ä¸­ï¼Œé”™è¯¯*/
 		{
 				if(err_msg)
 				{
@@ -248,7 +248,7 @@ arStatus_t		Parser_CreateRule(psrRule_t **prule, const psrSymb_t *head, const ps
 				return AR_E_EXISTED;
 		}
 
-		if(prec_tok != NULL && Parser_FindTermByName((psrTermInfoList_t*)term_list, prec_tok) == NULL)/*²úÉúÊ½ÓÅÏÈ¼¶·ûºÅ²»´æÔÚÓÚ·ÇÖÕ½á·ûÖĞ£¬´íÎó*/
+		if(prec_tok != NULL && Parser_FindTermByName((psrTermInfoList_t*)term_list, prec_tok) == NULL)/*äº§ç”Ÿå¼ä¼˜å…ˆçº§ç¬¦å·ä¸å­˜åœ¨äºéç»ˆç»“ç¬¦ä¸­ï¼Œé”™è¯¯*/
 		{
 				/*AR_error(L"Grammar Error: Invalid prec token in <%ls>!\r\n", head->name);*/
 				if(err_msg)
@@ -268,7 +268,7 @@ arStatus_t		Parser_CreateRule(psrRule_t **prule, const psrSymb_t *head, const ps
 
 				if(body->lst[i]->type == PARSER_TERM)
 				{
-						if(Parser_FindTermByName((psrTermInfoList_t*)term_list, symb->name) == NULL)/*·ÇÖÕ½á·û²»´æÔÚÓÚÓï·¨·ÇÖÕ½á·û¼¯ºÏÖĞ£¬Ê§°Ü*/
+						if(Parser_FindTermByName((psrTermInfoList_t*)term_list, symb->name) == NULL)/*éç»ˆç»“ç¬¦ä¸å­˜åœ¨äºè¯­æ³•éç»ˆç»“ç¬¦é›†åˆä¸­ï¼Œå¤±è´¥*/
 						{
 								if(err_msg)
 								{
@@ -279,7 +279,7 @@ arStatus_t		Parser_CreateRule(psrRule_t **prule, const psrSymb_t *head, const ps
 						
 						if(Parser_CompSymb(symb, PARSER_ErrorSymb) == 0)
 						{
-								if(inerr)/*Í¬Ò»¸ö²úÉúÊ½´æÔÚÁ½¸öerror*/
+								if(inerr)/*åŒä¸€ä¸ªäº§ç”Ÿå¼å­˜åœ¨ä¸¤ä¸ªerror*/
 								{
 										if(err_msg)
 										{
@@ -294,7 +294,7 @@ arStatus_t		Parser_CreateRule(psrRule_t **prule, const psrSymb_t *head, const ps
 						right_term = symb->name;
 				}else
 				{
-						if(Parser_FindTermByName((psrTermInfoList_t*)term_list, symb->name) != NULL)/*·ÇÖÕ½á·ûºÅ´æÔÚÓÚÖÕ½á·ûºÅ±íÖĞ*/
+						if(Parser_FindTermByName((psrTermInfoList_t*)term_list, symb->name) != NULL)/*éç»ˆç»“ç¬¦å·å­˜åœ¨äºç»ˆç»“ç¬¦å·è¡¨ä¸­*/
 						{
 								if(err_msg)
 								{
@@ -306,7 +306,7 @@ arStatus_t		Parser_CreateRule(psrRule_t **prule, const psrSymb_t *head, const ps
 				}
 		}
 		
-		if(right_term == NULL)/*Ã¿¸ö²úÉúÊ½±ØĞë´æÓĞÒ»¸öÓÅÏÈ¼¶·ûºÅ£¬ÇÒÎªÖÕ½á·û*/
+		if(right_term == NULL)/*æ¯ä¸ªäº§ç”Ÿå¼å¿…é¡»å­˜æœ‰ä¸€ä¸ªä¼˜å…ˆçº§ç¬¦å·ï¼Œä¸”ä¸ºç»ˆç»“ç¬¦*/
 		{
 				right_term = PARSER_DefPrecSymb->name;
 		}
@@ -316,7 +316,7 @@ arStatus_t		Parser_CreateRule(psrRule_t **prule, const psrSymb_t *head, const ps
 		
 		
 		
-		rule = AR_NEW0(psrRule_t);/*·ÖÅäµã1*/
+		rule = AR_NEW0(psrRule_t);/*åˆ†é…ç‚¹1*/
 
 		if(rule == NULL)
 		{
@@ -352,7 +352,7 @@ arStatus_t		Parser_CreateRule(psrRule_t **prule, const psrSymb_t *head, const ps
 
 		for(i = 0; i < body->count; ++i)
 		{
-				const psrSymb_t *tmp_symb = Parser_CopyNewSymb(body->lst[i]);/*·ÖÅäµã4*/
+				const psrSymb_t *tmp_symb = Parser_CopyNewSymb(body->lst[i]);/*åˆ†é…ç‚¹4*/
 
 				if(tmp_symb == NULL)	
 				{
@@ -631,7 +631,7 @@ static arStatus_t __init_grammar_component_unit(psrGrammar_t *grammar)
 		arStatus_t status;
 		AR_ASSERT(grammar != NULL);
 
-		/*Ã¿¸ögrammar¶¼ÓĞ×Ô¼ºË½ÓĞµÄ·ûºÅ£¬ÒòÎªspec_idµÄ¹ØÏµ£¬ËùÒÔÕâÀï¶¼copyÒ»·İĞÂµÄ*/
+		/*æ¯ä¸ªgrammaréƒ½æœ‰è‡ªå·±ç§æœ‰çš„ç¬¦å·ï¼Œå› ä¸ºspec_idçš„å…³ç³»ï¼Œæ‰€ä»¥è¿™é‡Œéƒ½copyä¸€ä»½æ–°çš„*/
 
 		status = Parser_InsertToTermInfoList(&grammar->term_list, PARSER_EOISymb->name,PARSER_EOI_TOKVAL, PARSER_ASSOC_NONASSOC, 0, NULL);
 
@@ -655,7 +655,7 @@ static arStatus_t __init_grammar_component_unit(psrGrammar_t *grammar)
 				return status;
 		}
 
-		/************************************************³õÊ¼»¯symb list¿Õ¼ä****************************************/
+		/************************************************åˆå§‹åŒ–symb listç©ºé—´****************************************/
 
 		status = Parser_ReserveSymbListCapacity(&grammar->symb_list, AR_PSR_MAX_SYMB_LIST);
 
@@ -844,7 +844,7 @@ const psrSymbList_t* Parser_GetSymbList(const psrGrammar_t *grammar)
 		
 		{
 				size_t i,k;
-				/*ÏÈ²åÈëËùÓĞÖÕ½á·û*/
+				/*å…ˆæ’å…¥æ‰€æœ‰ç»ˆç»“ç¬¦*/
 				for(i = 0; i < grammar->term_list.count; ++i)
 				{
 						if(Parser_InsertToSymbList(lst, grammar->term_list.lst[i].term) != AR_S_YES)
@@ -853,7 +853,7 @@ const psrSymbList_t* Parser_GetSymbList(const psrGrammar_t *grammar)
 						}
 				}
 				
-				/*²åÈëÃ¿Ò»Ìõ²úÉúÊ½µÄÃ¿Ò»¸ö·ûºÅ£¬ÖÕ½á·û»ò·ÇÖÕ½á·û*/
+				/*æ’å…¥æ¯ä¸€æ¡äº§ç”Ÿå¼çš„æ¯ä¸€ä¸ªç¬¦å·ï¼Œç»ˆç»“ç¬¦æˆ–éç»ˆç»“ç¬¦*/
 				for(i = 0; i < grammar->count; ++i)
 				{
 						const psrRule_t	*rule = grammar->rules[i];
@@ -956,7 +956,7 @@ arStatus_t				Parser_InsertRule(psrGrammar_t *grammar, psrRule_t *rule)
 				}
 		}
 
-		if(Parser_CompSymb(rule->head, PARSER_StartSymb) == 0)/*rule-head²»¿ÉÎª%Start±£Áô·ûºÅ*/
+		if(Parser_CompSymb(rule->head, PARSER_StartSymb) == 0)/*rule-headä¸å¯ä¸º%Startä¿ç•™ç¬¦å·*/
 		{
 				/*AR_error(L"Grammar Error : Non-term token %ls was reserved\r\n", rule->head->name);*/
 				AR_FormatString(grammar->last_err_msg, L"Grammar Error : Non-term token %ls was reserved\r\n", rule->head->name);
@@ -1286,7 +1286,7 @@ arStatus_t			Parser_CheckIsValidGrammar(const psrGrammar_t *grammar)
 		AR_ASSERT(grammar != NULL);
 		gmr = (psrGrammar_t*)grammar;
 		Parser_ClearGrammarLastError(gmr);
-		if(grammar->count < 2)/*StartºÍÊäÈëµÄµÚÒ»¸ö²úÉúÊ½Ò»¶¨>=2*/
+		if(grammar->count < 2)/*Startå’Œè¾“å…¥çš„ç¬¬ä¸€ä¸ªäº§ç”Ÿå¼ä¸€å®š>=2*/
 		{
 				AR_FormatString(gmr->last_err_msg, L"Grammar Error : empty grammar!\r\n");
 				/*
@@ -1301,7 +1301,7 @@ arStatus_t			Parser_CheckIsValidGrammar(const psrGrammar_t *grammar)
 		lst = Parser_GetSymbList(grammar);
 		AR_ASSERT(lst != NULL);
 
-		mark_tbl = AR_NEWARR0(ar_bool_t, lst->count * lst->count);/*ÓÃmark_tbl¼ÇÂ¼´Ë´íÎóÊÇ·ñÒÑ¾­±¨¸æ¹ıÁË*/
+		mark_tbl = AR_NEWARR0(ar_bool_t, lst->count * lst->count);/*ç”¨mark_tblè®°å½•æ­¤é”™è¯¯æ˜¯å¦å·²ç»æŠ¥å‘Šè¿‡äº†*/
 
 		if(mark_tbl == NULL)
 		{
@@ -1311,12 +1311,12 @@ arStatus_t			Parser_CheckIsValidGrammar(const psrGrammar_t *grammar)
 
 
 		result = true;
-		for(i = 0; i < grammar->count; ++i)/*Ã¿Ò»Ìõ²úÉúÊ½*/
+		for(i = 0; i < grammar->count; ++i)/*æ¯ä¸€æ¡äº§ç”Ÿå¼*/
 		{
 				const psrRule_t *rule;
 				rule = grammar->rules[i];
 
-				for(j = 0; j < rule->body.count; ++j)/*Ã¿Ò»¸ö·ûºÅ*/
+				for(j = 0; j < rule->body.count; ++j)/*æ¯ä¸€ä¸ªç¬¦å·*/
 				{
 						const psrSymb_t *symb;
 						symb = rule->body.lst[j];
@@ -1325,7 +1325,7 @@ arStatus_t			Parser_CheckIsValidGrammar(const psrGrammar_t *grammar)
 						{
 								ar_bool_t is_ok;
 								is_ok = false;
-								for(k = 0; !is_ok && k < grammar->count; ++k)/*¼ì²éÕâÀïÒıÓÃµÄ·ÇÖÕ½á·ûsymbÊÇ·ñ´æÓĞ¶¨Òå*/
+								for(k = 0; !is_ok && k < grammar->count; ++k)/*æ£€æŸ¥è¿™é‡Œå¼•ç”¨çš„éç»ˆç»“ç¬¦symbæ˜¯å¦å­˜æœ‰å®šä¹‰*/
 								{
 										if(Parser_CompSymb(symb, grammar->rules[k]->head) == 0)
 										{
@@ -1333,7 +1333,7 @@ arStatus_t			Parser_CheckIsValidGrammar(const psrGrammar_t *grammar)
 										}
 								}
 
-								if(!is_ok)/*Èç¹ûÃ»¶¨Òå£¬Ôò±¨´í*/
+								if(!is_ok)/*å¦‚æœæ²¡å®šä¹‰ï¼Œåˆ™æŠ¥é”™*/
 								{
 										size_t h,s;
 										h = (size_t)Parser_FindFromSymbList(lst, rule->head);
@@ -1363,7 +1363,7 @@ arStatus_t			Parser_CheckIsValidGrammar(const psrGrammar_t *grammar)
 		mark_tbl = NULL;
 
 
-		for(i = 0; i < lst->count; ++i)/*´Ë²¿·Ö¼ì²é·ÇÖÕ½á·ûÊÇ·ñ±»ÒıÓÃ¹ı*/
+		for(i = 0; i < lst->count; ++i)/*æ­¤éƒ¨åˆ†æ£€æŸ¥éç»ˆç»“ç¬¦æ˜¯å¦è¢«å¼•ç”¨è¿‡*/
 		{
 				const psrSymb_t *symb;
 				ar_bool_t is_ok;
@@ -1380,7 +1380,7 @@ arStatus_t			Parser_CheckIsValidGrammar(const psrGrammar_t *grammar)
 						const psrRule_t *rule;
 						rule = grammar->rules[k];
 
-						if(Parser_CompSymb(rule->head, symb) == 0)/*×Ô¼ºÒıÓÃ×Ô¼º²»Ëã*/
+						if(Parser_CompSymb(rule->head, symb) == 0)/*è‡ªå·±å¼•ç”¨è‡ªå·±ä¸ç®—*/
 						{
 								continue;
 						}
@@ -1416,12 +1416,12 @@ arStatus_t			Parser_CheckIsValidGrammar(const psrGrammar_t *grammar)
 
 
 /*
-firstsetÇó·¨Îª£¬ÀıÈçA->X(0)...X(n-1);
-ÉèFirst(Term) = {Term}; First(Epsilon) = {Epsilon}; i = 0;
-Èç¹ûFirst(X(i))´æÔÚ{Epsilon}£¬Ôò First(A) += (First(X(i) - {Epsilon}); Èç¹ûi == n-1£¬ÔòFirst(A) += {Epsilon}£¬±¾´ÎÑ­»·ÖÕÖ¹£»
-Èç¹û²»´æÔÚ{Epsilon}£¬ÔòÑ­»·ÖÕÖ¹£»
+firstsetæ±‚æ³•ä¸ºï¼Œä¾‹å¦‚A->X(0)...X(n-1);
+è®¾First(Term) = {Term}; First(Epsilon) = {Epsilon}; i = 0;
+å¦‚æœFirst(X(i))å­˜åœ¨{Epsilon}ï¼Œåˆ™ First(A) += (First(X(i) - {Epsilon}); å¦‚æœi == n-1ï¼Œåˆ™First(A) += {Epsilon}ï¼Œæœ¬æ¬¡å¾ªç¯ç»ˆæ­¢ï¼›
+å¦‚æœä¸å­˜åœ¨{Epsilon}ï¼Œåˆ™å¾ªç¯ç»ˆæ­¢ï¼›
 
-ÒòÎªÃ¿´Î¶¼»á´¦ÀíÖÁÉÙÒ»¸ö·ûºÅ£¬ËùÒÔÄÜÈ·±£Ñ­»·ÖÕÖ¹£¬³ı·ÇÎŞÈÎºÎ·ûºÅ¼ÓÈëµ½First¼¯ºÏÖĞ(changed == False);
+å› ä¸ºæ¯æ¬¡éƒ½ä¼šå¤„ç†è‡³å°‘ä¸€ä¸ªç¬¦å·ï¼Œæ‰€ä»¥èƒ½ç¡®ä¿å¾ªç¯ç»ˆæ­¢ï¼Œé™¤éæ— ä»»ä½•ç¬¦å·åŠ å…¥åˆ°Firsté›†åˆä¸­(changed == False);
 */
 arStatus_t					Parser_CalcFirstSet(const psrGrammar_t *grammar, psrSymbMap_t *first_set)
 {
@@ -1459,7 +1459,7 @@ arStatus_t					Parser_CalcFirstSet(const psrGrammar_t *grammar, psrSymbMap_t *fi
 		
 		/*changed = false; */
 		
-		/*Ê×ÏÈ¼ÆËãÄÄ¸ö·ÇÖÕ½á·û¿ÉÒÔÍÆµ¼³ö¿Õ´®Epsilon*/
+		/*é¦–å…ˆè®¡ç®—å“ªä¸ªéç»ˆç»“ç¬¦å¯ä»¥æ¨å¯¼å‡ºç©ºä¸²Epsilon*/
 		do{
 				changed = false;
 
@@ -1495,7 +1495,7 @@ arStatus_t					Parser_CalcFirstSet(const psrGrammar_t *grammar, psrSymbMap_t *fi
 								}
 						}
 
-						if(k == rule->body.count)/*Èç¹û²úÉúÊ½ÌåÖĞÎŞÈÎºÎ·ûºÅ»òËùÓĞ·ûºÅ¾ù¿ÉÒÔÍÆµ¼³ö¿Õ´®£¬Ôò´Ë²úÉúÊ½Í·±»ÈÏÎª¿ÉÍÆµ¼³ö¿Õ*/
+						if(k == rule->body.count)/*å¦‚æœäº§ç”Ÿå¼ä½“ä¸­æ— ä»»ä½•ç¬¦å·æˆ–æ‰€æœ‰ç¬¦å·å‡å¯ä»¥æ¨å¯¼å‡ºç©ºä¸²ï¼Œåˆ™æ­¤äº§ç”Ÿå¼å¤´è¢«è®¤ä¸ºå¯æ¨å¯¼å‡ºç©º*/
 						{
 								rec->can_empty = true;
 								changed = true;
@@ -1522,55 +1522,55 @@ arStatus_t					Parser_CalcFirstSet(const psrGrammar_t *grammar, psrSymbMap_t *fi
 
 						for(k = 0; k < rule->body.count; ++k)
 						{
-								s2 = rule->body.lst[k];/*²úÉúÊ½ÌåÖĞµÚk¸ö·ûºÅ*/
+								s2 = rule->body.lst[k];/*äº§ç”Ÿå¼ä½“ä¸­ç¬¬kä¸ªç¬¦å·*/
 								
 								if(s2->type == PARSER_TERM)
 								{
-										/*µ±Ç°²úÉúÊ½ÌåÖĞ´æÔÚÖÕ½á·û£¬Ôò½«Æä¼ÓÈëºóÖÕÖ¹Ñ­»·*/
+										/*å½“å‰äº§ç”Ÿå¼ä½“ä¸­å­˜åœ¨ç»ˆç»“ç¬¦ï¼Œåˆ™å°†å…¶åŠ å…¥åç»ˆæ­¢å¾ªç¯*/
 										status = Parser_InsertToSymbList_Unique(&rec->lst, s2);
 										
 										if(status == AR_S_YES)
 										{
 												changed = true;
-										}else if(status == AR_S_NO)/*Ö¤Ã÷s2ÒÑ¾­ÔÚrec->lstÖĞÁË*/
+										}else if(status == AR_S_NO)/*è¯æ˜s2å·²ç»åœ¨rec->lstä¸­äº†*/
 										{
-										}else	/*´íÎó£¬ÄÚ´æ·ÖÅäÊ§°ÜµÈ*/
+										}else	/*é”™è¯¯ï¼Œå†…å­˜åˆ†é…å¤±è´¥ç­‰*/
 										{
 												return status;
 										}
 
 										break;
-								}else if(Parser_CompSymb(s1, s2) == 0)/*·ÇÖÕ½á·û£¬ÇÒÓë²úÉúÊ½Í·ÏàÍ¬µÄ·ûºÅ*/
+								}else if(Parser_CompSymb(s1, s2) == 0)/*éç»ˆç»“ç¬¦ï¼Œä¸”ä¸äº§ç”Ÿå¼å¤´ç›¸åŒçš„ç¬¦å·*/
 								{
-										if(!rec->can_empty)/*Èç¹ûµ±Ç°²úÉúÊ½Í·²»Îª¿Õ£¬ÔòÖÕÖ¹Ñ­»·*/
+										if(!rec->can_empty)/*å¦‚æœå½“å‰äº§ç”Ÿå¼å¤´ä¸ä¸ºç©ºï¼Œåˆ™ç»ˆæ­¢å¾ªç¯*/
 										{
 												break;
 										}
 								
-								}else	/*·ÇÖÕ½á·û£¬ÇÒÓë²úÉúÊ½Í·²»Í¬*/
+								}else	/*éç»ˆç»“ç¬¦ï¼Œä¸”ä¸äº§ç”Ÿå¼å¤´ä¸åŒ*/
 								{
 										const psrMapRec_t *rec2 = NULL;
 										size_t x;
 										rec2 = Parser_GetSymbolFromSymbMap(first_set, s2);
-										/*½«µ±Ç°·ÇÖÕ½á·ûºÅµÄËùÓĞfirst·ûºÅ¼ÓÈëµ½µ±Ç°²úÉúÊ½Í·µÄfirst-setÖĞ*/
+										/*å°†å½“å‰éç»ˆç»“ç¬¦å·çš„æ‰€æœ‰firstç¬¦å·åŠ å…¥åˆ°å½“å‰äº§ç”Ÿå¼å¤´çš„first-setä¸­*/
 										
 										for(x = 0; x < rec2->lst.count; ++x)
 										{
 												status = Parser_InsertToSymbList_Unique(&rec->lst, rec2->lst.lst[x]);
 												
-												if(status == AR_S_YES)/*¸Ä±äÁË·ûºÅ·ÇÖÕ½á·ûs1µÄfirst¼¯ºÏ*/
+												if(status == AR_S_YES)/*æ”¹å˜äº†ç¬¦å·éç»ˆç»“ç¬¦s1çš„firsté›†åˆ*/
 												{
 														changed = true;
 
-												}else if(status == AR_S_NO) /*Ö¤Ã÷rec2->lst.lst[x]ÒÑ¾­ÔÚrec->lstÖĞÁË*/
+												}else if(status == AR_S_NO) /*è¯æ˜rec2->lst.lst[x]å·²ç»åœ¨rec->lstä¸­äº†*/
 												{
 
-												}else	/*´íÎó£¬ÄÚ´æ·ÖÅäÊ§°ÜµÈ*/
+												}else	/*é”™è¯¯ï¼Œå†…å­˜åˆ†é…å¤±è´¥ç­‰*/
 												{
 														return status;
 												}
 										}
-										/*Èç¹ûµ±Ç°·ûºÅ²»¿Éµ¼³ö¿Õ´®ÔòÖÕÖ¹Ñ­»·*/
+										/*å¦‚æœå½“å‰ç¬¦å·ä¸å¯å¯¼å‡ºç©ºä¸²åˆ™ç»ˆæ­¢å¾ªç¯*/
 										if(!rec2->can_empty)
 										{
 												break;
@@ -1587,13 +1587,13 @@ arStatus_t					Parser_CalcFirstSet(const psrGrammar_t *grammar, psrSymbMap_t *fi
 
 
 /*
-FollowSetµÄÇó·¨Îª: ÀıÈçA->X(0)...X(n-1);
-Éèi = 0->n-1, Follow(NULL)= {Epsilon};
-Èç¹ûX(i)Îª·ÇÖÕ½á·û,ÔòÒª¶ÔX(j)->X(n)Ñ­»·¼ì²â,Éèj = i+1 && j < n;
-Èç¹ûFirst(X(j))²»°üº¬{Epsilon},ÔòFollow(X(i)) += First(X(j)£¬Ñ­»·½áÊø£¬·ñÔò
-j < n-1:Follow(X(i)) += (First(X(j)) - {Epsilon})£¬Ñ­»·¼ÌĞø;
-j == n-1:Follow(X(i)) += (First(X(j)) - {Epsilon})£¬Ñ­»·½áÊø£¬²¢½«Follow(X(i) += Follow(A);
-×¢Òâ£¬µ±i == n-1Ê±£¬Follow(X(i)) += Follow(A);,ÒòÎªFollow(NULL)= {Epsilon};
+FollowSetçš„æ±‚æ³•ä¸º: ä¾‹å¦‚A->X(0)...X(n-1);
+è®¾i = 0->n-1, Follow(NULL)= {Epsilon};
+å¦‚æœX(i)ä¸ºéç»ˆç»“ç¬¦,åˆ™è¦å¯¹X(j)->X(n)å¾ªç¯æ£€æµ‹,è®¾j = i+1 && j < n;
+å¦‚æœFirst(X(j))ä¸åŒ…å«{Epsilon},åˆ™Follow(X(i)) += First(X(j)ï¼Œå¾ªç¯ç»“æŸï¼Œå¦åˆ™
+j < n-1:Follow(X(i)) += (First(X(j)) - {Epsilon})ï¼Œå¾ªç¯ç»§ç»­;
+j == n-1:Follow(X(i)) += (First(X(j)) - {Epsilon})ï¼Œå¾ªç¯ç»“æŸï¼Œå¹¶å°†Follow(X(i) += Follow(A);
+æ³¨æ„ï¼Œå½“i == n-1æ—¶ï¼ŒFollow(X(i)) += Follow(A);,å› ä¸ºFollow(NULL)= {Epsilon};
 */
 
 
@@ -1615,7 +1615,7 @@ arStatus_t				Parser_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *fo
 
 		
 
-		for(i = 0; i < lst->count; i++)/*³õÊ¼»¯ËùÓĞ·ÇÖÕ½á·ûfollow¼¯ºÏ£¬²¢ÉèÖÃÃ¿¸ö·ÇÖÕ½á·ûÊÇ·ñ¿É¿Õ£¬´Ófirst¼¯ºÏµÃµ½*/
+		for(i = 0; i < lst->count; i++)/*åˆå§‹åŒ–æ‰€æœ‰éç»ˆç»“ç¬¦followé›†åˆï¼Œå¹¶è®¾ç½®æ¯ä¸ªéç»ˆç»“ç¬¦æ˜¯å¦å¯ç©ºï¼Œä»firsté›†åˆå¾—åˆ°*/
 		{
 				const psrSymb_t *key = lst->lst[i];
 
@@ -1626,7 +1626,7 @@ arStatus_t				Parser_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *fo
 						if(status == AR_S_YES || status == AR_S_NO)
 						{
 
-						}else/*ÄÚ´æ·ÖÅäÊ§°Ü*/
+						}else/*å†…å­˜åˆ†é…å¤±è´¥*/
 						{
 								return status;
 						}
@@ -1637,13 +1637,13 @@ arStatus_t				Parser_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *fo
 				}
 		}
 
-		/*$Ò»¶¨ÔÚ²úÉúÊ½start ÖĞ*/
+		/*$ä¸€å®šåœ¨äº§ç”Ÿå¼start ä¸­*/
 		status = Parser_InsertToSymbMap(follow_set, PARSER_StartSymb, PARSER_EOISymb);
 		
 		if(status == AR_S_YES || status == AR_S_NO)
 		{
 				
-		}else/*ÄÚ´æ·ÖÅäÊ§°Ü*/
+		}else/*å†…å­˜åˆ†é…å¤±è´¥*/
 		{
 				return status;
 		}
@@ -1652,21 +1652,21 @@ arStatus_t				Parser_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *fo
 		do{
 				changed = false;
 				
-				for(i = 0; i < grammar->count; ++i)/*¶ÔÃ¿Ò»Ìõ²úÉúÊ½*/
+				for(i = 0; i < grammar->count; ++i)/*å¯¹æ¯ä¸€æ¡äº§ç”Ÿå¼*/
 				{
 						const psrRule_t *rule;
 						const psrMapRec_t *head_follow;
 						size_t k;
 						rule = grammar->rules[i];
 
-						head_follow = Parser_GetSymbolFromSymbMap(follow_set,rule->head);/*grammar->head[i]Ëù¶ÔÓ¦µÄfollow¼¯ºÏ*/
+						head_follow = Parser_GetSymbolFromSymbMap(follow_set,rule->head);/*grammar->head[i]æ‰€å¯¹åº”çš„followé›†åˆ*/
 						
 						for(k = 0; k < rule->body.count; ++k)
 						{
 								const psrSymb_t *key;
 								size_t next_idx;
 								key = rule->body.lst[k];
-								/*ÖÕ½á·ûÎŞfollow-set*/
+								/*ç»ˆç»“ç¬¦æ— follow-set*/
 								
 								if(key->type == PARSER_TERM)
 								{
@@ -1682,43 +1682,43 @@ arStatus_t				Parser_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *fo
 										psrMapRec_t *rec_tmp = NULL;
 										size_t x;
 										
-										next = Parser_GetSymbFromSymbList(&rule->body, next_idx);/*nextÎªkeyÖ®ºóµÄ·ûºÅ*/
+										next = Parser_GetSymbFromSymbList(&rule->body, next_idx);/*nextä¸ºkeyä¹‹åçš„ç¬¦å·*/
 
-										first_rec = Parser_GetSymbolFromSymbMap(first_set, next);/*nextµÄfirst-set*/
+										first_rec = Parser_GetSymbolFromSymbMap(first_set, next);/*nextçš„first-set*/
 
-										rec_tmp  = Parser_GetSymbolFromSymbMap(follow_set, key);/*keyµÄfollow-set*/
+										rec_tmp  = Parser_GetSymbolFromSymbMap(follow_set, key);/*keyçš„follow-set*/
 
-										/*½«keyÖ®ºóµÄ·ûºÅnextµÄfirst-set¼ÓÈëµ½keyµÄfollow-setÖĞ*/
+										/*å°†keyä¹‹åçš„ç¬¦å·nextçš„first-setåŠ å…¥åˆ°keyçš„follow-setä¸­*/
 										for(x = 0; first_rec && x < first_rec->lst.count; ++x)
 										{
 												const psrSymb_t *f_symb;
 												f_symb = first_rec->lst.lst[x];
-												AR_ASSERT(f_symb->type == PARSER_TERM);				/*first²»¿ÉÄÜÎª·ÇÖÕ½á·û*/
+												AR_ASSERT(f_symb->type == PARSER_TERM);				/*firstä¸å¯èƒ½ä¸ºéç»ˆç»“ç¬¦*/
 
 												status = Parser_InsertToSymbList_Unique(&rec_tmp->lst, f_symb);
 
 												if(status == AR_S_YES)
 												{
-														changed = true;	/*ÈÎºÎÒ»²½µÄ¸Ä¶¯¶¼ĞèÒªÖØĞÂ¼ÆËãfollow¼¯ºÏ*/
+														changed = true;	/*ä»»ä½•ä¸€æ­¥çš„æ”¹åŠ¨éƒ½éœ€è¦é‡æ–°è®¡ç®—followé›†åˆ*/
 												
 												}else if(status == AR_S_NO)
 												{
 
-												}else	/*ÄÚ´æ·ÖÅäÊ§°Ü*/
+												}else	/*å†…å­˜åˆ†é…å¤±è´¥*/
 												{
 														return status;
 												}
 										}
-										/*Èç¹ûnext²»¿Éµ¼³ö¿Õ´®£¬ÔòÑ­»·ÖÕÖ¹*/
+										/*å¦‚æœnextä¸å¯å¯¼å‡ºç©ºä¸²ï¼Œåˆ™å¾ªç¯ç»ˆæ­¢*/
 										if(first_rec && !first_rec->can_empty)
 										{
 												break;
 										}
 								}
 								
-								if(next_idx == rule->body.count)/*Èç¹ûkeyÎªµ±Ç°²úÉúÊ½×îºóÒ»¸ö·ûºÅ»òkeyÖ®ºóµÄËùÓĞ·ûºÅ¶¼¿Éµ¼³ö¿Õ´®*/
+								if(next_idx == rule->body.count)/*å¦‚æœkeyä¸ºå½“å‰äº§ç”Ÿå¼æœ€åä¸€ä¸ªç¬¦å·æˆ–keyä¹‹åçš„æ‰€æœ‰ç¬¦å·éƒ½å¯å¯¼å‡ºç©ºä¸²*/
 								{
-										/*Ôò½«²úÉúÊ½Í·µÄfollow-set¼ÓÈëµ½·ûºÅkeyµÄfollow-setÖĞ*/
+										/*åˆ™å°†äº§ç”Ÿå¼å¤´çš„follow-setåŠ å…¥åˆ°ç¬¦å·keyçš„follow-setä¸­*/
 										size_t x;
 										psrMapRec_t *rec_tmp = Parser_GetSymbolFromSymbMap(follow_set, key);
 										
@@ -1728,7 +1728,7 @@ arStatus_t				Parser_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *fo
 
 												if(status == AR_S_YES)
 												{
-														changed = true;	/*ÈÎºÎÒ»²½µÄ¸Ä¶¯¶¼ĞèÒªÖØĞÂ¼ÆËãfollow¼¯ºÏ*/
+														changed = true;	/*ä»»ä½•ä¸€æ­¥çš„æ”¹åŠ¨éƒ½éœ€è¦é‡æ–°è®¡ç®—followé›†åˆ*/
 												}else if(status == AR_S_NO)
 												{
 
@@ -1758,7 +1758,7 @@ arStatus_t				Parser_CalcFollowSet(const psrGrammar_t *grammar, psrSymbMap_t *fo
 
 
 
-/*****************************************************ÏÂÃæÎª²âÊÔÓÃ´úÂë*******************************************/
+/*****************************************************ä¸‹é¢ä¸ºæµ‹è¯•ç”¨ä»£ç *******************************************/
 
 
 

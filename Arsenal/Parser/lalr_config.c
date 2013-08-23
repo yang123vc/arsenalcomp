@@ -1,4 +1,4 @@
-
+ï»¿
 /*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
@@ -115,7 +115,7 @@ arStatus_t	Parser_SetBitInBitSet(lalrBitSet_t *bs, size_t bit_idx)
 		{
 				status = __init_bs_data(bs);
 
-				if(status != AR_S_YES)/*ÄÚ´æ·ÖÅäÊ§°Ü*/
+				if(status != AR_S_YES)/*å†…å­˜åˆ†é…å¤±è´¥*/
 				{
 						return status;
 				}

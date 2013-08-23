@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
  * 
@@ -164,7 +164,7 @@ static void __destroy_expected_list(psrActionTable_t *tbl)
 }
 
 
-/*´Ëº¯Êı½«ÔÚ½¨Á¢Íê±Ïºóµ÷ÓÃ*/
+/*æ­¤å‡½æ•°å°†åœ¨å»ºç«‹å®Œæ¯•åè°ƒç”¨*/
 
 static arStatus_t __build_expected_list(psrActionTable_t *tbl)
 {
@@ -288,11 +288,11 @@ const psrAction_t	* const PARSER_ErrorAction = &error_action;
 
 
 /*
-ÕâÀï¸ºÔğÓÃlookaheadºÍ²úÉúÊ½±¾ÉíÓÅÏÈ¼¶À´½â¾öÒÆÈë¹æÔ¼³åÍ»ÎÊÌâ£¬»ù±¾×ö·¨¾ÍÊÇ£¬ÓÅÏÈ¼¶¸ßµÄ°ÑÓÅÏÈ¼¶µÍµÄÌæ»»µô£¬
-Èç¹ûÓÅÏÈ¼¶ÏàÍ¬£¬Ôò²é¿´lookahead£¬Èç¹ûÊÇ×ó½áºÏ£¬ÇÒµ±Ç°ÊÇÒÆÈëÏî£¬ĞÂÌí¼Ó½øÀ´µÄÊÇ¹æÔ¼Ïî£¬ÄÇÃ´ÕâÖÖÒÆÈë¹æÔ¼³åÍ»
-¾ÍÌæ»»ÒÆÈëÏîÎª¹æÔ¼Ïî£¬Èç¹ûµ±Ç°ÊÇ¹æÔ¼Ïî£¬ÇÒĞÂÌí¼Ó½øÀ´µÄÒ²ÊÇ¹æÔ¼Ïî£¬ÔòµÃµ½Ò»¸ö¹æÔ¼¹æÔ¼³åÍ»£¬Èç¹ûĞÂÌí¼Ó½øÀ´µÄ²»ÊÇ¹æÔ¼Ïî£¬
-Ôò¶ªÆúµôĞÂÌí¼ÓµÄ£¬º¯Êı·µ»Ø¡£
-lookaheadÎªÓÒ½áºÏÊ±ºòÓëÖ®Ïà·´£¬Èç¹ûlookaheadÎŞ½áºÏĞÔ£¬ÔòÍ¬ÑùËãÊÇ³åÍ»£¬½«Æä¼ÓÈë¡£
+è¿™é‡Œè´Ÿè´£ç”¨lookaheadå’Œäº§ç”Ÿå¼æœ¬èº«ä¼˜å…ˆçº§æ¥è§£å†³ç§»å…¥è§„çº¦å†²çªé—®é¢˜ï¼ŒåŸºæœ¬åšæ³•å°±æ˜¯ï¼Œä¼˜å…ˆçº§é«˜çš„æŠŠä¼˜å…ˆçº§ä½çš„æ›¿æ¢æ‰ï¼Œ
+å¦‚æœä¼˜å…ˆçº§ç›¸åŒï¼Œåˆ™æŸ¥çœ‹lookaheadï¼Œå¦‚æœæ˜¯å·¦ç»“åˆï¼Œä¸”å½“å‰æ˜¯ç§»å…¥é¡¹ï¼Œæ–°æ·»åŠ è¿›æ¥çš„æ˜¯è§„çº¦é¡¹ï¼Œé‚£ä¹ˆè¿™ç§ç§»å…¥è§„çº¦å†²çª
+å°±æ›¿æ¢ç§»å…¥é¡¹ä¸ºè§„çº¦é¡¹ï¼Œå¦‚æœå½“å‰æ˜¯è§„çº¦é¡¹ï¼Œä¸”æ–°æ·»åŠ è¿›æ¥çš„ä¹Ÿæ˜¯è§„çº¦é¡¹ï¼Œåˆ™å¾—åˆ°ä¸€ä¸ªè§„çº¦è§„çº¦å†²çªï¼Œå¦‚æœæ–°æ·»åŠ è¿›æ¥çš„ä¸æ˜¯è§„çº¦é¡¹ï¼Œ
+åˆ™ä¸¢å¼ƒæ‰æ–°æ·»åŠ çš„ï¼Œå‡½æ•°è¿”å›ã€‚
+lookaheadä¸ºå³ç»“åˆæ—¶å€™ä¸ä¹‹ç›¸åï¼Œå¦‚æœlookaheadæ— ç»“åˆæ€§ï¼Œåˆ™åŒæ ·ç®—æ˜¯å†²çªï¼Œå°†å…¶åŠ å…¥ã€‚
 */
 
 static void __copy_action(psrAction_t *l, const psrAction_t *r)
@@ -328,7 +328,7 @@ static arStatus_t __insert_action_to_action_list(psrAction_t **dest, const psrAc
 		}
 
 		/*
-				¿ÉÄÜ´æÔÚshift£¬µ«ÕâÀï²»ÊÇ³åÍ»£¬Òò´ËÖ±½Ó·µ»Ø£¬ÒòÎª²»¿ÉÄÜÔÚÍ¬Ò»·ûºÅÉÏµÄÒÆÈëµ¼ÖÂ²»Í¬µÄ×´Ì¬×ª»»²»±»Ç°ÃæµÄDFA½¨Á¢¼ì²â³öÀ´
+				å¯èƒ½å­˜åœ¨shiftï¼Œä½†è¿™é‡Œä¸æ˜¯å†²çªï¼Œå› æ­¤ç›´æ¥è¿”å›ï¼Œå› ä¸ºä¸å¯èƒ½åœ¨åŒä¸€ç¬¦å·ä¸Šçš„ç§»å…¥å¯¼è‡´ä¸åŒçš„çŠ¶æ€è½¬æ¢ä¸è¢«å‰é¢çš„DFAå»ºç«‹æ£€æµ‹å‡ºæ¥
 		*/
 		if(curr->type == PARSER_SHIFT && sour->type == PARSER_SHIFT)
 		{
@@ -352,7 +352,7 @@ static arStatus_t __insert_action_to_action_list(psrAction_t **dest, const psrAc
 		if(sour->prec > curr->prec)
 		{
 				/*
-						ĞÂ¼ÓÈëµÄÓÅÏÈ¼¶¸ßÓÚÔ­Ïî£¬Ôò²»±»ÈÏÎªÊÇ³åÍ»£¬Òò´Ë²åÈëµ½Í·½áµã£¬currÏÖÔÚÎªhead½áµã
+						æ–°åŠ å…¥çš„ä¼˜å…ˆçº§é«˜äºåŸé¡¹ï¼Œåˆ™ä¸è¢«è®¤ä¸ºæ˜¯å†²çªï¼Œå› æ­¤æ’å…¥åˆ°å¤´ç»“ç‚¹ï¼Œcurrç°åœ¨ä¸ºheadç»“ç‚¹
 				*/
 				__copy_action(curr, sour);
 				return AR_S_YES;
@@ -360,13 +360,13 @@ static arStatus_t __insert_action_to_action_list(psrAction_t **dest, const psrAc
 		}else if(sour->prec < curr->prec)
 		{
 				/*
-						ĞÂ¼ÓÈëµÄÓÅÏÈ¼¶µÍÓÚÔ­Ïî£¬Ôò²»±»ÈÏÎªÊÇ³åÍ»£¬ÇÒ²»×öÈÎºÎĞŞ¸Ä£¬º¯Êı·µ»Ø
+						æ–°åŠ å…¥çš„ä¼˜å…ˆçº§ä½äºåŸé¡¹ï¼Œåˆ™ä¸è¢«è®¤ä¸ºæ˜¯å†²çªï¼Œä¸”ä¸åšä»»ä½•ä¿®æ”¹ï¼Œå‡½æ•°è¿”å›
 				*/
 				return AR_S_YES;
 		}else
 		{
 				/*
-						ÏàÍ¬ÓÅÏÈ¼¶µÄÇé¿öÏÂ£º
+						ç›¸åŒä¼˜å…ˆçº§çš„æƒ…å†µä¸‹ï¼š
 				*/
 				if(lookahead->assoc == PARSER_ASSOC_NONASSOC)
 				{
@@ -381,30 +381,30 @@ static arStatus_t __insert_action_to_action_list(psrAction_t **dest, const psrAc
 						
 						if(curr->type != PARSER_SHIFT)
 						{
-								/*Èç¹û²»ÊÇshift£¬Ôò½«ĞÂµÄaction·ÅÔÚÇ°Ãæ*/
+								/*å¦‚æœä¸æ˜¯shiftï¼Œåˆ™å°†æ–°çš„actionæ”¾åœ¨å‰é¢*/
 								tmp->next = *dest;
 								*dest = tmp;
 						}else
 						{
-								/*Èç¹ûÊÇshift£¬ÔòÑ¡ÔñcurrÔÚÇ°*/
+								/*å¦‚æœæ˜¯shiftï¼Œåˆ™é€‰æ‹©curråœ¨å‰*/
 								tmp->next = curr->next;
 								curr->next = tmp;
 						}
 
 				}else if(lookahead->assoc == PARSER_ASSOC_LEFT)
 				{
-						/*×ó½áºÏ£¬ÓÅÏÈ¼¶ÏàÍ¬£¬ÓÅÏÈÑ¡¹æÔ¼*/
-						if(curr->type == PARSER_SHIFT && sour->type == PARSER_REDUCE)/*shift-reduce³åÍ»£¬ÇÒ×ó½áºÏ*/
+						/*å·¦ç»“åˆï¼Œä¼˜å…ˆçº§ç›¸åŒï¼Œä¼˜å…ˆé€‰è§„çº¦*/
+						if(curr->type == PARSER_SHIFT && sour->type == PARSER_REDUCE)/*shift-reduceå†²çªï¼Œä¸”å·¦ç»“åˆ*/
 						{
 								__copy_action(curr, sour);
 						
 						}else if(curr->type == PARSER_REDUCE && sour->type != PARSER_REDUCE)
 						{
-								/*×ó½áºÏ£¬Ö»ÒªcurrÎª¹æÔ¼£¬sour²»ÊÇ¹æÔ¼Ôò²»±ä¶¯*/
+								/*å·¦ç»“åˆï¼Œåªè¦currä¸ºè§„çº¦ï¼Œsourä¸æ˜¯è§„çº¦åˆ™ä¸å˜åŠ¨*/
 								return AR_S_YES;
-						}else/*³åÍ»*/
+						}else/*å†²çª*/
 						{
-								/*ÕâµØ·½Ò»¶¨ÊÇ¹æÔ¼¹æÔ¼³åÍ»*/
+								/*è¿™åœ°æ–¹ä¸€å®šæ˜¯è§„çº¦è§„çº¦å†²çª*/
 								AR_ASSERT(curr->type == PARSER_REDUCE && sour->type == PARSER_REDUCE);
 								tmp = AR_NEW0(psrAction_t);
 
@@ -419,17 +419,17 @@ static arStatus_t __insert_action_to_action_list(psrAction_t **dest, const psrAc
 						}
 				}else if(lookahead->assoc == PARSER_ASSOC_RIGHT)
 				{
-						/*ÓÒ½áºÏ£¬ÓÅÏÈ¼¶ÏàÍ¬£¬ÓÅÏÈÑ¡ÒÆÈë*/
+						/*å³ç»“åˆï¼Œä¼˜å…ˆçº§ç›¸åŒï¼Œä¼˜å…ˆé€‰ç§»å…¥*/
 						if(curr->type == PARSER_REDUCE && sour->type == PARSER_SHIFT)
 						{
 								__copy_action(curr, sour);
 						}else if(curr->type == PARSER_SHIFT && sour->type != PARSER_SHIFT)
 						{
-								/*ÓÒ½áºÏ£¬Ö»ÒªcurrÎªÒÆÈë£¬sour²»ÊÇÒÆÈëÔò²»±ä¶«*/
+								/*å³ç»“åˆï¼Œåªè¦currä¸ºç§»å…¥ï¼Œsourä¸æ˜¯ç§»å…¥åˆ™ä¸å˜ä¸œ*/
 								return AR_S_YES;
-						}else/*³åÍ»*/
+						}else/*å†²çª*/
 						{
-								/*ÕâµØ·½Ò»¶¨ÊÇ¹æÔ¼¹æÔ¼³åÍ»*/
+								/*è¿™åœ°æ–¹ä¸€å®šæ˜¯è§„çº¦è§„çº¦å†²çª*/
 								AR_ASSERT(curr->type == PARSER_REDUCE && sour->type == PARSER_REDUCE);
 								tmp = AR_NEW0(psrAction_t);
 								if(tmp == NULL)
@@ -471,14 +471,14 @@ psrActionTable_t* __create_action_table(const psrGrammar_t *grammar, psrLRItemTy
 				start = Parser_Create_LALR_State(grammar);
 		}
 
-		if(start == NULL)		/*res_2Ê§°Ü£¬ÇåÀíres_1£¬·µ»Ø*/
+		if(start == NULL)		/*res_2å¤±è´¥ï¼Œæ¸…ç†res_1ï¼Œè¿”å›*/
 		{
 				Parser_UnInitStateSet(&set);
 				return NULL;
 		}
 
 
-		if(Parser_CollectState(&set, start) != AR_S_YES)/*Ê§°Ü£¬ÇåÀíres_2,res_1,·µ»Ø*/
+		if(Parser_CollectState(&set, start) != AR_S_YES)/*å¤±è´¥ï¼Œæ¸…ç†res_2,res_1,è¿”å›*/
 		{
 				Parser_DestroyState_ALL(start);	
 				Parser_UnInitStateSet(&set);
@@ -488,7 +488,7 @@ psrActionTable_t* __create_action_table(const psrGrammar_t *grammar, psrLRItemTy
 
 		tbl = __create_table(grammar);	/*res_3*/
 
-		if(tbl == NULL)			/*res_3Ê§°Ü£¬ÇåÀíres_2,res_1£¬·µ»Ø*/
+		if(tbl == NULL)			/*res_3å¤±è´¥ï¼Œæ¸…ç†res_2,res_1ï¼Œè¿”å›*/
 		{
 				Parser_DestroyState_ALL(start);	
 				Parser_UnInitStateSet(&set);

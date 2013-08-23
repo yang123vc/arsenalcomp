@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
  * 
@@ -158,16 +158,16 @@ static void __emit_code(rgxProg_t *prog, const rgxNode_t *node)
 						rgxIns_t *p1, *p2;
 						p1 = prog->pc++;
 						p1->opcode = RGX_BRANCH_I;/*count + 1*/
-						p1->left = prog->pc;/*µÚÒ»¸ö·ÖÖ§£¬µ±Ç°Ö¸ÁîµÄÏÂÒ»Ìõ*/
+						p1->left = prog->pc;/*ç¬¬ä¸€ä¸ªåˆ†æ”¯ï¼Œå½“å‰æŒ‡ä»¤çš„ä¸‹ä¸€æ¡*/
 
 						__emit_code(prog, node->left);
-						/*µ±Ç°prog->pcÎªnode->leftÉú³ÉÖ¸Áî×éµÄÏÂÒ»ÌõÖ¸Áî*/
+						/*å½“å‰prog->pcä¸ºnode->leftç”ŸæˆæŒ‡ä»¤ç»„çš„ä¸‹ä¸€æ¡æŒ‡ä»¤*/
 
-						p2 = prog->pc++; /*p2ÊÇnode->leftÖ¸Áî×éÖ´ÐÐÍêÖ®ºóµÄÏÂÒ»ÌõÖ¸Áî*/
+						p2 = prog->pc++; /*p2æ˜¯node->leftæŒ‡ä»¤ç»„æ‰§è¡Œå®Œä¹‹åŽçš„ä¸‹ä¸€æ¡æŒ‡ä»¤*/
 						p2->opcode = RGX_JMP_I;/*count + 1*/
-						p1->right = prog->pc;/*µÚ¶þ¸ö·ÖÖ§£¬node->leftÉú³ÉÖ¸Áî×éµÄÏÂÒ»Ìõ*/
+						p1->right = prog->pc;/*ç¬¬äºŒä¸ªåˆ†æ”¯ï¼Œnode->leftç”ŸæˆæŒ‡ä»¤ç»„çš„ä¸‹ä¸€æ¡*/
 						__emit_code(prog, node->right);
-						p2->left = prog->pc;/*p2ÒªÌøµ½node->rightÉú³ÉµÄÖ¸Áî×éÖ®ºóµÄÏÂÒ»ÌõÖ¸Áî*/
+						p2->left = prog->pc;/*p2è¦è·³åˆ°node->rightç”Ÿæˆçš„æŒ‡ä»¤ç»„ä¹‹åŽçš„ä¸‹ä¸€æ¡æŒ‡ä»¤*/
 
 						/*count == 2*/
 				}
@@ -176,18 +176,18 @@ static void __emit_code(rgxProg_t *prog, const rgxNode_t *node)
 		case RGX_STAR_T:
 		{
 				rgxIns_t *p1; 
-				prog->pc->opcode = RGX_BRANCH_I;/*ÕâÌõÖ¸Áîµ¼ÖÂÒ»¸ö·ÖÖ§, count + 1*/
-				p1 = prog->pc++; /*p1Îªµ±Ç°Ö¸Áî*/
-				p1->left = prog->pc;/*Ò»ÊÇ´ÓÏÂÒ»Ìõ¿ªÊ¼¼ÌÐøÆ¥Åänode->left*/
+				prog->pc->opcode = RGX_BRANCH_I;/*è¿™æ¡æŒ‡ä»¤å¯¼è‡´ä¸€ä¸ªåˆ†æ”¯, count + 1*/
+				p1 = prog->pc++; /*p1ä¸ºå½“å‰æŒ‡ä»¤*/
+				p1->left = prog->pc;/*ä¸€æ˜¯ä»Žä¸‹ä¸€æ¡å¼€å§‹ç»§ç»­åŒ¹é…node->left*/
 				__emit_code(prog, node->left);
 				
 
-				/*¸ú×ÅstarµÄÊÇÒ»¸öÌø×ªÖ¸Áî£¬»áÖ±½ÓÌø»Øµ½µ±Ç°Ö¸Áî*/
-				/*ÕâÀïprog->pcÎªnode->leftÉú³ÉµÄÖ¸Áî×éµÄÏÂÒ»ÌõÖ¸Áî*/
+				/*è·Ÿç€starçš„æ˜¯ä¸€ä¸ªè·³è½¬æŒ‡ä»¤ï¼Œä¼šç›´æŽ¥è·³å›žåˆ°å½“å‰æŒ‡ä»¤*/
+				/*è¿™é‡Œprog->pcä¸ºnode->leftç”Ÿæˆçš„æŒ‡ä»¤ç»„çš„ä¸‹ä¸€æ¡æŒ‡ä»¤*/
 				prog->pc->opcode = RGX_JMP_I;/*count + 1*/
-				prog->pc->left = p1;/*star,ËùÒÔ»ØÍËµ½¿ªÊ¼*/
+				prog->pc->left = p1;/*star,æ‰€ä»¥å›žé€€åˆ°å¼€å§‹*/
 				
-				p1->right = ++prog->pc;/*Ö´ÐÐµ½ÏÂÒ»ÌõÖ¸Áî*/
+				p1->right = ++prog->pc;/*æ‰§è¡Œåˆ°ä¸‹ä¸€æ¡æŒ‡ä»¤*/
 
 				if(node->non_greedy)
 				{
@@ -202,12 +202,12 @@ static void __emit_code(rgxProg_t *prog, const rgxNode_t *node)
 		case RGX_QUEST_T:
 		{
 				rgxIns_t *p1;
-				prog->pc->opcode = RGX_BRANCH_I;/*questµ¼ÖÂÒ»¸ö·ÖÖ§, count + 1*/
-				p1 = prog->pc++;				/*p1µ±Ç°branchÖ¸Áî*/
-				p1->left = prog->pc;			/*p1·ÖÖ§1ÎªÏÂÒ»ÌõÖ¸Áî*/
+				prog->pc->opcode = RGX_BRANCH_I;/*questå¯¼è‡´ä¸€ä¸ªåˆ†æ”¯, count + 1*/
+				p1 = prog->pc++;				/*p1å½“å‰branchæŒ‡ä»¤*/
+				p1->left = prog->pc;			/*p1åˆ†æ”¯1ä¸ºä¸‹ä¸€æ¡æŒ‡ä»¤*/
 				__emit_code(prog,node->left);		
-				/*µ±Ç°pcÎªnode->leftÉú³ÉµÄÖ¸Áî×éµÄÏÂÒ»ÌõÖ¸Áî*/
-				p1->right = prog->pc; /*quest == (0|1)£¬ËùÒÔ·ÖÖ§2Îªnode->leftµÄÏÂÒ»ÌõÖ¸Áî*/
+				/*å½“å‰pcä¸ºnode->leftç”Ÿæˆçš„æŒ‡ä»¤ç»„çš„ä¸‹ä¸€æ¡æŒ‡ä»¤*/
+				p1->right = prog->pc; /*quest == (0|1)ï¼Œæ‰€ä»¥åˆ†æ”¯2ä¸ºnode->leftçš„ä¸‹ä¸€æ¡æŒ‡ä»¤*/
 
 				if(node->non_greedy)
 				{
@@ -221,15 +221,15 @@ static void __emit_code(rgxProg_t *prog, const rgxNode_t *node)
 		case RGX_PLUS_T:
 		{
 				rgxIns_t *p1, *p2;
-				p1 = prog->pc;/*p1Îªµ±Ç°Ö¸Áî*/
+				p1 = prog->pc;/*p1ä¸ºå½“å‰æŒ‡ä»¤*/
 				__emit_code(prog, node->left);
 
-				/*´ËÊ±pcÎªnode->leftÖ¸Áî×éµÄÏÂÒ»ÌõÖ¸Áî*/
-				p2 = prog->pc++;/*p2Îªµ±Ç°Ö¸Áî*/
+				/*æ­¤æ—¶pcä¸ºnode->leftæŒ‡ä»¤ç»„çš„ä¸‹ä¸€æ¡æŒ‡ä»¤*/
+				p2 = prog->pc++;/*p2ä¸ºå½“å‰æŒ‡ä»¤*/
 				p2->opcode = RGX_BRANCH_I;/*count + 1*/
-				p2->left = p1;/*plus£¬·ÖÖ§1Îªnode->leftÖ¸Áî×éµÄµÚÒ»ÌõÖ¸Áî,Ñ­»·*/
+				p2->left = p1;/*plusï¼Œåˆ†æ”¯1ä¸ºnode->leftæŒ‡ä»¤ç»„çš„ç¬¬ä¸€æ¡æŒ‡ä»¤,å¾ªçŽ¯*/
 				
-				p2->right = prog->pc;/*·ÖÖ§2£¬¾­¹ýnode->leftºó£¬Ö´ÐÐµ½ÏÂÒ»ÌõÖ¸Áî*/
+				p2->right = prog->pc;/*åˆ†æ”¯2ï¼Œç»è¿‡node->leftåŽï¼Œæ‰§è¡Œåˆ°ä¸‹ä¸€æ¡æŒ‡ä»¤*/
 
 				if(node->non_greedy)
 				{
@@ -276,7 +276,7 @@ static void __emit_code(rgxProg_t *prog, const rgxNode_t *node)
 				
 				prog->pc++;
 				__emit_code(prog,node->left);/*node->left*/
-				/*´ËÊ±µ±Ç°Ö¸ÁîpcÎªnode->leftÖ¸Áî×éµÄÏÂÒ»Ìõ*/
+				/*æ­¤æ—¶å½“å‰æŒ‡ä»¤pcä¸ºnode->leftæŒ‡ä»¤ç»„çš„ä¸‹ä¸€æ¡*/
 				prog->pc->opcode = RGX_LOOKAHEAD_END_I;/*count + 1*/
 				prog->pc++;
 				
