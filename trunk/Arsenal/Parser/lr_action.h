@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
  * 
@@ -21,7 +21,7 @@
 
 AR_NAMESPACE_BEGIN
 
-/************************************************Óï·¨·ÖÎö±í*********************************************************************/
+/************************************************è¯­æ³•åˆ†æè¡¨*********************************************************************/
 
 typedef enum
 {
@@ -39,7 +39,7 @@ typedef struct __action_record_tag
 		size_t							delim			:	8  		;	
 
 		size_t							shift_to		:	24		;
-		size_t							reduce_count 	:	8 		;		/*¹æÔ¼Ê±ÓÃµ½£¬²úÉúÊ½Èç¹ûÎª%Epsilon£¬ÔòcountÎª0*/
+		size_t							reduce_count 	:	8 		;		/*è§„çº¦æ—¶ç”¨åˆ°ï¼Œäº§ç”Ÿå¼å¦‚æœä¸º%Epsilonï¼Œåˆ™countä¸º0*/
 		
 		struct __action_record_tag		*next;
 }psrAction_t;

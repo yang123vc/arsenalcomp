@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
  * 
@@ -21,7 +21,7 @@
 AR_NAMESPACE_BEGIN
 
 
-/***************************************************¸¨ÖúÊý¾Ý½á¹¹**********************************************/
+/***************************************************è¾…åŠ©æ•°æ®ç»“æž„**********************************************/
 
 
 static AR_INLINE void Parser_InitNodeStack(psrNodeStack_t *stack)
@@ -649,7 +649,7 @@ static arStatus_t __handle_shift(psrContext_t *parser_context, size_t shift_to, 
 		
 		Parser_PushStack(&parser_context->state_stack, shift_to);
 
-		/*Èç¹ûÓÃ»§Ö¸¶¨ÁË²ÎÊýtokµÄ¶ÔÓ¦²Ù×÷º¯Êý£¬Ôòµ÷ÓÃ£¬½«´Ê·¨·ûºÅ×ª»»Îª½Úµã£¬·ñÔò´Ë·ûºÅ¶ÔÓ¦½ÚµãÎªNULL*/
+		/*å¦‚æžœç”¨æˆ·æŒ‡å®šäº†å‚æ•°tokçš„å¯¹åº”æ“ä½œå‡½æ•°ï¼Œåˆ™è°ƒç”¨ï¼Œå°†è¯æ³•ç¬¦å·è½¬æ¢ä¸ºèŠ‚ç‚¹ï¼Œå¦åˆ™æ­¤ç¬¦å·å¯¹åº”èŠ‚ç‚¹ä¸ºNULL*/
 		if(term->leaf_f)
 		{
 				ret = term->leaf_f(tok, parser_context->ctx);
@@ -667,15 +667,15 @@ static arStatus_t __handle_shift(psrContext_t *parser_context, size_t shift_to, 
 		Parser_PushNodeStack(&parser_context->node_stack, ret.node);
 
 /*
-		½«parser×´Ì¬´Óerror×ª»ØÕý³£×´Ì¬Ö»ÓÐÔÚµ±Ç°×´Ì¬ÉÏ´æÔÚÒÆÈë£¬ÀýÈç£º
+		å°†parserçŠ¶æ€ä»Žerrorè½¬å›žæ­£å¸¸çŠ¶æ€åªæœ‰åœ¨å½“å‰çŠ¶æ€ä¸Šå­˜åœ¨ç§»å…¥ï¼Œä¾‹å¦‚ï¼š
 		A -> error ";";
 		A -> error;
-		µÈ
+		ç­‰
 
-		µÚÒ»Ìõ½«ÔÚÒÆÈë";"Ê±ºòÇå³ýerror×´Ì¬£¬
-		µÚ¶þÌõ½«ÔÚerror¹æÔ¼ÎªAºóµÄÏÂÒ»´ÎÕýÈ·ÊäÈëÊ±Çå³ý£¬ÀýÈç
+		ç¬¬ä¸€æ¡å°†åœ¨ç§»å…¥";"æ—¶å€™æ¸…é™¤errorçŠ¶æ€ï¼Œ
+		ç¬¬äºŒæ¡å°†åœ¨errorè§„çº¦ä¸ºAåŽçš„ä¸‹ä¸€æ¬¡æ­£ç¡®è¾“å…¥æ—¶æ¸…é™¤ï¼Œä¾‹å¦‚
 		B -> A ";";
-		ÕâÀï¼ÙÈçAÓÐÈÎºÎ´íÎó£¬½«ÔÚÒÆÈë';'ºóÇå³ý´íÎó×´Ì¬£»
+		è¿™é‡Œå‡å¦‚Aæœ‰ä»»ä½•é”™è¯¯ï¼Œå°†åœ¨ç§»å…¥';'åŽæ¸…é™¤é”™è¯¯çŠ¶æ€ï¼›
 */
 		if(parser_context->is_repair)
 		{
@@ -713,7 +713,7 @@ static arStatus_t __handle_reduce(psrContext_t *parser_context, const psrAction_
 
 
 /*
-		ÓÐÊ±ºòÀýÈçA->.ÕâÀà¿Õ²úÉúÊ½Ò²»á´æÔÚhandler£¬ÀýÈçÓïÒå¹³×ÓµÈ£¬Òò´ËÕâÀïÖ»¸ù¾ÝÊÇ·ñÓÐ×¢²á½øÀ´µÄº¯ÊýÀ´¾ö¶¨¹æÔ¼ÊÇ·ñÎªNULL
+		æœ‰æ—¶å€™ä¾‹å¦‚A->.è¿™ç±»ç©ºäº§ç”Ÿå¼ä¹Ÿä¼šå­˜åœ¨handlerï¼Œä¾‹å¦‚è¯­ä¹‰é’©å­ç­‰ï¼Œå› æ­¤è¿™é‡Œåªæ ¹æ®æ˜¯å¦æœ‰æ³¨å†Œè¿›æ¥çš„å‡½æ•°æ¥å†³å®šè§„çº¦æ˜¯å¦ä¸ºNULL
 */
 		if(rule->rule_f != NULL)
 		{
@@ -766,7 +766,7 @@ static arStatus_t __handle_reduce(psrContext_t *parser_context, const psrAction_
 		next_state = Parser_GetState(parser_context->parser->tbl, Parser_TopStack(&parser_context->state_stack), rule->head);
 
 		/*
-				top_stateÔÚÒ»¸ö·ÇÖÕ½á·ûÉÏµÄ×ªÒÆÈç¹û³öÏÖ-1£¬ÔòÖ¤Ã÷goto±íÒì³£
+				top_stateåœ¨ä¸€ä¸ªéžç»ˆç»“ç¬¦ä¸Šçš„è½¬ç§»å¦‚æžœå‡ºçŽ°-1ï¼Œåˆ™è¯æ˜Žgotoè¡¨å¼‚å¸¸
 		*/
 		AR_ASSERT(next_state != -1);
 
@@ -774,7 +774,7 @@ static arStatus_t __handle_reduce(psrContext_t *parser_context, const psrAction_
 		Parser_PushNodeStack(&parser_context->node_stack, ret.node);
 
 
-		/*ÕâÀï±»µ±×öÒÆÈëÁËÒ»¸ö·ÇÖÕ½á·û*/
+		/*è¿™é‡Œè¢«å½“åšç§»å…¥äº†ä¸€ä¸ªéžç»ˆç»“ç¬¦*/
 		if(parser_context->is_repair)
 		{
 				parser_context->repair_valid_shift++;
@@ -845,7 +845,7 @@ RECHECK_POINT:
 
 				status_tmp = __on_error(parser_context, tok);
 
-				if(status_tmp == AR_S_NO)  /*Èç¹û·µ»Ø¼Ù£¬ÔòÖ¤Ã÷²»ÐèÒª´¦Àí´Ë´íÎó·ûºÅ£¬Ôò²»»áÔÚstackÉÏÑ°ÕÒÄÜÆ¥ÅäµÄerror token*/
+				if(status_tmp == AR_S_NO)  /*å¦‚æžœè¿”å›žå‡ï¼Œåˆ™è¯æ˜Žä¸éœ€è¦å¤„ç†æ­¤é”™è¯¯ç¬¦å·ï¼Œåˆ™ä¸ä¼šåœ¨stackä¸Šå¯»æ‰¾èƒ½åŒ¹é…çš„error token*/
 				{
 						parser_context->is_repair = true;
 						on_error_is_handled = true;
@@ -853,7 +853,7 @@ RECHECK_POINT:
 				}else if(status_tmp == AR_S_YES)
 				{
 
-				}else /*´íÎó£¬Ôò´¦ÀíÖÕÖ¹*/
+				}else /*é”™è¯¯ï¼Œåˆ™å¤„ç†ç»ˆæ­¢*/
 				{
 						*status_ptr = status_tmp;
 						return ERR_RECOVERY_FAILED;
@@ -871,8 +871,8 @@ RECHECK_POINT:
 						AR_ASSERT(action != NULL);
 						
 /*
-		Ó¦¸ÃÕÒµ½Ò»¸öÔÚerrorÉÏÓÐshift¶¯×÷µÄ×´Ì¬£¬Ö®ºóÒÆÈëNULLÌæ´úÖÕ½á·ûerror£¬Èç¹û´æÔÚ¹æÔ¼£¬ÔòÐèÒªÏÈÐÐ¹æÔ¼(µ±È»£¬¹æÔ¼ºó¾ÍÊÇÒÆÈëerrorÁË),Èç¹ûerror²»ÊÇºÏ·¨µÄÊäÈë£¬
-		ÔòÏòÉÏpop stackºÍÏà¹Ø½Úµã
+		åº”è¯¥æ‰¾åˆ°ä¸€ä¸ªåœ¨errorä¸Šæœ‰shiftåŠ¨ä½œçš„çŠ¶æ€ï¼Œä¹‹åŽç§»å…¥NULLæ›¿ä»£ç»ˆç»“ç¬¦errorï¼Œå¦‚æžœå­˜åœ¨è§„çº¦ï¼Œåˆ™éœ€è¦å…ˆè¡Œè§„çº¦(å½“ç„¶ï¼Œè§„çº¦åŽå°±æ˜¯ç§»å…¥erroräº†),å¦‚æžœerrorä¸æ˜¯åˆæ³•çš„è¾“å…¥ï¼Œ
+		åˆ™å‘ä¸Špop stackå’Œç›¸å…³èŠ‚ç‚¹
 */
 						if(action->type == PARSER_REDUCE)
 						{
@@ -906,7 +906,7 @@ RECHECK_POINT:
 								found = true;
 						}else /*PARSER_ACCEPT*/
 						{
-								/*Ö»ÓÐEOI·ûºÅ²Å¿ÉÄÜµ¼ÖÂÒ»¸öaccept¶¯×÷*/
+								/*åªæœ‰EOIç¬¦å·æ‰å¯èƒ½å¯¼è‡´ä¸€ä¸ªacceptåŠ¨ä½œ*/
 								AR_ASSERT(false);
 								AR_CHECK(false, L"Arsenal parser internal error : %hs\r\n", AR_FUNC_NAME);
 						}
@@ -928,7 +928,7 @@ RECHECK_POINT:
 		{
 
 /*
-		ÔÚrepairÄ£Ê½£¬ÈÎºÎ²»ºÏ·¨µÄÊäÈë¶¼»á¶ªÆú£¬²¢ÇÒ²»ÏÔÊ¾ÈÎºÎ´íÎóÐÅÏ¢£¬µ±ÊäÈëÎªEOIÊ±£¬Ôòµ÷ÓÃerror_f±¨¸æÒÑ´ïEOI;
+		åœ¨repairæ¨¡å¼ï¼Œä»»ä½•ä¸åˆæ³•çš„è¾“å…¥éƒ½ä¼šä¸¢å¼ƒï¼Œå¹¶ä¸”ä¸æ˜¾ç¤ºä»»ä½•é”™è¯¯ä¿¡æ¯ï¼Œå½“è¾“å…¥ä¸ºEOIæ—¶ï¼Œåˆ™è°ƒç”¨error_fæŠ¥å‘Šå·²è¾¾EOI;
 */
 				const psrSymb_t *symb;
 				symb = Parser_FindTermFromInfoTable(parser_context->parser->term_tbl, tok->term_val)->term;
@@ -965,7 +965,7 @@ arStatus_t		Parser_AddToken(psrContext_t *parser_context, const psrToken_t *tok)
 
 		
 		
-		/*ÏÈÑ¹ÈëÀ©Õ¹µÄ²úÉúÊ½Start£¬Ö»ÓÐÆä¿ÉÒÔ½ÓÊÜEOI*/
+		/*å…ˆåŽ‹å…¥æ‰©å±•çš„äº§ç”Ÿå¼Startï¼Œåªæœ‰å…¶å¯ä»¥æŽ¥å—EOI*/
 		
 		if(parser_context->state_stack.count == 0)
 		{
@@ -977,8 +977,8 @@ arStatus_t		Parser_AddToken(psrContext_t *parser_context, const psrToken_t *tok)
 
 		
 		/*
-				ÒÆÈë½øÀ´µÄtoken±ØÐëÔÚterm_setÖÐÕÒµ½¶ÔÓ¦µÄsymbol£¬
-				·ñÔòÕâÀïÓ¦¸ÃÔÚµ÷ÓÃParser_AddTokenÖ®Ç°ÓÉ´Ê·¨·ÖÎöÆ÷¼ì²â³ö´íÎóÀ´
+				ç§»å…¥è¿›æ¥çš„tokenå¿…é¡»åœ¨term_setä¸­æ‰¾åˆ°å¯¹åº”çš„symbolï¼Œ
+				å¦åˆ™è¿™é‡Œåº”è¯¥åœ¨è°ƒç”¨Parser_AddTokenä¹‹å‰ç”±è¯æ³•åˆ†æžå™¨æ£€æµ‹å‡ºé”™è¯¯æ¥
 		*/
 		
 		if(term == NULL)
@@ -1030,13 +1030,13 @@ arStatus_t		Parser_AddToken(psrContext_t *parser_context, const psrToken_t *tok)
 				{
 						/*
 								%start : first_rule EOI
-								ÕâÊÇµÚÒ»Ìõrule %start£¬ÇÒ²»´æÔÚÒ»¸ö¹æÔ¼µ½%startµÄ¶¯×÷
+								è¿™æ˜¯ç¬¬ä¸€æ¡rule %startï¼Œä¸”ä¸å­˜åœ¨ä¸€ä¸ªè§„çº¦åˆ°%startçš„åŠ¨ä½œ
 						*/
 						AR_ASSERT(Parser_CompSymb(term->term, PARSER_EOISymb) == 0);
 						AR_ASSERT(action->reduce_count == 1);
 						AR_ASSERT(parser_context->state_stack.count == 2);
 						
-						Parser_RecoverDone(parser_context);/*ÕâÀïÏàµ±ÓÚshiftÁËEOI*/
+						Parser_RecoverDone(parser_context);/*è¿™é‡Œç›¸å½“äºŽshiftäº†EOI*/
 						
 						is_done = true;
 						parser_context->is_accepted = true;

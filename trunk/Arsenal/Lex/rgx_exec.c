@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
  * 
@@ -121,7 +121,7 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 
 
 
-/*´¦ÀíÔ¤ËÑË÷²¿·Ö*/
+/*å¤„ç†é¢„æœç´¢éƒ¨åˆ†*/
 
 static void __clear_for_lookahead(rgxProg_t *prog)
 {		
@@ -227,7 +227,7 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 
 								if(*sp != L'\0')
 								{
-										if(match->flags & LEX_SINGLE_LINE)/*single line ¿ÉÒÔÆ¥Åä°üº¬»»ĞĞ·ûºÅÔÚÄÚµÄËùÓĞ×Ö·û*/
+										if(match->flags & LEX_SINGLE_LINE)/*single line å¯ä»¥åŒ¹é…åŒ…å«æ¢è¡Œç¬¦å·åœ¨å†…çš„æ‰€æœ‰å­—ç¬¦*/
 										{
 												is_ok = true;
 										}else
@@ -295,14 +295,14 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 										is_ok = __loop(&loop, &sp, &x, &y, &act,  match);
 								}
 
-								if(is_ok == AR_S_YES)/*Æ¥Åä³É¹¦*/
+								if(is_ok == AR_S_YES)/*åŒ¹é…æˆåŠŸ*/
 								{
 										__add_thread(next, RGX_BuildThread(pc->left, sp, 0, 0, RGX_ACT_NOACTION), prog);
 								
-								}else if(is_ok == AR_S_NO)/*Æ¥ÅäÊ§°Ü£¬Ôò¼ÌĞø*/
+								}else if(is_ok == AR_S_NO)/*åŒ¹é…å¤±è´¥ï¼Œåˆ™ç»§ç»­*/
 								{
 
-								}else					/*³öÏÖ´íÎó*/
+								}else					/*å‡ºç°é”™è¯¯*/
 								{
 										status = is_ok;
 										goto END_POINT;
@@ -332,7 +332,7 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 
 								is_ok = __lookahead(&lhd, sp, match);
 
-								if(is_ok == AR_S_YES)/*Æ¥ÅäËÑË÷*/
+								if(is_ok == AR_S_YES)/*åŒ¹é…æœç´¢*/
 								{
 										if(pc->lookahead.negative)
 										{
@@ -342,7 +342,7 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 												__add_thread(next, RGX_BuildThread(pc->left, sp, 0,0, RGX_ACT_NOACTION), prog);
 										}
 
-								}else if(is_ok == AR_S_NO)		/*Æ¥ÅäÊ§°Ü*/
+								}else if(is_ok == AR_S_NO)		/*åŒ¹é…å¤±è´¥*/
 								{
 										if(pc->lookahead.negative)
 										{
@@ -351,7 +351,7 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 										{
 
 										}
-								}else							/*ÄÚ²¿´íÎó*/
+								}else							/*å†…éƒ¨é”™è¯¯*/
 								{
 										status = is_ok;
 										goto END_POINT;
@@ -362,8 +362,8 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 						case RGX_LOOKAHEAD_END_I:
 						{
 								/*
-										²»ÂÛÄãÇ°ÏòÔ¤ËÑË÷Ê²Ã´£¬Ö»ÒªÓĞÒ»¸ö×ßÍ¨ÁË¾ÍOK
-										ÀıÈça(?=(a|b|c|d))×ßÍ¨ÁËÄÄ¸ö¶¼ËãOK
+										ä¸è®ºä½ å‰å‘é¢„æœç´¢ä»€ä¹ˆï¼Œåªè¦æœ‰ä¸€ä¸ªèµ°é€šäº†å°±OK
+										ä¾‹å¦‚a(?=(a|b|c|d))èµ°é€šäº†å“ªä¸ªéƒ½ç®—OK
 								*/
 								status = AR_S_YES;
 								goto END_POINT;
@@ -401,7 +401,7 @@ END_POINT:
 
 
 
-/*´¦Àí¶¨ÊıÑ­»·²¿·Ö*/
+/*å¤„ç†å®šæ•°å¾ªç¯éƒ¨åˆ†*/
 
 static void __clear_for_loop(rgxProg_t *prog)
 {		
@@ -529,7 +529,7 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 
 								if(*sp != L'\0')
 								{
-										if(match->flags & LEX_SINGLE_LINE)/*single line ¿ÉÒÔÆ¥Åä°üº¬»»ĞĞ·ûºÅÔÚÄÚµÄËùÓĞ×Ö·û*/
+										if(match->flags & LEX_SINGLE_LINE)/*single line å¯ä»¥åŒ¹é…åŒ…å«æ¢è¡Œç¬¦å·åœ¨å†…çš„æ‰€æœ‰å­—ç¬¦*/
 										{
 												is_ok = true;
 										}else
@@ -621,7 +621,7 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 								final_next = sp;
 								final_act = act;
 								status = AR_S_YES;
-								goto BREAK_POINT;/*ÕâÒ»²½¾ö¶¨ÁËÓÅÏÈ¼¶Îªleft most*/
+								goto BREAK_POINT;/*è¿™ä¸€æ­¥å†³å®šäº†ä¼˜å…ˆçº§ä¸ºleft most*/
 						}
 								break;
 						case RGX_LOOKAHEAD_BEG_I:
@@ -636,7 +636,7 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 
 								is_ok = __lookahead(&lhd, sp, match);
 
-								if(is_ok == AR_S_YES)/*Æ¥Åä³É¹¦*/
+								if(is_ok == AR_S_YES)/*åŒ¹é…æˆåŠŸ*/
 								{
 										if(pc->lookahead.negative)
 										{
@@ -646,7 +646,7 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 												__add_thread(next, RGX_BuildThread(pc->left, sp, x,y, act), prog);
 										}
 
-								}else if(is_ok == AR_S_NO)/*Æ¥ÅäÊ§°Ü*/
+								}else if(is_ok == AR_S_NO)/*åŒ¹é…å¤±è´¥*/
 								{
 										if(pc->lookahead.negative)
 										{
@@ -655,7 +655,7 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 										{
 
 										}
-								}else			/*ÄÚ²¿´íÎó*/
+								}else			/*å†…éƒ¨é”™è¯¯*/
 								{
 										status = is_ok;
 										goto END_POINT;
@@ -834,7 +834,7 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 
 								if(*sp != L'\0')
 								{
-										if(match->flags & LEX_SINGLE_LINE)/*single line ¿ÉÒÔÆ¥Åä°üº¬»»ĞĞ·ûºÅÔÚÄÚµÄËùÓĞ×Ö·û*/
+										if(match->flags & LEX_SINGLE_LINE)/*single line å¯ä»¥åŒ¹é…åŒ…å«æ¢è¡Œç¬¦å·åœ¨å†…çš„æ‰€æœ‰å­—ç¬¦*/
 										{
 												is_ok = true;
 										}else
@@ -904,14 +904,14 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 										is_ok =  __loop(&loop, &sp, &x, &y, &act, match);
 								}
 
-								if(is_ok == AR_S_YES)/*Æ¥Åä³É¹¦*/
+								if(is_ok == AR_S_YES)/*åŒ¹é…æˆåŠŸ*/
 								{
 										__add_thread(next, RGX_BuildThread(pc->left, sp, x,y, act), prog);
 								
-								}else if(is_ok == AR_S_NO)/*Æ¥ÅäÊ§°Ü*/
+								}else if(is_ok == AR_S_NO)/*åŒ¹é…å¤±è´¥*/
 								{
 										
-								}else	/*´íÎó*/
+								}else	/*é”™è¯¯*/
 								{
 										status = is_ok;
 										goto END_POINT;
@@ -957,7 +957,7 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 
 										}
 								
-								}else	/*´íÎó*/
+								}else	/*é”™è¯¯*/
 								{
 										status = is_ok;
 										goto END_POINT;
@@ -986,7 +986,7 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 								final_act = act;
 								status = AR_S_YES;
 
-								goto BREAK_POINT;/*ÕâÒ»²½¾ö¶¨ÁËÓÅÏÈ¼¶Îªleft most*/
+								goto BREAK_POINT;/*è¿™ä¸€æ­¥å†³å®šäº†ä¼˜å…ˆçº§ä¸ºleft most*/
 								break;
 						}
 						case RGX_NOP_I:

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
  * 
@@ -37,7 +37,7 @@ AR_NAMESPACE_BEGIN
 
 static arStatus_t Parser_PrintActionTable(const psrActionTable_t *tbl, const psrGrammar_t *grammar, size_t width, arString_t *str)
 {
-		/*ÕâÀï±ØĞëÓÃint£¬ÒòÎªprintfÒ»×åº¯ÊıµÄ¶ÔÓÚ%*dÕâÀàwidthµÄ¶¨Òå¾ÍÊÇint*/
+		/*è¿™é‡Œå¿…é¡»ç”¨intï¼Œå› ä¸ºprintfä¸€æ—å‡½æ•°çš„å¯¹äº%*dè¿™ç±»widthçš„å®šä¹‰å°±æ˜¯int*/
 		int __WIDTH__;
 		size_t i,j;
 		wchar_t buf[1024];
@@ -1408,7 +1408,7 @@ END_POINT:
 				str = NULL;
 		}
 
-		if(ret != NULL && !is_ok) /*ÓĞ´íÎó·¢Éú£¬ĞèÒªÇåÀí*/
+		if(ret != NULL && !is_ok) /*æœ‰é”™è¯¯å‘ç”Ÿï¼Œéœ€è¦æ¸…ç†*/
 		{
 				Parser_DestroyParserStatusView(ret);
 				ret = NULL;

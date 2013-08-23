@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
  * 
@@ -590,9 +590,9 @@ static iniKeyVal_t*	__ini_find_from_section(iniSection_t *sec, const wchar_t *ke
 }
 
 /*
-²åÈë£º
-key = 333 ; ¼üÎ»ÉèÖÃ
-´ËÀàÏî£¬Òò´Ëkey²»¿ÉÎªNULL
+æ’å…¥ï¼š
+key = 333 ; é”®ä½è®¾ç½®
+æ­¤ç±»é¡¹ï¼Œå› æ­¤keyä¸å¯ä¸ºNULL
 */
 static iniKeyVal_t* __ini_insert_kvpair_to_section(iniSection_t *sec, const wchar_t *key, const wchar_t *val, const wchar_t *comment)
 {

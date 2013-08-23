@@ -1,4 +1,4 @@
-/*
+﻿/*
  * The Arsenal Library
  * Copyright (c) 2009-2013 by Solidus
  * 
@@ -3265,7 +3265,7 @@ static arStatus_t _flattenPlist(const plistElem_t *plist, plistArray_t *objlist,
 
                                 refnum = (ar_uint_32_t)tmp;
                                 
-                                status = AR_SetToHash(objtable, (void*)plist, (void*)refnum);
+                                status = AR_SetToHash(objtable, (void*)plist, (void*)(size_t)refnum);
                                 
                                 return status;
                         }else
@@ -3283,7 +3283,7 @@ static arStatus_t _flattenPlist(const plistElem_t *plist, plistArray_t *objlist,
                 return AR_E_NOMEM;
         }
         
-        if(AR_SetToHash(objtable, (void*)plist, (void*)refnum) != AR_S_YES)
+        if(AR_SetToHash(objtable, (void*)plist, (void*)(size_t)refnum) != AR_S_YES)
         {
                 return AR_E_NOMEM;
         }
@@ -5521,7 +5521,7 @@ arStatus_t              PList_LoadElemFromBinary(arBuffer_t *data, plistType_t *
                 }
         }
         
-END_POINT:
+
         return status;
 }
 

@@ -1,4 +1,4 @@
-
+ï»¿
 /*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
@@ -657,7 +657,7 @@ static arStatus_t CFG_InitConfig(cfgConfig_t *cfg, cfgNodeList_t *name, cfgNodeL
 						{
 								cfg->tok[cfg->tok_cnt] = token->lst[i]->token;
 
-								if(token->lst[i]->token.name != NULL)/*²»ÊÇÃ¿¸ötoken¶¼ÓĞÃû×Ö*/
+								if(token->lst[i]->token.name != NULL)/*ä¸æ˜¯æ¯ä¸ªtokenéƒ½æœ‰åå­—*/
 								{
 										cfg->tok[cfg->tok_cnt].name = ParserData_AllocString(psr_data,token->lst[i]->token.name);
 
@@ -2278,7 +2278,7 @@ static psrRetVal_t		AR_STDCALL __handle_pre_def(psrNode_t **nodes, size_t count,
 
 								if(attr->lexeme.lexeme)
 								{
-										if(AR_wcscmp(attr->lexeme.lexeme, CFG_BOTTOM_CODE_ATTR_NAME) == 0)/*´Ë¶Î´úÂëÊÇ·ñÔÚÎÄ±¾Ä©Î²*/
+										if(AR_wcscmp(attr->lexeme.lexeme, CFG_BOTTOM_CODE_ATTR_NAME) == 0)/*æ­¤æ®µä»£ç æ˜¯å¦åœ¨æ–‡æœ¬æœ«å°¾*/
 										{
 												res->predef.flags |= CFG_CODE_ON_BOTTOM_F;
 										}
@@ -3106,7 +3106,7 @@ const cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t 
 						PARSER_TOTERMTOK(&tok, &term);
 
 						/*
-						¹¹ÔìÒ»¸ö¼òµ¥¿ÕÓï¾ä£¬ÒÔ±ã²»»áÔÚ abc CFG_LEXVAL_EOIÕâÖÖÇé¿öÏÂ£¬ÎŞ·¨·ÖÎö³ö×ÓÊ÷
+						æ„é€ ä¸€ä¸ªç®€å•ç©ºè¯­å¥ï¼Œä»¥ä¾¿ä¸ä¼šåœ¨ abc CFG_LEXVAL_EOIè¿™ç§æƒ…å†µä¸‹ï¼Œæ— æ³•åˆ†æå‡ºå­æ ‘
 						*/
 						if(term.term_val == CFG_LEXVAL_EOI)
 						{
@@ -3126,7 +3126,7 @@ const cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t 
 								}else if(psr_ret == AR_S_NO)
 								{
 										AR_CHECK(false, L"Arsenal internal error : %hs\r\n", AR_FUNC_NAME);
-								}else/*´æ´¢·ÖÅäÊ§°ÜµÈ*/
+								}else/*å­˜å‚¨åˆ†é…å¤±è´¥ç­‰*/
 								{
 										goto END_POINT;
 								}
@@ -3209,7 +3209,7 @@ const cfgConfig_t*	CFG_CollectGrammarConfig(const wchar_t *gmr_txt, cfgReport_t 
 						AR_ASSERT(*Lex_GetNextInput(match) != L'\0');
 
 						
-						if(Lex_TrySkipTo(match, L";") != AR_S_YES)/*r³¢ÊÔÌøµ½';'Èç¹ûÎ´³É¹¦£¬ÔòÌøµ½Í·Ò»¸ö·Ç¿Õ°×·û*/
+						if(Lex_TrySkipTo(match, L";") != AR_S_YES)/*rå°è¯•è·³åˆ°';'å¦‚æœæœªæˆåŠŸï¼Œåˆ™è·³åˆ°å¤´ä¸€ä¸ªéç©ºç™½ç¬¦*/
 						{
 								Lex_Skip(match);
 						}
@@ -3232,7 +3232,7 @@ INNER_INV_POINT:
 						}
 
 						goto END_POINT;
-				}else /*¸÷ÖÖ´íÎó£¬ÀıÈçAR_E_NOMEM*/
+				}else /*å„ç§é”™è¯¯ï¼Œä¾‹å¦‚AR_E_NOMEM*/
 				{
 						goto END_POINT;
 				}
@@ -3405,7 +3405,7 @@ const cfgLexicalSet_t*		CFG_CollectLexicalSet(const wchar_t *gmr_txt)
 						Lex_ClearError(match);
 						is_ok = AR_S_YES;
 						continue;
-				}else /*ÓĞ´íÎó·¢Éú,±ÈÈç´æ´¢·ÖÅäÊ§°Ü*/
+				}else /*æœ‰é”™è¯¯å‘ç”Ÿ,æ¯”å¦‚å­˜å‚¨åˆ†é…å¤±è´¥*/
 				{
 						goto END_POINT;
 				}
