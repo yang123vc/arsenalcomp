@@ -1,4 +1,4 @@
-﻿/*
+/*
  * The Arsenal Library
  * Copyright (c) 2009-2013 by Solidus
  * 
@@ -3459,7 +3459,7 @@ static ar_uint_64_t    __flattenplist_hash_func(void *key, void *ctx)
         
         if(PList_GetElemType(k) == PLIST_ELEM_ARRAY_T || PList_GetElemType(k)  == PLIST_ELEM_DICT_T)
         {
-                return (ar_uint_64_t)k;
+                return (ar_uint_64_t)(size_t)k;
         }else
         {
                 return PList_HashElem((const plistElem_t*)key);
