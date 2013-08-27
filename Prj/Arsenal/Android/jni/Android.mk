@@ -74,6 +74,7 @@ LOCAL_SRC_FILES := \
         ../../../../Arsenal/Tools/grammar_collector.c\
         ../../../../Arsenal/Tools/iniobj.c\
         ../../../../Arsenal/Tools/serializer.c\
+        ../../../../Arsenal/Tools/property_list_internal.c\
         ../../../../Arsenal/Tools/property_list.c\
         ../../../../Arsenal/Tools/tools.c\
                                                 \
