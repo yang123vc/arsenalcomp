@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
  *
@@ -75,7 +75,7 @@ static qsort_range_t __partition(ar_byte_t *lo, ar_byte_t *hi, size_t width, cmp
 		
 		mid = lo + ((hi - lo)/width + 1) /2 * width;
 
-		/*ÒÔÏÂÈý²½±£Ö¤ mid >= lo && mid <= hi*/
+		/*ä»¥ä¸‹ä¸‰æ­¥ä¿è¯ mid >= lo && mid <= hi*/
         if(cmp_f(lo,mid) > 0)
 		{
 				AR_memswap(lo,mid, width);
@@ -109,12 +109,12 @@ static qsort_range_t __partition(ar_byte_t *lo, ar_byte_t *hi, size_t width, cmp
 								loguy += width;
 						}while(loguy <= hi && cmp_f(loguy, mid) <= 0);
 				}
-				/*Ö´ÐÐµ½´Ë£¬±£Ö¤[lo->loguy) <= mid*/
+				/*æ‰§è¡Œåˆ°æ­¤ï¼Œä¿è¯[lo->loguy) <= mid*/
 				
 				do{
 						higuy -= width;
 				} while (higuy > mid && cmp_f(higuy, mid) > 0);
-				/*Ö´ÐÐµ½´Ë£¬±£Ö¤(higuy->hi] > mid*/
+				/*æ‰§è¡Œåˆ°æ­¤ï¼Œä¿è¯(higuy->hi] > mid*/
 
 
 				if(higuy < loguy)break;
@@ -162,7 +162,7 @@ static qsort_range_t __partition(ar_byte_t *lo, ar_byte_t *hi, size_t width, cmp
 
 static void __qsort(ar_byte_t *lo, ar_byte_t *hi, size_t width, cmp_func_t cmp_f)
 {
-		ar_byte_t	*lo_stk[__QSORT_STKSIZE], *hi_stk[__QSORT_STKSIZE];/*ÕâÍæÒâ¶ùÒª»¹ÊÇÒç³öÁËÒ²Ã»µÃ°ì·¨~~*/
+		ar_byte_t	*lo_stk[__QSORT_STKSIZE], *hi_stk[__QSORT_STKSIZE];/*è¿™çŽ©æ„å„¿è¦è¿˜æ˜¯æº¢å‡ºäº†ä¹Ÿæ²¡å¾—åŠžæ³•~~*/
 		ar_int_t	stk_top = 0;
 		
 		qsort_range_t	range;
@@ -323,7 +323,7 @@ ar_int_t AR_bsearch(const void *key, const void *base, size_t num, size_t width,
 
 
 
-/*³ö×Ô£ºhttp://www.azillionmonkeys.com/qed/hash.html*/
+/*å‡ºè‡ªï¼šhttp://www.azillionmonkeys.com/qed/hash.html*/
 
 #define get16bits(d) ((((ar_uint_32_t)(((const ar_uint_8_t *)(d))[1])) << 8)\
                        +(ar_uint_32_t)(((const ar_uint_8_t *)(d))[0]) )

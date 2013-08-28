@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
  *
@@ -158,7 +158,7 @@ void	AR_check(ar_bool_t cond, const wchar_t *fmt, ...);
 
 
 #define AR_CMP(_a,_b) ((_a) < (_b) ? -1 : ((_a) == (_b) ? 0 : 1))
-/*ĞĞÖ÷Ó³Éä*/
+/*è¡Œä¸»æ˜ å°„*/
 #define AR_TBL_IDX_R(_x, _y, _col_n) ((_x) * (_col_n) + (_y))
 
 
@@ -192,7 +192,7 @@ static AR_INLINE const void* AR_GET_ELEM(const void *base, size_t width, size_t 
 
 /**********************************************************memory management***************************************************************/
 
-/*Defined AR_USE_CRT_ALLOCFUNC, using CRT memory alloc functions£¬otherwise, use the 'arHeap_t'
+/*Defined AR_USE_CRT_ALLOCFUNC, using CRT memory alloc functionsï¼Œotherwise, use the 'arHeap_t'
 */
 
 #define AR_MEM_MAX_ALLOC_RETRY_COUNT	1000000
@@ -763,7 +763,7 @@ void*	AR_GetHashIteratorData(const arHashIter_t *iter);
 /*********************************************************String Convert****************************************************/
 
 /*
-Under the windows need to modify __get_codepage_for_winapi£¬If the platform supports iconv library, modify __get_locale_str_for_iconv
+Under the windows need to modify __get_codepage_for_winapiï¼ŒIf the platform supports iconv library, modify __get_locale_str_for_iconv
 
 
 */
@@ -988,7 +988,7 @@ size_t			AR_EraseBufferBack(arBuffer_t *buffer, size_t nbytes);
 /*Returns the number of bytes not reallocate memory can also write*/
 size_t			AR_GetBufferCapacity(const arBuffer_t *buffer);
 
-/*AR_ReserveBufferµ÷ÓÃ³É¹¦ºó£¬AR_GetBufferCapacity(buffer) >= nbytes*/
+/*AR_ReserveBufferè°ƒç”¨æˆåŠŸåï¼ŒAR_GetBufferCapacity(buffer) >= nbytes*/
 arStatus_t		AR_ReserveBuffer(arBuffer_t *buffer, size_t nbytes);
 
 /*Readable memory block*/
@@ -1023,7 +1023,7 @@ void			AR_SetURICodePage(arURI_t *uri, arCodePage_t cp);
 ar_bool_t			AR_IsRelativeURI(const arURI_t *uri);
 
 
-/*ÕâÀïÄ¬ÈÏÈÏÎªÊäÈëµÄURIÍêÈ«Îª±àÂëºóµÄURL£¬Ö®ºó¸ù¾İURIÉèÖÃµÄcode page½«±àÂëºóµÄuri½âÂë£¬²¢×ª»»Îªunicode*/
+/*è¿™é‡Œé»˜è®¤è®¤ä¸ºè¾“å…¥çš„URIå®Œå…¨ä¸ºç¼–ç åçš„URLï¼Œä¹‹åæ ¹æ®URIè®¾ç½®çš„code pageå°†ç¼–ç åçš„uriè§£ç ï¼Œå¹¶è½¬æ¢ä¸ºunicode*/
 arStatus_t		AR_SetURI(arURI_t *uri, const wchar_t *str);
 arStatus_t		AR_SetEncodedURI(arURI_t *uri, const wchar_t *str);
 
@@ -1579,7 +1579,7 @@ arStatus_t		AR_GetMatrixColumn(const arMatrix_t *mat, size_t col,  arVector_t *o
 const double*	AR_GetMatrixRawData(const arMatrix_t *mat);
 
 
-/****************************************Éú³É±ê×¼¾ØÕóÀàĞÍ******************************************/
+/****************************************ç”Ÿæˆæ ‡å‡†çŸ©é˜µç±»å‹******************************************/
 void			AR_ZeroMatrix(arMatrix_t *mat);
 void			AR_IdentityMatrix(arMatrix_t *mat);
 arStatus_t		AR_DiagonalMatrix(arMatrix_t *mat, const arVector_t *vec);
@@ -1593,7 +1593,7 @@ void			AR_RemoveMatrixColumn(arMatrix_t *mat, size_t c);
 void			AR_ClearMatrixUpperTriangle(arMatrix_t *mat);
 void			AR_ClearMatrixLowerTriangle(arMatrix_t *mat);
 
-/****************************************ÅĞ¶Ï¾ØÕóÀàĞÍ******************************************/
+/****************************************åˆ¤æ–­çŸ©é˜µç±»å‹******************************************/
 
 arStatus_t		AR_IsSquareMatrix(const arMatrix_t *mat);
 
@@ -1606,16 +1606,16 @@ arStatus_t		AR_IsSymmetricMatrix(const arMatrix_t *mat, double epsilon);
 arStatus_t		AR_IsOrthogonalMatrix(const arMatrix_t *mat, double epsilon);
 arStatus_t		AR_IsOrthonormalMatrix(const arMatrix_t *mat, double epsilon);
 
-/*ÊÇ·ñÕı¶¨¾ØÕó*/
+/*æ˜¯å¦æ­£å®šçŸ©é˜µ*/
 arStatus_t		AR_IsPositiveDefiniteMatrix(const arMatrix_t *mat, double epsilon);
 arStatus_t		AR_IsSymmetricPositiveDefinite(const arMatrix_t *mat, double epsilon);
 
-/*ÊÇ·ñ°ëÕı¶¨¾ØÕó*/
+/*æ˜¯å¦åŠæ­£å®šçŸ©é˜µ*/
 arStatus_t		AR_IsPositiveSemiDefinite(const arMatrix_t *mat, double epsilon);
 arStatus_t		AR_IsSymmetricPositiveSemiDefinite(const arMatrix_t *mat, double epsilon);
 
 
-/****************************************»ù±¾¾ØÕó¼ÆËã******************************************/
+/****************************************åŸºæœ¬çŸ©é˜µè®¡ç®—******************************************/
 
 arStatus_t		AR_MultiplyMatrixByScalar(const arMatrix_t *mat, double value, arMatrix_t *dest);
 arStatus_t		AR_MultiplyMatrixByScalarSelf(arMatrix_t *mat, double value);
@@ -1645,7 +1645,7 @@ arStatus_t		AR_TransposeMatrix(const arMatrix_t *mat, arMatrix_t *dest);
 arStatus_t		AR_TransposeMatrixSelf(arMatrix_t *mat);
 
 
-/*È¡Äæ¾ØÕó*/
+/*å–é€†çŸ©é˜µ*/
 arStatus_t		AR_InverseMatrixSelf(arMatrix_t *mat);
 
 arStatus_t		AR_InverseLowerTriangularMatrixSelf(arMatrix_t *mat);
@@ -1660,15 +1660,15 @@ arStatus_t		AR_ReduceMatrixToEchelonForm(const arMatrix_t *mat, size_t *index, a
 
 
 
-/****************************************¾ØÕó·Ö½â******************************************/
+/****************************************çŸ©é˜µåˆ†è§£******************************************/
 
-/*Èı¶Ô½Ç¾ØÕó*/
+/*ä¸‰å¯¹è§’çŸ©é˜µ*/
 void			AR_TriDiagonalClearMatrixSelf(arMatrix_t *mat);
 arStatus_t		AR_TriDiagonalSolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t *b);
 arStatus_t		AR_TriDiagonalInverseMatrix(const arMatrix_t *mat, arMatrix_t *inv);
 
 
-/*LU·Ö½â*/
+/*LUåˆ†è§£*/
 
 arStatus_t		AR_LUFactorMatrixSelf(arMatrix_t *mat, size_t *index, double *det);
 arStatus_t		AR_LUInverseMatrix(const arMatrix_t *mat, const size_t *index, arMatrix_t *inv);
@@ -1679,7 +1679,7 @@ arStatus_t		AR_MultiplyMatrixLUFactors(const arMatrix_t *mat, const size_t *inde
 
 
 /*
-LDLT·Ö½â A = L*D*L^t,¾ØÕóÎª¶Ô³Æ·½Õó
+LDLTåˆ†è§£ A = L*D*L^t,çŸ©é˜µä¸ºå¯¹ç§°æ–¹é˜µ
 */
 
 arStatus_t		AR_LDLTFactorMatrixSelf(arMatrix_t *mat);
@@ -1690,14 +1690,14 @@ arStatus_t		AR_MultiplyMatrixLDLTFactors(const arMatrix_t *mat, arMatrix_t *orig
 
 
 
-/*Cholesky·Ö½â*/
+/*Choleskyåˆ†è§£*/
 arStatus_t		AR_CholeskyFactorMatrixSelf(arMatrix_t *mat);
 arStatus_t		AR_CholeskySolveMatrix(const arMatrix_t *mat, arVector_t *x, const arVector_t *b);
 arStatus_t		AR_CholeskyInverseMatrix(const arMatrix_t *mat, arMatrix_t *inv);
 arStatus_t		AR_MultiplyMatrixCholeskyFactors(const arMatrix_t *mat, arMatrix_t *original_mat);
 
 
-/*QR·Ö½â*/
+/*QRåˆ†è§£*/
 arStatus_t		AR_QRFactorMatrixSelf(arMatrix_t *mat, arVector_t *c, arVector_t *d);
 arStatus_t		AR_QRSloveMatrix(const arMatrix_t *mat, const arVector_t *c, const arVector_t *d, arVector_t *x, const arVector_t *b);
 arStatus_t		AR_QRInverseMatrix(const arMatrix_t *mat, const arVector_t *c, const arVector_t *d, arMatrix_t *inv);
@@ -1708,7 +1708,7 @@ arStatus_t		AR_MultiplyMatrixQRFactors(const arMatrix_t *mat, const arVector_t *
 
 
 
-/*************************************************************ÆäËû¹¦ÄÜ*************************************************************/
+/*************************************************************å…¶ä»–åŠŸèƒ½*************************************************************/
 arStatus_t		AR_MatrixToString(const arMatrix_t *mat, arString_t *str, size_t precision, const wchar_t *sp_str, const wchar_t *row_sp);
 
 

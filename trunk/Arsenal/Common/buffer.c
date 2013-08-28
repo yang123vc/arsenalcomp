@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
  * 
@@ -89,9 +89,9 @@ static AR_INLINE arStatus_t		__increase_capability(arBuffer_t *pbuf, size_t inc_
 
 static AR_INLINE  ar_bool_t __move_internal(arBuffer_t *pbuf, size_t len)
 {
-		size_t data_len = 0;	/* r***w read_cur ÖÁwrite_curÖ®¼äµÄ¿É¶ÁÊı¾İ³É¶¼*/
-		size_t vacancy_len = 0;	/* ***r read_curÖ®Ç°µÄ¿Õ°×¿Õ¼ä  */
-		size_t free_len = 0;	/* ***r  w*** first ÖÁread_curºÍ write_cur ÖÁ lastµÄ¿ÕÏĞ¿Õ¼äÊıÁ¿Ö®ºÍ*/
+		size_t data_len = 0;	/* r***w read_cur è‡³write_curä¹‹é—´çš„å¯è¯»æ•°æ®æˆéƒ½*/
+		size_t vacancy_len = 0;	/* ***r read_curä¹‹å‰çš„ç©ºç™½ç©ºé—´  */
+		size_t free_len = 0;	/* ***r  w*** first è‡³read_curå’Œ write_cur è‡³ lastçš„ç©ºé—²ç©ºé—´æ•°é‡ä¹‹å’Œ*/
 		AR_ASSERT(__buffer_is_valid(pbuf) && len > 0);
 
 		data_len = pbuf->write_cur - pbuf->read_cur;
