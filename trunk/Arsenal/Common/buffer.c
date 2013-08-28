@@ -311,6 +311,9 @@ arStatus_t		AR_InsertBufferToBuffer(arBuffer_t *buffer, const arBuffer_t *other)
 		}
 }
 
+
+
+
 size_t			AR_EraseBuffer(arBuffer_t *pbuf, size_t nbytes)
 {
 		size_t rm_data_len = 0;
@@ -417,6 +420,69 @@ size_t			AR_ReadBufferData(arBuffer_t *buffer, ar_byte_t *dest, size_t len)
 		return read_n;
 
 }
+
+
+
+arStatus_t         AR_GetLineFromBuffer(arBuffer_t *buf, char *line, size_t *l, const char *line_sp)
+{
+        size_t avail;
+        const char *b, *p, *e;
+        size_t need_n;
+        
+        AR_ASSERT(line_sp != NULL && AR_strlen(line_sp) > 0);
+        AR_ASSERT(buf != NULL);
+        
+        AR_ASSERT(l != NULL);
+        
+        
+        avail = AR_GetBufferAvailable(buf);
+        
+        
+        if(avail == 0)
+        {
+                *l = 0;
+                return AR_E_NOTMATCHED;
+        }
+        
+        b = (const char*)AR_GetBufferData(buf);
+        e = b + avail;
+        need_n = 0;
+        
+        p = AR_strstr_s(b, e, line_sp, line_sp + AR_strlen(line_sp));
+        
+        if(p == NULL)
+        {
+                return AR_E_NOTMATCHED;
+        }
+        
+        need_n = p - b;
+        
+        if(need_n == 0)
+        {
+                *l = 0;
+                AR_EraseBuffer(buf, need_n + 2);
+                return AR_S_YES;
+        }
+        
+        if(line == NULL)
+        {
+                *l = need_n;
+                return AR_S_YES;
+        }else
+        {
+                if(*l < need_n)
+                {
+                        return AR_E_SMALLBUF;
+                }else
+                {
+                        AR_strncpy(line, b, need_n);
+                        AR_ASSERT(avail >= need_n + 2);
+                        AR_EraseBuffer(buf, need_n + 2); /*抹掉\r\n*/
+                        return AR_S_YES;
+                }
+        }
+}
+
 
 
 
