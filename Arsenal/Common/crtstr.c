@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
  *
@@ -906,7 +906,7 @@ const wchar_t*		AR_wcsistr(const wchar_t *s, const wchar_t *p)
 
 
 
-//´ÓÓÒµ½×ó²éÕÒ
+//ä»å³åˆ°å·¦æŸ¥æ‰¾
 
 const wchar_t* AR_reverse_wcschr(const wchar_t* str, size_t l, wchar_t c)
 {
@@ -1548,9 +1548,9 @@ const wchar_t* AR_wcsstr_kmp_s(const wchar_t *beg, const wchar_t *end, const wch
 		for(i = 1,k = 0; i < m; ++i)
 		{
 				/*
-				Èç¹ûp[k]´¦²»ÏàµÈ£¬ ÔòÖ¤Ã÷ÓĞk¸öÇ°×ºÏàµÈ£¬ÔòËù¶ÔÓ¦µÄÕæºó×ºÎªnext[k-1];
-				ÒòÎª¸Ä±äk³¤¶ÈµÄÖ»ÓĞÏÂÃæk++Ò»ĞĞ£¬ÇÒÖ»ÓĞk > 0Ê±²ÅÓĞ¶ÁÈ¡nextÊı×éµÄ²Ù×÷£¬
-				ËùÒÔk¶ÁÈ¡µÄÓÀÔ¶Ê±ÒÑ¾­±»¼ÆËãºÃµÄ
+				å¦‚æœp[k]å¤„ä¸ç›¸ç­‰ï¼Œ åˆ™è¯æ˜æœ‰kä¸ªå‰ç¼€ç›¸ç­‰ï¼Œåˆ™æ‰€å¯¹åº”çš„çœŸåç¼€ä¸ºnext[k-1];
+				å› ä¸ºæ”¹å˜ké•¿åº¦çš„åªæœ‰ä¸‹é¢k++ä¸€è¡Œï¼Œä¸”åªæœ‰k > 0æ—¶æ‰æœ‰è¯»å–nextæ•°ç»„çš„æ“ä½œï¼Œ
+				æ‰€ä»¥kè¯»å–çš„æ°¸è¿œæ—¶å·²ç»è¢«è®¡ç®—å¥½çš„
 				*/
 				while(k > 0 && p[k] != p[i])k = next[k-1];
 				if(p[k] == p[i])k++;

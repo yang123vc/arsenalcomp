@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
  *
@@ -56,7 +56,7 @@ struct __medium_entery_tag
 
 struct __arsenal_heap_tag
 {
-		ar_byte_t			*small_first_free[((AR_SMALL_SIZE + 1)	/	AR_HEAP_ALIGN)+1];/*AR_SMALL_SIZE¶ÔÆëÕûÀíºó+header»á´æÔÚ³¬³ö256µÄÖµ,Òò´ËÊı×é+1*/
+		ar_byte_t			*small_first_free[((AR_SMALL_SIZE + 1)	/	AR_HEAP_ALIGN)+1];/*AR_SMALL_SIZEå¯¹é½æ•´ç†å+headerä¼šå­˜åœ¨è¶…å‡º256çš„å€¼,å› æ­¤æ•°ç»„+1*/
 		page_t			*small_cur_page;
 		size_t			small_cur_page_offset;
 		page_t 			*small_first_used_page;
@@ -139,7 +139,7 @@ static AR_INLINE void*	SmallAllocate(arHeap_t *heap, size_t bytes)
 
 
 		/*
-		×îĞ¡¿éÖ¸Õë±ØĞëÄÜ´æ´¢Ò»¸ösizeof(void*)´óĞ¡µÄÖµ£¬ÒÔĞÎ³ÉÒ»¸öÁ´±í
+		æœ€å°å—æŒ‡é’ˆå¿…é¡»èƒ½å­˜å‚¨ä¸€ä¸ªsizeof(void*)å¤§å°çš„å€¼ï¼Œä»¥å½¢æˆä¸€ä¸ªé“¾è¡¨
 		*/
 		if(bytes < sizeof(void*))
 		{
@@ -147,7 +147,7 @@ static AR_INLINE void*	SmallAllocate(arHeap_t *heap, size_t bytes)
 		}
 
 		/*
-		Êµ¼ÊĞèÒªµÄ×Ö½ÚÊıÎªbytes + AR_SMALL_HEADER_SIZE£¬½«Æä¶ÔÆëºó£¬¼õµôAR_SMALL_HEADER_SIZE£¬ÔòÎªÊµ¼ÊÊ¹ÓÃµÄ×Ö½ÚÊı
+		å®é™…éœ€è¦çš„å­—èŠ‚æ•°ä¸ºbytes + AR_SMALL_HEADER_SIZEï¼Œå°†å…¶å¯¹é½åï¼Œå‡æ‰AR_SMALL_HEADER_SIZEï¼Œåˆ™ä¸ºå®é™…ä½¿ç”¨çš„å­—èŠ‚æ•°
 		*/
 		bytes = AR_SMALL_ALIGN(bytes);
 
@@ -458,7 +458,7 @@ static AR_INLINE void	MediumFree(arHeap_t *heap, void *ptr)
 		
 		prev = e->prev;
 
-		if(prev && prev->free_block)	/*Èç¹ûÇ°ÃæµÄ¿é¿ÉÒÔºÏ²¢£¬Ôò½«±¾¿éºÏ²¢µ½Ç°ÃæµÃ¿éÖĞ*/
+		if(prev && prev->free_block)	/*å¦‚æœå‰é¢çš„å—å¯ä»¥åˆå¹¶ï¼Œåˆ™å°†æœ¬å—åˆå¹¶åˆ°å‰é¢å¾—å—ä¸­*/
 		{
 				prev->size += e->size;
 				prev->next = e->next;
@@ -471,7 +471,7 @@ static AR_INLINE void	MediumFree(arHeap_t *heap, void *ptr)
 		}else
 		{
 				/*
-				·ñÔò£¬½«±¾¿é²åÈëµ½first_freeÁ´±íÖĞ
+				å¦åˆ™ï¼Œå°†æœ¬å—æ’å…¥åˆ°first_freeé“¾è¡¨ä¸­
 				*/
 				e->prev_free = NULL;
 				e->next_free = (mediumEntry_t*)p->first_free;
@@ -488,7 +488,7 @@ static AR_INLINE void	MediumFree(arHeap_t *heap, void *ptr)
 
 		next = e->next;
 		
-		if(next && next->free_block)/*Èç¹ûºóÃæµÄ¿é¿ÉÒÔºÏ²¢£¬ÔòºÏ²¢µ½µ±Ç°¿ée*/
+		if(next && next->free_block)/*å¦‚æœåé¢çš„å—å¯ä»¥åˆå¹¶ï¼Œåˆ™åˆå¹¶åˆ°å½“å‰å—e*/
 		{
 				e->size += next->size;
 				e->next = next->next;
@@ -503,7 +503,7 @@ static AR_INLINE void	MediumFree(arHeap_t *heap, void *ptr)
 						next->prev_free->next_free = next->next_free;
 				}else
 				{
-						/*Ö´ĞĞºófirst_freeÓĞ¿ÉÄÜÎªNULL*/
+						/*æ‰§è¡Œåfirst_freeæœ‰å¯èƒ½ä¸ºNULL*/
 						AR_ASSERT((ar_byte_t*)next == (ar_byte_t*)p->first_free );
 						p->first_free = (ar_byte_t*)next->next_free; 
 				}
@@ -526,7 +526,7 @@ static AR_INLINE void	MediumFree(arHeap_t *heap, void *ptr)
 		if(e->size > p->largest_free)
 		{
 				/*
-				Ö´ĞĞµ½´Ë£¬Ö¤Ã÷p->first_free²»ÊÇ×î´ó¿é£¬Ôò½«¿ée·Åµ½p->first_freeÖĞ
+				æ‰§è¡Œåˆ°æ­¤ï¼Œè¯æ˜p->first_freeä¸æ˜¯æœ€å¤§å—ï¼Œåˆ™å°†å—eæ”¾åˆ°p->first_freeä¸­
 				*/
 				AR_ASSERT((ar_byte_t*)e != p->first_free);
 				p->largest_free = e->size;
@@ -555,7 +555,7 @@ static AR_INLINE void	MediumFree(arHeap_t *heap, void *ptr)
 		if(!is_in_freelist)
 		{
 				/*
-				Ö´ĞĞµ½´Ë£¬Ö¤Ã÷pageÒÑ¾­ÔÚmedium_first_used_page±íÖĞ£¬Òò´Ë£¬Òª½«ÆäÖØĞÂÁ¬Èëfirst_free±íÖĞ
+				æ‰§è¡Œåˆ°æ­¤ï¼Œè¯æ˜pageå·²ç»åœ¨medium_first_used_pageè¡¨ä¸­ï¼Œå› æ­¤ï¼Œè¦å°†å…¶é‡æ–°è¿å…¥first_freeè¡¨ä¸­
 				*/
 				if(p->prev)
 				{

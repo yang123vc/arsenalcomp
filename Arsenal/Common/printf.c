@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * The Arsenal Library
  * Copyright (c) 2009-2012 by Solidus
  * 
@@ -1214,10 +1214,10 @@ ar_int_t AR_vscwprintf(const wchar_t *fmt, va_list va_args)
 
 								/*
 										312 == wcslen(L"-1+(0{309})")
-										double ×î´ó¾«¶ÈÎª.0{309},ÕâÀï¾«¶ÈÄ¬ÈÏÉèÖÃÎª6
+										double æœ€å¤§ç²¾åº¦ä¸º.0{309},è¿™é‡Œç²¾åº¦é»˜è®¤è®¾ç½®ä¸º6
 								*/
 
-								cclen = AR_MAX(width, 312 + prec + 6);/*È¡×î´óÖµ*/
+								cclen = AR_MAX(width, 312 + prec + 6);/*å–æœ€å¤§å€¼*/
 
 								buf = AR_NEWARR0(wchar_t, cclen);
 
@@ -1364,7 +1364,7 @@ END_POINT:
 		}
 		
 #if(0)
-		if(res <= 0)						/*ºöÂÔµô´ËÖÖ´íÎó*/
+		if(res <= 0)						/*å¿½ç•¥æ‰æ­¤ç§é”™è¯¯*/
 		{
 				dest[0] = L'\0';
 				res = 0;

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
  *
@@ -227,7 +227,7 @@ static void __uninit_wait_queue(arAsyncQueue_t *queue)
 		while(queue->wait_cnt)
 		{
 				asyncWaitInfo_t *info;
-				AR_ASSERT(false);/*²»¿ÉÄÜÖ´ÐÐµ½´Ë*/
+				AR_ASSERT(false);/*ä¸å¯èƒ½æ‰§è¡Œåˆ°æ­¤*/
 				info = __pop_wait(queue);
 				AR_ASSERT(info != NULL);
 		}
@@ -362,9 +362,9 @@ arStatus_t	AR_GetFromAsyncQueueWithTimeout(arAsyncQueue_t *queue, void **pdata, 
 				{
 						AR_LockSpinLock(&queue->mutex);
 						/*
-						Èç¹û__remove_wait_node²»³É¹¦£¬ÔòÖ¤Ã÷ÔÚÔÚ±¾º¯ÊýAR_WaitEventTimeout³¬Ê±Ö®ºó£¬
-						AR_LockSpinLock(&queue->mutex);Ö®Ç°£¬ÓÐAR_PutToAsyncQueue»ñµÃËøÇÒ½«info.data
-						¸³Öµ
+						å¦‚æžœ__remove_wait_nodeä¸æˆåŠŸï¼Œåˆ™è¯æ˜Žåœ¨åœ¨æœ¬å‡½æ•°AR_WaitEventTimeoutè¶…æ—¶ä¹‹åŽï¼Œ
+						AR_LockSpinLock(&queue->mutex);ä¹‹å‰ï¼Œæœ‰AR_PutToAsyncQueueèŽ·å¾—é”ä¸”å°†info.data
+						èµ‹å€¼
 						*/
 						if(__remove_wait_node(queue, &info))
 						{
@@ -377,7 +377,7 @@ arStatus_t	AR_GetFromAsyncQueueWithTimeout(arAsyncQueue_t *queue, void **pdata, 
 						AR_UnLockSpinLock(&queue->mutex);
 				}else
 				{
-						/*Èç¹û²»ÐÒÖ´ÐÐµ½´Ë£¬×î´óµÄ¿ÉÄÜÓ¦¸ÃÊÇseteventÊ§°ÜÁË£¬ÄÇÃ´Ò²ÐíÓ¦¸ÃÖÕÖ¹£¬ÕâÀï²»¿¼ÂÇ´ËÇé¿ö£¬¼ÌÐøÊÔÍ¼É¾³ýµôÒÑ×¢²áµÄwaitinfo*/
+						/*å¦‚æžœä¸å¹¸æ‰§è¡Œåˆ°æ­¤ï¼Œæœ€å¤§çš„å¯èƒ½åº”è¯¥æ˜¯seteventå¤±è´¥äº†ï¼Œé‚£ä¹ˆä¹Ÿè®¸åº”è¯¥ç»ˆæ­¢ï¼Œè¿™é‡Œä¸è€ƒè™‘æ­¤æƒ…å†µï¼Œç»§ç»­è¯•å›¾åˆ é™¤æŽ‰å·²æ³¨å†Œçš„waitinfo*/
 						
 						AR_LockSpinLock(&queue->mutex);
 
@@ -449,7 +449,7 @@ arStatus_t	AR_GetFromAsyncQueue(arAsyncQueue_t *queue, void **pdata)
 				
 				if(status != AR_S_YES)
 				{
-						/*²»ÐÒÖ´ÐÐµ½´Ë£¬¿ÉÄÜ³öÏÖÈÎºÎÎÊÌâ£¬ÒÀÈ»³¢ÊÔÐÔµÄÇåÀíÒ»ÏÂinfo*/
+						/*ä¸å¹¸æ‰§è¡Œåˆ°æ­¤ï¼Œå¯èƒ½å‡ºçŽ°ä»»ä½•é—®é¢˜ï¼Œä¾ç„¶å°è¯•æ€§çš„æ¸…ç†ä¸€ä¸‹info*/
 						AR_LockSpinLock(&queue->mutex);
 
 						__remove_wait_node(queue, &info);

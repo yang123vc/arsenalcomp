@@ -1,4 +1,4 @@
-/*
+﻿/*
  * The Arsenal Library
  * Copyright (c) 2009-2013 by Solidus
  *
