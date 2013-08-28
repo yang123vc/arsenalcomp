@@ -106,6 +106,7 @@ _AR_GetHashIteratorData
 _AR_GetHashIteratorKey
 _AR_GetHeapMemUsage
 _AR_GetHomePath
+_AR_GetLineFromBuffer
 _AR_GetListBack
 _AR_GetListCount
 _AR_GetListFront

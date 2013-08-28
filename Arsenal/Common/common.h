@@ -1003,7 +1003,7 @@ size_t			AR_ReadBufferData(arBuffer_t *buffer, ar_byte_t *dest, size_t len);
 /*************************************helper****************************************/
 arStatus_t		AR_InsertCStringToBuffer(arBuffer_t *buffer, const char *str);
 arStatus_t		AR_InsertBufferToBuffer(arBuffer_t *buffer, const arBuffer_t *other);
-
+arStatus_t      AR_GetLineFromBuffer(arBuffer_t *buf, char *line, size_t *l, const char *line_sp);
 /************************************************************URI****************************************************************/
 
 
@@ -1087,7 +1087,7 @@ arStatus_t		AR_DecodeURLString(arCodePage_t cp, const wchar_t *uri, arString_t *
 
 arHash_t*		AR_CreateURIQueryTable();
 void			AR_DestroyURIQueryTable(arHash_t *tbl);
-
+#define         AR_ClearURIQueryTable(_tbl)     AR_ClearHash((_tbl))
 
 arStatus_t		AR_GetURIQueryItems(const arURI_t *uri, arHash_t *hash);
 arStatus_t		AR_SetURIQueryItems(arURI_t *uri, const arHash_t *hash);
