@@ -42,5 +42,18 @@
          landmarkName = "PList_LoadElemFromFile()"
          landmarkType = "7">
       </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../../Test/Mac_XCode4/commonTest.cpp"
+         timestampString = "399450776.202557"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "2350"
+         endingLineNumber = "2350"
+         landmarkName = "uri_test1()"
+         landmarkType = "7">
+      </FileBreakpoint>
    </FileBreakpoints>
 </Bucket>

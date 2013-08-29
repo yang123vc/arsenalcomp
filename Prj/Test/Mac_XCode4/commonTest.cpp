@@ -2345,6 +2345,32 @@ static void string_test1()
         
 
         
+static void uri_test1()
+{
+        arURI_t *uri = AR_CreateURI(AR_CP_UTF8);
+        arString_t   *str = NULL;
+        AR_ASSERT(uri != NULL);
+        
+        str = AR_CreateString();
+        AR_ASSERT(str != NULL);
+        
+        arStatus_t status = AR_SetEncodedURI(uri, L"http://www.baidu.com/test.html?memo%3D%D6%D0%B9%FA%D7%D6%A3%AC%CC%AB%B7%B3%C8%CB%C1%CB%A3%AC%BF%BF%A3%A1%A3%A1");
+        
+        AR_ASSERT(status == AR_S_YES);
+        
+        AR_GetURI(uri, str);
+        
+        AR_printf(L"%ls\r\n", AR_CSTR(str));
+        
+        AR_DestroyURI(uri);
+        uri = NULL;
+        
+        AR_DestroyString(str);
+        str = NULL;
+        
+    
+}
+        
         
 void common_test()
 {
@@ -2368,7 +2394,9 @@ void common_test()
         
         //string_test1();
         
-        base64_test1();
+        //base64_test1();
+        
+        uri_test1();
         
 }
         
