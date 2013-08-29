@@ -370,14 +370,36 @@ static arStatus_t	__decode(arCodePage_t cp, const wchar_t *begin, const wchar_t 
 		}
 		*w++ = '\0';
 
-		wbuf = AR_str_to_wcs(cp, buf, AR_strlen(buf));
+        wbuf = AR_str_to_wcs(cp, buf, AR_strlen(buf));
+        
+        if(wbuf == NULL)
+        {
+                arCodePage_t curr_code_page;
+                
+                for(curr_code_page = AR_CP_ACP; curr_code_page < AR_CP_MAX; ++curr_code_page)
+                {
+                        if(cp == curr_code_page)
+                        {
+                                continue;
+                        }
+                        
+                        wbuf = AR_str_to_wcs(curr_code_page, buf, AR_strlen(buf));
+                        
+                        if(wbuf != NULL)
+                        {
+                                break;
+                        }
+                }
+        }
 
-		if(wbuf == NULL)
-		{
-				status = AR_E_BADENCCONV;
-				goto END_POINT;
-		}
-
+        
+        if(wbuf == NULL)
+        {
+                status = AR_E_BADENCCONV;
+                goto END_POINT;
+        }
+        
+        
 		status = AR_AppendString(output, wbuf);
 		if(status != AR_S_YES)
 		{

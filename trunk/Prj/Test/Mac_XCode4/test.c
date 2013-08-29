@@ -14,9 +14,8 @@
 void test()
 {
         //file_sys_test();
-        //common_test();
+        common_test();
         //marshal_die_test();
-        
-        plist_test();
+        //plist_test();
         
 }
