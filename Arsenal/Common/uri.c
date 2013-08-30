@@ -374,7 +374,7 @@ static arStatus_t	__decode(arCodePage_t cp, const wchar_t *begin, const wchar_t 
         
         if(wbuf == NULL)
         {
-                arCodePage_t curr_code_page;
+                int curr_code_page;
                 
                 for(curr_code_page = AR_CP_ACP; curr_code_page < AR_CP_MAX; ++curr_code_page)
                 {
@@ -383,7 +383,7 @@ static arStatus_t	__decode(arCodePage_t cp, const wchar_t *begin, const wchar_t 
                                 continue;
                         }
                         
-                        wbuf = AR_str_to_wcs(curr_code_page, buf, AR_strlen(buf));
+                        wbuf = AR_str_to_wcs((arCodePage_t)curr_code_page, buf, AR_strlen(buf));
                         
                         if(wbuf != NULL)
                         {
