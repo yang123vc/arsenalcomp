@@ -2,7 +2,7 @@
 
 
 #include "../Arsenal/Tools/tools.h"
-
+#include "../Arsenal/Tools/property_list_internal.h"
 
 
 
@@ -292,6 +292,8 @@ END_POINT:
 
 
 
+
+
 extern "C" void plist_test()
 {
 		//parse_xml_test1();
@@ -300,7 +302,7 @@ extern "C" void plist_test()
 
 		//plist_parse_binary_test2();
 
-		plist_parse_binary_test2();
+		//plist_parse_binary_test2();
 
 }
 

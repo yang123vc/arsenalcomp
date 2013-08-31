@@ -301,6 +301,7 @@ AR_GetURIEncodedFragment
 AR_SetURIPathEtc
 AR_GetURIScheme
 AR_GetHashIteratorKey
+AR_GetURIEncodedPath
 AR_GetURIEncodedPathEtc
 AR_SetURIEncodedPath
 AR_UnInitHashIterator
