@@ -299,6 +299,7 @@ AR_GetURIEncodedFragment
 AR_SetURIPathEtc
 AR_GetURIScheme
 AR_GetHashIteratorKey
+AR_GetURIEncodedPath
 AR_GetURIEncodedPathEtc
 AR_SetURIEncodedPath
 AR_UnInitHashIterator
@@ -391,6 +392,20 @@ PList_LoadElemFromFile
 PList_SaveElemToXML
 PList_SaveElemToBinary
 PList_SaveElemToFile
+
+
+
+
+PList_CreateXMLParser
+PList_DestroyXMLParser(plistXMLParser_t *parser);
+PList_ClearXMLParser
+PList_SetXMLParserWithWcs
+PList_ParseXML
+PList_GetXMLParserErrorMessage
+PList_TryParseBinaryPlist
+PList_LoadXMLFromBinary
+PList_LoadXMLFromFile
+PList_LoadBinaryFromFile
 
 
 
