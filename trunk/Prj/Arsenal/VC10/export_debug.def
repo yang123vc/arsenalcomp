@@ -397,7 +397,7 @@ PList_SaveElemToFile
 
 
 PList_CreateXMLParser
-PList_DestroyXMLParser(plistXMLParser_t *parser);
+PList_DestroyXMLParser
 PList_ClearXMLParser
 PList_SetXMLParserWithWcs
 PList_ParseXML
