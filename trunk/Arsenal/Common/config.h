@@ -65,7 +65,10 @@
 				#define	AR_COMPILER		AR_VC
 		#endif
 
-		#define  _CRT_SECURE_NO_WARNINGS		1
+		#if !defined(_CRT_SECURE_NO_WARNINGS)
+				#define  _CRT_SECURE_NO_WARNINGS		1
+		#endif
+
 
 #elif defined(__BORLANDC__)
 

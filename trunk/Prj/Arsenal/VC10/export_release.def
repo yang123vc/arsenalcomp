@@ -22,10 +22,12 @@ AR_printf
 AR_check
 
 
-;AR_stricmp
-;AR_strnicmp
-;AR_wcsicmp
-;AR_wcsnicmp
+AR_stricmp
+AR_strnicmp
+AR_wcsicmp
+AR_wcsnicmp
+AR_wcsdup
+AR_wcshash
 
 AR_wcstrim
 AR_wcstrim_space
@@ -388,3 +390,30 @@ PList_SaveElemToXML
 PList_SaveElemToBinary
 PList_SaveElemToFile
 
+
+
+
+
+
+
+AR_close_file
+AR_error_file
+AR_eof_file
+AR_read_file
+AR_open_file
+AR_DestroyHash
+AR_CreateHash
+AR_FindFromHash 
+AR_InsertCStringToBuffer 
+AR_sprintf
+AR_wtou32
+AR_GetLineFromBuffer
+AR_stristr_s
+AR_strtrim_space
+AR_str_to_wcs
+AR_strtrim_right_space 
+AR_strdup 
+AR_strndup 
+AR_SetString
+AR_rand32
+AR_rand64
