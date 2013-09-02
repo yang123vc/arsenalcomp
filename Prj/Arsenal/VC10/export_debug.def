@@ -15,6 +15,7 @@ Arsenal_UnInit
 
 AR_error
 AR_printf
+AR_debug_print
 
 ;AR_error_ctx
 ;AR_printf_ctx
@@ -22,10 +23,12 @@ AR_printf
 AR_check
 
 
-;AR_stricmp
-;AR_strnicmp
-;AR_wcsicmp
-;AR_wcsnicmp
+AR_stricmp
+AR_strnicmp
+AR_wcsicmp
+AR_wcsnicmp
+AR_wcshash
+AR_wcsdup
 
 AR_wcstrim
 AR_wcstrim_space
@@ -407,5 +410,29 @@ PList_LoadXMLFromBinary
 PList_LoadXMLFromFile
 PList_LoadBinaryFromFile
 
+
+
+AR_debug_calloc
+AR_close_file
+AR_error_file
+AR_eof_file
+AR_read_file
+AR_open_file
+AR_DestroyHash
+AR_CreateHash
+AR_FindFromHash 
+AR_InsertCStringToBuffer 
+AR_sprintf
+AR_wtou32
+AR_GetLineFromBuffer
+AR_stristr_s
+AR_strtrim_space
+AR_str_to_wcs
+AR_strtrim_right_space 
+AR_strdup 
+AR_strndup 
+AR_rand32
+AR_rand64
+AR_SetString
 
 
