@@ -65,6 +65,8 @@
 				#define	AR_COMPILER		AR_VC
 		#endif
 
+		#define  _CRT_SECURE_NO_WARNINGS		1
+
 #elif defined(__BORLANDC__)
 
 		#define AR_COMPILER		AR_BCB6
@@ -273,7 +275,7 @@
 
 #if defined(OS_FAMILY_WINDOWS)
 
-
+		
 		#include <windows.h>
 
 
