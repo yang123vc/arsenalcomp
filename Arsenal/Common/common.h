@@ -647,6 +647,12 @@ ar_uint_t			AR_memhash(const ar_byte_t *data, size_t len);
 
 
 
+void AR_make_heap(void *arr, size_t count, size_t element_size, ar_int_t (*cmp_f)(const void*, const void*), void (*swap_f)(void*, void*));
+void AR_pop_heap(void *arr, size_t count, size_t element_size, ar_int_t (*cmp_f)(const void*, const void*), void (*swap_f)(void*, void*));
+void AR_push_heap(void *arr, size_t count, size_t element_size, ar_int_t (*cmp_f)(const void*, const void*), void (*swap_f)(void*, void*));
+void AR_sort_heap(void *arr, size_t count, size_t element_size, ar_int_t (*cmp_f)(const void*, const void*), void (*swap_f)(void*, void*));
+
+
 /********************************************************Basic Data Structure*********************************************************/
 
 /*
