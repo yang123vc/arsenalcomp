@@ -454,6 +454,122 @@ ar_uint_t AR_memhash(const ar_byte_t *data, size_t len)
 
 }
 
+
+
+
+/***********************heap****************************/
+
+
+
+
+/*__heap_fixup和__heap_fixdown都是认为数组自1开始*/
+
+static void __heap_fixup(void *arr, size_t count, size_t idx, size_t element_size, ar_int_t (*cmp_f)(const void*, const void*), void (*swap_f)(void*, void*) )
+{
+		count = count;
+		AR_ASSERT(idx <= count);
+		
+		while(idx > 1)
+		{
+				size_t p = idx / 2;
+                
+				if(cmp_f(AR_GET_ELEM(arr,element_size, p), AR_GET_ELEM(arr, element_size, idx)) >= 0)
+                {
+                        break;
+                }
+				
+				swap_f((void*)AR_GET_ELEM(arr,element_size, p), (void*)AR_GET_ELEM(arr, element_size, idx));
+                
+				idx = p;
+		}
+}
+
+static void __heap_fixdown(void *arr, size_t count, size_t idx, size_t element_size, ar_int_t (*cmp_f)(const void*, const void*), void (*swap_f)(void*, void*) )
+{
+		size_t c;
+		AR_ASSERT(idx <= count);
+        
+		while(idx * 2 <= count)
+		{
+				c = idx * 2;
+                
+				if(c < count && cmp_f(AR_GET_ELEM(arr, element_size, c), AR_GET_ELEM(arr, element_size, c + 1)) < 0)
+                {
+                        ++c;
+                }
+                
+				if(cmp_f(AR_GET_ELEM(arr, element_size, idx), AR_GET_ELEM(arr, element_size, c)) >= 0)
+                {
+                        break;
+                }
+                
+				swap_f((void*)AR_GET_ELEM(arr, element_size, idx), (void*)AR_GET_ELEM(arr, element_size, c));
+				idx = c;
+		}
+}
+
+
+
+
+void AR_push_heap(void *arr, size_t count, size_t element_size, ar_int_t (*cmp_f)(const void*, const void*), void (*swap_f)(void*, void*))
+{
+		void *heap_arr;
+        
+		AR_ASSERT(arr != NULL && count > 0 && element_size > 0 && cmp_f != NULL && swap_f != NULL);
+		heap_arr = (void*)((ar_byte_t*)arr - element_size);
+		__heap_fixup(heap_arr, count, count, element_size, cmp_f, swap_f);
+}
+
+
+void AR_pop_heap(void *arr, size_t count, size_t element_size, ar_int_t (*cmp_f)(const void*, const void*), void (*swap_f)(void*, void*))
+{
+		void *heap_arr;
+		AR_ASSERT(arr != NULL && count > 0 && element_size > 0 && cmp_f != NULL && swap_f != NULL);
+		heap_arr = (void*)((ar_byte_t*)arr - element_size);
+		
+		swap_f((void*)AR_GET_ELEM(heap_arr, element_size, 1), (void*)AR_GET_ELEM(heap_arr, element_size, count));
+		
+		__heap_fixdown(heap_arr, count - 1, 1, element_size, cmp_f, swap_f);
+}
+
+
+void AR_make_heap(void *arr, size_t count, size_t element_size, ar_int_t (*cmp_f)(const void*, const void*), void (*swap_f)(void*, void*))
+{
+		void *heap_arr;
+		size_t n;
+        
+		AR_ASSERT(arr != NULL && count > 0 && element_size > 0 && cmp_f != NULL && swap_f != NULL);
+        
+		heap_arr = (void*)((ar_byte_t*)arr - element_size);
+		
+		for(n = count /2; n >= 1; n--)
+        {
+                __heap_fixdown(heap_arr, count, n, element_size, cmp_f, swap_f);
+        }
+}
+
+void AR_sort_heap(void *arr, size_t count, size_t element_size, ar_int_t (*cmp_f)(const void*, const void*), void (*swap_f)(void*, void*))
+{
+		void *heap_arr;
+		AR_ASSERT(arr != NULL && count > 0 && element_size > 0 && cmp_f != NULL && swap_f != NULL);
+		heap_arr = (void*)((ar_byte_t*)arr - element_size);
+		
+		while(count > 1)
+		{
+				swap_f((void*)AR_GET_ELEM(heap_arr, element_size, 1), (void*)AR_GET_ELEM(heap_arr, element_size, count--));
+				__heap_fixdown(heap_arr, count, 1, element_size, cmp_f, swap_f);
+		}
+}
+
+
+
+
+
+
+
+
+
+
 AR_NAMESPACE_END
 
 

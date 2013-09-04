@@ -374,6 +374,7 @@ _AR_is_nan_dbl
 _AR_is_nan_flt
 _AR_logbase_dbl
 _AR_logbase_flt
+_AR_make_heap
 _AR_malloc
 _AR_memhash
 _AR_memswap
@@ -400,9 +401,11 @@ _AR_path_rename
 _AR_path_set_executable
 _AR_path_set_size
 _AR_path_set_writeable
+_AR_pop_heap
 _AR_pow_dbl
 _AR_pow_flt
 _AR_printf
+_AR_push_heap
 _AR_qsort
 _AR_rand32
 _AR_rand64
@@ -423,6 +426,7 @@ _AR_seek_file
 _AR_setenv
 _AR_sin_dbl
 _AR_sin_flt
+_AR_sort_heap
 _AR_sprintf
 _AR_sqrt_dbl
 _AR_sqrt_flt

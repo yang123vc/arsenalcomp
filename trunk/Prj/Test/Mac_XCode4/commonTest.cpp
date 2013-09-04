@@ -2372,6 +2372,52 @@ static void uri_test1()
 }
         
         
+static ar_int_t int_cmp_func(const void *l, const void *r)
+{
+        AR_ASSERT(l != NULL && r != NULL);
+        return - AR_CMP(*(ar_int_t*)l, *(ar_int_t*)r);
+        
+}
+ 
+static void int_swap_func(void *l, void *r)
+{
+        ar_int_t t;
+        AR_ASSERT(l != NULL && r != NULL);
+        
+        t = *(ar_int_t*)l;
+        
+        *(ar_int_t*)l = *(ar_int_t*)r;
+        *(ar_int_t*)r = t;
+        
+}
+        
+        
+static void heap_test1()
+{
+        /*
+         AR_make_heap
+        AR_pop_heap
+        AR_push_heap
+        AR_sort_heap
+        */
+        
+        ar_int_t arr[10];
+        
+        for(size_t i = 0; i < AR_NELEMS(arr); ++i)
+        {
+                arr[i] = AR_rand32() % 100;
+        }
+ 
+        AR_make_heap(arr, AR_NELEMS(arr), sizeof(arr[0]), int_cmp_func, int_swap_func);
+        
+        AR_sort_heap(arr, AR_NELEMS(arr), sizeof(arr[0]), int_cmp_func, int_swap_func);
+        
+        for(size_t i = 0; i < AR_NELEMS(arr); ++i)
+        {
+                AR_printf(L"%Id\r\n", arr[i]);
+        }
+}
+        
 void common_test()
 {
         AR_printf(L"On common_test\r\n");
@@ -2396,7 +2442,9 @@ void common_test()
         
         //base64_test1();
         
-        uri_test1();
+        //uri_test1();
+        
+        heap_test1();
         
 }
         
