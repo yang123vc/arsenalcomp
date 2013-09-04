@@ -2416,8 +2416,17 @@ static void heap_test1()
         {
                 AR_printf(L"%Id\r\n", arr[i]);
         }
+        
 }
         
+static void mem_test1()
+{
+        ar_byte_t *p = AR_NEWARR(ar_byte_t, 1024);
+        
+        
+        
+}
+
 void common_test()
 {
         AR_printf(L"On common_test\r\n");
@@ -2444,7 +2453,9 @@ void common_test()
         
         //uri_test1();
         
-        heap_test1();
+        //heap_test1();
+        
+        //mem_test1();
         
 }
         
