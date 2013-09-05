@@ -339,9 +339,9 @@ struct_declarator            :    declarator
 /*
     枚举声明
 */
-enum_specifier		:    "enum" "{" enumerator_list "}"
-						|    "enum" IDENTIFIER "{" enumerator_list "}"
-						|    "enum" IDENTIFIER
+enum_specifier        :    "enum" "{" enumerator_list "}"
+                        |    "enum" IDENTIFIER "{" enumerator_list "}"
+                        |    "enum" IDENTIFIER
                     ;
 
 enumerator_list            :    enumerator
@@ -432,10 +432,33 @@ initializer            :    assignment_expression
                     |    "{" error "}"
                     ;
 
+/*
 initializer_list        :    initializer
                     |    initializer_list "," initializer
                     ;
 
+*/
+
+
+/**************************C99***********************************/
+
+initializer_list        	:    designation  initializer
+                    		|    initializer_list "," designation  initializer
+                    		;
+
+designation			:	designator_list "="
+						|	.
+						;
+
+designator_list		:	designator
+						|	designator_list	designator
+						;
+
+
+designator				:	"."	 IDENTIFIER
+						;
+
+/*************************************************************/
 
 
 /*语句*/
