@@ -1010,6 +1010,9 @@ size_t			AR_ReadBufferData(arBuffer_t *buffer, ar_byte_t *dest, size_t len);
 arStatus_t		AR_InsertCStringToBuffer(arBuffer_t *buffer, const char *str);
 arStatus_t		AR_InsertBufferToBuffer(arBuffer_t *buffer, const arBuffer_t *other);
 arStatus_t      AR_GetLineFromBuffer(arBuffer_t *buf, char *line, size_t *l, const char *line_sp);
+
+
+
 /************************************************************URI****************************************************************/
 
 
