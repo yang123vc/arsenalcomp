@@ -631,7 +631,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <MinimalRebuild>false</MinimalRebuild>
-      <AssemblerOutput>AssemblyAndMachineCode</AssemblerOutput>
+      <AssemblerOutput>NoListing</AssemblerOutput>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -661,7 +661,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <MinimalRebuild>false</MinimalRebuild>
-      <AssemblerOutput>AssemblyAndMachineCode</AssemblerOutput>
+      <AssemblerOutput>NoListing</AssemblerOutput>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -691,7 +691,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <MinimalRebuild>false</MinimalRebuild>
-      <AssemblerOutput>AssemblyAndMachineCode</AssemblerOutput>
+      <AssemblerOutput>NoListing</AssemblerOutput>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
