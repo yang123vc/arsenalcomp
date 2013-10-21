@@ -1,139 +1,234 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
-	<ActiveTarget name="DLLDebug" />
-	<File name="..\..\..\Arsenal\Arsenal.c" open="0" top="0" tabpos="1">
-		<Cursor position="0" topLine="0" />
+	<ActiveTarget name="LibDebug" />
+	<File name="../../../Arsenal/Common/thread.c" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="793" topLine="12" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Arsenal.h" open="0" top="0" tabpos="2">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Tengu/tengu_parser.c" open="0" top="0" tabpos="19" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Common\algo.c" open="0" top="0" tabpos="6">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Common/byteorder.c" open="0" top="0" tabpos="17" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Common\base64.c" open="0" top="0" tabpos="13">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Common/crtstr.c" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Common\byteorder.c" open="0" top="0" tabpos="17">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Lex/lex.h" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Common\common.c" open="0" top="0" tabpos="1">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Tools/tools.c" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Common\common.h" open="0" top="0" tabpos="4">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Tools/property_list.c" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Common\config.h" open="0" top="0" tabpos="2">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Common/thread_posix_posix.h" open="0" top="0" tabpos="18" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Common\crtstr.c" open="0" top="0" tabpos="3">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Common/filesystem_path_posix_posix.h" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Common\filesystem_path_posix.h" open="0" top="0" tabpos="10">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Common/filesystem_path_posix.h" open="0" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Common\filesystem_path_posix_apple.h" open="0" top="0" tabpos="1">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Tengu/tengu_utility.c" open="0" top="0" tabpos="20" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Common\filesystem_path_posix_posix.h" open="0" top="0" tabpos="7">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Common/thread_posix_apple.h" open="0" top="0" tabpos="22" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Common\filesystem_path_win.h" open="0" top="0" tabpos="6">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Common/thread_posix.h" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="6121" topLine="270" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Common\filesystem_posix.h" open="0" top="0" tabpos="4">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Common/common.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Common\filesystem_win.h" open="1" top="1" tabpos="5">
-		<Cursor position="14029" topLine="741" />
+	<File name="../../../Arsenal/Common/config.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Common\memory.c" open="0" top="0" tabpos="10">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Arsenal.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Common\platform.h" open="0" top="0" tabpos="5">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Tengu/tengu.c" open="0" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Common\printf.c" open="0" top="0" tabpos="4">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Common/strconv.c" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Common\status.h" open="0" top="0" tabpos="6">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Lex/rgx_exec.c" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Common\strconv.c" open="0" top="0" tabpos="7">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Common/strnum.c" open="0" top="0" tabpos="15" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Common\strnum.c" open="0" top="0" tabpos="15">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Common/common.c" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Common\textfile.c" open="0" top="0" tabpos="5">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Common/printf.c" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Common\thread_posix.h" open="0" top="0" tabpos="23">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Tengu/tengu.h" open="0" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Common\thread_posix_apple.h" open="0" top="0" tabpos="22">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Lex/lex.c" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Common\thread_posix_posix.h" open="0" top="0" tabpos="18">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Tools/iniobj.c" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Common\thread_win.h" open="0" top="0" tabpos="2">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Tengu/tguvm.h" open="0" top="0" tabpos="13" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Lex\lex.c" open="0" top="0" tabpos="8">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Tengu/tengu_parser_impl.h" open="0" top="0" tabpos="18" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Lex\lex.h" open="0" top="0" tabpos="7">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Tools/grammar_config.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Lex\rgx_exec.c" open="0" top="0" tabpos="8">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Common/textfile.c" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Lex\rgx_misc.c" open="0" top="0" tabpos="4">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Common/status.h" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Parser\lr_action.c" open="1" top="0" tabpos="3">
-		<Cursor position="3292" topLine="131" />
+	<File name="../../../Arsenal/Common/filesystem_posix.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Parser\parser.h" open="0" top="0" tabpos="12">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Lex/rgx_misc.c" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Parser\symbol.c" open="1" top="0" tabpos="4">
-		<Cursor position="4039" topLine="203" />
+	<File name="../../../Arsenal/Common/algo.c" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Tengu\tengu.c" open="0" top="0" tabpos="11">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Common/base64.c" open="0" top="0" tabpos="13" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Tengu\tengu.h" open="0" top="0" tabpos="12">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Common/platform.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Tengu\tengu_parser.c" open="0" top="0" tabpos="19">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Common/filesystem_path_posix_apple.h" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Tengu\tengu_parser_impl.h" open="0" top="0" tabpos="18">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Tengu/tguvm.c" open="0" top="0" tabpos="14" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Tengu\tengu_utility.c" open="0" top="0" tabpos="20">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Common/memory.c" open="0" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Tengu\tguvm.c" open="0" top="0" tabpos="14">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Arsenal.c" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Tengu\tguvm.h" open="0" top="0" tabpos="13">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Common/thread_win.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Tools\grammar_config.h" open="0" top="0" tabpos="4">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Parser/lr_action.c" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Tools\iniobj.c" open="0" top="0" tabpos="4">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Parser/symbol.c" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Tools\property_list.c" open="0" top="0" tabpos="1">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Parser/parser.h" open="0" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Tools\serializer.c" open="1" top="0" tabpos="1">
-		<Cursor position="13656" topLine="725" />
+	<File name="../../../Arsenal/Tools/serializer.c" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
-	<File name="..\..\..\Arsenal\Tools\tools.c" open="1" top="0" tabpos="2">
-		<Cursor position="0" topLine="0" />
+	<File name="../../../Arsenal/Common/filesystem_win.h" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="../../../Arsenal/Common/filesystem_path_win.h" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

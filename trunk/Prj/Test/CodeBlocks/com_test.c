@@ -87,6 +87,31 @@ static void dir_copy_test()
 
 }
 
+
+static void mtx_test_1()
+{
+    arMutex_t *mtx = AR_CreateMutex();
+    AR_ASSERT(mtx != NULL);
+
+    arStatus_t status = AR_LockMutex(mtx);
+    AR_ASSERT(status == AR_S_YES);
+
+    status = AR_LockMutex(mtx);
+    AR_ASSERT(status == AR_S_YES);
+
+
+    status = AR_UnLockMutex(mtx);
+    AR_ASSERT(status == AR_S_YES);
+
+    status = AR_UnLockMutex(mtx);
+    AR_ASSERT(status == AR_S_YES);
+
+    AR_DestroyMutex(mtx);
+    mtx = NULL;
+
+
+}
+
 void com_test()
 {
 
@@ -95,7 +120,7 @@ void com_test()
 
         AR_error(AR_ERR_WARNING, L"test message : %ls", L"zhongguozi");
 
-        dir_copy_test();
+        //dir_copy_test();
 
         //file_seek_test();
 
@@ -103,6 +128,8 @@ void com_test()
        //text_test_save();
 
         //mem_test();
+
+        mtx_test_1();
 
 }
 

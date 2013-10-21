@@ -140,20 +140,20 @@ void			AR_DestroyThread(arThread_t *thd)
         int ret = 0;
         AR_ASSERT(thd != NULL);
         AR_JoinThread(thd);
-        
+
         if((ret = pthread_join(thd->thd, &result)) != 0)
         {
                 AR_error(AR_ERR_WARNING, L"can not join thread : error code == %d\r\n", ret);
         }
-        
+
         if((ret = pthread_detach(thd->thd)) != 0)
         {
-               /*If you join after the success of this function call is actually redundant, 
+               /*If you join after the success of this function call is actually redundant,
 			   so returns 3 it's not matter, the resources occupied by thread has been released
 			   */
-                
+
         }
-        
+
         AR_DestroyEvent(thd->done);
         thd->done = NULL;
         AR_DEL(thd);
@@ -163,11 +163,11 @@ void			AR_DestroyThread(arThread_t *thd)
 arStatus_t		AR_JoinThread(arThread_t *thd)
 {
         arStatus_t status;
-        
+
         AR_ASSERT(thd != NULL && thd->done != NULL);
-        
+
         status = AR_WaitEvent(thd->done);
-        
+
         return status;
 }
 
@@ -175,9 +175,9 @@ arStatus_t		AR_JoinThreadWithTimeout(arThread_t *thd, ar_uint_64_t milliseconds)
 {
         arStatus_t status;
         AR_ASSERT(thd != NULL && thd->done != NULL);
-        
+
         status = AR_WaitEventWithTimeout(thd->done, milliseconds);
-        
+
         return status;
 }
 
@@ -274,11 +274,8 @@ arMutex_t*		AR_CreateMutex()
 
         pthread_mutexattr_init(&attr);
 
-#if defined(PTHREAD_MUTEX_RECURSIVE_NP)
-        pthread_mutexattr_settype_np(&attr, PTHREAD_MUTEX_RECURSIVE_NP);
-#elif defined(PTHREAD_MUTEX_RECURSIVE)
         pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-#endif
+
         if(pthread_mutex_init(mtx, &attr) != 0)
         {
                 pthread_mutexattr_destroy(&attr);
@@ -295,7 +292,7 @@ void			AR_DestroyMutex(arMutex_t *mtx)
 {
         AR_ASSERT(mtx != NULL);
         pthread_mutex_destroy((pthread_mutex_t*)mtx);
-        
+
         AR_DEL(mtx);
 		mtx = NULL;
 

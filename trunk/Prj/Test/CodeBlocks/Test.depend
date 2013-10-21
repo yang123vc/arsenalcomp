@@ -451,3 +451,87 @@
 1376455841 /home/solidus/Desktop/Programming/Arsenal/Arsenal/Tools/property_list.h
 	"../Common/common.h"
 
+1382393700 source:/home/solidus/Desktop/Code/Arsenal/Prj/Test/CodeBlocks/com_test.c
+	"test.h"
+	<locale.h>
+
+1382393700 /home/solidus/Desktop/Code/Arsenal/Prj/Test/CodeBlocks/test.h
+	"../../../Arsenal/Arsenal.h"
+
+1382393696 /home/solidus/Desktop/Code/Arsenal/Arsenal/Arsenal.h
+	"./Common/common.h"
+	"./Lex/lex.h"
+	"./Parser/parser.h"
+	"./Tools/tools.h"
+	"./Tengu/tengu.h"
+
+1382393696 /home/solidus/Desktop/Code/Arsenal/Arsenal/Common/common.h
+	"config.h"
+	"status.h"
+
+1382393696 /home/solidus/Desktop/Code/Arsenal/Arsenal/Common/config.h
+	"platform.h"
+	<stdlib.h>
+	<stdio.h>
+	<wchar.h>
+	<stddef.h>
+	<stdarg.h>
+	<limits.h>
+	<assert.h>
+	<memory.h>
+	<string.h>
+	<math.h>
+	<wctype.h>
+	<string.h>
+	<float.h>
+	<locale.h>
+	<stdbool.h>
+	<windows.h>
+	<unistd.h>
+	<errno.h>
+	<pthread.h>
+
+1382393696 /home/solidus/Desktop/Code/Arsenal/Arsenal/Common/platform.h
+	<TargetConditionals.h>
+
+1382393696 /home/solidus/Desktop/Code/Arsenal/Arsenal/Common/status.h
+
+1382393695 /home/solidus/Desktop/Code/Arsenal/Arsenal/Lex/lex.h
+	"../Common/common.h"
+
+1382393696 /home/solidus/Desktop/Code/Arsenal/Arsenal/Parser/parser.h
+	"../Common/common.h"
+
+1382393695 /home/solidus/Desktop/Code/Arsenal/Arsenal/Tools/tools.h
+	"grammar_config.h"
+	"serializer.h"
+	"iniobj.h"
+	"property_list.h"
+
+1382393695 /home/solidus/Desktop/Code/Arsenal/Arsenal/Tools/grammar_config.h
+	"../Parser/parser.h"
+	"../Lex/lex.h"
+
+1382393695 /home/solidus/Desktop/Code/Arsenal/Arsenal/Tools/serializer.h
+	"../Common/common.h"
+
+1382393695 /home/solidus/Desktop/Code/Arsenal/Arsenal/Tools/iniobj.h
+	"../Common/common.h"
+
+1382393695 /home/solidus/Desktop/Code/Arsenal/Arsenal/Tools/property_list.h
+	"../Common/common.h"
+
+1382393695 /home/solidus/Desktop/Code/Arsenal/Arsenal/Tengu/tengu.h
+	"../Common/common.h"
+	"../Lex/lex.h"
+	"../Parser/parser.h"
+
+1382393700 source:/home/solidus/Desktop/Code/Arsenal/Prj/Test/CodeBlocks/main.c
+	"test.h"
+	<iostream>
+	<locale.h>
+	<wchar.h>
+
+1382393700 source:/home/solidus/Desktop/Code/Arsenal/Prj/Test/CodeBlocks/test.c
+	"test.h"
+
