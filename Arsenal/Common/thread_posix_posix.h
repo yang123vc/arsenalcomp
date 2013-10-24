@@ -12,7 +12,8 @@
  */
 
 
-static arSpinLock_t		__g_atomic_lock;
+
+
 
 void			AR_InitThread()
 {
@@ -21,32 +22,27 @@ void			AR_InitThread()
         sigaddset(&sset, SIGPIPE);
 
         pthread_sigmask(SIG_BLOCK, &sset, 0);
-
-
-		AR_InitSpinLock(&__g_atomic_lock);
-
-}
+		
+}		
 
 void			AR_UnInitThread()
 {
-		AR_UnInitSpinLock(&__g_atomic_lock);
+		
 
 }
+
 
 ar_int_t			AR_AtomicInc(volatile ar_int_t *dest)
 {
-		AR_LockSpinLock(&__g_atomic_lock);
-		*dest += 1;
-		AR_UnLockSpinLock(&__g_atomic_lock);
-		return *dest;
+		AR_ASSERT(dest != NULL);
+        return __sync_add_and_fetch(dest, 1);
 }
+
 
 ar_int_t			AR_AtomicDec(volatile ar_int_t *dest)
 {
-		AR_LockSpinLock(&__g_atomic_lock);
-		*dest -= 1;
-		AR_UnLockSpinLock(&__g_atomic_lock);
-		return *dest;
+		AR_ASSERT(dest != NULL);
+        return __sync_sub_and_fetch(dest, 1);
 }
 
 
