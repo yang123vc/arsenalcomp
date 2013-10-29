@@ -103,6 +103,21 @@ void			AR_UnInitSpinLock(arSpinLock_t *lock)
 		*lock = UNLOCK_STATE;
 }
 
+
+ar_bool_t AR_TryLockSpinLock(arSpinLock_t *lock)
+{
+		
+		if(COMP_EXCH(lock, LOCK_STATE, UNLOCK_STATE) == UNLOCK_STATE)
+		{
+				return true;
+		}else
+		{
+				return false;
+		}
+		
+
+}
+
 void			AR_LockSpinLock(arSpinLock_t *lock)
 {
 
@@ -110,7 +125,7 @@ void			AR_LockSpinLock(arSpinLock_t *lock)
 		AR_ASSERT(lock != NULL);
 		count = 0;
 
-		while(COMP_EXCH(lock, LOCK_STATE, UNLOCK_STATE) != UNLOCK_STATE)
+		while(!AR_TryLockSpinLock(lock))
 		{
 				if(++count > AR_MAXSPIN_COUNT)
 				{

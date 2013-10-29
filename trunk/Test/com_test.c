@@ -4011,6 +4011,24 @@ static void float_test4()
 
 }
 
+static void spinlock_test()
+{
+		arSpinLock_t spl;
+		AR_InitSpinLock(&spl);
+		
+		AR_LockSpinLock(&spl);
+		AR_ASSERT(!AR_TryLockSpinLock(&spl));
+		AR_UnLockSpinLock(&spl);
+
+		AR_ASSERT(AR_TryLockSpinLock(&spl));
+		AR_UnLockSpinLock(&spl);
+
+		AR_UnInitSpinLock(&spl);
+
+
+
+}
+
 
 
 void com_test()
@@ -4088,7 +4106,7 @@ void com_test()
 
 		//float_test3();
 
-		float_test4();
+		//float_test4();
 
 		//com_str_test_vcprintf();
 		//com_test_srpintf();
@@ -4138,7 +4156,7 @@ void com_test()
 		//path_test1();
 		//path_test2();
 
-
+		spinlock_test();
 
 }
 
