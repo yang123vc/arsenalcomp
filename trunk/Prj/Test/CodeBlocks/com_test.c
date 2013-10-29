@@ -112,6 +112,25 @@ static void mtx_test_1()
 
 }
 
+static void spinlock_test()
+{
+		arSpinLock_t spl;
+		AR_InitSpinLock(&spl);
+
+		AR_LockSpinLock(&spl);
+		AR_ASSERT(!AR_TryLockSpinLock(&spl));
+		AR_UnLockSpinLock(&spl);
+
+		AR_ASSERT(AR_TryLockSpinLock(&spl));
+		AR_UnLockSpinLock(&spl);
+
+		AR_UnInitSpinLock(&spl);
+
+
+
+}
+
+
 void com_test()
 {
 
@@ -129,7 +148,9 @@ void com_test()
 
         //mem_test();
 
-        mtx_test_1();
+       // mtx_test_1();
+
+       spinlock_test();
 
 }
 
