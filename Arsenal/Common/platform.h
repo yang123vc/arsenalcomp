@@ -137,6 +137,8 @@
 #define ARCH_SPARC   0x08
 #define ARCH_X64	 0x09
 #define ARCH_ARM     0x0a
+#define ARCH_ARM64   0x0b
+
 
 
 
@@ -198,6 +200,16 @@
 	#else
 		#define ARCH_LITTLE_ENDIAN						1
 	#endif
+
+#elif defined(__aarch64__)
+
+        #define ARCH										ARCH_ARM64
+
+        #if defined(__AARCH64EB__)
+                #define ARCH_BIG_ENDIAN							1
+        #else
+                #define ARCH_LITTLE_ENDIAN						1
+        #endif
 
 #endif
 
