@@ -1172,6 +1172,7 @@ void			AR_InitSpinLock(arSpinLock_t *lock);
 void			AR_UnInitSpinLock(arSpinLock_t *lock);
 void			AR_LockSpinLock(arSpinLock_t *lock);
 void			AR_UnLockSpinLock(arSpinLock_t *lock);
+ar_bool_t		AR_TryLockSpinLock(arSpinLock_t *lock);
 
 void			AR_YieldThread();
 void			AR_Sleep(ar_uint_64_t millisecond);

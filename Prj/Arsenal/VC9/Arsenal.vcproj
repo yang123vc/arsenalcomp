@@ -1657,7 +1657,11 @@
 			>
 		</File>
 		<File
-			RelativePath=".\export.def"
+			RelativePath=".\export_debug.def"
+			>
+		</File>
+		<File
+			RelativePath=".\export_release.def"
 			>
 		</File>
 	</Files>
