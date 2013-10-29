@@ -14,24 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "BEA4E2CE14E840DE00A29A8D"
-               BuildableName = "Arsenal.dylib"
-               BlueprintName = "ArsenalDLL"
-               ReferencedContainer = "container:../../../Prj/Arsenal/Mac_XCode5/Arsenal.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "BEAF6ED914F25FC500BE72FF"
-               BuildableName = "GrammarDesigner.app"
-               BlueprintName = "GrammarDesigner"
-               ReferencedContainer = "container:GrammarDesigner.xcodeproj">
+               BlueprintIdentifier = "BE185EC514E847860095DB44"
+               BuildableName = "TestDLL"
+               BlueprintName = "TestDLL"
+               ReferencedContainer = "container:Test.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -46,10 +32,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "BEAF6ED914F25FC500BE72FF"
-            BuildableName = "GrammarDesigner.app"
-            BlueprintName = "GrammarDesigner"
-            ReferencedContainer = "container:GrammarDesigner.xcodeproj">
+            BlueprintIdentifier = "BE185EC514E847860095DB44"
+            BuildableName = "TestDLL"
+            BlueprintName = "TestDLL"
+            ReferencedContainer = "container:Test.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -65,10 +51,10 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "BEAF6ED914F25FC500BE72FF"
-            BuildableName = "GrammarDesigner.app"
-            BlueprintName = "GrammarDesigner"
-            ReferencedContainer = "container:GrammarDesigner.xcodeproj">
+            BlueprintIdentifier = "BE185EC514E847860095DB44"
+            BuildableName = "TestDLL"
+            BlueprintName = "TestDLL"
+            ReferencedContainer = "container:Test.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -83,10 +69,10 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "BEAF6ED914F25FC500BE72FF"
-            BuildableName = "GrammarDesigner.app"
-            BlueprintName = "GrammarDesigner"
-            ReferencedContainer = "container:GrammarDesigner.xcodeproj">
+            BlueprintIdentifier = "BE185EC514E847860095DB44"
+            BuildableName = "TestDLL"
+            BlueprintName = "TestDLL"
+            ReferencedContainer = "container:Test.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

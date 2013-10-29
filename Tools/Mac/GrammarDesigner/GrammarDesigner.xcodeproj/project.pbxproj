@@ -9,11 +9,13 @@
 /* Begin PBXBuildFile section */
 		6744542F15C787A7000ABF71 /* EncodingConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6744542D15C787A7000ABF71 /* EncodingConverter.m */; };
 		6744543015C787A7000ABF71 /* EncodingConverter.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6744542E15C787A7000ABF71 /* EncodingConverter.xib */; };
-		67A2966C15C7E8860059D73B /* libcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A2966B15C7E8850059D73B /* libcrypto.dylib */; };
+		67747167182031DF0048F34E /* libcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 67747166182031DF0048F34E /* libcrypto.dylib */; };
+		67747169182031E60048F34E /* libpthread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 67747168182031E60048F34E /* libpthread.dylib */; };
+		6774716B182031ED0048F34E /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6774716A182031ED0048F34E /* libiconv.dylib */; };
+		6774716D182031F30048F34E /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6774716C182031F30048F34E /* Cocoa.framework */; };
 		67D9D58D16FD7F79003E6EDD /* Arsenal.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 67D9D58B16FD7F30003E6EDD /* Arsenal.dylib */; };
 		67D9D58F16FD7FC0003E6EDD /* Arsenal.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 67D9D58B16FD7F30003E6EDD /* Arsenal.dylib */; };
 		67D9D59216FD85FD003E6EDD /* NSString_Convert.m in Sources */ = {isa = PBXBuildFile; fileRef = 67D9D59116FD85FD003E6EDD /* NSString_Convert.m */; };
-		BEAF6EDF14F25FC500BE72FF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEAF6EDE14F25FC500BE72FF /* Cocoa.framework */; };
 		BEAF6EE914F25FC500BE72FF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = BEAF6EE714F25FC500BE72FF /* InfoPlist.strings */; };
 		BEAF6EEB14F25FC500BE72FF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BEAF6EEA14F25FC500BE72FF /* main.m */; };
 		BEAF6EEF14F25FC500BE72FF /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = BEAF6EED14F25FC500BE72FF /* Credits.rtf */; };
@@ -28,8 +30,6 @@
 		BEAF6F2314F2617A00BE72FF /* ARThread.m in Sources */ = {isa = PBXBuildFile; fileRef = BEAF6F1614F2617A00BE72FF /* ARThread.m */; };
 		BEAF6F2414F2617A00BE72FF /* ARUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = BEAF6F1814F2617A00BE72FF /* ARUtility.m */; };
 		BEAF6F2514F2617A00BE72FF /* Common.m in Sources */ = {isa = PBXBuildFile; fileRef = BEAF6F1A14F2617A00BE72FF /* Common.m */; };
-		BEAF6F2914F261D000BE72FF /* libpthread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BEAF6F2814F261D000BE72FF /* libpthread.dylib */; };
-		BEAF6F2B14F261D500BE72FF /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BEAF6F2A14F261D500BE72FF /* libiconv.dylib */; };
 		BEAF6F5C14F2620400BE72FF /* ActionView.m in Sources */ = {isa = PBXBuildFile; fileRef = BEAF6F2D14F2620300BE72FF /* ActionView.m */; };
 		BEAF6F5D14F2620400BE72FF /* ApplicationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BEAF6F2F14F2620300BE72FF /* ApplicationDelegate.m */; };
 		BEAF6F5E14F2620400BE72FF /* ConsoleMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = BEAF6F3114F2620300BE72FF /* ConsoleMessage.m */; };
@@ -74,12 +74,14 @@
 		6744542C15C787A7000ABF71 /* EncodingConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncodingConverter.h; sourceTree = "<group>"; };
 		6744542D15C787A7000ABF71 /* EncodingConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EncodingConverter.m; sourceTree = "<group>"; };
 		6744542E15C787A7000ABF71 /* EncodingConverter.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EncodingConverter.xib; sourceTree = "<group>"; };
-		67A2966B15C7E8850059D73B /* libcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.dylib; path = usr/lib/libcrypto.dylib; sourceTree = SDKROOT; };
+		67747166182031DF0048F34E /* libcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.dylib; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib/libcrypto.dylib; sourceTree = DEVELOPER_DIR; };
+		67747168182031E60048F34E /* libpthread.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpthread.dylib; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib/libpthread.dylib; sourceTree = DEVELOPER_DIR; };
+		6774716A182031ED0048F34E /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib/libiconv.dylib; sourceTree = DEVELOPER_DIR; };
+		6774716C182031F30048F34E /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		67D9D58B16FD7F30003E6EDD /* Arsenal.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = Arsenal.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		67D9D59016FD85FD003E6EDD /* NSString_Convert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSString_Convert.h; sourceTree = "<group>"; };
 		67D9D59116FD85FD003E6EDD /* NSString_Convert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSString_Convert.m; sourceTree = "<group>"; };
 		BEAF6EDA14F25FC500BE72FF /* GrammarDesigner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GrammarDesigner.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		BEAF6EDE14F25FC500BE72FF /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		BEAF6EE114F25FC500BE72FF /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		BEAF6EE214F25FC500BE72FF /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		BEAF6EE314F25FC500BE72FF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -107,8 +109,6 @@
 		BEAF6F1814F2617A00BE72FF /* ARUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARUtility.m; sourceTree = "<group>"; };
 		BEAF6F1914F2617A00BE72FF /* Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Common.h; sourceTree = "<group>"; };
 		BEAF6F1A14F2617A00BE72FF /* Common.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Common.m; sourceTree = "<group>"; };
-		BEAF6F2814F261D000BE72FF /* libpthread.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpthread.dylib; path = usr/lib/libpthread.dylib; sourceTree = SDKROOT; };
-		BEAF6F2A14F261D500BE72FF /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
 		BEAF6F2C14F2620300BE72FF /* ActionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionView.h; sourceTree = "<group>"; };
 		BEAF6F2D14F2620300BE72FF /* ActionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionView.m; sourceTree = "<group>"; };
 		BEAF6F2E14F2620300BE72FF /* ApplicationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplicationDelegate.h; sourceTree = "<group>"; };
@@ -156,11 +156,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6774716D182031F30048F34E /* Cocoa.framework in Frameworks */,
+				6774716B182031ED0048F34E /* libiconv.dylib in Frameworks */,
+				67747169182031E60048F34E /* libpthread.dylib in Frameworks */,
+				67747167182031DF0048F34E /* libcrypto.dylib in Frameworks */,
 				67D9D58D16FD7F79003E6EDD /* Arsenal.dylib in Frameworks */,
-				67A2966C15C7E8860059D73B /* libcrypto.dylib in Frameworks */,
-				BEAF6F2B14F261D500BE72FF /* libiconv.dylib in Frameworks */,
-				BEAF6F2914F261D000BE72FF /* libpthread.dylib in Frameworks */,
-				BEAF6EDF14F25FC500BE72FF /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -187,11 +187,11 @@
 		BEAF6EDD14F25FC500BE72FF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6774716C182031F30048F34E /* Cocoa.framework */,
+				6774716A182031ED0048F34E /* libiconv.dylib */,
+				67747168182031E60048F34E /* libpthread.dylib */,
+				67747166182031DF0048F34E /* libcrypto.dylib */,
 				67D9D58B16FD7F30003E6EDD /* Arsenal.dylib */,
-				67A2966B15C7E8850059D73B /* libcrypto.dylib */,
-				BEAF6F2A14F261D500BE72FF /* libiconv.dylib */,
-				BEAF6F2814F261D000BE72FF /* libpthread.dylib */,
-				BEAF6EDE14F25FC500BE72FF /* Cocoa.framework */,
 				BEAF6EE014F25FC500BE72FF /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -560,7 +560,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OBJROOT = build;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx10.6;
+				SDKROOT = macosx10.8;
 				SYMROOT = build;
 				WRAPPER_EXTENSION = app;
 			};
@@ -582,7 +582,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OBJROOT = build;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx10.6;
+				SDKROOT = macosx10.8;
 				SYMROOT = build;
 				WRAPPER_EXTENSION = app;
 			};

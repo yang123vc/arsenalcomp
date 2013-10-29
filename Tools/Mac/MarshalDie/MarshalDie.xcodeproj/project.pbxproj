@@ -7,12 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		671B94711606FD6300B314DF /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 671B94701606FD6300B314DF /* Arsenal.a */; };
 		67414B2715F9951400E78D72 /* MarshalDie.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 67414B2615F9951400E78D72 /* MarshalDie.1 */; };
-		67414B3E15F99C9100E78D72 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 67414B3D15F99C9100E78D72 /* libiconv.dylib */; };
-		67414B4015F99C9600E78D72 /* libpthread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 67414B3F15F99C9600E78D72 /* libpthread.dylib */; };
 		67414B5615F99FF500E78D72 /* generate_type.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67414B5215F99FF500E78D72 /* generate_type.cpp */; };
 		67414B5715F99FF500E78D72 /* marshal_die.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67414B5415F99FF500E78D72 /* marshal_die.cpp */; };
+		67747161182031800048F34E /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 67747160182031800048F34E /* Arsenal.a */; };
+		67747163182031990048F34E /* libpthread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 67747162182031990048F34E /* libpthread.dylib */; };
+		67747165182031A00048F34E /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 67747164182031A00048F34E /* libiconv.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -29,15 +29,15 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		671B94701606FD6300B314DF /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = Arsenal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		67414B2015F9951400E78D72 /* MarshalDie */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MarshalDie; sourceTree = BUILT_PRODUCTS_DIR; };
 		67414B2615F9951400E78D72 /* MarshalDie.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = MarshalDie.1; sourceTree = "<group>"; };
-		67414B3D15F99C9100E78D72 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
-		67414B3F15F99C9600E78D72 /* libpthread.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpthread.dylib; path = usr/lib/libpthread.dylib; sourceTree = SDKROOT; };
 		67414B5215F99FF500E78D72 /* generate_type.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = generate_type.cpp; sourceTree = "<group>"; };
 		67414B5315F99FF500E78D72 /* generate_type.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = generate_type.h; sourceTree = "<group>"; };
 		67414B5415F99FF500E78D72 /* marshal_die.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = marshal_die.cpp; sourceTree = "<group>"; };
 		67414B5515F99FF500E78D72 /* predef_code.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = predef_code.h; sourceTree = "<group>"; };
+		67747160182031800048F34E /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = Arsenal.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		67747162182031990048F34E /* libpthread.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpthread.dylib; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib/libpthread.dylib; sourceTree = DEVELOPER_DIR; };
+		67747164182031A00048F34E /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib/libiconv.dylib; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,9 +45,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				671B94711606FD6300B314DF /* Arsenal.a in Frameworks */,
-				67414B4015F99C9600E78D72 /* libpthread.dylib in Frameworks */,
-				67414B3E15F99C9100E78D72 /* libiconv.dylib in Frameworks */,
+				67747165182031A00048F34E /* libiconv.dylib in Frameworks */,
+				67747163182031990048F34E /* libpthread.dylib in Frameworks */,
+				67747161182031800048F34E /* Arsenal.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -57,9 +57,9 @@
 		67414B1515F9951300E78D72 = {
 			isa = PBXGroup;
 			children = (
-				671B94701606FD6300B314DF /* Arsenal.a */,
-				67414B3F15F99C9600E78D72 /* libpthread.dylib */,
-				67414B3D15F99C9100E78D72 /* libiconv.dylib */,
+				67747164182031A00048F34E /* libiconv.dylib */,
+				67747162182031990048F34E /* libpthread.dylib */,
+				67747160182031800048F34E /* Arsenal.a */,
 				67414B2315F9951400E78D72 /* MarshalDie */,
 				67414B2115F9951400E78D72 /* Products */,
 			);
@@ -197,9 +197,9 @@
 			buildSettings = {
 				CLANG_LINK_OBJC_RUNTIME = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Arsenal-abmjvpcppqzfudfdsbedzoydbnyy/Build/Products/Debug";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx10.6;
+				SDKROOT = macosx10.8;
 			};
 			name = Debug;
 		};
@@ -209,9 +209,9 @@
 				CLANG_LINK_OBJC_RUNTIME = NO;
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Arsenal-abmjvpcppqzfudfdsbedzoydbnyy/Build/Products/Debug";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx10.6;
+				SDKROOT = macosx10.8;
 			};
 			name = Release;
 		};
