@@ -63,14 +63,25 @@ void			AR_UnInitSpinLock(arSpinLock_t *lock)
 		*lock = UNLOCK_STATE;
 }
 
+
+
+
+ar_bool_t AR_TryLockSpinLock(arSpinLock_t *lock)
+{
+		AR_ASSERT(lcok != NULL);
+		return __sync_bool_compare_and_swap(lock, UNLOCK_STATE, LOCK_STATE) ? true : false;
+		
+
+}
+
 void			AR_LockSpinLock(arSpinLock_t *lock)
 {
-        
+
 		size_t count;
 		AR_ASSERT(lock != NULL);
 		count = 0;
-        
-		while(!__sync_bool_compare_and_swap(lock, UNLOCK_STATE, LOCK_STATE))
+
+		while(!AR_TryLockSpinLock(lock))
 		{
 				if(++count > AR_MAXSPIN_COUNT)
 				{

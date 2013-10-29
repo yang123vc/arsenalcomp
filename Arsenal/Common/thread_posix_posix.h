@@ -84,11 +84,24 @@ void			AR_UnInitSpinLock(arSpinLock_t *lock)
 		pthread_spin_destroy((pthread_spinlock_t*)lock);
 }
 
+
+
+
+ar_bool_t AR_TryLockSpinLock(arSpinLock_t *lock)
+{
+		AR_ASSERT(lcok != NULL);
+		return pthread_spin_trylock(lock) == 0 ? true : false;
+		
+
+}
+
 void			AR_LockSpinLock(arSpinLock_t *lock)
 {
 		AR_ASSERT(lock != NULL);
 		pthread_spin_lock((pthread_spinlock_t*)lock);
 }
+
+
 
 
 void			AR_UnLockSpinLock(arSpinLock_t *lock)

@@ -106,7 +106,7 @@ void			AR_UnInitSpinLock(arSpinLock_t *lock)
 
 ar_bool_t AR_TryLockSpinLock(arSpinLock_t *lock)
 {
-		
+		AR_ASSERT(lock != NULL);
 		if(COMP_EXCH(lock, LOCK_STATE, UNLOCK_STATE) == UNLOCK_STATE)
 		{
 				return true;
