@@ -1,4 +1,4 @@
-﻿/*
+/*
  * The Arsenal Library
  * Copyright (c) 2009-2013 by Solidus
  *
@@ -68,7 +68,7 @@ void			AR_UnInitSpinLock(arSpinLock_t *lock)
 
 ar_bool_t AR_TryLockSpinLock(arSpinLock_t *lock)
 {
-		AR_ASSERT(lcok != NULL);
+		AR_ASSERT(lock != NULL);
 		return __sync_bool_compare_and_swap(lock, UNLOCK_STATE, LOCK_STATE) ? true : false;
 		
 
