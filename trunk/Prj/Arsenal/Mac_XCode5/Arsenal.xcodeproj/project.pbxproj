@@ -181,14 +181,14 @@
 		671E7D801781299800B22D92 /* filesystem_path_posix_posix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filesystem_path_posix_posix.h; sourceTree = "<group>"; };
 		6728C3B4154C5E8300861D86 /* enviroment.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = enviroment.c; sourceTree = "<group>"; };
 		6728C3E215503E9300861D86 /* filesystem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = filesystem.c; sourceTree = "<group>"; };
-		67387CA916468E8400FE0910 /* Arsenal_Debug.exp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.exports; path = Arsenal_Debug.exp; sourceTree = "<group>"; };
-		67387CAA16468E8400FE0910 /* Arsenal_Release.exp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.exports; path = Arsenal_Release.exp; sourceTree = "<group>"; };
 		674D8C8215734D4B00CC43A6 /* uri.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = uri.c; sourceTree = "<group>"; };
 		675B2B611562254100DADFE2 /* printf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = printf.c; sourceTree = "<group>"; };
 		6774715318202CD70048F34E /* libpthread.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpthread.dylib; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib/libpthread.dylib; sourceTree = DEVELOPER_DIR; };
 		6774715518202CDF0048F34E /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib/libiconv.dylib; sourceTree = DEVELOPER_DIR; };
 		6793D97C15CFB50800A59636 /* filesystem_path_posix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filesystem_path_posix.h; sourceTree = "<group>"; };
 		6793D97D15CFB50800A59636 /* filesystem_path_win.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filesystem_path_win.h; sourceTree = "<group>"; };
+		6798732918249C3500F4E274 /* Arsenal_Debug.exp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.exports; path = Arsenal_Debug.exp; sourceTree = "<group>"; };
+		6798732A18249C3500F4E274 /* Arsenal_Release.exp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.exports; path = Arsenal_Release.exp; sourceTree = "<group>"; };
 		679A46D7155262E1006A5AD4 /* thread_posix_apple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thread_posix_apple.h; sourceTree = "<group>"; };
 		679A46D8155262E1006A5AD4 /* thread_posix_posix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thread_posix_posix.h; sourceTree = "<group>"; };
 		679B657B17C73CFF003D0329 /* property_list_internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = property_list_internal.h; sourceTree = "<group>"; };
@@ -301,8 +301,8 @@
 		67D9D58816FD7D4F003E6EDD /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				67387CA916468E8400FE0910 /* Arsenal_Debug.exp */,
-				67387CAA16468E8400FE0910 /* Arsenal_Release.exp */,
+				6798732918249C3500F4E274 /* Arsenal_Debug.exp */,
+				6798732A18249C3500F4E274 /* Arsenal_Release.exp */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -563,7 +563,6 @@
 				BEA4E2CB14E840DE00A29A8D /* Sources */,
 				BEA4E2CC14E840DE00A29A8D /* Frameworks */,
 				BEA4E2CD14E840DE00A29A8D /* Headers */,
-				670C63FC15EC972C007D116A /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -600,22 +599,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		670C63FC15EC972C007D116A /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "bin_dir=\"$PLATFORM_DEVELOPER_BIN_DIR\";\nnm_cmd=\"$bin_dir/nm\";\ndylib_path=\"$BUILD_DIR/$CONFIGURATION/$EXECUTABLE_NAME\";\noutfile=\"$BUILT_PRODUCTS_DIR/Arsenal_Debug.export\";\necho $nm_cmd;\necho $dylib_path;\necho $outfile;\n\npython << EOF;\nimport sys;\nimport os;\nimport subprocess;\nimport re;\n\n\nnm_call = subprocess.Popen(\"$nm_cmd -g $dylib_path\", stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE, shell = True);\nnm_result = nm_call.stdout.read();\n#print(nm_result);\n\n\n\np = re.compile('^[0-9a-f]+.*\\s(\\S+)$', re.MULTILINE);\nprint(p);\nresult = p.findall(nm_result);\n\nresult_str = \"\";\n\nfor item in result:\n    result_str += item;\n    result_str += \"\\n\";\n    pass;\n\n\n\nout_file = \"$PROJECT_DIR\" + \"/\" + \"$PRODUCT_NAME\" + \"_$CONFIGURATION.exp\";\n\nf = open(out_file, \"w\");\nf.write(result_str);\nf.close();\n\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		BEA4E2C014E83F1E00A29A8D /* Sources */ = {
@@ -830,7 +813,7 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = "";
-				EXPORTED_SYMBOLS_FILE = "";
+				EXPORTED_SYMBOLS_FILE = Arsenal_Debug.exp;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				INSTALL_PATH = "@loader_path/../Frameworks/";
@@ -846,7 +829,7 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = "";
-				EXPORTED_SYMBOLS_FILE = "";
+				EXPORTED_SYMBOLS_FILE = Arsenal_Release.exp;
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = "NDEBUG=1";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
