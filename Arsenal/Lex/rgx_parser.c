@@ -776,7 +776,7 @@ RECHECK:
 						}else
 						{
 								/*
-								 如果是例如a{3,5}，则将其改写为a{3}(a??){2}形式,如果non_greedy为真，则改写为a{m}a*
+								 如果是例如a{3,5}，则将其改写为a{3}(a?){2}形式,如果non-greedy为true,则改为a{3}(a??){2},
 								 */
 								
 								new_expr = RGX_CreateNode(RGX_QUEST_T);

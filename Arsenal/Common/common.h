@@ -525,7 +525,7 @@ const char*		AR_reverse_stristr(const char *str, size_t l,  const char *match, s
 
 ar_int_t			AR_vscwprintf(const wchar_t *fmt, va_list args);/*Returns a length sufficient to accommodate fmt + args*/
 ar_int_t			AR_scwprintf(const wchar_t *fmt, ...);
-wchar_t*		AR_vtow(const wchar_t *fmt, ...);
+wchar_t*			AR_vtow(const wchar_t *fmt, ...);
 
 ar_int_t			AR_swprintf(wchar_t *dest, size_t count, const wchar_t *fmt, ...);
 ar_int_t			AR_vswprintf(wchar_t *dest, size_t count, const wchar_t *fmt, va_list args);
@@ -535,7 +535,7 @@ ar_int_t			AR_vswprintf_nonalloc(wchar_t *dest, size_t count, const wchar_t *fmt
 
 ar_int_t			AR_vscprintf(const char *fmt, va_list args);	/*Returns a length sufficient to accommodate fmt + args*/
 ar_int_t			AR_scprintf(const char *fmt, ...);
-char*			AR_vtos(const char *fmt, ...);
+char*				AR_vtos(const char *fmt, ...);
 
 ar_int_t			AR_sprintf(char *dest, size_t count, const char *fmt, ...);
 ar_int_t			AR_vsprintf(char *dest, size_t count, const char *fmt, va_list args);

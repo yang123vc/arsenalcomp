@@ -112,11 +112,11 @@ extern void plist_test();
 void AR_Test()
 {
 #if defined(__LIB)
-		com_test();
+		//com_test();
 		//math_test();
 		//trie_tree_test();
 		//expr_test();
-		//lex_test();
+		lex_test();
 		
 		//lr_dfa_test();
 		//action_tbl_test();

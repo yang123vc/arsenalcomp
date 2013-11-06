@@ -910,9 +910,152 @@ void lex_line_test6()
 
 #endif
 
+
+
+
+void lex_test_loop3()
+{
+		lexMatch_t		*match;
+		lex_t			*lex;
+
+		lex = Lex_Create();
+		
+		lexAction_t act;
+		act.is_skip = false;
+		act.priority = 0;
+		act.value = 200;
+		AR_ASSERT(Lex_InsertRule(lex, L"(a*)*", &act) == AR_S_YES);
+
+		match = Lex_CreateMatch(lex);
+
+		Lex_ResetInput(match, L"aaaaa");
+		
+
+		lexToken_t tok;
+		arStatus_t lex_status;
+		
+		while(true)
+		{
+				lex_status = Lex_Match(match, &tok);
+
+				if(lex_status == AR_S_YES || lex_status == AR_S_YES)
+				{
+						if(tok.value == 0)
+						{
+								break;
+						}
+						wchar_t *s = AR_wcsndup(tok.str, tok.count);
+						AR_printf(L"%ls : row == %d : col == %d\r\n", s, tok.line, tok.col);
+						AR_DEL(s);
+				}else
+				{
+						break;
+				}
+		}
+
+		if(lex_status == AR_S_YES || lex_status == AR_S_YES)
+		{
+				AR_printf(L"%ls\r\n", L"success\r\n");
+		}else
+		{
+				AR_printf(L"error code = %d, %ls\r\n", AR_GET_STATUS(lex_status), L"failed\r\n");
+				
+		}
+
+
+		Lex_DestroyMatch(match);
+		Lex_Destroy(lex);
+
+}
+
+
+
+static const wchar_t *__cfg_lex_name[] =
+{
+		L"	delim		= 	[\\x{000B}\\x{0020}\\x{00A0}\\x{2028}\\x{2029} \\f\\v\\t\\r\\n]+",
+		L"  skip_lexem		= {delim}",
+		L"  key_lookahead   = {skip_lexem}+|\"{\""
+};
+
+
+
+void lex_test_loop4()
+{
+		lexMatch_t		*match;
+		lex_t			*lex;
+
+		arStatus_t		ar_status;
+		lex = Lex_Create();
+		
+		ar_status = AR_S_YES;
+		
+
+		for(size_t i = 0; i < AR_NELEMS(__cfg_lex_name); ++i)
+		{
+				ar_status = Lex_Insert(lex, __cfg_lex_name[i]);
+				AR_ASSERT(ar_status == AR_S_YES);
+
+		}
+
+		lexAction_t act;
+		act.is_skip = false;
+		act.priority = 0;
+		act.value = 200;
+
+		AR_ASSERT(Lex_InsertRule(lex, L"\\{:[^\\u0]*?:\\}", &act) == AR_S_YES);
+
+		match = Lex_CreateMatch(lex);
+
+		Lex_ResetInput(match, L"{:a:}");
+		
+
+		lexToken_t tok;
+		arStatus_t lex_status;
+		
+		while(true)
+		{
+				lex_status = Lex_Match(match, &tok);
+
+				if(lex_status == AR_S_YES || lex_status == AR_S_YES)
+				{
+						if(tok.value == 0)
+						{
+								break;
+						}
+						wchar_t *s = AR_wcsndup(tok.str, tok.count);
+						AR_printf(L"%ls : row == %d : col == %d\r\n", s, tok.line, tok.col);
+						AR_DEL(s);
+				}else
+				{
+						break;
+				}
+		}
+
+		if(lex_status == AR_S_YES || lex_status == AR_S_YES)
+		{
+				AR_printf(L"%ls\r\n", L"success\r\n");
+		}else
+		{
+				AR_printf(L"error code = %d, %ls\r\n", AR_GET_STATUS(lex_status), L"failed\r\n");
+				
+		}
+
+
+		Lex_DestroyMatch(match);
+		Lex_Destroy(lex);
+
+}
+
+
+
+
+
 void lex_test()
 {
-		//rgx_test_loop();
+		rgx_test_loop();
+		lex_test_loop4();
+		
+
 		//lex_test_loop();
 		//lex_test_loop2();
 		//lex_chinese_char();
@@ -933,6 +1076,8 @@ void lex_test()
 		//lex_test_skip_line_test();
 
 //		lex_line_num_test();
+
+		
 }
 
 AR_NAMESPACE_END

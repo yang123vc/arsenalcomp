@@ -578,6 +578,22 @@
 
 
 
+#if(AR_ARCH_VER	== ARCH_32)
+
+		#define AR_PLAT_INT_MAX			AR_INT32_MAX
+		#define AR_PLAT_UINT_MAX	    AR_UINT32_MAX
+
+#elif(AR_ARCH_VER == ARCH_64)
+
+		#define AR_PLAT_INT_MAX			AR_INT64_MAX
+		#define AR_PLAT_UINT_MAX	    AR_UINT64_MAX
+
+#else
+
+		#error "Not Support Platform!"
+
+#endif
+
 
 
 
