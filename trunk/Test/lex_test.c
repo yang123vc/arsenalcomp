@@ -925,6 +925,9 @@ void lex_test_loop3()
 		act.priority = 0;
 		act.value = 200;
 		AR_ASSERT(Lex_InsertRule(lex, L"(a*)*", &act) == AR_S_YES);
+		
+		act.value = 0;
+		AR_ASSERT(Lex_InsertRule(lex, L"$", &act));
 
 		match = Lex_CreateMatch(lex);
 
@@ -1002,11 +1005,14 @@ void lex_test_loop4()
 		act.priority = 0;
 		act.value = 200;
 
-		AR_ASSERT(Lex_InsertRule(lex, L"([ ]+)+", &act) == AR_S_YES);
+		AR_ASSERT(Lex_InsertRule(lex, L"(a|bcdef|g|ab|c|d|e|efg|fg)", &act) == AR_S_YES);
+		
+		act.value = 0;
+		AR_ASSERT(Lex_InsertRule(lex, L"$", &act) == AR_S_YES);
 
 		match = Lex_CreateMatch(lex);
 
-		Lex_ResetInput(match, L"              ");
+		Lex_ResetInput(match, L"abcdefg");
 		
 
 		lexToken_t tok;

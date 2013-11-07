@@ -25,15 +25,6 @@ static void __add_thread(rgxThreadList_t *lst,  rgxThread_t thd, rgxProg_t *prog
 {
 		AR_ASSERT(lst != NULL);
 		
-#if(0)
-		if(prog->mark == thd.pc->mark)
-		{
-				return;
-		}
-
-
-		thd.pc->mark = prog->mark;
-#endif
 
 		switch(thd.pc->opcode)
 		{
@@ -49,17 +40,19 @@ static void __add_thread(rgxThreadList_t *lst,  rgxThread_t thd, rgxProg_t *prog
 				__add_thread(lst, RGX_BuildThread(thd.pc->right, thd.sp, thd.line, thd.col, thd.act), prog);
 				break;
 		}
+		case RGX_NOP_I:
+		case RGX_CHAR_I:
+		case RGX_ANY_CHAR_I:
+
 		case RGX_LOOP_BEG_I:
 		case RGX_LOOP_END_I:
 		case RGX_LOOKAHEAD_BEG_I:
 		case RGX_LOOKAHEAD_END_I:
-		case RGX_NOP_I:
-		case RGX_CHAR_I:
 		case RGX_BEGIN_I:
 		case RGX_END_I:
 		case RGX_LINE_BEGIN_I:
 		case RGX_LINE_END_I:
-		case RGX_ANY_CHAR_I:
+
 		case RGX_MATCH_I:
 		{
 				RGX_InsertToThreadList(lst, thd);
@@ -127,32 +120,104 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match);
 
 
+static AR_INLINE ar_bool_t  __match_on_char(const rgxIns_t *pc, wchar_t c, ar_uint_t flags)
+{
+		
+		AR_ASSERT(pc != NULL);
 
-#if(0)
-/*处理预搜索部分*/
-
-static void __clear_for_lookahead(rgxProg_t *prog)
-{		
-		size_t k,l;
-		AR_ASSERT(prog && prog->start != NULL);
-		prog->mark = 0;
-
-		for(k = 0, l = 1; l > 0; ++k)
+		if(c == L'\0')
 		{
-				if(prog->start[k].opcode == RGX_LOOKAHEAD_BEG_I)
-				{
-						l++;
-				}else if(prog->start[k].opcode == RGX_LOOKAHEAD_END_I)
-				{
-						l--;
-				}
-				prog->start[k].mark = 0;
+				return false;
 		}
+				
+		if(flags & LEX_IGNORE_CASE)
+		{
+				wchar_t lower = (wchar_t)AR_tolower(c);
+				wchar_t upper = (wchar_t)AR_towupper(c);
 
-		prog->mark = 0;
+				if(lower >=  pc->range.beg && lower <= pc->range.end)
+				{
+						return true;
+
+				}else if(upper >=  pc->range.beg && upper <= pc->range.end)
+				{
+						return true;
+				}else
+				{
+						return false;
+				}
+		}else
+		{
+				if(c >= pc->range.beg && c <= pc->range.end)
+				{
+						return true;
+				}else
+				{
+						return false;
+				}
+
+		}
 }
 
-#endif
+
+
+
+static AR_INLINE ar_bool_t  __match_on_anychar(wchar_t c, ar_uint_t flags)
+{
+
+		if(c == L'\0')
+		{
+				return false;
+		}
+
+		if(flags & LEX_SINGLE_LINE)/*single line 可以匹配包含换行符号在内的所有字符*/
+		{
+				return true;
+		}
+
+		
+		if(Lex_IsLineTerminator(c))
+		{
+				return false;
+		}else
+		{
+				return true;
+		}
+}
+
+
+static AR_INLINE arStatus_t __match_on_loop(const rgxIns_t *pc, const wchar_t **start_pos, size_t *px, size_t *py, ar_uint_32_t *pact, lexMatch_t *match)
+{
+		size_t i;
+		arStatus_t status;
+		AR_ASSERT(pc != NULL && start_pos != NULL && px != NULL && py != NULL && pact != NULL && match != NULL);
+
+		status = AR_S_YES;
+		
+		for(i = 0; i < pc->fix_count && status == AR_S_YES; ++i)
+		{
+				rgxProg_t loop;
+				loop.start = (rgxIns_t*)pc + 1;
+				loop.pc = loop.start;
+				status = __loop(&loop, start_pos, px,py,pact, match);
+		}
+
+		return status;
+}
+
+
+static AR_INLINE arStatus_t __match_on_lookahead(const rgxIns_t *pc, const wchar_t *sp, lexMatch_t *match)
+{
+		rgxProg_t lhd;
+
+		AR_ASSERT(pc != NULL && sp != NULL && match != NULL);
+
+		lhd.start = (rgxIns_t*)pc + 1;
+		lhd.pc = lhd.start;
+
+		return __lookahead(&lhd, sp, match);
+
+}
 
 
 static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match)
@@ -176,15 +241,6 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 
 
 		input_beg = match->input;
-		
-
-		
-
-#if(0)
-		prog->mark = 0;
-		__clear_for_lookahead(prog);
-		prog->mark++;
-#endif
 
 		__add_thread(curr, RGX_BuildThread(prog->start, sp,0,0, RGX_ACT_NOACTION), prog);
 
@@ -194,10 +250,7 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 				{
 						break;
 				}
-				
-#if(0)
-				prog->mark++;
-#endif
+		
 
 				for(i = 0; i < curr->count; ++i)
 				{
@@ -208,27 +261,7 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 						{
 						case RGX_CHAR_I:
 						{
-								ar_bool_t is_ok = false;
-								if(*sp != L'\0')
-								{
-										if(match->flags & LEX_IGNORE_CASE)
-										{
-												wchar_t lower = (wchar_t)AR_tolower(*sp), upper = (wchar_t)AR_towupper(*sp);
-												
-												if(lower >=  pc->range.beg && lower <= pc->range.end)
-												{
-														is_ok = true;
-												}else if(upper >=  pc->range.beg && upper <= pc->range.end)
-												{
-														is_ok = true;
-												}
-										}else
-										{
-												is_ok = (*sp >= pc->range.beg && *sp <= pc->range.end) ? true : false;
-										}
-								}
-
-								if(is_ok)
+								if(__match_on_char(pc, *sp, match->flags))
 								{
 										__add_thread(next, RGX_BuildThread(pc + 1, sp + 1, 0, 0, RGX_ACT_NOACTION), prog);
 								}
@@ -237,20 +270,7 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 						}
 						case RGX_ANY_CHAR_I:
 						{
-								ar_bool_t is_ok = false;
-
-								if(*sp != L'\0')
-								{
-										if(match->flags & LEX_SINGLE_LINE)/*single line 可以匹配包含换行符号在内的所有字符*/
-										{
-												is_ok = true;
-										}else
-										{
-												is_ok = !Lex_IsLineTerminator(*sp);
-										}
-								}
-
-								if(is_ok)
+								if(__match_on_anychar(*sp, match->flags))
 								{
 										__add_thread(next, RGX_BuildThread(pc + 1, sp + 1, 0, 0, RGX_ACT_NOACTION), prog);
 								}
@@ -292,25 +312,10 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 						}
 						case RGX_LOOP_BEG_I:
 						{
-								size_t loop_cnt;
-								size_t i;
-								arStatus_t is_ok = AR_S_YES;
-								loop_cnt = pc->fix_count;
 								
-								for(i = 0; i < loop_cnt && is_ok == AR_S_YES; ++i)
-								{
-										size_t	x = 0,y = 0;
-										ar_uint_32_t act = RGX_ACT_NOACTION;
-										rgxProg_t loop;
-										loop.start = pc + 1;
-										loop.pc = loop.start;
-#if(0)
-										loop.mark = 0;
-#endif
-
-										
-										is_ok = __loop(&loop, &sp, &x, &y, &act,  match);
-								}
+								size_t	x = 0,y = 0;
+								ar_uint_32_t act = RGX_ACT_NOACTION;
+								arStatus_t is_ok = __match_on_loop(pc, &sp, &x, &y, &act, match);
 
 								if(is_ok == AR_S_YES)/*匹配成功*/
 								{
@@ -337,19 +342,8 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 						case RGX_LOOKAHEAD_BEG_I:
 						{
 								arStatus_t is_ok;
-								rgxProg_t lhd;
 								
-								is_ok = AR_S_YES;
-
-								lhd.start = pc + 1;
-								lhd.pc = lhd.start;
-#if(0)
-								lhd.mark = 0;
-#endif
-								
-								/*__clear_ins_set(lhd.start);*/
-
-								is_ok = __lookahead(&lhd, sp, match);
+								is_ok = __match_on_lookahead(pc, sp, match);
 
 								if(is_ok == AR_S_YES)/*匹配搜索*/
 								{
@@ -426,32 +420,6 @@ END_POINT:
 
 
 
-#if(0)
-/*处理定数循环部分*/
-
-static void __clear_for_loop(rgxProg_t *prog)
-{		
-		size_t k,l;
-		AR_ASSERT(prog && prog->start != NULL);
-		prog->mark = 0;
-
-		for(k = 0, l = 1; l > 0; ++k)
-		{
-				if(prog->start[k].opcode == RGX_LOOP_BEG_I)
-				{
-						l++;
-				}else if(prog->start[k].opcode == RGX_LOOP_END_I)
-				{
-						l--;
-				}
-				prog->start[k].mark = 0;
-		}
-
-		prog->mark = 0;
-}
-#endif
-
-
 
 static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, size_t *py, ar_uint_32_t *pact, lexMatch_t *match)
 {
@@ -486,17 +454,9 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 				goto END_POINT;
 		}
 
-#if(0)
-		__clear_for_loop(prog);
-		prog->mark = 0;
-#endif
-
 		RGX_ClearThreadList(curr);
 		RGX_ClearThreadList(next);
 
-#if(0)
-		prog->mark++;
-#endif
 		__add_thread(curr, RGX_BuildThread(prog->start, sp, x,y, act), prog);
 
 		
@@ -506,10 +466,8 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 				{
 						break;
 				}
-#if(0)
-				prog->mark++;
-#endif
-				
+
+
 				for(i = 0; i < curr->count; ++i)
 				{
 						pc = curr->lst[i].pc;
@@ -522,27 +480,7 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 						{
 						case RGX_CHAR_I:
 						{
-								ar_bool_t is_ok = false;
-								if(*sp != L'\0')
-								{
-										if(match->flags & LEX_IGNORE_CASE)
-										{
-												wchar_t lower = (wchar_t)AR_tolower(*sp), upper = (wchar_t)AR_towupper(*sp);
-												
-												if(lower >=  pc->range.beg && lower <= pc->range.end)
-												{
-														is_ok = true;
-												}else if(upper >=  pc->range.beg && upper <= pc->range.end)
-												{
-														is_ok = true;
-												}
-										}else
-										{
-												is_ok = (*sp >= pc->range.beg && *sp <= pc->range.end) ? true : false;
-										}
-								}
-
-								if(is_ok)
+								if(__match_on_char(pc, *sp, match->flags))
 								{
 										__check_is_newline(sp, &act, &x, &y);
 										sp++;
@@ -552,20 +490,7 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 						}
 						case RGX_ANY_CHAR_I:
 						{
-								ar_bool_t is_ok = false;
-
-								if(*sp != L'\0')
-								{
-										if(match->flags & LEX_SINGLE_LINE)/*single line 可以匹配包含换行符号在内的所有字符*/
-										{
-												is_ok = true;
-										}else
-										{
-												is_ok = !Lex_IsLineTerminator(*sp); 
-										}
-								}
-
-								if(is_ok)
+								if(__match_on_anychar(*sp, match->flags))
 								{
 										__check_is_newline(sp, &act, &x, &y);
 										sp++;
@@ -609,24 +534,7 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 						case RGX_LOOP_BEG_I:
 						{
 								
-								size_t loop_cnt;
-								size_t i;
-								arStatus_t is_ok = AR_S_YES;
-								
-								loop_cnt = pc->fix_count;
-
-
-								for(i = 0; i < loop_cnt && is_ok == AR_S_YES; ++i)
-								{
-										rgxProg_t loop;
-										loop.start = pc + 1;
-										loop.pc = loop.start;
-#if(0)
-										loop.mark = 0;
-#endif
-										is_ok = __loop(&loop, &sp, &x, &y, &act, match);
-								}
-
+								arStatus_t is_ok = __match_on_loop(pc, &sp, &x, &y, &act, match);
 
 								if(is_ok == AR_S_YES)
 								{
@@ -655,17 +563,11 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 								break;
 						case RGX_LOOKAHEAD_BEG_I:
 						{
-								rgxProg_t lhd;
+								
 								arStatus_t is_ok;
 
-								is_ok = AR_S_YES;
-								lhd.start = pc + 1;
-								lhd.pc = lhd.start;
-#if(0)
-								lhd.mark = 0;
-#endif
-
-								is_ok = __lookahead(&lhd, sp, match);
+								
+								is_ok = __match_on_lookahead(pc, sp, match);
 
 								if(is_ok == AR_S_YES)/*匹配成功*/
 								{
@@ -765,16 +667,7 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 
 		AR_memset(tok, 0, sizeof(*tok));
 
-#if(0)
-		for(i = 0; i < prog->count; ++i)
-		{
-				prog->start[i].mark = 0;
-		}
 
-
-		prog->mark = 0;
-#endif
-		
 		if(prog->curr == NULL) 
 		{
 				prog->curr = RGX_CreateThreadList();
@@ -818,9 +711,7 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 
 		final_row = 0; final_col = 0; final_next = NULL; final_act = RGX_ACT_NOACTION;
 
-#if(0)
-		prog->mark++;
-#endif
+
 		__add_thread(curr, RGX_BuildThread(prog->start, sp, x,y, act), prog);
 
 		for(;;)
@@ -829,10 +720,8 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 				{
 						break;
 				}
-#if(0)
-				prog->mark++;
-#endif
-				
+
+
 				for(i = 0; i < curr->count; ++i)
 				{
 						pc = curr->lst[i].pc;
@@ -845,30 +734,9 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 						{
 						case RGX_CHAR_I:
 						{
-								ar_bool_t is_ok = false;
-								if(*sp != L'\0')
-								{
-										if(match->flags & LEX_IGNORE_CASE)
-										{
-												wchar_t lower = (wchar_t)AR_tolower(*sp), upper = (wchar_t)AR_towupper(*sp);
-												
-												if(lower >=  pc->range.beg && lower <= pc->range.end)
-												{
-														is_ok = true;
-												}else if(upper >=  pc->range.beg && upper <= pc->range.end)
-												{
-														is_ok = true;
-												}
-										}else
-										{
-												is_ok = (*sp >= pc->range.beg && *sp <= pc->range.end) ? true : false;
-										}
-								}
-
-								if(is_ok)
+								if(__match_on_char(pc, *sp, match->flags))
 								{
 										__check_is_newline(sp, &act, &x, &y);
-
 										sp++;
 										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y, act), prog);
 								}
@@ -876,20 +744,8 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 						}
 						case RGX_ANY_CHAR_I:
 						{
-								ar_bool_t is_ok = false;
 
-								if(*sp != L'\0')
-								{
-										if(match->flags & LEX_SINGLE_LINE)/*single line 可以匹配包含换行符号在内的所有字符*/
-										{
-												is_ok = true;
-										}else
-										{
-												is_ok = !Lex_IsLineTerminator(*sp); 
-										}
-								}
-
-								if(is_ok)
+								if(__match_on_anychar(*sp, match->flags))
 								{
 										__check_is_newline(sp, &act, &x, &y);
 										sp++;
@@ -932,26 +788,8 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 						}
 						case RGX_LOOP_BEG_I:
 						{
-								
-								size_t loop_cnt;
-								size_t i;
-								arStatus_t is_ok = AR_S_YES;
 
-								loop_cnt = pc->fix_count;
-								
-
-								
-								for(i = 0; i < loop_cnt && is_ok == AR_S_YES; ++i)
-								{
-										rgxProg_t loop;
-										loop.start = pc + 1;
-										loop.pc = loop.start;
-#if(0)
-										loop.mark = 0;
-#endif
-										is_ok =  __loop(&loop, &sp, &x, &y, &act, match);
-								}
-
+								arStatus_t is_ok = __match_on_loop(pc, &sp, &x, &y, &act, match);
 								if(is_ok == AR_S_YES)/*匹配成功*/
 								{
 										__add_thread(next, RGX_BuildThread(pc->left, sp, x,y, act), prog);
@@ -975,17 +813,10 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 								break;
 						case RGX_LOOKAHEAD_BEG_I:
 						{
-								rgxProg_t lhd;
+								
 								arStatus_t is_ok;
 
-								is_ok = AR_S_YES;
-								lhd.start = pc + 1;
-								lhd.pc = lhd.start;
-#if(0)
-								lhd.mark = 0;
-#endif
-
-								is_ok = __lookahead(&lhd, sp, match);
+								is_ok = __match_on_lookahead(pc, sp, match);
 								
 								if(is_ok == AR_S_YES)
 								{

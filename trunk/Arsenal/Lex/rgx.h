@@ -262,7 +262,7 @@ typedef struct __thread_tag
 		const wchar_t			*sp;
 		size_t					line;
 		size_t					col;
-		ar_uint_32_t				act;
+		ar_uint_32_t			act;
 }rgxThread_t;
 
 rgxThread_t		RGX_BuildThread(rgxIns_t *pc, const wchar_t *sp, size_t x, size_t y, ar_uint_32_t act);
@@ -295,7 +295,6 @@ struct __regex_program_tag
 		size_t					count;
 		
 		rgxIns_t				*pc;
-		//ar_int_t					mark;
 		
 		rgxThreadList_t			*curr;
 		rgxThreadList_t			*next;
