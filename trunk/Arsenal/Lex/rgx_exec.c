@@ -20,11 +20,32 @@ AR_NAMESPACE_BEGIN
 
 
 
+static AR_INLINE ar_bool_t __already_in_list(const rgxThreadList_t *lst, const rgxThread_t *pthd)
+{
+		ar_int_t i;
+		AR_ASSERT(lst != NULL && pthd != NULL);
+
+		i = (ar_int_t)lst->count-1;
+		while(i >= 0)
+		{
+				if(lst->lst[i].pc == pthd->pc && lst->lst[i].sp == pthd->sp)
+				{
+						return true;
+				}
+				--i;
+		}
+
+		return false;
+}
 
 static void __add_thread(rgxThreadList_t *lst,  rgxThread_t thd, rgxProg_t *prog)
 {
 		AR_ASSERT(lst != NULL);
 		
+		if(__already_in_list(lst, &thd))
+		{
+				return;
+		}
 
 		switch(thd.pc->opcode)
 		{
@@ -860,6 +881,42 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 								break;
 						case RGX_MATCH_I:
 						{
+
+#if(0)			/*POSIX标准*/
+								if(status == AR_S_NO)
+								{
+										tok->str = match->next;
+										tok->index = match->next - match->input;
+										tok->count = sp - match->next;
+										tok->line = match->line;
+										tok->col = match->col;
+										tok->value = (size_t)pc->final;
+
+										final_row = x;
+										final_col = y;
+										final_next = sp;
+										final_act = act;
+										status = AR_S_YES;
+								}else
+								{
+										if((size_t)(sp - match->next) > tok->count)
+										{
+												tok->str = match->next;
+												tok->index = match->next - match->input;
+												tok->count = sp - match->next;
+												tok->line = match->line;
+												tok->col = match->col;
+												tok->value = (size_t)pc->final;
+
+												final_row = x;
+												final_col = y;
+												final_next = sp;
+												final_act = act;
+										}
+
+								}
+#endif
+
 								tok->str = match->next;
 								tok->index = match->next - match->input;
 								tok->count = sp - match->next;
@@ -874,6 +931,7 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 								status = AR_S_YES;
 
 								goto BREAK_POINT;/*这一步决定了优先级为left most*/
+
 								break;
 						}
 						default:

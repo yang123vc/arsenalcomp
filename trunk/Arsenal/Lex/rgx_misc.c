@@ -643,7 +643,10 @@ void RGX_UnInitThreadList(rgxThreadList_t *lst)
 
 static rgxThreadList_t	*__g_free_list = NULL;
 static arSpinLock_t		__g_spin_lock;
-static size_t			__g_max_thread_count = 0;
+
+#if defined(AR_DEBUG)
+		static size_t			__g_max_thread_count = 0;
+#endif
 
 #if defined(AR_DEBUG)
 		#define RGX_THREAD_LIST_INIT_COUNT		0
@@ -662,9 +665,11 @@ void	RGX_InitMisc()
 		AR_InitSpinLock(&__g_spin_lock);
 		__g_free_list = NULL;
 
+#if defined(AR_DEBUG)
 /*************************************************/
 		__g_max_thread_count = 0;
 /*************************************************/
+#endif
 
 		if(RGX_THREAD_LIST_POOL_NUM == 0)return;
 
@@ -712,6 +717,7 @@ void	RGX_UnInitMisc()
 				count++;
 		}
 
+#if defined(AR_DEBUG)
 		{
 				wchar_t buf[1024];
 				AR_swprintf(buf, 1024, L"Total consume rgxThreadList_t == %Iu", count);
@@ -720,7 +726,7 @@ void	RGX_UnInitMisc()
 				AR_swprintf(buf, 1024, L"Max consume rgxThread_t == %Iu",  __g_max_thread_count);
 				AR_error(AR_ERR_MESSAGE, L"%ls\r\n", buf);
 		}
-
+#endif
 	
 		AR_UnInitSpinLock(&__g_spin_lock);
 }
@@ -819,10 +825,12 @@ void RGX_InsertToThreadList(rgxThreadList_t *lst, rgxThread_t thd)
 
 		}
 
+#if defined(AR_DEBUG)
 		if(lst->count > __g_max_thread_count)
 		{
 				__g_max_thread_count = lst->count;
 		}
+#endif
 
 }
 
