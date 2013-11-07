@@ -47,23 +47,27 @@ static size_t __count(const rgxNode_t *node)
 				size_t l = 0,r = 0,curr = 0;
 				if(node->left) l = __count(node->left);
 				if(node->right) r = __count(node->right);
-				if(l > 0 && r > 0) curr = 2;
+				if(l > 0 && r > 0)
+				{
+						curr = 3;
+				}
+				
 				return l + r + curr;
 		}
 				break;
 		case RGX_STAR_T:
 		{
-				return 2 + __count(node->left) ;
+				return 3 + __count(node->left) ;
 		}
 				break;
 		case RGX_QUEST_T:
 		{
-				return 1 + __count(node->left);
-				break;
+				return 2 + __count(node->left);
 		}
+				break;
 		case RGX_PLUS_T:
 		{
-				return 1 + __count(node->left);
+				return 2 + __count(node->left);
 		}
 				break;
 		case RGX_FIXCOUNT_T:
@@ -143,18 +147,34 @@ static void __emit_code(rgxProg_t *prog, const rgxNode_t *node)
 		case RGX_CAT_T:
 		{
 				/*AR_ASSERT(node->left != NULL && node->right != NULL);*/
-				if(node->left)__emit_code(prog, node->left);
-				if(node->right)__emit_code(prog, node->right);
+				if(node->left)
+				{
+						__emit_code(prog, node->left);
+				}
+
+				if(node->right)
+				{
+						__emit_code(prog, node->right);
+				}
 		}
 				break;
 		case RGX_BRANCH_T:
 		{
 				if(node->left == NULL || node->right == NULL)
 				{
-						if(node->left)__emit_code(prog, node->left);
-						if(node->right)__emit_code(prog, node->right);
+						if(node->left)
+						{
+								__emit_code(prog, node->left);
+						}
+
+						if(node->right)
+						{
+								__emit_code(prog, node->right);
+						}
+
 				}else
 				{
+#if(0)
 						rgxIns_t *p1, *p2;
 						p1 = prog->pc++;
 						p1->opcode = RGX_BRANCH_I;/*count + 1*/
@@ -170,11 +190,30 @@ static void __emit_code(rgxProg_t *prog, const rgxNode_t *node)
 						p2->left = prog->pc;/*p2要跳到node->right生成的指令组之后的下一条指令*/
 
 						/*count == 2*/
+#endif
+
+						rgxIns_t *p1, *p2, *p3;
+						p1 = prog->pc++;						/*count+1;*/
+						p1->opcode = RGX_NOP_I;					/*生成NOP指令*/
+
+						p2 = prog->pc++;						/*BRANCH指令*/
+						p2->opcode = RGX_BRANCH_I;				/*count + 1*/
+						p2->left = prog->pc;					/*第一个分支，当前指令的下一条*/
+						__emit_code(prog, node->left);			
+						/*当前prog->pc为node->left生成指令组的下一条指令*/
+						p3 = prog->pc++;						
+						p3->opcode = RGX_JMP_I;					/**/
+						p2->right = prog->pc;					/*第二个分支，node->left生成的指令的下一条*/
+						__emit_code(prog, node->right);
+						p3->left = prog->pc;					/*p3要跳到node->right生成的指令的下一条指令*/
+
+						/*count == 3*/
 				}
 		}
 				break;
 		case RGX_STAR_T:
 		{
+#if(0)
 				rgxIns_t *p1; 
 				prog->pc->opcode = RGX_BRANCH_I;/*这条指令导致一个分支, count + 1*/
 				p1 = prog->pc++; /*p1为当前指令*/
@@ -197,10 +236,36 @@ static void __emit_code(rgxProg_t *prog, const rgxNode_t *node)
 				}
 
 				/*count == 2*/
+#endif
+				rgxIns_t *p1, *p2;
+
+				p1 = prog->pc++;
+				p1->opcode = RGX_NOP_I;
+
+				p2 = prog->pc++;	
+				p2->opcode = RGX_BRANCH_I;				/*这条指令导致一个分支, count + 1*/
+				p2->left = prog->pc;					/*分支一是从下一条开始继续匹配node->left*/
+				__emit_code(prog, node->left);
+
+				/*跟着star的是一个跳转指令，会直接跳回到p1*/
+				/*这里prog->pc为node->left生成的指令组的下一条指令*/
+				prog->pc->opcode = RGX_JMP_I;	/*count + 1*/
+				prog->pc->left = p1;			/*star,所以回退到开始*/
+				prog->pc++;
+				p2->right = prog->pc;			/*执行到下一条指令*/
+
+				if(node->non_greedy)
+				{
+						rgxIns_t *tmp = p2->left;
+						p2->left = p2->right;
+						p2->right = tmp;
+				}
+
 		}
 				break;
 		case RGX_QUEST_T:
 		{
+#if(0)
 				rgxIns_t *p1;
 				prog->pc->opcode = RGX_BRANCH_I;/*quest导致一个分支, count + 1*/
 				p1 = prog->pc++;				/*p1当前branch指令*/
@@ -216,10 +281,29 @@ static void __emit_code(rgxProg_t *prog, const rgxNode_t *node)
 						p1->right = tmp;
 				}
 				/*count == 1*/
+#endif
+				rgxIns_t *p1, *p2;
+				p1 = prog->pc++;
+				p1->opcode = RGX_NOP_I;
+				p2 = prog->pc++;
+				p2->opcode = RGX_BRANCH_I;
+				p2->left = prog->pc;
+				__emit_code(prog, node->left);
+				p2->right = prog->pc;					/*quest == (0|1)，所以分支2为node->left的下一条指令*/
+
+				if(node->non_greedy)
+				{
+						rgxIns_t *tmp = p2->left;
+						p2->left = p1->right;
+						p2->right = tmp;
+				}
+
+
 		}
 				break;
 		case RGX_PLUS_T:
 		{
+#if(0)
 				rgxIns_t *p1, *p2;
 				p1 = prog->pc;/*p1为当前指令*/
 				__emit_code(prog, node->left);
@@ -238,6 +322,28 @@ static void __emit_code(rgxProg_t *prog, const rgxNode_t *node)
 						p2->right = tmp;
 				}
 				/*count + 1*/
+#endif
+
+				rgxIns_t *p1, *p2, *p3;
+				p1 = prog->pc;/*p1为当前指令*/
+				__emit_code(prog, node->left);
+
+				/*此时pc为node->left指令组的下一条指令*/
+				p2 = prog->pc++;
+				p2->opcode = RGX_NOP_I;
+				
+				p3 = prog->pc++;
+				p3->opcode = RGX_BRANCH_I;
+				p3->left = p1;					/*plus，分支1为node->left指令组的第一条指令,循环*/
+				p3->right = prog->pc;			/*分支2，经过node->left后，执行到下一条指令*/
+				
+				if(node->non_greedy)
+				{
+						rgxIns_t *tmp = p3->left;
+						p3->left = p3->right;
+						p3->right = tmp;
+				}
+
 		}
 				break;
 		case RGX_FIXCOUNT_T:

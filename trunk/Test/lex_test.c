@@ -1002,11 +1002,11 @@ void lex_test_loop4()
 		act.priority = 0;
 		act.value = 200;
 
-		AR_ASSERT(Lex_InsertRule(lex, L"\\{:[^\\u0]*?:\\}", &act) == AR_S_YES);
+		AR_ASSERT(Lex_InsertRule(lex, L"([ ]+)+", &act) == AR_S_YES);
 
 		match = Lex_CreateMatch(lex);
 
-		Lex_ResetInput(match, L"{:a:}");
+		Lex_ResetInput(match, L"              ");
 		
 
 		lexToken_t tok;

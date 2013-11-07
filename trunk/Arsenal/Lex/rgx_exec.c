@@ -25,8 +25,15 @@ static void __add_thread(rgxThreadList_t *lst,  rgxThread_t thd, rgxProg_t *prog
 {
 		AR_ASSERT(lst != NULL);
 		
-		if(prog->mark == thd.pc->mark)return;
+#if(0)
+		if(prog->mark == thd.pc->mark)
+		{
+				return;
+		}
+
+
 		thd.pc->mark = prog->mark;
+#endif
 
 		switch(thd.pc->opcode)
 		{
@@ -121,6 +128,7 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 
 
 
+#if(0)
 /*处理预搜索部分*/
 
 static void __clear_for_lookahead(rgxProg_t *prog)
@@ -144,6 +152,7 @@ static void __clear_for_lookahead(rgxProg_t *prog)
 		prog->mark = 0;
 }
 
+#endif
 
 
 static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match)
@@ -171,10 +180,12 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 
 		
 
-
+#if(0)
 		prog->mark = 0;
 		__clear_for_lookahead(prog);
 		prog->mark++;
+#endif
+
 		__add_thread(curr, RGX_BuildThread(prog->start, sp,0,0, RGX_ACT_NOACTION), prog);
 
 		for(;;)
@@ -184,7 +195,10 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 						break;
 				}
 				
+#if(0)
 				prog->mark++;
+#endif
+
 				for(i = 0; i < curr->count; ++i)
 				{
 						pc = curr->lst[i].pc;
@@ -290,7 +304,10 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 										rgxProg_t loop;
 										loop.start = pc + 1;
 										loop.pc = loop.start;
+#if(0)
 										loop.mark = 0;
+#endif
+
 										
 										is_ok = __loop(&loop, &sp, &x, &y, &act,  match);
 								}
@@ -326,7 +343,9 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 
 								lhd.start = pc + 1;
 								lhd.pc = lhd.start;
+#if(0)
 								lhd.mark = 0;
+#endif
 								
 								/*__clear_ins_set(lhd.start);*/
 
@@ -370,6 +389,12 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 								break;
 						}
 						case RGX_NOP_I:
+						{
+
+								__add_thread(next, RGX_BuildThread(pc + 1, sp, 0, 0, RGX_ACT_NOACTION), prog);
+						}
+								break;
+
 						case RGX_MATCH_I:
 						default:
 						{
@@ -401,6 +426,7 @@ END_POINT:
 
 
 
+#if(0)
 /*处理定数循环部分*/
 
 static void __clear_for_loop(rgxProg_t *prog)
@@ -423,7 +449,7 @@ static void __clear_for_loop(rgxProg_t *prog)
 
 		prog->mark = 0;
 }
-
+#endif
 
 
 
@@ -460,17 +486,17 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 				goto END_POINT;
 		}
 
-
+#if(0)
 		__clear_for_loop(prog);
-		
-		
 		prog->mark = 0;
+#endif
 
 		RGX_ClearThreadList(curr);
 		RGX_ClearThreadList(next);
 
-
+#if(0)
 		prog->mark++;
+#endif
 		__add_thread(curr, RGX_BuildThread(prog->start, sp, x,y, act), prog);
 
 		
@@ -480,8 +506,9 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 				{
 						break;
 				}
-
+#if(0)
 				prog->mark++;
+#endif
 				
 				for(i = 0; i < curr->count; ++i)
 				{
@@ -594,7 +621,9 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 										rgxProg_t loop;
 										loop.start = pc + 1;
 										loop.pc = loop.start;
+#if(0)
 										loop.mark = 0;
+#endif
 										is_ok = __loop(&loop, &sp, &x, &y, &act, match);
 								}
 
@@ -632,7 +661,9 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 								is_ok = AR_S_YES;
 								lhd.start = pc + 1;
 								lhd.pc = lhd.start;
+#if(0)
 								lhd.mark = 0;
+#endif
 
 								is_ok = __lookahead(&lhd, sp, match);
 
@@ -669,8 +700,13 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 								AR_CHECK(false, L"Arsenal : regex exec error %hs\r\n", AR_FUNC_NAME);
 								break;
 						}
-						case RGX_MATCH_I:
 						case RGX_NOP_I:
+						{
+
+								__add_thread(next, RGX_BuildThread(pc + 1, sp, x, y, act), prog);
+						}
+								break;
+						case RGX_MATCH_I:
 						default:
 						{
 								AR_CHECK(false, L"Arsenal : regex exec error %hs\r\n", AR_FUNC_NAME);
@@ -729,12 +765,15 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 
 		AR_memset(tok, 0, sizeof(*tok));
 
+#if(0)
 		for(i = 0; i < prog->count; ++i)
 		{
 				prog->start[i].mark = 0;
 		}
 
+
 		prog->mark = 0;
+#endif
 		
 		if(prog->curr == NULL) 
 		{
@@ -779,13 +818,20 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 
 		final_row = 0; final_col = 0; final_next = NULL; final_act = RGX_ACT_NOACTION;
 
+#if(0)
 		prog->mark++;
+#endif
 		__add_thread(curr, RGX_BuildThread(prog->start, sp, x,y, act), prog);
 
 		for(;;)
 		{
-				if(curr->count == 0)break;
+				if(curr->count == 0)
+				{
+						break;
+				}
+#if(0)
 				prog->mark++;
+#endif
 				
 				for(i = 0; i < curr->count; ++i)
 				{
@@ -900,7 +946,9 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 										rgxProg_t loop;
 										loop.start = pc + 1;
 										loop.pc = loop.start;
+#if(0)
 										loop.mark = 0;
+#endif
 										is_ok =  __loop(&loop, &sp, &x, &y, &act, match);
 								}
 
@@ -933,7 +981,9 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 								is_ok = AR_S_YES;
 								lhd.start = pc + 1;
 								lhd.pc = lhd.start;
+#if(0)
 								lhd.mark = 0;
+#endif
 
 								is_ok = __lookahead(&lhd, sp, match);
 								
@@ -971,6 +1021,12 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 								AR_CHECK(false, L"Arsenal : regex exec error %hs\r\n", AR_FUNC_NAME);
 								break;
 						}
+						case RGX_NOP_I:
+						{
+
+								__add_thread(next, RGX_BuildThread(pc + 1, sp, x, y, act), prog);
+						}
+								break;
 						case RGX_MATCH_I:
 						{
 								tok->str = match->next;
@@ -989,7 +1045,6 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 								goto BREAK_POINT;/*这一步决定了优先级为left most*/
 								break;
 						}
-						case RGX_NOP_I:
 						default:
 						{
 								AR_CHECK(false, L"Arsenal : regex exec error %hs\r\n", AR_FUNC_NAME);
