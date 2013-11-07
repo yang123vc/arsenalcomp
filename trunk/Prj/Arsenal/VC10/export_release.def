@@ -313,9 +313,9 @@ AR_InitHashIterator
 
 
 
-AR_malloc
-AR_calloc
-AR_free
+;AR_malloc
+;AR_calloc
+;AR_free
 
 AR_wcscat
 AR_reverse_wcschr
