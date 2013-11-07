@@ -267,7 +267,7 @@ typedef struct __thread_tag
 
 rgxThread_t		RGX_BuildThread(rgxIns_t *pc, const wchar_t *sp, size_t x, size_t y, ar_uint_32_t act);
 
-#define AR_RGX_MAX_THREAD_CNT	512
+#define AR_RGX_MAX_THREAD_CNT	1024
 
 typedef struct __thd_list_tag
 {
