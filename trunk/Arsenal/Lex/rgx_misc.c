@@ -1,7 +1,7 @@
 ﻿
 /*
  * The Arsenal Library
- * Copyright (c) 2009 by Solidus
+ * Copyright (c) 2009-2013 by Solidus
  *
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without fee,

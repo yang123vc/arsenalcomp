@@ -1,6 +1,6 @@
 ﻿/*
  * The Arsenal Library
- * Copyright (c) 2009 by Solidus
+ * Copyright (c) 2009-2013 by Solidus
  * 
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without fee,
@@ -21,7 +21,7 @@ AR_NAMESPACE_BEGIN
 
 const wchar_t*	AR_Version()
 {
-		return L"0.4.08.1111";
+		return L"0.4.09.1136";
 }
 
 
