@@ -133,8 +133,8 @@ struct __rgx_node_tag
 				}range;
 				
 				size_t					fix_count;
-				ar_bool_t					negative_lookahead;
-				ar_bool_t					non_greedy;
+				ar_bool_t				negative_lookahead;
+				ar_bool_t				non_greedy;
 				size_t					final_val;
 		};
 };
@@ -222,7 +222,9 @@ struct __regex_instruction_tag
 		rgxIns_t		*left;
 		rgxIns_t		*right;
 
+		/*
 		ar_int_t			mark;
+		*/
 
 		union{
 				ar_int_t			final;
@@ -293,7 +295,7 @@ struct __regex_program_tag
 		size_t					count;
 		
 		rgxIns_t				*pc;
-		ar_int_t					mark;
+		//ar_int_t					mark;
 		
 		rgxThreadList_t			*curr;
 		rgxThreadList_t			*next;
