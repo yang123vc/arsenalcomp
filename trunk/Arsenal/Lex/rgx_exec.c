@@ -38,6 +38,8 @@ static AR_INLINE ar_bool_t __already_in_list(const rgxThreadList_t *lst, const r
 		return false;
 }
 
+
+
 static void __add_thread(rgxThreadList_t *lst,  rgxThread_t thd, rgxProg_t *prog)
 {
 		AR_ASSERT(lst != NULL);
@@ -47,7 +49,6 @@ static void __add_thread(rgxThreadList_t *lst,  rgxThread_t thd, rgxProg_t *prog
 		{
 				return;
 		}
-		
 
 
 		switch(thd.pc->opcode)
@@ -92,6 +93,79 @@ static void __add_thread(rgxThreadList_t *lst,  rgxThread_t thd, rgxProg_t *prog
 
 
 
+
+#if(0)
+
+static void __add_thread(rgxThreadList_t *lst,  rgxThread_t thd, rgxProg_t *prog)
+{
+#define __ADD_THREAD_MAX_LEVEL 32
+
+		rgxThread_t ss[__ADD_THREAD_MAX_LEVEL];
+		ar_int_t		ss_idx = (ar_int_t)__ADD_THREAD_MAX_LEVEL;
+		AR_ASSERT(lst != NULL);
+		
+		
+		if(__already_in_list(lst, &thd))
+		{
+				return;
+		}
+
+		
+
+		ss[--ss_idx] = thd;
+
+		while(ss_idx < __ADD_THREAD_MAX_LEVEL)
+		{
+				rgxThread_t tmp = ss[ss_idx++];
+
+				switch(tmp.pc->opcode)
+				{
+				case RGX_JMP_I:
+				{
+						AR_ASSERT(tmp.pc->right == NULL);
+
+						ss[--ss_idx] = RGX_BuildThread(tmp.pc->left, tmp.sp, tmp.line, tmp.col, tmp.act);
+						break;
+				}
+				case RGX_BRANCH_I:
+				{
+						ss[--ss_idx] = RGX_BuildThread(tmp.pc->right, tmp.sp, tmp.line, tmp.col, tmp.act);
+						ss[--ss_idx] = RGX_BuildThread(tmp.pc->left, tmp.sp, tmp.line, tmp.col, tmp.act);
+						break;
+				}
+				case RGX_NOP_I:
+				case RGX_CHAR_I:
+				case RGX_ANY_CHAR_I:
+
+				case RGX_LOOP_BEG_I:
+				case RGX_LOOP_END_I:
+				case RGX_LOOKAHEAD_BEG_I:
+				case RGX_LOOKAHEAD_END_I:
+				case RGX_BEGIN_I:
+				case RGX_END_I:
+				case RGX_LINE_BEGIN_I:
+				case RGX_LINE_END_I:
+
+				case RGX_MATCH_I:
+				{
+						RGX_InsertToThreadList(lst, tmp);
+						break;
+				}
+				default:
+				{
+						AR_CHECK(false, L"Arsenal : regex exec error %hs\r\n", AR_FUNC_NAME);
+						break;
+				}
+				}
+
+
+		}
+
+		
+}
+
+
+#endif
 
 #define IS_LINE_BEGIN(_sp, _input)		((_sp) == (_input) || (Lex_IsLineTerminator((_sp)[-1])))
 #define IS_LINE_END(_sp)				(*(_sp) == L'\0' || (Lex_IsLineTerminator(*(_sp))))
