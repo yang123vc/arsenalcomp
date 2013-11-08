@@ -257,9 +257,6 @@ BOOL CGrammarDesignerApp::InitInstance()
 	m_pMainWnd->DragAcceptFiles();
 
 	
-
-	test_func();
-
 	return TRUE;
 }
 
