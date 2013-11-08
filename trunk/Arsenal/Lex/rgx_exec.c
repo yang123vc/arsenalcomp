@@ -252,74 +252,76 @@ static AR_INLINE void __check_is_newline(const wchar_t *sp, ar_uint_32_t *pact, 
 static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, size_t *py, ar_uint_32_t *pact, lexMatch_t *match);
 static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match);
 
-#if(0)
-static AR_INLINE ar_bool_t  __match_on_char(const rgxIns_t *pc, wchar_t c, ar_uint_t flags)
-{
-		
-		AR_ASSERT(pc != NULL);
-
-		if(c == L'\0')
-		{
-				return false;
-		}
-		
-
-		if(flags & LEX_IGNORE_CASE)
-		{
-				wchar_t lower = (wchar_t)AR_tolower(c);
-				wchar_t upper = (wchar_t)AR_towupper(c);
-
-				if(lower >=  pc->range.beg && lower <= pc->range.end)
-				{
-						return true;
-
-				}else if(upper >=  pc->range.beg && upper <= pc->range.end)
-				{
-						return true;
-				}else
-				{
-						return false;
-				}
-		}else
-		{
-				if(c >= pc->range.beg && c <= pc->range.end)
-				{
-						return true;
-				}else
-				{
-						return false;
-				}
-
-		}
-}
-
+#define __match_on_char(_ret, _pc, _c, _flags)			\
+		do{												\
+				AR_ASSERT((_pc) != NULL);				\
+				if((_c) == L'\0')						\
+				{										\
+						(_ret) = false;					\
+						break;							\
+				}										\
+														\
+				if((_flags) & LEX_IGNORE_CASE)											\
+				{																		\
+						wchar_t	lower = (wchar_t)AR_tolower((_c));						\
+						wchar_t upper = (wchar_t)AR_towupper((_c));						\
+						if(lower >=  (_pc)->range.beg && lower <= (_pc)->range.end)			\
+						{																\
+								(_ret) = true;											\
+								break;													\
+						}else if(upper >=  (_pc)->range.beg && upper <= (_pc)->range.end)		\
+						{																\
+								(_ret) = true;											\
+								break;													\
+						}else															\
+						{																\
+								(_ret) = true;											\
+								break;													\
+						}																\
+				}else																	\
+				{																		\
+						if((_c) >= (_pc)->range.beg && (_c) <= (_pc)->range.end)		\
+						{																\
+								(_ret) = true;											\
+								break;													\
+						}else															\
+						{																\
+								(_ret) = false;											\
+								break;													\
+						}																\
+				}																		\
+		}while(0)																				
 
 
 
-static AR_INLINE ar_bool_t  __match_on_anychar(wchar_t c, ar_uint_t flags)
-{
 
-		if(c == L'\0')
-		{
-				return false;
-		}
+#define __match_on_anychar(_ret, _c, _flags)													\
+		do{																						\
+				if((_c) == L'\0')																\
+				{																				\
+						(_ret) = false;															\
+						break;																	\
+				}																				\
+																								\
+				if((_flags) & LEX_SINGLE_LINE)													\
+				{																				\
+						(_ret) = true;															\
+						break;																	\
+				}																				\
+				if(Lex_IsLineTerminator((_c)))													\
+				{																				\
+						(_ret) = false;															\
+						break;																	\
+				}else																			\
+				{																				\
+						(_ret) = true;															\
+						break;																	\
+				}																				\
+		}while(0)																				
 
-		if(flags & LEX_SINGLE_LINE)/*single line 可以匹配包含换行符号在内的所有字符*/
-		{
-				return true;
-		}
 
-		
-		if(Lex_IsLineTerminator(c))
-		{
-				return false;
-		}else
-		{
-				return true;
-		}
-}
 
-#endif
+
 
 
 
@@ -410,24 +412,9 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 						case RGX_CHAR_I:
 						{
 								ar_bool_t is_ok = false;
-								if(*sp != L'\0')
-								{
-										if(match->flags & LEX_IGNORE_CASE)
-										{
-												wchar_t lower = (wchar_t)AR_tolower(*sp), upper = (wchar_t)AR_towupper(*sp);
-												
-												if(lower >=  pc->range.beg && lower <= pc->range.end)
-												{
-														is_ok = true;
-												}else if(upper >=  pc->range.beg && upper <= pc->range.end)
-												{
-														is_ok = true;
-												}
-										}else
-										{
-												is_ok = (*sp >= pc->range.beg && *sp <= pc->range.end) ? true : false;
-										}
-								}
+
+								__match_on_char(is_ok, pc, *sp, match->flags);
+
 
 								if(is_ok)
 								{
@@ -441,16 +428,8 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 						{
 								ar_bool_t is_ok = false;
 
-								if(*sp != L'\0')
-								{
-										if(match->flags & LEX_SINGLE_LINE)/*single line 可以匹配包含换行符号在内的所有字符*/
-										{
-												is_ok = true;
-										}else
-										{
-												is_ok = !Lex_IsLineTerminator(*sp);
-										}
-								}
+								__match_on_anychar(is_ok, *sp, match->flags);
+								
 
 								if(is_ok)
 								{
@@ -679,24 +658,8 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 						case RGX_CHAR_I:
 						{
 								ar_bool_t is_ok = false;
-								if(*sp != L'\0')
-								{
-										if(match->flags & LEX_IGNORE_CASE)
-										{
-												wchar_t lower = (wchar_t)AR_tolower(*sp), upper = (wchar_t)AR_towupper(*sp);
-												
-												if(lower >=  pc->range.beg && lower <= pc->range.end)
-												{
-														is_ok = true;
-												}else if(upper >=  pc->range.beg && upper <= pc->range.end)
-												{
-														is_ok = true;
-												}
-										}else
-										{
-												is_ok = (*sp >= pc->range.beg && *sp <= pc->range.end) ? true : false;
-										}
-								}
+
+								__match_on_char(is_ok, pc, *sp, match->flags);
 
 								if(is_ok)
 								{
@@ -712,17 +675,9 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 						case RGX_ANY_CHAR_I:
 						{
 								ar_bool_t is_ok = false;
-
-								if(*sp != L'\0')
-								{
-										if(match->flags & LEX_SINGLE_LINE)/*single line 可以匹配包含换行符号在内的所有字符*/
-										{
-												is_ok = true;
-										}else
-										{
-												is_ok = !Lex_IsLineTerminator(*sp); 
-										}
-								}
+								
+								__match_on_anychar(is_ok, *sp, match->flags);
+								
 
 								if(is_ok)
 								{
@@ -981,24 +936,8 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 						case RGX_CHAR_I:
 						{
 								ar_bool_t is_ok = false;
-								if(*sp != L'\0')
-								{
-										if(match->flags & LEX_IGNORE_CASE)
-										{
-												wchar_t lower = (wchar_t)AR_tolower(*sp), upper = (wchar_t)AR_towupper(*sp);
-												
-												if(lower >=  pc->range.beg && lower <= pc->range.end)
-												{
-														is_ok = true;
-												}else if(upper >=  pc->range.beg && upper <= pc->range.end)
-												{
-														is_ok = true;
-												}
-										}else
-										{
-												is_ok = (*sp >= pc->range.beg && *sp <= pc->range.end) ? true : false;
-										}
-								}
+
+								__match_on_char(is_ok, pc, *sp, match->flags);
 
 								if(is_ok)
 								{
@@ -1015,17 +954,9 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 						{
 
 								ar_bool_t is_ok = false;
-
-								if(*sp != L'\0')
-								{
-										if(match->flags & LEX_SINGLE_LINE)/*single line 可以匹配包含换行符号在内的所有字符*/
-										{
-												is_ok = true;
-										}else
-										{
-												is_ok = !Lex_IsLineTerminator(*sp); 
-										}
-								}
+								
+								__match_on_anychar(is_ok, *sp, match->flags);
+								
 
 								if(is_ok)
 								{
