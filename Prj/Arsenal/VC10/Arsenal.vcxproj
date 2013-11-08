@@ -79,8 +79,12 @@
     <ClCompile Include="..\..\..\Arsenal\Lex\lex.c" />
     <ClCompile Include="..\..\..\Arsenal\Lex\lex_misc.c" />
     <ClCompile Include="..\..\..\Arsenal\Lex\match.c" />
-    <ClCompile Include="..\..\..\Arsenal\Lex\rgx_compile.c" />
-    <ClCompile Include="..\..\..\Arsenal\Lex\rgx_exec.c" />
+    <ClCompile Include="..\..\..\Arsenal\Lex\rgx_compile.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Arsenal\Lex\rgx_exec.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">CompileAsCpp</CompileAs>
+    </ClCompile>
     <ClCompile Include="..\..\..\Arsenal\Lex\rgx_misc.c" />
     <ClCompile Include="..\..\..\Arsenal\Lex\rgx_node.c" />
     <ClCompile Include="..\..\..\Arsenal\Lex\rgx_parser.c" />
