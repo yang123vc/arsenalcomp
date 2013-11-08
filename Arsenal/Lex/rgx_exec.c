@@ -42,10 +42,13 @@ static void __add_thread(rgxThreadList_t *lst,  rgxThread_t thd, rgxProg_t *prog
 {
 		AR_ASSERT(lst != NULL);
 		
+		
 		if(__already_in_list(lst, &thd))
 		{
 				return;
 		}
+		
+
 
 		switch(thd.pc->opcode)
 		{

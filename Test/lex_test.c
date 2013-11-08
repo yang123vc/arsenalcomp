@@ -1054,12 +1054,233 @@ void lex_test_loop4()
 
 
 
+static void lex_perf_test1()
+{
+
+		typedef enum
+		{
+				CFG_LEXVAL_EOI	= 0,
+				CFG_LEXVAL_DELIM ,
+				CFG_LEXVAL_SKIP = 600,
+				CFG_LEXVAL_CODE,
+				CFG_LEXVAL_VALUE,
+				CFG_LEXVAL_START,
+				CFG_LEXVAL_NAME,
+				CFG_LEXVAL_TOKEN,
+				CFG_LEXVAL_PREC,
+				CFG_LEXVAL_ASSOC,
+				CFG_LEXVAL_LEXEME,
+				CFG_LEXVAL_NUMBER,
+				CFG_LEXVAL_DOT,
+				CFG_LEXVAL_COMMA,
+				CFG_LEXVAL_COLON,
+				CFG_LEXVAL_SEMI,
+				CFG_LEXVAL_OR,
+				CFG_LEXVAL_FAKE_EOI,
+				CFG_LEXVAL_ACTION,
+				CFG_LEXVAL_ACTION_INS,
+				CFG_LEXVAL_COMMENT
+		}cfgLexValue_t;
+
+
+
+		static const wchar_t *__cfg_lex_name[] =
+		{
+				L"	delim		= 	[\\x{000B}\\x{0020}\\x{00A0}\\x{2028}\\x{2029} \\f\\v\\t\\r\\n]+",
+				L"	letter		= 	[A-Z_a-z]",
+				L"	digit		=	[0-9]",
+				L"	number		=	0|[1-9]{digit}*",
+				L"	name		=	{letter}({letter}|{digit})*",
+				L"	lexeme		=	{name}|(\\\"([^\\\"\\n\\r])+\\\")|('([^'\\n\\r])+')",
+				L"	comment		= 	/\\*([^\\*]|\\*+[^\\*/])*\\*+/",
+				L"	comment_line	= //[^\\n\\r]*(\\n|$|\\r)",
+				L"  skip_lexem		= {delim}",
+				L"	comment_lexem	= {comment}|{comment_line}",
+				L"  key_lookahead   = {skip_lexem}+|\"{\""
+		};
+
+
+
+		typedef struct  __cfg_lex_pattern_tag
+		{
+				size_t			val;
+				const wchar_t	*regex;
+				ar_bool_t			is_skip;
+				size_t			prec;
+		}cfgLexPattern_t;
+
+
+		static const cfgLexPattern_t	__cfg_pattern[] =
+		{
+				{CFG_LEXVAL_EOI,	L"$", false,2},
+				{CFG_LEXVAL_DELIM, L"{skip_lexem}+", true, 1},
+
+				{CFG_LEXVAL_COMMENT, L"{comment_lexem}", false, 1},
+
+				{CFG_LEXVAL_ASSOC,	L"\"%\"(\"left\"|\"right\"|\"nonassoc\")(?={key_lookahead})", false,1},
+
+				{CFG_LEXVAL_CODE,	L"\"%code\"(?={key_lookahead})", false,0},
+				{CFG_LEXVAL_VALUE,	L"\"%value\"(?={key_lookahead})", false,0},
+
+				{CFG_LEXVAL_SKIP,	L"\"%skip\"(?={key_lookahead})", false,0},
+				{CFG_LEXVAL_START,	L"\"%start\"(?={key_lookahead})", false,0},
+				{CFG_LEXVAL_NAME,	L"\"%name\"(?={key_lookahead})", false,0},
+				{CFG_LEXVAL_TOKEN,	L"\"%token\"(?={key_lookahead})", false,0},
+				{CFG_LEXVAL_PREC,	L"\"%prec\"(?={key_lookahead})", false,0},
+
+				{CFG_LEXVAL_ACTION, L"\"%action\"(?={skip_lexem}+)", false, 0},
+				{CFG_LEXVAL_ACTION_INS, L"\\{:[^\\u0]*?:\\}", false, 0},
+
+				{CFG_LEXVAL_LEXEME,	L"{lexeme}", false,0},
+				{CFG_LEXVAL_NUMBER,	L"{number}", false,0},
+
+				{CFG_LEXVAL_DOT,		L"\".\"",	false,1},
+				{CFG_LEXVAL_COMMA,		L"\",\"",	false,1},
+
+				{CFG_LEXVAL_COLON,		L"\":\"",	false,1},
+				{CFG_LEXVAL_SEMI,		L"\";\"",	false,1},
+
+				{CFG_LEXVAL_OR,		L"\"|\"",	false,1}
+		};
+
+
+
+
+		lex_t *lex;
+		size_t i;
+		arStatus_t status;
+		lex = Lex_Create();
+		AR_ASSERT(lex != NULL);
+
+
+		
+
+		for(i = 0; i < AR_NELEMS(__cfg_lex_name); ++i)
+		{
+			
+				status = Lex_Insert(lex, __cfg_lex_name[i]);
+				AR_ASSERT(status == AR_S_YES);
+		}
+
+		for(i = 0; i < AR_NELEMS(__cfg_pattern); ++i)
+		{
+				lexAction_t action;
+				action.is_skip = __cfg_pattern[i].is_skip;
+				action.priority = __cfg_pattern[i].prec;
+				action.value = (size_t)__cfg_pattern[i].val;
+
+				status = Lex_InsertRule(lex, __cfg_pattern[i].regex, &action);
+
+				AR_ASSERT(status == AR_S_YES);
+		}
+
+		status = Lex_GenerateTransTable(lex);
+		if(status != AR_S_YES)
+		{
+				AR_ASSERT(false);
+				goto INVALID_POINT;
+		}
+
+
+		/*************************************************************/
+
+		
+		lexMatch_t *match = Lex_CreateMatch(lex);
+		AR_ASSERT(match != NULL);
+		arString_t *s = AR_CreateString();
+		status = AR_LoadBomTextFile(L"C:\\Users\\liupeng\\Desktop\\test.gmr", NULL, s);
+
+		AR_ASSERT(status == AR_S_YES);
+
+		AR_ASSERT(AR_GetStringLength(s) > 0);
+		
+		
+		
+		for(size_t i = 0; i < 5; ++i)
+		{
+				lexToken_t tok;
+				arStatus_t lex_status;
+
+				Lex_ResetInput(match, AR_CSTR(s));
+
+				ar_uint_64_t beg = AR_GetTime_Milliseconds();
+
+				while(true)
+				{
+						lex_status = Lex_Match(match, &tok);
+
+						if(lex_status == AR_S_YES || lex_status == AR_S_YES)
+						{
+								if(tok.value == 0)
+								{
+										break;
+								}
+#if(0)
+								wchar_t *s = AR_wcsndup(tok.str, tok.count);
+								AR_printf(L"%ls : row == %d : col == %d\r\n", s, tok.line, tok.col);
+								AR_DEL(s);
+#endif
+
+						}else
+						{
+								break;
+						}
+				}
+
+				ar_uint_64_t end = AR_GetTime_Milliseconds();
+
+				AR_printf(L"round %d elapsed time : %qu ms\r\n", i, end - beg);
+
+				if(lex_status == AR_S_YES || lex_status == AR_S_YES)
+				{
+						AR_printf(L"%ls\r\n", L"success\r\n");
+				}else
+				{
+						AR_printf(L"error code = %d, %ls\r\n", AR_GET_STATUS(lex_status), L"failed\r\n");
+
+				}
+
+		}
+
+
+
+		/*************************************************************/
+
+
+
+
+
+INVALID_POINT:
+
+		if(s)
+		{
+				AR_DestroyString(s);
+				s = NULL;
+		}
+
+
+		if(match)
+		{
+				Lex_DestroyMatch(match);
+				match = NULL;
+		}
+
+		if(lex)
+		{
+				Lex_Destroy(lex);
+				lex = NULL;
+		}
+
+}
+
+
+
 
 
 void lex_test()
 {
-		rgx_test_loop();
-		lex_test_loop4();
+		//rgx_test_loop();
+		//lex_test_loop4();
 		
 
 		//lex_test_loop();
@@ -1082,6 +1303,8 @@ void lex_test()
 		//lex_test_skip_line_test();
 
 //		lex_line_num_test();
+
+		lex_perf_test1();
 
 		
 }

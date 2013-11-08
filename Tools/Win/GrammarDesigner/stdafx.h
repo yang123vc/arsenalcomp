@@ -94,5 +94,4 @@
 
 #define	REGENTRY_NAME	TEXT("Solidus Studio")
 
-void test_func();
 
