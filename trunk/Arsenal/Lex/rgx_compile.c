@@ -37,19 +37,36 @@ static size_t __count(const rgxNode_t *node)
 		{
 				size_t l = 0,r = 0;
 				
-				if(node->left != NULL) l = __count(node->left);
-				if(node->right != NULL)r = __count(node->right);
+				if(node->left != NULL)
+				{
+						l = __count(node->left);
+				}
+
+				if(node->right != NULL)
+				{
+						r = __count(node->right);
+				}
+
 				return l + r;
 		}
 				break;
 		case RGX_BRANCH_T:
 		{
 				size_t l = 0,r = 0,curr = 0;
-				if(node->left) l = __count(node->left);
-				if(node->right) r = __count(node->right);
+
+				if(node->left) 
+				{
+						l = __count(node->left);
+				}
+
+				if(node->right) 
+				{
+						r = __count(node->right);
+				}
+
 				if(l > 0 && r > 0)
 				{
-						curr = 3;
+						curr = 2;
 				}
 				
 				return l + r + curr;
@@ -57,17 +74,17 @@ static size_t __count(const rgxNode_t *node)
 				break;
 		case RGX_STAR_T:
 		{
-				return 3 + __count(node->left) ;
+				return 2 + __count(node->left) ;
 		}
 				break;
 		case RGX_QUEST_T:
 		{
-				return 2 + __count(node->left);
+				return 1 + __count(node->left);
 		}
 				break;
 		case RGX_PLUS_T:
 		{
-				return 2 + __count(node->left);
+				return 1 + __count(node->left);
 		}
 				break;
 		case RGX_FIXCOUNT_T:
@@ -174,7 +191,9 @@ static void __emit_code(rgxProg_t *prog, const rgxNode_t *node)
 
 				}else
 				{
-#if(0)
+
+						/*单纯的分支是不会导出空指令的*/
+
 						rgxIns_t *p1, *p2;
 						p1 = prog->pc++;
 						p1->opcode = RGX_BRANCH_I;/*count + 1*/
@@ -190,8 +209,8 @@ static void __emit_code(rgxProg_t *prog, const rgxNode_t *node)
 						p2->left = prog->pc;/*p2要跳到node->right生成的指令组之后的下一条指令*/
 
 						/*count == 2*/
-#endif
 
+#if(0)
 						rgxIns_t *p1, *p2, *p3;
 						p1 = prog->pc++;						/*count+1;*/
 						p1->opcode = RGX_NOP_I;					/*生成NOP指令*/
@@ -208,12 +227,13 @@ static void __emit_code(rgxProg_t *prog, const rgxNode_t *node)
 						p3->left = prog->pc;					/*p3要跳到node->right生成的指令的下一条指令*/
 
 						/*count == 3*/
+#endif
 				}
 		}
 				break;
 		case RGX_STAR_T:
 		{
-#if(0)
+
 				rgxIns_t *p1; 
 				prog->pc->opcode = RGX_BRANCH_I;/*这条指令导致一个分支, count + 1*/
 				p1 = prog->pc++; /*p1为当前指令*/
@@ -236,7 +256,8 @@ static void __emit_code(rgxProg_t *prog, const rgxNode_t *node)
 				}
 
 				/*count == 2*/
-#endif
+#if(0)
+
 				rgxIns_t *p1, *p2;
 
 				p1 = prog->pc++;
@@ -260,12 +281,12 @@ static void __emit_code(rgxProg_t *prog, const rgxNode_t *node)
 						p2->left = p2->right;
 						p2->right = tmp;
 				}
-
+#endif
 		}
 				break;
 		case RGX_QUEST_T:
 		{
-#if(0)
+
 				rgxIns_t *p1;
 				prog->pc->opcode = RGX_BRANCH_I;/*quest导致一个分支, count + 1*/
 				p1 = prog->pc++;				/*p1当前branch指令*/
@@ -281,7 +302,8 @@ static void __emit_code(rgxProg_t *prog, const rgxNode_t *node)
 						p1->right = tmp;
 				}
 				/*count == 1*/
-#endif
+#if(0)
+
 				rgxIns_t *p1, *p2;
 				p1 = prog->pc++;
 				p1->opcode = RGX_NOP_I;
@@ -297,13 +319,13 @@ static void __emit_code(rgxProg_t *prog, const rgxNode_t *node)
 						p2->left = p1->right;
 						p2->right = tmp;
 				}
-
+#endif
 
 		}
 				break;
 		case RGX_PLUS_T:
 		{
-#if(0)
+
 				rgxIns_t *p1, *p2;
 				p1 = prog->pc;/*p1为当前指令*/
 				__emit_code(prog, node->left);
@@ -322,7 +344,9 @@ static void __emit_code(rgxProg_t *prog, const rgxNode_t *node)
 						p2->right = tmp;
 				}
 				/*count + 1*/
-#endif
+
+#if(0)
+
 
 				rgxIns_t *p1, *p2, *p3;
 				p1 = prog->pc;/*p1为当前指令*/
@@ -343,7 +367,7 @@ static void __emit_code(rgxProg_t *prog, const rgxNode_t *node)
 						p3->left = p3->right;
 						p3->right = tmp;
 				}
-
+#endif
 		}
 				break;
 		case RGX_FIXCOUNT_T:
@@ -413,10 +437,28 @@ void			RGX_InitProg(rgxProg_t *prog)
 void			RGX_UnInitProg(rgxProg_t *prog)
 {
 		AR_ASSERT(prog != NULL);
-		if(prog->start != NULL)AR_DEL(prog->start);
+		if(prog->start != NULL)
+		{
+				AR_DEL(prog->start);
+		}
+
+		if(prog->marks)
+		{
+				AR_DEL(prog->marks);
+				prog->marks = NULL;
+		}
+
+
 		
-		if(prog->curr)RGX_DestroyThreadList(prog->curr);
-		if(prog->next)RGX_DestroyThreadList(prog->next);
+		if(prog->curr)
+		{
+				RGX_DestroyThreadList(prog->curr);
+		}
+
+		if(prog->next)
+		{
+				RGX_DestroyThreadList(prog->next);
+		}
 
 		AR_memset(prog, 0, sizeof(*prog));
 }
@@ -433,9 +475,22 @@ arStatus_t			RGX_Compile(rgxProg_t *prog, const rgxNode_t *tree)
 		AR_ASSERT(prog->count > 0);
 
 		prog->start = AR_NEWARR0(rgxIns_t, prog->count);
+		prog->marks = AR_NEWARR0(ar_uint_64_t, prog->count);
 
-		if(prog->start == NULL)
+		if(prog->start == NULL || prog->marks == NULL)
 		{
+				if(prog->start)
+				{
+						AR_DEL(prog->start);
+						prog->start = NULL;
+				}
+
+				if(prog->marks)
+				{
+						AR_DEL(prog->marks);
+						prog->marks = NULL;
+				}
+		
 				return AR_E_NOMEM;
 		}
 
@@ -444,6 +499,9 @@ arStatus_t			RGX_Compile(rgxProg_t *prog, const rgxNode_t *tree)
 		__emit_code(prog, tree);
 
 		AR_ASSERT(prog->pc == prog->start + prog->count);
+
+		prog->mark = 0;
+
 
 /*
 		{
