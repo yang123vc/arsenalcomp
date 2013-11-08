@@ -1502,7 +1502,7 @@ static void lex_perf_test2()
 		lexMatch_t *match = Lex_CreateMatch(lex);
 		AR_ASSERT(match != NULL);
 		arString_t *s = AR_CreateString();
-		status = AR_LoadBomTextFile(L"C:\\Users\\liupeng\\Desktop\\js_test2.js", NULL, s);
+		status = AR_LoadBomTextFile(L"C:\\Users\\liupeng\\Desktop\\test2.js", NULL, s);
 
 		AR_ASSERT(status == AR_S_YES);
 
@@ -1591,9 +1591,70 @@ INVALID_POINT:
 
 
 
+void lex_line_test9()
+{
+		lexMatch_t		*match;
+		lex_t			*lex;
+
+		lex = Lex_Create();
+		
+		lexAction_t act;
+		act.is_skip = false;
+		act.priority = 0;
+		act.value = 200;
+		AR_ASSERT(Lex_InsertRule(lex, L".+", &act) == AR_S_YES);
+		
+		act.value = 0;
+		AR_ASSERT(Lex_InsertRule(lex, L"$", &act)== AR_S_YES);
+
+		match = Lex_CreateMatch(lex);
+		
+		//Lex_ResetInput(match, L";中国\r;字abc\n;真麻烦\r\n;太烦了\r\n");
+		Lex_ResetInput(match, L";中国;字abc");
+
+		
+		lexToken_t tok;
+		arStatus_t lex_status;
+		
+		while(true)
+		{
+				lex_status = Lex_Match(match, &tok);
+
+				if(lex_status == AR_S_YES || lex_status == AR_S_YES)
+				{
+						if(tok.value == 0)
+						{
+								break;
+						}
+						wchar_t *s = AR_wcsndup(tok.str, tok.count);
+						AR_printf(L"%ls : row == %d : col == %d action == %Iu\r\n", s, tok.line, tok.col, tok.value);
+						AR_DEL(s);
+				}else
+				{
+						break;
+				}
+		}
+
+		if(lex_status == AR_S_YES || lex_status == AR_S_YES)
+		{
+				AR_printf(L"%ls\r\n", L"success\r\n");
+		}else
+		{
+				AR_printf(L"error code = %d, %ls\r\n", AR_GET_STATUS(lex_status), L"failed\r\n");
+				
+		}
+
+
+		Lex_DestroyMatch(match);
+		Lex_Destroy(lex);
+}
+
+
+
+
 void lex_test()
 {
-		//rgx_test_loop();
+		rgx_test_loop();
 		//lex_test_loop4();
 		
 
@@ -1618,9 +1679,11 @@ void lex_test()
 
 		//lex_line_num_test();
 
-		lex_perf_test1();
+		//lex_perf_test1();
 
-		lex_perf_test2();
+		//lex_perf_test2();
+
+		lex_line_test9();
 
 		
 }
