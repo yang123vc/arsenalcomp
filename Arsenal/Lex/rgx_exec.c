@@ -19,7 +19,7 @@
 AR_NAMESPACE_BEGIN
 
 
-
+#if(0)
 static AR_INLINE ar_bool_t __already_in_list(const rgxThreadList_t *lst, const rgxThread_t *pthd)
 {
 		ar_int_t i;
@@ -39,30 +39,52 @@ static AR_INLINE ar_bool_t __already_in_list(const rgxThreadList_t *lst, const r
 }
 
 
+#endif
 
-static void __add_thread(rgxThreadList_t *lst,  rgxThread_t thd, rgxProg_t *prog)
+#if(1)
+
+
+static void __add_thread(rgxThreadList_t *lst,  rgxThread_t *thd, rgxProg_t *prog)
 {
-		AR_ASSERT(lst != NULL);
-		
-		
-		if(__already_in_list(lst, &thd))
+		ar_uint_t pc_mark = 0;
+		AR_ASSERT(lst != NULL && thd != NULL);
+
+		/*
+		if(__already_in_list(lst, thd))
+		{
+				return;
+		}
+		*/
+
+		AR_ASSERT(thd->pc >= prog->start && thd->pc < prog->start + prog->count);
+
+		pc_mark = prog->marks[thd->pc - prog->start];
+
+		if(prog->mark == pc_mark)
 		{
 				return;
 		}
 
+		prog->marks[thd->pc - prog->start] = prog->mark;
 
-		switch(thd.pc->opcode)
+		switch(thd->pc->opcode)
 		{
 		case RGX_JMP_I:
 		{
-				AR_ASSERT(thd.pc->right == NULL);
-				__add_thread(lst, RGX_BuildThread(thd.pc->left, thd.sp, thd.line, thd.col, thd.act), prog);
+				AR_ASSERT(thd->pc->right == NULL);
+				
+				RGX_BuildThread(thd, thd->pc->left, thd->sp, thd->line, thd->col, thd->act);
+				__add_thread(lst, thd, prog);
 				break;
 		}
 		case RGX_BRANCH_I:
 		{
-				__add_thread(lst, RGX_BuildThread(thd.pc->left, thd.sp, thd.line, thd.col, thd.act), prog);
-				__add_thread(lst, RGX_BuildThread(thd.pc->right, thd.sp, thd.line, thd.col, thd.act), prog);
+				rgxThread_t tmp;
+				RGX_BuildThread(&tmp, thd->pc->left, thd->sp, thd->line, thd->col, thd->act);
+				__add_thread(lst, &tmp, prog);
+
+				RGX_BuildThread(&tmp, thd->pc->right, thd->sp, thd->line, thd->col, thd->act);
+				__add_thread(lst, &tmp, prog);
 				break;
 		}
 		case RGX_NOP_I:
@@ -92,27 +114,38 @@ static void __add_thread(rgxThreadList_t *lst,  rgxThread_t thd, rgxProg_t *prog
 }
 
 
-
+#endif
 
 #if(0)
 
-static void __add_thread(rgxThreadList_t *lst,  rgxThread_t thd, rgxProg_t *prog)
-{
-#define __ADD_THREAD_MAX_LEVEL 32
 
+static void __add_thread(rgxThreadList_t *lst,  rgxThread_t *thd, rgxProg_t *prog)
+{
+		#define __ADD_THREAD_MAX_LEVEL 32
+		ar_uint_t pc_mark = 0;
 		rgxThread_t ss[__ADD_THREAD_MAX_LEVEL];
 		ar_int_t		ss_idx = (ar_int_t)__ADD_THREAD_MAX_LEVEL;
+
+		AR_ASSERT(thd != NULL);
 		AR_ASSERT(lst != NULL);
+		AR_UNUSED(prog);
+		AR_ASSERT(thd->pc >= prog->start && thd->pc < prog->start + prog->count);
+
 		
 		
-		if(__already_in_list(lst, &thd))
+
+		pc_mark = prog->marks[thd->pc - prog->start];
+
+		if(prog->mark == pc_mark)
 		{
 				return;
 		}
 
-		
+		prog->marks[thd->pc - prog->start] = prog->mark;
 
-		ss[--ss_idx] = thd;
+
+
+		ss[--ss_idx] = *thd;
 
 		while(ss_idx < __ADD_THREAD_MAX_LEVEL)
 		{
@@ -123,14 +156,16 @@ static void __add_thread(rgxThreadList_t *lst,  rgxThread_t thd, rgxProg_t *prog
 				case RGX_JMP_I:
 				{
 						AR_ASSERT(tmp.pc->right == NULL);
-
-						ss[--ss_idx] = RGX_BuildThread(tmp.pc->left, tmp.sp, tmp.line, tmp.col, tmp.act);
+						--ss_idx;
+						RGX_BuildThread(&ss[ss_idx], tmp.pc->left, tmp.sp, tmp.line, tmp.col, tmp.act);
 						break;
 				}
 				case RGX_BRANCH_I:
 				{
-						ss[--ss_idx] = RGX_BuildThread(tmp.pc->right, tmp.sp, tmp.line, tmp.col, tmp.act);
-						ss[--ss_idx] = RGX_BuildThread(tmp.pc->left, tmp.sp, tmp.line, tmp.col, tmp.act);
+						--ss_idx;
+						RGX_BuildThread(&ss[ss_idx], tmp.pc->right, tmp.sp, tmp.line, tmp.col, tmp.act);
+						--ss_idx;
+						RGX_BuildThread(&ss[ss_idx], tmp.pc->left, tmp.sp, tmp.line, tmp.col, tmp.act);
 						break;
 				}
 				case RGX_NOP_I:
@@ -148,7 +183,7 @@ static void __add_thread(rgxThreadList_t *lst,  rgxThread_t thd, rgxProg_t *prog
 
 				case RGX_MATCH_I:
 				{
-						RGX_InsertToThreadList(lst, tmp);
+						RGX_InsertToThreadList(lst, &tmp);
 						break;
 				}
 				default:
@@ -158,9 +193,9 @@ static void __add_thread(rgxThreadList_t *lst,  rgxThread_t thd, rgxProg_t *prog
 				}
 				}
 
-
 		}
 
+#undef __ADD_THREAD_MAX_LEVEL
 		
 }
 
@@ -227,7 +262,8 @@ static AR_INLINE ar_bool_t  __match_on_char(const rgxIns_t *pc, wchar_t c, ar_ui
 		{
 				return false;
 		}
-				
+		
+
 		if(flags & LEX_IGNORE_CASE)
 		{
 				wchar_t lower = (wchar_t)AR_tolower(c);
@@ -284,38 +320,45 @@ static AR_INLINE ar_bool_t  __match_on_anychar(wchar_t c, ar_uint_t flags)
 }
 
 
-static AR_INLINE arStatus_t __match_on_loop(const rgxIns_t *pc, const wchar_t **start_pos, size_t *px, size_t *py, ar_uint_32_t *pact, lexMatch_t *match)
+static AR_INLINE arStatus_t __match_on_loop(rgxProg_t *prog, rgxIns_t *pc, const wchar_t **start_pos, size_t *px, size_t *py, ar_uint_32_t *pact, lexMatch_t *match)
 {
 		size_t i;
 		arStatus_t status;
+		AR_ASSERT(prog != NULL);
+
 		AR_ASSERT(pc != NULL && start_pos != NULL && px != NULL && py != NULL && pact != NULL && match != NULL);
+		AR_ASSERT(pc >= prog->start && pc < prog->start + prog->count);
 
 		status = AR_S_YES;
 		
 		for(i = 0; i < pc->fix_count && status == AR_S_YES; ++i)
 		{
-				rgxProg_t loop;
-				loop.start = (rgxIns_t*)pc + 1;
-				loop.pc = loop.start;
+				rgxProg_t loop = *prog;
+				loop.pc = pc + 1;
 				status = __loop(&loop, start_pos, px,py,pact, match);
+				prog->mark = loop.mark;
 		}
 
 		return status;
 }
 
 
-static AR_INLINE arStatus_t __match_on_lookahead(const rgxIns_t *pc, const wchar_t *sp, lexMatch_t *match)
+static AR_INLINE arStatus_t __match_on_lookahead(rgxProg_t *prog, rgxIns_t *pc, const wchar_t *sp, lexMatch_t *match)
 {
 		rgxProg_t lhd;
+		arStatus_t status;
+		AR_ASSERT(prog != NULL && pc != NULL && sp != NULL && match != NULL);
 
-		AR_ASSERT(pc != NULL && sp != NULL && match != NULL);
+		AR_ASSERT(pc >= prog->start && pc < prog->start + prog->count);
 
-		lhd.start = (rgxIns_t*)pc + 1;
-		lhd.pc = lhd.start;
+		lhd = *prog;
+		lhd.pc = pc + 1;
 
-		return __lookahead(&lhd, sp, match);
-
+		status = __lookahead(&lhd, sp, match);
+		prog->mark = lhd.mark;
+		return status;
 }
+
 
 
 static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match)
@@ -325,6 +368,7 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 		size_t i;
 		const wchar_t *input_beg;
 		arStatus_t status;
+		rgxThread_t thd;
 		AR_ASSERT(prog != NULL && sp != NULL && match != NULL);
 		
 		status = AR_S_NO;
@@ -339,8 +383,10 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 
 
 		input_beg = match->input;
-
-		__add_thread(curr, RGX_BuildThread(prog->start, sp,0,0, RGX_ACT_NOACTION), prog);
+		
+		prog->mark++;
+		RGX_BuildThread(&thd, prog->pc, sp,0,0, RGX_ACT_NOACTION);
+		__add_thread(curr, &thd, prog);
 
 		for(;;)
 		{
@@ -349,6 +395,7 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 						break;
 				}
 		
+				prog->mark++;
 
 				for(i = 0; i < curr->count; ++i)
 				{
@@ -361,7 +408,8 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 						{
 								if(__match_on_char(pc, *sp, match->flags))
 								{
-										__add_thread(next, RGX_BuildThread(pc + 1, sp + 1, 0, 0, RGX_ACT_NOACTION), prog);
+										RGX_BuildThread(&thd, pc + 1, sp + 1, 0, 0, RGX_ACT_NOACTION);
+										__add_thread(next, &thd, prog);
 								}
 
 								break;
@@ -370,7 +418,8 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 						{
 								if(__match_on_anychar(*sp, match->flags))
 								{
-										__add_thread(next, RGX_BuildThread(pc + 1, sp + 1, 0, 0, RGX_ACT_NOACTION), prog);
+										RGX_BuildThread(&thd, pc + 1, sp + 1, 0, 0, RGX_ACT_NOACTION);
+										__add_thread(next, &thd, prog);
 								}
 								break;
 						}
@@ -378,7 +427,8 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 						{
 								if(sp == input_beg)
 								{
-										__add_thread(next, RGX_BuildThread(pc + 1, sp, 0, 0, RGX_ACT_NOACTION), prog);
+										RGX_BuildThread(&thd, pc + 1, sp, 0, 0, RGX_ACT_NOACTION);
+										__add_thread(next, &thd, prog);
 								}
 								/*--sp;*/
 								break;
@@ -387,7 +437,8 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 						{
 								if(*sp == L'\0')
 								{
-										__add_thread(next, RGX_BuildThread(pc + 1, sp, 0, 0, RGX_ACT_NOACTION), prog);
+										RGX_BuildThread(&thd, pc + 1, sp, 0, 0, RGX_ACT_NOACTION);
+										__add_thread(next, &thd, prog);
 								}
 								break;
 						}
@@ -395,7 +446,8 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 						{
 								if(IS_LINE_BEGIN(sp, match->input))
 								{
-										__add_thread(next, RGX_BuildThread(pc + 1, sp, 0, 0, RGX_ACT_NOACTION), prog);
+										RGX_BuildThread(&thd, pc + 1, sp, 0, 0, RGX_ACT_NOACTION);
+										__add_thread(next, &thd, prog);
 								}
 								/*--sp;*/
 								break;
@@ -404,7 +456,8 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 						{
 								if(IS_LINE_END(sp))
 								{
-										__add_thread(next, RGX_BuildThread(pc + 1, sp, 0, 0, RGX_ACT_NOACTION), prog);
+										RGX_BuildThread(&thd, pc + 1, sp, 0, 0, RGX_ACT_NOACTION);
+										__add_thread(next, &thd, prog);
 								}
 								break;
 						}
@@ -413,18 +466,21 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 								
 								size_t	x = 0,y = 0;
 								ar_uint_32_t act = RGX_ACT_NOACTION;
-								arStatus_t is_ok = __match_on_loop(pc, &sp, &x, &y, &act, match);
+								arStatus_t is_ok = __match_on_loop(prog, pc, &sp, &x, &y, &act, match);
 
 								if(is_ok == AR_S_YES)/*匹配成功*/
 								{
-										__add_thread(next, RGX_BuildThread(pc->left, sp, 0, 0, RGX_ACT_NOACTION), prog);
+										RGX_BuildThread(&thd, pc->left, sp, 0, 0, RGX_ACT_NOACTION);
+										__add_thread(next, &thd, prog);
 								
 								}else if(is_ok == AR_S_NO)/*匹配失败，则继续*/
 								{
 
 								}else					/*出现错误*/
 								{
+
 										status = is_ok;
+										AR_ASSERT(false);
 										goto END_POINT;
 								}
 								
@@ -441,7 +497,7 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 						{
 								arStatus_t is_ok;
 								
-								is_ok = __match_on_lookahead(pc, sp, match);
+								is_ok = __match_on_lookahead(prog, pc, sp, match);
 
 								if(is_ok == AR_S_YES)/*匹配搜索*/
 								{
@@ -450,14 +506,16 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 
 										}else
 										{
-												__add_thread(next, RGX_BuildThread(pc->left, sp, 0,0, RGX_ACT_NOACTION), prog);
+												RGX_BuildThread(&thd, pc->left, sp, 0,0, RGX_ACT_NOACTION);
+												__add_thread(next, &thd, prog);
 										}
 
 								}else if(is_ok == AR_S_NO)		/*匹配失败*/
 								{
 										if(pc->lookahead.negative)
 										{
-												__add_thread(next, RGX_BuildThread(pc->left, sp, 0,0, RGX_ACT_NOACTION), prog);
+												RGX_BuildThread(&thd, pc->left, sp, 0,0, RGX_ACT_NOACTION);
+												__add_thread(next, &thd, prog);
 										}else
 										{
 
@@ -465,6 +523,7 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 								}else							/*内部错误*/
 								{
 										status = is_ok;
+										AR_ASSERT(false);
 										goto END_POINT;
 								}
 								
@@ -482,8 +541,8 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 						}
 						case RGX_NOP_I:
 						{
-
-								__add_thread(next, RGX_BuildThread(pc + 1, sp, 0, 0, RGX_ACT_NOACTION), prog);
+								RGX_BuildThread(&thd, pc + 1, sp, 0, 0, RGX_ACT_NOACTION);
+								__add_thread(next,&thd, prog);
 						}
 								break;
 
@@ -524,7 +583,7 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 		arStatus_t status;
 		rgxThreadList_t *curr, *next;
 		rgxIns_t				*pc;
-		
+		rgxThread_t				thd;
 		const wchar_t	*sp, *final_next;
 		ar_uint_32_t		act, final_act;
 		size_t i,x,y, final_row, final_col;
@@ -555,7 +614,10 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 		RGX_ClearThreadList(curr);
 		RGX_ClearThreadList(next);
 
-		__add_thread(curr, RGX_BuildThread(prog->start, sp, x,y, act), prog);
+		prog->mark++;
+
+		RGX_BuildThread(&thd, prog->pc, sp, x,y, act);
+		__add_thread(curr, &thd, prog);
 
 		
 		for(;;)
@@ -565,6 +627,7 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 						break;
 				}
 
+				prog->mark++;
 
 				for(i = 0; i < curr->count; ++i)
 				{
@@ -582,7 +645,9 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 								{
 										__check_is_newline(sp, &act, &x, &y);
 										sp++;
-										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y, act), prog);
+
+										RGX_BuildThread(&thd, pc + 1, sp, x,y, act);
+										__add_thread(next, &thd, prog);
 								}
 								break;
 						}
@@ -592,7 +657,8 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 								{
 										__check_is_newline(sp, &act, &x, &y);
 										sp++;
-										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y, act), prog);
+										RGX_BuildThread(&thd, pc + 1, sp, x,y, act);
+										__add_thread(next, &thd, prog);
 								}
 
 								break;
@@ -601,7 +667,8 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 						{
 								if(sp == match->input)
 								{
-										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y, act), prog);
+										RGX_BuildThread(&thd, pc + 1, sp, x,y, act);
+										__add_thread(next, &thd, prog);
 								}
 								break;
 						}
@@ -609,7 +676,8 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 						{
 								if(*sp == L'\0')
 								{
-										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y, act), prog);
+										RGX_BuildThread(&thd, pc + 1, sp, x,y, act);
+										__add_thread(next, &thd, prog);
 								}
 								break;
 						}
@@ -617,7 +685,8 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 						{
 								if(IS_LINE_BEGIN(sp, match->input))
 								{
-										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y, act), prog);
+										RGX_BuildThread(&thd, pc + 1, sp, x,y, act);
+										__add_thread(next, &thd, prog);
 								}
 								break;
 						}
@@ -625,24 +694,27 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 						{
 								if(IS_LINE_END(sp))
 								{
-										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y, act), prog);
+										RGX_BuildThread(&thd, pc + 1, sp, x,y, act);
+										__add_thread(next, &thd, prog);
 								}
 								break;
 						}
 						case RGX_LOOP_BEG_I:
 						{
 								
-								arStatus_t is_ok = __match_on_loop(pc, &sp, &x, &y, &act, match);
+								arStatus_t is_ok = __match_on_loop(prog, pc, &sp, &x, &y, &act, match);
 
 								if(is_ok == AR_S_YES)
 								{
-										__add_thread(next, RGX_BuildThread(pc->left, sp, x,y, act), prog);
+										RGX_BuildThread(&thd, pc->left, sp, x,y, act);
+										__add_thread(next, &thd, prog);
 								}else if(is_ok == AR_S_NO)
 								{
 										
 								}else
 								{
 										status = is_ok;
+										AR_ASSERT(false);
 										goto END_POINT;
 								}
 								
@@ -665,7 +737,7 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 								arStatus_t is_ok;
 
 								
-								is_ok = __match_on_lookahead(pc, sp, match);
+								is_ok = __match_on_lookahead(prog, pc, sp, match);
 
 								if(is_ok == AR_S_YES)/*匹配成功*/
 								{
@@ -674,14 +746,16 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 
 										}else
 										{
-												__add_thread(next, RGX_BuildThread(pc->left, sp, x,y, act), prog);
+												RGX_BuildThread(&thd, pc->left, sp, x,y, act);
+												__add_thread(next, &thd, prog);
 										}
 
 								}else if(is_ok == AR_S_NO)/*匹配失败*/
 								{
 										if(pc->lookahead.negative)
 										{
-												__add_thread(next, RGX_BuildThread(pc->left, sp, x,y, act), prog);
+												RGX_BuildThread(&thd, pc->left, sp, x,y, act);
+												__add_thread(next, &thd, prog);
 										}else
 										{
 
@@ -689,6 +763,7 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 								}else			/*内部错误*/
 								{
 										status = is_ok;
+										AR_ASSERT(false);
 										goto END_POINT;
 								}
 
@@ -702,8 +777,8 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 						}
 						case RGX_NOP_I:
 						{
-
-								__add_thread(next, RGX_BuildThread(pc + 1, sp, x, y, act), prog);
+								RGX_BuildThread(&thd, pc + 1, sp, x, y, act);
+								__add_thread(next, &thd, prog);
 						}
 								break;
 						case RGX_MATCH_I:
@@ -751,7 +826,7 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 {
 		arStatus_t status;
 		rgxThreadList_t	*curr, *next;
-		
+		rgxThread_t		thd;
 		rgxIns_t		*pc;
 		const wchar_t	*sp, *final_next;
 
@@ -809,8 +884,9 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 
 		final_row = 0; final_col = 0; final_next = NULL; final_act = RGX_ACT_NOACTION;
 
-
-		__add_thread(curr, RGX_BuildThread(prog->start, sp, x,y, act), prog);
+		prog->mark++;
+		RGX_BuildThread(&thd, prog->start, sp, x,y, act);
+		__add_thread(curr, &thd, prog);
 
 		for(;;)
 		{
@@ -819,6 +895,7 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 						break;
 				}
 
+				prog->mark++;
 
 				for(i = 0; i < curr->count; ++i)
 				{
@@ -836,7 +913,9 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 								{
 										__check_is_newline(sp, &act, &x, &y);
 										sp++;
-										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y, act), prog);
+
+										RGX_BuildThread(&thd, pc + 1, sp, x,y, act);
+										__add_thread(next, &thd , prog);
 								}
 								break;
 						}
@@ -847,7 +926,9 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 								{
 										__check_is_newline(sp, &act, &x, &y);
 										sp++;
-										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y, act), prog);
+
+										RGX_BuildThread(&thd, pc + 1, sp, x,y, act);
+										__add_thread(next, &thd, prog);
 								}
 
 								break;
@@ -856,7 +937,8 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 						{
 								if(sp == match->input)
 								{
-										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y, act), prog);
+										RGX_BuildThread(&thd, pc + 1, sp, x,y, act);
+										__add_thread(next, &thd, prog);
 								}
 								break;
 						}
@@ -864,7 +946,8 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 						{
 								if(*sp == L'\0')
 								{
-										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y, act), prog);
+										RGX_BuildThread(&thd, pc + 1, sp, x,y, act);
+										__add_thread(next, &thd, prog);
 								}
 								break;
 						}
@@ -872,7 +955,8 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 						{
 								if(IS_LINE_BEGIN(sp, match->input))
 								{
-										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y, act), prog);
+										RGX_BuildThread(&thd, pc + 1, sp, x,y, act);
+										__add_thread(next, &thd, prog);
 								}
 								break;
 						}
@@ -880,17 +964,19 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 						{
 								if(IS_LINE_END(sp))
 								{
-										__add_thread(next, RGX_BuildThread(pc + 1, sp, x,y, act), prog);
+										RGX_BuildThread(&thd, pc + 1, sp, x,y, act);
+										__add_thread(next, &thd, prog);
 								}
 								break;
 						}
 						case RGX_LOOP_BEG_I:
 						{
 
-								arStatus_t is_ok = __match_on_loop(pc, &sp, &x, &y, &act, match);
+								arStatus_t is_ok = __match_on_loop(prog, pc, &sp, &x, &y, &act, match);
 								if(is_ok == AR_S_YES)/*匹配成功*/
 								{
-										__add_thread(next, RGX_BuildThread(pc->left, sp, x,y, act), prog);
+										RGX_BuildThread(&thd, pc->left, sp, x,y, act);
+										__add_thread(next, &thd, prog);
 								
 								}else if(is_ok == AR_S_NO)/*匹配失败*/
 								{
@@ -898,6 +984,7 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 								}else	/*错误*/
 								{
 										status = is_ok;
+										AR_ASSERT(false);
 										goto END_POINT;
 								}
 								
@@ -914,7 +1001,7 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 								
 								arStatus_t is_ok;
 
-								is_ok = __match_on_lookahead(pc, sp, match);
+								is_ok = __match_on_lookahead(prog, pc, sp, match);
 								
 								if(is_ok == AR_S_YES)
 								{
@@ -923,14 +1010,16 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 
 										}else
 										{
-												__add_thread(next, RGX_BuildThread(pc->left, sp, x,y, act), prog);
+												RGX_BuildThread(&thd, pc->left, sp, x,y, act);
+												__add_thread(next, &thd, prog);
 										}
 
 								}else if(is_ok == AR_S_NO)
 								{
 										if(pc->lookahead.negative)
 										{
-												__add_thread(next, RGX_BuildThread(pc->left, sp, x,y, act), prog);
+												RGX_BuildThread(&thd, pc->left, sp, x,y, act);
+												__add_thread(next, &thd, prog);
 										}else
 										{
 
@@ -939,6 +1028,7 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 								}else	/*错误*/
 								{
 										status = is_ok;
+										AR_ASSERT(false);
 										goto END_POINT;
 								}
 
@@ -952,8 +1042,8 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 						}
 						case RGX_NOP_I:
 						{
-
-								__add_thread(next, RGX_BuildThread(pc + 1, sp, x, y, act), prog);
+								RGX_BuildThread(&thd, pc + 1, sp, x, y, act);
+								__add_thread(next, &thd, prog);
 						}
 								break;
 						case RGX_MATCH_I:
@@ -1041,7 +1131,7 @@ END_POINT:
 
 arStatus_t RGX_Match(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 {
-
+		arStatus_t status;
 		AR_ASSERT(prog != NULL && match != NULL && tok != NULL);
 
 		AR_ASSERT(match->input != NULL && match->next != NULL);
@@ -1051,7 +1141,11 @@ arStatus_t RGX_Match(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 				return AR_E_LEXNOTREADY;
 		}
 
-		return __thompson(prog, match, tok);
+		prog->mark = 0;
+		status = __thompson(prog, match, tok);
+		AR_memset(prog->marks, 0, prog->count * sizeof(prog->marks[0]));
+
+		return status;
 }
 
 

@@ -608,16 +608,15 @@ END_POINT:
 /***********************************************************/
 
 
-rgxThread_t		RGX_BuildThread(rgxIns_t *pc, const wchar_t *sp, size_t x, size_t y, ar_uint_32_t act)
+void		RGX_BuildThread(rgxThread_t *pthd, rgxIns_t *pc, const wchar_t *sp, size_t x, size_t y, ar_uint_32_t act)
 {
-		rgxThread_t tmp;
+		AR_ASSERT(pthd != NULL);
 		AR_ASSERT(pc != NULL && sp != NULL);
-		tmp.pc = pc;
-		tmp.sp = sp;
-		tmp.line = x;
-		tmp.col = y;
-		tmp.act = act;
-		return tmp;
+		pthd->pc = pc;
+		pthd->sp = sp;
+		pthd->line = x;
+		pthd->col = y;
+		pthd->act = act;
 }
 
 /*
@@ -811,18 +810,18 @@ void				RGX_DestroyThreadList(rgxThreadList_t *lst)
 
 
 
-void RGX_InsertToThreadList(rgxThreadList_t *lst, rgxThread_t thd)
+void RGX_InsertToThreadList(rgxThreadList_t *lst, rgxThread_t *thd)
 {
 		AR_ASSERT(lst != NULL);
-		AR_ASSERT(thd.pc != NULL && thd.sp != NULL);
+		AR_ASSERT(thd != NULL);
+		AR_ASSERT(thd->pc != NULL && thd->sp != NULL);
 
 		if(lst->count >= AR_RGX_MAX_THREAD_CNT)
 		{
 				AR_error(AR_ERR_FATAL, L"regex thread list overflow\r\n");
 		}else
 		{
-				lst->lst[lst->count++] = thd;
-
+				lst->lst[lst->count++] = *thd;
 		}
 
 #if defined(AR_DEBUG)

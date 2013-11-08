@@ -1277,6 +1277,320 @@ INVALID_POINT:
 
 
 
+static void lex_perf_test2()
+{
+
+		
+
+
+
+		
+		static const wchar_t *__g_lex_name[] =
+		{
+				L"delim = [\\x{000A}\\x{000B}\\x{000C}\\x{000D}\\x{0085}\\x{2028}\\x{2029}\\x{0020}\\f\\n\\r\\t\\v\\x{0009}\\x{0020}\\x{00A0}\\x{1680}\\x{180E}\\x{2000}-\\x{200A}\\x{202F}\\x{205F}\\x{3000}]",
+				L"comment = /\\*([^\\*]|\\*+[^\\*/])*\\*+/",
+				L"comment_line = (//[^\\x{000A}\\x{000B}\\x{000C}\\x{000D}\\x{0085}\\x{2028}\\x{2029}]*(\\x{000A}|\\x{000B}|\\x{000C}|\\x{000D}|\\x{0085}|\\x{2028}|\\x{2029}|$))",
+				L"skip_lexem = {delim}|{comment_line}|{comment}",
+				L"digit = [0-9]",
+				L"number = {digit}+",
+				L"letter = [A-Z_a-z\\x{0800}-\\x{4E00}\\x{4E00}-\\x{9FA5}\\x{3130}-\\x{318F}\\x{AC00}-\\x{D7AF}]",
+				L"hex_digit = [0-9a-fA-F]",
+				L"hex_literal = 0(x|X){hex_digit}+",
+				L"oct_literal = 0[0-7]+",
+				L"dec_literal = (0|[1-9][0-9]*)",
+				L"exponet = (e|E)(\\+|\\-)?[0-9]+",
+				L"float_literal = (((([0-9]\\.[0-9]*)){exponet}?)|([0-9]+{exponet}))",
+				L"escape_seq = (\\\\(\\x22|\\x27))",
+				L"string_dq = (\\x22({escape_seq}|[^\\x22])*\\x22)",
+				L"string_sq = \\x27({escape_seq}|[^\\x27])*\\x27",
+				L"keyword_lhd = {letter}|[0-9]",
+				L"float_constant = {float_literal}(?!{keyword_lhd})",
+				L"hex_constant = {hex_literal}(?!{keyword_lhd})",
+				L"oct_constant = {oct_literal}(?!{keyword_lhd})",
+				L"dec_constant = {dec_literal}(?!{keyword_lhd})",
+				
+#if(0)
+				L"line_terminator = [\\x{000A}\\x{000D}]",
+				L"source_character = [\\x{0000}-\\x{FFFF}]",
+				L"regex_srccharset = [^\\\\]",
+				L"regex_firstchar = ([^\\*/\\\\\\[])",
+				L"regex_char = ([^\\*/\\\\\\[])",
+				L"regex_str = (/({regex_firstchar}{})/)",
+#endif
+
+		};
+
+
+
+
+		enum
+		{
+				TOK_DELIM_ID = 257,
+				TOK_NAME = 258,
+				TOK_STRING = 259,
+				TOK_FLOAT_NUMBER = 260,
+				TOK_INT_NUMBER = 261,
+				TOK_IMPORT = 262,
+				TOK_FROM = 263,
+				TOK_FOR = 264,
+				TOK_DO = 265,
+				TOK_WHILE = 266,
+				TOK_IF = 267,
+				TOK_ELSE = 268,
+				TOK_CONTINUE = 269,
+				TOK_BREAK = 270,
+				TOK_RETURN = 271,
+				TOK_NULL = 272,
+				TOK_TRUE = 273,
+				TOK_FALSE = 274,
+				TOK_VAR = 275,
+				TOK_IN = 276,
+				TOK_LIST = 277,
+				TOK_TABLE = 278,
+				TOK_ELLIPSIS = 279,
+				TOK_INC = 280,
+				TOK_DEC = 281,
+				TOK_ANDAND = 282,
+				TOK_OROR = 283,
+				TOK_LE = 284,
+				TOK_GE = 285,
+				TOK_EQ = 286,
+				TOK_NE = 287,
+				TOK_LESS = 288,
+				TOK_GREATER = 289,
+				TOK_L_BRACES = 290,
+				TOK_R_BRACES = 291,
+				TOK_L_PAREN = 292,
+				TOK_R_PAREN = 293,
+				TOK_L_SQUARE = 294,
+				TOK_R_SQUARE = 295,
+				TOK_SEMICOLON = 296,
+				TOK_COMMA = 297,
+				TOK_ASSIGN = 298,
+				TOK_ADD = 299,
+				TOK_SUB = 300,
+				TOK_MUL = 301,
+				TOK_DIV = 302,
+				TOK_MOD = 303,
+				TOK_NOT = 304,
+				TOK_COLON = 305,
+				TOK_QUEST = 306,
+				TOK_DOT = 307,
+				TOK_OREQ = 308,
+				TOK_AND = 309,
+				TOK_OR = 310,
+				TOK_XOR = 311,
+				TOK_DOLLAR = 312,
+				TOK_TILDE = 313,
+				REGEX_STR = 314,
+		};
+
+
+
+
+		static struct 
+		{
+				const wchar_t *name;
+				size_t val;
+				size_t prec;
+				const wchar_t *regex;
+				ar_bool_t is_skip;
+		}__g_term_pattern[] =  {
+
+				{NULL, TOK_DELIM_ID,3, L"{skip_lexem}", true},
+				{L"NAME", TOK_NAME, 0, L"{letter}({letter}|{digit})*", false},
+				{L"STRING", TOK_STRING, 0, L"{string_dq}|{string_sq}", false},
+				//{L"REGEX_STR", REGEX_STR, 0, L"{regex_str}", false},
+				
+				{L"FLOAT_NUMBER", TOK_FLOAT_NUMBER, 2, L"{float_constant}", false},
+				{L"INT_NUMBER", TOK_INT_NUMBER, 2, L"{hex_constant}|{oct_constant}|{dec_constant}", false},
+				{L"import", TOK_IMPORT, 1, L"\"import\"(?!{keyword_lhd})", false},
+				{L"from", TOK_FROM, 1, L"\"from\"(?!{keyword_lhd})", false},
+				{L"for", TOK_FOR, 1, L"\"for\"(?!{keyword_lhd})", false},
+				{L"do", TOK_DO, 1, L"\"do\"(?!{keyword_lhd})", false},
+				{L"while", TOK_WHILE, 1, L"\"while\"(?!{keyword_lhd})", false},
+				{L"if", TOK_IF, 1, L"\"if\"(?!{keyword_lhd})", false},
+				{L"else", TOK_ELSE, 1, L"\"else\"(?!{keyword_lhd})", false},
+				{L"continue", TOK_CONTINUE, 1, L"\"continue\"(?!{keyword_lhd})", false},
+				{L"break", TOK_BREAK, 1, L"\"break\"(?!{keyword_lhd})", false},
+				{L"return", TOK_RETURN, 1, L"\"return\"(?!{keyword_lhd})", false},
+				{L"null", TOK_NULL, 1, L"\"null\"(?!{keyword_lhd})", false},
+				{L"true", TOK_TRUE, 1, L"\"true\"(?!{keyword_lhd})", false},
+				{L"false", TOK_FALSE, 1, L"\"false\"(?!{keyword_lhd})", false},
+				{L"var", TOK_VAR, 1, L"\"var\"(?!{keyword_lhd})", false},
+				{L"in", TOK_IN, 1, L"\"in\"(?!{keyword_lhd})", false},
+				{L"list", TOK_LIST, 1, L"\"list\"(?!{keyword_lhd})", false},
+				{L"table", TOK_TABLE, 1, L"\"table\"(?!{keyword_lhd})", false,},
+				{L"...", TOK_ELLIPSIS, 2, L"\"...\"", false},
+				{L"++", TOK_INC, 1, L"\"++\"", false},
+				{L"--", TOK_DEC, 1, L"\"--\"", false},
+				{L"&&", TOK_ANDAND, 1, L"\"&&\"", false},
+				{L"||", TOK_OROR, 1, L"\"||\"", false},
+				{L"<=", TOK_LE, 1, L"\"<=\"", false},
+				{L">=", TOK_GE, 1, L"\">=\"", false},
+				{L"==", TOK_EQ, 1, L"\"==\"", false},
+				{L"!=", TOK_NE, 1, L"\"!=\"", false},
+				{L"|=", TOK_OREQ, 1, L"\"|=\"", false},
+				{L"<", TOK_LESS, 0, L"\"<\"", false},
+				{L">", TOK_GREATER, 0, L"\">\"", false},
+				{L"{", TOK_L_BRACES, 0, L"\"{\"", false},
+				{L"}", TOK_R_BRACES, 0, L"\"}\"", false},
+				{L"(", TOK_L_PAREN, 0, L"\"(\"", false},
+				{L")", TOK_R_PAREN, 0, L"\")\"", false},
+				{L"[", TOK_L_SQUARE, 0, L"\"[\"", false},
+				{L"]", TOK_R_SQUARE, 0, L"\"]\"", false},
+				{L";", TOK_SEMICOLON, 0, L"\";\"", false},
+				{L",", TOK_COMMA, 0, L"\",\"", false},
+				{L"=", TOK_ASSIGN, 0, L"\"=\"", false},
+				{L"+", TOK_ADD, 0, L"\"+\"", false},
+				{L"-", TOK_SUB, 0, L"\"-\"", false},
+				{L"*", TOK_MUL, 0, L"\"*\"", false},
+				{L"/", TOK_DIV, 0, L"\"/\"", false},
+				{L"%", TOK_MOD, 0, L"\"%\"", false},
+				{L"!", TOK_NOT, 0, L"\"!\"", false},
+				{L":", TOK_COLON, 0, L"\":\"", false},
+				{L"?", TOK_QUEST, 0, L"\"?\"", false},
+				{L".", TOK_DOT, 0, L"\".\"", false},
+				{L"&", TOK_AND, 0, L"\"&\"", false},
+				{L"|", TOK_OR, 0, L"\"|\"", false},
+				{L"~", TOK_TILDE, 0, L"\"~\"", false},
+				{L"^", TOK_XOR, 0, L"\"^\"", false},
+				{L"$", TOK_DOLLAR, 0, L"\"$\"", false},
+				{L"CFG_LEXVAL_EOI", 0, 2, L"$", false}
+		};
+
+
+		lex_t *lex;
+		size_t i;
+		arStatus_t status;
+		lex = Lex_Create();
+		AR_ASSERT(lex != NULL);
+
+
+		
+
+		for(i = 0; i < AR_NELEMS(__g_lex_name); ++i)
+		{
+			
+				status = Lex_Insert(lex, __g_lex_name[i]);
+				AR_ASSERT(status == AR_S_YES);
+		}
+
+		for(i = 0; i < AR_NELEMS(__g_term_pattern); ++i)
+		{
+				lexAction_t action;
+				action.is_skip = __g_term_pattern[i].is_skip;
+				action.priority = __g_term_pattern[i].prec;
+				action.value = (size_t)__g_term_pattern[i].val;
+
+				status = Lex_InsertRule(lex, __g_term_pattern[i].regex, &action);
+
+				AR_ASSERT(status == AR_S_YES);
+		}
+
+		status = Lex_GenerateTransTable(lex);
+		if(status != AR_S_YES)
+		{
+				AR_ASSERT(false);
+				goto INVALID_POINT;
+		}
+
+
+		/*************************************************************/
+
+		
+		lexMatch_t *match = Lex_CreateMatch(lex);
+		AR_ASSERT(match != NULL);
+		arString_t *s = AR_CreateString();
+		status = AR_LoadBomTextFile(L"C:\\Users\\liupeng\\Desktop\\js_test2.js", NULL, s);
+
+		AR_ASSERT(status == AR_S_YES);
+
+		AR_ASSERT(AR_GetStringLength(s) > 0);
+		
+		
+		
+		for(size_t i = 0; i < 5; ++i)
+		{
+				lexToken_t tok;
+				arStatus_t lex_status;
+
+				Lex_ResetInput(match, AR_CSTR(s));
+
+				ar_uint_64_t beg = AR_GetTime_Milliseconds();
+
+				while(true)
+				{
+						lex_status = Lex_Match(match, &tok);
+
+						if(lex_status == AR_S_YES || lex_status == AR_S_YES)
+						{
+								if(tok.value == 0)
+								{
+										break;
+								}
+
+								/*
+								wchar_t *s = AR_wcsndup(tok.str, tok.count);
+								AR_printf(L"%ls : row == %d : col == %d\r\n", s, tok.line, tok.col);
+								AR_DEL(s);
+								*/
+
+						}else
+						{
+								break;
+						}
+				}
+
+				ar_uint_64_t end = AR_GetTime_Milliseconds();
+
+				AR_printf(L"round %d elapsed time : %qu ms\r\n", i, end - beg);
+
+				if(lex_status == AR_S_YES || lex_status == AR_S_YES)
+				{
+						AR_printf(L"%ls\r\n", L"success\r\n");
+				}else
+				{
+						AR_printf(L"error code = %d, %ls\r\n", AR_GET_STATUS(lex_status), L"failed\r\n");
+
+				}
+
+		}
+
+
+
+		/*************************************************************/
+
+
+
+
+
+INVALID_POINT:
+
+		if(s)
+		{
+				AR_DestroyString(s);
+				s = NULL;
+		}
+
+
+		if(match)
+		{
+				Lex_DestroyMatch(match);
+				match = NULL;
+		}
+
+		if(lex)
+		{
+				Lex_Destroy(lex);
+				lex = NULL;
+		}
+
+}
+
+
+
+
 void lex_test()
 {
 		//rgx_test_loop();
@@ -1302,9 +1616,11 @@ void lex_test()
 
 		//lex_test_skip_line_test();
 
-//		lex_line_num_test();
+		//lex_line_num_test();
 
 		lex_perf_test1();
+
+		lex_perf_test2();
 
 		
 }

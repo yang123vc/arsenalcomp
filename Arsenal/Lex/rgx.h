@@ -80,7 +80,7 @@ struct __rgx_char_range_tag
 struct __rgx_charset_tag
 {
 		ar_bool_t					is_neg;
-		rgxCharRange_t			*range;
+		rgxCharRange_t				*range;
 };
 
 
@@ -265,7 +265,7 @@ typedef struct __thread_tag
 		ar_uint_32_t			act;
 }rgxThread_t;
 
-rgxThread_t		RGX_BuildThread(rgxIns_t *pc, const wchar_t *sp, size_t x, size_t y, ar_uint_32_t act);
+void		RGX_BuildThread(rgxThread_t *pthd, rgxIns_t *pc, const wchar_t *sp, size_t x, size_t y, ar_uint_32_t act);
 
 #define AR_RGX_MAX_THREAD_CNT	256
 
@@ -279,7 +279,7 @@ typedef struct __thd_list_tag
 
 rgxThreadList_t*	RGX_CreateThreadList();
 void				RGX_DestroyThreadList(rgxThreadList_t *lst);
-void				RGX_InsertToThreadList(rgxThreadList_t *lst, rgxThread_t thd);
+void				RGX_InsertToThreadList(rgxThreadList_t *lst, rgxThread_t *thd);
 void				RGX_SwapThreadList(rgxThreadList_t *l, rgxThreadList_t *r);
 void				RGX_ClearThreadList(rgxThreadList_t *l);
 
@@ -291,8 +291,14 @@ typedef struct __regex_program_tag		rgxProg_t;
 
 struct __regex_program_tag
 {
+
+		ar_uint_t				mark;
+
 		rgxIns_t				*start;
+		ar_uint_t				*marks;
 		size_t					count;
+
+		
 		
 		rgxIns_t				*pc;
 		
