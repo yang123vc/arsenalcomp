@@ -41,8 +41,8 @@ static AR_INLINE ar_bool_t __already_in_list(const rgxThreadList_t *lst, const r
 
 #endif
 
-#if(1)
 
+#if(1)
 
 static void __add_thread(rgxThreadList_t *lst,  rgxThread_t *thd, rgxProg_t *prog)
 {
@@ -252,7 +252,7 @@ static AR_INLINE void __check_is_newline(const wchar_t *sp, ar_uint_32_t *pact, 
 static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, size_t *py, ar_uint_32_t *pact, lexMatch_t *match);
 static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match);
 
-
+#if(0)
 static AR_INLINE ar_bool_t  __match_on_char(const rgxIns_t *pc, wchar_t c, ar_uint_t flags)
 {
 		
@@ -318,6 +318,9 @@ static AR_INLINE ar_bool_t  __match_on_anychar(wchar_t c, ar_uint_t flags)
 				return true;
 		}
 }
+
+#endif
+
 
 
 static AR_INLINE arStatus_t __match_on_loop(rgxProg_t *prog, rgxIns_t *pc, const wchar_t **start_pos, size_t *px, size_t *py, ar_uint_32_t *pact, lexMatch_t *match)
@@ -406,7 +409,27 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 						{
 						case RGX_CHAR_I:
 						{
-								if(__match_on_char(pc, *sp, match->flags))
+								ar_bool_t is_ok = false;
+								if(*sp != L'\0')
+								{
+										if(match->flags & LEX_IGNORE_CASE)
+										{
+												wchar_t lower = (wchar_t)AR_tolower(*sp), upper = (wchar_t)AR_towupper(*sp);
+												
+												if(lower >=  pc->range.beg && lower <= pc->range.end)
+												{
+														is_ok = true;
+												}else if(upper >=  pc->range.beg && upper <= pc->range.end)
+												{
+														is_ok = true;
+												}
+										}else
+										{
+												is_ok = (*sp >= pc->range.beg && *sp <= pc->range.end) ? true : false;
+										}
+								}
+
+								if(is_ok)
 								{
 										RGX_BuildThread(&thd, pc + 1, sp + 1, 0, 0, RGX_ACT_NOACTION);
 										__add_thread(next, &thd, prog);
@@ -416,11 +439,25 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 						}
 						case RGX_ANY_CHAR_I:
 						{
-								if(__match_on_anychar(*sp, match->flags))
+								ar_bool_t is_ok = false;
+
+								if(*sp != L'\0')
 								{
-										RGX_BuildThread(&thd, pc + 1, sp + 1, 0, 0, RGX_ACT_NOACTION);
+										if(match->flags & LEX_SINGLE_LINE)/*single line 可以匹配包含换行符号在内的所有字符*/
+										{
+												is_ok = true;
+										}else
+										{
+												is_ok = !Lex_IsLineTerminator(*sp);
+										}
+								}
+
+								if(is_ok)
+								{
+										RGX_BuildThread(&thd,pc + 1, sp + 1, 0, 0, RGX_ACT_NOACTION);
 										__add_thread(next, &thd, prog);
 								}
+
 								break;
 						}
 						case RGX_BEGIN_I:
@@ -641,7 +678,27 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 						{
 						case RGX_CHAR_I:
 						{
-								if(__match_on_char(pc, *sp, match->flags))
+								ar_bool_t is_ok = false;
+								if(*sp != L'\0')
+								{
+										if(match->flags & LEX_IGNORE_CASE)
+										{
+												wchar_t lower = (wchar_t)AR_tolower(*sp), upper = (wchar_t)AR_towupper(*sp);
+												
+												if(lower >=  pc->range.beg && lower <= pc->range.end)
+												{
+														is_ok = true;
+												}else if(upper >=  pc->range.beg && upper <= pc->range.end)
+												{
+														is_ok = true;
+												}
+										}else
+										{
+												is_ok = (*sp >= pc->range.beg && *sp <= pc->range.end) ? true : false;
+										}
+								}
+
+								if(is_ok)
 								{
 										__check_is_newline(sp, &act, &x, &y);
 										sp++;
@@ -649,11 +706,25 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 										RGX_BuildThread(&thd, pc + 1, sp, x,y, act);
 										__add_thread(next, &thd, prog);
 								}
+
 								break;
 						}
 						case RGX_ANY_CHAR_I:
 						{
-								if(__match_on_anychar(*sp, match->flags))
+								ar_bool_t is_ok = false;
+
+								if(*sp != L'\0')
+								{
+										if(match->flags & LEX_SINGLE_LINE)/*single line 可以匹配包含换行符号在内的所有字符*/
+										{
+												is_ok = true;
+										}else
+										{
+												is_ok = !Lex_IsLineTerminator(*sp); 
+										}
+								}
+
+								if(is_ok)
 								{
 										__check_is_newline(sp, &act, &x, &y);
 										sp++;
@@ -909,24 +980,57 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 						{
 						case RGX_CHAR_I:
 						{
-								if(__match_on_char(pc, *sp, match->flags))
+								ar_bool_t is_ok = false;
+								if(*sp != L'\0')
+								{
+										if(match->flags & LEX_IGNORE_CASE)
+										{
+												wchar_t lower = (wchar_t)AR_tolower(*sp), upper = (wchar_t)AR_towupper(*sp);
+												
+												if(lower >=  pc->range.beg && lower <= pc->range.end)
+												{
+														is_ok = true;
+												}else if(upper >=  pc->range.beg && upper <= pc->range.end)
+												{
+														is_ok = true;
+												}
+										}else
+										{
+												is_ok = (*sp >= pc->range.beg && *sp <= pc->range.end) ? true : false;
+										}
+								}
+
+								if(is_ok)
 								{
 										__check_is_newline(sp, &act, &x, &y);
-										sp++;
 
+										sp++;
 										RGX_BuildThread(&thd, pc + 1, sp, x,y, act);
-										__add_thread(next, &thd , prog);
+										__add_thread(next, &thd, prog);
 								}
+
 								break;
 						}
 						case RGX_ANY_CHAR_I:
 						{
 
-								if(__match_on_anychar(*sp, match->flags))
+								ar_bool_t is_ok = false;
+
+								if(*sp != L'\0')
+								{
+										if(match->flags & LEX_SINGLE_LINE)/*single line 可以匹配包含换行符号在内的所有字符*/
+										{
+												is_ok = true;
+										}else
+										{
+												is_ok = !Lex_IsLineTerminator(*sp); 
+										}
+								}
+
+								if(is_ok)
 								{
 										__check_is_newline(sp, &act, &x, &y);
 										sp++;
-
 										RGX_BuildThread(&thd, pc + 1, sp, x,y, act);
 										__add_thread(next, &thd, prog);
 								}
