@@ -1188,7 +1188,7 @@ static void lex_perf_test1()
 		lexMatch_t *match = Lex_CreateMatch(lex);
 		AR_ASSERT(match != NULL);
 		arString_t *s = AR_CreateString();
-		status = AR_LoadBomTextFile(L"C:\\Users\\liupeng\\Desktop\\test.gmr", NULL, s);
+		status = AR_LoadBomTextFile(L"C:\\Users\\solidus\\Desktop\\lex_test_1.gmr", NULL, s);
 
 		AR_ASSERT(status == AR_S_YES);
 
@@ -1502,7 +1502,7 @@ static void lex_perf_test2()
 		lexMatch_t *match = Lex_CreateMatch(lex);
 		AR_ASSERT(match != NULL);
 		arString_t *s = AR_CreateString();
-		status = AR_LoadBomTextFile(L"C:\\Users\\liupeng\\Desktop\\test2.js", NULL, s);
+		status = AR_LoadBomTextFile(L"C:\\Users\\solidus\\Desktop\\js_lex_test_2.js", NULL, s);
 
 		AR_ASSERT(status == AR_S_YES);
 
@@ -1654,7 +1654,7 @@ void lex_line_test9()
 
 void lex_test()
 {
-		rgx_test_loop();
+		//rgx_test_loop();
 		//lex_test_loop4();
 		
 
@@ -1679,11 +1679,11 @@ void lex_test()
 
 		//lex_line_num_test();
 
-		//lex_perf_test1();
+		lex_perf_test1();
 
-		//lex_perf_test2();
+		lex_perf_test2();
 
-		lex_line_test9();
+		//lex_line_test9();
 
 		
 }

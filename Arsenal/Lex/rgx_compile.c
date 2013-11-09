@@ -475,7 +475,7 @@ arStatus_t			RGX_Compile(rgxProg_t *prog, const rgxNode_t *tree)
 		AR_ASSERT(prog->count > 0);
 
 		prog->start = AR_NEWARR0(rgxIns_t, prog->count);
-		prog->marks = AR_NEWARR0(ar_uint_64_t, prog->count);
+		prog->marks = AR_NEWARR0(ar_uint_t, prog->count);
 
 		if(prog->start == NULL || prog->marks == NULL)
 		{
