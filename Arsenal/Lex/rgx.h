@@ -262,12 +262,27 @@ typedef struct __thread_tag
 		const wchar_t			*sp;
 		size_t					line;
 		size_t					col;
-		ar_uint_32_t			act;
+		ar_uint_32_t            act;
 }rgxThread_t;
 
+/*
 void		RGX_BuildThread(rgxThread_t *pthd, rgxIns_t *pc, const wchar_t *sp, size_t x, size_t y, ar_uint_32_t act);
+*/
 
-#define AR_RGX_MAX_THREAD_CNT	256
+
+#define RGX_BuildThread(_pthd, _pc, _sp, _x, _y, _act)                  \
+        do{                                                             \
+                AR_ASSERT((_pthd) != NULL);                             \
+                AR_ASSERT((_pc) != NULL && (_sp) != NULL);              \
+                (_pthd)->pc = (_pc);                                    \
+                (_pthd)->sp = (_sp);                                    \
+                (_pthd)->line = (_x);                                   \
+                (_pthd)->col = (_y);                                    \
+                (_pthd)->act = (_act);                                  \
+        }while(0)
+
+
+#define AR_RGX_MAX_THREAD_CNT	512
 
 typedef struct __thd_list_tag
 {
@@ -279,9 +294,47 @@ typedef struct __thd_list_tag
 
 rgxThreadList_t*	RGX_CreateThreadList();
 void				RGX_DestroyThreadList(rgxThreadList_t *lst);
+
+/*
 void				RGX_InsertToThreadList(rgxThreadList_t *lst, rgxThread_t *thd);
 void				RGX_SwapThreadList(rgxThreadList_t *l, rgxThreadList_t *r);
 void				RGX_ClearThreadList(rgxThreadList_t *l);
+
+*/
+
+
+
+#define RGX_InsertToThreadList(_lst, _pthd)                                             \
+        do{                                                                             \
+                AR_ASSERT((_lst) != NULL);                                              \
+                AR_ASSERT((_pthd) != NULL);                                             \
+                AR_ASSERT((_pthd)->pc != NULL && (_pthd)->sp != NULL);                  \
+                AR_ASSERT((_lst)->count < AR_RGX_MAX_THREAD_CNT);                       \
+                (_lst)->lst[(_lst)->count++] = *(_pthd);                                \
+        }while(0)
+
+
+
+
+#define RGX_SwapThreadList(_l, _r)                              \
+        do{                                                     \
+                rgxThreadList_t tmp;                            \
+                AR_ASSERT((_l) != NULL && (_r) != NULL);        \
+                tmp = *(_l);                                    \
+                *(_l) = *(_r);                                  \
+                *(_r) = tmp;                                    \
+        }while(0)
+
+
+
+#define RGX_ClearThreadList(_l)                 \
+        do{                                     \
+                AR_ASSERT((_l) != NULL);        \
+                (_l)->count = 0;                \
+        }while(0)
+
+
+
 
 
 struct __regex_program_tag;

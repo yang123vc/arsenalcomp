@@ -186,7 +186,22 @@ arStatus_t		Lex_Match(lexMatch_t *match, lexToken_t *tok);
 //AR_LEX_CR+LF:		AR_LEX_CR followed by AR_LEX_LF
 
 
+
+/*
 ar_bool_t Lex_IsLineTerminator(wchar_t c);
+*/
+
+#define Lex_IsLineTerminator(_c)        \
+        (( (_c) == AR_LEX_LF            \
+        || (_c) == AR_LEX_VT            \
+        || (_c) == AR_LEX_FF            \
+        || (_c) == AR_LEX_CR            \
+        || (_c) == AR_LEX_NEL           \
+        || (_c) == AR_LEX_LS            \
+        || (_c) == AR_LEX_PS            \
+        ) ? true : false)               \
+
+
 
 /*****************************************************************************************************/
 

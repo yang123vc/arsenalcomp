@@ -1177,9 +1177,9 @@ arStatus_t RGX_Match(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 		}
 
 		prog->mark = 0;
+        AR_memset(prog->marks, 0, prog->count * sizeof(prog->marks[0]));
 		status = __thompson(prog, match, tok);
-		AR_memset(prog->marks, 0, prog->count * sizeof(prog->marks[0]));
-
+		
 		return status;
 }
 
