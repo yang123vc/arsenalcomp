@@ -1196,7 +1196,7 @@ static void lex_perf_test1()
 		
 		
 		
-		for(size_t i = 0; i < 5; ++i)
+		for(size_t i = 0; i < 10; ++i)
 		{
 				lexToken_t tok;
 				arStatus_t lex_status;
@@ -1510,7 +1510,7 @@ static void lex_perf_test2()
 		
 		
 		
-		for(size_t i = 0; i < 5; ++i)
+		for(size_t i = 0; i < 10; ++i)
 		{
 				lexToken_t tok;
 				arStatus_t lex_status;

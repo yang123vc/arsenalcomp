@@ -340,7 +340,7 @@ void				RGX_ClearThreadList(rgxThreadList_t *l);
 struct __regex_program_tag;
 typedef struct __regex_program_tag		rgxProg_t;
 
-
+#define AR_RGX_MAX_INS_RECURRSIVE_LEVEL	128
 
 struct __regex_program_tag
 {
@@ -351,7 +351,7 @@ struct __regex_program_tag
 		ar_uint_t				*marks;
 		size_t					count;
 
-		
+		rgxThread_t				thd_stk[AR_RGX_MAX_INS_RECURRSIVE_LEVEL];
 		
 		rgxIns_t				*pc;
 		

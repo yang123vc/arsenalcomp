@@ -42,7 +42,7 @@ static AR_INLINE ar_bool_t __already_in_list(const rgxThreadList_t *lst, const r
 #endif
 
 
-#if(1)
+#if(0)
 
 static void __add_thread(rgxThreadList_t *lst,  rgxThread_t *thd, rgxProg_t *prog)
 {
@@ -116,21 +116,22 @@ static void __add_thread(rgxThreadList_t *lst,  rgxThread_t *thd, rgxProg_t *pro
 
 #endif
 
-#if(0)
+#if(1)
 
 
 static void __add_thread(rgxThreadList_t *lst,  rgxThread_t *thd, rgxProg_t *prog)
 {
 		#define __ADD_THREAD_MAX_LEVEL 32
 		ar_uint_t pc_mark = 0;
-		rgxThread_t ss[__ADD_THREAD_MAX_LEVEL];
-		ar_int_t		ss_idx = (ar_int_t)__ADD_THREAD_MAX_LEVEL;
+		
+		rgxThread_t		*ss = NULL;
+		ar_int_t		ss_idx = -1;
 
 		AR_ASSERT(thd != NULL);
 		AR_ASSERT(lst != NULL);
-		AR_UNUSED(prog);
-		AR_ASSERT(thd->pc >= prog->start && thd->pc < prog->start + prog->count);
+		AR_ASSERT(prog != NULL);
 
+		AR_ASSERT(thd->pc >= prog->start && thd->pc < prog->start + prog->count);
 		
 		
 
@@ -144,27 +145,27 @@ static void __add_thread(rgxThreadList_t *lst,  rgxThread_t *thd, rgxProg_t *pro
 		prog->marks[thd->pc - prog->start] = prog->mark;
 
 
+		ss = prog->thd_stk;
+		ss[++ss_idx] = *thd;
 
-		ss[--ss_idx] = *thd;
-
-		while(ss_idx < __ADD_THREAD_MAX_LEVEL)
+		while(ss_idx >= 0)
 		{
-				rgxThread_t tmp = ss[ss_idx++];
-
+				rgxThread_t tmp = ss[ss_idx--];
+				
 				switch(tmp.pc->opcode)
 				{
 				case RGX_JMP_I:
 				{
 						AR_ASSERT(tmp.pc->right == NULL);
-						--ss_idx;
+						++ss_idx;
 						RGX_BuildThread(&ss[ss_idx], tmp.pc->left, tmp.sp, tmp.line, tmp.col, tmp.act);
 						break;
 				}
 				case RGX_BRANCH_I:
 				{
-						--ss_idx;
+						++ss_idx;
 						RGX_BuildThread(&ss[ss_idx], tmp.pc->right, tmp.sp, tmp.line, tmp.col, tmp.act);
-						--ss_idx;
+						++ss_idx;
 						RGX_BuildThread(&ss[ss_idx], tmp.pc->left, tmp.sp, tmp.line, tmp.col, tmp.act);
 						break;
 				}
@@ -1164,6 +1165,7 @@ END_POINT:
 
 
 
+
 arStatus_t RGX_Match(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 {
 		arStatus_t status;
@@ -1177,6 +1179,8 @@ arStatus_t RGX_Match(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok)
 		}
 
 		prog->mark = 0;
+
+
         AR_memset(prog->marks, 0, prog->count * sizeof(prog->marks[0]));
 		status = __thompson(prog, match, tok);
 		
