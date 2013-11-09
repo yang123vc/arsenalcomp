@@ -607,7 +607,7 @@ END_POINT:
 
 /***********************************************************/
 
-
+/*
 void		RGX_BuildThread(rgxThread_t *pthd, rgxIns_t *pc, const wchar_t *sp, size_t x, size_t y, ar_uint_32_t act)
 {
 		AR_ASSERT(pthd != NULL);
@@ -618,6 +618,7 @@ void		RGX_BuildThread(rgxThread_t *pthd, rgxIns_t *pc, const wchar_t *sp, size_t
 		pthd->col = y;
 		pthd->act = act;
 }
+*/
 
 /*
 void RGX_InitThreadList(rgxThreadList_t *lst)
@@ -643,9 +644,6 @@ void RGX_UnInitThreadList(rgxThreadList_t *lst)
 static rgxThreadList_t	*__g_free_list = NULL;
 static arSpinLock_t		__g_spin_lock;
 
-#if defined(AR_DEBUG)
-		static size_t			__g_max_thread_count = 0;
-#endif
 
 #if defined(AR_DEBUG)
 		#define RGX_THREAD_LIST_INIT_COUNT		0
@@ -664,13 +662,12 @@ void	RGX_InitMisc()
 		AR_InitSpinLock(&__g_spin_lock);
 		__g_free_list = NULL;
 
-#if defined(AR_DEBUG)
-/*************************************************/
-		__g_max_thread_count = 0;
-/*************************************************/
-#endif
+        
 
-		if(RGX_THREAD_LIST_POOL_NUM == 0)return;
+		if(RGX_THREAD_LIST_POOL_NUM == 0)
+        {
+                return;
+        }
 
 		tmp = AR_NEWARR0(rgxThreadList_t*, RGX_THREAD_LIST_POOL_NUM);
 
@@ -720,9 +717,6 @@ void	RGX_UnInitMisc()
 		{
 				wchar_t buf[1024];
 				AR_swprintf(buf, 1024, L"Total consume rgxThreadList_t == %Iu", count);
-				AR_error(AR_ERR_MESSAGE, L"%ls\r\n", buf);
-
-				AR_swprintf(buf, 1024, L"Max consume rgxThread_t == %Iu",  __g_max_thread_count);
 				AR_error(AR_ERR_MESSAGE, L"%ls\r\n", buf);
 		}
 #endif
@@ -809,31 +803,26 @@ void				RGX_DestroyThreadList(rgxThreadList_t *lst)
 
 
 
+/*
 
+ 
 void RGX_InsertToThreadList(rgxThreadList_t *lst, rgxThread_t *thd)
 {
-		AR_ASSERT(lst != NULL);
-		AR_ASSERT(thd != NULL);
-		AR_ASSERT(thd->pc != NULL && thd->sp != NULL);
+       AR_ASSERT(lst != NULL);
+       AR_ASSERT(thd != NULL);
+       AR_ASSERT(thd->pc != NULL && thd->sp != NULL);
 
-		if(lst->count >= AR_RGX_MAX_THREAD_CNT)
-		{
-				AR_error(AR_ERR_FATAL, L"regex thread list overflow\r\n");
-		}else
-		{
-				lst->lst[lst->count++] = *thd;
-		}
-
-#if defined(AR_DEBUG)
-		if(lst->count > __g_max_thread_count)
-		{
-				__g_max_thread_count = lst->count;
-		}
-#endif
-
+       if(lst->count >= AR_RGX_MAX_THREAD_CNT)
+       {
+               AR_error(AR_ERR_FATAL, L"regex thread list overflow\r\n");
+       }else
+       {
+               lst->lst[lst->count++] = *thd;
+       }
 }
 
 
+ 
 void RGX_SwapThreadList(rgxThreadList_t *l, rgxThreadList_t *r)
 {
 		rgxThreadList_t tmp;
@@ -849,6 +838,9 @@ void RGX_ClearThreadList(rgxThreadList_t *l)
 		AR_ASSERT(l != NULL);
 		l->count = 0;
 }
+
+*/
+
 
 
 AR_NAMESPACE_END

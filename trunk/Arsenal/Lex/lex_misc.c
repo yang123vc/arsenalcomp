@@ -17,23 +17,24 @@
 
 AR_NAMESPACE_BEGIN
 
-
+/*
 ar_bool_t Lex_IsLineTerminator(wchar_t c)
 {
 		switch(c)
 		{
-		case AR_LEX_LF:
-		case AR_LEX_VT:
-		case AR_LEX_FF:
-		case AR_LEX_CR:
-		case AR_LEX_NEL:
-		case AR_LEX_LS:
-		case AR_LEX_PS:
-				return true;
-		default:
-				return false;
+                case AR_LEX_LF:
+                case AR_LEX_VT:
+                case AR_LEX_FF:
+                case AR_LEX_CR:
+                case AR_LEX_NEL:
+                case AR_LEX_LS:
+                case AR_LEX_PS:
+                        return true;
+                default:
+                        return false;
 		}
 }
+*/
 
 
 AR_NAMESPACE_END
