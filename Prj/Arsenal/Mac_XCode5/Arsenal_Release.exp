@@ -335,7 +335,7 @@ _AR_atan_flt
 _AR_base64_decode
 _AR_base64_encode
 _AR_bsearch
-_AR_calloc
+
 _AR_ceil_dbl
 _AR_ceil_flt
 _AR_chartodigit
@@ -357,7 +357,7 @@ _AR_exp
 _AR_exp_flt
 _AR_floor_dbl
 _AR_floor_flt
-_AR_free
+
 _AR_getenv
 _AR_hasenv
 _AR_hexstr_to_data
@@ -375,7 +375,6 @@ _AR_is_nan_flt
 _AR_logbase_dbl
 _AR_logbase_flt
 _AR_make_heap
-_AR_malloc
 _AR_memhash
 _AR_memswap
 _AR_open_file
@@ -831,3 +830,8 @@ ___super_fast_hash_32
 ___uint32_for_six_big
 ___uint32_for_six_little
 _cfg_on_print
+
+
+#_AR_free
+#_AR_malloc
+#_AR_calloc
