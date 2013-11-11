@@ -421,7 +421,12 @@ static AR_INLINE void __match_on_posix_cset(ar_bool_t *ret, const rgxIns_t *pc, 
 				break;
 		}
 
+		if(pc->posix_cset.is_neg)
+		{
+				*ret = !*ret;
+		}
 }
+
 
 
 
