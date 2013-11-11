@@ -171,6 +171,7 @@ static void __add_thread(rgxThreadList_t *lst,  rgxThread_t *thd, rgxProg_t *pro
 				}
 				case RGX_NOP_I:
 				case RGX_CHAR_I:
+				case RGX_POSIXCSET_I:
 				case RGX_ANY_CHAR_I:
 
 				case RGX_LOOP_BEG_I:
@@ -239,6 +240,10 @@ static AR_INLINE void __check_is_newline(const wchar_t *sp, ar_uint_32_t *pact, 
 
 }
 
+
+
+
+
 /*
 #undef IS_NEW_LINE
 #undef LF
@@ -253,12 +258,12 @@ static AR_INLINE void __check_is_newline(const wchar_t *sp, ar_uint_32_t *pact, 
 static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, size_t *py, ar_uint_32_t *pact, lexMatch_t *match);
 static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match);
 
-#define __match_on_char(_ret, _pc, _c, _flags)			\
+#define __match_on_char(_pret, _pc, _c, _flags)			\
 		do{												\
 				AR_ASSERT((_pc) != NULL);				\
 				if((_c) == L'\0')						\
 				{										\
-						(_ret) = false;					\
+						*(_pret) = false;				\
 						break;							\
 				}										\
 														\
@@ -268,26 +273,26 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 						wchar_t upper = (wchar_t)AR_towupper((_c));						\
 						if(lower >=  (_pc)->range.beg && lower <= (_pc)->range.end)			\
 						{																\
-								(_ret) = true;											\
+								*(_pret) = true;											\
 								break;													\
 						}else if(upper >=  (_pc)->range.beg && upper <= (_pc)->range.end)		\
 						{																\
-								(_ret) = true;											\
+								*(_pret) = true;											\
 								break;													\
 						}else															\
 						{																\
-								(_ret) = true;											\
+								*(_pret) = true;											\
 								break;													\
 						}																\
 				}else																	\
 				{																		\
 						if((_c) >= (_pc)->range.beg && (_c) <= (_pc)->range.end)		\
 						{																\
-								(_ret) = true;											\
+								*(_pret) = true;											\
 								break;													\
 						}else															\
 						{																\
-								(_ret) = false;											\
+								*(_pret) = false;											\
 								break;													\
 						}																\
 				}																		\
@@ -295,33 +300,128 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 
 
 
-
-#define __match_on_anychar(_ret, _c, _flags)													\
+#define __match_on_anychar(_pret, _c, _flags)													\
 		do{																						\
 				if((_c) == L'\0')																\
 				{																				\
-						(_ret) = false;															\
+						*(_pret) = false;															\
 						break;																	\
 				}																				\
 																								\
 				if((_flags) & LEX_SINGLE_LINE)													\
 				{																				\
-						(_ret) = true;															\
+						*(_pret) = true;															\
 						break;																	\
 				}																				\
 				if(Lex_IsLineTerminator((_c)))													\
 				{																				\
-						(_ret) = false;															\
+						*(_pret) = false;															\
 						break;																	\
 				}else																			\
 				{																				\
-						(_ret) = true;															\
+						*(_pret) = true;															\
 						break;																	\
 				}																				\
 		}while(0)																				
 
 
 
+
+
+static AR_INLINE void __match_on_posix_cset(ar_bool_t *ret, const rgxIns_t *pc, wchar_t c, ar_int_t flags)
+{
+		AR_ASSERT(ret != NULL && pc != NULL);
+		AR_UNUSED(flags);
+		AR_ASSERT(pc->opcode == RGX_POSIXCSET_I);
+
+		*ret = false;
+
+		if(c == L'\0')
+		{
+				return;
+		}
+
+		switch(pc->posix_cset.posix_cset_type)
+		{
+		case RGX_PCSET_ALPHA_T:
+				if(AR_iswalpha(c))
+				{
+						*ret = true;
+				}
+				break;
+		case RGX_PCSET_BLANK_T:
+				if(AR_iswblank(c))
+				{
+						*ret = true;
+				}
+				break;
+		case RGX_PCSET_ALNUM_T:
+				if(AR_iswalnum(c))
+				{
+						*ret = true;
+				}
+				break;
+		case RGX_PCSET_CNTRL_T:
+				if(AR_iswcntrl(c))
+				{
+						*ret = true;
+				}
+				break;
+		case RGX_PCSET_DIGIT_T:
+				if(AR_iswdigit(c))
+				{
+						*ret = true;
+				}
+				break;
+		case RGX_PCSET_GRAPH_T:
+				if(AR_iswgraph(c))
+				{
+						*ret = true;
+				}
+				break;
+		case RGX_PCSET_LOWER_T:
+				if(AR_iswalpha(c))
+				{
+						*ret = true;
+				}
+				break;
+		case RGX_PCSET_UPPER_T:
+				if(AR_iswupper(c))
+				{
+						*ret = true;
+				}
+				break;
+		case RGX_PCSET_PUNCT_T:
+				if(AR_iswalpha(c))
+				{
+						*ret = true;
+				}
+				break;
+		case RGX_PCSET_PRINT_T:
+				if(AR_iswprint(c))
+				{
+						*ret = true;
+				}
+				break;
+		case RGX_PCSET_SPACE_T:
+				if(AR_iswspace(c))
+				{
+						*ret = true;
+				}
+				break;
+		case RGX_PCSET_XDIGIT_T:
+				if(AR_iswxdigit(c))
+				{
+						*ret = true;
+				}
+				break;
+		default:
+				AR_ASSERT(false);
+				*ret = false;
+				break;
+		}
+
+}
 
 
 
@@ -414,7 +514,7 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 						{
 								ar_bool_t is_ok = false;
 
-								__match_on_char(is_ok, pc, *sp, match->flags);
+								__match_on_char(&is_ok, pc, *sp, match->flags);
 
 
 								if(is_ok)
@@ -425,11 +525,24 @@ static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *m
 
 								break;
 						}
+						case RGX_POSIXCSET_I:
+						{
+								ar_bool_t is_ok = false;
+
+								__match_on_posix_cset(&is_ok, pc, *sp, match->flags);
+
+								if(is_ok)
+								{
+										RGX_BuildThread(&thd, pc + 1, sp + 1, 0, 0, RGX_ACT_NOACTION);
+										__add_thread(next, &thd, prog);
+								}
+						}
+								break;
 						case RGX_ANY_CHAR_I:
 						{
 								ar_bool_t is_ok = false;
 
-								__match_on_anychar(is_ok, *sp, match->flags);
+								__match_on_anychar(&is_ok, *sp, match->flags);
 								
 
 								if(is_ok)
@@ -660,7 +773,7 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 						{
 								ar_bool_t is_ok = false;
 
-								__match_on_char(is_ok, pc, *sp, match->flags);
+								__match_on_char(&is_ok, pc, *sp, match->flags);
 
 								if(is_ok)
 								{
@@ -673,11 +786,27 @@ static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px
 
 								break;
 						}
+						case RGX_POSIXCSET_I:
+						{
+								ar_bool_t is_ok = false;
+
+								__match_on_posix_cset(&is_ok, pc, *sp, match->flags);
+
+								if(is_ok)
+								{
+										__check_is_newline(sp, &act, &x, &y);
+										sp++;
+
+										RGX_BuildThread(&thd, pc + 1, sp, x,y, act);
+										__add_thread(next, &thd, prog);
+								}
+						}
+								break;
 						case RGX_ANY_CHAR_I:
 						{
 								ar_bool_t is_ok = false;
 								
-								__match_on_anychar(is_ok, *sp, match->flags);
+								__match_on_anychar(&is_ok, *sp, match->flags);
 								
 
 								if(is_ok)
@@ -938,7 +1067,7 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 						{
 								ar_bool_t is_ok = false;
 
-								__match_on_char(is_ok, pc, *sp, match->flags);
+								__match_on_char(&is_ok, pc, *sp, match->flags);
 
 								if(is_ok)
 								{
@@ -951,12 +1080,28 @@ static arStatus_t __thompson(rgxProg_t *prog, lexMatch_t *match, lexToken_t *tok
 
 								break;
 						}
+						case RGX_POSIXCSET_I:
+						{
+								ar_bool_t is_ok = false;
+
+								__match_on_posix_cset(&is_ok, pc, *sp, match->flags);
+
+								if(is_ok)
+								{
+										__check_is_newline(sp, &act, &x, &y);
+										sp++;
+
+										RGX_BuildThread(&thd, pc + 1, sp, x,y, act);
+										__add_thread(next, &thd, prog);
+								}
+						}
+								break;
 						case RGX_ANY_CHAR_I:
 						{
 
 								ar_bool_t is_ok = false;
 								
-								__match_on_anychar(is_ok, *sp, match->flags);
+								__match_on_anychar(&is_ok, *sp, match->flags);
 								
 
 								if(is_ok)

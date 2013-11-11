@@ -1086,9 +1086,12 @@ static void lex_perf_test1()
 
 		static const wchar_t *__cfg_lex_name[] =
 		{
-				L"	delim		= 	[\\x{000B}\\x{0020}\\x{00A0}\\x{2028}\\x{2029} \\f\\v\\t\\r\\n]+",
+				//L"	delim		= 	[\\x{000B}\\x{0020}\\x{00A0}\\x{2028}\\x{2029} \\f\\v\\t\\r\\n]+",
+				L"	delim		= 	[[:space:]]+",
 				L"	letter		= 	[A-Z_a-z]",
-				L"	digit		=	[0-9]",
+				//L"	letter		= 	[[:alpha:]_]",
+				//L"	digit		=	[0-9]",
+				L"digit = [:digit:]",
 				L"	number		=	0|[1-9]{digit}*",
 				L"	name		=	{letter}({letter}|{digit})*",
 				L"	lexeme		=	{name}|(\\\"([^\\\"\\n\\r])+\\\")|('([^'\\n\\r])+')",
@@ -1159,7 +1162,12 @@ static void lex_perf_test1()
 		{
 			
 				status = Lex_Insert(lex, __cfg_lex_name[i]);
-				AR_ASSERT(status == AR_S_YES);
+				
+				if(status != AR_S_YES)
+				{
+						AR_abort();
+				}
+
 		}
 
 		for(i = 0; i < AR_NELEMS(__cfg_pattern); ++i)
@@ -1171,7 +1179,11 @@ static void lex_perf_test1()
 
 				status = Lex_InsertRule(lex, __cfg_pattern[i].regex, &action);
 
-				AR_ASSERT(status == AR_S_YES);
+				if(status != AR_S_YES)
+				{
+						AR_abort();
+				}
+
 		}
 
 		status = Lex_GenerateTransTable(lex);
@@ -1188,7 +1200,7 @@ static void lex_perf_test1()
 		lexMatch_t *match = Lex_CreateMatch(lex);
 		AR_ASSERT(match != NULL);
 		arString_t *s = AR_CreateString();
-		status = AR_LoadBomTextFile(L"C:\\Users\\solidus\\Desktop\\lex_test_1.gmr", NULL, s);
+		status = AR_LoadBomTextFile(L"D:\\Code\\Test\\TestInput\\lex_test_1.gmr", NULL, s);
 
 		AR_ASSERT(status == AR_S_YES);
 
@@ -1287,13 +1299,16 @@ static void lex_perf_test2()
 		
 		static const wchar_t *__g_lex_name[] =
 		{
-				L"delim = [\\x{000A}\\x{000B}\\x{000C}\\x{000D}\\x{0085}\\x{2028}\\x{2029}\\x{0020}\\f\\n\\r\\t\\v\\x{0009}\\x{0020}\\x{00A0}\\x{1680}\\x{180E}\\x{2000}-\\x{200A}\\x{202F}\\x{205F}\\x{3000}]",
+				//L"delim = [\\x{000A}\\x{000B}\\x{000C}\\x{000D}\\x{0085}\\x{2028}\\x{2029}\\x{0020}\\f\\n\\r\\t\\v\\x{0009}\\x{0020}\\x{00A0}\\x{1680}\\x{180E}\\x{2000}-\\x{200A}\\x{202F}\\x{205F}\\x{3000}]",
+				L"delim = [[:space:]]+",
 				L"comment = /\\*([^\\*]|\\*+[^\\*/])*\\*+/",
 				L"comment_line = (//[^\\x{000A}\\x{000B}\\x{000C}\\x{000D}\\x{0085}\\x{2028}\\x{2029}]*(\\x{000A}|\\x{000B}|\\x{000C}|\\x{000D}|\\x{0085}|\\x{2028}|\\x{2029}|$))",
 				L"skip_lexem = {delim}|{comment_line}|{comment}",
-				L"digit = [0-9]",
+				//L"digit = [0-9]",
+				L"digit = [:digit:]",
 				L"number = {digit}+",
-				L"letter = [A-Z_a-z\\x{0800}-\\x{4E00}\\x{4E00}-\\x{9FA5}\\x{3130}-\\x{318F}\\x{AC00}-\\x{D7AF}]",
+				//L"letter = [A-Z_a-z\\x{0800}-\\x{4E00}\\x{4E00}-\\x{9FA5}\\x{3130}-\\x{318F}\\x{AC00}-\\x{D7AF}]",
+				L"letter = [[:alpha:]_]",
 				L"hex_digit = [0-9a-fA-F]",
 				L"hex_literal = 0(x|X){hex_digit}+",
 				L"oct_literal = 0[0-7]+",
@@ -1473,7 +1488,11 @@ static void lex_perf_test2()
 		{
 			
 				status = Lex_Insert(lex, __g_lex_name[i]);
-				AR_ASSERT(status == AR_S_YES);
+				
+				if(status != AR_S_YES)
+				{
+						AR_error(AR_ERR_FATAL, L"failed insert regex : '%ls'\r\n", __g_lex_name[i]);
+				}
 		}
 
 		for(i = 0; i < AR_NELEMS(__g_term_pattern); ++i)
@@ -1484,8 +1503,11 @@ static void lex_perf_test2()
 				action.value = (size_t)__g_term_pattern[i].val;
 
 				status = Lex_InsertRule(lex, __g_term_pattern[i].regex, &action);
-
-				AR_ASSERT(status == AR_S_YES);
+				
+				if(status != AR_S_YES)
+				{
+						AR_error(AR_ERR_FATAL, L"failed insert regex : '%ls'\r\n", __g_term_pattern[i].regex);
+				}
 		}
 
 		status = Lex_GenerateTransTable(lex);
@@ -1502,7 +1524,7 @@ static void lex_perf_test2()
 		lexMatch_t *match = Lex_CreateMatch(lex);
 		AR_ASSERT(match != NULL);
 		arString_t *s = AR_CreateString();
-		status = AR_LoadBomTextFile(L"C:\\Users\\solidus\\Desktop\\js_lex_test_2.js", NULL, s);
+		status = AR_LoadBomTextFile(L"D:\\Code\\Test\\TestInput\\js_lex_test_2.js", NULL, s);
 
 		AR_ASSERT(status == AR_S_YES);
 
@@ -1654,7 +1676,7 @@ void lex_line_test9()
 
 void lex_test()
 {
-		//rgx_test_loop();
+		rgx_test_loop();
 		//lex_test_loop4();
 		
 
@@ -1680,7 +1702,6 @@ void lex_test()
 		//lex_line_num_test();
 
 		lex_perf_test1();
-
 		lex_perf_test2();
 
 		//lex_line_test9();

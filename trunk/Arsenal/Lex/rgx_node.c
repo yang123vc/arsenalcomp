@@ -129,6 +129,10 @@ rgxNode_t*		RGX_CreateNode(rgxNodeType_t type)
 				
 				break;
 		}
+		case RGX_POSIXCSET_T:
+		{
+				break;
+		}
 		case RGX_CAT_T:
 		{
 				break;
@@ -217,6 +221,7 @@ void			RGX_DestroyNode(rgxNode_t *node)
 		}
 		
 		case RGX_CSET_T:
+		case RGX_POSIXCSET_T:
 		{
 				break;
 		}
@@ -402,6 +407,137 @@ arStatus_t		RGX_ToString(const rgxNode_t *node, arString_t *str)
 						{
 								return status;
 						}
+				}
+		}
+				break;
+		case RGX_POSIXCSET_T:
+		{
+
+				status = AR_AppendString(str, L"[:");
+				if(status != AR_S_YES)
+				{
+						return status;
+				}
+
+				if(node->posix_range.is_neg)
+				{
+						status = AR_AppendString(str, L"^");
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
+				}
+
+				switch(node->posix_range.set_type)
+				{
+				case RGX_PCSET_ALPHA_T:
+				{
+						status = AR_AppendString(str, L"alpha:]");
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
+				}
+						break;
+				case RGX_PCSET_BLANK_T:
+				{
+						status = AR_AppendString(str, L"blank:]");
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
+				}
+						break;
+				case RGX_PCSET_ALNUM_T:
+				{
+						status = AR_AppendString(str, L"alnum:]");
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
+				}
+						break;
+				case RGX_PCSET_CNTRL_T:
+				{
+						status = AR_AppendString(str, L"cntrl:]");
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
+				}
+						break;
+				case RGX_PCSET_DIGIT_T:
+				{
+						status = AR_AppendString(str, L"digit:]");
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
+				}
+						break;
+				case RGX_PCSET_GRAPH_T:
+				{
+						status = AR_AppendString(str, L"graph:]");
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
+				}
+						break;
+				case RGX_PCSET_LOWER_T:
+				{
+						status = AR_AppendString(str, L"lower:]");
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
+				}
+						break;
+				case RGX_PCSET_UPPER_T:
+				{
+						status = AR_AppendString(str, L"upper:]");
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
+				}
+						break;
+				case RGX_PCSET_PUNCT_T:
+				{
+						status = AR_AppendString(str, L"punct:]");
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
+				}
+						break;
+				case RGX_PCSET_PRINT_T:
+				{
+						status = AR_AppendString(str, L"print:]");
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
+				}
+						break;
+				case RGX_PCSET_SPACE_T:
+				{
+						status = AR_AppendString(str, L"space:]");
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
+				}
+						break;
+				case RGX_PCSET_XDIGIT_T:
+				{
+						status = AR_AppendString(str, L"xdigit:]");
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
+				}
+						break;
 				}
 		}
 				break;
