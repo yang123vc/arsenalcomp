@@ -200,13 +200,13 @@ static const wchar_t*	__transform_char(const wchar_t *input, wchar_t *c, rgxErro
 }
 
 
-#define __SET_ERR(_e, _next, _node, _pos, _status) \
-do{\
-(_e).err.status = (_status); \
-(_e).err.pos = (_pos); \
-(_e).next = (_next); \
-(_e).node = (_node); \
-}while(0)
+#define __SET_ERR(_e, _next, _node, _pos, _status)				\
+		do{														\
+				(_e).err.status = (_status);					\
+				(_e).err.pos = (_pos);							\
+				(_e).next = (_next);							\
+				(_e).node = (_node);							\
+		}while(0)
 
 static rgxResult_t	__handle_quote(const wchar_t *input)
 {
@@ -443,6 +443,413 @@ static const wchar_t* __get_charset(const wchar_t *input, wchar_t *c, rgxError_t
 
 
 
+static rgxResult_t	__handle_posix_charset(const wchar_t *input)
+{
+		const wchar_t *p; 
+		rgxResult_t		g_res; 
+		ar_bool_t is_neg;
+		AR_ASSERT(input != NULL);
+
+		__SET_ERR(g_res, NULL, NULL, NULL, AR_S_YES);
+		
+		p = input;
+		is_neg = false;
+
+		
+		if(*p == L'^') /*例如[^a-z]*/
+		{
+				is_neg = true; 
+				p++;
+		}
+
+		if(AR_wcsnicmp(p, L"alnum", 5) == 0)
+		{
+				g_res.node = RGX_CreateNode(RGX_POSIXCSET_T);
+
+				if(g_res.node == NULL)
+				{
+						__SET_ERR(g_res, NULL, NULL, NULL, AR_E_NOMEM);
+						goto INVALID_POINT;
+				}
+
+				g_res.node->posix_range.is_neg = is_neg;
+				g_res.node->posix_range.set_type = RGX_PCSET_ALNUM_T;
+				p += 5;
+
+		}else if(AR_wcsnicmp(p, L"alpha", 5) == 0)
+		{
+				g_res.node = RGX_CreateNode(RGX_POSIXCSET_T);
+				if(g_res.node == NULL)
+				{
+						__SET_ERR(g_res, NULL, NULL, NULL, AR_E_NOMEM);
+						goto INVALID_POINT;
+				}
+				g_res.node->posix_range.is_neg = is_neg;
+				g_res.node->posix_range.set_type = RGX_PCSET_ALPHA_T;
+
+				p += 5;
+
+		}else if(AR_wcsnicmp(p, L"blank",5) == 0)
+		{
+				g_res.node = RGX_CreateNode(RGX_POSIXCSET_T);
+				if(g_res.node == NULL)
+				{
+						__SET_ERR(g_res, NULL, NULL, NULL, AR_E_NOMEM);
+						goto INVALID_POINT;
+				}
+				g_res.node->posix_range.is_neg = is_neg;
+				g_res.node->posix_range.set_type = RGX_PCSET_BLANK_T;
+				p += 5;
+
+		}else if(AR_wcsnicmp(p, L"cntrl",5) == 0)
+		{
+				g_res.node = RGX_CreateNode(RGX_POSIXCSET_T);
+				if(g_res.node == NULL)
+				{
+						__SET_ERR(g_res, NULL, NULL, NULL, AR_E_NOMEM);
+						goto INVALID_POINT;
+				}
+				g_res.node->posix_range.is_neg = is_neg;
+				g_res.node->posix_range.set_type = RGX_PCSET_CNTRL_T;
+				p += 5;
+
+		}else if(AR_wcsnicmp(p, L"digit",5) == 0)
+		{
+				g_res.node = RGX_CreateNode(RGX_POSIXCSET_T);
+				if(g_res.node == NULL)
+				{
+						__SET_ERR(g_res, NULL, NULL, NULL, AR_E_NOMEM);
+						goto INVALID_POINT;
+				}
+
+				g_res.node->posix_range.is_neg = is_neg;
+				g_res.node->posix_range.set_type = RGX_PCSET_DIGIT_T;
+				p += 5;
+
+		}else if(AR_wcsnicmp(p, L"graph",5) == 0)
+		{
+				g_res.node = RGX_CreateNode(RGX_POSIXCSET_T);
+				if(g_res.node == NULL)
+				{
+						__SET_ERR(g_res, NULL, NULL, NULL, AR_E_NOMEM);
+						goto INVALID_POINT;
+				}
+				g_res.node->posix_range.is_neg = is_neg;
+				g_res.node->posix_range.set_type = RGX_PCSET_GRAPH_T;
+				p += 5;
+
+		}else if(AR_wcsnicmp(p, L"lower",5) == 0)
+		{
+				g_res.node = RGX_CreateNode(RGX_POSIXCSET_T);
+				if(g_res.node == NULL)
+				{
+						__SET_ERR(g_res, NULL, NULL, NULL, AR_E_NOMEM);
+						goto INVALID_POINT;
+				}
+				g_res.node->posix_range.is_neg = is_neg;
+				g_res.node->posix_range.set_type = RGX_PCSET_LOWER_T;
+
+				p += 5;
+
+		}else if(AR_wcsnicmp(p, L"punct",5) == 0)
+		{
+				g_res.node = RGX_CreateNode(RGX_POSIXCSET_T);
+				if(g_res.node == NULL)
+				{
+						__SET_ERR(g_res, NULL, NULL, NULL, AR_E_NOMEM);
+						goto INVALID_POINT;
+				}
+
+				g_res.node->posix_range.is_neg = is_neg;
+				g_res.node->posix_range.set_type = RGX_PCSET_PUNCT_T;
+
+
+				p += 5;
+
+		}else if(AR_wcsnicmp(p, L"print",5) == 0)
+		{
+				g_res.node = RGX_CreateNode(RGX_POSIXCSET_T);
+				if(g_res.node == NULL)
+				{
+						__SET_ERR(g_res, NULL, NULL, NULL, AR_E_NOMEM);
+						goto INVALID_POINT;
+				}
+
+				g_res.node->posix_range.is_neg = is_neg;
+				g_res.node->posix_range.set_type = RGX_PCSET_PRINT_T;
+
+				p += 5;
+		}else if(AR_wcsnicmp(p, L"space",5) == 0)
+		{
+				g_res.node = RGX_CreateNode(RGX_POSIXCSET_T);
+				if(g_res.node == NULL)
+				{
+						__SET_ERR(g_res, NULL, NULL, NULL, AR_E_NOMEM);
+						goto INVALID_POINT;
+				}
+
+				g_res.node->posix_range.is_neg = is_neg;
+				g_res.node->posix_range.set_type = RGX_PCSET_SPACE_T;
+
+				p += 5;
+		}else if(AR_wcsnicmp(p, L"upper",5) == 0)
+		{
+				g_res.node = RGX_CreateNode(RGX_POSIXCSET_T);
+				if(g_res.node == NULL)
+				{
+						__SET_ERR(g_res, NULL, NULL, NULL, AR_E_NOMEM);
+						goto INVALID_POINT;
+				}
+
+				g_res.node->posix_range.is_neg = is_neg;
+				g_res.node->posix_range.set_type = RGX_PCSET_UPPER_T;
+
+				p += 5;
+		}else if(AR_wcsnicmp(p, L"xdigit",5) == 0)
+		{
+				g_res.node = RGX_CreateNode(RGX_POSIXCSET_T);
+				if(g_res.node == NULL)
+				{
+						__SET_ERR(g_res, NULL, NULL, NULL, AR_E_NOMEM);
+						goto INVALID_POINT;
+				}
+
+				g_res.node->posix_range.is_neg = is_neg;
+				g_res.node->posix_range.set_type = RGX_PCSET_XDIGIT_T;
+
+				p += 6;
+		}else
+		{
+				__SET_ERR(g_res, NULL, NULL, p, AR_E_MALFORMAT);
+				goto INVALID_POINT;
+		}
+
+		if(*p != L':' || *(p + 1) != L']')
+		{
+
+				__SET_ERR(g_res, NULL, g_res.node, p, AR_E_MALFORMAT);
+				goto INVALID_POINT;
+		}
+
+		p += 2;
+		__SET_ERR(g_res, p, g_res.node, NULL, AR_S_YES);
+
+		
+		return g_res;
+		
+INVALID_POINT:
+
+		if(g_res.node != NULL) 
+		{
+				RGX_DestroyNode(g_res.node);
+				g_res.node = NULL;
+		}
+		return g_res;
+}
+
+
+static rgxResult_t	__handle_cset_range(const wchar_t *input)
+{
+		const wchar_t *p; 
+		rgxResult_t		g_res; 
+
+		rgxCharSet_t	cset;
+		rgxCharRange_t	*range = NULL;
+		AR_ASSERT(input != NULL);
+		
+		
+
+		if(*input == L':')		/*先判断是不是直接形如[:alnum:]这类posix charset表达式*/
+		{
+				__SET_ERR(g_res, NULL, NULL, NULL, AR_S_YES);	
+				g_res = __handle_posix_charset(input+1);
+
+				if(g_res.node != NULL)
+				{
+						return g_res;
+				}
+		}
+
+
+		__SET_ERR(g_res, NULL, NULL, NULL, AR_S_YES);
+		p = input;
+
+		RGX_InitCharSet(&cset);
+		
+		g_res.node = RGX_CreateNode(RGX_BRANCH_T);
+
+		if(g_res.node == NULL)
+		{		
+				__SET_ERR(g_res, NULL, NULL, NULL, AR_E_NOMEM);
+				goto INVALID_POINT;
+		}
+
+		if(*p == L'^') /*例如[^a-z]*/
+		{
+				cset.is_neg = true; 
+				p++;
+		}
+		
+		while(*p != L']')
+		{
+				rgxCharRange_t	range;
+				rgxError_t err;
+
+				if(*p == L'[' && *(p + 1) == L':')
+				{
+						rgxResult_t tmp = __handle_posix_charset(p+2);
+
+						if(tmp.err.status != AR_S_YES)
+						{
+								g_res.err = tmp.err;
+								g_res.next = NULL;
+								goto INVALID_POINT;
+						}else
+						{
+								p = tmp.next;
+								AR_ASSERT(tmp.node != NULL);
+								AR_ASSERT(tmp.node->type == RGX_POSIXCSET_T);
+								AR_ASSERT(p != NULL);
+								
+								if(cset.is_neg)
+								{
+										tmp.node->posix_range.is_neg = !tmp.node->posix_range.is_neg;
+								}
+								
+
+								g_res.err.status = RGX_InsertToNode(g_res.node, tmp.node);
+
+								if(g_res.err.status != AR_S_YES)
+								{
+										RGX_DestroyNode(tmp.node);
+										tmp.node = NULL;
+
+										__SET_ERR(g_res, NULL, g_res.node, NULL, g_res.err.status);
+										goto INVALID_POINT;
+								}
+						}
+
+				}else
+				{
+						p = __get_charset(p, &range.beg, &err);/*依次提取每个字符*/
+
+						if(p == NULL)/*错误返回*/
+						{
+								__SET_ERR(g_res, NULL, g_res.node, err.pos, err.status);
+								goto INVALID_POINT;
+						}else
+						{
+								if(*p == L'\0')/*错误输入，形如串‘[abc’*/
+								{
+										__SET_ERR(g_res, NULL, g_res.node, p, AR_E_MALFORMAT);
+										goto INVALID_POINT;
+								}
+
+								if(*p == L'-')/*形如[a-z]*/
+								{
+										p = __get_charset(p + 1, &range.end, &err);
+										if(p == NULL)/*错误返回*/
+										{
+												__SET_ERR(g_res, NULL, g_res.node, err.pos, err.status);
+												goto INVALID_POINT;
+										}
+								}else/*形如[ab]或者[a]等等*/
+								{
+										range.end = range.beg;
+								}
+						}
+						
+						g_res.err.status = RGX_InsertRangeToCharSet(&cset, &range);
+				
+						if(g_res.err.status != AR_S_YES)
+						{
+								__SET_ERR(g_res, NULL, NULL, NULL, g_res.err.status);
+								goto INVALID_POINT;
+						}
+				}
+		}
+		
+		AR_ASSERT(*p == L']');
+
+		
+		
+		
+		if(cset.range)
+		{
+				if(cset.is_neg)/*处理[^a-z]形式*/
+				{
+						g_res.err.status = RGX_ReverseNegativeCharSet(&cset);
+
+						if(g_res.err.status != AR_S_YES)
+						{
+								__SET_ERR(g_res, NULL, NULL, NULL, g_res.err.status);
+								goto INVALID_POINT;
+						}
+				}
+		
+
+				for(range = cset.range; range; range = range->next)
+				{
+						rgxNode_t *tmp = RGX_CreateNode(RGX_CSET_T);
+
+						if(tmp == NULL)
+						{
+								__SET_ERR(g_res, NULL, g_res.node, NULL, AR_E_NOMEM);
+								goto INVALID_POINT;
+						}
+
+						tmp->range.beg = range->beg;
+						tmp->range.end = range->end;
+
+						g_res.err.status = RGX_InsertToNode(g_res.node, tmp);
+
+						if(g_res.err.status != AR_S_YES)
+						{
+								RGX_DestroyNode(tmp);
+								tmp = NULL;
+
+								__SET_ERR(g_res, NULL, g_res.node, NULL, g_res.err.status);
+								goto INVALID_POINT;
+						}
+				}
+		}
+		
+		RGX_UnInitCharSet(&cset);
+
+		AR_ASSERT(g_res.node->type == RGX_BRANCH_T);
+
+		if(g_res.node->left == NULL && g_res.node->right == NULL) /*空集，错误*/
+		{
+				__SET_ERR(g_res, NULL, g_res.node, input, AR_E_MALFORMAT);
+				goto INVALID_POINT;
+		}else if(g_res.node->right == NULL)		/*形如[[:alnum]]*/
+		{
+				rgxNode_t *l = g_res.node->left;
+				g_res.node->left = g_res.node->right = NULL;
+				RGX_DestroyNode(g_res.node);
+				g_res.node = l;
+		}
+		
+		
+		__SET_ERR(g_res, p + 1, g_res.node, NULL, AR_S_YES);
+		
+		
+		return g_res;
+		
+INVALID_POINT:
+		RGX_UnInitCharSet(&cset);
+		
+		if(g_res.node != NULL) 
+		{
+				RGX_DestroyNode(g_res.node);
+				g_res.node = NULL;
+		}
+		return g_res;
+}
+
+
+
+#if(0)
 static rgxResult_t	__handle_cset_range(const wchar_t *input)
 {
 		const wchar_t *p; 
@@ -572,6 +979,10 @@ INVALID_POINT:
 		}
 		return g_res;
 }
+#endif
+
+
+
 
 static rgxResult_t	__handle_charset(const wchar_t *input)
 {
@@ -584,7 +995,7 @@ static rgxResult_t	__handle_charset(const wchar_t *input)
 		
 		__SET_ERR(g_res, NULL, NULL, NULL, AR_S_YES);
 		
-		if(*p == L'[')/*形如[a-z0-9A-Z]等等*/
+		if(*p == L'[')/*形如[a-z0-9A-Z]||[[:^alnum:]]等等*/
 		{
 				return __handle_cset_range(p+1);
 				

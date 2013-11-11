@@ -105,6 +105,7 @@ typedef enum
 		RGX_ANY_CHAR_T,
 
 		RGX_CSET_T,
+		RGX_POSIXCSET_T,
 
 		RGX_CAT_T,
 		RGX_BRANCH_T,
@@ -116,6 +117,25 @@ typedef enum
 		RGX_LOOKAHEAD_T,
 		RGX_FINAL_T
 }rgxNodeType_t;
+
+
+typedef enum
+{
+		RGX_PCSET_ALPHA_T,
+		RGX_PCSET_BLANK_T,
+		RGX_PCSET_ALNUM_T,
+		RGX_PCSET_CNTRL_T,
+		RGX_PCSET_DIGIT_T,
+		RGX_PCSET_GRAPH_T,
+		RGX_PCSET_LOWER_T,
+		RGX_PCSET_UPPER_T,
+
+		RGX_PCSET_PUNCT_T,
+		RGX_PCSET_PRINT_T,
+		RGX_PCSET_SPACE_T,
+		RGX_PCSET_XDIGIT_T,
+		RGX_PCSET_MAX_T,
+}rgxPosixCSetType_t;
 
 
 struct __rgx_node_tag
@@ -131,6 +151,11 @@ struct __rgx_node_tag
 						wchar_t	beg;
 						wchar_t end;
 				}range;
+
+				struct {
+						ar_bool_t				is_neg;
+						rgxPosixCSetType_t		set_type;
+				}posix_range;
 				
 				size_t					fix_count;
 				ar_bool_t				negative_lookahead;
@@ -195,6 +220,7 @@ typedef enum
 {
 		RGX_NOP_I,
 		RGX_CHAR_I,
+		RGX_POSIXCSET_I,
 		RGX_BEGIN_I,
 		RGX_END_I,
 		RGX_LINE_BEGIN_I,
@@ -235,6 +261,11 @@ struct __regex_instruction_tag
 						wchar_t	beg;
 						wchar_t end;
 				}range;
+
+				struct {
+						ar_bool_t				is_neg;
+						rgxPosixCSetType_t		posix_cset_type;
+				}posix_cset;
 				
 				struct {
 						ar_bool_t			negative;

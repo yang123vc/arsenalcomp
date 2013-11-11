@@ -23,6 +23,7 @@ static size_t __count(const rgxNode_t *node)
 		switch(node->type)
 		{
 		case RGX_CSET_T:
+		case RGX_POSIXCSET_T:
 		case RGX_FINAL_T:
 		case RGX_BEGIN_T:
 		case RGX_END_T:
@@ -122,6 +123,15 @@ static void __emit_code(rgxProg_t *prog, const rgxNode_t *node)
 				prog->pc->range.beg = node->range.beg;
 				prog->pc->range.end = node->range.end;
 				prog->pc++; /*count = 1*/
+		}
+				break;
+		case RGX_POSIXCSET_T:
+		{
+				prog->pc->opcode = RGX_POSIXCSET_I;
+				prog->pc->posix_cset.is_neg = node->posix_range.is_neg;
+				prog->pc->posix_cset.posix_cset_type = node->posix_range.set_type;
+				prog->pc++;
+
 		}
 				break;
 		case RGX_FINAL_T:
@@ -622,7 +632,61 @@ arStatus_t			RGX_ProgToString(const rgxProg_t *prog, arString_t *str)
 
 						break;
 				}
-				
+				case RGX_POSIXCSET_I:
+				{
+						const wchar_t *posix_cset_str = L"";
+
+						switch(pc->posix_cset.posix_cset_type)
+						{
+						case RGX_PCSET_ALPHA_T:
+								posix_cset_str = L"alpha";
+								break;
+						case RGX_PCSET_BLANK_T:
+								posix_cset_str = L"blank";
+								break;
+						case RGX_PCSET_ALNUM_T:
+								posix_cset_str = L"alnum";
+								break;
+						case RGX_PCSET_CNTRL_T:
+								posix_cset_str = L"cntrl";
+								break;
+						case RGX_PCSET_DIGIT_T:
+								posix_cset_str = L"digit";
+								break;
+						case RGX_PCSET_GRAPH_T:
+								posix_cset_str = L"graph";
+								break;
+						case RGX_PCSET_LOWER_T:
+								posix_cset_str = L"lower";
+								break;
+						case RGX_PCSET_UPPER_T:
+								posix_cset_str = L"upper";
+								break;
+						case RGX_PCSET_PUNCT_T:
+								posix_cset_str = L"punct";
+								break;
+						case RGX_PCSET_PRINT_T:
+								posix_cset_str = L"print";
+								break;
+						case RGX_PCSET_SPACE_T:
+								posix_cset_str = L"space";
+								break;
+						case RGX_PCSET_XDIGIT_T:
+								posix_cset_str = L"xdigit";
+								break;
+						default:
+								posix_cset_str = NULL;
+								AR_ASSERT(false);
+								break;
+						}
+
+						status = AR_AppendFormatString(str, L"%2d. %ls [:%ls%ls:]\r\n", i, RGX_INS_NAME[pc->opcode], pc->posix_cset.is_neg ? L"^" : L"", posix_cset_str);
+						if(status != AR_S_YES)
+						{
+								return status;
+						}
+				}
+						break;
 				case RGX_LOOP_BEG_I:
 				{
 						status = AR_AppendFormatString(str, L"%2d. %ls %Id LoopCount == %Id\r\n", i, RGX_INS_NAME[pc->opcode], (size_t)(pc->left - prog->start), pc->fix_count);

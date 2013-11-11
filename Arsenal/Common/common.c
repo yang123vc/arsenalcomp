@@ -21,7 +21,7 @@ AR_NAMESPACE_BEGIN
 
 const wchar_t*	AR_Version()
 {
-		return L"0.4.10.1150";
+		return L"0.4.11.1151";
 }
 
 

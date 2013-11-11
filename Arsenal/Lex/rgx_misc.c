@@ -22,6 +22,7 @@ const wchar_t *RGX_INS_NAME[] =
 {
 		L"nop",
 		L"char",
+		L"posix-cset",
 		L"match_begin",
 		L"match_end",
 		L"match_line_begin",

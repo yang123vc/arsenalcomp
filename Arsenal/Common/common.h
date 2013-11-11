@@ -442,14 +442,23 @@ char*			AR_strtrim_right_space(char *in);
 #define AR_wcsncpy(_d, _s, _n)	wcsncpy((_d), (_s), (_n))
 #define AR_wcschr(_s, _c)		wcschr((_s),(_c))
 #define AR_wcsstr(_s1, _s2)		wcsstr((_s1), (_s2))
+
+#define AR_towlower(_c)			towlower((_c))
+#define AR_towupper(_c)			towupper((_c))
+
 #define AR_iswalpha(_c)			iswalpha((_c))
 #define AR_iswalnum(_c)			iswalnum((_c))
 #define AR_iswdigit(_c)			iswdigit((_c))
-#define AR_towlower(_c)			towlower((_c))
-#define AR_towupper(_c)			towupper((_c))
+#define AR_iswxdigit(_c)		iswxdigit((_c))
 #define AR_iswspace(_c)			iswspace((_c))
 #define AR_iswgraph(_c)			iswgraph((_c))
 #define AR_iswprint(_c)			iswprint((_c))
+#define AR_iswcntrl(_c)			iswcntrl((_c))
+#define AR_iswupper(_c)			iswupper((_c))
+#define AR_iswlower(_c)			iswlower((_c))
+
+ar_int_t AR_iswblank(wchar_t c);
+
 
 
 wchar_t*			AR_wcsupr(wchar_t *s);
