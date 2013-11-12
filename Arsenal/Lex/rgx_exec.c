@@ -119,7 +119,7 @@ static void __add_thread(rgxThreadList_t *lst,  rgxThread_t *thd, rgxProg_t *pro
 #if(1)
 
 
-static void __add_thread(rgxThreadList_t *lst,  rgxThread_t *thd, rgxProg_t *prog)
+static AR_INLINE void __add_thread(rgxThreadList_t *lst,  rgxThread_t *thd, rgxProg_t *prog)
 {
 		#define __ADD_THREAD_MAX_LEVEL 32
 		ar_uint_t pc_mark = 0;
@@ -208,7 +208,7 @@ static void __add_thread(rgxThreadList_t *lst,  rgxThread_t *thd, rgxProg_t *pro
 #define IS_LINE_END(_sp)				(*(_sp) == L'\0' || (Lex_IsLineTerminator(*(_sp))))
 
 
-
+#if(0)
 static AR_INLINE void __check_is_newline(const wchar_t *sp, ar_uint_32_t *pact, size_t *px, size_t *py)
 {
 		AR_ASSERT(sp != NULL && pact != NULL && px != NULL && py != NULL);
@@ -239,9 +239,7 @@ static AR_INLINE void __check_is_newline(const wchar_t *sp, ar_uint_32_t *pact, 
 		}
 
 }
-
-
-
+#endif
 
 
 /*
@@ -254,6 +252,39 @@ static AR_INLINE void __check_is_newline(const wchar_t *sp, ar_uint_32_t *pact, 
 #undef LS
 #undef PS
 */
+
+#define __check_is_newline(_sp, _pact, _px, _py)														\
+		do{																								\
+				AR_ASSERT((_sp) != NULL && (_pact) != NULL && (_px) != NULL && (_py) != NULL);			\
+				if(Lex_IsLineTerminator(*(_sp)))														\
+				{																						\
+						if(*(_pact) & RGX_ACT_INCLINE)													\
+						{																				\
+								*(_py) = 0;																\
+								*(_px) += 1;															\
+								*(_pact) &= ~RGX_ACT_INCLINE;											\
+						}else																			\
+						{																				\
+								/*CR followed by LF*/													\
+								if(*(_sp) == AR_LEX_CR && *((_sp) + 1) == AR_LEX_LF)					\
+								{																		\
+										*(_py) += 1;													\
+										*(_pact) |= RGX_ACT_INCLINE;									\
+								}else																	\
+								{																		\
+										*(_py) = 0;														\
+										*(_px) += 1;													\
+								}																		\
+						}																				\
+				}else																					\
+				{																						\
+						*(_py) += 1;																	\
+				}																						\
+		}while(0)
+
+
+
+
 
 static arStatus_t  __loop(rgxProg_t *prog, const wchar_t **start_pos, size_t *px, size_t *py, ar_uint_32_t *pact, lexMatch_t *match);
 static arStatus_t  __lookahead(rgxProg_t *prog, const wchar_t *sp, lexMatch_t *match);
