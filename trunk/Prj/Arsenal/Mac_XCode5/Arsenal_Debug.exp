@@ -568,7 +568,7 @@ _Lex_Insert
 _Lex_InsertName
 _Lex_InsertRule
 _Lex_IsError
-_Lex_IsLineTerminator
+
 _Lex_Match
 _Lex_MatchClearFlags
 _Lex_MatchFlags
@@ -721,9 +721,9 @@ _Parser_UnInitTermInfoList
 _Parser_UnInit_LALR_Config
 _Parser_UnionBitSet
 _Parser_UnionConfigList
-_RGX_BuildThread
+
 _RGX_ClearNameSet
-_RGX_ClearThreadList
+
 _RGX_Compile
 _RGX_CopyCharSet
 _RGX_CopyNewNode
@@ -741,13 +741,13 @@ _RGX_InitProg
 _RGX_InsertRangeToCharSet
 _RGX_InsertToNameSet
 _RGX_InsertToNode
-_RGX_InsertToThreadList
+
 _RGX_Match
 _RGX_ParseExpr
 _RGX_ProgToString
 _RGX_RemoveFromNameSet
 _RGX_ReverseNegativeCharSet
-_RGX_SwapThreadList
+
 _RGX_ToString
 _RGX_UnInitCharSet
 _RGX_UnInitMisc
