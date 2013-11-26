@@ -788,47 +788,98 @@ static rgxResult_t	__handle_cset_range(const wchar_t *input)
 
 				}else
 				{
-						p = __get_charset_in_custom_cset(p, &range.beg, &err);/*依次提取每个字符*/
-
-						if(p == NULL)/*错误返回*/
+						wchar_t next_c = *(p + 1);
+						if(*p == L'\\' && (next_c == L'd' || next_c == L's' || next_c == L'w' || next_c == L'D' || next_c == L'S' || next_c == L'W'))
 						{
-								__SET_ERR(g_res, NULL, g_res.node, err.pos, err.status);
-								goto INVALID_POINT;
-						}else
-						{
-								if(*p == L'\0')/*错误输入，形如串‘[abc’*/
+								++p;
+								rgxNode_t *tmp_node = RGX_CreateNode(RGX_POSIXCSET_T);
+								if(tmp_node == NULL)
 								{
-										__SET_ERR(g_res, NULL, g_res.node, p, AR_E_MALFORMAT);
+										__SET_ERR(g_res, NULL, g_res.node, NULL, AR_E_NOMEM);
 										goto INVALID_POINT;
 								}
 
-								if(*p == L'-')/*形如[a-z]*/
+								if(next_c == L'd' || next_c == L'D')
 								{
-										p = __get_charset_in_custom_cset(p + 1, &range.end, &err);
-										if(p == NULL)/*错误返回*/
+										tmp_node->posix_range.set_type = RGX_PCSET_DIGIT_T;
+										if(next_c == L'D')
 										{
-												__SET_ERR(g_res, NULL, g_res.node, err.pos, err.status);
+												tmp_node->posix_range.is_neg = true;
+										}
+
+								}else if(next_c == L's' || next_c == L'S')
+								{
+										tmp_node->posix_range.set_type = RGX_PCSET_SPACE_T;
+										if(next_c == L'S')
+										{
+												tmp_node->posix_range.is_neg = true;
+										}
+								}else
+								{
+										tmp_node->posix_range.set_type = RGX_PCSET_ALNUM_T;
+										if(next_c == L'W')
+										{
+												tmp_node->posix_range.is_neg = true;
+										}
+
+								}
+
+								g_res.err.status = RGX_InsertToNode(g_res.node, tmp_node);
+
+								if(g_res.err.status != AR_S_YES)
+								{
+										RGX_DestroyNode(tmp_node);
+										tmp_node = NULL;
+
+										__SET_ERR(g_res, NULL, g_res.node, NULL, g_res.err.status);
+										goto INVALID_POINT;
+								}
+								++p;
+
+						}else
+						{
+								p = __get_charset_in_custom_cset(p, &range.beg, &err);/*依次提取每个字符*/
+
+								if(p == NULL)/*错误返回*/
+								{
+										__SET_ERR(g_res, NULL, g_res.node, err.pos, err.status);
+										goto INVALID_POINT;
+								}else
+								{
+										if(*p == L'\0')/*错误输入，形如串‘[abc’*/
+										{
+												__SET_ERR(g_res, NULL, g_res.node, p, AR_E_MALFORMAT);
 												goto INVALID_POINT;
 										}
-								}else/*形如[ab]或者[a]等等*/
-								{
-										range.end = range.beg;
-								}
-						}
 
-						if(range.beg > range.end)
-						{
-								wchar_t t = range.beg;
-								range.beg = range.end;
-								range.end = t;
-						}
-						
-						g_res.err.status = RGX_InsertRangeToCharSet(&cset, &range);
-				
-						if(g_res.err.status != AR_S_YES)
-						{
-								__SET_ERR(g_res, NULL, NULL, NULL, g_res.err.status);
-								goto INVALID_POINT;
+										if(*p == L'-')/*形如[a-z]*/
+										{
+												p = __get_charset_in_custom_cset(p + 1, &range.end, &err);
+												if(p == NULL)/*错误返回*/
+												{
+														__SET_ERR(g_res, NULL, g_res.node, err.pos, err.status);
+														goto INVALID_POINT;
+												}
+										}else/*形如[ab]或者[a]等等*/
+										{
+												range.end = range.beg;
+										}
+								}
+
+								if(range.beg > range.end)
+								{
+										wchar_t t = range.beg;
+										range.beg = range.end;
+										range.end = t;
+								}
+
+								g_res.err.status = RGX_InsertRangeToCharSet(&cset, &range);
+
+								if(g_res.err.status != AR_S_YES)
+								{
+										__SET_ERR(g_res, NULL, NULL, NULL, g_res.err.status);
+										goto INVALID_POINT;
+								}
 						}
 				}
 		}
@@ -1078,7 +1129,8 @@ static rgxResult_t	__handle_charset(const wchar_t *input)
 				
 		}else if(*p == L'\\')/*可能为转义字符或者\\B or \\E 匹配行首尾，如果不为行首尾， 则忽略*/
 		{
-				if(*(p + 1) == L'B' || *(p + 1) == L'E')
+				wchar_t next_c = *(p + 1);
+				if(next_c == L'B' || next_c == L'E')
 				{
 						++p;
 						g_res.node =  RGX_CreateNode(*p == L'B' ? RGX_LINE_BEGIN_T : RGX_LINE_END_T);
@@ -1092,6 +1144,48 @@ static rgxResult_t	__handle_charset(const wchar_t *input)
 						}
 						return g_res;
 				}
+
+				if(next_c == L'd' || next_c == L's' || next_c == L'w' || next_c == L'D' || next_c == L'S' || next_c == L'W')
+				{
+						++p;
+
+						g_res.node = RGX_CreateNode(RGX_POSIXCSET_T);
+						if(g_res.node == NULL)
+						{
+								__SET_ERR(g_res, NULL, NULL, NULL, AR_E_NOMEM);
+								return g_res;
+						}
+
+						if(next_c == L'd' || next_c == L'D')
+						{
+								g_res.node->posix_range.set_type = RGX_PCSET_DIGIT_T;
+								if(next_c == L'D')
+								{
+										g_res.node->posix_range.is_neg = true;
+								}
+
+						}else if(next_c == L's' || next_c == L'S')
+						{
+								g_res.node->posix_range.set_type = RGX_PCSET_SPACE_T;
+								if(next_c == L'S')
+								{
+										g_res.node->posix_range.is_neg = true;
+								}
+						}else
+						{
+								g_res.node->posix_range.set_type = RGX_PCSET_ALNUM_T;
+								if(next_c == L'W')
+								{
+										g_res.node->posix_range.is_neg = true;
+								}
+
+						}
+
+						__SET_ERR(g_res, ++p, g_res.node, NULL, AR_S_YES);
+						return g_res;
+						
+				}
+
 		}
 		/*尝试匹配基本字符，比如a or b or c等等*/
 		
