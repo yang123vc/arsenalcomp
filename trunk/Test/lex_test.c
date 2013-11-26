@@ -1676,7 +1676,7 @@ void lex_line_test9()
 
 void lex_test()
 {
-		//rgx_test_loop();
+		rgx_test_loop();
 		//lex_test_loop4();
 		
 

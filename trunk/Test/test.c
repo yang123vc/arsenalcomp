@@ -103,6 +103,8 @@ extern void v3checker_test();
 
 extern void plist_test();
 
+extern void net_test();
+
 #endif
 
 
@@ -116,7 +118,7 @@ void AR_Test()
 		//math_test();
 		//trie_tree_test();
 		//expr_test();
-		lex_test();
+		//lex_test();
 		
 		//lr_dfa_test();
 		//action_tbl_test();
@@ -144,7 +146,7 @@ void AR_Test()
 
 		//trans_char_test();
 		
-		//lex_test();
+		lex_test();
 		
 
 		//parser_perf_test();
@@ -200,6 +202,8 @@ void AR_Test()
 		//v3checker_test();
 
 		//plist_test();
+
+		//net_test();
 
 		getchar();
 #else
