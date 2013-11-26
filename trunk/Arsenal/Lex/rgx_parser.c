@@ -824,6 +824,12 @@ static rgxResult_t	__handle_cset_range(const wchar_t *input)
 
 								}
 
+								if(cset.is_neg)
+								{
+										tmp_node->posix_range.is_neg = !tmp_node->posix_range.is_neg;
+								}
+
+
 								g_res.err.status = RGX_InsertToNode(g_res.node, tmp_node);
 
 								if(g_res.err.status != AR_S_YES)
