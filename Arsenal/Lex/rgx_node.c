@@ -808,7 +808,7 @@ arStatus_t		RGX_ToString(const rgxNode_t *node, arString_t *str)
 				break;
 		case RGX_BEGIN_T:
 		{
-				status = AR_AppendString(str, L"^");
+				status = AR_AppendString(str, L"(BEGIN)");
 				if(status != AR_S_YES)
 				{
 						return status;
@@ -817,7 +817,7 @@ arStatus_t		RGX_ToString(const rgxNode_t *node, arString_t *str)
 				break;
 		case RGX_END_T:
 		{
-				status = AR_AppendString(str, L"$");
+				status = AR_AppendString(str, L"(END)");
 				if(status != AR_S_YES)
 				{
 						return status;
@@ -846,7 +846,7 @@ arStatus_t		RGX_ToString(const rgxNode_t *node, arString_t *str)
 				break;
 		case RGX_ANY_CHAR_T:
 		{
-				status = AR_AppendString(str, L".");
+				status = AR_AppendString(str, L"(ANY)");
 				if(status != AR_S_YES)
 				{
 						return status;

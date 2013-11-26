@@ -76,7 +76,9 @@ static const wchar_t*	__transform_char(const wchar_t *input, wchar_t *c, rgxErro
 						return ++p;
 				case L'u':
 				{
-						const wchar_t *ret; ar_uint_32_t val;
+						const wchar_t *ret; 
+						ar_uint_32_t val;
+
 						p += 1;
 						
 						if(*p != L'{')
@@ -648,6 +650,61 @@ INVALID_POINT:
 }
 
 
+
+
+static const wchar_t* __get_charset_in_custom_cset(const wchar_t *input, wchar_t *c, rgxError_t *err)
+{
+		AR_ASSERT(input != NULL && c != NULL && err != NULL);
+		err->pos = NULL;
+		err->status = AR_S_YES;
+		
+		switch(*input)
+		{
+				case L'\0':
+						err->status = AR_E_MALFORMAT;
+						err->pos = input;
+						return NULL;
+				case L'\a': 
+				case L'\f': 
+				case L'\n': 
+				case L'\r': 
+				case L'\t': 
+				case L'\v': 
+				case L'\b':
+						/*				AR_ASSERT(0);*/
+						err->status = AR_E_MALFORMAT;
+						err->pos = input;
+						return NULL;
+				case L'[':
+				case L']':
+				case L'-':
+						err->status = AR_E_MALFORMAT;
+						err->pos = input;
+						return NULL;
+						break;
+				case L'{':
+				case L'}':
+				case L'(':
+				case L')':
+				case L'?':
+				case L'*':
+				case L'|':
+				case L'"':
+				case L'^':
+				case L'$':
+				case L'.':
+						*c = *input;
+						return input + 1;
+				case L'\\':
+						return __transform_char(input + 1, c, err);
+				default:
+						*c = *input;
+						return ++input;
+		}
+}
+
+
+
 static rgxResult_t	__handle_cset_range(const wchar_t *input)
 {
 		const wchar_t *p; 
@@ -731,7 +788,7 @@ static rgxResult_t	__handle_cset_range(const wchar_t *input)
 
 				}else
 				{
-						p = __get_charset(p, &range.beg, &err);/*依次提取每个字符*/
+						p = __get_charset_in_custom_cset(p, &range.beg, &err);/*依次提取每个字符*/
 
 						if(p == NULL)/*错误返回*/
 						{
@@ -747,7 +804,7 @@ static rgxResult_t	__handle_cset_range(const wchar_t *input)
 
 								if(*p == L'-')/*形如[a-z]*/
 								{
-										p = __get_charset(p + 1, &range.end, &err);
+										p = __get_charset_in_custom_cset(p + 1, &range.end, &err);
 										if(p == NULL)/*错误返回*/
 										{
 												__SET_ERR(g_res, NULL, g_res.node, err.pos, err.status);
@@ -757,6 +814,13 @@ static rgxResult_t	__handle_cset_range(const wchar_t *input)
 								{
 										range.end = range.beg;
 								}
+						}
+
+						if(range.beg > range.end)
+						{
+								wchar_t t = range.beg;
+								range.beg = range.end;
+								range.end = t;
 						}
 						
 						g_res.err.status = RGX_InsertRangeToCharSet(&cset, &range);
