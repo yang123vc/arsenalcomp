@@ -88,7 +88,7 @@ arStatus_t Lex_InserToProgSet(lexProgSet_t *set, rgxProg_t *prog, const lexActio
 								new_progs = NULL;
 						}
 
-						if(new_acts == NULL)
+						if(new_acts)
 						{
 								AR_DEL(new_acts);
 								new_acts = NULL;
