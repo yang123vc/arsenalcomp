@@ -677,11 +677,11 @@ static const wchar_t* __get_charset_in_custom_cset(const wchar_t *input, wchar_t
 						return NULL;
 				case L'[':
 				case L']':
-				case L'-':
 						err->status = AR_E_MALFORMAT;
 						err->pos = input;
 						return NULL;
 						break;
+				case L'-':
 				case L'{':
 				case L'}':
 				case L'(':
@@ -858,7 +858,7 @@ static rgxResult_t	__handle_cset_range(const wchar_t *input)
 												goto INVALID_POINT;
 										}
 
-										if(*p == L'-')/*形如[a-z]*/
+										if(*p == L'-') /*形如[a-z]*/
 										{
 												p = __get_charset_in_custom_cset(p + 1, &range.end, &err);
 												if(p == NULL)/*错误返回*/
