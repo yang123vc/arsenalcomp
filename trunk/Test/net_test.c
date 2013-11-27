@@ -13,7 +13,7 @@ void net_test()
 		AR_DPRINT(L"On func : %hs\r\n", AR_FUNC_NAME);
 
 	
-		AR_printf(L"%#x\r\n", 0x1234);
+		AR_error(AR_ERR_MESSAGE, L"%#x\r\n", 0x1234);
 		wprintf(L"%#x\r\n", 0x1234);
 
 

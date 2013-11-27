@@ -1090,6 +1090,7 @@ static void lex_perf_test1()
 				L"	delim		= 	[[:space:]]+",
 				L"	letter		= 	[A-Z_a-z]",
 				//L"	letter		= 	[[:alpha:]_]",
+				//L"	letter		= 	[[:alpha:]_]",
 				//L"	digit		=	[0-9]",
 				L"digit = [:digit:]",
 				L"	number		=	0|[1-9]{digit}*",
