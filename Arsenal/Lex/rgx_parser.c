@@ -791,8 +791,10 @@ static rgxResult_t	__handle_cset_range(const wchar_t *input)
 						wchar_t next_c = *(p + 1);
 						if(*p == L'\\' && (next_c == L'd' || next_c == L's' || next_c == L'w' || next_c == L'D' || next_c == L'S' || next_c == L'W'))
 						{
+								rgxNode_t *tmp_node = NULL;
+
 								++p;
-								rgxNode_t *tmp_node = RGX_CreateNode(RGX_POSIXCSET_T);
+								tmp_node = RGX_CreateNode(RGX_POSIXCSET_T);
 								if(tmp_node == NULL)
 								{
 										__SET_ERR(g_res, NULL, g_res.node, NULL, AR_E_NOMEM);

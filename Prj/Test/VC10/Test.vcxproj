@@ -1518,6 +1518,7 @@
     <ClCompile Include="..\..\..\Test\mem_test.c" />
     <ClCompile Include="..\..\..\Test\net_test.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\Test\parser_gen_perf_test.c" />
     <ClCompile Include="..\..\..\Test\parser_test.c" />
