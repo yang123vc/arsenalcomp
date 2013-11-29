@@ -133,6 +133,12 @@ lexMatch_t*		Lex_CreateMatch(const lex_t *lex);
 
 void			Lex_DestroyMatch(lexMatch_t *pmatch);
 
+arStatus_t		Lex_EnableMatchRuleByValue(lexMatch_t *pmatch, size_t value, ar_bool_t enable);
+arStatus_t		Lex_RuleIsEnabledInMatch(lexMatch_t *pmatch, size_t value);
+
+void			Lex_EnableMatchAllRule(lexMatch_t *pmatch);
+void			Lex_DisableMatchAllRule(lexMatch_t *pmatch);
+
 void			Lex_ResetInput(lexMatch_t *pmatch, const wchar_t *input);
 
 void			Lex_ClearInput(lexMatch_t *pmatch);
