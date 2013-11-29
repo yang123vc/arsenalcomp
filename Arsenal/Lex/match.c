@@ -325,6 +325,7 @@ void Lex_ResetInput(lexMatch_t *pmatch, const wchar_t *input)
 		pmatch->is_ok = true;
 		pmatch->col = pmatch->line = 0;
 		pmatch->next_action = RGX_ACT_NOACTION;
+		Lex_EnableMatchAllRule(pmatch);
 }
 
 
