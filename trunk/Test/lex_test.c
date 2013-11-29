@@ -1416,7 +1416,7 @@ static void lex_perf_test2()
 				{NULL, TOK_DELIM_ID,3, L"{skip_lexem}", true},
 				{L"NAME", TOK_NAME, 0, L"{letter}({letter}|{digit})*", false},
 				{L"STRING", TOK_STRING, 0, L"{string_dq}|{string_sq}", false},
-				//{L"REGEX_STR", REGEX_STR, 0, L"{regex_str}", false},
+				//{L"REGEX_STR", REGEX_STR, 0, L"(\\[([^\\]\\\\\\n]+|\\\\.)+\\]|\\\\.|[^/\\\\\\n])*\"/\"[A-Za-z]*", false},
 				
 				{L"FLOAT_NUMBER", TOK_FLOAT_NUMBER, 2, L"{float_constant}", false},
 				{L"INT_NUMBER", TOK_INT_NUMBER, 2, L"{hex_constant}|{oct_constant}|{dec_constant}", false},
@@ -1552,7 +1552,7 @@ static void lex_perf_test2()
 								{
 										break;
 								}
-
+								
 								/*
 								wchar_t *s = AR_wcsndup(tok.str, tok.count);
 								AR_printf(L"%ls : row == %d : col == %d\r\n", s, tok.line, tok.col);
@@ -1561,7 +1561,15 @@ static void lex_perf_test2()
 
 						}else
 						{
-								break;
+								/*
+								if(Lex_RuleIsEnabledInMatch(match, TOK_NAME) == AR_S_NO)
+								{
+										Lex_EnableMatchRuleByValue(match, TOK_NAME, true);
+										Lex_ClearError(match);
+								}else*/
+								{
+										break;
+								}
 						}
 				}
 
@@ -1677,7 +1685,7 @@ void lex_line_test9()
 
 void lex_test()
 {
-		rgx_test_loop();
+		//rgx_test_loop();
 		//lex_test_loop4();
 		
 
@@ -1702,7 +1710,7 @@ void lex_test()
 
 		//lex_line_num_test();
 
-		lex_perf_test1();
+		//lex_perf_test1();
 		lex_perf_test2();
 
 		//lex_line_test9();

@@ -25,6 +25,7 @@ struct __prog_set_tag
 {
 		rgxProg_t						**prog;
 		lexAction_t						*action;
+		ar_bool_t						*enable;
 		size_t							count;
 		size_t							cap;
 };
@@ -48,6 +49,7 @@ void Lex_ClearProgSet(lexProgSet_t *set)
 		{
 				RGX_UnInitProg(set->prog[i]);
 				AR_DEL(set->prog[i]);
+				set->enable[i] = false;
 		}
 
 		set->count = 0;
@@ -61,8 +63,22 @@ void		Lex_DestroyProgSet(lexProgSet_t *set)
 		{
 				Lex_ClearProgSet(set);
 
-				if(set->prog)AR_DEL(set->prog);
-				if(set->action)AR_DEL(set->action);
+				if(set->prog)
+				{
+						AR_DEL(set->prog);
+				}
+
+				if(set->action)
+				{
+						AR_DEL(set->action);
+				}
+
+				if(set->enable)
+				{
+						AR_DEL(set->enable);
+						set->enable = NULL;
+				}
+
 				AR_DEL(set);
 		}
 }
@@ -76,11 +92,13 @@ arStatus_t Lex_InserToProgSet(lexProgSet_t *set, rgxProg_t *prog, const lexActio
 				size_t new_cap;
 				rgxProg_t **new_progs;
 				lexAction_t *new_acts;
-
+				ar_bool_t	*new_enable;
 				new_cap = (set->cap + 1)*2;
 				new_progs = AR_NEWARR(rgxProg_t*, new_cap);
 				new_acts = AR_NEWARR(lexAction_t, new_cap);
-				if(new_progs == NULL || new_acts == NULL)
+				new_enable = AR_NEWARR(ar_bool_t, new_cap);
+
+				if(new_progs == NULL || new_acts == NULL || new_enable == NULL)
 				{
 						if(new_progs)
 						{
@@ -93,23 +111,36 @@ arStatus_t Lex_InserToProgSet(lexProgSet_t *set, rgxProg_t *prog, const lexActio
 								AR_DEL(new_acts);
 								new_acts = NULL;
 						}
+
+						if(new_enable)
+						{
+								AR_DEL(new_enable);
+								new_enable = NULL;
+						}
+
 						return AR_E_NOMEM;
 				}
 
 				AR_memcpy(new_progs, set->prog, set->count * sizeof(rgxProg_t*));
 				AR_memcpy(new_acts, set->action, set->count * sizeof(lexAction_t));
+				AR_memcpy(new_enable, set->enable, set->count * sizeof(ar_bool_t));
 
 				AR_DEL(set->prog);
 				AR_DEL(set->action);
+				AR_DEL(set->enable);
 
 				set->cap = new_cap;
 				set->prog = new_progs;
 				set->action = new_acts;
+				set->enable = new_enable;
 		}
 
 		set->prog[set->count] = prog;
 		set->action[set->count] = *act;
+		set->enable[set->count] = true;
+
 		set->count++;
+
 		return AR_S_YES;
 }
 
@@ -118,6 +149,7 @@ static void __exch_set(lexProgSet_t *set, ar_int_t i,ar_int_t j)
 {
 		rgxProg_t		*prog;
 		lexAction_t		act;
+		ar_bool_t		enable;
 		AR_ASSERT(set != NULL);
 
 		prog = set->prog[i];
@@ -128,6 +160,11 @@ static void __exch_set(lexProgSet_t *set, ar_int_t i,ar_int_t j)
 		act = set->action[i];
 		set->action[i] = set->action[j];
 		set->action[j] = act;
+
+		enable = set->enable[i];
+		set->enable[i] = set->enable[j];
+		set->enable[j] = enable;
+
 }
 
 arStatus_t	Lex_RemoveFromProgSet(lexProgSet_t *set, size_t value)
@@ -190,6 +227,68 @@ void Lex_SortProgSet(lexProgSet_t *set)
 		}
 }
 
+
+AR_INLINE arStatus_t Lex_EnableProgSetByValue(lexProgSet_t *set, size_t value, ar_bool_t enable)
+{
+		size_t i, cnt;
+		
+		AR_ASSERT(set != NULL);
+
+		for(i = 0, cnt = 0; i < set->count; ++i)
+		{
+				if(set->action[i].value == value)
+				{
+						set->enable[i] = enable;
+						cnt++;
+				}
+		}
+
+		return cnt > 0 ? AR_S_YES : AR_E_NOTFOUND;
+}
+
+AR_INLINE arStatus_t Lex_RuleIsEnabledInProgSet(lexProgSet_t *set, size_t value)
+{
+		size_t i;
+		
+		AR_ASSERT(set != NULL);
+
+		for(i = 0; i < set->count; ++i)
+		{
+				if(set->action[i].value == value)
+				{
+						if(set->enable[i])
+						{
+								return AR_S_YES;
+						}else
+						{
+								return AR_S_NO;
+						}
+				}
+		}
+
+		return AR_E_NOTFOUND;
+}
+
+
+
+AR_INLINE void Lex_EnableProgSetByIndex(lexProgSet_t *set, size_t idx, ar_bool_t enable)
+{
+		AR_ASSERT(set != NULL);
+		AR_ASSERT(idx < set->count);
+
+		set->enable[idx] = enable;
+}
+
+
+
+AR_INLINE ar_bool_t Lex_QueryProgIsEnabledByIndex(lexProgSet_t *set, size_t idx)
+{
+		AR_ASSERT(set != NULL);
+		AR_ASSERT(idx < set->count);
+		return set->enable[idx];
+}
+
+
 /*********************************lexMatch_t***************************/
 
 
@@ -242,6 +341,7 @@ void Lex_ResetMatchState(lexMatch_t *pmatch)
 		pmatch->col = pmatch->line = 0;
 		pmatch->next_action = RGX_ACT_NOACTION;
 		pmatch->next = pmatch->input;
+		Lex_EnableMatchAllRule(pmatch);
 
 }
 
@@ -335,6 +435,37 @@ void Lex_DestroyMatch(lexMatch_t *pmatch)
 		}
 }
 
+arStatus_t		Lex_EnableMatchRuleByValue(lexMatch_t *pmatch, size_t value, ar_bool_t enable)
+{
+		AR_ASSERT(pmatch != NULL);
+		return Lex_EnableProgSetByValue(pmatch->prog_set, value, enable);
+}
+
+arStatus_t		Lex_RuleIsEnabledInMatch(lexMatch_t *pmatch, size_t value)
+{
+		AR_ASSERT(pmatch);
+		return Lex_RuleIsEnabledInProgSet(pmatch->prog_set, value);
+}
+
+
+void		Lex_EnableMatchAllRule(lexMatch_t *pmatch)
+{
+		size_t i;
+		for(i = 0; i < pmatch->prog_set->count; ++i)
+		{
+				Lex_EnableProgSetByIndex(pmatch->prog_set, i, true);
+		}
+}
+
+void	Lex_DisableMatchAllRule(lexMatch_t *pmatch)
+{
+		size_t i;
+		for(i = 0; i < pmatch->prog_set->count; ++i)
+		{
+				Lex_EnableProgSetByIndex(pmatch->prog_set, i, false);
+		}
+
+}
 
 
 const wchar_t* Lex_GetNextInput(const lexMatch_t *match)
@@ -548,11 +679,12 @@ arStatus_t Lex_Match(lexMatch_t *match, lexToken_t *tok)
 		arStatus_t status;
 		size_t i;
 		size_t empty_match_cnt = 0;
-
+		ar_bool_t		all_rule_diabled;
 		AR_ASSERT(match != NULL && tok != NULL);
 
 		status = AR_S_YES;
 REMATCH:
+		all_rule_diabled = true;
 		if(empty_match_cnt > LEX_MAX_EMPTY_MATCH_CNT)
 		{
 				/*
@@ -568,6 +700,13 @@ REMATCH:
 
 		for(i = 0; i < match->prog_set->count; ++i)
 		{
+				if(!Lex_QueryProgIsEnabledByIndex(match->prog_set, i))
+				{
+						continue;
+				}
+
+				all_rule_diabled = false;
+
 				status = RGX_Match(match->prog_set->prog[i], match, tok);
 
 				if(status == AR_S_YES)
@@ -609,8 +748,15 @@ REMATCH:
 				}
 		}
 
-		AR_ASSERT(status != AR_S_YES);
-		match->is_ok = false;
+		if(all_rule_diabled)
+		{
+				status = AR_E_LEXNOTREADY;
+		}else
+		{
+				AR_ASSERT(status != AR_S_YES);
+				match->is_ok = false;
+		}
+
 		return status;
 }
 
