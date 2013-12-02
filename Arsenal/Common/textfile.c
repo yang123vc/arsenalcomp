@@ -471,7 +471,7 @@ arStatus_t	AR_LoadBomTextFile(const wchar_t *path, arTxtBom_t *bom, arString_t *
 
 		if(ret != AR_S_YES)
 		{
-				AR_error(AR_ERR_WARNING, L"__AR_open_file failed for %ls in function '%hs'\r\n", path, AR_FUNC_NAME);
+				AR_error(AR_ERR_WARNING, L"AR_open_file failed for %ls in function '%hs'\r\n", path, AR_FUNC_NAME);
 				goto FAILED_POINT;
 		}
 
@@ -844,22 +844,10 @@ arStatus_t	AR_SaveBomTextFile(const wchar_t *path, arTxtBom_t bom, const wchar_t
 
 		if(ret != AR_S_YES)
 		{
-				AR_error(AR_ERR_WARNING, L"__AR_open_file failed for %ls in function '%hs'\r\n", path, AR_FUNC_NAME);
+				AR_error(AR_ERR_WARNING, L"AR_open_file failed for %ls in function '%hs'\r\n", path, AR_FUNC_NAME);
 				goto FAILED_POINT;
 		}
 
-		
-		/*if(fwrite((const ar_byte_t*)AR_GetBufferData(buf), 1, AR_GetBufferAvailable(buf), file) != AR_GetBufferAvailable(buf))*/
-#if(0)
-		wn = 0;
-		ret = AR_write_file(file, AR_GetBufferData(buf), AR_GetBufferAvailable(buf), &wn);
-		if(ret != AR_S_YES || wn != AR_GetBufferAvailable(buf))
-		{
-				ret = AR_E_FILE;
-				AR_error(AR_ERR_WARNING, L"fwrite failed for %ls in function '%hs'\r\n", path, AR_FUNC_NAME);
-				goto FAILED_POINT;
-		}
-#endif
 
 		while(AR_GetBufferAvailable(buf) > 0 && AR_eof_file(file) != AR_S_YES && AR_error_file(file) != AR_S_YES)
 		{
@@ -875,7 +863,7 @@ arStatus_t	AR_SaveBomTextFile(const wchar_t *path, arTxtBom_t bom, const wchar_t
 				if(ret != AR_S_YES || wn != read_n)
 				{
 						ret = AR_E_FILE;
-						AR_error(AR_ERR_WARNING, L"fwrite failed for %ls in function '%hs'\r\n", path, AR_FUNC_NAME);
+						AR_error(AR_ERR_WARNING, L"AR_write_file failed for %ls in function '%hs'\r\n", path, AR_FUNC_NAME);
 						goto FAILED_POINT;
 				}
 
@@ -884,7 +872,7 @@ arStatus_t	AR_SaveBomTextFile(const wchar_t *path, arTxtBom_t bom, const wchar_t
 		if(AR_error_file(file) == AR_S_YES)
 		{
 				ret = AR_E_FILE;
-				AR_error(AR_ERR_WARNING, L"fwrite failed for %ls in function '%hs'\r\n", path, AR_FUNC_NAME);
+				AR_error(AR_ERR_WARNING, L"AR_write_file failed for %ls in function '%hs'\r\n", path, AR_FUNC_NAME);
 				goto FAILED_POINT;
 		}
 

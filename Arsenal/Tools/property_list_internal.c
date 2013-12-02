@@ -1591,7 +1591,7 @@ arStatus_t              PList_LoadBinaryFromFile(const wchar_t *path, arBuffer_t
         
 		if(ret != AR_S_YES)
 		{
-				AR_error(AR_ERR_WARNING, L"__AR_open_file failed for %ls in function '%hs'\r\n", path, AR_FUNC_NAME);
+				AR_error(AR_ERR_WARNING, L"AR_open_file failed for %ls in function '%hs'\r\n", path, AR_FUNC_NAME);
 				goto FAILED_POINT;
 		}
         
@@ -1602,7 +1602,6 @@ arStatus_t              PList_LoadBinaryFromFile(const wchar_t *path, arBuffer_t
 				
 				do{
 						ret = AR_read_file(file, tmp, 256, &rn);
-						/*rn = fread((void*)tmp, 1, sizeof(tmp), file);*/
 						if(rn > 0)
 						{
 								ret = AR_InsertToBuffer(buf, tmp, rn);
@@ -1611,7 +1610,6 @@ arStatus_t              PList_LoadBinaryFromFile(const wchar_t *path, arBuffer_t
 										goto FAILED_POINT;
 								}
 						}
-                        //}while(!feof(file) && !ferror(file));
 				}while(AR_eof_file(file) != AR_S_YES && AR_error_file(file) != AR_S_YES);
                 
 				if(AR_error_file(file) == AR_S_YES)
