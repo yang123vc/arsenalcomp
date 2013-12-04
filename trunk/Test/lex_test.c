@@ -1683,6 +1683,287 @@ void lex_line_test9()
 
 
 
+
+static void lex_perf_test3()
+{
+
+		
+
+
+
+
+		static const wchar_t *__g_lex_name[] = {
+				L"delim = [ \\r\\n\\t]",
+				L"comment = /\\*([^\\*]|\\*+[^\\*/])*\\*+/",
+				L"comment_line = //[^\\n]*\\n",
+				L"digit = [:digit:]",
+				L"number = {digit}+",
+				L"letter = [[:alpha:]_]",
+				L"int_type_suffix = ((u|U)?(l|L))|((u|U)(l|L)?)",
+				L"octal_escape = (\\\\[0-3][0-7][0-7])|(\\\\[0-7][0-7])|(\\\\[0-7])",
+				L"hex_digit = [:xdigit:]",
+				L"hex_literal = 0(x|X){hex_digit}+{int_type_suffix}?",
+				L"dec_literal = (0|[1-9][:digit:]*){int_type_suffix}?",
+				L"oct_literal = 0[0-7]+{int_type_suffix}?",
+				L"exponet = (e|E)(\\+|\\-)?[:digit:]+",
+				L"float_type_suffix = (f|F|d|D)",
+				L"float_literal = ([:digit:]+\\.[:digit:]*{exponet}?{float_type_suffix}?)",
+				L"skip_lexem = {delim}|{comment}|{comment_line}",
+				L"escape_seq = (\\\\(b|t|n|f|r|\\x22|\\x27|\\\\))|{octal_escape}",
+				L"string_literal = (\\x22({escape_seq}|[^\\x22\\\\])*\\x22)",
+				L"char_literal = \\x27({escape_seq}|[^\\x27\\\\])\\x27",
+				L"keyword_lhd = [_[:digit:][:alpha:]]"
+		};
+
+
+
+
+
+
+
+		static struct 
+		{
+				const wchar_t *name;
+				size_t val;
+				size_t prec;
+				const wchar_t *regex;
+				ar_bool_t is_skip;
+		}__g_term_pattern[] =  {
+
+				{NULL, 257,1, L"{delim}+|{comment}+|{comment_line}+", true},
+				{L"STRING_LITERAL", 258, 0, L"{string_literal}", false},
+				{L"OCT_CONSTANT", 259, 0, L"{oct_literal}", false},
+				{L"HEX_CONSTANT", 260, 0, L"{hex_literal}", false},
+				{L"DEC_CONSTANT", 261, 0, L"{dec_literal}", false},
+				{L"FLOAT_CONSTANT", 262, 0, L"{float_literal}", false},
+				{L"CHAR_CONSTANT", 263, 0, L"{char_literal}", false},
+				{L"IDENTIFIER", 264, 0, L"{letter}({letter}|{digit})*", false},
+				{L"auto", 265, 1, L"\"auto\"(?!{keyword_lhd})", false},
+				{L"extern", 266, 1, L"\"extern\"(?!{keyword_lhd})", false},
+				{L"register", 267, 1, L"\"register\"(?!{keyword_lhd})", false},
+				{L"volatile", 268, 1, L"\"volatile\"(?!{keyword_lhd})", false},
+				{L"static", 269, 1, L"\"static\"(?!{keyword_lhd})", false},
+				{L"switch", 270, 1, L"\"switch\"(?!{keyword_lhd})", false},
+				{L"for", 271, 1, L"\"for\"(?!{keyword_lhd})", false},
+				{L"goto", 272, 1, L"\"goto\"(?!{keyword_lhd})", false},
+				{L"return", 273, 1, L"\"return\"(?!{keyword_lhd})", false},
+				{L"do", 274, 1, L"\"do\"(?!{keyword_lhd})", false},
+				{L"while", 275, 1, L"\"while\"(?!{keyword_lhd})", false},
+				{L"if", 276, 1, L"\"if\"(?!{keyword_lhd})", false},
+				{L"else", 277, 1, L"\"else\"(?!{keyword_lhd})", false},
+				{L"enum", 278, 1, L"\"enum\"(?!{keyword_lhd})", false},
+				{L"continue", 279, 1, L"\"continue\"(?!{keyword_lhd})", false},
+				{L"default", 280, 1, L"\"default\"(?!{keyword_lhd})", false},
+				{L"case", 281, 1, L"\"case\"(?!{keyword_lhd})", false},
+				{L"break", 282, 1, L"\"break\"(?!{keyword_lhd})", false},
+				{L"const", 283, 1, L"\"const\"(?!{keyword_lhd})", false},
+				{L"sizeof", 284, 1, L"\"sizeof\"(?!{keyword_lhd})", false},
+				{L"struct", 285, 1, L"\"struct\"(?!{keyword_lhd})", false},
+				{L"union", 286, 1, L"\"union\"(?!{keyword_lhd})", false},
+				{L"typedef", 287, 1, L"\"typedef\"(?!{keyword_lhd})", false},
+				{L"void", 288, 1, L"\"void\"(?!{keyword_lhd})", false},
+				{L"signed", 289, 1, L"\"signed\"(?!{keyword_lhd})", false},
+				{L"unsigned", 290, 1, L"\"unsigned\"(?!{keyword_lhd})", false},
+				{L"byte", 291, 1, L"\"byte\"(?!{keyword_lhd})", false},
+				{L"char", 292, 1, L"\"char\"(?!{keyword_lhd})", false},
+				{L"short", 293, 1, L"\"short\"(?!{keyword_lhd})", false},
+				{L"int", 294, 1, L"\"int\"(?!{keyword_lhd})", false},
+				{L"long", 295, 1, L"\"long\"(?!{keyword_lhd})", false},
+				{L"float", 296, 1, L"\"float\"(?!{keyword_lhd})", false},
+				{L"double", 297, 1, L"\"double\"(?!{keyword_lhd})", false},
+				{L"__attribute__", 298, 1, L"\"__attribute__\"", false},
+				{L"aligned", 299, 1, L"\"aligned\"", false},
+				{L"#pragma", 299, 1, L"#pragma", false},
+				{L"...", 300, 1, L"\"...\"", false},
+				{L">>=", 301, 2, L"\">>=\"", false},
+				{L"<<=", 302, 2, L"\"<<=\"", false},
+				{L"+=", 303, 1, L"\"+=\"", false},
+				{L"-=", 304, 1, L"\"-=\"", false},
+				{L"*=", 305, 1, L"\"*=\"", false},
+				{L"/=", 306, 1, L"\"/=\"", false},
+				{L"%=", 307, 1, L"\"%=\"", false},
+				{L"&=", 308, 1, L"\"&=\"", false},
+				{L"^=", 309, 1, L"\"^=\"", false},
+				{L"|=", 310, 1, L"\"|=\"", false},
+				{L">>", 311, 1, L"\">>\"", false},
+				{L"<<", 312, 1, L"\"<<\"", false},
+				{L"++", 313, 1, L"\"++\"", false},
+				{L"--", 314, 1, L"\"--\"", false},
+				{L"->", 315, 1, L"\"->\"", false},
+				{L"&&", 316, 1, L"\"&&\"", false},
+				{L"||", 317, 1, L"\"||\"", false},
+				{L"<=", 318, 1, L"\"<=\"", false},
+				{L">=", 319, 1, L"\">=\"", false},
+				{L"==", 320, 1, L"\"==\"", false},
+				{L"!=", 321, 1, L"\"!=\"", false},
+				{L";", 322, 0, L"\";\"", false},
+				{L"{", 323, 0, L"\"{\"", false},
+				{L"}", 324, 0, L"\"}\"", false},
+				{L",", 325, 0, L"\",\"", false},
+				{L":", 326, 0, L"\":\"", false},
+				{L"=", 327, 0, L"\"=\"", false},
+				{L"(", 328, 0, L"\"(\"", false},
+				{L")", 329, 0, L"\")\"", false},
+				{L"[", 330, 0, L"\"[\"", false},
+				{L"]", 331, 0, L"\"]\"", false},
+				{L".", 332, 0, L"\".\"", false},
+				{L"&", 333, 0, L"\"&\"", false},
+				{L"!", 334, 0, L"\"!\"", false},
+				{L"~", 335, 0, L"\"~\"", false},
+				{L"-", 336, 0, L"\"-\"", false},
+				{L"+", 337, 0, L"\"+\"", false},
+				{L"*", 338, 0, L"\"*\"", false},
+				{L"/", 339, 0, L"\"/\"", false},
+				{L"%", 340, 0, L"\"%\"", false},
+				{L"<", 341, 0, L"\"<\"", false},
+				{L">", 342, 0, L"\">\"", false},
+				{L"^", 343, 0, L"\"^\"", false},
+				{L"|", 344, 0, L"\"|\"", false},
+				{L"?", 345, 0, L"\"?\"", false},
+				{L"TYPE_ID", 346, 0, L"^", false},
+				{L"FAKE_EOI", 347, 0, L"^", false},
+				{L"CFG_LEXVAL_EOI", 0, 2, L"$", false}
+		};
+
+#define __TERM_COUNT__ ((size_t)92)
+
+
+
+
+		lex_t *lex;
+		size_t i;
+		arStatus_t status;
+		lex = Lex_Create();
+		AR_ASSERT(lex != NULL);
+
+
+		
+
+		for(i = 0; i < AR_NELEMS(__g_lex_name); ++i)
+		{
+			
+				status = Lex_Insert(lex, __g_lex_name[i]);
+				
+				if(status != AR_S_YES)
+				{
+						AR_error(AR_ERR_FATAL, L"failed insert regex : '%ls'\r\n", __g_lex_name[i]);
+				}
+		}
+
+		for(i = 0; i < AR_NELEMS(__g_term_pattern); ++i)
+		{
+				lexAction_t action;
+				action.is_skip = __g_term_pattern[i].is_skip;
+				action.priority = __g_term_pattern[i].prec;
+				action.value = (size_t)__g_term_pattern[i].val;
+
+				status = Lex_InsertRule(lex, __g_term_pattern[i].regex, &action);
+				
+				if(status != AR_S_YES)
+				{
+						AR_error(AR_ERR_FATAL, L"failed insert regex : '%ls'\r\n", __g_term_pattern[i].regex);
+				}
+		}
+
+		status = Lex_GenerateTransTable(lex);
+		if(status != AR_S_YES)
+		{
+				AR_ASSERT(false);
+				goto INVALID_POINT;
+		}
+
+
+		/*************************************************************/
+
+		
+		lexMatch_t *match = Lex_CreateMatch(lex);
+		AR_ASSERT(match != NULL);
+		arString_t *s = AR_CreateString();
+		status = AR_LoadBomTextFile(L"D:\\Code\\Test\\TestInput\\sqlite3_i.c", NULL, s);
+
+		AR_ASSERT(status == AR_S_YES);
+
+		AR_ASSERT(AR_GetStringLength(s) > 0);
+		
+		
+		
+		for(size_t i = 0; i < 10; ++i)
+		{
+				lexToken_t tok;
+				arStatus_t lex_status;
+
+				Lex_ResetInput(match, AR_CSTR(s));
+
+				ar_uint_64_t beg = AR_GetTime_Milliseconds();
+
+				while(true)
+				{
+						lex_status = Lex_Match(match, &tok);
+
+						if(lex_status == AR_S_YES || lex_status == AR_S_YES)
+						{
+								if(tok.value == 0)
+								{
+										break;
+								}
+								
+								
+
+						}else
+						{
+								break;
+								
+						}
+				}
+
+				ar_uint_64_t end = AR_GetTime_Milliseconds();
+
+				AR_printf(L"round %d elapsed time : %qu ms\r\n", i, end - beg);
+
+				if(lex_status == AR_S_YES || lex_status == AR_S_YES)
+				{
+						AR_printf(L"%ls\r\n", L"success\r\n");
+				}else
+				{
+						AR_printf(L"error code = %d, %ls\r\n", AR_GET_STATUS(lex_status), L"failed\r\n");
+
+				}
+
+		}
+
+
+
+		/*************************************************************/
+
+
+
+
+
+INVALID_POINT:
+
+		if(s)
+		{
+				AR_DestroyString(s);
+				s = NULL;
+		}
+
+
+		if(match)
+		{
+				Lex_DestroyMatch(match);
+				match = NULL;
+		}
+
+		if(lex)
+		{
+				Lex_Destroy(lex);
+				lex = NULL;
+		}
+
+}
+
+
+
 void lex_test()
 {
 		//rgx_test_loop();
@@ -1711,8 +1992,8 @@ void lex_test()
 		//lex_line_num_test();
 
 		//lex_perf_test1();
-		lex_perf_test2();
-
+		//lex_perf_test2();
+		lex_perf_test3();
 		//lex_line_test9();
 
 		
