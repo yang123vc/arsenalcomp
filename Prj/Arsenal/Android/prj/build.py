@@ -121,10 +121,26 @@ def build_arsenal(is_debug, is_shared, plat_name):
         
         if is_shared:
                 binary_path += "dll/";
+                if is_debug:
+                    binary_path += "debug/";
+                    pass;
+                else:
+                    binary_path += "release/";
+                    pass;
+                pass;
+                
                 arsenal_binary_file = binary_path + "Arsenal.so";
                 pass;
         else:
                 binary_path += "lib/";
+                if is_debug:
+                    binary_path += "debug/";
+                    pass;
+                else:
+                    binary_path += "release/";
+                    pass;
+                pass;
+                
                 arsenal_binary_file = binary_path + "Arsenal.a";
                 pass;
         
