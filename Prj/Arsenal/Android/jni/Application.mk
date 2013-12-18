@@ -1,4 +1,4 @@
-NDK_TOOLCHAIN_VERSION=4.7
+NDK_TOOLCHAIN_VERSION=4.8
 APP_PLATFORM := android-14
 
 ifeq ($(NDK_DEBUG),1)
@@ -29,4 +29,11 @@ ifeq ($(PLAT),x86)
         APP_ABI := x86
 endif
 
+ifeq ($(LIB_MODE),shared)
+	bin_dir := dll
+else
+	bin_dir := lib
+endif
+
+NDK_APP_OUT=../../../../Temp/$(APP_ABI)/$(APP_OPTIM)/$(bin_dir)
 
