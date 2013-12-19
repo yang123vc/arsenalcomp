@@ -36,4 +36,4 @@ else
 endif
 
 NDK_APP_OUT := ../../../../Temp/$(APP_ABI)/$(APP_OPTIM)/$(bin_dir)
-NDK_APP_DST_DIR := ../../../../Temp/$(APP_ABI)/$(APP_OPTIM)/$(bin_dir)
+#NDK_APP_DST_DIR
