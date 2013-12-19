@@ -68,8 +68,6 @@ LOCAL_SRC_FILES := \
         ../../../../Arsenal/Parser/report.c\
         ../../../../Arsenal/Parser/symbol.c\
                                                 \
-        ../../../../Arsenal/Tengu/tengu.c\
-                                                \
         ../../../../Arsenal/Tools/grammar_codegen.c\
         ../../../../Arsenal/Tools/grammar_collector.c\
         ../../../../Arsenal/Tools/iniobj.c\
@@ -78,6 +76,8 @@ LOCAL_SRC_FILES := \
         ../../../../Arsenal/Tools/property_list.c\
         ../../../../Arsenal/Tools/tools.c\
                                                 \
+        ../../../../Arsenal/Tengu/tengu.c	\
+						\
         ../../../../Arsenal/Arsenal.c\
         
 
