@@ -228,7 +228,7 @@ void Lex_SortProgSet(lexProgSet_t *set)
 }
 
 
-AR_INLINE arStatus_t Lex_EnableProgSetByValue(lexProgSet_t *set, size_t value, ar_bool_t enable)
+arStatus_t Lex_EnableProgSetByValue(lexProgSet_t *set, size_t value, ar_bool_t enable)
 {
 		size_t i, cnt;
 		
@@ -246,7 +246,7 @@ AR_INLINE arStatus_t Lex_EnableProgSetByValue(lexProgSet_t *set, size_t value, a
 		return cnt > 0 ? AR_S_YES : AR_E_NOTFOUND;
 }
 
-AR_INLINE arStatus_t Lex_RuleIsEnabledInProgSet(lexProgSet_t *set, size_t value)
+arStatus_t Lex_RuleIsEnabledInProgSet(lexProgSet_t *set, size_t value)
 {
 		size_t i;
 		
@@ -271,7 +271,7 @@ AR_INLINE arStatus_t Lex_RuleIsEnabledInProgSet(lexProgSet_t *set, size_t value)
 
 
 
-AR_INLINE void Lex_EnableProgSetByIndex(lexProgSet_t *set, size_t idx, ar_bool_t enable)
+void Lex_EnableProgSetByIndex(lexProgSet_t *set, size_t idx, ar_bool_t enable)
 {
 		AR_ASSERT(set != NULL);
 		AR_ASSERT(idx < set->count);
@@ -281,7 +281,7 @@ AR_INLINE void Lex_EnableProgSetByIndex(lexProgSet_t *set, size_t idx, ar_bool_t
 
 
 
-AR_INLINE ar_bool_t Lex_QueryProgIsEnabledByIndex(lexProgSet_t *set, size_t idx)
+ar_bool_t Lex_QueryProgIsEnabledByIndex(lexProgSet_t *set, size_t idx)
 {
 		AR_ASSERT(set != NULL);
 		AR_ASSERT(idx < set->count);
