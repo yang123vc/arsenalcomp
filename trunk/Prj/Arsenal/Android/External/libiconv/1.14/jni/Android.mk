@@ -36,12 +36,13 @@ LOCAL_C_INCLUDES += \
 TARGET_PLATFORM := android-14
 
 
-ifeq ($(LIB_MODE),shared)
-        include $(BUILD_SHARED_LIBRARY)
-else
-        include $(BUILD_STATIC_LIBRARY)
-endif
+#ifeq ($(LIB_MODE),shared)
+#        include $(BUILD_SHARED_LIBRARY)
+#else
+#        include $(BUILD_STATIC_LIBRARY)
+#endif
 
+include $(BUILD_STATIC_LIBRARY)
 
 
 
