@@ -43,6 +43,11 @@ ar_int_t			AR_AtomicDec(volatile ar_int_t *dest)
         return __sync_sub_and_fetch(dest, 1);
 }
 
+ar_bool_t			AR_AtomicCompExch(volatile ar_int_t *dest, ar_int_t val, ar_int_t cmpval)
+{
+		AR_ASSERT(dest != NULL);
+		return __sync_bool_compare_and_swap(dest, cmpval, val) ? true : false;
+}
 
 /****************************************************************************SpinLock***********************************************/
 
