@@ -153,6 +153,7 @@ int main()
 
 		Arsenal_Init(&ai);
 
+
 		AR_Test();
 
 		Arsenal_UnInit();
@@ -161,7 +162,7 @@ int main()
 #if(OS_TYPE == OS_WINDOWS_CE)
 		::MessageBoxW(NULL, L"Done", L"Message",0);
 #else
-		_CrtDumpMemoryLeaks();
+		//_CrtDumpMemoryLeaks();
 		printf("done\r\n");
 		getchar();
 #endif

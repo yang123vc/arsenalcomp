@@ -1283,6 +1283,9 @@ arStatus_t	AR_PutToAsyncQueue(arAsyncQueue_t *queue, void *data);
 arStatus_t	AR_AsyncQueueIsEmpty(const arAsyncQueue_t *queue);
 arStatus_t	AR_HasIdleThreadInAsyncQueue(const arAsyncQueue_t *queue);
 
+size_t		AR_GetAsyncQueueWaitCount(const arAsyncQueue_t *queue);
+size_t		AR_GetAsyncQueueDataCount(const arAsyncQueue_t *queue);
+
 
 
 
@@ -1441,7 +1444,7 @@ float			AR_atan_flt(float f);
 float			AR_atan2_flt(float y, float x);
 
 
-ar_bool_t			AR_is_equal_dbl(double x, double y, double epsilon);
+ar_bool_t		AR_is_equal_dbl(double x, double y, double epsilon);
 
 double			AR_logbase_dbl(double a, double base);
 double			AR_abs_dbl(double x);
@@ -1513,7 +1516,7 @@ void			AR_SwapElements(arVector_t *vec, size_t l, size_t r);
 double			AR_GetVectorValue(const arVector_t *vec, size_t idx);
 void			AR_SetVectorValue(arVector_t *vec, size_t idx, double val);
 
-ar_int_t			AR_CompareVector(const arVector_t *l, const arVector_t *r, double epsilon);
+ar_int_t		AR_CompareVector(const arVector_t *l, const arVector_t *r, double epsilon);
 
 
 void			AR_ZeroVector(arVector_t *vec);
@@ -1577,7 +1580,7 @@ arStatus_t		AR_CopyMatrix(arMatrix_t *dest, const arMatrix_t *src);
 arStatus_t		AR_SetMatrixSize(arMatrix_t *mat, size_t rows, size_t cols);
 arStatus_t		AR_SetMatrixData(arMatrix_t *mat, size_t row, size_t col, const double *data);
 
-ar_int_t			AR_CompareMatrix(const arMatrix_t *l, const arMatrix_t *r, double epsilon);
+ar_int_t		AR_CompareMatrix(const arMatrix_t *l, const arMatrix_t *r, double epsilon);
 
 size_t			AR_GetMatrixNumRows(const arMatrix_t *mat);
 size_t			AR_GetMatrixNumColumns(const arMatrix_t *mat);

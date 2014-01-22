@@ -155,7 +155,8 @@ AR_GetFromAsyncQueueWithTimeout
 AR_PutToAsyncQueue
 AR_AsyncQueueIsEmpty
 AR_HasIdleThreadInAsyncQueue
-
+AR_GetAsyncQueueWaitCount
+AR_GetAsyncQueueDataCount
 
 
 AR_str_to_wcs_buf
