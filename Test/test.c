@@ -146,7 +146,7 @@ void AR_Test()
 
 		//trans_char_test();
 		
-		lex_test();
+		//lex_test();
 		
 
 		//parser_perf_test();
@@ -179,7 +179,7 @@ void AR_Test()
 
 		//Tengu_Test();
 
-		//mem_test();
+		mem_test();
 		
 		//tokenizer_test();
 

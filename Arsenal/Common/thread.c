@@ -574,6 +574,21 @@ arStatus_t	AR_AsyncQueueIsEmpty(const arAsyncQueue_t *queue)
 }
 
 
+size_t		AR_GetAsyncQueueWaitCount(const arAsyncQueue_t *queue)
+{
+		AR_ASSERT(queue != NULL);
+		return queue->wait_cnt;
+
+}
+
+size_t		AR_GetAsyncQueueDataCount(const arAsyncQueue_t *queue)
+{
+		AR_ASSERT(queue != NULL);
+		
+		return queue->data_cnt;
+}
+
+
 void	AR_ClearAsyncQueue(arAsyncQueue_t *queue)
 {
 		AR_ASSERT(queue != NULL);
