@@ -227,6 +227,8 @@ void debug_memory_test()
 
 void mem_test()
 {
+		
+
 		debug_memory_test();
 		//alloc_test();
 

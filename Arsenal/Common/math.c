@@ -120,7 +120,7 @@ double AR_pow_dbl(double x, double y)
 		return (double)pow(x,y);
 }
 
-double AR_exp(double f)
+double AR_exp_dbl(double f)
 {
 		return (double)exp(f);
 }
