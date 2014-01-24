@@ -312,8 +312,8 @@ prefixexp	:	var
 
 
 functioncall	:	prefixexp args			
-			|	prefixexp ":" NAME args
-			;
+		|	prefixexp ":" NAME args
+		;
 
 
 args		:	"(" explist1 ")"	%prec		PREC_ARGS
