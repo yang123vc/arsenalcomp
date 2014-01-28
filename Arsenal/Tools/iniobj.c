@@ -875,11 +875,26 @@ static ar_bool_t	__is_valid_key_name(const wchar_t *name)
 arStatus_t			Ini_SectionIsExisted(const iniObject_t *obj, const wchar_t *sect)
 {
 		AR_ASSERT(obj != NULL && sect != NULL);
-
 		return __find_section(obj, sect) != -1 ?  AR_S_YES : AR_S_NO;
 
 }
 
+arStatus_t		Ini_KeyIsExisted(const iniObject_t *obj, const wchar_t *sect, const wchar_t *key)
+{
+		
+		const iniKeyVal_t *kv;
+		AR_ASSERT(obj != NULL && sect != NULL && key != NULL);
+		
+		kv = __find_keyval((iniObject_t*)obj, sect, key);
+
+		if(kv == NULL)
+		{
+				return AR_S_NO;
+		}else
+		{
+				return AR_S_YES;
+		}
+}
 
 
 arStatus_t			Ini_InsertSection(iniObject_t *obj, const wchar_t *sect, const wchar_t *comment)
@@ -1597,6 +1612,89 @@ END_POINT:
         return status;
 
 }
+
+
+
+/********************************************************************************************/
+
+static ar_int_t	__find_section_ignore_case(const iniObject_t *obj, const wchar_t *sect)
+{
+		size_t i;
+		AR_ASSERT(obj != NULL && sect != NULL);
+        
+		for(i = 0; i < obj->cnt; ++i)
+		{
+				if(AR_wcsicmp(obj->sect[i]->section_name, sect) == 0)
+				{
+						return (ar_int_t)i;
+				}
+		}
+        
+		return -1;
+}
+
+
+static iniKeyVal_t*	__ini_find_from_section_ignore_case(iniSection_t *sec, const wchar_t *key)
+{
+		size_t i;
+		iniKeyVal_t		*kv;
+		AR_ASSERT(sec != NULL && key != NULL);
+        
+		for(i = 0; i < sec->cnt; ++i)
+		{
+				kv = sec->kv_pairs[i];
+				if(kv->key && AR_wcsicmp(kv->key, key) == 0)
+				{
+						return kv;
+				}
+		}
+        
+		return NULL;
+}
+
+
+
+
+static iniKeyVal_t*		__find_keyval_ignore_case(iniObject_t *obj, const wchar_t *sect, const wchar_t *key)
+{
+		iniSection_t *section;
+		iniKeyVal_t  *kv;
+		ar_int_t idx;
+		AR_ASSERT(obj != NULL && sect != NULL && key != NULL);
+        
+		idx = __find_section_ignore_case(obj, sect);
+		if(idx == -1)
+		{
+				return NULL;
+		}
+		
+		section = obj->sect[idx];
+		
+		kv = __ini_find_from_section_ignore_case(section, key);
+        
+		return kv;
+}
+
+
+
+
+
+const wchar_t*	Ini_GetStringIgnoreCase(const iniObject_t *obj, const wchar_t *sect, const wchar_t *key)
+{
+        iniKeyVal_t *kv;
+		AR_ASSERT(obj != NULL && sect != NULL && key != NULL);
+		
+		kv = __find_keyval_ignore_case((iniObject_t*)obj, sect, key);
+        
+		if(kv == NULL)
+		{
+				return NULL;
+		}else
+		{
+				return kv->val;
+		}
+}
+
 
 
 AR_NAMESPACE_END

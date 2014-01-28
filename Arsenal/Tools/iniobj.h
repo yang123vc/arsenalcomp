@@ -37,6 +37,8 @@ arStatus_t		Ini_SaveObjectToFile(const iniObject_t *obj, const wchar_t *path);
 
 
 arStatus_t		Ini_SectionIsExisted(const iniObject_t *obj, const wchar_t *sect);
+arStatus_t		Ini_KeyIsExisted(const iniObject_t *obj, const wchar_t *sect, const wchar_t *key);
+
 arStatus_t		Ini_InsertSection(iniObject_t *obj, const wchar_t *sect, const wchar_t *comment);
 arStatus_t		Ini_RemoveSection(iniObject_t *obj, const wchar_t *sect);
 
@@ -67,6 +69,7 @@ size_t			Ini_GetSectionItemsCount(const iniObject_t *obj, const wchar_t *sect);
 const wchar_t*  Ini_GetSectionKeyByIndex(const iniObject_t *obj, const wchar_t *sect, size_t idx);
 
 
+const wchar_t*	Ini_GetStringIgnoreCase(const iniObject_t *obj, const wchar_t *sect, const wchar_t *key);
 
 AR_NAMESPACE_END
 
