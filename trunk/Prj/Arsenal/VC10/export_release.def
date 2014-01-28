@@ -371,6 +371,7 @@ Ini_ClearObject
 Ini_LoadObjectFromString
 Ini_SaveObjectToString
 Ini_SectionIsExisted
+Ini_KeyIsExisted
 Ini_InsertSection
 Ini_RemoveSection
 Ini_GetString
