@@ -4,7 +4,7 @@
 #include <string>
 #include <math.h>
 #include <time.h>
-
+#include <vector>
 #include "Base64Transcoder.h"
 
 #include "lfu_cache.h"
@@ -4030,6 +4030,155 @@ static void spinlock_test()
 }
 
 
+static ar_int_t int_cmp(const void *l, const void *r)
+{
+		int ln = *(const int*)l;
+		int rn = *(const int*)r;
+
+		//return AR_CMP(ln, rn);
+
+		if(ln < rn)
+		{
+				return 1;
+		}else if(ln == rn)
+		{
+				return 0;
+		}else
+		{
+				return -1;
+		}
+}
+
+static void int_swap(void *l, void*r)
+{
+		int t = *(int*)l;
+		*(int*)l = *(int*)r;
+		*(int*)r = t;
+}
+
+static void print_arr(const int *arr, size_t count)
+{
+		for(size_t i = 0; i < count; ++i)
+		{
+				AR_printf(L"%d  ", arr[i]);
+		}
+		AR_printf(L"\r\n");
+}
+
+static void algo_heap_test1()
+{
+		int arr[13];// = {44, 6, 28};
+
+		AR_srand(AR_GetTime_Milliseconds());
+
+		for(size_t i = 0; i < AR_NELEMS(arr); ++i)
+		{
+				arr[i] = AR_rand32() % 100;
+		}
+
+		print_arr(arr, AR_NELEMS(arr));
+
+		AR_make_heap(arr, AR_NELEMS(arr), sizeof(int), int_cmp, int_swap);
+		print_arr(arr, AR_NELEMS(arr));
+
+		size_t count = AR_NELEMS(arr);
+		while(count > 0)
+		{
+				AR_pop_heap(arr, count, sizeof(int), int_cmp, int_swap);
+				count--;
+				print_arr(arr, count);
+		}
+
+}
+
+
+static void algo_heap_test2()
+{
+		int arr[123];// = {44, 6, 28};
+
+		AR_srand(AR_GetTime_Milliseconds());
+
+		for(size_t i = 0; i < AR_NELEMS(arr); ++i)
+		{
+				arr[i] = AR_rand32() % 100;
+		}
+
+		print_arr(arr, AR_NELEMS(arr));
+
+		AR_make_heap(arr, AR_NELEMS(arr), sizeof(int), int_cmp, int_swap);
+		print_arr(arr, AR_NELEMS(arr));
+
+		AR_sort_heap(arr, AR_NELEMS(arr), sizeof(int), int_cmp, int_swap);
+
+		print_arr(arr, AR_NELEMS(arr));
+}
+
+
+static void algo_heap_test3()
+{
+		
+		int arr[12];// = {44, 6, 28};
+
+		AR_srand(AR_GetTime_Milliseconds());
+
+		for(size_t i = 0; i < AR_NELEMS(arr); ++i)
+		{
+				arr[i] = i;//AR_rand32() % 100;
+		}
+
+		print_arr(arr, AR_NELEMS(arr));
+
+		AR_make_heap(arr, AR_NELEMS(arr), sizeof(int), int_cmp, int_swap);
+		print_arr(arr, AR_NELEMS(arr));
+
+		size_t count = AR_NELEMS(arr);
+		while(count > 0)
+		{
+				size_t removed_idx = AR_rand32() % count;
+
+				AR_printf(L"removed value : %d\r\n", arr[removed_idx]);
+
+				AR_remove_heap(arr, count, removed_idx, sizeof(int), int_cmp, int_swap);
+				count--;
+				print_arr(arr, count);
+		}
+}
+
+
+
+static void algo_heap_test4()
+{
+		
+		std::vector<int>		arr;
+
+		AR_srand(AR_GetTime_Milliseconds());
+
+		//AR_make_heap(&arr[0], arr.size(), sizeof(int), int_cmp, int_swap);
+
+		for(size_t i = 0; i < 21; ++i)
+		{
+				//arr.push_back(AR_rand32() % 100);
+				arr.push_back(i);
+				AR_push_heap(&arr[0], arr.size(), sizeof(int), int_cmp, int_swap);
+		}
+
+		print_arr(&arr[0], arr.size());
+
+		
+		size_t count = arr.size();
+		while(count > 0)
+		{
+				AR_pop_heap(&arr[0], count, sizeof(int), int_cmp, int_swap);
+				count--;
+				print_arr(&arr[0], count);
+		}
+
+
+		print_arr(&arr[0], arr.size());
+}
+
+
+
 
 void com_test()
 {
@@ -4156,8 +4305,12 @@ void com_test()
 		//path_test1();
 		//path_test2();
 
-		spinlock_test();
+		//spinlock_test();
 
+		//algo_heap_test1();
+		//algo_heap_test2();
+		//algo_heap_test3();
+		algo_heap_test4();
 }
 
 

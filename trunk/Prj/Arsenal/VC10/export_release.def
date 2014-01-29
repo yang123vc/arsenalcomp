@@ -228,6 +228,12 @@ AR_scprintf
 AR_sprintf
 AR_vsprintf
 
+AR_make_heap
+AR_pop_heap
+AR_push_heap
+AR_sort_heap
+AR_remove_heap
+
 ;Lex
 
 Lex_Create				
