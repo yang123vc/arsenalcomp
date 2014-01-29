@@ -1201,7 +1201,7 @@ arThread_t*		AR_CreateThread(arThreadFunc_t func, void *data);
 void			AR_DestroyThread(arThread_t *thd);
 arStatus_t		AR_JoinThread(arThread_t *thd);
 arStatus_t		AR_JoinThreadWithTimeout(arThread_t *thd, ar_uint_64_t milliseconds);
-ar_uint_64_t		AR_GetThreadId(arThread_t *thd);
+ar_uint_64_t	AR_GetThreadId(arThread_t *thd);
 
 typedef enum
 {
