@@ -4155,7 +4155,7 @@ static void algo_heap_test4()
 
 		//AR_make_heap(&arr[0], arr.size(), sizeof(int), int_cmp, int_swap);
 
-		for(size_t i = 0; i < 21; ++i)
+		for(size_t i = 0; i < 8; ++i)
 		{
 				//arr.push_back(AR_rand32() % 100);
 				arr.push_back(i);
@@ -4170,13 +4170,52 @@ static void algo_heap_test4()
 		{
 				AR_pop_heap(&arr[0], count, sizeof(int), int_cmp, int_swap);
 				count--;
-				print_arr(&arr[0], count);
+				//print_arr(&arr[0], count);
+				AR_printf(L"arr[%d] == %d\r\n", count, arr[count]);
 		}
 
 
 		print_arr(&arr[0], arr.size());
 }
 
+
+
+static void algo_heap_test5()
+{
+		
+		std::vector<int>		arr;
+
+		AR_srand(AR_GetTime_Milliseconds());
+
+		//AR_make_heap(&arr[0], arr.size(), sizeof(int), int_cmp, int_swap);
+
+		for(size_t i = 0; i < 8; ++i)
+		{
+				//arr.push_back(AR_rand32() % 100);
+				arr.push_back(i);
+				AR_push_heap(&arr[0], arr.size(), sizeof(int), int_cmp, int_swap);
+		}
+
+		print_arr(&arr[0], arr.size());
+
+		
+		size_t count = arr.size();
+
+		AR_remove_heap(&arr[0], count, 1, sizeof(int), int_cmp, int_swap);
+		count--;
+		print_arr(&arr[0], count);
+
+		while(count > 0)
+		{
+				AR_pop_heap(&arr[0], count, sizeof(int), int_cmp, int_swap);
+				count--;
+				//print_arr(&arr[0], count);
+				AR_printf(L"arr[%d] == %d\r\n", count, arr[count]);
+		}
+
+
+		print_arr(&arr[0], arr.size());
+}
 
 
 
@@ -4310,7 +4349,8 @@ void com_test()
 		//algo_heap_test1();
 		//algo_heap_test2();
 		//algo_heap_test3();
-		algo_heap_test4();
+		//algo_heap_test4();
+		algo_heap_test5();
 }
 
 

@@ -511,38 +511,6 @@ static void __heap_fixdown(void *arr, size_t count, size_t idx, size_t element_s
 }
 
 
-#if defined(AR_DEBUG)
-
-static ar_bool_t __heap_verify(void *arr, size_t count, size_t element_size, ar_int_t (*cmp_f)(const void*, const void*))
-{
-		size_t i,l,r;
-		AR_ASSERT(arr != NULL);
-		i = 0;
-		while(i < count / 2)
-		{
-				l = (2 * i) + 1;
-				r = l + 1;
-
-				if(cmp_f(AR_GET_ELEM(arr, element_size, i), AR_GET_ELEM(arr, element_size, l)) < 0)
-				{
-						return false;
-				}
-
-				if(r < count && cmp_f(AR_GET_ELEM(arr, element_size, i), AR_GET_ELEM(arr, element_size, r)) < 0)
-				{
-						return false;
-				}
-				
-				i += 1;
-		}
-
-		return true;
-}
-
-#endif
-
-
-
 static void __heap_remove_at(void *arr, size_t count, size_t idx, size_t element_size, ar_int_t (*cmp_f)(const void*, const void*), void (*swap_f)(void*, void*))
 {
 		size_t i,p;
@@ -578,6 +546,39 @@ static void __heap_remove_at(void *arr, size_t count, size_t idx, size_t element
 		__heap_fixdown(arr, count, i, element_size, cmp_f, swap_f);
 
 }
+
+
+#if defined(AR_DEBUG)
+
+static ar_bool_t __heap_verify(void *arr, size_t count, size_t element_size, ar_int_t (*cmp_f)(const void*, const void*))
+{
+		size_t i,l,r;
+		AR_ASSERT(arr != NULL);
+		i = 0;
+		while(i < count / 2)
+		{
+				l = (2 * i) + 1;
+				r = l + 1;
+
+				if(cmp_f(AR_GET_ELEM(arr, element_size, i), AR_GET_ELEM(arr, element_size, l)) < 0)
+				{
+						return false;
+				}
+
+				if(r < count && cmp_f(AR_GET_ELEM(arr, element_size, i), AR_GET_ELEM(arr, element_size, r)) < 0)
+				{
+						return false;
+				}
+				
+				i += 1;
+		}
+
+		return true;
+}
+
+#endif
+
+
 
 void AR_make_heap(void *arr, size_t count, size_t element_size, ar_int_t (*cmp_f)(const void*, const void*), void (*swap_f)(void*, void*))
 {
