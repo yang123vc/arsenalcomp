@@ -660,7 +660,7 @@ void AR_make_heap(void *arr, size_t count, size_t element_size, ar_int_t (*cmp_f
 void AR_pop_heap(void *arr, size_t count, size_t element_size, ar_int_t (*cmp_f)(const void*, const void*), void (*swap_f)(void*, void*));
 void AR_push_heap(void *arr, size_t count, size_t element_size, ar_int_t (*cmp_f)(const void*, const void*), void (*swap_f)(void*, void*));
 void AR_sort_heap(void *arr, size_t count, size_t element_size, ar_int_t (*cmp_f)(const void*, const void*), void (*swap_f)(void*, void*));
-
+void AR_remove_heap(void *arr, size_t count, size_t idx, size_t element_size, ar_int_t (*cmp_f)(const void*, const void*), void (*swap_f)(void*, void*));
 
 /********************************************************Basic Data Structure*********************************************************/
 
