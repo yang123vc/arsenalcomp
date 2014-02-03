@@ -4350,7 +4350,7 @@ void com_test()
 		//algo_heap_test2();
 		//algo_heap_test3();
 		//algo_heap_test4();
-		algo_heap_test5();
+		//algo_heap_test5();
 }
 
 
