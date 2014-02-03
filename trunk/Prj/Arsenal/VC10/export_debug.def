@@ -349,6 +349,7 @@ CFG_ConfigToCode
 
 AR_GetExpandPath
 AR_GetRealPath
+AR_GetExpandRealPath
 
 SN_GetIntObject
 SN_DestroyObject

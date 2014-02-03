@@ -1274,8 +1274,14 @@ END_POINT:
 		}
 }
 
-#if(0)
-#endif
+static void float_test1()
+{
+		double ret = AR_logbase_dbl(8,2);
+		AR_printf(L"%g\r\n", ret);
+
+		ret = AR_exp_dbl(AR_logbase_dbl(0.01, 2.71828) / 20.0);
+		AR_printf(L"%g\r\n", ret);
+}
 
 void math_test()
 {
@@ -1289,8 +1295,8 @@ void math_test()
 		matrix_test3();
 		matrix_test4();
 		*/
-		matrix_test_factorization();
-
+		//matrix_test_factorization();
+		float_test1();
 }
 
 

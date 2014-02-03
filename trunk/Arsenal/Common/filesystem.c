@@ -97,6 +97,47 @@ arStatus_t		AR_error_file(arFile_t *file)
 }
 
 
+arStatus_t		AR_GetExpandRealPath(const wchar_t *path, arString_t *full_path)
+{
+        arStatus_t      status;
+        arString_t      *tmp;
+        AR_ASSERT(path != NULL && full_path != NULL);
+        
+        status = AR_S_YES;
+        tmp = NULL;
+        
+        tmp = AR_CreateString();
+        if(tmp == NULL)
+        {
+                status = AR_E_NOMEM;
+                goto END_POINT;
+        }
+        
+        status = AR_GetExpandPath(path,tmp);
+        
+        if(status != AR_S_YES)
+        {
+                goto END_POINT;
+        }
+        
+        AR_ClearString(full_path);
+
+        status = AR_GetRealPath(AR_GetStringCString(tmp), full_path);
+
+		if(status != AR_S_YES)
+        {
+                goto END_POINT;
+        }
+        
+END_POINT:
+        if(tmp)
+        {
+                AR_DestroyString(tmp);
+                tmp = NULL;
+        }
+        return status;
+}
+
 
 
 AR_NAMESPACE_END
