@@ -1892,11 +1892,106 @@ static void async_queue_test2()
 		AR_UnInitAsyncQueue(&queue);
 }
 
+
+static void output_thread3(void *data)
+{
+		arStatus_t status;
+		arAsyncQueue_t	*queue;
+		AR_ASSERT(data != NULL);
+		queue = (arAsyncQueue_t*)data;
+
+		while(true)
+		{
+				AR_Sleep(3000);
+
+				status = AR_GetFromAsyncQueueWithTimeout(queue, &data, 2000);
+				if(status == AR_S_YES)
+				{
+						const char *s = (const char*)data;
+						AR_ASSERT(s != NULL);
+						printf("thread == %d : %s\r\n", GetCurrentThreadId(), s);
+						
+						if(strcmp(s, "quit") == 0)
+						{
+
+								AR_DEL(s);
+								break;
+						}else
+						{
+								AR_DEL(s);
+						}
+
+				}else if(status == AR_E_TIMEOUT)
+				{
+						printf("thread %d timeout\r\n", GetCurrentThreadId());
+						continue;
+				}else
+				{
+						AR_ASSERT(false);
+				}
+		}
+
+		
+}
+
+
+
+static void async_queue_test3()
+{
+		int i;
+		char buf[1024];
+		arThread_t *thread_set[1];
+		arAsyncQueue_t	queue;
+		AR_InitAsyncQueue(&queue);
+
+		for(i = 0; i < 1; ++i)
+		{
+				thread_set[i] = AR_CreateThread(output_thread3, (void*)&queue);
+		}
+
+		printf("ÇëÊäÈë:\r\n");
+		while(true)
+		{
+				char *s = NULL;
+				gets(buf);
+				s = AR_NEWARR(char, 1024);
+				strcpy(s, buf);
+
+				AR_PutToAsyncQueueFront(&queue, (void*)s);
+				if(strcmp(buf, "quit")== 0)break;
+		}
+
+		for(i = 0; i < 1; ++i)
+		{
+				char *s = AR_NEWARR(char, 1024);
+				strcpy(s, "quit");
+				AR_PutToAsyncQueue(&queue, (void*)s);
+		}
+
+		for(i = 0; i < 1; ++i)
+		{
+				AR_DestroyThread(thread_set[i]);
+				thread_set[i] = NULL;
+		}
+
+		while(AR_AsyncQueueIsEmpty(&queue) != AR_S_YES)
+		{
+				const char *s;
+				AR_GetFromAsyncQueue(&queue, (void**)&s);
+				printf("delete string == %s\r\n", s);
+				AR_DEL(s);
+		}
+
+		AR_UnInitAsyncQueue(&queue);
+}
+
+
 void thd_test()
 {
 		//evt_test();
-		async_queue_test();
+		//async_queue_test();
 		//async_queue_test2();
+		async_queue_test3();
 }
 
 #define fail_if(expr, msg)                              \
@@ -4322,7 +4417,7 @@ void com_test()
 
 		//path_iter_test();
 
-		//thd_test();
+		thd_test();
 
 
 		//ds_test2();

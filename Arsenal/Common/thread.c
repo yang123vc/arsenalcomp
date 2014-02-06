@@ -134,6 +134,37 @@ static arStatus_t		__push_data(arAsyncQueue_t *queue, void *data)
 		return AR_S_YES;
 }
 
+
+static arStatus_t		__push_data_front(arAsyncQueue_t *queue, void *data)
+{
+		asyncDataNode_t *node;
+		AR_ASSERT(queue != NULL);
+		node = AR_NEW(asyncDataNode_t);
+		if(node == NULL)
+		{
+				return AR_E_NOMEM;
+		}
+
+		node->data = data;
+		node->next = NULL;
+
+		if(queue->data_cnt == 0)
+		{
+				AR_ASSERT(queue->data_head == NULL && queue->data_tail == NULL);
+				queue->data_head = queue->data_tail = node;
+				
+		}else
+		{
+				AR_ASSERT(queue->data_head != NULL && queue->data_tail != NULL);
+				node->next = queue->data_head;
+				queue->data_head = node;
+		}
+		queue->data_cnt++;
+		return AR_S_YES;
+}
+
+
+
 static void __uninit_data_queue(arAsyncQueue_t *queue)
 {
 		while(queue->data_cnt)
@@ -541,6 +572,41 @@ arStatus_t	AR_PutToAsyncQueue(arAsyncQueue_t *queue, void *data)
 
 		return status;
 }
+
+arStatus_t	AR_PutToAsyncQueueFront(arAsyncQueue_t *queue, void *data)
+{
+		arStatus_t	status;
+		AR_ASSERT(queue != NULL);
+
+		status = AR_S_YES;
+
+		AR_LockSpinLock(&queue->mutex);
+		
+		if(queue->wait_cnt > 0)
+		{
+				asyncWaitInfo_t *info = __top_wait(queue);
+				AR_ASSERT(info != NULL && info->event != NULL);
+				info->data = data;
+				status = AR_SetEvent(info->event);
+
+				if(status != AR_S_YES)
+				{
+						AR_error(AR_ERR_WARNING, L"%ls\r\n", L"failed to put data!");
+				}else
+				{
+						__pop_wait(queue);
+				}
+		}else
+		{
+				status = __push_data_front(queue, data);
+		}
+		
+		AR_UnLockSpinLock(&queue->mutex);
+
+		return status;
+}
+
+
 
 arStatus_t	AR_HasIdleThreadInAsyncQueue(const arAsyncQueue_t *queue)
 {

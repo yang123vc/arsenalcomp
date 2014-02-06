@@ -1279,9 +1279,10 @@ void	AR_ClearAsyncQueue(arAsyncQueue_t *queue);
 arStatus_t	AR_GetFromAsyncQueue(arAsyncQueue_t *queue, void **pdata);
 arStatus_t	AR_GetFromAsyncQueueWithTimeout(arAsyncQueue_t *queue, void **pdata, ar_uint_64_t	millisecond);
 arStatus_t	AR_PutToAsyncQueue(arAsyncQueue_t *queue, void *data);
+arStatus_t	AR_PutToAsyncQueueFront(arAsyncQueue_t *queue, void *data);/*when there is no waiting thread, this Data to the front of the queue*/
 
 arStatus_t	AR_AsyncQueueIsEmpty(const arAsyncQueue_t *queue);
-arStatus_t	AR_HasIdleThreadInAsyncQueue(const arAsyncQueue_t *queue);
+arStatus_t	AR_HasIdleThreadInAsyncQueue(const arAsyncQueue_t *queue); 
 
 size_t		AR_GetAsyncQueueWaitCount(const arAsyncQueue_t *queue);
 size_t		AR_GetAsyncQueueDataCount(const arAsyncQueue_t *queue);
