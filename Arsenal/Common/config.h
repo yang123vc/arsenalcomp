@@ -430,7 +430,7 @@
 		#define	AR_FMT64			L"ll"
 		#define	AR_FMT64_STR		"ll"
 
-        #define AR_NOOP                 (void)
+        #define AR_NOOP                 ((void)0)
         #define AR_FUNC_NAME			__PRETTY_FUNCTION__
 
 		#define	AR_DEBUG_BREAK				__builtin_trap
