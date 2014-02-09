@@ -355,7 +355,7 @@ _AR_escstr_to_str
 _AR_escstr_to_str_buf
 _AR_escstr_to_str_buf_n
 _AR_escstr_to_str_n
-_AR_exp
+_AR_exp_dbl
 _AR_exp_flt
 _AR_floor_dbl
 _AR_floor_flt
@@ -520,6 +520,9 @@ _AR_wtou32
 _AR_wtou32_s
 _AR_wtou64
 _AR_wtou64_s
+
+
+
 _Arsenal_Init
 _Arsenal_UnInit
 _CFG_CollectGrammarConfig

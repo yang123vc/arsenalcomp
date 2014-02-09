@@ -1074,7 +1074,7 @@ static void lex_perf_test1()
 
 				Lex_ResetInput(match, AR_CSTR(s));
 
-				ar_uint_64_t beg = AR_GetTime_Milliseconds();
+				ar_int_64_t beg = AR_GetTime_Milliseconds();
 
 				while(true)
 				{
@@ -1098,9 +1098,9 @@ static void lex_perf_test1()
 						}
 				}
 
-				ar_uint_64_t end = AR_GetTime_Milliseconds();
+				ar_int_64_t end = AR_GetTime_Milliseconds();
 
-				AR_printf(L"round %d elapsed time : %qu ms\r\n", i, end - beg);
+				AR_printf(L"round %d elapsed time : %qd ms\r\n", i, end - beg);
 
 				if(lex_status == AR_S_YES || lex_status == AR_S_YES)
 				{
@@ -1388,7 +1388,7 @@ static void lex_perf_test2()
 
 				Lex_ResetInput(match, AR_CSTR(s));
 
-				ar_uint_64_t beg = AR_GetTime_Milliseconds();
+				ar_int_64_t beg = AR_GetTime_Milliseconds();
 
 				while(true)
 				{
@@ -1413,9 +1413,9 @@ static void lex_perf_test2()
 						}
 				}
 
-				ar_uint_64_t end = AR_GetTime_Milliseconds();
+				ar_int_64_t end = AR_GetTime_Milliseconds();
 
-				AR_printf(L"round %d elapsed time : %qu ms\r\n", i, end - beg);
+				AR_printf(L"round %d elapsed time : %qd ms\r\n", i, end - beg);
 
 				if(lex_status == AR_S_YES || lex_status == AR_S_YES)
 				{
