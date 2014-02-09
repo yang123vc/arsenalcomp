@@ -69,7 +69,7 @@ void			AR_YieldThread()
 		__Yield();
 }
 
-void			AR_Sleep(ar_uint_64_t millisecond)
+void			AR_Sleep(ar_int_64_t millisecond)
 {
 		Sleep((DWORD)millisecond);
 }

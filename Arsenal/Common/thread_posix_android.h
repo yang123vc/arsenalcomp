@@ -115,7 +115,7 @@ void			AR_YieldThread()
         usleep(0);
 }
 
-void			AR_Sleep(ar_uint_64_t millisecond)
+void			AR_Sleep(ar_int_64_t millisecond)
 {
 		useconds_t m = (useconds_t)millisecond;
         
