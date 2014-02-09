@@ -40,11 +40,11 @@ AR_NAMESPACE_BEGIN
 
 #define RESOLUTION		1000000LL
 
-ar_uint_64_t		AR_GetTime_Microseconds()
+ar_int_64_t		AR_GetTime_Microseconds()
 {
 		struct timeval tv;
 		gettimeofday(&tv, NULL);
-		return (ar_uint_64_t)tv.tv_sec * (ar_uint_64_t)RESOLUTION + (ar_uint_64_t)tv.tv_usec;
+		return (ar_int_64_t)tv.tv_sec * (ar_int_64_t)RESOLUTION + (ar_int_64_t)tv.tv_usec;
 }
 
 
@@ -171,7 +171,7 @@ arStatus_t		AR_JoinThread(arThread_t *thd)
         return status;
 }
 
-arStatus_t		AR_JoinThreadWithTimeout(arThread_t *thd, ar_uint_64_t milliseconds)
+arStatus_t		AR_JoinThreadWithTimeout(arThread_t *thd, ar_int_64_t milliseconds)
 {
         arStatus_t status;
         AR_ASSERT(thd != NULL && thd->done != NULL);
@@ -490,7 +490,7 @@ arStatus_t		AR_TryWaitEvent(arEvent_t *evt)
         return AR_WaitEventWithTimeout(evt, 0);
 }
 
-arStatus_t		AR_WaitEventWithTimeout(arEvent_t *evt, ar_uint_64_t milliseconds)
+arStatus_t		AR_WaitEventWithTimeout(arEvent_t *evt, ar_int_64_t milliseconds)
 {
         int rc;
         struct timespec abstime;

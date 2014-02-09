@@ -150,11 +150,11 @@ void			AR_UnLockSpinLock(arSpinLock_t *lock)
 }
 
 
-static AR_INLINE ar_uint_64_t __get_time_microseconds()
+static AR_INLINE ar_int_64_t __get_time_microseconds()
 {
 		FILETIME ft;
-		ULARGE_INTEGER epoch; /* UNIX epoch (1970-01-01 00:00:00) expressed in Windows NT FILETIME*/
-		ULARGE_INTEGER ts;
+		LARGE_INTEGER epoch; /* UNIX epoch (1970-01-01 00:00:00) expressed in Windows NT FILETIME*/
+		LARGE_INTEGER ts;
 
 #if(OS_TYPE == OS_WINDOWS_CE)
 		{
@@ -177,7 +177,7 @@ static AR_INLINE ar_uint_64_t __get_time_microseconds()
 }
 
 
-ar_uint_64_t		AR_GetTime_Microseconds()
+ar_int_64_t		AR_GetTime_Microseconds()
 {
 		return __get_time_microseconds();
 }
@@ -282,7 +282,7 @@ arStatus_t		AR_WaitEvent(arEvent_t *evt)
 		}
 }
 
-arStatus_t		AR_WaitEventWithTimeout(arEvent_t *evt, ar_uint_64_t milliseconds)
+arStatus_t		AR_WaitEventWithTimeout(arEvent_t *evt, ar_int_64_t milliseconds)
 {
 		AR_ASSERT(evt != NULL);
 		switch(WaitForSingleObject((HANDLE)evt, (DWORD)milliseconds))
@@ -392,7 +392,7 @@ arStatus_t		AR_JoinThread(arThread_t *thd)
 }
 
 
-arStatus_t		AR_JoinThreadWithTimeout(arThread_t *thd, ar_uint_64_t milliseconds)
+arStatus_t		AR_JoinThreadWithTimeout(arThread_t *thd, ar_int_64_t milliseconds)
 {
 		AR_ASSERT(thd != NULL && thd->thread_hdl != NULL);
 		switch(WaitForSingleObject(thd->thread_hdl, (DWORD)milliseconds))
