@@ -36,9 +36,9 @@
 
 AR_NAMESPACE_BEGIN
 
-ar_uint_64_t		AR_GetTime_Milliseconds()
+ar_int_64_t		AR_GetTime_Milliseconds()
 {
-		return AR_GetTime_Microseconds() / AR_BIGNUM_U64(1000);
+		return AR_GetTime_Microseconds() / AR_BIGNUM_I64(1000);
 }
 
 
@@ -341,7 +341,7 @@ void	AR_UnInitAsyncQueue(arAsyncQueue_t *queue)
 
 
 
-arStatus_t	AR_GetFromAsyncQueueWithTimeout(arAsyncQueue_t *queue, void **pdata, ar_uint_64_t	millisecond)
+arStatus_t	AR_GetFromAsyncQueueWithTimeout(arAsyncQueue_t *queue, void **pdata, ar_int_64_t	millisecond)
 {
 		arStatus_t res;
 		AR_ASSERT(queue != NULL && pdata != NULL);
