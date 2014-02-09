@@ -690,7 +690,7 @@ FAILED_POINT:
 				return NO;
 		}else
 		{
-				ar_uint_64_t beg, end;
+				ar_int_64_t beg, end;
 				
 				beg = AR_GetTime_Milliseconds();
 				
@@ -704,7 +704,7 @@ FAILED_POINT:
 				end = AR_GetTime_Milliseconds();
 				
 #if(1)
-				NSString *str = [NSString stringWithFormat : @"Build Parser Tick count %qu",
+				NSString *str = [NSString stringWithFormat : @"Build Parser Tick count %qd",
 								 end - beg
 								 ];
 				
@@ -786,7 +786,7 @@ FAILED_POINT:
 		lexToken_t		token;
 		memset(&token, 0, sizeof(token));
 		
-		ar_uint_64_t beg = 0, end = 0;
+		ar_int_64_t beg = 0, end = 0;
 		
 		beg = AR_GetTime_Milliseconds();
 		
@@ -836,7 +836,7 @@ FAILED_POINT:
 		end = AR_GetTime_Milliseconds();
 		
 		{
-				NSString *str = [NSString stringWithFormat : @"Parse code Tick count %u", (ar_uint_32_t)(end - beg)];
+				NSString *str = [NSString stringWithFormat : @"Parse code Tick count %d", (ar_int_32_t)(end - beg)];
 
 				[delegate onParseMsg : PRINT_NODE_MSG_T
 								 Msg : str

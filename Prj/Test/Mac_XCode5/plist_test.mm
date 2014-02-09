@@ -565,7 +565,7 @@ static void perf_plist()
         
         for(size_t i = 0; i < 10; ++i)
         {
-                ar_uint_64_t beg, end;
+                ar_int_64_t beg, end;
                 
                 beg = AR_GetTime_Milliseconds();
                 
@@ -573,7 +573,7 @@ static void perf_plist()
                 
                 end = AR_GetTime_Milliseconds();
                 
-                AR_printf(L"elapsed time %qu ms\r\n", end - beg);
+                AR_printf(L"elapsed time %qd ms\r\n", end - beg);
         }
 
 }

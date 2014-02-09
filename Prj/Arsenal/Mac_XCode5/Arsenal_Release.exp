@@ -353,7 +353,7 @@ _AR_escstr_to_str
 _AR_escstr_to_str_buf
 _AR_escstr_to_str_buf_n
 _AR_escstr_to_str_n
-_AR_exp
+_AR_exp_dbl
 _AR_exp_flt
 _AR_floor_dbl
 _AR_floor_flt
