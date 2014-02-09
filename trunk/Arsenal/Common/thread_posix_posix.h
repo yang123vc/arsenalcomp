@@ -61,7 +61,7 @@ void			AR_YieldThread()
 		pthread_yield();
 }
 
-void			AR_Sleep(ar_uint_64_t millisecond)
+void			AR_Sleep(ar_int_64_t millisecond)
 {
 		long m = (long)millisecond;
 
