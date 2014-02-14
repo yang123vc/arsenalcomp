@@ -306,16 +306,19 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\..\..\binary\$(PlatformName)\$(Configuration)\</OutDir>
     <IntDir>..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(Configuration)\</IntDir>
+    <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLLDebug|Itanium'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\..\..\binary\$(PlatformName)\$(Configuration)\</OutDir>
     <IntDir>..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(Configuration)\</IntDir>
+    <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLLDebug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\..\..\binary\$(PlatformName)\$(Configuration)\</OutDir>
     <IntDir>..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(Configuration)\</IntDir>
+    <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='LibDebug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -336,16 +339,19 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\..\..\binary\$(PlatformName)\$(Configuration)\</OutDir>
     <IntDir>..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(Configuration)\</IntDir>
+    <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLLRelease|Itanium'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\..\..\binary\$(PlatformName)\$(Configuration)\</OutDir>
     <IntDir>..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(Configuration)\</IntDir>
+    <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLLRelease|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\..\..\binary\$(PlatformName)\$(Configuration)\</OutDir>
     <IntDir>..\..\..\Temp\$(ProjectName)\$(PlatformName)\$(Configuration)\</IntDir>
+    <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='LibRelease|Win32'">
     <LinkIncremental>false</LinkIncremental>
