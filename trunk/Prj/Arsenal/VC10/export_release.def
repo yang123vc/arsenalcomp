@@ -235,6 +235,14 @@ AR_push_heap
 AR_sort_heap
 AR_remove_heap
 
+AR_GetCurrentPath
+AR_GetHomePath
+AR_GetTempPath
+AR_GetExpandPath
+AR_GetNullPath
+AR_GetRealPath
+AR_GetExpandRealPath
+
 ;Lex
 
 Lex_Create				
