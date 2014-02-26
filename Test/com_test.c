@@ -4312,6 +4312,17 @@ static void algo_heap_test5()
 		print_arr(&arr[0], arr.size());
 }
 
+static void str_test21()
+{
+		size_t similar_cnt = 0;
+		
+		const wchar_t *wcs1 = L"ACDEF";
+		const wchar_t *wcs2 = L"XDEFGHI";
+		similar_cnt = AR_wcs_similar_text(wcs1, AR_wcslen(wcs1), wcs2, AR_wcslen(wcs2));
+
+}
+
+
 
 
 void com_test()
@@ -4342,6 +4353,7 @@ void com_test()
 		//str_test18();
 		//str_test19();
 		//str_test20();
+		str_test21();
 
 		//com_test3();
 		//com_conv();
@@ -4417,7 +4429,7 @@ void com_test()
 
 		//path_iter_test();
 
-		thd_test();
+		//thd_test();
 
 
 		//ds_test2();
