@@ -48,16 +48,24 @@ AR_GetStringLength
 
 
 
+
 AR_CreateBuffer
 AR_DestroyBuffer
 AR_ClearBuffer
+AR_SwapBuffer
+AR_CopyBuffer
+AR_CopyNewBuffer
 AR_AllocFromBuffer
 AR_InsertToBuffer
 AR_EraseBuffer
+AR_EraseBufferBack
 AR_GetBufferCapacity
 AR_ReserveBuffer
 AR_GetBufferData
 AR_GetBufferAvailable
+AR_ResetBufferData
+AR_ReadBufferData
+
 
 
 AR_qsort
