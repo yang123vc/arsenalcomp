@@ -1098,7 +1098,10 @@ RECHECK_POINT:
 
 				for(k = 0; k < n; ++k)
 				{
-						if(rules[k] == NULL)continue;
+						if(rules[k] == NULL)
+						{
+								continue;
+						}
 
 						if(k != i)
 						{
@@ -1111,20 +1114,37 @@ RECHECK_POINT:
 										cnt = 0;
 										bk[cnt++] = i;
 										bk[cnt++] = k;
+
 								}else if(x > 0 && x == max && __calc_leftfactor(rules[bk[0]], rules[i]) == x)
 								{
 										size_t j;
 										ar_bool_t need_i = true, need_k = true;
+
 										for(j = 0; j < n; ++j)
 										{
-												if(bk[j] == i)need_i = false;
-												if(bk[j] == k)need_k = false;
+												if(bk[j] == i)
+												{
+														need_i = false;
+												}
+
+												if(bk[j] == k)
+												{
+														need_k = false;
+												}
 										}
 										
-										if(need_i)bk[cnt++] = i;
-										if(need_k)bk[cnt++] = k;
+										if(need_i)
+										{
+												bk[cnt++] = i;
+										}
+
+										if(need_k)
+										{
+												bk[cnt++] = k;
+										}
 								}else
 								{
+
 								}
 						}
 				}
@@ -1255,6 +1275,7 @@ static arStatus_t					__report_left_factor(const psrGrammar_t *grammar, psrSymbo
 				if(tmp == AR_S_YES)
 				{
 						has_left_factor = AR_S_YES;
+
 				}else if(tmp == AR_S_NO)
 				{
 
