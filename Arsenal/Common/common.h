@@ -414,7 +414,7 @@ ar_int_t			AR_wcsnicmp(const wchar_t *l, const wchar_t *r, size_t n);
 #define AR_isspace(_c)			isspace((_c))
 #define AR_isgraph(_c)			isgraph((_c))
 #define AR_isprint(_c)			isprint((_c))
-
+#define AR_ispunct(_c)			ispunct((_c))
 
 char*			AR_strupr(char *s);
 char*			AR_strlwr(char *s);
@@ -456,6 +456,7 @@ char*			AR_strtrim_right_space(char *in);
 #define AR_iswcntrl(_c)			iswcntrl((_c))
 #define AR_iswupper(_c)			iswupper((_c))
 #define AR_iswlower(_c)			iswlower((_c))
+#define AR_iswpunct(_c)			iswpunct((_c))
 
 ar_int_t AR_iswblank(wchar_t c);
 

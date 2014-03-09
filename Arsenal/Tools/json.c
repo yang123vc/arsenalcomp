@@ -890,15 +890,13 @@ jsonObj_t* parse_json_escape_string(const wchar_t *lexer_str, size_t count)
 								*pstr++ = L'\t';
 								++p;
 								break;
-						case L'/':
-								*pstr++ = L'/';
-								++p;
-								break;
 						case L'"':
 								*pstr++ = L'"';
+								++p;
 								break;
 						case L'\'':
 								*pstr++ = L'\'';
+								++p;
 								break;
 						case L'u':
 						{
@@ -913,13 +911,13 @@ jsonObj_t* parse_json_escape_string(const wchar_t *lexer_str, size_t count)
 										if(p[i] >= L'0' && p[i] <= L'9')
 										{
 												c += (p[i] - L'0');
-										}else if(p[i] >= L'a' && p[i] <= L'z')
+										}else if(p[i] >= L'a' && p[i] <= L'e')
 										{
-												c += (p[i] - L'a');
+												c += (10 + p[i] - L'a');
 
-										}else if(p[i] >= L'A' && p[i] <= L'Z')
+										}else if(p[i] >= L'A' && p[i] <= L'F')
 										{
-												c += (p[i] - L'A');
+												c += (10 + p[i] - L'A');
 										}else
 										{
 												AR_error(AR_ERR_WARNING, L"invalid unicode val : %ls\r\n", p);
@@ -1040,7 +1038,7 @@ jsonObj_t* parse_json_integer_string(const wchar_t *lexer_str, size_t count)
 
 
 
-
+/************************************************************parser***************************************************************/
 
 
 
@@ -1140,38 +1138,8 @@ static void				__destroy_parser_context(psrContext_t *parser_context)
 
 
 
+/***************************************************************************************************************************************/
 
-arStatus_t		Json_Init()
-{
-		AR_InitSpinLock(&__g_lock);
-		return AR_S_YES;
-}
-
-
-void			Json_UnInit()
-{
-
-		if(__g_grammar)
-		{
-				Parser_DestroyGrammar(__g_grammar);
-				__g_grammar = NULL;
-		}
-
-		if(__g_parser)
-		{
-				Parser_DestroyParser(__g_parser);
-				__g_parser = NULL;
-		}
-
-		if(__g_lex)
-		{
-				Lex_Destroy(__g_lex);
-				__g_lex = NULL;
-		}
-
-		AR_InitSpinLock(&__g_lock);
-		
-}
 
 
 
@@ -1248,9 +1216,9 @@ arStatus_t		Json_LoadObjectFromString(const wchar_t *content, jsonObj_t **obj)
 
 						n = AR_wcslen(Lex_GetNextInput(match));
 
-						if(n > 5)
+						if(n > 20)
 						{
-								n = 5;
+								n = 20;
 						}
 
 						tok = AR_NEWARR(wchar_t, n + 1);
@@ -1368,21 +1336,331 @@ END_POINT:
 
 }
 
+/******************************************************************generator*************************************/
+static arStatus_t __json_object_to_string(const jsonObj_t *obj, arString_t *str, size_t indent);
+
+
+static arStatus_t __json_string_to_string(const wchar_t *wcs, arString_t *str, size_t indent)
+{
+		const wchar_t *p;
+		arStatus_t status;
+		AR_ASSERT(wcs != NULL && str != NULL);
+
+		AR_UNUSED(indent);
+
+		status = AR_S_YES;
+		p = wcs;
+
+		status = AR_AppendString(str, L"\"");
+		
+		while(*p != L'\0' && status == AR_S_YES)
+		{
+				switch(*p)
+				{
+				case L'\\':
+						status = AR_AppendString(str, L"\\\\");
+						break;
+				case L'\b':
+						status = AR_AppendString(str, L"\\b");
+						break;
+				case L'\f':
+						status = AR_AppendString(str, L"\\f");
+						break;
+				case L'\n':
+						status = AR_AppendString(str, L"\\n");
+						break;
+				case L'\r':
+						status = AR_AppendString(str, L"\\r");
+						break;
+				case L'\t':
+						status = AR_AppendString(str, L"\\t");
+						break;
+				case L'"':
+						status = AR_AppendString(str, L"\\\"");
+						break;
+				case L'\'':
+						status = AR_AppendString(str, L"\\'");
+						break;
+				default:
+				{
+						if( *p < 128 && AR_isprint((char)*p))
+						{
+								status = AR_AppendCharToString(str, *p);
+						}else
+						{
+								status = AR_AppendFormatString(str, L"\\u%0.4X", (ar_uint_32_t)*p);
+						}
+				}
+						break;
+				}
+
+				++p;
+		}
+
+		if(status == AR_S_YES)
+		{
+				status = AR_AppendString(str, L"\"");
+		}
+
+		return status;
+}
+
+
+static arStatus_t __json_float_to_string(double flt, arString_t *str, size_t indent)
+{
+		AR_ASSERT(str != NULL);
+		AR_UNUSED(indent);
+		return AR_AppendFormatString(str, L" %g", flt);
+}
+
+
+static arStatus_t __json_uint64_to_string(ar_uint_64_t un, arString_t *str, size_t indent)
+{
+		AR_ASSERT(str != NULL);
+		AR_UNUSED(indent);
+		return AR_AppendFormatString(str, L" %qu", un);
+}
+
+static arStatus_t __json_int64_to_string(ar_int_64_t n, arString_t *str, size_t indent)
+{
+		AR_ASSERT(str != NULL);
+		AR_UNUSED(indent);
+		return AR_AppendFormatString(str, L" %qd", n);
+
+}
+
+static arStatus_t __json_boolean_to_string(ar_bool_t b, arString_t *str, size_t indent)
+{
+		AR_ASSERT(str != NULL);
+		AR_UNUSED(indent);
+		return AR_AppendString(str, b ? L"true" : L"false");
+}
+
+static arStatus_t __json_null_to_string(arString_t *str, size_t indent)
+{
+		AR_ASSERT(str != NULL);
+		AR_UNUSED(indent);
+
+		return AR_AppendString(str, L"null");
+}
+
+
+
+static arStatus_t __json_dict_to_string(const jsonDict_t *dict, arString_t *str, size_t indent)
+{
+		size_t i,k;
+		AR_ASSERT(dict != NULL && str != NULL);
+
+		AR_AppendString(str, L"\r\n");
+		for(i = 0; i < indent; ++i)
+		{
+				AR_AppendString(str, L" ");
+		}
+		AR_AppendString(str, L"{\r\n");
+
+		
+
+		for(i = 0; i < dict->count; ++i)
+		{
+				const wchar_t *key = dict->pairs[i].key;
+				const jsonObj_t *val = dict->pairs[i].val;
+				AR_ASSERT(key != NULL);
+
+				AR_AppendString(str, L"\r\n");
+				for(k = 0; k < indent + 8; ++k)
+				{
+						AR_AppendString(str, L" ");
+				}
+
+				__json_string_to_string(key, str, indent);
+
+				AR_AppendString(str, L" : ");
+
+				if(val == NULL)
+				{
+						AR_AppendString(str, L"null");
+				}else
+				{
+						__json_object_to_string(val, str, indent + 8);
+				}
+
+				if(i < dict->count - 1)
+				{
+						AR_AppendString(str, L",");
+				}
+		}
+
+		if(dict->count > 0)
+		{
+				AR_AppendString(str, L"\r\n");
+				for(i = 0; i < indent; ++i)
+				{
+						AR_AppendString(str, L" ");
+				}
+		}
+
+		AR_AppendString(str, L"}");
+
+		return AR_S_YES;
+}
+
+
+static arStatus_t __json_array_to_string(const jsonArray_t *arr, arString_t *str, size_t indent)
+{
+		size_t i;
+		arStatus_t status;
+		AR_ASSERT(arr != NULL && str != NULL);
+
+		status = AR_S_YES;
+
+		status = AR_AppendString(str, L"[ ");
+		if(status != AR_S_YES)
+		{
+				return status;
+		}
+
+		for(i = 0; i < arr->count && status == AR_S_YES; ++i)
+		{
+				const jsonObj_t *obj = arr->lst[i];
+				AR_ASSERT(obj != NULL);
+				status = __json_object_to_string(obj, str, indent);
+				if(status == AR_S_YES && i < arr->count - 1)
+				{
+						status = AR_AppendString(str, L", ");
+				}
+		}
+
+		if(status != AR_S_YES)
+		{
+				return status;
+		}
+
+		status = AR_AppendString(str, L" ]");
+		
+		return status;
+
+}
+
+
+
+static arStatus_t __json_object_to_string(const jsonObj_t *obj, arString_t *str, size_t indent)
+{
+		arStatus_t status;
+		AR_ASSERT(obj != NULL && str != NULL);
+
+		status = AR_S_YES;
+
+		switch(obj->type)
+		{
+		case JSON_TYPE_DICT_T:
+				return __json_dict_to_string(&obj->dict, str, indent);
+		case JSON_TYPE_ARRAY_T:
+				return __json_array_to_string(&obj->array, str, indent);
+		case JSON_TYPE_STRING_T:
+				return __json_string_to_string(obj->str, str, indent);
+		case JSON_TYPE_INT_T:
+				if(obj->integer.is_signed)
+				{
+						return __json_int64_to_string(obj->integer.n, str, indent);
+				}else
+				{
+						return __json_uint64_to_string(obj->integer.n, str, indent);
+				}
+
+		case JSON_TYPE_FLOAT_T:
+				return __json_float_to_string(obj->float_num, str, indent);
+		case JSON_TYPE_BOOL_T:
+				return __json_boolean_to_string(obj->boolean, str, indent);
+		case JSON_TYPE_NULL_T:
+				return __json_null_to_string(str, indent);
+		default:
+				AR_ASSERT(false);
+				return AR_E_INVAL;
+				break;
+		}
+}
 
 arStatus_t		Json_SaveObjectToString(const jsonObj_t *obj, arString_t *str)
 {
-		AR_UNUSED(obj);
-		AR_UNUSED(str);
-		return AR_E_NOTSUPPORTED;
+		AR_ASSERT(obj != NULL && str != NULL);
+		AR_ClearString(str);
+		return __json_object_to_string(obj, str, 0);
 }
 
 
 arStatus_t		Json_SaveObjectToFile(const jsonObj_t *obj, const wchar_t *path)
 {
-		AR_UNUSED(obj);
-		AR_UNUSED(path);
-		return AR_E_NOTSUPPORTED;
+		arString_t *str;
+		arStatus_t status;
+		AR_ASSERT(obj != NULL && path != NULL);
+
+		status = AR_S_YES;
+		str = AR_CreateString();
+
+		if(str == NULL)
+		{
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+
+		status = Json_SaveObjectToString(obj, str);
+
+		if(status != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+
+		
+		status = AR_SaveBomTextFile(path, AR_TXT_BOM_UTF_8, AR_CSTR(str));
+
+
+END_POINT:
+		if(str)
+		{
+				AR_DestroyString(str);
+				str = NULL;
+		}
+		return status;
 }
+
+
+
+
+
+arStatus_t		Json_Init()
+{
+		AR_InitSpinLock(&__g_lock);
+		return AR_S_YES;
+}
+
+
+void			Json_UnInit()
+{
+
+		if(__g_grammar)
+		{
+				Parser_DestroyGrammar(__g_grammar);
+				__g_grammar = NULL;
+		}
+
+		if(__g_parser)
+		{
+				Parser_DestroyParser(__g_parser);
+				__g_parser = NULL;
+		}
+
+		if(__g_lex)
+		{
+				Lex_Destroy(__g_lex);
+				__g_lex = NULL;
+		}
+
+		AR_InitSpinLock(&__g_lock);
+		
+}
+
+
+
 
 
 AR_NAMESPACE_END
