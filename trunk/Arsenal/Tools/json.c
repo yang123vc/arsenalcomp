@@ -504,7 +504,11 @@ jsonObj_t*		Json_CreateObject(jsonType_t t)
 		if(obj)
 		{
 				obj->type = t;
-		}
+		}else
+        {
+                AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+                return NULL;
+        }
 
 		switch(obj->type)
 		{

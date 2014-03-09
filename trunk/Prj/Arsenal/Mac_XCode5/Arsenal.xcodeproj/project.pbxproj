@@ -16,6 +16,12 @@
 		6728C3B5154C5E8300861D86 /* enviroment.c in Sources */ = {isa = PBXBuildFile; fileRef = 6728C3B4154C5E8300861D86 /* enviroment.c */; };
 		6728C3B6154C5E8300861D86 /* enviroment.c in Sources */ = {isa = PBXBuildFile; fileRef = 6728C3B4154C5E8300861D86 /* enviroment.c */; };
 		6728C3E315503E9300861D86 /* filesystem.c in Sources */ = {isa = PBXBuildFile; fileRef = 6728C3E215503E9300861D86 /* filesystem.c */; };
+		6741333B18CCBF3900E8E603 /* json_parser_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 6741333818CCBF3900E8E603 /* json_parser_impl.h */; };
+		6741333C18CCBF3900E8E603 /* json_parser_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 6741333818CCBF3900E8E603 /* json_parser_impl.h */; };
+		6741333D18CCBF3900E8E603 /* json.c in Sources */ = {isa = PBXBuildFile; fileRef = 6741333918CCBF3900E8E603 /* json.c */; };
+		6741333E18CCBF3900E8E603 /* json.c in Sources */ = {isa = PBXBuildFile; fileRef = 6741333918CCBF3900E8E603 /* json.c */; };
+		6741333F18CCBF3900E8E603 /* json.h in Headers */ = {isa = PBXBuildFile; fileRef = 6741333A18CCBF3900E8E603 /* json.h */; };
+		6741334018CCBF3900E8E603 /* json.h in Headers */ = {isa = PBXBuildFile; fileRef = 6741333A18CCBF3900E8E603 /* json.h */; };
 		674D8C8315734D4B00CC43A6 /* uri.c in Sources */ = {isa = PBXBuildFile; fileRef = 674D8C8215734D4B00CC43A6 /* uri.c */; };
 		674D8C8415734D4B00CC43A6 /* uri.c in Sources */ = {isa = PBXBuildFile; fileRef = 674D8C8215734D4B00CC43A6 /* uri.c */; };
 		675B2B621562254100DADFE2 /* printf.c in Sources */ = {isa = PBXBuildFile; fileRef = 675B2B611562254100DADFE2 /* printf.c */; };
@@ -181,6 +187,9 @@
 		671E7D801781299800B22D92 /* filesystem_path_posix_posix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filesystem_path_posix_posix.h; sourceTree = "<group>"; };
 		6728C3B4154C5E8300861D86 /* enviroment.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = enviroment.c; sourceTree = "<group>"; };
 		6728C3E215503E9300861D86 /* filesystem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = filesystem.c; sourceTree = "<group>"; };
+		6741333818CCBF3900E8E603 /* json_parser_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = json_parser_impl.h; sourceTree = "<group>"; };
+		6741333918CCBF3900E8E603 /* json.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = json.c; sourceTree = "<group>"; };
+		6741333A18CCBF3900E8E603 /* json.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = json.h; sourceTree = "<group>"; };
 		674D8C8215734D4B00CC43A6 /* uri.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = uri.c; sourceTree = "<group>"; };
 		675B2B611562254100DADFE2 /* printf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = printf.c; sourceTree = "<group>"; };
 		6774715318202CD70048F34E /* libpthread.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpthread.dylib; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib/libpthread.dylib; sourceTree = DEVELOPER_DIR; };
@@ -423,6 +432,9 @@
 		BE185DD514E841B90095DB44 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				6741333818CCBF3900E8E603 /* json_parser_impl.h */,
+				6741333918CCBF3900E8E603 /* json.c */,
+				6741333A18CCBF3900E8E603 /* json.h */,
 				BE185DD614E841B90095DB44 /* grammar_codegen.c */,
 				BE185DD714E841B90095DB44 /* grammar_collector.c */,
 				BE185DD814E841B90095DB44 /* grammar_config.h */,
@@ -477,6 +489,7 @@
 				BE185E1914E841B90095DB44 /* lex.h in Headers */,
 				BE185E1F14E841B90095DB44 /* rgx.h in Headers */,
 				BE185E2D14E841B90095DB44 /* lalr.h in Headers */,
+				6741333B18CCBF3900E8E603 /* json_parser_impl.h in Headers */,
 				BE185E3314E841B90095DB44 /* lalr_config_aux.h in Headers */,
 				BE185E3914E841B90095DB44 /* lr_action.h in Headers */,
 				BE185E3D14E841B90095DB44 /* parser.h in Headers */,
@@ -487,6 +500,7 @@
 				BE185E6D14E841B90095DB44 /* serializer.h in Headers */,
 				BE185E7114E841B90095DB44 /* tools.h in Headers */,
 				679A46D9155262E1006A5AD4 /* thread_posix_apple.h in Headers */,
+				6741333F18CCBF3900E8E603 /* json.h in Headers */,
 				679A46DB155262E1006A5AD4 /* thread_posix_posix.h in Headers */,
 				67E28CB415615FF7005A2C79 /* enviroment_posix.h in Headers */,
 				67E28CB615615FF7005A2C79 /* enviroment_win.h in Headers */,
@@ -514,6 +528,7 @@
 				BE185E1A14E841B90095DB44 /* lex.h in Headers */,
 				BE185E2014E841B90095DB44 /* rgx.h in Headers */,
 				BE185E2E14E841B90095DB44 /* lalr.h in Headers */,
+				6741333C18CCBF3900E8E603 /* json_parser_impl.h in Headers */,
 				BE185E3414E841B90095DB44 /* lalr_config_aux.h in Headers */,
 				BE185E3A14E841B90095DB44 /* lr_action.h in Headers */,
 				BE185E3E14E841B90095DB44 /* parser.h in Headers */,
@@ -524,6 +539,7 @@
 				BE185E6E14E841B90095DB44 /* serializer.h in Headers */,
 				BE185E7214E841B90095DB44 /* tools.h in Headers */,
 				679A46DA155262E1006A5AD4 /* thread_posix_apple.h in Headers */,
+				6741334018CCBF3900E8E603 /* json.h in Headers */,
 				679A46DC155262E1006A5AD4 /* thread_posix_posix.h in Headers */,
 				67E28CB515615FF7005A2C79 /* enviroment_posix.h in Headers */,
 				67E28CB715615FF7005A2C79 /* enviroment_win.h in Headers */,
@@ -607,6 +623,7 @@
 			files = (
 				BE185DDF14E841B90095DB44 /* Arsenal.c in Sources */,
 				BE185DE314E841B90095DB44 /* algo.c in Sources */,
+				6741333D18CCBF3900E8E603 /* json.c in Sources */,
 				BE185DE514E841B90095DB44 /* base64.c in Sources */,
 				BE185DE714E841B90095DB44 /* buffer.c in Sources */,
 				BE185DE914E841B90095DB44 /* byteorder.c in Sources */,
@@ -664,6 +681,7 @@
 			files = (
 				67C97BA61553B18F00FCB4E5 /* filesystem.c in Sources */,
 				BE185DE014E841B90095DB44 /* Arsenal.c in Sources */,
+				6741333E18CCBF3900E8E603 /* json.c in Sources */,
 				BE185DE414E841B90095DB44 /* algo.c in Sources */,
 				BE185DE614E841B90095DB44 /* base64.c in Sources */,
 				BE185DE814E841B90095DB44 /* buffer.c in Sources */,
