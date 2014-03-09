@@ -447,6 +447,9 @@
     <ClCompile Include="..\..\..\Test\net_test.c">
       <Filter>Test</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Test\json_test.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Test\avltree.h">

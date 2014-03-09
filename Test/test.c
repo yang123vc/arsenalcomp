@@ -105,6 +105,8 @@ extern void plist_test();
 
 extern void net_test();
 
+extern void Json_Test();
+
 #endif
 
 
@@ -114,7 +116,7 @@ extern void net_test();
 void AR_Test()
 {
 #if defined(__LIB)
-		com_test();
+		//com_test();
 		//math_test();
 		//trie_tree_test();
 		//expr_test();
@@ -204,6 +206,8 @@ void AR_Test()
 		//plist_test();
 
 		//net_test();
+
+		Json_Test();
 
 		getchar();
 #else

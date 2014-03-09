@@ -1506,6 +1506,7 @@
     <ClCompile Include="..\..\..\Test\grammar_config_test.c" />
     <ClCompile Include="..\..\..\Test\grammar_test.c" />
     <ClCompile Include="..\..\..\Test\ini_test.c" />
+    <ClCompile Include="..\..\..\Test\json_test.cpp" />
     <ClCompile Include="..\..\..\Test\Lexer\regexp.c" />
     <ClCompile Include="..\..\..\Test\lex_test.c" />
     <ClCompile Include="..\..\..\Test\lfu_cache.c">

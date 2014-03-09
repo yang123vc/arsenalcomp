@@ -21,7 +21,7 @@ AR_NAMESPACE_BEGIN
 arStatus_t	Tools_Init()
 {
         arStatus_t status;
-        ar_bool_t cfg_is_init = false, plist_is_init = false;
+        ar_bool_t cfg_is_init = false, plist_is_init = false, json_is_init = false;
         
         status = AR_S_YES;
         
@@ -35,6 +35,14 @@ arStatus_t	Tools_Init()
         }
         plist_is_init = true;
         
+		status = Json_Init();
+
+		if(status != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+
+		json_is_init = true;
         
 END_POINT:
         
@@ -42,6 +50,12 @@ END_POINT:
         {
                 return status;
         }
+
+		if(json_is_init)
+		{
+				Json_UnInit();
+				json_is_init = false;
+		}
         
         if(plist_is_init)
         {
@@ -61,6 +75,7 @@ END_POINT:
 
 void	Tools_UnInit()
 {
+		Json_UnInit();
         PList_UnInit();
 		CFG_UnInit();
 }

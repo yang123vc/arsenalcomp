@@ -21,7 +21,9 @@
 
 AR_NAMESPACE_BEGIN
 
-#if(0)
+arStatus_t		Json_Init();
+void			Json_UnInit();
+
 
 typedef enum
 {
@@ -55,6 +57,7 @@ arStatus_t		Json_GetFloatFromObject(jsonObj_t *obj, double *num);
 
 arStatus_t		Json_SetStringToObject(jsonObj_t *obj, const wchar_t *str);
 arStatus_t		Json_GetStringFromObject(jsonObj_t *obj, arString_t *str);
+const wchar_t*	Json_GetWcsFromObject(jsonObj_t *obj);			/*valid until next call*/
 
 arStatus_t		Json_SetBooleanToObject(jsonObj_t *obj, ar_bool_t b);
 arStatus_t		Json_GetBooleanFromObject(jsonObj_t *obj, ar_bool_t *b);
@@ -80,7 +83,7 @@ arStatus_t		Json_LoadObjectFromFile(const wchar_t *path, jsonObj_t **obj);
 arStatus_t		Json_SaveObjectToFile(const jsonObj_t *obj, const wchar_t *path);
 
 
-#endif
+
 
 
 

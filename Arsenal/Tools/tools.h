@@ -18,6 +18,7 @@
 #include "serializer.h"
 #include "iniobj.h"
 #include "property_list.h"
+#include "json.h"
 
 AR_NAMESPACE_BEGIN
 

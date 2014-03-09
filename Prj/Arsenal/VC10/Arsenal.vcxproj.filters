@@ -314,4 +314,9 @@
       <Filter>Arsenal</Filter>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\..\Arsenal\Tools\json_parser_impl.h">
+      <Filter>Arsenal\Tools</Filter>
+    </CustomBuild>
+  </ItemGroup>
 </Project>
