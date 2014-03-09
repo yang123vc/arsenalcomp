@@ -61,20 +61,20 @@
 %name    escape_seq        :    "(\\\x22)" 
                 		;
 
-%name    string_dq        :     "(\x22({escape_seq}|[^\x22])*\x22)"        //只能提取"..."或"\""此类串，其它词法规则要到语义例程中处理    
-                ;
+%name    string_dq        	:     "(\x22({escape_seq}|[^\x22])*\x22)"        //只能提取"..."或"\""此类串，其它词法规则要到语义例程中处理    
+                		;
 
 
 
 
 %name        float_constant    :    "{float_literal}"
-                    ;
-%name        hex_constant        :    "{hex_literal}"
-                    ;
+                    		    ;
+%name        hex_constant      :    "{hex_literal}"
+                    		   ;
 %name        oct_constant        :    "{oct_literal}"
-                    ;
+                    			;
 %name        dec_constant        :    "{dec_literal}"
-                    ;
+                    			;
 
 
 
@@ -85,12 +85,25 @@
 
 
 
-%token        STRING        :    "{string_dq}"                        %value    "TOK_STRING"            %action on_string_leaf_handler        
-		              ;
+%token        STRING        :    "{string_dq}"                        %value    "TOK_STRING"            %action on_string_leaf_handler
+{:
+		AR_ASSERT(tok != NULL && tok->type == TOK_STRING);
+		
+:}
+;
 
 
-%token        FLOAT_NUMBER    :    "{float_constant}"                        ,2    %value    "TOK_FLOAT_NUMBER"        %action default_leaf_handler        ;
-%token        INT_NUMBER    :    "{hex_constant}|{oct_constant}|{dec_constant}"        ,2    %value    "TOK_INT_NUMBER"        %action default_leaf_handler        ;
+%token        FLOAT_NUMBER    :    "{float_constant}"         				,2    %value    "TOK_FLOAT_NUMBER"      %action default_float_leaf_handler      
+{:
+
+:}
+;
+
+%token        INT_NUMBER      :    "{hex_constant}|{oct_constant}|{dec_constant}"     	,2    %value    "TOK_INT_NUMBER"        %action default_integer_leaf_handler
+{:
+
+:}
+;
 
 
 %token    "null"        :    '"null"'        ,1            %value    "TOK_NULL"            %action default_leaf_handler            ;
@@ -113,42 +126,52 @@
 %start json;
 
 
-json	:	array
-	|	object
+json	:	array					%action "auto_return_0"
+	|	object					%action "auto_return_0"
+	{:
+		  psrRetVal_t ret = {AR_S_YES, (psrNode_t*)nodes[0]};
+                return ret;
+       :}
 	;
 
 
-object :	"{"	"}"
-	|	"{"	members	"}"
-	|	"{"	error	"}"
+optional_dot        		:    ","
+                    		|    .
+                    		;
+
+
+object :	"{"	"}"						%action    "on_object"
+	|	"{"	members	optional_dot "}"		%action    "on_object"
+	|	"{"	error	"}"					%action    "on_object"
 	;
 
 
-members:	members "," pair
-	|	pair
+members :	members "," pair			%action    "on_pair_list"
+	 |	pair					%action    "auto_return_0"
 	;
 
-pair	:	STRING	":"	value
+pair	:	STRING	":"	value			%action    "on_pair"
 	;
 
-array	:	"["	"]"
-	|	"["	elements "]"
-	|	"["	error	"]"
+array	:	"["	"]"						%action    "on_array"
+	|	"["	elements optional_dot  "]"			%action    "on_array"
+	|	"["	error	"]"					%action    "on_array"
 	;
 
-elements	:	elements "," value
-		|	value
+elements	:	elements "," value		%action on_elements_list
+		|	value				%action "auto_return_0"
 		;
 
 
-value	:	STRING
-	|	INT_NUMBER
-	|	FLOAT_NUMBER
-	|	object
-	|	array
-	|	"true"
-	|	"false"
-	|	"null"
+
+value	:	STRING					%action "auto_return_0"
+	|	INT_NUMBER				%action "auto_return_0"
+	|	FLOAT_NUMBER				%action "auto_return_0"
+	|	object					%action "auto_return_0"
+	|	array					%action "auto_return_0"
+	|	"true"					%action "auto_return_0"
+	|	"false"				%action "auto_return_0"
+	|	"null"					%action "auto_return_0"
 	;
 
 
