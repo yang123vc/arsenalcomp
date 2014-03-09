@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * The Arsenal Library
  * Copyright (c) 2009-2012 by Solidus
  * 
@@ -1271,7 +1271,7 @@ arStatus_t		Json_LoadObjectFromString(const wchar_t *content, jsonObj_t **obj)
 
 						status = AR_E_INVAL;
 						goto END_POINT;
-				}else /*¸÷ÖÖ´íÎó£¬ÀıÈçAR_E_NOMEM*/
+				}else /*å„ç§é”™è¯¯ï¼Œä¾‹å¦‚AR_E_NOMEM*/
 				{
 						goto END_POINT;
 				}
