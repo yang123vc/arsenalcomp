@@ -11,13 +11,15 @@
  *
  */
 
+#include "../Parser/parser.h"
+#include "../Lex/lex.h"
 #include "json.h"
-#include "serializer.h"
+
 
 AR_NAMESPACE_BEGIN
 
 
-#if(0)
+
 /*************************************************************Dict********************************************/
 
 typedef struct __json_dict_pair_tag
@@ -478,9 +480,12 @@ struct __json_object_tag
 				jsonArray_t		array;
 
 				wchar_t			*str;
-				union{
-						ar_uint_64_t	un;
-						ar_int_64_t		n;
+				struct{
+						ar_bool_t is_signed;
+						union{
+								ar_uint_64_t	un;
+								ar_int_64_t		n;
+						};
 				}integer;
 				double			float_num;
 
@@ -561,6 +566,9 @@ void			Json_DestroyObject(jsonObj_t *obj)
 				AR_ASSERT(false);
 				break;
 		}
+
+		AR_DEL(obj);
+		obj = NULL;
 }
 
 arStatus_t		Json_CompareObject(const jsonObj_t *l, const jsonObj_t *r)
@@ -652,6 +660,7 @@ arStatus_t		Json_SetIntToObject(jsonObj_t *obj, ar_int_64_t num)
 		AR_ASSERT(obj != NULL);
 		CHECK_MATCHED_TYPE(obj, JSON_TYPE_INT_T);
 
+		obj->integer.is_signed = true;
 		obj->integer.n = num;
 		return AR_S_YES;
 }
@@ -668,6 +677,8 @@ arStatus_t		Json_SetUIntToObject(jsonObj_t *obj, ar_uint_64_t num)
 {
 		AR_ASSERT(obj != NULL);
 		CHECK_MATCHED_TYPE(obj, JSON_TYPE_INT_T);
+
+		obj->integer.is_signed = false;
 		obj->integer.un = num;
 		return AR_S_YES;
 }
@@ -728,6 +739,20 @@ arStatus_t		Json_GetStringFromObject(jsonObj_t *obj, arString_t *str)
 		CHECK_MATCHED_TYPE(obj, JSON_TYPE_STRING_T);
 		return AR_SetString(str, obj->str);
 }
+
+const wchar_t*	Json_GetWcsFromObject(jsonObj_t *obj)
+{
+		AR_ASSERT(obj != NULL);
+
+		if(obj->type != JSON_TYPE_STRING_T)
+		{
+				return NULL;
+		}
+
+		return obj->str;
+
+}
+
 
 arStatus_t		Json_SetBooleanToObject(jsonObj_t *obj, ar_bool_t b)
 {
@@ -812,18 +837,18 @@ arStatus_t		Json_RemoveDictObject(jsonObj_t *obj, const wchar_t *key)
 
 /***************************************************************************************************/
 
-jsonObj_t* __parse_json_escape_string(const wchar_t *lexer_str)
+jsonObj_t* parse_json_escape_string(const wchar_t *lexer_str, size_t count)
 {
 		jsonObj_t *obj;
 		wchar_t *str ;
-		const wchar_t *p;
+		const wchar_t *p, *e;
 
 		wchar_t *pstr;
 
 		AR_ASSERT(lexer_str != NULL);
 
 		obj = NULL;
-		str = AR_NEWARR(wchar_t, AR_wcslen(lexer_str));
+		str = AR_NEWARR(wchar_t, count + 1);
 
 		if(str == NULL)
 		{
@@ -832,9 +857,10 @@ jsonObj_t* __parse_json_escape_string(const wchar_t *lexer_str)
 		}
 
 		p = lexer_str;
+		e = p + count;
 		pstr = str;
 
-		while(*p)
+		while(*p && p < e)
 		{
 				if(*p == L'\\')
 				{
@@ -842,25 +868,37 @@ jsonObj_t* __parse_json_escape_string(const wchar_t *lexer_str)
 						switch(*p)
 						{
 						case L'\\':
-								*pstr = *p;
+								*pstr++ = *p++;
 								break;
 						case L'b':
-								*pstr = L'\b';
+								*pstr++ = L'\b';
+								++p;
 								break;
 						case L'f':
-								*pstr = L'\f';
+								*pstr++ = L'\f';
+								++p;
 								break;
 						case L'n':
-								*pstr = L'\n';
+								*pstr++ = L'\n';
+								++p;
 								break;
 						case L'r':
-								*pstr = L'\r';
+								*pstr++ = L'\r';
+								++p;
 								break;
 						case L't':
-								*pstr = L'\t';
+								*pstr++ = L'\t';
+								++p;
 								break;
 						case L'/':
-								*pstr = L'/';
+								*pstr++ = L'/';
+								++p;
+								break;
+						case L'"':
+								*pstr++ = L'"';
+								break;
+						case L'\'':
+								*pstr++ = L'\'';
 								break;
 						case L'u':
 						{
@@ -868,7 +906,7 @@ jsonObj_t* __parse_json_escape_string(const wchar_t *lexer_str)
 								size_t i;
 								++p;
 
-								for(i = 0; i < 4 && p[i] != L'\0'; ++i)
+								for(i = 0; i < 4 && (p + i) < e && p[i] != L'\0'; ++i)
 								{
 										c *= 16;
 
@@ -893,16 +931,13 @@ jsonObj_t* __parse_json_escape_string(const wchar_t *lexer_str)
 
 								p += i;
 
-								*pstr = c;
+								*pstr++ = c;
 						}
 								break;
 						default:
 								AR_error(AR_ERR_WARNING, L"invalid escape char : %c\r\n", *p);
 								break;
 						}
-
-						++p;
-						++pstr;
 				}else
 				{
 						*pstr++ = *p++;
@@ -937,16 +972,417 @@ jsonObj_t* __parse_json_escape_string(const wchar_t *lexer_str)
 }
 
 
-arStatus_t		Json_LoadObjectFromString(const wchar_t *content, jsonObj_t **obj);
-arStatus_t		Json_SaveObjectToString(const jsonObj_t *obj, arString_t *str);
+jsonObj_t* parse_json_float_string(const wchar_t *lexer_str, size_t count)
+{
+		double flt;
+		AR_ASSERT(lexer_str != NULL);
 
-arStatus_t		Json_LoadObjectFromFile(const wchar_t *path, jsonObj_t **obj);
-arStatus_t		Json_SaveObjectToFile(const jsonObj_t *obj, const wchar_t *path);
+		if(AR_wtod_s(lexer_str, lexer_str + count, &flt) == NULL)
+		{
+				AR_error(AR_ERR_WARNING, L"invalid float string : %ls\r\n", lexer_str);
+				return NULL;
+		}else
+		{
+				jsonObj_t *obj = Json_CreateObject(JSON_TYPE_FLOAT_T);
+				if(obj == NULL)
+				{
+						AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+						return NULL;
+				}
 
-#endif
+				Json_SetFloatToObject(obj, flt);
+				return obj;
+		}
+}
 
 
 
+jsonObj_t* parse_json_integer_string(const wchar_t *lexer_str, size_t count)
+{
+		jsonObj_t *obj;
+		AR_ASSERT(lexer_str != NULL);
+
+		obj = Json_CreateObject(JSON_TYPE_INT_T);
+
+		if(obj == NULL)
+		{
+				AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+				return NULL;
+		}
+
+		if(lexer_str[0] == L'-')
+		{
+				obj->integer.is_signed = true;
+				if(AR_wtoi64_s(lexer_str, lexer_str + count, &obj->integer.n, 0) == NULL)
+				{
+						Json_DestroyObject(obj);
+						obj = NULL;
+						return NULL;
+
+				}
+		}else
+		{
+				obj->integer.is_signed = false;
+				if(AR_wtou64_s(lexer_str, lexer_str + count, &obj->integer.un, 0) == NULL)
+				{
+						Json_DestroyObject(obj);
+						obj = NULL;
+						return NULL;
+				}
+		}
+
+		return obj;
+}
+
+
+
+
+
+
+
+
+
+
+
+#include "json_parser_impl.h"
+
+static arSpinLock_t			__g_lock;
+static lex_t				*__g_lex = NULL;
+static psrGrammar_t			*__g_grammar = NULL;
+static const parser_t		*__g_parser = NULL;
+
+
+static lexMatch_t*		__create_lex_match()
+{
+		lexMatch_t		*match;
+
+		AR_LockSpinLock(&__g_lock);
+
+		if(__g_lex == NULL)
+		{
+				__g_lex = __build_lex();
+				if(__g_lex == NULL)
+				{
+						AR_error(AR_ERR_FATAL, L"grammar config : failed to initialize lexer\r\n");
+				}
+		}
+
+
+		match = Lex_CreateMatch(__g_lex);
+		AR_UnLockSpinLock(&__g_lock);
+
+		return match;
+}
+
+static void				__destroy_lex_match(lexMatch_t *match)
+{
+		AR_ASSERT(match != NULL);
+		Lex_DestroyMatch(match);
+}
+
+
+
+static const parser_t*		__build_parser(const psrGrammar_t *gmr)
+{
+		const parser_t *parser;
+		AR_ASSERT(gmr && Parser_CheckIsValidGrammar(gmr) == AR_S_YES);
+
+		parser = Parser_CreateParser(gmr, PARSER_SLR);
+		AR_ASSERT(parser && Parser_CountParserConflict(parser) == 0);
+		return parser;
+}
+
+
+
+
+static psrContext_t*	__create_parser_context(void *ctx)
+{
+		psrContext_t	*parser_context = NULL;
+		AR_LockSpinLock(&__g_lock);
+
+
+		if(__g_grammar == NULL)
+		{
+				psrHandler_t	psr_handler;
+				psr_handler.error_f = on_error;
+				psr_handler.free_f = on_free_node;
+
+				__g_grammar = __build_grammar(&psr_handler);
+
+				if(__g_grammar == NULL)
+				{
+						AR_error(AR_ERR_FATAL, L"grammar config : failed to initialize grammar\r\n");
+				}
+
+		}
+
+		if(__g_parser == NULL)
+		{
+				__g_parser = __build_parser(__g_grammar);
+				if(__g_parser == NULL)
+				{
+						AR_error(AR_ERR_FATAL, L"grammar config : failed to initialize parser\r\n");
+				}
+		}
+
+		parser_context = Parser_CreateContext(__g_parser, ctx);
+		AR_UnLockSpinLock(&__g_lock);
+		return parser_context;
+}
+
+
+static void				__destroy_parser_context(psrContext_t *parser_context)
+{
+		AR_ASSERT(parser_context != NULL);
+		Parser_DestroyContext(parser_context);
+}
+
+
+
+
+
+arStatus_t		Json_Init()
+{
+		AR_InitSpinLock(&__g_lock);
+		return AR_S_YES;
+}
+
+
+void			Json_UnInit()
+{
+
+		if(__g_grammar)
+		{
+				Parser_DestroyGrammar(__g_grammar);
+				__g_grammar = NULL;
+		}
+
+		if(__g_parser)
+		{
+				Parser_DestroyParser(__g_parser);
+				__g_parser = NULL;
+		}
+
+		if(__g_lex)
+		{
+				Lex_Destroy(__g_lex);
+				__g_lex = NULL;
+		}
+
+		AR_InitSpinLock(&__g_lock);
+		
+}
+
+
+
+arStatus_t		Json_LoadObjectFromString(const wchar_t *content, jsonObj_t **obj)
+{
+		arStatus_t status = AR_S_YES;
+		
+
+		psrContext_t	*parser_context;
+		
+		lexMatch_t		*match;
+
+		lexToken_t		tok;
+		psrToken_t		term;
+
+		AR_ASSERT(content != NULL && obj != NULL);
+
+		status = AR_S_YES;
+		match = NULL;
+		parser_context = NULL;
+
+
+
+		match		   = __create_lex_match();
+		if(match == NULL)
+		{
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+
+		
+		
+		parser_context = __create_parser_context(NULL);
+
+		if(parser_context == NULL)
+		{
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+		
+		Lex_ResetInput(match, content);
+
+
+		while(status == AR_S_YES)
+		{
+				status = Lex_Match(match, &tok);
+
+				if(status == AR_S_YES)
+				{
+						PARSER_TOTERMTOK(&tok, &term);
+
+						status = Parser_AddToken(parser_context, &term);
+
+						if(tok.value == 0)
+						{
+								break;
+						}
+
+						if(status != AR_S_YES)
+						{
+								
+								goto END_POINT;
+						}
+						
+				}else if(status == AR_S_NO)
+				{
+						size_t n;
+						size_t	line, col;
+						arString_t		*str;
+						wchar_t			*tok = NULL;
+
+						str = NULL;
+						tok = NULL;
+
+						n = AR_wcslen(Lex_GetNextInput(match));
+
+						if(n > 5)
+						{
+								n = 5;
+						}
+
+						tok = AR_NEWARR(wchar_t, n + 1);
+						if(tok)
+						{
+								AR_wcsncpy(tok, Lex_GetNextInput(match), n);
+								tok[n] = L'\0';
+						}
+
+						str = AR_CreateString();
+
+						if(tok == NULL || str == NULL)
+						{
+								status = AR_E_NOMEM;
+								if(tok)
+								{
+										AR_DEL(tok);
+										tok = NULL;
+								}
+
+								if(str)
+								{
+										AR_DestroyString(str);
+										str = NULL;
+								}
+
+								goto END_POINT;
+						}
+						
+						Lex_MatchGetCoordinate(match, NULL, &line, &col);
+
+						if(AR_AppendFormatString(str, L"Invalid Token %ls...(%Id : %Id)\r\n", tok, line, col) != AR_S_YES)
+						{
+								AR_DEL(tok);
+								tok = NULL;
+								AR_DestroyString(str);
+								str = NULL;
+
+								status = AR_E_NOMEM;
+								goto END_POINT;
+						}
+
+
+						AR_error(AR_ERR_WARNING, L"%ls\r\n", AR_CSTR(str));
+						AR_DEL(tok);
+						tok = NULL;
+
+						AR_DestroyString(str);
+						str = NULL;
+
+						status = AR_E_INVAL;
+						goto END_POINT;
+				}else /*¸÷ÖÖ´íÎó£¬ÀýÈçAR_E_NOMEM*/
+				{
+						goto END_POINT;
+				}
+
+				
+		}		
+
+		if(status == AR_S_YES)
+		{
+				*obj = (jsonObj_t*)Parser_GetResult(parser_context);
+				AR_ASSERT(Json_GetObjectType(*obj) == JSON_TYPE_ARRAY_T || Json_GetObjectType(*obj) == JSON_TYPE_DICT_T);
+
+		}
+
+END_POINT:
+		if(parser_context)
+		{
+				__destroy_parser_context(parser_context);
+				parser_context = NULL;
+		}
+
+		if(match)
+		{
+				__destroy_lex_match(match);
+				match = NULL;
+		}
+
+		return status;
+}
+
+
+arStatus_t		Json_LoadObjectFromFile(const wchar_t *path, jsonObj_t **obj)
+{
+		arStatus_t status;
+		arString_t *str;
+		AR_ASSERT(path != NULL && obj != NULL);
+
+		status = AR_S_YES;
+		str = AR_CreateString();
+		if(str == NULL)
+		{
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+
+		status = AR_LoadBomTextFile(path, NULL, str);
+
+		if(status != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+
+		status = Json_LoadObjectFromString(AR_CSTR(str), obj);
+
+END_POINT:
+		if(str)
+		{
+				AR_DestroyString(str);
+				str = NULL;
+		}
+		return status;
+
+}
+
+
+arStatus_t		Json_SaveObjectToString(const jsonObj_t *obj, arString_t *str)
+{
+		AR_UNUSED(obj);
+		AR_UNUSED(str);
+		return AR_E_NOTSUPPORTED;
+}
+
+
+arStatus_t		Json_SaveObjectToFile(const jsonObj_t *obj, const wchar_t *path)
+{
+		AR_UNUSED(obj);
+		AR_UNUSED(path);
+		return AR_E_NOTSUPPORTED;
+}
 
 
 AR_NAMESPACE_END

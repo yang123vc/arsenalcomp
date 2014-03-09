@@ -79,6 +79,30 @@
 
 
 
+
+%code syntax_tree_handler {:
+
+    static void        AR_STDCALL on_free_node(psrNode_t *node, void *ctx)
+    {
+		AR_ASSERT(node != NULL && ctx != NULL);
+		Json_DestroyObject((jsonObj_t*)node);
+		node = NULL;
+    }
+
+    static arStatus_t        AR_STDCALL on_error(const psrToken_t *tok, const size_t expected[], size_t count, void *ctx)
+    {
+		return AR_S_YES;
+    }
+    
+    static const psrHandler_t    __g_handler = {on_error, on_free_node};
+:}
+;
+
+
+
+
+
+
 %token     %skip            :    "{skip_lexem}"                ,1                %value    "TOK_DELIM_ID"             ;            //空白，需要过滤
 
 
@@ -87,34 +111,138 @@
 
 %token        STRING        :    "{string_dq}"                        %value    "TOK_STRING"            %action on_string_leaf_handler
 {:
+		jsonObj_t *str_node;
+		psrRetVal_t ret_val;
 		AR_ASSERT(tok != NULL && tok->type == TOK_STRING);
+		str_node = parse_json_escape_string(tok->str + 1, tok->count-1);
 		
+		if(str_node == NULL)
+		{
+			ret_val.status = AR_E_INVAL;
+			ret_val.node = NULL;
+		}else
+		{
+			ret_val.status = AR_S_YES;
+			ret_val.node = (psrNode_t*)str_node;
+		}
+		retyrb ret_val;
 :}
 ;
 
 
-%token        FLOAT_NUMBER    :    "{float_constant}"         				,2    %value    "TOK_FLOAT_NUMBER"      %action default_float_leaf_handler      
+%token        FLOAT_NUMBER    :    "\-?{float_constant}"         				,2    %value    "TOK_FLOAT_NUMBER"      %action default_float_leaf_handler      
 {:
+		jsonObj_t *flt_node;
+		psrRetVal_t ret_val;
+		AR_ASSERT(tok != NULL && tok->type == TOK_FLOAT_NUMBER);
+		str_node = parse_json_float_string(tok->str + 1, tok->count-1);
+		
+		if(str_node == NULL)
+		{
+			ret_val.status = AR_E_INVAL;
+			ret_val.node = NULL;
+		}else
+		{
+			ret_val.status = AR_S_YES;
+			ret_val.node = (psrNode_t*)str_node;
+		}
+		retyrb ret_val;
 
 :}
 ;
 
-%token        INT_NUMBER      :    "{hex_constant}|{oct_constant}|{dec_constant}"     	,2    %value    "TOK_INT_NUMBER"        %action default_integer_leaf_handler
+
+%token        INT_NUMBER      :    "\-?({hex_constant}|{oct_constant}|{dec_constant})"     	,2    %value    "TOK_INT_NUMBER"        %action default_integer_leaf_handler
 {:
+		jsonObj_t *flt_node;
+		psrRetVal_t ret_val;
+		AR_ASSERT(tok != NULL && tok->type == TOK_INT_NUMBER);
+		str_node = parse_json_integer_string(tok->str + 1, tok->count-1);
+		
+		if(str_node == NULL)
+		{
+			ret_val.status = AR_E_INVAL;
+			ret_val.node = NULL;
+		}else
+		{
+			ret_val.status = AR_S_YES;
+			ret_val.node = (psrNode_t*)str_node;
+		}
+		retyrb ret_val;
+
 
 :}
 ;
 
 
-%token    "null"        :    '"null"'        ,1            %value    "TOK_NULL"            %action default_leaf_handler            ;
-%token    "true"        :    '"true"'        ,1            %value    "TOK_TRUE"            %action default_leaf_handler            ;
-%token    "false"       :    '"false"'        ,1            %value    "TOK_FALSE"            %action default_leaf_handler            ;
+
+%token    "null"        :    '"null"'        ,1            %value    "TOK_NULL"            %action default_misc_leaf_handler
+{:
+		jsonObj_t *node;
+		psrRetVal_t ret_val;
+		AR_ASSERT(tok != NULL && (tok->type == TOK_NULL || tok->type == TOK_TRUE || tok->type == TOK_FALSE));
+
+		
+		if(tok->type == TOK_NULL)
+		{
+			node = Json_CreateObject(JSON_TYPE_NULL_T);
+		}else if(tok->type == TOK_TRUE)
+		{
+			node = Json_CreateObject(JSON_TYPE_BOOL_T);
+
+			if(node)
+			{
+				Json_SetBooleanToObject(node, true);
+			}
+
+		}else if(tok->type == TOK_FALSE)
+		{
+
+			node = Json_CreateObject(JSON_TYPE_BOOL_T);
+
+			if(node)
+			{
+				Json_SetBooleanToObject(node, false);
+			}
+
+		}else
+		{
+			AR_ASSERT(false);
+			ret_val.status = AR_E_INVAL;
+			node = NULL;
+		}
+
+		if(node == NULL)
+		{
+			ret_val.status = AR_E_NOMEM;
+			ret_val.node = NULL;
+		}else
+		{
+			ret_val.status = AR_S_YES;
+			ret_val.node = (psrNode_t*)node;
+		}
+		retyrb ret_val;
+
+
+:}
+;
+
+%token    "true"        :    '"true"'        ,1            %value    "TOK_TRUE"            %action default_misc_leaf_handler;
+%token    "false"       :    '"false"'        ,1            %value    "TOK_FALSE"            %action default_misc_leaf_handler;
 
 
 
 
 
-%token    "{"        :    '"{"'            ,0                    %value    "TOK_L_BRACES"        %action default_leaf_handler            ;
+%token    "{"        :    '"{"'            ,0                    %value    "TOK_L_BRACES"        %action default_leaf_handler 
+{:
+		psrRetVal_t ret_val;
+		ret_val.status = AR_S_YES;
+		ret_val.node = NULL;
+		return ret_val;
+:}
+;
+
 %token    "}"        :    '"}"'            ,0                    %value    "TOK_R_BRACES"        %action default_leaf_handler            ;
 %token    "["        :    '"["'            ,0                    %value    "TOK_L_SQUARE"        %action default_leaf_handler            ;
 %token    "]"        :    '"]"'            ,0                    %value    "TOK_R_SQUARE"        %action default_leaf_handler            ;
@@ -130,6 +258,7 @@ json	:	array					%action "auto_return_0"
 	|	object					%action "auto_return_0"
 	{:
 		  psrRetVal_t ret = {AR_S_YES, (psrNode_t*)nodes[0]};
+		  nodes[0] = NULL;
                 return ret;
        :}
 	;
@@ -141,25 +270,190 @@ optional_dot        		:    ","
 
 
 object :	"{"	"}"						%action    "on_object"
-	|	"{"	members	optional_dot "}"		%action    "on_object"
-	|	"{"	error	"}"					%action    "on_object"
+	{:
+		jsonObj_t *node;
+		psrRetVal_t ret;
+		
+		node = Json_CreateObject(JSON_TYPE_DICT_T);
+		if(node == NULL)
+		{
+			AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+			ret.status = AR_E_NOMEM;
+			ret.node = NULL;
+		}else
+		{
+			ret.status = AR_S_YES;
+			ret.node = (psrNode_t*)node;
+		}
+		return ret;
+	:}
+	|	"{"	members	optional_dot "}"		%action    "auto_return_1"
+	{:
+		 psrRetVal_t ret = {AR_S_YES, (psrNode_t*)nodes[1]};
+		 nodes[1] = NULL;
+               return ret;
+	:}
+	|	"{"	error	"}"					%action    "on_error_type"
+	{:
+		psrRetVal_t ret;
+		ret.status = AR_E_INVAL;
+		ret.node = NULL;
+		return ret;
+	:}
 	;
 
 
-members :	members "," pair			%action    "on_pair_list"
-	 |	pair					%action    "auto_return_0"
+members :	members "," STRING	":"	value			%action    "on_new_member"
+	 {:
+		psrRetVal_t ret;
+		jsonObject_t  *dict, *key, *val;
+		const wchar_t *key_wcs = NULL;
+		jsonObject_t **ns = (jsonObject_t**)nodes;
+			
+		dict = ns[0];
+		key = ns[2];
+		val = ns[4];
+		AR_ASSERT(dict != NULL && key != NULL && val != NULL);
+		key_wcs = Json_GetWcsFromObject(key);
+
+		if(key_wcs == NULL)
+		{
+			ret.status = AR_E_INVAL;
+			ret.node = NULL;
+			return ret;
+		}
+
+		ret.status = Json_SetDictObject(dict, key_wcs, val, true);
+		if(ret.status != AR_S_YES)
+		{
+			ret.node = NULL;
+			return ret;
+		}
+
+		ns[0] = NULL;
+		ns[4] = NULL;
+
+		ret.status = AR_S_YES;
+		ret.node = (psrNode_t*)dict;
+		return ret;
+	 :}
+	 |	STRING	":"	value					%action    "on_first_member"
+	{:
+		
+		jsonObject_t  *dict, *key, *val;
+		psrRetVal_t ret;
+		const wchar_t *key_wcs = NULL;
+		jsonObject_t **ns = (jsonObject_t**)nodes;
+			
+		key = ns[0];
+		val = ns[2];
+		AR_ASSERT(key != NULL && val != NULL);
+		key_wcs = Json_GetWcsFromObject(key);
+
+
+		dict = Json_CreateObject(JSON_TYPE_DICT_T);
+		if(dict == NULL)
+		{
+			AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+			ret.status = AR_E_NOMEM;
+			ret.node = NULL;
+			return ret;
+		}
+		
+		ret.status = Json_SetDictObject(dict, key_wcs, val, true);
+		if(ret.status != AR_S_YES)
+		{
+			Json_DestroyObject(dict);
+			dict = NULL;
+			ret.node = NULL;
+			return ret;
+		}
+
+		ns[2] = NULL;
+
+		ret.status = AR_S_YES;
+		ret.node = (psrNode_t*)dict;
+		return ret;
+	:}
 	;
 
-pair	:	STRING	":"	value			%action    "on_pair"
-	;
 
 array	:	"["	"]"						%action    "on_array"
-	|	"["	elements optional_dot  "]"			%action    "on_array"
-	|	"["	error	"]"					%action    "on_array"
+	{:
+		jsonObj_t *node;
+		psrRetVal_t ret;
+		
+		node = Json_CreateObject(JSON_TYPE_ARRAY_T);
+		if(node == NULL)
+		{
+			AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+			ret.status = AR_E_NOMEM;
+			ret.node = NULL;
+		}else
+		{
+			ret.status = AR_S_YES;
+			ret.node = (psrNode_t*)node;
+		}
+		return ret;
+
+	:}
+	|	"["	elements optional_dot  "]"			%action    "auto_return_1"
+	|	"["	error	"]"					%action    "on_error_type"
 	;
 
-elements	:	elements "," value		%action on_elements_list
-		|	value				%action "auto_return_0"
+elements	:	elements "," value		%action on_new_element
+		{:
+			psrRetVal_t ret;
+			jsonObject_t  *array, *val;
+			jsonObject_t **ns = (jsonObject_t**)nodes;
+			
+			array= ns[0];
+			val = ns[2];
+
+			AR_ASSERT(array != NULL && val != NULL);
+
+			ret.status = Json_AppendToArrayObject(array, val);
+			if(ret.status != AR_S_YES)
+			{
+				ret.node = NULL;
+				return ret;
+			}
+			ns[0] = NULL;
+			ns[2] = NULL;
+			ret.status = AR_S_YES;
+			ret.node = (psrNode_t*)dict;
+			return ret;
+
+		:}
+		|	value				%action "on_first_element"
+		{:
+			jsonObject_t  *array, *item;
+			psrRetVal_t ret;
+			
+			val = (jsonObj_t*)nodes[0];
+
+			array = Json_CreateObject(JSON_TYPE_ARRAY_T);
+			if(array == NULL)
+			{
+				AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+				ret.status = AR_E_NOMEM;
+				ret.node = NULL;
+				return ret;
+			}
+			
+			ret.status = Json_AppendToArrayObject(array, val);
+			if(ret.status != AR_S_YES)
+			{
+				Json_DestroyObject(array);
+				array = NULL;
+				ret.node = NULL;
+				return ret;
+			}
+
+			ret.status = AR_S_YES;
+			ret.node = (psrNode_t*)array;
+			return ret;
+		:}
 		;
 
 

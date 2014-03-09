@@ -147,6 +147,7 @@
     <ClInclude Include="..\..\..\Arsenal\Tools\grammar_config.h" />
     <ClInclude Include="..\..\..\Arsenal\Tools\iniobj.h" />
     <ClInclude Include="..\..\..\Arsenal\Tools\json.h" />
+    <CustomBuild Include="..\..\..\Arsenal\Tools\json_parser_impl.h" />
     <ClInclude Include="..\..\..\Arsenal\Tools\property_list.h" />
     <ClInclude Include="..\..\..\Arsenal\Tools\property_list_internal.h" />
     <ClInclude Include="..\..\..\Arsenal\Tools\serializer.h" />
