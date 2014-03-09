@@ -58,7 +58,7 @@ L"oct_literal = 0[0-7]+",
 L"dec_literal = (0|[1-9][0-9]*)",
 L"exponet = (e|E)(\\+|\\-)?[0-9]+",
 L"float_literal = (((([0-9]\\.[0-9]*)){exponet}?)|([0-9]+{exponet}))",
-L"escape_seq = (\\\\\\x22)",
+L"escape_seq = (\\\\\\x22|\\\\\\\\)",
 L"string_dq = (\\x22({escape_seq}|[^\\x22])*\\x22)",
 L"float_constant = {float_literal}",
 L"hex_constant = {hex_literal}",
@@ -358,7 +358,7 @@ static psrRetVal_t AR_STDCALL on_string_leaf_handler(const psrToken_t *tok,void 
 		AR_UNUSED(ctx);
 
 		AR_ASSERT(tok != NULL && tok->term_val == TOK_STRING);
-		str_node = parse_json_escape_string(tok->str + 1, tok->str_cnt - 1);
+		str_node = parse_json_escape_string(tok->str + 1, tok->str_cnt - 2);
 		
 		if(str_node == NULL)
 		{
