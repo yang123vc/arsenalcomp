@@ -104,6 +104,7 @@
     <ClCompile Include="..\..\..\Arsenal\Tools\grammar_codegen.c" />
     <ClCompile Include="..\..\..\Arsenal\Tools\grammar_collector.c" />
     <ClCompile Include="..\..\..\Arsenal\Tools\iniobj.c" />
+    <ClCompile Include="..\..\..\Arsenal\Tools\json.c" />
     <ClCompile Include="..\..\..\Arsenal\Tools\property_list.c" />
     <ClCompile Include="..\..\..\Arsenal\Tools\property_list_internal.c" />
     <ClCompile Include="..\..\..\Arsenal\Tools\serializer.c" />
@@ -145,6 +146,7 @@
     <ClInclude Include="..\..\..\Arsenal\Tengu\tguvm.h" />
     <ClInclude Include="..\..\..\Arsenal\Tools\grammar_config.h" />
     <ClInclude Include="..\..\..\Arsenal\Tools\iniobj.h" />
+    <ClInclude Include="..\..\..\Arsenal\Tools\json.h" />
     <ClInclude Include="..\..\..\Arsenal\Tools\property_list.h" />
     <ClInclude Include="..\..\..\Arsenal\Tools\property_list_internal.h" />
     <ClInclude Include="..\..\..\Arsenal\Tools\serializer.h" />
