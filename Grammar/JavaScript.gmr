@@ -629,7 +629,7 @@ ExprStatement:
   | ExprNoBF error                      
 ;
 
-IfStatement	:	"if" "(" Expr ")" Statement %prec IF_WITHOUT_ELSE
+IfStatement		:	"if" "(" Expr ")" Statement 			%prec IF_WITHOUT_ELSE
   			|	"if" "(" Expr ")" Statement "else" Statement
 			;
 
@@ -1220,9 +1220,8 @@ ExprStatement_NoNode:
   | ExprNoBF_NoNode error 
 ;
 
-IfStatement_NoNode:
-    "if" "(" Expr_NoNode ")" Statement_NoNode %prec IF_WITHOUT_ELSE
-  | "if" "(" Expr_NoNode ")" Statement_NoNode "else" Statement_NoNode
+IfStatement_NoNode	:    	"if" "(" Expr_NoNode ")" Statement_NoNode 				%prec IF_WITHOUT_ELSE
+  			| 	"if" "(" Expr_NoNode ")" Statement_NoNode "else" Statement_NoNode
 ;
 
 IterationStatement_NoNode:

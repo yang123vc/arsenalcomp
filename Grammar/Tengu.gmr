@@ -299,7 +299,7 @@
 产生式的优先级依赖于其最右终结符或显性指定,这里就是"else"
 */
 %nonassoc IF_WITHOUT_ELSE                        ;
-%nonassoc "else"                            ;
+%nonassoc "else"                            	;
 
 
 
@@ -584,8 +584,8 @@ selection_statement            :    if_statement        %action auto_return_0
 :};
 
 
-if_statement    :    "if" "(" expression ")" statement            %prec IF_WITHOUT_ELSE        %action on_if_statement
-                |    "if" "(" error ")" statement            %prec IF_WITHOUT_ELSE        %action on_if_statement
+if_statement    :    "if" "(" expression ")" statement            		%prec IF_WITHOUT_ELSE        %action on_if_statement
+                |    "if" "(" error ")" statement            			%prec IF_WITHOUT_ELSE        %action on_if_statement
                 ;
 
 
