@@ -4322,7 +4322,62 @@ static void str_test21()
 
 }
 
+const wchar_t* AR_wcsstr_wildcard_s(const wchar_t *beg, const wchar_t *end, const wchar_t *pb, const wchar_t *pe)
+{
+		const wchar_t *se, *last_matched;
+		
+		AR_ASSERT(beg != NULL && end != NULL && beg <= end);
+		AR_ASSERT(pb != NULL && pe != NULL && pb <= pe);
 
+		if(pe - pb == 0)
+		{
+				return beg;
+		}
+
+		if(end - beg == 0)
+		{
+				return NULL;
+		}
+
+		se = beg + 1;
+		last_matched = NULL;
+
+		while(se <= end)
+		{
+				ar_bool_t is_matched = AR_wcs_match_wildcard_s(beg, se, pb, pe);
+				if(is_matched)
+				{
+						last_matched = se;
+				}
+				if(se >= end || *se == L'\0')
+				{
+						break;
+				}else
+				{
+						se++;
+				}
+				
+		}
+
+		return last_matched;
+}
+
+const wchar_t* AR_wcsstr_wildcard(const wchar_t *s, const wchar_t *p)
+{
+		AR_ASSERT(s != NULL && p != NULL);
+		return AR_wcsstr_wildcard_s(s, s + AR_wcslen(s), p, p + AR_wcslen(p));
+}
+
+static void str_test22()
+{
+		ar_bool_t is_matched = AR_wcs_match_wildcard(L"axxxxbddceedef", L"a********b*c*******");
+		AR_ASSERT(is_matched);
+
+		is_matched = AR_wcs_match_wildcard(L"aab", L"c*b*a");
+		AR_ASSERT(!is_matched);
+		
+
+}
 
 
 void com_test()
@@ -4353,8 +4408,8 @@ void com_test()
 		//str_test18();
 		//str_test19();
 		//str_test20();
-		str_test21();
-
+		//str_test21();
+		str_test22();
 		//com_test3();
 		//com_conv();
 		//com_conv2();

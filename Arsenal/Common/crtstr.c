@@ -1522,6 +1522,133 @@ size_t AR_wcs_similar_text(const wchar_t *s1, size_t l1, const wchar_t *s2, size
 
 /***********************************************************************************************************************************/
 
+
+ar_bool_t AR_wcs_match_wildcard_s(const wchar_t *beg, const wchar_t *end, const wchar_t *pb, const wchar_t *pe)
+{
+		const wchar_t *s_star, *p_star;
+		const wchar_t *s, *p;
+		AR_ASSERT(beg != NULL && end != NULL && beg <= end);
+		AR_ASSERT(pb != NULL && pe != NULL && pb <= pe);
+
+		s_star = NULL;
+		p_star = NULL;
+
+		s = beg;
+		p = pb;
+
+		while(s < end && *s != L'\0')
+		{
+				if(*p == L'?' || *p == *s)
+				{
+						++s;
+						++p;
+				}else if(*p == L'*')
+				{
+						p = AR_wcstrim_s(p, pe, L"*");
+
+						if(p >= pe)
+						{
+								return true;
+						}
+
+						p_star = p;
+						s_star = s;
+				}else if( (*p == L'\0' || p >= pe || *p != *s) && p_star)
+				{
+						p = p_star;
+						++s_star;
+						s = s_star;
+				}else
+				{
+						return false;
+				}
+		}
+
+
+		while(*p != L'\0' && p < pe)
+		{
+				if(*p != L'*')
+				{
+						return false;
+				}
+		}
+
+		return true;
+}
+
+
+ar_bool_t AR_wcs_match_wildcard(const wchar_t *s, const wchar_t *p)
+{
+		AR_ASSERT(s != NULL && p != NULL);
+		return AR_wcs_match_wildcard_s(s, s + AR_wcslen(s), p, p + AR_wcslen(p));
+}
+
+
+ar_bool_t AR_str_match_wildcard_s(const char *beg, const char *end, const char *pb, const char *pe)
+{
+		const char *s_star, *p_star;
+		const char *s, *p;
+		AR_ASSERT(beg != NULL && end != NULL && beg <= end);
+		AR_ASSERT(pb != NULL && pe != NULL && pb <= pe);
+
+		s_star = NULL;
+		p_star = NULL;
+
+		s = beg;
+		p = pb;
+
+		while(s < end && *s != '\0')
+		{
+				if(*p == '?' || *p == *s)
+				{
+						++s;
+						++p;
+				}else if(*p == L'*')
+				{
+						p = AR_strtrim_s(p, pe, "*");
+
+						if(p >= pe)
+						{
+								return true;
+						}
+
+						p_star = p;
+						s_star = s;
+				}else if( (*p == '\0' || p >= pe || *p != *s) && p_star)
+				{
+						p = p_star;
+						++s_star;
+						s = s_star;
+				}else
+				{
+						return false;
+				}
+		}
+
+
+		while(*p != '\0' && p < pe)
+		{
+				if(*p != '*')
+				{
+						return false;
+				}
+		}
+
+		return true;
+}
+
+ar_bool_t AR_str_match_wildcard(const char *s, const char *p)
+{
+		AR_ASSERT(s != NULL && p != NULL);
+		return AR_str_match_wildcard_s(s, s + AR_strlen(s), p, p + AR_strlen(p));
+}
+
+
+
+
+
+/***********************************************************************************************************************************/
+
 #if(0)
 
 const wchar_t* AR_wcsstr_kmp(const wchar_t *s, const wchar_t *p)
