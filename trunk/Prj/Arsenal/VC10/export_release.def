@@ -614,3 +614,8 @@ AR_stod_s
 AR_stod
 
 AR_wcs_similar_text
+AR_str_similar_text
+AR_str_match_wildcard
+AR_str_match_wildcard_s
+AR_wcs_match_wildcard
+AR_wcs_match_wildcard_s

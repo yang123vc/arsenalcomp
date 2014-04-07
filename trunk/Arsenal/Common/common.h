@@ -878,7 +878,10 @@ size_t          AR_str_similar_text(const char *s1, size_t l1, const char *s2, s
 size_t          AR_wcs_similar_text(const wchar_t *s1, size_t l1, const wchar_t *s2, size_t l2);
 
 
-
+ar_bool_t		AR_str_match_wildcard(const char *s, const char *p);
+ar_bool_t		AR_str_match_wildcard_s(const char *beg, const char *end, const char *pb, const char *pe);
+ar_bool_t		AR_wcs_match_wildcard(const wchar_t *s, const wchar_t *p);
+ar_bool_t		AR_wcs_match_wildcard_s(const wchar_t *beg, const wchar_t *end, const wchar_t *pb, const wchar_t *pe);
 
 
 
