@@ -634,7 +634,8 @@ AR_wtod
 AR_wtod_s
 AR_stod_s
 AR_stod
-
+AR_loge_dbl
+AR_loge_flt
 
 AR_wcs_similar_text
 AR_str_similar_text

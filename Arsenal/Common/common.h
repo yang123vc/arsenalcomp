@@ -1433,6 +1433,7 @@ ar_int_64_t		AR_abs_64(ar_int_64_t x);
 ar_bool_t		AR_is_equal_flt(float x, float y, float epsilon);
 
 float			AR_logbase_flt(float a, float base);
+float			AR_loge_flt(float a);
 float			AR_abs_flt(float x);
 float			AR_ceil_flt(float f);
 float			AR_floor_flt(float f);
@@ -1452,6 +1453,7 @@ float			AR_atan2_flt(float y, float x);
 ar_bool_t		AR_is_equal_dbl(double x, double y, double epsilon);
 
 double			AR_logbase_dbl(double a, double base);
+double			AR_loge_dbl(double a);
 double			AR_abs_dbl(double x);
 double			AR_ceil_dbl(double f);
 double			AR_floor_dbl(double f);
