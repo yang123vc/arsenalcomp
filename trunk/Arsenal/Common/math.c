@@ -75,7 +75,10 @@ double AR_logbase_dbl(double a, double base)
 }
 
 
-
+double			AR_loge_dbl(double a)
+{
+		return log(a);
+}
 
 
 ar_int_32_t		AR_abs_32(ar_int_32_t x)
@@ -168,6 +171,11 @@ double AR_atan2_dbl(double y, double x)
 float AR_logbase_flt(float a, float base)
 {
 		return logf(a) / logf(base);
+}
+
+float			AR_loge_flt(float a)
+{
+		return logf(a);
 }
 
 
