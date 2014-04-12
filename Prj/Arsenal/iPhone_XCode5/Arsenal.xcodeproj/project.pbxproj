@@ -92,6 +92,9 @@
 		672BDCD816500431002D500E /* serializer.h in Headers */ = {isa = PBXBuildFile; fileRef = 672BDC8516500431002D500E /* serializer.h */; };
 		672BDCD916500431002D500E /* tools.c in Sources */ = {isa = PBXBuildFile; fileRef = 672BDC8616500431002D500E /* tools.c */; };
 		672BDCDA16500431002D500E /* tools.h in Headers */ = {isa = PBXBuildFile; fileRef = 672BDC8716500431002D500E /* tools.h */; };
+		6788B76818F9F16C00AF8D2E /* json_parser_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 6788B76518F9F16C00AF8D2E /* json_parser_impl.h */; };
+		6788B76918F9F16C00AF8D2E /* json.c in Sources */ = {isa = PBXBuildFile; fileRef = 6788B76618F9F16C00AF8D2E /* json.c */; };
+		6788B76A18F9F16C00AF8D2E /* json.h in Headers */ = {isa = PBXBuildFile; fileRef = 6788B76718F9F16C00AF8D2E /* json.h */; };
 		67940A611783F21A002B6140 /* filesystem_path_posix_apple.h in Headers */ = {isa = PBXBuildFile; fileRef = 67940A5E1783F21A002B6140 /* filesystem_path_posix_apple.h */; };
 		67940A621783F21A002B6140 /* filesystem_path_posix_posix.h in Headers */ = {isa = PBXBuildFile; fileRef = 67940A5F1783F21A002B6140 /* filesystem_path_posix_posix.h */; };
 		67940A631783F21A002B6140 /* thread_posix_android.h in Headers */ = {isa = PBXBuildFile; fileRef = 67940A601783F21A002B6140 /* thread_posix_android.h */; };
@@ -188,6 +191,9 @@
 		672BDC8516500431002D500E /* serializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = serializer.h; sourceTree = "<group>"; };
 		672BDC8616500431002D500E /* tools.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tools.c; sourceTree = "<group>"; };
 		672BDC8716500431002D500E /* tools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tools.h; sourceTree = "<group>"; };
+		6788B76518F9F16C00AF8D2E /* json_parser_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = json_parser_impl.h; sourceTree = "<group>"; };
+		6788B76618F9F16C00AF8D2E /* json.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = json.c; sourceTree = "<group>"; };
+		6788B76718F9F16C00AF8D2E /* json.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = json.h; sourceTree = "<group>"; };
 		67940A5E1783F21A002B6140 /* filesystem_path_posix_apple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filesystem_path_posix_apple.h; sourceTree = "<group>"; };
 		67940A5F1783F21A002B6140 /* filesystem_path_posix_posix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filesystem_path_posix_posix.h; sourceTree = "<group>"; };
 		67940A601783F21A002B6140 /* thread_posix_android.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thread_posix_android.h; sourceTree = "<group>"; };
@@ -335,6 +341,9 @@
 		672BDC7E16500431002D500E /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				6788B76518F9F16C00AF8D2E /* json_parser_impl.h */,
+				6788B76618F9F16C00AF8D2E /* json.c */,
+				6788B76718F9F16C00AF8D2E /* json.h */,
 				67B8139117E7105500595D03 /* property_list_internal.c */,
 				67B8139217E7105500595D03 /* property_list_internal.h */,
 				671357AF17BB40E8001133BC /* property_list.c */,
@@ -387,6 +396,7 @@
 			files = (
 				672BDC8916500431002D500E /* Arsenal.h in Headers */,
 				672BDC8F16500431002D500E /* common.h in Headers */,
+				6788B76A18F9F16C00AF8D2E /* json.h in Headers */,
 				672BDC9016500431002D500E /* config.h in Headers */,
 				672BDC9416500431002D500E /* enviroment_posix.h in Headers */,
 				672BDC9516500431002D500E /* enviroment_win.h in Headers */,
@@ -408,6 +418,7 @@
 				672BDCC216500431002D500E /* lr_action.h in Headers */,
 				672BDCC416500431002D500E /* parser.h in Headers */,
 				672BDCC616500431002D500E /* parser_in.h in Headers */,
+				6788B76818F9F16C00AF8D2E /* json_parser_impl.h in Headers */,
 				672BDCCA16500431002D500E /* tengu.h in Headers */,
 				672BDCCC16500431002D500E /* tengu_parser.h in Headers */,
 				672BDCCD16500431002D500E /* tengu_parser_impl.h in Headers */,
@@ -531,6 +542,7 @@
 				672BDCD916500431002D500E /* tools.c in Sources */,
 				671357B117BB40E8001133BC /* property_list.c in Sources */,
 				67B8139317E7105500595D03 /* property_list_internal.c in Sources */,
+				6788B76918F9F16C00AF8D2E /* json.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
