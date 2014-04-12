@@ -1726,12 +1726,11 @@ arStatus_t		AR_CholeskyInverseMatrix(const arMatrix_t *mat, arMatrix_t *inv);
 arStatus_t		AR_MultiplyMatrixCholeskyFactors(const arMatrix_t *mat, arMatrix_t *original_mat);
 
 
-/*QR分解*/
-arStatus_t		AR_QRFactorMatrixSelf(arMatrix_t *mat, arVector_t *c, arVector_t *d);
-arStatus_t		AR_QRSloveMatrix(const arMatrix_t *mat, const arVector_t *c, const arVector_t *d, arVector_t *x, const arVector_t *b);
-arStatus_t		AR_QRInverseMatrix(const arMatrix_t *mat, const arVector_t *c, const arVector_t *d, arMatrix_t *inv);
-arStatus_t		AR_UnpackMatrixQRFactors(const arMatrix_t *mat, const arVector_t *c, const arVector_t *d, arMatrix_t *Q, arMatrix_t *R);
-arStatus_t		AR_MultiplyMatrixQRFactors(const arMatrix_t *mat, const arVector_t *c, const arVector_t *d, arMatrix_t *original_matrix);
+/*SVD分解*/
+arStatus_t		AR_SVDFactorMatrixSelf(arMatrix_t *mat, arVector_t *w, arMatrix_t *v);
+arStatus_t		AR_SVDSloveMatrix(const arMatrix_t *mat, const arVector_t *w, const arVector_t *v, arVector_t *x, const arVector_t *b);
+arStatus_t		AR_SVDInverseMatrix(const arMatrix_t *mat, const arVector_t *w, const arVector_t *v, arMatrix_t *inv);
+arStatus_t		AR_MultiplyMatrixSVDFactors(const arMatrix_t *mat, const arVector_t *w, const arVector_t *v, arMatrix_t *original_matrix);
 
 
 
