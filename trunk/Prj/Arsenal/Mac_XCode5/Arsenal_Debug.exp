@@ -211,7 +211,7 @@ _AR_MultiplyMatrixByVector
 _AR_MultiplyMatrixCholeskyFactors
 _AR_MultiplyMatrixLDLTFactors
 _AR_MultiplyMatrixLUFactors
-_AR_MultiplyMatrixQRFactors
+
 _AR_MultiplyTransposeMatrixByMatrix
 _AR_MultiplyTransposeMatrixByMatrixSelf
 _AR_MultiplyTransposeMatrixByVector
@@ -229,9 +229,6 @@ _AR_PopListFront
 _AR_PushListBack
 _AR_PushListFront
 _AR_PutToAsyncQueue
-_AR_QRFactorMatrixSelf
-_AR_QRInverseMatrix
-_AR_QRSloveMatrix
 _AR_RandomMatrix
 _AR_RandomVector
 _AR_ReadBufferData
@@ -311,7 +308,6 @@ _AR_UnLockMutex
 _AR_UnLockSpinLock
 _AR_UnpackMatrixLDLTFactors
 _AR_UnpackMatrixLUFactors
-_AR_UnpackMatrixQRFactors
 _AR_VFormatString
 _AR_VectorToString
 _AR_Version
