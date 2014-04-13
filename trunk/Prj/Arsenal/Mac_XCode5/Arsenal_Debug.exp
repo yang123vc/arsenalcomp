@@ -828,12 +828,20 @@ ___uint32_for_six_little
 _cfg_on_print
 
 
-
-
 _AR_make_heap
 _AR_pop_heap
 _AR_push_heap
 _AR_sort_heap
+_AR_remove_heap
+
+_AR_AtomicCompExch
+_AR_GetAsyncQueueDataCount
+_AR_GetExpandRealPath
+_AR_PutToAsyncQueueFront
+_Ini_KeyIsExisted
+
+
+
 
 
 
