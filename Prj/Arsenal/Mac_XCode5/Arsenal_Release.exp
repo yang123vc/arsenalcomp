@@ -832,6 +832,19 @@ ___uint32_for_six_little
 _cfg_on_print
 
 
+
+_AR_AtomicCompExch
+_AR_GetAsyncQueueDataCount
+_AR_GetExpandRealPath
+_AR_PutToAsyncQueueFront
+_Ini_KeyIsExisted
+
+
+
 #_AR_free
 #_AR_malloc
 #_AR_calloc
+
+
+
+
