@@ -605,8 +605,146 @@ arStatus_t			AR_VectorToString(const arVector_t *vec, arString_t *str, size_t pr
 
 
 
-	
 
+
+/***********************************************************Transform*************************************************************************/
+	
+arStatus_t		AR_VecotrTransform_DCT2(arVector_t *vec)
+{
+		size_t n,u,x;
+		
+		double a, a0, a1, total;
+		double *tmp;
+		arStatus_t status;
+		AR_ASSERT(vec != NULL);
+
+		tmp = NULL;
+		status = AR_S_YES;
+		a0 = a1 = total = a = 0.0;
+		n = AR_GetVectorSize(vec);
+		u = x = 0;
+
+		AR_ASSERT(n > 0);
+
+		if(n == 0)
+		{
+				status = AR_E_INVAL;
+				goto END_POINT;
+		}
+
+		tmp = AR_NEWARR(double, n);
+
+		if(tmp == NULL)
+		{
+				AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+		
+		AR_memcpy(tmp, AR_GetVectorData(vec), n * sizeof(double));
+		
+		a0 = AR_sqrt_dbl(1 / (double)n);
+		a1 = AR_sqrt_dbl(2 / (double)n);
+		a = 0.0;
+		total = 0.0;
+
+		for(u = 0; u < n; u++)
+		{  
+				if(u == 0)
+				{
+						a = a0;
+				}else
+				{
+						a = a1;  
+				}
+
+				total = 0;
+				for( x = 0; x < n; x++)
+				{
+						total += tmp[x] * AR_cos_dbl( (2 * x + 1) *  AR_DBL_PI / (2 * n) * (double)u );
+				}
+				vec->v[u] = a * total;
+		}
+
+END_POINT:
+		if(tmp)
+		{
+				AR_DEL(tmp);
+				tmp = NULL;
+		}
+		return status;
+
+}
+
+
+arStatus_t		AR_VecotrInverseTransform_DCT2(arVector_t *vec)
+{
+		size_t n,u,x;
+		
+		double a, a0, a1, total;
+		double *tmp;
+		arStatus_t status;
+		AR_ASSERT(vec != NULL);
+
+		tmp = NULL;
+		status = AR_S_YES;
+		a0 = a1 = total = a = 0.0;
+		n = AR_GetVectorSize(vec);
+		u = x = 0;
+
+		AR_ASSERT(n > 0);
+
+		if(n == 0)
+		{
+				status = AR_E_INVAL;
+				goto END_POINT;
+		}
+
+		tmp = AR_NEWARR(double, n);
+
+		if(tmp == NULL)
+		{
+				AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+		
+		AR_memcpy(tmp, AR_GetVectorData(vec), n * sizeof(double));
+		
+		a0 = AR_sqrt_dbl(1 / (double)n);
+		a1 = AR_sqrt_dbl(2 / (double)n);
+		a = 0.0;
+		total = 0.0;
+
+		for(x = 0; x < n; x++)
+		{
+				total = 0;
+
+				for(u = 0; u < n; u++)
+				{
+
+						if(u == 0)
+						{
+								a = a0;
+						}else
+						{
+								a = a1;
+						}
+
+						total += a * tmp[u] * AR_cos_dbl((2 * x + 1) * u * AR_DBL_PI / (2 * n));
+				}
+
+				vec->v[x] = total;
+		}
+
+END_POINT:
+		if(tmp)
+		{
+				AR_DEL(tmp);
+				tmp = NULL;
+		}
+		return status;
+}
 
 
 AR_NAMESPACE_END

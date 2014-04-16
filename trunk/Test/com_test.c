@@ -5,6 +5,7 @@
 #include <math.h>
 #include <time.h>
 #include <vector>
+#include <algorithm>
 #include "Base64Transcoder.h"
 
 #include "lfu_cache.h"
@@ -4379,6 +4380,68 @@ static void str_test22()
 
 }
 
+static void select_test1()
+{
+		//void		AR_nth_elem(void *arr, size_t count, size_t width, size_t idx, ar_int_t (*cmp_f)(const void*, const void*));
+
+		AR_srand(time(NULL));
+
+		size_t arr[] = {0, 1,2,3,4,5,6,7,8,9};
+
+		AR_nth_elem(arr, AR_NELEMS(arr), sizeof(size_t), 5, __cmp_size_t);
+
+		AR_ASSERT(arr[5] == 5);
+
+		for(size_t i = 0; i < 10000000; ++i)
+		{
+				std::vector<size_t> vsize(AR_rand32() % 1000);
+
+				if(vsize.size() < 5)
+				{
+						vsize.resize(123);
+				}
+
+				std::vector<size_t> sorted_vsize(vsize.size());
+
+
+				for(size_t i = 0; i < vsize.size(); ++i)
+				{
+						vsize[i] = (size_t)AR_rand64() % 100000000;
+						sorted_vsize[i] = vsize[i];
+				}
+
+				size_t idx = AR_rand32() % vsize.size();
+				AR_nth_elem(&vsize[0], vsize.size(), sizeof(size_t), idx, __cmp_size_t);
+
+				std::sort(sorted_vsize.begin(), sorted_vsize.end());
+
+				if(vsize[idx] != sorted_vsize[idx])
+				{
+						AR_ASSERT(false);
+				}
+
+
+		}
+	
+}
+
+
+
+static void select_test2()
+{
+		//void		AR_nth_elem(void *arr, size_t count, size_t width, size_t idx, ar_int_t (*cmp_f)(const void*, const void*));
+
+		AR_srand(time(NULL));
+
+		size_t arr[] = {5,5,5,5,5,5,5,5,5,5,5,5};
+
+		AR_nth_elem(arr, AR_NELEMS(arr), sizeof(size_t), 5, __cmp_size_t);
+
+		AR_ASSERT(arr[5] == 5);
+
+
+}
+
 
 void com_test()
 {
@@ -4409,7 +4472,7 @@ void com_test()
 		//str_test19();
 		//str_test20();
 		//str_test21();
-		str_test22();
+		//str_test22();
 		//com_test3();
 		//com_conv();
 		//com_conv2();
@@ -4513,6 +4576,10 @@ void com_test()
 		//algo_heap_test3();
 		//algo_heap_test4();
 		//algo_heap_test5();
+
+		//select_test1();
+
+		select_test2();
 }
 
 

@@ -238,6 +238,48 @@ void AR_qsort(void *base, size_t num, size_t width, ar_int_t (*cmp_f)(const void
 		}
 }
 
+
+
+void AR_nth_elem(void *arr, size_t count, size_t width, size_t idx, ar_int_t (*cmp_f)(const void*, const void*))
+{
+		qsort_range_t range;
+		ar_int_t l, r;
+
+		AR_ASSERT(arr != NULL && count > 0 && width > 0 && idx < count && cmp_f != NULL);
+
+		l = 0;
+		r = (ar_int_t)count - 1;
+
+		while(r > l)
+		{
+				size_t lo_beg_idx, lo_end_idx, hi_beg_idx, hi_end_idx;
+				range = __partition((ar_byte_t*)AR_GET_ELEM(arr, width, l), (ar_byte_t*)AR_GET_ELEM(arr, width, r), width, cmp_f);
+
+				lo_beg_idx = (range.l_beg - (ar_byte_t*)arr) / width;
+				lo_end_idx = (range.l_end - (ar_byte_t*)arr) / width;
+
+				hi_beg_idx = (range.r_beg - (ar_byte_t*)arr) / width;
+				hi_end_idx = (range.r_end - (ar_byte_t*)arr) / width;
+
+
+				if(lo_end_idx >= lo_beg_idx && idx >= lo_beg_idx && idx <= lo_end_idx)
+				{
+						l = (ar_int_t)lo_beg_idx;
+						r = (ar_int_t)lo_end_idx;
+
+				}else if(hi_end_idx >= hi_beg_idx && idx >= hi_beg_idx && idx <= hi_end_idx)
+				{
+						l = (ar_int_t)hi_beg_idx;
+						r = (ar_int_t)hi_end_idx;
+				}else
+				{
+						break;
+				}
+		}
+}
+
+
+
 /*
 ar_int_t AR_bsearch(const void *key, const void *base, size_t num, size_t width, ar_int_t (*cmp_f)(const void*, const void*))
 {
