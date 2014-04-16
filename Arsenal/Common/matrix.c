@@ -554,7 +554,20 @@ void			AR_ClearMatrixLowerTriangle(arMatrix_t *mat)
 		}
 }
 
+void			AR_SetMatrixByValue(arMatrix_t *mat, double val)
+{
+		size_t i,j;
+		AR_ASSERT(mat != NULL);
+		AR_ASSERT(mat->nrows == mat->ncols);
 
+		for(i = 1; i < mat->nrows; ++i)
+		{
+				for(j = 0; j < i; ++j)
+				{
+						AR_SetMatrixValue(mat, i,j, val);
+				}
+		}
+}
 
 arStatus_t			AR_IsSquareMatrix(const arMatrix_t *mat)
 {
@@ -1241,6 +1254,49 @@ arStatus_t		AR_MultiplyTransposeMatrixByMatrix(const arMatrix_t *mat, const arMa
 		return status;
 }
 
+
+
+arStatus_t		AR_MultiplyMatrixByTransposeMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest)
+{
+		arStatus_t status;
+		size_t i,j,k,lrows,lcols,rrows,rcols;
+		double sum;
+
+		AR_ASSERT(mat != NULL && other != NULL && dest != NULL);
+
+		lrows = AR_GetMatrixNumRows(mat);
+		lcols = AR_GetMatrixNumColumns(mat);
+
+		rrows = AR_GetMatrixNumRows(other);
+		rcols = AR_GetMatrixNumColumns(other);
+
+		AR_ASSERT(lcols == rcols);
+
+		status = AR_S_YES;
+
+		if((status = AR_SetMatrixSize(dest, lrows, rrows)) != AR_S_YES)
+		{
+				return status;
+		}
+
+		AR_ZeroMatrix(dest);
+
+		for(i = 0; i < lrows; ++i)
+		{
+				for(j = 0; j < rrows; ++j)
+				{
+						sum = 0.0;
+						for(k = 0; k < rcols; ++k)
+						{
+								sum += AR_GetMatrixValue(mat, i,k) * AR_GetMatrixValue(other, j,k);
+						}
+
+						AR_SetMatrixValue(dest, i,j,sum);
+				}
+		}
+
+		return status;
+}
 
 arStatus_t			AR_MultiplyMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other)
 {
@@ -3504,5 +3560,162 @@ END_POINT:
 
 
 
+arStatus_t		AR_GenerateTransformMatrix_DCT2(arMatrix_t *mat, size_t n)
+{
+		arStatus_t status;
+		size_t i,j;
+		double c;
+		AR_ASSERT(mat != NULL && n > 1);
+
+		status = AR_S_YES;
+
+
+		status = AR_SetMatrixSize(mat, n,n);
+
+		if(status != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+
+		c = 1 / AR_sqrt_dbl((double)n);
+		for(i = 0; i < n; ++i)
+		{
+				AR_SetMatrixValue(mat, 0,i, c);
+		}
+
+		c = AR_sqrt_dbl(2.0 / (double)n);
+		
+
+		for(i = 1; i < n; ++i)
+		{
+				for(j = 0; j < n; ++j)
+				{
+						double val = c * AR_cos_dbl(i * AR_DBL_PI * (j + 0.5) / (double)n);
+						AR_SetMatrixValue(mat, i,j, val);
+				}
+		}
+END_POINT:
+		return status;
+}
+
+
+arStatus_t		AR_MatrixTransform_DCT2(arMatrix_t *mat, const arMatrix_t *dct_matrix)
+{
+		arStatus_t status;
+		size_t rows, cols;
+		arMatrix_t *tmp;
+		AR_ASSERT(mat != NULL && dct_matrix != NULL);
+		AR_ASSERT(AR_IsSquareMatrix(mat) == AR_S_YES && AR_IsSquareMatrix(dct_matrix) == AR_S_YES);
+
+		status = AR_S_YES;
+		tmp = NULL;
+		
+
+		rows = AR_GetMatrixNumRows(mat);
+		cols = AR_GetMatrixNumColumns(mat);
+		
+		if(rows != cols || rows != AR_GetMatrixNumRows(dct_matrix) || cols != AR_GetMatrixNumRows(dct_matrix))
+		{
+				status = AR_E_INVAL;
+				goto END_POINT;
+		}
+
+		tmp = AR_CreateMatrix(rows, cols);
+		
+
+		if(tmp == NULL)
+		{
+				AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+
+
+
+		/*A * f * A^t*/
+
+		status = AR_MultiplyMatrixByMatrix(dct_matrix, mat, tmp);
+		if(status != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+
+		status = AR_MultiplyMatrixByTransposeMatrix(tmp, dct_matrix, mat);
+
+		if(status != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+
+END_POINT:
+		if(tmp)
+		{
+				AR_DestroyMatrix(tmp);
+				tmp = NULL;
+		}
+
+
+		return status;
+
+}
+
+arStatus_t		AR_MatrixInverseTransform_DCT2(arMatrix_t *mat, const arMatrix_t *dct_matrix)
+{
+		arStatus_t status;
+		size_t rows, cols;
+		arMatrix_t *tmp;
+		AR_ASSERT(mat != NULL && dct_matrix != NULL);
+		AR_ASSERT(AR_IsSquareMatrix(mat) == AR_S_YES && AR_IsSquareMatrix(dct_matrix) == AR_S_YES);
+
+		status = AR_S_YES;
+		tmp = NULL;
+
+		rows = AR_GetMatrixNumRows(mat);
+		cols = AR_GetMatrixNumColumns(mat);
+		
+		if(rows != cols || rows != AR_GetMatrixNumRows(dct_matrix) || cols != AR_GetMatrixNumRows(dct_matrix))
+		{
+				status = AR_E_INVAL;
+				goto END_POINT;
+		}
+
+		tmp = AR_CreateMatrix(rows, cols);
+		
+
+		if(tmp == NULL)
+		{
+				AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+
+
+
+
+		/*A^t * f * A*/
+
+		status = AR_MultiplyTransposeMatrixByMatrix(dct_matrix, mat, tmp);
+		if(status != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+
+		status = AR_MultiplyMatrixByMatrix(tmp, dct_matrix, mat);
+
+		if(status != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+
+END_POINT:
+		if(tmp)
+		{
+				AR_DestroyMatrix(tmp);
+				tmp = NULL;
+		}
+		return status;
+
+
+}
 
 AR_NAMESPACE_END

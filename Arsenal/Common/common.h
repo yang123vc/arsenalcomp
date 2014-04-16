@@ -373,9 +373,9 @@ ar_uint_64_t		AR_BYTEFLIP_U64(ar_uint_64_t val);
 
 
 
-void	AR_qsort(void *base, size_t num, size_t width, ar_int_t (*cmp_f)(const void*, const void*));
+void		AR_qsort(void *base, size_t num, size_t width, ar_int_t (*cmp_f)(const void*, const void*));
 ar_int_t	AR_bsearch(const void *key, const void *base, size_t num, size_t width, ar_int_t (*cmp_f)(const void*, const void*));
-
+void		AR_nth_elem(void *arr, size_t count, size_t width, size_t idx, ar_int_t (*cmp_f)(const void*, const void*));
 
 
 
@@ -1407,6 +1407,9 @@ arStatus_t      AR_path_copydir(const wchar_t *src, const wchar_t *dest);
 
 /*******************************************************************Math*************************************************************************************************/
 
+#define AR_DBL_PI	3.14159265358979323846
+#define AR_FLT_PI	3.14159265358979323846f
+
 float  AR_nan_value_flt();
 float  AR_inf_value_flt();
 
@@ -1571,6 +1574,12 @@ arStatus_t		AR_CalcVectorNormNumber(const arVector_t *vec, arVectorNormType_t t,
 
 arStatus_t		AR_VectorToString(const arVector_t *vec, arString_t *str, size_t precision, const wchar_t *sp_str);
 
+
+/*************************************************Vector transform**Matrix**********************************************************/
+
+arStatus_t		AR_VecotrTransform_DCT2(arVector_t *vec);
+arStatus_t		AR_VecotrInverseTransform_DCT2(arVector_t *vec);
+
 /***************************************************************Matrix**********************************************************/
 
 struct __arsenal_matrix_tag;
@@ -1621,6 +1630,7 @@ void			AR_RemoveMatrixRow(arMatrix_t *mat, size_t r);
 void			AR_RemoveMatrixColumn(arMatrix_t *mat, size_t c);
 void			AR_ClearMatrixUpperTriangle(arMatrix_t *mat);
 void			AR_ClearMatrixLowerTriangle(arMatrix_t *mat);
+void			AR_SetMatrixByValue(arMatrix_t *mat, double val);
 
 /****************************************判断矩阵类型******************************************/
 
@@ -1649,13 +1659,18 @@ arStatus_t		AR_IsSymmetricPositiveSemiDefinite(const arMatrix_t *mat, double eps
 arStatus_t		AR_MultiplyMatrixByScalar(const arMatrix_t *mat, double value, arMatrix_t *dest);
 arStatus_t		AR_MultiplyMatrixByScalarSelf(arMatrix_t *mat, double value);
 
-arStatus_t		AR_MultiplyMatrixByVector(const arMatrix_t *mat, const arVector_t *other, arVector_t *dest);
-arStatus_t		AR_MultiplyTransposeMatrixByVector(const arMatrix_t *mat, const arVector_t *other, arVector_t *dest);
+arStatus_t		AR_MultiplyMatrixByVector(const arMatrix_t *mat, const arVector_t *other, arVector_t *dest);			/*mat * other */
+arStatus_t		AR_MultiplyTransposeMatrixByVector(const arMatrix_t *mat, const arVector_t *other, arVector_t *dest);	/*transpose(mat) * other */
 
-arStatus_t		AR_MultiplyMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest);
-arStatus_t		AR_MultiplyTransposeMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest);
-arStatus_t		AR_MultiplyMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other);
-arStatus_t		AR_MultiplyTransposeMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other);
+arStatus_t		AR_MultiplyMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest);			/*mat * other */
+arStatus_t		AR_MultiplyTransposeMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest);	/*transpose(mat) * other */
+arStatus_t		AR_MultiplyMatrixByTransposeMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest);	/*mat * transpose(other) */
+
+arStatus_t		AR_MultiplyMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other);								/*mat = mat * other */
+arStatus_t		AR_MultiplyTransposeMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other);						/*mat = transpose(mat) * other */
+
+
+
 
 arStatus_t		AR_AddMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest);
 arStatus_t		AR_AddMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other);
@@ -1738,6 +1753,15 @@ arStatus_t		AR_MultiplyMatrixSVDFactors(const arMatrix_t *mat, const arVector_t 
 
 /*************************************************************其他功能*************************************************************/
 arStatus_t		AR_MatrixToString(const arMatrix_t *mat, arString_t *str, size_t precision, const wchar_t *sp_str, const wchar_t *row_sp);
+
+
+
+/*************************************************************Transform***************************************************/
+
+arStatus_t		AR_GenerateTransformMatrix_DCT2(arMatrix_t *mat, size_t n);
+
+arStatus_t		AR_MatrixTransform_DCT2(arMatrix_t *mat, const arMatrix_t *dct_matrix);
+arStatus_t		AR_MatrixInverseTransform_DCT2(arMatrix_t *mat, const arMatrix_t *dct_matrix);
 
 
 AR_NAMESPACE_END

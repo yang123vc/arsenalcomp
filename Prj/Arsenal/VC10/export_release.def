@@ -621,3 +621,4 @@ AR_str_match_wildcard
 AR_str_match_wildcard_s
 AR_wcs_match_wildcard
 AR_wcs_match_wildcard_s
+AR_nth_elem

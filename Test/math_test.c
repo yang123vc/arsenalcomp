@@ -504,6 +504,10 @@ void matrix_test2()
 		AR_SetMatrixValue(mat, 2,2,7.0/2.0);
 
 		__print_matrix(mat);
+
+		AR_TransposeMatrixSelf(mat);
+		__print_matrix(mat);
+
 		status = AR_IsOrthogonalMatrix(mat, DBL_EPSILON);
 		AR_ASSERT(status == AR_S_YES);
 
@@ -1283,6 +1287,296 @@ static void float_test1()
 		AR_printf(L"%g\r\n", ret);
 }
 
+
+static void dct_test1()
+{
+		arVector_t *vec = AR_CreateVector(10);
+		arString_t *str = AR_CreateString();
+
+		for(size_t i = 0; i < AR_GetVectorSize(vec); ++i)
+		{
+				AR_SetVectorValue(vec, i, (double)i + 1);
+		}
+
+		AR_VectorToString(vec, str, 3, L",");
+		AR_printf(L"%ls\r\n", AR_CSTR(str));
+
+
+		AR_VecotrTransform_DCT2(vec);
+		AR_ClearString(str);
+		AR_VectorToString(vec, str, 3, L",");
+		AR_printf(L"%ls\r\n", AR_CSTR(str));
+
+
+		AR_VecotrInverseTransform_DCT2(vec);
+		AR_ClearString(str);
+		AR_VectorToString(vec, str, 3, L",");
+		AR_printf(L"%ls\r\n", AR_CSTR(str));
+
+		if(str)
+		{
+				AR_DestroyString(str);
+				str = NULL;
+		}
+
+		if(vec)
+		{
+				AR_DestroyVector(vec);
+				vec = NULL;
+		}
+}
+
+
+static void dct_test2()
+{
+		arMatrix_t *mat = AR_CreateMatrix(4,4);
+		arMatrix_t *dct = AR_CreateMatrix(4,4);
+		arString_t *str = AR_CreateString();
+		arStatus_t status = AR_S_YES;
+		AR_ASSERT(AR_GenerateTransformMatrix_DCT2(dct,4) == AR_S_YES);
+		
+		AR_ClearString(str);
+		AR_MatrixToString(dct, str, 3, L", ", L"\r\n");
+		AR_printf(L"%ls\r\n", AR_CSTR(str));
+
+		double m[4][4] = 
+		{
+				{61,    19,    50,    20,},
+				{82,    26,    61,    45,},
+				{89,    90,    82,    43,},
+				{93,    59,    53,    97,}
+		};
+		
+		for(size_t i = 0; i < 4; ++i)
+		{
+				for(size_t j = 0; j < 4; ++j)
+				{
+						AR_SetMatrixValue(mat, i,j, (double)m[i][j]);
+				}
+		}
+
+		AR_ClearString(str);
+		AR_MatrixToString(mat, str, 3, L", ", L"\r\n");
+		AR_printf(L"%ls\r\n", AR_CSTR(str));
+
+
+		status = AR_MatrixTransform_DCT2(mat, dct);
+		AR_ASSERT(status == AR_S_YES);
+
+		AR_ClearString(str);
+		AR_MatrixToString(mat, str, 3, L", ", L"\r\n");
+		AR_printf(L"%ls\r\n", AR_CSTR(str));
+
+
+		status = AR_MatrixInverseTransform_DCT2(mat, dct);
+		AR_ClearString(str);
+		AR_MatrixToString(mat, str, 3, L", ", L"\r\n");
+		AR_printf(L"%ls\r\n", AR_CSTR(str));
+
+
+		if(str)
+		{
+				AR_DestroyString(str);
+				str = NULL;
+		}
+
+		if(mat)
+		{
+				AR_DestroyMatrix(mat);
+				mat = NULL;
+		}
+
+		if(dct)
+		{
+				AR_DestroyMatrix(dct);
+				dct = NULL;
+		}
+}
+
+
+
+
+static void dct_test3()
+{
+		AR_srand(time(NULL));
+
+		for(size_t x = 0; x < 100000; ++x)
+		{
+				AR_printf(L"*********************************************************\r\n");
+				size_t N = AR_rand32() % 50;
+
+				if(N < 2)
+				{
+						N = 5;
+				}
+
+
+				arMatrix_t *src_mat = AR_CreateMatrix(N,N);
+				arMatrix_t *restore_mat = AR_CreateMatrix(N,N);
+				arMatrix_t *dct = AR_CreateMatrix(N,N);
+				arString_t *str = AR_CreateString();
+				arStatus_t status = AR_S_YES;
+				AR_ASSERT(AR_GenerateTransformMatrix_DCT2(dct,N) == AR_S_YES);
+
+				AR_ClearString(str);
+				AR_MatrixToString(dct, str, 3, L", ", L"\r\n");
+				AR_printf(L"%ls\r\n", AR_CSTR(str));
+
+
+				for(size_t i = 0; i < N; ++i)
+				{
+						for(size_t j = 0; j < N; ++j)
+						{
+								AR_SetMatrixValue(src_mat, i,j, AR_rand32() % 10000);
+						}
+				}
+
+				AR_ClearString(str);
+				AR_MatrixToString(src_mat, str, 3, L", ", L"\r\n");
+				AR_printf(L"%ls\r\n", AR_CSTR(str));
+
+				AR_CopyMatrix(restore_mat, src_mat);
+				status = AR_MatrixTransform_DCT2(src_mat, dct);
+				AR_ASSERT(status == AR_S_YES);
+
+				AR_ClearString(str);
+				AR_MatrixToString(src_mat, str, 3, L", ", L"\r\n");
+				AR_printf(L"%ls\r\n", AR_CSTR(str));
+
+
+				status = AR_MatrixInverseTransform_DCT2(src_mat, dct);
+				AR_ClearString(str);
+				AR_MatrixToString(src_mat, str, 3, L", ", L"\r\n");
+				AR_printf(L"%ls\r\n", AR_CSTR(str));
+
+
+				ar_int_t cmp = AR_CompareMatrix(src_mat, restore_mat, 0.01);
+
+				AR_ASSERT(cmp == 0);
+
+
+
+				if(str)
+				{
+						AR_DestroyString(str);
+						str = NULL;
+				}
+
+				if(src_mat)
+				{
+						AR_DestroyMatrix(src_mat);
+						src_mat = NULL;
+				}
+
+				if(restore_mat)
+				{
+						AR_DestroyMatrix(restore_mat);
+						restore_mat = NULL;
+						
+				}
+
+				if(dct)
+				{
+						AR_DestroyMatrix(dct);
+						dct = NULL;
+				}
+
+				//getchar();
+		}
+}
+
+static void transpose_multiply_test1()
+{
+		arStatus_t status;
+		
+		arMatrix_t *mat = NULL, *mat2 = NULL, *dest = NULL;
+		arString_t *str = NULL;
+
+
+		str = AR_CreateString();
+		
+		mat = AR_CreateMatrix(3,2);
+		mat2 = AR_CreateMatrix(3,2);
+		dest = AR_CreateMatrix(1,1);
+
+		/*
+		double data[] = 
+		{
+				8,		9,		
+				21,		5,		
+				3,		7,		
+		};
+
+		double data1[] = 
+		{
+				1,		1,		
+				1,		1,		
+				1,		1,	
+				1,		1,	
+				1,		1,	
+				1,		1,	
+		};
+		*/
+
+		double data[] = 
+		{
+				8,				
+				21,				
+				3,				
+		};
+
+		double data1[] = 
+		{
+				1,				
+				1,				
+				1,			
+				1,			
+				1,			
+				1,			
+		};
+
+		status = AR_SetMatrixData(mat, 3,1,data);
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_SetMatrixData(mat2, 6,1,data1);
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_MultiplyMatrixByTransposeMatrix(mat, mat2, dest);
+		AR_ASSERT(status == AR_S_YES);
+
+		
+		AR_ClearString(str);
+		AR_MatrixToString(dest, str, 3, L", ", L"\r\n");
+		AR_printf(L"%ls\r\n", AR_CSTR(str));
+
+
+
+		if(str)
+		{
+				AR_DestroyString(str);
+				str = NULL;
+		}
+
+		if(mat)
+		{
+				AR_DestroyMatrix(mat);
+				mat = NULL;
+		}
+
+		if(mat2)
+		{
+				AR_DestroyMatrix(mat2);
+				mat2 = NULL;
+		}
+
+		if(dest)
+		{
+				AR_DestroyMatrix(dest);
+				dest = NULL;
+		}
+
+}
+
 void math_test()
 {
 
@@ -1290,13 +1584,18 @@ void math_test()
 		//misc_test();
 		//vector_test();
 
-		/*matrix_test();
-		matrix_test2();
-		matrix_test3();
-		matrix_test4();
-		*/
+		//matrix_test();
+		//matrix_test2();
+		//matrix_test3();
+		//matrix_test4();
+		
 		//matrix_test_factorization();
-		float_test1();
+		//float_test1();
+
+		//dct_test1();
+		//dct_test2();
+		dct_test3();
+		//transpose_multiply_test1();
 }
 
 
