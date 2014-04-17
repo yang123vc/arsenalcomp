@@ -34,6 +34,9 @@
     <Filter Include="extlib\deelx">
       <UniqueIdentifier>{4039e73b-4408-48ba-a2c8-059001dfc341}</UniqueIdentifier>
     </Filter>
+    <Filter Include="extlib\CImg">
+      <UniqueIdentifier>{8aabdb58-1c0d-41bf-aed9-952faa2bc200}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\Test\avltree.c">
@@ -450,6 +453,9 @@
     <ClCompile Include="..\..\..\Test\json_test.cpp">
       <Filter>Test</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Test\phash_test.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Test\avltree.h">
@@ -832,6 +838,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Test\Base64Transcoder.h">
       <Filter>Test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Test\extlib\CImg\CImg.h">
+      <Filter>extlib\CImg</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

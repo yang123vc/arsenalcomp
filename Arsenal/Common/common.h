@@ -1407,7 +1407,7 @@ arStatus_t      AR_path_copydir(const wchar_t *src, const wchar_t *dest);
 
 /*******************************************************************Math*************************************************************************************************/
 
-#define AR_DBL_PI	3.14159265358979323846
+#define AR_DBL_PI	3.141592653589793238462643383
 #define AR_FLT_PI	3.14159265358979323846f
 
 float  AR_nan_value_flt();
@@ -1668,6 +1668,7 @@ arStatus_t		AR_MultiplyMatrixByTransposeMatrix(const arMatrix_t *mat, const arMa
 
 arStatus_t		AR_MultiplyMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other);								/*mat = mat * other */
 arStatus_t		AR_MultiplyTransposeMatrixByMatrixSelf(arMatrix_t *mat, const arMatrix_t *other);						/*mat = transpose(mat) * other */
+arStatus_t		AR_MultiplyMatrixByTransposeMatrixSelf(arMatrix_t *mat, const arMatrix_t *other);						/*mat = mat * transpose(other) */
 
 
 

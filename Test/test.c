@@ -107,6 +107,8 @@ extern void net_test();
 
 extern void Json_Test();
 
+extern void phash_test();
+
 #endif
 
 
@@ -117,7 +119,7 @@ void AR_Test()
 {
 #if defined(__LIB)
 		//com_test();
-		math_test();
+		//math_test();
 		//trie_tree_test();
 		//expr_test();
 		//lex_test();
@@ -208,6 +210,8 @@ void AR_Test()
 		//net_test();
 
 		//Json_Test();
+
+		phash_test();
 
 		getchar();
 #else

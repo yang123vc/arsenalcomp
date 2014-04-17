@@ -1524,6 +1524,7 @@
     <ClCompile Include="..\..\..\Test\parser_gen_perf_test.c" />
     <ClCompile Include="..\..\..\Test\parser_test.c" />
     <ClCompile Include="..\..\..\Test\perf_test.c" />
+    <ClCompile Include="..\..\..\Test\phash_test.cpp" />
     <ClCompile Include="..\..\..\Test\plist_test.cpp" />
     <ClCompile Include="..\..\..\Test\psr_misc.c" />
     <ClCompile Include="..\..\..\Test\ray_test.c" />
@@ -1540,6 +1541,7 @@
     <ClInclude Include="..\..\..\Test\avltree.h" />
     <ClInclude Include="..\..\..\Test\Base64Transcoder.h" />
     <ClInclude Include="..\..\..\Test\calc_test3_impl.h" />
+    <ClInclude Include="..\..\..\Test\extlib\CImg\CImg.h" />
     <ClInclude Include="..\..\..\Test\extlib\deelx\deelx.h" />
     <ClInclude Include="..\..\..\Test\extlib\libcurl\include\curl\curl.h" />
     <ClInclude Include="..\..\..\Test\extlib\libcurl\include\curl\curlbuild.h" />
