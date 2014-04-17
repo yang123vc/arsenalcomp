@@ -30,6 +30,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestTools", "TestTools", "{F038266C-B986-432E-ADB0-8CAABFA0684B}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageSearch", "..\..\..\TestTools\Win\ImageSearch\ImageSearch.vcxproj", "{FBE0E07F-4E72-476D-A47A-65BD25D2C764}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DE280C05-5EDC-446A-9695-30D3D22889DA} = {DE280C05-5EDC-446A-9695-30D3D22889DA}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
