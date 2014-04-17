@@ -1376,6 +1376,44 @@ END_POINT:
 }
 
 
+arStatus_t		AR_MultiplyMatrixByTransposeMatrixSelf(arMatrix_t *mat, const arMatrix_t *other)
+{
+		arStatus_t status;
+		arMatrix_t *tmp;
+		AR_ASSERT(mat != NULL && other != NULL);
+
+		status = AR_S_YES;
+
+		tmp = AR_CreateMatrix(mat->nrows, mat->ncols);
+
+		if(tmp == NULL)
+		{
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+		
+		
+		if((status = AR_MultiplyMatrixByTransposeMatrix(mat, other, tmp)) != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+
+
+		if((status = AR_CopyMatrix(mat, tmp)) != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+
+END_POINT:
+		if(tmp)
+		{
+				AR_DestroyMatrix(tmp);
+				tmp = NULL;
+		}
+		return status;
+}
+
+
 arStatus_t		AR_AddMatrixByMatrix(const arMatrix_t *mat, const arMatrix_t *other, arMatrix_t *dest)
 {
 		arStatus_t status;
