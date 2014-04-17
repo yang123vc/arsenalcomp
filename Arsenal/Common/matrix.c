@@ -3538,6 +3538,41 @@ arStatus_t			AR_MultiplyMatrixCholeskyFactors(const arMatrix_t *mat, arMatrix_t 
 
 
 
+arStatus_t		AR_SVDFactorMatrixSelf(arMatrix_t *mat, arVector_t *w, arMatrix_t *v)
+{
+		AR_UNUSED(mat);
+		AR_UNUSED(w);
+		AR_UNUSED(v);
+		return AR_E_NOTIMPL;
+}
+
+arStatus_t		AR_SVDSloveMatrix(const arMatrix_t *mat, const arVector_t *w, const arVector_t *v, arVector_t *x, const arVector_t *b)
+{
+		AR_UNUSED(mat);
+		AR_UNUSED(w);
+		AR_UNUSED(v);
+		AR_UNUSED(x);
+		AR_UNUSED(b);
+		return AR_E_NOTIMPL;
+}
+
+arStatus_t		AR_SVDInverseMatrix(const arMatrix_t *mat, const arVector_t *w, const arVector_t *v, arMatrix_t *inv)
+{
+		AR_UNUSED(mat);
+		AR_UNUSED(w);
+		AR_UNUSED(v);
+		AR_UNUSED(inv);
+		return AR_E_NOTIMPL;
+}
+
+arStatus_t		AR_MultiplyMatrixSVDFactors(const arMatrix_t *mat, const arVector_t *w, const arVector_t *v, arMatrix_t *original_matrix)
+{
+		AR_UNUSED(mat);
+		AR_UNUSED(w);
+		AR_UNUSED(v);
+		AR_UNUSED(original_matrix);
+		return AR_E_NOTIMPL;
+}
 
 
 

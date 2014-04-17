@@ -494,6 +494,7 @@
       </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="imagesearch.cpp" />
+    <ClCompile Include="image_hash.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -602,7 +603,10 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CImg\CImg.h" />
     <ClInclude Include="GeneratedFiles\ui_imagesearch.h" />
+    <ClInclude Include="image_hash.h" />
+    <ClInclude Include="stdhdr.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="imagesearch.qrc">

@@ -35,6 +35,9 @@
     <Filter Include="Generated Files\LibRelease">
       <UniqueIdentifier>{794dbc87-adac-4452-bed2-458d042a8018}</UniqueIdentifier>
     </Filter>
+    <Filter Include="CImg">
+      <UniqueIdentifier>{da998146-c913-4f15-8431-f46cc5e12955}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -58,6 +61,9 @@
     <ClCompile Include="GeneratedFiles\LibRelease\moc_imagesearch.cpp">
       <Filter>Generated Files\LibRelease</Filter>
     </ClCompile>
+    <ClCompile Include="image_hash.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="imagesearch.h">
@@ -73,6 +79,15 @@
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_imagesearch.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CImg\CImg.h">
+      <Filter>CImg</Filter>
+    </ClInclude>
+    <ClInclude Include="image_hash.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stdhdr.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
