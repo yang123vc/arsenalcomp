@@ -51,7 +51,7 @@ static double get_nth_elem(const std::vector<double> &vd, size_t nth)
 }
 
 
-arStatus_t phash_image(CByteImage_t &src, std::string &hash, const size_t SAMPLE_SIZE = 8)
+static arStatus_t phash_image(CByteImage_t &src, std::string &hash, const size_t SAMPLE_SIZE = 8)
 {
 
 
@@ -180,7 +180,7 @@ END_POINT:
 		return status;
 }
 
-ar_bool_t phash_image_file(const wchar_t *file, std::string &hash)
+static ar_bool_t phash_image_file(const wchar_t *file, std::string &hash)
 {
 		CByteImage_t src;
 		char *s = AR_wcs_to_str(AR_CP_UTF8, file, AR_wcslen(file));
