@@ -278,10 +278,7 @@ ImageSearch::ImageSearch(QWidget *parent, Qt::WFlags flags)	: QDialog(parent, fl
 		
 		m_tray->show();
 
-		std::string title = UTIL_WToUTF8(L"QTÌ«Å£±ÆÁË");
-		std::string msg = UTIL_WToUTF8(L"ÉñÁË!");
 
-		m_tray->showMessage(tr(title.c_str()),tr(msg.c_str()),QSystemTrayIcon::Information,2500);
 
 		m_check_foreground_timer = new QTimer(this);
 		connect(m_check_foreground_timer,SIGNAL(timeout()),this,SLOT(on_check_foreground_window()));
