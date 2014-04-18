@@ -226,3 +226,21 @@ size_t hamming_distance(const std::string &l, const std::string &r)
 
 
 
+
+size_t phash_hamming_distance(const std::string &l, const std::string &r)
+{
+		size_t count;
+		AR_ASSERT(l.size() == r.size());
+		
+		count = 0;
+		for(size_t i = 0; i < l.size(); ++i)
+		{
+				if(l[i] != r[i])
+				{
+						count++;
+				}
+		}
+
+		return count;
+}
+

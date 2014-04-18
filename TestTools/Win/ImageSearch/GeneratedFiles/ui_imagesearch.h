@@ -15,18 +15,26 @@
 #include <QtGui/QButtonGroup>
 #include <QtGui/QDialog>
 #include <QtGui/QHeaderView>
+#include <QtGui/QLabel>
 
 QT_BEGIN_NAMESPACE
 
 class Ui_ImageSearchClass
 {
 public:
+    QLabel *matched_image;
 
     void setupUi(QDialog *ImageSearchClass)
     {
         if (ImageSearchClass->objectName().isEmpty())
             ImageSearchClass->setObjectName(QString::fromUtf8("ImageSearchClass"));
-        ImageSearchClass->resize(600, 400);
+        ImageSearchClass->resize(640, 480);
+        ImageSearchClass->setMinimumSize(QSize(640, 480));
+        ImageSearchClass->setMaximumSize(QSize(800, 600));
+        matched_image = new QLabel(ImageSearchClass);
+        matched_image->setObjectName(QString::fromUtf8("matched_image"));
+        matched_image->setGeometry(QRect(10, 10, 300, 300));
+        matched_image->setAlignment(Qt::AlignCenter);
 
         retranslateUi(ImageSearchClass);
 
@@ -36,6 +44,7 @@ public:
     void retranslateUi(QDialog *ImageSearchClass)
     {
         ImageSearchClass->setWindowTitle(QApplication::translate("ImageSearchClass", "ImageSearch", 0, QApplication::UnicodeUTF8));
+        matched_image->setText(QApplication::translate("ImageSearchClass", "TextLabel", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

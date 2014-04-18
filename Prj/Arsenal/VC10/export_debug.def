@@ -251,6 +251,13 @@ AR_GetNullPath
 AR_GetRealPath
 AR_GetExpandRealPath
 
+AR_CreatePathIterator
+AR_DestroyPathIterator
+AR_PathIteratorSetPath
+AR_PathIteratorCurrent
+AR_PathIteratorNext
+AR_PathIteratorIsDone
+AR_PathIteratorPath
 
 
 ;Lex
@@ -583,6 +590,7 @@ AR_str_to_wcs
 AR_strtrim_right_space 
 AR_strdup 
 AR_strndup 
+AR_srand
 AR_rand32
 AR_rand64
 AR_SetString
