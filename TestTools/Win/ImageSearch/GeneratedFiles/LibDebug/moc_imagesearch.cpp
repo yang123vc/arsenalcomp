@@ -22,7 +22,7 @@ static const uint qt_meta_data_ImageSearch[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       1,   14, // methods
+       2,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -31,12 +31,14 @@ static const uint qt_meta_data_ImageSearch[] = {
 
  // slots: signature, parameters, type, tag, flags
       13,   12,   12,   12, 0x08,
+      49,   42,   12,   12, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_ImageSearch[] = {
     "ImageSearch\0\0on_check_foreground_window()\0"
+    "reason\0on_icon_activated(QSystemTrayIcon::ActivationReason)\0"
 };
 
 void ImageSearch::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -46,10 +48,10 @@ void ImageSearch::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
         ImageSearch *_t = static_cast<ImageSearch *>(_o);
         switch (_id) {
         case 0: _t->on_check_foreground_window(); break;
+        case 1: _t->on_icon_activated((*reinterpret_cast< QSystemTrayIcon::ActivationReason(*)>(_a[1]))); break;
         default: ;
         }
     }
-    Q_UNUSED(_a);
 }
 
 const QMetaObjectExtraData ImageSearch::staticMetaObjectExtraData = {
@@ -84,9 +86,9 @@ int ImageSearch::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 1)
+        if (_id < 2)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 1;
+        _id -= 2;
     }
     return _id;
 }
