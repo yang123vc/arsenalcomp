@@ -74,7 +74,8 @@ LOCAL_SRC_FILES := \
         ../../../../Arsenal/Tools/serializer.c\
         ../../../../Arsenal/Tools/property_list_internal.c\
         ../../../../Arsenal/Tools/property_list.c\
-        ../../../../Arsenal/Tools/tools.c\
+        ../../../../Arsenal/Tools/json.c\
+        ../../../../Arsenal/Tools/tools.c	\
                                                 \
         ../../../../Arsenal/Tengu/tengu.c	\
 						\

@@ -32,9 +32,9 @@ LOCAL_C_INCLUDES += \
 
 
 ifeq ($(LIB_MODE),shared)
-        LOCAL_LDLIBS := -l$(LOCAL_PATH)/../../../../Binary/dll/Arsenal.so
+        LOCAL_LDLIBS := -l$(LOCAL_PATH)/../../../../Binary/armeabi/release/dll/Arsenal.so
 else
-        LOCAL_LDLIBS := -l$(LOCAL_PATH)/../../../../Binary/lib/Arsenal.a
+        LOCAL_LDLIBS := -l$(LOCAL_PATH)/../../../../Binary/armeabi/release/lib/Arsenal.a
 endif
 
 
