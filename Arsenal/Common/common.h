@@ -1131,15 +1131,17 @@ typedef enum
 arStatus_t  AR_DetectTextBom(const ar_byte_t *data, size_t length, arTxtBom_t *bom, size_t *bom_len);
 
 arStatus_t	AR_LoadBomTextFromBinary(arBuffer_t *input, arTxtBom_t *bom, arString_t *out);
-
 arStatus_t	AR_LoadBomTextFile(const wchar_t *path, arTxtBom_t *bom, arString_t *out);
 
 arStatus_t	AR_SaveBomTextFile(const wchar_t *path, arTxtBom_t bom, const wchar_t *input);
-
 arStatus_t	AR_SaveBomTextToBinary(arBuffer_t *output, arTxtBom_t bom, const wchar_t *input);
 
 
+arStatus_t	AR_LoadBomTextFromBinaryWithCodePage(arBuffer_t *input, arTxtBom_t *bom, arString_t *out, arCodePage_t code_page);
+arStatus_t	AR_LoadBomTextFileWithCodePage(const wchar_t *path, arTxtBom_t *bom, arString_t *out, arCodePage_t code_page);
 
+arStatus_t	AR_SaveBomTextToBinaryWithCodePage(arBuffer_t *output, arTxtBom_t bom, const wchar_t *input, arCodePage_t code_page);
+arStatus_t	AR_SaveBomTextFileWithCodePage(const wchar_t *path, arTxtBom_t bom, const wchar_t *input, arCodePage_t code_page);
 
 
 /************************************************************************************************************************************************************************/
