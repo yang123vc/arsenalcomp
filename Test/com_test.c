@@ -4531,7 +4531,7 @@ static void buf_test1()
 				char tmp[1024];
 				size_t l = 1024;
 				
-				arStatus_t status = AR_GetLineFromBuffer(buf, tmp, &l, "\n");
+				arStatus_t status = AR_GetLineFromBufferWithLineSP(buf, tmp, &l, "\n");
 				tmp[l] = '\0';
 
 				AR_ASSERT(status == AR_S_YES);
