@@ -934,18 +934,21 @@ void			AR_SetStringChar(arString_t *str, size_t index, wchar_t c);
 #define			AR_StrPrint(_s) do{ AR_printf(L"%ls\r\n", AR_GetStringCString((_s))); }while(0)
 #define			AR_StrPrintCtx(_ctx, _s)do{ AR_printf_ctx((_ctx), L"%ls\r\n", AR_GetStringCString((_s))); }while(0)
 
-ar_int_t			AR_CompStringWithWcs(const arString_t *l, const wchar_t *r);
-ar_int_t			AR_CompString(const arString_t *l, const arString_t *r);
+ar_int_t		AR_CompStringWithWcs(const arString_t *l, const wchar_t *r);
+ar_int_t		AR_CompString(const arString_t *l, const arString_t *r);
 
-ar_int_t			AR_ICompStringWithWcs(const arString_t *l, const wchar_t *r);
-ar_int_t			AR_ICompString(const arString_t *l, const arString_t *r);
+ar_int_t		AR_ICompStringWithWcs(const arString_t *l, const wchar_t *r);
+ar_int_t		AR_ICompString(const arString_t *l, const arString_t *r);
 
 void			AR_StringToLower(arString_t *l);
 void			AR_StringToUpper(arString_t *l);
 
 void			AR_SwapString(arString_t *l, arString_t *r);
 
+size_t			AR_EraseString(arString_t *str, size_t pos, size_t nchars);
 
+arStatus_t      AR_GetLineFromString(arString_t *str, arString_t *line);
+arStatus_t      AR_GetLineFromStringWithLineSP(arString_t *str, arString_t *line, const wchar_t *line_sp);
 
 /********************************************************StringTable*****************************************************************/
 
@@ -1036,13 +1039,13 @@ typedef struct __arsenal_uri_tag		arURI_t;
 arURI_t*		AR_CreateURI(arCodePage_t cp);
 void			AR_DestroyURI(arURI_t *uri);
 void			AR_ClearURI(arURI_t *uri);
-ar_int_t			AR_CompURI(const arURI_t *l, const arURI_t *r);
+ar_int_t		AR_CompURI(const arURI_t *l, const arURI_t *r);
 arStatus_t		AR_NormalizeURI(arURI_t *uri);
 
 arCodePage_t	AR_GetURICodePage(const arURI_t *uri);
 void			AR_SetURICodePage(arURI_t *uri, arCodePage_t cp);
 
-ar_bool_t			AR_IsRelativeURI(const arURI_t *uri);
+ar_bool_t		AR_IsRelativeURI(const arURI_t *uri);
 
 
 /*这里默认认为输入的URI完全为编码后的URL，之后根据URI设置的code page将编码后的uri解码，并转换为unicode*/

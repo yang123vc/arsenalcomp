@@ -120,7 +120,7 @@ extern void lex_perf_test();
 void AR_Test()
 {
 #if defined(__LIB)
-		//com_test();
+		com_test();
 		//math_test();
 		//trie_tree_test();
 		//expr_test();
@@ -215,7 +215,7 @@ void AR_Test()
 
 		//phash_test();
 
-		lex_perf_test();
+		//lex_perf_test();
 
 		getchar();
 #else

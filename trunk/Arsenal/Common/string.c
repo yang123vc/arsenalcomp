@@ -469,4 +469,176 @@ void			AR_StringToUpper(arString_t *str)
 		}
 }
 
+
+size_t			AR_EraseString(arString_t *str, size_t pos, size_t nchars)
+{
+		size_t rm_len = 0;
+		AR_ASSERT(str != NULL);
+		AR_ASSERT(pos < str->count);
+
+		if(nchars == 0)
+				return 0;
+
+		rm_len = AR_MIN(str->count - pos, nchars);
+		
+		str->count -= rm_len;
+
+		AR_memmove(str->str + pos, str->str + pos + rm_len, sizeof(wchar_t) * str->count);
+
+		str->str[str->count] = L'\0';
+
+		return rm_len;
+}
+
+
+static const wchar_t line_terminator[] = 
+{
+		L'\x000A',		//Line Feed
+		L'\x000B',		//Vertical Tab
+		L'\x000C',		//Form Feed
+		L'\x000D',		//Carriage Return
+		L'\x0085',		//Next Line
+		L'\x2028',		//Line Separator
+		L'\x2029',		//Paragraph Separator
+		L'\0'
+};
+
+static wchar_t* __find_line_terminator(const wchar_t *s, size_t *line_term_len)
+{
+		AR_ASSERT(s != NULL);
+		AR_ASSERT(line_term_len != NULL);
+
+		while(*s)
+		{
+				if(AR_wcschr(line_terminator, *s) != NULL)
+				{
+						*line_term_len = 1;
+
+						if(*s == L'\x000D' && *(s + 1) == L'\x000A')
+						{
+								*line_term_len = *line_term_len + 1;
+						}
+
+						return (wchar_t*)s;
+								
+				}
+
+				++s;
+		}
+		*line_term_len = 0;
+		return (wchar_t*)s;
+}
+
+
+arStatus_t         AR_GetLineFromString(arString_t *str, arString_t *line)
+{
+        size_t avail;
+        const wchar_t *b, *p, *e;
+        size_t need_n, line_sp_len;
+        
+        AR_ASSERT(str != NULL);
+        
+		AR_ClearString(line);
+
+		
+        
+        avail = str->count;
+        line_sp_len = 0;
+        
+        if(avail == 0)
+        {
+				return AR_E_NOTMATCHED;
+        }
+        
+        b = str->str;
+        e = b + avail;
+        need_n = 0;
+        
+        p = __find_line_terminator(b, &line_sp_len);
+        
+		AR_ASSERT(p != NULL);
+        
+        need_n = p - b;
+        
+        if(need_n == 0)	/*empty line*/
+        {
+                AR_EraseString(str, 0, need_n + line_sp_len);
+                return AR_S_YES;
+        }
+        
+        if(line == NULL)
+        {
+				/*empty line*/
+                return AR_S_YES;
+        }else
+        {
+				arStatus_t status = AR_S_YES;
+				
+				status = AR_SetStringN(line, b, need_n);
+				AR_ASSERT(avail >= need_n + line_sp_len);
+                AR_EraseString(str, 0, need_n + line_sp_len); /*抹掉\r\n*/
+                
+				return status;
+        }
+}
+
+arStatus_t      AR_GetLineFromStringWithLineSP(arString_t *str, arString_t *line, const wchar_t *line_sp)
+{
+		size_t avail;
+        const wchar_t *b, *p, *e;
+        size_t need_n, line_sp_len;
+        
+        AR_ASSERT(str != NULL);
+        AR_ASSERT(line_sp != NULL);
+		AR_ClearString(line);
+
+		
+        
+        avail = str->count;
+        line_sp_len = AR_wcslen(line_sp);
+        AR_ASSERT(line_sp_len > 0);
+
+        if(avail == 0)
+        {
+				return AR_E_NOTMATCHED;
+        }
+        
+        b = str->str;
+        e = b + avail;
+        need_n = 0;
+        
+        p = AR_wcsstr_s(b, e, line_sp, line_sp + line_sp_len);
+        
+		if(p == 0)
+		{
+				need_n = e - b;
+				line_sp_len = 0;
+		}else
+		{
+				need_n = p - b;
+		}
+        
+        if(need_n == 0)	/*empty line*/
+        {
+                AR_EraseString(str, 0, need_n + line_sp_len);
+                return AR_S_YES;
+        }
+        
+        if(line == NULL)
+        {
+				/*empty line*/
+                return AR_S_YES;
+        }else
+        {
+				arStatus_t status = AR_S_YES;
+				
+				status = AR_SetStringN(line, b, need_n);
+				AR_ASSERT(avail >= need_n + line_sp_len);
+                AR_EraseString(str, 0, need_n + line_sp_len); /*抹掉\r\n*/
+                
+				return status;
+        }
+}
+
+
 AR_NAMESPACE_END
