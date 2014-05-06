@@ -1508,6 +1508,7 @@
     <ClCompile Include="..\..\..\Test\ini_test.c" />
     <ClCompile Include="..\..\..\Test\json_test.cpp" />
     <ClCompile Include="..\..\..\Test\Lexer\regexp.c" />
+    <ClCompile Include="..\..\..\Test\lexer_perf_test.cpp" />
     <ClCompile Include="..\..\..\Test\lex_test.c" />
     <ClCompile Include="..\..\..\Test\lfu_cache.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>

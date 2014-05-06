@@ -109,6 +109,8 @@ extern void Json_Test();
 
 extern void phash_test();
 
+extern void lex_perf_test();
+
 #endif
 
 
@@ -211,7 +213,9 @@ void AR_Test()
 
 		//Json_Test();
 
-		phash_test();
+		//phash_test();
+
+		lex_perf_test();
 
 		getchar();
 #else

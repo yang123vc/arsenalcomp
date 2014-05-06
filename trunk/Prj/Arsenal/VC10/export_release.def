@@ -79,9 +79,17 @@ AR_GetTime_Milliseconds
 
 
 
-AR_LoadBomTextFile
 AR_SaveBomTextFile
+AR_LoadBomTextFile
+AR_LoadBomTextFromBinary
 AR_SaveBomTextToBinary
+
+AR_LoadBomTextFromBinaryWithCodePage
+AR_LoadBomTextFileWithCodePage
+AR_SaveBomTextToBinaryWithCodePage
+AR_SaveBomTextFileWithCodePage
+
+
 
 AR_swprintf
 AR_wtoi32_s

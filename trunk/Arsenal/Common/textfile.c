@@ -340,7 +340,7 @@ static txtReadStatus_t		__read_wchar(arBuffer_t *input, arTxtBom_t enc, wchar_t 
 
 
 
-
+#if(0)
 
 
 arStatus_t	AR_LoadBomTextFromBinary(arBuffer_t *input, arTxtBom_t *bom, arString_t *out)
@@ -538,10 +538,216 @@ FAILED_POINT:
 }
 
 
+#endif
 
 
+arStatus_t	AR_LoadBomTextFromBinaryWithCodePage(arBuffer_t *input, arTxtBom_t *bom, arString_t *out, arCodePage_t code_page)
+{
+		arStatus_t ret;
+		arTxtBom_t	enc;
+		wchar_t c;
+		
+		txtReadStatus_t	status;
+		AR_ASSERT(input != NULL && out != NULL);
+
+		ret = AR_S_YES;
+		status = TXT_READ_OK;
+		AR_ClearString(out);
+		
+		if(AR_GetBufferAvailable(input) == 0)
+		{
+				if(bom)
+				{
+						*bom = AR_TXT_BOM_NONE;
+				}
+				return AR_S_YES;
+		}
+
+		
+		if(!__dectect_encoding(input, &enc))
+		{
+				status = TXT_READ_INVALID;
+				goto FAILED_POINT;
+		}
+
+		if(enc == AR_TXT_BOM_NONE)
+		{
+				
+				wchar_t *str = NULL;
+
+				
+
+				if(code_page < AR_CP_MAX)
+				{
+						str = AR_str_to_wcs(code_page, (const char*)AR_GetBufferData(input), AR_GetBufferAvailable(input));
+				}
+
+				if(str == NULL)
+				{
+						size_t cp;
+						for(cp = AR_CP_ACP; cp < AR_CP_MAX; ++cp)
+						{
+
+								str = AR_str_to_wcs((arCodePage_t)cp, (const char*)AR_GetBufferData(input), AR_GetBufferAvailable(input));
+								if(str != NULL)
+								{
+										break;
+								}
+
+						}
+				}
 
 
+				if(!str)
+				{
+						ret = AR_E_BADENCCONV;
+						status = TXT_READ_INVALID;
+						goto FAILED_POINT;
+				}
+
+				if(out && str)
+				{
+						ret = AR_AppendString(out, str);
+						if(ret != AR_S_YES)
+						{
+								status = TXT_READ_INVALID;
+								goto FAILED_POINT;
+						}
+				}
+
+				if(str)
+				{
+						AR_DEL(str);
+						str = NULL;
+				}
+
+		}else
+		{
+				do{
+
+						status = __read_wchar(input, enc, &c);
+
+						if(status == TXT_READ_OK && out)
+						{
+								ret = AR_AppendCharToString(out, c);
+								if(ret != AR_S_YES)
+								{
+										status = TXT_READ_INVALID;
+										goto FAILED_POINT;
+								}
+						}
+				}while(status == TXT_READ_OK);
+		}
+
+		if(bom)
+		{
+				*bom = enc;
+		}
+
+FAILED_POINT:
+		
+		if(status != TXT_READ_INVALID)
+		{
+				return AR_S_YES;
+		}else
+		{
+				return ret;
+		}
+}
+
+arStatus_t	AR_LoadBomTextFileWithCodePage(const wchar_t *path, arTxtBom_t *bom, arString_t *out, arCodePage_t code_page)
+{
+		arStatus_t		ret;
+		arFile_t		*file = NULL;
+		arBuffer_t		*buf;
+		
+		AR_ASSERT(path != NULL && out != NULL);
+
+		ret = AR_S_YES;
+		buf = NULL;
+		file = NULL;
+		
+
+		ret = AR_open_file(&file, path, L"rb");
+
+		if(ret != AR_S_YES)
+		{
+				AR_error(AR_ERR_WARNING, L"AR_open_file failed for %ls in function '%hs'\r\n", path, AR_FUNC_NAME);
+				goto FAILED_POINT;
+		}
+
+
+		buf = AR_CreateBuffer(1024);
+
+		if(buf == NULL)
+		{
+				ret = AR_E_NOMEM;
+				goto FAILED_POINT;
+		}
+
+		{
+				size_t	rn;
+				ar_byte_t	tmp[256];
+				
+				do{
+						ret = AR_read_file(file, tmp, 256, &rn);
+						/*rn = fread((void*)tmp, 1, sizeof(tmp), file);*/
+						if(rn > 0)
+						{
+								ret = AR_InsertToBuffer(buf, tmp, rn);
+								if(ret == AR_E_NOMEM)
+								{
+										goto FAILED_POINT;
+								}
+						}
+				//}while(!feof(file) && !ferror(file));
+				}while(AR_eof_file(file) != AR_S_YES && AR_error_file(file) != AR_S_YES);
+
+				if(AR_error_file(file) == AR_S_YES)
+				{
+						ret = AR_E_FILE;
+						AR_error(AR_ERR_WARNING, L"fread failed for %ls in function '%hs'\r\n", path, AR_FUNC_NAME);
+						goto FAILED_POINT;
+				}else
+				{
+						tmp[0] = '\0';
+						
+						ret = AR_InsertToBuffer(buf, tmp, 1);
+						if(ret != AR_S_YES)
+						{
+								goto FAILED_POINT;
+						}
+				}
+		}
+
+		ret = AR_LoadBomTextFromBinaryWithCodePage(buf, bom, out, code_page);
+
+FAILED_POINT:
+		if(file)
+		{
+				AR_close_file(file);
+				file = NULL;
+		}
+
+		if(buf)
+		{
+				AR_DestroyBuffer(buf);
+				buf = NULL;
+		}
+
+		return ret;
+}
+
+
+arStatus_t	AR_LoadBomTextFromBinary(arBuffer_t *input, arTxtBom_t *bom, arString_t *out)
+{
+		return AR_LoadBomTextFromBinaryWithCodePage(input, bom, out, AR_CP_MAX);
+}
+
+arStatus_t	AR_LoadBomTextFile(const wchar_t *path, arTxtBom_t *bom, arString_t *out)
+{
+		return AR_LoadBomTextFileWithCodePage(path, bom, out, AR_CP_MAX);
+}
 
 /***************************************Write File**********************************************************/
 
@@ -734,6 +940,7 @@ static arStatus_t __write_wchar(arBuffer_t *out, arTxtBom_t bom, wchar_t c)
 }
 
 
+#if(0)
 
 arStatus_t	AR_SaveBomTextToBinary(arBuffer_t *output, arTxtBom_t bom, const wchar_t *input)
 {
@@ -892,6 +1099,187 @@ FAILED_POINT:
 
 		return ret;
 }
+
+#endif
+
+
+arStatus_t	AR_SaveBomTextToBinaryWithCodePage(arBuffer_t *output, arTxtBom_t bom, const wchar_t *input, arCodePage_t code_page)
+{
+		arStatus_t	ret;
+		const wchar_t  *p;
+
+		AR_ASSERT(output != NULL && input != NULL);
+
+
+		ret = AR_S_YES;
+
+
+		if(bom == AR_TXT_BOM_NONE)
+		{
+				size_t n;
+				char *s = NULL;
+
+				if(code_page < AR_CP_MAX)
+				{
+						s = AR_wcs_to_str(code_page, input, AR_wcslen(input));
+				}else
+				{
+						s = AR_wcs_to_str(AR_CP_ACP, input, AR_wcslen(input));
+				}
+				
+				if(!s)
+				{
+						ret = AR_E_BADENCCONV;
+						goto CLEAR_LOCAL;
+				}
+
+				n = strlen(s);
+
+				if(n == 0)
+				{
+						goto CLEAR_LOCAL;
+				}else
+				{
+						ret = AR_InsertToBuffer(output, (ar_byte_t*)s, n);
+						if(ret != AR_S_YES)
+						{
+								goto CLEAR_LOCAL;
+						}
+				}
+CLEAR_LOCAL:
+				if(s)
+				{
+						AR_DEL(s);
+						s = NULL;
+				}
+		}else
+		{
+				ret = __write_bom(output, bom);
+				if(ret != AR_S_YES)
+				{
+						goto FAILED_POINT;
+				}
+				p = input;
+
+				while(*p)
+				{
+						ret = __write_wchar(output, bom, *p);
+						if(ret != AR_S_YES)
+						{
+								goto FAILED_POINT;
+						}
+						++p;
+				}
+		}
+
+
+FAILED_POINT:
+		
+		return ret;
+}
+
+
+
+
+
+arStatus_t	AR_SaveBomTextFileWithCodePage(const wchar_t *path, arTxtBom_t bom, const wchar_t *input, arCodePage_t code_page)
+{
+		arFile_t		*file;
+		arStatus_t		ret;
+		arBuffer_t		*buf;
+		size_t wn;
+		AR_ASSERT(path != NULL && input != NULL);
+
+
+
+		ret = AR_S_YES;
+		file = NULL;
+		buf = NULL;
+
+		buf = AR_CreateBuffer(1024);
+
+		if(buf == NULL)
+		{
+				ret = AR_E_NOMEM;
+				goto FAILED_POINT;
+		}
+
+		ret = AR_SaveBomTextToBinaryWithCodePage(buf, bom, input, code_page);
+		if(ret != AR_S_YES)
+		{
+				goto FAILED_POINT;
+		}
+
+
+		
+		ret = AR_open_file(&file, path, L"wb");
+
+		if(ret != AR_S_YES)
+		{
+				AR_error(AR_ERR_WARNING, L"AR_open_file failed for %ls in function '%hs'\r\n", path, AR_FUNC_NAME);
+				goto FAILED_POINT;
+		}
+
+
+		while(AR_GetBufferAvailable(buf) > 0 && AR_eof_file(file) != AR_S_YES && AR_error_file(file) != AR_S_YES)
+		{
+				ar_byte_t tmp[256];
+				size_t read_n;
+				wn = 0;
+				read_n = AR_ReadBufferData(buf, tmp, 256);
+				
+				AR_ASSERT(read_n > 0);
+
+				ret = AR_write_file(file, tmp, read_n, &wn);
+				
+				if(ret != AR_S_YES || wn != read_n)
+				{
+						ret = AR_E_FILE;
+						AR_error(AR_ERR_WARNING, L"AR_write_file failed for %ls in function '%hs'\r\n", path, AR_FUNC_NAME);
+						goto FAILED_POINT;
+				}
+
+		}
+
+		if(AR_error_file(file) == AR_S_YES)
+		{
+				ret = AR_E_FILE;
+				AR_error(AR_ERR_WARNING, L"AR_write_file failed for %ls in function '%hs'\r\n", path, AR_FUNC_NAME);
+				goto FAILED_POINT;
+		}
+
+
+FAILED_POINT:
+		if(file)
+		{
+				AR_close_file(file);
+				file = NULL;
+		}
+
+		if(buf)
+		{
+				AR_DestroyBuffer(buf);
+				buf = NULL;
+		}
+
+		return ret;
+}
+
+
+arStatus_t	AR_SaveBomTextToBinary(arBuffer_t *output, arTxtBom_t bom, const wchar_t *input)
+{
+		return AR_SaveBomTextToBinaryWithCodePage(output, bom, input, AR_CP_MAX);
+}
+
+
+arStatus_t	AR_SaveBomTextFile(const wchar_t *path, arTxtBom_t bom, const wchar_t *input)
+{
+		return AR_SaveBomTextFileWithCodePage(path, bom, input, AR_CP_MAX);
+}
+
+
+
+
 AR_NAMESPACE_END
 
 
