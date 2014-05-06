@@ -4442,6 +4442,112 @@ static void select_test2()
 
 }
 
+static void str_test23()
+{
+		arString_t *str = AR_CreateString();
+		arString_t *line = AR_CreateString();
+		AR_SetString(str, L"\r\n\na\rb\r\nc\r\rd\r\n\rx");
+
+
+		while(!AR_IsEmptyString(str))
+		{
+				AR_GetLineFromString(str, line);
+				AR_printf(L"%ls\r\n", AR_CSTR(line));
+		}
+
+		if(str)
+		{
+				AR_DestroyString(str);
+				str = NULL;
+		}
+
+		if(line)
+		{
+				AR_DestroyString(line);
+				line = NULL;
+		}
+}
+
+
+static void str_test24()
+{
+		arString_t *str = AR_CreateString();
+		
+		AR_SetString(str, L"0123456789");
+
+
+		AR_EraseString(str, 1,1);
+		AR_printf(L"%ls\r\n", AR_CSTR(str));
+		AR_ASSERT(AR_GetStringLength(str) == 9);
+
+		AR_EraseString(str, 3,1);
+		AR_printf(L"%ls\r\n", AR_CSTR(str));
+		AR_ASSERT(AR_GetStringLength(str) == 8);
+
+		if(str)
+		{
+				AR_DestroyString(str);
+				str = NULL;
+		}
+
+}
+
+
+static void str_test25()
+{
+		arString_t *str = AR_CreateString();
+		arString_t *line = AR_CreateString();
+		AR_SetString(str, L"\r\n\na\rb\r\nc\r\rd\r\n\rx");
+
+
+		while(!AR_IsEmptyString(str))
+		{
+				AR_GetLineFromStringWithLineSP(str, line, L"\n");
+				AR_printf(L"%ls\r\n", AR_CSTR(line));
+		}
+
+		if(str)
+		{
+				AR_DestroyString(str);
+				str = NULL;
+		}
+
+		if(line)
+		{
+				AR_DestroyString(line);
+				line = NULL;
+		}
+}
+
+
+static void buf_test1()
+{
+		arBuffer_t *buf = AR_CreateBuffer(1024);
+
+		AR_InsertCStringToBuffer(buf, "\r\n\na\rb\r\nc\r\rd\r\n\rx");
+
+		while(AR_GetBufferAvailable(buf) > 0)
+		{
+				char tmp[1024];
+				size_t l = 1024;
+				
+				arStatus_t status = AR_GetLineFromBuffer(buf, tmp, &l, "\n");
+				tmp[l] = '\0';
+
+				AR_ASSERT(status == AR_S_YES);
+
+				AR_printf(L"%hs\r\n", tmp);
+
+		}
+
+
+		if(buf)
+		{
+				AR_DestroyBuffer(buf);
+				buf = NULL;
+		}
+
+}
 
 void com_test()
 {
@@ -4473,6 +4579,11 @@ void com_test()
 		//str_test20();
 		//str_test21();
 		//str_test22();
+		//str_test23();
+		//str_test24();
+		//str_test25();
+		buf_test1();
+
 		//com_test3();
 		//com_conv();
 		//com_conv2();
@@ -4579,7 +4690,7 @@ void com_test()
 
 		//select_test1();
 
-		select_test2();
+		//select_test2();
 }
 
 

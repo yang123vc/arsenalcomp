@@ -427,13 +427,14 @@ arStatus_t         AR_GetLineFromBuffer(arBuffer_t *buf, char *line, size_t *l, 
 {
         size_t avail;
         const char *b, *p, *e;
-        size_t need_n;
+        size_t need_n, line_sp_len;
         
         AR_ASSERT(line_sp != NULL && AR_strlen(line_sp) > 0);
         AR_ASSERT(buf != NULL);
         
         AR_ASSERT(l != NULL);
         
+		line_sp_len = AR_strlen(line_sp);
         
         avail = AR_GetBufferAvailable(buf);
         
@@ -448,19 +449,22 @@ arStatus_t         AR_GetLineFromBuffer(arBuffer_t *buf, char *line, size_t *l, 
         e = b + avail;
         need_n = 0;
         
-        p = AR_strstr_s(b, e, line_sp, line_sp + AR_strlen(line_sp));
+        p = AR_strstr_s(b, e, line_sp, line_sp + line_sp_len);
         
         if(p == NULL)
         {
-                return AR_E_NOTMATCHED;
-        }
-        
-        need_n = p - b;
+				need_n = e - b;
+				line_sp_len = 0;
+                
+        }else
+		{
+				need_n = p - b;
+		}
         
         if(need_n == 0)
         {
                 *l = 0;
-                AR_EraseBuffer(buf, need_n + 2);
+                AR_EraseBuffer(buf, need_n + line_sp_len);
                 return AR_S_YES;
         }
         
@@ -476,8 +480,9 @@ arStatus_t         AR_GetLineFromBuffer(arBuffer_t *buf, char *line, size_t *l, 
                 }else
                 {
                         AR_strncpy(line, b, need_n);
-                        AR_ASSERT(avail >= need_n + 2);
-                        AR_EraseBuffer(buf, need_n + 2); /*抹掉\r\n*/
+                        AR_ASSERT(avail >= need_n + line_sp_len);
+                        AR_EraseBuffer(buf, need_n + line_sp_len); /*抹掉\r\n*/
+						*l = need_n;
                         return AR_S_YES;
                 }
         }
