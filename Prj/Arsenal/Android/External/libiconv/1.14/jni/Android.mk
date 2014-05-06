@@ -33,7 +33,7 @@ LOCAL_C_INCLUDES += \
   $(LOCAL_PATH)/../libcharset/include \
   $(LOCAL_PATH)/../srclib \
   
-TARGET_PLATFORM := android-14
+#TARGET_PLATFORM := android-14
 
 
 #ifeq ($(LIB_MODE),shared)
