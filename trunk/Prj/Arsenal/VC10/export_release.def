@@ -582,6 +582,9 @@ AR_strtrim_right_space
 AR_strdup 
 AR_strndup 
 AR_SetString
+AR_GetLineFromString
+AR_GetLineFromStringWithLineSP
+
 AR_srand
 AR_rand32
 AR_rand64

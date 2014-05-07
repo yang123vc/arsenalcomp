@@ -600,6 +600,8 @@ AR_srand
 AR_rand32
 AR_rand64
 AR_SetString
+AR_GetLineFromString
+AR_GetLineFromStringWithLineSP
 
 
 
