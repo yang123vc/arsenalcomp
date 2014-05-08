@@ -32,6 +32,9 @@ AR_wcsdup
 
 AR_wcstrim
 AR_wcstrim_space
+AR_wcstrim_s
+AR_wcstrim_space_s
+
 AR_wcsndup
 
 AR_Version
