@@ -1198,6 +1198,7 @@ void			AR_Sleep(ar_int_64_t millisecond);
 ar_int_64_t		AR_GetTime_Microseconds();
 ar_int_64_t		AR_GetTime_Milliseconds();
 
+ar_int_64_t		AR_GetTime_TickCount();
 
 /**********************************************************thread*************************************************************/
 

@@ -109,6 +109,17 @@ void			AR_UnLockSpinLock(arSpinLock_t *lock)
 }
 
 
+/****************************************************************************Ticks***********************************************/
+
+
+ar_int_64_t		AR_GetTime_TickCount()
+{
+		struct timespec now;
+        clock_gettime(CLOCK_MONOTONIC, &now);
+        ticks = (now.tv_sec - start_ts.tv_sec) * 1000 + (now.tv_nsec - start_ts.tv_nsec) / 1000000;
+		return (ar_int_64_t)ticks;
+}
+
 /************************************************************************************************************************************end*/
 void			AR_YieldThread()
 {
