@@ -164,7 +164,7 @@ int main()
 #else
 		//_CrtDumpMemoryLeaks();
 		printf("done\r\n");
-		getchar();
+		//getchar();
 #endif
 
 		return 0;
