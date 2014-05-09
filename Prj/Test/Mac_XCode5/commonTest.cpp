@@ -2426,6 +2426,18 @@ static void mem_test1()
         
         
 }
+        
+        
+static void tick_test()
+{
+        ar_int_64_t beg, end;
+        
+        beg = AR_GetTime_TickCount();
+        AR_Sleep(1000);
+        end = AR_GetTime_TickCount();
+        
+        AR_printf(L"elapsed milliseconds : %qd\r\n", end - beg);
+}
 
 void common_test()
 {
@@ -2456,6 +2468,8 @@ void common_test()
         //heap_test1();
         
         //mem_test1();
+        
+        tick_test();
         
 }
         

@@ -12,7 +12,7 @@
 #include "plist_test.h"
 #include "lex_test.h"
 
-
+extern void Json_Test();
 
 void test()
 {
@@ -20,6 +20,8 @@ void test()
         //common_test();
         //marshal_die_test();
         //plist_test();
-        lex_test();
+        //lex_test();
+        
+        Json_Test();
         
 }
