@@ -81,7 +81,8 @@ void json_test4()
 		arStatus_t status = AR_S_YES;
 		
 		beg = AR_GetTime_Microseconds();
-		status = Json_LoadObjectFromFile(L"..\\..\\..\\misc\\json_test\\twitter_public_timeline.json", &obj);
+		//status = Json_LoadObjectFromFile(L"..\\..\\..\\misc\\json_test\\twitter_public_timeline.json", &obj);
+		status = Json_LoadObjectFromFile(L"..\\..\\..\\misc\\json_test\\4.json", &obj);
 		AR_ASSERT(status == AR_S_YES);
 		end = AR_GetTime_Microseconds();
 
@@ -102,7 +103,7 @@ void json_test4()
 				obj = NULL;
 		}
 
-		//getchar();
+		getchar();
 }
 
 #endif
