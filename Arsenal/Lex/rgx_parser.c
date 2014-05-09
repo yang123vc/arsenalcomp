@@ -22,7 +22,7 @@
 AR_NAMESPACE_BEGIN
 
 
-AR_INLINE const wchar_t*	__transform_char(const wchar_t *input, wchar_t *c, rgxError_t *err)
+static const wchar_t*	__transform_char(const wchar_t *input, wchar_t *c, rgxError_t *err)
 {
 		const wchar_t	*p; 
 		AR_ASSERT(input != NULL && c != NULL && err != NULL);
