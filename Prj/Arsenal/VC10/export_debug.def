@@ -80,7 +80,7 @@ AR_str_to_escstr_buf
 
 AR_GetTime_Microseconds
 AR_GetTime_Milliseconds
-
+AR_GetTime_TickCount
 
 AR_SaveBomTextFile
 AR_LoadBomTextFile
