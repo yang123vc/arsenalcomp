@@ -24,6 +24,13 @@
 #error "Target ARCH  not supported"
 #endif
 
+
+
+
+static void __init_ticks();
+static void __uninit_ticks();
+
+
 void			AR_InitThread()
 {
         sigset_t sset;
@@ -31,11 +38,14 @@ void			AR_InitThread()
         sigaddset(&sset, SIGPIPE);
         pthread_sigmask(SIG_BLOCK, &sset, 0);
 
+
+		__init_ticks();
+
 }
 
 void			AR_UnInitThread()
 {
-
+		__uninit_ticks();
 
 }
 
@@ -70,6 +80,38 @@ ar_bool_t			AR_AtomicCompExch(volatile ar_int_t *dest, ar_int_t val, ar_int_t cm
 {
 		AR_ASSERT(dest != NULL);
 		return COMP_EXCH(dest, val, cmpval) ? true : false;
+}
+
+
+
+/****************************************************************************Ticks***********************************************/
+
+
+static ar_int_64_t __g_start_mach = 0;
+static mach_timebase_info_data_t __g_mach_base_info;
+static void __init_ticks()
+{
+		mach_timebase_info(&__g_mach_base_info);
+        __g_start_mach = (ar_int_64_t)mach_absolute_time();
+}
+
+static void __uninit_ticks()
+{
+		__g_start_mach = 0;
+		AR_memset(&__g_mach_base_info, 0, sizeof(__g_mach_base_info));
+}
+
+
+ar_int_64_t		AR_GetTime_TickCount()
+{
+		ar_int_64_t now;
+		ar_int_64_t ticks;
+		
+		ticks = 0;
+
+		now = (ar_int_64_t)mach_absolute_time();
+        ticks = (((now - start_mach) * (ar_int_64_t)mach_base_info.numer) / (ar_int_64_t)mach_base_info.denom) / 1000000;
+		return ticks;
 }
 
 

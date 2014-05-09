@@ -52,6 +52,17 @@ ar_bool_t			AR_AtomicCompExch(volatile ar_int_t *dest, ar_int_t val, ar_int_t cm
 		return __sync_bool_compare_and_swap(dest, cmpval, val) ? true : false;
 }
 
+
+/****************************************************************************Ticks***********************************************/
+
+
+
+
+ar_int_64_t		AR_GetTime_TickCount()
+{
+		return AR_GetTime_Milliseconds();
+}
+
 /****************************************************************************SpinLock***********************************************/
 
 
