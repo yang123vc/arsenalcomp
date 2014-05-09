@@ -4549,6 +4549,20 @@ static void buf_test1()
 
 }
 
+static void ticks_test()
+{
+		ar_int_64_t beg = AR_GetTime_TickCount();
+
+		AR_Sleep(1000);
+
+		ar_int_64_t end = AR_GetTime_TickCount();
+
+		AR_printf(L"elpased tickcounts : %qd\r\n", end - beg);
+
+		getchar();
+}
+
+
 void com_test()
 {
 		
@@ -4582,7 +4596,7 @@ void com_test()
 		//str_test23();
 		//str_test24();
 		//str_test25();
-		buf_test1();
+		//buf_test1();
 
 		//com_test3();
 		//com_conv();
@@ -4691,6 +4705,8 @@ void com_test()
 		//select_test1();
 
 		//select_test2();
+
+		ticks_test();
 }
 
 
