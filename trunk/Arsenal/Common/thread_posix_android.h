@@ -15,18 +15,22 @@
 #define Arsenal_thread_posix_android_h
 
 
+static void __init_ticks();
+static void __uninit_ticks();
+
 void			AR_InitThread()
 {
         sigset_t sset;
         sigemptyset(&sset);
         sigaddset(&sset, SIGPIPE);
         pthread_sigmask(SIG_BLOCK, &sset, 0);
+		__init_ticks();
         
 }
 
 void			AR_UnInitThread()
 {
-        
+        __uninit_ticks();
         
 }
 
@@ -111,13 +115,24 @@ void			AR_UnLockSpinLock(arSpinLock_t *lock)
 
 /****************************************************************************Ticks***********************************************/
 
+static struct timespec __g_start_ts;
+static void __init_ticks()
+{
+		clock_gettime(CLOCK_MONOTONIC, &__g_start_ts);
+}
+
+static void __uninit_ticks()
+{
+
+}
 
 ar_int_64_t		AR_GetTime_TickCount()
 {
 		struct timespec now;
+		ar_int_64_t ticks;
         clock_gettime(CLOCK_MONOTONIC, &now);
-        ticks = (now.tv_sec - start_ts.tv_sec) * 1000 + (now.tv_nsec - start_ts.tv_nsec) / 1000000;
-		return (ar_int_64_t)ticks;
+        ticks = (ar_int_64_t)((now.tv_sec - __g_start_ts.tv_sec) * 1000 + (now.tv_nsec - __g_start_ts.tv_nsec) / 1000000);
+		return ticks;
 }
 
 /************************************************************************************************************************************end*/
