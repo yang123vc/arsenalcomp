@@ -106,7 +106,7 @@ arStatus_t      AR_DetectTextBom(const ar_byte_t *data, size_t length, arTxtBom_
 /*****************************************************************************************/
 
 
-AR_INLINE ar_bool_t	__dectect_encoding(arBuffer_t *input, arTxtBom_t *bom)
+static ar_bool_t	__dectect_encoding(arBuffer_t *input, arTxtBom_t *bom)
 {
 		ar_byte_t tmp[4] = {0xcc, 0xcc,0xcc,0xcc};
 		size_t input_len;
@@ -182,7 +182,7 @@ typedef enum
 		TXT_READ_EOF
 }txtReadStatus_t;
 
-AR_INLINE txtReadStatus_t		__read_wchar(arBuffer_t *input, arTxtBom_t enc, wchar_t *out)
+static txtReadStatus_t		__read_wchar(arBuffer_t *input, arTxtBom_t enc, wchar_t *out)
 {
 
 		ar_uint_32_t e;
@@ -548,7 +548,7 @@ arStatus_t	AR_LoadBomTextFile(const wchar_t *path, arTxtBom_t *bom, arString_t *
 
 /***************************************Write File**********************************************************/
 
-AR_INLINE arStatus_t __write_bom(arBuffer_t *out, arTxtBom_t bom)
+static arStatus_t __write_bom(arBuffer_t *out, arTxtBom_t bom)
 {
 		ar_byte_t buf[4];
 		size_t wn;
@@ -618,7 +618,7 @@ AR_INLINE arStatus_t __write_bom(arBuffer_t *out, arTxtBom_t bom)
 
 
 
-AR_INLINE arStatus_t __write_wchar(arBuffer_t *out, arTxtBom_t bom, wchar_t c)
+static arStatus_t __write_wchar(arBuffer_t *out, arTxtBom_t bom, wchar_t c)
 {
 		arStatus_t ret;
 		AR_ASSERT(out != NULL);

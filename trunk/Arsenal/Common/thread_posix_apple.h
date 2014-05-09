@@ -110,7 +110,7 @@ ar_int_64_t		AR_GetTime_TickCount()
 		ticks = 0;
 
 		now = (ar_int_64_t)mach_absolute_time();
-        ticks = (((now - start_mach) * (ar_int_64_t)mach_base_info.numer) / (ar_int_64_t)mach_base_info.denom) / 1000000;
+        ticks = (((now - __g_start_mach) * (ar_int_64_t)__g_mach_base_info.numer) / (ar_int_64_t)__g_mach_base_info.denom) / 1000000;
 		return ticks;
 }
 

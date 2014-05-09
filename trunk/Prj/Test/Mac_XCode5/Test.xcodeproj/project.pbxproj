@@ -24,6 +24,8 @@
 		674D86B9182E5531006DFF2A /* lex_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 674D86B8182E5531006DFF2A /* lex_test.cpp */; };
 		674D86BA182E5531006DFF2A /* lex_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 674D86B8182E5531006DFF2A /* lex_test.cpp */; };
 		6774715F182030F20048F34E /* Arsenal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6774715E182030F20048F34E /* Arsenal.a */; };
+		678B9F72191D0DB900BBEF24 /* json_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 678B9F71191D0DB900BBEF24 /* json_test.cpp */; };
+		678B9F73191D0DB900BBEF24 /* json_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 678B9F71191D0DB900BBEF24 /* json_test.cpp */; };
 		679A46EA15527DD3006A5AD4 /* commonTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 679A46E915527DD3006A5AD4 /* commonTest.cpp */; };
 		679A46EB15527DD3006A5AD4 /* commonTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 679A46E915527DD3006A5AD4 /* commonTest.cpp */; };
 		679A46EE15527DF0006A5AD4 /* commonTest.h in Sources */ = {isa = PBXBuildFile; fileRef = 679A46ED15527DF0006A5AD4 /* commonTest.h */; };
@@ -75,6 +77,7 @@
 		674D86B8182E5531006DFF2A /* lex_test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lex_test.cpp; sourceTree = SOURCE_ROOT; };
 		674D86BB182E55D4006DFF2A /* lex_test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = lex_test.h; sourceTree = SOURCE_ROOT; };
 		6774715E182030F20048F34E /* Arsenal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = Arsenal.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		678B9F71191D0DB900BBEF24 /* json_test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = json_test.cpp; sourceTree = SOURCE_ROOT; };
 		679A46E915527DD3006A5AD4 /* commonTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = commonTest.cpp; sourceTree = SOURCE_ROOT; };
 		679A46ED15527DF0006A5AD4 /* commonTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = commonTest.h; sourceTree = SOURCE_ROOT; };
 		67CEFDC3177B66E600D7D9D4 /* Base64Transcoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Base64Transcoder.c; sourceTree = SOURCE_ROOT; };
@@ -142,6 +145,7 @@
 		BE185EA614E846F10095DB44 /* Test */ = {
 			isa = PBXGroup;
 			children = (
+				678B9F71191D0DB900BBEF24 /* json_test.cpp */,
 				674D86B8182E5531006DFF2A /* lex_test.cpp */,
 				674D86BB182E55D4006DFF2A /* lex_test.h */,
 				67CEFDC3177B66E600D7D9D4 /* Base64Transcoder.c */,
@@ -241,6 +245,7 @@
 				67F26D15156B55E0003FAA7E /* lfu_cache.cpp in Sources */,
 				67DB43F21688503A00F05430 /* marshal_die_test.cpp in Sources */,
 				67CEFDC5177B66E600D7D9D4 /* Base64Transcoder.c in Sources */,
+				678B9F72191D0DB900BBEF24 /* json_test.cpp in Sources */,
 				671357A617B4D9B6001133BC /* plist_test.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -258,6 +263,7 @@
 				679A46EF15527DF0006A5AD4 /* commonTest.h in Sources */,
 				67F26D16156B55E0003FAA7E /* lfu_cache.cpp in Sources */,
 				67DB43F31688503A00F05430 /* marshal_die_test.cpp in Sources */,
+				678B9F73191D0DB900BBEF24 /* json_test.cpp in Sources */,
 				67CEFDC6177B66E600D7D9D4 /* Base64Transcoder.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
