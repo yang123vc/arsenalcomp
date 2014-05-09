@@ -915,7 +915,7 @@ jsonObj_t* parse_json_escape_string(const wchar_t *lexer_str, size_t count)
 										if(p[i] >= L'0' && p[i] <= L'9')
 										{
 												c += (p[i] - L'0');
-										}else if(p[i] >= L'a' && p[i] <= L'e')
+										}else if(p[i] >= L'a' && p[i] <= L'f')
 										{
 												c += (10 + p[i] - L'a');
 
@@ -1320,15 +1320,22 @@ arStatus_t		Json_LoadObjectFromFile(const wchar_t *path, jsonObj_t **obj)
 				status = AR_E_NOMEM;
 				goto END_POINT;
 		}
-
+		
+		
 		status = AR_LoadBomTextFile(path, NULL, str);
+
 
 		if(status != AR_S_YES)
 		{
 				goto END_POINT;
 		}
 
+		
 		status = Json_LoadObjectFromString(AR_CSTR(str), obj);
+
+		
+		
+		
 
 END_POINT:
 		if(str)

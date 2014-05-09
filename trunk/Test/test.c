@@ -211,13 +211,13 @@ void AR_Test()
 
 		//net_test();
 
-		//Json_Test();
+		Json_Test();
 
 		//phash_test();
 
-		lex_perf_test();
+		//lex_perf_test();
 
-		getchar();
+		//getchar();
 #else
 		ARSpace::AR_printf(L"dll version\r\n");
 #endif
