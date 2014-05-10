@@ -316,6 +316,9 @@ static void save_plist_elem_test()
         parser = NULL;
         AR_DestroyString(xml);
         xml = NULL;
+        
+#undef PLIST_FILE_PATH
+        
 }
 
 
