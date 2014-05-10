@@ -80,28 +80,27 @@ void json_test4()
 		ar_int_64_t beg, end;
 		arStatus_t status = AR_S_YES;
 		
-		beg = AR_GetTime_Microseconds();
-		status = Json_LoadObjectFromFile(L"..\\..\\..\\misc\\json_test\\twitter_public_timeline.json", &obj);
-		//status = Json_LoadObjectFromFile(L"..\\..\\..\\misc\\json_test\\4.json", &obj);
-		AR_ASSERT(status == AR_S_YES);
-		end = AR_GetTime_Microseconds();
+		for(size_t i = 0; i < 3; ++i)
+		{
+				beg = AR_GetTime_Microseconds();
+				status = Json_LoadObjectFromFile(L"..\\..\\..\\misc\\json_test\\twitter_public_timeline.json", &obj);
+				AR_ASSERT(status == AR_S_YES);
+				end = AR_GetTime_Microseconds();
+
+				AR_printf(L"parse elapsed microseconds : %qd\r\n", end - beg);
+
+				
+				if(obj)
+				{
+						Json_DestroyObject(obj);
+						obj = NULL;
+				}
+		}
 
 		
-		AR_printf(L"parse elapsed microseconds : %qd\r\n", end - beg);
-
-		arString_t *str = AR_CreateString();
-		//AR_ReserveString(str, 1024 * 1024 * 5);
-		beg = AR_GetTime_Microseconds();
-		status = Json_SaveObjectToString(obj, str);
-		AR_ASSERT(status == AR_S_YES);
-		status = AR_SaveBomTextFile(L"D:\\1.json", AR_TXT_BOM_UTF_8, AR_CSTR(str));
-		AR_ASSERT(status == AR_S_YES);
-
-		end = AR_GetTime_Microseconds();
-		
-		AR_printf(L"serialize elapsed microseconds : %qd\r\n", end - beg);
 		
 
+		
 		if(obj)
 		{
 				Json_DestroyObject(obj);
