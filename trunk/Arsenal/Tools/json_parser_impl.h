@@ -58,15 +58,16 @@ L"oct_literal = 0[0-7]+",
 L"dec_literal = (0|[1-9][0-9]*)",
 L"exponet = (e|E)(\\+|\\-)?[0-9]+",
 L"float_literal = (((([0-9]\\.[0-9]*)){exponet}?)|([0-9]+{exponet}))",
-L"escape_seq = (\\\\\\x22|\\\\\\\\)",
-L"string_dq = (\\x22({escape_seq}|[^\\x22])*\\x22)",
+/*L"escape_seq = (\\\\\\x22|\\\\\\\\)",*/
+/*L"string_dq = (\\x22({escape_seq}|[^\\x22])*\\x22)",*/
+L"string_dq = (\\x22([^\\x22\\\\]|\\\\.)*\\x22)",
 L"float_constant = {float_literal}",
 L"hex_constant = {hex_literal}",
 L"oct_constant = {oct_literal}",
 L"dec_constant = {dec_literal}"
 };
 
-#define __NAME_COUNT__ ((size_t)18)
+#define __NAME_COUNT__ ((size_t)17)
 
 static psrRetVal_t AR_STDCALL on_string_leaf_handler(const psrToken_t *tok,void *ctx);
 
