@@ -131,6 +131,7 @@ _AR_GetThreadId
 _AR_GetThreadPriority
 _AR_GetTime_Microseconds
 _AR_GetTime_Milliseconds
+_AR_GetTime_TickCount
 _AR_GetURI
 _AR_GetURIAuthority
 _AR_GetURICodePage

@@ -619,7 +619,7 @@ const char*		AR_strstr_s(const char *s, const char *se, const char *p, const cha
 
 
 		
-		if(AR_UINT64_MAX / AR_UCHARMAX > pl)
+		if(AR_UINT64_MAX / AR_UCHARMAX > (ar_uint_64_t)pl)
 		{
 				ar_uint_64_t search_hash, pattern_hash;
 				search_hash = 0;
@@ -684,7 +684,7 @@ const wchar_t*	AR_wcsstr_s(const wchar_t *s, const wchar_t *se, const wchar_t *p
 				return s;
 		}
 		
-		if(AR_UINT64_MAX / AR_WCHARMAX > pl)
+		if(AR_UINT64_MAX / AR_WCHARMAX > (ar_uint_64_t)pl)
 		{
 				ar_uint_64_t search_hash, pattern_hash;
 				search_hash = 0;
@@ -752,7 +752,7 @@ const char*		AR_stristr_s(const char *s, const char *se, const char *p, const ch
 				return s;
 		}
 		
-		if(AR_UINT64_MAX / AR_UCHARMAX > pl)
+		if(AR_UINT64_MAX / AR_UCHARMAX > (ar_uint_64_t)pl)
 		{
 				ar_uint_64_t search_hash, pattern_hash;
 
@@ -819,7 +819,7 @@ const wchar_t*	AR_wcsistr_s(const wchar_t *s, const wchar_t *se, const wchar_t *
 		}
 		
         
-		if(AR_UINT64_MAX / AR_WCHARMAX > pl)
+		if(AR_UINT64_MAX / AR_WCHARMAX > (ar_uint_64_t)pl)
 		{
 				ar_uint_64_t search_hash, pattern_hash;
 
@@ -975,7 +975,7 @@ const wchar_t* AR_reverse_wcsstr(const wchar_t *str, size_t l,  const wchar_t *m
 
 		delta = l - ml;
 
-		if(AR_UINT64_MAX / AR_WCHARMAX > ml)
+		if(AR_UINT64_MAX / AR_WCHARMAX > (ar_uint_64_t)ml)
 		{
 				ar_uint_64_t		search_hash, match_hash;
 				search_hash = 0;
@@ -1078,7 +1078,7 @@ const wchar_t* AR_reverse_wcsistr(const wchar_t *str, size_t l,  const wchar_t *
 		delta = l - ml;
 
 
-		if(AR_UINT64_MAX / AR_WCHARMAX > ml)
+		if(AR_UINT64_MAX / AR_WCHARMAX > (ar_uint_64_t)ml)
 		{
 				ar_uint_64_t		search_hash, match_hash;
 				search_hash = 0;
@@ -1176,7 +1176,7 @@ const char* AR_reverse_strstr(const char *str, size_t l,  const char *match, siz
 
 		delta = l - ml;
 
-		if(AR_UINT64_MAX / AR_UCHARMAX > ml)
+		if(AR_UINT64_MAX / AR_UCHARMAX > (ar_uint_64_t)ml)
 		{
 				ar_uint_64_t		search_hash, match_hash;
 				search_hash = 0;
@@ -1277,7 +1277,7 @@ const char* AR_reverse_stristr(const char *str, size_t l,  const char *match, si
 
 		delta = l - ml;
 
-		if(AR_UINT64_MAX / AR_UCHARMAX > ml)
+		if(AR_UINT64_MAX / AR_UCHARMAX > (ar_uint_64_t)ml)
 		{
 				ar_uint_64_t	search_hash, match_hash;
 				search_hash = 0;

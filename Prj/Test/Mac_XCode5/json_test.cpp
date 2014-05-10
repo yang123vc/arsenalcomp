@@ -22,7 +22,7 @@ void json_test1()
 
 		const wchar_t *lex_str = L"abc\\\"\\r\\n\\t\\f\\uaa12345668";
 
-		json_str = parse_json_escape_string(lex_str, AR_wcslen(lex_str));
+		json_str = NULL;//parse_json_escape_string(lex_str, AR_wcslen(lex_str));
 
 
 		const wchar_t *lex_str2 = L"";
@@ -81,16 +81,27 @@ void json_test4()
 		arStatus_t status = AR_S_YES;
 		
         
-        
-		beg = AR_GetTime_Microseconds();
-		status = Json_LoadObjectFromFile(L"/Volumes/Code/Solidus/Commercial/Arsenal/misc/json_test/twitter_public_timeline.json", &obj);
-        
-		AR_ASSERT(status == AR_S_YES);
-		end = AR_GetTime_Microseconds();
+        for(size_t i = 0; i < 3; ++i)
+        {
+                beg = AR_GetTime_Microseconds();
+                status = Json_LoadObjectFromFile(L"/Volumes/Code/Solidus/Commercial/Arsenal/misc/json_test/twitter_public_timeline.json", &obj);
+                
+                AR_ASSERT(status == AR_S_YES);
+                end = AR_GetTime_Microseconds();
+                
+                AR_printf(L"parse elapsed microseconds : %qd\r\n", end - beg);
 
-		
-		AR_printf(L"parse elapsed microseconds : %qd\r\n", end - beg);
-
+                
+                
+                beg = AR_GetTime_Microseconds();
+                status = Json_LoadObjectFromFile(L"/Volumes/Code/Solidus/Commercial/Arsenal/misc/json_test/twitter_public_timeline.json", &obj);
+                
+                AR_ASSERT(status == AR_S_YES);
+                end = AR_GetTime_Microseconds();
+                
+                AR_printf(L"parse elapsed microseconds : %qd\r\n", end - beg);
+        }
+        
         
         beg = AR_GetTime_Microseconds();
         

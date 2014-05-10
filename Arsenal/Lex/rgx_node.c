@@ -538,6 +538,10 @@ arStatus_t		RGX_ToString(const rgxNode_t *node, arString_t *str)
 						}
 				}
 						break;
+                case RGX_PCSET_MAX_T:
+                default:
+                        AR_ASSERT(false);
+                        break;
 				}
 		}
 				break;
