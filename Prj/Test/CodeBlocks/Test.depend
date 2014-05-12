@@ -619,3 +619,91 @@
 	"test.h"
 	<locale.h>
 
+1399922303 source:/root/Desktop/Arsenal/trunk/Prj/Test/CodeBlocks/com_test.c
+	"test.h"
+	<locale.h>
+
+1399921984 /root/Desktop/Arsenal/trunk/Prj/Test/CodeBlocks/test.h
+	"../../../Arsenal/Arsenal.h"
+
+1399921959 /root/Desktop/Arsenal/trunk/Arsenal/Arsenal.h
+	"./Common/common.h"
+	"./Lex/lex.h"
+	"./Parser/parser.h"
+	"./Tools/tools.h"
+	"./Tengu/tengu.h"
+
+1399921958 /root/Desktop/Arsenal/trunk/Arsenal/Common/common.h
+	"config.h"
+	"status.h"
+
+1399921958 /root/Desktop/Arsenal/trunk/Arsenal/Common/config.h
+	"platform.h"
+	<stdlib.h>
+	<stdio.h>
+	<wchar.h>
+	<stddef.h>
+	<stdarg.h>
+	<limits.h>
+	<assert.h>
+	<memory.h>
+	<string.h>
+	<math.h>
+	<wctype.h>
+	<string.h>
+	<float.h>
+	<locale.h>
+	<stdbool.h>
+	<windows.h>
+	<unistd.h>
+	<errno.h>
+	<pthread.h>
+
+1399921958 /root/Desktop/Arsenal/trunk/Arsenal/Common/platform.h
+	<TargetConditionals.h>
+
+1399921958 /root/Desktop/Arsenal/trunk/Arsenal/Common/status.h
+
+1399921956 /root/Desktop/Arsenal/trunk/Arsenal/Lex/lex.h
+	"../Common/common.h"
+
+1399921959 /root/Desktop/Arsenal/trunk/Arsenal/Parser/parser.h
+	"../Common/common.h"
+
+1399921954 /root/Desktop/Arsenal/trunk/Arsenal/Tools/tools.h
+	"grammar_config.h"
+	"serializer.h"
+	"iniobj.h"
+	"property_list.h"
+	"json.h"
+
+1399921954 /root/Desktop/Arsenal/trunk/Arsenal/Tools/grammar_config.h
+	"../Parser/parser.h"
+	"../Lex/lex.h"
+
+1399921954 /root/Desktop/Arsenal/trunk/Arsenal/Tools/serializer.h
+	"../Common/common.h"
+
+1399921954 /root/Desktop/Arsenal/trunk/Arsenal/Tools/iniobj.h
+	"../Common/common.h"
+
+1399921954 /root/Desktop/Arsenal/trunk/Arsenal/Tools/property_list.h
+	"../Common/common.h"
+
+1399921954 /root/Desktop/Arsenal/trunk/Arsenal/Tools/json.h
+	"../Common/common.h"
+
+1399921955 /root/Desktop/Arsenal/trunk/Arsenal/Tengu/tengu.h
+	"../Common/common.h"
+	"../Lex/lex.h"
+	"../Parser/parser.h"
+
+1399921984 source:/root/Desktop/Arsenal/trunk/Prj/Test/CodeBlocks/main.c
+	"test.h"
+	<iostream>
+	<locale.h>
+	<wchar.h>
+
+1399921984 source:/root/Desktop/Arsenal/trunk/Prj/Test/CodeBlocks/test.c
+	"test.h"
+

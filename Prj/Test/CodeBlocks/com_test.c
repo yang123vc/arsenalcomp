@@ -130,6 +130,29 @@ static void spinlock_test()
 
 }
 
+static void tickcount_test()
+{
+    ar_int_64_t beg,end;
+
+    for(size_t i = 0; i < 5; ++i)
+    {
+
+        beg = AR_GetTime_TickCount();
+
+        AR_Sleep(1000);
+
+        end = AR_GetTime_TickCount();
+
+        AR_printf(L"elapsed milliseconds == %qd\r\n", end - beg);
+    }
+
+
+
+
+    getchar();
+
+
+}
 
 void com_test()
 {
@@ -150,7 +173,9 @@ void com_test()
 
        // mtx_test_1();
 
-       spinlock_test();
+       //spinlock_test();
+
+       tickcount_test();
 
 }
 
