@@ -17,11 +17,11 @@ extern void Json_Test();
 void test()
 {
         //file_sys_test();
-        //common_test();
+        common_test();
         //marshal_die_test();
         //plist_test();
         //lex_test();
         
-        Json_Test();
+        //Json_Test();
         
 }
