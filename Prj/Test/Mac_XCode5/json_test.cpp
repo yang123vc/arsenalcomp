@@ -83,6 +83,8 @@ void json_test4()
         
         for(size_t i = 0; i < 3; ++i)
         {
+               
+                
                 beg = AR_GetTime_Microseconds();
                 status = Json_LoadObjectFromFile(L"/Volumes/Code/Solidus/Commercial/Arsenal/misc/json_test/twitter_public_timeline.json", &obj);
                 
@@ -90,19 +92,16 @@ void json_test4()
                 end = AR_GetTime_Microseconds();
                 
                 AR_printf(L"parse elapsed microseconds : %qd\r\n", end - beg);
+                
+                if(obj)
+                {
+                        Json_DestroyObject(obj);
+                        obj = NULL;
 
-                
-                
-                beg = AR_GetTime_Microseconds();
-                status = Json_LoadObjectFromFile(L"/Volumes/Code/Solidus/Commercial/Arsenal/misc/json_test/twitter_public_timeline.json", &obj);
-                
-                AR_ASSERT(status == AR_S_YES);
-                end = AR_GetTime_Microseconds();
-                
-                AR_printf(L"parse elapsed microseconds : %qd\r\n", end - beg);
+                }
         }
         
-        
+        /*
         beg = AR_GetTime_Microseconds();
         
         status = Json_SaveObjectToFile(obj, L"/Users/solidus/Desktop/1.json");
@@ -110,7 +109,8 @@ void json_test4()
 		end = AR_GetTime_Microseconds();
 		
 		AR_printf(L"serialize elapsed microseconds : %qd\r\n", end - beg);
-		
+         
+         */
 
 		if(obj)
 		{
