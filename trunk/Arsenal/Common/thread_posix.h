@@ -13,7 +13,7 @@
 #include <signal.h>
 #include <sched.h>
 #include <errno.h>
-
+#include <time.h>
 
 #if(OS_TYPE == OS_MAC_OS_X || OS_TYPE == OS_IOS)
         #include <mach/mach.h>

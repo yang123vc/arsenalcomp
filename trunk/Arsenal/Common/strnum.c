@@ -1,12 +1,12 @@
 ﻿/*
  * The Arsenal Library
  * Copyright (c) 2009 by Solidus
- * 
+ *
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.It is provided "as is" without express 
+ * in supporting documentation.It is provided "as is" without express
  * or implied warranty.
  *
  */
@@ -138,12 +138,12 @@ ar_int_t			AR_u64tow_buf(wchar_t *out, size_t nbuf, ar_uint_64_t num, size_t rad
 
 		p = buf + __BUFFER_LEN;
 		*--p = 0;
-		
+
         do{
                 *--p = __tbl[num % radix];
-                
+
                 num /= radix;
-                
+
         }while(num > 0);
 
 		len = (ar_int_t)(buf + __BUFFER_LEN - p);/*Returned need the length of the array of elements contains '\0'*/
@@ -311,16 +311,16 @@ const char*	AR_stod(const char *in, double *num)
 
 const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *out)
 {
-		
+
 		const wchar_t *p;
 		double num = 0.0f,frac = 0.0f, exp = 1.0f;
 		double result = 0.0f;
 		ar_bool_t is_neg = false, is_ok = false;
-		
+
 		wchar_t decimal_point;
-        
+
 		AR_ASSERT(in != NULL && end != NULL && in <= end && out != NULL);
-		
+
 #if defined(AR_HAS_DECIMAL_POINT)
 		{
 				const struct lconv *conv;
@@ -352,7 +352,7 @@ const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *out)
 				++p;
 				is_ok = true;
 		}
-		
+
 		if(p < end && *p == decimal_point)
 		{
 				++p;
@@ -386,7 +386,7 @@ const wchar_t*	AR_wtod_s(const wchar_t *in, const wchar_t *end, double *out)
 				{
 						factor = true;
 				}
-				
+
 				e = 0;
 				is_ok = false;
 				while(p < end && *p >= L'0' && *p <= L'9')
@@ -514,7 +514,7 @@ static const wchar_t* __wtou64_s(const wchar_t *in, const wchar_t *end, ar_uint_
 		{
 				p = NULL;
 				/*errno = ERANGE;*/
-				
+
 				if(flag & __UNSIGNED)
 				{
 						val = AR_UINT64_MAX;
@@ -825,7 +825,7 @@ static const char* __stou64_s(const char *in, const char *end, ar_uint_64_t  *nu
 		{
 				p = NULL;
 				/*errno = ERANGE;*/
-				
+
 				if(flag & __UNSIGNED)
 				{
 						val = AR_UINT64_MAX;
@@ -1041,15 +1041,15 @@ const char* AR_stou32_s(const char *in, const char *end, ar_uint_32_t  *num, siz
 
 const char*	AR_stod_s(const char *in, const char *end, double *out)
 {
-		
+
 		const char *p;
 		double num = 0.0f,frac = 0.0f, exp = 1.0f;
 		double result = 0.0f;
 		ar_bool_t is_neg = false, is_ok = false;
-		
+
 		char decimal_point;
 		AR_ASSERT(in != NULL && end != NULL && in <= end && out != NULL);
-		
+
 #if defined(AR_HAS_DECIMAL_POINT)
 		{
 				const struct lconv *conv;
@@ -1081,7 +1081,7 @@ const char*	AR_stod_s(const char *in, const char *end, double *out)
 				++p;
 				is_ok = true;
 		}
-		
+
 		if(p < end && *p == decimal_point)
 		{
 				++p;
@@ -1115,7 +1115,7 @@ const char*	AR_stod_s(const char *in, const char *end, double *out)
 				{
 						factor = true;
 				}
-				
+
 				e = 0;
 				is_ok = false;
 				while(p < end && *p >= '0' && *p <= '9')
@@ -1148,11 +1148,11 @@ const char*	AR_stod_s(const char *in, const char *end, double *out)
 ar_bool_t	AR_wcs_is_float(const wchar_t *in, const wchar_t *end)
 {
 		const wchar_t *p;
-		
+
 		ar_bool_t is_float;
 
 		wchar_t decimal_point;
-		
+
 		AR_ASSERT(in != NULL && end != NULL && in <= end);
 
 #if defined(AR_HAS_DECIMAL_POINT)
@@ -1164,7 +1164,7 @@ ar_bool_t	AR_wcs_is_float(const wchar_t *in, const wchar_t *end)
 #else
         decimal_point = L'.';
 #endif
-        
+
 
 		is_float = false;
 
@@ -1200,7 +1200,7 @@ ar_bool_t	AR_wcs_is_float(const wchar_t *in, const wchar_t *end)
 				{
 						++p;
 				}
-				
+
 				is_float = false;
 
 				while(p < end && *p >= L'0' && *p <= L'9')/*e must be followed index*/
@@ -1223,7 +1223,7 @@ ar_bool_t	AR_wcs_is_int(const wchar_t *in, const wchar_t *end)
 				return false;
 		}
 
-		
+
 		if(AR_wtoi64_s(in, end, &un, 0) != NULL)
 		{
 				return true;
@@ -1243,13 +1243,13 @@ ar_bool_t	AR_wcs_is_int(const wchar_t *in, const wchar_t *end)
 ar_bool_t	AR_str_is_float(const char *in, const char *end)
 {
 		const char *p;
-		
+
 		ar_bool_t is_float;
 
 		char decimal_point;
-		
+
 		AR_ASSERT(in != NULL && end != NULL && in <= end);
-        
+
 #if defined(AR_HAS_DECIMAL_POINT)
 		{
 				const struct lconv *conv;
@@ -1258,9 +1258,9 @@ ar_bool_t	AR_str_is_float(const char *in, const char *end)
 		}
 #else
         decimal_point = '.';
-        
+
 #endif
-        
+
 
 		is_float = false;
 
@@ -1296,7 +1296,7 @@ ar_bool_t	AR_str_is_float(const char *in, const char *end)
 				{
 						++p;
 				}
-				
+
 				is_float = false;
 
 				while(p < end && *p >= '0' && *p <= '9')/*e must be followed index*/
@@ -1320,7 +1320,7 @@ ar_bool_t	AR_str_is_int(const char *in, const char *end)
 				return false;
 		}
 
-		
+
 		if(AR_stoi64_s(in, end, &un, 0) != NULL)
 		{
 				return true;
