@@ -275,7 +275,7 @@ wchar_t* AR_wcsndup(const wchar_t *sour, size_t len)
 		AR_ASSERT(sour != NULL);
 
 		result = AR_NEWARR(wchar_t, len + 1);
-		
+
 		if(result == NULL)
 		{
 				return NULL;
@@ -494,7 +494,7 @@ char*	AR_strtrim_right_space(char *in)
 const char*		AR_strstr_s(const char *s, const char *se, const char *p, const char *pe)
 {
 		size_t i;
-		
+
 		AR_ASSERT(s != NULL && se != NULL && s <= se);
 		AR_ASSERT(p != NULL && pe != NULL && p <= pe);
 
@@ -506,21 +506,21 @@ const char*		AR_strstr_s(const char *s, const char *se, const char *p, const cha
 		while(s < se)
 		{
 				for(i = 0; s < se && s[i] && p < pe && p[i] && s[i] == p[i]; ++i);
-				
+
 				if(p + i >= pe || p[i] == '\0')
 				{
 						return s;
 				}
 				++s;
 		}
-		
+
 		return NULL;
 }
 
 const wchar_t*	AR_wcsstr_s(const wchar_t *s, const wchar_t *se, const wchar_t *p, const wchar_t *pe)
 {
 		size_t i;
-		
+
 		AR_ASSERT(s != NULL && se != NULL && s <= se);
 		AR_ASSERT(p != NULL && pe != NULL && p <= pe);
 
@@ -539,14 +539,14 @@ const wchar_t*	AR_wcsstr_s(const wchar_t *s, const wchar_t *se, const wchar_t *p
 				}
 				++s;
 		}
-		
+
 		return NULL;
 }
 
 const char*		AR_stristr_s(const char *s, const char *se, const char *p, const char *pe)
 {
 		size_t i;
-		
+
 		AR_ASSERT(s != NULL && se != NULL && s <= se);
 		AR_ASSERT(p != NULL && pe != NULL && p <= pe);
 
@@ -564,14 +564,14 @@ const char*		AR_stristr_s(const char *s, const char *se, const char *p, const ch
 				}
 				++s;
 		}
-		
+
 		return NULL;
 }
 
 const wchar_t*	AR_wcsistr_s(const wchar_t *s, const wchar_t *se, const wchar_t *p, const wchar_t *pe)
 {
 		size_t i;
-		
+
 		AR_ASSERT(s != NULL && se != NULL && s <= se);
 		AR_ASSERT(p != NULL && pe != NULL && p <= pe);
 
@@ -590,7 +590,7 @@ const wchar_t*	AR_wcsistr_s(const wchar_t *s, const wchar_t *se, const wchar_t *
 				}
 				++s;
 		}
-		
+
 		return NULL;
 }
 
@@ -603,7 +603,7 @@ const char*		AR_strstr_s(const char *s, const char *se, const char *p, const cha
 		size_t i, l, pl;
 		AR_ASSERT(s != NULL && se != NULL && s <= se);
 		AR_ASSERT(p != NULL && pe != NULL && p <= pe);
-		
+
 		l = se - s;
 		pl = pe - p;
 
@@ -618,7 +618,7 @@ const char*		AR_strstr_s(const char *s, const char *se, const char *p, const cha
 		}
 
 
-		
+
 		if(AR_UINT64_MAX / AR_UCHARMAX > (ar_uint_64_t)pl)
 		{
 				ar_uint_64_t search_hash, pattern_hash;
@@ -670,10 +670,10 @@ const wchar_t*	AR_wcsstr_s(const wchar_t *s, const wchar_t *se, const wchar_t *p
 		size_t i, l, pl;
 		AR_ASSERT(s != NULL && se != NULL && s <= se);
 		AR_ASSERT(p != NULL && pe != NULL && p <= pe);
-		
+
 		l = se - s;
 		pl = pe - p;
-		
+
 		if (pl > l)
 		{
 				return NULL;
@@ -683,7 +683,7 @@ const wchar_t*	AR_wcsstr_s(const wchar_t *s, const wchar_t *se, const wchar_t *p
 		{
 				return s;
 		}
-		
+
 		if(AR_UINT64_MAX / AR_WCHARMAX > (ar_uint_64_t)pl)
 		{
 				ar_uint_64_t search_hash, pattern_hash;
@@ -738,7 +738,7 @@ const char*		AR_stristr_s(const char *s, const char *se, const char *p, const ch
 		size_t i, l, pl;
 		AR_ASSERT(s != NULL && se != NULL && s <= se);
 		AR_ASSERT(p != NULL && pe != NULL && p <= pe);
-		
+
 		l = se - s;
 		pl = pe - p;
 
@@ -751,7 +751,7 @@ const char*		AR_stristr_s(const char *s, const char *se, const char *p, const ch
 		{
 				return s;
 		}
-		
+
 		if(AR_UINT64_MAX / AR_UCHARMAX > (ar_uint_64_t)pl)
 		{
 				ar_uint_64_t search_hash, pattern_hash;
@@ -804,10 +804,10 @@ const wchar_t*	AR_wcsistr_s(const wchar_t *s, const wchar_t *se, const wchar_t *
 		size_t i, l, pl;
 		AR_ASSERT(s != NULL && se != NULL && s <= se);
 		AR_ASSERT(p != NULL && pe != NULL && p <= pe);
-		
+
 		l = se - s;
 		pl = pe - p;
-		
+
 		if (pl > l)
 		{
 				return NULL;
@@ -817,8 +817,8 @@ const wchar_t*	AR_wcsistr_s(const wchar_t *s, const wchar_t *se, const wchar_t *
 		{
 				return s;
 		}
-		
-        
+
+
 		if(AR_UINT64_MAX / AR_WCHARMAX > (ar_uint_64_t)pl)
 		{
 				ar_uint_64_t search_hash, pattern_hash;
@@ -954,7 +954,7 @@ const wchar_t* AR_reverse_wcschr(const wchar_t* str, size_t l, wchar_t c)
 const wchar_t* AR_reverse_wcsstr(const wchar_t *str, size_t l,  const wchar_t *match, size_t ml)
 {
 		size_t			delta;
-		
+
 		size_t i;
 		AR_ASSERT(str != NULL && match != NULL);
 
@@ -1009,7 +1009,7 @@ const wchar_t* AR_reverse_wcsstr(const wchar_t *str, size_t l,  const wchar_t *m
 						{
 								return NULL;
 						}
-						
+
 						delta--;
 				}
 
@@ -1033,7 +1033,7 @@ const wchar_t* AR_reverse_wcsichr(const wchar_t* str, size_t l, wchar_t c)
 		low_c = AR_towlower(c);
 		idx = l - 1;
 
-		while(AR_towlower(str[idx]) != low_c)
+		while((wchar_t)AR_towlower(str[idx]) != low_c)
 		{
 				if(idx == 0)
 				{
@@ -1043,7 +1043,7 @@ const wchar_t* AR_reverse_wcsichr(const wchar_t* str, size_t l, wchar_t c)
 				idx--;
 		}
 
-		if(idx == 0 && AR_towlower(str[0]) != c)
+		if(idx == 0 && (wchar_t)AR_towlower(str[0]) != c)
 		{
 				return NULL;
 		}else
@@ -1363,12 +1363,12 @@ ar_uint_t	AR_strhash(const char *str)
 		AR_ASSERT(str != NULL);
 
 		ret = 0;
-		
+
 		for(i = 0; str[i]; ++i)
 		{
 				ret = str[i] + (ret << 6) + (ret << 16) - ret;
 		}
-		
+
 		return ret;
 }
 
@@ -1381,12 +1381,12 @@ ar_uint_t		AR_strhash_n(const char *str, size_t n)
 		AR_ASSERT(str != NULL);
 
 		ret = 0;
-		
+
 		for(i = 0; i < n && str[i]; ++i)
 		{
 				ret = str[i] + (ret << 6) + (ret << 16) - ret;
 		}
-		
+
 		return ret;
 }
 
@@ -1414,7 +1414,7 @@ char* AR_strrot13(char *s, size_t n)
 
 				}
 		}
-		
+
 		return s;
 }
 
@@ -1429,20 +1429,20 @@ size_t AR_str_similar_text(const char *s1, size_t l1, const char *s2, size_t l2)
         const char *p, *q, *e1, *e2;
         size_t l;
         AR_ASSERT(s1 != NULL  && s2 != NULL);
-        
+
         max = 0;
         sum = 0;
         pos1 = 0;
         pos2 = 0;
         e1 = s1 + l1;
         e2 = s2 + l2;
-        
+
         for(p = s1; p < e1; ++p)
         {
                 for(q = s2; q < e2; ++q)
                 {
                         for(l = 0; (p + l < e1) && (q + l < e2) && (p[l] == q[l]); ++l);
-                        
+
                         if(l > max)
                         {
                                 max = l;
@@ -1451,22 +1451,22 @@ size_t AR_str_similar_text(const char *s1, size_t l1, const char *s2, size_t l2)
                         }
                 }
         }
-        
+
         sum = max;
-        
+
         if(sum > 0)
         {
                 if(pos1 > 0 && pos2 > 0)
                 {
                         sum += AR_str_similar_text(s1, pos1, s2, pos2);
                 }
-                
+
                 if(pos1 + max < l1 && pos2 + max < l2)
                 {
                         sum += AR_str_similar_text(s1 + pos1 + max, l1 - pos1 - max, s2 + pos2 + max, l2 - pos2 - max);
                 }
         }
-        
+
         return sum;
 }
 
@@ -1478,20 +1478,20 @@ size_t AR_wcs_similar_text(const wchar_t *s1, size_t l1, const wchar_t *s2, size
         const wchar_t *p, *q, *e1, *e2;
         size_t l;
         AR_ASSERT(s1 != NULL  && s2 != NULL);
-        
+
         max = 0;
         sum = 0;
         pos1 = 0;
         pos2 = 0;
         e1 = s1 + l1;
         e2 = s2 + l2;
-        
+
         for(p = s1; p < e1; ++p)
         {
                 for(q = s2; q < e2; ++q)
                 {
                         for(l = 0; (p + l < e1) && (q + l < e2) && (p[l] == q[l]); ++l);
-                        
+
                         if(l > max)
                         {
                                 max = l;
@@ -1500,22 +1500,22 @@ size_t AR_wcs_similar_text(const wchar_t *s1, size_t l1, const wchar_t *s2, size
                         }
                 }
         }
-        
+
         sum = max;
-        
+
         if(sum > 0)
         {
                 if(pos1 > 0 && pos2 > 0)
                 {
                         sum += AR_wcs_similar_text(s1, pos1, s2, pos2);
                 }
-                
+
                 if(pos1 + max < l1 && pos2 + max < l2)
                 {
                         sum += AR_wcs_similar_text(s1 + pos1 + max, l1 - pos1 - max, s2 + pos2 + max, l2 - pos2 - max);
                 }
         }
-        
+
         return sum;
 }
 
@@ -1728,12 +1728,12 @@ const wchar_t* AR_wcsstr_sunday_s(const wchar_t *s_b, const wchar_t *s_e, const 
 		}
 
 		s_pos = 0;
-		
+
 		while(s_pos + pl <= sl)
 		{
-				
+
 				for(f_pos = 0; f_pos < pl && s_b[s_pos + f_pos] == p_b[f_pos]; ++f_pos);
-				
+
 				if(f_pos == pl)
 				{
 						return s_b + s_pos;

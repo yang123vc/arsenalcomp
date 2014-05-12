@@ -1,12 +1,12 @@
 ﻿/*
  * The Arsenal Library
  * Copyright (c) 2009-2012 by Solidus
- * 
+ *
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.It is provided "as is" without express 
+ * in supporting documentation.It is provided "as is" without express
  * or implied warranty.
  *
  */
@@ -19,7 +19,7 @@ AR_NAMESPACE_BEGIN
 
 
 /*This module is modified from the the Poco URI module*/
-		
+
 struct __arsenal_uri_tag
 {
 		arCodePage_t	code_page;
@@ -213,7 +213,7 @@ static arStatus_t	__encode(arCodePage_t cp, const wchar_t *begin, const wchar_t 
 		arStatus_t status;
 		const char *s;
 		char *str;
-		
+
 		AR_ASSERT(begin != NULL && end != NULL && begin <= end && output != NULL);
 		status = AR_S_YES;
 
@@ -223,13 +223,13 @@ static arStatus_t	__encode(arCodePage_t cp, const wchar_t *begin, const wchar_t 
 		}
 
 		str = AR_wcs_to_str(cp, begin, end - begin);
-		
+
 		if(str == NULL)
 		{
 				status = AR_E_BADENCCONV;
 				goto END_POINT;
 		}
-		
+
 
 		for(s = str; *s != '\0'; ++s)
 		{
@@ -279,7 +279,7 @@ static arStatus_t	__decode(arCodePage_t cp, const wchar_t *begin, const wchar_t 
 		char *buf, *w, *str;
 		wchar_t *wbuf;
 		AR_ASSERT(begin != NULL && end != NULL && output != NULL);
-		
+
 		status = AR_S_YES;
 		wbuf = NULL;
 		str = NULL;
@@ -297,9 +297,9 @@ static arStatus_t	__decode(arCodePage_t cp, const wchar_t *begin, const wchar_t 
 				status =  AR_E_BADENCCONV;
 				goto END_POINT;
 		}
-		
+
 		buf = AR_NEWARR0(char, AR_strlen(str) + 1);
-		
+
 		if(buf == NULL)
 		{
 				status = AR_E_NOMEM;
@@ -308,14 +308,14 @@ static arStatus_t	__decode(arCodePage_t cp, const wchar_t *begin, const wchar_t 
 
 		w = buf;
 		s = str;
-		
+
 		while(*s != '\0')
 		{
 
 				char c, hi,lo;
-				
+
 				c = *s++;
-				
+
 				if(c == '%')
 				{
 						if(*s == '\0')
@@ -323,7 +323,7 @@ static arStatus_t	__decode(arCodePage_t cp, const wchar_t *begin, const wchar_t 
 								status = AR_E_MALFORMAT;
 								goto END_POINT;
 						}
-						
+
 						hi = *s++;
 
 						if(*s == '\0')
@@ -371,20 +371,20 @@ static arStatus_t	__decode(arCodePage_t cp, const wchar_t *begin, const wchar_t 
 		*w++ = '\0';
 
         wbuf = AR_str_to_wcs(cp, buf, AR_strlen(buf));
-        
+
         if(wbuf == NULL)
         {
                 int curr_code_page;
-                
+
                 for(curr_code_page = AR_CP_ACP; curr_code_page < AR_CP_MAX; ++curr_code_page)
                 {
-                        if(cp == curr_code_page)
+                        if((int)cp == curr_code_page)
                         {
                                 continue;
                         }
-                        
+
                         wbuf = AR_str_to_wcs((arCodePage_t)curr_code_page, buf, AR_strlen(buf));
-                        
+
                         if(wbuf != NULL)
                         {
                                 break;
@@ -392,14 +392,14 @@ static arStatus_t	__decode(arCodePage_t cp, const wchar_t *begin, const wchar_t 
                 }
         }
 
-        
+
         if(wbuf == NULL)
         {
                 status = AR_E_BADENCCONV;
                 goto END_POINT;
         }
-        
-        
+
+
 		status = AR_AppendString(output, wbuf);
 		if(status != AR_S_YES)
 		{
@@ -487,7 +487,7 @@ static ar_uint_16_t	__get_well_known_port(const arURI_t *uri)
 		{
 				return 5222;
 		}
-		
+
 		return 0;
 }
 
@@ -529,10 +529,10 @@ static uriParseRet_t __parse(arURI_t *uri, const wchar_t *begin, const wchar_t *
 		ret.status = AR_S_YES;
 		ret.next = NULL;
 		ret.err_pos = NULL;
-		
+
 		tmp = AR_CreateString();
 		__GOEND_IF_FAIL(tmp != NULL, AR_E_NOMEM, NULL);
-		
+
 		s = begin;
 		e = end;
 
@@ -549,7 +549,7 @@ static uriParseRet_t __parse(arURI_t *uri, const wchar_t *begin, const wchar_t *
 						__GOEND_IF_FAIL(ret.status == AR_S_YES, ret.status, NULL);
 						++s;
 				}
-				
+
 				if(s < end && *s == L':')
 				{
 						++s;
@@ -557,7 +557,7 @@ static uriParseRet_t __parse(arURI_t *uri, const wchar_t *begin, const wchar_t *
 						AR_StringToLower(tmp);
 						AR_SwapString(uri->scheme, tmp);
 						AR_ClearString(tmp);
-						
+
 						if(*s == L'/')
 						{
 								++s;
@@ -583,7 +583,7 @@ static uriParseRet_t __parse(arURI_t *uri, const wchar_t *begin, const wchar_t *
 		{
 				ret = __parse_pathetc(uri, begin, end);
 		}
-		
+
 		/*
 		if(uri->port == 0)
 		{
@@ -607,7 +607,7 @@ static uriParseRet_t __parse_authority(arURI_t *uri, const wchar_t *begin, const
 		uriParseRet_t	ret;
 		const wchar_t *s, *part_begin;
 		AR_ASSERT(uri != NULL && begin != NULL && end != NULL && begin <= end);
-		
+
 		ret.status = AR_S_YES;
 		ret.err_pos = NULL;
 		ret.next = NULL;
@@ -619,7 +619,7 @@ static uriParseRet_t __parse_authority(arURI_t *uri, const wchar_t *begin, const
 				part = www.test.com;
 
 		*/
-		
+
 		s = begin;
 		part_begin = s;
 		while(s < end && *s != L'/' && *s != L'?' && *s != L'#')
@@ -638,7 +638,7 @@ static uriParseRet_t __parse_authority(arURI_t *uri, const wchar_t *begin, const
 				}
 				++s;
 		}
-		
+
 		ret = __parse_host_port(uri, part_begin, s);
 
 		if(ret.status == AR_S_YES)
@@ -646,7 +646,7 @@ static uriParseRet_t __parse_authority(arURI_t *uri, const wchar_t *begin, const
 				ret.next = s;
 				AR_ASSERT(ret.err_pos == NULL);
 		}
-		
+
 END_POINT:
 		return ret;
 }
@@ -658,7 +658,7 @@ static uriParseRet_t __parse_host_port(arURI_t *uri, const wchar_t *begin, const
 		arString_t *host;
 		const wchar_t *s;
 		AR_ASSERT(uri != NULL && begin != NULL && end != NULL && begin <= end);
-		
+
 		ret.status = AR_S_YES;
 		ret.err_pos = NULL;
 		ret.next = NULL;
@@ -690,7 +690,7 @@ static uriParseRet_t __parse_host_port(arURI_t *uri, const wchar_t *begin, const
 						__GOEND_IF_FAIL(ret.status == AR_S_YES, ret.status, NULL);
 						++s;
 				}
-				
+
 				__GOEND_IF_FAIL(s < end, AR_E_MALFORMAT, begin);
 				++s;
 		}else
@@ -711,7 +711,7 @@ static uriParseRet_t __parse_host_port(arURI_t *uri, const wchar_t *begin, const
 				{
 						ar_uint_32_t port;
 						const wchar_t *s_next;
-						
+
 						s_next = AR_wtou32_s(s, end, &port, 10);
 
 						if(s_next == NULL)
@@ -782,7 +782,7 @@ static uriParseRet_t __parse_pathetc(arURI_t *uri, const wchar_t *begin, const w
 				__GOEND_IF_FAIL(ret.status == AR_S_YES, ret.status, ret.err_pos);
 				s = ret.next;
 		}
-		
+
 		if(s < end && *s == L'#')
 		{
 				++s;
@@ -797,17 +797,17 @@ END_POINT:
 
 static uriParseRet_t __parse_path(arURI_t *uri, const wchar_t *begin, const wchar_t *end)
 {
-		
+
 		uriParseRet_t	ret;
 		const wchar_t *s;
 		const wchar_t *path_begin;
 		AR_ASSERT(uri != NULL && begin != NULL && end != NULL && begin <= end);
 
-		
+
 		ret.status = AR_S_YES;
 		ret.next = NULL;
 		ret.err_pos = NULL;
-		
+
 		s = begin;
 		path_begin = s;
 
@@ -815,7 +815,7 @@ static uriParseRet_t __parse_path(arURI_t *uri, const wchar_t *begin, const wcha
 		{
 				++s;
 		}
-		
+
 		if(uri->_parse_encoded)
 		{
 				ret.status = __decode(uri->code_page, path_begin, s, uri->path);
@@ -837,7 +837,7 @@ static uriParseRet_t __parse_query(arURI_t *uri, const wchar_t *begin, const wch
 		const wchar_t *s;
 		const wchar_t *query_begin;
 		AR_ASSERT(uri != NULL && begin != NULL && end != NULL && begin <= end);
-		
+
 		ret.status = AR_S_YES;
 		ret.next = NULL;
 		ret.err_pos = NULL;
@@ -849,7 +849,7 @@ static uriParseRet_t __parse_query(arURI_t *uri, const wchar_t *begin, const wch
 		{
 				s++;
 		}
-		
+
 		if(uri->_parse_encoded)
 		{
 				ret.status = __decode(uri->code_page, query_begin, s, uri->query);
@@ -872,7 +872,7 @@ static uriParseRet_t __parse_fragment(arURI_t *uri, const wchar_t *begin, const 
 		const wchar_t *s;
 		const wchar_t *fragment_begin;
 		AR_ASSERT(uri != NULL && begin != NULL && end != NULL && begin <= end);
-		
+
 		ret.status = AR_S_YES;
 		ret.next = NULL;
 		ret.err_pos = NULL;
@@ -883,7 +883,7 @@ static uriParseRet_t __parse_fragment(arURI_t *uri, const wchar_t *begin, const 
 		{
 				s++;
 		}
-		
+
 		if(uri->_parse_encoded)
 		{
 				ret.status = __decode(uri->code_page, fragment_begin, s, uri->fragment);
@@ -955,7 +955,7 @@ arStatus_t		AR_GetURIAuthority(const arURI_t *uri, arString_t *str)
 				/*status = __encode(uri->code_page, AR_GetStringCString(uri->user_info), AR_GetStringCString(uri->user_info) + AR_GetStringLength(uri->user_info), ILLEGAL_S, str);*/
 
 				status = AR_AppendString(str, AR_GetStringCString(uri->user_info));
-				
+
 				__GOEND_IF_FAIL2(status == AR_S_YES, status);
 
 				status = AR_AppendString(str, L"@");
@@ -982,7 +982,7 @@ arStatus_t		AR_GetURIAuthority(const arURI_t *uri, arString_t *str)
 		{
 				status = AR_AppendString(str, L":");
 				__GOEND_IF_FAIL2(status == AR_S_YES, status);
-				
+
 				status = AR_AppendFormatString(str, L"%u", (ar_uint_32_t)uri->port);
 				__GOEND_IF_FAIL2(status == AR_S_YES, status);
 		}
@@ -1003,7 +1003,7 @@ arStatus_t		AR_GetURIEncodedAuthority(const arURI_t *uri, arString_t *str)
 		if(AR_GetStringLength(uri->user_info) > 0)
 		{
 				status = __encode(uri->code_page, AR_GetStringCString(uri->user_info), AR_GetStringCString(uri->user_info) + AR_GetStringLength(uri->user_info), ILLEGAL_S, str);
-				
+
 				__GOEND_IF_FAIL2(status == AR_S_YES, status);
 
 				status = AR_AppendString(str, L"@");
@@ -1030,7 +1030,7 @@ arStatus_t		AR_GetURIEncodedAuthority(const arURI_t *uri, arString_t *str)
 		{
 				status = AR_AppendString(str, L":");
 				__GOEND_IF_FAIL2(status == AR_S_YES, status);
-				
+
 				status = AR_AppendFormatString(str, L"%u", (ar_uint_32_t)uri->port);
 				__GOEND_IF_FAIL2(status == AR_S_YES, status);
 		}
@@ -1160,7 +1160,7 @@ arStatus_t		AR_SetURIScheme(arURI_t *uri, const wchar_t *str)
 				AR_StringToLower(uri->scheme);
 				uri->port = __get_well_known_port(uri);
 		}
-		
+
 		return status;
 
 }
@@ -1306,18 +1306,18 @@ arStatus_t		AR_SetURI(arURI_t *uri, const wchar_t *str)
 {
 		arStatus_t status;
 		AR_ASSERT(uri != NULL && str != NULL);
-		
+
 		str = AR_wcstrim_space(str);
 
 		AR_ClearURI(uri);
 		uri->_parse_encoded = false;
 		status = __parse(uri, str, str + AR_wcslen(str)).status;
-		
+
 		if(status != AR_S_YES)
 		{
 				AR_ClearURI(uri);
 		}
-		
+
 		return status;
 }
 
@@ -1341,7 +1341,7 @@ arStatus_t		AR_SetEncodedURI(arURI_t *uri, const wchar_t *str)
 		AR_ClearURI(uri);
 		uri->_parse_encoded = true;
 		status = __parse(uri, s, s + AR_wcslen(s)).status;
-		
+
 		if(status != AR_S_YES)
 		{
 				AR_ClearURI(uri);
@@ -1390,9 +1390,9 @@ arStatus_t		AR_GetEncodedURI(const arURI_t *uri, arString_t *str)
 				{
 						status = AR_AppendString(str, L"//");
 						__GOEND_IF_FAIL2(status == AR_S_YES, status);
-						
+
 						status = AR_CatString(str, auth);
-						
+
 						__GOEND_IF_FAIL2(status == AR_S_YES, status);
 				}
 
@@ -1474,7 +1474,7 @@ arStatus_t		AR_GetURI(const arURI_t *uri, arString_t *str)
 				{
 						status = AR_AppendString(str, L"//");
 						__GOEND_IF_FAIL2(status == AR_S_YES, status);
-						
+
 						status = AR_CatString(str, auth);
 						__GOEND_IF_FAIL2(status == AR_S_YES, status);
 				}
@@ -1531,7 +1531,7 @@ static arStatus_t	seg_copy_func(void *data, void **pnew_data, void *ctx)
 {
 		const wchar_t *src;
 		wchar_t **pdest;
-		
+
 		AR_ASSERT(data != NULL && pnew_data != NULL);
 		AR_UNUSED(ctx);
 		src = (const wchar_t*)data;
@@ -1615,7 +1615,7 @@ static arStatus_t __build_path(arURI_t *uri, const arList_t *segments, ar_bool_t
 
 				if(is_first)
 				{
-						
+
 						is_first = false;
 						if(leading_slash)
 						{
@@ -1654,7 +1654,7 @@ static arStatus_t		__remove_path_dot_segments(arURI_t *uri, ar_bool_t is_remove_
 		const arListNode_t *node;
 		arStatus_t		status;
 		ar_bool_t leading_slash, trailing_slash;
-		
+
 		AR_ASSERT(uri != NULL);
 		status = AR_S_YES;
 
@@ -1662,14 +1662,14 @@ static arStatus_t		__remove_path_dot_segments(arURI_t *uri, ar_bool_t is_remove_
 		{
 				return AR_S_YES;
 		}
-		
+
 		normalized = AR_CreateList(seg_copy_func, seg_destroy_func, NULL);
 		segments = AR_CreateList(seg_copy_func, seg_destroy_func, NULL);
 
 		__GOEND_IF_FAIL2(normalized != NULL && segments != NULL, AR_E_NOMEM);
-		
+
 		status = __get_uri_path_segments(uri, segments);
-		
+
 		__GOEND_IF_FAIL2(status == AR_S_YES, status);
 
 		leading_slash = AR_GetStringCString(uri->path)[0] == L'/' ? true : false;
@@ -1711,7 +1711,7 @@ static arStatus_t		__remove_path_dot_segments(arURI_t *uri, ar_bool_t is_remove_
 		status = __build_path(uri, normalized, leading_slash, trailing_slash);
 
 END_POINT:
-		
+
 		if(segments)
 		{
 				AR_DestroyList(segments);
@@ -1755,7 +1755,7 @@ static arStatus_t	__normalize_host(arURI_t *uri)
 		}
 
 		p = AR_GetStringCString(str);
-		
+
 		p = AR_wcstrim_space(p);
 		if(*p == L'\0')
 		{
@@ -1763,7 +1763,7 @@ static arStatus_t	__normalize_host(arURI_t *uri)
 		}
 
 		p = AR_wcstrim(p, L".");
-		
+
 		if(*p == L'\0')
 		{
 				goto END_POINT;
@@ -1831,7 +1831,7 @@ arStatus_t		AR_NormalizeURI(arURI_t *uri)
 {
 		arStatus_t		status;
 		AR_ASSERT(uri != NULL);
-		
+
 		status = __normalize_host(uri);
 
 		if(status != AR_S_YES)
@@ -1861,7 +1861,7 @@ static arStatus_t	__item_copy_func(void *data, void **pnew_data, void *ctx)
         AR_ASSERT(data != NULL && pnew_data != NULL);
         AR_UNUSED(ctx);
         nwcs = AR_wcsdup((const wchar_t*)data);
-        
+
         if(nwcs)
         {
                 *pnew_data = (void*)nwcs;
@@ -1918,30 +1918,30 @@ static arStatus_t __parse_query_items(const wchar_t *query, arHash_t *hash)
 
         wchar_t *name, *value;
         const wchar_t *b, *p;
-        size_t l;                
+        size_t l;
         AR_ASSERT(query != NULL && hash != NULL);
 		status = AR_S_YES;
-        
+
         l = AR_wcslen(query);
-        
+
         if(l == 0)
         {
                 return status;
         }
-        
+
         name = AR_NEWARR(wchar_t, l + 1);
         value = AR_NEWARR(wchar_t, l + 1);
-        
+
         if(name == NULL || value == NULL)
         {
                 status = AR_E_NOMEM;
                 goto END_POINT;
         }
-        
-        
+
+
         b = NULL;
         p = AR_wcstrim_space(query);
-        
+
 
 		while(p != NULL && *p != L'\0')
         {
@@ -1962,15 +1962,15 @@ static arStatus_t __parse_query_items(const wchar_t *query, arHash_t *hash)
                         goto END_POINT;
                 }
 
-                
+
                 b = p;
                 p = AR_wcsstr(p, L"&");
-                
+
                 if(p == NULL)
                 {
                         p = b + AR_wcslen(b);
                 }
-                 
+
                 if(p == b)/*like ?x=  */
                 {
                         status = AR_E_MALFORMAT;
@@ -1979,7 +1979,7 @@ static arStatus_t __parse_query_items(const wchar_t *query, arHash_t *hash)
 
                 AR_wcsncpy(value, b, p - b);
                 value[p-b] = L'\0';
-                
+
 				if(*p == L'&')
                 {
                         ++p;
@@ -2001,7 +2001,7 @@ END_POINT:
                 AR_DEL(name);
                 name = NULL;
         }
-        
+
         if(value)
         {
                 AR_DEL(value);
@@ -2016,7 +2016,7 @@ END_POINT:
 static arStatus_t __generate_query(const arHash_t *hash, arString_t *out)
 {
 		arStatus_t status;
-		arHashIter_t	iter; 
+		arHashIter_t	iter;
 		size_t cnt;
 
 		AR_ASSERT(hash != NULL && out != NULL);
@@ -2034,7 +2034,7 @@ static arStatus_t __generate_query(const arHash_t *hash, arString_t *out)
 		}
 		*/
 
-		
+
 		while(!AR_HashIteratorIsDone(&iter))
 		{
 				const wchar_t *key = (const wchar_t*)AR_GetHashIteratorKey(&iter);
@@ -2113,7 +2113,7 @@ static arStatus_t	__url_encode(arCodePage_t cp, const wchar_t *begin, const wcha
 		arStatus_t status;
 		const char *s;
 		char *str;
-		
+
 		AR_ASSERT(begin != NULL && end != NULL && begin <= end && output != NULL);
 		status = AR_S_YES;
 
@@ -2123,13 +2123,13 @@ static arStatus_t	__url_encode(arCodePage_t cp, const wchar_t *begin, const wcha
 		}
 
 		str = AR_wcs_to_str(cp, begin, end - begin);
-		
+
 		if(str == NULL)
 		{
 				status = AR_E_BADENCCONV;
 				goto END_POINT;
 		}
-		
+
 
 
 		for(s = str; *s != '\0'; ++s)
@@ -2169,14 +2169,14 @@ arStatus_t		AR_EncodeURLString(arCodePage_t cp, const wchar_t *uri, arString_t *
 {
 		AR_ASSERT(uri != NULL && out != NULL);
 		AR_ClearString(out);
-		
+
 		return __url_encode(cp, uri, uri + AR_wcslen(uri), out);
 }
 
 
 arStatus_t		AR_DecodeURLString(arCodePage_t cp, const wchar_t *uri, arString_t *out)
 {
-		
+
 		AR_ASSERT(uri != NULL && out != NULL);
 		AR_ClearString(out);
 		/*url encode compatible*/

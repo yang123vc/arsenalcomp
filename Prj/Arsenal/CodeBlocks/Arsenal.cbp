@@ -86,6 +86,7 @@
 		</Compiler>
 		<Linker>
 			<Add library="pthread" />
+			<Add library="rt" />
 		</Linker>
 		<Unit filename="../../../Arsenal/Arsenal.c">
 			<Option compilerVar="CC" />
@@ -135,6 +136,8 @@
 		<Unit filename="../../../Arsenal/Common/math.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../../../Arsenal/Common/math_posix.h" />
+		<Unit filename="../../../Arsenal/Common/math_win.h" />
 		<Unit filename="../../../Arsenal/Common/matrix.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -168,6 +171,7 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../Arsenal/Common/thread_posix.h" />
+		<Unit filename="../../../Arsenal/Common/thread_posix_android.h" />
 		<Unit filename="../../../Arsenal/Common/thread_posix_apple.h" />
 		<Unit filename="../../../Arsenal/Common/thread_posix_posix.h" />
 		<Unit filename="../../../Arsenal/Common/thread_win.h" />
