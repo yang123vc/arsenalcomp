@@ -266,6 +266,11 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../Arsenal/Tools/iniobj.h" />
+		<Unit filename="../../../Arsenal/Tools/json.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../Arsenal/Tools/json.h" />
+		<Unit filename="../../../Arsenal/Tools/json_parser_impl.h" />
 		<Unit filename="../../../Arsenal/Tools/property_list.c">
 			<Option compilerVar="CC" />
 		</Unit>
