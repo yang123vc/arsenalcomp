@@ -3663,7 +3663,17 @@ arStatus_t		AR_GenerateTransformMatrix_DCT2(arMatrix_t *mat, size_t n)
 		{
 				for(j = 0; j < n; ++j)
 				{
-						double val = c * AR_cos_dbl(i * AR_DBL_PI * (j + 0.5) / (double)n);
+						double val = 0.0;
+						double tmp = AR_cos_dbl(i * AR_DBL_PI * (j + 0.5) / (double)n);
+
+						if(AR_is_nan_dbl(tmp))
+						{
+								status = AR_E_RANGE;
+								goto END_POINT;
+						}
+
+						val = c * val;
+
 						AR_SetMatrixValue(mat, i,j, val);
 				}
 		}

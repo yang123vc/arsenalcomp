@@ -661,7 +661,15 @@ arStatus_t		AR_VecotrTransform_DCT2(arVector_t *vec)
 				total = 0;
 				for( x = 0; x < n; x++)
 				{
-						total += tmp[x] * AR_cos_dbl( (2 * x + 1) *  AR_DBL_PI / (2 * n) * (double)u );
+						double t = AR_cos_dbl( (2 * x + 1) *  AR_DBL_PI / (2 * n) * (double)u);
+
+						if(AR_is_nan_dbl(t))
+						{
+								status = AR_E_RANGE;
+								goto END_POINT;
+						}
+
+						total += tmp[x] * t;
 				}
 				vec->v[u] = a * total;
 		}
