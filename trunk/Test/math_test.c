@@ -1577,6 +1577,26 @@ static void transpose_multiply_test1()
 
 }
 
+
+
+void float_test2()
+{
+		double ret = AR_cos_dbl(HUGE_VAL);
+
+		if(AR_is_nan_dbl(ret))
+		{
+				printf("failed\r\n");
+		}
+		
+		ret = AR_sqrt_dbl(-3);
+
+		if(AR_is_nan_dbl(ret))
+		{
+				printf("failed\r\n");
+		}
+
+}
+
 void math_test()
 {
 
@@ -1591,10 +1611,11 @@ void math_test()
 		
 		//matrix_test_factorization();
 		//float_test1();
+		float_test2();
 
 		//dct_test1();
 		//dct_test2();
-		dct_test3();
+		//dct_test3();
 		//transpose_multiply_test1();
 }
 
