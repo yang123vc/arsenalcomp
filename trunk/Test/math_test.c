@@ -12,7 +12,7 @@ AR_NAMESPACE_BEGIN
 
 
 
-void misc_test()
+static void misc_test()
 {
 		AR_printf(L"%d\r\n", AR_abs_32(-1));
 		AR_printf(L"%d\r\n", AR_abs_32(1));
