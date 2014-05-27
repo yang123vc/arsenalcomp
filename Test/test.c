@@ -111,6 +111,8 @@ extern void phash_test();
 
 extern void lex_perf_test();
 
+extern void misc_test();
+
 #endif
 
 
@@ -121,7 +123,8 @@ void AR_Test()
 {
 #if defined(__LIB)
 		//com_test();
-		math_test();
+		//math_test();
+		misc_test();
 		//trie_tree_test();
 		//expr_test();
 		//lex_test();

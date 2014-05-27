@@ -1518,6 +1518,7 @@
     <ClCompile Include="..\..\..\Test\marshal_die_test.cpp" />
     <ClCompile Include="..\..\..\Test\math_test.c" />
     <ClCompile Include="..\..\..\Test\mem_test.c" />
+    <ClCompile Include="..\..\..\Test\misc_test.cpp" />
     <ClCompile Include="..\..\..\Test\net_test.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibDebug|x64'">Default</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='LibRelease|x64'">Default</CompileAs>
