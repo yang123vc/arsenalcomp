@@ -37,6 +37,9 @@
     <Filter Include="extlib\CImg">
       <UniqueIdentifier>{8aabdb58-1c0d-41bf-aed9-952faa2bc200}</UniqueIdentifier>
     </Filter>
+    <Filter Include="extlib\wtl">
+      <UniqueIdentifier>{94106501-78f4-49dc-8799-b597482a01f0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\Test\avltree.c">
@@ -847,6 +850,72 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Test\extlib\CImg\CImg.h">
       <Filter>extlib\CImg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlapp.h">
+      <Filter>extlib\wtl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlcrack.h">
+      <Filter>extlib\wtl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlctrls.h">
+      <Filter>extlib\wtl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlctrlw.h">
+      <Filter>extlib\wtl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlctrlx.h">
+      <Filter>extlib\wtl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlddx.h">
+      <Filter>extlib\wtl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atldlgs.h">
+      <Filter>extlib\wtl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atldwm.h">
+      <Filter>extlib\wtl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlfind.h">
+      <Filter>extlib\wtl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlframe.h">
+      <Filter>extlib\wtl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlgdi.h">
+      <Filter>extlib\wtl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlmisc.h">
+      <Filter>extlib\wtl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlprint.h">
+      <Filter>extlib\wtl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlres.h">
+      <Filter>extlib\wtl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlresce.h">
+      <Filter>extlib\wtl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlribbon.h">
+      <Filter>extlib\wtl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlscrl.h">
+      <Filter>extlib\wtl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlsplit.h">
+      <Filter>extlib\wtl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atltheme.h">
+      <Filter>extlib\wtl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atluser.h">
+      <Filter>extlib\wtl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlwince.h">
+      <Filter>extlib\wtl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlwinx.h">
+      <Filter>extlib\wtl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
