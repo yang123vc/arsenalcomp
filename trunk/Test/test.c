@@ -124,7 +124,7 @@ void AR_Test()
 #if defined(__LIB)
 		//com_test();
 		//math_test();
-		misc_test();
+		//misc_test();
 		//trie_tree_test();
 		//expr_test();
 		//lex_test();
@@ -216,7 +216,7 @@ void AR_Test()
 
 		//Json_Test();
 
-		//phash_test();
+		phash_test();
 
 		//lex_perf_test();
 

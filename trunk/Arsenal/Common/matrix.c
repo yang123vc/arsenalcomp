@@ -3672,7 +3672,7 @@ arStatus_t		AR_GenerateTransformMatrix_DCT2(arMatrix_t *mat, size_t n)
 								goto END_POINT;
 						}
 
-						val = c * val;
+						val = c * tmp;
 
 						AR_SetMatrixValue(mat, i,j, val);
 				}
@@ -3680,6 +3680,9 @@ arStatus_t		AR_GenerateTransformMatrix_DCT2(arMatrix_t *mat, size_t n)
 END_POINT:
 		return status;
 }
+
+
+
 
 
 arStatus_t		AR_MatrixTransform_DCT2(arMatrix_t *mat, const arMatrix_t *dct_matrix)
