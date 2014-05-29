@@ -1659,6 +1659,28 @@
     <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\urldata.h" />
     <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\warnless.h" />
     <ClInclude Include="..\..\..\Test\extlib\libcurl\lib\wildcard.h" />
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlapp.h" />
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlcrack.h" />
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlctrls.h" />
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlctrlw.h" />
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlctrlx.h" />
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlddx.h" />
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atldlgs.h" />
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atldwm.h" />
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlfind.h" />
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlframe.h" />
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlgdi.h" />
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlmisc.h" />
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlprint.h" />
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlres.h" />
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlresce.h" />
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlribbon.h" />
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlscrl.h" />
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlsplit.h" />
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atltheme.h" />
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atluser.h" />
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlwince.h" />
+    <ClInclude Include="..\..\..\Test\extlib\wtl\Include\atlwinx.h" />
     <ClInclude Include="..\..\..\Test\gen_code_impl.h" />
     <ClInclude Include="..\..\..\Test\Lexer\regexp.h" />
     <ClInclude Include="..\..\..\Test\lfu_cache.h" />
@@ -1878,7 +1900,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include;..\..\..\Test\extlib\wtl\include</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -1897,7 +1919,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN64;_DEBUG;_WINDOWS;</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include;..\..\..\Test\extlib\wtl\include</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -1916,7 +1938,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN64;_DEBUG;_WINDOWS;</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include;..\..\..\Test\extlib\wtl\include</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -1934,7 +1956,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;__LIB</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include;..\..\..\Test\extlib\wtl\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <StringPooling>false</StringPooling>
       <FunctionLevelLinking>false</FunctionLevelLinking>
@@ -1955,7 +1977,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN64;_DEBUG;_CONSOLE;__LIB</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include;..\..\..\Test\extlib\wtl\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <StringPooling>false</StringPooling>
       <FunctionLevelLinking>false</FunctionLevelLinking>
@@ -1976,7 +1998,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN64;_DEBUG;_CONSOLE;__LIB</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include;..\..\..\Test\extlib\wtl\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <StringPooling>false</StringPooling>
       <FunctionLevelLinking>false</FunctionLevelLinking>
@@ -2000,7 +2022,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include;..\..\..\Test\extlib\wtl\include</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -2023,7 +2045,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN64;NDEBUG;_WINDOWS;</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include;..\..\..\Test\extlib\wtl\include</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -2046,7 +2068,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN64;NDEBUG;_WINDOWS;</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include;..\..\..\Test\extlib\wtl\include</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -2068,7 +2090,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;__LIB</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include;..\..\..\Test\extlib\wtl\include</AdditionalIncludeDirectories>
       <StringPooling>false</StringPooling>
       <ExceptionHandling>Sync</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -2093,7 +2115,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN64;NDEBUG;_CONSOLE;__LIB</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include;..\..\..\Test\extlib\wtl\include</AdditionalIncludeDirectories>
       <StringPooling>false</StringPooling>
       <ExceptionHandling>Sync</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -2118,7 +2140,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN64;NDEBUG;_CONSOLE;__LIB</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Arsenal;..\..\..\Test\extlib\libcurl\include;..\..\..\Test\extlib\wtl\include</AdditionalIncludeDirectories>
       <StringPooling>false</StringPooling>
       <ExceptionHandling>Sync</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>

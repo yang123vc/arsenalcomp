@@ -22882,298 +22882,303 @@ namespace cimg_library_suffixed {
 
     //! Correlate image by a mask \newinstance.
     template<typename t>
-    CImg<_cimg_Ttfloat> get_correlate(const CImg<t>& mask, const unsigned int boundary_conditions=1,
-                                      const bool is_normalized=false) const {
-      if (is_empty() || !mask) return *this;
-      typedef _cimg_Ttfloat Ttfloat;
-      CImg<Ttfloat> res(_width,_height,_depth,cimg::max(_spectrum,mask._spectrum));
-      if (boundary_conditions && mask._width==mask._height && ((mask._depth==1 && mask._width<=5) || (mask._depth==mask._width && mask._width<=3))) {
-        // A special optimization is done for 2x2, 3x3, 4x4, 5x5, 2x2x2 and 3x3x3 mask (with boundary_conditions=1)
-        Ttfloat *ptrd = res._data;
-        switch (mask._depth) {
-        case 3 : {
-          T I[27] = { 0 };
-          cimg_forC(res,c) {
-            const CImg<T> _img = get_shared_channel(c%_spectrum);
-            const CImg<t> _mask = mask.get_shared_channel(c%mask._spectrum);
-            if (is_normalized) {
-              const Ttfloat _M = (Ttfloat)_mask.magnitude(2), M = _M*_M;
-              cimg_for3x3x3(_img,x,y,z,0,I,T) {
-                const Ttfloat N = M*(I[ 0]*I[ 0] + I[ 1]*I[ 1] + I[ 2]*I[ 2] +
-                                     I[ 3]*I[ 3] + I[ 4]*I[ 4] + I[ 5]*I[ 5] +
-                                     I[ 6]*I[ 6] + I[ 7]*I[ 7] + I[ 8]*I[ 8] +
-                                     I[ 9]*I[ 9] + I[10]*I[10] + I[11]*I[11] +
-                                     I[12]*I[12] + I[13]*I[13] + I[14]*I[14] +
-                                     I[15]*I[15] + I[16]*I[16] + I[17]*I[17] +
-                                     I[18]*I[18] + I[19]*I[19] + I[20]*I[20] +
-                                     I[21]*I[21] + I[22]*I[22] + I[23]*I[23] +
-                                     I[24]*I[24] + I[25]*I[25] + I[26]*I[26]);
-                *(ptrd++) = (Ttfloat)(N?(I[ 0]*_mask[ 0] + I[ 1]*_mask[ 1] + I[ 2]*_mask[ 2] +
-                                         I[ 3]*_mask[ 3] + I[ 4]*_mask[ 4] + I[ 5]*_mask[ 5] +
-                                         I[ 6]*_mask[ 6] + I[ 7]*_mask[ 7] + I[ 8]*_mask[ 8] +
-                                         I[ 9]*_mask[ 9] + I[10]*_mask[10] + I[11]*_mask[11] +
-                                         I[12]*_mask[12] + I[13]*_mask[13] + I[14]*_mask[14] +
-                                         I[15]*_mask[15] + I[16]*_mask[16] + I[17]*_mask[17] +
-                                         I[18]*_mask[18] + I[19]*_mask[19] + I[20]*_mask[20] +
-                                         I[21]*_mask[21] + I[22]*_mask[22] + I[23]*_mask[23] +
-                                         I[24]*_mask[24] + I[25]*_mask[25] + I[26]*_mask[26])/std::sqrt(N):0);
-              }
-            } else cimg_for3x3x3(_img,x,y,z,0,I,T)
-                     *(ptrd++) = (Ttfloat)(I[ 0]*_mask[ 0] + I[ 1]*_mask[ 1] + I[ 2]*_mask[ 2] +
-                                           I[ 3]*_mask[ 3] + I[ 4]*_mask[ 4] + I[ 5]*_mask[ 5] +
-                                           I[ 6]*_mask[ 6] + I[ 7]*_mask[ 7] + I[ 8]*_mask[ 8] +
-                                           I[ 9]*_mask[ 9] + I[10]*_mask[10] + I[11]*_mask[11] +
-                                           I[12]*_mask[12] + I[13]*_mask[13] + I[14]*_mask[14] +
-                                           I[15]*_mask[15] + I[16]*_mask[16] + I[17]*_mask[17] +
-                                           I[18]*_mask[18] + I[19]*_mask[19] + I[20]*_mask[20] +
-                                           I[21]*_mask[21] + I[22]*_mask[22] + I[23]*_mask[23] +
-                                           I[24]*_mask[24] + I[25]*_mask[25] + I[26]*_mask[26]);
-          }
-        } break;
-        case 2 : {
-          T I[8] = { 0 };
-          cimg_forC(res,c) {
-            const CImg<T> _img = get_shared_channel(c%_spectrum);
-            const CImg<t> _mask = mask.get_shared_channel(c%mask._spectrum);
-            if (is_normalized) {
-              const Ttfloat _M = (Ttfloat)_mask.magnitude(2), M = _M*_M;
-              cimg_for2x2x2(_img,x,y,z,0,I,T) {
-                const Ttfloat N = M*(I[0]*I[0] + I[1]*I[1] +
-                                     I[2]*I[2] + I[3]*I[3] +
-                                     I[4]*I[4] + I[5]*I[5] +
-                                     I[6]*I[6] + I[7]*I[7]);
-                *(ptrd++) = (Ttfloat)(N?(I[0]*_mask[0] + I[1]*_mask[1] +
-                                         I[2]*_mask[2] + I[3]*_mask[3] +
-                                         I[4]*_mask[4] + I[5]*_mask[5] +
-                                         I[6]*_mask[6] + I[7]*_mask[7])/std::sqrt(N):0);
-              }
-            } else cimg_for2x2x2(_img,x,y,z,0,I,T)
-                     *(ptrd++) = (Ttfloat)(I[0]*_mask[0] + I[1]*_mask[1] +
-                                           I[2]*_mask[2] + I[3]*_mask[3] +
-                                           I[4]*_mask[4] + I[5]*_mask[5] +
-                                           I[6]*_mask[6] + I[7]*_mask[7]);
-          }
-        } break;
-        default :
-        case 1 :
-          switch (mask._width) {
-          case 6 : {
-            T I[36] = { 0 };
-            cimg_forC(res,c) {
-              const CImg<T> _img = get_shared_channel(c%_spectrum);
-              const CImg<t> _mask = mask.get_shared_channel(c%mask._spectrum);
-              if (is_normalized) {
-                const Ttfloat _M = (Ttfloat)_mask.magnitude(2), M = _M*_M;
-                cimg_forZ(_img,z) cimg_for6x6(_img,x,y,z,0,I,T) {
-                  const Ttfloat N = M*(I[ 0]*I[ 0] + I[ 1]*I[ 1] + I[ 2]*I[ 2] + I[ 3]*I[ 3] + I[ 4]*I[ 4] + I[ 5]*I[ 5] +
-                                       I[ 6]*I[ 6] + I[ 7]*I[ 7] + I[ 8]*I[ 8] + I[ 9]*I[ 9] + I[10]*I[10] + I[11]*I[11] +
-                                       I[12]*I[12] + I[13]*I[13] + I[14]*I[14] + I[15]*I[15] + I[16]*I[16] + I[17]*I[17] +
-                                       I[18]*I[18] + I[19]*I[19] + I[20]*I[20] + I[21]*I[21] + I[22]*I[22] + I[23]*I[23] +
-                                       I[24]*I[24] + I[25]*I[25] + I[26]*I[26] + I[27]*I[27] + I[28]*I[28] + I[29]*I[29] +
-                                       I[30]*I[30] + I[31]*I[31] + I[32]*I[32] + I[33]*I[33] + I[34]*I[34] + I[35]*I[35]);
-                  *(ptrd++) = (Ttfloat)(N?(I[ 0]*_mask[ 0] + I[ 1]*_mask[ 1] + I[ 2]*_mask[ 2] + I[ 3]*_mask[ 3] + I[ 4]*_mask[ 4] + I[ 5]*_mask[ 5] +
-                                           I[ 6]*_mask[ 6] + I[ 7]*_mask[ 7] + I[ 8]*_mask[ 8] + I[ 9]*_mask[ 9] + I[10]*_mask[10] + I[11]*_mask[11] +
-                                           I[12]*_mask[12] + I[13]*_mask[13] + I[14]*_mask[14] + I[15]*_mask[15] + I[16]*_mask[16] + I[17]*_mask[17] +
-                                           I[18]*_mask[18] + I[19]*_mask[19] + I[20]*_mask[20] + I[21]*_mask[21] + I[22]*_mask[22] + I[23]*_mask[23] +
-                                           I[24]*_mask[24] + I[25]*_mask[25] + I[26]*_mask[26] + I[27]*_mask[27] + I[28]*_mask[28] + I[29]*_mask[29] +
-                                           I[30]*_mask[30] + I[31]*_mask[31] + I[32]*_mask[32] + I[33]*_mask[33] + I[34]*_mask[34] + I[35]*_mask[35])/std::sqrt(N):0);
-                }
-              } else cimg_forZ(_img,z) cimg_for6x6(_img,x,y,z,0,I,T)
-                       *(ptrd++) = (Ttfloat)(I[ 0]*_mask[ 0] + I[ 1]*_mask[ 1] + I[ 2]*_mask[ 2] + I[ 3]*_mask[ 3] + I[ 4]*_mask[ 4] + I[ 5]*_mask[ 5] +
-                                             I[ 6]*_mask[ 6] + I[ 7]*_mask[ 7] + I[ 8]*_mask[ 8] + I[ 9]*_mask[ 9] + I[10]*_mask[10] + I[11]*_mask[11] +
-                                             I[12]*_mask[12] + I[13]*_mask[13] + I[14]*_mask[14] + I[15]*_mask[15] + I[16]*_mask[16] + I[17]*_mask[17] +
-                                             I[18]*_mask[18] + I[19]*_mask[19] + I[20]*_mask[20] + I[21]*_mask[21] + I[22]*_mask[22] + I[23]*_mask[23] +
-                                             I[24]*_mask[24] + I[25]*_mask[25] + I[26]*_mask[26] + I[27]*_mask[27] + I[28]*_mask[28] + I[29]*_mask[29] +
-                                             I[30]*_mask[30] + I[31]*_mask[31] + I[32]*_mask[32] + I[33]*_mask[33] + I[34]*_mask[34] + I[35]*_mask[35]);
-            }
-          } break;
-          case 5 : {
-            T I[25] = { 0 };
-            cimg_forC(res,c) {
-              const CImg<T> _img = get_shared_channel(c%_spectrum);
-              const CImg<t> _mask = mask.get_shared_channel(c%mask._spectrum);
-              if (is_normalized) {
-                const Ttfloat _M = (Ttfloat)_mask.magnitude(2), M = _M*_M;
-                cimg_forZ(_img,z) cimg_for5x5(_img,x,y,z,0,I,T) {
-                  const Ttfloat N = M*(I[ 0]*I[ 0] + I[ 1]*I[ 1] + I[ 2]*I[ 2] + I[ 3]*I[ 3] + I[ 4]*I[ 4] +
-                                       I[ 5]*I[ 5] + I[ 6]*I[ 6] + I[ 7]*I[ 7] + I[ 8]*I[ 8] + I[ 9]*I[ 9] +
-                                       I[10]*I[10] + I[11]*I[11] + I[12]*I[12] + I[13]*I[13] + I[14]*I[14] +
-                                       I[15]*I[15] + I[16]*I[16] + I[17]*I[17] + I[18]*I[18] + I[19]*I[19] +
-                                       I[20]*I[20] + I[21]*I[21] + I[22]*I[22] + I[23]*I[23] + I[24]*I[24]);
-                  *(ptrd++) = (Ttfloat)(N?(I[ 0]*_mask[ 0] + I[ 1]*_mask[ 1] + I[ 2]*_mask[ 2] + I[ 3]*_mask[ 3] + I[ 4]*_mask[ 4] +
-                                           I[ 5]*_mask[ 5] + I[ 6]*_mask[ 6] + I[ 7]*_mask[ 7] + I[ 8]*_mask[ 8] + I[ 9]*_mask[ 9] +
-                                           I[10]*_mask[10] + I[11]*_mask[11] + I[12]*_mask[12] + I[13]*_mask[13] + I[14]*_mask[14] +
-                                           I[15]*_mask[15] + I[16]*_mask[16] + I[17]*_mask[17] + I[18]*_mask[18] + I[19]*_mask[19] +
-                                           I[20]*_mask[20] + I[21]*_mask[21] + I[22]*_mask[22] + I[23]*_mask[23] + I[24]*_mask[24])/std::sqrt(N):0);
-                }
-              } else cimg_forZ(_img,z) cimg_for5x5(_img,x,y,z,0,I,T)
-                       *(ptrd++) = (Ttfloat)(I[ 0]*_mask[ 0] + I[ 1]*_mask[ 1] + I[ 2]*_mask[ 2] + I[ 3]*_mask[ 3] + I[ 4]*_mask[ 4] +
-                                             I[ 5]*_mask[ 5] + I[ 6]*_mask[ 6] + I[ 7]*_mask[ 7] + I[ 8]*_mask[ 8] + I[ 9]*_mask[ 9] +
-                                             I[10]*_mask[10] + I[11]*_mask[11] + I[12]*_mask[12] + I[13]*_mask[13] + I[14]*_mask[14] +
-                                             I[15]*_mask[15] + I[16]*_mask[16] + I[17]*_mask[17] + I[18]*_mask[18] + I[19]*_mask[19] +
-                                             I[20]*_mask[20] + I[21]*_mask[21] + I[22]*_mask[22] + I[23]*_mask[23] + I[24]*_mask[24]);
-            }
-          } break;
-          case 4 : {
-            T I[16] = { 0 };
-            cimg_forC(res,c) {
-              const CImg<T> _img = get_shared_channel(c%_spectrum);
-              const CImg<t> _mask = mask.get_shared_channel(c%mask._spectrum);
-              if (is_normalized) {
-                const Ttfloat _M = (Ttfloat)_mask.magnitude(2), M = _M*_M;
-                cimg_forZ(_img,z) cimg_for4x4(_img,x,y,z,0,I,T) {
-                  const Ttfloat N = M*(I[ 0]*I[ 0] + I[ 1]*I[ 1] + I[ 2]*I[ 2] + I[ 3]*I[ 3] +
-                                       I[ 4]*I[ 4] + I[ 5]*I[ 5] + I[ 6]*I[ 6] + I[ 7]*I[ 7] +
-                                       I[ 8]*I[ 8] + I[ 9]*I[ 9] + I[10]*I[10] + I[11]*I[11] +
-                                       I[12]*I[12] + I[13]*I[13] + I[14]*I[14] + I[15]*I[15]);
-                  *(ptrd++) = (Ttfloat)(N?(I[ 0]*_mask[ 0] + I[ 1]*_mask[ 1] + I[ 2]*_mask[ 2] + I[ 3]*_mask[ 3] +
-                                           I[ 4]*_mask[ 4] + I[ 5]*_mask[ 5] + I[ 6]*_mask[ 6] + I[ 7]*_mask[ 7] +
-                                           I[ 8]*_mask[ 8] + I[ 9]*_mask[ 9] + I[10]*_mask[10] + I[11]*_mask[11] +
-                                           I[12]*_mask[12] + I[13]*_mask[13] + I[14]*_mask[14] + I[15]*_mask[15])/std::sqrt(N):0);
-                }
-              } else cimg_forZ(_img,z) cimg_for4x4(_img,x,y,z,0,I,T)
-                       *(ptrd++) = (Ttfloat)(I[ 0]*_mask[ 0] + I[ 1]*_mask[ 1] + I[ 2]*_mask[ 2] + I[ 3]*_mask[ 3] +
-                                             I[ 4]*_mask[ 4] + I[ 5]*_mask[ 5] + I[ 6]*_mask[ 6] + I[ 7]*_mask[ 7] +
-                                             I[ 8]*_mask[ 8] + I[ 9]*_mask[ 9] + I[10]*_mask[10] + I[11]*_mask[11] +
-                                             I[12]*_mask[12] + I[13]*_mask[13] + I[14]*_mask[14] + I[15]*_mask[15]);
-            }
-          } break;
-          case 3 : {
-            T I[9] = { 0 };
-            cimg_forC(res,c) {
-              const CImg<T> _img = get_shared_channel(c%_spectrum);
-              const CImg<t> _mask = mask.get_shared_channel(c%mask._spectrum);
-              if (is_normalized) {
-                const Ttfloat _M = (Ttfloat)_mask.magnitude(2), M = _M*_M;
-                cimg_forZ(_img,z) cimg_for3x3(_img,x,y,z,0,I,T) {
-                  const Ttfloat N = M*(I[0]*I[0] + I[1]*I[1] + I[2]*I[2] +
-                                       I[3]*I[3] + I[4]*I[4] + I[5]*I[5] +
-                                       I[6]*I[6] + I[7]*I[7] + I[8]*I[8]);
-                  *(ptrd++) = (Ttfloat)(N?(I[0]*_mask[0] + I[1]*_mask[1] + I[2]*_mask[2] +
-                                           I[3]*_mask[3] + I[4]*_mask[4] + I[5]*_mask[5] +
-                                           I[6]*_mask[6] + I[7]*_mask[7] + I[8]*_mask[8])/std::sqrt(N):0);
-                }
-              } else cimg_forZ(_img,z) cimg_for3x3(_img,x,y,z,0,I,T)
-                       *(ptrd++) = (Ttfloat)(I[0]*_mask[0] + I[1]*_mask[1] + I[2]*_mask[2] +
-                                             I[3]*_mask[3] + I[4]*_mask[4] + I[5]*_mask[5] +
-                                             I[6]*_mask[6] + I[7]*_mask[7] + I[8]*_mask[8]);
-            }
-          } break;
-          case 2 : {
-            T I[4] = { 0 };
-            cimg_forC(res,c) {
-              const CImg<T> _img = get_shared_channel(c%_spectrum);
-              const CImg<t> _mask = mask.get_shared_channel(c%mask._spectrum);
-              if (is_normalized) {
-                const Ttfloat _M = (Ttfloat)_mask.magnitude(2), M = _M*_M;
-                cimg_forZ(_img,z) cimg_for2x2(_img,x,y,z,0,I,T) {
-                  const Ttfloat N = M*(I[0]*I[0] + I[1]*I[1] +
-                                       I[2]*I[2] + I[3]*I[3]);
-                  *(ptrd++) = (Ttfloat)(N?(I[0]*_mask[0] + I[1]*_mask[1] +
-                                           I[2]*_mask[2] + I[3]*_mask[3])/std::sqrt(N):0);
-                }
-              } else cimg_forZ(_img,z) cimg_for2x2(_img,x,y,z,0,I,T)
-                       *(ptrd++) = (Ttfloat)(I[0]*_mask[0] + I[1]*_mask[1] +
-                                             I[2]*_mask[2] + I[3]*_mask[3]);
-            }
-          } break;
-          case 1 :
-            if (is_normalized) res.fill(1);
-            else cimg_forC(res,c) {
-                const CImg<T> _img = get_shared_channel(c%_spectrum);
-                const CImg<t> _mask = mask.get_shared_channel(c%mask._spectrum);
-                res.get_shared_channel(c).assign(_img)*=_mask[0];
-              }
-            break;
-          }
-        }
-      } else { // Generic version for other masks and borders conditions.
-        const int
-          mx2 = mask.width()/2, my2 = mask.height()/2, mz2 = mask.depth()/2,
-          mx1 = mx2 - 1 + (mask.width()%2), my1 = my2 - 1 + (mask.height()%2), mz1 = mz2 - 1 + (mask.depth()%2),
-          mxe = width() - mx2, mye = height() - my2, mze = depth() - mz2;
-        cimg_forC(res,c) {
-          const CImg<T> _img = get_shared_channel(c%_spectrum);
-          const CImg<t> _mask = mask.get_shared_channel(c%mask._spectrum);
-          if (is_normalized) { // Normalized correlation.
-            const Ttfloat _M = (Ttfloat)_mask.magnitude(2), M = _M*_M;
-            for (int z = mz1; z<mze; ++z)
-              for (int y = my1; y<mye; ++y)
-                for (int x = mx1; x<mxe; ++x) {
-                  Ttfloat val = 0, N = 0;
-                  for (int zm = -mz1; zm<=mz2; ++zm)
-                    for (int ym = -my1; ym<=my2; ++ym)
-                      for (int xm = -mx1; xm<=mx2; ++xm) {
-                        const Ttfloat _val = (Ttfloat)_img(x+xm,y+ym,z+zm);
-                        val+=_val*_mask(mx1+xm,my1+ym,mz1+zm);
-                        N+=_val*_val;
-                      }
-                  N*=M;
-                  res(x,y,z,c) = (Ttfloat)(N?val/std::sqrt(N):0);
-                }
-            if (boundary_conditions)
-              cimg_forYZ(res,y,z)
-                for (int x = 0; x<width(); (y<my1 || y>=mye || z<mz1 || z>=mze)?++x:((x<mx1-1 || x>=mxe)?++x:(x=mxe))) {
-                  Ttfloat val = 0, N = 0;
-                  for (int zm = -mz1; zm<=mz2; ++zm)
-                    for (int ym = -my1; ym<=my2; ++ym)
-                      for (int xm = -mx1; xm<=mx2; ++xm) {
-                        const Ttfloat _val = (Ttfloat)_img._atXYZ(x+xm,y+ym,z+zm);
-                        val+=_val*_mask(mx1+xm,my1+ym,mz1+zm);
-                        N+=_val*_val;
-                      }
-                  N*=M;
-                  res(x,y,z,c) = (Ttfloat)(N?val/std::sqrt(N):0);
-                }
-            else
-              cimg_forYZ(res,y,z)
-                for (int x = 0; x<width(); (y<my1 || y>=mye || z<mz1 || z>=mze)?++x:((x<mx1-1 || x>=mxe)?++x:(x=mxe))) {
-                  Ttfloat val = 0, N = 0;
-                  for (int zm = -mz1; zm<=mz2; ++zm)
-                    for (int ym = -my1; ym<=my2; ++ym)
-                      for (int xm = -mx1; xm<=mx2; ++xm) {
-                        const Ttfloat _val = (Ttfloat)_img.atXYZ(x+xm,y+ym,z+zm,0,0);
-                        val+=_val*_mask(mx1+xm,my1+ym,mz1+zm);
-                        N+=_val*_val;
-                      }
-                  N*=M;
-                  res(x,y,z,c) = (Ttfloat)(N?val/std::sqrt(N):0);
-                }
-          } else { // Classical correlation.
-            for (int z = mz1; z<mze; ++z)
-              for (int y = my1; y<mye; ++y)
-                for (int x = mx1; x<mxe; ++x) {
-                  Ttfloat val = 0;
-                  for (int zm = -mz1; zm<=mz2; ++zm)
-                    for (int ym = -my1; ym<=my2; ++ym)
-                      for (int xm = -mx1; xm<=mx2; ++xm)
-                        val+=_img(x+xm,y+ym,z+zm)*_mask(mx1+xm,my1+ym,mz1+zm);
-                  res(x,y,z,c) = (Ttfloat)val;
-                }
-            if (boundary_conditions)
-              cimg_forYZ(res,y,z)
-                for (int x = 0; x<width(); (y<my1 || y>=mye || z<mz1 || z>=mze)?++x:((x<mx1-1 || x>=mxe)?++x:(x=mxe))) {
-                  Ttfloat val = 0;
-                  for (int zm = -mz1; zm<=mz2; ++zm)
-                    for (int ym = -my1; ym<=my2; ++ym)
-                      for (int xm = -mx1; xm<=mx2; ++xm)
-                        val+=_img._atXYZ(x+xm,y+ym,z+zm)*_mask(mx1+xm,my1+ym,mz1+zm);
-                  res(x,y,z,c) = (Ttfloat)val;
-                }
-            else
-              cimg_forYZ(res,y,z)
-                for (int x = 0; x<width(); (y<my1 || y>=mye || z<mz1 || z>=mze)?++x:((x<mx1-1 || x>=mxe)?++x:(x=mxe))) {
-                  Ttfloat val = 0;
-                  for (int zm = -mz1; zm<=mz2; ++zm)
-                    for (int ym = -my1; ym<=my2; ++ym)
-                      for (int xm = -mx1; xm<=mx2; ++xm)
-                        val+=_img.atXYZ(x+xm,y+ym,z+zm,0,0)*_mask(mx1+xm,my1+ym,mz1+zm);
-                  res(x,y,z,c) = (Ttfloat)val;
-                }
-          }
-        }
-      }
-      return res;
+    CImg<_cimg_Ttfloat> get_correlate(const CImg<t>& mask, const unsigned int boundary_conditions=1,const bool is_normalized=false) const 
+	{
+			if (is_empty() || !mask) return *this;
+
+			typedef _cimg_Ttfloat Ttfloat;
+			CImg<Ttfloat> res(_width,_height,_depth,cimg::max(_spectrum,mask._spectrum));
+
+			if (boundary_conditions && mask._width==mask._height && ((mask._depth==1 && mask._width<=5) || (mask._depth==mask._width && mask._width<=3))) 
+			{
+					// A special optimization is done for 2x2, 3x3, 4x4, 5x5, 2x2x2 and 3x3x3 mask (with boundary_conditions=1)
+					Ttfloat *ptrd = res._data;
+					switch (mask._depth) {
+					case 3 : {
+							T I[27] = { 0 };
+							cimg_forC(res,c) {
+									const CImg<T> _img = get_shared_channel(c%_spectrum);
+									const CImg<t> _mask = mask.get_shared_channel(c%mask._spectrum);
+									if (is_normalized) {
+											const Ttfloat _M = (Ttfloat)_mask.magnitude(2), M = _M*_M;
+											cimg_for3x3x3(_img,x,y,z,0,I,T) {
+													const Ttfloat N = M*(I[ 0]*I[ 0] + I[ 1]*I[ 1] + I[ 2]*I[ 2] +
+															I[ 3]*I[ 3] + I[ 4]*I[ 4] + I[ 5]*I[ 5] +
+															I[ 6]*I[ 6] + I[ 7]*I[ 7] + I[ 8]*I[ 8] +
+															I[ 9]*I[ 9] + I[10]*I[10] + I[11]*I[11] +
+															I[12]*I[12] + I[13]*I[13] + I[14]*I[14] +
+															I[15]*I[15] + I[16]*I[16] + I[17]*I[17] +
+															I[18]*I[18] + I[19]*I[19] + I[20]*I[20] +
+															I[21]*I[21] + I[22]*I[22] + I[23]*I[23] +
+															I[24]*I[24] + I[25]*I[25] + I[26]*I[26]);
+													*(ptrd++) = (Ttfloat)(N?(I[ 0]*_mask[ 0] + I[ 1]*_mask[ 1] + I[ 2]*_mask[ 2] +
+															I[ 3]*_mask[ 3] + I[ 4]*_mask[ 4] + I[ 5]*_mask[ 5] +
+															I[ 6]*_mask[ 6] + I[ 7]*_mask[ 7] + I[ 8]*_mask[ 8] +
+															I[ 9]*_mask[ 9] + I[10]*_mask[10] + I[11]*_mask[11] +
+															I[12]*_mask[12] + I[13]*_mask[13] + I[14]*_mask[14] +
+															I[15]*_mask[15] + I[16]*_mask[16] + I[17]*_mask[17] +
+															I[18]*_mask[18] + I[19]*_mask[19] + I[20]*_mask[20] +
+															I[21]*_mask[21] + I[22]*_mask[22] + I[23]*_mask[23] +
+															I[24]*_mask[24] + I[25]*_mask[25] + I[26]*_mask[26])/std::sqrt(N):0);
+											}
+									} else cimg_for3x3x3(_img,x,y,z,0,I,T)
+											*(ptrd++) = (Ttfloat)(I[ 0]*_mask[ 0] + I[ 1]*_mask[ 1] + I[ 2]*_mask[ 2] +
+											I[ 3]*_mask[ 3] + I[ 4]*_mask[ 4] + I[ 5]*_mask[ 5] +
+											I[ 6]*_mask[ 6] + I[ 7]*_mask[ 7] + I[ 8]*_mask[ 8] +
+											I[ 9]*_mask[ 9] + I[10]*_mask[10] + I[11]*_mask[11] +
+											I[12]*_mask[12] + I[13]*_mask[13] + I[14]*_mask[14] +
+											I[15]*_mask[15] + I[16]*_mask[16] + I[17]*_mask[17] +
+											I[18]*_mask[18] + I[19]*_mask[19] + I[20]*_mask[20] +
+											I[21]*_mask[21] + I[22]*_mask[22] + I[23]*_mask[23] +
+											I[24]*_mask[24] + I[25]*_mask[25] + I[26]*_mask[26]);
+							}
+							 } break;
+					case 2 : {
+							T I[8] = { 0 };
+							cimg_forC(res,c) {
+									const CImg<T> _img = get_shared_channel(c%_spectrum);
+									const CImg<t> _mask = mask.get_shared_channel(c%mask._spectrum);
+									if (is_normalized) {
+											const Ttfloat _M = (Ttfloat)_mask.magnitude(2), M = _M*_M;
+											cimg_for2x2x2(_img,x,y,z,0,I,T) {
+													const Ttfloat N = M*(I[0]*I[0] + I[1]*I[1] +
+															I[2]*I[2] + I[3]*I[3] +
+															I[4]*I[4] + I[5]*I[5] +
+															I[6]*I[6] + I[7]*I[7]);
+													*(ptrd++) = (Ttfloat)(N?(I[0]*_mask[0] + I[1]*_mask[1] +
+															I[2]*_mask[2] + I[3]*_mask[3] +
+															I[4]*_mask[4] + I[5]*_mask[5] +
+															I[6]*_mask[6] + I[7]*_mask[7])/std::sqrt(N):0);
+											}
+									} else cimg_for2x2x2(_img,x,y,z,0,I,T)
+											*(ptrd++) = (Ttfloat)(I[0]*_mask[0] + I[1]*_mask[1] +
+											I[2]*_mask[2] + I[3]*_mask[3] +
+											I[4]*_mask[4] + I[5]*_mask[5] +
+											I[6]*_mask[6] + I[7]*_mask[7]);
+							}
+							 } break;
+					default :
+					case 1 :
+							switch (mask._width) {
+							case 6 : {
+									T I[36] = { 0 };
+									cimg_forC(res,c) {
+											const CImg<T> _img = get_shared_channel(c%_spectrum);
+											const CImg<t> _mask = mask.get_shared_channel(c%mask._spectrum);
+											if (is_normalized) {
+													const Ttfloat _M = (Ttfloat)_mask.magnitude(2), M = _M*_M;
+													cimg_forZ(_img,z) cimg_for6x6(_img,x,y,z,0,I,T) {
+															const Ttfloat N = M*(I[ 0]*I[ 0] + I[ 1]*I[ 1] + I[ 2]*I[ 2] + I[ 3]*I[ 3] + I[ 4]*I[ 4] + I[ 5]*I[ 5] +
+																	I[ 6]*I[ 6] + I[ 7]*I[ 7] + I[ 8]*I[ 8] + I[ 9]*I[ 9] + I[10]*I[10] + I[11]*I[11] +
+																	I[12]*I[12] + I[13]*I[13] + I[14]*I[14] + I[15]*I[15] + I[16]*I[16] + I[17]*I[17] +
+																	I[18]*I[18] + I[19]*I[19] + I[20]*I[20] + I[21]*I[21] + I[22]*I[22] + I[23]*I[23] +
+																	I[24]*I[24] + I[25]*I[25] + I[26]*I[26] + I[27]*I[27] + I[28]*I[28] + I[29]*I[29] +
+																	I[30]*I[30] + I[31]*I[31] + I[32]*I[32] + I[33]*I[33] + I[34]*I[34] + I[35]*I[35]);
+															*(ptrd++) = (Ttfloat)(N?(I[ 0]*_mask[ 0] + I[ 1]*_mask[ 1] + I[ 2]*_mask[ 2] + I[ 3]*_mask[ 3] + I[ 4]*_mask[ 4] + I[ 5]*_mask[ 5] +
+																	I[ 6]*_mask[ 6] + I[ 7]*_mask[ 7] + I[ 8]*_mask[ 8] + I[ 9]*_mask[ 9] + I[10]*_mask[10] + I[11]*_mask[11] +
+																	I[12]*_mask[12] + I[13]*_mask[13] + I[14]*_mask[14] + I[15]*_mask[15] + I[16]*_mask[16] + I[17]*_mask[17] +
+																	I[18]*_mask[18] + I[19]*_mask[19] + I[20]*_mask[20] + I[21]*_mask[21] + I[22]*_mask[22] + I[23]*_mask[23] +
+																	I[24]*_mask[24] + I[25]*_mask[25] + I[26]*_mask[26] + I[27]*_mask[27] + I[28]*_mask[28] + I[29]*_mask[29] +
+																	I[30]*_mask[30] + I[31]*_mask[31] + I[32]*_mask[32] + I[33]*_mask[33] + I[34]*_mask[34] + I[35]*_mask[35])/std::sqrt(N):0);
+													}
+											} else cimg_forZ(_img,z) cimg_for6x6(_img,x,y,z,0,I,T)
+													*(ptrd++) = (Ttfloat)(I[ 0]*_mask[ 0] + I[ 1]*_mask[ 1] + I[ 2]*_mask[ 2] + I[ 3]*_mask[ 3] + I[ 4]*_mask[ 4] + I[ 5]*_mask[ 5] +
+													I[ 6]*_mask[ 6] + I[ 7]*_mask[ 7] + I[ 8]*_mask[ 8] + I[ 9]*_mask[ 9] + I[10]*_mask[10] + I[11]*_mask[11] +
+													I[12]*_mask[12] + I[13]*_mask[13] + I[14]*_mask[14] + I[15]*_mask[15] + I[16]*_mask[16] + I[17]*_mask[17] +
+													I[18]*_mask[18] + I[19]*_mask[19] + I[20]*_mask[20] + I[21]*_mask[21] + I[22]*_mask[22] + I[23]*_mask[23] +
+													I[24]*_mask[24] + I[25]*_mask[25] + I[26]*_mask[26] + I[27]*_mask[27] + I[28]*_mask[28] + I[29]*_mask[29] +
+													I[30]*_mask[30] + I[31]*_mask[31] + I[32]*_mask[32] + I[33]*_mask[33] + I[34]*_mask[34] + I[35]*_mask[35]);
+									}
+									 } break;
+							case 5 : {
+									T I[25] = { 0 };
+									cimg_forC(res,c) {
+											const CImg<T> _img = get_shared_channel(c%_spectrum);
+											const CImg<t> _mask = mask.get_shared_channel(c%mask._spectrum);
+											if (is_normalized) {
+													const Ttfloat _M = (Ttfloat)_mask.magnitude(2), M = _M*_M;
+													cimg_forZ(_img,z) cimg_for5x5(_img,x,y,z,0,I,T) {
+															const Ttfloat N = M*(I[ 0]*I[ 0] + I[ 1]*I[ 1] + I[ 2]*I[ 2] + I[ 3]*I[ 3] + I[ 4]*I[ 4] +
+																	I[ 5]*I[ 5] + I[ 6]*I[ 6] + I[ 7]*I[ 7] + I[ 8]*I[ 8] + I[ 9]*I[ 9] +
+																	I[10]*I[10] + I[11]*I[11] + I[12]*I[12] + I[13]*I[13] + I[14]*I[14] +
+																	I[15]*I[15] + I[16]*I[16] + I[17]*I[17] + I[18]*I[18] + I[19]*I[19] +
+																	I[20]*I[20] + I[21]*I[21] + I[22]*I[22] + I[23]*I[23] + I[24]*I[24]);
+															*(ptrd++) = (Ttfloat)(N?(I[ 0]*_mask[ 0] + I[ 1]*_mask[ 1] + I[ 2]*_mask[ 2] + I[ 3]*_mask[ 3] + I[ 4]*_mask[ 4] +
+																	I[ 5]*_mask[ 5] + I[ 6]*_mask[ 6] + I[ 7]*_mask[ 7] + I[ 8]*_mask[ 8] + I[ 9]*_mask[ 9] +
+																	I[10]*_mask[10] + I[11]*_mask[11] + I[12]*_mask[12] + I[13]*_mask[13] + I[14]*_mask[14] +
+																	I[15]*_mask[15] + I[16]*_mask[16] + I[17]*_mask[17] + I[18]*_mask[18] + I[19]*_mask[19] +
+																	I[20]*_mask[20] + I[21]*_mask[21] + I[22]*_mask[22] + I[23]*_mask[23] + I[24]*_mask[24])/std::sqrt(N):0);
+													}
+											} else cimg_forZ(_img,z) cimg_for5x5(_img,x,y,z,0,I,T)
+													*(ptrd++) = (Ttfloat)(I[ 0]*_mask[ 0] + I[ 1]*_mask[ 1] + I[ 2]*_mask[ 2] + I[ 3]*_mask[ 3] + I[ 4]*_mask[ 4] +
+													I[ 5]*_mask[ 5] + I[ 6]*_mask[ 6] + I[ 7]*_mask[ 7] + I[ 8]*_mask[ 8] + I[ 9]*_mask[ 9] +
+													I[10]*_mask[10] + I[11]*_mask[11] + I[12]*_mask[12] + I[13]*_mask[13] + I[14]*_mask[14] +
+													I[15]*_mask[15] + I[16]*_mask[16] + I[17]*_mask[17] + I[18]*_mask[18] + I[19]*_mask[19] +
+													I[20]*_mask[20] + I[21]*_mask[21] + I[22]*_mask[22] + I[23]*_mask[23] + I[24]*_mask[24]);
+									}
+									 } break;
+							case 4 : {
+									T I[16] = { 0 };
+									cimg_forC(res,c) {
+											const CImg<T> _img = get_shared_channel(c%_spectrum);
+											const CImg<t> _mask = mask.get_shared_channel(c%mask._spectrum);
+											if (is_normalized) {
+													const Ttfloat _M = (Ttfloat)_mask.magnitude(2), M = _M*_M;
+													cimg_forZ(_img,z) cimg_for4x4(_img,x,y,z,0,I,T) {
+															const Ttfloat N = M*(I[ 0]*I[ 0] + I[ 1]*I[ 1] + I[ 2]*I[ 2] + I[ 3]*I[ 3] +
+																	I[ 4]*I[ 4] + I[ 5]*I[ 5] + I[ 6]*I[ 6] + I[ 7]*I[ 7] +
+																	I[ 8]*I[ 8] + I[ 9]*I[ 9] + I[10]*I[10] + I[11]*I[11] +
+																	I[12]*I[12] + I[13]*I[13] + I[14]*I[14] + I[15]*I[15]);
+															*(ptrd++) = (Ttfloat)(N?(I[ 0]*_mask[ 0] + I[ 1]*_mask[ 1] + I[ 2]*_mask[ 2] + I[ 3]*_mask[ 3] +
+																	I[ 4]*_mask[ 4] + I[ 5]*_mask[ 5] + I[ 6]*_mask[ 6] + I[ 7]*_mask[ 7] +
+																	I[ 8]*_mask[ 8] + I[ 9]*_mask[ 9] + I[10]*_mask[10] + I[11]*_mask[11] +
+																	I[12]*_mask[12] + I[13]*_mask[13] + I[14]*_mask[14] + I[15]*_mask[15])/std::sqrt(N):0);
+													}
+											} else cimg_forZ(_img,z) cimg_for4x4(_img,x,y,z,0,I,T)
+													*(ptrd++) = (Ttfloat)(I[ 0]*_mask[ 0] + I[ 1]*_mask[ 1] + I[ 2]*_mask[ 2] + I[ 3]*_mask[ 3] +
+													I[ 4]*_mask[ 4] + I[ 5]*_mask[ 5] + I[ 6]*_mask[ 6] + I[ 7]*_mask[ 7] +
+													I[ 8]*_mask[ 8] + I[ 9]*_mask[ 9] + I[10]*_mask[10] + I[11]*_mask[11] +
+													I[12]*_mask[12] + I[13]*_mask[13] + I[14]*_mask[14] + I[15]*_mask[15]);
+									}
+									 } break;
+							case 3 : {
+									T I[9] = { 0 };
+									cimg_forC(res,c) {
+											const CImg<T> _img = get_shared_channel(c%_spectrum);
+											const CImg<t> _mask = mask.get_shared_channel(c%mask._spectrum);
+											if (is_normalized) {
+													const Ttfloat _M = (Ttfloat)_mask.magnitude(2), M = _M*_M;
+													cimg_forZ(_img,z) cimg_for3x3(_img,x,y,z,0,I,T) {
+															const Ttfloat N = M*(I[0]*I[0] + I[1]*I[1] + I[2]*I[2] +
+																	I[3]*I[3] + I[4]*I[4] + I[5]*I[5] +
+																	I[6]*I[6] + I[7]*I[7] + I[8]*I[8]);
+															*(ptrd++) = (Ttfloat)(N?(I[0]*_mask[0] + I[1]*_mask[1] + I[2]*_mask[2] +
+																	I[3]*_mask[3] + I[4]*_mask[4] + I[5]*_mask[5] +
+																	I[6]*_mask[6] + I[7]*_mask[7] + I[8]*_mask[8])/std::sqrt(N):0);
+													}
+											} else cimg_forZ(_img,z) cimg_for3x3(_img,x,y,z,0,I,T)
+													*(ptrd++) = (Ttfloat)(I[0]*_mask[0] + I[1]*_mask[1] + I[2]*_mask[2] +
+													I[3]*_mask[3] + I[4]*_mask[4] + I[5]*_mask[5] +
+													I[6]*_mask[6] + I[7]*_mask[7] + I[8]*_mask[8]);
+									}
+									 } break;
+							case 2 : {
+									T I[4] = { 0 };
+									cimg_forC(res,c) {
+											const CImg<T> _img = get_shared_channel(c%_spectrum);
+											const CImg<t> _mask = mask.get_shared_channel(c%mask._spectrum);
+											if (is_normalized) {
+													const Ttfloat _M = (Ttfloat)_mask.magnitude(2), M = _M*_M;
+													cimg_forZ(_img,z) cimg_for2x2(_img,x,y,z,0,I,T) {
+															const Ttfloat N = M*(I[0]*I[0] + I[1]*I[1] +
+																	I[2]*I[2] + I[3]*I[3]);
+															*(ptrd++) = (Ttfloat)(N?(I[0]*_mask[0] + I[1]*_mask[1] +
+																	I[2]*_mask[2] + I[3]*_mask[3])/std::sqrt(N):0);
+													}
+											} else cimg_forZ(_img,z) cimg_for2x2(_img,x,y,z,0,I,T)
+													*(ptrd++) = (Ttfloat)(I[0]*_mask[0] + I[1]*_mask[1] +
+													I[2]*_mask[2] + I[3]*_mask[3]);
+									}
+									 } break;
+							case 1 :
+									if (is_normalized) res.fill(1);
+									else cimg_forC(res,c) {
+											const CImg<T> _img = get_shared_channel(c%_spectrum);
+											const CImg<t> _mask = mask.get_shared_channel(c%mask._spectrum);
+											res.get_shared_channel(c).assign(_img)*=_mask[0];
+									}
+									break;
+							}
+					}
+			} else { // Generic version for other masks and borders conditions.
+					const int
+							mx2 = mask.width()/2, my2 = mask.height()/2, mz2 = mask.depth()/2,
+							mx1 = mx2 - 1 + (mask.width()%2), my1 = my2 - 1 + (mask.height()%2), mz1 = mz2 - 1 + (mask.depth()%2),
+							mxe = width() - mx2, mye = height() - my2, mze = depth() - mz2;
+					cimg_forC(res,c) {
+							const CImg<T> _img = get_shared_channel(c%_spectrum);
+							const CImg<t> _mask = mask.get_shared_channel(c%mask._spectrum);
+							if (is_normalized) { // Normalized correlation.
+									const Ttfloat _M = (Ttfloat)_mask.magnitude(2), M = _M*_M;
+									for (int z = mz1; z<mze; ++z)
+											for (int y = my1; y<mye; ++y)
+													for (int x = mx1; x<mxe; ++x) {
+															Ttfloat val = 0, N = 0;
+															for (int zm = -mz1; zm<=mz2; ++zm)
+																	for (int ym = -my1; ym<=my2; ++ym)
+																			for (int xm = -mx1; xm<=mx2; ++xm) {
+																					const Ttfloat _val = (Ttfloat)_img(x+xm,y+ym,z+zm);
+																					val+=_val*_mask(mx1+xm,my1+ym,mz1+zm);
+																					N+=_val*_val;
+																			}
+																			N*=M;
+																			res(x,y,z,c) = (Ttfloat)(N?val/std::sqrt(N):0);
+													}
+													if (boundary_conditions)
+															cimg_forYZ(res,y,z)
+															for (int x = 0; x<width(); (y<my1 || y>=mye || z<mz1 || z>=mze)?++x:((x<mx1-1 || x>=mxe)?++x:(x=mxe))) {
+																	Ttfloat val = 0, N = 0;
+																	for (int zm = -mz1; zm<=mz2; ++zm)
+																			for (int ym = -my1; ym<=my2; ++ym)
+																					for (int xm = -mx1; xm<=mx2; ++xm) {
+																							const Ttfloat _val = (Ttfloat)_img._atXYZ(x+xm,y+ym,z+zm);
+																							val+=_val*_mask(mx1+xm,my1+ym,mz1+zm);
+																							N+=_val*_val;
+																					}
+																					N*=M;
+																					res(x,y,z,c) = (Ttfloat)(N?val/std::sqrt(N):0);
+															}
+													else
+															cimg_forYZ(res,y,z)
+															for (int x = 0; x<width(); (y<my1 || y>=mye || z<mz1 || z>=mze)?++x:((x<mx1-1 || x>=mxe)?++x:(x=mxe))) {
+																	Ttfloat val = 0, N = 0;
+																	for (int zm = -mz1; zm<=mz2; ++zm)
+																			for (int ym = -my1; ym<=my2; ++ym)
+																					for (int xm = -mx1; xm<=mx2; ++xm) {
+																							const Ttfloat _val = (Ttfloat)_img.atXYZ(x+xm,y+ym,z+zm,0,0);
+																							val+=_val*_mask(mx1+xm,my1+ym,mz1+zm);
+																							N+=_val*_val;
+																					}
+																					N*=M;
+																					res(x,y,z,c) = (Ttfloat)(N?val/std::sqrt(N):0);
+															}
+							} else { // Classical correlation.
+									for (int z = mz1; z<mze; ++z)
+											for (int y = my1; y<mye; ++y)
+													for (int x = mx1; x<mxe; ++x) 
+													{
+															Ttfloat val = 0;
+															for (int zm = -mz1; zm<=mz2; ++zm)
+																	for (int ym = -my1; ym<=my2; ++ym)
+																			for (int xm = -mx1; xm<=mx2; ++xm)
+																					val+=_img(x+xm,y+ym,z+zm)*_mask(mx1+xm,my1+ym,mz1+zm);
+															res(x,y,z,c) = (Ttfloat)val;
+													}
+
+													if (boundary_conditions)
+															cimg_forYZ(res,y,z)
+															for (int x = 0; x<width(); (y<my1 || y>=mye || z<mz1 || z>=mze)?++x:((x<mx1-1 || x>=mxe)?++x:(x=mxe))) {
+																	Ttfloat val = 0;
+																	for (int zm = -mz1; zm<=mz2; ++zm)
+																			for (int ym = -my1; ym<=my2; ++ym)
+																					for (int xm = -mx1; xm<=mx2; ++xm)
+																							val+=_img._atXYZ(x+xm,y+ym,z+zm)*_mask(mx1+xm,my1+ym,mz1+zm);
+																	res(x,y,z,c) = (Ttfloat)val;
+															}
+													else
+															cimg_forYZ(res,y,z)
+															for (int x = 0; x<width(); (y<my1 || y>=mye || z<mz1 || z>=mze)?++x:((x<mx1-1 || x>=mxe)?++x:(x=mxe))) {
+																	Ttfloat val = 0;
+																	for (int zm = -mz1; zm<=mz2; ++zm)
+																			for (int ym = -my1; ym<=my2; ++ym)
+																					for (int xm = -mx1; xm<=mx2; ++xm)
+																							val+=_img.atXYZ(x+xm,y+ym,z+zm,0,0)*_mask(mx1+xm,my1+ym,mz1+zm);
+																	res(x,y,z,c) = (Ttfloat)val;
+															}
+							}
+					}
+			}
+			return res;
     }
 
     //! Convolve image by a mask.
@@ -23193,8 +23198,8 @@ namespace cimg_library_suffixed {
 
     //! Convolve image by a mask \newinstance.
     template<typename t>
-    CImg<_cimg_Ttfloat> get_convolve(const CImg<t>& mask, const unsigned int boundary_conditions=1,
-                                     const bool is_normalized=false) const {
+    CImg<_cimg_Ttfloat> get_convolve(const CImg<t>& mask, const unsigned int boundary_conditions=1,const bool is_normalized=false) const 
+	{
       if (is_empty() || !mask) return *this;
       return get_correlate(CImg<t>(mask._data,mask.size(),1,1,1,true).get_mirror('x').resize(mask,-1),boundary_conditions,is_normalized);
     }
