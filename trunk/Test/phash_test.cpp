@@ -1194,9 +1194,9 @@ unsigned __int8* ph_mh_imagehash(const char *filename, int &N,float alpha, float
 
 		if (src.spectrum() == 3)
 		{
-				img = src.get_RGBtoYCbCr().channel(0).blur(1.0).resize(512,512,1,1,5).get_equalize(256);
+				img = src.get_RGBtoYCbCr().channel(0)/*.blur(1.0)*/.resize(512,512,1,1,5).get_equalize(256);
 		} else{
-				img = src.channel(0).get_blur(1.0).resize(512,512,1,1,5).get_equalize(256);
+				img = src.channel(0)/*.get_blur(1.0)*/.resize(512,512,1,1,5).get_equalize(256);
 		}
 		src.clear();
 
@@ -1268,9 +1268,9 @@ static void hash_test7()
 		int l,r;
 		std::wstring hash1, hash2;
 
-		unsigned __int8 *h1 = ph_mh_imagehash("C:\\Users\\solidus\\Desktop\\New folder\\attacked1.bmp", l, 1.0, 1.0, hash1);
+		unsigned __int8 *h1 = ph_mh_imagehash("C:\\Users\\solidus\\Desktop\\New folder\\attacked1.bmp", l, 1, 1.0, hash1);
 
-		unsigned __int8 *h2 = ph_mh_imagehash("C:\\Users\\solidus\\Desktop\\New folder\\worm10.bmp", r, 1.0, 1.0, hash2);
+		unsigned __int8 *h2 = ph_mh_imagehash("C:\\Users\\solidus\\Desktop\\New folder\\worm10.bmp", r, 1, 1.0, hash2);
 
 		size_t diff = phash_hamming_distance(hash1, hash2);
 
@@ -1290,9 +1290,9 @@ void phash_test()
 		
 		//hash_test4();
 
-		//hash_test6();
+		hash_test6();
 
-		hash_test7();
+		//hash_test7();
 
 		getchar();
 }
