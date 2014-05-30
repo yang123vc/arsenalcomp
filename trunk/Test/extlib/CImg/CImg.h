@@ -4355,7 +4355,7 @@ namespace cimg_library_suffixed {
 
     //! Convert ascii character to lower case.
     inline char uncase(const char x) {
-      return (char)((x<'A'||x>'Z')?x:x-'A'+'a');
+      return (char)( (x<'A'||x>'Z') ? x : x-'A'+'a');
     }
 
     //! Convert C-string to lower case.
@@ -23987,49 +23987,50 @@ namespace cimg_library_suffixed {
        Gaussian filter, Signal Processing, Volume 44, Issue 2, June 1995,
        Pages 139-151,
     **/
-    CImg<T>& vanvliet(const float sigma, const int order, const char axis='x', const bool boundary_conditions=true) {
-      if (is_empty()) return *this;
-      const char naxis = cimg::uncase(axis);
-      const float nsigma = sigma>=0?sigma:-sigma*(naxis=='x'?_width:naxis=='y'?_height:naxis=='z'?_depth:_spectrum)/100;
-      if (is_empty() || (nsigma<0.1f && !order)) return *this;
-      const Tfloat
-        nnsigma = nsigma<0.1f?0.1f:nsigma,
-        q = (Tfloat)(nnsigma<2.5?3.97156-4.14554*std::sqrt(1-0.2689*nnsigma):0.98711*nnsigma-0.96330),
-        b0 = 1.57825f + 2.44413f*q + 1.4281f*q*q + 0.4222205f*q*q*q,
-        b1 = (2.44413f*q + 2.85619f*q*q + 1.26661f*q*q*q),
-        b2 = -(1.4281f*q*q + 1.26661f*q*q*q),
-        b3 = 0.4222205f*q*q*q,
-        B = 1.f - (b1 + b2 + b3)/b0;
-      Tfloat filter[4];
-      filter[0] = B; filter[1] = b1/b0; filter[2] = b2/b0; filter[3] = b3/b0;
+    CImg<T>& vanvliet(const float sigma, const int order, const char axis='x', const bool boundary_conditions=true) 
+	{
+			if (is_empty()) return *this;
+			const char naxis = cimg::uncase(axis);
+			const float nsigma = sigma>=0?sigma:-sigma*(naxis=='x'?_width:naxis=='y'?_height:naxis=='z'?_depth:_spectrum)/100;
+			if (is_empty() || (nsigma<0.1f && !order)) return *this;
+			const Tfloat
+					nnsigma = nsigma<0.1f?0.1f:nsigma,
+					q = (Tfloat)(nnsigma<2.5?3.97156-4.14554*std::sqrt(1-0.2689*nnsigma):0.98711*nnsigma-0.96330),
+					b0 = 1.57825f + 2.44413f*q + 1.4281f*q*q + 0.4222205f*q*q*q,
+					b1 = (2.44413f*q + 2.85619f*q*q + 1.26661f*q*q*q),
+					b2 = -(1.4281f*q*q + 1.26661f*q*q*q),
+					b3 = 0.4222205f*q*q*q,
+					B = 1.f - (b1 + b2 + b3)/b0;
+			Tfloat filter[4];
+			filter[0] = B; filter[1] = b1/b0; filter[2] = b2/b0; filter[3] = b3/b0;
 
-      switch (naxis) {
-      case 'x' : {
+			switch (naxis) {
+			case 'x' : {
 #ifdef cimg_use_openmp
 #pragma omp parallel for collapse(3)
 #endif
-        cimg_forYZC(*this,y,z,c) _cimg_recursive_apply<4>(data(0,y,z,c),filter,_width,1U,order,boundary_conditions);
-      } break;
-      case 'y' : {
+					cimg_forYZC(*this,y,z,c) _cimg_recursive_apply<4>(data(0,y,z,c),filter,_width,1U,order,boundary_conditions);
+					   } break;
+			case 'y' : {
 #ifdef cimg_use_openmp
 #pragma omp parallel for collapse(3)
 #endif
-        cimg_forXZC(*this,x,z,c) _cimg_recursive_apply<4>(data(x,0,z,c),filter,_height,(unsigned long)_width,order,boundary_conditions);
-      } break;
-      case 'z' : {
+					cimg_forXZC(*this,x,z,c) _cimg_recursive_apply<4>(data(x,0,z,c),filter,_height,(unsigned long)_width,order,boundary_conditions);
+					   } break;
+			case 'z' : {
 #ifdef cimg_use_openmp
 #pragma omp parallel for collapse(3)
 #endif
-        cimg_forXYC(*this,x,y,c) _cimg_recursive_apply<4>(data(x,y,0,c),filter,_depth,(unsigned long)(_width*_height),order,boundary_conditions);
-      } break;
-      default : {
+					cimg_forXYC(*this,x,y,c) _cimg_recursive_apply<4>(data(x,y,0,c),filter,_depth,(unsigned long)(_width*_height),order,boundary_conditions);
+					   } break;
+			default : {
 #ifdef cimg_use_openmp
 #pragma omp parallel for collapse(3)
 #endif
-        cimg_forXYZ(*this,x,y,z) _cimg_recursive_apply<4>(data(x,y,z,0),filter,_spectrum,(unsigned long)(_width*_height*_depth),order,boundary_conditions);
-      }
-      }
-      return *this;
+					cimg_forXYZ(*this,x,y,z) _cimg_recursive_apply<4>(data(x,y,z,0),filter,_spectrum,(unsigned long)(_width*_height*_depth),order,boundary_conditions);
+					  }
+			}
+			return *this;
     }
 
     //! Blur image using Van Vliet recursive Gaussian filter. \newinstance.
