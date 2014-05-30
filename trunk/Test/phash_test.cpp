@@ -1,5 +1,14 @@
 
 
+#ifndef _UNICODE
+		#define _UNICODE
+#endif
+
+#ifndef UNICODE
+		#define UNICODE
+#endif
+
+
 #if defined(__LIB)
 
 #include <string>
@@ -13,6 +22,7 @@
 //#define cimg_use_jpeg
 #define cimg_display	0
 #include "./extlib/CImg/CImg.h"
+
 
  #define _WTL_NO_CSTRING
  #include <atlstr.h>
@@ -388,7 +398,7 @@ arStatus_t phash_image(CByteImage_t &src, std::wstring &hash)
 						int height = filtered_img.height();
 						int depth = filtered_img.depth();
 						filtered_img = src.crop(0,0,0,0,width-1,height-1,depth-1,2).RGBtoYCbCr().channel(0).get_convolve(meanfilter);
-				} else 
+				}else 
 				{
 						filtered_img = src.channel(0).get_convolve(meanfilter);
 				}
@@ -540,7 +550,7 @@ ar_bool_t phash_image_file(const wchar_t *file, std::wstring &hash)
 
 
 
-static BOOL __convert_image_ycrcb(CImage &img)
+static inline BOOL __convert_image_ycrcb(CImage &img)
 {
     BOOL ret;
     int x,y;
@@ -579,40 +589,40 @@ END_POINT:
 
 
 
-static BOOL __build_ychannel_matrix(CImage &scaled_img, arMatrix_t *img_mat)
+static BOOL __build_Ychannel_matrix(CImage &scaled_img, arMatrix_t *img_mat)
 {
-    BOOL ret;
-    int x,y;
-    AR_ASSERT(img_mat != NULL);
-    AR_ASSERT(scaled_img.GetWidth() == SCALED_IMAGE_SIZE && scaled_img.GetHeight() == SCALED_IMAGE_SIZE);
-    ret = TRUE;
+		BOOL ret;
+		int x,y;
+		AR_ASSERT(img_mat != NULL);
+		AR_ASSERT(scaled_img.GetWidth() == SCALED_IMAGE_SIZE && scaled_img.GetHeight() == SCALED_IMAGE_SIZE);
+		ret = TRUE;
 
-    if(AR_SetMatrixSize(img_mat, SCALED_IMAGE_SIZE, SCALED_IMAGE_SIZE) != AR_S_YES)
-    {
-        AR_printf(L"low mem : %hs\r\n", AR_FUNC_NAME);
-        ret = FALSE;
-        goto END_POINT;
-    }
-    
-	for(x = 0; x < scaled_img.GetWidth(); ++x)
-    {
-        for(y = 0; y < scaled_img.GetHeight(); ++y)
-        {
-            const BYTE *pix_addr = (const BYTE*)scaled_img.GetPixelAddress(x,y);
-            AR_ASSERT(pix_addr != NULL);
+		if(AR_SetMatrixSize(img_mat, SCALED_IMAGE_SIZE, SCALED_IMAGE_SIZE) != AR_S_YES)
+		{
+				AR_printf(L"low mem : %hs\r\n", AR_FUNC_NAME);
+				ret = FALSE;
+				goto END_POINT;
+		}
 
-            double Y, Cb, Cr;
+		for(x = 0; x < scaled_img.GetWidth(); ++x)
+		{
+				for(y = 0; y < scaled_img.GetHeight(); ++y)
+				{
+						const BYTE *pix_addr = (const BYTE*)scaled_img.GetPixelAddress(x,y);
+						AR_ASSERT(pix_addr != NULL);
 
-            Y = (double)pix_addr[2];
-			Cb = (double)pix_addr[1];
-			Cr = (double)pix_addr[0];
+						double Y, Cb, Cr;
 
-            AR_SetMatrixValue(img_mat, (size_t)x, (size_t)y, Y);
-        }
-    }
+						Y = (double)pix_addr[2];
+						Cb = (double)pix_addr[1];
+						Cr = (double)pix_addr[0];
+
+						AR_SetMatrixValue(img_mat, (size_t)x, (size_t)y, Y);
+				}
+		}
 
 END_POINT:
-    return ret;
+		return ret;
 }
 
 
@@ -654,7 +664,7 @@ static BOOL HashImage_DCT(CScreenImage &img, std::wstring &hex_str)
 				goto END_POINT;
 		}
 
-		ret = __build_ychannel_matrix(scaled_img, img_mat);
+		ret = __build_Ychannel_matrix(scaled_img, img_mat);
 
 		if(!ret)
 		{
@@ -734,6 +744,20 @@ END_POINT:
 		return ret;
 }
 
+BOOL HashImageFile_DCT(const std::wstring &path, std::wstring &hex_str)
+{
+		CScreenImage img;
+		BOOL ret = img.Load(path.c_str()) == S_OK;
+
+		if(!ret)
+		{
+				return ret;
+		}
+
+		ret = HashImage_DCT(img, hex_str);
+
+		return ret;
+}
 
 
 size_t phash_hamming_distance(const std::wstring &l, const std::wstring &r)
@@ -753,6 +777,108 @@ size_t phash_hamming_distance(const std::wstring &l, const std::wstring &r)
 		return count;
 }
 
+typedef std::map<std::wstring, std::wstring>	fhMap_t;
+
+
+static void GetSampleFiles(const std::wstring &path, fhMap_t &samples)
+{
+
+		std::wstring samples_path = path;
+		std::vector<std::wstring> samples_file_list;
+
+		AR_error(AR_ERR_MESSAGE, L"samples path : %ls\r\n", samples_path.c_str());
+		
+		arPathIter_t *iter = 	AR_CreatePathIterator();
+
+		if(samples_path.back() == L'\\')
+		{
+				samples_path.pop_back();
+		}
+
+		if(AR_PathIteratorSetPath(iter, samples_path.c_str()) != AR_S_YES)
+		{
+				goto END_POINT;
+		}
+
+		
+
+		while(!AR_PathIteratorIsDone(iter))
+		{
+				const wchar_t *name = AR_PathIteratorCurrent(iter);
+				
+				//AR_DPRINT(L"file name : %ls\r\n", name);
+
+				const wchar_t *p = AR_reverse_wcschr(name, AR_wcslen(name), L'.');
+
+				if(p != NULL && AR_wcsicmp(p, L".bmp") == 0)
+				{
+						std::wstring file_path = samples_path + L"\\" + std::wstring(name);
+						samples_file_list.push_back(file_path);
+				}else
+				{
+						int x = 3;
+						x++;
+				}
+
+
+				if(AR_PathIteratorNext(iter) != AR_S_YES)
+				{
+						break;
+				}
+		}
+
+
+		for(size_t i = 0; i < samples_file_list.size(); ++i)
+		{
+				const std::wstring &sample_path = samples_file_list[i];
+				const wchar_t *sample_name = AR_reverse_wcschr(sample_path.c_str(), sample_path.size(), L'\\');
+
+				if(sample_name == NULL || AR_wcslen(sample_name) == 0)
+				{
+						AR_error(AR_ERR_WARNING, L"invalid sample file path : %ls\r\n", sample_path.c_str());
+						continue;
+				}
+
+				sample_name++;
+
+				std::wstring hash;
+
+				
+#if(0)
+				if(!HashImageFile_DCT(sample_path, hash))
+				{
+						AR_error(AR_ERR_WARNING, L"failed to phash image file : %ls\r\n", sample_path.c_str());
+						continue;
+				}
+				
+#else
+
+				if(!phash_image_file(sample_path.c_str(), hash))
+				{
+						AR_error(AR_ERR_WARNING, L"failed to phash image file : %ls\r\n", sample_path.c_str());
+						continue;
+				}
+#endif
+
+				AR_DPRINT(L"%ls -> %ls\r\n", sample_name, hash.c_str());
+
+				samples[sample_name] = hash;
+		}
+
+END_POINT:
+		if(iter)
+		{
+				AR_DestroyPathIterator(iter);
+				iter = NULL;
+		}
+
+}
+
+
+
+
+
+
 
 
 void hash_test0()
@@ -771,7 +897,7 @@ void hash_test1()
 		std::wstring hash;
 		
 		CScreenImage img;
-		img.Load("C:\\Users\\solidus\\Desktop\\New folder\\qd_org.bmp");
+		img.Load(L"C:\\Users\\solidus\\Desktop\\New folder\\qd_org.bmp");
 
 		BOOL ret = HashImage_DCT(img, hash);
 
@@ -788,7 +914,7 @@ void hash_test2()
 		std::wstring hash2;
 		
 		CScreenImage img;
-		img.Load("C:\\Users\\solidus\\Desktop\\New folder\\qd_org.bmp");
+		img.Load(L"C:\\Users\\solidus\\Desktop\\New folder\\qd_org.bmp");
 
 		BOOL ret = HashImage_DCT(img, hash2);
 
@@ -812,42 +938,55 @@ void hash_test2()
 
 
 
+
 void hash_test3()
 {
-		std::wstring hash1, hash2;
+		AR_printf(L"CImage:\r\n");
+
+		std::wstring hash1, hash2, hash3, hash4, hash5;
 		BOOL ret;
 
-		CScreenImage img;
 
-		img.Load("C:\\Users\\solidus\\Desktop\\New folder\\worm.bmp");
-		ret = HashImage_DCT(img, hash1);
+
+		ret = HashImageFile_DCT(L"C:\\Users\\solidus\\Desktop\\New folder\\worm.bmp", hash1);
 		AR_ASSERT(ret);
-
 		AR_printf(L"%ls\r\n", hash1.c_str());
 
-		img.Destroy();
-		img.Load("C:\\Users\\solidus\\Desktop\\New folder\\worm5.bmp");
-		ret = HashImage_DCT(img, hash2);
+		ret = HashImageFile_DCT(L"C:\\Users\\solidus\\Desktop\\New folder\\worm2.bmp", hash2);
 		AR_ASSERT(ret);
-
 		AR_printf(L"%ls\r\n", hash2.c_str());
+		
+
+		ret = HashImageFile_DCT(L"C:\\Users\\solidus\\Desktop\\New folder\\worm3.bmp", hash3);
+		AR_ASSERT(ret);
+		AR_printf(L"%ls\r\n", hash3.c_str());
 
 
-		AR_ASSERT(hash1.size() == hash2.size());
+		ret = HashImageFile_DCT(L"C:\\Users\\solidus\\Desktop\\New folder\\worm4.bmp", hash4);
+		AR_ASSERT(ret);
+		AR_printf(L"%ls\r\n", hash4.c_str());
+		
 
-		size_t diff_count = 0;
-		for(size_t i = 0; i < hash2.size(); ++i)
-		{
-
-				if(hash1[i] != hash2[i])
-				{
-						diff_count++;
-				}
-
-		}
-
+		ret = HashImageFile_DCT(L"C:\\Users\\solidus\\Desktop\\New folder\\worm5.bmp", hash5);
+		AR_ASSERT(ret);
+		AR_printf(L"%ls\r\n", hash5.c_str());
+		
+		
+		size_t diff_count;
+		
+		diff_count = phash_hamming_distance(hash1,hash2);
 		AR_printf(L"hash distance : %Iu\r\n", diff_count);
 
+		diff_count = phash_hamming_distance(hash1,hash3);
+		AR_printf(L"hash distance : %Iu\r\n", diff_count);
+
+		diff_count = phash_hamming_distance(hash1,hash4);
+		AR_printf(L"hash distance : %Iu\r\n", diff_count);
+
+		diff_count = phash_hamming_distance(hash1,hash5);
+		AR_printf(L"hash distance : %Iu\r\n", diff_count);
+
+		AR_printf(L"---------------------------------------\r\n");
 
 }
 
@@ -857,6 +996,7 @@ void hash_test3()
 
 void hash_test4()
 {
+		AR_printf(L"CImg.h:\r\n");
 		std::wstring hash1, hash2, hash3, hash4, hash5;
 
 		phash_image_file(L"C:\\Users\\solidus\\Desktop\\New folder\\worm.bmp",hash1);
@@ -897,6 +1037,8 @@ void hash_test4()
 }
 
 
+
+
 void hash_test5()
 {
 		std::wstring hash1, hash2, hash3, hash4, hash5;
@@ -925,19 +1067,54 @@ void hash_test5()
 		AR_printf(L"---------------------------------------\r\n");
 }
 
+static void hash_test6()
+{
+		std::wstring path = L"";
+		fhMap_t m;
+		std::vector<std::wstring> hash_set;
+		BOOL ret = FALSE;
+
+		GetSampleFiles(L"C:\\Users\\solidus\\Desktop\\New folder\\", m);
+
+		std::map<int, std::wstring> name_map;
+		size_t i = 0;
+		for(fhMap_t::iterator it = m.begin(); it != m.end(); ++it)
+		{
+				name_map[i++] = it->first;
+				hash_set.push_back(it->second);
+				//AR_printf(L"index %d name : %ls\r\n", (int)i++, it->first.c_str());
+		}
+
+
+
+		for(size_t i = 0; i < hash_set.size(); ++i)
+		{
+				std::wstring l = hash_set[i];
+				
+				for(size_t k = i + 1; k < hash_set.size(); ++k)
+				{
+						size_t diff = phash_hamming_distance(l, hash_set[k]);
+						AR_printf(L"hash distance %ls vs %ls: %Iu\r\n", name_map[i].c_str(), name_map[k].c_str(), diff);
+				}
+		}
+}
+
+
 
 void phash_test()
 {
-		hash_test5();
+		//hash_test5();
 
 		//hash_test0();
 		//hash_test1();
 
 		//hash_test2();
 		
-		hash_test3();
+		//hash_test3();
 		
 		//hash_test4();
+
+		hash_test6();
 
 		getchar();
 }
