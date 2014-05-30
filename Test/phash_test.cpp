@@ -14,7 +14,7 @@
 #include <string>
 #include <vector>
 #include <map>
-
+#include <algorithm>
 
 
 #include "test.h"
@@ -155,7 +155,7 @@ public:
 			HDC dest_dc = NULL;
 			dest_img.Destroy();
 
-			if(!dest_img.Create((int)width, (int)height, this->GetBPP()))
+			if(!dest_img.Create((int)width, (int)height, 24/*this->GetBPP()*/))
 			{
 					result = FALSE;
 					goto END_POINT;
@@ -512,6 +512,14 @@ END_POINT:
 
 ar_bool_t phash_image_file(const wchar_t *file, std::wstring &hash)
 {
+
+		const wchar_t *p = AR_reverse_wcschr(file, AR_wcslen(file), L'.');
+
+		if(p == NULL || AR_wcsicmp(p, L".bmp") != 0)
+		{
+				return false;
+		}
+
 		CByteImage_t src;
 		char *s = AR_wcs_to_str(AR_CP_UTF8, file, AR_wcslen(file));
 		if(s == NULL)
@@ -549,7 +557,7 @@ ar_bool_t phash_image_file(const wchar_t *file, std::wstring &hash)
 
 
 
-
+#if(1)
 static inline BOOL __convert_image_ycrcb(CImage &img)
 {
     BOOL ret;
@@ -608,6 +616,7 @@ static BOOL __build_Ychannel_matrix(CImage &scaled_img, arMatrix_t *img_mat)
 		{
 				for(y = 0; y < scaled_img.GetHeight(); ++y)
 				{
+
 						const BYTE *pix_addr = (const BYTE*)scaled_img.GetPixelAddress(x,y);
 						AR_ASSERT(pix_addr != NULL);
 
@@ -624,6 +633,96 @@ static BOOL __build_Ychannel_matrix(CImage &scaled_img, arMatrix_t *img_mat)
 END_POINT:
 		return ret;
 }
+
+#else
+
+
+
+
+static inline BOOL __convert_image_ycrcb(CImage &img)
+{
+		return TRUE;
+#if(0)
+    BOOL ret;
+    int x,y;
+    
+    ret = TRUE;
+    
+	for(x = 0; x < img.GetWidth(); ++x)
+    {
+        for(y = 0; y < img.GetHeight(); ++y)
+        {
+            BYTE *pix_addr = (BYTE*)img.GetPixelAddress(x,y);
+            AR_ASSERT(pix_addr != NULL);
+
+            double R,G,B;
+
+            R = (double)pix_addr[2];
+            G = (double)pix_addr[1];
+            B = (double)pix_addr[0];
+
+            double Y =   (R * 66  + G * 129  + B * 25 + 128) / 256.0 + 16.0;
+            double Cb =  (-R * 38 - G * 74 + B * 112 + 128) / 256.0 + 128.0;
+            double Cr =  (R * 112 - G * 94 - B * 18 + 128) / 256.0 + 128.0;
+
+            Y = Y < 0 ? 0 : ( Y > 255 ? 255 : Y);
+            Cb = Cb < 0 ? 0 : ( Cb > 255 ? 255 : Cb);
+            Cr = Cr < 0 ? 0 : ( Cr > 255 ? 255 : Cr);
+
+			pix_addr[2] = (ar_byte_t)Y;
+            pix_addr[1] = (ar_byte_t)Cb;
+            pix_addr[0] = (ar_byte_t)Cr;
+        }
+    }
+END_POINT:
+    return ret;
+#endif
+
+}
+
+
+
+static BOOL __build_Ychannel_matrix(CImage &scaled_img, arMatrix_t *img_mat)
+{
+		BOOL ret;
+		int x,y;
+		AR_ASSERT(img_mat != NULL);
+		AR_ASSERT(scaled_img.GetWidth() == SCALED_IMAGE_SIZE && scaled_img.GetHeight() == SCALED_IMAGE_SIZE);
+		ret = TRUE;
+
+		if(AR_SetMatrixSize(img_mat, SCALED_IMAGE_SIZE, SCALED_IMAGE_SIZE) != AR_S_YES)
+		{
+				AR_printf(L"low mem : %hs\r\n", AR_FUNC_NAME);
+				ret = FALSE;
+				goto END_POINT;
+		}
+
+		for(x = 0; x < scaled_img.GetWidth(); ++x)
+		{
+				for(y = 0; y < scaled_img.GetHeight(); ++y)
+				{
+						const BYTE *pix_addr = (const BYTE*)scaled_img.GetPixelAddress(x,y);
+						AR_ASSERT(pix_addr != NULL);
+
+						double R,G,B;
+
+						R = (double)pix_addr[2];
+						G = (double)pix_addr[1];
+						B = (double)pix_addr[0];
+
+						double Y =   (R * 66  + G * 129  + B * 25 + 128) / 256.0 + 16.0;
+						double Cb =  (-R * 38 - G * 74 + B * 112 + 128) / 256.0 + 128.0;
+						double Cr =  (R * 112 - G * 94 - B * 18 + 128) / 256.0 + 128.0;
+
+						AR_SetMatrixValue(img_mat, (size_t)x, (size_t)y, Y);
+				}
+		}
+
+END_POINT:
+		return ret;
+}
+
+#endif
 
 
 static BOOL HashImage_DCT(CScreenImage &img, std::wstring &hex_str)
@@ -810,7 +909,7 @@ static void GetSampleFiles(const std::wstring &path, fhMap_t &samples)
 
 				const wchar_t *p = AR_reverse_wcschr(name, AR_wcslen(name), L'.');
 
-				if(p != NULL && AR_wcsicmp(p, L".bmp") == 0)
+				if(p != NULL && (AR_wcsicmp(p, L".bmp") == 0 || AR_wcsicmp(p, L".png") == 0 || AR_wcsicmp(p, L".jpg") == 0 || AR_wcsicmp(p, L".gif") == 0))
 				{
 						std::wstring file_path = samples_path + L"\\" + std::wstring(name);
 						samples_file_list.push_back(file_path);
@@ -844,7 +943,7 @@ static void GetSampleFiles(const std::wstring &path, fhMap_t &samples)
 				std::wstring hash;
 
 				
-#if(0)
+#if(1)
 				if(!HashImageFile_DCT(sample_path, hash))
 				{
 						AR_error(AR_ERR_WARNING, L"failed to phash image file : %ls\r\n", sample_path.c_str());
@@ -884,8 +983,7 @@ END_POINT:
 void hash_test0()
 {
 		std::wstring hash;
-		//phash_image_file(L"C:\\Users\\solidus\\Desktop\\New folder\\qd_org.bmp",hash);
-		phash_image_file(L"C:\\Users\\solidus\\Desktop\\New folder\\1.png",hash);
+		phash_image_file(L"C:\\Users\\solidus\\Desktop\\New folder\\qd_org.bmp",hash);
 		AR_printf(L"%ls\r\n", hash.c_str());
 }
 
@@ -897,8 +995,8 @@ void hash_test1()
 		std::wstring hash;
 		
 		CScreenImage img;
-		img.Load(L"C:\\Users\\solidus\\Desktop\\New folder\\qd_org.bmp");
-
+		//img.Load(L"C:\\Users\\solidus\\Desktop\\New folder\\qd_org.bmp");
+		img.Load(L"C:\\Users\\solidus\\Desktop\\New folder\\1.gif");
 		BOOL ret = HashImage_DCT(img, hash);
 
 		AR_printf(L"%ls\r\n", hash.c_str());
@@ -1069,34 +1167,85 @@ void hash_test5()
 
 static void hash_test6()
 {
-		std::wstring path = L"";
-		fhMap_t m;
-		std::vector<std::wstring> hash_set;
-		BOOL ret = FALSE;
 
-		GetSampleFiles(L"C:\\Users\\solidus\\Desktop\\New folder\\", m);
-
-		std::map<int, std::wstring> name_map;
-		size_t i = 0;
-		for(fhMap_t::iterator it = m.begin(); it != m.end(); ++it)
+		while(true)
 		{
-				name_map[i++] = it->first;
-				hash_set.push_back(it->second);
-				//AR_printf(L"index %d name : %ls\r\n", (int)i++, it->first.c_str());
-		}
+				AR_printf(L"---------------------------------------------------------------------------------\r\n----------------------------------------------------\r\n");
+				std::wstring path = L"";
+				fhMap_t m;
+				std::vector<std::wstring> hash_set;
+				BOOL ret = FALSE;
 
+				GetSampleFiles(L"C:\\Users\\solidus\\Desktop\\New folder\\", m);
 
-
-		for(size_t i = 0; i < hash_set.size(); ++i)
-		{
-				std::wstring l = hash_set[i];
-				
-				for(size_t k = i + 1; k < hash_set.size(); ++k)
+				std::map<int, std::wstring> name_map;
+				size_t i = 0;
+				for(fhMap_t::iterator it = m.begin(); it != m.end(); ++it)
 				{
-						size_t diff = phash_hamming_distance(l, hash_set[k]);
-						AR_printf(L"hash distance %ls vs %ls: %Iu\r\n", name_map[i].c_str(), name_map[k].c_str(), diff);
+						name_map[i++] = it->first;
+						hash_set.push_back(it->second);
+						//AR_printf(L"index %d name : %ls\r\n", (int)i++, it->first.c_str());
 				}
+
+
+				struct  record_t
+				{
+						std::wstring	l,r;
+						std::wstring	lh,rh;
+						size_t			diff;
+
+						bool operator<(const record_t &other)
+						{
+								if(this == &other)
+								{
+										return true;
+								}
+
+								return other.diff < this->diff;
+						}
+				};
+
+				std::vector<record_t>	rec_vec;
+
+				for(size_t i = 0; i < hash_set.size(); ++i)
+				{
+						std::wstring l = hash_set[i];
+
+						for(size_t k = i + 1; k < hash_set.size(); ++k)
+						{
+								size_t diff = phash_hamming_distance(l, hash_set[k]);
+
+								record_t rec;
+
+								rec.l = name_map[i];
+								rec.r = name_map[k];
+
+								rec.lh = l;
+								rec.rh = hash_set[k];
+								rec.diff = diff;
+								rec_vec.push_back(rec);
+								//AR_printf(L"hash distance %ls vs %ls: %Iu\r\n", name_map[i].c_str(), name_map[k].c_str(), diff);
+						}
+				}
+
+
+				std::sort(rec_vec.begin(), rec_vec.end());
+
+				for(size_t i = 0; i < rec_vec.size(); ++i)
+				{
+						const record_t &rec = rec_vec[i];
+
+						if((AR_wcsistr(rec.l.c_str(), L"worm") != NULL || AR_wcsistr(rec.r.c_str(), L"worm") != NULL) && rec.diff < 100 )
+						{
+								AR_printf(L"hash distance %ls vs %ls: %Iu\r\n", rec.l.c_str(), rec.r.c_str(), rec.diff);
+						}
+
+				}
+
+				::MessageBoxW(NULL, L"Done", 0, 0);
+				getchar();
 		}
+
 }
 
 
@@ -1106,7 +1255,7 @@ void phash_test()
 		//hash_test5();
 
 		//hash_test0();
-		//hash_test1();
+		hash_test1();
 
 		//hash_test2();
 		
@@ -1114,7 +1263,7 @@ void phash_test()
 		
 		//hash_test4();
 
-		hash_test6();
+		//hash_test6();
 
 		getchar();
 }
