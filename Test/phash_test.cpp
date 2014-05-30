@@ -557,7 +557,6 @@ ar_bool_t phash_image_file(const wchar_t *file, std::wstring &hash)
 
 
 
-#if(1)
 static inline BOOL __convert_image_ycrcb(CImage &img)
 {
     BOOL ret;
@@ -634,95 +633,6 @@ END_POINT:
 		return ret;
 }
 
-#else
-
-
-
-
-static inline BOOL __convert_image_ycrcb(CImage &img)
-{
-		return TRUE;
-#if(0)
-    BOOL ret;
-    int x,y;
-    
-    ret = TRUE;
-    
-	for(x = 0; x < img.GetWidth(); ++x)
-    {
-        for(y = 0; y < img.GetHeight(); ++y)
-        {
-            BYTE *pix_addr = (BYTE*)img.GetPixelAddress(x,y);
-            AR_ASSERT(pix_addr != NULL);
-
-            double R,G,B;
-
-            R = (double)pix_addr[2];
-            G = (double)pix_addr[1];
-            B = (double)pix_addr[0];
-
-            double Y =   (R * 66  + G * 129  + B * 25 + 128) / 256.0 + 16.0;
-            double Cb =  (-R * 38 - G * 74 + B * 112 + 128) / 256.0 + 128.0;
-            double Cr =  (R * 112 - G * 94 - B * 18 + 128) / 256.0 + 128.0;
-
-            Y = Y < 0 ? 0 : ( Y > 255 ? 255 : Y);
-            Cb = Cb < 0 ? 0 : ( Cb > 255 ? 255 : Cb);
-            Cr = Cr < 0 ? 0 : ( Cr > 255 ? 255 : Cr);
-
-			pix_addr[2] = (ar_byte_t)Y;
-            pix_addr[1] = (ar_byte_t)Cb;
-            pix_addr[0] = (ar_byte_t)Cr;
-        }
-    }
-END_POINT:
-    return ret;
-#endif
-
-}
-
-
-
-static BOOL __build_Ychannel_matrix(CImage &scaled_img, arMatrix_t *img_mat)
-{
-		BOOL ret;
-		int x,y;
-		AR_ASSERT(img_mat != NULL);
-		AR_ASSERT(scaled_img.GetWidth() == SCALED_IMAGE_SIZE && scaled_img.GetHeight() == SCALED_IMAGE_SIZE);
-		ret = TRUE;
-
-		if(AR_SetMatrixSize(img_mat, SCALED_IMAGE_SIZE, SCALED_IMAGE_SIZE) != AR_S_YES)
-		{
-				AR_printf(L"low mem : %hs\r\n", AR_FUNC_NAME);
-				ret = FALSE;
-				goto END_POINT;
-		}
-
-		for(x = 0; x < scaled_img.GetWidth(); ++x)
-		{
-				for(y = 0; y < scaled_img.GetHeight(); ++y)
-				{
-						const BYTE *pix_addr = (const BYTE*)scaled_img.GetPixelAddress(x,y);
-						AR_ASSERT(pix_addr != NULL);
-
-						double R,G,B;
-
-						R = (double)pix_addr[2];
-						G = (double)pix_addr[1];
-						B = (double)pix_addr[0];
-
-						double Y =   (R * 66  + G * 129  + B * 25 + 128) / 256.0 + 16.0;
-						double Cb =  (-R * 38 - G * 74 + B * 112 + 128) / 256.0 + 128.0;
-						double Cr =  (R * 112 - G * 94 - B * 18 + 128) / 256.0 + 128.0;
-
-						AR_SetMatrixValue(img_mat, (size_t)x, (size_t)y, Y);
-				}
-		}
-
-END_POINT:
-		return ret;
-}
-
-#endif
 
 
 static BOOL HashImage_DCT(CScreenImage &img, std::wstring &hex_str)
@@ -877,6 +787,8 @@ size_t phash_hamming_distance(const std::wstring &l, const std::wstring &r)
 }
 
 typedef std::map<std::wstring, std::wstring>	fhMap_t;
+
+
 
 
 static void GetSampleFiles(const std::wstring &path, fhMap_t &samples)
@@ -1165,6 +1077,8 @@ void hash_test5()
 		AR_printf(L"---------------------------------------\r\n");
 }
 
+
+
 static void hash_test6()
 {
 
@@ -1235,7 +1149,7 @@ static void hash_test6()
 				{
 						const record_t &rec = rec_vec[i];
 
-						if((AR_wcsistr(rec.l.c_str(), L"worm") != NULL || AR_wcsistr(rec.r.c_str(), L"worm") != NULL) && rec.diff < 100 )
+						if((AR_wcsistr(rec.l.c_str(), L"worm") != NULL || AR_wcsistr(rec.r.c_str(), L"worm") != NULL) && rec.diff < (HASH_SAMPLE_SIZE * HASH_SAMPLE_SIZE  ))
 						{
 								AR_printf(L"hash distance %ls vs %ls: %Iu\r\n", rec.l.c_str(), rec.r.c_str(), rec.diff);
 						}
@@ -1250,12 +1164,125 @@ static void hash_test6()
 
 
 
+CImg<float>* GetMHKernel(float alpha, float level)
+{
+		int sigma = (int)4*pow((float)alpha,(float)level);
+		static CImg<float> *pkernel = NULL;
+		float xpos, ypos, A;
+		if (!pkernel)
+		{
+				pkernel = new CImg<float>(2*sigma+1,2*sigma+1,1,1,0);
+				cimg_forXY(*pkernel,X,Y){
+						xpos = pow(alpha,-level)*(X-sigma);
+						ypos = pow(alpha,-level)*(Y-sigma);
+						A = xpos*xpos + ypos*ypos;
+						pkernel->atXY(X,Y) = (2-A)*exp(-A/2);
+				}
+		}
+		return pkernel;
+}
+
+unsigned __int8* ph_mh_imagehash(const char *filename, int &N,float alpha, float lvl, std::wstring &hash_str){
+		if (filename == NULL){
+				return NULL;
+		}
+		unsigned __int8 *hash = (unsigned char*)malloc(72*sizeof(unsigned __int8));
+		N = 72;
+		
+		CImg<unsigned __int8> src(filename);
+		CImg<unsigned __int8> img;
+
+		if (src.spectrum() == 3)
+		{
+				img = src.get_RGBtoYCbCr().channel(0).blur(1.0).resize(512,512,1,1,5).get_equalize(256);
+		} else{
+				img = src.channel(0).get_blur(1.0).resize(512,512,1,1,5).get_equalize(256);
+		}
+		src.clear();
+
+		CImg<float> *pkernel = GetMHKernel(alpha,lvl);
+		CImg<float> fresp =  img.get_correlate(*pkernel);
+		img.clear();
+		fresp.normalize(0,1.0);
+		CImg<float> blocks(31,31,1,1,0);
+		for (int rindex=0;rindex < 31;rindex++){
+				for (int cindex=0;cindex < 31;cindex++)
+				{
+						blocks(rindex,cindex) = fresp.get_crop(rindex*16,cindex*16,rindex*16+16-1,cindex*16+16-1).sum();
+				}
+		}
+
+
+		int hash_index;
+		int nb_ones = 0, nb_zeros = 0;
+		int bit_index = 0;
+		unsigned char hashbyte = 0;
+		for (int rindex=0;rindex < 31-2;rindex+=4)
+		{
+				CImg<float> subsec;
+				for (int cindex=0;cindex < 31-2;cindex+=4)
+				{
+						subsec = blocks.get_crop(cindex,rindex, cindex+2, rindex+2).unroll('x');
+						float ave = subsec.mean();
+						cimg_forX(subsec, I)
+						{
+								hashbyte <<= 1;
+								if (subsec(I) > ave){
+										hashbyte |= 0x01;
+										nb_ones++;
+										hash_str += L"1";
+								} else {
+										nb_zeros++;
+										hash_str += L"0";
+								}
+								bit_index++;
+								if ((bit_index%8) == 0){
+										hash_index = (int)(bit_index/8) - 1; 
+										hash[hash_index] = hashbyte;
+										hashbyte = 0x00;
+								}
+						}
+				}
+		}
+
+		return hash;
+}
+
+
+int ph_bitcount8(unsigned __int8 val)
+{
+		int num = 0;
+		while (val)
+		{
+				++num;
+				val &= val - 1;
+		}
+		return num;
+}
+
+
+
+
+static void hash_test7()
+{
+		int l,r;
+		std::wstring hash1, hash2;
+
+		unsigned __int8 *h1 = ph_mh_imagehash("C:\\Users\\solidus\\Desktop\\New folder\\attacked1.bmp", l, 1.0, 1.0, hash1);
+
+		unsigned __int8 *h2 = ph_mh_imagehash("C:\\Users\\solidus\\Desktop\\New folder\\worm10.bmp", r, 1.0, 1.0, hash2);
+
+		size_t diff = phash_hamming_distance(hash1, hash2);
+
+
+}
+
 void phash_test()
 {
 		//hash_test5();
 
 		//hash_test0();
-		hash_test1();
+		//hash_test1();
 
 		//hash_test2();
 		
@@ -1264,6 +1291,8 @@ void phash_test()
 		//hash_test4();
 
 		//hash_test6();
+
+		hash_test7();
 
 		getchar();
 }
