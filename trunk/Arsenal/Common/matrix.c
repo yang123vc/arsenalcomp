@@ -146,7 +146,7 @@ arStatus_t			AR_SetMatrixSize(arMatrix_t *mat, size_t rows, size_t cols)
 						return status;
 				}
 				
-				AR_memcpy(new_tmp, mat->m, AR_MIN(new_size, mat->nrows * mat->ncols));
+				AR_memcpy(new_tmp, mat->m, AR_MIN(new_size, mat->nrows * mat->ncols) * sizeof(double));
 				AR_DEL(mat->m);
 				
 				mat->nrows = rows;
