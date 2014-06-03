@@ -731,6 +731,8 @@ arStatus_t		AR_VecotrInverseTransform_DCT2(arVector_t *vec)
 				for(u = 0; u < n; u++)
 				{
 
+						double cos_tmp = 0.0;
+
 						if(u == 0)
 						{
 								a = a0;
@@ -739,7 +741,18 @@ arStatus_t		AR_VecotrInverseTransform_DCT2(arVector_t *vec)
 								a = a1;
 						}
 
-						total += a * tmp[u] * AR_cos_dbl((2 * x + 1) * u * AR_DBL_PI / (2 * n));
+
+						cos_tmp = AR_cos_dbl((2 * x + 1) * u * AR_DBL_PI / (2 * n));
+
+
+						if(AR_is_nan_dbl(cos_tmp))
+						{
+								status = AR_E_RANGE;
+								goto END_POINT;
+						}
+
+
+						total += a * tmp[u] * cos_tmp;
 				}
 
 				vec->v[x] = total;

@@ -13,6 +13,7 @@
 
 #include <string>
 #include <vector>
+#include <bitset>
 #include <map>
 #include <algorithm>
 
@@ -190,6 +191,8 @@ END_POINT:
 
 
 
+#if(0)
+
 static ar_int_t __cmp_dbl(const void *l, const void *r)
 {
 		double ld = *(const double*)l;
@@ -219,6 +222,21 @@ static double get_nth_elem(const std::vector<double> &vd, size_t nth)
 
 }
 
+#else
+
+static double get_nth_elem(const std::vector<double> &vd, size_t nth)
+{
+		AR_ASSERT(nth <= vd.size() && !vd.empty());
+
+        //因为稳定的输入N和调用频率，这种方式不会成为性能问题，所以没实现qsort_select一类算法。
+		std::vector<double> tmp = vd;
+        std::sort(tmp.begin(), tmp.end());     
+        return tmp[nth];
+}
+
+
+
+#endif
 
 #define HASH_SAMPLE_SIZE    16
 #define SCALED_IMAGE_SIZE   64     //dct变换仅支持方阵using namespace ATL;
@@ -726,15 +744,15 @@ static BOOL HashImage_DCT(CScreenImage &img, std::wstring &hex_str)
 				if(v > mid)
 				{
 						hash[i] = true;
-						hex_str += L"1";
+						//hex_str += L"1";
 				}else
 				{
 						hash[i] = false;
-						hex_str += L"0";
+						//hex_str += L"0";
 				}
 		}
 
-		//hex_str = __bitset_to_hex_string(hash);
+		hex_str = __bitset_to_hex_string(hash);
 
 END_POINT:
 
@@ -785,6 +803,27 @@ size_t phash_hamming_distance(const std::wstring &l, const std::wstring &r)
 
 		return count;
 }
+
+
+size_t phash_hamming_distance_vb(const std::vector<bool> &l, const std::vector<bool> &r)
+{
+		size_t count;
+
+		AR_ASSERT(l.size() == r.size());
+
+		count = 0;
+
+		for(size_t i = 0; i < l.size(); ++i)
+		{
+				if(l[i] != r[i])
+				{
+						count++;
+				}
+		}
+
+		return count;
+}
+
 
 typedef std::map<std::wstring, std::wstring>	fhMap_t;
 
@@ -1125,9 +1164,21 @@ static void hash_test6()
 				{
 						std::wstring l = hash_set[i];
 
+						
+						std::vector<bool>		lvb;
+
+						bool is_ok = __hex_string_to_bitset(l, HASH_SAMPLE_SIZE * HASH_SAMPLE_SIZE, lvb);
+						AR_ASSERT(is_ok);
+
 						for(size_t k = i + 1; k < hash_set.size(); ++k)
 						{
-								size_t diff = phash_hamming_distance(l, hash_set[k]);
+								std::vector<bool>		rvb;
+								is_ok = __hex_string_to_bitset(hash_set[k], HASH_SAMPLE_SIZE * HASH_SAMPLE_SIZE, rvb);
+								AR_ASSERT(is_ok);
+
+								//size_t diff = phash_hamming_distance(l, hash_set[k]);
+								
+								size_t diff = phash_hamming_distance_vb(lvb, rvb);
 
 								record_t rec;
 
@@ -1149,9 +1200,12 @@ static void hash_test6()
 				{
 						const record_t &rec = rec_vec[i];
 
-						if((AR_wcsistr(rec.l.c_str(), L"worm") != NULL || AR_wcsistr(rec.r.c_str(), L"worm") != NULL) && rec.diff < (HASH_SAMPLE_SIZE * HASH_SAMPLE_SIZE  ))
+						if((AR_wcsistr(rec.l.c_str(), L"worm") != NULL || AR_wcsistr(rec.r.c_str(), L"worm") != NULL) && rec.diff < (HASH_SAMPLE_SIZE * HASH_SAMPLE_SIZE))
 						{
-								AR_printf(L"hash distance %ls vs %ls: %Iu\r\n", rec.l.c_str(), rec.r.c_str(), rec.diff);
+								if(AR_wcsistr(rec.l.c_str(), L"worm12") != NULL || AR_wcsistr(rec.r.c_str(), L"worm12") != NULL)
+								{
+										AR_printf(L"hash distance %ls vs %ls: %Iu\r\n", rec.l.c_str(), rec.r.c_str(), rec.diff);
+								}
 						}
 
 				}
