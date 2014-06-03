@@ -1202,7 +1202,7 @@ static void hash_test6()
 
 						if((AR_wcsistr(rec.l.c_str(), L"worm") != NULL || AR_wcsistr(rec.r.c_str(), L"worm") != NULL) && rec.diff < (HASH_SAMPLE_SIZE * HASH_SAMPLE_SIZE))
 						{
-								if(AR_wcsistr(rec.l.c_str(), L"worm12") != NULL || AR_wcsistr(rec.r.c_str(), L"worm12") != NULL)
+								if(AR_wcsistr(rec.l.c_str(), L"worm13") != NULL || AR_wcsistr(rec.r.c_str(), L"worm13") != NULL)
 								{
 										AR_printf(L"hash distance %ls vs %ls: %Iu\r\n", rec.l.c_str(), rec.r.c_str(), rec.diff);
 								}
