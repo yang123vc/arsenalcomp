@@ -1964,6 +1964,53 @@ INVALID_POINT:
 
 
 
+
+
+void lex_test_skip_line_test2()
+{
+		const wchar_t *s = L"a\r\nb\n\rc\rd\ne\r\r\nf";
+		//const wchar_t *s = L"a\r\n\r\nf";
+		
+
+		lexMatch_t match;
+
+		AR_memset(&match, 0, sizeof(match));
+
+
+		match.next = s;
+		match.input = s;
+
+		Lex_SkipTo(&match, L"\nf");
+
+		Lex_SkipTo(&match, L"f");
+		
+
+
+
+
+
+		s = L"a     b\r\nc\r\n";
+		AR_memset(&match, 0, sizeof(match));
+		match.next = s;
+		match.input = s;
+
+		Lex_Skip(&match);
+
+
+		AR_printf(L"%ls\r\n", match.next);
+		
+		Lex_Skip(&match);
+
+
+		getchar();
+
+}
+
+
+
+
+
+
 void lex_test()
 {
 		//rgx_test_loop();
@@ -1993,8 +2040,9 @@ void lex_test()
 
 		//lex_perf_test1();
 		//lex_perf_test2();
-		lex_perf_test3();
+		//lex_perf_test3();
 		//lex_line_test9();
+		lex_test_skip_line_test2();
 
 		
 }

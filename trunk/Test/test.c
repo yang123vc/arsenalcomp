@@ -127,7 +127,7 @@ void AR_Test()
 		//misc_test();
 		//trie_tree_test();
 		//expr_test();
-		//lex_test();
+		lex_test();
 		
 		//lr_dfa_test();
 		//action_tbl_test();
@@ -216,7 +216,7 @@ void AR_Test()
 
 		//Json_Test();
 
-		phash_test();
+		//phash_test();
 
 		//lex_perf_test();
 
