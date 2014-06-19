@@ -494,38 +494,25 @@ void	Lex_ClearError(lexMatch_t *match)
 
 void	Lex_Skip(lexMatch_t *pmatch)
 {
+		const wchar_t *p;
+		size_t nchars;
 		AR_ASSERT(pmatch != NULL && pmatch->next != NULL);
 
-		
-		while(*pmatch->next && !AR_iswspace(*pmatch->next))
+		p = pmatch->next;
+
+		while(*p && !AR_iswspace(*p))
 		{
-				pmatch->next++;
-				pmatch->col++;
+				++p;
 		}
 
-
-		while(*pmatch->next && AR_iswspace(*pmatch->next))
+		while(*p && AR_iswspace(*p))
 		{
-				if(Lex_IsLineTerminator(*pmatch->next))
-				{
-						wchar_t next_c;
-						
-						pmatch->line++;
-						pmatch->col = 0;
-						
-						next_c = *(pmatch->next + 1);
-						if(*pmatch->next == AR_LEX_CR && next_c == AR_LEX_LF)
-						{
-								pmatch->next++;
-						}
-
-						pmatch->next_action &= ~RGX_ACT_INCLINE;
-				}else
-				{
-						pmatch->col++;
-				}
-				pmatch->next++;
+				++p;
 		}
+
+		nchars = p - pmatch->next;
+
+		Lex_SkipN(pmatch, nchars);
 }
 
 
@@ -536,57 +523,15 @@ void			Lex_SkipTo(lexMatch_t *pmatch, const wchar_t *tok)
 		const wchar_t *next;
 		AR_ASSERT(pmatch != NULL && pmatch->next != NULL);
 		next = AR_wcsstr(pmatch->next, tok);
-
+		size_t nchars;
 		if(next == NULL)
 		{
-				while(*pmatch->next != L'\0')
-				{
-						if(Lex_IsLineTerminator(*pmatch->next))
-						{
-								wchar_t next_c;
-								pmatch->line++;
-								pmatch->col = 0;
-								
-								next_c = *(pmatch->next + 1);
-								if(*pmatch->next == AR_LEX_CR && next_c == AR_LEX_LF)
-								{
-										pmatch->next++;
-								}
-
-								pmatch->next_action &= ~RGX_ACT_INCLINE;
-						}else
-						{
-								pmatch->col++;
-						}
-						pmatch->next++;
-				}
-		}else
-		{
-				while(pmatch->next != next)
-				{
-						if(Lex_IsLineTerminator(*pmatch->next))
-						{
-								wchar_t next_c;
-								pmatch->line++;
-								pmatch->col = 0;
-							
-								next_c = *(pmatch->next + 1);
-								if(*pmatch->next == AR_LEX_CR && next_c == AR_LEX_LF)
-								{
-										pmatch->next++;
-								}
-
-								pmatch->next_action &= ~RGX_ACT_INCLINE;
-						}else
-						{
-								pmatch->col++;
-						}
-
-						pmatch->next++;
-				}
+				next = pmatch->next + AR_wcslen(pmatch->next);
 		}
 
-		
+		nchars = next - pmatch->next;
+
+		Lex_SkipN(pmatch, nchars);
 }
 
 arStatus_t		Lex_TrySkipTo(lexMatch_t *pmatch, const wchar_t *tok)
@@ -616,18 +561,20 @@ void			Lex_SkipN(lexMatch_t *pmatch, size_t nchar)
 		{
 				if(Lex_IsLineTerminator(*pmatch->next))
 				{
-						wchar_t next_c;
-						pmatch->line++;
-						pmatch->col = 0;
 
+						wchar_t next_c;
 						next_c = *(pmatch->next + 1);
 
 						if(*pmatch->next == AR_LEX_CR && next_c == AR_LEX_LF)
 						{
-								pmatch->next++;
+								pmatch->next_action |= RGX_ACT_INCLINE;
+								pmatch->col++;
+						}else
+						{
+								pmatch->line++;
+								pmatch->col = 0;
+								pmatch->next_action &= ~RGX_ACT_INCLINE;
 						}
-
-						pmatch->next_action &= ~RGX_ACT_INCLINE;
 				}else
 				{
 						pmatch->col++;
