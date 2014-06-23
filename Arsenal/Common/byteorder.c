@@ -142,4 +142,54 @@ ar_uint_64_t		AR_BYTEFLIP_U64(ar_uint_64_t val)
 
 
 
+void			AR_BYTEFLIP_16B(ar_byte_t *b)
+{
+		ar_byte_t t;
+		AR_ASSERT(b != NULL);
+		t = b[0];
+		b[0] = b[1];
+		b[1] = t;
+		
+}
+
+void			AR_BYTEFLIP_32B(ar_byte_t *b)
+{
+		ar_byte_t t;
+		AR_ASSERT(b != NULL);
+
+		t = b[0];
+		b[0] = b[3];
+		b[3] = t;
+
+		t = b[1];
+		b[1] = b[2];
+		b[2] = t;
+}
+
+void			AR_BYTEFLIP_64B(ar_byte_t *b)
+{
+		ar_byte_t t;
+		AR_ASSERT(b != NULL);
+
+		t = b[0];
+		b[0] = b[7];
+		b[7] = t;
+
+
+		t = b[1];
+		b[1] = b[6];
+		b[6] = t;
+
+
+		t = b[2];
+		b[2] = b[5];
+		b[5] = t;
+
+
+		t = b[3];
+		b[3] = b[4];
+		b[4] = t;
+
+}
+
 AR_NAMESPACE_END

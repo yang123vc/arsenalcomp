@@ -307,16 +307,20 @@ void	AR_memswap(void *a, void *b, size_t n);
 
 
 ar_int_16_t		AR_BYTEFLIP_16(ar_int_16_t val);
-ar_uint_16_t		AR_BYTEFLIP_U16(ar_uint_16_t val);
+ar_uint_16_t	AR_BYTEFLIP_U16(ar_uint_16_t val);
 
 
 ar_int_32_t		AR_BYTEFLIP_32(ar_int_32_t val);
-ar_uint_32_t		AR_BYTEFLIP_U32(ar_uint_32_t val);
+ar_uint_32_t	AR_BYTEFLIP_U32(ar_uint_32_t val);
 
 
 ar_int_64_t		AR_BYTEFLIP_64(ar_int_64_t val);
-ar_uint_64_t		AR_BYTEFLIP_U64(ar_uint_64_t val);
+ar_uint_64_t	AR_BYTEFLIP_U64(ar_uint_64_t val);
 
+
+void			AR_BYTEFLIP_16B(ar_byte_t *b);
+void			AR_BYTEFLIP_32B(ar_byte_t *b);
+void			AR_BYTEFLIP_64B(ar_byte_t *b);
 
 
 #if defined(ARCH_LITTLE_ENDIAN)
@@ -328,12 +332,21 @@ ar_uint_64_t		AR_BYTEFLIP_U64(ar_uint_64_t val);
 		#define AR_LTON_U32(_n)			AR_BYTEFLIP_U32((_n))
 		#define AR_LTON_U64(_n)			AR_BYTEFLIP_U64((_n))
 
+		#define AR_LTON_16B(_n)			AR_BYTEFLIP_16B((_n))
+		#define AR_LTON_32B(_n)			AR_BYTEFLIP_32B((_n))
+		#define AR_LTON_64B(_n)			AR_BYTEFLIP_64B((_n))
+
 		#define AR_NTOL_16(_n)			AR_BYTEFLIP_16((_n))
 		#define AR_NTOL_32(_n)			AR_BYTEFLIP_32((_n))
 		#define AR_NTOL_64(_n)			AR_BYTEFLIP_64((_n))
 		#define AR_NTOL_U16(_n)			AR_BYTEFLIP_U16((_n))
 		#define AR_NTOL_U32(_n)			AR_BYTEFLIP_U32((_n))
 		#define AR_NTOL_U64(_n)			AR_BYTEFLIP_U64((_n))
+
+		#define AR_NTOL_16B(_n)			AR_BYTEFLIP_16B((_n))
+		#define AR_NTOL_32B(_n)			AR_BYTEFLIP_32B((_n))
+		#define AR_NTOL_64B(_n)			AR_BYTEFLIP_64B((_n))
+		
 
 #else
 
@@ -344,6 +357,11 @@ ar_uint_64_t		AR_BYTEFLIP_U64(ar_uint_64_t val);
 		#define AR_LTON_U32(_n)			(_n)
 		#define AR_LTON_U64(_n)			(_n)
 
+		#define AR_LTON_16B(_n)			(_n)
+		#define AR_LTON_32B(_n)			(_n)
+		#define AR_LTON_64B(_n)			(_n)
+		
+
 		#define AR_NTOL_16(_n)			(_n)
 		#define AR_NTOL_32(_n)			(_n)
 		#define AR_NTOL_64(_n)			(_n)
@@ -351,6 +369,9 @@ ar_uint_64_t		AR_BYTEFLIP_U64(ar_uint_64_t val);
 		#define AR_NTOL_U32(_n)			(_n)
 		#define AR_NTOL_U64(_n)			(_n)
 
+		#define AR_NTOL_16B(_n)			(_n)
+		#define AR_NTOL_32B(_n)			(_n)
+		#define AR_NTOL_64B(_n)			(_n)
 
 #endif
 
