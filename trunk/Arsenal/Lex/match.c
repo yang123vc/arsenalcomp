@@ -521,9 +521,10 @@ void	Lex_Skip(lexMatch_t *pmatch)
 void			Lex_SkipTo(lexMatch_t *pmatch, const wchar_t *tok)
 {
 		const wchar_t *next;
+		size_t nchars;
 		AR_ASSERT(pmatch != NULL && pmatch->next != NULL);
 		next = AR_wcsstr(pmatch->next, tok);
-		size_t nchars;
+		
 		if(next == NULL)
 		{
 				next = pmatch->next + AR_wcslen(pmatch->next);
