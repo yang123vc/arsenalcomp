@@ -506,6 +506,28 @@ END_POINT:
 }
 
 
+
+arStatus_t	AR_PeekFromAsyncQueue(arAsyncQueue_t *queue, void **pdata)
+{
+		AR_ASSERT(queue != NULL && pdata != NULL);
+
+		if(AR_AsyncQueueIsEmpty(queue) == AR_S_YES)
+		{
+				return AR_E_NOTREADY;
+		}
+		AR_LockSpinLock(&queue->mutex);
+
+		AR_ASSERT(queue->wait_cnt == 0);
+		AR_ASSERT(queue->data_cnt > 0);
+
+		*pdata = queue->data_head->data;
+
+		AR_UnLockSpinLock(&queue->mutex);
+
+		return AR_S_YES;
+
+}
+
 #if(0)
 
 arStatus_t	AR_PutToAsyncQueue(arAsyncQueue_t *queue, void *data)

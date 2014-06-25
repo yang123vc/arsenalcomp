@@ -176,7 +176,7 @@ AR_AsyncQueueIsEmpty
 AR_HasIdleThreadInAsyncQueue
 AR_GetAsyncQueueWaitCount
 AR_GetAsyncQueueDataCount
-
+AR_PeekFromAsyncQueue
 
 
 AR_str_to_wcs_buf
