@@ -1319,7 +1319,7 @@ size_t		AR_GetAsyncQueueWaitCount(const arAsyncQueue_t *queue);
 size_t		AR_GetAsyncQueueDataCount(const arAsyncQueue_t *queue);
 
 
-
+arStatus_t	AR_PeekFromAsyncQueue(arAsyncQueue_t *queue, void **pdata); /*this function can only be used in single consumer model*/
 
 
 
