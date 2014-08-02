@@ -357,73 +357,95 @@ arStatus_t	AR_GetFromAsyncQueueWithTimeout(arAsyncQueue_t *queue, void **pdata, 
 		}else
 		{
 
-				arEvent_t		*event;
-				asyncWaitInfo_t	info;
-
-				event = NULL;
-				event = AR_CreateEvent(false);
-				if(event == NULL)
+				if(millisecond > 0)
 				{
-						res = AR_E_SYS;
-						AR_UnLockSpinLock(&queue->mutex);
-						goto END_POINT;
-				}
+						arEvent_t		*event;
+						asyncWaitInfo_t	info;
 
-				
-				info.event = event;
-				info.data = NULL;
-
-				res = __push_wait(queue, &info);
-
-				if(res != AR_S_YES)
-				{
-						AR_UnLockSpinLock(&queue->mutex);
-						goto END_POINT;
-				}
-
-				AR_UnLockSpinLock(&queue->mutex);
-				
-				res = AR_WaitEventWithTimeout(event, millisecond);
-				
-				if(res == AR_S_YES)
-				{
-						*pdata = info.data;
-						res = AR_S_YES;
-				}else if(res == AR_E_TIMEOUT)
-				{
-						AR_LockSpinLock(&queue->mutex);
-						/*
-						如果__remove_wait_node不成功，则证明在在本函数AR_WaitEventTimeout超时之后，
-						AR_LockSpinLock(&queue->mutex);之前，有AR_PutToAsyncQueue获得锁且将info.data
-						赋值
-						*/
-						if(__remove_wait_node(queue, &info))
+						event = NULL;
+						event = AR_CreateEvent(false);
+						if(event == NULL)
 						{
-								res = AR_E_TIMEOUT;
+								res = AR_E_SYS;
+								AR_UnLockSpinLock(&queue->mutex);
+								goto END_POINT;
+						}
+
+
+						info.event = event;
+						info.data = NULL;
+
+						res = __push_wait(queue, &info);
+
+						if(res != AR_S_YES)
+						{
+								AR_UnLockSpinLock(&queue->mutex);
+								goto END_POINT;
+						}
+
+						AR_UnLockSpinLock(&queue->mutex);
+
+						res = AR_WaitEventWithTimeout(event, millisecond);
+
+						if(res == AR_S_YES)
+						{
+								*pdata = info.data;
+								res = AR_S_YES;
+						}else if(res == AR_E_TIMEOUT)
+						{
+								AR_LockSpinLock(&queue->mutex);
+								/*
+								如果__remove_wait_node不成功，则证明在在本函数AR_WaitEventTimeout超时之后，
+								AR_LockSpinLock(&queue->mutex);之前，有AR_PutToAsyncQueue获得锁且将info.data
+								赋值
+								*/
+								if(__remove_wait_node(queue, &info))
+								{
+										res = AR_E_TIMEOUT;
+								}else
+								{
+										res = AR_S_YES;
+										*pdata = info.data;
+								}
+								AR_UnLockSpinLock(&queue->mutex);
 						}else
 						{
-								res = AR_S_YES;
-								*pdata = info.data;
+								/*如果不幸执行到此，最大的可能应该是setevent失败了，那么也许应该终止，这里不考虑此情况，继续试图删除掉已注册的waitinfo*/
+
+								AR_LockSpinLock(&queue->mutex);
+
+								__remove_wait_node(queue, &info);
+
+								AR_UnLockSpinLock(&queue->mutex);
+
+								goto END_POINT;
 						}
-						AR_UnLockSpinLock(&queue->mutex);
-				}else
-				{
-						/*如果不幸执行到此，最大的可能应该是setevent失败了，那么也许应该终止，这里不考虑此情况，继续试图删除掉已注册的waitinfo*/
-						
-						AR_LockSpinLock(&queue->mutex);
-
-						__remove_wait_node(queue, &info);
-
-						AR_UnLockSpinLock(&queue->mutex);
-
-						goto END_POINT;
-				}
 
 END_POINT:
-				if(event != NULL)
+						if(event != NULL)
+						{
+								AR_DestroyEvent(event);
+								event = NULL;
+						}
+				}else
 				{
-						AR_DestroyEvent(event);
-						event = NULL;
+						AR_UnLockSpinLock(&queue->mutex);
+
+						AR_Sleep(0);
+
+						AR_LockSpinLock(&queue->mutex);
+
+						if(queue->data_cnt > 0)
+						{
+								*pdata = __pop_data(queue);
+								res = AR_S_YES;
+
+						}else
+						{
+								res = AR_E_TIMEOUT;
+						}
+
+						AR_UnLockSpinLock(&queue->mutex);
 				}
 
 
