@@ -160,7 +160,7 @@ void	AR_check(ar_bool_t cond, const wchar_t *fmt, ...);
 #define AR_CMP(_a,_b) ((_a) < (_b) ? -1 : ((_a) == (_b) ? 0 : 1))
 /*行主映射*/
 #define AR_TBL_IDX_R(_x, _y, _col_n) ((_x) * (_col_n) + (_y))
-
+#define AR_TBL_IDX_C(_x, _y, _row_n) ((_x) + (_y) * (_row_n))
 
 #define AR_NELEMS(_arr)	(sizeof((_arr))/sizeof((_arr)[0]))
 
