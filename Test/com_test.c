@@ -4563,6 +4563,40 @@ static void ticks_test()
 }
 
 
+static void mat_test()
+{
+		double mat[20];
+		AR_memset(mat, 0, sizeof(mat));
+
+		size_t idx = AR_TBL_IDX_C(0,0,4);
+		mat[idx] = 1.0;
+
+		idx = AR_TBL_IDX_C(1,1,4);
+		mat[idx] = 1.0;
+
+		idx = AR_TBL_IDX_C(2,2,4);
+		mat[idx] = 1.0;
+
+		idx = AR_TBL_IDX_C(3,3,4);
+		mat[idx] = 1.0;
+		
+
+		for(size_t i = 0; i < 4; ++i)
+		{
+				for(size_t k = 0; k < 5; ++k)
+				{
+						AR_printf(L"%g ", mat[AR_TBL_IDX_C(i,k,4)]);
+				}
+
+				AR_printf(L"\r\n");
+		}
+
+		AR_printf(L"\r\n");
+
+		getchar();
+}
+
+
 void com_test()
 {
 		
@@ -4706,7 +4740,9 @@ void com_test()
 
 		//select_test2();
 
-		ticks_test();
+		//ticks_test();
+
+		mat_test();
 }
 
 
