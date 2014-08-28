@@ -95,7 +95,14 @@
 #endif
 
 
-#if defined(__cplusplus) && !defined(__STDC_VERSION__)
+#if defined(__cplusplus)
+
+		#define AR_CPLUSPLUS_MODE	1
+
+#endif
+
+
+#if defined(AR_CPLUSPLUS_MODE) && !defined(__STDC_VERSION__)
 
 		#define __STDC_VERSION__  0
 #endif
@@ -107,7 +114,7 @@
 #endif
 
 
-#if defined(__cplusplus) || defined(AR_HAS_C99_FEATURE)
+#if defined(AR_CPLUSPLUS_MODE) || defined(AR_HAS_C99_FEATURE)
 		#define AR_HAS_INLINE	1
 #endif
 
@@ -130,7 +137,7 @@
 
 
 
-#if defined(__cplusplus)
+#if defined(AR_CPLUSPLUS_MODE)
 
 		#define AR_NAMESPACE_BEGIN		namespace ARSpace { extern "C" {
 		#define AR_NAMESPACE_END		} }
@@ -271,7 +278,7 @@
     #define AR_HAS_STDINT
 #endif
 
-#if defined(__bool_true_false_are_defined) || defined(__cplusplus)
+#if defined(__bool_true_false_are_defined) || defined(AR_CPLUSPLUS_MODE)
 		#define AR_HAS_BOOL_TRUE_FALSE
 #endif
 
