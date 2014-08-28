@@ -34,6 +34,7 @@ AR_wcstrim_space
 AR_wcstrim_s
 AR_wcstrim_space_s
 AR_wcsndup
+AR_memswap
 
 AR_Version
 
