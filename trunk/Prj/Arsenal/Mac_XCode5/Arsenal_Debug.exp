@@ -1,3 +1,4 @@
+_AR_TryLockSpinLock
 _AR_AddMatrixByMatrix
 _AR_AddMatrixByMatrixSelf
 _AR_AddVectorByVector
@@ -10,6 +11,7 @@ _AR_AppendString
 _AR_AppendStringN
 _AR_AppendVFormatString
 _AR_AsyncQueueIsEmpty
+_AR_PeekFromAsyncQueue
 _AR_AtomicDec
 _AR_AtomicInc
 _AR_BYTEFLIP_16

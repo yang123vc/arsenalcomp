@@ -1,3 +1,11 @@
+_AR_make_heap
+_AR_pop_heap
+_AR_push_heap
+_AR_sort_heap
+_AR_remove_heap
+
+_AR_TryLockSpinLock
+_AR_PeekFromAsyncQueue
 _AR_AddMatrixByMatrix
 _AR_AddMatrixByMatrixSelf
 _AR_AddVectorByVector
