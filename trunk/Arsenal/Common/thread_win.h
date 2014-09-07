@@ -477,41 +477,32 @@ arStatus_t		AR_GetThreadPriority(arThread_t *thd, arThreadPrio_t *p_prio)
 
 
 /************************************************************Ticks*********************************/
-
-//static LARGE_INTEGER __g_hires_start_ticks;
-//static LARGE_INTEGER __g_hires_ticks_per_second;
+static LARGE_INTEGER __g_hires_start_ticks;
+static LARGE_INTEGER __g_hires_ticks_per_second;
 
 static void __init_ticks()
 {
-		//QueryPerformanceFrequency(&__g_hires_ticks_per_second);
-		//QueryPerformanceCounter(&__g_hires_start_ticks);
+		QueryPerformanceFrequency(&__g_hires_ticks_per_second);
+		QueryPerformanceCounter(&__g_hires_start_ticks);
 }
 
 static void __uninit_ticks()
 {
-		//AR_memset(&__g_hires_ticks_per_second, 0, sizeof(__g_hires_ticks_per_second));
-		//AR_memset(&__g_hires_start_ticks, 0, sizeof(__g_hires_start_ticks));
+		AR_memset(&__g_hires_ticks_per_second, 0, sizeof(__g_hires_ticks_per_second));
+		AR_memset(&__g_hires_start_ticks, 0, sizeof(__g_hires_start_ticks));
 
 }
 
 ar_int_64_t	AR_GetTime_TickCount()
 {
-
 		LARGE_INTEGER hires_now;
-		LARGE_INTEGER ticks_per_second;
-		QueryPerformanceFrequency(&ticks_per_second);
 		QueryPerformanceCounter(&hires_now);
-		
-		//QueryPerformanceCounter(&__g_hires_start_ticks);
 
-        hires_now.QuadPart -= ticks_per_second.QuadPart;
+        hires_now.QuadPart -= __g_hires_start_ticks.QuadPart;
         hires_now.QuadPart *= 1000;
-        hires_now.QuadPart /= ticks_per_second.QuadPart;
+        hires_now.QuadPart /= __g_hires_ticks_per_second.QuadPart;
 
         return (ar_int_64_t)hires_now.QuadPart;
-
-
-		//return AR_GetTime_Milliseconds();
 }
 
 
