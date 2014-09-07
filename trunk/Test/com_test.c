@@ -6,6 +6,8 @@
 #include <time.h>
 #include <vector>
 #include <algorithm>
+#include <process.h>
+
 #include "Base64Transcoder.h"
 
 #include "lfu_cache.h"
@@ -4551,13 +4553,25 @@ static void buf_test1()
 
 static void ticks_test()
 {
-		ar_int_64_t beg = AR_GetTime_TickCount();
+		
+		::SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);
 
-		AR_Sleep(1000);
+		while(true)
+		{
+				ar_int_64_t beg = AR_GetTime_TickCount();
 
-		ar_int_64_t end = AR_GetTime_TickCount();
+				ar_int_32_t sleep_val = AR_rand32() % 20;
+				AR_Sleep(sleep_val);
 
-		AR_printf(L"elpased tickcounts : %qd\r\n", end - beg);
+				ar_int_64_t end = AR_GetTime_TickCount();
+
+				ar_int_64_t perf_cnt = end - beg;
+
+				if(abs(perf_cnt - sleep_val) > 5)
+				{
+						AR_printf(L"elpased tickcounts : %qd, sleep val : %d\r\n", perf_cnt, sleep_val);
+				}
+		}
 
 		getchar();
 }
@@ -4740,9 +4754,9 @@ void com_test()
 
 		//select_test2();
 
-		//ticks_test();
+		ticks_test();
 
-		mat_test();
+		//mat_test();
 }
 
 
