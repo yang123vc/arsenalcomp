@@ -15,7 +15,7 @@ AR_NAMESPACE_BEGIN
 jsonObj_t* parse_json_escape_string(const wchar_t *lexer_str, size_t count);
 
 
-
+#if(0)
 void json_test1()
 {
 		jsonObj_t *json_str, *json_str2;
@@ -36,7 +36,7 @@ void json_test1()
 		Json_DestroyObject(json_str);
 		json_str = NULL;
 }
-
+#endif
 
 void json_test2()
 {
