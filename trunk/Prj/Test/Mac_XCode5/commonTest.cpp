@@ -2428,16 +2428,33 @@ static void mem_test1()
 }
         
         
-static void tick_test()
+static void ticks_test()
 {
-        ar_int_64_t beg, end;
         
-        beg = AR_GetTime_TickCount();
-        AR_Sleep(1000);
-        end = AR_GetTime_TickCount();
+        //::SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);
         
-        AR_printf(L"elapsed milliseconds : %qd\r\n", end - beg);
+        while(true)
+        {
+                ar_int_64_t beg = AR_GetTime_TickCount();
+                
+                ar_int_32_t sleep_val = AR_rand32() % 20;
+                AR_Sleep(sleep_val);
+                
+                ar_int_64_t end = AR_GetTime_TickCount();
+                
+                ar_int_64_t perf_cnt = end - beg;
+                
+                if(abs(perf_cnt - sleep_val) > 1)
+                {
+                        AR_printf(L"elpased tickcounts : %qd, sleep val : %d\r\n", perf_cnt, sleep_val);
+                }
+        }
+        
+        getchar();
 }
+        
+        
+
 
 void common_test()
 {
@@ -2469,7 +2486,7 @@ void common_test()
         
         //mem_test1();
         
-        tick_test();
+        ticks_test();
         
 }
         

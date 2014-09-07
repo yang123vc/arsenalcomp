@@ -901,5 +901,8 @@ _PList_LoadBinaryFromFile
 #_AR_calloc
 
 
-
+_Json_DestroyObject
+_Json_GetWcsFromObject
+_Json_LoadObjectFromFile
+_Json_SaveObjectToFile
 
