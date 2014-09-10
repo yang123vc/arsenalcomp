@@ -1524,8 +1524,8 @@ void text_test_load_save()
 {
 
 //#define INPUT_FILE		L"..\\..\\..\\misc\\txt_enc_test\\empty_ascii.txt"
-#define INPUT_FILE		L"D:\\Code\\Solidus\\Compiler\\Arsenal\\misc\\txt_enc_test\\utf8_read_test.txt"
-#define OUTPUT_FILE		L"E:\\test.txt"
+#define INPUT_FILE		L"C:\\Users\\solidus\\Desktop\\1.utf8.chs.srt"
+#define OUTPUT_FILE		L"C:\\Users\\solidus\\Desktop\\out.utf8.chs.srt"
 #define OUTPUT_TYPE		AR_TXT_BOM_UTF_8
 
 		arString_t *str = AR_CreateString();
@@ -4704,7 +4704,7 @@ void com_test()
 		
 		//escstr_test2();
 		
-		//text_test_load_save();
+		text_test_load_save();
 
 		//rand_test();
 		
@@ -4754,7 +4754,7 @@ void com_test()
 
 		//select_test2();
 
-		ticks_test();
+		//ticks_test();
 
 		//mat_test();
 }
