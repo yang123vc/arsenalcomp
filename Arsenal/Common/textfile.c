@@ -336,6 +336,102 @@ static txtReadStatus_t		__read_wchar(arBuffer_t *input, arTxtBom_t enc, wchar_t 
 		return TXT_READ_OK;
 }
 
+/******************************************util**************************************/
+
+static ar_bool_t __is_utf8(const ar_byte_t * string, size_t len)
+{
+		const ar_byte_t *bytes, *end;
+		if(string == NULL || len == 0)
+		{
+				return false;
+		}
+
+		bytes = string;
+		end = string + len;
+
+		while(bytes < end)
+		{
+				if(*bytes == 0)
+				{
+						bytes += 1;
+						continue;
+				}
+
+				if( (// ASCII
+						// use bytes[0] <= 0x7F to allow ASCII control characters
+						bytes[0] == 0x09 ||
+						bytes[0] == 0x0A ||
+						bytes[0] == 0x0D ||
+						(0x20 <= bytes[0] && bytes[0] <= 0x7E)
+						)
+						) 
+				{
+						bytes += 1;
+						continue;
+				}
+
+				if( (// non-overlong 2-byte
+						(0xC2 <= bytes[0] && bytes[0] <= 0xDF) &&
+						(0x80 <= bytes[1] && bytes[1] <= 0xBF)
+						)
+						) 
+				{
+								bytes += 2;
+								continue;
+				}
+
+				if( (// excluding overlongs
+						bytes[0] == 0xE0 &&
+						(0xA0 <= bytes[1] && bytes[1] <= 0xBF) &&
+						(0x80 <= bytes[2] && bytes[2] <= 0xBF)
+						) ||
+						(// straight 3-byte
+						((0xE1 <= bytes[0] && bytes[0] <= 0xEC) ||
+						bytes[0] == 0xEE ||
+						bytes[0] == 0xEF) &&
+						(0x80 <= bytes[1] && bytes[1] <= 0xBF) &&
+						(0x80 <= bytes[2] && bytes[2] <= 0xBF)
+						) ||
+						(// excluding surrogates
+						bytes[0] == 0xED &&
+						(0x80 <= bytes[1] && bytes[1] <= 0x9F) &&
+						(0x80 <= bytes[2] && bytes[2] <= 0xBF)
+						)
+						) 
+				{
+								bytes += 3;
+								continue;
+				}
+
+				if( (// planes 1-3
+						bytes[0] == 0xF0 &&
+						(0x90 <= bytes[1] && bytes[1] <= 0xBF) &&
+						(0x80 <= bytes[2] && bytes[2] <= 0xBF) &&
+						(0x80 <= bytes[3] && bytes[3] <= 0xBF)
+						) ||
+						(// planes 4-15
+						(0xF1 <= bytes[0] && bytes[0] <= 0xF3) &&
+						(0x80 <= bytes[1] && bytes[1] <= 0xBF) &&
+						(0x80 <= bytes[2] && bytes[2] <= 0xBF) &&
+						(0x80 <= bytes[3] && bytes[3] <= 0xBF)
+						) ||
+						(// plane 16
+						bytes[0] == 0xF4 &&
+						(0x80 <= bytes[1] && bytes[1] <= 0x8F) &&
+						(0x80 <= bytes[2] && bytes[2] <= 0xBF) &&
+						(0x80 <= bytes[3] && bytes[3] <= 0xBF)
+						)
+						) 
+				{
+								bytes += 4;
+								continue;
+				}
+
+				return false;
+		}
+
+		return true;
+}
 
 
 arStatus_t	AR_LoadBomTextFromBinaryWithCodePage(arBuffer_t *input, arTxtBom_t *bom, arString_t *out, arCodePage_t code_page)
@@ -381,9 +477,22 @@ arStatus_t	AR_LoadBomTextFromBinaryWithCodePage(arBuffer_t *input, arTxtBom_t *b
 
 				if(str == NULL)
 				{
+						if(__is_utf8(AR_GetBufferData(input),AR_GetBufferAvailable(input)))
+						{
+								str = AR_str_to_wcs(AR_CP_UTF8, (const char*)AR_GetBufferData(input), AR_GetBufferAvailable(input));
+						}
+				}
+
+				if(str == NULL)
+				{
 						size_t cp;
+
 						for(cp = AR_CP_ACP; cp < AR_CP_MAX; ++cp)
 						{
+								if(AR_CP_ACP == AR_CP_UTF8) /*前面已经判断过了，不是utf8*/
+								{
+										continue;
+								}
 
 								str = AR_str_to_wcs((arCodePage_t)cp, (const char*)AR_GetBufferData(input), AR_GetBufferAvailable(input));
 								if(str != NULL)
