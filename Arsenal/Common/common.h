@@ -1144,12 +1144,13 @@ arStatus_t		AR_SetURIQueryItems(arURI_t *uri, const arHash_t *hash);
 
 typedef enum
 {
-		AR_TXT_BOM_NONE		=		0x01,
-		AR_TXT_BOM_UTF16_BE		=		0x02,
-		AR_TXT_BOM_UTF16_LE		=		0x04,
-		AR_TXT_BOM_UTF_8		=		0x08,
-		AR_TXT_BOM_UTF32_LE		=		0x10,
-		AR_TXT_BOM_UTF32_BE		=		0x20
+		AR_TXT_BOM_NONE			=		0x01,
+		AR_TXT_BOM_UTF16_BE					,
+		AR_TXT_BOM_UTF16_LE					,
+		AR_TXT_BOM_UTF_8					,
+		AR_TXT_BOM_UTF_8_WITHOUT_BOM		,
+		AR_TXT_BOM_UTF32_LE					,
+		AR_TXT_BOM_UTF32_BE					,
 }arTxtBom_t;
 
 arStatus_t  AR_DetectTextBom(const ar_byte_t *data, size_t length, arTxtBom_t *bom, size_t *bom_len);
