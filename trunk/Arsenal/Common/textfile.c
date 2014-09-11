@@ -480,6 +480,11 @@ arStatus_t	AR_LoadBomTextFromBinaryWithCodePage(arBuffer_t *input, arTxtBom_t *b
 						if(__is_utf8(AR_GetBufferData(input),AR_GetBufferAvailable(input)))
 						{
 								str = AR_str_to_wcs(AR_CP_UTF8, (const char*)AR_GetBufferData(input), AR_GetBufferAvailable(input));
+
+								if(str)
+								{
+										enc = AR_TXT_BOM_UTF_8_WITHOUT_BOM;
+								}
 						}
 				}
 
@@ -675,6 +680,11 @@ static arStatus_t __write_bom(arBuffer_t *out, arTxtBom_t bom)
 				buf[2] = 0xBF;
 		}
 				break;
+		case AR_TXT_BOM_UTF_8_WITHOUT_BOM:
+		{
+				wn = 0;
+		}
+				break;
 		case AR_TXT_BOM_UTF16_BE:
 		{
 				wn = 2;
@@ -737,6 +747,7 @@ static arStatus_t __write_wchar(arBuffer_t *out, arTxtBom_t bom, wchar_t c)
 		switch(bom)
 		{
 		case AR_TXT_BOM_UTF_8:
+		case AR_TXT_BOM_UTF_8_WITHOUT_BOM:
 		{
 				ar_byte_t utf8[10];
 				size_t n;

@@ -1524,9 +1524,9 @@ void text_test_load_save()
 {
 
 //#define INPUT_FILE		L"..\\..\\..\\misc\\txt_enc_test\\empty_ascii.txt"
-#define INPUT_FILE		L"C:\\Users\\solidus\\Desktop\\1.utf8.chs.srt"
-#define OUTPUT_FILE		L"C:\\Users\\solidus\\Desktop\\out.utf8.chs.srt"
-#define OUTPUT_TYPE		AR_TXT_BOM_UTF_8
+#define INPUT_FILE		L"C:\\Users\\solidus\\Desktop\\1.txt"
+#define OUTPUT_FILE		L"C:\\Users\\solidus\\Desktop\\out.txt"
+#define OUTPUT_TYPE		AR_TXT_BOM_UTF_8_WITHOUT_BOM
 
 		arString_t *str = AR_CreateString();
 		
