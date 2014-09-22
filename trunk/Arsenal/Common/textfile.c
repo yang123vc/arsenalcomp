@@ -438,7 +438,7 @@ arStatus_t	AR_LoadBomTextFromBinaryWithCodePage(arBuffer_t *input, arTxtBom_t *b
 {
 		arStatus_t ret;
 		arTxtBom_t	enc;
-		wchar_t c;
+		
 		
 		txtReadStatus_t	status;
 		AR_ASSERT(input != NULL && out != NULL);
@@ -535,7 +535,7 @@ arStatus_t	AR_LoadBomTextFromBinaryWithCodePage(arBuffer_t *input, arTxtBom_t *b
 		}else
 		{
 				do{
-
+						wchar_t c;
 						status = __read_wchar(input, enc, &c);
 
 						if(status == TXT_READ_OK && out)
