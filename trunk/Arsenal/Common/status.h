@@ -55,7 +55,6 @@ typedef enum
         AR_E_ACCES,
         AR_E_NOTENOUGH,
         
-		AR_E_NET,
 		AR_E_TIMEOUT,
 		AR_E_CANCELLED,
 
