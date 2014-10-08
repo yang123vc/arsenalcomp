@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		67102CEE19E57F61002F0015 /* libpthread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 67102CED19E57F61002F0015 /* libpthread.dylib */; };
+		67102CF019E57F67002F0015 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 67102CEF19E57F67002F0015 /* libiconv.dylib */; };
+		67102CF119E57FAD002F0015 /* libpthread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 67102CED19E57F61002F0015 /* libpthread.dylib */; };
+		67102CF219E57FB2002F0015 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 67102CEF19E57F67002F0015 /* libiconv.dylib */; };
 		6713578917B36CCA001133BC /* property_list.c in Sources */ = {isa = PBXBuildFile; fileRef = 6713578817B36CCA001133BC /* property_list.c */; };
 		6713578A17B36CCA001133BC /* property_list.c in Sources */ = {isa = PBXBuildFile; fileRef = 6713578817B36CCA001133BC /* property_list.c */; };
 		671E7D811781299800B22D92 /* filesystem_path_posix_apple.h in Headers */ = {isa = PBXBuildFile; fileRef = 671E7D7F1781299800B22D92 /* filesystem_path_posix_apple.h */; };
@@ -26,10 +30,6 @@
 		674D8C8415734D4B00CC43A6 /* uri.c in Sources */ = {isa = PBXBuildFile; fileRef = 674D8C8215734D4B00CC43A6 /* uri.c */; };
 		675B2B621562254100DADFE2 /* printf.c in Sources */ = {isa = PBXBuildFile; fileRef = 675B2B611562254100DADFE2 /* printf.c */; };
 		675B2B631562254100DADFE2 /* printf.c in Sources */ = {isa = PBXBuildFile; fileRef = 675B2B611562254100DADFE2 /* printf.c */; };
-		6774715418202CD70048F34E /* libpthread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6774715318202CD70048F34E /* libpthread.dylib */; };
-		6774715618202CDF0048F34E /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6774715518202CDF0048F34E /* libiconv.dylib */; };
-		6774715718202D180048F34E /* libpthread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6774715318202CD70048F34E /* libpthread.dylib */; };
-		6774715818202D210048F34E /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6774715518202CDF0048F34E /* libiconv.dylib */; };
 		6793D97E15CFB50800A59636 /* filesystem_path_posix.h in Headers */ = {isa = PBXBuildFile; fileRef = 6793D97C15CFB50800A59636 /* filesystem_path_posix.h */; };
 		6793D97F15CFB50800A59636 /* filesystem_path_posix.h in Headers */ = {isa = PBXBuildFile; fileRef = 6793D97C15CFB50800A59636 /* filesystem_path_posix.h */; };
 		6793D98015CFB50800A59636 /* filesystem_path_win.h in Headers */ = {isa = PBXBuildFile; fileRef = 6793D97D15CFB50800A59636 /* filesystem_path_win.h */; };
@@ -181,6 +181,8 @@
 
 /* Begin PBXFileReference section */
 		670F86D01782D920009202A9 /* thread_posix_android.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = thread_posix_android.h; sourceTree = "<group>"; };
+		67102CED19E57F61002F0015 /* libpthread.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpthread.dylib; path = usr/lib/libpthread.dylib; sourceTree = SDKROOT; };
+		67102CEF19E57F67002F0015 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
 		6713578717B36CBB001133BC /* property_list.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = property_list.h; sourceTree = "<group>"; };
 		6713578817B36CCA001133BC /* property_list.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = property_list.c; sourceTree = "<group>"; };
 		671E7D7F1781299800B22D92 /* filesystem_path_posix_apple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filesystem_path_posix_apple.h; sourceTree = "<group>"; };
@@ -192,8 +194,6 @@
 		6741333A18CCBF3900E8E603 /* json.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = json.h; sourceTree = "<group>"; };
 		674D8C8215734D4B00CC43A6 /* uri.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = uri.c; sourceTree = "<group>"; };
 		675B2B611562254100DADFE2 /* printf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = printf.c; sourceTree = "<group>"; };
-		6774715318202CD70048F34E /* libpthread.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpthread.dylib; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib/libpthread.dylib; sourceTree = DEVELOPER_DIR; };
-		6774715518202CDF0048F34E /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib/libiconv.dylib; sourceTree = DEVELOPER_DIR; };
 		6793D97C15CFB50800A59636 /* filesystem_path_posix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filesystem_path_posix.h; sourceTree = "<group>"; };
 		6793D97D15CFB50800A59636 /* filesystem_path_win.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filesystem_path_win.h; sourceTree = "<group>"; };
 		6798732918249C3500F4E274 /* Arsenal_Debug.exp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.exports; path = Arsenal_Debug.exp; sourceTree = "<group>"; };
@@ -281,8 +281,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6774715618202CDF0048F34E /* libiconv.dylib in Frameworks */,
-				6774715418202CD70048F34E /* libpthread.dylib in Frameworks */,
+				67102CF019E57F67002F0015 /* libiconv.dylib in Frameworks */,
+				67102CEE19E57F61002F0015 /* libpthread.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -290,8 +290,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6774715818202D210048F34E /* libiconv.dylib in Frameworks */,
-				6774715718202D180048F34E /* libpthread.dylib in Frameworks */,
+				67102CF219E57FB2002F0015 /* libiconv.dylib in Frameworks */,
+				67102CF119E57FAD002F0015 /* libpthread.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -301,8 +301,8 @@
 		67D9D58716FD7D42003E6EDD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				6774715518202CDF0048F34E /* libiconv.dylib */,
-				6774715318202CD70048F34E /* libpthread.dylib */,
+				67102CEF19E57F67002F0015 /* libiconv.dylib */,
+				67102CED19E57F61002F0015 /* libpthread.dylib */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -764,7 +764,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = NO;
-				SDKROOT = macosx10.6;
+				SDKROOT = macosx10.9;
 			};
 			name = Debug;
 		};
@@ -790,7 +790,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
-				SDKROOT = macosx10.6;
+				SDKROOT = macosx10.9;
 			};
 			name = Release;
 		};
@@ -804,7 +804,7 @@
 				OBJROOT = "$(SYMROOT)";
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = Arsenal;
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx10.9;
 				SYMROOT = build;
 			};
 			name = Debug;
@@ -821,7 +821,7 @@
 				OBJROOT = "$(SYMROOT)";
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = Arsenal;
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx10.9;
 				SYMROOT = build;
 			};
 			name = Release;
@@ -837,7 +837,7 @@
 				INSTALL_PATH = "@loader_path/../Frameworks/";
 				OBJROOT = "$(SYMROOT)";
 				PRODUCT_NAME = Arsenal;
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx10.9;
 				SYMROOT = build;
 			};
 			name = Debug;
@@ -855,7 +855,7 @@
 				INSTALL_PATH = "@loader_path/../Frameworks/";
 				OBJROOT = "$(SYMROOT)";
 				PRODUCT_NAME = Arsenal;
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx10.9;
 				SYMROOT = build;
 			};
 			name = Release;
