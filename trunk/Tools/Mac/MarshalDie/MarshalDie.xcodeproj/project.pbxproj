@@ -165,7 +165,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = NO;
-				SDKROOT = macosx10.6;
+				SDKROOT = macosx10.9;
 				USER_HEADER_SEARCH_PATHS = ../../../Arsenal;
 			};
 			name = Debug;
@@ -187,7 +187,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = NO;
-				SDKROOT = macosx10.6;
+				SDKROOT = macosx10.9;
 				USER_HEADER_SEARCH_PATHS = ../../../Arsenal;
 			};
 			name = Release;
@@ -199,7 +199,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				LIBRARY_SEARCH_PATHS = "$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Arsenal-abmjvpcppqzfudfdsbedzoydbnyy/Build/Products/Debug";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx10.9;
 			};
 			name = Debug;
 		};
@@ -211,7 +211,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				LIBRARY_SEARCH_PATHS = "$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Arsenal-abmjvpcppqzfudfdsbedzoydbnyy/Build/Products/Debug";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx10.9;
 			};
 			name = Release;
 		};
