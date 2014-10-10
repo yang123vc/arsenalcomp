@@ -610,6 +610,7 @@ AR_InsertCStringToBuffer
 AR_sprintf
 AR_wtou32
 AR_GetLineFromBufferWithLineSP
+AR_stristr
 AR_stristr_s
 AR_strtrim_space
 AR_str_to_wcs
