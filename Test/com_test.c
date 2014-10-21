@@ -4704,7 +4704,7 @@ void com_test()
 		
 		//escstr_test2();
 		
-		text_test_load_save();
+		//text_test_load_save();
 
 		//rand_test();
 		
@@ -4729,7 +4729,7 @@ void com_test()
 
 		//cache_test();
 
-		//uri_test();
+		uri_test();
 
 		//buffer_test3();
 
