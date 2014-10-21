@@ -1003,6 +1003,40 @@ static void uri_parse_test()
 
 		AR_ASSERT(AR_IsRelativeURI(uri));
 
+
+		/*******************************************************************************/
+		status = AR_SetURI(uri, L"rtsp://solidus:12345@www.pigletshare.com:12345/index.html");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIScheme(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"rtsp") == 0);
+
+		status = AR_GetURIHost(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"www.pigletshare.com") == 0);
+
+		status = AR_GetURIUserInfo(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(str), L"solidus:12345") == 0);
+
+		status = AR_GetURIPath(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_CompStringWithWcs(str, L"/index.html") == 0);
+
+		status = AR_GetURIQuery(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_GetStringLength(str) == 0);
+
+		status = AR_GetURIFragment(uri, str);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_GetStringLength(str) == 0);
+
+		AR_ASSERT(!AR_IsRelativeURI(uri));
+
+
+		/*************************************************************************/
+
 		AR_DestroyURI(uri);
 		uri = NULL;
 		AR_DestroyString(str);
@@ -2389,26 +2423,26 @@ static void work_test3()
 
 void uri_test()
 {
-		/*
-		uri_construct_test();
+		
+		//uri_construct_test();
 		uri_parse_test();
-		uri_tostring_test();
-		uri_compare_test();
-		uri_normalize_test();
-		uri_misc_test();
-		uri_exception_test();
+		//uri_tostring_test();
+		//uri_compare_test();
+		//uri_normalize_test();
+		//uri_misc_test();
+		//uri_exception_test();
 
-		uri_misc_test2();
+		//uri_misc_test2();
 
-		uri_chinese_host_test();
+		//uri_chinese_host_test();
 
-		work_test();
-		work_test2();
+		//work_test();
+		//work_test2();
 
-		__query_table_test();
-		*/
+		//__query_table_test();
+		
 
-		work_test3();
+		//work_test3();
 
 }
 
