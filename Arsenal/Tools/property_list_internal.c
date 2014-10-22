@@ -1,10 +1,15 @@
-﻿//
-//  property_list_internal.c
-//  Arsenal
-//
-//  Created by solidus on 13-8-23.
-//  Copyright (c) 2013年 none. All rights reserved.
-//
+﻿/*
+ * The Arsenal Library
+ * Copyright (c) 2009-2013 by Solidus
+ * 
+ * Permission to use, copy, modify, distribute and sell this software
+ * and its documentation for any purpose is hereby granted without fee,
+ * provided that the above copyright notice appear in all copies and
+ * that both that copyright notice and this permission notice appear
+ * in supporting documentation.It is provided "as is" without express 
+ * or implied warranty.
+ *
+ */
 
 
 #include "property_list_internal.h"
