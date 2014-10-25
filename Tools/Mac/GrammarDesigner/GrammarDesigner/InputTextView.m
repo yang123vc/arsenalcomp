@@ -122,7 +122,8 @@
 		
 		
         self.automaticQuoteSubstitutionEnabled = NO;
-        
+        self.automaticDashSubstitutionEnabled = NO;
+        self.automaticLinkDetectionEnabled = NO;
 }
 
 
