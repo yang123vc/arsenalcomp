@@ -2912,12 +2912,7 @@ enum {
 };
 
 
-static AR_INLINE ar_uint_32_t __check_uint32_add_unsigned_unsigned(ar_uint_32_t x, ar_uint_32_t y, ar_int_t *err)
-{
-        if((AR_UINT32_MAX - y) < x)
-                *err = *err | CF_OVERFLOW_ERROR;
-        return x + y;
-}
+
 
 static AR_INLINE ar_uint_64_t __check_uint64_add_unsigned_unsigned(ar_uint_64_t x, ar_uint_64_t y, ar_int_t *err)
 {
@@ -2926,14 +2921,6 @@ static AR_INLINE ar_uint_64_t __check_uint64_add_unsigned_unsigned(ar_uint_64_t 
         return x + y;
 }
 
-static AR_INLINE ar_uint_32_t __check_uint32_mul_unsigned_unsigned(ar_uint_32_t x, ar_uint_32_t y, ar_int_t *err)
-{
-        ar_uint_64_t tmp = (ar_uint_64_t) x * (ar_uint_64_t) y;
-        /* If any of the upper 32 bits touched, overflow */
-        if(tmp & 0xffffffff00000000ULL)
-                *err = *err | CF_OVERFLOW_ERROR;
-        return (ar_uint_32_t) tmp;
-}
 
 static AR_INLINE ar_uint_64_t __check_uint64_mul_unsigned_unsigned(ar_uint_64_t x, ar_uint_64_t y, ar_int_t *err)
 {
@@ -2948,6 +2935,27 @@ static AR_INLINE ar_uint_64_t __check_uint64_mul_unsigned_unsigned(ar_uint_64_t 
         }
         return x * y;
 }
+
+#if AR_ARCH_VER == ARCH_32
+
+static AR_INLINE ar_uint_32_t __check_uint32_add_unsigned_unsigned(ar_uint_32_t x, ar_uint_32_t y, ar_int_t *err)
+{
+        if((AR_UINT32_MAX - y) < x)
+                *err = *err | CF_OVERFLOW_ERROR;
+        return x + y;
+}
+
+static AR_INLINE ar_uint_32_t __check_uint32_mul_unsigned_unsigned(ar_uint_32_t x, ar_uint_32_t y, ar_int_t *err)
+{
+        ar_uint_64_t tmp = (ar_uint_64_t) x * (ar_uint_64_t) y;
+        /* If any of the upper 32 bits touched, overflow */
+        if(tmp & 0xffffffff00000000ULL)
+                *err = *err | CF_OVERFLOW_ERROR;
+        return (ar_uint_32_t) tmp;
+}
+
+#endif
+
 
 
 #if AR_ARCH_VER == ARCH_64

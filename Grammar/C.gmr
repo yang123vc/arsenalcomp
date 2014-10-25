@@ -442,21 +442,21 @@ initializer_list        :    initializer
 
 /**************************C99***********************************/
 
-initializer_list        	:    designation  initializer
-                    		|    initializer_list "," designation  initializer
-                    		;
+initializer_list            :    designation  initializer
+                            |    initializer_list "," designation  initializer
+                            ;
 
-designation			:	designator_list "="
-						|	.
-						;
+designation            :    designator_list "="
+                        |    .
+                        ;
 
-designator_list		:	designator
-						|	designator_list	designator
-						;
+designator_list        :    designator
+                        |    designator_list    designator
+                        ;
 
 
-designator				:	"."	 IDENTIFIER
-						;
+designator                :    "."     IDENTIFIER
+                        ;
 
 /*************************************************************/
 

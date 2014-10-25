@@ -485,6 +485,7 @@ static arStatus_t		__init_event_freelist()
 		AR_InitSpinLock(&__g_event_list_lock);
 		__g_event_list = NULL;
 		__g_event_list_count = 0;
+        return AR_S_YES;
 }
 
 
@@ -578,7 +579,7 @@ void			AR_DestroyEvent(arEvent_t *evt)
 
 arEvent_t*		AR_CreateEvent(ar_bool_t is_auto_reset)
 {
-		__create_event(is_auto_reset);
+		return __create_event(is_auto_reset);
 }
 
 void			AR_DestroyEvent(arEvent_t *evt)

@@ -9,10 +9,9 @@
 /* Begin PBXBuildFile section */
 		67102CF419E5804B002F0015 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67102CF319E5804B002F0015 /* Cocoa.framework */; };
 		67102CF619E58067002F0015 /* libcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 67102CF519E58067002F0015 /* libcrypto.dylib */; };
+		6726E5C819FB7BB2001EC66B /* Arsenal.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6726E5C719FB7BB2001EC66B /* Arsenal.dylib */; };
 		6744542F15C787A7000ABF71 /* EncodingConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6744542D15C787A7000ABF71 /* EncodingConverter.m */; };
 		6744543015C787A7000ABF71 /* EncodingConverter.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6744542E15C787A7000ABF71 /* EncodingConverter.xib */; };
-		67D9D58D16FD7F79003E6EDD /* Arsenal.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 67D9D58B16FD7F30003E6EDD /* Arsenal.dylib */; };
-		67D9D58F16FD7FC0003E6EDD /* Arsenal.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 67D9D58B16FD7F30003E6EDD /* Arsenal.dylib */; };
 		67D9D59216FD85FD003E6EDD /* NSString_Convert.m in Sources */ = {isa = PBXBuildFile; fileRef = 67D9D59116FD85FD003E6EDD /* NSString_Convert.m */; };
 		BEAF6EE914F25FC500BE72FF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = BEAF6EE714F25FC500BE72FF /* InfoPlist.strings */; };
 		BEAF6EEB14F25FC500BE72FF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BEAF6EEA14F25FC500BE72FF /* main.m */; };
@@ -62,7 +61,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				67D9D58F16FD7FC0003E6EDD /* Arsenal.dylib in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,10 +69,10 @@
 /* Begin PBXFileReference section */
 		67102CF319E5804B002F0015 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		67102CF519E58067002F0015 /* libcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.dylib; path = usr/lib/libcrypto.dylib; sourceTree = SDKROOT; };
+		6726E5C719FB7BB2001EC66B /* Arsenal.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = Arsenal.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		6744542C15C787A7000ABF71 /* EncodingConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncodingConverter.h; sourceTree = "<group>"; };
 		6744542D15C787A7000ABF71 /* EncodingConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EncodingConverter.m; sourceTree = "<group>"; };
 		6744542E15C787A7000ABF71 /* EncodingConverter.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EncodingConverter.xib; sourceTree = "<group>"; };
-		67D9D58B16FD7F30003E6EDD /* Arsenal.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = Arsenal.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		67D9D59016FD85FD003E6EDD /* NSString_Convert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSString_Convert.h; sourceTree = "<group>"; };
 		67D9D59116FD85FD003E6EDD /* NSString_Convert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSString_Convert.m; sourceTree = "<group>"; };
 		BEAF6EDA14F25FC500BE72FF /* GrammarDesigner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GrammarDesigner.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -152,9 +150,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6726E5C819FB7BB2001EC66B /* Arsenal.dylib in Frameworks */,
 				67102CF619E58067002F0015 /* libcrypto.dylib in Frameworks */,
 				67102CF419E5804B002F0015 /* Cocoa.framework in Frameworks */,
-				67D9D58D16FD7F79003E6EDD /* Arsenal.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -181,9 +179,9 @@
 		BEAF6EDD14F25FC500BE72FF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6726E5C719FB7BB2001EC66B /* Arsenal.dylib */,
 				67102CF519E58067002F0015 /* libcrypto.dylib */,
 				67102CF319E5804B002F0015 /* Cocoa.framework */,
-				67D9D58B16FD7F30003E6EDD /* Arsenal.dylib */,
 				BEAF6EE014F25FC500BE72FF /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -548,6 +546,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/../../../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Debug\"",
 					"\"$(SRCROOT)/../../../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Release\"",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Arsenal-cioqhdtwweclwldkguwwtscwgqfz/Build/Products/Debug",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OBJROOT = build;
@@ -570,6 +569,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/../../../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Debug\"",
 					"\"$(SRCROOT)/../../../../../../Temp/Arsenal-gfnutpdkrndboxamtfrlapzveqde/Build/Products/Release\"",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Arsenal-cioqhdtwweclwldkguwwtscwgqfz/Build/Products/Debug",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OBJROOT = build;
