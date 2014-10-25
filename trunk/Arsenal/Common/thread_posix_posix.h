@@ -16,7 +16,7 @@ static void __init_ticks();
 static void __uninit_ticks();
 
 
-void			AR_InitThread()
+void			Plat_InitThread()
 {
         sigset_t sset;
         sigemptyset(&sset);
@@ -28,7 +28,7 @@ void			AR_InitThread()
 
 }
 
-void			AR_UnInitThread()
+void	Plat_UnInitThread()
 {
         __uninit_ticks();
 
