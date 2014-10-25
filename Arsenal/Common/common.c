@@ -64,16 +64,17 @@ arStatus_t AR_CommonInit(const arInit_t *info)
 		{
 				__g_ctx = *info;
 		}
-
+        
+        AR_InitMemory();
 		AR_InitThread();
-		AR_InitMemory();
+		
 		return AR_S_YES;
 }
 
 arStatus_t AR_CommonUnInit()
 {
-		AR_UnInitMemory();
 		AR_UnInitThread();
+        AR_UnInitMemory();
 		return AR_S_YES;
 }
 
