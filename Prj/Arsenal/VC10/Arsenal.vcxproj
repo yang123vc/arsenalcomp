@@ -410,6 +410,7 @@
       <FloatingPointExceptions>false</FloatingPointExceptions>
       <MinimalRebuild>false</MinimalRebuild>
       <AssemblerOutput>AssemblyAndMachineCode</AssemblerOutput>
+      <UseUnicodeForAssemblerListing>false</UseUnicodeForAssemblerListing>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -432,6 +433,7 @@
       <FloatingPointExceptions>false</FloatingPointExceptions>
       <MinimalRebuild>false</MinimalRebuild>
       <AssemblerOutput>AssemblyAndMachineCode</AssemblerOutput>
+      <UseUnicodeForAssemblerListing>false</UseUnicodeForAssemblerListing>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -455,6 +457,7 @@
       <FloatingPointExceptions>false</FloatingPointExceptions>
       <MinimalRebuild>false</MinimalRebuild>
       <AssemblerOutput>AssemblyAndMachineCode</AssemblerOutput>
+      <UseUnicodeForAssemblerListing>false</UseUnicodeForAssemblerListing>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -469,7 +472,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG; _LIB;</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <UseUnicodeForAssemblerListing>true</UseUnicodeForAssemblerListing>
+      <UseUnicodeForAssemblerListing>false</UseUnicodeForAssemblerListing>
       <StringPooling>false</StringPooling>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -495,7 +498,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN64;_WINDOWS;_DEBUG; _LIB;</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <UseUnicodeForAssemblerListing>true</UseUnicodeForAssemblerListing>
+      <UseUnicodeForAssemblerListing>false</UseUnicodeForAssemblerListing>
       <StringPooling>false</StringPooling>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -521,7 +524,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN64;_WINDOWS;_DEBUG; _LIB;</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <UseUnicodeForAssemblerListing>true</UseUnicodeForAssemblerListing>
+      <UseUnicodeForAssemblerListing>false</UseUnicodeForAssemblerListing>
       <StringPooling>false</StringPooling>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -557,6 +560,7 @@
       <FloatingPointExceptions>false</FloatingPointExceptions>
       <MinimalRebuild>false</MinimalRebuild>
       <AssemblerOutput>AssemblyAndMachineCode</AssemblerOutput>
+      <UseUnicodeForAssemblerListing>false</UseUnicodeForAssemblerListing>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -585,6 +589,7 @@
       <FloatingPointExceptions>false</FloatingPointExceptions>
       <MinimalRebuild>false</MinimalRebuild>
       <AssemblerOutput>AssemblyAndMachineCode</AssemblerOutput>
+      <UseUnicodeForAssemblerListing>false</UseUnicodeForAssemblerListing>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -614,6 +619,7 @@
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <MinimalRebuild>false</MinimalRebuild>
       <AssemblerOutput>AssemblyAndMachineCode</AssemblerOutput>
+      <UseUnicodeForAssemblerListing>false</UseUnicodeForAssemblerListing>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -645,6 +651,7 @@
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <MinimalRebuild>false</MinimalRebuild>
       <AssemblerOutput>NoListing</AssemblerOutput>
+      <UseUnicodeForAssemblerListing>false</UseUnicodeForAssemblerListing>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -675,6 +682,7 @@
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <MinimalRebuild>false</MinimalRebuild>
       <AssemblerOutput>NoListing</AssemblerOutput>
+      <UseUnicodeForAssemblerListing>false</UseUnicodeForAssemblerListing>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -705,6 +713,7 @@
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <MinimalRebuild>false</MinimalRebuild>
       <AssemblerOutput>NoListing</AssemblerOutput>
+      <UseUnicodeForAssemblerListing>false</UseUnicodeForAssemblerListing>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
