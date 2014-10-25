@@ -1195,8 +1195,10 @@ ar_bool_t			AR_AtomicCompExch(volatile ar_int_t *dest, ar_int_t val, ar_int_t cm
 
 #if defined(OS_FAMILY_UNIX)
 	
-		#if(OS_TYPE == OS_IOS || OS_TYPE == OS_MAC_OS_X || OS_TYPE == OS_ANDROID)
-				typedef			volatile ar_int_t				arSpinLock_t;	
+		#if(OS_TYPE == OS_ANDROID)
+				typedef			volatile ar_int_t				arSpinLock_t;
+        #elif (OS_TYPE == OS_IOS || OS_TYPE == OS_MAC_OS_X)
+                typedef			volatile ar_int_t               arSpinLock_t;
 		#else
 				typedef			pthread_spinlock_t              arSpinLock_t;
 		#endif

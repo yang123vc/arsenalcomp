@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "BEA4E2CE14E840DE00A29A8D"
-               BuildableName = "Arsenal.dylib"
-               BlueprintName = "ArsenalDLL"
+               BlueprintIdentifier = "BEA4E2C314E83F1E00A29A8D"
+               BuildableName = "Arsenal.a"
+               BlueprintName = "ArsenalLib"
                ReferencedContainer = "container:Arsenal.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -28,9 +28,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "BEA4E2C314E83F1E00A29A8D"
-               BuildableName = "Arsenal.a"
-               BlueprintName = "ArsenalLib"
+               BlueprintIdentifier = "BEA4E2CE14E840DE00A29A8D"
+               BuildableName = "Arsenal.dylib"
+               BlueprintName = "ArsenalDLL"
                ReferencedContainer = "container:Arsenal.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -99,6 +99,15 @@
       buildConfiguration = "Debug">
       <Testables>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "BE185EA214E846F10095DB44"
+            BuildableName = "TestLib"
+            BlueprintName = "TestLib"
+            ReferencedContainer = "container:../../Test/Mac_XCode6/Test.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </TestAction>
    <LaunchAction
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
@@ -112,10 +121,10 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "BE185EA214E846F10095DB44"
-            BuildableName = "TestLib"
-            BlueprintName = "TestLib"
-            ReferencedContainer = "container:../../Test/Mac_XCode6/Test.xcodeproj">
+            BlueprintIdentifier = "BEAF6ED914F25FC500BE72FF"
+            BuildableName = "GrammarDesigner.app"
+            BlueprintName = "GrammarDesigner"
+            ReferencedContainer = "container:../../../Tools/Mac/GrammarDesigner/GrammarDesigner.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -127,6 +136,15 @@
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Debug"
       debugDocumentVersioning = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "BE185EA214E846F10095DB44"
+            BuildableName = "TestLib"
+            BlueprintName = "TestLib"
+            ReferencedContainer = "container:../../Test/Mac_XCode6/Test.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

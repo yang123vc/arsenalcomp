@@ -194,7 +194,7 @@ static AR_INLINE void*	malloc_mem(size_t bytes)
 		}
 
 		AR_LockSpinLock(&__g_lock);
-		ret = AR_AllocFromHeap(__g_heap, bytes);
+        ret = AR_AllocFromHeap(__g_heap, bytes);
 		AR_UnLockSpinLock(&__g_lock);
 		return ret;
 }
@@ -203,7 +203,7 @@ static AR_INLINE void	free_mem(void *ptr)
 {
 		AR_ASSERT(ptr != NULL);
 		AR_LockSpinLock(&__g_lock);
-		AR_FreeToHeap(__g_heap, ptr);
+        AR_FreeToHeap(__g_heap, ptr);
 		
 		AR_UnLockSpinLock(&__g_lock);
 }

@@ -121,6 +121,8 @@
 		hasValidParser = NO;
 		
 		
+        self.automaticQuoteSubstitutionEnabled = NO;
+        
 }
 
 

@@ -494,7 +494,7 @@ arStatus_t	AR_LoadBomTextFromBinaryWithCodePage(arBuffer_t *input, arTxtBom_t *b
 
 						for(cp = AR_CP_ACP; cp < AR_CP_MAX; ++cp)
 						{
-								if(AR_CP_ACP == AR_CP_UTF8) /*前面已经判断过了，不是utf8*/
+								if(cp == AR_CP_UTF8) /*前面已经判断过了，不是utf8*/
 								{
 										continue;
 								}

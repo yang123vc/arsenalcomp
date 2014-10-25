@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0460"
+   LastUpgradeVersion = "0600"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "NO"
@@ -16,8 +16,8 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "BEA4E2C314E83F1E00A29A8D"
                BuildableName = "Arsenal.a"
-               BlueprintName = "ArsenalLIb"
-               ReferencedContainer = "container:../../Arsenal/Mac_XCode5/Arsenal.xcodeproj">
+               BlueprintName = "ArsenalLib"
+               ReferencedContainer = "container:../../Arsenal/Mac_XCode6/Arsenal.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
