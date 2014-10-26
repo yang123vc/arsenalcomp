@@ -1992,9 +1992,9 @@ static void async_queue_test3()
 void thd_test()
 {
 		//evt_test();
-		//async_queue_test();
+		async_queue_test();
 		//async_queue_test2();
-		async_queue_test3();
+		//async_queue_test3();
 }
 
 #define fail_if(expr, msg)                              \
@@ -4720,7 +4720,7 @@ void com_test()
 
 		//path_iter_test();
 
-		//thd_test();
+		thd_test();
 
 
 		//ds_test2();
@@ -4729,7 +4729,7 @@ void com_test()
 
 		//cache_test();
 
-		uri_test();
+		//uri_test();
 
 		//buffer_test3();
 

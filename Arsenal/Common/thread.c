@@ -324,13 +324,30 @@ void	AR_InitAsyncQueue(arAsyncQueue_t *queue)
 		__init_data_queue(queue);
 		__init_wait_queue(queue);
 		AR_InitSpinLock(&queue->mutex);
+
+		queue->cached_event_cnt = 0;
+		AR_InitSpinLock(&queue->cached_event_mutex);
+
 }
 
 
 
 void	AR_UnInitAsyncQueue(arAsyncQueue_t *queue)
 {
+		size_t i;
 		AR_ASSERT(queue != NULL);
+
+		for(i = 0; i < queue->cached_event_cnt; ++i)
+		{
+				if(queue->cached_events[i] != NULL)
+				{
+						AR_DestroyEvent(queue->cached_events[i]);
+						queue->cached_events[i] = NULL;
+				}
+		}
+		queue->cached_event_cnt = 0;
+		AR_UnInitSpinLock(&queue->cached_event_mutex);
+
 		
 		AR_ASSERT(queue->wait_cnt == 0);
 		__uninit_wait_queue(queue);
@@ -339,7 +356,70 @@ void	AR_UnInitAsyncQueue(arAsyncQueue_t *queue)
 		AR_UnInitSpinLock(&queue->mutex);
 }
 
+static AR_INLINE arEvent_t* __get_asyncqueue_cached_events(arAsyncQueue_t *queue)
+{
+		arEvent_t *evt;
+		AR_ASSERT(queue != NULL);
+		evt = NULL;
+		AR_LockSpinLock(&queue->cached_event_mutex);
 
+		if(queue->cached_event_cnt > 0)
+		{
+				size_t i;
+				for(i = 0; i < AR_ASYNCQUEUE_MAX_WAIT_EVENT; ++i)
+				{
+						if(queue->cached_events[i])
+						{
+								evt = queue->cached_events[i];
+								queue->cached_events[i] = NULL;
+								break;
+						}
+				}
+
+				AR_ASSERT(evt != NULL);
+				queue->cached_event_cnt--;
+				AR_UnLockSpinLock(&queue->cached_event_mutex);
+		}else
+		{
+				AR_UnLockSpinLock(&queue->cached_event_mutex);
+
+				evt = AR_CreateEvent(false);
+		}
+		return evt;
+}
+
+static AR_INLINE void __put_asyncqueue_cached_events(arAsyncQueue_t *queue, arEvent_t *evt)
+{
+		AR_ASSERT(queue != NULL && evt != NULL);
+
+		AR_LockSpinLock(&queue->cached_event_mutex);
+
+		AR_ASSERT(queue->cached_event_cnt <= AR_ASYNCQUEUE_MAX_WAIT_EVENT);
+
+		if(queue->cached_event_cnt == AR_ASYNCQUEUE_MAX_WAIT_EVENT)
+		{
+				AR_UnLockSpinLock(&queue->cached_event_mutex);
+				AR_DestroyEvent(evt);
+				evt = NULL;
+				return;
+		}else
+		{
+				size_t i;
+				for(i = 0; i < AR_ASYNCQUEUE_MAX_WAIT_EVENT; ++i)
+				{
+						if(queue->cached_events[i] == NULL)
+						{
+								AR_ResetEvent(evt);
+								queue->cached_events[i] = evt;
+								break;
+						}
+				}
+				queue->cached_event_cnt++;
+				AR_ASSERT(queue->cached_event_cnt <= AR_ASYNCQUEUE_MAX_WAIT_EVENT);
+				AR_UnLockSpinLock(&queue->cached_event_mutex);
+		}
+
+}
 
 arStatus_t	AR_GetFromAsyncQueueWithTimeout(arAsyncQueue_t *queue, void **pdata, ar_int_64_t	millisecond)
 {
@@ -363,7 +443,8 @@ arStatus_t	AR_GetFromAsyncQueueWithTimeout(arAsyncQueue_t *queue, void **pdata, 
 						asyncWaitInfo_t	info;
 
 						event = NULL;
-						event = AR_CreateEvent(false);
+						/*event = AR_CreateEvent(false);*/
+						event = __get_asyncqueue_cached_events(queue);
 						if(event == NULL)
 						{
 								res = AR_E_SYS;
@@ -424,7 +505,8 @@ arStatus_t	AR_GetFromAsyncQueueWithTimeout(arAsyncQueue_t *queue, void **pdata, 
 END_POINT:
 						if(event != NULL)
 						{
-								AR_DestroyEvent(event);
+								/*AR_DestroyEvent(event);*/
+								__put_asyncqueue_cached_events(queue, event);
 								event = NULL;
 						}
 				}else
@@ -476,8 +558,8 @@ arStatus_t	AR_GetFromAsyncQueue(arAsyncQueue_t *queue, void **pdata)
 
 				event = NULL;
 
-				event = AR_CreateEvent(false);
-
+				/*event = AR_CreateEvent(false);*/
+				event = __get_asyncqueue_cached_events(queue);
 				if(event == NULL)
 				{
 						status = AR_E_SYS;
@@ -517,7 +599,8 @@ arStatus_t	AR_GetFromAsyncQueue(arAsyncQueue_t *queue, void **pdata)
 END_POINT:
 				if(event != NULL)
 				{
-						AR_DestroyEvent(event);
+						/*AR_DestroyEvent(event);*/
+						__put_asyncqueue_cached_events(queue, event);
 						event = NULL;
 				}
 
