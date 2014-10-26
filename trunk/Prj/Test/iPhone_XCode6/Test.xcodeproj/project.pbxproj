@@ -157,6 +157,11 @@
 			attributes = {
 				LastUpgradeCheck = 0420;
 				ORGANIZATIONNAME = none;
+				TargetAttributes = {
+					BE82C8F514F211CE00F30E56 = {
+						DevelopmentTeam = BSEDRDQ95S;
+					};
+				};
 			};
 			buildConfigurationList = BE82C8F014F211CE00F30E56 /* Build configuration list for PBXProject "Test" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -298,6 +303,8 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD)";
 				CODE_SIGN_ENTITLEMENTS = dabaopku.plist;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "";
 				HEADER_SEARCH_PATHS = ../../../Arsenal;
@@ -315,6 +322,7 @@
 				);
 				OBJROOT = build;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SYMROOT = build;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
@@ -327,6 +335,8 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD)";
 				CODE_SIGN_ENTITLEMENTS = dabaopku.plist;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "";
 				HEADER_SEARCH_PATHS = ../../../Arsenal;
@@ -344,6 +354,7 @@
 				);
 				OBJROOT = build;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SYMROOT = build;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
