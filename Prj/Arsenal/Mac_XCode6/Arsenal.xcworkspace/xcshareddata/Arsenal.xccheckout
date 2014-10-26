@@ -14,7 +14,7 @@
 		<string>https://arsenalcomp.googlecode.com/svn/trunk</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>Prj/Arsenal/Mac_XCode5/Arsenal.xcworkspace</string>
+	<string>Prj/Arsenal/Mac_XCode6/Arsenal.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>eabf3678-e258-11dd-a550-c997509ed985++505</key>
@@ -26,7 +26,7 @@
 		<string>https://arsenalcomp.googlecode.com/svn</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://arsenalcomp.googlecode.com/svn/trunk/Prj/Arsenal/Mac_XCode5/Arsenal.xcworkspace</string>
+	<string>https://arsenalcomp.googlecode.com/svn/trunk/Prj/Arsenal/Mac_XCode6/Arsenal.xcworkspace</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
@@ -34,14 +34,8 @@
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
-			<key>IDESourceControlRepositoryBranchesRelativeLocationKey</key>
-			<string>branches</string>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.subversion</string>
-			<key>IDESourceControlRepositoryTagsRelativeLocationKey</key>
-			<string>tags</string>
-			<key>IDESourceControlRepositoryTrunkRelativeLocationKey</key>
-			<string>trunk</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
 			<string>eabf3678-e258-11dd-a550-c997509ed985++505</string>
 			<key>IDESourceControlWCCName</key>

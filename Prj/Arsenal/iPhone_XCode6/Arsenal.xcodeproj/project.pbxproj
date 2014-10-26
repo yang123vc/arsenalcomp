@@ -102,7 +102,6 @@
 		67B8139417E7105500595D03 /* property_list_internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 67B8139217E7105500595D03 /* property_list_internal.h */; };
 		67EEB80817C4873D00334796 /* math_posix.h in Headers */ = {isa = PBXBuildFile; fileRef = 67EEB80617C4873D00334796 /* math_posix.h */; };
 		67EEB80917C4873D00334796 /* math_win.h in Headers */ = {isa = PBXBuildFile; fileRef = 67EEB80717C4873D00334796 /* math_win.h */; };
-		BE328EEB14F20CA9006BCA74 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE328EEA14F20CA9006BCA74 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -202,8 +201,6 @@
 		67EEB80617C4873D00334796 /* math_posix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = math_posix.h; sourceTree = "<group>"; };
 		67EEB80717C4873D00334796 /* math_win.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = math_win.h; sourceTree = "<group>"; };
 		BE328EE714F20CA9006BCA74 /* Arsenal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = Arsenal.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		BE328EEA14F20CA9006BCA74 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		BE82C84814F20D5B00F30E56 /* dabaopku.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = dabaopku.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -211,7 +208,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BE328EEB14F20CA9006BCA74 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -364,7 +360,6 @@
 		BE328EDC14F20CA9006BCA74 = {
 			isa = PBXGroup;
 			children = (
-				BE82C84814F20D5B00F30E56 /* dabaopku.plist */,
 				672BDC2F16500431002D500E /* Arsenal */,
 				BE328EE914F20CA9006BCA74 /* Frameworks */,
 				BE328EE814F20CA9006BCA74 /* Products */,
@@ -382,7 +377,6 @@
 		BE328EE914F20CA9006BCA74 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				BE328EEA14F20CA9006BCA74 /* Foundation.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -569,7 +563,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				OBJROOT = "$(SYMROOT)";
 				PRODUCT_NAME = Arsenal;
 				PROVISIONING_PROFILE = "";
@@ -594,7 +588,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				OBJROOT = "$(SYMROOT)";
 				PRODUCT_NAME = Arsenal;
 				PROVISIONING_PROFILE = "";
@@ -614,7 +608,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = Arsenal;
 				SDKROOT = iphoneos;
@@ -632,7 +626,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = Arsenal;
 				SDKROOT = iphoneos;
