@@ -368,147 +368,9 @@ struct __arsenal_event_tag
         volatile ar_bool_t  state;
         pthread_mutex_t  mtx;
         pthread_cond_t   cond;
-
-		arEvent_t		*next;
 };
 
 
-static arSpinLock_t		__g_event_list_lock;
-static arEvent_t		*__g_event_list = NULL;
-static size_t			__g_event_list_count = 0;
-
-
-static arEvent_t*		__create_event(ar_bool_t is_auto_reset)
-{
-		arEvent_t *ret = NULL;
-		ar_bool_t mtx_init = false,cond_init = false;
-		arStatus_t status = AR_S_YES;
-
-		AR_LockSpinLock(&__g_event_list_lock);
-
-		if(__g_event_list)
-		{
-				ret = __g_event_list;
-				__g_event_list = __g_event_list->next;
-				ret->next = NULL;
-				ret->is_auto_reset = is_auto_reset;
-				AR_ResetEvent(ret);
-				AR_ASSERT(__g_event_list_count > 0);
-				__g_event_list_count--;
-		}else
-		{
-				AR_ASSERT(__g_event_list_count == 0);
-				ret = AR_NEW0(arEvent_t);
-				if(ret == NULL)
-				{
-						status = AR_E_NOMEM;
-						AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
-						goto END_POINT;
-				}
-
-				ret->is_auto_reset = is_auto_reset;
-				ret->state = false;
-
-				if(pthread_mutex_init(&ret->mtx, NULL) != 0)
-				{
-						AR_error(AR_ERR_WARNING, L"cannot create event (mutex)");
-						goto END_POINT;
-				}else
-				{
-						mtx_init = true;
-				}
-
-				if(pthread_cond_init(&ret->cond, NULL) != 0)
-				{
-						AR_error(AR_ERR_WARNING, L"cannot create event (condition)");
-						goto END_POINT;
-				}else
-				{
-						cond_init = true;
-				}
-		}
-
-END_POINT:
-		if(status != AR_S_YES)
-		{
-				if(ret && mtx_init)
-				{
-						pthread_mutex_destroy(&ret->mtx);
-				}
-
-				if(ret && cond_init)
-				{
-						pthread_cond_destroy(&ret->cond);
-				}
-
-				if(ret)
-				{
-						AR_DEL(ret);
-						ret = NULL;
-				}
-		}
-
-		AR_UnLockSpinLock(&__g_event_list_lock);
-		return ret;
-}
-
-static void __destroy_event(arEvent_t *evt)
-{
-
-		if(evt == NULL)
-		{
-				return;
-		}
-
-
-		AR_LockSpinLock(&__g_event_list_lock);
-
-		if(__g_event_list_count > 20)
-		{
-				pthread_cond_destroy(&evt->cond);
-				pthread_mutex_destroy(&evt->mtx);
-				AR_DEL(evt);
-				evt = NULL;
-		}else
-		{
-				AR_ResetEvent(evt);
-				evt->next = __g_event_list;
-				__g_event_list = evt;
-				__g_event_list_count++;
-		}
-
-		AR_UnLockSpinLock(&__g_event_list_lock);
-}
-
-static arStatus_t		__init_event_freelist()
-{
-		AR_InitSpinLock(&__g_event_list_lock);
-		__g_event_list = NULL;
-		__g_event_list_count = 0;
-        return AR_S_YES;
-}
-
-
-static void __uninit_event_freelist()
-{
-		arEvent_t *curr = NULL;
-		curr = __g_event_list;
-		
-		while(curr)
-		{
-				arEvent_t *next = curr->next;
-				AR_DEL(curr);
-				curr = next;
-		}
-
-		AR_UnInitSpinLock(&__g_event_list_lock);
-}
-
-
-
-
-
-#if(0)
 arEvent_t*		AR_CreateEvent(ar_bool_t is_auto_reset)
 {
         ar_bool_t mtx_init,cond_init;
@@ -573,22 +435,8 @@ void			AR_DestroyEvent(arEvent_t *evt)
         AR_DEL(evt);
         evt = NULL;
 }
-#else
 
 
-
-arEvent_t*		AR_CreateEvent(ar_bool_t is_auto_reset)
-{
-		return __create_event(is_auto_reset);
-}
-
-void			AR_DestroyEvent(arEvent_t *evt)
-{
-		AR_ASSERT(evt != NULL);
-		__destroy_event(evt);
-}
-
-#endif
 
 
 arStatus_t		AR_SetEvent(arEvent_t *evt)
@@ -722,14 +570,12 @@ arStatus_t		AR_WaitEventWithTimeout(arEvent_t *evt, ar_int_64_t milliseconds)
 void		AR_InitThread()
 {
 		Plat_InitThread();
-		__init_event_freelist();
+		
 }
 
 void			AR_UnInitThread()
 {
-		__uninit_event_freelist();
         Plat_UnInitThread();
-		
 }
 
 AR_NAMESPACE_END
