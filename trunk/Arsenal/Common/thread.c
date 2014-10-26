@@ -513,7 +513,7 @@ END_POINT:
 				{
 						AR_UnLockSpinLock(&queue->mutex);
 
-						AR_Sleep(0);
+						AR_YieldThread();
 
 						AR_LockSpinLock(&queue->mutex);
 
