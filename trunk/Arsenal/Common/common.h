@@ -1292,6 +1292,8 @@ struct __async_wait_node_tag;
 typedef struct __async_wait_node_tag	asyncWaitNode_t;
 
 
+#define	AR_ASYNCQUEUE_MAX_WAIT_EVENT	8
+
 struct __arsenal_async_queue_tag
 {
 		arSpinLock_t			mutex;
@@ -1302,6 +1304,10 @@ struct __arsenal_async_queue_tag
 		asyncDataNode_t			*data_head;
 		asyncDataNode_t			*data_tail;
 		size_t					data_cnt;
+
+		arSpinLock_t			cached_event_mutex;
+		arEvent_t				*cached_events[AR_ASYNCQUEUE_MAX_WAIT_EVENT];
+		size_t					cached_event_cnt;
 };
 
 
