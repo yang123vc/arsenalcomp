@@ -79,7 +79,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "384"
             endingLineNumber = "384"
-            landmarkName = "__create_event(ar_bool_t is_auto_reset)"
+            landmarkName = "AR_CreateEvent(ar_bool_t is_auto_reset)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -94,9 +94,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "582"
-            endingLineNumber = "582"
-            landmarkName = "AR_CreateEvent(ar_bool_t is_auto_reset)"
-            landmarkType = "7">
+            endingLineNumber = "582">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
