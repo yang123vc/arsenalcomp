@@ -4522,6 +4522,23 @@ static void str_test25()
 }
 
 
+static void str_test26()
+{
+		wchar_t c = 892;
+
+		char buf[1024];
+		
+		ar_int_t l = AR_wcs_to_str_buf(AR_CP_UTF8, L"°Ù", 1, buf, 1024);
+
+
+		if(l > 0)
+		{
+				buf[l] = '\0';
+		}
+		
+}
+
+
 static void buf_test1()
 {
 		arBuffer_t *buf = AR_CreateBuffer(1024);
@@ -4644,6 +4661,7 @@ void com_test()
 		//str_test23();
 		//str_test24();
 		//str_test25();
+		str_test26();
 		//buf_test1();
 
 		//com_test3();
@@ -4720,7 +4738,7 @@ void com_test()
 
 		//path_iter_test();
 
-		thd_test();
+		//thd_test();
 
 
 		//ds_test2();
