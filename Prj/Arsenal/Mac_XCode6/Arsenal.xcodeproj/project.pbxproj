@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		67102CEE19E57F61002F0015 /* libpthread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 67102CED19E57F61002F0015 /* libpthread.dylib */; };
-		67102CF019E57F67002F0015 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 67102CEF19E57F67002F0015 /* libiconv.dylib */; };
 		67102CF119E57FAD002F0015 /* libpthread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 67102CED19E57F61002F0015 /* libpthread.dylib */; };
 		67102CF219E57FB2002F0015 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 67102CEF19E57F67002F0015 /* libiconv.dylib */; };
 		6713578917B36CCA001133BC /* property_list.c in Sources */ = {isa = PBXBuildFile; fileRef = 6713578817B36CCA001133BC /* property_list.c */; };
@@ -281,8 +279,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				67102CF019E57F67002F0015 /* libiconv.dylib in Frameworks */,
-				67102CEE19E57F61002F0015 /* libpthread.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
