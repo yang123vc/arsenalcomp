@@ -693,6 +693,7 @@ static struct { const wchar_t	*rule; const wchar_t	*prec_token; psrRuleFunc_t	ha
 #define __RULE_COUNT__ ((size_t)125)
 #define START_RULE L"module"
 
+#if(0)
 
 static lex_t*	__build_lex()													
 {																				
@@ -830,6 +831,7 @@ static psrGrammar_t*	__build_grammar(const psrHandler_t	*handler)
 }
 
 
+#endif
 
 
 

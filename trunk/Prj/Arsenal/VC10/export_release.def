@@ -471,6 +471,7 @@ AR_SetURIAuthority
 AR_SetURIScheme
 AR_SetURIQueryItems
 AR_GetURIUserInfo
+AR_GetURIUserInfoEx
 AR_GetURIPathEtc
 AR_CreateURIQueryTable
 AR_HashIteratorNext
