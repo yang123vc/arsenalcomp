@@ -4661,7 +4661,7 @@ void com_test()
 		//str_test23();
 		//str_test24();
 		//str_test25();
-		str_test26();
+		//str_test26();
 		//buf_test1();
 
 		//com_test3();
@@ -4747,7 +4747,7 @@ void com_test()
 
 		//cache_test();
 
-		//uri_test();
+		uri_test();
 
 		//buffer_test3();
 

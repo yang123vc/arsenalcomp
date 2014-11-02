@@ -27,12 +27,15 @@ static void uri_parse_test()
 		arStatus_t status;
 		
 		status = AR_S_YES;
-		arString_t *str;
+		arString_t *str, *user, *pwd;
 
 		uri = AR_CreateURI(AR_CP_UTF8);
 		str = AR_CreateString();
-		
+		user = AR_CreateString();
+		pwd = AR_CreateString();
+
 		AR_ASSERT(uri != NULL);
+		AR_ASSERT(str != NULL && user != NULL && pwd != NULL);
 
 
 		/*******************************************************************************/
@@ -1035,12 +1038,51 @@ static void uri_parse_test()
 		AR_ASSERT(!AR_IsRelativeURI(uri));
 
 
+		status = AR_GetURIUserInfoEx(uri, user, pwd);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(user), L"solidus") == 0);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(pwd), L"12345") == 0);
+
+
 		/*************************************************************************/
+		
+		status = AR_SetURI(uri, L"rtsp://solidus@www.pigletshare.com:12345/index.html");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIUserInfoEx(uri, user, pwd);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(user), L"solidus") == 0);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(pwd), L"") == 0);
+		/*******************************************************************************/
+		
+		status = AR_SetURI(uri, L"rtsp://:12345@www.pigletshare.com:12345/index.html");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIUserInfoEx(uri, user, pwd);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(user), L"") == 0);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(pwd), L"12345") == 0);
+		/*******************************************************************************/
+		
+		status = AR_SetURI(uri, L"rtsp://www.pigletshare.com:12345/index.html");
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_GetURIUserInfoEx(uri, user, pwd);
+		AR_ASSERT(status == AR_S_YES);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(user), L"") == 0);
+		AR_ASSERT(AR_wcscmp(AR_GetStringCString(pwd), L"") == 0);
+
+		/*******************************************************************************/
 
 		AR_DestroyURI(uri);
 		uri = NULL;
 		AR_DestroyString(str);
 		str = NULL;
+
+		AR_DestroyString(user);
+		user = NULL;
+		AR_DestroyString(pwd);
+		pwd = NULL;
 }
 
 

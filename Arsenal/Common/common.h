@@ -1082,7 +1082,10 @@ arStatus_t		AR_GetEncodedURI(const arURI_t *uri, arString_t *str);
 arStatus_t		AR_GetURIScheme(const arURI_t *uri, arString_t *str);
 arStatus_t		AR_SetURIScheme(arURI_t *uri, const wchar_t *str);
 
+
+
 arStatus_t		AR_GetURIUserInfo(const arURI_t *uri, arString_t *str);
+arStatus_t		AR_GetURIUserInfoEx(const arURI_t *uri, arString_t *user, arString_t *pwd);
 
 arStatus_t		AR_SetURIUserInfo(arURI_t *uri, const wchar_t *str);
 arStatus_t		AR_SetURIEncodedUserInfo(arURI_t *uri, const wchar_t *str);
@@ -1090,7 +1093,7 @@ arStatus_t		AR_SetURIEncodedUserInfo(arURI_t *uri, const wchar_t *str);
 arStatus_t		AR_GetURIHost(const arURI_t *uri, arString_t *str);
 arStatus_t		AR_SetURIHost(arURI_t *uri, const wchar_t *str);
 
-ar_uint_16_t		AR_GetURIPort(const arURI_t *uri);
+ar_uint_16_t	AR_GetURIPort(const arURI_t *uri);
 void			AR_SetURIPort(arURI_t *uri, ar_uint_16_t port);
 
 

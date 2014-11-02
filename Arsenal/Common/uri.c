@@ -925,6 +925,48 @@ arStatus_t		AR_GetURIUserInfo(const arURI_t *uri, arString_t *str)
 		/*return __encode(uri->code_page, AR_GetStringCString(uri->user_info), AR_GetStringCString(uri->user_info) + AR_GetStringLength(uri->user_info), ILLEGAL_S, str);*/
 }
 
+
+arStatus_t		AR_GetURIUserInfoEx(const arURI_t *uri, arString_t *user, arString_t *pwd)
+{
+		const wchar_t *b, *sp;
+		arStatus_t status;
+		AR_ASSERT(uri != NULL && user != NULL && pwd != NULL);
+		status = AR_S_YES;
+
+		if(user)
+		{
+				AR_ClearString(user);
+		}
+
+		if(pwd)
+		{
+				AR_ClearString(pwd);
+		}
+
+		b = AR_CSTR(uri->user_info);
+
+		sp = AR_wcschr(b, L':');
+
+		if(sp == NULL)
+		{
+				return AR_SetString(user, b);
+		}
+		
+		status = AR_SetStringN(user, b, sp - b);
+		if(status != AR_S_YES)
+		{
+				return status;
+		}
+
+		b = sp;
+		while(*b != L'\0' && *b == L':')
+		{
+				++b;
+		}
+
+		return AR_SetString(pwd, b);
+}
+
 arStatus_t		AR_GetURIHost(const arURI_t *uri, arString_t *str)
 {
 		AR_ASSERT(uri != NULL && str != NULL);
@@ -1169,14 +1211,15 @@ arStatus_t		AR_SetURIUserInfo(arURI_t *uri, const wchar_t *str)
 {
 		AR_ASSERT(uri != NULL && str != NULL);
 		AR_ClearString(uri->user_info);
-		return __decode(uri->code_page, str, str + AR_wcslen(str), uri->user_info);
+		return AR_SetString(uri->user_info, str);
+		
 }
 
 arStatus_t		AR_SetURIEncodedUserInfo(arURI_t *uri, const wchar_t *str)
 {
 		AR_ASSERT(uri != NULL && str != NULL);
 		AR_ClearString(uri->user_info);
-		return AR_SetString(uri->user_info, str);
+		return __decode(uri->code_page, str, str + AR_wcslen(str), uri->user_info);
 }
 
 
