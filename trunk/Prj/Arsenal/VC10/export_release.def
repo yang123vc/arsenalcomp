@@ -109,6 +109,7 @@ AR_GetEncodedURI
 AR_SetEncodedURI
 AR_GetURI
 AR_DestroyURI
+AR_GetURIPort
 
 AR_base64_decode
 AR_base64_encode
