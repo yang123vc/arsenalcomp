@@ -283,6 +283,40 @@ AR_BYTEFLIP_32B
 AR_BYTEFLIP_64B
 
 
+
+AR_open_file
+AR_close_file
+AR_read_file
+AR_write_file
+AR_eof_file
+AR_error_file
+AR_seek_file
+AR_tell_file
+AR_path_is_hidden
+AR_path_is_dev
+AR_path_is_dir
+AR_path_is_link
+AR_path_is_file
+AR_path_is_executable
+AR_path_is_writeable
+AR_path_is_readable
+AR_path_is_existed
+AR_path_set_executable
+AR_path_set_writeable
+AR_path_rename
+AR_path_remove
+AR_path_create_file
+AR_path_create_dir
+AR_path_create_path
+AR_path_remove_path
+AR_path_copyfile
+AR_path_copylink
+AR_path_get_size
+AR_path_set_size
+AR_path_copydir
+
+
+
 ;Lex
 
 Lex_Create				
