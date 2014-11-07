@@ -317,6 +317,8 @@ ar_uint_32_t	AR_BYTEFLIP_U32(ar_uint_32_t val);
 ar_int_64_t		AR_BYTEFLIP_64(ar_int_64_t val);
 ar_uint_64_t	AR_BYTEFLIP_U64(ar_uint_64_t val);
 
+float           AR_BYTEFLIP_FLOAT(float val);
+double          AR_BYTEFLIP_DOUBLE(double val);
 
 void			AR_BYTEFLIP_16B(ar_byte_t *b);
 void			AR_BYTEFLIP_32B(ar_byte_t *b);

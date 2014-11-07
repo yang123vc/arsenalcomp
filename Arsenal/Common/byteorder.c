@@ -141,6 +141,32 @@ ar_uint_64_t		AR_BYTEFLIP_U64(ar_uint_64_t val)
 }
 
 
+float           AR_BYTEFLIP_FLOAT(float val)
+{
+        union
+        {
+                float           f;
+                ar_uint_32_t    u32;
+        }swapper;
+        
+        swapper.f = val;
+        swapper.u32 = AR_BYTEFLIP_U32(swapper.u32);
+        return swapper.f;
+}
+
+double          AR_BYTEFLIP_DOUBLE(double val)
+{
+        union
+        {
+                double          dbl;
+                ar_uint_64_t    u64;
+        }swapper;
+        
+        swapper.dbl = val;
+        swapper.u64 = AR_BYTEFLIP_U64(swapper.u64);
+        return swapper.dbl;
+}
+
 
 void			AR_BYTEFLIP_16B(ar_byte_t *b)
 {
