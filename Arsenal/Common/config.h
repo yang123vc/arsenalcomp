@@ -793,6 +793,9 @@ typedef void*					ar_ptr_t;
 #define	AR_USE_CRT_ALLOCFUNC	1
 */
 
+#define AR_USE_CRT_ALLOCFUNC    1
+
+#if(0)
 #ifndef AR_NDEBUG
 
 		#ifndef AR_USE_CRT_ALLOCFUNC
@@ -809,6 +812,7 @@ typedef void*					ar_ptr_t;
 
         #define	AR_USE_CRT_ALLOCFUNC	1
 
+#endif
 #endif
 
 

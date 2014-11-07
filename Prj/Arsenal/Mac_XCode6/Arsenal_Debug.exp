@@ -345,9 +345,11 @@ _AR_cos_dbl
 _AR_cos_flt
 _AR_data_to_hexstr
 _AR_data_to_hexwcs
-_AR_debug_calloc
-_AR_debug_free
-_AR_debug_malloc
+
+#_AR_debug_calloc
+#_AR_debug_free
+#_AR_debug_malloc
+
 _AR_debug_print
 _AR_eof_file
 _AR_error
