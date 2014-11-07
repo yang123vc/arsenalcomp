@@ -253,7 +253,7 @@ arStatus_t		AR_SetThreadPriority(arThread_t *thd, arThreadPrio_t prio)
 
         if(pthread_setschedparam(thd->thd, SCHED_OTHER, &par) != 0)
         {
-                AR_error(AR_ERR_WARNING, L"cannot set thread priority!");
+                AR_error(AR_ERR_WARNING, L"cannot set thread priority!\r\n");
                 return AR_E_SYS;
         }else
         {
@@ -297,7 +297,7 @@ arMutex_t*		AR_CreateMutex()
                 pthread_mutexattr_destroy(&attr);
                 AR_DEL(mtx);
                 mtx = NULL;
-                AR_error(AR_ERR_WARNING, L"cannot create mutex");
+                AR_error(AR_ERR_WARNING, L"cannot create mutex\r\n");
                 return NULL;
         }
         pthread_mutexattr_destroy(&attr);
@@ -319,7 +319,7 @@ arStatus_t		AR_LockMutex(arMutex_t *mtx)
         AR_ASSERT(mtx != NULL);
         if (pthread_mutex_lock((pthread_mutex_t*)mtx) != 0)
         {
-                AR_error(AR_ERR_WARNING, L"cannot lock mutex");
+                AR_error(AR_ERR_WARNING, L"cannot lock mutex\r\n");
                 return AR_E_SYS;
         }
         return AR_S_YES;
@@ -339,7 +339,7 @@ arStatus_t		AR_TryLockMutex(arMutex_t *mtx)
                 return AR_S_NO;
         }else
         {
-                AR_error(AR_ERR_WARNING, L"cannot trylock mutex");
+                AR_error(AR_ERR_WARNING, L"cannot trylock mutex\r\n");
                 return AR_E_SYS;
         }
 }
@@ -349,7 +349,7 @@ arStatus_t		AR_UnLockMutex(arMutex_t *mtx)
         AR_ASSERT(mtx != NULL);
         if(pthread_mutex_unlock((pthread_mutex_t*)mtx) != 0)
         {
-                AR_error(AR_ERR_WARNING, L"cannot unlock mutex");
+                AR_error(AR_ERR_WARNING, L"cannot unlock mutex\r\n");
                 return AR_E_SYS;
         }else
         {
@@ -389,7 +389,7 @@ arEvent_t*		AR_CreateEvent(ar_bool_t is_auto_reset)
 
         if(pthread_mutex_init(&evt->mtx, NULL) != 0)
         {
-                AR_error(AR_ERR_WARNING, L"cannot create event (mutex)");
+                AR_error(AR_ERR_WARNING, L"cannot create event (mutex)\r\n");
                 goto FAILED_POINT;
         }else
         {
@@ -398,7 +398,7 @@ arEvent_t*		AR_CreateEvent(ar_bool_t is_auto_reset)
 
         if(pthread_cond_init(&evt->cond, NULL) != 0)
         {
-                AR_error(AR_ERR_WARNING, L"cannot create event (condition)");
+                AR_error(AR_ERR_WARNING, L"cannot create event (condition)\r\n");
                 goto FAILED_POINT;
         }else
         {
@@ -443,7 +443,7 @@ arStatus_t		AR_SetEvent(arEvent_t *evt)
 {
         if(pthread_mutex_lock(&evt->mtx) != 0)
         {
-                AR_error(AR_ERR_WARNING, L"cannot signal event (lock)");
+                AR_error(AR_ERR_WARNING, L"cannot signal event (lock)\r\n");
                 return AR_E_SYS;
         }
 
@@ -452,7 +452,7 @@ arStatus_t		AR_SetEvent(arEvent_t *evt)
         if(pthread_cond_broadcast(&evt->cond) != 0)
         {
                 pthread_mutex_unlock(&evt->mtx);
-                AR_error(AR_ERR_WARNING, L"cannot signal event");
+                AR_error(AR_ERR_WARNING, L"cannot signal event\r\n");
                 return AR_E_SYS;
         }
 
@@ -467,7 +467,7 @@ arStatus_t		AR_ResetEvent(arEvent_t *evt)
 
         if(pthread_mutex_lock(&evt->mtx) != 0)
         {
-                AR_error(AR_ERR_WARNING, L"cannot reset event");
+                AR_error(AR_ERR_WARNING, L"cannot reset event\r\n");
                 return AR_E_SYS;
         }
         evt->state = false;
@@ -480,7 +480,7 @@ arStatus_t		AR_WaitEvent(arEvent_t *evt)
         AR_ASSERT(evt != NULL);
         if(pthread_mutex_lock(&evt->mtx) != 0)
         {
-                AR_error(AR_ERR_WARNING, L"wait for event failed (lock)");
+                AR_error(AR_ERR_WARNING, L"wait for event failed (lock)\r\n");
                 return AR_E_SYS;
         }
 
@@ -490,7 +490,8 @@ arStatus_t		AR_WaitEvent(arEvent_t *evt)
                 if(err != 0)
                 {
                         pthread_mutex_unlock(&evt->mtx);
-                        AR_error(AR_ERR_WARNING, L"wait for event failed : %d", err);
+                        AR_error(AR_ERR_WARNING, L"wait for event failed : %d\r\n", err);
+                        AR_ASSERT(false);/*must be logical error !!!*/
                         return AR_E_SYS;
                 }
         }
@@ -533,7 +534,7 @@ arStatus_t		AR_WaitEventWithTimeout(arEvent_t *evt, ar_int_64_t milliseconds)
 
         if(pthread_mutex_lock(&evt->mtx) != 0)
         {
-                AR_error(AR_ERR_WARNING, L"wait for event failed (lock)");
+                AR_error(AR_ERR_WARNING, L"wait for event failed (lock)\r\n");
                 return AR_E_SYS;
         }
 
@@ -550,7 +551,8 @@ arStatus_t		AR_WaitEventWithTimeout(arEvent_t *evt, ar_int_64_t milliseconds)
                 }else
                 {
                         pthread_mutex_unlock(&evt->mtx);
-                        AR_error(AR_ERR_WARNING, L"cannot wait for event");
+                        AR_error(AR_ERR_WARNING, L"cannot wait for event\r\n");
+                        AR_ASSERT(false);//must be logical error !!!
                         return AR_E_SYS;
                 }
         }
