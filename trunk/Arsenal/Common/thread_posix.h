@@ -486,10 +486,11 @@ arStatus_t		AR_WaitEvent(arEvent_t *evt)
 
         while (!evt->state)
         {
-                if(pthread_cond_wait(&evt->cond, &evt->mtx) != 0)
+                int err = pthread_cond_wait(&evt->cond, &evt->mtx);
+                if(err != 0)
                 {
                         pthread_mutex_unlock(&evt->mtx);
-                        AR_error(AR_ERR_WARNING, L"wait for event failed");
+                        AR_error(AR_ERR_WARNING, L"wait for event failed : %d", err);
                         return AR_E_SYS;
                 }
         }
