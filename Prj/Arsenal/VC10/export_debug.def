@@ -280,6 +280,8 @@ AR_BYTEFLIP_U64
 AR_BYTEFLIP_16B
 AR_BYTEFLIP_32B
 AR_BYTEFLIP_64B
+AR_BYTEFLIP_FLOAT
+AR_BYTEFLIP_DOUBLE
 
 AR_open_file
 AR_close_file
@@ -533,8 +535,7 @@ AR_InitHashIterator
 AR_wcscat
 AR_reverse_wcschr
 
-AR_debug_malloc
-AR_debug_free
+
 
 AR_GetURIPort
 AR_IsRelativeURI 
@@ -631,7 +632,7 @@ PList_LoadBinaryFromFile
 
 
 
-AR_debug_calloc
+
 AR_close_file
 AR_error_file
 AR_eof_file
@@ -849,4 +850,6 @@ Json_SaveObjectToFile
 
 
 
-
+;AR_debug_malloc
+;AR_debug_free
+;AR_debug_calloc
