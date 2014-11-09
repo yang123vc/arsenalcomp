@@ -850,6 +850,6 @@ Json_SaveObjectToFile
 
 
 
-;AR_debug_malloc
-;AR_debug_free
-;AR_debug_calloc
+AR_debug_malloc
+AR_debug_free
+AR_debug_calloc
