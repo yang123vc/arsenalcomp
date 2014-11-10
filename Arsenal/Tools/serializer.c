@@ -814,20 +814,35 @@ static snRetVal_t	__get_float(arBuffer_t	*buffer)
 		AR_EraseBuffer(buffer, 1);
 		
 		{
-				wchar_t buf[512];
 				ar_int_t need_n;
+				wchar_t *buf = AR_NEWARR(wchar_t, 512);
+				if(buf == NULL)
+				{
+						AR_error(AR_ERR_WARNING, L"low mem : %ls\r\n", AR_FUNC_NAME);
+						ret.status = AR_E_NOMEM;
+						goto END_POINT;
+				}
+
+				
 				need_n= SN_GetWcsFromStringObject(str_obj, buf, 512);
 				if(need_n <= 0)
 				{
+						AR_DEL(buf);
+						buf = NULL;
 						ret.status = AR_E_BADENCCONV;
 						goto END_POINT;
 				}
 
 				if(AR_wtod(buf, &num) == NULL)
 				{
+						AR_DEL(buf);
+						buf = NULL;
 						ret.status = AR_E_MALFORMAT;
 						goto END_POINT;
 				}
+
+				AR_DEL(buf);
+				buf = NULL;
 		}
 
 		ret.obj = SN_CreateObject(SN_FLOAT_T);
@@ -1156,17 +1171,25 @@ static arStatus_t		__put_float(arBuffer_t	*buffer, const snFloat_t *float_num)
 {
 		arStatus_t status;
 		const char b = 'f', e = 'e';
-		wchar_t buf[1024];
+		wchar_t *buf = NULL;
 		
 		AR_ASSERT(buffer != NULL && float_num != NULL);
 
 		status = AR_S_YES;
 		
+		buf = AR_NEWARR(wchar_t, 1024);
+
+		if(buf == NULL)
+		{
+				status = AR_E_NOMEM;
+				goto END_POINT;
+		}
+
 
 		if(AR_swprintf(buf, 1024, L"%.*g", (ar_uint_32_t)30, float_num->num) <= 0)
 		{
 				status = AR_E_MALFORMAT;
-				return status;
+				goto END_POINT;
 		}
 
 		status = AR_InsertToBuffer(buffer, (const ar_byte_t*)&b, 1);
@@ -1206,6 +1229,12 @@ static arStatus_t		__put_float(arBuffer_t	*buffer, const snFloat_t *float_num)
 		}
 		
 END_POINT:
+		if(buf)
+		{
+				AR_DEL(buf);
+				buf = NULL;
+		}
+
 		return status;
 }
 

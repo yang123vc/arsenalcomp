@@ -259,13 +259,14 @@ arStatus_t AR_printf(const wchar_t *msg,...)
 
 void	AR_check(ar_bool_t cond, const wchar_t *fmt, ...)
 {
-		wchar_t buf[1024];
+		
 		ar_int_t len;
 		va_list arg_ptr;
 		AR_ASSERT(fmt);
 		
 		if(!cond)
 		{
+				wchar_t buf[1024];
 				AR_va_start(arg_ptr, fmt);
 				len = AR_vswprintf_nonalloc(buf, 1024, fmt, arg_ptr);
 				AR_va_end(arg_ptr);

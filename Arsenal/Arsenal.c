@@ -81,7 +81,7 @@ arStatus_t	Arsenal_Init(const arInit_t *ctx)
 		total_end = AR_GetTime_Milliseconds();
 
 		{
-				wchar_t msg[1024];
+				wchar_t msg[256];
 				AR_swprintf(msg, AR_NELEMS(msg), L"Arsenal initialized consume time == %Id\r\n", total_end - total_beg);
 				AR_printf(msg);
 		}
