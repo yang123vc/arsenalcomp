@@ -25,95 +25,98 @@ AR_NAMESPACE_BEGIN
 
 		
 
-
-#define __CHECK_RET_VAL(_call_stmt)						\
+#define __CHECK_RET_VAL_DELBUF(_call_stmt)				\
 		do{												\
 				arStatus_t status = _call_stmt;			\
 				if(status != AR_S_YES)					\
 				{										\
+						if(buf){AR_DEL(buf);buf=NULL;}	\
 						return status;					\
 				}										\
 		}while(0)
-
 static arStatus_t Parser_PrintActionTable(const psrActionTable_t *tbl, const psrGrammar_t *grammar, size_t width, arString_t *str)
 {
 		/*这里必须用int，因为printf一族函数的对于%*d这类width的定义就是int*/
 		int __WIDTH__;
 		size_t i,j;
-		wchar_t buf[1024];
+		wchar_t *buf = AR_NEWARR(wchar_t, 1024);
+		if(buf == NULL)
+		{
+				return AR_E_NOMEM;
+		}
 
 		__WIDTH__ = (int)width;
 		
-		__CHECK_RET_VAL(AR_AppendString(str,L"TermSet:\r\n"));
+		__CHECK_RET_VAL_DELBUF(AR_AppendString(str,L"TermSet:\r\n"));
 
 		for(i = 0; i < tbl->term_set.count; ++i)
 		{
-				__CHECK_RET_VAL(Parser_PrintSymbol(tbl->term_set.lst[i],str));
-				__CHECK_RET_VAL(AR_AppendString(str,L"  "));
+				__CHECK_RET_VAL_DELBUF(Parser_PrintSymbol(tbl->term_set.lst[i],str));
+				__CHECK_RET_VAL_DELBUF(AR_AppendString(str,L"  "));
 		}
 
-		__CHECK_RET_VAL(AR_AppendString(str,L"\r\n"));
-		__CHECK_RET_VAL(AR_AppendString(str, L"-----------------------------------------\r\n"));
-		__CHECK_RET_VAL(AR_AppendString(str,L"NonTermSet:\r\n"));
+		__CHECK_RET_VAL_DELBUF(AR_AppendString(str,L"\r\n"));
+		__CHECK_RET_VAL_DELBUF(AR_AppendString(str, L"-----------------------------------------\r\n"));
+		__CHECK_RET_VAL_DELBUF(AR_AppendString(str,L"NonTermSet:\r\n"));
 
 		for(i = 0; i < tbl->nonterm_set.count; ++i)
 		{
-				__CHECK_RET_VAL(Parser_PrintSymbol(tbl->nonterm_set.lst[i],str));
-				__CHECK_RET_VAL(AR_AppendString(str,L"  "));
+				__CHECK_RET_VAL_DELBUF(Parser_PrintSymbol(tbl->nonterm_set.lst[i],str));
+				__CHECK_RET_VAL_DELBUF(AR_AppendString(str,L"  "));
 		}
 
-		__CHECK_RET_VAL(AR_AppendString(str,L"\r\n"));
-		__CHECK_RET_VAL(AR_AppendString(str,L"-----------------------------------------\r\n"));
+		__CHECK_RET_VAL_DELBUF(AR_AppendString(str,L"\r\n"));
+		__CHECK_RET_VAL_DELBUF(AR_AppendString(str,L"-----------------------------------------\r\n"));
 
 		
-		__CHECK_RET_VAL(AR_AppendString(str,L"Goto Table:\r\n"));
+		__CHECK_RET_VAL_DELBUF(AR_AppendString(str,L"Goto Table:\r\n"));
 		
-		__CHECK_RET_VAL(AR_AppendFormatString(str, L"%*ls", __WIDTH__,L"NULL"));
+		__CHECK_RET_VAL_DELBUF(AR_AppendFormatString(str, L"%*ls", __WIDTH__,L"NULL"));
 
 		for(i = 0; i < tbl->nonterm_set.count; ++i)
 		{
 				AR_swprintf(buf, 1024, L"<%ls>", tbl->nonterm_set.lst[i]->name);
-				__CHECK_RET_VAL(AR_AppendFormatString(str, L"%*ls",__WIDTH__, buf));
+				__CHECK_RET_VAL_DELBUF(AR_AppendFormatString(str, L"%*ls",__WIDTH__, buf));
 		}
 
 
-		__CHECK_RET_VAL(AR_AppendString(str,L"\r\n"));
-		__CHECK_RET_VAL(AR_AppendString(str,L"\r\n"));
+		__CHECK_RET_VAL_DELBUF(AR_AppendString(str,L"\r\n"));
+		__CHECK_RET_VAL_DELBUF(AR_AppendString(str,L"\r\n"));
 
 		for(i = 0; i < tbl->goto_row; i++)
 		{
 				AR_swprintf(buf, 1024, L"I[%Id]", (size_t)i);
 
-				__CHECK_RET_VAL(AR_AppendFormatString(str, L"%*ls:", __WIDTH__,buf));
+				__CHECK_RET_VAL_DELBUF(AR_AppendFormatString(str, L"%*ls:", __WIDTH__,buf));
 
 				for(j = 0; j < tbl->goto_col; ++j)
 				{
-						__CHECK_RET_VAL(AR_AppendFormatString(str, L"%*Id", __WIDTH__, tbl->goto_tbl[AR_TBL_IDX_R(i,j,tbl->goto_col)]));
+						__CHECK_RET_VAL_DELBUF(AR_AppendFormatString(str, L"%*Id", __WIDTH__, tbl->goto_tbl[AR_TBL_IDX_R(i,j,tbl->goto_col)]));
 				}
 
-				__CHECK_RET_VAL(AR_AppendString(str,L"\r\n"));
+				__CHECK_RET_VAL_DELBUF(AR_AppendString(str,L"\r\n"));
 		}
 
-		__CHECK_RET_VAL(AR_AppendString(str,L"-----------------------------------------\r\n"));
+		__CHECK_RET_VAL_DELBUF(AR_AppendString(str,L"-----------------------------------------\r\n"));
 
-		__CHECK_RET_VAL(AR_AppendString(str,L"Action Table:\r\n"));
+		__CHECK_RET_VAL_DELBUF(AR_AppendString(str,L"Action Table:\r\n"));
 		
-		__CHECK_RET_VAL(AR_AppendFormatString(str,L"%*ls", __WIDTH__,L"NULL"));
+		__CHECK_RET_VAL_DELBUF(AR_AppendFormatString(str,L"%*ls", __WIDTH__,L"NULL"));
 
 		for(i = 0; i < tbl->term_set.count; ++i)
 		{
-				__CHECK_RET_VAL(AR_AppendFormatString(str,L"%*ls",__WIDTH__, tbl->term_set.lst[i]->name));
+				__CHECK_RET_VAL_DELBUF(AR_AppendFormatString(str,L"%*ls",__WIDTH__, tbl->term_set.lst[i]->name));
 		}
 		
-		__CHECK_RET_VAL(AR_AppendFormatString(str,L"\r\n"));
-		__CHECK_RET_VAL(AR_AppendFormatString(str,L"\r\n"));
+		__CHECK_RET_VAL_DELBUF(AR_AppendFormatString(str,L"\r\n"));
+		__CHECK_RET_VAL_DELBUF(AR_AppendFormatString(str,L"\r\n"));
 
 
 		for(i = 0; i < tbl->row; ++i)
 		{
 				AR_swprintf(buf, 1024, L"I[%Id]", i);
 
-				__CHECK_RET_VAL(AR_AppendFormatString(str,L"%*ls:", __WIDTH__,buf));
+				__CHECK_RET_VAL_DELBUF(AR_AppendFormatString(str,L"%*ls:", __WIDTH__,buf));
 
 				for(j = 0; j < tbl->col; ++j)
 				{
@@ -125,32 +128,48 @@ static arStatus_t Parser_PrintActionTable(const psrActionTable_t *tbl, const psr
 						switch(pact->type)
 						{
 						case PARSER_ACCEPT:
-								__CHECK_RET_VAL(AR_AppendFormatString(str,L"%*ls", __WIDTH__,L"accept"));
+								__CHECK_RET_VAL_DELBUF(AR_AppendFormatString(str,L"%*ls", __WIDTH__,L"accept"));
 								break;
 						case PARSER_SHIFT:
 						{
-								__CHECK_RET_VAL(AR_AppendFormatString(str,L"%*Id", __WIDTH__, (size_t)pact->shift_to));
+								__CHECK_RET_VAL_DELBUF(AR_AppendFormatString(str,L"%*Id", __WIDTH__, (size_t)pact->shift_to));
 						}
 								break;
 						case PARSER_REDUCE:
 						{
 								AR_swprintf(buf, 1024, L"[<%ls>:%Id]",rule->head->name, (size_t)pact->reduce_count);
-								__CHECK_RET_VAL(AR_AppendFormatString(str,L"%*ls", __WIDTH__,buf));
+								__CHECK_RET_VAL_DELBUF(AR_AppendFormatString(str,L"%*ls", __WIDTH__,buf));
 								
 						}
 								break;
 						default:
-								__CHECK_RET_VAL(AR_AppendFormatString(str,L"%*ls", __WIDTH__,L"error"));
+								__CHECK_RET_VAL_DELBUF(AR_AppendFormatString(str,L"%*ls", __WIDTH__,L"error"));
 								break;
 						}
 				}
-				__CHECK_RET_VAL(AR_AppendFormatString(str,L"\r\n"));
+				__CHECK_RET_VAL_DELBUF(AR_AppendFormatString(str,L"\r\n"));
 		}
-		__CHECK_RET_VAL(AR_AppendFormatString(str,L"-----------------------------------------\r\n"));
+		__CHECK_RET_VAL_DELBUF(AR_AppendFormatString(str,L"-----------------------------------------\r\n"));
+
+		if(buf)
+		{
+				AR_DEL(buf);
+				buf = NULL;
+		}
 
 		return AR_S_YES;
 }
 
+
+
+#define __CHECK_RET_VAL(_call_stmt)						\
+		do{												\
+				arStatus_t status = _call_stmt;			\
+				if(status != AR_S_YES)					\
+				{										\
+						return status;					\
+				}										\
+		}while(0)
 
 
 static arStatus_t Parser_ReportConflict(const psrActionTable_t *tbl, const psrGrammar_t *grammar, arString_t *str)

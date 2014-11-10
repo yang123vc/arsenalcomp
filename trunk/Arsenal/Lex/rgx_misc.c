@@ -716,8 +716,8 @@ void	RGX_UnInitMisc()
 
 #if defined(AR_DEBUG)
 		{
-				wchar_t buf[1024];
-				AR_swprintf(buf, 1024, L"Total consume rgxThreadList_t == %Iu", count);
+				wchar_t buf[128];
+				AR_swprintf(buf, 128, L"Total consume rgxThreadList_t == %Iu", count);
 				AR_error(AR_ERR_MESSAGE, L"%ls\r\n", buf);
 		}
 #endif

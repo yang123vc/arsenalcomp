@@ -173,20 +173,20 @@ const wchar_t*			AR_GetStringN(arStringTable_t *tbl, const wchar_t *str, size_t 
 
 const wchar_t*			AR_GetStringInt(arStringTable_t *tbl, ar_int_64_t num, size_t radix)
 {
-		wchar_t buf[1024];
+		wchar_t buf[128];
 
 		AR_ASSERT(tbl != NULL && radix > 1 && radix <= 16);
-		AR_i64tow_buf(buf, 1024, num, radix);
+		AR_i64tow_buf(buf, 128, num, radix);
 		return AR_GetString(tbl, buf);
 }
 
 const wchar_t*			AR_GetStringUInt(arStringTable_t *tbl, ar_uint_64_t num, size_t radix)
 {
-		wchar_t buf[1024];
+		wchar_t buf[128];
 		
 		AR_ASSERT(tbl != NULL && radix > 1 && radix <= 16);
 		
-		AR_u64tow_buf(buf, 1024, num, radix);
+		AR_u64tow_buf(buf, 128, num, radix);
 		
 		return AR_GetString(tbl, buf);
 }
@@ -194,13 +194,28 @@ const wchar_t*			AR_GetStringUInt(arStringTable_t *tbl, ar_uint_64_t num, size_t
 
 const wchar_t*			AR_GetStringFloat(arStringTable_t *tbl, double num, size_t prec)
 {
-		wchar_t buf[1024];
-		
+		wchar_t *buf = NULL;
+		const wchar_t *ret = NULL;
 		AR_ASSERT(tbl != NULL && prec > 0);
+
+		buf = AR_NEWARR(wchar_t, 1024);
+
+		if(buf == NULL)
+		{
+				AR_error(AR_ERR_WARNING, L"low mem : %hs\r\n", AR_FUNC_NAME);
+				return NULL;
+		}
 		
 		AR_swprintf(buf, 1024, L"%.*g", (ar_uint_32_t)prec, num);
 		
-		return AR_GetString(tbl, buf);
+		ret = AR_GetString(tbl, buf);
+
+		if(buf)
+		{
+				AR_DEL(buf);
+				buf = NULL;
+		}
+		return ret;
 }
 
 

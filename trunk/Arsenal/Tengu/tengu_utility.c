@@ -124,13 +124,24 @@ ar_bool_t			TGU_HasString(const wchar_t *name)
 tguSrc_t*		TGU_LoadSources(const wchar_t *work_dir, const wchar_t *file_name)
 {
 		tguSrc_t		*src;
-		wchar_t			path[1024];
 		size_t			len_of_name;
 		const wchar_t	*end_of_name;
+
+		wchar_t			*path = AR_NEWARR(wchar_t, 1024);
+
+		if(path == NULL)
+		{
+				AR_DEL(path);
+				path = NULL;
+				return NULL;
+		}
+
 		AR_ASSERT(work_dir != NULL && file_name != NULL);
 
 		if(AR_wcslen(file_name) == 0 || AR_wcslen(work_dir) == 0)
 		{
+				AR_DEL(path);
+				path = NULL;
 				return NULL;
 		}
 
@@ -146,6 +157,8 @@ tguSrc_t*		TGU_LoadSources(const wchar_t *work_dir, const wchar_t *file_name)
 
 		if(src == NULL)
 		{
+				AR_DEL(path);
+				path = NULL;
 				goto INVALID_POINT;
 		}
 
@@ -153,6 +166,8 @@ tguSrc_t*		TGU_LoadSources(const wchar_t *work_dir, const wchar_t *file_name)
 
 		if(src->path == NULL)
 		{
+				AR_DEL(path);
+				path = NULL;
 				goto INVALID_POINT;
 		}
 		
@@ -175,6 +190,8 @@ tguSrc_t*		TGU_LoadSources(const wchar_t *work_dir, const wchar_t *file_name)
 
 				if(str == NULL)
 				{
+						AR_DEL(path);
+						path = NULL;
 						goto INVALID_POINT;
 				}
 
@@ -190,8 +207,13 @@ tguSrc_t*		TGU_LoadSources(const wchar_t *work_dir, const wchar_t *file_name)
 
 		if(!src->code)
 		{
+				AR_DEL(path);
+				path = NULL;
 				goto INVALID_POINT;
 		}
+
+		AR_DEL(path);
+		path = NULL;
 		return src;
 
 

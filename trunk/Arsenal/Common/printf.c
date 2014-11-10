@@ -1399,30 +1399,37 @@ ar_int_t			AR_vswprintf_nonalloc(wchar_t *dest, size_t count, const wchar_t *fmt
 		ar_int_t res;
 		va_list save;
 		ar_int_t need_l;
-		wchar_t src_fmt[1024];
+		wchar_t *src_fmt;
 
 
 		AR_ASSERT(dest != NULL && fmt != NULL);
 
 		res = 0;
 		need_l = 0;
-		
-
+		src_fmt = NULL;
 
 
 		/******************** converted to the format of the target CRT***************/
 		
 		need_l = __wcs_format_preprocess(fmt, NULL);
 
-		if(need_l <= 0 || need_l >= 1024)
+		if(need_l <= 0)
 		{
 				dest[0] = L'\0';
 				return -1;
 		}
 		
+		src_fmt = (wchar_t*)malloc( (need_l + 1) * sizeof(wchar_t));
+		if(src_fmt == NULL)
+		{
+				dest[0] = L'\0';
+				return -1;
+		}
 
 		if(__wcs_format_preprocess(fmt, src_fmt) <= 0)
 		{
+				free(src_fmt);
+				src_fmt = NULL;
 				dest[0] = L'\0';
 				return -1;
 		}
@@ -1434,10 +1441,14 @@ ar_int_t			AR_vswprintf_nonalloc(wchar_t *dest, size_t count, const wchar_t *fmt
 
 		if(res < 0)
 		{
+				free(src_fmt);
+				src_fmt = NULL;
 				dest[0] = L'\0';
 				return -1;
 		}
 	   /*****************************************************************************/
+		free(src_fmt);
+		src_fmt = NULL;
 		return res;
 
 }

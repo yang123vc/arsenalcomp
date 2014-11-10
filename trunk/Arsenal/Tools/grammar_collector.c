@@ -158,7 +158,12 @@ static arStatus_t	ParserData_CheckAndInsertName(cfgParserData_t *psr_data, const
 		if(ParserData_HasString(psr_data, name, t) == AR_S_YES)
 		{
 				cfgReportInfo_t	msg;
-				wchar_t	buf[1024];
+				wchar_t	*buf = AR_NEWARR(wchar_t, 1024);
+
+				if(buf == NULL)
+				{
+						return AR_E_NOMEM;
+				}
 
 				msg.warning.line = line;
 				switch(t)
@@ -182,6 +187,13 @@ static arStatus_t	ParserData_CheckAndInsertName(cfgParserData_t *psr_data, const
 				msg.warning.msg = buf;
 				msg.type = CFG_REPORT_WARNING_SYNTAX_T;
 				psr_data->report->report_func(&msg, psr_data->report->report_ctx);
+
+				if(buf)
+				{
+						AR_DEL(buf);
+						buf = NULL;
+				}
+
 				return AR_S_YES;
 		}else
 		{
