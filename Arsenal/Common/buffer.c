@@ -275,7 +275,7 @@ arStatus_t			AR_InsertToBuffer(arBuffer_t *buffer, const ar_byte_t *data, size_t
 
 		if(ptr)
 		{
-				memcpy(ptr, data, len);
+				AR_memcpy(ptr, data, len);
 				return AR_S_YES;
 		}else
 		{
