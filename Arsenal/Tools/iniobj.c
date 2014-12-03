@@ -79,7 +79,7 @@ static arIniLineType_t __parse_line(const wchar_t *line, wchar_t *key, wchar_t *
 		val[0] = L'\0';
 		comment[0] = L'\0';
         
-        AR_DPRINT(L"line : '%ls'\r\n", line);
+        //AR_DPRINT(L"line : '%ls'\r\n", line);
         
 		for(p = line; p <= line + line_len; ++p)
 		{
@@ -284,7 +284,7 @@ static arIniLineType_t __parse_line(const wchar_t *line, wchar_t *key, wchar_t *
                                         AR_wcsncpy(val, b, l);
                                         val[l] = L'\0';
                                         
-                                        AR_DPRINT(L"'%ls : %ls'\r\n", key, val);
+                                        //AR_DPRINT(L"'%ls : %ls'\r\n", key, val);
                                         
                                         return INI_KEY_VAL;
                                 }else if(AR_iswspace(*p))
