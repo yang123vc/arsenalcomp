@@ -34,6 +34,8 @@
 		67CEFDC6177B66E600D7D9D4 /* Base64Transcoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 67CEFDC3177B66E600D7D9D4 /* Base64Transcoder.c */; };
 		67DB43F21688503A00F05430 /* marshal_die_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67DB43F11688503A00F05430 /* marshal_die_test.cpp */; };
 		67DB43F31688503A00F05430 /* marshal_die_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67DB43F11688503A00F05430 /* marshal_die_test.cpp */; };
+		67F144D61A2F6CE0008C1A92 /* ini_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67F144D41A2F6CE0008C1A92 /* ini_test.cpp */; };
+		67F144D71A2F6CE0008C1A92 /* ini_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67F144D41A2F6CE0008C1A92 /* ini_test.cpp */; };
 		67F26D15156B55E0003FAA7E /* lfu_cache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67F26D14156B55E0003FAA7E /* lfu_cache.cpp */; };
 		67F26D16156B55E0003FAA7E /* lfu_cache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67F26D14156B55E0003FAA7E /* lfu_cache.cpp */; };
 		BE185ED514E849250095DB44 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = BE185ED314E849250095DB44 /* main.c */; };
@@ -84,6 +86,7 @@
 		67CEFDC4177B66E600D7D9D4 /* Base64Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Transcoder.h; sourceTree = SOURCE_ROOT; };
 		67DB43F11688503A00F05430 /* marshal_die_test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = marshal_die_test.cpp; sourceTree = SOURCE_ROOT; };
 		67DB43F41688505C00F05430 /* marshal_inner_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = marshal_inner_types.h; sourceTree = SOURCE_ROOT; };
+		67F144D41A2F6CE0008C1A92 /* ini_test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ini_test.cpp; sourceTree = SOURCE_ROOT; };
 		67F26D12156B55C9003FAA7E /* lfu_cache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lfu_cache.h; sourceTree = SOURCE_ROOT; };
 		67F26D14156B55E0003FAA7E /* lfu_cache.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lfu_cache.cpp; sourceTree = SOURCE_ROOT; };
 		BE185EA314E846F10095DB44 /* TestLib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TestLib; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -163,6 +166,7 @@
 				67DB43F11688503A00F05430 /* marshal_die_test.cpp */,
 				671357A517B4D9B6001133BC /* plist_test.mm */,
 				671357A817B4DA51001133BC /* plist_test.h */,
+				67F144D41A2F6CE0008C1A92 /* ini_test.cpp */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -244,6 +248,7 @@
 				674D86B9182E5531006DFF2A /* lex_test.cpp in Sources */,
 				67F26D15156B55E0003FAA7E /* lfu_cache.cpp in Sources */,
 				67DB43F21688503A00F05430 /* marshal_die_test.cpp in Sources */,
+				67F144D61A2F6CE0008C1A92 /* ini_test.cpp in Sources */,
 				67CEFDC5177B66E600D7D9D4 /* Base64Transcoder.c in Sources */,
 				678B9F72191D0DB900BBEF24 /* json_test.cpp in Sources */,
 				671357A617B4D9B6001133BC /* plist_test.mm in Sources */,
@@ -262,6 +267,7 @@
 				674D86BA182E5531006DFF2A /* lex_test.cpp in Sources */,
 				679A46EF15527DF0006A5AD4 /* commonTest.h in Sources */,
 				67F26D16156B55E0003FAA7E /* lfu_cache.cpp in Sources */,
+				67F144D71A2F6CE0008C1A92 /* ini_test.cpp in Sources */,
 				67DB43F31688503A00F05430 /* marshal_die_test.cpp in Sources */,
 				678B9F73191D0DB900BBEF24 /* json_test.cpp in Sources */,
 				67CEFDC6177B66E600D7D9D4 /* Base64Transcoder.c in Sources */,
