@@ -511,12 +511,14 @@ END_POINT:
 						}
 				}else
 				{
+                        /*
 						AR_UnLockSpinLock(&queue->mutex);
 
 						AR_YieldThread();
 
 						AR_LockSpinLock(&queue->mutex);
-
+                         */
+                        
 						if(queue->data_cnt > 0)
 						{
 								*pdata = __pop_data(queue);
