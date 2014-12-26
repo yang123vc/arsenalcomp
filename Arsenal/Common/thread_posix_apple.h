@@ -148,7 +148,7 @@ void			AR_LockSpinLock(arSpinLock_t *lock)
         {
                 if(++count > AR_MAXSPIN_COUNT)
                 {
-                        AR_Sleep(5);
+                        AR_YieldThread();
                         count = 0;
                 }
         }
