@@ -1196,7 +1196,7 @@ ar_bool_t			AR_AtomicCompExch(volatile ar_int_t *dest, ar_int_t val, ar_int_t cm
 
 /**********************************************************spinlock*************************************************************/
 
-#define			AR_MAXSPIN_COUNT		5000
+#define			AR_MAXSPIN_COUNT		25000
 
 #if defined(OS_FAMILY_UNIX)
 	
