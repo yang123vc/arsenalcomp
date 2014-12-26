@@ -442,6 +442,7 @@
 				BE328EE314F20CA9006BCA74 /* Sources */,
 				BE328EE414F20CA9006BCA74 /* Frameworks */,
 				BE328EE514F20CA9006BCA74 /* Headers */,
+				679EE14E1A4DBE7A00A1025D /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -477,6 +478,22 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		679EE14E1A4DBE7A00A1025D /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "python -B << EOF\n#coding=utf-8\nimport os;\nimport sys;\n\ncodebase_root_path = os.path.abspath(\"$PROJECT_DIR\" + \"/../../../\") + \"/\";\nbuild_temp_path    = os.path.abspath(\"$BUILT_PRODUCTS_DIR\") + \"/\";\nproduct_app_name   = \"$FULL_PRODUCT_NAME\";\nconfiguration      = \"$CONFIGURATION\";\nproject_dir        = \"$PROJECT_DIR\";\nplatform_name      = \"$PLATFORM_NAME\";\npackage_dir        =  \"Binary/\"  + platform_name + \"/\" + \"$CONFIGURATION\" + \"/\";\n\n\nprint(project_dir);\nprint(configuration);\nprint(package_dir);\n\n\nsys.path.append(project_dir);\nimport package;\n\n\nif not package.pack_dylib(codebase_root_path, build_temp_path, package_dir, product_app_name, configuration):\n    sys.exit(-1);\nelse:\n    sys.exit(0);\n\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		BE328EE314F20CA9006BCA74 /* Sources */ = {
@@ -555,8 +572,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_ENTITLEMENTS = dabaopku.plist;
-				CODE_SIGN_IDENTITY = "IOS Dev Crack";
+				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: peng liu (F2Q4HFZZ2L)";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -597,8 +614,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_ENTITLEMENTS = dabaopku.plist;
-				CODE_SIGN_IDENTITY = "IOS Dev Crack";
+				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: peng liu (F2Q4HFZZ2L)";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
