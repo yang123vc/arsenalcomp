@@ -563,6 +563,8 @@ _Ini_SetComment
 _Ini_SetFloat
 _Ini_SetInt
 _Ini_SetString
+_Ini_LoadObjectFromFile
+
 _Ini_SetUInt
 _Lex_Clear
 _Lex_ClearError

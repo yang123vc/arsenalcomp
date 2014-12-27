@@ -178,10 +178,12 @@ void			AR_UnLockSpinLock(arSpinLock_t *lock)
 
 static ar_int_64_t __g_start_mach = 0;
 static mach_timebase_info_data_t __g_mach_base_info;
+
 static void __init_ticks()
 {
         mach_timebase_info(&__g_mach_base_info);
         __g_start_mach = (ar_int_64_t)mach_absolute_time();
+        
 }
 
 static void __uninit_ticks()
@@ -204,6 +206,74 @@ ar_int_64_t		AR_GetTime_TickCount()
 }
 
 
+/*******************************************************Priority***********************************************************************/
+
+
+
+static int __get_min_os_prio()
+{
+        return sched_get_priority_min(SCHED_OTHER);
+}
+
+static int __get_max_os_prio()
+{
+        return sched_get_priority_max(SCHED_OTHER);
+}
+
+static int __map_prio(arThreadPrio_t prio)
+{
+        int pmin = __get_min_os_prio();
+        int pmax = __get_max_os_prio();
+        
+        switch (prio)
+        {
+                case AR_THREAD_PREC_LOW:
+                        return pmin;
+                case AR_THREAD_PREC_NORMAL:
+                        return pmin + (pmax - pmin) / 2;
+                default:
+                        return pmax;
+        }
+}
+
+
+
+arStatus_t		AR_SetThreadPriority(arThread_t *thd, arThreadPrio_t prio)
+{
+        struct sched_param par;
+        AR_ASSERT(thd != NULL);
+        
+        if(prio == thd->prio)
+        {
+                return AR_S_YES;
+        }
+        
+        par.sched_priority = __map_prio(prio);
+        
+        if(pthread_setschedparam(thd->thd, SCHED_FIFO, &par) != 0)
+        {
+                AR_error(AR_ERR_WARNING, L"cannot set thread priority!\r\n");
+                
+                return AR_E_SYS;
+        }else
+        {
+                
+                thd->prio = prio;
+                return AR_S_YES;
+        }
+        
+}
+
+
+arStatus_t		AR_GetThreadPriority(arThread_t *thd, arThreadPrio_t *p_prio)
+{
+        AR_ASSERT(thd != NULL);
+        
+        *p_prio = thd->prio;
+        return AR_S_YES;
+}
+
+
 
 
 /************************************************************************************************************************************end*/
@@ -212,10 +282,28 @@ void			AR_YieldThread()
 		pthread_yield_np();
 }
 
+
 void			AR_Sleep(ar_int_64_t millisecond)
 {
+        
+#if(0)
 		useconds_t m = (useconds_t)millisecond;
 
 		usleep(m * 1000);
+#else
+        
+        if(millisecond == 0)
+        {
+                AR_YieldThread();
+        }else
+        {
+                uint64_t now = mach_absolute_time();
+                uint64_t interval =  + (millisecond * (ar_int_64_t)__g_mach_base_info.denom * 1000000 / __g_mach_base_info.numer);
+                
+                mach_wait_until(now + interval);
+        }
+#endif
 
 }
+
+

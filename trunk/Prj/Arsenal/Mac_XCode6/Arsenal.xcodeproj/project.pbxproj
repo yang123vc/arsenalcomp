@@ -591,7 +591,7 @@
 		BEA4E2BB14E83F1D00A29A8D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0600;
+				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = none;
 			};
 			buildConfigurationList = BEA4E2BE14E83F1D00A29A8D /* Build configuration list for PBXProject "Arsenal" */;
@@ -766,7 +766,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = NO;
-				SDKROOT = macosx10.9;
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -799,7 +799,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = NO;
-				SDKROOT = macosx10.9;
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};
@@ -813,7 +813,7 @@
 				OBJROOT = "$(SYMROOT)";
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = Arsenal;
-				SDKROOT = macosx10.9;
+				SDKROOT = macosx;
 				SYMROOT = build;
 			};
 			name = Debug;
@@ -830,7 +830,7 @@
 				OBJROOT = "$(SYMROOT)";
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = Arsenal;
-				SDKROOT = macosx10.9;
+				SDKROOT = macosx;
 				SYMROOT = build;
 			};
 			name = Release;
@@ -846,7 +846,7 @@
 				INSTALL_PATH = "@loader_path/../Frameworks/";
 				OBJROOT = "$(SYMROOT)";
 				PRODUCT_NAME = Arsenal;
-				SDKROOT = macosx10.9;
+				SDKROOT = macosx;
 				SYMROOT = build;
 			};
 			name = Debug;
@@ -864,7 +864,7 @@
 				INSTALL_PATH = "@loader_path/../Frameworks/";
 				OBJROOT = "$(SYMROOT)";
 				PRODUCT_NAME = Arsenal;
-				SDKROOT = macosx10.9;
+				SDKROOT = macosx;
 				SYMROOT = build;
 			};
 			name = Release;

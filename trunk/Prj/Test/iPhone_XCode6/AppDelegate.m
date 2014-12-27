@@ -11,6 +11,13 @@
 
 
 
+#include <mach/mach.h>
+
+#include <mach/mach_time.h>
+
+#include <pthread.h>
+
+
 
 
 
@@ -24,10 +31,36 @@
     [super dealloc];
 }
 
+static void	thread_worker(void *data)
+{
+        ar_int_64_t beg, end;
+        
+        while(true)
+        {
+                beg = AR_GetTime_TickCount();
+
+                AR_Sleep(3);
+                
+                end = AR_GetTime_TickCount();
+                
+                AR_printf(L"elapsed : %qd\r\n", end- beg);
+        }
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
         Initialize_Arsenal();
+        
+        arThread_t *thd = AR_CreateThread(thread_worker, NULL);
+        if(thd)
+        {
+                AR_SetThreadPriority(thd, AR_THREAD_PREC_HIGH);
+                
+        }
+        
+        
+        
         return YES;
 }
 							
