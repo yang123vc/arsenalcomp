@@ -29,6 +29,28 @@
 AR_NAMESPACE_BEGIN
 
 
+
+struct __arsenal_thread_tag
+{
+        pthread_t               thd;
+        arThreadPrio_t          prio;
+        void                    *data;
+        arThreadFunc_t          func;
+        arEvent_t               *done;
+};
+
+
+
+struct __arsenal_event_tag
+{
+        ar_bool_t           is_auto_reset;
+        volatile ar_bool_t  state;
+        pthread_mutex_t  mtx;
+        pthread_cond_t   cond;
+};
+
+
+
 #if (OS_TYPE == OS_MAC_OS_X || OS_TYPE == OS_IOS)
 
 		#include "thread_posix_apple.h"
@@ -70,15 +92,6 @@ ar_int_64_t		AR_GetTime_Microseconds()
 
 
 /********************************************Thread**********************************************/
-
-struct __arsenal_thread_tag
-{
-        pthread_t               thd;
-        arThreadPrio_t          prio;
-        void                    *data;
-        arThreadFunc_t          func;
-        arEvent_t               *done;
-};
 
 
 static void* __entry(void* data)
@@ -200,15 +213,17 @@ arStatus_t		AR_JoinThreadWithTimeout(arThread_t *thd, ar_int_64_t milliseconds)
 
 
 
-
-
 ar_uint_64_t		AR_GetThreadId(arThread_t *thd)
 {
-		AR_ASSERT(thd != NULL);
-		return (ar_uint_64_t)thd->thd;
+        AR_ASSERT(thd != NULL);
+        return (ar_uint_64_t)thd->thd;
 }
 
 
+
+
+
+#if(OS_TYPE != OS_MAC_OS_X && OS_TYPE != OS_IOS)
 
 
 static int __get_min_os_prio()
@@ -248,19 +263,22 @@ arStatus_t		AR_SetThreadPriority(arThread_t *thd, arThreadPrio_t prio)
                 return AR_S_YES;
         }
 
-
-        par.sched_priority = __map_prio(thd->prio);
+        par.sched_priority = __map_prio(prio);
 
         if(pthread_setschedparam(thd->thd, SCHED_OTHER, &par) != 0)
         {
                 AR_error(AR_ERR_WARNING, L"cannot set thread priority!\r\n");
+
                 return AR_E_SYS;
         }else
         {
+                
                 thd->prio = prio;
                 return AR_S_YES;
         }
+        
 }
+
 
 arStatus_t		AR_GetThreadPriority(arThread_t *thd, arThreadPrio_t *p_prio)
 {
@@ -271,6 +289,7 @@ arStatus_t		AR_GetThreadPriority(arThread_t *thd, arThreadPrio_t *p_prio)
 }
 
 
+#endif
 
 /********************************Mutex*****************************************/
 
@@ -360,15 +379,6 @@ arStatus_t		AR_UnLockMutex(arMutex_t *mtx)
 
 /***************************************************Event*****************************************/
 
-
-
-struct __arsenal_event_tag
-{
-        ar_bool_t           is_auto_reset;
-        volatile ar_bool_t  state;
-        pthread_mutex_t  mtx;
-        pthread_cond_t   cond;
-};
 
 
 arEvent_t*		AR_CreateEvent(ar_bool_t is_auto_reset)

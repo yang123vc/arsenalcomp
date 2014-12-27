@@ -349,9 +349,9 @@ _AR_cos_flt
 _AR_data_to_hexstr
 _AR_data_to_hexwcs
 
-#_AR_debug_calloc
-#_AR_debug_free
-#_AR_debug_malloc
+_AR_debug_calloc
+_AR_debug_free
+_AR_debug_malloc
 
 _AR_debug_print
 _AR_eof_file
@@ -557,6 +557,8 @@ _Ini_SetFloat
 _Ini_SetInt
 _Ini_SetString
 _Ini_SetUInt
+_Ini_LoadObjectFromFile
+
 _Lex_Clear
 _Lex_ClearError
 _Lex_ClearInput
