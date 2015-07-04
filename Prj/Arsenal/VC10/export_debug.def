@@ -315,6 +315,9 @@ AR_path_set_size
 AR_path_copydir
 
 
+AR_path_get_creationtime
+AR_path_get_modifiedtime
+AR_path_set_modifiedtime
 
 ;Lex
 
