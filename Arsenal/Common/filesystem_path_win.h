@@ -412,7 +412,7 @@ arStatus_t      AR_path_get_creationtime(const wchar_t *path, ar_int_64_t *tm)
 		ts.LowPart  = fad.ftCreationTime.dwLowDateTime;
 		ts.HighPart = fad.ftCreationTime.dwHighDateTime;
 		ts.QuadPart -= epoch.QuadPart;
-		*tm = ts.QuadPart;
+		*tm = ts.QuadPart / 10 / 1000000;
 
 		return AR_S_YES;
 }
@@ -442,7 +442,7 @@ arStatus_t      AR_path_get_modifiedtime(const wchar_t *path, ar_int_64_t *tm)
 		ts.LowPart  = fad.ftLastWriteTime.dwLowDateTime;
 		ts.HighPart = fad.ftLastWriteTime.dwHighDateTime;
 		ts.QuadPart -= epoch.QuadPart;
-		*tm = ts.QuadPart;
+		*tm = ts.QuadPart / 10 / 1000000;
 
 		return AR_S_YES;
         
@@ -463,7 +463,7 @@ arStatus_t      AR_path_set_modifiedtime(const wchar_t *path, ar_int_64_t tm)
 		epoch.LowPart  = 0xD53E8000;
 		epoch.HighPart = 0x019DB1DE;
 
-		ts.QuadPart  = tm * 10;
+		ts.QuadPart  = tm * 10 * 1000000;
 		ts.QuadPart += epoch.QuadPart;
 		low  = ts.LowPart;
 		high = ts.HighPart;
