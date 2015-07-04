@@ -386,6 +386,36 @@ END_POINT:
 
 
 
+
+
+
+arStatus_t      AR_path_get_creationtime(const wchar_t *path, ar_int_64_t *tm)
+{
+        return AR_E_NOTSUPPORTED;
+}
+
+
+
+arStatus_t      AR_path_get_modifiedtime(const wchar_t *path, ar_int_64_t *tm)
+{
+        return AR_E_NOTSUPPORTED;
+        
+}
+
+
+arStatus_t      AR_path_set_modifiedtime(const wchar_t *path, ar_int_64_t tm)
+{
+        return AR_E_NOTSUPPORTED;
+}
+
+
+
+
+
+
+
+
+
 /**********************************************************************************************/
 
 arStatus_t      AR_path_rename(const wchar_t *src_path, const wchar_t *dest_path)
