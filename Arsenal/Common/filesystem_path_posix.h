@@ -224,8 +224,13 @@ arStatus_t      AR_path_get_creationtime(const wchar_t *path, ar_int_64_t *tm)
         if(lstat(utf8, &st) == 0)
 #endif
         {
-                status = AR_S_YES;
+				status = AR_S_YES;
+#if defined(st_birthtime)
                 *tm = (ar_int_64_t)st.st_birthtime;
+#else
+				*tm = (ar_int_64_t)st.st_ctime;
+#endif
+
         }else
         {
                 int err_code = errno;
