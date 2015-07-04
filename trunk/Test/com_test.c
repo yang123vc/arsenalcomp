@@ -4628,6 +4628,22 @@ static void mat_test()
 }
 
 
+static void file_time_test()
+{
+		ar_int_64_t		tm = 0;
+		arStatus_t status = AR_S_YES;
+
+		status = AR_path_get_creationtime(L"H:\\Code\\Test\\TestInput\\1.avi", &tm);
+		AR_ASSERT(status == AR_S_YES);
+
+
+		status = AR_path_get_modifiedtime(L"H:\\Code\\Test\\TestInput\\1.avi", &tm);
+		AR_ASSERT(status == AR_S_YES);
+
+		status = AR_path_set_modifiedtime(L"H:\\Code\\Test\\TestInput\\1.avi", tm + 10);
+
+}
+
 void com_test()
 {
 		
@@ -4747,7 +4763,7 @@ void com_test()
 
 		//cache_test();
 
-		uri_test();
+		//uri_test();
 
 		//buffer_test3();
 
@@ -4775,6 +4791,10 @@ void com_test()
 		//ticks_test();
 
 		//mat_test();
+
+		file_time_test();
+
+
 }
 
 
