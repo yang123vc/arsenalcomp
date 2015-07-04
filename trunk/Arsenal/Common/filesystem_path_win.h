@@ -391,22 +391,103 @@ END_POINT:
 
 arStatus_t      AR_path_get_creationtime(const wchar_t *path, ar_int_64_t *tm)
 {
-        return AR_E_NOTSUPPORTED;
+		WIN32_FILE_ATTRIBUTE_DATA fad;
+		ULARGE_INTEGER epoch; // UNIX epoch (1970-01-01 00:00:00) expressed in Windows NT FILETIME
+		ULARGE_INTEGER ts;
+
+		AR_ASSERT(path != NULL && tm != NULL);
+
+		AR_memset(&fad, 0, sizeof(fad));
+
+		if(!GetFileAttributesExW(path, GetFileExInfoStandard, &fad)) 
+		{
+				DWORD last_err = GetLastError();
+				return __map_last_error(last_err);
+		}
+
+		
+		epoch.LowPart  = 0xD53E8000;
+		epoch.HighPart = 0x019DB1DE;
+
+		ts.LowPart  = fad.ftCreationTime.dwLowDateTime;
+		ts.HighPart = fad.ftCreationTime.dwHighDateTime;
+		ts.QuadPart -= epoch.QuadPart;
+		*tm = ts.QuadPart;
+
+		return AR_S_YES;
 }
 
 
 
 arStatus_t      AR_path_get_modifiedtime(const wchar_t *path, ar_int_64_t *tm)
 {
-        return AR_E_NOTSUPPORTED;
+		WIN32_FILE_ATTRIBUTE_DATA fad;
+		ULARGE_INTEGER epoch; // UNIX epoch (1970-01-01 00:00:00) expressed in Windows NT FILETIME
+		ULARGE_INTEGER ts;
+
+		AR_ASSERT(path != NULL && tm != NULL);
+
+		AR_memset(&fad, 0, sizeof(fad));
+
+		if(!GetFileAttributesExW(path, GetFileExInfoStandard, &fad)) 
+		{
+				DWORD last_err = GetLastError();
+				return __map_last_error(last_err);
+		}
+
+
+		epoch.LowPart  = 0xD53E8000;
+		epoch.HighPart = 0x019DB1DE;
+
+		ts.LowPart  = fad.ftLastWriteTime.dwLowDateTime;
+		ts.HighPart = fad.ftLastWriteTime.dwHighDateTime;
+		ts.QuadPart -= epoch.QuadPart;
+		*tm = ts.QuadPart;
+
+		return AR_S_YES;
         
 }
 
 
 arStatus_t      AR_path_set_modifiedtime(const wchar_t *path, ar_int_64_t tm)
 {
-        return AR_E_NOTSUPPORTED;
+		UINT32 low;
+		UINT32 high;
+		FILETIME ft;
+		HANDLE fdl = INVALID_HANDLE_VALUE;
+		ULARGE_INTEGER epoch; // UNIX epoch (1970-01-01 00:00:00) expressed in Windows NT FILETIME
+		ULARGE_INTEGER ts;
+		
+		AR_ASSERT(path != NULL);
+
+		epoch.LowPart  = 0xD53E8000;
+		epoch.HighPart = 0x019DB1DE;
+
+		ts.QuadPart  = tm * 10;
+		ts.QuadPart += epoch.QuadPart;
+		low  = ts.LowPart;
+		high = ts.HighPart;
+
+		
+		ft.dwLowDateTime  = low;
+		ft.dwHighDateTime = high;
+
+		fdl = CreateFileW(path, FILE_WRITE_ATTRIBUTES, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
+		if(fdl == INVALID_HANDLE_VALUE)
+		{
+				DWORD last_err = GetLastError();
+				return __map_last_error(last_err);
+		}
+
+		if(!SetFileTime(fdl, 0, &ft, &ft))
+		{
+				DWORD last_err = GetLastError();
+				return __map_last_error(last_err);
+		}
+		return AR_S_YES;
 }
+
+
 
 
 
