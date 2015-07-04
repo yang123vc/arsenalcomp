@@ -195,6 +195,144 @@ END_POINT:
 }
 
 
+arStatus_t      AR_path_get_creationtime(const wchar_t *path, ar_int_64_t *tm)
+{
+        arStatus_t status;
+        char *utf8;
+        
+#if defined(AR_HAS_STAT64)
+        struct stat64 st;
+#else
+        struct stat st;
+#endif
+
+        AR_ASSERT(path != NULL && tm != NULL);
+        
+        status = AR_S_YES;
+        utf8 = AR_wcs_to_str(AR_CP_UTF8, path, AR_wcslen(path));
+        
+        if(utf8 == NULL)
+        {
+                status = AR_E_BADENCCONV;
+                goto END_POINT;
+        }
+        
+        
+#if defined(AR_HAS_STAT64)
+        if(lstat64(utf8, &st) == 0)
+#else
+        if(lstat(utf8, &st) == 0)
+#endif
+        {
+                status = AR_S_YES;
+                *tm = (ar_int_64_t)st.st_birthtime;
+        }else
+        {
+                int err_code = errno;
+                status = __map_last_error(err_code);
+        }
+
+
+
+END_POINT:
+        if(utf8 != NULL)
+        {
+                AR_DEL(utf8);
+                utf8 = NULL;
+        }
+        return status;
+
+}
+
+
+
+arStatus_t      AR_path_get_modifiedtime(const wchar_t *path, ar_int_64_t *tm)
+{
+        arStatus_t status;
+        char *utf8;
+        
+#if defined(AR_HAS_STAT64)
+        struct stat64 st;
+#else
+        struct stat st;
+#endif
+        
+        AR_ASSERT(path != NULL && tm != NULL);
+        
+        status = AR_S_YES;
+        utf8 = AR_wcs_to_str(AR_CP_UTF8, path, AR_wcslen(path));
+        
+        if(utf8 == NULL)
+        {
+                status = AR_E_BADENCCONV;
+                goto END_POINT;
+        }
+        
+        
+#if defined(AR_HAS_STAT64)
+        if(lstat64(utf8, &st) == 0)
+#else
+        if(lstat(utf8, &st) == 0)
+#endif
+        {
+                status = AR_S_YES;
+                *tm = (ar_int_64_t)st.st_mtime;
+        }else
+        {
+                int err_code = errno;
+                status = __map_last_error(err_code);
+        }
+
+        
+END_POINT:
+        if(utf8 != NULL)
+        {
+                AR_DEL(utf8);
+                utf8 = NULL;
+        }
+        return status;
+}
+
+
+arStatus_t      AR_path_set_modifiedtime(const wchar_t *path, ar_int_64_t tm)
+{
+        arStatus_t status;
+        char *utf8;
+        struct utimbuf tb;
+        
+        AR_ASSERT(path != NULL);
+        
+        status = AR_S_YES;
+        utf8 = AR_wcs_to_str(AR_CP_UTF8, path, AR_wcslen(path));
+        
+        if(utf8 == NULL)
+        {
+                status = AR_E_BADENCCONV;
+                goto END_POINT;
+        }
+        
+        
+        
+        tb.actime  = (time_t)tm;
+        tb.modtime = (time_t)tm;
+        
+        if(utime(utf8, &tb) != 0)
+        {
+                int err_code = errno;
+                status = __map_last_error(err_code);
+        }
+
+        
+END_POINT:
+        if(utf8 != NULL)
+        {
+                AR_DEL(utf8);
+                utf8 = NULL;
+        }
+        return status;
+}
+
+
 
 
 

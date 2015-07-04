@@ -1443,6 +1443,13 @@ arStatus_t      AR_path_get_size(const wchar_t *path, ar_uint_64_t *ps);
 arStatus_t      AR_path_set_size(const wchar_t *path, ar_uint_64_t size);
 
 
+arStatus_t      AR_path_get_creationtime(const wchar_t *path, ar_int_64_t *tm);
+
+arStatus_t      AR_path_get_modifiedtime(const wchar_t *path, ar_int_64_t *tm);
+arStatus_t      AR_path_set_modifiedtime(const wchar_t *path, ar_int_64_t tm);
+
+
+
 arStatus_t      AR_path_copydir(const wchar_t *src, const wchar_t *dest);
 
 

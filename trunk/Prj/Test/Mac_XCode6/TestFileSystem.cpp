@@ -311,18 +311,42 @@ END_POINT:
         }
 }
         
+        
+static void file_time_test()
+{
+        
+        arStatus_t status = AR_S_YES;
+        ar_int_64_t tm = 0;
+        
+        status = AR_path_get_creationtime(L"/Volumes/Code/Test/Data/TestInput/2.ts", &tm);
+        
+        AR_ASSERT(status == AR_S_YES);
+        
+        status = AR_path_get_modifiedtime(L"/Volumes/Code/Test/Data/TestInput/2.ts", &tm);
+        
+        
+        status = AR_path_set_modifiedtime(L"/Volumes/Code/Test/Data/TestInput/2.ts", tm + 10);
+        
+        
+        status = AR_path_get_modifiedtime(L"/Volumes/Code/Test/Data/TestInput/2.ts", &tm);
+        
+
+}
+
 void file_sys_test()
 {
-//        env_test();
-//        path_test();
+        //        env_test();
+        //        path_test();
       //path_iter_test();
         
         
-//        startup_items_test();
+        //        startup_items_test();
         
-//full_path_test();
+        //full_path_test();
         
-        file_seek_test();
+        //file_seek_test();
+        
+        file_time_test();
 }
 
 

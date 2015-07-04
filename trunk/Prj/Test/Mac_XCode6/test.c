@@ -17,13 +17,13 @@ extern void Ini_Test();
 
 void test()
 {
-        //file_sys_test();
+        file_sys_test();
         //common_test();
         //marshal_die_test();
         //plist_test();
         //lex_test();
         
         //Json_Test();
-        Ini_Test();
+        //Ini_Test();
         
 }
