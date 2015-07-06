@@ -536,6 +536,13 @@ _AR_wtou32
 _AR_wtou32_s
 _AR_wtou64
 _AR_wtou64_s
+
+
+_AR_path_get_creationtime
+_AR_path_get_modifiedtime
+_AR_path_set_modifiedtime
+
+
 _Arsenal_Init
 _Arsenal_UnInit
 _CFG_CollectGrammarConfig
